@@ -244,6 +244,8 @@ void StartFrame (void)
 .string cvarfilter;
 void SV_OnEntityPreSpawnFunction()
 {
+	if(!self) //Skip pre-spawn function for world.
+		return;
 	if(self.gametypefilter != "")
 	if not(isGametypeInFilter(game, teams_matter, self.gametypefilter))
 	{
@@ -380,4 +382,8 @@ void SV_OnEntityPreSpawnFunction()
 		self.angles_z = self.angles_z + (random() * 2 - 1) * self.anglesjitter_z;
 	if(self.anglejitter != 0)
 		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
+
+	string repl = cvar_string(strcat("sv_spawnreplace_", self.classname));
+	if(repl != "")
+		self.classname = strzone(repl);
 }
