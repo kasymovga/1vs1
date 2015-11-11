@@ -135,6 +135,7 @@ void func_breakable_destroyed()
 
 void func_breakable_restore()
 {
+	self.nextthink = 0;
 	func_breakable_look_restore();
 	func_breakable_behave_restore();
 }
@@ -162,6 +163,12 @@ void func_breakable_destroy() {
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
 
+	if(self.respawntime)
+	{
+		self.think = func_breakable_restore;
+		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
+	}
+ 
 	oldmsg = self.message;
 	self.message = "";
 	SUB_UseTargets();
