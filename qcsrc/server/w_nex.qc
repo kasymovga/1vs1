@@ -1,3 +1,5 @@
+.float nex_lasthit;
+
 void SendCSQCNexBeamParticle() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_NEXGUNBEAMPARTICLE);
@@ -18,10 +20,17 @@ void W_Nex_Attack (void)
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", cvar("g_balance_nex_damage"));
 
 	yoda = 0;
+	damage_goodhits = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, cvar("g_balance_nex_damage"), cvar("g_balance_nex_force"), cvar("g_balance_nex_damagefalloff_mindist"), cvar("g_balance_nex_damagefalloff_maxdist"), cvar("g_balance_nex_damagefalloff_halflife"), cvar("g_balance_nex_damagefalloff_forcehalflife"), WEP_NEX);
 
 	if(yoda && flying)
 		announce(self, "announcer/male/yoda.wav");
+	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "")
+	{
+		if(announce(self, sv_announcer_extra_twohits))
+			damage_goodhits = 0; // only every second time
+	}
+	self.nex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle();

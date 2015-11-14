@@ -57,6 +57,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 .entity teamkill_soundsource;
 .entity pusher;
 .float taunt_soundtime;
+.float lastfrag;
 
 
 float IsDifferentTeam(entity a, entity b)
@@ -368,6 +369,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						blood_message = "^1First blood\n";
 						victim_message = "^1First victim\n";  // or First casualty
 					}
+					if (sv_announcer_extra_firstblood != "")
+						announce(attacker, sv_announcer_extra_firstblood);
 				}
 
 				if(sv_gentle > 0) {
@@ -395,7 +398,14 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 							bprint("^1", s, "^1 ", substring(w_deathtypestring, 0, p), a, "^1", substring(w_deathtypestring, p+1, strlen(w_deathtypestring) - (p+1)), "\n");
 					}
 					else if (deathtype == DEATH_TELEFRAG)
+					{
 						bprint ("^1",s, "^1 was telefragged by ", a, "\n");
+						if (sv_announcer_extra_telefrag != "")
+						{
+							announce(attacker, sv_announcer_extra_telefrag);
+							announce(targ, sv_announcer_extra_telefrag);
+						}
+					}
 					else if (deathtype == DEATH_DROWN)
 						bprint ("^1",s, "^1 was drowned by ", a, "\n");
 					else if (deathtype == DEATH_SLIME)
@@ -454,6 +464,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				}
 
 				LogDeath("frag", deathtype, attacker, targ);
+
+				float fragtime = time;
 
 				if (attacker.killcount == 3)
 				{
@@ -518,6 +530,17 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						announce(attacker, "announcer/male/30kills.wav");
 					}
 				}
+				else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "")
+				{
+						if (announce(attacker, sv_announcer_extra_doublekill))
+							fragtime = 0;
+				}
+				if (DEATH_ISWEAPON(deathtype, WEP_LASER) && sv_announcer_extra_laserfrag != "")
+				{
+						announce(targ, sv_announcer_extra_laserfrag);
+						announce(attacker, sv_announcer_extra_laserfrag);
+				}
+				attacker.lastfrag = fragtime;
 			}
 		}
 		else
