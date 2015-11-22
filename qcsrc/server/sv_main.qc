@@ -237,10 +237,32 @@ void StartFrame (void)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
 }
 
+string gametype_patterns() {
+	string s = cvar_string("sv_gametype_patterns");
+	if (s == "") //Trying to guess
+	{
+		if (teams_matter)
+		{
+			s = "team|ctf";
+		}
+		else if(cvar("g_maxplayers") == 2)
+		{
+			s = "tournament|duel";
+		}
+		else
+		{
+			s = "ffa";
+		}
+	}
+	return s;
+}
+
 .vector originjitter;
 .vector anglesjitter;
 .float anglejitter;
 .string gametypefilter;
+.string gametype;
+.string not_gametype;
 .string cvarfilter;
 void SV_OnEntityPreSpawnFunction()
 {
@@ -251,6 +273,50 @@ void SV_OnEntityPreSpawnFunction()
 	{
 		remove(self);
 		return;
+	}
+	if (self.gametype != "")
+	{
+		string s = gametype_patterns();
+		float i, n, matched;
+		matched = 0;
+		n = tokenizebyseparator(s, "|");
+		for (i = 0; i < n; i++)
+		{
+			s = argv(i);
+			if(s == "")
+				continue;
+			if(strstrofs(self.gametype, s, 0) >= 0)
+			{
+				print(strcat("Found pattern '", s, "' for entity '", self.classname, "' with gametype '", self.gametype, "'\n"));
+				matched = 1;
+				break;
+			}
+		}
+		if not(matched)
+		{
+			print(strcat("Removed entity '", self.classname, "' with gametype '", self.gametype, "' because no patterns found\n"));
+			remove(self);
+			return;
+		}
+	}
+	if (self.not_gametype != "")
+	{
+		//OMG, fteqcc.
+		s = gametype_patterns();
+		float i, n;
+		n = tokenizebyseparator(s, "|");
+		for (i = 0; i < n; i++)
+		{
+			s = argv(i);
+			if(s == "")
+				continue;
+			if(strstrofs(self.not_gametype, s, 0) >= 0)
+			{
+				print(strcat("Removed entity '", self.classname, "' with not allowed gametype '", self.not_gametype, "' because patterns found\n"));
+				remove(self);
+				return;
+			}
+		}
 	}
 	if(self.cvarfilter != "")
 	{
