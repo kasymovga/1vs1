@@ -268,6 +268,8 @@ void SV_OnEntityPreSpawnFunction()
 {
 	if(!self) //Skip pre-spawn function for world.
 		return;
+	string s;
+	float i, n;
 	if(self.gametypefilter != "")
 	if not(isGametypeInFilter(game, teams_matter, self.gametypefilter))
 	{
@@ -276,8 +278,8 @@ void SV_OnEntityPreSpawnFunction()
 	}
 	if (self.gametype != "")
 	{
-		string s = gametype_patterns();
-		float i, n, matched;
+		s = gametype_patterns();
+		float matched;
 		matched = 0;
 		n = tokenizebyseparator(s, "|");
 		for (i = 0; i < n; i++)
@@ -301,9 +303,7 @@ void SV_OnEntityPreSpawnFunction()
 	}
 	if (self.not_gametype != "")
 	{
-		//OMG, fteqcc.
 		s = gametype_patterns();
-		float i, n;
 		n = tokenizebyseparator(s, "|");
 		for (i = 0; i < n; i++)
 		{
@@ -320,8 +320,8 @@ void SV_OnEntityPreSpawnFunction()
 	}
 	if(self.cvarfilter != "")
 	{
-		float n, i, o, inv;
-		string s, k, v;
+		float o, inv;
+		string k, v;
 		inv = 0;
 
 		s = self.cvarfilter;
