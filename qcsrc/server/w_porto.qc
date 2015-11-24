@@ -70,6 +70,7 @@ void W_Porto_Think (void)
 
 void W_Porto_Touch (void)
 {
+	PROJECTILE_SKIPNONSOLID
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here

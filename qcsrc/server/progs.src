@@ -40,6 +40,8 @@ antilag.qh
 
 vote.qh
 
+g_subs.qh
+
 scores_rules.qc
 
 miscfunctions.qc
