@@ -104,6 +104,66 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 	}
 }
 
+.entity lightning_beam;
+.float lightning_beam_length;
+
+void W_Electro_Attack_Lightning_Remove(entity own)
+{
+	if (own.lightning_beam)
+	{
+		stopsound(own.lightning_beam, CHAN_PROJECTILE);
+		stopsound(own, CHAN_PROJECTILE);
+		remove(own.lightning_beam);
+		own.lightning_beam = world;
+	}
+}
+
+void W_Electro_Attack_Lightning_Think()
+{
+	makevectors(self.owner.v_angle);
+	W_SetupShot(self.owner, TRUE, 0, "", 0);
+	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
+	setorigin(self, (self.owner.origin + trace_endpos) * 0.5);
+	te_beam(self.owner, trace_endpos, w_shotorg);
+	self.nextthink = time;
+}
+
+.float lightning_sound_last;
+void W_Electro_Attack_Lightning()
+{
+	float damage = cvar("g_balance_electro_primary_damage");
+	W_SetupShot(self, TRUE, 0, "", damage);
+	if (!self.lightning_beam) {
+		self.lightning_beam = spawn();
+		setorigin(self.lightning_beam, self.origin);
+		self.lightning_beam.owner = self;
+		self.lightning_beam.think = W_Electro_Attack_Lightning_Think;
+		self.lightning_beam.nextthink = time;
+		self.lightning_beam.lightning_beam_length = cvar("g_balance_electro_primary_lightning_length");
+		sound(self.lightning_beam, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+	}
+	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self);
+	if (trace_fraction < 1)
+	{
+		//if (time - self.lightning_beam.lightning_sound_last > 0.2)
+		//{
+		//	setorigin(self.lightning_beam, trace_endpos);
+		//	self.lightning_beam.lightning_sound_last = time;
+		//	sound(self.lightning_beam, CHAN_WEAPON, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+		//}
+		if (trace_ent && trace_ent.takedamage)
+			Damage (trace_ent, self, self, damage, WEP_ELECTRO, trace_endpos, w_shotdir * cvar("g_balance_electro_primary_force"));
+		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+			//Damage_DamageInfo(trace_endpos, cvar("g_balance_electro_primary_damage"), 0, 0, cvar("g_balance_electro_primary_force") * w_shotdir, WEP_ELECTRO, self);
+			pointparticles(particleeffectnum("machinegun_impact"), trace_endpos, '0 0 0', 0);
+		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self);
+	}
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_cells = self.ammo_cells - cvar("g_balance_electro_primary_ammo");
+}
+
 void W_Electro_Attack()
 {
 	local entity proj;
@@ -207,6 +267,19 @@ void w_electro_checkattack()
 	w_ready();
 }
 
+void w_electro_checkattack_lightning()
+{
+	if(self.BUTTON_ATCK)
+	if(weapon_prepareattack(0, -1))
+	{
+		W_Electro_Attack_Lightning();
+		weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_electro_primary_refire"), w_electro_checkattack_lightning);
+		return;
+	}
+	W_Electro_Attack_Lightning_Remove(self);
+	w_ready();
+}
+
 .float bot_secondary_electromooth;
 float w_electro(float req)
 {
@@ -238,8 +311,16 @@ float w_electro(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, cvar("g_balance_electro_primary_refire")))
 		{
-			W_Electro_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
+			if (cvar("g_balance_electro_primary_lightning"))
+			{
+				W_Electro_Attack_Lightning();
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_refire"), w_electro_checkattack_lightning);
+			}
+			else
+			{
+				W_Electro_Attack();
+				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_electro_primary_animtime"), w_ready);
+			}
 		}
 		if (self.BUTTON_ATCK2)
 		if (time >= self.electro_secondarytime)
@@ -297,6 +378,7 @@ float w_electro(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.electro_secondarytime = time;
+		W_Electro_Attack_Lightning_Remove(self);
 	}
 	return TRUE;
 };

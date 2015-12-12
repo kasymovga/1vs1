@@ -1489,6 +1489,7 @@ void ClientDisconnect (void)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
+	W_Electro_Attack_Lightning_Remove(self);
 
 	SoundEntity_Detach(self);
 
