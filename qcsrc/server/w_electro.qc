@@ -124,7 +124,7 @@ void W_Electro_Attack_Lightning_Think()
 	W_SetupShot(self.owner, TRUE, 0, "", 0);
 	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
 	setorigin(self, (self.owner.origin + trace_endpos) * 0.5);
-	te_beam(self.owner, trace_endpos, w_shotorg);
+	te_beam(self.owner, trace_endpos, w_shotorg - (w_shotdir * 10));
 	self.nextthink = time;
 }
 
