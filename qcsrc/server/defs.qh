@@ -160,6 +160,7 @@ float sv_gameplayfix_skipnonsolid;
 .vector anim_forwardleft; // player running forward and left
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
+.vector anim_melee; // player melee attack
 
 // weapon animation vectors:
 .vector anim_fire1;

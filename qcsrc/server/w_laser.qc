@@ -13,8 +13,77 @@ void W_Laser_Touch (void)
 	remove (self);
 }
 
+.float melee_damage;
+.float melee_force;
+.float melee_distance;
+.float melee_time;
+.float melee_lastthink;
+.float melee_startthink;
+.float melee_ticrate;
+.float melee_secondary;
+
+void W_Laser_Attack_Gauntlet_Think()
+{
+	float melee_frame;
+	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - time);
+	if (melee_frame < 0)
+	{
+		remove(self);
+		return;
+	}
+	float damage_factor = melee_frame / self.melee_time;
+	float frame_damage = self.melee_damage * damage_factor;
+	float frame_force = self.melee_force * damage_factor;
+	makevectors(self.owner.angles);
+	W_SetupShot(self.owner, FALSE, 0, "", self.melee_damage);
+	traceline(w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * self.melee_distance, MOVE_NORMAL, self);
+	if (trace_fraction < 1)
+	if (trace_ent)
+	if (trace_ent.takedamage)
+		Damage (trace_ent, self.owner, self.owner, frame_damage,
+				WEP_LASER | (self.melee_secondary ? HITTYPE_SECONDARY : 0), trace_endpos, w_shotdir * frame_force);
+	self.melee_lastthink = time;
+	self.nextthink = time + self.melee_ticrate;
+}
+
+void W_Laser_Attack_Gauntlet (float issecondary)
+{
+	sound (self, CHAN_WEAPON, cvar_string("sv_sound_laser_gauntlet"), VOL_BASE, ATTN_NORM);
+	entity melee = spawn();
+	melee.owner = self;
+	melee.think = W_Laser_Attack_Gauntlet_Think;
+	melee.melee_secondary = issecondary;
+	if (issecondary)
+	{
+		melee.nextthink = time + cvar("g_balance_laser_secondary_gauntlet_delay");
+		melee.melee_damage = cvar("g_balance_laser_secondary_damage");
+		melee.melee_force = cvar("g_balance_laser_secondary_force");
+		melee.melee_distance = cvar("g_balance_laser_secondary_radius");
+		melee.melee_time = cvar("g_balance_laser_secondary_gauntlet_time");
+		melee.melee_ticrate = cvar("g_balance_laser_secondary_gauntlet_ticrate");
+	}
+	else
+	{
+		melee.nextthink = time + cvar("g_balance_laser_primary_gauntlet_delay");
+		melee.melee_damage = cvar("g_balance_laser_primary_damage");
+		melee.melee_force = cvar("g_balance_laser_primary_force");
+		melee.melee_distance = cvar("g_balance_laser_primary_radius");
+		melee.melee_time = cvar("g_balance_laser_primary_gauntlet_time");
+		melee.melee_ticrate = cvar("g_balance_laser_primary_gauntlet_ticrate");
+	}
+	melee.melee_startthink = melee.nextthink;
+	melee.melee_lastthink = melee.nextthink;
+	melee.nextthink += melee.melee_ticrate; //avoid frame with zero melee_frame
+}
+
 void W_Laser_Attack (float issecondary)
 {
+	float ismelee = (issecondary ? cvar("g_balance_laser_secondary_gauntlet") : cvar("g_balance_laser_primary_gauntlet"));
+	if (ismelee)
+	{
+		W_Laser_Attack_Gauntlet(issecondary);
+		return;
+	}
 	local entity missile;
 	vector s_forward;
 	float a;
@@ -124,6 +193,7 @@ float w_laser(float req)
 		precache_model ("models/weapons/v_laser.md3");
 		precache_model ("models/weapons/h_laser.dpm");
 		precache_sound ("weapons/lasergun_fire.wav");
+		precache_sound (cvar_string("sv_sound_laser_gauntlet"));
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_LASER);
