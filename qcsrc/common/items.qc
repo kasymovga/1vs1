@@ -2,6 +2,17 @@
 entity weapon_info[24];
 entity dummy_weapon_info;
 
+string weapon_modelname(string name)
+{
+	string model_replacement;
+	model_replacement = cvar_string(strcat("sv_model_", name));
+	if (model_replacement == "")
+	{
+		model_replacement = name;
+	}
+	return model_replacement;
+};
+
 void register_weapon_real(float id, float(float) func, float ammotype, float i, float normalweapon, float canclimb, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
 {
 	entity e;
@@ -13,8 +24,13 @@ void register_weapon_real(float id, float(float) func, float ammotype, float i, 
 	e.message = wname;
 	e.items = ammotype;
 	e.weapon_func = func;
+#ifdef SVQC
+	e.model = strzone(strcat("models/weapons/g_", weapon_modelname(modelname), ".md3"));
+	e.mdl = strzone(weapon_modelname(modelname));
+#else
 	e.mdl = modelname;
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+#endif
 	e.spawnflags = 0;
 	e.model2 = strzone(strcat("wpn-", e.mdl));
 	if(normalweapon > 0)
