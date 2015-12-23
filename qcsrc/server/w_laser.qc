@@ -25,7 +25,7 @@ void W_Laser_Touch (void)
 void W_Laser_Attack_Gauntlet_Think()
 {
 	float melee_frame;
-	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - time);
+	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - self.melee_lastthink);
 	if (melee_frame < 0)
 	{
 		remove(self);
