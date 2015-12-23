@@ -12,7 +12,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 		if (e.classname == "plasma")
 		{
 			// see if there is line of sight to the combo ball
-			traceline(org, e.origin, MOVE_NOMONSTERS, e);
+			traceline(org, e.origin, MOVE_NORMAL, e);
 			if (trace_fraction == 1 || trace_ent == e)
 			{
 				// change owner to whoever caused the combo explosion
@@ -139,11 +139,12 @@ void W_Electro_Attack_Lightning()
 		self.lightning_beam.think = W_Electro_Attack_Lightning_Think;
 		self.lightning_beam.nextthink = time;
 		self.lightning_beam.lightning_beam_length = cvar("g_balance_electro_primary_lightning_length");
+		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		sound(self.lightning_beam, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 	}
-	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self);
+	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self.lightning_beam);
 	if (trace_fraction < 1)
 	{
 		if (trace_ent && trace_ent.takedamage)
