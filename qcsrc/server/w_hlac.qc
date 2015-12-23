@@ -196,9 +196,6 @@ float w_hlac(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-        precache_model ("models/weapons/g_hlac.md3");
-		precache_model ("models/weapons/v_hlac.md3");
-		precache_model ("models/weapons/h_hlac.dpm");
 		precache_sound ("weapons/lasergun_fire.wav");
 
 	}

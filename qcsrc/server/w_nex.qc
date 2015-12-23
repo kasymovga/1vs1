@@ -63,9 +63,6 @@ float w_nex(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/nexflash.md3");
-		precache_model ("models/weapons/g_nex.md3");
-		precache_model ("models/weapons/v_nex.md3");
-		precache_model ("models/weapons/h_nex.dpm");
 		precache_sound ("weapons/nexfire.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");

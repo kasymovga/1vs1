@@ -125,9 +125,6 @@ float w_shotgun(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/uziflash.md3");
-		precache_model ("models/weapons/g_shotgun.md3");
-		precache_model ("models/weapons/v_shotgun.md3");
-		precache_model ("models/weapons/h_shotgun.dpm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
 	}

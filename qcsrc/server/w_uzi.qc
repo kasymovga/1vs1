@@ -111,9 +111,6 @@ float w_uzi(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/uziflash.md3");
-		precache_model ("models/weapons/g_uzi.md3");
-		precache_model ("models/weapons/v_uzi.md3");
-		precache_model ("models/weapons/h_uzi.dpm");
 		precache_sound ("weapons/uzi_fire.wav");
 	}
 	else if (req == WR_SETUP)
