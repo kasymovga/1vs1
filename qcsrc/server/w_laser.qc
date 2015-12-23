@@ -203,6 +203,7 @@ float w_laser(float req)
 	else if (req == WR_RELOAD)
 	{
 		if (cvar("g_balance_laser_secondary_gauntlet"))
+		if (weapon_prepareattack(0, cvar("g_balance_laser_secondary_refire")))
 		{
 			W_Laser_Attack_Gauntlet(TRUE);
 			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_laser_secondary_animtime"), w_ready);
