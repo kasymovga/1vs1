@@ -128,7 +128,6 @@ void W_Electro_Attack_Lightning_Think()
 	self.nextthink = time;
 }
 
-.float lightning_sound_last;
 void W_Electro_Attack_Lightning()
 {
 	float damage = cvar("g_balance_electro_primary_damage");
@@ -147,16 +146,9 @@ void W_Electro_Attack_Lightning()
 	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self);
 	if (trace_fraction < 1)
 	{
-		//if (time - self.lightning_beam.lightning_sound_last > 0.2)
-		//{
-		//	setorigin(self.lightning_beam, trace_endpos);
-		//	self.lightning_beam.lightning_sound_last = time;
-		//	sound(self.lightning_beam, CHAN_WEAPON, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
-		//}
 		if (trace_ent && trace_ent.takedamage)
 			Damage (trace_ent, self, self, damage, WEP_ELECTRO, trace_endpos, w_shotdir * cvar("g_balance_electro_primary_force"));
 		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-			//Damage_DamageInfo(trace_endpos, cvar("g_balance_electro_primary_damage"), 0, 0, cvar("g_balance_electro_primary_force") * w_shotdir, WEP_ELECTRO, self);
 			pointparticles(particleeffectnum("machinegun_impact"), trace_endpos, '0 0 0', 0);
 		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self);
 	}
