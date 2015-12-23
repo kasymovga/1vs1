@@ -202,7 +202,10 @@ float w_laser(float req)
 		w_deathtypestring = "lasered himself to hell";
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
+		if (((w_deathtype & HITTYPE_SECONDARY) ? cvar("g_balance_laser_secondary_gauntlet") : cvar("g_balance_laser_primary_gauntlet")))
+			w_deathtypestring = "was smashed to death by"; // unchecked: SPLASH
+		else
+			w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	}
 	return TRUE;
 };
