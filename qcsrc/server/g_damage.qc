@@ -535,10 +535,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						if (announce(attacker, sv_announcer_extra_doublekill))
 							fragtime = 0;
 				}
-				if (DEATH_ISWEAPON(deathtype, WEP_LASER) && sv_announcer_extra_laserfrag != "")
+				if (DEATH_ISWEAPON(deathtype, WEP_LASER) && sv_announcer_extra_gauntletfrag != "" &&
+						((deathtype & HITTYPE_SECONDARY) ? cvar("g_balance_laser_secondary_gauntlet") : cvar("g_balance_laser_primary_gauntlet")))
 				{
-						announce(targ, sv_announcer_extra_laserfrag);
-						announce(attacker, sv_announcer_extra_laserfrag);
+						announce(targ, sv_announcer_extra_gauntletfrag);
+						announce(attacker, sv_announcer_extra_gauntletfrag);
 				}
 				attacker.lastfrag = fragtime;
 			}

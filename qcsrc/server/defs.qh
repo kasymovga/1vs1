@@ -64,7 +64,7 @@ float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
 
-string sv_announcer_extra_laserfrag;
+string sv_announcer_extra_gauntletfrag;
 string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;

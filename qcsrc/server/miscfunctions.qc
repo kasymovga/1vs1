@@ -1617,7 +1617,7 @@ void precache()
 
 	//Extra sounds
 #define EXTRA_ANNOUNCER(x) do { sv_announcer_extra_##x = strzone(cvar_string("sv_announcer_extra_"#x)); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
-	EXTRA_ANNOUNCER(laserfrag);
+	EXTRA_ANNOUNCER(gauntletfrag);
 	sv_announcer_extra_doublekill_interval = cvar("sv_announcer_extra_doublekill_interval");
 	if (sv_announcer_extra_doublekill_interval) {
 		EXTRA_ANNOUNCER(doublekill);
