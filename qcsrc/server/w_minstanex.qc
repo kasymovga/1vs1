@@ -197,9 +197,6 @@ float w_minstanex(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/nexflash.md3");
-		precache_model ("models/weapons/g_minstanex.md3");
-		precache_model ("models/weapons/v_minstanex.md3");
-		precache_model ("models/weapons/h_minstanex.dpm");
 		precache_sound ("weapons/minstanexfire.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");

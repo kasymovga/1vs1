@@ -212,9 +212,6 @@ float w_hook(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_hookgun.md3");
-		precache_model ("models/weapons/v_hookgun.md3");
-		precache_model ("models/weapons/h_hookgun.dpm");
 		precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
 		precache_sound ("weapons/hook_fire.wav");
 		precache_sound ("weapons/hookbomb_fire.wav");

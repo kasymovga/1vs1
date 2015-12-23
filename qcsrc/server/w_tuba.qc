@@ -132,10 +132,6 @@ float w_tuba(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_tuba.md3");
-		precache_model ("models/weapons/v_tuba.md3");
-		precache_model ("models/weapons/h_tuba.dpm");
-
 		float i;
 		for(i = -18; i <= +27; ++i)
 			precache_sound(TUBA_NOTE(i));

@@ -170,9 +170,6 @@ float w_campingrifle(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{		
-		precache_model ("models/weapons/g_campingrifle.md3");
-		precache_model ("models/weapons/v_campingrifle.md3");
-		precache_model ("models/weapons/h_campingrifle.dpm");
 		precache_sound ("weapons/campingrifle_reload.wav");
 		precache_sound ("weapons/campingrifle_fire.wav");
 		precache_sound ("weapons/campingrifle_fire2.wav");

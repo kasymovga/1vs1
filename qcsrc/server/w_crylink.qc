@@ -227,9 +227,6 @@ float w_crylink(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_crylink.md3");
-		precache_model ("models/weapons/v_crylink.md3");
-		precache_model ("models/weapons/h_crylink.dpm");
 		precache_sound ("weapons/crylink_fire.wav");
 		precache_sound ("weapons/crylink_fire2.wav");
 	}

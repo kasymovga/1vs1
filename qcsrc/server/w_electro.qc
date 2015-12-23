@@ -253,9 +253,6 @@ float w_electro(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_electro.md3");
-		precache_model ("models/weapons/v_electro.md3");
-		precache_model ("models/weapons/h_electro.dpm");
 		precache_sound ("weapons/electro_bounce.wav");
 		precache_sound ("weapons/electro_fire.wav");
 		precache_sound ("weapons/electro_fire2.wav");
