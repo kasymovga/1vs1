@@ -25,7 +25,7 @@ void W_Laser_Touch (void)
 void W_Laser_Attack_Gauntlet_Think()
 {
 	float melee_frame;
-	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - time);
+	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - self.melee_lastthink);
 	if (melee_frame < 0)
 	{
 		remove(self);
@@ -200,6 +200,16 @@ float w_laser(float req)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "lasered himself to hell";
+	else if (req == WR_RELOAD)
+	{
+		if (cvar("g_balance_laser_secondary_gauntlet"))
+		if (weapon_prepareattack(0, cvar("g_balance_laser_secondary_refire")))
+		{
+			W_Laser_Attack_Gauntlet(TRUE);
+			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_laser_secondary_animtime"), w_ready);
+		}
+
+	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if (((w_deathtype & HITTYPE_SECONDARY) ? cvar("g_balance_laser_secondary_gauntlet") : cvar("g_balance_laser_primary_gauntlet")))
