@@ -9,14 +9,8 @@ void W_Reload()
 void W_SwitchWeapon(float imp)
 {
 	if (self.switchweapon != imp)
-	{
 		if (client_hasweapon(self, imp, TRUE, TRUE))
 			W_SwitchWeapon_Force(self, imp);
-	}
-	else
-	{
-		W_Reload();
-	}
 };
 
 .float weaponcomplainindex;
