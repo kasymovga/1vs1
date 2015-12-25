@@ -1117,15 +1117,25 @@ void readlevelcvars(void)
 
     g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
     g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-    g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
-    g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
-    g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
+    g_pickup_respawntime_healthsmall = cvar("g_pickup_respawntime_healthsmall");
+    g_pickup_respawntime_healthmedium = cvar("g_pickup_respawntime_healthmedium");
+    g_pickup_respawntime_healthlarge = cvar("g_pickup_respawntime_healthlarge");
+    g_pickup_respawntime_healthmega = cvar("g_pickup_respawntime_healthmega");
+    g_pickup_respawntime_armorsmall = cvar("g_pickup_respawntime_armorsmall");
+    g_pickup_respawntime_armormedium = cvar("g_pickup_respawntime_armormedium");
+    g_pickup_respawntime_armorbig = cvar("g_pickup_respawntime_armorbig");
+    g_pickup_respawntime_armorlarge = cvar("g_pickup_respawntime_armorlarge");
     g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
     g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
     g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-    g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
-    g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
-    g_pickup_respawntimejitter_long = cvar("g_pickup_respawntimejitter_long");
+    g_pickup_respawntimejitter_healthsmall = cvar("g_pickup_respawntimejitter_healthsmall");
+    g_pickup_respawntimejitter_healthmedium = cvar("g_pickup_respawntimejitter_healthmedium");
+    g_pickup_respawntimejitter_healthlarge = cvar("g_pickup_respawntimejitter_healthlarge");
+    g_pickup_respawntimejitter_healthmega = cvar("g_pickup_respawntimejitter_healthmega");
+    g_pickup_respawntimejitter_armorsmall = cvar("g_pickup_respawntimejitter_armorsmall");
+    g_pickup_respawntimejitter_armormedium = cvar("g_pickup_respawntimejitter_armormedium");
+    g_pickup_respawntimejitter_armorbig = cvar("g_pickup_respawntimejitter_armorbig");
+    g_pickup_respawntimejitter_armorlarge = cvar("g_pickup_respawntimejitter_armorlarge");
     g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
 
     if (g_minstagib) g_nixnex = g_weaponarena = 0;
