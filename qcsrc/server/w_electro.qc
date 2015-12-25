@@ -317,6 +317,7 @@ float w_electro(float req)
 		}
 		if (self.BUTTON_ATCK2)
 		if (time >= self.electro_secondarytime)
+		if (cvar("g_balance_electro_secondary"))
 		if (weapon_prepareattack(1, cvar("g_balance_electro_secondary_refire")))
 		{
 			W_Electro_Attack2();
