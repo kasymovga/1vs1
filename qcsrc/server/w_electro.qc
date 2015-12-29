@@ -124,7 +124,7 @@ void W_Electro_Attack_Lightning_Think()
 	W_SetupShot(self.owner, TRUE, 0, "", 0);
 	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
 	setorigin(self, (self.owner.origin + trace_endpos) * 0.5);
-	te_beam(self.owner, trace_endpos, w_shotorg - (w_shotdir * 10));
+	te_lightning1(self, trace_endpos, w_shotorg_visual);
 	self.nextthink = time;
 }
 
@@ -144,7 +144,7 @@ void W_Electro_Attack_Lightning()
 		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 	}
-	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self.lightning_beam);
+	traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self.lightning_beam, ANTILAG_LATENCY(self));
 	if (trace_fraction < 1)
 	{
 		if (trace_ent && trace_ent.takedamage)
