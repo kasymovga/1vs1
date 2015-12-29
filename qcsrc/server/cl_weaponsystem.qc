@@ -46,6 +46,8 @@ float WFRAME_IDLE = 2;
 float WFRAME_RELOAD = 3;
 .float wframe;
 
+.vector shotorg_visual;
+
 void(float fr, float t, void() func) weapon_thinkf;
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
@@ -131,7 +133,7 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	float nudge = 1; // added to traceline target and subtracted from result
 	local vector trueaimpoint;
 	local float oldsolid;
-	vector vecs, dv;
+	vector vecs, vecs_visual, dv;
 	oldsolid = ent.dphitcontentsmask;
 	if(ent.weapon == WEP_CAMPINGRIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -161,12 +163,18 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	}
 	else
 		vecs = '0 0 0';
+	vecs_visual = ent.weaponentity.shotorg_visual;
+	vecs_visual_y = -vecs_visual_y;
 
 	if(debug_shotorg != '0 0 0')
 		vecs = debug_shotorg;
 
 	dv = v_right * vecs_y + v_up * vecs_z;
-	w_shotorg = ent.origin + ent.view_ofs + dv;
+	w_shotorg = ent.origin + ent.view_ofs;
+
+	w_shotorg_visual = w_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z);
+
+	w_shotorg = w_shotorg + dv;
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
@@ -593,6 +601,7 @@ void CL_Weaponentity_Think()
 			vector v0;
 			v0 = self.movedir;
 			self.movedir = shotorg_adjust(v0, FALSE, FALSE);
+			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE);
 			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE) - v0;
 		}
 		self.owner.stat_shotorg = compressShotOrigin(self.movedir);
