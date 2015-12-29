@@ -569,11 +569,11 @@ void GetCvars(float f)
 	{
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
-		else if (s == "cl_gunalign")
+		else if (!self.fake_init && s == "cl_gunalign")
 		{
-			entity e = spawn();
-			e.owner = self;
-			Net_LinkEntity(e, FALSE, 0, FakeInit_SendEntity);
+			self.fake_init = spawn();
+			self.fake_init.owner = self;
+			Net_LinkEntity(self.fake_init, FALSE, 0, FakeInit_SendEntity);
 		}
 	}
 }

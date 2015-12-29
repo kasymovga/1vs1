@@ -1545,6 +1545,9 @@ void ClientDisconnect (void)
 	if (self.killindicator)
 		remove (self.killindicator);
 
+	if (self.fake_init)
+		remove (self.fake_init);
+
 	WaypointSprite_PlayerGone();
 
 	bot_relinkplayerlist();
