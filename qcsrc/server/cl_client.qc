@@ -983,7 +983,10 @@ void PutClientInServer (void)
 
 		// reset fields the weapons may use
         for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-            weapon_action(j, WR_RESETPLAYER);
+		{
+			weapon_action(j, WR_RESETPLAYER);
+			weapon_action(j, WR_CLEAR);
+		}
 
 		oldself = self;
 		self = spot;
@@ -1489,7 +1492,7 @@ void ClientDisconnect (void)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
-	W_Electro_Attack_Lightning_Remove(self);
+	weapon_action(self.weapon, WR_CLEAR);
 
 	SoundEntity_Detach(self);
 

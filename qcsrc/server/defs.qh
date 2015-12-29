@@ -244,6 +244,7 @@ float WR_SUICIDEMESSAGE = 7; // sets w_deathtypestring or leaves it alone (and m
 float WR_KILLMESSAGE    = 8; // sets w_deathtypestring or leaves it alone
 float WR_RELOAD         = 9; // does not need to do anything
 float WR_RESETPLAYER    = 10; // does not need to do anything
+float WR_CLEAR          = 11; // clear resources used by this weapon
 
 void weapon_defaultspawnfunc(float wpn);
 
