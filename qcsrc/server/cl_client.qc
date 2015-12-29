@@ -1002,6 +1002,33 @@ void PutClientInServer (void)
 	//	ctf_playerchanged();
 }
 
+float FakeInit_SendEntity(entity to, float sf)
+{
+	if (to != self.owner)
+		return FALSE;
+	print("Send fake init info for client\n");
+	float i;
+	vector client_hook_shotorigin;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
+	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
+	for(i = 1; i <= 24; ++i)
+		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
+	if(g_grappling_hook)
+		client_hook_shotorigin = '8 -8 -12';
+	else
+		client_hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, TRUE);
+	WriteCoord(MSG_ENTITY, client_hook_shotorigin_x);
+	WriteCoord(MSG_ENTITY, client_hook_shotorigin_y);
+	WriteCoord(MSG_ENTITY, client_hook_shotorigin_z);
+
+	if(sv_foginterval && world.fog != "")
+		WriteString(MSG_ENTITY, world.fog);
+	else
+		WriteString(MSG_ENTITY, "");
+	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
+	return TRUE;
+}
+
 float ClientInit_SendEntity(entity to, float sf)
 {
 	float i;
