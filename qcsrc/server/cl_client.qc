@@ -1006,7 +1006,6 @@ float FakeInit_SendEntity(entity to, float sf)
 {
 	if (to != self.owner)
 		return FALSE;
-	print("Send fake init info for client\n");
 	float i;
 	vector client_hook_shotorigin;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);

@@ -571,7 +571,6 @@ void GetCvars(float f)
 			self.switchweapon = w_getbestweapon(self);
 		else if (s == "cl_gunalign")
 		{
-			print("Get cl_gunalign, create fake init\n");
 			entity e = spawn();
 			e.owner = self;
 			Net_LinkEntity(e, FALSE, 0, FakeInit_SendEntity);
