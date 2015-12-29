@@ -368,9 +368,8 @@ float w_electro(float req)
 		}
 	}
 	else if (req == WR_RESETPLAYER)
-	{
 		self.electro_secondarytime = time;
+	else if (req == WR_CLEAR)
 		W_Electro_Attack_Lightning_Remove(self);
-	}
 	return TRUE;
 };
