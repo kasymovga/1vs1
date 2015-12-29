@@ -139,7 +139,7 @@ void W_Electro_Attack_Lightning()
 		self.lightning_beam.think = W_Electro_Attack_Lightning_Think;
 		self.lightning_beam.nextthink = time;
 		self.lightning_beam.lightning_beam_length = cvar("g_balance_electro_primary_lightning_length");
-		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		self.lightning_beam.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		sound(self.lightning_beam, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
