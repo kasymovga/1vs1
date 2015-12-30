@@ -40,8 +40,11 @@ void W_Laser_Attack_Gauntlet_Think()
 	if (trace_fraction < 1)
 	if (trace_ent)
 	if (trace_ent.takedamage)
+	{
 		Damage (trace_ent, self.owner, self.owner, frame_damage,
 				WEP_LASER | (self.melee_secondary ? HITTYPE_SECONDARY : 0), trace_endpos, w_shotdir * frame_force);
+		Damage_RecordDamage(self.owner, WEP_LASER, frame_damage);
+	}
 	self.melee_lastthink = time;
 	self.nextthink = time + self.melee_ticrate;
 }
