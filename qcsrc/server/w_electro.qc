@@ -121,7 +121,7 @@ void W_Electro_Attack_Lightning_Remove(entity own)
 void W_Electro_Attack_Lightning_Think()
 {
 	makevectors(self.owner.v_angle);
-	W_SetupShot(self.owner, TRUE, 0, "", 0);
+	W_SetupShot(self.owner, FALSE, 0, "", 0);
 	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
 	setorigin(self, (self.owner.origin + trace_endpos) * 0.5);
 	te_beam(self.owner, trace_endpos, w_shotorg_visual);
@@ -131,7 +131,7 @@ void W_Electro_Attack_Lightning_Think()
 void W_Electro_Attack_Lightning()
 {
 	float damage = cvar("g_balance_electro_primary_damage");
-	W_SetupShot(self, TRUE, 0, "", damage);
+	W_SetupShot(self, FALSE, 0, "", damage);
 	if (!self.lightning_beam) {
 		self.lightning_beam = spawn();
 		setorigin(self.lightning_beam, self.origin);
