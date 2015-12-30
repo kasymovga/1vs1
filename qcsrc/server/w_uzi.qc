@@ -101,7 +101,7 @@ float w_uzi(float req)
 			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_uzi_sustained_refire"), uzi_fire1_02);
 		}
 		if (self.BUTTON_ATCK2)
-		if (cvar("g_balance_uzi_secondary"))
+		if (cvar("g_balance_uzi_first"))
 		if (weapon_prepareattack(1, 0))
 		{
 			self.uzi_bulletcounter = 1;
