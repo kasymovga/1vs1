@@ -35,7 +35,7 @@ void W_Laser_Attack_Gauntlet_Think()
 	float frame_damage = self.melee_damage * damage_factor;
 	float frame_force = self.melee_force * damage_factor;
 	makevectors(self.owner.angles);
-	W_SetupShot(self.owner, FALSE, 0, "", self.melee_damage);
+	W_SetupShot(self.owner, FALSE, 0, "", frame_damage);
 	traceline(w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * self.melee_distance, MOVE_NORMAL, self);
 	if (trace_fraction < 1)
 	if (trace_ent)
