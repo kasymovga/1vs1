@@ -148,7 +148,10 @@ void W_Electro_Attack_Lightning()
 	if (trace_fraction < 1)
 	{
 		if (trace_ent && trace_ent.takedamage)
+		{
 			Damage (trace_ent, self, self, damage, WEP_ELECTRO, trace_endpos, w_shotdir * cvar("g_balance_electro_primary_force"));
+			Damage_RecordDamage(self, WEP_ELECTRO, damage);
+		}
 		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 			pointparticles(particleeffectnum("machinegun_impact"), trace_endpos, '0 0 0', 0);
 		W_Plasma_TriggerCombo(trace_endpos, cvar("g_balance_electro_primary_comboradius"), self);
