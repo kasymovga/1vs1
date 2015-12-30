@@ -184,6 +184,13 @@ void InitGameplayMode()
 	world.maxs = mi_max;
 
 	MapInfo_LoadMapSettings(mapname);
+	float force_gametype_restore = 0;
+	string force_gametype = cvar_string("force_gametype");
+	if (force_gametype != "")
+	{
+		force_gametype_restore = MapInfo_CurrentGametype();
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(force_gametype));
+	}
 
 	if not(cvar_value_issafe(world.fog))
 	{
@@ -404,6 +411,9 @@ void InitGameplayMode()
 	}
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
+
+	if (force_gametype_restore)
+		MapInfo_SwitchGameType(force_gametype_restore);
 }
 
 string GetClientVersionMessage() {
