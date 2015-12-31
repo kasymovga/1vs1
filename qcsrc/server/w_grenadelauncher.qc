@@ -21,7 +21,7 @@ float g_balance_grenadelauncher_secondary_radius;
 float g_balance_grenadelauncher_secondary_refire;
 float g_balance_grenadelauncher_secondary_speed;
 float g_balance_grenadelauncher_secondary_speed_up;
-float g_balance_grenadelauncher_seconday;
+float g_balance_grenadelauncher_secondary;
 
 void W_Grenade_Explode (void)
 {
@@ -211,7 +211,7 @@ float w_glauncher(float req)
 			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, w_ready);
 		}
 		if (self.BUTTON_ATCK2)
-		if (g_balance_grenadelauncher_seconday)
+		if (g_balance_grenadelauncher_secondary)
 		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire))
 		{
 			W_Grenade_Attack2();
@@ -276,7 +276,7 @@ float w_glauncher(float req)
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_refire);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed_up);
-		CACHE_CVAR(g_balance_grenadelauncher_seconday);
+		CACHE_CVAR(g_balance_grenadelauncher_secondary);
 	}
 	return TRUE;
 };
