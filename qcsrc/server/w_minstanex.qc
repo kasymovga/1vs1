@@ -1,3 +1,7 @@
+float g_balance_minstanex_ammo;
+float g_balance_minstanex_animtime;
+float g_balance_minstanex_refire;
+
 .float minstanex_lasthit;
 
 void W_MinstaNex_Attack (void)
@@ -80,7 +84,7 @@ void W_MinstaNex_Attack (void)
 		if (g_minstagib)
 			self.ammo_cells = self.ammo_cells - 1;
 		else
-			self.ammo_cells = self.ammo_cells - cvar("g_balance_minstanex_ammo");
+			self.ammo_cells = self.ammo_cells - g_balance_minstanex_ammo;
 	}
 }
 
@@ -173,16 +177,16 @@ float w_minstanex(float req)
 		if(self.ammo_cells>0)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
-			self.BUTTON_ATCK2 = bot_aim(cvar("g_balance_laser_primary_speed"), 0, cvar("g_balance_laser_primary_lifetime"), FALSE);
+			self.BUTTON_ATCK2 = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if (weapon_prepareattack(0, cvar("g_balance_minstanex_refire")))
+			if (weapon_prepareattack(0, g_balance_minstanex_refire))
 			{
 				W_MinstaNex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_minstanex_animtime"), w_ready);
+				weapon_thinkf(WFRAME_FIRE1, g_balance_minstanex_animtime, w_ready);
 			}
 		}
 		else if (self.BUTTON_ATCK2)
@@ -213,7 +217,7 @@ float w_minstanex(float req)
 		if (g_minstagib)
 			return self.ammo_cells >= 1;
 		else
-			return self.ammo_cells >= cvar("g_balance_minstanex_ammo");
+			return self.ammo_cells >= g_balance_minstanex_ammo;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
@@ -224,6 +228,12 @@ float w_minstanex(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
+	}
+	else if (req == WR_CVAR_CACHE)
+	{
+		CACHE_CVAR(g_balance_minstanex_ammo);
+		CACHE_CVAR(g_balance_minstanex_animtime);
+		CACHE_CVAR(g_balance_minstanex_refire);
 	}
 	return TRUE;
 };

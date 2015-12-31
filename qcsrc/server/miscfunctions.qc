@@ -105,6 +105,8 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
 #endif
 
+#define CACHE_CVAR(x) x = cvar(#x)
+
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
 
@@ -1032,6 +1034,17 @@ void readplayerstartcvars()
     warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
     warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
     warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
+
+	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+	{
+		(get_weaponinfo(j)).weapon_func(WR_CVAR_CACHE);
+	}
+	CACHE_CVAR(g_antilag);
+	CACHE_CVAR(g_antilag_bullets);
+	CACHE_CVAR(g_casings);
+	CACHE_CVAR(g_projectiles_newton_style);
+	CACHE_CVAR(g_balance_pause_fuel_regen);
+	CACHE_CVAR(g_balance_selfdamagepercent);
 }
 
 float g_bugrigs;

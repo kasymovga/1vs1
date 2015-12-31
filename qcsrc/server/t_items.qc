@@ -1537,7 +1537,7 @@ void target_items_use (void)
 	if(activator.ammo_fuel > f0)
 		activator.pauserotfuel_finished = max(activator.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
 	else if(activator.ammo_fuel < f0)
-		activator.pauseregen_finished = max(activator.pauseregen_finished, time + cvar("g_balance_pause_fuel_regen"));
+		activator.pauseregen_finished = max(activator.pauseregen_finished, time + g_balance_pause_fuel_regen);
 
 	if(activator.armorvalue > a0)
 		activator.pauserotarmor_finished = max(activator.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));

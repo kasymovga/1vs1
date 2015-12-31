@@ -789,7 +789,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			damage = damage * cvar("g_balance_powerup_invincible_takedamage");
 
 		if (targ == attacker)
-			damage = damage * cvar("g_balance_selfdamagepercent");	// Partial damage if the attacker hits himself
+			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
 		// CTF: reduce damage/force
 		if(g_ctf)

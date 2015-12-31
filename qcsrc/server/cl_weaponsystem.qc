@@ -262,7 +262,7 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 #else
 	if (antilag)
 	{
-		if (cvar("g_antilag") == 1) // switch to "ghost" if not hitting original
+		if (g_antilag == 1) // switch to "ghost" if not hitting original
 		{
 			traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
 			if (!trace_ent.takedamage)
@@ -278,7 +278,7 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 				}
 			}
 		}
-		else if(cvar("g_antilag") == 3) // client side hitscan
+		else if(g_antilag == 3) // client side hitscan
 		{
 			if (ent.cursor_trace_ent)                 // client was aiming at someone
 			if (ent.cursor_trace_ent != ent)         // just to make sure
@@ -1191,8 +1191,8 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
-		if (self.weapon == WEP_LASER && ((fr == WFRAME_FIRE2 && cvar("g_balance_laser_secondary_gauntlet")) ||
-				(fr == WFRAME_FIRE1 && cvar("g_balance_laser_primary_gauntlet"))))
+		if (self.weapon == WEP_LASER && ((fr == WFRAME_FIRE2 && g_balance_laser_secondary_gauntlet) ||
+				(fr == WFRAME_FIRE1 && g_balance_laser_primary_gauntlet)))
 			anim = self.anim_melee;
 		else
 			anim = self.anim_shoot;
@@ -1211,7 +1211,6 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 	vector mdirection;
 	float mspeed;
 	float outspeed;
-	float nstyle;
 	vector outvelocity;
 
 	mvelocity = mvelocity * g_weaponspeedfactor;
@@ -1219,18 +1218,17 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
 
-	nstyle = cvar("g_projectiles_newton_style");
-	if(nstyle == 0)
+	if(g_projectiles_newton_style == 0)
 	{
 		// absolute velocity
 		outvelocity = mvelocity;
 	}
-	else if(nstyle == 1)
+	else if(g_projectiles_newton_style == 1)
 	{
 		// true Newtonian projectiles
 		outvelocity = pvelocity + mvelocity;
 	}
-	else if(nstyle == 2)
+	else if(g_projectiles_newton_style == 2)
 	{
 		// true Newtonian projectiles with automatic aim adjustment
 		//
@@ -1259,14 +1257,14 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 		outspeed = bound(mspeed * cvar("g_projectiles_newton_style_2_minfactor"), outspeed, mspeed * cvar("g_projectiles_newton_style_2_maxfactor"));
 		outvelocity = mdirection * outspeed;
 	}
-	else if(nstyle == 3)
+	else if(g_projectiles_newton_style == 3)
 	{
 		// pseudo-Newtonian:
 		outspeed = mspeed + mdirection * pvelocity;
 		outspeed = bound(mspeed * 0.7, outspeed, mspeed * 5.0);
 		outvelocity = mdirection * outspeed;
 	}
-	else if(nstyle == 4)
+	else if(g_projectiles_newton_style == 4)
 	{
 		// tZorkian:
 		outspeed = mspeed + vlen(pvelocity);

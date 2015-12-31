@@ -1,3 +1,22 @@
+float g_balance_hook_primary_animtime;
+float g_balance_hook_primary_fuel;
+float g_balance_hook_primary_hooked_fuel;
+float g_balance_hook_primary_hooked_time_free;
+float g_balance_hook_primary_hooked_time_max;
+float g_balance_hook_primary_refire;
+float g_balance_hook_secondary_ammo;
+float g_balance_hook_secondary_animtime;
+float g_balance_hook_secondary_damage;
+float g_balance_hook_secondary_duration;
+float g_balance_hook_secondary_edgedamage;
+float g_balance_hook_secondary_force;
+float g_balance_hook_secondary_gravity;
+float g_balance_hook_secondary_lifetime;
+float g_balance_hook_secondary_power;
+float g_balance_hook_secondary_radius;
+float g_balance_hook_secondary_refire;
+float g_balance_hook_secondary_speed;
+
 .float dmg;
 .float dmg_edge;
 .float dmg_radius;
@@ -37,12 +56,12 @@ void W_Hook_Explode2 (void)
 
 	self.think = W_Hook_ExplodeThink;
 	self.nextthink = time;
-	self.dmg = cvar("g_balance_hook_secondary_damage");
-	self.dmg_edge = cvar("g_balance_hook_secondary_edgedamage");
-	self.dmg_radius = cvar("g_balance_hook_secondary_radius");
-	self.dmg_force = cvar("g_balance_hook_secondary_force");
-	self.dmg_power = cvar("g_balance_hook_secondary_power");
-	self.dmg_duration = cvar("g_balance_hook_secondary_duration");
+	self.dmg = g_balance_hook_secondary_damage;
+	self.dmg_edge = g_balance_hook_secondary_edgedamage;
+	self.dmg_radius = g_balance_hook_secondary_radius;
+	self.dmg_force = g_balance_hook_secondary_force;
+	self.dmg_power = g_balance_hook_secondary_power;
+	self.dmg_duration = g_balance_hook_secondary_duration;
 	self.teleport_time = time;
 	self.dmg_last = 1;
 	self.movetype = MOVETYPE_NONE;
@@ -59,30 +78,30 @@ void W_Hook_Attack2()
 	local entity gren;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - cvar("g_balance_hook_secondary_ammo");
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", cvar("g_balance_hook_secondary_damage"));
+		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
+	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", g_balance_hook_secondary_damage);
 
 	gren = spawn ();
 	gren.owner = self;
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = cvar("g_balance_hook_secondary_damage");
+	gren.bot_dodgerating = g_balance_hook_secondary_damage;
 	gren.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
-	gren.nextthink = time + cvar("g_balance_hook_secondary_lifetime");
+	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = adaptor_think2use;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
 
-	gren.velocity = '0 0 1' * cvar("g_balance_hook_secondary_speed");
-	if(cvar("g_projectiles_newton_style"))
+	gren.velocity = '0 0 1' * g_balance_hook_secondary_speed;
+	if(g_projectiles_newton_style)
 		gren.velocity = gren.velocity + self.velocity;
 
-	gren.gravity = cvar("g_balance_hook_secondary_gravity");
+	gren.gravity = g_balance_hook_secondary_gravity;
 	//W_SetupProjectileVelocity(gren); // just falling down!
 
 	gren.angles = '0 0 0';
@@ -121,41 +140,41 @@ float w_hook(float req)
 			if (weapon_prepareattack(0, -1))
 			{
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-					self.ammo_fuel = self.ammo_fuel - cvar("g_balance_hook_primary_fuel");
+					self.ammo_fuel = self.ammo_fuel - g_balance_hook_primary_fuel;
 				self.hook_state |= HOOK_FIRING;
-				weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_hook_primary_animtime"), w_ready);				
+				weapon_thinkf(WFRAME_FIRE1, g_balance_hook_primary_animtime, w_ready);				
 			}
 		}
 
 		if (self.BUTTON_ATCK2)
 		{
-			if (weapon_prepareattack(1, cvar("g_balance_hook_secondary_refire")))
+			if (weapon_prepareattack(1, g_balance_hook_secondary_refire))
 			{
 				W_Hook_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_hook_secondary_animtime"), w_ready);
+				weapon_thinkf(WFRAME_FIRE2, g_balance_hook_secondary_animtime, w_ready);
 			}
 		}
 
 		if(self.hook)
 		{
 			// if hooked, no bombs, and increase the timer
-			self.hook_refire = max(self.hook_refire, time + cvar("g_balance_hook_primary_refire"));
+			self.hook_refire = max(self.hook_refire, time + g_balance_hook_primary_refire);
 
 			// hook also inhibits health regeneration, but only for 1 second
 			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_fuel_regen"));
+				self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
 		}
 
 		if(self.hook && self.hook.state == 1)
 		{
-			hooked_time_max = cvar("g_balance_hook_primary_hooked_time_max");			
+			hooked_time_max = g_balance_hook_primary_hooked_time_max;			
 			if (hooked_time_max > 0)
 			{
 				if ( time > self.hook_time_hooked + hooked_time_max )
 					self.hook_state |= HOOK_REMOVING;
 			}
 			
-			hooked_fuel = cvar("g_balance_hook_primary_hooked_fuel");
+			hooked_fuel = g_balance_hook_primary_hooked_fuel;
 			if (hooked_fuel > 0)
 			{
 				if ( time > self.hook_time_fueldecrease )
@@ -181,7 +200,7 @@ float w_hook(float req)
 		else
 		{
 			self.hook_time_hooked = time;				
-			self.hook_time_fueldecrease = time + cvar("g_balance_hook_primary_hooked_time_free");
+			self.hook_time_fueldecrease = time + g_balance_hook_primary_hooked_time_free;
 		}
 
 		if (self.BUTTON_CROUCH)
@@ -226,11 +245,11 @@ float w_hook(float req)
 		if(self.hook)
 			return self.ammo_fuel > 0;
 		else
-			return self.ammo_fuel >= cvar("g_balance_hook_primary_fuel");
+			return self.ammo_fuel >= g_balance_hook_primary_fuel;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		return self.ammo_cells >= cvar("g_balance_hook_secondary_ammo");
+		return self.ammo_cells >= g_balance_hook_secondary_ammo;
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
@@ -239,6 +258,27 @@ float w_hook(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.hook_refire = time;
+	}
+	else if (req == WR_CVAR_CACHE)
+	{
+		CACHE_CVAR(g_balance_hook_primary_animtime);
+		CACHE_CVAR(g_balance_hook_primary_fuel);
+		CACHE_CVAR(g_balance_hook_primary_hooked_fuel);
+		CACHE_CVAR(g_balance_hook_primary_hooked_time_free);
+		CACHE_CVAR(g_balance_hook_primary_hooked_time_max);
+		CACHE_CVAR(g_balance_hook_primary_refire);
+		CACHE_CVAR(g_balance_hook_secondary_ammo);
+		CACHE_CVAR(g_balance_hook_secondary_animtime);
+		CACHE_CVAR(g_balance_hook_secondary_damage);
+		CACHE_CVAR(g_balance_hook_secondary_duration);
+		CACHE_CVAR(g_balance_hook_secondary_edgedamage);
+		CACHE_CVAR(g_balance_hook_secondary_force);
+		CACHE_CVAR(g_balance_hook_secondary_gravity);
+		CACHE_CVAR(g_balance_hook_secondary_lifetime);
+		CACHE_CVAR(g_balance_hook_secondary_power);
+		CACHE_CVAR(g_balance_hook_secondary_radius);
+		CACHE_CVAR(g_balance_hook_secondary_refire);
+		CACHE_CVAR(g_balance_hook_secondary_speed);
 	}
 	return TRUE;
 };

@@ -395,8 +395,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
 	}
 
-	if(cvar("g_antilag_bullets"))
-	if(pSpeed >= cvar("g_antilag_bullets"))
+	if(g_antilag_bullets)
+	if(pSpeed >= g_antilag_bullets)
 	{
 		float eff;
 
@@ -411,7 +411,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			lag = 0;
 		if(clienttype(self) != CLIENTTYPE_REAL)
 			lag = 0;
-		if(cvar("g_antilag") == 0)
+		if(g_antilag == 0)
 			lag = 0; // only do hitscan, but no antilag
 
 		if(lag)

@@ -1,3 +1,22 @@
+float g_balance_shotgun_primary_ammo;
+float g_balance_shotgun_primary_animtime;
+float g_balance_shotgun_primary_bulletconstant;
+float g_balance_shotgun_primary_bullets;
+float g_balance_shotgun_primary_damage;
+float g_balance_shotgun_primary_force;
+float g_balance_shotgun_primary_refire;
+float g_balance_shotgun_primary_speed;
+float g_balance_shotgun_primary_spread;
+float g_balance_shotgun_secondary;
+float g_balance_shotgun_secondary_ammo;
+float g_balance_shotgun_secondary_animtime;
+float g_balance_shotgun_secondary_bulletconstant;
+float g_balance_shotgun_secondary_bullets;
+float g_balance_shotgun_secondary_damage;
+float g_balance_shotgun_secondary_force;
+float g_balance_shotgun_secondary_refire;
+float g_balance_shotgun_secondary_speed;
+float g_balance_shotgun_secondary_spread;
 
 void W_Shotgun_Attack (void)
 {
@@ -11,25 +30,25 @@ void W_Shotgun_Attack (void)
 	float	bulletconstant;
 	local entity flash;
 
-	ammoamount = cvar("g_balance_shotgun_primary_ammo");
-	bullets = cvar("g_balance_shotgun_primary_bullets");
-	d = cvar("g_balance_shotgun_primary_damage");
-	f = cvar("g_balance_shotgun_primary_force");
-	spread = cvar("g_balance_shotgun_primary_spread");
-	bulletspeed = cvar("g_balance_shotgun_primary_speed");
-	bulletconstant = cvar("g_balance_shotgun_primary_bulletconstant");
+	ammoamount = g_balance_shotgun_primary_ammo;
+	bullets = g_balance_shotgun_primary_bullets;
+	d = g_balance_shotgun_primary_damage;
+	f = g_balance_shotgun_primary_force;
+	spread = g_balance_shotgun_primary_spread;
+	bulletspeed = g_balance_shotgun_primary_speed;
+	bulletconstant = g_balance_shotgun_primary_bulletconstant;
 
-	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", cvar("g_balance_shotgun_primary_damage"));
+	W_SetupShot (self, g_antilag_bullets && bulletspeed >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_damage);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - ammoamount;
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, cvar("g_balance_shotgun_primary_ammo"));
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
 
 	// casing code
-	if (cvar("g_casings") >= 1)
+	if (g_casings >= 1)
 		for (sc = 0;sc < ammoamount;sc = sc + 1)
 			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
@@ -55,25 +74,25 @@ void W_Shotgun_Attack2 (void)
 	float	bulletconstant;
 	local entity flash;
 
-	ammoamount = cvar("g_balance_shotgun_secondary_ammo");
-	bullets = cvar("g_balance_shotgun_secondary_bullets");
-	d = cvar("g_balance_shotgun_secondary_damage");
-	f = cvar("g_balance_shotgun_secondary_force");
-	spread = cvar("g_balance_shotgun_secondary_spread");
-	bulletspeed = cvar("g_balance_shotgun_secondary_speed");
-	bulletconstant = cvar("g_balance_shotgun_secondary_bulletconstant");
+	ammoamount = g_balance_shotgun_secondary_ammo;
+	bullets = g_balance_shotgun_secondary_bullets;
+	d = g_balance_shotgun_secondary_damage;
+	f = g_balance_shotgun_secondary_force;
+	spread = g_balance_shotgun_secondary_spread;
+	bulletspeed = g_balance_shotgun_secondary_speed;
+	bulletconstant = g_balance_shotgun_secondary_bulletconstant;
 
-	W_SetupShot (self, cvar("g_antilag_bullets") && bulletspeed >= cvar("g_antilag_bullets"), 5, "weapons/shotgun_fire.wav", cvar("g_balance_shotgun_secondary_damage"));
+	W_SetupShot (self, g_antilag_bullets && bulletspeed >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_damage);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN | HITTYPE_SECONDARY, 0, 1, bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - ammoamount;
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, cvar("g_balance_shotgun_secondary_ammo"));
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, g_balance_shotgun_secondary_ammo);
 
 	// casing code
-	if (cvar("g_casings") >= 1)
+	if (g_casings >= 1)
 		for (sc = 0;sc < ammoamount;sc = sc + 1)
 			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
@@ -90,12 +109,12 @@ void W_Shotgun_Attack2 (void)
 void shotgun_fire2_03()
 {
 	W_Shotgun_Attack2();
-	weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), w_ready);
+	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, w_ready);
 }
 void shotgun_fire2_02()
 {
 	W_Shotgun_Attack2();
-	weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), shotgun_fire2_03);
+	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, shotgun_fire2_03);
 }
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
@@ -110,17 +129,17 @@ float w_shotgun(float req)
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, cvar("g_balance_shotgun_primary_refire")))
+		if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
 		{
 			W_Shotgun_Attack();
-			weapon_thinkf(WFRAME_FIRE1, cvar("g_balance_shotgun_primary_animtime"), w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, w_ready);
 		}
 		if (self.BUTTON_ATCK2)
-		if (cvar("g_balance_shotgun_secondary"))
-		if (weapon_prepareattack(1, cvar("g_balance_shotgun_secondary_refire")))
+		if (g_balance_shotgun_secondary)
+		if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire))
 		{
 			W_Shotgun_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, cvar("g_balance_shotgun_secondary_animtime"), shotgun_fire2_02);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, shotgun_fire2_02);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -132,14 +151,36 @@ float w_shotgun(float req)
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_SHOTGUN);
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_shells >= cvar("g_balance_shotgun_primary_ammo");
+		return self.ammo_shells >= g_balance_shotgun_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_shells >= cvar("g_balance_shotgun_secondary_ammo") * 3;
+		return self.ammo_shells >= g_balance_shotgun_secondary_ammo * 3;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)
 	{
 		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
+	}
+	else if (req == WR_CVAR_CACHE)
+	{
+		CACHE_CVAR(g_balance_shotgun_primary_ammo);
+		CACHE_CVAR(g_balance_shotgun_primary_animtime);
+		CACHE_CVAR(g_balance_shotgun_primary_bulletconstant);
+		CACHE_CVAR(g_balance_shotgun_primary_bullets);
+		CACHE_CVAR(g_balance_shotgun_primary_damage);
+		CACHE_CVAR(g_balance_shotgun_primary_force);
+		CACHE_CVAR(g_balance_shotgun_primary_refire);
+		CACHE_CVAR(g_balance_shotgun_primary_speed);
+		CACHE_CVAR(g_balance_shotgun_primary_spread);
+		CACHE_CVAR(g_balance_shotgun_secondary);
+		CACHE_CVAR(g_balance_shotgun_secondary_ammo);
+		CACHE_CVAR(g_balance_shotgun_secondary_animtime);
+		CACHE_CVAR(g_balance_shotgun_secondary_bulletconstant);
+		CACHE_CVAR(g_balance_shotgun_secondary_bullets);
+		CACHE_CVAR(g_balance_shotgun_secondary_damage);
+		CACHE_CVAR(g_balance_shotgun_secondary_force);
+		CACHE_CVAR(g_balance_shotgun_secondary_refire);
+		CACHE_CVAR(g_balance_shotgun_secondary_speed);
+		CACHE_CVAR(g_balance_shotgun_secondary_spread);
 	}
 	return TRUE;
 };
