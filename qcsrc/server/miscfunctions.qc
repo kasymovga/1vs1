@@ -1210,6 +1210,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_projectiles_newton_style);
 	CACHE_CVAR(g_balance_pause_fuel_regen);
 	CACHE_CVAR(g_balance_selfdamagepercent);
+	CACHE_CVAR(sv_gameplayfix_skipnonsolid);
 }
 
 /*

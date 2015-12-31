@@ -483,6 +483,7 @@ void spawnfunc_worldspawn (void)
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
 	readlevelcvars();
+	PhysicReadCvars();
 	GrappleHookInit();
 
 	player_count = 0;

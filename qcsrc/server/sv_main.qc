@@ -174,27 +174,8 @@ void StartFrame (void)
 	UncustomizeEntitiesRun();
 	InitializeEntitiesRun();
 
-	sv_gravity = cvar("sv_gravity");
-	sv_maxairspeed = cvar("sv_maxairspeed");
-	sv_maxspeed = cvar ("sv_maxspeed");
-	sv_friction = cvar ("sv_friction");
-	sv_accelerate = cvar ("sv_accelerate");
-	sv_airaccelerate = cvar("sv_airaccelerate");
-	sv_airaccel_sideways_friction = cvar("sv_airaccel_sideways_friction");
-	sv_airaccel_qw = cvar("sv_airaccel_qw");
-	sv_stopspeed = cvar ("sv_stopspeed");
-	sv_airstopaccelerate = cvar("sv_airstopaccelerate");
-	sv_airstrafeaccelerate = cvar("sv_airstrafeaccelerate");
-	sv_maxairstrafespeed = cvar("sv_maxairstrafespeed");
-	sv_aircontrol = cvar("sv_aircontrol");
-	sv_warsowbunny_airforwardaccel = cvar("sv_warsowbunny_airforwardaccel");
-	sv_warsowbunny_accel = cvar("sv_warsowbunny_accel");
-	sv_warsowbunny_topspeed = cvar("sv_warsowbunny_topspeed");
-	sv_warsowbunny_turnaccel = cvar("sv_warsowbunny_turnaccel");
-	sv_warsowbunny_backtosideratio = cvar("sv_warsowbunny_backtosideratio");
 	teamplay = cvar ("teamplay");
 	sys_ticrate = cvar("sys_ticrate");
-	sv_gameplayfix_skipnonsolid = cvar("sv_gameplayfix_skipnonsolid");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout

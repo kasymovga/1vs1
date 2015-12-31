@@ -1164,3 +1164,25 @@ void SV_PlayerPhysics()
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
 };
+
+void PhysicReadCvars()
+{
+	CACHE_CVAR(sv_gravity);
+	CACHE_CVAR(sv_maxairspeed);
+	CACHE_CVAR(sv_maxspeed);
+	CACHE_CVAR(sv_friction);
+	CACHE_CVAR(sv_accelerate);
+	CACHE_CVAR(sv_airaccelerate);
+	CACHE_CVAR(sv_airaccel_sideways_friction);
+	CACHE_CVAR(sv_airaccel_qw);
+	CACHE_CVAR(sv_stopspeed);
+	CACHE_CVAR(sv_airstopaccelerate);
+	CACHE_CVAR(sv_airstrafeaccelerate);
+	CACHE_CVAR(sv_maxairstrafespeed);
+	CACHE_CVAR(sv_aircontrol);
+	CACHE_CVAR(sv_warsowbunny_airforwardaccel);
+	CACHE_CVAR(sv_warsowbunny_accel);
+	CACHE_CVAR(sv_warsowbunny_topspeed);
+	CACHE_CVAR(sv_warsowbunny_turnaccel);
+	CACHE_CVAR(sv_warsowbunny_backtosideratio);
+}
