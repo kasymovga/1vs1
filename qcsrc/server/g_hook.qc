@@ -47,6 +47,16 @@ And you should be done!
 
 ============================================*/
 
+float g_balance_grapplehook_airfriction;
+float g_balance_grapplehook_force_rubber;
+float g_balance_grapplehook_force_rubber_overstretch;
+float g_balance_grapplehook_health;
+float g_balance_grapplehook_length_min;
+float g_balance_grapplehook_speed_fly;
+float g_balance_grapplehook_speed_pull;
+float g_balance_grapplehook_stretch;
+float g_grappling_hook_tarzan;
+
 .string aiment_classname;
 .float aiment_deadflag;
 void SetMovetypeFollow(entity ent, entity e)
@@ -115,7 +125,7 @@ void GrapplingHook_Stop()
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
+	float spd, dist, newlength;
 	vector dir, org, end, v0, dv;
 	if(self.owner.health <= 0 || self.owner.hook != self)	// how did that happen?
 	{														// well, better fix it anyway
@@ -163,32 +173,11 @@ void GrapplingHookThink()
 
 	if(self.state == 1)
 	{
-		pullspeed = cvar("g_balance_grapplehook_speed_pull");//2000;
-		// speed the rope is pulled with
-
-		rubberforce = cvar("g_balance_grapplehook_force_rubber");//2000;
-		// force the rope will use if it is stretched
-
-		rubberforce_overstretch = cvar("g_balance_grapplehook_force_rubber_overstretch");//1000;
-		// force the rope will use if it is stretched
-
-		minlength = cvar("g_balance_grapplehook_length_min");//100;
-		// minimal rope length
-		// if the rope goes below this length, it isn't pulled any more
-
-		ropestretch = cvar("g_balance_grapplehook_stretch");//400;
-		// if the rope is stretched by more than this amount, more rope is
-		// given to you again
-
-		ropeairfriction = cvar("g_balance_grapplehook_airfriction");//0.2
-		// while hanging on the rope, this friction component will help you a
-		// bit to control the rope
-
 		dir = self.origin - org;
 		dist = vlen(dir);
 		dir = normalize(dir);
 
-		if(cvar("g_grappling_hook_tarzan"))
+		if(g_grappling_hook_tarzan)
 		{
 			v0 = self.owner.velocity;
 
@@ -196,13 +185,13 @@ void GrapplingHookThink()
 			if(self.owner.hook_state & HOOK_PULLING)
 			{
 				newlength = self.hook_length;
-				newlength = max(newlength - pullspeed * frametime, minlength);
+				newlength = max(newlength - g_balance_grapplehook_speed_pull * frametime, g_balance_grapplehook_length_min);
 
-				if(newlength < dist - ropestretch) // overstretched?
+				if(newlength < dist - g_balance_grapplehook_stretch) // overstretched?
 				{
-					newlength = dist - ropestretch;
+					newlength = dist - g_balance_grapplehook_stretch;
 					if(self.owner.velocity * dir < 0) // only if not already moving in hook direction
-						self.owner.velocity = self.owner.velocity + frametime * dir * rubberforce_overstretch;
+						self.owner.velocity = self.owner.velocity + frametime * dir * g_balance_grapplehook_force_rubber_overstretch;
 				}
 
 				self.hook_length = newlength;
@@ -216,12 +205,12 @@ void GrapplingHookThink()
 			else
 			{
 				// then pull the player
-				spd = bound(0, (dist - self.hook_length) / ropestretch, 1);
-				self.owner.velocity = self.owner.velocity * (1 - frametime * ropeairfriction);
-				self.owner.velocity = self.owner.velocity + frametime * dir * spd * rubberforce;
+				spd = bound(0, (dist - self.hook_length) / g_balance_grapplehook_stretch, 1);
+				self.owner.velocity = self.owner.velocity * (1 - frametime * g_balance_grapplehook_airfriction);
+				self.owner.velocity = self.owner.velocity + frametime * dir * spd * g_balance_grapplehook_force_rubber;
 
 				dv = ((self.owner.velocity - v0) * dir) * dir;
-				if(cvar("g_grappling_hook_tarzan") >= 2)
+				if(g_grappling_hook_tarzan >= 2)
 				{
 					if(self.aiment.movetype == MOVETYPE_WALK)
 					{
@@ -241,9 +230,9 @@ void GrapplingHookThink()
 			end = self.origin - dir*50;
 			dist = vlen(end - org);
 			if(dist < 200)
-				spd = dist * (pullspeed / 200);
+				spd = dist * (g_balance_grapplehook_speed_pull / 200);
 			else
-				spd = pullspeed;
+				spd = g_balance_grapplehook_speed_pull;
 			if(spd < 50)
 				spd = 0;
 			self.owner.velocity = dir*spd;
@@ -340,7 +329,7 @@ void FireGrapplingHook (void)
 
 	missile.state = 0; // not latched onto anything
 
-	missile.velocity = v_forward * cvar("g_balance_grapplehook_speed_fly");
+	missile.velocity = v_forward * g_balance_grapplehook_speed_fly;
 	W_SetupProjectileVelocity(missile);
 
 	missile.angles = vectoangles (missile.velocity);
@@ -352,7 +341,7 @@ void FireGrapplingHook (void)
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 
-	missile.health = cvar("g_balance_grapplehook_health");//120
+	missile.health = g_balance_grapplehook_health;//120
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
@@ -467,6 +456,15 @@ void GrapplingHookFrame()
 
 void GrappleHookInit()
 {
+	CACHE_CVAR(g_balance_grapplehook_airfriction);
+	CACHE_CVAR(g_balance_grapplehook_force_rubber);
+	CACHE_CVAR(g_balance_grapplehook_force_rubber_overstretch);
+	CACHE_CVAR(g_balance_grapplehook_health);
+	CACHE_CVAR(g_balance_grapplehook_length_min);
+	CACHE_CVAR(g_balance_grapplehook_speed_fly);
+	CACHE_CVAR(g_balance_grapplehook_speed_pull);
+	CACHE_CVAR(g_balance_grapplehook_stretch);
+	CACHE_CVAR(g_grappling_hook_tarzan);
 	if(g_grappling_hook)
 		hook_shotorigin = '8 -8 -12';
 	else
