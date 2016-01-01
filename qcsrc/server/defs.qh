@@ -91,6 +91,8 @@ string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
 string sv_announcer_extra_twohits;
 
+float sv_ready_restart_after_countdown;
+
 float sv_gameplayfix_skipnonsolid;
 
 // Fields

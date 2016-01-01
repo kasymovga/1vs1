@@ -19,6 +19,29 @@ float sv_warsowbunny_accel;
 float sv_warsowbunny_topspeed;
 float sv_warsowbunny_turnaccel;
 float sv_warsowbunny_backtosideratio;
+float sv_jumpvelocity;
+float sv_gameplayfix_q2airaccelerate;
+float sv_friction_on_land;
+float speedmeter;
+float g_nick_flood_penalty_yellow;
+float g_nick_flood_penalty_red;
+float g_balance_rune_speed_combo_jumpheight;
+float g_balance_rune_speed_jumpheight;
+float g_balance_curse_slow_jumpheight;
+float developer_shtest;
+float g_balance_curse_slow_moverate;
+float g_balance_rune_speed_combo_moverate;
+float g_balance_rune_speed_moverate;
+float g_jetpack_acceleration_side;
+float g_jetpack_acceleration_up;
+float g_jetpack_antigravity;
+float g_jetpack_fuel;
+float g_jetpack_maxspeed_side;
+float g_jetpack_maxspeed_up;
+float g_minstagib_speed_jumpheight;
+float g_minstagib_speed_moverate;
+float g_nexball_basketball_carrier_speed;
+float sv_spectator_speed_multiplier;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -44,9 +67,6 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	float mjumpheight;
-
-	mjumpheight = cvar("sv_jumpvelocity");
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		if (self.watertype == CONTENT_WATER)
@@ -78,33 +98,33 @@ void PlayerJump (void)
 		if(self.runes & RUNE_SPEED)
 		{
 			if(self.runes & CURSE_SLOW)
-				mjumpheight = mjumpheight * cvar("g_balance_rune_speed_combo_jumpheight");
+				sv_jumpvelocity = sv_jumpvelocity * g_balance_rune_speed_combo_jumpheight;
 			else
-				mjumpheight = mjumpheight * cvar("g_balance_rune_speed_jumpheight");
+				sv_jumpvelocity = sv_jumpvelocity * g_balance_rune_speed_jumpheight;
 		}
 		else if(self.runes & CURSE_SLOW)
 		{
-			mjumpheight = mjumpheight * cvar("g_balance_curse_slow_jumpheight");
+			sv_jumpvelocity = sv_jumpvelocity * g_balance_curse_slow_jumpheight;
 		}
 	}
 
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 	{
-		mjumpheight = mjumpheight * cvar("g_minstagib_speed_jumpheight");
+		sv_jumpvelocity = sv_jumpvelocity * g_minstagib_speed_jumpheight;
 	}
 
 	if(!(self.lastflags & FL_ONGROUND))
 	{
-		if(cvar("speedmeter"))
+		if(speedmeter)
 			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 		if(self.lastground < time - 0.3)
-			self.velocity = self.velocity * (1 - cvar("sv_friction_on_land"));
+			self.velocity = self.velocity * (1 - sv_friction_on_land);
 		if(self.jumppadcount > 1)
 			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 	}
 
-	self.velocity_z = self.velocity_z + mjumpheight;
+	self.velocity_z = self.velocity_z + sv_jumpvelocity;
 	self.oldvelocity_z = self.velocity_z;
 
 	self.flags &~= FL_ONGROUND;
@@ -419,7 +439,7 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	float addspeed;
 	float savespeed;
 
-	if(cvar("sv_gameplayfix_q2airaccelerate"))
+	if(sv_gameplayfix_q2airaccelerate)
 		wishspeed0 = wishspeed;
 
 	savespeed = self.velocity * self.velocity;
@@ -620,13 +640,13 @@ void SV_PlayerPhysics()
 	self.v_angle_old = self.v_angle;
 
 	if(time < self.nickspamtime)
-	if(self.nickspamcount >= cvar("g_nick_flood_penalty_yellow"))
+	if(self.nickspamcount >= g_nick_flood_penalty_yellow)
 	{
 		// slight annoyance for nick change scripts
 		self.movement = -1 * self.movement;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = self.BUTTON_ZOOM = self.BUTTON_CROUCH = self.BUTTON_HOOK = self.BUTTON_USE = 0;
 
-		if(self.nickspamcount >= cvar("g_nick_flood_penalty_red")) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
+		if(self.nickspamcount >= g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
 		{
 			self.angles_x = random() * 360;
 			self.angles_y = random() * 360;
@@ -645,7 +665,7 @@ void SV_PlayerPhysics()
 			shtest_score = self.shtest_accumulator / (SHTEST_DELTA + time - self.shtest_next);
 			if(shtest_score > SHTEST_THRESHOLD)
 				print("TIME PARADOX: shtest for ", self.netname, " said ", ftos(shtest_score), "\n");
-			else if(cvar("developer_shtest"))
+			else if(developer_shtest)
 				dprint("okay: shtest for ", self.netname, " said ", ftos(shtest_score), "\n");
 		}
 		self.shtest_next = time + SHTEST_DELTA;
@@ -667,7 +687,7 @@ void SV_PlayerPhysics()
 		not_allowed_to_move = 0;
 		if(self.race_penalty)
 			not_allowed_to_move = 1;
-		if(!cvar("sv_ready_restart_after_countdown"))
+		if(!sv_ready_restart_after_countdown)
 		if(time < game_starttime)
 			not_allowed_to_move = 1;
 
@@ -713,24 +733,24 @@ void SV_PlayerPhysics()
 		if(self.runes & RUNE_SPEED)
 		{
 			if(self.runes & CURSE_SLOW)
-				maxspd_mod = maxspd_mod * cvar("g_balance_rune_speed_combo_moverate");
+				maxspd_mod = maxspd_mod * g_balance_rune_speed_combo_moverate;
 			else
-				maxspd_mod = maxspd_mod * cvar("g_balance_rune_speed_moverate");
+				maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
 		}
 		else if(self.runes & CURSE_SLOW)
 		{
-			maxspd_mod = maxspd_mod * cvar("g_balance_curse_slow_moverate");
+			maxspd_mod = maxspd_mod * g_balance_curse_slow_moverate;
 		}
 	}
 
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 	{
-		maxspd_mod = cvar("g_minstagib_speed_moverate");
+		maxspd_mod = g_minstagib_speed_moverate;
 	}
 
 	if(g_nexball && self.ballcarried)
 	{
-		maxspd_mod = cvar("g_nexball_basketball_carrier_speed");
+		maxspd_mod = g_nexball_basketball_carrier_speed;
 	}
 
 	swampspd_mod = 1;
@@ -740,7 +760,7 @@ void SV_PlayerPhysics()
 
 	if(self.classname != "player")
 	{
-		maxspd_mod = cvar("sv_spectator_speed_multiplier");
+		maxspd_mod = sv_spectator_speed_multiplier;
 		if(!self.spectatorspeed)
 			self.spectatorspeed = maxspd_mod;
 		if(self.impulse && self.impulse <= 19)
@@ -928,7 +948,7 @@ void SV_PlayerPhysics()
 			PM_Accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 		}
 	}
-	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!cvar("g_jetpack_fuel") || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO))
+	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		//makevectors(self.v_angle_y * '0 1 0');
 		makevectors(self.v_angle);
@@ -945,9 +965,9 @@ void SV_PlayerPhysics()
 
 		// it is now normalized, so...
 		float a_side, a_up, a_add, a_diff;
-		a_side = cvar("g_jetpack_acceleration_side");
-		a_up = cvar("g_jetpack_acceleration_up");
-		a_add = cvar("g_jetpack_antigravity") * sv_gravity;
+		a_side = g_jetpack_acceleration_side;
+		a_up = g_jetpack_acceleration_up;
+		a_add = g_jetpack_antigravity * sv_gravity;
 
 		wishvel_x *= a_side;
 		wishvel_y *= a_side;
@@ -995,11 +1015,11 @@ void SV_PlayerPhysics()
 		//print("best possible acceleration: ", ftos(best), "\n");
 
 		float fxy, fz;
-		fxy = bound(0, 1 - (self.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / cvar("g_jetpack_maxspeed_side"), 1);
+		fxy = bound(0, 1 - (self.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / g_jetpack_maxspeed_side, 1);
 		if(wishvel_z - sv_gravity > 0)
-			fz = bound(0, 1 - self.velocity_z / cvar("g_jetpack_maxspeed_up"), 1);
+			fz = bound(0, 1 - self.velocity_z / g_jetpack_maxspeed_up, 1);
 		else
-			fz = bound(0, 1 + self.velocity_z / cvar("g_jetpack_maxspeed_up"), 1);
+			fz = bound(0, 1 + self.velocity_z / g_jetpack_maxspeed_up, 1);
 
 		float fvel;
 		fvel = vlen(wishvel);
@@ -1008,8 +1028,8 @@ void SV_PlayerPhysics()
 		wishvel_z = (wishvel_z - sv_gravity) * fz + sv_gravity;
 
 		fvel = min(1, vlen(wishvel) / best);
-		if(cvar("g_jetpack_fuel") && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
-			f = min(1, self.ammo_fuel / (cvar("g_jetpack_fuel") * frametime * fvel));
+		if(g_jetpack_fuel && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
+			f = min(1, self.ammo_fuel / (g_jetpack_fuel * frametime * fvel));
 		else
 			f = 1;
 
@@ -1019,12 +1039,12 @@ void SV_PlayerPhysics()
 		{
 			self.velocity = self.velocity + wishvel * f * frametime;
 			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				self.ammo_fuel -= cvar("g_jetpack_fuel") * frametime * fvel * f;
+				self.ammo_fuel -= g_jetpack_fuel * frametime * fvel * f;
 			self.flags &~= FL_ONGROUND;
 			self.items |= IT_USING_JETPACK;
 
 			// jetpack also inhibits health regeneration, but only for 1 second
-			self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_fuel_regen"));
+			self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
 		}
 	}
 	else if (self.flags & FL_ONGROUND)
@@ -1039,10 +1059,10 @@ void SV_PlayerPhysics()
 
 		if(!(self.lastflags & FL_ONGROUND))
 		{
-			if(cvar("speedmeter"))
+			if(speedmeter)
 				dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 			if(self.lastground < time - 0.3)
-				self.velocity = self.velocity * (1 - cvar("sv_friction_on_land"));
+				self.velocity = self.velocity * (1 - sv_friction_on_land);
 			if(self.jumppadcount > 1)
 				dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 			self.jumppadcount = 0;
@@ -1185,4 +1205,27 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_warsowbunny_topspeed);
 	CACHE_CVAR(sv_warsowbunny_turnaccel);
 	CACHE_CVAR(sv_warsowbunny_backtosideratio);
+	CACHE_CVAR(sv_jumpvelocity);
+	CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
+	CACHE_CVAR(sv_friction_on_land);
+	CACHE_CVAR(speedmeter);
+	CACHE_CVAR(g_nick_flood_penalty_yellow);
+	CACHE_CVAR(g_nick_flood_penalty_red);
+	CACHE_CVAR(g_balance_rune_speed_combo_jumpheight);
+	CACHE_CVAR(g_balance_rune_speed_jumpheight);
+	CACHE_CVAR(g_balance_curse_slow_jumpheight);
+	CACHE_CVAR(developer_shtest);
+	CACHE_CVAR(g_balance_curse_slow_moverate);
+	CACHE_CVAR(g_balance_rune_speed_combo_moverate);
+	CACHE_CVAR(g_balance_rune_speed_moverate);
+	CACHE_CVAR(g_jetpack_acceleration_side);
+	CACHE_CVAR(g_jetpack_acceleration_up);
+	CACHE_CVAR(g_jetpack_antigravity);
+	CACHE_CVAR(g_jetpack_fuel);
+	CACHE_CVAR(g_jetpack_maxspeed_side);
+	CACHE_CVAR(g_jetpack_maxspeed_up);
+	CACHE_CVAR(g_minstagib_speed_jumpheight);
+	CACHE_CVAR(g_minstagib_speed_moverate);
+	CACHE_CVAR(g_nexball_basketball_carrier_speed);
+	CACHE_CVAR(sv_spectator_speed_multiplier);
 }
