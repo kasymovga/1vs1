@@ -165,7 +165,7 @@ float GameCommand_Vote(string s, entity e) {
 							e.vote_next = time + cvar("sv_vote_wait");
 						}
 						bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote for ", votecalledvote_display, "\n");
-						if(cvar("sv_eventlog"))
+						if(sv_eventlog)
 							GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
 						VoteCount(); // needed if you are the only one
 						Nagger_VoteChanged();
@@ -204,7 +204,7 @@ float GameCommand_Vote(string s, entity e) {
 						e.vote_next = time + cvar("sv_vote_wait");
 					}
 					bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote to become ^3master^2.\n");
-					if(cvar("sv_eventlog"))
+					if(sv_eventlog)
 						GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
 					VoteCount(); // needed if you are the only one
 					Nagger_VoteChanged();
@@ -222,7 +222,7 @@ float GameCommand_Vote(string s, entity e) {
 					print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 				} else if(RemapVote(dovote, "vdo", e)) { // strcat seems to be necessary
 					bprint("\{1}^2* ^3", VoteNetname(e), "^2 used his ^3master^2 status to do \"^2", RemapVote_display, "^2\".\n");
-					if(cvar("sv_eventlog"))
+					if(sv_eventlog)
 						GameLogEcho(strcat(":vote:vdo:", ftos(e.playerid), ":", RemapVote_display));
 					localcmd(strcat(RemapVote_vote, "\n"));
 				} else {
@@ -242,7 +242,7 @@ float GameCommand_Vote(string s, entity e) {
 				if(granted) {
 					print("Accepted master login from ", VoteNetname(e), "\n");
 					bprint("\{1}^2* ^3", VoteNetname(e), "^2 logged in as ^3master^2\n");
-					if(cvar("sv_eventlog"))
+					if(sv_eventlog)
 						GameLogEcho(strcat(":vote:vlogin:", ftos(e.playerid)));
 				}
 				else
@@ -478,7 +478,7 @@ void VoteTimeout() {
 
 void VoteStop(entity stopper) {
 	bprint("\{1}^2* ^3", VoteNetname(stopper), "^2 stopped ^3", VoteNetname(votecaller), "^2's vote\n");
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 		GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid)));
 	if(stopper == votecaller) {
 		// no wait for next vote so you can correct your vote
@@ -508,7 +508,7 @@ void VoteSpam(float yescount, float nocount, float abstaincount, float notvoters
 		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
 	}
 	bprint(s);
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 	{
 		s = strcat(":vote:v", result, ":", ftos(yescount));
 		s = strcat(s, ":", ftos(nocount));

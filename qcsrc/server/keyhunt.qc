@@ -124,7 +124,7 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 		UpdateFrags(player, frags_player);
 	if(key && key.owner && frags_owner)
 		UpdateFrags(key.owner, frags_owner);
-	if(!cvar("sv_eventlog"))  //output extra info to the console or text file
+	if(!sv_eventlog)  //output extra info to the console or text file
 		return;
 	s = strcat(":keyhunt:", what, ":", ftos(player.playerid));
 	s = strcat(s, ":", ftos(frags_player));

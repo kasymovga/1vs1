@@ -210,7 +210,7 @@ string AppendItemcodes(string s, entity player)
 void LogDeath(string mode, float deathtype, entity killer, entity killed)
 {
 	string s;
-	if(!cvar("sv_eventlog"))
+	if(!sv_eventlog)
 		return;
 	s = strcat(":kill:", mode);
 	s = strcat(s, ":", ftos(killer.playerid));

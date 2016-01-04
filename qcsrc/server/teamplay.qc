@@ -75,7 +75,7 @@ void entcs_init();
 void LogTeamchange(entity pl)
 {
 	string str;
-	if(!cvar("sv_eventlog"))
+	if(!sv_eventlog)
 		return;
 	if(pl.playerid < 1)
 		return;

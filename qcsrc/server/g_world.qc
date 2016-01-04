@@ -504,7 +504,7 @@ void spawnfunc_worldspawn (void)
 	//	dom_init();
 
 	GameLogInit(); // prepare everything
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 	{
 		s = strcat(cvar_string("sv_eventlog_files_counter"), ".");
 		s = strcat(s, ftos(random()));
@@ -1160,7 +1160,7 @@ void DumpStats(float final)
 	local float i;
 
 	to_console = cvar("sv_logscores_console");
-	to_eventlog = cvar("sv_eventlog");
+	to_eventlog = sv_eventlog;
 	to_file = cvar("sv_logscores_file");
 
 	if(!final)
@@ -1325,7 +1325,7 @@ void NextLevel()
 
 	DumpStats(TRUE);
 
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 		GameLogEcho(":gameover");
 
 	GameLogClose();
@@ -2066,7 +2066,7 @@ string MapVote_Suggest(string m)
 	if(mapvote_suggestions[i] != "")
 		strunzone(mapvote_suggestions[i]);
 	mapvote_suggestions[i] = strzone(m);
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(self.playerid)));
 	return strcat("Suggestion of ", m, " accepted.");
 }
@@ -2266,7 +2266,7 @@ float MapVote_Finished(float mappos)
 	float i;
 	float didntvote;
 
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 	{
 		result = strcat(":vote:finished:", mapvote_maps[mappos]);
 		result = strcat(result, ":", ftos(mapvote_votes[mappos]), "::");
@@ -2386,7 +2386,7 @@ float MapVote_CheckRules_2()
 						}
 				}
 			result = strcat(result, ":didn't vote:", ftos(didntvote));
-			if(cvar("sv_eventlog"))
+			if(sv_eventlog)
 				GameLogEcho(result);
 		}
 

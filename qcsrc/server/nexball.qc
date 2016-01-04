@@ -75,7 +75,7 @@ void ResetBall();
 void LogNB(string mode, entity actor)
 {
 	string s;
-	if(!cvar("sv_eventlog"))
+	if(!sv_eventlog)
 		return;
 	s = strcat(":nexball:", mode);
 	if(actor != world)

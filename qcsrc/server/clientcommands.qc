@@ -806,7 +806,7 @@ void ReadyRestartForce()
 	if (!cvar("sv_ready_restart_after_countdown"))
 		reset_map(TRUE);
 
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 		GameLogEcho(":restart");
 }
 

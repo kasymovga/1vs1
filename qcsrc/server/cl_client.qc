@@ -1369,7 +1369,7 @@ void ClientConnect (void)
 	}
 
 	self.playerid = (playerid_last = playerid_last + 1);
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 	{
 		if(clienttype(self) == CLIENTTYPE_REAL)
 			GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", self.netaddress, ":", self.netname));
@@ -1514,7 +1514,7 @@ void ClientDisconnect (void)
 	if(self.entcs)
 		detach_entcs();
 
-	if(cvar("sv_eventlog"))
+	if(sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
@@ -2334,7 +2334,7 @@ void PlayerPreThink (void)
 
 	if(self.netname_previous != self.netname)
 	{
-		if(cvar("sv_eventlog"))
+		if(sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(self.playerid), ":", self.netname));
 		if(self.netname_previous)
 			strunzone(self.netname_previous);
