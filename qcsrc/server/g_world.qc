@@ -377,6 +377,7 @@ void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
+void Damage_ReadCvars();
 void spawnfunc_worldspawn (void)
 {
 	float fd, l, i, j, n;
@@ -485,6 +486,7 @@ void spawnfunc_worldspawn (void)
 	readlevelcvars();
 	PhysicReadCvars();
 	GrappleHookInit();
+	Damage_ReadCvars();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");

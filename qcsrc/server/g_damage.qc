@@ -3,6 +3,36 @@
 .float dmg_force;
 .float dmg_radius;
 
+float g_balance_curse_empathy_minhealth;
+float g_balance_curse_empathy_takedamage;
+float g_balance_curse_vulner_takedamage;
+float g_balance_curse_weak_damage;
+float g_balance_curse_weak_force;
+float g_balance_firetransfer_damage;
+float g_balance_firetransfer_time;
+float g_balance_powerup_invincible_takedamage;
+float g_balance_powerup_strength_damage;
+float g_balance_powerup_strength_force;
+float g_balance_powerup_strength_selfdamage;
+float g_balance_powerup_strength_selfforce;
+float g_balance_rune_defense_combo_takedamage;
+float g_balance_rune_defense_takedamage;
+float g_balance_rune_strength_combo_damage;
+float g_balance_rune_strength_combo_force;
+float g_balance_rune_strength_damage;
+float g_balance_rune_strength_force;
+float g_balance_rune_vampire_absorb;
+float g_balance_rune_vampire_combo_absorb;
+float g_balance_rune_vampire_maxhealth;
+float g_ctf_flagcarrier_selfdamage;
+float g_ctf_flagcarrier_selfforce;
+float g_friendlyfire;
+float g_lms_campcheck_distance;
+float g_mirrordamage;
+float g_teamdamage_threshold;
+float g_throughfloor_damage;
+float g_throughfloor_force;
+
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
@@ -123,7 +153,7 @@ void GiveFrags (entity attacker, entity targ, float f)
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
 	if(g_arena)
-		if(cvar("g_arena_roundbased"))
+		if(arena_roundbased)
 			return;
 
 	if(targ != attacker) // not for suicides
@@ -536,7 +566,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 							fragtime = 0;
 				}
 				if (DEATH_ISWEAPON(deathtype, WEP_LASER) && sv_announcer_extra_gauntletfrag != "" &&
-						((deathtype & HITTYPE_SECONDARY) ? cvar("g_balance_laser_secondary_gauntlet") : cvar("g_balance_laser_primary_gauntlet")))
+						((deathtype & HITTYPE_SECONDARY) ? g_balance_laser_secondary_gauntlet : g_balance_laser_primary_gauntlet))
 				{
 						announce(targ, sv_announcer_extra_gauntletfrag);
 						announce(attacker, sv_announcer_extra_gauntletfrag);
@@ -697,18 +727,18 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					{
 						if(targ.classname == "player" && targ.deadflag == DEAD_NO)
 						{
-							teamdamage0 = max(attacker.dmg_team, cvar("g_teamdamage_threshold"));
+							teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
 							attacker.dmg_team = attacker.dmg_team + damage;
 							if(attacker.dmg_team > teamdamage0)
-								mirrordamage = cvar("g_mirrordamage") * (attacker.dmg_team - teamdamage0);
-							mirrorforce = cvar("g_mirrordamage") * vlen(force);
+								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
+							mirrorforce = g_mirrordamage * vlen(force);
 							if(g_minstagib)
 							{
-								if(cvar("g_friendlyfire") == 0)
+								if(g_friendlyfire == 0)
 									damage = 0;
 							}
 							else
-								damage = cvar("g_friendlyfire") * damage;
+								damage = g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 						}
 						else
@@ -722,8 +752,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(attacker.classname == "player")
 		if(attacker != targ)
 		{
-			targ.lms_traveled_distance = cvar("g_lms_campcheck_distance");
-			attacker.lms_traveled_distance = cvar("g_lms_campcheck_distance");
+			targ.lms_traveled_distance = g_lms_campcheck_distance;
+			attacker.lms_traveled_distance = g_lms_campcheck_distance;
 		}
 
 		if(targ.classname == "player")
@@ -774,19 +804,19 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		{
 			if(targ == attacker)
 			{
-				damage = damage * cvar("g_balance_powerup_strength_selfdamage");
-				force = force * cvar("g_balance_powerup_strength_selfforce");
+				damage = damage * g_balance_powerup_strength_selfdamage;
+				force = force * g_balance_powerup_strength_selfforce;
 			}
 			else
 			{
-				damage = damage * cvar("g_balance_powerup_strength_damage");
-				force = force * cvar("g_balance_powerup_strength_force");
+				damage = damage * g_balance_powerup_strength_damage;
+				force = force * g_balance_powerup_strength_force;
 			}
 		}
 
 		// apply invincibility multiplier
 		if (targ.items & IT_INVINCIBLE && !g_minstagib)
-			damage = damage * cvar("g_balance_powerup_invincible_takedamage");
+			damage = damage * g_balance_powerup_invincible_takedamage;
 
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
@@ -796,8 +826,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ == attacker)
 		if(targ.flagcarried)
 		{
-			damage = damage * cvar("g_ctf_flagcarrier_selfdamage");
-			force = force * cvar("g_ctf_flagcarrier_selfforce");
+			damage = damage * g_ctf_flagcarrier_selfdamage;
+			force = force * g_ctf_flagcarrier_selfforce;
 		}
 
 		if(g_runematch)
@@ -807,31 +837,31 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			{
 				if(attacker.runes & CURSE_WEAK) // have both curse & rune
 				{
-					damage = damage * cvar("g_balance_rune_strength_combo_damage");
-					force = force * cvar("g_balance_rune_strength_combo_force");
+					damage = damage * g_balance_rune_strength_combo_damage;
+					force = force * g_balance_rune_strength_combo_force;
 				}
 				else
 				{
-					damage = damage * cvar("g_balance_rune_strength_damage");
-					force = force * cvar("g_balance_rune_strength_force");
+					damage = damage * g_balance_rune_strength_damage;
+					force = force * g_balance_rune_strength_force;
 				}
 			}
 			else if (attacker.runes & CURSE_WEAK)
 			{
-				damage = damage * cvar("g_balance_curse_weak_damage");
-				force = force * cvar("g_balance_curse_weak_force");
+				damage = damage * g_balance_curse_weak_damage;
+				force = force * g_balance_curse_weak_force;
 			}
 
 			// apply defense rune
 			if (targ.runes & RUNE_DEFENSE)
 			{
 				if (targ.runes & CURSE_VULNER) // have both curse & rune
-					damage = damage * cvar("g_balance_rune_defense_combo_takedamage");
+					damage = damage * g_balance_rune_defense_combo_takedamage;
 				else
-					damage = damage * cvar("g_balance_rune_defense_takedamage");
+					damage = damage * g_balance_rune_defense_takedamage;
 			}
 			else if (targ.runes & CURSE_VULNER)
-				damage = damage * cvar("g_balance_curse_vulner_takedamage");
+				damage = damage * g_balance_curse_vulner_takedamage;
 		}
 
 		// count the damage
@@ -938,9 +968,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				{
 					//attacker.health = attacker.health + damage * cvar("g_balance_rune_vampire_combo_absorb");
 					attacker.health = bound(
-						cvar("g_balance_curse_empathy_minhealth"), // LA: was 3, now 40
-						attacker.health + damage * cvar("g_balance_rune_vampire_combo_absorb"),
-						cvar("g_balance_rune_vampire_maxhealth"));	// LA: was 1000, now 500
+						g_balance_curse_empathy_minhealth, // LA: was 3, now 40
+						attacker.health + damage * g_balance_rune_vampire_combo_absorb,
+						g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
 				}
 				else
 				{
@@ -948,16 +978,16 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					attacker.health = bound(
 						attacker.health,	// LA: was 3, but changed so that you can't lose health
 											// empathy won't let you gain health in the same way...
-						attacker.health + damage * cvar("g_balance_rune_vampire_absorb"),
-						cvar("g_balance_rune_vampire_maxhealth"));	// LA: was 1000, now 500
+						attacker.health + damage * g_balance_rune_vampire_absorb,
+						g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
 					}
 			}
 			// apply empathy curse
 			else if (attacker.runes & CURSE_EMPATHY)
 			{
 				attacker.health = bound(
-					cvar("g_balance_curse_empathy_minhealth"), // LA: was 3, now 20
-					attacker.health + damage * cvar("g_balance_curse_empathy_takedamage"),
+					g_balance_curse_empathy_minhealth, // LA: was 3, now 20
+					attacker.health + damage * g_balance_curse_empathy_takedamage,
 					attacker.health);
 			}
 		}
@@ -1032,9 +1062,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	vector  nearest;
 	float   total_damage_to_creatures;
 	entity  next;
-	float   tfloordmg;
-	float   tfloorforce;
-
 	float stat_damagedone;
 	float stat_maxdamage;
 
@@ -1052,9 +1079,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	}
 
 	RadiusDamage_running = 1;
-
-	tfloordmg = cvar("g_throughfloor_damage");
-	tfloorforce = cvar("g_throughfloor_force");
 
 	blastorigin = (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5);
 	total_damage_to_creatures = 0;
@@ -1139,9 +1163,9 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						}
 						nearest = hitloc * (1 / max(1, hits));
 						hitratio = (hits / total);
-						a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
+						a = bound(0, g_throughfloor_damage + (1-g_throughfloor_damage) * hitratio, 1);
 						finaldmg = finaldmg * a;
-						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
+						a = bound(0, g_throughfloor_force + (1-g_throughfloor_force) * hitratio, 1);
 						force = force * a;
 						//if (targ == attacker)
 						//{
@@ -1149,7 +1173,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
 						//	print(" (", ftos(a), ")\n");
 						//}
-						if(hits || tfloordmg || tfloorforce)
+						if(hits || g_throughfloor_damage || g_throughfloor_force)
 						{
 							if(targ.iscreature)
 							{
@@ -1332,8 +1356,8 @@ void Fire_ApplyDamage(entity e)
 		if not(IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
 		{
-			t = cvar("g_balance_firetransfer_time") * (e.fire_endtime - time);
-			d = cvar("g_balance_firetransfer_damage") * e.fire_damagepersec * t;
+			t = g_balance_firetransfer_time * (e.fire_endtime - time);
+			d = g_balance_firetransfer_damage * e.fire_damagepersec * t;
 			Fire_AddDamage(other, e, d, t, DEATH_FIRE);
 		}
 	}
@@ -1364,4 +1388,37 @@ void fireburner_think()
 	}
 	Fire_ApplyDamage(self.owner);
 	self.nextthink = time;
+}
+
+void Damage_ReadCvars()
+{
+	CACHE_CVAR(g_balance_curse_empathy_minhealth);
+	CACHE_CVAR(g_balance_curse_empathy_takedamage);
+	CACHE_CVAR(g_balance_curse_vulner_takedamage);
+	CACHE_CVAR(g_balance_curse_weak_damage);
+	CACHE_CVAR(g_balance_curse_weak_force);
+	CACHE_CVAR(g_balance_firetransfer_damage);
+	CACHE_CVAR(g_balance_firetransfer_time);
+	CACHE_CVAR(g_balance_powerup_invincible_takedamage);
+	CACHE_CVAR(g_balance_powerup_strength_damage);
+	CACHE_CVAR(g_balance_powerup_strength_force);
+	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
+	CACHE_CVAR(g_balance_powerup_strength_selfforce);
+	CACHE_CVAR(g_balance_rune_defense_combo_takedamage);
+	CACHE_CVAR(g_balance_rune_defense_takedamage);
+	CACHE_CVAR(g_balance_rune_strength_combo_damage);
+	CACHE_CVAR(g_balance_rune_strength_combo_force);
+	CACHE_CVAR(g_balance_rune_strength_damage);
+	CACHE_CVAR(g_balance_rune_strength_force);
+	CACHE_CVAR(g_balance_rune_vampire_absorb);
+	CACHE_CVAR(g_balance_rune_vampire_combo_absorb);
+	CACHE_CVAR(g_balance_rune_vampire_maxhealth);
+	CACHE_CVAR(g_ctf_flagcarrier_selfdamage);
+	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
+	CACHE_CVAR(g_friendlyfire);
+	CACHE_CVAR(g_lms_campcheck_distance);
+	CACHE_CVAR(g_mirrordamage);
+	CACHE_CVAR(g_teamdamage_threshold);
+	CACHE_CVAR(g_throughfloor_damage);
+	CACHE_CVAR(g_throughfloor_force);
 }
