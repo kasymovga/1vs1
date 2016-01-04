@@ -26,6 +26,8 @@ float g_balance_rune_vampire_combo_absorb;
 float g_balance_rune_vampire_maxhealth;
 float g_ctf_flagcarrier_selfdamage;
 float g_ctf_flagcarrier_selfforce;
+float g_ctf_flagscore_kill;
+float g_ctf_personalscore_kill;
 float g_friendlyfire;
 float g_lms_campcheck_distance;
 float g_mirrordamage;
@@ -470,7 +472,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				if(g_ctf && targ.flagcarried)
 				{
-					UpdateFrags(attacker, ctf_score_value("score_kill"));
+					UpdateFrags(attacker, ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill));
 					PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
 					GiveFrags(attacker, targ, 0); // for logging
 				}
@@ -1415,6 +1417,8 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_balance_rune_vampire_maxhealth);
 	CACHE_CVAR(g_ctf_flagcarrier_selfdamage);
 	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
+	CACHE_CVAR(g_ctf_flagscore_kill);
+	CACHE_CVAR(g_ctf_personalscore_kill);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_lms_campcheck_distance);
 	CACHE_CVAR(g_mirrordamage);

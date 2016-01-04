@@ -1,6 +1,39 @@
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 
+float g_balance_ctf_damageforcescale;
+float g_balance_ctf_delay_collect;
+float g_ctf_allow_drop;
+float g_ctf_captimerecord_always;
+float g_ctf_default_teams;
+float g_ctf_flag_capture_effects;
+float g_ctf_flag_pickup_effects;
+float g_ctf_flag_returntime;
+float g_ctf_personalpenalty_drop;
+float g_ctf_personalpenalty_returned;
+float g_ctf_personalpenalty_suicidedrop;
+float g_ctf_personalscore_capture;
+float g_ctf_personalscore_pickup_base;
+float g_ctf_personalscore_pickup_dropped_early;
+float g_ctf_personalscore_pickup_dropped_late;
+float g_ctf_personalscore_return;
+float g_ctf_personalscore_return_by_killer;
+float g_ctf_personalscore_return_rogue;
+float g_ctf_personalscore_return_rogue_by_killer;
+float g_ctf_flagpenalty_drop;
+float g_ctf_flagpenalty_returned;
+float g_ctf_flagpenalty_suicidedrop;
+float g_ctf_flagscore_capture;
+float g_ctf_flagscore_pickup_base;
+float g_ctf_flagscore_pickup_dropped_early;
+float g_ctf_flagscore_pickup_dropped_late;
+float g_ctf_flagscore_return;
+float g_ctf_flagscore_return_by_killer;
+float g_ctf_flagscore_return_rogue;
+float g_ctf_flagscore_return_rogue_by_killer;
+
+#define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
+
 .entity basewaypoint;
 .entity sprite;
 entity ctf_worldflaglist; // CTF flags in the map
@@ -121,14 +154,6 @@ void ctf_captureshield_spawn()
 	setsize(e, e.scale * e.mins, e.scale * e.maxs);
 }
 
-float ctf_score_value(string parameter)
-{
-	if(g_ctf_win_mode != 2)
-		return cvar(strcat("g_ctf_personal", parameter));
-	else
-		return cvar(strcat("g_ctf_flag", parameter));
-}
-
 void FakeTimeLimit(entity e, float t)
 {
 	msg_entity = e;
@@ -190,7 +215,7 @@ void place_flag()
 void LogCTF(string mode, float flagteam, entity actor)
 {
 	string s;
-	if(!cvar("sv_eventlog"))
+	if(!sv_eventlog)
 		return;
 	s = strcat(":ctf:", mode);
 	s = strcat(s, ":", ftos(flagteam));
@@ -274,9 +299,9 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	bprint(p.netname, "^7 lost the ", e.netname, "\n");
 
 	if(penalty_receiver)
-		UpdateFrags(penalty_receiver, -ctf_score_value("penalty_suicidedrop"));
+		UpdateFrags(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
-		UpdateFrags(p, -ctf_score_value("penalty_drop"));
+		UpdateFrags(p, -CTF_SCORE_VALUE(penalty_drop));
 	PlayerScore_Add(p, SP_CTF_DROPS, +1);
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
@@ -296,7 +321,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	sound (self, CHAN_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
-	e.damageforcescale = cvar("g_balance_ctf_damageforcescale");
+	e.damageforcescale = g_balance_ctf_damageforcescale;
 	e.takedamage = DAMAGE_YES;
 
 	if (p.flagcarried == e)
@@ -310,7 +335,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	setorigin(e, p.origin - '0 0 24' + '0 0 37');
 	e.cnt = FLAG_DROPPED;
 	e.velocity = '0 0 300';
-	e.pain_finished = time + cvar("g_ctf_flag_returntime");//30;
+	e.pain_finished = time + g_ctf_flag_returntime;//30;
 
 	trace_startsolid = FALSE;
 	tracebox(e.origin, e.mins, e.maxs, e.origin, TRUE, e);
@@ -405,7 +430,7 @@ void FlagThink()
 		return;
 	}
 
-	if(cvar("g_ctf_allow_drop"))
+	if(g_ctf_allow_drop)
 	if(e.BUTTON_USE)
 		DropFlag(self, e, world);
 };
@@ -439,7 +464,7 @@ void FlagTouch()
 		{
 			return;
 		}
-		if(cvar("g_ctf_captimerecord_always") || player_count - currentbots <= 1) // at most one human
+		if(g_ctf_captimerecord_always || player_count - currentbots <= 1) // at most one human
 		{
 			t = time - other.flagcarried.flagpickuptime;
 			s = ftos_decimals(t, 2);
@@ -477,9 +502,9 @@ void FlagTouch()
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 		LogCTF("capture", other.flagcarried.team, other);
 		// give credit to the individual player
-		UpdateFrags(other, ctf_score_value("score_capture"));
+		UpdateFrags(other, CTF_SCORE_VALUE(score_capture));
 
-		if (cvar("g_ctf_flag_capture_effects")) {
+		if (g_ctf_flag_capture_effects) {
 			if (other.team == COLOR_TEAM1) { // red team scores effect
 				pointparticles(particleeffectnum("red_ground_quake"), self.origin, '0 0 0', 1);
 				flag_cap_ring_spawn(self.origin);
@@ -507,7 +532,7 @@ void FlagTouch()
 		if (other.next_take_time > time)
 			return;
 			
-		if (cvar("g_ctf_flag_pickup_effects")) // pickup effect
+		if (g_ctf_flag_pickup_effects) // pickup effect
 			pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
 			
 		// pick up
@@ -523,7 +548,7 @@ void FlagTouch()
 		self.cnt = FLAG_CARRY;
 		self.angles = '0 0 0';
 		bprint(other.netname, "^7 got the ", self.netname, "\n");
-		UpdateFrags(other, ctf_score_value("score_pickup_base"));
+		UpdateFrags(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 		LogCTF("steal", self.team, other);
@@ -555,39 +580,39 @@ void FlagTouch()
 			FOR_EACH_PLAYER(player)
 				if(player.playerid == self.dropperid)
 				{
-					PlayerScore_Add(player, SP_SCORE, -ctf_score_value("penalty_returned"));
+					PlayerScore_Add(player, SP_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 					ctf_captureshield_update(player, 0); // shield only
 				}
 
 			// punish the team who was last carrying it
 			if(self.team == COLOR_TEAM1)
-				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, -ctf_score_value("penalty_returned"));
+				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 			else
-				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, -ctf_score_value("penalty_returned"));
+				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 
 			// reward the player who returned it
 			if(other.playerid == self.playerid) // is this the guy who killed the FC last?
 			{
 				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					UpdateFrags(other, ctf_score_value("score_return_by_killer"));
+					UpdateFrags(other, CTF_SCORE_VALUE(score_return_by_killer));
 				else
-					UpdateFrags(other, ctf_score_value("score_return_rogue_by_killer"));
+					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue_by_killer));
 			}
 			else
 			{
 				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					UpdateFrags(other, ctf_score_value("score_return"));
+					UpdateFrags(other, CTF_SCORE_VALUE(score_return));
 				else
-					UpdateFrags(other, ctf_score_value("score_return_rogue"));
+					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
 			LogCTF("return", self.team, other);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
-		else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + cvar("g_balance_ctf_delay_collect")))
+		else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_balance_ctf_delay_collect))
 		{
-			if (cvar("g_ctf_flag_pickup_effects")) // field pickup effect
+			if (g_ctf_flag_pickup_effects) // field pickup effect
 				pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
 			
 			// pick up
@@ -599,10 +624,10 @@ void FlagTouch()
 			bprint(other.netname, "^7 picked up the ", self.netname, "\n");
 
 			float f;
-			f = bound(0, (self.pain_finished - time) / cvar("g_ctf_flag_returntime"), 1);
+			f = bound(0, (self.pain_finished - time) / g_ctf_flag_returntime, 1);
 			//print("factor is ", ftos(f), "\n");
-			f = ctf_score_value("score_pickup_dropped_late") * (1-f)
-			  + ctf_score_value("score_pickup_dropped_early") * f;
+			f = CTF_SCORE_VALUE(score_pickup_dropped_late) * (1-f)
+			  + CTF_SCORE_VALUE(score_pickup_dropped_early) * f;
 			f = floor(f + 0.5);
 			self.dropperid = other.playerid;
 			//print("score is ", ftos(f), "\n");
@@ -1009,6 +1034,36 @@ void ctf_delayedinit()
 
 void ctf_init()
 {
+	CACHE_CVAR(g_balance_ctf_damageforcescale);
+	CACHE_CVAR(g_balance_ctf_delay_collect);
+	CACHE_CVAR(g_ctf_allow_drop);
+	CACHE_CVAR(g_ctf_captimerecord_always);
+	CACHE_CVAR(g_ctf_default_teams);
+	CACHE_CVAR(g_ctf_flag_capture_effects);
+	CACHE_CVAR(g_ctf_flag_pickup_effects);
+	CACHE_CVAR(g_ctf_flag_returntime);
+	CACHE_CVAR(g_ctf_personalpenalty_drop);
+	CACHE_CVAR(g_ctf_personalpenalty_returned);
+	CACHE_CVAR(g_ctf_personalpenalty_suicidedrop);
+	CACHE_CVAR(g_ctf_personalscore_capture);
+	CACHE_CVAR(g_ctf_personalscore_pickup_base);
+	CACHE_CVAR(g_ctf_personalscore_pickup_dropped_early);
+	CACHE_CVAR(g_ctf_personalscore_pickup_dropped_late);
+	CACHE_CVAR(g_ctf_personalscore_return);
+	CACHE_CVAR(g_ctf_personalscore_return_by_killer);
+	CACHE_CVAR(g_ctf_personalscore_return_rogue);
+	CACHE_CVAR(g_ctf_personalscore_return_rogue_by_killer);
+	CACHE_CVAR(g_ctf_flagpenalty_drop);
+	CACHE_CVAR(g_ctf_flagpenalty_returned);
+	CACHE_CVAR(g_ctf_flagpenalty_suicidedrop);
+	CACHE_CVAR(g_ctf_flagscore_capture);
+	CACHE_CVAR(g_ctf_flagscore_pickup_base);
+	CACHE_CVAR(g_ctf_flagscore_pickup_dropped_early);
+	CACHE_CVAR(g_ctf_flagscore_pickup_dropped_late);
+	CACHE_CVAR(g_ctf_flagscore_return);
+	CACHE_CVAR(g_ctf_flagscore_return_by_killer);
+	CACHE_CVAR(g_ctf_flagscore_return_rogue);
+	CACHE_CVAR(g_ctf_flagscore_return_rogue_by_killer);
 	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
