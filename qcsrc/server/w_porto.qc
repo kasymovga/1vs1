@@ -210,12 +210,11 @@ void spawnfunc_weapon_porto (void)
 	weapon_defaultspawnfunc(WEP_PORTO);
 }
 
-float w_nexball_weapon(float req);
+float w_nexball_weapon_think();
 float w_porto(float req)
 {
 	vector v_angle_save;
 
-	if (g_nexball) { return w_nexball_weapon(req); }
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -225,6 +224,7 @@ float w_porto(float req)
 	}
 	else if (req == WR_THINK)
 	{
+		if (g_nexball) { return w_nexball_weapon_think(); } //For old porto nexball behaviour
 		if(self.porto_v_angle_held)
 		{
 			if(!self.BUTTON_ATCK2)

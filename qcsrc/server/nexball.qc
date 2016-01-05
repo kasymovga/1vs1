@@ -2,7 +2,9 @@
 #define BALL_EFFECTMASK 1229
 #define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
 #define BALL_MAXS '16 16 16'
-#define BALL_ATTACHORG '3 0 16'
+//#define BALL_ATTACHORG '3 0 16'
+#define BALL_ATTACHORG '40 0 16'
+#define BALL_POV '40 0 -16'
 #define BALL_SPRITECOLOR '.91 .85 .62'
 #define BALL_FOOT   1
 #define BALL_BASKET 2
@@ -42,6 +44,7 @@ float g_nexball_delay_goal;
 float g_nexball_delay_start;
 
 .float teamtime;
+.entity pov_ball;
 
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
@@ -58,10 +61,28 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_delay_idle);               //10
 	CACHE_CVAR(g_nexball_football_physics);         //0
 	CACHE_CVAR(g_nexball_ball_scale);
+	CACHE_CVAR(g_balance_nexball_primary_animtime);
+	CACHE_CVAR(g_balance_nexball_primary_refire);
+	CACHE_CVAR(g_balance_nexball_primary_speed);
+	CACHE_CVAR(g_balance_nexball_secondary);
+	CACHE_CVAR(g_balance_nexball_secondary_animtime);
+	CACHE_CVAR(g_balance_nexball_secondary_force);
+	CACHE_CVAR(g_balance_nexball_secondary_lifetime);
+	CACHE_CVAR(g_balance_nexball_secondary_refire);
+	CACHE_CVAR(g_balance_nexball_secondary_speed);
+	CACHE_CVAR(g_nexball_basketball_meter);
+	CACHE_CVAR(g_nexball_basketball_meter_maxpower);
+	CACHE_CVAR(g_nexball_basketball_meter_minpower);
+	CACHE_CVAR(g_nexball_delay_collect);
+	CACHE_CVAR(g_nexball_delay_goal);
+	CACHE_CVAR(g_nexball_delay_start);
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 
 	InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+	precache_model ("models/elaser.mdl");
+	precache_sound ("nexball/shoot1.wav");
+	precache_sound ("nexball/shoot2.wav");
 }
 
 float OtherTeam(float t)  //works only if there are two teams on the map!
@@ -166,6 +187,15 @@ void GiveBall (entity plyr, entity ball)
 	setattachment(ball, plyr, "");
 	setorigin(ball, BALL_ATTACHORG);
 
+	plyr.pov_ball = spawn();
+	plyr.pov_ball.owner = plyr;
+	plyr.pov_ball.solid = SOLID_NOT;
+	plyr.pov_ball.classname = "pov_ball";
+	plyr.pov_ball.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	plyr.pov_ball.viewmodelforclient = plyr;
+	setmodel(plyr.pov_ball, ball.model);
+	setorigin(plyr.pov_ball, BALL_POV);
+
 	if (ball.team != plyr.team)
 		ball.teamtime = time + g_nexball_basketball_delay_hold_forteam;
 
@@ -222,6 +252,8 @@ void DropBall (entity ball, vector org, vector vel)
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_UpdateTeamRadar(ball.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 
+	remove(ball.owner.pov_ball);
+	ball.owner.pov_ball = world;
 	ball.owner.ballcarried = world;
 	ball.owner = world;
 }
@@ -457,7 +489,6 @@ void nb_delayedinit (void)
 		nb_spawnteams();
 	ScoreRules_nexball(nb_teams);
 }
-
 
 //=======================//
 //      spawnfuncs       //
@@ -703,73 +734,35 @@ void W_Nexball_Attack2 (void)
 	missile.flags = FL_PROJECTILE;
 }
 
-float w_nexball_weapon(float req)
+float w_nexball_weapon_think()
 {
-	if (req == WR_THINK)
+	if (self.BUTTON_ATCK)
+	if (weapon_prepareattack(0, g_balance_nexball_primary_refire))
+	if (g_nexball_basketball_meter)
 	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, g_balance_nexball_primary_refire))
-		if (g_nexball_basketball_meter)
-		{
-			if (self.ballcarried && !self.metertime)
-				self.metertime = time;
-			else
-				weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
-		}
+		if (self.ballcarried && !self.metertime)
+			self.metertime = time;
 		else
-		{
-			W_Nexball_Attack(-1);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
-		}
-		if (g_balance_nexball_secondary)
-		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, g_balance_nexball_secondary_refire))
-		{
-			W_Nexball_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_nexball_secondary_animtime, w_ready);
-		}
+	}
+	else
+	{
+		W_Nexball_Attack(-1);
+		weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
+	}
+	if (g_balance_nexball_secondary)
+	if (self.BUTTON_ATCK2)
+	if (weapon_prepareattack(1, g_balance_nexball_secondary_refire))
+	{
+		W_Nexball_Attack2();
+		weapon_thinkf(WFRAME_FIRE2, g_balance_nexball_secondary_animtime, w_ready);
+	}
 
-		if (!self.BUTTON_ATCK && self.metertime && self.ballcarried)
-		{
-			W_Nexball_Attack(time - self.metertime);
-			// DropBall or stealing will set metertime back to 0
-			weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
-		}
-	}
-	else if (req == WR_PRECACHE)
+	if (!self.BUTTON_ATCK && self.metertime && self.ballcarried)
 	{
-		precache_model ("models/elaser.mdl");
-		precache_sound ("nexball/shoot1.wav");
-		precache_sound ("nexball/shoot2.wav");
+		W_Nexball_Attack(time - self.metertime);
+		// DropBall or stealing will set metertime back to 0
+		weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
 	}
-	else if (req == WR_SETUP)
-		weapon_setup(WEP_PORTO);
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = "is a weirdo";
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		w_deathtypestring = "got killed by #'s black magic";
-	}
-	else if (req == WR_CVAR_CACHE)
-	{
-		CACHE_CVAR(g_balance_nexball_primary_animtime);
-		CACHE_CVAR(g_balance_nexball_primary_refire);
-		CACHE_CVAR(g_balance_nexball_primary_speed);
-		CACHE_CVAR(g_balance_nexball_secondary);
-		CACHE_CVAR(g_balance_nexball_secondary_animtime);
-		CACHE_CVAR(g_balance_nexball_secondary_force);
-		CACHE_CVAR(g_balance_nexball_secondary_lifetime);
-		CACHE_CVAR(g_balance_nexball_secondary_refire);
-		CACHE_CVAR(g_balance_nexball_secondary_speed);
-		CACHE_CVAR(g_nexball_basketball_meter);
-		CACHE_CVAR(g_nexball_basketball_meter_maxpower);
-		CACHE_CVAR(g_nexball_basketball_meter_minpower);
-		CACHE_CVAR(g_nexball_delay_collect);
-		CACHE_CVAR(g_nexball_delay_goal);
-		CACHE_CVAR(g_nexball_delay_start);
-	}
-	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;
 }

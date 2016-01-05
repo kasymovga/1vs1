@@ -1,5 +1,8 @@
 void W_Reload()
 {
+	if(g_nexball)
+	if(self.ballcarried)
+		return;
 	if(self.switchweapon == self.weapon)
 	if(self.weaponentity.state == WS_READY)
 		weapon_action(self.weapon, WR_RELOAD);
@@ -366,7 +369,10 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			weapon_action(self.weapon, WR_THINK);
+			if (g_nexball && self.ballcarried)
+				w_nexball_weapon_think();
+			else
+				weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + frametime * 0.5 >= self.weapon_nextthink)
 		{
