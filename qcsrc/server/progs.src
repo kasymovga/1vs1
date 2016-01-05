@@ -42,6 +42,8 @@ vote.qh
 
 g_subs.qh
 
+irc.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -169,3 +171,4 @@ monsters/ai.qc
 monsters/m_monsters.qc
 
 csqcprojectile.qc
+irc.qc
