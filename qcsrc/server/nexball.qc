@@ -3,8 +3,8 @@
 #define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
 #define BALL_MAXS '16 16 16'
 //#define BALL_ATTACHORG '3 0 16'
-#define BALL_ATTACHORG '40 0 16'
-#define BALL_POV '40 0 -16'
+#define BALL_ATTACHORG '50 0 16'
+#define BALL_POV '50 0 -16'
 #define BALL_SPRITECOLOR '.91 .85 .62'
 #define BALL_FOOT   1
 #define BALL_BASKET 2
