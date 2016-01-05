@@ -20,6 +20,7 @@ float g_nexball_basketball_delay_hold;
 float g_nexball_basketball_delay_hold_forteam;
 float g_nexball_basketball_effects_default;
 float g_nexball_basketball_teamsteal;
+float g_nexball_ball_scale;
 float balls;
 float ball_scale;
 float nb_teams;
@@ -27,6 +28,7 @@ float nb_teams;
 float g_balance_nexball_primary_animtime;
 float g_balance_nexball_primary_refire;
 float g_balance_nexball_primary_speed;
+float g_balance_nexball_secondary;
 float g_balance_nexball_secondary_animtime;
 float g_balance_nexball_secondary_force;
 float g_balance_nexball_secondary_lifetime;
@@ -55,6 +57,7 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_football_boost_up);        //200
 	CACHE_CVAR(g_nexball_delay_idle);               //10
 	CACHE_CVAR(g_nexball_football_physics);         //0
+	CACHE_CVAR(g_nexball_ball_scale);
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 
@@ -470,10 +473,11 @@ void SpawnBall (void)
 		self.model = "models/nexball/ball.md3";
 		self.scale = 1.3;
 	}
+	self.scale *= g_nexball_ball_scale;
 
 	precache_model (self.model);
 	setmodel (self, self.model);
-	setsize (self, BALL_MINS, BALL_MAXS);
+	setsize (self, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale);
 	ball_scale = self.scale;
 
 	relocate_nexball();
@@ -717,6 +721,7 @@ float w_nexball_weapon(float req)
 			W_Nexball_Attack(-1);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
 		}
+		if (g_balance_nexball_secondary)
 		if (self.BUTTON_ATCK2)
 		if (weapon_prepareattack(1, g_balance_nexball_secondary_refire))
 		{
@@ -752,6 +757,7 @@ float w_nexball_weapon(float req)
 		CACHE_CVAR(g_balance_nexball_primary_animtime);
 		CACHE_CVAR(g_balance_nexball_primary_refire);
 		CACHE_CVAR(g_balance_nexball_primary_speed);
+		CACHE_CVAR(g_balance_nexball_secondary);
 		CACHE_CVAR(g_balance_nexball_secondary_animtime);
 		CACHE_CVAR(g_balance_nexball_secondary_force);
 		CACHE_CVAR(g_balance_nexball_secondary_lifetime);
