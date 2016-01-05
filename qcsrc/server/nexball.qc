@@ -733,9 +733,6 @@ float w_nexball_weapon(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_porto.md3");
-		precache_model ("models/weapons/v_porto.md3");
-		precache_model ("models/weapons/h_porto.dpm");
 		precache_model ("models/elaser.mdl");
 		precache_sound ("nexball/shoot1.wav");
 		precache_sound ("nexball/shoot2.wav");
