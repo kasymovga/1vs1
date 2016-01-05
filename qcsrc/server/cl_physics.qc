@@ -42,6 +42,7 @@ float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
 float g_nexball_basketball_carrier_speed;
 float sv_spectator_speed_multiplier;
+float sv_slicksurfaces;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -79,7 +80,7 @@ void PlayerJump (void)
 		return;
 	}
 
-	if (!(self.flags & FL_ONGROUND))
+	if (!(self.flags & FL_ONGROUND_OR_SLICK))
 		return;
 
 	if(!sv_pogostick)
@@ -113,7 +114,7 @@ void PlayerJump (void)
 		sv_jumpvelocity = sv_jumpvelocity * g_minstagib_speed_jumpheight;
 	}
 
-	if(!(self.lastflags & FL_ONGROUND))
+	if(!(self.lastflags & FL_ONGROUND_OR_SLICK))
 	{
 		if(speedmeter)
 			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
@@ -127,7 +128,7 @@ void PlayerJump (void)
 	self.velocity_z = self.velocity_z + sv_jumpvelocity;
 	self.oldvelocity_z = self.velocity_z;
 
-	self.flags &~= FL_ONGROUND;
+	self.flags &~= FL_ONGROUND_OR_SLICK;
 	self.flags &~= FL_JUMPRELEASED;
 
 	if (self.crouch)
@@ -806,6 +807,18 @@ void SV_PlayerPhysics()
 		self.angles_z = 0;
 	}
 
+	if(sv_slicksurfaces && (self.flags & FL_ONGROUND))
+	{
+		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+		{
+			self.flags &~= FL_ONGROUND;
+			self.flags |= FL_SLICK;
+		}
+		else
+			self.flags &~= FL_SLICK;
+	}
+
 	if(self.flags & FL_ONGROUND)
 	if(self.wasFlying)
 	{
@@ -1228,4 +1241,5 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
+	CACHE_CVAR(sv_slicksurfaces);
 }
