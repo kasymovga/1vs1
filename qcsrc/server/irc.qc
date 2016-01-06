@@ -1,7 +1,6 @@
 
 entity irc;
 
-float sv_ircbot_admin_allow_cmd;
 float sv_ircbot_announce_bans;
 float sv_ircbot_announce_game_events;
 float sv_ircbot_announce_gameover;
@@ -9,7 +8,6 @@ float sv_ircbot_announce_gamestart;
 float sv_ircbot_announce_irc_joinparts;
 float sv_ircbot_announce_irc_nick;
 float sv_ircbot_announce_joinparts;
-float sv_ircbot_announce_joinparts_showcountry_timeout;
 float sv_ircbot_announce_joinparts_showgameinfo;
 float sv_ircbot_announce_joinparts_showip;
 float sv_ircbot_announce_name;
@@ -163,7 +161,6 @@ void IRC_Init(void) {
         return;
     }
     
-	CACHE_CVAR(sv_ircbot_admin_allow_cmd);
 	CACHE_CVAR(sv_ircbot_announce_bans);
 	CACHE_CVAR(sv_ircbot_announce_game_events);
 	CACHE_CVAR(sv_ircbot_announce_gameover);
@@ -171,7 +168,6 @@ void IRC_Init(void) {
 	CACHE_CVAR(sv_ircbot_announce_irc_joinparts);
 	CACHE_CVAR(sv_ircbot_announce_irc_nick);
 	CACHE_CVAR(sv_ircbot_announce_joinparts);
-	CACHE_CVAR(sv_ircbot_announce_joinparts_showcountry_timeout);
 	CACHE_CVAR(sv_ircbot_announce_joinparts_showgameinfo);
 	CACHE_CVAR(sv_ircbot_announce_joinparts_showip);
 	CACHE_CVAR(sv_ircbot_announce_name);
@@ -205,14 +201,6 @@ void IRC_Init(void) {
     irc.nextthink = time + 5;
     
     IRC_Announce_GameStart();
-}
-
-float IRC_IsAdmin(string mask) {
-    float i, argc = tokenizebyseparator(cvar_string("sv_ircbot_admin_list"), " ");
-    for(i = 0; i < argc; ++i)
-        if(IRC_MaskMatches(mask, argv(i)))
-            return TRUE;
-    return FALSE;
 }
 
 float IRC_IsIgnored(string mask) {
