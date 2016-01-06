@@ -1062,6 +1062,8 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 
 	if(flood)
 		print("NOTE: ", playername(source), "^7 is flooding.\n");
+	else if (!teamsay && !privatesay)
+		IRC_Announce_PlayerChat(source, msgin);
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)

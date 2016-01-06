@@ -655,6 +655,7 @@ void spawnfunc_worldspawn (void)
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), ";");
 
 	world_initialized = 1;
+	IRC_Init();
 }
 
 void spawnfunc_light (void)
@@ -1331,6 +1332,7 @@ void NextLevel()
 		GameLogEcho(":gameover");
 
 	GameLogClose();
+	IRC_Announce_GameOver();
 
 	FOR_EACH_CLIENT(other)
 	{

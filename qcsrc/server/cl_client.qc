@@ -1483,6 +1483,9 @@ void ClientConnect (void)
 	}
 	else
 		self.hitplotfh = -1;
+
+	if (clienttype(self) == CLIENTTYPE_REAL)
+		IRC_Announce_ClientConnect(self);
 }
 
 /*
@@ -1581,6 +1584,9 @@ void ClientDisconnect (void)
 
 	// free cvars
 	GetCvars(-1);
+
+	if (clienttype(self) == CLIENTTYPE_REAL)
+		IRC_Announce_ClientDisconnect(self);
 }
 
 .float BUTTON_CHAT;

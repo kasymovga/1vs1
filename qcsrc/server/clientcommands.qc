@@ -735,6 +735,8 @@ void SV_ParseClientCommand(string s) {
 		if(self.jointime > 0 && time > self.jointime + 10 && time > self.nickspamtime) // allow any changes in the first 10 seconds since joining
 		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?
 		{
+			if (cmd == "name")
+				IRC_Announce_Name(self, argv(1));
 			if(self.nickspamtime == 0 || time > self.nickspamtime + cvar("g_nick_flood_timeout"))
 				// good, no serious flood
 				self.nickspamcount = 1;
