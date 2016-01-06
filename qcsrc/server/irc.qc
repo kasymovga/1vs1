@@ -68,7 +68,7 @@ float IRC_CheckSession(float s) {
 #define IRC_STRING_SEPARATOR "^9  //  "
 
 string IRC_GameInfoString(void) {
-    return strcat("^7playing ^5", MapInfo_GetGameTypeCvar(game), "^7 on ^2", mapname);
+    return strcat("^7playing ^5", gamemode_name, "^7 on ^2", mapname);
 }
 
 string IRC_ClientsInfoString(void) {
@@ -384,7 +384,7 @@ void IRC_Defer_Update_Topic()
 
 void IRC_Announce_GameStart(void) { if(!irc) return;
     if(sv_ircbot_announce_gamestart)
-        IRC_Announce(irc.cnt, irc.target, strcat("^3--> ^7Now playing ^5", MapInfo_GetGameTypeCvar(game), "^7 on ^2", mapname, " ^3<-- "));
+        IRC_Announce(irc.cnt, irc.target, strcat("^3--> ^7Now playing ^5", gamemode_name, "^7 on ^2", mapname, " ^3<-- "));
 	entity e = spawn();
 	e.nextthink = time + 10;
 	e.think = IRC_Defer_Update_Topic;
@@ -392,7 +392,7 @@ void IRC_Announce_GameStart(void) { if(!irc) return;
 
 void IRC_Announce_GameOver(void) { if(!irc) return;
     if(sv_ircbot_announce_gameover)
-        IRC_Announce(irc.cnt, irc.target, strcat("^1--> ^5", MapInfo_GetGameTypeCvar(game), "^7 on ^2", mapname, " ^7ended ^1<-- "));
+        IRC_Announce(irc.cnt, irc.target, strcat("^1--> ^5", gamemode_name, "^7 on ^2", mapname, " ^7ended ^1<-- "));
 }
 
 void IRC_Announce_GameEvent(string estr) { if(!irc) return;
