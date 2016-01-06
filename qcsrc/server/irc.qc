@@ -72,7 +72,7 @@ string IRC_GameInfoString(void) {
 }
 
 string IRC_ClientsInfoString(void) {
-    string s = strcat("^1", ftos(player_count + currentbots), "^7/", ftos(maxclients), " clients");
+    string s = strcat("^1", ftos(player_count), "^7/", ftos(maxclients), " clients");
     if(currentbots > 0)
         s = strcat(s, " (", ftos(currentbots), " bots)");
     return s;
@@ -113,7 +113,7 @@ void IRC_UpdateTopic(void) {
     
     if(!player_count && sv_ircbot_update_topic_serverempty)
         s = strcat(s, IRC_STRING_SEPARATOR, "^1server empty");
-    else if(player_count + currentbots == maxclients && sv_ircbot_update_topic_serverfull)
+    else if(player_count == maxclients && sv_ircbot_update_topic_serverfull)
         s = strcat(s, IRC_STRING_SEPARATOR, "^1server full");
     
     if(cvar_string("_sv_ircbot_lasttopic") != IRC_DP2IRC(s) || irc.skin > 1) {
