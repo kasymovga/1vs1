@@ -373,6 +373,7 @@ float Ban_MaybeEnforceBan(entity client)
 	{
 		string s;
 		s = strcat("^1NOTE:^7 banned client ", client.netaddress, " just tried to enter\n");
+		IRC_Announce_Ban(strcat("^1* banned client ^4", client.netaddress, "^1 just tried to enter"));
 		dropclient(client);
 		bprint(s);
 		return TRUE;
@@ -399,6 +400,7 @@ string Ban_Enforce(float i, string reason)
 				reason = strcat(reason, e.netname);
 			}
 			s = strcat(s, "^1NOTE:^7 banned client ", e.netname, "^7 has to go\n");
+			IRC_Announce_Ban(strcat("^1* banned client ^4", e.netaddress, "^1 has to go"));
 			dropclient(e);
 		}
 	bprint(s);
