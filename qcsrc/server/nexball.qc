@@ -29,6 +29,7 @@ float nb_teams;
 
 float g_balance_nexball_primary_animtime;
 float g_balance_nexball_primary_refire;
+float g_balance_nexball_primary_shootatmaxmeter;
 float g_balance_nexball_primary_speed;
 float g_balance_nexball_secondary;
 float g_balance_nexball_secondary_animtime;
@@ -63,6 +64,7 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_ball_scale);
 	CACHE_CVAR(g_balance_nexball_primary_animtime);
 	CACHE_CVAR(g_balance_nexball_primary_refire);
+	CACHE_CVAR(g_balance_nexball_primary_shootatmaxmeter);
 	CACHE_CVAR(g_balance_nexball_primary_speed);
 	CACHE_CVAR(g_balance_nexball_secondary);
 	CACHE_CVAR(g_balance_nexball_secondary_animtime);
@@ -758,7 +760,8 @@ float w_nexball_weapon_think()
 		weapon_thinkf(WFRAME_FIRE2, g_balance_nexball_secondary_animtime, w_ready);
 	}
 
-	if (!self.BUTTON_ATCK && self.metertime && self.ballcarried)
+	if (self.metertime && self.ballcarried && (!self.BUTTON_ATCK ||
+			(g_balance_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time)))
 	{
 		W_Nexball_Attack(time - self.metertime);
 		// DropBall or stealing will set metertime back to 0
