@@ -1,3 +1,6 @@
+/*
+ * Ported from RocketMinsta mod. https://github.com/nexAkari/RocketMinsta
+ */
 
 void IRC_Init(void);
 void IRC_Announce_PlayerChat(entity plr, string msg);

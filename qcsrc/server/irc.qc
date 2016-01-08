@@ -1,4 +1,6 @@
-
+/*
+ * Ported from RocketMinsta mod. https://github.com/nexAkari/RocketMinsta
+ */
 entity irc;
 
 float sv_ircbot_announce_bans;
