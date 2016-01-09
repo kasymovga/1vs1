@@ -30,6 +30,7 @@ float sv_ircbot_update_topic_serverfull;
 float irc_was_connected;
 float irc_reconnect_time;
 float irc_disconnections;
+float irc_gamestart_wasannounced;
 
 float IRC_CheckSession(float s) {
     if(!IRC_SessionExists(s))
@@ -372,6 +373,8 @@ void IRC_Announce_Client(entity plr, float ispart) {
 
 void IRC_Announce_ClientConnect(entity plr) { if(!irc) return;
     IRC_Announce_Client(plr, FALSE);
+    if (!irc_gamestart_wasannounced)
+        IRC_Announce_GameStart();
 }
 
 void IRC_Announce_ClientDisconnect(entity plr) { if(!irc) return;
@@ -386,7 +389,10 @@ void IRC_Defer_Update_Topic()
 
 void IRC_Announce_GameStart(void) { if(!irc) return;
     if(sv_ircbot_announce_gamestart)
-        IRC_Announce(irc.cnt, irc.target, strcat("^3--> ^7Now playing ^5", gamemode_name, "^7 on ^2", mapname, " ^3<-- "));
+    if(sv_ircbot_announce_when_empty || player_count > 0) {
+        IRC_Privmsg(irc.cnt, irc.target, strcat("^3--> ^7Now playing ^5", gamemode_name, "^7 on ^2", mapname, " ^3<-- "));
+        irc_gamestart_wasannounced = TRUE;
+    }
 	entity e = spawn();
 	e.nextthink = time + 10;
 	e.think = IRC_Defer_Update_Topic;
