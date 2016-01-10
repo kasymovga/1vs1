@@ -400,7 +400,8 @@ void IRC_Announce_GameStart(void) { if(!irc) return;
 
 void IRC_Announce_GameOver(void) { if(!irc) return;
     if(sv_ircbot_announce_gameover)
-        IRC_Announce(irc.cnt, irc.target, strcat("^1--> ^5", gamemode_name, "^7 on ^2", mapname, " ^7ended ^1<-- "));
+    if(sv_ircbot_announce_when_empty || player_count > 0 || irc_gamestart_wasannounced)
+        IRC_Privmsg(irc.cnt, irc.target, strcat("^1--> ^5", gamemode_name, "^7 on ^2", mapname, " ^7ended ^1<-- "));
 }
 
 void IRC_Announce_GameEvent(string estr) { if(!irc) return;
