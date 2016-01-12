@@ -68,6 +68,24 @@ string kh_sound_alarm = "kh/alarm.wav";  // the new siren/alarm
 
 float kh_key_dropped, kh_key_carried;
 
+float g_balance_keyhunt_damageforcescale;
+float g_balance_keyhunt_delay_collect;
+float g_balance_keyhunt_delay_drop;
+float g_balance_keyhunt_delay_return;
+float g_balance_keyhunt_delay_round;
+float g_balance_keyhunt_delay_tracking;
+float g_balance_keyhunt_dropvelocity;
+float g_balance_keyhunt_maxdist;
+float g_balance_keyhunt_protecttime;
+float g_balance_keyhunt_score_capture;
+float g_balance_keyhunt_score_carrierfrag;
+float g_balance_keyhunt_score_collect;
+float g_balance_keyhunt_score_destroyed;
+float g_balance_keyhunt_score_destroyed_ownfactor;
+float g_balance_keyhunt_score_push;
+float g_balance_keyhunt_throwvelocity;
+float g_keyhunt_showenemycarrier;
+
 void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occasionaly
 {
 	kh_Controller_Thinkfunc = func;
@@ -224,8 +242,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.flags = FL_ITEM;
 	key.solid = SOLID_TRIGGER;
 	key.movetype = MOVETYPE_TOSS;
-	key.pain_finished = time + cvar("g_balance_keyhunt_delay_return");
-	key.damageforcescale = cvar("g_balance_keyhunt_damageforcescale");
+	key.pain_finished = time + g_balance_keyhunt_delay_return;
+	key.damageforcescale = g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
@@ -290,7 +308,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(key.kh_next == world)
 		{
 			// player is now a key carrier
-			if (cvar("g_keyhunt_showenemycarrier"))
+			if (g_keyhunt_showenemycarrier)
 			{
 				WaypointSprite_AttachCarrier("", player);
 				player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
@@ -479,7 +497,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 
 	if(key.kh_dropperteam != player.team)
 	{
-		kh_Scores_Event(player, key, "collect", cvar("g_balance_keyhunt_score_collect"), 0);
+		kh_Scores_Event(player, key, "collect", g_balance_keyhunt_score_collect, 0);
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
@@ -505,9 +523,9 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			bprint(player.netname, "^7 died and lost the ", key.netname, "\n");
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
-			key.velocity = W_CalculateProjectileVelocity(player.velocity, cvar("g_balance_keyhunt_dropvelocity") * v_forward);
+			key.velocity = W_CalculateProjectileVelocity(player.velocity, g_balance_keyhunt_dropvelocity * v_forward);
 			key.pusher = mypusher;
-			key.pushltime = time + cvar("g_balance_keyhunt_protecttime");
+			key.pushltime = time + g_balance_keyhunt_protecttime;
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
@@ -527,7 +545,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 	if(other.deadflag != DEAD_NO)
 		return;
 	if(other == self.enemy)
-		if(time < self.kh_droptime + cvar("g_balance_keyhunt_delay_collect"))
+		if(time < self.kh_droptime + g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
 	kh_Key_Collect(self, other);
 }
@@ -559,7 +577,7 @@ void kh_Key_Think()  // runs all the time
 #endif
 
 		if(self.owner.BUTTON_USE)
-		if(time >= self.owner.kh_droptime + cvar("g_balance_keyhunt_delay_drop"))
+		if(time >= self.owner.kh_droptime + g_balance_keyhunt_delay_drop)
 		{
 			self.owner.kh_droptime = time;
 			self.kh_droptime = time;  // prevent collecting this one for some time
@@ -569,9 +587,9 @@ void kh_Key_Think()  // runs all the time
 			bprint(self.owner.netname, "^7 dropped the ", self.netname, "\n");
 			sound(self.owner, CHAN_AUTO, kh_sound_drop, VOL_BASE, ATTN_NORM);
 			makevectors(self.owner.v_angle);
-			self.velocity = W_CalculateProjectileVelocity(self.owner.velocity, cvar("g_balance_keyhunt_throwvelocity") * v_forward);
+			self.velocity = W_CalculateProjectileVelocity(self.owner.velocity, g_balance_keyhunt_throwvelocity * v_forward);
 			kh_Key_AssignTo(self, world);
-			self.pushltime = time + cvar("g_balance_keyhunt_protecttime");
+			self.pushltime = time + g_balance_keyhunt_protecttime;
 			self.kh_dropperteam = self.team;
 		}
 	}
@@ -594,7 +612,7 @@ void kh_Key_Think()  // runs all the time
 		vector p;
 		p = self.owner.origin;
 		FOR_EACH_KH_KEY(key)
-			if(vlen(key.owner.origin - p) > cvar("g_balance_keyhunt_maxdist"))
+			if(vlen(key.owner.origin - p) > g_balance_keyhunt_maxdist)
 				goto not_winning;
 		kh_WinnerTeam(self.team);
 :not_winning
@@ -625,7 +643,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	float first;
 	entity key;
 	float score;
-	score = (kh_teams - 1) * cvar("g_balance_keyhunt_score_capture");
+	score = (kh_teams - 1) * g_balance_keyhunt_score_capture;
 	DistributeEvenly_Init(score, kh_teams);
 	// twice the score for 3 team games, three times the score for 4 team games!
 	// note: for a win by destroying the key, this should NOT be applied
@@ -694,17 +712,16 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 	if(attacker)
 	{
 		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, world, "pushed", 0, -cvar("g_balance_keyhunt_score_push"));
+			kh_Scores_Event(lostkey.kh_previous_owner, world, "pushed", 0, - g_balance_keyhunt_score_push);
 			// don't actually GIVE him the -nn points, just log
-		kh_Scores_Event(attacker, world, "push", cvar("g_balance_keyhunt_score_push"), 0);
+		kh_Scores_Event(attacker, world, "push", g_balance_keyhunt_score_push, 0);
 		PlayerScore_Add(attacker, SP_KH_PUSHES, 1);
 		centerprint(attacker, "Your push is the best!");
 		bprint("The ", ColoredTeamName(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
 	}
 	else
 	{
-		float of, fragsleft, i, j, thisteam;
-		of = cvar("g_balance_keyhunt_score_destroyed_ownfactor");
+		float fragsleft, i, j, thisteam;
 
 		FOR_EACH_PLAYER(player)
 			if(player.team != teem)
@@ -715,18 +732,18 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 				++keys;
 
 		if(lostkey.kh_previous_owner)
-			kh_Scores_Event(lostkey.kh_previous_owner, world, "destroyed", 0, -cvar("g_balance_keyhunt_score_destroyed"));
+			kh_Scores_Event(lostkey.kh_previous_owner, world, "destroyed", 0, - g_balance_keyhunt_score_destroyed);
 			// don't actually GIVE him the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
 			PlayerScore_Add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
 
-		DistributeEvenly_Init(cvar("g_balance_keyhunt_score_destroyed"), keys * of + players);
+		DistributeEvenly_Init(g_balance_keyhunt_score_destroyed, keys * g_balance_keyhunt_score_destroyed_ownfactor + players);
 
 		FOR_EACH_KH_KEY(key)
 			if(key.owner && key.team != teem)
 			{
-				f = DistributeEvenly_Get(of);
+				f = DistributeEvenly_Get(g_balance_keyhunt_score_destroyed_ownfactor);
 				kh_Scores_Event(key.owner, world, "destroyed_holdingkey", f, 0);
 			}
 
@@ -778,7 +795,7 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Remove(key);
 	kh_no_radar_circles = FALSE;
 
-	kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round"), "Round starts in ", kh_StartRound);
+	kh_Controller_SetThink(g_balance_keyhunt_delay_round, "Round starts in ", kh_StartRound);
 }
 
 string kh_CheckEnoughPlayers()  // checks enough player are present, runs after every completed round
@@ -820,7 +837,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing == "")
-		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round"), "Round starts in ", kh_StartRound);
+		kh_Controller_SetThink(g_balance_keyhunt_delay_round, "Round starts in ", kh_StartRound);
 	else
 		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
 }
@@ -866,7 +883,7 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_tracking"), "Scanning frequency range...", kh_EnableTrackingDevice);
+	kh_Controller_SetThink(g_balance_keyhunt_delay_tracking, "Scanning frequency range...", kh_EnableTrackingDevice);
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
@@ -914,11 +931,11 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 			nk = 0;
 			for(k = targ.kh_next; k != world; k = k.kh_next)
 				++nk;
-			kh_Scores_Event(attacker, targ.kh_next, "carrierfrag", -nk * cvar("g_balance_keyhunt_score_collect"), 0);
+			kh_Scores_Event(attacker, targ.kh_next, "carrierfrag", -nk * g_balance_keyhunt_score_collect, 0);
 		}
 		else
 		{
-			kh_Scores_Event(attacker, targ.kh_next, "carrierfrag", cvar("g_balance_keyhunt_score_carrierfrag")-1, 0);
+			kh_Scores_Event(attacker, targ.kh_next, "carrierfrag", g_balance_keyhunt_score_carrierfrag - 1, 0);
 			PlayerScore_Add(attacker, SP_KH_KCKILLS, 1);
 			// the frag gets added later
 		}
@@ -929,6 +946,23 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 
 void kh_init()  // sets up th KH environment
 {
+	CACHE_CVAR(g_balance_keyhunt_damageforcescale);
+	CACHE_CVAR(g_balance_keyhunt_delay_collect);
+	CACHE_CVAR(g_balance_keyhunt_delay_drop);
+	CACHE_CVAR(g_balance_keyhunt_delay_return);
+	CACHE_CVAR(g_balance_keyhunt_delay_round);
+	CACHE_CVAR(g_balance_keyhunt_delay_tracking);
+	CACHE_CVAR(g_balance_keyhunt_dropvelocity);
+	CACHE_CVAR(g_balance_keyhunt_maxdist);
+	CACHE_CVAR(g_balance_keyhunt_protecttime);
+	CACHE_CVAR(g_balance_keyhunt_score_capture);
+	CACHE_CVAR(g_balance_keyhunt_score_carrierfrag);
+	CACHE_CVAR(g_balance_keyhunt_score_collect);
+	CACHE_CVAR(g_balance_keyhunt_score_destroyed);
+	CACHE_CVAR(g_balance_keyhunt_score_destroyed_ownfactor);
+	CACHE_CVAR(g_balance_keyhunt_score_push);
+	CACHE_CVAR(g_balance_keyhunt_throwvelocity);
+	CACHE_CVAR(g_keyhunt_showenemycarrier);
 	precache_sound(kh_sound_capture);
 	precache_sound(kh_sound_destroy);
 	precache_sound(kh_sound_drop);
