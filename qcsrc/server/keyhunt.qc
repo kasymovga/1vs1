@@ -33,12 +33,6 @@ float kh_no_radar_circles;
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
-float test[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-//test[0] = status of dropped keys, test[1 - 16] = player #
-//replace 17 with cvar("maxplayers") or similar !!!!!!!!!
-//for(i = 0; i < maxplayers; ++i)
-//	test[i] = "0";
-
 float kh_Team_ByID(float t)
 {
 	if(t == 0) return COLOR_TEAM1;
@@ -290,18 +284,6 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		player.kh_next = key;
 		if(key.kh_next)
 			key.kh_next.kh_prev = key;
-
-		float i;
-		i = test[key.owner.playerid];
-			if(key.netname == "^1red key")
-				i += 1;
-			if(key.netname == "^4blue key")
-				i += 2;
-			if(key.netname == "^3yellow key")
-				i += 4;
-			if(key.netname == "^6pink key")
-				i += 8;
-		test[key.owner.playerid] = i;
 
 		kh_Key_Attach(key);
 
