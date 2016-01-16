@@ -96,7 +96,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(teleporter.owner)
 		{
 			player.pusher = teleporter.owner;
-			player.pushltime = time + cvar("g_maxpushtime");
+			player.pushltime = time + g_maxpushtime;
 		}
 		else
 		{

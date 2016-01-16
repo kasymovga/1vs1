@@ -218,7 +218,7 @@ void GrapplingHookThink()
 						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
 						self.aiment.flags &~= FL_ONGROUND;
 						self.aiment.pusher = self.owner;
-						self.aiment.pushltime = time + cvar("g_maxpushtime");
+						self.aiment.pushltime = time + g_maxpushtime;
 					}
 				}
 
@@ -293,7 +293,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 			if(attacker != self.owner)
 			{
 				self.owner.pusher = attacker;
-				self.owner.pushltime = time + cvar("g_maxpushtime");
+				self.owner.pushltime = time + g_maxpushtime;
 			}
 			RemoveGrapplingHook(self.owner);
 		}

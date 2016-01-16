@@ -49,10 +49,13 @@ float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
 float g_jetpack;
 
+float g_maxpushtime;
+
 float g_antilag;
 float g_antilag_bullets;
 float g_casings;
 float g_projectiles_newton_style;
+float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
 float g_balance_selfdamagepercent;
 
@@ -63,6 +66,9 @@ float sv_clones;
 float sv_cheats;
 float sv_gentle;
 float sv_foginterval;
+
+float spawn_debug;
+float spawn_debugview;
 
 entity	activator;
 string	string_null;

@@ -1,3 +1,6 @@
+float g_spawn_furthest;
+float sv_servermodelsonly;
+
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -199,7 +202,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindis
 	{
 		spot.SPAWNPOINT_SCORE = Spawn_Score(spot, playerlist, teamcheck);
 
-		if(cvar("spawn_debugview"))
+		if(spawn_debugview)
 		{
 			setmodel(spot, "models/runematch/rune.mdl");
 			if(spot.SPAWNPOINT_SCORE < mindist)
@@ -321,13 +324,13 @@ entity SelectSpawnPoint (float anypoint)
 				firstspot = firstspot_new;
 			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
 		}
-		else if (random() > cvar("g_spawn_furthest"))
+		else if (random() > g_spawn_furthest)
 			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
 		else
 			spot = Spawn_WeightedPoint(firstspot, 1, 5000, 5); // chooses a far far away spawnpoint
 	}
 
-	if(cvar("spawn_debugview"))
+	if(spawn_debugview)
 	{
 		print("spot mindistance: ", ftos(spot.SPAWNPOINT_SCORE), "\n");
 
@@ -340,7 +343,7 @@ entity SelectSpawnPoint (float anypoint)
 
 	if (!spot)
 	{
-		if(cvar("spawn_debug"))
+		if(spawn_debug)
 			GotoNextMap();
 		else
 		{
@@ -368,7 +371,7 @@ string CheckPlayerModel(string plyermodel) {
 		return FallbackPlayerModel;
 	if( substring(plyermodel,0,14) != "models/player/")
 		return FallbackPlayerModel;
-	else if(cvar("sv_servermodelsonly"))
+	else if(sv_servermodelsonly)
 	{
 		if(substring(plyermodel,-4,4) != ".zym")
 		if(substring(plyermodel,-4,4) != ".dpm")
@@ -586,7 +589,7 @@ void PutObserverInServer (void)
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
-	self.armorvalue = cvar("g_balance_armor_start");
+	self.armorvalue = start_armorvalue;
 	self.pauserotarmor_finished = 0;
 	self.pauserothealth_finished = 0;
 	self.pauseregen_finished = 0;
@@ -960,7 +963,7 @@ void PutClientInServer (void)
 
 		race_PostSpawn(spot);
 
-		if(cvar("spawn_debug"))
+		if(spawn_debug)
 		{
 			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
 			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
@@ -1024,7 +1027,7 @@ float FakeInit_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
+	WriteByte(MSG_ENTITY, g_balance_armor_blockpercent * 255.0);
 	return TRUE;
 }
 
@@ -1043,7 +1046,7 @@ float ClientInit_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, cvar("g_balance_armor_blockpercent") * 255.0);
+	WriteByte(MSG_ENTITY, g_balance_armor_blockpercent * 255.0);
 	return TRUE;
 }
 
@@ -2515,7 +2518,7 @@ void PlayerPreThink (void)
 					centerprint(self, cvar_string("g_lms_campcheck_message"));
 					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
 					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					Damage(self, self, self, bound(0, cvar("g_lms_campcheck_damage"), self.health + self.armorvalue * cvar("g_balance_armor_blockpercent") + 5), DEATH_CAMP, self.origin, '0 0 0');
+					Damage(self, self, self, bound(0, cvar("g_lms_campcheck_damage"), self.health + self.armorvalue * g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
 				}
 				self.lms_nextcheck = time + cvar("g_lms_campcheck_interval");
 				self.lms_traveled_distance = 0;
@@ -2949,5 +2952,11 @@ void PlayerPostThink (void)
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, cvar("g_balance_armor_blockpercent")));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, g_balance_armor_blockpercent));
+}
+
+void Client_ReadCvars()
+{
+	CACHE_CVAR(g_spawn_furthest);
+	CACHE_CVAR(sv_servermodelsonly);
 }
