@@ -554,8 +554,14 @@ void VoteCount() {
 	local float realplayerabstaincount;
 	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
 
+	string ignore_players_with_prefix = cvar_string("sv_vote_ignore_players_with_prefix");
+	float ignore_players_with_prefix_len = strlen(ignore_players_with_prefix);
+
 	FOR_EACH_REALCLIENT(player)
 	{
+		if (ignore_players_with_prefix_len)
+		if (substring(strdecolorize(player.netname), 0, ignore_players_with_prefix_len) == ignore_players_with_prefix)
+			continue;
 		if(player.vote_vote == -1) {
 			++nocount;
 		} else if(player.vote_vote == 1) {
