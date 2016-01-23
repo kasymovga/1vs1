@@ -755,6 +755,7 @@ void SV_ParseClientCommand(string s) {
 void ReadyRestartForce()
 {
 	local entity e;
+	restart_active = 1;
 
 	bprint("^1Server is restarting...\n");
 
@@ -870,6 +871,7 @@ void restartTimer_Think() {
 	reset_map(TRUE);
 	Score_ClearAll();
 	remove(self);
+	restart_active = 0;
 	return;
 }
 

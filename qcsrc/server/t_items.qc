@@ -769,7 +769,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		}
 		*/
 
-		if(cvar("spawn_debug") >= 2)
+		if(spawn_debug >= 2)
 		{
 			entity otheritem;
 			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)

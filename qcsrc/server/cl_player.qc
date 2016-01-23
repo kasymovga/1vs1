@@ -383,7 +383,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, cvar("g_balance_armor_blockpercent"), damage);
+	v = healtharmor_applydamage(self.armorvalue, g_balance_armor_blockpercent, damage);
 	take = v_x;
 	save = v_y;
 
@@ -482,7 +482,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 	if (!g_minstagib)
 	{
-		v = healtharmor_applydamage(self.armorvalue, cvar("g_balance_armor_blockpercent"), damage);
+		v = healtharmor_applydamage(self.armorvalue, g_balance_armor_blockpercent, damage);
 		take = v_x;
 		save = v_y;
 	}
@@ -567,7 +567,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else if(attacker.classname == "player" || attacker.classname == "gib")
 	{
 		self.pusher = attacker;
-		self.pushltime = time + cvar("g_maxpushtime");
+		self.pushltime = time + g_maxpushtime;
 	}
 	else if(time < self.pushltime)
 	{

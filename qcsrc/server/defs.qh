@@ -49,10 +49,13 @@ float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
 float g_jetpack;
 
+float g_maxpushtime;
+
 float g_antilag;
 float g_antilag_bullets;
 float g_casings;
 float g_projectiles_newton_style;
+float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
 float g_balance_selfdamagepercent;
 
@@ -63,6 +66,9 @@ float sv_clones;
 float sv_cheats;
 float sv_gentle;
 float sv_foginterval;
+
+float spawn_debug;
+float spawn_debugview;
 
 entity	activator;
 string	string_null;
@@ -88,8 +94,6 @@ float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
 string sv_announcer_extra_twohits;
-
-float sv_ready_restart_after_countdown;
 
 float sv_gameplayfix_skipnonsolid;
 
@@ -307,6 +311,7 @@ float alreadychangedlevel;
 .float ready;
 #define RESTART_COUNTDOWN 10
 float restart_mapalreadyrestarted; //bool, indicates whether reset_map() was already executed
+float restart_active;
 entity restartTimer;
 void restartTimer_Think();
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds

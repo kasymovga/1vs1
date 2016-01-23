@@ -296,7 +296,7 @@ void W_WeaponFrame()
 {
 	vector fo, ri, up;
 
-	if((arena_roundbased && time < warmup) || ((time < game_starttime) && !cvar("sv_ready_restart_after_countdown")))
+	if((arena_roundbased && time < warmup) || ((time < game_starttime) && !restart_active))
 		return;
 
 	if (!self.weaponentity || self.health < 1)
