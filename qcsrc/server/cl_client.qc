@@ -1,5 +1,8 @@
 float g_spawn_furthest;
 float sv_servermodelsonly;
+float sv_reset_on_join;
+
+float reset_on_join_done;
 
 float ClientData_Send(entity to, float sf)
 {
@@ -765,6 +768,7 @@ Called when a client spawns in the server
 =============
 */
 //void() ctf_playerchanged;
+void ReadyRestartForce();
 void PutClientInServer (void)
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
@@ -796,6 +800,8 @@ void PutClientInServer (void)
 	if(self.classname == "player") {
 		entity spot, oldself;
 		float j;
+		local float currentlyPlaying;
+		entity e;
 
 		if(self.team < 0)
 			JoinBestTeam(self, FALSE, TRUE);
@@ -867,7 +873,7 @@ void PutClientInServer (void)
 		self.pauserotfuel_finished = time + cvar("g_balance_pause_fuel_rot_spawn");
 		self.pauseregen_finished = time + cvar("g_balance_pause_health_regen_spawn");
 		//extend the pause of rotting if client was reset at the beginning of the countdown
-		if(!cvar("sv_ready_restart_after_countdown") && time < game_starttime) { // TODO why is this cvar NOTted?
+		if(time < game_starttime) { // TODO why is this cvar NOTted?
 			self.spawnshieldtime += game_starttime - time;
 			self.pauserotarmor_finished += game_starttime - time;
 			self.pauserothealth_finished += game_starttime - time;
@@ -997,6 +1003,20 @@ void PutClientInServer (void)
 				SUB_UseTargets();
 			activator = world;
 		self = oldself;
+
+		if (sv_reset_on_join)
+		if not(reset_on_join_done)
+		{
+			FOR_EACH_REALPLAYER(e)
+				if(e.classname == "player")
+					currentlyPlaying += 1;
+			if (currentlyPlaying == sv_reset_on_join)
+			{
+				reset_on_join_done = TRUE;
+				if (time > game_starttime)
+					ReadyRestartForce();
+			}
+		}
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
@@ -2959,4 +2979,5 @@ void Client_ReadCvars()
 {
 	CACHE_CVAR(g_spawn_furthest);
 	CACHE_CVAR(sv_servermodelsonly);
+	CACHE_CVAR(sv_reset_on_join);
 }
