@@ -1,4 +1,7 @@
 float g_spawn_furthest;
+float g_teamdamage_resetspeed;
+float g_allow_oldnexbeam;
+float g_forced_respawn;
 float sv_servermodelsonly;
 float sv_reset_on_join;
 
@@ -2352,7 +2355,7 @@ void() nexball_setstatus;
 void PlayerPreThink (void)
 {
 	self.stat_game_starttime = game_starttime;
-	self.stat_allow_oldnexbeam = cvar("g_allow_oldnexbeam");
+	self.stat_allow_oldnexbeam = g_allow_oldnexbeam;
 	self.stat_leadlimit = cvar("leadlimit");
 
 	if(blockSpectators && frametime)
@@ -2466,7 +2469,7 @@ void PlayerPreThink (void)
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				force_respawn = (g_lms || cvar("g_forced_respawn"));
+				force_respawn = (g_lms || g_forced_respawn);
 				if (self.deadflag == DEAD_DYING)
 				{
 					if(force_respawn)
@@ -2608,7 +2611,7 @@ void PlayerPreThink (void)
 		ctf_setstatus();
 		nexball_setstatus();
 
-		self.dmg_team = max(0, self.dmg_team - cvar("g_teamdamage_resetspeed") * frametime);
+		self.dmg_team = max(0, self.dmg_team - g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
 	} else if(gameover) {
@@ -2980,4 +2983,7 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_spawn_furthest);
 	CACHE_CVAR(sv_servermodelsonly);
 	CACHE_CVAR(sv_reset_on_join);
+	CACHE_CVAR(g_teamdamage_resetspeed);
+	CACHE_CVAR(g_allow_oldnexbeam);
+	CACHE_CVAR(g_forced_respawn);
 }
