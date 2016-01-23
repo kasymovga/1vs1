@@ -876,7 +876,7 @@ void PutClientInServer (void)
 		self.pauserotfuel_finished = time + cvar("g_balance_pause_fuel_rot_spawn");
 		self.pauseregen_finished = time + cvar("g_balance_pause_health_regen_spawn");
 		//extend the pause of rotting if client was reset at the beginning of the countdown
-		if(time < game_starttime) { // TODO why is this cvar NOTted?
+		if(!restart_active && time < game_starttime) {
 			self.spawnshieldtime += game_starttime - time;
 			self.pauserotarmor_finished += game_starttime - time;
 			self.pauserothealth_finished += game_starttime - time;

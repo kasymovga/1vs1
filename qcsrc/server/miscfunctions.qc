@@ -1211,7 +1211,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_balance_pause_fuel_regen);
 	CACHE_CVAR(g_balance_selfdamagepercent);
 	CACHE_CVAR(sv_gameplayfix_skipnonsolid);
-	CACHE_CVAR(sv_ready_restart_after_countdown);
 	CACHE_CVAR(sv_eventlog);
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(g_balance_armor_blockpercent);

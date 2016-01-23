@@ -95,8 +95,6 @@ string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
 string sv_announcer_extra_twohits;
 
-float sv_ready_restart_after_countdown;
-
 float sv_gameplayfix_skipnonsolid;
 
 float sv_eventlog;
@@ -313,6 +311,7 @@ float alreadychangedlevel;
 .float ready;
 #define RESTART_COUNTDOWN 10
 float restart_mapalreadyrestarted; //bool, indicates whether reset_map() was already executed
+float restart_active;
 entity restartTimer;
 void restartTimer_Think();
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
