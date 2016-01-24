@@ -8,6 +8,7 @@
 #define BALL_SPRITECOLOR '.91 .85 .62'
 #define BALL_FOOT   1
 #define BALL_BASKET 2
+#define BALL_HOCKEY 4
 //spawnflags
 #define GOAL_TOUCHPLAYER 1
 //goal types
@@ -17,6 +18,7 @@
 float g_nexball_football_boost_forward;
 float g_nexball_football_boost_up;
 float g_nexball_football_physics;
+float g_nexball_hockey_boost_forward;
 float g_nexball_delay_idle;
 float g_nexball_basketball_delay_hold;
 float g_nexball_basketball_delay_hold_forteam;
@@ -59,6 +61,7 @@ void nb_init() // Called early (worldspawn stage)
 	// General settings
 	CACHE_CVAR(g_nexball_football_boost_forward);   //100
 	CACHE_CVAR(g_nexball_football_boost_up);        //200
+	CACHE_CVAR(g_nexball_hockey_boost_forward);   //100
 	CACHE_CVAR(g_nexball_delay_idle);               //10
 	CACHE_CVAR(g_nexball_football_physics);         //0
 	CACHE_CVAR(g_nexball_ball_scale);
@@ -155,6 +158,7 @@ void relocate_nexball (void)
 
 void basketball_touch();
 void football_touch();
+void hockey_touch();
 
 void DropOwner (void)
 {
@@ -264,11 +268,16 @@ void InitBall (void)
 {
 	if (gameover) return;
 	self.flags &~= FL_ONGROUND;
-	self.movetype = MOVETYPE_BOUNCE;
+	if (self.classname == "nexball_hockey")
+		self.movetype = MOVETYPE_BOUNCEMISSILE;
+	else
+		self.movetype = MOVETYPE_BOUNCE;
 	if (self.classname == "nexball_basketball")
 		self.touch = basketball_touch;
 	else if (self.classname == "nexball_football")
 		self.touch = football_touch;
+	else if (self.classname == "nexball_hockey")
+		self.touch = hockey_touch;
 	self.cnt = 0;
 	self.think = ResetBall;
 	self.nextthink = time + g_nexball_delay_idle + 3;
@@ -348,6 +357,35 @@ void football_touch (void)
 	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
 
+void hockey_touch (void)
+{
+	if (other.solid == SOLID_BSP) {
+		self.velocity_z = 0;
+		if (time > self.lastground + 0.1)
+		{
+			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
+			self.lastground = time;
+		}
+		if (vlen(self.velocity) && !self.cnt)
+			self.nextthink = time + g_nexball_delay_idle;
+		return;
+	}
+	if (other.classname != "player")
+		return;
+	if (other.health < 1)
+		return;
+	if (!self.cnt)
+		self.nextthink = time + g_nexball_delay_idle;
+
+	self.pusher = other;
+	self.team = other.team;
+
+	makevectors(other.v_angle_y * '0 1 0');
+	self.velocity = other.velocity + v_forward * g_nexball_hockey_boost_forward;
+	self.velocity_z = 0;
+	self.avelocity = '0 1 0' * self.velocity_x;
+}
+
 void basketball_touch (void)
 {
 	if (other.ballcarried)
@@ -380,6 +418,7 @@ void GoalTouch (void)
 		ball = other;
 	if (ball.classname != "nexball_basketball")
 	if (ball.classname != "nexball_football")
+	if (ball.classname != "nexball_hockey")
 		return;
 	if ((!ball.pusher && self.team != GOAL_OUT) || ball.cnt)
 		return;
@@ -579,6 +618,16 @@ void spawnfunc_nexball_football (void)
 	SpawnBall();
 }
 
+void spawnfunc_nexball_hockey (void)
+{
+	self.classname = "nexball_hockey";
+	self.solid = SOLID_TRIGGER;
+	balls |= BALL_HOCKEY;
+	self.bouncefactor = cvar("g_nexball_hockey_bouncefactor");
+	self.bouncestop = cvar("g_nexball_hockey_bouncestop");
+	SpawnBall();
+}
+
 void SpawnGoal (void)
 {
 	if(!g_nexball) { remove(self); return; }
@@ -634,6 +683,7 @@ void spawnfunc_nexball_out (void)
 void spawnfunc_ball            (void) { spawnfunc_nexball_football(); }
 void spawnfunc_ball_football   (void) { spawnfunc_nexball_football(); }
 void spawnfunc_ball_basketball (void) { spawnfunc_nexball_basketball(); }
+void spawnfunc_ball_hockey (void) { spawnfunc_nexball_hockey(); }
 // The "red goal" is defended by blue team. A ball in there counts as a point for red.
 void spawnfunc_ball_redgoal    (void) { spawnfunc_nexball_bluegoal(); } // I blame Revenant
 void spawnfunc_ball_bluegoal   (void) { spawnfunc_nexball_redgoal(); }  // but he didn't mean to cause trouble :p
