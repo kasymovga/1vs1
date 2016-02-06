@@ -19,6 +19,8 @@ float g_nexball_football_boost_forward;
 float g_nexball_football_boost_up;
 float g_nexball_football_physics;
 float g_nexball_hockey_boost_forward;
+float g_nexball_hockey_melee_boost_forward;
+float g_nexball_hockey_melee_boost_up;
 float g_nexball_delay_idle;
 float g_nexball_basketball_delay_hold;
 float g_nexball_basketball_delay_hold_forteam;
@@ -62,6 +64,8 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_football_boost_forward);   //100
 	CACHE_CVAR(g_nexball_football_boost_up);        //200
 	CACHE_CVAR(g_nexball_hockey_boost_forward);   //100
+	CACHE_CVAR(g_nexball_hockey_melee_boost_forward);   //300
+	CACHE_CVAR(g_nexball_hockey_melee_boost_up);   //100
 	CACHE_CVAR(g_nexball_delay_idle);               //10
 	CACHE_CVAR(g_nexball_football_physics);         //0
 	CACHE_CVAR(g_nexball_ball_scale);
@@ -141,7 +145,7 @@ void nexball_setstatus (void)
 
 void relocate_nexball (void)
 {
-	tracebox(self.origin, BALL_MINS, BALL_MAXS, self.origin, TRUE, self);
+	tracebox(self.origin, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, self.origin, TRUE, self);
 	if (trace_startsolid)
 	{
 		vector o;
@@ -277,7 +281,9 @@ void InitBall (void)
 	else if (self.classname == "nexball_football")
 		self.touch = football_touch;
 	else if (self.classname == "nexball_hockey")
+	{
 		self.touch = hockey_touch;
+	}
 	self.cnt = 0;
 	self.think = ResetBall;
 	self.nextthink = time + g_nexball_delay_idle + 3;
@@ -366,8 +372,6 @@ void hockey_touch (void)
 			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
 			self.lastground = time;
 		}
-		if (vlen(self.velocity) && !self.cnt)
-			self.nextthink = time + g_nexball_delay_idle;
 		return;
 	}
 	if (other.classname != "player")
@@ -383,7 +387,14 @@ void hockey_touch (void)
 	makevectors(other.v_angle_y * '0 1 0');
 	self.velocity = other.velocity + v_forward * g_nexball_hockey_boost_forward;
 	self.velocity_z = 0;
-	self.avelocity = '0 1 0' * self.velocity_x;
+	if (other.weapon == WEP_LASER)
+	if ((other.weaponentity.wframe == WFRAME_FIRE2 && g_balance_laser_secondary_gauntlet)
+			|| (other.weaponentity.wframe == WFRAME_FIRE1 && g_balance_laser_primary_gauntlet))
+	{
+		self.velocity = self.velocity + v_forward * g_nexball_hockey_melee_boost_forward;
+		self.velocity_z = g_nexball_hockey_melee_boost_up;
+	}
+	self.avelocity = '0 -180 0' + ('0 360 0' * random());
 }
 
 void basketball_touch (void)
@@ -618,6 +629,20 @@ void spawnfunc_nexball_football (void)
 	SpawnBall();
 }
 
+void hockey_physic_controller_think(void)
+{
+	self.nextthink = time;
+	if (self.ballcarried.cnt)
+		return;
+	tracebox(self.ballcarried.origin, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, self.ballcarried.origin + '0 0 -1', MOVE_WORLDONLY, world);
+	if (trace_fraction == 1)
+	{
+		self.ballcarried.velocity_z -= sv_gravity * frametime;
+		setorigin(self.ballcarried, self.ballcarried.origin);
+	}
+}
+
+.entity hockey_physic_controller;
 void spawnfunc_nexball_hockey (void)
 {
 	self.classname = "nexball_hockey";
@@ -625,6 +650,10 @@ void spawnfunc_nexball_hockey (void)
 	balls |= BALL_HOCKEY;
 	self.bouncefactor = cvar("g_nexball_hockey_bouncefactor");
 	self.bouncestop = cvar("g_nexball_hockey_bouncestop");
+	self.hockey_physic_controller = spawn();
+	self.hockey_physic_controller.ballcarried = self;
+	self.hockey_physic_controller.think = hockey_physic_controller_think;
+	self.hockey_physic_controller.nextthink = time;
 	SpawnBall();
 }
 
@@ -731,7 +760,7 @@ void W_Nexball_Attack (float t)
 		return;
 
 	W_SetupShot (self, FALSE, 4, "nexball/shoot1.wav",0);
-	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
+	tracebox(w_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
 		if(self.metertime)
