@@ -417,9 +417,6 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	// needs to be done so early as they would still spawn
-	RegisterWeapons();
-
 	if(sv_cheats)
 		ServerProgsDB = db_create();
 	else
@@ -484,6 +481,8 @@ void spawnfunc_worldspawn (void)
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
+	// needs to be done so early as they would still spawn
+	RegisterWeapons();
 	readlevelcvars();
 	PhysicReadCvars();
 	GrappleHookInit();
