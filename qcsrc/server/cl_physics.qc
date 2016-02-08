@@ -43,6 +43,7 @@ float g_minstagib_speed_moverate;
 float g_nexball_basketball_carrier_speed;
 float sv_spectator_speed_multiplier;
 float sv_slicksurfaces;
+float sv_slicksurfaces_allowjump;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -80,7 +81,8 @@ void PlayerJump (void)
 		return;
 	}
 
-	if (!(self.flags & FL_ONGROUND_OR_SLICK))
+	if not(self.flags & FL_ONGROUND)
+	if not((self.flags & FL_SLICK) && sv_slicksurfaces_allowjump)
 		return;
 
 	if(!sv_pogostick)
@@ -807,7 +809,8 @@ void SV_PlayerPhysics()
 		self.angles_z = 0;
 	}
 
-	if(sv_slicksurfaces && (self.flags & FL_ONGROUND))
+	if(sv_slicksurfaces)
+	if(self.flags & FL_ONGROUND)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
 		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
@@ -1242,4 +1245,5 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(sv_slicksurfaces);
+	CACHE_CVAR(sv_slicksurfaces_allowjump);
 }
