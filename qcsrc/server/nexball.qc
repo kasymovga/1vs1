@@ -19,6 +19,7 @@ float g_nexball_football_boost_forward;
 float g_nexball_football_boost_up;
 float g_nexball_football_physics;
 float g_nexball_hockey_boost_forward;
+float g_nexball_hockey_bouncefactor;
 float g_nexball_hockey_melee_boost_forward;
 float g_nexball_hockey_melee_boost_up;
 float g_nexball_delay_idle;
@@ -64,6 +65,7 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_football_boost_forward);   //100
 	CACHE_CVAR(g_nexball_football_boost_up);        //200
 	CACHE_CVAR(g_nexball_hockey_boost_forward);   //100
+	CACHE_CVAR(g_nexball_hockey_bouncefactor);   //0.9
 	CACHE_CVAR(g_nexball_hockey_melee_boost_forward);   //300
 	CACHE_CVAR(g_nexball_hockey_melee_boost_up);   //100
 	CACHE_CVAR(g_nexball_delay_idle);               //10
@@ -367,6 +369,8 @@ void hockey_touch (void)
 {
 	if (other.solid == SOLID_BSP) {
 		self.velocity_z = 0;
+		self.velocity_x = self.velocity_x * g_nexball_hockey_bouncefactor;
+		self.velocity_y = self.velocity_y * g_nexball_hockey_bouncefactor;
 		if (time > self.lastground + 0.1)
 		{
 			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
@@ -648,8 +652,6 @@ void spawnfunc_nexball_hockey (void)
 	self.classname = "nexball_hockey";
 	self.solid = SOLID_TRIGGER;
 	balls |= BALL_HOCKEY;
-	self.bouncefactor = cvar("g_nexball_hockey_bouncefactor");
-	self.bouncestop = cvar("g_nexball_hockey_bouncestop");
 	self.hockey_physic_controller = spawn();
 	self.hockey_physic_controller.ballcarried = self;
 	self.hockey_physic_controller.think = hockey_physic_controller_think;
