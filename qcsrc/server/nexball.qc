@@ -656,6 +656,7 @@ void spawnfunc_nexball_hockey (void)
 	self.hockey_physic_controller.ballcarried = self;
 	self.hockey_physic_controller.think = hockey_physic_controller_think;
 	self.hockey_physic_controller.nextthink = time;
+	self.cnt = 4;
 	SpawnBall();
 }
 
