@@ -19,7 +19,6 @@ float g_balance_rocketlauncher_laserguided_speedaccel;
 float g_balance_rocketlauncher_laserguided_speedstart;
 float g_balance_rocketlauncher_laserguided_turnrate;
 float g_balance_rocketlauncher_lifetime;
-float g_balance_rocketlauncher_primary_damage;
 float g_balance_rocketlauncher_radius;
 float g_balance_rocketlauncher_refire;
 float g_balance_rocketlauncher_speed;
@@ -332,7 +331,7 @@ void W_Rocket_Attack (void)
 	missile.pushltime = time + g_balance_rocketlauncher_guidedelay;
 	missile.classname = "rocket";
 	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = g_balance_rocketlauncher_primary_damage * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
+	missile.bot_dodgerating = g_balance_rocketlauncher_damage * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = g_balance_rocketlauncher_damageforcescale;
@@ -603,7 +602,6 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_laserguided_speedstart);
 		CACHE_CVAR(g_balance_rocketlauncher_laserguided_turnrate);
 		CACHE_CVAR(g_balance_rocketlauncher_lifetime);
-		CACHE_CVAR(g_balance_rocketlauncher_primary_damage);
 		CACHE_CVAR(g_balance_rocketlauncher_radius);
 		CACHE_CVAR(g_balance_rocketlauncher_refire);
 		CACHE_CVAR(g_balance_rocketlauncher_speed);
