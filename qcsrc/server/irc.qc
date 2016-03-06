@@ -4,6 +4,7 @@
 entity irc;
 
 float sv_ircbot_announce_bans;
+float sv_ircbot_announce_chat_from_bots;
 float sv_ircbot_announce_game_events;
 float sv_ircbot_announce_gameover;
 float sv_ircbot_announce_gamestart;
@@ -165,6 +166,7 @@ void IRC_Init(void) {
     }
     
 	CACHE_CVAR(sv_ircbot_announce_bans);
+	CACHE_CVAR(sv_ircbot_announce_chat_from_bots);
 	CACHE_CVAR(sv_ircbot_announce_game_events);
 	CACHE_CVAR(sv_ircbot_announce_gameover);
 	CACHE_CVAR(sv_ircbot_announce_gamestart);
@@ -335,7 +337,8 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
 }
 
 void IRC_Announce_PlayerChat(entity plr, string msg) { if(!irc) return;
-    IRC_Privmsg(irc.cnt, irc.target, strcat("<", plr.netname, "^7> ", msg));
+	if (clienttype(plr) == CLIENTTYPE_REAL || sv_ircbot_announce_chat_from_bots)
+		IRC_Privmsg(irc.cnt, irc.target, strcat("<", plr.netname, "^7> ", msg));
 }
 
 void IRC_Announce_Client_Callback(string ip, string cn, entity ctx) {
