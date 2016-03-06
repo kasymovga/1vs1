@@ -601,6 +601,9 @@ void SpawnBall (void)
 	self.reset = ball_restart;
 	self.think = InitBall;
 	self.nextthink = game_starttime + g_nexball_delay_start;
+	self.bot_pickup = TRUE;
+	self.bot_pickupevalfunc = generic_pickupevalfunc;
+	self.bot_pickupbasevalue = BOT_PICKUP_RATING_HIGH;
 }
 
 void spawnfunc_nexball_basketball (void)
