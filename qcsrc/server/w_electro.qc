@@ -320,7 +320,7 @@ float w_electro(float req)
 		self.BUTTON_ATCK2=FALSE;
 		if(vlen(self.origin-self.enemy.origin) > 1000)
 			self.bot_secondary_electromooth = 0;
-		if(self.bot_secondary_electromooth == 0)
+		if(self.bot_secondary_electromooth == 0 || !g_balance_electro_secondary)
 		{
 			if(bot_aim(g_balance_electro_primary_speed, 0, g_balance_electro_primary_lifetime, FALSE))
 			{

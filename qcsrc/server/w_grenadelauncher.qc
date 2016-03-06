@@ -185,7 +185,7 @@ float w_glauncher(float req)
 	{
 		self.BUTTON_ATCK = FALSE;
 		self.BUTTON_ATCK2 = FALSE;
-		if (self.bot_secondary_grenademooth == 0)
+		if (self.bot_secondary_grenademooth == 0 || !g_balance_grenadelauncher_secondary)
 		{
 			if(bot_aim(g_balance_grenadelauncher_primary_speed, g_balance_grenadelauncher_primary_speed_up, g_balance_grenadelauncher_primary_lifetime, TRUE))
 			{
