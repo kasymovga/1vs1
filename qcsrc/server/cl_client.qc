@@ -93,6 +93,7 @@ void spawnfunc_info_player_start (void)
 void spawnfunc_info_player_deathmatch (void)
 {
 	self.classname = "info_player_deathmatch";
+	waypoint_spawnforitem(self);
 	relocate_spawnpoint();
 }
 
