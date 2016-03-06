@@ -1125,6 +1125,14 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		bprint(msgstr);
 }
 
+void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix)
+{
+	float n;
+	n = tokenizebyseparator(msglist, "|");
+	n = floor(random() * n);
+	Say(source, teamsay, privatesay, strcat(prefix, argv(n)), FALSE);
+}
+
 float GetVoiceMessageVoiceType(string type)
 {
 	if(type == "taunt")

@@ -258,6 +258,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
+void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix);
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	string	s, a;
@@ -273,6 +274,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 		if (targ == attacker)
 		{
+			if not(clienttype(attacker) == CLIENTTYPE_REAL)
+				Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
 			if (deathtype == DEATH_TEAMCHANGE) {
 				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", ColoredTeamName(targ.team)));
 			} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
@@ -357,6 +360,15 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else if (attacker.classname == "player" || attacker.classname == "gib")
 		{
+			if not(clienttype(attacker) == CLIENTTYPE_REAL)
+				Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, ": "));
+			if not(clienttype(targ) == CLIENTTYPE_REAL)
+			{
+				if (random() < 0.5)
+					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged"), "");
+				else
+					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, ": "));
+			}
 			if(teams_matter && attacker.team == targ.team)
 			{
 				if(sv_gentle) {
@@ -578,6 +590,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else
 		{
+			if not(clienttype(targ) == CLIENTTYPE_REAL)
+				Bot_Say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 				bprint ("^1",s, "^1 ", inflictor.message, "\n");
