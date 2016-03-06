@@ -3,6 +3,8 @@
 .float dmg_force;
 .float dmg_radius;
 
+float bot_taunt;
+float bot_talk;
 float g_balance_curse_empathy_minhealth;
 float g_balance_curse_empathy_takedamage;
 float g_balance_curse_vulner_takedamage;
@@ -361,8 +363,23 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		else if (attacker.classname == "player" || attacker.classname == "gib")
 		{
 			if not(clienttype(attacker) == CLIENTTYPE_REAL)
-				Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, ": "));
+			{
+				if (bot_talk)
+				if (random() > bot_talk)
+					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, ": "));
+				if (bot_taunt)
+				if (random() > bot_taunt)
+				{
+					local entity oldself;
+					oldself = self;
+					self = attacker;
+					VoiceMessage("taunt", "");
+					self = oldself;
+				}
+			}
 			if not(clienttype(targ) == CLIENTTYPE_REAL)
+			if (bot_talk)
+			if (random() > bot_talk)
 			{
 				if (random() < 0.5)
 					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged"), "");
@@ -591,6 +608,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		else
 		{
 			if not(clienttype(targ) == CLIENTTYPE_REAL)
+			if (bot_talk)
+			if (random() > bot_talk)
 				Bot_Say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
@@ -1408,6 +1427,8 @@ void fireburner_think()
 
 void Damage_ReadCvars()
 {
+	CACHE_CVAR(bot_taunt);
+	CACHE_CVAR(bot_talk);
 	CACHE_CVAR(g_balance_curse_empathy_minhealth);
 	CACHE_CVAR(g_balance_curse_empathy_takedamage);
 	CACHE_CVAR(g_balance_curse_vulner_takedamage);
