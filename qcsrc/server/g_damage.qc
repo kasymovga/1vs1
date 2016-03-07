@@ -366,7 +366,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				if (bot_talk)
 				if (random() > bot_talk)
-					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, ": "));
+					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
 				if (bot_taunt)
 				if (random() > bot_taunt)
 				{
@@ -384,7 +384,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (random() < 0.5)
 					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged"), "");
 				else
-					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, ": "));
+					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 			if(teams_matter && attacker.team == targ.team)
 			{
