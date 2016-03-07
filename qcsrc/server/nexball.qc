@@ -27,6 +27,9 @@ float g_nexball_basketball_delay_hold;
 float g_nexball_basketball_delay_hold_forteam;
 float g_nexball_basketball_effects_default;
 float g_nexball_basketball_teamsteal;
+float g_nexball_ball_explosive_radius;
+float g_nexball_ball_explosive_damage;
+float g_nexball_ball_explosive_force;
 float g_nexball_ball_scale;
 float balls;
 float ball_scale;
@@ -50,6 +53,7 @@ float g_nexball_delay_goal;
 float g_nexball_delay_start;
 
 .float teamtime;
+.float explosive;
 .entity pov_ball;
 
 void nb_delayedinit();
@@ -71,6 +75,9 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_delay_idle);               //10
 	CACHE_CVAR(g_nexball_football_physics);         //0
 	CACHE_CVAR(g_nexball_ball_scale);
+	CACHE_CVAR(g_nexball_ball_explosive_radius);
+	CACHE_CVAR(g_nexball_ball_explosive_damage);
+	CACHE_CVAR(g_nexball_ball_explosive_force);
 	CACHE_CVAR(g_balance_nexball_primary_animtime);
 	CACHE_CVAR(g_balance_nexball_primary_refire);
 	CACHE_CVAR(g_balance_nexball_primary_shootatmaxmeter);
@@ -286,6 +293,9 @@ void InitBall (void)
 	{
 		self.touch = hockey_touch;
 	}
+	self.solid = SOLID_TRIGGER;
+	setmodel(self, self.mdl);
+	setsize(self, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale);
 	self.cnt = 0;
 	self.think = ResetBall;
 	self.nextthink = time + g_nexball_delay_idle + 3;
@@ -500,6 +510,26 @@ void GoalTouch (void)
 	if (ball.classname == "nexball_basketball")
 		ball.touch = football_touch; // better than SUB_Null: football control until the ball gets reset
 	ball.nextthink = time + g_nexball_delay_goal * (self.team != GOAL_OUT);
+	if (ball.explosive)
+	{
+		local float i;
+		local vector expl_orig;
+		local entity temp;
+		RadiusDamage(ball, ball.pusher, g_nexball_ball_explosive_damage, 0, g_nexball_ball_explosive_radius, ball, g_nexball_ball_explosive_force, DEATH_HURTTRIGGER, world);
+		for (i = 0; i < 16; i++)
+		{
+			expl_orig = ball.origin + '-100 -100 0' + random() * '200 0 0' + random() * '0 200 0' + random() * '0 0 200';
+			pointparticles(particleeffectnum("rocket_explode"), expl_orig, '0 0 0', 1);
+			temp = spawn();
+			setorigin(temp, expl_orig);
+			sound(temp, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			remove(temp);
+		}
+		ball.cnt = 4;
+		ball.solid = SOLID_NOT;
+		setmodel(ball, "");
+		ball.velocity = '0 0 0';
+	}
 }
 
 //=======================//
@@ -564,7 +594,7 @@ void SpawnBall (void)
 
 	precache_model (self.model);
 	setmodel (self, self.model);
-	setsize (self, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale);
+	self.mdl = self.model;
 	ball_scale = self.scale;
 
 	relocate_nexball();
