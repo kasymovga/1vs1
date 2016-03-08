@@ -365,7 +365,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if not(clienttype(attacker) == CLIENTTYPE_REAL)
 			{
 				if (bot_talk)
-				if (random() > bot_talk)
+				if (random() <= bot_talk)
 				{
 					if (teams_matter && attacker.team == targ.team)
 						Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
@@ -384,7 +384,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			if not(clienttype(targ) == CLIENTTYPE_REAL)
 			if (bot_talk)
-			if (random() > bot_talk)
+			if (random() <= bot_talk)
 			{
 				if (teams_matter && attacker.team == targ.team)
 				{
@@ -621,7 +621,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if not(clienttype(targ) == CLIENTTYPE_REAL)
 			if (bot_talk)
-			if (random() > bot_talk)
+			if (random() <= bot_talk)
 				Bot_Say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
