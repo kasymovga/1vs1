@@ -1128,8 +1128,9 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix)
 {
 	float n;
-	n = tokenizebyseparator(msglist, "|");
-	n = floor(random() * n);
+	if (msglist == "")
+		return;
+	n = floor(random() * tokenizebyseparator(msglist, "|"));
 	Say(source, teamsay, privatesay, strcat(prefix, argv(n)), FALSE);
 }
 
