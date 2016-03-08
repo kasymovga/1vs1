@@ -373,7 +373,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
 				}
 				if (bot_taunt)
-				if (random() > bot_taunt)
+				if (random() <= bot_taunt)
 				{
 					local entity oldself;
 					oldself = self;
