@@ -175,23 +175,41 @@ void spawnfunc_weapon_laser (void)
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
+.float bot_melee;
 float w_laser(float req)
 {
 	local float r1;
 	local float r2;
+	local float gauntlet;
 	if (req == WR_AIM)
 	{
-		if(g_balance_laser_secondary)
+		gauntlet = FALSE;
+		if (g_balance_laser_primary_gauntlet)
 		{
-			r1 = g_balance_laser_primary_damage;
-			r2 = g_balance_laser_secondary_damage;
-			if (random() * (r2 + r1) > r1)
-				self.BUTTON_ATCK2 = bot_aim(g_balance_laser_secondary_speed, 0, g_balance_laser_secondary_lifetime, FALSE);
+			if (vlen(self.origin - self.enemy.origin) < g_balance_laser_primary_radius * 2)
+				gauntlet = self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_radius * 100, 0, 0.1, FALSE);
+		}
+		if (g_balance_laser_secondary_gauntlet)
+		{
+			if (vlen(self.origin - self.enemy.origin) < g_balance_laser_secondary_radius * 2)
+				gauntlet = self.bot_melee = bot_aim(g_balance_laser_secondary_radius * 100, 0, 0.1, FALSE);
+			else
+				self.bot_melee = FALSE;
+		}
+		if not(gauntlet)
+		{
+			if(g_balance_laser_secondary)
+			{
+				r1 = g_balance_laser_primary_damage;
+				r2 = g_balance_laser_secondary_damage;
+				if (random() * (r2 + r1) > r1)
+					self.BUTTON_ATCK2 = bot_aim(g_balance_laser_secondary_speed, 0, g_balance_laser_secondary_lifetime, FALSE);
+				else
+					self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
+			}
 			else
 				self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
 		}
-		else
-			self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
@@ -216,6 +234,13 @@ float w_laser(float req)
 				if(self.switchweapon == WEP_LASER) // don't do this if already switching
 					W_SwitchWeapon (self.cnt);
 			}
+		}
+		if (self.bot_melee)
+		if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
+		{
+			W_Laser_Attack_Gauntlet(TRUE);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, w_ready);
+			self.bot_melee = FALSE;
 		}
 	}
 	else if (req == WR_PRECACHE)
