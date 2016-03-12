@@ -318,14 +318,27 @@ float w_electro(float req)
 	{
 		self.BUTTON_ATCK=FALSE;
 		self.BUTTON_ATCK2=FALSE;
-		if(vlen(self.origin-self.enemy.origin) > 1000)
+		if(vlen(self.origin-self.enemy.origin) > g_balance_electro_secondary_speed)
 			self.bot_secondary_electromooth = 0;
-		if(self.bot_secondary_electromooth == 0 || !g_balance_electro_secondary)
+		if(self.bot_secondary_electromooth == 0)
 		{
-			if(bot_aim(g_balance_electro_primary_speed, 0, g_balance_electro_primary_lifetime, FALSE))
+			local float aim_electro_speed;
+			local float aim_electro_lifetime;
+			if (g_balance_electro_primary_lightning)
+			{
+				aim_electro_speed = g_balance_electro_primary_lightning_length * 100;
+				aim_electro_lifetime = 0.01;
+			}
+			else
+			{
+				aim_electro_speed = g_balance_electro_primary_speed;
+				aim_electro_lifetime = g_balance_electro_primary_lifetime;
+			}
+			if(bot_aim(aim_electro_speed, 0, aim_electro_lifetime, FALSE))
 			{
 				self.BUTTON_ATCK = TRUE;
-				if(random() < 0.01) self.bot_secondary_electromooth = 1;
+				if(g_balance_electro_secondary && random() < sys_ticrate)
+					self.bot_secondary_electromooth = 1;
 			}
 		}
 		else
@@ -333,7 +346,7 @@ float w_electro(float req)
 			if(bot_aim(g_balance_electro_secondary_speed, g_balance_electro_secondary_speed_up, g_balance_electro_secondary_lifetime, TRUE))
 			{
 				self.BUTTON_ATCK2 = TRUE;
-				if(random() < 0.03) self.bot_secondary_electromooth = 0;
+				if(random() < sys_ticrate * 3) self.bot_secondary_electromooth = 0;
 			}
 		}
 	}
