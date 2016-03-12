@@ -581,6 +581,7 @@ void GameCommand(string command)
 	vector v;
 	float entno, i;
 	string s;
+	entity plr;
 	argc = tokenize_console(command);
 
 	if(argv(0) == "help" || argc == 0)
@@ -710,7 +711,6 @@ void GameCommand(string command)
 	if (argv(0) == "nospectators")
 	{
 		blockSpectators = 1;
-		local entity plr;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 		{
 			if(plr.classname == "spectator" || plr.classname == "observer")
@@ -1037,6 +1037,15 @@ void GameCommand(string command)
 		else
 			print(strcat("Error: Unable to find a bot with the name or number '",argv(1),"'\n"));
 
+		return;
+	}
+
+	if (argv(0) == "alltospec")
+	{
+		FOR_EACH_REALPLAYER(plr)
+		{
+			PlayerToSpec(plr);
+		}
 		return;
 	}
 

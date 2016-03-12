@@ -1029,6 +1029,43 @@ void PutClientInServer (void)
 	//	ctf_playerchanged();
 }
 
+.float lms_spectate_warning;
+void PlayerToSpec(entity player)
+{
+	entity oldself;
+	if(g_arena)
+		return;
+	if(g_lms)
+	{
+		if(player.lms_spectate_warning)
+		{
+			// mark player as spectator
+			PlayerScore_Add(player, SP_LMS_RANK, 666 - PlayerScore_Add(player, SP_LMS_RANK, 0));
+		}
+		else
+		{
+			player.lms_spectate_warning = 1;
+			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+			return;
+		}
+	}
+	if(player.classname == "player" && cvar("sv_spectate") == 1) {
+		if(player.flagcarried)
+			DropFlag(player.flagcarried, world, world);
+		if(player.ballcarried)
+			DropBall(player.ballcarried, player.origin, player.velocity);
+		kh_Key_DropAll(player, TRUE);
+		oldself = self;
+		self = player;
+		WaypointSprite_PlayerDead();
+		player.classname = "observer";
+		if(blockSpectators)
+			sprint(player, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+		PutClientInServer();
+		self = oldself;
+	}
+}
+
 float FakeInit_SendEntity(entity to, float sf)
 {
 	if (to != self.owner)

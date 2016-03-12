@@ -135,7 +135,6 @@ void DragBox_Think()
 
 //float ctf_clientcommand();
 float readyrestart_happened;
-.float lms_spectate_warning;
 void spawnfunc_func_breakable();
 
 .float cmd_floodtime;
@@ -233,34 +232,7 @@ void SV_ParseClientCommand(string s) {
 			return;
 		if not(self.flags & FL_CLIENT)
 			return;
-		if(g_arena)
-			return;
-		if(g_lms)
-		{
-			if(self.lms_spectate_warning)
-			{
-				// mark player as spectator
-				PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
-			}
-			else
-			{
-				self.lms_spectate_warning = 1;
-				sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
-				return;
-			}
-		}
-		if(self.classname == "player" && cvar("sv_spectate") == 1) {
-			if(self.flagcarried)
-				DropFlag(self.flagcarried, world, world);
-			if(self.ballcarried)
-				DropBall(self.ballcarried, self.origin, self.velocity);
-			kh_Key_DropAll(self, TRUE);
-			WaypointSprite_PlayerDead();
-			self.classname = "observer";
-			if(blockSpectators)
-				sprint(self, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
-			PutClientInServer();
-		}
+		PlayerToSpec(self);
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
