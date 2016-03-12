@@ -775,7 +775,6 @@ Called when a client spawns in the server
 void ReadyRestartForce();
 void PutClientInServer (void)
 {
-	print("PutClientInServer: ", self.netname, "\n");
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
 		self.classname = "player";
@@ -811,7 +810,6 @@ void PutClientInServer (void)
 		if(self.team < 0 || clienttype(self) == CLIENTTYPE_BOT)
 			JoinBestTeam(self, FALSE, TRUE);
 
-		print("PutClientInServer: cp1\n");
 
 		race_PreSpawn();
 
