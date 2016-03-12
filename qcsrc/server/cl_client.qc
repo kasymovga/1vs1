@@ -775,6 +775,7 @@ Called when a client spawns in the server
 void ReadyRestartForce();
 void PutClientInServer (void)
 {
+	print("PutClientInServer: ", self.netname, "\n");
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
 		self.classname = "player";
@@ -807,8 +808,10 @@ void PutClientInServer (void)
 		local float currentlyPlaying;
 		entity e;
 
-		if(self.team < 0)
+		if(self.team < 0 || clienttype(self) == CLIENTTYPE_BOT)
 			JoinBestTeam(self, FALSE, TRUE);
+
+		print("PutClientInServer: cp1\n");
 
 		race_PreSpawn();
 
@@ -1029,26 +1032,9 @@ void PutClientInServer (void)
 	//	ctf_playerchanged();
 }
 
-.float lms_spectate_warning;
 void PlayerToSpec(entity player)
 {
 	entity oldself;
-	if(g_arena)
-		return;
-	if(g_lms)
-	{
-		if(player.lms_spectate_warning)
-		{
-			// mark player as spectator
-			PlayerScore_Add(player, SP_LMS_RANK, 666 - PlayerScore_Add(player, SP_LMS_RANK, 0));
-		}
-		else
-		{
-			player.lms_spectate_warning = 1;
-			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
-			return;
-		}
-	}
 	if(player.classname == "player" && cvar("sv_spectate") == 1) {
 		if(player.flagcarried)
 			DropFlag(player.flagcarried, world, world);

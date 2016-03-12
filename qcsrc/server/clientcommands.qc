@@ -158,6 +158,7 @@ float cmd_floodcheck()
 	return FALSE;
 }
 
+.float lms_spectate_warning;
 void SV_ParseClientCommand(string s) {
 	string cmd;
 	float tokens, f, effectnum;
@@ -232,6 +233,22 @@ void SV_ParseClientCommand(string s) {
 			return;
 		if not(self.flags & FL_CLIENT)
 			return;
+		if(g_arena)
+			return;
+		if(g_lms)
+		{
+			if(self.lms_spectate_warning)
+			{
+				// mark player as spectator
+				PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
+			}
+			else
+			{
+				self.lms_spectate_warning = 1;
+				sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+				return;
+			}
+		}
 		PlayerToSpec(self);
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)

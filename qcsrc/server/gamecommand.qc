@@ -1042,7 +1042,7 @@ void GameCommand(string command)
 
 	if (argv(0) == "alltospec")
 	{
-		FOR_EACH_REALPLAYER(plr)
+		FOR_EACH_PLAYER(plr)
 		{
 			PlayerToSpec(plr);
 		}
