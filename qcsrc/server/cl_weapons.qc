@@ -336,6 +336,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + frametime * 0.5)
 			{
 #endif
+			weapon_action(self.weapon, WR_CLEAR);
 			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
