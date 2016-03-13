@@ -887,10 +887,16 @@ float w_nexball_weapon_think()
 
 void spawnfunc_nexball_redbase()
 {
-	WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
+	if (g_nexball)
+		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
+	else
+		remove(self);
 }
 
 void spawnfunc_nexball_bluebase()
 {
-	WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
+	if (g_nexball)
+		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
+	else
+		remove(self);
 }
