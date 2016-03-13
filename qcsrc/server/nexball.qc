@@ -884,3 +884,13 @@ float w_nexball_weapon_think()
 	}
 	return TRUE;
 }
+
+void spawnfunc_nexball_redbase()
+{
+	WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
+}
+
+void spawnfunc_nexball_bluebase()
+{
+	WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
+}
