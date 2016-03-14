@@ -3,8 +3,8 @@
 #define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
 #define BALL_MAXS '16 16 16'
 //#define BALL_ATTACHORG '3 0 16'
-#define BALL_ATTACHORG '50 0 16'
-#define BALL_POV '50 0 -16'
+#define BALL_ATTACHORG '30 0 16'
+#define BALL_POV '30 0 -16'
 #define BALL_SPRITECOLOR '.91 .85 .62'
 #define BALL_FOOT   1
 #define BALL_BASKET 2
@@ -183,6 +183,9 @@ void DropOwner (void)
 	ownr.flags &~= FL_ONGROUND;
 }
 
+.string ball_weapon_model_save;
+.string ball_weapon_model2_save;
+.string ball_exteriorweapon_model_save;
 void GiveBall (entity plyr, entity ball)
 {
 	local entity ownr;
@@ -192,10 +195,7 @@ void GiveBall (entity plyr, entity ball)
 		ownr.effects &~= g_nexball_basketball_effects_default;
 		ownr.ballcarried = world;
 		if (ownr.metertime)
-		{
 			ownr.metertime = 0;
-			ownr.weaponentity.state = WS_READY;
-		}
 		WaypointSprite_Kill(ownr.waypointsprite_attachedforcarrier);
 	}
 	else
@@ -220,6 +220,21 @@ void GiveBall (entity plyr, entity ball)
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
 	ball.team = plyr.team;
+	if (plyr.weaponentity)
+	{
+		if (plyr.weaponentity.weaponentity)
+		{
+			ball.ball_weapon_model2_save = plyr.weaponentity.weaponentity.model;
+			setmodel(plyr.weaponentity.weaponentity, "");
+		}
+		ball.ball_weapon_model_save = plyr.weaponentity.model;
+		setmodel(plyr.weaponentity, "");
+	}
+	if (plyr.exteriorweaponentity)
+	{
+		ball.ball_exteriorweapon_model_save = plyr.exteriorweaponentity.model;
+		setmodel(plyr.exteriorweaponentity, "");
+	}
 	plyr.ballcarried = ball;
 	ball.dropperid = plyr.playerid;
 
@@ -261,10 +276,7 @@ void DropBall (entity ball, vector org, vector vel)
 	ball.nextthink = min(time + g_nexball_delay_idle, ball.teamtime);
 
 	if (ball.owner.metertime)
-	{
 		ball.owner.metertime = 0;
-		ball.owner.weaponentity.state = WS_READY;
-	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
 	WaypointSprite_AttachCarrier("nb-ball", ball);
@@ -274,6 +286,14 @@ void DropBall (entity ball, vector org, vector vel)
 	remove(ball.owner.pov_ball);
 	ball.owner.pov_ball = world;
 	ball.owner.ballcarried = world;
+	if (ball.owner.weaponentity)
+	{
+		if (ball.owner.weaponentity.weaponentity)
+			setmodel(ball.owner.weaponentity.weaponentity, ball.ball_weapon_model2_save);
+		setmodel(ball.owner.weaponentity, ball.ball_weapon_model_save);
+	}
+	if (ball.owner.exteriorweaponentity)
+		setmodel(ball.owner.exteriorweaponentity, ball.ball_exteriorweapon_model_save);
 	ball.owner = world;
 }
 
@@ -759,35 +779,6 @@ void spawnfunc_ball_bound      (void) { spawnfunc_nexball_out(); }
 //      Weapon code      //
 //=======================//
 
-void W_Nexball_Touch (void)
-{
-	local entity ball, attacker;
-	attacker = self.owner;
-
-	PROJECTILE_TOUCH;
-	if(attacker.team != other.team || g_nexball_basketball_teamsteal)
-	if((ball = other.ballcarried) && (attacker.classname == "player" || attacker.classname == "gib"))
-	{
-		other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * g_balance_nexball_secondary_force;
-		other.flags &~= FL_ONGROUND;
-		if(!attacker.ballcarried)
-		{
-			LogNB("stole", attacker);
-			sound (other, CHAN_AUTO, ball.noise2, VOL_BASE, ATTN_NORM);
-
-			if(attacker.team == other.team && time > attacker.teamkill_complain)
-			{
-				attacker.teamkill_complain = time + 5;
-				attacker.teamkill_soundtime = time + 0.4;
-				attacker.teamkill_soundsource = other;
-			}
-
-			GiveBall(attacker, other.ballcarried);
-		}
-	}
-	remove(self);
-}
-
 void W_Nexball_Attack (float t)
 {
 	local entity ball;
@@ -821,67 +812,22 @@ void W_Nexball_Attack (float t)
 	//TODO: use the speed_up cvar too ??
 }
 
-void W_Nexball_Attack2 (void)
-{
-	local entity missile;
-	if (!(balls & BALL_BASKET))
-		return;
-	W_SetupShot (self, FALSE, 2, "nexball/shoot2.wav",0);
-//	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	missile = spawn ();
-
-	missile.owner = self;
-	missile.classname = "ballstealer";
-
-	missile.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(missile);
-
-	setmodel (missile, "models/elaser.mdl"); // precision set below
-	setsize (missile, '0 0 0', '0 0 0');
-	setorigin (missile, w_shotorg);
-
-	missile.velocity = w_shotdir * g_balance_nexball_secondary_speed;
-	W_SetupProjectileVelocity(missile);
-	missile.angles = vectoangles (missile.velocity);
-	missile.touch = W_Nexball_Touch;
-	missile.think = SUB_Remove;
-	missile.nextthink = time + g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
-
-	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
-	missile.flags = FL_PROJECTILE;
-}
-
-float w_nexball_weapon_think()
+float w_nexball_carrier_think()
 {
 	if (self.BUTTON_ATCK)
-	if (weapon_prepareattack(0, g_balance_nexball_primary_refire))
-	if (g_nexball_basketball_meter)
 	{
-		if (self.ballcarried && !self.metertime)
-			self.metertime = time;
+		if (g_nexball_basketball_meter)
+		{
+			if (!self.metertime)
+				self.metertime = time;
+		}
 		else
-			weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
+			W_Nexball_Attack(-1);
 	}
-	else
-	{
-		W_Nexball_Attack(-1);
-		weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
-	}
-	if (g_balance_nexball_secondary)
-	if (self.BUTTON_ATCK2)
-	if (weapon_prepareattack(1, g_balance_nexball_secondary_refire))
-	{
-		W_Nexball_Attack2();
-		weapon_thinkf(WFRAME_FIRE2, g_balance_nexball_secondary_animtime, w_ready);
-	}
-
 	if (self.metertime && self.ballcarried && (!self.BUTTON_ATCK ||
 			(g_balance_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time)))
-	{
 		W_Nexball_Attack(time - self.metertime);
-		// DropBall or stealing will set metertime back to 0
-		weapon_thinkf(WFRAME_FIRE1, g_balance_nexball_primary_animtime, w_ready);
-	}
+	// DropBall or stealing will set metertime back to 0
 	return TRUE;
 }
 

@@ -266,7 +266,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if (g_nixnex)
 		return;
-	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
+	if (g_nexball && self.ballcarried)
 		return;
 	if (!cvar("g_pickup_items"))
 		return;
@@ -292,9 +292,16 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 };
 
 // Bringed back weapon frame
+float w_nexball_carrier_think();
 void W_WeaponFrame()
 {
 	vector fo, ri, up;
+
+	if (g_nexball && self.ballcarried)
+	{
+		w_nexball_carrier_think();
+		return;
+	}
 
 	if((arena_roundbased && time < warmup) || ((time < game_starttime) && !restart_active))
 		return;
@@ -370,10 +377,7 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			if (g_nexball && self.ballcarried)
-				w_nexball_weapon_think();
-			else
-				weapon_action(self.weapon, WR_THINK);
+			weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + frametime * 0.5 >= self.weapon_nextthink)
 		{
