@@ -422,8 +422,9 @@ void hockey_touch (void)
 	self.velocity = other.velocity + v_forward * g_nexball_hockey_boost_forward;
 	self.velocity_z = 0;
 	if (other.weapon == WEP_LASER)
-	if ((other.weaponentity.wframe == WFRAME_FIRE2 && g_balance_laser_secondary_gauntlet)
-			|| (other.weaponentity.wframe == WFRAME_FIRE1 && g_balance_laser_primary_gauntlet))
+	if ((other.weaponentity.wframe == WFRAME_FIRE2 && g_balance_laser_secondary_melee)
+			|| (other.weaponentity.wframe == WFRAME_FIRE1 && g_balance_laser_primary_melee)
+			|| other.weaponentity.wframe == WFRAME_MELEE)
 	{
 		self.velocity = self.velocity + v_forward * g_nexball_hockey_melee_boost_forward;
 		self.velocity_z = g_nexball_hockey_melee_boost_up;

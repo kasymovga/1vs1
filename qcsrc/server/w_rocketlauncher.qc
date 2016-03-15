@@ -579,6 +579,8 @@ float w_rlauncher(float req)
 	{
 		self.rl_release = 0;
 	}
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_rocketlauncher_ammo);

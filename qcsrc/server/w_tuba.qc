@@ -152,6 +152,8 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		w_deathtypestring = "hurt his own ears with the @!#%'n Tuba";

@@ -377,6 +377,8 @@ float w_fireball(float req)
 		return self.ammo_rockets >= g_balance_fireball_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_fireball_secondary_ammo;
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)

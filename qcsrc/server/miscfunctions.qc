@@ -1056,6 +1056,7 @@ float g_touchexplode_force;
 float sv_autotaunt;
 float sv_taunt;
 
+void Melee_Init();
 void readlevelcvars(void)
 {
     g_bugrigs = cvar("g_bugrigs");
@@ -1199,6 +1200,7 @@ void readlevelcvars(void)
 	{
 		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);
 	}
+	Melee_Init();
 	CACHE_CVAR(g_antilag);
 	CACHE_CVAR(g_antilag_bullets);
 	CACHE_CVAR(g_casings);
@@ -1650,7 +1652,7 @@ void precache()
 
 	//Extra sounds
 #define EXTRA_ANNOUNCER(x) do { sv_announcer_extra_##x = strzone(cvar_string("sv_announcer_extra_"#x)); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
-	EXTRA_ANNOUNCER(gauntletfrag);
+	EXTRA_ANNOUNCER(meleefrag);
 	sv_announcer_extra_doublekill_interval = cvar("sv_announcer_extra_doublekill_interval");
 	if (sv_announcer_extra_doublekill_interval) {
 		EXTRA_ANNOUNCER(doublekill);

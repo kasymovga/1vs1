@@ -4,10 +4,7 @@ float g_balance_laser_primary_animtime;
 float g_balance_laser_primary_damage;
 float g_balance_laser_primary_edgedamage;
 float g_balance_laser_primary_force;
-//float g_balance_laser_primary_gauntlet; //defined in defs.qh
-float g_balance_laser_primary_gauntlet_delay;
-float g_balance_laser_primary_gauntlet_ticrate;
-float g_balance_laser_primary_gauntlet_time;
+//float g_balance_laser_primary_melee; //defined in defs.qh
 float g_balance_laser_primary_lifetime;
 float g_balance_laser_primary_radius;
 float g_balance_laser_primary_refire;
@@ -18,10 +15,7 @@ float g_balance_laser_secondary_animtime;
 float g_balance_laser_secondary_damage;
 float g_balance_laser_secondary_edgedamage;
 float g_balance_laser_secondary_force;
-//float g_balance_laser_secondary_gauntlet; //defined in defs.qh
-float g_balance_laser_secondary_gauntlet_delay;
-float g_balance_laser_secondary_gauntlet_ticrate;
-float g_balance_laser_secondary_gauntlet_time;
+//float g_balance_laser_secondary_melee; //defined in defs.qh
 float g_balance_laser_secondary_lifetime;
 float g_balance_laser_secondary_radius;
 float g_balance_laser_secondary_refire;
@@ -41,79 +35,12 @@ void W_Laser_Touch (void)
 	remove (self);
 }
 
-.float melee_damage;
-.float melee_force;
-.float melee_distance;
-.float melee_time;
-.float melee_lastthink;
-.float melee_startthink;
-.float melee_ticrate;
-.float melee_secondary;
-
-void W_Laser_Attack_Gauntlet_Think()
-{
-	float melee_frame;
-	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - self.melee_lastthink);
-	if (melee_frame < 0)
-	{
-		remove(self);
-		return;
-	}
-	float damage_factor = melee_frame / self.melee_time;
-	float frame_damage = self.melee_damage * damage_factor;
-	float frame_force = self.melee_force * damage_factor;
-	makevectors(self.owner.angles);
-	W_SetupShot(self.owner, FALSE, 0, "", frame_damage);
-	traceline_antilag(self.owner, w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * self.melee_distance, MOVE_NORMAL, self, ANTILAG_LATENCY(self.owner));
-	if (trace_fraction < 1)
-	if (trace_ent)
-	if (trace_ent.takedamage)
-	{
-		Damage (trace_ent, self.owner, self.owner, frame_damage,
-				WEP_LASER | (self.melee_secondary ? HITTYPE_SECONDARY : 0), trace_endpos, w_shotdir * frame_force);
-		Damage_RecordDamage(self.owner, WEP_LASER, frame_damage);
-	}
-	self.melee_lastthink = time;
-	self.nextthink = time + self.melee_ticrate;
-}
-
-void W_Laser_Attack_Gauntlet (float issecondary)
-{
-	sound (self, CHAN_WEAPON, cvar_string("sv_sound_laser_gauntlet"), VOL_BASE, ATTN_NORM);
-	entity melee = spawn();
-	melee.owner = self;
-	melee.think = W_Laser_Attack_Gauntlet_Think;
-	melee.melee_secondary = issecondary;
-	if (issecondary)
-	{
-		melee.nextthink = time + g_balance_laser_secondary_gauntlet_delay;
-		melee.melee_damage = g_balance_laser_secondary_damage;
-		melee.melee_force = g_balance_laser_secondary_force;
-		melee.melee_distance = g_balance_laser_secondary_radius;
-		melee.melee_time = g_balance_laser_secondary_gauntlet_time;
-		melee.melee_ticrate = g_balance_laser_secondary_gauntlet_ticrate;
-	}
-	else
-	{
-		melee.nextthink = time + g_balance_laser_primary_gauntlet_delay;
-		melee.melee_damage = g_balance_laser_primary_damage;
-		melee.melee_force = g_balance_laser_primary_force;
-		melee.melee_distance = g_balance_laser_primary_radius;
-		melee.melee_time = g_balance_laser_primary_gauntlet_time;
-		melee.melee_ticrate = g_balance_laser_primary_gauntlet_ticrate;
-	}
-	melee.melee_startthink = melee.nextthink;
-	melee.melee_lastthink = melee.nextthink;
-	melee.nextthink += melee.melee_ticrate; //avoid frame with zero melee_frame
-	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-}
-
 void W_Laser_Attack (float issecondary)
 {
-	float ismelee = (issecondary ? g_balance_laser_secondary_gauntlet : g_balance_laser_primary_gauntlet);
+	float ismelee = (issecondary ? g_balance_laser_secondary_melee : g_balance_laser_primary_melee);
 	if (ismelee)
 	{
-		W_Laser_Attack_Gauntlet(issecondary);
+		W_Melee_Attack();
 		return;
 	}
 	local entity missile;
@@ -176,39 +103,25 @@ void spawnfunc_weapon_laser (void)
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
-.float bot_melee;
 float w_laser(float req)
 {
-	local float r1;
-	local float r2;
-	local float gauntlet;
+	local float melee;
 	if (req == WR_AIM)
 	{
-		gauntlet = FALSE;
-		if (g_balance_laser_primary_gauntlet)
+		melee = W_Melee_Aim();
+		if not(melee)
 		{
-			if (vlen(self.origin - self.enemy.origin) < g_balance_laser_primary_radius * 2)
-				gauntlet = self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_radius * 100, 0, 0.1, FALSE);
-		}
-		if (g_balance_laser_secondary_gauntlet)
-		{
-			if (vlen(self.origin - self.enemy.origin) < g_balance_laser_secondary_radius * 2)
-				gauntlet = self.bot_melee = bot_aim(g_balance_laser_secondary_radius * 100, 0, 0.1, FALSE);
-			else
-				self.bot_melee = FALSE;
-		}
-		if not(gauntlet)
-		{
-			if(g_balance_laser_secondary)
-			{
-				r1 = g_balance_laser_primary_damage;
-				r2 = g_balance_laser_secondary_damage;
-				if (random() * (r2 + r1) > r1)
-					self.BUTTON_ATCK2 = bot_aim(g_balance_laser_secondary_speed, 0, g_balance_laser_secondary_lifetime, FALSE);
-				else
-					self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
-			}
-			else
+			if (g_balance_laser_primary_melee)
+			if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
+				melee = self.BUTTON_ATCK = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
+
+			if (g_balance_laser_secondary)
+			if not(melee)
+			if (g_balance_laser_secondary_melee)
+			if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
+				melee = self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
+
+			if not(melee)
 				self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
 		}
 	}
@@ -237,18 +150,15 @@ float w_laser(float req)
 			}
 		}
 		if (self.bot_melee)
-		if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
+		if (weapon_prepareattack(0, g_balance_melee_refire))
 		{
-			W_Laser_Attack_Gauntlet(TRUE);
-			weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, w_ready);
+			W_Melee_Attack();
+			weapon_thinkf(WFRAME_MELEE, g_balance_melee_animtime, w_ready);
 			self.bot_melee = FALSE;
 		}
 	}
 	else if (req == WR_PRECACHE)
-	{
 		precache_sound ("weapons/lasergun_fire.wav");
-		precache_sound (cvar_string("sv_sound_laser_gauntlet"));
-	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_LASER);
 	else if (req == WR_CHECKAMMO1)
@@ -258,32 +168,16 @@ float w_laser(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "lasered himself to hell";
 	else if (req == WR_RELOAD)
-	{
-		if (g_balance_laser_secondary_gauntlet)
-		if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
-		{
-			W_Laser_Attack_Gauntlet(TRUE);
-			weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, w_ready);
-		}
-
-	}
+		W_Melee_Attack_Check();
 	else if (req == WR_KILLMESSAGE)
-	{
-		if (((w_deathtype & HITTYPE_SECONDARY) ? g_balance_laser_secondary_gauntlet : g_balance_laser_primary_gauntlet))
-			w_deathtypestring = "was smashed to death by"; // unchecked: SPLASH
-		else
-			w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
-	}
+		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_laser_primary_animtime);
 		CACHE_CVAR(g_balance_laser_primary_damage);
 		CACHE_CVAR(g_balance_laser_primary_edgedamage);
 		CACHE_CVAR(g_balance_laser_primary_force);
-		CACHE_CVAR(g_balance_laser_primary_gauntlet);
-		CACHE_CVAR(g_balance_laser_primary_gauntlet_delay);
-		CACHE_CVAR(g_balance_laser_primary_gauntlet_ticrate);
-		CACHE_CVAR(g_balance_laser_primary_gauntlet_time);
+		CACHE_CVAR(g_balance_laser_primary_melee);
 		CACHE_CVAR(g_balance_laser_primary_lifetime);
 		CACHE_CVAR(g_balance_laser_primary_radius);
 		CACHE_CVAR(g_balance_laser_primary_refire);
@@ -294,10 +188,7 @@ float w_laser(float req)
 		CACHE_CVAR(g_balance_laser_secondary_damage);
 		CACHE_CVAR(g_balance_laser_secondary_edgedamage);
 		CACHE_CVAR(g_balance_laser_secondary_force);
-		CACHE_CVAR(g_balance_laser_secondary_gauntlet);
-		CACHE_CVAR(g_balance_laser_secondary_gauntlet_delay);
-		CACHE_CVAR(g_balance_laser_secondary_gauntlet_ticrate);
-		CACHE_CVAR(g_balance_laser_secondary_gauntlet_time);
+		CACHE_CVAR(g_balance_laser_secondary_melee);
 		CACHE_CVAR(g_balance_laser_secondary_lifetime);
 		CACHE_CVAR(g_balance_laser_secondary_radius);
 		CACHE_CVAR(g_balance_laser_secondary_refire);

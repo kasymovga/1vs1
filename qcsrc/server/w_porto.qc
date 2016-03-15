@@ -265,6 +265,8 @@ float w_porto(float req)
 		precache_sound ("porto/fire.wav");
 		precache_sound ("porto/unsupported.wav");
 	}
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_PORTO);
 	else if (req == WR_SUICIDEMESSAGE)

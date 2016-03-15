@@ -219,6 +219,8 @@ float w_minstanex(float req)
 		else
 			return self.ammo_cells >= g_balance_minstanex_ammo;
 	}
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)

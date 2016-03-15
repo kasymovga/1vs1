@@ -420,6 +420,8 @@ float w_electro(float req)
 	}
 	else if (req == WR_RESETPLAYER)
 		self.electro_secondarytime = time;
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_CLEAR)
 		W_Electro_Attack_Lightning_Remove(self);
 	else if (req == WR_CVAR_CACHE)

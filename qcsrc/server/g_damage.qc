@@ -470,6 +470,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						else
 							bprint("^1", s, "^1 ", substring(w_deathtypestring, 0, p), a, "^1", substring(w_deathtypestring, p+1, strlen(w_deathtypestring) - (p+1)), "\n");
 					}
+					else if (w == WEP_MELEE)
+					{
+						bprint ("^1",s, "^1 was smashed by ", a, "\n");
+					}
 					else if (deathtype == DEATH_TELEFRAG)
 					{
 						bprint ("^1",s, "^1 was telefragged by ", a, "\n");
@@ -608,11 +612,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						if (announce(attacker, sv_announcer_extra_doublekill))
 							fragtime = 0;
 				}
-				if (DEATH_ISWEAPON(deathtype, WEP_LASER) && sv_announcer_extra_gauntletfrag != "" &&
-						((deathtype & HITTYPE_SECONDARY) ? g_balance_laser_secondary_gauntlet : g_balance_laser_primary_gauntlet))
+				if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "")
 				{
-						announce(targ, sv_announcer_extra_gauntletfrag);
-						announce(attacker, sv_announcer_extra_gauntletfrag);
+						announce(targ, sv_announcer_extra_meleefrag);
+						announce(attacker, sv_announcer_extra_meleefrag);
 				}
 				attacker.lastfrag = fragtime;
 			}

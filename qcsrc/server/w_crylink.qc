@@ -275,6 +275,8 @@ float w_crylink(float req)
 	{
 		w_deathtypestring = "succeeded at self-destructing himself with the Crylink";
 	}
+	else if (req == WR_RELOAD)
+		W_Melee_Attack_Check();
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)

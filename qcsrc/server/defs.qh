@@ -59,8 +59,8 @@ float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
 float g_balance_selfdamagepercent;
 
-float g_balance_laser_primary_gauntlet;
-float g_balance_laser_secondary_gauntlet;
+float g_balance_laser_primary_melee;
+float g_balance_laser_secondary_melee;
 
 float sv_clones;
 float sv_cheats;
@@ -88,7 +88,7 @@ float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
 
-string sv_announcer_extra_gauntletfrag;
+string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;
