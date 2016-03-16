@@ -354,7 +354,7 @@ void endFireBallisticBullet()
 }
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, dt, savetime;
+	float lag, dt;
 	entity pl, oldself;
 
 	entity proj;
@@ -421,9 +421,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		oldself = self;
 		self = proj;
 
-		savetime = frametime;
-		frametime = 0.05;
-
 		for(;;)
 		{
 			tracetoss_skipnonsolid(self, oldself, 0.05 * 0.125, 200);
@@ -463,7 +460,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 			W_BallisticBullet_LeaveSolid_think();
 		}
-		frametime = savetime;
 		self = oldself;
 
 		if(lag)
