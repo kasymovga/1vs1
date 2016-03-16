@@ -426,7 +426,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		for(;;)
 		{
-			tracetoss_skipnonsolid(self, oldself, 0.05 * 0.125, 20);
+			tracetoss_skipnonsolid(self, oldself, 0.05 * 0.125, 200);
 
 			if not(inWarmupStage)
 			if not(self.isbot)
