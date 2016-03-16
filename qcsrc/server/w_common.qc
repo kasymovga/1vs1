@@ -196,8 +196,8 @@ void W_BallisticBullet_Hit (void)
 		headshot = 0;
 		yoda = 0;
 		damage_headshotbonus = self.dmg_edge;
-		railgun_start = self.origin - 2 * frametime * self.velocity;
-		railgun_end = self.origin + 2 * frametime * self.velocity;
+		railgun_start = self.origin - 0.1 * self.velocity;
+		railgun_end = self.origin + 0.1 * self.velocity;
 
 		if(other.flags & FL_CLIENT)
 		if(other.deadflag == DEAD_NO)
