@@ -5,6 +5,7 @@
 .vector antilag_saved_origin;
 
 .float antilag_debug;
+float antilag_context_index;
 
 void antilag_dummy()
 {
@@ -58,7 +59,7 @@ vector antilag_takebackorigin(entity e, float t)
 {
 	float i0, i1;
 
-	i0 = antilag_find(e, t);
+	i0 = antilag_context_index;
 	if(i0 < 0)
 	{
 		i0 = e.antilag_index - 1;
@@ -81,4 +82,9 @@ void antilag_takeback(entity e, float t)
 void antilag_restore(entity e)
 {
 	setorigin(e, e.antilag_saved_origin);
+}
+
+void antilag_prepare(entity plr)
+{
+	antilag_context_index = antilag_find(plr, ANTILAG_LATENCY(plr));
 }

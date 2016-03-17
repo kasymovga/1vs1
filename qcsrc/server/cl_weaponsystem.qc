@@ -36,8 +36,6 @@ void W_SwitchWeapon_Force(entity e, float w)
 	e.switchweapon = w;
 }
 
-.float antilag_debug;
-
 // VorteX: static frame globals
 float WFRAME_DONTCHANGE = -1;
 float WFRAME_FIRE1 = 0;
@@ -136,6 +134,7 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
 	oldsolid = ent.dphitcontentsmask;
+	antilag_prepare(ent);
 	if(ent.weapon == WEP_CAMPINGRIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
@@ -179,88 +178,13 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
-	{
-		if(ent.antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
-		else
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-	}
+		tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 	else
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
 	w_shotdir = normalize(trueaimpoint - w_shotorg);
 
-#if 0
-	// explanation of g_antilag:
-	// if client reports it was aiming at a player, and the serverside trace
-	// says it would miss, change the aim point to the player's new origin,
-	// but only if the shot at the player's new origin would hit of course
-	//
-	// FIXME: a much better method for bullet weapons would be to leave a
-	// trail of lagged 'ghosts' behind players, and see if the bullet hits the
-	// ghost corresponding to this player's ping time, and if so it would do
-	// damage to the real player
-	if (antilag)
-	if (ent.cursor_trace_ent)                 // client was aiming at someone
-	if (ent.cursor_trace_ent != ent)         // just to make sure
-	if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-	if (ent.cursor_trace_ent.classname == "player") // and actually a player
-	if (cvar("g_antilag") == 1)
-	{
-		// verify that the shot would miss without antilag
-		// (avoids an issue where guns would always shoot at their origin)
-		traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
-		if (!trace_ent.takedamage)
-		{
-			// verify that the shot would hit if altered
-			traceline(w_shotorg, ent.cursor_trace_ent.origin, MOVE_NORMAL, ent);
-			if (trace_ent == ent.cursor_trace_ent)
-			{
-				// verify that the shot would hit in the past
-				if(ent.antilag_debug)
-					antilag_takeback(ent.cursor_trace_ent, time - ent.antilag_debug);
-				else
-					antilag_takeback(ent.cursor_trace_ent, time - ANTILAG_LATENCY(ent));
-
-				traceline(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
-				antilag_restore(ent.cursor_trace_ent);
-
-				if(trace_ent == ent.cursor_trace_ent)
-				{
-					// HIT!
-					w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
-					dprint("ANTILAG HIT for ", ent.netname, "\n");
-				}
-				else
-				{
-					// prydon cursor aimbot or odd network conditions
-					dprint("WARNING: antilag ghost trace for ", ent.netname, " failed!\n");
-				}
-
-				if(cvar("developer") >= 2)
-				{
-					vector v, vplus, vel;
-					float X;
-					v     = antilag_takebackorigin(ent.cursor_trace_ent, time - (ANTILAG_LATENCY(ent)       ));
-					vplus = antilag_takebackorigin(ent.cursor_trace_ent, time - (ANTILAG_LATENCY(ent) + 0.01));
-					vel = (vplus - v) * (1 / 0.01);
-					// solve: v + X * vel = closest to ent.origin + ent.view_ofs, v_forward axis
-					v     -= (ent.origin + ent.view_ofs);
-					// solve: v + X * vel = closest to v_forward axis
-					// project into 2D by subtracting v_forward components:
-					v   -= (v   * v_forward) * v_forward;
-					vel -= (vel * v_forward) * v_forward;
-					// solve: v + X * vel = closest to origin
-					// (v + X * vel)^2 closest to 0
-					// v^2 + 2 * X * (v * vel) + X^2 * vel^2 closest to 0
-					X = -(v * vel) / (vel * vel);
-					dprint("dead center needs adjustment of ", ftos(X), " (that is, ", ftos(ANTILAG_LATENCY(ent) + X), " instead of ", ftos(ANTILAG_LATENCY(ent)), "\n");
-				}
-			}
-		}
-	}
-#else
 	if (antilag)
 	{
 		if (g_antilag == 1) // switch to "ghost" if not hitting original
@@ -301,7 +225,6 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 			}
 		}
 	}
-#endif
 
 	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
 

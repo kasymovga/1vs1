@@ -270,6 +270,7 @@ void spiderbot_minigun_fire(entity gun,float trail)
 
     sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 
+	antilag_prepare(self);
     fireBullet (v, v_forward, cvar("g_vehicle_spiderbot_minigun_spread"), cvar("g_vehicle_spiderbot_minigun_damage"),
         cvar("g_vehicle_spiderbot_minigun_spread"), DEATH_TURRET, 0);
 

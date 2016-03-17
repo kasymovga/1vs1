@@ -57,10 +57,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// note down which entities were hit so we can damage them later
 	while (1)
 	{
-		if(self.antilag_debug)
-			traceline_antilag (self, start, end, FALSE, self, self.antilag_debug);
-		else
-			traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
+		traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -411,7 +408,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			lag = 0;
 		if(clienttype(self) != CLIENTTYPE_REAL)
 			lag = 0;
-		if(g_antilag == 0)
+		if(g_antilag != 2)
 			lag = 0; // only do hitscan, but no antilag
 
 		if(lag)
@@ -496,10 +493,7 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 
 	dir = normalize(dir + randomvec() * spread);
 	end = start + dir * MAX_SHOT_DISTANCE;
-	if(self.antilag_debug)
-		traceline_antilag (self, start, end, FALSE, self, self.antilag_debug);
-	else
-		traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
+	traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
 
     end = trace_endpos;
 
