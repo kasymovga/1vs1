@@ -4,6 +4,7 @@ float g_balance_shotgun_primary_bulletconstant;
 float g_balance_shotgun_primary_bullets;
 float g_balance_shotgun_primary_damage;
 float g_balance_shotgun_primary_force;
+float g_balance_shotgun_primary_gravityfactor;
 float g_balance_shotgun_primary_refire;
 float g_balance_shotgun_primary_speed;
 float g_balance_shotgun_primary_spread;
@@ -14,6 +15,7 @@ float g_balance_shotgun_secondary_bulletconstant;
 float g_balance_shotgun_secondary_bullets;
 float g_balance_shotgun_secondary_damage;
 float g_balance_shotgun_secondary_force;
+float g_balance_shotgun_secondary_gravityfactor;
 float g_balance_shotgun_secondary_refire;
 float g_balance_shotgun_secondary_speed;
 float g_balance_shotgun_secondary_spread;
@@ -40,7 +42,7 @@ void W_Shotgun_Attack (void)
 
 	W_SetupShot (self, g_antilag_bullets && bulletspeed >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_damage);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, g_balance_shotgun_primary_gravityfactor, bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - ammoamount;
@@ -84,7 +86,7 @@ void W_Shotgun_Attack2 (void)
 
 	W_SetupShot (self, g_antilag_bullets && bulletspeed >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_damage);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN | HITTYPE_SECONDARY, 0, 1, bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN | HITTYPE_SECONDARY, 0, g_balance_shotgun_primary_gravityfactor, bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - ammoamount;
@@ -170,6 +172,7 @@ float w_shotgun(float req)
 		CACHE_CVAR(g_balance_shotgun_primary_bullets);
 		CACHE_CVAR(g_balance_shotgun_primary_damage);
 		CACHE_CVAR(g_balance_shotgun_primary_force);
+		CACHE_CVAR(g_balance_shotgun_primary_gravityfactor);
 		CACHE_CVAR(g_balance_shotgun_primary_refire);
 		CACHE_CVAR(g_balance_shotgun_primary_speed);
 		CACHE_CVAR(g_balance_shotgun_primary_spread);
@@ -180,6 +183,7 @@ float w_shotgun(float req)
 		CACHE_CVAR(g_balance_shotgun_secondary_bullets);
 		CACHE_CVAR(g_balance_shotgun_secondary_damage);
 		CACHE_CVAR(g_balance_shotgun_secondary_force);
+		CACHE_CVAR(g_balance_shotgun_secondary_gravityfactor);
 		CACHE_CVAR(g_balance_shotgun_secondary_refire);
 		CACHE_CVAR(g_balance_shotgun_secondary_speed);
 		CACHE_CVAR(g_balance_shotgun_secondary_spread);

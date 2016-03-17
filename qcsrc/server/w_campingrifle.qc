@@ -11,6 +11,7 @@ float g_balance_campingrifle_primary_bulletconstant;
 float g_balance_campingrifle_primary_burstcost;
 float g_balance_campingrifle_primary_damage;
 float g_balance_campingrifle_primary_force;
+float g_balance_campingrifle_primary_gravityfactor;
 float g_balance_campingrifle_primary_headshotaddeddamage;
 float g_balance_campingrifle_primary_lifetime;
 float g_balance_campingrifle_primary_refire;
@@ -23,6 +24,7 @@ float g_balance_campingrifle_secondary_bulletconstant;
 float g_balance_campingrifle_secondary_burstcost;
 float g_balance_campingrifle_secondary_damage;
 float g_balance_campingrifle_secondary_force;
+float g_balance_campingrifle_secondary_gravityfactor;
 float g_balance_campingrifle_secondary_headshotaddeddamage;
 float g_balance_campingrifle_secondary_lifetime;
 float g_balance_campingrifle_secondary_refire;
@@ -114,7 +116,7 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	}
 
-	fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, EF_RED, 1, pBulletConstant);
+	fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, EF_RED, ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
 	endFireBallisticBullet();
 
 	if (g_casings >= 2)
@@ -267,6 +269,7 @@ float w_campingrifle(float req)
 		CACHE_CVAR(g_balance_campingrifle_primary_burstcost);
 		CACHE_CVAR(g_balance_campingrifle_primary_damage);
 		CACHE_CVAR(g_balance_campingrifle_primary_force);
+		CACHE_CVAR(g_balance_campingrifle_primary_gravityfactor);
 		CACHE_CVAR(g_balance_campingrifle_primary_headshotaddeddamage);
 		CACHE_CVAR(g_balance_campingrifle_primary_lifetime);
 		CACHE_CVAR(g_balance_campingrifle_primary_refire);
@@ -279,6 +282,7 @@ float w_campingrifle(float req)
 		CACHE_CVAR(g_balance_campingrifle_secondary_burstcost);
 		CACHE_CVAR(g_balance_campingrifle_secondary_damage);
 		CACHE_CVAR(g_balance_campingrifle_secondary_force);
+		CACHE_CVAR(g_balance_campingrifle_secondary_gravityfactor);
 		CACHE_CVAR(g_balance_campingrifle_secondary_headshotaddeddamage);
 		CACHE_CVAR(g_balance_campingrifle_secondary_lifetime);
 		CACHE_CVAR(g_balance_campingrifle_secondary_refire);

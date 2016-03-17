@@ -15,12 +15,14 @@ float g_balance_uzi_first;
 float g_balance_uzi_first_ammo;
 float g_balance_uzi_first_damage;
 float g_balance_uzi_first_force;
+float g_balance_uzi_first_gravityfactor;
 float g_balance_uzi_first_refire;
 float g_balance_uzi_first_spread;
 float g_balance_uzi_speed;
 float g_balance_uzi_sustained_ammo;
 float g_balance_uzi_sustained_damage;
 float g_balance_uzi_sustained_force;
+float g_balance_uzi_sustained_gravityfactor;
 float g_balance_uzi_sustained_refire;
 float g_balance_uzi_sustained_spread;
 
@@ -47,9 +49,9 @@ void W_Uzi_Attack (float deathtype)
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * W_WeaponRateFactor();
 
 	if (self.uzi_bulletcounter == 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, 0, 1, g_balance_uzi_bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, 0, g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 	else
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, 0, 1, g_balance_uzi_bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, 0, g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -152,12 +154,14 @@ float w_uzi(float req)
 		CACHE_CVAR(g_balance_uzi_first_ammo);
 		CACHE_CVAR(g_balance_uzi_first_damage);
 		CACHE_CVAR(g_balance_uzi_first_force);
+		CACHE_CVAR(g_balance_uzi_first_gravityfactor);
 		CACHE_CVAR(g_balance_uzi_first_refire);
 		CACHE_CVAR(g_balance_uzi_first_spread);
 		CACHE_CVAR(g_balance_uzi_speed);
 		CACHE_CVAR(g_balance_uzi_sustained_ammo);
 		CACHE_CVAR(g_balance_uzi_sustained_damage);
 		CACHE_CVAR(g_balance_uzi_sustained_force);
+		CACHE_CVAR(g_balance_uzi_sustained_gravityfactor);
 		CACHE_CVAR(g_balance_uzi_sustained_refire);
 		CACHE_CVAR(g_balance_uzi_sustained_spread);
 	}
