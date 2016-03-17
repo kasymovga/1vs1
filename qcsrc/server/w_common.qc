@@ -436,7 +436,15 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			}
 
 			if(vlen(trace_endpos - self.origin) > 16)
-				zcurveparticles_from_tracetoss(eff, self.origin, trace_endpos, self.velocity);
+			{
+				if (proj.gravity)
+					zcurveparticles_from_tracetoss(eff, self.origin, trace_endpos, self.velocity);
+				else
+				{
+					endzcurveparticles();
+					trailparticles(world, eff, self.origin, trace_endpos);
+				}
+			}
 			if(trace_fraction == 1)
 				break;
 				// won't hit anything anytime soon (DP's
