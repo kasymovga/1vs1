@@ -331,7 +331,11 @@ void SV_ParseClientCommand(string s) {
 			VoiceMessage(argv(1), "");
 	} else if(cmd == "say") {
 		if(tokens >= 2)
+		{
 			Say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (substring(argv(1), 0, 1) == "/")
+				GameCommand_Vote(strcat("vote call ", substring(s, strstrofs(s, "/", 0) + 1, -1)), self);
+		}
 		//clientcommand(self, formatmessage(s));
 	} else if(cmd == "say_team") {
 		if(tokens >= 2)
