@@ -30,6 +30,7 @@ mapvoting.qc
 
 rubble.qc
 hook.qc
+lightning.qc
 particles.qc
 laser.qc
 projectile.qc
