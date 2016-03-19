@@ -141,6 +141,8 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 
 .entity lightning_beam;
 .float lightning_beam_length;
+.vector lightning_beam_begin;
+.vector lightning_beam_end;
 
 void W_Electro_Attack_Lightning_Remove(entity own)
 {
@@ -158,9 +160,28 @@ void W_Electro_Attack_Lightning_Think()
 	makevectors(self.owner.v_angle);
 	W_SetupShot(self.owner, FALSE, 0, "", 0);
 	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
+	self.lightning_beam_begin = w_shotorg_visual;
+	self.lightning_beam_end = trace_endpos;
 	setorigin(self, (self.owner.origin + trace_endpos) * 0.5);
-	te_beam(self.owner, trace_endpos, w_shotorg_visual);
 	self.nextthink = time;
+	self.SendFlags |= 2;
+}
+
+float W_Electro_Ligtning_Send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_LIGHTNING);
+
+	WriteShort(MSG_ENTITY, num_for_edict(self.owner));
+	WriteCoord(MSG_ENTITY, self.lightning_beam_begin_x);
+	WriteCoord(MSG_ENTITY, self.lightning_beam_begin_y);
+	WriteCoord(MSG_ENTITY, self.lightning_beam_begin_z);
+	WriteCoord(MSG_ENTITY, self.lightning_beam_end_x);
+	WriteCoord(MSG_ENTITY, self.lightning_beam_end_y);
+	WriteCoord(MSG_ENTITY, self.lightning_beam_end_z);
+	WriteCoord(MSG_ENTITY, self.owner.weaponentity.shotorg_visual_x);
+	WriteCoord(MSG_ENTITY, -self.owner.weaponentity.shotorg_visual_y);
+	WriteCoord(MSG_ENTITY, self.owner.weaponentity.shotorg_visual_z);
+	return TRUE;
 }
 
 void W_Electro_Attack_Lightning()
@@ -178,6 +199,7 @@ void W_Electro_Attack_Lightning()
 		sound(self.lightning_beam, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		sound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+		Net_LinkEntity(self.lightning_beam, FALSE, 0, W_Electro_Ligtning_Send);
 	}
 	traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self.lightning_beam, ANTILAG_LATENCY(self));
 	if (trace_fraction < 1)

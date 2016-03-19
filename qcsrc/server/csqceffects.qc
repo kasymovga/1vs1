@@ -10,4 +10,3 @@ void te_csqc_lightningarc(vector from,vector to)
 	WriteCoord(MSG_BROADCAST, to_y);
 	WriteCoord(MSG_BROADCAST, to_z);
 }
-
