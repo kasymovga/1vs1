@@ -4,6 +4,7 @@ float g_allow_oldnexbeam;
 float g_forced_respawn;
 float sv_servermodelsonly;
 float sv_reset_on_join;
+float sv_disable_crouch;
 
 float reset_on_join_done;
 
@@ -2574,6 +2575,7 @@ void PlayerPreThink (void)
 
 		if ((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss)
 		{
+			if not(sv_disable_crouch)
 			if (!self.crouch)
 			{
 				self.crouch = TRUE;
@@ -3002,6 +3004,7 @@ void PlayerPostThink (void)
 
 void Client_ReadCvars()
 {
+	CACHE_CVAR(sv_disable_crouch);
 	CACHE_CVAR(g_spawn_furthest);
 	CACHE_CVAR(sv_servermodelsonly);
 	CACHE_CVAR(sv_reset_on_join);
