@@ -157,6 +157,12 @@ void W_Electro_Attack_Lightning_Remove(entity own)
 
 void W_Electro_Attack_Lightning_Think()
 {
+	if (self.owner.weapon != WEP_ELECTRO)
+	{
+		remove(self);
+		print("Abandoned electro beam detected and removed\n");
+		return;
+	}
 	makevectors(self.owner.v_angle);
 	W_SetupShot(self.owner, FALSE, 0, "", 0);
 	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
