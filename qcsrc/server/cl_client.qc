@@ -543,6 +543,7 @@ putting a client as observer in the server
 void FixPlayermodel();
 void PutObserverInServer (void)
 {
+	float i;
 	entity	spot;
 
 	race_PreSpawnObserver();
@@ -551,6 +552,9 @@ void PutObserverInServer (void)
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
+
+	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+		weapon_action(i, WR_CLEAR);
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -997,11 +1001,8 @@ void PutClientInServer (void)
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
+		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 			weapon_action(j, WR_RESETPLAYER);
-			weapon_action(j, WR_CLEAR);
-		}
 
 		oldself = self;
 		self = spot;
@@ -1549,6 +1550,7 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
+	float i;
 	if not(self.flags & FL_CLIENT)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
@@ -1570,7 +1572,9 @@ void ClientDisconnect (void)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
-	weapon_action(self.weapon, WR_CLEAR);
+
+	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+		weapon_action(i, WR_CLEAR);
 
 	SoundEntity_Detach(self);
 
