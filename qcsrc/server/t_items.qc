@@ -485,7 +485,7 @@ void Item_Touch (void)
 
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 
-	if (self.classname == "droppedweapon")
+	if (substring(self.classname, 0, 7) == "dropped")
 		remove (self);
 	else if not(self.spawnshieldtime)
 		return;
@@ -683,7 +683,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	startitem_failed = FALSE;
 
 	// is it a dropped weapon?
-	if (self.classname == "droppedweapon")
+	if (substring(self.classname, 0, 7) == "dropped")
 	{
 		self.reset = SUB_Remove;
 		// it's a dropped weapon
@@ -883,7 +883,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	if(itemflags & FL_WEAPON)
 		self.modelflags |= MF_ROTATE;
 
-	if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
+	if (substring(self.classname, 0, 7) != "dropped") // if dropped, colormap is already set up nicely
 	if (itemflags & FL_WEAPON)
 	{
 		// neutral team color for pickup weapons
@@ -1426,7 +1426,7 @@ void target_items_use (void)
 {
 	float h0, a0, f0;
 
-	if(activator.classname == "droppedweapon")
+	if(substring(activator.classname, 7, 0) == "dropped")
 	{
 		EXACTTRIGGER_TOUCH;
 		remove(activator);
@@ -1440,8 +1440,8 @@ void target_items_use (void)
 	EXACTTRIGGER_TOUCH;
 
 	entity e;
-	for(e = world; (e = find(e, classname, "droppedweapon")); )
-		if(e.enemy == activator)
+	for(e = world; (e = findentity(e, enemy, activator)); )
+		if(substring(e.classname, 0, 7) == "dropped")
 			remove(e);
 
 	float _switchweapon;

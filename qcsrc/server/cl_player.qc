@@ -376,6 +376,30 @@ void SpawnThrownWeapon (vector org, float w)
 		W_ThrowWeapon(randomvec() * 125 + '0 0 200', org - self.origin, FALSE);
 }
 
+void DropBackPack(vector org)
+{
+	if (g_weaponarena)
+		return;
+	if (g_lms)
+		return;
+	if (g_nixnex)
+		return;
+	entity ammopack, oldself;
+	ammopack = spawn();
+	ammopack.ammo_cells = self.ammo_cells;
+	ammopack.ammo_rockets = self.ammo_rockets;
+	ammopack.ammo_shells = self.ammo_shells;
+	ammopack.ammo_nails = self.ammo_nails;
+	ammopack.ammo_fuel = self.ammo_fuel;
+	ammopack.classname = "droppedbackpack";
+	ammopack.colormap = self.colormap;
+	setorigin(ammopack, org);
+	oldself = self;
+	self = ammopack;
+	StartItem (sv_model_backpack, "misc/itempickup.wav", 0, 0, "ammopack", IT_AMMO, W_WeaponBit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
+	self = oldself;
+}
+
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	local float take, save;
@@ -631,8 +655,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.alpha = 1;
 		// clear selected player display
 		ClearSelectedPlayer();
-		// throw a weapon
-		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		if (g_pickup_drop_backpack)
+			DropBackPack (self.origin + (self.mins + self.maxs) * 0.5);
+		else
+			// throw a weapon
+			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();

@@ -710,6 +710,8 @@ vector randompos(vector m1, vector m2)
     return  v;
 };
 
+float g_pickup_drop_backpack;
+string sv_model_backpack;
 float g_pickup_shells;
 float g_pickup_shells_max;
 float g_pickup_nails;
@@ -1017,6 +1019,8 @@ void readplayerstartcvars()
         if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = g_pickup_rockets;
         if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = g_pickup_fuel;
     }
+
+	g_pickup_drop_backpack = cvar("g_pickup_drop_backpack");
 
     start_ammo_shells = max(0, start_ammo_shells);
     start_ammo_nails = max(0, start_ammo_nails);
@@ -1674,6 +1678,15 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTN_NONE);
     }
 #endif
+	if (g_pickup_drop_backpack)
+	{
+		sv_model_backpack = cvar_string("sv_model_backpack");
+		if (sv_model_backpack == "")
+			sv_model_backpack = "models/items/g_jetpack.md3";
+		else
+			sv_model_backpack = strzone(sv_model_backpack);
+		precache_model(sv_model_backpack);
+	}
 }
 
 // sorry, but using \ in macros breaks line numbers
