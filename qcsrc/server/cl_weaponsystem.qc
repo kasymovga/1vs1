@@ -134,6 +134,8 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
 	oldsolid = ent.dphitcontentsmask;
+	entity ent_orig = ent;
+	ent = Akimbo_Owner(ent);
 	antilag_prepare(ent);
 	if(ent.weapon == WEP_CAMPINGRIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -156,14 +158,14 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
-	if(ent.weaponentity.movedir_x > 0)
+	if(ent_orig.weaponentity.movedir_x > 0)
 	{
-		vecs = ent.weaponentity.movedir;
+		vecs = ent_orig.weaponentity.movedir;
 		vecs_y = -vecs_y;
 	}
 	else
 		vecs = '0 0 0';
-	vecs_visual = ent.weaponentity.shotorg_visual;
+	vecs_visual = ent_orig.weaponentity.shotorg_visual;
 	vecs_visual_y = -vecs_visual_y;
 
 	if(debug_shotorg != '0 0 0')
@@ -308,9 +310,9 @@ void LaserTarget_Think()
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {
-	self.viewmodelforclient = self.owner;
+	self.viewmodelforclient = Akimbo_Owner(self.owner);
 	if(other.classname == "spectator")
-		if(other.enemy == self.owner)
+		if(other.enemy == self.viewmodelforclient)
 			self.viewmodelforclient = other;
 	return TRUE;
 }
@@ -500,7 +502,7 @@ void CL_Weaponentity_Think()
 					}
 				}
 
-				self.viewmodelforclient = self.owner;
+				self.viewmodelforclient = Akimbo_Owner(self.owner);
 			}
 		}
 		else
@@ -524,9 +526,10 @@ void CL_Weaponentity_Think()
 		{
 			vector v0;
 			v0 = self.movedir;
-			self.movedir = shotorg_adjust(v0, FALSE, FALSE);
-			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE);
-			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE) - v0;
+			float akimbo_active = Akimbo_Active(self.owner);
+			self.movedir = shotorg_adjust(v0, FALSE, FALSE, akimbo_active);
+			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE, akimbo_active);
+			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE, akimbo_active) - v0;
 		}
 		self.owner.stat_shotorg = compressShotOrigin(self.movedir);
 		self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
@@ -760,17 +763,20 @@ void CL_ExteriorWeaponentity_Think()
 		else
 			self.model = "";
 
-		if((tag_found = gettagindex(self.owner, "tag_weapon")))
+		if((tag_found = gettagindex(Akimbo_Owner(self.owner), "tag_weapon")))
 		{
 			self.tag_index = tag_found;
 			self.tag_entity = self.owner;
 		}
 		else
-			setattachment(self, self.owner, "bip01 r hand");
+			setattachment(self, Akimbo_Owner(self.owner), "bip01 r hand");
 
 		// if that didn't find a tag, hide the exterior weapon model
 		if (!self.tag_index)
 			self.model = "";
+
+		if (Akimbo_Active(self.owner) == 2)
+			setorigin(self, '0 20 0');
 	}
 	self.effects = self.owner.effects | EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
@@ -792,7 +798,7 @@ void CL_SpawnWeaponentity()
 	setmodel(self.weaponentity, ""); // precision set when changed
 	setorigin(self.weaponentity, '0 0 0');
 	self.weaponentity.angles = '0 0 0';
-	self.weaponentity.viewmodelforclient = self;
+	self.weaponentity.viewmodelforclient = Akimbo_Owner(self);
 	self.weaponentity.flags = 0;
 	self.weaponentity.think = CL_Weaponentity_Think;
 	self.weaponentity.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
@@ -1240,7 +1246,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 		xflash = spawn();
 		copyentity(flash, xflash);
 
-		flash.viewmodelforclient = self;
+		flash.viewmodelforclient = Akimbo_Owner(self);
 
 		if(self.weaponentity.oldorigin_x > 0)
 		{

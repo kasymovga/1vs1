@@ -6,6 +6,16 @@ void W_Reload()
 	if(self.switchweapon == self.weapon)
 	if(self.weaponentity.state == WS_READY)
 		weapon_action(self.weapon, WR_RELOAD);
+	entity oldself = self;
+	self = Akimbo_Ghost(self);
+	if (self)
+	if (self != oldself)
+	{
+		if(self.switchweapon == self.weapon)
+		if(self.weaponentity.state == WS_READY)
+			weapon_action(self.weapon, WR_RELOAD);
+	}
+	self = oldself;
 }
 
 // switch between weapons

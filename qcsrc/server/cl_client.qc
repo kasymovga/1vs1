@@ -1065,7 +1065,7 @@ float FakeInit_SendEntity(entity to, float sf)
 	if(g_grappling_hook)
 		client_hook_shotorigin = '8 -8 -12';
 	else
-		client_hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, TRUE);
+		client_hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, TRUE, FALSE);
 	WriteCoord(MSG_ENTITY, client_hook_shotorigin_x);
 	WriteCoord(MSG_ENTITY, client_hook_shotorigin_y);
 	WriteCoord(MSG_ENTITY, client_hook_shotorigin_z);
@@ -2620,6 +2620,7 @@ void PlayerPreThink (void)
 			self.items &~= self.items_added;
 
 			W_WeaponFrame();
+			Akimbo_WeaponFrame();
 
 			self.items_added = 0;
 			if(self.items & IT_JETPACK)

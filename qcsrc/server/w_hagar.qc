@@ -67,7 +67,7 @@ void W_Hagar_Attack (void)
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_primary_damage;
@@ -102,7 +102,7 @@ void W_Hagar_Attack2 (void)
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_secondary_damage;

@@ -387,14 +387,19 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)))
 		{
-			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if(it & e.weapons)
+				if not(item.weapons & e.weapons)
+					continue;
+				if not(player.weapons & e.weapons)
+				{
+					pickedup = TRUE;
 					W_GiveWeapon (player, e.weapon, item.netname);
+				}
+				else if (Akimbo_GiveWeapon (player, e.weapon, item.netname))
+					pickedup = TRUE;
 			}
 		}
 

@@ -44,6 +44,8 @@ g_subs.qh
 
 irc.qh
 
+akimbo.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -173,3 +175,5 @@ monsters/m_monsters.qc
 
 csqcprojectile.qc
 irc.qc
+
+akimbo.qc

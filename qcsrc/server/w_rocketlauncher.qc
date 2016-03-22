@@ -322,8 +322,9 @@ void W_Rocket_Attack (void)
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = self;
-	self.lastrocket = missile;
+	missile.owner = Akimbo_Owner(self);
+	if (Akimbo_Active(self) < 2)
+		self.lastrocket = missile;
 	if(g_balance_rocketlauncher_detonatedelay >= 0)
 		missile.spawnshieldtime = time + g_balance_rocketlauncher_detonatedelay;
 	else
@@ -576,9 +577,7 @@ float w_rlauncher(float req)
 			w_deathtypestring = "ate #'s rocket";
 	}
 	else if (req == WR_RESETPLAYER)
-	{
 		self.rl_release = 0;
-	}
 	else if (req == WR_RELOAD)
 		W_Melee_Attack_Check();
 	else if (req == WR_CVAR_CACHE)

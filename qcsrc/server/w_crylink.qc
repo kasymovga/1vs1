@@ -112,7 +112,7 @@ void W_Crylink_Attack (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
-		proj.realowner = proj.owner = self;
+		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = g_balance_crylink_primary_damage;
@@ -176,7 +176,7 @@ void W_Crylink_Attack2 (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
-		proj.realowner = proj.owner = self;
+		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = g_balance_crylink_secondary_damage;

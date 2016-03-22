@@ -2361,10 +2361,30 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 	return vecs;
 }
 
-vector shotorg_adjust(vector vecs, float y_is_right, float visual)
+vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active)
 {
 	string s;
 	vector v;
+	if (akimbo_active)
+	{
+		if (akimbo_active == 2)
+			vecs_y = -vecs_y;
+		if not(visual)
+		{
+			if (cvar("g_shootfromeye"))
+				vecs_z = 0;
+			else if (cvar("g_shootfromcenter"))
+				vecs_z -= 0;
+			else if ((s = cvar_string("g_shootfromfixedorigin")) != "")
+			{
+				v = stov(s);
+				if (v_x != 0)
+					vecs_x = v_x;
+				vecs_z = v_z;
+			}
+		}
+		return vecs;
+	}
 
 	if (cvar("g_shootfromeye"))
 	{

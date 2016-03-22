@@ -488,6 +488,7 @@ void spawnfunc_worldspawn (void)
 	GrappleHookInit();
 	Damage_ReadCvars();
 	Client_ReadCvars();
+	Akimbo_Init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");

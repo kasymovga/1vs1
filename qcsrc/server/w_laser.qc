@@ -60,7 +60,7 @@ void W_Laser_Attack (float issecondary)
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = Akimbo_Owner(self);
 	missile.classname = "laserbolt";
 	missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;

@@ -42,9 +42,9 @@ void W_Melee_Attack_Think()
 
 void W_Melee_Attack ()
 {
-	sound (self, CHAN_WEAPON, cvar_string("sv_sound_melee"), VOL_BASE, ATTN_NORM);
+	sound (Akimbo_Owner(self), CHAN_WEAPON, cvar_string("sv_sound_melee"), VOL_BASE, ATTN_NORM);
 	entity melee = spawn();
-	melee.owner = self;
+	melee.owner = Akimbo_Owner(self);
 	melee.think = W_Melee_Attack_Think;
 	melee.nextthink = time + g_balance_melee_delay;
 	melee.melee_damage = g_balance_melee_damage;
