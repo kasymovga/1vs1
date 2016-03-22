@@ -280,6 +280,12 @@ void Ent_Projectile()
 	if(f & 2)
 	{
 		self.cnt = ReadByte();
+		self.mins_x = ReadCoord();
+		self.mins_y = ReadCoord();
+		self.mins_z = ReadCoord();
+		self.maxs_x = ReadCoord();
+		self.maxs_y = ReadCoord();
+		self.maxs_z = ReadCoord();
 
 		self.silent = (self.cnt & 0x80);
 		self.cnt = (self.cnt & 0x7F);
@@ -310,8 +316,6 @@ void Ent_Projectile()
 				break;
 		}
 
-		self.mins = '0 0 0';
-		self.maxs = '0 0 0';
 		self.colormod = '0 0 0';
 		self.move_touch = SUB_Stop;
 		self.move_movetype = MOVETYPE_TOSS;
@@ -321,23 +325,15 @@ void Ent_Projectile()
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
 				loopsound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				break;
 			case PROJECTILE_ROCKET:
 				loopsound(self, CHAN_PROJECTILE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
-				self.mins = '-3 -3 -3';
-				self.maxs = '3 3 3';
 				break;
 			case PROJECTILE_GRENADE:
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
-				self.mins = '0 0 -3';
-				self.maxs = '0 0 -3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				break;
@@ -363,15 +359,11 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
-				self.mins = '-16 -16 -16';
-				self.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
-				self.mins = '-4 -4 -4';
-				self.maxs = '4 4 4';
 				break;
 			default:
 				break;

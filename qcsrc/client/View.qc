@@ -267,18 +267,6 @@ float TrueAimCheck()
 				return EnemyHitCheck();
 			}
 			break;
-		case WEP_ROCKET_LAUNCHER: // projectile has a size!
-			mi = '-3 -3 -3';
-			ma = '3 3 3';
-			break;
-		case WEP_FIREBALL: // projectile has a size!
-			mi = '-16 -16 -16';
-			ma = '16 16 16';
-			break;
-		case WEP_ELECTRO: // projectile has a size!
-			mi = '0 0 -3';
-			ma = '0 0 -3';
-			break;
 	}
 
 	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
