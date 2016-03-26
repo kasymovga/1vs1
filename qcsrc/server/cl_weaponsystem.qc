@@ -7,6 +7,10 @@
 ===========================================================================
 */
 
+float g_balance_rune_speed_combo_atkrate;
+float g_balance_rune_speed_atkrate;
+float g_balance_curse_slow_atkrate;
+
 float W_WeaponRateFactor()
 {
 	float t;
@@ -17,13 +21,13 @@ float W_WeaponRateFactor()
 		if(self.runes & RUNE_SPEED)
 		{
 			if(self.runes & CURSE_SLOW)
-				t = t * cvar("g_balance_rune_speed_combo_atkrate");
+				t = t * g_balance_rune_speed_combo_atkrate;
 			else
-				t = t * cvar("g_balance_rune_speed_atkrate");
+				t = t * g_balance_rune_speed_atkrate;
 		}
 		else if(self.runes & CURSE_SLOW)
 		{
-			t = t * cvar("g_balance_curse_slow_atkrate");
+			t = t * g_balance_curse_slow_atkrate;
 		}
 	}
 
@@ -44,6 +48,15 @@ float WFRAME_IDLE = 2;
 float WFRAME_RELOAD = 3;
 float WFRAME_MELEE = 4;
 .float wframe;
+
+float g_balance_weaponswitchdelay;
+float g_showweaponspawns;
+float g_projectiles_newton_style_2_maxfactor;
+float g_projectiles_newton_style_2_minfactor;
+vector sv_qcanimation_melee_morph1angles;
+vector sv_qcanimation_melee_morph2angles;
+vector sv_qcanimation_melee_morph1origin;
+vector sv_qcanimation_melee_morph2origin;
 
 .vector shotorg_visual;
 
@@ -315,7 +328,7 @@ float CL_Weaponentity_CustomizeEntityForClient()
 	return TRUE;
 }
 
-float qcweaponanimation;
+float sv_qcweaponanimation;
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
 .vector weapon_morph0origin;
@@ -334,7 +347,7 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
 .string weaponname;
-#define QCWEAPONANIMATION_ORIGIN(e) (qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
+#define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
 
 /*
  * supported formats:
@@ -404,7 +417,7 @@ void CL_Weaponentity_Think()
 			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
 			v_shot_idx = gettagindex(self, "shot"); // used later
 
-			if(qcweaponanimation)
+			if(sv_qcweaponanimation)
 			{
 				self.angles = '0 0 0';
 				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
@@ -534,7 +547,7 @@ void CL_Weaponentity_Think()
 		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
 		// check if an instant weapon switch occurred
-		if (qcweaponanimation)
+		if (sv_qcweaponanimation)
 		{
 			if (self.state == WS_READY)
 			{
@@ -546,7 +559,6 @@ void CL_Weaponentity_Think()
 		else
 			setorigin(self, self.view_ofs);
 		// reset animstate now
-		self.wframe = WFRAME_IDLE;
 		self.weapon_morph0time = 0;
 		self.weapon_morph1time = 0;
 		self.weapon_morph2time = 0;
@@ -578,10 +590,10 @@ void CL_Weaponentity_Think()
 	self.angles = '0 0 0';
 	local float f;
 	f = 0;
-	float useqcanimation = (qcweaponanimation || self.wframe == WFRAME_MELEE);
-	if (self.state == WS_RAISE && !intermission_running)
+	float useqcanimation = (sv_qcweaponanimation || self.wframe == WFRAME_MELEE);
+	if (self.state == WS_RAISE && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar("g_balance_weaponswitchdelay");
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -589,9 +601,9 @@ void CL_Weaponentity_Think()
 			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
 		}
 	}
-	else if (self.state == WS_DROP && !intermission_running)
+	else if (self.state == WS_DROP && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar("g_balance_weaponswitchdelay");
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -865,7 +877,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		{
 			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
 
-			if(cvar("g_showweaponspawns"))
+			if(g_showweaponspawns)
 			{
 				entity e;
 				string s;
@@ -921,7 +933,6 @@ void w_ready()
 void weapon_setup(float windex)
 {
 	entity e;
-	qcweaponanimation = cvar("sv_qcweaponanimation");
 	e = get_weaponinfo(windex);
 	self.items &~= IT_AMMO;
 	self.items = self.items | e.items;
@@ -1007,7 +1018,7 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
-		if (qcweaponanimation || fr == WFRAME_MELEE)
+		if (sv_qcweaponanimation || fr == WFRAME_MELEE)
 		{
 			if (fr != WFRAME_IDLE)
 			{
@@ -1071,14 +1082,14 @@ void weapon_thinkf(float fr, float t, void() func)
 				else if (fr == WFRAME_MELEE)
 				{
 					self.weapon_morph1time = time + t * 0.25;
-					self.weapon_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
+					self.weapon_morph1angles = sv_qcanimation_melee_morph1angles;
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + stov(cvar_string("sv_qcanimation_melee_morph1origin"));
+					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee_morph1origin;
 
 					self.weapon_morph2time = time + t * 0.65;
-					self.weapon_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
+					self.weapon_morph2angles = sv_qcanimation_melee_morph2angles;
 					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
-					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + stov(cvar_string("sv_qcanimation_melee_morph2origin"));
+					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee_morph2origin;
 				}
 			}
 		}
@@ -1190,7 +1201,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 			//dprint("impossible shot, adjusting\n");
 		}
 
-		outspeed = bound(mspeed * cvar("g_projectiles_newton_style_2_minfactor"), outspeed, mspeed * cvar("g_projectiles_newton_style_2_maxfactor"));
+		outspeed = bound(mspeed * g_projectiles_newton_style_2_minfactor, outspeed, mspeed * g_projectiles_newton_style_2_maxfactor);
 		outvelocity = mdirection * outspeed;
 	}
 	else if(g_projectiles_newton_style == 3)
@@ -1225,7 +1236,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
-	if(qcweaponanimation)
+	if(sv_qcweaponanimation)
 	{
 		setorigin(flash, w_shotorg + w_shotdir * 50);
 		flash.angles = vectoangles(w_shotdir);
@@ -1251,4 +1262,20 @@ void W_AttachToShotorg(entity flash, vector offset)
 			setattachment(xflash, self.exteriorweaponentity, "shot");
 		}
 	}
+}
+
+void W_Init()
+{
+	CACHE_CVAR(g_balance_weaponswitchdelay);
+	CACHE_CVAR(g_balance_rune_speed_combo_atkrate);
+	CACHE_CVAR(g_balance_rune_speed_atkrate);
+	CACHE_CVAR(g_balance_curse_slow_atkrate);
+	CACHE_CVAR(g_projectiles_newton_style_2_minfactor);
+	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
+	CACHE_CVAR(g_showweaponspawns);
+	CACHE_CVAR(sv_qcweaponanimation);
+	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
+	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
+	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
+	sv_qcanimation_melee_morph2origin = stov(cvar_string("sv_qcanimation_melee_morph2origin"));
 }

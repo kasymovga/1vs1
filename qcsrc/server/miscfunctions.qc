@@ -1061,6 +1061,7 @@ float sv_autotaunt;
 float sv_taunt;
 
 void Melee_Init();
+void W_Init();
 void readlevelcvars(void)
 {
     g_bugrigs = cvar("g_bugrigs");
@@ -1205,6 +1206,7 @@ void readlevelcvars(void)
 		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);
 	}
 	Melee_Init();
+	W_Init();
 	CACHE_CVAR(g_antilag);
 	CACHE_CVAR(g_antilag_bullets);
 	CACHE_CVAR(g_casings);
