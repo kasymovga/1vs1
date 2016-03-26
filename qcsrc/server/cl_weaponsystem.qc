@@ -1128,8 +1128,7 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
-		if (self.weapon == WEP_LASER && ((fr == WFRAME_FIRE2 && g_balance_laser_secondary_melee) ||
-				(fr == WFRAME_FIRE1 && g_balance_laser_primary_melee)) || fr == WFRAME_MELEE)
+		if (fr == WFRAME_MELEE)
 			anim = self.anim_melee;
 		else
 			anim = self.anim_shoot;
