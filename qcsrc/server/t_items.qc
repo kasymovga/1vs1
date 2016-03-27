@@ -329,6 +329,9 @@ float Item_GiveTo(entity item, entity player)
 		if not(item.flags & FL_NO_WEAPON_STAY)
 		if (item.flags & FL_WEAPON)
 		{
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+				if (W_WeaponBit(i) & item.weapons)
+					Akimbo_GiveWeapon (player, i, item.netname);
 			if(item.classname == "droppedweapon")
 			{
 				if (player.weapons & item.weapons)	// don't let players stack ammo by tossing weapons
