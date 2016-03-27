@@ -565,6 +565,7 @@ void PutObserverInServer (void)
 
 	DropAllRunes(self);
 	kh_Key_DropAll(self, TRUE);
+	Akimbo_Clear();
 
 	Portal_ClearAll(self);
 
@@ -1580,6 +1581,7 @@ void ClientDisconnect (void)
 
 	DropAllRunes(self);
 	kh_Key_DropAll(self, TRUE);
+	Akimbo_Clear();
 
 	Portal_ClearAll(self);
 
