@@ -1876,7 +1876,8 @@ void player_powerups (void)
 	if (self.items & IT_STRENGTH)
 	{
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+		if not(g_powerup_strength_akimbo)
+			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 		if (time > self.strength_finished)
 		{
 			self.items = self.items - (self.items & IT_STRENGTH);

@@ -1,6 +1,7 @@
 .float akimbo_weapons;
 .entity akimbo_ghost;
 float g_akimbo_weapons;
+float weapons_with_akimbo_support;
 
 void Akimbo_GhostRemove(entity e)
 {
@@ -31,7 +32,9 @@ void Akimbo_WeaponFrame()
 	if not(self.weapon)
 		return;
 	float wpnbit = W_WeaponBit(self.weapon);
-	if (self.akimbo_weapons & wpnbit)
+	if ((self.akimbo_weapons & wpnbit) ||
+			(g_powerup_strength_akimbo && self.strength_finished > time &&
+			(wpnbit & weapons_with_akimbo_support)))
 	{
 		entity oldself = self;
 		if not(self.akimbo_ghost)
@@ -93,7 +96,7 @@ void Akimbo_Init()
 				break;
 			}
 
-	g_akimbo_weapons = g_akimbo_weapons & (
+	weapons_with_akimbo_support =
 			WEPBIT_LASER |
 			WEPBIT_SHOTGUN |
 			WEPBIT_UZI |
@@ -104,7 +107,10 @@ void Akimbo_Init()
 			WEPBIT_HLAC |
 			WEPBIT_NEX |
 			WEPBIT_HAGAR |
-			WEPBIT_ROCKET_LAUNCHER);
+			WEPBIT_ROCKET_LAUNCHER;
+
+	g_akimbo_weapons = g_akimbo_weapons & weapons_with_akimbo_support;
+	g_powerup_strength_akimbo = cvar("g_powerup_strength_akimbo");
 }
 
 entity Akimbo_Owner(entity e)
