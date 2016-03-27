@@ -14,6 +14,8 @@ void Akimbo_GhostRemove(entity e)
 	remove(self.akimbo_ghost.exteriorweaponentity);
 	remove(self.akimbo_ghost);
 	self.akimbo_ghost = world;
+	if (self.weaponentity)
+		self.weaponentity.cnt = 0;
 }
 
 void Akimbo_WeaponFrame()
