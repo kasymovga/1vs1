@@ -153,5 +153,5 @@ float Akimbo_Active(entity e)
 void Akimbo_Clear(entity e)
 {
 	Akimbo_GhostRemove(e);
-	self.akimbo_weapons = 0;
+	e.akimbo_weapons = 0;
 }
