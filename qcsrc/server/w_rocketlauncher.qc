@@ -349,6 +349,8 @@ void W_Rocket_Attack (void)
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_laserguided_speedstart * g_weaponspeedfactor;
 	else
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
+	if (Akimbo_Active(self) == 2)
+		missile.velocity = missile.velocity * 1.5;
 	W_SetupProjectileVelocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
