@@ -335,7 +335,7 @@ void w_electro_checkattack_lightning()
 	if(weapon_prepareattack(0, -1))
 	{
 		W_Electro_Attack_Lightning();
-		weapon_thinkf(WFRAME_FIRE2, g_balance_electro_primary_refire, w_electro_checkattack_lightning);
+		weapon_thinkf(WFRAME_DONTCHANGE, g_balance_electro_primary_refire, w_electro_checkattack_lightning);
 		return;
 	}
 	W_Electro_Attack_Lightning_Remove(self);
