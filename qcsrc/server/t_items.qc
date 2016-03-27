@@ -331,7 +331,9 @@ float Item_GiveTo(entity item, entity player)
 		{
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 				if (W_WeaponBit(i) & item.weapons)
-					Akimbo_GiveWeapon (player, i, item.netname);
+					if (Akimbo_GiveWeapon (player, i, item.netname))
+						sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+
 			if(item.classname == "droppedweapon")
 			{
 				if (player.weapons & item.weapons)	// don't let players stack ammo by tossing weapons
