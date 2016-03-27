@@ -338,6 +338,11 @@ void W_WeaponFrame()
 	{
 		if (!g_balance_weaponswitchdelay)
 		{
+			if (Akimbo_Active(self) > 1) //We need recreate akimbo ghost entity after weapon switching
+			{
+				Akimbo_GhostRemove(Akimbo_Owner(self));
+				return;
+			}
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(self.switchweapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, 0, w_ready);
