@@ -302,7 +302,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// play2(player, "announce/robotic/invisible.wav");
-				player.strength_finished = max(player.strength_finished, time) + cvar("g_balance_powerup_strength_time");
+				player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
 			}
 
 			// speed powerup
@@ -311,7 +311,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// play2(player, "announce/robotic/speed.wav");
-				player.invincible_finished = max(player.invincible_finished, time) + cvar("g_balance_powerup_strength_time");
+				player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
 			}
 
 			if (item.ammo_fuel)
@@ -420,12 +420,12 @@ float Item_GiveTo(entity item, entity player)
 			if (item.strength_finished)
 			{
 				pickedup = TRUE;
-				player.strength_finished = max(player.strength_finished, time) + cvar("g_balance_powerup_strength_time");
+				player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
 			}
 			if (item.invincible_finished)
 			{
 				pickedup = TRUE;
-				player.invincible_finished = max(player.invincible_finished, time) + cvar("g_balance_powerup_invincible_time");
+				player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
 			}
 			//if (item.speed_finished)
 			//{
@@ -955,7 +955,7 @@ void minstagib_items (float itemid)
 	// replace with invis
 	if (itemid == IT_STRENGTH)
 	{
-		self.strength_finished = 30;
+		self.strength_finished = cvar("g_balance_powerup_strength_time");
 		StartItem ("models/items/g_strength.md3",
 			"misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Invisibility", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -972,7 +972,7 @@ void minstagib_items (float itemid)
 	// replace with speed
 	if (itemid == IT_INVINCIBLE)
 	{
-		self.invincible_finished = 30;
+		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 		StartItem ("models/items/g_invincible.md3",
 			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -1310,7 +1310,7 @@ void spawnfunc_item_strength (void) {
 		minstagib_items(IT_STRENGTH);
 	} else {
 		precache_sound("weapons/strength_fire.wav");
-		self.strength_finished = 30;
+		self.strength_finished = cvar("g_balance_powerup_strength_time");
 		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
 }
@@ -1325,7 +1325,7 @@ void spawnfunc_item_invincible (void) {
 	if(g_minstagib) {
 		minstagib_items(IT_INVINCIBLE);
 	} else {
-		self.invincible_finished = 30;
+		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
 }
