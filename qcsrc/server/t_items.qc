@@ -1175,7 +1175,7 @@ void spawnfunc_weapon_rocketlauncher (void)
 
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
-		self.ammo_rockets = g_pickup_rockets;
+		self.ammo_rockets = cvar("g_pickup_rockets");
 	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
@@ -1192,13 +1192,13 @@ void spawnfunc_item_bullets (void) {
 	}
 
 	if(!self.ammo_nails)
-		self.ammo_nails = g_pickup_nails;
+		self.ammo_nails = cvar("g_pickup_nails");
 	StartItem ("models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
 void spawnfunc_item_cells (void) {
 	if(!self.ammo_cells)
-		self.ammo_cells = g_pickup_cells;
+		self.ammo_cells = cvar("g_pickup_cells");
 	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
@@ -1214,63 +1214,63 @@ void spawnfunc_item_shells (void) {
 	}
 
 	if(!self.ammo_shells)
-		self.ammo_shells = g_pickup_shells;
+		self.ammo_shells = cvar("g_pickup_shells");
 	StartItem ("models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
 }
 
 void spawnfunc_item_armor_small (void) {
 	if(!self.armorvalue)
-		self.armorvalue = g_pickup_armorsmall;
+		self.armorvalue = cvar("g_pickup_armorsmall");
 	if(!self.max_armorvalue)
-		self.max_armorvalue = g_pickup_armorsmall_max;
+		self.max_armorvalue = cvar("g_pickup_armorsmall_max");
 	StartItem ("models/items/g_a1.md3", "misc/armor1.wav", g_pickup_respawntime_armorsmall, g_pickup_respawntimejitter_armorsmall, "5 Armor", IT_ARMOR_SHARD, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_armor_medium (void) {
 	if(!self.armorvalue)
-		self.armorvalue = g_pickup_armormedium;
+		self.armorvalue = cvar("g_pickup_armormedium");
 	if(!self.max_armorvalue)
-		self.max_armorvalue = g_pickup_armormedium_max;
+		self.max_armorvalue = cvar("g_pickup_armormedium_max");
 	StartItem ("models/items/g_armormedium.md3", "misc/armor10.wav", g_pickup_respawntime_armormedium, g_pickup_respawntimejitter_armormedium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_armor_big (void) {
 	if(!self.armorvalue)
-		self.armorvalue = g_pickup_armorbig;
+		self.armorvalue = cvar("g_pickup_armorbig");
 	if(!self.max_armorvalue)
-		self.max_armorvalue = g_pickup_armorbig_max;
+		self.max_armorvalue = cvar("g_pickup_armorbig_max");
 	StartItem ("models/items/g_a50.md3", "misc/armor17_5.wav", g_pickup_respawntime_armorbig, g_pickup_respawntimejitter_armorbig, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
 }
 
 void spawnfunc_item_armor_large (void) {
 	if(!self.armorvalue)
-		self.armorvalue = g_pickup_armorlarge;
+		self.armorvalue = cvar("g_pickup_armorlarge");
 	if(!self.max_armorvalue)
-		self.max_armorvalue = g_pickup_armorlarge_max;
+		self.max_armorvalue = cvar("g_pickup_armorlarge_max");
 	StartItem ("models/items/g_a25.md3", "misc/armor25.wav", g_pickup_respawntime_armorlarge, g_pickup_respawntimejitter_armorlarge, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
 
 void spawnfunc_item_health_small (void) {
 	if(!self.max_health)
-		self.max_health = g_pickup_healthsmall_max;
+		self.max_health = cvar("g_pickup_healthsmall_max");
 	if(!self.health)
-		self.health = g_pickup_healthsmall;
+		self.health = cvar("g_pickup_healthsmall");
 	StartItem ("models/items/g_h1.md3", "misc/minihealth.wav", g_pickup_respawntime_healthsmall, g_pickup_respawntimejitter_healthsmall, "5 Health", IT_5HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_health_medium (void) {
 	if(!self.max_health)
-		self.max_health = g_pickup_healthmedium_max;
+		self.max_health = cvar("g_pickup_healthmedium_max");
 	if(!self.health)
-		self.health = g_pickup_healthmedium;
+		self.health = cvar("g_pickup_healthmedium");
 	StartItem ("models/items/g_h25.md3", "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_large (void) {
 	if(!self.max_health)
-		self.max_health = g_pickup_healthlarge_max;
+		self.max_health = cvar("g_pickup_healthlarge_max");
 	if(!self.health)
-		self.health = g_pickup_healthlarge;
+		self.health = cvar("g_pickup_healthlarge");
 	StartItem ("models/items/g_h50.md3", "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
@@ -1285,9 +1285,9 @@ void spawnfunc_item_health_mega (void) {
 		minstagib_items(IT_NAILS);
 	} else {
 		if(!self.max_health)
-			self.max_health = g_pickup_healthmega_max;
+			self.max_health = cvar("g_pickup_healthmega_max");
 		if(!self.health)
-			self.health = g_pickup_healthmega;
+			self.health = cvar("g_pickup_healthmega");
 		StartItem ("models/items/g_h100.md3", "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 	}
 }
@@ -1621,7 +1621,7 @@ void spawnfunc_target_items (void)
 void spawnfunc_item_fuel(void)
 {
 	if(!self.ammo_fuel)
-		self.ammo_fuel = g_pickup_fuel;
+		self.ammo_fuel = cvar("g_pickup_fuel");
 	StartItem ("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
@@ -1640,7 +1640,7 @@ void spawnfunc_item_jetpack(void)
 	if(g_grappling_hook)
 		return; // sorry, but these two can't coexist (same button); spawn fuel instead
 	if(!self.ammo_fuel)
-		self.ammo_fuel = g_pickup_fuel_jetpack;
+		self.ammo_fuel = cvar("g_pickup_fuel_jetpack");
 	if(start_items & IT_JETPACK)
 	{
 		spawnfunc_item_fuel();

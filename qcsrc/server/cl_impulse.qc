@@ -369,8 +369,8 @@ void ImpulseCommands (void)
 						self.ammo_rockets = g_pickup_rockets_max;
 						self.ammo_cells = g_pickup_cells_max;
 						self.ammo_fuel = g_pickup_fuel_max;
-						self.health = g_pickup_healthsmall_max;
-						self.armorvalue = g_pickup_armorsmall_max;
+						self.health = cvar("g_pickup_healthsmall_max");
+						self.armorvalue = cvar("g_pickup_armorsmall_max");
 						self.pauserotarmor_finished = time + cvar("g_balance_pause_armor_rot_spawn");
 						self.pauserothealth_finished = time + cvar("g_balance_pause_health_rot_spawn");
 						self.pauserotfuel_finished = time + cvar("g_balance_pause_fuel_rot_spawn");

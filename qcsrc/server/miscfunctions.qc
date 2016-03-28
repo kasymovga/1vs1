@@ -712,33 +712,11 @@ vector randompos(vector m1, vector m2)
 
 float g_pickup_drop_backpack;
 string sv_model_backpack;
-float g_pickup_shells;
 float g_pickup_shells_max;
-float g_pickup_nails;
 float g_pickup_nails_max;
-float g_pickup_rockets;
 float g_pickup_rockets_max;
-float g_pickup_cells;
 float g_pickup_cells_max;
-float g_pickup_fuel;
-float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
-float g_pickup_armorsmall;
-float g_pickup_armorsmall_max;
-float g_pickup_armormedium;
-float g_pickup_armormedium_max;
-float g_pickup_armorbig;
-float g_pickup_armorbig_max;
-float g_pickup_armorlarge;
-float g_pickup_armorlarge_max;
-float g_pickup_healthsmall;
-float g_pickup_healthsmall_max;
-float g_pickup_healthmedium;
-float g_pickup_healthmedium_max;
-float g_pickup_healthlarge;
-float g_pickup_healthlarge_max;
-float g_pickup_healthmega;
-float g_pickup_healthmega_max;
 float g_weaponarena;
 float g_weaponarena_random;
 string g_weaponarena_list;
@@ -1008,16 +986,16 @@ void readplayerstartcvars()
 
     if (g_weapon_stay == 2)
     {
-        if (!start_ammo_shells) start_ammo_shells = g_pickup_shells;
-        if (!start_ammo_nails) start_ammo_nails = g_pickup_nails;
-        if (!start_ammo_cells) start_ammo_cells = g_pickup_cells;
-        if (!start_ammo_rockets) start_ammo_rockets = g_pickup_rockets;
-        if (!start_ammo_fuel) start_ammo_fuel = g_pickup_fuel;
-        if (!warmup_start_ammo_shells) warmup_start_ammo_shells = g_pickup_shells;
-        if (!warmup_start_ammo_nails) warmup_start_ammo_nails = g_pickup_nails;
-        if (!warmup_start_ammo_cells) warmup_start_ammo_cells = g_pickup_cells;
-        if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = g_pickup_rockets;
-        if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = g_pickup_fuel;
+        if (!start_ammo_shells) start_ammo_shells = cvar("g_pickup_shells");
+        if (!start_ammo_nails) start_ammo_nails = cvar("g_pickup_nails");
+        if (!start_ammo_cells) start_ammo_cells = cvar("g_pickup_cells");
+        if (!start_ammo_rockets) start_ammo_rockets = cvar("g_pickup_rockets");
+        if (!start_ammo_fuel) start_ammo_fuel = cvar("g_pickup_fuel");
+        if (!warmup_start_ammo_shells) warmup_start_ammo_shells = cvar("g_pickup_shells");
+        if (!warmup_start_ammo_nails) warmup_start_ammo_nails = cvar("g_pickup_nails");
+        if (!warmup_start_ammo_cells) warmup_start_ammo_cells = cvar("g_pickup_cells");
+        if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = cvar("g_pickup_rockets");
+        if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = cvar("g_pickup_fuel");
     }
 
 	g_pickup_drop_backpack = cvar("g_pickup_drop_backpack");
@@ -1158,33 +1136,11 @@ void readlevelcvars(void)
     g_weapondamagefactor = cvar("g_weapondamagefactor");
     g_weaponforcefactor = cvar("g_weaponforcefactor");
 
-    g_pickup_shells                    = cvar("g_pickup_shells");
     g_pickup_shells_max                = cvar("g_pickup_shells_max");
-    g_pickup_nails                     = cvar("g_pickup_nails");
     g_pickup_nails_max                 = cvar("g_pickup_nails_max");
-    g_pickup_rockets                   = cvar("g_pickup_rockets");
     g_pickup_rockets_max               = cvar("g_pickup_rockets_max");
-    g_pickup_cells                     = cvar("g_pickup_cells");
     g_pickup_cells_max                 = cvar("g_pickup_cells_max");
-    g_pickup_fuel                     = cvar("g_pickup_fuel");
-    g_pickup_fuel_jetpack             = cvar("g_pickup_fuel_jetpack");
     g_pickup_fuel_max                 = cvar("g_pickup_fuel_max");
-    g_pickup_armorsmall                = cvar("g_pickup_armorsmall");
-    g_pickup_armorsmall_max            = cvar("g_pickup_armorsmall_max");
-    g_pickup_armormedium               = cvar("g_pickup_armormedium");
-    g_pickup_armormedium_max           = cvar("g_pickup_armormedium_max");
-    g_pickup_armorbig                  = cvar("g_pickup_armorbig");
-    g_pickup_armorbig_max              = cvar("g_pickup_armorbig_max");
-    g_pickup_armorlarge                = cvar("g_pickup_armorlarge");
-    g_pickup_armorlarge_max            = cvar("g_pickup_armorlarge_max");
-    g_pickup_healthsmall               = cvar("g_pickup_healthsmall");
-    g_pickup_healthsmall_max           = cvar("g_pickup_healthsmall_max");
-    g_pickup_healthmedium              = cvar("g_pickup_healthmedium");
-    g_pickup_healthmedium_max          = cvar("g_pickup_healthmedium_max");
-    g_pickup_healthlarge               = cvar("g_pickup_healthlarge");
-    g_pickup_healthlarge_max           = cvar("g_pickup_healthlarge_max");
-    g_pickup_healthmega                = cvar("g_pickup_healthmega");
-    g_pickup_healthmega_max            = cvar("g_pickup_healthmega_max");
 
     g_pinata = cvar("g_pinata");
 
