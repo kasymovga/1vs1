@@ -96,8 +96,6 @@ void uzi_fire1_02()
 		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, w_ready);
 };
 
-void spawnfunc_weapon_machinegun(); // defined in t_items.qc
-
 float w_uzi(float req)
 {
 	if (req == WR_AIM)

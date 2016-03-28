@@ -1803,3 +1803,27 @@ void spawnfunc_trigger_magicear()
 	// target:
 	//   what to trigger
 }
+
+//HL compat
+void func_ladder_touch()
+{
+	if not(other.iscreature)
+		return;
+
+	EXACTTRIGGER_TOUCH;
+
+	other.ladder_time = time + 0.1;
+	other.ladder_entity = self;
+};
+//HL compat
+void spawnfunc_func_ladder()
+{
+	EXACTTRIGGER_INIT;
+	self.touch = func_ladder_touch;
+};
+//HL compat
+void spawnfunc_func_water()
+{
+	EXACTTRIGGER_INIT;
+	self.touch = func_ladder_touch;
+};

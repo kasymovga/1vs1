@@ -986,7 +986,6 @@ void minst_remove_item (void) {
 		remove(self);
 }
 
-float weaponswapping;
 float internalteam;
 
 void weapon_defaultspawnfunc(float wpn)
@@ -1116,24 +1115,11 @@ void weapon_defaultspawnfunc(float wpn)
 		weapon_precache(e.weapon);
 }
 
-void spawnfunc_weapon_shotgun (void);
 void spawnfunc_weapon_uzi (void) {
-	if(q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
-	{
-		weapon_defaultspawnfunc(WEP_SHOTGUN);
-		return;
-	}
 	weapon_defaultspawnfunc(WEP_UZI);
 }
 
 void spawnfunc_weapon_shotgun (void) {
-	if(q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
-	{
-		weapon_defaultspawnfunc(WEP_UZI);
-		return;
-	}
 	weapon_defaultspawnfunc(WEP_SHOTGUN);
 }
 
@@ -1179,18 +1165,7 @@ void spawnfunc_item_rockets (void) {
 	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
-void spawnfunc_item_shells (void);
 void spawnfunc_item_bullets (void) {
-	if(!weaponswapping)
-	if(q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
-	{
-		weaponswapping = TRUE;
-		spawnfunc_item_shells();
-		weaponswapping = FALSE;
-		return;
-	}
-
 	if(!self.ammo_nails)
 		self.ammo_nails = cvar("g_pickup_nails");
 	StartItem ("models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
@@ -1203,16 +1178,6 @@ void spawnfunc_item_cells (void) {
 }
 
 void spawnfunc_item_shells (void) {
-	if(!weaponswapping)
-	if(q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
-	{
-		weaponswapping = TRUE;
-		spawnfunc_item_bullets();
-		weaponswapping = FALSE;
-		return;
-	}
-
 	if(!self.ammo_shells)
 		self.ammo_shells = cvar("g_pickup_shells");
 	StartItem ("models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
@@ -1293,12 +1258,6 @@ void spawnfunc_item_health_mega (void) {
 }
 
 // support old misnamed entities
-void spawnfunc_item_armor1() { spawnfunc_item_armor_small(); }  // FIXME: in Quake this is green armor, in Nexuiz maps it is an armor shard
-void spawnfunc_item_armor25() { spawnfunc_item_armor_large(); }
-void spawnfunc_item_health1() { spawnfunc_item_health_small(); }
-void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
-void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
-
 void spawnfunc_item_strength (void) {
 	if(!cvar("g_powerup_strength"))
 		return;
@@ -1339,9 +1298,6 @@ void spawnfunc_item_minst_cells (void) {
 	else
 		remove(self);
 }
-
-// compatibility:
-void spawnfunc_item_quad (void) {self.classname = "item_strength";spawnfunc_item_strength();}
 
 float target_item_func_set(float a, float b)
 {
@@ -1649,8 +1605,5 @@ void spawnfunc_item_jetpack(void)
 	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
-// we no longer have the seeker
-void spawnfunc_weapon_seeker()
-{
-	spawnfunc_weapon_fireball();
-}
+//Q1 compat
+void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_health_mega();else spawnfunc_item_health_medium();}
