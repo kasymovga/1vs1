@@ -962,7 +962,8 @@ float weapon_prepareattack(float secondary, float attacktime)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		if (Akimbo_Active(self) < 2)
+			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		return FALSE;
 	}
 

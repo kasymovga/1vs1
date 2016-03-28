@@ -338,7 +338,8 @@ void W_WeaponFrame()
 	{
 		if (!g_balance_weaponswitchdelay)
 		{
-			if (Akimbo_Active(self) > 1) //Akimbo weapon will be recreate automatic
+			if (Akimbo_Active(self) > 1)
+			if not(Akimbo_HaveWeapon(self, self.switchweapon))
 				return;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(self.switchweapon, WR_SETUP);

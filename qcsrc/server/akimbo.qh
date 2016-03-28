@@ -5,5 +5,6 @@ entity Akimbo_Ghost(entity e);
 float g_powerup_strength_akimbo;
 
 float Akimbo_GiveWeapon(entity p, float wpn, string name);
+float Akimbo_HaveWeapon(entity e, float wpn);
 float Akimbo_Active(entity e);
 void Akimbo_Clear(entity e);

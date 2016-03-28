@@ -31,10 +31,7 @@ void Akimbo_WeaponFrame()
 	}
 	if not(self.weapon)
 		return;
-	float wpnbit = W_WeaponBit(self.weapon);
-	if ((self.akimbo_weapons & wpnbit) ||
-			(g_powerup_strength_akimbo && self.strength_finished > time &&
-			(wpnbit & weapons_with_akimbo_support)))
+	if (Akimbo_HaveWeapon(self, self.weapon))
 	{
 		entity oldself = self;
 		if not(self.akimbo_ghost)
@@ -162,4 +159,14 @@ void Akimbo_Clear(entity e)
 {
 	Akimbo_GhostRemove(e);
 	e.akimbo_weapons = 0;
+}
+
+float Akimbo_HaveWeapon(entity e, float wpn)
+{
+	float wpnbit = W_WeaponBit(wpn);
+	if ((e.akimbo_weapons & wpnbit) ||
+			(g_powerup_strength_akimbo && e.strength_finished > time &&
+			(wpnbit & weapons_with_akimbo_support)))
+		return TRUE;
+	return FALSE;
 }
