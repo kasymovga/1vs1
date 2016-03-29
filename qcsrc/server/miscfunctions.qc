@@ -1143,6 +1143,7 @@ void readlevelcvars(void)
     g_pickup_fuel_max                 = cvar("g_pickup_fuel_max");
 
     g_pinata = cvar("g_pinata");
+    g_pinata_drop_all = cvar("g_pinata_drop_all");
 
     g_weapon_stay = cvar("g_weapon_stay");
     if (!g_weapon_stay && (cvar("deathmatch") == 2))

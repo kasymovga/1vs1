@@ -368,7 +368,7 @@ void SpawnThrownWeapon (vector org, float w)
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			if(self.weapons & W_WeaponBit(j))
-				if(W_IsWeaponThrowable(j))
+				if(W_IsWeaponThrowable(j) || g_pinata_drop_all)
 					W_ThrowNewWeapon(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
 		}
 	}
