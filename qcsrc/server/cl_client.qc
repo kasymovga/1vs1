@@ -543,7 +543,6 @@ putting a client as observer in the server
 void FixPlayermodel();
 void PutObserverInServer (void)
 {
-	float i;
 	entity	spot;
 
 	race_PreSpawnObserver();
@@ -551,10 +550,7 @@ void PutObserverInServer (void)
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
-	RemoveGrapplingHook(self); // Wazat's Grappling Hook
-
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		weapon_action(i, WR_CLEAR);
+	PlayerClear(FALSE, world);
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -562,17 +558,6 @@ void PutObserverInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-
-	DropAllRunes(self);
-	kh_Key_DropAll(self, TRUE);
-	Akimbo_Clear(self);
-
-	Portal_ClearAll(self);
-
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
-	if(self.ballcarried)
-		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	WaypointSprite_PlayerDead();
 
@@ -809,7 +794,6 @@ void PutClientInServer (void)
 
 	if(self.classname == "player") {
 		entity spot, oldself;
-		float j;
 		local float currentlyPlaying;
 		entity e;
 
@@ -825,8 +809,6 @@ void PutClientInServer (void)
 			centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
 			return; // spawn failed
 		}
-
-		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
 		self.classname = "player";
 		self.wasplayer = TRUE;
@@ -1000,10 +982,6 @@ void PutClientInServer (void)
 		}
 
 		target_voicescript_clear(self);
-
-		// reset fields the weapons may use
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			weapon_action(j, WR_RESETPLAYER);
 
 		oldself = self;
 		self = spot;
@@ -1551,7 +1529,6 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
-	float i;
 	if not(self.flags & FL_CLIENT)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
@@ -1574,21 +1551,9 @@ void ClientDisconnect (void)
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
 
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		weapon_action(i, WR_CLEAR);
-
 	SoundEntity_Detach(self);
 
-	DropAllRunes(self);
-	kh_Key_DropAll(self, TRUE);
-	Akimbo_Clear(self);
-
-	Portal_ClearAll(self);
-
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
-	if(self.ballcarried)
-		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
+	PlayerClear(FALSE, world);
 
 	// Here, everything has been done that requires this player to be a client.
 
