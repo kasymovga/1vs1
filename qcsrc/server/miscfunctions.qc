@@ -2342,6 +2342,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_
 				vecs_z = v_z;
 			}
 		}
+		vecs_y = vecs_y * 1.2;
 		return vecs;
 	}
 
