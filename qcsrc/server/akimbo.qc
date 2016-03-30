@@ -84,15 +84,7 @@ void Akimbo_WeaponFrame()
 void Akimbo_Init()
 {
 	float i, j, n;
-	n = tokenize_console(cvar_string("g_akimbo_weapons"));
-	for (i = 0; i < n; i++)
-		for (j = WEP_FIRST; j <= WEP_LAST; j++)
-			if (argv(i) == get_weaponinfo(j).netname)
-			{
-				g_akimbo_weapons |= W_WeaponBit(j);
-				break;
-			}
-
+	string s = cvar_string("g_akimbo_weapons");
 	weapons_with_akimbo_support =
 			WEPBIT_LASER |
 			WEPBIT_SHOTGUN |
@@ -106,6 +98,18 @@ void Akimbo_Init()
 			WEPBIT_HAGAR |
 			WEPBIT_ROCKET_LAUNCHER;
 
+	if (s == "all")
+		g_akimbo_weapons = weapons_with_akimbo_support;
+	else {
+		n = tokenize_console(s);
+		for (i = 0; i < n; i++)
+			for (j = WEP_FIRST; j <= WEP_LAST; j++)
+				if (argv(i) == get_weaponinfo(j).netname)
+				{
+					g_akimbo_weapons |= W_WeaponBit(j);
+					break;
+				}
+	}
 	g_akimbo_weapons = g_akimbo_weapons & weapons_with_akimbo_support;
 	g_powerup_strength_akimbo = cvar("g_powerup_strength_akimbo");
 }
