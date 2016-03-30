@@ -16,6 +16,8 @@ float g_balance_melee_force;
 float g_balance_melee_distance;
 float g_balance_melee_refire;
 
+float bot_melee_love;
+
 void W_Melee_Attack_Think()
 {
 	float melee_frame;
@@ -56,11 +58,19 @@ void W_Melee_Attack ()
 	melee.melee_lastthink = melee.nextthink;
 	melee.nextthink += melee.melee_ticrate; //avoid frame with zero melee_frame
 	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	self.bot_melee = FALSE;
+}
+
+float W_Melee_Possible()
+{
+	if (self.weapon != WEP_CAMPINGRIFLE)
+	if (g_balance_melee || (self.weapon == WEP_LASER && (g_balance_laser_primary_melee || g_balance_laser_secondary_melee)))
+		return TRUE;
+	return FALSE;
 }
 
 void W_Melee_Attack_Check()
 {
-	if (g_balance_melee)
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
 		W_Melee_Attack();
@@ -80,17 +90,14 @@ void Melee_Init()
 	CACHE_CVAR(g_balance_melee_force);
 	CACHE_CVAR(g_balance_melee_distance);
 	CACHE_CVAR(g_balance_melee_refire);
+	bot_melee_love = cvar("bot_melee");
 }
 
-.float bot_melee;
 float W_Melee_Aim()
 {
-	if (g_balance_melee)
-	{
-		if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
-			self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
-	}
-	else
-		self.bot_melee = FALSE;
+	if (W_Melee_Possible())
+	if (random() < bot_melee_love)
+	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
+		self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
 	return self.bot_melee;
 }

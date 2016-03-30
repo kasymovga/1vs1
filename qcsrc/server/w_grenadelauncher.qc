@@ -234,8 +234,6 @@ float w_glauncher(float req)
 		return self.ammo_rockets >= g_balance_grenadelauncher_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)

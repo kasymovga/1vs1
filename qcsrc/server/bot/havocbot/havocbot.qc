@@ -85,6 +85,7 @@ void havocbot_ai()
 	}
 	havocbot_aim();
 	lag_update();
+	self.bot_melee = FALSE;
 	if (self.bot_aimtarg)
 	{
 		self.aistatus |= AI_STATUS_ATTACKING;
@@ -92,15 +93,17 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			weapon_action(self.weapon, WR_AIM);
+			if (!W_Melee_Aim()) //Try melee first
+				weapon_action(self.weapon, WR_AIM);
 			if (cvar("bot_nofire") || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = FALSE;
 				self.BUTTON_ATCK2 = FALSE;
+				self.bot_melee = FALSE;
 			}
 			else
 			{
-				if(self.BUTTON_ATCK||self.BUTTON_ATCK2)
+				if(self.BUTTON_ATCK||self.BUTTON_ATCK2||self.bot_melee)
 					self.lastfiredweapon = self.weapon;
 			}
 		}

@@ -169,8 +169,6 @@ float w_hagar(float req)
 		return self.ammo_rockets >= g_balance_hagar_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "played with tiny rockets";
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH

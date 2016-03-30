@@ -237,8 +237,6 @@ float w_hlac(float req)
 		w_deathtypestring = "should have used a smaller gun";
 	else if (req == WR_KILLMESSAGE)
 		w_deathtypestring = "was cut down by";
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_hlac_primary_ammo);

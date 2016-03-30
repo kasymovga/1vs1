@@ -42,6 +42,8 @@ vote.qh
 
 g_subs.qh
 
+w_melee.qh
+
 irc.qh
 
 akimbo.qh
