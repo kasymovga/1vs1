@@ -13,5 +13,5 @@ cl_1vs1.dat : $(CL_SOURCES)
 .PHONY: cl.pk3
 
 cl.pk3 : cl_1vs1.dat
-	HASH=`md5sum cl_1vs1.dat | head -c 8`; DATE=`stat -c %y cl_1vs1.dat | head -c 19 | sed 's/[ -:]//g'`; NAME="cl_1vs1-$$DATE$$HASH.pk3";\
+	HASH=`md5sum cl_1vs1.dat | head -c 8`; DATE=`stat -c %y cl_1vs1.dat | head -c 19 | sed 's/[ :-]//g'`; NAME="cl_1vs1-$$DATE$$HASH.pk3";\
 if test ! -f "$$NAME" -o cl_1vs1.dat -nt "$$NAME"; then rm -f cl_1vs1*.pk3; zip "$$NAME" cl_1vs1.dat; fi
