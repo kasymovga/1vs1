@@ -333,7 +333,7 @@ void checkpoint_passed()
 		// do not allow portalling through checkpoints
 		trace_plane_normal = normalize(-1 * other.velocity);
 		self = other;
-		W_Porto_Fail(0);
+		W_Porto_Fail();
 		return;
 	}
 
