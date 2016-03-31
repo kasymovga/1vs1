@@ -24,6 +24,7 @@ float g_balance_rocketlauncher_refire;
 float g_balance_rocketlauncher_speed;
 float g_balance_rocketlauncher_speedaccel;
 float g_balance_rocketlauncher_speedstart;
+vector g_balance_rocketlauncher_projsize;
 
 .float rl_release;
 .float rl_detonate_later;
@@ -318,7 +319,7 @@ void W_Rocket_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", g_balance_rocketlauncher_damage);
+	W_SetupShot_ProjectileSize (self, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize, FALSE, 5, "weapons/rocket_fire.wav", g_balance_rocketlauncher_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
@@ -342,7 +343,7 @@ void W_Rocket_Attack (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+	setsize (missile, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize); // give it some size so it can be shot
 
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	if(g_laserguided_missile && self.laser_on)
@@ -608,6 +609,7 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_speed);
 		CACHE_CVAR(g_balance_rocketlauncher_speedaccel);
 		CACHE_CVAR(g_balance_rocketlauncher_speedstart);
+		g_balance_rocketlauncher_projsize = stov(cvar_string("g_balance_rocketlauncher_projsize"));
 	}
 	return TRUE;
 };
