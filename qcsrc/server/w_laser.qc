@@ -60,7 +60,7 @@ void W_Laser_Attack (float issecondary)
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = Akimbo_Owner(self);
 	missile.classname = "laserbolt";
 	missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;
@@ -105,39 +105,27 @@ void spawnfunc_weapon_laser (void)
 
 float w_laser(float req)
 {
-	local float melee;
 	if (req == WR_AIM)
-	{
-		melee = W_Melee_Aim();
-		if not(melee)
-		{
-			if (g_balance_laser_primary_melee)
-			if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
-				melee = self.BUTTON_ATCK = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
-
-			if (g_balance_laser_secondary)
-			if not(melee)
-			if (g_balance_laser_secondary_melee)
-			if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
-				melee = self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
-
-			if not(melee)
-				self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
-		}
-	}
+		self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
 	else if (req == WR_THINK)
 	{
 		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, g_balance_laser_primary_refire))
 		{
-			W_Laser_Attack(FALSE);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, w_ready);
+			if (g_balance_laser_primary_melee)
+				W_Melee_Attack_Check();
+			else if (weapon_prepareattack(0, g_balance_laser_primary_refire))
+			{
+				W_Laser_Attack(FALSE);
+				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, w_ready);
+			}
 		}
 		if (self.BUTTON_ATCK2)
 		{
 			if(g_balance_laser_secondary)
 			{
-				if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
+				if (g_balance_laser_secondary_melee)
+					W_Melee_Attack_Check();
+				else if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
 				{
 					W_Laser_Attack(TRUE);
 					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, w_ready);
@@ -148,13 +136,6 @@ float w_laser(float req)
 				if(self.switchweapon == WEP_LASER) // don't do this if already switching
 					W_SwitchWeapon (self.cnt);
 			}
-		}
-		if (self.bot_melee)
-		if (weapon_prepareattack(0, g_balance_melee_refire))
-		{
-			W_Melee_Attack();
-			weapon_thinkf(WFRAME_MELEE, g_balance_melee_animtime, w_ready);
-			self.bot_melee = FALSE;
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -167,8 +148,6 @@ float w_laser(float req)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "lasered himself to hell";
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_KILLMESSAGE)
 		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	else if (req == WR_CVAR_CACHE)

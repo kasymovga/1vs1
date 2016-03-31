@@ -111,7 +111,7 @@ void W_Grenade_Attack (void)
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
-	gren.owner = self;
+	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = g_balance_grenadelauncher_primary_damage;
@@ -146,7 +146,7 @@ void W_Grenade_Attack2 (void)
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
-	gren.owner = self;
+	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = g_balance_grenadelauncher_secondary_damage;
@@ -234,8 +234,6 @@ float w_glauncher(float req)
 		return self.ammo_rockets >= g_balance_grenadelauncher_primary_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)

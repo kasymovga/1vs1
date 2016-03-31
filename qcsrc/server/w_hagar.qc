@@ -67,7 +67,7 @@ void W_Hagar_Attack (void)
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_primary_damage;
@@ -102,7 +102,7 @@ void W_Hagar_Attack2 (void)
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_secondary_damage;
@@ -169,8 +169,6 @@ float w_hagar(float req)
 		return self.ammo_rockets >= g_balance_hagar_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "played with tiny rockets";
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH

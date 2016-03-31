@@ -96,8 +96,6 @@ void uzi_fire1_02()
 		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, w_ready);
 };
 
-void spawnfunc_weapon_machinegun(); // defined in t_items.qc
-
 float w_uzi(float req)
 {
 	if (req == WR_AIM)
@@ -136,8 +134,6 @@ float w_uzi(float req)
 		return self.ammo_nails >= g_balance_uzi_first_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= g_balance_uzi_first_ammo;
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)

@@ -42,7 +42,11 @@ vote.qh
 
 g_subs.qh
 
+w_melee.qh
+
 irc.qh
+
+akimbo.qh
 
 scores_rules.qc
 
@@ -143,13 +147,6 @@ ipban.qc
 
 ../common/mapinfo.qc
 
-
-
-
-t_quake3.qc
-t_halflife.qc
-t_quake.qc
-
 race.qc
 
 
@@ -173,3 +170,5 @@ monsters/m_monsters.qc
 
 csqcprojectile.qc
 irc.qc
+
+akimbo.qc

@@ -368,7 +368,7 @@ void SpawnThrownWeapon (vector org, float w)
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			if(self.weapons & W_WeaponBit(j))
-				if(W_IsWeaponThrowable(j))
+				if(W_IsWeaponThrowable(j) || g_pinata_drop_all)
 					W_ThrowNewWeapon(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
 		}
 	}
@@ -453,11 +453,51 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	}
 }
 
+
+void PlayerClear(float killed, entity attacker)
+{
+	float j;
+	DropAllRunes(self);
+	Akimbo_Clear(self);
+	if(self.ballcarried)
+		DropBall(self.ballcarried, self.origin, self.velocity);
+
+	if (killed)
+		Portal_ClearAllLater(self);
+	else
+		Portal_ClearAll(self);
+
+	// reset fields the weapons may use just in case
+	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+	{
+		weapon_action(j, WR_RESETPLAYER);
+		weapon_action(j, WR_CLEAR);
+		ATTACK_FINISHED_FOR(self, j) = 0;
+	}
+	RemoveGrapplingHook(self); // Wazat's Grappling Hook
+
+	if(killed && (self == attacker))
+		kh_Key_DropAll(self, TRUE);
+	else if(killed && (attacker.classname == "player" || attacker.classname == "gib"))
+		kh_Key_DropAll(self, FALSE);
+	else
+		kh_Key_DropAll(self, TRUE);
+	if(self.flagcarried)
+	{
+		if(killed && (attacker.classname != "player" && attacker.classname != "gib"))
+			DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
+		else if(killed && (attacker.team == self.team))
+			DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
+		else
+			DropFlag(self.flagcarried, world, attacker);
+	}
+}
+
 void ClientKill_Now_TeamChange();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float take, save, waves, sdelay, dh, da, j;
+	local float take, save, waves, sdelay, dh, da;
 	vector v;
 	float valid_damage_for_weaponstats;
 
@@ -663,25 +703,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
-		DropAllRunes(self);
-		if(self == attacker)
-			kh_Key_DropAll(self, TRUE);
-		else if(attacker.classname == "player" || attacker.classname == "gib")
-			kh_Key_DropAll(self, FALSE);
-		else
-			kh_Key_DropAll(self, TRUE);
-		if(self.flagcarried)
-		{
-			if(attacker.classname != "player" && attacker.classname != "gib")
-				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
-			else if(attacker.team == self.team)
-				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
-			else
-				DropFlag(self.flagcarried, world, attacker);
-		}
-		if(self.ballcarried)
-			DropBall(self.ballcarried, self.origin, self.velocity);
-		Portal_ClearAllLater(self);
+		PlayerClear(TRUE, attacker);
 		// clear waypoints
 		WaypointSprite_PlayerDead();
 		// make the corpse upright (not tilted)
@@ -764,14 +786,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(sv_gentle > 0) {
 			// remove corpse
 			PlayerCorpseDamage (inflictor, attacker, 100.0, deathtype, hitloc, force);
-		}
-
-		// reset fields the weapons may use just in case
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			weapon_action(j, WR_RESETPLAYER);
-			weapon_action(j, WR_CLEAR);
-			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
 }

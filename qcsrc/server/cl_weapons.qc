@@ -5,7 +5,18 @@ void W_Reload()
 		return;
 	if(self.switchweapon == self.weapon)
 	if(self.weaponentity.state == WS_READY)
-		weapon_action(self.weapon, WR_RELOAD);
+	{
+		if (W_Melee_Possible())
+			W_Melee_Attack_Check();
+		else
+			weapon_action(self.weapon, WR_RELOAD);
+	}
+	entity oldself = self;
+	self = Akimbo_Ghost(self);
+	if (self)
+	if (self != oldself)
+		W_Reload();
+	self = oldself;
 }
 
 // switch between weapons
@@ -326,7 +337,16 @@ void W_WeaponFrame()
 	// Change weapon
 	if (self.weapon != self.switchweapon)
 	{
-		if (self.weaponentity.state == WS_CLEAR)
+		if (!g_balance_weaponswitchdelay)
+		{
+			if (Akimbo_Active(self) > 1)
+			if not(Akimbo_HaveWeapon(self, self.switchweapon))
+				return;
+			weapon_action(self.weapon, WR_CLEAR);
+			weapon_action(self.switchweapon, WR_SETUP);
+			weapon_thinkf(WFRAME_IDLE, 0, w_ready);
+			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
+		} else if (self.weaponentity.state == WS_CLEAR)
 		{
 			setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
@@ -334,7 +354,7 @@ void W_WeaponFrame()
 			weapon_action(self.switchweapon, WR_SETUP);
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, cvar("g_balance_weaponswitchdelay"), w_ready);
+			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_READY)
@@ -348,7 +368,7 @@ void W_WeaponFrame()
 			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, cvar("g_balance_weaponswitchdelay"), w_clear);
+			weapon_thinkf(WFRAME_DONTCHANGE, g_balance_weaponswitchdelay, w_clear);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}
@@ -377,7 +397,10 @@ void W_WeaponFrame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			weapon_action(self.weapon, WR_THINK);
+			if (self.bot_melee)
+				W_Melee_Attack_Check();
+			else
+				weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + frametime * 0.5 >= self.weapon_nextthink)
 		{

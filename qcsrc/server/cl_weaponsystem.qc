@@ -7,6 +7,10 @@
 ===========================================================================
 */
 
+float g_balance_rune_speed_combo_atkrate;
+float g_balance_rune_speed_atkrate;
+float g_balance_curse_slow_atkrate;
+
 float W_WeaponRateFactor()
 {
 	float t;
@@ -17,13 +21,13 @@ float W_WeaponRateFactor()
 		if(self.runes & RUNE_SPEED)
 		{
 			if(self.runes & CURSE_SLOW)
-				t = t * cvar("g_balance_rune_speed_combo_atkrate");
+				t = t * g_balance_rune_speed_combo_atkrate;
 			else
-				t = t * cvar("g_balance_rune_speed_atkrate");
+				t = t * g_balance_rune_speed_atkrate;
 		}
 		else if(self.runes & CURSE_SLOW)
 		{
-			t = t * cvar("g_balance_curse_slow_atkrate");
+			t = t * g_balance_curse_slow_atkrate;
 		}
 	}
 
@@ -44,6 +48,15 @@ float WFRAME_IDLE = 2;
 float WFRAME_RELOAD = 3;
 float WFRAME_MELEE = 4;
 .float wframe;
+
+float g_balance_weaponswitchdelay;
+float g_showweaponspawns;
+float g_projectiles_newton_style_2_maxfactor;
+float g_projectiles_newton_style_2_minfactor;
+vector sv_qcanimation_melee_morph1angles;
+vector sv_qcanimation_melee_morph2angles;
+vector sv_qcanimation_melee_morph1origin;
+vector sv_qcanimation_melee_morph2origin;
 
 .vector shotorg_visual;
 
@@ -134,6 +147,8 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
 	oldsolid = ent.dphitcontentsmask;
+	entity ent_orig = ent;
+	ent = Akimbo_Owner(ent);
 	antilag_prepare(ent);
 	if(ent.weapon == WEP_CAMPINGRIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -156,14 +171,14 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
-	if(ent.weaponentity.movedir_x > 0)
+	if(ent_orig.weaponentity.movedir_x > 0)
 	{
-		vecs = ent.weaponentity.movedir;
+		vecs = ent_orig.weaponentity.movedir;
 		vecs_y = -vecs_y;
 	}
 	else
 		vecs = '0 0 0';
-	vecs_visual = ent.weaponentity.shotorg_visual;
+	vecs_visual = ent_orig.weaponentity.shotorg_visual;
 	vecs_visual_y = -vecs_visual_y;
 
 	if(debug_shotorg != '0 0 0')
@@ -308,14 +323,14 @@ void LaserTarget_Think()
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {
-	self.viewmodelforclient = self.owner;
+	self.viewmodelforclient = Akimbo_Owner(self.owner);
 	if(other.classname == "spectator")
-		if(other.enemy == self.owner)
+		if(other.enemy == self.viewmodelforclient)
 			self.viewmodelforclient = other;
 	return TRUE;
 }
 
-float qcweaponanimation;
+float sv_qcweaponanimation;
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
 .vector weapon_morph0origin;
@@ -334,7 +349,7 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
 .string weaponname;
-#define QCWEAPONANIMATION_ORIGIN(e) (qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
+#define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
 
 /*
  * supported formats:
@@ -404,7 +419,7 @@ void CL_Weaponentity_Think()
 			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
 			v_shot_idx = gettagindex(self, "shot"); // used later
 
-			if(qcweaponanimation)
+			if(sv_qcweaponanimation)
 			{
 				self.angles = '0 0 0';
 				makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
@@ -500,7 +515,7 @@ void CL_Weaponentity_Think()
 					}
 				}
 
-				self.viewmodelforclient = self.owner;
+				self.viewmodelforclient = Akimbo_Owner(self.owner);
 			}
 		}
 		else
@@ -524,9 +539,10 @@ void CL_Weaponentity_Think()
 		{
 			vector v0;
 			v0 = self.movedir;
-			self.movedir = shotorg_adjust(v0, FALSE, FALSE);
-			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE);
-			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE) - v0;
+			float akimbo_active = Akimbo_Active(self.owner);
+			self.movedir = shotorg_adjust(v0, FALSE, FALSE, akimbo_active);
+			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE, akimbo_active);
+			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE, akimbo_active) - v0;
 		}
 		self.owner.stat_shotorg = compressShotOrigin(self.movedir);
 		self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
@@ -534,7 +550,7 @@ void CL_Weaponentity_Think()
 		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
 		// check if an instant weapon switch occurred
-		if (qcweaponanimation)
+		if (sv_qcweaponanimation)
 		{
 			if (self.state == WS_READY)
 			{
@@ -546,7 +562,6 @@ void CL_Weaponentity_Think()
 		else
 			setorigin(self, self.view_ofs);
 		// reset animstate now
-		self.wframe = WFRAME_IDLE;
 		self.weapon_morph0time = 0;
 		self.weapon_morph1time = 0;
 		self.weapon_morph2time = 0;
@@ -578,10 +593,10 @@ void CL_Weaponentity_Think()
 	self.angles = '0 0 0';
 	local float f;
 	f = 0;
-	float useqcanimation = (qcweaponanimation || self.wframe == WFRAME_MELEE);
-	if (self.state == WS_RAISE && !intermission_running)
+	float useqcanimation = (sv_qcweaponanimation || self.wframe == WFRAME_MELEE);
+	if (self.state == WS_RAISE && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar("g_balance_weaponswitchdelay");
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -589,9 +604,9 @@ void CL_Weaponentity_Think()
 			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
 		}
 	}
-	else if (self.state == WS_DROP && !intermission_running)
+	else if (self.state == WS_DROP && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar("g_balance_weaponswitchdelay");
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -760,17 +775,20 @@ void CL_ExteriorWeaponentity_Think()
 		else
 			self.model = "";
 
-		if((tag_found = gettagindex(self.owner, "tag_weapon")))
+		if((tag_found = gettagindex(Akimbo_Owner(self.owner), "tag_weapon")))
 		{
 			self.tag_index = tag_found;
 			self.tag_entity = self.owner;
 		}
 		else
-			setattachment(self, self.owner, "bip01 r hand");
+			setattachment(self, Akimbo_Owner(self.owner), "bip01 r hand");
 
 		// if that didn't find a tag, hide the exterior weapon model
 		if (!self.tag_index)
 			self.model = "";
+
+		if (Akimbo_Active(self.owner) == 2)
+			setorigin(self, '0 20 0');
 	}
 	self.effects = self.owner.effects | EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
@@ -792,7 +810,7 @@ void CL_SpawnWeaponentity()
 	setmodel(self.weaponentity, ""); // precision set when changed
 	setorigin(self.weaponentity, '0 0 0');
 	self.weaponentity.angles = '0 0 0';
-	self.weaponentity.viewmodelforclient = self;
+	self.weaponentity.viewmodelforclient = Akimbo_Owner(self);
 	self.weaponentity.flags = 0;
 	self.weaponentity.think = CL_Weaponentity_Think;
 	self.weaponentity.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
@@ -865,7 +883,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		{
 			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
 
-			if(cvar("g_showweaponspawns"))
+			if(g_showweaponspawns)
 			{
 				entity e;
 				string s;
@@ -921,7 +939,6 @@ void w_ready()
 void weapon_setup(float windex)
 {
 	entity e;
-	qcweaponanimation = cvar("sv_qcweaponanimation");
 	e = get_weaponinfo(windex);
 	self.items &~= IT_AMMO;
 	self.items = self.items | e.items;
@@ -945,7 +962,8 @@ float weapon_prepareattack(float secondary, float attacktime)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		if (Akimbo_Active(self) < 2)
+			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		return FALSE;
 	}
 
@@ -1007,7 +1025,7 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
-		if (qcweaponanimation || fr == WFRAME_MELEE)
+		if (sv_qcweaponanimation || fr == WFRAME_MELEE)
 		{
 			if (fr != WFRAME_IDLE)
 			{
@@ -1071,14 +1089,14 @@ void weapon_thinkf(float fr, float t, void() func)
 				else if (fr == WFRAME_MELEE)
 				{
 					self.weapon_morph1time = time + t * 0.25;
-					self.weapon_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
+					self.weapon_morph1angles = sv_qcanimation_melee_morph1angles;
 					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + stov(cvar_string("sv_qcanimation_melee_morph1origin"));
+					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee_morph1origin;
 
 					self.weapon_morph2time = time + t * 0.65;
-					self.weapon_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
+					self.weapon_morph2angles = sv_qcanimation_melee_morph2angles;
 					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
-					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + stov(cvar_string("sv_qcanimation_melee_morph2origin"));
+					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee_morph2origin;
 				}
 			}
 		}
@@ -1128,8 +1146,7 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
-		if (self.weapon == WEP_LASER && ((fr == WFRAME_FIRE2 && g_balance_laser_secondary_melee) ||
-				(fr == WFRAME_FIRE1 && g_balance_laser_primary_melee)) || fr == WFRAME_MELEE)
+		if (fr == WFRAME_MELEE)
 			anim = self.anim_melee;
 		else
 			anim = self.anim_shoot;
@@ -1191,7 +1208,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 			//dprint("impossible shot, adjusting\n");
 		}
 
-		outspeed = bound(mspeed * cvar("g_projectiles_newton_style_2_minfactor"), outspeed, mspeed * cvar("g_projectiles_newton_style_2_maxfactor"));
+		outspeed = bound(mspeed * g_projectiles_newton_style_2_minfactor, outspeed, mspeed * g_projectiles_newton_style_2_maxfactor);
 		outvelocity = mdirection * outspeed;
 	}
 	else if(g_projectiles_newton_style == 3)
@@ -1226,7 +1243,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
-	if(qcweaponanimation)
+	if(sv_qcweaponanimation)
 	{
 		setorigin(flash, w_shotorg + w_shotdir * 50);
 		flash.angles = vectoangles(w_shotdir);
@@ -1240,7 +1257,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 		xflash = spawn();
 		copyentity(flash, xflash);
 
-		flash.viewmodelforclient = self;
+		flash.viewmodelforclient = Akimbo_Owner(self);
 
 		if(self.weaponentity.oldorigin_x > 0)
 		{
@@ -1252,4 +1269,20 @@ void W_AttachToShotorg(entity flash, vector offset)
 			setattachment(xflash, self.exteriorweaponentity, "shot");
 		}
 	}
+}
+
+void W_Init()
+{
+	CACHE_CVAR(g_balance_weaponswitchdelay);
+	CACHE_CVAR(g_balance_rune_speed_combo_atkrate);
+	CACHE_CVAR(g_balance_rune_speed_atkrate);
+	CACHE_CVAR(g_balance_curse_slow_atkrate);
+	CACHE_CVAR(g_projectiles_newton_style_2_minfactor);
+	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
+	CACHE_CVAR(g_showweaponspawns);
+	CACHE_CVAR(sv_qcweaponanimation);
+	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
+	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
+	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
+	sv_qcanimation_melee_morph2origin = stov(cvar_string("sv_qcanimation_melee_morph2origin"));
 }

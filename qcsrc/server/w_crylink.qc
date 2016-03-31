@@ -112,7 +112,7 @@ void W_Crylink_Attack (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
-		proj.realowner = proj.owner = self;
+		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = g_balance_crylink_primary_damage;
@@ -176,7 +176,7 @@ void W_Crylink_Attack2 (void)
 	while (counter < shots)
 	{
 		proj = spawn ();
-		proj.realowner = proj.owner = self;
+		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = g_balance_crylink_secondary_damage;
@@ -275,8 +275,6 @@ float w_crylink(float req)
 	{
 		w_deathtypestring = "succeeded at self-destructing himself with the Crylink";
 	}
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)

@@ -84,8 +84,6 @@ float w_nex(float req)
 		return self.ammo_cells >= g_balance_nex_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)

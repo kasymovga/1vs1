@@ -29,6 +29,7 @@ void W_GiveWeapon (entity e, float wep, string name)
 
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
+	entity oldself = self;
 	local vector hitloc, force, endpoint, dir;
 	local entity ent, endent;
 	local float endq3surfaceflags;
@@ -39,6 +40,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	string snd;
 	entity pseudoprojectile;
 	float f, ffs;
+	self = Akimbo_Owner(self);
 
 	did_hit = 0;
 
@@ -169,6 +171,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	trace_endpos = endpoint;
 	trace_ent = endent;
 	trace_dphitq3surfaceflags = endq3surfaceflags;
+	self = oldself;
 }
 
 .float dmg_edge;
@@ -352,7 +355,8 @@ void endFireBallisticBullet()
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
 	float lag, dt;
-	entity pl, oldself;
+	entity pl, oldself, oldself_akimbo = self;
+	self = Akimbo_Owner(self);
 
 	entity proj;
 	proj = spawn();
@@ -476,9 +480,11 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		remove(proj);
 
+		self = oldself_akimbo;
 		return;
 	}
 
+	self = oldself_akimbo;
 	if(tracereffects & EF_RED)
 		CSQCProjectile(proj, TRUE, PROJECTILE_BULLET_GLOWING, TRUE);
 	else

@@ -488,16 +488,13 @@ void spawnfunc_worldspawn (void)
 	GrappleHookInit();
 	Damage_ReadCvars();
 	Client_ReadCvars();
+	Akimbo_Init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
 	if(bot_waypoints_for_items == 1)
 		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
-
-	// for setting by mapinfo
-	q3acompat_machineshotgunswap = cvar("sv_q3acompat_machineshotgunswap");
-	cvar_set("sv_q3acompat_machineshotgunswap", "0");
 
 	precache();
 
@@ -2627,4 +2624,5 @@ void SV_Shutdown()
 	{
 		print("NOTE: crashed before even initializing the world, not saving persistent data\n");
 	}
+	require_spawnfunc_prefix = 0;
 }

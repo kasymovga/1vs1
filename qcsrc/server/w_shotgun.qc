@@ -162,8 +162,6 @@ float w_shotgun(float req)
 	{
 		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	}
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_shotgun_primary_ammo);

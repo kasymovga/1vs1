@@ -165,7 +165,7 @@ void W_Electro_Attack_Lightning_Think()
 	}
 	makevectors(self.owner.v_angle);
 	W_SetupShot(self.owner, FALSE, 0, "", 0);
-	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, self.owner);
+	traceline(w_shotorg, w_shotorg + w_shotdir * self.lightning_beam_length, MOVE_NORMAL, Akimbo_Owner(self.owner));
 	self.lightning_beam_begin = w_shotorg_visual;
 	self.lightning_beam_end = trace_endpos;
 	setorigin(self, (self.owner.origin + trace_endpos) * 0.5);
@@ -177,7 +177,7 @@ float W_Electro_Ligtning_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LIGHTNING);
 
-	WriteShort(MSG_ENTITY, num_for_edict(self.owner));
+	WriteShort(MSG_ENTITY, num_for_edict(Akimbo_Owner(self.owner)));
 	WriteCoord(MSG_ENTITY, self.lightning_beam_begin_x);
 	WriteCoord(MSG_ENTITY, self.lightning_beam_begin_y);
 	WriteCoord(MSG_ENTITY, self.lightning_beam_begin_z);
@@ -207,6 +207,8 @@ void W_Electro_Attack_Lightning()
 		sound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 		Net_LinkEntity(self.lightning_beam, FALSE, 0, W_Electro_Ligtning_Send);
 	}
+	entity oldself = self;
+	self = Akimbo_Owner(self);
 	traceline_antilag(self, w_shotorg, w_shotorg + w_shotdir * self.lightning_beam.lightning_beam_length, MOVE_NORMAL, self.lightning_beam, ANTILAG_LATENCY(self));
 	if (trace_fraction < 1)
 	{
@@ -219,6 +221,7 @@ void W_Electro_Attack_Lightning()
 			pointparticles(particleeffectnum("machinegun_impact"), trace_endpos, '0 0 0', 0);
 		W_Plasma_TriggerCombo(trace_endpos, g_balance_electro_primary_comboradius, self);
 	}
+	self = oldself;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_electro_primary_ammo;
 }
@@ -233,7 +236,7 @@ void W_Electro_Attack()
 
 	proj = spawn ();
 	proj.classname = "plasma_prim";
-	proj.owner = self;
+	proj.owner = Akimbo_Owner(self);
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_electro_primary_damage;
 	proj.use = W_Plasma_Explode;
@@ -270,7 +273,7 @@ void W_Electro_Attack2()
 
 	proj = spawn ();
 	proj.classname = "plasma";
-	proj.owner = self;
+	proj.owner = Akimbo_Owner(self);
 	proj.use = W_Plasma_Explode;
 	proj.think = adaptor_think2use;
 	proj.bot_dodge = TRUE;
@@ -332,7 +335,7 @@ void w_electro_checkattack_lightning()
 	if(weapon_prepareattack(0, -1))
 	{
 		W_Electro_Attack_Lightning();
-		weapon_thinkf(WFRAME_FIRE2, g_balance_electro_primary_refire, w_electro_checkattack_lightning);
+		weapon_thinkf(WFRAME_DONTCHANGE, g_balance_electro_primary_refire, w_electro_checkattack_lightning);
 		return;
 	}
 	W_Electro_Attack_Lightning_Remove(self);
@@ -448,8 +451,6 @@ float w_electro(float req)
 	}
 	else if (req == WR_RESETPLAYER)
 		self.electro_secondarytime = time;
-	else if (req == WR_RELOAD)
-		W_Melee_Attack_Check();
 	else if (req == WR_CLEAR)
 		W_Electro_Attack_Lightning_Remove(self);
 	else if (req == WR_CVAR_CACHE)
