@@ -30,15 +30,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 	}
 
 	if(sf & 2)
-	{
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
-	}
 
 	return 1;
 }
