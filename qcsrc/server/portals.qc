@@ -287,10 +287,7 @@ void Portal_Touch()
 	}
 	*/
 
-	if(Portal_TeleportPlayer(self, other))
-		if(other.classname == "porto")
-			if(other.effects & EF_RED)
-				other.effects += EF_BLUE - EF_RED;
+	Portal_TeleportPlayer(self, other);
 }
 
 void Portal_Think();
@@ -544,7 +541,6 @@ void Portal_ClearAll_PortalsOnly(entity own)
 void Portal_ClearAll(entity own)
 {
 	Portal_ClearAll_PortalsOnly(own);
-	W_Porto_Remove(own);
 }
 void Portal_RemoveLater_Think()
 {
@@ -567,7 +563,6 @@ void Portal_ClearAllLater_PortalsOnly(entity own)
 void Portal_ClearAllLater(entity own)
 {
 	Portal_ClearAllLater_PortalsOnly(own);
-	W_Porto_Remove(own);
 }
 void Portal_ClearWithID(entity own, float id)
 {
@@ -635,11 +630,7 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
-	{
-		// if(!own.portal_out || own.portal_out.portal_id == portal_id_val)
-			Portal_ClearAll_PortalsOnly(own);
 		return 0;
-	}
 
 	portal.portal_id = portal_id_val;
 	Portal_SetInPortal(own, portal);

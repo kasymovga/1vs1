@@ -5,88 +5,13 @@
 #define rld_size_x 256
 #define rld_size_y 16
 
-entity porto;
-vector polyline[16];
-float trace_dphitcontents;
+//float trace_dphitcontents;
 float trace_networkentity;
-float Q3SURFACEFLAG_SLICK = 2; // low friction surface
+//float Q3SURFACEFLAG_SLICK = 2; // low friction surface
 float DPCONTENTS_SOLID = 1; // blocks player movement
 float DPCONTENTS_BODY = 32; // blocks player movement
 float DPCONTENTS_CORPSE = 64; // blocks player movement
 float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
-void Porto_Draw()
-{
-	vector p, dir, ang, q, nextdir;
-	float idx, portal_number, portal1_idx;
-
-	if(activeweapon != WEP_PORTO || spectatee_status || gametype == GAME_NEXBALL)
-		return;
-	if(intermission == 1)
-		return;
-	if(intermission == 2)
-		return;
-	if (getstati(STAT_HEALTH) <= 0)
-		return;
-
-	dir = view_forward;
-
-	if(angles_held_status)
-	{
-		makevectors(angles_held);
-		dir = v_forward;
-	}
-
-	p = view_origin;
-
-	polyline[0] = p;
-	idx = 1;
-	portal_number = 0;
-	nextdir = dir;
-
-	for(;;)
-	{
-		dir = nextdir;
-		traceline(p, p + 65536 * dir, TRUE, porto);
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			return;
-		nextdir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal; // mirror dir at trace_plane_normal
-		p = trace_endpos;
-		polyline[idx] = p;
-		++idx;
-		if(idx >= 16)
-			return;
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
-			continue;
-		++portal_number;
-		ang = vectoangles2(trace_plane_normal, dir);
-		ang_x = -ang_x;
-		makevectors(ang);
-		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
-			return;
-		if(portal_number == 1)
-			portal1_idx = idx;
-		if(portal_number >= 2)
-			break;
-	}
-
-	while(idx >= 2)
-	{
-		p = polyline[idx-2];
-		q = polyline[idx-1];
-		if(idx == 2)
-			p = p - view_up * 16;
-		if(idx-1 >= portal1_idx)
-		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL);
-		}
-		else
-		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL);
-		}
-		--idx;
-	}
-}
-
 /**
  * Checks whether the server initiated a map restart (stat_game_starttime changed)
  *
@@ -109,14 +34,6 @@ void CheckForGamestartChange() {
 		}
 	}
 	previous_game_starttime = startTime;
-}
-
-void Porto_Init()
-{
-	porto = spawn();
-	porto.classname = "porto";
-	porto.draw = Porto_Draw;
-	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
 
 float drawtime;

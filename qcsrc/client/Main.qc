@@ -296,7 +296,6 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
-void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
@@ -308,7 +307,6 @@ void PostInit(void)
 	playerchecker.think = Playerchecker_Think;
 	playerchecker.nextthink = time + 0.2;
 
-	Porto_Init();
 	TrueAim_Init();
 
 	postinit = true;

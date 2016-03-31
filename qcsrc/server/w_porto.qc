@@ -1,10 +1,13 @@
+// RED - INPUT
+// BLUE - OUTPUT
 float g_balance_porto_primary_animtime;
 float g_balance_porto_primary_lifetime;
 float g_balance_porto_primary_refire;
 float g_balance_porto_primary_speed;
 float g_balance_powerup_strength_force;
 
-.entity porto_current;
+.entity porto_current_in;
+.entity porto_current_out;
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
 .vector right_vector;
@@ -17,12 +20,14 @@ void W_Porto_Success (void)
 		return;
 	}
 
-	self.owner.porto_current = world;
+	if (self.effects & EF_RED)
+		self.owner.porto_current_in = world;
+	else
+		self.owner.porto_current_out = world;
 	remove(self);
 }
 
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
-void W_Porto_Fail (float failhard)
+void W_Porto_Fail ()
 {
 	if(self.owner == world)
 	{
@@ -30,39 +35,29 @@ void W_Porto_Fail (float failhard)
 		return;
 	}
 
-	// no portals here!
-	Portal_ClearWithID(self.owner, self.portal_id);
-	self.owner.porto_current = world;
+	if (self.effects & EF_RED)
+		self.owner.porto_current_in = world;
+	else
+		self.owner.porto_current_out = world;
 
-	if(!failhard && self.owner.playerid == self.playerid && self.owner.deadflag == DEAD_NO && !(self.owner.weapons & WEPBIT_PORTO))
-	{
-		setsize (self, '-16 -16 0', '16 16 32');
-		setorigin(self, self.origin + trace_plane_normal);
-		if(move_out_of_solid(self))
-		{
-			self.flags = FL_ITEM;
-			self.velocity = trigger_push_calculatevelocity(self.origin, self.owner, 128);
-			tracetoss(self, self);
-			if(vlen(trace_endpos - self.owner.origin) < 128)
-			{
-				W_ThrowNewWeapon(self.owner, WEP_PORTO, 0, self.origin, self.velocity);
-				centerprint(self.owner, "^1Portal deployment failed.\n\n^2Catch it to try again!");
-			}
-		}
-	}
 	remove(self);
 }
 
 void W_Porto_Remove (entity p)
 {
-	if(p.porto_current)
+	entity oldself;
+	oldself = self;
+	if(p.porto_current_in)
 	{
-		entity oldself;
-		oldself = self;
-		self = p.porto_current;
-		W_Porto_Fail(1);
-		self = oldself;
+		self = p.porto_current_in;
+		W_Porto_Fail();
 	}
+	if(p.porto_current_out)
+	{
+		self = p.porto_current_out;
+		W_Porto_Fail();
+	}
+	self = oldself;
 }
 
 void W_Porto_Think (void)
@@ -71,7 +66,7 @@ void W_Porto_Think (void)
 	if(self.owner.playerid != self.playerid)
 		remove(self);
 	else
-		W_Porto_Fail(0);
+		W_Porto_Fail();
 }
 
 void W_Porto_Touch (void)
@@ -111,58 +106,44 @@ void W_Porto_Touch (void)
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
-		W_Porto_Fail(0);
+		W_Porto_Fail();
 	}
 	else if(self.effects & EF_RED)
 	{
-		self.effects += EF_BLUE - EF_RED;
-		if(Portal_SpawnInPortalAtTrace(self.owner, self.right_vector, self.portal_id))
+		if(Portal_SpawnInPortalAtTrace(self.owner, self.right_vector, self.owner.portal_id))
 		{
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
-			trace_plane_normal = norm;
 			centerprint(self.owner, "^1In^7-portal created.");
-			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
-			self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * norm));
-			CSQCProjectile(self, TRUE, PROJECTILE_PORTO_BLUE, TRUE); // change type
+			W_Porto_Success();
 		}
 		else
 		{
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
-			W_Porto_Fail(0);
+			W_Porto_Fail();
 		}
 	}
 	else
 	{
-		if(self.owner.portal_in.portal_id == self.portal_id)
+		if(Portal_SpawnOutPortalAtTrace(self.owner, self.right_vector, self.owner.portal_id))
 		{
-			if(Portal_SpawnOutPortalAtTrace(self.owner, self.right_vector, self.portal_id))
-			{
-				sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
-				trace_plane_normal = norm;
-				centerprint(self.owner, "^4Out^7-portal created.");
-				W_Porto_Success();
-			}
-			else
-			{
-				sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
-				W_Porto_Fail(0);
-			}
+			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
+			trace_plane_normal = norm;
+			centerprint(self.owner, "^4Out^7-portal created.");
+			W_Porto_Success();
 		}
 		else
 		{
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
-			W_Porto_Fail(0);
+			W_Porto_Fail();
 		}
 	}
 }
 
-void W_Porto_Attack (void)
+void W_Porto_Attack (float out)
 {
 	local entity gren;
 
-	if not(self.items & IT_UNLIMITED_SUPERWEAPONS)
-		self.weapons = self.weapons - (self.weapons & WEPBIT_PORTO);
 	W_SetupShot (self, FALSE, 4, "porto/fire.wav", 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
@@ -178,7 +159,16 @@ void W_Porto_Attack (void)
 	gren.bot_dodgerating = 200;
 	gren.movetype = MOVETYPE_BOUNCEMISSILE;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.effects = EF_RED;
+	if (out)
+	{
+		gren.effects = EF_BLUE;
+		self.porto_current_out = gren;
+	}
+	else
+	{
+		gren.effects = EF_RED;
+		self.porto_current_in = gren;
+	}
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
@@ -194,8 +184,6 @@ void W_Porto_Attack (void)
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	gren.portal_id = time;
-	self.porto_current = gren;
 	gren.playerid = self.playerid;
 	fixedmakevectors(vectoangles(gren.velocity));
 	gren.right_vector = v_right;
@@ -247,11 +235,19 @@ float w_porto(float req)
 			makevectors(self.porto_v_angle); // override the previously set angles
 
 		if (self.BUTTON_ATCK)
-		if (!self.porto_current)
+		if (!self.porto_current_in)
 		if (!self.porto_forbidden)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
-			W_Porto_Attack();
+			W_Porto_Attack(FALSE);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, w_ready);
+		}
+		if (self.BUTTON_ATCK2)
+		if (!self.porto_current_out)
+		if (!self.porto_forbidden)
+		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
+		{
+			W_Porto_Attack(TRUE);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, w_ready);
 		}
 	}
@@ -273,8 +269,12 @@ float w_porto(float req)
 		w_deathtypestring = "felt # doing the impossible to him";
 	else if (req == WR_RESETPLAYER)
 	{
-		self.porto_current = world;
+		self.porto_current_in = world;
+		self.porto_current_out = world;
+		self.portal_id = time;
 	}
+	else if (req == WR_CLEAR)
+		W_Porto_Remove(self);
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_porto_primary_animtime);
