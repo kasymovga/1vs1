@@ -280,12 +280,6 @@ void Ent_Projectile()
 	if(f & 2)
 	{
 		self.cnt = ReadByte();
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
 
 		self.silent = (self.cnt & 0x80);
 		self.cnt = (self.cnt & 0x7F);
@@ -368,6 +362,12 @@ void Ent_Projectile()
 			default:
 				break;
 		}
+		self.mins_x = ReadCoord();
+		self.mins_y = ReadCoord();
+		self.mins_z = ReadCoord();
+		self.maxs_x = ReadCoord();
+		self.maxs_y = ReadCoord();
+		self.maxs_z = ReadCoord();
 	}
 
 	if(self.gravity)
