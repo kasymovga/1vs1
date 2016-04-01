@@ -710,40 +710,10 @@ vector randompos(vector m1, vector m2)
     return  v;
 };
 
-float g_pickup_drop_backpack;
-string sv_model_backpack;
-float g_pickup_shells_max;
-float g_pickup_nails_max;
-float g_pickup_rockets_max;
-float g_pickup_cells_max;
-float g_pickup_fuel_max;
-float g_weaponarena;
-float g_weaponarena_random;
-string g_weaponarena_list;
 float g_weaponspeedfactor;
 float g_weaponratefactor;
 float g_weapondamagefactor;
 float g_weaponforcefactor;
-
-float start_weapons;
-float start_items;
-float start_ammo_shells;
-float start_ammo_nails;
-float start_ammo_rockets;
-float start_ammo_cells;
-float start_ammo_fuel;
-float start_health;
-float start_armorvalue;
-float warmup_start_weapons;
-float warmup_start_ammo_shells;
-float warmup_start_ammo_nails;
-float warmup_start_ammo_rockets;
-float warmup_start_ammo_cells;
-float warmup_start_ammo_fuel;
-float warmup_start_health;
-float warmup_start_armorvalue;
-float g_weapon_stay;
-float g_ghost_items;
 
 entity get_weaponinfo(float w);
 
@@ -757,262 +727,6 @@ void weapon_precache(float wpn)
 }
 
 float NixNex_CanChooseWeapon(float wpn);
-void readplayerstartcvars()
-{
-    entity e;
-    float i, j, t;
-    string s;
-
-    // initialize starting values for players
-    start_weapons = 0;
-    start_items = 0;
-    start_ammo_shells = 0;
-    start_ammo_nails = 0;
-    start_ammo_rockets = 0;
-    start_ammo_cells = 0;
-    start_health = cvar("g_balance_health_start");
-    start_armorvalue = cvar("g_balance_armor_start");
-
-    g_weaponarena = 0;
-    s = cvar_string("g_weaponarena");
-    if (s == "0")
-    {
-    }
-    else if (s == "all")
-    {
-        g_weaponarena_list = "All Weapons";
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-        {
-            e = get_weaponinfo(j);
-            g_weaponarena |= e.weapons;
-            weapon_precache(e.weapon);
-        }
-    }
-    else if (s == "most")
-    {
-        g_weaponarena_list = "Most Weapons";
-        for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-        {
-            e = get_weaponinfo(j);
-            if (e.spawnflags & WEPSPAWNFLAG_NORMAL)
-            {
-                g_weaponarena |= e.weapons;
-                weapon_precache(e.weapon);
-            }
-        }
-    }
-    else if (s == "none")
-    {
-        g_weaponarena_list = "No Weapons";
-        g_weaponarena = WEPBIT_ALL + 1; // this supports no single weapon bit!
-    }
-    else
-    {
-        t = tokenize_console(s);
-        g_weaponarena_list = "";
-        for (i = 0; i < t; ++i)
-        {
-            s = argv(i);
-            for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-            {
-                e = get_weaponinfo(j);
-                if (e.netname == s)
-                {
-                    g_weaponarena |= e.weapons;
-                    weapon_precache(e.weapon);
-                    g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
-                    break;
-                }
-            }
-            if (j > WEP_LAST)
-            {
-                print("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
-            }
-        }
-		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
-	}
-
-	if(g_weaponarena)
-		g_weaponarena_random = cvar("g_weaponarena_random");
-	else
-		g_weaponarena_random = 0;
-
-    if (g_nixnex)
-    {
-        start_weapons = 0;
-        // will be done later
-        for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-            if (NixNex_CanChooseWeapon(i))
-                weapon_precache(i);
-        if(!cvar("g_use_ammunition"))
-        	start_items |= IT_UNLIMITED_AMMO;
-    }
-    else if (g_weaponarena)
-    {
-        start_weapons = g_weaponarena;
-		if (g_weaponarena & (WEPBIT_GRENADE_LAUNCHER | WEPBIT_HAGAR | WEPBIT_ROCKET_LAUNCHER))
-			start_ammo_rockets = 999;
-		if (g_weaponarena & WEPBIT_SHOTGUN)
-			start_ammo_shells = 999;
-		if (g_weaponarena & (WEPBIT_ELECTRO | WEPBIT_CRYLINK | WEPBIT_NEX | WEPBIT_MINSTANEX | WEPBIT_HLAC | WEPBIT_HOOK))
-			start_ammo_cells = 999;
-		if (g_weaponarena & (WEPBIT_UZI | WEPBIT_CAMPINGRIFLE))
-			start_ammo_nails = 999;
-		if (g_weaponarena & WEPBIT_HOOK)
-			start_ammo_fuel = 999;
-        start_items |= IT_UNLIMITED_AMMO;
-    }
-    else if (g_minstagib)
-    {
-        start_health = 100;
-        start_armorvalue = 0;
-        start_weapons = WEPBIT_MINSTANEX;
-        weapon_precache(WEP_MINSTANEX);
-        start_ammo_cells = cvar("g_minstagib_ammo_start");
-        g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
-        start_ammo_fuel = cvar("g_start_ammo_fuel");
-
-        if (g_minstagib_invis_alpha <= 0)
-            g_minstagib_invis_alpha = -1;
-    }
-    else
-    {
-        if (g_lms)
-        {
-            start_ammo_shells = cvar("g_lms_start_ammo_shells");
-            start_ammo_nails = cvar("g_lms_start_ammo_nails");
-            start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-            start_ammo_cells = cvar("g_lms_start_ammo_cells");
-            start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-            start_health = cvar("g_lms_start_health");
-            start_armorvalue = cvar("g_lms_start_armor");
-        }
-        else if (cvar("g_use_ammunition"))
-        {
-            start_ammo_shells = cvar("g_start_ammo_shells");
-            start_ammo_nails = cvar("g_start_ammo_nails");
-            start_ammo_rockets = cvar("g_start_ammo_rockets");
-            start_ammo_cells = cvar("g_start_ammo_cells");
-            start_ammo_fuel = cvar("g_start_ammo_fuel");
-        }
-        else
-        {
-            start_ammo_shells = cvar("g_pickup_shells_max");
-            start_ammo_nails = cvar("g_pickup_nails_max");
-            start_ammo_rockets = cvar("g_pickup_rockets_max");
-            start_ammo_cells = cvar("g_pickup_cells_max");
-            start_ammo_fuel = cvar("g_pickup_fuel_max");
-            start_items |= IT_UNLIMITED_AMMO;
-        }
-
-        for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-        {
-            e = get_weaponinfo(i);
-            if (!(e.weapon))
-                continue;
-
-            t = cvar(strcat("g_start_weapon_", e.netname));
-
-            if (t < 0) // "default" weapon selection
-            {
-                if (g_lms)
-                    t = (e.spawnflags & WEPSPAWNFLAG_NORMAL);
-                else if (g_race || g_cts)
-                    t = (i == WEP_LASER);
-                else
-                    t = (i == WEP_LASER || i == WEP_SHOTGUN);
-                if (g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-                    t += (i == WEP_HOOK);
-            }
-
-            if (t)
-            {
-                start_weapons |= e.weapons;
-                weapon_precache(e.weapon);
-            }
-        }
-    }
-
-    if (inWarmupStage)
-    {
-        warmup_start_ammo_shells = start_ammo_shells;
-        warmup_start_ammo_nails = start_ammo_nails;
-        warmup_start_ammo_rockets = start_ammo_rockets;
-        warmup_start_ammo_cells = start_ammo_cells;
-        warmup_start_ammo_fuel = start_ammo_fuel;
-        warmup_start_health = start_health;
-        warmup_start_armorvalue = start_armorvalue;
-        warmup_start_weapons = start_weapons;
-
-        if (!g_weaponarena && !g_nixnex && !g_minstagib)
-        {
-            if (cvar("g_use_ammunition"))
-            {
-                warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
-                warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
-                warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
-                warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
-                warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
-            }
-            warmup_start_health = cvar("g_warmup_start_health");
-            warmup_start_armorvalue = cvar("g_warmup_start_armor");
-            if (cvar("g_warmup_allguns"))
-            {
-                for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-                {
-                    e = get_weaponinfo(i);
-                    if (!(e.weapon))
-                        continue;
-                    if (e.spawnflags & WEPSPAWNFLAG_NORMAL)
-                    {
-                        warmup_start_weapons |= e.weapons;
-                        weapon_precache(e.weapon);
-                    }
-                }
-            }
-        }
-    }
-
-    if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
-    {
-        g_grappling_hook = 0; // these two can't coexist, as they use the same button
-        start_items |= IT_FUEL_REGEN;
-        start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-        warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-    }
-
-    if (g_jetpack)
-        start_items |= IT_JETPACK;
-
-    if (g_weapon_stay == 2)
-    {
-        if (!start_ammo_shells) start_ammo_shells = cvar("g_pickup_shells");
-        if (!start_ammo_nails) start_ammo_nails = cvar("g_pickup_nails");
-        if (!start_ammo_cells) start_ammo_cells = cvar("g_pickup_cells");
-        if (!start_ammo_rockets) start_ammo_rockets = cvar("g_pickup_rockets");
-        if (!start_ammo_fuel) start_ammo_fuel = cvar("g_pickup_fuel");
-        if (!warmup_start_ammo_shells) warmup_start_ammo_shells = cvar("g_pickup_shells");
-        if (!warmup_start_ammo_nails) warmup_start_ammo_nails = cvar("g_pickup_nails");
-        if (!warmup_start_ammo_cells) warmup_start_ammo_cells = cvar("g_pickup_cells");
-        if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = cvar("g_pickup_rockets");
-        if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = cvar("g_pickup_fuel");
-    }
-
-	g_pickup_drop_backpack = cvar("g_pickup_drop_backpack");
-
-    start_ammo_shells = max(0, start_ammo_shells);
-    start_ammo_nails = max(0, start_ammo_nails);
-    start_ammo_cells = max(0, start_ammo_cells);
-    start_ammo_rockets = max(0, start_ammo_rockets);
-    start_ammo_fuel = max(0, start_ammo_fuel);
-
-    warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
-    warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
-    warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
-    warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
-    warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
-}
-
 float g_bugrigs;
 float g_bugrigs_planar_movement;
 float g_bugrigs_planar_movement_car_jumping;
@@ -1104,58 +818,16 @@ void readlevelcvars(void)
     if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || cvar("g_campaign"))
         inWarmupStage = 0; // these modes cannot work together, sorry
 
-    g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
-    g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-    g_pickup_respawntime_healthsmall = cvar("g_pickup_respawntime_healthsmall");
-    g_pickup_respawntime_healthmedium = cvar("g_pickup_respawntime_healthmedium");
-    g_pickup_respawntime_healthlarge = cvar("g_pickup_respawntime_healthlarge");
-    g_pickup_respawntime_healthmega = cvar("g_pickup_respawntime_healthmega");
-    g_pickup_respawntime_armorsmall = cvar("g_pickup_respawntime_armorsmall");
-    g_pickup_respawntime_armormedium = cvar("g_pickup_respawntime_armormedium");
-    g_pickup_respawntime_armorbig = cvar("g_pickup_respawntime_armorbig");
-    g_pickup_respawntime_armorlarge = cvar("g_pickup_respawntime_armorlarge");
-    g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
-    g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
-    g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-    g_pickup_respawntimejitter_healthsmall = cvar("g_pickup_respawntimejitter_healthsmall");
-    g_pickup_respawntimejitter_healthmedium = cvar("g_pickup_respawntimejitter_healthmedium");
-    g_pickup_respawntimejitter_healthlarge = cvar("g_pickup_respawntimejitter_healthlarge");
-    g_pickup_respawntimejitter_healthmega = cvar("g_pickup_respawntimejitter_healthmega");
-    g_pickup_respawntimejitter_armorsmall = cvar("g_pickup_respawntimejitter_armorsmall");
-    g_pickup_respawntimejitter_armormedium = cvar("g_pickup_respawntimejitter_armormedium");
-    g_pickup_respawntimejitter_armorbig = cvar("g_pickup_respawntimejitter_armorbig");
-    g_pickup_respawntimejitter_armorlarge = cvar("g_pickup_respawntimejitter_armorlarge");
-    g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
-
-    if (g_minstagib) g_nixnex = g_weaponarena = 0;
-    if (g_nixnex) g_weaponarena = 0;
-    g_weaponarena = 0;
-
     g_weaponspeedfactor = cvar("g_weaponspeedfactor");
     g_weaponratefactor = cvar("g_weaponratefactor");
     g_weapondamagefactor = cvar("g_weapondamagefactor");
     g_weaponforcefactor = cvar("g_weaponforcefactor");
 
-    g_pickup_shells_max                = cvar("g_pickup_shells_max");
-    g_pickup_nails_max                 = cvar("g_pickup_nails_max");
-    g_pickup_rockets_max               = cvar("g_pickup_rockets_max");
-    g_pickup_cells_max                 = cvar("g_pickup_cells_max");
-    g_pickup_fuel_max                 = cvar("g_pickup_fuel_max");
-
     g_pinata = cvar("g_pinata");
     g_pinata_drop_all = cvar("g_pinata_drop_all");
 
-    g_weapon_stay = cvar("g_weapon_stay");
-    if (!g_weapon_stay && (cvar("deathmatch") == 2))
-        g_weapon_stay = 1;
-	g_ghost_items = cvar("g_ghost_items");
-	if(g_ghost_items >= 1)
-		g_ghost_items = 0.13; // default alpha value
-
     if not(inWarmupStage)
         game_starttime                 = cvar("g_start_delay");
-
-    readplayerstartcvars();
 
 	float i;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1637,15 +1309,6 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTN_NONE);
     }
 #endif
-	if (g_pickup_drop_backpack)
-	{
-		sv_model_backpack = cvar_string("sv_model_backpack");
-		if (sv_model_backpack == "")
-			sv_model_backpack = "models/items/g_jetpack.md3";
-		else
-			sv_model_backpack = strzone(sv_model_backpack);
-		precache_model(sv_model_backpack);
-	}
 }
 
 // sorry, but using \ in macros breaks line numbers

@@ -52,6 +52,8 @@ scores_rules.qc
 
 miscfunctions.qc
 
+t_items.qh
+
 waypointsprites.qc
 
 bot/bot.qc

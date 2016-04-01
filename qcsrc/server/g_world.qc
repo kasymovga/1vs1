@@ -484,6 +484,7 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 	readlevelcvars();
+	Items_Init();
 	PhysicReadCvars();
 	GrappleHookInit();
 	Damage_ReadCvars();
