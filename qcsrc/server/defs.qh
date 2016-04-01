@@ -36,7 +36,6 @@ float g_casings;
 float g_projectiles_newton_style;
 float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
-float g_balance_selfdamagepercent;
 
 float g_balance_laser_primary_melee;
 float g_balance_laser_secondary_melee;
