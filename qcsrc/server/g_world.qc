@@ -370,6 +370,243 @@ void spawnfunc___init_dedicated_server(void)
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
 
+void precache()
+{
+    // gamemode related things
+    precache_model ("models/misc/chatbubble.spr");
+    precache_model ("models/misc/teambubble.spr");
+    if (g_runematch)
+    {
+        precache_model ("models/runematch/curse.mdl");
+        precache_model ("models/runematch/rune.mdl");
+    }
+
+#ifdef TTURRETS_ENABLED
+    if (cvar("g_turrets"))
+        turrets_precash();
+#endif
+
+    // Precache all player models if desired
+    if (cvar("sv_precacheplayermodels"))
+    {
+        PrecachePlayerSounds("sound/player/default.sounds");
+        precache_all_models("models/player/*.zym");
+        precache_all_models("models/player/*.dpm");
+        precache_all_models("models/player/*.md3");
+        precache_all_models("models/player/*.psk");
+    }
+
+    if (cvar("sv_defaultcharacter"))
+    {
+        string s;
+        s = cvar_string("sv_defaultplayermodel_red");
+        if (s != "")
+        {
+            precache_model(s);
+            PrecachePlayerSounds(strcat(s, ".sounds"));
+        }
+        s = cvar_string("sv_defaultplayermodel_blue");
+        if (s != "")
+        {
+            precache_model(s);
+            PrecachePlayerSounds(strcat(s, ".sounds"));
+        }
+        s = cvar_string("sv_defaultplayermodel_yellow");
+        if (s != "")
+        {
+            precache_model(s);
+            PrecachePlayerSounds(strcat(s, ".sounds"));
+        }
+        s = cvar_string("sv_defaultplayermodel_pink");
+        if (s != "")
+        {
+            precache_model(s);
+            PrecachePlayerSounds(strcat(s, ".sounds"));
+        }
+        s = cvar_string("sv_defaultplayermodel");
+        if (s != "")
+        {
+            precache_model(s);
+            PrecachePlayerSounds(strcat(s, ".sounds"));
+        }
+    }
+
+    if (g_footsteps)
+    {
+        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
+        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
+    }
+
+    // gore and miscellaneous sounds
+    //precache_sound ("misc/h2ohit.wav");
+    precache_model ("models/hook.md3");
+    precache_sound ("misc/armorimpact.wav");
+    precache_sound ("misc/bodyimpact1.wav");
+    precache_sound ("misc/bodyimpact2.wav");
+    precache_sound ("misc/gib.wav");
+    precache_sound ("misc/gib_splat01.wav");
+    precache_sound ("misc/gib_splat02.wav");
+    precache_sound ("misc/gib_splat03.wav");
+    precache_sound ("misc/gib_splat04.wav");
+    precache_sound ("misc/hit.wav");
+    PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
+    PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
+    precache_sound ("misc/null.wav");
+    precache_sound ("misc/spawn.wav");
+    precache_sound ("misc/talk.wav");
+    precache_sound ("misc/teleport.wav");
+    precache_sound ("misc/poweroff.wav");
+    precache_sound ("player/lava.wav");
+    precache_sound ("player/slime.wav");
+
+    if (g_jetpack)
+        precache_sound ("misc/jetpack_fly.wav");
+
+    // announcer sounds - male
+    precache_sound ("announcer/male/electrobitch.wav");
+    precache_sound ("announcer/male/airshot.wav");
+    precache_sound ("announcer/male/03kills.wav");
+    precache_sound ("announcer/male/05kills.wav");
+    precache_sound ("announcer/male/10kills.wav");
+    precache_sound ("announcer/male/15kills.wav");
+    precache_sound ("announcer/male/20kills.wav");
+    precache_sound ("announcer/male/25kills.wav");
+    precache_sound ("announcer/male/30kills.wav");
+    precache_sound ("announcer/male/botlike.wav");
+    precache_sound ("announcer/male/yoda.wav");
+    precache_sound ("announcer/male/amazing.wav");
+    precache_sound ("announcer/male/awesome.wav");
+    precache_sound ("announcer/male/headshot.wav");
+    precache_sound ("announcer/male/impressive.wav");
+
+    // announcer sounds - robotic
+    precache_sound ("announcer/robotic/prepareforbattle.wav");
+    precache_sound ("announcer/robotic/begin.wav");
+    precache_sound ("announcer/robotic/timeoutcalled.wav");
+    precache_sound ("announcer/robotic/1fragleft.wav");
+    precache_sound ("announcer/robotic/2fragsleft.wav");
+    precache_sound ("announcer/robotic/3fragsleft.wav");
+    precache_sound ("announcer/robotic/terminated.wav");
+    if (g_minstagib)
+    {
+        precache_sound ("announcer/robotic/lastsecond.wav");
+        precache_sound ("announcer/robotic/narrowly.wav");
+    }
+
+    precache_model ("models/sprites/0.spr32");
+    precache_model ("models/sprites/1.spr32");
+    precache_model ("models/sprites/2.spr32");
+    precache_model ("models/sprites/3.spr32");
+    precache_model ("models/sprites/4.spr32");
+    precache_model ("models/sprites/5.spr32");
+    precache_model ("models/sprites/6.spr32");
+    precache_model ("models/sprites/7.spr32");
+    precache_model ("models/sprites/8.spr32");
+    precache_model ("models/sprites/9.spr32");
+    precache_model ("models/sprites/10.spr32");
+    precache_sound ("announcer/robotic/1.wav");
+    precache_sound ("announcer/robotic/2.wav");
+    precache_sound ("announcer/robotic/3.wav");
+    precache_sound ("announcer/robotic/4.wav");
+    precache_sound ("announcer/robotic/5.wav");
+    precache_sound ("announcer/robotic/6.wav");
+    precache_sound ("announcer/robotic/7.wav");
+    precache_sound ("announcer/robotic/8.wav");
+    precache_sound ("announcer/robotic/9.wav");
+    precache_sound ("announcer/robotic/10.wav");
+
+    // common weapon precaches
+    precache_sound ("weapons/weapon_switch.wav");
+    precache_sound ("weapons/weaponpickup.wav");
+    precache_sound ("weapons/unavailable.wav");
+    if (g_grappling_hook)
+    {
+        precache_sound ("weapons/hook_fire.wav"); // hook
+        precache_sound ("weapons/hook_impact.wav"); // hook
+    }
+
+    if (cvar("sv_precacheweapons") || g_nixnex)
+    {
+        //precache weapon models/sounds
+        local float wep;
+        wep = WEP_FIRST;
+        while (wep <= WEP_LAST)
+        {
+            weapon_precache(wep);
+            wep = wep + 1;
+        }
+    }
+
+    precache_model("models/elaser.mdl");
+    precache_model("models/laser.mdl");
+    precache_model("models/ebomb.mdl");
+}
+
+
+void readlevelcvars(void)
+{
+	CACHE_CVAR(g_touchexplode);
+	CACHE_CVAR(g_touchexplode_radius);
+	CACHE_CVAR(g_touchexplode_damage);
+	CACHE_CVAR(g_touchexplode_edgedamage);
+	CACHE_CVAR(g_touchexplode_force);
+
+#ifdef ALLOW_FORCEMODELS
+	CACHE_CVAR(sv_clforceplayermodels);
+#endif
+	CACHE_CVAR(sv_loddistance1);
+	CACHE_CVAR(sv_loddistance2);
+	if(sv_loddistance2 <= sv_loddistance1)
+		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
+	CACHE_CVAR(sv_clones);
+	CACHE_CVAR(sv_cheats);
+	CACHE_CVAR(sv_gentle);
+	CACHE_CVAR(sv_foginterval);
+	CACHE_CVAR(g_cloaked);
+	CACHE_CVAR(g_footsteps);
+	CACHE_CVAR(g_grappling_hook);
+	CACHE_CVAR(g_jetpack);
+	CACHE_CVAR(g_laserguided_missile);
+	CACHE_CVAR(g_midair);
+	CACHE_CVAR(g_minstagib);
+	CACHE_CVAR(g_nixnex);
+	CACHE_CVAR(g_nixnex_with_laser);
+	CACHE_CVAR(g_norecoil);
+	CACHE_CVAR(g_vampire);
+	CACHE_CVAR(g_bloodloss);
+	CACHE_CVAR(sv_maxidle);
+	CACHE_CVAR(sv_maxidle_spectatorsareidle);
+	CACHE_CVAR(g_ctf_reverse);
+	CACHE_CVAR(sv_autotaunt);
+	CACHE_CVAR(sv_taunt);
+
+	inWarmupStage = cvar("g_warmup");
+	CACHE_CVAR(g_warmup_limit);
+	CACHE_CVAR(g_warmup_allguns);
+	CACHE_CVAR(g_warmup_allow_timeout);
+
+	if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || cvar("g_campaign"))
+		inWarmupStage = 0; // these modes cannot work together, sorry
+
+	CACHE_CVAR(g_pinata);
+	CACHE_CVAR(g_pinata_drop_all);
+
+	if not(inWarmupStage)
+		game_starttime = cvar("g_start_delay");
+
+	CACHE_CVAR(g_antilag);
+	CACHE_CVAR(g_antilag_bullets);
+	CACHE_CVAR(g_casings);
+	CACHE_CVAR(g_projectiles_newton_style);
+	CACHE_CVAR(g_balance_pause_fuel_regen);
+	CACHE_CVAR(sv_gameplayfix_skipnonsolid);
+	CACHE_CVAR(sv_eventlog);
+	CACHE_CVAR(g_maxpushtime);
+	CACHE_CVAR(g_balance_armor_blockpercent);
+	CACHE_CVAR(spawn_debug);
+	CACHE_CVAR(spawn_debugview);
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void RegisterWeapons();

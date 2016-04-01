@@ -27,6 +27,11 @@ float g_ctf_reverse;
 float g_race_qualifying;
 float inWarmupStage;
 float g_jetpack;
+float g_touchexplode;
+float g_touchexplode_radius;
+float g_touchexplode_damage;
+float g_touchexplode_edgedamage;
+float g_touchexplode_force;
 
 float g_maxpushtime;
 
@@ -44,6 +49,8 @@ float sv_clones;
 float sv_cheats;
 float sv_gentle;
 float sv_foginterval;
+float sv_autotaunt;
+float sv_taunt;
 
 float spawn_debug;
 float spawn_debugview;
