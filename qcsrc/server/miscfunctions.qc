@@ -710,11 +710,6 @@ vector randompos(vector m1, vector m2)
     return  v;
 };
 
-float g_weaponspeedfactor;
-float g_weaponratefactor;
-float g_weapondamagefactor;
-float g_weaponforcefactor;
-
 entity get_weaponinfo(float w);
 
 void weapon_precache(float wpn)
@@ -782,11 +777,6 @@ void readlevelcvars(void)
     if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || cvar("g_campaign"))
         inWarmupStage = 0; // these modes cannot work together, sorry
 
-    g_weaponspeedfactor = cvar("g_weaponspeedfactor");
-    g_weaponratefactor = cvar("g_weaponratefactor");
-    g_weapondamagefactor = cvar("g_weapondamagefactor");
-    g_weaponforcefactor = cvar("g_weaponforcefactor");
-
     g_pinata = cvar("g_pinata");
     g_pinata_drop_all = cvar("g_pinata_drop_all");
 
@@ -798,7 +788,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_casings);
 	CACHE_CVAR(g_projectiles_newton_style);
 	CACHE_CVAR(g_balance_pause_fuel_regen);
-	CACHE_CVAR(g_balance_selfdamagepercent);
 	CACHE_CVAR(sv_gameplayfix_skipnonsolid);
 	CACHE_CVAR(sv_eventlog);
 	CACHE_CVAR(g_maxpushtime);

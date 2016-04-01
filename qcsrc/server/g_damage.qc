@@ -26,6 +26,7 @@ float g_balance_rune_strength_force;
 float g_balance_rune_vampire_absorb;
 float g_balance_rune_vampire_combo_absorb;
 float g_balance_rune_vampire_maxhealth;
+float g_balance_selfdamagepercent;
 float g_ctf_flagcarrier_selfdamage;
 float g_ctf_flagcarrier_selfforce;
 float g_ctf_flagscore_kill;
@@ -36,6 +37,8 @@ float g_mirrordamage;
 float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
+float g_weapondamagefactor;
+float g_weaponforcefactor;
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
@@ -1475,4 +1478,7 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_teamdamage_threshold);
 	CACHE_CVAR(g_throughfloor_damage);
 	CACHE_CVAR(g_throughfloor_force);
+	CACHE_CVAR(g_weapondamagefactor);
+	CACHE_CVAR(g_weaponforcefactor);
+	CACHE_CVAR(g_balance_selfdamagepercent);
 }

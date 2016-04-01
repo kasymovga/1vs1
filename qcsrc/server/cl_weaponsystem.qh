@@ -8,3 +8,6 @@ float WFRAME_MELEE = 4;
 .float wframe;
 
 void W_Init();
+
+float g_weaponratefactor;
+float g_weaponspeedfactor;

@@ -1273,6 +1273,8 @@ void W_Init()
 	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
 	CACHE_CVAR(g_showweaponspawns);
 	CACHE_CVAR(sv_qcweaponanimation);
+	CACHE_CVAR(g_weaponspeedfactor);
+	CACHE_CVAR(g_weaponratefactor);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
