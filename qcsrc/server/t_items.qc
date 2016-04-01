@@ -1637,6 +1637,7 @@ void spawnfunc_item_jetpack(void)
 //Q1 compat
 void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_health_mega();else spawnfunc_item_health_medium();}
 
+float NixNex_CanChooseWeapon(float wpn);
 void Items_Init()
 {
 	CACHE_CVAR(g_pickup_drop_backpack);
