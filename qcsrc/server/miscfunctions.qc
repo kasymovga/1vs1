@@ -727,21 +727,6 @@ void weapon_precache(float wpn)
 }
 
 float NixNex_CanChooseWeapon(float wpn);
-float g_bugrigs;
-float g_bugrigs_planar_movement;
-float g_bugrigs_planar_movement_car_jumping;
-float g_bugrigs_reverse_spinning;
-float g_bugrigs_reverse_speeding;
-float g_bugrigs_reverse_stopping;
-float g_bugrigs_air_steering;
-float g_bugrigs_angle_smoothing;
-float g_bugrigs_friction_floor;
-float g_bugrigs_friction_brake;
-float g_bugrigs_friction_air;
-float g_bugrigs_accel;
-float g_bugrigs_speed_ref;
-float g_bugrigs_speed_pow;
-float g_bugrigs_steer;
 
 float g_touchexplode;
 float g_touchexplode_radius;
@@ -756,22 +741,6 @@ void Melee_Init();
 void W_Init();
 void readlevelcvars(void)
 {
-    g_bugrigs = cvar("g_bugrigs");
-    g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
-    g_bugrigs_planar_movement_car_jumping = cvar("g_bugrigs_planar_movement_car_jumping");
-    g_bugrigs_reverse_spinning = cvar("g_bugrigs_reverse_spinning");
-    g_bugrigs_reverse_speeding = cvar("g_bugrigs_reverse_speeding");
-    g_bugrigs_reverse_stopping = cvar("g_bugrigs_reverse_stopping");
-    g_bugrigs_air_steering = cvar("g_bugrigs_air_steering");
-    g_bugrigs_angle_smoothing = cvar("g_bugrigs_angle_smoothing");
-    g_bugrigs_friction_floor = cvar("g_bugrigs_friction_floor");
-    g_bugrigs_friction_brake = cvar("g_bugrigs_friction_brake");
-    g_bugrigs_friction_air = cvar("g_bugrigs_friction_air");
-    g_bugrigs_accel = cvar("g_bugrigs_accel");
-    g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
-    g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
-    g_bugrigs_steer = cvar("g_bugrigs_steer");
-
     g_touchexplode = cvar("g_touchexplode");
     g_touchexplode_radius = cvar("g_touchexplode_radius");
     g_touchexplode_damage = cvar("g_touchexplode_damage");
@@ -790,7 +759,6 @@ void readlevelcvars(void)
     sv_gentle = cvar("sv_gentle");
     sv_foginterval = cvar("sv_foginterval");
     g_cloaked = cvar("g_cloaked");
-    g_jump_grunt = cvar("g_jump_grunt");
     g_footsteps = cvar("g_footsteps");
     g_grappling_hook = cvar("g_grappling_hook");
     g_jetpack = cvar("g_jetpack");
@@ -804,8 +772,6 @@ void readlevelcvars(void)
     g_bloodloss = cvar("g_bloodloss");
     sv_maxidle = cvar("sv_maxidle");
     sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-    sv_pogostick = cvar("sv_pogostick");
-    sv_doublejump = cvar("sv_doublejump");
     g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
