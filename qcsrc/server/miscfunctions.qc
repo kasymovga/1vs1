@@ -737,8 +737,6 @@ float g_touchexplode_force;
 float sv_autotaunt;
 float sv_taunt;
 
-void Melee_Init();
-void W_Init();
 void readlevelcvars(void)
 {
     g_touchexplode = cvar("g_touchexplode");
@@ -795,13 +793,6 @@ void readlevelcvars(void)
     if not(inWarmupStage)
         game_starttime                 = cvar("g_start_delay");
 
-	float i;
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);
-	}
-	Melee_Init();
-	W_Init();
 	CACHE_CVAR(g_antilag);
 	CACHE_CVAR(g_antilag_bullets);
 	CACHE_CVAR(g_casings);

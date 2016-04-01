@@ -485,6 +485,7 @@ void spawnfunc_worldspawn (void)
 	RegisterWeapons();
 	readlevelcvars();
 	Items_Init();
+	W_Init();
 	PhysicReadCvars();
 	GrappleHookInit();
 	Damage_ReadCvars();
