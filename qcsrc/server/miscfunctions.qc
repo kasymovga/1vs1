@@ -1231,17 +1231,6 @@ void precache()
     precache_model("models/laser.mdl");
     precache_model("models/ebomb.mdl");
 
-	//Extra sounds
-#define EXTRA_ANNOUNCER(x) do { sv_announcer_extra_##x = strzone(cvar_string("sv_announcer_extra_"#x)); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
-	EXTRA_ANNOUNCER(meleefrag);
-	sv_announcer_extra_doublekill_interval = cvar("sv_announcer_extra_doublekill_interval");
-	if (sv_announcer_extra_doublekill_interval) {
-		EXTRA_ANNOUNCER(doublekill);
-	}
-	EXTRA_ANNOUNCER(twohits);
-	EXTRA_ANNOUNCER(telefrag);
-	EXTRA_ANNOUNCER(firstblood);
-	
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
 
