@@ -28,6 +28,7 @@ vector g_balance_rocketlauncher_projsize;
 
 .float rl_release;
 .float rl_detonate_later;
+.entity lastrocket;
 
 void W_Rocket_Unregister()
 {
@@ -580,7 +581,10 @@ float w_rlauncher(float req)
 			w_deathtypestring = "ate #'s rocket";
 	}
 	else if (req == WR_RESETPLAYER)
+	{
 		self.rl_release = 0;
+		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
+	}
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_rocketlauncher_ammo);

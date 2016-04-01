@@ -348,8 +348,6 @@ string getTimeoutText(float addOneSecond);
 
 .entity flagcarried;
 
-.entity lastrocket;
-
 .float playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
