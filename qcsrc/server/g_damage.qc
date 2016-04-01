@@ -39,6 +39,13 @@ float g_throughfloor_damage;
 float g_throughfloor_force;
 float g_weapondamagefactor;
 float g_weaponforcefactor;
+string sv_announcer_extra_meleefrag;
+string sv_announcer_extra_doublekill;
+float sv_announcer_extra_doublekill_interval;
+string sv_announcer_extra_telefrag;
+string sv_announcer_extra_firstblood;
+string sv_announcer_extra_twohits; //used in w_nex.qc
+
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
@@ -1443,6 +1450,7 @@ void fireburner_think()
 	self.nextthink = time;
 }
 
+#define EXTRA_ANNOUNCER(x) do { sv_announcer_extra_##x = strzone(cvar_string("sv_announcer_extra_"#x)); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
 void Damage_ReadCvars()
 {
 	CACHE_CVAR(bot_taunt);
@@ -1481,4 +1489,13 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_weapondamagefactor);
 	CACHE_CVAR(g_weaponforcefactor);
 	CACHE_CVAR(g_balance_selfdamagepercent);
+	//Extra sounds
+	EXTRA_ANNOUNCER(meleefrag);
+	CACHE_CVAR(sv_announcer_extra_doublekill_interval);
+	if (sv_announcer_extra_doublekill_interval) {
+		EXTRA_ANNOUNCER(doublekill);
+	}
+	EXTRA_ANNOUNCER(twohits); //Used in w_nex.qc
+	EXTRA_ANNOUNCER(telefrag);
+	EXTRA_ANNOUNCER(firstblood);
 }
