@@ -48,6 +48,10 @@ irc.qh
 
 akimbo.qh
 
+t_items.qh
+
+cl_weaponsystem.qh
+
 scores_rules.qc
 
 miscfunctions.qc

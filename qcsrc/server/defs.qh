@@ -16,7 +16,7 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 // Globals
 
 float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_lms, g_runematch, g_race, g_nexball, g_cts;
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_nixnex, g_nixnex_with_laser, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_bloodloss;
+float g_cloaked, g_footsteps, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_nixnex, g_nixnex_with_laser, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_bloodloss;
 float g_pinata_drop_all;
 float g_warmup_limit;
 float g_warmup_allguns;
@@ -26,29 +26,12 @@ float g_ctf_ignore_frags;
 float g_ctf_reverse;
 float g_race_qualifying;
 float inWarmupStage;
-float g_pickup_respawntime_weapon;
-float g_pickup_respawntime_ammo;
-float g_pickup_respawntime_healthsmall;
-float g_pickup_respawntime_healthmedium;
-float g_pickup_respawntime_healthlarge;
-float g_pickup_respawntime_healthmega;
-float g_pickup_respawntime_armorsmall;
-float g_pickup_respawntime_armormedium;
-float g_pickup_respawntime_armorbig;
-float g_pickup_respawntime_armorlarge;
-float g_pickup_respawntime_powerup;
-float g_pickup_respawntimejitter_weapon;
-float g_pickup_respawntimejitter_ammo;
-float g_pickup_respawntimejitter_healthsmall;
-float g_pickup_respawntimejitter_healthmedium;
-float g_pickup_respawntimejitter_healthlarge;
-float g_pickup_respawntimejitter_healthmega;
-float g_pickup_respawntimejitter_armorsmall;
-float g_pickup_respawntimejitter_armormedium;
-float g_pickup_respawntimejitter_armorbig;
-float g_pickup_respawntimejitter_armorlarge;
-float g_pickup_respawntimejitter_powerup;
 float g_jetpack;
+float g_touchexplode;
+float g_touchexplode_radius;
+float g_touchexplode_damage;
+float g_touchexplode_edgedamage;
+float g_touchexplode_force;
 
 float g_maxpushtime;
 
@@ -58,7 +41,6 @@ float g_casings;
 float g_projectiles_newton_style;
 float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
-float g_balance_selfdamagepercent;
 
 float g_balance_laser_primary_melee;
 float g_balance_laser_secondary_melee;
@@ -67,6 +49,8 @@ float sv_clones;
 float sv_cheats;
 float sv_gentle;
 float sv_foginterval;
+float sv_autotaunt;
+float sv_taunt;
 
 float spawn_debug;
 float spawn_debugview;
@@ -88,13 +72,6 @@ void UpdateFrags(entity player, float f);
 float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
-
-string sv_announcer_extra_meleefrag;
-string sv_announcer_extra_doublekill;
-float sv_announcer_extra_doublekill_interval;
-string sv_announcer_extra_telefrag;
-string sv_announcer_extra_firstblood;
-string sv_announcer_extra_twohits;
 
 float sv_gameplayfix_skipnonsolid;
 
@@ -470,8 +447,6 @@ float lockteams;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 
-float sv_pogostick;
-float sv_doublejump;
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;

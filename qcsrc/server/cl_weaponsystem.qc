@@ -40,15 +40,6 @@ void W_SwitchWeapon_Force(entity e, float w)
 	e.switchweapon = w;
 }
 
-// VorteX: static frame globals
-float WFRAME_DONTCHANGE = -1;
-float WFRAME_FIRE1 = 0;
-float WFRAME_FIRE2 = 1;
-float WFRAME_IDLE = 2;
-float WFRAME_RELOAD = 3;
-float WFRAME_MELEE = 4;
-.float wframe;
-
 float g_balance_weaponswitchdelay;
 float g_showweaponspawns;
 float g_projectiles_newton_style_2_maxfactor;
@@ -1273,6 +1264,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 
 void W_Init()
 {
+	float i;
 	CACHE_CVAR(g_balance_weaponswitchdelay);
 	CACHE_CVAR(g_balance_rune_speed_combo_atkrate);
 	CACHE_CVAR(g_balance_rune_speed_atkrate);
@@ -1281,8 +1273,15 @@ void W_Init()
 	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
 	CACHE_CVAR(g_showweaponspawns);
 	CACHE_CVAR(sv_qcweaponanimation);
+	CACHE_CVAR(g_weaponspeedfactor);
+	CACHE_CVAR(g_weaponratefactor);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
 	sv_qcanimation_melee_morph2origin = stov(cvar_string("sv_qcanimation_melee_morph2origin"));
+	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);
+	}
+	Melee_Init();
 }
