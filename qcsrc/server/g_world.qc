@@ -605,6 +605,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_balance_armor_blockpercent);
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
+	CACHE_CVAR(nex252_compat_mode);
 }
 
 void Map_MarkAsRecent(string m);

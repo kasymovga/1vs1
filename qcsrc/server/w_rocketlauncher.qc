@@ -613,7 +613,10 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_speed);
 		CACHE_CVAR(g_balance_rocketlauncher_speedaccel);
 		CACHE_CVAR(g_balance_rocketlauncher_speedstart);
-		g_balance_rocketlauncher_projsize = stov(cvar_string("g_balance_rocketlauncher_projsize"));
+		if (nex252_compat_mode)
+			g_balance_rocketlauncher_projsize = '3 3 3';
+		else
+			g_balance_rocketlauncher_projsize = stov(cvar_string("g_balance_rocketlauncher_projsize"));
 	}
 	return TRUE;
 };

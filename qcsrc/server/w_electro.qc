@@ -468,7 +468,10 @@ float w_electro(float req)
 		CACHE_CVAR(g_balance_electro_primary_edgedamage);
 		CACHE_CVAR(g_balance_electro_primary_force);
 		CACHE_CVAR(g_balance_electro_primary_lifetime);
-		CACHE_CVAR(g_balance_electro_primary_lightning);
+		if (nex252_compat_mode)
+			g_balance_electro_primary_lightning = 0;
+		else
+			CACHE_CVAR(g_balance_electro_primary_lightning);
 		CACHE_CVAR(g_balance_electro_primary_lightning_length);
 		CACHE_CVAR(g_balance_electro_primary_radius);
 		CACHE_CVAR(g_balance_electro_primary_refire);
