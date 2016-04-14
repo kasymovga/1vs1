@@ -87,6 +87,7 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
+	float sv_jumpvelocity_factor;
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		if (self.watertype == CONTENT_WATER)
@@ -114,24 +115,25 @@ void PlayerJump (void)
 		if(time < self.doublejump_nextjumptime)
 			return;
 
+	sv_jumpvelocity_factor = 1;
 	if(g_runematch)
 	{
 		if(self.runes & RUNE_SPEED)
 		{
 			if(self.runes & CURSE_SLOW)
-				sv_jumpvelocity = sv_jumpvelocity * g_balance_rune_speed_combo_jumpheight;
+				sv_jumpvelocity_factor = g_balance_rune_speed_combo_jumpheight;
 			else
-				sv_jumpvelocity = sv_jumpvelocity * g_balance_rune_speed_jumpheight;
+				sv_jumpvelocity_factor = g_balance_rune_speed_jumpheight;
 		}
 		else if(self.runes & CURSE_SLOW)
 		{
-			sv_jumpvelocity = sv_jumpvelocity * g_balance_curse_slow_jumpheight;
+			sv_jumpvelocity_factor = g_balance_curse_slow_jumpheight;
 		}
 	}
 
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 	{
-		sv_jumpvelocity = sv_jumpvelocity * g_minstagib_speed_jumpheight;
+		sv_jumpvelocity_factor = sv_jumpvelocity_factor * g_minstagib_speed_jumpheight;
 	}
 
 	if(!(self.lastflags & FL_ONGROUND_OR_SLICK))
@@ -145,7 +147,7 @@ void PlayerJump (void)
 		self.jumppadcount = 0;
 	}
 
-	self.velocity_z = self.velocity_z + sv_jumpvelocity;
+	self.velocity_z = self.velocity_z + sv_jumpvelocity * sv_jumpvelocity_factor;
 	self.oldvelocity_z = self.velocity_z;
 
 	self.flags &~= FL_ONGROUND_OR_SLICK;
