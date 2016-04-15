@@ -52,6 +52,8 @@ t_items.qh
 
 cl_weaponsystem.qh
 
+info_messages.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -176,3 +178,5 @@ csqcprojectile.qc
 irc.qc
 
 akimbo.qc
+
+info_messages.qc
