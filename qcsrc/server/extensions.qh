@@ -1661,25 +1661,6 @@ float DPCONTENTS_DONOTENTER = 1024; // AI hint brush
 float DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
 float DPCONTENTS_BOTCLIP = 2048; // AI hint brush
 float DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
-float Q3SURFACEFLAG_NODAMAGE = 1;
-float Q3SURFACEFLAG_SLICK = 2; // low friction surface
-float Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
-float Q3SURFACEFLAG_LADDER = 8; // climbable surface
-float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
-float Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
-float Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
-//float Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_HINT = 256; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_SKIP = 512; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_NOLIGHTMAP = 1024; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_POINTLIGHT = 2048; // compiler hint (not important to qc)
-float Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
-float Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
-float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc // in real world important)
-//float Q3SURFACEFLAG_LIGHTFILTER = 32768; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_ALPHASHADOW = 65536; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_NODLIGHT = 131072; // compiler hint (not important to qc)
-//float Q3SURFACEFLAG_DUST = 262144; // translucent 'light beam' effect (not important to qc)
 //description:
 //adds additional information after a traceline/tracebox/tracetoss call.
 //also (very important) sets trace_* globals before calling .touch functions,

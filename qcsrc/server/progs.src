@@ -54,6 +54,9 @@ cl_weaponsystem.qh
 
 info_messages.qh
 
+../common/cl_physics.qh
+cl_physics.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -74,6 +77,7 @@ g_damage.qc
 
 teamplay.qc
 
+../common/cl_physics.qc
 cl_physics.qc
 
 // tZork's libs

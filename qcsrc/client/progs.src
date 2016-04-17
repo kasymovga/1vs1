@@ -10,6 +10,7 @@ csqc_builtins.qc
 ../common/items.qh
 
 ../common/mapinfo.qh
+../common/cl_physics.qh
 interpolate.qh
 teamradar.qh
 waypointsprites.qh
@@ -55,3 +56,5 @@ bgmscript.qc
 ../common/gamecommand.qc
 ../common/mapinfo.qc
 ../common/items.qc
+../common/cl_physics.qc
+cl_physics.qc

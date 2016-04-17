@@ -4,27 +4,6 @@ string CVAR_CHECK_BALANCE = "9b590c8f7c3065d917ac8e2e5e842a88";
 float	FALSE					= 0;
 float	TRUE					= 1;
 
-float	FL_FLY					= 1;
-float	FL_SWIM					= 2;
-float	FL_CLIENT				= 8;
-float	FL_INWATER				= 16;
-float	FL_MONSTER				= 32;
-float	FL_GODMODE				= 64;
-float	FL_NOTARGET				= 128;
-float	FL_ITEM					= 256;
-float	FL_ONGROUND				= 512;
-float	FL_PARTIALGROUND			= 1024;
-float	FL_WATERJUMP				= 2048;
-float	FL_JUMPRELEASED				= 4096;
-float	FL_WEAPON				= 8192;
-float	FL_POWERUP				= 16384;
-float	FL_PROJECTILE				= 32768;
-float	FL_TOSSED				= 65536;
-float   FL_NO_WEAPON_STAY       = 131072;
-float   FL_SPAWNING       = 262144;
-float   FL_SLICK				= 524288;
-float   FL_ONGROUND_OR_SLICK	= 524800;
-
 float	MOVETYPE_NONE				= 0;
 float	MOVETYPE_ANGLENOCLIP			= 1;
 float	MOVETYPE_ANGLECLIP			= 2;
