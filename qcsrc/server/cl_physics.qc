@@ -19,6 +19,7 @@ float g_minstagib_speed_moverate;
 float g_nexball_basketball_carrier_speed;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
+float sv_csqc_physic;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -552,6 +553,7 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_slicksurfaces);
 	CACHE_CVAR(sv_slicksurfaces_allowjump);
 	CACHE_CVAR(sv_pogostick);
+	CACHE_CVAR(sv_csqc_physic);
 
 	//Server-side only
 	CACHE_CVAR(g_jetpack_fuel);
@@ -678,7 +680,7 @@ void PhysicClientClear(entity plr)
 
 void PhysicClientInit(entity plr)
 {
-	if (nex252_compat_mode)
+	if (nex252_compat_mode || !sv_csqc_physic)
 		return;
 	plr.player_physic = spawn();
 	plr.player_physic.gravity = 1;
