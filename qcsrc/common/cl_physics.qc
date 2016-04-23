@@ -136,11 +136,7 @@ void PlayerJump (void)
 		return;
 
 	if(!(physic_lastflags & FL_ONGROUND_OR_SLICK))
-	{
 		Physic_LandingHook();
-		if(physic_lastground < time - 0.3)
-			physic_velocity = physic_velocity * (1 - sv_friction_on_land);
-	}
 
 	physic_velocity_z = physic_velocity_z + sv_jumpvelocity * Physic_JumpVelocityFactor();
 
@@ -417,8 +413,6 @@ void PlayerPhysics()
 		if(!(physic_lastflags & FL_ONGROUND))
 		{
 			Physic_LandingHook();
-			if(physic_lastground < time - 0.3)
-				physic_velocity = physic_velocity * (1 - sv_friction_on_land);
 		}
 
 #ifdef LETS_TEST_FTEQCC
@@ -441,7 +435,9 @@ void PlayerPhysics()
 		if(f > 0)
 		{
 			if (f < sv_stopspeed)
+			{
 				f = 1 - frametime * (sv_stopspeed / f) * sv_friction;
+			}
 			else
 				f = 1 - frametime * sv_friction;
 			if (f > 0)
@@ -453,6 +449,7 @@ void PlayerPhysics()
 		// acceleration
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
+
 		if (wishspeed > sv_maxspeed*maxspd_mod)
 			wishspeed = sv_maxspeed*maxspd_mod;
 		if (physic_crouch)
@@ -528,8 +525,6 @@ void PlayerPhysics()
 	}
 
 :end
-	if(physic_flags & FL_ONGROUND)
-		physic_lastground = time;
 
 	physic_lastflags = physic_flags;
 	Physic_FrameEndHook();

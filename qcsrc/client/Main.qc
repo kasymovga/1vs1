@@ -821,6 +821,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_WALL: Ent_Wall(); break;
 		case ENT_CLIENT_MODELEFFECT: Ent_ModelEffect(bIsNewEntity); break;
 		case ENT_CLIENT_LIGHTNING: Ent_Lightning(savetime); break;
+		case ENT_CLIENT_PHYSIC: Ent_Physic(bIsNewEntity); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;

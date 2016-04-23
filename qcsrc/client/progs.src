@@ -11,6 +11,7 @@ csqc_builtins.qc
 
 ../common/mapinfo.qh
 ../common/cl_physics.qh
+cl_physics.qh
 interpolate.qh
 teamradar.qh
 waypointsprites.qh

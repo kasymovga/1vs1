@@ -1513,7 +1513,10 @@ void ClientConnect (void)
 		self.hitplotfh = -1;
 
 	if (clienttype(self) == CLIENTTYPE_REAL)
+	{
 		IRC_Announce_ClientConnect(self);
+		PhysicClientInit(self);
+	}
 }
 
 /*
@@ -1605,7 +1608,10 @@ void ClientDisconnect (void)
 	GetCvars(-1);
 
 	if (clienttype(self) == CLIENTTYPE_REAL)
+	{
 		IRC_Announce_ClientDisconnect(self);
+		PhysicClientClear(self);
+	}
 }
 
 .float BUTTON_CHAT;

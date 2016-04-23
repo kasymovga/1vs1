@@ -1,5 +1,6 @@
 .float race_penalty;
 .float restart_jump;
+.entity player_physic;
 
 float sv_doublejump;
 float speedmeter;
@@ -96,6 +97,8 @@ void Physic_LandingHook()
 	if(self.jumppadcount > 1)
 		dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 	self.jumppadcount = 0;
+	if(self.lastground < time - 0.3)
+		physic_velocity = physic_velocity * (1 - sv_friction_on_land);
 }
 
 float IsFlying(entity a)
@@ -178,6 +181,7 @@ float Physic_JetPackVelocityFactor(float fvel)
 }
 
 .string lastclassname;
+.float last_maxspeedmod;
 float Physic_MaxSpeedMod()
 {
 	float maxspd_mod = 1, spd;
@@ -236,13 +240,26 @@ float Physic_MaxSpeedMod()
 		stuffcmd(self, strcat("cl_sidespeed ", temps, "\n"));
 		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
 	}
-
+	if (self.last_maxspeedmod != maxspd_mod)
+		self.player_physic.SendFlags |= 8;
+	self.last_maxspeedmod = maxspd_mod;
 	return maxspd_mod;
 }
 
+.float last_movetype;
+.float last_physic_ladder;
 void Physic_FrameEndHook()
 {
+	if (self.player_physic) {
+		if (self.lastclassname != self.classname
+				|| self.last_movetype != self.movetype
+				|| physic_ladder != self.last_physic_ladder
+				)
+			self.player_physic.SendFlags |= 8;
+	}
 	self.lastclassname = self.classname;
+	self.last_movetype = self.movetype;
+	self.last_physic_ladder = physic_ladder;
 }
 
 void Nixnex_GiveCurrentWeapon();
@@ -445,7 +462,9 @@ void Physic_FrameBeginHook()
 		else if(self.disableclientprediction == 2)
 		{
 			if(self.movetype == MOVETYPE_NONE)
+			{
 				self.movetype = MOVETYPE_WALK;
+			}
 			self.disableclientprediction = 0;
 		}
 		physic_movetype = self.movetype;
@@ -458,6 +477,8 @@ void Physic_FrameBeginHook()
 		self.angles_z = 0;
 	}
 	self.items &~= IT_USING_JETPACK;
+	if (self.player_physic)
+		self.player_physic.SendFlags |= 4;
 }
 
 void SV_PlayerPhysics()
@@ -472,7 +493,6 @@ void SV_PlayerPhysics()
 	physic_is_player = (self.classname == "player");
 	physic_ladder = (time < self.ladder_time);
 	physic_ladder_iswater = (self.ladder_entity.classname == "func_water");
-	physic_lastground = self.lastground;
 	physic_gravity_factor = self.gravity;
 	if (physic_ladder_iswater)
 	{
@@ -485,15 +505,18 @@ void SV_PlayerPhysics()
 	physic_waterlevel = self.waterlevel;
 	physic_watertype = self.watertype;
 	PlayerPhysics();
+	if(physic_flags & FL_ONGROUND)
+		self.lastground = time;
 	self.flags = physic_flags;
 	self.velocity = physic_velocity;
 	self.waterlevel = physic_waterlevel;
 	self.watertype = physic_watertype;
-	self.lastground = physic_lastground;
 }
 
 void PhysicReadCvars()
 {
+	//Common
+	CACHE_CVAR(sv_stepheight);
 	CACHE_CVAR(sv_gravity);
 	CACHE_CVAR(sv_maxairspeed);
 	CACHE_CVAR(sv_maxspeed);
@@ -505,7 +528,6 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_stopspeed);
 	CACHE_CVAR(sv_airstopaccelerate);
 	CACHE_CVAR(sv_airstrafeaccelerate);
-	CACHE_CVAR(sv_doublejump);
 	CACHE_CVAR(sv_maxairstrafespeed);
 	CACHE_CVAR(sv_aircontrol);
 	CACHE_CVAR(sv_warsowbunny_airforwardaccel);
@@ -516,6 +538,17 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_jumpvelocity);
 	CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
 	CACHE_CVAR(sv_friction_on_land);
+	CACHE_CVAR(g_jetpack_acceleration_side);
+	CACHE_CVAR(g_jetpack_acceleration_up);
+	CACHE_CVAR(g_jetpack_antigravity);
+	CACHE_CVAR(g_jetpack_maxspeed_side);
+	CACHE_CVAR(g_jetpack_maxspeed_up);
+	CACHE_CVAR(sv_slicksurfaces);
+	CACHE_CVAR(sv_slicksurfaces_allowjump);
+	CACHE_CVAR(sv_pogostick);
+
+	//Server-side only
+	CACHE_CVAR(g_jetpack_fuel);
 	CACHE_CVAR(speedmeter);
 	CACHE_CVAR(g_nick_flood_penalty_yellow);
 	CACHE_CVAR(g_nick_flood_penalty_red);
@@ -526,18 +559,130 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_balance_curse_slow_moverate);
 	CACHE_CVAR(g_balance_rune_speed_combo_moverate);
 	CACHE_CVAR(g_balance_rune_speed_moverate);
-	CACHE_CVAR(g_jetpack_acceleration_side);
-	CACHE_CVAR(g_jetpack_acceleration_up);
-	CACHE_CVAR(g_jetpack_antigravity);
-	CACHE_CVAR(g_jetpack_fuel);
-	CACHE_CVAR(g_jetpack_maxspeed_side);
-	CACHE_CVAR(g_jetpack_maxspeed_up);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
-	CACHE_CVAR(sv_slicksurfaces);
-	CACHE_CVAR(sv_slicksurfaces_allowjump);
-	CACHE_CVAR(sv_pogostick);
 	CACHE_CVAR(g_jump_grunt);
+	CACHE_CVAR(sv_doublejump);
+}
+
+float Physic_SendEntity(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
+	WriteCoord(MSG_ENTITY, sf);
+	if (sf & 1)
+	{
+		WriteCoord(MSG_ENTITY, sv_stepheight);
+		WriteCoord(MSG_ENTITY, sv_gravity);
+		WriteCoord(MSG_ENTITY, sv_maxairspeed);
+		WriteCoord(MSG_ENTITY, sv_maxspeed);
+		WriteCoord(MSG_ENTITY, sv_friction);
+		WriteCoord(MSG_ENTITY, sv_accelerate);
+		WriteCoord(MSG_ENTITY, sv_airaccelerate);
+		WriteCoord(MSG_ENTITY, sv_airaccel_sideways_friction);
+		WriteCoord(MSG_ENTITY, sv_airaccel_qw);
+		WriteCoord(MSG_ENTITY, sv_stopspeed);
+		WriteCoord(MSG_ENTITY, sv_airstopaccelerate);
+		WriteCoord(MSG_ENTITY, sv_airstrafeaccelerate);
+		WriteCoord(MSG_ENTITY, sv_maxairstrafespeed);
+		WriteCoord(MSG_ENTITY, sv_aircontrol);
+		WriteCoord(MSG_ENTITY, sv_warsowbunny_airforwardaccel);
+		WriteCoord(MSG_ENTITY, sv_warsowbunny_accel);
+		WriteCoord(MSG_ENTITY, sv_warsowbunny_topspeed);
+		WriteCoord(MSG_ENTITY, sv_warsowbunny_turnaccel);
+		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
+		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
+		WriteCoord(MSG_ENTITY, sv_gameplayfix_q2airaccelerate);
+		WriteCoord(MSG_ENTITY, sv_friction_on_land);
+		WriteCoord(MSG_ENTITY, g_jetpack_acceleration_side);
+		WriteCoord(MSG_ENTITY, g_jetpack_acceleration_up);
+		WriteCoord(MSG_ENTITY, g_jetpack_antigravity);
+		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_side);
+		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_up);
+		WriteCoord(MSG_ENTITY, sv_slicksurfaces);
+		WriteCoord(MSG_ENTITY, sv_slicksurfaces_allowjump);
+		WriteCoord(MSG_ENTITY, sv_pogostick);
+	}
+	if (sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, self.crouch_mins_x);
+		WriteCoord(MSG_ENTITY, self.crouch_mins_y);
+		WriteCoord(MSG_ENTITY, self.crouch_mins_z);
+		WriteCoord(MSG_ENTITY, self.crouch_maxs_x);
+		WriteCoord(MSG_ENTITY, self.crouch_maxs_y);
+		WriteCoord(MSG_ENTITY, self.crouch_maxs_z);
+		WriteCoord(MSG_ENTITY, self.stand_mins_x);
+		WriteCoord(MSG_ENTITY, self.stand_mins_y);
+		WriteCoord(MSG_ENTITY, self.stand_mins_z);
+		WriteCoord(MSG_ENTITY, self.stand_maxs_x);
+		WriteCoord(MSG_ENTITY, self.stand_maxs_y);
+		WriteCoord(MSG_ENTITY, self.stand_maxs_z);
+		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_x);
+		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_y);
+		WriteCoord(MSG_ENTITY, self.crouch_view_ofs_z);
+		WriteCoord(MSG_ENTITY, self.stand_view_ofs_x);
+		WriteCoord(MSG_ENTITY, self.stand_view_ofs_y);
+		WriteCoord(MSG_ENTITY, self.stand_view_ofs_z);
+	}
+	if (sf & 4)
+	{
+		WriteCoord(MSG_ENTITY, self.owner.origin_x);
+		WriteCoord(MSG_ENTITY, self.owner.origin_y);
+		WriteCoord(MSG_ENTITY, self.owner.origin_z);
+	}
+	if (sf & 8)
+	{
+		WriteByte(MSG_ENTITY, self.owner.movetype);
+		WriteCoord(MSG_ENTITY, self.gravity);
+		float send_flags = 0;
+		entity oldself = self;
+		self = self.owner;
+		if (self.classname == "player") send_flags += 1;
+		if (self.deadflag) send_flags += 2;
+		if (self.last_physic_ladder) send_flags += 4;
+		if (self.ladder_entity.classname == "func_water") send_flags += 8;
+		WriteByte(MSG_ENTITY, send_flags);
+		if (send_flags & 8)
+		{
+			WriteCoord(MSG_ENTITY, self.ladder_entity.speed);
+			WriteCoord(MSG_ENTITY, self.ladder_entity.watertype);
+			WriteCoord(MSG_ENTITY, self.ladder_entity.origin_z + self.ladder_entity.maxs_z);
+		}
+		WriteCoord(MSG_ENTITY, self.last_maxspeedmod);
+		WriteCoord(MSG_ENTITY, Physic_JumpVelocityFactor());
+		self = oldself;
+
+	}
+	return TRUE;
+}
+
+void PhysicClientClear(entity plr)
+{
+	if (plr.player_physic)
+		remove(plr.player_physic);
+}
+
+void PhysicClientInit(entity plr)
+{
+	if (nex252_compat_mode)
+		return;
+	plr.player_physic = spawn();
+	plr.player_physic.gravity = 1;
+	plr.player_physic.SendFlags = 255;
+	plr.player_physic.crouch_mins = PL_CROUCH_MIN;
+	plr.player_physic.crouch_maxs = PL_CROUCH_MAX;
+	plr.player_physic.stand_mins = PL_MIN;
+	plr.player_physic.stand_maxs = PL_MAX;
+	plr.player_physic.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
+	plr.player_physic.stand_view_ofs = PL_VIEW_OFS;
+	plr.player_physic.viewmodelforclient = plr;
+	plr.player_physic.owner = plr;
+	Net_LinkEntity(plr.player_physic, FALSE, 0, Physic_SendEntity); 
+}
+
+void PhysicClientUpdate(entity plr)
+{
+	if (plr.player_physic)
+		plr.player_physic.SendFlags |= 8;
 }

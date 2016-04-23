@@ -1,0 +1,2 @@
+vector CSQCPlayer_SetCamera();
+void Ent_Physic(float isnew);

@@ -1,3 +1,4 @@
+float sv_stepheight;
 float sv_maxspeed;
 float sv_aircontrol;
 float sv_gameplayfix_q2airaccelerate;
@@ -44,7 +45,6 @@ float physic_ladder_top;
 vector physic_movement;
 float physic_waterlevel;
 float physic_watertype;
-float physic_lastground;
 float physic_movetype;
 float physic_gravity_factor;
 
@@ -61,3 +61,10 @@ void Physic_FrameBeginHook();
 void Physic_FrameEndHook();
 void Physic_JetPackHook(float fuel_fact);
 void Physic_CheckWaterJumpHook();
+
+.vector crouch_mins;
+.vector crouch_maxs;
+.vector crouch_view_ofs;
+.vector stand_mins;
+.vector stand_maxs;
+.vector stand_view_ofs;
