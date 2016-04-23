@@ -248,18 +248,23 @@ float Physic_MaxSpeedMod()
 
 .float last_movetype;
 .float last_physic_ladder;
+.float last_can_use_jetpack;
 void Physic_FrameEndHook()
 {
-	if (self.player_physic) {
-		if (self.lastclassname != self.classname
-				|| self.last_movetype != self.movetype
-				|| physic_ladder != self.last_physic_ladder
-				)
-			self.player_physic.SendFlags |= 8;
-	}
+	if not(self.player_physic)
+		return;
+
+	float can_use_jetpack = (self.items & IT_JETPACK) && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || (self.items & IT_UNLIMITED_WEAPON_AMMO));
+	if (self.lastclassname != self.classname
+			|| self.last_movetype != self.movetype
+			|| physic_ladder != self.last_physic_ladder
+			|| can_use_jetpack != self.last_can_use_jetpack
+			)
+		self.player_physic.SendFlags |= 8;
 	self.lastclassname = self.classname;
 	self.last_movetype = self.movetype;
 	self.last_physic_ladder = physic_ladder;
+	self.last_can_use_jetpack = can_use_jetpack;
 }
 
 void Nixnex_GiveCurrentWeapon();
@@ -642,6 +647,7 @@ float Physic_SendEntity(entity to, float sf)
 		if (self.deadflag) send_flags += 2;
 		if (self.last_physic_ladder) send_flags += 4;
 		if (self.ladder_entity.classname == "func_water") send_flags += 8;
+		if (self.last_can_use_jetpack) send_flags += 16;
 		WriteByte(MSG_ENTITY, send_flags);
 		if (send_flags & 8)
 		{

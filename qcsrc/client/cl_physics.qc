@@ -7,6 +7,7 @@ float physic_button_crouch;
 float pmove_onground;
 float physic_maxspeedmod;
 float physic_jump_velocity_factor;
+float physic_can_use_jetpack;
 
 
 const float unstick_count = 27;
@@ -228,7 +229,7 @@ void Physic_CheckWaterJumpHook()
 
 float Physic_CanUseJetPack()
 {
-	return 0;
+	return (physic_can_use_jetpack && (input_buttons & 32));
 }
 
 float Physic_JetPackVelocityFactor(float fvel)
@@ -380,6 +381,7 @@ void Ent_Physic(float isnew)
 		physic_maxspeedmod = ReadCoord();
 		physic_ladder = recv_flags & 4;	
 		physic_ladder_iswater = recv_flags & 8;	
+		physic_can_use_jetpack = recv_flags & 16;
 		if (physic_ladder && physic_ladder_iswater)
 		{
 			physic_ladder_speed = ReadCoord();
