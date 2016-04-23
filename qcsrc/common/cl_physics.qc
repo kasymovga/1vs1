@@ -171,6 +171,7 @@ void CheckWaterJump()
 			physic_flags |= FL_WATERJUMP;
 			physic_velocity_z = 225;
 			physic_flags &~= FL_JUMPRELEASED;
+			physic_teleport_time = 2;
 			Physic_CheckWaterJumpHook();
 			return;
 		}
@@ -223,7 +224,7 @@ void PlayerPhysics()
 	{
 		physic_velocity_x = self.movedir_x;
 		physic_velocity_y = self.movedir_y;
-		if (time > self.teleport_time || physic_waterlevel == WATERLEVEL_NONE)
+		if (physic_teleport_time < 0 || physic_waterlevel == WATERLEVEL_NONE)
 		{
 			physic_flags &~= FL_WATERJUMP;
 			self.teleport_time = 0;
@@ -243,7 +244,7 @@ void PlayerPhysics()
 		wishspeed = vlen(wishvel);
 		if (wishspeed > sv_maxspeed*maxspd_mod)
 			wishspeed = sv_maxspeed*maxspd_mod;
-		if (time >= self.teleport_time)
+		if (physic_teleport_time <= 0)
 			PM_Accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 	}
 	else if (physic_waterlevel >= WATERLEVEL_SWIMMING)
@@ -307,7 +308,7 @@ void PlayerPhysics()
 		wishspeed = vlen(wishvel);
 		if (wishspeed > sv_maxspeed*maxspd_mod)
 			wishspeed = sv_maxspeed*maxspd_mod;
-		if (time >= self.teleport_time)
+		if (physic_teleport_time <= 0)
 		{
 			// water acceleration
 			PM_Accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
@@ -454,7 +455,7 @@ void PlayerPhysics()
 			wishspeed = sv_maxspeed*maxspd_mod;
 		if (physic_crouch)
 			wishspeed = wishspeed * 0.5;
-		if (time >= self.teleport_time)
+		if (physic_teleport_time <= 0)
 			PM_Accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 	}
 	else
@@ -483,7 +484,7 @@ void PlayerPhysics()
 			wishspeed = maxairspd;
 		if (physic_crouch)
 			wishspeed = wishspeed * 0.5;
-		if (time >= self.teleport_time)
+		if (physic_teleport_time <= 0)
 		{
 			float accelerating;
 			float wishspeed2;

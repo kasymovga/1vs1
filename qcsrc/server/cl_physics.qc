@@ -499,6 +499,7 @@ void SV_PlayerPhysics()
 	physic_ladder = (time < self.ladder_time);
 	physic_ladder_iswater = (self.ladder_entity.classname == "func_water");
 	physic_gravity_factor = self.gravity;
+	physic_teleport_time = self.teleport_time - time;
 	if (physic_ladder_iswater)
 	{
 		physic_ladder_speed = self.ladder_entity.speed;
@@ -575,6 +576,8 @@ void PhysicReadCvars()
 float Physic_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
+	if (self.teleport_time - time >= 0)
+		sf |= 16;
 	WriteCoord(MSG_ENTITY, sf);
 	if (sf & 1)
 	{
@@ -659,6 +662,10 @@ float Physic_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, Physic_JumpVelocityFactor());
 		self = oldself;
 
+	}
+	if (sf & 16)
+	{
+		WriteCoord(MSG_ENTITY, self.teleport_time - time);
 	}
 	return TRUE;
 }

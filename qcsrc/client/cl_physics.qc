@@ -8,6 +8,7 @@ float pmove_onground;
 float physic_maxspeedmod;
 float physic_jump_velocity_factor;
 float physic_can_use_jetpack;
+float physic_start_teleport_time;
 
 
 const float unstick_count = 27;
@@ -258,6 +259,7 @@ void Physic_FrameEndHook()
 	if (physic_movetype == MOVETYPE_WALK)
 		physic_velocity_z -= physic_gravity_factor * sv_gravity * frametime;
 
+	physic_teleport_time -= frametime;
 }
 
 entity physic;
@@ -276,6 +278,7 @@ vector CSQCPlayer_SetCamera()
 		self.origin = self.pmove_origin;
 		pmove_org = self.origin;
 		self.velocity = physic_velocity = pmove_vel;
+		physic_teleport_time = physic_start_teleport_time;
 		
 		for (i = servercommandframe + 1; i <= n; i++)
 		{
@@ -390,6 +393,12 @@ void Ent_Physic(float isnew)
 		}
 		physic_jump_velocity_factor = ReadCoord();
 	}
+	if (f & 16)
+	{
+		physic_start_teleport_time = ReadCoord();
+	}
+	else
+		physic_start_teleport_time = -1;
 	if (isnew)
 	{
 		self.mins = self.stand_mins;

@@ -47,6 +47,7 @@ float physic_waterlevel;
 float physic_watertype;
 float physic_movetype;
 float physic_gravity_factor;
+float physic_teleport_time;
 
 void PlayerPhysics();
 
