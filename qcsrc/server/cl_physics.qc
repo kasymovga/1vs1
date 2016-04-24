@@ -242,6 +242,7 @@ float Physic_MaxSpeedMod()
 		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
 	}
 	if (self.last_maxspeedmod != maxspd_mod)
+	if (self.player_physic)
 		self.player_physic.SendFlags |= 8;
 	self.last_maxspeedmod = maxspd_mod;
 	return maxspd_mod;
