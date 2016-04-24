@@ -265,7 +265,7 @@ void Physic_FrameEndHook()
 entity physic;
 
 .vector pmove_origin;
-vector CSQCPlayer_SetCamera()
+vector CSQCPhysic_SetCamera()
 {
 	if(physic && servercommandframe && clientcommandframe)
 	{
@@ -273,6 +273,7 @@ vector CSQCPlayer_SetCamera()
 		float i;
 		float first_print = 1;
 		float n = clientcommandframe + 1;
+		vector v;
 		entity oldself = self;
 		self = physic;
 		self.origin = self.pmove_origin;
@@ -299,7 +300,10 @@ vector CSQCPlayer_SetCamera()
 
 		self = oldself;
 		frametime = frametime_save;
-		return physic.origin + physic.view_ofs;
+		v = physic.origin + physic.view_ofs;
+		if not(cvar("chase_active"))
+			R_SetView(VF_ORIGIN, v);
+		return v;
 	}
 	else
 		return pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);

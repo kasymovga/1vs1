@@ -251,18 +251,6 @@ void CSQC_UpdateView(float w, float h)
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 
 	// Render the Scene
-	if(!intermission || !view_set)
-	{
-		view_angles = input_angles;
-		view_origin = CSQCPlayer_SetCamera();
-		//view_origin = pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);
-		makevectors(view_angles);
-		view_forward = v_forward;
-		view_right = v_right;
-		view_up = v_up;
-		view_set = 1;
-	}
-
 	vid_width = w;
 	vid_height = h;
 
@@ -350,7 +338,17 @@ void CSQC_UpdateView(float w, float h)
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
 	R_SetView(VF_DRAWWORLD, 1);
-	R_SetView(VF_ORIGIN, view_origin);
+
+	if(!intermission || !view_set)
+	{
+		view_angles = input_angles;
+		makevectors(view_angles);
+		view_forward = v_forward;
+		view_right = v_right;
+		view_up = v_up;
+		view_set = 1;
+		view_origin = CSQCPhysic_SetCamera();
+	}
 
 	// Set the console size vars
 	vid_conwidth = cvar("vid_conwidth");
