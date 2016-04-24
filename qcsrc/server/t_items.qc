@@ -756,9 +756,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			setorigin(self, self.origin + '0 0 1');
 			// set item size before we spawn a spawnfunc_waypoint
 			if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-				setsize (self, '-16 -16 0', '16 16 48');
+				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 48' * sv_world_scale);
 			else
-				setsize (self, '-16 -16 0', '16 16 32');
+				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 32' * sv_world_scale);
 			// note droptofloor returns FALSE if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);

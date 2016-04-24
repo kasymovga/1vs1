@@ -686,12 +686,12 @@ void PhysicClientInit(entity plr)
 	plr.player_physic = spawn();
 	plr.player_physic.gravity = 1;
 	plr.player_physic.SendFlags = 255;
-	plr.player_physic.crouch_mins = PL_CROUCH_MIN;
-	plr.player_physic.crouch_maxs = PL_CROUCH_MAX;
-	plr.player_physic.stand_mins = PL_MIN;
-	plr.player_physic.stand_maxs = PL_MAX;
-	plr.player_physic.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
-	plr.player_physic.stand_view_ofs = PL_VIEW_OFS;
+	plr.player_physic.crouch_mins = PL_CROUCH_MIN * sv_world_scale;
+	plr.player_physic.crouch_maxs = PL_CROUCH_MAX * sv_world_scale;
+	plr.player_physic.stand_mins = PL_MIN * sv_world_scale;
+	plr.player_physic.stand_maxs = PL_MAX * sv_world_scale;
+	plr.player_physic.crouch_view_ofs = PL_CROUCH_VIEW_OFS * sv_world_scale;
+	plr.player_physic.stand_view_ofs = PL_VIEW_OFS * sv_world_scale;
 	plr.player_physic.viewmodelforclient = plr;
 	plr.player_physic.owner = plr;
 	Net_LinkEntity(plr.player_physic, FALSE, 0, Physic_SendEntity); 

@@ -53,6 +53,7 @@ float sv_gentle;
 float sv_foginterval;
 float sv_autotaunt;
 float sv_taunt;
+float sv_world_scale;
 
 float spawn_debug;
 float spawn_debugview;

@@ -612,7 +612,7 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = PL_VIEW_OFS;
+	self.view_ofs = PL_VIEW_OFS * sv_world_scale;
 	setorigin (self, spot.origin);
 	setsize (self, '0 0 0', '0 0 0');
 	self.prevorigin = self.origin;
@@ -876,7 +876,7 @@ void PutClientInServer (void)
 		self.death_time = 0;
 		self.dead_frame = 0;
 		self.alpha = 0;
-		self.scale = 0;
+		self.scale = sv_world_scale;
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;
@@ -921,8 +921,8 @@ void PutClientInServer (void)
 		FixPlayermodel();
 
 		self.crouch = FALSE;
-		self.view_ofs = PL_VIEW_OFS;
-		setsize (self, PL_MIN, PL_MAX);
+		self.view_ofs = PL_VIEW_OFS * sv_world_scale;
+		setsize (self, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale);
 		self.spawnorigin = spot.origin;
 		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -2556,8 +2556,8 @@ void PlayerPreThink (void)
 			if (!self.crouch)
 			{
 				self.crouch = TRUE;
-				self.view_ofs = PL_CROUCH_VIEW_OFS;
-				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
+				self.view_ofs = PL_CROUCH_VIEW_OFS * sv_world_scale;
+				setsize (self, PL_CROUCH_MIN * sv_world_scale, PL_CROUCH_MAX * sv_world_scale);
 				setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
 			}
 		}
@@ -2565,12 +2565,12 @@ void PlayerPreThink (void)
 		{
 			if (self.crouch)
 			{
-				tracebox(self.origin, PL_MIN, PL_MAX, self.origin, FALSE, self);
+				tracebox(self.origin, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale, self.origin, FALSE, self);
 				if (!trace_startsolid)
 				{
 					self.crouch = FALSE;
-					self.view_ofs = PL_VIEW_OFS;
-					setsize (self, PL_MIN, PL_MAX);
+					self.view_ofs = PL_VIEW_OFS * sv_world_scale;
+					setsize (self, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale);
 				}
 			}
 		}

@@ -719,6 +719,9 @@ void spawnfunc_worldspawn (void)
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
+	sv_world_scale = cvar("sv_world_scale");
+	if (sv_world_scale <= 0)
+		sv_world_scale = 1;
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 	readlevelcvars();
