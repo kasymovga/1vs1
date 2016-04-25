@@ -55,35 +55,6 @@ void PM_ClientMovement_UpdateStatus(float ground)
 	// make sure player is not stuck
 	PM_ClientMovement_Unstick();
 
-	// set crouched
-	if (physic_button_crouch)
-	{
-		// wants to crouch, this always works..
-		if (!physic_crouch)
-		{
-			physic_crouch = TRUE;
-			self.mins = self.crouch_mins;
-			self.maxs = self.crouch_maxs;
-			self.view_ofs = self.crouch_view_ofs;
-		}
-	}
-	else
-	{
-		// wants to stand, if currently crouching we need to check for a
-		// low ceiling first
-		if (physic_crouch)
-		{
-			tracebox(self.origin, self.stand_mins, self.stand_maxs, self.origin, MOVE_NORMAL, self);
-			if (!trace_startsolid)
-			{
-				physic_crouch = FALSE;
-				self.mins = self.stand_mins;
-				self.maxs = self.stand_maxs;
-				self.view_ofs = self.stand_view_ofs;
-			}
-		}
-	}
-
 	if(ground)
 	{
 		tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
@@ -246,6 +217,10 @@ void Physic_OnJumpHook()
 {
 }
 
+void Physic_OnCrouchHook()
+{
+}
+
 void Physic_LandingHook()
 {
 }
@@ -347,9 +322,11 @@ void Ent_Physic(float isnew)
 		g_jetpack_antigravity = ReadCoord();
 		g_jetpack_maxspeed_side = ReadCoord();
 		g_jetpack_maxspeed_up = ReadCoord();
-		sv_slicksurfaces = ReadCoord();
-		sv_slicksurfaces_allowjump = ReadCoord();
-		sv_pogostick = ReadCoord();
+		float switches = ReadByte();
+		sv_slicksurfaces = switches & 1;
+		sv_slicksurfaces_allowjump = switches & 2;
+		sv_pogostick = switches & 4;
+		sv_disable_crouch = switches & 8;
 	}
 	if (f & 2)
 	{

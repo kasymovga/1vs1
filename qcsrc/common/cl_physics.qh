@@ -28,11 +28,13 @@ float g_jetpack_acceleration_up;
 float g_jetpack_antigravity;
 float g_jetpack_maxspeed_side;
 float g_jetpack_maxspeed_up;
+float sv_disable_crouch;
 
 float physic_deadflag;
 float physic_cantjump;
 float physic_flags;
 vector physic_velocity;
+float physic_button_crouch;
 float physic_crouch;
 float physic_button_jump;
 vector physic_v_angle;
@@ -58,6 +60,7 @@ float Physic_JetPackVelocityFactor(float fvel);
 void Physic_OnJumpHook();
 void Physic_CheckGroundHook();
 void Physic_LandingHook();
+void Physic_OnCrouchHook()
 void Physic_FrameBeginHook();
 void Physic_FrameEndHook();
 void Physic_JetPackHook(float fuel_fact);
