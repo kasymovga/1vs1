@@ -152,6 +152,11 @@ void Physic_CheckGroundHook()
 	}
 }
 
+void Physic_OnCrouchHook()
+{
+	setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
+}
+
 float Physic_CanUseJetPack()
 {
 	float trying_use_jetpack = (self.items & IT_JETPACK) && self.BUTTON_HOOK;
@@ -486,6 +491,8 @@ void Physic_FrameBeginHook()
 	self.items &~= IT_USING_JETPACK;
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
+
+	physic_button_crouch = self.BUTTON_CROUCH;
 }
 
 void SV_PlayerPhysics()
@@ -515,6 +522,7 @@ void SV_PlayerPhysics()
 	PlayerPhysics();
 	if(physic_flags & FL_ONGROUND)
 		self.lastground = time;
+	self.crouch = physic_crouch;
 	self.flags = physic_flags;
 	self.velocity = physic_velocity;
 	self.waterlevel = physic_waterlevel;
@@ -574,6 +582,7 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(sv_doublejump);
+	CACHE_CVAR(sv_disable_crouch);
 }
 
 float Physic_SendEntity(entity to, float sf)
@@ -611,9 +620,11 @@ float Physic_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, g_jetpack_antigravity);
 		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_side);
 		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_up);
-		WriteCoord(MSG_ENTITY, sv_slicksurfaces);
-		WriteCoord(MSG_ENTITY, sv_slicksurfaces_allowjump);
-		WriteCoord(MSG_ENTITY, sv_pogostick);
+		float switches = (sv_slicksurfaces ? 1 : 0)
+				+ (sv_slicksurfaces_allowjump ? 2 : 0)
+				+ (sv_pogostick ? 4 : 0)
+				+ (sv_disable_crouch ? 8 : 0);
+		WriteByte(MSG_ENTITY, switches);
 	}
 	if (sf & 2)
 	{

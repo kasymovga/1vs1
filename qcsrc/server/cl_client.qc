@@ -4,7 +4,6 @@ float g_allow_oldnexbeam;
 float g_forced_respawn;
 float sv_servermodelsonly;
 float sv_reset_on_join;
-float sv_disable_crouch;
 
 float reset_on_join_done;
 
@@ -922,7 +921,13 @@ void PutClientInServer (void)
 
 		self.crouch = FALSE;
 		self.view_ofs = PL_VIEW_OFS * sv_world_scale;
+		self.stand_view_ofs = PL_VIEW_OFS * sv_world_scale;
+		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS * sv_world_scale;
 		setsize (self, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale);
+		self.stand_mins = PL_MIN * sv_world_scale;
+		self.stand_maxs = PL_MAX * sv_world_scale;
+		self.crouch_mins = PL_CROUCH_MIN * sv_world_scale;
+		self.crouch_maxs = PL_CROUCH_MAX * sv_world_scale;
 		self.spawnorigin = spot.origin;
 		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -2550,6 +2555,7 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
+#if 0
 		if ((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss)
 		{
 			if not(sv_disable_crouch)
@@ -2574,6 +2580,7 @@ void PlayerPreThink (void)
 				}
 			}
 		}
+#endif
 
 		if(self.health <= g_bloodloss && self.deadflag == DEAD_NO)
 		{
@@ -2982,7 +2989,6 @@ void PlayerPostThink (void)
 
 void Client_ReadCvars()
 {
-	CACHE_CVAR(sv_disable_crouch);
 	CACHE_CVAR(g_spawn_furthest);
 	CACHE_CVAR(sv_servermodelsonly);
 	CACHE_CVAR(sv_reset_on_join);

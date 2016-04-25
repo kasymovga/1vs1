@@ -184,6 +184,30 @@ void PlayerPhysics()
 	local float wishspeed, f, maxspd_mod, maxairspd, airaccel;
 	
 	Physic_FrameBeginHook();
+	if (physic_button_crouch)
+	{
+		if not(sv_disable_crouch)
+		if (!physic_crouch)
+		{
+			physic_crouch = TRUE;
+			self.view_ofs = self.crouch_view_ofs;
+			setsize (self, self.crouch_mins, self.crouch_maxs);
+			Physic_OnCrouchHook();
+		}
+	}
+	else
+	{
+		if (physic_crouch)
+		{
+			tracebox(self.origin, self.stand_mins, self.stand_maxs, self.origin, FALSE, self);
+			if (!trace_startsolid)
+			{
+				physic_crouch = FALSE;
+				self.view_ofs = self.stand_view_ofs;
+				setsize (self, self.stand_mins, self.stand_maxs);
+			}
+		}
+	}
 
 	if (physic_movetype == MOVETYPE_NONE)
 		return;
