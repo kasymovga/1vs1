@@ -284,6 +284,14 @@ vector CSQCPhysic_SetCamera()
 		return pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 }
 
+void Physic_InitCheck()
+{
+	if (self.cnt)
+		return;
+	localcmd("cmd csqc_physic_reinit\n");
+	self.nextthink = time + 1;
+}
+
 void Ent_Physic(float isnew)
 {
 	float f = ReadCoord();
@@ -292,9 +300,15 @@ void Ent_Physic(float isnew)
 	if (isnew)
 	{
 		cvar_clientsettemp("cl_movement_replay", "0");
+		if not(f & 1)
+		{
+			self.think = Physic_InitCheck;
+			self.nextthink = time;
+		}
 	}
 	if (f & 1)
 	{
+		self.cnt = 1;
 		sv_stepheight = ReadCoord();
 		sv_gravity = ReadCoord();
 		sv_maxairspeed = ReadCoord();

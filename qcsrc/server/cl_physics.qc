@@ -694,12 +694,15 @@ void PhysicClientInit(entity plr)
 {
 	if (nex252_compat_mode || !sv_csqc_physic)
 		return;
-	plr.player_physic = spawn();
-	plr.player_physic.gravity = 1;
+	if not(plr.player_physic)
+	{
+		plr.player_physic = spawn();
+		plr.player_physic.gravity = 1;
+		plr.player_physic.viewmodelforclient = plr;
+		plr.player_physic.owner = plr;
+		Net_LinkEntity(plr.player_physic, FALSE, 0, Physic_SendEntity);
+	}
 	plr.player_physic.SendFlags = 255;
-	plr.player_physic.viewmodelforclient = plr;
-	plr.player_physic.owner = plr;
-	Net_LinkEntity(plr.player_physic, FALSE, 0, Physic_SendEntity); 
 }
 
 void PhysicClientUpdate(entity plr)
