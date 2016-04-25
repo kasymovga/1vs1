@@ -362,7 +362,6 @@ void Ent_Physic(float isnew)
 		float recv_flags = ReadByte();
 		physic_is_player = recv_flags & 1;
 		physic_deadflag = recv_flags & 2;
-		physic_maxspeedmod = ReadCoord();
 		physic_ladder = recv_flags & 4;	
 		physic_ladder_iswater = recv_flags & 8;	
 		physic_can_use_jetpack = recv_flags & 16;
@@ -372,6 +371,7 @@ void Ent_Physic(float isnew)
 			physic_ladder_watertype = ReadCoord();
 			physic_ladder_top = ReadCoord();
 		}
+		physic_maxspeedmod = ReadCoord();
 		physic_jump_velocity_factor = ReadCoord();
 	}
 	if (f & 16)
