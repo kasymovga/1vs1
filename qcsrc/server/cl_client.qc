@@ -611,7 +611,7 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = PL_VIEW_OFS * sv_world_scale;
+	self.view_ofs = PL_VIEW_OFS;
 	setorigin (self, spot.origin);
 	setsize (self, '0 0 0', '0 0 0');
 	self.prevorigin = self.origin;
@@ -920,14 +920,14 @@ void PutClientInServer (void)
 		FixPlayermodel();
 
 		self.crouch = FALSE;
-		self.view_ofs = PL_VIEW_OFS * sv_world_scale;
-		self.stand_view_ofs = PL_VIEW_OFS * sv_world_scale;
-		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS * sv_world_scale;
-		setsize (self, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale);
-		self.stand_mins = PL_MIN * sv_world_scale;
-		self.stand_maxs = PL_MAX * sv_world_scale;
-		self.crouch_mins = PL_CROUCH_MIN * sv_world_scale;
-		self.crouch_maxs = PL_CROUCH_MAX * sv_world_scale;
+		self.view_ofs = PL_VIEW_OFS;
+		self.stand_view_ofs = PL_VIEW_OFS;
+		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
+		setsize (self, PL_MIN, PL_MAX);
+		self.stand_mins = PL_MIN;
+		self.stand_maxs = PL_MAX;
+		self.crouch_mins = PL_CROUCH_MIN;
+		self.crouch_maxs = PL_CROUCH_MAX;
 		self.spawnorigin = spot.origin;
 		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -2554,33 +2554,6 @@ void PlayerPreThink (void)
 		}
 
 		self.prevorigin = self.origin;
-
-#if 0
-		if ((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss)
-		{
-			if not(sv_disable_crouch)
-			if (!self.crouch)
-			{
-				self.crouch = TRUE;
-				self.view_ofs = PL_CROUCH_VIEW_OFS * sv_world_scale;
-				setsize (self, PL_CROUCH_MIN * sv_world_scale, PL_CROUCH_MAX * sv_world_scale);
-				setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
-			}
-		}
-		else
-		{
-			if (self.crouch)
-			{
-				tracebox(self.origin, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale, self.origin, FALSE, self);
-				if (!trace_startsolid)
-				{
-					self.crouch = FALSE;
-					self.view_ofs = PL_VIEW_OFS * sv_world_scale;
-					setsize (self, PL_MIN * sv_world_scale, PL_MAX * sv_world_scale);
-				}
-			}
-		}
-#endif
 
 		if(self.health <= g_bloodloss && self.deadflag == DEAD_NO)
 		{
