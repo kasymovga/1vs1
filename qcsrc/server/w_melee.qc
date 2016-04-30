@@ -27,7 +27,8 @@ void W_Melee_Attack_Think()
 	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + self.melee_time - self.melee_lastthink);
 	if (melee_frame < 0)
 	{
-		remove(self);
+		self.think = SUB_Remove;
+		self.nextthink = self.melee_startthink + g_balance_melee_animtime;
 		return;
 	}
 	float damage_factor = melee_frame / self.melee_time;
