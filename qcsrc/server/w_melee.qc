@@ -13,8 +13,11 @@ float g_balance_melee_ticrate;
 float g_balance_melee_time;
 float g_balance_melee_damage;
 float g_balance_melee_force;
+float g_balance_melee_force_up;
 float g_balance_melee_distance;
 float g_balance_melee_refire;
+vector sv_player_melee_angles;
+vector sv_player_melee_origin;
 
 float bot_melee_love;
 
@@ -37,13 +40,16 @@ void W_Melee_Attack_Think()
 	if (trace_ent)
 	if (trace_ent.takedamage)
 		Damage (trace_ent, self.owner, self.owner, frame_damage,
-				WEP_MELEE, trace_endpos, w_shotdir * frame_force);
+				WEP_MELEE, trace_endpos, w_shotdir * frame_force + '0 0 1' * g_balance_melee_force_up * damage_factor);
 	self.melee_lastthink = time;
 	self.nextthink = time + self.melee_ticrate;
 }
 
 void W_Melee_Attack ()
 {
+	if (g_balance_melee == 2 && Akimbo_Active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
+		return;
+
 	sound (Akimbo_Owner(self), CHAN_WEAPON, cvar_string("sv_sound_melee"), VOL_BASE, ATTN_NORM);
 	entity melee = spawn();
 	melee.owner = Akimbo_Owner(self);
@@ -58,6 +64,16 @@ void W_Melee_Attack ()
 	melee.melee_lastthink = melee.nextthink;
 	melee.nextthink += melee.melee_ticrate; //avoid frame with zero melee_frame
 	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	if (g_balance_melee == 2)
+	{
+		setmodel(melee, self.model);
+		melee.angles = sv_player_melee_angles;
+		melee.colormap = self.colormap;
+		setorigin(melee, sv_player_melee_origin);
+		setanim(melee, self.anim_melee);
+		melee.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+		melee.viewmodelforclient = self;
+	}
 	self.bot_melee = FALSE;
 }
 
@@ -88,8 +104,11 @@ void Melee_Init()
 	CACHE_CVAR(g_balance_melee_time);
 	CACHE_CVAR(g_balance_melee_damage);
 	CACHE_CVAR(g_balance_melee_force);
+	CACHE_CVAR(g_balance_melee_force_up);
 	CACHE_CVAR(g_balance_melee_distance);
 	CACHE_CVAR(g_balance_melee_refire);
+	sv_player_melee_angles = stov(cvar_string("sv_player_melee_angles"));
+	sv_player_melee_origin = stov(cvar_string("sv_player_melee_origin"));
 	bot_melee_love = cvar("bot_melee");
 }
 
