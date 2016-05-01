@@ -70,6 +70,8 @@ void nb_init() // Called early (worldspawn stage)
 	// General settings
 	CACHE_CVAR(g_nexball_football_boost_forward);   //100
 	CACHE_CVAR(g_nexball_football_boost_up);        //200
+	CACHE_CVAR(g_nexball_football_melee_boost_forward);
+	CACHE_CVAR(g_nexball_football_melee_boost_up);
 	CACHE_CVAR(g_nexball_hockey_boost_forward);   //100
 	CACHE_CVAR(g_nexball_hockey_bouncefactor);   //0.9
 	CACHE_CVAR(g_nexball_hockey_melee_boost_forward);   //300
@@ -395,7 +397,10 @@ void football_touch (void)
 		self.velocity = other.velocity + v_forward * g_nexball_football_boost_forward + v_up * g_nexball_football_boost_up;
 	}
 	if (other.weaponentity.wframe == WFRAME_MELEE)
-		self.velocity = self.velocity + v_forward * g_nexball_football_melee_boost_forward + '0 0 1' * g_nexball_football_melee_boost_up;
+	{
+		makevectors(other.v_angle);
+		self.velocity = self.velocity + v_forward * g_nexball_football_melee_boost_forward + v_up * g_nexball_football_melee_boost_up;
+	}
 	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
 
