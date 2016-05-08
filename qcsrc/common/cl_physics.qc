@@ -135,7 +135,7 @@ void PlayerJump (void)
 	if(physic_cantjump)
 		return;
 
-	if(!(physic_lastflags & FL_ONGROUND_OR_SLICK))
+	if(!(physic_lastflags & FL_ONGROUND) && (physic_flags & FL_ONGROUND))
 		Physic_LandingHook();
 
 	physic_velocity_z = physic_velocity_z + sv_jumpvelocity * Physic_JumpVelocityFactor();
@@ -221,7 +221,7 @@ void PlayerPhysics()
 	if(sv_slicksurfaces)
 	if(physic_flags & FL_ONGROUND)
 	{
-		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+		tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
 		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
 		{
 			physic_flags &~= FL_ONGROUND;
