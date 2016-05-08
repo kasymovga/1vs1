@@ -4,6 +4,7 @@
 
 float g_balance_melee;
 float g_balance_melee_animtime;
+float g_balance_melee_allow_crouched;
 float g_balance_melee_delay;
 float g_balance_melee_ticrate;
 float g_balance_melee_time;
@@ -78,6 +79,7 @@ void W_Melee_Attack ()
 
 float W_Melee_Possible()
 {
+	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
 	if (self.weapon != WEP_CAMPINGRIFLE)
 	if (g_balance_melee || (self.weapon == WEP_LASER && (g_balance_laser_primary_melee || g_balance_laser_secondary_melee)))
 		return TRUE;
@@ -98,6 +100,7 @@ void Melee_Init()
 	precache_sound (cvar_string("sv_sound_melee"));
 	CACHE_CVAR(g_balance_melee);
 	CACHE_CVAR(g_balance_melee_animtime);
+	CACHE_CVAR(g_balance_melee_allow_crouched);
 	CACHE_CVAR(g_balance_melee_delay);
 	CACHE_CVAR(g_balance_melee_ticrate);
 	CACHE_CVAR(g_balance_melee_time);
