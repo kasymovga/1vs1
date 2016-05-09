@@ -255,3 +255,26 @@ void spawnfunc_trigger_teleport (void)
 		return;
 	}
 }
+
+void spawnfunc_misc_teleporter (void) //Q2 compat
+{
+
+	setmodel(self, "models/ebomb.mdl");
+	self.angles = '90 0 0';
+	self.scale = 2;
+	self.movetype = MOVETYPE_NONE;
+	//setsize(self, '-48 -48 -48', '48 48 48');
+	self.solid = SOLID_TRIGGER;
+	self.touch = Teleport_Touch;
+
+	self.use = trigger_teleport_use;
+
+	// this must be called to spawn the teleport waypoints for bots
+	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
+
+	if (!self.target)
+	{
+		objerror ("Teleporter with no target");
+		return;
+	}
+}
