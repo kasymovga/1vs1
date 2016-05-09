@@ -260,10 +260,11 @@ void spawnfunc_misc_teleporter (void) //Q2 compat
 {
 
 	setmodel(self, "models/ebomb.mdl");
-	self.angles = '90 0 0';
 	self.scale = 2;
 	self.movetype = MOVETYPE_NONE;
-	//setsize(self, '-48 -48 -48', '48 48 48');
+	self.mins = '-48 -48 -48';
+	self.maxs = '48 48 48';
+	setsize(self, '-48 -48 -48', '48 48 48');
 	self.solid = SOLID_TRIGGER;
 	self.touch = Teleport_Touch;
 
