@@ -9,6 +9,7 @@ float physic_maxspeedmod;
 float physic_jump_velocity_factor;
 float physic_can_use_jetpack;
 float physic_start_teleport_time;
+float physic_start_crouch;
 
 
 const float unstick_count = 27;
@@ -246,7 +247,6 @@ vector CSQCPhysic_SetCamera()
 	{
 		float frametime_save = frametime;
 		float i;
-		float first_print = 1;
 		float n = clientcommandframe + 1;
 		vector v;
 		entity oldself = self;
@@ -255,6 +255,16 @@ vector CSQCPhysic_SetCamera()
 		pmove_org = self.origin;
 		self.velocity = physic_velocity = pmove_vel;
 		physic_teleport_time = physic_start_teleport_time;
+		if (physic_start_crouch)
+		{
+			setsize(self, self.crouch_mins, self.crouch_maxs);
+			self.view_ofs = self.crouch_view_ofs;
+		}
+		else
+		{
+			setsize(self, self.stand_mins, self.stand_maxs);
+			self.view_ofs = self.stand_view_ofs;
+		}
 		
 		for (i = servercommandframe + 1; i <= n; i++)
 		{
@@ -294,20 +304,12 @@ void Physic_InitCheck()
 
 void Ent_Physic(float isnew)
 {
-	float f = ReadCoord();
+	float f = ReadShort();
 	physic = self;
-	physic.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-	if (isnew)
-	{
-		cvar_clientsettemp("cl_movement_replay", "0");
-		if not(f & 1)
-		{
-			self.think = Physic_InitCheck;
-			self.nextthink = time;
-		}
-	}
 	if (f & 1)
 	{
+		if (cvar("cl_movement_replay"))
+			cvar_clientsettemp("cl_movement_replay", "0");
 		self.cnt = 1;
 		sv_stepheight = ReadCoord();
 		sv_gravity = ReadCoord();
@@ -323,13 +325,12 @@ void Ent_Physic(float isnew)
 		sv_airstrafeaccelerate = ReadCoord();
 		sv_maxairstrafespeed = ReadCoord();
 		sv_aircontrol = ReadCoord();
+		sv_warsowbunny_turnaccel = ReadCoord();
 		sv_warsowbunny_airforwardaccel = ReadCoord();
 		sv_warsowbunny_accel = ReadCoord();
 		sv_warsowbunny_topspeed = ReadCoord();
-		sv_warsowbunny_turnaccel = ReadCoord();
 		sv_warsowbunny_backtosideratio = ReadCoord();
 		sv_jumpvelocity = ReadCoord();
-		sv_gameplayfix_q2airaccelerate = ReadCoord();
 		sv_friction_on_land = ReadCoord();
 		g_jetpack_acceleration_side = ReadCoord();
 		g_jetpack_acceleration_up = ReadCoord();
@@ -341,6 +342,12 @@ void Ent_Physic(float isnew)
 		sv_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
+		sv_gameplayfix_q2airaccelerate = switches & 16;
+	}
+	else if not(self.cnt)
+	{
+		self.think = Physic_InitCheck;
+		self.nextthink = time;
 	}
 	if (f & 2)
 	{
@@ -368,36 +375,43 @@ void Ent_Physic(float isnew)
 		self.pmove_origin_x = ReadCoord();
 		self.pmove_origin_y = ReadCoord();
 		self.pmove_origin_z = ReadCoord();
-	}
-	if (f & 8)
-	{
-		physic_movetype = ReadByte();
-		physic_gravity_factor = ReadCoord();
-		float recv_flags = ReadByte();
-		physic_is_player = recv_flags & 1;
-		physic_deadflag = recv_flags & 2;
-		physic_ladder = recv_flags & 4;	
-		physic_ladder_iswater = recv_flags & 8;	
-		physic_can_use_jetpack = recv_flags & 16;
+		physic_is_player = f & 8;
+		physic_deadflag = f & 16;
+		physic_ladder = f & 32;	
+		physic_ladder_iswater = f & 64;	
+		physic_can_use_jetpack = f & 128;
+		physic_start_crouch = f & 256;
 		if (physic_ladder && physic_ladder_iswater)
 		{
 			physic_ladder_speed = ReadCoord();
 			physic_ladder_watertype = ReadCoord();
 			physic_ladder_top = ReadCoord();
 		}
-		physic_maxspeedmod = ReadCoord();
-		physic_jump_velocity_factor = ReadCoord();
-	}
-	if (f & 16)
-	{
-		physic_start_teleport_time = ReadCoord();
-	}
-	else
-		physic_start_teleport_time = -1;
-	if (isnew)
-	{
-		self.mins = self.stand_mins;
-		self.maxs = self.stand_maxs;
-		self.view_ofs = self.stand_view_ofs;
+		if (f & 512)
+		{
+			physic_maxspeedmod = ReadCoord();
+			physic_jump_velocity_factor = ReadCoord();
+		}
+		else
+		{
+			physic_maxspeedmod = 1;
+			physic_jump_velocity_factor = 1;
+		}
+		if (f & 1024)
+			physic_movetype = ReadByte();
+		else
+			physic_movetype = MOVETYPE_WALK;
+		if (physic_movetype == MOVETYPE_NOCLIP)
+			self.dphitcontentsmask = 0;
+		else
+			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+		if (f & 2048)
+			physic_gravity_factor = ReadCoord();
+		else
+			physic_gravity_factor = 1;
+		if (f & 4096)
+			physic_start_teleport_time = ReadCoord();
+		else
+			physic_start_teleport_time = -1;
 	}
 }

@@ -246,32 +246,16 @@ float Physic_MaxSpeedMod()
 		stuffcmd(self, strcat("cl_sidespeed ", temps, "\n"));
 		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
 	}
-	if (self.last_maxspeedmod != maxspd_mod)
-	if (self.player_physic)
-		self.player_physic.SendFlags |= 8;
 	self.last_maxspeedmod = maxspd_mod;
 	return maxspd_mod;
 }
 
-.float last_movetype;
 .float last_physic_ladder;
 .float last_can_use_jetpack;
 void Physic_FrameEndHook()
 {
-	if not(self.player_physic)
-		return;
-
-	float can_use_jetpack = (self.items & IT_JETPACK) && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || (self.items & IT_UNLIMITED_WEAPON_AMMO));
-	if (self.lastclassname != self.classname
-			|| self.last_movetype != self.movetype
-			|| physic_ladder != self.last_physic_ladder
-			|| can_use_jetpack != self.last_can_use_jetpack
-			)
-		self.player_physic.SendFlags |= 8;
-	self.lastclassname = self.classname;
-	self.last_movetype = self.movetype;
 	self.last_physic_ladder = physic_ladder;
-	self.last_can_use_jetpack = can_use_jetpack;
+	self.last_can_use_jetpack = (self.items & IT_JETPACK) && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || (self.items & IT_UNLIMITED_WEAPON_AMMO));
 }
 
 void Nixnex_GiveCurrentWeapon();
@@ -490,7 +474,7 @@ void Physic_FrameBeginHook()
 	}
 	self.items &~= IT_USING_JETPACK;
 	if (self.player_physic)
-		self.player_physic.SendFlags |= 4;
+		self.player_physic.SendFlags = 4;
 
 	physic_button_crouch = self.BUTTON_CROUCH;
 }
@@ -585,12 +569,34 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_disable_crouch);
 }
 
+//3588
+//2048
+//1024
+//512
+//4
+
 float Physic_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
-	if (self.teleport_time - time >= 0)
-		sf |= 16;
-	WriteCoord(MSG_ENTITY, sf);
+	if not(sf & 3)
+	{
+		entity oldself = self;
+		self = self.owner;
+		if (self.classname == "player") sf |= 8;
+		if (self.deadflag) sf |= 16;
+		if (self.last_physic_ladder) sf |= 32;
+		if (self.ladder_entity.classname == "func_water") sf |= 64;
+		if (self.last_can_use_jetpack) sf |= 128;
+		if (self.crouch) sf |= 256;
+		if (self.last_maxspeedmod != 1) sf |= 512;
+		if (self.movetype != MOVETYPE_WALK) sf |= 1024;
+		if (self.gravity && self.gravity != 1) sf |= 2048;
+		if (self.teleport_time - time >= 0) sf |= 4096;
+		self = oldself;
+	}
+	else
+		sf = sf & 7;
+	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1)
 	{
 		WriteCoord(MSG_ENTITY, sv_stepheight);
@@ -607,13 +613,12 @@ float Physic_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, sv_airstrafeaccelerate);
 		WriteCoord(MSG_ENTITY, sv_maxairstrafespeed);
 		WriteCoord(MSG_ENTITY, sv_aircontrol);
+		WriteCoord(MSG_ENTITY, sv_warsowbunny_turnaccel);
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_airforwardaccel);
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_accel);
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_topspeed);
-		WriteCoord(MSG_ENTITY, sv_warsowbunny_turnaccel);
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
-		WriteCoord(MSG_ENTITY, sv_gameplayfix_q2airaccelerate);
 		WriteCoord(MSG_ENTITY, sv_friction_on_land);
 		WriteCoord(MSG_ENTITY, g_jetpack_acceleration_side);
 		WriteCoord(MSG_ENTITY, g_jetpack_acceleration_up);
@@ -623,7 +628,8 @@ float Physic_SendEntity(entity to, float sf)
 		float switches = (sv_slicksurfaces ? 1 : 0)
 				+ (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
-				+ (sv_disable_crouch ? 8 : 0);
+				+ (sv_disable_crouch ? 8 : 0)
+				+ (sv_gameplayfix_q2airaccelerate ? 16 :0);
 		WriteByte(MSG_ENTITY, switches);
 	}
 	if (sf & 2)
@@ -652,34 +658,23 @@ float Physic_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.owner.origin_x);
 		WriteCoord(MSG_ENTITY, self.owner.origin_y);
 		WriteCoord(MSG_ENTITY, self.owner.origin_z);
-	}
-	if (sf & 8)
-	{
-		WriteByte(MSG_ENTITY, self.owner.movetype);
-		WriteCoord(MSG_ENTITY, self.gravity);
-		float send_flags = 0;
-		entity oldself = self;
-		self = self.owner;
-		if (self.classname == "player") send_flags += 1;
-		if (self.deadflag) send_flags += 2;
-		if (self.last_physic_ladder) send_flags += 4;
-		if (self.ladder_entity.classname == "func_water") send_flags += 8;
-		if (self.last_can_use_jetpack) send_flags += 16;
-		WriteByte(MSG_ENTITY, send_flags);
-		if (send_flags & 8)
+		if (sf & 96)
 		{
 			WriteCoord(MSG_ENTITY, self.ladder_entity.speed);
 			WriteCoord(MSG_ENTITY, self.ladder_entity.watertype);
 			WriteCoord(MSG_ENTITY, self.ladder_entity.origin_z + self.ladder_entity.maxs_z);
 		}
-		WriteCoord(MSG_ENTITY, self.last_maxspeedmod);
-		WriteCoord(MSG_ENTITY, Physic_JumpVelocityFactor());
-		self = oldself;
-
-	}
-	if (sf & 16)
-	{
-		WriteCoord(MSG_ENTITY, self.teleport_time - time);
+		if (sf & 512)
+		{
+			WriteCoord(MSG_ENTITY, self.last_maxspeedmod);
+			WriteCoord(MSG_ENTITY, Physic_JumpVelocityFactor());
+		}
+		if (sf & 1024)
+			WriteByte(MSG_ENTITY, self.owner.movetype);
+		if (sf & 2048)
+			WriteCoord(MSG_ENTITY, self.gravity);
+		if (sf & 4096)
+			WriteCoord(MSG_ENTITY, self.teleport_time - time);
 	}
 	return TRUE;
 }
@@ -697,16 +692,9 @@ void PhysicClientInit(entity plr)
 	if not(plr.player_physic)
 	{
 		plr.player_physic = spawn();
-		plr.player_physic.gravity = 1;
 		plr.player_physic.viewmodelforclient = plr;
 		plr.player_physic.owner = plr;
 		Net_LinkEntity(plr.player_physic, FALSE, 0, Physic_SendEntity);
 	}
-	plr.player_physic.SendFlags = 255;
-}
-
-void PhysicClientUpdate(entity plr)
-{
-	if (plr.player_physic)
-		plr.player_physic.SendFlags |= 8;
+	plr.player_physic.SendFlags = 3;
 }
