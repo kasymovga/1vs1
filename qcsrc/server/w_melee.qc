@@ -70,7 +70,7 @@ void W_Melee_Attack ()
 		melee.angles = sv_player_melee_angles;
 		melee.colormap = self.colormap;
 		setorigin(melee, sv_player_melee_origin);
-		setanim(melee, self.anim_melee);
+		setanim(melee, self.anim_melee, FALSE, TRUE, TRUE);
 		melee.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
 		melee.viewmodelforclient = self;
 	}
