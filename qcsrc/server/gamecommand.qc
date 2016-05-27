@@ -1049,6 +1049,19 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (argv(0) == "rereadcvars")
+	{
+		W_Init();
+		Damage_ReadCvars();
+		PhysicReadCvars();
+		FOR_EACH_PLAYER(plr)
+		{
+			PhysicClientClear(plr);
+			PhysicClientInit(plr);
+		}
+		return;
+	}
+
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
 
