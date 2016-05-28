@@ -174,16 +174,10 @@ void StartFrame (void)
 	UncustomizeEntitiesRun();
 	InitializeEntitiesRun();
 
-	teamplay = cvar ("teamplay");
 	sys_ticrate = cvar("sys_ticrate");
 
 	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
 		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout
-
-	if(teams_matter && !teamplay)
-		teamplay = 3;
-	if(!teams_matter && teamplay)
-		teamplay = 0;
 
 	skill = cvar("skill");
 

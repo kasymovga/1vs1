@@ -410,6 +410,11 @@ void InitGameplayMode()
 		ScoreRules_race();
 	}
 
+	if(teams_matter && !teamplay)
+		teamplay = 3;
+	if(!teams_matter && teamplay)
+		teamplay = 0;
+
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 
 	if (force_gametype_restore)
