@@ -17,7 +17,6 @@ float g_balance_campingrifle_primary_lifetime;
 float g_balance_campingrifle_primary_refire;
 float g_balance_campingrifle_primary_speed;
 float g_balance_campingrifle_primary_spread;
-float g_balance_campingrifle_reloadtime;
 float g_balance_campingrifle_secondary_ammo;
 float g_balance_campingrifle_secondary_animtime;
 float g_balance_campingrifle_secondary_bulletconstant;

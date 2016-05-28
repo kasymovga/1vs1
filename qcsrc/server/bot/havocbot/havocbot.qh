@@ -1,6 +1,8 @@
 /*
  * Globals and Fields
  */
+float bot_nofire;
+float bot_ai_strategyinterval;
 
 .float havocbot_keyboardskill;
 .float facingwalltime, ignoregoaltime;

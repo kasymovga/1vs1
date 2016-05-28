@@ -1,3 +1,5 @@
+float bot_ai_navigation_jetpack;
+float bot_ai_navigation_jetpack_mindistance;
 
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
@@ -653,8 +655,8 @@ void navigation_routerating(entity e, float f, float rangebias)
 	// Evaluate path using jetpack
 	if(g_jetpack)
 	if(self.items & IT_JETPACK)
-	if(cvar("bot_ai_navigation_jetpack"))
-	if(vlen(self.origin - e.origin) > cvar("bot_ai_navigation_jetpack_mindistance"))
+	if(bot_ai_navigation_jetpack)
+	if(vlen(self.origin - e.origin) > bot_ai_navigation_jetpack_mindistance)
 	{
 		vector pointa, pointb;
 
@@ -706,9 +708,9 @@ void navigation_routerating(entity e, float f, float rangebias)
 			xydistance = vlen(pointa - pointb);
 			zdistance = fabs(pointa_z - self.origin_z);
 
-			t = zdistance / cvar("g_jetpack_maxspeed_up");
-			t += xydistance / cvar("g_jetpack_maxspeed_side");
-			fuel = t * cvar("g_jetpack_fuel") * 0.8;
+			t = zdistance / g_jetpack_maxspeed_up;
+			t += xydistance / g_jetpack_maxspeed_side;
+			fuel = t * g_jetpack_fuel * 0.8;
 
 		//	dprint("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel),"\n");
 
@@ -719,8 +721,8 @@ void navigation_routerating(entity e, float f, float rangebias)
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
 				//  - between air and ground speeds)
 
-				cost = xydistance / (cvar("g_jetpack_maxspeed_side")/cvar("sv_maxspeed"));
-				cost += zdistance / (cvar("g_jetpack_maxspeed_up")/cvar("sv_maxspeed"));
+				cost = xydistance / (g_jetpack_maxspeed_side/sv_maxspeed);
+				cost += zdistance / (g_jetpack_maxspeed_up/sv_maxspeed);
 				cost *= 1.5;
 
 				// Compare against other goals
@@ -1073,3 +1075,9 @@ void debuggoalstack()
 }
 
 #endif
+
+void bot_navigation_init()
+{
+	CACHE_CVAR(bot_ai_navigation_jetpack);
+	CACHE_CVAR(bot_ai_navigation_jetpack_mindistance);
+}

@@ -1,8 +1,6 @@
 float g_balance_rocketlauncher_ammo;
 float g_balance_rocketlauncher_animtime;
-float g_balance_rocketlauncher_damage;
 float g_balance_rocketlauncher_damageforcescale;
-float g_balance_rocketlauncher_detonatedelay;
 float g_balance_rocketlauncher_edgedamage;
 float g_balance_rocketlauncher_force;
 float g_balance_rocketlauncher_guidedelay;

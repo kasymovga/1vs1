@@ -70,3 +70,4 @@ void navigation_goalrating_end();
 void botframe_updatedangerousobjects(float maxupdate);
 
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
+void bot_navigation_init();

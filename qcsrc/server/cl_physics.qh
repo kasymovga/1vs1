@@ -1,1 +1,2 @@
 float IsFlying(entity a);
+float g_jetpack_fuel;

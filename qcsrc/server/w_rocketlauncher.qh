@@ -1,0 +1,3 @@
+float g_balance_rocketlauncher_damage;
+float g_balance_rocketlauncher_detonatedelay;
+

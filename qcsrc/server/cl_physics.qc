@@ -13,7 +13,6 @@ float developer_shtest;
 float g_balance_curse_slow_moverate;
 float g_balance_rune_speed_combo_moverate;
 float g_balance_rune_speed_moverate;
-float g_jetpack_fuel;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
 float g_nexball_basketball_carrier_speed;

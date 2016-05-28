@@ -738,6 +738,7 @@ void spawnfunc_worldspawn (void)
 	Damage_ReadCvars();
 	Client_ReadCvars();
 	Akimbo_Init();
+	bot_init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");

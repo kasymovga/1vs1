@@ -1,3 +1,5 @@
+float bot_navigation_ignoreplayers;
+
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
 // (suitable for spawnfunc_waypoint editor)
@@ -50,7 +52,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	waypoint_clearlinks(w);
 	//waypoint_schedulerelink(w);
 
-	if (cvar("g_waypointeditor"))
+	if (g_waypointeditor)
 	{
 		m1 = w.mins;
 		m2 = w.maxs;
@@ -154,8 +156,8 @@ void waypoint_think()
 	local entity e;
 	local vector sv, sm1, sm2, ev, em1, em2, dv;
 
-	stepheightvec = cvar("sv_stepheight") * '0 0 1';
-	bot_navigation_movemode = ((cvar("bot_navigation_ignoreplayers")) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+	stepheightvec = sv_stepheight * '0 0 1';
+	bot_navigation_movemode = (bot_navigation_ignoreplayers ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	//dprint("waypoint_think wpisbox = ", ftos(self.wpisbox), "\n");
 	sm1 = self.origin + self.mins;
@@ -251,7 +253,7 @@ void waypoint_schedulerelink(entity wp)
 	if (wp == world)
 		return;
 	// TODO: add some sort of visible box in edit mode for box waypoints
-	if (cvar("g_waypointeditor"))
+	if (g_waypointeditor)
 	{
 		local vector m1, m2;
 		m1 = wp.mins;
@@ -861,4 +863,10 @@ void botframe_showwaypointlinks()
 		}
 		player = find(player, classname, "player");
 	}
+};
+
+void bot_waypoints_init()
+{
+	CACHE_CVAR(bot_navigation_ignoreplayers);
+	CACHE_CVAR(g_waypointeditor);
 };

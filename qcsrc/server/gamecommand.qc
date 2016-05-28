@@ -1059,6 +1059,7 @@ void GameCommand(string command)
 			PhysicClientClear(plr);
 			PhysicClientInit(plr);
 		}
+		bot_init();
 		return;
 	}
 

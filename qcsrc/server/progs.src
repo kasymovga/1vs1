@@ -54,6 +54,10 @@ cl_weaponsystem.qh
 
 info_messages.qh
 
+w_campingrifle.qh
+
+w_rocketlauncher.qh
+
 ../common/cl_physics.qh
 cl_physics.qh
 

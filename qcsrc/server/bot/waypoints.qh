@@ -14,6 +14,7 @@ float relink_total, relink_walkculled, relink_pvsculled, relink_lengthculled;
 float botframe_waypointeditorlightningtime;
 float botframe_loadedforcedlinks;
 float botframe_cachedwaypointlinks;
+float g_waypointeditor;
 
 .entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
 .entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;

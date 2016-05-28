@@ -1,3 +1,5 @@
+float g_debug_bot_commands;
+
 .float bot_cmdqueuebuf_allocated;
 .float bot_cmdqueuebuf;
 .float bot_cmdqueuebuf_start;
@@ -861,14 +863,14 @@ float bot_presskeys()
 		return FALSE;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		self.movement_x = cvar("sv_maxspeed");
+		self.movement_x = sv_maxspeed;
 	else if(self.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		self.movement_x = -cvar("sv_maxspeed");
+		self.movement_x = -sv_maxspeed;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		self.movement_y = cvar("sv_maxspeed");
+		self.movement_y = sv_maxspeed;
 	else if(self.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		self.movement_y = -cvar("sv_maxspeed");
+		self.movement_y = -sv_maxspeed;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_JUMP)
 		self.BUTTON_JUMP = TRUE;
@@ -1262,7 +1264,7 @@ float bot_execute_commands_once()
 	}
 	else
 	{
-		if(cvar("g_debug_bot_commands"))
+		if(g_debug_bot_commands)
 		{
 			local string parms;
 
@@ -1303,4 +1305,9 @@ float bot_execute_commands()
 	}
 	while(f < 0);
 	return f;
+}
+
+void bot_scripting_init()
+{
+	CACHE_CVAR(g_debug_bot_commands);
 }

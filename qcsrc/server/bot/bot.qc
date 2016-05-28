@@ -10,6 +10,20 @@
 
 #include "havocbot/havocbot.qc"
 
+float bot_ai_dangerdetectioninterval;
+float bot_ai_dangerdetectionupdates;
+float bot_ai_thinkinterval;
+float bot_god;
+float bot_join_empty;
+float bot_navigation_ignoreplayers;
+float bot_number;
+float bot_usemodelnames;
+float bot_vs_human;
+float waypoint_benchmark;
+float skill_auto;
+float skill_auto_min;
+float skill_auto_max;
+
 entity bot_spawn()
 {
 	local entity oldself, bot;
@@ -33,10 +47,10 @@ void bot_think()
 		return;
 
 	self.flags &~= FL_GODMODE;
-	if(cvar("bot_god"))
+	if(bot_god)
 		self.flags |= FL_GODMODE;
 
-	self.bot_nextthink = self.bot_nextthink + cvar("bot_ai_thinkinterval") * pow(0.5, self.bot_aiskill);
+	self.bot_nextthink = self.bot_nextthink + bot_ai_thinkinterval * pow(0.5, self.bot_aiskill);
 	//if (self.bot_painintensity > 0)
 	//	self.bot_painintensity = self.bot_painintensity - (skill + 1) * 40 * frametime;
 
@@ -194,7 +208,7 @@ void bot_setnameandstuff()
 	self.bot_preferredcolors = self.clientcolors;
 
 	// pick the name
-	if (cvar("bot_usemodelnames"))
+	if (bot_usemodelnames)
 		name = bot_model;
 	else
 		name = bot_name;
@@ -468,20 +482,22 @@ void autoskill(float factor)
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
-		if(cvar("skill") < cvar("skill_auto_max"))
+		if(skill < skill_auto_max)
 		{
 			dprint("2 frags difference, increasing skill\n");
-			cvar_set("skill", ftos(cvar("skill") + 1));
-			bprint("^2SKILL UP!^7 Now at level ", ftos(cvar("skill")), "\n");
+			skill = skill + 1;
+			cvar_set("skill", ftos(skill));
+			bprint("^2SKILL UP!^7 Now at level ", ftos(skill), "\n");
 		}
 	}
 	else if(bestbot >= bestplayer * factor + 2)
 	{
-		if(cvar("skill") > cvar("skill_auto_min"))
+		if(skill > skill_auto_min)
 		{
 			dprint("2 frags difference, decreasing skill\n");
-			cvar_set("skill", ftos(cvar("skill") - 1));
-			bprint("^1SKILL DOWN!^7 Now at level ", ftos(cvar("skill")), "\n");
+			skill = skill - 1;
+			cvar_set("skill", ftos(skill));
+			bprint("^1SKILL DOWN!^7 Now at level ", ftos(skill), "\n");
 		}
 	}
 	else
@@ -506,15 +522,13 @@ void bot_serverframe()
 	if (time < 2)
 		return;
 
-	stepheightvec = cvar("sv_stepheight") * '0 0 1';
-	bot_navigation_movemode = ((cvar("bot_navigation_ignoreplayers")) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+	stepheightvec = sv_stepheight * '0 0 1';
+	bot_navigation_movemode = ((bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	if(time > autoskill_nextthink)
 	{
-		float a;
-		a = cvar("skill_auto");
-		if(a)
-			autoskill(a);
+		if(skill_auto)
+			autoskill(skill_auto);
 		autoskill_nextthink = time + 5;
 	}
 
@@ -533,17 +547,17 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if ((realplayers || cvar("bot_join_empty") || (currentbots > 0 && time < 5)))
+	if ((realplayers || bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
 		minplayers = max(0, floor(realminplayers));
 
 		float realminbots, minbots;
-		if(teamplay && cvar("bot_vs_human"))
-			realminbots = ceil(fabs(cvar("bot_vs_human")) * activerealplayers);
+		if(teamplay && bot_vs_human)
+			realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
 		else
-			realminbots = cvar("bot_number");
+			realminbots = bot_number;
 		minbots = max(0, floor(realminbots));
 
 		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
@@ -555,8 +569,6 @@ void bot_serverframe()
 		// if there are no players, remove bots
 		bots = 0;
 	}
-
-	bot_ignore_bots = cvar("bot_ignore_bots");
 
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
@@ -577,11 +589,11 @@ void bot_serverframe()
 
 	if(botframe_spawnedwaypoints)
 	{
-		if(cvar("waypoint_benchmark"))
+		if(waypoint_benchmark)
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || cvar("g_waypointeditor"))
+	if (currentbots > 0 || g_waypointeditor)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
@@ -622,15 +634,15 @@ void bot_serverframe()
 		if (botframe_nextdangertime < time)
 		{
 			local float interval;
-			interval = cvar("bot_ai_dangerdetectioninterval");
+			interval = bot_ai_dangerdetectioninterval;
 			if (botframe_nextdangertime < time - interval * 1.5)
 				botframe_nextdangertime = time;
 			botframe_nextdangertime = botframe_nextdangertime + interval;
-			botframe_updatedangerousobjects(cvar("bot_ai_dangerdetectionupdates"));
+			botframe_updatedangerousobjects(bot_ai_dangerdetectionupdates);
 		}
 	}
 
-	if (cvar("g_waypointeditor"))
+	if (g_waypointeditor)
 		botframe_showwaypointlinks();
 
 	if(time > bot_cvar_nextthink)
@@ -639,4 +651,27 @@ void bot_serverframe()
 			bot_custom_weapon_priority_setup();
 		bot_cvar_nextthink = time + 5;
 	}
+};
+
+void bot_init()
+{
+	CACHE_CVAR(bot_ai_dangerdetectioninterval);
+	CACHE_CVAR(bot_ai_dangerdetectionupdates);
+	CACHE_CVAR(bot_ai_thinkinterval);
+	CACHE_CVAR(bot_god);
+	CACHE_CVAR(bot_ignore_bots);
+	CACHE_CVAR(bot_join_empty);
+	CACHE_CVAR(bot_navigation_ignoreplayers);
+	CACHE_CVAR(bot_number);
+	CACHE_CVAR(bot_usemodelnames);
+	CACHE_CVAR(bot_vs_human);
+	CACHE_CVAR(waypoint_benchmark);
+	CACHE_CVAR(skill_auto);
+	CACHE_CVAR(skill_auto_min);
+	CACHE_CVAR(skill_auto_max);
+	bot_aim_init();
+	bot_navigation_init();
+	bot_waypoints_init();
+	bot_scripting_init();
+	bot_havocbot_init();
 };
