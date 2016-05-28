@@ -15,6 +15,7 @@ float CampaignBailout(string s)
 	cvar_string = cvar_string_builtin;
 	cvar_set = cvar_set_builtin;
 	cvar_set("g_campaign", "0");
+	g_campaign = 0;
 	print("campaign initialization failed: ", s, "\n");
 	return 1;
 }
@@ -93,7 +94,6 @@ void CampaignPreInit()
 	cvar_string = cvar_string_campaignwrapper;
 	cvar_set = cvar_set_campaignwrapper;
 
-	cvar_set("g_campaign", "1");
 	cvar_set("g_dm", "0");
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));

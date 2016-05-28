@@ -208,7 +208,7 @@ void SV_ParseClientCommand(string s) {
 			self.classname = "observer";
 			self.version_mismatch = 1;
 			PutClientInServer();
-		} else if(cvar("g_campaign") || cvar("g_balance_teams") || cvar("g_balance_teams_force")) {
+		} else if(g_campaign || cvar("g_balance_teams") || cvar("g_balance_teams_force")) {
 			//JoinBestTeam(self, FALSE, TRUE);
 		} else if(teams_matter && !cvar("sv_spectate")) {
 			self.classname = "observer";
@@ -263,7 +263,7 @@ void SV_ParseClientCommand(string s) {
 				PlayerScore_Clear(self);
 				bprint ("^4", self.netname, "^4 is playing now\n");
 				PutClientInServer();
-				if(cvar("g_campaign"))
+				if(g_campaign)
 					campaign_bots_may_start = 1;
 			}
 			else {
@@ -276,7 +276,7 @@ void SV_ParseClientCommand(string s) {
 			return;
 		if( !teams_matter ) {
 			sprint( self, "selecteam can only be used in teamgames\n");
-		} else if(cvar("g_campaign")) {
+		} else if(g_campaign) {
 			//JoinBestTeam(self, 0);
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");

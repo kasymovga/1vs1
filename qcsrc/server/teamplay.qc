@@ -14,7 +14,7 @@ float IsTeamBalanceForced()
 		return 0; // no rebalancing whatsoever please
 	if(!teams_matter)
 		return 0;
-	if(cvar("g_campaign"))
+	if(g_campaign)
 		return 0;
 	if(!cvar("g_balance_teams_force"))
 		return -1;
@@ -243,7 +243,7 @@ void InitGameplayMode()
 		game = GAME_CTF;
 		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
-		if(cvar("g_campaign"))
+		if(g_campaign)
 			g_ctf_win_mode = 2;
 		else
 			g_ctf_win_mode = cvar("g_ctf_win_mode");
@@ -369,7 +369,7 @@ void InitGameplayMode()
 	cache_lastmutatormsg = strzone("");
 
 	// enforce the server's universal frag/time limits
-	if(!cvar("g_campaign"))
+	if(!g_campaign)
 	{
 		if(fraglimit_override >= 0)
 			cvar_set("fraglimit", ftos(fraglimit_override));
@@ -384,11 +384,11 @@ void InitGameplayMode()
 	if(g_race)
 	{
 		// we need to find out the correct value for g_race_qualifying
-		if(cvar("g_campaign"))
+		if(g_campaign)
 		{
 			g_race_qualifying = 1;
 		}
-		else if(!cvar("g_campaign") && cvar("g_race_qualifying_timelimit") > 0)
+		else if(!g_campaign && cvar("g_race_qualifying_timelimit") > 0)
 		{
 			g_race_qualifying = 2;
 			race_fraglimit = cvar("fraglimit");
@@ -442,7 +442,7 @@ void PrintWelcomeMessage(entity pl)
 
 	if(self.cvar_scr_centertime == 0) return;
 
-	if(cvar("g_campaign"))
+	if(g_campaign)
 	{
 		if(self.classname == "player" && !self.BUTTON_INFO)
 			return;
@@ -458,7 +458,7 @@ void PrintWelcomeMessage(entity pl)
 		self.welcomemessage_time = time + max(0.5, self.cvar_scr_centertime * 0.6);
 	}
 
-	if(cvar("g_campaign"))
+	if(g_campaign)
 	{
 		centerprint(pl, campaign_message);
 		return;
@@ -1003,7 +1003,7 @@ void SV_ChangeTeam(float _color)
 		return;
 	}
 
-	if(cvar("g_campaign"))
+	if(g_campaign)
 	{
 		sprint(self, "Team changes not allowed\n");
 		return; // changing teams is not allowed

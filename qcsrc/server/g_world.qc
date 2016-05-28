@@ -585,7 +585,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
 
-	if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || g_campaign)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	CACHE_CVAR(g_pinata);
@@ -712,7 +712,8 @@ void spawnfunc_worldspawn (void)
 	// 63 testing
 	lightstyle(63, "a");
 
-	if(cvar("g_campaign"))
+	CACHE_CVAR(g_campaign);
+	if(g_campaign)
 		CampaignPreInit();
 
 	Map_MarkAsRecent(mapname);
@@ -794,7 +795,7 @@ void spawnfunc_worldspawn (void)
 
 	SetDefaultAlpha();
 
-	if(cvar("g_campaign"))
+	if(g_campaign)
 		CampaignPostInit();
 
 	fteqcc_testbugs();
@@ -1225,7 +1226,7 @@ string GetNextMap()
 
 float DoNextMapOverride()
 {
-	if(cvar("g_campaign"))
+	if(g_campaign)
 	{
 		CampaignPostIntermission();
 		alreadychangedlevel = TRUE;
@@ -1611,7 +1612,7 @@ void NextLevel()
 		}
 	}
 
-	if(cvar("g_campaign"))
+	if(g_campaign)
 		CampaignPreIntermission();
 
 	localcmd("\nsv_hook_gameend;");

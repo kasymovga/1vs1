@@ -632,7 +632,7 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "warp") if(argc == 2) if(cvar("g_campaign"))
+	if(argv(0) == "warp") if(argc == 2) if(g_campaign)
 	{
 		CampaignLevelWarp(stof(argv(1)));
 		return;

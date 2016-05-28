@@ -57,7 +57,7 @@ void bot_think()
 	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
 	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
 
-	if(time < game_starttime || ((cvar("g_campaign") && !campaign_bots_may_start)))
+	if(time < game_starttime || ((g_campaign && !campaign_bots_may_start)))
 	{
 		self.nextthink = time + 0.5;
 		return;
@@ -118,7 +118,7 @@ void bot_setnameandstuff()
 	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
 	string name, prefix, suffix;
 
- 	if(cvar("g_campaign"))
+	if(g_campaign)
 	{
 		prefix = "";
 		suffix = "";
@@ -181,7 +181,7 @@ void bot_setnameandstuff()
 	self.bot_forced_team = stof(argv(5));
 
 	prio = 6;
-#define READSKILL(f,w,r) if(argv(prio) != "") self.f = stof(argv(prio)) * (w); else self.f = (!cvar("g_campaign")) * (2 * random() - 1) * (r) * (w); ++prio
+#define READSKILL(f,w,r) if(argv(prio) != "") self.f = stof(argv(prio)) * (w); else self.f = (!g_campaign) * (2 * random() - 1) * (r) * (w); ++prio
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboards kill

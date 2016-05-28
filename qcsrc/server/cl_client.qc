@@ -1379,7 +1379,7 @@ void ClientConnect (void)
 
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if((cvar("sv_spectate") == 1 && !g_lms) || cvar("g_campaign")) {
+	if((cvar("sv_spectate") == 1 && !g_lms) || g_campaign) {
 		self.classname = "observer";
 	} else {
 		if(teams_matter)
@@ -2175,16 +2175,16 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(isJoinAllowed()) {
-		if(!teams_matter || cvar("g_campaign") || cvar("g_balance_teams") || (self.wasplayer && cvar("g_changeteam_banned"))) {
+		if(!teams_matter || g_campaign || cvar("g_balance_teams") || (self.wasplayer && cvar("g_changeteam_banned"))) {
 			self.classname = "player";
-			if(cvar("g_campaign") || cvar("g_balance_teams") || cvar("g_balance_teams_force"))
+			if(g_campaign || cvar("g_balance_teams") || cvar("g_balance_teams_force"))
 				JoinBestTeam(self, FALSE, TRUE);
-			if(cvar("g_campaign"))
+			if(g_campaign)
 				campaign_bots_may_start = 1;
 			PutClientInServer();
 			if(self.classname == "player")
 				bprint ("^4", self.netname, "^4 is playing now\n");
-			if(!cvar("g_campaign"))
+			if(!g_campaign)
 				centerprint(self,""); // clear MOTD
 			return;
 		} else {
@@ -2532,7 +2532,7 @@ void PlayerPreThink (void)
 			dist_z = 0;
 			self.lms_traveled_distance += fabs(vlen(dist));
 
-			if((cvar("g_campaign") && !campaign_bots_may_start) || (time < game_starttime))
+			if((g_campaign && !campaign_bots_may_start) || (time < game_starttime))
 			{
 				self.lms_nextcheck = time + cvar("g_lms_campcheck_interval")*2;
 				self.lms_traveled_distance = 0;
