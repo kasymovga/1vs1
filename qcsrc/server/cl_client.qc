@@ -4,6 +4,66 @@ float g_allow_oldnexbeam;
 float g_forced_respawn;
 float sv_servermodelsonly;
 float sv_reset_on_join;
+float g_spawn_furthest;
+float sv_servermodelsonly;
+float sv_reset_on_join;
+float g_teamdamage_resetspeed;
+float g_allow_oldnexbeam;
+float g_forced_respawn;
+float g_balance_armor_limit;
+float g_balance_armor_regen;
+float g_balance_armor_regenlinear;
+float g_balance_armor_regenstable;
+float g_balance_armor_rot;
+float g_balance_armor_rotlinear;
+float g_balance_armor_rotstable;
+float g_balance_curse_venom_hpmod;
+float g_balance_curse_venom_limitmod;
+float g_balance_curse_venom_rotrate;
+float g_balance_fuel_limit;
+float g_balance_fuel_regen;
+float g_balance_fuel_regenlinear;
+float g_balance_fuel_regenstable;
+float g_balance_fuel_rot;
+float g_balance_fuel_rotlinear;
+float g_balance_fuel_rotstable;
+float g_balance_health_limit;
+float g_balance_health_regen;
+float g_balance_health_regenlinear;
+float g_balance_health_regenstable;
+float g_balance_health_rot;
+float g_balance_health_rotlinear;
+float g_balance_health_rotstable;
+float g_balance_kill_delay;
+float g_balance_pause_armor_rot_spawn;
+float g_balance_pause_fuel_rot_spawn;
+float g_balance_pause_health_regen_spawn;
+float g_balance_pause_health_rot_spawn;
+float g_balance_rune_regen_combo_hpmod;
+float g_balance_rune_regen_combo_limitmod;
+float g_balance_rune_regen_combo_regenrate;
+float g_balance_rune_regen_combo_rotrate;
+float g_balance_rune_regen_hpmod;
+float g_balance_rune_regen_limitmod;
+float g_balance_rune_regen_regenrate;
+float g_changeteam_banned;
+float g_fullbrightplayers;
+float g_hitplots;
+float g_jetpack_attenuation;
+float g_lms_campcheck_damage;
+float g_lms_campcheck_distance;
+float g_lms_campcheck_interval;
+float g_lms_regenerate;
+float g_maxplayers;
+float g_maxplayers_spectator_blocktime;
+float g_midair_shieldtime;
+float g_player_brightness;
+float g_spawnshieldtime;
+float g_spawnsound;
+float leadlimit;
+float sv_spectate;
+float sv_timeout;
+float sv_timeout_number;
 
 float reset_on_join_done;
 
@@ -859,11 +919,11 @@ void PutClientInServer (void)
 		self.weapon = 0;
 		self.jump_interval = time;
 
-		self.spawnshieldtime = time + cvar("g_spawnshieldtime");
-		self.pauserotarmor_finished = time + cvar("g_balance_pause_armor_rot_spawn");
-		self.pauserothealth_finished = time + cvar("g_balance_pause_health_rot_spawn");
-		self.pauserotfuel_finished = time + cvar("g_balance_pause_fuel_rot_spawn");
-		self.pauseregen_finished = time + cvar("g_balance_pause_health_regen_spawn");
+		self.spawnshieldtime = time + g_spawnshieldtime;
+		self.pauserotarmor_finished = time + g_balance_pause_armor_rot_spawn;
+		self.pauserothealth_finished = time + g_balance_pause_health_rot_spawn;
+		self.pauserotfuel_finished = time + g_balance_pause_fuel_rot_spawn;
+		self.pauseregen_finished = time + g_balance_pause_health_regen_spawn;
 		//extend the pause of rotting if client was reset at the beginning of the countdown
 		if(!restart_active && time < game_starttime) {
 			self.spawnshieldtime += game_starttime - time;
@@ -957,10 +1017,10 @@ void PutClientInServer (void)
 
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
-		self.colormod = '1 1 1' * cvar("g_player_brightness");
+		self.colormod = '1 1 1' * g_player_brightness;
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
-		self.lms_nextcheck = time + cvar("g_lms_campcheck_interval")*2;
+		self.lms_nextcheck = time + g_lms_campcheck_interval*2;
 		self.lms_traveled_distance = 0;
 		self.speedrunning = FALSE;
 
@@ -975,7 +1035,7 @@ void PutClientInServer (void)
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
-		if (cvar("g_spawnsound"))
+		if (g_spawnsound)
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 		if(g_assault) {
@@ -1018,7 +1078,7 @@ void PutClientInServer (void)
 void PlayerToSpec(entity player)
 {
 	entity oldself;
-	if(player.classname == "player" && cvar("sv_spectate") == 1) {
+	if(player.classname == "player" && sv_spectate == 1) {
 		if(player.flagcarried)
 			DropFlag(player.flagcarried, world, world);
 		if(player.ballcarried)
@@ -1029,7 +1089,7 @@ void PlayerToSpec(entity player)
 		WaypointSprite_PlayerDead();
 		player.classname = "observer";
 		if(blockSpectators)
-			sprint(player, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 		PutClientInServer();
 		self = oldself;
 	}
@@ -1199,7 +1259,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 {
 	float killtime;
 	entity e;
-	killtime = cvar("g_balance_kill_delay");
+	killtime = g_balance_kill_delay;
 
 	if(g_race_qualifying)
 		killtime = 0;
@@ -1310,23 +1370,6 @@ void FixClientCvars(entity e)
 	stuffcmd(e, "\nin_bindmap 0 0\n");
 	if(g_race || g_cts)
 		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
-	/*
-	 * we no longer need to stuff this. Remove this comment block if you feel
-	 * 2.3 and higher (or was it 2.2.3?) don't need these any more
-	stuffcmd(e, strcat("cl_gravity ", ftos(cvar("sv_gravity")), "\n"));
-	stuffcmd(e, strcat("cl_movement_accelerate ", ftos(cvar("sv_accelerate")), "\n"));
-	stuffcmd(e, strcat("cl_movement_friction ", ftos(cvar("sv_friction")), "\n"));
-	stuffcmd(e, strcat("cl_movement_maxspeed ", ftos(cvar("sv_maxspeed")), "\n"));
-	stuffcmd(e, strcat("cl_movement_airaccelerate ", ftos(cvar("sv_airaccelerate")), "\n"));
-	stuffcmd(e, strcat("cl_movement_maxairspeed ", ftos(cvar("sv_maxairspeed")), "\n"));
-	stuffcmd(e, strcat("cl_movement_stopspeed ", ftos(cvar("sv_stopspeed")), "\n"));
-	stuffcmd(e, strcat("cl_movement_jumpvelocity ", ftos(cvar("sv_jumpvelocity")), "\n"));
-	stuffcmd(e, strcat("cl_movement_stepheight ", ftos(cvar("sv_stepheight")), "\n"));
-	stuffcmd(e, strcat("set cl_movement_friction_on_land ", ftos(cvar("sv_friction_on_land")), "\n"));
-	stuffcmd(e, strcat("set cl_movement_airaccel_qw ", ftos(cvar("sv_airaccel_qw")), "\n"));
-	stuffcmd(e, strcat("set cl_movement_airaccel_sideways_friction ", ftos(cvar("sv_airaccel_sideways_friction")), "\n"));
-	stuffcmd(e, "cl_movement_edgefriction 1\n");
-	 */
 }
 
 /*
@@ -1379,12 +1422,12 @@ void ClientConnect (void)
 
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if((cvar("sv_spectate") == 1 && !g_lms) || g_campaign) {
+	if((sv_spectate == 1 && !g_lms) || g_campaign) {
 		self.classname = "observer";
 	} else {
 		if(teams_matter)
 		{
-			if(cvar("g_balance_teams") || cvar("g_balance_teams_force"))
+			if(g_balance_teams || g_balance_teams_force)
 			{
 				self.classname = "player";
 				campaign_bots_may_start = 1;
@@ -1483,11 +1526,11 @@ void ClientConnect (void)
 	self.spectatortime = time;
 	if(blockSpectators)
 	{
-		sprint(self, strcat("^7You have to become a player within the next ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+		sprint(self, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 	}
 
 	self.jointime = time;
-	self.allowedTimeouts = cvar("sv_timeout_number");
+	self.allowedTimeouts = sv_timeout_number;
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -1509,7 +1552,7 @@ void ClientConnect (void)
 
 	SoundEntity_Attach(self);
 
-	if(cvar("g_hitplots") || strstrofs(strcat(" ", cvar_string("g_hitplots_individuals"), " "), strcat(" ", self.netaddress, " "), 0) >= 0)
+	if(g_hitplots || strstrofs(strcat(" ", cvar_string("g_hitplots_individuals"), " "), strcat(" ", self.netaddress, " "), 0) >= 0)
 	{
 		self.hitplotfh = fopen(strcat("hits-", matchid, "-", self.netaddress, "-", ftos(self.playerid), ".plot"), FILE_WRITE);
 		fputs(self.hitplotfh, strcat("#name ", self.netname, "\n"));
@@ -1747,7 +1790,7 @@ void play_countdown(float finished, string samp)
  * @param addOneSecond boolean, set to 1 if the welcome-message centerprint asks for the text
  */
 string getTimeoutText(float addOneSecond) {
-	if (!cvar("sv_timeout") || !timeoutStatus)
+	if (!sv_timeout || !timeoutStatus)
 		return "";
 
 	local string retStr;
@@ -1785,7 +1828,7 @@ void player_powerups (void)
 {
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
-		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, cvar("g_jetpack_attenuation"));
+		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
 		self.modelflags |= MF_ROCKET;
 	}
 	else
@@ -1886,7 +1929,7 @@ void player_powerups (void)
 		}
 	}
 
-	if (cvar("g_fullbrightplayers"))
+	if (g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;
 
 	// midair gamemode: damage only while in the air
@@ -1896,7 +1939,7 @@ void player_powerups (void)
 	// remaining hits in the same frame)
 	if (self.flags & FL_ONGROUND)
 	if (g_midair)
-		self.spawnshieldtime = max(self.spawnshieldtime, time + cvar("g_midair_shieldtime"));
+		self.spawnshieldtime = max(self.spawnshieldtime, time + g_midair_shieldtime);
 
 	if (time >= game_starttime)
 	if (time < self.spawnshieldtime)
@@ -1951,15 +1994,15 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 void player_regen (void)
 {
 	float minh, mina, minf, maxh, maxa, maxf, limith, limita, limitf, max_mod, regen_mod, rot_mod, limit_mod;
-	maxh = cvar("g_balance_health_rotstable");
-	maxa = cvar("g_balance_armor_rotstable");
-	maxf = cvar("g_balance_fuel_rotstable");
-	minh = cvar("g_balance_health_regenstable");
-	mina = cvar("g_balance_armor_regenstable");
-	minf = cvar("g_balance_fuel_regenstable");
-	limith = cvar("g_balance_health_limit");
-	limita = cvar("g_balance_armor_limit");
-	limitf = cvar("g_balance_fuel_limit");
+	maxh = g_balance_health_rotstable;
+	maxa = g_balance_armor_rotstable;
+	maxf = g_balance_fuel_rotstable;
+	minh = g_balance_health_regenstable;
+	mina = g_balance_armor_regenstable;
+	minf = g_balance_fuel_regenstable;
+	limith = g_balance_health_limit;
+	limita = g_balance_armor_limit;
+	limitf = g_balance_fuel_limit;
 
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
 
@@ -1967,27 +2010,27 @@ void player_regen (void)
 	{
 		if (self.runes & CURSE_VENOM) // do we have both rune/curse?
 		{
-			regen_mod = cvar("g_balance_rune_regen_combo_regenrate");
-			max_mod = cvar("g_balance_rune_regen_combo_hpmod");
-			limit_mod = cvar("g_balance_rune_regen_combo_limitmod");
+			regen_mod = g_balance_rune_regen_combo_regenrate;
+			max_mod = g_balance_rune_regen_combo_hpmod;
+			limit_mod = g_balance_rune_regen_combo_limitmod;
 		}
 		else
 		{
-			regen_mod = cvar("g_balance_rune_regen_regenrate");
-			max_mod = cvar("g_balance_rune_regen_hpmod");
-			limit_mod = cvar("g_balance_rune_regen_limitmod");
+			regen_mod = g_balance_rune_regen_regenrate;
+			max_mod = g_balance_rune_regen_hpmod;
+			limit_mod = g_balance_rune_regen_limitmod;
 		}
 	}
 	else if (self.runes & CURSE_VENOM)
 	{
-		max_mod = cvar("g_balance_curse_venom_hpmod");
+		max_mod = g_balance_curse_venom_hpmod;
 		if (self.runes & RUNE_REGEN) // do we have both rune/curse?
-			rot_mod = cvar("g_balance_rune_regen_combo_rotrate");
+			rot_mod = g_balance_rune_regen_combo_rotrate;
 		else
-			rot_mod = cvar("g_balance_curse_venom_rotrate");
-		limit_mod = cvar("g_balance_curse_venom_limitmod");
+			rot_mod = g_balance_curse_venom_rotrate;
+		limit_mod = g_balance_curse_venom_limitmod;
 		//if (!self.runes & RUNE_REGEN)
-		//	rot_mod = cvar("g_balance_curse_venom_rotrate");
+		//	rot_mod = g_balance_curse_venom_rotrate;
 	}
 	maxh = maxh * max_mod;
 	//maxa = maxa * max_mod;
@@ -2002,10 +2045,10 @@ void player_regen (void)
 	if(g_lms)
 		rot_mod = 0;
 
-	if (!g_minstagib && (!g_lms || cvar("g_lms_regenerate")))
+	if (!g_minstagib && (!g_lms || g_lms_regenerate))
 	{
-		self.armorvalue = CalcRotRegen(self.armorvalue, mina, cvar("g_balance_armor_regen"), cvar("g_balance_armor_regenlinear"), regen_mod * frametime * (time > self.pauseregen_finished), maxa, cvar("g_balance_armor_rot"), cvar("g_balance_armor_rotlinear"), rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
-		self.health = CalcRotRegen(self.health, minh, cvar("g_balance_health_regen"), cvar("g_balance_health_regenlinear"), regen_mod * frametime * (time > self.pauseregen_finished), maxh, cvar("g_balance_health_rot"), cvar("g_balance_health_rotlinear"), rot_mod * frametime * (time > self.pauserothealth_finished), limith);
+		self.armorvalue = CalcRotRegen(self.armorvalue, mina, g_balance_armor_regen, g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, g_balance_armor_rot, g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
+		self.health = CalcRotRegen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
 
 		// if player rotted to death...  die!
 		if(self.health < 1)
@@ -2013,7 +2056,7 @@ void player_regen (void)
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, cvar("g_balance_fuel_regen"), cvar("g_balance_fuel_regenlinear"), regen_mod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), maxf, cvar("g_balance_fuel_rot"), cvar("g_balance_fuel_rotlinear"), rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, g_balance_fuel_regen, g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), maxf, g_balance_fuel_rot, g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
 }
 
 float zoomstate_set;
@@ -2175,9 +2218,9 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(isJoinAllowed()) {
-		if(!teams_matter || g_campaign || cvar("g_balance_teams") || (self.wasplayer && cvar("g_changeteam_banned"))) {
+		if(!teams_matter || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned)) {
 			self.classname = "player";
-			if(g_campaign || cvar("g_balance_teams") || cvar("g_balance_teams_force"))
+			if(g_campaign || g_balance_teams || g_balance_teams_force)
 				JoinBestTeam(self, FALSE, TRUE);
 			if(g_campaign)
 				campaign_bots_may_start = 1;
@@ -2205,7 +2248,7 @@ void LeaveSpectatorMode()
  * @return bool TRUE if the player is allowed to join, false otherwise
  */
 float isJoinAllowed() {
-	if (!cvar("g_maxplayers"))
+	if (!g_maxplayers)
 		return TRUE;
 
 	local entity e;
@@ -2214,7 +2257,7 @@ float isJoinAllowed() {
 		if(e.classname == "player")
 			currentlyPlaying += 1;
 	}
-	if(currentlyPlaying < cvar("g_maxplayers"))
+	if(currentlyPlaying < g_maxplayers)
 		return TRUE;
 
 	return FALSE;
@@ -2226,7 +2269,7 @@ float isJoinAllowed() {
  */
 void checkSpectatorBlock() {
 	if(self.classname == "spectator" || self.classname == "observer") {
-		if( time > (self.spectatortime + cvar("g_maxplayers_spectator_blocktime")) ) {
+		if( time > (self.spectatortime + g_maxplayers_spectator_blocktime) ) {
 			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
 			dropclient(self);
 		}
@@ -2361,7 +2404,7 @@ void PlayerPreThink (void)
 {
 	self.stat_game_starttime = game_starttime;
 	self.stat_allow_oldnexbeam = g_allow_oldnexbeam;
-	self.stat_leadlimit = cvar("leadlimit");
+	self.stat_leadlimit = leadlimit;
 
 	if(blockSpectators && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
@@ -2523,7 +2566,7 @@ void PlayerPreThink (void)
 			}
 		}
 
-		if(g_lms && !self.deadflag && cvar("g_lms_campcheck_interval"))
+		if(g_lms && !self.deadflag && g_lms_campcheck_interval)
 		{
 			vector dist;
 
@@ -2534,21 +2577,21 @@ void PlayerPreThink (void)
 
 			if((g_campaign && !campaign_bots_may_start) || (time < game_starttime))
 			{
-				self.lms_nextcheck = time + cvar("g_lms_campcheck_interval")*2;
+				self.lms_nextcheck = time + g_lms_campcheck_interval*2;
 				self.lms_traveled_distance = 0;
 			}
 
 			if(time > self.lms_nextcheck)
 			{
 				//sprint(self, "distance: ", ftos(self.lms_traveled_distance), "\n");
-				if(self.lms_traveled_distance < cvar("g_lms_campcheck_distance"))
+				if(self.lms_traveled_distance < g_lms_campcheck_distance)
 				{
 					centerprint(self, cvar_string("g_lms_campcheck_message"));
 					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
 					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					Damage(self, self, self, bound(0, cvar("g_lms_campcheck_damage"), self.health + self.armorvalue * g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
+					Damage(self, self, self, bound(0, g_lms_campcheck_damage, self.health + self.armorvalue * g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
 				}
-				self.lms_nextcheck = time + cvar("g_lms_campcheck_interval");
+				self.lms_nextcheck = time + g_lms_campcheck_interval;
 				self.lms_traveled_distance = 0;
 			}
 		}
@@ -2968,4 +3011,58 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_teamdamage_resetspeed);
 	CACHE_CVAR(g_allow_oldnexbeam);
 	CACHE_CVAR(g_forced_respawn);
+	CACHE_CVAR(g_balance_armor_limit);
+	CACHE_CVAR(g_balance_armor_regen);
+	CACHE_CVAR(g_balance_armor_regenlinear);
+	CACHE_CVAR(g_balance_armor_regenstable);
+	CACHE_CVAR(g_balance_armor_rot);
+	CACHE_CVAR(g_balance_armor_rotlinear);
+	CACHE_CVAR(g_balance_armor_rotstable);
+	CACHE_CVAR(g_balance_curse_venom_hpmod);
+	CACHE_CVAR(g_balance_curse_venom_limitmod);
+	CACHE_CVAR(g_balance_curse_venom_rotrate);
+	CACHE_CVAR(g_balance_fuel_limit);
+	CACHE_CVAR(g_balance_fuel_regen);
+	CACHE_CVAR(g_balance_fuel_regenlinear);
+	CACHE_CVAR(g_balance_fuel_regenstable);
+	CACHE_CVAR(g_balance_fuel_rot);
+	CACHE_CVAR(g_balance_fuel_rotlinear);
+	CACHE_CVAR(g_balance_fuel_rotstable);
+	CACHE_CVAR(g_balance_health_limit);
+	CACHE_CVAR(g_balance_health_regen);
+	CACHE_CVAR(g_balance_health_regenlinear);
+	CACHE_CVAR(g_balance_health_regenstable);
+	CACHE_CVAR(g_balance_health_rot);
+	CACHE_CVAR(g_balance_health_rotlinear);
+	CACHE_CVAR(g_balance_health_rotstable);
+	CACHE_CVAR(g_balance_kill_delay);
+	CACHE_CVAR(g_balance_pause_armor_rot_spawn);
+	CACHE_CVAR(g_balance_pause_fuel_rot_spawn);
+	CACHE_CVAR(g_balance_pause_health_regen_spawn);
+	CACHE_CVAR(g_balance_pause_health_rot_spawn);
+	CACHE_CVAR(g_balance_rune_regen_combo_hpmod);
+	CACHE_CVAR(g_balance_rune_regen_combo_limitmod);
+	CACHE_CVAR(g_balance_rune_regen_combo_regenrate);
+	CACHE_CVAR(g_balance_rune_regen_combo_rotrate);
+	CACHE_CVAR(g_balance_rune_regen_hpmod);
+	CACHE_CVAR(g_balance_rune_regen_limitmod);
+	CACHE_CVAR(g_balance_rune_regen_regenrate);
+	CACHE_CVAR(g_changeteam_banned);
+	CACHE_CVAR(g_fullbrightplayers);
+	CACHE_CVAR(g_hitplots);
+	CACHE_CVAR(g_jetpack_attenuation);
+	CACHE_CVAR(g_lms_campcheck_damage);
+	CACHE_CVAR(g_lms_campcheck_distance);
+	CACHE_CVAR(g_lms_campcheck_interval);
+	CACHE_CVAR(g_lms_regenerate);
+	CACHE_CVAR(g_maxplayers);
+	CACHE_CVAR(g_maxplayers_spectator_blocktime);
+	CACHE_CVAR(g_midair_shieldtime);
+	CACHE_CVAR(g_player_brightness);
+	CACHE_CVAR(g_spawnshieldtime);
+	CACHE_CVAR(g_spawnsound);
+	CACHE_CVAR(leadlimit);
+	CACHE_CVAR(sv_spectate);
+	CACHE_CVAR(sv_timeout);
+	CACHE_CVAR(sv_timeout_number);
 }

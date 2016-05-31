@@ -611,13 +611,11 @@ void readlevelcvars(void)
 
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void RegisterWeapons();
 void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void Damage_ReadCvars();
-void Client_ReadCvars();
 void spawnfunc_worldspawn (void)
 {
 	float fd, l, i, j, n;
@@ -739,6 +737,7 @@ void spawnfunc_worldspawn (void)
 	GrappleHookInit();
 	Damage_ReadCvars();
 	Client_ReadCvars();
+	Teamplay_ReadCvars();
 	Akimbo_Init();
 	bot_init();
 	runematch_init();

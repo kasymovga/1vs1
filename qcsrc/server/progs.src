@@ -61,6 +61,8 @@ w_rocketlauncher.qh
 ../common/cl_physics.qh
 cl_physics.qh
 
+cl_client.qh
+
 scores_rules.qc
 
 miscfunctions.qc

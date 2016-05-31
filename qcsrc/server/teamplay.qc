@@ -1,3 +1,7 @@
+float g_balance_teams;
+float g_balance_teams_force;
+float g_balance_teams_prevent_imbalance;
+
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
@@ -16,7 +20,7 @@ float IsTeamBalanceForced()
 		return 0;
 	if(g_campaign)
 		return 0;
-	if(!cvar("g_balance_teams_force"))
+	if(!g_balance_teams_force)
 		return -1;
 	return 1;
 }
@@ -1014,7 +1018,7 @@ void SV_ChangeTeam(float _color)
 		return;
 	}
 
-	if(cvar("g_balance_teams_prevent_imbalance"))
+	if(g_balance_teams_prevent_imbalance)
 	{
 		// only allow changing to a smaller or equal size team
 
@@ -1352,4 +1356,11 @@ void tdm_delayedinit()
 void tdm_init()
 {
 	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
+};
+
+void Teamplay_ReadCvars()
+{
+	CACHE_CVAR(g_balance_teams);
+	CACHE_CVAR(g_balance_teams_force);
+	CACHE_CVAR(g_balance_teams_prevent_imbalance);
 };

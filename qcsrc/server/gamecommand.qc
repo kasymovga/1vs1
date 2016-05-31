@@ -1060,6 +1060,8 @@ void GameCommand(string command)
 			PhysicClientInit(plr);
 		}
 		bot_init();
+		Client_ReadCvars();
+		Teamplay_ReadCvars();
 		return;
 	}
 
