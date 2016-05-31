@@ -15,8 +15,25 @@ float	CURSE_VENOM	= 32768;
 float	CURSE_SLOW	= 65536;
 float	CURSE_EMPATHY	= 131072;
 float	CURSE_LAST	= 131072;
+float	CURSE_NONE	= 262144;
 
 float RUNE_COUNT = 5;
+
+float g_runematch_allow_same;
+float g_runematch_curses;
+float g_runematch_drop_runes_max;
+float g_runematch_frags_killedby_runeholder;
+float g_runematch_frags_killed_runeholder;
+float g_runematch_frags_norune;
+float g_runematch_pointamt;
+float g_runematch_pointrate;
+float g_runematch_respawntime;
+float g_runematch_rune_alpha;
+float g_runematch_rune_color_strength;
+float g_runematch_rune_effects;
+//float g_runematch_rune_glow_color;
+//float g_runematch_rune_glow_size;
+float g_runematch_shuffletime;
 
 /* rune ideas:
 
@@ -36,7 +53,7 @@ spawn point for runes in runematch
 
 void spawnfunc_runematch_spawn_point()
 {
-	if(!g_runematch || !cvar("g_runematch_fixedspawns"))
+	if(!(g_runematch || g_runes) || !cvar("g_runematch_fixedspawns"))
 	{
 		remove(self);
 		return;
@@ -156,7 +173,7 @@ vector RuneColormod(float r)
 	if(r == CURSE_EMPATHY)
 		_color = '179 0 204';//'128 0 255';
 
-	return _color * (1 / 255) * cvar("g_runematch_rune_color_strength");
+	return _color * (1 / 255) * g_runematch_rune_color_strength;
 }
 
 void rune_respawn();
@@ -243,7 +260,7 @@ void rune_respawn()
 		self.solid = SOLID_TRIGGER;
 		self.touch = rune_touch;
 		self.think = rune_respawn;
-		self.nextthink = time + cvar("g_runematch_shuffletime");//30 + random()*5; // fixme: cvar
+		self.nextthink = time + g_runematch_shuffletime;//30 + random()*5; // fixme: cvar
 	}
 	else
 	{
@@ -297,7 +314,7 @@ void DropRune(entity pl, entity e)
 	e.solid = SOLID_TRIGGER;
 	// reposition itself if not picked up soon
 	e.think = rune_respawn;
-	e.nextthink = time + cvar("g_runematch_respawntime");//15 + random()*5; // fixme: cvar
+	e.nextthink = time + g_runematch_respawntime;//15 + random()*5; // fixme: cvar
 	e.touch = rune_touch;
 
 	pl.runes = pl.runes - (pl.runes & (e.runes | e.enemy.runes));
@@ -337,7 +354,7 @@ float RuneMatchesCurse(float r, float c)
 void DropAllRunes(entity pl)
 {
 	entity rune, curse;
-	float rcount, ccount, r, c, rand, prevent_same, numtodrop, tries;
+	float rcount, ccount, r, c, rand, numtodrop, tries;
 
 	entity curse1, rune1, curse2, rune2;
 
@@ -358,8 +375,7 @@ void DropAllRunes(entity pl)
 		curse = find(curse, classname, "curse");
 	}
 
-	numtodrop = cvar("g_runematch_drop_runes_max");
-	prevent_same = !cvar("g_runematch_allow_same");
+	numtodrop = g_runematch_drop_runes_max;
 
 	rune = curse = world;
 	do
@@ -373,7 +389,7 @@ void DropAllRunes(entity pl)
 
 		// find a random curse
 		tries = 15;
-		if(ccount > 1 && prevent_same)
+		if(ccount > 1 && !g_runematch_allow_same)
 		{
 			// avoid pairing runes and curses that match each other
 			do{
@@ -440,7 +456,7 @@ void rune_reset()
 
 void spawn_runes()
 {
-	float rn, cs, runes_used, curses_used, prevent_same, numrunes;
+	float rn, cs, runes_used, curses_used, numrunes;
 	entity e;
 
 	if(self)
@@ -452,7 +468,6 @@ void spawn_runes()
 	runes_used  = 0;
 	curses_used = 0;
 
-	prevent_same = !cvar("g_runematch_allow_same");
 	numrunes = RUNE_COUNT;
 
 	while(numrunes > 0)
@@ -463,12 +478,15 @@ void spawn_runes()
 				RandomSelection_Add(world, rn, string_null, 1, 1);
 		rn = RandomSelection_chosen_float;
 
-		RandomSelection_Init();
-		for(cs = CURSE_FIRST; cs <= CURSE_LAST; cs *= 2)
-			if not(curses_used & cs)
-				if not(prevent_same && cs == RuneMatchesCurse(rn, cs))
-					RandomSelection_Add(world, cs, string_null, 1, 1);
-		cs = RandomSelection_chosen_float;
+		if (g_runematch_curses) {
+			RandomSelection_Init();
+			for(cs = CURSE_FIRST; cs <= CURSE_LAST; cs *= 2)
+				if not(curses_used & cs)
+					if not(!g_runematch_allow_same && cs == RuneMatchesCurse(rn, cs))
+						RandomSelection_Add(world, cs, string_null, 1, 1);
+			cs = RandomSelection_chosen_float;
+		} else
+			cs = CURSE_NONE;
 
 		if(!rn || !cs)
 			error("No rune/curse left");
@@ -501,11 +519,11 @@ void spawn_runes()
 		e.colormod = RuneColormod(rn);
 		e.enemy.colormod = RuneColormod(cs);
 
-		e.alpha = e.enemy.alpha = cvar("g_runematch_rune_alpha");//0.78;
-		e.effects = e.enemy.effects = cvar("g_runematch_rune_effects") | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
+		e.alpha = e.enemy.alpha = g_runematch_rune_alpha;//0.78;
+		e.effects = e.enemy.effects = g_runematch_rune_effects | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
 
-		//e.glow_size = e.enemy.glow_size = cvar("g_runematch_rune_glow_size");
-		//e.glow_color = e.enemy.glow_color = cvar("g_runematch_rune_glow_color");
+		//e.glow_size = e.enemy.glow_size = g_runematch_rune_glow_size;
+		//e.glow_color = e.enemy.glow_color = g_runematch_rune_glow_color;
 
 		//rn = RUNE_FIRST;
 		//cs = CURSE_FIRST;
@@ -517,7 +535,24 @@ void spawn_runes()
 void runematch_init()
 {
 	if(!g_runematch)
+	if(!g_runes)
 		return;
+
+	CACHE_CVAR(g_runematch_allow_same);
+	CACHE_CVAR(g_runematch_curses);
+	CACHE_CVAR(g_runematch_drop_runes_max);
+	CACHE_CVAR(g_runematch_frags_killedby_runeholder);
+	CACHE_CVAR(g_runematch_frags_killed_runeholder);
+	CACHE_CVAR(g_runematch_frags_norune);
+	CACHE_CVAR(g_runematch_pointamt);
+	CACHE_CVAR(g_runematch_pointrate);
+	CACHE_CVAR(g_runematch_respawntime);
+	CACHE_CVAR(g_runematch_rune_alpha);
+	CACHE_CVAR(g_runematch_rune_color_strength);
+	CACHE_CVAR(g_runematch_rune_effects);
+	//CACHE_CVAR(g_runematch_rune_glow_color);
+	//CACHE_CVAR(g_runematch_rune_glow_size);
+	CACHE_CVAR(g_runematch_shuffletime);
 
 	entity e;
 	e = spawn();
@@ -533,7 +568,7 @@ void RuneMatchGivePoints()
 {
 	entity rune;
 
-	if(!g_runematch || !cvar("g_runematch_pointamt"))
+	if(!g_runematch || !g_runematch_pointamt)
 		return;
 
 	if(gameover)
@@ -542,7 +577,7 @@ void RuneMatchGivePoints()
 	if(runematch_point_time > time)
 		return;
 
-	runematch_point_time = time + cvar("g_runematch_pointrate");
+	runematch_point_time = time + g_runematch_pointrate;
 
 	rune = world;
 	do
@@ -553,7 +588,7 @@ void RuneMatchGivePoints()
 
 		if(rune.owner.classname == "player")
 		{
-			UpdateFrags(rune.owner, cvar("g_runematch_pointamt"));
+			UpdateFrags(rune.owner, g_runematch_pointamt);
 		}
 	}while(rune);
 }
@@ -586,15 +621,15 @@ float RunematchHandleFrags(entity attacker, entity targ, float f)
 	}
 
 	if(!arunes && !trunes)
-		return f - 1 + cvar("g_runematch_frags_norune"); // don't give points to players when no runes are involved.
+		return f - 1 + g_runematch_frags_norune; // don't give points to players when no runes are involved.
 
 	if(arunes)
 	{	// got a kill while holding runes
-		newfrags = newfrags + cvar("g_runematch_frags_killedby_runeholder");//5;
+		newfrags = newfrags + g_runematch_frags_killedby_runeholder;//5;
 	}
 	if(trunes)
 	{	// killed an enemy holding runes
-		newfrags = newfrags + cvar("g_runematch_frags_killed_runeholder");//5;
+		newfrags = newfrags + g_runematch_frags_killed_runeholder;//5;
 	}
 	if(newfrags)
 		f = f - 1 + newfrags;

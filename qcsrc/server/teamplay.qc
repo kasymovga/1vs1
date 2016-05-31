@@ -269,7 +269,6 @@ void InitGameplayMode()
 			ActivateTeamplay();
 		fraglimit_override = cvar("g_runematch_point_limit");
 		leadlimit_override = cvar("g_runematch_point_leadlimit");
-		runematch_init();
 	}
 
 	if(g_lms)

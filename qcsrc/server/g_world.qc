@@ -574,6 +574,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_vampire);
 	CACHE_CVAR(g_bloodloss);
+	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_spectatorsareidle);
 	CACHE_CVAR(g_ctf_reverse);
@@ -740,6 +741,7 @@ void spawnfunc_worldspawn (void)
 	Client_ReadCvars();
 	Akimbo_Init();
 	bot_init();
+	runematch_init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");

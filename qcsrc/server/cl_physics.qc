@@ -67,19 +67,16 @@ void Physic_CheckWaterJumpHook()
 float Physic_JumpVelocityFactor()
 {
 	float jumpvelocity_factor = 1;
-	if(g_runematch)
+	if(self.runes & RUNE_SPEED)
 	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				jumpvelocity_factor = g_balance_rune_speed_combo_jumpheight;
-			else
-				jumpvelocity_factor = g_balance_rune_speed_jumpheight;
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			jumpvelocity_factor = g_balance_curse_slow_jumpheight;
-		}
+		if(self.runes & CURSE_SLOW)
+			jumpvelocity_factor = g_balance_rune_speed_combo_jumpheight;
+		else
+			jumpvelocity_factor = g_balance_rune_speed_jumpheight;
+	}
+	else if(self.runes & CURSE_SLOW)
+	{
+		jumpvelocity_factor = g_balance_curse_slow_jumpheight;
 	}
 
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
@@ -191,18 +188,15 @@ float Physic_MaxSpeedMod()
 {
 	float maxspd_mod = 1, spd;
 	string temps;
-	if(g_runematch)
+	if(self.runes & RUNE_SPEED)
 	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				maxspd_mod = maxspd_mod * g_balance_rune_speed_combo_moverate;
-			else
-				maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
-		}
-		else if(self.runes & CURSE_SLOW)
-			maxspd_mod = maxspd_mod * g_balance_curse_slow_moverate;
+		if(self.runes & CURSE_SLOW)
+			maxspd_mod = maxspd_mod * g_balance_rune_speed_combo_moverate;
+		else
+			maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
 	}
+	else if(self.runes & CURSE_SLOW)
+		maxspd_mod = maxspd_mod * g_balance_curse_slow_moverate;
 
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 		maxspd_mod = maxspd_mod * g_minstagib_speed_moverate;
