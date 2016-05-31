@@ -1,6 +1,8 @@
 float g_balance_teams;
 float g_balance_teams_force;
 float g_balance_teams_prevent_imbalance;
+float g_changeteam_banned;
+float bot_vs_human;
 
 string cache_mutatormsg;
 string cache_lastmutatormsg;
@@ -685,9 +687,9 @@ void CheckAllowedTeams (entity for_whom)
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
 	if(c3==-1&&c4==-1)
-	if(cvar("bot_vs_human") && for_whom)
+	if(bot_vs_human && for_whom)
 	{
-		if(cvar("bot_vs_human") > 0)
+		if(bot_vs_human > 0)
 		{
 			// bots are all blue
 			if(clienttype(for_whom) == CLIENTTYPE_BOT)
@@ -789,7 +791,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0)
 		totalteams = totalteams + 1;
 
-	if(cvar("bot_vs_human"))
+	if(bot_vs_human)
 		totalteams += 1;
 
 	if(totalteams <= 1)
@@ -1012,7 +1014,7 @@ void SV_ChangeTeam(float _color)
 		return; // changing teams is not allowed
 	}
 
-	if(cvar("g_changeteam_banned") && self.wasplayer)
+	if(g_changeteam_banned && self.wasplayer)
 	{
 		sprint(self, "Team changes not allowed\n");
 		return;
@@ -1363,4 +1365,6 @@ void Teamplay_ReadCvars()
 	CACHE_CVAR(g_balance_teams);
 	CACHE_CVAR(g_balance_teams_force);
 	CACHE_CVAR(g_balance_teams_prevent_imbalance);
+	CACHE_CVAR(g_changeteam_banned);
+	CACHE_CVAR(bot_vs_human);
 };
