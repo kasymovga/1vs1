@@ -3,17 +3,15 @@
 Domination as a plugin for netquake mods
 by LordHavoc (lordhavoc@ghdigital.com)
 
-How to add domination points to a mod:
-1. Add this line to progs.src above world.qc:
-domination.qc
-2. Comment out all lines in ClientObituary in client.qc that begin with targ.frags  or attacker.frags.
-3. Add this above spawnfunc_worldspawn in world.qc:
-void() dom_init;
-4. Add this line to the end of spawnfunc_worldspawn in world.qc:
-dom_init();
-
-Note: The only teams who can use dom control points are identified by spawnfunc_dom_team entities (if none exist these default to red and blue and use only quake models/sounds).
 */
+
+float g_domination_default_teams;
+float g_domination_point_amt;
+float g_domination_point_capturetime;
+float g_domination_point_fullbright;
+float g_domination_point_glow;
+float g_domination_point_rate;
+float g_domination_teams_override;
 
 #define DOMPOINTFRAGS frags
 
@@ -26,7 +24,7 @@ void() dom_controlpoint_setup;
 void LogDom(string mode, float team_before, entity actor)
 {
 	string s;
-	if(!cvar("sv_eventlog"))
+	if(!sv_eventlog)
 		return;
 	s = strcat(":dom:", mode);
 	s = strcat(s, ":", ftos(team_before));
@@ -77,11 +75,11 @@ void dompoint_captured ()
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
-	//self.nextthink = time + cvar("g_domination_point_rate");
+	//self.nextthink = time + g_domination_point_rate;
 	//self.think = dompointthink;
 
-	if(cvar("g_domination_point_rate"))
-		self.delay = time + cvar("g_domination_point_rate");
+	if(g_domination_point_rate)
+		self.delay = time + g_domination_point_rate;
 	else
 		self.delay = time + self.wait;
 
@@ -146,7 +144,7 @@ void dompointthink()
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
-	waittime = cvar("g_domination_point_rate");
+	waittime = g_domination_point_rate;
 	if(!waittime)
 		waittime = self.wait;
 	self.delay = time + waittime;
@@ -155,7 +153,7 @@ void dompointthink()
 	// NOTE: this defaults to 0
 	if (self.goalentity.netname != "")
 	{
-		fragamt = cvar("g_domination_point_amt");
+		fragamt = g_domination_point_amt;
 		if(!fragamt)
 			fragamt = self.DOMPOINTFRAGS;
 		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
@@ -199,8 +197,8 @@ void dompointtouch()
 	self.dmg_inflictor = other;
 
 	// self.state = 1;
-	// self.delay = time + cvar("g_domination_point_capturetime");
-	//self.nextthink = time + cvar("g_domination_point_capturetime");
+	// self.delay = time + g_domination_point_capturetime;
+	//self.nextthink = time + g_domination_point_capturetime;
 	//self.think = dompoint_captured;
 
 	// go to neutral team in the mean time
@@ -252,7 +250,7 @@ Keys:
 
 void spawnfunc_dom_team()
 {
-	if(!g_domination || cvar("g_domination_teams_override") >= 2)
+	if(!g_domination || g_domination_teams_override >= 2)
 	{
 		remove(self);
 		return;
@@ -317,198 +315,6 @@ void dom_controlpoint_setup()
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
 };
 
-
-
-// player has joined game, get him on a team
-// depreciated
-/*void dom_player_join_team(entity pl)
-{
-	entity head;
-	float c1, c2, c3, c4, totalteams, smallestteam, smallestteam_count, selectedteam;
-	float balance_teams, force_balance, balance_type;
-
-	balance_teams = cvar("g_balance_teams");
-	balance_teams = cvar("g_balance_teams_force");
-
-	c1 = c2 = c3 = c4 = -1;
-	totalteams = 0;
-
-	// first find out what teams are allowed
-	head = find(world, classname, "dom_team");
-	while(head)
-	{
-		if(head.netname != "")
-		{
-			//if(head.team == pl.team)
-			//	selected = head;
-			if(head.team == COLOR_TEAM1)
-			{
-					c1 = 0;
-			}
-			if(head.team == COLOR_TEAM2)
-			{
-					c2 = 0;
-			}
-			if(head.team == COLOR_TEAM3)
-			{
-					c3 = 0;
-			}
-			if(head.team == COLOR_TEAM4)
-			{
-					c4 = 0;
-			}
-		}
-		head = find(head, classname, "dom_team");
-	}
-
-	// make sure there are at least 2 teams to join
-	if(c1 >= 0)
-		totalteams = totalteams + 1;
-	if(c2 >= 0)
-		totalteams = totalteams + 1;
-	if(c3 >= 0)
-		totalteams = totalteams + 1;
-	if(c4 >= 0)
-		totalteams = totalteams + 1;
-
-	if(totalteams <= 1)
-		error("dom_player_join_team: Too few teams available for domination\n");
-
-	// whichever teams that are available are set to 0 instead of -1
-
-	// if we don't care what team he ends up on, put him on whatever team he entered as.
-	// if he's not on a valid team, then put him on the smallest team
-	if(!balance_teams && !force_balance)
-	{
-		if(     c1 >= 0 && pl.team == COLOR_TEAM1)
-			selectedteam = pl.team;
-		else if(c2 >= 0 && pl.team == COLOR_TEAM2)
-			selectedteam = pl.team;
-		else if(c3 >= 0 && pl.team == COLOR_TEAM3)
-			selectedteam = pl.team;
-		else if(c4 >= 0 && pl.team == COLOR_TEAM4)
-			selectedteam = pl.team;
-		else
-			selectedteam = -1;
-		if(selectedteam > 0)
-		{
-			SetPlayerColors(pl, selectedteam - 1);
-			return;
-		}
-		// otherwise end up on the smallest team (handled below)
-	}
-
-	// now count how many players are on each team already
-
-	head = find(world, classname, "player");
-	while(head)
-	{
-		//if(head.netname != "")
-		{
-			if(head.team == COLOR_TEAM1)
-			{
-				if(c1 >= 0)
-					c1 = c1 + 1;
-			}
-			if(head.team == COLOR_TEAM2)
-			{
-				if(c2 >= 0)
-					c2 = c2 + 1;
-			}
-			if(head.team == COLOR_TEAM3)
-			{
-				if(c3 >= 0)
-					c3 = c3 + 1;
-			}
-			if(head.team == COLOR_TEAM4)
-			{
-				if(c4 >= 0)
-					c4 = c4 + 1;
-			}
-		}
-		head = find(head, classname, "player");
-	}
-
-	// c1...c4 now have counts of each team
-	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
-
-	smallestteam = 0;
-	smallestteam_count = 999;
-
-	// 2 gives priority to what team you're already on, 1 goes in order
-	balance_type = 1;
-
-	if(balance_type == 1)
-	{
-		if(c1 >= 0 && c1 < smallestteam_count)
-		{
-			smallestteam = 1;
-			smallestteam_count = c1;
-		}
-		if(c2 >= 0 && c2 < smallestteam_count)
-		{
-			smallestteam = 2;
-			smallestteam_count = c2;
-		}
-		if(c3 >= 0 && c3 < smallestteam_count)
-		{
-			smallestteam = 3;
-			smallestteam_count = c3;
-		}
-		if(c4 >= 0 && c4 < smallestteam_count)
-		{
-			smallestteam = 4;
-			smallestteam_count = c4;
-		}
-	}
-	else
-	{
-		if(c1 >= 0 && (c1 < smallestteam_count ||
-					(c1 == smallestteam_count && self.team == COLOR_TEAM1) ) )
-		{
-			smallestteam = 1;
-			smallestteam_count = c1;
-		}
-		if(c2 >= 0 && c2 < (c2 < smallestteam_count ||
-					(c2 == smallestteam_count && self.team == COLOR_TEAM2) ) )
-		{
-			smallestteam = 2;
-			smallestteam_count = c2;
-		}
-		if(c3 >= 0 && c3 < (c3 < smallestteam_count ||
-					(c3 == smallestteam_count && self.team == COLOR_TEAM3) ) )
-		{
-			smallestteam = 3;
-			smallestteam_count = c3;
-		}
-		if(c4 >= 0 && c4 < (c4 < smallestteam_count ||
-					(c4 == smallestteam_count && self.team == COLOR_TEAM4) ) )
-		{
-			smallestteam = 4;
-			smallestteam_count = c4;
-		}
-	}
-
-	if(smallestteam == 1)
-	{
-		selectedteam = COLOR_TEAM1 - 1;
-	}
-	if(smallestteam == 2)
-	{
-		selectedteam = COLOR_TEAM2 - 1;
-	}
-	if(smallestteam == 3)
-	{
-		selectedteam = COLOR_TEAM3 - 1;
-	}
-	if(smallestteam == 4)
-	{
-		selectedteam = COLOR_TEAM4 - 1;
-	}
-
-	SetPlayerColors(pl, selectedteam);
-}
-*/
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
 Control point for Domination gameplay.
 */
@@ -527,9 +333,9 @@ void spawnfunc_dom_controlpoint()
 		self.scale = 0.6;
 
 	//if(!self.glow_size)
-	//	self.glow_size = cvar("g_domination_point_glow");
+	//	self.glow_size = g_domination_point_glow;
 	self.effects = self.effects | EF_LOWPRECISION;
-	if (cvar("g_domination_point_fullbright"))
+	if (g_domination_point_fullbright)
 		self.effects |= EF_FULLBRIGHT;
 };
 
@@ -578,10 +384,10 @@ void dom_spawnpoint(vector org)
 void dom_spawnteams()
 {
 	float numteams;
-	if(cvar("g_domination_teams_override") < 2)
-		numteams = cvar("g_domination_default_teams");
+	if(g_domination_teams_override < 2)
+		numteams = g_domination_default_teams;
 	else
-		numteams = cvar("g_domination_teams_override");
+		numteams = g_domination_teams_override;
 	// LordHavoc: edit this if you want to change defaults
 	dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
 	dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
@@ -597,7 +403,7 @@ void dom_delayedinit()
 	local entity head;
 
 	// if no teams are found, spawn defaults, if custom teams are set, use them
-	if (find(world, classname, "dom_team") == world || cvar("g_domination_teams_override") >= 2)
+	if (find(world, classname, "dom_team") == world || g_domination_teams_override >= 2)
 		dom_spawnteams();
 	// if no control points are found, spawn defaults
 	if (find(world, classname, "dom_controlpoint") == world)
@@ -626,6 +432,13 @@ void dom_delayedinit()
 
 void dom_init()
 {
+	CACHE_CVAR(g_domination_default_teams);
+	CACHE_CVAR(g_domination_point_amt);
+	CACHE_CVAR(g_domination_point_capturetime);
+	CACHE_CVAR(g_domination_point_fullbright);
+	CACHE_CVAR(g_domination_point_glow);
+	CACHE_CVAR(g_domination_point_rate);
+	CACHE_CVAR(g_domination_teams_override);
 	// we have to precache default models/sounds even if they might not be
 	// used because spawnfunc_worldspawn is executed before any other entities are read,
 	// so we don't even know yet if this map is set up for domination...
@@ -636,9 +449,5 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
-
-	// teamplay is always on in domination, defaults to hurt self but not teammates
-	//if(!teams_matter)
-	//	cvar_set("teamplay", "3");
 };
 
