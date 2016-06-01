@@ -7,7 +7,7 @@ by LordHavoc (lordhavoc@ghdigital.com)
 
 float g_domination_default_teams;
 float g_domination_point_amt;
-float g_domination_point_capturetime;
+//float g_domination_point_capturetime;
 float g_domination_point_fullbright;
 float g_domination_point_glow;
 float g_domination_point_rate;
@@ -434,7 +434,7 @@ void dom_init()
 {
 	CACHE_CVAR(g_domination_default_teams);
 	CACHE_CVAR(g_domination_point_amt);
-	CACHE_CVAR(g_domination_point_capturetime);
+	//CACHE_CVAR(g_domination_point_capturetime);
 	CACHE_CVAR(g_domination_point_fullbright);
 	CACHE_CVAR(g_domination_point_glow);
 	CACHE_CVAR(g_domination_point_rate);
