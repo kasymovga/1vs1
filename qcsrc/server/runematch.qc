@@ -248,8 +248,11 @@ void rune_touch()
 	//sprint(other, strcat(RuneName(self.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY)), "\n"));
 
 	bprint("^3", other.netname, "^7 has picked up ",
-		RuneName(self.runes & (RUNE_LAST*2-1)), "^7 and ");
-	bprint(RuneName(self.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY)), "\n");
+		RuneName(self.runes & (RUNE_LAST*2-1)), "^7");
+	float curses = self.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY);
+	if (curses)
+		bprint(" and ", RuneName(curses));
+	bprint("\n");
 }
 
 void rune_respawn()
@@ -325,8 +328,11 @@ void DropRune(entity pl, entity e)
 
 
 	bprint("^3", pl.netname, "^7 has lost ",
-		RuneName(e.runes & (RUNE_LAST*2-1)), "^7 and ");
-	bprint(RuneName(e.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY)), "\n");
+		RuneName(e.runes & (RUNE_LAST*2-1)), "^7");
+	float curses = e.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY);
+	if (curses)
+		bprint(" and ", RuneName(curses));
+	bprint("\n");
 }
 
 float RuneMatchesCurse(float r, float c)
