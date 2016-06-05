@@ -30,9 +30,9 @@ vector g_balance_rocketlauncher_projsize;
 
 void W_Rocket_Unregister()
 {
-	if(self.owner && self.owner.lastrocket == self)
+	if(self.owner && self.lastrocket.lastrocket == self)
 	{
-		self.owner.lastrocket = world;
+		self.lastrocket.lastrocket = world;
 		// self.owner.rl_release = 1;
 	}
 }
@@ -120,7 +120,7 @@ entity FindLaserTarget(entity e, float dist_variance, float dot_variance)
 void W_Rocket_RemoteExplode()
 {
 	if(self.owner.deadflag == DEAD_NO)
-	if(self.owner.lastrocket)
+	if(self.lastrocket.lastrocket)
 	{
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
@@ -236,7 +236,7 @@ void W_Rocket_Think (void)
 		}
 		else
 		{
-			if(self == self.owner.lastrocket)
+			if(self == self.lastrocket.lastrocket)
 			if(!self.owner.rl_release)
 			if(g_balance_rocketlauncher_guiderate)
 			if(time > self.pushltime)
@@ -323,8 +323,8 @@ void W_Rocket_Attack (void)
 
 	missile = spawn ();
 	missile.owner = Akimbo_Owner(self);
-	if (Akimbo_Active(self) < 2)
-		self.lastrocket = missile;
+	missile.lastrocket = self;
+	self.lastrocket = missile;
 	if(g_balance_rocketlauncher_detonatedelay >= 0)
 		missile.spawnshieldtime = time + g_balance_rocketlauncher_detonatedelay;
 	else
@@ -529,7 +529,7 @@ float w_rlauncher(float req)
 			if (self.BUTTON_ATCK2)
 			{
 				rockfound = 0;
-				for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.owner == self)
+				for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.lastrocket == self)
 				{
 					if(!rock.rl_detonate_later)
 					{
