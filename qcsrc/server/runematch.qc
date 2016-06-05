@@ -20,6 +20,7 @@ float	CURSE_NONE	= 262144;
 float RUNE_COUNT = 5;
 
 float g_runematch_allow_same;
+float g_runematch_carried_runes_max;
 float g_runematch_curses;
 float g_runematch_drop_runes_max;
 float g_runematch_frags_killedby_runeholder;
@@ -120,6 +121,16 @@ void rune_unmark_spot(entity e)
 		e.owner.owner = world;
 		e.owner = world;
 	}
+}
+
+float RunesCount(float r)
+{
+	float i, count = 0;
+	for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2)
+		if (r & i)
+			count++;
+
+	return count;
 }
 
 string RuneName(float r)
@@ -224,6 +235,9 @@ void rune_touch()
 		return;
 	if(self.wait > time)
 		return; // "notouch" time isn't finished
+
+	if (RunesCount(other.runes) >= g_runematch_carried_runes_max)
+		return;
 
 	// detach from the spawn point you're on
 	rune_unmark_spot(self);
@@ -545,6 +559,7 @@ void runematch_init()
 		return;
 
 	CACHE_CVAR(g_runematch_allow_same);
+	CACHE_CVAR(g_runematch_carried_runes_max);
 	CACHE_CVAR(g_runematch_curses);
 	CACHE_CVAR(g_runematch_drop_runes_max);
 	CACHE_CVAR(g_runematch_frags_killedby_runeholder);
