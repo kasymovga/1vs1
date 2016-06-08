@@ -131,25 +131,12 @@ vector w_shotdir;
 void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
-	local vector trueaimpoint;
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
 	oldsolid = ent.dphitcontentsmask;
 	entity ent_orig = ent;
 	ent = Akimbo_Owner(ent);
 	antilag_prepare(ent);
-	if(ent.weapon == WEP_CAMPINGRIFLE)
-		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	else
-		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	if(antilag)
-		traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-		// passing world, because we do NOT want it to touch dphitcontentsmask
-	else
-		traceline(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
-	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaimpoint = trace_endpos;
-
 	// Track max damage and set the stat to be sent later in g_world.qc
 	if not(inWarmupStage)
 	{
@@ -186,7 +173,24 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(trueaimpoint - w_shotorg);
+	if (Akimbo_Active(ent))
+		w_shotdir = s_forward;
+	else
+	{
+		local vector trueaimpoint;
+		if(ent.weapon == WEP_CAMPINGRIFLE)
+			ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		else
+			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		if(antilag)
+			traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+			// passing world, because we do NOT want it to touch dphitcontentsmask
+		else
+			traceline(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		trueaimpoint = trace_endpos;
+		w_shotdir = normalize(trueaimpoint - w_shotorg);
+	}
 
 	if (antilag)
 	{
