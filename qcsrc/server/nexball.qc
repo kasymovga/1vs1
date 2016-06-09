@@ -2,8 +2,7 @@
 #define BALL_EFFECTMASK 1229
 #define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
 #define BALL_MAXS '16 16 16'
-//#define BALL_ATTACHORG '3 0 16'
-#define BALL_ATTACHORG '30 0 16'
+#define BALL_ATTACHORG '10 0 10'
 #define BALL_POV '30 0 -16'
 #define BALL_SPRITECOLOR '.91 .85 .62'
 #define BALL_FOOT   1
@@ -207,7 +206,15 @@ void GiveBall (entity plyr, entity ball)
 		WaypointSprite_Kill(ball.waypointsprite_attachedforcarrier);
 	}
 
-	setattachment(ball, plyr, "");
+	float tag_found;
+	if((tag_found = gettagindex(plyr, "tag_weapon")))
+	{
+		ball.tag_index = tag_found;
+		ball.tag_entity = self.owner;
+	}
+	else
+		setattachment(ball, plyr, "bip01 r hand");
+
 	setorigin(ball, BALL_ATTACHORG);
 
 	plyr.pov_ball = spawn();
