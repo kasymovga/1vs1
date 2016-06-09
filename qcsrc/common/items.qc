@@ -27,6 +27,26 @@ void register_weapon_real(float id, float(float) func, float ammotype, float i, 
 #ifdef SVQC
 	e.model = strzone(strcat("models/weapons/g_", weapon_modelname(modelname), ".md3"));
 	e.mdl = strzone(weapon_modelname(modelname));
+
+	float animfile;
+	string animfilename = strcat("models/weapons/h_", e.mdl, ".dpm.animinfo");
+	animfile = fopen(animfilename, FILE_READ);
+	// preset some defaults that work great for renamed zym files (which don't need an animinfo)
+	e.anim_fire1  = '0 1 0.01';
+	e.anim_fire2  = '1 1 0.01';
+	e.anim_idle   = '2 1 0.01';
+	e.anim_reload = '3 1 0.01';
+	if (animfile >= 0)
+	{
+		animparseerror = FALSE;
+		e.anim_fire1  = animparseline(animfile);
+		e.anim_fire2  = animparseline(animfile);
+		e.anim_idle   = animparseline(animfile);
+		e.anim_reload = animparseline(animfile);
+		fclose(animfile);
+		if (animparseerror)
+			print("Parse error in ", animfilename, ", some player animations are broken\n");
+	}
 #else
 	e.mdl = modelname;
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
