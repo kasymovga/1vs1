@@ -23,35 +23,23 @@ float g_balance_shotgun_secondary_spread;
 void W_Shotgun_Attack (void)
 {
 	float	sc;
-	float	ammoamount;
-	float	bullets;
-	float	d;
-	float	f;
-	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
 	local entity flash;
 
-	ammoamount = g_balance_shotgun_primary_ammo;
-	bullets = g_balance_shotgun_primary_bullets;
-	d = g_balance_shotgun_primary_damage;
-	f = g_balance_shotgun_primary_force;
-	spread = g_balance_shotgun_primary_spread;
-	bulletspeed = g_balance_shotgun_primary_speed;
-	bulletconstant = g_balance_shotgun_primary_bulletconstant;
-
-	W_SetupShot (self, g_antilag_bullets && bulletspeed >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_damage);
-	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, g_balance_shotgun_primary_gravityfactor, bulletconstant);
+	W_SetupShot (self, g_antilag_bullets && g_balance_shotgun_primary_speed >= g_antilag_bullets,
+			5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_damage);
+	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
+		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
+				g_balance_shotgun_primary_damage, 0, g_balance_shotgun_primary_force,
+				WEP_SHOTGUN, 0, g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_shells = self.ammo_shells - ammoamount;
+		self.ammo_shells = self.ammo_shells - g_balance_shotgun_primary_ammo;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
 
 	// casing code
 	if (g_casings >= 1)
-		for (sc = 0;sc < ammoamount;sc = sc + 1)
+		for (sc = 0; sc < g_balance_shotgun_primary_ammo; sc = sc + 1)
 			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
 	// muzzle flash for 1st person view
@@ -67,35 +55,24 @@ void W_Shotgun_Attack (void)
 void W_Shotgun_Attack2 (void)
 {
 	float	sc;
-	float	ammoamount;
-	float	bullets;
-	float	d;
-	float	f;
-	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
 	local entity flash;
 
-	ammoamount = g_balance_shotgun_secondary_ammo;
-	bullets = g_balance_shotgun_secondary_bullets;
-	d = g_balance_shotgun_secondary_damage;
-	f = g_balance_shotgun_secondary_force;
-	spread = g_balance_shotgun_secondary_spread;
-	bulletspeed = g_balance_shotgun_secondary_speed;
-	bulletconstant = g_balance_shotgun_secondary_bulletconstant;
-
-	W_SetupShot (self, g_antilag_bullets && bulletspeed >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_damage);
-	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN | HITTYPE_SECONDARY, 0, g_balance_shotgun_primary_gravityfactor, bulletconstant);
+	W_SetupShot (self, g_antilag_bullets && g_balance_shotgun_secondary_speed >= g_antilag_bullets,
+			5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_damage);
+	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
+		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
+				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,
+				WEP_SHOTGUN | HITTYPE_SECONDARY, 0, g_balance_shotgun_secondary_gravityfactor,
+				g_balance_shotgun_secondary_bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_shells = self.ammo_shells - ammoamount;
+		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, g_balance_shotgun_secondary_ammo);
 
 	// casing code
 	if (g_casings >= 1)
-		for (sc = 0;sc < ammoamount;sc = sc + 1)
+		for (sc = 0; sc < g_balance_shotgun_secondary_ammo; sc = sc + 1)
 			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
 	flash = spawn();
