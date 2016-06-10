@@ -109,6 +109,7 @@ void Ent_DamageInfo(float isNew)
 					sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
 				break;
 			case WEP_SHOTGUN:
+			case WEP_SUPERSHOTGUN:
 				org2 = org + backoff * 2;
 				pointparticles(particleeffectnum("shotgun_impact"), org2, backoff * 1000, 1);
 				if(!issilent)

@@ -305,6 +305,7 @@ void Ent_Projectile()
 			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
+			case PROJECTILE_BULLET_BIG: setmodel(self, "models/tracer.mdl"); self.scale = 3; break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -357,6 +358,10 @@ void Ent_Projectile()
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = SUB_Null;
+				break;
+			case PROJECTILE_BULLET_BIG:
+				self.move_movetype = MOVETYPE_BOUNCEMISSILE;
 				self.move_touch = SUB_Null;
 				break;
 			default:

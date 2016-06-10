@@ -137,6 +137,21 @@ string W_FixWeaponOrder(string order, float complete)
 
 void RegisterWeapons()
 {
+#ifdef SVQC
+	if (cvar("nex252_compat_mode"))
+	{
+		WEPBIT_ALL = WEPBIT_ALL_STANDART;
+		WEP_LAST = WEP_LAST_STANDART;
+		WEP_LAST = WEP_LAST_STANDART;
+	}
+	else
+	{
+#endif
+		WEPBIT_ALL = WEPBIT_ALL_EXTRA;
+		WEP_LAST = WEP_LAST_EXTRA;
+#ifdef SVQC
+	}
+#endif
 	// %weaponaddpoint
 	register_weapon(WEP_LASER,            w_laser,        0,                1,  1, 1, WEP_TYPE_SPLASH,  0,                      "laser",        "laser",           "Laser");
 	register_weapon(WEP_SHOTGUN,          w_shotgun,      IT_SHELLS,        2,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW,  "shotgun",      "shotgun",         "Shotgun");
@@ -154,6 +169,10 @@ void RegisterWeapons()
 	register_weapon(WEP_TUBA,             w_tuba,         0,                1, -1, 0, WEP_TYPE_SPLASH,  BOT_PICKUP_RATING_MID,  "tuba",         "tuba",            "@!#%'n Tuba");
 	register_weapon(WEP_CAMPINGRIFLE,     w_campingrifle, IT_NAILS,         3,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "campingrifle", "campingrifle",    "Rifle");
 	register_weapon(WEP_FIREBALL,         w_fireball,     IT_ROCKETS,       9,  1, 0, WEP_TYPE_SPLASH,  BOT_PICKUP_RATING_MID,  "fireball",     "fireball",        "Fireball");
+#ifdef SVQC
+	if not(cvar("nex252_compat_mode"))
+#endif
+		register_weapon(WEP_SUPERSHOTGUN,     w_supershotgun, IT_SHELLS,        8,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "shotgun", "supershotgun",        "Shotgun");
 
 	register_weapons_done();
 }
