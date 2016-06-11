@@ -172,7 +172,7 @@ void RegisterWeapons()
 #ifdef SVQC
 	if not(cvar("nex252_compat_mode"))
 #endif
-		register_weapon(WEP_SUPERSHOTGUN,     w_supershotgun, IT_SHELLS,        8,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "shotgun", "supershotgun",        "Shotgun");
+		register_weapon(WEP_SUPERSHOTGUN,     w_supershotgun, IT_SHELLS,        8,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "supershotgun", "supershotgun",        "SuperShotgun");
 
 	register_weapons_done();
 }
