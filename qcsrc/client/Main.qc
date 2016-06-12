@@ -95,6 +95,13 @@ void CSQC_Init(void)
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 
+	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
+	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
+	registercvar("crosshair_supershotgun_color_blue", "0", CVAR_SAVE);
+	registercvar("crosshair_supershotgun_color_red", "1", CVAR_SAVE);
+	registercvar("crosshair_supershotgun_color_green", "0.5", CVAR_SAVE);
+	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
+
 #ifndef CAMERATEST
 	if(isdemo())
 	{
