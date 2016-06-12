@@ -56,6 +56,12 @@ void CSQC_Init(void)
 	}
 #pragma target FTE
 #endif
+	if (cvar_string("g_xonoticversion") != "")
+	{
+		print("Xonotic client detected\n");
+		registercvar("_supports_weaponpriority", "0");
+		cvar_clientsettemp("crosshair_per_weapon", "0");
+	}
 	
 	check_unacceptable_compiler_bugs();
 
@@ -300,7 +306,7 @@ void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\nsbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
+	localcmd(strcat("\ncl_cmd sbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
 
 	entity playerchecker;
 	playerchecker = spawn();
@@ -532,9 +538,11 @@ void GameCommand(string msg)
 		}
 		localcmd("sv_cmd debug_shotorg\n");
 	}
+	else if(cmd == "sendcvar") {
+	}
 	else
 	{
-		print("Invalid command. For a list of supported commands, try cl_cmd help.\n");
+		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}
 
 	return;
