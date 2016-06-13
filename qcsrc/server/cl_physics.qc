@@ -651,7 +651,7 @@ float Physic_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.owner.origin_x);
 		WriteCoord(MSG_ENTITY, self.owner.origin_y);
 		WriteCoord(MSG_ENTITY, self.owner.origin_z);
-		if (sf & 96)
+		if ((sf & 32) && (sf & 64))
 		{
 			WriteCoord(MSG_ENTITY, self.ladder_entity.speed);
 			WriteCoord(MSG_ENTITY, self.ladder_entity.watertype);
