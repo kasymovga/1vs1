@@ -547,6 +547,9 @@ void GameCommand(string msg)
 	}
 	else if(cmd == "sendcvar") {
 	}
+	else if(cmd == "handlevote") {
+		localcmd(strcat("cmd vote ", argv(1), "\n"));
+	}
 	else
 	{
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
