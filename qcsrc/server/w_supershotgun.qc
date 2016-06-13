@@ -206,7 +206,7 @@ float w_supershotgun(float req)
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_shells >= g_balance_supershotgun_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		w_deathtypestring = "used C++ and shot the leg out";
 	else if (req == WR_KILLMESSAGE)
 	{
 		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
