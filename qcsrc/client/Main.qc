@@ -60,6 +60,19 @@ void CSQC_Init(void)
 	{
 		print("Xonotic client detected\n");
 		registercvar("_supports_weaponpriority", "0");
+		registercvar("sbar_hudselector", "1", CVAR_SAVE);
+		registercvar("sbar_scoreboard_alpha_bg", "0.6", CVAR_SAVE);
+		registercvar("sbar_scoreboard_highlight", "1", CVAR_SAVE);
+		registercvar("sbar_border_thickness", "1", CVAR_SAVE);
+		registercvar("sbar_color_bg_r", "0", CVAR_SAVE);
+		registercvar("sbar_color_bg_g", "0.25", CVAR_SAVE);
+		registercvar("sbar_color_bg_b", "0.17", CVAR_SAVE);
+		registercvar("sbar_color_bg_team", "0.5", CVAR_SAVE);
+		cvar_set("sbar_alpha_bg", cvar_string("hud_panel_bg_alpha"));
+		cvar_set("sbar_alpha_fg", cvar_string("hud_panel_fg_alpha"));
+		cvar_set("sbar_hud_accuracy", cvar_string("hud_panel_weapons_accuracy"));
+		cvar_set("sbar_showcurrentammo", cvar_string("hud_panel_ammo_onlycurrent"));
+		cvar_set("sbar_increment_maptime", cvar_string("hud_panel_timer_increment"));
 		cvar_clientsettemp("crosshair_per_weapon", "0");
 	}
 	
