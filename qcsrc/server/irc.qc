@@ -2,6 +2,7 @@
  * Ported from RocketMinsta mod. https://github.com/nexAkari/RocketMinsta
  */
 entity irc;
+float irc_startup_time;
 
 float sv_ircbot_announce_bans;
 float sv_ircbot_announce_chat_from_bots;
@@ -11,6 +12,7 @@ float sv_ircbot_announce_gamestart;
 float sv_ircbot_announce_irc_joinparts;
 float sv_ircbot_announce_irc_nick;
 float sv_ircbot_announce_joinparts;
+float sv_ircbot_announce_joinparts_delay;
 float sv_ircbot_announce_joinparts_showgameinfo;
 float sv_ircbot_announce_joinparts_showip;
 float sv_ircbot_announce_name;
@@ -152,6 +154,7 @@ string IRC_DP2IRC_NoColors(string s) {
 
 void IRC_Init(void) {
     float s;
+	irc_startup_time = time;
     
     if(!cvar("sv_ircbot"))
         return;
@@ -173,6 +176,7 @@ void IRC_Init(void) {
 	CACHE_CVAR(sv_ircbot_announce_irc_joinparts);
 	CACHE_CVAR(sv_ircbot_announce_irc_nick);
 	CACHE_CVAR(sv_ircbot_announce_joinparts);
+	CACHE_CVAR(sv_ircbot_announce_joinparts_delay);
 	CACHE_CVAR(sv_ircbot_announce_joinparts_showgameinfo);
 	CACHE_CVAR(sv_ircbot_announce_joinparts_showip);
 	CACHE_CVAR(sv_ircbot_announce_name);
@@ -365,6 +369,9 @@ void IRC_Announce_Client_Callback(string ip, string cn, entity ctx) {
 
 void IRC_Announce_Client(entity plr, float ispart) {
     if(!sv_ircbot_announce_joinparts)
+        return;
+
+    if(time - irc_startup_time < sv_ircbot_announce_joinparts_delay)
         return;
     
     entity ctx = spawn();
