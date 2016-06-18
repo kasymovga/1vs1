@@ -609,7 +609,6 @@ void PutObserverInServer (void)
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
-	PlayerClear(FALSE, world);
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -1070,6 +1069,7 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
+	PlayerClear(FALSE, world);
 
 	//if(g_ctf)
 	//	ctf_playerchanged();
