@@ -80,7 +80,7 @@ void W_Melee_Attack ()
 float W_Melee_Possible()
 {
 	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
-	if (self.weapon != WEP_CAMPINGRIFLE)
+	if (self.weapon != WEP_CAMPINGRIFLE || g_balance_campingrifle_hotreload)
 	if (g_balance_melee || (self.weapon == WEP_LASER && (g_balance_laser_primary_melee || g_balance_laser_secondary_melee)))
 		return TRUE;
 	return FALSE;

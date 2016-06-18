@@ -1,1 +1,2 @@
 float g_balance_campingrifle_reloadtime;
+float g_balance_campingrifle_hotreload;
