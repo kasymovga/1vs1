@@ -1066,6 +1066,7 @@ void PutClientInServer (void)
 					ReadyRestartForce();
 			}
 		}
+		Freeze_SpawnHook();
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
@@ -1660,6 +1661,7 @@ void ClientDisconnect (void)
 		IRC_Announce_ClientDisconnect(self);
 		PhysicClientClear(self);
 	}
+	Freeze_PlayerClear(self);
 }
 
 .float BUTTON_CHAT;

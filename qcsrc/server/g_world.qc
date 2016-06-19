@@ -739,6 +739,7 @@ void spawnfunc_worldspawn (void)
 	Client_ReadCvars();
 	Teamplay_ReadCvars();
 	Akimbo_Init();
+	Freeze_Init();
 	bot_init();
 	runematch_init();
 

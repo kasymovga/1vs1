@@ -48,6 +48,8 @@ irc.qh
 
 akimbo.qh
 
+freeze.qh
+
 t_items.qh
 
 cl_weaponsystem.qh
@@ -191,3 +193,5 @@ irc.qc
 akimbo.qc
 
 info_messages.qc
+
+freeze.qc

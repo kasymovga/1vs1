@@ -1,0 +1,223 @@
+float freeze_active;
+float freeze_activate_time;
+float freeze_countdown_last;
+float freeze_winner_team;
+float g_tdm_freeze_enddelay;
+float g_tdm_freeze_slowdown;
+float g_tdm_freeze_startdelay;
+float g_tdm_freeze_unfroze_time;
+float sv_model_ice_scale;
+float sv_model_ice_z;
+float sv_model_ice_alpha;
+string ice_model;
+entity freeze_controller;
+.entity ice;
+.float unfroze_progress;
+
+void Freeze_Think()
+{
+	self.nextthink = time;
+	if (gameover)
+		return;
+	if (time < game_starttime)
+		return;
+	entity plr;
+	float team_alive, have_death_players;
+	if not(freeze_active)
+	{
+		if (time >= freeze_activate_time)
+		{
+			game_starttime = freeze_activate_time + g_tdm_freeze_startdelay;
+			freeze_countdown_last = 0;
+			reset_map(TRUE);
+			freeze_active = 1;
+			FOR_EACH_REALPLAYER(plr)
+				centerprint(plr, "^2Starting new round\n");
+			return;
+		}
+		else
+		{
+			FOR_EACH_REALPLAYER(plr)
+			{
+				float countdown = ceil(freeze_activate_time - time);
+				if (freeze_countdown_last != countdown)
+				{
+					string winner_message;
+					if (freeze_winner_team > 0)
+						winner_message = strcat(Team_ColorName(freeze_winner_team), " Team wins!");
+					else
+						winner_message = "";
+					centerprint(plr, strcat("^2Round finished!\n^2", winner_message, "\n^2Restarting in ", ftos(countdown), "\n"));
+					freeze_countdown_last = countdown;
+				}
+			}
+		}
+	}
+	team_alive = 0;
+	have_death_players = 0;
+    FOR_EACH_PLAYER(plr)
+    {
+        if (plr.deadflag == DEAD_FREEZE)
+		{
+			have_death_players = 1;
+			continue;
+		}
+		
+		if (team_alive > 0) {
+			if (plr.team != team_alive)
+			{
+				team_alive = -1;
+			}
+		}
+		else if not(team_alive)
+		{
+			team_alive = plr.team;
+		}
+    }
+	if not(freeze_active)
+		return;
+
+	if (team_alive > 0)
+		TeamScore_AddToTeam(team_alive, ST_SCORE, 10);
+	else if (team_alive < 0)
+		return;
+
+	if (have_death_players)
+	{
+		freeze_winner_team = team_alive;
+		freeze_active = 0;
+		freeze_activate_time = time + g_tdm_freeze_enddelay;
+	}
+}
+
+void Freeze_SpawnHook()
+{
+	if (freeze_active)
+		Freeze_DeathHandle();
+}
+
+void Freeze_IceThink()
+{
+	self.nextthink = time;
+	if (self.owner.deadflag != DEAD_FREEZE)
+	{
+		Freeze_PlayerClear(self.owner);
+		return;
+	}
+
+	if not(freeze_active)
+		return;
+
+	float oldprogress = self.unfroze_progress;
+	entity e;
+	FOR_EACH_PLAYER(e)
+	{
+		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO)
+			continue;
+
+		if (vlen(e.origin - self.owner.origin) < 100)
+		{
+			self.unfroze_progress += frametime;
+			if (clienttype(e) == CLIENTTYPE_REAL)
+				centerprint(e, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
+		}
+	}
+	if (self.unfroze_progress >= g_tdm_freeze_unfroze_time)
+	{
+		self.owner.deadflag = DEAD_NO;
+		return;
+	}
+
+	if (self.unfroze_progress == oldprogress)
+	if (oldprogress != 0)
+		self.unfroze_progress = min(0, oldprogress - frametime);
+
+	if (self.unfroze_progress != oldprogress)
+		self.alpha = sv_model_ice_alpha * max(0.01, (g_tdm_freeze_unfroze_time - self.unfroze_progress));
+}
+
+float Freeze_DeathHandle()
+{
+	if not(g_tdm)
+		return FALSE;
+
+	if not(g_tdm_freeze)
+		return FALSE;
+
+	if (self.deadflag == DEAD_FREEZE)
+		return TRUE;
+
+	self.deadflag = DEAD_FREEZE;
+	self.health = start_health;
+	self.ice = spawn();
+	self.ice.alpha = sv_model_ice_alpha;
+	self.ice.scale = sv_model_ice_scale;
+	self.ice.owner = self;
+	self.ice.think = Freeze_IceThink;
+	self.ice.nextthink = time;
+	self.ice.colormod = TeamColor(self.team);
+	WaypointSprite_AttachCarrier("helpme", self);
+	setattachment(self.ice, self, "");
+	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
+	setmodel(self.ice, ice_model);
+	return TRUE;
+}
+
+float Freeze_DamageHandle(float deathtype)
+{
+	if not(self.deadflag == DEAD_FREEZE)
+		return FALSE;
+
+	if (deathtype == DEATH_SLIME ||
+			deathtype == DEATH_LAVA ||
+			deathtype == DEATH_HURTTRIGGER)
+		PutClientInServer();
+
+	self.unfroze_progress = 0;
+
+	return TRUE;
+}
+
+void Freeze_PlayerClear(entity plr)
+{
+	if (plr.ice)
+		remove(plr.ice);
+	plr.ice = world;
+	WaypointSprite_DetachCarrier(plr);
+}
+
+void Freeze_Init()
+{
+	CACHE_CVAR(g_tdm_freeze);
+	CACHE_CVAR(g_tdm_freeze_enddelay);
+	CACHE_CVAR(g_tdm_freeze_slowdown);
+	CACHE_CVAR(g_tdm_freeze_startdelay);
+	CACHE_CVAR(g_tdm_freeze_unfroze_time);
+	CACHE_CVAR(sv_model_ice_alpha);
+	CACHE_CVAR(sv_model_ice_scale);
+	CACHE_CVAR(sv_model_ice_z);
+	if not(g_tdm)
+		return;
+	if not(g_tdm_freeze)
+		return;
+	freeze_active = 1;
+	freeze_controller = spawn();
+	freeze_controller.think = Freeze_Think;
+	freeze_controller.nextthink = time;
+	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
+	precache_model(ice_model);
+}
+
+float Freeze_SpeedMod() {
+	if (self.deadflag == DEAD_FREEZE)
+		return g_tdm_freeze_slowdown;
+
+	return 1;
+}
+
+float Freeze_JumpMod() {
+	if (self.deadflag == DEAD_FREEZE)
+		return g_tdm_freeze_slowdown;
+
+	return 1;
+}
