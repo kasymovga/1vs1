@@ -171,9 +171,6 @@ void CSQC_Init(void)
 		registercvar("crosshair_fireball_color_blue", "0.2", CVAR_SAVE);
 		registercvar("crosshair_fireball_color_alpha", "1", CVAR_SAVE);
 		registercvar("crosshair_fireball_size", "1", CVAR_SAVE);
-
-		if (cvar("crosshair") == 31)
-			cvar_clientsettemp("crosshair", "32");
 	}
 	
 	check_unacceptable_compiler_bugs();
