@@ -37,12 +37,6 @@ void W_Laser_Touch (void)
 
 void W_Laser_Attack (float issecondary)
 {
-	float ismelee = (issecondary ? g_balance_laser_secondary_melee : g_balance_laser_primary_melee);
-	if (ismelee)
-	{
-		W_Melee_Attack();
-		return;
-	}
 	local entity missile;
 	vector s_forward;
 	float a;
