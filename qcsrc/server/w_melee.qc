@@ -88,11 +88,14 @@ float W_Melee_Possible()
 
 void W_Melee_Attack_Check()
 {
+	float items_save = self.items;
+	self.items |= IT_UNLIMITED_WEAPON_AMMO;
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
 		W_Melee_Attack();
 		weapon_thinkf(WFRAME_MELEE, g_balance_melee_animtime, w_ready);
 	}
+	self.items = items_save;
 }
 
 void Melee_Init()
