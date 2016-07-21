@@ -175,7 +175,7 @@ void ImpulseCommands (void)
 	else if(imp >= 230 && imp <= 253)
 	{
 		if(self.deadflag == DEAD_NO)
-			W_SwitchWeapon (imp - 230 + WEP_FIRST);
+			W_SwitchWeapon (imp - 230 + WEP_FIRST - ((self.version <= 1000) ? 1 : 0));
 		else
 			self.impulse = imp; // retry in next frame
 	}
