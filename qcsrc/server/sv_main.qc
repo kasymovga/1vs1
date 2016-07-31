@@ -427,7 +427,10 @@ void SV_OnEntityPreSpawnFunction()
 
 	string repl = cvar_string(strcat("sv_spawnreplace_", self.classname));
 	if(repl != "")
+	{
+		print("Entity ", self.classname, " replaced with ", repl, "\n");
 		self.classname = strzone(repl);
+	}
 	if (self.scale)
 		self.scale = self.scale * sv_world_scale;
 	else
