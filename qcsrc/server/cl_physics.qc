@@ -19,6 +19,12 @@ float g_nexball_basketball_carrier_speed;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float sv_csqc_physic;
+float g_walljump;
+float g_walljump_delay;
+float g_walljump_force;
+float g_walljump_smokeparticle_num;
+float g_walljump_velocity_xy_factor;
+float g_walljump_velocity_z_factor;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -271,6 +277,37 @@ void SpecialCommand()
 #endif
 }
 
+vector PlayerTouchWall ()
+{
+	local float dist, max_normal;
+	local vector start, end;
+	dist = 10;
+	max_normal = 0.2;
+	start = self.origin;
+	end = start + v_forward * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	end = start - v_forward * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	end = start + v_right * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	end = start - v_right * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	return '0 0 0';
+}
+
+.float lastwj;
 void Physic_FrameBeginHook()
 {
 	vector wishvel;
@@ -324,6 +361,7 @@ void Physic_FrameBeginHook()
 			}
 		}
 	}
+
 	self.race_movetime_frac += frametime;
 	f = floor(self.race_movetime_frac);
 	self.race_movetime_frac -= f;
@@ -459,6 +497,37 @@ void Physic_FrameBeginHook()
 		physic_movetype = self.movetype;
 	}
 
+	//TODO: move to common part
+	if (g_walljump)
+	if not(physic_cantjump)
+	if (physic_is_player)
+	if (physic_movetype == MOVETYPE_WALK)
+	if not(self.hook.state)
+	if (physic_button_jump)
+	if not(physic_flags & FL_ONGROUND)
+	if (time - self.lastwj > g_walljump_delay)
+	{
+		local vector plane_normal;
+		plane_normal = PlayerTouchWall ();
+		if (plane_normal != '0 0 0')
+		{
+			self.lastwj = time;
+			float wj_force = g_walljump_force;
+			float wj_xy_factor = g_walljump_velocity_xy_factor;
+			float wj_z_factor = g_walljump_velocity_z_factor;
+			physic_velocity_x += plane_normal_x * wj_force;
+			physic_velocity_x /= wj_xy_factor;
+			physic_velocity_y += plane_normal_y * wj_force;
+			physic_velocity_y /= wj_xy_factor;
+			physic_velocity_z = sv_jumpvelocity * wj_z_factor;
+			if (physic_crouch) physic_velocity_z *= -1; // thanks Synap for the idea
+			self.oldvelocity = physic_velocity;
+			pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
+			PlayerSound (playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		}
+	}
+
+
 	if (!self.fixangle)
 	{
 		self.angles_x = 0;
@@ -560,6 +629,12 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(sv_doublejump);
 	CACHE_CVAR(sv_disable_crouch);
+	CACHE_CVAR(g_walljump);
+	CACHE_CVAR(g_walljump_delay);
+	CACHE_CVAR(g_walljump_force);
+	CACHE_CVAR(g_walljump_smokeparticle_num);
+	CACHE_CVAR(g_walljump_velocity_xy_factor);
+	CACHE_CVAR(g_walljump_velocity_z_factor);
 }
 
 //3588
