@@ -567,6 +567,13 @@ void CL_Weaponentity_Think()
 		self.weaponentity.colormap = self.colormap;
 	}
 
+	if (self.owner.cvar_cl_gunalpha) {
+		self.alpha *= self.owner.cvar_cl_gunalpha;
+		if (self.weaponentity)
+			self.weaponentity.alpha *= self.owner.cvar_cl_gunalpha;
+	}
+
+
 	self.angles = '0 0 0';
 	local float f;
 	f = 0;

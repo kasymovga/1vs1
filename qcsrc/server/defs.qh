@@ -341,6 +341,7 @@ float default_player_alpha;
 float default_weapon_alpha;
 
 .float() customizeentityforclient;
+.float cvar_cl_gunalpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;

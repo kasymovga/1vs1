@@ -42,6 +42,7 @@ void Akimbo_WeaponFrame()
 			self.akimbo_ghost.modelindex = self.modelindex;
 			self.akimbo_ghost.weapons = self.weapons;
 			self.akimbo_ghost.owner = self;
+			self.akimbo_ghost.cvar_cl_gunalpha = self.cvar_cl_gunalpha;
 			self = self.akimbo_ghost;
 			CL_SpawnWeaponentity();
 			self.weaponentity.state = WS_RAISE;
