@@ -1,0 +1,4 @@
+entity menu;
+void Menu_Draw();
+void Ent_Menu(float bIsNewEntity);
+float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);

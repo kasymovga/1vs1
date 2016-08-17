@@ -28,7 +28,6 @@ void CSQC_kh_hud();
 void CSQC_ctf_hudreset();
 void CSQC_ctf_hud();
 void CSQC_nb_hud();
-void MapVote_Draw();
 void Sbar_FinaleOverlay()
 {
 	/*vector pos;
@@ -39,7 +38,8 @@ void Sbar_FinaleOverlay()
 	//drawpic(pos, "gfx/finale", '0 0 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	//drawstring(pos, "END", sbar_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-	MapVote_Draw();
+	if (mv_active)
+		MapVote_Draw();
 }
 
 float weaponspace[10];
@@ -2422,7 +2422,7 @@ void Sbar_Draw (void)
 
 	if (intermission == 2) // map voting screen
 	{
-		if(sb_showscores) {
+		if(sb_showscores && !menu) {
 			Sbar_DrawScoreboard();
 			Sbar_Score();
 			Sbar_Timer();
@@ -2436,6 +2436,10 @@ void Sbar_Draw (void)
 			Sbar_FinaleOverlay();
 
 		Sbar_Reset();
+	}
+	else if (menu)
+	{
+		Menu_Draw();
 	}
 	else if (sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
 	{

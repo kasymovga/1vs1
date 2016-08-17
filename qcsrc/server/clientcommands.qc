@@ -690,6 +690,9 @@ void SV_ParseClientCommand(string s) {
 		}
 		else
 			sprint(self, "Usage: sv_cheats 1; restart; cmd dragbox_clear\n");
+	} else if(cmd == "menu_select") {
+		if (argv(1) == "gametypevote")
+			GameTypeVote_Select(self, stof(argv(2)));
 	} else {
 		//if(ctf_clientcommand())
 		//	return;

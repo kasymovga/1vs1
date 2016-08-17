@@ -63,6 +63,10 @@ cl_physics.qh
 
 cl_client.qh
 
+gametypevote.qh
+
+menu.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -191,3 +195,5 @@ irc.qc
 akimbo.qc
 
 info_messages.qc
+menu.qc
+gametypevote.qc

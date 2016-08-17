@@ -18,6 +18,9 @@ waypointsprites.qh
 movetypes.qh
 prandom.qh
 bgmscript.qh
+mapvoting.qh
+menu.qh
+mouse.qh
 
 main.qh
 
@@ -59,3 +62,5 @@ bgmscript.qc
 ../common/items.qc
 ../common/cl_physics.qc
 cl_physics.qc
+menu.qc
+mouse.qc
