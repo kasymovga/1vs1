@@ -63,6 +63,8 @@ cl_physics.qh
 
 cl_client.qh
 
+dodging.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -191,3 +193,5 @@ irc.qc
 akimbo.qc
 
 info_messages.qc
+
+dodging.qc
