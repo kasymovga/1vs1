@@ -19,6 +19,8 @@ float	STATE_BOTTOM	= 1;
 float	STATE_UP		= 2;
 float	STATE_DOWN		= 3;
 
+.float train_nomins;
+
 .entity trigger_field;
 
 void() plat_center_touch;
@@ -266,16 +268,16 @@ void train_next()
 	if(self.wait < 0)
 	{
 		if (targ.speed)
-			SUB_CalcMove(targ.origin - self.mins, targ.speed, train_next);
+			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), targ.speed, train_next);
 		else
-			SUB_CalcMove(targ.origin - self.mins, self.speed, train_next);
+			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), self.speed, train_next);
 	}
 	else
 	{
 		if (targ.speed)
-			SUB_CalcMove(targ.origin - self.mins, targ.speed, train_wait);
+			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), targ.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
+			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), self.speed, train_wait);
 	}
 
 	if(self.noise != "")
@@ -289,7 +291,7 @@ void func_train_find()
 	self.target = targ.target;
 	if (!self.target)
 		objerror("func_train_find: no next target");
-	setorigin(self, targ.origin - self.mins);
+	setorigin(self, targ.origin - (self.train_nomins ? '0 0 0' : self.mins));
 	self.nextthink = self.ltime + 1;
 	self.think = train_next;
 };
