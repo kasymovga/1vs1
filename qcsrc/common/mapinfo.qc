@@ -966,6 +966,21 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 	return r;
 }
 
+float MapInfo_GetGameTypes(string s) // returns 0 if the map can't be played with the current settings, MapInfo_Map_supportedGametypes otherwise
+{
+	float r;
+	if (!MapInfo_Get_ByName(s, 1, 0))
+		return 0;
+
+	if((MapInfo_Map_supportedFeatures & MapInfo_CurrentFeatures()) != MapInfo_CurrentFeatures())
+		r = 0;
+	else
+		r = MapInfo_Map_supportedGametypes;
+
+	MapInfo_ClearTemps();
+	return r;
+}
+
 string MapInfo_GetGameTypeCvar(float t)
 {
 	switch(t)

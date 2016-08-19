@@ -61,6 +61,7 @@ string MapInfo_FixName(string s);
 
 // play a map
 float MapInfo_CheckMap(string s); // returns 0 if the map can't be played with the current settings
+float MapInfo_GetGameTypes(string s);
 void MapInfo_LoadMap(string s);
 
 // list all maps for the current game type

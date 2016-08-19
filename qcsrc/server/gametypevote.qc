@@ -1,5 +1,6 @@
 float gametypevote_finished;
 float gametypevote_start;
+float gametypevote_available;
 entity gametypevote;
 
 float gametypes[MENU_ITEMS_MAXCOUNT];
@@ -49,7 +50,8 @@ string GameTypeVote_GetDescr(float n) {
 }
 
 float GameTypeVote_Think() {
-	float n, i, max_votes, gametype_max_votes, tmp;
+	float n, i, max_votes, gametype_max_votes, tmp, nextmap_types, t;
+	string nextmap;
 	if (nex252_compat_mode)
 		return FALSE;
 
@@ -67,22 +69,34 @@ float GameTypeVote_Think() {
 	}
 	if not(gametypevote) {
 		print("Game type vote initialized\n");
-		n = tokenizebyseparator(cvar_string("sv_gametypevote"), " ");
-		if (n > MENU_ITEMS_MAXCOUNT)
-			n = MENU_ITEMS_MAXCOUNT;
-
-		if (n <= 1) {
-			gametypevote_finished = TRUE;
-			return TRUE;
-		}
+		nextmap = cvar_string("nextmap");
+		nextmap_types = MapInfo_GetGameTypes(nextmap);
 
 		gametypevote_start = time;
 		gametypevote = Menu_Prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"));
-		gametypes_count = n;
-		for (i = 0; i < n; i++) {
-			gametypes[i] = MapInfo_Type_FromString(argv(i));
-			Menu_Add_Item(gametypevote, GameTypeVote_GetDescr(i));
+		t = 1;
+		gametypes_count = 0;
+		for (i = 0; i < 15; i++) {
+			if (!nextmap_types || (t & nextmap_types))
+			if (t & gametypevote_available)
+			{
+				gametypes[gametypes_count] = t;
+				Menu_Add_Item(gametypevote, GameTypeVote_GetDescr(gametypes_count));
+				gametypes_count++;
+				if (gametypes_count == MENU_ITEMS_MAXCOUNT)
+					break;
+			}
+			t *= 2;
 		}
+	}
+	if (gametypes_count < 1) {
+		gametypevote_finished = TRUE;
+		return TRUE;
+	}
+	if (gametypes_count == 1) {
+		MapInfo_SwitchGameType(gametypes[0]);
+		gametypevote_finished = TRUE;
+		return TRUE;
 	}
 	for (i = 0; i < gametypes_count; i++) {
 		if (gametypes_votes[i] > (player_count - currentbots) / 2) {
@@ -129,4 +143,17 @@ void GameTypeVote_Select(entity plr, float select) {
 	tmp = gametypes_votes[select] + 1;
 	gametypes_votes[select] = tmp;
 	Menu_Set_Item(gametypevote, select, GameTypeVote_GetDescr(select));
+}
+
+float GameTypeVote_Mask() {
+	return gametypevote_available;
+}
+
+void GameTypeVote_Init() {
+	float i, n;
+	n = tokenizebyseparator(cvar_string("sv_gametypevote"), " ");
+	gametypevote_available = 0;
+	for (i = 0; i < n; i++) {
+		gametypevote_available |= MapInfo_Type_FromString(argv(i));
+	}
 }
