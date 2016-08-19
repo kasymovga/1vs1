@@ -1341,6 +1341,9 @@ void IntermissionThink()
 	if (time < intermission_exittime)
 		return;
 
+	if (GameTypeVote_Think())
+		return;
+
 	if(!mapvote_initialized)
 		if (time < intermission_exittime + 10 && !self.BUTTON_ATCK && !self.BUTTON_JUMP && !self.BUTTON_ATCK2 && !self.BUTTON_HOOK && !self.BUTTON_USE)
 			return;

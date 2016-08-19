@@ -1,0 +1,5 @@
+entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeout);
+void Menu_Add_Item(entity menu, string name);
+void Menu_Set_Item(entity menu, float item, string name);
+void Menu_Set_Title(entity menu, string title);
+void Menu_Remove(entity menu);

@@ -1,0 +1,2 @@
+float GameTypeVote_Think();
+void GameTypeVote_Select(entity plr, float select);

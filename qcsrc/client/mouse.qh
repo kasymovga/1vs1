@@ -1,0 +1,4 @@
+vector mouse_pos;
+void Mouse_Init();
+void Mouse_ReadPos();
+void Mouse_Draw();
