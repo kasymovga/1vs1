@@ -270,6 +270,7 @@ const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
 const float STAT_HUD = 50;
+const float STAT_PLAYER_STATE = 51;
 const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 
@@ -497,6 +498,13 @@ float   FL_NO_WEAPON_STAY       = 131072;
 float   FL_SPAWNING       = 262144;
 float   FL_SLICK				= 524288;
 float   FL_ONGROUND_OR_SLICK	= 524800;
+
+float	DEAD_NO					= 0;
+float	DEAD_DYING				= 1;
+float	DEAD_DEAD				= 2;
+float	DEAD_RESPAWNABLE			= 3;
+float	DEAD_RESPAWNING			= 4;
+float	DEAD_FREEZE      = 5;
 
 float Q3SURFACEFLAG_NODAMAGE = 1;
 float Q3SURFACEFLAG_SLICK = 2; // low friction surface

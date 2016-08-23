@@ -137,7 +137,7 @@ void trigger_push_touch()
 	if (!other.projectiledeathtype || other.classname == "bullet")
 		return;
 
-	if (other.deadflag && other.iscreature)
+	if (other.deadflag && other.deadflag != DEAD_FREEZE && other.iscreature)
 		return;
 
 	if(self.team)

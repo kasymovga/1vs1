@@ -296,7 +296,7 @@ void player_anim (void)
 	if (self.weaponentity)
 		updateanim(self.weaponentity);
 
-	if (self.deadflag != DEAD_NO)
+	if (self.deadflag != DEAD_NO && self.deadflag != DEAD_FREEZE)
 	{
 		if (time > self.animstate_endtime)
 		{
@@ -501,6 +501,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	local float take, save, waves, sdelay, dh, da;
 	vector v;
 	float valid_damage_for_weaponstats;
+	if (Freeze_DamageHandle(deathtype))
+		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -660,6 +662,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 
 	if (self.health < 1)
+	if not(Freeze_DeathHandle(attacker, inflictor, deathtype))
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;

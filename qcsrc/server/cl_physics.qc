@@ -213,6 +213,8 @@ float Physic_MaxSpeedMod()
 	if(self.in_swamp)
 		maxspd_mod = maxspd_mod * self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 
+	maxspd_mod = maxspd_mod * Freeze_SpeedMod();
+
 	if(self.classname != "player")
 	{
 		maxspd_mod = sv_spectator_speed_multiplier;
@@ -640,8 +642,12 @@ void SV_PlayerPhysics()
 {
 	physic_flags = self.flags;
 	physic_velocity = self.velocity;
-	physic_cantjump = ((self.health <= g_bloodloss) || (time < self.doublejump_nextjumptime));
-	physic_deadflag = self.deadflag;
+	physic_cantjump = (self.deadflag || (self.health <= g_bloodloss) || (time < self.doublejump_nextjumptime));
+	if (self.deadflag != DEAD_FREEZE)
+		physic_deadflag = self.deadflag;
+	else
+		physic_deadflag = 0;
+
 	physic_crouch = self.crouch;
 	physic_button_jump = self.BUTTON_JUMP;
 	physic_v_angle = self.v_angle;

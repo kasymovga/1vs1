@@ -6,6 +6,7 @@
 .float last_RIGHT_KEY_time;
 
 float g_dodging_delay;
+float g_dodging_frozen_factor;
 float g_dodging_height_threshold;
 float g_dodging_wall_distance_threshold;
 float g_dodging_wall_dodging;
@@ -30,6 +31,7 @@ void dodging_ReadCvars() {
 
 	CACHE_CVAR(g_dodging);
 	CACHE_CVAR(g_dodging_delay);
+	CACHE_CVAR(g_dodging_frozen_factor);
 	CACHE_CVAR(g_dodging_height_threshold);
 	CACHE_CVAR(g_dodging_horiz_speed);
 	CACHE_CVAR(g_dodging_ramp_time);
@@ -94,11 +96,11 @@ float dodging_GetPressedKeys()
 	if(!g_dodging)
 		return 0;
 
-#if 0
-	if(g_freezetag && self.freezetag_frozen)
-	if not(g_freezetag_dodging_frozen)
+	if (self.deadflag == DEAD_FREEZE) {
+		if not(g_dodging_frozen_factor)
+			return 0;
+	} else if (self.deadflag)
 		return 0;
-#endif
 
 	dodge_detected = 0;
     self.cvar_cl_dodging_timeout = 0.2;
@@ -164,6 +166,8 @@ float dodging_GetPressedKeys()
 		self.dodging_single_action = 1;
 
 		self.dodging_velocity_gain = g_dodging_horiz_speed;
+		if (self.deadflag == DEAD_FREEZE)
+			self.dodging_velocity_gain *= g_dodging_frozen_factor;
 
 		self.dodging_direction_x = tap_direction_x;
 		self.dodging_direction_y = tap_direction_y;
