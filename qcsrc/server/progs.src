@@ -63,13 +63,11 @@ cl_physics.qh
 
 cl_client.qh
 
-<<<<<<< HEAD
 gametypevote.qh
 
 menu.qh
-=======
+
 dodging.qh
->>>>>>> dodging
 
 scores_rules.qc
 
