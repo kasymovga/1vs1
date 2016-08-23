@@ -42,6 +42,7 @@ void Akimbo_WeaponFrame()
 			self.akimbo_ghost.modelindex = self.modelindex;
 			self.akimbo_ghost.weapons = self.weapons;
 			self.akimbo_ghost.owner = self;
+			self.akimbo_ghost.cvar_cl_gunalpha = self.cvar_cl_gunalpha;
 			self = self.akimbo_ghost;
 			CL_SpawnWeaponentity();
 			self.weaponentity.state = WS_RAISE;
@@ -96,6 +97,7 @@ void Akimbo_Init()
 			WEPBIT_HLAC |
 			WEPBIT_NEX |
 			WEPBIT_HAGAR |
+			WEPBIT_SUPERSHOTGUN |
 			WEPBIT_ROCKET_LAUNCHER;
 
 	if (s == "all")
@@ -147,6 +149,22 @@ float Akimbo_GiveWeapon(entity p, float wpn, string name)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+float Akimbo_DropWeapon(entity p, float wpn, string name)
+{
+	float wpnbit = W_WeaponBit(wpn);
+	if not(g_akimbo_weapons & wpnbit)
+		return FALSE;
+
+	if not(wpnbit & p.akimbo_weapons)
+		return FALSE;
+
+	p.akimbo_weapons &~= wpnbit;
+	sprint(p, "You drop ^4Akimbo ^2");
+	sprint(p, name);
+	sprint(p, "\n");
+	return TRUE;
 }
 
 float Akimbo_Active(entity e)

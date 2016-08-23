@@ -25,6 +25,7 @@ float sv_ircbot_chat_irc2game_require_highlight;
 float sv_ircbot_reconnect_interval;
 float sv_ircbot_reconnect_interval_add;
 float sv_ircbot_spamstatus;
+float sv_ircbot_spamstatus_delay;
 float sv_ircbot_update_topic;
 float sv_ircbot_update_topic_hostname;
 float sv_ircbot_update_topic_serverempty;
@@ -88,7 +89,7 @@ float IRC_Privmsg(float handle, string targ, string msg) {
     float r = IRC_Privmsg_Builtin(handle, targ, msg);
     
     float spam = max(0, sv_ircbot_spamstatus);
-    if(spam && handle == irc.cnt && strtolower(targ) == irc.target) {
+    if(spam && handle == irc.cnt && strtolower(targ) == irc.target && time - irc_startup_time >= sv_ircbot_spamstatus_delay) {
         float c = cvar("_sv_ircbot_msgsent") + 1;
         if(c >= spam) {
             c = 0;
@@ -189,6 +190,7 @@ void IRC_Init(void) {
 	CACHE_CVAR(sv_ircbot_reconnect_interval);
 	CACHE_CVAR(sv_ircbot_reconnect_interval_add);
 	CACHE_CVAR(sv_ircbot_spamstatus);
+	CACHE_CVAR(sv_ircbot_spamstatus_delay);
 	CACHE_CVAR(sv_ircbot_update_topic);
 	CACHE_CVAR(sv_ircbot_update_topic_hostname);
 	CACHE_CVAR(sv_ircbot_update_topic_serverempty);

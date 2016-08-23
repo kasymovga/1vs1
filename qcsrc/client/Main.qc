@@ -682,6 +682,15 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(menu_visible)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
+
+	if (mv_active)
+	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (menu)
+	if (Menu_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
 	return bSkipKey;
 }
 
@@ -950,6 +959,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_MODELEFFECT: Ent_ModelEffect(bIsNewEntity); break;
 		case ENT_CLIENT_LIGHTNING: Ent_Lightning(savetime); break;
 		case ENT_CLIENT_PHYSIC: Ent_Physic(bIsNewEntity); break;
+		case ENT_CLIENT_MENU: Ent_Menu(bIsNewEntity); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;

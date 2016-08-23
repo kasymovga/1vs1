@@ -1,0 +1,24 @@
+// set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
+.float dodging_action;
+// these store the movement direction at the time of the dodge action happening.
+.float dodging_direction_x;
+.float dodging_direction_y;
+// This is the velocity gain to be added over the ramp time.
+// It will decrease from frame to frame during dodging_action = 1
+// until it's 0.
+.float dodging_velocity_gain;
+// the jump part of the dodge cannot be ramped
+.float dodging_single_action;
+// this indicates the last time a dodge was executed. used to check if another one is allowed
+// and to ramp up the dodge acceleration in the physics hook.
+.float last_dodging_time;
+
+float g_dodging;
+float g_dodging_horiz_speed;
+float g_dodging_ramp_time;
+float g_dodging_sound;
+float g_dodging_up_speed;
+
+void dodging_Initialize();
+float dodging_GetPressedKeys();
+void dodging_ReadCvars();

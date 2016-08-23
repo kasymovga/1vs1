@@ -2073,6 +2073,7 @@ void SetZoomState(float z)
 }
 
 void GetPressedKeys(void) {
+	dodging_GetPressedKeys();
 	if (self.movement_x > 0) // get if movement keys are pressed
 	{	// forward key pressed
 		self.pressedkeys |= KEY_FORWARD;

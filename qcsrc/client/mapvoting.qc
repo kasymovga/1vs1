@@ -1,6 +1,5 @@
 float mv_num_maps;
 
-float mv_active;
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT];
@@ -12,6 +11,64 @@ float mv_ownvote;
 float mv_detail;
 float mv_timeout;
 float mv_maps_mask;
+
+float mv_selection;
+
+float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns)
+{
+	float cell;
+	float c, r;
+
+	cell = -1;
+
+	for (r = 0; r < rows; ++r)
+		for (c = 0; c < columns; ++c)
+		{
+			if (mouse_pos_x >= topleft_x + cellsize_x *  c &&
+				mouse_pos_x <= topleft_x + cellsize_x * (c + 1) &&
+				mouse_pos_y >= topleft_y + cellsize_y *  r &&
+				mouse_pos_y <= topleft_y + cellsize_y * (r + 1))
+			{
+				cell = r * columns + c;
+				break;
+			}
+		}
+
+	if (cell >= mv_num_maps)
+		cell = -1;
+
+	if (mv_abstain && cell < 0)
+		return mv_num_maps;
+
+	return cell;
+}
+
+float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	float imp;
+
+	if (bInputType != 0)
+		return false;
+
+	if ('0' <= nPrimary && nPrimary <= '9')
+	{
+		// number-based voting is not prefered in NeX - but still possible manually using impulse
+		imp = nPrimary - '0';
+		if (imp == 0) imp = 10;
+		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
+		return true;
+	}
+
+	if (nPrimary == K_MOUSE1)
+		if (mv_selection >= 0)
+		{
+			imp = min(mv_selection + 1, mv_num_maps);
+			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
+			return true;
+		}
+
+	return false;
+}
 
 string MapVote_FormatMapItem(float id, string map, float count, float maxwidth)
 {
@@ -131,8 +188,7 @@ void MapVote_Draw()
 	float tsize;
 	vector dist;
 
-	if(!mv_active)
-		return;
+	Mouse_ReadPos();
 	
 	center = (vid_conwidth - 1)/2;
 	xmin = vid_conwidth*0.05; // 5% border must suffice
@@ -180,6 +236,8 @@ void MapVote_Draw()
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 
+	mv_selection = MapVote_Selection(pos, dist, rows, columns);
+
 	pos_x += (xmax - xmin) / (2 * columns);
 	pos_y += (dist_y - isize) / 2;
 	ymax -= isize;
@@ -204,6 +262,7 @@ void MapVote_Draw()
 		pos_x = (xmax+xmin)*0.5;
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}
+	Mouse_Draw();
 }
 
 void Cmd_MapVote_MapDownload(float argc)
@@ -286,6 +345,8 @@ void MapVote_Init()
 	registercmd("-showscores");
 
 	mv_active = 1;
+	mv_selection = -1;
+	Mouse_Init();
 
 	ssdir = ReadString();
 	

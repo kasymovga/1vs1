@@ -544,6 +544,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_shownames, "cl_shownames");
 	GetCvars_handleString(s, f, cvar_g_nexuizversion, "g_nexuizversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
+	GetCvars_handleFloat(s, f, cvar_cl_gunalpha, "cl_gunalpha");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);

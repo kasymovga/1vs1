@@ -742,6 +742,7 @@ void spawnfunc_worldspawn (void)
 	Freeze_Init();
 	bot_init();
 	runematch_init();
+	GameTypeVote_Init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
@@ -805,7 +806,7 @@ void spawnfunc_worldspawn (void)
 	Ban_LoadBans();
 
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
+	MapInfo_FilterGametype(MapInfo_CurrentGametype() | GameTypeVote_Mask(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -1340,6 +1341,9 @@ void IntermissionThink()
 	}
 
 	if (time < intermission_exittime)
+		return;
+
+	if (GameTypeVote_Think())
 		return;
 
 	if(!mapvote_initialized)
@@ -2733,7 +2737,7 @@ void MapVote_Think()
 
 string GotoMap(string m)
 {
-	if(!MapInfo_CheckMap(m))
+	if not(MapInfo_GetGameTypes(m) & (MapInfo_CurrentGametype() | GameTypeVote_Mask()))
 		return "The map you chose is not available on this server.";
 	cvar_set("nextmap", m);
 	cvar_set("timelimit", "-1");

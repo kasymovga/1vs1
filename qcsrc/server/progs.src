@@ -65,6 +65,14 @@ cl_physics.qh
 
 cl_client.qh
 
+<<<<<<< HEAD
+gametypevote.qh
+
+menu.qh
+=======
+dodging.qh
+>>>>>>> dodging
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -195,3 +203,9 @@ akimbo.qc
 info_messages.qc
 
 freeze.qc
+
+menu.qc
+
+gametypevote.qc
+
+dodging.qc

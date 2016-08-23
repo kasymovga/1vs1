@@ -174,9 +174,13 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 230 && imp <= 253)
 	{
-		if(self.deadflag == DEAD_NO)
+		if(self.deadflag == DEAD_NO) {
+			if (self.version <= 1000) {
+				if (imp >= 234)
+					imp--;
+			}
 			W_SwitchWeapon (imp - 230 + WEP_FIRST);
-		else
+		} else
 			self.impulse = imp; // retry in next frame
 	}
 	// deploy waypoints

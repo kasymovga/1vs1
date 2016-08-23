@@ -48,6 +48,8 @@ And you should be done!
 ============================================*/
 
 float g_balance_grapplehook_airfriction;
+float g_balance_grapplehook_damage;
+float g_balance_grapplehook_damage_interval;
 float g_balance_grapplehook_force_rubber;
 float g_balance_grapplehook_force_rubber_overstretch;
 float g_balance_grapplehook_health;
@@ -59,11 +61,15 @@ float g_grappling_hook_tarzan;
 
 .string aiment_classname;
 .float aiment_deadflag;
+.float hook_attack_time;
+
 void SetMovetypeFollow(entity ent, entity e)
 {
 	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
 	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid
 	ent.aiment = e; // make the hole follow bmodel
+	if (ent.aiment.takedamage)
+		ent.hook_attack_time = time + g_balance_grapplehook_damage_interval;
 	ent.punchangle = e.angles; // the original angles of bmodel
 	ent.view_ofs = ent.origin - e.origin; // relative origin
 	ent.v_angle = ent.angles - e.angles; // relative angles
@@ -72,6 +78,7 @@ void SetMovetypeFollow(entity ent, entity e)
 }
 void UnsetMovetypeFollow(entity ent)
 {
+	ent.hook_attack_time = 0;
 	ent.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(ent);
 	ent.aiment = world;
@@ -176,6 +183,16 @@ void GrapplingHookThink()
 		dir = self.origin - org;
 		dist = vlen(dir);
 		dir = normalize(dir);
+
+		if (g_balance_grapplehook_damage_interval)
+		if (self.aiment)
+		if (self.hook_attack_time)
+		if (self.aiment.takedamage)
+		while (self.hook_attack_time <= time)
+		{
+			Damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
+			self.hook_attack_time += g_balance_grapplehook_damage_interval;
+		}
 
 		if(g_grappling_hook_tarzan)
 		{
@@ -457,6 +474,8 @@ void GrapplingHookFrame()
 void GrappleHookInit()
 {
 	CACHE_CVAR(g_balance_grapplehook_airfriction);
+	CACHE_CVAR(g_balance_grapplehook_damage);
+	CACHE_CVAR(g_balance_grapplehook_damage_interval);
 	CACHE_CVAR(g_balance_grapplehook_force_rubber);
 	CACHE_CVAR(g_balance_grapplehook_force_rubber_overstretch);
 	CACHE_CVAR(g_balance_grapplehook_health);
