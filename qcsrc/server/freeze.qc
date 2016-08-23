@@ -23,7 +23,28 @@ void Freeze_Think()
 	if (time < game_starttime)
 		return;
 	entity plr;
-	float team_alive, have_death_players;
+	float team_alive, have_death_players, team_check;
+	team_check = 0;
+	FOR_EACH_PLAYER(plr) {
+		if not(team_check)
+			team_check = plr.team;
+		else if (plr.team != team_check) {
+			team_check = -1;
+			break;
+		}
+	}
+	if (team_check >= 0) {
+		FOR_EACH_PLAYER(plr)
+		{
+			plr.deadflag = DEAD_NO;
+			Freeze_PlayerClear(plr);
+			if (clienttype(plr) == CLIENTTYPE_REAL)
+				centerprint(plr, "^2Awaiting players...\n");
+		}
+		freeze_active = 0;
+		freeze_activate_time = time + g_tdm_freeze_enddelay;
+		return;
+	}
 	if not(freeze_active)
 	{
 		if (time >= freeze_activate_time)
@@ -57,6 +78,9 @@ void Freeze_Think()
 			}
 		}
 	}
+	if not(freeze_active)
+		return;
+
 	team_alive = 0;
 	have_death_players = 0;
     FOR_EACH_PLAYER(plr)
@@ -78,10 +102,7 @@ void Freeze_Think()
 			team_alive = plr.team;
 		}
     }
-	if not(freeze_active)
-		return;
-
-	if (team_alive > 0)
+	if (team_alive > 0 && have_death_players)
 		TeamScore_AddToTeam(team_alive, ST_SCORE, 1);
 	else if (team_alive < 0)
 		return;
@@ -241,7 +262,7 @@ void Freeze_Init()
 		return;
 	if not(g_tdm_freeze)
 		return;
-	freeze_active = 1;
+	freeze_activate_time = time + g_tdm_freeze_startdelay;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;
