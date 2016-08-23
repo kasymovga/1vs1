@@ -24,13 +24,6 @@ float	SOLID_BBOX				= 2;
 float	SOLID_SLIDEBOX				= 3;
 float	SOLID_BSP				= 4;
 
-float	DEAD_NO					= 0;
-float	DEAD_DYING				= 1;
-float	DEAD_DEAD				= 2;
-float	DEAD_RESPAWNABLE			= 3;
-float	DEAD_RESPAWNING			= 4;
-float	DEAD_FREEZE      = 5;
-
 float	DAMAGE_NO				= 0;
 float	DAMAGE_YES				= 1;
 float	DAMAGE_AIM				= 2;

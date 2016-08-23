@@ -31,8 +31,11 @@ void Freeze_Think()
 			freeze_countdown_last = 0;
 			reset_map(TRUE);
 			freeze_active = 1;
-			FOR_EACH_REALPLAYER(plr)
+			FOR_EACH_REALPLAYER(plr) {
 				centerprint(plr, "^2Starting new round\n");
+			}
+			FOR_EACH_PLAYER(plr)
+				Freeze_PlayerClear(plr);
 			return;
 		}
 		else
@@ -99,7 +102,7 @@ void Freeze_SpawnHook()
 void Freeze_IceThink()
 {
 	self.nextthink = time;
-	if (self.owner.deadflag != DEAD_FREEZE)
+	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self)
 	{
 		Freeze_PlayerClear(self.owner);
 		return;
@@ -120,6 +123,8 @@ void Freeze_IceThink()
 			self.unfroze_progress += frametime;
 			if (clienttype(e) == CLIENTTYPE_REAL)
 				centerprint(e, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
+			if (clienttype(self.owner) == CLIENTTYPE_REAL)
+				centerprint(self.owner, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
 		}
 	}
 	if (self.unfroze_progress >= g_tdm_freeze_unfroze_time)
@@ -149,6 +154,9 @@ float Freeze_DeathHandle()
 
 	self.deadflag = DEAD_FREEZE;
 	self.health = start_health;
+	if (self.ice)
+		return TRUE;
+
 	self.ice = spawn();
 	self.ice.alpha = sv_model_ice_alpha;
 	self.ice.scale = sv_model_ice_scale;
@@ -196,6 +204,7 @@ void Freeze_Init()
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
+	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	if not(g_tdm)
 		return;
 	if not(g_tdm_freeze)
