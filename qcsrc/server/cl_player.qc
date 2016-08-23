@@ -749,7 +749,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
-		print("Kakogo hu9??????\n");
 		if (random() < 0.5)
 		{
 			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
