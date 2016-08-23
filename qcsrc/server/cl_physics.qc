@@ -307,6 +307,100 @@ vector PlayerTouchWall ()
 	return '0 0 0';
 }
 
+float dodging_PlayerPhysics()
+{
+	float common_factor;
+	float new_velocity_gain;
+	float velocity_difference;
+	float clean_up_and_do_nothing;
+	float forcemod;
+	forcemod = 1;
+
+	new_velocity_gain = 0;
+	clean_up_and_do_nothing = 0;
+
+	if(!g_dodging)
+		return 0;
+
+	// when swimming, no dodging allowed..
+	if (self.waterlevel >= WATERLEVEL_SWIMMING)
+		clean_up_and_do_nothing = 1;
+
+#if 0
+	if(g_freezetag && self.freezetag_frozen) {
+		if(g_freezetag_dodging_frozen)
+			forcemod = g_freezetag_dodging_frozen_forcefactor;
+		else
+			clean_up_and_do_nothing = 1;
+	}
+#endif
+
+	if (clean_up_and_do_nothing != 0) {
+		self.dodging_action = 0;
+		self.dodging_direction_x = 0;
+		self.dodging_direction_y = 0;
+		return 0;
+	}
+
+	// make sure v_up, v_right and v_forward are sane
+	makevectors(self.angles);
+
+	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
+	// will be called ramp_time/frametime times = 2 times. so, we need to
+	// add 0.5 * the total speed each frame until the dodge action is done..
+	common_factor = frametime / g_dodging_ramp_time;
+
+	// if ramp time is smaller than frametime we get problems ;D
+	if (common_factor > 1)
+		common_factor = 1;
+
+	new_velocity_gain = self.dodging_velocity_gain - (common_factor * g_dodging_horiz_speed * forcemod);
+	if (new_velocity_gain < 0)
+		new_velocity_gain = 0;
+
+	velocity_difference = self.dodging_velocity_gain - new_velocity_gain;
+
+	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
+	if (self.dodging_action == 1) {
+		//disable jump key during dodge accel phase
+		if (self.movement_z > 0) self.movement_z = 0;
+
+		physic_velocity =
+			  physic_velocity
+			+ ((self.dodging_direction_y * velocity_difference) * v_right)
+			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
+
+		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;
+	}
+
+	// the up part of the dodge is a single shot action
+	if (self.dodging_single_action == 1) {
+		self.flags &~= FL_ONGROUND;
+
+		physic_velocity =
+			  physic_velocity
+			+ (g_dodging_up_speed * forcemod * v_up);
+
+		if (g_dodging_sound == 1)
+			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+
+		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
+
+		self.dodging_single_action = 0;
+	}
+
+	// are we done with the dodging ramp yet?
+	if((self.dodging_action == 1) && ((time - self.last_dodging_time) > g_dodging_ramp_time))
+	{
+		// reset state so next dodge can be done correctly
+		self.dodging_action = 0;
+		self.dodging_direction_x = 0;
+		self.dodging_direction_y = 0;
+	}
+
+	return 0;
+}
+
 .float lastwj;
 void Physic_FrameBeginHook()
 {
@@ -398,7 +492,7 @@ void Physic_FrameBeginHook()
 	}
 	else if(self.specialcommand_pos && (c != substring(specialcommand, self.specialcommand_pos - 1, 1)))
 		self.specialcommand_pos = 0;
-	
+
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())
             return;
@@ -539,6 +633,7 @@ void Physic_FrameBeginHook()
 		self.player_physic.SendFlags = 4;
 
 	physic_button_crouch = self.BUTTON_CROUCH;
+	dodging_PlayerPhysics();
 }
 
 void SV_PlayerPhysics()
@@ -635,6 +730,7 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_walljump_smokeparticle_num);
 	CACHE_CVAR(g_walljump_velocity_xy_factor);
 	CACHE_CVAR(g_walljump_velocity_z_factor);
+	dodging_ReadCvars();
 }
 
 //3588
