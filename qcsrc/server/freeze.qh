@@ -5,5 +5,4 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);
 float Freeze_DamageHandle(float deathtype);
 void Freeze_PlayerClear(entity plr);
 float Freeze_SpeedMod();
-float Freeze_JumpMod();
 float Freeze_HandleFrags(entity attacker, entity targ, float f);

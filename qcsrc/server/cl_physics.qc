@@ -89,7 +89,6 @@ float Physic_JumpVelocityFactor()
 	{
 		jumpvelocity_factor = jumpvelocity_factor * g_minstagib_speed_jumpheight;
 	}
-	jumpvelocity_factor = jumpvelocity_factor * Freeze_JumpMod();
 
 	return jumpvelocity_factor;
 }
@@ -643,7 +642,7 @@ void SV_PlayerPhysics()
 {
 	physic_flags = self.flags;
 	physic_velocity = self.velocity;
-	physic_cantjump = ((self.health <= g_bloodloss) || (time < self.doublejump_nextjumptime));
+	physic_cantjump = (self.deadflag || (self.health <= g_bloodloss) || (time < self.doublejump_nextjumptime));
 	if (self.deadflag != DEAD_FREEZE)
 		physic_deadflag = self.deadflag;
 	else

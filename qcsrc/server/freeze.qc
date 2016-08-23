@@ -256,13 +256,6 @@ float Freeze_SpeedMod() {
 	return 1;
 }
 
-float Freeze_JumpMod() {
-	if (self.deadflag == DEAD_FREEZE)
-		return g_tdm_freeze_slowdown;
-
-	return 1;
-}
-
 float Freeze_HandleFrags(entity attacker, entity targ, float f) {
 	PlayerScore_Add(attacker, SP_SCORE, f);
 	attacker.totalfrags += f;
