@@ -662,7 +662,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 
 	if (self.health < 1)
-	if not(Freeze_DeathHandle())
+	if not(Freeze_DeathHandle(attacker, inflictor, deathtype))
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;

@@ -12,6 +12,7 @@ float sv_model_ice_alpha;
 string ice_model;
 entity freeze_controller;
 .entity ice;
+.entity last_unfrozer;
 .float unfroze_progress;
 
 void Freeze_Think()
@@ -30,12 +31,12 @@ void Freeze_Think()
 			game_starttime = freeze_activate_time + g_tdm_freeze_startdelay;
 			freeze_countdown_last = 0;
 			reset_map(TRUE);
+			FOR_EACH_PLAYER(plr)
+				Freeze_PlayerClear(plr);
 			freeze_active = 1;
 			FOR_EACH_REALPLAYER(plr) {
 				centerprint(plr, "^2Starting new round\n");
 			}
-			FOR_EACH_PLAYER(plr)
-				Freeze_PlayerClear(plr);
 			return;
 		}
 		else
@@ -81,7 +82,7 @@ void Freeze_Think()
 		return;
 
 	if (team_alive > 0)
-		TeamScore_AddToTeam(team_alive, ST_SCORE, 10);
+		TeamScore_AddToTeam(team_alive, ST_SCORE, 1);
 	else if (team_alive < 0)
 		return;
 
@@ -93,10 +94,14 @@ void Freeze_Think()
 	}
 }
 
+void Freeze_FreezePlayer()
+{
+}
+
 void Freeze_SpawnHook()
 {
 	if (freeze_active)
-		Freeze_DeathHandle();
+		Freeze_DeathHandle(world, world, 0);
 }
 
 void Freeze_IceThink()
@@ -112,23 +117,44 @@ void Freeze_IceThink()
 		return;
 
 	float oldprogress = self.unfroze_progress;
-	entity e;
-	FOR_EACH_PLAYER(e)
+	entity e, unfrozer;
+	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100)
 	{
-		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO)
+		unfrozer = self.last_unfrozer;
+	}
+	else FOR_EACH_PLAYER(e)
+	{
+		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100)
 			continue;
 
-		if (vlen(e.origin - self.owner.origin) < 100)
-		{
-			self.unfroze_progress += frametime;
-			if (clienttype(e) == CLIENTTYPE_REAL)
-				centerprint(e, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
-			if (clienttype(self.owner) == CLIENTTYPE_REAL)
-				centerprint(self.owner, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
-		}
+		unfrozer = e;
+		break;
+	}
+	if (unfrozer != self.last_unfrozer)
+	if (clienttype(self.last_unfrozer) == CLIENTTYPE_REAL)
+		centerprint(self.last_unfrozer, "^3Unfrozing interrupted\n");
+
+	if not(unfrozer)
+	if (self.last_unfrozer)
+	if (clienttype(self.owner) == CLIENTTYPE_REAL)
+		centerprint(self.owner, strcat("^3Unfrozing interrupted\n"));
+
+	self.last_unfrozer = unfrozer;
+	if (unfrozer)
+	{
+		self.unfroze_progress += frametime;
+		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
+			centerprint(unfrozer, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
+		if (clienttype(self.owner) == CLIENTTYPE_REAL)
+			centerprint(self.owner, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
 	}
 	if (self.unfroze_progress >= g_tdm_freeze_unfroze_time)
 	{
+		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
+			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
+		if (clienttype(self.owner) == CLIENTTYPE_REAL)
+			centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
+		PlayerScore_Add(unfrozer, SP_SCORE, 1);
 		self.owner.deadflag = DEAD_NO;
 		return;
 	}
@@ -141,7 +167,7 @@ void Freeze_IceThink()
 		self.alpha = sv_model_ice_alpha * max(0.01, (g_tdm_freeze_unfroze_time - self.unfroze_progress));
 }
 
-float Freeze_DeathHandle()
+float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 {
 	if not(g_tdm)
 		return FALSE;
@@ -151,6 +177,10 @@ float Freeze_DeathHandle()
 
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
+
+	if (freeze_active)
+	if (deathtype)
+		Obituary(attacker, inflictor, self, deathtype);
 
 	self.deadflag = DEAD_FREEZE;
 	self.health = start_health;
@@ -201,6 +231,8 @@ void Freeze_Init()
 	CACHE_CVAR(g_tdm_freeze_slowdown);
 	CACHE_CVAR(g_tdm_freeze_startdelay);
 	CACHE_CVAR(g_tdm_freeze_unfroze_time);
+	if (g_tdm_freeze_unfroze_time <= 0)
+		g_tdm_freeze_unfroze_time = 1;
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
@@ -229,4 +261,10 @@ float Freeze_JumpMod() {
 		return g_tdm_freeze_slowdown;
 
 	return 1;
+}
+
+float Freeze_HandleFrags(entity attacker, entity targ, float f) {
+	PlayerScore_Add(attacker, SP_SCORE, f);
+	attacker.totalfrags += f;
+	return 0;
 }

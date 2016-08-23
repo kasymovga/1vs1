@@ -746,6 +746,7 @@ void CL_ExteriorWeaponentity_Think()
 		return;
 	}
 	if (self.owner.deadflag != DEAD_NO)
+	if (self.owner.deadflag != DEAD_FREEZE)
 	{
 		self.model = "";
 		return;
