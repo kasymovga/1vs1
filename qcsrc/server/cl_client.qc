@@ -1067,6 +1067,7 @@ void PutClientInServer (void)
 			}
 		}
 		Freeze_SpawnHook();
+		Nadget_SpawnHook();
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
@@ -2612,7 +2613,10 @@ void PlayerPreThink (void)
 
 		FixPlayermodel();
 
-		GrapplingHookFrame();
+		if (g_nadgets)
+			Nadget_Frame();
+		else
+			GrapplingHookFrame();
 
 		if(frametime)
 		{

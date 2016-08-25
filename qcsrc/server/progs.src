@@ -50,6 +50,8 @@ akimbo.qh
 
 freeze.qh
 
+nadgets.qh
+
 t_items.qh
 
 cl_weaponsystem.qh
@@ -207,3 +209,5 @@ menu.qc
 gametypevote.qc
 
 dodging.qc
+
+nadgets.qc
