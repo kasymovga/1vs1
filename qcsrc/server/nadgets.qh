@@ -1,3 +1,4 @@
 void Nadget_Init();
 void Nadget_Frame();
 void Nadget_SpawnHook();
+void Nadget_Clear();

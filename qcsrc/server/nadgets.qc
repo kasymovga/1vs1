@@ -1,5 +1,6 @@
 .float nadget_count;
 .float nadget_hold;
+.entity nadget_pb;
 float g_nadgets_count_start;
 float g_balance_nadget_grenade_damage;
 float g_balance_nadget_grenade_damageforcescale;
@@ -121,6 +122,12 @@ void Nadget_Grenade_Throw(float speedfactor) {
 	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 }
 
+void Nadget_Clear() {
+	if (self.nadget_pb)
+		remove(self.nadget_pb);
+	self.nadget_pb = world;
+}
+
 void Nadget_Frame() {
 	if (self.nadget_count <= 0)
 		return;
@@ -134,9 +141,13 @@ void Nadget_Frame() {
 		return;
 	}
 	if (self.BUTTON_HOOK && self.nadget_hold >= 0) {
-		if (g_balance_nadget_throw_holdtime > 0)
+		if (g_balance_nadget_throw_holdtime > 0) {
 			self.nadget_hold += frametime / g_balance_nadget_throw_holdtime;
-		else
+			if not(self.nadget_pb)
+				self.nadget_pb = ProgressBar_Create("Throw power", self);
+
+			ProgressBar_SetValue(self.nadget_pb, self.nadget_hold);
+		} else
 			self.nadget_hold = 1;
 	}
 	if (self.nadget_hold && (!self.BUTTON_HOOK || self.nadget_hold >= 1)) {
@@ -146,5 +157,7 @@ void Nadget_Frame() {
 			self.nadget_hold = -1;
 		else
 			self.nadget_hold = 0;
+
+		Nadget_Clear();
 	}
 }
