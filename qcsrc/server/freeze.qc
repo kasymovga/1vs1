@@ -168,7 +168,7 @@ void Freeze_IceThink()
 				self.owner.unfroze_pb = ProgressBar_Create("Unfrozing", self.owner);
 		} else {
 			if (self.owner.unfroze_pb)
-				remove(self.owner.unfroze_pb);;
+				remove(self.owner.unfroze_pb);
 
 			self.owner.unfroze_pb = world;
 			self.unfroze_pb = world;
