@@ -52,6 +52,8 @@ freeze.qh
 
 nadgets.qh
 
+progressbar.qh
+
 t_items.qh
 
 cl_weaponsystem.qh
@@ -211,3 +213,5 @@ gametypevote.qc
 dodging.qc
 
 nadgets.qc
+
+progressbar.qc

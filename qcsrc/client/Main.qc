@@ -960,6 +960,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LIGHTNING: Ent_Lightning(savetime); break;
 		case ENT_CLIENT_PHYSIC: Ent_Physic(bIsNewEntity); break;
 		case ENT_CLIENT_MENU: Ent_Menu(bIsNewEntity); break;
+		case ENT_CLIENT_PROGRESSBAR: Ent_ProgressBar(bIsNewEntity); break;
 		default:
 			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 			break;

@@ -50,7 +50,7 @@ string GameTypeVote_GetDescr(float n) {
 }
 
 float GameTypeVote_Think() {
-	float n, i, max_votes, gametype_max_votes, tmp, nextmap_types, t;
+	float i, max_votes, gametype_max_votes, tmp, nextmap_types, t;
 	string nextmap;
 	if (nex252_compat_mode)
 		return FALSE;
