@@ -15,6 +15,7 @@ entity freeze_controller;
 .entity last_unfrozer;
 .float unfroze_progress;
 .entity unfroze_pb;
+#define ICE_FRAME_TIME 0.2
 
 void Freeze_Think()
 {
@@ -128,7 +129,7 @@ void Freeze_SpawnHook()
 
 void Freeze_IceThink()
 {
-	self.nextthink = time;
+	self.nextthink = time + ICE_FRAME_TIME;
 	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self)
 	{
 		if (self.unfroze_pb) //for self.owner.ice != self case
@@ -178,7 +179,7 @@ void Freeze_IceThink()
 	self.last_unfrozer = unfrozer;
 	if (unfrozer)
 	{
-		self.unfroze_progress += frametime;
+		self.unfroze_progress += ICE_FRAME_TIME;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			if (self.unfroze_pb)
 				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_tdm_freeze_unfroze_time);
@@ -202,7 +203,7 @@ void Freeze_IceThink()
 
 	if (self.unfroze_progress == oldprogress)
 	if (oldprogress != 0)
-		self.unfroze_progress = min(0, oldprogress - frametime);
+		self.unfroze_progress = min(0, oldprogress - ICE_FRAME_TIME);
 
 	if (self.unfroze_progress != oldprogress)
 		self.alpha = sv_model_ice_alpha * max(0.01, (g_tdm_freeze_unfroze_time - self.unfroze_progress));
