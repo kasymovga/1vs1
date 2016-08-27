@@ -1,0 +1,3 @@
+void ProgressBar_Draw();
+void Ent_ProgressBar(float bIsNewEntity);
+entity progressbar;

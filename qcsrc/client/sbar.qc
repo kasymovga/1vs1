@@ -2422,6 +2422,8 @@ void Sbar_Draw (void)
 	}
 
 	Sbar_UpdatePlayerTeams();
+	if (progressbar)
+		ProgressBar_Draw();
 
 	if (intermission == 2) // map voting screen
 	{

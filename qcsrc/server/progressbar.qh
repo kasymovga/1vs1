@@ -1,0 +1,2 @@
+entity ProgressBar_Create(string name, entity plr);
+void ProgressBar_SetValue(entity pb, float value);
