@@ -3,6 +3,13 @@
 .string menu_title;
 .float menu_timeout;
 
+float Menu_CustomizeEntityForClient() {
+	if not(other == self.owner)
+		return FALSE;
+
+	return TRUE;
+}
+
 float Menu_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MENU);
 	WriteByte(MSG_ENTITY, sf & 255);
@@ -30,8 +37,10 @@ entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeo
 	e.menu_id = _menu_id;
 	e.menu_title = _menu_title;
 	e.menu_timeout = timeout;
-	e.viewmodelforclient = plr;
 	e.owner = plr;
+	if (plr)
+		e.customizeentityforclient = Menu_CustomizeEntityForClient;
+
 	Net_LinkEntity(e, FALSE, 0, Menu_SendEntity);
 	return e;
 }
