@@ -14,6 +14,7 @@ entity freeze_controller;
 .entity ice;
 .entity last_unfrozer;
 .float unfroze_progress;
+.entity unfroze_pb;
 
 void Freeze_Think()
 {
@@ -130,6 +131,10 @@ void Freeze_IceThink()
 	self.nextthink = time;
 	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self)
 	{
+		if (self.unfroze_pb) //for self.owner.ice != self case
+			remove(self.unfroze_pb);
+		self.unfroze_pb = world;
+
 		Freeze_PlayerClear(self.owner);
 		return;
 	}
@@ -139,6 +144,7 @@ void Freeze_IceThink()
 
 	float oldprogress = self.unfroze_progress;
 	entity e, unfrozer;
+	unfrozer = world;
 	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100)
 	{
 		unfrozer = self.last_unfrozer;
@@ -152,29 +158,43 @@ void Freeze_IceThink()
 		break;
 	}
 	if (unfrozer != self.last_unfrozer)
-	if (clienttype(self.last_unfrozer) == CLIENTTYPE_REAL)
-		centerprint(self.last_unfrozer, "^3Unfrozing interrupted\n");
+	{
+		if (self.unfroze_pb)
+			remove(self.unfroze_pb);
 
-	if not(unfrozer)
-	if (self.last_unfrozer)
-	if (clienttype(self.owner) == CLIENTTYPE_REAL)
-		centerprint(self.owner, strcat("^3Unfrozing interrupted\n"));
+		if (unfrozer) {
+			self.unfroze_pb = ProgressBar_Create("Unfrozing", unfrozer);
+			if not(self.owner.unfroze_pb)
+				self.owner.unfroze_pb = ProgressBar_Create("Unfrozing", self.owner);
+		} else {
+			if (self.owner.unfroze_pb)
+				remove(self.owner.unfroze_pb);;
+
+			self.owner.unfroze_pb = world;
+			self.unfroze_pb = world;
+		}
+	}
 
 	self.last_unfrozer = unfrozer;
 	if (unfrozer)
 	{
 		self.unfroze_progress += frametime;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
-			centerprint(unfrozer, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
+			if (self.unfroze_pb)
+				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_tdm_freeze_unfroze_time);
+
 		if (clienttype(self.owner) == CLIENTTYPE_REAL)
-			centerprint(self.owner, strcat("^2Unfrozing: ", ftos(min(100, ceil((self.unfroze_progress / g_tdm_freeze_unfroze_time) * 100))), "%\n"));
+			if (self.owner.unfroze_pb)
+				ProgressBar_SetValue(self.owner.unfroze_pb, self.unfroze_progress / g_tdm_freeze_unfroze_time);
 	}
 	if (self.unfroze_progress >= g_tdm_freeze_unfroze_time)
 	{
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
+
 		if (clienttype(self.owner) == CLIENTTYPE_REAL)
 			centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
+
 		PlayerScore_Add(unfrozer, SP_SCORE, 1);
 		self.owner.deadflag = DEAD_NO;
 		return;
@@ -241,6 +261,11 @@ void Freeze_PlayerClear(entity plr)
 {
 	if (plr.ice)
 		remove(plr.ice);
+	if (plr.unfroze_pb)
+		remove(plr.unfroze_pb);
+	if (plr.ice.unfroze_pb)
+		remove(plr.ice.unfroze_pb);
+	plr.unfroze_pb = world;
 	plr.ice = world;
 	WaypointSprite_DetachCarrier(plr);
 }
