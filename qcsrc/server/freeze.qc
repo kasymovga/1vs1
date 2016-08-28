@@ -9,6 +9,8 @@ float g_tdm_freeze_unfroze_time;
 float sv_model_ice_scale;
 float sv_model_ice_z;
 float sv_model_ice_alpha;
+float need_check_teams;
+float team_alive, have_death_players, team_check;
 string ice_model;
 entity freeze_controller;
 .entity ice;
@@ -25,14 +27,17 @@ void Freeze_Think()
 	if (time < game_starttime)
 		return;
 	entity plr;
-	float team_alive, have_death_players, team_check;
-	team_check = 0;
-	FOR_EACH_PLAYER(plr) {
-		if not(team_check)
-			team_check = plr.team;
-		else if (plr.team != team_check) {
-			team_check = -1;
-			break;
+	float need_check_teams_copy = need_check_teams;
+	need_check_teams = 0;
+	if (need_check_teams_copy) {
+		team_check = 0;
+		FOR_EACH_PLAYER(plr) {
+			if not(team_check)
+				team_check = plr.team;
+			else if (plr.team != team_check) {
+				team_check = -1;
+				break;
+			}
 		}
 	}
 	if (team_check >= 0) {
@@ -64,16 +69,16 @@ void Freeze_Think()
 		}
 		else
 		{
+			string winner_message;
+			if (freeze_winner_team > 0)
+				winner_message = strcat(Team_ColorName(freeze_winner_team), " Team wins!");
+			else
+				winner_message = "";
+			float countdown = ceil(freeze_activate_time - time);
 			FOR_EACH_REALPLAYER(plr)
 			{
-				float countdown = ceil(freeze_activate_time - time);
 				if (freeze_countdown_last != countdown)
 				{
-					string winner_message;
-					if (freeze_winner_team > 0)
-						winner_message = strcat(Team_ColorName(freeze_winner_team), " Team wins!");
-					else
-						winner_message = "";
 					centerprint(plr, strcat("^2Round finished!\n^2", winner_message, "\n^2Restarting in ", ftos(countdown), "\n"));
 					freeze_countdown_last = countdown;
 				}
@@ -83,27 +88,28 @@ void Freeze_Think()
 	if not(freeze_active)
 		return;
 
-	team_alive = 0;
-	have_death_players = 0;
-    FOR_EACH_PLAYER(plr)
-    {
-        if (plr.deadflag == DEAD_FREEZE)
+	if (need_check_teams_copy) {
+		team_alive = 0;
+		have_death_players = 0;
+		FOR_EACH_PLAYER(plr)
 		{
-			have_death_players = 1;
-			continue;
-		}
-		
-		if (team_alive > 0) {
-			if (plr.team != team_alive)
+			if (plr.deadflag == DEAD_FREEZE)
 			{
-				team_alive = -1;
+				have_death_players = 1;
+				continue;
+			}
+			if (team_alive > 0) {
+				if (plr.team != team_alive)
+				{
+					team_alive = -1;
+				}
+			}
+			else if not(team_alive)
+			{
+				team_alive = plr.team;
 			}
 		}
-		else if not(team_alive)
-		{
-			team_alive = plr.team;
-		}
-    }
+	}
 	if (team_alive > 0 && have_death_players)
 		TeamScore_AddToTeam(team_alive, ST_SCORE, 1);
 	else if (team_alive < 0)
@@ -123,6 +129,7 @@ void Freeze_FreezePlayer()
 
 void Freeze_SpawnHook()
 {
+	need_check_teams = 1;
 	if (freeze_active)
 		Freeze_DeathHandle(world, world, 0);
 }
@@ -196,6 +203,7 @@ void Freeze_IceThink()
 		if (clienttype(self.owner) == CLIENTTYPE_REAL)
 			centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
 
+		bprint ("^1", self.owner.netname, "^1 was revived by ", unfrozer.netname, "\n");
 		PlayerScore_Add(unfrozer, SP_SCORE, 1);
 		self.owner.deadflag = DEAD_NO;
 		return;
@@ -216,6 +224,8 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 
 	if not(g_tdm_freeze)
 		return FALSE;
+
+	need_check_teams = 1;
 
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
@@ -269,6 +279,7 @@ void Freeze_PlayerClear(entity plr)
 	plr.unfroze_pb = world;
 	plr.ice = world;
 	WaypointSprite_DetachCarrier(plr);
+	need_check_teams = 1;
 }
 
 void Freeze_Init()
@@ -294,6 +305,7 @@ void Freeze_Init()
 	freeze_controller.nextthink = time;
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
+	need_check_teams = 1;
 }
 
 float Freeze_SpeedMod() {
