@@ -37,6 +37,8 @@ string GameTypeName(float t) {
 		return "Race";
 	} else if (t == MAPINFO_TYPE_ARENA) {
 		return "Arena";
+	} else if (t == MAPINFO_TYPE_FREEZETAG) {
+		return "Freeze Tag";
 	}
 	return "WTF";
 }
