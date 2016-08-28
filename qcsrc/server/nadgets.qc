@@ -1,7 +1,6 @@
-.float nadget_count;
 .float nadget_hold;
 .entity nadget_pb;
-float g_nadgets_count_start;
+float g_balance_nadget_grenade_ammo;
 float g_balance_nadget_grenade_damage;
 float g_balance_nadget_grenade_damageforcescale;
 float g_balance_nadget_grenade_edgedamage;
@@ -44,13 +43,12 @@ string Nadget_NameByCode(float f) {
 #endif
 
 void Nadget_SpawnHook() {
-	self.nadget_count = g_nadgets_count_start;
 	self.nadget_hold = 0;
 }
 
 void Nadget_Init() {
 	CACHE_CVAR(g_nadgets);
-	CACHE_CVAR(g_nadgets_count_start);
+	CACHE_CVAR(g_balance_nadget_grenade_ammo);
 	CACHE_CVAR(g_balance_nadget_grenade_damage);
 	CACHE_CVAR(g_balance_nadget_grenade_damageforcescale);
 	CACHE_CVAR(g_balance_nadget_grenade_edgedamage);
@@ -62,6 +60,13 @@ void Nadget_Init() {
 	CACHE_CVAR(g_balance_nadget_grenade_radius);
 	CACHE_CVAR(g_balance_nadget_throw_speedfactor_min);
 	CACHE_CVAR(g_balance_nadget_throw_holdtime);
+	precache_sound("weapons/grenade_bounce1.wav");
+	precache_sound("weapons/grenade_bounce2.wav");
+	precache_sound("weapons/grenade_bounce3.wav");
+	precache_sound("weapons/grenade_bounce4.wav");
+	precache_sound("weapons/grenade_bounce5.wav");
+	precache_sound("weapons/grenade_bounce6.wav");
+	precache_sound("weapons/grenade_fire.wav");
 #if 0
 	float n, i;
 	n = tokenizebyseparator(cvar_string("g_nadgets"), " ");
@@ -116,6 +121,9 @@ void Nadget_Grenade_Explode (void)
 void Nadget_Grenade_Throw(float holdtime) {
 	local entity gren;
 
+	if (self.ammo_rockets < g_balance_nadget_grenade_ammo)
+		return;
+
 	if (self.deadflag)
 		makevectors(randomvec());
 	else
@@ -155,6 +163,7 @@ void Nadget_Grenade_Throw(float holdtime) {
 	gren.flags = FL_PROJECTILE;
 
 	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+	self.ammo_rockets -= g_balance_nadget_grenade_ammo;
 }
 
 void Nadget_Clear() {
@@ -162,29 +171,28 @@ void Nadget_Clear() {
 		remove(self.nadget_pb);
 		self.nadget_pb = world;
 	}
-
 	if (self.nadget_hold > 0) {
 		Nadget_Grenade_Throw(self.nadget_hold);
+
 		self.nadget_hold = 0;
 	}
 }
 
 void Nadget_Frame() {
-	if (self.nadget_count <= 0)
-		return;
-
 	if not(self.deadflag == DEAD_NO) {
 		Nadget_Clear();
 		return;
 	}
-
-	if not(self.BUTTON_HOOK)
-	if (self.nadget_hold < 0) {
-		self.nadget_hold = 0;
-		return;
+	if not(self.BUTTON_HOOK) {
+		if (self.nadget_hold < 0) {
+			self.nadget_hold = 0;
+			return;
+		}
 	}
 	if (self.BUTTON_HOOK && self.nadget_hold >= 0) {
-		if (g_balance_nadget_throw_holdtime > 0) {
+		if (self.ammo_rockets < g_balance_nadget_grenade_ammo) {
+			Nadget_Clear();
+		} else if (g_balance_nadget_throw_holdtime > 0) {
 			self.nadget_hold += frametime / g_balance_nadget_throw_holdtime;
 			if not(self.nadget_pb)
 				self.nadget_pb = ProgressBar_Create("Throw power", self);
@@ -195,7 +203,6 @@ void Nadget_Frame() {
 	}
 	if (self.nadget_hold && (!self.BUTTON_HOOK || self.nadget_hold >= 1)) {
 		Nadget_Grenade_Throw(self.nadget_hold);
-		self.nadget_count -= 1;
 		if (self.BUTTON_HOOK)
 			self.nadget_hold = -1;
 		else

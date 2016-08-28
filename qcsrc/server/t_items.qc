@@ -1783,7 +1783,11 @@ void Items_Init()
 	else if (g_weaponarena)
 	{
 		start_weapons = g_weaponarena;
-		if (g_weaponarena & (WEPBIT_GRENADE_LAUNCHER | WEPBIT_HAGAR | WEPBIT_ROCKET_LAUNCHER))
+		if (g_nadgets) {
+			start_ammo_rockets = cvar("g_start_ammo_rockets");
+			if (start_ammo_rockets > 0)
+				start_items |= IT_ROCKETS;
+		} else if (g_weaponarena & (WEPBIT_GRENADE_LAUNCHER | WEPBIT_HAGAR | WEPBIT_ROCKET_LAUNCHER))
 			start_ammo_rockets = 999;
 		if (g_weaponarena & WEPBIT_SHOTGUN)
 			start_ammo_shells = 999;
