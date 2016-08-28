@@ -71,49 +71,84 @@ void Nadget_Init() {
 #endif
 }
 
+void Nadget_Grenade_Touch (void)
+{
+	PROJECTILE_TOUCH;
+	if (other.takedamage == DAMAGE_AIM)
+		self.use();
+	else {
+		if (self.owner)
+			self.owner = world;
+
+		float r;
+		r = random() * 6;
+		if(r < 1)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 2)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 3)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 4)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+		else if(r < 5)
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+		else
+			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+	}
+}
+
 void Nadget_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(IsDifferentTeam(self.realowner, other))
 				if(IsFlying(other))
-					announce(self.owner, "announcer/male/airshot.wav");
+					announce(self.realowner, "announcer/male/airshot.wav");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, g_balance_nadget_grenade_damage, g_balance_nadget_grenade_edgedamage, g_balance_nadget_grenade_radius, world, g_balance_nadget_grenade_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, g_balance_nadget_grenade_damage, g_balance_nadget_grenade_edgedamage, g_balance_nadget_grenade_radius, world, g_balance_nadget_grenade_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
 
-void Nadget_Grenade_Throw(float speedfactor) {
+void Nadget_Grenade_Throw(float holdtime) {
 	local entity gren;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_secondary_damage);
+	if (self.deadflag)
+		makevectors(randomvec());
+	else
+		makevectors(self.v_angle);
+	sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
+	w_shotorg = self.origin;
+	traceline(w_shotorg, w_shotorg + v_forward * 21, MOVE_NOMONSTERS, self);
+	w_shotorg = w_shotorg + (trace_fraction * 20 * v_forward);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
-	gren.owner = Akimbo_Owner(self);
+	gren.owner = gren.realowner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = g_balance_nadget_grenade_damage;
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_NADGET_GRENADE;
 	setsize(gren, '0 0 -3', '0 0 -3');
 	setorigin(gren, w_shotorg);
 
-	gren.nextthink = time + g_balance_nadget_grenade_lifetime;
+	gren.nextthink = time + g_balance_nadget_grenade_lifetime - g_balance_nadget_throw_holdtime * holdtime;
 	gren.think = adaptor_think2use;
 	gren.use = Nadget_Grenade_Explode;
-	gren.touch = W_Grenade_Touch2;
+	gren.touch = Nadget_Grenade_Touch;
 	gren.takedamage = DAMAGE_YES;
 	gren.health = g_balance_nadget_grenade_health;
 	gren.damageforcescale = g_balance_nadget_grenade_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
-	gren.velocity = (w_shotdir * g_balance_nadget_grenade_speed + v_up * g_balance_nadget_grenade_speed_up) * speedfactor;
+	gren.velocity = (w_shotdir * g_balance_nadget_grenade_speed + v_up * g_balance_nadget_grenade_speed_up) *
+			bound(0, g_balance_nadget_throw_speedfactor_min + (1 - g_balance_nadget_throw_speedfactor_min) * self.nadget_hold, 1);
 	W_SetupProjectileVelocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -123,17 +158,25 @@ void Nadget_Grenade_Throw(float speedfactor) {
 }
 
 void Nadget_Clear() {
-	if (self.nadget_pb)
+	if (self.nadget_pb) {
 		remove(self.nadget_pb);
-	self.nadget_pb = world;
+		self.nadget_pb = world;
+	}
+
+	if (self.nadget_hold > 0) {
+		Nadget_Grenade_Throw(self.nadget_hold);
+		self.nadget_hold = 0;
+	}
 }
 
 void Nadget_Frame() {
 	if (self.nadget_count <= 0)
 		return;
 
-	if not(self.deadflag == DEAD_NO)
+	if not(self.deadflag == DEAD_NO) {
+		Nadget_Clear();
 		return;
+	}
 
 	if not(self.BUTTON_HOOK)
 	if (self.nadget_hold < 0) {
@@ -151,7 +194,7 @@ void Nadget_Frame() {
 			self.nadget_hold = 1;
 	}
 	if (self.nadget_hold && (!self.BUTTON_HOOK || self.nadget_hold >= 1)) {
-		Nadget_Grenade_Throw(bound(0, g_balance_nadget_throw_speedfactor_min + (1 - g_balance_nadget_throw_speedfactor_min) * self.nadget_hold, 1));
+		Nadget_Grenade_Throw(self.nadget_hold);
 		self.nadget_count -= 1;
 		if (self.BUTTON_HOOK)
 			self.nadget_hold = -1;

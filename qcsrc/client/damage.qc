@@ -198,6 +198,7 @@ void Ent_DamageInfo(float isNew)
 						sound(self, CHAN_PROJECTILE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
 				}
 				break;
+			case WEP_NADGET_GRENADE:
 			case WEP_ROCKET_LAUNCHER:
 				org2 = org + backoff * 12;
 				pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
