@@ -2615,7 +2615,8 @@ void PlayerPreThink (void)
 
 		if (g_nadgets)
 			Nadget_Frame();
-		else
+
+		if (!g_nadgets || g_grappling_hook)
 			GrapplingHookFrame();
 
 		if(frametime)

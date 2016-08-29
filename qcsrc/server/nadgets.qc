@@ -166,6 +166,7 @@ void Nadget_Grenade_Throw(float holdtime) {
 	self.ammo_rockets -= g_balance_nadget_grenade_ammo;
 }
 
+.float nadget_button;
 void Nadget_Clear() {
 	if (self.nadget_pb) {
 		remove(self.nadget_pb);
@@ -176,6 +177,14 @@ void Nadget_Clear() {
 
 		self.nadget_hold = 0;
 	}
+	self.nadget_button = FALSE;
+}
+
+void Nadget_Button() {
+	if (self.ammo_rockets < g_balance_nadget_grenade_ammo)
+		self.nadget_button = FALSE;
+	else
+		self.nadget_button = !self.nadget_button;
 }
 
 void Nadget_Frame() {
@@ -183,13 +192,16 @@ void Nadget_Frame() {
 		Nadget_Clear();
 		return;
 	}
-	if not(self.BUTTON_HOOK) {
+
+	float nadget_btn = (self.nadget_button || (g_grappling_hook ? 0 : self.BUTTON_HOOK));
+
+	if not(nadget_btn) {
 		if (self.nadget_hold < 0) {
 			self.nadget_hold = 0;
 			return;
 		}
 	}
-	if (self.BUTTON_HOOK && self.nadget_hold >= 0) {
+	if (nadget_btn && self.nadget_hold >= 0) {
 		if (self.ammo_rockets < g_balance_nadget_grenade_ammo) {
 			Nadget_Clear();
 		} else if (g_balance_nadget_throw_holdtime > 0) {
@@ -201,9 +213,9 @@ void Nadget_Frame() {
 		} else
 			self.nadget_hold = 1;
 	}
-	if (self.nadget_hold && (!self.BUTTON_HOOK || self.nadget_hold >= 1)) {
+	if (self.nadget_hold && (!nadget_btn || self.nadget_hold >= 1)) {
 		Nadget_Grenade_Throw(self.nadget_hold);
-		if (self.BUTTON_HOOK)
+		if (nadget_btn)
 			self.nadget_hold = -1;
 		else
 			self.nadget_hold = 0;
