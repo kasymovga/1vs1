@@ -216,7 +216,6 @@ void Nadget_Plasma_Think() {
 		return;
 	}
 	entity e;
-	float d;
 	for(e = findradius(self.origin, g_balance_nadget_plasma_radius); e; e = e.chain) {
 		if not(e.takedamage == DAMAGE_AIM)
 			continue;
@@ -331,7 +330,6 @@ void Nadget_Grenade_Throw() {
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	float projtype;
 	gren.use = Nadget_Grenade_Explode;
 	gren.touch = Nadget_Grenade_Touch;
 	if (self.nadget_type == NADGET_GRENADE) {
