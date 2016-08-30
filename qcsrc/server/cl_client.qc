@@ -1070,6 +1070,7 @@ void PutClientInServer (void)
 		Nadget_SpawnHook();
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
+		Nadget_ObserverHook();
 	}
 	PlayerClear(FALSE, world);
 
