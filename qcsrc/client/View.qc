@@ -434,9 +434,16 @@ void CSQC_UpdateView(float w, float h)
 
 	// draw 2D entities
 	e = self;
-	for(self = world; (self = nextent(self)); )
-		if(self.draw2d)
+	for(self = world; (self = nextent(self)); ) {
+		if not(self.draw2d)
+			continue;
+
+		if not(self.draw2d_pre)
 			self.draw2d();
+		else if (self.draw2d_pre())
+			self.draw2d();
+	}
+
 	self = e;
 
 	// draw radar

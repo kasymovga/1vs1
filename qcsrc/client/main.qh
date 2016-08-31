@@ -107,6 +107,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float ready;
 
 .void(void) draw;
+.void(void) draw2d_pre;
 .void(void) draw2d;
 .void(void) entremove;
 float drawframetime;
@@ -157,3 +158,5 @@ float armorblockpercent;
 float calledhooks;
 #define HOOK_START    1
 #define HOOK_END      2
+
+float ext_DP_CSQC_QUERYRENDERENTITY;

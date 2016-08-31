@@ -37,11 +37,32 @@ float entcs_customize()
 	return TRUE;
 }
 
+float entcs_customize_enemy()
+{
+	entity o;
+	o = self.owner;
+	if(o.deadflag != DEAD_NO)
+		return FALSE;
+	if(o.classname != "player")
+		return FALSE;
+
+	if(other.classname == "player")
+	if(teamplay)
+	if(o.team == other.team)
+		return FALSE;
+
+	return TRUE;
+}
+
 float entcs_send(entity to, float sf)
 {
 	entity o;
 	o = self.owner;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
+	if (self.classname == "entcs_sender_v2")
+		WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
+	else
+		WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS_ENEMY);
+
 	WriteByte(MSG_ENTITY, num_for_edict(o));
 	WriteShort(MSG_ENTITY, o.origin_x);
 	WriteShort(MSG_ENTITY, o.origin_y);
@@ -70,21 +91,39 @@ entity attach_entcs()
 	local entity ent;
 
 	ent = spawn();
-	ent.classname = "entcs_sender_v2";
+	self.entcs = ent;
+	if (teamplay) {
+		print("entcs sender\n");
+		ent.classname = "entcs_sender_v2";
+		ent.owner = self;
+		ent.think = entcs_think;
+		ent.nextthink = time;
+
+		Net_LinkEntity(ent, FALSE, 0, entcs_send);
+		ent.customizeentityforclient = entcs_customize;
+
+		ent.entcs = spawn();
+		ent = ent.entcs;
+	}
+
+	ent.classname = "entcs_sender_v2_enemy";
 	ent.owner = self;
 	ent.think = entcs_think;
 	ent.nextthink = time;
 
-	Net_LinkEntity(ent, FALSE, 0, entcs_send);
-	ent.customizeentityforclient = entcs_customize;
+	Net_LinkEntity(ent, TRUE, 0, entcs_send);
+	ent.customizeentityforclient = entcs_customize_enemy;
 
-	self.entcs = ent;
 
 	return ent;
 };
 
 void detach_entcs()
 {
-	remove(self.entcs);
-	self.entcs = world;
+	if (self.entcs) {
+		if (self.entcs.entcs)
+			remove(self.entcs.entcs);
+		remove(self.entcs);
+		self.entcs = world;
+	}
 };

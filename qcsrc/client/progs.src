@@ -21,6 +21,7 @@ bgmscript.qh
 mapvoting.qh
 menu.qh
 mouse.qh
+shownames.qh
 progressbar.qh
 
 main.qh
@@ -65,4 +66,5 @@ bgmscript.qc
 cl_physics.qc
 menu.qc
 mouse.qc
+shownames.qc
 progressbar.qc

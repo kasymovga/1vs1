@@ -274,6 +274,7 @@ void CSQC_Init(void)
 	mi_center = (mi_min + mi_max) * 0.5;
 	mi_scale = mi_max - mi_min;
 	minimapname = strzone(minimapname);
+	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -699,17 +700,23 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-void Ent_ReadEntCS()
+void Ent_ReadEntCS(float bIsNewEntity, float _enemy)
 {
 	InterpolateOrigin_Undo();
 
-	self.classname = "entcs_receiver";
 	self.sv_entnum = ReadByte() - 1;
 	self.origin_x = ReadShort();
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
 	self.angles_y = ReadByte() * 360.0 / 256;
 	self.origin_z = self.angles_x = self.angles_z = 0;
+	if (_enemy)
+		self.classname = "entcs_receiver_enemy";
+	else
+		self.classname = "entcs_receiver";
+	if (bIsNewEntity) {
+		Shownames_Init(self);
+	}
 
 	InterpolateOrigin_Note();
 }
@@ -937,7 +944,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	self.enttype = t;
 	switch(t)
 	{
-		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(); break;
+		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(bIsNewEntity, FALSE); break;
+		case ENT_CLIENT_ENTCS_ENEMY: Ent_ReadEntCS(bIsNewEntity, TRUE); break;
 		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
 		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
 		case ENT_CLIENT_POINTPARTICLES: Ent_PointParticles(); break;

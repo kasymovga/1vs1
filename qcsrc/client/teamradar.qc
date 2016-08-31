@@ -365,6 +365,7 @@ void() teamradar_view =
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
 		//if(color == COLOR_SPECTATOR || color == color2)
+		if (tm.sameteam)
 			draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
 	}
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');

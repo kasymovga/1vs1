@@ -1,0 +1,2 @@
+.float sameteam;
+void Shownames_Init(entity plr);
