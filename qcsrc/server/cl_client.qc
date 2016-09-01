@@ -1067,8 +1067,10 @@ void PutClientInServer (void)
 			}
 		}
 		Freeze_SpawnHook();
+		Nadget_SpawnHook();
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
+		Nadget_ObserverHook();
 	}
 	PlayerClear(FALSE, world);
 
@@ -2611,7 +2613,11 @@ void PlayerPreThink (void)
 
 		FixPlayermodel();
 
-		GrapplingHookFrame();
+		if (g_nadgets)
+			Nadget_Frame();
+
+		if (!g_nadgets || g_grappling_hook)
+			GrapplingHookFrame();
 
 		if(frametime)
 		{

@@ -50,6 +50,8 @@ akimbo.qh
 
 freeze.qh
 
+nadgets.qh
+
 progressbar.qh
 
 t_items.qh
@@ -209,5 +211,7 @@ menu.qc
 gametypevote.qc
 
 dodging.qc
+
+nadgets.qc
 
 progressbar.qc

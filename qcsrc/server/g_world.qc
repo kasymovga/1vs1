@@ -731,6 +731,7 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 	readlevelcvars();
+	Nadget_Init();
 	Items_Init();
 	W_Init();
 	PhysicReadCvars();

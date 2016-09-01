@@ -476,6 +476,7 @@ void PlayerClear(float killed, entity attacker)
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
+	Nadget_Clear();
 
 	if(killed && (self == attacker))
 		kh_Key_DropAll(self, TRUE);

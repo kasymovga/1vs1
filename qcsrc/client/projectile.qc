@@ -12,6 +12,13 @@ void SUB_Stop()
 	self.move_movetype = MOVETYPE_NONE;
 }
 
+void SUB_PlasmaStop()
+{
+	self.move_velocity = self.move_avelocity = '0 0 0';
+	self.avelocity = '0 0 0';
+	self.move_movetype = MOVETYPE_NONE;
+}
+
 .float count; // set if clientside projectile
 .float cnt; // sound index
 .float gravity;
@@ -53,6 +60,7 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_CRYLINK_BOUNCING:
 			trailparticles(self, particleeffectnum("TR_CRYLINKPLASMA"), from, to);
 			break;
+		case PROJECTILE_PLASMA:
 		case PROJECTILE_ELECTRO:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
@@ -63,7 +71,11 @@ void Projectile_DrawTrail(vector to)
 			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to);
 			break;
 		case PROJECTILE_GRENADE_BOUNCING:
+		case PROJECTILE_HANDGRENADE:
 			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to);
+			break;
+		case PROJECTILE_MOLOTOV:
+			trailparticles(self, particleeffectnum("firemine"), from, to);
 			break;
 		case PROJECTILE_PORTO_RED:
 			trailparticles(self, particleeffectnum("TR_WIZSPIKE"), from, to);
@@ -86,6 +98,7 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_BULLET_GLOWING:
 			trailparticles(self, particleeffectnum("tr_rifle"), from, to);
 			break;
+		case PROJECTILE_MOLOTOV:
 		case PROJECTILE_FIREMINE:
 			trailparticles(self, particleeffectnum("firemine"), from, to);
 			break;
@@ -141,6 +154,8 @@ void Projectile_Draw()
 				break;
 			*/
 			case PROJECTILE_GRENADE_BOUNCING:
+			case PROJECTILE_MOLOTOV:
+			case PROJECTILE_PLASMA:
 				rot = '0 -1000 0'; // sideways
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -160,6 +175,13 @@ void Projectile_Draw()
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
 			trailorigin += v_right * 1 + v_forward * -10;
+			break;
+		case PROJECTILE_HANDGRENADE:
+		case PROJECTILE_MOLOTOV:
+			trailorigin += v_right * 2 + v_forward * -20;
+			break;
+		case PROJECTILE_PLASMA:
+			trailorigin += v_right * 2 + v_forward * -20 + randomvec() * 10;
 			break;
 		default:
 			break;
@@ -294,7 +316,10 @@ void Ent_Projectile()
 			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl"); break;
 			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl"); break;
 			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl"); break;
-			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3"); break;
+			case PROJECTILE_MOLOTOV:
+			case PROJECTILE_PLASMA:
+			case PROJECTILE_HANDGRENADE: setmodel(self, "models/grenademodel.md3"); self.scale = 2; break;
+			case PROJECTILE_GRENADE:
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3"); break;
 			case PROJECTILE_LASER: setmodel(self, "models/laser.mdl"); break;
 			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3"); break;
@@ -332,6 +357,10 @@ void Ent_Projectile()
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				break;
+			case PROJECTILE_HANDGRENADE:
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = SUB_Null;
+				break;
 			case PROJECTILE_PORTO_RED:
 				self.colormod = '2 1 1';
 				self.alpha = 0.5;
@@ -363,6 +392,9 @@ void Ent_Projectile()
 			case PROJECTILE_BULLET_BIG:
 				self.move_movetype = MOVETYPE_BOUNCEMISSILE;
 				self.move_touch = SUB_Null;
+				break;
+			case PROJECTILE_PLASMA:
+				self.move_touch = SUB_PlasmaStop;
 				break;
 			default:
 				break;

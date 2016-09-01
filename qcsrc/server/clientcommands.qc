@@ -693,6 +693,8 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "menu_select") {
 		if (argv(1) == "gametypevote")
 			GameTypeVote_Select(self, stof(argv(2)));
+		else if (argv(1) == "nadget")
+			Nadget_Select(stof(argv(2)));
 	} else {
 		//if(ctf_clientcommand())
 		//	return;
