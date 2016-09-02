@@ -46,6 +46,9 @@ float entcs_customize_enemy()
 	if(o.classname != "player")
 		return FALSE;
 
+	if (o == other)
+		return FALSE;
+
 	if(other.classname == "player")
 	if(teamplay)
 	if(o.team == other.team)
@@ -82,7 +85,8 @@ void entcs_think()
 	{
 		setorigin(self, o.origin);
 		self.angles = o.angles;
-		self.SendFlags |= 1;
+		if not(self.cnt)
+			self.SendFlags |= 1;
 	}
 };
 
@@ -114,6 +118,7 @@ entity attach_entcs()
 	}
 
 	ent.classname = "entcs_sender_v2_enemy";
+	ent.cnt = 1;
 	ent.owner = self;
 	ent.think = entcs_think;
 	ent.nextthink = time;
