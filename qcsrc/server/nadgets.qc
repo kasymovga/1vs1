@@ -224,6 +224,10 @@ void Nadget_Plasma_Think() {
 		if not(e.takedamage == DAMAGE_AIM)
 			continue;
 
+		traceline(self.origin, e.origin, MOVE_WORLDONLY, world);
+		if (trace_fraction < 1)
+			continue;
+
 		te_lightning1(world, self.origin, e.origin);
 		sound(self, CHAN_WEAPON, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 		Damage(e, self, self.realowner, g_balance_nadget_plasma_damage * 0.1, WEP_NADGET_PLASMA, e.origin, normalize(e.origin - self.origin) * g_balance_nadget_plasma_force);
