@@ -710,10 +710,13 @@ void Ent_ReadEntCS(float bIsNewEntity, float _enemy)
 	self.origin_z = ReadShort();
 	self.angles_y = ReadByte() * 360.0 / 256;
 	self.origin_z = self.angles_x = self.angles_z = 0;
-	if (_enemy)
+	if (_enemy) {
 		self.classname = "entcs_receiver_enemy";
-	else
+		self.cnt = 1;
+	} else {
 		self.classname = "entcs_receiver";
+		self.cnt = 0;
+	}
 	if (bIsNewEntity) {
 		Shownames_Init(self);
 	}

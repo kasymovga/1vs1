@@ -32,19 +32,27 @@ float Shownames_PreDrawPlayer() {
     if(!shownames)
         return FALSE;
 
+    if (teamplay)
     if (shownames_teamonly)
-	if (self.classname == "entcs_receiver_enemy")
+	if (self.cnt)
         return FALSE;
 
-    if(ext_DP_CSQC_QUERYRENDERENTITY) {
-        float plr_entnum = self.sv_entnum + 1;
+	if not(ext_DP_CSQC_QUERYRENDERENTITY)
+		return FALSE;
 
-        if(getentity(plr_entnum, E_ACTIVE)) {
-            self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
-			return TRUE;
-		}
-    }
-	return FALSE;
+	float plr_entnum = self.sv_entnum + 1;
+
+	if(getentity(plr_entnum, E_ACTIVE)) {
+		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
+	}
+
+	if (self.cnt) {
+		traceline(self.iorigin, view_origin, 0, world);
+		if (trace_fraction < 1)
+			return FALSE;
+	}
+
+	return TRUE;
 }
 
 void Shownames_DrawPlayer() {
