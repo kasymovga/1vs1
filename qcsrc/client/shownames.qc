@@ -44,7 +44,8 @@ float Shownames_PreDrawPlayer() {
 
 	if(getentity(plr_entnum, E_ACTIVE)) {
 		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
-	}
+	} else
+		return FALSE;
 
 	if (self.cnt) {
 		traceline(self.iorigin, view_origin, 0, world);
