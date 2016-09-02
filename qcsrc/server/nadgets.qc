@@ -95,12 +95,12 @@ void Nadget_SpawnHook() {
 }
 
 void Nadget_Select(float nadget) {
-	if (self.nadget_type)
+	if (nadget < 0 || nadget >= available_nadgets_count)
 		return;
 
-	if (nadget >= 0 && nadget < available_nadgets_count) {
+	if not(self.nadget_type)
 		self.nadget_type = available_nadgets[nadget];
-	}
+
 	if (self.nadget_menu) {
 		remove(self.nadget_menu);
 		self.nadget_menu = world;
