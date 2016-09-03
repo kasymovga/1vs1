@@ -128,6 +128,7 @@ vector w_shotdir;
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
+.float lastshot_time;
 void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
@@ -238,14 +239,16 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	if (!g_norecoil)
 		ent.punchangle_x = recoil * -1;
 
-	if (snd != "")
-	{
-		sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
-	}
+	if (ent.lastshot_time < time) {
+		if (snd != "")
+			sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
 
-	if (ent.items & IT_STRENGTH)
-	if (!g_minstagib)
-		sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		if (ent.items & IT_STRENGTH)
+		if (!g_minstagib)
+			sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+
+		ent.lastshot_time = time;
+	}
 };
 
 #define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
