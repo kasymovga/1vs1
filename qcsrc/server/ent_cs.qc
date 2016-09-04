@@ -61,16 +61,21 @@ float entcs_send(entity to, float sf)
 {
 	entity o;
 	o = self.owner;
-	if (self.classname == "entcs_sender_v2")
-		WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
-	else
-		WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS_ENEMY);
-
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, num_for_edict(o));
 	WriteShort(MSG_ENTITY, o.origin_x);
 	WriteShort(MSG_ENTITY, o.origin_y);
 	WriteShort(MSG_ENTITY, o.origin_z);
 	WriteByte(MSG_ENTITY, o.angles_y * 256.0 / 360);
+	return TRUE;
+};
+
+float entcs_send_enemy(entity to, float sf)
+{
+	entity o;
+	o = self.owner;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS_ENEMY);
+	WriteByte(MSG_ENTITY, num_for_edict(o));
 	return TRUE;
 };
 
@@ -101,7 +106,6 @@ entity attach_entcs()
 	ent = spawn();
 	self.entcs = ent;
 	if (teamplay) {
-		print("entcs sender\n");
 		ent.classname = "entcs_sender_v2";
 		ent.owner = self;
 		ent.think = entcs_think;
@@ -123,7 +127,7 @@ entity attach_entcs()
 	ent.think = entcs_think;
 	ent.nextthink = time;
 
-	Net_LinkEntity(ent, TRUE, 0, entcs_send);
+	Net_LinkEntity(ent, TRUE, 0, entcs_send_enemy);
 	ent.customizeentityforclient = entcs_customize_enemy;
 
 

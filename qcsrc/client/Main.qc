@@ -700,7 +700,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-void Ent_ReadEntCS(float bIsNewEntity, float _enemy)
+void Ent_ReadEntCS(float bIsNewEntity)
 {
 	InterpolateOrigin_Undo();
 
@@ -710,18 +710,21 @@ void Ent_ReadEntCS(float bIsNewEntity, float _enemy)
 	self.origin_z = ReadShort();
 	self.angles_y = ReadByte() * 360.0 / 256;
 	self.origin_z = self.angles_x = self.angles_z = 0;
-	if (_enemy) {
-		self.classname = "entcs_receiver_enemy";
-		self.cnt = 1;
-	} else {
-		self.classname = "entcs_receiver";
-		self.cnt = 0;
-	}
-	if (bIsNewEntity) {
+	self.classname = "entcs_receiver";
+	self.cnt = 0;
+	if (bIsNewEntity)
 		Shownames_Init(self);
-	}
 
 	InterpolateOrigin_Note();
+}
+
+void Ent_ReadEntCSEnemy(float bIsNewEntity)
+{
+	self.sv_entnum = ReadByte() - 1;
+	self.classname = "entcs_receiver_enemy";
+	self.cnt = 1;
+	if (bIsNewEntity)
+		Shownames_Init(self);
 }
 
 void Ent_Remove();
@@ -947,8 +950,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	self.enttype = t;
 	switch(t)
 	{
-		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(bIsNewEntity, FALSE); break;
-		case ENT_CLIENT_ENTCS_ENEMY: Ent_ReadEntCS(bIsNewEntity, TRUE); break;
+		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(bIsNewEntity); break;
+		case ENT_CLIENT_ENTCS_ENEMY: Ent_ReadEntCSEnemy(bIsNewEntity); break;
 		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
 		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
 		case ENT_CLIENT_POINTPARTICLES: Ent_PointParticles(); break;
