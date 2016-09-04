@@ -399,12 +399,24 @@ void Ent_Projectile()
 			default:
 				break;
 		}
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
+		if (f & 4) {
+			if (f & 16) {
+				self.mins_x = ReadChar();
+				self.mins_y = ReadChar();
+			} else
+				self.mins = '0 0 0';
+
+			self.mins_z = ReadChar();
+			if (f & 8) {
+				self.maxs_x = ReadChar();
+				self.maxs_y = ReadChar();
+				self.maxs_z = ReadChar();
+			} else
+				self.maxs = self.mins;
+		} else {
+			self.mins = '0 0 0';
+			self.maxs = '0 0 0';
+		}
 	}
 
 	if(self.gravity)
