@@ -67,8 +67,8 @@ void fillNexuizServerListTab(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Join"));
-		me.TD(me, 1, me.columns - 2, e = makeNexuizButton("Join!", '0 0 0'));
+		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Join"));
+		me.TD(me, 1, me.columns, e = makeNexuizButton("Join!", '0 0 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;
