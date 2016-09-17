@@ -1,4 +1,4 @@
-../../1vs1.dat // output filename
+progs.dat // output filename
 
 ../common/util-pre.qh
 sys.qh

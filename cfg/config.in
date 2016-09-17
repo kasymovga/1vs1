@@ -1,5 +1,6 @@
-sv_progs 1vs1.dat
-csqc_progname cl_1vs1.dat
+alias nex252_compat_mode_enable "csqc_progname csprogs.dat; nex252_compat_mode 1"
+set nex252_compat_mode "0"
+
 set bot_messages_suicide "I am sooo noob today|Ooops|cyka bl9"
 set bot_messages_fragged "damn it!|bl9|aaarrrrgggghhhh"
 set bot_messages_fragged_priv "new patch?|oh, its you again|9 toje tak mogu|nice one :)|9 otomschu"
@@ -150,7 +151,6 @@ set g_balance_uzi_sustained_gravityfactor 1
 set g_balance_campingrifle_secondary_gravityfactor 1
 set g_balance_campingrifle_primary_gravityfactor 1
 set sv_disable_crouch 0
-sv_curl_serverpackages "cl_1vs1.dat"
 set g_pickup_drop_backpack 0
 set g_akimbo_weapons "laser"
 set g_powerup_strength_akimbo 0
@@ -211,10 +211,6 @@ set sv_spawnreplace_weapon_hyperblaster weapon_hlac
 //Xonotic compat
 set sv_spawnreplace_misc_breakablemodel "func_breakable"
 set sv_spawnreplace_weapon_seeker "weapon_hagar"
-
-set nex252_compat_mode "0"
-alias nex252_compat_mode_enable "csqc_progname csprogs.dat; nex252_compat_mode 1"
-alias nex252_compat_mode_disable "csqc_progname cl_1vs1.dat; nex252_compat_mode 0"
 
 set sv_infomessages_interval "10"
 set sv_infomessage1 "This server is running 1vs1 mod from https://github.com/kasymovga/1vs1"

@@ -1,4 +1,4 @@
-../../menu.dat
+menu.dat
 
 config.qh
 ../common/util-pre.qh
