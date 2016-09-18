@@ -1,6 +1,6 @@
 SV_SOURCES=$(shell find qcsrc/server qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
 CL_SOURCES=$(shell find qcsrc/client qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
-MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
+MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)')
 FTEQCC=fteqcc
 MOD_NAME=1vs1
 SV_PROGNAME=$(MOD_NAME).dat
