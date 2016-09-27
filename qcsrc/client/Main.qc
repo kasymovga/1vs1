@@ -173,7 +173,8 @@ void CSQC_Init(void)
 		registercvar("crosshair_fireball_size", "1", CVAR_SAVE);
 	}
 
-	if (cvar_string("sv_master2") == "") {
+	if (cvar_string("sv_master2") == "")
+	if (cvar_string("sv_masterextra1") == "") {
 		localcmd("\nseta sv_master2 107.161.23.68\n");
 	}
 	
