@@ -172,6 +172,10 @@ void CSQC_Init(void)
 		registercvar("crosshair_fireball_color_alpha", "1", CVAR_SAVE);
 		registercvar("crosshair_fireball_size", "1", CVAR_SAVE);
 	}
+
+	if (cvar_string("sv_master2") == "") {
+		localcmd("\nseta sv_master2 107.161.23.68\n");
+	}
 	
 	check_unacceptable_compiler_bugs();
 
