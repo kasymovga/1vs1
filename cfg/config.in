@@ -330,3 +330,6 @@ set g_balance_nadget_plasma_edgedamage 0
 set g_balance_nadget_plasma_force 50
 set g_balance_nadget_plasma_count 5
 set g_balance_nadget_plasma_lifetime 3
+
+set hud_shownames 1
+set hud_shownames_enemies 0
