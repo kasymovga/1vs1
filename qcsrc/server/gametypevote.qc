@@ -10,44 +10,11 @@ float gametypes_count;
 
 .float gametypevote_select;
 
-string GameTypeName(float t) {
-	if (t == MAPINFO_TYPE_DEATHMATCH) {
-		return "Deathmatch";
-	} else if (t == MAPINFO_TYPE_DOMINATION) {
-		return "Domination";
-	} else if (t == MAPINFO_TYPE_TEAM_DEATHMATCH) {
-		return "Team Deathmatch";
-	} else if (t == MAPINFO_TYPE_CTF) {
-		return "Capture The Flag";
-	} else if (t == MAPINFO_TYPE_ASSAULT) {
-		return "Assault";
-	} else if (t == MAPINFO_TYPE_RUNEMATCH) {
-		return "Runematch";
-	} else if (t == MAPINFO_TYPE_NEXBALL) {
-		return "Nexball";
-	} else if (t == MAPINFO_TYPE_ONSLAUGHT) {
-		return "Onslaught";
-	} else if (t == MAPINFO_TYPE_KEYHUNT) {
-		return "Key Hunt";
-	} else if (t == MAPINFO_TYPE_LMS) {
-		return "Last Man Standing";
-	} else if (t == MAPINFO_TYPE_CTS) {
-		return "CTS";
-	} else if (t == MAPINFO_TYPE_RACE) {
-		return "Race";
-	} else if (t == MAPINFO_TYPE_ARENA) {
-		return "Arena";
-	} else if (t == MAPINFO_TYPE_FREEZETAG) {
-		return "Freeze Tag";
-	}
-	return "WTF";
-}
-
 string GameTypeVote_GetDescr(float n) {
 	if (gametypes_descr[n] != "")
 		strunzone(gametypes_descr[n]);
 
-	gametypes_descr[n] = strzone(strcat(GameTypeName(gametypes[n]), " (", ftos(gametypes_votes[n]), ")"));
+	gametypes_descr[n] = strzone(strcat(MapInfo_HumanString_FromType(gametypes[n]), " (", ftos(gametypes_votes[n]), ")"));
 	return gametypes_descr[n];
 }
 

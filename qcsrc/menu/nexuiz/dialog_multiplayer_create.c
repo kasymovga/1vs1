@@ -46,7 +46,7 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_cts", "Race CTS"));
 			if(e.checked) e0 = NULL;
 	me.TR(me);
-		n = 7;
+		n = 8;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_tdm", "TDM"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_ctf", "CTF"));
@@ -60,6 +60,8 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_onslaught", "Onslaught"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_nexball", "Nexball"));
+			if(e.checked) e0 = NULL;
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_freeze", "FreezeTag"));
 			if(e.checked) e0 = NULL;
 		if(e0)
 		{

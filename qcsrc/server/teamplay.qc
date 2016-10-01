@@ -105,6 +105,7 @@ void WriteGameCvars()
 	cvar_set("g_race", ftos(g_race));
 	cvar_set("g_nexball", ftos(g_nexball));
 	cvar_set("g_cts", ftos(g_cts));
+	cvar_set("g_freeze", ftos(g_freeze));
 }
 
 void ReadGameCvars()
@@ -130,6 +131,7 @@ void ReadGameCvars()
 		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
 		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
+		found += (g_freeze = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("g_freeze")));
 
 		if(found)
 			break;
@@ -220,16 +222,22 @@ void InitGameplayMode()
 	fraglimit_override = cvar("fraglimit_override");
 	leadlimit_override = cvar("leadlimit_override");
 
+	gamemode_name = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
 	if(g_dm)
 	{
 		game = GAME_DEATHMATCH;
-		gamemode_name = "Deathmatch";
 	}
 
 	if(g_tdm)
 	{
 		game = GAME_TEAM_DEATHMATCH;
-		gamemode_name = "Team Deathmatch";
+		ActivateTeamplay();
+		tdm_init();
+	}
+
+	if(g_freeze)
+	{
+		game = GAME_TEAM_DEATHMATCH;
 		ActivateTeamplay();
 		tdm_init();
 	}
@@ -237,7 +245,6 @@ void InitGameplayMode()
 	if(g_domination)
 	{
 		game = GAME_DOMINATION;
-		gamemode_name = "Domination";
 		ActivateTeamplay();
 		fraglimit_override = cvar("g_domination_point_limit");
 		leadlimit_override = cvar("g_domination_point_leadlimit");
@@ -247,7 +254,6 @@ void InitGameplayMode()
 	if(g_ctf)
 	{
 		game = GAME_CTF;
-		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
 		if(g_campaign)
 			g_ctf_win_mode = 2;
@@ -270,7 +276,6 @@ void InitGameplayMode()
 	if(g_runematch)
 	{
 		game = GAME_RUNEMATCH;
-		gamemode_name = "Rune Match";
 		if(cvar("deathmatch_force_teamplay"))
 			ActivateTeamplay();
 		fraglimit_override = cvar("g_runematch_point_limit");
@@ -280,7 +285,6 @@ void InitGameplayMode()
 	if(g_lms)
 	{
 		game = GAME_LMS;
-		gamemode_name = "Last Man Standing";
 		fraglimit_override = cvar("g_lms_lives_override");
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
@@ -293,7 +297,6 @@ void InitGameplayMode()
 	if(g_arena)
 	{
 		game = GAME_ARENA;
-		gamemode_name = "Arena";
 		fraglimit_override = cvar("g_arena_point_limit");
 		leadlimit_override = cvar("g_arena_point_leadlimit");
 		maxspawned = cvar("g_arena_maxspawned");
@@ -305,7 +308,6 @@ void InitGameplayMode()
 	if(g_keyhunt)
 	{
 		game = GAME_KEYHUNT;
-		gamemode_name = "Key Hunt";
 		ActivateTeamplay();
 		fraglimit_override = cvar("g_keyhunt_point_limit");
 		leadlimit_override = cvar("g_keyhunt_point_leadlimit");
@@ -315,7 +317,6 @@ void InitGameplayMode()
 	if(g_assault)
 	{
 		game = GAME_ASSAULT;
-		gamemode_name = "Assault";
 		ActivateTeamplay();
 		ScoreRules_assault();
 	}
@@ -323,14 +324,12 @@ void InitGameplayMode()
 	if(g_onslaught)
 	{
 		game = GAME_ONSLAUGHT;
-		gamemode_name = "Onslaught";
 		ActivateTeamplay();
 	}
 
 	if(g_race)
 	{
 		game = GAME_RACE;
-		gamemode_name = "Race";
 
 		if(cvar("g_race_teams"))
 		{
@@ -348,7 +347,6 @@ void InitGameplayMode()
 	if(g_cts)
 	{
 		game = GAME_CTS;
-		gamemode_name = "CTS";
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
@@ -357,7 +355,6 @@ void InitGameplayMode()
 	if(g_nexball)
 	{
 		game = GAME_NEXBALL;
-		gamemode_name = "Nexball";
 		fraglimit_override = cvar("g_nexball_goallimit");
 		leadlimit_override = cvar("g_nexball_goalleadlimit");
 		ActivateTeamplay();

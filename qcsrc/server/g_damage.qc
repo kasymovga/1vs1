@@ -209,7 +209,7 @@ void GiveFrags (entity attacker, entity targ, float f)
 		if(g_ctf_ignore_frags)
 			f = 0;
 	}
-	else if (g_tdm && g_tdm_freeze)
+	else if (g_freeze)
 	{
 		f = Freeze_HandleFrags(attacker, targ, f);
 	}

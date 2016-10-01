@@ -2,10 +2,10 @@ float freeze_active;
 float freeze_activate_time;
 float freeze_countdown_last;
 float freeze_winner_team;
-float g_tdm_freeze_enddelay;
-float g_tdm_freeze_slowdown;
-float g_tdm_freeze_startdelay;
-float g_tdm_freeze_unfroze_time;
+float g_freeze_enddelay;
+float g_freeze_slowdown;
+float g_freeze_startdelay;
+float g_freeze_unfroze_time;
 float sv_model_ice_scale;
 float sv_model_ice_z;
 float sv_model_ice_alpha;
@@ -44,13 +44,17 @@ void Freeze_Think()
 	if (team_check >= 0) {
 		FOR_EACH_PLAYER(plr)
 		{
-			plr.deadflag = DEAD_NO;
 			Freeze_PlayerClear(plr);
+			if (plr.deadflag != DEAD_NO) {
+				entity oldself = self;
+				PutClientInServer();
+				self = oldself;
+			}
 			if (clienttype(plr) == CLIENTTYPE_REAL)
 				centerprint(plr, "^2Awaiting players...\n");
 		}
 		freeze_active = 0;
-		freeze_activate_time = time + g_tdm_freeze_enddelay;
+		freeze_activate_time = time + g_freeze_enddelay;
 		return;
 	}
 	if not(freeze_active)
@@ -118,7 +122,7 @@ void Freeze_Think()
 	{
 		freeze_winner_team = team_alive;
 		freeze_active = 0;
-		freeze_activate_time = time + g_tdm_freeze_enddelay;
+		freeze_activate_time = time + g_freeze_enddelay;
 	}
 }
 
@@ -188,13 +192,13 @@ void Freeze_IceThink()
 		self.unfroze_progress += ICE_FRAME_TIME;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			if (self.unfroze_pb)
-				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_tdm_freeze_unfroze_time);
+				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
 
 		if (clienttype(self.owner) == CLIENTTYPE_REAL)
 			if (self.owner.unfroze_pb)
-				ProgressBar_SetValue(self.owner.unfroze_pb, self.unfroze_progress / g_tdm_freeze_unfroze_time);
+				ProgressBar_SetValue(self.owner.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
 	}
-	if (self.unfroze_progress >= g_tdm_freeze_unfroze_time)
+	if (self.unfroze_progress >= g_freeze_unfroze_time)
 	{
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
@@ -213,15 +217,12 @@ void Freeze_IceThink()
 		self.unfroze_progress = min(0, oldprogress - ICE_FRAME_TIME);
 
 	if (self.unfroze_progress != oldprogress)
-		self.alpha = sv_model_ice_alpha * max(0.01, (g_tdm_freeze_unfroze_time - self.unfroze_progress));
+		self.alpha = sv_model_ice_alpha * max(0.01, (g_freeze_unfroze_time - self.unfroze_progress));
 }
 
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 {
-	if not(g_tdm)
-		return FALSE;
-
-	if not(g_tdm_freeze)
+	if not(g_freeze)
 		return FALSE;
 
 	need_check_teams = 1;
@@ -283,22 +284,20 @@ void Freeze_PlayerClear(entity plr)
 
 void Freeze_Init()
 {
-	CACHE_CVAR(g_tdm_freeze);
-	CACHE_CVAR(g_tdm_freeze_enddelay);
-	CACHE_CVAR(g_tdm_freeze_slowdown);
-	CACHE_CVAR(g_tdm_freeze_startdelay);
-	CACHE_CVAR(g_tdm_freeze_unfroze_time);
-	if (g_tdm_freeze_unfroze_time <= 0)
-		g_tdm_freeze_unfroze_time = 1;
+	CACHE_CVAR(g_freeze);
+	CACHE_CVAR(g_freeze_enddelay);
+	CACHE_CVAR(g_freeze_slowdown);
+	CACHE_CVAR(g_freeze_startdelay);
+	CACHE_CVAR(g_freeze_unfroze_time);
+	if (g_freeze_unfroze_time <= 0)
+		g_freeze_unfroze_time = 1;
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
-	if not(g_tdm)
+	if not(g_freeze)
 		return;
-	if not(g_tdm_freeze)
-		return;
-	freeze_activate_time = time + g_tdm_freeze_startdelay;
+	freeze_activate_time = time + g_freeze_startdelay;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;
@@ -309,7 +308,7 @@ void Freeze_Init()
 
 float Freeze_SpeedMod() {
 	if (self.deadflag == DEAD_FREEZE)
-		return g_tdm_freeze_slowdown;
+		return g_freeze_slowdown;
 
 	return 1;
 }

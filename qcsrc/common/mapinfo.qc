@@ -536,6 +536,39 @@ float MapInfo_Type_FromString(string t)
 	else                    return 0;
 }
 
+string MapInfo_HumanString_FromType(float t) {
+	if (t == MAPINFO_TYPE_DEATHMATCH) {
+		return "Deathmatch";
+	} else if (t == MAPINFO_TYPE_DOMINATION) {
+		return "Domination";
+	} else if (t == MAPINFO_TYPE_TEAM_DEATHMATCH) {
+		return "Team Deathmatch";
+	} else if (t == MAPINFO_TYPE_CTF) {
+		return "Capture The Flag";
+	} else if (t == MAPINFO_TYPE_ASSAULT) {
+		return "Assault";
+	} else if (t == MAPINFO_TYPE_RUNEMATCH) {
+		return "Runematch";
+	} else if (t == MAPINFO_TYPE_NEXBALL) {
+		return "Nexball";
+	} else if (t == MAPINFO_TYPE_ONSLAUGHT) {
+		return "Onslaught";
+	} else if (t == MAPINFO_TYPE_KEYHUNT) {
+		return "Key Hunt";
+	} else if (t == MAPINFO_TYPE_LMS) {
+		return "Last Man Standing";
+	} else if (t == MAPINFO_TYPE_CTS) {
+		return "CTS";
+	} else if (t == MAPINFO_TYPE_RACE) {
+		return "Race";
+	} else if (t == MAPINFO_TYPE_ARENA) {
+		return "Arena";
+	} else if (t == MAPINFO_TYPE_FREEZETAG) {
+		return "Freeze Tag";
+	}
+	return "WTF";
+}
+
 void _MapInfo_Parse_Settemp(string pFilename, string acl, string s, float recurse)
 {
 	string t;
@@ -745,6 +778,10 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f);
 			else
 				dprint("Map ", pFilename, " supports unknown game type ", t, ", ignored\n");
+
+			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
+			if (cvar("g_freeze_use_tdm_maps"))
+				MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 		}
 		else if(t == "size")
 		{
@@ -944,6 +981,8 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_NEXBALL;
 	else if(cvar("g_cts"))
 		return MAPINFO_TYPE_CTS;
+	else if(cvar("g_freeze"))
+		return MAPINFO_TYPE_FREEZETAG;
 	else
 		return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -987,9 +1026,8 @@ string MapInfo_GetGameTypeCvar(float t)
 	switch(t)
 	{
 		case MAPINFO_TYPE_DEATHMATCH: return "g_dm";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH:
-		case MAPINFO_TYPE_FREEZETAG:
-				return "g_tdm";
+		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "g_tdm";
+		case MAPINFO_TYPE_FREEZETAG: return "g_freeze";
 		case MAPINFO_TYPE_DOMINATION: return "g_domination";
 		case MAPINFO_TYPE_CTF: return "g_ctf";
 		case MAPINFO_TYPE_RUNEMATCH: return "g_runematch";
@@ -1009,8 +1047,8 @@ void MapInfo_SwitchGameType(float t)
 {
 	cvar_set("gamecfg",      "0");
 	cvar_set("g_dm",         (t == MAPINFO_TYPE_DEATHMATCH)      ? "1" : "0");
-	cvar_set("g_tdm",        (t & (MAPINFO_TYPE_TEAM_DEATHMATCH | MAPINFO_TYPE_FREEZETAG)) ? "1" : "0");
-	cvar_set("g_tdm_freeze", (t == MAPINFO_TYPE_FREEZETAG)        ? "1" : "0");
+	cvar_set("g_tdm",        (t == MAPINFO_TYPE_TEAM_DEATHMATCH) ? "1" : "0");
+	cvar_set("g_freeze",     (t == MAPINFO_TYPE_FREEZETAG)       ? "1" : "0");
 	cvar_set("g_domination", (t == MAPINFO_TYPE_DOMINATION)      ? "1" : "0");
 	cvar_set("g_ctf",        (t == MAPINFO_TYPE_CTF)             ? "1" : "0");
 	cvar_set("g_runematch",  (t == MAPINFO_TYPE_RUNEMATCH)       ? "1" : "0");

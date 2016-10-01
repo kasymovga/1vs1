@@ -428,6 +428,7 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_RACE) return "rc";
 	else if (g == GAME_NEXBALL) return "nexball";
 	else if (g == GAME_CTS) return "cts";
+	else if (g == GAME_FREEZETAG) return "ft";
 	return "dm";
 }
 

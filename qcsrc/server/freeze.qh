@@ -1,4 +1,4 @@
-float g_tdm_freeze;
+float g_freeze;
 void Freeze_Init();
 void Freeze_SpawnHook();
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);

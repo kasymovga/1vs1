@@ -72,6 +72,7 @@ string MapInfo_ListAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 float MapInfo_Type_FromString(string t);
 string MapInfo_GetGameTypeCvar(float t);
 void MapInfo_SwitchGameType(float t);
+string MapInfo_HumanString_FromType(float t);
 
 // to be called from worldspawn to set up cvars
 void MapInfo_LoadMapSettings(string s);
