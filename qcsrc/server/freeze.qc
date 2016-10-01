@@ -61,7 +61,6 @@ void Freeze_Think()
 	{
 		if (time >= freeze_activate_time)
 		{
-			print("TESTESTETST\n");
 			freeze_countdown_last = 0;
 			reset_map(TRUE);
 			FOR_EACH_PLAYER(plr)
@@ -70,6 +69,9 @@ void Freeze_Think()
 			FOR_EACH_REALPLAYER(plr) {
 				centerprint(plr, "^2New round started\n");
 			}
+
+			FOR_EACH_REALPLAYER(plr)
+				announce(plr, "announcer/robotic/begin.wav");
 		}
 		else
 		{
@@ -85,6 +87,10 @@ void Freeze_Think()
 				{
 					centerprint(plr, strcat("^2Round finished!\n^2", winner_message, "\n^2Restarting in ", ftos(countdown), "\n"));
 					freeze_countdown_last = countdown;
+
+					if (countdown <= 3)
+						FOR_EACH_REALPLAYER(plr)
+							announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"));
 				}
 			}
 		}
@@ -120,6 +126,9 @@ void Freeze_Think()
 
 	if (have_death_players)
 	{
+		FOR_EACH_REALPLAYER(plr)
+			announce(plr, "domination/claim.wav");
+
 		freeze_winner_team = team_alive;
 		freeze_active = 0;
 		freeze_activate_time = time + g_freeze_enddelay;
@@ -303,6 +312,11 @@ void Freeze_Init()
 	freeze_controller.nextthink = time;
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
+	precache_sound("domination/claim.wav");
+	precache_sound("announcer/robotic/begin.wav");
+	precache_sound("announcer/robotic/3.wav");
+	precache_sound("announcer/robotic/2.wav");
+	precache_sound("announcer/robotic/1.wav");
 	need_check_teams = 1;
 }
 
