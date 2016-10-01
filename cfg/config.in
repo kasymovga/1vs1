@@ -213,7 +213,7 @@ set sv_spawnreplace_misc_breakablemodel "func_breakable"
 set sv_spawnreplace_weapon_seeker "weapon_hagar"
 
 set sv_infomessages_interval "10"
-set sv_infomessage1 "This server is running 1vs1 mod from https://github.com/kasymovga/1vs1"
+set sv_infomessage1 ""
 set sv_infomessage2 ""
 set sv_infomessage3 ""
 set sv_infomessage4 ""
