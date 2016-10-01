@@ -267,6 +267,9 @@ set g_freeze_slowdown 0.1
 set g_freeze_startdelay 3
 set g_freeze_unfroze_time 3
 set g_freeze_use_tdm_maps 1
+set g_freeze_winlimit 10
+
+set g_tdm_fraglimit 50
 
 set sv_model_ice "models/ebomb.mdl"
 set sv_model_ice_alpha 0.5

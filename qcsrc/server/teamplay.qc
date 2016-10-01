@@ -233,6 +233,7 @@ void InitGameplayMode()
 		game = GAME_TEAM_DEATHMATCH;
 		ActivateTeamplay();
 		tdm_init();
+		fraglimit_override = cvar("g_tdm_fraglimit");
 	}
 
 	if(g_freeze)
@@ -240,6 +241,7 @@ void InitGameplayMode()
 		game = GAME_TEAM_DEATHMATCH;
 		ActivateTeamplay();
 		tdm_init();
+		fraglimit_override = cvar("g_freeze_winlimit");
 	}
 
 	if(g_domination)
