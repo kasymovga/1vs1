@@ -83,26 +83,17 @@ void reset_map(float dorespawn)
 			}
 			else
 			{
-				/*
-				only reset players if a restart countdown is active
-				this can either be due to cvar sv_ready_restart_after_countdown having set
-				restart_mapalreadyrestarted to 1 after the countdown ended or when
-				sv_ready_restart_after_countdown is not used and countdown is still running
-				*/
-				if (restart_mapalreadyrestarted || (time < game_starttime))
-				{
-					//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (self.classname == "player") {
-						//PlayerScore_Clear(self);
-						if(g_lms)
-							PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
-						self.killcount = 0;
-						//stop the player from moving so that he stands still once he gets respawned
-						self.velocity = '0 0 0';
-						self.avelocity = '0 0 0';
-						self.movement = '0 0 0';
-						PutClientInServer();
-					}
+				//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
+				if (self.classname == "player") {
+					//PlayerScore_Clear(self);
+					if(g_lms)
+						PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
+					self.killcount = 0;
+					//stop the player from moving so that he stands still once he gets respawned
+					self.velocity = '0 0 0';
+					self.avelocity = '0 0 0';
+					self.movement = '0 0 0';
+					PutClientInServer();
 				}
 			}
 		}

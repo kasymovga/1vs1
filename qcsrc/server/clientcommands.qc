@@ -775,7 +775,6 @@ void ReadyRestartForce()
 
 	readyrestart_happened = 1;
 	game_starttime = time + RESTART_COUNTDOWN;
-	restart_mapalreadyrestarted = 0; //reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	inWarmupStage = 0; //once the game is restarted the game is in match stage
 
@@ -867,7 +866,6 @@ void ReadyCount()
  * is set)
  */
 void restartTimer_Think() {
-	restart_mapalreadyrestarted = 1;
 	reset_map(TRUE);
 	Score_ClearAll();
 	remove(self);

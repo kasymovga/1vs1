@@ -24,8 +24,9 @@ void Freeze_Think()
 	self.nextthink = time;
 	if (gameover)
 		return;
-	if (time < game_starttime)
+	if (time < game_starttime || inWarmupStage)
 		return;
+
 	entity plr;
 	float need_check_teams_copy = need_check_teams;
 	need_check_teams = 0;
@@ -56,16 +57,15 @@ void Freeze_Think()
 	{
 		if (time >= freeze_activate_time)
 		{
-			game_starttime = freeze_activate_time + g_tdm_freeze_startdelay;
+			print("TESTESTETST\n");
 			freeze_countdown_last = 0;
 			reset_map(TRUE);
 			FOR_EACH_PLAYER(plr)
 				Freeze_PlayerClear(plr);
 			freeze_active = 1;
 			FOR_EACH_REALPLAYER(plr) {
-				centerprint(plr, "^2Starting new round\n");
+				centerprint(plr, "^2New round started\n");
 			}
-			return;
 		}
 		else
 		{
@@ -84,9 +84,8 @@ void Freeze_Think()
 				}
 			}
 		}
-	}
-	if not(freeze_active)
 		return;
+	}
 
 	if (need_check_teams_copy) {
 		team_alive = 0;
