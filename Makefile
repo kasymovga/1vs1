@@ -1,6 +1,7 @@
 SV_SOURCES=$(shell find qcsrc/server qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
 CL_SOURCES=$(shell find qcsrc/client qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
 MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)')
+SET_CURL_PACKAGE=yes
 FTEQCC=fteqcc
 MOD_NAME=1vs1
 SV_PROGNAME=$(MOD_NAME).dat
@@ -25,7 +26,7 @@ menu.dat : $(MENU_SOURCES)
 $(CFG_NAME) : cfg/config.in Makefile
 	echo sv_progs $(SV_PROGNAME) > $(CFG_NAME).tmp
 	echo csqc_progname $(CL_PROGNAME) >> $(CFG_NAME).tmp
-	echo sv_curl_serverpackages $(CL_PROGNAME) >> $(CFG_NAME).tmp
+	if test "$(SET_CURL_PACKAGE)" = yes; then echo sv_curl_serverpackages $(CL_PROGNAME) >> $(CFG_NAME).tmp; else echo -n; fi
 	echo 'alias nex252_compat_mode_disable "csqc_progname $(CL_PROGNAME); nex252_compat_mode 0"' >> $(CFG_NAME).tmp
 	cat cfg/config.in >> $(CFG_NAME).tmp
 	mv -f $(CFG_NAME).tmp $(CFG_NAME)
