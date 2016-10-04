@@ -17,13 +17,23 @@ float g_balance_nadget_molotov_edgedamage;
 float g_balance_nadget_molotov_force;
 float g_balance_nadget_molotov_count;
 float g_balance_nadget_molotov_lifetime;
+float g_balance_nadget_molotov_shard_burntime;
+float g_balance_nadget_molotov_shard_damage;
+float g_balance_nadget_molotov_shard_radius;
+float g_balance_nadget_molotov_shard_edgedamage;
+float g_balance_nadget_molotov_shard_lifetime;
 
-float g_balance_nadget_plasma_damage;
-float g_balance_nadget_plasma_radius;
-float g_balance_nadget_plasma_edgedamage;
-float g_balance_nadget_plasma_force;
-float g_balance_nadget_plasma_count;
-float g_balance_nadget_plasma_lifetime;
+float g_balance_nadget_tesla_damage;
+float g_balance_nadget_tesla_radius;
+float g_balance_nadget_tesla_edgedamage;
+float g_balance_nadget_tesla_force;
+float g_balance_nadget_tesla_count;
+float g_balance_nadget_tesla_lifetime;
+float g_balance_nadget_tesla_beam_damage;
+float g_balance_nadget_tesla_beam_force;
+float g_balance_nadget_tesla_beam_radius;
+float g_balance_nadget_tesla_beam_refire;
+float g_balance_nadget_tesla_beam_lifetime;
 
 float g_balance_nadget_throw_speedfactor_min;
 float g_balance_nadget_throw_holdtime;
@@ -32,7 +42,7 @@ float g_balance_nadget_throw_holdtime;
 .float nadget_button;
 #define NADGET_GRENADE 1
 #define NADGET_MOLOTOV 2
-#define NADGET_PLASMA 4
+#define NADGET_TESLA 4
 #define NADGET_LAST 4
 float available_nadgets_count;
 float available_nadgets[3];
@@ -44,20 +54,20 @@ float Nadget_CodeByName(string name) {
 	if (name == "molotov")
 		return NADGET_MOLOTOV;
 
-	if (name == "plasma")
-		return NADGET_PLASMA;
+	if (name == "tesla")
+		return NADGET_TESLA;
 
 	return 0;
 }
 
-string Nadget_NameByCode(float f) {
+string Nadget_HumanNameByCode(float f) {
 	switch (f) {
 		case NADGET_GRENADE:
-			return "grenade";
+			return "Grenade";
 		case NADGET_MOLOTOV:
-			return "molotov";
-		case NADGET_PLASMA:
-			return "plasma";
+			return "Molotov";
+		case NADGET_TESLA:
+			return "Tesla";
 	}
 	return "WTF";
 }
@@ -88,7 +98,7 @@ void Nadget_SpawnHook() {
 			self.nadget_menu = Menu_Prepare(self, "nadget", "Select your nadget", 0);
 			float i;
 			for (i = 0; i < available_nadgets_count; i++) {
-				Menu_Add_Item(self.nadget_menu, Nadget_NameByCode(available_nadgets[i]));
+				Menu_Add_Item(self.nadget_menu, Nadget_HumanNameByCode(available_nadgets[i]));
 			}
 		}
 	}
@@ -139,12 +149,22 @@ void Nadget_Init() {
 	CACHE_CVAR(g_balance_nadget_molotov_force);
 	CACHE_CVAR(g_balance_nadget_molotov_count);
 	CACHE_CVAR(g_balance_nadget_molotov_lifetime);
-	CACHE_CVAR(g_balance_nadget_plasma_damage);
-	CACHE_CVAR(g_balance_nadget_plasma_radius);
-	CACHE_CVAR(g_balance_nadget_plasma_edgedamage);
-	CACHE_CVAR(g_balance_nadget_plasma_force);
-	CACHE_CVAR(g_balance_nadget_plasma_count);
-	CACHE_CVAR(g_balance_nadget_plasma_lifetime);
+	CACHE_CVAR(g_balance_nadget_molotov_shard_burntime);
+	CACHE_CVAR(g_balance_nadget_molotov_shard_damage);
+	CACHE_CVAR(g_balance_nadget_molotov_shard_edgedamage);
+	CACHE_CVAR(g_balance_nadget_molotov_shard_lifetime);
+	CACHE_CVAR(g_balance_nadget_molotov_shard_radius);
+	CACHE_CVAR(g_balance_nadget_tesla_damage);
+	CACHE_CVAR(g_balance_nadget_tesla_radius);
+	CACHE_CVAR(g_balance_nadget_tesla_edgedamage);
+	CACHE_CVAR(g_balance_nadget_tesla_force);
+	CACHE_CVAR(g_balance_nadget_tesla_count);
+	CACHE_CVAR(g_balance_nadget_tesla_lifetime);
+	CACHE_CVAR(g_balance_nadget_tesla_beam_damage);
+	CACHE_CVAR(g_balance_nadget_tesla_beam_force);
+	CACHE_CVAR(g_balance_nadget_tesla_beam_radius);
+	CACHE_CVAR(g_balance_nadget_tesla_beam_refire);
+	CACHE_CVAR(g_balance_nadget_tesla_beam_lifetime);
 	precache_sound("weapons/grenade_bounce1.wav");
 	precache_sound("weapons/grenade_bounce2.wav");
 	precache_sound("weapons/grenade_bounce3.wav");
@@ -164,12 +184,12 @@ void Nadget_Init() {
 void Nadget_Grenade_Touch (void)
 {
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM || self.nadget_type == NADGET_MOLOTOV || self.nadget_type == NADGET_PLASMA) {
+	if (other.takedamage == DAMAGE_AIM || self.nadget_type == NADGET_MOLOTOV || self.nadget_type == NADGET_TESLA) {
 		if (self.nadget_type == NADGET_MOLOTOV)
 			self.cnt = 1;
 
 		self.use();
-	} else if not(self.nadget_type == NADGET_PLASMA) {
+	} else if not(self.nadget_type == NADGET_TESLA) {
 		if (self.owner)
 			self.owner = world;
 
@@ -194,7 +214,7 @@ void Nadget_Grenade_Touch (void)
 void Nadget_Molotov_Touch() {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, g_balance_nadget_molotov_damage, g_balance_nadget_molotov_lifetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
+	if(Fire_AddDamage(other, self.realowner, g_balance_nadget_molotov_shard_damage, g_balance_nadget_molotov_shard_lifetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
 	{
 		remove(self);
 		return;
@@ -208,19 +228,19 @@ void Nadget_Molotov_Think() {
 		return;
 	}
 
-	W_Fireball_LaserPlay(0.1, g_balance_nadget_molotov_radius, g_balance_nadget_molotov_edgedamage, g_balance_nadget_molotov_damage, g_balance_nadget_molotov_lifetime);
+	W_Fireball_LaserPlay(0.1, g_balance_nadget_molotov_shard_radius, g_balance_nadget_molotov_shard_edgedamage, g_balance_nadget_molotov_shard_damage, g_balance_nadget_molotov_shard_burntime);
 
 	self.nextthink = time + 0.1;
 }
 
-void Nadget_Plasma_Think() {
+void Nadget_Tesla_Think() {
 	if(time > self.pushltime) {
-		RadiusDamage (self, self.realowner, g_balance_nadget_plasma_damage, g_balance_nadget_plasma_edgedamage, g_balance_nadget_plasma_radius, world, g_balance_nadget_plasma_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, g_balance_nadget_tesla_damage, g_balance_nadget_tesla_edgedamage, g_balance_nadget_tesla_radius, world, g_balance_nadget_tesla_force, self.projectiledeathtype, other);
 		remove(self);
 		return;
 	}
 	entity e;
-	for(e = findradius(self.origin, g_balance_nadget_plasma_radius); e; e = e.chain) {
+	for(e = findradius(self.origin, g_balance_nadget_tesla_beam_radius); e; e = e.chain) {
 		if not(e.takedamage == DAMAGE_AIM)
 			continue;
 
@@ -230,10 +250,10 @@ void Nadget_Plasma_Think() {
 
 		te_lightning1(world, self.origin, e.origin);
 		sound(self, CHAN_WEAPON, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
-		Damage(e, self, self.realowner, g_balance_nadget_plasma_damage * 0.1, WEP_NADGET_PLASMA, e.origin, normalize(e.origin - self.origin) * g_balance_nadget_plasma_force);
+		Damage(e, self, self.realowner, g_balance_nadget_tesla_beam_damage, WEP_NADGET_TESLA, e.origin, normalize(e.origin - self.origin) * g_balance_nadget_tesla_beam_force);
 	}
 
-	self.nextthink = time + 0.1;
+	self.nextthink = time + g_balance_nadget_tesla_beam_refire;
 }
 
 void Nadget_Grenade_Explode (void)
@@ -269,7 +289,7 @@ void Nadget_Grenade_Explode (void)
 				proj.velocity = (normalize(randomvec()) * 0.5 + normalize(self.velocity) * 0.5 + trace_plane_normal) * g_balance_nadget_molotov_force;
 			else
 				proj.velocity = (normalize(randomvec()) * 0.5 + normalize(self.velocity) * 0.5) * g_balance_nadget_molotov_force;
-			proj.pushltime = time + g_balance_nadget_molotov_lifetime;
+			proj.pushltime = time + g_balance_nadget_molotov_shard_lifetime;
 			W_SetupProjectileVelocity(proj);
 			proj.owner = world;
 
@@ -279,20 +299,20 @@ void Nadget_Grenade_Explode (void)
 			CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
 		}
 		RadiusDamage (self, self.realowner, g_balance_nadget_molotov_damage, g_balance_nadget_molotov_edgedamage, g_balance_nadget_molotov_radius, world, 0, self.projectiledeathtype, other);
-	} else if (self.nadget_type == NADGET_PLASMA) {
+	} else if (self.nadget_type == NADGET_TESLA) {
 		entity lb;
 		lb = spawn();
 		lb.realowner = lb.owner = self.owner;
 		lb.bot_dodge = TRUE;
-		lb.bot_dodgerating = g_balance_nadget_plasma_damage;
+		lb.bot_dodgerating = g_balance_nadget_tesla_damage;
 		setorigin(lb, self.origin);
-		lb.think = Nadget_Plasma_Think;
+		lb.think = Nadget_Tesla_Think;
 		lb.nextthink = time;
 		lb.scale = 4;
-		lb.pushltime = time + g_balance_nadget_plasma_lifetime;
+		lb.pushltime = time + g_balance_nadget_tesla_beam_lifetime;
 		lb.projectiledeathtype = self.projectiledeathtype;
 		setmodel(lb, "models/ebomb.mdl");
-		RadiusDamage (self, self.realowner, g_balance_nadget_plasma_damage, g_balance_nadget_plasma_edgedamage, g_balance_nadget_plasma_radius, world, g_balance_nadget_plasma_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, g_balance_nadget_tesla_damage, g_balance_nadget_tesla_edgedamage, g_balance_nadget_tesla_radius, world, g_balance_nadget_tesla_force, self.projectiledeathtype, other);
 	}
 
 	remove (self);
@@ -350,11 +370,11 @@ void Nadget_Grenade_Throw() {
 		gren.movetype = MOVETYPE_TOSS;
 		gren.projectiledeathtype = WEP_NADGET_MOLOTOV;
 		CSQCProjectile(gren, TRUE, PROJECTILE_MOLOTOV, TRUE);
-	} else if (self.nadget_type == NADGET_PLASMA) {
-		gren.nextthink = time + g_balance_nadget_plasma_lifetime;
+	} else if (self.nadget_type == NADGET_TESLA) {
+		gren.nextthink = time + g_balance_nadget_tesla_lifetime;
 		gren.movetype = MOVETYPE_BOUNCE;
-		gren.projectiledeathtype = WEP_NADGET_PLASMA;
-		CSQCProjectile(gren, TRUE, PROJECTILE_PLASMA, TRUE);
+		gren.projectiledeathtype = WEP_NADGET_TESLA;
+		CSQCProjectile(gren, TRUE, PROJECTILE_TESLA, TRUE);
 	}
 
 	self.ammo_rockets -= g_balance_nadget_grenade_ammo;

@@ -12,13 +12,6 @@ void SUB_Stop()
 	self.move_movetype = MOVETYPE_NONE;
 }
 
-void SUB_PlasmaStop()
-{
-	self.move_velocity = self.move_avelocity = '0 0 0';
-	self.avelocity = '0 0 0';
-	self.move_movetype = MOVETYPE_NONE;
-}
-
 .float count; // set if clientside projectile
 .float cnt; // sound index
 .float gravity;
@@ -60,7 +53,7 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_CRYLINK_BOUNCING:
 			trailparticles(self, particleeffectnum("TR_CRYLINKPLASMA"), from, to);
 			break;
-		case PROJECTILE_PLASMA:
+		case PROJECTILE_TESLA:
 		case PROJECTILE_ELECTRO:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
@@ -155,7 +148,7 @@ void Projectile_Draw()
 			*/
 			case PROJECTILE_GRENADE_BOUNCING:
 			case PROJECTILE_MOLOTOV:
-			case PROJECTILE_PLASMA:
+			case PROJECTILE_TESLA:
 				rot = '0 -1000 0'; // sideways
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -180,7 +173,7 @@ void Projectile_Draw()
 		case PROJECTILE_MOLOTOV:
 			trailorigin += v_right * 2 + v_forward * -20;
 			break;
-		case PROJECTILE_PLASMA:
+		case PROJECTILE_TESLA:
 			trailorigin += v_right * 2 + v_forward * -20 + randomvec() * 10;
 			break;
 		default:
@@ -317,7 +310,7 @@ void Ent_Projectile()
 			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl"); break;
 			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl"); break;
 			case PROJECTILE_MOLOTOV:
-			case PROJECTILE_PLASMA:
+			case PROJECTILE_TESLA:
 			case PROJECTILE_HANDGRENADE: setmodel(self, "models/grenademodel.md3"); self.scale = 2; break;
 			case PROJECTILE_GRENADE:
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3"); break;
@@ -392,9 +385,6 @@ void Ent_Projectile()
 			case PROJECTILE_BULLET_BIG:
 				self.move_movetype = MOVETYPE_BOUNCEMISSILE;
 				self.move_touch = SUB_Null;
-				break;
-			case PROJECTILE_PLASMA:
-				self.move_touch = SUB_PlasmaStop;
 				break;
 			default:
 				break;

@@ -23,7 +23,7 @@ float WEP_LAST_EXTRA			= 17; float WEPBIT_ALL_EXTRA         = 131071;
 float WEP_COUNT = 18;
 float WEP_LAST;
 float WEPBIT_ALL;
-float WEP_NADGET_PLASMA    = 28;
+float WEP_NADGET_TESLA      = 28;
 float WEP_NADGET_MOLOTOV    = 29;
 float WEP_NADGET_GRENADE    = 30;
 float WEP_MELEE             = 31;

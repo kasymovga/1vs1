@@ -140,7 +140,7 @@ void Ent_DamageInfo(float isNew)
 				if(!issilent)
 					sound(self, CHAN_PROJECTILE, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 				break;
-			case WEP_NADGET_PLASMA:
+			case WEP_NADGET_TESLA:
 			case WEP_ELECTRO:
 				org2 = org + backoff * 6;
 				if(secondary)
