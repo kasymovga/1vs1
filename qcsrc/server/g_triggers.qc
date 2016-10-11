@@ -3,8 +3,6 @@ void SUB_DontUseTargets()
 }
 
 
-void() SUB_UseTargets;
-
 void DelayThink()
 {
 	activator = self.enemy;
@@ -102,7 +100,7 @@ void SUB_UseTargets()
 			{
 				//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
 				self = t;
-				other = stemp;
+				other = otemp;
 				activator = act;
 				self.use();
 			}

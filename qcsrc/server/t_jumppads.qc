@@ -305,6 +305,27 @@ void spawnfunc_trigger_push()
 	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 };
 
-void spawnfunc_target_push() {};
+void spawnfunc_target_push() {
+	if (self.angles != '0 0 0')
+		SetMovedir ();
+
+	EXACTTRIGGER_INIT;
+
+	self.use = trigger_push_touch;
+	//self.touch = trigger_push_touch;
+
+	// normal push setup
+	if (!self.speed)
+		self.speed = 1000;
+	self.movedir = self.movedir * self.speed * 10;
+
+	if not(self.noise)
+		self.noise = "misc/jumppad.wav";
+	precache_sound (self.noise);
+
+	// this must be called to spawn the teleport waypoints for bots
+	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
+};
+
 void spawnfunc_info_notnull() {};
 void spawnfunc_target_position() {};
