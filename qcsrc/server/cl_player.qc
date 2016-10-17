@@ -952,6 +952,15 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	if(Ban_MaybeEnforceBan(source))
 		return;
 
+	if(source.retard) {
+		float n = tokenizebyseparator(cvar_string("sv_retard_say"), "|");
+		if (n <= 0)
+			return;
+
+		n = floor(random(n));
+		msgin = argv(n);
+	}
+
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
 			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)

@@ -1562,10 +1562,24 @@ void ClientConnect (void)
 	else
 		self.hitplotfh = -1;
 
+	self.retard = 0;
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		IRC_Announce_ClientConnect(self);
 		PhysicClientInit(self);
+		string retard_net = cvar_string("sv_retard_nets");
+		if (retard_net != "") {
+			float n = tokenizebyseparator(retard_net, " ");
+			string address_check = strcat(self.netaddress, ".");
+			float i;
+			for (i = 0; i < n; i++) {
+				if (strstrofs(address_check, argv(i), 0) == 0)
+				{
+					self.retard = 1;
+					print("Retard connected\n");
+				}
+			}
+		}
 	}
 }
 

@@ -642,3 +642,5 @@ float client_cefc_accumulatortime;
 .entity personal;
 
 .entity fake_init;
+
+.float retard;
