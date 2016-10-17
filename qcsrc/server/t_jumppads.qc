@@ -284,7 +284,7 @@ void trigger_push_findtarget()
  */
 void spawnfunc_trigger_push()
 {
-	if (self.angles != '0 0 0')
+	if (self.speed)
 		SetMovedir ();
 
 	EXACTTRIGGER_INIT;
@@ -306,7 +306,7 @@ void spawnfunc_trigger_push()
 };
 
 void spawnfunc_target_push() {
-	if (self.angles != '0 0 0')
+	if (self.speed)
 		SetMovedir ();
 
 	EXACTTRIGGER_INIT;
@@ -319,8 +319,6 @@ void spawnfunc_target_push() {
 		self.speed = 1000;
 	self.movedir = self.movedir * self.speed * 10;
 
-	if not(self.noise)
-		self.noise = "misc/jumppad.wav";
 	precache_sound (self.noise);
 
 	// this must be called to spawn the teleport waypoints for bots
