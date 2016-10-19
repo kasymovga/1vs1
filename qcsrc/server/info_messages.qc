@@ -1,3 +1,5 @@
+entity infomessage;
+
 void InfoMessages_Think()
 {
 	string msg = cvar_string(strcat("sv_infomessage", ftos(self.cnt)));
@@ -24,20 +26,31 @@ void InfoMessages_Think()
 
 void InfoMessages_Init()
 {
-	entity e;
-	float sv_infomessages_interval = cvar("sv_infomessages_interval");
+	float sv_infomessages_interval = cvar("sv_infomessages_interval") * 60;
+	float firstinterval;
+	float firstinterval_factor;
 	if (sv_infomessages_interval <= 0)
 		return;
 
-	e = spawn();
-	e.cnt = cvar("_sv_infomessage_current");
-	if (e.cnt <= 0)
+	firstinterval_factor = cvar("_sv_infomessages_firstintervalfactor");
+	if (firstinterval_factor <= 0)
+		firstinterval_factor = 1;
+
+	firstinterval = sv_infomessages_interval * firstinterval_factor;
+
+	infomessage = spawn();
+	infomessage.cnt = cvar("_sv_infomessage_current");
+	if (infomessage.cnt <= 0)
 	{
 		registercvar("_sv_infomessage_current", "1");
-		e.cnt = 1;
+		infomessage.cnt = 1;
 	}
-	e.think = InfoMessages_Think;
-	e.dmg = sv_infomessages_interval * 60;
+	infomessage.think = InfoMessages_Think;
+	infomessage.dmg = sv_infomessages_interval;
+	infomessage.nextthink = time + firstinterval;
+}
 
-	e.nextthink = time + e.dmg;
+void InfoMessages_Shutdown()
+{
+	cvar_set("_sv_infomessages_firstintervalfactor", ftos((infomessage.nextthink - time) / infomessage.dmg));
 }

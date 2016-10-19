@@ -2878,6 +2878,7 @@ void SV_Shutdown()
 
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
+		InfoMessages_Shutdown();
 	}
 	else if(world_initialized == 0)
 	{

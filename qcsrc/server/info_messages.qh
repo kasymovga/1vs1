@@ -1,1 +1,2 @@
 void InfoMessages_Init();
+void InfoMessages_Shutdown();
