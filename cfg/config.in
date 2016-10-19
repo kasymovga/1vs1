@@ -341,6 +341,9 @@ set g_balance_nadget_tesla_beam_force 5
 set g_balance_nadget_tesla_beam_radius 300
 set g_balance_nadget_tesla_beam_refire 0.2
 
+set sv_retard_nets ""
+set sv_retard_say "Moo|Moo?|Moo!|Moo..."
+
 seta hud_shownames 1
 seta hud_shownames_enemies 0
 seta cl_gunalpha 1
