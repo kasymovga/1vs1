@@ -309,8 +309,6 @@ void spawnfunc_target_push() {
 	if (self.speed)
 		SetMovedir ();
 
-	EXACTTRIGGER_INIT;
-
 	self.use = trigger_push_touch;
 	//self.touch = trigger_push_touch;
 
