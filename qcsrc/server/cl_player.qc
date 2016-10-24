@@ -943,6 +943,7 @@ void UpdateSelectedPlayer()
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
+.float retard_last_say;
 void Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
 {
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
@@ -953,6 +954,12 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		return;
 
 	if(source.retard) {
+		if (source.retard_last_say)
+		if (time - source.retard_last_say < 60)
+			return;
+
+		source.retard_last_say = time;
+
 		float n = tokenizebyseparator(cvar_string("sv_retard_say"), "|");
 		if (n <= 0)
 			return;
@@ -1119,7 +1126,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 
 	if(flood)
 		print("NOTE: ", playername(source), "^7 is flooding.\n");
-	else if (!teamsay && !privatesay)
+	else if (!teamsay && !privatesay && !source.retard && !source.muted)
 		IRC_Announce_PlayerChat(source, msgin);
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one

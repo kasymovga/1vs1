@@ -1577,6 +1577,7 @@ void ClientConnect (void)
 				{
 					self.retard = 1;
 					print("Retard connected\n");
+					self.netname = "User of RetardNet";
 				}
 			}
 		}
