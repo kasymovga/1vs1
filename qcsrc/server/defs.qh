@@ -644,3 +644,5 @@ float client_cefc_accumulatortime;
 .entity fake_init;
 
 .float retard;
+
+.float xonoticplayer;

@@ -324,6 +324,16 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, maplist_reply);
 	} else if(cmd == "lsmaps") {
 		sprint(self, lsmaps_reply);
+	} else if(cmd == "iamxonoticplayer") {
+		self.xonoticplayer = TRUE;
+		s = cvar_string("sv_message_for_xonotic_players");
+		if (s != "") {
+			float n = strstrofs(s, "USERNAME", 0);
+			if (n >= 0) {
+				s = strcat(substring(s, 0, n), self.netname, substring(s, n + 8, -1));
+			}
+			sprint(self, strcat("\{1}", s, "\n"));
+		}
 	} else if(cmd == "records") {
 		sprint(self, records_reply);
 	} else if(cmd == "voice") {

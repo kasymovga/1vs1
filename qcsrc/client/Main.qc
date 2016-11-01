@@ -171,6 +171,9 @@ void CSQC_Init(void)
 		registercvar("crosshair_fireball_color_blue", "0.2", CVAR_SAVE);
 		registercvar("crosshair_fireball_color_alpha", "1", CVAR_SAVE);
 		registercvar("crosshair_fireball_size", "1", CVAR_SAVE);
+
+		if not(cvar("_iamxonoticplayer"))
+			localcmd("\ncmd iamxonoticplayer; set _iamxonoticplayer 1\n");
 	}
 
 	if (cvar_string("sv_master2") == "")
