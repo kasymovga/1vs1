@@ -855,8 +855,11 @@ void door_use()
 
 void door_trigger_touch()
 {
-	if (other.health < 1)
-	if not(other.iscreature && other.deadflag == DEAD_NO)
+	//if (other.health < 1)
+	//if not(other.iscreature && other.deadflag == DEAD_NO)
+	//	return;
+
+	if (other.classname != "player")
 		return;
 
 	if (time < self.attack_finished_single)
@@ -882,7 +885,7 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		oself = self;
 		self = self.owner;
 		self.health = self.max_health;
-		self.takedamage = DAMAGE_NO;	// wil be reset upon return
+		//self.takedamage = DAMAGE_NO; // wil be reset upon return //ORLY?
 		door_use ();
 		self = oself;
 	}
@@ -1028,7 +1031,7 @@ SPAWNING FUNCTIONS
 entity spawn_field(vector fmins, vector fmaxs)
 {
 	local entity	trigger;
-	local	vector	t1, t2;
+	local	vector	t1, t2, v;
 
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
@@ -1039,7 +1042,8 @@ entity spawn_field(vector fmins, vector fmaxs)
 
 	t1 = fmins;
 	t2 = fmaxs;
-	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
+	v = stov(cvar_string("sv_door_trigger_field"));
+	setsize (trigger, t1 - v, t2 + v);
 	return (trigger);
 };
 
@@ -1080,10 +1084,16 @@ void LinkDoors()
 	{
 		self.owner = self.enemy = self;
 
-		if (self.health)
-			return;
 		IFTARGETED
 			return;
+		if (self.health || cvar("sv_door_shootable"))
+		{
+			self.takedamage = DAMAGE_YES;
+			self.event_damage = door_damage;
+			if (self.health)
+				return;
+		}
+
 		if (self.items)
 			return;
 		self.trigger_field = spawn_field(self.absmin, self.absmax);
@@ -1099,14 +1109,21 @@ void LinkDoors()
 
 	do
 	{
-		self.owner = starte;			// master door
+		if (self.owner != starte) {
+			self.owner = starte;			// master door
 
-		if (self.health)
-			starte.health = self.health;
-		IFTARGETED
-			starte.targetname = self.targetname;
-		if (self.message != "")
-			starte.message = self.message;
+			if (self.health)
+				starte.health = self.health;
+			IFTARGETED
+				starte.targetname = self.targetname;
+			else if (self.health || cvar("sv_door_shootable")) {
+				self.takedamage = DAMAGE_YES;
+				self.event_damage = door_damage;
+			}
+			if (self.message != "")
+				starte.message = self.message;
+
+		}
 
 		t = find(t, classname, self.classname);
 		if (!t)
@@ -1228,7 +1245,7 @@ void spawnfunc_func_door()
 	}
 
 	if (!self.speed)
-		self.speed = 100;
+		self.speed = cvar("sv_door_default_speed");
 	if (!self.wait)
 		self.wait = 3;
 	if (!self.lip)
@@ -1243,12 +1260,6 @@ void spawnfunc_func_door()
 		InitializeEntity(self, door_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = STATE_BOTTOM;
-
-	if (self.health)
-	{
-		self.takedamage = DAMAGE_YES;
-		self.event_damage = door_damage;
-	}
 
 	if (self.items)
 		self.wait = -1;
