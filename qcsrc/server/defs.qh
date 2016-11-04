@@ -646,3 +646,5 @@ float client_cefc_accumulatortime;
 .float retard;
 
 .float xonoticplayer;
+
+.float keys;

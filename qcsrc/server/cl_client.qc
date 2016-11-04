@@ -885,6 +885,7 @@ void PutClientInServer (void)
 			self.effects = 0;
 		self.air_finished = time + 12;
 		self.dmg = 2;
+		self.keys = 0;
 
 		if(inWarmupStage)
 		{

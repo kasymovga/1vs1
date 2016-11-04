@@ -862,6 +862,10 @@ void door_trigger_touch()
 	if (other.classname != "player")
 		return;
 
+	if (self.owner.items)
+	if not(other.keys & self.owner.items)
+		return;
+
 	if (time < self.attack_finished_single)
 		return;
 	self.attack_finished_single = time + 1;

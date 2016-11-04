@@ -481,6 +481,12 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 	}
+	if(item.spawnshieldtime)
+	if((it = item.items & IT_KEY1))
+	{
+		pickedup = TRUE;
+		player.keys |= it;
+	}
 
 :skip
 	// always eat teamed entities
@@ -1319,6 +1325,12 @@ void spawnfunc_item_invincible (void) {
 		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
+}
+
+void spawnfunc_item_key_gold (void) {
+	self.origin_z = self.origin_z + 40;
+	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Gold Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
+	self.mins_z = self.mins_z - 40;
 }
 
 void spawnfunc_item_minst_cells (void) {
