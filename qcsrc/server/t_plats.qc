@@ -1086,15 +1086,13 @@ void LinkDoors()
 
 		IFTARGETED
 			return;
-		if (self.health || cvar("sv_door_shootable"))
+
+		if (self.health || (!self.items && cvar("sv_door_shootable")))
 		{
 			self.takedamage = DAMAGE_YES;
 			self.event_damage = door_damage;
-			if (self.health)
-				return;
 		}
-
-		if (self.items)
+		if (self.health)
 			return;
 		self.trigger_field = spawn_field(self.absmin, self.absmax);
 
@@ -1116,7 +1114,7 @@ void LinkDoors()
 				starte.health = self.health;
 			IFTARGETED
 				starte.targetname = self.targetname;
-			else if (self.health || cvar("sv_door_shootable")) {
+			else if (self.health || (!self.items && cvar("sv_door_shootable"))) {
 				self.takedamage = DAMAGE_YES;
 				self.event_damage = door_damage;
 			}
@@ -1138,8 +1136,6 @@ void LinkDoors()
 			if (self.health)
 				return;
 			IFTARGETED
-				return;
-			if (self.items)
 				return;
 
 			self.owner.trigger_field = spawn_field(cmins, cmaxs);
@@ -1261,9 +1257,6 @@ void spawnfunc_func_door()
 
 	self.state = STATE_BOTTOM;
 
-	if (self.items)
-		self.wait = -1;
-
 	self.touch = door_touch;
 
 // LinkDoors can't be done until all of the doors have been spawned, so
@@ -1382,9 +1375,6 @@ void spawnfunc_func_door_rotating()
 		self.takedamage = DAMAGE_YES;
 		self.event_damage = door_damage;
 	}
-
-	if (self.items)
-		self.wait = -1;
 
 	self.touch = door_touch;
 
