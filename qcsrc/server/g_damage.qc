@@ -1192,7 +1192,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						// and do damage if any of them hit
 						hits = 0;
 						if (targ.classname == "player")
-							total = ceil(bound(1, finaldmg, 50));
+							total = ceil(bound(1, finaldmg, 10));
 						else
 							total = ceil(bound(1, finaldmg/10, 5));
 						hitloc = nearest;
