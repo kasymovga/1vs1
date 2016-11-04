@@ -1825,3 +1825,30 @@ void spawnfunc_func_water()
 	EXACTTRIGGER_INIT;
 	self.touch = func_ladder_touch;
 };
+
+void target_delay_use() {
+	self.nextthink = time + self.wait;
+	self.think = SUB_UseTargets;
+}
+
+void target_delay_init() {
+	IFTARGETED
+		return;
+	self.use();
+}
+
+void spawnfunc_target_delay() {
+	self.use = target_delay_use;
+	self.reset = target_delay_init;
+	InitializeEntity(self, target_delay_init, INITPRIO_SETLOCATION);
+}
+
+void trigger_always_init() {
+	self.nextthink = time;
+	self.think = SUB_UseTargets;
+}
+
+void spawnfunc_trigger_always() {
+	self.reset = trigger_always_init;
+	InitializeEntity(self, trigger_always_init, INITPRIO_LAST);
+}
