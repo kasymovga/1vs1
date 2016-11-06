@@ -326,8 +326,9 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, lsmaps_reply);
 	} else if(cmd == "iamxonoticplayer") {
 		self.xonoticplayer = TRUE;
-		s = cvar_string("sv_message_for_xonotic_players");
-		if (s != "") {
+		if (tokens >= 2)
+		if (argv(1) == "first")
+		if ((s = cvar_string("sv_message_for_xonotic_players")) != "") {
 			float n = strstrofs(s, "USERNAME", 0);
 			if (n >= 0) {
 				s = strcat(substring(s, 0, n), self.netname, substring(s, n + 8, -1));

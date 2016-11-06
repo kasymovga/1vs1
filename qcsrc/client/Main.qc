@@ -173,7 +173,9 @@ void CSQC_Init(void)
 		registercvar("crosshair_fireball_size", "1", CVAR_SAVE);
 
 		if not(cvar("_iamxonoticplayer"))
-			localcmd("\ncmd iamxonoticplayer; set _iamxonoticplayer 1\n");
+			localcmd("\ncmd iamxonoticplayer first; set _iamxonoticplayer 1\n");
+		else
+			localcmd("\ncmd iamxonoticplayer\n");
 	}
 
 	if (cvar_string("sv_master2") == "")
