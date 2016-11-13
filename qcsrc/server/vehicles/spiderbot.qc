@@ -599,6 +599,16 @@ void spiderbot_exit(float eject)
     entity e;
     self.frame = 5;
     e = findchain(classname,"spiderbot_rocket");
+	vector exit_origin;
+	if(eject)
+		exit_origin = self.origin + '0 0 160';
+	else
+		exit_origin = self.origin + v_forward * 100 + '0 0 64';
+
+	tracebox(exit_origin, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+	if (trace_startsolid)
+		exit_origin = self.origin;
+
     while(e)
     {
         if(e.owner == self.owner)
@@ -662,13 +672,9 @@ void spiderbot_exit(float eject)
     setattachment(self.owner,world,"");
 
 	makevectors(self.angles);
+	setorigin(self.owner, exit_origin);
 	if(eject)
-	{
-	    setorigin(self.owner,self.origin + v_forward * 100 + '0 0 64');
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
-	}
-	else
-        setorigin(self.owner,self.origin - v_forward * 200 + '0 0 64');
 
     self.owner = world;
 }
@@ -754,7 +760,7 @@ void spiderbot_blowup()
     sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
 
-    RadiusDamage (self, self, 250, 15, 250, world, 250, DEATH_TURRET, world);
+    RadiusDamage (self, self, 100, 15, 250, world, 250, DEATH_TURRET, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.nextthink  = time + 10;
@@ -772,12 +778,12 @@ void spiderbot_die()
     self.solid      = SOLID_NOT;
     self.takedamage = DAMAGE_NO;
     self.touch      = SUB_Null;
-    self.nextthink  = time + random() * 2;
-    self.think      = spiderbot_blowup;
     self.deadflag    = DEAD_DEAD;
 	self.vehicle_hudmodel.viewmodelforclient = self;
 	self.frame = 0;
 	self.tur_head.frame = 0;
+	self.think = spiderbot_blowup;
+	self.nextthink = time;
 
 }
 
