@@ -354,3 +354,32 @@ set sv_message_for_xonotic_players ""
 set sv_door_shootable 1
 set sv_door_trigger_field "60 60 8"
 set sv_door_default_speed 100
+
+set g_vehicle_spiderbot_crush_dmg 200
+set g_vehicle_spiderbot_crush_force 200
+set g_vehicle_spiderbot_head_pitchspeed 360
+set g_vehicle_spiderbot_head_pitchlimit_up 20
+set g_vehicle_spiderbot_head_pitchlimit_down -20
+set g_vehicle_spiderbot_head_turnspeed 720
+set g_vehicle_spiderbot_head_turnlimit 90
+set g_vehicle_spiderbot_health 300
+set g_vehicle_spiderbot_minigun_cooldown 4
+set g_vehicle_spiderbot_minigun_damage 30
+set g_vehicle_spiderbot_minigun_heat 4
+set g_vehicle_spiderbot_minigun_spread 0.05
+set g_vehicle_spiderbot_minigun_refire 0.08
+set g_vehicle_spiderbot_movement_inertia 0.5
+set g_vehicle_spiderbot_rocket_damage 100
+set g_vehicle_spiderbot_rocket_edgedamage 0
+set g_vehicle_spiderbot_rocket_force 100
+set g_vehicle_spiderbot_rocket_noise 0.1
+set g_vehicle_spiderbot_rocket_radius 300
+set g_vehicle_spiderbot_rocket_reload 4
+set g_vehicle_spiderbot_rocket_refire 1
+set g_vehicle_spiderbot_rocket_speed 1200
+set g_vehicle_spiderbot_rocket_turnrate 1
+set g_vehicle_spiderbot_shield 200
+set g_vehicle_spiderbot_speed_walk 800
+set g_vehicle_spiderbot_speed_stop 80
+set g_vehicle_spiderbot_speed_strafe 800
+set g_vehicle_spiderbot_turnspeed 180
