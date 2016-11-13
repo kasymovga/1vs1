@@ -355,8 +355,9 @@ set sv_door_shootable 1
 set sv_door_trigger_field "60 60 8"
 set sv_door_default_speed 100
 
-set g_vehicle_spiderbot_crush_dmg 200
+set g_vehicle_spiderbot_crush_dmg 100
 set g_vehicle_spiderbot_crush_force 200
+set g_vehicle_spiderbot_crush_minspeed 600
 set g_vehicle_spiderbot_head_pitchspeed 360
 set g_vehicle_spiderbot_head_pitchlimit_up 20
 set g_vehicle_spiderbot_head_pitchlimit_down -20
@@ -365,6 +366,8 @@ set g_vehicle_spiderbot_head_turnlimit 90
 set g_vehicle_spiderbot_health 300
 set g_vehicle_spiderbot_health_regen 0
 set g_vehicle_spiderbot_health_regen_dmgpause 10
+set g_vehicle_spiderbot_jump_accel 1.2
+set g_vehicle_spiderbot_jump_up 800
 set g_vehicle_spiderbot_minigun_cooldown 0.1
 set g_vehicle_spiderbot_minigun_damage 30
 set g_vehicle_spiderbot_minigun_heat 0.2

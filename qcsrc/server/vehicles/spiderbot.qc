@@ -24,6 +24,7 @@
 
 float g_vehicle_spiderbot_crush_dmg;
 float g_vehicle_spiderbot_crush_force;
+float g_vehicle_spiderbot_crush_minspeed;
 float g_vehicle_spiderbot_head_pitchlimit_down;
 float g_vehicle_spiderbot_head_pitchlimit_up;
 float g_vehicle_spiderbot_head_pitchspeed;
@@ -32,6 +33,8 @@ float g_vehicle_spiderbot_head_turnspeed;
 float g_vehicle_spiderbot_health;
 float g_vehicle_spiderbot_health_regen;
 float g_vehicle_spiderbot_health_regen_dmgpause;
+float g_vehicle_spiderbot_jump_accel;
+float g_vehicle_spiderbot_jump_up;
 float g_vehicle_spiderbot_minigun_cooldown;
 float g_vehicle_spiderbot_minigun_damage;
 float g_vehicle_spiderbot_minigun_heat;
@@ -448,7 +451,7 @@ float spiderbot_pplug()
             player.BUTTON_JUMP = 0;
             spider.anim_start = MODEL_SPIDERBOT_JUMP_START;
             spider.anim_end   = MODEL_SPIDERBOT_JUMP_END;
-            spider.velocity   = v_forward * 700 + v_up * 600;
+            spider.velocity   = spider.velocity * g_vehicle_spiderbot_jump_accel + v_up * g_vehicle_spiderbot_jump_up;
             spider.state = SBS_JUMP;
             spider.frame = 4;
         }
@@ -701,9 +704,10 @@ void spiderbot_touch()
         if(other.classname != "player")
             return;
 
-        //todo: add check for velocity here (so we dont cush players runing onto us from behind)
+		float f = vlen(self.velocity - other.velocity) / g_vehicle_spiderbot_crush_minspeed;
 
-        Damage(other,self,self.owner,g_vehicle_spiderbot_crush_dmg,DEATH_TURRET,'0 0 0', normalize(other.origin - self.origin) * g_vehicle_spiderbot_crush_force );
+		if (f > 0)
+			Damage(other,self,self.owner,g_vehicle_spiderbot_crush_dmg * f,DEATH_TURRET,'0 0 0', normalize(other.origin - self.origin) * g_vehicle_spiderbot_crush_force * f);
         return;
     }
 
@@ -860,12 +864,15 @@ void vewhicle_spiderbot_dinit()
 void vehicle_spiderbot_readcvars() {
 	CACHE_CVAR(g_vehicle_spiderbot_crush_dmg);
 	CACHE_CVAR(g_vehicle_spiderbot_crush_force);
+	CACHE_CVAR(g_vehicle_spiderbot_crush_minspeed);
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchlimit_down);
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchlimit_up);
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchspeed);
 	CACHE_CVAR(g_vehicle_spiderbot_head_turnlimit);
 	CACHE_CVAR(g_vehicle_spiderbot_head_turnspeed);
 	CACHE_CVAR(g_vehicle_spiderbot_health);
+	CACHE_CVAR(g_vehicle_spiderbot_jump_accel);
+	CACHE_CVAR(g_vehicle_spiderbot_jump_up);
 	CACHE_CVAR(g_vehicle_spiderbot_minigun_cooldown);
 	CACHE_CVAR(g_vehicle_spiderbot_minigun_damage);
 	CACHE_CVAR(g_vehicle_spiderbot_minigun_heat);
