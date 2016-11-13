@@ -331,8 +331,8 @@ void spiderbot_miniguns_do()
     if ((self.owner.BUTTON_ATCK) && (self.owner.vehicle_heat < 1) && (self.tur_head.attack_finished_single < time))
     {
 
-        self.gun1.angles_z += 36;
-        self.gun2.angles_z -= 36;
+        self.gun1.angles_z += 720 * sys_ticrate / g_vehicle_spiderbot_minigun_refire;
+        self.gun2.angles_z -= 720 * sys_ticrate / g_vehicle_spiderbot_minigun_refire;
         if(self.gun1.angles_z >= 360)
         {
             self.gun1.angles_z = 0;
@@ -354,33 +354,15 @@ void spiderbot_miniguns_do()
         }
 
         self = self.vehicle;
-        self.owner.vehicle_heat += g_vehicle_spiderbot_minigun_heat * g_vehicle_spiderbot_minigun_refire;
-        if(self.owner.vehicle_heat >= 1)
+        self.vehicle_heat += g_vehicle_spiderbot_minigun_heat * g_vehicle_spiderbot_minigun_refire;
+        if(self.vehicle_heat >= 1)
         {
             self.vehicle_heat = 1;
-            self.owner.vehicle_heat = 1;
             self.tur_head.attack_finished_single = (1/g_vehicle_spiderbot_minigun_cooldown)+time;
         }
         else
             self.tur_head.attack_finished_single = g_vehicle_spiderbot_minigun_refire + time;
     }
-    else
-        if(self.vehicle_heat > 0)
-        {
-            self.vehicle_heat = max(self.vehicle_heat - g_vehicle_spiderbot_minigun_cooldown * sys_ticrate,0);
-            if(self.tur_head.attack_finished_single < time)
-            {
-                self.vehicle_heat = 0;
-                self.owner.vehicle_heat = 0;
-            }
-            else
-            {
-				self.owner.vehicle_heat  = self.vehicle_heat;
-            }
-        }
-        else
-            self.owner.vehicle_heat = max(self.owner.vehicle_heat - g_vehicle_spiderbot_minigun_cooldown * sys_ticrate,0);
-
 }
 #define SBS_IDLE  0
 #define SBS_JUMP  1
@@ -555,7 +537,12 @@ float spiderbot_pplug()
 
 void spiderbot_think()
 {
-    if(self.flags & FL_ONGROUND)
+	if(self.vehicle_heat > 0)
+		self.vehicle_heat = max(self.vehicle_heat - g_vehicle_spiderbot_minigun_cooldown * sys_ticrate,0);
+
+	if (self.owner)
+		self.owner.vehicle_heat = self.vehicle_heat;
+    else if(self.flags & FL_ONGROUND)
     {
         movelib_beak_simple(g_vehicle_spiderbot_speed_stop);
         //movelib_groundalign4point(300,100);
@@ -584,7 +571,6 @@ void spiderbot_enter()
     self.colormap             = self.owner.colormap;
     self.tur_head.colormap    = self.owner.colormap;
     self.vehicle_hudmodel.viewmodelforclient = self.owner;
-    self.nextthink = 0;
     self.owner.angles         = self.angles;
     self.owner.takedamage     = DAMAGE_NO;
     self.owner.solid          = SOLID_NOT;
