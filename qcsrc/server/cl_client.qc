@@ -1574,7 +1574,7 @@ void ClientConnect (void)
 			string address_check = strcat(self.netaddress, ".");
 			float i;
 			for (i = 0; i < n; i++) {
-				if (strstrofs(address_check, argv(i), 0) == 0)
+				if (argv(i) != "" && strstrofs(address_check, argv(i), 0) == 0)
 				{
 					self.retard = 1;
 					print("Retard connected\n");
