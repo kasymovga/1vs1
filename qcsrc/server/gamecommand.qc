@@ -1062,6 +1062,7 @@ void GameCommand(string command)
 		bot_init();
 		Client_ReadCvars();
 		Teamplay_ReadCvars();
+		vehicles_readcvars();
 		return;
 	}
 

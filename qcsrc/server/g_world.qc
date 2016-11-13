@@ -910,6 +910,7 @@ void spawnfunc_worldspawn (void)
 	world_initialized = 1;
 	IRC_Init();
 	InfoMessages_Init();
+	vehicles_readcvars();
 }
 
 void spawnfunc_light (void)

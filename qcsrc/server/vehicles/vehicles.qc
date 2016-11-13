@@ -1,3 +1,7 @@
+#ifdef VEHICLES_ENABLED
+#include "spiderbot.qc"
+#include "racer.qc"
+
 void vehicle_stdproc_enter()
 {
 }
@@ -10,28 +14,28 @@ void vehicle_stdproc_regen()
 {
     float smax,hmax;
 
-    smax = CCVAR("_shield");
-    hmax = CCVAR("_health");
+    smax = self.shield_max;
+    hmax = self.health_max;
 
     if(self.vehicle_flags & VHF_HASSHIELD)
     if(self.vehicle_flags & VHF_SHIELDREGEN)
     if(self.vehicle_shield < smax)
-    if(self.dmg_time + CCVAR("_shield_regen_dmgpause") < time)
+    if(self.dmg_time + self.shield_regen_dmgpause < time)
     {
-        self.vehicle_shield = min(self.vehicle_shield + CCVAR("_shield_regen") / server_fps,smax);
+        self.vehicle_shield = min(self.vehicle_shield + self.shield_regen / server_fps,smax);
 
         if(self.owner)
-            self.owner.vehicle_shield = self.vehicle_shield / cvar(strcat(self.cvar_basename,"_shield"));
+            self.owner.vehicle_shield = self.vehicle_shield / self.shield;
     }
 
     if(self.vehicle_flags & VHF_HEALTHREGEN)
-    if(self.dmg_time + CCVAR("_health_regen_dmgpause") < time)
+    if(self.dmg_time + self.health_regen_dmgpause < time)
     if(self.vehicle_health < hmax)
     {
-        self.vehicle_health = min(self.vehicle_health + CCVAR("_health_regen") / server_fps,hmax);
+        self.vehicle_health = min(self.vehicle_health + self.health_regen / server_fps,hmax);
 
         if(self.owner)
-            self.owner.vehicle_health = self.vehicle_health / CCVAR("_health");
+            self.owner.vehicle_health = self.vehicle_health / hmax;
     }
 }
 
@@ -121,3 +125,8 @@ void bugmenot()
     self.vehicle_spawn      = self.vehicle_exit;
     self.vehicle_message    = self.vehicle_exit;
 }
+
+void vehicles_readcvars() {
+	vehicle_spiderbot_readcvars();
+}
+#endif

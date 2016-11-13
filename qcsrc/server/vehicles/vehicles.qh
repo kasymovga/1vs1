@@ -1,5 +1,6 @@
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
+#include "spiderbot.qh"
 
 #message "with tZork vehicles (experimental)"
 
@@ -33,6 +34,13 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .float anim_end;
 
 .float dmg_time;
+.float shield;
+.float shield_max;
+.float health_max;
+.float shield_regen;
+.float health_regen;
+.float shield_regen_dmgpause;
+.float health_regen_dmgpause;
 
 float server_fps;
 
@@ -45,8 +53,8 @@ float server_fps;
 .void() vehicle_spawn;
 .float(float message) vehicle_message;
 
-#include "vehicles.qc"
-#include "spiderbot.qc"
-#include "racer.qc"
+void vehicles_readcvars();
+void vehicle_stdproc_regen();
+void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 
 #endif

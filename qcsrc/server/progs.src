@@ -16,6 +16,8 @@ defs.qh		// Should rename this, it has fields and globals
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
 
+vehicles/vehicles.qh
+
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
@@ -181,7 +183,6 @@ race.qc
 
 //// tZork Turrets ////
 tturrets/include/turrets.qh
-vehicles/vehicles.qh
 
 scores.qc
 
@@ -215,3 +216,5 @@ dodging.qc
 nadgets.qc
 
 progressbar.qc
+
+vehicles/vehicles.qc

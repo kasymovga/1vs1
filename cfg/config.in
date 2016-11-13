@@ -363,9 +363,11 @@ set g_vehicle_spiderbot_head_pitchlimit_down -20
 set g_vehicle_spiderbot_head_turnspeed 720
 set g_vehicle_spiderbot_head_turnlimit 90
 set g_vehicle_spiderbot_health 300
-set g_vehicle_spiderbot_minigun_cooldown 4
+set g_vehicle_spiderbot_health_regen 0
+set g_vehicle_spiderbot_health_regen_dmgpause 10
+set g_vehicle_spiderbot_minigun_cooldown 0.1
 set g_vehicle_spiderbot_minigun_damage 30
-set g_vehicle_spiderbot_minigun_heat 4
+set g_vehicle_spiderbot_minigun_heat 0.2
 set g_vehicle_spiderbot_minigun_spread 0.05
 set g_vehicle_spiderbot_minigun_refire 0.08
 set g_vehicle_spiderbot_movement_inertia 0.5
@@ -379,6 +381,8 @@ set g_vehicle_spiderbot_rocket_refire 1
 set g_vehicle_spiderbot_rocket_speed 1200
 set g_vehicle_spiderbot_rocket_turnrate 1
 set g_vehicle_spiderbot_shield 200
+set g_vehicle_spiderbot_regen 20
+set g_vehicle_spiderbot_regen_pause 5
 set g_vehicle_spiderbot_speed_walk 800
 set g_vehicle_spiderbot_speed_stop 80
 set g_vehicle_spiderbot_speed_strafe 800
