@@ -143,7 +143,12 @@ void ImpulseCommands (void)
 					W_PreviousWeapon (2);
 					break;
 				case 17:
-					if (g_minstagib || g_weaponarena)
+					if (self.vehicle) {
+						e = self;
+						self = self.vehicle;
+						self.vehicle_exit(0);
+						self = e;
+					} else if (g_minstagib || g_weaponarena)
 						Nadget_Button();
 					else
 						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
