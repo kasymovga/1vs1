@@ -698,16 +698,17 @@ void spiderbot_touch()
 {
     if(self.owner)
     {
-        if(vlen(self.velocity) == 0)
+        if(vlen(self.velocity) < g_vehicle_spiderbot_crush_minspeed)
             return;
 
         if(other.classname != "player")
             return;
 
-		float f = vlen(self.velocity - other.velocity) / g_vehicle_spiderbot_crush_minspeed;
-
-		if (f > 0)
+		float f = vlen(self.velocity - other.velocity);
+		if (f > g_vehicle_spiderbot_crush_minspeed) {
+			f /= g_vehicle_spiderbot_speed_walk;
 			Damage(other,self,self.owner,g_vehicle_spiderbot_crush_dmg * f,DEATH_TURRET,'0 0 0', normalize(other.origin - self.origin) * g_vehicle_spiderbot_crush_force * f);
+		}
         return;
     }
 
