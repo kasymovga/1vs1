@@ -445,6 +445,13 @@ float spiderbot_pplug()
     self = spider;
     if(spider.flags & FL_ONGROUND)
     {
+		if (self.wasFlying || vlen(self.velocity) > 100)
+		if (self.nextstep <= time) {
+			GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			self.nextstep = time + 0.2;
+		}
+
+		spider.wasFlying = 0;
         //if(spider.state != SBS_JUMP)
         if(player.BUTTON_JUMP)
         {
@@ -515,7 +522,8 @@ float spiderbot_pplug()
             }
         }
         movelib_groundalign4point(300,100,0.25);
-    }
+    } else
+		spider.wasFlying = 1;
 
     //anim_do();
     spiderbot_miniguns_do();
