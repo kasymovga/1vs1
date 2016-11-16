@@ -493,6 +493,10 @@ void PlayerClear(float killed, entity attacker)
 		else
 			DropFlag(self.flagcarried, world, attacker);
 	}
+	if (self.hat) {
+		remove(self.hat);
+		self.hat = world;
+	}
 }
 
 void ClientKill_Now_TeamChange();

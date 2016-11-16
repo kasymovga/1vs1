@@ -1,1 +1,2 @@
 void Client_ReadCvars();
+.entity hat;

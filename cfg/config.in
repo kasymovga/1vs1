@@ -354,3 +354,5 @@ set sv_message_for_xonotic_players ""
 set sv_door_shootable 1
 set sv_door_trigger_field "60 60 8"
 set sv_door_default_speed 100
+
+set sv_player_hat ""
