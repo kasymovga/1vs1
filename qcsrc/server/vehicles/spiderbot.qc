@@ -623,14 +623,14 @@ void spiderbot_exit(float eject)
     self.frame = 5;
     e = findchain(classname,"spiderbot_rocket");
 	vector exit_origin;
+	makevectors(self.angles);
 	if(eject)
 		exit_origin = self.origin + '0 0 160';
 	else
 		exit_origin = self.origin + v_forward * 100 + '0 0 64';
 
-	tracebox(exit_origin, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-	if (trace_startsolid)
-		exit_origin = self.origin;
+	tracebox(self.origin, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+	exit_origin = trace_endpos;
 
     while(e)
     {
@@ -694,7 +694,6 @@ void spiderbot_exit(float eject)
 
     setattachment(self.owner,world,"");
 
-	makevectors(self.angles);
 	setorigin(self.owner, exit_origin);
 	if(eject)
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
