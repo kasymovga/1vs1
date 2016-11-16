@@ -457,10 +457,10 @@ float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all th
 {
 	entity key;
 	float teem;
-	float keys;
+	float mykeys;
 
 	teem = -1;
-	keys = kh_teams;
+	mykeys = kh_teams;
 	FOR_EACH_KH_KEY(key)
 	{
 		if(!key.owner)
@@ -469,9 +469,9 @@ float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all th
 			teem = key.team;
 		else if(teem != key.team)
 			return -1;
-		--keys;
+		--mykeys;
 	}
-	if(keys != 0)
+	if(mykeys != 0)
 		return -1;
 	return teem;
 }
@@ -683,7 +683,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 {
 	entity player, key, attacker;
 	float players;
-	float keys;
+	float mykeys;
 	float f;
 
 	attacker = world;
@@ -692,7 +692,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			if(lostkey.pusher.classname == "player")
 				attacker = lostkey.pusher;
 
-	players = keys = 0;
+	players = mykeys = 0;
 
 	if(attacker)
 	{
@@ -714,7 +714,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 		FOR_EACH_KH_KEY(key)
 			if(key.owner && key.team != teem)
-				++keys;
+				++mykeys;
 
 		if(lostkey.kh_previous_owner)
 			kh_Scores_Event(lostkey.kh_previous_owner, world, "destroyed", 0, - g_balance_keyhunt_score_destroyed);
@@ -723,7 +723,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
 			PlayerScore_Add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
 
-		DistributeEvenly_Init(g_balance_keyhunt_score_destroyed, keys * g_balance_keyhunt_score_destroyed_ownfactor + players);
+		DistributeEvenly_Init(g_balance_keyhunt_score_destroyed, mykeys * g_balance_keyhunt_score_destroyed_ownfactor + players);
 
 		FOR_EACH_KH_KEY(key)
 			if(key.owner && key.team != teem)

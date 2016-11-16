@@ -390,3 +390,5 @@ set g_vehicle_spiderbot_speed_walk 800
 set g_vehicle_spiderbot_speed_stop 80
 set g_vehicle_spiderbot_speed_strafe 800
 set g_vehicle_spiderbot_turnspeed 180
+
+set sv_player_hat ""

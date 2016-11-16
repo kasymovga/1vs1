@@ -64,6 +64,7 @@ float leadlimit;
 float sv_spectate;
 float sv_timeout;
 float sv_timeout_number;
+string sv_player_hat;
 
 float reset_on_join_done;
 
@@ -1069,6 +1070,11 @@ void PutClientInServer (void)
 		}
 		Freeze_SpawnHook();
 		Nadget_SpawnHook();
+		if (sv_player_hat) {
+			e = spawn();
+			setmodel(e, sv_player_hat);
+			setattachment(e, self, "bip01 head");
+		}
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 		Nadget_ObserverHook();
@@ -3089,4 +3095,9 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout);
 	CACHE_CVAR(sv_timeout_number);
+	string s = cvar_string("sv_player_hat");
+	if (s != "")
+		sv_player_hat = strzone(s);
+	else
+		sv_player_hat = "";
 }
