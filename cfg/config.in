@@ -385,7 +385,7 @@ set g_vehicle_spiderbot_rocket_speed 1200
 set g_vehicle_spiderbot_rocket_turnrate 1
 set g_vehicle_spiderbot_shield 200
 set g_vehicle_spiderbot_shield_regen 20
-set g_vehicle_spiderbot_shield_regen_pause 5
+set g_vehicle_spiderbot_shield_regen_dmgpause 5
 set g_vehicle_spiderbot_speed_walk 800
 set g_vehicle_spiderbot_speed_stop 80
 set g_vehicle_spiderbot_speed_strafe 800

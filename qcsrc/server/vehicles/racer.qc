@@ -112,7 +112,7 @@ float racer_pplug()
     racer.angles_x *= -1;
 
     // Turn Body
-    ftmp = cvar("g_vehicle_racer_turnspeed") / server_fps;
+    ftmp = cvar("g_vehicle_racer_turnspeed") * sys_ticrate;
     ftmp2 = ftmp * -1;
 
     ftmp = bound(ftmp2,shortangle_f(player.v_angle_y - racer.angles_y,racer.angles_y),ftmp);
@@ -383,9 +383,6 @@ void racer_die()
 
 void racer_dinit()
 {
-
-    server_fps = (1 / sys_ticrate);
-
     /*
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);

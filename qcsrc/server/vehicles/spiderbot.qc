@@ -897,6 +897,8 @@ void vehicle_spiderbot_readcvars() {
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_speed);
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_turnrate);
 	CACHE_CVAR(g_vehicle_spiderbot_shield);
+	CACHE_CVAR(g_vehicle_spiderbot_shield_regen);
+	CACHE_CVAR(g_vehicle_spiderbot_shield_regen_dmgpause);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_stop);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_strafe);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_walk);

@@ -42,8 +42,6 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .float shield_regen_dmgpause;
 .float health_regen_dmgpause;
 
-float server_fps;
-
 #define VHEF_NORMAL 0
 #define VHEF_EJECT 1
 

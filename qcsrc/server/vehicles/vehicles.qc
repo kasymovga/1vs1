@@ -22,17 +22,17 @@ void vehicle_stdproc_regen()
     if(self.vehicle_shield < smax)
     if(self.dmg_time + self.shield_regen_dmgpause < time)
     {
-        self.vehicle_shield = min(self.vehicle_shield + self.shield_regen / server_fps,smax);
+        self.vehicle_shield = min(self.vehicle_shield + self.shield_regen * sys_ticrate, smax);
 
         if(self.owner)
-            self.owner.vehicle_shield = self.vehicle_shield / self.shield;
+            self.owner.vehicle_shield = self.vehicle_shield / smax;
     }
 
     if(self.vehicle_flags & VHF_HEALTHREGEN)
     if(self.dmg_time + self.health_regen_dmgpause < time)
     if(self.vehicle_health < hmax)
     {
-        self.vehicle_health = min(self.vehicle_health + self.health_regen / server_fps,hmax);
+        self.vehicle_health = min(self.vehicle_health + self.health_regen * sys_ticrate, hmax);
 
         if(self.owner)
             self.owner.vehicle_health = self.vehicle_health / hmax;
