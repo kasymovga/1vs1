@@ -3095,9 +3095,13 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout);
 	CACHE_CVAR(sv_timeout_number);
+	if (sv_player_hat != "")
+		strunzone(sv_player_hat);
+
 	string s = cvar_string("sv_player_hat");
-	if (s != "")
+	if (s != "") {
 		sv_player_hat = strzone(s);
-	else
+		precache_model(sv_player_hat);
+	} else
 		sv_player_hat = "";
 }
