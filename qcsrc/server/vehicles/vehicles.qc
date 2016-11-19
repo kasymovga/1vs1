@@ -1,6 +1,5 @@
 #ifdef VEHICLES_ENABLED
 #include "spiderbot.qc"
-#include "racer.qc"
 
 void vehicle_stdproc_enter()
 {
