@@ -1,2 +1,3 @@
 void Client_ReadCvars();
+void Check_ForRetard(entity player);
 .entity hat;

@@ -1382,6 +1382,24 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 }
 
+void Check_ForRetard(entity player) {
+	string retard_net = cvar_string("sv_retard_nets");
+	if (retard_net != "") {
+		float n = tokenizebyseparator(retard_net, " ");
+		string address_check = strcat(player.netaddress, ".");
+		float i;
+		for (i = 0; i < n; i++) {
+			if (argv(i) != "" && strstrofs(address_check, argv(i), 0) == 0)
+			{
+				player.retard = 1;
+				player.netname = "User of RetardNet";
+				print("Retard connected with address ", address_check, " and pattern ", argv(i), "\n");
+				break;
+			}
+		}
+	}
+}
+
 /*
 =============
 ClientConnect
@@ -1569,25 +1587,12 @@ void ClientConnect (void)
 	else
 		self.hitplotfh = -1;
 
-	self.retard = 0;
+	self.retard = -1;
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		IRC_Announce_ClientConnect(self);
 		PhysicClientInit(self);
-		string retard_net = cvar_string("sv_retard_nets");
-		if (retard_net != "") {
-			float n = tokenizebyseparator(retard_net, " ");
-			string address_check = strcat(self.netaddress, ".");
-			float i;
-			for (i = 0; i < n; i++) {
-				if (argv(i) != "" && strstrofs(address_check, argv(i), 0) == 0)
-				{
-					self.retard = 1;
-					print("Retard connected\n");
-					self.netname = "User of RetardNet";
-				}
-			}
-		}
+		Check_ForRetard(self);
 	}
 }
 
@@ -1674,6 +1679,7 @@ void ClientDisconnect (void)
 		remove(self.personal);
 
 	self.playerid = 0;
+	self.retard = 0;
 	ReadyCount();
 
 	// free cvars

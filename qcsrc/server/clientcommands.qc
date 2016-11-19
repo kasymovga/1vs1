@@ -747,7 +747,7 @@ void SV_ParseClientCommand(string s) {
 		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?
 		{
 			if (cmd == "name") {
-				if (self.retard)
+				if (self.retard > 0)
 					return;
 				IRC_Announce_Name(self, argv(1));
 			}
