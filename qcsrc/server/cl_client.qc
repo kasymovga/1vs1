@@ -65,6 +65,9 @@ float sv_spectate;
 float sv_timeout;
 float sv_timeout_number;
 string sv_player_hat;
+string sv_player_hat_attachment;
+float sv_player_hat_scale;
+vector sv_player_hat_origin, sv_player_hat_angles;
 
 float reset_on_join_done;
 
@@ -1073,7 +1076,10 @@ void PutClientInServer (void)
 		if (sv_player_hat) {
 			e = spawn();
 			setmodel(e, sv_player_hat);
-			setattachment(e, self, "bip01 head");
+			e.scale = sv_player_hat_scale;
+			setattachment(e, self, sv_player_hat_attachment);
+			e.angles = sv_player_hat_angles;
+			setorigin(e, sv_player_hat_origin);
 		}
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
@@ -3104,10 +3110,24 @@ void Client_ReadCvars()
 	if (sv_player_hat != "")
 		strunzone(sv_player_hat);
 
-	string s = cvar_string("sv_player_hat");
+	if (sv_player_hat_attachment != "")
+		strunzone(sv_player_hat_attachment);
+
+	string s;
+	s = cvar_string("sv_player_hat");
 	if (s != "") {
 		sv_player_hat = strzone(s);
 		precache_model(sv_player_hat);
 	} else
 		sv_player_hat = "";
+
+	s = cvar_string("sv_player_hat_attachment");
+	if (s != "")
+		sv_player_hat_attachment = strzone(s);
+	else
+		sv_player_hat_attachment = "";
+
+	sv_player_hat_scale = cvar("sv_player_hat_scale");
+	sv_player_hat_origin = stov(cvar_string("sv_player_hat_origin"));
+	sv_player_hat_angles = stov(cvar_string("sv_player_hat_angles"));
 }

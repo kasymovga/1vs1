@@ -392,3 +392,7 @@ set g_vehicle_spiderbot_speed_strafe 800
 set g_vehicle_spiderbot_turnspeed 180
 
 set sv_player_hat ""
+set sv_player_hat_angles "0 0 0"
+set sv_player_hat_attachment ""
+set sv_player_hat_origin "0 0 0"
+set sv_player_hat_scale 1
