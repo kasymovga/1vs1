@@ -380,9 +380,11 @@ set g_vehicle_spiderbot_rocket_force 100
 set g_vehicle_spiderbot_rocket_noise 0.1
 set g_vehicle_spiderbot_rocket_radius 300
 set g_vehicle_spiderbot_rocket_reload 4
-set g_vehicle_spiderbot_rocket_refire 1
-set g_vehicle_spiderbot_rocket_speed 1200
-set g_vehicle_spiderbot_rocket_turnrate 1
+set g_vehicle_spiderbot_rocket_refire 0.5
+set g_vehicle_spiderbot_rocket_speed 2000
+set g_vehicle_spiderbot_rocket_spread 0.01
+set g_vehicle_spiderbot_rocket_turnrate 0
+set g_vehicle_spiderbot_rocket_up 0
 set g_vehicle_spiderbot_shield 200
 set g_vehicle_spiderbot_shield_regen 20
 set g_vehicle_spiderbot_shield_regen_dmgpause 5

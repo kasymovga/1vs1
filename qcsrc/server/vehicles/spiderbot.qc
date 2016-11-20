@@ -49,7 +49,9 @@ float g_vehicle_spiderbot_rocket_radius;
 float g_vehicle_spiderbot_rocket_refire;
 float g_vehicle_spiderbot_rocket_reload;
 float g_vehicle_spiderbot_rocket_speed;
+float g_vehicle_spiderbot_rocket_spread;
 float g_vehicle_spiderbot_rocket_turnrate;
+float g_vehicle_spiderbot_rocket_up;
 float g_vehicle_spiderbot_shield;
 float g_vehicle_spiderbot_shield_regen;
 float g_vehicle_spiderbot_shield_regen_dmgpause;
@@ -275,7 +277,7 @@ void spiderbot_rocket_do()
     missile.bot_dodgerating = 75;
     missile.nextthink       = time;// + 0.2;
     missile.movetype        = MOVETYPE_FLYMISSILE;
-    missile.velocity        = normalize(v_forward + (v_up * 0.5) + randomvec() * 0.25) * g_vehicle_spiderbot_rocket_speed;
+    missile.velocity        = normalize(v_forward + (v_up * g_vehicle_spiderbot_rocket_up) + randomvec() * g_vehicle_spiderbot_rocket_spread) * g_vehicle_spiderbot_rocket_speed;
     missile.angles          = vectoangles(missile.velocity);
     missile.think           = spiderbot_rocket_think;
     missile.flags           = FL_PROJECTILE;
@@ -624,12 +626,17 @@ void spiderbot_exit(float eject)
     e = findchain(classname,"spiderbot_rocket");
 	vector exit_origin;
 	makevectors(self.angles);
+	print("angles=", vtos(self.angles), "\n");
+	print("origin=", vtos(self.origin), "\n");
 	if(eject)
 		exit_origin = self.origin + '0 0 160';
 	else
-		exit_origin = self.origin + v_forward * 100 + '0 0 64';
+		exit_origin = self.origin + v_forward * 130 + '0 0 64';
 
-	tracebox(self.origin, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+	tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+	if (trace_fraction < 1)
+		return;
+
 	exit_origin = trace_endpos;
 
     while(e)
@@ -895,7 +902,9 @@ void vehicle_spiderbot_readcvars() {
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_refire);
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_reload);
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_speed);
+	CACHE_CVAR(g_vehicle_spiderbot_rocket_spread);
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_turnrate);
+	CACHE_CVAR(g_vehicle_spiderbot_rocket_up);
 	CACHE_CVAR(g_vehicle_spiderbot_shield);
 	CACHE_CVAR(g_vehicle_spiderbot_shield_regen);
 	CACHE_CVAR(g_vehicle_spiderbot_shield_regen_dmgpause);
