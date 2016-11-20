@@ -958,10 +958,8 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		return;
 
 	if not(source.flags & FL_CLIENT)
-	if not(source.retard) {
+	if not(source.retard)
 		Check_ForRetard(source);
-		print("Retard check\n");
-	}
 
 	if(source.retard > 0) {
 		if (source.retard_last_say)
