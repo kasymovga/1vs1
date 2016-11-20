@@ -626,8 +626,6 @@ void spiderbot_exit(float eject)
     e = findchain(classname,"spiderbot_rocket");
 	vector exit_origin;
 	makevectors(self.angles);
-	print("angles=", vtos(self.angles), "\n");
-	print("origin=", vtos(self.origin), "\n");
 	if(eject)
 		exit_origin = self.origin + '0 0 160';
 	else
