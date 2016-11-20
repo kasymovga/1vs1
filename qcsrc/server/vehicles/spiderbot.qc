@@ -634,8 +634,22 @@ void spiderbot_exit(float eject)
 		exit_origin = self.origin + v_forward * 130 + '0 0 64';
 
 	tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-	if (trace_fraction < 1)
-		return;
+	if not(eject) {
+		if (trace_fraction < 1) {
+			exit_origin = self.origin - v_right * 130 + '0 0 64';
+			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+		}
+		if (trace_fraction < 1) {
+			exit_origin = self.origin + v_right * 130 + '0 0 64';
+			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+		}
+		if (trace_fraction < 1) {
+			exit_origin = self.origin - v_forward * 130 + '0 0 64';
+			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+		}
+		if (trace_fraction < 1)
+			return;
+	}
 
 	exit_origin = trace_endpos;
 
