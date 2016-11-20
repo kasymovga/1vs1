@@ -28,7 +28,6 @@ float g_walljump_velocity_z_factor;
 
 .float ladder_time;
 .entity ladder_entity;
-.float gravity;
 .float swamp_slowdown;
 .float lastground;
 .float spectatorspeed;

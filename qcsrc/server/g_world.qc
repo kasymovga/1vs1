@@ -601,6 +601,12 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_projectiles_newton_style);
 	CACHE_CVAR(g_balance_pause_fuel_regen);
 	CACHE_CVAR(sv_gameplayfix_skipnonsolid);
+	if (sv_gameplayfix_skipnonsolid) {
+		traceline = traceline_skipnonsolid;
+		tracebox = tracebox_skipnonsolid;
+		tracetoss = tracetoss_skipnonsolid;
+	} else
+		tracetoss = tracetoss_wrapper;
 	CACHE_CVAR(sv_eventlog);
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(g_balance_armor_blockpercent);

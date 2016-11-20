@@ -309,14 +309,10 @@ Additionally it moves players back into the past before the trace and restores t
 */
 #define SKIPNONSOLID_ESCAPE_STEP 0.1
 void traceline_skipnonsolid(vector start, vector end, float t, entity forent) {
-    if (!sv_gameplayfix_skipnonsolid) {
-        traceline(start, end, t, forent);
-        return;
-    }
     float prev_trace_fract = 0;
     float tries;
     for (tries = 10; tries > 0; tries--) {
-        traceline(start, end, t, forent);
+        traceline_real(start, end, t, forent);
         if(trace_fraction == 1)
             break;
         trace_fraction = prev_trace_fract + (trace_fraction * (1 - prev_trace_fract));
@@ -332,14 +328,10 @@ void traceline_skipnonsolid(vector start, vector end, float t, entity forent) {
 }
 
 void tracebox_skipnonsolid(vector start, vector mi, vector ma, vector end, float nomonst, entity forent) {
-    if (!sv_gameplayfix_skipnonsolid) {
-        tracebox(start, mi, ma, end, nomonst, forent);
-        return;
-    }
     float prev_trace_fract = 0;
     float tries;
     for (tries = 10; tries > 0; tries--) {
-        tracebox(start, mi, ma, end, nomonst, forent);
+        tracebox_real(start, mi, ma, end, nomonst, forent);
         if(trace_fraction == 1)
             break;
         trace_fraction = prev_trace_fract + (trace_fraction * (1 - prev_trace_fract));
@@ -354,20 +346,19 @@ void tracebox_skipnonsolid(vector start, vector mi, vector ma, vector end, float
     if (tries == 0) print("Can't escape from nonsolid!\n");
 }
 
-.float gravity;
+void tracetoss_wrapper(entity ent, entity ignore, float toss_frametime, float toss_count) {
+	vector v0;
+	float g0;
+	v0 = ent.velocity;
+	g0 = ent.gravity;
+	ent.velocity = ent.velocity * toss_frametime * 20;
+	ent.gravity *= (toss_frametime * toss_frametime * 400);
+	tracetoss_dp(ent, ignore);
+	ent.velocity= v0;
+	ent.gravity = g0;
+	return;
+}
 void tracetoss_skipnonsolid(entity ent, entity ignore, float toss_frametime, float toss_count) {
-    if (!sv_gameplayfix_skipnonsolid) {
-        vector v0;
-        float g0;
-        v0 = ent.velocity;
-        g0 = ent.gravity;
-        ent.velocity = ent.velocity * toss_frametime * 20;
-        ent.gravity *= (toss_frametime * toss_frametime * 400);
-        tracetoss(ent, ignore);
-        ent.velocity= v0;
-        ent.gravity = g0;
-        return;
-    }
     //Almost full copy of darkplaces tracetoss but with tracebox_skipnonsolid instead tracebox.
     float i, tries;
     vector end;
@@ -380,7 +371,7 @@ void tracetoss_skipnonsolid(entity ent, entity ignore, float toss_frametime, flo
         ent.angles = ent.angles + (ent.avelocity *  toss_frametime);
         end = ent.origin + (ent.velocity * toss_frametime);
         for (tries = 10; tries > 0; tries--) {
-            tracebox(ent.origin, ent.mins, ent.maxs, end, FALSE, ent);
+            tracebox_real(ent.origin, ent.mins, ent.maxs, end, FALSE, ent);
             if (trace_endpos == ent.origin)
                 ent.origin += normalize(ent.velocity) * SKIPNONSOLID_ESCAPE_STEP;
             else
@@ -396,8 +387,6 @@ void tracetoss_skipnonsolid(entity ent, entity ignore, float toss_frametime, flo
     ent.origin = origin_save;
     ent.angles = angles_save;
 }
-#define traceline traceline_skipnonsolid
-#define tracebox tracebox_skipnonsolid
 
 void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
@@ -429,7 +418,7 @@ void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vec
 	}
 
 	// do the trace
-	tracebox_skipnonsolid (v1, mi, ma, v2, nomonst, forent);
+	tracebox (v1, mi, ma, v2, nomonst, forent);
 
 	// restore players to current positions
 	if (lag)

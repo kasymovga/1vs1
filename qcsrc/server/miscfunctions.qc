@@ -1315,6 +1315,8 @@ float SUB_NoImpactCheck()
 
 float projectile_skipnonsolid()
 {
+	//if (!sv_gameplayfix_skipnonsolid)
+	//	backtrace("Skip nonsolid code activated when disabled");
 	if(!other && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID) && !(trace_dphitcontents & self.dphitcontentsmask)) {
 		//Trying correct origin
 		tracebox_skipnonsolid(self.origin, self.mins, self.maxs, self.origin + (self.velocity * (1 - trace_fraction) * frametime), FALSE, self);
@@ -1328,7 +1330,7 @@ float projectile_skipnonsolid()
 	return FALSE;
 }
 
-#define PROJECTILE_SKIPNONSOLID if (sv_gameplayfix_skipnonsolid && projectile_skipnonsolid()) { return; }
+#define PROJECTILE_SKIPNONSOLID if (sv_gameplayfix_skipnonsolid) if(projectile_skipnonsolid()) { return; }
 #define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
 
 float MAX_IPBAN_URIS = 16;

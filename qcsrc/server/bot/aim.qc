@@ -63,7 +63,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	{
 		setorigin(tracetossent, org); // reset
 		tracetossent.velocity = findtrajectory_velocity = normalize(dir) * shotspeed + shotspeedupward * '0 0 1';
-		tracetoss(tracetossent, ignore); // love builtin functions...
+		tracetoss(tracetossent, ignore, 0.05, 20);
 		if (trace_ent == tracetossfaketarget) // done
 		{
 			targ.solid = savesolid;

@@ -425,7 +425,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		for(;;)
 		{
 			if (proj.gravity)
-				tracetoss_skipnonsolid(self, oldself, 0.05 * 0.125, 200);
+				tracetoss(self, oldself, 0.05 * 0.125, 200);
 			else
 				traceline(self.origin, start + proj.velocity * 1.25, FALSE, self);
 
