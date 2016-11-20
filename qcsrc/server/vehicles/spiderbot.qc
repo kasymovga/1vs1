@@ -440,7 +440,7 @@ float spiderbot_pplug()
     //player.angles_x *= -1;
 
     // Turn Body
-    ftmp = g_vehicle_spiderbot_turnspeed / sys_ticrate;
+    ftmp = g_vehicle_spiderbot_turnspeed * sys_ticrate;
     ftmp2 = ftmp * -1;
     ftmp = bound(ftmp2,spider.tur_head.angles_y,ftmp);
 
