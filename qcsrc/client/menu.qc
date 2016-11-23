@@ -93,7 +93,7 @@ void Menu_Draw() {
 	float center;
 	float size_scale;
 	vector item_color;
-	center = (vid_conwidth - 1)/2;
+	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = ITEM_TOP_MARGIN;
 	pos_z = 0;
 	pos_x = center - stringwidth(menu.menu_title, false) * 0.5 * 24;

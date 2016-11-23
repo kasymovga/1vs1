@@ -177,6 +177,7 @@ void CSQC_Init(void)
 		else
 			localcmd("\ncmd iamxonoticplayer\n");
 	}
+	read_cvars_init();
 
 	if (cvar_string("sv_master2") == "")
 	if (cvar_string("sv_masterextra1") == "") {
@@ -1252,7 +1253,7 @@ string getcommandkey(string text, string command)
 	string keys;
 	float n, j, k, l;
 
-	if (!sbar_showbinds)
+	if (!CVAR(sbar_showbinds))
 		return text;
 
 	keys = db_get(binddb, command);
@@ -1270,7 +1271,7 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (sbar_showbinds_limit > 0 && sbar_showbinds_limit >= l) break;
+				if (CVAR(sbar_showbinds_limit) > 0 && CVAR(sbar_showbinds_limit) >= l) break;
 			}
 
 		}
@@ -1278,12 +1279,12 @@ string getcommandkey(string text, string command)
 	}
 
 	if ("" == keys) {
-		if (sbar_showbinds > 1)
+		if (CVAR(sbar_showbinds) > 1)
 			return strcat(text, " (not bound)");
 		else
 			return text;
 	}
-	else if (sbar_showbinds > 1)
+	else if (CVAR(sbar_showbinds) > 1)
 		return strcat(text, " (", keys, ")");
 	else
 		return keys;

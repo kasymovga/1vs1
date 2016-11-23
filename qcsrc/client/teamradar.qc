@@ -3,10 +3,9 @@ vector teamradar_origin3d_in_texcoord; // player origin
 vector teamradar_origin2d; // 2D origin
 vector teamradar_size2d; // 2D size
 vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // don't even ask
-float teamradar_size; // 2D scale factor
-float cl_teamradar_scale; // window size = ...qu
-float cl_teamradar_nohudhack;
-float v_flipped;
+float teamradar_size_scale; // 2D scale factor
+float teamradar_scale; // window size = ...qu
+float teamradar_nohudhack;
 
 float vlen2d(vector v)
 {
@@ -40,8 +39,8 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	out = rotate(in, teamradar_angle * DEG2RAD);
 	out_y = - out_y; // screen space is reversed
 
-	out = out * teamradar_size;
-	if(v_flipped)
+	out = out * teamradar_size_scale;
+	if(CVAR(v_flipped))
 		out_x = -out_x;
 	out += teamradar_origin2d;
 	return out;
@@ -72,7 +71,7 @@ void draw_teamradar_background(float bg, float fg)
 		fga = 1;
 		fgc = '1 1 1' * fg;
 		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
-		if(v_flipped)
+		if(CVAR(v_flipped))
 		{
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord3), yinvert(mi_pictexcoord3), fgc, fga);
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord2), yinvert(mi_pictexcoord2), fgc, fga);
@@ -97,7 +96,7 @@ void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
 	makevectors(pangles - '0 1 0' * teamradar_angle);
-	if(v_flipped)
+	if(CVAR(v_flipped))
 	{
 		v_forward_x = -v_forward_x;
 		v_right_x = -v_right_x;
@@ -148,7 +147,7 @@ void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, 
 			dt = time - dt;
 			if(dt >= 1 || dt <= 0)
 				continue;
-			v = '2 2 0' * teamradar_size * dt;
+			v = '2 2 0' * teamradar_size_scale * dt;
 			drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 		}
 	}
@@ -177,51 +176,50 @@ void draw_teamradar_link(vector start, vector end, float colors)
 	R_EndPolygon();
 }
 
-float cl_teamradar_scale;
-float cl_teamradar_background_alpha;
-float cl_teamradar_foreground_alpha;
-float cl_teamradar_rotation;
-vector cl_teamradar_size;
-vector cl_teamradar_position;
-float cl_teamradar_zoommode;
+float teamradar_scale;
+float teamradar_background_alpha;
+float teamradar_foreground_alpha;
+float teamradar_rotation;
+vector teamradar_size;
+vector teamradar_position;
+float teamradar_zoommode;
 
 void teamradar_loadcvars()
 {
-	v_flipped = cvar("v_flipped");
 	if(ons_showmap)
 	{
-		cl_teamradar_scale = 42; // dummy, not used (see zoommode)
-		cl_teamradar_background_alpha = 1 * (1 - cvar("_menu_alpha"));
-		cl_teamradar_foreground_alpha = 1 * (1 - cvar("_menu_alpha"));
-		cl_teamradar_rotation = cvar("cl_teamradar_rotation");
-		if(!cl_teamradar_rotation)
-			cl_teamradar_rotation = 4;
-		cl_teamradar_size = '256 256 0'; // TODO make somewhat variable?
-		cl_teamradar_position = '0.5 0.5 0';
-		cl_teamradar_zoommode = 3;
-		cl_teamradar_nohudhack = 0;
+		teamradar_scale = 42; // dummy, not used (see zoommode)
+		teamradar_background_alpha = 1 * (1 - CVAR(_menu_alpha));
+		teamradar_foreground_alpha = 1 * (1 - CVAR(_menu_alpha));
+		teamradar_rotation = CVAR(cl_teamradar_rotation);
+		if(!teamradar_rotation)
+			teamradar_rotation = 4;
+		teamradar_size = '256 256 0'; // TODO make somewhat variable?
+		teamradar_position = '0.5 0.5 0';
+		teamradar_zoommode = 3;
+		teamradar_nohudhack = 0;
 	}
 	else
 	{
-		cl_teamradar_scale = cvar("cl_teamradar_scale");
-		cl_teamradar_background_alpha = cvar("cl_teamradar_background_alpha") * sbar_alpha_fg;
-		cl_teamradar_foreground_alpha = cvar("cl_teamradar_foreground_alpha") * sbar_alpha_fg;
-		cl_teamradar_rotation = cvar("cl_teamradar_rotation");
-		cl_teamradar_size = stov(cvar_string("cl_teamradar_size"));
-		cl_teamradar_position = stov(cvar_string("cl_teamradar_position"));
-		cl_teamradar_zoommode = cvar("cl_teamradar_zoommode");
+		teamradar_scale = CVAR(cl_teamradar_scale);
+		teamradar_background_alpha = CVAR(cl_teamradar_background_alpha) * sbar_alpha_fg;
+		teamradar_foreground_alpha = CVAR(cl_teamradar_foreground_alpha) * sbar_alpha_fg;
+		teamradar_rotation = CVAR(cl_teamradar_rotation);
+		teamradar_size = stov(cvar_string("cl_teamradar_size"));
+		teamradar_position = stov(cvar_string("cl_teamradar_position"));
+		teamradar_zoommode = CVAR(cl_teamradar_zoommode);
 
 		// others default to 0
 		// match this to defaultNexuiz.cfg!
-		if(!cl_teamradar_scale) cl_teamradar_scale = 4096;
-		if(!cl_teamradar_background_alpha) cl_teamradar_background_alpha = 0.4 * sbar_alpha_fg;
-		if(!cl_teamradar_foreground_alpha) cl_teamradar_foreground_alpha = 0.8 * sbar_alpha_fg;
-		if(!cl_teamradar_size_x) cl_teamradar_size_x = 128;
-		if(!cl_teamradar_size_y) cl_teamradar_size_y = cl_teamradar_size_x;
+		if(!teamradar_scale) teamradar_scale = 4096;
+		if(!teamradar_background_alpha) teamradar_background_alpha = 0.4 * sbar_alpha_fg;
+		if(!teamradar_foreground_alpha) teamradar_foreground_alpha = 0.8 * sbar_alpha_fg;
+		if(!teamradar_size_x) teamradar_size_x = 128;
+		if(!teamradar_size_y) teamradar_size_y = teamradar_size_x;
 
-		cl_teamradar_size_z = 0;
-		cl_teamradar_nohudhack = cl_teamradar_position_z;
-		cl_teamradar_position_z = 0;
+		teamradar_size_z = 0;
+		teamradar_nohudhack = teamradar_position_z;
+		teamradar_position_z = 0;
 	}
 }
 
@@ -238,7 +236,7 @@ void() teamradar_view =
 
 	teamradar_loadcvars();
 
-	switch(cl_teamradar_zoommode)
+	switch(teamradar_zoommode)
 	{
 		default:
 		case 0:
@@ -255,41 +253,41 @@ void() teamradar_view =
 			break;
 	}
 
-	switch(cl_teamradar_rotation)
+	switch(teamradar_rotation)
 	{
 		case 0:
 			teamradar_angle = view_angles_y - 90;
 			break;
 		default:
-			teamradar_angle = 90 * cl_teamradar_rotation;
+			teamradar_angle = 90 * teamradar_rotation;
 			break;
 	}
 
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
-	teamradar_size2d = cl_teamradar_size;
+	teamradar_size2d = teamradar_size;
 
 	teamradar_origin2d =
-		  '1 0 0' * (0.5 * teamradar_size2d_x + cl_teamradar_position_x * (vid_conwidth - teamradar_size2d_x))
-		+ '0 1 0' * (0.5 * teamradar_size2d_y + cl_teamradar_position_y * (vid_conheight - teamradar_size2d_y));
+		  '1 0 0' * (0.5 * teamradar_size2d_x + teamradar_position_x * (CVAR(vid_conwidth) - teamradar_size2d_x))
+		+ '0 1 0' * (0.5 * teamradar_size2d_y + teamradar_position_y * (CVAR(vid_conheight) - teamradar_size2d_y));
 	
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0';
-	if(cl_teamradar_position == '1 0 0')
+	if(teamradar_position == '1 0 0')
 	{
-		if(cl_teamradar_nohudhack < 2)
+		if(teamradar_nohudhack < 2)
 			teamradar_origin2d_y += 25;
-		if(cl_teamradar_nohudhack < 1)
+		if(teamradar_nohudhack < 1)
 			teamradar_extraclip_mins_y -= 25;
 	}
-	else if(cl_teamradar_position == '0 1 0' || cl_teamradar_position == '1 1 0')
+	else if(teamradar_position == '0 1 0' || teamradar_position == '1 1 0')
 	{
-		if(cl_teamradar_nohudhack < 2)
+		if(teamradar_nohudhack < 2)
 			teamradar_origin2d_y -= 50;
-		//if(cl_teamradar_nohudhack < 1)
+		//if(teamradar_nohudhack < 1)
 			//teamradar_extraclip_size_y += 50; // don't, the HUD looks nice
 	}
 
 	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
-	if(cl_teamradar_rotation == 0)
+	if(teamradar_rotation == 0)
 	{
 		// max-min distance must fit the radar in any rotation
 		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
@@ -312,11 +310,11 @@ void() teamradar_view =
 		);
 	}
 
-	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / cl_teamradar_scale;
+	normalsize = vlen_maxnorm2d(teamradar_size2d) * scale2d / teamradar_scale;
 	if(bigsize > normalsize)
 		normalsize = bigsize;
 
-	teamradar_size =
+	teamradar_size_scale =
 		  f * bigsize
 		+ (1 - f) * normalsize;
 	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
@@ -333,7 +331,7 @@ void() teamradar_view =
 		teamradar_size2d_y + teamradar_extraclip_maxs_y - teamradar_extraclip_mins_y
 	);
 
-	draw_teamradar_background(cl_teamradar_background_alpha, cl_teamradar_foreground_alpha);
+	draw_teamradar_background(teamradar_background_alpha, teamradar_foreground_alpha);
 
 	if(ons_showmap)
 	{

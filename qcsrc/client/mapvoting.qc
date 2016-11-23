@@ -190,18 +190,18 @@ void MapVote_Draw()
 
 	Mouse_ReadPos();
 	
-	center = (vid_conwidth - 1)/2;
-	xmin = vid_conwidth*0.05; // 5% border must suffice
-	xmax = vid_conwidth - xmin;
+	center = (CVAR(vid_conwidth) - 1)/2;
+	xmin = CVAR(vid_conwidth)*0.05; // 5% border must suffice
+	xmax = CVAR(vid_conwidth) - xmin;
 	ymin = 20;
-	i = cvar("con_chatpos"); //*cvar("con_chatsize");
+	i = CVAR(con_chatpos); //*con_chatsize;
 	if(i < 0)
-		ymax = vid_conheight + (i - cvar("con_chat")) * cvar("con_chatsize");
-	if(i >= 0 || ymax < (vid_conheight*0.5))
-		ymax = vid_conheight - ymin;
+		ymax = CVAR(vid_conheight) + (i - CVAR(con_chat)) * CVAR(con_chatsize);
+	if(i >= 0 || ymax < (CVAR(vid_conheight)*0.5))
+		ymax = CVAR(vid_conheight) - ymin;
 
 	drawfont = sbar_bigfont;
-	sbar_fontsize = Sbar_GetFontsize("sbar_fontsize");
+	sbar_fontsize = Sbar_GetFontsize(CVAR(sbar_fontsize));
 
 	pos_y = ymin;
 	pos_z = 0;

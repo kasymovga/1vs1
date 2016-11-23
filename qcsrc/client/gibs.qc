@@ -50,9 +50,8 @@ void Gib_setmodel(entity gib, string mdlname, float specnum)
 
 void new_te_bloodshower (float ef, vector org, float explosionspeed, float howmany)
 {
-	float i, pmod;
-	pmod = cvar("cl_particles_quality");
-	for (i = 0; i < 250 * pmod; ++i)
+	float i;
+	for (i = 0; i < 250 * CVAR(cl_particles_quality); ++i)
 		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
 }
 
@@ -124,14 +123,14 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 		gib.move_touch = SUB_RemoveOnNoImpact;
 
 	gib.move_origin = gib.origin = org;
-	gib.move_velocity = vconst * cvar_or("cl_gibs_velocity_scale", 1) + vrand * cvar_or("cl_gibs_velocity_random", 1) + '0 0 1' * cvar("cl_gibs_velocity_up");
+	gib.move_velocity = vconst * CVAR_OR(cl_gibs_velocity_scale, 1) + vrand * CVAR_OR(cl_gibs_velocity_random, 1) + '0 0 1' * CVAR(cl_gibs_velocity_up);
 	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity);
 	gib.move_time = time;
-	gib.damageforcescale = cvar_or("cl_gibs_damageforcescale", 3.5);
+	gib.damageforcescale = CVAR_OR(cl_gibs_damageforcescale, 3.5);
 
-	gib.nextthink = time + cvar_or("cl_gibs_lifetime", 14) * (1 + prandom() * 0.15);
+	gib.nextthink = time + CVAR_OR(cl_gibs_lifetime, 14) * (1 + prandom() * 0.15);
 
-	RubbleLimit("gib", cvar_or("cl_gibs_maxcount",100), Gib_Delete);
+	RubbleLimit("gib", CVAR_OR(cl_gibs_maxcount,100), Gib_Delete);
 }
 
 void Ent_GibSplash(float isNew)
@@ -151,26 +150,26 @@ void Ent_GibSplash(float isNew)
 	org_z = ReadShort() * 4 + 2;
 	vel = decompressShortVector(ReadShort());
 
-	if(cvar("cl_gentle"))
+	if(CVAR(cl_gentle))
 		type |= 0x80; // set gentle bit
 
 	if(type & 0x80)
 	{
-		if(cvar("cl_gentle") > 1)
+		if(CVAR(cl_gentle) > 1)
 			gentle_prefix = "";
 		else
 			gentle_prefix = "morphed_";
 	}
-	else if(cvar("cl_particlegibs"))
+	else if(CVAR(cl_particlegibs))
 	{
 		type |= 0x80;
 		gentle_prefix = "particlegibs_";
 	}
 
-	if not(cvar("cl_gentle"))
-		amount *= 1 - cvar("cl_nogibs");
+	if not(CVAR(cl_gentle))
+		amount *= 1 - CVAR(cl_nogibs);
 
-	if(cvar("ekg"))
+	if(CVAR(ekg))
 		amount *= 5;
 
 	if(amount <= 0 || !isNew)

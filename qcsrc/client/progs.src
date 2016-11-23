@@ -26,6 +26,8 @@ progressbar.qh
 
 main.qh
 
+cvar.qc
+
 sortlist.qc
 miscfunctions.qc
 teamplay.qc

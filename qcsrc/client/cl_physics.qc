@@ -286,7 +286,7 @@ vector CSQCPhysic_SetCamera()
 		self = oldself;
 		frametime = frametime_save;
 		v = physic.origin + physic.view_ofs;
-		if not(cvar("chase_active"))
+		if not(CVAR(chase_active))
 			R_SetView(VF_ORIGIN, v);
 		return v;
 	}

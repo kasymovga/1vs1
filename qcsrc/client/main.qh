@@ -125,8 +125,6 @@ float warmup_stage;
 
 float weaponimpulse[24];
 string getcommandkey(string text, string command);
-float sbar_showbinds;
-float sbar_showbinds_limit;
 
 string vote_called_vote;
 float ready_waiting;
@@ -141,7 +139,7 @@ void restartAnnouncer_Think();
 float current_zoomfraction;
 
 float cs_project_is_b0rked;
-float vid_width, vid_height, vid_pixelheight;
+float vid_width, vid_height;
 
 float camera_active;		// Demo camera is active if set to TRUE
 float chase_active_backup;

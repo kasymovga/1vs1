@@ -5,9 +5,6 @@
 // plr.sameteam = player is on same team as local client
 //
 
-float shownames;
-float shownames_teamonly;
-
 .float the_entnum;
 
 .float sn_lastdraw;
@@ -29,11 +26,11 @@ float E_ORIGIN      = 1; // vector
 #define SHOWNAMES_ORIGIN_OFFSET '0 0 64'
 
 float Shownames_PreDrawPlayer() {
-    if(!shownames)
+    if(!CVAR(hud_shownames))
         return FALSE;
 
     if (teamplay)
-    if (shownames_teamonly)
+    if not(CVAR(hud_shownames_enemies))
 	if (self.cnt)
         return FALSE;
 
@@ -72,7 +69,7 @@ void Shownames_DrawPlayer() {
     vector o;
     o = project_3d_to_2d(self.iorigin + SHOWNAMES_ORIGIN_OFFSET);
 
-    if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+    if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
         return;
 
     o_z = 0;
@@ -118,9 +115,6 @@ void Shownames_DrawPlayer() {
 }
 
 void Shownames_Init(entity plr) {
-	shownames = cvar("hud_shownames");
-	shownames_teamonly = !cvar("hud_shownames_enemies");
-
     plr.draw2d = Shownames_DrawPlayer;
     plr.draw2d_pre = Shownames_PreDrawPlayer;
 }

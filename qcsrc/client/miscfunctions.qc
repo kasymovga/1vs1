@@ -40,7 +40,7 @@ void maptimeAnnouncer() {
     timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
 
     //5 minute check
-    if (cvar("cl_sound_maptime_warning") >= 2) {
+    if (CVAR(cl_sound_maptime_warning) >= 2) {
         //make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
         if(announcer_5min)
         {
@@ -55,7 +55,7 @@ void maptimeAnnouncer() {
     }
 
     //1 minute check
-    if (cvar("cl_sound_maptime_warning") == 1 || cvar("cl_sound_maptime_warning") == 3) {
+    if (CVAR(cl_sound_maptime_warning) == 1 || CVAR(cl_sound_maptime_warning) == 3) {
     	if (announcer_1min)
     	{
 			if(timeleft > 60)
@@ -202,10 +202,10 @@ void CSQC_CheckEngine()
 	sbar_bigfont = FONT_USER+2;
 }
 
-vector Sbar_GetFontsize(string cvarname)
+vector Sbar_GetFontsize(vector v)
 {
-	vector v;
-	v = stov(cvar_string(cvarname));
+	//vector v;
+	//v = stov(cvar_string(cvarname));
 	if(v_x == 0)
 		v = '8 8 0';
 	if(v_y == 0)
@@ -217,13 +217,13 @@ vector Sbar_GetFontsize(string cvarname)
 float Sbar_GetWidth(float teamcolumnwidth)
 {
 	float f;
-	f = cvar("sbar_width");
+	f = CVAR(sbar_width);
 	if(f == 0)
 		f = 640;
 	if(f < 320)
 		f = 320;
-	if(f > vid_conwidth - 2 * teamcolumnwidth)
-		f = vid_conwidth - 2 * teamcolumnwidth;
+	if(f > CVAR(vid_conwidth) - 2 * teamcolumnwidth)
+		f = CVAR(vid_conwidth) - 2 * teamcolumnwidth;
 	return f;
 }
 
@@ -232,7 +232,7 @@ float PreviewExists(string name)
 	float f;
 	string file;
 
-	if(cvar("cl_readpicture_force"))
+	if (CVAR(cl_readpicture_force))
 		return false;
 
 	file = strcat(name, ".tga");
@@ -287,23 +287,13 @@ string ColorTranslateRGB(string s)
 		return s;
 }
 
-float cvar_or(string cv, float v)
-{
-	string s;
-	s = cvar_string(cv);
-	if(s == "")
-		return v;
-	else
-		return stof(s);
-}
-
 vector project_3d_to_2d(vector vec)
 {
 	vec = cs_project(vec);
 	if(cs_project_is_b0rked > 0)
 	{
-		vec_x *= vid_conwidth / vid_width;
-		vec_y *= vid_conheight / vid_height;
+		vec_x *= CVAR(vid_conwidth) / vid_width;
+		vec_y *= CVAR(vid_conheight) / vid_height;
 	}
 	return vec;
 }

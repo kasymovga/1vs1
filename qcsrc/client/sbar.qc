@@ -10,12 +10,7 @@ float weapontime;
 
 float sbar_alpha_fg;
 float sbar_alpha_bg;
-float sbar_color_bg_team;
 float sbar_border_thickness;
-float sbar_scoreboard_alpha_bg;
-float sbar_scoreboard_highlight;
-float sbar_hudselector;
-float sbar_hud_accuracy;
 
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
@@ -31,7 +26,7 @@ void CSQC_nb_hud();
 void Sbar_FinaleOverlay()
 {
 	/*vector pos;
-	pos_x = (vid_conwidth - 1)/2;
+	pos_x = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = 16;
 	pos_z = 0;*/
 
@@ -83,8 +78,8 @@ void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 	sp = weaponspace[idx] + 1;
 	weaponspace[idx] = sp;
 
-	pos_x = (vid_conwidth + 6 - w_width * 9) * 0.5 + w_width * idx;
-	pos_y = (vid_conheight - w_height * sp) - 38; // move 38 pixels up
+	pos_x = (CVAR(vid_conwidth) + 6 - w_width * 9) * 0.5 + w_width * idx;
+	pos_y = (CVAR(vid_conheight) - w_height * sp) - 38; // move 38 pixels up
 	pos_z = 0;
 	vsize_x = w_width;
 	vsize_y = w_height;
@@ -100,7 +95,7 @@ void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 	drawstring(pos, ftos(imp), vsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// draw the weapon accuracy on the HUD
-	if(sbar_hud_accuracy)
+	if(CVAR(sbar_hud_accuracy))
  	{
  		weapon_stats = rint(100*weapon_hit/weapon_damage);
  		fill_colour_x = 1 - 0.015 * weapon_stats;
@@ -849,7 +844,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		drawfill(pos - '1 1 0', tmp + '2 0 0', '1 1 1', 0.25, DRAWFLAG_NORMAL);
 	else
 	{
-		if (sbar_scoreboard_highlight)
+		if (CVAR(sbar_scoreboard_highlight))
 			if(!mod(pl_number,2))
 				drawfill(pos - '1 1 0', tmp + '2 0 0', '1 1 1', 0.09, DRAWFLAG_NORMAL);
 	}
@@ -946,23 +941,23 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	tmp_y = 1.25 * sbar_fontsize_y;
 
 	// rounded header
-	drawpic(pos, "gfx/hud/sb_scoreboard_tableheader", tmp, '0.5 0.5 0.5', sbar_scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic(pos, "gfx/hud/sb_scoreboard_tableheader", tmp, '0.5 0.5 0.5', CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL);
 
 	// table border
 	tmp_y += sbar_border_thickness;
 	tmp_y += body_table_height;
-	drawborderlines(sbar_border_thickness, pos, tmp, '0 0 0', sbar_scoreboard_alpha_bg, DRAWFLAG_NORMAL); // more transparency for the scoreboard
+	drawborderlines(sbar_border_thickness, pos, tmp, '0 0 0', CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL); // more transparency for the scoreboard
 
 	// separator header/table
 	pos_y += 1.25 * sbar_fontsize_y;
 	tmp_y = sbar_border_thickness;
-	drawfill(pos, tmp, '0 0 0', sbar_scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawfill(pos, tmp, '0 0 0', CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL);
 
 	pos_y += sbar_border_thickness;
 
 	// table background
 	tmp_y = body_table_height;
-	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * sbar_color_bg_team, sbar_scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * CVAR(sbar_color_bg_team), CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL);
 
 	// anyway, apply some color
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
@@ -973,7 +968,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 
 	pos += '1 1 0';
 
-	if (sbar_scoreboard_highlight)
+	if (CVAR(sbar_scoreboard_highlight))
 	{
 		column_dim_y = 1.25 * sbar_fontsize_y; // header
 		column_dim_y += sbar_border_thickness;
@@ -986,10 +981,10 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 		if(sbar_field[i] == SP_SEPARATOR)
 			break;
 		column_dim_x = sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
-		if (sbar_scoreboard_highlight)
+		if (CVAR(sbar_scoreboard_highlight))
 		{
 			if (mod(i,2))
-				drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', sbar_scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
+				drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', CVAR(sbar_scoreboard_alpha_bg) * 0.2, DRAWFLAG_NORMAL);
 		}
 		drawstring(pos, sbar_title[i], sbar_fontsize, rgb, 1, DRAWFLAG_NORMAL);
 		pos_x += column_dim_x;
@@ -1005,7 +1000,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 
 			pos_x -= sbar_size[i]*sbar_fontsize_x;
 
-			if (sbar_scoreboard_highlight)
+			if (CVAR(sbar_scoreboard_highlight))
 			{
 				if (!mod(i,2))
 				{
@@ -1013,7 +1008,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 						column_dim_x = sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x / 2 + 1;
 					else
 						column_dim_x = sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
-					drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', sbar_scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
+					drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', CVAR(sbar_scoreboard_alpha_bg) * 0.2, DRAWFLAG_NORMAL);
 				}
 			}
 
@@ -1071,11 +1066,11 @@ void Sbar_DrawScoreboard()
 
 	sbwidth = Sbar_GetWidth(6.5 * sbar_fontsize_y);
 
-	xmin = 0.5 * (vid_conwidth - sbwidth);
+	xmin = 0.5 * (CVAR(vid_conwidth) - sbwidth);
 	ymin = SCOREBOARD_OFFSET;
 
-	xmax = vid_conwidth - xmin;
-	ymax = vid_conheight - 0.2*vid_conheight;
+	xmax = CVAR(vid_conwidth) - xmin;
+	ymax = CVAR(vid_conheight) - 0.2 * CVAR(vid_conheight);
 
 	// Initializes position
 	pos_x = xmin;
@@ -1114,9 +1109,9 @@ void Sbar_DrawScoreboard()
 	}
 	else
 	{
-		rgb_x = cvar("sbar_color_bg_r");
-		rgb_y = cvar("sbar_color_bg_g");
-		rgb_z = cvar("sbar_color_bg_b");
+		rgb_x = CVAR(sbar_color_bg_r);
+		rgb_y = CVAR(sbar_color_bg_g);
+		rgb_z = CVAR(sbar_color_bg_b);
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
@@ -1293,8 +1288,8 @@ void Sbar_Score()
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
 
  	vector bottomright;
- 	bottomright_x = vid_conwidth;
- 	bottomright_y = vid_conheight;
+ 	bottomright_x = CVAR(vid_conwidth);
+ 	bottomright_y = CVAR(vid_conheight);
  	bottomright_z = 0;
 
 	score_pos = bottomright - '196 42 0';
@@ -1412,7 +1407,7 @@ void Sbar_Score()
 		vector m;
 		string s, forcetime;
 
-		m = '0.5 0 0' * vid_conwidth + '0 0.25 0' * vid_conheight;
+		m = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.25 0' * CVAR(vid_conheight);
 
 		if(race_checkpointtime)
 		{
@@ -1519,7 +1514,7 @@ void Sbar_Timer()
 	
 	vector topright;
 	topright = '0 0 0';
-	topright_x = vid_conwidth;
+	topright_x = CVAR(vid_conwidth);
 	
 	timelimit = getstatf(STAT_TIMELIMIT);
 	
@@ -1535,7 +1530,7 @@ void Sbar_Timer()
 	else
 		timer_color = '1 0 0'; //red
 
-	if (cvar("sbar_increment_maptime") || timelimit == 0 || warmup_stage) {
+	if (CVAR(sbar_increment_maptime) || timelimit == 0 || warmup_stage) {
 		if (time < getstatf(STAT_GAMESTARTTIME)) {
 			//while restart is still active, show 00:00
 			minutes = seconds = 0;
@@ -1567,19 +1562,19 @@ void Sbar_Timer()
 		bgpos_z = 0;
 	}
 
-	if (cvar("viewsize") <= 100) { // draw timer background when viewsize <= 100
+	if (CVAR(viewsize) <= 100) { // draw timer background when viewsize <= 100
 		if (teamplay)
-			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', GetTeamRGB(myteam) * sbar_color_bg_team, sbar_alpha_bg, DRAWFLAG_NORMAL); // timer bg color = myteam color
+			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', GetTeamRGB(myteam) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // timer bg color = myteam color
 		else {
-			color_x = cvar("sbar_color_bg_r");
-			color_y = cvar("sbar_color_bg_g");
-			color_z = cvar("sbar_color_bg_b");
+			color_x = CVAR(sbar_color_bg_r);
+			color_y = CVAR(sbar_color_bg_g);
+			color_z = CVAR(sbar_color_bg_b);
 
 			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', color, sbar_alpha_bg, DRAWFLAG_NORMAL);
 		}
 	}
 
-	if(minutesLeft >= 1 || cvar("sbar_increment_maptime") || timelimit == 0 || warmup_stage) {
+	if(minutesLeft >= 1 || CVAR(sbar_increment_maptime) || timelimit == 0 || warmup_stage) {
 		Sbar_DrawXNum(topright - '103 0 0' + '0 2 0', minutes, 3, 0, 18, timer_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(topright - '53 0 0' + '0 1 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
@@ -1593,7 +1588,7 @@ float Sbar_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 2)
 		return 1;
-	else if (getstati(STAT_HEALTH) <= 0 && cvar("cl_deathscoreboard"))
+	else if (getstati(STAT_HEALTH) <= 0 && CVAR(cl_deathscoreboard))
 		return 1;
 	else if(sb_showscores_force)
 		return 1;
@@ -1604,8 +1599,8 @@ void CSQC_Strength_Timer() {
 	vector pos;
 	vector bottom;
 
-	bottom_x = vid_conwidth/2;
-	bottom_y = vid_conheight;
+	bottom_x = CVAR(vid_conwidth)/2;
+	bottom_y = CVAR(vid_conheight);
 	bottom_z = 0;
 
 	float stat_items, dt;
@@ -1625,7 +1620,7 @@ void CSQC_Strength_Timer() {
 	picsize = '22 22 0';
 	countdown_fontsize = 18;
 
-	if (vid_conwidth >= 800)
+	if (CVAR(vid_conwidth) >= 800)
 		pos = bottom + '192 -46 0';
 	else
 		pos = bottom + '192 -94 0';
@@ -1694,11 +1689,11 @@ void centerprint(string strMessage)
 	float i, j, n, hcount;
 	string s;
 
-	centerprint_fontsize = Sbar_GetFontsize("scr_centersize");
+	centerprint_fontsize = Sbar_GetFontsize(CVAR(scr_centersize));
 
 	centerprint_expire = min(centerprint_expire, time); // if any of the returns happens, this message will fade out
 
-	if(cvar("scr_centertime") <= 0)
+	if(CVAR(scr_centertime) <= 0)
 		return;
 
 	if(strMessage == "")
@@ -1733,7 +1728,7 @@ void centerprint(string strMessage)
 		getWrappedLine_remaining = argv(j);
 		while(getWrappedLine_remaining)
 		{
-			s = getWrappedLine(vid_conwidth * 0.75 / centerprint_fontsize_x, stringwidth_colors);
+			s = getWrappedLine(CVAR(vid_conwidth) * 0.75 / centerprint_fontsize_x, stringwidth_colors);
 			if(centerprint_messages[i])
 				strunzone(centerprint_messages[i]);
 			centerprint_messages[i] = strzone(s);
@@ -1754,11 +1749,11 @@ void centerprint(string strMessage)
 	float h, havail;
 	h = centerprint_fontsize_y*hcount;
 
-	havail = vid_conheight;
-	if(cvar("con_chatpos") < 0)
-		havail -= (-cvar("con_chatpos") + cvar("con_chat")) * cvar("con_chatsize"); // avoid overlapping chat
-	if(havail > vid_conheight - 70)
-		havail = vid_conheight - 70; // avoid overlapping HUD
+	havail = CVAR(vid_conheight);
+	if(CVAR(con_chatpos) < 0)
+		havail -= (-CVAR(con_chatpos) + CVAR(con_chat)) * CVAR(con_chatsize); // avoid overlapping chat
+	if(havail > CVAR(vid_conheight) - 70)
+		havail = CVAR(vid_conheight) - 70; // avoid overlapping HUD
 
 	centerprint_start_x = 0;
 
@@ -1815,7 +1810,7 @@ void centerprint(string strMessage)
 	centerprint_start_y =
 		min(
 			max(
-				max(scoreboard_bottom, vid_conheight * 0.5 + 16),
+				max(scoreboard_bottom, CVAR(vid_conheight) * 0.5 + 16),
 				(havail - h)/2
 			),
 			havail - h
@@ -1823,7 +1818,7 @@ void centerprint(string strMessage)
 #endif
 
 	centerprint_num = i;
-	centerprint_expire = time + cvar("scr_centertime");
+	centerprint_expire = time + CVAR(scr_centertime);
 }
 
 void Sbar_DrawCenterPrint (void)
@@ -1846,7 +1841,7 @@ void Sbar_DrawCenterPrint (void)
 	pos = centerprint_start;
 	for (i=0; i<centerprint_num; i = i + 1)
 	{
-		pos_x = (vid_conwidth - centerprint_fontsize_x * centerprint_width[i]) * 0.5;
+		pos_x = (CVAR(vid_conwidth) - centerprint_fontsize_x * centerprint_width[i]) * 0.5;
 		ts = centerprint_messages[i];
 		if (ts != "")
 		{
@@ -1883,8 +1878,8 @@ void Sbar_DrawPressedKeys(void)
 
 	bgsize = '126 75 0';
 
-	pos = '1 0 0' * (vid_conwidth - bgsize_x) * pos_x
-	    + '0 1 0' * (vid_conheight - bgsize_y) * pos_y;
+	pos = '1 0 0' * (CVAR(vid_conwidth) - bgsize_x) * pos_x
+	    + '0 1 0' * (CVAR(vid_conheight) - bgsize_y) * pos_y;
 	pos -= '-15 -6 0'; // adjust to the origin of these numbers
 
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
@@ -1903,7 +1898,7 @@ void Sbar_ShowSpeed(void)
 	float pos, conversion_factor;
 	string speed, unit;
 
-	switch(cvar("cl_showspeed_unit"))
+	switch(CVAR(cl_showspeed_unit))
 	{
 		default:
 		case 0:
@@ -1932,13 +1927,13 @@ void Sbar_ShowSpeed(void)
 			break;
 	}
 
-	if (cvar("cl_showspeed_z") == 1)
+	if (CVAR(cl_showspeed_z) == 1)
 		speed = strcat(ftos(floor( vlen(pmove_vel) * conversion_factor + 0.5 )), unit);
 	else
 		speed = strcat(ftos(floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 )), unit);
 
-	numsize_x = numsize_y = cvar("cl_showspeed_size");
-	pos = (vid_conheight - numsize_y) * cvar("cl_showspeed_position");
+	numsize_x = numsize_y = CVAR(cl_showspeed_size);
+	pos = (CVAR(vid_conheight) - numsize_y) * CVAR(cl_showspeed_position);
 	
 	drawfont = sbar_bigfont;
 	drawstringcenter('1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -1951,13 +1946,13 @@ float acc_avg;
 
 void Sbar_ShowAcceleration(void)
 {
-	float acceleration, sz, scale, alpha, f;
+	float acceleration, f;
 	vector pos, top, rgb;
-	top_x = vid_conwidth/2;
+	top_x = CVAR(vid_conwidth)/2;
 	top_y = 0;
 
 	f = time - acc_prevtime;
-	if(cvar("cl_showacceleration_z"))
+	if(CVAR(cl_showacceleration_z))
 		acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
 	else
 		acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
@@ -1968,12 +1963,9 @@ void Sbar_ShowAcceleration(void)
 	acc_avg = acc_avg * (1 - f) + acceleration * f;
 	acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
 
-	pos = top - sz/2 * '0 1 0' + (cvar("cl_showacceleration_position") * vid_conheight) * '0 1 0';
+	pos = top - CVAR(cl_showacceleration_size)/2 * '0 1 0' + (CVAR(cl_showacceleration_position) * CVAR(vid_conheight)) * '0 1 0';
 
-	sz = cvar("cl_showacceleration_size");
-	scale = cvar("cl_showacceleration_scale");
-	alpha = cvar("cl_showacceleration_alpha");
-	if (cvar("cl_showacceleration_color_custom"))
+	if (CVAR(cl_showacceleration_color_custom))
 		rgb = stov(cvar_string("cl_showacceleration_color"));
 	else {
 		rgb = '1 1 1';
@@ -1985,9 +1977,9 @@ void Sbar_ShowAcceleration(void)
 	}
 		
 	if (acceleration > 0)
-		drawpic(pos, "gfx/hud/accelerometer_gradient", acceleration * scale * '40 0 0' + sz * '0 1 0', rgb, alpha * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/hud/accelerometer_gradient", acceleration * CVAR(cl_showacceleration_scale) * '40 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
-		drawpic(pos + acceleration * scale * '40 0 0', "gfx/hud/accelerometer_gradient", -acceleration * scale * '40 0 0' + sz * '0 1 0', rgb, alpha * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + acceleration * CVAR(cl_showacceleration_scale) * '40 0 0', "gfx/hud/accelerometer_gradient", -acceleration * CVAR(cl_showacceleration_scale) * '40 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void Sbar_DrawAccuracyStats_Description_Hitscan(vector position)
@@ -2073,7 +2065,7 @@ void Sbar_DrawAccuracyStats()
 				// 90	0		0.85	1 - % * 0.015	1 - (100 - %) * 0.015
 				// 100	0		1		1 - % * 0.015	1 - (100 - %) * 0.015
 
-				if ((left_border + count_splash * (fill_size_x + col_margin) + fill_size_x) >= vid_conwidth)
+				if ((left_border + count_splash * (fill_size_x + col_margin) + fill_size_x) >= CVAR(vid_conwidth))
 				{
 					count_splash = 0;
 					++row;
@@ -2123,7 +2115,7 @@ void Sbar_DrawAccuracyStats()
 				// 90	0		0.85	1 - % * 0.015	1 - (100 - %) * 0.015
 				// 100	0		1		1 - % * 0.015	1 - (100 - %) * 0.015
 
-				if ((left_border + count_hitscan * (fill_size_x + col_margin) + fill_size_x + cvar("stats_right_margin")) >= vid_conwidth)
+				if ((left_border + count_hitscan * (fill_size_x + col_margin) + fill_size_x + CVAR(stats_right_margin)) >= CVAR(vid_conwidth))
 				{
 					count_hitscan = 0;
 					++row;
@@ -2166,7 +2158,7 @@ void drawstringright(vector position, string text, vector scale, vector rgb, flo
 
 void drawstringcenter(vector position, string text, vector scale, vector rgb, float alpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * scale_x);
+	position_x = 0.5 * (CVAR(vid_conwidth) - 0.6025 * strlen(text) * scale_x);
 	drawstring(position, text, scale, rgb, alpha, flag);
 }
 
@@ -2227,27 +2219,24 @@ void Sbar_Draw (void)
 	vector bottomright;
 	vector bottomleft;
 
-	topright_x = vid_conwidth;
+	topright_x = CVAR(vid_conwidth);
 	topright_y = 0;
 	topright_z = 0;
 
-	bottom_x = vid_conwidth/2;
-	bottom_y = vid_conheight;
+	bottom_x = CVAR(vid_conwidth)/2;
+	bottom_y = CVAR(vid_conheight);
 	bottom_z = 0;
 
-	bottomright_x = vid_conwidth;
-	bottomright_y = vid_conheight;
+	bottomright_x = CVAR(vid_conwidth);
+	bottomright_y = CVAR(vid_conheight);
 	bottomright_z = 0;
 
 	bottomleft_x = 0;
-	bottomleft_y = vid_conheight;
+	bottomleft_y = CVAR(vid_conheight);
 	bottomleft_z = 0;
 
-	sbar_alpha_bg = cvar("sbar_alpha_bg") * (1 - cvar("_menu_alpha"));
-	sbar_border_thickness = bound(0, cvar("sbar_border_thickness"), 5);
-	sbar_color_bg_team = cvar("sbar_color_bg_team");
-	sbar_scoreboard_alpha_bg = cvar("sbar_scoreboard_alpha_bg");
-	sbar_scoreboard_highlight = cvar("sbar_scoreboard_highlight");
+	sbar_alpha_bg = CVAR(sbar_alpha_bg) * (1 - CVAR(_menu_alpha));
+	sbar_border_thickness = bound(0, CVAR(sbar_border_thickness), 5);
 
 	float i;
 	float weapon_stats;
@@ -2262,15 +2251,15 @@ void Sbar_Draw (void)
  	weapon_number = weapon_stats & 63;
  	weapon_fired[weapon_number] = rint(weapon_stats / 64);
 
-	vector o; o = '1 0 0' * vid_conwidth;
+	vector o; o = '1 0 0' * CVAR(vid_conwidth);
 	o_y = 28; // move spectator text slightly down to prevent overlapping the timer
 
 	string s;
 	vector pos;
 	pos = '0 0 0';
 
-	sbar_fontsize = Sbar_GetFontsize("sbar_fontsize");
-	sbar_fontsize_spec = Sbar_GetFontsize("sbar_fontsize_spec");
+	sbar_fontsize = Sbar_GetFontsize(CVAR(sbar_fontsize));
+	sbar_fontsize_spec = Sbar_GetFontsize(CVAR(sbar_fontsize_spec));
 
 	if(getstati(STAT_PLAYER_STATE) == DEAD_FREEZE)
 		drawfill('0 0 0', bottomright, '1 1 1', 0.4, DRAWFLAG_ADDITIVE);
@@ -2285,7 +2274,7 @@ void Sbar_Draw (void)
 		// spectated player name between HUD and chat area, aligned to the left
 		pos_x = bottomleft_x;
 		pos_y = bottom_y - 50 - sbar_fontsize_spec_y;
-		s = textShortenToWidth(s, vid_conwidth/2.5/sbar_fontsize_spec_x, stringwidth_colors);
+		s = textShortenToWidth(s, CVAR(vid_conwidth)/2.5/sbar_fontsize_spec_x, stringwidth_colors);
 		drawcolorcodedstring(pos, s, sbar_fontsize_spec, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawfont = sbar_font;
 
@@ -2338,7 +2327,7 @@ void Sbar_Draw (void)
 	}
 
 	// move more important stuff more to the middle so its more visible
-	o_y = vid_conheight * 0.66;
+	o_y = CVAR(vid_conheight) * 0.66;
 
 	string blinkcolor;
 	if(mod(time, 1) >= 0.5)
@@ -2477,20 +2466,20 @@ void Sbar_Draw (void)
 		vector bg_size; // hud background size
 		bg_size = '1600 58 0';
 
-		if (cvar("viewsize") <= 100 && vid_conwidth <= 1600) {
+		if (CVAR(viewsize) <= 100 && CVAR(vid_conwidth) <= 1600) {
 			if (teamplay)
-				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, GetTeamRGB(myteam) * sbar_color_bg_team, sbar_alpha_bg, DRAWFLAG_NORMAL); // hud color = myteam color
+				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, GetTeamRGB(myteam) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // hud color = myteam color
 			else {
 				// allow for custom HUD colors in non-teamgames
-				color_x = cvar("sbar_color_bg_r");
-				color_y = cvar("sbar_color_bg_g");
-				color_z = cvar("sbar_color_bg_b");
+				color_x = CVAR(sbar_color_bg_r);
+				color_y = CVAR(sbar_color_bg_g);
+				color_z = CVAR(sbar_color_bg_b);
 
 				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, color, sbar_alpha_bg, DRAWFLAG_NORMAL);
 			}
 		}
 
-		if(sbar_hudselector == 2) // combined health and armor display
+		if(CVAR(sbar_hudselector) == 2) // combined health and armor display
 		{
 			vector v;
 			v = healtharmor_maxdamage(health, armor, armorblockpercent);
@@ -2518,7 +2507,7 @@ void Sbar_Draw (void)
 		{
 			vector health_pos, armor_pos;
 
-			if (sbar_hudselector == 0) { // old style layout with armor left of health
+			if (CVAR(sbar_hudselector) == 0) { // old style layout with armor left of health
 				armor_pos = bottom - '96 28 0';
 				health_pos = bottom - '-14 28 0';
 			}
@@ -2566,9 +2555,9 @@ void Sbar_Draw (void)
 		for (i = 0; i < 4; ++i) {
 			a = getstati(GetAmmoStat(i)); // how much ammo do we have of type i?
 
-			if(sbar_currentammo || vid_conwidth < 800) { // force showing current ammo only with conwidths < 800
+			if(CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < 800) { // force showing current ammo only with conwidths < 800
 				if (stat_items & GetAmmoItemCode(i)) {
-					if (vid_conwidth >= 800) {
+					if (CVAR(vid_conwidth) >= 800) {
 						pos_x = 230;
 						pos_y = 40;
 					} else {
@@ -2577,7 +2566,7 @@ void Sbar_Draw (void)
 					}
 
 					pos = bottom - pos;
-					if(vid_conwidth >= 800)
+					if(CVAR(vid_conwidth) >= 800)
 						drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '107 29 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					drawpic(pos + '76 3 0', GetAmmoPicture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					if(a < 10)
@@ -2620,7 +2609,7 @@ void Sbar_Draw (void)
 			float invincibility_time, dt;
 			invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
 			dt = invincibility_time - time;
-			if (vid_conwidth >= 800) {
+			if (CVAR(vid_conwidth) >= 800) {
 				if (dt > 0) { // if the invincibility timer is active, draw fuel ammo elsewhere
 					pos_x = bottom_x + 140;
 					pos_y = bottom_y - 72;
@@ -2674,7 +2663,7 @@ void CSQC_ctf_hud(void)
 	vector bottomleft, redflag_pos, blueflag_pos, sz;
 	float f; // every function should have that
 	bottomleft_x = 0;
-	bottomleft_y = vid_conheight;
+	bottomleft_y = CVAR(vid_conheight);
 	bottomleft_z = 0;
 
 	float redflag, blueflag; // current status
@@ -2808,11 +2797,11 @@ void CSQC_kh_hud(void)
 
 	vector bottomleft;
 	bottomleft_x = 0;
-	bottomleft_y = vid_conheight;
+	bottomleft_y = CVAR(vid_conheight);
 	bottomleft_z = 0;
 
 	p_x = 6;
-	p_y = vid_conheight - 34 - 3;
+	p_y = CVAR(vid_conheight) - 34 - 3;
 	p_z = 0;
 
 	kh_keys = getstati(STAT_KH_KEYS);
@@ -2924,7 +2913,7 @@ void CSQC_nb_hud(void)
 	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
 
 	pos_x = 4;
-	pos_y = vid_conheight - 42;
+	pos_y = CVAR(vid_conheight) - 42;
 	pos_z = 0;
 
 	//Manage the progress bar if any

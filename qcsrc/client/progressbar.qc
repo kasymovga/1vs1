@@ -3,12 +3,12 @@ entity progressbar;
 
 void ProgressBar_Draw() {
 	entity e;
-	float center = vid_conwidth / 2;
+	float center = CVAR(vid_conwidth) / 2;
 	float left = center - 100;
 	vector pos, posleft, fillrect;
 	fillrect = '200 10 0';
 	posleft = pos + '-100 0 0';
-	pos_y = vid_conheight - 100;
+	pos_y = CVAR(vid_conheight) - 100;
 	for (e = progressbar; e; e = e.progressbar_chain) {
 		pos_x = left;
 		drawborderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);

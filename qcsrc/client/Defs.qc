@@ -151,7 +151,6 @@ void		end_sys_fields;			// flag for structure dumping
 float		intermission;
 float		sb_showscores;
 float		sb_showaccuracy;
-float		sbar_currentammo;
 .string		message;
 .float renderflags;
 // float		coop;
@@ -175,7 +174,6 @@ float		sbar_currentammo;
 .float team;
 .float team_size;
 
-float vid_conwidth, vid_conheight;
 float binddb;
 
 // QUALIFYING

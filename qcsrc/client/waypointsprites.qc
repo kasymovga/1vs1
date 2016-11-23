@@ -1,17 +1,10 @@
 float waypointsprite_initialized;
 float waypointsprite_fadedistance;
-float waypointsprite_normdistance;
-float waypointsprite_minscale;
-float waypointsprite_minalpha;
-float waypointsprite_distancealphaexponent;
-float waypointsprite_timealphaexponent;
 float waypointsprite_scale;
 float waypointsprite_edgefadealpha;
 float waypointsprite_edgefadescale;
-float waypointsprite_edgefadedistance;
 float waypointsprite_crosshairfadealpha;
 float waypointsprite_crosshairfadescale;
-float waypointsprite_crosshairfadedistance;
 float waypointsprite_distancefadealpha;
 float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
@@ -111,18 +104,18 @@ void Draw_WaypointSprite()
 	float t;
 
 	if(self.lifetime)
-		self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), waypointsprite_timealphaexponent);
+		self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), CVAR(g_waypointsprite_timealphaexponent));
 	else
 		self.alpha = 1;
 
 	if(self.hideflags & 2)
 		return; // radar only
 
-	if(cvar("cl_hidewaypoints") >= 2)
+	if(CVAR(cl_hidewaypoints) >= 2)
 		return;
 
 	if(self.hideflags & 1)
-		if(cvar("cl_hidewaypoints"))
+		if(CVAR(cl_hidewaypoints))
 			return; // fixed waypoint
 
 	InterpolateOrigin_Do();
@@ -167,10 +160,10 @@ void Draw_WaypointSprite()
 	float a;
 	a = self.alpha * sbar_alpha_fg;
 
-	if(self.maxdistance > waypointsprite_normdistance)
-		a *= pow(bound(0, (self.maxdistance - dist) / (self.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+	if(self.maxdistance > CVAR(g_waypointsprite_normdistance))
+		a *= pow(bound(0, (self.maxdistance - dist) / (self.maxdistance - CVAR(g_waypointsprite_normdistance)), 1), CVAR(g_waypointsprite_distancealphaexponent));
 	else if(self.maxdistance > 0)
-		a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+		a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - CVAR(g_waypointsprite_normdistance)), 1), CVAR(g_waypointsprite_distancealphaexponent)) * (1 - CVAR(g_waypointsprite_minalpha)) + CVAR(g_waypointsprite_minalpha);
 
 	if(a <= 0)
 		return;
@@ -181,7 +174,7 @@ void Draw_WaypointSprite()
 	o = project_3d_to_2d(self.origin);
 	rot = 0;
 
-	if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+	if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
 	{
 		// scale it to be just in view
 		vector d;
@@ -189,20 +182,20 @@ void Draw_WaypointSprite()
 
 		// get the waypoint angle vector
 		/*
-		d_x = view_right * (self.origin - view_origin) * vid_conwidth / vid_width;
-		d_y = -view_up * (self.origin - view_origin) * vid_conheight / (vid_height * vid_pixelheight);
+		d_x = view_right * (self.origin - view_origin) * CVAR(vid_conwidth) / vid_width;
+		d_y = -view_up * (self.origin - view_origin) * CVAR(vid_conheight) / (vid_height * vid_pixelheight);
 		d_z = 0;
 		*/
 		
-		d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+		d = o - '0.5 0 0' * CVAR(vid_conwidth) - '0 0.5 0' * CVAR(vid_conheight);
 
 		/*
-		if(cvar("v_flipped"))
+		if(v_flipped)
 			d_x = -d_x;
 		*/
 
-		f1 = d_x / vid_conwidth;
-		f2 = d_y / vid_conheight;
+		f1 = d_x / CVAR(vid_conwidth);
+		f2 = d_y / CVAR(vid_conheight);
 
 		if(max(f1, -f1) > max(f2, -f2))
 		{
@@ -235,12 +228,12 @@ void Draw_WaypointSprite()
 			}
 		}
 
-		o = d + '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+		o = d + '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
 	}
 	o_z = 0;
 
 	float vidscale;
-	vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
+	vidscale = max(CVAR(vid_conwidth) / vid_width, CVAR(vid_conheight) / vid_height);
 
 	t = stof(db_get(tempdb, strcat("/spriteframes/", spriteimage)));
 	if(t == 0)
@@ -249,9 +242,9 @@ void Draw_WaypointSprite()
 		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(mod(floor((max(0, time - self.spawntime)) * 2), t)));
 
 	float edgedistance_min, crosshairdistance;
-	edgedistance_min = min4(o_y, o_x,vid_conwidth - o_x, vid_conheight - o_y);
+	edgedistance_min = min4(o_y, o_x,CVAR(vid_conwidth) - o_x, CVAR(vid_conheight) - o_y);
 
-	crosshairdistance = sqrt( pow(o_x - vid_conwidth/2, 2) + pow(o_y - vid_conheight/2, 2) );
+	crosshairdistance = sqrt( pow(o_x - CVAR(vid_conwidth)/2, 2) + pow(o_y - CVAR(vid_conheight)/2, 2) );
 
 	t = waypointsprite_scale * vidscale;
 
@@ -259,13 +252,13 @@ void Draw_WaypointSprite()
 		a = a * (1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
 		t = t * (1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist/waypointsprite_distancefadedistance, 1)));
 	}
-	if (edgedistance_min < waypointsprite_edgefadedistance) {
-		a = a * (1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1)));
-		t = t * (1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/waypointsprite_edgefadedistance, 1)));
+	if (edgedistance_min < CVAR(g_waypointsprite_edgefadedistance)) {
+		a = a * (1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min/CVAR(g_waypointsprite_edgefadedistance), 1)));
+		t = t * (1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min/CVAR(g_waypointsprite_edgefadedistance), 1)));
 	}
-	if(crosshairdistance < waypointsprite_crosshairfadedistance) {
-		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
-		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
+	if(crosshairdistance < CVAR(g_waypointsprite_crosshairfadedistance)) {
+		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
+		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 	}
 	drawrotpic(o, rot * 90 * DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
 
@@ -408,21 +401,14 @@ void Ent_WaypointSprite()
 void WaypointSprite_Load()
 {
 	waypointsprite_fadedistance = vlen(mi_max - mi_min);
-	waypointsprite_normdistance = cvar("g_waypointsprite_normdistance");
-	waypointsprite_minscale = cvar("g_waypointsprite_minscale");
-	waypointsprite_minalpha = cvar("g_waypointsprite_minalpha");
-	waypointsprite_distancealphaexponent = cvar("g_waypointsprite_distancealphaexponent");
-	waypointsprite_timealphaexponent = cvar("g_waypointsprite_timealphaexponent");
-	waypointsprite_scale = cvar_or("g_waypointsprite_scale", 1) * (1 - cvar("_menu_alpha"));
-	waypointsprite_edgefadealpha = cvar_or("g_waypointsprite_edgefadealpha", 1);
-	waypointsprite_edgefadescale = cvar_or("g_waypointsprite_edgefadescale", 1);
-	waypointsprite_edgefadedistance = cvar("g_waypointsprite_edgefadedistance");
-	waypointsprite_crosshairfadealpha = cvar_or("g_waypointsprite_crosshairfadealpha", 1);
-	waypointsprite_crosshairfadescale = cvar_or("g_waypointsprite_crosshairfadescale", 1);
-	waypointsprite_crosshairfadedistance = cvar("g_waypointsprite_crosshairfadedistance");
-	waypointsprite_distancefadealpha = cvar_or("g_waypointsprite_distancefadealpha", 1);
-	waypointsprite_distancefadescale = cvar_or("g_waypointsprite_distancefadescale", 1);
-	waypointsprite_distancefadedistance = vlen(mi_max - mi_min) * cvar_or("g_waypointsprite_distancefadedistancemultiplier", 1);
+	waypointsprite_scale = CVAR_OR(g_waypointsprite_scale, 1) * (1 - CVAR(_menu_alpha));
+	waypointsprite_edgefadealpha = CVAR_OR(g_waypointsprite_edgefadealpha, 1);
+	waypointsprite_edgefadescale = CVAR_OR(g_waypointsprite_edgefadescale, 1);
+	waypointsprite_crosshairfadealpha = CVAR_OR(g_waypointsprite_crosshairfadealpha, 1);
+	waypointsprite_crosshairfadescale = CVAR_OR(g_waypointsprite_crosshairfadescale, 1);
+	waypointsprite_distancefadealpha = CVAR_OR(g_waypointsprite_distancefadealpha, 1);
+	waypointsprite_distancefadescale = CVAR_OR(g_waypointsprite_distancefadescale, 1);
+	waypointsprite_distancefadedistance = vlen(mi_max - mi_min) * CVAR_OR(g_waypointsprite_distancefadedistancemultiplier, 1);
 
 	if(!waypointsprite_initialized)
 	{
