@@ -330,7 +330,7 @@ void Net_ReadNexgunBeamParticle()
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);
 	
 	//draw either the old v2.3 beam or the new beam
-	if (cvar("cl_particles_oldnexbeam") && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+	if (cvar("cl_particles_oldnexbeam"))
 		trailparticles(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos);
 	else
 		trailparticles(world, particleeffectnum("nex_beam"), shotorg, endpos);

@@ -1,6 +1,5 @@
 float g_spawn_furthest;
 float g_teamdamage_resetspeed;
-float g_allow_oldnexbeam;
 float g_forced_respawn;
 float sv_servermodelsonly;
 float sv_reset_on_join;
@@ -8,7 +7,6 @@ float g_spawn_furthest;
 float sv_servermodelsonly;
 float sv_reset_on_join;
 float g_teamdamage_resetspeed;
-float g_allow_oldnexbeam;
 float g_forced_respawn;
 float g_balance_armor_limit;
 float g_balance_armor_regen;
@@ -2441,7 +2439,6 @@ void() nexball_setstatus;
 void PlayerPreThink (void)
 {
 	self.stat_game_starttime = game_starttime;
-	self.stat_allow_oldnexbeam = g_allow_oldnexbeam;
 	self.stat_leadlimit = leadlimit;
 
 	if(blockSpectators && frametime)
@@ -3051,7 +3048,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_servermodelsonly);
 	CACHE_CVAR(sv_reset_on_join);
 	CACHE_CVAR(g_teamdamage_resetspeed);
-	CACHE_CVAR(g_allow_oldnexbeam);
 	CACHE_CVAR(g_forced_respawn);
 	CACHE_CVAR(g_balance_armor_limit);
 	CACHE_CVAR(g_balance_armor_regen);
