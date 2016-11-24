@@ -1,1 +1,2 @@
 void vehicle_spiderbot_readcvars();
+float spiderbot_physic_hook();

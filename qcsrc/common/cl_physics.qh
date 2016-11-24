@@ -65,6 +65,7 @@ void Physic_FrameBeginHook();
 void Physic_FrameEndHook();
 void Physic_JetPackHook(float fuel_fact);
 void Physic_CheckWaterJumpHook();
+var float() physic_plug;
 
 .vector crouch_mins;
 .vector crouch_maxs;
@@ -72,3 +73,5 @@ void Physic_CheckWaterJumpHook();
 .vector stand_mins;
 .vector stand_maxs;
 .vector stand_view_ofs;
+
+const var float() physic_plug_null;

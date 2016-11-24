@@ -235,3 +235,4 @@ float ticrate;
 // only for Porto
 float angles_held_status;
 vector angles_held;
+.float waterlevel; // direction jitter

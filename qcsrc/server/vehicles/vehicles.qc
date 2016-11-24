@@ -1,12 +1,26 @@
 #ifdef VEHICLES_ENABLED
 #include "spiderbot.qc"
 
-void vehicle_stdproc_enter()
+float vehicle_extract_player(entity plr, float eject)
 {
-}
+	if not(plr.vehicle)
+		return 0;
 
-void vehicle_stdproc_exit(float eject)
-{
+	entity e = self;
+	e.vehicle_exit_time = time;
+	self = plr.vehicle;
+	self.vehicle_exit(eject);
+	self = e;
+    plr.alpha          = 1;
+    plr.PlayerPhysplug = physic_plug_null;
+    plr.vehicle        = world;
+	plr.view_ofs       = PL_VIEW_OFS;
+	plr.hud            = HUD_NORMAL;
+	plr.event_damage   = PlayerDamage;
+    setsize(plr,PL_MIN,PL_MAX);
+
+
+	return 1;
 }
 
 void vehicle_stdproc_regen()
@@ -108,7 +122,7 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
     if(self.vehicle_health <= 0)
     {
         if(self.owner)
-            self.vehicle_exit(VHEF_EJECT);
+            vehicle_extract_player(self.owner, VHEF_EJECT);
 
         self.vehicle_die();
     }

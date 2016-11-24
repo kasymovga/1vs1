@@ -1,2 +1,6 @@
+var void() physic_plug_pre;
+var void() physic_plug_post;
+const var void() physic_plug_nopostpre;
+
 vector CSQCPhysic_SetCamera();
 void Ent_Physic(float isnew);

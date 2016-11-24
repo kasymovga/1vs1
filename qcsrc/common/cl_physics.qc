@@ -183,7 +183,15 @@ void PlayerPhysics()
 	local vector wishvel, wishdir, v;
 	local float wishspeed, f, maxspd_mod, maxairspd, airaccel;
 	
+    if(physic_plug)
+        if(physic_plug())
+            return;
+
 	Physic_FrameBeginHook();
+    if(physic_plug)
+        if(physic_plug())
+            return;
+
 	if (physic_button_crouch)
 	{
 		if not(sv_disable_crouch)

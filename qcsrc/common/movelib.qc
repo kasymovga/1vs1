@@ -178,57 +178,41 @@ void movelib_beak_simple(float force)
     self.velocity_z = vz;
 }
 
-
 void movelib_groundalign4point(float spring_length,float spring_up,float blendrate)
 {
-    vector a,b,c,d,e,r,push_angle, ahead,side;
+	vector v, vx, vy, vz, v1, mn, vcross1, vcross2;
+	float f;
+	mn = '0 0 0';
+	v = self.origin;
+	//v_z += self.mins_z * 0.5;
+	vx = '1 0 0' * spring_length;
+	vy = '0 1 0' * spring_length;
+	vz = '0 0 1' * spring_up;
+	blendrate = 90 * blendrate * frametime;
+	
+	v1 = v + vy;
+	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	vcross1 = (trace_startsolid ? v1 : trace_endpos);
 
-    push_angle_y = 0;
-    r = (self.absmax + self.absmin) * 0.5 + (v_up * spring_up);
-    e = v_up * spring_length;
+	v1 = v - vy;
+	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	vcross1 -= (trace_startsolid ? v1 : trace_endpos);
 
-    // Put springs slightly inside bbox
-    ahead = v_forward * (self.maxs_x * 0.85);
-    side  = v_right   * (self.maxs_y * 0.85);
+	v1 = v + vx;
+	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	vcross2 = (trace_startsolid ? v1 : trace_endpos);
 
-    a = r + ahead + side;
-    b = r + ahead - side;
-    c = r - ahead + side;
-    d = r - ahead - side;
+	v1 = v - vx;
+	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	vcross2 -= (trace_startsolid ? v1 : trace_endpos);
 
-    traceline(a, a - e,MOVE_NORMAL,self);
-    a_z =  (1 - trace_fraction);
-    r = trace_endpos;
-
-    traceline(b, b - e,MOVE_NORMAL,self);
-    b_z =  (1 - trace_fraction);
-    r += trace_endpos;
-
-    traceline(c, c - e,MOVE_NORMAL,self);
-    c_z =  (1 - trace_fraction);
-    r += trace_endpos;
-
-    traceline(d, d - e,MOVE_NORMAL,self);
-    d_z =  (1 - trace_fraction);
-    r += trace_endpos;
-
-    a_x = r_z;
-    r = self.origin;
-    r_z = r_z;
-
-    push_angle_x = (a_z - c_z) * 45;
-    push_angle_x += (b_z - d_z) * 45;
-
-    push_angle_z = (b_z - a_z) * 45;
-    push_angle_z += (d_z - c_z) * 45;
-
-    //self.angles_x += push_angle_x * 0.95;
-    //self.angles_z += push_angle_z * 0.95;
-
-    self.angles_x = ((1-blendrate) *  self.angles_x)  + (push_angle_x * blendrate);
-    self.angles_z = ((1-blendrate) *  self.angles_z)  + (push_angle_z * blendrate);
-
-    //a = self.origin;
-    setorigin(self,r);
+	mn = normalize(cross(vcross2, vcross1));
+	//print("mn=", vtos(mn), "\n");
+	f = (asin(mn * v_forward) / PI) * 180;
+	//print("f=", ftos(f), "\n");
+	self.angles_x = bound(-45, self.angles_x - bound(-blendrate, f, blendrate), 45);
+	f = (asin(mn * v_right) / PI) * 180;
+	//print("f=", ftos(f), "\n");
+	self.angles_z = bound(-45, self.angles_z + bound(-blendrate, f, blendrate), 45);
 }
 

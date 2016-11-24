@@ -494,10 +494,6 @@ void Physic_FrameBeginHook()
 	else if(self.specialcommand_pos && (c != substring(specialcommand, self.specialcommand_pos - 1, 1)))
 		self.specialcommand_pos = 0;
 
-    if(self.PlayerPhysplug)
-        if(self.PlayerPhysplug())
-            return;
-
 	if(!sv_maxidle_spectatorsareidle || self.movetype == MOVETYPE_WALK)
 	{
 		if(buttons != self.buttons_old || physic_movement != self.movement_old || self.v_angle != self.v_angle_old)
@@ -544,6 +540,9 @@ void Physic_FrameBeginHook()
 
 	if (clienttype(self) == CLIENTTYPE_BOT)
 		bot_think();
+
+    if(physic_plug)
+		return;
 
 	if (self.punchangle != '0 0 0')
 	{
@@ -630,15 +629,16 @@ void Physic_FrameBeginHook()
 		self.angles_z = 0;
 	}
 	self.items &~= IT_USING_JETPACK;
-	if (self.player_physic)
-		self.player_physic.SendFlags = 4;
+	dodging_PlayerPhysics();
 
 	physic_button_crouch = self.BUTTON_CROUCH;
-	dodging_PlayerPhysics();
 }
 
 void SV_PlayerPhysics()
 {
+	if (self.player_physic)
+		self.player_physic.SendFlags |= 4;
+
 	physic_flags = self.flags;
 	physic_velocity = self.velocity;
 	physic_cantjump = (self.deadflag || (self.health <= g_bloodloss) || (time < self.doublejump_nextjumptime));
@@ -655,6 +655,7 @@ void SV_PlayerPhysics()
 	physic_ladder_iswater = (self.ladder_entity.classname == "func_water");
 	physic_gravity_factor = self.gravity;
 	physic_teleport_time = self.teleport_time - time;
+	physic_plug = self.PlayerPhysplug;
 	if (physic_ladder_iswater)
 	{
 		physic_ladder_speed = self.ladder_entity.speed;

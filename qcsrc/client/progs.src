@@ -8,9 +8,11 @@ csqc_constants.qc
 csqc_builtins.qc
 ../common/util.qh
 ../common/items.qh
+../common/extensions.qh
 
 ../common/mapinfo.qh
 ../common/cl_physics.qh
+../common/cl_physics_spiderbot.qh
 cl_physics.qh
 interpolate.qh
 teamradar.qh
@@ -23,11 +25,13 @@ menu.qh
 mouse.qh
 shownames.qh
 progressbar.qh
+cl_physics_spiderbot.qh
 
 main.qh
 
 cvar.qc
 
+../common/movelib.qc
 sortlist.qc
 miscfunctions.qc
 teamplay.qc
@@ -65,7 +69,9 @@ bgmscript.qc
 ../common/mapinfo.qc
 ../common/items.qc
 ../common/cl_physics.qc
+../common/cl_physics_spiderbot.qc
 cl_physics.qc
+cl_physics_spiderbot.qc
 menu.qc
 mouse.qc
 shownames.qc
