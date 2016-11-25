@@ -60,19 +60,27 @@ void CSQC_Init(void)
 	{
 		print("Xonotic client detected\n");
 		registercvar("_supports_weaponpriority", "0");
-		registercvar("sbar_hudselector", "1", CVAR_SAVE);
-		registercvar("sbar_scoreboard_alpha_bg", "0.6", CVAR_SAVE);
-		registercvar("sbar_scoreboard_highlight", "1", CVAR_SAVE);
-		registercvar("sbar_border_thickness", "1", CVAR_SAVE);
-		registercvar("sbar_color_bg_r", "0", CVAR_SAVE);
-		registercvar("sbar_color_bg_g", "0.25", CVAR_SAVE);
-		registercvar("sbar_color_bg_b", "0.17", CVAR_SAVE);
-		registercvar("sbar_color_bg_team", "0.5", CVAR_SAVE);
+
 		cvar_set("sbar_alpha_bg", cvar_string("hud_panel_bg_alpha"));
 		cvar_set("sbar_alpha_fg", cvar_string("hud_panel_fg_alpha"));
 		cvar_set("sbar_hud_accuracy", cvar_string("hud_panel_weapons_accuracy"));
 		cvar_set("sbar_showcurrentammo", cvar_string("hud_panel_ammo_onlycurrent"));
 		cvar_set("sbar_increment_maptime", cvar_string("hud_panel_timer_increment"));
+		cvar_set("sbar_showbinds", cvar_string("hud_showbinds"));
+		cvar_set("sbar_showbinds_limit", cvar_string("hud_showbinds_limit"));
+		cvar_set("sbar_width", cvar_string("hud_width"));
+		cvar_set("sbar_border_thickness", cvar_string("scoreboard_border_thickness"));
+		cvar_set("sbar_fontsize", cvar_string("hud_fontsize"));
+		cvar_set("sbar_fontsize_spec", cvar_string("hud_fontsize"));
+		cvar_set("sbar_hudselector", ftos(!cvar("hud_panel_healtharmor_flip")));
+		cvar_set("sbar_scoreboard_alpha_bg", cvar_string("scoreboard_alpha_bg"));
+		vector v = stov(cvar_string("hud_panel_bg_color"));
+		cvar_set("sbar_color_bg_r", ftos(v_x));
+		cvar_set("sbar_color_bg_g", ftos(v_y));
+		cvar_set("sbar_color_bg_b", ftos(v_z));
+		cvar_set("sbar_color_bg_team", cvar_string("hud_panel_bg_color_team"));
+		cvar_set("cl_teamradar", cvar_string("hud_panel_radar"));
+		cvar_set("sbar_scoreboard_highlight", cvar_string("scoreboard_highlight"));
 
 		registercvar("crosshair_laser", "", CVAR_SAVE);
 		registercvar("crosshair_laser_color_red", "1", CVAR_SAVE);
