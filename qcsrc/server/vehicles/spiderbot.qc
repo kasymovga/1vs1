@@ -405,7 +405,7 @@ float spiderbot_physic_hook()
 	//print("spider.angles_x=", ftos(spider.angles_x), "\n");
 	//print("spider.tur_head.angles_x=", ftos(spider.tur_head.angles_x), "\n");
 	//print("player.v_angle_x=", ftos(player.v_angle_x), "\n");
-	spider.vehicle_hudmodel.angles_x = bound(-10, (spider.tur_head.angles_x + player.v_angle_x + spider.angles_x) * 0.25, 10);
+	spider.vehicle_hudmodel.angles_x = bound(-90, -1 * (spider.tur_head.angles_x + player.v_angle_x + spider.angles_x), 90);
 	spider.vehicle_hudmodel.angles_z = spider.angles_z;
 	spider.vehicle_hudmodel.angles_y = spider.angles_y - player.v_angle_y + spider.tur_head.angles_y;
 
@@ -738,12 +738,13 @@ void vewhicle_spiderbot_dinit()
     self.gun2 = spawn();
     //self.vehicle_viewport = spawn();
     self.vehicle_hudmodel = spawn();
+    self.vehicle_hudmodel.vehicle_hudmodel = spawn();
     self.vehicle_hudmodel.gun1 = spawn();
     self.vehicle_hudmodel.gun2 = spawn();
-	setattachment(self.vehicle_hudmodel.gun1, self.vehicle_hudmodel, "");
+	setattachment(self.vehicle_hudmodel.gun1, self.vehicle_hudmodel.vehicle_hudmodel, "");
 	setorigin(self.vehicle_hudmodel.gun1, '20 -20 20');
 	self.vehicle_hudmodel.gun1.angles = '0 0 0';
-	setattachment(self.vehicle_hudmodel.gun2, self.vehicle_hudmodel, "");
+	setattachment(self.vehicle_hudmodel.gun2, self.vehicle_hudmodel.vehicle_hudmodel, "");
 	setorigin(self.vehicle_hudmodel.gun2, '20 20 20');
 	self.vehicle_hudmodel.gun2.angles = '0 0 0';
 	self.vehicle = spawn();
@@ -753,8 +754,10 @@ void vewhicle_spiderbot_dinit()
 
 	spiderbot_stop(self);
 
-    setmodel (self.vehicle_hudmodel, "models/spiderbot/cp.md3");
-	setorigin (self.vehicle_hudmodel, '-40 0 -20');
+    setmodel (self.vehicle_hudmodel, "null");
+    setmodel (self.vehicle_hudmodel.vehicle_hudmodel, "models/spiderbot/cp.md3");
+	setattachment(self.vehicle_hudmodel.vehicle_hudmodel, self.vehicle_hudmodel, "");
+	setorigin (self.vehicle_hudmodel.vehicle_hudmodel, '-40 0 -20');
     //setmodel (self.vehicle_viewport, "null");
     setmodel(self, "null");
     setmodel(self.vehicle, "models/spiderbot/spiderbot.dpm");
