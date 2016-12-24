@@ -379,13 +379,13 @@ float spiderbot_physic_hook()
     ad = player.v_angle -  (spider.tur_head.angles + spider.angles);
 
     // Rotate head
-    ftmp = g_vehicle_spiderbot_head_turnspeed * sys_ticrate;
+    ftmp = g_vehicle_spiderbot_head_turnspeed * frametime;
     ftmp2 = ftmp * -1;
     spider.tur_head.angles_y += bound(ftmp2,shortangle_f(ad_y,spider.tur_head.angles_y),ftmp);
     spider.tur_head.angles_y = bound(g_vehicle_spiderbot_head_turnlimit * -1,spider.tur_head.angles_y,g_vehicle_spiderbot_head_turnlimit);
 
     // Pitch head
-    ftmp = g_vehicle_spiderbot_head_pitchspeed * sys_ticrate;
+    ftmp = g_vehicle_spiderbot_head_pitchspeed * frametime;
     ftmp2 = ftmp * -1;
     spider.tur_head.angles_x += bound(ftmp2,shortangle_f(ad_x,spider.tur_head.angles_x),ftmp);
     spider.tur_head.angles_x = bound(g_vehicle_spiderbot_head_pitchlimit_down,spider.tur_head.angles_x,g_vehicle_spiderbot_head_pitchlimit_up);
