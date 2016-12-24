@@ -208,10 +208,10 @@ void movelib_groundalign4point(float spring_length,float spring_up,float blendra
 
 	mn = normalize(cross(vcross2, vcross1));
 	//print("mn=", vtos(mn), "\n");
-	f = (asin(mn * v_forward) / PI) * 180;
+	f = asin(mn * v_forward) * RAD2DEG;
 	//print("f=", ftos(f), "\n");
 	self.angles_x = bound(-45, self.angles_x - bound(-blendrate, f, blendrate), 45);
-	f = (asin(mn * v_right) / PI) * 180;
+	f = asin(mn * v_right) * RAD2DEG;
 	//print("f=", ftos(f), "\n");
 	self.angles_z = bound(-45, self.angles_z + bound(-blendrate, f, blendrate), 45);
 }
