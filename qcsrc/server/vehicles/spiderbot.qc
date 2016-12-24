@@ -589,6 +589,7 @@ void spiderbot_exit(float eject)
 	self.owner.angles_z = 0;
     self.owner = world;
 	spiderbot_stop(self);
+	self.angles_x = -self.angles_x;
 }
 
 void spiderbot_touch()
