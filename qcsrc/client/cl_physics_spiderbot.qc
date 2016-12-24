@@ -1,5 +1,5 @@
 entity spider;
-float physic_spiderbot_start_angle;
+vector spiderbot_start_angles;
 vector spider_start_origin;
 vector spider_start_velocity;
 
@@ -9,7 +9,7 @@ float physic_spiderbot_hook() {
 	float physic_movetype_save = physic_movetype;
 	physic_movetype = MOVETYPE_WALK;
 	PM_ClientMovement_Unstick(self.mins, self.maxs);
-	tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_WORLDONLY, self);
+	tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
 	if (trace_startsolid || (trace_fraction <= 1 && trace_plane_normal_z > 0.7))
 		self.flags = FL_ONGROUND;
 	else
@@ -28,7 +28,7 @@ float physic_spiderbot_hook() {
 void physic_spiderbot_pre() {
 	setorigin(spider, spider_start_origin);
 	spider.velocity = spider_start_velocity;
-	physic_spiderbot_angle = physic_spiderbot_start_angle;
+	spider.angles = spiderbot_start_angles;
 }
 
 void physic_spiderbot_post() {
@@ -68,9 +68,9 @@ void Ent_PhysicSpiderbot(float isnew)
 	}
 	if (f & 2)
 	{
-		spider.angles_x = ReadCoord();
-		physic_spiderbot_start_angle = ReadCoord();
-		spider.angles_z = ReadCoord();
+		spiderbot_start_angles_x = ReadCoord();
+		spiderbot_start_angles_y = ReadCoord();
+		spiderbot_start_angles_z = ReadCoord();
 		spider_start_origin_x = ReadCoord();
 		spider_start_origin_y = ReadCoord();
 		spider_start_origin_z = ReadCoord();

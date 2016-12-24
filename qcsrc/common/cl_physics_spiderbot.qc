@@ -10,20 +10,19 @@ float physic_spiderbot()
             if(vlen(physic_movement) == 0) {
                 movelib_beak_simple(g_vehicle_spiderbot_speed_stop);
 			} else {
-				if (physic_v_angle_y != physic_spiderbot_angle) {
+				if (physic_v_angle_y != self.angles_y) {
 					float turn_angle_speed = g_vehicle_spiderbot_turnspeed * frametime;
-					while (physic_spiderbot_angle - physic_v_angle_y > 180)
-						physic_spiderbot_angle -= 360;
+					while (self.angles_y - physic_v_angle_y > 180)
+						self.angles_y -= 360;
 
-					while (physic_spiderbot_angle - physic_v_angle_y < -180)
-						physic_spiderbot_angle += 360;
+					while (self.angles_y - physic_v_angle_y < -180)
+						self.angles_y += 360;
 
-					if (physic_v_angle_y > physic_spiderbot_angle)
-						physic_spiderbot_angle = min(physic_spiderbot_angle + turn_angle_speed, physic_v_angle_y);
+					if (physic_v_angle_y > self.angles_y)
+						self.angles_y = min(self.angles_y + turn_angle_speed, physic_v_angle_y);
 					else
-						physic_spiderbot_angle = max(physic_spiderbot_angle - turn_angle_speed, physic_v_angle_y);
+						self.angles_y = max(self.angles_y - turn_angle_speed, physic_v_angle_y);
 
-					self.angles_y = physic_spiderbot_angle;
 					makevectors(self.angles);
 				}
                 if(physic_movement_x != 0)
@@ -47,5 +46,6 @@ float physic_spiderbot()
         }
 	}
 	self.angles_x = -self.angles_x;
+	movelib_groundalign4point(100,100, 1);
     return 1;
 }

@@ -369,9 +369,7 @@ float spiderbot_physic_hook()
     else
         player.rockets_reload = 1 - ((spider.gun2.cnt - time) /spider.attack_finished_single);
 
-	physic_spiderbot_angle = spider.angles_y;
 	physic_spiderbot();
-	movelib_groundalign4point(100,100, 1);
 
     spider.tur_head.angles_x *= -1;
     spider.angles_x *= -1;
