@@ -1054,11 +1054,6 @@ void GameCommand(string command)
 		W_Init();
 		Damage_ReadCvars();
 		PhysicReadCvars();
-		FOR_EACH_PLAYER(plr)
-		{
-			PhysicClientClear(plr);
-			PhysicClientInit(plr);
-		}
 		bot_init();
 		Client_ReadCvars();
 		Teamplay_ReadCvars();
