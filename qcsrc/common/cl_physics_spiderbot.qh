@@ -1,0 +1,12 @@
+#define spiderbot_MIN '-75 -75 5'
+#define spiderbot_MAX '75 75 105'
+
+float g_vehicle_spiderbot_jump_accel;
+float g_vehicle_spiderbot_jump_up;
+float g_vehicle_spiderbot_speed_stop;
+float g_vehicle_spiderbot_speed_strafe;
+float g_vehicle_spiderbot_speed_walk;
+float g_vehicle_spiderbot_turnspeed;
+float g_vehicle_spiderbot_movement_inertia;
+
+float physic_spiderbot();

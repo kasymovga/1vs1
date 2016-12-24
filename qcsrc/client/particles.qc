@@ -40,7 +40,6 @@ float PointInBrush(entity brush, vector point)
 
 .float cnt; // effect number
 .vector velocity; // particle velocity
-.float waterlevel; // direction jitter
 .float count; // count multiplier
 .float impulse; // density
 .string noise; // sound

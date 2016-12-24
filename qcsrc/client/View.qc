@@ -38,6 +38,7 @@ void CheckForGamestartChange() {
 
 float drawtime;
 
+#if 0
 float tan(float x)
 {
 	return sin(x) / cos(x);
@@ -49,6 +50,7 @@ float atan2(float y, float x)
 	v = vectoangles(v);
 	return v_y * 0.01745329251994329576;
 }
+#endif
 
 vector GetCurrentFov(float fov)
 {

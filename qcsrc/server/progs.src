@@ -5,6 +5,7 @@ sys.qh
 pre-builtins.qh
 builtins.qh
 extensions.qh
+../common/extensions.qh
 post-builtins.qh
 constants.qh
 ../common/constants.qh
@@ -67,6 +68,7 @@ w_campingrifle.qh
 w_rocketlauncher.qh
 
 ../common/cl_physics.qh
+../common/cl_physics_spiderbot.qh
 cl_physics.qh
 
 cl_client.qh
@@ -102,8 +104,9 @@ cl_physics.qc
 
 // tZork's libs
 verbstack.qc
-movelib.qc
+../common/movelib.qc
 steerlib.qc
+../common/cl_physics_spiderbot.qc
 pathlib/pathlib.qh
 
 g_world.qc

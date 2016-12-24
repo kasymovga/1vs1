@@ -619,6 +619,8 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
+	vehicle_extract_player(self, TRUE);
+
 	WaypointSprite_PlayerDead();
 
 	if(self.killcount != -666)

@@ -183,6 +183,10 @@ void PlayerPhysics()
 	local vector wishvel, wishdir, v;
 	local float wishspeed, f, maxspd_mod, maxairspd, airaccel;
 	
+    if(physic_plug)
+        if(physic_plug())
+            return;
+
 	Physic_FrameBeginHook();
 	if (physic_button_crouch)
 	{

@@ -29,6 +29,7 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .entity vehicle;
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
+.float vehicle_exit_time;
 
 .float anim_start;
 .float anim_end;
@@ -54,5 +55,6 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 void vehicles_readcvars();
 void vehicle_stdproc_regen();
 void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+float vehicle_extract_player(entity plr, float eject);
 
 #endif

@@ -368,7 +368,7 @@ set g_vehicle_spiderbot_health 300
 set g_vehicle_spiderbot_health_regen 0
 set g_vehicle_spiderbot_health_regen_dmgpause 10
 set g_vehicle_spiderbot_jump_accel 1.2
-set g_vehicle_spiderbot_jump_up 800
+set g_vehicle_spiderbot_jump_up 400
 set g_vehicle_spiderbot_minigun_cooldown 0.1
 set g_vehicle_spiderbot_minigun_damage 30
 set g_vehicle_spiderbot_minigun_heat 0.2

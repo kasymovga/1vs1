@@ -36,13 +36,13 @@ vector unstick_offsets[unstick_count] =
 	'-0.125  0.125 -0.125', '0.125  0.125 -0.125',
 };
 
-void PM_ClientMovement_Unstick()
+void PM_ClientMovement_Unstick(vector unsmins, vector unsmaxs)
 {
 	float i;
 	for (i = 0; i < unstick_count; i++)
 	{
 		vector neworigin = unstick_offsets[i] + self.origin;
-		tracebox(neworigin, self.crouch_mins, self.crouch_maxs, neworigin, MOVE_NORMAL, self);
+		tracebox(neworigin, unsmins, unsmaxs, neworigin, MOVE_NORMAL, self);
 		if (!trace_startsolid)
 		{
 			setorigin(self, neworigin);
@@ -54,7 +54,7 @@ void PM_ClientMovement_Unstick()
 void PM_ClientMovement_UpdateStatus(float ground)
 {
 	// make sure player is not stuck
-	PM_ClientMovement_Unstick();
+	PM_ClientMovement_Unstick(self.crouch_mins, self.crouch_maxs);
 
 	if(ground)
 	{
@@ -228,6 +228,7 @@ void Physic_LandingHook()
 
 void Physic_FrameBeginHook()
 {
+	PM_ClientMovement_UpdateStatus(TRUE);
 }
 
 void Physic_FrameEndHook()
@@ -236,6 +237,7 @@ void Physic_FrameEndHook()
 		physic_velocity_z -= physic_gravity_factor * sv_gravity * frametime;
 
 	physic_teleport_time -= frametime;
+	PM_ClientMovement_Move();
 }
 
 entity physic;
@@ -255,6 +257,9 @@ vector CSQCPhysic_SetCamera()
 		pmove_org = self.origin;
 		self.velocity = physic_velocity = pmove_vel;
 		physic_teleport_time = physic_start_teleport_time;
+		if (physic_plug_pre)
+			physic_plug_pre();
+
 		if (physic_start_crouch)
 		{
 			setsize(self, self.crouch_mins, self.crouch_maxs);
@@ -278,16 +283,18 @@ vector CSQCPhysic_SetCamera()
 			physic_button_jump = input_buttons & 2;
 			self.angles_y = input_angles_y;
 			
-			PM_ClientMovement_UpdateStatus(TRUE);
 			PlayerPhysics();
-			PM_ClientMovement_Move();
 		}
 
+		if (physic_plug_post)
+			physic_plug_post();
 		self = oldself;
 		frametime = frametime_save;
 		v = physic.origin + physic.view_ofs;
+
 		if not(CVAR(chase_active))
 			R_SetView(VF_ORIGIN, v);
+
 		return v;
 	}
 	else

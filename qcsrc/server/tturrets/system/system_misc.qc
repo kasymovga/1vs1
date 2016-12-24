@@ -6,6 +6,7 @@ float(float v) anglemods =
 	v = v - 360 * floor(v / 360);
 	return v;
 };
+
 float safeangle(float a)
 {
     if((a > -361) && (a < 361))
