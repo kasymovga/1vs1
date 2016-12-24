@@ -405,9 +405,9 @@ float spiderbot_physic_hook()
 	//print("spider.angles_x=", ftos(spider.angles_x), "\n");
 	//print("spider.tur_head.angles_x=", ftos(spider.tur_head.angles_x), "\n");
 	//print("player.v_angle_x=", ftos(player.v_angle_x), "\n");
-	spider.vehicle_hudmodel.angles_x = bound(-90, -1 * (spider.tur_head.angles_x + player.v_angle_x + spider.angles_x), 90);
 	spider.vehicle_hudmodel.angles_z = spider.angles_z;
 	spider.vehicle_hudmodel.angles_y = spider.angles_y - player.v_angle_y + spider.tur_head.angles_y;
+	spider.vehicle_hudmodel.angles_x = bound(-90, -1 * (spider.tur_head.angles_x + player.v_angle_x + spider.angles_x), 90) * cos(spider.vehicle_hudmodel.angles_y * DEG2RAD);
 
 	if (spider.player_physic)
 		spider.player_physic.SendFlags |= 2;
