@@ -478,6 +478,8 @@ void PlayerClear(float killed, entity attacker)
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
 	Nadget_Clear();
 
+	vehicle_extract_player(self, TRUE);
+
 	if(killed && (self == attacker))
 		kh_Key_DropAll(self, TRUE);
 	else if(killed && (attacker.classname == "player" || attacker.classname == "gib"))
