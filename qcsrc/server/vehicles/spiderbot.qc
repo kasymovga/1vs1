@@ -286,6 +286,10 @@ float spiderbot_physic_hook()
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
+    if(gameover) {
+		spider.velocity = '0 0 0';
+		return 1;
+	}
 
     player.exteriormodeltoclient = spider.tur_head;
 
