@@ -46,6 +46,6 @@ float physic_spiderbot()
         }
 	}
 	self.angles_x = -self.angles_x;
-	movelib_groundalign4point(100,100, 1);
+	movelib_groundalign4point(50, 50, 1);
     return 1;
 }
