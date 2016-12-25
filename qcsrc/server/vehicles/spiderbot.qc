@@ -862,6 +862,7 @@ void spawnfunc_vehicle_spiderbot()
 
     precache_model ( "models/turrets/rocket.md3");
     precache_sound ( "weapons/rocket_impact.wav" );
+    precache_sound ( "weapons/uzi_fire.wav" );
 
     //self.team                = -1;
     self.think = vewhicle_spiderbot_dinit;
