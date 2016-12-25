@@ -267,6 +267,7 @@ void spiderbot_miniguns_do()
 #define SBS_LEFT  4
 #define SBS_RIGHT 5
 .float state;
+.float prevtime;
 
 float spiderbot_physic_hook()
 {
@@ -372,6 +373,11 @@ float spiderbot_physic_hook()
         player.rockets_reload = 1;
     else
         player.rockets_reload = 1 - ((spider.gun2.cnt - time) /spider.attack_finished_single);
+
+	if (self.prevtime == time)
+		physic_spiderbot_jump_decr = 0.5;
+	else
+		self.prevtime = time;
 
 	physic_spiderbot();
 

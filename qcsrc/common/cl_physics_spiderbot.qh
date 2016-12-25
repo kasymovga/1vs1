@@ -10,3 +10,4 @@ float g_vehicle_spiderbot_turnspeed;
 float g_vehicle_spiderbot_movement_inertia;
 
 float physic_spiderbot();
+float physic_spiderbot_jump_decr;
