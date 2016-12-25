@@ -223,8 +223,6 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
-void CSQC_common_hud(void);
-
 void CSQC_kh_hud(void);
 void CSQC_ctf_hud(void);
 void PostInit(void);
@@ -471,7 +469,7 @@ void CSQC_UpdateView(float w, float h)
     {
         if(CVAR(r_letterbox) == 0)
             if(CVAR(viewsize) < 120)
-                CSQC_common_hud();
+				Sbar_Draw();
 
         // crosshair goes VERY LAST
         if(!scoreboard_active && !ons_showmap && !camera_active) {
@@ -629,6 +627,7 @@ void CSQC_spider_HUD()
     float rockets,reload,heat,hp,shield,i;
     vector p,pp;
 
+	Sbar_Draw();
     rockets = getstati(STAT_SPIDERBOT_ROCKETS);
     heat    = min(getstatf(STAT_SPIDERBOT_HEAT),1);
     reload  = min(getstatf(STAT_SPIDERBOT_RELOAD),1);
@@ -637,7 +636,7 @@ void CSQC_spider_HUD()
 
     // Draw health bar
     p = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
-    p = p + '0 1 0' * CVAR(vid_conheight) - '0 32 0';
+    p = p + '0 1 0' * CVAR(vid_conheight) - '0 72 0';
     //pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
     drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, DRAWFLAG_NORMAL);
     p_y += 8;
@@ -647,14 +646,14 @@ void CSQC_spider_HUD()
 
     // Draw minigun heat indicator
     p = '0.5 0 0' * (CVAR(vid_conwidth) - 256);
-    p = p + '0 1 0' * CVAR(vid_conheight) - '0 34  0';
+    p = p + '0 1 0' * CVAR(vid_conheight) - '0 74  0';
     drawfill(p, '256 0 0' * (1-heat) + '0 2 0' ,'0 0 1', 0.5, DRAWFLAG_NORMAL);
     p_x += 256 * (1-heat);
     drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, DRAWFLAG_NORMAL);
 
     // Draw rocket icons for loaded/empty tubes.
     pp = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
-    pp += '0 1 0' * CVAR(vid_conheight) - '0 64 0';
+    pp += '0 1 0' * CVAR(vid_conheight) - '0 104 0';
     for(i = 0; i < 8; ++i)
     {
         p = pp + '1 0 0' * (rkt_size * i);
@@ -677,34 +676,7 @@ void CSQC_spider_HUD()
                 drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, DRAWFLAG_NORMAL);
         }
     }
-
-	if (sb_showscores)
-	{
-		Sbar_DrawScoreboard();
-		Sbar_DrawCenterPrint();
-	}
-
 }
-void CSQC_common_hud(void)
-{
-
-	// Sbar_SortFrags(); done in Sbar_Draw
-    float hud;
-    hud = getstati(STAT_HUD);
-
-    //hud = 10;
-    switch(hud)
-    {
-        case HUD_NORMAL:
-            Sbar_Draw();
-            break;
-
-        case HUD_SPIDERBOT:
-            CSQC_spider_HUD();
-            break;
-    }
-}
-
 
 // following vectors must be global to allow seamless switching between camera modes
 vector camera_offset, current_camera_offset, mouse_angles, current_angles, current_origin, current_position;
