@@ -79,10 +79,7 @@ void spiderbot_rocket_explode()
     pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
     w_deathtypestring = "dident escape the rocket barrage";
 
-    if(!self.owner)
-        self.owner = self.realowner;
-
-    RadiusDamage (self, self.owner,
+    RadiusDamage (self, self.realowner,
      g_vehicle_spiderbot_rocket_damage,
      g_vehicle_spiderbot_rocket_edgedamage,
      g_vehicle_spiderbot_rocket_radius, world,
@@ -93,15 +90,6 @@ void spiderbot_rocket_explode()
 
 void spiderbot_rocket_touch()
 {
-    if(self.owner)
-    {
-        if(other == self.owner.vehicle)
-            return;
-
-        if(other == self.owner.vehicle.tur_head)
-            return;
-    }
-
     PROJECTILE_TOUCH;
     spiderbot_rocket_explode();
 }
@@ -111,22 +99,21 @@ void spiderbot_rocket_think()
     vector newdir,olddir;
 
     self.nextthink  = time;
-    if (self.owner.deadflag != DEAD_NO)
+    if (self.realowner.deadflag != DEAD_NO)
     {
         spiderbot_rocket_explode();
         return;
     }
 
-    if not (self.owner.vehicle)
+    if not (self.realowner.vehicle)
     {
         UpdateCSQCProjectile(self);
         return;
     }
 
-    self.solid      = SOLID_BBOX;
     self.touch      = spiderbot_rocket_touch;
     olddir = normalize(self.velocity);
-    newdir = normalize(self.owner.cursor_trace_endpos - self.origin);
+    newdir = normalize(self.realowner.cursor_trace_endpos - self.origin);
     newdir += randomvec() * g_vehicle_spiderbot_rocket_noise;
     self.velocity = normalize(olddir + newdir * g_vehicle_spiderbot_rocket_turnrate) * g_vehicle_spiderbot_rocket_speed;
 
@@ -161,7 +148,8 @@ void spiderbot_rocket_do()
     te_explosion (missile.origin);
 
     missile.classname       = "spiderbot_rocket";
-    missile.owner           = self.owner;
+    missile.owner           = self;
+    missile.realowner       = self.owner;
     missile.bot_dodge       = TRUE;
     missile.bot_dodgerating = 75;
     missile.nextthink       = time;// + 0.2;
@@ -170,7 +158,7 @@ void spiderbot_rocket_do()
     missile.angles          = vectoangles(missile.velocity);
     missile.think           = spiderbot_rocket_think;
     missile.flags           = FL_PROJECTILE;
-    missile.solid           = SOLID_NOT;
+    missile.solid           = SOLID_BBOX;
 
 	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
 }
