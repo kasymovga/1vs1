@@ -4,6 +4,7 @@ float g_turrets_aimidle_delay;
 float g_turrets_nofire;
 float g_turrets_targetscan_maxdelay;
 float g_turrets_targetscan_mindelay;
+float g_turrets_targetscan_playersonly;
 
 /*
 float turret_customizeentityforclient()
@@ -619,7 +620,6 @@ entity turret_select_target()
     float  score;    // target looper entity score
     entity e_enemy;  // currently best scoreing target
     float  m_score;  // currently best scoreing target's score
-    float f;
 
 	e_enemy = world;
     m_score = 0;
@@ -633,22 +633,34 @@ entity turret_select_target()
     else
         self.enemy = world;
 
-    e = findradius(self.origin,self.target_range);
+	if (g_turrets_targetscan_playersonly) {
+		FOR_EACH_PLAYER(e) {
+			if (turret_validate_target(self,e,self.target_select_flags) <= 0)
+				continue;
 
-    while (e)
-    {
-		if(e.takedamage)
-		{
-			f = turret_validate_target(self,e,self.target_select_flags);
-			if (f > 0)
+			score = self.turret_score_target(self,e);
+			if ((score > m_score) && (score > 0))
 			{
-				score = self.turret_score_target(self,e);
-				if ((score > m_score) && (score > 0))
-				{
-					e_enemy = e;
-					m_score = score;
-				}
+				e_enemy = e;
+				m_score = score;
 			}
+		}
+		return e_enemy;
+	}
+
+    for (e = findradius(self.origin,self.target_range); e; e = e.chain)
+    {
+		if not(e.takedamage)
+			continue;
+
+		if (turret_validate_target(self,e,self.target_select_flags) <= 0)
+			continue;
+
+		score = self.turret_score_target(self,e);
+		if ((score > m_score) && (score > 0))
+		{
+			e_enemy = e;
+			m_score = score;
 		}
         e = e.chain;
     }
@@ -1301,6 +1313,7 @@ void turret_readcvars() {
 	CACHE_CVAR(g_turrets_nofire);
 	CACHE_CVAR(g_turrets_targetscan_maxdelay);
 	CACHE_CVAR(g_turrets_targetscan_mindelay);
+	CACHE_CVAR(g_turrets_targetscan_playersonly);
 	e = nextent(world);
 	while (e)
 	{
