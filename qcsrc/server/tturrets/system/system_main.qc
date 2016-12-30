@@ -1,5 +1,10 @@
 #define cvar_base "g_turrets_unit_"
 
+float g_turrets_aimidle_delay;
+float g_turrets_nofire;
+float g_turrets_targetscan_maxdelay;
+float g_turrets_targetscan_mindelay;
+
 /*
 float turret_customizeentityforclient()
 {
@@ -616,6 +621,7 @@ entity turret_select_target()
     float  m_score;  // currently best scoreing target's score
     float f;
 
+	e_enemy = world;
     m_score = 0;
     if(self.enemy)
 	if(self.enemy.takedamage)
@@ -628,9 +634,6 @@ entity turret_select_target()
         self.enemy = world;
 
     e = findradius(self.origin,self.target_range);
-
-    // Nothing to aim at?
-    if (!e) return world;
 
     while (e)
     {
@@ -779,7 +782,7 @@ void turret_think()
 
         // g_turrets_targetscan_maxdelay forces a target re-scan this often
         float do_target_scan;
-        if((self.target_select_time + cvar("g_turrets_targetscan_maxdelay")) < time)
+        if((self.target_select_time + g_turrets_targetscan_maxdelay) < time)
             do_target_scan = 1;
 
         // Old target (if any) invalid?
@@ -787,7 +790,7 @@ void turret_think()
             do_target_scan = 1;
 
         // But never more often then g_turrets_targetscan_mindelay!
-        if (self.target_select_time + cvar("g_turrets_targetscan_mindelay") > time)
+        if (self.target_select_time + g_turrets_targetscan_mindelay > time)
             do_target_scan = 0;
 
         if(do_target_scan)
@@ -811,7 +814,7 @@ void turret_think()
             return;
         }
         else
-            self.lip = time + cvar("g_turrets_aimidle_delay"); // Keep track of the last time we had a target.
+            self.lip = time + g_turrets_aimidle_delay; // Keep track of the last time we had a target.
 
         // Predict?
         if not(self.aim_flags & TFL_AIM_NO)
@@ -835,7 +838,7 @@ void turret_think()
 
 void turret_fire()
 {
-    if (cvar("g_turrets_nofire") != 0)
+    if (g_turrets_nofire != 0)
         return;
 
     /*
@@ -898,29 +901,6 @@ void turret_link()
     self.think      = turret_think;
     self.nextthink  = time;
 }
-void turrets_manager_think()
-{
-    self.nextthink = time + 1;
-
-    entity e;
-    if (cvar("g_turrets_reloadcvars") == 1)
-    {
-        e = nextent(world);
-        while (e)
-        {
-            if (e.tur_head != world)
-            {
-
-                load_unit_settings(e,e.cvar_basename,1);
-                if(e.turret_postthink)
-                    e.turret_postthink();
-            }
-
-            e = nextent(e);
-        }
-        cvar_set("g_turrets_reloadcvars","0");
-    }
-}
 
 /*
 * Standard turret initialization. use this!
@@ -931,16 +911,6 @@ float turret_count;
 float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head)
 {
 	entity e,ee;
-
-    e = find(world, classname, "turret_manager");
-    if not (e)
-    {
-        e = spawn();
-        e.classname = "turret_manager";
-        e.think = turrets_manager_think;
-        e.nextthink = time + 2;
-    }
-
 
     if(csqc_shared)
     {
@@ -1325,4 +1295,25 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     return 1;
 }
 
-
+void turret_readcvars() {
+    entity e;
+	CACHE_CVAR(g_turrets_aimidle_delay);
+	CACHE_CVAR(g_turrets_nofire);
+	CACHE_CVAR(g_turrets_targetscan_maxdelay);
+	CACHE_CVAR(g_turrets_targetscan_mindelay);
+	e = nextent(world);
+	while (e)
+	{
+		if (e.tur_head != world)
+		{
+			load_unit_settings(e,e.cvar_basename,1);
+			if(e.turret_postthink) {
+				entity oldself = self;
+				self = e;
+				e.turret_postthink();
+				self = oldself;
+			}
+		}
+		e = nextent(e);
+	}
+}

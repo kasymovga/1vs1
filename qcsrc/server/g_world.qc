@@ -916,6 +916,7 @@ void spawnfunc_worldspawn (void)
 	IRC_Init();
 	InfoMessages_Init();
 	vehicles_readcvars();
+	turret_readcvars();
 }
 
 void spawnfunc_light (void)

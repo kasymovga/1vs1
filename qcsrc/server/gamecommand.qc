@@ -1058,6 +1058,7 @@ void GameCommand(string command)
 		Client_ReadCvars();
 		Teamplay_ReadCvars();
 		vehicles_readcvars();
+		turret_readcvars();
 		return;
 	}
 
