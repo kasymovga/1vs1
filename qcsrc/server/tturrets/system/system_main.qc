@@ -491,7 +491,7 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
         return -5;
 
     // Cant touch this
-    if (e_target.health < 0)
+    if (e_target.health <= 0)
         return -6;
 
     // player
