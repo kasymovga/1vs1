@@ -184,6 +184,8 @@ void CSQC_Init(void)
 			localcmd("\ncmd iamxonoticplayer first; set _iamxonoticplayer 1\n");
 		else
 			localcmd("\ncmd iamxonoticplayer\n");
+
+		localcmd("\nseta menu_updatecheck 0\n");
 	}
 	read_cvars_init();
 
