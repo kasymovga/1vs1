@@ -621,8 +621,6 @@ void PutObserverInServer (void)
 
 	vehicle_extract_player(self, TRUE);
 
-	WaypointSprite_PlayerDead();
-
 	if(self.killcount != -666)
 	{
 		if(g_lms)
@@ -1093,19 +1091,15 @@ void PutClientInServer (void)
 
 void PlayerToSpec(entity player)
 {
-	entity oldself;
-	if(player.classname == "player" && sv_spectate == 1) {
-		if(player.flagcarried)
-			DropFlag(player.flagcarried, world, world);
-		if(player.ballcarried)
-			DropBall(player.ballcarried, player.origin, player.velocity);
-		kh_Key_DropAll(player, TRUE);
-		oldself = self;
+	if (player.classname == "player")
+	if (sv_spectate) {
+		entity oldself = self;
 		self = player;
-		WaypointSprite_PlayerDead();
+		PlayerClear(FALSE, world);
 		player.classname = "observer";
 		if(blockSpectators)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+
 		PutClientInServer();
 		self = oldself;
 	}

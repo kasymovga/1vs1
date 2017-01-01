@@ -460,6 +460,8 @@ void PlayerClear(float killed, entity attacker)
 	float j;
 	DropAllRunes(self);
 	Akimbo_Clear(self);
+	//Clear waypoints
+	WaypointSprite_PlayerDead();
 	if(self.ballcarried)
 		DropBall(self.ballcarried, self.origin, self.velocity);
 
@@ -715,8 +717,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
 		PlayerClear(TRUE, attacker);
-		// clear waypoints
-		WaypointSprite_PlayerDead();
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
