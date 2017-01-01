@@ -460,8 +460,6 @@ void PlayerClear(float killed, entity attacker)
 	float j;
 	DropAllRunes(self);
 	Akimbo_Clear(self);
-	//Clear waypoints
-	WaypointSprite_PlayerDead();
 	if(self.ballcarried)
 		DropBall(self.ballcarried, self.origin, self.velocity);
 
@@ -497,6 +495,8 @@ void PlayerClear(float killed, entity attacker)
 		else
 			DropFlag(self.flagcarried, world, attacker);
 	}
+	//Clear waypoints
+	WaypointSprite_PlayerDead();
 	if (self.hat) {
 		remove(self.hat);
 		self.hat = world;
