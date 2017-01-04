@@ -602,7 +602,7 @@ putting a client as observer in the server
 =============
 */
 void FixPlayermodel();
-void PutObserverInServer (void)
+void PutObserverInServer(float frags_team_reset)
 {
 	entity	spot;
 
@@ -696,6 +696,9 @@ void PutObserverInServer (void)
 
 	if(sv_loddistance1)
 		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
+
+	if not(frags_team_reset)
+		return;
 
 	self.team = -1;
 
@@ -824,7 +827,7 @@ Called when a client spawns in the server
 */
 //void() ctf_playerchanged;
 void ReadyRestartForce();
-void PutClientInServer (void)
+void PutClientInServer()
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
@@ -857,9 +860,8 @@ void PutClientInServer (void)
 		local float currentlyPlaying;
 		entity e;
 
-		if(self.team < 0 || clienttype(self) == CLIENTTYPE_BOT)
+		if(self.team < 0 || (clienttype(self) == CLIENTTYPE_BOT && !self.team))
 			JoinBestTeam(self, FALSE, TRUE);
-
 
 		race_PreSpawn();
 
@@ -1080,7 +1082,7 @@ void PutClientInServer (void)
 			setorigin(e, sv_player_hat_origin);
 		}
 	} else if(self.classname == "observer") {
-		PutObserverInServer ();
+		PutObserverInServer(TRUE);
 		Nadget_ObserverHook();
 	}
 	PlayerClear(FALSE, world);
@@ -2200,21 +2202,31 @@ float SpectateUpdate() {
 }
 
 float SpectateNext() {
-	other = find(self.enemy, classname, "player");
-	if (!other) {
+	other = self.enemy;
+	do
 		other = find(other, classname, "player");
+	while (other && self.team > 0 && other.team != self.team);
+	if (!other) {
+		do
+			if (other == self.enemy)
+				break;
+			else
+				other = find(other, classname, "player");
+		while (other && self.team > 0 && other.team != self.team);
 	}
+	print("Test\n");
 	if (other) {
 		self.enemy = other;
 	}
 	if(self.enemy.classname == "player") {
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
+		if (clienttype(self) == CLIENTTYPE_REAL) {
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_SETVIEW);
+			WriteEntity(MSG_ONE, self.enemy);
+			//stuffcmd(self, "set viewsize $tmpviewsize \n");
+		}
 		self.movetype = MOVETYPE_NONE;
-		if(!SpectateUpdate())
-			PutObserverInServer();
+		SpectateCopy(self.enemy);
 		return 1;
 	} else {
 		return 0;
@@ -2354,7 +2366,12 @@ float vercmp(string v1, string v2)
 
 void ObserverThink()
 {
-	if (self.flags & FL_JUMPRELEASED) {
+	if (self.team > 0) {
+		if (SpectateNext() == 1) {
+			self.classname = "spectator";
+			self.flags |= FL_JUMPRELEASED;
+		}
+	} else if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
@@ -2396,16 +2413,14 @@ void SpectatorThink()
 				self.classname = "observer";
 				PutClientInServer();
 			}
-		} else if (self.BUTTON_ATCK2) {
+		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
 			self.welcomemessage_time = 0;
-			self.flags &~= FL_JUMPRELEASED;
-			self.classname = "observer";
-			PutClientInServer();
+			PutObserverInServer(FALSE);
 		} else {
 			if(!SpectateUpdate())
-				PutObserverInServer();
+				PutObserverInServer(FALSE);
 		}
-	} else {
+	} else if (self.team <= 0) {
 		if (!(self.BUTTON_ATCK || self.BUTTON_ATCK2)) {
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)

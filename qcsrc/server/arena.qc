@@ -10,8 +10,6 @@ entity spawnqueue_last;
 entity champion;
 float warmup;
 
-void PutObserverInServer();
-void PutClientInServer();
 void(entity e) ReturnFlag;
 void dom_controlpoint_setup();
 void onslaught_generator_reset();
@@ -79,7 +77,7 @@ void reset_map(float dorespawn)
 				if(self.spawned)
 					PutClientInServer();
 				else
-					PutObserverInServer();
+					PutObserverInServer(TRUE);
 			}
 			else
 			{
