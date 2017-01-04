@@ -501,6 +501,7 @@ void PlayerClear(float killed, entity attacker)
 		remove(self.hat);
 		self.hat = world;
 	}
+	GameHook_PlayerClear(self);
 }
 
 void ClientKill_Now_TeamChange();
@@ -510,7 +511,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	local float take, save, waves, sdelay, dh, da;
 	vector v;
 	float valid_damage_for_weaponstats;
-	if (Freeze_DamageHandle(deathtype))
+	if (GameHook_DamageHandle(deathtype))
 		return;
 
 	dh = max(self.health, 0);
@@ -671,7 +672,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 
 	if (self.health < 1)
-	if not(Freeze_DeathHandle(attacker, inflictor, deathtype))
+	if not(GameHook_DeathHandle(attacker, inflictor, deathtype))
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;

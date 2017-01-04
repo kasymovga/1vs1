@@ -512,6 +512,7 @@ float	DEAD_DEAD				= 2;
 float	DEAD_RESPAWNABLE			= 3;
 float	DEAD_RESPAWNING			= 4;
 float	DEAD_FREEZE      = 5;
+float	DEAD_SPEC        = 6;
 
 float Q3SURFACEFLAG_NODAMAGE = 1;
 float Q3SURFACEFLAG_SLICK = 2; // low friction surface

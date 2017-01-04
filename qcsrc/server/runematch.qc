@@ -52,6 +52,8 @@ float g_runematch_shuffletime;
 spawn point for runes in runematch
 */
 
+float RunematchHandleFrags(entity attacker, entity targ, float f);
+
 void spawnfunc_runematch_spawn_point()
 {
 	if(!(g_runematch || g_runes) || !cvar("g_runematch_fixedspawns"))
@@ -554,8 +556,9 @@ void spawn_runes()
 
 void runematch_init()
 {
-	if(!g_runematch)
-	if(!g_runes)
+	if (g_runematch)
+		GameHook_FragsHandle = RunematchHandleFrags;
+	else if not(g_runes)
 		return;
 
 	CACHE_CVAR(g_runematch_allow_same);

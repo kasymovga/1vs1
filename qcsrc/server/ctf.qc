@@ -56,6 +56,13 @@ float captureshield_min_negscore; // punish at -20 points
 float captureshield_max_ratio; // punish at most 30% of each team
 float captureshield_force; // push force of the shield
 
+float ctf_handle_frags(entity attacker, entity targ, float f) {
+	if(g_ctf_ignore_frags)
+		return 0;
+
+	return f;
+}
+
 float ctf_captureshield_shielded(entity p)
 {
 	float s, se;
@@ -1070,6 +1077,7 @@ void ctf_init()
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
+	GameHook_FragsHandle = ctf_handle_frags;
 };
 
 void ctf_setstatus2(entity flag, float shift)

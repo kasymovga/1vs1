@@ -724,6 +724,7 @@ void spawnfunc_worldspawn (void)
 	Map_MarkAsRecent(mapname);
 
 	precache_model ("null"); // we need this one before InitGameplayMode
+	GameHook_Init();
 	InitGameplayMode();
 	sv_world_scale = cvar("sv_world_scale");
 	if (sv_world_scale <= 0)

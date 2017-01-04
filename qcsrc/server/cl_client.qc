@@ -855,6 +855,7 @@ void PutClientInServer()
 	if(gameover)
 		self.classname = "observer";
 
+	PlayerClear(FALSE, world);
 	if(self.classname == "player") {
 		entity spot, oldself;
 		local float currentlyPlaying;
@@ -1071,7 +1072,7 @@ void PutClientInServer()
 					ReadyRestartForce();
 			}
 		}
-		Freeze_SpawnHook();
+		GameHook_Spawn();
 		Nadget_SpawnHook();
 		if (sv_player_hat) {
 			e = spawn();
@@ -1085,7 +1086,6 @@ void PutClientInServer()
 		PutObserverInServer(TRUE);
 		Nadget_ObserverHook();
 	}
-	PlayerClear(FALSE, world);
 
 	//if(g_ctf)
 	//	ctf_playerchanged();
@@ -1692,7 +1692,6 @@ void ClientDisconnect (void)
 		IRC_Announce_ClientDisconnect(self);
 		PhysicClientClear(self);
 	}
-	Freeze_PlayerClear(self);
 }
 
 .float BUTTON_CHAT;

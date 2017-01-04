@@ -179,16 +179,8 @@ void GiveFrags (entity attacker, entity targ, float f)
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 
-	// FIXME fix the mess this is (we have REAL points now!)
-	if(g_runematch)
-	{
-		f = RunematchHandleFrags(attacker, targ, f);
-	}
-	else if(g_keyhunt)
-	{
-		f = kh_HandleFrags(attacker, targ, f);
-	}
-	else if(g_lms)
+	f = GameHook_FragsHandle(attacker, targ, f);
+	if(g_lms)
 	{
 		// remove a life
 		float tl;
@@ -203,15 +195,6 @@ void GiveFrags (entity attacker, entity targ, float f)
 			--lms_next_place;
 		}
 		f = 0;
-	}
-	else if(g_ctf)
-	{
-		if(g_ctf_ignore_frags)
-			f = 0;
-	}
-	else if (g_freeze)
-	{
-		f = Freeze_HandleFrags(attacker, targ, f);
 	}
 
 	attacker.totalfrags += f;

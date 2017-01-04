@@ -78,6 +78,7 @@ gametypevote.qh
 menu.qh
 
 dodging.qh
+gamehooks.qh
 
 scores_rules.qc
 
@@ -221,3 +222,4 @@ nadgets.qc
 progressbar.qc
 
 vehicles/vehicles.qc
+gamehooks.qc

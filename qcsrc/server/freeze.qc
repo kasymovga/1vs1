@@ -19,6 +19,11 @@ entity freeze_controller;
 .entity unfroze_pb;
 #define ICE_FRAME_TIME 0.2
 
+float Freeze_SpeedMod();
+float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);
+void Freeze_PlayerClear(entity plr);
+float Freeze_HandleFrags(entity attacker, entity targ, float f);
+
 void Freeze_Think()
 {
 	self.nextthink = time;
@@ -231,9 +236,7 @@ void Freeze_IceThink()
 
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 {
-	if not(g_freeze)
-		return FALSE;
-
+	PlayerClear(FALSE, world);
 	need_check_teams = 1;
 
 	if (self.deadflag == DEAD_FREEZE)
@@ -281,10 +284,13 @@ void Freeze_PlayerClear(entity plr)
 {
 	if (plr.ice)
 		remove(plr.ice);
+
 	if (plr.unfroze_pb)
 		remove(plr.unfroze_pb);
+
 	if (plr.ice.unfroze_pb)
 		remove(plr.ice.unfroze_pb);
+
 	plr.unfroze_pb = world;
 	plr.ice = world;
 	WaypointSprite_DetachCarrier(plr);
@@ -306,6 +312,13 @@ void Freeze_Init()
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	if not(g_freeze)
 		return;
+
+	GameHook_DeathHandle = Freeze_DeathHandle;
+	GameHook_Spawn = Freeze_SpawnHook;
+	GameHook_PlayerClear = Freeze_PlayerClear;
+	GameHook_SpeedMod = Freeze_SpeedMod;
+	GameHook_DamageHandle = Freeze_DamageHandle;
+	GameHook_FragsHandle = Freeze_HandleFrags;
 	freeze_activate_time = time + g_freeze_startdelay;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
