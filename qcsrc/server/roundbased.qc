@@ -34,9 +34,7 @@ void Roundbased_TeamArenaThink()
 				rb_team_check = -1;
 				break;
 			}
-			print("plr.team=", ftos(plr.team), "\n");
 		}
-		print("rb_team_check=", ftos(rb_team_check), "\n");
 	}
 	if (rb_team_check >= 0) {
 		FOR_EACH_REALCLIENT(plr)
