@@ -725,7 +725,7 @@ void GetTeamCounts(entity ignore)
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOR_EACH_PLAYER(head)
+	FOR_EACH_CLIENT(head)
 	{
 		if(head != ignore)// && head.netname != "")
 		{
