@@ -1,7 +1,7 @@
 var float(entity attacker, entity inflictor, float deathtype) GameHook_DeathHandle;
 var float() GameHook_SpeedMod;
 var void() GameHook_Spawn;
-var void() GameHook_PlayerClear;
+var void(entity e) GameHook_PlayerClear;
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle;
 var float(float deathtype) GameHook_DamageHandle;
 
