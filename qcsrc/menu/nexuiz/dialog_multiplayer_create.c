@@ -32,7 +32,7 @@ void fillNexuizServerCreateTab(entity me)
 	float n;
 
 	me.TR(me);
-		n = 6;
+		n = 7;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_dm", "DM"));
 			e0 = e;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_arena", "Arena"));
@@ -43,8 +43,12 @@ void fillNexuizServerCreateTab(entity me)
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_cts", "Race CTS"));
 			if(e.checked) e0 = NULL;
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_clanarena", "Clan Arena"));
+			if(e.checked) e0 = NULL;
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_freeze", "FreezeTag"));
+			if(e.checked) e0 = NULL;
 	me.TR(me);
-		n = 8;
+		n = 7;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_tdm", "TDM"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_ctf", "CTF"));
@@ -58,8 +62,6 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_onslaught", "Onslaught"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_nexball", "Nexball"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "g_freeze", "FreezeTag"));
 			if(e.checked) e0 = NULL;
 		if(e0)
 		{
@@ -215,6 +217,7 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 		case MAPINFO_TYPE_ONSLAUGHT:       GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_CTS:             GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_FREEZETAG:       GameType_ConfigureSliders(e, l, l2, "Win limit:",       1,   50,  1, "g_freeze_winlimit");        break;
+		case MAPINFO_TYPE_CLANARENA:       GameType_ConfigureSliders(e, l, l2, "Win limit:",       1,   50,  1, "g_clanarena_winlimit");     break;
 		case MAPINFO_TYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(e, l, l2, "Frag limit:",      5,  200,  5, "g_tdm_fraglimit");          break;
 		default:                           GameType_ConfigureSliders(e, l, l2, "Frag limit:",      5,  100,  5, "fraglimit_override");       break;
 	}
