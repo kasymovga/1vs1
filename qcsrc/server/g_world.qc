@@ -1475,7 +1475,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(other.classname == "player" || g_arena || g_lms)
+			if(other.classname == "player" || g_arena)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1786,24 +1786,6 @@ float WinningCondition_Onslaught()
 	return WINNING_NO;
 }
 
-float LMS_NewPlayerLives()
-{
-	float fl;
-	fl = cvar("fraglimit");
-	if(fl == 0)
-		fl = 999;
-
-	// first player has left the game for dying too much? Nobody else can get in.
-	if(lms_lowest_lives < 1)
-		return 0;
-
-	if(!cvar("g_lms_join_anytime"))
-		if(lms_lowest_lives < fl - cvar("g_lms_last_join"))
-			return 0;
-
-	return bound(1, lms_lowest_lives, fl);
-}
-
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
@@ -1851,85 +1833,6 @@ float WinningCondition_Assault()
 	}
 
 	return status;
-}
-
-// LMS winning condition: game terminates if and only if there's at most one
-// one player who's living lives. Top two scores being equal cancels the time
-// limit.
-float WinningCondition_LMS()
-{
-	entity head, head2;
-	float have_player;
-	float have_players;
-	float l;
-
-	have_player = FALSE;
-	have_players = FALSE;
-	l = LMS_NewPlayerLives();
-
-	head = find(world, classname, "player");
-	if(head)
-		have_player = TRUE;
-	head2 = find(head, classname, "player");
-	if(head2)
-		have_players = TRUE;
-
-	if(have_player)
-	{
-		// we have at least one player
-		if(have_players)
-		{
-			// two or more active players - continue with the game
-		}
-		else
-		{
-			// exactly one player?
-
-			ClearWinners();
-			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
-
-			if(l)
-			{
-				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
-				return WINNING_NO;
-			}
-			else
-			{
-				// a winner!
-				// and assign him his first place
-				PlayerScore_Add(head, SP_LMS_RANK, 1);
-				return WINNING_YES;
-			}
-		}
-	}
-	else
-	{
-		// nobody is playing at all...
-		if(l)
-		{
-			// wait for players...
-		}
-		else
-		{
-			// SNAFU (maybe a draw game?)
-			ClearWinners();
-			dprint("No players, ending game.\n");
-			return WINNING_YES;
-		}
-	}
-
-	// When we get here, we have at least two players who are actually LIVING,
-	// now check if the top two players have equal score.
-	WinningConditionHelper();
-
-	ClearWinners();
-	if(WinningConditionHelper_winner)
-		WinningConditionHelper_winner.winning = TRUE;
-	if(WinningConditionHelper_topscore == WinningConditionHelper_secondscore)
-		return WINNING_NEVER;
-
-	// Top two have different scores? Way to go for our beloved TIMELIMIT!
-	return WINNING_NO;
 }
 
 void ShuffleMaplist()
@@ -2239,10 +2142,6 @@ void CheckRules_World()
 	else if(g_assault)
 	{
 		checkrules_status = WinningCondition_Assault(); // TODO remove this?
-	}
-	else if(g_lms)
-	{
-		checkrules_status = WinningCondition_LMS();
 	}
 	else if (g_onslaught)
 	{

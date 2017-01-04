@@ -245,7 +245,6 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
-	if(g_lms) return;
 	if(g_arena) return;
 	if(g_race && !g_race_qualifying) return;
 
@@ -315,7 +314,6 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	entity s;
 
 	if(gameover)
-	if not(g_lms && scorefield == SP_LMS_RANK) // allow writing to this field in intermission as it is needed for newly joining players
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
@@ -499,12 +497,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(p.classname != "player" && !g_arena && !g_lms)
+			if(p.classname != "player" && !g_arena)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(p.classname == "player" || g_arena || g_lms)
+			if(p.classname == "player" || g_arena)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";

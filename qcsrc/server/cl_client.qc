@@ -48,10 +48,6 @@ float g_changeteam_banned;
 float g_fullbrightplayers;
 float g_hitplots;
 float g_jetpack_attenuation;
-float g_lms_campcheck_damage;
-float g_lms_campcheck_distance;
-float g_lms_campcheck_interval;
-float g_lms_regenerate;
 float g_maxplayers;
 float g_maxplayers_spectator_blocktime;
 float g_midair_shieldtime;
@@ -622,17 +618,7 @@ void PutObserverInServer(float frags_team_reset)
 	vehicle_extract_player(self, TRUE);
 
 	if(self.killcount != -666)
-	{
-		if(g_lms)
-		{
-			if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
-				bprint ("^4", self.netname, "^4 has no more lives left\n");
-			else
-				bprint ("^4", self.netname, "^4 is spectating now\n"); // TODO turn this into a proper forfeit?
-		}
-		else
-			bprint ("^4", self.netname, "^4 is spectating now\n");
-	}
+		bprint ("^4", self.netname, "^4 is spectating now\n");
 
 	PlayerScore_Clear(self); // clear scores when needed
 
@@ -713,14 +699,6 @@ void PutObserverInServer(float frags_team_reset)
 		{
 			Spawnqueue_Insert(self);
 		}
-	}
-	else if(g_lms)
-	{
-		// Only if the player cannot play at all
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
-			self.frags = FRAGS_SPECTATOR;
-		else
-			self.frags = FRAGS_LMS_LOSER;
 	}
 	else
 		self.frags = FRAGS_SPECTATOR;
@@ -838,14 +816,6 @@ void PutClientInServer()
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
-	}
-
-	// player is dead and becomes observer
-	// FIXME fix LMS scoring for new system
-	if(g_lms)
-	{
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
-			self.classname = "observer";
 	}
 
 	if(g_arena)
@@ -1025,8 +995,6 @@ void PutClientInServer()
 		self.colormod = '1 1 1' * g_player_brightness;
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
-		self.lms_nextcheck = time + g_lms_campcheck_interval*2;
-		self.lms_traveled_distance = 0;
 		self.speedrunning = FALSE;
 
 		race_PostSpawn(spot);
@@ -1452,7 +1420,7 @@ void ClientConnect (void)
 
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if((sv_spectate == 1 && !g_lms) || g_campaign) {
+	if((sv_spectate == 1) || g_campaign) {
 		self.classname = "observer";
 	} else {
 		if(teams_matter)
@@ -1565,15 +1533,6 @@ void ClientConnect (void)
 	{
 		if(g_weaponarena == WEPBIT_TUBA)
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
-	}
-
-	if(g_lms)
-	{
-		if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
-		{
-			PlayerScore_Add(self, SP_LMS_RANK, 666);
-			self.frags = FRAGS_SPECTATOR;
-		}
 	}
 
 	if(!sv_foginterval && world.fog != "")
@@ -2074,10 +2033,7 @@ void player_regen (void)
 	limita = limita * limit_mod;
 	//limitf = limitf * limit_mod;
 
-	if(g_lms)
-		rot_mod = 0;
-
-	if (!g_minstagib && (!g_lms || g_lms_regenerate))
+	if (!g_minstagib)
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, g_balance_armor_regen, g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, g_balance_armor_rot, g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 		self.health = CalcRotRegen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
@@ -2547,7 +2503,7 @@ void PlayerPreThink (void)
 
 		if (self.deadflag != DEAD_NO)
 		{
-			float button_pressed, force_respawn;
+			float button_pressed;
 			if(self.personal && g_race_qualifying)
 			{
 				if(time > self.death_time)
@@ -2562,10 +2518,9 @@ void PlayerPreThink (void)
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				force_respawn = (g_lms || g_forced_respawn);
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(force_respawn)
+					if(g_forced_respawn)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2608,36 +2563,6 @@ void PlayerPreThink (void)
 			{
 				PlayerTouchExplode(self, other);
 				self.touchexplode_time = other.touchexplode_time = time + 0.2;
-			}
-		}
-
-		if(g_lms && !self.deadflag && g_lms_campcheck_interval)
-		{
-			vector dist;
-
-			// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
-			dist = self.prevorigin - self.origin;
-			dist_z = 0;
-			self.lms_traveled_distance += fabs(vlen(dist));
-
-			if((g_campaign && !campaign_bots_may_start) || (time < game_starttime))
-			{
-				self.lms_nextcheck = time + g_lms_campcheck_interval*2;
-				self.lms_traveled_distance = 0;
-			}
-
-			if(time > self.lms_nextcheck)
-			{
-				//sprint(self, "distance: ", ftos(self.lms_traveled_distance), "\n");
-				if(self.lms_traveled_distance < g_lms_campcheck_distance)
-				{
-					centerprint(self, cvar_string("g_lms_campcheck_message"));
-					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
-					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					Damage(self, self, self, bound(0, g_lms_campcheck_damage, self.health + self.armorvalue * g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
-				}
-				self.lms_nextcheck = time + g_lms_campcheck_interval;
-				self.lms_traveled_distance = 0;
 			}
 		}
 
@@ -3099,10 +3024,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_fullbrightplayers);
 	CACHE_CVAR(g_hitplots);
 	CACHE_CVAR(g_jetpack_attenuation);
-	CACHE_CVAR(g_lms_campcheck_damage);
-	CACHE_CVAR(g_lms_campcheck_distance);
-	CACHE_CVAR(g_lms_campcheck_interval);
-	CACHE_CVAR(g_lms_regenerate);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
 	CACHE_CVAR(g_midair_shieldtime);

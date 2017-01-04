@@ -829,13 +829,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 		weaponsInMap |= weaponid;
 
-		if(g_lms)
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-		else if (g_weaponarena && ((weaponid & WEPBIT_ALL) || (itemid & IT_AMMO)))
+		if (g_weaponarena && ((weaponid & WEPBIT_ALL) || (itemid & IT_AMMO)))
 		{
 			startitem_failed = TRUE;
 			remove(self);
@@ -1831,17 +1825,7 @@ void Items_Init()
 	}
 	else
 	{
-		if (g_lms)
-		{
-			start_ammo_shells = cvar("g_lms_start_ammo_shells");
-			start_ammo_nails = cvar("g_lms_start_ammo_nails");
-			start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-			start_ammo_cells = cvar("g_lms_start_ammo_cells");
-			start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-			start_health = cvar("g_lms_start_health");
-			start_armorvalue = cvar("g_lms_start_armor");
-		}
-		else if (cvar("g_use_ammunition"))
+		if (cvar("g_use_ammunition"))
 		{
 			start_ammo_shells = cvar("g_start_ammo_shells");
 			start_ammo_nails = cvar("g_start_ammo_nails");
@@ -1869,9 +1853,7 @@ void Items_Init()
 
 			if (t < 0) // "default" weapon selection
 			{
-				if (g_lms)
-					t = (e.spawnflags & WEPSPAWNFLAG_NORMAL);
-				else if (g_race || g_cts)
+				if (g_race || g_cts)
 					t = (i == WEP_LASER);
 				else
 					t = (i == WEP_LASER || i == WEP_SHOTGUN);

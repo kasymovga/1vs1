@@ -422,7 +422,6 @@ void Cmd_Sbar_Help(float argc)
 	print("^3fckills^7                  Number of flag carrier kills\n");
 	print("^3returns^7                  Number of flag returns\n");
 	print("^3drops^7                    Number of flag drops\n");
-	print("^3lives^7                    Number of lives (LMS)\n");
 	print("^3rank^7                     Player rank\n");
 	print("^3pushes^7                   Number of players pushed into void\n");
 	print("^3destroyed^7                Number of keys destroyed by pushing them into void\n");
@@ -454,13 +453,12 @@ string Sbar_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
 		"ping pl name | ",
-		"-teams,race,lms/kills -teams,lms/deaths -teams,lms,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
+		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
-		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals ",
-		"-lms,race,nexball/score");
+		"-race,nexball/score");
 }
 
 void Cmd_Sbar_SetFields(float argc)
@@ -1147,64 +1145,56 @@ void Sbar_DrawScoreboard()
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
-	if(gametype == GAME_LMS)
+	if(tl > 0)
+		str = strcat(str, " for ^1", ftos(tl), " minutes^7");
+	if(fl > 0)
 	{
 		if(tl > 0)
-			str = strcat(str, " for up to ^1", ftos(tl), " minutes^7");
-	}
-	else
-	{
-		if(tl > 0)
-			str = strcat(str, " for ^1", ftos(tl), " minutes^7");
-		if(fl > 0)
+			str = strcat(str, " or");
+		if(teamplay)
 		{
-			if(tl > 0)
-				str = strcat(str, " or");
-			if(teamplay)
-			{
-				str = strcat(str, " until ^3", ScoreString(teamscores_flags[ts_primary], fl));
-				if(teamscores_label[ts_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(teamscores_label[ts_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", teamscores_label[ts_primary]);
-			}
+			str = strcat(str, " until ^3", ScoreString(teamscores_flags[ts_primary], fl));
+			if(teamscores_label[ts_primary] == "score")
+				str = strcat(str, " points^7");
+			else if(teamscores_label[ts_primary] == "fastest")
+				str = strcat(str, " is beaten^7");
 			else
-			{
-				str = strcat(str, " until ^3", ScoreString(scores_flags[ps_primary], fl));
-				if(scores_label[ps_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(scores_label[ps_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", scores_label[ps_primary]);
-			}
+				str = strcat(str, " ", teamscores_label[ts_primary]);
 		}
-		if(ll > 0)
+		else
 		{
-			if(tl > 0 || fl > 0)
-				str = strcat(str, " or");
-			if(teamplay)
-			{
-				str = strcat(str, " until a lead of ^3", ScoreString(teamscores_flags[ts_primary], ll));
-				if(teamscores_label[ts_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(teamscores_label[ts_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", teamscores_label[ts_primary]);
-			}
+			str = strcat(str, " until ^3", ScoreString(scores_flags[ps_primary], fl));
+			if(scores_label[ps_primary] == "score")
+				str = strcat(str, " points^7");
+			else if(scores_label[ps_primary] == "fastest")
+				str = strcat(str, " is beaten^7");
 			else
-			{
-				str = strcat(str, " until a lead of ^3", ScoreString(scores_flags[ps_primary], ll));
-				if(scores_label[ps_primary] == "score")
-					str = strcat(str, " points^7");
-				else if(scores_label[ps_primary] == "fastest")
-					str = strcat(str, " is beaten^7");
-				else
-					str = strcat(str, " ", scores_label[ps_primary]);
-			}
+				str = strcat(str, " ", scores_label[ps_primary]);
+		}
+	}
+	if(ll > 0)
+	{
+		if(tl > 0 || fl > 0)
+			str = strcat(str, " or");
+		if(teamplay)
+		{
+			str = strcat(str, " until a lead of ^3", ScoreString(teamscores_flags[ts_primary], ll));
+			if(teamscores_label[ts_primary] == "score")
+				str = strcat(str, " points^7");
+			else if(teamscores_label[ts_primary] == "fastest")
+				str = strcat(str, " is beaten^7");
+			else
+				str = strcat(str, " ", teamscores_label[ts_primary]);
+		}
+		else
+		{
+			str = strcat(str, " until a lead of ^3", ScoreString(scores_flags[ps_primary], ll));
+			if(scores_label[ps_primary] == "score")
+				str = strcat(str, " points^7");
+			else if(scores_label[ps_primary] == "fastest")
+				str = strcat(str, " is beaten^7");
+			else
+				str = strcat(str, " ", scores_label[ps_primary]);
 		}
 	}
 
@@ -2296,17 +2286,6 @@ void Sbar_Draw (void)
 
 		if(gametype == GAME_ARENA)
 			s = "^1Wait for your turn to join";
-		else if(gametype == GAME_LMS)
-		{
-			entity sk;
-			sk = playerslots[player_localentnum - 1];
-			if(sk.(scores[ps_primary]) >= 666)
-				s = "^1Match has already begun";
-			else if(sk.(scores[ps_primary]) > 0)
-				s = "^1You have no more lives left";
-			else
-				s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-		}
 		else
 			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
 		o = Sbar_DrawNoteLine(o, s);

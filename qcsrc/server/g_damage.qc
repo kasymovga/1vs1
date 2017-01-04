@@ -32,7 +32,6 @@ float g_ctf_flagcarrier_selfforce;
 float g_ctf_flagscore_kill;
 float g_ctf_personalscore_kill;
 float g_friendlyfire;
-float g_lms_campcheck_distance;
 float g_mirrordamage;
 float g_minstagib_nolaserdamage;
 float g_teamdamage_threshold;
@@ -180,22 +179,6 @@ void GiveFrags (entity attacker, entity targ, float f)
 	}
 
 	f = GameHook_FragsHandle(attacker, targ, f);
-	if(g_lms)
-	{
-		// remove a life
-		float tl;
-		tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-		if(tl < lms_lowest_lives)
-			lms_lowest_lives = tl;
-		if(tl <= 0)
-		{
-			if(!lms_next_place)
-				lms_next_place = player_count;
-			PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-			--lms_next_place;
-		}
-		f = 0;
-	}
 
 	attacker.totalfrags += f;
 
@@ -786,14 +769,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					}
 				}
 			}
-		}
-
-		if(targ.classname == "player")
-		if(attacker.classname == "player")
-		if(attacker != targ)
-		{
-			targ.lms_traveled_distance = g_lms_campcheck_distance;
-			attacker.lms_traveled_distance = g_lms_campcheck_distance;
 		}
 
 		if(targ.classname == "player")
@@ -1456,7 +1431,6 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_ctf_flagscore_kill);
 	CACHE_CVAR(g_ctf_personalscore_kill);
 	CACHE_CVAR(g_friendlyfire);
-	CACHE_CVAR(g_lms_campcheck_distance);
 	CACHE_CVAR(g_mirrordamage);
 	CACHE_CVAR(g_minstagib_nolaserdamage);
 	CACHE_CVAR(g_teamdamage_threshold);

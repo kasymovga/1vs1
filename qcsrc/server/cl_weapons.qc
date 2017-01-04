@@ -273,8 +273,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if (g_weaponarena)
 		return;
-	if (g_lms)
-		return;
 	if (g_nixnex)
 		return;
 	if (g_nexball && self.ballcarried)
