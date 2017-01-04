@@ -103,6 +103,7 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
+#define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
 #endif
 
 #define CACHE_CVAR(x) x = cvar(#x)

@@ -1,7 +1,3 @@
-float freeze_active;
-float freeze_activate_time;
-float freeze_countdown_last;
-float freeze_winner_team;
 float g_freeze_enddelay;
 float g_freeze_slowdown;
 float g_freeze_startdelay;
@@ -9,8 +5,6 @@ float g_freeze_unfroze_time;
 float sv_model_ice_scale;
 float sv_model_ice_z;
 float sv_model_ice_alpha;
-float need_check_teams;
-float team_alive, have_death_players, team_check;
 string ice_model;
 entity freeze_controller;
 .entity ice;
@@ -27,127 +21,13 @@ float Freeze_HandleFrags(entity attacker, entity targ, float f);
 void Freeze_Think()
 {
 	self.nextthink = time;
-	if (gameover)
-		return;
-	if (time < game_starttime || inWarmupStage)
-		return;
-
-	entity plr;
-	float need_check_teams_copy = need_check_teams;
-	need_check_teams = 0;
-	if (need_check_teams_copy) {
-		team_check = 0;
-		FOR_EACH_PLAYER(plr) {
-			if not(team_check)
-				team_check = plr.team;
-			else if (plr.team != team_check) {
-				team_check = -1;
-				break;
-			}
-		}
-	}
-	if (team_check >= 0) {
-		FOR_EACH_PLAYER(plr)
-		{
-			Freeze_PlayerClear(plr);
-			if (plr.deadflag != DEAD_NO) {
-				entity oldself = self;
-				PutClientInServer();
-				self = oldself;
-			}
-			if (clienttype(plr) == CLIENTTYPE_REAL)
-				centerprint(plr, "^2Awaiting players...\n");
-		}
-		freeze_active = 0;
-		freeze_activate_time = time + g_freeze_enddelay;
-		return;
-	}
-	if not(freeze_active)
-	{
-		if (time >= freeze_activate_time)
-		{
-			freeze_countdown_last = 0;
-			reset_map(TRUE);
-			FOR_EACH_PLAYER(plr)
-				Freeze_PlayerClear(plr);
-			freeze_active = 1;
-			FOR_EACH_REALPLAYER(plr) {
-				centerprint(plr, "^2New round started\n");
-			}
-
-			FOR_EACH_REALPLAYER(plr)
-				announce(plr, "announcer/robotic/begin.wav");
-		}
-		else
-		{
-			string winner_message;
-			if (freeze_winner_team > 0)
-				winner_message = strcat(Team_ColorName(freeze_winner_team), " Team wins!");
-			else
-				winner_message = "";
-			float countdown = ceil(freeze_activate_time - time);
-			FOR_EACH_REALPLAYER(plr)
-			{
-				if (freeze_countdown_last != countdown)
-				{
-					centerprint(plr, strcat("^2Round finished!\n^2", winner_message, "\n^2Restarting in ", ftos(countdown), "\n"));
-					freeze_countdown_last = countdown;
-
-					if (countdown <= 3)
-						FOR_EACH_REALPLAYER(plr)
-							announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"));
-				}
-			}
-		}
-		return;
-	}
-
-	if (need_check_teams_copy) {
-		team_alive = 0;
-		have_death_players = 0;
-		FOR_EACH_PLAYER(plr)
-		{
-			if (plr.deadflag == DEAD_FREEZE)
-			{
-				have_death_players = 1;
-				continue;
-			}
-			if (team_alive > 0) {
-				if (plr.team != team_alive)
-				{
-					team_alive = -1;
-				}
-			}
-			else if not(team_alive)
-			{
-				team_alive = plr.team;
-			}
-		}
-	}
-	if (team_alive > 0 && have_death_players)
-		TeamScore_AddToTeam(team_alive, ST_SCORE, 1);
-	else if (team_alive < 0)
-		return;
-
-	if (have_death_players)
-	{
-		FOR_EACH_REALPLAYER(plr)
-			announce(plr, "domination/claim.wav");
-
-		freeze_winner_team = team_alive;
-		freeze_active = 0;
-		freeze_activate_time = time + g_freeze_enddelay;
-	}
-}
-
-void Freeze_FreezePlayer()
-{
+	Roundbased_TeamArenaThink();
 }
 
 void Freeze_SpawnHook()
 {
-	need_check_teams = 1;
-	if (freeze_active)
+	Roundbased_NeedCheckTeams();
+	if (Roundbased_Active)
 		Freeze_DeathHandle(world, world, 0);
 }
 
@@ -164,7 +44,7 @@ void Freeze_IceThink()
 		return;
 	}
 
-	if not(freeze_active)
+	if not(Roundbased_Active)
 		return;
 
 	float oldprogress = self.unfroze_progress;
@@ -237,12 +117,12 @@ void Freeze_IceThink()
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 {
 	PlayerClear(FALSE, world);
-	need_check_teams = 1;
+	Roundbased_NeedCheckTeams();
 
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
 
-	if (freeze_active)
+	if (Roundbased_Active)
 	if (deathtype)
 		Obituary(attacker, inflictor, self, deathtype);
 
@@ -294,7 +174,7 @@ void Freeze_PlayerClear(entity plr)
 	plr.unfroze_pb = world;
 	plr.ice = world;
 	WaypointSprite_DetachCarrier(plr);
-	need_check_teams = 1;
+	Roundbased_NeedCheckTeams();
 }
 
 void Freeze_Init()
@@ -319,18 +199,12 @@ void Freeze_Init()
 	GameHook_SpeedMod = Freeze_SpeedMod;
 	GameHook_DamageHandle = Freeze_DamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;
-	freeze_activate_time = time + g_freeze_startdelay;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;
+	Roundbased_Init(g_freeze_enddelay, g_freeze_startdelay);
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
-	precache_sound("domination/claim.wav");
-	precache_sound("announcer/robotic/begin.wav");
-	precache_sound("announcer/robotic/3.wav");
-	precache_sound("announcer/robotic/2.wav");
-	precache_sound("announcer/robotic/1.wav");
-	need_check_teams = 1;
 }
 
 float Freeze_SpeedMod() {

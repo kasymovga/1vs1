@@ -211,6 +211,8 @@ akimbo.qc
 
 info_messages.qc
 
+roundbased.qc
+
 freeze.qc
 
 clanarena.qc
