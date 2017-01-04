@@ -1,17 +1,22 @@
 entity ca_controller;
 float ca_countdown_last;
 float ca_active;
-float ca_activate_time;
 float ca_need_check_teams;
 float ca_winner_team;
 float ca_team_check;
 float ca_team_alive;
 float ca_have_death_players;
+float ca_spawn_all;
 
 float g_clanarena_enddelay;
 float g_clanarena_startdelay;
 
 #define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
+
+void Clanarena_SetRoundStart() {
+	ca_spawn_all = time + g_clanarena_enddelay;
+	round_warmup = ca_spawn_all + g_clanarena_startdelay;
+}
 
 void Clanarena_Think()
 {
@@ -24,9 +29,7 @@ void Clanarena_Think()
 	entity oldself;
 
 	entity plr;
-	float need_check_teams_copy = ca_need_check_teams;
-	ca_need_check_teams = 0;
-	if (need_check_teams_copy) {
+	if (ca_need_check_teams) {
 		ca_team_check = 0;
 		FOR_EACH_TEAMPLAYER(plr) {
 			if not(ca_team_check)
@@ -42,15 +45,16 @@ void Clanarena_Think()
 			centerprint(plr, "^2Awaiting players...\n");
 
 		ca_active = 0;
-		ca_activate_time = time + g_clanarena_enddelay;
+		Clanarena_SetRoundStart();
+		ca_need_check_teams = 0;
 		return;
 	}
 	if not(ca_active)
 	{
-		if (time >= ca_activate_time)
-		{
-			ca_countdown_last = 0;
-			reset_map(TRUE);
+		if (ca_spawn_all)
+		if (time >= ca_spawn_all) {
+			reset_map(FALSE);
+			ca_spawn_all = 0;
 			oldself = self;
 			FOR_EACH_TEAMPLAYER(plr) {
 				self = plr;
@@ -58,27 +62,29 @@ void Clanarena_Think()
 				PutClientInServer();
 			}
 			self = oldself;
+		}
+		if (time >= round_warmup)
+		{
+			ca_countdown_last = 0;
 			ca_active = 1;
 			FOR_EACH_REALCLIENT(plr) {
 				centerprint(plr, "^2New round started\n");
-			}
-
-			FOR_EACH_REALCLIENT(plr)
 				announce(plr, "announcer/robotic/begin.wav");
+			}
 		}
 		else
 		{
 			string winner_message;
 			if (ca_winner_team > 0)
-				winner_message = strcat(Team_ColorName(ca_winner_team), " Team wins!");
+				winner_message = strcat("^2Round finished!\n^2", Team_ColorName(ca_winner_team), " Team wins!\n");
 			else
 				winner_message = "";
-			float countdown = ceil(ca_activate_time - time);
+			float countdown = ceil(round_warmup - time);
 			FOR_EACH_REALCLIENT(plr)
 			{
 				if (ca_countdown_last != countdown)
 				{
-					centerprint(plr, strcat("^2Round finished!\n^2", winner_message, "\n^2Restarting in ", ftos(countdown), "\n"));
+					centerprint(plr, strcat(winner_message, "^2Restarting in ", ftos(countdown), "\n"));
 					ca_countdown_last = countdown;
 
 					if (countdown <= 3)
@@ -90,7 +96,7 @@ void Clanarena_Think()
 		return;
 	}
 
-	if (need_check_teams_copy) {
+	if (ca_need_check_teams) {
 		ca_team_alive = 0;
 		ca_have_death_players = 0;
 		FOR_EACH_TEAMPLAYER(plr)
@@ -112,6 +118,7 @@ void Clanarena_Think()
 				ca_team_alive = plr.team;
 			}
 		}
+		ca_need_check_teams = 0;
 	}
 	if (ca_team_alive > 0 && ca_have_death_players)
 		TeamScore_AddToTeam(ca_team_alive, ST_SCORE, 1);
@@ -125,7 +132,7 @@ void Clanarena_Think()
 
 		ca_winner_team = ca_team_alive;
 		ca_active = 0;
-		ca_activate_time = time + g_clanarena_enddelay;
+		Clanarena_SetRoundStart();
 	}
 }
 
@@ -139,6 +146,9 @@ void Clanarena_SpawnHook() {
 
 float Clanarena_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	ca_need_check_teams = TRUE;
+	if not(ca_active) {
+		PutClientInServer();
+	}
 	return FALSE;
 }
 
@@ -162,7 +172,7 @@ void Clanarena_Init()
 	GameHook_Spawn = Clanarena_SpawnHook;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
-	ca_activate_time = time + g_clanarena_startdelay;
+	Clanarena_SetRoundStart();
 	ca_controller = spawn();
 	ca_controller.think = Clanarena_Think;
 	ca_controller.nextthink = time;

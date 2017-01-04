@@ -312,7 +312,7 @@ void W_WeaponFrame()
 		return;
 	}
 
-	if((arena_roundbased && time < warmup) || ((time < game_starttime) && !restart_active))
+	if((time < round_warmup) || ((time < game_starttime) && !restart_active))
 		return;
 
 	if (!self.weaponentity || self.health < 1)

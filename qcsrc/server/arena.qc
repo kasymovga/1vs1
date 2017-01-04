@@ -8,7 +8,7 @@ float arena_roundbased;
 entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
-float warmup;
+float round_warmup;
 
 void(entity e) ReturnFlag;
 void dom_controlpoint_setup();
@@ -29,7 +29,7 @@ void reset_map(float dorespawn)
 
 	if(g_arena)
 	if(cvar("g_arena_warmup"))
-		warmup = time + cvar("g_arena_warmup");
+		round_warmup = time + cvar("g_arena_warmup");
 
 	race_ReadyRestart();
 	
@@ -167,10 +167,10 @@ void Arena_Warmup()
 	if(!g_arena || !arena_roundbased || (time < game_starttime))
 		return;
 
-	f = rint(warmup - time);
+	f = rint(round_warmup - time);
 
 	msg = NEWLINES;
-	if(time < warmup && self.spawned)
+	if(time < round_warmup && self.spawned)
 	{
 		if(champion)
 			msg = strcat(msg, "The Champion is ", champion.netname, "^7\n");
@@ -212,7 +212,7 @@ float next_round;
  */
 void Spawnqueue_Check()
 {
-	if(time < warmup + 1)
+	if(time < round_warmup + 1)
 		return;
 
 	//extend next_round if it isn't set yet and only 1 player is spawned

@@ -405,5 +405,5 @@ set g_turrets_targetscan_playersonly 0
 set g_clanarena 0
 set g_clanarena_use_tdm_maps 1
 set g_clanarena_winlimit 10
-set g_clanarena_enddelay 5
-set g_clanarena_startdelay 3
+set g_clanarena_enddelay 3
+set g_clanarena_startdelay 10
