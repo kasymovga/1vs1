@@ -91,7 +91,6 @@ void Clanarena_Think()
 	}
 
 	if (need_check_teams_copy) {
-		print("Check players count\n");
 		ca_team_alive = 0;
 		ca_have_death_players = 0;
 		FOR_EACH_TEAMPLAYER(plr)
@@ -113,7 +112,6 @@ void Clanarena_Think()
 				ca_team_alive = plr.team;
 			}
 		}
-		print("ca_team_alive=", ftos(ca_team_alive), "\n");
 	}
 	if (ca_team_alive > 0 && ca_have_death_players)
 		TeamScore_AddToTeam(ca_team_alive, ST_SCORE, 1);

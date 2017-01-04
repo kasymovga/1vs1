@@ -2169,7 +2169,6 @@ float SpectateNext() {
 				other = find(other, classname, "player");
 		while (other && self.team > 0 && other.team != self.team);
 	}
-	print("Test\n");
 	if (other) {
 		self.enemy = other;
 	}
