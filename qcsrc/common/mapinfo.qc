@@ -521,6 +521,7 @@ float MapInfo_Type_FromString(string t)
 	if     (t == "dm")      return MAPINFO_TYPE_DEATHMATCH;
 	else if(t == "tdm")     return MAPINFO_TYPE_TEAM_DEATHMATCH;
 	else if(t == "ft")      return MAPINFO_TYPE_FREEZETAG;
+	else if(t == "ca")      return MAPINFO_TYPE_CLANARENA;
 	else if(t == "dom")     return MAPINFO_TYPE_DOMINATION;
 	else if(t == "ctf")     return MAPINFO_TYPE_CTF;
 	else if(t == "rune")    return MAPINFO_TYPE_RUNEMATCH;
@@ -565,6 +566,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Arena";
 	} else if (t == MAPINFO_TYPE_FREEZETAG) {
 		return "Freeze Tag";
+	} else if (t == MAPINFO_TYPE_CLANARENA) {
+		return "Clan Arena";
 	}
 	return "WTF";
 }
@@ -782,6 +785,9 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
 			if (cvar("g_freeze_use_tdm_maps"))
 				MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
+
+			if (cvar("g_clanarena_use_tdm_maps"))
+				MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CLANARENA;
 		}
 		else if(t == "size")
 		{
@@ -983,6 +989,8 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_CTS;
 	else if(cvar("g_freeze"))
 		return MAPINFO_TYPE_FREEZETAG;
+	else if(cvar("g_clanarena"))
+		return MAPINFO_TYPE_CLANARENA;
 	else
 		return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1028,6 +1036,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_DEATHMATCH: return "g_dm";
 		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "g_tdm";
 		case MAPINFO_TYPE_FREEZETAG: return "g_freeze";
+		case MAPINFO_TYPE_CLANARENA: return "g_clanarena";
 		case MAPINFO_TYPE_DOMINATION: return "g_domination";
 		case MAPINFO_TYPE_CTF: return "g_ctf";
 		case MAPINFO_TYPE_RUNEMATCH: return "g_runematch";
@@ -1049,6 +1058,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_dm",         (t == MAPINFO_TYPE_DEATHMATCH)      ? "1" : "0");
 	cvar_set("g_tdm",        (t == MAPINFO_TYPE_TEAM_DEATHMATCH) ? "1" : "0");
 	cvar_set("g_freeze",     (t == MAPINFO_TYPE_FREEZETAG)       ? "1" : "0");
+	cvar_set("g_clanarena",  (t == MAPINFO_TYPE_CLANARENA)       ? "1" : "0");
 	cvar_set("g_domination", (t == MAPINFO_TYPE_DOMINATION)      ? "1" : "0");
 	cvar_set("g_ctf",        (t == MAPINFO_TYPE_CTF)             ? "1" : "0");
 	cvar_set("g_runematch",  (t == MAPINFO_TYPE_RUNEMATCH)       ? "1" : "0");

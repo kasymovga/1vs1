@@ -106,6 +106,7 @@ void WriteGameCvars()
 	cvar_set("g_nexball", ftos(g_nexball));
 	cvar_set("g_cts", ftos(g_cts));
 	cvar_set("g_freeze", ftos(g_freeze));
+	cvar_set("g_clanarena", ftos(g_clanarena));
 }
 
 void ReadGameCvars()
@@ -131,7 +132,8 @@ void ReadGameCvars()
 		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
 		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
-		found += (g_freeze = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("g_freeze")));
+		found += (g_freeze = (!found && (prev != GAME_FREEZETAG) && cvar("g_freeze")));
+		found += (g_clanarena = (!found && (prev != GAME_CLANARENA) && cvar("g_clanarena")));
 
 		if(found)
 			break;
@@ -238,10 +240,18 @@ void InitGameplayMode()
 
 	if(g_freeze)
 	{
-		game = GAME_TEAM_DEATHMATCH;
+		game = GAME_FREEZETAG;
 		ActivateTeamplay();
 		tdm_init();
 		fraglimit_override = cvar("g_freeze_winlimit");
+	}
+
+	if(g_clanarena)
+	{
+		game = GAME_CLANARENA;
+		ActivateTeamplay();
+		tdm_init();
+		fraglimit_override = cvar("g_clanarena_winlimit");
 	}
 
 	if(g_domination)
@@ -1147,7 +1157,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
-	FOR_EACH_PLAYER(head)
+	FOR_EACH_CLIENT(head)
 	{
 		if(head.team == steam)
 		{

@@ -401,3 +401,9 @@ set sv_player_hat_origin "0 0 0"
 set sv_player_hat_scale 1
 
 set g_turrets_targetscan_playersonly 0
+
+set g_clanarena 0
+set g_clanarena_use_tdm_maps 1
+set g_clanarena_winlimit 10
+set g_clanarena_enddelay 5
+set g_clanarena_startdelay 3

@@ -53,6 +53,8 @@ akimbo.qh
 
 freeze.qh
 
+clanarena.qh
+
 nadgets.qh
 
 progressbar.qh
@@ -210,6 +212,8 @@ akimbo.qc
 info_messages.qc
 
 freeze.qc
+
+clanarena.qc
 
 menu.qc
 

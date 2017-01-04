@@ -748,6 +748,7 @@ void spawnfunc_worldspawn (void)
 	Teamplay_ReadCvars();
 	Akimbo_Init();
 	Freeze_Init();
+	Clanarena_Init();
 	bot_init();
 	runematch_init();
 	GameTypeVote_Init();

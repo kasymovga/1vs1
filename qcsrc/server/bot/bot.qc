@@ -537,7 +537,7 @@ void bot_serverframe()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(head.classname == "player" || g_lms || g_arena)
+		if(head.classname == "player" || head.team > 1 || g_lms || g_arena)
 			++activerealplayers;
 		++realplayers;
 	}
