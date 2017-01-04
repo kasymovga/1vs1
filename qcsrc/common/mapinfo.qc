@@ -777,12 +777,13 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			else
 				dprint("Map ", pFilename, " supports unknown game type ", t, ", ignored\n");
 
-			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
-			if (cvar("g_freeze_use_tdm_maps"))
-				MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
+			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH) {
+				if (cvar("g_freeze_use_tdm_maps"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 
-			if (cvar("g_clanarena_use_tdm_maps"))
-				MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CLANARENA;
+				if (cvar("g_clanarena_use_tdm_maps"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CLANARENA;
+			}
 		}
 		else if(t == "size")
 		{
