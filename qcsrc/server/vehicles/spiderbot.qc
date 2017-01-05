@@ -605,15 +605,14 @@ void spiderbot_touch()
 		}
         return;
     }
-
 	if (other.vehicle_exit_time >= time)
 		return;
 
     if(other.classname != "player")
         return;
 
-    if(other.deadflag != DEAD_NO)
-        return;
+	if not(PlayerCanFire(other))
+		return;
 
     if(other.vehicle != world)
         return;

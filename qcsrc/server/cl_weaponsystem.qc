@@ -391,8 +391,7 @@ void CL_Weaponentity_Think()
 		remove(self);
 		return;
 	}
-	if (self.owner.deadflag != DEAD_NO)
-	if (self.owner.deadflag != DEAD_FREEZE)
+	if (PLAYER_REALLY_DEAD(self.owner))
 	{
 		self.model = "";
 		if (self.weaponentity)
@@ -748,8 +747,7 @@ void CL_ExteriorWeaponentity_Think()
 		remove(self);
 		return;
 	}
-	if (self.owner.deadflag != DEAD_NO)
-	if (self.owner.deadflag != DEAD_FREEZE)
+	if (PLAYER_REALLY_DEAD(self.owner))
 	{
 		self.model = "";
 		return;
@@ -939,14 +937,12 @@ void weapon_setup(float windex)
 };
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
-.float race_penalty;
 float weapon_prepareattack(float secondary, float attacktime)
 {
 	//if sv_ready_restart_after_countdown is set, don't allow the player to shoot
 	//if all players readied up and the countdown is running
-	if(time < round_warmup || (time < game_starttime && !restart_active) || time < self.race_penalty) {
+	if not(PlayerCanFire(self))
 		return FALSE;
-	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))

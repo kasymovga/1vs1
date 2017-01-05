@@ -2500,7 +2500,7 @@ void PlayerPreThink (void)
 		if(frametime)
 			player_powerups();
 
-		if (self.deadflag != DEAD_NO)
+		if (PLAYER_REALLY_DEAD(self))
 		{
 			float button_pressed;
 			if(self.personal && g_race_qualifying)

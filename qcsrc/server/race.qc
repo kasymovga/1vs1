@@ -1,6 +1,5 @@
 #define MAX_CHECKPOINTS 255
 
-.float race_penalty;
 .float race_penalty_accumulator;
 .string race_penalty_reason;
 .float race_checkpoint; // player: next checkpoint that has to be reached

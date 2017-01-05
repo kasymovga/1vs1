@@ -108,6 +108,11 @@ string STR_OBSERVER = "observer";
 
 #define CACHE_CVAR(x) x = cvar(#x)
 
+#define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)
+#define PLAYER_DEAD(x) (x.deadflag)
+#define PLAYER_REALLY_DEAD(x) (x.deadflag > 0 && x.deadflag <= DEAD_RESPAWNING)
+#define PLAYER_REALLY_ALIVE(x) (!x.deadflag)
+
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
 
@@ -121,6 +126,23 @@ void bcenterprint(string s)
     FOR_EACH_PLAYER(head)
     if (clienttype(head) == CLIENTTYPE_REAL)
         centerprint(head, s);
+}
+
+float PlayerCanFire(entity plr) {
+	if (PLAYER_DEAD(self))
+		return FALSE;
+
+	if (time < round_warmup)
+		return FALSE;
+
+	if (time < game_starttime)
+	if (!restart_active)
+		return FALSE;
+
+	if (time < self.race_penalty)
+		return FALSE;
+
+	return TRUE;
 }
 
 void GameLogEcho(string s)

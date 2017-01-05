@@ -1,4 +1,3 @@
-.float race_penalty;
 .float restart_jump;
 .entity player_physic;
 

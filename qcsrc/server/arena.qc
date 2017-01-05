@@ -8,7 +8,6 @@ float arena_roundbased;
 entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
-float round_warmup;
 
 void(entity e) ReturnFlag;
 void dom_controlpoint_setup();
