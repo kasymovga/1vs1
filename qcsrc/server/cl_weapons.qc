@@ -312,9 +312,6 @@ void W_WeaponFrame()
 		return;
 	}
 
-	if((time < round_warmup) || ((time < game_starttime) && !restart_active))
-		return;
-
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
