@@ -194,6 +194,7 @@ void InitGameplayMode()
 	cvar_set("timelimit", cvar_string("timelimit_default"));
 	cvar_set("fraglimit", cvar_string("fraglimit_default"));
 	MapInfo_LoadMapSettings(mapname);
+	_MapInfo_Parse_Settemp("_worldspawn_", cvar_string("g_mapinfo_settemp_acl"), strcat("#include gameconfig_", MapInfo_String_FromType(MapInfo_CurrentGametype()), ".cfg"), 1);
 	float force_gametype_restore = 0;
 	string force_gametype = cvar_string("force_gametype");
 	if (force_gametype != "")

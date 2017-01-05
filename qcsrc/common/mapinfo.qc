@@ -535,6 +535,25 @@ float MapInfo_Type_FromString(string t)
 	else                    return 0;
 }
 
+string MapInfo_String_FromType(float t)
+{
+	if     (t == MAPINFO_TYPE_DEATHMATCH     ) return "dm"     ;
+	else if(t == MAPINFO_TYPE_TEAM_DEATHMATCH) return "tdm"    ;
+	else if(t == MAPINFO_TYPE_FREEZETAG      ) return "ft"     ;
+	else if(t == MAPINFO_TYPE_CLANARENA      ) return "ca"     ;
+	else if(t == MAPINFO_TYPE_DOMINATION     ) return "dom"    ;
+	else if(t == MAPINFO_TYPE_CTF            ) return "ctf"    ;
+	else if(t == MAPINFO_TYPE_RUNEMATCH      ) return "rune"   ;
+	else if(t == MAPINFO_TYPE_ARENA          ) return "arena"  ;
+	else if(t == MAPINFO_TYPE_KEYHUNT        ) return "kh"     ;
+	else if(t == MAPINFO_TYPE_ASSAULT        ) return "as"     ;
+	else if(t == MAPINFO_TYPE_ONSLAUGHT      ) return "ons"    ;
+	else if(t == MAPINFO_TYPE_RACE           ) return "rc"     ;
+	else if(t == MAPINFO_TYPE_NEXBALL        ) return "nexball";
+	else if(t == MAPINFO_TYPE_CTS            ) return "cts"    ;
+	else                                       return "wtf"    ;
+}
+
 string MapInfo_HumanString_FromType(float t) {
 	if (t == MAPINFO_TYPE_DEATHMATCH) {
 		return "Deathmatch";

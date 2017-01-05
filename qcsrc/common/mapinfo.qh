@@ -70,12 +70,14 @@ string MapInfo_ListAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 
 // gets a gametype from a string
 float MapInfo_Type_FromString(string t);
+string MapInfo_String_FromType(float t);
 string MapInfo_GetGameTypeCvar(float t);
 void MapInfo_SwitchGameType(float t);
 string MapInfo_HumanString_FromType(float t);
 
 // to be called from worldspawn to set up cvars
 void MapInfo_LoadMapSettings(string s);
+void _MapInfo_Parse_Settemp(string pFilename, string acl, string s, float recurse);
 
 void MapInfo_Cache_Destroy(); // disable caching
 void MapInfo_Cache_Create(); // enable caching
