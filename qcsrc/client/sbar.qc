@@ -541,7 +541,7 @@ void Cmd_Sbar_SetFields(float argc)
 			sbar_field[sbar_num_fields] = SP_NAME;
 			have_name = 1;
 		} else if(str == "status") {
-			sbar_field[sbar_num_fields] = SP_STATUS;
+			sbar_field[sbar_num_fields] = SP_STATUS_STRING;
 		} else if(str == "|") {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
 			have_separator = 1;
@@ -708,7 +708,7 @@ string Sbar_GetField(entity pl, float field)
 				}
 			}
 			return GetPlayerName(pl.sv_entnum);
-		case SP_STATUS:
+		case SP_STATUS_STRING:
 			return ((pl.(scores[field]) == 0) ? "ALIVE" : "DEAD");
 
 		case SP_FRAGS:
