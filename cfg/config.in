@@ -263,9 +263,9 @@ set g_balance_supershotgun_secondary_spread 0.15
 
 set g_balance_campingrifle_hotreload 0
 set g_freeze 0
-set g_freeze_enddelay 5
+set g_freeze_enddelay 3
 set g_freeze_slowdown 0.1
-set g_freeze_startdelay 3
+set g_freeze_startdelay 10
 set g_freeze_unfroze_time 3
 set g_freeze_use_tdm_maps 1
 set g_freeze_winlimit 10
