@@ -191,6 +191,8 @@ void InitGameplayMode()
 	world.mins = mi_min;
 	world.maxs = mi_max;
 
+	cvar_set("timelimit", cvar_string("timelimit_default"));
+	cvar_set("fraglimit", cvar_string("fraglimit_default"));
 	MapInfo_LoadMapSettings(mapname);
 	float force_gametype_restore = 0;
 	string force_gametype = cvar_string("force_gametype");
