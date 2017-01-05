@@ -3,6 +3,6 @@ var float() GameHook_SpeedMod;
 var void() GameHook_Spawn;
 var void(entity e) GameHook_PlayerClear;
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle;
-var float(float deathtype) GameHook_DamageHandle;
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHook_DamageHandle;
 
 void GameHook_Init();

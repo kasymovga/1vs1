@@ -128,6 +128,7 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 
 	self.deadflag = DEAD_FREEZE;
 	self.health = start_health;
+	PlayerScore_Set(self, SP_STATUS, 1);
 	if (self.ice)
 		return TRUE;
 
@@ -145,7 +146,7 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	return TRUE;
 }
 
-float Freeze_DamageHandle(float deathtype)
+float Freeze_DamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if not(self.deadflag == DEAD_FREEZE)
 		return FALSE;
@@ -171,6 +172,7 @@ void Freeze_PlayerClear(entity plr)
 	if (plr.ice.unfroze_pb)
 		remove(plr.ice.unfroze_pb);
 
+	PlayerScore_Set(plr, SP_STATUS, 0);
 	plr.unfroze_pb = world;
 	plr.ice = world;
 	WaypointSprite_DetachCarrier(plr);
@@ -205,6 +207,9 @@ void Freeze_Init()
 	Roundbased_Init(g_freeze_enddelay, g_freeze_startdelay);
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status",     SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
 }
 
 float Freeze_SpeedMod() {

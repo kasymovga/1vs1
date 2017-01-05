@@ -509,7 +509,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	local float take, save, waves, sdelay, dh, da;
 	vector v;
 	float valid_damage_for_weaponstats;
-	if (GameHook_DamageHandle(deathtype))
+	if (GameHook_DamageHandle(inflictor, attacker, damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);

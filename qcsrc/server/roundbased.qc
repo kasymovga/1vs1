@@ -145,5 +145,6 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	Roundbased_NeedCheckTeams();
 	rb_enddelay = enddelay;
 	rb_startdelay = startdelay;
-	Roundbased_SetRoundStart();
+	rb_respawn_all = 0;
+	round_warmup = time + rb_startdelay;
 }

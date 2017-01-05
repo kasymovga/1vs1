@@ -458,7 +458,7 @@ string Sbar_DefaultColumnLayout()
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals ",
-		"-race,nexball/score");
+		"-race,nexball/score +ca/damage +ca/status +ft/status");
 }
 
 void Cmd_Sbar_SetFields(float argc)
@@ -540,6 +540,8 @@ void Cmd_Sbar_SetFields(float argc)
 		} else if(str == "name" || str == "nick") {
 			sbar_field[sbar_num_fields] = SP_NAME;
 			have_name = 1;
+		} else if(str == "status") {
+			sbar_field[sbar_num_fields] = SP_STATUS;
 		} else if(str == "|") {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
 			have_separator = 1;
@@ -706,6 +708,8 @@ string Sbar_GetField(entity pl, float field)
 				}
 			}
 			return GetPlayerName(pl.sv_entnum);
+		case SP_STATUS:
+			return ((pl.(scores[field]) == 0) ? "ALIVE" : "DEAD");
 
 		case SP_FRAGS:
 			f = pl.(scores[SP_KILLS]);

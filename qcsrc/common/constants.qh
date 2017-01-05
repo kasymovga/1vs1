@@ -344,6 +344,9 @@ const float STAT_SPIDERBOT_SHIELD  = 65;
 #define SP_DEATHS 1
 #define SP_SUICIDES 2
 #define SP_SCORE 3
+#define SP_DAMAGE 4
+#define SP_STATUS 5
+
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
 // this assignment must match menu/nexuiz/dialog_settings_misc.c!

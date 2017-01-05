@@ -309,6 +309,24 @@ void PlayerScore_Detach(entity player)
 	player.scorekeeper = world;
 }
 
+float PlayerScore_Set(entity player, float scorefield, float score)
+{
+	entity s;
+
+	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
+	s = player.scorekeeper;
+	if(!s)
+	{
+		if(gameover)
+			return 0;
+		error("Adding score to unknown player!");
+	}
+	if(scores_label[scorefield] != "")
+		s.SendFlags |= pow(2, scorefield);
+
+	return (s.(scores[scorefield]) = score);
+}
+
 float PlayerScore_Add(entity player, float scorefield, float score)
 {
 	entity s;

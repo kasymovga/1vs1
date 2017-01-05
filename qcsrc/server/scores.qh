@@ -20,6 +20,7 @@ void PlayerScore_Detach(entity player);
  * Returns the new score.
  */
 float PlayerScore_Add(entity player, float scorefield, float score);
+float PlayerScore_Set(entity player, float scorefield, float score);
 
 /**
  * Initialize the score of this player if needed.
