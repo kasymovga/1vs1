@@ -2354,16 +2354,16 @@ void ObserverThink()
 void SpectatorThink()
 {
 	if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP && !self.version_mismatch) {
+		if (self.BUTTON_JUMP && !self.version_mismatch && self.team <= 0) {
 			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.welcomemessage_time = 0;
-			self.flags &~= FL_JUMPRELEASED;
 			if(SpectateNext() == 1) {
 				self.classname = "spectator";
 			} else {
+				self.flags &~= FL_JUMPRELEASED;
 				self.classname = "observer";
 				PutClientInServer();
 			}
