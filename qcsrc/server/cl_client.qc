@@ -617,7 +617,8 @@ void PutObserverInServer(float frags_team_reset)
 
 	vehicle_extract_player(self, TRUE);
 
-	if(self.killcount != -666)
+	if (frags_team_reset || self.team <= 0)
+	if (self.killcount != -666)
 		bprint ("^4", self.netname, "^4 is spectating now\n");
 
 	PlayerScore_Clear(self); // clear scores when needed
