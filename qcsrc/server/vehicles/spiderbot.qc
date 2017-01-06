@@ -706,6 +706,11 @@ void spiderbot_die()
 
 }
 
+void spiderbot_reset() {
+	spiderbot_die();
+	spiderbot_spawn();
+}
+
 void vewhicle_spiderbot_dinit()
 {
     self.spiderbot_spawnpnt = spawn();
@@ -779,6 +784,7 @@ void vewhicle_spiderbot_dinit()
 
     self.vehicle_die = spiderbot_die;
     self.vehicle_exit = spiderbot_exit;
+	self.reset = spiderbot_reset;
 }
 
 void vehicle_spiderbot_readcvars() {
