@@ -22,9 +22,7 @@ void Clanarena_SpawnHook() {
 
 float Clanarena_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	Roundbased_NeedCheckTeams();
-	if not(Roundbased_Active)
-		PutClientInServer();
-	else
+	if (Roundbased_Active)
 		PlayerScore_Set(self, SP_STATUS, 1);
 
 	return FALSE;
