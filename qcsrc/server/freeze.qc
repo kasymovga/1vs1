@@ -116,13 +116,15 @@ void Freeze_IceThink()
 
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 {
+	if not(Roundbased_Active)
+		return FALSE;
+
 	PlayerClear(FALSE, world);
 	Roundbased_NeedCheckTeams();
 
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
 
-	if (Roundbased_Active)
 	if (deathtype)
 		Obituary(attacker, inflictor, self, deathtype);
 
