@@ -7,6 +7,7 @@ float rb_have_death_players;
 float rb_team_alive;
 float rb_enddelay;
 float rb_startdelay;
+float rb_after_warmup;
 
 float Roundbased_Active;
 
@@ -19,11 +20,14 @@ void Roundbased_TeamArenaThink()
 {
 	if (gameover)
 		return;
-	if (time < game_starttime || inWarmupStage)
+
+	if (inWarmupStage)
+		return;
+
+	if (time < game_starttime)
 		return;
 
 	entity oldself;
-
 	entity plr;
 	if (rb_need_check_teams) {
 		rb_team_check = 0;
@@ -47,6 +51,15 @@ void Roundbased_TeamArenaThink()
 	}
 	if not(Roundbased_Active)
 	{
+		if (rb_after_warmup) {
+			rb_respawn_all = 0;
+			if (cvar("sv_ready_restart_after_countdown"))
+				round_warmup = game_starttime + rb_startdelay;
+			else
+				round_warmup = game_starttime;
+
+			rb_after_warmup = FALSE;
+		}
 		if (rb_respawn_all)
 		if (time >= rb_respawn_all) {
 			reset_map(FALSE);
@@ -80,7 +93,7 @@ void Roundbased_TeamArenaThink()
 			{
 				if (rb_countdown_last != countdown)
 				{
-					centerprint(plr, strcat(winner_message, "^2Restarting in ", ftos(countdown), "\n"));
+					centerprint(plr, strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"));
 					rb_countdown_last = countdown;
 
 					if (countdown <= 3)
@@ -146,5 +159,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	rb_enddelay = enddelay;
 	rb_startdelay = startdelay;
 	rb_respawn_all = 0;
-	round_warmup = time + rb_startdelay;
+	if (inWarmupStage)
+		rb_after_warmup = TRUE;
+	else
+		round_warmup = time + rb_startdelay;
 }
