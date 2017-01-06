@@ -1040,16 +1040,16 @@ void PutClientInServer()
 					ReadyRestartForce();
 			}
 		}
-		GameHook_Spawn();
-		Nadget_SpawnHook();
 		if (sv_player_hat) {
-			e = spawn();
-			setmodel(e, sv_player_hat);
-			e.scale = sv_player_hat_scale;
-			setattachment(e, self, sv_player_hat_attachment);
-			e.angles = sv_player_hat_angles;
-			setorigin(e, sv_player_hat_origin);
+			self.hat = spawn();
+			setmodel(self.hat, sv_player_hat);
+			self.hat.scale = sv_player_hat_scale;
+			setattachment(self.hat, self, sv_player_hat_attachment);
+			self.hat.angles = sv_player_hat_angles;
+			setorigin(self.hat, sv_player_hat_origin);
 		}
+		Nadget_SpawnHook();
+		GameHook_Spawn();
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 		Nadget_ObserverHook();
