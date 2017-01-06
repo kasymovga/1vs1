@@ -53,11 +53,7 @@ void Roundbased_TeamArenaThink()
 	{
 		if (rb_after_warmup) {
 			rb_respawn_all = 0;
-			if (cvar("sv_ready_restart_after_countdown"))
-				round_warmup = game_starttime + rb_startdelay;
-			else
-				round_warmup = game_starttime;
-
+			round_warmup = game_starttime + rb_startdelay;
 			rb_after_warmup = FALSE;
 		}
 		if (rb_respawn_all)
