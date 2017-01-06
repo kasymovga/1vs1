@@ -788,12 +788,9 @@ void ReadyRestartForce()
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(cvar("sv_ready_restart_after_countdown"))
-	{
-		restartTimer = spawn();
-		restartTimer.think = restartTimer_Think;
-		restartTimer.nextthink = game_starttime;
-	}
+	restartTimer = spawn();
+	restartTimer.think = restartTimer_Think;
+	restartTimer.nextthink = (cvar("sv_ready_restart_after_countdown") ? game_starttime : time);
 
 	//after a restart every players number of allowed timeouts gets reset, too
 	if(cvar("sv_timeout"))
@@ -801,10 +798,6 @@ void ReadyRestartForce()
 		FOR_EACH_REALPLAYER(e)
 			e.allowedTimeouts = cvar("sv_timeout_number");
 	}
-
-	//reset map immediately if this cvar is not set
-	if (!cvar("sv_ready_restart_after_countdown"))
-		reset_map(TRUE);
 
 	if(sv_eventlog)
 		GameLogEcho(":restart");
