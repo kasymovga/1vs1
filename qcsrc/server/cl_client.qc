@@ -2361,10 +2361,10 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.welcomemessage_time = 0;
+			self.flags &~= FL_JUMPRELEASED;
 			if(SpectateNext() == 1) {
 				self.classname = "spectator";
 			} else {
-				self.flags &~= FL_JUMPRELEASED;
 				self.classname = "observer";
 				PutClientInServer();
 			}
@@ -2375,10 +2375,11 @@ void SpectatorThink()
 			if(!SpectateUpdate())
 				PutObserverInServer(FALSE);
 		}
-	} else if (self.team <= 0) {
+	} else {
 		if (!(self.BUTTON_ATCK || self.BUTTON_ATCK2)) {
 			self.flags |= FL_JUMPRELEASED;
-			if(self.flags & FL_SPAWNING)
+			if (self.team <= 0)
+			if (self.flags & FL_SPAWNING)
 			{
 				self.flags &~= FL_SPAWNING;
 				LeaveSpectatorMode();
