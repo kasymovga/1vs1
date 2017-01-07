@@ -156,5 +156,5 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	if (inWarmupStage)
 		rb_after_warmup = TRUE;
 	else
-		round_warmup = time + rb_startdelay;
+		round_warmup = game_starttime + rb_startdelay;
 }
