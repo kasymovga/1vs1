@@ -85,17 +85,15 @@ void Roundbased_TeamArenaThink()
 			else
 				winner_message = "";
 			float countdown = ceil(round_warmup - time);
-			FOR_EACH_REALCLIENT(plr)
+			if (rb_countdown_last != countdown)
 			{
-				if (rb_countdown_last != countdown)
+				FOR_EACH_REALCLIENT(plr)
 				{
 					centerprint(plr, strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"));
-					rb_countdown_last = countdown;
-
 					if (countdown <= 3)
-						FOR_EACH_REALCLIENT(plr)
-							announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"));
+						announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"));
 				}
+				rb_countdown_last = countdown;
 			}
 		}
 		return;
