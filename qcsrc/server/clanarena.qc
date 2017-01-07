@@ -11,7 +11,8 @@ void Clanarena_Think()
 
 void Clanarena_SpawnHook() {
 	Roundbased_NeedCheckTeams();
-	if not(Roundbased_Active) {
+	if not(Roundbased_Active)
+	if not(Roundbased_RestartTime) {
 		PlayerScore_Set(self, SP_STATUS, 0);
 		return;
 	}
