@@ -497,6 +497,14 @@ void() m_draw =
 	if(!menuInitialized)
 	{
 		// TODO draw an info image about this situation
+		if not(cvar("utf8_enable"))
+			cvar_set("utf8_enable", "1");
+
+		if (cvar("r_font_disable_freetype")) {
+			cvar_set("r_font_disable_freetype", "0");
+			localcmd("\nr_restart\n");
+		}
+
 		m_init_delayed();
 		return;
 	}
