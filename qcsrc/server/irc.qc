@@ -24,6 +24,7 @@ float sv_ircbot_chat_irc2game;
 float sv_ircbot_chat_irc2game_require_highlight;
 float sv_ircbot_reconnect_interval;
 float sv_ircbot_reconnect_interval_add;
+float sv_ircbot_silent;
 float sv_ircbot_spamstatus;
 float sv_ircbot_spamstatus_delay;
 float sv_ircbot_update_topic;
@@ -35,6 +36,13 @@ float irc_was_connected;
 float irc_reconnect_time;
 float irc_disconnections;
 float irc_gamestart_wasannounced;
+
+void IRC_Print(string str) {
+	if (sv_ircbot_silent)
+		bprint("\{3}", "^5IRC ", str, "\n");
+	else
+		bprint("\{1}", "^5IRC ", str, "\n");
+}
 
 float IRC_CheckSession(float s) {
     if(!IRC_SessionExists(s))
@@ -189,6 +197,7 @@ void IRC_Init(void) {
 	CACHE_CVAR(sv_ircbot_chat_irc2game_require_highlight);
 	CACHE_CVAR(sv_ircbot_reconnect_interval);
 	CACHE_CVAR(sv_ircbot_reconnect_interval_add);
+	CACHE_CVAR(sv_ircbot_silent);
 	CACHE_CVAR(sv_ircbot_spamstatus);
 	CACHE_CVAR(sv_ircbot_spamstatus_delay);
 	CACHE_CVAR(sv_ircbot_update_topic);
@@ -266,7 +275,7 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
             }
             
             if(msg != "")
-                bprint("\{1}^5IRC ^8<^3", nick, "^8>^7 ", msg, "\n");
+                IRC_Print(strcat("^8<^3", nick, "^8>^7 ", msg));
         }
     } else if(event == "PRIVMSG") {
 		//Nothing
@@ -277,7 +286,7 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
         if(substring(argv(0), 0, 7) == "ACTION ") {
             msg = argv(0);
             if(!IRC_IsIgnored(src))
-                bprint("\{1}^5IRC  ^3* ", nick, "^7 ", IRC_IRC2DP(substring(msg, 7, strlen(msg))), "\n");
+                IRC_Print(strcat("^3* ", nick, "^7 ", IRC_IRC2DP(substring(msg, 7, strlen(msg)))));
         }
     } else if(event == "ACTION") {
         // /me for unborked libircclient
@@ -286,7 +295,7 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
         if(strtolower(argv(0)) == irc.target) {
             msg = argv(1);
             if(!IRC_IsIgnored(src))
-                bprint("\{1}^5IRC  ^3* ", nick, "^7 ", IRC_IRC2DP(msg), "\n");
+                IRC_Print(strcat("^3* ", nick, "^7 ", IRC_IRC2DP(msg)));
         }
     } else if(event == "KICK") {
         if(sv_ircbot_channel_auto_rejoin)
@@ -295,35 +304,23 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
             return;
         }
         
-        if(sv_ircbot_announce_irc_joinparts) if(strtolower(argv(0)) == irc.target) {
-            bprint("\{1}^5IRC  ^1* ^3", nick, " ^1kicked ^3", argv(1), " ^1from ^2", argv(0));
-            if(argv(2) != "" && argv(2) != argv(1))
-               bprint(" ^8(", argv(2), ")");
-            bprint("\n");
-        }
+        if(sv_ircbot_announce_irc_joinparts) if(strtolower(argv(0)) == irc.target)
+            IRC_Print(strcat("^1* ^3", nick, " ^1kicked ^3", argv(1), " ^1from ^2", argv(0), ((argv(2) != "" && argv(2) != argv(1)) ? strcat(" ^8(", argv(2), ")") : "")));
     } else if(event == "JOIN") {
         if(sv_ircbot_announce_irc_joinparts) if(strtolower(argv(0)) == irc.target)
-            bprint("\{1}^5IRC  ^7* ^3", nick, " ^7joined ^2", argv(0), "\n");
+            IRC_Print(strcat("^7* ^3", nick, " ^7joined ^2", argv(0)));
     } else if(event == "PART") {
-        if(sv_ircbot_announce_irc_joinparts) if(strtolower(argv(0)) == irc.target) {
-            bprint("\{1}^5IRC  ^7* ^3", nick, " ^7left ^2", argv(0));
-            if(argv(1) != "" && argv(1) != nick)
-                bprint(" ^8(", argv(1), ")");
-            bprint("\n");
-        }
+        if(sv_ircbot_announce_irc_joinparts) if(strtolower(argv(0)) == irc.target)
+            IRC_Print(strcat("^7* ^3", nick, " ^7left ^2", argv(0), ((argv(1) != "" && argv(1) != nick) ? strcat(" ^8(", argv(1), ")") : "")));
     } else if(event == "QUIT") {
-        if(sv_ircbot_announce_irc_joinparts) {
-            bprint("\{1}^5IRC  ^1* ^3", nick, " ^1has quit IRC");
-            if(argv(0) != "" && argv(0) != "Quit")
-                bprint(" ^8(", argv(0), ")");
-            bprint("\n");
-        }
+        if(sv_ircbot_announce_irc_joinparts)
+            IRC_Print(strcat("^1* ^3", nick, " ^1has quit IRC", ((argv(0) != "" && argv(0) != "Quit") ?  strcat(" ^8(", argv(0), ")") : "")));
     } else if(event == "MODE") {
         if(strtolower(argv(0)) == irc.target) if(argv(1) == "+o") if(argv(2) == IRC_CurrentNick(irc.cnt))
             irc.skin = 1;
     } else if(event == "NICK") {
         if(sv_ircbot_announce_irc_nick)
-            bprint("\{1}^5IRC  ^7* ^3", nick, " ^7is now known as ^3", argv(0), "\n");
+            IRC_Print(strcat("^7* ^3", nick, " ^7is now known as ^3", argv(0)));
     } else if(event == "TOPIC") {
         if(strtolower(argv(0)) == irc.target) {
             cvar_set("_sv_ircbot_lasttopic", argv(1));
