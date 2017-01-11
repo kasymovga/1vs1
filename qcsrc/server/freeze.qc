@@ -15,7 +15,7 @@ entity freeze_controller;
 
 float Freeze_SpeedMod();
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);
-void Freeze_PlayerClear(entity plr);
+void Freeze_PlayerClear(entity plr, entity attacker, float killed);
 float Freeze_HandleFrags(entity attacker, entity targ, float f);
 
 void Freeze_Think()
@@ -40,7 +40,7 @@ void Freeze_IceThink()
 			remove(self.unfroze_pb);
 		self.unfroze_pb = world;
 
-		Freeze_PlayerClear(self.owner);
+		Freeze_PlayerClear(self.owner, world, 0);
 		return;
 	}
 
@@ -163,7 +163,7 @@ float Freeze_DamageHandle(entity inflictor, entity attacker, float damage, float
 	return TRUE;
 }
 
-void Freeze_PlayerClear(entity plr)
+void Freeze_PlayerClear(entity plr, entity attacker, float killed)
 {
 	if (plr.ice)
 		remove(plr.ice);

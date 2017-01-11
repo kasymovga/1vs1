@@ -9,7 +9,7 @@ float _GameHook_SpeedMod() {
 	return 1;
 }
 
-void _GameHook_PlayerClear(entity e) {
+void _GameHook_PlayerClear(entity plr, entity attacker, float killed) {
 }
 
 float _GameHook_FragsHandle(entity attacker, entity targ, float f) {

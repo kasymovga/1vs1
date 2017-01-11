@@ -1039,6 +1039,18 @@ void ctf_delayedinit()
 	ScoreRules_ctf();
 };
 
+void ctf_PlayerClear(entity plr, entity attacker, float killed) {
+	if(plr.flagcarried)
+	{
+		if(killed && (attacker.classname != "player" && attacker.classname != "gib"))
+			DropFlag(plr.flagcarried, plr, attacker); // penalty for flag loss by suicide
+		else if(killed && (attacker.team == plr.team))
+			DropFlag(plr.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
+		else
+			DropFlag(plr.flagcarried, world, attacker);
+	}
+}
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
@@ -1078,6 +1090,7 @@ void ctf_init()
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
 	GameHook_FragsHandle = ctf_handle_frags;
+	GameHook_PlayerClear = ctf_PlayerClear;
 };
 
 void ctf_setstatus2(entity flag, float shift)

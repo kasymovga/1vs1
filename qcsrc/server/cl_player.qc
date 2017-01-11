@@ -458,9 +458,6 @@ void PlayerClear(float killed, entity attacker)
 	float j;
 	DropAllRunes(self);
 	Akimbo_Clear(self);
-	if(self.ballcarried)
-		DropBall(self.ballcarried, self.origin, self.velocity);
-
 	if (killed)
 		Portal_ClearAllLater(self);
 	else
@@ -478,28 +475,13 @@ void PlayerClear(float killed, entity attacker)
 
 	vehicle_extract_player(self, TRUE);
 
-	if(killed && (self == attacker))
-		kh_Key_DropAll(self, TRUE);
-	else if(killed && (attacker.classname == "player" || attacker.classname == "gib"))
-		kh_Key_DropAll(self, FALSE);
-	else
-		kh_Key_DropAll(self, TRUE);
-	if(self.flagcarried)
-	{
-		if(killed && (attacker.classname != "player" && attacker.classname != "gib"))
-			DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
-		else if(killed && (attacker.team == self.team))
-			DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
-		else
-			DropFlag(self.flagcarried, world, attacker);
-	}
-	//Clear waypoints
-	WaypointSprite_PlayerDead();
 	if (self.hat) {
 		remove(self.hat);
 		self.hat = world;
 	}
-	GameHook_PlayerClear(self);
+	GameHook_PlayerClear(self, attacker, killed);
+	//Clear waypoints
+	WaypointSprite_PlayerDead();
 }
 
 void ClientKill_Now_TeamChange();

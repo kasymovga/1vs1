@@ -57,6 +57,11 @@ float g_nexball_delay_start;
 .float explosive;
 .entity pov_ball;
 
+void nb_PlayerClear(entity plr, entity attacker, float killed) {
+	if(plr.ballcarried)
+		DropBall(plr.ballcarried, plr.origin, plr.velocity);
+}
+
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
 {
@@ -97,6 +102,8 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_delay_collect);
 	CACHE_CVAR(g_nexball_delay_goal);
 	CACHE_CVAR(g_nexball_delay_start);
+
+	GameHook_PlayerClear = nb_PlayerClear;
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 
