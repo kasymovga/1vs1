@@ -49,7 +49,6 @@ float g_balance_laser_primary_melee;
 float g_balance_laser_secondary_melee;
 
 float sv_clones;
-float sv_cheats;
 float sv_gentle;
 float sv_foginterval;
 float sv_autotaunt;
@@ -611,7 +610,6 @@ string matchid;
 .string noise4;
 
 .float damage_hits, maxdamage_fired;
-.float maycheat;
 .float stat_leadlimit;
 
 float radar_showennemies;
@@ -633,7 +631,6 @@ float client_cefc_accumulatortime;
 .float restriction;
 
 .entity clientdata;
-.entity personal;
 
 .entity fake_init;
 

@@ -1637,9 +1637,6 @@ void ClientDisconnect (void)
 
 	ClearPlayerSounds();
 
-	if(self.personal)
-		remove(self.personal);
-
 	self.playerid = 0;
 	self.retard = 0;
 	ReadyCount();
@@ -1665,11 +1662,7 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag)
-#ifdef TETRIS
-		|| self.owner.tetris_on
-#endif
-	)
+	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag))
 		self.model = self.mdl;
 	else
 		self.model = "";
@@ -2454,18 +2447,6 @@ void PlayerPreThink (void)
 				self.version_nagtime = 0;
 			}
 
-	// GOD MODE info
-	if(!(self.flags & FL_GODMODE)) if(self.max_armorvalue)
-	{
-		sprint(self, strcat("godmode saved you ", ftos(self.max_armorvalue), " units of damage, cheater!\n"));
-		self.max_armorvalue = 0;
-	}
-
-#ifdef TETRIS
-	if (TetrisPreFrame())
-		return;
-#endif
-
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
@@ -2505,47 +2486,35 @@ void PlayerPreThink (void)
 		if (PLAYER_REALLY_DEAD(self))
 		{
 			float button_pressed;
-			if(self.personal && g_race_qualifying)
+			if(frametime)
+				player_anim();
+			button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
+			if (self.deadflag == DEAD_DYING)
+			{
+				if(g_forced_respawn)
+					self.deadflag = DEAD_RESPAWNING;
+				else if(!button_pressed)
+					self.deadflag = DEAD_DEAD;
+			}
+			else if (self.deadflag == DEAD_DEAD)
+			{
+				if(button_pressed)
+					self.deadflag = DEAD_RESPAWNABLE;
+			}
+			else if (self.deadflag == DEAD_RESPAWNABLE)
+			{
+				if(!button_pressed)
+					self.deadflag = DEAD_RESPAWNING;
+			}
+			else if (self.deadflag == DEAD_RESPAWNING)
 			{
 				if(time > self.death_time)
 				{
 					self.death_time = time + 1; // only retry once a second
 					respawn();
-					self.impulse = 141;
 				}
 			}
-			else
-			{
-				if(frametime)
-					player_anim();
-				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				if (self.deadflag == DEAD_DYING)
-				{
-					if(g_forced_respawn)
-						self.deadflag = DEAD_RESPAWNING;
-					else if(!button_pressed)
-						self.deadflag = DEAD_DEAD;
-				}
-				else if (self.deadflag == DEAD_DEAD)
-				{
-					if(button_pressed)
-						self.deadflag = DEAD_RESPAWNABLE;
-				}
-				else if (self.deadflag == DEAD_RESPAWNABLE)
-				{
-					if(!button_pressed)
-						self.deadflag = DEAD_RESPAWNING;
-				}
-				else if (self.deadflag == DEAD_RESPAWNING)
-				{
-					if(time > self.death_time)
-					{
-						self.death_time = time + 1; // only retry once a second
-						respawn();
-					}
-				}
-				ShowRespawnCountdown();
-			}
+			ShowRespawnCountdown();
 			return;
 		}
 
@@ -2884,27 +2853,6 @@ void PlayerPostThink (void)
 		}
 		self.idlekick_lasttimeleft = timeleft;
 	}
-
-#ifdef TETRIS
-	if(self.impulse == 100)
-		ImpulseCommands();
-	if (TetrisPostFrame())
-		return;
-#endif
-
-	if(sv_cheats || self.maycheat)
-		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG)
-				if(!self.dragentity)
-					if(self.cursor_trace_ent)
-						if(Drag_IsDraggable(self.cursor_trace_ent))
-						{
-							if(self.cursor_trace_ent.draggedby)
-								Drag_Finish(self.cursor_trace_ent.draggedby);
-							if(self.cursor_trace_ent.tag_entity)
-								detach_sameorigin(self.cursor_trace_ent);
-							Drag_Begin(self, self.cursor_trace_ent, self.cursor_trace_endpos);
-						}
 
 	if(Drag_IsDragging(self))
 	{

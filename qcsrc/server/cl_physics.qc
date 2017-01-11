@@ -263,19 +263,6 @@ void Nixnex_GiveCurrentWeapon();
 .vector movement_old;
 .float buttons_old;
 .vector v_angle_old;
-string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
-.float specialcommand_pos;
-void SpecialCommand()
-{
-#ifdef TETRIS
-	TetrisImpulse();
-#else
-	if(sv_cheats || self.maycheat)
-		self.impulse = 99;
-	else
-		print("A hollow voice says \"Plugh\".\n");
-#endif
-}
 
 vector PlayerTouchWall ()
 {
@@ -408,7 +395,6 @@ void Physic_FrameBeginHook()
 	float wishspeed, buttons;
 	float f;
 	float shtest_score;
-	string c;
 	if(g_race || g_cts)
 	{
 		// if record times matter
@@ -461,36 +447,6 @@ void Physic_FrameBeginHook()
 	self.race_movetime_count += f;
 	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
 	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
-
-	if(!buttons)
-		c = "x";
-	else if(buttons == 1)
-		c = "1";
-	else if(buttons == 2)
-		c = " ";
-	else if(buttons == 128)
-		c = "s";
-	else if(buttons == 256)
-		c = "w";
-	else if(buttons == 512)
-		c = "a";
-	else if(buttons == 1024)
-		c = "d";
-	else
-		c = "?";
-
-	if(c == substring(specialcommand, self.specialcommand_pos, 1))
-	{
-		self.specialcommand_pos += 1;
-		if(self.specialcommand_pos >= strlen(specialcommand))
-		{
-			self.specialcommand_pos = 0;
-			SpecialCommand();
-			return;
-		}
-	}
-	else if(self.specialcommand_pos && (c != substring(specialcommand, self.specialcommand_pos - 1, 1)))
-		self.specialcommand_pos = 0;
 
 	if(!sv_maxidle_spectatorsareidle || self.movetype == MOVETYPE_WALK)
 	{

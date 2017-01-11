@@ -427,13 +427,10 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	if (!(self.flags & FL_GODMODE))
-	{
-		self.armorvalue = self.armorvalue - save;
-		self.health = self.health - take;
-		// pause regeneration for 5 seconds
-		self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
-	}
+	self.armorvalue = self.armorvalue - save;
+	self.health = self.health - take;
+	// pause regeneration for 5 seconds
+	self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
@@ -568,50 +565,45 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 	if (time > self.spawnshieldtime)
 	{
-		if (!(self.flags & FL_GODMODE))
+		self.armorvalue = self.armorvalue - save;
+		self.health = self.health - take;
+		// pause regeneration for 5 seconds
+		self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
+
+		if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 		{
-			self.armorvalue = self.armorvalue - save;
-			self.health = self.health - take;
-			// pause regeneration for 5 seconds
-			self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
+			self.pain_finished = time + 0.5;	//Supajoe
 
-			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
-			{
-				self.pain_finished = time + 0.5;	//Supajoe
-
-				if(sv_gentle < 1) {
-					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
-					{
-						if (random() > 0.5)
-							setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
-						else
-							setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
-					}
-
-					if(sound_allowed(MSG_BROADCAST, attacker))
-					if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
-					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
-					{
-						if(self.health > 75) // TODO make a "gentle" version?
-							PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 50)
-							PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 25)
-							PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 1)
-							PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-					}
+			if(sv_gentle < 1) {
+				if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
+				{
+					if (random() > 0.5)
+						setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+					else
+						setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
 				}
 
-				// throw off bot aim temporarily
-				local float shake;
-				shake = damage * 5 / (bound(0,skill,100) + 1);
-				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
-				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				if(sound_allowed(MSG_BROADCAST, attacker))
+				if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
+				// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
+				{
+					if(self.health > 75) // TODO make a "gentle" version?
+						PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					else if(self.health > 50)
+						PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					else if(self.health > 25)
+						PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					else if(self.health > 1)
+						PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				}
 			}
+
+			// throw off bot aim temporarily
+			local float shake;
+			shake = damage * 5 / (bound(0,skill,100) + 1);
+			self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
+			self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
 		}
-		else
-			self.max_armorvalue += (save + take);
 	}
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);

@@ -161,8 +161,7 @@ void minstagib_ammocheck (void)
 		{
 			centerprint(self, "get some ammo or\nyou'll be dead in ^310^7 seconds...");
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			if not(self.flags & FL_GODMODE)
-				announce(self, "announcer/robotic/10.wav");
+			announce(self, "announcer/robotic/10.wav");
 		}
 	}
 	self.minstagib_nextthink = time + 1;

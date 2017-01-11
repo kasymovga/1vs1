@@ -65,11 +65,6 @@ void CampaignPreInit()
 {
 	float baseskill;
 	string title;
-	if(cvar("sv_cheats"))
-	{
-		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
-		return;
-	}
 	campaign_level = cvar("_campaign_index");
 	campaign_name = strzone(cvar_string("_campaign_name"));
 	campaign_index_var = strzone(strcat("g_campaign", campaign_name, "_index"));
@@ -236,19 +231,4 @@ void CampaignPostIntermission()
 	strunzone(campaign_index_var);
 	strunzone(campaign_name);
 	campaign_name = "";
-}
-
-
-
-void CampaignLevelWarp(float n)
-{
-	if(!sv_cheats)
-		return;
-	CampaignFile_Unload();
-	CampaignFile_Load(n, 1);
-	if(campaign_entries)
-		CampaignSetup(0);
-	else
-		error("Sorry, cheater. You are NOT WELCOME.");
-	CampaignFile_Unload();
 }

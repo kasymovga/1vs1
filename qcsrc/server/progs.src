@@ -92,8 +92,6 @@ bot/bot.qc
 
 g_subs.qc
 
-g_tetris.qc
-
 runematch.qc
 arena.qc
 

@@ -559,7 +559,6 @@ void readlevelcvars(void)
 	if(sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 	CACHE_CVAR(sv_clones);
-	CACHE_CVAR(sv_cheats);
 	CACHE_CVAR(sv_gentle);
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_cloaked);
@@ -660,10 +659,7 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	if(sv_cheats)
-		ServerProgsDB = db_create();
-	else
-		ServerProgsDB = db_load("server.db");
+	ServerProgsDB = db_load("server.db");
 
 	TemporaryDB = db_create();
 
@@ -2750,10 +2746,7 @@ void RestoreGame()
 	// some things then break, so let's work around them...
 
 	// Progs DB (capture records)
-	if(sv_cheats)
-		ServerProgsDB = db_create();
-	else
-		ServerProgsDB = db_load("server.db");
+	ServerProgsDB = db_load("server.db");
 
 	// Mapinfo
 	MapInfo_Shutdown();
@@ -2774,8 +2767,7 @@ void SV_Shutdown()
 		world_initialized = 0;
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
-		if(!sv_cheats)
-			db_save(ServerProgsDB, "server.db");
+		db_save(ServerProgsDB, "server.db");
 		if(cvar("developer"))
 			db_save(TemporaryDB, "server-temp.db");
 		db_close(ServerProgsDB);
