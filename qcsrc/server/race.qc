@@ -5,6 +5,7 @@
 .float race_checkpoint; // player: next checkpoint that has to be reached
 .float race_laptime;
 .entity race_lastpenalty;
+.float race_penalty;
 
 .entity sprite;
 
@@ -762,4 +763,27 @@ void spawnfunc_trigger_race_penalty()
 		self.race_penalty_reason = "missing a checkpoint";
 	if (!self.race_penalty)
 		self.race_penalty = 5;
+}
+
+float race_PlayerAllowedToMove() {
+	if(self.race_penalty)
+		if(time > self.race_penalty)
+			self.race_penalty = 0;
+
+	if(self.race_penalty)
+		return TRUE;
+
+	return FALSE;
+}
+
+float race_PlayerCanFire() {
+	if (time < self.race_penalty)
+		return FALSE;
+
+	return TRUE;
+}
+
+void race_init() {
+	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;
+	GameHook_PlayerCanFire = race_PlayerCanFire;
 }

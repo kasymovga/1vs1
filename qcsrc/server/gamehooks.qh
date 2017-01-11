@@ -4,5 +4,7 @@ var void() GameHook_Spawn;
 var void(entity plr, entity attacker, float killed) GameHook_PlayerClear;
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle;
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHook_DamageHandle;
+var float(entity plr) GameHook_PlayerCanFire;
+var float() GameHook_PlayerAllowedToMove;
 
 void GameHook_Init();

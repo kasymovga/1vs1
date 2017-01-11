@@ -139,10 +139,10 @@ float PlayerCanFire(entity plr) {
 	if (!restart_active)
 		return FALSE;
 
-	if (time < self.race_penalty)
+	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
-	return TRUE;
+	return GameHook_PlayerCanFire(plr);
 }
 
 void GameLogEcho(string s)

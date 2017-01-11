@@ -35,7 +35,6 @@ float g_touchexplode_radius;
 float g_touchexplode_damage;
 float g_touchexplode_edgedamage;
 float g_touchexplode_force;
-.float race_penalty;
 
 float g_maxpushtime;
 

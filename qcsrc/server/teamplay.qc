@@ -411,6 +411,7 @@ void InitGameplayMode()
 			independent_players = 1;
 
 		ScoreRules_race();
+		race_init();
 	}
 
 	if(teams_matter && !teamplay)
