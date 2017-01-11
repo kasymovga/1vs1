@@ -129,7 +129,7 @@ void bcenterprint(string s)
 }
 
 float PlayerCanFire(entity plr) {
-	if (PLAYER_DEAD(self))
+	if (PLAYER_DEAD(plr))
 		return FALSE;
 
 	if (time < round_warmup)
