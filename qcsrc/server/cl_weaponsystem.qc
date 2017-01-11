@@ -939,8 +939,19 @@ void weapon_setup(float windex)
 // perform weapon to attack (weaponstate and attack_finished check is here)
 float weapon_prepareattack(float secondary, float attacktime)
 {
-	//if sv_ready_restart_after_countdown is set, don't allow the player to shoot
-	//if all players readied up and the countdown is running
+	if(attacktime >= 0)
+	{
+		// don't fire if previous attack is not finished
+		if (ATTACK_FINISHED(self) > time + frametime * 0.5)
+			return FALSE;
+		// don't fire while changing weapon
+		if (self.weaponentity.state != WS_READY)
+			return FALSE;
+	}
+	// do not even think about shooting if switching
+	if(self.switchweapon != self.weapon)
+		return FALSE;
+
 	if not(PlayerCanFire(self))
 		return FALSE;
 
@@ -952,22 +963,6 @@ float weapon_prepareattack(float secondary, float attacktime)
 		return FALSE;
 	}
 
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
-		return FALSE;
-
-	// do not even think about shooting if switching
-	if(self.switchweapon != self.weapon)
-		return FALSE;
-
-	if(attacktime >= 0)
-	{
-		// don't fire if previous attack is not finished
-		if (ATTACK_FINISHED(self) > time + frametime * 0.5)
-			return FALSE;
-		// don't fire while changing weapon
-		if (self.weaponentity.state != WS_READY)
-			return FALSE;
-	}
 	self.weaponentity.state = WS_INUSE;
 
 	self.spawnshieldtime = min(self.spawnshieldtime, time); // kill spawn shield when you fire
