@@ -127,12 +127,12 @@ void rune_unmark_spot(entity e)
 
 float RunesCount(float r)
 {
-	float i, count = 0;
+	float i, n = 0;
 	for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2)
 		if (r & i)
-			count++;
+			n++;
 
-	return count;
+	return n;
 }
 
 string RuneName(float r)
