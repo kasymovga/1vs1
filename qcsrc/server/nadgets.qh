@@ -2,6 +2,5 @@ void Nadget_Init();
 void Nadget_Frame();
 void Nadget_SpawnHook();
 void Nadget_ObserverHook();
-void Nadget_Clear();
+void Nadget_Clear(float killed);
 void Nadget_Button();
-void Nadget_Select(float nadget);

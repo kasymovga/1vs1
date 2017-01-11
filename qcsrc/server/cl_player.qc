@@ -474,7 +474,7 @@ void PlayerClear(float killed, entity attacker)
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
-	Nadget_Clear();
+	Nadget_Clear(killed);
 
 	vehicle_extract_player(self, TRUE);
 

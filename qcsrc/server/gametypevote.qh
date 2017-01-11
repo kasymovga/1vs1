@@ -1,4 +1,3 @@
 float GameTypeVote_Think();
-void GameTypeVote_Select(entity plr, float select);
 float GameTypeVote_Mask();
 void GameTypeVote_Init();

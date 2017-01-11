@@ -2,6 +2,9 @@
 .string menu_id;
 .string menu_title;
 .float menu_timeout;
+.entity menu_chain;
+.void(float choice) menu_handler;
+entity _menu_chain;
 
 float Menu_CustomizeEntityForClient() {
 	if not(other == self.owner)
@@ -31,17 +34,20 @@ float Menu_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeout) {
+entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeout, void(float choice) _menu_handler) {
 	entity e = spawn();
 	e.classname = "menu";
 	e.menu_id = _menu_id;
 	e.menu_title = _menu_title;
 	e.menu_timeout = timeout;
+	e.menu_handler = _menu_handler;
 	e.owner = plr;
 	if (plr)
 		e.customizeentityforclient = Menu_CustomizeEntityForClient;
 
 	Net_LinkEntity(e, FALSE, 0, Menu_SendEntity);
+	e.menu_chain = _menu_chain;
+	_menu_chain = e;
 	return e;
 }
 
@@ -67,5 +73,23 @@ void Menu_Set_Title(entity menu, string title) {
 }
 
 void Menu_Remove(entity menu) {
+	entity e;
+	if (_menu_chain == menu)
+		_menu_chain = _menu_chain.menu_chain;
+	else
+		for (; e.menu_chain; e = e.menu_chain)
+			if (e.menu_chain == menu) {
+				e.menu_chain = e.menu_chain.menu_chain;
+				break;
+			}
 	remove(menu);
+}
+
+void Menu_Select(string _menu_id, float choice) {
+	entity e;
+	for (e = _menu_chain; e; e = e.menu_chain)
+		if (e.menu_id == _menu_id) {
+			e.menu_handler(choice);
+			break;
+		}
 }

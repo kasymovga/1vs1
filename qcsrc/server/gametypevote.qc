@@ -10,6 +10,8 @@ float gametypes_count;
 
 .float gametypevote_select;
 
+void GameTypeVote_Select(float select);
+
 string GameTypeVote_GetDescr(float n) {
 	if (gametypes_descr[n] != "")
 		strunzone(gametypes_descr[n]);
@@ -42,7 +44,7 @@ float GameTypeVote_Think() {
 		nextmap_types = MapInfo_GetGameTypes(nextmap);
 
 		gametypevote_start = time;
-		gametypevote = Menu_Prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"));
+		gametypevote = Menu_Prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"), GameTypeVote_Select);
 		t = 1;
 		gametypes_count = 0;
 		for (i = 0; i < 15; i++) {
@@ -94,7 +96,7 @@ float GameTypeVote_Think() {
 	return TRUE;
 }
 
-void GameTypeVote_Select(entity plr, float select) {
+void GameTypeVote_Select(float select) {
 	float tmp, prev_select;
 	if (select < 0 || select >= gametypes_count)
 		return;
@@ -102,13 +104,13 @@ void GameTypeVote_Select(entity plr, float select) {
 	if not(gametypevote)
 		return;
 
-	if (plr.gametypevote_select >= 1 && plr.gametypevote_select <= gametypes_count) {
-		prev_select = plr.gametypevote_select - 1;
+	if (self.gametypevote_select >= 1 && self.gametypevote_select <= gametypes_count) {
+		prev_select = self.gametypevote_select - 1;
 		tmp = gametypes_votes[prev_select];
 		gametypes_votes[prev_select] = tmp - 1;
 		Menu_Set_Item(gametypevote, prev_select, GameTypeVote_GetDescr(prev_select));
 	}
-	plr.gametypevote_select = select + 1;
+	self.gametypevote_select = select + 1;
 	tmp = gametypes_votes[select] + 1;
 	gametypes_votes[select] = tmp;
 	Menu_Set_Item(gametypevote, select, GameTypeVote_GetDescr(select));

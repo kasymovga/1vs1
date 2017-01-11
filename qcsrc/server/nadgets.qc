@@ -46,6 +46,7 @@ float g_balance_nadget_throw_holdtime;
 #define NADGET_LAST 4
 float available_nadgets_count;
 float available_nadgets[3];
+void Nadget_Select(float nadget);
 
 float Nadget_CodeByName(string name) {
 	if (name == "grenade")
@@ -95,12 +96,19 @@ void Nadget_SpawnHook() {
 		if (available_nadgets_count == 1) {
 			self.nadget_type = available_nadgets[0];
 		} else if not(self.nadget_menu) {
-			self.nadget_menu = Menu_Prepare(self, "nadget", "Select your nadget", 0);
+			self.nadget_menu = Menu_Prepare(self, "nadget", "Select your nadget", 0, Nadget_Select);
 			float i;
 			for (i = 0; i < available_nadgets_count; i++) {
 				Menu_Add_Item(self.nadget_menu, Nadget_HumanNameByCode(available_nadgets[i]));
 			}
 		}
+	}
+}
+
+void Nadget_Menu_Remove() {
+	if (self.nadget_menu) {
+		Menu_Remove(self.nadget_menu);
+		self.nadget_menu = world;
 	}
 }
 
@@ -111,10 +119,7 @@ void Nadget_Select(float nadget) {
 	if not(self.nadget_type)
 		self.nadget_type = available_nadgets[nadget];
 
-	if (self.nadget_menu) {
-		remove(self.nadget_menu);
-		self.nadget_menu = world;
-	}
+	Nadget_Menu_Remove();
 }
 
 void Nadget_Init() {
@@ -380,7 +385,7 @@ void Nadget_Grenade_Throw() {
 	self.ammo_rockets -= g_balance_nadget_grenade_ammo;
 }
 
-void Nadget_Clear() {
+void Nadget_Reset() {
 	if (self.nadget_pb) {
 		remove(self.nadget_pb);
 		self.nadget_pb = world;
@@ -393,6 +398,12 @@ void Nadget_Clear() {
 	self.nadget_button = FALSE;
 }
 
+void Nadget_Clear(float killed) {
+	Nadget_Reset();
+	if not(killed)
+		Nadget_Menu_Remove();
+}
+
 void Nadget_Button() {
 	if (self.ammo_rockets < g_balance_nadget_grenade_ammo)
 		self.nadget_button = FALSE;
@@ -402,7 +413,7 @@ void Nadget_Button() {
 
 void Nadget_Frame() {
 	if not(self.deadflag == DEAD_NO) {
-		Nadget_Clear();
+		Nadget_Reset();
 		return;
 	}
 
@@ -416,7 +427,7 @@ void Nadget_Frame() {
 	}
 	if (nadget_btn && self.nadget_hold >= 0) {
 		if (self.ammo_rockets < g_balance_nadget_grenade_ammo) {
-			Nadget_Clear();
+			Nadget_Reset();
 		} else if (g_balance_nadget_throw_holdtime > 0) {
 			self.nadget_hold += frametime / g_balance_nadget_throw_holdtime;
 			if not(self.nadget_pb)
@@ -433,7 +444,7 @@ void Nadget_Frame() {
 		else
 			self.nadget_hold = 0;
 
-		Nadget_Clear();
+		Nadget_Reset();
 	}
 }
 
