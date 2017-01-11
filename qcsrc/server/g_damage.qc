@@ -1041,9 +1041,6 @@ vector NearestPointOnBox(entity box, vector org)
 .float actual_damage[WEP_COUNT]; //amount of damage done
 .float max_damage[WEP_COUNT]; //the maximum damage of the weapon
 
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(actual_damage);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(max_damage);
-
 void Damage_RecordDamage(entity attacker, float deathtype, float damage)
 {
 	float weaponid;
