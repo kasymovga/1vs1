@@ -779,9 +779,15 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
+.float just_connected;
 void ReadyRestartForce();
 void PutClientInServer()
 {
+	if (self.just_connected) {
+		self.team = -1;
+		self.just_connected = FALSE;
+	}
+
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
 		self.classname = "player";
@@ -1363,6 +1369,7 @@ void ClientConnect (void)
 
 	self.classname = "player_joining";
 	self.team = -1; //clear engine assigned values
+	self.just_connected = TRUE;
 
 	self.flags = FL_CLIENT;
 	self.version_nagtime = time + 10 + random() * 10;
