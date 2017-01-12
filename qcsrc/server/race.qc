@@ -775,9 +775,9 @@ float race_PlayerAllowedToMove() {
 			self.race_penalty = 0;
 
 	if(self.race_penalty)
-		return TRUE;
+		return FALSE;
 
-	return FALSE;
+	return TRUE;
 }
 
 float race_PlayerCanFire() {

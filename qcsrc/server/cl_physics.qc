@@ -458,8 +458,12 @@ void Physic_FrameBeginHook()
 	}
 	if(self.classname == "player")
 	{
+		float allowed_to_move = 0;
 		if (time >= game_starttime || restart_active)
 		if (GameHook_PlayerAllowedToMove())
+			allowed_to_move = 1;
+
+		if (allowed_to_move)
 		{
 			if(self.disableclientprediction == 2) {
 				if(self.movetype == MOVETYPE_NONE)
