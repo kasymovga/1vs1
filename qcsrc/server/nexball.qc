@@ -62,6 +62,13 @@ void nb_PlayerClear(entity plr, entity attacker, float killed) {
 		DropBall(plr.ballcarried, plr.origin, plr.velocity);
 }
 
+float nb_SpeedMod() {
+	if(self.ballcarried)
+		return g_nexball_basketball_carrier_speed;
+
+	return 1;
+}
+
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
 {
@@ -105,6 +112,7 @@ void nb_init() // Called early (worldspawn stage)
 
 	GameHook_PlayerClear = nb_PlayerClear;
 	GameHook_PlayerPreThink = nexball_setstatus;
+	GameHook_SpeedMod = nb_SpeedMod;
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 

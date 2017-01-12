@@ -207,9 +207,6 @@ float Physic_MaxSpeedMod()
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 		maxspd_mod = maxspd_mod * g_minstagib_speed_moverate;
 
-	if(g_nexball && self.ballcarried)
-		maxspd_mod = maxspd_mod * g_nexball_basketball_carrier_speed;
-
 	if(self.in_swamp)
 		maxspd_mod = maxspd_mod * self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 
