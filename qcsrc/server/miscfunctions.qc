@@ -2062,3 +2062,66 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 	else
 		return 1;
 }
+
+/**
+ * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
+ * Sets the 'warmup' global variable.
+ */
+void reset_map(float dorespawn)
+{
+	entity oldself;
+	oldself = self;
+
+	race_ReadyRestart();
+	
+	for(self = world; (self = nextent(self)); )
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	{
+		if(self.reset)
+		{
+			self.reset();
+			continue;
+		}
+
+		if(self.team_saved)
+			self.team = self.team_saved;
+
+		if(self.flags & FL_PROJECTILE) // remove any projectiles left
+		{
+			stopsound(self, CHAN_PAIN);
+			remove(self);
+		}
+	}
+
+	// Waypoints and assault start come LAST
+	for(self = world; (self = nextent(self)); )
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	{
+		if(self.reset2)
+		{
+			self.reset2();
+			continue;
+		}
+	}
+
+	// Moving the player reset code here since the player-reset depends
+	// on spawnpoint entities which have to be reset first --blub
+	if(dorespawn)
+	FOR_EACH_CLIENT(self) {
+		if(self.flags & FL_CLIENT)				// reset all players
+		if (self.classname == "player") {
+			//PlayerScore_Clear(self);
+			self.killcount = 0;
+			//stop the player from moving so that he stands still once he gets respawned
+			self.velocity = '0 0 0';
+			self.avelocity = '0 0 0';
+			self.movement = '0 0 0';
+			PutClientInServer();
+		}
+	}
+
+	if(g_keyhunt)
+		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
+
+	self = oldself;
+}

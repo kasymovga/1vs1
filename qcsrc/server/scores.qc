@@ -245,7 +245,6 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
-	if(g_arena) return;
 	if(g_race && !g_race_qualifying) return;
 
 	sk = player.scorekeeper;
@@ -515,12 +514,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(p.classname != "player" && !g_arena)
+			if(p.classname != "player")
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(p.classname == "player" || g_arena)
+			if(p.classname == "player")
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";

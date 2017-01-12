@@ -242,7 +242,6 @@ void cvar_changes_init()
 		// mapinfo
 		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
-		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ctf");
 		BADCVAR("g_dm");
@@ -585,7 +584,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
 
-	if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || g_campaign)
+	if ((g_race && g_race_qualifying == 2) || g_runematch || g_assault || g_campaign)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	CACHE_CVAR(g_pinata);
@@ -1470,7 +1469,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(other.classname == "player" || g_arena)
+			if(other.classname == "player")
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1865,7 +1864,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || g_arena || (g_race && !g_race_qualifying) || g_nexball)
+	if(g_dm || g_tdm || (g_race && !g_race_qualifying) || g_nexball)
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)

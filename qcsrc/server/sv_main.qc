@@ -181,8 +181,6 @@ void StartFrame (void)
 
 	skill = cvar("skill");
 
-	Spawnqueue_Check();
-
 	// if in warmup stage and limit for warmup is hit start match
 	if (inWarmupStage)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)

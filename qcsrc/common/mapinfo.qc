@@ -406,8 +406,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 
 		if(spawnpoints >= 8  && diameter > 4096)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
-		if(                     diameter < 4096)
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ARENA;
 		if(spawnpoints >= 12 && diameter > 5120)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
 	}
@@ -524,7 +522,6 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "dom")     return MAPINFO_TYPE_DOMINATION;
 	else if(t == "ctf")     return MAPINFO_TYPE_CTF;
 	else if(t == "rune")    return MAPINFO_TYPE_RUNEMATCH;
-	else if(t == "arena")   return MAPINFO_TYPE_ARENA;
 	else if(t == "kh")      return MAPINFO_TYPE_KEYHUNT;
 	else if(t == "as")      return MAPINFO_TYPE_ASSAULT;
 	else if(t == "ons")     return MAPINFO_TYPE_ONSLAUGHT;
@@ -544,7 +541,6 @@ string MapInfo_String_FromType(float t)
 	else if(t == MAPINFO_TYPE_DOMINATION     ) return "dom"    ;
 	else if(t == MAPINFO_TYPE_CTF            ) return "ctf"    ;
 	else if(t == MAPINFO_TYPE_RUNEMATCH      ) return "rune"   ;
-	else if(t == MAPINFO_TYPE_ARENA          ) return "arena"  ;
 	else if(t == MAPINFO_TYPE_KEYHUNT        ) return "kh"     ;
 	else if(t == MAPINFO_TYPE_ASSAULT        ) return "as"     ;
 	else if(t == MAPINFO_TYPE_ONSLAUGHT      ) return "ons"    ;
@@ -577,8 +573,6 @@ string MapInfo_HumanString_FromType(float t) {
 		return "CTS";
 	} else if (t == MAPINFO_TYPE_RACE) {
 		return "Race";
-	} else if (t == MAPINFO_TYPE_ARENA) {
-		return "Arena";
 	} else if (t == MAPINFO_TYPE_FREEZETAG) {
 		return "Freeze Tag";
 	} else if (t == MAPINFO_TYPE_CLANARENA) {
@@ -716,7 +710,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DOMINATION)      fputs(fh, "type dom 200 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF)             fputs(fh, "type ctf 300 20 10\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RUNEMATCH)       fputs(fh, "type rune 200 20\n");
-		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ARENA)           fputs(fh, "type arena 10 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEYHUNT)         fputs(fh, "type kh 1000 20 3\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ASSAULT)         fputs(fh, "type as 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE)            fputs(fh, "type rc 20 5 7 15\n");
@@ -988,8 +981,6 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_TEAM_DEATHMATCH;
 	else if(cvar("g_assault"))
 		return MAPINFO_TYPE_ASSAULT;
-	else if(cvar("g_arena"))
-		return MAPINFO_TYPE_ARENA;
 	else if(cvar("g_keyhunt"))
 		return MAPINFO_TYPE_KEYHUNT;
 	else if(cvar("g_onslaught"))
@@ -1053,7 +1044,6 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_DOMINATION: return "g_domination";
 		case MAPINFO_TYPE_CTF: return "g_ctf";
 		case MAPINFO_TYPE_RUNEMATCH: return "g_runematch";
-		case MAPINFO_TYPE_ARENA: return "g_arena";
 		case MAPINFO_TYPE_KEYHUNT: return "g_kh";
 		case MAPINFO_TYPE_ASSAULT: return "g_assault";
 		case MAPINFO_TYPE_ONSLAUGHT: return "g_onslaught";
@@ -1074,7 +1064,6 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_domination", (t == MAPINFO_TYPE_DOMINATION)      ? "1" : "0");
 	cvar_set("g_ctf",        (t == MAPINFO_TYPE_CTF)             ? "1" : "0");
 	cvar_set("g_runematch",  (t == MAPINFO_TYPE_RUNEMATCH)       ? "1" : "0");
-	cvar_set("g_arena",      (t == MAPINFO_TYPE_ARENA)           ? "1" : "0");
 	cvar_set("g_keyhunt",    (t == MAPINFO_TYPE_KEYHUNT)         ? "1" : "0");
 	cvar_set("g_assault",    (t == MAPINFO_TYPE_ASSAULT)         ? "1" : "0");
 	cvar_set("g_onslaught",  (t == MAPINFO_TYPE_ONSLAUGHT)       ? "1" : "0");
