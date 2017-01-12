@@ -802,10 +802,12 @@ void PutClientInServer()
 		local float currentlyPlaying;
 		entity e;
 
-		if(clienttype(self) == CLIENTTYPE_REAL)
-			self.team = self.bot_forced_team;
+		if (self.team < 0) {
+			if(clienttype(self) == CLIENTTYPE_REAL)
+				self.team = self.bot_forced_team;
 
-		JoinBestTeam(self, FALSE, FALSE);
+			JoinBestTeam(self, FALSE, FALSE);
+		}
 
 		race_PreSpawn();
 
