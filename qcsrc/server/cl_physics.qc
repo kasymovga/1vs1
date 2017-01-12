@@ -8,7 +8,6 @@ float g_nick_flood_penalty_red;
 float g_balance_rune_speed_combo_jumpheight;
 float g_balance_rune_speed_jumpheight;
 float g_balance_curse_slow_jumpheight;
-float developer_shtest;
 float g_balance_curse_slow_moverate;
 float g_balance_rune_speed_combo_moverate;
 float g_balance_rune_speed_moverate;
@@ -30,12 +29,15 @@ float g_walljump_velocity_z_factor;
 .float swamp_slowdown;
 .float lastground;
 .float spectatorspeed;
+.float doublejump_nextjumptime;
 
+#if 0
+float developer_shtest;
 #define SHTEST_DELTA 10
 #define SHTEST_THRESHOLD 1.1
 .float shtest_next;
 .float shtest_accumulator;
-.float doublejump_nextjumptime;
+#endif
 
 float buttons_prev;
 
@@ -393,7 +395,6 @@ void Physic_FrameBeginHook()
 {
 	float buttons;
 	float f;
-	float shtest_score;
 	GameHook_PhysicFrameBegin();
 	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
 
@@ -423,6 +424,8 @@ void Physic_FrameBeginHook()
 		}
 	}
 
+#if 0
+	float shtest_score;
 	if(time > self.shtest_next)
 	{
 		if(self.shtest_next > 0)
@@ -440,6 +443,7 @@ void Physic_FrameBeginHook()
 		self.shtest_accumulator = 0;
 	}
 	self.shtest_accumulator += frametime;
+#endif
 
 	if (clienttype(self) == CLIENTTYPE_BOT)
 		bot_think();
@@ -611,7 +615,9 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_balance_rune_speed_combo_jumpheight);
 	CACHE_CVAR(g_balance_rune_speed_jumpheight);
 	CACHE_CVAR(g_balance_curse_slow_jumpheight);
+#if 0
 	CACHE_CVAR(developer_shtest);
+#endif
 	CACHE_CVAR(g_balance_curse_slow_moverate);
 	CACHE_CVAR(g_balance_rune_speed_combo_moverate);
 	CACHE_CVAR(g_balance_rune_speed_moverate);
