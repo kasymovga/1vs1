@@ -159,8 +159,6 @@ void CopyBody(float keepvelocity)
 	self.prevorigin = oldself.origin;
 	self.reset = SUB_Remove;
 
-	Drag_MoveDrag(oldself, self);
-
 	self = oldself;
 }
 

@@ -54,7 +54,6 @@ vector havocbot_dodge();
  * Imports
  */
 
-.entity draggedby;
 .float ladder_time;
 .entity ladder_entity;
 

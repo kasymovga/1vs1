@@ -20,9 +20,6 @@ float bot_ai_weapon_combo_threshold;
 
 void havocbot_ai()
 {
-	if(self.draggedby)
-		return;
-
 	if(bot_execute_commands())
 		return;
 
