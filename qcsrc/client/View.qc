@@ -411,15 +411,8 @@ void CSQC_UpdateView(float w, float h)
 	//drawstring('50 50', ftos(game), '10 10 0', '1 1 1', 1, 0);
 	//self = edict_num(player_localnum);
 	//drawstring('0 0', vtos(pmove_org), '8 8 0', '1 1 1', 1, 0);
-	//drawstring('0 8', strcat("ORG: ", vtos(self.origin), " state: ", ftos(self.ctf_state), " HP: ", ftos(self.health)), '8 8 0', '1 1 1', 1, 0);
-	// as long as the ctf part isn't in, this is useless
 	if(menu_visible)
 		menu_show();
-
-	/*if(gametype == GAME_CTF)
-	{
-		ctf_view();
-	} else */
 
 	// draw 2D entities
 	e = self;

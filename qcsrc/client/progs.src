@@ -36,8 +36,6 @@ sortlist.qc
 miscfunctions.qc
 teamplay.qc
 
-ctf.qc
-
 sbar.qc
 mapvoting.qc
 

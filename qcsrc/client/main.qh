@@ -20,9 +20,6 @@ var float(float bInputType, float nPrimary, float nSecondary) menu_action;
 // --------------------------------------------------------------------------
 // CTF
 
-void() ctf_menu_show;
-string ctf_temp_1;
-
 // --------------------------------------------------------------------------
 // Onslaught
 
@@ -44,7 +41,6 @@ float gametype;
 //float sorted_teams;
 
 // Defs
-//.float ctf_state;
 //.float health;
 
 // Constants
