@@ -411,12 +411,7 @@ entity SelectSpawnPoint (float anypoint)
 		if(spawn_debug)
 			GotoNextMap();
 		else
-		{
-			if(some_spawn_has_been_used)
-				return world; // team can't spawn any more, because of actions of other team
-			else
-				error("Cannot find a spawn point - please fix the map!");
-		}
+			return world; // team can't spawn any more, because of actions of other team
 	}
 
 	return spot;
@@ -840,10 +835,10 @@ void PutClientInServer()
 
 		spot = SelectSpawnPoint (FALSE);
 		if(!spot)
-		{
+			spot = SelectSpawnPoint(TRUE);
+
+		if(!spot)
 			centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
-			return; // spawn failed
-		}
 
 		self.classname = "player";
 		self.wasplayer = TRUE;
