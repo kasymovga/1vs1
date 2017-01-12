@@ -373,16 +373,16 @@ void bot_clientconnect()
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
 
-	if(self.bot_forced_team==1)
-		self.team = COLOR_TEAM1;
-	else if(self.bot_forced_team==2)
-		self.team = COLOR_TEAM2;
-	else if(self.bot_forced_team==3)
-		self.team = COLOR_TEAM3;
-	else if(self.bot_forced_team==4)
-		self.team = COLOR_TEAM4;
-	else
-		JoinBestTeam(self, FALSE, TRUE);
+	if (teams_matter) {
+		if(self.bot_forced_team==1)
+			self.bot_forced_team = COLOR_TEAM1;
+		else if(self.bot_forced_team==2)
+			self.bot_forced_team = COLOR_TEAM2;
+		else if(self.bot_forced_team==3)
+			self.bot_forced_team = COLOR_TEAM3;
+		else if(self.bot_forced_team==4)
+			self.bot_forced_team = COLOR_TEAM4;
+	}
 
 	havocbot_setupbot();
 };

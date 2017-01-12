@@ -831,8 +831,10 @@ void PutClientInServer()
 		local float currentlyPlaying;
 		entity e;
 
-		if(self.team < 0 || (clienttype(self) == CLIENTTYPE_BOT && !self.team))
-			JoinBestTeam(self, FALSE, TRUE);
+		if(clienttype(self) == CLIENTTYPE_REAL)
+			self.team = self.bot_forced_team;
+
+		JoinBestTeam(self, FALSE, FALSE);
 
 		race_PreSpawn();
 
@@ -1393,6 +1395,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 	self.classname = "player_joining";
+	self.team = -1; //clear engine assigned values
 
 	self.flags = FL_CLIENT;
 	self.version_nagtime = time + 10 + random() * 10;
@@ -1409,8 +1412,6 @@ void ClientConnect (void)
 	bot_clientconnect();
 
 	race_PreSpawnObserver();
-
-	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
 	if((sv_spectate == 1) || g_campaign) {
 		self.classname = "observer";
@@ -1449,16 +1450,7 @@ void ClientConnect (void)
 
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 
-	bprint ("^4",self.netname);
-	bprint ("^4 connected");
-
-	if(self.team > 0)
-	{
-		bprint(" and joined the ");
-		bprint(ColoredTeamName(self.team));
-	}
-
-	bprint("\n");
+	bprint ("^4", self.netname, "^4 connected\n");
 
 	self.welcomemessage_time = 0;
 
