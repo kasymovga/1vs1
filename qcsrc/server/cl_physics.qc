@@ -312,15 +312,6 @@ float dodging_PlayerPhysics()
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 		clean_up_and_do_nothing = 1;
 
-#if 0
-	if(g_freezetag && self.freezetag_frozen) {
-		if(g_freezetag_dodging_frozen)
-			forcemod = g_freezetag_dodging_frozen_forcefactor;
-		else
-			clean_up_and_do_nothing = 1;
-	}
-#endif
-
 	if (clean_up_and_do_nothing != 0) {
 		self.dodging_action = 0;
 		self.dodging_direction_x = 0;
