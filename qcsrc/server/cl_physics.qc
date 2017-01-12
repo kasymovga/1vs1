@@ -391,61 +391,10 @@ float dodging_PlayerPhysics()
 .float lastwj;
 void Physic_FrameBeginHook()
 {
-	vector wishvel;
-	float wishspeed, buttons;
+	float buttons;
 	float f;
 	float shtest_score;
-	if(g_race || g_cts)
-	{
-		// if record times matter
-		// ensure nothing EVIL is being done (i.e. strafebot)
-		// this hinders joystick users though
-		// but it still gives SOME analog control
-		// TODO implement this for engine cl_movement code too (basically, clipping to the four axes)
-		wishvel_x = fabs(self.movement_x);
-		wishvel_y = fabs(self.movement_y);
-		if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
-		{
-			wishvel_z = 0;
-			wishspeed = vlen(wishvel);
-			if(wishvel_x >= 2 * wishvel_y)
-			{
-				// pure X motion
-				if(self.movement_x > 0)
-					self.movement_x = wishspeed;
-				else
-					self.movement_x = -wishspeed;
-				self.movement_y = 0;
-			}
-			else if(wishvel_y >= 2 * wishvel_x)
-			{
-				// pure Y motion
-				self.movement_x = 0;
-				if(self.movement_y > 0)
-					self.movement_y = wishspeed;
-				else
-					self.movement_y = -wishspeed;
-			}
-			else
-			{
-				// diagonal
-				if(self.movement_x > 0)
-					self.movement_x = 0.70710678118654752440 * wishspeed;
-				else
-					self.movement_x = -0.70710678118654752440 * wishspeed;
-				if(self.movement_y > 0)
-					self.movement_y = 0.70710678118654752440 * wishspeed;
-				else
-					self.movement_y = -0.70710678118654752440 * wishspeed;
-			}
-		}
-	}
-
-	self.race_movetime_frac += frametime;
-	f = floor(self.race_movetime_frac);
-	self.race_movetime_frac -= f;
-	self.race_movetime_count += f;
-	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+	GameHook_PhysicFrameBegin();
 	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
 
 	if(!sv_maxidle_spectatorsareidle || self.movetype == MOVETYPE_WALK)

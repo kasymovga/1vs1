@@ -6,6 +6,10 @@
 .float race_laptime;
 .entity race_lastpenalty;
 .float race_penalty;
+.float race_movetime; // for reading
+.float race_movetime_frac; // fractional accumulator for higher accuracy (helper for writing)
+.float race_movetime_count; // integer accumulator
+
 
 .entity sprite;
 
@@ -783,7 +787,61 @@ float race_PlayerCanFire() {
 	return TRUE;
 }
 
+void race_PhysicFrameBegin() {
+	vector wishvel;
+	float wishspeed, f;
+	// if record times matter
+	// ensure nothing EVIL is being done (i.e. strafebot)
+	// this hinders joystick users though
+	// but it still gives SOME analog control
+	// TODO implement this for engine cl_movement code too (basically, clipping to the four axes)
+	wishvel_x = fabs(self.movement_x);
+	wishvel_y = fabs(self.movement_y);
+	if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
+	{
+		wishvel_z = 0;
+		wishspeed = vlen(wishvel);
+		if(wishvel_x >= 2 * wishvel_y)
+		{
+			// pure X motion
+			if(self.movement_x > 0)
+				self.movement_x = wishspeed;
+			else
+				self.movement_x = -wishspeed;
+			self.movement_y = 0;
+		}
+		else if(wishvel_y >= 2 * wishvel_x)
+		{
+			// pure Y motion
+			self.movement_x = 0;
+			if(self.movement_y > 0)
+				self.movement_y = wishspeed;
+			else
+				self.movement_y = -wishspeed;
+		}
+		else
+		{
+			// diagonal
+			if(self.movement_x > 0)
+				self.movement_x = 0.70710678118654752440 * wishspeed;
+			else
+				self.movement_x = -0.70710678118654752440 * wishspeed;
+			if(self.movement_y > 0)
+				self.movement_y = 0.70710678118654752440 * wishspeed;
+			else
+				self.movement_y = -0.70710678118654752440 * wishspeed;
+		}
+	}
+
+	self.race_movetime_frac += frametime;
+	f = floor(self.race_movetime_frac);
+	self.race_movetime_frac -= f;
+	self.race_movetime_count += f;
+	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+}
+
 void race_init() {
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;
 	GameHook_PlayerCanFire = race_PlayerCanFire;
+	GameHook_PhysicFrameBegin = race_PhysicFrameBegin;
 }
