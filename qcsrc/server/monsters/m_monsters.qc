@@ -372,12 +372,6 @@ void() flymonster_start =
 
 void() swimmonster_start_go =
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-
 	//self.cantrigger = TRUE;
 
 	self.takedamage = DAMAGE_AIM;
