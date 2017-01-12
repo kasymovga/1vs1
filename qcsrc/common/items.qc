@@ -2,13 +2,13 @@
 entity weapon_info[24];
 entity dummy_weapon_info;
 
-string weapon_modelname(string name)
+string weapon_modelname(string wname)
 {
 	string model_replacement;
-	model_replacement = cvar_string(strcat("sv_model_", name));
+	model_replacement = cvar_string(strcat("sv_model_", wname));
 	if (model_replacement == "")
 	{
-		model_replacement = name;
+		model_replacement = wname;
 	}
 	return model_replacement;
 };
