@@ -804,7 +804,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-//void() ctf_playerchanged;
 void ReadyRestartForce();
 void PutClientInServer()
 {
@@ -1055,9 +1054,6 @@ void PutClientInServer()
 		PutObserverInServer(TRUE);
 		Nadget_ObserverHook();
 	}
-
-	//if(g_ctf)
-	//	ctf_playerchanged();
 }
 
 void PlayerToSpec(entity player)
@@ -1378,10 +1374,8 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-//void ctf_clientconnect();
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
-//void dom_player_join_team(entity pl);
 void ClientConnect (void)
 {
 	local string s;
@@ -1415,9 +1409,6 @@ void ClientConnect (void)
 	bot_clientconnect();
 
 	race_PreSpawnObserver();
-
-	//if(g_domination)
-	//	dom_player_join_team(self);
 
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
@@ -1512,10 +1503,6 @@ void ClientConnect (void)
 		self.classname = "observer";
 		Spawnqueue_Insert(self);
 	}
-	/*else if(g_ctf)
-	{
-		ctf_clientconnect();
-	}*/
 
 	attach_entcs();
 
