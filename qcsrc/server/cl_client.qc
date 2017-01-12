@@ -382,14 +382,7 @@ entity SelectSpawnPoint (float anypoint)
 		// there is 50/50 chance of choosing a random spot or the furthest spot
 		// (this means that roughly every other spawn will be furthest, so you
 		// usually won't get fragged at spawn twice in a row)
-		if (arena_roundbased)
-		{
-			firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, 800, teamcheck);
-			if(firstspot_new)
-				firstspot = firstspot_new;
-			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
-		}
-		else if (random() > g_spawn_furthest)
+		if (random() > g_spawn_furthest)
 			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
 		else
 			spot = Spawn_WeightedPoint(firstspot, 1, 5000, 5); // chooses a far far away spawnpoint
@@ -689,20 +682,7 @@ void PutObserverInServer(float frags_team_reset)
 
 	self.team = -1;
 
-	if(g_arena)
-	{
-		if(self.version_mismatch)
-		{
-			Spawnqueue_Unmark(self);
-			Spawnqueue_Remove(self);
-		}
-		else
-		{
-			Spawnqueue_Insert(self);
-		}
-	}
-	else
-		self.frags = FRAGS_SPECTATOR;
+	self.frags = FRAGS_SPECTATOR;
 }
 
 float RestrictSkin(float s)
@@ -817,10 +797,6 @@ void PutClientInServer()
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-
-	if(g_arena)
-	if(!self.spawned)
-		self.classname = "observer";
 
 	if(gameover)
 		self.classname = "observer";
@@ -968,12 +944,6 @@ void PutClientInServer()
 		// don't reset back to last position, even if new position is stuck in solid
 		self.oldorigin = self.origin;
 		self.prevorigin = self.origin;
-
-		if(g_arena)
-		{
-			Spawnqueue_Remove(self);
-			Spawnqueue_Mark(self);
-		}
 
 		self.event_damage = PlayerDamage;
 
@@ -1498,12 +1468,6 @@ void ClientConnect (void)
 
 	stuffcmd(self, strcat("set gametype ", ftos(game), "\n"));
 
-	if(g_arena)
-	{
-		self.classname = "observer";
-		Spawnqueue_Insert(self);
-	}
-
 	attach_entcs();
 
 	bot_relinkplayerlist();
@@ -1607,12 +1571,6 @@ void ClientDisconnect (void)
 	if(self.weaponentity)
 		if(self.weaponentity.lasertarget)
 			remove(self.weaponentity.lasertarget);
-
-	if(g_arena)
-	{
-		Spawnqueue_Unmark(self);
-		Spawnqueue_Remove(self);
-	}
 
 	ClientData_Detach();
 	PlayerScore_Detach(self);
@@ -2697,8 +2655,6 @@ void PlayerPostThink (void)
 		}
 	}
 	*/
-
-	Arena_Warmup();
 
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 

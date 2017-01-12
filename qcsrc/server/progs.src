@@ -93,7 +93,6 @@ bot/bot.qc
 g_subs.qc
 
 runematch.qc
-arena.qc
 
 g_violence.qc
 g_damage.qc

@@ -197,13 +197,10 @@ void SV_ParseClientCommand(string s) {
 			return;
 		if not(self.flags & FL_CLIENT)
 			return;
-		if(g_arena)
-			return;
 		PlayerToSpec(self);
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if(!g_arena)
 		if (self.classname != "player" && !lockteams)
 		{
 			if(isJoinAllowed()) {
@@ -463,7 +460,7 @@ void ReadyRestartForce()
 void ReadyRestart()
 {
 	// no arena, assault support yet...
-	if(g_arena | g_assault | gameover | intermission_running | race_completing)
+	if(g_assault | gameover | intermission_running | race_completing)
 		localcmd("restart\n");
 	else
 		localcmd("\nsv_hook_gamerestart;");
