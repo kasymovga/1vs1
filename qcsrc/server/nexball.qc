@@ -104,6 +104,7 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_delay_start);
 
 	GameHook_PlayerClear = nb_PlayerClear;
+	GameHook_PlayerPreThink = nexball_setstatus;
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 
@@ -145,8 +146,6 @@ void ball_restart (void)
 void nexball_setstatus (void)
 {
 	local entity oldself;
-	if (!g_nexball)
-		return;
 	if (self.ballcarried)
 	{
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time))

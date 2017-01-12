@@ -2564,8 +2564,7 @@ void PlayerPreThink (void)
 		if (g_minstagib)
 			minstagib_ammocheck();
 
-		ctf_setstatus();
-		nexball_setstatus();
+		GameHook_PlayerPreThink();
 
 		self.dmg_team = max(0, self.dmg_team - g_teamdamage_resetspeed * frametime);
 

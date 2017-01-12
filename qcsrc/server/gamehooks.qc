@@ -2,7 +2,7 @@ float _GameHook_DeathHandle(entity attacker, entity inflictor, float deathtype) 
 	return FALSE;
 }
 
-void _GameHook_Spawn() {
+void _GameHook_DoNothing() {
 }
 
 float _GameHook_Return1() {
@@ -26,11 +26,12 @@ float _GameHook_DamageHandle(float deathtype) {
 
 void GameHook_Init() {
 	GameHook_DeathHandle = _GameHook_DeathHandle;
-	GameHook_Spawn = _GameHook_Spawn;
+	GameHook_Spawn = _GameHook_DoNothing;
 	GameHook_PlayerClear = _GameHook_PlayerClear;
 	GameHook_SpeedMod = _GameHook_Return1;
 	GameHook_FragsHandle = _GameHook_FragsHandle;
 	GameHook_DamageHandle = _GameHook_DamageHandle;
 	GameHook_PlayerCanFire = _GameHook_PlayerCanFire;
 	GameHook_PlayerAllowedToMove = _GameHook_Return1;
+	GameHook_PlayerPreThink = _GameHook_DoNothing;
 }

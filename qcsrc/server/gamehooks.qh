@@ -6,5 +6,6 @@ var float(entity attacker, entity targ, float f) GameHook_FragsHandle;
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHook_DamageHandle;
 var float(entity plr) GameHook_PlayerCanFire;
 var float() GameHook_PlayerAllowedToMove;
+var void() GameHook_PlayerPreThink;
 
 void GameHook_Init();
