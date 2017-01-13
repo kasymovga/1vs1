@@ -575,7 +575,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_spectatorsareidle);
-	CACHE_CVAR(g_ctf_reverse);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
 

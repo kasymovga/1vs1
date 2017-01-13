@@ -20,6 +20,7 @@ float g_ctf_personalscore_return;
 float g_ctf_personalscore_return_by_killer;
 float g_ctf_personalscore_return_rogue;
 float g_ctf_personalscore_return_rogue_by_killer;
+float g_ctf_reverse;
 float g_ctf_flagpenalty_drop;
 float g_ctf_flagpenalty_returned;
 float g_ctf_flagpenalty_suicidedrop;
@@ -1072,6 +1073,7 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_personalscore_return_by_killer);
 	CACHE_CVAR(g_ctf_personalscore_return_rogue);
 	CACHE_CVAR(g_ctf_personalscore_return_rogue_by_killer);
+	CACHE_CVAR(g_ctf_reverse);
 	CACHE_CVAR(g_ctf_flagpenalty_drop);
 	CACHE_CVAR(g_ctf_flagpenalty_returned);
 	CACHE_CVAR(g_ctf_flagpenalty_suicidedrop);

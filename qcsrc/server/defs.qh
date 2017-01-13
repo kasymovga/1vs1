@@ -25,7 +25,6 @@ float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float g_ctf_win_mode;
 float g_ctf_ignore_frags;
-float g_ctf_reverse;
 float g_race_qualifying;
 float inWarmupStage;
 float round_warmup;
