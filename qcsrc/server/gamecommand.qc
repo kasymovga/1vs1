@@ -1045,14 +1045,7 @@ void GameCommand(string command)
 
 	if (argv(0) == "rereadcvars")
 	{
-		W_Init();
-		Damage_ReadCvars();
-		PhysicReadCvars();
-		bot_init();
-		Client_ReadCvars();
-		Teamplay_ReadCvars();
-		vehicles_readcvars();
-		turret_readcvars();
+		readdynamiccvars();
 		return;
 	}
 

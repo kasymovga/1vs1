@@ -610,6 +610,23 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(nex252_compat_mode);
+	Nadget_Init();
+	Items_Init();
+}
+
+void Damage_ReadCvars();
+void readdynamiccvars() {
+	W_Init();
+	Damage_ReadCvars();
+	PhysicReadCvars();
+	bot_init();
+	Client_ReadCvars();
+	Teamplay_ReadCvars();
+	GrappleHookInit();
+	Akimbo_Init();
+	vehicles_readcvars();
+	turret_readcvars();
+	WaypointSprite_Init();
 }
 
 void Map_MarkAsRecent(string m);
@@ -618,7 +635,6 @@ void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
-void Damage_ReadCvars();
 void spawnfunc_worldspawn (void)
 {
 	float fd, l, i, j, n;
@@ -731,18 +747,9 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 	readlevelcvars();
-	Nadget_Init();
-	Items_Init();
-	W_Init();
-	PhysicReadCvars();
-	GrappleHookInit();
-	Damage_ReadCvars();
-	Client_ReadCvars();
-	Teamplay_ReadCvars();
-	Akimbo_Init();
+	readdynamiccvars();
 	Freeze_Init();
 	Clanarena_Init();
-	bot_init();
 	runematch_init();
 	GameTypeVote_Init();
 
@@ -753,8 +760,6 @@ void spawnfunc_worldspawn (void)
 			bot_waypoints_for_items = 0;
 
 	precache();
-
-	WaypointSprite_Init();
 
 	//if (g_domination)
 	//	dom_init();
@@ -910,8 +915,6 @@ void spawnfunc_worldspawn (void)
 	world_initialized = 1;
 	IRC_Init();
 	InfoMessages_Init();
-	vehicles_readcvars();
-	turret_readcvars();
 }
 
 void spawnfunc_light (void)
