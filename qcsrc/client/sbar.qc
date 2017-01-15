@@ -2414,14 +2414,12 @@ void Sbar_Draw (void)
 
 		Sbar_Reset();
 	}
-	else if (menu)
-	{
-		Menu_Draw();
-	}
 	else if (sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
 	{
   		if(sb_showaccuracy)
   			Sbar_DrawAccuracyStats();
+		else if (menu && !sb_showscores)
+			Menu_Draw();
   		else
 			Sbar_DrawScoreboard();
 		Sbar_Score();
@@ -2435,6 +2433,8 @@ void Sbar_Draw (void)
 			Sbar_DrawScoreboard();
 		else if(sb_showaccuracy)
 			Sbar_DrawAccuracyStats();
+		else if (menu)
+			Menu_Draw();
 
 		float armor, health;
 		armor = getstati(STAT_ARMOR);
