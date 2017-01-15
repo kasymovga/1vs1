@@ -205,8 +205,8 @@ void teamradar_loadcvars()
 		teamradar_background_alpha = CVAR(cl_teamradar_background_alpha) * sbar_alpha_fg;
 		teamradar_foreground_alpha = CVAR(cl_teamradar_foreground_alpha) * sbar_alpha_fg;
 		teamradar_rotation = CVAR(cl_teamradar_rotation);
-		teamradar_size = stov(cvar_string("cl_teamradar_size"));
-		teamradar_position = stov(cvar_string("cl_teamradar_position"));
+		teamradar_size = CVAR(cl_teamradar_size);
+		teamradar_position = CVAR(cl_teamradar_position);
 		teamradar_zoommode = CVAR(cl_teamradar_zoommode);
 
 		// others default to 0

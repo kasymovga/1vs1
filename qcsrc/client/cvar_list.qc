@@ -146,9 +146,11 @@ READ_CVARS_SECTION(29, 30)
 	CACHE_CVAR(g_waypointsprite_distancefadescale);
 	CACHE_CVAR(g_waypointsprite_distancefadedistancemultiplier);
 	CACHE_CVAR_VEC(sbar_fontsize);
+	CACHE_CVAR_VEC(cl_teamradar_position);
 READ_CVARS_SECTION(30, 0)
 	CACHE_CVAR_VEC(scr_centersize);
 	CACHE_CVAR_VEC(sbar_fontsize_spec);
 	CACHE_CVAR(teamplay);
+	CACHE_CVAR_VEC(cl_teamradar_size);
 READ_CVARS_END(0)
 
