@@ -405,15 +405,6 @@ void CSQC_UpdateView(float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
-	// Draw the mouse cursor
-	// NOTE: drawpic must happen after R_RenderScene for some reason
-	//drawpic(getmousepos(), "gfx/cursor.tga", '11 14 0', '1 1 1', 1, 0);
-	//drawstring('50 50', ftos(game), '10 10 0', '1 1 1', 1, 0);
-	//self = edict_num(player_localnum);
-	//drawstring('0 0', vtos(pmove_org), '8 8 0', '1 1 1', 1, 0);
-	if(menu_visible)
-		menu_show();
-
 	// draw 2D entities
 	e = self;
 	for(self = world; (self = nextent(self)); ) {
