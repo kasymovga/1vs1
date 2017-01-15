@@ -374,7 +374,7 @@ void() teamradar_view =
 
 // radar links
 
-void Ent_RadarLink()
+void Ent_RadarLink(float ignore)
 {
 	float sendflags;
 	sendflags = ReadByte();

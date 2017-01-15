@@ -119,6 +119,7 @@ float zoomin_effect;
 float ignore_plus_zoom;
 float ignore_minus_zoom;
 float warmup_stage;
+float clienttime;
 
 float weaponimpulse[24];
 string getcommandkey(string text, string command);

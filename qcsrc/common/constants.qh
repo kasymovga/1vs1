@@ -90,8 +90,9 @@ const float ENT_CLIENT_MENU = 25;
 const float ENT_CLIENT_PROGRESSBAR = 26;
 const float ENT_CLIENT_PHYSIC_SPIDERBOT = 27;
 const float ENT_CLIENT_ENTCS_ENEMY = 30;
+#define ENT_CLIENT_COUNT 31
 
-const float ENT_CLIENT_TURRET = 40;
+//const float ENT_CLIENT_TURRET = 40;
 
 const float SPRITERULE_DEFAULT = 0;
 const float SPRITERULE_TEAMPLAY = 1;
