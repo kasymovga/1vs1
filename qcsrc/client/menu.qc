@@ -1,3 +1,4 @@
+entity menu;
 float menu_selected;
 float menu_choiced;
 .string menu_items[MENU_ITEMS_MAXCOUNT];
@@ -9,6 +10,7 @@ float menu_choiced;
 #define ITEM_HEIGHT 30
 #define ITEM_TOP_MARGIN 20
 
+void Menu_Draw();
 void Ent_Menu_Clear(float f) {
 	float i;
 	f = self.flags & f;
@@ -24,9 +26,14 @@ void Ent_Menu_Clear(float f) {
 }
 
 void Ent_Menu_Remove() {
+	sb_hidescores = TRUE;
+	menu.draw2d = world.draw2d;
 	Ent_Menu_Clear(255);
 	if (self == menu) {
 		menu = menu.menu_next;
+		if (menu)
+			menu.draw2d = Menu_Draw;
+
 		menu_choiced = -1;
 		return;
 	}
@@ -53,6 +60,7 @@ void Ent_Menu(float bIsNewEntity) {
 		if not(menu) {
 			menu = self;
 			menu_choiced = -1;
+			menu.draw2d = Menu_Draw;
 		} else {
 			e = menu;
 			while (e.menu_next)
@@ -92,6 +100,7 @@ void Menu_Draw() {
 	float center;
 	float size_scale;
 	vector item_color;
+	sb_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = ITEM_TOP_MARGIN;
 	pos_z = 0;

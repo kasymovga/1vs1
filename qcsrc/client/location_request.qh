@@ -1,0 +1,2 @@
+void Ent_LocationRequest(float ignore);
+entity location_request;

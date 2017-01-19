@@ -1,4 +1,4 @@
-void teamradar_view();
+void teamradar_view(float big, string title);
 
 #define MAX_TEAMRADAR_TIMES 32
 

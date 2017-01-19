@@ -73,6 +73,7 @@ string TeamNoName(float t)
 
 void dom_init();
 void ctf_init();
+void onslaught_init();
 void runematch_init();
 void tdm_init();
 void nb_init();
@@ -313,6 +314,7 @@ void InitGameplayMode()
 	{
 		game = GAME_ONSLAUGHT;
 		ActivateTeamplay();
+		onslaught_init();
 	}
 
 	if(g_race)

@@ -376,9 +376,12 @@ void CSQC_UpdateView(float w, float h)
 		camera_mode = FALSE;
 	}
 
-	// Draw the Crosshair
-	float scoreboard_active;
-	scoreboard_active = Sbar_WouldDrawScoreboard();
+	if (Sbar_WouldDrawScoreboard()) {
+		draw_crosshair = FALSE;
+		sb_hidescores = FALSE;
+	} else
+		draw_crosshair = TRUE;
+
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
@@ -420,8 +423,13 @@ void CSQC_UpdateView(float w, float h)
 	self = e;
 
 	// draw radar
-	if(ons_showmap || (!scoreboard_active && CVAR(cl_teamradar) && (CVAR(cl_teamradar) == 2 || teamplay)))
-		teamradar_view();
+	if(ons_showmap)
+		teamradar_view(TRUE, "");
+	else if (CVAR(cl_teamradar)) {
+		if ((CVAR(cl_teamradar) == 2 || teamplay))
+		if (draw_crosshair)
+			teamradar_view(FALSE, "");
+	}
 
 	// draw sbar
  	if(CVAR(r_letterbox) == 0) {
@@ -456,7 +464,7 @@ void CSQC_UpdateView(float w, float h)
 				Sbar_Draw();
 
         // crosshair goes VERY LAST
-        if(!scoreboard_active && !ons_showmap && !camera_active) {
+        if (draw_crosshair) {
 			// TrueAim check
 			float shottype;
 			float bullets, ring_scale;

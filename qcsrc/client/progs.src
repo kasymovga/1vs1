@@ -26,6 +26,7 @@ mouse.qh
 shownames.qh
 progressbar.qh
 cl_physics_spiderbot.qh
+location_request.qh
 
 main.qh
 
@@ -74,3 +75,4 @@ menu.qc
 mouse.qc
 shownames.qc
 progressbar.qc
+location_request.qc

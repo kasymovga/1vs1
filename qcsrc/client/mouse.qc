@@ -8,6 +8,7 @@ void Mouse_Draw() {
 		mouse_pos_y = bound(0, mouse_pos_y, CVAR(vid_conheight));
 		drawpic(mouse_pos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		mouse_not_centered = TRUE;
+		mouse_enabled = FALSE;
 	} else if (mouse_not_centered) {
 		mouse_pos = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
 		mouse_not_centered = FALSE;

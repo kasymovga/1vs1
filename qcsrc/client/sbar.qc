@@ -2394,12 +2394,10 @@ void Sbar_Draw (void)
 	}
 
 	Sbar_UpdatePlayerTeams();
-	if (progressbar)
-		ProgressBar_Draw();
 
 	if (intermission == 2) // map voting screen
 	{
-		if(sb_showscores && !menu) {
+		if(sb_showscores) {
 			Sbar_DrawScoreboard();
 			Sbar_Score();
 			Sbar_Timer();
@@ -2418,9 +2416,7 @@ void Sbar_Draw (void)
 	{
   		if(sb_showaccuracy)
   			Sbar_DrawAccuracyStats();
-		else if (menu && !sb_showscores)
-			Menu_Draw();
-  		else
+		else if (sb_showscores || !sb_hidescores)
 			Sbar_DrawScoreboard();
 		Sbar_Score();
 		Sbar_Timer();
@@ -2433,8 +2429,6 @@ void Sbar_Draw (void)
 			Sbar_DrawScoreboard();
 		else if(sb_showaccuracy)
 			Sbar_DrawAccuracyStats();
-		else if (menu)
-			Menu_Draw();
 
 		float armor, health;
 		armor = getstati(STAT_ARMOR);

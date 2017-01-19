@@ -817,7 +817,11 @@ void PutClientInServer()
 
 		race_PreSpawn();
 
-		spot = SelectSpawnPoint (FALSE);
+		spot = GameHook_SelectSpawnPoint();
+
+		if (!spot)
+			spot = SelectSpawnPoint (FALSE);
+
 		if(!spot)
 			spot = SelectSpawnPoint(TRUE);
 
