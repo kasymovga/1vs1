@@ -30,7 +30,7 @@ void W_Melee_Attack_Think()
 		return;
 	}
 	float damage_factor = (g_balance_melee_onehit ? 1 : (melee_frame / g_balance_melee_time));
-	makevectors(self.owner.angles);
+	makevectors(self.owner.v_angle);
 	W_SetupShot(self.owner, FALSE, 0, "", 0);
 	traceline_antilag(self.owner, w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * g_balance_melee_distance, MOVE_NORMAL, self, ANTILAG_LATENCY(self.owner));
 	if (trace_fraction < 1)
