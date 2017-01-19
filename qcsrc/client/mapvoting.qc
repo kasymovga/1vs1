@@ -188,8 +188,6 @@ void MapVote_Draw()
 	float tsize;
 	vector dist;
 
-	Mouse_ReadPos();
-	
 	center = (CVAR(vid_conwidth) - 1)/2;
 	xmin = CVAR(vid_conwidth)*0.05; // 5% border must suffice
 	xmax = CVAR(vid_conwidth) - xmin;
@@ -262,7 +260,8 @@ void MapVote_Draw()
 		pos_x = (xmax+xmin)*0.5;
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}
-	Mouse_Draw();
+	Mouse_Enable();
+	CSQC_InputEvent_Callback = MapVote_InputEvent;
 }
 
 void Cmd_MapVote_MapDownload(float argc)
@@ -346,7 +345,6 @@ void MapVote_Init()
 
 	mv_active = 1;
 	mv_selection = -1;
-	Mouse_Init();
 
 	ssdir = ReadString();
 	

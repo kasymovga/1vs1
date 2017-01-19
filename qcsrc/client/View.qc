@@ -565,6 +565,7 @@ void CSQC_UpdateView(float w, float h)
             }
         }
     }
+	Mouse_Draw();
 
 	if(NextFrameCommand)
 	{

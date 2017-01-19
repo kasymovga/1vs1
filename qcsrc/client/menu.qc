@@ -45,8 +45,6 @@ void Ent_Menu(float bIsNewEntity) {
 	float skip_duplicated;
 	skip_duplicated = FALSE;
 	float i;
-	if not(menu)
-		Mouse_Init();
 	for (e = menu; e; e = e.menu_next)
 		if (e == self)
 			skip_duplicated = TRUE;
@@ -86,6 +84,7 @@ void Ent_Menu(float bIsNewEntity) {
 	}
 }
 
+float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void Menu_Draw() {
 	float i;
 	string menu_string;
@@ -106,7 +105,6 @@ void Menu_Draw() {
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	}
 	pos_y += ITEM_HEIGHT;
-	Mouse_ReadPos();
 	menu_selected = floor((mouse_pos_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
 
 	for (i = 0; i < menu.cnt; i++) {
@@ -129,7 +127,8 @@ void Menu_Draw() {
 		pos_y += ITEM_HEIGHT;
 	}
 
-	Mouse_Draw();
+	Mouse_Enable();
+	CSQC_InputEvent_Callback = Menu_InputEvent;
 }
 
 float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
