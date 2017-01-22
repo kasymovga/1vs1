@@ -16,7 +16,7 @@ void LightningThink()
 	self.nextthink = time;
 }
 
-void Ent_Lightning(float usetime)
+void Ent_Lightning(float ignore)
 {
 	float i;
 	entity p;
@@ -36,6 +36,6 @@ void Ent_Lightning(float usetime)
 	self.lightning_beam_shotorg_x = ReadCoord();
 	self.lightning_beam_shotorg_y = ReadCoord();
 	self.lightning_beam_shotorg_z = ReadCoord();
-	self.nextthink = usetime;
+	self.nextthink = clienttime;
 	self.think = LightningThink;
 }

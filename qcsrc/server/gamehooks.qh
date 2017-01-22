@@ -8,3 +8,4 @@ var float(entity plr) GameHook_PlayerCanFire = { return TRUE; }
 var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
 var void() GameHook_PlayerPreThink = {}
+var entity() GameHook_SelectSpawnPoint = { return world; }

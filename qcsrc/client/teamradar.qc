@@ -31,6 +31,13 @@ vector teamradar_3dcoord_to_texcoord(vector in)
 	return out;
 }
 
+vector teamradar_texcoord_to_3dcoord(vector in) {
+	vector out;
+	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
+	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
+	return out;
+}
+
 vector teamradar_texcoord_to_2dcoord(vector in)
 {
 	vector out;
@@ -43,6 +50,19 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	if(CVAR(v_flipped))
 		out_x = -out_x;
 	out += teamradar_origin2d;
+	return out;
+}
+
+vector teamradar_2dcoord_to_texcoord(vector in) {
+	vector out;
+	out = in - teamradar_origin2d;
+	if (CVAR(v_flipped))
+		out_x = -out_x;
+
+	out = out * (1 / teamradar_size_scale);
+	out_y = -out_y;
+	out = rotate(out, -teamradar_angle * DEG2RAD);
+	out += teamradar_origin3d_in_texcoord;
 	return out;
 }
 
@@ -184,9 +204,9 @@ vector teamradar_size;
 vector teamradar_position;
 float teamradar_zoommode;
 
-void teamradar_loadcvars()
+void teamradar_loadcvars(float big)
 {
-	if(ons_showmap)
+	if(big)
 	{
 		teamradar_scale = 42; // dummy, not used (see zoommode)
 		teamradar_background_alpha = 1 * (1 - CVAR(_menu_alpha));
@@ -194,7 +214,7 @@ void teamradar_loadcvars()
 		teamradar_rotation = CVAR(cl_teamradar_rotation);
 		if(!teamradar_rotation)
 			teamradar_rotation = 4;
-		teamradar_size = '256 256 0'; // TODO make somewhat variable?
+		teamradar_size = '256 256 0' * big; // TODO make somewhat variable?
 		teamradar_position = '0.5 0.5 0';
 		teamradar_zoommode = 3;
 		teamradar_nohudhack = 0;
@@ -205,8 +225,8 @@ void teamradar_loadcvars()
 		teamradar_background_alpha = CVAR(cl_teamradar_background_alpha) * sbar_alpha_fg;
 		teamradar_foreground_alpha = CVAR(cl_teamradar_foreground_alpha) * sbar_alpha_fg;
 		teamradar_rotation = CVAR(cl_teamradar_rotation);
-		teamradar_size = stov(cvar_string("cl_teamradar_size"));
-		teamradar_position = stov(cvar_string("cl_teamradar_position"));
+		teamradar_size = CVAR(cl_teamradar_size);
+		teamradar_position = CVAR(cl_teamradar_position);
 		teamradar_zoommode = CVAR(cl_teamradar_zoommode);
 
 		// others default to 0
@@ -223,18 +243,19 @@ void teamradar_loadcvars()
 	}
 }
 
-void() teamradar_view =
+void(float big, string title) teamradar_view =
 {
 	local float color1, color2; // color already declared as a global in sbar.qc
 	local vector rgb;
 	local entity tm;
 	float scale2d, normalsize, bigsize;
 	float f;
-
-	if(minimapname == "" && !ons_showmap)
+	if (big)
+		draw_crosshair = 0;
+	else if(minimapname == "")
 		return;
 
-	teamradar_loadcvars();
+	teamradar_loadcvars(big);
 
 	switch(teamradar_zoommode)
 	{
@@ -333,7 +354,7 @@ void() teamradar_view =
 
 	draw_teamradar_background(teamradar_background_alpha, teamradar_foreground_alpha);
 
-	if(ons_showmap)
+	if(big)
 	{
 		drawresetcliparea();
 
@@ -346,6 +367,8 @@ void() teamradar_view =
 		frame_size_y = teamradar_size2d_y * 1.1171875;
 		drawpic(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', sbar_alpha_fg, 0);
 		drawpic(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, sbar_alpha_fg, 0);
+		if (title)
+			drawstring(frame_origin - '0 24 0', title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 
 		drawsetcliparea(
 			teamradar_origin2d_x - teamradar_size2d_x * 0.5,
@@ -374,7 +397,7 @@ void() teamradar_view =
 
 // radar links
 
-void Ent_RadarLink()
+void Ent_RadarLink(float ignore)
 {
 	float sendflags;
 	sendflags = ReadByte();

@@ -2394,12 +2394,10 @@ void Sbar_Draw (void)
 	}
 
 	Sbar_UpdatePlayerTeams();
-	if (progressbar)
-		ProgressBar_Draw();
 
 	if (intermission == 2) // map voting screen
 	{
-		if(sb_showscores && !menu) {
+		if(sb_showscores) {
 			Sbar_DrawScoreboard();
 			Sbar_Score();
 			Sbar_Timer();
@@ -2414,15 +2412,11 @@ void Sbar_Draw (void)
 
 		Sbar_Reset();
 	}
-	else if (menu)
-	{
-		Menu_Draw();
-	}
 	else if (sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
 	{
   		if(sb_showaccuracy)
   			Sbar_DrawAccuracyStats();
-  		else
+		else if (sb_showscores || !sb_hidescores)
 			Sbar_DrawScoreboard();
 		Sbar_Score();
 		Sbar_Timer();

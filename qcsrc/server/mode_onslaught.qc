@@ -1394,3 +1394,62 @@ void spawnfunc_onslaught_link()
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
 	Net_LinkEntity(self, FALSE, 0, onslaught_link_send);
 };
+
+.vector ons_spawn_area;
+void onslaught_LocationRequest_Callback(float x, float y) {
+	if (self.deadflag)
+		self.deadflag = DEAD_RESPAWNING;
+
+	self.ons_spawn_area_x = x;
+	self.ons_spawn_area_y = y;
+	self.ons_spawn_area_z = 1;
+}
+
+entity onslaught_SelectSpawnPoint() {
+	entity e, selected;
+	if not(self.ons_spawn_area_z)
+		return world;
+
+	vector v;
+	float fmin, f;
+	e = world;
+	selected = world;
+	fmin = -1;
+
+	while ((e = find(e, classname, "info_player_deathmatch"))) {
+		if (e.team > 0)
+		if (e.team != self.team)
+			continue;
+
+		v_x = e.origin_x;
+		v_y = e.origin_y;
+		f = vlen(v - self.ons_spawn_area);
+		if (f < fmin || fmin < 0) {
+			fmin = f;
+			selected = e;
+		}
+	}
+	return selected;
+}
+
+float onslaught_DeathHandle(entity attacker, entity inflictor, float deathtype) {
+	self.ons_spawn_area = '0 0 0';
+	LocationRequest_Create(self, "Select your spawn area", onslaught_LocationRequest_Callback);
+	return FALSE;
+}
+
+void onslaught_Spawn() {
+	LocationRequest_Remove(self);
+}
+
+void onslaught_PlayerClear(entity plr, entity attacker, float killed) {
+	if not(killed)
+		LocationRequest_Remove(plr);
+}
+
+void onslaught_init() {
+	GameHook_DeathHandle = onslaught_DeathHandle;
+	GameHook_Spawn = onslaught_Spawn;
+	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
+	GameHook_PlayerClear = onslaught_PlayerClear;
+}

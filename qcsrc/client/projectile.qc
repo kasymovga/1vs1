@@ -227,7 +227,7 @@ void Ent_RemoveProjectile()
 	}
 }
 
-void Ent_Projectile()
+void Ent_Projectile(float ignore)
 {
 	float f;
 

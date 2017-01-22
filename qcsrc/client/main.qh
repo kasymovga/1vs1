@@ -10,16 +10,6 @@ const string string_null;
 
 #define DATABUF_NEXT (5*maxclients)
 
-void() menu_show_error;
-void() menu_sub_null;
-
-float menu_visible;
-var void() menu_show;
-var float(float bInputType, float nPrimary, float nSecondary) menu_action;
-
-// --------------------------------------------------------------------------
-// CTF
-
 // --------------------------------------------------------------------------
 // Onslaught
 
@@ -106,6 +96,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .void(void) draw;
 .void(void) draw2d_pre;
 .void(void) draw2d;
+var void(void) draw2d_null;
 .void(void) entremove;
 float drawframetime;
 vector view_origin, view_angles, view_forward, view_right, view_up;
@@ -119,6 +110,7 @@ float zoomin_effect;
 float ignore_plus_zoom;
 float ignore_minus_zoom;
 float warmup_stage;
+float clienttime;
 
 float weaponimpulse[24];
 string getcommandkey(string text, string command);
@@ -155,3 +147,6 @@ float calledhooks;
 #define HOOK_END      2
 
 float ext_DP_CSQC_QUERYRENDERENTITY;
+
+var float CSQC_InputEvent_Callback(float bInputType, float nPrimary, float nSecondary);
+float draw_crosshair;

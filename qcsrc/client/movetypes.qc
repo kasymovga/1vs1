@@ -234,9 +234,9 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 	{
 		self.move_didgravity = TRUE;
 		if(self.gravity)
-			self.move_velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+			self.move_velocity_z = self.move_velocity_z - dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
 		else
-			self.move_velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			self.move_velocity_z = self.move_velocity_z - dt * getstatf(STAT_MOVEVARS_GRAVITY);
 	}
 
 	self.move_angles = self.move_angles + self.move_avelocity * dt;
@@ -413,9 +413,9 @@ void Movetype_Physics_MatchServer() // SV_Physics_Entity
 		if(self.move_didgravity)
 		{
 			if(self.gravity)
-				self.velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.velocity_z = self.velocity_z - dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
 			else
-				self.velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.velocity_z = self.velocity_z - dt * getstatf(STAT_MOVEVARS_GRAVITY);
 		}
 
 		self.angles = self.move_angles + dt * self.avelocity;

@@ -1,3 +1,4 @@
+entity menu;
 float menu_selected;
 float menu_choiced;
 .string menu_items[MENU_ITEMS_MAXCOUNT];
@@ -9,6 +10,7 @@ float menu_choiced;
 #define ITEM_HEIGHT 30
 #define ITEM_TOP_MARGIN 20
 
+void Menu_Draw();
 void Ent_Menu_Clear(float f) {
 	float i;
 	f = self.flags & f;
@@ -24,9 +26,14 @@ void Ent_Menu_Clear(float f) {
 }
 
 void Ent_Menu_Remove() {
+	sb_hidescores = TRUE;
+	menu.draw2d = world.draw2d;
 	Ent_Menu_Clear(255);
 	if (self == menu) {
 		menu = menu.menu_next;
+		if (menu)
+			menu.draw2d = Menu_Draw;
+
 		menu_choiced = -1;
 		return;
 	}
@@ -45,8 +52,6 @@ void Ent_Menu(float bIsNewEntity) {
 	float skip_duplicated;
 	skip_duplicated = FALSE;
 	float i;
-	if not(menu)
-		Mouse_Init();
 	for (e = menu; e; e = e.menu_next)
 		if (e == self)
 			skip_duplicated = TRUE;
@@ -55,6 +60,7 @@ void Ent_Menu(float bIsNewEntity) {
 		if not(menu) {
 			menu = self;
 			menu_choiced = -1;
+			menu.draw2d = Menu_Draw;
 		} else {
 			e = menu;
 			while (e.menu_next)
@@ -86,6 +92,7 @@ void Ent_Menu(float bIsNewEntity) {
 	}
 }
 
+float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void Menu_Draw() {
 	float i;
 	string menu_string;
@@ -93,6 +100,7 @@ void Menu_Draw() {
 	float center;
 	float size_scale;
 	vector item_color;
+	sb_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = ITEM_TOP_MARGIN;
 	pos_z = 0;
@@ -106,7 +114,6 @@ void Menu_Draw() {
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	}
 	pos_y += ITEM_HEIGHT;
-	Mouse_ReadPos();
 	menu_selected = floor((mouse_pos_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
 
 	for (i = 0; i < menu.cnt; i++) {
@@ -129,7 +136,8 @@ void Menu_Draw() {
 		pos_y += ITEM_HEIGHT;
 	}
 
-	Mouse_Draw();
+	Mouse_Enable();
+	CSQC_InputEvent_Callback = Menu_InputEvent;
 }
 
 float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {

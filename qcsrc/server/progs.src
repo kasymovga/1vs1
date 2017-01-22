@@ -11,6 +11,7 @@ constants.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
+location_request.qh
 
 defs.qh		// Should rename this, it has fields and globals
 
@@ -223,5 +224,7 @@ dodging.qc
 nadgets.qc
 
 progressbar.qc
+
+location_request.qc
 
 vehicles/vehicles.qc

@@ -1,0 +1,4 @@
+entity LocationRequest_Create(entity plr, string title, void(float x, float y)callback);
+void LocationRequest_Select(float x, float y);
+void LocationRequest_Remove(entity plr);
+var void(float x, float y) location_request_callback_null;

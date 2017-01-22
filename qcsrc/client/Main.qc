@@ -4,6 +4,8 @@
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
+var void(float) ent_parsers[ENT_CLIENT_COUNT];
+
 void cvar_clientsettemp(string cv, string val)
 {
 	entity e;
@@ -41,8 +43,21 @@ void() menu_sub_null =
 float __engine_check;
 #endif
 
+void Ent_Error(float ignore) {
+	error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
+}
+
 string forcefog;
-void WaypointSprite_Load();
+void Ent_ReadEntCS(float bIsNewEntity);
+void Ent_ReadEntCSEnemy(float bIsNewEntity);
+void Ent_ScoresInfo(float ignore);
+void Ent_ReadPlayerScore(float ignore);
+void Ent_ReadTeamScore(float ignore);
+void Ent_Nagger(float ignore);
+void Ent_ClientData(float ignore);
+void Ent_RandomSeed(float ignore);
+void Ent_Init(float ignore);
+
 void CSQC_Init(void)
 {
 #ifdef USE_FTE
@@ -205,9 +220,6 @@ void CSQC_Init(void)
 	compressShortVector_init();
 
 	drawfont = 0;
-	menu_visible = FALSE;
-	menu_show = menu_show_error;
-	menu_action = menu_sub_null;
 
 	for(i = 0; i < 255; ++i)
 		if(getplayerkey(i, "viewentity") == "")
@@ -293,6 +305,37 @@ void CSQC_Init(void)
 	mi_scale = mi_max - mi_min;
 	minimapname = strzone(minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
+
+	for (i = 0; i < ENT_CLIENT_COUNT; i++) {
+		ent_parsers[i] = Ent_Error;
+	}
+	ent_parsers[ENT_CLIENT_ENTCS] = Ent_ReadEntCS;
+	ent_parsers[ENT_CLIENT_SCORES_INFO] = Ent_ScoresInfo;
+	ent_parsers[ENT_CLIENT_SCORES] = Ent_ReadPlayerScore;
+	ent_parsers[ENT_CLIENT_TEAMSCORES] = Ent_ReadTeamScore;
+	ent_parsers[ENT_CLIENT_POINTPARTICLES] = Ent_PointParticles;
+	ent_parsers[ENT_CLIENT_RAINSNOW] = Ent_RainOrSnow;
+	ent_parsers[ENT_CLIENT_LASER] = Ent_Laser;
+	ent_parsers[ENT_CLIENT_NAGGER] = Ent_Nagger;
+	ent_parsers[ENT_CLIENT_WAYPOINT] = Ent_WaypointSprite;
+	ent_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
+	ent_parsers[ENT_CLIENT_PROJECTILE] = Ent_Projectile;
+	ent_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;
+	ent_parsers[ENT_CLIENT_DAMAGEINFO] = Ent_DamageInfo;
+	ent_parsers[ENT_CLIENT_CASING] = Ent_Casing;
+	ent_parsers[ENT_CLIENT_INIT] = Ent_Init;
+	ent_parsers[ENT_CLIENT_MAPVOTE] = Ent_MapVote;
+	ent_parsers[ENT_CLIENT_CLIENTDATA] = Ent_ClientData;
+	ent_parsers[ENT_CLIENT_RANDOMSEED] = Ent_RandomSeed;
+	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
+	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
+	ent_parsers[ENT_CLIENT_LIGHTNING] = Ent_Lightning;
+	ent_parsers[ENT_CLIENT_PHYSIC] = Ent_Physic;
+	ent_parsers[ENT_CLIENT_PHYSIC_SPIDERBOT] = Ent_PhysicSpiderbot;
+	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
+	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
+	ent_parsers[ENT_CLIENT_ENTCS_ENEMY] = Ent_ReadEntCSEnemy;
+	ent_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -693,22 +736,17 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
+var float(float bInputType, float nPrimary, float nSecondary) CSQC_InputEvent_Callback_null;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
 
-	if(menu_visible)
-		if(menu_action(bInputType, nPrimary, nSecondary))
-			return TRUE;
-
-	if (mv_active)
-	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
-
-	if (menu)
-	if (Menu_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
+	if (CSQC_InputEvent_Callback) {
+		bSkipKey = CSQC_InputEvent_Callback(bInputType, nPrimary, nSecondary);
+		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
+		return bSkipKey;
+	}
 
 	return bSkipKey;
 }
@@ -747,7 +785,7 @@ void Ent_ReadEntCSEnemy(float bIsNewEntity)
 
 void Ent_Remove();
 
-void Ent_RemovePlayerScore()
+void Ent_RemovePlayerScore(float ignore)
 {
 	float i;
 
@@ -760,7 +798,7 @@ void Ent_RemovePlayerScore()
 	}
 }
 
-void Ent_ReadPlayerScore()
+void Ent_ReadPlayerScore(float ignore)
 {
 	float i, n;
 	float isNew;
@@ -817,7 +855,7 @@ void Ent_ReadPlayerScore()
 	self.entremove = Ent_RemovePlayerScore;
 }
 
-void Ent_ReadTeamScore()
+void Ent_ReadTeamScore(float ignore)
 {
 	float i;
 	entity o;
@@ -850,7 +888,7 @@ void Net_Reset()
 {
 }
 
-void Ent_ClientData()
+void Ent_ClientData(float ignore)
 {
 	float f;
 	float newspectatee_status;
@@ -889,7 +927,7 @@ void Ent_ClientData()
 	spectatee_status = newspectatee_status;
 }
 
-void Ent_Nagger()
+void Ent_Nagger(float ignore)
 {
 	float nags, i, j, b, f;
 
@@ -924,7 +962,7 @@ void Ent_Nagger()
 	warmup_stage = (nags & 16);
 }
 
-void Ent_RandomSeed()
+void Ent_RandomSeed(float ignore)
 {
 	float s;
 	prandom_debug();
@@ -934,9 +972,6 @@ void Ent_RandomSeed()
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void Ent_RadarLink();
-void Ent_Init();
-void Ent_ScoresInfo();
 void(float bIsNewEntity) CSQC_Ent_Update =
 {
 	float t;
@@ -955,7 +990,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 		time = serverprevtime + serverdeltatime;
 	}
-
+	clienttime = time;
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(self.enttype)
 		if(t != self.enttype)
@@ -965,40 +1000,11 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 			bIsNewEntity = 1;
 		}
 #endif
-	self.enttype = t;
-	switch(t)
-	{
-		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(bIsNewEntity); break;
-		case ENT_CLIENT_ENTCS_ENEMY: Ent_ReadEntCSEnemy(bIsNewEntity); break;
-		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
-		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
-		case ENT_CLIENT_POINTPARTICLES: Ent_PointParticles(); break;
-		case ENT_CLIENT_RAINSNOW: Ent_RainOrSnow(); break;
-		case ENT_CLIENT_LASER: Ent_Laser(); break;
-		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
-		case ENT_CLIENT_WAYPOINT: Ent_WaypointSprite(); break;
-		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
-		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
-		case ENT_CLIENT_GIBSPLASH: Ent_GibSplash(bIsNewEntity); break;
-		case ENT_CLIENT_DAMAGEINFO: Ent_DamageInfo(bIsNewEntity); break;
-		case ENT_CLIENT_CASING: Ent_Casing(bIsNewEntity); break;
-		case ENT_CLIENT_INIT: Ent_Init(); break;
-		case ENT_CLIENT_SCORES_INFO: Ent_ScoresInfo(); break;
-		case ENT_CLIENT_MAPVOTE: Ent_MapVote(); break;
-		case ENT_CLIENT_CLIENTDATA: Ent_ClientData(); break;
-		case ENT_CLIENT_RANDOMSEED: Ent_RandomSeed(); break;
-		case ENT_CLIENT_WALL: Ent_Wall(); break;
-		case ENT_CLIENT_MODELEFFECT: Ent_ModelEffect(bIsNewEntity); break;
-		case ENT_CLIENT_LIGHTNING: Ent_Lightning(savetime); break;
-		case ENT_CLIENT_PHYSIC: Ent_Physic(bIsNewEntity); break;
-		case ENT_CLIENT_PHYSIC_SPIDERBOT: Ent_PhysicSpiderbot(bIsNewEntity); break;
-		case ENT_CLIENT_MENU: Ent_Menu(bIsNewEntity); break;
-		case ENT_CLIENT_PROGRESSBAR: Ent_ProgressBar(bIsNewEntity); break;
-		default:
-			error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
-			break;
-	}
+	if (t >= ENT_CLIENT_COUNT)
+		Ent_Error(0);
 
+	self.enttype = t;
+	ent_parsers[t](bIsNewEntity);
 	time = savetime;
 };
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
@@ -1069,7 +1075,7 @@ void Fog_Force()
 }
 
 void Gamemode_Init();
-void Ent_ScoresInfo()
+void Ent_ScoresInfo(float ignore)
 {
 	float i;
 	self.classname = "ent_client_scores_info";
@@ -1088,7 +1094,7 @@ void Ent_ScoresInfo()
 	Gamemode_Init();
 }
 
-void Ent_Init()
+void Ent_Init(float ignore)
 {
 	float i;
 	self.classname = "ent_client_init";

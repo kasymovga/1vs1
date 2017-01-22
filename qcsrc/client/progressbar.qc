@@ -26,6 +26,8 @@ void Ent_ProgressBar_Remove() {
 	strunzone(self.netname);
 	if (progressbar == self) {
 		progressbar = progressbar.progressbar_chain;
+		if (progressbar)
+			progressbar.draw2d = ProgressBar_Draw;
 	} else
 		for (e = progressbar; e.progressbar_chain; e = e.progressbar_chain) {
 			if (e.progressbar_chain == self) {
@@ -43,6 +45,9 @@ void Ent_ProgressBar(float bIsNewEntity) {
 	}
 	if (bIsNewEntity) {
 		entity e;
+		if (progressbar)
+			progressbar.draw2d = world.draw2d;
+
 		for (e = progressbar; e; e = e.progressbar_chain)
 			if (e == self) //Already added in chain
 				return;
@@ -50,5 +55,6 @@ void Ent_ProgressBar(float bIsNewEntity) {
 		self.entremove = Ent_ProgressBar_Remove;
 		self.progressbar_chain = progressbar;
 		progressbar = self;
+		progressbar.draw2d = ProgressBar_Draw;
 	}
 }

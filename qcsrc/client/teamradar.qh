@@ -1,4 +1,4 @@
-void teamradar_view();
+void teamradar_view(float big, string title);
 
 #define MAX_TEAMRADAR_TIMES 32
 
@@ -7,3 +7,5 @@ void teamradar_view();
 .float teamradar_times[MAX_TEAMRADAR_TIMES];
 .float teamradar_time_index;
 .vector teamradar_color;
+
+void Ent_RadarLink(float ignore);
