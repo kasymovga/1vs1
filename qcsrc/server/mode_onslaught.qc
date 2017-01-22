@@ -1433,7 +1433,9 @@ entity onslaught_SelectSpawnPoint() {
 
 float onslaught_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	self.ons_spawn_area = '0 0 0';
-	LocationRequest_Create(self, "Select your spawn area", onslaught_LocationRequest_Callback);
+	if(clienttype(self) == CLIENTTYPE_REAL)
+		LocationRequest_Create(self, "Select your spawn area", onslaught_LocationRequest_Callback);
+
 	return FALSE;
 }
 
