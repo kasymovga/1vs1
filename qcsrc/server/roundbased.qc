@@ -81,7 +81,7 @@ void Roundbased_TeamArenaThink()
 		{
 			string winner_message;
 			if (rb_winner_team > 0)
-				winner_message = strcat("^2Round finished!\n^2", Team_ColorName(rb_winner_team), " Team wins!\n");
+				winner_message = strcat("^2Round finished!\n", Team_ColorCode(rb_winner_team), Team_ColorName(rb_winner_team), " Team^2 wins!\n");
 			else
 				winner_message = "";
 			float countdown = ceil(round_warmup - time);
@@ -130,10 +130,16 @@ void Roundbased_TeamArenaThink()
 
 	if (rb_have_death_players)
 	{
-		FOR_EACH_REALPLAYER(plr)
-			announce(plr, "domination/claim.wav");
-
 		rb_winner_team = rb_team_alive;
+		string announce_sound = ((rb_winner_team == COLOR_TEAM1) ?
+				"ctf/red_capture.wav" :
+				((rb_winner_team == COLOR_TEAM2) ?
+						"ctf/blue_capture.wav" :
+						"domination/claim.wav"));
+
+		FOR_EACH_REALCLIENT(plr)
+			announce(plr, announce_sound);
+
 		Roundbased_Active = 0;
 		Roundbased_SetRoundStart();
 	}
@@ -149,6 +155,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	precache_sound("announcer/robotic/3.wav");
 	precache_sound("announcer/robotic/2.wav");
 	precache_sound("announcer/robotic/1.wav");
+	precache_sound("ctf/blue_capture.wav");
+	precache_sound("ctf/red_capture.wav");
 	Roundbased_NeedCheckTeams();
 	rb_enddelay = enddelay;
 	rb_startdelay = startdelay;
