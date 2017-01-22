@@ -344,12 +344,10 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, cvar_changes);
 	} else if(cmd == "menu_select") {
 		Menu_Select(argv(1), stof(argv(2)));
-	} else if(cmd == "location_request_test") {
-		LocationRequest_Create(self, "Test", location_request_callback_null);
 	} else if(cmd == "location_select") {
 		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
 	} else if(cmd == "mylocation") {
-		sprint(self, strcat("you location: ", vtos(self.origin), "\n"));
+		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else {
 		//if(ctf_clientcommand())
 		//	return;
