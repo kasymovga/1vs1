@@ -1417,7 +1417,6 @@ entity onslaught_SelectSpawnPoint() {
 	fmin = -1;
 
 	while ((e = find(e, classname, "info_player_deathmatch"))) {
-		if (e.team > 0)
 		if (e.team != self.team)
 			continue;
 
