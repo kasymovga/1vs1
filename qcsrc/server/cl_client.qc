@@ -50,7 +50,6 @@ float g_hitplots;
 float g_jetpack_attenuation;
 float g_maxplayers;
 float g_maxplayers_spectator_blocktime;
-float g_midair_shieldtime;
 float g_player_brightness;
 float g_spawnshieldtime;
 float g_spawnsound;
@@ -2655,7 +2654,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
-	CACHE_CVAR(g_midair_shieldtime);
 	CACHE_CVAR(g_player_brightness);
 	CACHE_CVAR(g_spawnshieldtime);
 	CACHE_CVAR(g_spawnsound);
