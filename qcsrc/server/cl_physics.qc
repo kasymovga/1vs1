@@ -256,7 +256,6 @@ void Physic_FrameEndHook()
 	self.last_can_use_jetpack = (self.items & IT_JETPACK) && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || (self.items & IT_UNLIMITED_WEAPON_AMMO));
 }
 
-void Nixnex_GiveCurrentWeapon();
 .float() PlayerPhysplug;
 
 .vector movement_old;

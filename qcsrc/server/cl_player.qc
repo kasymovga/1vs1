@@ -379,8 +379,6 @@ void DropBackPack(vector org)
 {
 	if (g_weaponarena)
 		return;
-	if (g_nixnex)
-		return;
 	entity ammopack, oldself;
 	ammopack = spawn();
 	ammopack.ammo_cells = self.ammo_cells;

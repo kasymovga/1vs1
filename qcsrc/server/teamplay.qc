@@ -481,8 +481,6 @@ void PrintWelcomeMessage(entity pl)
 	modifications = "";
 	if(g_minstagib)
 		modifications = strcat(modifications, ", MinstaGib");
-	if(g_nixnex)
-		modifications = strcat(modifications, ", NixNex");
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)

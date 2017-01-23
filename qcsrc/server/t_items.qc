@@ -845,35 +845,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				return;
 			}
 		}
-		else if (g_nixnex)
-		{
-			local float rm;
-
-			rm = 1;
-			switch (itemid)
-			{
-				case IT_HEALTH:
-				case IT_5HP:
-				case IT_25HP:
-				case IT_ARMOR:
-				case IT_ARMOR_SHARD:
-					if (cvar("g_nixnex_with_healtharmor"))
-						rm = 0;
-					break;
-				case IT_STRENGTH:
-				case IT_INVINCIBLE:
-					if (cvar("g_nixnex_with_powerups"))
-						rm = 0;
-					break;
-			}
-
-			if(rm)
-			{
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
 		else if (!cvar("g_pickup_items") && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE && itemid != IT_HEALTH)
 		{
 			startitem_failed = TRUE;
@@ -1551,13 +1522,6 @@ void spawnfunc_target_items (void)
 	float n, i, j;
 	entity e;
 
-	if(g_nixnex)
-	{
-		// items triggers cannot work in nixnex (as they change weapons/ammo)
-		remove(self);
-		return;
-	}
-
 	self.use = target_items_use;
 	if(!self.strength_finished)
 		self.strength_finished = cvar("g_balance_powerup_strength_time");
@@ -1637,7 +1601,6 @@ void spawnfunc_item_jetpack(void)
 //Q1 compat
 void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_health_mega();else spawnfunc_item_health_medium();}
 
-float NixNex_CanChooseWeapon(float wpn);
 void Items_Init()
 {
 	CACHE_CVAR(g_pickup_drop_backpack);
@@ -1763,21 +1726,10 @@ void Items_Init()
 		g_weaponarena_random = 0;
 
 	if (g_minstagib)
-		g_nixnex = g_weaponarena = 0;
-
-
-	if (g_nixnex)
-	{
 		g_weaponarena = 0;
-		start_weapons = 0;
-		// will be done later
-		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if (NixNex_CanChooseWeapon(i))
-				weapon_precache(i);
-		if(!cvar("g_use_ammunition"))
-			start_items |= IT_UNLIMITED_AMMO;
-	}
-	else if (g_weaponarena)
+
+
+	if (g_weaponarena)
 	{
 		start_weapons = g_weaponarena;
 		if (g_nadgets) {
@@ -1871,7 +1823,7 @@ void Items_Init()
 		warmup_start_armorvalue = start_armorvalue;
 		warmup_start_weapons = start_weapons;
 
-		if (!g_weaponarena && !g_nixnex && !g_minstagib)
+		if (!g_weaponarena && !g_minstagib)
 		{
 			if (cvar("g_use_ammunition"))
 			{

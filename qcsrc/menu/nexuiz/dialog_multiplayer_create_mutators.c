@@ -66,8 +66,6 @@ string toStringNexuizMutatorsDialog(entity me)
 	s = "";
 	if(cvar("g_minstagib"))
 		s = strcat(s, ", MinstaGib");
-	if(cvar("g_nixnex"))
-		s = strcat(s, ", NixNex");
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
@@ -248,13 +246,6 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_minstagib", string_null, "MinstaGib"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_nixnex", string_null, "NixNex"));
-	me.TR(me);
-		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "g_nixnex_with_laser", "with laser"));
-			setDependent(e, "g_nixnex", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_weaponarena", "most", "Most weapons"));

@@ -524,7 +524,7 @@ void precache()
         precache_sound ("weapons/hook_impact.wav"); // hook
     }
 
-    if (cvar("sv_precacheweapons") || g_nixnex)
+    if (cvar("sv_precacheweapons"))
     {
         //precache weapon models/sounds
         local float wep;
@@ -567,8 +567,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_laserguided_missile);
 	CACHE_CVAR(g_midair);
 	CACHE_CVAR(g_minstagib);
-	CACHE_CVAR(g_nixnex);
-	CACHE_CVAR(g_nixnex_with_laser);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_vampire);
 	CACHE_CVAR(g_bloodloss);
@@ -783,8 +781,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":instagib");
 		if(cvar_string("g_weaponarena") != "0")
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
-		if(cvar("g_nixnex"))
-			s = strcat(s, ":nixnex");
 		if(cvar("g_vampire"))
 			s = strcat(s, ":vampire");
 		if(cvar("g_laserguided_missile"))

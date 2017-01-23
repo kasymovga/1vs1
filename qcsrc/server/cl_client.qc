@@ -967,7 +967,6 @@ void PutClientInServer()
 		}
 
 		self.cnt = WEP_LASER;
-		self.nixnex_lastchange_id = -1;
 
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
@@ -2412,8 +2411,6 @@ void PlayerPreThink (void)
 			self.teleport_time = 0;
 			self.effects = self.effects - (self.effects & EF_NODRAW);
 		}
-
-		Nixnex_GiveCurrentWeapon();
 
 		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
 			UpdateSelectedPlayer();
