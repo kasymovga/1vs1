@@ -569,7 +569,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_minstagib);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_vampire);
-	CACHE_CVAR(g_bloodloss);
 	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_spectatorsareidle);

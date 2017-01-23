@@ -528,7 +528,7 @@ void SV_PlayerPhysics()
 
 	physic_flags = self.flags;
 	physic_velocity = self.velocity;
-	physic_cantjump = (self.deadflag || (self.health <= g_bloodloss) || (time < self.doublejump_nextjumptime));
+	physic_cantjump = (self.deadflag || (time < self.doublejump_nextjumptime));
 	if (self.deadflag != DEAD_FREEZE)
 		physic_deadflag = self.deadflag;
 	else

@@ -2480,15 +2480,6 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if(self.health <= g_bloodloss && self.deadflag == DEAD_NO)
-		{
-			if(self.bloodloss_timer < time)
-			{
-				self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
-				self.bloodloss_timer = time + 0.5 + random() * 0.5;
-			}
-		}
-
 		FixPlayermodel();
 
 		if (g_nadgets)

@@ -508,8 +508,6 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Pinata");
 	if(g_weapon_stay)
 		modifications = strcat(modifications, ", Weapons stay");
-	if(g_bloodloss > 0)
-		modifications = strcat(modifications, ", Bloodloss");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);

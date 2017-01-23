@@ -18,7 +18,7 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 float nex252_compat_mode;
 
 float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_runematch, g_race, g_nexball, g_cts, g_clanarena, g_campaign;
-float g_cloaked, g_footsteps, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_bloodloss, g_runes, g_nadgets;
+float g_cloaked, g_footsteps, g_grappling_hook, g_laserguided_missile, g_midair, g_minstagib, g_pinata, g_norecoil, g_vampire, g_minstagib_invis_alpha, g_runes, g_nadgets;
 float g_pinata_drop_all;
 float g_warmup_limit;
 float g_warmup_allguns;
@@ -624,7 +624,6 @@ float client_cefc_accumulatortime;
 
 .float spectatee_status;
 .float zoomstate;
-.float bloodloss_timer;
 .float restriction;
 
 .entity clientdata;
