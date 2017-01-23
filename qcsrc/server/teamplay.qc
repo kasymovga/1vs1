@@ -500,8 +500,6 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", LG missiles");
 	if(g_midair)
 		modifications = strcat(modifications, ", Midair");
-	if(g_vampire)
-		modifications = strcat(modifications, ", Vampire");
 	if(g_pinata)
 		modifications = strcat(modifications, ", Pinata");
 	if(g_weapon_stay)

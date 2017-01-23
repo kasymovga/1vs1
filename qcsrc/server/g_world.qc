@@ -546,7 +546,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_midair);
 	CACHE_CVAR(g_minstagib);
 	CACHE_CVAR(g_norecoil);
-	CACHE_CVAR(g_vampire);
 	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_spectatorsareidle);
@@ -765,8 +764,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":instagib");
 		if(cvar_string("g_weaponarena") != "0")
 			s = strcat(s, ":", cvar_string("g_weaponarena"), " arena");
-		if(cvar("g_vampire"))
-			s = strcat(s, ":vampire");
 		if(cvar("g_laserguided_missile"))
 			s = strcat(s, ":laserguided_missile");
 		if(cvar("g_norecoil"))

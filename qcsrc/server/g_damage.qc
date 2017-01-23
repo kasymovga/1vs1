@@ -962,12 +962,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if(targ.classname == "player" && attacker.classname == "player" && attacker != targ && attacker.health > 2)
 	{
 		// Savage: vampire mode
-		if (g_vampire)
-		if (!g_minstagib)
-		if (time > self.spawnshieldtime)
-		{
-			attacker.health += damage;
-		}
 		if (attacker.runes & RUNE_VAMPIRE)
 		{
 		// apply vampire rune
