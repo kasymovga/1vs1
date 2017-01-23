@@ -8,27 +8,6 @@ void GotoNextMap();
 void ShuffleMaplist()
 float() DoNextMapOverride;
 
-void SetDefaultAlpha()
-{
-	if(cvar("g_running_guns"))
-	{
-		default_player_alpha = -1;
-		default_weapon_alpha = +1;
-	}
-	else if(g_cloaked)
-	{
-		default_player_alpha = cvar("g_balance_cloaked_alpha");
-		default_weapon_alpha = default_player_alpha;
-	}
-	else
-	{
-		default_player_alpha = cvar("g_player_alpha");
-		if(default_player_alpha == 0)
-			default_player_alpha = 1;
-		default_weapon_alpha = default_player_alpha;
-	}
-}
-
 void fteqcc_testbugs()
 {
 	float a, b;
@@ -560,7 +539,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(sv_clones);
 	CACHE_CVAR(sv_gentle);
 	CACHE_CVAR(sv_foginterval);
-	CACHE_CVAR(g_cloaked);
 	CACHE_CVAR(g_footsteps);
 	CACHE_CVAR(g_grappling_hook);
 	CACHE_CVAR(g_jetpack);
@@ -624,6 +602,13 @@ void readdynamiccvars() {
 	vehicles_readcvars();
 	turret_readcvars();
 	WaypointSprite_Init();
+	default_player_alpha = cvar("g_player_alpha");
+	default_weapon_alpha = cvar("g_weapon_alpha");
+	if not(default_player_alpha)
+		default_player_alpha = 1;
+
+	if not(default_weapon_alpha)
+		default_weapon_alpha = 1;
 }
 
 void Map_MarkAsRecent(string m);
@@ -797,8 +782,6 @@ void spawnfunc_worldspawn (void)
 		matchid = strzone(ftos(random()));
 
 	cvar_set("nextmap", "");
-
-	SetDefaultAlpha();
 
 	if(g_campaign)
 		CampaignPostInit();
@@ -2011,8 +1994,6 @@ void CheckRules_World()
 
 	VoteThink();
 	MapVote_Think();
-
-	SetDefaultAlpha();
 
 	/*
 	MapVote_Think should now do that part

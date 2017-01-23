@@ -72,8 +72,6 @@ string toStringNexuizMutatorsDialog(entity me)
 		s = strcat(s, ", No start weapons");
 	if(cvar("sv_gravity") < 800)
 		s = strcat(s, ", Low gravity");
-	if(cvar("g_cloaked"))
-		s = strcat(s, ", Cloaked");
 	if(cvar("g_footsteps"))
 		s = strcat(s, ", Steps");
 	if(cvar("g_grappling_hook"))
@@ -158,9 +156,6 @@ void fillNexuizMutatorsDialog(entity me)
 	string str, hstr;
 	me.TR(me);
 		me.TD(me, 1, 2, makeNexuizTextLabel(0, "Gameplay mutators:"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_cloaked", "Cloaked"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_footsteps", "Footsteps"));
