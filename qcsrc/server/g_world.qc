@@ -523,12 +523,6 @@ void precache()
 
 void readlevelcvars(void)
 {
-	CACHE_CVAR(g_touchexplode);
-	CACHE_CVAR(g_touchexplode_radius);
-	CACHE_CVAR(g_touchexplode_damage);
-	CACHE_CVAR(g_touchexplode_edgedamage);
-	CACHE_CVAR(g_touchexplode_force);
-
 #ifdef ALLOW_FORCEMODELS
 	CACHE_CVAR(sv_clforceplayermodels);
 #endif

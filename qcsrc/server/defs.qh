@@ -29,11 +29,6 @@ float g_race_qualifying;
 float inWarmupStage;
 float round_warmup;
 float g_jetpack;
-float g_touchexplode;
-float g_touchexplode_radius;
-float g_touchexplode_damage;
-float g_touchexplode_edgedamage;
-float g_touchexplode_force;
 
 float g_maxpushtime;
 
