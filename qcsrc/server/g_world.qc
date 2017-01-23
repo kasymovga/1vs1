@@ -537,7 +537,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_grappling_hook);
 	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_laserguided_missile);
-	CACHE_CVAR(g_midair);
 	CACHE_CVAR(g_minstagib);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_runes);
@@ -762,8 +761,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":laserguided_missile");
 		if(cvar("g_norecoil"))
 			s = strcat(s, ":norecoil");
-		if(cvar("g_midair"))
-			s = strcat(s, ":midair");
 		if(cvar("g_minstagib"))
 			s = strcat(s, ":minstagib");
 		GameLogEcho(s);

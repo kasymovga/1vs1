@@ -238,9 +238,6 @@ void havocbot_bunnyhop(vector dir)
 	local float bunnyhopdistance;
 	local vector deviation;
 
-	if(g_midair)
-		return;
-
 	// Don't jump when using some weapons
 	if(self.aistatus & AI_STATUS_ATTACKING)
 	if(self.weapon & WEP_CAMPINGRIFLE)
