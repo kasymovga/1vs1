@@ -1,6 +1,18 @@
 float g_spawn_furthest;
 float g_teamdamage_resetspeed;
 float g_forced_respawn;
+float sv_defaultcharacter;
+float sv_defaultplayercolors;
+string sv_defaultplayermodel;
+string sv_defaultplayermodel_red;
+string sv_defaultplayermodel_blue;
+string sv_defaultplayermodel_yellow;
+string sv_defaultplayermodel_pink;
+float sv_defaultplayerskin;
+float sv_defaultplayerskin_red;
+float sv_defaultplayerskin_blue;
+float sv_defaultplayerskin_yellow;
+float sv_defaultplayerskin_pink;
 float sv_servermodelsonly;
 float sv_reset_on_join;
 float g_spawn_furthest;
@@ -696,19 +708,28 @@ void FixPlayermodel()
 
 	defaultmodel = "";
 
-	if(cvar("sv_defaultcharacter") == 1) {
+	if (sv_defaultcharacter) {
 		defaultskin = 0;
 
 		if(teams_matter)
 		{
-			defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", Team_ColorNameLowerCase(self.team)));
-			defaultskin = cvar(strcat("sv_defaultplayerskin_", Team_ColorNameLowerCase(self.team)));
+			defaultmodel =
+					((self.team == COLOR_TEAM1) ? sv_defaultplayermodel_red :
+					((self.team == COLOR_TEAM2) ? sv_defaultplayermodel_blue :
+					((self.team == COLOR_TEAM3) ? sv_defaultplayermodel_yellow :
+					((self.team == COLOR_TEAM4) ? sv_defaultplayermodel_pink : sv_defaultplayermodel))));
+
+			defaultskin =
+					((self.team == COLOR_TEAM1) ? sv_defaultplayerskin_red :
+					((self.team == COLOR_TEAM2) ? sv_defaultplayerskin_blue :
+					((self.team == COLOR_TEAM3) ? sv_defaultplayerskin_yellow :
+					((self.team == COLOR_TEAM4) ? sv_defaultplayerskin_pink : sv_defaultplayerskin))));
 		}
 
 		if(defaultmodel == "")
 		{
-			defaultmodel = cvar_string("sv_defaultplayermodel");
-			defaultskin = cvar("sv_defaultplayerskin");
+			defaultmodel = sv_defaultplayermodel;
+			defaultskin = sv_defaultplayerskin;
 		}
 	}
 
@@ -751,9 +772,9 @@ void FixPlayermodel()
 		self.species = player_getspecies(); // model or skin has changed
 
 	if(!teams_matter)
-		if(strlen(cvar_string("sv_defaultplayercolors")))
-			if(self.clientcolors != cvar("sv_defaultplayercolors"))
-				setcolor(self, cvar("sv_defaultplayercolors"));
+		if (sv_defaultplayercolors > -2)
+			if (self.clientcolors != sv_defaultplayercolors)
+				setcolor (self, sv_defaultplayercolors);
 }
 
 /*
@@ -2607,7 +2628,30 @@ void PlayerPostThink (void)
 
 void Client_ReadCvars()
 {
+	string s;
 	CACHE_CVAR(g_spawn_furthest);
+	CACHE_CVAR(sv_defaultcharacter);
+	CACHE_CVAR(sv_defaultplayerskin);
+	CACHE_CVAR(sv_defaultplayerskin_red);
+	CACHE_CVAR(sv_defaultplayerskin_blue);
+	CACHE_CVAR(sv_defaultplayerskin_yellow);
+	CACHE_CVAR(sv_defaultplayerskin_pink);
+	unzone_ifneeded(sv_defaultplayermodel);
+	unzone_ifneeded(sv_defaultplayermodel_red);
+	unzone_ifneeded(sv_defaultplayermodel_blue);
+	unzone_ifneeded(sv_defaultplayermodel_yellow);
+	unzone_ifneeded(sv_defaultplayermodel_pink);
+	sv_defaultplayermodel = cvar_string_zone_ifneeded("sv_defaultplayermodel");
+	sv_defaultplayermodel_red = cvar_string_zone_ifneeded("sv_defaultplayermodel_red");
+	sv_defaultplayermodel_blue = cvar_string_zone_ifneeded("sv_defaultplayermodel_blue");
+	sv_defaultplayermodel_yellow = cvar_string_zone_ifneeded("sv_defaultplayermodel_yellow");
+	sv_defaultplayermodel_pink = cvar_string_zone_ifneeded("sv_defaultplayermodel_pink");
+	s = cvar_string("sv_defaultplayercolors");
+	if (s == "")
+		sv_defaultplayercolors = -2;
+	else
+		sv_defaultplayercolors = stof(s);
+
 	CACHE_CVAR(sv_servermodelsonly);
 	CACHE_CVAR(sv_reset_on_join);
 	CACHE_CVAR(g_teamdamage_resetspeed);
@@ -2667,7 +2711,6 @@ void Client_ReadCvars()
 	if (sv_player_hat_attachment != "")
 		strunzone(sv_player_hat_attachment);
 
-	string s;
 	s = cvar_string("sv_player_hat");
 	if (s != "") {
 		sv_player_hat = strzone(s);
