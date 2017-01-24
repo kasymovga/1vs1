@@ -496,8 +496,6 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Steps");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
-	if(g_laserguided_missile)
-		modifications = strcat(modifications, ", LG missiles");
 	if(g_pinata)
 		modifications = strcat(modifications, ", Pinata");
 	if(g_weapon_stay)

@@ -22,11 +22,68 @@ float g_balance_rocketlauncher_refire;
 float g_balance_rocketlauncher_speed;
 float g_balance_rocketlauncher_speedaccel;
 float g_balance_rocketlauncher_speedstart;
+float g_balance_rocketlauncher_laserguided_missile;
 vector g_balance_rocketlauncher_projsize;
 
 .float rl_release;
 .float rl_detonate_later;
 .entity lastrocket;
+// Laser target for laser-guided weapons
+.entity lasertarget;
+.float laser_on;
+
+void LaserTarget_Clear() {
+	if (self.lasertarget)
+		remove(self.lasertarget);
+
+	self.lasertarget = world;
+}
+
+void LaserTarget_Think() {
+	entity e;
+	vector offset;
+	float uselaser;
+	uselaser = 0;
+
+	// if a laser-enabled weapon isn't selected, delete any existing laser and quit
+	if not(self.laser_on) {
+		LaserTarget_Clear();
+		return;
+	}
+
+	if not(self.lasertarget)
+	{
+		// we don't have a lasertarget entity, so spawn one
+		//bprint("create laser target\n");
+		e = self.lasertarget = spawn();
+		e.owner = self.owner;			// Its owner is my owner
+		e.classname = "laser_target";
+		e.movetype = MOVETYPE_NOCLIP;	// don't touch things
+		setmodel(e, "models/laser_dot.mdl");	// what it looks like, precision set below
+		e.scale = 1.25;				// make it larger
+		e.alpha = 0.25;				// transparency
+		e.colormod = '255 0 0' * (1/255) * 8;	// change colors
+		e.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
+		// make it dynamically glow
+		// you should avoid over-using this, as it can slow down the player's computer.
+		e.glow_color = 251; // red color
+		e.glow_size = 12;
+	}
+	else {
+		e = self.lasertarget;
+	}
+
+	// move the laser dot to where the player is looking
+
+	makevectors(self.v_angle); // set v_forward etc to the direction the player is looking
+	offset = '0 0 26' + v_right*3;
+	traceline(self.origin + offset, self.origin + offset + v_forward * MAX_SHOT_DISTANCE, FALSE, self); // trace forward until you hit something, like a player or wall
+	setorigin(e, trace_endpos + v_forward*8); // move me to where the traceline ended
+	if(trace_plane_normal != '0 0 0')
+		e.angles = vectoangles(trace_plane_normal);
+	else
+		e.angles = vectoangles(v_forward);
+}
 
 void W_Rocket_Unregister()
 {
@@ -59,7 +116,7 @@ void W_Rocket_Explode (void)
 			ATTACK_FINISHED(self.owner) = time;
 			self.owner.switchweapon = w_getbestweapon(self.owner);
 		}
-		if(g_laserguided_missile)
+		if(g_balance_rocketlauncher_laserguided_missile)
 			ATTACK_FINISHED(self.owner) = time + g_balance_rocketlauncher_refire * W_WeaponRateFactor();
 	}
 	remove (self);
@@ -176,7 +233,7 @@ void W_Rocket_Think (void)
 		return;
 	}
 
-	if(g_laserguided_missile)
+	if(g_balance_rocketlauncher_laserguided_missile)
 	{
 		// accelerate
 		makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
@@ -196,7 +253,7 @@ void W_Rocket_Think (void)
 	// laser guided, or remote detonation
 	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
 	{
-		if(g_laserguided_missile)
+		if(g_balance_rocketlauncher_laserguided_missile)
 		{
 			if(self.rl_detonate_later)
 				W_Rocket_RemoteExplode();
@@ -212,12 +269,12 @@ void W_Rocket_Think (void)
 					}
 
 					if(!self.enemy)
-						self.enemy = self.owner.weaponentity.lasertarget;
+						self.enemy = self.owner.lasertarget;
 				}
 				else self.enemy = world;
 			}
 			else // don't allow stealing: always target my owner's laser (if it exists)
-				self.enemy = self.owner.weaponentity.lasertarget;
+				self.enemy = self.owner.lasertarget;
 
 			if(self.enemy != world)
 			{
@@ -345,7 +402,7 @@ void W_Rocket_Attack (void)
 	setsize (missile, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize); // give it some size so it can be shot
 
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-	if(g_laserguided_missile && self.laser_on)
+	if(g_balance_rocketlauncher_laserguided_missile && self.laser_on)
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_laserguided_speedstart * g_weaponspeedfactor;
 	else
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
@@ -360,7 +417,7 @@ void W_Rocket_Attack (void)
 	missile.cnt = time + g_balance_rocketlauncher_lifetime;
 	missile.flags = FL_PROJECTILE;
 
-	CSQCProjectile(missile, g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
+	CSQCProjectile(missile, g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
@@ -475,7 +532,7 @@ float w_rlauncher(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(g_laserguided_missile)
+		if(g_balance_rocketlauncher_laserguided_missile)
 		{
 			if (self.BUTTON_ATCK && self.rl_release)
 			{
@@ -510,6 +567,7 @@ float w_rlauncher(float req)
 				// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 				sound (self, CHAN_WEAPON2, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
 			}
+			LaserTarget_Think();
 		}
 		else
 		{
@@ -548,7 +606,7 @@ float w_rlauncher(float req)
 		precache_sound ("weapons/rocket_det.wav");
 		precache_sound ("weapons/rocket_fire.wav");
 		precache_sound ("weapons/rocket_mode.wav");
-		if (g_laserguided_missile)
+		if (g_balance_rocketlauncher_laserguided_missile)
 		{
 			precache_model ("models/laser_dot.mdl"); // rocket launcher
 		}
@@ -582,6 +640,11 @@ float w_rlauncher(float req)
 	{
 		self.rl_release = 0;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
+		LaserTarget_Clear();
+	}
+	else if (req == WR_CLEAR)
+	{
+		LaserTarget_Clear();
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
@@ -601,6 +664,7 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_guidestop);
 		CACHE_CVAR(g_balance_rocketlauncher_health);
 		CACHE_CVAR(g_balance_rocketlauncher_laserguided_allow_steal);
+		CACHE_CVAR(g_balance_rocketlauncher_laserguided_missile);
 		CACHE_CVAR(g_balance_rocketlauncher_laserguided_speed);
 		CACHE_CVAR(g_balance_rocketlauncher_laserguided_speedaccel);
 		CACHE_CVAR(g_balance_rocketlauncher_laserguided_speedstart);
