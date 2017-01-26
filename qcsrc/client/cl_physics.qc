@@ -19,7 +19,7 @@ void PM_ClientMovement_UpdateStatus(float ground)
 	if(ground)
 	{
 		//tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-		tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(physic_velocity), MOVE_NORMAL, self);
+		tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(physic_velocity) - '0 0 0.125', MOVE_NORMAL, self);
 		float f;
 		if (trace_fraction < 1.0 && trace_plane_normal_z > 0.7)// && (f = self.velocity * trace_plane_normal) <= 0)
 		{
