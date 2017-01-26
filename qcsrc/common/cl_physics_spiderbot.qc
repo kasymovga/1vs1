@@ -4,7 +4,8 @@ float physic_spiderbot()
 	makevectors(self.angles);
     if(self.flags & FL_ONGROUND) {
         if(physic_button_jump) {
-			self.velocity = self.velocity * g_vehicle_spiderbot_jump_accel + v_up * g_vehicle_spiderbot_jump_up * (1 - physic_spiderbot_jump_decr);
+			self.velocity = self.velocity * g_vehicle_spiderbot_jump_accel + v_up * g_vehicle_spiderbot_jump_up;
+			self.flags &~= FL_ONGROUND;
         } else {
             if(vlen(physic_movement) == 0) {
                 movelib_beak_simple(g_vehicle_spiderbot_speed_stop);
