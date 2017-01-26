@@ -414,7 +414,7 @@ void spiderbot_think()
 		self.owner.vehicle_heat = self.vehicle_heat;
     else if(self.flags & FL_ONGROUND)
     {
-        movelib_beak_simple(g_vehicle_spiderbot_speed_stop);
+        movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
         //movelib_groundalign4point(300,100);
     }
 

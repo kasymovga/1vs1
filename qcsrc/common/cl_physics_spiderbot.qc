@@ -8,7 +8,7 @@ float physic_spiderbot()
 			self.flags &~= FL_ONGROUND;
         } else {
             if(vlen(physic_movement) == 0) {
-                movelib_beak_simple(g_vehicle_spiderbot_speed_stop);
+                movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
 			} else {
 				if (physic_v_angle_y != self.angles_y) {
 					float turn_angle_speed = g_vehicle_spiderbot_turnspeed * frametime;
@@ -33,14 +33,14 @@ float physic_spiderbot()
                         physic_movement_x = -1;
 
                     physic_movement_y = 0;
-                    movelib_move_simple(normalize(v_forward * physic_movement_x),g_vehicle_spiderbot_speed_walk,g_vehicle_spiderbot_movement_inertia);
+                    movelib_move_simple(normalize(v_forward * physic_movement_x),g_vehicle_spiderbot_speed_walk,g_vehicle_spiderbot_movement_inertia * frametime);
                 } else if(physic_movement_y != 0) {
                     if(physic_movement_y < 0)
                         physic_movement_y = -1;
                     else if(physic_movement_y > 0)
                         physic_movement_y = 1;
 
-                    movelib_move_simple(normalize(v_right * physic_movement_y),g_vehicle_spiderbot_speed_strafe,g_vehicle_spiderbot_movement_inertia);
+                    movelib_move_simple(normalize(v_right * physic_movement_y),g_vehicle_spiderbot_speed_strafe,g_vehicle_spiderbot_movement_inertia * frametime);
                 }
             }
         }
