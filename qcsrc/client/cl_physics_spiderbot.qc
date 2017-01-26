@@ -8,15 +8,14 @@ float physic_spiderbot_hook() {
 	self = spider;
 	float physic_movetype_save = physic_movetype;
 	physic_movetype = MOVETYPE_WALK;
-	PM_ClientMovement_Unstick(self.mins, self.maxs);
-	tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+	self.velocity_z = self.velocity_z - sv_gravity * frametime;
+	tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(self.velocity), MOVE_NORMAL, self);
 	if (trace_startsolid || (trace_fraction <= 1 && trace_plane_normal_z > 0.7))
 		self.flags = FL_ONGROUND;
 	else
 		self.flags = 0;
 
 	physic_spiderbot();
-	self.velocity_z = self.velocity_z - sv_gravity * frametime;
 	physic_velocity = self.velocity;
 	PM_ClientMovement_Move();
 	self.velocity = physic_velocity;

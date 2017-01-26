@@ -11,54 +11,15 @@ float physic_can_use_jetpack;
 float physic_start_teleport_time;
 float physic_start_crouch;
 
-
-const float unstick_count = 27;
-vector unstick_offsets[unstick_count] =
-{
-// 1 no nudge (just return the original if this test passes)
-	'0.000   0.000  0.000',
-// 6 simple nudges
-	' 0.000  0.000  0.125', '0.000  0.000 -0.125',
-	'-0.125  0.000  0.000', '0.125  0.000  0.000',
-	' 0.000 -0.125  0.000', '0.000  0.125  0.000',
-// 4 diagonal flat nudges
-	'-0.125 -0.125  0.000', '0.125 -0.125  0.000',
-	'-0.125  0.125  0.000', '0.125  0.125  0.000',
-// 8 diagonal upward nudges
-	'-0.125  0.000  0.125', '0.125  0.000  0.125',
-	' 0.000 -0.125  0.125', '0.000  0.125  0.125',
-	'-0.125 -0.125  0.125', '0.125 -0.125  0.125',
-	'-0.125  0.125  0.125', '0.125  0.125  0.125',
-// 8 diagonal downward nudges
-	'-0.125  0.000 -0.125', '0.125  0.000 -0.125',
-	' 0.000 -0.125 -0.125', '0.000  0.125 -0.125',
-	'-0.125 -0.125 -0.125', '0.125 -0.125 -0.125',
-	'-0.125  0.125 -0.125', '0.125  0.125 -0.125',
-};
-
-void PM_ClientMovement_Unstick(vector unsmins, vector unsmaxs)
-{
-	float i;
-	for (i = 0; i < unstick_count; i++)
-	{
-		vector neworigin = unstick_offsets[i] + self.origin;
-		tracebox(neworigin, unsmins, unsmaxs, neworigin, MOVE_NORMAL, self);
-		if (!trace_startsolid)
-		{
-			setorigin(self, neworigin);
-			return;// true;
-		}
-	}
-}
-
 void PM_ClientMovement_UpdateStatus(float ground)
 {
-	// make sure player is not stuck
-	PM_ClientMovement_Unstick(self.crouch_mins, self.crouch_maxs);
+	if (physic_movetype == MOVETYPE_WALK)
+		physic_velocity_z -= physic_gravity_factor * sv_gravity * frametime;
 
 	if(ground)
 	{
-		tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+		//tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+		tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(physic_velocity), MOVE_NORMAL, self);
 		float f;
 		if (trace_fraction < 1.0 && trace_plane_normal_z > 0.7)// && (f = self.velocity * trace_plane_normal) <= 0)
 		{
@@ -233,9 +194,6 @@ void Physic_FrameBeginHook()
 
 void Physic_FrameEndHook()
 {
-	if (physic_movetype == MOVETYPE_WALK)
-		physic_velocity_z -= physic_gravity_factor * sv_gravity * frametime;
-
 	physic_teleport_time -= frametime;
 	PM_ClientMovement_Move();
 }
