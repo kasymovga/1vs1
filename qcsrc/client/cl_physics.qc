@@ -201,6 +201,7 @@ void Physic_FrameEndHook()
 entity physic;
 
 .vector pmove_origin;
+.vector pmove_velocity;
 vector CSQCPhysic_SetCamera()
 {
 	if(physic && servercommandframe && clientcommandframe)
@@ -213,7 +214,7 @@ vector CSQCPhysic_SetCamera()
 		self = physic;
 		self.origin = self.pmove_origin;
 		pmove_org = self.origin;
-		self.velocity = physic_velocity = pmove_vel;
+		self.velocity = physic_velocity = self.pmove_velocity;
 		physic_teleport_time = physic_start_teleport_time;
 		if (physic_plug_pre)
 			physic_plug_pre();
@@ -275,6 +276,7 @@ void Ent_Physic(float isnew)
 	{
 		if (cvar("cl_movement_replay"))
 			cvar_clientsettemp("cl_movement_replay", "0");
+
 		self.cnt = 1;
 		sv_stepheight = ReadCoord();
 		sv_gravity = ReadCoord();
@@ -340,6 +342,9 @@ void Ent_Physic(float isnew)
 		self.pmove_origin_x = ReadCoord();
 		self.pmove_origin_y = ReadCoord();
 		self.pmove_origin_z = ReadCoord();
+		self.pmove_velocity_x = ReadCoord();
+		self.pmove_velocity_y = ReadCoord();
+		self.pmove_velocity_z = ReadCoord();
 		physic_is_player = f & 8;
 		physic_deadflag = f & 16;
 		physic_ladder = f & 32;	
