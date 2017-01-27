@@ -251,8 +251,15 @@ vector CSQCPhysic_SetCamera()
 		frametime = frametime_save;
 		v = physic.origin + physic.view_ofs;
 
-		if not(CVAR(chase_active))
-			R_SetView(VF_ORIGIN, v);
+		if (CVAR(chase_active)) {
+			makevectors(input_angles);
+			tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
+			v = trace_endpos;
+			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
+			v = trace_endpos;
+
+		}
+		R_SetView(VF_ORIGIN, v);
 
 		return v;
 	}
