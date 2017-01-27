@@ -30,8 +30,6 @@ void LocationRequest_Select(float x, float y) {
 
 	if (self.location_request.location_request_callback)
 		self.location_request.location_request_callback(x, y);
-
-	LocationRequest_Remove(self);
 }
 
 entity LocationRequest_Create(entity plr, string title, void(float x, float y)callback) {
