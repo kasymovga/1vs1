@@ -219,6 +219,7 @@ vector CSQCPhysic_SetCamera()
 		if (physic_plug_pre)
 			physic_plug_pre();
 
+		physic_crouch = physic_start_crouch;
 		if (physic_start_crouch)
 		{
 			setsize(self, self.crouch_mins, self.crouch_maxs);
