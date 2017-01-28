@@ -28,28 +28,52 @@ string serverlist_uris[SERVERLIST_URIS_COUNT] = {
 
 float(string url, float id) uri_get = #513;
 
-void URI_Get_Callback(float id, float status, string data) {
-	if (status) {
-		print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
-		serverlist_uri_index++;
-		if (serverlist_uri_index < SERVERLIST_URIS_COUNT)
-			uri_get(serverlist_uris[serverlist_uri_index], URI_GET_SERVERLIST);
 
-		return;
-	}
+void ParseServerListLine(string s) {
+	float d;
+	d = strstrofs(s, "/", 0);
+	cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
+}
+
+void URI_Get_Callback(float id, float status, string data) {
+	float f;
 	if (id == URI_GET_SERVERLIST) {
+		if (status) {
+			print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
+			serverlist_uri_index++;
+			if (serverlist_uri_index < SERVERLIST_URIS_COUNT) {
+				uri_get(serverlist_uris[serverlist_uri_index], URI_GET_SERVERLIST);
+				return;
+			} else {
+				f = fopen("data/serverlistcache.txt", FILE_READ);
+				string s;
+				if (f < 0) {
+					f = fopen("serverlistbootstrap.txt", FILE_READ);
+					if (f < 0)
+						return;
+					else
+						print("Loaded server list from serverlistbootstrap.txt\n");
+				} else
+					print("Loaded server list cache from data/serverlistcache.txt\n");
+
+				while ((s = fgets(f)))
+					ParseServerListLine(s);
+
+				fclose(f);
+			}
+			return;
+		}
 		print(serverlist_uris[serverlist_uri_index], " downloaded successfully\n");
+		f = fopen("serverlistcache.txt", FILE_WRITE);
+		if not(f < 0) {
+			fputs(f, data);
+			fclose(f);
+		}
 		cvar_set("net_slist_extra", "");
 		float n = tokenizebyseparator(data, "\n");
 		float i;
-		float d;
-		for (i = 0; i < n; i++) {
-			d = strstrofs(argv(i), "/", 0);
-			if (d > 0) {
-				//print("added server: ", argv(i), "\n");
-				cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", substring(argv(i), 0, d)));
-			}
-		}
+		for (i = 0; i < n; i++)
+			ParseServerListLine(argv(i));
 	}
 }
 
