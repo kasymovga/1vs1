@@ -18,12 +18,49 @@ float menuMouseMode;
 
 void SUB_Null() { };
 
+const float URI_GET_SERVERLIST = 10;
+#define SERVERLIST_URIS_COUNT 2
+var float serverlist_uri_index = 0;
+string serverlist_uris[SERVERLIST_URIS_COUNT] = {
+	"http://nexuiz.mooo.com/serverlist.txt",
+	"http://nexuiz.trafflow.com/serverlist.txt",
+};
+
+float(string url, float id) uri_get = #513;
+
+void URI_Get_Callback(float id, float status, string data) {
+	if (status) {
+		print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
+		serverlist_uri_index++;
+		if (serverlist_uri_index < SERVERLIST_URIS_COUNT)
+			uri_get(serverlist_uris[serverlist_uri_index], URI_GET_SERVERLIST);
+
+		return;
+	}
+	if (id == URI_GET_SERVERLIST) {
+		print(serverlist_uris[serverlist_uri_index], " downloaded successfully\n");
+		cvar_set("net_slist_extra", "");
+		float n = tokenizebyseparator(data, "\n");
+		float i;
+		float d;
+		for (i = 0; i < n; i++) {
+			d = strstrofs(argv(i), "/", 0);
+			if (d > 0) {
+				//print("added server: ", argv(i), "\n");
+				cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", substring(argv(i), 0, d)));
+			}
+		}
+	}
+}
+
 void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
 
 	dprint_load();
 	check_unacceptable_compiler_bugs();
+
+	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
 
 	// list all game dirs (TEST)
 	if(cvar("developer"))

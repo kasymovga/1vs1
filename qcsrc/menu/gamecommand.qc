@@ -75,6 +75,24 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "dumpserverlist")
+	{
+		string s = argv(1);
+		if not(s)
+			s = "serverlist.txt";
+
+		float f = fopen(s, FILE_WRITE);
+		if not(f < 0) {
+			float n = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+			float i;
+			for (i = 0; i < n; i++) {
+				fputs(f, strcat(gethostcachestring(SLIST_FIELD_CNAME, i), "//", gethostcachestring(SLIST_FIELD_NAME, i), "\n"));
+			}
+			fclose(f);
+		}
+		return;
+	}
+
 #if 0
 	if(argv(0) == "tokentest")
 	{
