@@ -27,6 +27,8 @@ shownames.qh
 progressbar.qh
 cl_physics_spiderbot.qh
 location_request.qh
+dlc.qh
+../common/dlc.qh
 
 main.qh
 
@@ -35,6 +37,7 @@ cvar.qc
 ../common/movelib.qc
 sortlist.qc
 miscfunctions.qc
+../common/miscfunctions.qc
 teamplay.qc
 
 sbar.qc
@@ -76,3 +79,5 @@ mouse.qc
 shownames.qc
 progressbar.qc
 location_request.qc
+dlc.qc
+../common/dlc.qc

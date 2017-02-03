@@ -1,0 +1,2 @@
+void dlc_require(string dlc);
+void dlc_init();

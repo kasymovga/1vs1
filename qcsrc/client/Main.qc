@@ -336,6 +336,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
 	ent_parsers[ENT_CLIENT_ENTCS_ENEMY] = Ent_ReadEntCSEnemy;
 	ent_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
+	ent_parsers[ENT_CLIENT_DLC_LIST] = Ent_DLCList;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)

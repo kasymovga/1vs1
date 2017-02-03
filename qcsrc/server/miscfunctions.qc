@@ -2125,16 +2125,3 @@ void reset_map(float dorespawn)
 
 	self = oldself;
 }
-
-string cvar_string_zone_ifneeded(string cvar_name) {
-	string s = cvar_string(cvar_name);
-	if (s != "")
-		return strzone(s);
-
-	return "";
-}
-
-void unzone_ifneeded(string s) {
-	if (s != "")
-		strunzone(s);
-}

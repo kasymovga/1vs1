@@ -414,3 +414,6 @@ set timelimit_default 15
 set fraglimit_default 10
 
 set g_weapon_alpha 0
+
+set sv_dlc_repository "http://nexuiz.mooo.com/rexdlc/"
+set sv_dlc_extra ""

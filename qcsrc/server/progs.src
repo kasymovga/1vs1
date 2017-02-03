@@ -25,6 +25,9 @@ campaign.qh
 ../common/mapinfo.qh
 ../common/util.qc
 
+../common/dlc.qh
+dlc.qh
+
 csqcprojectile.qh
 csqceffects.qc
 
@@ -86,6 +89,7 @@ gamehooks.qh
 scores_rules.qc
 
 miscfunctions.qc
+../common/miscfunctions.qc
 
 waypointsprites.qc
 
@@ -228,3 +232,6 @@ progressbar.qc
 location_request.qc
 
 vehicles/vehicles.qc
+
+../common/dlc.qc
+dlc.qc

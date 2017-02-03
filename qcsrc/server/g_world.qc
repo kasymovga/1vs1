@@ -717,6 +717,7 @@ void spawnfunc_worldspawn (void)
 	PL_CROUCH_VIEW_OFS = '0 0 15' * sv_world_scale;
 	PL_CROUCH_MIN = '-16 -16 -24' * sv_world_scale;
 	PL_CROUCH_MAX = '16 16 25' * sv_world_scale;
+	dlc_init();
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 	readlevelcvars();
