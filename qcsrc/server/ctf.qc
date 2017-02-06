@@ -61,6 +61,15 @@ float ctf_handle_frags(entity attacker, entity targ, float f) {
 	if(g_ctf_ignore_frags)
 		return 0;
 
+	if (f < 0)
+		return f;
+
+	if (targ.flagcarried) {
+		PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
+		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
+		if not(f)
+			UpdateFrags(attacker, f);
+	}
 	return f;
 }
 
