@@ -9,7 +9,7 @@ void Clanarena_Think()
 	Roundbased_TeamArenaThink();
 }
 
-void Clanarena_SpawnHook() {
+void Clanarena_Spawn(entity spot) {
 	Roundbased_NeedCheckTeams();
 	if not(Roundbased_Active)
 	if not(Roundbased_RestartTime) {
@@ -55,7 +55,7 @@ void Clanarena_Init()
 	CACHE_CVAR(g_clanarena_startdelay);
 	CACHE_CVAR(g_clanarena_enddelay);
 
-	GameHook_Spawn = Clanarena_SpawnHook;
+	GameHook_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
 	GameHook_DamageHandle = Clanarena_DamageHandle;

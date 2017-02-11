@@ -18,6 +18,12 @@ string race_checkpoint_recordholders[MAX_CHECKPOINTS];
 float race_checkpoint_lasttimes[MAX_CHECKPOINTS];
 float race_checkpoint_lastlaps[MAX_CHECKPOINTS];
 entity race_checkpoint_lastplayers[MAX_CHECKPOINTS];
+float race_spawns;
+float race_highest_place_spawn; // number of places; a place higher gets spawned at 0
+float race_lowest_place_spawn; // where to spawn in qualifying
+.float race_place;
+void race_ImposePenaltyTime(entity pl, float penalty, string reason);
+void race_StartCompleting();
 
 float race_highest_checkpoint;
 float race_timed_checkpoint;
@@ -603,28 +609,23 @@ void race_RetractPlayer()
 	}
 }
 
-void race_PreDie()
+void race_PreDie(entity plr, entity attacker, float killed)
 {
-	if(!g_race && !g_cts)
-		return;
-
-	race_AbandonRaceCheck(self);
+	if (killed)
+		race_AbandonRaceCheck(plr);
 }
 
-void race_PreSpawn()
+entity race_PreSpawn()
 {
-	if(!g_race && !g_cts)
-		return;
 	if(self.killcount == -666 || g_race_qualifying)
 		race_PreparePlayer();
 
 	race_AbandonRaceCheck(self);
+	return world;
 }
 
 void race_PostSpawn(entity spot)
 {
-	if(!g_race && !g_cts)
-		return;
 	if(self.killcount != -666 && !g_race_qualifying)
 	{
 		if(spot.target == "")
@@ -642,8 +643,6 @@ void race_PostSpawn(entity spot)
 
 void race_PreSpawnObserver()
 {
-	if(!g_race && !g_cts)
-		return;
 	race_PreparePlayer();
 }
 
@@ -680,7 +679,7 @@ void race_ClearRecords()
 		race_ClearTime(e);
 }
 
-void race_ReadyRestart()
+void race_Reset()
 {
 	float s;
 
@@ -840,8 +839,153 @@ void race_PhysicFrameBegin() {
 	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
 }
 
+float race_WinningCondition_NonQualifying(float fraglimit)
+{
+	float wc;
+	entity p;
+	float n, c;
+
+	n = 0;
+	c = 0;
+	FOR_EACH_PLAYER(p)
+	{
+		++n;
+		if(p.race_completed)
+			++c;
+	}
+	if(n && (n == c))
+		return WINNING_YES;
+
+	wc = WinningCondition_Scores(fraglimit, 0);
+
+	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
+	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
+	// do NOT support equality when the laps are all raced!
+		return WINNING_STARTSUDDENDEATHOVERTIME;
+	else
+		return WINNING_NEVER;
+
+	return wc;
+}
+
+float race_WinningCondition_QualifyingThenRace(float limit)
+{
+	float wc;
+	wc = WinningCondition_Scores(limit, 0);
+
+	// NEVER initiate overtime
+	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
+		return WINNING_YES;
+
+	return wc;
+}
+
+float race_WinningCondition(float fraglimit, float ignore) {
+	if(!g_race_qualifying)
+		return race_WinningCondition_NonQualifying(fraglimit);
+	else if(g_race_qualifying == 2)
+		return race_WinningCondition_QualifyingThenRace(fraglimit);
+
+	return WINNING_NO;
+}
+
+float race_InitiateOvertime() {
+	if (g_race_qualifying == 2) {
+		float totalplayers;
+		float playerswithlaps;
+		float readyplayers;
+		entity head;
+		totalplayers = playerswithlaps = readyplayers = 0;
+		FOR_EACH_PLAYER(head)
+		{
+			++totalplayers;
+			if(PlayerScore_Add(head, SP_RACE_FASTEST, 0))
+				++playerswithlaps;
+			if(head.ready)
+				++readyplayers;
+		}
+
+		// at least 2 of the players have completed a lap: start the RACE
+		// otherwise, the players should end the qualifying on their own
+		if(readyplayers || playerswithlaps >= 2)
+		{
+			checkrules_suddendeathend = 0;
+			ReadyRestart(); // go to race
+			return FALSE;
+		}
+	}
+	if(!checkrules_suddendeathend)
+	{
+		checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
+		if(g_race && !g_race_qualifying)
+			race_StartCompleting();
+	}
+	return FALSE;
+}
+
+float race_SpawnPointGood(entity spot) {
+	if(race_spawns)
+		if(spot.target == "")
+			return FALSE;
+
+	if(spot.target == "")
+		return TRUE;
+
+	local entity ent;
+	float good, found;
+	ent = find(world, targetname, spot.target);
+	while(ent) {
+		if(ent.classname == "trigger_race_checkpoint")
+		{
+			found = 1;
+			if(self.classname == "player") // spectators may spawn everywhere
+			{
+				if(g_race_qualifying)
+				{
+					// spawn at first
+					if(ent.race_checkpoint != 0)
+						return FALSE;
+
+					if(spot.race_place != race_lowest_place_spawn)
+						return FALSE;
+				}
+				else
+				{
+					if(ent.race_checkpoint != race_PreviousCheckpoint(self.race_checkpoint))
+						return FALSE;
+
+					float pl;
+					pl = self.race_place;
+					if(pl > race_highest_place_spawn)
+						pl = 0;
+					if(spot.race_place != pl)
+						return FALSE;
+				}
+			}
+			good = 1;
+		}
+		ent = find(ent, targetname, spot.target);
+	}
+	if(found && !good)
+		return FALSE;
+
+	return TRUE;
+}
+
 void race_init() {
+	if (g_race) {
+		GameHook_WinningCondition = race_WinningCondition;
+		GameHook_InititateOvertime = race_InitiateOvertime;
+	}
+
+	GameHook_InitSpectator = race_InitSpectator;
+	GameHook_Reset = race_Reset;
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;
 	GameHook_PlayerCanFire = race_PlayerCanFire;
 	GameHook_PhysicFrameBegin = race_PhysicFrameBegin;
+	GameHook_SelectSpawnPoint = race_PreSpawn;
+	GameHook_Spawn = race_PostSpawn;
+	GameHook_PlayerClear = race_PreDie;
+	GameHook_ObserverSpawn = race_PreSpawnObserver;
+	GameHook_SpawnPointGood = race_SpawnPointGood;
 }

@@ -189,10 +189,6 @@ float Spawn_Score(entity spot, entity playerlist, float teamcheck)
 	if(spot.team != teamcheck)
 		return -1;
 
-	if(race_spawns)
-		if(spot.target == "")
-			return -1;
-
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
 		if(spot.restriction == 1)
@@ -203,53 +199,8 @@ float Spawn_Score(entity spot, entity playerlist, float teamcheck)
 		if(spot.restriction == 2)
 			return -1;
 	}
-
-	// filter out spots for assault
-	if(spot.target != "") {
-		local entity ent;
-		float good, found;
-		ent = find(world, targetname, spot.target);
-		while(ent) {
-			if(ent.classname == "target_objective")
-			{
-				found = 1;
-				if(ent.health < 0 || ent.health >= ASSAULT_VALUE_INACTIVE)
-					return -1;
-				good = 1;
-			}
-			else if(ent.classname == "trigger_race_checkpoint")
-			{
-				found = 1;
-				if(self.classname == "player") // spectators may spawn everywhere
-				{
-					if(g_race_qualifying)
-					{
-						// spawn at first
-						if(ent.race_checkpoint != 0)
-							return -1;
-						if(spot.race_place != race_lowest_place_spawn)
-							return -1;
-					}
-					else
-					{
-						if(ent.race_checkpoint != race_PreviousCheckpoint(self.race_checkpoint))
-							return -1;
-						float pl;
-						pl = self.race_place;
-						if(pl > race_highest_place_spawn)
-							pl = 0;
-						if(spot.race_place != pl)
-							return -1;
-					}
-				}
-				good = 1;
-			}
-			ent = find(ent, targetname, spot.target);
-		}
-
-		if(found && !good)
-			return -1;
-	}
+	if (!GameHook_SpawnPointGood(spot))
+		return -1;
 
 	player = playerlist;
 	shortest = vlen(world.maxs - world.mins);
@@ -601,7 +552,7 @@ void PutObserverInServer(float frags_team_reset)
 {
 	entity	spot;
 
-	race_PreSpawnObserver();
+	GameHook_ObserverSpawn();
 
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
@@ -820,8 +771,6 @@ void PutClientInServer()
 			JoinBestTeam(self, FALSE, FALSE);
 		}
 
-		race_PreSpawn();
-
 		spot = GameHook_SelectSpawnPoint();
 
 		if (!spot)
@@ -830,8 +779,10 @@ void PutClientInServer()
 		if(!spot)
 			spot = SelectSpawnPoint(TRUE);
 
-		if(!spot)
+		if(!spot) {
 			centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
+			PutObserverInServer(FALSE);
+		}
 
 		self.classname = "player";
 		self.wasplayer = TRUE;
@@ -980,8 +931,6 @@ void PutClientInServer()
 
 		self.speedrunning = FALSE;
 
-		race_PostSpawn(spot);
-
 		if(spawn_debug)
 		{
 			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
@@ -993,13 +942,6 @@ void PutClientInServer()
 
 		if (g_spawnsound)
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-
-		if(g_assault) {
-			if(self.team == assault_attacker_team)
-				centerprint(self, "You are attacking!");
-			else
-				centerprint(self, "You are defending!");
-		}
 
 		target_voicescript_clear(self);
 
@@ -1032,7 +974,7 @@ void PutClientInServer()
 			setorigin(self.hat, sv_player_hat_origin);
 		}
 		Nadget_SpawnHook();
-		GameHook_Spawn();
+		GameHook_Spawn(spot);
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 		Nadget_ObserverHook();
@@ -1392,8 +1334,6 @@ void ClientConnect (void)
 	ClientData_Attach();
 
 	bot_clientconnect();
-
-	race_PreSpawnObserver();
 
 	if((sv_spectate == 1) || g_campaign) {
 		self.classname = "observer";
@@ -2515,8 +2455,7 @@ void PlayerPreThink (void)
 	if(self.spectatee_status != oldspectatee_status)
 	{
 		ClientData_Touch(self);
-		if(g_race || g_cts)
-			race_InitSpectator();
+		GameHook_InitSpectator();
 	}
 
 	if(self.teamkill_soundtime)

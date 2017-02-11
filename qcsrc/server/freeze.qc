@@ -24,7 +24,7 @@ void Freeze_Think()
 	Roundbased_TeamArenaThink();
 }
 
-void Freeze_SpawnHook()
+void Freeze_Spawn(entity spot)
 {
 	Roundbased_NeedCheckTeams();
 	if (Roundbased_Active)
@@ -198,7 +198,7 @@ void Freeze_Init()
 		return;
 
 	GameHook_DeathHandle = Freeze_DeathHandle;
-	GameHook_Spawn = Freeze_SpawnHook;
+	GameHook_Spawn = Freeze_Spawn;
 	GameHook_PlayerClear = Freeze_PlayerClear;
 	GameHook_SpeedMod = Freeze_SpeedMod;
 	GameHook_DamageHandle = Freeze_DamageHandle;

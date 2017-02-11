@@ -306,6 +306,7 @@ void InitGameplayMode()
 	if(g_assault)
 	{
 		game = GAME_ASSAULT;
+		assault_init();
 		ActivateTeamplay();
 		ScoreRules_assault();
 	}

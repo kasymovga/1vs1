@@ -1347,7 +1347,7 @@ float onslaught_DeathHandle(entity attacker, entity inflictor, float deathtype) 
 	return FALSE;
 }
 
-void onslaught_Spawn() {
+void onslaught_Spawn(entity spot) {
 	LocationRequest_Remove(self);
 }
 
@@ -1356,11 +1356,54 @@ void onslaught_PlayerClear(entity plr, entity attacker, float killed) {
 		LocationRequest_Remove(plr);
 }
 
+// Onslaught winning condition:
+// game terminates if only one team has a working generator (or none)
+float onslaught_WinningCondition()
+{
+	entity head;
+	local float t1, t2, t3, t4;
+
+	WinningConditionHelper(); // set worldstatus
+
+	if(inWarmupStage)
+		return WINNING_NO;
+
+	// first check if the game has ended
+	t1 = t2 = t3 = t4 = 0;
+	head = find(world, classname, "onslaught_generator");
+	while (head)
+	{
+		if (head.health > 0)
+		{
+			if (head.team == COLOR_TEAM1) t1 = 1;
+			if (head.team == COLOR_TEAM2) t2 = 1;
+			if (head.team == COLOR_TEAM3) t3 = 1;
+			if (head.team == COLOR_TEAM4) t4 = 1;
+		}
+		head = find(head, classname, "onslaught_generator");
+	}
+	if (t1 + t2 + t3 + t4 < 2)
+	{
+		// game over, only one team remains (or none)
+		ClearWinners();
+		if (t1) SetWinners(team, COLOR_TEAM1);
+		if (t2) SetWinners(team, COLOR_TEAM2);
+		if (t3) SetWinners(team, COLOR_TEAM3);
+		if (t4) SetWinners(team, COLOR_TEAM4);
+		dprint("Have a winner, ending game.\n");
+		return WINNING_YES;
+	}
+
+	// Two or more teams remain
+	return WINNING_NO;
+}
+
 void onslaught_init() {
 	GameHook_DeathHandle = onslaught_DeathHandle;
 	GameHook_Spawn = onslaught_Spawn;
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
 	GameHook_PlayerClear = onslaught_PlayerClear;
+	GameHook_WinningCondition = onslaught_WinningCondition;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");

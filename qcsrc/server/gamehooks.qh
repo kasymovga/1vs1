@@ -1,6 +1,6 @@
 var float(entity attacker, entity inflictor, float deathtype) GameHook_DeathHandle = { return FALSE; }
 var float() GameHook_SpeedMod = { return 1; }
-var void() GameHook_Spawn = {}
+var void(entity spot) GameHook_Spawn = {}
 var void(entity plr, entity attacker, float killed) GameHook_PlayerClear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHook_DamageHandle = { return FALSE; }
@@ -9,3 +9,16 @@ var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
 var void() GameHook_PlayerPreThink = {}
 var entity() GameHook_SelectSpawnPoint = { return world; }
+var float(float fraglimit, float leadlimit) GameHook_WinningCondition = { 
+	float f = WinningCondition_RanOutOfSpawns();
+	if(f == WINNING_YES) {
+		bprint("Hey! Someone ran out of spawns!\n");
+		return f;
+	}
+	return WinningCondition_Scores(fraglimit, leadlimit);
+}
+var float() GameHook_InititateOvertime = { return TRUE; }
+var void() GameHook_Reset = {}
+var void() GameHook_ObserverSpawn = {}
+var void() GameHook_InitSpectator = {}
+var float(entity spot) GameHook_SpawnPointGood = { return TRUE; }

@@ -131,6 +131,7 @@ Called before each frame by the server
 void RuneMatchGivePoints();
 float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
+void ReadyRestart();
 void StartFrame (void)
 {
 	remove = remove_unsafely; // not during spawning!
