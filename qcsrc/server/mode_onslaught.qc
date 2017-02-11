@@ -59,7 +59,7 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 
 	setmodel(gib, smodel);
 	setorigin(gib, v_from);
-	gib.solid = SOLID_BBOX;
+	gib.solid = SOLID_NOT;
 	gib.movetype = MOVETYPE_BOUNCE;
 	gib.takedamage = DAMAGE_YES;
 	gib.event_damage = ons_gib_damage;
