@@ -18,6 +18,12 @@ void onslaught_link_checkupdate();
 
 .string model1, model2, model3;
 
+float g_onslaught_gen_health;
+float g_onslaught_cp_buildhealth;
+float g_onslaught_cp_buildtime;
+float g_onslaught_cp_health;
+float g_onslaught_cp_regen;
+
 void ons_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
 {
 	self.velocity = self.velocity + vforce;
@@ -372,34 +378,6 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 	return 0;
 }
 
-void onslaught_generator_think()
-{
-	local float d;
-	local entity e;
-	self.nextthink = ceil(time + 1);
-	if (!gameover)
-	{
-		if (cvar("timelimit"))
-		if (time > game_starttime + cvar("timelimit") * 60)
-		{
-			// self.max_health / 300 gives 5 minutes of overtime.
-			// control points reduce the overtime duration.
-			sound(self, CHAN_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTN_NORM);
-			d = 1;
-			e = findchain(classname, "onslaught_controlpoint");
-			while (e)
-			{
-				if (e.team != self.team)
-					if (e.islinked)
-						d = d + 1;
-				e = e.chain;
-			}
-			d = d * self.max_health / 300;
-			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
-		}
-	}
-};
-
 void onslaught_generator_ring_spawn(vector org)
 {
 	modeleffect_spawn("models/onslaught/shockwavetransring.md3", 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, -16, 0.1, 1.25, 0.25);
@@ -626,7 +604,6 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		setmodel(self, "models/onslaught/generator_dmg2.md3");
 	else if(self.health < self.max_health * 0.90)
 		setmodel(self, "models/onslaught/generator_dmg1.md3");
-	setsize(self, '-52 -52 -14', '52 52 75');
 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
@@ -656,15 +633,6 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	if(random() < damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
-};
-
-// update links after a delay
-void onslaught_generator_delayed()
-{
-	onslaught_updatelinks();
-	// now begin normal thinking
-	self.think = onslaught_generator_think;
-	self.nextthink = time;
 };
 
 string onslaught_generator_waypointsprite_for_team(entity e, float t)
@@ -809,14 +777,14 @@ void onslaught_controlpoint_updatesprite(entity e)
 void onslaught_generator_reset()
 {
 	self.team = self.team_saved;
-	self.lasthealth = self.max_health = self.health = cvar("g_onslaught_gen_health");
+	self.lasthealth = self.max_health = self.health = g_onslaught_gen_health;
 	self.takedamage = DAMAGE_AIM;
 	self.bot_attack = TRUE;
 	self.iscaptured = TRUE;
 	self.islinked = TRUE;
 	self.isshielded = TRUE;
 	self.enemy.solid = SOLID_NOT;
-	self.think = onslaught_generator_delayed;
+	self.think = onslaught_updatelinks;
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
 
@@ -842,39 +810,13 @@ void spawnfunc_onslaught_generator()
 	}
 
 	local entity e;
-	precache_model("models/onslaught/generator.md3");
-	precache_model("models/onslaught/generator_shield.md3");
-	precache_model("models/onslaught/generator_dmg1.md3");
-	precache_model("models/onslaught/generator_dmg2.md3");
-	precache_model("models/onslaught/generator_dmg3.md3");
-	precache_model("models/onslaught/generator_dmg4.md3");
-	precache_model("models/onslaught/generator_dmg5.md3");
-	precache_model("models/onslaught/generator_dmg6.md3");
-	precache_model("models/onslaught/generator_dmg7.md3");
-	precache_model("models/onslaught/generator_dmg8.md3");
-	precache_model("models/onslaught/generator_dmg9.md3");
-	precache_model("models/onslaught/generator_dead.md3");
-	precache_model("models/onslaught/shockwave.md3");
-	precache_model("models/onslaught/shockwavetransring.md3");
-	precache_model("models/onslaught/gen_gib1.md3");
-	precache_model("models/onslaught/gen_gib2.md3");
-	precache_model("models/onslaught/gen_gib3.md3");
-	precache_model("models/onslaught/ons_ray.md3");
-	precache_sound("onslaught/generator_decay.wav");
-	precache_sound("weapons/grenade_impact.wav");
-	precache_sound("weapons/rocket_impact.wav");
-	precache_sound("onslaught/generator_underattack.wav");
-	precache_sound("onslaught/shockwave.wav");
-	precache_sound("onslaught/ons_hit1.wav");
-	precache_sound("onslaught/ons_hit2.wav");
-	precache_sound("onslaught/electricity_explode.wav");
 	if (!self.team)
 		objerror("team must be set");
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	self.lasthealth = self.max_health = self.health = cvar("g_onslaught_gen_health");
+	self.lasthealth = self.max_health = self.health = g_onslaught_gen_health;
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
 	setorigin(self, self.origin);
@@ -896,9 +838,9 @@ void spawnfunc_onslaught_generator()
 	setorigin(e, self.origin);
 	e.colormap = self.colormap;
 	e.team = self.team;
-	self.think = onslaught_generator_delayed;
+	self.think = onslaught_updatelinks;
 	self.nextthink = time + 0.2;
-	InitializeEntity(self, onslaught_generator_delayed, INITPRIO_LAST);
+	InitializeEntity(self, onslaught_updatelinks, INITPRIO_LAST);
 
 	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite);
 	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
@@ -913,8 +855,6 @@ void spawnfunc_onslaught_generator()
 };
 
 .float waslinked;
-.float cp_bob_spd;
-.vector cp_origin, cp_bob_origin, cp_bob_dmg;
 
 float ons_notification_time_team1;
 float ons_notification_time_team2;
@@ -970,7 +910,6 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / sys_ticrate));
 	self.pain_finished = time + 1;
 	self.punchangle = (2 * randomvec() - '1 1 1') * 45;
-	self.cp_bob_dmg_z = (2 * random() - 1) * 15;
 	// colormod flash when shot
 	self.colormod = '2 2 2';
 	// particles on every hit
@@ -1018,7 +957,6 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
 			setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
-		//setsize(self, '-32 -32 0', '32 32 8');
 
 		remove(self);
 	}
@@ -1090,14 +1028,6 @@ void onslaught_controlpoint_icon_think()
 	self.angles_z = self.punchangle_z;
 	self.mangle_y = self.mangle_y + 1.5;
 
-	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd / 8));
-	self.cp_bob_spd = self.cp_bob_spd + 0.5;
-	if(self.cp_bob_dmg_z > 0)
-		self.cp_bob_dmg_z = self.cp_bob_dmg_z - 0.1;
-	else
-		self.cp_bob_dmg_z = 0;
-	setorigin(self,self.cp_origin + self.cp_bob_origin + self.cp_bob_dmg);
-
 	// damaged fx
 	if(random() < 0.6 - self.health / self.max_health)
 	{
@@ -1127,7 +1057,7 @@ void onslaught_controlpoint_icon_buildthink()
 	if (self.health >= self.max_health)
 	{
 		self.health = self.max_health;
-		self.count = cvar("g_onslaught_cp_regen") * sys_ticrate; // slow repair rate from now on
+		self.count = g_onslaught_cp_regen * sys_ticrate; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
 		bprint(ColoredTeamName(self.team), " captured ", self.owner.message, " control point\n");
@@ -1144,16 +1074,12 @@ void onslaught_controlpoint_icon_buildthink()
 		activator = self;
 		SUB_UseTargets ();
 		self = oself;
-		self.cp_origin = self.origin;
-		self.cp_bob_origin = '0 0 0.1';
-		self.cp_bob_spd = 0;
 	}
 	self.alpha = self.health / self.max_health;
 	// colormod flash when shot
 	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
 	if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
 		setmodel(self.owner, "models/onslaught/controlpoint_pad2.md3");
-	//setsize(self, '-32 -32 0', '32 32 8');
 
 	if(random() < 0.9 - self.health / self.max_health)
 		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
@@ -1177,13 +1103,14 @@ void onslaught_controlpoint_touch()
 	self.goalentity = e = spawn();
 	e.classname = "onslaught_controlpoint_icon";
 	e.owner = self;
-	e.max_health = cvar("g_onslaught_cp_health");
-	e.health = cvar("g_onslaught_cp_buildhealth");
+	e.max_health = g_onslaught_cp_health;
+	e.health = g_onslaught_cp_buildhealth;
 	e.solid = SOLID_BBOX;
 	e.movetype = MOVETYPE_NONE;
+	e.scale = 1.2;
 	setmodel(e, "models/onslaught/controlpoint_icon.md3");
 	setsize(e, '-32 -32 -32', '32 32 32');
-	setorigin(e, self.origin + '0 0 96');
+	setorigin(e, self.origin + '0 0 32');
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = TRUE;
 	e.event_damage = onslaught_controlpoint_icon_damage;
@@ -1191,7 +1118,7 @@ void onslaught_controlpoint_touch()
 	e.colormap = 1024 + (e.team - 1) * 17;
 	e.think = onslaught_controlpoint_icon_buildthink;
 	e.nextthink = time + sys_ticrate;
-	e.count = (e.max_health - e.health) * sys_ticrate / cvar("g_onslaught_cp_buildtime"); // how long it takes to build
+	e.count = (e.max_health - e.health) * sys_ticrate / g_onslaught_cp_buildtime; // how long it takes to build
 	sound(e, CHAN_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
 	self.team = e.team;
 	self.colormap = e.colormap;
@@ -1214,7 +1141,6 @@ void onslaught_controlpoint_reset()
 	self.think = self.enemy.think = SUB_Null;
 	self.nextthink = 0; // don't like SUB_Null :P
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
-	//setsize(self, '-32 -32 0', '32 32 8');
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
 
@@ -1242,27 +1168,9 @@ void spawnfunc_onslaught_controlpoint()
 		remove(self);
 		return;
 	}
-	precache_model("models/onslaught/controlpoint_pad.md3");
-	precache_model("models/onslaught/controlpoint_pad2.md3");
-	precache_model("models/onslaught/controlpoint_shield.md3");
-	precache_model("models/onslaught/controlpoint_icon.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg2.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg3.md3");
-	precache_model("models/onslaught/controlpoint_icon_gib1.md3");
-	precache_model("models/onslaught/controlpoint_icon_gib2.md3");
-	precache_model("models/onslaught/controlpoint_icon_gib4.md3");
-	precache_sound("onslaught/controlpoint_build.wav");
-	precache_sound("onslaught/controlpoint_built.wav");
-	precache_sound("weapons/grenade_impact.wav");
-	precache_sound("onslaught/damageblockedbyshield.wav");
-	precache_sound("onslaught/controlpoint_underattack.wav");
-	precache_sound("onslaught/ons_spark1.wav");
-	precache_sound("onslaught/ons_spark2.wav");
-	self.solid = SOLID_BBOX;
+	self.solid = SOLID_TRIGGER;
 	self.movetype = MOVETYPE_NONE;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
-	//setsize(self, '-32 -32 0', '32 32 8');
 	setorigin(self, self.origin);
 	self.touch = onslaught_controlpoint_touch;
 	self.team = 0;
@@ -1273,11 +1181,11 @@ void spawnfunc_onslaught_controlpoint()
 	// spawn shield model which indicates whether this can be damaged
 	self.enemy = e = spawn();
 	e.classname = "onslaught_controlpoint_shield";
+	e.scale = 0.7;
 	e.solid = SOLID_NOT;
 	e.movetype = MOVETYPE_NONE;
 	e.effects = EF_ADDITIVE;
 	setmodel(e, "models/onslaught/controlpoint_shield.md3");
-	//setsize(e, '-32 -32 0', '32 32 128');
 	setorigin(e, self.origin);
 	e.colormap = self.colormap;
 
@@ -1453,4 +1361,52 @@ void onslaught_init() {
 	GameHook_Spawn = onslaught_Spawn;
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
 	GameHook_PlayerClear = onslaught_PlayerClear;
+	precache_model("models/onslaught/generator.md3");
+	precache_model("models/onslaught/generator_shield.md3");
+	precache_model("models/onslaught/generator_dmg1.md3");
+	precache_model("models/onslaught/generator_dmg2.md3");
+	precache_model("models/onslaught/generator_dmg3.md3");
+	precache_model("models/onslaught/generator_dmg4.md3");
+	precache_model("models/onslaught/generator_dmg5.md3");
+	precache_model("models/onslaught/generator_dmg6.md3");
+	precache_model("models/onslaught/generator_dmg7.md3");
+	precache_model("models/onslaught/generator_dmg8.md3");
+	precache_model("models/onslaught/generator_dmg9.md3");
+	precache_model("models/onslaught/generator_dead.md3");
+	precache_model("models/onslaught/shockwave.md3");
+	precache_model("models/onslaught/shockwavetransring.md3");
+	precache_model("models/onslaught/gen_gib1.md3");
+	precache_model("models/onslaught/gen_gib2.md3");
+	precache_model("models/onslaught/gen_gib3.md3");
+	precache_model("models/onslaught/ons_ray.md3");
+	precache_sound("onslaught/generator_decay.wav");
+	precache_sound("weapons/grenade_impact.wav");
+	precache_sound("weapons/rocket_impact.wav");
+	precache_sound("onslaught/generator_underattack.wav");
+	precache_sound("onslaught/shockwave.wav");
+	precache_sound("onslaught/ons_hit1.wav");
+	precache_sound("onslaught/ons_hit2.wav");
+	precache_sound("onslaught/electricity_explode.wav");
+	precache_model("models/onslaught/controlpoint_pad.md3");
+	precache_model("models/onslaught/controlpoint_pad2.md3");
+	precache_model("models/onslaught/controlpoint_shield.md3");
+	precache_model("models/onslaught/controlpoint_icon.md3");
+	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
+	precache_model("models/onslaught/controlpoint_icon_dmg2.md3");
+	precache_model("models/onslaught/controlpoint_icon_dmg3.md3");
+	precache_model("models/onslaught/controlpoint_icon_gib1.md3");
+	precache_model("models/onslaught/controlpoint_icon_gib2.md3");
+	precache_model("models/onslaught/controlpoint_icon_gib4.md3");
+	precache_sound("onslaught/controlpoint_build.wav");
+	precache_sound("onslaught/controlpoint_built.wav");
+	precache_sound("weapons/grenade_impact.wav");
+	precache_sound("onslaught/damageblockedbyshield.wav");
+	precache_sound("onslaught/controlpoint_underattack.wav");
+	precache_sound("onslaught/ons_spark1.wav");
+	precache_sound("onslaught/ons_spark2.wav");
+	CACHE_CVAR(g_onslaught_gen_health);
+	CACHE_CVAR(g_onslaught_cp_buildhealth);
+	CACHE_CVAR(g_onslaught_cp_buildtime);
+	CACHE_CVAR(g_onslaught_cp_health);
+	CACHE_CVAR(g_onslaught_cp_regen);
 }
