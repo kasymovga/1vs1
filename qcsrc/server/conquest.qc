@@ -64,14 +64,26 @@ void conquest_cp_reset() {
 void conquest_cp_think_capture() {
 	if (self.owner) {
 		self.capture_progress = self.capture_progress + (frametime / g_conquest_capture_time);
+		if (self.team)
+			self.enemy.alpha = 1 - self.capture_progress;
+
 		if (self.capture_progress >= 1) {
 			PlayerScore_Add(self.owner, SP_SCORE, 10);
-			if (self.team > 0)
+			if (self.team > 0) {
+				play2team(self.team, "onslaught/controlpoint_underattack.ogg");
+				play2team(self.owner.team, "domination/claim.wav");
 				conquest_cp_free();
-			else
-				conquest_cp_capture(self.owner.team);
+				if (clienttype(self.owner) == CLIENTTYPE_REAL)
+					centerprint(self.owner, "Control point was freed");
 
-			activator = self.owner;
+			} else {
+				conquest_cp_capture(self.owner.team);
+				if (clienttype(self.owner) == CLIENTTYPE_REAL)
+					centerprint(self.owner, "Control point was captured");
+
+				play2team(self.team, "onslaught/controlpoint_built.ogg");
+			}
+			activator = self;
 			SUB_UseTargets();
 
 			entity e, oldself;
@@ -92,6 +104,8 @@ void conquest_cp_think_capture() {
 		}
 	}
 	if not(self.owner) {
+		if (self.team)
+			self.enemy.alpha = 1;
 		self.capture_progress = 0;
 		conquest_remove_progress_bar();
 		return;
@@ -218,10 +232,12 @@ entity conquest_SelectSpawnPoint() {
 void conquest_init() {
 	precache_model("models/onslaught/controlpoint_pad.md3");
 	precache_model("models/ctf/flags.md3");
+	precache_sound("onslaught/controlpoint_built.ogg");
+	precache_sound("onslaught/controlpoint_underattack.ogg");
+	precache_sound("domination/claim.wav");
 	CACHE_CVAR(g_conquest_capture_time);
 	if (g_conquest_capture_time <= 0)
 		g_conquest_capture_time = 1;
-
 
 	GameHook_WinningCondition = conquest_WinningCondition;
 	GameHook_FragsHandle = conquest_FragsHandle;
