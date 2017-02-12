@@ -4,6 +4,14 @@ void conquest_cp_free() {
 	remove(self.enemy);
 	self.enemy = world;
 	self.team = 0;
+	entity e;
+	if (self.target != "")
+	for (e = world; (e = find(e, targetname, self.target)); )
+		if (e.classname == "info_player_deathmatch")
+			if (e.sprite) {
+				remove(e.sprite);
+				e.sprite = world;
+			}
 }
 
 void conquest_cp_capture(float byteam) {
@@ -18,6 +26,15 @@ void conquest_cp_capture(float byteam) {
 	self.enemy.modelflags = MF_ROTATE;
 	setorigin(self.enemy, self.origin + '0 0 64');
 	self.team = byteam;
+	entity e;
+	if (self.target != "")
+	for (e = world; (e = find(e, targetname, self.target)); )
+		if (e.classname == "info_player_deathmatch") {
+			if not(e.sprite)
+				WaypointSprite_SpawnFixed(string_null, e.origin, e, sprite);
+
+			WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormapPaletteColor(self.team - 1, FALSE));
+		}
 }
 
 .float capture_progress;
@@ -32,7 +49,7 @@ void conquest_remove_progress_bar() {
 }
 
 void conquest_update_waypoint() {
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, 0.5 * colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(self.team - 1, FALSE));
 	string s;
 	if(self.team == COLOR_TEAM1)
 		s = "ons-cp-red";
@@ -63,6 +80,14 @@ void conquest_cp_reset() {
 
 void conquest_cp_think_capture() {
 	if (self.owner) {
+		if not(self.capture_progress)
+		if (self.team > 0)
+		if (self.delay < time) {
+			play2team(self.team, "onslaught/controlpoint_underattack.ogg");
+			WaypointSprite_Ping(self.sprite);
+			self.delay = time + g_conquest_capture_time;
+		}
+
 		self.capture_progress = self.capture_progress + (frametime / g_conquest_capture_time);
 		if (self.team)
 			self.enemy.alpha = 1 - self.capture_progress;
@@ -70,16 +95,15 @@ void conquest_cp_think_capture() {
 		if (self.capture_progress >= 1) {
 			PlayerScore_Add(self.owner, SP_SCORE, 10);
 			if (self.team > 0) {
-				play2team(self.team, "onslaught/controlpoint_underattack.ogg");
-				play2team(self.owner.team, "domination/claim.wav");
+				play2all("domination/claim.wav");
 				conquest_cp_free();
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
-					centerprint(self.owner, "Control point was freed");
+					centerprint(self.owner, "Control Point has been freed");
 
 			} else {
 				conquest_cp_capture(self.owner.team);
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
-					centerprint(self.owner, "Control point was captured");
+					centerprint(self.owner, "Control Point has been captured");
 
 				play2team(self.team, "onslaught/controlpoint_built.ogg");
 			}
@@ -168,6 +192,8 @@ float conquest_TeamCanSpawn(float t) {
 	for (head = world; (head = find(head, classname, "conquest_cp")); )
 		if (head.team == t)
 			return TRUE;
+
+	return FALSE;
 }
 
 float conquest_WinningCondition()
@@ -209,6 +235,9 @@ float conquest_WinningCondition()
 		if (t1) SetWinners(team, COLOR_TEAM1);
 		if (t2) SetWinners(team, COLOR_TEAM2);
 		dprint("Have a winner, ending game.\n");
+		FOR_EACH_REALCLIENT(head)
+			LocationRequest_Remove(head);
+
 		return WINNING_YES;
 	}
 
