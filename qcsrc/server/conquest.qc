@@ -96,12 +96,14 @@ void conquest_cp_think_capture() {
 			PlayerScore_Add(self.owner, SP_SCORE, 10);
 			if (self.team > 0) {
 				play2all("domination/claim.wav");
+				TeamScore_AddToTeam(self.team, ST_SCORE, -1);
 				conquest_cp_free();
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
 					centerprint(self.owner, "Control Point has been freed");
 
 			} else {
 				conquest_cp_capture(self.owner.team);
+				TeamScore_AddToTeam(self.team, ST_SCORE, 1);
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
 					centerprint(self.owner, "Control Point has been captured");
 
@@ -200,7 +202,7 @@ float conquest_WinningCondition()
 {
 	entity head;
 	float t1, t2;
-
+	t1 = t2 = 0;
 	WinningConditionHelper(); // set worldstatus
 	if(inWarmupStage)
 		return WINNING_NO;
@@ -232,12 +234,24 @@ float conquest_WinningCondition()
 	if (t1 + t2 < 2) {
 		// game over, only one team remains (or none)
 		ClearWinners();
-		if (t1) SetWinners(team, COLOR_TEAM1);
-		if (t2) SetWinners(team, COLOR_TEAM2);
-		dprint("Have a winner, ending game.\n");
+		string announce_sound;
+		announce_sound = "domination/claim.wav";
+		if (t1) {
+			SetWinners(team, COLOR_TEAM1);
+			announce_sound = "ctf/red_capture.wav";
+		}
+		if (t2) {
+			SetWinners(team, COLOR_TEAM2);
+			announce_sound = "ctf/blue_capture.wav";
+		}
+		if (t1 + t2 > 0)
 		FOR_EACH_REALCLIENT(head)
-			LocationRequest_Remove(head);
 
+		dprint("Have a winner, ending game.\n");
+		FOR_EACH_REALCLIENT(head) {
+			announce(head, announce_sound);
+			LocationRequest_Remove(head);
+		}
 		return WINNING_YES;
 	}
 
@@ -258,9 +272,38 @@ entity conquest_SelectSpawnPoint() {
 	return onslaught_SelectSpawnPoint();
 }
 
+void conquest_Reset() {
+	float b1, b2;
+	entity e;
+	b1 = b2 = 0;
+	for (e = world; (e = find(e, classname, "conquest_cp")); ) {
+		if (e.team == COLOR_TEAM1)
+			TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, 1);
+
+		if (e.team == COLOR_TEAM2)
+			TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, 1);
+	}
+}
+
+void conquest_delayedinit() {
+	entity e;
+	for (e = world; (e = find(e, classname, "info_player_deathmatch")); ) {
+		if not(e.team)
+			continue;
+
+		if not(e.sprite)
+			WaypointSprite_SpawnFixed(string_null, e.origin, e, sprite);
+
+		WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormapPaletteColor(e.team - 1, FALSE));
+	}
+	conquest_Reset();
+}
+
 void conquest_init() {
 	precache_model("models/onslaught/controlpoint_pad.md3");
 	precache_model("models/ctf/flags.md3");
+	precache_sound("ctf/blue_capture.wav");
+	precache_sound("ctf/red_capture.wav");
 	precache_sound("onslaught/controlpoint_built.ogg");
 	precache_sound("onslaught/controlpoint_underattack.ogg");
 	precache_sound("domination/claim.wav");
@@ -274,4 +317,6 @@ void conquest_init() {
 	GameHook_DeathHandle = onslaught_DeathHandle;
 	GameHook_Spawn = onslaught_Spawn;
 	GameHook_PlayerClear = onslaught_PlayerClear;
+	GameHook_Reset = conquest_Reset;
+	InitializeEntity(world, conquest_delayedinit, INITPRIO_LAST);
 }
