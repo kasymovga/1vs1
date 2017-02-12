@@ -414,3 +414,6 @@ set timelimit_default 15
 set fraglimit_default 10
 
 set g_weapon_alpha 0
+
+set g_conquest 0
+set g_conquest_capture_time 5

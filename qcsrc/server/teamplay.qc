@@ -98,6 +98,7 @@ void WriteGameCvars()
 	cvar_set("g_domination", ftos(g_domination));
 	cvar_set("g_ctf", ftos(g_ctf));
 	cvar_set("g_runematch", ftos(g_runematch));
+	cvar_set("g_conquest", ftos(g_conquest));
 	cvar_set("g_keyhunt", ftos(g_keyhunt));
 	cvar_set("g_assault", ftos(g_assault));
 	cvar_set("g_onslaught", ftos(g_onslaught));
@@ -123,6 +124,7 @@ void ReadGameCvars()
 		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("g_domination")));
 		found += (g_ctf = (!found && (prev != GAME_CTF) && cvar("g_ctf")));
 		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("g_runematch")));
+		found += (g_conquest = (!found && (prev != GAME_CONQUEST) && cvar("g_conquest")));
 		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("g_keyhunt")));
 		found += (g_assault = (!found && (prev != GAME_ASSAULT) && cvar("g_assault")));
 		found += (g_onslaught = (!found && (prev != GAME_ONSLAUGHT) && cvar("g_onslaught")));
@@ -350,6 +352,13 @@ void InitGameplayMode()
 		leadlimit_override = cvar("g_nexball_goalleadlimit");
 		ActivateTeamplay();
 		nb_init();
+	}
+
+	if (g_conquest)
+	{
+		game = GAME_CONQUEST;
+		ActivateTeamplay();
+		conquest_init();
 	}
 
 	if(teams_matter)

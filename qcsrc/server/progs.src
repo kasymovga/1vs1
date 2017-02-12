@@ -58,6 +58,8 @@ clanarena.qh
 
 assault.qh
 
+conquest.qh
+
 nadgets.qh
 
 progressbar.qh
@@ -179,6 +181,8 @@ gamecommand.qc
 keyhunt.qc
 
 assault.qc
+
+conquest.qc
 
 ipban.qc
 
