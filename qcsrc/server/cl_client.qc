@@ -773,15 +773,13 @@ void PutClientInServer()
 
 		spot = GameHook_SelectSpawnPoint();
 
-		if (!spot)
-			spot = SelectSpawnPoint (FALSE);
-
-		if(!spot)
-			spot = SelectSpawnPoint(TRUE);
-
 		if(!spot) {
-			centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
+			if (clienttype(self) == CLIENTTYPE_REAL)
+				centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
+
+			print(self.netname, " not have place to spawn\n");
 			PutObserverInServer(FALSE);
+			return;
 		}
 
 		self.classname = "player";

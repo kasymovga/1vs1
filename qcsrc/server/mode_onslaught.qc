@@ -952,8 +952,6 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		activator = self;
 		SUB_UseTargets ();
 		self = oself;
-
-
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
 			setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
@@ -1074,6 +1072,18 @@ void onslaught_controlpoint_icon_buildthink()
 		activator = self;
 		SUB_UseTargets ();
 		self = oself;
+
+		entity e;
+		if (self.target != "")
+			FOR_EACH_CLIENT(e)
+				if (e.team == self.team)
+				if (e.classname != "player") {
+					oself = self;
+					self = e;
+					PutClientInServer();
+					self = oself;
+				}
+
 	}
 	self.alpha = self.health / self.max_health;
 	// colormod flash when shot
@@ -1316,7 +1326,7 @@ void onslaught_LocationRequest_Callback(float x, float y) {
 entity onslaught_SelectSpawnPoint() {
 	entity e, selected;
 	if not(self.ons_spawn_area_z)
-		return world;
+		return SelectSpawnPoint(FALSE);
 
 	vector v;
 	float fmin, f;
