@@ -154,6 +154,7 @@ void conquest_cp_touch() {
 	if (self.owner)
 		return;
 
+	other.bot_dontmove = time + sys_ticrate * 2;
 	self.owner = other;
 	if not(self.capture_progress_bar)
 		self.capture_progress_bar = ProgressBar_Create(((self.team > 0) ? "Freeing control point..." : "Capturing control point..."), other);

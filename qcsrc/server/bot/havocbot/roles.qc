@@ -126,7 +126,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 	}
 };
 
-void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius)
+void havocbot_goalrating_controlpoints_dom(float ratingscale, vector org, float sradius)
 {
 	local entity head;
 	head = findchain(classname, "dom_controlpoint");
@@ -144,6 +144,55 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 		head = head.chain;
 	}
 };
+
+void havocbot_goalrating_controlpoints_conq(float ratingscale, vector org, float sradius)
+{
+	local entity head;
+	head = findchain(classname, "conquest_cp");
+	while (head)
+	{
+		if (vlen(head.origin - org) < sradius)
+		{
+			if(!head.team)
+				navigation_routerating(head, ratingscale * 0.5, 5000);
+			else if(head.team != self.team) // other team's point
+				navigation_routerating(head, ratingscale, 5000);
+		}
+		head = head.chain;
+	}
+};
+
+void havocbot_goalrating_frozen_teammates(float ratingscale, vector org, float sradius)
+{
+	local entity head;
+	local float distance;
+
+	// don't chase players if we're under water
+	if(self.waterlevel>WATERLEVEL_WETFEET)
+		return;
+
+	FOR_EACH_PLAYER(head)
+	{
+		if (self != head)
+		if (head.deadflag == DEAD_FREEZE)
+		if (head.team == self.team)
+		{
+			distance = vlen(head.origin - org);
+			if (distance < 50 || distance > sradius)
+				continue;
+
+			if(head.flags & FL_INWATER || head.flags & FL_PARTIALGROUND)
+				continue;
+
+			// not falling
+			if(head.flags & FL_ONGROUND == 0)
+				continue;
+
+			navigation_routerating(head, ratingscale, 5000);
+			break;
+		}
+	}
+}
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
@@ -215,9 +264,45 @@ void havocbot_role_dom()
 	{
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 		navigation_goalrating_start();
-		havocbot_goalrating_controlpoints(10000, self.origin, 15000);
+		havocbot_goalrating_controlpoints_dom(10000, self.origin, 15000);
 		havocbot_goalrating_items(8000, self.origin, 8000);
 		//havocbot_goalrating_enemyplayers(3000, self.origin, 2000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+};
+
+//FT:
+void havocbot_role_ft()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	if (self.bot_strategytime < time)
+	{
+		self.bot_strategytime = time + bot_ai_strategyinterval;
+		navigation_goalrating_start();
+		havocbot_goalrating_frozen_teammates(15000, self.origin, 8000);
+		havocbot_goalrating_items(8000, self.origin, 8000);
+		havocbot_goalrating_enemyplayers(8000, self.origin, 2000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+};
+
+//Conquest:
+void havocbot_role_conquest()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	if (self.bot_strategytime < time)
+	{
+		self.bot_strategytime = time + bot_ai_strategyinterval;
+		navigation_goalrating_start();
+		havocbot_goalrating_controlpoints_conq(25000, self.origin, 15000);
+		havocbot_goalrating_items(8000, self.origin, 8000);
+		havocbot_goalrating_enemyplayers(8000, self.origin, 2000);
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
@@ -290,6 +375,16 @@ void havocbot_chooserole_dom()
 	self.havocbot_role = havocbot_role_dom;
 };
 
+void havocbot_chooserole_ft()
+{
+	self.havocbot_role = havocbot_role_ft;
+};
+
+void havocbot_chooserole_conquest()
+{
+	self.havocbot_role = havocbot_role_conquest;
+};
+
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
@@ -305,6 +400,10 @@ void havocbot_chooserole()
 		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
+	else if (g_conquest)
+		havocbot_chooserole_conquest();
+	else if (g_freeze)
+		havocbot_chooserole_ft();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 };
