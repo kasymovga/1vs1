@@ -26,6 +26,10 @@ float g_pickup_respawntimejitter_armormedium;
 float g_pickup_respawntimejitter_armorbig;
 float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
+string sv_model_healthsmall;
+string sv_model_healthmedium;
+string sv_model_healthlarge;
+string sv_model_healthmega;
 
 #define ITEM_RESPAWN_TICKS 10
 
@@ -962,7 +966,7 @@ void minstagib_items (float itemid)
 	if (itemid == IT_NAILS)
 	{
 		self.max_health = 1;
-		StartItem ("models/items/g_h100.md3",
+		StartItem (sv_model_healthmega,
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 
@@ -1223,7 +1227,7 @@ void spawnfunc_item_health_small (void) {
 		self.max_health = cvar("g_pickup_healthsmall_max");
 	if(!self.health)
 		self.health = cvar("g_pickup_healthsmall");
-	StartItem ("models/items/g_h1.md3", "misc/minihealth.wav", g_pickup_respawntime_healthsmall, g_pickup_respawntimejitter_healthsmall, "5 Health", IT_5HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItem (sv_model_healthsmall, "misc/minihealth.wav", g_pickup_respawntime_healthsmall, g_pickup_respawntimejitter_healthsmall, "5 Health", IT_5HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_health_medium (void) {
@@ -1231,7 +1235,7 @@ void spawnfunc_item_health_medium (void) {
 		self.max_health = cvar("g_pickup_healthmedium_max");
 	if(!self.health)
 		self.health = cvar("g_pickup_healthmedium");
-	StartItem ("models/items/g_h25.md3", "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItem (sv_model_healthmedium, "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_large (void) {
@@ -1239,7 +1243,7 @@ void spawnfunc_item_health_large (void) {
 		self.max_health = cvar("g_pickup_healthlarge_max");
 	if(!self.health)
 		self.health = cvar("g_pickup_healthlarge");
-	StartItem ("models/items/g_h50.md3", "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItem (sv_model_healthlarge, "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_mega (void) {
@@ -1253,7 +1257,7 @@ void spawnfunc_item_health_mega (void) {
 			self.max_health = cvar("g_pickup_healthmega_max");
 		if(!self.health)
 			self.health = cvar("g_pickup_healthmega");
-		StartItem ("models/items/g_h100.md3", "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+		StartItem (sv_model_healthmega, "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 	}
 }
 
@@ -1631,6 +1635,22 @@ void Items_Init()
 	CACHE_CVAR(g_pickup_rockets_max);
 	CACHE_CVAR(g_pickup_cells_max);
 	CACHE_CVAR(g_pickup_fuel_max);
+	sv_model_healthsmall = cvar_string_zone_ifneeded("sv_model_healthsmall");
+	if (sv_model_healthsmall == "")
+		sv_model_healthsmall = "models/items/g_h1.md3";
+
+	sv_model_healthmedium = cvar_string_zone_ifneeded("sv_model_healthmedium");
+	if (sv_model_healthmedium == "")
+		sv_model_healthmedium = "models/items/g_h25.md3";
+
+	sv_model_healthlarge = cvar_string_zone_ifneeded("sv_model_healthlarge");
+	if (sv_model_healthlarge == "")
+		sv_model_healthlarge = "models/items/g_h50.md3";
+
+	sv_model_healthmega = cvar_string_zone_ifneeded("sv_model_healthmega");
+	if (sv_model_healthmega == "")
+		sv_model_healthmega = "models/items/g_h100.md3";
+
 	if (g_pickup_drop_backpack)
 	{
 		sv_model_backpack = cvar_string("sv_model_backpack");
