@@ -149,7 +149,7 @@ void conquest_cp_touch() {
 	other.bot_dontmove = time + sys_ticrate * 2;
 	self.owner = other;
 	if not(self.capture_progress_bar)
-		self.capture_progress_bar = ProgressBar_Create(((self.team > 0) ? "Freeing control point..." : "Capturing control point..."), other);
+		self.capture_progress_bar = ProgressBar_Create(((self.team > 0) ? "Freeing..." : "Capturing..."), other);
 	
 	self.think = conquest_cp_think_capture;
 	self.nextthink = time;
