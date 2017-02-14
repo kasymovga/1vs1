@@ -2665,3 +2665,15 @@ void Client_ReadCvars()
 	sv_player_hat_origin = stov(cvar_string("sv_player_hat_origin"));
 	sv_player_hat_angles = stov(cvar_string("sv_player_hat_angles"));
 }
+
+void PutTeamToServer(float t) {
+	entity e, oldself;
+	FOR_EACH_CLIENT(e)
+		if (e.team == t)
+		if (e.classname != "player") {
+			oldself = self;
+			self = e;
+			PutClientInServer();
+			self = oldself;
+		}
+}

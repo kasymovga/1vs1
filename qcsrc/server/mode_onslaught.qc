@@ -1073,17 +1073,8 @@ void onslaught_controlpoint_icon_buildthink()
 		SUB_UseTargets ();
 		self = oself;
 
-		entity e;
 		if (self.target != "")
-			FOR_EACH_CLIENT(e)
-				if (e.team == self.team)
-				if (e.classname != "player") {
-					oself = self;
-					self = e;
-					PutClientInServer();
-					self = oself;
-				}
-
+			PutTeamToServer(self.team);
 	}
 	self.alpha = self.health / self.max_health;
 	// colormod flash when shot

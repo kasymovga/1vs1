@@ -112,17 +112,9 @@ void conquest_cp_think_capture() {
 			activator = self;
 			SUB_UseTargets();
 
-			entity e, oldself;
 			if (self.target != "")
 			if (self.team > 0)
-				FOR_EACH_CLIENT(e)
-					if (e.team == self.team)
-					if (e.classname != "player") {
-						oldself = self;
-						self = e;
-						PutClientInServer();
-						self = oldself;
-					}
+				PutTeamToServer(self.team);
 
 			WaypointSprite_Ping(self.sprite);
 			conquest_update_waypoint();
