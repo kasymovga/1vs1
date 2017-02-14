@@ -765,7 +765,7 @@ void PutClientInServer()
 		entity e;
 
 		if (self.team < 0) {
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(clienttype(self) == CLIENTTYPE_BOT)
 				self.team = self.bot_forced_team;
 
 			JoinBestTeam(self, FALSE, FALSE);
