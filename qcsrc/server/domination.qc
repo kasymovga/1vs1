@@ -408,27 +408,21 @@ void dom_delayedinit()
 	// if no control points are found, spawn defaults
 	if (find(world, classname, "dom_controlpoint") == world)
 	{
-		// here follow default domination points for each map
-		/*
-		if (world.model == "maps/e1m1.bsp")
+		// if no supported map was found, make every deathmatch spawn a point
+		head = find(world, classname, "info_player_deathmatch");
+		while (head)
 		{
-			dom_spawnpoint('0 0 0');
-		}
-		else
-		*/
-		{
-			// if no supported map was found, make every deathmatch spawn a point
-			head = find(world, classname, "info_player_deathmatch");
-			while (head)
-			{
-				dom_spawnpoint(head.origin);
-				head = find(head, classname, "info_player_deathmatch");
-			}
+			dom_spawnpoint(head.origin);
+			head = find(head, classname, "info_player_deathmatch");
 		}
 	}
 
 	ScoreRules_dom();
 };
+
+entity dom_SelectSpawnPoint() {
+	return SelectSpawnPoint(TRUE);
+}
 
 void dom_init()
 {
@@ -448,6 +442,7 @@ void dom_init()
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
+	GameHook_SelectSpawnPoint = dom_SelectSpawnPoint;
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
 };
 

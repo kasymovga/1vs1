@@ -2072,7 +2072,7 @@ void reset_map(float dorespawn)
 	entity oldself;
 	oldself = self;
 
-	race_ReadyRestart();
+	GameHook_Reset();
 	
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)

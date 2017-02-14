@@ -69,6 +69,7 @@ entity player_list;
 .float bot_pickupbasevalue;
 .float bot_canfire;
 .float bot_strategytime;
+.float bot_dontmove;
 
 .float bot_forced_team;
 .float bot_config_loaded;

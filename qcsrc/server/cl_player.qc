@@ -680,7 +680,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		race_PreDie();
 		PlayerClear(TRUE, attacker);
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;

@@ -880,3 +880,125 @@ void Score_NicePrint(entity to)
 	}
 }
 
+float leaderfrags;
+float WinningCondition_Scores(float limit, float leadlimit)
+{
+	// TODO make everything use THIS winning condition (except LMS)
+	WinningConditionHelper();
+
+	if(teams_matter)
+	{
+		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
+		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);
+		team3_score = TeamScore_GetCompareValue(COLOR_TEAM3);
+		team4_score = TeamScore_GetCompareValue(COLOR_TEAM4);
+	}
+
+	ClearWinners();
+	if(WinningConditionHelper_winner)
+		WinningConditionHelper_winner.winning = 1;
+	if(WinningConditionHelper_winnerteam >= 0)
+		SetWinners(team, WinningConditionHelper_winnerteam);
+
+	if(WinningConditionHelper_lowerisbetter)
+	{
+		WinningConditionHelper_topscore = -WinningConditionHelper_topscore;
+		WinningConditionHelper_secondscore = -WinningConditionHelper_secondscore;
+		limit = -limit;
+	}
+
+	if(WinningConditionHelper_zeroisworst)
+		leadlimit = 0; // not supported in this mode
+
+	if(g_dm || g_tdm || (g_race && !g_race_qualifying) || g_nexball)
+	// these modes always score in increments of 1, thus this makes sense
+	{
+		if(leaderfrags != WinningConditionHelper_topscore)
+		{
+			leaderfrags = WinningConditionHelper_topscore;
+
+			if (limit)
+			if (leaderfrags == limit - 1)
+				play2all("announcer/robotic/1fragleft.wav");
+			else if (leaderfrags == limit - 2)
+				play2all("announcer/robotic/2fragsleft.wav");
+			else if (leaderfrags == limit - 3)
+				play2all("announcer/robotic/3fragsleft.wav");
+		}
+	}
+
+	return GetWinningCode(
+		WinningConditionHelper_topscore &&
+		(
+			(limit && (WinningConditionHelper_topscore >= limit))
+			||
+			(leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
+		),
+		WinningConditionHelper_equality
+	);
+}
+
+float WinningCondition_RanOutOfSpawns()
+{
+	entity head;
+
+	if(!have_team_spawns)
+		return WINNING_NO;
+
+	if(!some_spawn_has_been_used)
+		return WINNING_NO;
+
+	team1_score = team2_score = team3_score = team4_score = 0;
+
+	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
+	{
+		if(head.team == COLOR_TEAM1)
+			team1_score = 1;
+		else if(head.team == COLOR_TEAM2)
+			team2_score = 1;
+		else if(head.team == COLOR_TEAM3)
+			team3_score = 1;
+		else if(head.team == COLOR_TEAM4)
+			team4_score = 1;
+	}
+
+	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
+	{
+		if(head.team == COLOR_TEAM1)
+			team1_score = 1;
+		else if(head.team == COLOR_TEAM2)
+			team2_score = 1;
+		else if(head.team == COLOR_TEAM3)
+			team3_score = 1;
+		else if(head.team == COLOR_TEAM4)
+			team4_score = 1;
+	}
+
+	ClearWinners();
+	if(team1_score + team2_score + team3_score + team4_score == 0)
+	{
+		checkrules_equality = TRUE;
+		return WINNING_YES;
+	}
+	else if(team1_score + team2_score + team3_score + team4_score == 1)
+	{
+		float t, i;
+		if(team1_score) t = COLOR_TEAM1;
+		if(team2_score) t = COLOR_TEAM2;
+		if(team3_score) t = COLOR_TEAM3;
+		if(team4_score) t = COLOR_TEAM4;
+		CheckAllowedTeams(world);
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
+		{
+			if(t != COLOR_TEAM1) if(c1 >= 0) TeamScore_AddToTeam(COLOR_TEAM1, i, -1000);
+			if(t != COLOR_TEAM2) if(c2 >= 0) TeamScore_AddToTeam(COLOR_TEAM2, i, -1000);
+			if(t != COLOR_TEAM3) if(c3 >= 0) TeamScore_AddToTeam(COLOR_TEAM3, i, -1000);
+			if(t != COLOR_TEAM4) if(c4 >= 0) TeamScore_AddToTeam(COLOR_TEAM4, i, -1000);
+		}
+
+		AddWinners(team, t);
+		return WINNING_YES;
+	}
+	else
+		return WINNING_NO;
+}

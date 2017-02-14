@@ -384,6 +384,8 @@ void havocbot_movetogoal()
 	//if (self.goalentity)
 	//	te_lightning2(self, self.origin, (self.goalentity.absmin + self.goalentity.absmax) * 0.5);
 	self.movement = '0 0 0';
+	if (self.bot_dontmove >= time)
+		return;
 
 	// Jetpack navigation
 	if(self.goalcurrent)

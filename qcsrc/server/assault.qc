@@ -319,3 +319,88 @@ void assault_new_round() {
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
 	ReadyRestartForce(); // sets game_starttime
 }
+
+// Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
+// they win. Otherwise the defending team wins once the timelimit passes.
+float assault_WinningCondition()
+{
+	local float status;
+
+	WinningConditionHelper(); // set worldstatus
+
+	status = WINNING_NO;
+	// as the timelimit has not yet passed just assume the defending team will win
+	if(assault_attacker_team == COLOR_TEAM1)
+	{
+		SetWinners(team, COLOR_TEAM2);
+	}
+	else
+	{
+		SetWinners(team, COLOR_TEAM1);
+	}
+
+	local entity ent;
+	ent = find(world, classname, "target_assault_roundend");
+	if(ent)
+	{
+		if(ent.winning)	// round end has been triggered by attacking team
+		{
+			bprint("ASSAULT: round completed...\n");
+			SetWinners(team, assault_attacker_team);
+
+			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
+
+			if(ent.cnt == 1) // this was the second round
+			{
+				status = WINNING_YES;
+			}
+			else
+			{
+				local entity oldself;
+				oldself = self;
+				self = ent;
+				assault_new_round();
+				self = oldself;
+			}
+		}
+	}
+
+	return status;
+}
+
+void assault_spawn(entity spot) {
+	if(self.team == assault_attacker_team)
+		centerprint(self, "You are attacking!");
+	else
+		centerprint(self, "You are defending!");
+}
+
+float assault_SpawnPointGood(entity spot) {
+	if(spot.target == "")
+		return TRUE;
+
+	local entity ent;
+	float good, found;
+	ent = find(world, targetname, spot.target);
+	while(ent) {
+		if(ent.classname == "target_objective")
+		{
+			found = 1;
+			if(ent.health < 0 || ent.health >= ASSAULT_VALUE_INACTIVE)
+				return FALSE;
+
+			good = 1;
+		}
+		ent = find(ent, targetname, spot.target);
+	}
+	if(found && !good)
+		return FALSE;
+
+	return TRUE;
+}
+
+void assault_init() {
+	GameHook_WinningCondition = assault_WinningCondition;
+	GameHook_Spawn = assault_spawn;
+	GameHook_SpawnPointGood = assault_SpawnPointGood;
+}

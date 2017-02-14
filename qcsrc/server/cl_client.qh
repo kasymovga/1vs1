@@ -2,4 +2,6 @@ void Client_ReadCvars();
 void Check_ForRetard(entity player);
 void PutObserverInServer(float frags_team_reset);
 void PutClientInServer();
+void PutTeamToServer(float t);
+entity SelectSpawnPoint (float anypoint);
 .entity hat;

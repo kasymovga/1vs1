@@ -484,14 +484,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						bprint ("^1",s, "^1 was fragged by ", a, "\n");
 				}
 
-				if(g_ctf && targ.flagcarried)
-				{
-					UpdateFrags(attacker, ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill));
-					PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
-					GiveFrags(attacker, targ, 0); // for logging
-				}
-				else
-					GiveFrags(attacker, targ, 1);
+				GiveFrags(attacker, targ, 1);
 
 				if (targ.killcount > 2) {
 					if(sv_gentle)

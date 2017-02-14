@@ -1620,18 +1620,13 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 float checkrules_overtimesadded; //how many overtimes have been already added
 
-float WINNING_NO = 0; // no winner, but time limits may terminate the game
-float WINNING_YES = 1; // winner found
-float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
-float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
-
 void InitiateOvertime()
 {
 	// Check first whether normal overtimes could be added before initiating suddendeath mode
 	// - for this timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
-	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("timelimit_overtimes")) && cvar("timelimit_overtime") && !(g_race && !g_race_qualifying))
+	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("timelimit_overtimes")) && cvar("timelimit_overtime"))
 	{
 		++checkrules_overtimesadded;
 		//add one more overtime by simply extending the timelimit
@@ -1653,15 +1648,6 @@ void InitiateOvertime()
 				" to the game!"
 			)
 		);
-	}
-	else
-	{
-		if(!checkrules_suddendeathend)
-		{
-			checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
-			if(g_race && !g_race_qualifying)
-				race_StartCompleting();
-		}
 	}
 }
 
@@ -1704,265 +1690,9 @@ void ClearWinners(void)
 		head.winning = 0;
 }
 
-// Onslaught winning condition:
-// game terminates if only one team has a working generator (or none)
-float WinningCondition_Onslaught()
-{
-	entity head;
-	local float t1, t2, t3, t4;
-
-	WinningConditionHelper(); // set worldstatus
-
-	if(inWarmupStage)
-		return WINNING_NO;
-
-	// first check if the game has ended
-	t1 = t2 = t3 = t4 = 0;
-	head = find(world, classname, "onslaught_generator");
-	while (head)
-	{
-		if (head.health > 0)
-		{
-			if (head.team == COLOR_TEAM1) t1 = 1;
-			if (head.team == COLOR_TEAM2) t2 = 1;
-			if (head.team == COLOR_TEAM3) t3 = 1;
-			if (head.team == COLOR_TEAM4) t4 = 1;
-		}
-		head = find(head, classname, "onslaught_generator");
-	}
-	if (t1 + t2 + t3 + t4 < 2)
-	{
-		// game over, only one team remains (or none)
-		ClearWinners();
-		if (t1) SetWinners(team, COLOR_TEAM1);
-		if (t2) SetWinners(team, COLOR_TEAM2);
-		if (t3) SetWinners(team, COLOR_TEAM3);
-		if (t4) SetWinners(team, COLOR_TEAM4);
-		dprint("Have a winner, ending game.\n");
-		return WINNING_YES;
-	}
-
-	// Two or more teams remain
-	return WINNING_NO;
-}
-
-// Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
-// they win. Otherwise the defending team wins once the timelimit passes.
-void assault_new_round();
-float WinningCondition_Assault()
-{
-	local float status;
-
-	WinningConditionHelper(); // set worldstatus
-
-	status = WINNING_NO;
-	// as the timelimit has not yet passed just assume the defending team will win
-	if(assault_attacker_team == COLOR_TEAM1)
-	{
-		SetWinners(team, COLOR_TEAM2);
-	}
-	else
-	{
-		SetWinners(team, COLOR_TEAM1);
-	}
-
-	local entity ent;
-	ent = find(world, classname, "target_assault_roundend");
-	if(ent)
-	{
-		if(ent.winning)	// round end has been triggered by attacking team
-		{
-			bprint("ASSAULT: round completed...\n");
-			SetWinners(team, assault_attacker_team);
-
-			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
-
-			if(ent.cnt == 1) // this was the second round
-			{
-				status = WINNING_YES;
-			}
-			else
-			{
-				local entity oldself;
-				oldself = self;
-				self = ent;
-				assault_new_round();
-				self = oldself;
-			}
-		}
-	}
-
-	return status;
-}
-
 void ShuffleMaplist()
 {
 	cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
-}
-
-float leaderfrags;
-float WinningCondition_Scores(float limit, float leadlimit)
-{
-	// TODO make everything use THIS winning condition (except LMS)
-	WinningConditionHelper();
-
-	if(teams_matter)
-	{
-		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
-		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);
-		team3_score = TeamScore_GetCompareValue(COLOR_TEAM3);
-		team4_score = TeamScore_GetCompareValue(COLOR_TEAM4);
-	}
-
-	ClearWinners();
-	if(WinningConditionHelper_winner)
-		WinningConditionHelper_winner.winning = 1;
-	if(WinningConditionHelper_winnerteam >= 0)
-		SetWinners(team, WinningConditionHelper_winnerteam);
-
-	if(WinningConditionHelper_lowerisbetter)
-	{
-		WinningConditionHelper_topscore = -WinningConditionHelper_topscore;
-		WinningConditionHelper_secondscore = -WinningConditionHelper_secondscore;
-		limit = -limit;
-	}
-
-	if(WinningConditionHelper_zeroisworst)
-		leadlimit = 0; // not supported in this mode
-
-	if(g_dm || g_tdm || (g_race && !g_race_qualifying) || g_nexball)
-	// these modes always score in increments of 1, thus this makes sense
-	{
-		if(leaderfrags != WinningConditionHelper_topscore)
-		{
-			leaderfrags = WinningConditionHelper_topscore;
-
-			if (limit)
-			if (leaderfrags == limit - 1)
-				play2all("announcer/robotic/1fragleft.wav");
-			else if (leaderfrags == limit - 2)
-				play2all("announcer/robotic/2fragsleft.wav");
-			else if (leaderfrags == limit - 3)
-				play2all("announcer/robotic/3fragsleft.wav");
-		}
-	}
-
-	return GetWinningCode(
-		WinningConditionHelper_topscore &&
-		(
-			(limit && (WinningConditionHelper_topscore >= limit))
-			||
-			(leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
-		),
-		WinningConditionHelper_equality
-	);
-}
-
-float WinningCondition_Race(float fraglimit)
-{
-	float wc;
-	entity p;
-	float n, c;
-
-	n = 0;
-	c = 0;
-	FOR_EACH_PLAYER(p)
-	{
-		++n;
-		if(p.race_completed)
-			++c;
-	}
-	if(n && (n == c))
-		return WINNING_YES;
-	wc = WinningCondition_Scores(fraglimit, 0);
-
-	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	// do NOT support equality when the laps are all raced!
-		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
-	return wc;
-}
-
-void ReadyRestart();
-float WinningCondition_QualifyingThenRace(float limit)
-{
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
-
-	// NEVER initiate overtime
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	{
-		return WINNING_YES;
-	}
-
-	return wc;
-}
-
-float WinningCondition_RanOutOfSpawns()
-{
-	entity head;
-
-	if(!have_team_spawns)
-		return WINNING_NO;
-
-	if(!some_spawn_has_been_used)
-		return WINNING_NO;
-
-	team1_score = team2_score = team3_score = team4_score = 0;
-
-	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
-	{
-		if(head.team == COLOR_TEAM1)
-			team1_score = 1;
-		else if(head.team == COLOR_TEAM2)
-			team2_score = 1;
-		else if(head.team == COLOR_TEAM3)
-			team3_score = 1;
-		else if(head.team == COLOR_TEAM4)
-			team4_score = 1;
-	}
-
-	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
-	{
-		if(head.team == COLOR_TEAM1)
-			team1_score = 1;
-		else if(head.team == COLOR_TEAM2)
-			team2_score = 1;
-		else if(head.team == COLOR_TEAM3)
-			team3_score = 1;
-		else if(head.team == COLOR_TEAM4)
-			team4_score = 1;
-	}
-
-	ClearWinners();
-	if(team1_score + team2_score + team3_score + team4_score == 0)
-	{
-		checkrules_equality = TRUE;
-		return WINNING_YES;
-	}
-	else if(team1_score + team2_score + team3_score + team4_score == 1)
-	{
-		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
-		CheckAllowedTeams(world);
-		for(i = 0; i < MAX_TEAMSCORE; ++i)
-		{
-			if(t != COLOR_TEAM1) if(c1 >= 0) TeamScore_AddToTeam(COLOR_TEAM1, i, -1000);
-			if(t != COLOR_TEAM2) if(c2 >= 0) TeamScore_AddToTeam(COLOR_TEAM2, i, -1000);
-			if(t != COLOR_TEAM3) if(c3 >= 0) TeamScore_AddToTeam(COLOR_TEAM3, i, -1000);
-			if(t != COLOR_TEAM4) if(c4 >= 0) TeamScore_AddToTeam(COLOR_TEAM4, i, -1000);
-		}
-
-		AddWinners(team, t);
-		return WINNING_YES;
-	}
-	else
-		return WINNING_NO;
 }
 
 /*
@@ -2038,38 +1768,10 @@ void CheckRules_World()
 	}
 	else
 	{
-		if (timelimit && time >= timelimit)
-		{
-			if(g_race && (g_race_qualifying == 2) && timelimit > 0)
-			{
-				float totalplayers;
-				float playerswithlaps;
-				float readyplayers;
-				entity head;
-				totalplayers = playerswithlaps = readyplayers = 0;
-				FOR_EACH_PLAYER(head)
-				{
-					++totalplayers;
-					if(PlayerScore_Add(head, SP_RACE_FASTEST, 0))
-						++playerswithlaps;
-					if(head.ready)
-						++readyplayers;
-				}
-
-				// at least 2 of the players have completed a lap: start the RACE
-				// otherwise, the players should end the qualifying on their own
-				if(readyplayers || playerswithlaps >= 2)
-				{
-					checkrules_suddendeathend = 0;
-					ReadyRestart(); // go to race
-					return;
-				}
-				else
-					InitiateOvertime();
-			}
-			else
-				InitiateOvertime();
-		}
+		if (timelimit)
+		if (time >= timelimit)
+		if (GameHook_InititateOvertime())
+			InitiateOvertime();
 	}
 
 	if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
@@ -2079,34 +1781,7 @@ void CheckRules_World()
 	}
 
 	float checkrules_status;
-	checkrules_status = WinningCondition_RanOutOfSpawns();
-	if(checkrules_status == WINNING_YES)
-	{
-		bprint("Hey! Someone ran out of spawns!\n");
-	}
-	else if(g_race && !g_race_qualifying && timelimit >= 0)
-	{
-		checkrules_status = WinningCondition_Race(fraglimit);
-		//print("WC_RACE yields ", ftos(checkrules_status), "\n");
-	}
-	else if(g_race && g_race_qualifying == 2 && timelimit >= 0)
-	{
-		checkrules_status = WinningCondition_QualifyingThenRace(fraglimit);
-		//print("WC_QUALIFYING_THEN_RACE yields ", ftos(checkrules_status), "\n");
-	}
-	else if(g_assault)
-	{
-		checkrules_status = WinningCondition_Assault(); // TODO remove this?
-	}
-	else if (g_onslaught)
-	{
-		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
-	}
-	else
-	{
-		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
-		//print("WC_SCORES yields ", ftos(checkrules_status), "\n");
-	}
+	checkrules_status = GameHook_WinningCondition(fraglimit, leadlimit);
 
 	if(checkrules_status == WINNING_STARTSUDDENDEATHOVERTIME)
 	{
