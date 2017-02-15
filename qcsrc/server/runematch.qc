@@ -559,6 +559,7 @@ void runematch_init()
 	if (g_runematch) {
 		GameHook_FragsHandle = RunematchHandleFrags;
 		GameHook_WinCountDown = stub_WinCountDown;
+		GameHook_WarmupAllowed = false_WarmupAllowed;
 	} else if not(g_runes)
 		return;
 

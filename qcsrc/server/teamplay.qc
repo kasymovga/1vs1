@@ -253,6 +253,7 @@ void InitGameplayMode()
 		game = GAME_CLANARENA;
 		ActivateTeamplay();
 		tdm_init();
+		Clanarena_Init();
 		fraglimit_override = cvar("g_clanarena_winlimit");
 	}
 

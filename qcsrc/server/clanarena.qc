@@ -48,13 +48,8 @@ float Clanarena_DamageHandle(entity inflictor, entity attacker, float damage, fl
 
 void Clanarena_Init()
 {
-	CACHE_CVAR(g_clanarena);
-	if not(g_clanarena)
-		return;
-
 	CACHE_CVAR(g_clanarena_startdelay);
 	CACHE_CVAR(g_clanarena_enddelay);
-
 	GameHook_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;

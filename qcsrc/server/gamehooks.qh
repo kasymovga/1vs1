@@ -38,3 +38,7 @@ var void(float frags_remain) GameHook_WinCountDown = {
 	else if (frags_remain == 3)
 		play2all("announcer/robotic/3fragsleft.wav");
 }
+var float(float f) GameHook_KillDelayMod = { return f; }
+var string(string s) GameHook_SuddenDeathMessageMod = { return s; }
+var float() false_WarmupAllowed = { return FALSE; }
+var float() GameHook_WarmupAllowed = { return TRUE; }

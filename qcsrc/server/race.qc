@@ -958,10 +958,33 @@ void race_WinCountDown(float remain_frags) {
 		race_WinCountDown_orig(remain_frags);
 }
 
+float race_KillDelayMod(float f) {
+	if (g_race_qualifying)
+		return 0;
+
+	return f;
+}
+
+string race_SuddenDeathMod(string s) {
+	if (g_race_qualifying)
+		return s;
+
+	return "^3Everyone, finish your lap! The race is over!";
+}
+
+float race_WarmupAllowed() {
+	if (g_race_qualifying == 2)
+		return FALSE;
+
+	return TRUE;
+}
+
 void race_init() {
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
 		GameHook_OvertimeHandle = race_OvertimeHandle;
+		GameHook_KillDelayMod = race_KillDelayMod;
+		GameHook_WarmupAllowed = race_WarmupAllowed;
 	}
 
 	GameHook_InitSpectator = race_InitSpectator;

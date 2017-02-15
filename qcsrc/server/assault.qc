@@ -404,4 +404,5 @@ void assault_init() {
 	GameHook_Spawn = assault_spawn;
 	GameHook_SpawnPointGood = assault_SpawnPointGood;
 	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_WarmupAllowed = false_WarmupAllowed;
 }

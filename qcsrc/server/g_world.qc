@@ -549,7 +549,8 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
 
-	if ((g_race && g_race_qualifying == 2) || g_runematch || g_assault || g_campaign)
+	//if ((g_race && g_race_qualifying == 2) || g_runematch || g_assault || g_campaign)
+	if (!GameHook_WarmupAllowed() || g_campaign)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	CACHE_CVAR(g_pinata);
@@ -719,12 +720,11 @@ void spawnfunc_worldspawn (void)
 	PL_CROUCH_MAX = '16 16 25' * sv_world_scale;
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
-	readlevelcvars();
-	readdynamiccvars();
 	Freeze_Init();
-	Clanarena_Init();
 	runematch_init();
 	GameTypeVote_Init();
+	readlevelcvars();
+	readdynamiccvars();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
@@ -1748,10 +1748,7 @@ void CheckRules_World()
 		if(!checkrules_suddendeathwarning)
 		{
 			checkrules_suddendeathwarning = TRUE;
-			if(g_race && !g_race_qualifying)
-				bcenterprint("^3Everyone, finish your lap! The race is over!");
-			else
-				bcenterprint("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!");
+			bcenterprint(GameHook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"));
 		}
 	} else {
 		if (timelimit)
