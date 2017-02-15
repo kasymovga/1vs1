@@ -23,7 +23,8 @@ var float(float fraglimit, float leadlimit) GameHook_WinningCondition = {
 	}
 	return WinningCondition_Scores(fraglimit, leadlimit);
 }
-var float() GameHook_InititateOvertime = { return TRUE; }
+var float() GameHook_OvertimeHandle = { return FALSE; }
+var float() GameHook_OvertimeAllowed = { return TRUE; }
 var void() GameHook_Reset = {}
 var void() GameHook_ObserverSpawn = {}
 var void() GameHook_InitSpectator = {}

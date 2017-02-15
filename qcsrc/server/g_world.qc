@@ -1625,6 +1625,9 @@ void InitiateOvertime()
 	// - for this timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
+	if (GameHook_OvertimeHandle())
+		return;
+
 	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("timelimit_overtimes")) && cvar("timelimit_overtime"))
 	{
 		++checkrules_overtimesadded;
@@ -1753,7 +1756,7 @@ void CheckRules_World()
 	} else {
 		if (timelimit)
 		if (time >= timelimit) {
-			if (GameHook_InititateOvertime()) {
+			if (GameHook_OvertimeAllowed()) {
 				if (WinningConditionHelper_equality) {
 					InitiateOvertime();
 				} else {

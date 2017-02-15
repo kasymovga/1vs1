@@ -867,7 +867,7 @@ float race_WinningCondition(float fraglimit, float ignore) {
 	return FALSE;
 }
 
-float race_InitiateOvertime() {
+float race_OvertimeHandle() {
 	if (g_race_qualifying == 2) {
 		float totalplayers;
 		float playerswithlaps;
@@ -953,7 +953,7 @@ float race_SpawnPointGood(entity spot) {
 void race_init() {
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
-		GameHook_InititateOvertime = race_InitiateOvertime;
+		GameHook_OvertimeHandle = race_OvertimeHandle;
 	}
 
 	GameHook_InitSpectator = race_InitSpectator;
