@@ -311,5 +311,6 @@ void conquest_init() {
 	GameHook_Spawn = onslaught_Spawn;
 	GameHook_PlayerClear = onslaught_PlayerClear;
 	GameHook_Reset = conquest_Reset;
+	GameHook_WinCountDown = stub_WinCountDown;
 	InitializeEntity(world, conquest_delayedinit, INITPRIO_LAST);
 }

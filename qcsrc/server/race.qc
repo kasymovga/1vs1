@@ -950,6 +950,14 @@ float race_SpawnPointGood(entity spot) {
 	return TRUE;
 }
 
+var void(float remain_frags) race_WinCountDown_orig;
+
+void race_WinCountDown(float remain_frags) {
+	if (g_race)
+	if not(g_race_qualifying)
+		race_WinCountDown_orig(remain_frags);
+}
+
 void race_init() {
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
@@ -966,4 +974,6 @@ void race_init() {
 	GameHook_PlayerClear = race_PreDie;
 	GameHook_ObserverSpawn = race_PreSpawnObserver;
 	GameHook_SpawnPointGood = race_SpawnPointGood;
+	race_WinCountDown_orig = GameHook_WinCountDown;
+	GameHook_WinCountDown = race_WinCountDown;
 }

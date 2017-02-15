@@ -910,21 +910,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || (g_race && !g_race_qualifying) || g_nexball)
-	// these modes always score in increments of 1, thus this makes sense
+	if (limit)
+	if (leaderfrags != WinningConditionHelper_topscore)
 	{
-		if(leaderfrags != WinningConditionHelper_topscore)
-		{
-			leaderfrags = WinningConditionHelper_topscore;
-
-			if (limit)
-			if (leaderfrags == limit - 1)
-				play2all("announcer/robotic/1fragleft.wav");
-			else if (leaderfrags == limit - 2)
-				play2all("announcer/robotic/2fragsleft.wav");
-			else if (leaderfrags == limit - 3)
-				play2all("announcer/robotic/3fragsleft.wav");
-		}
+		leaderfrags = WinningConditionHelper_topscore;
+		GameHook_WinCountDown(limit - leaderfrags);
 	}
 	if (WinningConditionHelper_equality)
 		return FALSE;

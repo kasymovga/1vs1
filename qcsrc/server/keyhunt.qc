@@ -964,6 +964,7 @@ void kh_init()  // sets up th KH environment
 	precache_sound(kh_sound_alarm);  // the new siren
 	GameHook_FragsHandle = kh_HandleFrags;
 	GameHook_PlayerClear = kh_PlayerCLear;
+	GameHook_WinCountDown = stub_WinCountDown;
 
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
 	precache_model("models/keyhunt/key-carried.md3");

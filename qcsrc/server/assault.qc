@@ -403,4 +403,5 @@ void assault_init() {
 	GameHook_WinningCondition = assault_WinningCondition;
 	GameHook_Spawn = assault_spawn;
 	GameHook_SpawnPointGood = assault_SpawnPointGood;
+	GameHook_WinCountDown = stub_WinCountDown;
 }

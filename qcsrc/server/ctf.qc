@@ -1103,6 +1103,7 @@ void ctf_init()
 	GameHook_FragsHandle = ctf_handle_frags;
 	GameHook_PlayerClear = ctf_PlayerClear;
 	GameHook_PlayerPreThink = ctf_setstatus;
+	GameHook_WinCountDown = stub_WinCountDown;
 };
 
 void ctf_setstatus2(entity flag, float shift)

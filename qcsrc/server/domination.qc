@@ -443,6 +443,7 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	GameHook_SelectSpawnPoint = dom_SelectSpawnPoint;
+	GameHook_WinCountDown = stub_WinCountDown;
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
 };
 

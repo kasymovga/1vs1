@@ -59,6 +59,7 @@ void Clanarena_Init()
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
 	GameHook_DamageHandle = Clanarena_DamageHandle;
+	GameHook_WinCountDown = race_WinCountDown;
 	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
 	ca_controller = spawn();
 	ca_controller.think = Clanarena_Think;

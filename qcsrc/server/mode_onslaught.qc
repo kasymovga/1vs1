@@ -1405,6 +1405,7 @@ void onslaught_init() {
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
 	GameHook_PlayerClear = onslaught_PlayerClear;
 	GameHook_WinningCondition = onslaught_WinningCondition;
+	GameHook_WinCountDown = stub_WinCountDown;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");

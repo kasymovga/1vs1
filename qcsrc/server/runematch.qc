@@ -556,9 +556,10 @@ void spawn_runes()
 
 void runematch_init()
 {
-	if (g_runematch)
+	if (g_runematch) {
 		GameHook_FragsHandle = RunematchHandleFrags;
-	else if not(g_runes)
+		GameHook_WinCountDown = stub_WinCountDown;
+	} else if not(g_runes)
 		return;
 
 	CACHE_CVAR(g_runematch_allow_same);

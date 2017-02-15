@@ -205,6 +205,7 @@ void Freeze_Init()
 	GameHook_SpeedMod = Freeze_SpeedMod;
 	GameHook_DamageHandle = Freeze_DamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;
+	GameHook_WinCountDown = race_WinCountDown;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;
