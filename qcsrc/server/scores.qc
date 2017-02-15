@@ -881,7 +881,7 @@ void Score_NicePrint(entity to)
 }
 
 float leaderfrags;
-float WinningCondition_Scores(float limit, float leadlimit)
+float WinningCondition_Scores(float limit, float _leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
@@ -908,7 +908,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	}
 
 	if(WinningConditionHelper_zeroisworst)
-		leadlimit = 0; // not supported in this mode
+		_leadlimit = 0; // not supported in this mode
 
 	if (limit)
 	if (leaderfrags != WinningConditionHelper_topscore)
@@ -923,7 +923,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		if (limit && (WinningConditionHelper_topscore >= limit))
 			return TRUE;
 
-		if (leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
+		if (_leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= _leadlimit))
 			return TRUE;
 	}
 
