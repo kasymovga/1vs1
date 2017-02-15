@@ -1647,21 +1647,8 @@ void InitiateOvertime()
 				" to the game!"
 			)
 		);
-	}
-}
-
-float GetWinningCode(float fraglimitreached, float equality)
-{
-	if(equality)
-		if(fraglimitreached)
-			return WINNING_STARTSUDDENDEATHOVERTIME;
-		else
-			return WINNING_NEVER;
-	else
-		if(fraglimitreached)
-			return WINNING_YES;
-		else
-			return WINNING_NO;
+	} else if (!checkrules_suddendeathend)
+		checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
 }
 
 // set the .winning flag for exactly those players with a given field value
@@ -1754,8 +1741,7 @@ void CheckRules_World()
 		return;
 	}
 
-	if(checkrules_suddendeathend)
-	{
+	if(checkrules_suddendeathend) {
 		if(!checkrules_suddendeathwarning)
 		{
 			checkrules_suddendeathwarning = TRUE;
@@ -1764,49 +1750,31 @@ void CheckRules_World()
 			else
 				bcenterprint("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!");
 		}
-	}
-	else
-	{
+	} else {
 		if (timelimit)
-		if (time >= timelimit)
-		if (GameHook_InititateOvertime()) {
-			if not(WinningConditionHelper_winner || WinningConditionHelper_winnerteam) {
-				InitiateOvertime();
+		if (time >= timelimit) {
+			if (GameHook_InititateOvertime()) {
+				if (WinningConditionHelper_equality) {
+					InitiateOvertime();
+				} else {
+					NextLevel();
+					return;
+				}
 			} else {
 				NextLevel();
 				return;
 			}
 		}
 	}
-
-	if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
-	{
+	if (GameHook_WinningCondition(fraglimit, leadlimit)) {
 		NextLevel();
 		return;
 	}
-
-	float checkrules_status;
-	checkrules_status = GameHook_WinningCondition(fraglimit, leadlimit);
-
-	if(checkrules_status == WINNING_STARTSUDDENDEATHOVERTIME)
+	if (checkrules_suddendeathend)
+	if (time >= checkrules_suddendeathend || !WinningConditionHelper_equality)
 	{
-		checkrules_status = WINNING_NEVER;
-		checkrules_overtimesadded = -1;
-		InitiateOvertime();
-	}
-
-	if(checkrules_status == WINNING_NEVER)
-		// equality cases! Nobody wins if the overtime ends in a draw.
-		ClearWinners();
-
-	if(checkrules_suddendeathend)
-		if(checkrules_status != WINNING_NEVER || time >= checkrules_suddendeathend)
-			checkrules_status = WINNING_YES;
-
-	if(checkrules_status == WINNING_YES)
-	{
-		//print("WINNING\n");
 		NextLevel();
+		return;
 	}
 };
 

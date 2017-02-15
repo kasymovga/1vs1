@@ -926,16 +926,18 @@ float WinningCondition_Scores(float limit, float leadlimit)
 				play2all("announcer/robotic/3fragsleft.wav");
 		}
 	}
+	if (WinningConditionHelper_equality)
+		return FALSE;
 
-	return GetWinningCode(
-		WinningConditionHelper_topscore &&
-		(
-			(limit && (WinningConditionHelper_topscore >= limit))
-			||
-			(leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
-		),
-		WinningConditionHelper_equality
-	);
+	if (WinningConditionHelper_topscore) {
+		if (limit && (WinningConditionHelper_topscore >= limit))
+			return TRUE;
+
+		if (leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 float WinningCondition_RanOutOfSpawns()
@@ -943,10 +945,10 @@ float WinningCondition_RanOutOfSpawns()
 	entity head;
 
 	if(!have_team_spawns)
-		return WINNING_NO;
+		return FALSE;
 
 	if(!some_spawn_has_been_used)
-		return WINNING_NO;
+		return FALSE;
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
@@ -978,7 +980,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(team1_score + team2_score + team3_score + team4_score == 0)
 	{
 		checkrules_equality = TRUE;
-		return WINNING_YES;
+		return TRUE;
 	}
 	else if(team1_score + team2_score + team3_score + team4_score == 1)
 	{
@@ -997,8 +999,8 @@ float WinningCondition_RanOutOfSpawns()
 		}
 
 		AddWinners(team, t);
-		return WINNING_YES;
+		return TRUE;
 	}
 	else
-		return WINNING_NO;
+		return FALSE;
 }

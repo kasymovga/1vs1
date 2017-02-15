@@ -1367,7 +1367,7 @@ float onslaught_WinningCondition()
 	WinningConditionHelper(); // set worldstatus
 
 	if(inWarmupStage)
-		return WINNING_NO;
+		return FALSE;
 
 	// first check if the game has ended
 	t1 = t2 = t3 = t4 = 0;
@@ -1392,11 +1392,11 @@ float onslaught_WinningCondition()
 		if (t3) SetWinners(team, COLOR_TEAM3);
 		if (t4) SetWinners(team, COLOR_TEAM4);
 		dprint("Have a winner, ending game.\n");
-		return WINNING_YES;
+		return TRUE;
 	}
 
 	// Two or more teams remain
-	return WINNING_NO;
+	return FALSE;
 }
 
 void onslaught_init() {

@@ -841,7 +841,6 @@ void race_PhysicFrameBegin() {
 
 float race_WinningCondition_NonQualifying(float fraglimit)
 {
-	float wc;
 	entity p;
 	float n, c;
 
@@ -854,39 +853,18 @@ float race_WinningCondition_NonQualifying(float fraglimit)
 			++c;
 	}
 	if(n && (n == c))
-		return WINNING_YES;
+		return TRUE;
 
-	wc = WinningCondition_Scores(fraglimit, 0);
-
-	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	// do NOT support equality when the laps are all raced!
-		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
-
-	return wc;
-}
-
-float race_WinningCondition_QualifyingThenRace(float limit)
-{
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
-
-	// NEVER initiate overtime
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-		return WINNING_YES;
-
-	return wc;
+	return WinningCondition_Scores(fraglimit, 0);
 }
 
 float race_WinningCondition(float fraglimit, float ignore) {
 	if(!g_race_qualifying)
 		return race_WinningCondition_NonQualifying(fraglimit);
 	else if(g_race_qualifying == 2)
-		return race_WinningCondition_QualifyingThenRace(fraglimit);
+		return WinningCondition_Scores(fraglimit, 0);
 
-	return WINNING_NO;
+	return FALSE;
 }
 
 float race_InitiateOvertime() {

@@ -328,7 +328,7 @@ float assault_WinningCondition()
 
 	WinningConditionHelper(); // set worldstatus
 
-	status = WINNING_NO;
+	status = FALSE;
 	// as the timelimit has not yet passed just assume the defending team will win
 	if(assault_attacker_team == COLOR_TEAM1)
 	{
@@ -352,7 +352,7 @@ float assault_WinningCondition()
 
 			if(ent.cnt == 1) // this was the second round
 			{
-				status = WINNING_YES;
+				status = TRUE;
 			}
 			else
 			{
