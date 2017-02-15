@@ -621,7 +621,7 @@ entity race_PreSpawn()
 		race_PreparePlayer();
 
 	race_AbandonRaceCheck(self);
-	return world;
+	return SelectSpawnPoint(FALSE);
 }
 
 void race_PostSpawn(entity spot)
