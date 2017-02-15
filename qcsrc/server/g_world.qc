@@ -1769,8 +1769,14 @@ void CheckRules_World()
 	{
 		if (timelimit)
 		if (time >= timelimit)
-		if (GameHook_InititateOvertime())
-			InitiateOvertime();
+		if (GameHook_InititateOvertime()) {
+			if not(WinningConditionHelper_winner || WinningConditionHelper_winnerteam) {
+				InitiateOvertime();
+			} else {
+				NextLevel();
+				return;
+			}
+		}
 	}
 
 	if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
