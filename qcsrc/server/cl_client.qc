@@ -1263,10 +1263,7 @@ void DoTeamChange(float destteam)
 
 void FixClientCvars(entity e)
 {
-	// send prediction settings to the client
-	stuffcmd(e, "\nin_bindmap 0 0\n");
-	if(g_race || g_cts)
-		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
+	stuffcmd(e, strcat("\nin_bindmap 0 0\n", GameHook_FixClientCvars(), "\n"));
 }
 
 void Check_ForRetard(entity player) {

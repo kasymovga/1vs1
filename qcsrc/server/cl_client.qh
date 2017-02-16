@@ -4,4 +4,5 @@ void PutObserverInServer(float frags_team_reset);
 void PutClientInServer();
 void PutTeamToServer(float t);
 entity SelectSpawnPoint (float anypoint);
+void FixClientCvars(entity e);
 .entity hat;

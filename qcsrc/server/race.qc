@@ -979,6 +979,23 @@ float race_WarmupAllowed() {
 	return TRUE;
 }
 
+string race_FixClientCvars() {
+	return "cl_cmd settemp cl_movecliptokeyboard 2";
+}
+
+string race_RecordForMap(string bspname) {
+	string recid = (g_race ? RACE_RECORD : CTS_RECORD);
+	float r = stof(db_get(ServerProgsDB, strcat(bspname, recid, "time")));
+	if (r == 0)
+		return "";
+
+	return strcat(strpad(32, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", db_get(ServerProgsDB, strcat(bspname, recid, "netname")), "\n");
+}
+
+float race_ReadyAllowed() {
+	return (g_race_qualifying == 2);
+}
+
 void race_init() {
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
@@ -999,4 +1016,7 @@ void race_init() {
 	GameHook_SpawnPointGood = race_SpawnPointGood;
 	race_WinCountDown_orig = GameHook_WinCountDown;
 	GameHook_WinCountDown = race_WinCountDown;
+	GameHook_FixClientCvars = race_FixClientCvars;
+	GameHook_RecordForMap = race_RecordForMap;
+	GameHook_ReadyAllowed = race_ReadyAllowed;
 }

@@ -380,7 +380,6 @@ void ClearSelectedPlayer();
 .float selected_player_display_timeout; // when the selection will time out
 
 void FixIntermissionClient(entity e);
-void FixClientCvars(entity e);
 
 float weaponsInMap;
 

@@ -42,3 +42,6 @@ var float(float f) GameHook_KillDelayMod = { return f; }
 var string(string s) GameHook_SuddenDeathMessageMod = { return s; }
 var float() false_WarmupAllowed = { return FALSE; }
 var float() GameHook_WarmupAllowed = { return TRUE; }
+var float() GameHook_ReadyAllowed = { return FALSE; }
+var string() GameHook_FixClientCvars = { return ""; }
+var string(string bspname) GameHook_RecordForMap = { return ""; }

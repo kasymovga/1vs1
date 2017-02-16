@@ -1061,6 +1061,14 @@ void ctf_PlayerClear(entity plr, entity attacker, float killed) {
 	}
 }
 
+string ctf_RecordForMap(string bspname) {
+	float r = stof(db_get(ServerProgsDB, strcat(bspname, "/captimerecord/time")));
+	if (r == 0)
+		return "";
+
+	return strcat(strpad(32, bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
+}
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
@@ -1104,6 +1112,7 @@ void ctf_init()
 	GameHook_PlayerClear = ctf_PlayerClear;
 	GameHook_PlayerPreThink = ctf_setstatus;
 	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_RecordForMap = ctf_RecordForMap;
 };
 
 void ctf_setstatus2(entity flag, float shift)
