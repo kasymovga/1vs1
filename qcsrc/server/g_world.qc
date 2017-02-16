@@ -549,7 +549,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
 
-	//if ((g_race && g_race_qualifying == 2) || g_runematch || g_assault || g_campaign)
 	if (!GameHook_WarmupAllowed() || g_campaign)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
@@ -576,6 +575,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_balance_armor_blockpercent);
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
+	CACHE_CVAR(g_telefrags);
 	CACHE_CVAR(nex252_compat_mode);
 	Nadget_Init();
 	Items_Init();

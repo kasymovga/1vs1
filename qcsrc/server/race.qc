@@ -996,14 +996,22 @@ float race_ReadyAllowed() {
 	return (g_race_qualifying == 2);
 }
 
+float race_ClearScoresAllowed() {
+	return g_race_qualifying;
+}
+
+float race_TelefragsAllowed() {
+	return FALSE;
+}
+
 void race_init() {
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
 		GameHook_OvertimeHandle = race_OvertimeHandle;
 		GameHook_KillDelayMod = race_KillDelayMod;
 		GameHook_WarmupAllowed = race_WarmupAllowed;
+		GameHook_ClearScoreAllowed = race_ClearScoresAllowed;
 	}
-
 	GameHook_InitSpectator = race_InitSpectator;
 	GameHook_Reset = race_Reset;
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;
@@ -1019,4 +1027,5 @@ void race_init() {
 	GameHook_FixClientCvars = race_FixClientCvars;
 	GameHook_RecordForMap = race_RecordForMap;
 	GameHook_ReadyAllowed = race_ReadyAllowed;
+	GameHook_TelefragsAllowed = race_TelefragsAllowed;
 }

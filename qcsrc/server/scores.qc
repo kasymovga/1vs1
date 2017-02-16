@@ -245,7 +245,9 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
-	if(g_race && !g_race_qualifying) return;
+
+	if not(GameHook_ClearScoreAllowed())
+		return;
 
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
