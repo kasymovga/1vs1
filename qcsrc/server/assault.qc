@@ -219,13 +219,11 @@ void spawnfunc_func_assault_wall() {
 
 
 void target_assault_roundend_reset() {
-	//print("round end reset\n");
-	self.cnt = self.cnt + 1; // up round counter
-	self.winning = 0; // up round
+	self.winning = FALSE;
 }
 
 void target_assault_roundend_use() {
-	self.winning = 1; // round has been won by attackers
+	self.winning = TRUE;
 }
 
 void spawnfunc_target_assault_roundend() {
@@ -234,44 +232,37 @@ void spawnfunc_target_assault_roundend() {
 		remove(self);
 		return;
 	}
-	self.winning = 0; // round not yet won by attackers
+	self.winning = FALSE; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
 	self.use = target_assault_roundend_use;
-	self.cnt = 0; // first round
-	self.reset = target_assault_roundend_reset;
+	self.cnt = FALSE; // first round
 }
 
 void assault_roundstart_use() {
-
 	activator = self;
 	SUB_UseTargets();
 
-	/*
-#ifdef TTURRETS_ENABLED
-entity ent,oldself;
+	entity ent,oldself;
 
 	//(Re)spawn all turrets
 	oldself = self;
 	ent = find(world, classname, "turret_main");
 	while(ent) {
-	// Swap turret teams
-	if(ent.team == COLOR_TEAM1)
-	ent.team = COLOR_TEAM2;
-	else
-	ent.team = COLOR_TEAM1;
+		// Swap turret teams
+		if(ent.team == COLOR_TEAM1)
+			ent.team = COLOR_TEAM2;
+		else
+			ent.team = COLOR_TEAM1;
 
-	self = ent;
+		self = ent;
 
-	// Dubbles as teamchange
-	turret_stdproc_respawn();
-	//ent.turret_spawnfunc();
+		// Dubbles as teamchange
+		turret_stdproc_respawn();
+		//ent.turret_spawnfunc();
 
-	ent = find(ent, classname, "turret_main");
+		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
-#endif
-*/
-
 }
 
 void spawnfunc_target_assault_roundstart() {
@@ -293,7 +284,6 @@ void assault_new_round() {
 	//bprint("ASSAULT: new round\n");
 
 	// up round counter
-	self.winning = self.winning + 1;
 
 	// swap attacker/defender roles
 	if(assault_attacker_team == COLOR_TEAM1) {
@@ -322,13 +312,10 @@ void assault_new_round() {
 
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
-float assault_WinningCondition()
+float assault_WinningCondition(float ignore1, float ignore2)
 {
-	local float status;
-
 	WinningConditionHelper(); // set worldstatus
 
-	status = FALSE;
 	// as the timelimit has not yet passed just assume the defending team will win
 	if(assault_attacker_team == COLOR_TEAM1)
 	{
@@ -340,22 +327,21 @@ float assault_WinningCondition()
 	}
 
 	local entity ent;
-	ent = find(world, classname, "target_assault_roundend");
-	if(ent)
+	ent = world;
+	while ((ent = find(ent, classname, "target_assault_roundend")))
 	{
 		if(ent.winning)	// round end has been triggered by attacking team
 		{
 			bprint("ASSAULT: round completed...\n");
+			ent.winning = FALSE;
 			SetWinners(team, assault_attacker_team);
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
-			if(ent.cnt == 1) // this was the second round
-			{
-				status = TRUE;
-			}
-			else
-			{
+			if(ent.cnt) // this was the second round
+				return TRUE;
+			else {
+				ent.cnt = TRUE;
 				local entity oldself;
 				oldself = self;
 				self = ent;
@@ -365,7 +351,7 @@ float assault_WinningCondition()
 		}
 	}
 
-	return status;
+	return FALSE;
 }
 
 void assault_spawn(entity spot) {
