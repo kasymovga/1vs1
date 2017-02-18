@@ -1004,6 +1004,8 @@ float race_TelefragsAllowed() {
 	return FALSE;
 }
 
+float race_ReadyRestartHard() { return race_completing; }
+
 void race_init() {
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
@@ -1028,4 +1030,5 @@ void race_init() {
 	GameHook_RecordForMap = race_RecordForMap;
 	GameHook_ReadyAllowed = race_ReadyAllowed;
 	GameHook_TelefragsAllowed = race_TelefragsAllowed;
+	GameHook_ReadyRestartHard = race_ReadyRestartHard;
 }

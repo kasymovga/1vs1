@@ -385,10 +385,13 @@ float assault_SpawnPointGood(entity spot) {
 	return TRUE;
 }
 
+float assault_ReadyRestartHard() { return TRUE; }
+
 void assault_init() {
 	GameHook_WinningCondition = assault_WinningCondition;
 	GameHook_Spawn = assault_spawn;
 	GameHook_SpawnPointGood = assault_SpawnPointGood;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_WarmupAllowed = false_WarmupAllowed;
+	GameHook_ReadyRestartHard = assault_ReadyRestartHard;
 }
