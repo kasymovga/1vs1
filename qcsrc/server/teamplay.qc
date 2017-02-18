@@ -311,7 +311,6 @@ void InitGameplayMode()
 		game = GAME_ASSAULT;
 		assault_init();
 		ActivateTeamplay();
-		ScoreRules_assault();
 	}
 
 	if(g_onslaught)
@@ -410,7 +409,6 @@ void InitGameplayMode()
 		if(g_race_qualifying)
 			independent_players = 1;
 
-		ScoreRules_race();
 		race_init();
 	}
 

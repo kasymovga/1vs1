@@ -1,3 +1,5 @@
+#define ST_ASSAULT_OBJECTIVES 1
+#define SP_ASSAULT_OBJECTIVES 4
 void spawnfunc_func_breakable();
 void target_objective_decrease_activate();
 .entity assault_decreaser;
@@ -394,4 +396,8 @@ void assault_init() {
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_WarmupAllowed = false_WarmupAllowed;
 	GameHook_ReadyRestartHard = assault_ReadyRestartHard;
+	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
+	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
 }

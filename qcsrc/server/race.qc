@@ -28,6 +28,32 @@ void race_StartCompleting();
 float race_highest_checkpoint;
 float race_timed_checkpoint;
 
+#define ST_RACE_LAPS 1
+#define SP_RACE_LAPS 4
+#define SP_RACE_FASTEST 5
+#define SP_RACE_TIME 5
+void ScoreRules_race()
+{
+	ScoreRules_basics(race_teams, 0, 0, FALSE);
+	if(race_teams)
+	{
+		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	}
+	else if(g_race_qualifying)
+	{
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	}
+	else
+	{
+		//ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      0);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	}
+	ScoreRules_basics_end();
+}
+
 float race_NextCheckpoint(float f)
 {
 	if(f >= race_highest_checkpoint)

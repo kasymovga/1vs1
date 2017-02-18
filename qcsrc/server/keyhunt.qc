@@ -1,5 +1,13 @@
 #define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
 
+#define ST_KH_CAPS 1
+#define SP_KH_CAPS 4
+#define SP_KH_PUSHES 5
+#define SP_KH_DESTROYS 6
+#define SP_KH_PICKUPS 7
+#define SP_KH_KCKILLS 8
+#define SP_KH_LOSSES 9
+
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL
 // #define KH_KEY_ATTACHMENT_DEBUG
@@ -1001,7 +1009,15 @@ void kh_init()  // sets up th KH environment
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
-	ScoreRules_kh(kh_teams);
+	ScoreRules_basics(kh_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS,  "destroyed", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
 }
 
 void kh_finalize()
