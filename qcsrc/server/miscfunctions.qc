@@ -2086,3 +2086,15 @@ void unzone_ifneeded(string s) {
 	if (s != "")
 		strunzone(s);
 }
+
+void defer_think() {
+	self.use();
+	remove(self);
+}
+
+void defer(float t, void() callback) {
+	entity e = spawn();
+	e.use = callback;
+	e.nextthink = t + time;
+	e.think = defer_think;
+}
