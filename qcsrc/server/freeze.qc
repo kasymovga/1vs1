@@ -183,6 +183,10 @@ void Freeze_PlayerClear(entity plr, entity attacker, float killed)
 	Roundbased_NeedCheckTeams();
 }
 
+float Freeze_FragLimitOverride() {
+	return cvar("g_freeze_winlimit");
+}
+
 void Freeze_Init()
 {
 	CACHE_CVAR(g_freeze);
@@ -195,16 +199,14 @@ void Freeze_Init()
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
-	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
-	if not(g_freeze)
-		return;
-
 	GameHook_DeathHandle = Freeze_DeathHandle;
 	GameHook_Spawn = Freeze_Spawn;
 	GameHook_PlayerClear = Freeze_PlayerClear;
 	GameHook_SpeedMod = Freeze_SpeedMod;
 	GameHook_DamageHandle = Freeze_DamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;
+	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_FragLimitOverride = Freeze_FragLimitOverride;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;

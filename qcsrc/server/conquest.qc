@@ -198,7 +198,7 @@ float conquest_WinningCondition()
 	t1 = t2 = 0;
 	WinningConditionHelper(); // set worldstatus
 	if(inWarmupStage)
-		return WINNING_NO;
+		return FALSE;
 
 	FOR_EACH_TEAMPLAYER(head)
 		if (head.team == COLOR_TEAM1)
@@ -245,11 +245,11 @@ float conquest_WinningCondition()
 			announce(head, announce_sound);
 			LocationRequest_Remove(head);
 		}
-		return WINNING_YES;
+		return TRUE;
 	}
 
 	// Two or more teams remain
-	return WINNING_NO;
+	return FALSE;
 }
 
 float conquest_FragsHandle(entity attacker, entity targ, float f) {
@@ -311,5 +311,6 @@ void conquest_init() {
 	GameHook_Spawn = onslaught_Spawn;
 	GameHook_PlayerClear = onslaught_PlayerClear;
 	GameHook_Reset = conquest_Reset;
+	GameHook_WinCountDown = stub_WinCountDown;
 	InitializeEntity(world, conquest_delayedinit, INITPRIO_LAST);
 }

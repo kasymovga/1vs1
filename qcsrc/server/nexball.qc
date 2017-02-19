@@ -1,4 +1,7 @@
 //EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
+#define ST_NEXBALL_GOALS 1
+#define SP_NEXBALL_GOALS 4
+#define SP_NEXBALL_FAULTS 5
 #define BALL_EFFECTMASK 1229
 #define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
 #define BALL_MAXS '16 16 16'
@@ -69,6 +72,14 @@ float nb_SpeedMod() {
 	return 1;
 }
 
+float nb_FragLimitOverride() {
+	return cvar("g_nexball_goallimit");
+}
+
+float nb_LeadLimitOverride() {
+	return cvar("g_nexball_goalleadlimit");
+}
+
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
 {
@@ -113,6 +124,8 @@ void nb_init() // Called early (worldspawn stage)
 	GameHook_PlayerClear = nb_PlayerClear;
 	GameHook_PlayerPreThink = nexball_setstatus;
 	GameHook_SpeedMod = nb_SpeedMod;
+	GameHook_FragLimitOverride = nb_FragLimitOverride;
+	GameHook_LeadLimitOverride = nb_LeadLimitOverride;
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 
@@ -622,7 +635,12 @@ void nb_delayedinit (void)
 {
 	if (find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
-	ScoreRules_nexball(nb_teams);
+
+	ScoreRules_basics(nb_teams, 0, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
 }
 
 //=======================//

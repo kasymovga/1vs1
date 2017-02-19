@@ -123,8 +123,3 @@ entity PlayerScore_Sort(.float field);
 
 float WinningCondition_Scores(float limit, float leadlimit);
 float WinningCondition_RanOutOfSpawns();
-
-float WINNING_NO = 0; // no winner, but time limits may terminate the game
-float WINNING_YES = 1; // winner found
-float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
-float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW

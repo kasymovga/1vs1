@@ -245,7 +245,9 @@ void PlayerScore_Clear(entity player)
 
 	if(teamscores_entities_count)
 		return;
-	if(g_race && !g_race_qualifying) return;
+
+	if not(GameHook_ClearScoreAllowed())
+		return;
 
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
@@ -881,7 +883,7 @@ void Score_NicePrint(entity to)
 }
 
 float leaderfrags;
-float WinningCondition_Scores(float limit, float leadlimit)
+float WinningCondition_Scores(float limit, float _leadlimit)
 {
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
@@ -908,34 +910,26 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	}
 
 	if(WinningConditionHelper_zeroisworst)
-		leadlimit = 0; // not supported in this mode
+		_leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || (g_race && !g_race_qualifying) || g_nexball)
-	// these modes always score in increments of 1, thus this makes sense
+	if (limit)
+	if (leaderfrags != WinningConditionHelper_topscore)
 	{
-		if(leaderfrags != WinningConditionHelper_topscore)
-		{
-			leaderfrags = WinningConditionHelper_topscore;
+		leaderfrags = WinningConditionHelper_topscore;
+		GameHook_WinCountDown(limit - leaderfrags);
+	}
+	if (WinningConditionHelper_equality)
+		return FALSE;
 
-			if (limit)
-			if (leaderfrags == limit - 1)
-				play2all("announcer/robotic/1fragleft.wav");
-			else if (leaderfrags == limit - 2)
-				play2all("announcer/robotic/2fragsleft.wav");
-			else if (leaderfrags == limit - 3)
-				play2all("announcer/robotic/3fragsleft.wav");
-		}
+	if (WinningConditionHelper_topscore) {
+		if (limit && (WinningConditionHelper_topscore >= limit))
+			return TRUE;
+
+		if (_leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= _leadlimit))
+			return TRUE;
 	}
 
-	return GetWinningCode(
-		WinningConditionHelper_topscore &&
-		(
-			(limit && (WinningConditionHelper_topscore >= limit))
-			||
-			(leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= leadlimit))
-		),
-		WinningConditionHelper_equality
-	);
+	return FALSE;
 }
 
 float WinningCondition_RanOutOfSpawns()
@@ -943,10 +937,10 @@ float WinningCondition_RanOutOfSpawns()
 	entity head;
 
 	if(!have_team_spawns)
-		return WINNING_NO;
+		return FALSE;
 
 	if(!some_spawn_has_been_used)
-		return WINNING_NO;
+		return FALSE;
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
@@ -978,7 +972,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(team1_score + team2_score + team3_score + team4_score == 0)
 	{
 		checkrules_equality = TRUE;
-		return WINNING_YES;
+		return TRUE;
 	}
 	else if(team1_score + team2_score + team3_score + team4_score == 1)
 	{
@@ -997,8 +991,8 @@ float WinningCondition_RanOutOfSpawns()
 		}
 
 		AddWinners(team, t);
-		return WINNING_YES;
+		return TRUE;
 	}
 	else
-		return WINNING_NO;
+		return FALSE;
 }

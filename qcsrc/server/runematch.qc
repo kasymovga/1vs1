@@ -554,11 +554,25 @@ void spawn_runes()
 	}
 }
 
+float runematch_FragLimitOverride() { return cvar("g_runematch_point_limit"); }
+
+float runematch_LeadLimitOverride() { return cvar("g_runematch_point_leadlimit"); }
+
 void runematch_init()
 {
-	if (g_runematch)
-		GameHook_FragsHandle = RunematchHandleFrags;
-	else if not(g_runes)
+	if not(g_runematch)
+		return;
+
+	GameHook_FragsHandle = RunematchHandleFrags;
+	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_WarmupAllowed = false_WarmupAllowed;
+	GameHook_FragLimitOverride = runematch_FragLimitOverride;
+	GameHook_LeadLimitOverride = runematch_LeadLimitOverride;
+}
+
+void runes_init() {
+	if not(g_runes)
+	if not(g_runematch)
 		return;
 
 	CACHE_CVAR(g_runematch_allow_same);
@@ -577,13 +591,11 @@ void runematch_init()
 	//CACHE_CVAR(g_runematch_rune_glow_color);
 	//CACHE_CVAR(g_runematch_rune_glow_size);
 	CACHE_CVAR(g_runematch_shuffletime);
-
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;
 	e.nextthink = time + 0.1;
 }
-
 
 float runematch_point_time;
 

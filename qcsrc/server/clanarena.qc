@@ -46,19 +46,20 @@ float Clanarena_DamageHandle(entity inflictor, entity attacker, float damage, fl
 	return FALSE;
 }
 
+float Clanarena_FragLimitOverride() {
+	return cvar("g_clanarena_winlimit");
+}
+
 void Clanarena_Init()
 {
-	CACHE_CVAR(g_clanarena);
-	if not(g_clanarena)
-		return;
-
 	CACHE_CVAR(g_clanarena_startdelay);
 	CACHE_CVAR(g_clanarena_enddelay);
-
 	GameHook_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
 	GameHook_DamageHandle = Clanarena_DamageHandle;
+	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
 	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
 	ca_controller = spawn();
 	ca_controller.think = Clanarena_Think;

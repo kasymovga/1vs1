@@ -17,15 +17,37 @@ var entity() GameHook_SelectSpawnPoint = {
 	return spot;
 }
 var float(float fraglimit, float leadlimit) GameHook_WinningCondition = { 
-	float f = WinningCondition_RanOutOfSpawns();
-	if(f == WINNING_YES) {
+	if (WinningCondition_RanOutOfSpawns()) {
 		bprint("Hey! Someone ran out of spawns!\n");
-		return f;
+		return TRUE;
 	}
 	return WinningCondition_Scores(fraglimit, leadlimit);
 }
-var float() GameHook_InititateOvertime = { return TRUE; }
+var float() GameHook_OvertimeHandle = { return FALSE; }
+var float() GameHook_OvertimeAllowed = { return TRUE; }
 var void() GameHook_Reset = {}
 var void() GameHook_ObserverSpawn = {}
 var void() GameHook_InitSpectator = {}
 var float(entity spot) GameHook_SpawnPointGood = { return TRUE; }
+var void(float frags_remain) stub_WinCountDown = {}
+var void(float frags_remain) GameHook_WinCountDown = {
+	if (frags_remain == 1)
+		play2all("announcer/robotic/1fragleft.wav");
+	else if (frags_remain == 2)
+		play2all("announcer/robotic/2fragsleft.wav");
+	else if (frags_remain == 3)
+		play2all("announcer/robotic/3fragsleft.wav");
+}
+var float(float f) GameHook_KillDelayMod = { return f; }
+var string(string s) GameHook_SuddenDeathMessageMod = { return s; }
+var float() false_WarmupAllowed = { return FALSE; }
+var float() GameHook_WarmupAllowed = { return TRUE; }
+var float() GameHook_ReadyAllowed = { return FALSE; }
+var float() GameHook_ClearScoreAllowed = { return TRUE; }
+var float() GameHook_TelefragsAllowed = { return TRUE; }
+var string() GameHook_FixClientCvars = { return ""; }
+var string(string bspname) GameHook_RecordForMap = { return ""; }
+var float() GameHook_ReadyRestartHard = { return FALSE; }
+var float() GameHook_FragLimitOverride = { return cvar("fraglimit_override"); }
+var float() GameHook_TimeLimitOverride = { return cvar("timelimit_override"); }
+var float() GameHook_LeadLimitOverride = { return cvar("leadlimit_override"); }

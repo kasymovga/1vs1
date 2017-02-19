@@ -1159,10 +1159,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 {
 	float killtime;
 	entity e;
-	killtime = g_balance_kill_delay;
-
-	if(g_race_qualifying)
-		killtime = 0;
+	killtime = GameHook_KillDelayMod(g_balance_kill_delay);
 
 	self.killindicator_teamchange = targetteam;
 
@@ -1266,10 +1263,7 @@ void DoTeamChange(float destteam)
 
 void FixClientCvars(entity e)
 {
-	// send prediction settings to the client
-	stuffcmd(e, "\nin_bindmap 0 0\n");
-	if(g_race || g_cts)
-		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
+	stuffcmd(e, strcat("\nin_bindmap 0 0\n", GameHook_FixClientCvars(), "\n"));
 }
 
 void Check_ForRetard(entity player) {

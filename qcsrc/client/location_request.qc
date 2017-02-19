@@ -4,8 +4,6 @@ void LocationRequest_Remove() {
 }
 
 float LocationRequest_InputEvent(float bInputType, float nPrimary, float nSecondary) {
-	float choice;
-
 	if (bInputType != 0)
 		return FALSE;
 

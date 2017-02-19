@@ -23,9 +23,6 @@ float g_pinata_drop_all;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_ctf_win_mode;
-float g_ctf_ignore_frags;
-float g_race_qualifying;
 float inWarmupStage;
 float round_warmup;
 float g_jetpack;
@@ -51,6 +48,8 @@ float sv_world_scale;
 
 float spawn_debug;
 float spawn_debugview;
+
+float g_telefrags;
 
 entity	activator;
 string	string_null;
@@ -380,7 +379,6 @@ void ClearSelectedPlayer();
 .float selected_player_display_timeout; // when the selection will time out
 
 void FixIntermissionClient(entity e);
-void FixClientCvars(entity e);
 
 float weaponsInMap;
 

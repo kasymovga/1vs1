@@ -88,6 +88,7 @@ gametypevote.qh
 menu.qh
 
 dodging.qh
+miscfunctions.qh
 gamehooks.qh
 
 scores_rules.qc

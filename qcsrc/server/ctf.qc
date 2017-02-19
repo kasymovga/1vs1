@@ -1,6 +1,13 @@
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 
+#define ST_CTF_CAPS 1
+#define SP_CTF_CAPS 4
+#define SP_CTF_PICKUPS 5
+#define SP_CTF_DROPS 6
+#define SP_CTF_FCKILLS 7
+#define SP_CTF_RETURNS 8
+
 float g_balance_ctf_damageforcescale;
 float g_balance_ctf_delay_collect;
 float g_ctf_allow_drop;
@@ -32,6 +39,8 @@ float g_ctf_flagscore_return;
 float g_ctf_flagscore_return_by_killer;
 float g_ctf_flagscore_return_rogue;
 float g_ctf_flagscore_return_rogue_by_killer;
+float g_ctf_win_mode;
+float g_ctf_ignore_frags;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -1046,7 +1055,33 @@ void ctf_delayedinit()
 	if (find(world, classname, "ctf_team") == world)
 		ctf_spawnteams();
 
-	ScoreRules_ctf();
+	float sp_score, sp_caps;
+	sp_score = sp_caps = 0;
+	switch(g_ctf_win_mode)
+	{
+		case 0: // caps only
+			sp_caps = SFL_SORT_PRIO_PRIMARY;
+			break;
+		case 1: // caps, then score
+			sp_caps = SFL_SORT_PRIO_PRIMARY;
+			sp_score = SFL_SORT_PRIO_SECONDARY;
+			break;
+		case 2: // score only
+		default:
+			sp_caps = SFL_SORT_PRIO_SECONDARY; // looks better ;)
+			sp_score = SFL_SORT_PRIO_PRIMARY;
+			break;
+	}
+
+	CheckAllowedTeams(world);
+	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      sp_caps);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
 };
 
 void ctf_PlayerClear(entity plr, entity attacker, float killed) {
@@ -1059,6 +1094,22 @@ void ctf_PlayerClear(entity plr, entity attacker, float killed) {
 		else
 			DropFlag(plr.flagcarried, world, attacker);
 	}
+}
+
+string ctf_RecordForMap(string bspname) {
+	float r = stof(db_get(ServerProgsDB, strcat(bspname, "/captimerecord/time")));
+	if (r == 0)
+		return "";
+
+	return strcat(strpad(32, bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
+}
+
+float ctf_FragLimitOverride() {
+	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_limit") : cvar("capturelimit_override"));
+}
+
+float ctf_LeadLimitOverride() {
+	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_leadlimit") : cvar("captureleadlimit_override"));
 }
 
 void ctf_init()
@@ -1094,6 +1145,12 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_flagscore_return_by_killer);
 	CACHE_CVAR(g_ctf_flagscore_return_rogue);
 	CACHE_CVAR(g_ctf_flagscore_return_rogue_by_killer);
+	CACHE_CVAR(g_ctf_ignore_frags);
+	if(g_campaign)
+		g_ctf_win_mode = 2;
+	else
+		g_ctf_win_mode = cvar("g_ctf_win_mode");
+
 	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
@@ -1103,6 +1160,10 @@ void ctf_init()
 	GameHook_FragsHandle = ctf_handle_frags;
 	GameHook_PlayerClear = ctf_PlayerClear;
 	GameHook_PlayerPreThink = ctf_setstatus;
+	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_RecordForMap = ctf_RecordForMap;
+	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
+	GameHook_FragLimitOverride = ctf_FragLimitOverride;
 };
 
 void ctf_setstatus2(entity flag, float shift)

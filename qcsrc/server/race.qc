@@ -10,6 +10,11 @@
 .float race_movetime_frac; // fractional accumulator for higher accuracy (helper for writing)
 .float race_movetime_count; // integer accumulator
 
+float g_race_qualifying;
+
+float race_fraglimit;
+float race_leadlimit;
+float race_timelimit;
 
 .entity sprite;
 
@@ -27,6 +32,32 @@ void race_StartCompleting();
 
 float race_highest_checkpoint;
 float race_timed_checkpoint;
+
+#define ST_RACE_LAPS 1
+#define SP_RACE_LAPS 4
+#define SP_RACE_FASTEST 5
+#define SP_RACE_TIME 5
+void ScoreRules_race()
+{
+	ScoreRules_basics(race_teams, 0, 0, FALSE);
+	if(race_teams)
+	{
+		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	}
+	else if(g_race_qualifying)
+	{
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	}
+	else
+	{
+		//ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      0);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	}
+	ScoreRules_basics_end();
+}
 
 float race_NextCheckpoint(float f)
 {
@@ -621,7 +652,7 @@ entity race_PreSpawn()
 		race_PreparePlayer();
 
 	race_AbandonRaceCheck(self);
-	return world;
+	return SelectSpawnPoint(FALSE);
 }
 
 void race_PostSpawn(entity spot)
@@ -841,7 +872,6 @@ void race_PhysicFrameBegin() {
 
 float race_WinningCondition_NonQualifying(float fraglimit)
 {
-	float wc;
 	entity p;
 	float n, c;
 
@@ -854,42 +884,21 @@ float race_WinningCondition_NonQualifying(float fraglimit)
 			++c;
 	}
 	if(n && (n == c))
-		return WINNING_YES;
+		return TRUE;
 
-	wc = WinningCondition_Scores(fraglimit, 0);
-
-	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	// do NOT support equality when the laps are all raced!
-		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
-
-	return wc;
-}
-
-float race_WinningCondition_QualifyingThenRace(float limit)
-{
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
-
-	// NEVER initiate overtime
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-		return WINNING_YES;
-
-	return wc;
+	return WinningCondition_Scores(fraglimit, 0);
 }
 
 float race_WinningCondition(float fraglimit, float ignore) {
 	if(!g_race_qualifying)
 		return race_WinningCondition_NonQualifying(fraglimit);
 	else if(g_race_qualifying == 2)
-		return race_WinningCondition_QualifyingThenRace(fraglimit);
+		return WinningCondition_Scores(fraglimit, 0);
 
-	return WINNING_NO;
+	return FALSE;
 }
 
-float race_InitiateOvertime() {
+float race_OvertimeHandle() {
 	if (g_race_qualifying == 2) {
 		float totalplayers;
 		float playerswithlaps;
@@ -911,7 +920,7 @@ float race_InitiateOvertime() {
 		{
 			checkrules_suddendeathend = 0;
 			ReadyRestart(); // go to race
-			return FALSE;
+			return TRUE;
 		}
 	}
 	if(!checkrules_suddendeathend)
@@ -920,7 +929,7 @@ float race_InitiateOvertime() {
 		if(g_race && !g_race_qualifying)
 			race_StartCompleting();
 	}
-	return FALSE;
+	return TRUE;
 }
 
 float race_SpawnPointGood(entity spot) {
@@ -972,12 +981,117 @@ float race_SpawnPointGood(entity spot) {
 	return TRUE;
 }
 
+var void(float remain_frags) race_WinCountDown_orig;
+
+void race_WinCountDown(float remain_frags) {
+	if (g_race)
+	if not(g_race_qualifying)
+		race_WinCountDown_orig(remain_frags);
+}
+
+float race_KillDelayMod(float f) {
+	if (g_race_qualifying)
+		return 0;
+
+	return f;
+}
+
+string race_SuddenDeathMod(string s) {
+	if (g_race_qualifying)
+		return s;
+
+	return "^3Everyone, finish your lap! The race is over!";
+}
+
+float race_WarmupAllowed() {
+	if (g_race_qualifying == 2)
+		return FALSE;
+
+	return TRUE;
+}
+
+string race_FixClientCvars() {
+	return "cl_cmd settemp cl_movecliptokeyboard 2";
+}
+
+string race_RecordForMap(string bspname) {
+	string recid = (g_race ? RACE_RECORD : CTS_RECORD);
+	float r = stof(db_get(ServerProgsDB, strcat(bspname, recid, "time")));
+	if (r == 0)
+		return "";
+
+	return strcat(strpad(32, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", db_get(ServerProgsDB, strcat(bspname, recid, "netname")), "\n");
+}
+
+float race_ReadyAllowed() {
+	return (g_race_qualifying == 2);
+}
+
+float race_ClearScoresAllowed() {
+	return g_race_qualifying;
+}
+
+float race_TelefragsAllowed() {
+	return FALSE;
+}
+
+float race_ReadyRestartHard() { return race_completing; }
+
+float race_FragLimitOverride() {
+	if (g_race)
+		return cvar("g_race_laps_limit");
+
+	return 0;
+}
+
+float race_LeadLimitOverride() {
+	return 0;
+}
+
 void race_init() {
 	if (g_race) {
-		GameHook_WinningCondition = race_WinningCondition;
-		GameHook_InititateOvertime = race_InitiateOvertime;
-	}
+		float qualifying_override;
+		qualifying_override = -1;
+		if(cvar("g_race_teams"))
+		{
+			ActivateTeamplay();
+			race_teams = bound(2, cvar("g_race_teams"), 4);
+		}
+		else
+			race_teams = 0;
 
+		qualifying_override = cvar("g_race_qualifying_timelimit_override");
+		if(qualifying_override >= 0)
+			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+
+		if (g_campaign) {
+			g_race_qualifying = 1;
+		} else {
+			if (cvar("g_race_qualifying_timelimit") > 0) {
+				race_fraglimit = cvar("fraglimit");
+				race_leadlimit = cvar("leadlimit");
+				race_timelimit = cvar("timelimit");
+				cvar_set("fraglimit", "0");
+				cvar_set("leadlimit", "0");
+				cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+				g_race_qualifying = 2;
+			} else
+				g_race_qualifying = 0;
+		}
+	}
+	if (g_cts)
+		g_race_qualifying = 1;
+
+	if (g_race_qualifying)
+		independent_players = 1;
+
+	if (g_race) {
+		GameHook_WinningCondition = race_WinningCondition;
+		GameHook_OvertimeHandle = race_OvertimeHandle;
+		GameHook_KillDelayMod = race_KillDelayMod;
+		GameHook_WarmupAllowed = race_WarmupAllowed;
+		GameHook_ClearScoreAllowed = race_ClearScoresAllowed;
+	}
 	GameHook_InitSpectator = race_InitSpectator;
 	GameHook_Reset = race_Reset;
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;
@@ -988,4 +1102,13 @@ void race_init() {
 	GameHook_PlayerClear = race_PreDie;
 	GameHook_ObserverSpawn = race_PreSpawnObserver;
 	GameHook_SpawnPointGood = race_SpawnPointGood;
+	race_WinCountDown_orig = GameHook_WinCountDown;
+	GameHook_WinCountDown = race_WinCountDown;
+	GameHook_FixClientCvars = race_FixClientCvars;
+	GameHook_RecordForMap = race_RecordForMap;
+	GameHook_ReadyAllowed = race_ReadyAllowed;
+	GameHook_TelefragsAllowed = race_TelefragsAllowed;
+	GameHook_ReadyRestartHard = race_ReadyRestartHard;
+	GameHook_LeadLimitOverride = race_LeadLimitOverride;
+	GameHook_FragLimitOverride = race_FragLimitOverride;
 }

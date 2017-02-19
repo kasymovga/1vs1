@@ -1393,66 +1393,14 @@ void print_to(entity e, string s)
 
 string getrecords()
 {
-    float rec;
-    string h;
-    float r;
     float i;
     string s;
-
-    rec = 0;
-
     s = "";
-
-    if (g_ctf)
-    {
-        for (i = 0; i < MapInfo_count; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
-                if (r == 0)
-                    continue;
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/netname"));
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    if (g_race)
-    {
-        for (i = 0; i < MapInfo_count; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time")));
-                if (r == 0)
-                    continue;
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "netname"));
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    if (g_cts)
-    {
-        for (i = 0; i < MapInfo_count; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time")));
-                if (r == 0)
-                    continue;
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "netname"));
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
+	for (i = 0; i < MapInfo_count; ++i)
+		if (MapInfo_Get_ByID(i))
+			s = strcat(s, GameHook_RecordForMap(MapInfo_Map_bspname));
 
     MapInfo_ClearTemps();
-
     if (s == "")
         return "No records are available on this server.\n";
     else
@@ -2120,8 +2068,17 @@ void reset_map(float dorespawn)
 		}
 	}
 
-	if(g_keyhunt)
-		kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
-
 	self = oldself;
+}
+
+void defer_think() {
+	self.use();
+	remove(self);
+}
+
+void defer(float t, void() callback) {
+	entity e = spawn();
+	e.use = callback;
+	e.nextthink = t + time;
+	e.think = defer_think;
 }

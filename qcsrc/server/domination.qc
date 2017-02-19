@@ -15,6 +15,10 @@ float g_domination_teams_override;
 
 #define DOMPOINTFRAGS frags
 
+#define ST_DOM_TICKS 1
+#define SP_DOM_TICKS 4
+#define SP_DOM_TAKES 5
+
 .float enemy_playerid;
 .entity sprite;
 .float captime;
@@ -417,12 +421,27 @@ void dom_delayedinit()
 		}
 	}
 
-	ScoreRules_dom();
+	float sp_domticks, sp_score;
+	sp_score = sp_domticks = 0;
+	if(cvar("g_domination_disable_frags"))
+		sp_domticks = SFL_SORT_PRIO_PRIMARY;
+	else
+		sp_score = SFL_SORT_PRIO_PRIMARY;
+	CheckAllowedTeams(world);
+	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), sp_score, sp_score, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
+	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
+	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
+	ScoreRules_basics_end();
 };
 
 entity dom_SelectSpawnPoint() {
 	return SelectSpawnPoint(TRUE);
 }
+
+float dom_FragLimitOverride() { return cvar("g_domination_point_limit"); }
+
+float dom_LeadLimitOverride() { return cvar("g_domination_point_leadlimit"); }
 
 void dom_init()
 {
@@ -443,6 +462,9 @@ void dom_init()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 	GameHook_SelectSpawnPoint = dom_SelectSpawnPoint;
+	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_FragLimitOverride = dom_FragLimitOverride;
+	GameHook_LeadLimitOverride = dom_LeadLimitOverride;
 	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
 };
 

@@ -242,8 +242,7 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 
-		if((inWarmupStage && 0 >= g_warmup_limit) // with unlimited warmup players have to be able to restart
-		   || cvar("sv_ready_restart") || g_race_qualifying == 2)
+		if(inWarmupStage || cvar("sv_ready_restart") || GameHook_ReadyAllowed())
 		{
 			if(!readyrestart_happened || cvar("sv_ready_restart_repeatable"))
 			{
@@ -418,7 +417,7 @@ void ReadyRestartForce()
 	VoteReset();
 
 	// clear overtime
-	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2) {
+	if (checkrules_overtimesadded > 0) {
 		//we have to decrease timelimit to its original value again!!
 		float newTL;
 		newTL = cvar("timelimit");
@@ -464,9 +463,10 @@ void ReadyRestartForce()
 void ReadyRestart()
 {
 	// no arena, assault support yet...
-	if(g_assault | gameover | intermission_running | race_completing)
-		localcmd("restart\n");
-	else
+	if(GameHook_ReadyRestartHard() | gameover | intermission_running) {
+		localcmd("\nrestart\n");
+		return;
+	} else
 		localcmd("\nsv_hook_gamerestart;");
 
 	ReadyRestartForce();

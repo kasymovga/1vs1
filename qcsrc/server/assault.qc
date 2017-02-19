@@ -1,3 +1,9 @@
+#define ST_ASSAULT_OBJECTIVES 1
+#define SP_ASSAULT_OBJECTIVES 4
+float assault_winning;
+float assault_roundend;
+float assault_secondround;
+float assault_secondround_timelimit;
 void spawnfunc_func_breakable();
 void target_objective_decrease_activate();
 .entity assault_decreaser;
@@ -218,14 +224,9 @@ void spawnfunc_func_assault_wall() {
 }
 
 
-void target_assault_roundend_reset() {
-	//print("round end reset\n");
-	self.cnt = self.cnt + 1; // up round counter
-	self.winning = 0; // up round
-}
-
 void target_assault_roundend_use() {
-	self.winning = 1; // round has been won by attackers
+	assault_winning = TRUE;
+	assault_roundend = TRUE;
 }
 
 void spawnfunc_target_assault_roundend() {
@@ -234,44 +235,35 @@ void spawnfunc_target_assault_roundend() {
 		remove(self);
 		return;
 	}
-	self.winning = 0; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
 	self.use = target_assault_roundend_use;
-	self.cnt = 0; // first round
-	self.reset = target_assault_roundend_reset;
 }
 
 void assault_roundstart_use() {
-
 	activator = self;
 	SUB_UseTargets();
 
-	/*
-#ifdef TTURRETS_ENABLED
-entity ent,oldself;
+	entity ent,oldself;
 
 	//(Re)spawn all turrets
 	oldself = self;
 	ent = find(world, classname, "turret_main");
 	while(ent) {
-	// Swap turret teams
-	if(ent.team == COLOR_TEAM1)
-	ent.team = COLOR_TEAM2;
-	else
-	ent.team = COLOR_TEAM1;
+		// Swap turret teams
+		if(ent.team == COLOR_TEAM1)
+			ent.team = COLOR_TEAM2;
+		else if (ent.team == COLOR_TEAM2)
+			ent.team = COLOR_TEAM1;
 
-	self = ent;
+		self = ent;
 
-	// Dubbles as teamchange
-	turret_stdproc_respawn();
-	//ent.turret_spawnfunc();
+		// Dubbles as teamchange
+		turret_stdproc_respawn();
+		//ent.turret_spawnfunc();
 
-	ent = find(ent, classname, "turret_main");
+		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
-#endif
-*/
-
 }
 
 void spawnfunc_target_assault_roundstart() {
@@ -287,13 +279,17 @@ void spawnfunc_target_assault_roundstart() {
 	InitializeEntity(self, assault_roundstart_use, INITPRIO_FINDTARGET);
 }
 
+void assault_reset_map() {
+	reset_map(TRUE); // sets game_starttime
+	cvar_set("timelimit", ftos(assault_secondround_timelimit));
+}
+
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
 void assault_new_round() {
 	//bprint("ASSAULT: new round\n");
 
 	// up round counter
-	self.winning = self.winning + 1;
 
 	// swap attacker/defender roles
 	if(assault_attacker_team == COLOR_TEAM1) {
@@ -316,19 +312,23 @@ void assault_new_round() {
 	}
 
 	// reset the level with a countdown
-	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
-	ReadyRestartForce(); // sets game_starttime
+	assault_secondround_timelimit = (time - game_starttime) / 60;
+	game_starttime = time + 15;
+	defer(5, assault_reset_map);
+	entity e;
+	//FOR_EACH_REALCLIENT(e)
+	//	centerprint(e, "Round finished! Prepare for second round.");
 }
 
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
-float assault_WinningCondition()
+float assault_WinningCondition(float ignore1, float ignore2)
 {
-	local float status;
-
 	WinningConditionHelper(); // set worldstatus
 
-	status = WINNING_NO;
+	if (time < game_starttime)
+		return FALSE;
+
 	// as the timelimit has not yet passed just assume the defending team will win
 	if(assault_attacker_team == COLOR_TEAM1)
 	{
@@ -339,33 +339,30 @@ float assault_WinningCondition()
 		SetWinners(team, COLOR_TEAM1);
 	}
 
-	local entity ent;
-	ent = find(world, classname, "target_assault_roundend");
-	if(ent)
+	entity ent = find(ent, classname, "target_assault_roundend");
+
+	if (assault_roundend)
 	{
-		if(ent.winning)	// round end has been triggered by attacking team
-		{
+		assault_roundend = FALSE;
+		if(assault_winning) {
 			bprint("ASSAULT: round completed...\n");
+			assault_winning = FALSE;
 			SetWinners(team, assault_attacker_team);
-
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
-
-			if(ent.cnt == 1) // this was the second round
-			{
-				status = WINNING_YES;
-			}
-			else
-			{
-				local entity oldself;
-				oldself = self;
-				self = ent;
-				assault_new_round();
-				self = oldself;
-			}
+		}
+		if(assault_secondround) // this was the second round
+			return TRUE;
+		else {
+			assault_secondround = TRUE;
+			local entity oldself;
+			oldself = self;
+			self = ent;
+			assault_new_round();
+			self = oldself;
 		}
 	}
 
-	return status;
+	return FALSE;
 }
 
 void assault_spawn(entity spot) {
@@ -399,8 +396,24 @@ float assault_SpawnPointGood(entity spot) {
 	return TRUE;
 }
 
+float assault_ReadyRestartHard() { return TRUE; }
+
+float assault_OvertimeHandle() {
+	assault_roundend = TRUE;
+	assault_WinningCondition(0, 0);
+	return TRUE;
+}
+
 void assault_init() {
+	GameHook_OvertimeHandle = assault_OvertimeHandle;
 	GameHook_WinningCondition = assault_WinningCondition;
 	GameHook_Spawn = assault_spawn;
 	GameHook_SpawnPointGood = assault_SpawnPointGood;
+	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_WarmupAllowed = false_WarmupAllowed;
+	GameHook_ReadyRestartHard = assault_ReadyRestartHard;
+	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
+	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
 }

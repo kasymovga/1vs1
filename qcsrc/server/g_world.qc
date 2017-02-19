@@ -549,7 +549,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
 
-	if ((g_race && g_race_qualifying == 2) || g_runematch || g_assault || g_campaign)
+	if (!GameHook_WarmupAllowed() || g_campaign)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	CACHE_CVAR(g_pinata);
@@ -575,9 +575,11 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_balance_armor_blockpercent);
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
+	CACHE_CVAR(g_telefrags);
 	CACHE_CVAR(nex252_compat_mode);
 	Nadget_Init();
 	Items_Init();
+	runes_init();
 }
 
 void Damage_ReadCvars();
@@ -720,12 +722,9 @@ void spawnfunc_worldspawn (void)
 	dlc_init();
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
+	GameTypeVote_Init();
 	readlevelcvars();
 	readdynamiccvars();
-	Freeze_Init();
-	Clanarena_Init();
-	runematch_init();
-	GameTypeVote_Init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
@@ -830,6 +829,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
+	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 
 	next_pingtime = time + 5;
 	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);
@@ -1626,6 +1626,9 @@ void InitiateOvertime()
 	// - for this timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
+	if (GameHook_OvertimeHandle())
+		return;
+
 	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("timelimit_overtimes")) && cvar("timelimit_overtime"))
 	{
 		++checkrules_overtimesadded;
@@ -1648,21 +1651,8 @@ void InitiateOvertime()
 				" to the game!"
 			)
 		);
-	}
-}
-
-float GetWinningCode(float fraglimitreached, float equality)
-{
-	if(equality)
-		if(fraglimitreached)
-			return WINNING_STARTSUDDENDEATHOVERTIME;
-		else
-			return WINNING_NEVER;
-	else
-		if(fraglimitreached)
-			return WINNING_YES;
-		else
-			return WINNING_NO;
+	} else if (!checkrules_suddendeathend)
+		checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
 }
 
 // set the .winning flag for exactly those players with a given field value
@@ -1755,53 +1745,37 @@ void CheckRules_World()
 		return;
 	}
 
-	if(checkrules_suddendeathend)
-	{
+	if(checkrules_suddendeathend) {
 		if(!checkrules_suddendeathwarning)
 		{
 			checkrules_suddendeathwarning = TRUE;
-			if(g_race && !g_race_qualifying)
-				bcenterprint("^3Everyone, finish your lap! The race is over!");
-			else
-				bcenterprint("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!");
+			bcenterprint(GameHook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"));
+		}
+	} else {
+		if (timelimit)
+		if (time >= timelimit) {
+			if (GameHook_OvertimeAllowed()) {
+				if (WinningConditionHelper_equality) {
+					InitiateOvertime();
+				} else {
+					NextLevel();
+					return;
+				}
+			} else {
+				NextLevel();
+				return;
+			}
 		}
 	}
-	else
-	{
-		if (timelimit)
-		if (time >= timelimit)
-		if (GameHook_InititateOvertime())
-			InitiateOvertime();
-	}
-
-	if (checkrules_suddendeathend && time >= checkrules_suddendeathend)
-	{
+	if (GameHook_WinningCondition(fraglimit, leadlimit)) {
 		NextLevel();
 		return;
 	}
-
-	float checkrules_status;
-	checkrules_status = GameHook_WinningCondition(fraglimit, leadlimit);
-
-	if(checkrules_status == WINNING_STARTSUDDENDEATHOVERTIME)
+	if (checkrules_suddendeathend)
+	if (time >= checkrules_suddendeathend || !WinningConditionHelper_equality)
 	{
-		checkrules_status = WINNING_NEVER;
-		checkrules_overtimesadded = -1;
-		InitiateOvertime();
-	}
-
-	if(checkrules_status == WINNING_NEVER)
-		// equality cases! Nobody wins if the overtime ends in a draw.
-		ClearWinners();
-
-	if(checkrules_suddendeathend)
-		if(checkrules_status != WINNING_NEVER || time >= checkrules_suddendeathend)
-			checkrules_status = WINNING_YES;
-
-	if(checkrules_status == WINNING_YES)
-	{
-		//print("WINNING\n");
 		NextLevel();
+		return;
 	}
 };
 
