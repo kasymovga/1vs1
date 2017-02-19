@@ -10,6 +10,11 @@
 .float race_movetime_frac; // fractional accumulator for higher accuracy (helper for writing)
 .float race_movetime_count; // integer accumulator
 
+float g_race_qualifying;
+
+float race_fraglimit;
+float race_leadlimit;
+float race_timelimit;
 
 .entity sprite;
 
@@ -1033,6 +1038,42 @@ float race_TelefragsAllowed() {
 float race_ReadyRestartHard() { return race_completing; }
 
 void race_init() {
+	if (g_race) {
+		float qualifying_override;
+		qualifying_override = -1;
+		if(cvar("g_race_teams"))
+		{
+			ActivateTeamplay();
+			race_teams = bound(2, cvar("g_race_teams"), 4);
+		}
+		else
+			race_teams = 0;
+
+		qualifying_override = cvar("g_race_qualifying_timelimit_override");
+		if(qualifying_override >= 0)
+			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+
+		if (g_campaign) {
+			g_race_qualifying = 1;
+		} else {
+			if (cvar("g_race_qualifying_timelimit") > 0) {
+				race_fraglimit = cvar("fraglimit");
+				race_leadlimit = cvar("leadlimit");
+				race_timelimit = cvar("timelimit");
+				cvar_set("fraglimit", "0");
+				cvar_set("leadlimit", "0");
+				cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+				g_race_qualifying = 2;
+			} else
+				g_race_qualifying = 0;
+		}
+	}
+	if (g_cts)
+		g_race_qualifying = 1;
+
+	if (g_race_qualifying)
+		independent_players = 1;
+
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;
 		GameHook_OvertimeHandle = race_OvertimeHandle;

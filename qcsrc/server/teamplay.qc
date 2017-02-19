@@ -174,9 +174,7 @@ void ActivateTeamplay()
 
 void InitGameplayMode()
 {
-	float fraglimit_override, timelimit_override, leadlimit_override, qualifying_override;
-
-	qualifying_override = -1;
+	float fraglimit_override, timelimit_override, leadlimit_override;
 
 	VoteReset();
 
@@ -320,30 +318,26 @@ void InitGameplayMode()
 		onslaught_init();
 	}
 
+	if(g_cts)
+	{
+		game = GAME_CTS;
+		fraglimit_override = 0;
+		leadlimit_override = 0;
+	}
+
 	if(g_race)
 	{
 		game = GAME_RACE;
 
-		if(cvar("g_race_teams"))
-		{
-			ActivateTeamplay();
-			race_teams = bound(2, cvar("g_race_teams"), 4);
-		}
-		else
-			race_teams = 0;
-
-		qualifying_override = cvar("g_race_qualifying_timelimit_override");
 		fraglimit_override = cvar("g_race_laps_limit");
 		leadlimit_override = 0; // currently not supported by race
 	}
 
-	if(g_cts)
+	if(g_race || g_cts)
 	{
-		game = GAME_CTS;
-		g_race_qualifying = 1;
-		fraglimit_override = 0;
-		leadlimit_override = 0;
+		race_init();
 	}
+
 
 	if(g_nexball)
 	{
@@ -379,37 +373,6 @@ void InitGameplayMode()
 			cvar_set("timelimit", ftos(timelimit_override));
 		if(leadlimit_override >= 0)
 			cvar_set("leadlimit", ftos(leadlimit_override));
-		if(qualifying_override >= 0)
-			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
-
-	if(g_race)
-	{
-		// we need to find out the correct value for g_race_qualifying
-		if(g_campaign)
-		{
-			g_race_qualifying = 1;
-		}
-		else if(!g_campaign && cvar("g_race_qualifying_timelimit") > 0)
-		{
-			g_race_qualifying = 2;
-			race_fraglimit = cvar("fraglimit");
-			race_leadlimit = cvar("leadlimit");
-			race_timelimit = cvar("timelimit");
-			cvar_set("fraglimit", "0");
-			cvar_set("leadlimit", "0");
-			cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
-		}
-		else
-			g_race_qualifying = 0;
-	}
-
-	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		race_init();
 	}
 
 	if(teams_matter && !teamplay)

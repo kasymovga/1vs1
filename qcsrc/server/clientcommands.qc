@@ -417,7 +417,7 @@ void ReadyRestartForce()
 	VoteReset();
 
 	// clear overtime
-	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2) {
+	if (checkrules_overtimesadded > 0) {
 		//we have to decrease timelimit to its original value again!!
 		float newTL;
 		newTL = cvar("timelimit");
