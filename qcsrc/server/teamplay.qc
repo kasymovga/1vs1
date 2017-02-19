@@ -172,6 +172,10 @@ void ActivateTeamplay()
 	teams_matter = 1;
 }
 
+float tdm_FragLimitOverride() {
+	return cvar("g_tdm_fraglimit");
+}
+
 void InitGameplayMode()
 {
 	float fraglimit_override, timelimit_override, leadlimit_override;
@@ -219,11 +223,6 @@ void InitGameplayMode()
 	// in case mapinfo switched the type
 	ReadGameCvars();
 
-	// set both here, gamemode can override it later
-	timelimit_override = cvar("timelimit_override");
-	fraglimit_override = cvar("fraglimit_override");
-	leadlimit_override = cvar("leadlimit_override");
-
 	gamemode_name = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
 	if(g_dm)
 	{
@@ -234,8 +233,8 @@ void InitGameplayMode()
 	{
 		game = GAME_TEAM_DEATHMATCH;
 		ActivateTeamplay();
+		GameHook_FragLimitOverride = tdm_FragLimitOverride;
 		tdm_init();
-		fraglimit_override = cvar("g_tdm_fraglimit");
 	}
 
 	if(g_freeze)
@@ -243,7 +242,7 @@ void InitGameplayMode()
 		game = GAME_FREEZETAG;
 		ActivateTeamplay();
 		tdm_init();
-		fraglimit_override = cvar("g_freeze_winlimit");
+		Freeze_Init();
 	}
 
 	if(g_clanarena)
@@ -252,15 +251,12 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		tdm_init();
 		Clanarena_Init();
-		fraglimit_override = cvar("g_clanarena_winlimit");
 	}
 
 	if(g_domination)
 	{
 		game = GAME_DOMINATION;
 		ActivateTeamplay();
-		fraglimit_override = cvar("g_domination_point_limit");
-		leadlimit_override = cvar("g_domination_point_leadlimit");
 		dom_init();
 	}
 
@@ -268,21 +264,6 @@ void InitGameplayMode()
 	{
 		game = GAME_CTF;
 		ActivateTeamplay();
-		if(g_campaign)
-			g_ctf_win_mode = 2;
-		else
-			g_ctf_win_mode = cvar("g_ctf_win_mode");
-		g_ctf_ignore_frags = cvar("g_ctf_ignore_frags");
-		if(g_ctf_win_mode == 2)
-		{
-			fraglimit_override = cvar("g_ctf_capture_limit");
-			leadlimit_override = cvar("g_ctf_capture_leadlimit");
-		}
-		else
-		{
-			fraglimit_override = cvar("capturelimit_override");
-			leadlimit_override = cvar("captureleadlimit_override");
-		}
 		ctf_init();
 	}
 
@@ -291,8 +272,8 @@ void InitGameplayMode()
 		game = GAME_RUNEMATCH;
 		if(cvar("deathmatch_force_teamplay"))
 			ActivateTeamplay();
-		fraglimit_override = cvar("g_runematch_point_limit");
-		leadlimit_override = cvar("g_runematch_point_leadlimit");
+
+		runematch_init();
 	}
 
 	if(g_keyhunt)
@@ -319,31 +300,18 @@ void InitGameplayMode()
 	}
 
 	if(g_cts)
-	{
 		game = GAME_CTS;
-		fraglimit_override = 0;
-		leadlimit_override = 0;
-	}
 
 	if(g_race)
-	{
 		game = GAME_RACE;
 
-		fraglimit_override = cvar("g_race_laps_limit");
-		leadlimit_override = 0; // currently not supported by race
-	}
-
 	if(g_race || g_cts)
-	{
 		race_init();
-	}
 
 
 	if(g_nexball)
 	{
 		game = GAME_NEXBALL;
-		fraglimit_override = cvar("g_nexball_goallimit");
-		leadlimit_override = cvar("g_nexball_goalleadlimit");
 		ActivateTeamplay();
 		nb_init();
 	}
@@ -367,6 +335,9 @@ void InitGameplayMode()
 	// enforce the server's universal frag/time limits
 	if(!g_campaign)
 	{
+		timelimit_override = GameHook_TimeLimitOverride();
+		fraglimit_override = GameHook_FragLimitOverride();
+		leadlimit_override = GameHook_LeadLimitOverride();
 		if(fraglimit_override >= 0)
 			cvar_set("fraglimit", ftos(fraglimit_override));
 		if(timelimit_override >= 0)

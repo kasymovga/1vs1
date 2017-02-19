@@ -48,3 +48,6 @@ var float() GameHook_TelefragsAllowed = { return TRUE; }
 var string() GameHook_FixClientCvars = { return ""; }
 var string(string bspname) GameHook_RecordForMap = { return ""; }
 var float() GameHook_ReadyRestartHard = { return FALSE; }
+var float() GameHook_FragLimitOverride = { return cvar("fraglimit_override"); }
+var float() GameHook_TimeLimitOverride = { return cvar("timelimit_override"); }
+var float() GameHook_LeadLimitOverride = { return cvar("leadlimit_override"); }

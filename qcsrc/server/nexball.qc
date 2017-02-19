@@ -72,6 +72,14 @@ float nb_SpeedMod() {
 	return 1;
 }
 
+float nb_FragLimitOverride() {
+	return cvar("g_nexball_goallimit");
+}
+
+float nb_LeadLimitOverride() {
+	return cvar("g_nexball_goalleadlimit");
+}
+
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
 {
@@ -116,6 +124,8 @@ void nb_init() // Called early (worldspawn stage)
 	GameHook_PlayerClear = nb_PlayerClear;
 	GameHook_PlayerPreThink = nexball_setstatus;
 	GameHook_SpeedMod = nb_SpeedMod;
+	GameHook_FragLimitOverride = nb_FragLimitOverride;
+	GameHook_LeadLimitOverride = nb_LeadLimitOverride;
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 

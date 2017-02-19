@@ -1037,6 +1037,17 @@ float race_TelefragsAllowed() {
 
 float race_ReadyRestartHard() { return race_completing; }
 
+float race_FragLimitOverride() {
+	if (g_race)
+		return cvar("g_race_laps_limit");
+
+	return 0;
+}
+
+float race_LeadLimitOverride() {
+	return 0;
+}
+
 void race_init() {
 	if (g_race) {
 		float qualifying_override;
@@ -1098,4 +1109,6 @@ void race_init() {
 	GameHook_ReadyAllowed = race_ReadyAllowed;
 	GameHook_TelefragsAllowed = race_TelefragsAllowed;
 	GameHook_ReadyRestartHard = race_ReadyRestartHard;
+	GameHook_LeadLimitOverride = race_LeadLimitOverride;
+	GameHook_FragLimitOverride = race_FragLimitOverride;
 }

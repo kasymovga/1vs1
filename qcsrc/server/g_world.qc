@@ -579,6 +579,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(nex252_compat_mode);
 	Nadget_Init();
 	Items_Init();
+	runes_init();
 }
 
 void Damage_ReadCvars();
@@ -720,8 +721,6 @@ void spawnfunc_worldspawn (void)
 	PL_CROUCH_MAX = '16 16 25' * sv_world_scale;
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
-	Freeze_Init();
-	runematch_init();
 	GameTypeVote_Init();
 	readlevelcvars();
 	readdynamiccvars();
@@ -829,6 +828,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
+	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 
 	next_pingtime = time + 5;
 	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);

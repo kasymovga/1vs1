@@ -39,6 +39,8 @@ float g_ctf_flagscore_return;
 float g_ctf_flagscore_return_by_killer;
 float g_ctf_flagscore_return_rogue;
 float g_ctf_flagscore_return_rogue_by_killer;
+float g_ctf_win_mode;
+float g_ctf_ignore_frags;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -1102,6 +1104,14 @@ string ctf_RecordForMap(string bspname) {
 	return strcat(strpad(32, bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
 }
 
+float ctf_FragLimitOverride() {
+	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_limit") : cvar("capturelimit_override"));
+}
+
+float ctf_LeadLimitOverride() {
+	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_leadlimit") : cvar("captureleadlimit_override"));
+}
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
@@ -1135,6 +1145,12 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_flagscore_return_by_killer);
 	CACHE_CVAR(g_ctf_flagscore_return_rogue);
 	CACHE_CVAR(g_ctf_flagscore_return_rogue_by_killer);
+	CACHE_CVAR(g_ctf_ignore_frags);
+	if(g_campaign)
+		g_ctf_win_mode = 2;
+	else
+		g_ctf_win_mode = cvar("g_ctf_win_mode");
+
 	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
 
@@ -1146,6 +1162,8 @@ void ctf_init()
 	GameHook_PlayerPreThink = ctf_setstatus;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;
+	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
+	GameHook_FragLimitOverride = ctf_FragLimitOverride;
 };
 
 void ctf_setstatus2(entity flag, float shift)
