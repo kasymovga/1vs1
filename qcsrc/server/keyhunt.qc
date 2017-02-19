@@ -946,6 +946,10 @@ void kh_PlayerCLear(entity plr, entity attacker, float killed) {
 		kh_Key_DropAll(plr, TRUE);
 }
 
+void kh_Reset() {
+	kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
+}
+
 void kh_init()  // sets up th KH environment
 {
 	CACHE_CVAR(g_balance_keyhunt_damageforcescale);
@@ -1006,6 +1010,7 @@ void kh_init()  // sets up th KH environment
 
 	kh_controller.model = "";
 	kh_controller.modelindex = 0;
+	kh_controller.reset2 = kh_Reset;
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
