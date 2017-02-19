@@ -915,7 +915,7 @@ float race_OvertimeHandle() {
 		{
 			checkrules_suddendeathend = 0;
 			ReadyRestart(); // go to race
-			return FALSE;
+			return TRUE;
 		}
 	}
 	if(!checkrules_suddendeathend)
@@ -924,7 +924,7 @@ float race_OvertimeHandle() {
 		if(g_race && !g_race_qualifying)
 			race_StartCompleting();
 	}
-	return FALSE;
+	return TRUE;
 }
 
 float race_SpawnPointGood(entity spot) {
