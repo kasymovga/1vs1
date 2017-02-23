@@ -265,7 +265,6 @@ float aircraft_physic_hook()
 {
     vector ad;
     entity player,aircraft;
-    float ftmp,ftmp2;
 
     player = self;
     aircraft = self.vehicle;

@@ -315,7 +315,7 @@ void assault_new_round() {
 	assault_secondround_timelimit = (time - game_starttime) / 60;
 	game_starttime = time + 15;
 	defer(5, assault_reset_map);
-	entity e;
+	//entity e;
 	//FOR_EACH_REALCLIENT(e)
 	//	centerprint(e, "Round finished! Prepare for second round.");
 }
