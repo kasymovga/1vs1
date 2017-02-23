@@ -51,9 +51,15 @@ void conquest_remove_progress_bar() {
 void conquest_update_waypoint() {
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(self.team - 1, FALSE));
 	string s;
-	if(self.team == COLOR_TEAM1)
+	s = "";
+	if (self.owner) {
+		if (self.team == COLOR_TEAM1)
+			s = "ons-cp-atck-red";
+		else if (self.team == COLOR_TEAM2)
+			s = "ons-cp-atck-blue";
+	} else if (self.team == COLOR_TEAM1)
 		s = "ons-cp-red";
-	else if(self.team == COLOR_TEAM2)
+	else if (self.team == COLOR_TEAM2)
 		s = "ons-cp-blue";
 	else
 		s = "ons-cp-neut";
@@ -87,6 +93,7 @@ void conquest_cp_think_capture() {
 		if (self.conquest_delay < time) {
 			play2team(self.team, "onslaught/controlpoint_underattack.ogg");
 			WaypointSprite_Ping(self.sprite);
+			conquest_update_waypoint();
 			self.conquest_delay = time + g_conquest_capture_time;
 		}
 
@@ -125,6 +132,7 @@ void conquest_cp_think_capture() {
 	if not(self.owner) {
 		if (self.team)
 			self.enemy.alpha = 1;
+		conquest_update_waypoint();
 		self.capture_progress = 0;
 		conquest_remove_progress_bar();
 		return;
