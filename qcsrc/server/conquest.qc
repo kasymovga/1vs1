@@ -114,7 +114,6 @@ void conquest_cp_think_capture() {
 			activator = self;
 			SUB_UseTargets();
 
-			if (self.target != "")
 			if (self.team > 0)
 				PutTeamToServer(self.team);
 
