@@ -156,6 +156,10 @@ void conquest_cp_touch() {
 }
 
 void spawnfunc_conquest_cp() {
+	if not(g_conquest) {
+		remove(self);
+		return;
+	}
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	self.classname = "conquest_cp";
 	if (self.team > 0)
