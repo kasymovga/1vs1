@@ -890,6 +890,21 @@ void turret_stdproc_fire()
     dprint("^1Bang, ^3your dead^7 ",self.enemy.netname,"! ^1(turret with no real firefunc)\n");
 }
 
+void turret_stdproc_setcolormod() {
+	vector cmod = '0 0 0';
+    if (self.team == COLOR_TEAM1)
+		cmod = '1.4 0.8 0.8';
+    else if (self.team == COLOR_TEAM2)
+		cmod = '0.8 0.8 1.4';
+    else if (self.team == COLOR_TEAM3)
+		cmod = '1.2 1.2 0.6';
+    else if (self.team == COLOR_TEAM4)
+		cmod = '1.2 0.6 1.2';
+
+	self.colormod = cmod;
+	self.tur_head.colormod = cmod;
+}
+
 /*
     When .used a turret switch team to activator.team.
     If activator is world, the turrets goes inactive.
@@ -898,13 +913,14 @@ void turret_stdproc_use()
 {
     dprint("Turret ",self.netname, " used by ",activator.classname,"\n");
 
-    self.team = activator.team;
+    self.tur_head.team = self.team = activator.team;
 
     if(self.team == 0)
         self.tur_active = 0;
     else
         self.tur_active = 1;
 
+	turret_stdproc_setcolormod();
 }
 
 void turret_link()
@@ -922,7 +938,7 @@ void turret_link()
 float turret_count;
 float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head)
 {
-	entity e,ee;
+	entity e;
 
     if(csqc_shared)
     {
@@ -954,26 +970,19 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     load_unit_settings(self,self.cvar_basename,0);
 
     // Handle turret teams.
-    if (cvar("g_assult") != 0)
-    {
-        if (!self.team)
-            self.team = 14; // Assume turrets are on the defending side if not explicitly set otehrwize
-    }
-    else if not (teamplay)
+	if not(teamplay)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
-	else if(g_onslaught && self.targetname)
-	{
-		e = find(world,target,self.targetname);
-		if(e != world)
+	else {
+		if (self.targetname != "")
 		{
-			self.team = e.team;
-			ee = e;
-		}
+			e = find(world,target,self.targetname);
+			if(e != world)
+			{
+				self.team = e.team;
+			}
+		} else
+			self.team = 0;
 	}
-	else if(!self.team)
-		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
-
-
 
     /*
     * Try to guess some reasonaly defaults
@@ -1243,8 +1252,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     self.tur_head.movetype   = MOVETYPE_NOCLIP;
 
     // Team color
-    if (self.team == COLOR_TEAM1) self.colormod = '1.4 0.8 0.8';
-    if (self.team == COLOR_TEAM2) self.colormod = '0.8 0.8 1.4';
+	turret_stdproc_setcolormod();
 
     // Attach stdprocs. override when and what needed
     if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
@@ -1296,13 +1304,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     self.classname = "turret_main";
 
     self.tur_active = 1;
-
-    // In ONS mode, and linked to a ONS ent. need to call the use to set team.
-    if (g_onslaught && ee)
-    {
-        activator = ee;
-        self.use();
-    }
 
     return 1;
 }

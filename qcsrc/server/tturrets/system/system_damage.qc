@@ -211,33 +211,7 @@ void turret_stdproc_respawn()
 
     self.tur_head.team = self.team;
 
-    /*
-    COLOR_TEAM1       = 4;  // red
-    COLOR_TEAM2       = 13; // blue
-    COLOR_TEAM3       = 12; // yellow
-    COLOR_TEAM4       = 9; // pink
-    */
-
-	self.colormod = '0 0 0';
-
-	switch(self.team)
-	{
-        case COLOR_TEAM1: // Red
-            self.colormod = '1.4 0.8 0.8';
-            break;
-
-        case COLOR_TEAM2: // Blue
-            self.colormod = '0.8 0.8 1.4';
-            break;
-
-        case COLOR_TEAM3: // Yellow
-            self.colormod = '1.4 1.4 0.6';
-            break;
-
-        case COLOR_TEAM4: // Pink
-            self.colormod = '1.4 0.6 1.4';
-            break;
-	}
+	turret_stdproc_setcolormod();
 
     self.deadflag           = DEAD_NO;
     self.tur_head.deadflag  = self.deadflag;
