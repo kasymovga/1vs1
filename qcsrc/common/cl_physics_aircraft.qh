@@ -1,0 +1,11 @@
+#define aircraft_MIN '-75 -75 5'
+#define aircraft_MAX '75 75 105'
+
+float g_vehicle_aircraft_accel_up;
+float g_vehicle_aircraft_speed;
+float g_vehicle_aircraft_speed_stop;
+float g_vehicle_aircraft_turnspeed;
+float g_vehicle_aircraft_movement_inertia;
+
+float physic_spiderbot();
+

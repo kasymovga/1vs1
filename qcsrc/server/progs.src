@@ -76,6 +76,7 @@ w_rocketlauncher.qh
 
 ../common/cl_physics.qh
 ../common/cl_physics_spiderbot.qh
+../common/cl_physics_aircraft.qh
 cl_physics.qh
 
 cl_client.qh
@@ -113,6 +114,7 @@ verbstack.qc
 ../common/movelib.qc
 steerlib.qc
 ../common/cl_physics_spiderbot.qc
+../common/cl_physics_aircraft.qc
 pathlib/pathlib.qh
 
 g_world.qc

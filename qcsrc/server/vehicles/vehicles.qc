@@ -1,5 +1,6 @@
 #ifdef VEHICLES_ENABLED
 #include "spiderbot.qc"
+#include "aircraft.qc"
 
 float vehicle_extract_player(entity plr, float eject)
 {
@@ -21,6 +22,22 @@ float vehicle_extract_player(entity plr, float eject)
 
 
 	return 1;
+}
+
+float player_can_use_vehicle(entity plr) {
+	if (plr.vehicle_exit_time >= time)
+		return FALSE;
+
+    if(plr.classname != "player")
+        return FALSE;
+
+	if not(PlayerCanFire(plr))
+		return FALSE;
+
+    if(plr.vehicle != world)
+        return FALSE;
+
+	return TRUE;
 }
 
 void vehicle_stdproc_regen()
@@ -109,6 +126,12 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
     else
         self.vehicle_health -= damage;
 
+	if (clienttype(attacker) == CLIENTTYPE_REAL) {
+		if (random() < 0.5)
+			sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
+		else
+			sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
+	}
 
     if(self.owner)
     {
@@ -141,5 +164,8 @@ void bugmenot()
 
 void vehicles_readcvars() {
 	vehicle_spiderbot_readcvars();
+	vehicle_aircraft_readcvars();
+	precache_sound("onslaught/ons_hit1.wav");
+	precache_sound("onslaught/ons_hit2.wav");
 }
 #endif
