@@ -773,7 +773,6 @@ void spawnfunc_vehicle_aircraft()
 
     precache_model ( "models/vhshield.md3");
     precache_model ( "models/spiderbot/cp.md3");
-    precache_model ( "models/spiderbot/spiderbot.dpm");
     precache_model ( "models/spiderbot/spiderbot_top.dpm");
     precache_model ( "models/spiderbot/spiderbot_barrels.dpm");
     precache_model ( "models/onslaught/gen_gib1.md3");
