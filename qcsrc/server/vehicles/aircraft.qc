@@ -354,7 +354,9 @@ void aircraft_enter()
 	self.owner.vehicle_heat = self.vehicle_heat;
     self.team                   = self.owner.team;
 	setattachment(self.vehicle, other, "");
+	setattachment(self.tur_head, other, "");
 	setorigin(self.vehicle, '0 0 0');
+	setorigin(self.tur_head, '0 0 -16');
 	vehicle_stdproc_setcolormod();
 
     if(clienttype(other) == CLIENTTYPE_REAL)
@@ -414,7 +416,9 @@ void aircraft_exit(float eject)
     e = findchain(classname,"aircraft_rocket");
 	aircraft_engine_off();
 	setattachment(self.vehicle, self, "");
+	setattachment(self.tur_head, self, "");
 	setorigin(self.vehicle, '0 0 48');
+	setorigin(self.tur_head, '0 0 32');
 
 	exit_origin = trace_endpos;
 

@@ -1107,6 +1107,7 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
+	vehicle_extract_player(self, TRUE);
 	// in any case:
 	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
