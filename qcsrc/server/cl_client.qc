@@ -2666,6 +2666,7 @@ void PutTeamToServer(float t) {
 	FOR_EACH_CLIENT(e)
 		if (e.team == t)
 		if (e.classname != "player") {
+			e.classname = "player";
 			oldself = self;
 			self = e;
 			PutClientInServer();
