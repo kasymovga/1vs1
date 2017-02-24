@@ -893,16 +893,17 @@ void turret_stdproc_fire()
 void turret_stdproc_setcolormod() {
 	vector cmod = '0 0 0';
     if (self.team == COLOR_TEAM1)
-		cmod = '1.4 0.8 0.8';
+		cmod = '1.8 0.6 0.6';
     else if (self.team == COLOR_TEAM2)
-		cmod = '0.8 0.8 1.4';
+		cmod = '0.6 0.6 1.8';
     else if (self.team == COLOR_TEAM3)
-		cmod = '1.2 1.2 0.6';
+		cmod = '1.4 1.4 0.2';
     else if (self.team == COLOR_TEAM4)
-		cmod = '1.2 0.6 1.2';
+		cmod = '1.4 0.2 1.4';
 
 	self.colormod = cmod;
-	self.tur_head.colormod = cmod;
+	if (self.tur_head)
+		self.tur_head.colormod = cmod;
 }
 
 /*
