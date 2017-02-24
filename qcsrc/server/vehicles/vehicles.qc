@@ -40,6 +40,12 @@ float player_can_use_vehicle(entity plr) {
 	return TRUE;
 }
 
+void vehicle_stdproc_setcolormod() {
+	turret_stdproc_setcolormod();
+	if (self.vehicle)
+		self.vehicle.colormod = self.colormod;
+}
+
 void vehicle_stdproc_regen()
 {
     float smax,hmax;

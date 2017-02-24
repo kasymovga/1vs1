@@ -327,8 +327,6 @@ void aircraft_enter()
     if not (clienttype(other) == CLIENTTYPE_REAL)
         return;
 
-    self.colormod = self.tur_head.colormod = '0 0 0';
-
     if(teamplay)
     if(self.team)
     if(self.team != other.team)
@@ -357,6 +355,7 @@ void aircraft_enter()
     self.team                   = self.owner.team;
 	setattachment(self.vehicle, other, "");
 	setorigin(self.vehicle, '0 0 0');
+	vehicle_stdproc_setcolormod();
 
     if(clienttype(other) == CLIENTTYPE_REAL)
     {
@@ -456,19 +455,14 @@ void aircraft_exit(float eject)
 	self.colormap            = 1024;
 	self.tur_head.colormap   = 1024;
 
-    if not (teamplay)
-        self.team                = 0;
-    else
-    {
-        self.team = self.aircraft_spawnpnt.team ;
-        if (self.team == COLOR_TEAM1) self.colormod = '1.4 0.8 0.8';
-        if (self.team == COLOR_TEAM2) self.colormod = '0.8 0.8 1.4';
-        self.tur_head.colormod = self.colormod;
-    }
+    if not(teamplay)
+        self.team = 0;
+	else
+        self.team = self.spiderbot_spawnpnt.team ;
 
+	vehicle_stdproc_setcolormod();
 	self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
-
 	setorigin(self.owner, exit_origin);
 	if(eject)
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
@@ -546,15 +540,7 @@ void aircraft_spawn()
     setorigin(self,self.aircraft_spawnpnt.origin);
     self.angles = self.aircraft_spawnpnt.angles;
 
-    if (self.team == COLOR_TEAM1)
-        self.colormod = '1.4 0.8 0.8';
-    else if (self.team == COLOR_TEAM2)
-        self.colormod = '0.8 0.8 1.4';
-    else
-        self.colormod = '0 0 0';
-
-    self.tur_head.colormod = self.colormod;
-
+	vehicle_stdproc_setcolormod();
 
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
@@ -654,6 +640,12 @@ void vewhicle_aircraft_dinit()
 	setorigin (self.vehicle_hudmodel.vehicle_hudmodel, '-40 0 -20');
     //setmodel (self.vehicle_viewport, "null");
     setmodel(self, "null");
+	setmodel(self.tur_head, "models/ebomb.mdl");
+	self.vehicle.anim_start = 0;
+	self.vehicle.anim_end = 1;
+	setattachment(self.tur_head, self, "");
+	self.tur_head.scale = 5;
+	setorigin(self.tur_head, '0 0 32');
     //setmodel(self.vehicle, "models/spiderbot/spiderbot.dpm");
     setmodel(self.vehicle, "models/spiderbot/spiderbot_top.dpm");
 	setattachment(self.vehicle, self, "");
@@ -664,8 +656,6 @@ void vewhicle_aircraft_dinit()
     setmodel(self.vehicle_hudmodel.gun1,"models/spiderbot/spiderbot_barrels.dpm");
     setmodel(self.vehicle_hudmodel.gun2,"models/spiderbot/spiderbot_barrels.dpm");
 
-    //setattachment(self.vehicle_hudmodel,self.tur_head,"");
-    //setattachment(self.vehicle_viewport,self.vehicle_hudmodel,"");
     setattachment(self.gun1,self.vehicle,"tag_hardpoint01");
     setattachment(self.gun2,self.vehicle,"tag_hardpoint02");
 

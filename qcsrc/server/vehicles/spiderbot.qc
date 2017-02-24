@@ -416,8 +416,6 @@ void spiderbot_enter()
     if not (clienttype(other) == CLIENTTYPE_REAL)
         return;
 
-    self.colormod = self.tur_head.colormod = '0 0 0';
-
     if(teamplay)
     if(self.team)
     if(self.team != other.team)
@@ -446,6 +444,7 @@ void spiderbot_enter()
     self.team                   = self.owner.team;
 	setattachment(self.vehicle, other, "");
 	setorigin(self.vehicle, '0 0 -48');
+	vehicle_stdproc_setcolormod();
 
     if(clienttype(other) == CLIENTTYPE_REAL)
     {
@@ -547,12 +546,9 @@ void spiderbot_exit(float eject)
     if not (teamplay)
         self.team                = 0;
     else
-    {
         self.team = self.spiderbot_spawnpnt.team ;
-        if (self.team == COLOR_TEAM1) self.colormod = '1.4 0.8 0.8';
-        if (self.team == COLOR_TEAM2) self.colormod = '0.8 0.8 1.4';
-        self.tur_head.colormod = self.colormod;
-    }
+
+	vehicle_stdproc_setcolormod();
 
 	self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
@@ -635,15 +631,7 @@ void spiderbot_spawn()
     setorigin(self,self.spiderbot_spawnpnt.origin);
     self.angles = self.spiderbot_spawnpnt.angles;
 
-    if (self.team == COLOR_TEAM1)
-        self.colormod = '1.4 0.8 0.8';
-    else if (self.team == COLOR_TEAM2)
-        self.colormod = '0.8 0.8 1.4';
-    else
-        self.colormod = '0 0 0';
-
-    self.tur_head.colormod = self.colormod;
-
+	vehicle_stdproc_setcolormod();
 
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
