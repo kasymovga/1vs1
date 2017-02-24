@@ -1,33 +1,8 @@
-#define MODEL_AIRCRAFT_FORWARD_START 1
-#define MODEL_AIRCRAFT_FORWARD_END 31
-#define MODEL_AIRCRAFT_FORWARD_LENGTH 31
-
-#define MODEL_AIRCRAFT_BACKWARDS_START 32
-#define MODEL_AIRCRAFT_BACKWARDS_END 62
-#define MODEL_AIRCRAFT_BACKWARDS_LENGTH 31
-
-#define MODEL_AIRCRAFT_LEFT_START 63
-#define MODEL_AIRCRAFT_LEFT_END 93
-#define MODEL_AIRCRAFT_LEFT_LENGTH 31
-
-#define MODEL_AIRCRAFT_RIGHT_START 94
-#define MODEL_AIRCRAFT_RIGHT_END 124
-#define MODEL_AIRCRAFT_RIGHT_LENGTH 31
-
-#define MODEL_AIRCRAFT_JUMP_START 125
-#define MODEL_AIRCRAFT_JUMP_END 155
-#define MODEL_AIRCRAFT_JUMP_LENGTH 31
-
 #define aircraft_spawnpnt wkr_spawn
 
 float g_vehicle_aircraft_crush_dmg;
 float g_vehicle_aircraft_crush_force;
 float g_vehicle_aircraft_crush_minspeed;
-float g_vehicle_aircraft_head_pitchlimit_down;
-float g_vehicle_aircraft_head_pitchlimit_up;
-float g_vehicle_aircraft_head_pitchspeed;
-float g_vehicle_aircraft_head_turnlimit;
-float g_vehicle_aircraft_head_turnspeed;
 float g_vehicle_aircraft_health;
 float g_vehicle_aircraft_health_regen;
 float g_vehicle_aircraft_health_regen_dmgpause;
@@ -709,11 +684,6 @@ void vehicle_aircraft_readcvars() {
 	CACHE_CVAR(g_vehicle_aircraft_crush_dmg);
 	CACHE_CVAR(g_vehicle_aircraft_crush_force);
 	CACHE_CVAR(g_vehicle_aircraft_crush_minspeed);
-	CACHE_CVAR(g_vehicle_aircraft_head_pitchlimit_down);
-	CACHE_CVAR(g_vehicle_aircraft_head_pitchlimit_up);
-	CACHE_CVAR(g_vehicle_aircraft_head_pitchspeed);
-	CACHE_CVAR(g_vehicle_aircraft_head_turnlimit);
-	CACHE_CVAR(g_vehicle_aircraft_head_turnspeed);
 	CACHE_CVAR(g_vehicle_aircraft_health);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_cooldown);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_damage);
