@@ -576,7 +576,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
-	CACHE_CVAR(nex252_compat_mode);
 	Nadget_Init();
 	Items_Init();
 	runes_init();

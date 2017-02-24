@@ -464,12 +464,10 @@ void spiderbot_enter()
     //WriteAngle(MSG_ONE, self.tur_head.angles_z + self.angles_z);    // roll
     //self.owner.view_ofs = '0 0 0';
     //self.tur_head.nodrawtoclient = self.owner;
-	if not(nex252_compat_mode) {
-		self.player_physic = spawn();
-		self.player_physic.viewmodelforclient = self.owner;
-		self.player_physic.vehicle = self;
-		Net_LinkEntity(self.player_physic, FALSE, 0, SpiderbotPhysic_SendEntity);
-	}
+	self.player_physic = spawn();
+	self.player_physic.viewmodelforclient = self.owner;
+	self.player_physic.vehicle = self;
+	Net_LinkEntity(self.player_physic, FALSE, 0, SpiderbotPhysic_SendEntity);
 }
 
 void spiderbot_exit(float eject)

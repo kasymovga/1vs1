@@ -749,8 +749,9 @@ void PhysicClientClear(entity plr)
 
 void PhysicClientInit(entity plr)
 {
-	if (nex252_compat_mode || !sv_csqc_physic)
+	if not(sv_csqc_physic)
 		return;
+
 	if not(plr.player_physic)
 	{
 		plr.player_physic = spawn();

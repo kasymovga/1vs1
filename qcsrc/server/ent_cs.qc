@@ -99,10 +99,6 @@ entity attach_entcs()
 {
 	local entity ent;
 
-	if (nex252_compat_mode)
-	if not(teamplay)
-		return world;
-
 	ent = spawn();
 	self.entcs = ent;
 	if (teamplay) {
@@ -113,9 +109,6 @@ entity attach_entcs()
 
 		Net_LinkEntity(ent, FALSE, 0, entcs_send);
 		ent.customizeentityforclient = entcs_customize;
-
-		if (nex252_compat_mode)
-			return ent;
 
 		ent.entcs = spawn();
 		ent = ent.entcs;

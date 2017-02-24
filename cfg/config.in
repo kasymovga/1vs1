@@ -1,6 +1,3 @@
-alias nex252_compat_mode_enable "csqc_progname csprogs.dat; nex252_compat_mode 1"
-set nex252_compat_mode "0"
-
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
 set bot_messages_fragged_priv "nice one|oh|just luck"

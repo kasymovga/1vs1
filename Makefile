@@ -27,7 +27,6 @@ $(CFG_NAME) : cfg/config.in Makefile
 	echo sv_progs $(SV_PROGNAME) > $(CFG_NAME).tmp
 	echo csqc_progname $(CL_PROGNAME) >> $(CFG_NAME).tmp
 	if test "$(SET_CURL_PACKAGE)" = yes; then echo sv_curl_serverpackages $(CL_PROGNAME) >> $(CFG_NAME).tmp; else echo -n; fi
-	echo 'alias nex252_compat_mode_disable "csqc_progname $(CL_PROGNAME); nex252_compat_mode 0"' >> $(CFG_NAME).tmp
 	cat cfg/config.in >> $(CFG_NAME).tmp
 	mv -f $(CFG_NAME).tmp $(CFG_NAME)
 
