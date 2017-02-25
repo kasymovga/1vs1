@@ -981,8 +981,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 			{
 				self.team = e.team;
 			}
-		} else
-			self.team = 0;
+		}
 	}
 
     /*
