@@ -358,7 +358,7 @@ set sv_door_default_speed 100
 set g_vehicle_aircraft_crush_dmg 100
 set g_vehicle_aircraft_crush_force 200
 set g_vehicle_aircraft_crush_minspeed 600
-set g_vehicle_aircraft_health 300
+set g_vehicle_aircraft_health 200
 set g_vehicle_aircraft_health_regen 0
 set g_vehicle_aircraft_health_regen_dmgpause 10
 set g_vehicle_aircraft_accel_up 1200
@@ -379,7 +379,7 @@ set g_vehicle_aircraft_rocket_speed 2000
 set g_vehicle_aircraft_rocket_spread 0.01
 set g_vehicle_aircraft_rocket_turnrate 0
 set g_vehicle_aircraft_rocket_up 0
-set g_vehicle_aircraft_shield 200
+set g_vehicle_aircraft_shield 100
 set g_vehicle_aircraft_shield_regen 20
 set g_vehicle_aircraft_shield_regen_dmgpause 5
 set g_vehicle_aircraft_speed 800
