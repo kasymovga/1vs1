@@ -539,8 +539,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_minstagib);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_runes);
-	CACHE_CVAR(sv_maxidle);
-	CACHE_CVAR(sv_maxidle_spectatorsareidle);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
 

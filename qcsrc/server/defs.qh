@@ -427,9 +427,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 float lockteams;
 
 .float parm_idlesince;
-float sv_maxidle;
-float sv_maxidle_spectatorsareidle;
-
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;

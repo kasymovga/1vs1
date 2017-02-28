@@ -73,6 +73,8 @@ string sv_player_hat;
 string sv_player_hat_attachment;
 float sv_player_hat_scale;
 vector sv_player_hat_origin, sv_player_hat_angles;
+float sv_maxidle;
+float sv_maxidle_forcespec;
 
 float reset_on_join_done;
 
@@ -2493,31 +2495,43 @@ void PlayerPostThink (void)
 		stuffcmd(self, "seta _cl_name Player\n");
 	}
 
-	if(sv_maxidle && frametime)
+	if(frametime)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
-		float timeleft;
-		timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
-		if(timeleft <= 0)
-		{
-			bprint("^3", self.netname, "^3 was kicked for idling.\n");
-			announce(self, "announcer/robotic/terminated.wav");
-			dropclient(self);
-			return;
+		float timeleft, drop, maxidle;
+		if (sv_maxidle_forcespec && self.classname == "player") {
+			maxidle = sv_maxidle_forcespec;
+			drop = FALSE;
+		} else if (sv_maxidle) {
+			maxidle = sv_maxidle;
+			drop = TRUE;
+		} else
+			maxidle = 0;
+
+		if (maxidle) {
+			timeleft = ceil(maxidle - (time - self.parm_idlesince));
+			if (timeleft <= 0) {
+				announce(self, "announcer/robotic/terminated.wav");
+				if (drop) {
+					bprint("^3", self.netname, "^3 was kicked for idling.\n");
+					dropclient(self);
+				} else {
+					bprint("^3", self.netname, "^3 was moved to spectators for idling.\n");
+					PutObserverInServer(FALSE);
+					self.parm_idlesince = time;
+				}
+				return;
+			} else if(timeleft <= 10) {
+				if(timeleft != self.idlekick_lasttimeleft)
+				{
+					centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
+					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"));
+				}
+			} else
+				centerprint_expire(self, CENTERPRIO_IDLEKICK);
+
+			self.idlekick_lasttimeleft = timeleft;
 		}
-		else if(timeleft <= 10)
-		{
-			if(timeleft != self.idlekick_lasttimeleft)
-			{
-				centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3Disconnecting in ", ftos(timeleft), "..."));
-				announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"));
-			}
-		}
-		else
-		{
-			centerprint_expire(self, CENTERPRIO_IDLEKICK);
-		}
-		self.idlekick_lasttimeleft = timeleft;
 	}
 
 	if(self.classname == "player") {
@@ -2637,6 +2651,8 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout);
 	CACHE_CVAR(sv_timeout_number);
+	CACHE_CVAR(sv_maxidle);
+	CACHE_CVAR(sv_maxidle_forcespec);
 	if (sv_player_hat != "")
 		strunzone(sv_player_hat);
 
