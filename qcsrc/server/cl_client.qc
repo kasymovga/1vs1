@@ -2530,10 +2530,6 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 
 		GetPressedKeys();
-	} else if (self.classname == "observer") {
-		//do nothing
-	} else if (self.classname == "spectator") {
-		//do nothing
 	}
 
 	/*
