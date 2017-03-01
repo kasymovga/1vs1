@@ -78,11 +78,6 @@ float sv_maxidle_forcespec;
 
 float reset_on_join_done;
 
-void FixAngle_KeepIdle() {
-	self.fixangle = TRUE;
-	self.v_angle_old = self.v_angle;
-}
-
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -560,7 +555,7 @@ void PutClientToSpot(entity spot) {
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
-	FixAngle_KeepIdle();
+	self.fixangle = TRUE;
 	self.crouch = FALSE;
 	self.view_ofs = PL_VIEW_OFS;
 	setorigin (self, spot.origin);
