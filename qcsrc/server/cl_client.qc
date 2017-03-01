@@ -2203,8 +2203,6 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
-void() ctf_setstatus;
-void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
 {

@@ -1112,6 +1112,8 @@ float ctf_LeadLimitOverride() {
 	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_leadlimit") : cvar("captureleadlimit_override"));
 }
 
+void ctf_setstatus();
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);

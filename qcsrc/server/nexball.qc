@@ -80,6 +80,7 @@ float nb_LeadLimitOverride() {
 	return cvar("g_nexball_goalleadlimit");
 }
 
+void nexball_setstatus();
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
 {
