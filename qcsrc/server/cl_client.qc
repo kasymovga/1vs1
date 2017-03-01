@@ -2522,7 +2522,7 @@ void PlayerPostThink (void)
 					dropclient(self);
 				} else {
 					bprint("^3", self.netname, "^3 was moved to spectators for idling.\n");
-					PutObserverInServer(FALSE);
+					PlayerToSpec(self);
 				}
 				return;
 			} else if(timeleft <= 10) {
