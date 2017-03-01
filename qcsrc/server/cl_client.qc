@@ -1309,7 +1309,6 @@ void ClientConnect (void)
 	self.just_connected = TRUE;
 
 	self.flags = FL_CLIENT;
-	self.version_nagtime = time + 10 + random() * 10;
 
 	if(player_count<0)
 	{
@@ -2130,50 +2129,6 @@ void checkSpectatorBlock() {
 	}
 }
 
-float vercmp_recursive(string v1, string v2)
-{
-	float dot1, dot2;
-	string s1, s2;
-	float r;
-
-	dot1 = strstrofs(v1, ".", 0);
-	dot2 = strstrofs(v2, ".", 0);
-	if(dot1 == -1)
-		s1 = v1;
-	else
-		s1 = substring(v1, 0, dot1);
-	if(dot2 == -1)
-		s2 = v2;
-	else
-		s2 = substring(v2, 0, dot2);
-
-	r = stof(s1) - stof(s2);
-	if(r != 0)
-		return r;
-
-	r = strcasecmp(s1, s2);
-	if(r != 0)
-		return r;
-
-	if(dot1 == -1)
-		if(dot2 == -1)
-			return 0;
-		else
-			return -1;
-	else
-		if(dot2 == -1)
-			return 1;
-		else
-			return vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
-}
-
-float vercmp(string v1, string v2)
-{
-	if(strcasecmp(v1, v2) == 0) // early out check
-		return 0;
-	return vercmp_recursive(v1, v2);
-}
-
 void ObserverThink()
 {
 	if (self.team > 0) {
@@ -2275,37 +2230,6 @@ void PlayerPreThink (void)
 			strunzone(self.netname_previous);
 		self.netname_previous = strzone(self.netname);
 	}
-
-	// version nagging
-	if(self.version_nagtime)
-		if(self.cvar_g_nexuizversion)
-			if(time > self.version_nagtime)
-			{
-				if(strstr(self.cvar_g_nexuizversion, "svn", 0) < 0)
-				{
-					if(strstr(cvar_string("g_nexuizversion"), "svn", 0) >= 0)
-					{
-						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), " (beta)^7, you have ^3Rexuiz ", self.cvar_g_nexuizversion, "^1\n");
-						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), " (beta)^7, you have ^3", self.cvar_g_nexuizversion, "^1\n"));
-					}
-					else
-					{
-						float r;
-						r = vercmp(self.cvar_g_nexuizversion, cvar_string("g_nexuizversion"));
-						if(r < 0)
-						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7 is out, and you still have ^3", self.cvar_g_nexuizversion, "^1 - get the update from ^4http://www.nexuiz.com/^1!\n");
-							sprint(self, strcat("\{1}^1NOTE: ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7 is out, and you still have ^3", self.cvar_g_nexuizversion, "^1 - get the update from ^4http://www.nexuiz.com/^1!\n"));
-						}
-						else if(r > 0)
-						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7, you have ^3", self.cvar_g_nexuizversion, "^1\n");
-							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7, you have ^3", self.cvar_g_nexuizversion, "^1\n"));
-						}
-					}
-				}
-				self.version_nagtime = 0;
-			}
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
