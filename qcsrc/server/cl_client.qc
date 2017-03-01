@@ -78,6 +78,11 @@ float sv_maxidle_forcespec;
 
 float reset_on_join_done;
 
+void FixAngle_KeepIdle() {
+	self.fixangle = TRUE;
+	self.v_angle_old = self.v_angle;
+}
+
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -608,7 +613,7 @@ void PutObserverInServer(float frags_team_reset)
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
-	self.fixangle = TRUE;
+	FixAngle_KeepIdle();
 	self.crouch = FALSE;
 
 	self.view_ofs = PL_VIEW_OFS;
@@ -875,7 +880,7 @@ void PutClientInServer()
 		self.angles = spot.angles;
 
 		self.angles_z = 0; // never spawn tilted even if the spot says to
-		self.fixangle = TRUE; // turn this way immediately
+		FixAngle_KeepIdle();
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
 		self.punchangle = '0 0 0';
@@ -2518,7 +2523,6 @@ void PlayerPostThink (void)
 				} else {
 					bprint("^3", self.netname, "^3 was moved to spectators for idling.\n");
 					PutObserverInServer(FALSE);
-					self.parm_idlesince = time;
 				}
 				return;
 			} else if(timeleft <= 10) {
