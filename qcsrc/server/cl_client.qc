@@ -547,6 +547,27 @@ void setmodel_lod(entity e, string modelname)
 	UpdatePlayerSounds();
 }
 
+void ClientSetView(entity to) {
+	if not(clienttype(self) == CLIENTTYPE_REAL)
+		return;
+
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_SETVIEW);
+	WriteEntity(MSG_ONE, to);
+}
+
+void PutClientToSpot(entity spot) {
+	self.deadflag = DEAD_NO;
+	self.angles = spot.angles;
+	self.angles_z = 0;
+	FixAngle_KeepIdle();
+	self.crouch = FALSE;
+	self.view_ofs = PL_VIEW_OFS;
+	setorigin (self, spot.origin);
+	self.prevorigin = self.origin;
+	ClientSetView(self);
+}
+
 /*
 =============
 PutObserverInServer
@@ -564,13 +585,6 @@ void PutObserverInServer(float frags_team_reset)
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
-
-	if(clienttype(self) == CLIENTTYPE_REAL)
-	{
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self);
-	}
 
 	vehicle_extract_player(self, TRUE);
 
@@ -609,17 +623,8 @@ void PutObserverInServer(float frags_team_reset)
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
-	self.runes = 0;
-	self.deadflag = DEAD_NO;
-	self.angles = spot.angles;
-	self.angles_z = 0;
-	FixAngle_KeepIdle();
-	self.crouch = FALSE;
-
-	self.view_ofs = PL_VIEW_OFS;
-	setorigin (self, spot.origin);
+	PutClientToSpot(spot);
 	setsize (self, '0 0 0', '0 0 0');
-	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
 	self.model = "";
@@ -755,13 +760,6 @@ void PutClientInServer()
 	{
 		self.classname = "player";
 	}
-	else if(clienttype(self) == CLIENTTYPE_REAL)
-	{
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self);
-	}
-
 	if(gameover)
 		self.classname = "observer";
 
@@ -873,14 +871,7 @@ void PutClientInServer()
 
 		self.metertime = 0;
 
-		self.runes = 0;
-
-		self.deadflag = DEAD_NO;
-
-		self.angles = spot.angles;
-
-		self.angles_z = 0; // never spawn tilted even if the spot says to
-		FixAngle_KeepIdle();
+		PutClientToSpot(spot);
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
 		self.punchangle = '0 0 0';
@@ -900,8 +891,6 @@ void PutClientInServer()
 		self.model = "";
 		FixPlayermodel();
 
-		self.crouch = FALSE;
-		self.view_ofs = PL_VIEW_OFS;
 		self.stand_view_ofs = PL_VIEW_OFS;
 		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
 		setsize (self, PL_MIN, PL_MAX);
@@ -910,10 +899,8 @@ void PutClientInServer()
 		self.crouch_mins = PL_CROUCH_MIN;
 		self.crouch_maxs = PL_CROUCH_MAX;
 		self.spawnorigin = spot.origin;
-		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
 		self.oldorigin = self.origin;
-		self.prevorigin = self.origin;
 
 		self.event_damage = PlayerDamage;
 
@@ -2047,12 +2034,7 @@ float SpectateNext() {
 		self.enemy = other;
 	}
 	if(self.enemy.classname == "player") {
-		if (clienttype(self) == CLIENTTYPE_REAL) {
-			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_SETVIEW);
-			WriteEntity(MSG_ONE, self.enemy);
-			//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		}
+		ClientSetView(self.enemy);
 		self.movetype = MOVETYPE_NONE;
 		SpectateCopy(self.enemy);
 		return 1;
