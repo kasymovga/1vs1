@@ -13,7 +13,6 @@ float g_balance_rune_speed_combo_moverate;
 float g_balance_rune_speed_moverate;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
-float g_nexball_basketball_carrier_speed;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float sv_csqc_physic;
@@ -612,7 +611,6 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_balance_rune_speed_moverate);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
-	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(sv_doublejump);

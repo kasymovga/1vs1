@@ -17,6 +17,7 @@
 #define GOAL_FAULT -1
 #define GOAL_OUT -2
 
+float g_nexball_basketball_carrier_speed;
 float g_nexball_football_boost_forward;
 float g_nexball_football_boost_up;
 float g_nexball_football_melee_boost_forward;
@@ -39,16 +40,8 @@ float balls;
 float ball_scale;
 float nb_teams;
 
-float g_balance_nexball_primary_animtime;
-float g_balance_nexball_primary_refire;
 float g_balance_nexball_primary_shootatmaxmeter;
 float g_balance_nexball_primary_speed;
-float g_balance_nexball_secondary;
-float g_balance_nexball_secondary_animtime;
-float g_balance_nexball_secondary_force;
-float g_balance_nexball_secondary_lifetime;
-float g_balance_nexball_secondary_refire;
-float g_balance_nexball_secondary_speed;
 float g_nexball_basketball_meter;
 float g_nexball_basketball_meter_maxpower;
 float g_nexball_basketball_meter_minpower;
@@ -80,6 +73,28 @@ float nb_LeadLimitOverride() {
 	return cvar("g_nexball_goalleadlimit");
 }
 
+float nb_WeaponFrameHandle() {
+	if not(self.ballcarried)
+		return FALSE;
+
+	w_nexball_carrier_think();
+	return TRUE;
+}
+
+float nb_ReloadAllowed() {
+	if (self.ballcarried)
+		return FALSE;
+
+	return TRUE;
+}
+
+float nb_ThrowWeaponAllowed() {
+	if (self.ballcarried)
+		return FALSE;
+
+	return TRUE;
+}
+
 void nexball_setstatus();
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
@@ -105,28 +120,24 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_ball_explosive_radius);
 	CACHE_CVAR(g_nexball_ball_explosive_damage);
 	CACHE_CVAR(g_nexball_ball_explosive_force);
-	CACHE_CVAR(g_balance_nexball_primary_animtime);
-	CACHE_CVAR(g_balance_nexball_primary_refire);
 	CACHE_CVAR(g_balance_nexball_primary_shootatmaxmeter);
 	CACHE_CVAR(g_balance_nexball_primary_speed);
-	CACHE_CVAR(g_balance_nexball_secondary);
-	CACHE_CVAR(g_balance_nexball_secondary_animtime);
-	CACHE_CVAR(g_balance_nexball_secondary_force);
-	CACHE_CVAR(g_balance_nexball_secondary_lifetime);
-	CACHE_CVAR(g_balance_nexball_secondary_refire);
-	CACHE_CVAR(g_balance_nexball_secondary_speed);
 	CACHE_CVAR(g_nexball_basketball_meter);
 	CACHE_CVAR(g_nexball_basketball_meter_maxpower);
 	CACHE_CVAR(g_nexball_basketball_meter_minpower);
 	CACHE_CVAR(g_nexball_delay_collect);
 	CACHE_CVAR(g_nexball_delay_goal);
 	CACHE_CVAR(g_nexball_delay_start);
+	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 
 	GameHook_PlayerClear = nb_PlayerClear;
 	GameHook_PlayerPreThink = nexball_setstatus;
 	GameHook_SpeedMod = nb_SpeedMod;
 	GameHook_FragLimitOverride = nb_FragLimitOverride;
 	GameHook_LeadLimitOverride = nb_LeadLimitOverride;
+	GameHook_WeaponFrameHandle = nb_WeaponFrameHandle;
+	GameHook_ReloadAllowed = nb_ReloadAllowed;
+	GameHook_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
 
 	radar_showennemies = cvar("g_nexball_radar_showallplayers");
 
@@ -862,7 +873,7 @@ void W_Nexball_Attack (float t)
 
 float w_nexball_carrier_think()
 {
-	if (self.BUTTON_ATCK)
+	if (self.BUTTON_ATCK || self.BUTTON_ATCK2)
 	{
 		if (g_nexball_basketball_meter)
 		{
