@@ -80,7 +80,7 @@ float nb_LeadLimitOverride() {
 }
 
 float nb_WeaponFrameHandle() {
-	if not(self.ballcarried)
+	if not(Akimbo_Owner(self).ballcarried)
 		return FALSE;
 
 	w_nexball_carrier_think();
@@ -241,9 +241,25 @@ void DropOwner (void)
 	ownr.flags &~= FL_ONGROUND;
 }
 
-.string ball_weapon_model_save;
-.string ball_weapon_model2_save;
-.string ball_exteriorweapon_model_save;
+void HideWeapon(entity e) {
+	e.message2 = e.weaponname;
+	e.weaponname = "";
+	e.weaponentity.cnt = 0;
+	entity akimbo_ghost = Akimbo_Ghost(e);
+	if (akimbo_ghost)
+	if (e != akimbo_ghost)
+		HideWeapon(akimbo_ghost);
+}
+
+void UnhideWeapon(entity e) {
+	e.weaponname = e.message2;
+	e.weaponentity.cnt = 0;
+	entity akimbo_ghost = Akimbo_Ghost(e);
+	if (akimbo_ghost)
+	if (e != akimbo_ghost)
+		UnhideWeapon(akimbo_ghost);
+}
+
 void GiveBall (entity plyr, entity ball)
 {
 	local entity ownr;
@@ -287,21 +303,7 @@ void GiveBall (entity plyr, entity ball)
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
 	ball.team = plyr.team;
-	if (plyr.weaponentity)
-	{
-		if (plyr.weaponentity.weaponentity)
-		{
-			ball.ball_weapon_model2_save = plyr.weaponentity.weaponentity.model;
-			setmodel(plyr.weaponentity.weaponentity, "");
-		}
-		ball.ball_weapon_model_save = plyr.weaponentity.model;
-		setmodel(plyr.weaponentity, "");
-	}
-	if (plyr.exteriorweaponentity)
-	{
-		ball.ball_exteriorweapon_model_save = plyr.exteriorweaponentity.model;
-		setmodel(plyr.exteriorweaponentity, "");
-	}
+	HideWeapon(plyr);
 	plyr.ballcarried = ball;
 	ball.dropperid = plyr.playerid;
 
@@ -353,14 +355,7 @@ void DropBall (entity ball, vector org, vector vel)
 	remove(ball.owner.pov_ball);
 	ball.owner.pov_ball = world;
 	ball.owner.ballcarried = world;
-	if (ball.owner.weaponentity)
-	{
-		if (ball.owner.weaponentity.weaponentity)
-			setmodel(ball.owner.weaponentity.weaponentity, ball.ball_weapon_model2_save);
-		setmodel(ball.owner.weaponentity, ball.ball_weapon_model_save);
-	}
-	if (ball.owner.exteriorweaponentity)
-		setmodel(ball.owner.exteriorweaponentity, ball.ball_exteriorweapon_model_save);
+	UnhideWeapon(ball.owner);
 	ball.owner = world;
 }
 

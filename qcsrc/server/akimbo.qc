@@ -77,6 +77,7 @@ void Akimbo_WeaponFrame()
 		self.health = oldself.health;
 		self.v_angle = oldself.v_angle;
 		self.origin = oldself.origin;
+		self.cnt = oldself.cnt;
 		W_WeaponFrame();
 		oldself.ammo_shells = self.ammo_shells;
 		oldself.ammo_cells = self.ammo_cells;
@@ -197,6 +198,11 @@ void Akimbo_Clear(entity e)
 float Akimbo_HaveWeapon(entity e, float wpn)
 {
 	float wpnbit = W_WeaponBit(wpn);
+#if 0
+	if (cvar("g_akimbo_force") && (wpn & weapons_with_akimbo_support))
+		return TRUE;
+#endif
+
 	if ((e.akimbo_weapons & wpnbit) ||
 			(g_powerup_strength_akimbo && e.strength_finished > time &&
 			(wpnbit & weapons_with_akimbo_support)))
