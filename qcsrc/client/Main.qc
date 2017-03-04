@@ -1100,8 +1100,6 @@ void Ent_Init(float ignore)
 	float i;
 	self.classname = "ent_client_init";
 
-	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
-
 	for(i = 0; i < 24; ++i)
 		weaponimpulse[i] = ReadByte() - 1;
 	hook_shotorigin_x = ReadCoord();

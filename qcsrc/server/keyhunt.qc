@@ -950,6 +950,10 @@ void kh_Reset() {
 	kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
 }
 
+void kh_SpectateCopy(entity e) {
+	self.kh_state = e.kh_state;
+}
+
 void kh_init()  // sets up th KH environment
 {
 	CACHE_CVAR(g_balance_keyhunt_damageforcescale);
@@ -977,6 +981,7 @@ void kh_init()  // sets up th KH environment
 	GameHook_FragsHandle = kh_HandleFrags;
 	GameHook_PlayerClear = kh_PlayerCLear;
 	GameHook_WinCountDown = stub_WinCountDown;
+	GameHook_SpectateCopy = kh_SpectateCopy;
 
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
 	precache_model("models/keyhunt/key-carried.md3");

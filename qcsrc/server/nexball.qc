@@ -39,6 +39,12 @@ float g_nexball_ball_scale;
 float balls;
 float ball_scale;
 float nb_teams;
+.float metertime;
+.float metertime_stat;
+// Nexball
+.entity ballcarried;
+float g_nexball_meter_period;
+
 
 float g_balance_nexball_primary_shootatmaxmeter;
 float g_balance_nexball_primary_speed;
@@ -99,6 +105,10 @@ float nb_RadarShowEnemiesAllowed() {
 	return TRUE;
 }
 
+void nb_SpectateCopy(entity e) {
+	self.metertime = e.metertime;
+}
+
 void nexball_setstatus();
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
@@ -107,7 +117,7 @@ void nb_init() // Called early (worldspawn stage)
 	if (g_nexball_meter_period <= 0)
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 	g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
-	addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
+	addstat(STAT_NB_METERSTART, AS_FLOAT, metertime_stat);
 
 	// General settings
 	CACHE_CVAR(g_nexball_football_boost_forward);   //100
@@ -142,6 +152,7 @@ void nb_init() // Called early (worldspawn stage)
 	GameHook_WeaponFrameHandle = nb_WeaponFrameHandle;
 	GameHook_ReloadAllowed = nb_ReloadAllowed;
 	GameHook_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
+	GameHook_SpectateCopy = nb_SpectateCopy;
 	if (cvar("g_nexball_radar_showallplayers"))
 		GameHook_RadarShowEnemiesAllowed = nb_RadarShowEnemiesAllowed;
 
@@ -242,7 +253,8 @@ void GiveBall (entity plyr, entity ball)
 		ownr.effects &~= g_nexball_basketball_effects_default;
 		ownr.ballcarried = world;
 		if (ownr.metertime)
-			ownr.metertime = 0;
+			ownr.metertime_stat = ownr.metertime = 0;
+
 		WaypointSprite_Kill(ownr.waypointsprite_attachedforcarrier);
 	}
 	else
@@ -331,7 +343,7 @@ void DropBall (entity ball, vector org, vector vel)
 	ball.nextthink = min(time + g_nexball_delay_idle, ball.teamtime);
 
 	if (ball.owner.metertime)
-		ball.owner.metertime = 0;
+		ball.owner.metertime_stat = ball.owner.metertime = 0;
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
 	WaypointSprite_AttachCarrier("nb-ball", ball);
@@ -887,9 +899,13 @@ float w_nexball_carrier_think()
 		else
 			W_Nexball_Attack(-1);
 	}
-	if (self.metertime && self.ballcarried && (!self.BUTTON_ATCK ||
-			(g_balance_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time)))
-		W_Nexball_Attack(time - self.metertime);
+	if (self.metertime) {
+		self.metertime_stat = (time - self.metertime) / g_nexball_meter_period;
+		self.metertime_stat = (self.metertime_stat - floor(self.metertime_stat)) * 2;
+		if (!self.BUTTON_ATCK ||
+				(g_balance_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time))
+			W_Nexball_Attack(time - self.metertime);
+	}
 	// DropBall or stealing will set metertime back to 0
 	return TRUE;
 }

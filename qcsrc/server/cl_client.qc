@@ -864,8 +864,6 @@ void PutClientInServer()
 		self.hook_time = 0;
 		self.dmg_team = 0;
 
-		self.metertime = 0;
-
 		PutClientToSpot(spot);
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
@@ -991,7 +989,6 @@ float FakeInit_SendEntity(entity to, float sf)
 	float i;
 	vector client_hook_shotorigin;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	for(i = 1; i <= 24; ++i)
 		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
 	if(g_grappling_hook)
@@ -1014,7 +1011,6 @@ float ClientInit_SendEntity(entity to, float sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	for(i = 1; i <= 24; ++i)
 		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
@@ -1963,7 +1959,7 @@ spectate mode routines
 ======================
 */
 void SpectateCopy(entity spectatee) {
-	self.kh_state = spectatee.kh_state;
+	GameHook_SpectateCopy(spectatee);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -1975,7 +1971,6 @@ void SpectateCopy(entity spectatee) {
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
-	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;

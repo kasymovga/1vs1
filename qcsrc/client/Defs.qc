@@ -205,9 +205,6 @@ float race_othercheckpointlapsdelta;
 string race_othercheckpointenemy;
 float sb_showscores_force;
 
-// Nexball
-float nb_pb_period;
-
 // Spectating
 float spectatee_status;
 
