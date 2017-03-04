@@ -66,12 +66,12 @@ void vehicle_stdproc_regen()
 
     if(self.vehicle_flags & VHF_HEALTHREGEN)
     if(self.dmg_time + self.health_regen_dmgpause < time)
-    if(self.vehicle_health < hmax)
+    if(self.health < hmax)
     {
-        self.vehicle_health = min(self.vehicle_health + self.health_regen * sys_ticrate, hmax);
+        self.health = min(self.health + self.health_regen * sys_ticrate, hmax);
 
         if(self.owner)
-            self.owner.vehicle_health = self.vehicle_health / hmax;
+            self.owner.vehicle_health = self.health / hmax;
     }
 }
 
@@ -126,29 +126,27 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
             ddmg_take = fabs(self.vehicle_shield);
             self.vehicle_shield = 0;
 
-            self.vehicle_health -= ddmg_take;
+            self.health -= ddmg_take;
         }
     }
     else
-        self.vehicle_health -= damage;
+        self.health -= damage;
 
-	if (clienttype(attacker) == CLIENTTYPE_REAL) {
-		if (random() < 0.5)
-			sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
-		else
-			sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
-	}
+	if (random() < 0.5)
+		sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
+	else
+		sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
 
     if(self.owner)
     {
-        self.owner.vehicle_health = self.vehicle_health / CCVAR("_health");
+        self.owner.vehicle_health = self.health / CCVAR("_health");
 
         if(self.vehicle_flags & VHF_HASSHIELD)
             self.owner.vehicle_shield = self.vehicle_shield / cvar(strcat(self.cvar_basename,"_shield"));
 
     }
 
-    if(self.vehicle_health <= 0)
+    if(self.health <= 0)
     {
         if(self.owner)
             vehicle_extract_player(self.owner, VHEF_EJECT);

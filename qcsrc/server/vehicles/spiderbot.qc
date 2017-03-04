@@ -438,7 +438,7 @@ void spiderbot_enter()
     self.owner.vehicle        = self;
     self.owner.event_damage   = SUB_Null;
     self.owner.hud            = HUD_SPIDERBOT;
-    self.owner.vehicle_health = (self.vehicle_health / g_vehicle_spiderbot_health);
+    self.owner.vehicle_health = (self.health / g_vehicle_spiderbot_health);
     self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_spiderbot_shield);
 	self.owner.vehicle_heat = self.vehicle_heat;
     self.team                   = self.owner.team;
@@ -609,7 +609,7 @@ void spiderbot_spawn()
     self.think = spiderbot_think;
     self.nextthink = time;
 
-    self.vehicle_health = CCVAR("_health");
+    self.health = CCVAR("_health");
     self.vehicle_shield = CCVAR("_shield");
     self.event_damage = vehicle_stdproc_damage;
     self.iscreature = TRUE;

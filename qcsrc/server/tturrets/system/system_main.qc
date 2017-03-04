@@ -485,10 +485,6 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     if not (e_target)
         return -2;
 
-	if(g_onslaught)
-		if (substring(e_target.classname, 0, 10) == "onslaught_") // don't attack onslaught targets, that's the player's job!
-			return - 3;
-
     if (validate_flags & TFL_TARGETSELECT_NO)
         return -4;
 
@@ -620,6 +616,7 @@ entity turret_select_target()
     float  score;    // target looper entity score
     entity e_enemy;  // currently best scoreing target
     float  m_score;  // currently best scoreing target's score
+	entity e_real;
 
 	e_enemy = world;
     m_score = 0;
@@ -635,13 +632,18 @@ entity turret_select_target()
 
 	if (g_turrets_targetscan_playersonly) {
 		FOR_EACH_PLAYER(e) {
-			if (turret_validate_target(self,e,self.target_select_flags) <= 0)
+			if (e.vehicle)
+				e_real = e.vehicle;
+			else
+				e_real = e;
+
+			if (turret_validate_target(self,e_real,self.target_select_flags) <= 0)
 				continue;
 
-			score = self.turret_score_target(self,e);
+			score = self.turret_score_target(self,e_real);
 			if ((score > m_score) && (score > 0))
 			{
-				e_enemy = e;
+				e_enemy = e_real;
 				m_score = score;
 			}
 		}
