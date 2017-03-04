@@ -88,6 +88,13 @@ float g_balance_keyhunt_score_push;
 float g_balance_keyhunt_throwvelocity;
 float g_keyhunt_showenemycarrier;
 
+void kh_Key_Spawn(entity key, entity initial_owner, float angle, float idx);
+void kh_Key_Hide(entity key);
+
+#define STR_ITEM_KH_KEY "item_kh_key"
+typedef void(void) kh_Think_t;
+var kh_Think_t kh_Controller_Thinkfunc;
+
 void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occasionaly
 {
 	kh_Controller_Thinkfunc = func;
@@ -370,14 +377,11 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 
 void key_reset()
 {
-	kh_Key_AssignTo(self, world);
-	kh_Key_Remove(self);
+	kh_Key_Hide(self);
 }
 
-void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
+void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
-	entity key;
-	key = spawn();
 	key.count = i;
 	key.classname = STR_ITEM_KH_KEY;
 	key.touch = kh_Key_Touch;
@@ -391,6 +395,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 	key.modelindex = kh_key_dropped;
 	key.model = "key";
 	key.kh_dropperteam = 0;
+	key.effects &~= EF_NODRAW;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = TeamColor(initial_owner.team) * KH_KEY_BRIGHTNESS;
@@ -415,10 +420,6 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 			break;
 	}
 
-	// link into key list
-	key.kh_worldkeynext = kh_worldkeylist;
-	kh_worldkeylist = key;
-
 	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
 
 	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE);
@@ -428,7 +429,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 	kh_Key_AssignTo(key, initial_owner);
 }
 
-void kh_Key_Remove(entity key)  // runs after when all the keys have been collected or when a key has been dropped for more than X seconds
+void kh_Key_Hide(entity key)  // runs after when all the keys have been collected or when a key has been dropped for more than X seconds
 {
 	entity o;
 	o = key.owner;
@@ -438,24 +439,8 @@ void kh_Key_Remove(entity key)  // runs after when all the keys have been collec
 	else // it was dropped
 		WaypointSprite_DetachCarrier(key);
 
-	// remove key from key list
-	if (kh_worldkeylist == key)
-		kh_worldkeylist = kh_worldkeylist.kh_worldkeynext;
-	else
-	{
-		o = kh_worldkeylist;
-		while (o)
-		{
-			if (o.kh_worldkeynext == key)
-			{
-				o.kh_worldkeynext = o.kh_worldkeynext.kh_worldkeynext;
-				break;
-			}
-			o = o.kh_worldkeynext;
-		}
-	}
-
-	remove(key);
+	key.solid = SOLID_NOT;
+	key.effects |= EF_NODRAW;
 
 	kh_update_state();
 }
@@ -785,7 +770,7 @@ void kh_FinishRound()  // runs when a team captures the keys
 
 	kh_no_radar_circles = TRUE;
 	FOR_EACH_KH_KEY(key)
-		kh_Key_Remove(key);
+		kh_Key_Hide(key);
 	kh_no_radar_circles = FALSE;
 
 	kh_Controller_SetThink(g_balance_keyhunt_delay_round, "Round starts in ", kh_StartRound);
@@ -858,7 +843,9 @@ void kh_StartRound()  // runs at the start of each round
 		if(clienttype(player) == CLIENTTYPE_REAL)
 			centerprint_expire(player, CENTERPRIO_SPAM);
 
-	for(i = 0; i < kh_teams; ++i)
+	entity key;
+	i = 0;
+	FOR_EACH_KH_KEY(key)
 	{
 		teem = kh_Team_ByID(i);
 		players = 0;
@@ -872,7 +859,8 @@ void kh_StartRound()  // runs at the start of each round
 						if(random() * players <= 1)
 							my_player = player;
 					}
-		kh_Key_Spawn(my_player, 360 * i / kh_teams, i);
+		kh_Key_Spawn(key, my_player, 360 * i / kh_teams, i);
+		i++;
 	}
 
 	kh_tracking_enabled = FALSE;
@@ -1028,6 +1016,14 @@ void kh_init()  // sets up th KH environment
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
+	float i;
+	entity key;
+	for (i = 0; i < kh_teams; i++) {
+		key = spawn();
+		key.kh_worldkeynext = kh_worldkeylist;
+		kh_worldkeylist = key;
+		key.team = kh_Team_ByID(i);
+	}
 }
 
 void kh_finalize()
