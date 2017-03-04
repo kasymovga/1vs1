@@ -20,6 +20,20 @@ void entcs_init()
 	print("Initializing ClientSide information entities\n");
 };
 
+float entcs_customize_no_teamcheck()
+{
+	entity o;
+	o = self.owner;
+	if(o.deadflag != DEAD_NO)
+		return FALSE;
+	if(o.classname != "player")
+		return FALSE;
+	if(other == o)
+		return FALSE;
+
+	return TRUE;
+}
+
 float entcs_customize()
 {
 	entity o;
@@ -32,8 +46,7 @@ float entcs_customize()
 		return FALSE;
 	if(other.classname == "player")
 		if(o.team != other.team)
-			if not(radar_showennemies)
-				return FALSE;
+			return FALSE;
 	return TRUE;
 }
 
@@ -108,7 +121,10 @@ entity attach_entcs()
 		ent.nextthink = time;
 
 		Net_LinkEntity(ent, FALSE, 0, entcs_send);
-		ent.customizeentityforclient = entcs_customize;
+		if (GameHook_RadarShowEnemiesAllowed())
+			ent.customizeentityforclient = entcs_customize_no_teamcheck;
+		else
+			ent.customizeentityforclient = entcs_customize;
 
 		ent.entcs = spawn();
 		ent = ent.entcs;

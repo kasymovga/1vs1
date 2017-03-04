@@ -95,6 +95,10 @@ float nb_ThrowWeaponAllowed() {
 	return TRUE;
 }
 
+float nb_RadarShowEnemiesAllowed() {
+	return TRUE;
+}
+
 void nexball_setstatus();
 void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
@@ -138,8 +142,8 @@ void nb_init() // Called early (worldspawn stage)
 	GameHook_WeaponFrameHandle = nb_WeaponFrameHandle;
 	GameHook_ReloadAllowed = nb_ReloadAllowed;
 	GameHook_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
-
-	radar_showennemies = cvar("g_nexball_radar_showallplayers");
+	if (cvar("g_nexball_radar_showallplayers"))
+		GameHook_RadarShowEnemiesAllowed = nb_RadarShowEnemiesAllowed;
 
 	InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
 	precache_model ("models/elaser.mdl");

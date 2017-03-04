@@ -591,8 +591,6 @@ string matchid;
 .float damage_hits, maxdamage_fired;
 .float stat_leadlimit;
 
-float radar_showennemies;
-
 #ifdef PROFILING
 float client_cefc_accumulator;
 float client_cefc_accumulatortime;
