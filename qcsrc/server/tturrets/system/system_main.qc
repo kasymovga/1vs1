@@ -529,15 +529,18 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
             if (e_target.team != e_turret.team)
                 return -11;
 
+			if (e_target.owner)
             if (e_turret.team != e_target.owner.team)
                 return -12;
+
         }
         else
         {
-            if (e_target.team == e_turret.team)
+            if (e_target.team == e_turret.team || (teamplay && !e_target.team))
                 return -13;
 
-            if (e_turret.team == e_target.owner.team)
+			if (e_target.owner)
+            if (e_turret.team == e_target.owner.team || (teamplay && !e_target.owner.team))
                 return -14;
         }
     }
@@ -670,6 +673,22 @@ entity turret_select_target()
     return e_enemy;
 }
 
+void turret_stdproc_setcolormod() {
+	vector cmod = '0 0 0';
+    if (self.team == COLOR_TEAM1)
+		cmod = '1.8 0.6 0.6';
+    else if (self.team == COLOR_TEAM2)
+		cmod = '0.6 0.6 1.8';
+    else if (self.team == COLOR_TEAM3)
+		cmod = '1.4 1.4 0.2';
+    else if (self.team == COLOR_TEAM4)
+		cmod = '1.4 0.2 1.4';
+
+	self.colormod = cmod;
+	if (self.tur_head)
+		self.tur_head.colormod = cmod;
+}
+
 void turret_think()
 {
     entity e;
@@ -679,16 +698,8 @@ void turret_think()
     // ONS uses somewhat backwards linking.
     if (teamplay)
     {
-        if not (g_onslaught)
-            if (self.target)
-            {
-                e = find(world,targetname,self.target);
-                if (e != world)
-                    self.team = e.team;
-            }
-
         if (self.team != self.tur_head.team)
-            turret_stdproc_respawn();
+			turret_stdproc_setcolormod();
     }
 
 #ifdef TURRET_DEBUG
@@ -892,20 +903,13 @@ void turret_stdproc_fire()
     dprint("^1Bang, ^3your dead^7 ",self.enemy.netname,"! ^1(turret with no real firefunc)\n");
 }
 
-void turret_stdproc_setcolormod() {
-	vector cmod = '0 0 0';
-    if (self.team == COLOR_TEAM1)
-		cmod = '1.8 0.6 0.6';
-    else if (self.team == COLOR_TEAM2)
-		cmod = '0.6 0.6 1.8';
-    else if (self.team == COLOR_TEAM3)
-		cmod = '1.4 1.4 0.2';
-    else if (self.team == COLOR_TEAM4)
-		cmod = '1.4 0.2 1.4';
+void turret_activate()
+{
+	if (teamplay)
+        self.tur_active = self.team;
+    else
+        self.tur_active = 1;
 
-	self.colormod = cmod;
-	if (self.tur_head)
-		self.tur_head.colormod = cmod;
 }
 
 /*
@@ -918,12 +922,8 @@ void turret_stdproc_use()
 
     self.tur_head.team = self.team = activator.team;
 
-    if(self.team == 0)
-        self.tur_active = 0;
-    else
-        self.tur_active = 1;
-
 	turret_stdproc_setcolormod();
+	turret_activate();
 }
 
 void turret_link()
@@ -1305,7 +1305,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     // Its all good.
     self.classname = "turret_main";
 
-    self.tur_active = 1;
+	turret_activate();
 
     return 1;
 }
