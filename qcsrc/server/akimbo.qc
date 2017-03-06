@@ -3,82 +3,92 @@
 float g_akimbo_weapons;
 float weapons_with_akimbo_support;
 
-void Akimbo_GhostRemove(entity e)
-{
+void Akimbo_GhostHide(entity e) {
 	entity oldself = self;
-	self = self.akimbo_ghost;
+	self = e.akimbo_ghost;
 	weapon_action(self.weapon, WR_CLEAR);
-	self = oldself;
-	if (self.akimbo_ghost.weaponentity.weaponentity)
-		remove(self.akimbo_ghost.weaponentity.weaponentity);
-	remove(self.akimbo_ghost.weaponentity);
-	remove(self.akimbo_ghost.exteriorweaponentity);
-	remove(self.akimbo_ghost);
-	self.akimbo_ghost = world;
+	if (self.weaponentity.weaponentity)
+		remove(self.weaponentity.weaponentity);
+	remove(self.weaponentity);
+	remove(self.exteriorweaponentity);
+	self.weaponentity = world;
+	self.exteriorweaponentity = world;
 	if (self.weaponentity)
 		self.weaponentity.cnt = 0;
+
+	self = oldself;
+}
+
+void Akimbo_GhostRemove(entity e)
+{
+	if (e.akimbo_ghost.weaponentity)
+		Akimbo_GhostHide(e);
+
+	remove(e.akimbo_ghost);
+	e.akimbo_ghost = world;
 }
 
 void Akimbo_WeaponFrame()
 {
-	if (self.akimbo_ghost && self.akimbo_ghost.weapon != self.weapon)
-		Akimbo_GhostRemove(self);
-	if (g_nexball)
-	if (self.ballcarried)
-	{
-		return;
-		Akimbo_GhostRemove(self);
-	}
-	if not(self.weapon)
-		return;
-	if (Akimbo_HaveWeapon(self, self.weapon))
+	float akimbo_weapon;
+	if (self.akimbo_ghost) {
+		if (self.akimbo_ghost.switchweapon != self.switchweapon)
+			self.akimbo_ghost.switchweapon = self.switchweapon;
+
+		if (self.akimbo_ghost.weaponentity)
+			akimbo_weapon = self.akimbo_ghost.weapon;
+		else
+			akimbo_weapon = self.weapon;
+	} else
+		akimbo_weapon = self.weapon;
+
+	if (akimbo_weapon && Akimbo_HaveWeapon(self, akimbo_weapon))
 	{
 		entity oldself = self;
-		if not(self.akimbo_ghost)
-		{
-			self.akimbo_ghost = spawn();
-			self.akimbo_ghost.weapon = self.weapon;
-			self.akimbo_ghost.switchweapon = self.weapon;
-			self.akimbo_ghost.modelindex = self.modelindex;
-			self.akimbo_ghost.weapons = self.weapons;
-			self.akimbo_ghost.owner = self;
-			self.akimbo_ghost.cvar_cl_gunalpha = self.cvar_cl_gunalpha;
-			self = self.akimbo_ghost;
+		self = self.akimbo_ghost;
+		if not(self.weaponentity) {
+			if not(self)
+				oldself.akimbo_ghost = self = spawn();
+
+			self.weapon = akimbo_weapon;
+			self.switchweapon = akimbo_weapon;
+			self.modelindex = oldself.modelindex;
+			self.weapons = oldself.weapons;
+			self.owner = oldself;
+			self.cvar_cl_gunalpha = oldself.cvar_cl_gunalpha;
 			CL_SpawnWeaponentity();
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
-			self = oldself;
-			self.weaponentity.cnt = 0;
+			oldself.weaponentity.cnt = 0;
 		}
-		self.akimbo_ghost.ammo_shells = self.ammo_shells;
-		self.akimbo_ghost.ammo_cells = self.ammo_cells;
-		self.akimbo_ghost.ammo_nails = self.ammo_nails;
-		self.akimbo_ghost.ammo_rockets = self.ammo_rockets;
-		self.akimbo_ghost.weapons = self.weapons;
-		self.akimbo_ghost.BUTTON_ATCK = self.BUTTON_ATCK;
-		self.akimbo_ghost.BUTTON_ATCK2 = self.BUTTON_ATCK2;
-		self.akimbo_ghost.deadflag = self.deadflag;
-		self.akimbo_ghost.colormap = self.colormap;
-		self.akimbo_ghost.effects = self.effects;
-		self.akimbo_ghost.alpha = self.alpha;
-		self.akimbo_ghost.health = self.health;
-		self.akimbo_ghost.switchweapon = self.switchweapon;
-		self.akimbo_ghost.v_angle = self.v_angle;
-		self.akimbo_ghost.origin = self.origin;
-		self = self.akimbo_ghost;
+		self.ammo_shells = oldself.ammo_shells;
+		self.ammo_cells = oldself.ammo_cells;
+		self.ammo_nails = oldself.ammo_nails;
+		self.ammo_rockets = oldself.ammo_rockets;
+		self.weapons = oldself.weapons;
+		self.BUTTON_ATCK = oldself.BUTTON_ATCK;
+		self.BUTTON_ATCK2 = oldself.BUTTON_ATCK2;
+		self.deadflag = oldself.deadflag;
+		self.colormap = oldself.colormap;
+		self.effects = oldself.effects;
+		self.alpha = oldself.alpha;
+		self.health = oldself.health;
+		self.v_angle = oldself.v_angle;
+		self.origin = oldself.origin;
+		self.cnt = oldself.cnt;
 		W_WeaponFrame();
+		oldself.ammo_shells = self.ammo_shells;
+		oldself.ammo_cells = self.ammo_cells;
+		oldself.ammo_nails = self.ammo_nails;
+		oldself.ammo_rockets = self.ammo_rockets;
 		self = oldself;
-		self.ammo_shells = self.akimbo_ghost.ammo_shells;
-		self.ammo_cells = self.akimbo_ghost.ammo_cells;
-		self.ammo_nails = self.akimbo_ghost.ammo_nails;
-		self.ammo_rockets = self.akimbo_ghost.ammo_rockets;
 	}
 	else
 	{
-		if (self.akimbo_ghost)
-			Akimbo_GhostRemove(self);
+		if (self.akimbo_ghost.weaponentity)
+			Akimbo_GhostHide(self);
 	}
 }
 
@@ -169,7 +179,7 @@ float Akimbo_DropWeapon(entity p, float wpn, string name)
 
 float Akimbo_Active(entity e)
 {
-	if (e.akimbo_ghost)
+	if (e.akimbo_ghost.weaponentity)
 		return 1;
 	if (Akimbo_Owner(e) != e)
 		return 2;
@@ -179,13 +189,20 @@ float Akimbo_Active(entity e)
 
 void Akimbo_Clear(entity e)
 {
-	Akimbo_GhostRemove(e);
+	if (e.akimbo_ghost)
+		Akimbo_GhostRemove(e);
+
 	e.akimbo_weapons = 0;
 }
 
 float Akimbo_HaveWeapon(entity e, float wpn)
 {
 	float wpnbit = W_WeaponBit(wpn);
+#if 0
+	if (cvar("g_akimbo_force") && (wpn & weapons_with_akimbo_support))
+		return TRUE;
+#endif
+
 	if ((e.akimbo_weapons & wpnbit) ||
 			(g_powerup_strength_akimbo && e.strength_finished > time &&
 			(wpnbit & weapons_with_akimbo_support)))

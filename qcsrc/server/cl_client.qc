@@ -73,6 +73,8 @@ string sv_player_hat;
 string sv_player_hat_attachment;
 float sv_player_hat_scale;
 vector sv_player_hat_origin, sv_player_hat_angles;
+float sv_maxidle;
+float sv_maxidle_forcespec;
 
 float reset_on_join_done;
 
@@ -540,6 +542,27 @@ void setmodel_lod(entity e, string modelname)
 	UpdatePlayerSounds();
 }
 
+void ClientSetView(entity to) {
+	if not(clienttype(self) == CLIENTTYPE_REAL)
+		return;
+
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_SETVIEW);
+	WriteEntity(MSG_ONE, to);
+}
+
+void PutClientToSpot(entity spot) {
+	self.deadflag = DEAD_NO;
+	self.angles = spot.angles;
+	self.angles_z = 0;
+	self.fixangle = TRUE;
+	self.crouch = FALSE;
+	self.view_ofs = PL_VIEW_OFS;
+	setorigin (self, spot.origin);
+	self.prevorigin = self.origin;
+	ClientSetView(self);
+}
+
 /*
 =============
 PutObserverInServer
@@ -557,13 +580,6 @@ void PutObserverInServer(float frags_team_reset)
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
-
-	if(clienttype(self) == CLIENTTYPE_REAL)
-	{
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self);
-	}
 
 	vehicle_extract_player(self, TRUE);
 
@@ -602,17 +618,8 @@ void PutObserverInServer(float frags_team_reset)
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
-	self.runes = 0;
-	self.deadflag = DEAD_NO;
-	self.angles = spot.angles;
-	self.angles_z = 0;
-	self.fixangle = TRUE;
-	self.crouch = FALSE;
-
-	self.view_ofs = PL_VIEW_OFS;
-	setorigin (self, spot.origin);
+	PutClientToSpot(spot);
 	setsize (self, '0 0 0', '0 0 0');
-	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
 	self.model = "";
@@ -748,13 +755,6 @@ void PutClientInServer()
 	{
 		self.classname = "player";
 	}
-	else if(clienttype(self) == CLIENTTYPE_REAL)
-	{
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self);
-	}
-
 	if(gameover)
 		self.classname = "observer";
 
@@ -864,16 +864,7 @@ void PutClientInServer()
 		self.hook_time = 0;
 		self.dmg_team = 0;
 
-		self.metertime = 0;
-
-		self.runes = 0;
-
-		self.deadflag = DEAD_NO;
-
-		self.angles = spot.angles;
-
-		self.angles_z = 0; // never spawn tilted even if the spot says to
-		self.fixangle = TRUE; // turn this way immediately
+		PutClientToSpot(spot);
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
 		self.punchangle = '0 0 0';
@@ -893,8 +884,6 @@ void PutClientInServer()
 		self.model = "";
 		FixPlayermodel();
 
-		self.crouch = FALSE;
-		self.view_ofs = PL_VIEW_OFS;
 		self.stand_view_ofs = PL_VIEW_OFS;
 		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
 		setsize (self, PL_MIN, PL_MAX);
@@ -903,10 +892,8 @@ void PutClientInServer()
 		self.crouch_mins = PL_CROUCH_MIN;
 		self.crouch_maxs = PL_CROUCH_MAX;
 		self.spawnorigin = spot.origin;
-		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
 		self.oldorigin = self.origin;
-		self.prevorigin = self.origin;
 
 		self.event_damage = PlayerDamage;
 
@@ -1002,7 +989,6 @@ float FakeInit_SendEntity(entity to, float sf)
 	float i;
 	vector client_hook_shotorigin;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	for(i = 1; i <= 24; ++i)
 		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
 	if(g_grappling_hook)
@@ -1025,7 +1011,6 @@ float ClientInit_SendEntity(entity to, float sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	for(i = 1; i <= 24; ++i)
 		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
 	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
@@ -1107,6 +1092,7 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
+	vehicle_extract_player(self, TRUE);
 	// in any case:
 	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
@@ -1314,7 +1300,6 @@ void ClientConnect (void)
 	self.just_connected = TRUE;
 
 	self.flags = FL_CLIENT;
-	self.version_nagtime = time + 10 + random() * 10;
 
 	if(player_count<0)
 	{
@@ -1974,7 +1959,7 @@ spectate mode routines
 ======================
 */
 void SpectateCopy(entity spectatee) {
-	self.kh_state = spectatee.kh_state;
+	GameHook_SpectateCopy(spectatee);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -1986,7 +1971,6 @@ void SpectateCopy(entity spectatee) {
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
-	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
@@ -2039,12 +2023,7 @@ float SpectateNext() {
 		self.enemy = other;
 	}
 	if(self.enemy.classname == "player") {
-		if (clienttype(self) == CLIENTTYPE_REAL) {
-			msg_entity = self;
-			WriteByte(MSG_ONE, SVC_SETVIEW);
-			WriteEntity(MSG_ONE, self.enemy);
-			//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		}
+		ClientSetView(self.enemy);
 		self.movetype = MOVETYPE_NONE;
 		SpectateCopy(self.enemy);
 		return 1;
@@ -2140,50 +2119,6 @@ void checkSpectatorBlock() {
 	}
 }
 
-float vercmp_recursive(string v1, string v2)
-{
-	float dot1, dot2;
-	string s1, s2;
-	float r;
-
-	dot1 = strstrofs(v1, ".", 0);
-	dot2 = strstrofs(v2, ".", 0);
-	if(dot1 == -1)
-		s1 = v1;
-	else
-		s1 = substring(v1, 0, dot1);
-	if(dot2 == -1)
-		s2 = v2;
-	else
-		s2 = substring(v2, 0, dot2);
-
-	r = stof(s1) - stof(s2);
-	if(r != 0)
-		return r;
-
-	r = strcasecmp(s1, s2);
-	if(r != 0)
-		return r;
-
-	if(dot1 == -1)
-		if(dot2 == -1)
-			return 0;
-		else
-			return -1;
-	else
-		if(dot2 == -1)
-			return 1;
-		else
-			return vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
-}
-
-float vercmp(string v1, string v2)
-{
-	if(strcasecmp(v1, v2) == 0) // early out check
-		return 0;
-	return vercmp_recursive(v1, v2);
-}
-
 void ObserverThink()
 {
 	if (self.team > 0) {
@@ -2263,8 +2198,6 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
-void() ctf_setstatus;
-void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
 {
@@ -2285,37 +2218,6 @@ void PlayerPreThink (void)
 			strunzone(self.netname_previous);
 		self.netname_previous = strzone(self.netname);
 	}
-
-	// version nagging
-	if(self.version_nagtime)
-		if(self.cvar_g_nexuizversion)
-			if(time > self.version_nagtime)
-			{
-				if(strstr(self.cvar_g_nexuizversion, "svn", 0) < 0)
-				{
-					if(strstr(cvar_string("g_nexuizversion"), "svn", 0) >= 0)
-					{
-						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), " (beta)^7, you have ^3Rexuiz ", self.cvar_g_nexuizversion, "^1\n");
-						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), " (beta)^7, you have ^3", self.cvar_g_nexuizversion, "^1\n"));
-					}
-					else
-					{
-						float r;
-						r = vercmp(self.cvar_g_nexuizversion, cvar_string("g_nexuizversion"));
-						if(r < 0)
-						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7 is out, and you still have ^3", self.cvar_g_nexuizversion, "^1 - get the update from ^4http://www.nexuiz.com/^1!\n");
-							sprint(self, strcat("\{1}^1NOTE: ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7 is out, and you still have ^3", self.cvar_g_nexuizversion, "^1 - get the update from ^4http://www.nexuiz.com/^1!\n"));
-						}
-						else if(r > 0)
-						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7, you have ^3", self.cvar_g_nexuizversion, "^1\n");
-							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Rexuiz ", cvar_string("g_nexuizversion"), "^7, you have ^3", self.cvar_g_nexuizversion, "^1\n"));
-						}
-					}
-				}
-				self.version_nagtime = 0;
-			}
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
@@ -2492,31 +2394,42 @@ void PlayerPostThink (void)
 		stuffcmd(self, "seta _cl_name Player\n");
 	}
 
-	if(sv_maxidle && frametime)
+	if(frametime)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
-		float timeleft;
-		timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
-		if(timeleft <= 0)
-		{
-			bprint("^3", self.netname, "^3 was kicked for idling.\n");
-			announce(self, "announcer/robotic/terminated.wav");
-			dropclient(self);
-			return;
+		float timeleft, drop, maxidle;
+		if (sv_maxidle_forcespec && self.classname == "player") {
+			maxidle = sv_maxidle_forcespec;
+			drop = FALSE;
+		} else if (sv_maxidle) {
+			maxidle = sv_maxidle;
+			drop = TRUE;
+		} else
+			maxidle = 0;
+
+		if (maxidle) {
+			timeleft = ceil(maxidle - (time - self.parm_idlesince));
+			if (timeleft <= 0) {
+				announce(self, "announcer/robotic/terminated.wav");
+				if (drop) {
+					bprint("^3", self.netname, "^3 was kicked for idling.\n");
+					dropclient(self);
+				} else {
+					bprint("^3", self.netname, "^3 was moved to spectators for idling.\n");
+					PlayerToSpec(self);
+				}
+				return;
+			} else if(timeleft <= 10) {
+				if(timeleft != self.idlekick_lasttimeleft)
+				{
+					centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
+					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"));
+				}
+			} else
+				centerprint_expire(self, CENTERPRIO_IDLEKICK);
+
+			self.idlekick_lasttimeleft = timeleft;
 		}
-		else if(timeleft <= 10)
-		{
-			if(timeleft != self.idlekick_lasttimeleft)
-			{
-				centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3Disconnecting in ", ftos(timeleft), "..."));
-				announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"));
-			}
-		}
-		else
-		{
-			centerprint_expire(self, CENTERPRIO_IDLEKICK);
-		}
-		self.idlekick_lasttimeleft = timeleft;
 	}
 
 	if(self.classname == "player") {
@@ -2529,10 +2442,6 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 
 		GetPressedKeys();
-	} else if (self.classname == "observer") {
-		//do nothing
-	} else if (self.classname == "spectator") {
-		//do nothing
 	}
 
 	/*
@@ -2636,6 +2545,8 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout);
 	CACHE_CVAR(sv_timeout_number);
+	CACHE_CVAR(sv_maxidle);
+	CACHE_CVAR(sv_maxidle_forcespec);
 	if (sv_player_hat != "")
 		strunzone(sv_player_hat);
 
@@ -2665,6 +2576,7 @@ void PutTeamToServer(float t) {
 	FOR_EACH_CLIENT(e)
 		if (e.team == t)
 		if (e.classname != "player") {
+			e.classname = "player";
 			oldself = self;
 			self = e;
 			PutClientInServer();

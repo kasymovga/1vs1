@@ -189,7 +189,8 @@ void Physic_LandingHook()
 
 void Physic_FrameBeginHook()
 {
-	PM_ClientMovement_UpdateStatus(TRUE);
+	if not(physic_plug)
+		PM_ClientMovement_UpdateStatus(TRUE);
 }
 
 void Physic_FrameEndHook()

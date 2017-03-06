@@ -1,8 +1,8 @@
 void W_Reload()
 {
-	if(g_nexball)
-	if(self.ballcarried)
+	if not(GameHook_ReloadAllowed())
 		return;
+
 	if(self.switchweapon == self.weapon)
 	if(self.weaponentity.state == WS_READY)
 	{
@@ -273,7 +273,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if (g_weaponarena)
 		return;
-	if (g_nexball && self.ballcarried)
+	if not(GameHook_ThrowWeaponAllowed())
 		return;
 	if (!cvar("g_pickup_items"))
 		return;
@@ -304,12 +304,8 @@ void W_WeaponFrame()
 {
 	vector fo, ri, up;
 
-	if (g_nexball && self.ballcarried)
-	{
-		w_nexball_carrier_think();
+	if (GameHook_WeaponFrameHandle())
 		return;
-	}
-
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 

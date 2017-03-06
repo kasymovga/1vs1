@@ -45,7 +45,6 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
 
 	if(sf & 4)
-	if not(nex252_compat_mode)
 	{
 		if (sf & 16) {
 			WriteChar(MSG_ENTITY, self.mins_x);

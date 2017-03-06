@@ -51,9 +51,15 @@ void conquest_remove_progress_bar() {
 void conquest_update_waypoint() {
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(self.team - 1, FALSE));
 	string s;
-	if(self.team == COLOR_TEAM1)
+	s = "";
+	if (self.owner) {
+		if (self.team == COLOR_TEAM1)
+			s = "ons-cp-atck-red";
+		else if (self.team == COLOR_TEAM2)
+			s = "ons-cp-atck-blue";
+	} else if (self.team == COLOR_TEAM1)
 		s = "ons-cp-red";
-	else if(self.team == COLOR_TEAM2)
+	else if (self.team == COLOR_TEAM2)
 		s = "ons-cp-blue";
 	else
 		s = "ons-cp-neut";
@@ -78,14 +84,17 @@ void conquest_cp_reset() {
 	conquest_update_waypoint();
 }
 
+.float conquest_delay;
+
 void conquest_cp_think_capture() {
 	if (self.owner) {
 		if not(self.capture_progress)
 		if (self.team > 0)
-		if (self.delay < time) {
+		if (self.conquest_delay < time) {
 			play2team(self.team, "onslaught/controlpoint_underattack.ogg");
 			WaypointSprite_Ping(self.sprite);
-			self.delay = time + g_conquest_capture_time;
+			conquest_update_waypoint();
+			self.conquest_delay = time + g_conquest_capture_time;
 		}
 
 		self.capture_progress = self.capture_progress + (frametime / g_conquest_capture_time);
@@ -112,7 +121,6 @@ void conquest_cp_think_capture() {
 			activator = self;
 			SUB_UseTargets();
 
-			if (self.target != "")
 			if (self.team > 0)
 				PutTeamToServer(self.team);
 
@@ -124,6 +132,7 @@ void conquest_cp_think_capture() {
 	if not(self.owner) {
 		if (self.team)
 			self.enemy.alpha = 1;
+		conquest_update_waypoint();
 		self.capture_progress = 0;
 		conquest_remove_progress_bar();
 		return;
@@ -156,6 +165,10 @@ void conquest_cp_touch() {
 }
 
 void spawnfunc_conquest_cp() {
+	if not(g_conquest) {
+		remove(self);
+		return;
+	}
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	self.classname = "conquest_cp";
 	if (self.team > 0)

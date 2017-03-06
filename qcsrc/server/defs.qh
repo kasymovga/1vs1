@@ -15,8 +15,6 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 
 // Globals
 
-float nex252_compat_mode;
-
 float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_runematch, g_conquest, g_race, g_nexball, g_cts, g_clanarena, g_campaign;
 float g_footsteps, g_grappling_hook, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_runes, g_nadgets;
 float g_pinata_drop_all;
@@ -340,8 +338,6 @@ float sv_loddistance1;
 float sv_loddistance2;
 .float cvar_cl_gunalign;
 
-.float version_nagtime;
-
 .float modelindex_lod0;
 .float modelindex_lod0_from_nexuiz;
 .float skinindex;
@@ -429,9 +425,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 float lockteams;
 
 .float parm_idlesince;
-float sv_maxidle;
-float sv_maxidle_spectatorsareidle;
-
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;
@@ -549,11 +542,6 @@ void target_voicescript_clear(entity pl);
 .string target4;
 .float trigger_reverse;
 
-// Nexball
-.entity ballcarried;
-.float metertime;
-float g_nexball_meter_period;
-
 void SUB_DontUseTargets();
 void SUB_UseTargets();
 
@@ -597,8 +585,6 @@ string matchid;
 
 .float damage_hits, maxdamage_fired;
 .float stat_leadlimit;
-
-float radar_showennemies;
 
 #ifdef PROFILING
 float client_cefc_accumulator;

@@ -251,14 +251,6 @@ void spiderbot_miniguns_do()
             self.tur_head.attack_finished_single = g_vehicle_spiderbot_minigun_refire + time;
     }
 }
-#define SBS_IDLE  0
-#define SBS_JUMP  1
-#define SBS_WALK  2
-#define SBS_BACK  3
-#define SBS_LEFT  4
-#define SBS_RIGHT 5
-.float state;
-
 float spiderbot_physic_hook()
 {
     vector ad;
@@ -299,14 +291,12 @@ float spiderbot_physic_hook()
             player.BUTTON_JUMP = 0;
             spider.vehicle.anim_start = MODEL_SPIDERBOT_JUMP_START;
             spider.vehicle.anim_end   = MODEL_SPIDERBOT_JUMP_END;
-            spider.state = SBS_JUMP;
             spider.vehicle.frame = 4;
         }
         else
         {
             if(vlen(player.movement) == 0)
             {
-                spider.state = SBS_IDLE;
 				spiderbot_stop(spider);
             }
             else
@@ -317,14 +307,12 @@ float spiderbot_physic_hook()
                     {
                         spider.vehicle.anim_start = MODEL_SPIDERBOT_FORWARD_START;
                         spider.vehicle.anim_end   = MODEL_SPIDERBOT_FORWARD_END;
-                        spider.state = SBS_WALK;
                         spider.vehicle.frame = 0;
                     }
                     else if(player.movement_x < 0)
                     {
                         spider.vehicle.anim_start = MODEL_SPIDERBOT_BACKWARDS_START;
                         spider.vehicle.anim_end   = MODEL_SPIDERBOT_BACKWARDS_END;
-                        spider.state = SBS_BACK;
                         spider.vehicle.frame = 1;
                     }
                 }
@@ -334,14 +322,12 @@ float spiderbot_physic_hook()
                     {
                         spider.vehicle.anim_start = MODEL_SPIDERBOT_LEFT_START;
                         spider.vehicle.anim_end   = MODEL_SPIDERBOT_LEFT_END;
-                        spider.state = SBS_LEFT;
                         spider.vehicle.frame = 2;
                     }
                     else if(player.movement_y > 0)
                     {
                         spider.vehicle.anim_start = MODEL_SPIDERBOT_RIGHT_START;
                         spider.vehicle.anim_end   = MODEL_SPIDERBOT_RIGHT_END;
-                        spider.state = SBS_RIGHT;
                         spider.vehicle.frame = 3;
                     }
                 }
@@ -430,8 +416,6 @@ void spiderbot_enter()
     if not (clienttype(other) == CLIENTTYPE_REAL)
         return;
 
-    self.colormod = self.tur_head.colormod = '0 0 0';
-
     if(teamplay)
     if(self.team)
     if(self.team != other.team)
@@ -454,12 +438,13 @@ void spiderbot_enter()
     self.owner.vehicle        = self;
     self.owner.event_damage   = SUB_Null;
     self.owner.hud            = HUD_SPIDERBOT;
-    self.owner.vehicle_health = (self.vehicle_health / g_vehicle_spiderbot_health);
+    self.owner.vehicle_health = (self.health / g_vehicle_spiderbot_health);
     self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_spiderbot_shield);
 	self.owner.vehicle_heat = self.vehicle_heat;
     self.team                   = self.owner.team;
 	setattachment(self.vehicle, other, "");
 	setorigin(self.vehicle, '0 0 -48');
+	vehicle_stdproc_setcolormod();
 
     if(clienttype(other) == CLIENTTYPE_REAL)
     {
@@ -479,21 +464,15 @@ void spiderbot_enter()
     //WriteAngle(MSG_ONE, self.tur_head.angles_z + self.angles_z);    // roll
     //self.owner.view_ofs = '0 0 0';
     //self.tur_head.nodrawtoclient = self.owner;
-	if not(nex252_compat_mode) {
-		self.player_physic = spawn();
-		self.player_physic.viewmodelforclient = self.owner;
-		self.player_physic.vehicle = self;
-		Net_LinkEntity(self.player_physic, FALSE, 0, SpiderbotPhysic_SendEntity);
-	}
+	self.player_physic = spawn();
+	self.player_physic.viewmodelforclient = self.owner;
+	self.player_physic.vehicle = self;
+	Net_LinkEntity(self.player_physic, FALSE, 0, SpiderbotPhysic_SendEntity);
 }
 
 void spiderbot_exit(float eject)
 {
     entity e;
-    self.frame = 5;
-    e = findchain(classname,"spiderbot_rocket");
-	setattachment(self.vehicle, self, "");
-	setorigin(self.vehicle, '0 0 0');
 	vector exit_origin;
 	makevectors(self.angles);
 	if(eject)
@@ -516,10 +495,14 @@ void spiderbot_exit(float eject)
 			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1)
-			return;
+			exit_origin = self.origin + '0 0 64';
 	}
 
 	exit_origin = trace_endpos;
+    self.frame = 5;
+    e = findchain(classname,"spiderbot_rocket");
+	setattachment(self.vehicle, self, "");
+	setorigin(self.vehicle, '0 0 0');
 
     while(e)
     {
@@ -561,12 +544,9 @@ void spiderbot_exit(float eject)
     if not (teamplay)
         self.team                = 0;
     else
-    {
         self.team = self.spiderbot_spawnpnt.team ;
-        if (self.team == COLOR_TEAM1) self.colormod = '1.4 0.8 0.8';
-        if (self.team == COLOR_TEAM2) self.colormod = '0.8 0.8 1.4';
-        self.tur_head.colormod = self.colormod;
-    }
+
+	vehicle_stdproc_setcolormod();
 
 	self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
@@ -602,17 +582,8 @@ void spiderbot_touch()
 		}
         return;
     }
-	if (other.vehicle_exit_time >= time)
+	if not(player_can_use_vehicle(other))
 		return;
-
-    if(other.classname != "player")
-        return;
-
-	if not(PlayerCanFire(other))
-		return;
-
-    if(other.vehicle != world)
-        return;
 
     spiderbot_enter();
 }
@@ -638,7 +609,7 @@ void spiderbot_spawn()
     self.think = spiderbot_think;
     self.nextthink = time;
 
-    self.vehicle_health = CCVAR("_health");
+    self.health = CCVAR("_health");
     self.vehicle_shield = CCVAR("_shield");
     self.event_damage = vehicle_stdproc_damage;
     self.iscreature = TRUE;
@@ -658,15 +629,7 @@ void spiderbot_spawn()
     setorigin(self,self.spiderbot_spawnpnt.origin);
     self.angles = self.spiderbot_spawnpnt.angles;
 
-    if (self.team == COLOR_TEAM1)
-        self.colormod = '1.4 0.8 0.8';
-    else if (self.team == COLOR_TEAM2)
-        self.colormod = '0.8 0.8 1.4';
-    else
-        self.colormod = '0 0 0';
-
-    self.tur_head.colormod = self.colormod;
-
+	vehicle_stdproc_setcolormod();
 
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
@@ -701,6 +664,16 @@ void spiderbot_die()
 	self.think = spiderbot_blowup;
 	self.nextthink = time;
 
+	float i, f;
+	for (i = 0; i < 10; i++) {
+		f = random();
+		if(f < 0.3)
+			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 11 + '0 0 20', "models/onslaught/gen_gib1.md3", 6, TRUE);
+		else if(f > 0.7)
+			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 12 + '0 0 20', "models/onslaught/gen_gib2.md3", 6, TRUE);
+		else
+			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 13 + '0 0 20', "models/onslaught/gen_gib3.md3", 6, TRUE);
+	}
 }
 
 void spiderbot_reset() {
@@ -859,6 +832,9 @@ void spawnfunc_vehicle_spiderbot()
     precache_model ( "models/spiderbot/spiderbot.dpm");
     precache_model ( "models/spiderbot/spiderbot_top.dpm");
     precache_model ( "models/spiderbot/spiderbot_barrels.dpm");
+    precache_model ( "models/onslaught/gen_gib1.md3");
+    precache_model ( "models/onslaught/gen_gib2.md3");
+    precache_model ( "models/onslaught/gen_gib3.md3");
 
     precache_model ( "models/turrets/rocket.md3");
     precache_sound ( "weapons/rocket_impact.wav" );

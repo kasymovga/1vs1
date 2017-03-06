@@ -539,8 +539,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_minstagib);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_runes);
-	CACHE_CVAR(sv_maxidle);
-	CACHE_CVAR(sv_maxidle_spectatorsareidle);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
 
@@ -576,7 +574,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
-	CACHE_CVAR(nex252_compat_mode);
 	Nadget_Init();
 	Items_Init();
 	runes_init();

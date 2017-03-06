@@ -2883,29 +2883,26 @@ void CSQC_kh_hud(void)
 
 void CSQC_nb_hud(void)
 {
-	float stat_items, nb_pb_starttime, dt, p;
+	float stat_items, nb_pb;
 	vector pos;
 
 	stat_items = getstati(STAT_ITEMS);
-	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
+	nb_pb = getstatf(STAT_NB_METERSTART);
 
 	pos_x = 4;
 	pos_y = CVAR(vid_conheight) - 42;
 	pos_z = 0;
 
 	//Manage the progress bar if any
-	if (nb_pb_starttime > 0)
+	if (nb_pb > 0)
 	{
 		vector s;
-		dt = mod(time - nb_pb_starttime, nb_pb_period);
-		// one period of positive triangle
-		p = 2 * dt / nb_pb_period;
-		if (p > 1)
-			p = 2 - p;
+		if (nb_pb > 1)
+			nb_pb = 2 - nb_pb;
 
 		s = NBPB_SIZE;
 		//Draw the filling
-		drawfill(pos, p * s_x * '1 0 0' + s_y * '0 1 0', NBPB_IRGB, NBPB_IALPH, NBPB_IFLAG);
+		drawfill(pos, nb_pb * s_x * '1 0 0' + s_y * '0 1 0', NBPB_IRGB, NBPB_IALPH, NBPB_IFLAG);
 
 		//Draw the box
 		s = NBPB_SIZE;

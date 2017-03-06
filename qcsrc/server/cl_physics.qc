@@ -13,7 +13,6 @@ float g_balance_rune_speed_combo_moverate;
 float g_balance_rune_speed_moverate;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
-float g_nexball_basketball_carrier_speed;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float sv_csqc_physic;
@@ -385,11 +384,9 @@ void Physic_FrameBeginHook()
 	GameHook_PhysicFrameBegin();
 	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
 
-	if(!sv_maxidle_spectatorsareidle || self.movetype == MOVETYPE_WALK)
-	{
-		if(buttons != self.buttons_old || physic_movement != self.movement_old || self.v_angle != self.v_angle_old)
-			self.parm_idlesince = time;
-	}
+	if(buttons != self.buttons_old || physic_movement != self.movement_old || self.v_angle != self.v_angle_old)
+		self.parm_idlesince = time;
+
 	buttons_prev = self.buttons_old;
 	self.buttons_old = buttons;
 	self.movement_old = physic_movement;
@@ -614,7 +611,6 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_balance_rune_speed_moverate);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
-	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(sv_doublejump);
@@ -749,8 +745,9 @@ void PhysicClientClear(entity plr)
 
 void PhysicClientInit(entity plr)
 {
-	if (nex252_compat_mode || !sv_csqc_physic)
+	if not(sv_csqc_physic)
 		return;
+
 	if not(plr.player_physic)
 	{
 		plr.player_physic = spawn();

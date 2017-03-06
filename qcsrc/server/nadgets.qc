@@ -124,10 +124,6 @@ void Nadget_Select(float nadget) {
 
 void Nadget_Init() {
 	//CACHE_CVAR(g_nadgets);
-	if (nex252_compat_mode) {
-		g_nadgets = 0;
-		return;
-	}
 	float n, i;
 	n = tokenizebyseparator(cvar_string("g_nadgets"), " ");
 	for (i = 0; i < n; i++) {

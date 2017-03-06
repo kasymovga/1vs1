@@ -13,6 +13,7 @@ csqc_builtins.qc
 ../common/mapinfo.qh
 ../common/cl_physics.qh
 ../common/cl_physics_spiderbot.qh
+../common/cl_physics_aircraft.qh
 cl_physics.qh
 interpolate.qh
 teamradar.qh
@@ -26,6 +27,7 @@ mouse.qh
 shownames.qh
 progressbar.qh
 cl_physics_spiderbot.qh
+cl_physics_aircraft.qh
 location_request.qh
 dlc.qh
 ../common/dlc.qh
@@ -72,8 +74,10 @@ bgmscript.qc
 ../common/items.qc
 ../common/cl_physics.qc
 ../common/cl_physics_spiderbot.qc
+../common/cl_physics_aircraft.qc
 cl_physics.qc
 cl_physics_spiderbot.qc
+cl_physics_aircraft.qc
 menu.qc
 mouse.qc
 shownames.qc

@@ -1126,8 +1126,7 @@ void spawnfunc_weapon_shotgun (void) {
 }
 
 void spawnfunc_weapon_supershotgun (void) {
-	if not(nex252_compat_mode)
-		weapon_defaultspawnfunc(WEP_SUPERSHOTGUN);
+	weapon_defaultspawnfunc(WEP_SUPERSHOTGUN);
 }
 
 void spawnfunc_weapon_nex (void)
