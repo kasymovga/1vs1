@@ -4,7 +4,15 @@ entity dlc_wait;
 
 void DLCWait() {
 	if (dlc_ready_all()) {
-		localcmd("\nrestart\n");
+		float n = tokenizebyseparator(dlc_list, " ");
+		float i;
+		localcmd("\n");
+		for (i = 0; i < n; i++) {
+			if (argv(i) != "")
+				localcmd(strcat("exec rexdlc_", argv(i), "_server.cfg", "\n"));
+		}
+		localcmd("restart\n");
+		localcmd("r_restart\n"); //In case if it local server
 		remove(self);
 		dlc_wait = world;
 		return;

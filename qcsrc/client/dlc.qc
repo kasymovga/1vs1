@@ -2,7 +2,19 @@ entity dlc_wait;
 
 void DLCWait() {
 	if (dlc_ready_all()) {
-		localcmd("\nr_restart\n");
+		float n = tokenizebyseparator(dlc_list, " ");
+		float i;
+		localcmd("\n");
+		for (i = 0; i < n; i++) {
+			if (argv(i) != "")
+				localcmd(strcat("exec rexdlc_", argv(i), "_client.cfg", "\n"));
+		}
+		localcmd("r_restart\n");
+		n = tokenizebyseparator(dlc_list, " ");
+		for (i = 0; i < n; i++) {
+			if (argv(i) != "")
+				localcmd(strcat("exec rexdlc_", argv(i), "_client_post.cfg", "\n"));
+		}
 		remove(self);
 		dlc_wait = world;
 		return;
@@ -33,11 +45,14 @@ void Ent_DLCList(float new) {
 		float i;
 		float not_all_loaded;
 		not_all_loaded = FALSE;
+		localcmd("\n");
 		for (i = 0; i < n; i++)
-			if (argv(i) != "")
+			if (argv(i) != "") {
 				if not(dlc_load(argv(i)))
 					not_all_loaded = TRUE;
-					
+				else
+					localcmd(strcat("exec rexdlc_", argv(i), "_client_post.cfg", "\n"));
+			}
 		if (not_all_loaded)
 		if not(dlc_wait) {
 			dlc_wait = spawn();
