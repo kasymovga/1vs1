@@ -15,15 +15,16 @@ float W_WeaponRateFactor()
 {
 	float t;
 	t = 1.0 / g_weaponratefactor;
+	entity o = Akimbo_Owner(self);
 
-	if(self.runes & RUNE_SPEED)
+	if(o.runes & RUNE_SPEED)
 	{
-		if(self.runes & CURSE_SLOW)
+		if(o.runes & CURSE_SLOW)
 			t = t * g_balance_rune_speed_combo_atkrate;
 		else
 			t = t * g_balance_rune_speed_atkrate;
 	}
-	else if(self.runes & CURSE_SLOW)
+	else if(o.runes & CURSE_SLOW)
 	{
 		t = t * g_balance_curse_slow_atkrate;
 	}
@@ -698,13 +699,14 @@ void CL_ExteriorWeaponentity_Think()
 		else
 			self.model = "";
 
-		if((tag_found = gettagindex(Akimbo_Owner(self.owner), "tag_weapon")))
+		entity ao = Akimbo_Owner(self.owner);
+		if((tag_found = gettagindex(ao, "tag_weapon")))
 		{
 			self.tag_index = tag_found;
-			self.tag_entity = self.owner;
+			self.tag_entity = ao;
 		}
 		else
-			setattachment(self, Akimbo_Owner(self.owner), "bip01 r hand");
+			setattachment(self, ao, "bip01 r hand");
 
 		// if that didn't find a tag, hide the exterior weapon model
 		if (!self.tag_index)
