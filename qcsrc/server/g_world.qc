@@ -609,6 +609,14 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void spawnfunc_worldspawn (void)
 {
+	gettaginfo_parent = 0;
+	gettaginfo_name = "";
+	gettaginfo_offset = '0 0 0';
+	gettaginfo_forward = '0 0 0';
+	gettaginfo_right = '0 0 0';
+	gettaginfo_up = '0 0 0';
+	trace_dphittexturename = "";
+
 	float fd, l, i, j, n;
 	string s, col;
 
