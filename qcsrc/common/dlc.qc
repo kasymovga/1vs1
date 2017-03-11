@@ -1,5 +1,5 @@
 string dlc_pk3_name(string dlc_name) {
-	return strcat("rexdlc_", dlc_name, ".pk3");
+	return strcat("zzz-rexdlc_", dlc_name, ".pk3");
 }
 
 string dlc_serverpackage_name(string dlc_name) {

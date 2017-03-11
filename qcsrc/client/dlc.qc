@@ -9,12 +9,14 @@ void DLCWait() {
 			if (argv(i) != "")
 				localcmd(strcat("exec rexdlc_", argv(i), "_client.cfg", "\n"));
 		}
-		localcmd("r_restart\n");
+		localcmd("r_restart;disconnect;reconnect\n");
+#if 0
 		n = tokenizebyseparator(dlc_list, " ");
 		for (i = 0; i < n; i++) {
 			if (argv(i) != "")
 				localcmd(strcat("exec rexdlc_", argv(i), "_client_post.cfg", "\n"));
 		}
+#endif
 		remove(self);
 		dlc_wait = world;
 		return;
