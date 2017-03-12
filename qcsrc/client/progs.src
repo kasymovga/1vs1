@@ -57,6 +57,7 @@ casings.qc
 effects.qc
 wall.qc
 modeleffects.qc
+zapper.qc
 
 //vehicles/spiderbot.qc
 Main.qc

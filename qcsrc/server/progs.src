@@ -154,6 +154,7 @@ w_campingrifle.qc
 w_tuba.qc
 w_fireball.qc
 w_supershotgun.qc
+w_zapper.qc
 
 t_items.qc
 cl_weapons.qc

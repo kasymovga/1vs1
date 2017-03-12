@@ -32,6 +32,15 @@ float W_WeaponRateFactor()
 	return t;
 }
 
+float W_WeaponRateFactorFor(entity o)
+{
+	entity oldself = self;
+	self = o;
+	float f = W_WeaponRateFactor();
+	self = oldself;
+	return f;
+}
+
 void W_SwitchWeapon_Force(entity e, float w)
 {
 	e.cnt = e.switchweapon;

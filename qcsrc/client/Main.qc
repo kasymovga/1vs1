@@ -338,6 +338,8 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_ENTCS_ENEMY] = Ent_ReadEntCSEnemy;
 	ent_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
 	ent_parsers[ENT_CLIENT_DLC_LIST] = Ent_DLCList;
+	ent_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
+	ent_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -1251,6 +1253,10 @@ float CSQC_Parse_TempEntity()
 			break;
         case TE_CSQC_LIGHTNINGARC:
             Net_ReadLightningarc();
+            bHandled = true;
+            break;
+        case TE_CSQC_ZAPPERLIGHTNING:
+            Zapper_ReadLightning();
             bHandled = true;
             break;
 		default:

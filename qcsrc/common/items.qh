@@ -1,30 +1,30 @@
 // Weapon indexes
 // %weaponaddpoint
-float WEP_FIRST				=  1;
-float WEP_LASER				=  1; float WEPBIT_LASER			= 1; // always: 2^(w-1)
-float WEP_SHOTGUN			=  2; float WEPBIT_SHOTGUN			= 2;
-float WEP_UZI				=  3; float WEPBIT_UZI				= 4;
-float WEP_GRENADE_LAUNCHER	=  4; float WEPBIT_GRENADE_LAUNCHER	= 8;
-float WEP_ELECTRO			=  5; float WEPBIT_ELECTRO			= 16;
-float WEP_CRYLINK			=  6; float WEPBIT_CRYLINK			= 32;
-float WEP_NEX				=  7; float WEPBIT_NEX				= 64;
-float WEP_HAGAR				=  8; float WEPBIT_HAGAR			= 128;
-float WEP_ROCKET_LAUNCHER	=  9; float WEPBIT_ROCKET_LAUNCHER	= 256;
-float WEP_PORTO				= 10; float WEPBIT_PORTO			= 512;
-float WEP_MINSTANEX			= 11; float WEPBIT_MINSTANEX		= 1024;
-float WEP_HOOK     			= 12; float WEPBIT_HOOK     		= 2048;
-float WEP_HLAC			    = 13; float WEPBIT_HLAC		        = 4096;
-float WEP_TUBA        	    = 14; float WEPBIT_TUBA             = 8192;
-float WEP_CAMPINGRIFLE	    = 15; float WEPBIT_CAMPINGRIFLE     = 16384;
-float WEP_FIREBALL          = 16; float WEPBIT_FIREBALL		    = 32768;
-float WEP_SUPERSHOTGUN          = 17; float WEPBIT_SUPERSHOTGUN		    = 65536;
-float WEP_LAST			= 17; float WEPBIT_ALL         = 131071;
-float WEP_COUNT = 18;
-float WEPBIT_ALL;
-float WEP_NADGET_TESLA      = 28;
-float WEP_NADGET_MOLOTOV    = 29;
-float WEP_NADGET_GRENADE    = 30;
-float WEP_MELEE             = 31;
+float WEP_FIRST            =  1;
+float WEP_LASER            =  1; float WEPBIT_LASER            = 1; // always: 2^(w-1)
+float WEP_SHOTGUN          =  2; float WEPBIT_SHOTGUN          = 2;
+float WEP_UZI              =  3; float WEPBIT_UZI              = 4;
+float WEP_GRENADE_LAUNCHER =  4; float WEPBIT_GRENADE_LAUNCHER = 8;
+float WEP_ELECTRO          =  5; float WEPBIT_ELECTRO          = 16;
+float WEP_CRYLINK          =  6; float WEPBIT_CRYLINK          = 32;
+float WEP_NEX              =  7; float WEPBIT_NEX              = 64;
+float WEP_HAGAR            =  8; float WEPBIT_HAGAR            = 128;
+float WEP_ROCKET_LAUNCHER  =  9; float WEPBIT_ROCKET_LAUNCHER  = 256;
+float WEP_PORTO            = 10; float WEPBIT_PORTO            = 512;
+float WEP_MINSTANEX        = 11; float WEPBIT_MINSTANEX        = 1024;
+float WEP_HOOK             = 12; float WEPBIT_HOOK             = 2048;
+float WEP_HLAC             = 13; float WEPBIT_HLAC             = 4096;
+float WEP_TUBA             = 14; float WEPBIT_TUBA             = 8192;
+float WEP_CAMPINGRIFLE     = 15; float WEPBIT_CAMPINGRIFLE     = 16384;
+float WEP_FIREBALL         = 16; float WEPBIT_FIREBALL         = 32768;
+float WEP_SUPERSHOTGUN     = 17; float WEPBIT_SUPERSHOTGUN     = 65536;
+float WEP_ZAPPER           = 18; float WEPBIT_ZAPPER           = 131072;
+float WEP_LAST             = 18; float WEPBIT_ALL              = 262143;
+float WEP_COUNT            = 19;
+float WEP_NADGET_TESLA     = 28;
+float WEP_NADGET_MOLOTOV   = 29;
+float WEP_NADGET_GRENADE   = 30;
+float WEP_MELEE            = 31;
 
 float BOT_PICKUP_RATING_LOW	= 2500;
 float BOT_PICKUP_RATING_MID	= 5000;

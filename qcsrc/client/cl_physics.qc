@@ -205,12 +205,12 @@ entity physic;
 .vector pmove_velocity;
 vector CSQCPhysic_SetCamera()
 {
+	vector v;
 	if(physic && servercommandframe && clientcommandframe)
 	{
 		float frametime_save = frametime;
 		float i;
 		float n = clientcommandframe + 1;
-		vector v;
 		entity oldself = self;
 		self = physic;
 		self.origin = self.pmove_origin;
@@ -259,14 +259,15 @@ vector CSQCPhysic_SetCamera()
 			v = trace_endpos;
 			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			v = trace_endpos;
-
 		}
-		R_SetView(VF_ORIGIN, v);
-
-		return v;
 	}
 	else
-		return pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		v = pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);
+
+	if not(CVAR(chase_active))
+		R_SetView(VF_ORIGIN, v);
+
+	return v;
 }
 
 void Physic_InitCheck()
