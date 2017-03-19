@@ -1,3 +1,6 @@
+float g_balance_health_limit;
+float g_balance_armor_limit;
+
 void Client_ReadCvars();
 void Check_ForRetard(entity player);
 void PutObserverInServer(float frags_team_reset);

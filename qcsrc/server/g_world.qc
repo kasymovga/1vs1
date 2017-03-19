@@ -541,6 +541,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
+	CACHE_CVAR(g_nadgets);
 
 	inWarmupStage = cvar("g_warmup");
 	CACHE_CVAR(g_warmup_limit);
@@ -574,7 +575,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
-	Nadget_Init();
 	Items_Init();
 	runes_init();
 }
@@ -730,6 +730,7 @@ void spawnfunc_worldspawn (void)
 	GameTypeVote_Init();
 	readlevelcvars();
 	readdynamiccvars();
+	HG_Init();
 
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");

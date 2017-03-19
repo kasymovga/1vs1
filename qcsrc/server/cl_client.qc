@@ -20,7 +20,6 @@ float sv_servermodelsonly;
 float sv_reset_on_join;
 float g_teamdamage_resetspeed;
 float g_forced_respawn;
-float g_balance_armor_limit;
 float g_balance_armor_regen;
 float g_balance_armor_regenlinear;
 float g_balance_armor_regenstable;
@@ -37,7 +36,6 @@ float g_balance_fuel_regenstable;
 float g_balance_fuel_rot;
 float g_balance_fuel_rotlinear;
 float g_balance_fuel_rotstable;
-float g_balance_health_limit;
 float g_balance_health_regen;
 float g_balance_health_regenlinear;
 float g_balance_health_regenstable;
@@ -958,11 +956,10 @@ void PutClientInServer()
 			self.hat.angles = sv_player_hat_angles;
 			setorigin(self.hat, sv_player_hat_origin);
 		}
-		Nadget_SpawnHook();
 		GameHook_Spawn(spot);
+		HG_PlayerSpawn();
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
-		Nadget_ObserverHook();
 	}
 }
 
@@ -1465,6 +1462,8 @@ void ClientDisconnect (void)
 	bprint ("^4 disconnected\n");
 
 	SoundEntity_Detach(self);
+
+	self.classname = "disconnecting";
 
 	PlayerClear(FALSE, world);
 
@@ -2061,6 +2060,9 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(isJoinAllowed()) {
+		if(HG_ShowMenu(FALSE))
+			return;
+
 		if(!teams_matter || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned)) {
 			self.classname = "player";
 			if(g_campaign || g_balance_teams || g_balance_teams_force)
@@ -2250,6 +2252,8 @@ void PlayerPreThink (void)
 			self.fixangle = TRUE;
 		}
 
+		HG_PlayerFrame();
+
 		if(frametime)
 			player_powerups();
 
@@ -2293,7 +2297,6 @@ void PlayerPreThink (void)
 		FixPlayermodel();
 
 		if (g_nadgets)
-			Nadget_Frame();
 
 		if (!g_nadgets || g_grappling_hook)
 			GrapplingHookFrame();

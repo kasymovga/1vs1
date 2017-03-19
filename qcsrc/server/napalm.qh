@@ -1,0 +1,10 @@
+
+.float napalm_burn_radius;
+.float napalm_burn_damage;
+.float napalm_burn_edgedamage;
+.float napalm_burn_time;
+
+#define NAPALM_BURN_INTERVAL 0.3
+
+entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_randfactor, float deathtype,
+                    float burnradius, float burndamage, float burnedgedamage, float burntime);

@@ -725,6 +725,8 @@ void GameCommand(string msg)
 	}
 	else if(cmd == "handlevote") {
 		localcmd(strcat("cmd vote ", argv(1), "\n"));
+	} else if(cmd == "modelprecache") {
+		precache_model(argv(1));
 	}
 	else
 	{
@@ -1257,6 +1259,10 @@ float CSQC_Parse_TempEntity()
             break;
         case TE_CSQC_ZAPPERLIGHTNING:
             Zapper_ReadLightning();
+            bHandled = true;
+            break;
+        case TE_CSQC_NADGETSELECT:
+			Net_ReadNadgetSelect();
             bHandled = true;
             break;
 		default:

@@ -1,0 +1,14 @@
+
+#define HG_SENTRY_MINS '-24.4 -24.4   0.0'
+#define HG_SENTRY_MAXS ' 24.4  24.4 110.0'
+
+.float hg_sentry_energy;
+.float hg_sentry_capture_progress;
+
+.entity hg_sentry_capture_player;
+.entity hg_sentry_emitter_next;
+
+.float sentry_arc_hit;
+
+void HG_Sentry_Explode(void);
+void HG_Sentry_Trigger(void);

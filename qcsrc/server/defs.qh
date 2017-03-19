@@ -610,3 +610,8 @@ float client_cefc_accumulatortime;
 .float xonoticplayer;
 
 .float keys;
+
+#define BUTTON_NADGET  BUTTON_HOOK
+#define BUTTON_NADGET2 button9
+
+.float lastdamage;

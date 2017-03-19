@@ -347,6 +347,8 @@ void SV_ParseClientCommand(string s) {
 		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
 	} else if(cmd == "mylocation") {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
+	} else if(cmd == "picknade") {
+		HG_Pick(tokens);
 	} else {
 		//if(ctf_clientcommand())
 		//	return;

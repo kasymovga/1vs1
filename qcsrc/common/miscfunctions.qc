@@ -35,3 +35,13 @@ float approach(float v, float t, float d) {
 	}
 	return v;
 }
+
+float TeamColorSkin(float t) {
+    switch(t) {
+        case COLOR_TEAM1:   return 1; break;
+        case COLOR_TEAM2:   return 2; break;
+        case COLOR_TEAM3:   return 3; break;
+        case COLOR_TEAM4:   return 4; break;
+    }
+    return 0;
+}

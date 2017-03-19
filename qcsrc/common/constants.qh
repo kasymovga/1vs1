@@ -46,13 +46,17 @@ const float AS_INT		= 2;
 const float AS_FLOAT_TRUNCATED	= 2;
 const float AS_FLOAT		= 8;
 
-const float TE_CSQC_PICTURE = 100;
-const float TE_CSQC_RACE = 101;
-const float TE_CSQC_SPAWN = 102;
-const float TE_CSQC_ZCURVEPARTICLES = 103;
-const float TE_CSQC_NEXGUNBEAMPARTICLE = 104;
-const float TE_CSQC_LIGHTNINGARC = 105;
-const float TE_CSQC_ZAPPERLIGHTNING = 106;
+enum {
+	TE_CSQC_PICTURE = 100,
+	TE_CSQC_RACE,
+	TE_CSQC_SPAWN,
+	TE_CSQC_ZCURVEPARTICLES,
+	TE_CSQC_NEXGUNBEAMPARTICLE,
+	TE_CSQC_LIGHTNINGARC,
+	TE_CSQC_ZAPPERLIGHTNING,
+	TE_CSQC_NADGETSELECT,
+};
+
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -261,28 +265,64 @@ float CVAR_READONLY	= 4;
 ///////////////////////////
 // csqc communication stuff
 
-const float STAT_KH_KEYS = 32;
-const float STAT_CTF_STATE = 33;
-const float STAT_WEAPONS = 35;
-const float STAT_SWITCHWEAPON = 36;
-const float STAT_GAMESTARTTIME = 37;
-const float STAT_STRENGTH_FINISHED = 38;
-const float STAT_INVINCIBLE_FINISHED = 39;
-const float STAT_DAMAGE_HITS = 40; // Used by the weapon stats code, represents the total amount of damage done to other players
-const float STAT_DAMAGE_FIRED = 41;// Used by the weapon stats code, represents the total amount of potential damage fired
-const float STAT_PRESSED_KEYS = 42;
-//const float STAT_ALLOW_OLDNEXBEAM = 43; // this stat could later contain some other bits of info, like, more server-side particle config
-const float STAT_FUEL = 44;
-const float STAT_NB_METERSTART = 45;
-const float STAT_SHOTORG = 46; // compressShotOrigin
-const float STAT_LEADLIMIT = 47;
-const float STAT_BULLETS_LOADED = 48;
+enum {
+	STAT_KH_KEYS = 32,
+	STAT_CTF_STATE,
+	STAT_WEAPONS,
+	STAT_SWITCHWEAPON,
+	STAT_GAMESTARTTIME,
+	STAT_STRENGTH_FINISHED,
+	STAT_INVINCIBLE_FINISHED,
+	STAT_DAMAGE_HITS, // Used by the weapon stats code, represents the total amount of damage done to other players
+	STAT_DAMAGE_FIRED, // Used by the weapon stats code, represents the total amount of potential damage fired
+	STAT_PRESSED_KEYS,
+	STAT_FUEL,
+	STAT_NB_METERSTART,
+	STAT_SHOTORG,
+	STAT_LEADLIMIT,
+	STAT_BULLETS_LOADED,
+	STAT_HUD,
+	STAT_PLAYER_STATE,
+	STAT_STEALTH,
+	STAT_STEALTH_SAVED,
+    STAT_HGTYPE,
+    STAT_HGAMMO,
+    STAT_HGREFIRE,
+    STAT_HGREGEN,
+    STAT_HGREGENMAX,
+    STAT_HGREGENPAUSED,
+    STAT_HGREGENRATE,
+
+    STAT_HGTYPE2,
+    STAT_HGAMMO2,
+    STAT_HGREFIRE2,
+    STAT_HGREGEN2,
+    STAT_HGREGENMAX2,
+    STAT_HGREGENPAUSED2,
+    STAT_HGREGENRATE2,
+
+    STAT_HGBONUS,
+    STAT_HGBONUSTYPE,
+    STAT_HGDETONABLES,
+    STAT_HGFORCE,
+    STAT_HGLAUNCH,
+
+    STAT_HGSHIELDSTORE,
+    STAT_HGSHIELDSTOREMAX,
+    STAT_HGSHIELD,
+    STAT_HGSHIELDPOWER,
+    STAT_HGSHIELDDAMAGEPERSHOT,
+
+    STAT_HGSENTRYCAPTURE,
+
+    STAT_HGTWARP_EXPIRETIME,
+    STAT_HGTWARP_WARPTIME
+};
+
 const float CTF_STATE_ATTACK = 1;
 const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
-const float STAT_HUD = 50;
-const float STAT_PLAYER_STATE = 51;
 const float HUD_NORMAL = 0;
 const float HUD_SPIDERBOT = 10;
 
@@ -410,28 +450,36 @@ float	ATTN_MAX   				= 3.984375;
 #define VOL_BASEVOICE 1.0
 
 // this sets sounds and other properties of the projectiles in csqc
-float PROJECTILE_ELECTRO = 1;
-float PROJECTILE_ROCKET = 2;
-float PROJECTILE_BULLET = 4;
-float PROJECTILE_CRYLINK = 5;
-float PROJECTILE_ELECTRO_BEAM = 6;
-float PROJECTILE_GRENADE = 7;
-float PROJECTILE_GRENADE_BOUNCING = 8;
-float PROJECTILE_LASER = 9;
-float PROJECTILE_HLAC = 10;
-float PROJECTILE_PORTO_RED = 13;
-float PROJECTILE_PORTO_BLUE = 14;
-float PROJECTILE_HOOKBOMB = 15;
-float PROJECTILE_HAGAR = 16;
-float PROJECTILE_HAGAR_BOUNCING = 17;
-float PROJECTILE_BULLET_GLOWING = 18;
-float PROJECTILE_CRYLINK_BOUNCING = 19;
-float PROJECTILE_FIREBALL = 20;
-float PROJECTILE_FIREMINE = 21;
-float PROJECTILE_BULLET_BIG = 22;
-float PROJECTILE_MOLOTOV = 23;
-float PROJECTILE_TESLA = 24;
-float PROJECTILE_HANDGRENADE = 25;
+enum {
+	PROJECTILE_ELECTRO = 1,
+	PROJECTILE_ROCKET,
+	PROJECTILE_BULLET,
+	PROJECTILE_CRYLINK,
+	PROJECTILE_ELECTRO_BEAM,
+	PROJECTILE_GRENADE,
+	PROJECTILE_GRENADE_BOUNCING,
+	PROJECTILE_LASER,
+	PROJECTILE_HLAC,
+	PROJECTILE_PORTO_RED,
+	PROJECTILE_PORTO_BLUE,
+	PROJECTILE_HOOKBOMB,
+	PROJECTILE_HAGAR,
+	PROJECTILE_HAGAR_BOUNCING,
+	PROJECTILE_BULLET_GLOWING,
+	PROJECTILE_CRYLINK_BOUNCING,
+	PROJECTILE_FIREBALL,
+	PROJECTILE_FIREMINE,
+	PROJECTILE_BULLET_BIG,
+	PROJECTILE_HG_GENERIC,
+	PROJECTILE_HG_NAPALM,
+	PROJECTILE_HG_PLASMA,
+	PROJECTILE_HG_TRANSLOC,
+	PROJECTILE_HG_REMOTE,
+	PROJECTILE_HG_LASER,
+	PROJECTILE_HG_PLASMA_SHARD,
+	PROJECTILE_HG_RAZE,
+	PROJECTILE_HG_NAPALMSHARD
+};
 
 float SPECIES_HUMAN        =  0;
 float SPECIES_ROBOT_SOLID  =  1;
@@ -462,6 +510,7 @@ float DEATH_MIRRORDAMAGE = 10014;
 float DEATH_TOUCHEXPLODE = 10015;
 float DEATH_CHEAT = 10016;
 float DEATH_FIRE = 10017;
+float DEATH_RESOURCE_ARMOR = 10018;
 float DEATH_TURRET = 10100;
 
 float DEATH_WEAPONMASK = 0xFF;
@@ -543,3 +592,7 @@ float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc // i
 //float Q3SURFACEFLAG_ALPHASHADOW = 65536; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NODLIGHT = 131072; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_DUST = 262144; // translucent 'light beam' effect (not important to qc)
+
+const float M_PI = 3.14159265358979323846;
+#define RM_SOUND_LASER_SECONDARY "weapons/rm_laser2.wav"
+#define RM_SOUND_LASER_PRIMARY "weapons/rm_laser1.wav"

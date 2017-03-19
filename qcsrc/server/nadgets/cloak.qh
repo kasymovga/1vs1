@@ -1,0 +1,10 @@
+
+.float hg_stealth;
+.float hg_stealthalpha;
+.float hg_stealthtime;
+.float hg_wasstealth;
+.float hg_stealth_saved;
+.float hg_stealth_protectionexpiretime;
+
+void HG_Cloak_PlayerFrame(void);
+void HG_Cloak_Trigger(void);

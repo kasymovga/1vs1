@@ -1,3 +1,5 @@
+float g_balance_pause_armor_rot;
+float g_balance_pause_health_rot;
 float g_pickup_drop_backpack;
 string sv_model_backpack;
 float start_items;

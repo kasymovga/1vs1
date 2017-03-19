@@ -1,0 +1,16 @@
+
+float hg_plasma_group;
+
+.float hg_plasmalock;
+.float hg_plasmalock_nexteffect;
+.entity hg_plasmalock_owner;
+
+.float hg_plasma_projrange;
+.float hg_plasma_projdps;
+.float hg_plasma_projdps_delay;
+.float hg_plasma_projdps_next;
+.float hg_plasma_projdps_last;
+.float hg_plasma_projdist;
+
+void HG_Plasma_Shard(float kickangle);
+void HG_Plasma_Explode(void);

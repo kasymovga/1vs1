@@ -1,0 +1,19 @@
+
+.float hg_shield;
+.float hg_shieldstat;
+.float hg_shieldpower;
+.float hg_shieldmax;
+.float hg_shieldhealth;
+.float hg_shield_oldmovetype;
+.float hg_shield_stored;
+.float hg_shield_stored_limit;
+.float hg_shield_damage_per_shot;
+
+.entity hg_shieldmodel;
+
+.float shield_arc_hit;
+
+void HG_Shield_PlayerFrame(void);
+float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hitloc);
+void HG_Shield_Trigger(void);
+//void HG_Shield_Adept_ExtendRenew(entity plr);

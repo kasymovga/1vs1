@@ -60,6 +60,9 @@ modeleffects.qc
 zapper.qc
 
 //vehicles/spiderbot.qc
+../common/nadgets.qh
+../common/nadgets.qc
+nadgetselect.qc
 Main.qc
 View.qc
 interpolate.qc

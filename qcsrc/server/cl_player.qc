@@ -464,7 +464,6 @@ void PlayerClear(float killed, entity attacker)
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
-	Nadget_Clear(killed);
 
 	vehicle_extract_player(self, TRUE);
 
@@ -475,6 +474,13 @@ void PlayerClear(float killed, entity attacker)
 	GameHook_PlayerClear(self, attacker, killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
+	if (killed)
+		HG_PlayerDeath();
+	else {
+		if ((self.classname != "player" && self.team <= 0) || self.classname == "disconnecting") {
+			HG_RemoveAll(self);
+		}
+	}
 }
 
 void ClientKill_Now_TeamChange();

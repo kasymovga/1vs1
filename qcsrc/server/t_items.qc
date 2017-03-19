@@ -26,6 +26,7 @@ float g_pickup_respawntimejitter_armormedium;
 float g_pickup_respawntimejitter_armorbig;
 float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
+float g_balance_pause_fuel_rot;
 string sv_model_healthsmall;
 string sv_model_healthmedium;
 string sv_model_healthlarge;
@@ -286,7 +287,7 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 			}
 			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
 			{
@@ -474,14 +475,14 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				player.health = min(player.health + item.health, item.max_health);
-				player.pauserothealth_finished = max(player.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+				player.pauserothealth_finished = max(player.pauserothealth_finished, time + g_balance_pause_health_rot);
 			}
 			if (item.armorvalue)
 			if (player.armorvalue < item.max_armorvalue)
 			{
 				pickedup = TRUE;
 				player.armorvalue = min(player.armorvalue + item.armorvalue, item.max_armorvalue);
-				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + cvar("g_balance_pause_armor_rot"));
+				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + g_balance_pause_armor_rot);
 			}
 		}
 	}
@@ -1634,6 +1635,9 @@ void Items_Init()
 	CACHE_CVAR(g_pickup_rockets_max);
 	CACHE_CVAR(g_pickup_cells_max);
 	CACHE_CVAR(g_pickup_fuel_max);
+	CACHE_CVAR(g_balance_pause_fuel_rot);
+	CACHE_CVAR(g_balance_pause_health_rot);
+	CACHE_CVAR(g_balance_pause_armor_rot);
 	sv_model_healthsmall = cvar_string_zone_ifneeded("sv_model_healthsmall");
 	if (sv_model_healthsmall == "")
 		sv_model_healthsmall = "models/items/g_h1.md3";

@@ -948,8 +948,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	// apply damage
 	if (damage != 0 || (self.damageforcescale && vlen(force)))
-	if (self.event_damage)
+	if (self.event_damage) {
 		self.event_damage (inflictor, attacker, damage, deathtype, hitloc, force);
+		self.lastdamage = time;
+	}
 	self = oldself;
 
 	if(targ.classname == "player" && attacker.classname == "player" && attacker != targ && attacker.health > 2)
@@ -1428,4 +1430,87 @@ void Damage_ReadCvars()
 	EXTRA_ANNOUNCER(twohits); //Used in w_nex.qc
 	EXTRA_ANNOUNCER(telefrag);
 	EXTRA_ANNOUNCER(firstblood);
+}
+
+.float heal_next_particle;
+float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal, float hlimit, float alimit, float healtype, float pauserot, float pausearot, vector hitloc, vector force) {
+
+    if(targ.classname == "player") {
+        if(hlimit)  hlimit = min(g_balance_health_limit, hlimit);
+        else        hlimit = g_balance_health_limit;
+        if(alimit)  alimit = min(g_balance_armor_limit,  alimit);
+        else        alimit = g_balance_armor_limit;
+
+#if 0
+        if(g_clanarena) {
+            hlimit = min(g_clanarena_start_health, hlimit);
+            alimit = min(g_clanarena_start_armor,  alimit);
+
+            if(healtype != DEATH_HURTTRIGGER)
+            if(!(DEATH_HGTYPE(healtype) == HG_LINKER && healtype & HITTYPE_SECONDARY)) {
+                float lim = g_clanarena_heal_limit;
+                hlimit = min(hlimit, lim);
+                alimit = min(alimit, lim);
+            }
+        }
+#endif
+    }
+
+#if 0
+    float silent = (healtype == DEATH_ITEM);
+#endif
+    
+    if(pauserot  < 0) pauserot  = g_balance_pause_health_rot;
+    if(pausearot < 0) pausearot = g_balance_pause_armor_rot;
+    
+	heal  = max(0, min(heal,  hlimit - targ.health));
+	aheal = max(0, min(aheal, alimit - targ.armorvalue));
+
+    targ.health += heal;
+    targ.pauserothealth_finished = max(targ.pauserothealth_finished, time + pauserot);
+    
+    targ.armorvalue += aheal;
+    targ.pauserotarmor_finished = max(targ.pauserotarmor_finished, time + pausearot);
+
+#if 0
+    if(targ.classname == "player")
+        Buffs_ConduitDamage(targ, healer, heal, aheal, healtype, TRUE);
+#endif
+
+    if(heal || aheal) {
+#if 0
+        float vdtype = VDMG_TYPE_HEAL;
+        
+        if(heal >= 100 || aheal >= 100)
+            vdtype |= VDMG_TYPE_CRIT;
+        else if(DEATH_ISWEAPON(healtype, WEP_CAMPINGRIFLE) && (healtype & HITTYPE_HEADSHOT))
+            vdtype |= VDMG_TYPE_CRIT;
+        
+        VisualDamage(healer, targ, heal, aheal, vdtype, hitloc);
+        HealScore(targ, healer, heal + aheal);
+#endif
+        
+#if 0
+        if(!silent) {
+#endif
+            if(time > targ.heal_next_particle) {
+                //te_heal(targ);
+                targ.heal_next_particle = time + 0.2;
+            }
+            
+            if(heal)  sound(targ, CHAN_AUTO, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);
+            if(aheal) sound(targ, CHAN_AUTO, "misc/armor10.wav", VOL_BASE, ATTN_NORM);
+#if 0
+        }
+#endif
+    }
+   
+    // apply push
+    if(targ.damageforcescale)
+    if(vlen(force)) {
+        targ.velocity = targ.velocity + targ.damageforcescale * force;
+        targ.flags &~= FL_ONGROUND;
+    }
+
+    return heal + aheal;
 }

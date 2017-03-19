@@ -18,6 +18,12 @@ void SUB_Stop()
 .float snd_looping;
 .float silent;
 
+void SetupProjectileColormap(float default_team) {
+    if(!teamplay)
+        self.team = default_team;
+    self.colormap = 1024 + self.team * 17;
+}
+
 void Projectile_DrawTrail(vector to)
 {
 	vector from;
@@ -53,7 +59,6 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_CRYLINK_BOUNCING:
 			trailparticles(self, particleeffectnum("TR_CRYLINKPLASMA"), from, to);
 			break;
-		case PROJECTILE_TESLA:
 		case PROJECTILE_ELECTRO:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
@@ -64,11 +69,7 @@ void Projectile_DrawTrail(vector to)
 			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to);
 			break;
 		case PROJECTILE_GRENADE_BOUNCING:
-		case PROJECTILE_HANDGRENADE:
 			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to);
-			break;
-		case PROJECTILE_MOLOTOV:
-			trailparticles(self, particleeffectnum("firemine"), from, to);
 			break;
 		case PROJECTILE_PORTO_RED:
 			trailparticles(self, particleeffectnum("TR_WIZSPIKE"), from, to);
@@ -91,7 +92,6 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_BULLET_GLOWING:
 			trailparticles(self, particleeffectnum("tr_rifle"), from, to);
 			break;
-		case PROJECTILE_MOLOTOV:
 		case PROJECTILE_FIREMINE:
 			trailparticles(self, particleeffectnum("firemine"), from, to);
 			break;
@@ -147,8 +147,6 @@ void Projectile_Draw()
 				break;
 			*/
 			case PROJECTILE_GRENADE_BOUNCING:
-			case PROJECTILE_MOLOTOV:
-			case PROJECTILE_TESLA:
 				rot = '0 -1000 0'; // sideways
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -168,13 +166,6 @@ void Projectile_Draw()
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
 			trailorigin += v_right * 1 + v_forward * -10;
-			break;
-		case PROJECTILE_HANDGRENADE:
-		case PROJECTILE_MOLOTOV:
-			trailorigin += v_right * 2 + v_forward * -20;
-			break;
-		case PROJECTILE_TESLA:
-			trailorigin += v_right * 2 + v_forward * -20 + randomvec() * 10;
 			break;
 		default:
 			break;
@@ -309,9 +300,6 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl"); break;
 			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl"); break;
 			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl"); break;
-			case PROJECTILE_MOLOTOV:
-			case PROJECTILE_TESLA:
-			case PROJECTILE_HANDGRENADE: setmodel(self, "models/grenademodel.md3"); self.scale = 2; break;
 			case PROJECTILE_GRENADE:
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3"); break;
 			case PROJECTILE_LASER: setmodel(self, "models/laser.mdl"); break;
@@ -324,6 +312,35 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
 			case PROJECTILE_BULLET_BIG: setmodel(self, "models/tracer.mdl"); self.scale = 3; break;
+			case PROJECTILE_HG_GENERIC: case PROJECTILE_HG_NAPALM:
+                setmodel(self, "models/handgrenade.iqm");
+                SetupProjectileColormap(COLOR_TEAM1);
+                break;
+            case PROJECTILE_HG_PLASMA:
+                setmodel(self, "models/plasmabomb.iqm");
+                SetupProjectileColormap(COLOR_TEAM2);
+                break;
+            case PROJECTILE_HG_REMOTE:
+                setmodel(self, "models/mine.md3");
+                self.skin = TeamColorSkin(self.team);
+                break;
+            case PROJECTILE_HG_LASER: setmodel(self, "models/elaser.mdl"); break;
+            case PROJECTILE_HG_TRANSLOC:
+                setmodel(self, "models/translocator.iqm");
+                self.skin = TeamColorSkin(self.team);
+                SetupProjectileColormap(COLOR_TEAM4);
+                //self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+                break;
+            case PROJECTILE_HG_PLASMA_SHARD:
+                setmodel(self, "models/ebomb.mdl");
+                SetupProjectileColormap(COLOR_TEAM2);
+                self.skin = 2;
+                //plasma_chain = findchainfloat_tofield(cnt, PROJECTILE_HG_PLASMA_SHARD, plasma_next);
+                break;
+            case PROJECTILE_HG_RAZE:
+                setmodel(self, "models/raze.md3");
+                SetupProjectileColormap(COLOR_TEAM1);
+                break;
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -335,6 +352,7 @@ void Ent_Projectile(float ignore)
 
 		switch(self.cnt)
 		{
+            case PROJECTILE_HG_PLASMA_SHARD:
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
 				loopsound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
@@ -347,10 +365,13 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_GRENADE:
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
-				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
-				break;
-			case PROJECTILE_HANDGRENADE:
+			case PROJECTILE_HG_GENERIC:
+            case PROJECTILE_HG_PLASMA:
+			case PROJECTILE_HG_NAPALM:
+            case PROJECTILE_HG_TRANSLOC:
+            case PROJECTILE_HG_REMOTE:
+			case PROJECTILE_HG_RAZE:
+            case PROJECTILE_HG_LASER:
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = SUB_Null;
 				break;
@@ -377,6 +398,7 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
 				break;
+            case PROJECTILE_HG_NAPALMSHARD:
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;

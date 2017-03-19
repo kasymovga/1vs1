@@ -63,8 +63,6 @@ assault.qh
 
 conquest.qh
 
-nadgets.qh
-
 progressbar.qh
 
 t_items.qh
@@ -91,6 +89,9 @@ menu.qh
 dodging.qh
 miscfunctions.qh
 gamehooks.qh
+../common/nadgets.qh
+nadgets/include.qh
+napalm.qh
 
 scores_rules.qc
 
@@ -235,8 +236,6 @@ gametypevote.qc
 
 dodging.qc
 
-nadgets.qc
-
 progressbar.qc
 
 location_request.qc
@@ -245,3 +244,6 @@ vehicles/vehicles.qc
 
 ../common/dlc.qc
 dlc.qc
+nadgets/include.qc
+../common/nadgets.qc
+napalm.qc

@@ -116,10 +116,7 @@ void ImpulseCommands (void)
 					if (vehicle_extract_player(self, FALSE))
 						break;
 
-					if (g_minstagib || g_weaponarena)
-						Nadget_Button();
-					else
-						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
+					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 					break;
 				case 18:
 					W_NextWeapon (1);

@@ -1,1 +1,3 @@
+var void remove(entity e);
+void objerror(string s);
 void play2all(string samp);

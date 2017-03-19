@@ -1,2 +1,3 @@
 void traceline_skipnonsolid(vector start, vector end, float t, entity forent);
 void tracebox_skipnonsolid(vector start, vector mi, vector ma, vector end, float nomonst, entity forent);
+float crandom (void);

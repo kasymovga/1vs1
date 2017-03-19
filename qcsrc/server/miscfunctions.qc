@@ -1,5 +1,3 @@
-var void remove(entity e);
-void objerror(string s);
 void droptofloor();
 .vector dropped_origin;
 
@@ -33,10 +31,10 @@ float DistributeEvenly_Get(float weight)
     return f;
 }
 
-void move_out_of_solid_expand(entity e, vector by)
+void move_out_of_solid_expand(entity e, vector by, float t)
 {
     float eps = 0.0625;
-    tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
+    tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, t, e);
     if (trace_startsolid)
         return;
     if (trace_fraction < 1)
@@ -47,16 +45,16 @@ void move_out_of_solid_expand(entity e, vector by)
     }
 }
 
-float move_out_of_solid(entity e)
+float move_out_of_solid_with_type(entity e, float t)
 {
     vector o, m0, m1;
 
     o = e.origin;
-    traceline(o, o, MOVE_WORLDONLY, e);
+    traceline(o, o, t, e);
     if (trace_startsolid)
         return 0;
 
-    tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
+    tracebox(o, e.mins, e.maxs, o, t, e);
     if (!trace_startsolid)
         return 1;
 
@@ -64,17 +62,17 @@ float move_out_of_solid(entity e)
     m1 = e.maxs;
     e.mins = '0 0 0';
     e.maxs = '0 0 0';
-    move_out_of_solid_expand(e, '1 0 0' * m0_x);
+    move_out_of_solid_expand(e, '1 0 0' * m0_x, t);
     e.mins_x = m0_x;
-    move_out_of_solid_expand(e, '1 0 0' * m1_x);
+    move_out_of_solid_expand(e, '1 0 0' * m1_x, t);
     e.maxs_x = m1_x;
-    move_out_of_solid_expand(e, '0 1 0' * m0_y);
+    move_out_of_solid_expand(e, '0 1 0' * m0_y, t);
     e.mins_y = m0_y;
-    move_out_of_solid_expand(e, '0 1 0' * m1_y);
+    move_out_of_solid_expand(e, '0 1 0' * m1_y, t);
     e.maxs_y = m1_y;
-    move_out_of_solid_expand(e, '0 0 1' * m0_z);
+    move_out_of_solid_expand(e, '0 0 1' * m0_z, t);
     e.mins_z = m0_z;
-    move_out_of_solid_expand(e, '0 0 1' * m1_z);
+    move_out_of_solid_expand(e, '0 0 1' * m1_z, t);
     e.maxs_z = m1_z;
     setorigin(e, e.origin);
 
@@ -87,6 +85,7 @@ float move_out_of_solid(entity e)
 
     return 1;
 }
+#define move_out_of_solid(x) move_out_of_solid_with_type(x, MOVE_WORLDONLY)
 
 string STR_PLAYER = "player";
 string STR_SPECTATOR = "spectator";
@@ -2081,4 +2080,18 @@ void defer(float t, void() callback) {
 	e.use = callback;
 	e.nextthink = t + time;
 	e.think = defer_think;
+}
+
+vector RandomSpreadVector(float side, float up, float up_min, float up_min_rand) {
+    vector v;
+	v_x = crandom() * 2 * side;
+	v_y = crandom() * 2 * side;
+	v_z = max(up * random(), up_min + up_min_rand * crandom() * 2);
+	return v;
+}
+
+vector CircleSpreadVector(float side, float up, float sangle) {
+    return  side * v_forward * cos(sangle) +
+            side * v_right   * sin(sangle) +
+            up   * v_up;
 }
