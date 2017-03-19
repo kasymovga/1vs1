@@ -580,14 +580,14 @@ void HG_Trigger(void) {
     else {
         HG_Sentry_Trigger();
 
+	if(!HG_GenericProjectile_DetonateAll(self, FALSE)) {
 #if 0
-        if(!HG_GenericProjectile_DetonateAll(self, FALSE)) {
-            if(self.hg_twarp_moment) {
-                HG_TimeWarper_Trigger(FALSE);
-                return;
-            }
-        }
+		if(self.hg_twarp_moment) {
+			HG_TimeWarper_Trigger(FALSE);
+			return;
+		}
 #endif
+	}
 
         self.hg_detonatepressed = TRUE;
 
