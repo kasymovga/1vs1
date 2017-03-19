@@ -13,22 +13,6 @@ vector Zapper_BeamRGB(float t) {
     }
 }
 
-float TeamNumber(float t, float d) {
-    switch(t) {
-        case COLOR_TEAM1:
-            return 1;
-        case COLOR_TEAM2:
-            return 2;
-        case COLOR_TEAM3:
-            return 3;
-        case COLOR_TEAM4:
-            return 4;
-        default:
-            return d;
-    }
-} 
-#define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(TeamNumber(t, d))))
-
 float zapper_beam_width;
 vector zapper_particles_trace_callback_origin;
 float zapper_particles_trace_callback_beamoffs;
