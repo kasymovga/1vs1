@@ -355,6 +355,7 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
 			case PROJECTILE_BULLET_BIG: setmodel(self, "models/tracer.mdl"); self.scale = 3; break;
+			case PROJECTILE_HG_NAPALMSHARD: self.model = ""; self.modelindex = 0; break;
 			case PROJECTILE_HG_GENERIC: case PROJECTILE_HG_NAPALM:
                 setmodel(self, "models/handgrenade.iqm");
                 SetupProjectileColormap(COLOR_TEAM1);
