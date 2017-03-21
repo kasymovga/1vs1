@@ -100,8 +100,35 @@ void Ent_DamageInfo(float isNew)
 
 		setorigin(self, org + backoff * 2); // for sound() calls
 
-		switch(hitwep)
-		{
+		if(DEATH_ISHG(hittype)) {
+			if (!issilent)
+				sound(self, CHAN_AUTO, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+
+			hittype &~= DEATH_HITTYPEMASK;
+			switch (hittype)
+			{
+				case HG_NORMAL:
+				case HG_REMOTE:
+				case HG_NAPALM:
+				case HG_RAZE:
+					pointparticles(particleeffectnum("RM_EXPLOSION"), self.origin, '0 0 0', 1);
+					break;
+
+				case HG_PLASMA: case HG_LASER:
+					if((hittype == HG_PLASMA && (secondary || bounce)) || hittype == HG_LASER) {
+						org2 = org + backoff * 6;
+						pointparticles(rm_particleeffectnum_team("RM_HG_PLASMA_SHARD_EXPLODE", self.team, 2 - (hittype == HG_LASER)), org2, '0 0 0', 1);
+						if(!issilent)
+							sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+					} else { // plasma bomb explosion
+						org2 = org + backoff * 2;
+						pointparticles(rm_particleeffectnum_team("RM_HG_PLASMA_EXPLODE", self.team, 2), org2, '0 0 0', 1);
+						if(!issilent)
+							sound(self, CHAN_PROJECTILE, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+					}
+					break;
+				}
+		} else switch(hitwep) {
 			case WEP_LASER:
 				org2 = org + backoff * 6;
 				pointparticles(particleeffectnum("laser_impact"), org2, backoff * 1000, 1);

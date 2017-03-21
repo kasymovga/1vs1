@@ -28,6 +28,9 @@ const float HG_START  = _HG_START + 1;
 const float HG_END    = _HG_END   - 1;
 const float HG_RANDOM = 25252;
 
+#define DEATH_HGTYPE(t)               ((t) & DEATH_WEAPONMASK) 
+#define DEATH_ISHG(t)                 (DEATH_HGTYPE(t) >= HG_START && DEATH_HGTYPE(t) <= HG_END)
+
 string HG_TypeToName(float);
 float HG_NameToType(string);
 string HG_TypeToExpandedName(float);

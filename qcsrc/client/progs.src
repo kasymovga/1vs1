@@ -31,6 +31,7 @@ cl_physics_aircraft.qh
 location_request.qh
 dlc.qh
 ../common/dlc.qh
+../common/nadgets.qh
 
 main.qh
 
@@ -60,7 +61,6 @@ modeleffects.qc
 zapper.qc
 
 //vehicles/spiderbot.qc
-../common/nadgets.qh
 ../common/nadgets.qc
 nadgetselect.qc
 Main.qc

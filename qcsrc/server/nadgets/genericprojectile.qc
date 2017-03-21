@@ -534,9 +534,6 @@ void HG_GenericProjectile_ChangeOwner(entity o) {
     self.team = o.team;
 }
 
-#define DEATH_HGTYPE(t)               ((t) & DEATH_WEAPONMASK) 
-#define DEATH_ISHG(t)                 (DEATH_HGTYPE(t) >= HG_START && DEATH_HGTYPE(t) <= HG_END)
-
 void HG_GenericProjectile_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
     if(DEATH_ISHG(deathtype))
         return;
