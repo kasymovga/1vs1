@@ -54,18 +54,16 @@ void HG_Plasma_Shard_Think(void) {
     }
 #endif
 
-    if(time > self.hg_plasma_projdps_next) {
-        float pdmg = self.hg_plasma_projdps * (time - self.hg_plasma_projdps_last);
-        RadiusDamage(self, self.realowner, pdmg, pdmg, self.hg_plasma_projrange, world, 0, self.projectiledeathtype, world);
-        self.hg_plasma_projdps_next = time + self.hg_plasma_projdps_delay;
-        self.hg_plasma_projdps_last = time;
-    }
+	float pdmg = self.hg_plasma_projdps * (time - self.hg_plasma_projdps_last);
+	RadiusDamage(self, self.realowner, pdmg, pdmg, self.hg_plasma_projrange, world, 0, self.projectiledeathtype, world);
+	self.hg_plasma_projdps_next = time + self.hg_plasma_projdps_delay;
+	self.hg_plasma_projdps_last = time;
 
 #if 0
     HealParticleEmitter(self.realowner);
 #endif
 
-    self.nextthink = time;
+    self.nextthink = min(self.hg_plasma_projdps_next, self.hg_detonatetime);
 }
 
 void HG_Plasma_Shard_Touch(void) {
@@ -84,7 +82,6 @@ void HG_Plasma_Shard(float kickangle) {
     proj.team = proj.owner.team;
     proj.use = HG_Plasma_Shard_Explode;
     proj.think = HG_Plasma_Shard_Think;
-    proj.nextthink = time;
     proj.bot_dodge = TRUE;
     proj.bot_dodgerating = cvar("g_nadgets_plasma_projectile_damage") + 300; // just avoid plasma
     proj.hg_detonatetime = time + cvar("g_nadgets_plasma_projectile_lifetime") + random() * cvar("g_nadgets_plasma_projectile_lifetime_randomfactor");
@@ -116,14 +113,15 @@ void HG_Plasma_Shard(float kickangle) {
     proj.takedamage = DAMAGE_NO;
     proj.flags = FL_PROJECTILE;
     proj.hg_plasma_projrange = cvar("g_nadgets_plasma_projectile_dps_range");
-    proj.hg_plasma_projdps = cvar("g_nadgets_plasma_projectile_dps) * Buffs_NadgetPower(self.realowner");
+    proj.hg_plasma_projdps = cvar("g_nadgets_plasma_projectile_dps") /* * Buffs_NadgetPower(self.realowner) */;
     proj.hg_plasma_projdps_delay = cvar("g_nadgets_plasma_projectile_dps_delay");
 #if 0
     proj.hg_plasma_projdist = cvar("g_nadgets_plasma_projectile_maxdistance");
     proj.csqcprojectile_extradata = hg_plasma_group & 0xFF;
 #endif
     proj.hg_plasma_projdps_next = time + cvar("g_nadgets_plasma_projectile_dps_pause") + random() * cvar("g_nadgets_plasma_projectile_dps_pause_randomfactor");
-    proj.hg_plasma_projdps_last = proj.hg_plasma_projdps_next - proj.hg_plasma_projdps_delay;
+    proj.hg_plasma_projdps_last = max(time, proj.hg_plasma_projdps_next - proj.hg_plasma_projdps_delay);
+    proj.nextthink = min(proj.hg_plasma_projdps_next, proj.hg_detonatetime);
 #if 0
     proj.heal_emitter_radius = proj.hg_plasma_projrange;
     proj.damage_noinfo = TRUE;
