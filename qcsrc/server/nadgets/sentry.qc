@@ -461,7 +461,8 @@ void HG_Sentry_Trigger(void) {
         // Aiming directly, sentry can hit directly -OR- aiming through a warpzone, sentry can hit through the same warpzone
         //tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc_untransformed, MOVE_NORMAL, self, TRUE);
 
-        tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc, MOVE_NORMAL, self, TRUE);
+        tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc + normalize(aimloc - o), MOVE_NORMAL, self, ANTILAG_LATENCY(self));
+		entity targ = ((trace_fraction < 1) ? trace_ent : world);
 
 #if 0
         if(!IS_GOOD_HIT) {
@@ -482,10 +483,6 @@ void HG_Sentry_Trigger(void) {
             //vector end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
             vector end_visual = trace_endpos;
             vector dir = normalize(end_visual - o);
-
-            tracebox_antilag(self, o, '0 0 0', '0 0 0', o + dir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self, TRUE);
-
-            entity targ = trace_ent;
             vector endpos = trace_endpos;
             float noimpact = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT);
             vector force = c_frc * dir;
