@@ -14,7 +14,7 @@ void HG_Waypoint_Update(string wpname) {
         wpname = hgname + "_" + wpname;
 #endif
 
-    wpname = strcat("pointers/", wpname);
+    //wpname = strcat("pointers/", wpname);
 
     if(!self.hg_waypoint) {
         float ownerhack = (/* self.hg_type == HG_BAIT || */ self.hg_type == HG_SENTRY);
@@ -54,9 +54,9 @@ void HG_Waypoint_SetColor(float wpcolor) {
         self.hg_wp_state = wpcolor;
 		string wpcolor_string;
 		switch(wpcolor) {
-			case WPCOLOR_RED:    wpcolor_string = "red"; break;
-			case WPCOLOR_ORANGE: wpcolor_string = "orange"; break;
-			case WPCOLOR_CYAN:   wpcolor_string = "cyan"; break;
+			case WPCOLOR_RED:    wpcolor_string = "pointers/red"; break;
+			case WPCOLOR_ORANGE: wpcolor_string = "pointers/orange"; break;
+			case WPCOLOR_CYAN:   wpcolor_string = "pointers/cyan"; break;
 			default:             wpcolor_string = "";
         }
         HG_Waypoint_Update(wpcolor_string);
