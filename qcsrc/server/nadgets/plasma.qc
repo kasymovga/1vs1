@@ -53,16 +53,33 @@ void HG_Plasma_Shard_Think(void) {
         }
     }
 #endif
-
 	float pdmg = self.hg_plasma_projdps * (time - self.hg_plasma_projdps_last);
-	RadiusDamage(self, self.realowner, pdmg, pdmg, self.hg_plasma_projrange, world, 0, self.projectiledeathtype, world);
 	self.hg_plasma_projdps_next = time + self.hg_plasma_projdps_delay;
 	self.hg_plasma_projdps_last = time;
+	vector o = self.origin;
+	float f = cvar("g_nadgets_plasma_projectile_force");
+	for (e = findradius (o, self.hg_plasma_projrange); e; e = e.chain) {
+		if (e == self)
+			continue;
 
+		if not(e.takedamage)
+			continue;
+
+		traceline(o, e.origin, MOVE_NOMONSTERS, self);
+		if (trace_fraction < 1)
+		if (trace_ent != e)
+			continue;
+
+		Damage(e, self, self.realowner,
+				pdmg,
+				HG_PLASMA | HITTYPE_BOUNCE, trace_endpos,
+				'0 0 0');
+
+		te_csqc_lightningarc(o, e.origin);
+	}
 #if 0
     HealParticleEmitter(self.realowner);
 #endif
-
     self.nextthink = min(self.hg_plasma_projdps_next, self.hg_detonatetime);
 }
 
