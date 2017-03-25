@@ -166,6 +166,8 @@ void Projectile_Draw()
 	else
 	{
 		InterpolateOrigin_Do();
+        if(self.cnt == PROJECTILE_HG_RAZE)
+            self.angles_x = -90;
 	}
 
 	if(self.count & 0x80)
