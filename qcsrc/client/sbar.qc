@@ -1,5 +1,6 @@
 void drawstringright(vector, string, vector, vector, float, float);
 void drawstringcenter(vector, string, vector, vector, float, float);
+void drawcolorcodedstringcenter(vector, string, vector, float, float);
 
 float weapon_hits[WEP_COUNT];
 float weapon_fired[WEP_COUNT];
@@ -2156,6 +2157,12 @@ void drawstringcenter(vector position, string text, vector scale, vector rgb, fl
 	drawstring(position, text, scale, rgb, alpha, flag);
 }
 
+void drawcolorcodedstringcenter(vector position, string text, vector scale, float alpha, float flag)
+{
+	position_x = 0.5 * (CVAR(vid_conwidth) - stringwidth(text, TRUE) * scale_x);
+	drawcolorcodedstring(position, text, scale, alpha, flag);
+}
+
 float GetAmmoStat(float i)
 {
 	switch(i)
@@ -2202,6 +2209,40 @@ void Sbar_Reset (void)
 		CSQC_kh_hudreset();
 	else if(gametype == GAME_CTF)
 		CSQC_ctf_hudreset();
+}
+
+void DrawProgressFragmented(vector cpos, vector l_size, float progress, float alpha, vector l_color, float fragments) {
+    vector pos;
+    pos_x = cpos_x - l_size_x / 2;
+    pos_y = cpos_y - l_size_y / 2;
+
+    vector fill = l_size;
+    fill_x *= progress;
+
+    drawfill(pos, fill, l_color, alpha * 0.7, DRAWFLAG_NORMAL);
+
+    if(fragments < 2) {
+        drawborderlines(1, pos, l_size, l_color, alpha, DRAWFLAG_NORMAL);
+    } else {
+        vector fragsize;
+		fragsize_x = l_size_x / fragments;
+		fragsize_y = l_size_y;
+		fragsize_z = 0;
+
+		float frag;
+        for(frag = 0; frag < fragments; ++frag) {
+            drawborderlines(1, pos + fragsize_x * frag * '1 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
+        }
+    }
+}
+
+float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen) {
+#if 0
+    if(timewarper_active && getstati(stat_type) == HG_TIMEWARP)
+        return 1 - timewarper_remaining_duration / timewarper_max_duration;
+    else
+#endif
+        return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
 
 void Sbar_Draw (void)
@@ -2577,6 +2618,134 @@ void Sbar_Draw (void)
 					}
 				}
 			}
+		}
+
+        // nades
+        float hgtype = getstati(STAT_HGTYPE);
+		if (hgtype) {
+			vector hgapos;
+			hgapos_x = 0;
+			hgapos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 7;
+			hgapos_z = 0;
+			float hgtype2 = getstati(STAT_HGTYPE2);
+			float hgammo = getstati(STAT_HGAMMO);
+			float hgdetons = getstati(STAT_HGDETONABLES);
+			float hgcd, hgcd2;
+            hgcd = getstatf(STAT_HGREFIRE) - servertime;
+
+#if 0
+            if(hgcd > 0) {
+                if(hgcd > hg_maxcd) hg_maxcd = hgcd;
+            } else hg_maxcd = 0;
+#endif
+
+            if(hgtype2) {
+                hgcd2 = getstatf(STAT_HGREFIRE2) - servertime;
+
+#if 0
+                if(hgcd2 > 0) {
+                    if(hgcd2 > hg_maxcd2) hg_maxcd2 = hgcd2;
+                } else hg_maxcd2 = 0;
+#endif
+            }
+
+            if(getstati(STAT_HGSHIELDSTORE)) {
+                DrawProgressFragmented('0.5 0 0' * CVAR(vid_conwidth) + hgapos - sbar_fontsize_y * '0 2.5 0', '25 0 0' * sbar_fontsize_x + '0 7 0',
+                             getstati(STAT_HGSHIELDSTORE) / getstati(STAT_HGSHIELDSTOREMAX), 0.7, '1 0.3 0',
+                             getstati(STAT_HGSHIELDSTOREMAX) / getstati(STAT_HGSHIELDDAMAGEPERSHOT));
+            }
+
+            if(getstati(STAT_STEALTH)) {
+                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * ('0 2 0'/* + '0 1 0' * !!adept */), strcat(
+                                            "^3Shoot or press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            " ^3to ", /* if(adept) "suspend" else */ "cancel", " stealth (^1", ftos(getstati(STAT_STEALTH)), " ^3seconds remaining)"),
+                                            sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+#if 0
+                if(adept) drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                                            "^3Press ^1", strtoupper(getcommandkey("drop flag", "+use")),
+                                            " ^3to cancel stealth completely"),
+                                            sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+#endif
+            } else if(getstati(STAT_STEALTH_SAVED)) {
+                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                                            "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            " ^3to re-enter stealth (^1", ftos(getstati(STAT_STEALTH_SAVED)), " ^3seconds remaining)"),
+                                            sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+            } else if(getstatf(STAT_HGSHIELD)) {
+                string smsg;
+                if(getstati(STAT_HGSHIELDSTORE) > 0) {
+                    smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                  " ^3to discharge your ", HG_TypeToExpandedName(hgtype),
+                                  " for ^1", ftos(getstati(STAT_HGSHIELDSTORE)), " ^3damage");
+                } else {
+                    smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                  " ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : HG_TypeToExpandedName(hgtype)));
+                }
+                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+            } else if(hgdetons) {
+                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                                            "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            " ^3to trigger your nadget",
+                                            ((hgdetons > 1) ? strcat("s (^2", ftos(hgdetons), "^3)") : "")),
+                                            sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+            } else if(hgtype == HG_GG && hgammo) {
+                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(getcommandkey("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+#if 0
+            } else if(timewarper_active) {
+                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                                            "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            " ^3to go back in time"),
+                                            sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+#endif
+            }
+
+#if 0
+            if(nadesector_pos) {
+                pos_y = 33;
+                pos = bottom - pos;
+                pos_x = nadesector_pos;
+                Sbar_DrawNadgetRegenSector(pos, hgtype, hgammo, getstatf(STAT_HGREGEN), getstatf(STAT_HGREGENRATE), getstatf(STAT_HGREGENMAX), getstati(STAT_HGREGENPAUSED), hgcd, hg_maxcd);
+                if(nadesector2_pos) {
+                    pos_x = nadesector2_pos;
+                    Sbar_DrawNadgetRegenSector(pos, getstati(STAT_HGTYPE2), getstati(STAT_HGAMMO2), getstatf(STAT_HGREGEN2), getstatf(STAT_HGREGENRATE2), getstatf(STAT_HGREGENMAX2), getstati(STAT_HGREGENPAUSED2), hgcd2, hg_maxcd2);
+                }
+            } else {
+#endif
+                // HUD doesn't support the nade sector - fallback to the old display method
+                if(hgammo)
+                    drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+                else
+                    drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+
+				float hgregen = Sbar_GetNadgetRegen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
+				vector hgrsize;
+                if(hgregen && hgregen != 1) {
+                    hgrsize = '70 3 0';
+                    hgapos_y += 10;
+                    hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
+                    hgrsize_x *= hgregen;
+                    drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
+                }
+                if(hgtype2) {
+                    hgapos_y += 5;
+                    hgammo = getstati(STAT_HGAMMO2);
+					float hgregen2 = Sbar_GetNadgetRegen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2) - hgregen2;
+                    if(hgammo)
+                        drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype2), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+                    else
+                        drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype2), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+
+                    if(hgregen2 && hgregen2 != 1) {
+                        hgrsize = '70 3 0';
+                        hgapos_y += 10;
+                        hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
+                        hgrsize_x *= hgregen2;
+                        drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
+                    }
+                }
+#if 0
+            }
+#endif
 		}
 
 		// fuel ammo

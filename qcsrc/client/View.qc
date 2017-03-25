@@ -223,6 +223,52 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
+float vshield;
+void DrawTintEffects(void) {
+    float st = getstati(STAT_STEALTH);
+    float s = st || getstatf(STAT_HGSHIELD);
+    //float twarp = getstatf(STAT_HGTWARP_WARPTIME);
+    vector fullscreen;
+	fullscreen_x = CVAR(vid_conwidth);
+	fullscreen_y = CVAR(vid_conheight);
+	fullscreen_z = 0;
+
+    if(s)
+        vshield = approach(vshield, 1, frametime * 3);
+    else
+        vshield = approach(vshield, 0, frametime * 3);
+
+    if(vshield) {
+        if(st) {
+            drawfill('0 0 0', fullscreen, '1 1 1', 0.1 * vshield, DRAWFLAG_MODULATE);
+        } else {
+#if 0
+            var clr = if(getstati(STAT_BUFFS) & BUFF_ADEPT)
+                '1 0.5 1'
+            else
+                '1 1 0.5';
+#endif
+			vector clr = '1 1 0.5';
+
+            drawfill('0 0 0', fullscreen, clr * vshield + '1 1 1' * (1 - vshield), 1, DRAWFLAG_MODULATE);
+            drawfill('0 0 0', fullscreen, clr, 0.1 * vshield, DRAWFLAG_ADDITIVE);
+        }
+
+    }
+
+#if 0
+    if(twarp) {
+        const twarp_dur = 3;
+        twarp = 1 - bound(0, (servertime - twarp) / twarp_dur, 1);
+
+        if(twarp) {
+            twarp = ipol_pow2In(twarp);
+            drawfill('0 0 0', fullscreen, '0.85 0.9 1', 0.25 * twarp, DRAWFLAG_ADDITIVE);
+        }
+    }
+#endif
+}
+
 void CSQC_kh_hud(void);
 void CSQC_ctf_hud(void);
 void PostInit(void);
@@ -407,6 +453,8 @@ void CSQC_UpdateView(float w, float h)
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+
+	DrawTintEffects();
 
 	// draw 2D entities
 	e = self;
