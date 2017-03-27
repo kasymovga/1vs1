@@ -31,7 +31,7 @@ void HG_Transloc_Explode(void) {
     TeleportPlayer(self, self.owner, self.origin, a, v_forward * (0.5 + 0.5 /* * Buffs_NadgetPower(self.owner) */ ) * (
                     cvar("g_nadgets_transloc_push_base")
                   + cvar("g_nadgets_transloc_push_playerfactor") * vlen(self.owner.velocity)
-                  + cvar("g_nadgets_transloc_push_projfactor")   * vlen(self.velocity)), '0 0 0', '0 0 0');
+                  + cvar("g_nadgets_transloc_push_projfactor")   * vlen(self.velocity)), '0 0 0', '0 0 0', cvar("g_nadgets_transloc_damage"));
     //tdeath_deathtype = 0;
 
 #if 0

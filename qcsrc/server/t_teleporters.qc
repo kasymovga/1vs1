@@ -5,7 +5,7 @@ void trigger_teleport_use()
 }
 
 float tdeath_hit;
-void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax)
+void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float damage)
 {
 	entity head;
 	vector deathmin;
@@ -33,10 +33,10 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 						if(head.classname == "player")
 						if(head.health >= 1)
 							++tdeath_hit;
-						Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+						Damage (head, teleporter, telefragger, damage, DEATH_TELEFRAG, head.origin, '0 0 0');
 					}
 					else if (telefragger.health < 1) // corpses gib
-						Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+						Damage (head, teleporter, telefragger, damage, DEATH_TELEFRAG, head.origin, '0 0 0');
 					else // dead bodies and monsters gib themselves instead of telefragging
 						Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG, telefragger.origin, '0 0 0');
 				}
@@ -44,11 +44,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 
 void spawn_tdeath(vector v0, entity e, vector v)
 {
-	tdeath(e, e, e, '0 0 0', '0 0 0');
+	tdeath(e, e, e, '0 0 0', '0 0 0', 10000);
 }
 
 .entity pusher;
-void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax)
+void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float damage)
 {
 	entity oldself;
 	entity telefragger;
@@ -87,7 +87,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if (player.takedamage)
 		if (player.deadflag == DEAD_NO)
 		if (GameHook_TelefragsAllowed())
-			tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
+			tdeath(player, teleporter, telefragger, telefragmin, telefragmax, damage);
 
 		// player no longer is on ground
 		player.flags &~= FL_ONGROUND;
@@ -165,7 +165,7 @@ void Teleport_Touch (void)
 		if(vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
 
-	TeleportPlayer(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0');
+	TeleportPlayer(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', 10000);
 
 	if(e.target)
 	{

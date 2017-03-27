@@ -156,7 +156,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	}
 
 	tdeath_hit = 0;
-	TeleportPlayer(teleporter, player, to, ang, newvel, teleporter.enemy.absmin, teleporter.enemy.absmax);
+	TeleportPlayer(teleporter, player, to, ang, newvel, teleporter.enemy.absmin, teleporter.enemy.absmax, 10000);
 	if(tdeath_hit)
 	{
 		// telefrag within 1 second of portal creation = amazing
