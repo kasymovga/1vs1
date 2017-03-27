@@ -2010,7 +2010,8 @@ void reset_map(float dorespawn)
 	oldself = self;
 
 	GameHook_Reset();
-	
+	HG_MapReset();
+
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
 	{

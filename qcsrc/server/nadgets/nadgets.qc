@@ -806,9 +806,9 @@ void HG_Pick(float tokens) {
 		if(argc) for(i = 0; i < argc; ++i) {
 			if(t == HG_NameToType(argv(i))) {
 				sprint(self, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2", HG_TypeToExpandedName(t), (nr ? "^1 on the next round.\n" : "^1.\n")));
-				(self.(nr ? hg_ctx_type_picked_nextround : hg_ctx_type_picked)) = t;
+				self.hg_ctx_type_picked_nextround = t;
 				if(!nr) {
-
+					self.hg_ctx_type_picked = t;
 					HG_ResetAmmo(self, FALSE);
 
 					if(astate) {
@@ -830,6 +830,7 @@ void HG_Pick(float tokens) {
 				}
 
 				success = TRUE;
+				self.hg_ctx_type_picked_nextround = -1;
 				break;
 			}
 		}
@@ -839,4 +840,28 @@ void HG_Pick(float tokens) {
 			return;
 		}
 	})
+}
+
+void HG_MapReset() {
+	if not(g_nadgets)
+		return;
+
+	entity e = self;
+	FOR_EACH_TEAMPLAYER(self) {
+		HG_DO_IN_ALL_CONTEXTS({
+			if(self.hg_ctx_type_picked_nextround >= 0)
+				self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
+			self.hg_ctx_type_picked_nextround = -1;
+		})
+
+		if(self.hg_optout_nextround >= 0)
+			self.hg_optout = self.hg_optout_nextround;
+
+		self.hg_optout_nextround = -1;
+		HG_ResetState(self, FALSE);
+		self.hg_nadesused = 0;
+		if(self.hg_alwaysask)
+			HG_ShowMenu(TRUE);
+	}
+	self = e;
 }
