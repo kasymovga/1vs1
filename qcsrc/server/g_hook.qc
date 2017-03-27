@@ -50,6 +50,7 @@ And you should be done!
 float g_balance_grapplehook_airfriction;
 float g_balance_grapplehook_damage;
 float g_balance_grapplehook_damage_interval;
+float g_balance_grapplehook_dontpull;
 float g_balance_grapplehook_force_rubber;
 float g_balance_grapplehook_force_rubber_overstretch;
 float g_balance_grapplehook_gravity;
@@ -224,8 +225,11 @@ void GrapplingHookThink()
 			{
 				// then pull the player
 				spd = bound(0, (dist - self.hook_length) / g_balance_grapplehook_stretch, 1);
-				self.owner.velocity = self.owner.velocity * (1 - frametime * g_balance_grapplehook_airfriction);
-				self.owner.velocity = self.owner.velocity + frametime * dir * spd * g_balance_grapplehook_force_rubber;
+				if not(g_balance_grapplehook_dontpull) {
+					self.owner.velocity = self.owner.velocity * (1 - frametime * g_balance_grapplehook_airfriction);
+					self.owner.velocity = self.owner.velocity + frametime * dir * spd * g_balance_grapplehook_force_rubber;
+					self.owner.flags &~= FL_ONGROUND;
+				}
 
 				dv = ((self.owner.velocity - v0) * dir) * dir;
 				if(g_grappling_hook_tarzan >= 2)
@@ -239,8 +243,6 @@ void GrapplingHookThink()
 						self.aiment.pushltime = time + g_maxpushtime;
 					}
 				}
-
-				self.owner.flags &~= FL_ONGROUND;
 			}
 		}
 		else
@@ -478,6 +480,7 @@ void GrappleHookInit()
 	CACHE_CVAR(g_balance_grapplehook_airfriction);
 	CACHE_CVAR(g_balance_grapplehook_damage);
 	CACHE_CVAR(g_balance_grapplehook_damage_interval);
+	CACHE_CVAR(g_balance_grapplehook_dontpull);
 	CACHE_CVAR(g_balance_grapplehook_force_rubber);
 	CACHE_CVAR(g_balance_grapplehook_force_rubber_overstretch);
 	CACHE_CVAR(g_balance_grapplehook_gravity);
