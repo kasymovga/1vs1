@@ -84,6 +84,7 @@ void HG_Precache(void) {
     precache_sound("weapons/rocket_mode.wav");
     precache_sound("weapons/nexfire.wav");
     precache_sound("weapons/electro_fire2.wav");
+    precache_sound("weapons/electro_fly.wav");
     precache_sound("porto/expire.wav");
     precache_sound("porto/bounce.wav");
     precache_sound("misc/powerup_shield.wav");
