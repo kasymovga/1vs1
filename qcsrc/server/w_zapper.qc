@@ -727,6 +727,7 @@ float w_zapper(float req) {
         precache_sound("misc/arc2.wav");
 		if (cvar("g_rocketminsta_zapper")) {
 			dlc_require("rm_effects_v1");
+			dlc_require("pryaxe_balls");
 			dlc_require("zapper_v1");
 		}
     } else if(req == WR_RESETPLAYER){

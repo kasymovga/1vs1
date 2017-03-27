@@ -19,8 +19,10 @@ void HG_Init(void) {
 	if not(g_nadgets)
 		return;
 
-	dlc_require("nadgets");
 	dlc_require("rm_effects_v1");
+	dlc_require("rm_laser");
+	dlc_require("pryaxe_balls");
+	dlc_require("nadgets");
     CACHE_CVAR(g_nadgets_double);
 	CACHE_CVAR(g_nadgets_detonate_on_death);
 	CACHE_CVAR(g_nadgets_sentry_disown_on_death);
