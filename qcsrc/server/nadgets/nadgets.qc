@@ -478,8 +478,12 @@ void HG_PlayerFrame(void) {
 
 	float mayfire = (!g_grappling_hook || (!self.hook/* && !CustomHGHookButton(self) */)) || self.hg_power;
 
+#if 0
     if(time < self.hg_plasmalock || PLAYER_DEAD(self))
         mayfire = FALSE;
+#endif
+	if not(PlayerCanFire(self))
+		mayfire = FALSE;
 
 	float held, isalt;
 	held = self.(g_nadgets_detonatelaunches ? hg_detonatepressed : BUTTON_NADGET);
