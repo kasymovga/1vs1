@@ -64,6 +64,7 @@ void HG_Init(void) {
     #define HGDEF(id,shortname,longname,color) HG_Hook_Init_##shortname();
     HGDEFS
     #undef HGDEF
+	HG_Precache();
 }
 
 void HG_Precache(void) {
