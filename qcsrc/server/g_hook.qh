@@ -15,3 +15,5 @@ float HOOK_WAITING_FOR_RELEASE = 16;
 
 void GrappleHookInit();
 vector hook_shotorigin;
+
+#define BUTTON_HOOK_PRESSED (g_nadgets ? self.BUTTON_USE : self.BUTTON_HOOK)

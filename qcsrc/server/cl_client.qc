@@ -2296,10 +2296,7 @@ void PlayerPreThink (void)
 
 		FixPlayermodel();
 
-		if (g_nadgets)
-
-		if (!g_nadgets || g_grappling_hook)
-			GrapplingHookFrame();
+		GrapplingHookFrame();
 
 		if(frametime)
 		{

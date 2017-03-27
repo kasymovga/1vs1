@@ -131,7 +131,8 @@ float w_hook(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+		float button_hook = BUTTON_HOOK_PRESSED;
+		if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
 		{
 			if(!self.hook)
 			if not(self.hook_state & HOOK_WAITING_FOR_RELEASE)
@@ -206,7 +207,7 @@ float w_hook(float req)
 		if (self.BUTTON_CROUCH)
 		{
 			self.hook_state &~= HOOK_PULLING;
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
 				self.hook_state &~= HOOK_RELEASING;
 			else
 				self.hook_state |= HOOK_RELEASING;
@@ -216,7 +217,7 @@ float w_hook(float req)
 			self.hook_state |= HOOK_PULLING;
 			self.hook_state &~= HOOK_RELEASING;
 
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
 			{
 				// already fired
 				if(self.hook)

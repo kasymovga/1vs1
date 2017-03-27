@@ -385,10 +385,11 @@ void FireGrapplingHook (void)
 
 void GrapplingHookFrame()
 {
+	float button_hook = BUTTON_HOOK_PRESSED;
 	if(g_grappling_hook && timeoutStatus != 2 && self.weapon != WEP_HOOK)
 	{
 		// offhand hook controls
-		if(self.BUTTON_HOOK)
+		if(button_hook)
 		{
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
 			{
@@ -416,10 +417,10 @@ void GrapplingHookFrame()
 	}
 	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
 	{
-		if(self.BUTTON_HOOK && !self.hook_switchweapon)
+		if(button_hook && !self.hook_switchweapon)
 			W_SwitchWeapon(WEP_HOOK);
 	}
-	self.hook_switchweapon = self.BUTTON_HOOK;
+	self.hook_switchweapon = button_hook;
 
 	if(!g_grappling_hook && self.weapon != WEP_HOOK)
 	{
