@@ -236,6 +236,9 @@ float w_campingrifle(float req)
 			if(!full)
 				self.campingrifle_bulletcounter = -1;
 
+		if not(self.campingrifle_bulletcounter)
+			self.campingrifle_bulletcounter = -1;
+
 		self.campingrifle_hotreloadtime = time + g_balance_campingrifle_reloadtime;
 	}
 	else if (req == WR_CHECKAMMO1)
@@ -282,8 +285,7 @@ float w_campingrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.campingrifle_accumulator = time - g_balance_campingrifle_bursttime;
-		self.campingrifle_bulletcounter = g_balance_campingrifle_magazinecapacity;
-		W_CampingRifle_CheckMaxBullets();
+		self.campingrifle_bulletcounter = -1;
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
