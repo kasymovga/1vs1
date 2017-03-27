@@ -52,6 +52,7 @@ float g_balance_grapplehook_damage;
 float g_balance_grapplehook_damage_interval;
 float g_balance_grapplehook_force_rubber;
 float g_balance_grapplehook_force_rubber_overstretch;
+float g_balance_grapplehook_gravity;
 float g_balance_grapplehook_health;
 float g_balance_grapplehook_length_min;
 float g_balance_grapplehook_speed_fly;
@@ -337,7 +338,7 @@ void FireGrapplingHook (void)
 	self.hook = missile;
 	missile.classname = "grapplinghook";
 
-	missile.movetype = MOVETYPE_FLY;
+	missile.movetype = (g_balance_grapplehook_gravity ? MOVETYPE_TOSS : MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	setmodel (missile, "models/hook.md3"); // precision set below
@@ -479,6 +480,7 @@ void GrappleHookInit()
 	CACHE_CVAR(g_balance_grapplehook_damage_interval);
 	CACHE_CVAR(g_balance_grapplehook_force_rubber);
 	CACHE_CVAR(g_balance_grapplehook_force_rubber_overstretch);
+	CACHE_CVAR(g_balance_grapplehook_gravity);
 	CACHE_CVAR(g_balance_grapplehook_health);
 	CACHE_CVAR(g_balance_grapplehook_length_min);
 	CACHE_CVAR(g_balance_grapplehook_speed_fly);
