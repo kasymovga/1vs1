@@ -1823,8 +1823,6 @@ void Items_Init()
 					t = (i == WEP_LASER);
 				else
 					t = (i == WEP_LASER || i == WEP_SHOTGUN);
-				if (g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-					t += (i == WEP_HOOK);
 			}
 
 			if (t)
