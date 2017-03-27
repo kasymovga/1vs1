@@ -21,6 +21,7 @@ void HG_Init(void) {
 
 	dlc_require("rm_effects_v1");
 	dlc_require("rm_laser");
+	dlc_require("rm_arc");
 	dlc_require("pryaxe_balls");
 	dlc_require("nadgets");
     CACHE_CVAR(g_nadgets_double);
@@ -85,6 +86,8 @@ void HG_Precache(void) {
     precache_sound("weapons/nexfire.wav");
     precache_sound("weapons/electro_fire2.wav");
     precache_sound("weapons/electro_fly.wav");
+    precache_sound("misc/arc1.wav");
+    precache_sound("misc/arc2.wav");
     precache_sound("porto/expire.wav");
     precache_sound("porto/bounce.wav");
     precache_sound("misc/powerup_shield.wav");
