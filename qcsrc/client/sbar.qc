@@ -2236,6 +2236,10 @@ void DrawProgressFragmented(vector cpos, vector l_size, float progress, float al
     }
 }
 
+void DrawProgress(vector cpos, vector l_size, float progress, float alpha, vector l_color) {
+    DrawProgressFragmented(cpos, l_size, progress, alpha, l_color, 1);
+}
+
 float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen) {
 #if 0
     if(timewarper_active && getstati(stat_type) == HG_TIMEWARP)
@@ -2244,6 +2248,8 @@ float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen
 #endif
         return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
+
+float hg_visual, hg_alpha;
 
 void Sbar_Draw (void)
 {
@@ -2348,6 +2354,26 @@ void Sbar_Draw (void)
 	{
 		s = "^2Currently in ^1warmup^2 stage!";
 		o = Sbar_DrawNoteLine(o, s);
+	}
+
+	// handgrenade force meter
+	float hgstat = getstatf(STAT_HGFORCE);
+	if (hgstat) {
+		float hgls = getstatf(STAT_HGLAUNCH);
+		if(hgstat) {
+			hg_alpha = approach(hg_alpha, 1, 5 * drawframetime);
+		} else {
+			hg_alpha = approach(hg_alpha, 0, 5 * drawframetime);
+		}
+		hg_visual = approach(hg_visual, hgstat, drawframetime * hgls);
+		hgstat = hg_visual;
+		if(hg_alpha)
+		{
+			vector hgpos;
+			hgpos_x = CVAR(vid_conwidth) / 2;
+			hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
+			DrawProgress(hgpos, '120 5 0', hgstat, 0.7 * hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat));
+		}
 	}
 
 	// move more important stuff more to the middle so its more visible
