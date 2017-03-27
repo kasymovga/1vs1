@@ -9,6 +9,7 @@ void DLCWait() {
 		localcmd("\n");
 		for (i = 0; i < n; i++) {
 			if (argv(i) != "")
+			if (fexists(strcat("rexdlc_", argv(i), "_server.cfg")))
 				localcmd(strcat("exec rexdlc_", argv(i), "_server.cfg", "\n"));
 		}
 		localcmd("restart\n");

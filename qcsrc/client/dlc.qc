@@ -7,6 +7,7 @@ void DLCWait() {
 		localcmd("\n");
 		for (i = 0; i < n; i++) {
 			if (argv(i) != "")
+			if (fexists(strcat("rexdlc_", argv(i), "_client.cfg")))
 				localcmd(strcat("exec rexdlc_", argv(i), "_client.cfg", "\n"));
 		}
 		localcmd("r_restart;disconnect;reconnect\n");
@@ -52,7 +53,7 @@ void Ent_DLCList(float new) {
 			if (argv(i) != "") {
 				if not(dlc_load(argv(i)))
 					not_all_loaded = TRUE;
-				else
+				else if (fexists(strcat("rexdlc_", argv(i), "_client_post.cfg")))
 					localcmd(strcat("exec rexdlc_", argv(i), "_client_post.cfg", "\n"));
 			}
 		if (not_all_loaded)
