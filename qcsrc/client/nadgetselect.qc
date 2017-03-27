@@ -223,6 +223,9 @@ float NS_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 void Net_ReadNadgetSelect(void) {
     string opts_pri, opts_sec;
 
+	if (ReadByte())
+		g_nadgets_double = 1;
+
     opts_pri = ReadString();
     if(g_nadgets_double)
         opts_sec = ReadString();

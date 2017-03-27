@@ -740,6 +740,7 @@ void HG_WriteNadgetSelect(void) {
     msg_entity = self;
     WriteByte(MSG_ONE, SVC_TEMPENTITY);
     WriteByte(MSG_ONE, TE_CSQC_NADGETSELECT);
+    WriteByte(MSG_ONE, g_nadgets_double);
     WriteString(MSG_ONE, HG_SelectableTypes(FALSE));
 
     if(g_nadgets_double)
