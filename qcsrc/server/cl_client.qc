@@ -2394,7 +2394,8 @@ void PlayerPostThink (void)
 		stuffcmd(self, "seta _cl_name Player\n");
 	}
 
-	if(frametime)
+	if (frametime)
+	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop, maxidle;
