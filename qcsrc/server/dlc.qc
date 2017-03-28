@@ -38,11 +38,15 @@ void dlc_require(string dlc_name) {
 	float i, n;
 	n = tokenize_console(cvar_string("sv_curl_serverpackages"));
 	string s;
+	float add_to_server_packages;
+	add_to_server_packages = TRUE;
 	for (i = 0; i < n; i++)
 		if (argv(i) == strcat("rexdlc_", dlc_name, ".serverpackage"))
-			return;
+			add_to_server_packages = FALSE;
 
-	cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
+	if (add_to_server_packages)
+		cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
+
 	n = tokenizebyseparator(dlc_list, " ");
 	for (i = 0; i < n; i++)
 		if (argv(i) == dlc_name)
