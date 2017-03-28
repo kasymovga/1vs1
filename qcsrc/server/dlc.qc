@@ -39,7 +39,7 @@ void dlc_require(string dlc_name) {
 	n = tokenize_console(cvar_string("sv_curl_serverpackages"));
 	string s;
 	for (i = 0; i < n; i++)
-		if (argv(i) == strcat("rdlc_", dlc_name, ".serverpackage"))
+		if (argv(i) == strcat("rexdlc_", dlc_name, ".serverpackage"))
 			return;
 
 	cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
