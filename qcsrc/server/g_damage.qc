@@ -712,17 +712,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
-		if (targ.classname == "player")
-		if (attacker.classname == "player")
-		if (!targ.isbot)
-		if (attacker.isbot)
-			damage = damage * bound(0.1, (skill + 5) * 0.1, 1);
-
 		// nullify damage if teamplay is on
 		if(deathtype != DEATH_TELEFRAG)
-		if(attacker.classname == "player")
+		if(targ.classname == "player")
 		{
-			if(targ.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			if(attacker.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
 			{
 				damage = 0;
 				force = '0 0 0';
@@ -737,7 +731,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						damage = 0;
 					else if(teamplay == 4)
 					{
-						if(targ.classname == "player" && targ.deadflag == DEAD_NO)
+						if(targ.deadflag == DEAD_NO)
 						{
 							teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
 							attacker.dmg_team = attacker.dmg_team + damage;
@@ -753,8 +747,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								damage = g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 						}
-						else
-							damage = 0;
 					}
 				}
 			}
