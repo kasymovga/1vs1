@@ -780,12 +780,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 			}
 			if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-			if (g_minstagib_nolaserdamage)
+			if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker))
 			{
 				damage = 0;
 				if (targ != attacker)
 				{
 					if (targ.classname == "player")
+					if (g_minstagib_nolaserdamage)
 						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
 					damage = 0;
 					mirrordamage = 0;
