@@ -104,7 +104,7 @@ void HG_Shield_Trigger(void) {
 		entity oldself = self;
         self = spawn();
         self.classname = "hg_shield_discharge";
-        self.owner = self;
+        self.owner = oldself;
         self.think = HG_Shield_Discharge_Think;
         self.reset = SUB_Remove;
         self.think();

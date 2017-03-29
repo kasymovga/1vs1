@@ -123,3 +123,4 @@ HGDEFS
 
 void HG_Pick(float token);
 void HG_MapReset();
+float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc);

@@ -870,3 +870,10 @@ void HG_MapReset() {
 	}
 	self = e;
 }
+
+float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc) {
+	if not(g_nadgets)
+		return damage;
+
+	return HG_Shield_Damage(attacker, damage, deathtype, hitloc);
+}

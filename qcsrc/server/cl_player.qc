@@ -496,6 +496,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 
+	damage = HG_Damage(attacker, damage, deathtype, hitloc);
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
 		damage *= sqrt(bound(1.0, self.cvar_cl_handicap, 100.0));
