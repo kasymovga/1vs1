@@ -132,9 +132,6 @@ float PlayerCanFire(entity plr) {
 	if (PLAYER_DEAD(plr))
 		return FALSE;
 
-	if (time < round_warmup)
-		return FALSE;
-
 	if (time < game_starttime)
 	if (!restart_active)
 		return FALSE;

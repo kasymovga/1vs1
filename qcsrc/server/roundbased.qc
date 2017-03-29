@@ -7,9 +7,14 @@ float rb_team_alive;
 float rb_enddelay;
 float rb_startdelay;
 float rb_after_warmup;
+float round_warmup;
 
 float Roundbased_Active;
 float Roundbased_RestartTime;
+
+float Roundbased_PlayerCanFire() {
+	return Roundbased_Active;
+}
 
 void Roundbased_SetRoundStart() {
 	Roundbased_RestartTime = time + rb_enddelay;

@@ -60,6 +60,7 @@ void Clanarena_Init()
 	GameHook_DamageHandle = Clanarena_DamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
+	GameHook_PlayerCanFire = Roundbased_PlayerCanFire;
 	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
 	ca_controller = spawn();
 	ca_controller.think = Clanarena_Think;
