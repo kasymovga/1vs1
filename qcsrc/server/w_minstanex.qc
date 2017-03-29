@@ -191,6 +191,7 @@ float w_minstanex(float req)
 		else if (self.BUTTON_ATCK2)
 		{
 			if (self.jump_interval <= time)
+			if (PLAYER_REALLY_ALIVE(self))
 			{
 				self.jump_interval = time + 0.9 * W_WeaponRateFactor();
 				W_Laser_Attack(FALSE);

@@ -136,7 +136,7 @@ void GrapplingHookThink()
 {
 	float spd, dist, newlength;
 	vector dir, org, end, v0, dv;
-	if(self.owner.health <= 0 || self.owner.hook != self)	// how did that happen?
+	if(PLAYER_DEAD(self.owner) || self.owner.hook != self)	// how did that happen?
 	{														// well, better fix it anyway
 		remove(self);
 		return;
@@ -186,14 +186,19 @@ void GrapplingHookThink()
 		dist = vlen(dir);
 		dir = normalize(dir);
 
-		if (g_balance_grapplehook_damage_interval)
-		if (self.aiment)
-		if (self.hook_attack_time)
-		if (self.aiment.takedamage)
-		while (self.hook_attack_time <= time)
-		{
-			Damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
-			self.hook_attack_time += g_balance_grapplehook_damage_interval;
+		if (self.aiment) {
+			if not(PlayerCanFire(self.owner)) {
+				RemoveGrapplingHook(self.owner);
+				return;
+			}
+			if (g_balance_grapplehook_damage_interval)
+			if (self.hook_attack_time)
+			if (self.aiment.takedamage)
+			while (self.hook_attack_time <= time)
+			{
+				Damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
+				self.hook_attack_time += g_balance_grapplehook_damage_interval;
+			}
 		}
 
 		if(g_grappling_hook_tarzan)
@@ -325,9 +330,6 @@ void FireGrapplingHook (void)
 	local entity missile;
 	local vector org;
 
-	if((time < round_warmup) || (time < game_starttime))
-		return;
-
 	makevectors(self.v_angle);
 
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
@@ -395,6 +397,7 @@ void GrapplingHookFrame()
 		if(button_hook)
 		{
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
+			if (time > game_starttime)
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
