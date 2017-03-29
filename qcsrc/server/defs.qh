@@ -22,7 +22,6 @@ float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float inWarmupStage;
-float round_warmup;
 float g_jetpack;
 
 float g_maxpushtime;

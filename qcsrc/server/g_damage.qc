@@ -780,7 +780,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					if (targ.classname == "player")
 					if (g_minstagib_nolaserdamage)
 						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
-					damage = 0;
+
 					mirrordamage = 0;
 					force = '0 0 0';
 					// keep mirrorforce
