@@ -10,7 +10,7 @@ string dlc_url(string dlc_name) {
 }
 
 float dlc_ready(string dlc_name) {
-	return fexist(dlc_serverpackage_name(dlc_name));
+	return fexists(dlc_serverpackage_name(dlc_name));
 }
 
 float dlc_load(string dlc_name) {

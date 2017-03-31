@@ -14,7 +14,7 @@ void unzone_ifneeded(string s) {
 		strunzone(s);
 }
 
-float fexist(string path) {
+float fexists(string path) {
 	float f = fopen(path, FILE_READ);
 	if (f < 0)
 		return FALSE;
