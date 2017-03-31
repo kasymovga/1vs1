@@ -27,10 +27,6 @@ float g_balance_rune_vampire_absorb;
 float g_balance_rune_vampire_combo_absorb;
 float g_balance_rune_vampire_maxhealth;
 float g_balance_selfdamagepercent;
-float g_ctf_flagcarrier_selfdamage;
-float g_ctf_flagcarrier_selfforce;
-float g_ctf_flagscore_kill;
-float g_ctf_personalscore_kill;
 float g_friendlyfire;
 float g_mirrordamage;
 float g_minstagib_nolaserdamage;
@@ -772,7 +768,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 			}
 			if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-			if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker))
+			if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker, FALSE))
 			{
 				damage = 0;
 				if (targ != attacker)
@@ -819,14 +815,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
-		// CTF: reduce damage/force
-		if(g_ctf)
-		if(targ == attacker)
-		if(targ.flagcarried)
-		{
-			damage = damage * g_ctf_flagcarrier_selfdamage;
-			force = force * g_ctf_flagcarrier_selfforce;
-		}
+		damage = damage * GameHook_DamageMod(targ, attacker, deathtype);
+		force = force * GameHook_ForceMod(targ, attacker, deathtype);
 
 		// apply strength rune
 		if (attacker.runes & RUNE_STRENGTH)
@@ -1399,10 +1389,6 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_balance_rune_vampire_absorb);
 	CACHE_CVAR(g_balance_rune_vampire_combo_absorb);
 	CACHE_CVAR(g_balance_rune_vampire_maxhealth);
-	CACHE_CVAR(g_ctf_flagcarrier_selfdamage);
-	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
-	CACHE_CVAR(g_ctf_flagscore_kill);
-	CACHE_CVAR(g_ctf_personalscore_kill);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_mirrordamage);
 	CACHE_CVAR(g_minstagib_nolaserdamage);

@@ -185,7 +185,7 @@ void GrapplingHookThink()
 		dir = normalize(dir);
 
 		if (self.aiment) {
-			if not(PlayerCanFire(self.owner)) {
+			if not(PlayerCanFire(self.owner, FALSE)) {
 				RemoveGrapplingHook(self.owner);
 				return;
 			}

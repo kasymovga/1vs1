@@ -41,6 +41,10 @@ float g_ctf_flagscore_return_rogue;
 float g_ctf_flagscore_return_rogue_by_killer;
 float g_ctf_win_mode;
 float g_ctf_ignore_frags;
+float g_ctf_flagcarrier_selfdamage;
+float g_ctf_flagcarrier_selfforce;
+float g_ctf_flagscore_kill;
+float g_ctf_personalscore_kill;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -1114,6 +1118,22 @@ float ctf_LeadLimitOverride() {
 
 void ctf_setstatus();
 
+float ctf_DamageMod(entity targ, entity attacker, float deathtype) {
+	if(targ == attacker)
+	if(targ.flagcarried)
+		return g_ctf_flagcarrier_selfforce;
+
+	return 1;
+}
+
+float ctf_ForceMod(entity targ, entity attacker, float deathtype) {
+	if(targ == attacker)
+	if(targ.flagcarried)
+		return g_ctf_flagcarrier_selfdamage;
+
+	return 1;
+}
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
@@ -1148,6 +1168,10 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_flagscore_return_rogue);
 	CACHE_CVAR(g_ctf_flagscore_return_rogue_by_killer);
 	CACHE_CVAR(g_ctf_ignore_frags);
+	CACHE_CVAR(g_ctf_flagcarrier_selfdamage);
+	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
+	CACHE_CVAR(g_ctf_flagscore_kill);
+	CACHE_CVAR(g_ctf_personalscore_kill);
 	if(g_campaign)
 		g_ctf_win_mode = 2;
 	else
@@ -1166,6 +1190,8 @@ void ctf_init()
 	GameHook_RecordForMap = ctf_RecordForMap;
 	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
 	GameHook_FragLimitOverride = ctf_FragLimitOverride;
+	GameHook_DamageMod = ctf_DamageMod;
+	GameHook_ForceMod = ctf_ForceMod;
 };
 
 void ctf_setstatus2(entity flag, float shift)

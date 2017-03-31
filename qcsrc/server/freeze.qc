@@ -150,7 +150,7 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	return TRUE;
 }
 
-float Freeze_DamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+float Freeze_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if not(self.deadflag == DEAD_FREEZE)
 		return FALSE;
@@ -203,11 +203,10 @@ void Freeze_Init()
 	GameHook_Spawn = Freeze_Spawn;
 	GameHook_PlayerClear = Freeze_PlayerClear;
 	GameHook_SpeedMod = Freeze_SpeedMod;
-	GameHook_DamageHandle = Freeze_DamageHandle;
+	GameHook_PlayerDamageHandle = Freeze_PlayerDamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Freeze_FragLimitOverride;
-	GameHook_PlayerCanFire = Roundbased_PlayerCanFire;
 	freeze_controller = spawn();
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;

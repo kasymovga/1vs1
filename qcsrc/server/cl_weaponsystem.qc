@@ -890,7 +890,7 @@ float weapon_prepareattack(float secondary, float attacktime)
 	if(self.switchweapon != self.weapon)
 		return FALSE;
 
-	if not(PlayerCanFire(self))
+	if not(PlayerCanFire(self, TRUE))
 		return FALSE;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

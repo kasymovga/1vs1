@@ -810,8 +810,8 @@ float race_PlayerAllowedToMove() {
 	return TRUE;
 }
 
-float race_PlayerCanFire() {
-	if (time < self.race_penalty)
+float race_PlayerCanFire(entity plr, float wep) {
+	if (time < plr.race_penalty)
 		return FALSE;
 
 	return TRUE;

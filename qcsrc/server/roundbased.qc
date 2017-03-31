@@ -12,8 +12,15 @@ float round_warmup;
 float Roundbased_Active;
 float Roundbased_RestartTime;
 
-float Roundbased_PlayerCanFire() {
-	return Roundbased_Active;
+float Roundbased_PlayerCanFire(entity plr, float wep) {
+	if (Roundbased_Active)
+		return TRUE;
+
+	if (wep) //Always allow shoot with laser (no damage when round not active)
+	if (plr.weapon == WEP_LASER)
+		return TRUE;
+
+	return FALSE;
 }
 
 void Roundbased_SetRoundStart() {
@@ -154,6 +161,23 @@ void Roundbased_NeedCheckTeams() {
 	rb_need_check_teams = TRUE;
 }
 
+float Roundbased_DamageMod(entity targ, entity attacker, float deathtype) {
+	if not(Roundbased_Active)
+	if (DEATH_ISWEAPON(deathtype, WEP_LASER)) //No damage laser when round not active
+		return 0;
+
+	return 1;
+}
+
+float Roundbased_ForceMod(entity targ, entity attacker, float deathtype) {
+	if not(Roundbased_Active)
+	if (targ != attacker) //Laser force only for shooter when round not active
+	if (DEATH_ISWEAPON(deathtype, WEP_LASER))
+		return 0;
+
+	return 1;
+}
+
 void Roundbased_Init(float enddelay, float startdelay) {
 	precache_sound("domination/claim.wav");
 	precache_sound("announcer/robotic/begin.wav");
@@ -170,4 +194,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 		rb_after_warmup = TRUE;
 	else
 		round_warmup = game_starttime + rb_startdelay;
+
+	GameHook_PlayerCanFire = Roundbased_PlayerCanFire;
+	GameHook_DamageMod = Roundbased_DamageMod;
+	GameHook_ForceMod = Roundbased_ForceMod;
 }
