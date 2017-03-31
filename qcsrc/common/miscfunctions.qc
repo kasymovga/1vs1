@@ -45,13 +45,3 @@ float TeamColorSkin(float t) {
     }
     return 0;
 }
-
-float fexists(string f)
-{
-    float fh;
-    fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return FALSE;
-    fclose(fh);
-    return TRUE;
-}
