@@ -271,8 +271,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
-	if (g_weaponarena)
-		return;
 	if not(GameHook_ThrowWeaponAllowed())
 		return;
 	if (!cvar("g_pickup_items"))

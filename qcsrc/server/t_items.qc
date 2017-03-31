@@ -833,13 +833,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 		weaponsInMap |= weaponid;
 
-		if (g_weaponarena && ((weaponid & WEPBIT_ALL) || (itemid & IT_AMMO)))
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-		else if (g_minstagib)
+		if (g_minstagib)
 		{
 			// don't remove dropped items and powerups
 			if (self.classname != "minstagib")
@@ -1680,94 +1674,7 @@ void Items_Init()
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
-	g_weaponarena = 0;
-	s = cvar_string("g_weaponarena");
-	if (s == "0")
-	{
-	}
-	else if (s == "all")
-	{
-		g_weaponarena_list = "All Weapons";
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			g_weaponarena |= e.weapons;
-			weapon_precache(e.weapon);
-		}
-	}
-	else if (s == "most")
-	{
-		g_weaponarena_list = "Most Weapons";
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			if (e.spawnflags & WEPSPAWNFLAG_NORMAL)
-			{
-				g_weaponarena |= e.weapons;
-				weapon_precache(e.weapon);
-			}
-		}
-	}
-	else if (s == "none")
-	{
-		g_weaponarena_list = "No Weapons";
-		g_weaponarena = WEPBIT_ALL + 1; // this supports no single weapon bit!
-	}
-	else
-	{
-		t = tokenize_console(s);
-		g_weaponarena_list = "";
-		for (i = 0; i < t; ++i)
-		{
-			s = argv(i);
-			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			{
-				e = get_weaponinfo(j);
-				if (e.netname == s)
-				{
-					g_weaponarena |= e.weapons;
-					weapon_precache(e.weapon);
-					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
-					break;
-				}
-			}
-			if (j > WEP_LAST)
-			{
-				print("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
-			}
-		}
-		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
-	}
-
-	if(g_weaponarena)
-		g_weaponarena_random = cvar("g_weaponarena_random");
-	else
-		g_weaponarena_random = 0;
-
 	if (g_minstagib)
-		g_weaponarena = 0;
-
-
-	if (g_weaponarena)
-	{
-		start_weapons = g_weaponarena;
-		if (g_nadgets) {
-			start_ammo_rockets = cvar("g_start_ammo_rockets");
-			if (start_ammo_rockets > 0)
-				start_items |= IT_ROCKETS;
-		} else if (g_weaponarena & (WEPBIT_GRENADE_LAUNCHER | WEPBIT_HAGAR | WEPBIT_ROCKET_LAUNCHER))
-			start_ammo_rockets = 999;
-		if (g_weaponarena & WEPBIT_SHOTGUN)
-			start_ammo_shells = 999;
-		if (g_weaponarena & (WEPBIT_ELECTRO | WEPBIT_CRYLINK | WEPBIT_NEX | WEPBIT_MINSTANEX | WEPBIT_HLAC | WEPBIT_HOOK))
-			start_ammo_cells = 999;
-		if (g_weaponarena & (WEPBIT_UZI | WEPBIT_CAMPINGRIFLE))
-			start_ammo_nails = 999;
-		if (g_weaponarena & WEPBIT_HOOK)
-			start_ammo_fuel = 999;
-		start_items |= IT_UNLIMITED_AMMO;
-	}
-	else if (g_minstagib)
 	{
 		if (g_nadgets)
 			start_ammo_rockets = cvar("g_start_ammo_rockets");
@@ -1842,7 +1749,7 @@ void Items_Init()
 		warmup_start_armorvalue = start_armorvalue;
 		warmup_start_weapons = start_weapons;
 
-		if (!g_weaponarena && !g_minstagib)
+		if not(g_minstagib)
 		{
 			if (cvar("g_use_ammunition"))
 			{
@@ -1856,7 +1763,7 @@ void Items_Init()
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
 			if (cvar("g_warmup_allguns"))
 			{
-				for (i = WEP_FIRST; i <= WEP_LAST; ++i)
+				for (i = WEP_FIRST; i < WEP_FIREBALL; ++i)
 				{
 					e = get_weaponinfo(i);
 					if (!(e.weapon))

@@ -19,55 +19,12 @@ void showNotifyNexuizMutatorsDialog(entity me)
 	loadAllCvars(me);
 }
 
-string weaponarenastring;
-string weaponarenastring_cvar;
-string WeaponArenaString()
-{
-	string s;
-	float n, i, j;
-	entity e;
-	s = cvar_string("g_weaponarena");
-	if(s == "0")
-		return "";
-	if(s == "all")
-		return "All Weapons Arena";
-	if(s == "most")
-		return "Most Weapons Arena";
-	if(s == weaponarenastring_cvar)
-		return weaponarenastring;
-	if(weaponarenastring)
-		strunzone(weaponarenastring);
-	if(weaponarenastring_cvar)
-		strunzone(weaponarenastring_cvar);
-
-	weaponarenastring_cvar = strzone(s);
-
-	n = tokenize_console(s);
-	s = "";
-	for(i = 0; i < n; ++i)
-	{
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			if(argv(i) == e.netname)
-				s = strcat(s, " & ", e.message);
-		}
-	}
-	s = strcat(substring(s, 3, strlen(s) - 3), " Arena");
-	
-	weaponarenastring = strzone(s);
-
-	return weaponarenastring;
-}
-
 string toStringNexuizMutatorsDialog(entity me)
 {
 	string s;
 	s = "";
 	if(cvar("g_minstagib"))
 		s = strcat(s, ", MinstaGib");
-	if(cvar_string("g_weaponarena") != "0")
-		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
 		s = strcat(s, ", No start weapons");
 	if(cvar("sv_gravity") < 800)
@@ -88,66 +45,9 @@ string toStringNexuizMutatorsDialog(entity me)
 		return substring(s, 2, strlen(s) - 2);
 }
 
-
-
-// WARNING: dirty hack. TODO clean this up by putting this behaviour in extra classes.
-void loadCvarsLaserWeaponArenaWeaponButton(entity me)
-{
-	tokenize_console(cvar_string("g_weaponarena"));
-	me.checked = (argv(0) == me.cvarValue);
-}
-
-void saveCvarsLaserWeaponArenaWeaponButton(entity me)
-{
-	string suffix;
-
-	suffix = "";
-	if(me.cvarValue != "laser" && me.cvarValue != "most")
-		if(cvar("menu_weaponarena_with_laser"))
-			suffix = " laser";
-	if(me.checked)
-		cvar_set("g_weaponarena", strcat(me.cvarValue, suffix));
-	else
-		cvar_set("g_weaponarena", me.cvarOffValue);
-}
-
-.void(entity) draw_weaponarena;
-.void(entity) saveCvars_weaponarena;
-void saveCvarsLaserWeaponArenaLaserButton(entity me)
-{
-	// run the old function
-	me.saveCvars_weaponarena(me);
-
-	me.disabled = ((cvar_string("g_weaponarena") == "0") || (cvar_string("g_weaponarena") == "laser") || (cvar_string("g_weaponarena") == "most"));
-
-	if not(me.disabled)
-	{
-		// check for the laser suffix
-		string s;
-		s = cvar_string("g_weaponarena");
-		if(me.checked && substring(s, strlen(s) - 6, 6) != " laser")
-			s = strcat(s, " laser");
-		else if(!me.checked && substring(s, strlen(s) - 6, 6) == " laser")
-			s = substring(s, 0, strlen(s) - 6);
-		cvar_set("g_weaponarena", s);
-	}
-}
-
-void preDrawLaserWeaponArenaLaserButton(entity me)
-{
-	me.disabled = ((cvar_string("g_weaponarena") == "0") || (cvar_string("g_weaponarena") == "laser") || (cvar_string("g_weaponarena") == "most"));
-	// run the old function
-	me.draw_weaponarena(me);
-}
-// WARNING: end of dirty hack. Do not try this at home.
-
-
-
 void fillNexuizMutatorsDialog(entity me)
 {
-	entity e, s, w;
-	float i, j;
-	string str, hstr;
+	entity e, s;
 	me.TR(me);
 		me.TD(me, 1, 2, makeNexuizTextLabel(0, "Gameplay mutators:"));
 	me.TR(me);
@@ -179,53 +79,130 @@ void fillNexuizMutatorsDialog(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeNexuizCheckBoxEx(2, 0, "g_weapon_stay", "Weapons stay"));
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_pickup_items", "Pickup items"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_use_ammunition", "Use ammunition"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_minstagib", "MinstaGib"));
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 4, makeNexuizTextLabel(0, "Weapon arenas:"));
+	me.TR(me);
+		me.TD(me, 1, 4, makeNexuizTextLabel(0, "Start weapons:"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, string_null, string_null, "Regular (no arena)"));
-	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
-	{
-		w = get_weaponinfo(i);
-		if(w.spawnflags & WEPSPAWNFLAG_HIDDEN)
-			continue;
-		if(j & 1 == 0)
-			me.TR(me);
-		str = w.netname;
-		hstr = w.message;
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_weaponarena", strzone(str), strzone(hstr)));
-			e.cvarOffValue = "0";
-			// custom load/save logic that ignores a " laser" suffix, or adds it 
-			e.loadCvars = loadCvarsLaserWeaponArenaWeaponButton;
-			e.saveCvars = saveCvarsLaserWeaponArenaWeaponButton;
-			e.loadCvars(e);
-		++j;
-	}
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Laser:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_laser"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "menu_weaponarena_with_laser", "with laser"));
-			// hook the draw function to gray it out
-			e.draw_weaponarena = e.draw;
-			e.draw = preDrawLaserWeaponArenaLaserButton;
-			// hook the save function to notify about the cvar
-			e.saveCvars_weaponarena = e.saveCvars;
-			e.saveCvars = saveCvarsLaserWeaponArenaLaserButton;
-	me.TR(me);
-		me.TD(me, 1, 4, makeNexuizTextLabel(0, "Special arenas:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Shotgun:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_shotgun"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_minstagib", string_null, "MinstaGib"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Uzi:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_uzi"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_weaponarena", "most", "Most weapons"));
-			e.cvarOffValue = "0";
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Camping Rifle:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_campingrifle"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_start_weapon_laser", "0", "No start weapons"));
-			e.cvarOffValue = "-1";
-			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_campingrifle g_start_weapon_hlac g_start_weapon_seeker g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_porto g_start_weapon_tuba");
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Mortar:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_grenadelauncher"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crylink:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_crylink"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "HLAC:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_hlac"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Electro:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_electro"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Nex:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_nex"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Hagar:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_hagar"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Rocket Launcher:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_rocketlauncher"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "FireBall:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_fireball"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "HookGun:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_hook"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Porto:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_porto"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton("OK", '0 0 0'));
