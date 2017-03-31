@@ -37,7 +37,7 @@ float Clanarena_HandleFrags(entity attacker, entity targ, float f) {
 	return 0;
 }
 
-float Clanarena_DamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.flags & FL_CLIENT)
 	if (attacker.team != self.team) {
 		PlayerScore_Add(attacker, SP_DAMAGE, damage);
@@ -57,10 +57,9 @@ void Clanarena_Init()
 	GameHook_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
-	GameHook_DamageHandle = Clanarena_DamageHandle;
+	GameHook_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
-	GameHook_PlayerCanFire = Roundbased_PlayerCanFire;
 	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
 	ca_controller = spawn();
 	ca_controller.think = Clanarena_Think;

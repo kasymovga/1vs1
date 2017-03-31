@@ -127,7 +127,7 @@ void bcenterprint(string s)
         centerprint(head, s);
 }
 
-float PlayerCanFire(entity plr) {
+float PlayerCanFire(entity plr, float wep) {
 	if (PLAYER_DEAD(plr))
 		return FALSE;
 
@@ -138,7 +138,7 @@ float PlayerCanFire(entity plr) {
 	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
-	return GameHook_PlayerCanFire(plr);
+	return GameHook_PlayerCanFire(plr, wep);
 }
 
 void GameLogEcho(string s)
