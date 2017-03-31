@@ -482,7 +482,7 @@ void HG_PlayerFrame(void) {
     if(time < self.hg_plasmalock || PLAYER_DEAD(self))
         mayfire = FALSE;
 #endif
-	if not(PlayerCanFire(self))
+	if not(PlayerCanFire(self, FALSE))
 		mayfire = FALSE;
 
 	float held, isalt;
