@@ -1,4 +1,7 @@
 float g_conquest_capture_time;
+float g_conquest_lasthope_time;
+float conq_timelimit_save;
+float conq_lasthope;
 
 void conquest_cp_free() {
 	remove(self.enemy);
@@ -208,7 +211,10 @@ float conquest_WinningCondition()
 {
 	entity head;
 	float t1, t2;
+	float one_of_team_cannot_spawn;
 	t1 = t2 = 0;
+
+	one_of_team_cannot_spawn = FALSE;
 	WinningConditionHelper(); // set worldstatus
 	if(inWarmupStage)
 		return FALSE;
@@ -229,13 +235,29 @@ float conquest_WinningCondition()
 			break;
 		}
 
-	if not(t1)
 	if (conquest_TeamCanSpawn(COLOR_TEAM1))
 		t1 = 1;
+	else
+		one_of_team_cannot_spawn = TRUE;
 
-	if not(t2)
 	if (conquest_TeamCanSpawn(COLOR_TEAM2))
 		t2 = 1;
+	else
+		one_of_team_cannot_spawn = TRUE;
+
+	if (one_of_team_cannot_spawn) {
+		if not(conq_lasthope) {
+			float new_time_limit = (time - game_starttime + g_conquest_lasthope_time) / 60;
+			conq_timelimit_save = cvar("timelimit");
+			cvar_set("timelimit", ftos(new_time_limit));
+			conq_lasthope = 1;
+		}
+	} else {
+		if (conq_lasthope) {
+			cvar_set("timelimit", ftos(conq_timelimit_save));
+			conq_lasthope = 0;
+		}
+	}
 
 	if (t1 + t2 < 2) {
 		// game over, only one team remains (or none)
@@ -314,6 +336,7 @@ void conquest_init() {
 	precache_sound("onslaught/controlpoint_underattack.ogg");
 	precache_sound("domination/claim.wav");
 	CACHE_CVAR(g_conquest_capture_time);
+	CACHE_CVAR(g_conquest_lasthope_time);
 	if (g_conquest_capture_time <= 0)
 		g_conquest_capture_time = 1;
 
