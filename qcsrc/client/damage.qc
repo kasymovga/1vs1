@@ -160,14 +160,12 @@ void Ent_DamageInfo(float isNew)
 					else if(r < 0.2)
 						sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 				break;
-			case WEP_NADGET_MOLOTOV:
 			case WEP_GRENADE_LAUNCHER:
 				org2 = org + backoff * 12;
 				pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
 				if(!issilent)
 					sound(self, CHAN_PROJECTILE, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 				break;
-			case WEP_NADGET_TESLA:
 			case WEP_ELECTRO:
 				org2 = org + backoff * 6;
 				if(secondary)
@@ -227,7 +225,6 @@ void Ent_DamageInfo(float isNew)
 						sound(self, CHAN_PROJECTILE, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
 				}
 				break;
-			case WEP_NADGET_GRENADE:
 			case WEP_ROCKET_LAUNCHER:
 				org2 = org + backoff * 12;
 				pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);

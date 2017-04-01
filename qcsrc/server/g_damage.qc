@@ -435,10 +435,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					{
 						bprint ("^1",s, "^1 was smashed by ", a, "\n");
 					}
-					else if (w == WEP_NADGET_GRENADE)
-					{
-						bprint ("^1",s, "^1 was exploded by ", a, "\n");
-					}
 					else if (deathtype == DEATH_TELEFRAG)
 					{
 						bprint ("^1",s, "^1 was telefragged by ", a, "\n");
