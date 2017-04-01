@@ -948,7 +948,7 @@ void PutClientInServer()
 					ReadyRestartForce();
 			}
 		}
-		if (sv_player_hat) {
+		if (sv_player_hat != "") {
 			self.hat = spawn();
 			setmodel(self.hat, sv_player_hat);
 			self.hat.scale = sv_player_hat_scale;
