@@ -20,7 +20,6 @@ float WEP_FIREBALL          = 16; float WEPBIT_FIREBALL		    = 32768;
 float WEP_SUPERSHOTGUN          = 17; float WEPBIT_SUPERSHOTGUN		    = 65536;
 float WEP_LAST			= 17; float WEPBIT_ALL         = 131071;
 float WEP_COUNT = 18;
-float WEPBIT_ALL;
 float WEP_NADGET_TESLA      = 28;
 float WEP_NADGET_MOLOTOV    = 29;
 float WEP_NADGET_GRENADE    = 30;
