@@ -70,7 +70,7 @@ void Freeze_IceThink()
 		if (unfrozer) {
 			self.unfroze_pb = ProgressBar_Create("Unfrozing", unfrozer);
 			if not(self.owner.unfroze_pb)
-				self.owner.unfroze_pb = ProgressBar_Create("Unfrozing", self.owner);
+				self.owner.unfroze_pb = ProgressBar_Create("Reviving", self.owner);
 		} else {
 			if (self.owner.unfroze_pb)
 				remove(self.owner.unfroze_pb);
