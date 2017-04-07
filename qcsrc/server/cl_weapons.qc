@@ -273,7 +273,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if not(GameHook_ThrowWeaponAllowed())
 		return;
-	if (!cvar("g_pickup_items"))
+	if not(g_pickup_items)
+		return;
+	if not(g_pickup_weapons)
 		return;
 	if(!W_IsWeaponThrowable(w))
 		return;
