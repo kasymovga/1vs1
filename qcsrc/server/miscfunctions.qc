@@ -906,15 +906,21 @@ void play2(entity e, string filename)
 }
 
 .float announcetime;
+float announce_force(entity player, string msg)
+{
+	if not(clienttype(player) == CLIENTTYPE_REAL)
+		return FALSE;
+
+	player.announcetime = time + 0.8;
+	play2(player, msg);
+	return TRUE;
+}
+
 float announce(entity player, string msg)
 {
     if (time > player.announcetime)
-        if (clienttype(player) == CLIENTTYPE_REAL)
-        {
-            player.announcetime = time + 0.8;
-            play2(player, msg);
-            return TRUE;
-        }
+		return announce_force(player, msg);
+
     return FALSE;
 }
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)

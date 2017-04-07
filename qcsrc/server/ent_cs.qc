@@ -44,9 +44,9 @@ float entcs_customize()
 		return FALSE;
 	if(other == o)
 		return FALSE;
-	if(other.classname == "player")
-		if(o.team != other.team)
-			return FALSE;
+	if(other.team > 0)
+	if(o.team != other.team)
+		return FALSE;
 	return TRUE;
 }
 

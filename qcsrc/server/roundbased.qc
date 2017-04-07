@@ -150,7 +150,7 @@ void Roundbased_TeamArenaThink()
 						"domination/claim.wav"));
 
 		FOR_EACH_REALCLIENT(plr)
-			announce(plr, announce_sound);
+			announce_force(plr, announce_sound);
 
 		Roundbased_Active = 0;
 		Roundbased_SetRoundStart();
