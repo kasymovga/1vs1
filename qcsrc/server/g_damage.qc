@@ -124,8 +124,6 @@ void UpdateFrags(entity player, float f)
 void W_SwitchWeapon_Force(entity e, float w);
 void GiveFrags (entity attacker, entity targ, float f)
 {
-	float w;
-
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 

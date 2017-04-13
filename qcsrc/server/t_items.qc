@@ -1691,8 +1691,7 @@ void Items_Init()
 		g_ghost_items = 0.13; // default alpha value
 
 	entity e;
-	float i, j, t;
-	string s;
+	float i, t;
 
 	// initialize starting values for players
 	start_weapons = 0;
