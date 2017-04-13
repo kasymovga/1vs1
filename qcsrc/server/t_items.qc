@@ -1756,10 +1756,7 @@ void Items_Init()
 
 			if (t < 0) // "default" weapon selection
 			{
-				if (g_race || g_cts)
-					t = (i == WEP_LASER);
-				else
-					t = (i == WEP_LASER || i == WEP_SHOTGUN);
+				t = (i == WEP_LASER || i == WEP_SHOTGUN);
 			}
 
 			if (t)
