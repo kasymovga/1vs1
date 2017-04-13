@@ -1710,11 +1710,6 @@ void Items_Init()
 
 	if (g_minstagib)
 	{
-		if (g_nadgets)
-			start_ammo_rockets = cvar("g_start_ammo_rockets");
-			if (start_ammo_rockets > 0)
-				start_items |= IT_ROCKETS;
-
 		start_health = 100;
 		start_armorvalue = 0;
 		start_weapons = WEPBIT_MINSTANEX;
