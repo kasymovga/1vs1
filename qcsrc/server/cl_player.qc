@@ -377,8 +377,6 @@ void SpawnThrownWeapon (vector org, float w)
 
 void DropBackPack(vector org)
 {
-	if (g_weaponarena)
-		return;
 	entity ammopack, oldself;
 	ammopack = spawn();
 	ammopack.ammo_cells = self.ammo_cells;

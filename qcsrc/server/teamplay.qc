@@ -424,13 +424,6 @@ void PrintWelcomeMessage(entity pl)
 	modifications = "";
 	if(g_minstagib)
 		modifications = strcat(modifications, ", MinstaGib");
-	if(g_weaponarena)
-	{
-		if(g_weaponarena_random)
-			modifications = strcat(modifications, ", ", ftos(g_weaponarena_random), " of ", g_weaponarena_list, " Arena");
-		else
-			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
-	}
 	if(cvar("g_start_weapon_laser") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < 800)

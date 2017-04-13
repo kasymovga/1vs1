@@ -822,9 +822,6 @@ void PutClientInServer()
 			self.weapons = start_weapons;
 		}
 
-		if(g_weaponarena_random)
-			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
-
 		self.items = start_items;
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = self.switchweapon;
@@ -1398,12 +1395,6 @@ void ClientConnect (void)
 
 	self.jointime = time;
 	self.allowedTimeouts = sv_timeout_number;
-
-	if(clienttype(self) == CLIENTTYPE_REAL)
-	{
-		if(g_weaponarena == WEPBIT_TUBA)
-			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
-	}
 
 	if(!sv_foginterval && world.fog != "")
 		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));

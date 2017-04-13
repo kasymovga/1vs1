@@ -150,26 +150,6 @@ void GiveFrags (entity attacker, entity targ, float f)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
-	if(targ != attacker) // not for suicides
-	if(g_weaponarena_random)
-	{
-		// after a frag, choose another random weapon set
-		if(inWarmupStage)
-			w = warmup_start_weapons;
-		else
-			w = start_weapons;
-
-		attacker.weapons = randombits(w - (w & W_WeaponBit(attacker.weapon)), g_weaponarena_random, TRUE);
-		if(attacker.weapons < 0)
-		{
-			// error from randombits: no weapon available
-			// this means we can just give ALL weapons
-			attacker.weapons = w;
-		}
-		if not(attacker.weapons & W_WeaponBit(attacker.weapon))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
-	}
-
 	f = GameHook_FragsHandle(attacker, targ, f);
 
 	attacker.totalfrags += f;

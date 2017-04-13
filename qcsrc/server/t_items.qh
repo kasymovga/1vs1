@@ -19,8 +19,5 @@ float warmup_start_ammo_rockets;
 float warmup_start_ammo_cells;
 float warmup_start_ammo_fuel;
 float warmup_start_weapons;
-float g_weaponarena_random;
-string g_weaponarena_list;
 float g_weapon_stay;
-float g_weaponarena; //Defined in defs.qh
 void Items_Init();
