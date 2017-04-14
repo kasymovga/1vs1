@@ -584,7 +584,6 @@ void readlevelcvars(void)
 	runes_init();
 }
 
-void Damage_ReadCvars();
 void readdynamiccvars() {
 	W_Init();
 	Damage_ReadCvars();
