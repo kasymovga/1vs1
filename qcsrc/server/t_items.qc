@@ -4,6 +4,8 @@ float g_balance_pause_fuel_rot;
 float g_balance_pause_health_regen;
 float g_balance_pause_health_rot;
 float g_fullbrightitems;
+float g_minstagib_ammo_drop;
+float g_minstagib_extralives;
 float g_pickup_shells_max;
 float g_pickup_nails_max;
 float g_pickup_rockets_max;
@@ -324,7 +326,7 @@ float Item_GiveTo(entity item, entity player)
 				if (item.weapons & WEPBIT_MINSTANEX)
 					W_GiveWeapon (player, WEP_MINSTANEX, "Nex");
 				if (item.ammo_cells)
-					player.ammo_cells = min (player.ammo_cells + cvar("g_minstagib_ammo_drop"), 999);
+					player.ammo_cells = min (player.ammo_cells + g_minstagib_ammo_drop, 999);
 				player.health = 100;
 			}
 
@@ -334,7 +336,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
-				player.armorvalue = player.armorvalue + cvar("g_minstagib_extralives");
+				player.armorvalue = player.armorvalue + g_minstagib_extralives;
 				sprint(player, "^3You picked up some extra lives\n");
 			}
 
@@ -1639,6 +1641,8 @@ void Items_Init()
 	CACHE_CVAR(g_balance_pause_health_regen);
 	CACHE_CVAR(g_balance_pause_health_rot);
 	CACHE_CVAR(g_fullbrightitems);
+	CACHE_CVAR(g_minstagib_ammo_drop);
+	CACHE_CVAR(g_minstagib_extralives);
 	CACHE_CVAR(g_pickup_drop_backpack);
 	CACHE_CVAR(g_pickup_respawntime_weapon);
 	CACHE_CVAR(g_pickup_respawntime_ammo);
