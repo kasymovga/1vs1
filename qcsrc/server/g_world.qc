@@ -580,6 +580,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_telefrags);
 	Nadget_Init();
 	Items_Init();
+	Player_Init();
 	runes_init();
 }
 
