@@ -36,7 +36,6 @@ float g_pickup_respawntimejitter_armormedium;
 float g_pickup_respawntimejitter_armorbig;
 float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
-float g_balance_pause_fuel_rot;
 float g_use_ammunition;
 string sv_model_healthsmall;
 string sv_model_healthmedium;
@@ -1672,9 +1671,6 @@ void Items_Init()
 	CACHE_CVAR(g_pickup_rockets_max);
 	CACHE_CVAR(g_pickup_cells_max);
 	CACHE_CVAR(g_pickup_fuel_max);
-	CACHE_CVAR(g_balance_pause_fuel_rot);
-	CACHE_CVAR(g_balance_pause_health_rot);
-	CACHE_CVAR(g_balance_pause_armor_rot);
 	CACHE_CVAR(g_use_ammunition);
 	CACHE_CVAR(g_pickup_items);
 	CACHE_CVAR(g_pickup_weapons);
