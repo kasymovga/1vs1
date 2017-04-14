@@ -576,6 +576,7 @@ void PutObserverInServer(float frags_team_reset)
 	entity	spot;
 
 	GameHook_ObserverSpawn();
+	PlayerClear(FALSE, world);
 
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
@@ -757,7 +758,6 @@ void PutClientInServer()
 	if(gameover)
 		self.classname = "observer";
 
-	PlayerClear(FALSE, world);
 	if(self.classname == "player") {
 		entity spot, oldself;
 		local float currentlyPlaying;
@@ -780,7 +780,7 @@ void PutClientInServer()
 			PutObserverInServer(FALSE);
 			return;
 		}
-
+		PlayerClear(FALSE, world);
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
