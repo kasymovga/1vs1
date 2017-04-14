@@ -299,7 +299,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 };
 
 // Bringed back weapon frame
-float w_nexball_carrier_think();
 void W_WeaponFrame()
 {
 	vector fo, ri, up;

@@ -59,6 +59,14 @@ float g_nexball_delay_start;
 .float explosive;
 .entity pov_ball;
 
+float w_nexball_carrier_think();
+void nexball_setstatus();
+void nb_delayedinit();
+void ResetBall();
+void basketball_touch();
+void football_touch();
+void hockey_touch();
+
 void nb_PlayerClear(entity plr, entity attacker, float killed) {
 	if(plr.ballcarried)
 		DropBall(plr.ballcarried, plr.origin, plr.velocity);
@@ -109,8 +117,6 @@ void nb_SpectateCopy(entity e) {
 	self.metertime = e.metertime;
 }
 
-void nexball_setstatus();
-void nb_delayedinit();
 void nb_init() // Called early (worldspawn stage)
 {
 	CACHE_CVAR(g_nexball_meter_period); //sent with the client init entity
@@ -171,8 +177,6 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 	return e.team;
 }
 
-void ResetBall();
-
 void LogNB(string mode, entity actor)
 {
 	string s;
@@ -226,10 +230,6 @@ void relocate_nexball (void)
 		self.origin = o;
 	}
 }
-
-void basketball_touch();
-void football_touch();
-void hockey_touch();
 
 void DropOwner (void)
 {

@@ -7,6 +7,10 @@ string GetGametype();
 void GotoNextMap();
 void ShuffleMaplist()
 float() DoNextMapOverride;
+void Map_MarkAsRecent(string m);
+void() MapVote_Start;
+void() MapVote_Think;
+void MapVote_Spawn();
 
 void fteqcc_testbugs()
 {
@@ -601,12 +605,7 @@ void readdynamiccvars() {
 		default_weapon_alpha = 1;
 }
 
-void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void Nagger_Init();
-void ClientInit_Spawn();
-void WeaponStats_Init();
-void WeaponStats_Shutdown();
 void spawnfunc_worldspawn (void)
 {
 	gettaginfo_parent = 0;
@@ -1296,8 +1295,6 @@ When the player presses attack or jump, change to the next level
 ============
 */
 .float autoscreenshot;
-void() MapVote_Start;
-void() MapVote_Think;
 float mapvote_initialized;
 void IntermissionThink()
 {
@@ -1862,7 +1859,6 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	mapvote_count += 1;
 }
 
-void MapVote_Spawn();
 void MapVote_Init()
 {
 	float i;

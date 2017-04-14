@@ -1,0 +1,2 @@
+void WeaponStats_Init();
+void WeaponStats_Shutdown();

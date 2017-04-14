@@ -475,8 +475,6 @@ void PlayerClear(float killed, entity attacker)
 	WaypointSprite_PlayerDead();
 }
 
-void ClientKill_Now_TeamChange();
-
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	local float take, save, waves, sdelay, dh, da;
