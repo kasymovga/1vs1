@@ -1,3 +1,24 @@
+float g_chat_flood_burst;
+float g_chat_flood_burst_team;
+float g_chat_flood_burst_tell;
+float g_chat_flood_lmax;
+float g_chat_flood_lmax_team;
+float g_chat_flood_lmax_tell;
+float g_chat_flood_notify_flooder;
+float g_chat_flood_spl;
+float g_chat_flood_spl_team;
+float g_chat_flood_spl_tell;
+float g_chat_nospectators;
+float g_chat_teamcolors;
+float g_respawn_delay;
+float g_respawn_mapsettings;
+float g_respawn_mapsettings_delay;
+float g_respawn_mapsettings_waves;
+float g_respawn_waves;
+float g_voice_flood_spv;
+float g_voice_flood_spv_team;
+float sv_allow_shownames;
+
 float weaponstats_buffer;
 
 void WeaponStats_Init()
@@ -424,7 +445,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.armorvalue = self.armorvalue - save;
 	self.health = self.health - take;
 	// pause regeneration for 5 seconds
-	self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
+	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_health_regen);
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
@@ -563,7 +584,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.armorvalue = self.armorvalue - save;
 		self.health = self.health - take;
 		// pause regeneration for 5 seconds
-		self.pauseregen_finished = max(self.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
+		self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_health_regen);
 
 		if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 		{
@@ -702,19 +723,19 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// when to allow respawn
 		sdelay = 0;
 		waves = 0;
-		if(cvar("g_respawn_mapsettings"))
+		if(g_respawn_mapsettings)
 		{
-			sdelay = cvar("g_respawn_mapsettings_delay");
-			waves = cvar("g_respawn_mapsettings_waves");
+			sdelay = g_respawn_mapsettings_delay;
+			waves = g_respawn_mapsettings_waves;
 		}
 		if(!sdelay)
 			sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
 		if(!sdelay)
-			sdelay = cvar("g_respawn_delay");
+			sdelay = g_respawn_delay;
 		if(!waves)
 			waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
 		if(!waves)
-			waves = cvar("g_respawn_waves");
+			waves = g_respawn_waves;
 		if(waves)
 			self.death_time = ceil((time + sdelay) / waves) * waves;
 		else
@@ -819,7 +840,7 @@ void UpdateSelectedPlayer()
 	selected = world;
 	selected_score = 0.95; // 18 degrees
 
-	if(!cvar("sv_allow_shownames"))
+	if(!sv_allow_shownames)
 		return;
 
 	if(clienttype(self) != CLIENTTYPE_REAL)
@@ -971,7 +992,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	}
 	*/
 
-	if(cvar("g_chat_teamcolors"))
+	if(g_chat_teamcolors)
 		namestr = playername(source);
 	else
 		namestr = source.netname;
@@ -982,7 +1003,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		privatemsgprefixlen = strlen(msgstr);
 		msgstr = strcat(msgstr, msgin);
 		cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
-		if(cvar("g_chat_teamcolors"))
+		if(g_chat_teamcolors)
 			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
 		else
 			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
@@ -1013,23 +1034,23 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		float lines;
 		if(privatesay)
 		{
-			flood_spl = cvar("g_chat_flood_spl_tell");
-			flood_burst = cvar("g_chat_flood_burst_tell");
-			flood_lmax = cvar("g_chat_flood_lmax_tell");
+			flood_spl = g_chat_flood_spl_tell;
+			flood_burst = g_chat_flood_burst_tell;
+			flood_lmax = g_chat_flood_lmax_tell;
 			flood_field = floodcontrol_chattell;
 		}
 		else if(teamsay)
 		{
-			flood_spl = cvar("g_chat_flood_spl_team");
-			flood_burst = cvar("g_chat_flood_burst_team");
-			flood_lmax = cvar("g_chat_flood_lmax_team");
+			flood_spl = g_chat_flood_spl_team;
+			flood_burst = g_chat_flood_burst_team;
+			flood_lmax = g_chat_flood_lmax_team;
 			flood_field = floodcontrol_chatteam;
 		}
 		else
 		{
-			flood_spl = cvar("g_chat_flood_spl");
-			flood_burst = cvar("g_chat_flood_burst");
-			flood_lmax = cvar("g_chat_flood_lmax");
+			flood_spl = g_chat_flood_spl;
+			flood_burst = g_chat_flood_burst;
+			flood_lmax = g_chat_flood_lmax;
 			flood_field = floodcontrol_chat;
 		}
 		flood_burst = max(0, flood_burst - 1);
@@ -1068,7 +1089,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 
 	if(flood == 2)
 	{
-		if(cvar("g_chat_flood_notify_flooder"))
+		if(g_chat_flood_notify_flooder)
 		{
 			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
 			sourcecmsgstr = "";
@@ -1089,7 +1110,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	if(!privatesay)
 	if(source.classname != "player")
 	{
-		if(teamsay || (cvar("g_chat_nospectators") == 1) || (cvar("g_chat_nospectators") == 2 && !inWarmupStage))
+		if(teamsay || (g_chat_nospectators == 1) || (g_chat_nospectators == 2 && !inWarmupStage))
 			teamsay = -1; // spectators
 	}
 
@@ -1111,7 +1132,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	}
 	else if(flood == 1)
 	{
-		if(cvar("g_chat_flood_notify_flooder"))
+		if(g_chat_flood_notify_flooder)
 			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
 		else
 		{
@@ -1424,12 +1445,12 @@ void VoiceMessage(string type, string msg)
 	flood = 0;
 	if(ownteam)
 	{
-		flood_spv = cvar("g_voice_flood_spv_team");
+		flood_spv = g_voice_flood_spv_team;
 		flood_field = floodcontrol_voiceteam;
 	}
 	else
 	{
-		flood_spv = cvar("g_voice_flood_spv");
+		flood_spv = g_voice_flood_spv;
 		flood_field = floodcontrol_voice;
 	}
 
@@ -1446,4 +1467,27 @@ void VoiceMessage(string type, string msg)
 
 	if (!flood)
 		PlayerSound(sample, CHAN_VOICE, voicetype);
+}
+
+void Player_Init() {
+	CACHE_CVAR(g_chat_flood_burst);
+	CACHE_CVAR(g_chat_flood_burst_team);
+	CACHE_CVAR(g_chat_flood_burst_tell);
+	CACHE_CVAR(g_chat_flood_lmax);
+	CACHE_CVAR(g_chat_flood_lmax_team);
+	CACHE_CVAR(g_chat_flood_lmax_tell);
+	CACHE_CVAR(g_chat_flood_notify_flooder);
+	CACHE_CVAR(g_chat_flood_spl);
+	CACHE_CVAR(g_chat_flood_spl_team);
+	CACHE_CVAR(g_chat_flood_spl_tell);
+	CACHE_CVAR(g_chat_nospectators);
+	CACHE_CVAR(g_chat_teamcolors);
+	CACHE_CVAR(g_respawn_delay);
+	CACHE_CVAR(g_respawn_mapsettings);
+	CACHE_CVAR(g_respawn_mapsettings_delay);
+	CACHE_CVAR(g_respawn_mapsettings_waves);
+	CACHE_CVAR(g_respawn_waves);
+	CACHE_CVAR(g_voice_flood_spv);
+	CACHE_CVAR(g_voice_flood_spv_team);
+	CACHE_CVAR(sv_allow_shownames);
 }

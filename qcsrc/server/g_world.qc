@@ -580,10 +580,10 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
 	Items_Init();
+	Player_Init();
 	runes_init();
 }
 
-void Damage_ReadCvars();
 void readdynamiccvars() {
 	W_Init();
 	Damage_ReadCvars();
