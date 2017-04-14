@@ -1,3 +1,11 @@
+float g_balance_pause_armor_rot;
+float g_balance_pause_fuel_regen;
+float g_balance_pause_fuel_rot;
+float g_balance_pause_health_regen;
+float g_balance_pause_health_rot;
+float g_fullbrightitems;
+float g_minstagib_ammo_drop;
+float g_minstagib_extralives;
 float g_pickup_shells_max;
 float g_pickup_nails_max;
 float g_pickup_rockets_max;
@@ -161,7 +169,7 @@ void Item_Show (entity e, float mode)
 
 	if (e.strength_finished || e.invincible_finished)
 		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
-	if (cvar("g_fullbrightitems"))
+	if (g_fullbrightitems)
 		e.effects |= EF_FULLBRIGHT;
 
 	// relink entity (because solid may have changed)
@@ -319,7 +327,7 @@ float Item_GiveTo(entity item, entity player)
 				if (item.weapons & WEPBIT_MINSTANEX)
 					W_GiveWeapon (player, WEP_MINSTANEX, "Nex");
 				if (item.ammo_cells)
-					player.ammo_cells = min (player.ammo_cells + cvar("g_minstagib_ammo_drop"), 999);
+					player.ammo_cells = min (player.ammo_cells + g_minstagib_ammo_drop, 999);
 				player.health = 100;
 			}
 
@@ -329,7 +337,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				// sound not available
 				// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
-				player.armorvalue = player.armorvalue + cvar("g_minstagib_extralives");
+				player.armorvalue = player.armorvalue + g_minstagib_extralives;
 				sprint(player, "^3You picked up some extra lives\n");
 			}
 
@@ -356,7 +364,7 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 			}
 		}
 	}
@@ -422,7 +430,7 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 			}
 		}
 
@@ -1517,17 +1525,17 @@ void target_items_use (void)
 		activator.invincible_finished = 0;
 
 	if(activator.health > h0)
-		activator.pauserothealth_finished = max(activator.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+		activator.pauserothealth_finished = max(activator.pauserothealth_finished, time + g_balance_pause_health_rot);
 	else if(activator.health < h0)
-		activator.pauseregen_finished = max(activator.pauseregen_finished, time + cvar("g_balance_pause_health_regen"));
+		activator.pauseregen_finished = max(activator.pauseregen_finished, time + g_balance_pause_health_regen);
 
 	if(activator.ammo_fuel > f0)
-		activator.pauserotfuel_finished = max(activator.pauserotfuel_finished, time + cvar("g_balance_pause_fuel_rot"));
+		activator.pauserotfuel_finished = max(activator.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	else if(activator.ammo_fuel < f0)
 		activator.pauseregen_finished = max(activator.pauseregen_finished, time + g_balance_pause_fuel_regen);
 
 	if(activator.armorvalue > a0)
-		activator.pauserotarmor_finished = max(activator.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+		activator.pauserotarmor_finished = max(activator.pauserothealth_finished, time + g_balance_pause_health_rot);
 
 	if not(activator.weapons & W_WeaponBit(activator.switchweapon))
 		_switchweapon = TRUE;
@@ -1628,6 +1636,14 @@ void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_healt
 
 void Items_Init()
 {
+	CACHE_CVAR(g_balance_pause_armor_rot);
+	CACHE_CVAR(g_balance_pause_fuel_regen);
+	CACHE_CVAR(g_balance_pause_fuel_rot);
+	CACHE_CVAR(g_balance_pause_health_regen);
+	CACHE_CVAR(g_balance_pause_health_rot);
+	CACHE_CVAR(g_fullbrightitems);
+	CACHE_CVAR(g_minstagib_ammo_drop);
+	CACHE_CVAR(g_minstagib_extralives);
 	CACHE_CVAR(g_pickup_drop_backpack);
 	CACHE_CVAR(g_pickup_respawntime_weapon);
 	CACHE_CVAR(g_pickup_respawntime_ammo);
