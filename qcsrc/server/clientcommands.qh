@@ -1,0 +1,3 @@
+void Nagger_Init();
+void ReadyRestartForce();
+void ReadyCount();

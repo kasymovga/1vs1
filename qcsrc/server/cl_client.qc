@@ -76,6 +76,8 @@ float sv_maxidle_forcespec;
 
 float reset_on_join_done;
 
+void FixPlayermodel();
+
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -489,7 +491,6 @@ float Client_customizeentityforclient()
 	return TRUE;
 }
 
-void UpdatePlayerSounds();
 void setmodel_lod(entity e, string modelname)
 {
 	string s;
@@ -568,7 +569,6 @@ PutObserverInServer
 putting a client as observer in the server
 =============
 */
-void FixPlayermodel();
 void PutObserverInServer(float frags_team_reset)
 {
 	entity	spot;
@@ -741,7 +741,6 @@ Called when a client spawns in the server
 =============
 */
 .float just_connected;
-void ReadyRestartForce();
 void PutClientInServer()
 {
 	if (self.just_connected) {
@@ -1271,8 +1270,6 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-string ColoredTeamName(float t);
-void DecodeLevelParms (void);
 void ClientConnect (void)
 {
 	local string s;
@@ -1427,7 +1424,6 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 .entity teambubbleentity;
-void ReadyCount();
 void ClientDisconnect (void)
 {
 	if not(self.flags & FL_CLIENT)

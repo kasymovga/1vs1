@@ -10,6 +10,40 @@
 float g_balance_rune_speed_combo_atkrate;
 float g_balance_rune_speed_atkrate;
 float g_balance_curse_slow_atkrate;
+float g_balance_weaponswitchdelay;
+float g_showweaponspawns;
+float g_projectiles_newton_style_2_maxfactor;
+float g_projectiles_newton_style_2_minfactor;
+float g_weaponratefactor;
+vector sv_qcanimation_melee_morph1angles;
+vector sv_qcanimation_melee_morph2angles;
+vector sv_qcanimation_melee_morph1origin;
+vector sv_qcanimation_melee_morph2origin;
+float sv_qcweaponanimation;
+
+vector weapon_offset = '0 -10 0';
+vector weapon_adjust = '10 0 -15';
+
+.vector shotorg_visual;
+.vector weapon_morph0origin;
+.vector weapon_morph0angles;
+.float  weapon_morph0time;
+.vector weapon_morph1origin;
+.vector weapon_morph1angles;
+.float  weapon_morph1time;
+.vector weapon_morph2origin;
+.vector weapon_morph2angles;
+.float  weapon_morph2time;
+.vector weapon_morph3origin;
+.vector weapon_morph3angles;
+.float  weapon_morph3time;
+.vector weapon_morph4origin;
+.vector weapon_morph4angles;
+.float  weapon_morph4time;
+
+void(float fr, float t, void() func) weapon_thinkf;
+
+#define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
 
 float W_WeaponRateFactor()
 {
@@ -47,18 +81,6 @@ void W_SwitchWeapon_Force(entity e, float w)
 	e.switchweapon = w;
 }
 
-float g_balance_weaponswitchdelay;
-float g_showweaponspawns;
-float g_projectiles_newton_style_2_maxfactor;
-float g_projectiles_newton_style_2_minfactor;
-vector sv_qcanimation_melee_morph1angles;
-vector sv_qcanimation_melee_morph2angles;
-vector sv_qcanimation_melee_morph1origin;
-vector sv_qcanimation_melee_morph2origin;
-
-.vector shotorg_visual;
-
-void(float fr, float t, void() func) weapon_thinkf;
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {
@@ -131,9 +153,6 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		}
 	}
 }
-
-vector w_shotorg;
-vector w_shotdir;
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
@@ -261,10 +280,6 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 	}
 };
 
-#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, maxdamage)
-#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-#define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, maxdamage)
-
 float CL_Weaponentity_CustomizeEntityForClient()
 {
 	self.viewmodelforclient = Akimbo_Owner(self.owner);
@@ -273,27 +288,6 @@ float CL_Weaponentity_CustomizeEntityForClient()
 			self.viewmodelforclient = other;
 	return TRUE;
 }
-
-float sv_qcweaponanimation;
-vector weapon_offset = '0 -10 0';
-vector weapon_adjust = '10 0 -15';
-.vector weapon_morph0origin;
-.vector weapon_morph0angles;
-.float  weapon_morph0time;
-.vector weapon_morph1origin;
-.vector weapon_morph1angles;
-.float  weapon_morph1time;
-.vector weapon_morph2origin;
-.vector weapon_morph2angles;
-.float  weapon_morph2time;
-.vector weapon_morph3origin;
-.vector weapon_morph3angles;
-.float  weapon_morph3time;
-.vector weapon_morph4origin;
-.vector weapon_morph4angles;
-.float  weapon_morph4time;
-.string weaponname;
-#define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
 
 /*
  * supported formats:
@@ -762,7 +756,6 @@ void CL_SpawnWeaponentity()
 };
 
 .float hasweapon_complain_spam;
-
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
 	local float weaponbit, f;

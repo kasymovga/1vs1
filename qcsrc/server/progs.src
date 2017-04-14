@@ -82,6 +82,10 @@ cl_physics.qh
 
 cl_client.qh
 
+cl_player.qh
+
+clientcommands.qh
+
 gametypevote.qh
 
 menu.qh
