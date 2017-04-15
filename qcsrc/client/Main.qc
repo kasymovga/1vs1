@@ -27,18 +27,6 @@ void cvar_clientsettemp_restore()
 			cvar_set(e.netname, e.message);
 }
 
-void() menu_show_error =
-{
-	drawstring('0 200 0', "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!", '8 8 0', '1 0 0', 1, 0);
-};
-
-// CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
-// Useful for precaching things
-
-void() menu_sub_null =
-{
-};
-
 #ifdef USE_FTE
 float __engine_check;
 #endif
@@ -58,6 +46,8 @@ void Ent_ClientData(float ignore);
 void Ent_RandomSeed(float ignore);
 void Ent_Init(float ignore);
 
+// CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
+// Useful for precaching things
 void CSQC_Init(void)
 {
 #ifdef USE_FTE
@@ -1023,8 +1013,8 @@ void Ent_Remove()
 
 	self.enttype = 0;
 	self.classname = "";
-	self.draw = menu_sub_null;
-	self.entremove = menu_sub_null;
+	self.draw = world.draw;
+	self.entremove = world.entremove;
 	// TODO possibly set more stuff to defaults
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
