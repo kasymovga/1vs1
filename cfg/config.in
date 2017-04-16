@@ -454,5 +454,9 @@ set sv_model_healthlarge ""
 set sv_model_healthmedium ""
 set sv_model_healthmega ""
 set sv_model_healthsmall ""
+set sv_model_armorsmall ""
+set sv_model_armormedium ""
+set sv_model_armorbig ""
+set sv_model_armorlarge ""
 
 set sv_maxidle_forcespec 120
