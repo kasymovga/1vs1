@@ -41,6 +41,10 @@ string sv_model_healthsmall;
 string sv_model_healthmedium;
 string sv_model_healthlarge;
 string sv_model_healthmega;
+string sv_model_armorsmall;
+string sv_model_armormedium;
+string sv_model_armorbig;
+string sv_model_armorlarge;
 
 #define ITEM_RESPAWN_TICKS 10
 
@@ -1219,7 +1223,7 @@ void spawnfunc_item_armor_small (void) {
 		self.armorvalue = cvar("g_pickup_armorsmall");
 	if(!self.max_armorvalue)
 		self.max_armorvalue = cvar("g_pickup_armorsmall_max");
-	StartItem ("models/items/g_a1.md3", "misc/armor1.wav", g_pickup_respawntime_armorsmall, g_pickup_respawntimejitter_armorsmall, "5 Armor", IT_ARMOR_SHARD, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItem (sv_model_armorsmall, "misc/armor1.wav", g_pickup_respawntime_armorsmall, g_pickup_respawntimejitter_armorsmall, "5 Armor", IT_ARMOR_SHARD, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_armor_medium (void) {
@@ -1227,7 +1231,7 @@ void spawnfunc_item_armor_medium (void) {
 		self.armorvalue = cvar("g_pickup_armormedium");
 	if(!self.max_armorvalue)
 		self.max_armorvalue = cvar("g_pickup_armormedium_max");
-	StartItem ("models/items/g_armormedium.md3", "misc/armor10.wav", g_pickup_respawntime_armormedium, g_pickup_respawntimejitter_armormedium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItem (sv_model_armormedium, "misc/armor10.wav", g_pickup_respawntime_armormedium, g_pickup_respawntimejitter_armormedium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_armor_big (void) {
@@ -1235,7 +1239,7 @@ void spawnfunc_item_armor_big (void) {
 		self.armorvalue = cvar("g_pickup_armorbig");
 	if(!self.max_armorvalue)
 		self.max_armorvalue = cvar("g_pickup_armorbig_max");
-	StartItem ("models/items/g_a50.md3", "misc/armor17_5.wav", g_pickup_respawntime_armorbig, g_pickup_respawntimejitter_armorbig, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
+	StartItem (sv_model_armorbig, "misc/armor17_5.wav", g_pickup_respawntime_armorbig, g_pickup_respawntimejitter_armorbig, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
 }
 
 void spawnfunc_item_armor_large (void) {
@@ -1243,7 +1247,7 @@ void spawnfunc_item_armor_large (void) {
 		self.armorvalue = cvar("g_pickup_armorlarge");
 	if(!self.max_armorvalue)
 		self.max_armorvalue = cvar("g_pickup_armorlarge_max");
-	StartItem ("models/items/g_a25.md3", "misc/armor25.wav", g_pickup_respawntime_armorlarge, g_pickup_respawntimejitter_armorlarge, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+	StartItem (sv_model_armorlarge, "misc/armor25.wav", g_pickup_respawntime_armorlarge, g_pickup_respawntimejitter_armorlarge, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
 
 void spawnfunc_item_health_small (void) {
@@ -1689,6 +1693,22 @@ void Items_Init()
 	sv_model_healthmega = cvar_string_zone_ifneeded("sv_model_healthmega");
 	if (sv_model_healthmega == "")
 		sv_model_healthmega = "models/items/g_h100.md3";
+
+	sv_model_armorsmall = cvar_string_zone_ifneeded("sv_model_armorsmall");
+	if (sv_model_armorsmall == "")
+		sv_model_armorsmall = "models/items/g_a1.md3";
+
+	sv_model_armormedium = cvar_string_zone_ifneeded("sv_model_armormedium");
+	if (sv_model_armormedium == "")
+		sv_model_armormedium = "models/items/g_armormedium.md3";
+
+	sv_model_armorbig = cvar_string_zone_ifneeded("sv_model_armorbig");
+	if (sv_model_armorbig == "")
+		sv_model_armorbig = "models/items/g_a50.md3";
+
+	sv_model_armorlarge = cvar_string_zone_ifneeded("sv_model_armorlarge");
+	if (sv_model_armorlarge == "")
+		sv_model_armorlarge = "models/items/g_a25.md3";
 
 	if (g_pickup_drop_backpack)
 	{
