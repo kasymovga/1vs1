@@ -92,6 +92,7 @@ menu.qh
 
 dodging.qh
 miscfunctions.qh
+../common/miscfunctions.qh
 gamehooks.qh
 ../common/nadgets.qh
 nadgets/include.qh

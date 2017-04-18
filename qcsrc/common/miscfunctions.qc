@@ -45,3 +45,15 @@ float TeamColorSkin(float t) {
     }
     return 0;
 }
+
+/*
+==================
+SUB_Remove
+
+Remove self
+==================
+*/
+void SUB_Remove (void)
+{
+	remove (self);
+}

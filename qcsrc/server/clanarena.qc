@@ -2,6 +2,7 @@ entity ca_controller;
 
 float g_clanarena_enddelay;
 float g_clanarena_startdelay;
+float g_clanarena_healthrotpause_on_damage;
 
 void Clanarena_Think()
 {
@@ -42,6 +43,8 @@ float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float dama
 	if (attacker.team != self.team) {
 		PlayerScore_Add(attacker, SP_DAMAGE, damage);
 		PlayerScore_Add(attacker, SP_SCORE, damage / 10);
+		attacker.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
+		self.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
 	}
 	return FALSE;
 }
@@ -58,6 +61,7 @@ void Clanarena_Init()
 {
 	CACHE_CVAR(g_clanarena_startdelay);
 	CACHE_CVAR(g_clanarena_enddelay);
+	CACHE_CVAR(g_clanarena_healthrotpause_on_damage);
 	GameHook_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;

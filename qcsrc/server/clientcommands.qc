@@ -268,15 +268,25 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, maplist_reply);
 	} else if(cmd == "lsmaps") {
 		sprint(self, lsmaps_reply);
-	} else if(cmd == "iamxonoticplayer") {
-		self.xonoticplayer = TRUE;
-		if ((tokens >= 2 && argv(1) == "first") || cvar("sv_message_for_xonotic_players_nagger"))
-		if ((s = cvar_string("sv_message_for_xonotic_players")) != "") {
-			float n = strstrofs(s, "USERNAME", 0);
-			if (n >= 0) {
-				s = strcat(substring(s, 0, n), self.netname, substring(s, n + 8, -1));
+	} else if(cmd == "gameclient") {
+		s = argv(1);
+		print("Game client for ", self.netname, ": ", s, "\n");
+		GameLogEcho(strcat(":gameclient:", ftos(self.playerid), ":", s));
+		if (s == "xonotic") {
+			self.gameclient = CLIENT_XONOTIC;
+			if ((s = cvar_string("sv_message_for_xonotic_players")) != "") {
+				float n = strstrofs(s, "USERNAME", 0);
+				if (n >= 0) {
+					s = strcat(substring(s, 0, n), self.netname, substring(s, n + 8, -1));
+				}
+				sprint(self, strcat("\{1}", s, "\n"));
 			}
-			sprint(self, strcat("\{1}", s, "\n"));
+		} else if (s == "rexuiz") {
+			self.gameclient = CLIENT_REXUIZ;
+		} else if (s == "nexuiz") {
+			self.gameclient = CLIENT_NEXUIZ;
+		} else if (s == "oldnexuiz") {
+			self.gameclient = CLIENT_OLDNEXUIZ;
 		}
 	} else if(cmd == "records") {
 		sprint(self, records_reply);
@@ -381,6 +391,7 @@ void SV_ParseClientCommand(string s) {
 		if(cmd != "pings")
 		if(cmd != "sv_startdownload")
 		if(cmd != "download")
+		if(cmd != "rate_burstsize")
 		{
 			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
 			return;

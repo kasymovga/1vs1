@@ -6,7 +6,6 @@ void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
-void() SUB_Remove;
 
 void spawnfunc_info_null (void)
 {
@@ -77,18 +76,6 @@ vector animparseline(float animfile)
 		anim = '0 1 2';
 	return anim;
 };
-
-/*
-==================
-SUB_Remove
-
-Remove self
-==================
-*/
-void SUB_Remove (void)
-{
-	remove (self);
-}
 
 /*
 ==================
