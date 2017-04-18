@@ -94,6 +94,7 @@ menu.qh
 
 dodging.qh
 miscfunctions.qh
+../common/miscfunctions.qh
 gamehooks.qh
 
 scores_rules.qc

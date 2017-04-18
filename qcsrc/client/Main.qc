@@ -35,6 +35,33 @@ void Ent_Error(float ignore) {
 	error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
 }
 
+void ClientUpdateMessage_Draw() {
+	string msg;
+	vector pos;
+	pos_z = 0;
+	float _alpha = 0.5 + mod(time, 2) * 0.5;
+
+	msg = "^1WARNING: ^3Your client is not recommended!";
+	pos_y = 10;
+	pos_x = 10;
+	drawcolorcodedstring(pos, msg, '12 24 0', _alpha, DRAWFLAG_NORMAL);
+
+	pos_y += 32;
+	drawcolorcodedstring(pos, self.bgmscript, '12 24 0', _alpha, DRAWFLAG_NORMAL);
+
+	msg = "^3Please download and install Rexuiz from ^2http://rexuiz.top^7";
+	pos_y += 32;
+	drawcolorcodedstring(pos, msg, '12 24 0', _alpha, DRAWFLAG_NORMAL);
+}
+
+void ClientUpdateMessage(string msg) {
+	entity e = spawn();
+	e.draw2d = ClientUpdateMessage_Draw;
+	e.nextthink = time + 10;
+	e.think = SUB_Remove;
+	e.bgmscript = msg;
+}
+
 string forcefog;
 void Ent_ReadEntCS(float bIsNewEntity);
 void Ent_ReadEntCSEnemy(float bIsNewEntity);
@@ -191,14 +218,17 @@ void CSQC_Init(void)
 		xonotic_client = TRUE;
 	}
 	read_cvars_init();
-	if (xonotic_client)
+	if (xonotic_client) {
 		localcmd("\ncmd gameclient xonotic\n");
-	else if (fexists("rexuiz.cfg"))
+		ClientUpdateMessage("^3You play with Xonotic client on Rexuiz server.");
+	} else if (fexists("rexuiz.cfg"))
 		localcmd("\ncmd gameclient rexuiz\n");
 	else if (autocvar_autocvar_check)
 		localcmd("\ncmd gameclient nexuiz\n");
-	else
+	else {
 		localcmd("\ncmd gameclient oldnexuiz\n");
+		ClientUpdateMessage("^3You play with really old Nexuiz client");
+	}
 
 	if (cvar_string("sv_master2") == "")
 	if (cvar_string("sv_masterextra1") == "") {

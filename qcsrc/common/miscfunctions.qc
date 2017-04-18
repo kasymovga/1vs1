@@ -22,3 +22,16 @@ float fexists(string path) {
 	fclose(f);
 	return TRUE;
 }
+
+/*
+==================
+SUB_Remove
+
+Remove self
+==================
+*/
+void SUB_Remove (void)
+{
+	remove (self);
+}
+
