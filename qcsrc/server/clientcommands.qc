@@ -389,6 +389,7 @@ void SV_ParseClientCommand(string s) {
 		if(cmd != "pings")
 		if(cmd != "sv_startdownload")
 		if(cmd != "download")
+		if(cmd != "rate_burstsize")
 		{
 			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
 			return;
