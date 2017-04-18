@@ -150,7 +150,7 @@ void ImpulseCommands (void)
 	else if(imp >= 230 && imp <= 253)
 	{
 		if(self.deadflag == DEAD_NO) {
-			if (self.version <= 1000) {
+			if (self.gameclient == CLIENT_XONOTIC) {
 				if (imp >= 234)
 					imp--;
 			}

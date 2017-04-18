@@ -61,6 +61,8 @@ void CSQC_Init(void)
 	}
 #pragma target FTE
 #endif
+	float xonotic_client;
+	xonotic_client = FALSE;
 	if (cvar_string("g_xonoticversion") != "")
 	{
 		print("Xonotic client detected\n");
@@ -185,14 +187,18 @@ void CSQC_Init(void)
 		registercvar("crosshair_fireball_color_alpha", "1", CVAR_SAVE);
 		registercvar("crosshair_fireball_size", "1", CVAR_SAVE);
 
-		if not(cvar("_iamxonoticplayer"))
-			localcmd("\ncmd iamxonoticplayer first; set _iamxonoticplayer 1\n");
-		else
-			localcmd("\ncmd iamxonoticplayer\n");
-
 		localcmd("\nseta menu_updatecheck 0\n");
+		xonotic_client = TRUE;
 	}
 	read_cvars_init();
+	if (xonotic_client)
+		localcmd("\ncmd gameclient xonotic\n");
+	else if (fexists("rexuiz.cfg"))
+		localcmd("\ncmd gameclient rexuiz\n");
+	else if (autocvar_autocvar_check)
+		localcmd("\ncmd gameclient nexuiz\n");
+	else
+		localcmd("\ncmd gameclient oldnexuiz\n");
 
 	if (cvar_string("sv_master2") == "")
 	if (cvar_string("sv_masterextra1") == "") {

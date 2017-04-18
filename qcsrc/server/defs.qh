@@ -606,6 +606,14 @@ float client_cefc_accumulatortime;
 
 .float retard;
 
-.float xonoticplayer;
+.float gameclient;
+
+enum {
+	CLIENT_UNKNOWN,
+	CLIENT_REXUIZ,
+	CLIENT_NEXUIZ,
+	CLIENT_OLDNEXUIZ,
+	CLIENT_XONOTIC
+};
 
 .float keys;
