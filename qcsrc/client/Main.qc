@@ -54,11 +54,16 @@ void ClientUpdateMessage_Draw() {
 	drawcolorcodedstring(pos, msg, '12 24 0', _alpha, DRAWFLAG_NORMAL);
 }
 
+void ClientUpdateMessage_SetNextThink() {
+	self.nextthink = time + 10;
+	self.think = SUB_Remove;
+}
+
 void ClientUpdateMessage(string msg) {
 	entity e = spawn();
 	e.draw2d = ClientUpdateMessage_Draw;
-	e.nextthink = time + 10;
-	e.think = SUB_Remove;
+	e.nextthink = 1;
+	e.think = ClientUpdateMessage_SetNextThink;
 	e.bgmscript = msg;
 }
 
