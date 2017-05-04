@@ -1,5 +1,7 @@
 float g_conquest_capture_time;
 float g_conquest_lasthope_time;
+float g_conquest_score_capture;
+float g_conquest_teamscore_alternative;
 float conq_timelimit_save;
 float conq_lasthope;
 
@@ -105,10 +107,13 @@ void conquest_cp_think_capture() {
 			self.enemy.alpha = 1 - self.capture_progress;
 
 		if (self.capture_progress >= 1) {
-			PlayerScore_Add(self.owner, SP_SCORE, 10);
+			PlayerScore_Add(self.owner, SP_SCORE, g_conquest_score_capture);
 			if (self.team > 0) {
 				play2all("domination/claim.wav");
-				TeamScore_AddToTeam(self.team, ST_SCORE, -1);
+				if (g_conquest_teamscore_alternative)
+					TeamScore_AddToTeam(self.owner.team, ST_SCORE, 1);
+				else
+					TeamScore_AddToTeam(self.team, ST_SCORE, -1);
 				conquest_cp_free();
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
 					centerprint(self.owner, "Control Point has been freed");
@@ -337,6 +342,8 @@ void conquest_init() {
 	precache_sound("domination/claim.wav");
 	CACHE_CVAR(g_conquest_capture_time);
 	CACHE_CVAR(g_conquest_lasthope_time);
+	CACHE_CVAR(g_conquest_score_capture);
+	CACHE_CVAR(g_conquest_teamscore_alternative);
 	if (g_conquest_capture_time <= 0)
 		g_conquest_capture_time = 1;
 
