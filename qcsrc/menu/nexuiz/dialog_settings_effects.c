@@ -57,18 +57,21 @@ void fillNexuizEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Texture quality:"));
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("gl_picmip"));
-			if(cvar("developer"))
-				e.addValue(e, "Leet", "1337");
-			e.addValue(e, "Lowest", "4");
-			e.addValue(e, "Low", "3");
+			e.addValue(e, "Lowest", "16");
+			e.addValue(e, "Low", "4");
 			e.addValue(e, "Normal", "2");
 			e.addValue(e, "Good", "1");
 			e.addValue(e, "Best", "0");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(1, "r_picmipworld", "Reduce model texture quality only"));
-			setDependent(e, "gl_picmip", 0.5, -0.5);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "World texture quality:"));
+		me.TD(me, 1, 2, e = makeNexuizTextSlider("gl_picmip_world"));
+			e.addValue(e, "Lowest", "16");
+			e.addValue(e, "Low", "4");
+			e.addValue(e, "Normal", "2");
+			e.addValue(e, "Good", "1");
+			e.addValue(e, "Best", "0");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Anisotropy:"));
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("gl_texture_anisotropy"));
@@ -125,11 +128,7 @@ void fillNexuizEffectsSettingsTab(entity me)
 		if(cvar("developer"))
 			me.TD(me, 1, 3, e = makeNexuizCheckBoxEx(3, 0, "r_showsurfaces", "Show surfaces"));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizRadioButton(1, string_null, string_null, "No dynamic lighting"));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizRadioButton(1, "gl_flashblend", string_null, "Flash blend approximation"));
-	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "r_shadow_realtime_dlight", string_null, "Realtime dynamic lighting"));
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_shadow_realtime_dlight", "Realtime dynamic lighting"));
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_shadow_realtime_dlight_shadows", "Shadows"));
 			setDependent(e, "r_shadow_realtime_dlight", 1, 1);
 	me.TR(me);
@@ -141,11 +140,7 @@ void fillNexuizEffectsSettingsTab(entity me)
 		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(0, "r_shadow_usenormalmap", "Use normal maps"));
 			setDependentOR(e, "r_shadow_realtime_dlight", 1, 1, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_coronas", "Coronas"));
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_bloom", "Bloom"));
-			setDependent(e, "r_hdr", 0, 0);
-		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_hdr", "High Dynamic Range (HDR)"));
 	me.TR(me);
 	
 	me.TR(me);
