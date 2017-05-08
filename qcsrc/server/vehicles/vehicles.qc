@@ -12,7 +12,6 @@ float vehicle_extract_player(entity plr, float eject)
 	self = plr.vehicle;
 	self.vehicle_exit(eject);
 	self = e;
-    plr.alpha          = 1;
     plr.PlayerPhysplug = physic_plug_null;
     plr.vehicle        = world;
 	plr.view_ofs       = PL_VIEW_OFS;

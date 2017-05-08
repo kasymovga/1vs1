@@ -18,6 +18,8 @@ float g_respawn_waves;
 float g_voice_flood_spv;
 float g_voice_flood_spv_team;
 float sv_allow_shownames;
+float g_jetpack_attenuation;
+float g_fullbrightplayers;
 
 float weaponstats_buffer;
 
@@ -235,6 +237,132 @@ float player_getspecies()
 		s = SPECIES_HUMAN;
 
 	return s;
+}
+
+void play_countdown(float finished, string samp)
+{
+	if(clienttype(self) == CLIENTTYPE_REAL)
+		if(floor(finished - time - frametime) != floor(finished - time))
+			if(finished - time < 6)
+				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
+}
+
+void player_effects()
+{
+	if((self.items & IT_USING_JETPACK) && !self.deadflag)
+	{
+		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
+		self.modelflags |= MF_ROCKET;
+	}
+	else
+	{
+		SoundEntity_StopSound(self, CHAN_PLAYER);
+		self.modelflags &~= MF_ROCKET;
+	}
+
+	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME);
+
+	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
+		return;
+	
+	Fire_ApplyDamage(self);
+	Fire_ApplyEffect(self);
+
+	if (self.vehicle)
+	if (self.vehicle_flags & VHF_HIDEPLAYER) {
+		self.alpha = -1;
+		return;
+	}
+
+	if (g_minstagib)
+	{
+		self.effects |= EF_FULLBRIGHT;
+
+		if (self.items & IT_STRENGTH)
+		{
+			play_countdown(self.strength_finished, "misc/poweroff.wav");
+			if (time > self.strength_finished)
+			{
+				self.alpha = default_player_alpha;
+				self.items &~= IT_STRENGTH;
+				sprint(self, "^3Invisibility has worn off\n");
+			}
+		}
+		else
+		{
+			if (time < self.strength_finished)
+			{
+				self.alpha = g_minstagib_invis_alpha;
+				self.items |= IT_STRENGTH;
+				sprint(self, "^3You are invisible\n");
+			}
+		}
+
+		if (self.items & IT_INVINCIBLE)
+		{
+			play_countdown(self.invincible_finished, "misc/poweroff.wav");
+			if (time > self.invincible_finished)
+			{
+				self.items = self.items - (self.items & IT_INVINCIBLE);
+				sprint(self, "^3Speed has worn off\n");
+			}
+		}
+		else
+		{
+			if (time < self.invincible_finished)
+			{
+				self.items = self.items | IT_INVINCIBLE;
+				sprint(self, "^3You are on speed\n");
+			}
+		}
+		return;
+	}
+
+	if (self.items & IT_STRENGTH)
+	{
+		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		if not(g_powerup_strength_akimbo)
+			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+		if (time > self.strength_finished)
+		{
+			self.items = self.items - (self.items & IT_STRENGTH);
+			sprint(self, "^3Strength has worn off\n");
+		}
+	}
+	else
+	{
+		if (time < self.strength_finished)
+		{
+			self.items = self.items | IT_STRENGTH;
+			sprint(self, "^3Strength infuses your weapons with devastating power\n");
+		}
+	}
+	if (self.items & IT_INVINCIBLE)
+	{
+		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
+		if (time > self.invincible_finished)
+		{
+			self.items = self.items - (self.items & IT_INVINCIBLE);
+			sprint(self, "^3Shield has worn off\n");
+		}
+	}
+	else
+	{
+		if (time < self.invincible_finished)
+		{
+			self.items = self.items | IT_INVINCIBLE;
+			sprint(self, "^3Shield surrounds you\n");
+		}
+	}
+	if (g_fullbrightplayers)
+		self.effects = self.effects | EF_FULLBRIGHT;
+
+	if (time >= game_starttime)
+	if (time < self.spawnshieldtime)
+		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+
+	HG_PlayerEffects();
 }
 
 void player_setupanimsformodel()
@@ -1490,4 +1618,6 @@ void Player_Init() {
 	CACHE_CVAR(g_voice_flood_spv);
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(sv_allow_shownames);
+	CACHE_CVAR(g_jetpack_attenuation);
+	CACHE_CVAR(g_fullbrightplayers);
 }

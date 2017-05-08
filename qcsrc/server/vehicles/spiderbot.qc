@@ -433,7 +433,7 @@ void spiderbot_enter()
     self.owner.solid          = SOLID_NOT;
 	if not(sv_csqc_physic)
 		self.owner.movetype   = MOVETYPE_NOCLIP;
-    self.owner.alpha          = -1;
+
     self.owner.PlayerPhysplug = spiderbot_physic_hook;
     self.owner.vehicle        = self;
     self.owner.event_damage   = SUB_Null;
@@ -719,7 +719,7 @@ void vewhicle_spiderbot_dinit()
 	setorigin(self.vehicle_hudmodel.gun2, '20 20 20');
 	self.vehicle_hudmodel.gun2.angles = '0 0 0';
 	self.vehicle = spawn();
-    self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN;
+    self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER;
     self.cvar_basename = "g_vehicle_spiderbot";
 	self.vehicle_heat = 0;
 

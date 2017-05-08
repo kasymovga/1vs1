@@ -55,9 +55,7 @@ float g_balance_rune_regen_hpmod;
 float g_balance_rune_regen_limitmod;
 float g_balance_rune_regen_regenrate;
 float g_changeteam_banned;
-float g_fullbrightplayers;
 float g_hitplots;
-float g_jetpack_attenuation;
 float g_maxplayers;
 float g_maxplayers_spectator_blocktime;
 float g_player_brightness;
@@ -906,7 +904,6 @@ void PutClientInServer()
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
 		self.colormod = '1 1 1' * g_player_brightness;
-		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
 		self.speedrunning = FALSE;
 
@@ -1613,14 +1610,6 @@ void respawn(void)
 	PutClientInServer();
 }
 
-void play_countdown(float finished, string samp)
-{
-	if(clienttype(self) == CLIENTTYPE_REAL)
-		if(floor(finished - time - frametime) != floor(finished - time))
-			if(finished - time < 6)
-				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
-}
-
 /**
  * When sv_timeout is used this function returs strings like
  * "Timeout begins in 2 seconds!\n" or "Timeout ends in 23 seconds!\n".
@@ -1660,119 +1649,6 @@ string getTimeoutText(float addOneSecond) {
 		}
 	}
 	else return "";
-}
-
-void player_powerups (void)
-{
-	if((self.items & IT_USING_JETPACK) && !self.deadflag)
-	{
-		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
-		self.modelflags |= MF_ROCKET;
-	}
-	else
-	{
-		SoundEntity_StopSound(self, CHAN_PLAYER);
-		self.modelflags &~= MF_ROCKET;
-	}
-
-	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME);
-
-	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
-		return;
-	
-	Fire_ApplyDamage(self);
-	Fire_ApplyEffect(self);
-
-	if (g_minstagib)
-	{
-		self.effects |= EF_FULLBRIGHT;
-
-		if (self.items & IT_STRENGTH)
-		{
-			play_countdown(self.strength_finished, "misc/poweroff.wav");
-			if (time > self.strength_finished)
-			{
-				self.alpha = default_player_alpha;
-				self.exteriorweaponentity.alpha = default_weapon_alpha;
-				self.items &~= IT_STRENGTH;
-				sprint(self, "^3Invisibility has worn off\n");
-			}
-		}
-		else
-		{
-			if (time < self.strength_finished)
-			{
-				self.alpha = g_minstagib_invis_alpha;
-				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
-				self.items |= IT_STRENGTH;
-				sprint(self, "^3You are invisible\n");
-			}
-		}
-
-		if (self.items & IT_INVINCIBLE)
-		{
-			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			if (time > self.invincible_finished)
-			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
-				sprint(self, "^3Speed has worn off\n");
-			}
-		}
-		else
-		{
-			if (time < self.invincible_finished)
-			{
-				self.items = self.items | IT_INVINCIBLE;
-				sprint(self, "^3You are on speed\n");
-			}
-		}
-		return;
-	}
-
-	if (self.items & IT_STRENGTH)
-	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		if not(g_powerup_strength_akimbo)
-			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.strength_finished)
-		{
-			self.items = self.items - (self.items & IT_STRENGTH);
-			sprint(self, "^3Strength has worn off\n");
-		}
-	}
-	else
-	{
-		if (time < self.strength_finished)
-		{
-			self.items = self.items | IT_STRENGTH;
-			sprint(self, "^3Strength infuses your weapons with devastating power\n");
-		}
-	}
-	if (self.items & IT_INVINCIBLE)
-	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.invincible_finished)
-		{
-			self.items = self.items - (self.items & IT_INVINCIBLE);
-			sprint(self, "^3Shield has worn off\n");
-		}
-	}
-	else
-	{
-		if (time < self.invincible_finished)
-		{
-			self.items = self.items | IT_INVINCIBLE;
-			sprint(self, "^3Shield surrounds you\n");
-		}
-	}
-
-	if (g_fullbrightplayers)
-		self.effects = self.effects | EF_FULLBRIGHT;
-
-	if (time >= game_starttime)
-	if (time < self.spawnshieldtime)
-		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 }
 
 float CalcRegen(float current, float stable, float regenfactor, float regenframetime)
@@ -2243,7 +2119,7 @@ void PlayerPreThink (void)
 		HG_PlayerFrame();
 
 		if(frametime)
-			player_powerups();
+			player_effects();
 
 		if (PLAYER_REALLY_DEAD(self))
 		{
@@ -2522,9 +2398,7 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_balance_rune_regen_limitmod);
 	CACHE_CVAR(g_balance_rune_regen_regenrate);
 	CACHE_CVAR(g_changeteam_banned);
-	CACHE_CVAR(g_fullbrightplayers);
 	CACHE_CVAR(g_hitplots);
-	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
 	CACHE_CVAR(g_player_brightness);
