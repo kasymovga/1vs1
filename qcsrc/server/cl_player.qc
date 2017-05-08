@@ -265,6 +265,7 @@ void player_effects()
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 	
+	self.alpha = default_player_alpha;
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
@@ -283,7 +284,6 @@ void player_effects()
 			play_countdown(self.strength_finished, "misc/poweroff.wav");
 			if (time > self.strength_finished)
 			{
-				self.alpha = default_player_alpha;
 				self.items &~= IT_STRENGTH;
 				sprint(self, "^3Invisibility has worn off\n");
 			}
