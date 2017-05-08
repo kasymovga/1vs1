@@ -28,9 +28,11 @@ var void() read_cvars;
 float autocvar_autocvar_check;
 void read_cvars_dummy() { };
 void read_cvars_init() {
+	cvar_set("autocvar_check", "0");
 	autocvar_autocvar_check = 0;
 	cvar_set("autocvar_check", "1");
 	if (autocvar_autocvar_check) {
+		//print("Auto cvars working, good\n");
 		read_cvars = read_cvars_dummy;
 		return;
 	}
