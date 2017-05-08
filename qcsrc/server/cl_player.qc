@@ -270,7 +270,7 @@ void player_effects()
 	Fire_ApplyEffect(self);
 
 	if (self.vehicle)
-	if (self.vehicle_flags & VHF_HIDEPLAYER) {
+	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER) {
 		self.alpha = -1;
 		return;
 	}
