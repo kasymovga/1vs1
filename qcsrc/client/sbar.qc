@@ -2356,26 +2356,6 @@ void Sbar_Draw (void)
 		o = Sbar_DrawNoteLine(o, s);
 	}
 
-	// handgrenade force meter
-	float hgstat = getstatf(STAT_HGFORCE);
-	if (hgstat) {
-		float hgls = getstatf(STAT_HGLAUNCH);
-		if(hgstat) {
-			hg_alpha = approach(hg_alpha, 1, 5 * drawframetime);
-		} else {
-			hg_alpha = approach(hg_alpha, 0, 5 * drawframetime);
-		}
-		hg_visual = approach(hg_visual, hgstat, drawframetime * hgls);
-		hgstat = hg_visual;
-		if(hg_alpha)
-		{
-			vector hgpos;
-			hgpos_x = CVAR(vid_conwidth) / 2;
-			hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
-			DrawProgress(hgpos, '120 5 0', hgstat, 0.7 * hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat));
-		}
-	}
-
 	// move more important stuff more to the middle so its more visible
 	o_y = CVAR(vid_conheight) * 0.66;
 
@@ -2658,6 +2638,28 @@ void Sbar_Draw (void)
 			float hgdetons = getstati(STAT_HGDETONABLES);
 			float hgcd, hgcd2;
             hgcd = getstatf(STAT_HGREFIRE) - servertime;
+			// handgrenade force meter
+			float hgstat = getstatf(STAT_HGFORCE);
+			if (hgstat) {
+				float hgls = getstatf(STAT_HGLAUNCH);
+				if(hgstat) {
+					hg_alpha = approach(hg_alpha, 1, 5 * drawframetime);
+				} else {
+					hg_alpha = approach(hg_alpha, 0, 5 * drawframetime);
+				}
+				hg_visual = approach(hg_visual, hgstat, drawframetime * hgls);
+				hgstat = hg_visual;
+				if(hg_alpha)
+				{
+					vector hgpos;
+					hgpos_x = CVAR(vid_conwidth) / 2;
+					hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
+					DrawProgress(hgpos, '120 5 0', hgstat, 0.7 * hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat));
+				}
+			} else {
+				hg_alpha = 0;
+				hg_visual = 0;
+			}
 
 #if 0
             if(hgcd > 0) {
