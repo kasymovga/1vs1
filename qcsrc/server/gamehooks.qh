@@ -4,7 +4,7 @@ var void(entity spot) GameHook_Spawn = {}
 var void(entity plr, entity attacker, float killed) GameHook_PlayerClear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHook_PlayerDamageHandle = { return FALSE; }
-var float(entity plr, float wep) GameHook_PlayerCanFire = { return TRUE; }
+var float(entity plr, float wep) GameHookChain_PlayerCanFire;
 var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
 var void() GameHook_PlayerPreThink = {}

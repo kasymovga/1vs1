@@ -12,13 +12,14 @@ float round_warmup;
 float Roundbased_Active;
 float Roundbased_RestartTime;
 
+var float(entity plr, float wep) Roundbased_PlayerCanFire_NextLink;
 float Roundbased_PlayerCanFire(entity plr, float wep) {
 	if (Roundbased_Active)
-		return TRUE;
+		return (Roundbased_PlayerCanFire_NextLink ? Roundbased_PlayerCanFire_NextLink(plr, wep) : TRUE);
 
 	if (wep) //Always allow shoot with laser (no damage when round not active)
 	if (plr.weapon == WEP_LASER)
-		return TRUE;
+		return (Roundbased_PlayerCanFire_NextLink ? Roundbased_PlayerCanFire_NextLink(plr, wep) : TRUE);
 
 	return FALSE;
 }
@@ -195,7 +196,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	else
 		round_warmup = game_starttime + rb_startdelay;
 
-	GameHook_PlayerCanFire = Roundbased_PlayerCanFire;
+	Roundbased_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
+	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
 	GameHook_DamageMod = Roundbased_DamageMod;
 	GameHook_ForceMod = Roundbased_ForceMod;
 }

@@ -14,6 +14,15 @@ float g_nadgets_drop_on_death;
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
 
+var float(entity plr, float wep) HG_PlayerCanFire_NextLink;
+
+float HG_PlayerCanFire(entity plr, float wep) {
+	if (self.hg_stealth)
+		return FALSE;
+
+	return (HG_PlayerCanFire_NextLink ? HG_PlayerCanFire_NextLink(plr, wep) : TRUE);
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -50,6 +59,9 @@ void HG_Init(void) {
     addstat(STAT_HGBONUS, AS_INT, hg_bonus);
     addstat(STAT_HGBONUSTYPE, AS_INT, hg_bonustype);
     addstat(STAT_HGREFIRE, AS_FLOAT, hg_next1);
+
+	HG_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
+	GameHookChain_PlayerCanFire = HG_PlayerCanFire;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
