@@ -76,6 +76,9 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_ELECTRO:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
+		case PROJECTILE_HG_PLASMA_SHARD:
+			trailparticles(self, rm_particleeffectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
+			break;
 		case PROJECTILE_ELECTRO_BEAM:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
