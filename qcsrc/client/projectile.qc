@@ -461,12 +461,8 @@ void Ent_Projectile(float ignore)
 				break;
 		}
 		if (f & 4) {
-			if (f & 16) {
-				self.mins_x = ReadChar();
-				self.mins_y = ReadChar();
-			} else
-				self.mins = '0 0 0';
-
+			self.mins_x = ReadChar();
+			self.mins_y = ReadChar();
 			self.mins_z = ReadChar();
 			if (f & 8) {
 				self.maxs_x = ReadChar();
@@ -478,6 +474,8 @@ void Ent_Projectile(float ignore)
 			self.mins = '0 0 0';
 			self.maxs = '0 0 0';
 		}
+		if (f & 16)
+			self.team = ReadChar();
 	}
 
 	if(self.gravity)

@@ -15,12 +15,12 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 	if (self.mins == self.maxs) {
 		if (self.mins == '0 0 0')
 			sf &~= 4;
-		else if (self.mins == self.maxs) {
+		else if (self.mins == self.maxs)
 			sf &~= 8;
-			if (self.mins_x == 0)
-			if (self.mins_y == 0)
-				sf &~= 0x10;
-		}
+	}
+	if (sf & 16)
+	if (self.team <= 0) {
+		sf &~= 16;
 	}
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
@@ -41,21 +41,21 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 		}
 	}
 
-	if(sf & 2)
+	if(sf & 2) {
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
-
-	if(sf & 4)
-	{
-		if (sf & 16) {
+		if(sf & 4)
+		{
 			WriteChar(MSG_ENTITY, self.mins_x);
 			WriteChar(MSG_ENTITY, self.mins_y);
+			WriteChar(MSG_ENTITY, self.mins_z);
+			if (sf & 8) {
+				WriteChar(MSG_ENTITY, self.maxs_x);
+				WriteChar(MSG_ENTITY, self.maxs_y);
+				WriteChar(MSG_ENTITY, self.maxs_z);
+			}
 		}
-		WriteChar(MSG_ENTITY, self.mins_z);
-		if (sf & 8) {
-			WriteChar(MSG_ENTITY, self.maxs_x);
-			WriteChar(MSG_ENTITY, self.maxs_y);
-			WriteChar(MSG_ENTITY, self.maxs_z);
-		}
+		if (sf & 16)
+			WriteChar(MSG_ENTITY, self.team);
 	}
 
 	return 1;

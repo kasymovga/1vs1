@@ -388,13 +388,13 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 
 float TeamNumber(float t, float d) {
     switch(t) {
-        case COLOR_TEAM1:
+        case 5:
             return 1;
-        case COLOR_TEAM2:
+        case 14:
             return 2;
-        case COLOR_TEAM3:
+        case 13:
             return 3;
-        case COLOR_TEAM4:
+        case 10:
             return 4;
         default:
             return d;
