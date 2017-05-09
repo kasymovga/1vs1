@@ -260,12 +260,18 @@ vector CSQCPhysic_SetCamera()
 			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			v = trace_endpos;
 		}
+		if not(CVAR(chase_active))
+			R_SetView(VF_ORIGIN, v);
 	}
-	else
+	else {
 		v = pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		if (camera_correction_needed) {
+			if not(CVAR(chase_active))
+				R_SetView(VF_ORIGIN, v);
 
-	if not(CVAR(chase_active))
-		R_SetView(VF_ORIGIN, v);
+			camera_correction_needed = FALSE;
+		}
+	}
 
 	return v;
 }

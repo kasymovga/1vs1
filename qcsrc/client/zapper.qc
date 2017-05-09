@@ -50,6 +50,7 @@ void Zapper_Draw(void) {
 	vector zapper_shotorigin = self.zapper_shotorg;
     if(self.sv_entnum == me) {
 		if not(autocvar_chase_active) {
+			camera_correction_needed = TRUE;
 			start = view_origin + view_forward * zapper_shotorigin_x + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
 			self.zapper_start = start;
 			zapper_beam_width = 8;
