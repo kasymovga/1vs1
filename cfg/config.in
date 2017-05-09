@@ -475,7 +475,7 @@ set g_nadgets_regen_compensate 1 "After using a nadget, reduce the regeneration 
 set g_nadgets_pickup 1 "Enables +1 nadget pickup items"
 set g_nadgets_pickup_random_bonus 0 "If enabled, nadget items give a random bonus nadget instead of +1 nadget ammo. Value controls how much bonuses to give"
 set g_nadgets_pickup_regenvalue 30 "If >0, the nadget pickup items will grant this much seconds worth of regen instead of 1 nadget"
-set g_nadgets_resetonrespawn 0 "If enabled, ammo and regen state will be reset on each respawn"
+set g_nadgets_resetonrespawn 1 "If enabled, ammo and regen state will be reset on each respawn"
 set g_nadgets_type "normal" "The default grenade type. Currently, normal and napalm are available"
 set g_nadgets_type_selectable "normal remote plasma laser raze transloc shield linker sentry random" "A list of nadget types that players may pick. If empty, the default is always used"
 set g_nadgets_type_selectable_primary "normal remote plasma laser raze random" "A list of nadget types that players may pick as their primary in g_nadgets_double mode."
