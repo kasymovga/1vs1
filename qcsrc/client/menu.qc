@@ -105,6 +105,7 @@ void Menu_Draw() {
 	pos_y = ITEM_TOP_MARGIN;
 	pos_z = 0;
 	pos_x = center - stringwidth(menu.menu_title, false) * 0.5 * 24;
+    drawfill('0 1' * ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (ITEM_TOP_MARGIN + ITEM_HEIGHT * (menu.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
 	drawstring(pos, menu.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += ITEM_HEIGHT;
 	if (menu.menu_timeout) {
@@ -142,6 +143,7 @@ void Menu_Draw() {
 
 float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	float choice;
+	choice = -1;
 
 	if (bInputType != 0)
 		return FALSE;
@@ -149,30 +151,33 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	if (nPrimary == K_ESCAPE)
 	if (menu.flags & 16) {
 		nPrimary = K_MOUSE1;
-		menu_selected = menu.cnt;
+		choice = menu.cnt;
 	}
 
-	if ('0' <= nPrimary && nPrimary <= '9') {
+	if ('0' >= nPrimary && nPrimary <= '9') {
 		choice = nPrimary - '0';
 		if (choice == 0)
 			choice = 9;
 		else
 			choice--;
 
+		choice = choice;
+		return TRUE;
+	}
+	if (nPrimary == K_MOUSE1) {
+		if (menu_selected < 0)
+			menu_selected = menu.cnt;
+
+		choice = min(menu_selected, menu.cnt);
+	}
+	if (choice >= 0) {
+		float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
+		if (subcmd >= 0) {
+			localcmd(strcat("\n", substring(menu.menu_items[choice], subcmd + 1, -1)));
+		}
 		localcmd(strcat("\ncmd menu_select ", menu.menu_id, " ", ftos(choice), "\n"));
 		menu_choiced = choice;
 		return TRUE;
 	}
-	if (nPrimary == K_MOUSE1)
-		if (menu_selected >= 0) {
-			choice = min(menu_selected, menu.cnt);
-			float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
-			if (subcmd >= 0) {
-				localcmd(strcat("\n", substring(menu.menu_items[choice], subcmd + 1, -1)));
-			}
-			localcmd(strcat("\ncmd menu_select ", menu.menu_id, " ", ftos(choice), "\n"));
-			menu_choiced = choice;
-			return TRUE;
-		}
 	return FALSE;
 }
