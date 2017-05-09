@@ -582,6 +582,7 @@ void readlevelcvars(void)
 	Items_Init();
 	Player_Init();
 	runes_init();
+	GameMenu_Init();
 }
 
 void readdynamiccvars() {

@@ -1,0 +1,2 @@
+void GameMenu_Show();
+void GameMenu_Init();

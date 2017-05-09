@@ -785,6 +785,12 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return bSkipKey;
 	}
 
+	if (bInputType == 0)
+	if (nPrimary == K_ESCAPE) {
+		localcmd("\ncmd gamemenu\n");
+		return true;
+	}
+
 	return bSkipKey;
 }
 
@@ -932,7 +938,7 @@ void Ent_ClientData(float ignore)
 
 	f = ReadByte();
 
-	sb_showscores_force = (f & 1);
+	//sb_showscores_force = (f & 1);
 
 	if(f & 2)
 	{

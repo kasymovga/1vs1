@@ -175,6 +175,7 @@ void SV_ParseClientCommand(string s) {
 		} else if(teams_matter && !cvar("sv_spectate")) {
 			self.classname = "observer";
 			stuffcmd(self,"menu_showteamselect\n");
+			//GameMenu_Show();
 		}
 	} else if(cmd == "reportcvar") { // old system
 		if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
@@ -193,29 +194,16 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "csqc_physic_reinit") {
 		PhysicClientInit(self);
 	} else if(cmd == "spectate") {
-		if(cmd_floodcheck())
-			return;
 		if not(self.flags & FL_CLIENT)
 			return;
 		PlayerToSpec(self);
+	} else if (cmd == "gamemenu") {
+		GameMenu_Show();
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if (self.classname != "player" && !lockteams)
-		{
-			if(isJoinAllowed()) {
-				self.classname = "player";
-				PlayerScore_Clear(self);
-				bprint ("^4", self.netname, "^4 is playing now\n");
-				PutClientInServer();
-				if(g_campaign)
-					campaign_bots_may_start = 1;
-			}
-			else {
-				//player may not join because of g_maxplayers is set
-				centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
-			}
-		}
+			LeaveSpectatorMode();
 	} else if( cmd == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
 			return;

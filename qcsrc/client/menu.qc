@@ -99,7 +99,7 @@ void Menu_Draw() {
 	vector pos;
 	float center;
 	float size_scale;
-	vector item_color;
+	string item_color;
 	sb_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = ITEM_TOP_MARGIN;
@@ -123,16 +123,16 @@ void Menu_Draw() {
 			size_scale = 1;
 
 		if (menu_choiced == i)
-			item_color = '0 1 0';
+			item_color = "^4";
 		else if (menu_selected == i)
-			item_color = '0 1 1';
+			item_color = "^3";
 		else
-			item_color = '1 1 1';
+			item_color = "^7";
 
-		menu_string = strcat(ftos(i + 1), ". ", menu.menu_items[i]);
-
-		pos_x = center - stringwidth(menu_string, false) * 0.5 * 24 * size_scale;
-		drawstring(pos, menu_string, '24 24 0' * size_scale, item_color, 1, DRAWFLAG_NORMAL);
+		float subcmd = strstrofs(menu.menu_items[i], "|", 0);
+		menu_string = strcat(item_color, ftos(i + 1), ". ", substring(menu.menu_items[i], 0, subcmd));
+		pos_x = center - stringwidth(strdecolorize(menu_string), false) * 0.5 * 24 * size_scale;
+		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		pos_y += ITEM_HEIGHT;
 	}
 
@@ -145,6 +145,12 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 
 	if (bInputType != 0)
 		return FALSE;
+
+	if (nPrimary == K_ESCAPE)
+	if (menu.flags & 16) {
+		nPrimary = K_MOUSE1;
+		menu_selected = menu.cnt;
+	}
 
 	if ('0' <= nPrimary && nPrimary <= '9') {
 		choice = nPrimary - '0';
@@ -160,6 +166,10 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	if (nPrimary == K_MOUSE1)
 		if (menu_selected >= 0) {
 			choice = min(menu_selected, menu.cnt);
+			float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
+			if (subcmd >= 0) {
+				localcmd(strcat("\n", substring(menu.menu_items[choice], subcmd + 1, -1)));
+			}
 			localcmd(strcat("\ncmd menu_select ", menu.menu_id, " ", ftos(choice), "\n"));
 			menu_choiced = choice;
 			return TRUE;

@@ -45,9 +45,10 @@ string firstkeyfor(string cmds) {
 
 float NS_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void NS_Draw(void) {
-    if(ns_active)
+    if(ns_active) {
         ns_alpha = approach(ns_alpha, 1, frametime * 5);
-    else
+		CSQC_InputEvent_Callback = NS_InputEvent;
+    } else
         ns_alpha = approach(ns_alpha, 0, frametime * 7);
 
     if(!ns_alpha) {
@@ -56,12 +57,11 @@ void NS_Draw(void) {
 	}
 	Mouse_Enable();
 	sb_hidescores = TRUE;
-	CSQC_InputEvent_Callback = NS_InputEvent;
 
     float a = ns_alpha;
 
     drawfont = sbar_bigfont;
-    drawfill('0 0', '1 0' * CVAR(vid_conwidth) + '0 1' * CVAR(vid_conheight), '0 0 0', 0.5 * a, DRAWFLAG_NORMAL);
+    //drawfill('0 0', '1 0' * CVAR(vid_conwidth) + '0 1' * CVAR(vid_conheight), '0 0 0', 0.5 * a, DRAWFLAG_NORMAL);
 
     vector o;
 	o_x = (CVAR(vid_conwidth) - ns_width) * 0.5;

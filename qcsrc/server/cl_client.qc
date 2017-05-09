@@ -1927,7 +1927,7 @@ void LeaveSpectatorMode()
 		if(HG_ShowMenu(FALSE))
 			return;
 
-		if(!teams_matter || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned)) {
+		if(!teams_matter || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.classname = "player";
 			if(g_campaign || g_balance_teams || g_balance_teams_force)
 				JoinBestTeam(self, FALSE, TRUE);
@@ -1941,6 +1941,7 @@ void LeaveSpectatorMode()
 			return;
 		} else {
 			stuffcmd(self,"menu_showteamselect\n");
+			//GameMenu_Show();
 			return;
 		}
 	}

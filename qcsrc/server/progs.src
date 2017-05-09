@@ -89,6 +89,7 @@ clientcommands.qh
 gametypevote.qh
 
 menu.qh
+gamemenu.qh
 
 dodging.qh
 miscfunctions.qh
@@ -252,3 +253,4 @@ dlc.qc
 nadgets/include.qc
 ../common/nadgets.qc
 napalm.qc
+gamemenu.qc

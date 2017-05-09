@@ -16,6 +16,8 @@ float Menu_CustomizeEntityForClient() {
 float Menu_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MENU);
 	WriteByte(MSG_ENTITY, sf & 255);
+	sf &~= MENU_ESCAPE_ENABLE;
+	sf |= self.flags;
 	if (sf & 8)
 		WriteString(MSG_ENTITY, self.menu_id);
 
@@ -49,6 +51,10 @@ entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeo
 	e.menu_chain = _menu_chain;
 	_menu_chain = e;
 	return e;
+}
+
+void Menu_Set_Flags(entity menu, float _flags) {
+	menu.flags = _flags;
 }
 
 void Menu_Add_Item(entity menu, string name) {
