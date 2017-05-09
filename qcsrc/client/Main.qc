@@ -787,6 +787,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if (bInputType == 0)
 	if (nPrimary == K_ESCAPE) {
+		GameMenu_Holder();
 		localcmd("\ncmd gamemenu\n");
 		return true;
 	}

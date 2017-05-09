@@ -27,7 +27,6 @@ void Ent_Menu_Clear(float f) {
 
 void Ent_Menu_Remove() {
 	sb_hidescores = TRUE;
-	menu.draw2d = world.draw2d;
 	Ent_Menu_Clear(255);
 	if (self == menu) {
 		menu = menu.menu_next;
@@ -104,12 +103,12 @@ void Menu_Draw() {
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = ITEM_TOP_MARGIN;
 	pos_z = 0;
-	pos_x = center - stringwidth(menu.menu_title, false) * 0.5 * 24;
-    drawfill('0 1' * ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (ITEM_TOP_MARGIN + ITEM_HEIGHT * (menu.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
-	drawstring(pos, menu.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	pos_x = center - stringwidth(self.menu_title, false) * 0.5 * 24;
+    drawfill('0 1' * ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (ITEM_TOP_MARGIN + ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
+	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += ITEM_HEIGHT;
-	if (menu.menu_timeout) {
-		i = ceil(max(0, menu.menu_timeout - time));
+	if (self.menu_timeout) {
+		i = ceil(max(0, self.menu_timeout - time));
 		menu_string = strcat(ftos(i), " seconds left");
 		pos_x = center - stringwidth(menu_string, false) * 0.5 * 16;
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
@@ -117,7 +116,7 @@ void Menu_Draw() {
 	pos_y += ITEM_HEIGHT;
 	menu_selected = floor((mouse_pos_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
 
-	for (i = 0; i < menu.cnt; i++) {
+	for (i = 0; i < self.cnt; i++) {
 		if (menu_selected == i)
 			size_scale = 1.1;
 		else
@@ -130,8 +129,8 @@ void Menu_Draw() {
 		else
 			item_color = "^7";
 
-		float subcmd = strstrofs(menu.menu_items[i], "|", 0);
-		menu_string = strcat(item_color, ftos(i + 1), ". ", substring(menu.menu_items[i], 0, subcmd));
+		float subcmd = strstrofs(self.menu_items[i], "|", 0);
+		menu_string = strcat(item_color, ftos(i + 1), ". ", substring(self.menu_items[i], 0, subcmd));
 		pos_x = center - stringwidth(strdecolorize(menu_string), false) * 0.5 * 24 * size_scale;
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		pos_y += ITEM_HEIGHT;
@@ -149,27 +148,20 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 		return FALSE;
 
 	if (nPrimary == K_ESCAPE)
-	if (menu.flags & 16) {
-		nPrimary = K_MOUSE1;
+	if (menu.flags & 16)
 		choice = menu.cnt;
-	}
 
-	if ('0' >= nPrimary && nPrimary <= '9') {
+	if ('0' <= nPrimary)
+	if (nPrimary <= '9') {
 		choice = nPrimary - '0';
 		if (choice == 0)
 			choice = 9;
 		else
 			choice--;
-
-		choice = choice;
-		return TRUE;
 	}
-	if (nPrimary == K_MOUSE1) {
-		if (menu_selected < 0)
-			menu_selected = menu.cnt;
+	if (nPrimary == K_MOUSE1)
+		choice = max(0, min(menu_selected, menu.cnt));
 
-		choice = min(menu_selected, menu.cnt);
-	}
 	if (choice >= 0) {
 		float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
 		if (subcmd >= 0) {
@@ -180,4 +172,37 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 		return TRUE;
 	}
 	return FALSE;
+}
+
+entity gamemenu_holder;
+void GameMenu_Holder_Think() {
+	if (find(world, menu_id, "gamemenu")) {
+		Ent_Menu_Remove();
+		remove(self);
+		gamemenu_holder = world;
+		return;
+	}
+	self.nextthink = time;
+}
+
+void GameMenu_Holder() {
+	if (gamemenu_holder)
+		return;
+
+	gamemenu_holder = spawn();
+	gamemenu_holder.draw2d = Menu_Draw;
+	gamemenu_holder.flags = 16;
+	gamemenu_holder.menu_title = "Loading Game Menu...";
+	gamemenu_holder.cnt = 2;
+	gamemenu_holder.menu_id = "gamemenu_holder";
+	gamemenu_holder.menu_items[0] = "Main Menu|togglemenu";
+	gamemenu_holder.menu_items[1] = "Disconnect|disconnect";
+	gamemenu_holder.menu_next = menu;
+	gamemenu_holder.nextthink = time;
+	gamemenu_holder.think = GameMenu_Holder_Think;
+	menu_choiced = -1;
+	if (menu)
+		menu.draw2d = world.draw2d;
+
+	menu = gamemenu_holder;
 }
