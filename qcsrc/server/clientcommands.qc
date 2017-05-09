@@ -183,8 +183,6 @@ void SV_ParseClientCommand(string s) {
 			tokens = tokenize_console(s);
 		}
 		GetCvars(1);
-	} else if(cmd == "csqc_physic_reinit") {
-		PhysicClientInit(self);
 	} else if(cmd == "spectate") {
 		if not(self.flags & FL_CLIENT)
 			return;
