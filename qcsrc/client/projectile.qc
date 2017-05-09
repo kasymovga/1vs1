@@ -476,6 +476,8 @@ void Ent_Projectile(float ignore)
 		}
 		if (f & 16)
 			self.team = ReadChar();
+		else
+			self.team = 0;
 	}
 
 	if(self.gravity)
