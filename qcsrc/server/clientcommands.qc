@@ -130,7 +130,6 @@ void SV_ParseClientCommand(string s) {
 	tokens = tokenize_console(s);
 
 	cmd = argv(0);
-	if(cmd != "reportcvar")
 	if(cmd != "sentcvar")
 	if(cmd != "pause")
 	if(cmd != "prespawn")
@@ -177,13 +176,6 @@ void SV_ParseClientCommand(string s) {
 			stuffcmd(self,"menu_showteamselect\n");
 			//GameMenu_Show();
 		}
-	} else if(cmd == "reportcvar") { // old system
-		if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
-		{
-			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-			tokens = tokenize_console(s);
-		}
-		GetCvars(1);
 	} else if(cmd == "sentcvar") { // new system
 		if(tokens == 2) // undefined cvar: use the default value on the server then
 		{
