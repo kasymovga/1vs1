@@ -664,13 +664,22 @@ void HG_ResetState(entity p, float clearammo) {
 }
 
 void HG_PlayerSpawn(void) {
+	if not(g_nadgets)
+		return;
+
     if(self.classname != "player")
         return;
 
     //HG_TimeWarper_Abort();
 
-    if(g_nadgets_resetonrespawn)
+    if(g_nadgets_resetonrespawn) {
+		HG_DO_IN_ALL_CONTEXTS({
+			if(self.hg_ctx_type_picked_nextround >= 0)
+				self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
+			self.hg_ctx_type_picked_nextround = -1;
+		})
         HG_ResetState(self, PLAYER_DEAD(self));
+	}
 
     self.hg_shield = 0;
     HG_UpdateDetonables();
@@ -844,10 +853,10 @@ void HG_Pick(float tokens) {
 						remove(astate);
 						astate = world;
 					}
+					self.hg_ctx_type_picked_nextround = -1;
 				}
 
 				success = TRUE;
-				self.hg_ctx_type_picked_nextround = -1;
 				break;
 			}
 		}
