@@ -18,7 +18,7 @@ float GetPlayerColorForce(float i)
 	if(!teamplay)
 		return 0;
 	else
-		return stof(getplayerkey(i, "colors")) & 15;
+		return (stof(getplayerkey(i, "colors")) & 15) + 1;
 }
 
 float GetPlayerColor(float i)

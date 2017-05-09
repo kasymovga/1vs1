@@ -594,3 +594,8 @@ float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc // i
 const float M_PI = 3.14159265358979323846;
 #define RM_SOUND_LASER_SECONDARY "weapons/rm_laser2.wav"
 #define RM_SOUND_LASER_PRIMARY "weapons/rm_laser1.wav"
+
+float COLOR_TEAM1	= 5;  // red
+float COLOR_TEAM2	= 14; // blue
+float COLOR_TEAM3	= 13; // yellow
+float COLOR_TEAM4	= 10; // pink

@@ -347,7 +347,7 @@ void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
     WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
     WriteByte(MSG_BROADCAST, TE_CSQC_ZAPPERLIGHTNING);
     
-    WriteByte(MSG_BROADCAST, ateam-1);
+    WriteByte(MSG_BROADCAST, ateam);
     WriteCoord(MSG_BROADCAST, from_x);
     WriteCoord(MSG_BROADCAST, from_y);
     WriteCoord(MSG_BROADCAST, from_z);

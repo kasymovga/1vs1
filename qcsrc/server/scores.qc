@@ -52,7 +52,7 @@ float TeamScore_SendEntity(entity to, float sendflags)
 	float i, p, longflags;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
-	WriteByte(MSG_ENTITY, self.team - 1);
+	WriteByte(MSG_ENTITY, self.team);
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)

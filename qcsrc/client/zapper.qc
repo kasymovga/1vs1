@@ -144,7 +144,7 @@ void Zapper_Read(float t) {
 
         if(sf & 16) {
             self.sv_entnum = 0;
-            self.team = ReadByte() - 1;
+            self.team = ReadByte();
         } else {
             self.sv_entnum = ReadByte();
             self.team = GetPlayerColor(self.sv_entnum - 1);
@@ -152,9 +152,6 @@ void Zapper_Read(float t) {
 
         self.alpha = 1;
         self.cnt = random() * 1000;
-
-        if(!self.team)
-            self.team = COLOR_TEAM2;
     }
 
     if(sf & 2) {
