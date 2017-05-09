@@ -55,6 +55,7 @@ void NS_Draw(void) {
         return;
 	}
 	Mouse_Enable();
+	sb_hidescores = TRUE;
 	CSQC_InputEvent_Callback = NS_InputEvent;
 
     float a = ns_alpha;
