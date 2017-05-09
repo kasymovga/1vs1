@@ -4,6 +4,7 @@
 
 .float hg_sentry_energy;
 .float hg_sentry_capture_progress;
+.entity hg_sentry_capture_pb;
 
 .entity hg_sentry_capture_player;
 .entity hg_sentry_emitter_next;
