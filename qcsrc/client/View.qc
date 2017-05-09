@@ -422,10 +422,10 @@ void CSQC_UpdateView(float w, float h)
 		camera_mode = FALSE;
 	}
 
-	if (Sbar_WouldDrawScoreboard()) {
+	sb_hidescores = FALSE;
+	if (Sbar_WouldDrawScoreboard())
 		draw_crosshair = FALSE;
-		sb_hidescores = FALSE;
-	} else
+	else
 		draw_crosshair = TRUE;
 
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
