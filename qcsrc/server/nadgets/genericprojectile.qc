@@ -232,8 +232,6 @@ void HG_GenericProjectile_Touch(void) {
                 vector oldvel = self.velocity;
                 self.velocity = '0 0 0';
 
-                ++hg_plasma_group;
-
 				float c;
                 for(c = 0; c < pcount; ++c)
                     HG_Plasma_Shard(2 * M_PI * (c / pcount));

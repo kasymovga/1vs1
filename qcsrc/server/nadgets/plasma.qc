@@ -167,7 +167,6 @@ void HG_Plasma_Explode(void) {
 	v_z = 0;
     vectorvectors(normalize(v));
 
-    ++hg_plasma_group;
     for (c = 0; c < cvar("g_nadgets_plasma_projectile_count"); c ++)
         HG_Plasma_Shard(2 * M_PI * (c / cvar("g_nadgets_plasma_projectile_count")));
 }

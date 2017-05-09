@@ -1,7 +1,5 @@
-
-float hg_plasma_group;
-
 #if 0
+float hg_plasma_group;
 .float hg_plasmalock;
 .float hg_plasmalock_nexteffect;
 .entity hg_plasmalock_owner;
