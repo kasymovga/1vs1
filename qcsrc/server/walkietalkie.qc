@@ -5,6 +5,15 @@ string WalkieTalkie_SoundPath(float n) {
 	return strcat("walkietalkie/", sv_walkietalkie[n], ".wav");
 }
 
+var void(entity menu) WalkieTalkie_GameMenuAddItems_NextLink;
+void WalkieTalkie_GameMenuAddItems(entity menu) {
+	if (sv_walkietalkie_count)
+		Menu_Add_Item(menu, "Walkie-Talkie|cmd walkietalkie");
+
+	if (WalkieTalkie_GameMenuAddItems_NextLink)
+		WalkieTalkie_GameMenuAddItems_NextLink(menu);
+}
+
 void WalkieTalkie_Init() {
 	string s = cvar_string("sv_walkietalkie");
 	if (s == "")
@@ -16,6 +25,8 @@ void WalkieTalkie_Init() {
 		sv_walkietalkie[i] = strzone(argv(i));
 		precache_sound(WalkieTalkie_SoundPath(i));
 	}
+	WalkieTalkie_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = WalkieTalkie_GameMenuAddItems;
 }
 
 float walkietalkie_block[4];
@@ -48,11 +59,6 @@ void WalkieTalkie_Menu_Select(float n) {
 	WaypointSprite_Attach("here", 0);
 	defer_for(self, 2, WalkeTalkie_WaypointRemove);
 	walkietalkie_block[team_index] = time + 3;
-}
-
-void WalkieTalkie_GameMenuItem(entity menu) {
-	if (sv_walkietalkie_count)
-		Menu_Add_Item(menu, "Walkie-Talkie|cmd walkietalkie");
 }
 
 void WalkieTalkie_Menu() {

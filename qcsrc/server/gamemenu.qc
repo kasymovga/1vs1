@@ -30,12 +30,8 @@ void GameMenu_Show() {
 		else
 			Menu_Add_Item(e, "Spectate|cmd spectate");
 	}
-
-	if (g_nadgets)
-	if (self.team > 0 || self.classname == "player")
-		Menu_Add_Item(e, "Switch Nadget|cmd picknade");
-
-	WalkieTalkie_GameMenuItem(e);
+	if (GameHookChain_GameMenuAddItems)
+		GameHookChain_GameMenuAddItems(e);
 }
 
 void GameMenu_Init() {

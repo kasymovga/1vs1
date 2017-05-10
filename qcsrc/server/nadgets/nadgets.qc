@@ -15,12 +15,21 @@ float g_nadgets_drop_on_death;
 // Intended for the Camping Rifle Arena mode
 
 var float(entity plr, float wep) HG_PlayerCanFire_NextLink;
-
 float HG_PlayerCanFire(entity plr, float wep) {
 	if (self.hg_stealth)
 		return FALSE;
 
 	return (HG_PlayerCanFire_NextLink ? HG_PlayerCanFire_NextLink(plr, wep) : TRUE);
+}
+
+var void(entity menu) HG_GameMenuAddItems_NextLink;
+void HG_GameMenuAddItems(entity menu) {
+	if (g_nadgets)
+	if (self.team > 0 || self.classname == "player")
+		Menu_Add_Item(menu, "Switch Nadget|cmd picknade");
+
+	if (HG_GameMenuAddItems_NextLink)
+		HG_GameMenuAddItems_NextLink(menu);
 }
 
 void HG_Init(void) {
@@ -62,6 +71,8 @@ void HG_Init(void) {
 
 	HG_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
 	GameHookChain_PlayerCanFire = HG_PlayerCanFire;
+	HG_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = HG_GameMenuAddItems;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
