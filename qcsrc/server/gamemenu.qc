@@ -4,7 +4,7 @@ void GameMenu_Select(float select) {
 	if not(self.gamemenu)
 		return;
 
-	remove(self.gamemenu);
+	Menu_Remove(self.gamemenu);
 	self.gamemenu = world;
 }
 
