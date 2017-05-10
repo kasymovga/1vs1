@@ -8,6 +8,7 @@ string WalkieTalkie_SoundPath(float n) {
 var void(entity menu) WalkieTalkie_GameMenuAddItems_NextLink;
 void WalkieTalkie_GameMenuAddItems(entity menu) {
 	if (sv_walkietalkie_count)
+	if (self.classname == "player")
 		Menu_Add_Item(menu, "Walkie-Talkie|cmd walkietalkie");
 
 	if (WalkieTalkie_GameMenuAddItems_NextLink)
