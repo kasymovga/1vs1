@@ -1,11 +1,6 @@
 float sv_gamemenu;
-.entity gamemenu;
 void GameMenu_Select(float select) {
-	if not(self.gamemenu)
-		return;
-
-	Menu_Remove(self.gamemenu);
-	self.gamemenu = world;
+	Menu_Remove_For(self, "gamemenu");
 }
 
 void GameMenu_Show() {
@@ -13,13 +8,11 @@ void GameMenu_Show() {
 		stuffcmd(self,"togglemenu\n");
 		return;
 	}
-	if (self.gamemenu) {
-		remove(self.gamemenu);
-		self.gamemenu = world;
-		return;
-	}
 
-	entity e = self.gamemenu = Menu_Prepare(self, "gamemenu", "Game Menu", 0, GameMenu_Select);
+	entity e = Menu_Prepare(self, "gamemenu", "Game Menu", 0, GameMenu_Select);
+	if not(e)
+		return;
+
 	Menu_Set_Flags(e, MENU_ESCAPE_ENABLE);
 	Menu_Add_Item(e, "Main Menu|togglemenu");
 	Menu_Add_Item(e, "Disconnect|disconnect");

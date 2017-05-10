@@ -37,7 +37,15 @@ float Menu_SendEntity(entity to, float sf) {
 }
 
 entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeout, void(float choice) _menu_handler) {
-	entity e = spawn();
+	entity e;
+	for (e = _menu_chain; e; e = e.menu_chain) // Only one menu of one type for player
+		if (e.owner == plr)
+		if (e.menu_id == _menu_id) {
+			backtrace("Duplicated menu");
+			return world;
+		}
+
+	e = spawn();
 	e.classname = "menu";
 	e.menu_id = _menu_id;
 	e.menu_title = _menu_title;
@@ -54,11 +62,17 @@ entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeo
 }
 
 void Menu_Set_Flags(entity menu, float _flags) {
+	if not(menu)
+		backtrace("Menu_Set_Flags get world entity");
+
 	menu.flags = _flags;
 }
 
 void Menu_Add_Item(entity menu, string name) {
-	if (menu.cnt >= MENU_ITEMS_MAXCOUNT - 1)
+	if not(menu)
+		backtrace("Menu_Set_Flags get world entity");
+
+	if (menu.cnt >= MENU_ITEMS_MAXCOUNT)
 		return;
 
 	(menu.menu_items[menu.cnt]) = name;
@@ -74,6 +88,9 @@ void Menu_Set_Item(entity menu, float item, string name) {
 }
 
 void Menu_Set_Title(entity menu, string title) {
+	if not(menu)
+		backtrace("Menu_Set_Title get world entity");
+
 	menu.menu_title = title;
 	menu.SendFlags |= 2;
 }
@@ -83,7 +100,7 @@ void Menu_Remove(entity menu) {
 	if (_menu_chain == menu)
 		_menu_chain = _menu_chain.menu_chain;
 	else
-		for (; e.menu_chain; e = e.menu_chain)
+		for (e = _menu_chain; e.menu_chain; e = e.menu_chain)
 			if (e.menu_chain == menu) {
 				e.menu_chain = e.menu_chain.menu_chain;
 				break;
@@ -97,5 +114,15 @@ void Menu_Select(string _menu_id, float choice) {
 		if (e.menu_id == _menu_id) {
 			e.menu_handler(choice);
 			break;
+		}
+}
+
+void Menu_Remove_For(entity plr, string _menu_id) {
+	entity e;
+	for (e = _menu_chain; e; e = e.menu_chain)
+		if (e.owner == plr)
+		if (e.menu_id == _menu_id) {
+			Menu_Remove(e);
+			return;
 		}
 }
