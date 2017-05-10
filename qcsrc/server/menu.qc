@@ -70,7 +70,7 @@ void Menu_Set_Flags(entity menu, float _flags) {
 
 void Menu_Add_Item(entity menu, string name) {
 	if not(menu)
-		backtrace("Menu_Set_Flags get world entity");
+		backtrace("Menu_Add_Item get world entity");
 
 	if (menu.cnt >= MENU_ITEMS_MAXCOUNT)
 		return;
