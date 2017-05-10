@@ -34,6 +34,7 @@ void Ent_Menu_Remove() {
 			menu.draw2d = Menu_Draw;
 
 		menu_choiced = -1;
+		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
 		return;
 	}
 	entity e;
@@ -159,8 +160,12 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 		else
 			choice--;
 	}
-	if (nPrimary == K_MOUSE1)
-		choice = max(0, min(menu_selected, menu.cnt));
+	if (nPrimary == K_MOUSE1) {
+		if (menu_selected < 0)
+			choice = menu.cnt;
+		else
+			choice = min(menu_selected, menu.cnt);
+	}
 
 	if (choice >= 0) {
 		float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
@@ -175,14 +180,37 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 }
 
 entity gamemenu_holder;
+
+void GameMenu_Holder_Remove() {
+	entity oldself = self;
+	self = gamemenu_holder;
+	Ent_Menu_Remove();
+	remove(self);
+	gamemenu_holder = world;
+	CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
+	self = oldself;
+}
+
 void GameMenu_Holder_Think() {
 	if (find(world, menu_id, "gamemenu")) {
-		Ent_Menu_Remove();
-		remove(self);
-		gamemenu_holder = world;
+		GameMenu_Holder_Remove();
 		return;
 	}
 	self.nextthink = time;
+}
+
+float GameMenu_Holder_InputEvent(float bInputType, float nPrimary, float nSecondary) {
+	if (bInputType == 0)
+	if (nPrimary == K_ESCAPE || nPrimary == '3' || (nPrimary == K_MOUSE1 && (menu_selected > 1))) {
+		GameMenu_Holder_Remove();
+		return TRUE;
+	}
+	return Menu_InputEvent(bInputType, nPrimary, nSecondary);
+}
+
+void GameMenu_Holder_Draw() {
+	Menu_Draw();
+	CSQC_InputEvent_Callback = GameMenu_Holder_InputEvent;
 }
 
 void GameMenu_Holder() {
@@ -190,13 +218,13 @@ void GameMenu_Holder() {
 		return;
 
 	gamemenu_holder = spawn();
-	gamemenu_holder.draw2d = Menu_Draw;
-	gamemenu_holder.flags = 16;
+	gamemenu_holder.draw2d = GameMenu_Holder_Draw;
 	gamemenu_holder.menu_title = "Loading Game Menu...";
-	gamemenu_holder.cnt = 2;
+	gamemenu_holder.cnt = 3;
 	gamemenu_holder.menu_id = "gamemenu_holder";
 	gamemenu_holder.menu_items[0] = "Main Menu|togglemenu";
 	gamemenu_holder.menu_items[1] = "Disconnect|disconnect";
+	gamemenu_holder.menu_items[2] = "Return to Game";
 	gamemenu_holder.menu_next = menu;
 	gamemenu_holder.nextthink = time;
 	gamemenu_holder.think = GameMenu_Holder_Think;
