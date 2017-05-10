@@ -337,6 +337,8 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else if(cmd == "picknade") {
 		HG_Pick(tokens);
+	} else if(cmd == "walkietalkie") {
+		WalkieTalkie_Menu();
 	} else {
 		//if(ctf_clientcommand())
 		//	return;

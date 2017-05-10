@@ -34,6 +34,8 @@ void GameMenu_Show() {
 	if (g_nadgets)
 	if (self.team > 0 || self.classname == "player")
 		Menu_Add_Item(e, "Switch Nadget|cmd picknade");
+
+	WalkieTalkie_GameMenuItem(e);
 }
 
 void GameMenu_Init() {

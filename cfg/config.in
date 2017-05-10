@@ -156,6 +156,7 @@ set g_akimbo_weapons "laser"
 set g_powerup_strength_akimbo 0
 set g_pinata_drop_all 0
 set sv_gamemenu 1
+set sv_walkietalkie ""
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_ammo_shells "item_bullets"

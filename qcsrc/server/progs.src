@@ -90,6 +90,7 @@ gametypevote.qh
 
 menu.qh
 gamemenu.qh
+walkietalkie.qh
 
 dodging.qh
 miscfunctions.qh
@@ -254,3 +255,4 @@ nadgets/include.qc
 ../common/nadgets.qc
 napalm.qc
 gamemenu.qc
+walkietalkie.qc

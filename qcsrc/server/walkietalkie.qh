@@ -1,0 +1,3 @@
+void WalkieTalkie_Init();
+void WalkieTalkie_Menu();
+void WalkieTalkie_GameMenuItem(entity menu);

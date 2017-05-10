@@ -2064,15 +2064,23 @@ void reset_map(float dorespawn)
 }
 
 void defer_think() {
-	self.use();
+	entity oldself = self;
+	self = self.enemy;
+	oldself.use();
+	self = oldself;
 	remove(self);
 }
 
-void defer(float t, void() callback) {
+void defer_for(entity e_for, float t, void() callback) {
 	entity e = spawn();
 	e.use = callback;
+	e.enemy = e_for;
 	e.nextthink = t + time;
 	e.think = defer_think;
+}
+
+void defer(float t, void() callback) {
+	defer_for(world, t, callback);
 }
 
 vector RandomSpreadVector(float side, float up, float up_min, float up_min_rand) {

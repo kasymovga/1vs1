@@ -583,6 +583,7 @@ void readlevelcvars(void)
 	Player_Init();
 	runes_init();
 	GameMenu_Init();
+	WalkieTalkie_Init();
 }
 
 void readdynamiccvars() {
