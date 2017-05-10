@@ -14,6 +14,18 @@ float g_nadgets_drop_on_death;
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
 
+var float(string cmd, float tokens) HG_ClientCommandHandle_NextLink;
+float HG_ClientCommandHandle(string cmd, float tokens) {
+	if(cmd == "picknade") {
+		HG_Pick(tokens);
+		return TRUE;
+	}
+	if (HG_ClientCommandHandle_NextLink)
+		return HG_ClientCommandHandle_NextLink(cmd, tokens);
+
+	return FALSE;
+}
+
 var float(entity plr, float wep) HG_PlayerCanFire_NextLink;
 float HG_PlayerCanFire(entity plr, float wep) {
 	if (self.hg_stealth)
@@ -73,6 +85,8 @@ void HG_Init(void) {
 	GameHookChain_PlayerCanFire = HG_PlayerCanFire;
 	HG_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
 	GameHookChain_GameMenuAddItems = HG_GameMenuAddItems;
+	HG_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
+	GameHookChain_ClientCommandHandle = HG_ClientCommandHandle;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);

@@ -140,6 +140,10 @@ void SV_ParseClientCommand(string s) {
 			return;
 	}
 
+	if (GameHookChain_ClientCommandHandle)
+	if (GameHookChain_ClientCommandHandle(cmd, tokens))
+		return;
+
 	if(GameCommand_Vote(s, self)) {
 		return;
 	} else if(GameCommand_MapVote(argv(0))) {
@@ -335,10 +339,6 @@ void SV_ParseClientCommand(string s) {
 		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
 	} else if(cmd == "mylocation") {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
-	} else if(cmd == "picknade") {
-		HG_Pick(tokens);
-	} else if(cmd == "walkietalkie") {
-		WalkieTalkie_Menu();
 	} else {
 		//if(ctf_clientcommand())
 		//	return;

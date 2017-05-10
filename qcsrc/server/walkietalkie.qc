@@ -13,6 +13,17 @@ void WalkieTalkie_GameMenuAddItems(entity menu) {
 	if (WalkieTalkie_GameMenuAddItems_NextLink)
 		WalkieTalkie_GameMenuAddItems_NextLink(menu);
 }
+var float(string cmd, float tokens) WalkieTalkie_ClientCommandHandle_NextLink;
+float WalkieTalkie_ClientCommandHandle(string cmd, float tokens) {
+	if (cmd == "walkietalkie") {
+		WalkieTalkie_Menu();
+		return TRUE;
+	}
+	if (WalkieTalkie_ClientCommandHandle_NextLink)
+		return WalkieTalkie_ClientCommandHandle_NextLink(cmd, tokens);
+
+	return FALSE;
+}
 
 void WalkieTalkie_Init() {
 	string s = cvar_string("sv_walkietalkie");
@@ -27,6 +38,8 @@ void WalkieTalkie_Init() {
 	}
 	WalkieTalkie_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
 	GameHookChain_GameMenuAddItems = WalkieTalkie_GameMenuAddItems;
+	WalkieTalkie_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
+	GameHookChain_ClientCommandHandle = WalkieTalkie_ClientCommandHandle;
 }
 
 float walkietalkie_block[4];

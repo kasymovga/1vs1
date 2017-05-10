@@ -4,6 +4,9 @@ void GameMenu_Select(float select) {
 }
 
 void GameMenu_Show() {
+	if (cvar("sv_gamemenu_broken"))
+		return;
+
 	if not(sv_gamemenu) {
 		stuffcmd(self,"togglemenu\n");
 		return;

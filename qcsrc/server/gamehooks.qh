@@ -59,3 +59,4 @@ var void(entity e) GameHook_SpectateCopy = {}
 var float(entity targ, entity attacker, float deathtype) GameHook_DamageMod = { return 1; }
 var float(entity targ, entity attacker, float deathtype) GameHook_ForceMod = { return 1; }
 var void(entity menu) GameHookChain_GameMenuAddItems;
+var float(string cmd, float tokens) GameHookChain_ClientCommandHandle;
