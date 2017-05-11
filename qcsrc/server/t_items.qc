@@ -403,6 +403,7 @@ float Item_GiveTo(entity item, entity player)
 			_switchweapon = TRUE;
 
 		if(item.spawnshieldtime)
+		if(g_use_ammunition)
 		{
 			if (item.ammo_shells)
 			if (player.ammo_shells < g_pickup_shells_max)
@@ -1764,11 +1765,11 @@ void Items_Init()
 		}
 		else
 		{
-			start_ammo_shells = cvar("g_pickup_shells_max");
-			start_ammo_nails = cvar("g_pickup_nails_max");
-			start_ammo_rockets = cvar("g_pickup_rockets_max");
-			start_ammo_cells = cvar("g_pickup_cells_max");
-			start_ammo_fuel = cvar("g_pickup_fuel_max");
+			start_ammo_shells = 0;
+			start_ammo_nails = 0;
+			start_ammo_rockets = 0;
+			start_ammo_cells = 0;
+			start_ammo_fuel = 0;
 			start_items |= IT_UNLIMITED_AMMO;
 		}
 
