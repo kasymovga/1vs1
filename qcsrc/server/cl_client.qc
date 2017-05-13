@@ -971,52 +971,51 @@ void PlayerToSpec(entity player)
 	}
 }
 
-float FakeInit_SendEntity(entity to, float sf)
-{
-	if (to != self.owner)
-		return FALSE;
-	float i;
-	vector client_hook_shotorigin;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	for(i = 1; i <= 24; ++i)
-		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
-	if(g_grappling_hook)
-		client_hook_shotorigin = '8 -8 -12';
-	else
-		client_hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, TRUE, FALSE);
-	WriteCoord(MSG_ENTITY, client_hook_shotorigin_x);
-	WriteCoord(MSG_ENTITY, client_hook_shotorigin_y);
-	WriteCoord(MSG_ENTITY, client_hook_shotorigin_z);
-
-	if(sv_foginterval && world.fog != "")
-		WriteString(MSG_ENTITY, world.fog);
-	else
-		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, g_balance_armor_blockpercent * 255.0);
-	return TRUE;
-}
-
 float ClientInit_SendEntity(entity to, float sf)
 {
 	float i;
+	vector client_hook_shotorigin;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	for(i = 1; i <= 24; ++i)
-		WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_x);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_y);
-	WriteCoord(MSG_ENTITY, hook_shotorigin_z);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & 1) {
+		for(i = 1; i <= 24; ++i)
+			WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
+	}
+	if (sf & 2) {
+		if(g_grappling_hook)
+			client_hook_shotorigin = '8 -8 -12';
+		else {
+			self.owner = to;
+			client_hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, TRUE, FALSE);
+			self.owner = world;
+		}
+		WriteCoord(MSG_ENTITY, client_hook_shotorigin_x);
+		WriteCoord(MSG_ENTITY, client_hook_shotorigin_y);
+		WriteCoord(MSG_ENTITY, client_hook_shotorigin_z);
+	}
 
-	if(sv_foginterval && world.fog != "")
-		WriteString(MSG_ENTITY, world.fog);
-	else
-		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, g_balance_armor_blockpercent * 255.0);
+	if (sf & 4) {
+		if(sv_foginterval && world.fog != "")
+			WriteString(MSG_ENTITY, world.fog);
+		else
+			WriteString(MSG_ENTITY, "");
+	}
+	if (sf & 8)
+		WriteByte(MSG_ENTITY, g_balance_armor_blockpercent * 255.0);
+
 	return TRUE;
 }
 
+entity client_init;
 void ClientInit_Spawn()
 {
-	Net_LinkEntity(spawn(), FALSE, 0, ClientInit_SendEntity);
+	client_init = spawn();
+	Net_LinkEntity(client_init, FALSE, 0, ClientInit_SendEntity);
+}
+
+void ClientInit_UpdateHookOrigin() {
+	//Awfull hack
+	client_init.SendFlags |= 2;
 }
 
 /*

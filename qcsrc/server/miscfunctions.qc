@@ -549,8 +549,6 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 }
 string W_FixWeaponOrder_ForceComplete(string s);
 string W_FixWeaponOrder_AllowIncomplete(string s);
-float FakeInit_SendEntity(entity to, float sf);
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc);
 float w_getbestweapon(entity e);
 void GetCvars(float f)
 {
@@ -592,11 +590,7 @@ void GetCvars(float f)
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
 		else if (!self.fake_init && s == "cl_gunalign")
-		{
-			self.fake_init = spawn();
-			self.fake_init.owner = self;
-			Net_LinkEntity(self.fake_init, FALSE, 0, FakeInit_SendEntity);
-		}
+			ClientInit_UpdateHookOrigin();
 	}
 }
 

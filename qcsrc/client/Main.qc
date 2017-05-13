@@ -1142,18 +1142,25 @@ void Ent_Init(float ignore)
 {
 	float i;
 	self.classname = "ent_client_init";
+	float sf = ReadByte();
 
-	for(i = 0; i < 24; ++i)
-		weaponimpulse[i] = ReadByte() - 1;
-	hook_shotorigin_x = ReadCoord();
-	hook_shotorigin_y = ReadCoord();
-	hook_shotorigin_z = ReadCoord();
+	if (sf & 1) {
+		for(i = 0; i < 24; ++i)
+			weaponimpulse[i] = ReadByte() - 1;
+	}
+	if (sf & 2) {
+		hook_shotorigin_x = ReadCoord();
+		hook_shotorigin_y = ReadCoord();
+		hook_shotorigin_z = ReadCoord();
+	}
 
-	if(forcefog)
-		strunzone(forcefog);
-	forcefog = strzone(ReadString());
+	if (sf & 4) {
+		unzone_ifneeded(forcefog);
+		forcefog = zone_ifneeded(ReadString());
+	}
 
-	armorblockpercent = ReadByte() / 255.0;
+	if (sf & 8)
+		armorblockpercent = ReadByte() / 255.0;
 
 	if(!postinit)
 		PostInit();

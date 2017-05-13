@@ -60,6 +60,7 @@ float g_balance_grapplehook_speed_fly;
 float g_balance_grapplehook_speed_pull;
 float g_balance_grapplehook_stretch;
 float g_grappling_hook_tarzan;
+vector hook_shotorigin;
 
 .string aiment_classname;
 .float aiment_deadflag;
