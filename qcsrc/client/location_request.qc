@@ -23,7 +23,7 @@ void LocationRequest_Draw() {
 	ons_showmap = FALSE;
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = LocationRequest_InputEvent;
-	teamradar_view(2, location_request.netname);
+	teamradar_view(1.8, location_request.netname);
 }
 
 void Ent_LocationRequest(float ignore) {
