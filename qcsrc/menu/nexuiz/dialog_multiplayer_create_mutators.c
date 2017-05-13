@@ -98,7 +98,7 @@ void fillNexuizMutatorsDialog(entity me)
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_minstagib", "MinstaGib"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.4, e = makeNexuizTextLabel(0, "Akimbo:"));
+		me.TD(me, 1, 0.6, e = makeNexuizTextLabel(0, "Akimbo:"));
 		me.TD(me, 1, 0.6, s = makeNexuizTextSlider("g_akimbo_weapons"));
 			s.addValue(s, "None", "none");
 			s.addValue(s, "Laser", "laser");
