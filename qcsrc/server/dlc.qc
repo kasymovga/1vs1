@@ -26,7 +26,7 @@ float dlc_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_LIST);
 	sf &~= 4;
 	if (to.netaddress == "local") {
-		sf != 4;
+		sf |= 4;
 	}
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
