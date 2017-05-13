@@ -198,6 +198,7 @@ float w_supershotgun(float req)
 		precache_model ("models/uziflash.md3");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
+		dlc_require("supershotgun");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_SUPERSHOTGUN);
