@@ -640,10 +640,13 @@ void race_RetractPlayer()
 	}
 }
 
-void race_PreDie(entity plr, entity attacker, float killed)
+var void(entity plr, entity attacker, float killed) race_PlayerClear_NextLink;
+void race_PlayerClear(entity plr, entity attacker, float killed)
 {
 	if (killed)
 		race_AbandonRaceCheck(plr);
+
+	race_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 entity race_PreSpawn()
@@ -1101,7 +1104,8 @@ void race_init() {
 	GameHook_PhysicFrameBegin = race_PhysicFrameBegin;
 	GameHook_SelectSpawnPoint = race_PreSpawn;
 	GameHook_Spawn = race_PostSpawn;
-	GameHook_PlayerClear = race_PreDie;
+	race_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = race_PlayerClear;
 	GameHook_ObserverSpawn = race_PreSpawnObserver;
 	GameHook_SpawnPointGood = race_SpawnPointGood;
 	race_WinCountDown_orig = GameHook_WinCountDown;

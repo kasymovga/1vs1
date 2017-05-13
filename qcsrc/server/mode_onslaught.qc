@@ -1352,9 +1352,12 @@ void onslaught_Spawn(entity spot) {
 	LocationRequest_Remove(self);
 }
 
+var void(entity plr, entity attacker, float killed) onslaught_PlayerClear_NextLink;
 void onslaught_PlayerClear(entity plr, entity attacker, float killed) {
 	if not(killed)
 		LocationRequest_Remove(plr);
+
+	onslaught_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 // Onslaught winning condition:
@@ -1403,7 +1406,8 @@ void onslaught_init() {
 	GameHook_DeathHandle = onslaught_DeathHandle;
 	GameHook_Spawn = onslaught_Spawn;
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
-	GameHook_PlayerClear = onslaught_PlayerClear;
+	onslaught_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = onslaught_PlayerClear;
 	GameHook_WinningCondition = onslaught_WinningCondition;
 	GameHook_WinCountDown = stub_WinCountDown;
 	precache_model("models/onslaught/generator.md3");

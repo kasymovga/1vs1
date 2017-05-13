@@ -925,13 +925,16 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 	return f;
 }
 
-void kh_PlayerCLear(entity plr, entity attacker, float killed) {
+var void(entity plr, entity attacker, float killed) kh_PlayerClear_NextLink;
+void kh_PlayerClear(entity plr, entity attacker, float killed) {
 	if(killed && (plr == attacker))
 		kh_Key_DropAll(plr, TRUE);
 	else if(killed && (attacker.classname == "player" || attacker.classname == "gib"))
 		kh_Key_DropAll(plr, FALSE);
 	else
 		kh_Key_DropAll(plr, TRUE);
+
+	kh_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 void kh_Reset() {
@@ -967,7 +970,8 @@ void kh_init()  // sets up th KH environment
 	precache_sound(kh_sound_collect);
 	precache_sound(kh_sound_alarm);  // the new siren
 	GameHook_FragsHandle = kh_HandleFrags;
-	GameHook_PlayerClear = kh_PlayerCLear;
+	kh_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = kh_PlayerClear;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_SpectateCopy = kh_SpectateCopy;
 

@@ -3,10 +3,6 @@ void HG_Precache(void);
 void HG_SetContext(float isalt);
 void HG_PlayerFrame(void);
 void HG_Attack(void);
-void HG_PlayerSpawn(void);
-void HG_PlayerJoin(void);
-void HG_PlayerDeath(void);
-void HG_PlayerTrueDeath(void);
 void HG_ResetState(entity, float);
 void HG_ResetAmmo(entity, float);
 void HG_CopyAmmoState(entity src, entity dst);
@@ -122,6 +118,5 @@ HGDEFS
 #define HG_EMPTY_INITFUNC(hgt) HG_HOOKFUNCTION(hgt, Init) { return HG_INIT_OK; }
 
 void HG_Pick(float token);
-void HG_MapReset();
 float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc);
 void HG_PlayerEffects();

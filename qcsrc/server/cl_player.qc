@@ -618,16 +618,9 @@ void PlayerClear(float killed, entity attacker)
 		remove(self.hat);
 		self.hat = world;
 	}
-	GameHook_PlayerClear(self, attacker, killed);
+	GameHookChain_PlayerClear(self, attacker, killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
-	if (killed)
-		HG_PlayerDeath();
-	else {
-		if ((self.classname != "player" && self.team <= 0) || self.classname == "disconnecting") {
-			HG_RemoveAll(self);
-		}
-	}
 }
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)

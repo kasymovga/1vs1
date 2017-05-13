@@ -67,9 +67,12 @@ void basketball_touch();
 void football_touch();
 void hockey_touch();
 
+var void(entity plr, entity attacker, float killed) nb_PlayerClear_NextLink;
 void nb_PlayerClear(entity plr, entity attacker, float killed) {
 	if(plr.ballcarried)
 		DropBall(plr.ballcarried, plr.origin, plr.velocity);
+
+	nb_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 float nb_SpeedMod() {
@@ -150,7 +153,8 @@ void nb_init() // Called early (worldspawn stage)
 	CACHE_CVAR(g_nexball_delay_start);
 	CACHE_CVAR(g_nexball_basketball_carrier_speed);
 
-	GameHook_PlayerClear = nb_PlayerClear;
+	nb_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = nb_PlayerClear;
 	GameHook_PlayerPreThink = nexball_setstatus;
 	GameHook_SpeedMod = nb_SpeedMod;
 	GameHook_FragLimitOverride = nb_FragLimitOverride;

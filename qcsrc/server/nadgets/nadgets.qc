@@ -2,7 +2,6 @@ float g_nadgets_detonate_on_death;
 float g_nadgets_sentry_disown_on_death;
 float g_nadgets_regen_compensate;
 float g_nadgets_remove_on_death;
-float g_nadgets_resetonrespawn;
 float g_nadgets_storage_limit_factor;
 float g_nadgets_regen;
 float g_nadgets_ammo;
@@ -10,6 +9,9 @@ float g_nadgets_regen_damagepause;
 float g_nadgets_shield_damage_store_allow_cancel_discharge;
 float g_nadgets_initial_regen;
 float g_nadgets_drop_on_death;
+
+void HG_UpdateDetonables(void);
+void HG_ForceDetonateAll(void);
 
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
@@ -40,6 +42,43 @@ void HG_GameMenuAddItems(entity menu) {
 	HG_GameMenuAddItems_NextLink(menu);
 }
 
+var void(entity plr, entity attacker, float killed) HG_PlayerClear_NextLink;
+void HG_PlayerClear(entity plr, entity attacker, float killed) {
+	if (killed) {
+		if(g_nadgets_remove_on_death > 1)
+			HG_RemoveAll(self);
+
+		if(self.hg_power > 0 && g_nadgets_drop_on_death) {
+			HG_SetContext(self.hg_altstate);
+			self.hg_power = 0;
+			HG_Attack();
+		}
+		if(g_nadgets_detonate_on_death > 1)
+			HG_ForceDetonateAll();
+	} else {
+		if ((self.classname != "player" && self.team <= 0) || self.classname == "disconnecting") {
+			HG_RemoveAll(self);
+			HG_GenericProjectile_DetonateAll(self, TRUE);
+		}
+	}
+	HG_DO_IN_ALL_CONTEXTS({
+		if(self.hg_ctx_type_picked_nextround >= 0)
+			self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
+		self.hg_ctx_type_picked_nextround = -1;
+	})
+    self.hg_power = 0;
+    self.hg_bonus = 0;
+    self.hg_bonustype = HG_NORMAL;
+    self.hg_shield = 0;
+	if (self.classname == "player")
+		HG_DO_IN_ALL_CONTEXTS(HG_ResetAmmo(plr, FALSE);)
+
+    self.hg_shield = 0;
+	self.hg_stealth = 0;
+	self.hg_stealthalpha = 0;
+    HG_UpdateDetonables();
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -55,7 +94,6 @@ void HG_Init(void) {
 	CACHE_CVAR(g_nadgets_sentry_disown_on_death);
 	CACHE_CVAR(g_nadgets_regen_compensate);
 	CACHE_CVAR(g_nadgets_remove_on_death);
-	CACHE_CVAR(g_nadgets_resetonrespawn);
 	CACHE_CVAR(g_nadgets_storage_limit_factor);
 	CACHE_CVAR(g_nadgets_regen);
 	CACHE_CVAR(g_nadgets_regen_damagepause);
@@ -77,6 +115,8 @@ void HG_Init(void) {
     addstat(STAT_HGBONUSTYPE, AS_INT, hg_bonustype);
     addstat(STAT_HGREFIRE, AS_FLOAT, hg_next1);
 
+	HG_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = HG_PlayerClear;
 	HG_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
 	GameHookChain_PlayerCanFire = HG_PlayerCanFire;
 	HG_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
@@ -677,41 +717,6 @@ void HG_ResetAmmo(entity p, float clearammo) {
 }
 
 void HG_ResetState(entity p, float clearammo) {
-    p.hg_power = 0;
-    p.hg_bonus = 0;
-    p.hg_bonustype = HG_NORMAL;
-    p.hg_shield = 0;
-    HG_DO_IN_ALL_CONTEXTS(HG_ResetAmmo(p, clearammo);)
-}
-
-void HG_PlayerSpawn(void) {
-	if not(g_nadgets)
-		return;
-
-    if(self.classname != "player")
-        return;
-
-    //HG_TimeWarper_Abort();
-
-    if(g_nadgets_resetonrespawn) {
-		HG_DO_IN_ALL_CONTEXTS({
-			if(self.hg_ctx_type_picked_nextround >= 0)
-				self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
-			self.hg_ctx_type_picked_nextround = -1;
-		})
-        HG_ResetState(self, PLAYER_DEAD(self));
-	}
-
-    self.hg_shield = 0;
-    HG_UpdateDetonables();
-}
-
-void HG_PlayerJoin(void) {
-    if(self.classname != "player")
-        return;
-
-    HG_ResetState(self, PLAYER_DEAD(self));
-    HG_UpdateDetonables();
 }
 
 void HG_ForceDetonateAll(void) {
@@ -722,50 +727,6 @@ void HG_ForceDetonateAll(void) {
         if(s.realowner == self)
             HG_FadeOut(s);
     }
-}
-
-void HG_PlayerDeath(void) {
-    // Called for all deaths
-
-    if(!g_nadgets)
-        return;
-
-    //HG_TimeWarper_Abort();
-
-    if(g_nadgets_remove_on_death > 1)
-        HG_RemoveAll(self);
-
-    if(self.hg_power > 0 && g_nadgets_drop_on_death) {
-        HG_SetContext(self.hg_altstate);
-        self.hg_power = 0;
-        HG_Attack();
-    }
-
-#if 0
-    if(!g_freezetag && !g_jailbreak) {
-#endif
-        if(g_nadgets_resetonrespawn)
-            self.hg_ammo1 = self.hg_ammo2 = 0;
-#if 0
-    }
-#endif
-
-    if(g_nadgets_detonate_on_death > 1)
-        HG_ForceDetonateAll();
-}
-
-void HG_PlayerTrueDeath(void) {
-    // Called only for "real" deaths not intercepted by gametype rules
-    // Won't be called for getting frozen, for example
-
-    if(!g_nadgets)
-        return;
-
-    if(g_nadgets_remove_on_death == 1)
-        HG_RemoveAll(self);
-
-    if(g_nadgets_detonate_on_death == 1)
-        HG_ForceDetonateAll();
 }
 
 string HG_SelectableTypes(float issecondary) {
@@ -852,7 +813,7 @@ void HG_Pick(float tokens) {
 
 		if(argc) for(i = 0; i < argc; ++i) {
 			if(t == HG_NameToType(argv(i))) {
-				sprint(self, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2", HG_TypeToExpandedName(t), (nr ? "^1 on the next round.\n" : "^1.\n")));
+				sprint(self, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2", HG_TypeToExpandedName(t), (nr ? "^1 on the next respawn.\n" : "^1.\n")));
 				self.hg_ctx_type_picked_nextround = t;
 				if(!nr) {
 					self.hg_ctx_type_picked = t;
@@ -887,30 +848,6 @@ void HG_Pick(float tokens) {
 			return;
 		}
 	})
-}
-
-void HG_MapReset() {
-	if not(g_nadgets)
-		return;
-
-	entity e = self;
-	FOR_EACH_TEAMPLAYER(self) {
-		HG_DO_IN_ALL_CONTEXTS({
-			if(self.hg_ctx_type_picked_nextround >= 0)
-				self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
-			self.hg_ctx_type_picked_nextround = -1;
-		})
-
-		if(self.hg_optout_nextround >= 0)
-			self.hg_optout = self.hg_optout_nextround;
-
-		self.hg_optout_nextround = -1;
-		HG_ResetState(self, FALSE);
-		self.hg_nadesused = 0;
-		if(self.hg_alwaysask)
-			HG_ShowMenu(TRUE);
-	}
-	self = e;
 }
 
 float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc) {

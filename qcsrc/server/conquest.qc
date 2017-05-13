@@ -368,7 +368,9 @@ void conquest_init() {
 	GameHook_SelectSpawnPoint = conquest_SelectSpawnPoint;
 	GameHook_DeathHandle = onslaught_DeathHandle;
 	GameHook_Spawn = onslaught_Spawn;
-	GameHook_PlayerClear = onslaught_PlayerClear;
+
+	onslaught_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = onslaught_PlayerClear;
 	GameHook_Reset = conquest_Reset;
 	GameHook_WinCountDown = stub_WinCountDown;
 	if (cvar("g_conquest_use_ons"))

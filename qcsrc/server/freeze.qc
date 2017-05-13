@@ -165,6 +165,7 @@ float Freeze_PlayerDamageHandle(entity inflictor, entity attacker, float damage,
 	return TRUE;
 }
 
+var void(entity plr, entity attacker, float killed) Freeze_PlayerClear_NextLink;
 void Freeze_PlayerClear(entity plr, entity attacker, float killed)
 {
 	if (plr.ice)
@@ -181,6 +182,7 @@ void Freeze_PlayerClear(entity plr, entity attacker, float killed)
 	plr.ice = world;
 	WaypointSprite_DetachCarrier(plr);
 	Roundbased_NeedCheckTeams();
+	Freeze_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 float Freeze_FragLimitOverride() {
@@ -201,7 +203,8 @@ void Freeze_Init()
 	CACHE_CVAR(sv_model_ice_z);
 	GameHook_DeathHandle = Freeze_DeathHandle;
 	GameHook_Spawn = Freeze_Spawn;
-	GameHook_PlayerClear = Freeze_PlayerClear;
+	Freeze_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = Freeze_PlayerClear;
 	GameHook_SpeedMod = Freeze_SpeedMod;
 	GameHook_PlayerDamageHandle = Freeze_PlayerDamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;

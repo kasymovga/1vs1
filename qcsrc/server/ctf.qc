@@ -1088,6 +1088,7 @@ void ctf_delayedinit()
 	ScoreRules_basics_end();
 };
 
+var void(entity plr, entity attacker, float killed) ctf_PlayerClear_NextLink;
 void ctf_PlayerClear(entity plr, entity attacker, float killed) {
 	if(plr.flagcarried)
 	{
@@ -1098,6 +1099,8 @@ void ctf_PlayerClear(entity plr, entity attacker, float killed) {
 		else
 			DropFlag(plr.flagcarried, world, attacker);
 	}
+
+	ctf_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 string ctf_RecordForMap(string bspname) {
@@ -1184,7 +1187,8 @@ void ctf_init()
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
 	GameHook_FragsHandle = ctf_handle_frags;
-	GameHook_PlayerClear = ctf_PlayerClear;
+	ctf_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = ctf_PlayerClear;
 	GameHook_PlayerPreThink = ctf_setstatus;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;

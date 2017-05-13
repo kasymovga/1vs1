@@ -53,8 +53,10 @@ float Clanarena_FragLimitOverride() {
 	return cvar("g_clanarena_winlimit");
 }
 
+var void(entity plr, entity attachker, float killed) Clanarena_PlayerClear_NextLink;
 void Clanarena_PlayerClear(entity plr, entity attacker, float killed) {
 	Roundbased_NeedCheckTeams();
+	Clanarena_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 void Clanarena_Init()
@@ -68,7 +70,8 @@ void Clanarena_Init()
 	GameHook_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
-	GameHook_PlayerClear = Clanarena_PlayerClear;
+	Clanarena_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = Clanarena_PlayerClear;
 	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
 	ca_controller = spawn();
 	ca_controller.think = Clanarena_Think;

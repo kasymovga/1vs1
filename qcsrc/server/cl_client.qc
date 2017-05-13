@@ -950,7 +950,6 @@ void PutClientInServer()
 			setorigin(self.hat, sv_player_hat_origin);
 		}
 		GameHook_Spawn(spot);
-		HG_PlayerSpawn();
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 	}
@@ -1450,7 +1449,6 @@ void ClientDisconnect (void)
 	self.classname = "disconnecting";
 
 	PlayerClear(FALSE, world);
-	HG_GenericProjectile_DetonateAll(self, TRUE);
 
 	// Here, everything has been done that requires this player to be a client.
 
