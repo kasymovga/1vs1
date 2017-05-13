@@ -110,6 +110,7 @@ void Akimbo_Init()
 			WEPBIT_NEX |
 			WEPBIT_HAGAR |
 			WEPBIT_SUPERSHOTGUN |
+			WEPBIT_ZAPPER |
 			WEPBIT_ROCKET_LAUNCHER;
 
 	if (s == "all")
