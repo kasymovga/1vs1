@@ -77,6 +77,7 @@ void HG_PlayerClear(entity plr, entity attacker, float killed) {
 	self.hg_stealth = 0;
 	self.hg_stealthalpha = 0;
     HG_UpdateDetonables();
+	HG_PlayerClear_NextLink(plr, attacker, killed);
 }
 
 void HG_Init(void) {
