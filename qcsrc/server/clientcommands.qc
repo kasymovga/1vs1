@@ -262,12 +262,16 @@ void SV_ParseClientCommand(string s) {
 				}
 				sprint(self, strcat("\{1}", s, "\n"));
 			}
+			cvar_set("connections_xonotic", ftos(cvar("connections_xonotic") + 1));
 		} else if (s == "rexuiz") {
 			self.gameclient = CLIENT_REXUIZ;
+			cvar_set("connections_rexuiz", ftos(cvar("connections_rexuiz") + 1));
 		} else if (s == "nexuiz") {
 			self.gameclient = CLIENT_NEXUIZ;
+			cvar_set("connections_nexuiz", ftos(cvar("connections_nexuiz") + 1));
 		} else if (s == "oldnexuiz") {
 			self.gameclient = CLIENT_OLDNEXUIZ;
+			cvar_set("connections_oldnexuiz", ftos(cvar("connections_oldnexuiz") + 1));
 		}
 	} else if(cmd == "records") {
 		sprint(self, records_reply);
