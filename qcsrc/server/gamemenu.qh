@@ -1,2 +1,3 @@
+float sv_gamemenu;
 void GameMenu_Show();
 void GameMenu_Init();

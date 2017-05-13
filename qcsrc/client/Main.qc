@@ -773,6 +773,7 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
+float gamemenu;
 var float(float bInputType, float nPrimary, float nSecondary) CSQC_InputEvent_Callback_null;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
@@ -786,7 +787,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 
 	if (bInputType == 0)
-	if (nPrimary == K_ESCAPE) {
+	if (nPrimary == K_ESCAPE)
+	if (gamemenu)
+	{
 		GameMenu_Holder();
 		localcmd("\ncmd gamemenu\n");
 		return true;
@@ -1161,6 +1164,9 @@ void Ent_Init(float ignore)
 
 	if (sf & 8)
 		armorblockpercent = ReadByte() / 255.0;
+
+	if (sf & 16)
+		gamemenu = ReadByte();
 
 	if(!postinit)
 		PostInit();

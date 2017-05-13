@@ -1003,6 +1003,9 @@ float ClientInit_SendEntity(entity to, float sf)
 	if (sf & 8)
 		WriteByte(MSG_ENTITY, g_balance_armor_blockpercent * 255.0);
 
+	if (sf & 16)
+		WriteByte(MSG_ENTITY, sv_gamemenu);
+
 	return TRUE;
 }
 

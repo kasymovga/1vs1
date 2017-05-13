@@ -1,12 +1,8 @@
-float sv_gamemenu;
 void GameMenu_Select(float select) {
 	Menu_Remove_For(self, "gamemenu");
 }
 
 void GameMenu_Show() {
-	if (cvar("sv_gamemenu_broken"))
-		return;
-
 	if not(sv_gamemenu) {
 		stuffcmd(self,"togglemenu\n");
 		return;
