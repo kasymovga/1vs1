@@ -332,6 +332,22 @@ void conquest_delayedinit() {
 	conquest_Reset();
 }
 
+void conquest_ons_EntityPreSpawn() {
+	if (self.classname == "onslaught_generator" || self.classname == "onslaught_controlpoint") {
+		self.classname = "conquest_cp";
+	}
+}
+
+void conquest_ctf_and_ons_EntityPreSpawn() {
+	if (self.classname == "item_flag_team1") {
+		self.classname = "conquest_cp_fromredflag";
+	} else if (self.classname == "item_flag_team2") {
+		self.classname = "conquest_cp_fromblueflag";
+	} else if (self.classname == "dom_controlpoint") {
+		self.classname = "conquest_cp";
+	}
+}
+
 void conquest_init() {
 	precache_model("models/onslaught/controlpoint_pad.md3");
 	precache_model("models/ctf/flags.md3");
@@ -355,5 +371,11 @@ void conquest_init() {
 	GameHook_PlayerClear = onslaught_PlayerClear;
 	GameHook_Reset = conquest_Reset;
 	GameHook_WinCountDown = stub_WinCountDown;
+	if (cvar("g_conquest_use_ons"))
+		GameHook_EntityPreSpawn = conquest_ons_EntityPreSpawn;
+
+	if (cvar("g_conquest_use_ctf_and_dom"))
+		GameHook_EntityPreSpawn = conquest_ctf_and_ons_EntityPreSpawn;
+
 	InitializeEntity(world, conquest_delayedinit, INITPRIO_LAST);
 }
