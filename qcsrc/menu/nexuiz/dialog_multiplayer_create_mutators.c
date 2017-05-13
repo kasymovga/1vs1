@@ -7,7 +7,7 @@ CLASS(NexuizMutatorsDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizMutatorsDialog, title, string, "Mutators")
 	ATTRIB(NexuizMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.9)
-	ATTRIB(NexuizMutatorsDialog, rows, float, 18)
+	ATTRIB(NexuizMutatorsDialog, rows, float, 20)
 	ATTRIB(NexuizMutatorsDialog, columns, float, 6)
 	ATTRIB(NexuizMutatorsDialog, refilterEntity, entity, NULL)
 ENDCLASS(NexuizMutatorsDialog)
@@ -96,6 +96,14 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_minstagib", "MinstaGib"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.4, e = makeNexuizTextLabel(0, "Akimbo:"));
+		me.TD(me, 1, 0.6, s = makeNexuizTextSlider("g_akimbo_weapons"));
+			s.addValue(s, "None", "none");
+			s.addValue(s, "Laser", "laser");
+			s.addValue(s, "All", "all");
+			s.configureNexuizTextSliderValues(s);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
@@ -208,6 +216,22 @@ void fillNexuizMutatorsDialog(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Porto:"));
 		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_porto"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Supershotgun:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_supershotgun"));
+			s.addValue(s, "Default", "-1");
+			s.addValue(s, "No", "0");
+			s.addValue(s, "Yes", "1");
+			s.configureNexuizTextSliderValues(s);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Zapper:"));
+		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_zapper"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
