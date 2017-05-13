@@ -815,10 +815,7 @@ float race_PlayerCanFire(entity plr, float wep) {
 	if (time < plr.race_penalty)
 		return FALSE;
 
-	if (race_PlayerCanFire_NextLink)
-		race_PlayerCanFire_NextLink(plr, wep);
-
-	return TRUE;
+	return race_PlayerCanFire_NextLink(plr, wep);
 }
 
 void race_PhysicFrameBegin() {

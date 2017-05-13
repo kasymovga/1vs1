@@ -4,7 +4,7 @@ var void(entity spot) GameHook_Spawn = {}
 var void(entity plr, entity attacker, float killed) GameHook_PlayerClear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHook_PlayerDamageHandle = { return FALSE; }
-var float(entity plr, float wep) GameHookChain_PlayerCanFire;
+var float(entity plr, float wep) GameHookChain_PlayerCanFire = { return TRUE; }
 var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
 var void() GameHook_PlayerPreThink = {}
@@ -58,6 +58,6 @@ var float() GameHook_RadarShowEnemiesAllowed = { return FALSE; }
 var void(entity e) GameHook_SpectateCopy = {}
 var float(entity targ, entity attacker, float deathtype) GameHook_DamageMod = { return 1; }
 var float(entity targ, entity attacker, float deathtype) GameHook_ForceMod = { return 1; }
-var void(entity menu) GameHookChain_GameMenuAddItems;
-var float(string cmd, float tokens) GameHookChain_ClientCommandHandle;
+var void(entity menu) GameHookChain_GameMenuAddItems = {};
+var float(string cmd, float tokens) GameHookChain_ClientCommandHandle = { return FALSE; }
 var void() GameHook_EntityPreSpawn = {};

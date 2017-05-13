@@ -140,7 +140,6 @@ void SV_ParseClientCommand(string s) {
 			return;
 	}
 
-	if (GameHookChain_ClientCommandHandle)
 	if (GameHookChain_ClientCommandHandle(cmd, tokens))
 		return;
 

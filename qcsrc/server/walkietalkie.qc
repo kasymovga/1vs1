@@ -11,8 +11,7 @@ void WalkieTalkie_GameMenuAddItems(entity menu) {
 	if (self.classname == "player")
 		Menu_Add_Item(menu, "Walkie-Talkie|cmd walkietalkie");
 
-	if (WalkieTalkie_GameMenuAddItems_NextLink)
-		WalkieTalkie_GameMenuAddItems_NextLink(menu);
+	WalkieTalkie_GameMenuAddItems_NextLink(menu);
 }
 var float(string cmd, float tokens) WalkieTalkie_ClientCommandHandle_NextLink;
 float WalkieTalkie_ClientCommandHandle(string cmd, float tokens) {
@@ -20,10 +19,7 @@ float WalkieTalkie_ClientCommandHandle(string cmd, float tokens) {
 		WalkieTalkie_Menu();
 		return TRUE;
 	}
-	if (WalkieTalkie_ClientCommandHandle_NextLink)
-		return WalkieTalkie_ClientCommandHandle_NextLink(cmd, tokens);
-
-	return FALSE;
+	return WalkieTalkie_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
 void WalkieTalkie_Init() {

@@ -33,8 +33,7 @@ void GameMenu_Show() {
 		else
 			Menu_Add_Item(e, "Spectate|cmd spectate");
 	}
-	if (GameHookChain_GameMenuAddItems)
-		GameHookChain_GameMenuAddItems(e);
+	GameHookChain_GameMenuAddItems(e);
 }
 
 void GameMenu_Init() {

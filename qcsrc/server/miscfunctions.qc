@@ -138,7 +138,7 @@ float PlayerCanFire(entity plr, float wep) {
 	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
-	return (GameHookChain_PlayerCanFire ? GameHookChain_PlayerCanFire(plr, wep) : TRUE);
+	return GameHookChain_PlayerCanFire(plr, wep);
 }
 
 void GameLogEcho(string s)

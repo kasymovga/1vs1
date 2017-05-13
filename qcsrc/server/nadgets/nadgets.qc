@@ -20,10 +20,7 @@ float HG_ClientCommandHandle(string cmd, float tokens) {
 		HG_Pick(tokens);
 		return TRUE;
 	}
-	if (HG_ClientCommandHandle_NextLink)
-		return HG_ClientCommandHandle_NextLink(cmd, tokens);
-
-	return FALSE;
+	return HG_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
 var float(entity plr, float wep) HG_PlayerCanFire_NextLink;
@@ -31,7 +28,7 @@ float HG_PlayerCanFire(entity plr, float wep) {
 	if (self.hg_stealth)
 		return FALSE;
 
-	return (HG_PlayerCanFire_NextLink ? HG_PlayerCanFire_NextLink(plr, wep) : TRUE);
+	return HG_PlayerCanFire_NextLink(plr, wep);
 }
 
 var void(entity menu) HG_GameMenuAddItems_NextLink;
@@ -40,8 +37,7 @@ void HG_GameMenuAddItems(entity menu) {
 	if (self.team > 0 || self.classname == "player")
 		Menu_Add_Item(menu, "Switch Nadget|cmd picknade");
 
-	if (HG_GameMenuAddItems_NextLink)
-		HG_GameMenuAddItems_NextLink(menu);
+	HG_GameMenuAddItems_NextLink(menu);
 }
 
 void HG_Init(void) {

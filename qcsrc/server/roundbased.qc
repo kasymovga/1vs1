@@ -15,11 +15,11 @@ float Roundbased_RestartTime;
 var float(entity plr, float wep) Roundbased_PlayerCanFire_NextLink;
 float Roundbased_PlayerCanFire(entity plr, float wep) {
 	if (Roundbased_Active)
-		return (Roundbased_PlayerCanFire_NextLink ? Roundbased_PlayerCanFire_NextLink(plr, wep) : TRUE);
+		return Roundbased_PlayerCanFire_NextLink(plr, wep);
 
 	if (wep) //Always allow shoot with laser (no damage when round not active)
 	if (plr.weapon == WEP_LASER)
-		return (Roundbased_PlayerCanFire_NextLink ? Roundbased_PlayerCanFire_NextLink(plr, wep) : TRUE);
+		return Roundbased_PlayerCanFire_NextLink(plr, wep);
 
 	return FALSE;
 }
