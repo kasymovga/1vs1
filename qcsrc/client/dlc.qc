@@ -1,4 +1,5 @@
 entity dlc_wait;
+float localConnection;
 
 void DLCWait() {
 	if (dlc_ready_all()) {
@@ -10,7 +11,9 @@ void DLCWait() {
 			if (fexists(strcat("rexdlc_", argv(i), "_client.cfg")))
 				localcmd(strcat("exec rexdlc_", argv(i), "_client.cfg", "\n"));
 		}
-		localcmd("r_restart;disconnect;reconnect\n");
+		localcmd("r_restart\n");
+		if not(localConnection)
+			localcmd("disconnect;reconnect\n");
 #if 0
 		n = tokenizebyseparator(dlc_list, " ");
 		for (i = 0; i < n; i++) {
@@ -64,4 +67,8 @@ void Ent_DLCList(float new) {
 			dlc_wait.draw2d = DLCDraw2d;
 		}
 	}
+	if (f & 4)
+		localConnection = TRUE;
+	else
+		localConnection = FALSE;
 }
