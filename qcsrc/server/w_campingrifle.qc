@@ -80,6 +80,7 @@ void W_CampingRifle_Reload()
 	if (self.campingrifle_bulletcounter >= g_balance_campingrifle_magazinecapacity)
 		return;
 
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if(self.ammo_nails < min(g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo))
 	{
 		self.campingrifle_bulletcounter = -1; // reload later
