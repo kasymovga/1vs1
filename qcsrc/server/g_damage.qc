@@ -5,11 +5,6 @@
 
 float bot_taunt;
 float bot_talk;
-float g_balance_curse_empathy_minhealth;
-float g_balance_curse_empathy_takedamage;
-float g_balance_curse_vulner_takedamage;
-float g_balance_curse_weak_damage;
-float g_balance_curse_weak_force;
 float g_balance_firetransfer_damage;
 float g_balance_firetransfer_time;
 float g_balance_powerup_invincible_takedamage;
@@ -17,15 +12,6 @@ float g_balance_powerup_strength_damage;
 float g_balance_powerup_strength_force;
 float g_balance_powerup_strength_selfdamage;
 float g_balance_powerup_strength_selfforce;
-float g_balance_rune_defense_combo_takedamage;
-float g_balance_rune_defense_takedamage;
-float g_balance_rune_strength_combo_damage;
-float g_balance_rune_strength_combo_force;
-float g_balance_rune_strength_damage;
-float g_balance_rune_strength_force;
-float g_balance_rune_vampire_absorb;
-float g_balance_rune_vampire_combo_absorb;
-float g_balance_rune_vampire_maxhealth;
 float g_balance_selfdamagepercent;
 float g_friendlyfire;
 float g_mirrordamage;
@@ -789,39 +775,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
-		damage = damage * GameHook_DamageMod(targ, attacker, deathtype);
-		force = force * GameHook_ForceMod(targ, attacker, deathtype);
-
-		// apply strength rune
-		if (attacker.runes & RUNE_STRENGTH)
-		{
-			if(attacker.runes & CURSE_WEAK) // have both curse & rune
-			{
-				damage = damage * g_balance_rune_strength_combo_damage;
-				force = force * g_balance_rune_strength_combo_force;
-			}
-			else
-			{
-				damage = damage * g_balance_rune_strength_damage;
-				force = force * g_balance_rune_strength_force;
-			}
-		}
-		else if (attacker.runes & CURSE_WEAK)
-		{
-			damage = damage * g_balance_curse_weak_damage;
-			force = force * g_balance_curse_weak_force;
-		}
-
-		// apply defense rune
-		if (targ.runes & RUNE_DEFENSE)
-		{
-			if (targ.runes & CURSE_VULNER) // have both curse & rune
-				damage = damage * g_balance_rune_defense_combo_takedamage;
-			else
-				damage = damage * g_balance_rune_defense_takedamage;
-		}
-		else if (targ.runes & CURSE_VULNER)
-			damage = damage * g_balance_curse_vulner_takedamage;
+		GameHook_DamageMod = GameHook_ForceMod = 1;
+		GameHookChain_DamageForceModsSet(targ, attacker, deathtype);
+		damage = damage * GameHook_DamageMod;
+		force = force * GameHook_ForceMod;
 
 		// count the damage
 		if(attacker)
@@ -911,40 +868,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	self = oldself;
 
-	if(targ.classname == "player" && attacker.classname == "player" && attacker != targ && attacker.health > 2)
-	{
-		// Savage: vampire mode
-		if (attacker.runes & RUNE_VAMPIRE)
-		{
-		// apply vampire rune
-			if (attacker.runes & CURSE_EMPATHY) // have the curse too
-			{
-				//attacker.health = attacker.health + damage * cvar("g_balance_rune_vampire_combo_absorb");
-				attacker.health = bound(
-					g_balance_curse_empathy_minhealth, // LA: was 3, now 40
-					attacker.health + damage * g_balance_rune_vampire_combo_absorb,
-					g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
-			}
-			else
-			{
-				//attacker.health = attacker.health + damage * cvar("g_balance_rune_vampire_absorb");
-				attacker.health = bound(
-					attacker.health,	// LA: was 3, but changed so that you can't lose health
-										// empathy won't let you gain health in the same way...
-					attacker.health + damage * g_balance_rune_vampire_absorb,
-					g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
-				}
-		}
-		// apply empathy curse
-		else if (attacker.runes & CURSE_EMPATHY)
-		{
-			attacker.health = bound(
-				g_balance_curse_empathy_minhealth, // LA: was 3, now 20
-				attacker.health + damage * g_balance_curse_empathy_takedamage,
-				attacker.health);
-		}
-	}
-
+	GameHookChain_DamageForceDone(targ, attacker, damage, force);
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
@@ -1344,11 +1268,6 @@ void Damage_ReadCvars()
 {
 	CACHE_CVAR(bot_taunt);
 	CACHE_CVAR(bot_talk);
-	CACHE_CVAR(g_balance_curse_empathy_minhealth);
-	CACHE_CVAR(g_balance_curse_empathy_takedamage);
-	CACHE_CVAR(g_balance_curse_vulner_takedamage);
-	CACHE_CVAR(g_balance_curse_weak_damage);
-	CACHE_CVAR(g_balance_curse_weak_force);
 	CACHE_CVAR(g_balance_firetransfer_damage);
 	CACHE_CVAR(g_balance_firetransfer_time);
 	CACHE_CVAR(g_balance_powerup_invincible_takedamage);
@@ -1356,15 +1275,6 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_balance_powerup_strength_force);
 	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
 	CACHE_CVAR(g_balance_powerup_strength_selfforce);
-	CACHE_CVAR(g_balance_rune_defense_combo_takedamage);
-	CACHE_CVAR(g_balance_rune_defense_takedamage);
-	CACHE_CVAR(g_balance_rune_strength_combo_damage);
-	CACHE_CVAR(g_balance_rune_strength_combo_force);
-	CACHE_CVAR(g_balance_rune_strength_damage);
-	CACHE_CVAR(g_balance_rune_strength_force);
-	CACHE_CVAR(g_balance_rune_vampire_absorb);
-	CACHE_CVAR(g_balance_rune_vampire_combo_absorb);
-	CACHE_CVAR(g_balance_rune_vampire_maxhealth);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_mirrordamage);
 	CACHE_CVAR(g_minstagib_nolaserdamage);

@@ -1121,20 +1121,15 @@ float ctf_LeadLimitOverride() {
 
 void ctf_setstatus();
 
-float ctf_DamageMod(entity targ, entity attacker, float deathtype) {
+var void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet_NextLink;
+void ctf_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	if(targ == attacker)
-	if(targ.flagcarried)
-		return g_ctf_flagcarrier_selfforce;
+	if(targ.flagcarried) {
+		GameHook_ForceMod *= g_ctf_flagcarrier_selfforce;
+		GameHook_DamageMod *= g_ctf_flagcarrier_selfdamage;
+	}
 
-	return 1;
-}
-
-float ctf_ForceMod(entity targ, entity attacker, float deathtype) {
-	if(targ == attacker)
-	if(targ.flagcarried)
-		return g_ctf_flagcarrier_selfdamage;
-
-	return 1;
+	ctf_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
 void ctf_init()
@@ -1194,8 +1189,8 @@ void ctf_init()
 	GameHook_RecordForMap = ctf_RecordForMap;
 	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
 	GameHook_FragLimitOverride = ctf_FragLimitOverride;
-	GameHook_DamageMod = ctf_DamageMod;
-	GameHook_ForceMod = ctf_ForceMod;
+	ctf_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = ctf_DamageForceModsSet;
 };
 
 void ctf_setstatus2(entity flag, float shift)

@@ -13,6 +13,7 @@ entity freeze_controller;
 .entity unfroze_pb;
 #define ICE_FRAME_TIME 0.2
 
+var float() Freeze_SpeedMod_NextLink;
 float Freeze_SpeedMod();
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);
 void Freeze_PlayerClear(entity plr, entity attacker, float killed);
@@ -205,7 +206,8 @@ void Freeze_Init()
 	GameHook_Spawn = Freeze_Spawn;
 	Freeze_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Freeze_PlayerClear;
-	GameHook_SpeedMod = Freeze_SpeedMod;
+	Freeze_SpeedMod_NextLink = GameHookChain_SpeedMod;
+	GameHookChain_SpeedMod = Freeze_SpeedMod;
 	GameHook_PlayerDamageHandle = Freeze_PlayerDamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;
 	GameHook_WinCountDown = stub_WinCountDown;
@@ -222,10 +224,11 @@ void Freeze_Init()
 }
 
 float Freeze_SpeedMod() {
+	float f = Freeze_SpeedMod_NextLink();
 	if (self.deadflag == DEAD_FREEZE)
-		return g_freeze_slowdown;
+		return g_freeze_slowdown * f;
 
-	return 1;
+	return f;
 }
 
 float Freeze_HandleFrags(entity attacker, entity targ, float f) {

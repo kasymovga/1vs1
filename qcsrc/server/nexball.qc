@@ -75,11 +75,13 @@ void nb_PlayerClear(entity plr, entity attacker, float killed) {
 	nb_PlayerClear_NextLink(plr, attacker, killed);
 }
 
+var float() nb_SpeedMod_NextLink;
 float nb_SpeedMod() {
+	float f = nb_SpeedMod_NextLink();
 	if(self.ballcarried)
-		return g_nexball_basketball_carrier_speed;
+		return g_nexball_basketball_carrier_speed * f;
 
-	return 1;
+	return f;
 }
 
 float nb_FragLimitOverride() {
@@ -156,7 +158,8 @@ void nb_init() // Called early (worldspawn stage)
 	nb_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = nb_PlayerClear;
 	GameHook_PlayerPreThink = nexball_setstatus;
-	GameHook_SpeedMod = nb_SpeedMod;
+	nb_SpeedMod_NextLink = GameHookChain_SpeedMod;
+	GameHookChain_SpeedMod = nb_SpeedMod;
 	GameHook_FragLimitOverride = nb_FragLimitOverride;
 	GameHook_LeadLimitOverride = nb_LeadLimitOverride;
 	GameHook_WeaponFrameHandle = nb_WeaponFrameHandle;

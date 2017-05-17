@@ -5,12 +5,6 @@ float sv_doublejump;
 float speedmeter;
 float g_nick_flood_penalty_yellow;
 float g_nick_flood_penalty_red;
-float g_balance_rune_speed_combo_jumpheight;
-float g_balance_rune_speed_jumpheight;
-float g_balance_curse_slow_jumpheight;
-float g_balance_curse_slow_moverate;
-float g_balance_rune_speed_combo_moverate;
-float g_balance_rune_speed_moverate;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
 float sv_spectator_speed_multiplier;
@@ -71,19 +65,7 @@ void Physic_CheckWaterJumpHook()
 
 float Physic_JumpVelocityFactor()
 {
-	float jumpvelocity_factor = 1;
-	if(self.runes & RUNE_SPEED)
-	{
-		if(self.runes & CURSE_SLOW)
-			jumpvelocity_factor = g_balance_rune_speed_combo_jumpheight;
-		else
-			jumpvelocity_factor = g_balance_rune_speed_jumpheight;
-	}
-	else if(self.runes & CURSE_SLOW)
-	{
-		jumpvelocity_factor = g_balance_curse_slow_jumpheight;
-	}
-
+	float jumpvelocity_factor = GameHookChain_JumpVelocityMod();
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 	{
 		jumpvelocity_factor = jumpvelocity_factor * g_minstagib_speed_jumpheight;
@@ -193,15 +175,6 @@ float Physic_MaxSpeedMod()
 {
 	float maxspd_mod = 1, spd;
 	string temps;
-	if(self.runes & RUNE_SPEED)
-	{
-		if(self.runes & CURSE_SLOW)
-			maxspd_mod = maxspd_mod * g_balance_rune_speed_combo_moverate;
-		else
-			maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
-	}
-	else if(self.runes & CURSE_SLOW)
-		maxspd_mod = maxspd_mod * g_balance_curse_slow_moverate;
 
 	if(g_minstagib && (self.items & IT_INVINCIBLE))
 		maxspd_mod = maxspd_mod * g_minstagib_speed_moverate;
@@ -209,7 +182,7 @@ float Physic_MaxSpeedMod()
 	if(self.in_swamp)
 		maxspd_mod = maxspd_mod * self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 
-	maxspd_mod = maxspd_mod * GameHook_SpeedMod();
+	maxspd_mod = maxspd_mod * GameHookChain_SpeedMod();
 
 	if(self.classname != "player")
 	{
@@ -600,15 +573,6 @@ void PhysicReadCvars()
 	CACHE_CVAR(speedmeter);
 	CACHE_CVAR(g_nick_flood_penalty_yellow);
 	CACHE_CVAR(g_nick_flood_penalty_red);
-	CACHE_CVAR(g_balance_rune_speed_combo_jumpheight);
-	CACHE_CVAR(g_balance_rune_speed_jumpheight);
-	CACHE_CVAR(g_balance_curse_slow_jumpheight);
-#if 0
-	CACHE_CVAR(developer_shtest);
-#endif
-	CACHE_CVAR(g_balance_curse_slow_moverate);
-	CACHE_CVAR(g_balance_rune_speed_combo_moverate);
-	CACHE_CVAR(g_balance_rune_speed_moverate);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(sv_spectator_speed_multiplier);

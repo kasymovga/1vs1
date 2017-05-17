@@ -1,5 +1,5 @@
 var float(entity attacker, entity inflictor, float deathtype) GameHook_DeathHandle = { return FALSE; }
-var float() GameHook_SpeedMod = { return 1; }
+var float() GameHookChain_SpeedMod = { return 1; }
 var void(entity spot) GameHook_Spawn = {}
 var void(entity plr, entity attacker, float killed) GameHookChain_PlayerClear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
@@ -56,8 +56,17 @@ var float() GameHook_ReloadAllowed = { return TRUE; }
 var float() GameHook_ThrowWeaponAllowed = { return TRUE; }
 var float() GameHook_RadarShowEnemiesAllowed = { return FALSE; }
 var void(entity e) GameHook_SpectateCopy = {}
-var float(entity targ, entity attacker, float deathtype) GameHook_DamageMod = { return 1; }
-var float(entity targ, entity attacker, float deathtype) GameHook_ForceMod = { return 1; }
+float GameHook_DamageMod;
+float GameHook_ForceMod;
+var void(entity targ, entity attacker, float deathtype) GameHookChain_DamageForceModsSet = {}
 var void(entity menu) GameHookChain_GameMenuAddItems = {};
 var float(string cmd, float tokens) GameHookChain_ClientCommandHandle = { return FALSE; }
 var void() GameHook_EntityPreSpawn = {};
+float GameHook_HealthMaxMod;
+float GameHook_ArmorHealthLimitMod;
+float GameHook_RegenMod;
+float GameHook_RotMod;
+var void() GameHookChain_HealthArmorFuelModsSet = {}
+var float() GameHookChain_JumpVelocityMod = { return 1; }
+var float() GameHookChain_WeaponRateFactor = { return 1; }
+var void() GameHookChain_DamageForceDone(entity targ, entity attacker, float damage, vector force) = {}

@@ -162,21 +162,17 @@ void Roundbased_NeedCheckTeams() {
 	rb_need_check_teams = TRUE;
 }
 
-float Roundbased_DamageMod(entity targ, entity attacker, float deathtype) {
+var void(entity targ, entity attacker, float deathtype) Roundbased_DamageForceModsSet_NextLink;
+void Roundbased_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	if not(Roundbased_Active)
-	if (DEATH_ISWEAPON(deathtype, WEP_LASER)) //No damage laser when round not active
-		return 0;
-
-	return 1;
-}
-
-float Roundbased_ForceMod(entity targ, entity attacker, float deathtype) {
-	if not(Roundbased_Active)
-	if (targ != attacker) //Laser force only for shooter when round not active
-	if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-		return 0;
-
-	return 1;
+	if (DEATH_ISWEAPON(deathtype, WEP_LASER)) {
+		GameHook_DamageMod = 0;
+		if (targ != attacker) {
+			GameHook_ForceMod = 0;
+			return; //No sense in other chain links
+		}
+	}
+	Roundbased_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
 void Roundbased_Init(float enddelay, float startdelay) {
@@ -198,6 +194,6 @@ void Roundbased_Init(float enddelay, float startdelay) {
 
 	Roundbased_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
 	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
-	GameHook_DamageMod = Roundbased_DamageMod;
-	GameHook_ForceMod = Roundbased_ForceMod;
+	Roundbased_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = Roundbased_DamageForceModsSet;
 }

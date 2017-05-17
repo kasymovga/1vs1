@@ -7,9 +7,6 @@
 ===========================================================================
 */
 
-float g_balance_rune_speed_combo_atkrate;
-float g_balance_rune_speed_atkrate;
-float g_balance_curse_slow_atkrate;
 float g_balance_weaponswitchdelay;
 float g_showweaponspawns;
 float g_projectiles_newton_style_2_maxfactor;
@@ -48,21 +45,10 @@ void(float fr, float t, void() func) weapon_thinkf;
 float W_WeaponRateFactor()
 {
 	float t;
-	t = 1.0 / g_weaponratefactor;
-	entity o = Akimbo_Owner(self);
-
-	if(o.runes & RUNE_SPEED)
-	{
-		if(o.runes & CURSE_SLOW)
-			t = t * g_balance_rune_speed_combo_atkrate;
-		else
-			t = t * g_balance_rune_speed_atkrate;
-	}
-	else if(o.runes & CURSE_SLOW)
-	{
-		t = t * g_balance_curse_slow_atkrate;
-	}
-
+	entity oldself = self;
+	self = Akimbo_Owner(self);
+	t = (1.0 / g_weaponratefactor) * GameHookChain_WeaponRateFactor();
+	self = oldself;
 	return t;
 }
 
@@ -1195,9 +1181,6 @@ void W_Init()
 {
 	float i;
 	CACHE_CVAR(g_balance_weaponswitchdelay);
-	CACHE_CVAR(g_balance_rune_speed_combo_atkrate);
-	CACHE_CVAR(g_balance_rune_speed_atkrate);
-	CACHE_CVAR(g_balance_curse_slow_atkrate);
 	CACHE_CVAR(g_projectiles_newton_style_2_minfactor);
 	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
 	CACHE_CVAR(g_showweaponspawns);

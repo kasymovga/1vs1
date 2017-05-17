@@ -26,9 +26,6 @@ float g_balance_armor_regenstable;
 float g_balance_armor_rot;
 float g_balance_armor_rotlinear;
 float g_balance_armor_rotstable;
-float g_balance_curse_venom_hpmod;
-float g_balance_curse_venom_limitmod;
-float g_balance_curse_venom_rotrate;
 float g_balance_fuel_limit;
 float g_balance_fuel_regen;
 float g_balance_fuel_regenlinear;
@@ -47,13 +44,6 @@ float g_balance_pause_armor_rot_spawn;
 float g_balance_pause_fuel_rot_spawn;
 float g_balance_pause_health_regen_spawn;
 float g_balance_pause_health_rot_spawn;
-float g_balance_rune_regen_combo_hpmod;
-float g_balance_rune_regen_combo_limitmod;
-float g_balance_rune_regen_combo_regenrate;
-float g_balance_rune_regen_combo_rotrate;
-float g_balance_rune_regen_hpmod;
-float g_balance_rune_regen_limitmod;
-float g_balance_rune_regen_regenrate;
 float g_changeteam_banned;
 float g_hitplots;
 float g_maxplayers;
@@ -1698,59 +1688,18 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 void player_regen (void)
 {
-	float minh, mina, minf, maxh, maxa, maxf, limith, limita, limitf, max_mod, regen_mod, rot_mod, limit_mod;
-	maxh = g_balance_health_rotstable;
-	maxa = g_balance_armor_rotstable;
-	maxf = g_balance_fuel_rotstable;
-	minh = g_balance_health_regenstable;
-	mina = g_balance_armor_regenstable;
-	minf = g_balance_fuel_regenstable;
-	limith = g_balance_health_limit;
-	limita = g_balance_armor_limit;
-	limitf = g_balance_fuel_limit;
-
-	max_mod = regen_mod = rot_mod = limit_mod = 1;
-
-	if (self.runes & RUNE_REGEN)
-	{
-		if (self.runes & CURSE_VENOM) // do we have both rune/curse?
-		{
-			regen_mod = g_balance_rune_regen_combo_regenrate;
-			max_mod = g_balance_rune_regen_combo_hpmod;
-			limit_mod = g_balance_rune_regen_combo_limitmod;
-		}
-		else
-		{
-			regen_mod = g_balance_rune_regen_regenrate;
-			max_mod = g_balance_rune_regen_hpmod;
-			limit_mod = g_balance_rune_regen_limitmod;
-		}
-	}
-	else if (self.runes & CURSE_VENOM)
-	{
-		max_mod = g_balance_curse_venom_hpmod;
-		if (self.runes & RUNE_REGEN) // do we have both rune/curse?
-			rot_mod = g_balance_rune_regen_combo_rotrate;
-		else
-			rot_mod = g_balance_curse_venom_rotrate;
-		limit_mod = g_balance_curse_venom_limitmod;
-		//if (!self.runes & RUNE_REGEN)
-		//	rot_mod = g_balance_curse_venom_rotrate;
-	}
-	maxh = maxh * max_mod;
-	//maxa = maxa * max_mod;
-	//maxf = maxf * max_mod;
-	minh = minh * max_mod;
-	//mina = mina * max_mod;
-	//minf = minf * max_mod;
-	limith = limith * limit_mod;
-	limita = limita * limit_mod;
-	//limitf = limitf * limit_mod;
+	float minh, maxh, limith, limita;
+	GameHook_HealthMaxMod = GameHook_ArmorHealthLimitMod = GameHook_RegenMod = GameHook_RotMod = 1;
+	GameHookChain_HealthArmorFuelModsSet();
+	maxh = g_balance_health_rotstable * GameHook_HealthMaxMod;
+	minh = g_balance_health_regenstable * GameHook_HealthMaxMod;
+	limith = g_balance_health_limit * GameHook_ArmorHealthLimitMod;
+	limita = g_balance_armor_limit * GameHook_ArmorHealthLimitMod;
 
 	if (!g_minstagib)
 	{
-		self.armorvalue = CalcRotRegen(self.armorvalue, mina, g_balance_armor_regen, g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, g_balance_armor_rot, g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
-		self.health = CalcRotRegen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
+		self.armorvalue = CalcRotRegen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotarmor_finished), limita);
+		self.health = CalcRotRegen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, GameHook_RotMod * frametime * (time > self.pauserothealth_finished), limith);
 
 		// if player rotted to death...  die!
 		if(self.health < 1)
@@ -1758,7 +1707,7 @@ void player_regen (void)
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, g_balance_fuel_regen, g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), maxf, g_balance_fuel_rot, g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 }
 
 float zoomstate_set;
@@ -2369,9 +2318,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_balance_armor_rot);
 	CACHE_CVAR(g_balance_armor_rotlinear);
 	CACHE_CVAR(g_balance_armor_rotstable);
-	CACHE_CVAR(g_balance_curse_venom_hpmod);
-	CACHE_CVAR(g_balance_curse_venom_limitmod);
-	CACHE_CVAR(g_balance_curse_venom_rotrate);
 	CACHE_CVAR(g_balance_fuel_limit);
 	CACHE_CVAR(g_balance_fuel_regen);
 	CACHE_CVAR(g_balance_fuel_regenlinear);
@@ -2391,13 +2337,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_balance_pause_fuel_rot_spawn);
 	CACHE_CVAR(g_balance_pause_health_regen_spawn);
 	CACHE_CVAR(g_balance_pause_health_rot_spawn);
-	CACHE_CVAR(g_balance_rune_regen_combo_hpmod);
-	CACHE_CVAR(g_balance_rune_regen_combo_limitmod);
-	CACHE_CVAR(g_balance_rune_regen_combo_regenrate);
-	CACHE_CVAR(g_balance_rune_regen_combo_rotrate);
-	CACHE_CVAR(g_balance_rune_regen_hpmod);
-	CACHE_CVAR(g_balance_rune_regen_limitmod);
-	CACHE_CVAR(g_balance_rune_regen_regenrate);
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(g_hitplots);
 	CACHE_CVAR(g_maxplayers);
