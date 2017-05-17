@@ -763,6 +763,8 @@ void runes_init() {
 	if not(g_runematch)
 		return;
 
+	precache_model ("models/runematch/curse.mdl");
+	precache_model ("models/runematch/rune.mdl");
 	CACHE_CVAR(g_balance_curse_empathy_minhealth);
 	CACHE_CVAR(g_balance_curse_empathy_takedamage);
 	CACHE_CVAR(g_balance_curse_vulner_takedamage);

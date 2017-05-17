@@ -357,12 +357,6 @@ void precache()
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
     precache_model ("models/misc/teambubble.spr");
-    if (g_runematch)
-    {
-        precache_model ("models/runematch/curse.mdl");
-        precache_model ("models/runematch/rune.mdl");
-    }
-
 #ifdef TTURRETS_ENABLED
     if (cvar("g_turrets"))
         turrets_precash();
@@ -441,8 +435,7 @@ void precache()
     precache_sound ("player/lava.wav");
     precache_sound ("player/slime.wav");
 
-    if (g_jetpack)
-        precache_sound ("misc/jetpack_fly.wav");
+	precache_sound ("misc/jetpack_fly.wav");
 
     // announcer sounds - male
     precache_sound ("announcer/male/electrobitch.wav");
@@ -501,11 +494,8 @@ void precache()
     precache_sound ("weapons/weapon_switch.wav");
     precache_sound ("weapons/weaponpickup.wav");
     precache_sound ("weapons/unavailable.wav");
-    if (g_grappling_hook)
-    {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
-    }
+	precache_sound ("weapons/hook_fire.wav"); // hook
+	precache_sound ("weapons/hook_impact.wav"); // hook
 
     if (cvar("sv_precacheweapons"))
     {
