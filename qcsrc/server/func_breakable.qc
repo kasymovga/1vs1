@@ -119,6 +119,7 @@ void func_breakable_behave_destroyed()
 
 void func_breakable_behave_restore()
 {
+	self.owner = world;
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_AIM;
 	self.event_damage = func_breakable_damage;
