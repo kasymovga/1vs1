@@ -788,6 +788,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if (bInputType == 0)
 	if (nPrimary == K_ESCAPE)
+	if not(intermission)
 	if (gamemenu)
 	{
 		GameMenu_Holder();
