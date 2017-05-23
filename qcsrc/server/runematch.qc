@@ -746,6 +746,12 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 	runematch_DamageForceDone_NextLink(targ, attacker, damage, force);
 }
 
+var void(entity self, entity attacker, float killed) runematch_PlayerClear_NextLink;
+void runematch_PlayerClear(entity plr, entity attacker, float killed) {
+	DropAllRunes(self);
+	runematch_PlayerClear_NextLink(plr, attacker, killed);
+}
+
 void runematch_init()
 {
 	if not(g_runematch)
@@ -826,6 +832,8 @@ void runes_init() {
 	GameHookChain_DamageForceModsSet = runematch_DamageForceModsSet;
 	runematch_DamageForceDone_NextLink = GameHookChain_DamageForceDone;
 	GameHookChain_DamageForceDone = runematch_DamageForceDone;
+	runematch_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = runematch_PlayerClear;
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;
