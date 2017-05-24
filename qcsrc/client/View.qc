@@ -363,11 +363,6 @@ void CSQC_UpdateView(float w, float h)
 	sbar_alpha_fg = CVAR(sbar_alpha_fg) * (1 - CVAR(_menu_alpha));
 	ColorTranslateMode = CVAR(cl_stripcolorcodes);
 	activeweapon = getstati(STAT_SWITCHWEAPON);
-	if(CVAR(teamplay) != teamplay)
-	{
-		teamplay = CVAR(teamplay);
-		Sbar_InitScores();
-	}
 
 	if(last_weapon != activeweapon) {
 		weapontime = time;

@@ -1169,6 +1169,13 @@ void Ent_Init(float ignore)
 	if (sf & 16)
 		gamemenu = ReadByte();
 
+	if (sf & 32) {
+		teamplay = ReadByte();
+		registercvar("_teams_available", "0");
+		cvar_set("_teams_available", ftos(ReadByte()));
+		Sbar_InitScores();
+	}
+
 	if(!postinit)
 		PostInit();
 }

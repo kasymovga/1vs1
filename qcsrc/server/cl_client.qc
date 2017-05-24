@@ -903,9 +903,6 @@ void PutClientInServer()
 			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		//stuffcmd(self, "chase_active 0");
-	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-
 		if (g_spawnsound)
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
@@ -963,7 +960,7 @@ void PlayerToSpec(entity player)
 
 float ClientInit_SendEntity(entity to, float sf)
 {
-	float i;
+	float i, t;
 	vector client_hook_shotorigin;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, sf);
@@ -996,6 +993,15 @@ float ClientInit_SendEntity(entity to, float sf)
 	if (sf & 16)
 		WriteByte(MSG_ENTITY, sv_gamemenu);
 
+	if (sf & 32) {
+		WriteByte(MSG_ENTITY, teamplay);
+		t = 0;
+		if(teams_matter) {
+			CheckAllowedTeams(self);
+			if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
+		}
+		WriteByte(MSG_ENTITY, t);
+	}
 	return TRUE;
 }
 
@@ -1261,7 +1267,6 @@ Called when a client connects to the server
 void ClientConnect (void)
 {
 	local string s;
-	float t;
 
 	if(self.flags & FL_CLIENT)
 	{
@@ -1344,29 +1349,11 @@ void ClientConnect (void)
 	// Wazat's grappling hook
 	SetGrappleHookBindings();
 
-	// get autoswitch state from player when he toggles it
-	stuffcmd(self, "alias autoswitch \"set cl_autoswitch $1 ; cmd autoswitch $1\"\n"); // default.cfg-ed in 2.4.1
-
 	// get version info from player
 	stuffcmd(self, "cmd clientversion $gameversion\n");
 
 	// get other cvars from player
 	GetCvars(0);
-
-	// set cvar for team scoreboard
-	stuffcmd(self, strcat("set teamplay ", ftos(teamplay), "\n"));
-
-	// notify about available teams
-	if(teams_matter)
-	{
-		CheckAllowedTeams(self);
-		t = 0; if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
-		stuffcmd(self, strcat("set _teams_available ", ftos(t), "\n"));
-	}
-	else
-		stuffcmd(self, "set _teams_available 0\n");
-
-	stuffcmd(self, strcat("set gametype ", ftos(game), "\n"));
 
 	attach_entcs();
 

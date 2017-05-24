@@ -150,7 +150,6 @@ READ_CVARS_SECTION(29, 30)
 READ_CVARS_SECTION(30, 31)
 	CACHE_CVAR_VEC(scr_centersize);
 	CACHE_CVAR_VEC(sbar_fontsize_spec);
-	CACHE_CVAR(teamplay);
 	CACHE_CVAR_VEC(cl_teamradar_size);
 READ_CVARS_SECTION(31, 0)
 	CACHE_CVAR(chase_back);
