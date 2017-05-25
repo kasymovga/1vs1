@@ -121,7 +121,7 @@ void func_breakable_behave_restore()
 {
 	self.owner = world;
 	self.health = self.max_health;
-	self.takedamage = DAMAGE_AIM;
+	self.takedamage = DAMAGE_YES;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
 	setsize(self, self.mins_save, self.maxs_save);
