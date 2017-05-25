@@ -574,6 +574,7 @@ void readlevelcvars(void)
 	runes_init();
 	GameMenu_Init();
 	WalkieTalkie_Init();
+	Akimbo_Init();
 }
 
 void readdynamiccvars() {
@@ -584,7 +585,6 @@ void readdynamiccvars() {
 	Client_ReadCvars();
 	Teamplay_ReadCvars();
 	GrappleHookInit();
-	Akimbo_Init();
 	vehicles_readcvars();
 	turret_readcvars();
 	WaypointSprite_Init();

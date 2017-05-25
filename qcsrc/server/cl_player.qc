@@ -596,7 +596,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 void PlayerClear(float killed, entity attacker)
 {
 	float j;
-	Akimbo_Clear(self);
 	if (killed)
 		Portal_ClearAllLater(self);
 	else

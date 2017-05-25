@@ -2,6 +2,7 @@
 .entity akimbo_ghost;
 float g_akimbo_weapons;
 float weapons_with_akimbo_support;
+void Akimbo_Clear(entity e);
 
 void Akimbo_GhostHide(entity e) {
 	entity oldself = self;
@@ -94,6 +95,14 @@ void Akimbo_WeaponFrame()
 	}
 }
 
+var void(entity plr, entity attacker, float killed) Akimbo_PlayerClear_NextLink;
+void Akimbo_PlayerClear(entity plr, entity attacker, float killed) {
+	if not(killed)
+		Akimbo_Clear(self);
+
+	Akimbo_PlayerClear_NextLink(plr, attacker, killed);
+}
+
 void Akimbo_Init()
 {
 	float i, j, n;
@@ -127,6 +136,12 @@ void Akimbo_Init()
 	}
 	g_akimbo_weapons = g_akimbo_weapons & weapons_with_akimbo_support;
 	g_powerup_strength_akimbo = cvar("g_powerup_strength_akimbo");
+	if not(g_akimbo_weapons)
+	if not(g_powerup_strength_akimbo)
+		return;
+
+	Akimbo_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = Akimbo_PlayerClear;
 }
 
 entity Akimbo_Owner(entity e)

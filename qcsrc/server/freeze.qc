@@ -122,7 +122,7 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	if not(Roundbased_Active)
 		return FALSE;
 
-	PlayerClear(FALSE, world);
+	PlayerClear(TRUE, world);
 	Roundbased_NeedCheckTeams();
 
 	if (self.deadflag == DEAD_FREEZE)
