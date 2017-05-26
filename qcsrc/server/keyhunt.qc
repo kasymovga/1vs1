@@ -573,7 +573,8 @@ void kh_Key_Think()  // runs all the time
 	}
 
 	// if in nodrop or time over, end the round
-	if(!self.owner)
+	if not(self.owner)
+	if not(self.effects & EF_NODRAW)
 		if(time > self.pain_finished)
 			kh_LoserTeam(self.team, self);
 
