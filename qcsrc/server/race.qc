@@ -640,13 +640,13 @@ void race_RetractPlayer()
 	}
 }
 
-var void(entity plr, entity attacker, float killed) race_PlayerClear_NextLink;
-void race_PlayerClear(entity plr, entity attacker, float killed)
+var void(float killed) race_PlayerClear_NextLink;
+void race_PlayerClear(float killed)
 {
 	if (killed)
-		race_AbandonRaceCheck(plr);
+		race_AbandonRaceCheck(self);
 
-	race_PlayerClear_NextLink(plr, attacker, killed);
+	race_PlayerClear_NextLink(killed);
 }
 
 entity race_PreSpawn()

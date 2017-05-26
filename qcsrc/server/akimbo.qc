@@ -95,12 +95,12 @@ void Akimbo_WeaponFrame()
 	}
 }
 
-var void(entity plr, entity attacker, float killed) Akimbo_PlayerClear_NextLink;
-void Akimbo_PlayerClear(entity plr, entity attacker, float killed) {
+var void(float killed) Akimbo_PlayerClear_NextLink;
+void Akimbo_PlayerClear(float killed) {
 	if not(killed)
 		Akimbo_Clear(self);
 
-	Akimbo_PlayerClear_NextLink(plr, attacker, killed);
+	Akimbo_PlayerClear_NextLink(killed);
 }
 
 void Akimbo_Init()

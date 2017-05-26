@@ -1088,19 +1088,22 @@ void ctf_delayedinit()
 	ScoreRules_basics_end();
 };
 
-var void(entity plr, entity attacker, float killed) ctf_PlayerClear_NextLink;
-void ctf_PlayerClear(entity plr, entity attacker, float killed) {
-	if(plr.flagcarried)
-	{
-		if(killed && (attacker.classname != "player" && attacker.classname != "gib"))
-			DropFlag(plr.flagcarried, plr, attacker); // penalty for flag loss by suicide
-		else if(killed && (attacker.team == plr.team))
-			DropFlag(plr.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
-		else
-			DropFlag(plr.flagcarried, world, attacker);
-	}
+var void(float killed) ctf_PlayerClear_NextLink;
+void ctf_PlayerClear(float killed) {
+	if(self.flagcarried)
+		DropFlag(self.flagcarried, world, world);
 
-	ctf_PlayerClear_NextLink(plr, attacker, killed);
+	ctf_PlayerClear_NextLink(killed);
+}
+
+float ctf_DeathHandle(entity attacker, entity inflictor, float deathtype) {
+	if (self.flagcarried) {
+		if(attacker.classname != "player" && attacker.classname != "gib")
+			DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
+		else if(attacker.team == self.team)
+			DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
+	}
+	return FALSE;
 }
 
 string ctf_RecordForMap(string bspname) {

@@ -54,10 +54,10 @@ float Clanarena_FragLimitOverride() {
 	return cvar("g_clanarena_winlimit");
 }
 
-var void(entity plr, entity attachker, float killed) Clanarena_PlayerClear_NextLink;
-void Clanarena_PlayerClear(entity plr, entity attacker, float killed) {
+var void(float killed) Clanarena_PlayerClear_NextLink;
+void Clanarena_PlayerClear(float killed) {
 	Roundbased_NeedCheckTeams();
-	Clanarena_PlayerClear_NextLink(plr, attacker, killed);
+	Clanarena_PlayerClear_NextLink(killed);
 }
 
 void Clanarena_Init()

@@ -746,10 +746,10 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 	runematch_DamageForceDone_NextLink(targ, attacker, damage, force);
 }
 
-var void(entity self, entity attacker, float killed) runematch_PlayerClear_NextLink;
-void runematch_PlayerClear(entity plr, entity attacker, float killed) {
+var void(float killed) runematch_PlayerClear_NextLink;
+void runematch_PlayerClear(float killed) {
 	DropAllRunes(self);
-	runematch_PlayerClear_NextLink(plr, attacker, killed);
+	runematch_PlayerClear_NextLink(killed);
 }
 
 void runematch_init()

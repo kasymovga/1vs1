@@ -1354,12 +1354,12 @@ void onslaught_Spawn(entity spot) {
 	onslaught_Spawn_NextLink(spot);
 }
 
-var void(entity plr, entity attacker, float killed) onslaught_PlayerClear_NextLink;
-void onslaught_PlayerClear(entity plr, entity attacker, float killed) {
+var void(float killed) onslaught_PlayerClear_NextLink;
+void onslaught_PlayerClear(float killed) {
 	if not(killed)
-		LocationRequest_Remove(plr);
+		LocationRequest_Remove(self);
 
-	onslaught_PlayerClear_NextLink(plr, attacker, killed);
+	onslaught_PlayerClear_NextLink(killed);
 }
 
 // Onslaught winning condition:

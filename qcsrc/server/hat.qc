@@ -4,14 +4,14 @@ float sv_player_hat_scale;
 vector sv_player_hat_origin, sv_player_hat_angles;
 .entity hat;
 
-var void(entity plr, entity attacker, float killed) Hat_PlayerClear_NextLink;
-void Hat_PlayerClear(entity plr, entity attacker, float killed) {
-	if (plr.hat)
-	if (!killed || PLAYER_REALLY_DEAD(plr)) {
-		remove(plr.hat);
-		plr.hat = world;
+var void(float killed) Hat_PlayerClear_NextLink;
+void Hat_PlayerClear(float killed) {
+	if (self.hat)
+	if (!killed || PLAYER_REALLY_DEAD(self)) {
+		remove(self.hat);
+		self.hat = world;
 	}
-	Hat_PlayerClear_NextLink(plr, attacker, killed);
+	Hat_PlayerClear_NextLink(killed);
 }
 
 var void(entity spot) Hat_Spawn_NextLink;

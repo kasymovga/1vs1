@@ -558,7 +558,7 @@ void PutObserverInServer(float frags_team_reset)
 	entity	spot;
 
 	GameHook_ObserverSpawn();
-	PlayerClear(FALSE, world);
+	PlayerClear(FALSE);
 
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
@@ -762,7 +762,7 @@ void PutClientInServer()
 			PutObserverInServer(FALSE);
 			return;
 		}
-		PlayerClear(FALSE, world);
+		PlayerClear(FALSE);
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
@@ -935,7 +935,7 @@ void PlayerToSpec(entity player)
 	if (sv_spectate) {
 		entity oldself = self;
 		self = player;
-		PlayerClear(FALSE, world);
+		PlayerClear(FALSE);
 		player.classname = "observer";
 		if(blockSpectators)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
@@ -1414,7 +1414,7 @@ void ClientDisconnect (void)
 
 	self.classname = "disconnecting";
 
-	PlayerClear(FALSE, world);
+	PlayerClear(FALSE);
 
 	// Here, everything has been done that requires this player to be a client.
 

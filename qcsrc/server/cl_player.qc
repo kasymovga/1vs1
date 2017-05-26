@@ -593,7 +593,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 
-void PlayerClear(float killed, entity attacker)
+void PlayerClear(float killed)
 {
 	float j;
 	if (killed)
@@ -611,7 +611,7 @@ void PlayerClear(float killed, entity attacker)
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
 	vehicle_extract_player(self, TRUE);
-	GameHookChain_PlayerClear(self, attacker, killed);
+	GameHookChain_PlayerClear(killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
 }
@@ -818,7 +818,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		PlayerClear(TRUE, attacker);
+		PlayerClear(TRUE);
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;

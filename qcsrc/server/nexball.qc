@@ -67,12 +67,12 @@ void basketball_touch();
 void football_touch();
 void hockey_touch();
 
-var void(entity plr, entity attacker, float killed) nb_PlayerClear_NextLink;
-void nb_PlayerClear(entity plr, entity attacker, float killed) {
-	if(plr.ballcarried)
-		DropBall(plr.ballcarried, plr.origin, plr.velocity);
+var void(float killed) nb_PlayerClear_NextLink;
+void nb_PlayerClear(float killed) {
+	if(self.ballcarried)
+		DropBall(self.ballcarried, self.origin, self.velocity);
 
-	nb_PlayerClear_NextLink(plr, attacker, killed);
+	nb_PlayerClear_NextLink(killed);
 }
 
 var float() nb_SpeedMod_NextLink;

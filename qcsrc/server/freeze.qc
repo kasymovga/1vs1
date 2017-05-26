@@ -16,7 +16,7 @@ entity freeze_controller;
 var float() Freeze_SpeedMod_NextLink;
 float Freeze_SpeedMod();
 float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);
-void Freeze_PlayerClear(entity plr, entity attacker, float killed);
+void Freeze_PlayerClear(float killed);
 float Freeze_HandleFrags(entity attacker, entity targ, float f);
 
 void Freeze_Think()
@@ -43,7 +43,10 @@ void Freeze_IceThink()
 			remove(self.unfroze_pb);
 		self.unfroze_pb = world;
 
-		Freeze_PlayerClear(self.owner, world, 0);
+		entity oldself = self;
+		self = self.owner;
+		Freeze_PlayerClear(FALSE);
+		self = oldself;
 		return;
 	}
 
@@ -124,7 +127,7 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	if not(Roundbased_Active)
 		return FALSE;
 
-	PlayerClear(TRUE, world);
+	PlayerClear(TRUE);
 	Roundbased_NeedCheckTeams();
 
 	if (self.deadflag == DEAD_FREEZE)
@@ -168,24 +171,24 @@ float Freeze_PlayerDamageHandle(entity inflictor, entity attacker, float damage,
 	return TRUE;
 }
 
-var void(entity plr, entity attacker, float killed) Freeze_PlayerClear_NextLink;
-void Freeze_PlayerClear(entity plr, entity attacker, float killed)
+var void(float killed) Freeze_PlayerClear_NextLink;
+void Freeze_PlayerClear(float killed)
 {
-	if (plr.ice)
-		remove(plr.ice);
+	if (self.ice)
+		remove(self.ice);
 
-	if (plr.unfroze_pb)
-		remove(plr.unfroze_pb);
+	if (self.unfroze_pb)
+		remove(self.unfroze_pb);
 
-	if (plr.ice.unfroze_pb)
-		remove(plr.ice.unfroze_pb);
+	if (self.ice.unfroze_pb)
+		remove(self.ice.unfroze_pb);
 
-	PlayerScore_Set(plr, SP_STATUS, 0);
-	plr.unfroze_pb = world;
-	plr.ice = world;
-	WaypointSprite_DetachCarrier(plr);
+	PlayerScore_Set(self, SP_STATUS, 0);
+	self.unfroze_pb = world;
+	self.ice = world;
+	WaypointSprite_DetachCarrier(self);
 	Roundbased_NeedCheckTeams();
-	Freeze_PlayerClear_NextLink(plr, attacker, killed);
+	Freeze_PlayerClear_NextLink(killed);
 }
 
 float Freeze_FragLimitOverride() {
