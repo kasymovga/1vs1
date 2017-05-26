@@ -611,11 +611,6 @@ void PlayerClear(float killed, entity attacker)
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
 	vehicle_extract_player(self, TRUE);
-
-	if (self.hat) {
-		remove(self.hat);
-		self.hat = world;
-	}
 	GameHookChain_PlayerClear(self, attacker, killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();

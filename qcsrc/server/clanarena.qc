@@ -10,14 +10,15 @@ void Clanarena_Think()
 	Roundbased_TeamArenaThink();
 }
 
+var void(entity spot) Clanarena_Spawn_NextLink;
 void Clanarena_Spawn(entity spot) {
+	Clanarena_Spawn_NextLink(spot);
 	Roundbased_NeedCheckTeams();
 	if not(Roundbased_Active)
 	if not(Roundbased_RestartTime) {
 		PlayerScore_Set(self, SP_STATUS, 0);
 		return;
 	}
-
 	PlayerScore_Set(self, SP_STATUS, 1);
 	PutObserverInServer(FALSE);
 }
@@ -64,7 +65,8 @@ void Clanarena_Init()
 	CACHE_CVAR(g_clanarena_startdelay);
 	CACHE_CVAR(g_clanarena_enddelay);
 	CACHE_CVAR(g_clanarena_healthrotpause_on_damage);
-	GameHook_Spawn = Clanarena_Spawn;
+	Clanarena_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
 	GameHook_PlayerDamageHandle = Clanarena_PlayerDamageHandle;

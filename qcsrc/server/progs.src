@@ -91,6 +91,7 @@ gametypevote.qh
 menu.qh
 gamemenu.qh
 walkietalkie.qh
+hat.qh
 
 dodging.qh
 miscfunctions.qh
@@ -256,3 +257,4 @@ nadgets/include.qc
 napalm.qc
 gamemenu.qc
 walkietalkie.qc
+hat.qc

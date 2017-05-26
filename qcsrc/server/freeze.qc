@@ -25,9 +25,11 @@ void Freeze_Think()
 	Roundbased_TeamArenaThink();
 }
 
+var void(entity spot) Freeze_Spawn_NextLink;
 void Freeze_Spawn(entity spot)
 {
 	Roundbased_NeedCheckTeams();
+	Freeze_Spawn_NextLink(spot);
 	if (Roundbased_Active)
 		Freeze_DeathHandle(world, world, 0);
 }
@@ -203,7 +205,8 @@ void Freeze_Init()
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
 	GameHook_DeathHandle = Freeze_DeathHandle;
-	GameHook_Spawn = Freeze_Spawn;
+	Freeze_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = Freeze_Spawn;
 	Freeze_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Freeze_PlayerClear;
 	Freeze_SpeedMod_NextLink = GameHookChain_SpeedMod;

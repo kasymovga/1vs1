@@ -365,11 +365,14 @@ float assault_WinningCondition(float ignore1, float ignore2)
 	return FALSE;
 }
 
-void assault_spawn(entity spot) {
+var void(entity spot) assault_Spawn_NextLink;
+void assault_Spawn(entity spot) {
 	if(self.team == assault_attacker_team)
 		centerprint(self, "You are attacking!");
 	else
 		centerprint(self, "You are defending!");
+
+	assault_Spawn_NextLink(spot);
 }
 
 float assault_SpawnPointGood(entity spot) {
@@ -407,7 +410,8 @@ float assault_OvertimeHandle() {
 void assault_init() {
 	GameHook_OvertimeHandle = assault_OvertimeHandle;
 	GameHook_WinningCondition = assault_WinningCondition;
-	GameHook_Spawn = assault_spawn;
+	assault_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = assault_Spawn;
 	GameHook_SpawnPointGood = assault_SpawnPointGood;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_WarmupAllowed = false_WarmupAllowed;

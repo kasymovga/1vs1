@@ -575,6 +575,7 @@ void readlevelcvars(void)
 	GameMenu_Init();
 	WalkieTalkie_Init();
 	Akimbo_Init();
+	Hat_Init();
 }
 
 void readdynamiccvars() {

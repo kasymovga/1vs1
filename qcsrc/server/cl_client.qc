@@ -55,10 +55,6 @@ float leadlimit;
 float sv_spectate;
 float sv_timeout;
 float sv_timeout_number;
-string sv_player_hat;
-string sv_player_hat_attachment;
-float sv_player_hat_scale;
-vector sv_player_hat_origin, sv_player_hat_angles;
 float sv_maxidle;
 float sv_maxidle_forcespec;
 
@@ -767,7 +763,6 @@ void PutClientInServer()
 			return;
 		}
 		PlayerClear(FALSE, world);
-		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
@@ -928,15 +923,7 @@ void PutClientInServer()
 					ReadyRestartForce();
 			}
 		}
-		if (sv_player_hat != "") {
-			self.hat = spawn();
-			setmodel(self.hat, sv_player_hat);
-			self.hat.scale = sv_player_hat_scale;
-			setattachment(self.hat, self, sv_player_hat_attachment);
-			self.hat.angles = sv_player_hat_angles;
-			setorigin(self.hat, sv_player_hat_origin);
-		}
-		GameHook_Spawn(spot);
+		GameHookChain_Spawn(spot);
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 	}
@@ -2337,28 +2324,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);
-	if (sv_player_hat != "")
-		strunzone(sv_player_hat);
-
-	if (sv_player_hat_attachment != "")
-		strunzone(sv_player_hat_attachment);
-
-	s = cvar_string("sv_player_hat");
-	if (s != "") {
-		sv_player_hat = strzone(s);
-		precache_model(sv_player_hat);
-	} else
-		sv_player_hat = "";
-
-	s = cvar_string("sv_player_hat_attachment");
-	if (s != "")
-		sv_player_hat_attachment = strzone(s);
-	else
-		sv_player_hat_attachment = "";
-
-	sv_player_hat_scale = cvar("sv_player_hat_scale");
-	sv_player_hat_origin = stov(cvar_string("sv_player_hat_origin"));
-	sv_player_hat_angles = stov(cvar_string("sv_player_hat_angles"));
 }
 
 void PutTeamToServer(float t) {

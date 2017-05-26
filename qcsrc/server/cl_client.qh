@@ -8,7 +8,6 @@ void PutClientInServer();
 void PutTeamToServer(float t);
 entity SelectSpawnPoint (float anypoint);
 void FixClientCvars(entity e);
-.entity hat;
 void ClientKill_Now_TeamChange();
 void ClientInit_Spawn();
 void ClientInit_UpdateHookOrigin();

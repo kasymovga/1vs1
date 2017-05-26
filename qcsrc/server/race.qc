@@ -658,7 +658,8 @@ entity race_PreSpawn()
 	return SelectSpawnPoint(FALSE);
 }
 
-void race_PostSpawn(entity spot)
+var void(entity spot) race_Spawn_NextLink;
+void race_Spawn(entity spot)
 {
 	if(self.killcount != -666 && !g_race_qualifying)
 	{
@@ -673,6 +674,7 @@ void race_PostSpawn(entity spot)
 		self.race_checkpoint = 0;
 
 	self.race_place = 0;
+	race_Spawn_NextLink(spot);
 }
 
 void race_PreSpawnObserver()
@@ -1103,7 +1105,8 @@ void race_init() {
 	GameHookChain_PlayerCanFire = race_PlayerCanFire;
 	GameHook_PhysicFrameBegin = race_PhysicFrameBegin;
 	GameHook_SelectSpawnPoint = race_PreSpawn;
-	GameHook_Spawn = race_PostSpawn;
+	race_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = race_Spawn;
 	race_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = race_PlayerClear;
 	GameHook_ObserverSpawn = race_PreSpawnObserver;
