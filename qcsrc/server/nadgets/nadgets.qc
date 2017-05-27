@@ -42,8 +42,8 @@ void HG_GameMenuAddItems(entity menu) {
 	HG_GameMenuAddItems_NextLink(menu);
 }
 
-var void(entity plr, entity attacker, float killed) HG_PlayerClear_NextLink;
-void HG_PlayerClear(entity plr, entity attacker, float killed) {
+var void(float killed) HG_PlayerClear_NextLink;
+void HG_PlayerClear(float killed) {
 	if (killed) {
 		if(g_nadgets_remove_on_death > 1)
 			HG_RemoveAll(self);
@@ -71,13 +71,13 @@ void HG_PlayerClear(entity plr, entity attacker, float killed) {
     self.hg_bonustype = HG_NORMAL;
     self.hg_shield = 0;
 	if (self.classname == "player")
-		HG_DO_IN_ALL_CONTEXTS(HG_ResetAmmo(plr, FALSE);)
+		HG_DO_IN_ALL_CONTEXTS(HG_ResetAmmo(self, FALSE);)
 
     self.hg_shield = 0;
 	self.hg_stealth = 0;
 	self.hg_stealthalpha = 0;
     HG_UpdateDetonables();
-	HG_PlayerClear_NextLink(plr, attacker, killed);
+	HG_PlayerClear_NextLink(killed);
 }
 
 void HG_Init(void) {
