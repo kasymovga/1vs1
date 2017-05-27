@@ -576,6 +576,10 @@ void readlevelcvars(void)
 	WalkieTalkie_Init();
 	Akimbo_Init();
 	Hat_Init();
+	registercvar("connections_xonotic", "0");
+	registercvar("connections_rexuiz", "0");
+	registercvar("connections_nexuiz", "0");
+	registercvar("connections_oldnexuiz", "0");
 }
 
 void readdynamiccvars() {
