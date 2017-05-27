@@ -28,7 +28,7 @@ void configureNexuizCreditsListNexuizCreditsList(entity me)
 {
 	me.configureNexuizListBox(me);
 	// load the file
-	me.bufferIndex = buf_load("nexuiz-credits.txt");
+	me.bufferIndex = buf_load("rexuiz-credits.txt");
 	me.nItems = buf_getsize(me.bufferIndex);
 }
 void destroyNexuizCreditsList(entity me)
