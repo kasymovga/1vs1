@@ -2086,12 +2086,11 @@ void PlayerPreThink (void)
 
 		GrapplingHookFrame();
 
+		W_WeaponFrame();
+		Akimbo_WeaponFrame();
 		if(frametime)
 		{
 			self.items &~= self.items_added;
-
-			W_WeaponFrame();
-			Akimbo_WeaponFrame();
 
 			self.items_added = 0;
 			if(self.items & IT_JETPACK)
@@ -2099,11 +2098,9 @@ void PlayerPreThink (void)
 					self.items_added |= IT_FUEL;
 
 			self.items |= self.items_added;
-		}
-
-		player_regen();
-		if(frametime)
+			player_regen();
 			player_anim();
+		}
 
 		if (g_minstagib)
 			minstagib_ammocheck();
