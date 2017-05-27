@@ -121,6 +121,7 @@ void Ent_Wall()
 
 	InterpolateOrigin_Note();
 
+	setorigin(self, self.origin);
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;
 }
