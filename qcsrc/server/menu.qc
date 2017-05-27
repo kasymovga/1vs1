@@ -15,9 +15,9 @@ float Menu_CustomizeEntityForClient() {
 
 float Menu_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MENU);
-	WriteByte(MSG_ENTITY, sf & 255);
 	sf &~= MENU_ESCAPE_ENABLE;
 	sf |= self.flags;
+	WriteByte(MSG_ENTITY, sf & 255);
 	if (sf & 8)
 		WriteString(MSG_ENTITY, self.menu_id);
 
