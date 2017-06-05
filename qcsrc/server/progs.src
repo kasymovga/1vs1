@@ -220,11 +220,6 @@ func_breakable.qc
 
 ../common/items.qc
 
-monsters/defs.qc
-monsters/fight.qc
-monsters/ai.qc
-monsters/m_monsters.qc
-
 csqcprojectile.qc
 irc.qc
 
@@ -258,3 +253,7 @@ napalm.qc
 gamemenu.qc
 walkietalkie.qc
 hat.qc
+monsters/monsters.qc
+monsters/spearguy.qc
+monsters/soldier.qc
+monsters/heavysoldier.qc

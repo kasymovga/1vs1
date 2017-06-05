@@ -1,1 +1,2 @@
 void SUB_Remove();
+.void() entremove;

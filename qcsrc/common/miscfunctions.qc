@@ -36,6 +36,16 @@ float approach(float v, float t, float d) {
 	return v;
 }
 
+float approach_angle(float v, float t, float d) {
+	while (v - t < -180)
+		v += 360;
+
+	while (v - t > 180)
+		v -= 360;
+
+	return approach(v, t, d);
+}
+
 float TeamColorSkin(float t) {
     switch(t) {
         case COLOR_TEAM1:   return 1; break;
@@ -55,5 +65,7 @@ Remove self
 */
 void SUB_Remove (void)
 {
+	if (self.entremove)
+		self.entremove();
 	remove (self);
 }
