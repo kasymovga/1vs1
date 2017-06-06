@@ -82,7 +82,8 @@ void uzi_fire1_02()
 	}
 	if (self.BUTTON_ATCK)
 	{
-		if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		if not(weapon_action(self.weapon, WR_CHECKAMMO1))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			w_ready();
@@ -131,7 +132,7 @@ float w_uzi(float req)
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_UZI);
 	else if (req == WR_CHECKAMMO1)
-		return self.ammo_nails >= g_balance_uzi_first_ammo;
+		return self.ammo_nails >= g_balance_uzi_sustained_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= g_balance_uzi_first_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
