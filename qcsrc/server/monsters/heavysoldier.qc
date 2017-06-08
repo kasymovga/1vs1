@@ -3,13 +3,6 @@ void heavysoldier_guard();
 
 void heavysoldier_grenade_explode (void)
 {
-	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
-				if(other.deadflag == DEAD_NO)
-					if(IsFlying(other))
-						announce(self.owner, "announcer/male/airshot.wav");
-
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 	RadiusDamage (self, self.owner, 50, 0, 100, world, 100, self.projectiledeathtype, other);
