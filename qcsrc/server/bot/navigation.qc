@@ -653,7 +653,6 @@ void navigation_routerating(entity e, float f, float rangebias)
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
 	// Evaluate path using jetpack
-	if(g_jetpack)
 	if(self.items & IT_JETPACK)
 	if(bot_ai_navigation_jetpack)
 	if(vlen(self.origin - e.origin) > bot_ai_navigation_jetpack_mindistance)
@@ -715,7 +714,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		//	dprint("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel),"\n");
 
 			// enough fuel ?
-			if(self.ammo_fuel>fuel)
+			if(self.ammo_fuel>fuel || (self.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship

@@ -1834,6 +1834,7 @@ void Items_Init()
 		}
 	}
 
+	if (g_use_ammunition)
 	if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
 	{
 		g_grappling_hook = 0; // these two can't coexist, as they use the same button

@@ -388,10 +388,9 @@ void havocbot_movetogoal()
 		return;
 
 	// Jetpack navigation
-	if(self.goalcurrent)
 	if(self.navigation_jetpack_goal)
 	if(self.goalcurrent==self.navigation_jetpack_goal)
-	if(self.ammo_fuel)
+	if(self.ammo_fuel || (self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		#ifdef DEBUG_BOT_GOALSTACK
 			debuggoalstack();
