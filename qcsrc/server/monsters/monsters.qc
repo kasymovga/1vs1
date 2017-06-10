@@ -1,6 +1,14 @@
-#define MONSTER_DIE 1
+#define MONSTERS_MAX 16
 
-entity monster_look_for_player(float distance, float fov_factor) {
+void monster_set_route() {
+	bot_navigation_movemode = MOVE_NORMAL;
+	navigation_clearroute();
+	navigation_goalrating_start();
+	navigation_routerating(self.enemy, 10000, 10000);
+	navigation_goalrating_end();
+}
+
+entity monster_look_for_player(float distance, float heardistance, float fov_factor) {
 	entity e;
 	vector v;
 	float f;
@@ -9,7 +17,13 @@ entity monster_look_for_player(float distance, float fov_factor) {
 	if (e.health >= 1) {
 		
 		f = vlen(e.origin - self.origin);
-		if (f <= distance) {
+		if (f <= heardistance) {
+			traceline(self.origin, e.origin, MOVE_WORLDONLY, self);
+			if (trace_fraction == 1) {
+				p = e;
+				break;
+			}
+		} else if (f <= distance) {
 			v = normalize(e.origin - self.origin);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
@@ -20,6 +34,15 @@ entity monster_look_for_player(float distance, float fov_factor) {
 				}
 			}
 		}
+	}
+	if (p) {
+		if (self.enemy)
+		if (self.enemy.classname == "monster_walk_path")
+			self.message2 = self.enemy.targetname;
+
+		self.think = self.weapon_think;
+		self.enemy = p;
+		self.think();
 	}
 	return p;
 }
@@ -46,23 +69,45 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 			o.dmg = o.dmg + 1;
 		}
 	} else if (attacker.classname == "player") {
+		if (self.enemy) {
+			if (self.enemy.classname == "monster_walk_path")
+				self.message2 = self.enemy.targetname;
+			else
+				return;
+		}
+
 		self.enemy = attacker;
 		self.think = self.weapon_think;
 	}
 }
 
-void monster_move_walk(vector direction, float _speed, float blend_factor) {
-	float dir_z_save = direction_z;
-	float vel_z_save = self.velocity_z;
-	movelib_move_simple(direction, _speed, blend_factor * frametime);
-	direction_z = dir_z_save;
-	self.velocity_z = vel_z_save;
-}
-
 vector monster_get_direction_to(entity e) {
-	vector v = self.enemy.origin - self.origin;
+	if (self.goalcurrent)
+		navigation_poptouchedgoals();
+
+	vector v;
+	if (self.goalcurrent) {
+		//print("self.goalcurrent=", self.goalcurrent.classname, "\n");
+		v = self.goalcurrent.origin - self.origin;
+	} else
+		v = self.enemy.origin - self.origin;
+
 	v_z = 0;
 	return normalize(v);
+}
+
+vector monster_move_walk(float _speed, float blend_factor) {
+	if (self.bot_strategytime < time) {
+		self.bot_strategytime = time + 1 + random() * 1;
+		monster_set_route();
+	}
+	vector v = monster_get_direction_to(self.enemy);
+	float dir_z_save = v_z;
+	float vel_z_save = self.velocity_z;
+	movelib_move_simple(v, _speed, blend_factor * frametime);
+	v_z = dir_z_save;
+	self.velocity_z = vel_z_save;
+	return v;
 }
 
 void monster_spawn_think() {
@@ -73,9 +118,10 @@ void monster_spawn_think() {
 	self = spawn();
 	self.angles = oldself.angles;
 	setorigin(self, oldself.origin);
+	sound (self, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+	pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
 	self.owner = oldself;
 	self.reset = monster_die;
-
 	oldself.weapon_think();
 
 	self = oldself;
@@ -94,12 +140,74 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	if (t != "")
 		self.enemy = find(world, targetname, t);
 
-	if (self.enemy)
+	if (self.enemy) {
 		self.think = walk;
-	else
+		//print("Prepare route\n");
+	} else
 		self.think = idle;
 
 	self.event_damage = monster_event_damage;
+}
+
+float monster_walk_finished(void() idle, float dist) {
+	vector v = self.enemy.origin - self.origin;
+	v_z = 0;
+	if (vlen(v) < dist) {
+		if (self.enemy.target != "")
+			self.enemy = find(world, targetname, self.enemy.target);
+		else
+			self.enemy = world;
+
+		if not(self.enemy) {
+			self.think = idle;
+			idle();
+			return TRUE;
+		} else
+			monster_set_route();
+	} else if not(self.goalcurrent) {
+		if (self.bot_strategytime < time) {
+			self.bot_strategytime = time + 1 + random();
+			monster_set_route();
+		}
+	}
+	return FALSE;
+}
+
+float monster_check_target(void() walk, void() guard) {
+	if (self.enemy.health < 1) {
+		self.enemy = world;
+		if (self.message2 != "")
+			self.enemy = find(world, targetname, self.message2);
+
+		if (self.enemy) {
+			self.think = walk;
+			monster_set_route();
+		} else
+			self.think = guard;
+
+		self.think();
+		return TRUE;
+	} else if (self.bot_strategytime < time) {
+		self.bot_strategytime = time + 1 + random() * 1;
+		monster_set_route();
+	}
+	return FALSE;
+}
+
+float monster_common_init_done;
+void monster_common_init() {
+	precache_sound("misc/teleport.wav");
+}
+
+void monster_init(void() init_func) {
+	if not(monster_common_init_done) {
+		monster_common_init();
+		monster_common_init_done = TRUE;
+	}
+	if (find(world, classname, self.classname) != self)
+		return;
+
+	init_func();
 }
 
 void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
@@ -113,4 +221,10 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	}
 }
 
-void spawnfunc_monster_walk_path() { }
+void spawnfunc_monster_walk_path() {
+#if 0
+	setmodel(self, "models/ebomb.mdl");
+	self.scale = 4;
+	self.solid = SOLID_NOT;
+#endif
+}

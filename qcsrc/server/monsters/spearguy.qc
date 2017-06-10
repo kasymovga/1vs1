@@ -1,26 +1,25 @@
 void spearguy_idle();
 void spearguy_guard();
+void spearguy_walk();
 
 void spearguy_hunt() {
 	self.nextthink = time;
-	vector v;
-	v = monster_get_direction_to(self.enemy);
-	if (self.enemy.health < 1) {
-		self.think = spearguy_guard;
-		spearguy_guard();
+	if (monster_check_target(spearguy_walk, spearguy_guard))
 		return;
-	}
+
+	vector v;
 	if (vlen(self.enemy.origin - self.origin) > 80) {
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
-		monster_move_walk(v, 500, 5);
+		v = monster_move_walk(600, 5);
 	} else {
+		v = self.enemy.origin - self.origin;
 		movelib_beak_simple(100 * frametime);
 		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			makevectors(self.angles);
 			te_lightning1(world, self.origin + normalize(v_forward) * 20, self.enemy.origin);
-			Damage(self.enemy, self, self, 50 * frametime, DEATH_TURRET, self.enemy.origin, v);
+			Damage(self.enemy, self, self, 50 * frametime, WEP_MELEE, self.enemy.origin, v_forward);
 		}
 	}
 	v = vectoangles(v);
@@ -29,13 +28,11 @@ void spearguy_hunt() {
 
 void spearguy_idle() {
 	self.nextthink = time;
+	if (monster_look_for_player(1500, 500, 0))
+		return;
+
 	movelib_beak_simple(100 * frametime);
 	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
-	entity e;
-	if ((e = monster_look_for_player(500, 0))) {
-		self.enemy = e;
-		self.think = spearguy_hunt;
-	}
 }
 
 void spearguy_guard() {
@@ -45,33 +42,23 @@ void spearguy_guard() {
 
 void spearguy_walk() {
 	self.nextthink = time;
+	if(monster_look_for_player(1500, 500, 0))
+		return;
+
+	if (monster_walk_finished(spearguy_idle, 100))
+		return;
+
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
-	entity e;
-	if ((e = monster_look_for_player(500, 0))) {
-		self.enemy = e;
-		self.think = spearguy_hunt;
-		return;
-	}
-	vector v, v1;
-	v1 = monster_get_direction_to(self.enemy);
-	v = self.enemy.origin - self.origin;
-	if (vlen(v) < frametime * 2 * (vlen(self.velocity)) + 32) {
-		if (self.enemy.target)
-			self.enemy = find(world, targetname, self.enemy.target);
-		else
-			self.enemy = world;
-
-		if not(self.enemy)
-			self.think = spearguy_idle;
-
-		return;
-	}
 	//self.velocity = normalize(v) * 400;
-	monster_move_walk(v1, 300, 5);
+	vector v = monster_move_walk(400, 5);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 
+}
+
+void spearguy_remove() {
+	remove(self.exteriorweaponentity);
 }
 
 void spearguy_spawn() {
@@ -79,12 +66,23 @@ void spearguy_spawn() {
 	setmodel(self, "models/player/lurk.zym");
 	self.movetype = MOVETYPE_WALK;
 	setsize(self, '-32 -32 -32', '32 32 32');
+	self.exteriorweaponentity = spawn();
+	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
+	setmodel(self.exteriorweaponentity, "models/weapons/v_rspear.md3");
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.health = 100;
 	self.damageforcescale = 1;
+	self.entremove = spearguy_remove;
+	self.netname = "Spearguy";
+}
+
+void spearguy_init() {
+	precache_model("models/player/lurk.zym");
+	precache_model("models/weapons/v_rspear.md3");
 }
 
 void spawnfunc_spearguy_spawn() {
+	monster_init(spearguy_init);
 	monster_prepare_spawn(spearguy_spawn, spawnfunc_spearguy_spawn);
 }

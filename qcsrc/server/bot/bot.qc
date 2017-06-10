@@ -593,7 +593,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || g_waypointeditor)
+	//if (currentbots > 0 || g_waypointeditor)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
