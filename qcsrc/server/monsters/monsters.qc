@@ -1,11 +1,28 @@
 #define MONSTERS_MAX 16
 
 void monster_set_route() {
+	float f1, f2;
+	entity p;
+	if (self.items & IT_JETPACK) {
+		f1 = bot_ai_navigation_jetpack;
+		f2 = bot_ai_navigation_jetpack_mindistance;
+		bot_ai_navigation_jetpack = TRUE;
+		bot_ai_navigation_jetpack_mindistance = 500;
+	}
 	bot_navigation_movemode = MOVE_NORMAL;
 	navigation_clearroute();
 	navigation_goalrating_start();
-	navigation_routerating(self.enemy, 10000, 10000);
+	if (self.enemy)
+		navigation_routerating(self.enemy, 10000, 10000);
+	else
+		FOR_EACH_PLAYER(p)
+			navigation_routerating(p, 10000, 10000);
+
 	navigation_goalrating_end();
+	if (self.items & IT_JETPACK) {
+		bot_ai_navigation_jetpack = f1;
+		bot_ai_navigation_jetpack_mindistance = f2;
+	}
 }
 
 entity monster_look_for_player(float distance, float heardistance, float fov_factor) {
@@ -110,6 +127,16 @@ vector monster_move_walk(float _speed, float blend_factor) {
 	return v;
 }
 
+vector monster_move_fly(float _speed, float blend_factor) {
+	if (self.bot_strategytime < time) {
+		self.bot_strategytime = time + 1 + random() * 1;
+		monster_set_route();
+	}
+	vector v = monster_get_direction_to(self.enemy);
+	movelib_move_simple(v, _speed, blend_factor * frametime);
+	return v;
+}
+
 void monster_spawn_think() {
 	if (self.dmg <= 0)
 		return;
@@ -149,7 +176,14 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.event_damage = monster_event_damage;
 }
 
+void monster_set_fly() {
+	self.items = IT_JETPACK | IT_UNLIMITED_WEAPON_AMMO;
+}
+
 float monster_walk_finished(void() idle, float dist) {
+	if not(self.enemy) //Free walk
+		return FALSE;
+
 	vector v = self.enemy.origin - self.origin;
 	v_z = 0;
 	if (vlen(v) < dist) {

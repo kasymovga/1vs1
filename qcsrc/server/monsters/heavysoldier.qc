@@ -51,7 +51,7 @@ void heavysoldier_hunt() {
 
 		gren.nextthink = time + 5;
 		gren.think = adaptor_think2use;
-		gren.use = W_Grenade_Explode;
+		gren.use = heavysoldier_grenade_explode;
 		gren.touch = heavysoldier_grenade_touch;
 		gren.velocity = normalize(_shotdir) * 3200;
 		W_SetupProjectileVelocity(gren);
