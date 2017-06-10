@@ -7,7 +7,7 @@ void monster_set_route() {
 		f1 = bot_ai_navigation_jetpack;
 		f2 = bot_ai_navigation_jetpack_mindistance;
 		bot_ai_navigation_jetpack = TRUE;
-		bot_ai_navigation_jetpack_mindistance = 500;
+		bot_ai_navigation_jetpack_mindistance = 100;
 	}
 	bot_navigation_movemode = MOVE_NORMAL;
 	navigation_clearroute();
@@ -25,7 +25,7 @@ void monster_set_route() {
 	}
 }
 
-entity monster_look_for_player(float distance, float heardistance, float fov_factor) {
+entity monster_look_for_player(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter) {
 	entity e;
 	vector v;
 	float f;
@@ -59,6 +59,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 
 		self.think = self.weapon_think;
 		self.enemy = p;
+		self.attack_finished_single = time + random() * attack_delay_jitter + attack_delay;
 		self.think();
 	}
 	return p;
@@ -105,11 +106,14 @@ vector monster_get_direction_to(entity e) {
 	vector v;
 	if (self.goalcurrent) {
 		//print("self.goalcurrent=", self.goalcurrent.classname, "\n");
-		v = self.goalcurrent.origin - self.origin;
+		if (self.navigation_jetpack_goal == self.goalcurrent) {
+			v = self.navigation_jetpack_point - self.origin;
+			//print("Trying fly\n");
+		} else
+			v = self.goalcurrent.origin - self.origin;
 	} else
 		v = self.enemy.origin - self.origin;
 
-	v_z = 0;
 	return normalize(v);
 }
 
@@ -119,6 +123,7 @@ vector monster_move_walk(float _speed, float blend_factor) {
 		monster_set_route();
 	}
 	vector v = monster_get_direction_to(self.enemy);
+	v_z = 0;
 	float dir_z_save = v_z;
 	float vel_z_save = self.velocity_z;
 	movelib_move_simple(v, _speed, blend_factor * frametime);
@@ -133,6 +138,7 @@ vector monster_move_fly(float _speed, float blend_factor) {
 		monster_set_route();
 	}
 	vector v = monster_get_direction_to(self.enemy);
+	v = monster_get_direction_to(self.enemy);
 	movelib_move_simple(v, _speed, blend_factor * frametime);
 	return v;
 }

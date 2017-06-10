@@ -48,8 +48,7 @@ void soldier_hunt() {
 
 void soldier_idle() {
 	self.nextthink = time;
-	if (monster_look_for_player(2500, 500, 0)) {
-		self.attack_finished_single = time + random() * 3 + 1;
+	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
@@ -65,8 +64,7 @@ void soldier_guard() {
 
 void soldier_walk() {
 	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0)) {
-		self.attack_finished_single = time + random() * 3 + 1;
+	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
 	}
 	if (monster_walk_finished(soldier_idle, 100))

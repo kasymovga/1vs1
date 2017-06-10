@@ -17,8 +17,7 @@ void flyingthing_grenade_touch (void)
 
 void flyingthing_idle() {
 	self.nextthink = time;
-	if (monster_look_for_player(3000, 500, 0)) {
-		self.attack_finished_single = time + random() * 1 + 1;
+	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
@@ -78,8 +77,7 @@ void flyingthing_hunt() {
 
 void flyingthing_walk() {
 	self.nextthink = time;
-	if (monster_look_for_player(3000, 500, 0)) {
-		self.attack_finished_single = time + random() * 1 + 1;
+	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
 	}
 	if (monster_walk_finished(flyingthing_idle, 100))
@@ -99,7 +97,7 @@ void flyingthing_spawn() {
 	monster_prepare(flyingthing_hunt, flyingthing_walk, flyingthing_idle);
 	setmodel(self, "models/turrets/walker_mghead.md3");
 	self.solid = SOLID_BBOX;
-	setsize(self, '-16 -16 -32', '16 16 0');
+	setsize(self, '-16 -16 -48', '16 16 0');
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
 	self.health = 100;

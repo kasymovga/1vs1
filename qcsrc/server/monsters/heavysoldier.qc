@@ -76,8 +76,7 @@ void heavysoldier_hunt() {
 
 void heavysoldier_idle() {
 	self.nextthink = time;
-	if (monster_look_for_player(2000, 500, 0)) {
-		self.attack_finished_single = time + random() * 3 + 1;
+	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
@@ -93,8 +92,7 @@ void heavysoldier_guard() {
 
 void heavysoldier_walk() {
 	self.nextthink = time;
-	if (monster_look_for_player(1000, 500, 0)) {
-		self.attack_finished_single = time + random() * 3 + 1;
+	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
 	if (monster_walk_finished(heavysoldier_idle, 100))

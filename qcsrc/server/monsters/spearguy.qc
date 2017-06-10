@@ -28,7 +28,7 @@ void spearguy_hunt() {
 
 void spearguy_idle() {
 	self.nextthink = time;
-	if (monster_look_for_player(1500, 500, 0))
+	if (monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
 	movelib_beak_simple(100 * frametime);
@@ -42,7 +42,7 @@ void spearguy_guard() {
 
 void spearguy_walk() {
 	self.nextthink = time;
-	if(monster_look_for_player(1500, 500, 0))
+	if(monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
 	if (monster_walk_finished(spearguy_idle, 100))
