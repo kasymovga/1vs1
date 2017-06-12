@@ -64,7 +64,7 @@ void heavysoldier_hunt() {
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else {
-		v = monster_move_walk(250, 5);
+		v = monster_move_walk(250, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
@@ -100,7 +100,7 @@ void heavysoldier_walk() {
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(150, 5);
+	vector v = monster_move_walk(150, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);

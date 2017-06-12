@@ -79,12 +79,13 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
+		GameHook_MonsterKilled(attacker);
 		Violence_GibSplash(self, 1, 1, attacker);
 		monster_die();
 		entity o = self.owner;
 		if (o.spawnflags & 1) {
 			o.nextthink = time + o.respawntime;
-			o.dmg = o.dmg + 1;
+			o.dmg = o.dmg + GameHook_MonsterQuant();
 		}
 	} else if (attacker.classname == "player") {
 		if (self.enemy) {
@@ -117,15 +118,29 @@ vector monster_get_direction_to(entity e) {
 	return normalize(v);
 }
 
-vector monster_move_walk(float _speed, float blend_factor) {
+vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
+	float dir_z_save;
+	float vel_z_save;
+	vector v;
+	if (rushdistance)
+	if (self.enemy)
+	if (rushdistance > vlen(self.origin - self.enemy.origin)) {
+		v = normalize(self.enemy.origin - self.origin);
+		dir_z_save = v_z;
+		vel_z_save = self.velocity_z;
+		movelib_move_simple(v, _speed, blend_factor * frametime);
+		v_z = dir_z_save;
+		self.velocity_z = vel_z_save;
+		return v;
+	}
 	if (self.bot_strategytime < time) {
 		self.bot_strategytime = time + 1 + random() * 1;
 		monster_set_route();
 	}
-	vector v = monster_get_direction_to(self.enemy);
+	v = monster_get_direction_to(self.enemy);
 	v_z = 0;
-	float dir_z_save = v_z;
-	float vel_z_save = self.velocity_z;
+	dir_z_save = v_z;
+	vel_z_save = self.velocity_z;
 	movelib_move_simple(v, _speed, blend_factor * frametime);
 	v_z = dir_z_save;
 	self.velocity_z = vel_z_save;
@@ -137,9 +152,10 @@ vector monster_move_fly(float _speed, float blend_factor) {
 		self.bot_strategytime = time + 1 + random() * 1;
 		monster_set_route();
 	}
-	vector v = monster_get_direction_to(self.enemy);
+	vector v;
 	v = monster_get_direction_to(self.enemy);
-	movelib_move_simple(v, _speed, blend_factor * frametime);
+	v_z = v_z + 0.5 * vlen(v);
+	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
 }
 
@@ -158,12 +174,13 @@ void monster_spawn_think() {
 	oldself.weapon_think();
 
 	self = oldself;
-	self.dmg = self.dmg - 1;
+	self.dmg = self.dmg - GameHook_MonsterQuant();
 	self.nextthink = time + self.respawntime;
 }
 
 void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.classname = "monster";
+	self.iscreature = TRUE;
 	self.weapon_think = hunt;
 	self.nextthink = time;
 	string t = self.owner.target;
@@ -173,7 +190,7 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	if (t != "")
 		self.enemy = find(world, targetname, t);
 
-	if (self.enemy) {
+	if (self.enemy || self.owner.spawnflags & 2) {
 		self.think = walk;
 		//print("Prepare route\n");
 	} else
@@ -192,7 +209,7 @@ float monster_walk_finished(void() idle, float dist) {
 
 	vector v = self.enemy.origin - self.origin;
 	v_z = 0;
-	if (vlen(v) < dist) {
+	if (self.owner.spawnflags & 2 && vlen(v) < dist) {
 		if (self.enemy.target != "")
 			self.enemy = find(world, targetname, self.enemy.target);
 		else
@@ -219,7 +236,7 @@ float monster_check_target(void() walk, void() guard) {
 		if (self.message2 != "")
 			self.enemy = find(world, targetname, self.message2);
 
-		if (self.enemy) {
+		if (self.enemy || self.owner.spawnflags & 2) {
 			self.think = walk;
 			monster_set_route();
 		} else

@@ -10,7 +10,7 @@ void spearguy_hunt() {
 	vector v;
 	if (vlen(self.enemy.origin - self.origin) > 80) {
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
-		v = monster_move_walk(600, 5);
+		v = monster_move_walk(600, 5, 500);
 	} else {
 		v = self.enemy.origin - self.origin;
 		movelib_beak_simple(100 * frametime);
@@ -50,7 +50,7 @@ void spearguy_walk() {
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(400, 5);
+	vector v = monster_move_walk(400, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
