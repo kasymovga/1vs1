@@ -1,5 +1,3 @@
-#define MONSTERS_MAX 16
-
 void monster_set_route() {
 	float f1, f2;
 	entity p;
@@ -16,7 +14,8 @@ void monster_set_route() {
 		navigation_routerating(self.enemy, 10000, 10000);
 	else
 		FOR_EACH_PLAYER(p)
-			navigation_routerating(p, 10000, 10000);
+			if (p.health >= 1)
+				navigation_routerating(p, 10000, 10000);
 
 	navigation_goalrating_end();
 	if (self.items & IT_JETPACK) {
