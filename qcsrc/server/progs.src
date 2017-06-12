@@ -62,6 +62,7 @@ clanarena.qh
 assault.qh
 
 conquest.qh
+survive.qh
 
 progressbar.qh
 
@@ -258,3 +259,5 @@ monsters/spearguy.qc
 monsters/soldier.qc
 monsters/heavysoldier.qc
 monsters/flyingthing.qc
+monsters/boss1.qc
+survive.qc

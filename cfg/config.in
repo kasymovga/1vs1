@@ -1062,3 +1062,6 @@ set g_nadgets_raze_fire_spawninterval 0.1
 //set g_nadgets_timewarper_adept_detect_enemies_teamwide 0
 
 ///// END Handgrenades mutator /////
+
+set g_survive_wave_pause 5
+set g_survive 0

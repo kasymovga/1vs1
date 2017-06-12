@@ -429,6 +429,7 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_FREEZETAG) return "ft";
 	else if (g == GAME_CLANARENA) return "ca";
 	else if (g == GAME_CONQUEST) return "conq";
+	else if (g == GAME_SURVIVE) return "surv";
 	return "dm";
 }
 

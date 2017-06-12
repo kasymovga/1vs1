@@ -107,6 +107,7 @@ void WriteGameCvars()
 	cvar_set("g_cts", ftos(g_cts));
 	cvar_set("g_freeze", ftos(g_freeze));
 	cvar_set("g_clanarena", ftos(g_clanarena));
+	cvar_set("g_survive", ftos(g_survive));
 }
 
 void ReadGameCvars()
@@ -133,6 +134,7 @@ void ReadGameCvars()
 		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
 		found += (g_freeze = (!found && (prev != GAME_FREEZETAG) && cvar("g_freeze")));
 		found += (g_clanarena = (!found && (prev != GAME_CLANARENA) && cvar("g_clanarena")));
+		found += (g_survive = (!found && (prev != GAME_SURVIVE) && cvar("g_survive")));
 
 		if(found)
 			break;
@@ -321,6 +323,12 @@ void InitGameplayMode()
 		game = GAME_CONQUEST;
 		ActivateTeamplay();
 		conquest_init();
+	}
+
+	if (g_survive)
+	{
+		game = GAME_SURVIVE;
+		survive_init();
 	}
 
 	if(teams_matter)
@@ -808,8 +816,10 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
-	if(!teams_matter)
+	if not(teams_matter) {
+		self.team = 0;
 		return 0;
+	}
 
 	// find out what teams are available
 	CheckAllowedTeams(pl);

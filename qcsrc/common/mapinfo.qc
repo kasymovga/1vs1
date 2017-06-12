@@ -529,6 +529,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "rc")      return MAPINFO_TYPE_RACE;
 	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
 	else if(t == "cts")     return MAPINFO_TYPE_CTS;
+	else if(t == "surv")    return MAPINFO_TYPE_SURVIVE;
 	else if(t == "all")     return MAPINFO_TYPE_ALL;
 	else                    return 0;
 }
@@ -549,6 +550,7 @@ string MapInfo_String_FromType(float t)
 	else if(t == MAPINFO_TYPE_RACE           ) return "rc"     ;
 	else if(t == MAPINFO_TYPE_NEXBALL        ) return "nexball";
 	else if(t == MAPINFO_TYPE_CTS            ) return "cts"    ;
+	else if(t == MAPINFO_TYPE_SURVIVE        ) return "surv"    ;
 	else                                       return "wtf"    ;
 }
 
@@ -581,6 +583,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Freeze Tag";
 	} else if (t == MAPINFO_TYPE_CLANARENA) {
 		return "Clan Arena";
+	} else if (t == MAPINFO_TYPE_SURVIVE) {
+		return "Survive";
 	}
 	return "WTF";
 }
@@ -1001,6 +1005,8 @@ float MapInfo_CurrentGametype()
 		return MAPINFO_TYPE_FREEZETAG;
 	else if(cvar("g_clanarena"))
 		return MAPINFO_TYPE_CLANARENA;
+	else if(cvar("g_survive"))
+		return MAPINFO_TYPE_SURVIVE;
 	else
 		return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1057,6 +1063,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_RACE: return "g_race";
 		case MAPINFO_TYPE_NEXBALL: return "g_nexball";
 		case MAPINFO_TYPE_CTS: return "g_cts";
+		case MAPINFO_TYPE_SURVIVE: return "g_survive";
 		default: return "";
 	}
 }
@@ -1078,6 +1085,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_race",       (t == MAPINFO_TYPE_RACE)            ? "1" : "0");
 	cvar_set("g_nexball",    (t == MAPINFO_TYPE_NEXBALL)         ? "1" : "0");
 	cvar_set("g_cts",        (t == MAPINFO_TYPE_CTS)             ? "1" : "0");
+	cvar_set("g_survive",    (t == MAPINFO_TYPE_SURVIVE)         ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s)

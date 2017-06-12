@@ -70,3 +70,5 @@ var void() GameHookChain_HealthArmorFuelModsSet = {}
 var float() GameHookChain_JumpVelocityMod = { return 1; }
 var float() GameHookChain_WeaponRateFactor = { return 1; }
 var void(entity targ, entity attacker, float damage, vector force) GameHookChain_DamageForceDone = {}
+var void(entity attacker) GameHook_MonsterKilled {}
+var float() GameHook_MonsterQuant { return 1; }
