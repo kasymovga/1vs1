@@ -78,6 +78,7 @@ void spearguy_spawn() {
 }
 
 void spearguy_init() {
+	dlc_require("rspear");
 	precache_model("models/player/lurk.zym");
 	precache_model("models/weapons/v_rspear.md3");
 }
