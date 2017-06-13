@@ -55,7 +55,7 @@ void boss1_hunt() {
 			gren.think = adaptor_think2use;
 			gren.use = boss1_grenade_explode;
 			gren.touch = boss1_grenade_touch;
-			gren.velocity = normalize(_shotdir) * 3200 + randomvec() * 0.25;
+			gren.velocity = normalize(_shotdir + randomvec() * 0.05 * vlen(_shotdir)) * 3200;
 			W_SetupProjectileVelocity(gren);
 
 			gren.angles = vectoangles (gren.velocity);
