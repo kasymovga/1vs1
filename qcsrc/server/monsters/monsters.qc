@@ -180,6 +180,8 @@ void monster_spawn_think() {
 void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.classname = "monster";
 	self.iscreature = TRUE;
+	self.bot_attack = TRUE;
+	self.team = self.owner.team;
 	self.weapon_think = hunt;
 	self.nextthink = time;
 	string t = self.owner.target;

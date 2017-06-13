@@ -34,12 +34,8 @@ void survive_Spawn(entity spot) {
 		PlayerScore_Set(self, SP_STATUS, 0);
 		return;
 	}
-	PlayerScore_Set(self, SP_STATUS, 1);
 	PutObserverInServer(FALSE);
-}
-
-float survive_FragsHandle(entity attacker, entity targ, float f) {
-	return 0;
+	PlayerScore_Set(self, SP_STATUS, 1);
 }
 
 float survive_DeathHandle(entity attacker, entity inflictor, float deathtype) {
@@ -87,6 +83,7 @@ void survive_trigger() {
 	if not(wave_not_found)
 	for (i = 1; i <= wave_number; i++)
 	for (self = world; (self = find(self, targetname, strcat("wavefrom", ftos(i)))); ) {
+		self.team = COLOR_TEAM2;
 		self.reset();
 		self.use();
 	}
@@ -188,7 +185,6 @@ void spawnfunc_survive_wave() {
 
 void survive_init() {
 	GameHook_WinningCondition = survive_WinningCondition;
-	GameHook_FragsHandle = survive_FragsHandle;
 	GameHook_DeathHandle = survive_DeathHandle;
 
 	GameHook_WinCountDown = stub_WinCountDown;
@@ -198,8 +194,8 @@ void survive_init() {
 	survive_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = survive_Spawn;
 
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status",     SFL_LOWER_IS_BETTER);
+	ScoreRules_basics(1, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 
 	CACHE_CVAR(g_survive_wave_pause);

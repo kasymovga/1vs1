@@ -328,6 +328,7 @@ void InitGameplayMode()
 	if (g_survive)
 	{
 		game = GAME_SURVIVE;
+		ActivateTeamplay();
 		survive_init();
 	}
 
@@ -580,6 +581,8 @@ void CheckAllowedTeams (entity for_whom)
 			c1 = c2 = c3 = c4 = 0;
 		else if(dm >= 3)
 			c1 = c2 = c3 = 0;
+		else if (g_survive)
+			c1 = 0;
 		else
 			c1 = c2 = 0;
 	}
@@ -722,6 +725,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 			error("Too few teams available for ctf\n");
 		else if(g_keyhunt)
 			error("Too few teams available for key hunt\n");
+		else if(g_survive) {}
 		else
 			error("Too few teams available for team deathmatch\n");
 	}
