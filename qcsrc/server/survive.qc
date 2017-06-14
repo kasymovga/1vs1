@@ -171,6 +171,7 @@ float survive_WinningCondition() {
 void survive_MonsterKilled(entity attacker) {
 	if (attacker.classname == "player") {
 		PlayerScore_Add(attacker, SP_SCORE, 1);
+		TeamScore_AddToTeam(attacker.team, ST_SCORE, 1);
 	}
 }
 
