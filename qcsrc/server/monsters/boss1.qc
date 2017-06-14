@@ -20,6 +20,7 @@ void boss1_grenade_touch (void)
 
 void boss1_hunt() {
 	self.nextthink = time;
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	if (monster_check_target(boss1_walk, boss1_guard))
 		return;
 
@@ -78,6 +79,7 @@ void boss1_hunt() {
 }
 
 void boss1_idle() {
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -87,6 +89,7 @@ void boss1_idle() {
 }
 
 void boss1_guard() {
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
@@ -95,6 +98,7 @@ void boss1_guard() {
 
 void boss1_walk() {
 	self.nextthink = time;
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	if (monster_look_for_player(2000, 1000, 0, 1, 3)) {
 		return;
 	}
@@ -112,6 +116,7 @@ void boss1_walk() {
 
 void boss1_remove() {
 	remove(self.exteriorweaponentity);
+	WaypointSprite_DetachCarrier(self);
 }
 
 void boss1_spawn() {
@@ -128,8 +133,12 @@ void boss1_spawn() {
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.health = 3000;
+	self.max_health = 3000;
 	self.damageforcescale = 0.01;
 	self.netname = "Big Soldier";
+	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_UpdateMaxHealth(e, self.health);
+	WaypointSprite_UpdateHealth(e, self.health);
 }
 
 void boss1_init() {
