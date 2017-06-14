@@ -28,7 +28,8 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	entity e;
 	vector v;
 	float f;
-	entity p;
+	entity p = world;
+	if not(gameover)
 	FOR_EACH_PLAYER(e)
 	if (e.health >= 1) {
 		if (teamplay) {
