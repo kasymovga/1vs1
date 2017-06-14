@@ -2,6 +2,7 @@ float wave_number;
 float wave_not_found;
 float survive_active;
 float g_survive_wave_pause;
+float g_survive_monster_factor;
 float survive_monster_quant;
 entity survive_plan_entity;
 
@@ -50,7 +51,7 @@ void survive_trigger() {
 	}
 	entity oldself = self;
 	entity e;
-	survive_monster_quant = 0;
+	survive_monster_quant = (1 - g_survive_monster_factor);
 	survive_active = FALSE;
 	FOR_EACH_CLIENT(self) {
 		if (self.team >= 0) {
@@ -58,7 +59,7 @@ void survive_trigger() {
 				self.classname = "player";
 				PutClientInServer();
 			}
-			survive_monster_quant++;
+			survive_monster_quant += g_survive_monster_factor;
 		}
 	}
 	self = oldself;
@@ -70,21 +71,20 @@ void survive_trigger() {
 	string wave_str = wave_string();
 	for (self = world; (self = find(self, targetname, wave_str)); ) {
 		wave_not_found = FALSE;
-		self.reset();
+		activator = survive_plan_entity;
 		self.use();
 	}
 	float i;
 	for (i = wave_number; i >= 1; i--)
 	for (self = world; (self = find(self, targetname, strcat("waveto", ftos(i)))); ) {
 		wave_not_found = FALSE;
-		self.reset();
+		activator = survive_plan_entity;
 		self.use();
 	}
 	if not(wave_not_found)
 	for (i = 1; i <= wave_number; i++)
 	for (self = world; (self = find(self, targetname, strcat("wavefrom", ftos(i)))); ) {
-		self.team = COLOR_TEAM2;
-		self.reset();
+		activator = survive_plan_entity;
 		self.use();
 	}
 	if not(wave_not_found) {
@@ -110,6 +110,7 @@ void survive_plan() {
 	survive_plan_entity.classname = "monster";
 	survive_plan_entity.think = survive_trigger;
 	survive_plan_entity.nextthink = time + g_survive_wave_pause;
+	survive_plan_entity.team = COLOR_TEAM2;
 	survive_active = FALSE;
 	entity oldself = self;
 	FOR_EACH_CLIENT(self) {
@@ -180,7 +181,6 @@ float survive_MonsterQuant() {
 }
 
 void spawnfunc_survive_wave() {
-	self.reset = SUB_Null;
 	self.use = SUB_Null;
 }
 
@@ -200,4 +200,6 @@ void survive_init() {
 	ScoreRules_basics_end();
 
 	CACHE_CVAR(g_survive_wave_pause);
+	g_survive_monster_factor = bound(0, cvar("g_survive_monster_factor"), 1);
+	wave_number = cvar("g_survive_wave_skip");
 }

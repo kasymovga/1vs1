@@ -1064,4 +1064,6 @@ set g_nadgets_raze_fire_spawninterval 0.1
 ///// END Handgrenades mutator /////
 
 set g_survive_wave_pause 5
+set g_survive_wave_skip 0
+set g_survive_monster_factor 0.5
 set g_survive 0

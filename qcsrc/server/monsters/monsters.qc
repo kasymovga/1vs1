@@ -31,7 +31,13 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	entity p;
 	FOR_EACH_PLAYER(e)
 	if (e.health >= 1) {
-		
+		if (teamplay) {
+			if not(self.team)
+				continue;
+
+			if (self.team == e.team)
+				continue;
+		}
 		f = vlen(e.origin - self.origin);
 		if (f <= heardistance) {
 			traceline(self.origin, e.origin, MOVE_WORLDONLY, self);
@@ -177,6 +183,16 @@ void monster_spawn_think() {
 	self.nextthink = time + self.respawntime;
 }
 
+void monster_spawn_use() {
+	if not(self.spawnflags & 1)
+		self.reset();
+
+	if (activator)
+		self.team = activator.team;
+
+	self.think();
+}
+
 void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.classname = "monster";
 	self.iscreature = TRUE;
@@ -270,10 +286,15 @@ void monster_init(void() init_func) {
 
 void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.weapon_think = spawnfunc;
-	self.use = self.think = monster_spawn_think;
+	self.think = monster_spawn_think;
+	self.use = monster_spawn_use;
 	self.nextthink = 0;
 	self.dmg = max(self.cnt, 1);
 	self.reset = resetfunc;
+	if (teamplay)
+	if not(self.team)
+		self.team = -1;
+
 	if (self.targetname == "") {
 		self.nextthink = time;
 	}
