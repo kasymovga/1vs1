@@ -40,7 +40,7 @@ void boss1_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		float i;
-		for (i = 0; i < 8; i++) {
+		for (i = 0; i < 4; i++) {
 			entity gren = spawn();
 			gren.owner = self;
 			gren.classname = "grenade";
