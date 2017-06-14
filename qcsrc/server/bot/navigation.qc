@@ -354,7 +354,9 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 	}
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org_z = ent.origin_z + ent.mins_z - PL_MIN_z; // player height
+	vector _mins = self.mins;
+	vector _maxs = self.mins;
+	org_z = ent.origin_z + ent.mins_z - _mins_z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -391,7 +393,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 					if (walkfromwp)
 					{
 						//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
-						if (tracewalk(ent, v, PL_MIN, PL_MAX, org, bot_navigation_movemode))
+						if (tracewalk(ent, v, _mins, _maxs, org, bot_navigation_movemode))
 						{
 							bestdist = dist;
 							best = w;
@@ -399,7 +401,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 					}
 					else
 					{
-						if (tracewalk(ent, org, PL_MIN, PL_MAX, v, bot_navigation_movemode))
+						if (tracewalk(ent, org, _mins, _maxs, v, bot_navigation_movemode))
 						{
 							bestdist = dist;
 							best = w;
@@ -680,7 +682,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			local float zdistance, xydistance, cost, t, fuel;
 			local vector down, npa, npb;
 
-			down = '0 0 -1' * (PL_MAX_z - PL_MIN_z) * 10;
+			down = '0 0 -1' * (self.maxs_z - self.mins_z) * 10;
 
 			do{
 				npa = pointa + down;
@@ -806,7 +808,7 @@ float navigation_routetogoal(entity e, vector startposition)
 		return TRUE;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(self, startposition, PL_MIN, PL_MAX, e.origin, bot_navigation_movemode))
+	if (tracewalk(self, startposition, self.mins, self.maxs, e.origin, bot_navigation_movemode))
 		return TRUE;
 
 	// see if there are waypoints describing a path to the item
