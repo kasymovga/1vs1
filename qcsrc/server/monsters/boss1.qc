@@ -64,7 +64,7 @@ void boss1_hunt() {
 			CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 		}
 
-		self.attack_finished_single = time + 3 + random();
+		self.attack_finished_single = time + 1 + random();
 		self.bulletcounter = time + 0.5;
 	} else {
 		v = monster_move_walk(450, 5, 0);
