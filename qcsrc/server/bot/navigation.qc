@@ -355,7 +355,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
 	vector _mins = self.mins;
-	vector _maxs = self.mins;
+	vector _maxs = self.maxs;
 	org_z = ent.origin_z + ent.mins_z - _mins_z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
