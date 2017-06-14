@@ -97,8 +97,8 @@ void Akimbo_WeaponFrame()
 
 var void(float killed) Akimbo_PlayerClear_NextLink;
 void Akimbo_PlayerClear(float killed) {
-	if not(killed)
-		Akimbo_Clear(self);
+	//if not(killed)
+	Akimbo_Clear(self);
 
 	Akimbo_PlayerClear_NextLink(killed);
 }
