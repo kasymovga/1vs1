@@ -128,7 +128,7 @@ void boss1_spawn() {
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.health = 3000;
-	self.damageforcescale = 1;
+	self.damageforcescale = 0.01;
 	self.netname = "Big Soldier";
 }
 
