@@ -120,7 +120,7 @@ void heavysoldier_spawn() {
 	self.colormap = 1024 + 34;
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
-	setsize(self, '-32 -32 -32', '32 32 32');
+	setsize(self, '-16 -16 -24', '16 16 45');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.health = 200;
