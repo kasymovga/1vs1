@@ -9,7 +9,7 @@ void spider_hunt() {
 
 	vector v = self.enemy.origin - self.origin;
 	float f = vlen(v);
-	if (f < 50) {
+	if (f < 75) {
 		self.enemy = self;
 		monster_die();
 		return;
@@ -31,7 +31,7 @@ void spider_hunt() {
 			self.attack_finished_single = time + 4 + random();
 			self.bulletcounter = time + 0.5;
 		} else if (self.flags & FL_ONGROUND) {
-			v = monster_move_walk(400, 5, 0);
+			v = monster_move_walk(500, 5, 0);
 			v = vectoangles(v);
 			self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 		}
@@ -77,7 +77,7 @@ void spider_walk() {
 	self.anim_end   = MODEL_SPIDERBOT_FORWARD_END;
 	self.frame      = 0;
 	if (self.flags & FL_ONGROUND) {
-		vector v = monster_move_walk(200, 5, 0);
+		vector v = monster_move_walk(400, 5, 0);
 		//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
@@ -86,7 +86,7 @@ void spider_walk() {
 }
 
 void spider_remove() {
-	RadiusDamage (self, self, 100, 0, 100, world, 100, WEP_GRENADE_LAUNCHER, world);
+	RadiusDamage (self, self, 100, 0, 150, world, 100, WEP_GRENADE_LAUNCHER, world);
 	remove(self.weaponentity);
 }
 
