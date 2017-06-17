@@ -259,5 +259,6 @@ monsters/spearguy.qc
 monsters/soldier.qc
 monsters/heavysoldier.qc
 monsters/flyingthing.qc
+monsters/spider.qc
 monsters/boss1.qc
 survive.qc
