@@ -931,7 +931,7 @@ void PutClientInServer()
 
 void PlayerToSpec(entity player)
 {
-	if (player.classname == "player")
+	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
 	if (sv_spectate) {
 		entity oldself = self;
 		self = player;
