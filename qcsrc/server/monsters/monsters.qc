@@ -79,6 +79,20 @@ void monster_die() {
 	self.think = SUB_Remove;
 }
 
+void monster_corpse_event_damage() {
+	if (self.health < 200)
+		monster_die();
+}
+
+void monster_die_animated() {
+	setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
+	self.movetype = MOVETYPE_TOSS;
+	self.solid = SOLID_TRIGGER;
+	self.nextthink = time + 5;
+	self.think = monster_die;
+	self.event_damage = monster_corpse_event_damage;
+}
+
 void monster_event_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.classname != "monster")
 		self.health = self.health - damage;
@@ -93,7 +107,10 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 			o.dmg = o.dmg + GameHook_MonsterQuant();
 		}
 		self.enemy = attacker;
-		monster_die();
+		if (self.anim_die1 != '0 0 0')
+			monster_die_animated();
+		else
+			monster_die();
 	} else if (attacker.classname == "player") {
 		if (self.enemy) {
 			if (self.enemy.classname == "monster_walk_path")
