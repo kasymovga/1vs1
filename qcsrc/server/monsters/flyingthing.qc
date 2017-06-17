@@ -93,6 +93,7 @@ void flyingthing_walk() {
 
 void flyingthing_spawn() {
 	self.movetype = MOVETYPE_WALK;
+	self.species = SPECIES_ROBOT_SOLID;
 	monster_set_fly();
 	monster_prepare(flyingthing_hunt, flyingthing_walk, flyingthing_idle);
 	setmodel(self, "models/turrets/walker_mghead.md3");
