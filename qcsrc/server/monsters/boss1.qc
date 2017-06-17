@@ -29,7 +29,7 @@ void boss1_hunt() {
 	dofire = FALSE;
 	if (self.attack_finished_single < time) {
 		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-		if (trace_fraction == 1)
+		if (trace_fraction > 0.95)
 			dofire = TRUE;
 	}
 	if (dofire) {
@@ -129,13 +129,14 @@ void boss1_spawn() {
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
 	self.scale = 3;
-	setsize(self, '-64 -64 -48', '64 64 96');
+	setsize(self, '-48 -48 -72', '64 64 135');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.health = 3000;
 	self.max_health = 3000;
 	self.damageforcescale = 0.01;
 	self.netname = "Big Soldier";
+	self.anim_die1 = '0 1 0.5';
 	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);
