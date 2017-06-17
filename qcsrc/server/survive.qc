@@ -67,34 +67,25 @@ void survive_trigger() {
 		survive_monster_quant = 1 / survive_monster_quant + 0.01;
 	}
 
-	wave_not_found = TRUE;
-	string wave_str = wave_string();
-	for (self = world; (self = find(self, targetname, wave_str)); ) {
-		wave_not_found = FALSE;
+	for (self = world; (self = find(self, targetname, wave_string())); ) {
 		activator = survive_plan_entity;
 		self.use();
 	}
 	float i;
 	for (i = wave_number; i >= 1; i--)
 	for (self = world; (self = find(self, targetname, strcat("waveto", ftos(i)))); ) {
-		wave_not_found = FALSE;
 		activator = survive_plan_entity;
 		self.use();
 	}
-	if not(wave_not_found)
 	for (i = 1; i <= wave_number; i++)
 	for (self = world; (self = find(self, targetname, strcat("wavefrom", ftos(i)))); ) {
 		activator = survive_plan_entity;
 		self.use();
 	}
-	if not(wave_not_found) {
-		survive_active = TRUE;
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, "^2New wave coming!!!\nTry to survive\n");
-	} else {
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, "^2All enemy destroyed!!!\nYou successfully survived\n");
-	}
+	survive_active = TRUE;
+	FOR_EACH_REALCLIENT(e)
+		centerprint(e, "^1New wave incoming!!!\n^1Try to survive\n");
+
 	self = oldself;
 	remove(self);
 	survive_plan_entity = world;
@@ -102,9 +93,6 @@ void survive_trigger() {
 
 void survive_plan() {
 	entity e;
-	FOR_EACH_REALCLIENT(e)
-		centerprint(e, "^2Waiting new wave...\n");
-
 	wave_number++;
 	survive_plan_entity = spawn();
 	survive_plan_entity.classname = "monster";
@@ -123,21 +111,38 @@ void survive_plan() {
 	}
 }
 
+float survive_checkNextWave() {
+	string wave_ind_str = ftos(wave_number + 1);
+	if (find(world, targetname, strcat("wave", wave_ind_str)))
+		return TRUE;
+
+	if (find(world, targetname, strcat("waveto", wave_ind_str)))
+		return TRUE;
+
+	return FALSE;
+}
+
 float survive_WinningCondition() {
+	if (time < game_starttime)
+		return FALSE;
+
 	//print("survive_WinningCondition()\n");
 	entity e;
 	entity monster;
-	if (wave_not_found)
+	if (wave_not_found) {
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, "^2All enemies destroyed!!!\n^2You successfully survived\n");
+
 		return TRUE;
+	}
 
 	if (survive_active)
 	if not(survive_has_alive_players())
 		return TRUE;
 
 	monster = find(world, classname, "monster");
-	string wave_str = wave_string();
 	if not(monster)
-	for (e = world; (e = find(e, targetname, wave_str));) {
+	for (e = world; (e = find(e, targetname, wave_string()));) {
 		if (e.nextthink) {
 			monster = e;
 			break;
@@ -158,13 +163,15 @@ float survive_WinningCondition() {
 			break;
 		}
 	}
-	if (survive_active)
-	if not(monster)
-		survive_plan();
-
-	if not(survive_active)
-	if not(survive_plan_entity)
-		survive_plan();
+	if not(monster) {
+		if (survive_checkNextWave())
+			survive_plan();
+		else
+			wave_not_found = TRUE;
+	}
+	if (survive_plan_entity)
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, strcat("^3New wave starts in ", ftos(floor(survive_plan_entity.nextthink - time)), " seconds"));
 
 	return FALSE;
 }
