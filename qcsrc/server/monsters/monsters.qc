@@ -72,6 +72,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 }
 
 void monster_die() {
+	Violence_GibSplash(self, 1, 1, self.enemy);
 	self.solid = SOLID_NOT;
 	self.alpha = -1;
 	self.nextthink = time;
@@ -86,13 +87,13 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		GameHook_MonsterKilled(attacker);
-		Violence_GibSplash(self, 1, 1, attacker);
-		monster_die();
 		entity o = self.owner;
 		if (o.spawnflags & 1) {
 			o.nextthink = time + o.respawntime;
 			o.dmg = o.dmg + GameHook_MonsterQuant();
 		}
+		self.enemy = attacker;
+		monster_die();
 	} else if (attacker.classname == "player") {
 		if (self.enemy) {
 			if (self.enemy.classname == "monster_walk_path")
