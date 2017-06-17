@@ -107,7 +107,7 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	}
 }
 
-vector monster_get_direction_to(entity e) {
+vector monster_get_direction() {
 	if (self.goalcurrent)
 		navigation_poptouchedgoals();
 
@@ -144,7 +144,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 		self.bot_strategytime = time + 1 + random() * 1;
 		monster_set_route();
 	}
-	v = monster_get_direction_to(self.enemy);
+	v = monster_get_direction();
 	v_z = 0;
 	dir_z_save = v_z;
 	vel_z_save = self.velocity_z;
@@ -160,7 +160,7 @@ vector monster_move_fly(float _speed, float blend_factor) {
 		monster_set_route();
 	}
 	vector v;
-	v = monster_get_direction_to(self.enemy);
+	v = monster_get_direction();
 	v_z = v_z + 0.5 * vlen(v);
 	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
