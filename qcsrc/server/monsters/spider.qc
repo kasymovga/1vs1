@@ -102,7 +102,7 @@ void spider_spawn() {
 	self.species = SPECIES_ROBOT_SOLID;
 	self.movetype = MOVETYPE_WALK;
 	self.entremove = spider_remove;
-	setsize(self, '-16 -16 0', '16 16 16');
+	setsize(self, '-16 -16 0', '16 16 24');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.health = 50;
