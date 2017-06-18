@@ -137,10 +137,16 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			// hit something
 			if (trace_fraction < 1)
 			{
+				if (boxesoverlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
+					return TRUE;
+
 				// check if we can walk over this obstacle
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
+					if (boxesoverlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
+						return TRUE;
+
 					#ifdef DEBUG_TRACEWALK
 						debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
 					#endif
@@ -808,8 +814,23 @@ float navigation_routetogoal(entity e, vector startposition)
 		return TRUE;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(self, startposition, self.mins, self.maxs, e.origin, bot_navigation_movemode))
+	vector v1;
+	vector v2;
+	if (e.movetype == MOVETYPE_WALK) {
+		tracebox(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', MOVE_NORMAL, e);
+		v1 = trace_endpos + e.mins;
+		v2 = trace_endpos + e.maxs;
+	} else {
+		v1 = e.origin + e.mins;
+		v2 = e.origin + e.maxs;
+	}
+	vector v;
+	v_x = bound(v1_x, self.origin_x, v2_x);
+	v_y = bound(v1_y, self.origin_y, v2_y);
+	v_z = bound(v1_z, self.origin_z, v2_z);
+	if (tracewalk(self, startposition, self.mins, self.maxs, v, bot_navigation_movemode)) {
 		return TRUE;
+	}
 
 	// see if there are waypoints describing a path to the item
 	if(e.classname != "waypoint" || (e.wpflags & WAYPOINTFLAG_PERSONAL))
