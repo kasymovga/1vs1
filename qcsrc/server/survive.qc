@@ -64,7 +64,7 @@ void survive_trigger() {
 	}
 	self = oldself;
 	if (survive_monster_quant) {
-		survive_monster_quant = 1 / survive_monster_quant + 0.01;
+		survive_monster_quant = 1 / survive_monster_quant;
 	}
 
 	for (self = world; (self = find(self, targetname, wave_string())); ) {
