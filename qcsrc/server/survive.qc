@@ -92,7 +92,6 @@ void survive_trigger() {
 }
 
 void survive_plan() {
-	entity e;
 	wave_number++;
 	survive_plan_entity = spawn();
 	survive_plan_entity.classname = "monster";
@@ -109,6 +108,7 @@ void survive_plan() {
 			}
 		}
 	}
+	self = oldself;
 }
 
 float survive_checkNextWave() {
@@ -122,6 +122,7 @@ float survive_checkNextWave() {
 	return FALSE;
 }
 
+float survive_last_countdown;
 float survive_WinningCondition() {
 	if (time < game_starttime)
 		return FALSE;
@@ -169,9 +170,15 @@ float survive_WinningCondition() {
 		else
 			wave_not_found = TRUE;
 	}
-	if (survive_plan_entity)
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, strcat("^3New wave starts in ", ftos(floor(survive_plan_entity.nextthink - time)), " seconds"));
+	if (survive_plan_entity) {
+		float countdown = ceil(survive_plan_entity.nextthink - time);
+		if (survive_last_countdown != countdown) {
+			FOR_EACH_REALCLIENT(e)
+				centerprint(e, strcat("^3New wave starts in ", ftos(countdown), " seconds"));
+
+			survive_last_countdown = countdown;
+		}
+	}
 
 	return FALSE;
 }
