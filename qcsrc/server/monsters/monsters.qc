@@ -184,7 +184,8 @@ vector monster_move_fly(float _speed, float blend_factor) {
 }
 
 void monster_spawn_think() {
-	if (self.dmg <= 0)
+	float quant = GameHook_MonsterQuant();
+	if (self.dmg < quant)
 		return;
 
 	entity oldself = self;
@@ -198,7 +199,7 @@ void monster_spawn_think() {
 	oldself.weapon_think();
 
 	self = oldself;
-	self.dmg = self.dmg - GameHook_MonsterQuant();
+	self.dmg = self.dmg - quant;
 	self.nextthink = time + self.respawntime;
 }
 
