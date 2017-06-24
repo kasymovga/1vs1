@@ -97,7 +97,7 @@ void survive_plan() {
 	survive_plan_entity.classname = "monster";
 	survive_plan_entity.think = survive_trigger;
 	survive_plan_entity.nextthink = time + g_survive_wave_pause;
-	survive_plan_entity.team = COLOR_TEAM2;
+	survive_plan_entity.team = -1; //Fake team
 	survive_active = FALSE;
 	entity oldself = self;
 	FOR_EACH_CLIENT(self) {

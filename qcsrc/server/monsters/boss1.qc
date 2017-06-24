@@ -125,7 +125,11 @@ void boss1_spawn() {
 	self.movetype = MOVETYPE_WALK;
 	self.exteriorweaponentity = spawn();
 	self.entremove = boss1_remove;
-	self.colormap = 1024 + 17;
+	if (self.team > 0)
+		self.colormap = 1024;
+	else
+		self.colormap = 1024 + 17;
+
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
 	self.scale = 3;

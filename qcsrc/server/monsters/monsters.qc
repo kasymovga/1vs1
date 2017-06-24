@@ -235,6 +235,8 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 		self.think = idle;
 
 	self.event_damage = monster_event_damage;
+	if (self.team > 0)
+		self.colormod = TeamColorMod(self.team);
 }
 
 void monster_set_fly() {

@@ -87,7 +87,11 @@ void soldier_spawn() {
 	setmodel(self, "models/player/shock.zym");
 	self.movetype = MOVETYPE_WALK;
 	self.entremove = soldier_remove;
-	self.colormap = 1024 + 17;
+	if (self.team > 0)
+		self.colormap = 1024;
+	else
+		self.colormap = 1024 + 17;
+
 	self.exteriorweaponentity = spawn();
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_shotgun.md3");

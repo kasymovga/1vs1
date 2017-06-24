@@ -107,6 +107,7 @@ void spider_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Explosive Spider";
+	self.weaponentity.colormod = self.colormod;
 }
 
 void spider_init() {

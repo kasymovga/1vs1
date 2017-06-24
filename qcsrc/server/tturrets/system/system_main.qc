@@ -674,16 +674,7 @@ entity turret_select_target()
 }
 
 void turret_stdproc_setcolormod() {
-	vector cmod = '0 0 0';
-    if (self.team == COLOR_TEAM1)
-		cmod = '1.8 0.6 0.6';
-    else if (self.team == COLOR_TEAM2)
-		cmod = '0.6 0.6 1.8';
-    else if (self.team == COLOR_TEAM3)
-		cmod = '1.4 1.4 0.2';
-    else if (self.team == COLOR_TEAM4)
-		cmod = '1.4 0.2 1.4';
-
+	vector cmod = TeamColorMod(self.team);
 	self.colormod = cmod;
 	if (self.tur_head)
 		self.tur_head.colormod = cmod;

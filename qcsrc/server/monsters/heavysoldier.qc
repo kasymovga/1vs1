@@ -117,13 +117,16 @@ void heavysoldier_spawn() {
 	self.movetype = MOVETYPE_WALK;
 	self.exteriorweaponentity = spawn();
 	self.entremove = heavysoldier_remove;
-	self.colormap = 1024 + 34;
+	if (self.team > 0)
+		self.colormap = 1024;
+	else
+		self.colormap = 1024 + 34;
+
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
 	setsize(self, '-16 -16 -24', '16 16 45');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
-	self.health = 100;
 	self.damageforcescale = 1;
 	self.netname = "Heavy Soldier";
 }

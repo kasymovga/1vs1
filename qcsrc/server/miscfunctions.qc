@@ -2089,3 +2089,16 @@ vector CircleSpreadVector(float side, float up, float sangle) {
             side * v_right   * sin(sangle) +
             up   * v_up;
 }
+
+vector TeamColorMod(float teamcolor) {
+    if (teamcolor == COLOR_TEAM1)
+		return '1.8 0.6 0.6';
+    else if (teamcolor == COLOR_TEAM2)
+		return '0.6 0.6 1.8';
+    else if (teamcolor == COLOR_TEAM3)
+		return '1.4 1.4 0.2';
+    else if (teamcolor == COLOR_TEAM4)
+		return '1.4 0.2 1.4';
+
+	return '0 0 0';
+}
