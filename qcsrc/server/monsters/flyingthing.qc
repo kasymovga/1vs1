@@ -101,7 +101,6 @@ void flyingthing_spawn() {
 	setsize(self, '-16 -16 -48', '16 16 0');
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
-	self.health = 100;
 }
 
 void flyingthing_init() {

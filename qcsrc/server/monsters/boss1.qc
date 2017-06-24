@@ -132,8 +132,7 @@ void boss1_spawn() {
 	setsize(self, '-48 -48 -72', '64 64 135');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
-	self.health = 3000;
-	self.max_health = 3000;
+	self.max_health = self.health;
 	self.damageforcescale = 0.01;
 	self.netname = "Big Soldier";
 	self.anim_die1 = '0 1 0.5';

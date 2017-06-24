@@ -94,7 +94,6 @@ void soldier_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
-	self.health = 50;
 	self.damageforcescale = 1;
 	self.netname = "Soldier";
 }

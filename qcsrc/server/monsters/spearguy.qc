@@ -71,7 +71,6 @@ void spearguy_spawn() {
 	setmodel(self.exteriorweaponentity, "models/weapons/v_rspear.md3");
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
-	self.health = 100;
 	self.damageforcescale = 1;
 	self.entremove = spearguy_remove;
 	self.netname = "Spearguy";

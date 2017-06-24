@@ -80,7 +80,7 @@ void monster_die() {
 }
 
 void monster_corpse_event_damage() {
-	if (self.health < 200)
+	if (self.health < -200)
 		monster_die();
 }
 
@@ -215,6 +215,7 @@ void monster_spawn_use() {
 
 void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.classname = "monster";
+	self.health = self.owner.health;
 	self.iscreature = TRUE;
 	self.bot_attack = TRUE;
 	self.team = self.owner.team;
@@ -304,6 +305,14 @@ void monster_init(void() init_func) {
 	init_func();
 }
 
+string monster_classname() {
+	float spawn_suffix = strstrofs(self.classname, "_spawn", 0);
+	if (spawn_suffix >= 0) {
+		return substring(self.classname, 0, spawn_suffix);
+	}
+	return self.classname;
+}
+
 void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.weapon_think = spawnfunc;
 	self.think = monster_spawn_think;
@@ -311,6 +320,7 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.nextthink = 0;
 	self.dmg = max(self.cnt, 1);
 	self.reset = resetfunc;
+	self.health = cvar(strcat("g_monster_", monster_classname(), "_health"));
 	if (teamplay)
 	if not(self.team)
 		self.team = -1;
