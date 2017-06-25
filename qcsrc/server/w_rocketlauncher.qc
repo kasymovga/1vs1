@@ -676,6 +676,8 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_speedaccel);
 		CACHE_CVAR(g_balance_rocketlauncher_speedstart);
 		g_balance_rocketlauncher_projsize = stov(cvar_string("g_balance_rocketlauncher_projsize"));
+
+		ProjInfo_RegisterAuto(PROJECTILE_ROCKET, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize);
 	}
 	return TRUE;
 };

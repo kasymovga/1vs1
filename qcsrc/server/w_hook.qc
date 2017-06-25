@@ -124,7 +124,7 @@ void spawnfunc_weapon_hook (void)
 float w_hook(float req)
 {
 	float hooked_time_max, hooked_fuel;
-		
+
 	if (req == WR_AIM)
 	{
 		// ... sorry ...
@@ -143,7 +143,7 @@ float w_hook(float req)
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 					self.ammo_fuel = self.ammo_fuel - g_balance_hook_primary_fuel;
 				self.hook_state |= HOOK_FIRING;
-				weapon_thinkf(WFRAME_FIRE1, g_balance_hook_primary_animtime, w_ready);				
+				weapon_thinkf(WFRAME_FIRE1, g_balance_hook_primary_animtime, w_ready);
 			}
 		}
 
@@ -168,13 +168,13 @@ float w_hook(float req)
 
 		if(self.hook && self.hook.state == 1)
 		{
-			hooked_time_max = g_balance_hook_primary_hooked_time_max;			
+			hooked_time_max = g_balance_hook_primary_hooked_time_max;
 			if (hooked_time_max > 0)
 			{
 				if ( time > self.hook_time_hooked + hooked_time_max )
 					self.hook_state |= HOOK_REMOVING;
 			}
-			
+
 			hooked_fuel = g_balance_hook_primary_hooked_fuel;
 			if (hooked_fuel > 0)
 			{
@@ -200,7 +200,7 @@ float w_hook(float req)
 		}
 		else
 		{
-			self.hook_time_hooked = time;				
+			self.hook_time_hooked = time;
 			self.hook_time_fueldecrease = time + g_balance_hook_primary_hooked_time_free;
 		}
 
@@ -280,6 +280,8 @@ float w_hook(float req)
 		CACHE_CVAR(g_balance_hook_secondary_radius);
 		CACHE_CVAR(g_balance_hook_secondary_refire);
 		CACHE_CVAR(g_balance_hook_secondary_speed);
+
+		ProjInfo_RegisterAuto(PROJECTILE_HOOKBOMB, '0 0 0', '0 0 0');
 	}
 	return TRUE;
 };

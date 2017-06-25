@@ -989,6 +989,11 @@ float ClientInit_SendEntity(entity to, float sf)
 		}
 		WriteByte(MSG_ENTITY, t);
 	}
+
+	if(sf & 64) {
+		ProjInfo_Send();
+	}
+
 	return TRUE;
 }
 

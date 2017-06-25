@@ -142,6 +142,27 @@ void HG_Init(void) {
     HGDEFS
     #undef HGDEF
 	HG_Precache();
+
+    if(g_nadgets_oldhitboxes) {
+        ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, '0 0 -3', '0 0 -3');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, '0 0 -3', '0 0 -3');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, '0 0 -3', '0 0 -3');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, '0 0 -3', '0 0 -3');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, '0 0 -3', '0 0 -3');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, '0 0 -3', '0 0 -3');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, '0 0 -3', '0 0 -3');
+    } else {
+        ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '-1 -1 -1', HG_SIZE_TRANSLOC * '1 1 1');
+    }
+
+    ProjInfo_RegisterAuto(PROJECTILE_HG_RAZE, '-16 -16 -3', '16 16 3');
+    ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA_SHARD, '0 0 -3', '0 0 -3');
 }
 
 void HG_Precache(void) {
@@ -782,10 +803,10 @@ void spawnfunc_target_bonusnadgets(void) {
 void HG_Pick(float tokens) {
 	if not(self.flags & FL_CLIENT)
 		return;
-	
+
 	if(!g_nadgets)
 		return;
-	
+
 	if(tokens < 2) {
 		HG_ShowMenu(2);
 		return;
@@ -795,7 +816,7 @@ void HG_Pick(float tokens) {
 	//float gamestarted = roundstate == ROUNDSTATE_GAME;
 	//float term = (self.term_authed && !self.term_used);
 	float nr = isplayer && (/*gamestarted || */(self.hg_nadesused && !inWarmupStage)) /* && !term */;
-	
+
 	float t1 = HG_NameToType(argv(1));
 	float t2 = HG_NameToType(argv(2));
 	float success, t, i, argc;

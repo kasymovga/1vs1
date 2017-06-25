@@ -132,9 +132,9 @@ float w_laser(float req)
 			}
 		}
 	}
-	else if (req == WR_PRECACHE)
+	else if (req == WR_PRECACHE) {
 		precache_sound ("weapons/lasergun_fire.wav");
-	else if (req == WR_SETUP)
+	} else if (req == WR_SETUP)
 		weapon_setup(WEP_LASER);
 	else if (req == WR_CHECKAMMO1)
 		return TRUE;
@@ -167,6 +167,8 @@ float w_laser(float req)
 		CACHE_CVAR(g_balance_laser_secondary_refire);
 		CACHE_CVAR(g_balance_laser_secondary_shotangle);
 		CACHE_CVAR(g_balance_laser_secondary_speed);
+
+		ProjInfo_RegisterAuto(PROJECTILE_LASER, '0 0 0', '0 0 0');
 	}
 	return TRUE;
 };

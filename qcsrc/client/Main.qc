@@ -239,7 +239,7 @@ void CSQC_Init(void)
 	if (cvar_string("sv_masterextra1") == "") {
 		localcmd("\nseta sv_master2 107.161.23.68\n");
 	}
-	
+
 	check_unacceptable_compiler_bugs();
 
 	float i;
@@ -1175,6 +1175,10 @@ void Ent_Init(float ignore)
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));
 		Sbar_InitScores();
+	}
+
+	if (sf & 64) {
+		ProjInfo_Read();
 	}
 
 	if(!postinit)
