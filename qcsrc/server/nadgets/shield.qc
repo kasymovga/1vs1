@@ -117,6 +117,11 @@ void HG_Shield_Trigger(void) {
         stopsound(self, CHAN_AUTO);
     }
 #endif
+
+    if(self.hg_shield_stored <= 0) {
+        self.hg_shield = 0;
+        stopsound(self, CHAN_AUTO);
+    }
 }
 
 #if 0
