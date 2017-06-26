@@ -866,6 +866,10 @@ void weapon_setup(float windex)
 // perform weapon to attack (weaponstate and attack_finished check is here)
 float weapon_prepareattack(float secondary, float attacktime)
 {
+	if(!GameHookChain_WeaponPrepareAttack(secondary, attacktime)) {
+		return FALSE;
+	}
+
 	if(attacktime >= 0)
 	{
 		// don't fire if previous attack is not finished

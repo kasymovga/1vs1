@@ -73,3 +73,4 @@ var void(entity targ, entity attacker, float damage, vector force) GameHookChain
 var void(entity attacker) GameHook_MonsterKilled {}
 var float() GameHook_MonsterQuant { return 1; }
 var float(entity plr, entity viewer, float palpha) GameHookChain_PlayerAlphaMod = { return palpha; }
+var float(float secondary, float attacktime) GameHookChain_WeaponPrepareAttack = { return TRUE; }
