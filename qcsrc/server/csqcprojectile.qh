@@ -5,3 +5,5 @@ void UpdateCSQCProjectile(entity e);
 void UpdateCSQCProjectileAfterTeleport(entity e);
 void UpdateCSQCProjectileNextFrame(entity e);
 void CSQCProjectile_Check(entity e);
+
+void ProjInfo_Send(void);

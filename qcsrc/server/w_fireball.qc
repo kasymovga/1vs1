@@ -450,6 +450,9 @@ float w_fireball(float req)
 		CACHE_CVAR(g_balance_fireball_secondary_refire);
 		CACHE_CVAR(g_balance_fireball_secondary_refire2);
 		CACHE_CVAR(g_balance_fireball_secondary_speed);
+
+		ProjInfo_RegisterAuto(PROJECTILE_FIREMINE, '-4 -4 -4', '4 4 4');
+		ProjInfo_RegisterAuto(PROJECTILE_FIREBALL, '-16 -16 -16', '16 16 16');
 	}
 	return TRUE;
 };

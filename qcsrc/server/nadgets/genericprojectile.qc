@@ -333,9 +333,9 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
 
     float sz;
 	switch(e.hg_type) {
-	case HG_TRANSLOC: sz = 6; break;
-	case HG_PLASMA  : sz = 7; break;
-	default         : sz = 5;
+	case HG_TRANSLOC: sz = HG_SIZE_TRANSLOC; break;
+	case HG_PLASMA  : sz = HG_SIZE_PLASMA_STICK; break;
+	default         : sz = HG_SIZE_DEFAULT;
     }
 
     vector hitmins = '-1 -1 -1' * sz;
@@ -590,7 +590,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
         hitmins = '0 0 -3';
         hitmaxs = '0 0 -3';
     } else {
-        float sz = ((hgtype == HG_TRANSLOC) ? 8 : 5);
+        float sz = ((hgtype == HG_TRANSLOC) ? HG_SIZE_TRANSLOC : HG_SIZE_DEFAULT);
         hitmins = '-1 -1 -1' * sz;
         hitmaxs = ' 1  1  1' * sz;
     }

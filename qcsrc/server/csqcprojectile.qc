@@ -11,13 +11,6 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 	if(self.flags & FL_ONGROUND)
 		sf |= 0x40;
 
-	if (sf & 4)
-	if (self.mins == self.maxs) {
-		if (self.mins == '0 0 0')
-			sf &~= 4;
-		else if (self.mins == self.maxs)
-			sf &~= 8;
-	}
 	if (sf & 16)
 	if (self.team <= 0) {
 		sf &~= 16;
@@ -43,17 +36,6 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 
 	if(sf & 2) {
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
-		if(sf & 4)
-		{
-			WriteChar(MSG_ENTITY, self.mins_x);
-			WriteChar(MSG_ENTITY, self.mins_y);
-			WriteChar(MSG_ENTITY, self.mins_z);
-			if (sf & 8) {
-				WriteChar(MSG_ENTITY, self.maxs_x);
-				WriteChar(MSG_ENTITY, self.maxs_y);
-				WriteChar(MSG_ENTITY, self.maxs_z);
-			}
-		}
 		if (sf & 16)
 			WriteChar(MSG_ENTITY, self.team);
 	}
@@ -74,9 +56,9 @@ void CSQCProjectile_Check(entity e)
 void CSQCProjectile(entity e, float clientanimate, float type, float docull)
 {
 	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
-	
+
 	e.csqcprojectile_clientanimate = clientanimate;
-	
+
 	if(e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
 	{
 		if(e.gravity == 0)
@@ -127,5 +109,43 @@ void UpdateCSQCProjectileNextFrame(entity e)
 		e.csqcprojectile_oldnextthink = e.nextthink;
 		e.think = CSQCProjectile_Update_Think;
 		e.nextthink = time;
+	}
+}
+
+void ProjInfo_Send(void) {
+	float i;
+
+	WriteByte(MSG_ENTITY, projinfo_highest_registered);
+
+	for(i = 0; i <= projinfo_highest_registered; ++i) {
+		float type = projinfo_type[i];
+
+		WriteByte(MSG_ENTITY, type);
+
+		switch(type) {
+			case PROJINFO_TYPE_UNREGISTERED:
+			case PROJINFO_TYPE_POINT_000:
+			case PROJINFO_TYPE_POINT_00n3:
+				break;
+
+			case PROJINFO_TYPE_UNCENTERED: {
+				vector pmaxs = projinfo_mins[i];
+				WriteCoord(MSG_ENTITY, pmaxs_x);
+				WriteCoord(MSG_ENTITY, pmaxs_y);
+				WriteCoord(MSG_ENTITY, pmaxs_z);
+			} // intended fallthrough
+
+			case PROJINFO_TYPE_POINT:
+			case PROJINFO_TYPE_CENTERED: {
+				vector pmins = projinfo_mins[i];
+				WriteCoord(MSG_ENTITY, pmins_x);
+				WriteCoord(MSG_ENTITY, pmins_y);
+				WriteCoord(MSG_ENTITY, pmins_z);
+			} break;
+
+			default: {
+				error(strcat("Invalid ProjInfo type ", ftos(type)));
+			}
+		}
 	}
 }

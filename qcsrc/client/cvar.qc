@@ -16,8 +16,8 @@ var void() read_cvars;
 #undef READ_CVARS_SECTION
 #undef READ_CVARS_END
 
-#define CACHE_CVAR(x) autocvar_##x = cvar(#x)
-#define CACHE_CVAR_DEF(x) autocvar_##x = cvar(#x)
+#define CACHE_CVAR(x) autocvar_##x = cvar(#x);
+#define CACHE_CVAR_DEF(x) autocvar_##x = cvar(#x);
 #define CACHE_CVAR_VEC(x) autocvar_##x = stov(cvar_string(#x));
 #define READ_CVARS_BEGIN(x,y) void read_cvars_##y(); void read_cvars_##x() {
 #define READ_CVARS_SECTION(x,y) read_cvars = read_cvars_##x; } void read_cvars_##y(); void read_cvars_##x() {
