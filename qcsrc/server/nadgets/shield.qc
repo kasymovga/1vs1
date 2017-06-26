@@ -19,14 +19,12 @@ float g_nadgets_shield_immobile;
 float g_nadgets_shield_health;
 float g_nadgets_shield_diminish;
 
-#if 0
 void HG_Shield_Discharge_Arc(entity targ, entity attacker, float damage) {
     ArcDamage(targ, attacker, damage, HG_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
         g_nadgets_shield_damage_store_arc_range, g_nadgets_shield_damage_store_arc,
         g_nadgets_shield_damage_store_arc_pushback, COLOR_TEAM3, shield_arc_hit
     );
 }
-#endif
 
 void HG_Shield_Discharge_Think(void) {
     entity targ;
@@ -78,11 +76,9 @@ void HG_Shield_Discharge_Think(void) {
     //W_SetHitscanVisuals(self.owner, end);
     W_Zapper_Attack2_Effect((teams_matter ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
 
-#if 0
     if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (IsDifferentTeam(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
         HG_Shield_Discharge_Arc(targ, self.owner, damage);
     }
-#endif
 
     self.nextthink = time + g_nadgets_shield_damage_store_burstdelay;
 }
@@ -111,12 +107,10 @@ void HG_Shield_Trigger(void) {
 		self = oldself;
     }
 
-#if 0
-    if(!Buffs_Present(self, BUFF_ADEPT) || self.hg_shield_stored <= 0) {
+    // if(!Buffs_Present(self, BUFF_ADEPT) || self.hg_shield_stored <= 0) {
         self.hg_shield = 0;
         stopsound(self, CHAN_AUTO);
-    }
-#endif
+    // }
 }
 
 #if 0

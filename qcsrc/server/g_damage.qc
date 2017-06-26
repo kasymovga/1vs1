@@ -40,6 +40,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
 	WriteShort(MSG_ENTITY, self.oldorigin_x);
+	WriteByte(MSG_ENTITY, self.team);
 	return TRUE;
 }
 
@@ -61,8 +62,11 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-
 	e.oldorigin_x = compressShortVector(e.velocity);
+
+	if(teams_matter) {
+		e.team = dmgowner.team;
+	}
 
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -1324,16 +1328,16 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
 #if 0
     float silent = (healtype == DEATH_ITEM);
 #endif
-    
+
     if(pauserot  < 0) pauserot  = g_balance_pause_health_rot;
     if(pausearot < 0) pausearot = g_balance_pause_armor_rot;
-    
+
 	heal  = max(0, min(heal,  hlimit - targ.health));
 	aheal = max(0, min(aheal, alimit - targ.armorvalue));
 
     targ.health += heal;
     targ.pauserothealth_finished = max(targ.pauserothealth_finished, time + pauserot);
-    
+
     targ.armorvalue += aheal;
     targ.pauserotarmor_finished = max(targ.pauserotarmor_finished, time + pausearot);
 
@@ -1345,16 +1349,16 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
     if(heal || aheal) {
 #if 0
         float vdtype = VDMG_TYPE_HEAL;
-        
+
         if(heal >= 100 || aheal >= 100)
             vdtype |= VDMG_TYPE_CRIT;
         else if(DEATH_ISWEAPON(healtype, WEP_CAMPINGRIFLE) && (healtype & HITTYPE_HEADSHOT))
             vdtype |= VDMG_TYPE_CRIT;
-        
+
         VisualDamage(healer, targ, heal, aheal, vdtype, hitloc);
         HealScore(targ, healer, heal + aheal);
 #endif
-        
+
 #if 0
         if(!silent) {
 #endif
@@ -1362,14 +1366,14 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
                 //te_heal(targ);
                 targ.heal_next_particle = time + 0.2;
             }
-            
+
             if(heal)  sound(targ, CHAN_AUTO, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);
             if(aheal) sound(targ, CHAN_AUTO, "misc/armor10.wav", VOL_BASE, ATTN_NORM);
 #if 0
         }
 #endif
     }
-   
+
     // apply push
     if(targ.damageforcescale)
     if(vlen(force)) {
@@ -1378,4 +1382,92 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
     }
 
     return heal + aheal;
+}
+
+void ArcEffect(vector from, vector to, float t) {
+    // te_csqc_lightningarc(from, to, TRUE, t);
+    // W_Zapper_Attack2_Effect(t, from, to);
+    te_csqc_lightningarc(from, to);
+}
+
+void ArcDamage_Recurse(entity targ, entity attacker, float damage, float deathtype,
+                       vector arcoffset, float range, float mul, float force, float default_color,
+                       float targetTeamMates, float targetFrozen, float targetAlive, .float hitfield) {
+    entity oldself = self;
+    entity plr, newtarget;
+    float dist, shortest;
+
+    if(targetFrozen)
+        damage = 1;
+    else
+        damage = damage * mul;
+
+    if(damage < 1)
+        return;
+
+    newtarget = world;
+    shortest = range;
+    targ.hitfield = TRUE;
+
+    FOR_EACH_PLAYER(plr)
+    if(plr != attacker)
+    if(plr != targ)
+    if(plr.deadflag == DEAD_NO || (plr.deadflag == DEAD_FREEZE && targetFrozen))
+    if(!plr.hg_stealth || (targetTeamMates && plr.team == attacker.team))
+    if(!plr.hitfield) {
+        float sameteam = (teams_matter && plr.team == attacker.team);
+        if((!sameteam && (((plr.deadflag != DEAD_FREEZE) && targetAlive) || ((plr.deadflag == DEAD_FREEZE) && targetFrozen))) || (sameteam && targetTeamMates)) {
+            dist = vlen(plr.origin - targ.origin);
+            if(dist < shortest) {
+                traceline(targ.origin + arcoffset, plr.origin + arcoffset, MOVE_NORMAL, world);
+
+                if(trace_fraction < 1 && trace_ent == plr) {
+                    shortest = dist;
+                    newtarget = plr;
+                }
+            }
+        }
+    }
+
+    if(newtarget) {
+        ArcEffect(targ.origin + arcoffset, newtarget.origin + arcoffset,
+                  (targetTeamMates ? 0 : (teams_matter ? attacker.team : default_color)));
+
+        Damage(newtarget, attacker, attacker, damage, deathtype, '0 0 0',
+               normalize(newtarget.origin - targ.origin) * force);
+
+        ArcDamage_Recurse(newtarget, attacker, damage, deathtype, arcoffset, range, mul, force,
+                          default_color, targetTeamMates, targetFrozen, targetAlive, hitfield);
+
+        if(targetTeamMates)
+            sound(newtarget, CHAN_PROJECTILE, "kh/capture.wav", 0.4, ATTN_NORM);
+        else
+            sound(newtarget, CHAN_PROJECTILE, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"),
+                  VOL_BASE, ATTN_NORM * 0.3);
+    }
+
+    self = oldself;
+}
+
+void ArcDamage(entity targ, entity attacker, float damage, float deathtype,
+               float range, float mul, float force, float default_color, .float hitfield) {
+
+#if 0
+    float targetTeamMates = (teams_matter && Buffs_Present(attacker, BUFF_MEDIC) && targ.team == attacker.team);
+#else
+    float targetTeamMates = 0;
+#endif
+
+    if(teams_matter && targ.team == attacker.team && !targetTeamMates)
+        return;
+
+    float targetFrozen = (targ.deadflag == DEAD_FREEZE) && !targetTeamMates;
+    float targetAlive = !targetFrozen && !targetTeamMates;
+
+    ArcDamage_Recurse(targ, attacker, damage, deathtype,
+                      attacker.maxs_z * '0 0 0.5', range, mul, force, default_color,
+                      targetTeamMates, targetFrozen, targetAlive, hitfield);
+
+    entity e; for(e = world; (e = findfloat(e, hitfield, TRUE));)
+        e.hitfield = FALSE;
 }

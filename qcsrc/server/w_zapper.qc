@@ -16,11 +16,9 @@ float g_balance_zapper_primary_ticrate;
 float g_balance_zapper_secondary;
 float g_balance_zapper_secondary_accumulate;
 float g_balance_zapper_secondary_ammo;
-#if 0
 float g_balance_zapper_secondary_arc;
 float g_balance_zapper_secondary_arc_force;
 float g_balance_zapper_secondary_arc_range;
-#endif
 float g_balance_zapper_secondary_charge_time;
 float g_balance_zapper_secondary_damage;
 float g_balance_zapper_secondary_damagefalloff_forcehalflife;
@@ -45,7 +43,7 @@ float g_balance_zapper_secondary_refire;
 .float zapper_expire;
 .float zapper_lastdmg;
 .float zapper_dmgdelay;
-//.float zapper_arc_hit;
+.float zapper_arc_hit;
 .float zapper_heat;
 .float zapper_coolofftime;
 .float zapper_accumulate;
@@ -244,26 +242,26 @@ void W_Zapper_Beam_Think(void) {
     float dt = time - self.zapper_lastdmg;
     float rate = W_WeaponRateFactorFor(o);
     float damageIsDps = FALSE;
-    
+
     if(dt < frametime)
     if(almost_equals(dt, frametime))
         dt = frametime;
-    
+
     float wantedTicrate = self.zapper_dmgdelay * rate;
-    
+
     if(wantedTicrate <= 0) {
         wantedTicrate = dt;
         damageIsDps = TRUE;
-    }    
+    }
     for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
         float damage = g_balance_zapper_primary_damage;
         float force  = g_balance_zapper_primary_force;
-        
+
         if(damageIsDps) {
             damage = damage * wantedTicrate;
             force = force * wantedTicrate;
         }
-        
+
 		//RM Feature that Rexuiz dont have
         //W_Accuracy_RegisterShot(o, o.weapon);
         //W_Accuracy_RegisterHit(o, targ, o.weapon);
@@ -332,7 +330,7 @@ void W_Zapper_Attack1(void) {
     e.zapper_expire = time + g_balance_zapper_primary_lifetime;
     e.zapper_dmgdelay = g_balance_zapper_primary_ticrate;
     e.zapper_lastdmg = time - e.zapper_dmgdelay * W_WeaponRateFactor();
-    
+
     Net_LinkEntity(e, FALSE, 0, W_Zapper_Beam_Send);
 
     self.zapper_beam = e;
@@ -346,7 +344,7 @@ void W_Zapper_Attack1(void) {
 void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
     WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
     WriteByte(MSG_BROADCAST, TE_CSQC_ZAPPERLIGHTNING);
-    
+
     WriteByte(MSG_BROADCAST, ateam);
     WriteCoord(MSG_BROADCAST, from_x);
     WriteCoord(MSG_BROADCAST, from_y);
@@ -356,7 +354,6 @@ void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
     WriteCoord(MSG_BROADCAST, to_z);
 }
 
-#if 0
 void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
     float arc = g_balance_zapper_secondary_arc;
 
@@ -368,7 +365,6 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
         g_balance_zapper_secondary_arc_force, COLOR_TEAM2, zapper_arc_hit
     );
 }
-#endif
 
 void W_Zapper_Attack2(void) {
     float accum_time = g_balance_zapper_secondary_accumulate;
@@ -386,7 +382,7 @@ void W_Zapper_Attack2(void) {
 
     makevectors(self.v_angle);
     W_SetupShot(self, TRUE, 5, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"), damage);
-    
+
     entity targ;
     vector end = w_shotorg + w_shotdir * range;
     //entity pts = Buffs_MEODP_Hitscan_Begin(self);
@@ -413,10 +409,8 @@ void W_Zapper_Attack2(void) {
         damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
         force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
 
-#if 0
         if(targ.iscreature)
             W_Zapper_Attack2_Arc(targ, self, damage);
-#endif
 
 		entity o = Akimbo_Owner(self);
         Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * w_shotdir);
@@ -765,11 +759,9 @@ float w_zapper(float req) {
 		CACHE_CVAR(g_balance_zapper_secondary);
 		CACHE_CVAR(g_balance_zapper_secondary_accumulate);
 		CACHE_CVAR(g_balance_zapper_secondary_ammo);
-		#if 0
 		CACHE_CVAR(g_balance_zapper_secondary_arc);
 		CACHE_CVAR(g_balance_zapper_secondary_arc_force);
 		CACHE_CVAR(g_balance_zapper_secondary_arc_range);
-		#endif
 		CACHE_CVAR(g_balance_zapper_secondary_charge_time);
 		CACHE_CVAR(g_balance_zapper_secondary_damage);
 		CACHE_CVAR(g_balance_zapper_secondary_damagefalloff_forcehalflife);

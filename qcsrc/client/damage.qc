@@ -23,6 +23,8 @@ void Ent_DamageInfo(float isNew)
 	edge = ReadByte();
 	force = decompressShortVector(ReadShort());
 
+	self.team = ReadByte();
+
 	if not(isNew)
 		return;
 
@@ -33,7 +35,7 @@ void Ent_DamageInfo(float isNew)
 	}
 	else
 		forcemul = 1;
-	
+
 	for(self = findradius(org, rad); self; self = self.chain)
 	{
 		if(rad)
@@ -79,7 +81,7 @@ void Ent_DamageInfo(float isNew)
 	self = oldself;
 
 	// TODO spawn particle effects and sounds based on hittype
-	
+
 	if(!DEATH_ISSPECIAL(hittype))
 	{
 		float hitwep, secondary, bounce, headshot;

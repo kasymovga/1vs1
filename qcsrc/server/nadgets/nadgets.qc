@@ -80,6 +80,17 @@ void HG_PlayerClear(float killed) {
 	HG_PlayerClear_NextLink(killed);
 }
 
+var void() HG_GameHookChain_ObserverSpawn_Next;
+
+void HG_ObserverSpawn(void) {
+    self.hg_type1_picked = 0;
+    self.hg_type2_picked = 0;
+    self.hg_next1 = 0;
+    self.hg_next2 = 0;
+
+    HG_GameHookChain_ObserverSpawn_Next();
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -163,6 +174,9 @@ void HG_Init(void) {
 
     ProjInfo_RegisterAuto(PROJECTILE_HG_RAZE, '-16 -16 -3', '16 16 3');
     ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA_SHARD, '0 0 -3', '0 0 -3');
+
+    HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
+    GameHookChain_ObserverSpawn = HG_ObserverSpawn;
 }
 
 void HG_Precache(void) {
@@ -752,13 +766,26 @@ void HG_ForceDetonateAll(void) {
 }
 
 string HG_SelectableTypes(float issecondary) {
-    if(!g_nadgets_double)
-        return cvar_string("g_nadgets_type_selectable");
+    string types;
 
-    if(issecondary)
-        return cvar_string("g_nadgets_type_selectable_secondary");
+    if(!g_nadgets_double) {
+        types = cvar_string("g_nadgets_type_selectable");
+    } else if(issecondary) {
+        types = cvar_string("g_nadgets_type_selectable_secondary");
+    } else {
+        types = cvar_string("g_nadgets_type_selectable_primary");
+    }
 
-    return cvar_string("g_nadgets_type_selectable_primary");
+    if(types == "all") {
+        types = "";
+
+        #define HGDEF(id,shortname,longname,color) \
+            types = strcat(types, #shortname, " ");
+        HGDEFS
+        #undef HGDEF
+    }
+
+    return types;
 }
 
 void HG_WriteNadgetSelect(void) {
