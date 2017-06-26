@@ -1069,9 +1069,10 @@ set g_survive_monster_factor 0.5
 set g_survive 0
 
 set g_monster_boss1_health 3000
+set g_monster_ewheel_health 50
 set g_monster_flyingthing_health 100
 set g_monster_heavysoldier_health 100
 set g_monster_soldier_health 50
 set g_monster_spearguy_health 100
 set g_monster_spider_health 100
-set g_monster_walker_health 3000
+set g_monster_walker_health 500

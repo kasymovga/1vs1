@@ -124,12 +124,12 @@ teamplay.qc
 cl_physics.qc
 
 // tZork's libs
-verbstack.qc
+//verbstack.qc
 ../common/movelib.qc
-steerlib.qc
+//steerlib.qc
 ../common/cl_physics_spiderbot.qc
 ../common/cl_physics_aircraft.qc
-pathlib/pathlib.qh
+//pathlib/pathlib.qh
 
 g_world.qc
 g_casings.qc
@@ -261,4 +261,6 @@ monsters/heavysoldier.qc
 monsters/flyingthing.qc
 monsters/spider.qc
 monsters/boss1.qc
+monsters/walker.qc
+monsters/ewheel.qc
 survive.qc

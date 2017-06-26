@@ -1,4 +1,4 @@
-#define aircraft_spawnpnt wkr_spawn
+#define aircraft_spawnpnt enemy
 
 float g_vehicle_aircraft_crush_dmg;
 float g_vehicle_aircraft_crush_force;

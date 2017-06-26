@@ -18,7 +18,7 @@
 #define MODEL_SPIDERBOT_JUMP_END 155
 #define MODEL_SPIDERBOT_JUMP_LENGTH 31
 
-#define spiderbot_spawnpnt wkr_spawn
+#define spiderbot_spawnpnt enemy
 
 float g_vehicle_spiderbot_crush_dmg;
 float g_vehicle_spiderbot_crush_force;
