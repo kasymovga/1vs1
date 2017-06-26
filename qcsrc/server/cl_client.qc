@@ -411,6 +411,11 @@ float Client_customizeentityforclient()
 {
 	entity modelsource;
 
+	self.alpha = Player_CalculateAlpha(self, other);
+
+	if(self.alpha < 0)
+		return FALSE;
+
 	if(self.modelindex == 0)
 		return TRUE;
 

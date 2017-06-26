@@ -60,6 +60,25 @@ void HG_Cloak_PlayerFrame(void) {
     }
 }
 
+var float(entity plr, entity viewer, float palpha) HG_Cloak_PlayerAlphaMod_Next = { return palpha; }
+
+float HG_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
+    float sa = 1 - plr.hg_stealthalpha;
+
+    if(viewer && viewer != plr) {
+        if(
+            (teams_matter && viewer.team == plr.team) ||
+            // (viewer.hg_stealth && (!Buffs_Present(plr, BUFF_ADEPT) || Buffs_Present(viewer, BUFF_ADEPT))) ||
+            viewer.hg_stealth ||
+            viewer.classname != "player"
+        ) {
+            sa = 0.3 + 0.7 * sa;
+        }
+    }
+
+    return HG_Cloak_PlayerAlphaMod_Next(plr, viewer, sa * palpha);
+}
+
 HG_HOOKFUNCTION(cloak, Attack) {
     if(self.hg_stealth && !g_nadgets_cloak_usewhileactive)
         return HG_ATTACK_FAIL;
@@ -75,7 +94,12 @@ HG_HOOKFUNCTION(cloak, Init) {
 	CACHE_CVAR(g_nadgets_cloak_stealthrate);
 	CACHE_CVAR(g_nadgets_cloak_usewhileactive);
 	CACHE_CVAR(g_nadgets_cloak_unstealthrate);
+
     addstat(STAT_STEALTH, AS_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);
+
+    HG_Cloak_PlayerAlphaMod_Next = GameHookChain_PlayerAlphaMod;
+    GameHookChain_PlayerAlphaMod = HG_Cloak_PlayerAlphaMod;
+
     return HG_INIT_OK;
 }

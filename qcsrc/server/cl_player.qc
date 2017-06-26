@@ -264,7 +264,7 @@ void player_effects()
 
 	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
-	
+
 	self.alpha = default_player_alpha;
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
@@ -765,7 +765,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(!DEATH_ISSPECIAL(deathtype))
 	if(IsDifferentTeam(self, attacker))
 		valid_damage_for_weaponstats = 1;
-	
+
 	if(valid_damage_for_weaponstats)
 	{
 		dh = dh - max(self.health, 0);
@@ -1581,6 +1581,39 @@ void VoiceMessage(string type, string msg)
 
 	if (!flood)
 		PlayerSound(sample, CHAN_VOICE, voicetype);
+}
+
+float Player_CalculateAlpha(entity plr, entity viewer) {
+	plr = Akimbo_Owner(plr);
+	float dalpha = max(0.01, default_player_alpha);
+
+	if(plr.classname == "observer") {
+		if(plr == viewer) {
+			return dalpha;
+		}
+
+		return -1;
+	} else if(plr.classname == "spectator") {
+		return -1;
+	}
+
+	if(plr.deadflag) {
+		return dalpha;
+	}
+
+	if(viewer.classname == "spectator") {
+		viewer = viewer.enemy;
+	}
+
+	float sa = GameHookChain_PlayerAlphaMod(plr, viewer, dalpha);
+
+	if(plr == viewer && sa < 0.01) {
+		sa = 0.01;
+	} else if(sa <= 0) {
+		sa = -1;
+	}
+
+	return sa;
 }
 
 void Player_Init() {
