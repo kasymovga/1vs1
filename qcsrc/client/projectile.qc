@@ -283,7 +283,7 @@ void Ent_Projectile(float ignore)
 	//   effects
 	//
 	// projectiles don't send angles, because they always follow the velocity
-	
+
 	f = ReadByte();
 	self.count = (f & 0x80);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES;
@@ -334,6 +334,7 @@ void Ent_Projectile(float ignore)
 	if(f & 2)
 	{
 		self.cnt = ReadByte();
+		ProjInfo_AssertRegistered(self.cnt);
 
 		self.silent = (self.cnt & 0x80);
 		self.cnt = (self.cnt & 0x7F);
@@ -460,20 +461,10 @@ void Ent_Projectile(float ignore)
 			default:
 				break;
 		}
-		if (f & 4) {
-			self.mins_x = ReadChar();
-			self.mins_y = ReadChar();
-			self.mins_z = ReadChar();
-			if (f & 8) {
-				self.maxs_x = ReadChar();
-				self.maxs_y = ReadChar();
-				self.maxs_z = ReadChar();
-			} else
-				self.maxs = self.mins;
-		} else {
-			self.mins = '0 0 0';
-			self.maxs = '0 0 0';
-		}
+
+		self.mins = PROJINFO_PROPERTY(self.cnt, mins);
+		self.maxs = PROJINFO_PROPERTY(self.cnt, maxs);
+
 		if (f & 16)
 			self.team = ReadChar();
 		else
@@ -497,7 +488,7 @@ void Ent_Projectile(float ignore)
 
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
-	
+
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }
@@ -517,4 +508,49 @@ void Projectile_Precache()
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");
 	precache_sound("weapons/fireball_fly2.wav");
+}
+
+void ProjInfo_Read(void) {
+	float phighest = ReadByte();
+	float i;
+
+	for(i = 0; i <= phighest; ++i) {
+		float type = ReadByte();
+		vector pmins = '0 0 0';
+		vector pmaxs = '0 0 0';
+
+		switch(type) {
+			case PROJINFO_TYPE_UNREGISTERED:
+			case PROJINFO_TYPE_POINT_000:
+				break;
+
+			case PROJINFO_TYPE_POINT_00n3: {
+				pmins = pmaxs = '0 0 -3';
+			} break;
+
+			case PROJINFO_TYPE_UNCENTERED: {
+				pmaxs_x = ReadCoord();
+				pmaxs_y = ReadCoord();
+				pmaxs_z = ReadCoord();
+			} // intended fallthrough
+
+			case PROJINFO_TYPE_POINT:
+			case PROJINFO_TYPE_CENTERED: {
+				pmins_x = ReadCoord();
+				pmins_y = ReadCoord();
+				pmins_z = ReadCoord();
+
+				switch(type) {
+					case PROJINFO_TYPE_POINT: pmaxs = pmins; break;
+					case PROJINFO_TYPE_CENTERED:  pmaxs = pmins * -1; break;
+				}
+			} break;
+
+			default: {
+				error(strcat("Invalid ProjInfo type ", ftos(type)));
+			}
+		}
+
+		ProjInfo_Register(i + 1, type, pmins, pmaxs);
+	}
 }

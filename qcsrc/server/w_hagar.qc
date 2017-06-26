@@ -197,6 +197,9 @@ float w_hagar(float req)
 		CACHE_CVAR(g_balance_hagar_secondary_refire);
 		CACHE_CVAR(g_balance_hagar_secondary_speed);
 		CACHE_CVAR(g_balance_hagar_secondary_spread);
+
+		ProjInfo_RegisterAuto(PROJECTILE_HAGAR, '0 0 0', '0 0 0');
+		ProjInfo_RegisterAuto(PROJECTILE_HAGAR_BOUNCING, '0 0 0', '0 0 0');
 	}
 	return TRUE;
 };

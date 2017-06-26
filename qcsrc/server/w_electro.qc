@@ -489,6 +489,9 @@ float w_electro(float req)
 		CACHE_CVAR(g_balance_electro_secondary_speed);
 		CACHE_CVAR(g_balance_electro_secondary_speed_up);
 		CACHE_CVAR(g_balance_electro_secondary_spread);
+
+		ProjInfo_RegisterAuto(PROJECTILE_ELECTRO, '0 0 -3', '0 0 -3');
+		ProjInfo_RegisterAuto(PROJECTILE_ELECTRO_BEAM, '0 0 -3', '0 0 -3');
 	}
 	return TRUE;
 };

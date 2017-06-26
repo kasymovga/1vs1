@@ -2,7 +2,8 @@ SV_SOURCES=$(shell find qcsrc/server qcsrc/common -type f -regextype posix-egrep
 CL_SOURCES=$(shell find qcsrc/client qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
 MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)')
 SET_CURL_PACKAGE=yes
-FTEQCC=fteqcc
+QCC=fteqcc
+QCCFLAGS=-O3
 MOD_NAME=1vs1
 SV_PROGNAME=$(MOD_NAME).dat
 CL_PROGNAME=cl_$(MOD_NAME).dat
@@ -12,15 +13,15 @@ PK3_NAME=cl_$(MOD_NAME)
 all: $(SV_PROGNAME) $(CL_PROGNAME) menu.dat cl.pk3 $(CFG_NAME)
 
 $(SV_PROGNAME) : $(SV_SOURCES)
-	cd qcsrc/server && $(FTEQCC) -O3
+	cd qcsrc/server && $(QCC) $(QCCFLAGS)
 	mv -f qcsrc/server/progs.dat $(SV_PROGNAME)
 
 $(CL_PROGNAME) : $(CL_SOURCES)
-	cd qcsrc/client && $(FTEQCC) -O3
+	cd qcsrc/client && $(QCC) $(QCCFLAGS)
 	mv -f qcsrc/client/csprogs.dat $(CL_PROGNAME)
 
 menu.dat : $(MENU_SOURCES)
-	cd qcsrc/menu && $(FTEQCC) -O3
+	cd qcsrc/menu && $(QCC) $(QCCFLAGS)
 	mv -f qcsrc/menu/menu.dat menu.dat
 
 $(CFG_NAME) : cfg/config.in Makefile

@@ -277,6 +277,9 @@ float w_glauncher(float req)
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed_up);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary);
+
+		ProjInfo_RegisterAuto(PROJECTILE_GRENADE, '0 0 -3', '0 0 -3');
+		ProjInfo_RegisterAuto(PROJECTILE_GRENADE_BOUNCING, '0 0 -3', '0 0 -3');
 	}
 	return TRUE;
 };

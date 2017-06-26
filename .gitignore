@@ -1,0 +1,10 @@
+*.swp
+*.kate-swp
+*.dat
+*.lno
+*.log
+*.asm
+*.cfg
+*.pk3
+*~
+*.sublime-workspace

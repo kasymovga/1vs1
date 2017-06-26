@@ -320,6 +320,9 @@ float w_crylink(float req)
 		CACHE_CVAR(g_balance_crylink_secondary_shots);
 		CACHE_CVAR(g_balance_crylink_secondary_speed);
 		CACHE_CVAR(g_balance_crylink_secondary_spread);
+
+		ProjInfo_RegisterAuto(PROJECTILE_CRYLINK, '0 0 0', '0 0 0');
+		ProjInfo_RegisterAuto(PROJECTILE_CRYLINK_BOUNCING, '0 0 0', '0 0 0');
 	}
 	return TRUE;
 };

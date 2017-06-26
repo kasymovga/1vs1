@@ -282,6 +282,9 @@ float w_porto(float req)
 		CACHE_CVAR(g_balance_porto_primary_refire);
 		CACHE_CVAR(g_balance_porto_primary_speed);
 		CACHE_CVAR(g_balance_powerup_strength_force);
+
+		ProjInfo_RegisterAuto(PROJECTILE_PORTO_RED, '0 0 0', '0 0 0');
+		ProjInfo_RegisterAuto(PROJECTILE_PORTO_BLUE, '0 0 0', '0 0 0');
 	}
 	return TRUE;
 };

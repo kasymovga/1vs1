@@ -1,0 +1,30 @@
+
+#define PROJINFO_ENABLE_ASSERTIONS
+
+enum {
+    PROJINFO_TYPE_UNREGISTERED,
+    PROJINFO_TYPE_POINT,        // mins == maxs
+    PROJINFO_TYPE_POINT_000,    // mins == maxs == '0  0  0'
+    PROJINFO_TYPE_POINT_00n3,   // mins == maxs == '0  0 -3'
+    PROJINFO_TYPE_CENTERED,     // mins == -maxs
+    PROJINFO_TYPE_UNCENTERED,   // mins != maxs && mins != -maxs
+};
+
+float projinfo_type[NUM_PROJECTILES];
+vector projinfo_mins[NUM_PROJECTILES];
+vector projinfo_maxs[NUM_PROJECTILES];
+
+float projinfo_highest_registered;
+
+void ProjInfo_Register(float csqcid, float entrytype, vector mins, vector maxs);
+void ProjInfo_RegisterAuto(float csqcid, vector mins, vector maxs);
+
+#ifdef PROJINFO_ENABLE_ASSERTIONS
+void ProjInfo_AssertRegistered(float csqcid);
+void ProjInfo_AssertUnregistered(float csqcid);
+#else
+#define ProjInfo_AssertRegistered(csqcid)
+#define ProjInfo_AssertUnregistered(csqcid)
+#endif
+
+#define PROJINFO_PROPERTY(csqcid,property) projinfo_##property[(csqcid) - 1]

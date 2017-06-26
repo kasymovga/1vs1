@@ -266,6 +266,8 @@ float w_hlac(float req)
 		CACHE_CVAR(g_balance_hlac_secondary_speed);
 		CACHE_CVAR(g_balance_hlac_secondary_spread);
 		CACHE_CVAR(g_balance_hlac_secondary_spread_crouchmod);
+
+		ProjInfo_RegisterAuto(PROJECTILE_HLAC, '0 0 0', '0 0 0');
 	}
 	return TRUE;
 };

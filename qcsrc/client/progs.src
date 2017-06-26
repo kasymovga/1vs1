@@ -10,6 +10,7 @@ csqc_builtins.qc
 ../common/items.qh
 ../common/extensions.qh
 
+../common/projinfo.qh
 ../common/mapinfo.qh
 ../common/cl_physics.qh
 ../common/cl_physics_spiderbot.qh
@@ -74,6 +75,7 @@ prandom.qc
 bgmscript.qc
 
 ../common/util.qc
+../common/projinfo.qc
 ../common/gamecommand.qc
 ../common/mapinfo.qc
 ../common/items.qc

@@ -24,6 +24,7 @@ campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
 ../common/util.qc
+../common/projinfo.qh
 
 ../common/dlc.qh
 dlc.qh
@@ -246,6 +247,7 @@ location_request.qc
 
 vehicles/vehicles.qc
 
+../common/projinfo.qc
 ../common/dlc.qc
 dlc.qc
 nadgets/include.qc
