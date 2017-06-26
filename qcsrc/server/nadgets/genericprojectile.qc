@@ -157,8 +157,10 @@ void HG_GenericProjectile_Touch(void) {
 
     if(SUB_NoImpactCheck()) {
         if(self.hg_type == HG_TRANSLOC || self.hg_type == HG_RAZE) {
-            if(trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+            if(trace_dphitcontents & DPCONTENTS_PLAYERCLIP) {
+                UpdateCSQCProjectileNextFrame(self);
                 goto troll;
+            }
             self.use();
             return;
         }
