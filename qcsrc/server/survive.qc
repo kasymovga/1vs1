@@ -144,6 +144,7 @@ float survive_WinningCondition() {
 	monster = find(world, classname, "monster");
 	if not(monster)
 	for (e = world; (e = find(e, targetname, wave_string()));) {
+		if (strstrofs(e.classname, "_spawn", 0) > 0)
 		if (e.nextthink) {
 			monster = e;
 			break;
@@ -152,6 +153,7 @@ float survive_WinningCondition() {
 	float i;
 	for (i = 1; !monster && i <= wave_number; i++)
 	for (e = world; (e = find(e, targetname, strcat("wavefrom", ftos(i)))); ) {
+		if (strstrofs(e.classname, "_spawn", 0) > 0)
 		if (e.nextthink) {
 			monster = e;
 			break;
@@ -159,6 +161,7 @@ float survive_WinningCondition() {
 	}
 	for (i = wave_number; !monster && i >= 1; i--)
 	for (e = world; (e = find(e, targetname, strcat("waveto", ftos(i)))); ) {
+		if (strstrofs(e.classname, "_spawn", 0) > 0)
 		if (e.nextthink) {
 			monster = e;
 			break;
