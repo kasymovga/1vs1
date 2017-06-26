@@ -23,7 +23,7 @@ void SUB_Stop()
 void SetupProjectileColormap(float default_team) {
     if(!teamplay)
         self.team = default_team;
-    self.colormap = 1024 + self.team * 17;
+    self.colormap = 1024 + (self.team - 1) * 17;
 }
 
 .float nextparticle;
@@ -357,6 +357,12 @@ void Ent_Projectile(float ignore)
 		self.cnt = ReadByte();
 		ProjInfo_AssertRegistered(self.cnt);
 
+		if (f & 16) {
+			self.team = ReadChar();
+		} else {
+			self.team = 0;
+		}
+
 		self.silent = (self.cnt & 0x80);
 		self.cnt = (self.cnt & 0x7F);
 
@@ -485,11 +491,6 @@ void Ent_Projectile(float ignore)
 
 		self.mins = PROJINFO_PROPERTY(self.cnt, mins);
 		self.maxs = PROJINFO_PROPERTY(self.cnt, maxs);
-
-		if (f & 16)
-			self.team = ReadChar();
-		else
-			self.team = 0;
 	}
 
     if(f & 4) {

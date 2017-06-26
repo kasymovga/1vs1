@@ -40,6 +40,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
 	WriteShort(MSG_ENTITY, self.oldorigin_x);
+	WriteByte(MSG_ENTITY, self.team);
 	return TRUE;
 }
 
@@ -61,8 +62,11 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-
 	e.oldorigin_x = compressShortVector(e.velocity);
+
+	if(teams_matter) {
+		e.team = dmgowner.team;
+	}
 
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -1324,16 +1328,16 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
 #if 0
     float silent = (healtype == DEATH_ITEM);
 #endif
-    
+
     if(pauserot  < 0) pauserot  = g_balance_pause_health_rot;
     if(pausearot < 0) pausearot = g_balance_pause_armor_rot;
-    
+
 	heal  = max(0, min(heal,  hlimit - targ.health));
 	aheal = max(0, min(aheal, alimit - targ.armorvalue));
 
     targ.health += heal;
     targ.pauserothealth_finished = max(targ.pauserothealth_finished, time + pauserot);
-    
+
     targ.armorvalue += aheal;
     targ.pauserotarmor_finished = max(targ.pauserotarmor_finished, time + pausearot);
 
@@ -1345,16 +1349,16 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
     if(heal || aheal) {
 #if 0
         float vdtype = VDMG_TYPE_HEAL;
-        
+
         if(heal >= 100 || aheal >= 100)
             vdtype |= VDMG_TYPE_CRIT;
         else if(DEATH_ISWEAPON(healtype, WEP_CAMPINGRIFLE) && (healtype & HITTYPE_HEADSHOT))
             vdtype |= VDMG_TYPE_CRIT;
-        
+
         VisualDamage(healer, targ, heal, aheal, vdtype, hitloc);
         HealScore(targ, healer, heal + aheal);
 #endif
-        
+
 #if 0
         if(!silent) {
 #endif
@@ -1362,14 +1366,14 @@ float Heal(entity targ, entity inflictor, entity healer, float heal, float aheal
                 //te_heal(targ);
                 targ.heal_next_particle = time + 0.2;
             }
-            
+
             if(heal)  sound(targ, CHAN_AUTO, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);
             if(aheal) sound(targ, CHAN_AUTO, "misc/armor10.wav", VOL_BASE, ATTN_NORM);
 #if 0
         }
 #endif
     }
-   
+
     // apply push
     if(targ.damageforcescale)
     if(vlen(force)) {
