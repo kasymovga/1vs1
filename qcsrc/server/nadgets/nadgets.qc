@@ -766,13 +766,26 @@ void HG_ForceDetonateAll(void) {
 }
 
 string HG_SelectableTypes(float issecondary) {
-    if(!g_nadgets_double)
-        return cvar_string("g_nadgets_type_selectable");
+    string types;
 
-    if(issecondary)
-        return cvar_string("g_nadgets_type_selectable_secondary");
+    if(!g_nadgets_double) {
+        types = cvar_string("g_nadgets_type_selectable");
+    } else if(issecondary) {
+        types = cvar_string("g_nadgets_type_selectable_secondary");
+    } else {
+        types = cvar_string("g_nadgets_type_selectable_primary");
+    }
 
-    return cvar_string("g_nadgets_type_selectable_primary");
+    if(types == "all") {
+        types = "";
+
+        #define HGDEF(id,shortname,longname,color) \
+            types = strcat(types, #shortname, " ");
+        HGDEFS
+        #undef HGDEF
+    }
+
+    return types;
 }
 
 void HG_WriteNadgetSelect(void) {
