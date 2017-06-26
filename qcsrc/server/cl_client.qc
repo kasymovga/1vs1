@@ -411,6 +411,11 @@ float Client_customizeentityforclient()
 {
 	entity modelsource;
 
+	self.alpha = Player_CalculateAlpha(self, other);
+
+	if(self.alpha < 0)
+		return FALSE;
+
 	if(self.modelindex == 0)
 		return TRUE;
 
@@ -557,7 +562,7 @@ void PutObserverInServer(float frags_team_reset)
 {
 	entity	spot;
 
-	GameHook_ObserverSpawn();
+	GameHookChain_ObserverSpawn();
 	PlayerClear(FALSE);
 
 	spot = SelectSpawnPoint (TRUE);

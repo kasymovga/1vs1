@@ -272,8 +272,17 @@ float CL_Weaponentity_CustomizeEntityForClient()
 	if(other.classname == "spectator")
 		if(other.enemy == self.viewmodelforclient)
 			self.viewmodelforclient = other;
-	return TRUE;
+
+    self.alpha = Player_CalculateAlpha(self.viewmodelforclient, world);
+	return (self.alpha > 0);
 }
+
+float CL_ExterioirWeaponentity_CustomizeEntityForClient()
+{
+    self.alpha = Player_CalculateAlpha(self.owner, other);
+    return (self.alpha > 0);
+}
+
 
 /*
  * supported formats:
@@ -485,11 +494,6 @@ void CL_Weaponentity_Think()
 	self.effects &~= EF_FULLBRIGHT; // can mask team color, so get rid of it
 	self.effects &~= EF_TELEPORT_BIT;
 	self.effects |= tb;
-
-	if(self.owner.alpha != 0)
-		self.alpha = self.owner.alpha;
-	else
-		self.alpha = 1;
 
 	self.colormap = self.owner.colormap;
 	if (self.weaponentity)
@@ -706,10 +710,6 @@ void CL_ExteriorWeaponentity_Think()
 	}
 	self.effects = self.owner.effects | EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
-	if(self.owner.alpha != 0)
-		self.alpha = self.owner.alpha;
-	else
-		self.alpha = 1;
 
 	self.colormap = self.owner.colormap;
 };
@@ -738,6 +738,7 @@ void CL_SpawnWeaponentity()
 	setorigin(self.exteriorweaponentity, '0 0 0');
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
+	self.exteriorweaponentity.customizeentityforclient = CL_ExterioirWeaponentity_CustomizeEntityForClient;
 	self.exteriorweaponentity.nextthink = time;
 };
 
@@ -865,6 +866,10 @@ void weapon_setup(float windex)
 // perform weapon to attack (weaponstate and attack_finished check is here)
 float weapon_prepareattack(float secondary, float attacktime)
 {
+	if(!GameHookChain_WeaponPrepareAttack(secondary, attacktime)) {
+		return FALSE;
+	}
+
 	if(attacktime >= 0)
 	{
 		// don't fire if previous attack is not finished

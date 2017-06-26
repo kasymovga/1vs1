@@ -22,6 +22,7 @@ void Hat_Spawn(entity spot) {
 	setattachment(self.hat, self, sv_player_hat_attachment);
 	self.hat.angles = sv_player_hat_angles;
 	setorigin(self.hat, sv_player_hat_origin);
+	self.hat.customizeentityforclient = CL_ExterioirWeaponentity_CustomizeEntityForClient;
 	Hat_Spawn_NextLink(spot);
 }
 

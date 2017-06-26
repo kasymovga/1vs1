@@ -1,18 +1,23 @@
 .float csqcprojectile_type;
+.float csqcprojectile_sendangles;
 
 float CSQCProjectile_SendEntity(entity to, float sf)
 {
-	// note: flag 0x20 = no trail please
-	sf = sf & 0x3F;
+	// note: flag 32 = no trail please
+	sf = sf & 63;
 
-	if(self.csqcprojectile_clientanimate)
-		sf |= 0x80; // client animated, not interpolated
+	if(self.csqcprojectile_clientanimate) {
+        sf &~= 4;
+		sf |= 128; // client animated, not interpolated
+    } else if(!self.csqcprojectile_sendangles) {
+        sf &~= 4;
+    }
 
-	if(self.flags & FL_ONGROUND)
-		sf |= 0x40;
+	if(self.flags & FL_ONGROUND) {
+		sf |= 64;
+	}
 
-	if (sf & 16)
-	if (self.team <= 0) {
+	if(self.team <= 0) {
 		sf &~= 16;
 	}
 
@@ -25,7 +30,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
 
-		if(sf & 0x80)
+		if(sf & 128)
 		{
 			WriteCoord(MSG_ENTITY, self.velocity_x);
 			WriteCoord(MSG_ENTITY, self.velocity_y);
@@ -36,9 +41,15 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 
 	if(sf & 2) {
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
-		if (sf & 16)
+		if(sf & 16)
 			WriteChar(MSG_ENTITY, self.team);
 	}
+
+    if(sf & 4) {
+        WriteCoord(MSG_ENTITY, self.angles_x);
+        WriteCoord(MSG_ENTITY, self.angles_y);
+        WriteCoord(MSG_ENTITY, self.angles_z);
+    }
 
 	return 1;
 }
@@ -79,6 +90,16 @@ void UpdateCSQCProjectile(entity e)
 		// send new origin data
 		e.SendFlags |= 1;
 	}
+}
+
+void UpdateCSQCProjectileAngles(entity e)
+{
+    if(e.SendEntity == CSQCProjectile_SendEntity)
+    {
+        // send new angles data (does nothing in predictive mode)
+        e.SendFlags |= 4;
+        e.csqcprojectile_sendangles = TRUE;
+    }
 }
 
 void UpdateCSQCProjectileAfterTeleport(entity e)

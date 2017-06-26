@@ -1,3 +1,5 @@
 var void remove(entity e);
 void objerror(string s);
 void play2all(string samp);
+
+float Player_CalculateAlpha(entity plr, entity viewer);

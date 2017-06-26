@@ -4,6 +4,7 @@ float g_nadgets_cloak_damagereduction_time;
 float g_nadgets_cloak_stealthrate;
 float g_nadgets_cloak_usewhileactive;
 float g_nadgets_cloak_unstealthrate;
+float g_nadgets_cloak_actiondelay;
 
 void HG_Cloak(void) {
     self.hg_stealth = self.hg_stealth + g_nadgets_cloak_duration/* * Buffs_NadgetPower(self)*/;
@@ -60,6 +61,39 @@ void HG_Cloak_PlayerFrame(void) {
     }
 }
 
+var float(entity plr, entity viewer, float palpha) HG_Cloak_PlayerAlphaMod_Next;
+
+float HG_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
+    float sa = 1 - plr.hg_stealthalpha;
+
+    if(viewer && viewer != plr) {
+        if(
+            (teams_matter && viewer.team == plr.team) ||
+            // (viewer.hg_stealth && (!Buffs_Present(plr, BUFF_ADEPT) || Buffs_Present(viewer, BUFF_ADEPT))) ||
+            viewer.hg_stealth ||
+            viewer.classname != "player"
+        ) {
+            sa = 0.3 + 0.7 * sa;
+        }
+    }
+
+    return HG_Cloak_PlayerAlphaMod_Next(plr, viewer, sa * palpha);
+}
+
+var float(float secondary, float attacktime) HG_Cloak_WeaponPrepareAttack_Next;
+
+float HG_Cloak_WeaponPrepareAttack(float secondary, float attacktime) {
+    if(self.hg_stealth) {
+        HG_Cloak_Trigger();
+    }
+
+    if(time - self.hg_stealthtime < g_nadgets_cloak_actiondelay) {
+        return FALSE;
+    }
+
+    return HG_Cloak_WeaponPrepareAttack_Next(secondary, attacktime);
+}
+
 HG_HOOKFUNCTION(cloak, Attack) {
     if(self.hg_stealth && !g_nadgets_cloak_usewhileactive)
         return HG_ATTACK_FAIL;
@@ -75,7 +109,16 @@ HG_HOOKFUNCTION(cloak, Init) {
 	CACHE_CVAR(g_nadgets_cloak_stealthrate);
 	CACHE_CVAR(g_nadgets_cloak_usewhileactive);
 	CACHE_CVAR(g_nadgets_cloak_unstealthrate);
+    CACHE_CVAR(g_nadgets_cloak_actiondelay);
+
     addstat(STAT_STEALTH, AS_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);
+
+    HG_Cloak_PlayerAlphaMod_Next = GameHookChain_PlayerAlphaMod;
+    GameHookChain_PlayerAlphaMod = HG_Cloak_PlayerAlphaMod;
+
+    HG_Cloak_WeaponPrepareAttack_Next = GameHookChain_WeaponPrepareAttack;
+    GameHookChain_WeaponPrepareAttack = HG_Cloak_WeaponPrepareAttack;
+
     return HG_INIT_OK;
 }
