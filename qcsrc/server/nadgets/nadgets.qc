@@ -80,6 +80,15 @@ void HG_PlayerClear(float killed) {
 	HG_PlayerClear_NextLink(killed);
 }
 
+var void() HG_GameHookChain_ObserverSpawn_Next;
+
+void HG_ObserverSpawn(void) {
+    self.hg_type1_picked = 0;
+    self.hg_type2_picked = 0;
+
+    HG_GameHookChain_ObserverSpawn_Next();
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -163,6 +172,9 @@ void HG_Init(void) {
 
     ProjInfo_RegisterAuto(PROJECTILE_HG_RAZE, '-16 -16 -3', '16 16 3');
     ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA_SHARD, '0 0 -3', '0 0 -3');
+
+    HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
+    GameHookChain_ObserverSpawn = HG_ObserverSpawn;
 }
 
 void HG_Precache(void) {

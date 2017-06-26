@@ -557,7 +557,7 @@ void PutObserverInServer(float frags_team_reset)
 {
 	entity	spot;
 
-	GameHook_ObserverSpawn();
+	GameHookChain_ObserverSpawn();
 	PlayerClear(FALSE);
 
 	spot = SelectSpawnPoint (TRUE);

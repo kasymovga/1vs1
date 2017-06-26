@@ -487,7 +487,7 @@ void trigger_race_checkpoint_verify()
 	if(have_verified)
 		return;
 	have_verified = 1;
-	
+
 	qual = g_race_qualifying;
 
 	oldself = self;
@@ -513,7 +513,7 @@ void trigger_race_checkpoint_verify()
 				self.race_place = race_lowest_place_spawn;
 				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
-				
+
 				// race only (initial spawn)
 				g_race_qualifying = 0;
 				for(p = 1; p <= race_highest_place_spawn; ++p)
@@ -577,7 +577,7 @@ void spawnfunc_trigger_race_checkpoint()
 		self.message2 = "was pushed backwards by";
 	if (!self.race_penalty_reason)
 		self.race_penalty_reason = "missing a checkpoint";
-	
+
 	self.race_checkpoint = self.cnt;
 
 	if(self.race_checkpoint > race_highest_checkpoint)
@@ -677,9 +677,12 @@ void race_Spawn(entity spot)
 	race_Spawn_NextLink(spot);
 }
 
+var void() race_GameHookChain_ObserverSpawn_Next;
+
 void race_PreSpawnObserver()
 {
 	race_PreparePlayer();
+	race_GameHookChain_ObserverSpawn_Next();
 }
 
 void spawnfunc_info_player_race (void)
@@ -1109,7 +1112,8 @@ void race_init() {
 	GameHookChain_Spawn = race_Spawn;
 	race_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = race_PlayerClear;
-	GameHook_ObserverSpawn = race_PreSpawnObserver;
+	race_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
+	GameHookChain_ObserverSpawn = race_PreSpawnObserver;
 	GameHook_SpawnPointGood = race_SpawnPointGood;
 	race_WinCountDown_orig = GameHook_WinCountDown;
 	GameHook_WinCountDown = race_WinCountDown;

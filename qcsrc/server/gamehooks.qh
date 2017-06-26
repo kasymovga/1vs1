@@ -13,10 +13,10 @@ var entity() GameHook_SelectSpawnPoint = {
 	spot = SelectSpawnPoint (FALSE);
 	if not(spot)
 		spot = SelectSpawnPoint(TRUE);
-	
+
 	return spot;
 }
-var float(float fraglimit, float leadlimit) GameHook_WinningCondition = { 
+var float(float fraglimit, float leadlimit) GameHook_WinningCondition = {
 	if (WinningCondition_RanOutOfSpawns()) {
 		bprint("Hey! Someone ran out of spawns!\n");
 		return TRUE;
@@ -26,7 +26,7 @@ var float(float fraglimit, float leadlimit) GameHook_WinningCondition = {
 var float() GameHook_OvertimeHandle = { return FALSE; }
 var float() GameHook_OvertimeAllowed = { return TRUE; }
 var void() GameHook_Reset = {}
-var void() GameHook_ObserverSpawn = {}
+var void() GameHookChain_ObserverSpawn = {}
 var void() GameHook_InitSpectator = {}
 var float(entity spot) GameHook_SpawnPointGood = { return TRUE; }
 var void(float frags_remain) stub_WinCountDown = {}
