@@ -1,6 +1,8 @@
 .float spawntime;
 .vector trail_oldorigin;
 .float trail_oldtime;
+.vector server_angles;
+.float use_server_angles;
 
 void SUB_Null()
 {
@@ -169,8 +171,12 @@ void Projectile_Draw()
 	else
 	{
 		InterpolateOrigin_Do();
-        if(self.cnt == PROJECTILE_HG_RAZE)
+
+        if(self.use_server_angles) {
+            self.angles = self.server_angles;
+        } else if(self.cnt == PROJECTILE_HG_RAZE) {
             self.angles_x = -90;
+        }
 	}
 
 	if(self.count & 0x80)
@@ -184,7 +190,7 @@ void Projectile_Draw()
 		t = time;
 	}
 
-	if(!(f & FL_ONGROUND))
+	if((!(f & FL_ONGROUND) || self.cnt == PROJECTILE_HG_RAZE) && !self.use_server_angles)
 	{
 		rot = '0 0 0';
 		switch(self.cnt)
@@ -286,7 +292,11 @@ void Ent_Projectile(float ignore)
 
 	f = ReadByte();
 	self.count = (f & 0x80);
-	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES;
+	self.iflags = (self.iflags & IFLAG_INTERNALMASK);
+
+    if(!self.use_server_angles)
+        self.iflags |= IFLAG_ANGLES | IFLAG_AUTOANGLES;
+
 	self.solid = SOLID_TRIGGER;
 	//self.effects = EF_NOMODELFLAGS;
 
@@ -470,6 +480,14 @@ void Ent_Projectile(float ignore)
 		else
 			self.team = 0;
 	}
+
+    if(f & 4) {
+        self.server_angles_x = ReadCoord();
+        self.server_angles_y = ReadCoord();
+        self.server_angles_z = ReadCoord();
+        self.iflags &~= IFLAG_ANGLES | IFLAG_AUTOANGLES;
+        self.use_server_angles = TRUE;
+    }
 
 	if(self.gravity)
 	{

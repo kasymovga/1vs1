@@ -361,9 +361,7 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
     e.csqcprojectile_clientanimate = FALSE;
     UpdateCSQCProjectile(e);
     e.SendFlags = 0xFFFFFF;
-#if 0
     UpdateCSQCProjectileAngles(e);
-#endif
     e.effects |= EF_NODEPTHTEST; // no culling please
     move_out_of_solid(e, MOVE_WORLDONLY);
 }
@@ -383,9 +381,7 @@ void HG_GenericProjectile_Think(void) {
 
         if(self.movetype == MOVETYPE_FOLLOW) {
             if(self.angles != self.hg_oldangles) {
-#if 0
                 UpdateCSQCProjectileAngles(self);
-#endif
                 self.hg_oldangles = self.angles;
             }
 
