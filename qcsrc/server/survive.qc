@@ -63,9 +63,10 @@ void survive_trigger() {
 		}
 	}
 	self = oldself;
-	if (survive_monster_quant) {
+	if (survive_monster_quant)
 		survive_monster_quant = 1 / survive_monster_quant;
-	}
+	else
+		survive_monster_quant = 1;
 
 	for (self = world; (self = find(self, targetname, wave_string())); ) {
 		activator = survive_plan_entity;
@@ -202,6 +203,7 @@ void spawnfunc_survive_wave() {
 }
 
 void survive_init() {
+	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
 	GameHook_DeathHandle = survive_DeathHandle;
 
