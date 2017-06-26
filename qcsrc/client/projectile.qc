@@ -203,8 +203,19 @@ void Projectile_Draw()
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
+			case PROJECTILE_HG_GENERIC:
+			case PROJECTILE_HG_NAPALM:
+				rot = '0 1000 0'; // sideways
+				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
+				break;
+			case PROJECTILE_HG_TRANSLOC:
+				rot = '700 643 721';
+				break;
+			case PROJECTILE_HG_RAZE:
+			case PROJECTILE_HG_PLASMA:
+				rot = '0 0 -1000';
 				break;
 			default:
 				break;
