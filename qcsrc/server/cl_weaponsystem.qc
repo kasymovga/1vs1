@@ -273,8 +273,7 @@ float CL_Weaponentity_CustomizeEntityForClient()
 		if(other.enemy == self.viewmodelforclient)
 			self.viewmodelforclient = other;
 
-    self.alpha = Player_CalculateAlpha(self.viewmodelforclient, world);
-	return (self.alpha > 0);
+	return TRUE;
 }
 
 float CL_ExterioirWeaponentity_CustomizeEntityForClient()
@@ -496,19 +495,16 @@ void CL_Weaponentity_Think()
 	self.effects |= tb;
 
 	self.colormap = self.owner.colormap;
+	self.alpha = Player_CalculateAlpha(self.owner, self.owner);
+	if (self.owner.cvar_cl_gunalpha)
+		self.alpha *= self.owner.cvar_cl_gunalpha;
+
 	if (self.weaponentity)
 	{
 		self.weaponentity.effects = self.effects;
 		self.weaponentity.alpha = self.alpha;
 		self.weaponentity.colormap = self.colormap;
 	}
-
-	if (self.owner.cvar_cl_gunalpha) {
-		self.alpha *= self.owner.cvar_cl_gunalpha;
-		if (self.weaponentity)
-			self.weaponentity.alpha *= self.owner.cvar_cl_gunalpha;
-	}
-
 
 	self.angles = '0 0 0';
 	local float f;
