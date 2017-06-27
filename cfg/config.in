@@ -205,7 +205,7 @@ set sv_spawnreplace_weapon_railgun "weapon_nex"
 set sv_spawnreplace_weapon_bfg "weapon_fireball"
 set sv_spawnreplace_weapon_nailgun weapon_uzi
 set sv_spawnreplace_weapon_supernailgun weapon_uzi
-set sv_spawnreplace_weapon_supershotgun weapon_uzi
+set sv_spawnreplace_weapon_supershotgun ""
 set sv_spawnreplace_weapon_shotgun weapon_uzi
 set sv_spawnreplace_weapon_chaingun weapon_uzi
 set sv_spawnreplace_weapon_hyperblaster weapon_hlac
