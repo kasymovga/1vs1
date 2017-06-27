@@ -666,6 +666,14 @@ void centerprint_atprio(entity e, float prio, string s)
     if (intermission_running)
         if (prio < CENTERPRIO_MAPVOTE)
             return;
+
+	entity spec;
+	if (e.classname == "player")
+		FOR_EACH_REALCLIENT(spec)
+			if (spec.enemy == e)
+			if (spec.classname == "spectator")
+				centerprint_atprio(spec, prio, s);
+
     if (time > e.centerprint_expires)
         e.centerprint_priority = 0;
     if (prio >= e.centerprint_priority)
