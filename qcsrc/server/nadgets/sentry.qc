@@ -301,7 +301,7 @@ void HG_Sentry_Remove(void) {
 }
 
 void HG_Sentry_Explode(void) {
-    //te_blast(self.origin + self.view_ofs);
+    te_blast(self.origin + self.view_ofs);
     HG_Sentry_Remove();
 }
 
