@@ -10,3 +10,12 @@ void te_csqc_lightningarc(vector from,vector to)
 	WriteCoord(MSG_BROADCAST, to_y);
 	WriteCoord(MSG_BROADCAST, to_z);
 }
+
+void te_blast(vector loc) {
+    WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+    WriteByte(MSG_BROADCAST, TE_CSQC_BLAST);
+
+    WriteCoord(MSG_BROADCAST, loc_x);
+    WriteCoord(MSG_BROADCAST, loc_y);
+    WriteCoord(MSG_BROADCAST, loc_z);
+}

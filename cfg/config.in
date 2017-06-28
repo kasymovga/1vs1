@@ -976,6 +976,8 @@ set g_nadgets_sentry_capture_damage_delay 0.2
 set g_nadgets_sentry_bonus_amount_multiplier 1
 set g_nadgets_sentry_bonus_random_weight 0.5
 set g_nadgets_sentry_levitation 0
+set g_nadgets_sentry_friction 3
+set g_nadgets_sentry_hookable 0
 
 // Raze
 set g_nadgets_raze_regen_time 14
