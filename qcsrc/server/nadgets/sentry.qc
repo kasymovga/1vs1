@@ -19,6 +19,10 @@ float g_nadgets_sentry_repairfactor_nadgets;
 float g_nadgets_sentry_shock_damage;
 float g_nadgets_sentry_shock_force;
 float g_nadgets_sentry_shock_energy_cost;
+float g_nadgets_sentry_friction;
+float g_nadgets_sentry_hookable;
+
+.float spawntime;
 
 float HG_Sentry_TargetIsTaken(entity emitter, entity targ) {
 	entity e;
@@ -301,8 +305,44 @@ void HG_Sentry_Explode(void) {
     HG_Sentry_Remove();
 }
 
+void HG_Sentry_Levitate(void) {
+    // oscillation effect
+    // FIXME: doesn't work properly without g_nadgets_sentry_levitation
+    // TODO: maybe move this to CSQC
+
+    float shift; for(shift = 0; shift < PI * 2; shift += 0.1) {
+        vector new_origin = self.origin + frametime * '0 0 8' * sin(self.spawntime + time + self.phase + shift);
+        tracebox(new_origin, self.mins, self.maxs, new_origin, MOVE_NORMAL, self);
+
+        if(!trace_startsolid) {
+            setorigin(self, new_origin);
+            break;
+        }
+    }
+
+    self.phase += shift;
+
+    // dampen velocity to prevent the sentry from moving forever, i.e. after being hook-dragged.
+    self.velocity = self.velocity * (1 - frametime * g_nadgets_sentry_friction);
+
+    if(g_nadgets_sentry_levitation && g_nadgets_sentry_hookable) {
+        // this hack is used to benefit from the "step" elevation of MOVETYPE_WALK while dragging a levitating sentry.
+        // very low .gravaity is assigned to the sentry at spawn, which makes it seem like the sentry is still floating while being dragged.
+
+        if(self.pushltime - (time + g_maxpushtime) > frametime) {
+            // hook not attached
+            self.movetype = MOVETYPE_FLY;
+        } else {
+            // hook attached
+            self.movetype = MOVETYPE_WALK;
+        }
+    }
+}
+
 void HG_Sentry_Orphaned_Think(void) {
     entity e;
+
+    HG_Sentry_Levitate();
 
     if(self.hg_sentry_capture_player) {
         e = self.hg_sentry_capture_player;
@@ -351,6 +391,8 @@ void HG_Sentry_Orphaned_Think(void) {
 void HG_Sentry_Think(void) {
     entity o = self.realowner;
 
+    HG_Sentry_Levitate();
+
     if(o && ((teams_matter && self.team != o.team) || !o.iscreature))
         o = world;
 
@@ -396,10 +438,6 @@ void HG_Sentry_Think(void) {
 #endif
 
     self.nextthink = time;
-
-	if (g_nadgets_sentry_levitation) {
-		setorigin(self, self.spawnorigin + '0 0 8' * sin(time));
-	}
 }
 
 void HG_Sentry_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
@@ -552,7 +590,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.team = self.team;
     e.realowner = self; // can't use owner here because we want to be blocked by it
     e.solid = SOLID_BBOX;
-    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_NONE : MOVETYPE_TOSS);
+    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : MOVETYPE_WALK);
     e.angles = '0 360 0' * random();
     e.reset = HG_Sentry_Remove;
     e.think = HG_Sentry_Think;
@@ -564,6 +602,13 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.health = g_nadgets_sentry_health;
     e.event_damage = HG_Sentry_Damage;
     e.cnt = time + g_nadgets_sentry_beam_initialdelay;
+    e.spawntime = time;
+    e.hookable = g_nadgets_sentry_hookable;
+
+    if(g_nadgets_sentry_levitation) {
+        // also see HG_Sentry_Levitate
+        e.gravity = 0.001;
+    }
 
     self.hg_detonables += 1;
 
@@ -615,5 +660,7 @@ HG_HOOKFUNCTION(sentry, Init) {
 	CACHE_CVAR(g_nadgets_sentry_shock_damage);
 	CACHE_CVAR(g_nadgets_sentry_shock_force);
 	CACHE_CVAR(g_nadgets_sentry_shock_energy_cost);
+    CACHE_CVAR(g_nadgets_sentry_friction);
+    CACHE_CVAR(g_nadgets_sentry_hookable);
     return HG_INIT_OK;
 }

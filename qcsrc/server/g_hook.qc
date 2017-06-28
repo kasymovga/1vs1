@@ -65,6 +65,7 @@ vector hook_shotorigin;
 .string aiment_classname;
 .float aiment_deadflag;
 .float hook_attack_time;
+.float hookable;
 
 void SetMovetypeFollow(entity ent, entity e)
 {
@@ -240,7 +241,7 @@ void GrapplingHookThink()
 				dv = ((self.owner.velocity - v0) * dir) * dir;
 				if(g_grappling_hook_tarzan >= 2)
 				{
-					if(self.aiment.movetype == MOVETYPE_WALK)
+					if(self.aiment.movetype == MOVETYPE_WALK || self.aiment.hookable)
 					{
 						self.owner.velocity = self.owner.velocity - dv * 0.5;
 						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
