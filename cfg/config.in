@@ -411,6 +411,7 @@ set g_weapon_alpha 0
 
 set sv_dlc_repository "http://nexuiz.mooo.com/rexdlc/"
 set sv_dlc_extra ""
+alias dlc_require "sv_cmd dlc_require $*"
 
 set g_conquest 0
 set g_conquest_capture_time 5

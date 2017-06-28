@@ -1049,6 +1049,13 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (argv(0) == "dlc_require")
+	if (argv(1) != "")
+	{
+		dlc_require(argv(1));
+		return;
+	}
+
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
 
