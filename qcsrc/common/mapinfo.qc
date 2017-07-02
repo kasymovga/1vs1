@@ -797,6 +797,14 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			else
 				dprint("Map ", pFilename, " supports unknown game type ", t, ", ignored\n");
 
+			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
+				if (cvar("g_tdm_use_dm_maps"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
+
+			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF)
+				if (cvar("g_tdm_use_ctf_maps"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
+
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH) {
 				if (cvar("g_freeze_use_tdm_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
