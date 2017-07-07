@@ -2081,7 +2081,7 @@ void defer_for(entity e_for, float t, void() callback) {
 }
 
 void defer(float t, void() callback) {
-	defer_for(world, t, callback);
+	defer_for(self, t, callback);
 }
 
 vector RandomSpreadVector(float side, float up, float up_min, float up_min_rand) {

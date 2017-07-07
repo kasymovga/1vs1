@@ -57,6 +57,7 @@ irc.qh
 akimbo.qh
 
 freeze.qh
+radio.qh
 
 clanarena.qh
 
@@ -266,3 +267,4 @@ monsters/boss1.qc
 monsters/walker.qc
 monsters/ewheel.qc
 survive.qc
+radio.qc
