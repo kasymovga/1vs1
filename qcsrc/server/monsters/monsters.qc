@@ -185,6 +185,10 @@ vector monster_move_fly(float _speed, float blend_factor) {
 
 void monster_spawn_think() {
 	float quant = GameHook_MonsterQuant();
+	if (teamplay)
+	if not(self.team)
+		return;
+
 	if (self.dmg < quant)
 		return;
 
