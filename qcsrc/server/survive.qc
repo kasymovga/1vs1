@@ -64,7 +64,7 @@ void survive_trigger() {
 	}
 	self = oldself;
 	if (survive_monster_quant)
-		survive_monster_quant = 1 / survive_monster_quant;
+		survive_monster_quant = 1 / (survive_monster_quant + 0.001);
 	else
 		survive_monster_quant = 1;
 
