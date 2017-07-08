@@ -438,6 +438,7 @@ void _MapInfo_Map_Reset()
 	MapInfo_Map_fog = "";
 	MapInfo_Map_mins = '0 0 0';
 	MapInfo_Map_maxs = '0 0 0';
+	cvar_set("_map_dlc", "");
 }
 
 void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType)
@@ -884,6 +885,10 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			{
 				dprint("Map ", pFilename, " has a client setting for unknown game type ", t, ", ignored\n");
 			}
+		}
+		else if(t == "require_dlc")
+		{
+			cvar_set("_map_dlc", s);
 		}
 		else if(t == "fog")
 		{

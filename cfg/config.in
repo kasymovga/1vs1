@@ -413,6 +413,9 @@ set g_weapon_alpha 0
 
 set sv_dlc_repository "http://nexuiz.mooo.com/rexdlc/"
 set sv_dlc_extra ""
+set sv_dlc_maps ""
+set sv_dlc_server_only ""
+set _map_dlc ""
 alias dlc_require "sv_cmd dlc_require $*"
 
 set g_conquest 0
