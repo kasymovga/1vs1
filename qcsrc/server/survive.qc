@@ -73,7 +73,8 @@ void survive_trigger() {
 		self.use();
 	}
 	float i;
-	for (i = wave_number; i >= 1; i--)
+	float wave_to_max = wave_number + 10;
+	for (i = wave_number; i < wave_to_max; i++)
 	for (self = world; (self = find(self, targetname, strcat("waveto", ftos(i)))); ) {
 		activator = survive_plan_entity;
 		self.use();
@@ -130,12 +131,20 @@ float survive_WinningCondition() {
 		return FALSE;
 
 	//print("survive_WinningCondition()\n");
-	entity e;
-	entity monster;
+	entity e, oldself, monster;
 	if (wave_not_found) {
 		FOR_EACH_REALCLIENT(e)
 			centerprint(e, "^2All enemies destroyed!!!\n^2You successfully survived\n");
 
+		e = find(world, targetname, "survive_success");
+		if (e) {
+			oldself = self;
+			self = e;
+			activator = world;
+			other = world;
+			self.use();
+			self = oldself;
+		}
 		return TRUE;
 	}
 
