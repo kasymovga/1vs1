@@ -1852,3 +1852,30 @@ void spawnfunc_trigger_always() {
 	self.reset = trigger_always_init;
 	InitializeEntity(self, trigger_always_init, INITPRIO_LAST);
 }
+
+void func_moveentity_think() {
+	vector v = self.enemy.origin;
+	float f = self.speed * frametime;
+	v_x = approach(v_x, self.origin_x, f);
+	v_y = approach(v_y, self.origin_y, f);
+	v_z = approach(v_z, self.origin_z, f);
+	setorigin(self.enemy, v);
+	if (v == self.origin)
+		return;
+
+
+	self.nextthink = time;
+}
+
+void func_moveentity_use() {
+	self.enemy = find(world, targetname, self.target);
+	if not(self.enemy)
+		return;
+
+	self.think();
+}
+
+void spawnfunc_func_moveentity() {
+	self.use = func_moveentity_use;
+	self.think = func_moveentity_think;
+}
