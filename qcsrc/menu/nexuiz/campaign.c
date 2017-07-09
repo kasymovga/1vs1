@@ -99,7 +99,7 @@ entity makeNexuizCampaignList()
 void configureNexuizCampaignListNexuizCampaignList(entity me)
 {
 	me.configureNexuizListBox(me);
-	me.campaignGlob = search_begin("maps/campaign*.txt", TRUE, TRUE);
+	me.campaignGlob = search_begin("maps/campaignr*.txt", TRUE, TRUE);
 	me.loadCvars(me);
 	me.campaignGo(me, 0); // takes care of enabling/disabling buttons too
 }
