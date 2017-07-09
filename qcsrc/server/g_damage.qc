@@ -542,6 +542,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				attacker.lastfrag = fragtime;
 			}
 		}
+		else if (attacker.classname == "monster")
+		{
+			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were fragged by ^7", attacker.netname));
+			bprint ("^1",s, "^1 was killed by ", attacker.netname, "\n");
+		}
 		else
 		{
 			if not(clienttype(targ) == CLIENTTYPE_REAL)
@@ -586,8 +591,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					bprint ("^1",s, "^1 felt a little hot\n");
 				else
 					bprint ("^1",s, "^1 burnt to death\n");
-			else if (attacker.classname == "monster")
-				bprint ("^1",s, "^1 was killed by ", attacker.netname, "\n");
 			else
 				if(sv_gentle)
 					bprint ("^1",s, "^1 needs a restart\n");
