@@ -585,7 +585,7 @@ string MapInfo_HumanString_FromType(float t) {
 	} else if (t == MAPINFO_TYPE_CLANARENA) {
 		return "Clan Arena";
 	} else if (t == MAPINFO_TYPE_SURVIVE) {
-		return "Survive";
+		return "Survival";
 	}
 	return "WTF";
 }
