@@ -14,6 +14,19 @@ float dlc_ready(string dlc_name) {
 }
 
 float dlc_load(string dlc_name) {
+	float n = tokenizebyseparator(dlc_list, " ");
+	float i;
+	string list = dlc_list;
+	string s;
+	while (list != "") {
+		s = car(list);
+		list = cdr(list);
+		if (s == dlc_name)
+			return TRUE;
+	}
+	s = strzone(strcat(dlc_list, " ", dlc_name));
+	unzone_ifneeded(dlc_list);
+	dlc_list = s;
 	if (dlc_ready(dlc_name))
 		return TRUE;
 
@@ -22,12 +35,14 @@ float dlc_load(string dlc_name) {
 }
 
 float dlc_ready_all() {
-	float n = tokenize_console(dlc_list);
-	float i;
-	for (i = 0; i < n; i++)
-		if (argv(i) != "")
-		if not(dlc_ready(argv(i)))
+	string list = dlc_list;
+	string s;
+	while (list != "") {
+		s = car(list);
+		list = cdr(list);
+		if (s != "")
+		if not(dlc_ready(s))
 			return FALSE;
-
+	}
 	return TRUE;
 }

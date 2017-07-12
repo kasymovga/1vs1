@@ -49,15 +49,6 @@ float dlc_SendEntity(entity to, float sf) {
 }
 
 void dlc_require_server_only(string dlc_name) {
-	float n = tokenizebyseparator(dlc_list, " ");
-	float i;
-	for (i = 0; i < n; i++)
-		if (argv(i) == dlc_name)
-			return;
-
-	string s = strzone(strcat(dlc_list, " ", dlc_name));
-	unzone_ifneeded(dlc_list);
-	dlc_list = s;
 	if (dlc_load(dlc_name))
 		dlc_exec_cfg(dlc_name); //Just in case
 
