@@ -13,22 +13,6 @@ string extractRestOfLine(string haystack, string needle)
 		return substring(haystack, strlen(needle), strlen(haystack) - strlen(needle));
 	return string_null;
 }
-string car(string s)
-{
-	float o;
-	o = strstrofs(s, " ", 0);
-	if(o < 0)
-		return s;
-	return substring(s, 0, o);
-}
-string cdr(string s)
-{
-	float o;
-	o = strstrofs(s, " ", 0);
-	if(o < 0)
-		return string_null;
-	return substring(s, o + 1, strlen(s) - (o + 1));
-}
 float matchacl(string acl, string str)
 {
 	string t, s;

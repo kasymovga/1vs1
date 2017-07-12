@@ -1,2 +1,4 @@
 void SUB_Remove();
 .void() entremove;
+string car(string s);
+string cdr(string s);

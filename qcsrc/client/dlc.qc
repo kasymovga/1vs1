@@ -44,10 +44,7 @@ void Ent_DLCList(float new) {
 	}
 
 	if (f & 2) {
-		unzone_ifneeded(dlc_list);
-		dlc_list = zone_ifneeded(ReadString());
-
-		float n = tokenizebyseparator(dlc_list, " ");
+		float n = tokenizebyseparator(ReadString(), " ");
 		float i;
 		float not_all_loaded;
 		not_all_loaded = FALSE;
