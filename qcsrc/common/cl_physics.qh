@@ -60,7 +60,7 @@ float Physic_JetPackVelocityFactor(float fvel);
 void Physic_OnJumpHook();
 void Physic_CheckGroundHook();
 void Physic_LandingHook();
-void Physic_OnCrouchHook()
+void Physic_OnCrouchHook();
 void Physic_FrameBeginHook();
 void Physic_FrameEndHook();
 void Physic_JetPackHook(float fuel_fact);

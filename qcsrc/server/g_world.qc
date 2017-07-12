@@ -5,7 +5,7 @@ float world_initialized;
 string GetMapname();
 string GetGametype();
 void GotoNextMap();
-void ShuffleMaplist()
+void ShuffleMaplist();
 float() DoNextMapOverride;
 void Map_MarkAsRecent(string m);
 void() MapVote_Start;

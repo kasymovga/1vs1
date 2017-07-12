@@ -4,9 +4,9 @@ var void() read_cvars;
 #define CACHE_CVAR(x) float autocvar_##x;
 #define CACHE_CVAR_DEF(x,y) var float autocvar_##x = y;
 #define CACHE_CVAR_VEC(x) vector autocvar_##x;
-#define READ_CVARS_BEGIN(x,y) ;
-#define READ_CVARS_SECTION(x,y) ;
-#define READ_CVARS_END(x) ;
+#define READ_CVARS_BEGIN(x,y)
+#define READ_CVARS_SECTION(x,y)
+#define READ_CVARS_END(x)
 #include "cvar_list.qc"
 
 #undef CACHE_CVAR
