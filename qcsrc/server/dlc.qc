@@ -23,7 +23,6 @@ void DLCWait() {
 			}
 		}
 		localcmd("restart\n");
-		localcmd("r_restart\n"); //In case if it local server
 		remove(self);
 		dlc_wait = world;
 		return;
