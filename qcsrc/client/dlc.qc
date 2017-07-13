@@ -2,30 +2,33 @@ entity dlc_wait;
 float localConnection;
 
 void DLCWait() {
-	if (dlc_ready_all()) {
-		float n = tokenizebyseparator(dlc_list, " ");
-		float i;
-		localcmd("\n");
-		for (i = 0; i < n; i++) {
-			if (argv(i) != "")
-			if (fexists(strcat("rexdlc_", argv(i), "_client.cfg")))
-				localcmd(strcat("exec rexdlc_", argv(i), "_client.cfg", "\n"));
-		}
-		localcmd("r_restart\n");
-		if not(localConnection)
-			localcmd("disconnect;reconnect\n");
-#if 0
-		n = tokenizebyseparator(dlc_list, " ");
-		for (i = 0; i < n; i++) {
-			if (argv(i) != "")
-				localcmd(strcat("exec rexdlc_", argv(i), "_client_post.cfg", "\n"));
-		}
-#endif
-		remove(self);
-		dlc_wait = world;
+	if not(dlc_ready_all()) {
+		self.nextthink = time + 1;
 		return;
 	}
-	self.nextthink = time + 1;
+	string l, s;
+	localcmd("\n");
+	l = dlc_list;
+	while (l != "") {
+		s = car(l);
+		l = cdr(l);
+		if (s != "")
+		if (fexists(strcat("rexdlc_", s, "_client.cfg")))
+			localcmd(strcat("exec rexdlc_", s, "_client.cfg", "\n"));
+	}
+	if not(localConnection)
+		localcmd("disconnect;reconnect\n");
+	else {
+		l = dlc_list;
+		while (l != "") {
+			s = car(l);
+			l = cdr(l);
+			if (s != "")
+				localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
+		}
+	}
+	remove(self);
+	dlc_wait = world;
 }
 
 void DLCDraw2d() {
@@ -44,24 +47,41 @@ void Ent_DLCList(float new) {
 	}
 
 	if (f & 2) {
-		float n = tokenizebyseparator(ReadString(), " ");
-		float i;
+		string list = ReadString();
+		string s;
 		float not_all_loaded;
 		not_all_loaded = FALSE;
-		localcmd("\n");
-		for (i = 0; i < n; i++)
-			if (argv(i) != "") {
-				if not(dlc_load(argv(i)))
-					not_all_loaded = TRUE;
-				else if (fexists(strcat("rexdlc_", argv(i), "_client_post.cfg")))
-					localcmd(strcat("exec rexdlc_", argv(i), "_client_post.cfg", "\n"));
+		string l = list;
+		while (l != "") {
+			s = car(l);
+			l = cdr(l);
+			if (s != "")
+			if not(dlc_load(s)) {
+				not_all_loaded = TRUE;
+				break;
 			}
-		if (not_all_loaded)
-		if not(dlc_wait) {
-			dlc_wait = spawn();
-			dlc_wait.think = DLCWait;
-			dlc_wait.nextthink = time + 1;
-			dlc_wait.draw2d = DLCDraw2d;
+		}
+		if (not_all_loaded) {
+			if not(dlc_wait) {
+				dlc_wait = spawn();
+				dlc_wait.think = DLCWait;
+				dlc_wait.nextthink = time + 1;
+				dlc_wait.draw2d = DLCDraw2d;
+			}
+		} else {
+			localcmd("\n");
+			l = list;
+			while (l != "") {
+				s = car(l);
+				l = cdr(l);
+				if (s != "") {
+					if (fexists(strcat("rexdlc_", s, "_client.cfg")))
+						localcmd(strcat("exec rexdlc_", s, "_client.cfg\n"));
+
+					if (fexists(strcat("rexdlc_", s, "_client_post.cfg")))
+						localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
+				}
+			}
 		}
 	}
 	if (f & 4)
