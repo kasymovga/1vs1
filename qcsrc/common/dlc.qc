@@ -15,7 +15,6 @@ float dlc_ready(string dlc_name) {
 
 float dlc_load(string dlc_name) {
 	float n = tokenizebyseparator(dlc_list, " ");
-	float i;
 	string list = dlc_list;
 	string s;
 	while (list != "") {
