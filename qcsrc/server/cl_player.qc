@@ -1095,17 +1095,6 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	if(msgin == "")
 		return;
 
-	/*
-	 * using bprint solves this... me stupid
-	// how can we prevent the message from appearing in a listen server?
-	// for now, just give "say" back and only handle say_team
-	if(!teamsay)
-	{
-		clientcommand(self, strcat("say ", msgin));
-		return;
-	}
-	*/
-
 	if(g_chat_teamcolors)
 		namestr = playername(source);
 	else
