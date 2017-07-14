@@ -192,3 +192,17 @@ float ReadInt24_t();
 void WriteInt24_t(float dest, float val);
 #endif
 #endif
+
+/*
+ *  Operator overloads
+ */
+
+// defined per module, maps directly to the strcat builtin
+string operator+(string s1, string s2);
+
+string operator+(string s, float f);
+string operator+(float f, string s);
+string operator+(string s, vector v);
+string operator+(vector v, string s);
+string operator+(string s, entity e);
+string operator+(entity e, string s);

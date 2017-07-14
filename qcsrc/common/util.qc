@@ -138,7 +138,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 float dist_point_line(vector p, vector l0, vector ldir)
 {
 	ldir = normalize(ldir);
-	
+
 	// remove the component in line direction
 	p = p - (p * ldir) * ldir;
 
@@ -277,7 +277,7 @@ void db_save(float db, string pFilename)
 {
 	float fh, i, n;
 	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0) 
+	if(fh < 0)
 	{
 		print(strcat("^1Can't write DB to ", pFilename));
 		return;
@@ -483,7 +483,7 @@ string ScoreString(float pFlags, float pValue)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
 		valstr = ftos(pValue);
-	
+
 	return valstr;
 }
 
@@ -690,7 +690,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 				neworder = strcat(neworder, ftos(w), " ");
 		}
 	}
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -715,7 +715,7 @@ string swapInPriorityList(string order, float i, float j)
 		}
 		return substring(s, 0, strlen(s) - 1);
 	}
-	
+
 	return order;
 }
 
@@ -1089,7 +1089,7 @@ vector rgb_to_hsv(vector rgb)
 		hsv_y = 0;
 	else
 		hsv_y = 1 - mi/ma;
-	
+
 	return hsv;
 }
 
@@ -1107,7 +1107,7 @@ vector rgb_to_hsl(vector rgb)
 	ma = max3(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	
+
 	hsl_z = 0.5 * (mi + ma);
 	if(mi == ma)
 		hsl_y = 0;
@@ -1115,7 +1115,7 @@ vector rgb_to_hsl(vector rgb)
 		hsl_y = (ma - mi) / (2*hsl_z);
 	else // if(hsl_z > 0.5)
 		hsl_y = (ma - mi) / (2 - 2*hsl_z);
-	
+
 	return hsl;
 }
 
@@ -1127,7 +1127,7 @@ vector hsl_to_rgb(vector hsl)
 		maminusmi = hsl_y * 2 * hsl_z;
 	else
 		maminusmi = hsl_y * (2 - 2 * hsl_z);
-	
+
 	// hsl_z     = 0.5 * mi + 0.5 * ma
 	// maminusmi =     - mi +       ma
 	mi = hsl_z - 0.5 * maminusmi;
@@ -1240,7 +1240,7 @@ float textLengthUpToWidth(string theText, float maxWidth, textLengthUpToWidth_wi
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1268,7 +1268,7 @@ float textLengthUpToWidth(string theText, float maxWidth, textLengthUpToWidth_wi
 				}
 			}
 	}
-	
+
 	return left;
 }
 
@@ -1648,3 +1648,42 @@ void WriteInt24_t(float dest, float val)
 }
 #endif
 #endif
+
+
+#ifdef CSQC
+string etos(entity e) {
+    return "entity #" + num_for_edict(e);
+}
+#endif
+
+
+/*
+ *  Operator overloads
+ */
+
+
+string operator+(string s, float f) {
+    return s + ftos(f);
+}
+
+string operator+(float f, string s) {
+    return ftos(f) + s;
+}
+
+
+string operator+(string s, vector v) {
+    return s + vtos(v);
+}
+
+string operator+(vector v, string s) {
+    return vtos(v) + s;
+}
+
+
+string operator+(string s, entity e) {
+    return s + etos(e);
+}
+
+string operator+(entity e, string s) {
+    return etos(e) + s;
+}
