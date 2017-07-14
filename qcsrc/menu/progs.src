@@ -5,6 +5,7 @@ config.qh
 msys.qh
 mbuiltin.qh
 ../common/util.qh
+../common/miscfunctions.qh
 
 oo/base.h
 
@@ -34,6 +35,7 @@ menu.qc
 draw.qc
 nexuiz/util.qc
 
+../common/miscfunctions.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
