@@ -28,6 +28,9 @@ string mmss(float tenths) {
 	return strcat(ftos(minutes), ":", substring(s, 1, 2));
 }
 
+var void() Radio_RealClientConnect_NextLink;
+void Radio_RealClientConnect(void);
+
 void Radio_Init(void) {
 	radio_playing_queue = -1;
 
@@ -44,6 +47,8 @@ void Radio_Init(void) {
 	CACHE_CVAR(sv_radio_queue_advanceat);
 	CACHE_CVAR(sv_radio_queue_autofill_retry);
 	CACHE_CVAR(sv_radio_log_skips);
+	Radio_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+	GameHookChain_RealClientConnect = Radio_RealClientConnect;
 }
 
 void Radio_SendPreload(entity e, string url) {
@@ -306,11 +311,12 @@ void Radio_ClientConnect_Delayed(void) {
 	Radio_SendPlay(self);
 }
 
-void Radio_ClientConnect(void) {
-	if(!radio_playing)
-		return;
+void Radio_RealClientConnect(void) {
+	Radio_RealClientConnect_NextLink();
+	if (player_count - currentbots == 1)
+		defer(5, Radio_Queue_PlayFirst);
 
-	if(clienttype(self) != CLIENTTYPE_REAL)
+	if(!radio_playing)
 		return;
 
 	if(sv_radio_preload)

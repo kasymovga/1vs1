@@ -1381,6 +1381,7 @@ void ClientConnect (void)
 	self.retard = -1;
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
+		GameHookChain_RealClientConnect();
 		IRC_Announce_ClientConnect(self);
 		PhysicClientInit(self);
 		Check_ForRetard(self);
