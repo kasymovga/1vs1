@@ -110,12 +110,12 @@ void IP2C_ClearCache(void) {
 string IP2C_LookupCached(string ip) {
     var res = db_get(IPCacheDB, ip);
 
-    if(res) {
+    if(res != "") {
         return res;
     }
 
     if(checkextension("DP_RM_GEOIP") && cvar("sv_ip2country_use_builtin")) {
-        if((var res = GeoIP_LookUp(ip))) {
+        if((res = GeoIP_LookUp(ip))) {
             return res;
         }
     }
