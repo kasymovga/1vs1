@@ -124,7 +124,7 @@ void Sbar_DrawXNum (vector pos, float num, float digits, float showminusplus, fl
 		plus = true;
 		pos_x -= lettersize;
 	} else
-		plus = false;	
+		plus = false;
 
 	if(num < 0 || (num < 0 && showminusplus == 3) || (showminusplus == 1 && num <= 0))
 	{
@@ -439,7 +439,7 @@ void Cmd_Sbar_Help(float argc)
 	print("of game types, then a slash, to make the field show up only in these\n");
 	print("or in all but these game types. You can also specify 'all' as a\n");
 	print("field to show all fields available for the current game mode.\n\n");
-	
+
 	print("The special game type names 'teams' and 'noteams' can be used to\n");
 	print("include/exclude ALL teams/noteams game modes.\n\n");
 
@@ -453,7 +453,7 @@ void Cmd_Sbar_Help(float argc)
 string Sbar_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
-		"ping pl name | ",
+		"ping pl ?cn name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
@@ -484,7 +484,7 @@ void Cmd_Sbar_SetFields(float argc)
 		else if(argv(1) == "all")
 		{
 			string s;
-			s = "ping pl color name |";
+			s = "ping pl ?cn color name |";
 			for(i = 0; i < MAX_SCORE; ++i)
 			{
 				if(i != ps_primary)
@@ -538,6 +538,8 @@ void Cmd_Sbar_SetFields(float argc)
 			sbar_field[sbar_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			sbar_field[sbar_num_fields] = SP_KDRATIO;
+		} else if(str == "cn" && sv_ip2country) {
+			sbar_field[sbar_num_fields] = SP_COUNTRY;
 		} else if(str == "name" || str == "nick") {
 			sbar_field[sbar_num_fields] = SP_NAME;
 			have_name = 1;
@@ -692,6 +694,15 @@ string Sbar_GetField(entity pl, float field)
 			sbar_field_rgb = '1 0.5 0.5' - '0 0.5 0.5'*tmp;
 			return str;
 
+		case SP_COUNTRY:
+            float char0 = pl.(scores[SP_COUNTRY]) & 0xff;
+            float char1 = floor(pl.(scores[SP_COUNTRY]) / 256) & 0xff;
+
+            if(!char0 || !char1)
+                return "";
+
+            return strcat(chr2str(char0), chr2str(char1));
+
 		case SP_NAME:
 			if(ready_waiting && pl.ready)
 			{
@@ -813,15 +824,17 @@ string Sbar_FixScoreboardColumnWidth(float i, string str)
 					namesize -= sbar_size[j] + 1;
 		namesize += 1;
 		sbar_size[i] = namesize;
-		
+
 		if (sbar_fixscoreboardcolumnwidth_iconlen != 0)
 			namesize -= sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen;
 		str = textShortenToWidth(str, namesize, stringwidth_colors);
 		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, TRUE);
 	}
+	else if(field == SP_COUNTRY)
+		sbar_fixscoreboardcolumnwidth_len = stringwidth("XX", FALSE);
 	else
 		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, FALSE);
-	
+
 	f = sbar_fixscoreboardcolumnwidth_len + sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen;
 	if(sbar_size[i] < f)
 		sbar_size[i] = f;
@@ -860,7 +873,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		if(field == SP_SEPARATOR)
 			break;
 
-		if(is_spec && field != SP_NAME && field != SP_PING) {
+		if(is_spec && field != SP_NAME && field != SP_PING && field != SP_COUNTRY) {
 			pos_x += sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
 			continue;
 		}
@@ -872,6 +885,9 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		if(field == SP_NAME) {
 			tmp_x = sbar_fontsize_x*(sbar_size[i] - sbar_fixscoreboardcolumnwidth_iconlen - sbar_fixscoreboardcolumnwidth_marginlen) + sbar_fontsize_x;
 			drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
+		} else if(field == SP_COUNTRY) {
+			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
+			drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 		} else {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
@@ -1021,7 +1037,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 			pos_x -= sbar_fontsize_x;
 		}
 	}
-	
+
 	pos_x = xmin;
 	pos_y += 1.25 * sbar_fontsize_y; // skip the header
 	pos_y += sbar_border_thickness;
@@ -1046,7 +1062,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 			pos_y += 1.25 * sbar_fontsize_y;
 			++i;
 		}
-	
+
 	if (i == 0)
 		pos_y += 1.25 * sbar_fontsize_y; // move to the end of the table
 	pos_y += 1.25 * sbar_fontsize_y; // move empty row (out of the table)
@@ -1088,7 +1104,7 @@ void Sbar_DrawScoreboard()
 	pos_y += sbar_fontsize_y;
 
 	drawfont = sbar_font;
-	
+
 	// Draw the scoreboard
 	vector bg_size;
 	bg_size = drawgetimagesize("gfx/hud/sb_scoreboard_bg");
@@ -1127,7 +1143,7 @@ void Sbar_DrawScoreboard()
 
 	tmp = pos + '0 1.5 0' * sbar_fontsize_y;
 	pos_y += 3 * sbar_fontsize_y;
-	
+
 	// List spectators
 	float specs;
 	specs = 0;
@@ -1302,7 +1318,7 @@ void Sbar_Score()
 
 		float racemin, racesec, racemsec;
 		float distsec, distmsec, minusplus;
-		
+
 		racemin = floor(score/(60 * TIME_FACTOR));
 		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
 		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
@@ -1355,7 +1371,7 @@ void Sbar_Score()
 			distribution = 0;
 
 		score = me.(scores[ps_primary]);
-		
+
 		if(distribution >= 5) {
 			distribution_color = '0 1 0';
 			leader = 1;
@@ -1366,7 +1382,7 @@ void Sbar_Score()
 			distribution_color = '1 1 0';
 		else
 			distribution_color = '1 0 0';
-		
+
 		Sbar_DrawXNum(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		Sbar_DrawXNum(score_pos, score, 4, 0, 34, distribution_color, leader, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
@@ -1381,7 +1397,7 @@ void Sbar_Score()
 
 			if (score > max_fragcount)
 				max_fragcount = score;
-	
+
 			if(tm.team == myteam) {
 				if (max_fragcount == score)
 					leader = 1;
@@ -1506,13 +1522,13 @@ void Sbar_Timer()
 	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
 	vector bgpos, timer_color;
 	bgpos = '0 0 0';
-	
+
 	vector topright;
 	topright = '0 0 0';
 	topright_x = CVAR(vid_conwidth);
-	
+
 	timelimit = getstatf(STAT_TIMELIMIT);
-	
+
 	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
 	timeleft = ceil(timeleft);
 	minutesLeft = floor(timeleft / 60);
@@ -1932,7 +1948,7 @@ void Sbar_ShowSpeed(void)
 
 	numsize_x = numsize_y = CVAR(cl_showspeed_size);
 	pos = (CVAR(vid_conheight) - numsize_y) * CVAR(cl_showspeed_position);
-	
+
 	drawfont = sbar_bigfont;
 	drawstringcenter('1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
@@ -1973,7 +1989,7 @@ void Sbar_ShowAcceleration(void)
 			rgb = '.5 1 .5' - '.5 0 .5' * bound(0, +acceleration * 0.2, 1);
 		}
 	}
-		
+
 	if (acceleration > 0)
 		drawpic(pos, "gfx/hud/accelerometer_gradient", acceleration * CVAR(cl_showacceleration_scale) * '40 0 0' + CVAR(cl_showacceleration_size) * '0 1 0', rgb, CVAR(cl_showacceleration_alpha) * sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else if (acceleration < 0)
@@ -2539,7 +2555,7 @@ void Sbar_Draw (void)
 				health_pos = bottom - '-14 28 0';
 			}
 			else {
-				health_pos = bottom - '96 28 0';				
+				health_pos = bottom - '96 28 0';
 				armor_pos = bottom - '-14 28 0';
 			}
 
@@ -2813,7 +2829,7 @@ void Sbar_Draw (void)
 
 		// draw strength/invincibility icon and timer
 		CSQC_Strength_Timer();
-		
+
 		// draw gametype specific icons
 		if(gametype == GAME_KEYHUNT)
 			CSQC_kh_hud();
@@ -2865,7 +2881,7 @@ void CSQC_ctf_hud(void)
 		blueflag_prevstatus = blueflag_prevframe;
 		blueflag_prevframe = blueflag;
 	}
-	
+
 	redflag_statuschange_elapsedtime = time - redflag_statuschange_time;
 	blueflag_statuschange_elapsedtime = time - blueflag_statuschange_time;
 
@@ -2941,9 +2957,9 @@ void CSQC_ctf_hud(void)
 		blueflag_pos = bottomleft - '-4 50 0';
 		redflag_pos = bottomleft - '-62 50 0';
 	}
-	
+
 	sz = '52 52 0';
-	
+
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
 		drawpic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);

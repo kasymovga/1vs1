@@ -193,6 +193,10 @@ void WriteInt24_t(float dest, float val);
 #endif
 #endif
 
+#ifndef SVQC
+string FlagIcon(string cn);
+#endif
+
 /*
  *  Operator overloads
  */

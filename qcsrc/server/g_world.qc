@@ -879,6 +879,7 @@ void spawnfunc_worldspawn (void)
 	world_initialized = 1;
 	IRC_Init();
 	InfoMessages_Init();
+    IP2C_InitSV();
 }
 
 void spawnfunc_light (void)

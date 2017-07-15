@@ -1904,3 +1904,10 @@ void(float pause) setpause = #531;
 //
 //Note: it is worth considering that network-related functions may be called during the pause (including customizeentityforclient for example), and it is also important to consider the continued use of the KRIMZON_SV_PARSECLIENTCOMMAND extension while paused (chatting players, etc), players may also join/leave during the pause.  In other words, the only things that are not called are think and other time-related functions.
 
+//DP_RM_QCSENDPACKET
+//idea: Akari
+//darkplaces implementation: Akari
+//builtin definitions:
+float(string addr, string data) net_sendpacket = #801;
+//description:
+//A QC builtin equivalent of the "packet" command
