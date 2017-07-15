@@ -1,4 +1,3 @@
-#define URI_GET_RADIO 32
 float sv_radio;
 float sv_radio_announce;
 float sv_radio_preload;
@@ -31,6 +30,9 @@ string mmss(float tenths) {
 var void() Radio_RealClientConnect_NextLink;
 void Radio_RealClientConnect(void);
 
+var void() Radio_ServerFrame_NextLink;
+void Radio_ServerFrame(void);
+
 void Radio_Init(void) {
 	radio_playing_queue = -1;
 
@@ -49,6 +51,8 @@ void Radio_Init(void) {
 	CACHE_CVAR(sv_radio_log_skips);
 	Radio_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = Radio_RealClientConnect;
+	Radio_ServerFrame_NextLink = GameHookChain_ServerFrame;
+	GameHookChain_ServerFrame = Radio_ServerFrame;
 }
 
 void Radio_SendPreload(entity e, string url) {
@@ -269,7 +273,9 @@ void Radio_Queue_Skip(void) {
 	Radio_Queue_PlayFirst();
 }
 
-void Radio_Frame(void) {
+var void() Radio_ServerFrame_NextLink;
+void Radio_ServerFrame(void) {
+	Radio_ServerFrame_NextLink();
 	if(radio_queue_next_request)
 	if(time > radio_queue_next_request)
 		Radio_Queue_Request();

@@ -195,6 +195,7 @@ void StartFrame (void)
 	CheckRules_World ();
 
 	AuditTeams();
+	GameHookChain_ServerFrame();
 
 	RuneMatchGivePoints();
 	bot_serverframe();

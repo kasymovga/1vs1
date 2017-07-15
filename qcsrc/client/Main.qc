@@ -1336,6 +1336,7 @@ float CSQC_Parse_TempEntity()
 		case TE_CSQC_RADIO:
 			Net_ReadRadio();
 			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;
