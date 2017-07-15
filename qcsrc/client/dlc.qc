@@ -26,7 +26,7 @@ void DLCWait() {
 			if (s != "")
 				localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
 		}
-		localcmd(strcat("r_restart\n"));
+		localcmd("r_restart\n");
 	}
 	remove(self);
 	dlc_wait = world;
