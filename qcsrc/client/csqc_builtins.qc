@@ -70,6 +70,7 @@ string (float fhandle)							fgets = #112;
 void (float fhandle, string s)						fputs = #113;
 float (string s)							strlen = #114;
 string (...)								strcat = #115;
+string operator+(string s1, string s2)             = #115;
 string (string s, float start, float length)				substring = #116;
 vector (string s)							stov = #117;
 string (string s)							strzone = #118;

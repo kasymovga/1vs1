@@ -17,7 +17,7 @@ string wordwrap(string s, float l);
 void wordwrap_sprint(string s, float l);
 #endif
 #endif
-void wordwrap_cb(string s, float l, void(string) callback)
+void wordwrap_cb(string s, float l, void(string) callback);
 
 float GameCommand_Generic(string cmd);
 // returns TRUE if handled, FALSE otherwise
@@ -53,7 +53,7 @@ void buf_save(float buf, string filename);
 
 // modulo function
 #ifndef MENUQC
-float mod(float a, float b) { return a - (floor(a / b) * b); }   
+float mod(float a, float b) { return a - (floor(a / b) * b); }
 #endif
 
 string GametypeNameFromType(float g);
@@ -192,3 +192,17 @@ float ReadInt24_t();
 void WriteInt24_t(float dest, float val);
 #endif
 #endif
+
+/*
+ *  Operator overloads
+ */
+
+// defined per module, maps directly to the strcat builtin
+string operator+(string s1, string s2);
+
+string operator+(string s, float f);
+string operator+(float f, string s);
+string operator+(string s, vector v);
+string operator+(vector v, string s);
+string operator+(string s, entity e);
+string operator+(entity e, string s);
