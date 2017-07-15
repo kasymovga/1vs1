@@ -29,7 +29,6 @@ oo/implementation.h
 	classes.c
 
 ../common/util.qc
-../common/miscfunctions.qc
 ../common/gamecommand.qc
 gamecommand.qc
 menu.qc
