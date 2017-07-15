@@ -54,6 +54,7 @@ void IP2C_InitSV(void) {
         return;
     }
 
+    IP2C_Init();
     dlc_require("flagicons");
 
     Net_LinkEntity(spawn(), FALSE, 0, inline float(entity e, float sf) {
