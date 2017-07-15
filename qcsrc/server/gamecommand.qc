@@ -604,6 +604,7 @@ void GameCommand(string command)
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
+		IP2C_GameCommand("help");
 		return;
 	}
 
@@ -615,6 +616,10 @@ void GameCommand(string command)
 
 	if(GameCommand_Generic(command))
 		return;
+
+	if(IP2C_GameCommand(command)) {
+		return;
+	}
 
 	if(argv(0) == "printstats")
 	{
@@ -961,6 +966,7 @@ void GameCommand(string command)
 				print("\nsv_cmd bot_cmd reset          #Clear the cmd queues of all bots\n");
 				print("sv_cmd bot_cmd load <file>    #Load script file\n");
 				print("\nUse sv_cmd bot_cmd help <command> for more\n\n");
+				IP2C_GameCommand("help");
 				return;
 			}
 
@@ -1058,4 +1064,3 @@ void GameCommand(string command)
 
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
-

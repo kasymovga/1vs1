@@ -250,7 +250,7 @@ void PlayerScore_Clear(entity player)
 		return;
 
 	sk = player.scorekeeper;
-	for(i = 0; i < MAX_SCORE; ++i)
+	for(i = 0; i < MAX_SCORE; ++i) if(i != SP_COUNTRY)
 	{
 		if(sk.(scores[i]) != 0)
 			if(scores_label[i] != "")
@@ -270,6 +270,9 @@ void Score_ClearAll()
 			continue;
 		for(i = 0; i < MAX_SCORE; ++i)
 		{
+			if(i == SP_COUNTRY)
+				continue;
+
 			if(sk.(scores[i]) != 0)
 				if(scores_label[i] != "")
 					sk.SendFlags |= pow(2, i);
@@ -322,9 +325,8 @@ float PlayerScore_Set(entity player, float scorefield, float score)
 			return 0;
 		error("Adding score to unknown player!");
 	}
-	if(scores_label[scorefield] != "")
-		s.SendFlags |= pow(2, scorefield);
 
+	s.SendFlags |= pow(2, scorefield);
 	return (s.(scores[scorefield]) = score);
 }
 
@@ -670,7 +672,7 @@ float PlayerTeamScore_Compare(entity p1, entity p2)
 				r = p1.team - p2.team;
 			return r;
 		}
-	
+
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper);
 }
 
@@ -690,7 +692,7 @@ entity PlayerScore_Sort(.float field)
 		plist = p;
 	}
 	// Now plist points to the whole list.
-	
+
 	pfirst = plast = world;
 
 	i = 0;
@@ -787,7 +789,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 		s = "Scores:";
 
 	s = strcat(s, strpad(max(0, NAMEWIDTH - strlennocol(s)), ""));
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -821,7 +823,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 			break;
 		}
 	}
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -870,7 +872,7 @@ void Score_NicePrint(entity to)
 		t = p.team;
 		p = p.chain;
 	}
-	
+
 	t = 0;
 	FOR_EACH_CLIENT(p)
 	if(p.classname != "player")

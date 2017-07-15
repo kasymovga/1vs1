@@ -29,6 +29,10 @@ campaign.qh
 ../common/dlc.qh
 dlc.qh
 
+../common/extresponse.qh
+../common/ip2c.qh
+ip2c.qh
+
 csqcprojectile.qh
 csqceffects.qc
 
@@ -209,11 +213,12 @@ ipban.qc
 
 race.qc
 
-
 //// tZork Turrets ////
 tturrets/include/turrets.qh
 
 scores.qc
+
+../common/extresponse.qc
 
 portals.qc
 
@@ -246,6 +251,9 @@ progressbar.qc
 location_request.qc
 
 vehicles/vehicles.qc
+
+../common/ip2c.qc
+ip2c.qc
 
 ../common/projinfo.qc
 ../common/dlc.qc

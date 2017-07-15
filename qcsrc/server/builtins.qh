@@ -71,3 +71,5 @@ string	precache_model2 (string s)							= #75;
 string	precache_sound2 (string s)							= #76;
 string	precache_file2 (string s)							= #77;
 void(entity e) setspawnparms = #78;
+
+string getextresponse(void) = #624;

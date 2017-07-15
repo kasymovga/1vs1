@@ -1370,6 +1370,10 @@ void URI_Get_Callback(float id, float status, string data)
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
     }
+    else if (id == URI_GET_IP2C)
+    {
+        IP2C_URI_Get_Callback(id, status, data);
+    }
     else
     {
         print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
