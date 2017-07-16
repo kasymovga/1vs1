@@ -35,7 +35,7 @@ void Napalm_Burn(void) {
                 if(sameteam && o != e)
                     if(!cvar("g_friendlyfire"))
                             continue;
-                    
+
 #if 0
                 if(!Buffs_TenacityDamage(e, o, damage, dtype))
                     continue;
@@ -114,4 +114,15 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     CSQCProjectile(proj, TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE);
 
     return proj;
+}
+
+float napalm_init_done;
+
+void Napalm_Init(void) {
+    if(napalm_init_done) {
+        return;
+    }
+
+    ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, '0 0 -3', '0 0 -3');
+    napalm_init_done = TRUE;
 }

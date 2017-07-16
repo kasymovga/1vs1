@@ -2296,6 +2296,14 @@ void EndFrame()
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
 	}
+
+    /*
+    if(roundstate != roundstate_old) {
+        defer(0, FireRoundstateTriggers);
+        localcmd("\nsv_hook_roundstatechanged ", ftos(roundstate), "\n");
+        roundstate_old = roundstate;
+    }
+    */
 }
 
 

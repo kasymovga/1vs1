@@ -171,6 +171,8 @@ w_fireball.qc
 w_supershotgun.qc
 w_zapper.qc
 
+g_laserbeam.qc
+
 t_items.qc
 cl_weapons.qc
 cl_impulse.qc
