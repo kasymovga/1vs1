@@ -23,6 +23,11 @@ void DLCWait() {
 			}
 		}
 		localcmd("restart\n");
+		FOR_EACH_REALCLIENT(e)
+			if (e.netaddress == "local") {
+				localcmd("r_restart\n");
+				break;
+			}
 		remove(self);
 		dlc_wait = world;
 		return;
