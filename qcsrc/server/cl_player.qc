@@ -807,6 +807,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
+        dropentities(self);
+
 		// become fully visible
 		self.alpha = 1;
 		// clear selected player display

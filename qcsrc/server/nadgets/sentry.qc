@@ -273,7 +273,7 @@ void HG_Sentry_SetOwner(entity sentry, entity newowner) {
 }
 
 void HG_Sentry_Remove(void) {
-    //dropentities(self);
+    dropentities(self);
     HG_Sentry_Interrupt_Capture();
 
     if(self.realowner.classname == "player")

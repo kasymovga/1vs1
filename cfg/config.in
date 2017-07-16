@@ -214,6 +214,9 @@ set sv_spawnreplace_weapon_hyperblaster weapon_hlac
 set sv_spawnreplace_misc_breakablemodel "func_breakable"
 set sv_spawnreplace_weapon_seeker "weapon_hagar"
 
+//Quake Live compat
+set sv_spawnreplace_func_advertisement "func_wall"
+
 set sv_infomessages_interval "10"
 set sv_infomessage1 ""
 set sv_infomessage2 ""
