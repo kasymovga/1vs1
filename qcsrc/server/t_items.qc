@@ -45,6 +45,7 @@ string sv_model_armorsmall;
 string sv_model_armormedium;
 string sv_model_armorbig;
 string sv_model_armorlarge;
+void minstagib_items(float item_id);
 
 #define ITEM_RESPAWN_TICKS 10
 
@@ -292,87 +293,12 @@ float Item_GiveTo(entity item, entity player)
 	pickedup = FALSE;
 	_switchweapon = FALSE;
 
-	if (g_minstagib)
-	{
-		if(item.spawnshieldtime)
-		{
-			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max)
-			{
-				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
-			}
-			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
-			{
-				pickedup = TRUE;
-				player.items |= it;
-				sprint (player, strcat("You got the ^2", item.netname, "\n"));
-			}
-
-			_switchweapon = TRUE;
-			if (item.ammo_cells)
-			{
-				pickedup = TRUE;
-				// play some cool sounds ;)
-				centerprint(player, "\n");
-				if (clienttype(player) == CLIENTTYPE_REAL)
-				{
-					if(player.health <= 5)
-						play2(player, "announcer/robotic/lastsecond.wav");
-					else if(player.health < 50)
-						play2(player, "announcer/robotic/narrowly.wav");
-				}
-				// sound not available
-				// else if(item.items == IT_CELLS)
-				//	play2(player, "announce/robotic/ammo.wav");
-
-				if (item.weapons & WEPBIT_MINSTANEX)
-					W_GiveWeapon (player, WEP_MINSTANEX, "Nex");
-				if (item.ammo_cells)
-					player.ammo_cells = min (player.ammo_cells + g_minstagib_ammo_drop, 999);
-				player.health = 100;
-			}
-
-			// extralife powerup
-			if (item.max_health)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
-				player.armorvalue = player.armorvalue + g_minstagib_extralives;
-				sprint(player, "^3You picked up some extra lives\n");
-			}
-
-			// invis powerup
-			if (item.strength_finished)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// play2(player, "announce/robotic/invisible.wav");
-				player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
-			}
-
-			// speed powerup
-			if (item.invincible_finished)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// play2(player, "announce/robotic/speed.wav");
-				player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
-			}
-
-			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max)
-			{
-				pickedup = TRUE;
-				player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
-			}
-		}
-	}
-	else
-	{
+	if (GameHookChain_ItemGiveToHandle(item, player)) {
+		pickedup = GameHookChain_ItemGiveToHandle_PickedUp;
+		GameHookChain_ItemGiveToHandle_PickedUp = FALSE;
+		_switchweapon = GameHookChain_ItemGiveToHandle_SwitchWeapon;
+		GameHookChain_ItemGiveToHandle_SwitchWeapon = FALSE;
+	} else {
 		if (g_weapon_stay == 1)
 		if not(item.flags & FL_NO_WEAPON_STAY)
 		if (item.flags & FL_WEAPON)
@@ -925,79 +851,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		Item_ScheduleInitialRespawn(self);
 }
 
-/* replace items in minstagib
- * IT_STRENGTH	 = invisibility
- * IT_NAILS	 = extra lives
- * IT_INVINCIBLE = speed
- */
-void minstagib_items (float itemid)
-{
-	// we don't want to replace dropped weapons ;)
-	if (self.classname == "droppedweapon")
-	{
-		self.ammo_cells = 25;
-		StartItem ("models/weapons/g_nex.md3",
-			"weapons/weaponpickup.wav", 15, 0,
-			"MinstaNex", 0, WEPBIT_MINSTANEX, FL_WEAPON, generic_pickupevalfunc, 1000);
-		return;
-	}
-
-	local float rnd;
-	self.classname = "minstagib";
-
-	// replace rocket launchers and nex guns with ammo cells
-	if (itemid == IT_CELLS)
-	{
-		self.ammo_cells = 1;
-		StartItem ("models/items/a_cells.md3",
-			"misc/itempickup.wav", 45, 0,
-			"Nex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
-		return;
-	}
-
-	// randomize
-	rnd = random() * 3;
-	if (rnd <= 1)
-		itemid = IT_STRENGTH;
-	else if (rnd <= 2)
-		itemid = IT_NAILS;
-	else
-		itemid = IT_INVINCIBLE;
-
-	// replace with invis
-	if (itemid == IT_STRENGTH)
-	{
-		self.strength_finished = cvar("g_balance_powerup_strength_time");
-		StartItem ("models/items/g_strength.md3",
-			"misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Invisibility", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
-	}
-	// replace with extra lives
-	if (itemid == IT_NAILS)
-	{
-		self.max_health = 1;
-		StartItem (sv_model_healthmega,
-			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
-
-	}
-	// replace with speed
-	if (itemid == IT_INVINCIBLE)
-	{
-		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
-		StartItem ("models/items/g_invincible.md3",
-			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
-	}
-
-}
-
-float minst_no_auto_cells;
-void minst_remove_item (void) {
-	if(minst_no_auto_cells)
-		remove(self);
-}
-
 float internalteam;
 
 void weapon_defaultspawnfunc(float wpn)
@@ -1012,6 +865,8 @@ void weapon_defaultspawnfunc(float wpn)
 		remove(self);
 		return;
 	}
+	if (GameHookChain_WeaponSpawnHandle(float wpn))
+		return;
 
 	// set the respawntime in advance (so replaced weapons can copy it)
 
@@ -1145,37 +1000,16 @@ void spawnfunc_weapon_supershotgun (void) {
 
 void spawnfunc_weapon_nex (void)
 {
-	if (g_minstagib)
-	{
-		minstagib_items(IT_CELLS);
-		self.think = minst_remove_item;
-		self.nextthink = time;
-		return;
-	}
 	weapon_defaultspawnfunc(WEP_NEX);
 }
 
 void spawnfunc_weapon_minstanex (void)
 {
-	if (g_minstagib)
-	{
-		minstagib_items(IT_CELLS);
-		self.think = minst_remove_item;
-		self.nextthink = time;
-		return;
-	}
 	weapon_defaultspawnfunc(WEP_MINSTANEX);
 }
 
 void spawnfunc_weapon_rocketlauncher (void)
 {
-	if (g_minstagib)
-	{
-		minstagib_items(IT_CELLS);
-		self.think = minst_remove_item;
-		self.nextthink = time;
-		return;
-	}
 	weapon_defaultspawnfunc(WEP_ROCKET_LAUNCHER);
 }
 
@@ -1320,16 +1154,6 @@ void spawnfunc_item_key_gold (void) {
 	self.origin_z = self.origin_z + 40;
 	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Gold Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
 	self.mins_z = self.mins_z - 40;
-}
-
-void spawnfunc_item_minst_cells (void) {
-	if (g_minstagib)
-	{
-		minst_no_auto_cells = 1;
-		minstagib_items(IT_CELLS);
-	}
-	else
-		remove(self);
 }
 
 float target_item_func_set(float a, float b)

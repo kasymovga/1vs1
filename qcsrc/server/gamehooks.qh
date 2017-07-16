@@ -7,7 +7,7 @@ var float(entity inflictor, entity attacker, float damage, float deathtype, vect
 var float(entity plr, float wep) GameHookChain_PlayerCanFire = { return TRUE; }
 var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
-var void() GameHook_PlayerPreThink = {}
+var void() GameHookChain_PlayerPreThink = {}
 var entity() GameHook_SelectSpawnPoint = {
 	entity spot;
 	spot = SelectSpawnPoint (FALSE);
@@ -66,6 +66,7 @@ float GameHook_HealthMaxMod;
 float GameHook_ArmorHealthLimitMod;
 float GameHook_RegenMod;
 float GameHook_RotMod;
+float GameHook_HealthArmorRotRegen;
 var void() GameHookChain_HealthArmorFuelModsSet = {}
 var float() GameHookChain_JumpVelocityMod = { return 1; }
 var float() GameHookChain_WeaponRateFactor = { return 1; }
@@ -74,3 +75,7 @@ var void(entity attacker) GameHook_MonsterKilled {}
 var float() GameHook_MonsterQuant { return 1; }
 var float(entity plr, entity viewer, float palpha) GameHookChain_PlayerAlphaMod = { return palpha; }
 var float(float secondary, float attacktime) GameHookChain_WeaponPrepareAttack = { return TRUE; }
+var float(entity item, entity player) GameHookChain_ItemGiveToHandle = { return FALSE; }
+float GameHookChain_ItemGiveToHandle_PickedUp;
+float GameHookChain_ItemGiveToHandle_SwitchWeapon;
+var float(float wpn) GameHookChain_WeaponSpawnHandle = { return FALSE; }

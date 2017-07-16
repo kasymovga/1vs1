@@ -1675,23 +1675,21 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 void player_regen (void)
 {
 	float minh, maxh, limith, limita;
-	GameHook_HealthMaxMod = GameHook_ArmorHealthLimitMod = GameHook_RegenMod = GameHook_RotMod = 1;
+	GameHook_HealthArmorRotRegen = GameHook_HealthMaxMod = GameHook_ArmorHealthLimitMod = GameHook_RegenMod = GameHook_RotMod = 1;
 	GameHookChain_HealthArmorFuelModsSet();
-	maxh = g_balance_health_rotstable * GameHook_HealthMaxMod;
-	minh = g_balance_health_regenstable * GameHook_HealthMaxMod;
-	limith = g_balance_health_limit * GameHook_ArmorHealthLimitMod;
-	limita = g_balance_armor_limit * GameHook_ArmorHealthLimitMod;
-
-	if (!g_minstagib)
+	if (GameHook_HealthArmorRotRegen)
 	{
-		self.armorvalue = CalcRotRegen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotarmor_finished), limita);
+		limith = g_balance_health_limit * GameHook_ArmorHealthLimitMod;
+		maxh = g_balance_health_rotstable * GameHook_HealthMaxMod;
+		minh = g_balance_health_regenstable * GameHook_HealthMaxMod;
 		self.health = CalcRotRegen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, GameHook_RotMod * frametime * (time > self.pauserothealth_finished), limith);
-
 		// if player rotted to death...  die!
 		if(self.health < 1)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
-	}
+		limita = g_balance_armor_limit * GameHook_ArmorHealthLimitMod;
+		self.armorvalue = CalcRotRegen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotarmor_finished), limita);
 
+	}
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 }
@@ -2114,10 +2112,7 @@ void PlayerPreThink (void)
 			player_anim();
 		}
 
-		if (g_minstagib)
-			minstagib_ammocheck();
-
-		GameHook_PlayerPreThink();
+		GameHookChain_PlayerPreThink();
 
 		self.dmg_team = max(0, self.dmg_team - g_teamdamage_resetspeed * frametime);
 

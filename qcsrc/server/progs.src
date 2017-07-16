@@ -85,6 +85,7 @@ w_rocketlauncher.qh
 ../common/cl_physics_spiderbot.qh
 ../common/cl_physics_aircraft.qh
 cl_physics.qh
+minstagib.qh
 
 cl_client.qh
 
@@ -274,3 +275,4 @@ monsters/boss1.qc
 monsters/walker.qc
 monsters/ewheel.qc
 survive.qc
+minstagib.qc

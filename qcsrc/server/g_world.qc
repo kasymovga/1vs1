@@ -462,11 +462,6 @@ void precache()
     precache_sound ("announcer/robotic/2fragsleft.wav");
     precache_sound ("announcer/robotic/3fragsleft.wav");
     precache_sound ("announcer/robotic/terminated.wav");
-    if (g_minstagib)
-    {
-        precache_sound ("announcer/robotic/lastsecond.wav");
-        precache_sound ("announcer/robotic/narrowly.wav");
-    }
 
     precache_model ("models/sprites/0.spr32");
     precache_model ("models/sprites/1.spr32");
@@ -530,7 +525,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_footsteps);
 	CACHE_CVAR(g_grappling_hook);
 	CACHE_CVAR(g_jetpack);
-	CACHE_CVAR(g_minstagib);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_autotaunt);
@@ -569,6 +563,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
+	minstagib_init();
 	Items_Init();
 	Player_Init();
 	runes_init();

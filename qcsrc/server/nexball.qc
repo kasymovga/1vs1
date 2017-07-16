@@ -60,6 +60,7 @@ float g_nexball_delay_start;
 .entity pov_ball;
 
 float w_nexball_carrier_think();
+var void() nexball_setstatus_NextLink;
 void nexball_setstatus();
 void nb_delayedinit();
 void ResetBall();
@@ -157,7 +158,8 @@ void nb_init() // Called early (worldspawn stage)
 
 	nb_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = nb_PlayerClear;
-	GameHook_PlayerPreThink = nexball_setstatus;
+	nexball_setstatus_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = nexball_setstatus;
 	nb_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = nb_SpeedMod;
 	GameHook_FragLimitOverride = nb_FragLimitOverride;
@@ -219,6 +221,7 @@ void nexball_setstatus (void)
 		} else
 			self.items |= IT_KEY1;
 	}
+	nexball_setstatus_NextLink();
 }
 
 void relocate_nexball (void)

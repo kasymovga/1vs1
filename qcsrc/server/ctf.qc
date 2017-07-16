@@ -1122,6 +1122,7 @@ float ctf_LeadLimitOverride() {
 	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_leadlimit") : cvar("captureleadlimit_override"));
 }
 
+var void() ctf_setstatus_NextLink;
 void ctf_setstatus();
 
 var void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet_NextLink;
@@ -1187,7 +1188,8 @@ void ctf_init()
 	GameHook_FragsHandle = ctf_handle_frags;
 	ctf_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = ctf_PlayerClear;
-	GameHook_PlayerPreThink = ctf_setstatus;
+	ctf_setstatus_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = ctf_setstatus;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;
 	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
@@ -1255,6 +1257,7 @@ void ctf_setstatus()
 				ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
 		}
 	}
+	ctf_setstatus_NextLink();
 };
 /*
 entity(float cteam) ctf_team_has_commander =
