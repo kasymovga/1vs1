@@ -5,7 +5,7 @@ float world_initialized;
 string GetMapname();
 string GetGametype();
 void GotoNextMap();
-void ShuffleMaplist()
+void ShuffleMaplist();
 float() DoNextMapOverride;
 void Map_MarkAsRecent(string m);
 void() MapVote_Start;
@@ -880,6 +880,7 @@ void spawnfunc_worldspawn (void)
 	world_initialized = 1;
 	IRC_Init();
 	InfoMessages_Init();
+    IP2C_InitSV();
 }
 
 void spawnfunc_light (void)
@@ -2296,6 +2297,14 @@ void EndFrame()
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
 	}
+
+    /*
+    if(roundstate != roundstate_old) {
+        defer(0, FireRoundstateTriggers);
+        localcmd("\nsv_hook_roundstatechanged ", ftos(roundstate), "\n");
+        roundstate_old = roundstate;
+    }
+    */
 }
 
 
@@ -2385,6 +2394,7 @@ void SV_Shutdown()
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
 		InfoMessages_Shutdown();
+        IP2C_Shutdown();
 	}
 	else if(world_initialized == 0)
 	{

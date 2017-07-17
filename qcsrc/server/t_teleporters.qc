@@ -134,8 +134,6 @@ void Teleport_Touch (void)
 
 	EXACTTRIGGER_TOUCH;
 
-	makevectors(self.enemy.mangle);
-
 	if(other.classname == "player")
 		RemoveGrapplingHook(other);
 
@@ -160,6 +158,8 @@ void Teleport_Touch (void)
 	{
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 	}
+
+	makevectors(e.mangle);
 
 	if(e.speed)
 		if(vlen(other.velocity) > e.speed)

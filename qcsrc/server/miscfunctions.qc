@@ -1375,7 +1375,11 @@ void URI_Get_Callback(float id, float status, string data)
 	{
 		Radio_URI_Get_Callback(id, status, data);
 	}
-    else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+    else if (id == URI_GET_IP2C)
+    {
+        IP2C_URI_Get_Callback(id, status, data);
+    }
+    else
     {
         print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
     }
@@ -2114,4 +2118,47 @@ vector TeamColorMod(float teamcolor) {
 		return '1.4 0.2 1.4';
 
 	return '0 0 0';
+}
+
+float Team_Index(float t) {
+    switch(t) {
+        case COLOR_TEAM1: return 0;
+        case COLOR_TEAM2: return 1;
+        case COLOR_TEAM3: return 2;
+        case COLOR_TEAM4: return 3;
+    }
+
+    return -1;
+}
+
+float Team_FromIndex(float i) {
+    switch(i) {
+        case 0: return COLOR_TEAM1;
+        case 1: return COLOR_TEAM2;
+        case 2: return COLOR_TEAM3;
+        case 3: return COLOR_TEAM4;
+    }
+
+    return 0;
+}
+
+void dropentities(entity platform) {
+    const nudge = '1 1 1';
+    entity e;
+
+    while((e = findflags(e, flags, FL_ONGROUND))) {
+        if(boxesoverlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
+            e.flags &~= FL_ONGROUND;
+            UpdateCSQCProjectileNextFrame(e);
+        }
+    }
+
+    while((e = findentity(e, aiment, platform))) {
+        if(e.movetype == MOVETYPE_FOLLOW) {
+            e.movetype = MOVETYPE_TOSS;
+            e.aiment = world;
+            e.flags &~= FL_ONGROUND;
+            UpdateCSQCProjectileNextFrame(e);
+        }
+    }
 }

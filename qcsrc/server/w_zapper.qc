@@ -133,8 +133,11 @@ float W_Zapper_Beam_Send(entity to, float sf) {
 
     if(o > maxclients) {
         o = 0;
-		sf |= 16;
 	}
+
+    if(!o) {
+        sf |= 16;
+    }
 
     if(self.classname == "zapper_shield_beam")
         WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER_SHIELD);

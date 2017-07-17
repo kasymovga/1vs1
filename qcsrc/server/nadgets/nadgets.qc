@@ -158,7 +158,7 @@ void HG_Init(void) {
         ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, '0 0 -3', '0 0 -3');
         ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, '0 0 -3', '0 0 -3');
         ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, '0 0 -3', '0 0 -3');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, '0 0 -3', '0 0 -3');
+        // ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, '0 0 -3', '0 0 -3');
         ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, '0 0 -3', '0 0 -3');
         ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, '0 0 -3', '0 0 -3');
         ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, '0 0 -3', '0 0 -3');
@@ -166,7 +166,7 @@ void HG_Init(void) {
         ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
         ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
         ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
+        // ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
         ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
         ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
         ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '-1 -1 -1', HG_SIZE_TRANSLOC * '1 1 1');
@@ -177,6 +177,8 @@ void HG_Init(void) {
 
     HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
     GameHookChain_ObserverSpawn = HG_ObserverSpawn;
+
+    Napalm_Init();
 }
 
 void HG_Precache(void) {

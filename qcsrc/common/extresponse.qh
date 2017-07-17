@@ -1,0 +1,8 @@
+
+typedef void(float, string) er_func_t;
+
+.er_func_t er_func;
+
+void ER_Query(string dst, string input);
+void ER_RegisterHandler(string command, er_func_t callback, entity selfent);
+void ER_Update(void);

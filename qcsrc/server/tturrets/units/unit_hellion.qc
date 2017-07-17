@@ -6,7 +6,7 @@ void turret_hellion_dinit();
 void turret_hellion_attack();
 void turret_hellion_missile_explode();
 void turret_hellion_missile_think();
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce);
 
 void turret_hellion_postthink()
 {

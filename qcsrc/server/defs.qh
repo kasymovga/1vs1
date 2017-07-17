@@ -622,3 +622,5 @@ enum {
 #define BUTTON_NADGET2 button9
 
 .float lastdamage;
+
+null_t NULL; // FIXME: declare this in common, and get rid of string_null, func_null, etc. universally.

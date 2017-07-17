@@ -214,6 +214,9 @@ set sv_spawnreplace_weapon_hyperblaster weapon_hlac
 set sv_spawnreplace_misc_breakablemodel "func_breakable"
 set sv_spawnreplace_weapon_seeker "weapon_hagar"
 
+//Quake Live compat
+set sv_spawnreplace_func_advertisement "func_wall"
+
 set sv_infomessages_interval "10"
 set sv_infomessage1 ""
 set sv_infomessage2 ""
@@ -436,6 +439,13 @@ set sv_model_armorbig ""
 set sv_model_armorlarge ""
 
 set sv_maxidle_forcespec 120
+
+set sv_ip2country 0
+set sv_ip2country_allow_fakeflag 0
+set sv_ip2country_use_builtin 1
+set sv_ip2country_server "udp://108.61.164.188:16886"
+set sv_ip2country_timeout 30
+set sv_ip2country_proxy 0
 
 set g_balance_zapper_animtime 0.1
 set g_balance_zapper_primary_ammo 1

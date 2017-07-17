@@ -1386,6 +1386,8 @@ void ClientConnect (void)
 		PhysicClientInit(self);
 		Check_ForRetard(self);
 	}
+
+	IP2C_SetCountry(self);
 }
 
 /*

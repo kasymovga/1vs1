@@ -490,9 +490,9 @@ float   turret_stdproc_targetscore_support(entity e_turret,entity e_target);
 * Aim functions
 */
 /// Generic aimer guided by self.aim_flags
-vector turret_stdproc_aim_generic()
+vector turret_stdproc_aim_generic();
 // Straight line, current location
-//vector  turret_stdproc_aim_simple()
+//vector  turret_stdproc_aim_simple();
 
 /*
 * Turret turning & pitch

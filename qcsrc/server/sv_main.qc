@@ -139,6 +139,8 @@ void StartFrame (void)
 	servertime = time;
 	serverframetime = frametime;
 
+	ER_Update();
+
 #ifdef PROFILING
 	if(time > client_cefc_accumulatortime + 1)
 	{

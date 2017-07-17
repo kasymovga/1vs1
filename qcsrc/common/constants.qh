@@ -104,7 +104,8 @@ const float ENT_CLIENT_LOCATION_REQUEST = 31;
 const float ENT_CLIENT_DLC_LIST = 32;
 const float ENT_CLIENT_ZAPPER_SHIELD = 33;
 const float ENT_CLIENT_ZAPPER = 34;
-#define ENT_CLIENT_COUNT 35
+const float ENT_CLIENT_INIT_IP2C = 35;
+#define ENT_CLIENT_COUNT 36
 
 //const float ENT_CLIENT_TURRET = 40;
 
@@ -385,7 +386,7 @@ const float STAT_SPIDERBOT_SHIELD  = 65;
 /**
  * Score indices
  */
-#define MAX_SCORE 10
+#define MAX_SCORE 11
 #define MAX_TEAMSCORE 2
 
 #define ST_SCORE 0
@@ -395,6 +396,7 @@ const float STAT_SPIDERBOT_SHIELD  = 65;
 #define SP_SCORE 3
 #define SP_DAMAGE 4
 #define SP_STATUS 5
+#define SP_COUNTRY 10
 
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 

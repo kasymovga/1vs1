@@ -14,6 +14,8 @@
 .float debrisfadetime;
 .float debrisdamageforcescale;
 .float debrisskin;
+.float napalm_count;
+.float napalm_color;
 
 .string mdl_dead; // or "" to hide when broken
 .string debris; // space separated list of debris models
@@ -141,6 +143,28 @@ void func_breakable_restore()
 	func_breakable_behave_restore();
 }
 
+void func_breakable_launch_napalm(void) {
+    // yes, this is a lazy hack
+
+    var nc = self.napalm_count;
+
+    if(nc <= 0)
+        return;
+
+    var saveteam = self.owner.team;
+    self.hg_type = HG_REMOTE;
+    self.owner.team = Team_FromIndex(self.napalm_color);
+
+    for(var c = 0; c < nc; ++c) {
+        Napalm_Spawn(self.owner, self.origin, 3, 0.15, DEATH_HURTTRIGGER, 180, 80, 20, 1.5) {
+            velocity: RandomSpreadVector(70, 300, 300, 10)
+        };
+    }
+
+    self.hg_type = 0;
+    self.owner.team = saveteam;
+}
+
 vector debrisforce; // global, set before calling this
 void func_breakable_destroy() {
 	float n, i;
@@ -156,6 +180,7 @@ void func_breakable_destroy() {
 			LaunchDebris(argv(i), debrisforce);
 	}
 
+    func_breakable_launch_napalm();
 	func_breakable_destroyed();
 
 	if(self.noise)
@@ -172,7 +197,7 @@ void func_breakable_destroy() {
 		self.think = func_breakable_restore;
 		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
 	}
- 
+
 	oldmsg = self.message;
 	self.message = "";
 	other = self;
@@ -262,4 +287,8 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+
+	if(self.napalm_count > 0) {
+		Napalm_Init();
+	}
 }

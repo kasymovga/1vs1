@@ -807,6 +807,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
+        dropentities(self);
+
 		// become fully visible
 		self.alpha = 1;
 		// clear selected player display
@@ -1128,12 +1130,13 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 
 	// FLOOD CONTROL
 	flood = 0;
+	var .float flood_field;
+
 	if(floodcontrol)
 	{
 		float flood_spl;
 		float flood_burst;
 		float flood_lmax;
-		var .float flood_field;
 		float lines;
 		if(privatesay)
 		{
@@ -1185,10 +1188,10 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 			flood = 1;
 			msgstr = fullmsgstr;
 		}
-	}
 
-	if (timeoutStatus == 2) //when game is paused, no flood protection
-		source.flood_field = flood = 0;
+		if (timeoutStatus == 2) //when game is paused, no flood protection
+			source.flood_field = flood = 0;
+	}
 
 	if(flood == 2)
 	{
