@@ -32,6 +32,10 @@ void Radio_RealClientConnect(void);
 
 var void() Radio_ServerFrame_NextLink;
 void Radio_ServerFrame(void);
+var float(string cmd, float tokens) Radio_ClientCommandHandle_NextLink;
+float Radio_ClientCommandHandle(string cmd, float tokens);
+var float(string cmd, float tokens) Radio_GameCommandHandle_NextLink;
+float Radio_GameCommandHandle(string cmd, float tokens);
 
 void Radio_Init(void) {
 	radio_playing_queue = -1;
@@ -53,6 +57,10 @@ void Radio_Init(void) {
 	GameHookChain_RealClientConnect = Radio_RealClientConnect;
 	Radio_ServerFrame_NextLink = GameHookChain_ServerFrame;
 	GameHookChain_ServerFrame = Radio_ServerFrame;
+	Radio_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
+	GameHookChain_ClientCommandHandle = Radio_ClientCommandHandle;
+	Radio_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
+	GameHookChain_GameCommandHandle = Radio_GameCommandHandle;
 }
 
 void Radio_SendPreload(entity e, string url) {
@@ -103,9 +111,6 @@ void Radio_SendPlay(entity e) {
 }
 
 void Radio_Preload(string url) {
-	if(!sv_radio)
-		return;
-
 	if(!sv_radio_preload)
 		return;
 
@@ -114,9 +119,6 @@ void Radio_Preload(string url) {
 }
 
 void Radio_Play(string url, string fname, float loop) {
-	if(!sv_radio)
-		return;
-
 	unzone_ifneeded(radio_url);
 	unzone_ifneeded(radio_filename);
 
@@ -159,9 +161,6 @@ void Radio_Queue_Request(void) {
 }
 
 void Radio_Queue_PlayFirst(void) {
-	if(!sv_radio)
-		return;
-
 	if(!player_count || gameover) {
 		Radio_Stop();
 		return;
@@ -208,9 +207,6 @@ string Radio_Queue_GetFreeID(void) {
 }
 
 void Radio_Queue(string url, string fname, float len, string desc) {
-	if(!sv_radio)
-		return;
-
 	radio_queue_next_request = 0;
 
 	string id = Radio_Queue_GetFreeID();
@@ -328,4 +324,54 @@ void Radio_RealClientConnect(void) {
 	if(sv_radio_preload)
 		Radio_SendPreload(self, radio_url);
 	defer(3, Radio_ClientConnect_Delayed);
+}
+
+float Radio_ClientCommandHandle(string cmd, float tokens) {
+    if(cmd == "radio") {
+//        if(!self.scorekeeper)
+//            return FALSE;
+//
+//        float o = self.radio_enabled;
+//        self.radio_enabled = stof(argv(1));
+//        PlayerScore_SetFlagsBoolean(self, SPFLAG_MUTE, !self.radio_enabled);
+//
+//        if(!o && self.radio_enabled)
+		Radio_SendPlay(self);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+float Radio_GameCommandHandle(string cmd, float tokens) {
+    if(argv(0) == "netmusic" || argv(0) == "radio_play") {
+    	Radio_Play(argv(1), argv(2), (argv(3) == "loop"));
+    	return TRUE;
+    }
+    if(argv(0) == "stopmusic" || argv(0) == "radio_stop") {
+    	Radio_Stop();
+    	return TRUE;
+    }
+    if(argv(0) == "radio_preload") {
+    	Radio_Preload(argv(1));
+    	return TRUE;
+    }
+    if(argv(0) == "radio_queue") {
+    	Radio_Queue(argv(1), argv(2), stof(argv(3)), uri_unescape(argv(4)));
+    	return TRUE;
+    }
+    if(argv(0) == "radio_queue_skip") {
+    	Radio_Queue_Skip();
+    	return TRUE;
+    }
+    if(argv(0) == "radio_queue_restart") {
+    	Radio_Queue_PlayFirst();
+    	return TRUE;
+    }
+    if(argv(0) == "radio_evil") {
+		entity e;
+        FOR_EACH_REALCLIENT(e)
+            stuffcmd(e, "radio 1\n");
+        return TRUE;
+    }
+	return FALSE;
 }

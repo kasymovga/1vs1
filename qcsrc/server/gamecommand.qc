@@ -616,6 +616,9 @@ void GameCommand(string command)
 	if(GameCommand_Generic(command))
 		return;
 
+	if (GameHookChain_GameCommandHandle(command, argc))
+		return;
+
 	if(argv(0) == "printstats")
 	{
 		DumpStats(FALSE);
