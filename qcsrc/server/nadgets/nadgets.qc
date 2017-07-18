@@ -13,6 +13,9 @@ float g_nadgets_drop_on_death;
 void HG_UpdateDetonables(void);
 void HG_ForceDetonateAll(void);
 
+var void() HG_PlayerPreThink_NextLink;
+void HG_PlayerPreThink();
+
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
 
@@ -177,6 +180,8 @@ void HG_Init(void) {
 
     HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
     GameHookChain_ObserverSpawn = HG_ObserverSpawn;
+	HG_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = HG_PlayerPreThink;
 
     Napalm_Init();
 }
@@ -567,10 +572,7 @@ void HG_AdvanceRegen(entity plr, float delta, float limit) {
     }
 }
 
-void HG_PlayerFrame(void) {
-    if(!g_nadgets)
-        return;
-
+void HG_PlayerPreThink(void) {
     if(time < game_starttime)
         return;
 

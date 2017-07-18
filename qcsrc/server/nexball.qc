@@ -60,7 +60,8 @@ float g_nexball_delay_start;
 .entity pov_ball;
 
 float w_nexball_carrier_think();
-void nexball_setstatus();
+var void() nexball_PlayerPreThink_NextLink;
+void nexball_PlayerPreThink();
 void nb_delayedinit();
 void ResetBall();
 void basketball_touch();
@@ -157,7 +158,8 @@ void nb_init() // Called early (worldspawn stage)
 
 	nb_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = nb_PlayerClear;
-	GameHook_PlayerPreThink = nexball_setstatus;
+	nexball_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = nexball_PlayerPreThink;
 	nb_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = nb_SpeedMod;
 	GameHook_FragLimitOverride = nb_FragLimitOverride;
@@ -202,7 +204,7 @@ void ball_restart (void)
 	ResetBall();
 }
 
-void nexball_setstatus (void)
+void nexball_PlayerPreThink (void)
 {
 	local entity oldself;
 	self.items &~= IT_KEY1;
@@ -219,6 +221,7 @@ void nexball_setstatus (void)
 		} else
 			self.items |= IT_KEY1;
 	}
+	nexball_PlayerPreThink_NextLink();
 }
 
 void relocate_nexball (void)

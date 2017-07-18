@@ -7,7 +7,7 @@ var float(entity inflictor, entity attacker, float damage, float deathtype, vect
 var float(entity plr, float wep) GameHookChain_PlayerCanFire = { return TRUE; }
 var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
-var void() GameHook_PlayerPreThink = {}
+var void() GameHookChain_PlayerPreThink = {}
 var entity() GameHook_SelectSpawnPoint = {
 	entity spot;
 	spot = SelectSpawnPoint (FALSE);

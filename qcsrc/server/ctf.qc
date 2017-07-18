@@ -1122,7 +1122,8 @@ float ctf_LeadLimitOverride() {
 	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_leadlimit") : cvar("captureleadlimit_override"));
 }
 
-void ctf_setstatus();
+var void() ctf_PlayerPreThink_NextLink;
+void ctf_PlayerPreThink();
 
 var void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet_NextLink;
 void ctf_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
@@ -1187,7 +1188,8 @@ void ctf_init()
 	GameHook_FragsHandle = ctf_handle_frags;
 	ctf_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = ctf_PlayerClear;
-	GameHook_PlayerPreThink = ctf_setstatus;
+	ctf_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = ctf_PlayerPreThink;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;
 	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
@@ -1211,7 +1213,7 @@ void ctf_setstatus2(entity flag, float shift)
 	}
 };
 
-void ctf_setstatus()
+void ctf_PlayerPreThink()
 {
 	self.items &~= IT_RED_FLAG_TAKEN;
 	self.items &~= IT_RED_FLAG_LOST;
@@ -1255,6 +1257,7 @@ void ctf_setstatus()
 				ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
 		}
 	}
+	ctf_PlayerPreThink_NextLink();
 };
 /*
 entity(float cteam) ctf_team_has_commander =
