@@ -299,10 +299,8 @@ void IP2C_PrintRequests(void) {
         IP2C_Log(strcat(e.ip2c_callbackip, " : ^5", ftos(time - e.ip2c_requested_at), "s"));
 }
 
-float IP2C_GameCommand(string command) {
-    float argc = tokenize_console(command);
-
-    switch(argv(0)) {
+float IP2C_GameCommand(string cmd, float tokens) {
+    switch(cmd) {
         case "help":
             print("  ip2c_lookup ipaddress\n");
             print("  ip2c_status\n");
@@ -323,7 +321,7 @@ float IP2C_GameCommand(string command) {
             return TRUE;
 
         case "ip2c_putcache":
-            if(argc < 3) {
+            if(tokens < 3) {
                 print("Usage: ip2c_putcache ip countrycode\n");
                 return TRUE;
             }

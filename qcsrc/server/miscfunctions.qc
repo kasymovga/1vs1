@@ -1354,6 +1354,7 @@ float MAX_IPBAN_URIS = 16;
 float URI_GET_DISCARD   = 0;
 float URI_GET_IPBAN     = 1;
 float URI_GET_IPBAN_END = 16;
+float URI_GET_RADIO = 32;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -1370,6 +1371,10 @@ void URI_Get_Callback(float id, float status, string data)
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
     }
+    else if (id == URI_GET_RADIO)
+	{
+		Radio_URI_Get_Callback(id, status, data);
+	}
     else if (id == URI_GET_IP2C)
     {
         IP2C_URI_Get_Callback(id, status, data);
@@ -2085,7 +2090,7 @@ void defer_for(entity e_for, float t, void() callback) {
 }
 
 void defer(float t, void() callback) {
-	defer_for(world, t, callback);
+	defer_for(self, t, callback);
 }
 
 vector RandomSpreadVector(float side, float up, float up_min, float up_min_rand) {
@@ -2113,4 +2118,47 @@ vector TeamColorMod(float teamcolor) {
 		return '1.4 0.2 1.4';
 
 	return '0 0 0';
+}
+
+float Team_Index(float t) {
+    switch(t) {
+        case COLOR_TEAM1: return 0;
+        case COLOR_TEAM2: return 1;
+        case COLOR_TEAM3: return 2;
+        case COLOR_TEAM4: return 3;
+    }
+
+    return -1;
+}
+
+float Team_FromIndex(float i) {
+    switch(i) {
+        case 0: return COLOR_TEAM1;
+        case 1: return COLOR_TEAM2;
+        case 2: return COLOR_TEAM3;
+        case 3: return COLOR_TEAM4;
+    }
+
+    return 0;
+}
+
+void dropentities(entity platform) {
+    const nudge = '1 1 1';
+    entity e;
+
+    while((e = findflags(e, flags, FL_ONGROUND))) {
+        if(boxesoverlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
+            e.flags &~= FL_ONGROUND;
+            UpdateCSQCProjectileNextFrame(e);
+        }
+    }
+
+    while((e = findentity(e, aiment, platform))) {
+        if(e.movetype == MOVETYPE_FOLLOW) {
+            e.movetype = MOVETYPE_TOSS;
+            e.aiment = world;
+            e.flags &~= FL_ONGROUND;
+            UpdateCSQCProjectileNextFrame(e);
+        }
+    }
 }

@@ -61,6 +61,7 @@ irc.qh
 akimbo.qh
 
 freeze.qh
+radio.qh
 
 clanarena.qh
 
@@ -172,6 +173,8 @@ w_fireball.qc
 w_supershotgun.qc
 w_zapper.qc
 
+g_laserbeam.qc
+
 t_items.qc
 cl_weapons.qc
 cl_impulse.qc
@@ -276,3 +279,4 @@ monsters/walker.qc
 monsters/ewheel.qc
 survive.qc
 minstagib.qc
+radio.qc

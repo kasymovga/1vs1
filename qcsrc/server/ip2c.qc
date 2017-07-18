@@ -46,6 +46,14 @@ float IP2C_ClientCommandHandle(string cmd, float tokens) {
     return IP2C_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
+var float(string cmd, float tokens) IP2C_GameCommandHandle_NextLink;
+float IP2C_GameCommandHandle(string cmd, float tokens) {
+	if(IP2C_GameCommand(cmd, tokens))
+		return TRUE;
+
+	return FALSE;
+}
+
 void IP2C_InitSV(void) {
     CACHE_CVAR(sv_ip2country);
     CACHE_CVAR(sv_ip2country_allow_fakeflag);
@@ -66,4 +74,6 @@ void IP2C_InitSV(void) {
         IP2C_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
         GameHookChain_ClientCommandHandle = IP2C_ClientCommandHandle;
     }
+	IP2C_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
+	GameHookChain_GameCommandHandle = IP2C_GameCommandHandle;
 }

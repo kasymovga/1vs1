@@ -7,7 +7,7 @@ void IP2C_ClearCache(void);
 void IP2C_Lookup(string ip, ip2c_callback_t callback, float timeout, entity callbackentity);
 void IP2C_URI_Get_Callback(float id, float status, string data);
 void IP2C_PrintRequests(void);
-float IP2C_GameCommand(string cmd);
+float IP2C_GameCommand(string cmd, float tokens);
 
 ip2c_callback_t IP2C_Callback_DumpToConsole;
 

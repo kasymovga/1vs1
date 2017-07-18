@@ -36,6 +36,7 @@ dlc.qh
 
 main.qh
 ../common/miscfunctions.qh
+radio.qh
 
 cvar.qc
 
@@ -92,3 +93,4 @@ progressbar.qc
 location_request.qc
 dlc.qc
 ../common/dlc.qc
+radio.qc

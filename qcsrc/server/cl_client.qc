@@ -1381,6 +1381,7 @@ void ClientConnect (void)
 	self.retard = -1;
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
+		GameHookChain_RealClientConnect();
 		IRC_Announce_ClientConnect(self);
 		PhysicClientInit(self);
 		Check_ForRetard(self);
@@ -2049,8 +2050,7 @@ void PlayerPreThink (void)
 			self.angles = self.lastV_angle;
 			self.fixangle = TRUE;
 		}
-
-		HG_PlayerFrame();
+		GameHookChain_PlayerPreThink();
 
 		if(frametime)
 			player_effects();
@@ -2111,8 +2111,6 @@ void PlayerPreThink (void)
 			player_regen();
 			player_anim();
 		}
-
-		GameHookChain_PlayerPreThink();
 
 		self.dmg_team = max(0, self.dmg_team - g_teamdamage_resetspeed * frametime);
 

@@ -571,6 +571,7 @@ void readlevelcvars(void)
 	WalkieTalkie_Init();
 	Akimbo_Init();
 	Hat_Init();
+	Radio_Init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");
@@ -2291,6 +2292,14 @@ void EndFrame()
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
 	}
+
+    /*
+    if(roundstate != roundstate_old) {
+        defer(0, FireRoundstateTriggers);
+        localcmd("\nsv_hook_roundstatechanged ", ftos(roundstate), "\n");
+        roundstate_old = roundstate;
+    }
+    */
 }
 
 

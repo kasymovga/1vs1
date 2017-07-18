@@ -61,6 +61,7 @@ float GameHook_ForceMod;
 var void(entity targ, entity attacker, float deathtype) GameHookChain_DamageForceModsSet = {}
 var void(entity menu) GameHookChain_GameMenuAddItems = {};
 var float(string cmd, float tokens) GameHookChain_ClientCommandHandle = { return FALSE; }
+var float(string cmd, float tokens) GameHookChain_GameCommandHandle = { return FALSE; }
 var void() GameHook_EntityPreSpawn = {};
 float GameHook_HealthMaxMod;
 float GameHook_ArmorHealthLimitMod;
@@ -79,3 +80,5 @@ var float(entity item, entity player) GameHookChain_ItemGiveToHandle = { return 
 float GameHookChain_ItemGiveToHandle_PickedUp;
 float GameHookChain_ItemGiveToHandle_SwitchWeapon;
 var float(float wpn) GameHookChain_WeaponSpawnHandle = { return FALSE; }
+var void() GameHookChain_RealClientConnect = {}
+var void() GameHookChain_ServerFrame = {}

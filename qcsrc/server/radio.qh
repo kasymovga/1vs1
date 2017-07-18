@@ -1,0 +1,2 @@
+void Radio_Init(void);
+void Radio_URI_Get_Callback(float id, float status, string data);

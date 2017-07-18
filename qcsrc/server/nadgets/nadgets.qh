@@ -1,7 +1,6 @@
 void HG_Init(void);
 void HG_Precache(void);
 void HG_SetContext(float isalt);
-void HG_PlayerFrame(void);
 void HG_Attack(void);
 void HG_ResetState(entity, float);
 void HG_ResetAmmo(entity, float);

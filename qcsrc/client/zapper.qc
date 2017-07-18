@@ -71,7 +71,7 @@ void Zapper_Draw(void) {
 
     zapper_particles_trace_callback_beamoffs = -time * 5;
     zapper_particles_trace_callback_origin = start;
-    
+
     vector dynlight_org = self.zapper_start;
 
     if(first_person) {
@@ -98,7 +98,7 @@ void Zapper_Draw_Shield(void) {
         self.zapper_start = view_origin + view_forward * (zapper_shotorigin_x - 1) + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
         self.zapper_end = self.zapper_start + view_forward * 30;
     }
-    
+
     vector start = self.zapper_start;
     vector end = self.zapper_end;
 
@@ -197,10 +197,10 @@ void LightingArc_Draw(void) {
         case COLOR_TEAM4: tex = "particles/hook_pink";      break;
         default         : tex = "particles/hook_green";     break;
     }
-    
+
     float i; for(i = 0; i < 5; ++i)
         Draw_CylindricLine(self.origin, self.velocity, 25 * self.alpha, tex, 0.02, random(), '1 1 1', self.alpha, DRAWFLAG_ADDITIVE);
-    
+
     self.alpha = self.alpha - frametime * 3;
     if(self.alpha < 0)
         remove(self);
@@ -213,14 +213,14 @@ void LightingArc_Segment(vector start, vector end, float ateam) {
     e.velocity = end;
     e.draw = LightingArc_Draw;
     e.team = ateam;
-    
+
     trailparticles(world, rm_particleeffectnum_team("RM_LIGHTNING", ateam, 2), start, end);
 }
 
 
 void Zapper_ReadLightning(void) {
     vector from, to;
-    
+
     float zapper_lightning_ateam  = ReadByte();
     from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
     to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();

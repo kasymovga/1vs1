@@ -29,7 +29,10 @@ void() plat_trigger_use;
 void() plat_go_up;
 void() plat_go_down;
 void() plat_crush;
+
 float PLAT_LOW_TRIGGER = 1;
+float PLAT_NO_TRIGGER = 8;
+float PLAT_REVERSIBLE = 16;
 
 void plat_spawn_inside_trigger()
 {
@@ -58,6 +61,8 @@ void plat_spawn_inside_trigger()
 		tmin_y = (self.mins_y + self.maxs_y) / 2;
 		tmax_y = tmin_y + 1;
 	}
+
+	self.enemy = trigger;
 
 	setsize (trigger, tmin, tmax);
 };
@@ -98,11 +103,18 @@ void plat_center_touch()
 	if (other.health <= 0)
 		return;
 
+	var trig = self;
 	self = self.enemy;
-	if (self.state == 2)
-		plat_go_up ();
-	else if (self.state == 1)
+
+	if(self.state == 2) {
+		if(trig.wait < 0) {
+			trig.wait = time + self.delay;
+		} else if(time > trig.wait) {
+			plat_go_up();
+		}
+	} else if(self.state == 1) {
 		self.nextthink = self.ltime + 1;	// delay going down
+	}
 };
 
 void plat_outside_touch()
@@ -120,8 +132,12 @@ void plat_outside_touch()
 
 void plat_trigger_use()
 {
-	if (self.think)
+	if (self.think && !(self.spawnflags & PLAT_REVERSIBLE) || self.state != 4 && self.state != 1)
 		return;		// already activated
+
+    if(self.spawnflags & PLAT_REVERSIBLE && self.enemy)
+        self.enemy.wait = -1;
+
 	plat_go_down();
 };
 
@@ -159,7 +175,7 @@ void plat_use()
 
 void plat_reset()
 {
-	IFTARGETED
+	if(!self.nottargeted && self.targetname != "" && !(self.spawnflags & PLAT_REVERSIBLE))
 	{
 		setorigin (self, self.pos1);
 		self.state = 4;
@@ -171,6 +187,14 @@ void plat_reset()
 		self.state = 2;
 		self.use = plat_trigger_use;
 	}
+
+	if(self.enemy)
+		self.enemy.wait = 0;
+
+	self.velocity = '0 0 0';
+	self.think = SUB_Null;
+	self.nextthink = 0;
+	stopsound(self, CHAN_TRIGGER);
 }
 
 void spawnfunc_path_corner() { };
@@ -238,7 +262,12 @@ void spawnfunc_func_plat()
 	self.pos2_z = self.origin_z -
 			((cvar("sv_gameplayfix_useheightforplat") && self.height) ? self.height : self.size_z) + 8;
 
-	plat_spawn_inside_trigger ();	// the "start moving" trigger
+	if(!self.delay) {
+		self.delay = 2;
+	}
+
+	if(!(self.spawnflags & PLAT_NO_TRIGGER))
+		plat_spawn_inside_trigger ();	// the "start moving" trigger
 
 	self.reset = plat_reset;
 	plat_reset();
@@ -596,6 +625,7 @@ void spawnfunc_func_button()
 
 	self.blocked = button_blocked;
 	self.use = button_use;
+    self.reset = button_reset;
 
 //	if (self.health == 0) // all buttons are now shootable
 //		self.health = 10;
@@ -1352,11 +1382,15 @@ void spawnfunc_func_door_rotating()
 
     if (self.sounds > 0)
 	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
 	}
+
+    if(self.noise1)
+        precache_sound(self.noise1);
+
+    if(self.noise2)
+        precache_sound(self.noise2);
 
 	if (!self.speed)
 		self.speed = 50;
@@ -1852,4 +1886,108 @@ void spawnfunc_func_vectormamamam()
 	self.effects |= EF_LOWPRECISION;
 
 	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
+}
+
+/*
+ * magicwall
+ */
+
+.float alpha_solid;
+.float alpha_nonsolid;
+.float oldsolid;
+
+#define MAGICWALL_ALPHAFIELD(e) (if((e).solid == SOLID_BSP) alpha_solid else alpha_nonsolid)
+
+#define SPAWNFLAG_MW_START_HIDDEN 4
+#define SPAWNFLAG_MW_TOGGLE 8
+
+void func_magicwall_think_transition(void) {
+    self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
+    if(self.alpha && self.alpha < self.alpha_solid)
+        self.nextthink = time;
+    else if(self.think1)
+        self.think1();
+}
+
+void func_magicwall_start_transition(float sol, void(void) done) {
+    self.solid = sol;
+
+    if(!sol)
+        dropentities(self);
+
+    if(self.speed < 0) {
+        self.alpha = self.MAGICWALL_ALPHAFIELD(self);
+        if(done)
+            done();
+        return;
+    }
+
+    self.think = func_magicwall_think_transition;
+    self.think1 = done;
+    self.nextthink = time;
+}
+
+void spawnfunc_func_magicwall(void) {
+    G_MODEL_INIT(SOLID_BSP)
+
+    if(self.alpha_solid <= 0)
+        self.alpha_solid = 1;
+
+    if(self.alpha_nonsolid < 0)
+        self.alpha_nonsolid = 0;
+
+    if(!self.wait && self.target == "")
+        self.wait = self.delay;
+
+    if(!self.wait)
+        self.wait = 3;
+
+    if(!self.speed)
+        self.speed = 1;
+
+    self.oldsolid = if(self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) SOLID_NOT else SOLID_BSP;
+
+    self.customizeentityforclient = inline float(void) {
+        return (self.alpha > 0);
+    };
+
+    self.think = inline void(void) {
+        self.nextthink = time;
+        self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
+    };
+
+    self.reset = inline void(void) {
+        self.solid = self.oldsolid;
+        self.alpha = self.MAGICWALL_ALPHAFIELD(self);
+        self.think = SUB_Null;
+    };
+
+    self.use = if(self.spawnflags & SPAWNFLAG_MW_TOGGLE)
+        inline void(void) {
+            func_magicwall_start_transition(if(self.solid == SOLID_BSP) SOLID_NOT else SOLID_BSP, func_null);
+        } else inline void(void) {
+            if(self.oldsolid != self.solid) {
+                if(self.think && self.think != func_magicwall_think_transition)
+                    self.nextthink = time + self.wait;
+                return;
+            }
+
+            func_magicwall_start_transition(if(self.oldsolid == SOLID_BSP) SOLID_NOT else SOLID_BSP,
+                if(self.wait >= 0) inline void(void) {
+                    self.nextthink = time + self.wait;
+                    self.think = inline void(void) {
+                        func_magicwall_start_transition(self.oldsolid, func_null);
+                    };
+                } else func_null);
+        };
+
+    self.touch = inline void(void) {
+        if(other.classname == "player" && !PLAYER_DEAD(other))
+            using(activator = other)
+                SUB_UseTargets();
+    };
+
+    // self.clipgroup = CLIPGROUP_OBSERVER;
+    self.reset();
+    self.nextthink = time;
 }
