@@ -292,7 +292,6 @@ void player_effects()
 		{
 			if (time < self.strength_finished)
 			{
-				self.alpha = g_minstagib_invis_alpha;
 				self.items |= IT_STRENGTH;
 				sprint(self, "^3You are invisible\n");
 			}

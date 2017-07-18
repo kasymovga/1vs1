@@ -270,6 +270,11 @@ float minstagib_ThrowWeaponAllowed(float doreduce) {
 	return minstagib_ThrowWeaponAllowed_NextLink(doreduce);
 }
 
+var float(entity plr, entity viewer, float dalpha) minstagib_PlayerAlphaMod_NextLink;
+float minstagib_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
+	return ((time < plr.strength_finished) ? g_minstagib_invis_alpha : 1) * minstagib_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
+}
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -293,6 +298,8 @@ void minstagib_init() {
 	GameHookChain_SpeedMod = minstagib_SpeedMod;
 	minstagib_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
+	minstagib_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
+	GameHookChain_PlayerAlphaMod = minstagib_PlayerAlphaMod;
 }
 
 void spawnfunc_item_minst_cells (void) {
