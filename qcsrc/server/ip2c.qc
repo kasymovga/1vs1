@@ -48,7 +48,7 @@ float IP2C_ClientCommandHandle(string cmd, float tokens) {
 
 var float(string cmd, float tokens) IP2C_GameCommandHandle_NextLink;
 float IP2C_GameCommandHandle(string cmd, float tokens) {
-	if(IP2C_GameCommand(cmd))
+	if(IP2C_GameCommand(cmd, tokens))
 		return TRUE;
 
 	return FALSE;

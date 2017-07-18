@@ -583,8 +583,9 @@ void GameCommand(string command)
 	string s;
 	entity plr;
 	argc = tokenize_console(command);
+	string cmd = argv(0);
 
-	if(argv(0) == "help" || argc == 0)
+	if(cmd == "help" || argc == 0)
 	{
 		print("Usage: sv_cmd COMMAND..., where possible commands are:\n");
 		print("  adminmsg clientnumber \"message\"\n");
@@ -604,7 +605,7 @@ void GameCommand(string command)
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
-		IP2C_GameCommand("help");
+		IP2C_GameCommand("help", argc);
 		return;
 	}
 
@@ -617,16 +618,16 @@ void GameCommand(string command)
 	if(GameCommand_Generic(command))
 		return;
 
-	if (GameHookChain_GameCommandHandle(command, argc))
+	if (GameHookChain_GameCommandHandle(cmd, argc))
 		return;
 
-	if(argv(0) == "printstats")
+	if(cmd == "printstats")
 	{
 		DumpStats(FALSE);
 		return;
 	}
 
-	if(argv(0) == "make_mapinfo")
+	if(cmd == "make_mapinfo")
 	{
 		e = spawn();
 		e.classname = "make_mapinfo";
@@ -636,13 +637,13 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "gotomap") if(argc == 2)
+	if(cmd == "gotomap") if(argc == 2)
 	{
 		print(GotoMap(argv(1)), "\n");
 		return;
 	}
 
-	if(argv(0) == "gametype") if(argc == 2)
+	if(cmd == "gametype") if(argc == 2)
 	{
 		float t, tsave;
 		s = argv(1);
@@ -668,7 +669,7 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "adminmsg") if(argc == 3)
+	if(cmd == "adminmsg") if(argc == 3)
 	{
 		entno = stof(argv(1));
 		client = world;
@@ -685,28 +686,28 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "savedb") if(argc == 2)
+	if(cmd == "savedb") if(argc == 2)
 	{
 		db_save(ServerProgsDB, argv(1));
 		print("DB saved.\n");
 		return;
 	}
 
-	if(argv(0) == "dumpdb") if(argc == 2)
+	if(cmd == "dumpdb") if(argc == 2)
 	{
 		db_dump(ServerProgsDB, argv(1));
 		print("DB dumped.\n");
 		return;
 	}
 
-	if(argv(0) == "loaddb") if(argc == 2)
+	if(cmd == "loaddb") if(argc == 2)
 	{
 		db_close(ServerProgsDB);
 		ServerProgsDB = db_load(argv(1));
 		print("DB loaded.\n");
 		return;
 	}
-	if (argv(0) == "nospectators")
+	if (cmd == "nospectators")
 	{
 		blockSpectators = 1;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
@@ -720,7 +721,7 @@ void GameCommand(string command)
 		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds!\n"));
 		return;
 	}
-	if (argv(0) == "lockteams")
+	if (cmd == "lockteams")
 	{
 		if(teams_matter)
 		{
@@ -731,7 +732,7 @@ void GameCommand(string command)
 			bprint("That command can only be used in a team-based gamemode.\n");
 		return;
 	}
-	if (argv(0) == "unlockteams")
+	if (cmd == "unlockteams")
 	{
 		if(teams_matter)
 		{
@@ -742,7 +743,7 @@ void GameCommand(string command)
 			bprint("That command can only be used in a team-based gamemode.\n");
 		return;
 	}
-	if (argv(0) == "movetoteam") if(argc == 3)
+	if (cmd == "movetoteam") if(argc == 3)
 	{
 		entno = stof(argv(1));
 		client = world;
@@ -763,43 +764,43 @@ void GameCommand(string command)
 			print("Client not found\n");
 		return;
 	}
-	if (argv(0) == "teamstatus")
+	if (cmd == "teamstatus")
 	{
 		Score_NicePrint(world);
 		return;
 	}
-	if (argv(0) == "allready")
+	if (cmd == "allready")
 	{
 		ReadyRestart();
 		return;
 	}
-	if (argv(0) == "effectindexdump")
+	if (cmd == "effectindexdump")
 	{
 		EffectIndexDump();
 		return;
 	}
-	if (argv(0) == "radarmap")
+	if (cmd == "radarmap")
 	{
 		RadarMap(argc);
 		return;
 	}
-	if (argv(0) == "bbox")
+	if (cmd == "bbox")
 	{
 		BBox();
 		return;
 	}
-	if (argv(0) == "cvar_changes")
+	if (cmd == "cvar_changes")
 	{
 		print(cvar_changes);
 		return;
 	}
-	if (argv(0) == "find") if(argc == 2)
+	if (cmd == "find") if(argc == 2)
 	{
 		for(client = world; (client = find(client, classname, argv(1))); )
 			print(etos(client), "\n");
 		return;
 	}
-	if (argv(0) == "records")
+	if (cmd == "records")
 	{
 		strunzone(records_reply);
 		records_reply = strzone(getrecords());
@@ -807,7 +808,7 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "cointoss")
+	if(cmd == "cointoss")
 	{
 		bprint("^3Throwing coin... Result: ");
 		if (random() > 0.5)
@@ -817,19 +818,19 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "__FORCE_READY_RESTART")
+	if(cmd == "__FORCE_READY_RESTART")
 	{
 		reset_map(FALSE);
 		return;
 	}
 
-	if(argv(0) == "debug_shotorg")
+	if(cmd == "debug_shotorg")
 	{
 		debug_shotorg = stov(argv(1));
 		return;
 	}
 
-	if(argv(0) == "gettaginfo") if(argc >= 4)
+	if(cmd == "gettaginfo") if(argc >= 4)
 	{
 		e = spawn();
 		if(argv(1) == "w")
@@ -856,7 +857,7 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "time")
+	if(cmd == "time")
 	{
 		print("time = ", ftos(time), "\n");
 		print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
@@ -868,7 +869,7 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "tracebug")
+	if(cmd == "tracebug")
 	{
 		print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
 		for(;;)
@@ -936,7 +937,7 @@ void GameCommand(string command)
 		}
 	}
 
-	if(argv(0) == "tracewalk")
+	if(cmd == "tracewalk")
 	{
 		e = nextent(world);
 		if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
@@ -946,14 +947,14 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(argv(0) == "onslaught_updatelinks")
+	if(cmd == "onslaught_updatelinks")
 	{
 		onslaught_updatelinks();
 		print("ONS links updated\n");
 		return;
 	}
 
-	if(argv(0) == "bot_cmd")
+	if(cmd == "bot_cmd")
 	{
 		local entity bot;
 
@@ -965,7 +966,6 @@ void GameCommand(string command)
 				print("\nsv_cmd bot_cmd reset          #Clear the cmd queues of all bots\n");
 				print("sv_cmd bot_cmd load <file>    #Load script file\n");
 				print("\nUse sv_cmd bot_cmd help <command> for more\n\n");
-				IP2C_GameCommand("help");
 				return;
 			}
 
@@ -996,7 +996,7 @@ void GameCommand(string command)
 			{
 				argc = tokenize_console(s);
 
-				if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
+				if(argc >= 3 && cmd == "sv_cmd" && argv(1) == "bot_cmd")
 				{
 					// let's start at token 2 so we can skip sv_cmd bot_cmd
 					bot = find_bot_by_number(stof(argv(2)));
@@ -1039,7 +1039,7 @@ void GameCommand(string command)
 		return;
 	}
 
-	if (argv(0) == "alltospec")
+	if (cmd == "alltospec")
 	{
 		FOR_EACH_PLAYER(plr)
 		{
@@ -1048,13 +1048,13 @@ void GameCommand(string command)
 		return;
 	}
 
-	if (argv(0) == "rereadcvars")
+	if (cmd == "rereadcvars")
 	{
 		readdynamiccvars();
 		return;
 	}
 
-	if (argv(0) == "dlc_require")
+	if (cmd == "dlc_require")
 	if (argv(1) != "")
 	{
 		dlc_require(argv(1));
