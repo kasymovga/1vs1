@@ -59,14 +59,21 @@ void Net_ReadRadio(void) {
 	}
 
 	string fname = strzone(ReadString());
-	float loop = ReadByte();
+	float f = ReadByte();
+	float loop = f & 1;
+	float force = f & 2;
 	float start;
 	
 	if(!loop)
 		start = ReadCoord();
 
-	if(!autocvar_radio)
-		return;
+	if (!autocvar_radio) {
+		if (!force)
+			return;
+
+		autocvar_radio = 1;
+		cvar_set("radio", "1");
+	}
 
 	localcmd("curl --pak ", url, "\n");
 

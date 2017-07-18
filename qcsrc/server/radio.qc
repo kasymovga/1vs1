@@ -37,6 +37,13 @@ float Radio_ClientCommandHandle(string cmd, float tokens);
 var float(string cmd, float tokens) Radio_GameCommandHandle_NextLink;
 float Radio_GameCommandHandle(string cmd, float tokens);
 
+var void(entity menu) Radio_GameMenuAddItems_NextLink;
+void Radio_GameMenuAddItems(entity menu) {
+	Menu_Add_Item(menu, "Radio toggle|cmd radiotoggle $radio");
+	Radio_GameMenuAddItems_NextLink(menu);
+}
+
+
 void Radio_Init(void) {
 	radio_playing_queue = -1;
 
@@ -61,6 +68,8 @@ void Radio_Init(void) {
 	GameHookChain_ClientCommandHandle = Radio_ClientCommandHandle;
 	Radio_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = Radio_GameCommandHandle;
+	Radio_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = Radio_GameMenuAddItems;
 }
 
 void Radio_SendPreload(entity e, string url) {
@@ -93,7 +102,7 @@ void Radio_Announce(entity e) {
 	}
 }
 
-void Radio_SendPlay(entity e) {
+void Radio_SendPlay(entity e, float force) {
 	if(!radio_playing)
 		return;
 
@@ -102,10 +111,10 @@ void Radio_SendPlay(entity e) {
 	msg_entity = e;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_RADIO);
-	WriteByte(MSG_ONE, FALSE);
+	WriteByte(MSG_ONE, FALSE); //preload
 	WriteString(MSG_ONE, radio_url);
 	WriteString(MSG_ONE, radio_filename);
-	WriteByte(MSG_ONE, radio_looping);
+	WriteByte(MSG_ONE, (radio_looping ? 1 : 0) | (force ? 2 : 0));
 	if(!radio_looping)
 		WriteCoord(MSG_ONE, radio_starttime);
 }
@@ -136,7 +145,7 @@ void Radio_Play(string url, string fname, float loop) {
 	dprint("Start: ", ftos(radio_starttime), "\n");
 
 	entity e; FOR_EACH_REALCLIENT(e)
-		Radio_SendPlay(e);
+		Radio_SendPlay(e, FALSE);
 }
 
 void Radio_Stop(void) {
@@ -310,7 +319,7 @@ void Radio_URI_Get_Callback(float id, float status, string data) {
 }
 
 void Radio_ClientConnect_Delayed(void) {
-	Radio_SendPlay(self);
+	Radio_SendPlay(self, FALSE);
 }
 
 void Radio_RealClientConnect(void) {
@@ -327,7 +336,7 @@ void Radio_RealClientConnect(void) {
 }
 
 float Radio_ClientCommandHandle(string cmd, float tokens) {
-    if(cmd == "radio") {
+    if(cmd == "radiotoggle" && tokens == 2) {
 //        if(!self.scorekeeper)
 //            return FALSE;
 //
@@ -336,7 +345,12 @@ float Radio_ClientCommandHandle(string cmd, float tokens) {
 //        PlayerScore_SetFlagsBoolean(self, SPFLAG_MUTE, !self.radio_enabled);
 //
 //        if(!o && self.radio_enabled)
-		Radio_SendPlay(self);
+		if (stof(argv(1)))
+			stuffcmd(self, "cd reset; radio 0\n");
+		else {
+			Radio_SendPlay(self, TRUE);
+		}
+
 		return TRUE;
 	}
 	return FALSE;
