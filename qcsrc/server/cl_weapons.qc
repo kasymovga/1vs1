@@ -271,7 +271,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
-	if not(GameHook_ThrowWeaponAllowed())
+	if not(GameHookChain_ThrowWeaponAllowed(doreduce))
 		return;
 	if not(g_pickup_items)
 		return;

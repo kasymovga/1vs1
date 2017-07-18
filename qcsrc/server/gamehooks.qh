@@ -53,7 +53,7 @@ var float() GameHook_TimeLimitOverride = { return cvar("timelimit_override"); }
 var float() GameHook_LeadLimitOverride = { return cvar("leadlimit_override"); }
 var float() GameHook_WeaponFrameHandle = { return FALSE; }
 var float() GameHook_ReloadAllowed = { return TRUE; }
-var float() GameHook_ThrowWeaponAllowed = { return TRUE; }
+var float(float dropped) GameHookChain_ThrowWeaponAllowed = { return TRUE; }
 var float() GameHook_RadarShowEnemiesAllowed = { return FALSE; }
 var void(entity e) GameHook_SpectateCopy = {}
 float GameHook_DamageMod;

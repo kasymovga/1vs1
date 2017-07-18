@@ -108,11 +108,12 @@ float nb_ReloadAllowed() {
 	return TRUE;
 }
 
-float nb_ThrowWeaponAllowed() {
+var float(float ignore) nb_ThrowWeaponAllowed_NextLink;
+float nb_ThrowWeaponAllowed(float ignore) {
 	if (self.ballcarried)
 		return FALSE;
 
-	return TRUE;
+	return nb_ThrowWeaponAllowed_NextLink(ignore);
 }
 
 float nb_RadarShowEnemiesAllowed() {
@@ -166,7 +167,8 @@ void nb_init() // Called early (worldspawn stage)
 	GameHook_LeadLimitOverride = nb_LeadLimitOverride;
 	GameHook_WeaponFrameHandle = nb_WeaponFrameHandle;
 	GameHook_ReloadAllowed = nb_ReloadAllowed;
-	GameHook_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
+	nb_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
+	GameHookChain_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
 	GameHook_SpectateCopy = nb_SpectateCopy;
 	if (cvar("g_nexball_radar_showallplayers"))
 		GameHook_RadarShowEnemiesAllowed = nb_RadarShowEnemiesAllowed;

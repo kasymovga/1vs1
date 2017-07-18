@@ -5,8 +5,6 @@ float sv_doublejump;
 float speedmeter;
 float g_nick_flood_penalty_yellow;
 float g_nick_flood_penalty_red;
-float g_minstagib_speed_jumpheight;
-float g_minstagib_speed_moverate;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float sv_csqc_physic;
@@ -65,13 +63,7 @@ void Physic_CheckWaterJumpHook()
 
 float Physic_JumpVelocityFactor()
 {
-	float jumpvelocity_factor = GameHookChain_JumpVelocityMod();
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-	{
-		jumpvelocity_factor = jumpvelocity_factor * g_minstagib_speed_jumpheight;
-	}
-
-	return jumpvelocity_factor;
+	return GameHookChain_JumpVelocityMod();
 }
 
 void Physic_LandingHook()
@@ -175,9 +167,6 @@ float Physic_MaxSpeedMod()
 {
 	float maxspd_mod = 1, spd;
 	string temps;
-
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-		maxspd_mod = maxspd_mod * g_minstagib_speed_moverate;
 
 	if(self.in_swamp)
 		maxspd_mod = maxspd_mod * self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
@@ -573,8 +562,6 @@ void PhysicReadCvars()
 	CACHE_CVAR(speedmeter);
 	CACHE_CVAR(g_nick_flood_penalty_yellow);
 	CACHE_CVAR(g_nick_flood_penalty_red);
-	CACHE_CVAR(g_minstagib_speed_jumpheight);
-	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(sv_doublejump);
