@@ -45,7 +45,6 @@ string sv_model_armorsmall;
 string sv_model_armormedium;
 string sv_model_armorbig;
 string sv_model_armorlarge;
-void minstagib_items(float item_id);
 
 #define ITEM_RESPAWN_TICKS 10
 
@@ -1113,15 +1112,11 @@ void spawnfunc_item_health_mega (void) {
 	if(!cvar("g_powerup_superhealth"))
 		return;
 
-	if(g_minstagib) {
-		minstagib_items(IT_NAILS);
-	} else {
-		if(!self.max_health)
-			self.max_health = cvar("g_pickup_healthmega_max");
-		if(!self.health)
-			self.health = cvar("g_pickup_healthmega");
-		StartItem (sv_model_healthmega, "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
-	}
+	if(!self.max_health)
+		self.max_health = cvar("g_pickup_healthmega_max");
+	if(!self.health)
+		self.health = cvar("g_pickup_healthmega");
+	StartItem (sv_model_healthmega, "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
 
 // support old misnamed entities
@@ -1129,25 +1124,17 @@ void spawnfunc_item_strength (void) {
 	if(!cvar("g_powerup_strength"))
 		return;
 
-	if(g_minstagib) {
-		minstagib_items(IT_STRENGTH);
-	} else {
-		precache_sound("weapons/strength_fire.wav");
-		self.strength_finished = cvar("g_balance_powerup_strength_time");
-		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
-	}
+	precache_sound("weapons/strength_fire.wav");
+	self.strength_finished = cvar("g_balance_powerup_strength_time");
+	StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 }
 
 void spawnfunc_item_invincible (void) {
 	if(!cvar("g_powerup_shield"))
 		return;
 
-	if(g_minstagib) {
-		minstagib_items(IT_INVINCIBLE);
-	} else {
-		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
-		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
-	}
+	self.invincible_finished = cvar("g_balance_powerup_invincible_time");
+	StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 }
 
 void spawnfunc_item_key_gold (void) {

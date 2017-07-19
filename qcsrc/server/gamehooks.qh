@@ -62,7 +62,7 @@ var void(entity targ, entity attacker, float deathtype) GameHookChain_DamageForc
 var void(entity menu) GameHookChain_GameMenuAddItems = {};
 var float(string cmd, float tokens) GameHookChain_ClientCommandHandle = { return FALSE; }
 var float(string cmd, float tokens) GameHookChain_GameCommandHandle = { return FALSE; }
-var void() GameHook_EntityPreSpawn = {};
+var void() GameHookChain_EntityPreSpawn = {};
 float GameHook_HealthMaxMod;
 float GameHook_ArmorHealthLimitMod;
 float GameHook_RegenMod;

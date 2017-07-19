@@ -275,6 +275,20 @@ float minstagib_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
 	return ((time < plr.strength_finished) ? g_minstagib_invis_alpha : 1) * minstagib_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
 }
 
+void spawnfunc_minstagib_extra_lives() { minstagib_items(IT_NAILS); }
+void spawnfunc_minstagib_invisibility() { minstagib_items(IT_STRENGTH); }
+void spawnfunc_minstagib_speed() { minstagib_items(IT_INVINCIBLE); }
+
+var void() minstagib_EntityPreSpawn_NextLink;
+void minstagib_EntityPreSpawn() {
+	if (self.classname == "item_health_mega")
+		self.classname = "minstagib_extra_lives";
+	else if (self.classname == "item_strength")
+		self.classname = "minstagib_invisibility";
+	else if (self.classname == "item_invincible")
+		self.classname = "minstagib_speed";
+}
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -300,6 +314,8 @@ void minstagib_init() {
 	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
 	minstagib_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = minstagib_PlayerAlphaMod;
+	minstagib_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
+	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
 }
 
 void spawnfunc_item_minst_cells (void) {

@@ -433,7 +433,7 @@ void SV_OnEntityPreSpawnFunction()
 		print("Entity ", self.classname, " replaced with ", repl, "\n");
 		self.classname = strzone(repl);
 	}
-	GameHook_EntityPreSpawn();
+	GameHookChain_EntityPreSpawn();
 	if (self.scale)
 		self.scale = self.scale * sv_world_scale;
 	else
