@@ -266,7 +266,6 @@ void player_effects()
 		return;
 
 	self.alpha = default_player_alpha;
-	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
 	if (self.vehicle)

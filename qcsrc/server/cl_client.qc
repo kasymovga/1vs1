@@ -778,10 +778,7 @@ void PutClientInServer()
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
 		self.takedamage = DAMAGE_AIM;
-		if(g_minstagib)
-			self.effects = EF_FULLBRIGHT;
-		else
-			self.effects = 0;
+		self.effects = 0;
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		self.keys = 0;
@@ -928,6 +925,7 @@ void PutClientInServer()
 					ReadyRestartForce();
 			}
 		}
+		player_effects();
 		GameHookChain_Spawn(spot);
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
@@ -2052,9 +2050,10 @@ void PlayerPreThink (void)
 		}
 		GameHookChain_PlayerPreThink();
 
-		if(frametime)
+		if(frametime) {
+			Fire_ApplyDamage(self);
 			player_effects();
-
+		}
 		if (PLAYER_REALLY_DEAD(self))
 		{
 			float button_pressed;
