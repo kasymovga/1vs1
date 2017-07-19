@@ -504,10 +504,6 @@ void player_anim (void)
 
 void SpawnThrownWeapon (vector org, float w)
 {
-	if(g_minstagib)
-	if(self.ammo_cells <= 0)
-		return;
-
 	if(g_pinata)
 	{
 		float j;
