@@ -290,6 +290,8 @@ void CSQC_Init(void)
 #endif
 	registercvar("sbar_usecsqc", "1");
 	registercvar("sbar_columns", "default", CVAR_SAVE);
+	localcmd("alias +nadget2 +button9\n");
+	localcmd("alias -nadget2 -button9\n");
 
 	gametype = 0;
 
