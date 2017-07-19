@@ -74,7 +74,6 @@ void walker_hunt() {
 
 	float dofire;
 	dofire = FALSE;
-	entity e;
 	if (self.attack_finished_single < time)
 	{
 		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);

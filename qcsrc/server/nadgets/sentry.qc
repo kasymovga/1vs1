@@ -466,8 +466,8 @@ void HG_Sentry_MEODP_Death(entity attacker, entity inflictor) {
 }
 
 void HG_Sentry_Trigger(void) {
-    entity e, aimtarg, aimtransform;
-    vector o, aimloc, aimloc_untransformed;
+    entity e, aimtarg/*, aimtransform*/;
+    vector o, aimloc/*, aimloc_untransformed*/;
 
     makevectors(self.v_angle);
     W_SetupShot(self, FALSE, 0, "", -1);

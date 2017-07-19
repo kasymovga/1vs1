@@ -29,7 +29,7 @@ void HG_Plasma_Shard_Explode(void) {
 
 void HG_Plasma_Shard_Think(void) {
     entity e;
-    float found;
+    //float found;
 
     if(time >= self.hg_detonatetime) {
         HG_Plasma_Shard_Explode();

@@ -5,7 +5,7 @@ void Napalm_Touch(void) {
 
 void Napalm_Burn(void) {
     entity e, o;
-    float d, ismedic, sameteam;
+    float d,/* ismedic,*/ sameteam;
     vector p;
 
     float dtype = self.projectiledeathtype;
