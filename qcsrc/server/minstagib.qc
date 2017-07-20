@@ -311,6 +311,10 @@ void minstagib_init() {
 	CACHE_CVAR(g_minstagib_extralives);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
+	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
+	if (g_minstagib_invis_alpha <= 0)
+		g_minstagib_invis_alpha = -1;
+
 	precache_sound ("announcer/robotic/lastsecond.wav");
 	precache_sound ("announcer/robotic/narrowly.wav");
 	minstagib_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;

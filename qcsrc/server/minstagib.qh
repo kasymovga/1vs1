@@ -1,1 +1,2 @@
+float g_minstagib_invis_alpha;
 void minstagib_init();

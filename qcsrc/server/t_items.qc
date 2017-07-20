@@ -1542,11 +1542,8 @@ void Items_Init()
 		start_weapons = WEPBIT_MINSTANEX;
 		weapon_precache(WEP_MINSTANEX);
 		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 
-		if (g_minstagib_invis_alpha <= 0)
-			g_minstagib_invis_alpha = -1;
 	}
 	else
 	{
