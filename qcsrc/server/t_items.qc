@@ -4,8 +4,6 @@ float g_balance_pause_fuel_rot;
 float g_balance_pause_health_regen;
 float g_balance_pause_health_rot;
 float g_fullbrightitems;
-float g_minstagib_ammo_drop;
-float g_minstagib_extralives;
 float g_pickup_shells_max;
 float g_pickup_nails_max;
 float g_pickup_rockets_max;
@@ -771,20 +769,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			}
 			self.is_item = TRUE;
 		}
-
 		weaponsInMap |= weaponid;
-
-		if (g_minstagib)
-		{
-			// don't remove dropped items and powerups
-			if (self.classname != "minstagib")
-			{
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-		else if not(g_pickup_items)
+		if (!g_pickup_items || GameHookChain_ItemForbidden())
 		{
 			startitem_failed = TRUE;
 			remove (self);
@@ -1457,8 +1443,6 @@ void Items_Init()
 	CACHE_CVAR(g_balance_pause_health_regen);
 	CACHE_CVAR(g_balance_pause_health_rot);
 	CACHE_CVAR(g_fullbrightitems);
-	CACHE_CVAR(g_minstagib_ammo_drop);
-	CACHE_CVAR(g_minstagib_extralives);
 	CACHE_CVAR(g_pickup_drop_backpack);
 	CACHE_CVAR(g_pickup_respawntime_weapon);
 	CACHE_CVAR(g_pickup_respawntime_ammo);

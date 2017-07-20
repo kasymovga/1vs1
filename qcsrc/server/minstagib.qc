@@ -1,3 +1,5 @@
+float g_minstagib_ammo_drop;
+float g_minstagib_extralives;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
 /* replace items in minstagib
@@ -249,6 +251,7 @@ float minstagib_WeaponSpawnHandle(float wpn) {
 	} else
 		remove(self);
 
+	minstagib_WeaponSpawnHandle_NextLink(wpn);
 	return TRUE;
 }
 
@@ -287,6 +290,16 @@ void minstagib_EntityPreSpawn() {
 		self.classname = "minstagib_invisibility";
 	else if (self.classname == "item_invincible")
 		self.classname = "minstagib_speed";
+
+	minstagib_EntityPreSpawn_NextLink();
+}
+
+var float() minstagib_ItemForbidden_NextLink;
+float minstagib_ItemForbidden() {
+	if (self.classname != "minstagib")
+		return TRUE;
+
+	return minstagib_ItemForbidden_NextLink();
 }
 
 void minstagib_init() {
@@ -294,6 +307,8 @@ void minstagib_init() {
 	if not(g_minstagib)
 		return;
 
+	CACHE_CVAR(g_minstagib_ammo_drop);
+	CACHE_CVAR(g_minstagib_extralives);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	precache_sound ("announcer/robotic/lastsecond.wav");
@@ -316,6 +331,8 @@ void minstagib_init() {
 	GameHookChain_PlayerAlphaMod = minstagib_PlayerAlphaMod;
 	minstagib_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
 	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
+	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;
+	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
 }
 
 void spawnfunc_item_minst_cells (void) {
