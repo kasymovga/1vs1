@@ -654,6 +654,11 @@ void FixPlayermodel()
 
 	defaultmodel = "";
 
+	if (self.vehicle)
+	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER) {
+		defaultmodel = "null";
+		goto setdefaultmodel;
+	}
 	if (sv_defaultcharacter) {
 		defaultskin = 0;
 
@@ -678,16 +683,15 @@ void FixPlayermodel()
 			defaultskin = sv_defaultplayerskin;
 		}
 	}
-
 	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
 	{
 		if(self.model != "")
 			bprint("\{1}^1Player ", self.netname, "^1 has a zero modelindex, trying to fix...\n");
 		self.model = ""; // force the != checks to return true
 	}
-
 	if(defaultmodel != "")
 	{
+:setdefaultmodel
 		if (defaultmodel != self.model)
 		{
 			m1 = self.mins;

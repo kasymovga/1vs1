@@ -118,4 +118,3 @@ HGDEFS
 
 void HG_Pick(float token);
 float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc);
-void HG_PlayerEffects();

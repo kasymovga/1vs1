@@ -268,53 +268,8 @@ void player_effects()
 	self.alpha = default_player_alpha;
 	Fire_ApplyEffect(self);
 
-	if (self.vehicle)
-	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER) {
-		self.alpha = -1;
+	if (GameHookChain_PlayerEffectsHandle())
 		return;
-	}
-
-	if (g_minstagib)
-	{
-		self.effects |= EF_FULLBRIGHT;
-
-		if (self.items & IT_STRENGTH)
-		{
-			play_countdown(self.strength_finished, "misc/poweroff.wav");
-			if (time > self.strength_finished)
-			{
-				self.items &~= IT_STRENGTH;
-				sprint(self, "^3Invisibility has worn off\n");
-			}
-		}
-		else
-		{
-			if (time < self.strength_finished)
-			{
-				self.items |= IT_STRENGTH;
-				sprint(self, "^3You are invisible\n");
-			}
-		}
-
-		if (self.items & IT_INVINCIBLE)
-		{
-			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			if (time > self.invincible_finished)
-			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
-				sprint(self, "^3Speed has worn off\n");
-			}
-		}
-		else
-		{
-			if (time < self.invincible_finished)
-			{
-				self.items = self.items | IT_INVINCIBLE;
-				sprint(self, "^3You are on speed\n");
-			}
-		}
-		return;
-	}
 
 	if (self.items & IT_STRENGTH)
 	{
@@ -359,8 +314,6 @@ void player_effects()
 	if (time >= game_starttime)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
-
-	HG_PlayerEffects();
 }
 
 void player_setupanimsformodel()
@@ -1586,7 +1539,6 @@ float Player_CalculateAlpha(entity plr, entity viewer) {
 	if(plr.deadflag) {
 		return dalpha;
 	}
-
 	if(viewer.classname == "spectator") {
 		viewer = viewer.enemy;
 	}

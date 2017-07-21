@@ -307,6 +307,37 @@ string minstagib_WelcomeMessageMod(string s) {
 	return strcat(minstagib_WelcomeMessageMod_NextLink(s), ", MinstaGib");
 }
 
+var float() minstagib_PlayerEffectsHandle_NextLink;
+float minstagib_PlayerEffectsHandle() {
+	minstagib_PlayerEffectsHandle_NextLink();
+	self.effects |= EF_FULLBRIGHT;
+	if (self.items & IT_STRENGTH) {
+		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		if (time > self.strength_finished) {
+			self.items &~= IT_STRENGTH;
+			sprint(self, "^3Invisibility has worn off\n");
+		}
+	} else {
+		if (time < self.strength_finished) {
+			self.items |= IT_STRENGTH;
+			sprint(self, "^3You are invisible\n");
+		}
+	}
+	if (self.items & IT_INVINCIBLE) {
+		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		if (time > self.invincible_finished) {
+			self.items = self.items - (self.items & IT_INVINCIBLE);
+			sprint(self, "^3Speed has worn off\n");
+		}
+	} else {
+		if (time < self.invincible_finished) {
+			self.items = self.items | IT_INVINCIBLE;
+			sprint(self, "^3You are on speed\n");
+		}
+	}
+	return TRUE;
+}
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -344,6 +375,8 @@ void minstagib_init() {
 	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
 	minstagib_WelcomeMessageMod_NextLink = GameHookChain_WelcomeMessageMod;
 	GameHookChain_WelcomeMessageMod = minstagib_WelcomeMessageMod;
+	minstagib_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
+	GameHookChain_PlayerEffectsHandle = minstagib_PlayerEffectsHandle;
 }
 
 void spawnfunc_item_minst_cells (void) {

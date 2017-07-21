@@ -909,12 +909,3 @@ float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc) {
 
 	return HG_Shield_Damage(attacker, damage, deathtype, hitloc);
 }
-
-void HG_PlayerEffects() {
-	if (self.hg_stealthalpha)
-	{
-		self.alpha = (self.alpha ? self.alpha : 1) * (1 - self.hg_stealthalpha);
-		if not(self.alpha)
-			self.alpha = -1;
-	}
-}
