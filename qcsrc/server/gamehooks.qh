@@ -83,3 +83,4 @@ var float(float wpn) GameHookChain_WeaponSpawnHandle = { return FALSE; }
 var void() GameHookChain_RealClientConnect = {}
 var void() GameHookChain_ServerFrame = {}
 var float() GameHookChain_ItemForbidden = { return FALSE; }
+var string(string s) GameHookChain_WelcomeMessageMod = { return s; }

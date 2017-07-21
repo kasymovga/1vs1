@@ -430,11 +430,7 @@ void PrintWelcomeMessage(entity pl)
 	}
 
 :normal
-	modifications = "";
-	if(g_minstagib)
-		modifications = strcat(modifications, ", MinstaGib");
-	if(cvar("g_start_weapon_laser") == 0)
-		modifications = strcat(modifications, ", No start weapons");
+	modifications = GameHookChain_WelcomeMessageMod("");
 	if(cvar("sv_gravity") < 800)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_footsteps)

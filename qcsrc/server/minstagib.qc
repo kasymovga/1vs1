@@ -302,6 +302,11 @@ float minstagib_ItemForbidden() {
 	return minstagib_ItemForbidden_NextLink();
 }
 
+var string(string s) minstagib_WelcomeMessageMod_NextLink;
+string minstagib_WelcomeMessageMod(string s) {
+	return strcat(minstagib_WelcomeMessageMod_NextLink(s), ", MinstaGib");
+}
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -337,6 +342,8 @@ void minstagib_init() {
 	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
 	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;
 	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
+	minstagib_WelcomeMessageMod_NextLink = GameHookChain_WelcomeMessageMod;
+	GameHookChain_WelcomeMessageMod = minstagib_WelcomeMessageMod;
 }
 
 void spawnfunc_item_minst_cells (void) {
