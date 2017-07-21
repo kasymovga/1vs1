@@ -252,7 +252,9 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");
-		GameLogEcho(strcat(":gameclient:", ftos(self.playerid), ":", s));
+		if (sv_eventlog)
+			GameLogEcho(strcat(":gameclient:", ftos(self.playerid), ":", s));
+
 		if (s == "xonotic") {
 			self.gameclient = CLIENT_XONOTIC;
 			if ((s = cvar_string("sv_message_for_xonotic_players")) != "") {
