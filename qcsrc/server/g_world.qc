@@ -769,7 +769,7 @@ void spawnfunc_worldspawn (void)
 
 	fteqcc_testbugs();
 
-	Ban_LoadBans();
+	Ban_Init();
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype() | GameTypeVote_Mask(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);

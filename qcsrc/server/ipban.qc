@@ -19,6 +19,11 @@
  *     server IP that registered the ban
  */
 
+float MAX_IPBAN_URIS = 16;
+
+float URI_GET_IPBAN;
+
+
 float Ban_Insert(string ip, float bantime, string reason, float dosync);
 
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
@@ -591,4 +596,12 @@ float GameCommand_Ban(string command)
 		}
 	}
 	return FALSE;
+}
+
+void Ban_Init() {
+	Ban_LoadBans();
+	URI_GET_IPBAN = URI_RegisterHandler(OnlineBanList_URI_Get_Callback);
+	float i;
+	for (i = 1; i < MAX_IPBAN_URIS; i++)
+		URI_RegisterHandler(OnlineBanList_URI_Get_Callback);
 }

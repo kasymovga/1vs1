@@ -87,6 +87,8 @@ void IP2C_Init(void) {
 
     if(cvar("sv_ip2country_proxy"))
         ER_RegisterHandler("ip2cq", IP2C_ER_Request_Callback, world);
+
+	URI_GET_IP2C = URI_RegisterHandler(IP2C_URI_Get_Callback);
 }
 
 void IP2C_Shutdown(void) {

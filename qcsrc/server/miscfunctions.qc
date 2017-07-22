@@ -1349,42 +1349,6 @@ float projectile_skipnonsolid()
 #define PROJECTILE_SKIPNONSOLID if (sv_gameplayfix_skipnonsolid) if(projectile_skipnonsolid()) { return; }
 #define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
 
-float MAX_IPBAN_URIS = 16;
-
-float URI_GET_DISCARD   = 0;
-float URI_GET_IPBAN     = 1;
-float URI_GET_IPBAN_END = 16;
-float URI_GET_RADIO = 32;
-
-void URI_Get_Callback(float id, float status, string data)
-{
-    dprint("Received HTTP request data for id ", ftos(id), "; status is ", ftos(status), "\nData is:\n");
-    dprint(data);
-    dprint("\nEnd of data.\n");
-
-    if (id == URI_GET_DISCARD)
-    {
-        // discard
-    }
-    else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
-    {
-        // online ban list
-        OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else if (id == URI_GET_RADIO)
-	{
-		Radio_URI_Get_Callback(id, status, data);
-	}
-    else if (id == URI_GET_IP2C)
-    {
-        IP2C_URI_Get_Callback(id, status, data);
-    }
-    else
-    {
-        print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
-    }
-}
-
 void print_to(entity e, string s)
 {
     if (e)

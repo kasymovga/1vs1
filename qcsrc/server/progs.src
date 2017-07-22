@@ -62,6 +62,7 @@ akimbo.qh
 
 freeze.qh
 radio.qh
+../common/curl.qh
 
 clanarena.qh
 
@@ -280,3 +281,4 @@ monsters/ewheel.qc
 survive.qc
 minstagib.qc
 radio.qc
+../common/curl.qc

@@ -13,6 +13,7 @@ oo/base.h
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/curl.qh
 
 gamecommand.qh
 menu.qh
@@ -40,3 +41,4 @@ nexuiz/util.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/items.qc
+../common/curl.qc

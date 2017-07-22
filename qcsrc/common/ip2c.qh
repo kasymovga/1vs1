@@ -45,7 +45,7 @@ ip2c_callback_t IP2C_Callback_DumpToConsole;
 
 
 const IP2C_UDP_PROTOCOL_PREFIX = "udp://";
-const URI_GET_IP2C = 17;
+float URI_GET_IP2C;
 
 // DP_RM_GEOIP
 string(string addr) GeoIP_LookUp = #802;

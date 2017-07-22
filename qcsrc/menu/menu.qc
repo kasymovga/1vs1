@@ -18,7 +18,7 @@ float menuMouseMode;
 
 void SUB_Null() { };
 
-const float URI_GET_SERVERLIST = 10;
+float URI_GET_SERVERLIST;
 #define SERVERLIST_URIS_COUNT 2
 var float serverlist_uri_index = 0;
 string serverlist_uris[SERVERLIST_URIS_COUNT] = {
@@ -35,46 +35,44 @@ void ParseServerListLine(string s) {
 	cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
 }
 
-void URI_Get_Callback(float id, float status, string data) {
+void ServerList_URI_Get_Callback(float id, float status, string data) {
 	float f;
-	if (id == URI_GET_SERVERLIST) {
-		if (status) {
-			print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
-			serverlist_uri_index++;
-			if (serverlist_uri_index < SERVERLIST_URIS_COUNT) {
-				uri_get(serverlist_uris[serverlist_uri_index], URI_GET_SERVERLIST);
-				return;
-			} else {
-				f = fopen("data/serverlistcache.txt", FILE_READ);
-				string s;
-				if (f < 0) {
-					f = fopen("serverlistbootstrap.txt", FILE_READ);
-					if (f < 0)
-						return;
-					else
-						print("Loaded server list from serverlistbootstrap.txt\n");
-				} else
-					print("Loaded server list cache from data/serverlistcache.txt\n");
-
-				while ((s = fgets(f)))
-					ParseServerListLine(s);
-
-				fclose(f);
-			}
+	if (status) {
+		print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
+		serverlist_uri_index++;
+		if (serverlist_uri_index < SERVERLIST_URIS_COUNT) {
+			uri_get(serverlist_uris[serverlist_uri_index], URI_GET_SERVERLIST);
 			return;
-		}
-		print(serverlist_uris[serverlist_uri_index], " downloaded successfully\n");
-		f = fopen("serverlistcache.txt", FILE_WRITE);
-		if not(f < 0) {
-			fputs(f, data);
+		} else {
+			f = fopen("data/serverlistcache.txt", FILE_READ);
+			string s;
+			if (f < 0) {
+				f = fopen("serverlistbootstrap.txt", FILE_READ);
+				if (f < 0)
+					return;
+				else
+					print("Loaded server list from serverlistbootstrap.txt\n");
+			} else
+				print("Loaded server list cache from data/serverlistcache.txt\n");
+
+			while ((s = fgets(f)))
+				ParseServerListLine(s);
+
 			fclose(f);
 		}
-		cvar_set("net_slist_extra", "");
-		float n = tokenizebyseparator(data, "\n");
-		float i;
-		for (i = 0; i < n; i++)
-			ParseServerListLine(argv(i));
+		return;
 	}
+	print(serverlist_uris[serverlist_uri_index], " downloaded successfully\n");
+	f = fopen("serverlistcache.txt", FILE_WRITE);
+	if not(f < 0) {
+		fputs(f, data);
+		fclose(f);
+	}
+	cvar_set("net_slist_extra", "");
+	float n = tokenizebyseparator(data, "\n");
+	float i;
+	for (i = 0; i < n; i++)
+		ParseServerListLine(argv(i));
 }
 
 void() m_init =
@@ -84,6 +82,7 @@ void() m_init =
 	dprint_load();
 	check_unacceptable_compiler_bugs();
 
+	URI_GET_SERVERLIST = URI_RegisterHandler(ServerList_URI_Get_Callback);
 	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
 
 	// list all game dirs (TEST)

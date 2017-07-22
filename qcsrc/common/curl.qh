@@ -1,0 +1,3 @@
+float URI_RegisterHandler(void(float id, float status, string data) uri_handler);
+float MAX_URI_HANDLERS = 32;
+float URI_GET_DISCARD = 0;
