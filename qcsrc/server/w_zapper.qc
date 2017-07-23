@@ -784,9 +784,5 @@ float w_zapper(float req) {
 }
 
 void spawnfunc_weapon_zapper(void) {
-	if not(cvar("g_rocketminsta_zapper")) {
-		remove(self);
-		return;
-	}
     weapon_defaultspawnfunc(WEP_ZAPPER);
 }
