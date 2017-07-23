@@ -201,6 +201,7 @@ void Physic_FrameEndHook()
 
 entity physic;
 
+float stairsmoothz;
 .vector pmove_origin;
 .vector pmove_velocity;
 vector CSQCPhysic_SetCamera()
@@ -259,6 +260,18 @@ vector CSQCPhysic_SetCamera()
 			v = trace_endpos;
 			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			v = trace_endpos;
+		}
+		if (autocvar_cl_stairsmoothspeed) {
+			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time > 0) {
+				stairsmoothz = v_z;
+			} else {
+				if (v_z > stairsmoothz) {
+					v_z = bound(v_z - sv_stepheight, stairsmoothz + frametime * autocvar_cl_stairsmoothspeed, v_z);
+				} else {
+					v_z = bound(v_z, stairsmoothz - frametime * autocvar_cl_stairsmoothspeed, v_z + sv_stepheight);
+				}
+				stairsmoothz = v_z;
+			}
 		}
 		if not(CVAR(chase_active))
 			R_SetView(VF_ORIGIN, v);
