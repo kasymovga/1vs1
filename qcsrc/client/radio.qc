@@ -53,7 +53,7 @@ void Net_ReadRadio(void) {
 		cvar_clientsettemp("bgmvolume", "0.1");
 
 	if(preload) {
-		if(autocvar_radio)
+		if(autocvar__radio)
 			localcmd("curl --pak ", url, "\n");
 		return;
 	}
@@ -67,12 +67,12 @@ void Net_ReadRadio(void) {
 	if(!loop)
 		start = ReadCoord();
 
-	if (!autocvar_radio) {
+	if (!autocvar__radio) {
 		if (!force)
 			return;
 
-		autocvar_radio = 1;
-		cvar_set("radio", "1");
+		autocvar__radio = 1;
+		cvar_set("_radio", "1");
 	}
 
 	localcmd("curl --pak ", url, "\n");

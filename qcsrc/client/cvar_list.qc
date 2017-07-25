@@ -156,6 +156,6 @@ READ_CVARS_SECTION(31, 0)
 	CACHE_CVAR(chase_back)
 	CACHE_CVAR(chase_up)
 	CACHE_CVAR(bgmvolume)
-	CACHE_CVAR(radio)
+	CACHE_CVAR(_radio)
 READ_CVARS_END(0)
 
