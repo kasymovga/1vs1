@@ -102,14 +102,18 @@ void Physic_CheckGroundHook()
 		if not(self.hook)
 		{
 			self.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-			{
-				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			if (self.waterlevel > 0) {
+					GlobalSound(globalsound_waterfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			} else {
+				trace_dphitq3surfaceflags = 0;
+				tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+				{
+					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+						GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					else
+						GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+				}
 			}
 		}
 	}

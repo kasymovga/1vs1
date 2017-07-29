@@ -477,8 +477,10 @@ ALLVOICEMSGS
 
 string globalsound_fall;
 string globalsound_metalfall;
+string globalsound_waterfall;
 string globalsound_step;
 string globalsound_metalstep;
+string globalsound_waterstep;
 
 #define VOICETYPE_PLAYERSOUND 10
 #define VOICETYPE_TEAMRADIO 11
