@@ -16,9 +16,11 @@ void DLCWait() {
 		if (fexists(strcat("rexdlc_", s, "_client.cfg")))
 			localcmd(strcat("exec rexdlc_", s, "_client.cfg", "\n"));
 	}
-	if not(localConnection)
-		localcmd("disconnect;reconnect;r_restart\n");
-	else {
+	if not(localConnection) {
+		localcmd("r_restart;");
+		if not(isdemo())
+			localcmd("disconnect;reconnect\n");
+	} else {
 		l = dlc_list;
 		while (l != "") {
 			s = car(l);
