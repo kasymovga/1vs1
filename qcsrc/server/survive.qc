@@ -133,9 +133,10 @@ float survive_WinningCondition() {
 	//print("survive_WinningCondition()\n");
 	entity e, oldself, monster;
 	if (wave_not_found) {
-		FOR_EACH_REALCLIENT(e)
+		FOR_EACH_REALCLIENT(e) {
 			centerprint(e, "^2All enemies destroyed!!!\n^2You successfully survived\n");
-
+			e.winning = TRUE;
+		}
 		e = find(world, targetname, "survive_success");
 		if (e) {
 			oldself = self;
