@@ -78,6 +78,7 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
+	string s;
 
 	dprint_load();
 	check_unacceptable_compiler_bugs();
@@ -89,13 +90,22 @@ void() m_init =
 	if(cvar("developer"))
 	{
 		float i;
-		string s;
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
 			if not(s)
 				break;
 			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
+		}
+	}
+	string l = cvar_string("menu_dlc_list");
+	dlc_repo = cvar_string_zone_ifneeded("sv_dlc_repository");
+	while (l != "") {
+		s = car(l);
+		l = cdr(l);
+		if (s != "") {
+			dlc_load(s);
+			print("Loading dlc: ", s, "\n");
 		}
 	}
 }
@@ -127,6 +137,7 @@ void UpdateConWidthHeight()
 	}
 }
 
+float dlc_wait_frame;
 void() m_init_delayed =
 {
 	float fh, glob, n, i;
@@ -135,6 +146,14 @@ void() m_init_delayed =
 	dprint_load();
 
 	menuInitialized = 0;
+	if (dlc_ready_all()) {
+		print("dlc loading finished\n");
+		print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
+	} else if (dlc_wait_frame < 10) {
+		dlc_wait_frame++;
+		preMenuInit();
+		return;
+	}
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;

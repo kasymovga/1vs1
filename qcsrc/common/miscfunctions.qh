@@ -2,3 +2,4 @@ void SUB_Remove();
 .void() entremove;
 string car(string s);
 string cdr(string s);
+string cvar_string_zone_ifneeded(string s);
