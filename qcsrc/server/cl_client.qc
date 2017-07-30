@@ -939,6 +939,7 @@ void PutClientInServer()
 void PlayerToSpec(entity player)
 {
 	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
+	if not(g_campaign)
 	if (sv_spectate) {
 		entity oldself = self;
 		self = player;
@@ -1295,7 +1296,10 @@ void ClientConnect (void)
 
 	bot_clientconnect();
 
-	if((sv_spectate == 1) || g_campaign) {
+	if (g_campaign) {
+		self.classname = "player";
+		campaign_bots_may_start = 1;
+	} else if (sv_spectate == 1) {
 		self.classname = "observer";
 	} else {
 		if(teams_matter)
@@ -1303,7 +1307,6 @@ void ClientConnect (void)
 			if(g_balance_teams || g_balance_teams_force)
 			{
 				self.classname = "player";
-				campaign_bots_may_start = 1;
 			}
 			else
 			{
@@ -1313,7 +1316,6 @@ void ClientConnect (void)
 		else
 		{
 			self.classname = "player";
-			campaign_bots_may_start = 1;
 		}
 	}
 
