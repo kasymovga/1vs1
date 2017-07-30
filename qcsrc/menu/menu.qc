@@ -147,8 +147,8 @@ void() m_init_delayed =
 
 	menuInitialized = 0;
 	if (dlc_ready_all()) {
-		print("dlc loading finished\n");
-		print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
+		//print("dlc loading finished\n");
+		//print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
 	} else if (dlc_wait_frame < 10) {
 		dlc_wait_frame++;
 		preMenuInit();
