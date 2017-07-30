@@ -22,13 +22,13 @@ void DLCWait() {
 				registercvar(dlc_init_cvar(argv(i)), "1");
 			}
 		}
-		localcmd("restart\n");
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
 				localcmd("r_restart\n");
 				break;
 			}
+		localcmd("restart\n");
 		remove(self);
 		dlc_wait = world;
 		return;
