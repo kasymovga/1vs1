@@ -2391,7 +2391,7 @@ void SV_Shutdown()
 		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
 		InfoMessages_Shutdown();
-        IP2C_Shutdown();
+        IP2C_ShutdownSV();
 	}
 	else if(world_initialized == 0)
 	{

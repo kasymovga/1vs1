@@ -77,3 +77,10 @@ void IP2C_InitSV(void) {
 	IP2C_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = IP2C_GameCommandHandle;
 }
+
+void IP2C_ShutdownSV(void) {
+    if(!sv_ip2country)
+        return;
+
+	IP2C_Shutdown();
+}

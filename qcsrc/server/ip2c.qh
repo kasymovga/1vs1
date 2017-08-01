@@ -1,4 +1,5 @@
 
 void IP2C_InitSV(void);
+void IP2C_ShutdownSV(void);
 void IP2C_SetCountry_Internal(entity player, string cn);
 void IP2C_SetCountry(entity player);
