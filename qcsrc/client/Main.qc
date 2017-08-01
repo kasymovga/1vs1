@@ -67,6 +67,25 @@ void ClientUpdateMessage(string msg) {
 	e.bgmscript = msg;
 }
 
+void search_and_precache(string s) {
+	float i;
+	string pic;
+	float n;
+	float glob = search_begin(s, TRUE, TRUE);
+	if (glob < 0)
+		return;
+
+	for(i = 0; i < search_getsize(glob); ++i) {
+		pic = search_getfilename(glob, i);
+		//print("Precaching ", pic, "\n");
+		precache_pic(pic);
+		pic = substring(pic, 0, strstrofs(pic, ".tga", 0));
+		//print("Precaching ", pic, "\n");
+		precache_pic(pic);
+	}
+	search_end(glob);
+}
+
 string forcefog;
 void Ent_ReadEntCS(float bIsNewEntity);
 void Ent_ReadEntCSEnemy(float bIsNewEntity);
@@ -339,6 +358,13 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 
+	search_and_precache("gfx/num_*");
+	search_and_precache("gfx/inv_*");
+	search_and_precache("gfx/crosshair*");
+	search_and_precache("gfx/sb_*");
+	search_and_precache("gfx/hud/*.tga");
+	search_and_precache("gfx/hud/keys/*.tga");
+	search_and_precache("gfx/teamradar_*.tga");
 	for (i = 0; i < ENT_CLIENT_COUNT; i++) {
 		ent_parsers[i] = Ent_Error;
 	}
