@@ -15,6 +15,8 @@ void HG_ForceDetonateAll(void);
 
 var void() HG_PlayerPreThink_NextLink;
 void HG_PlayerPreThink();
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) HG_PlayerDamageHandle_NextLink;
+float HG_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
@@ -138,6 +140,8 @@ void HG_Init(void) {
 	GameHookChain_GameMenuAddItems = HG_GameMenuAddItems;
 	HG_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
 	GameHookChain_ClientCommandHandle = HG_ClientCommandHandle;
+	HG_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
+	GameHookChain_PlayerDamageHandle = HG_PlayerDamageHandle;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
@@ -903,9 +907,7 @@ void HG_Pick(float tokens) {
 	})
 }
 
-float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc) {
-	if not(g_nadgets)
-		return damage;
-
-	return HG_Shield_Damage(attacker, damage, deathtype, hitloc);
+float HG_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+	GameHookChain_PlayerDamageMod = HG_Shield_Damage(attacker, damage, deathtype, hitloc);
+	return HG_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
 }

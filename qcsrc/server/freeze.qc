@@ -156,10 +156,11 @@ float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	return TRUE;
 }
 
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Freeze_PlayerDamageHandle_NextLink;
 float Freeze_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if not(self.deadflag == DEAD_FREEZE)
-		return FALSE;
+		return Freeze_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
 
 	if (deathtype == DEATH_SLIME ||
 			deathtype == DEATH_LAVA ||
@@ -214,7 +215,8 @@ void Freeze_Init()
 	GameHookChain_PlayerClear = Freeze_PlayerClear;
 	Freeze_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = Freeze_SpeedMod;
-	GameHook_PlayerDamageHandle = Freeze_PlayerDamageHandle;
+	Freeze_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
+	GameHookChain_PlayerDamageHandle = Freeze_PlayerDamageHandle;
 	GameHook_FragsHandle = Freeze_HandleFrags;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Freeze_FragLimitOverride;

@@ -568,13 +568,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	local float take, save, waves, sdelay, dh, da;
 	vector v;
 	float valid_damage_for_weaponstats;
-	if (GameHook_PlayerDamageHandle(inflictor, attacker, damage, deathtype, hitloc, force))
+	GameHookChain_PlayerDamageMod = 1;
+	if (GameHookChain_PlayerDamageHandle(inflictor, attacker, damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 
-	damage = HG_Damage(attacker, damage, deathtype, hitloc);
+	damage = damage * GameHookChain_PlayerDamageMod;
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
 		damage *= sqrt(bound(1.0, self.cvar_cl_handicap, 100.0));

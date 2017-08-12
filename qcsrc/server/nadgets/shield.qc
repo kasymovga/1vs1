@@ -194,16 +194,16 @@ void HG_Shield_PlayerFrame(void) {
 .float hg_shield_nexteffect;
 
 float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hitloc) {
-    if not(g_nadgets && damage && attacker.iscreature && self.hg_shield)
-        return damage;
+    if not(damage && attacker.iscreature && self.hg_shield)
+        return 1;
 
     if(DEATH_HGTYPE(deathtype) == HG_TRANSLOC && g_nadgets_transloc_counters_shield) {
         self.hg_shield = 0;
-        return damage;
+        return 1;
     }
 
     if not(DEATH_HGTYPE(deathtype) != HG_SHIELD /* && deathtype != DEATH_NOISE && deathtype != DEATH_ARC */ && DEATH_HGTYPE(deathtype) != HG_GG)
-        return damage;
+        return 1;
 
     vector offs = '0 0 1' * self.maxs_z * 0.5;
     float reflect    = damage * g_nadgets_shield_damage_reflect * self.hg_shieldpower;
@@ -212,7 +212,6 @@ float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hi
 
     float o = self.hg_shield_stored;
     self.hg_shield_stored = min(g_nadgets_shield_damage_store_limit, self.hg_shield_stored + damage * g_nadgets_shield_damage_store);
-    damage *= takefactor;
 
     if(self.hg_shield_stored > o && time > self.hg_shield_nexteffect) {
         //te_eleblast(hitloc, if(teams_matter) self.team else 0);
@@ -241,7 +240,7 @@ float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hi
     if(self.hg_shieldhealth <= 0)
         self.hg_shield = 0;
 
-    return damage;
+    return takefactor;
 }
 
 HG_HOOKFUNCTION(shield, Attack) {

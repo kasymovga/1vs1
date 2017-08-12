@@ -39,6 +39,7 @@ float Clanarena_HandleFrags(entity attacker, entity targ, float f) {
 	return 0;
 }
 
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Clanarena_PlayerDamageHandle_NextLink;
 float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.flags & FL_CLIENT)
 	if (attacker.team != self.team) {
@@ -47,7 +48,7 @@ float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float dama
 		attacker.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
 		self.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
 	}
-	return FALSE;
+	return Clanarena_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
 }
 
 float Clanarena_FragLimitOverride() {
@@ -69,7 +70,8 @@ void Clanarena_Init()
 	GameHookChain_Spawn = Clanarena_Spawn;
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	GameHook_DeathHandle = Clanarena_DeathHandle;
-	GameHook_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
+	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
+	GameHookChain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
 	Clanarena_PlayerClear_NextLink = GameHookChain_PlayerClear;

@@ -117,4 +117,3 @@ HGDEFS
 #define HG_EMPTY_INITFUNC(hgt) HG_HOOKFUNCTION(hgt, Init) { return HG_INIT_OK; }
 
 void HG_Pick(float token);
-float HG_Damage(entity attacker, float damage, float deathtype, vector hitloc);
