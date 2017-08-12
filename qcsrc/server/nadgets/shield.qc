@@ -56,7 +56,7 @@ void HG_Shield_Discharge_Think(void) {
 
     if(armordamage > 0 && armorval) {
         armordamage *= g_nadgets_shield_damage_store_allow_armor_drain;
-        Damage(self.owner, self.owner, self.owner, armordamage, DEATH_RESOURCE_ARMOR, '0 0 0', '0 0 0');
+		self.owner.armorvalue = max(0, self.owner.armorvalue - armordamage);
     }
 
     makevectors(self.owner.v_angle);
