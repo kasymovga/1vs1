@@ -2,6 +2,7 @@ float g_minstagib_ammo_drop;
 float g_minstagib_extralives;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
+float g_minstagib_nolaserdamage;
 /* replace items in minstagib
  * IT_STRENGTH	 = invisibility
  * IT_NAILS	 = extra lives
@@ -386,6 +387,7 @@ void minstagib_init() {
 	CACHE_CVAR(g_minstagib_extralives);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
+	CACHE_CVAR(g_minstagib_nolaserdamage);
 	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	if (g_minstagib_invis_alpha <= 0)
 		g_minstagib_invis_alpha = -1;

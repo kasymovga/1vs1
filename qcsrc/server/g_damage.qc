@@ -15,7 +15,6 @@ float g_balance_powerup_strength_selfforce;
 float g_balance_selfdamagepercent;
 float g_friendlyfire;
 float g_mirrordamage;
-float g_minstagib_nolaserdamage;
 float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
@@ -1251,7 +1250,6 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_balance_powerup_strength_selfforce);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_mirrordamage);
-	CACHE_CVAR(g_minstagib_nolaserdamage);
 	CACHE_CVAR(g_teamdamage_threshold);
 	CACHE_CVAR(g_throughfloor_damage);
 	CACHE_CVAR(g_throughfloor_force);
