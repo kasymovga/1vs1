@@ -717,43 +717,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 		}
 
-		if(targ.classname == "player")
-		if (g_minstagib)
-		{
-			if ((deathtype == DEATH_FALL)  ||
-				(deathtype == DEATH_DROWN) ||
-				(deathtype == DEATH_SLIME) ||
-				(deathtype == DEATH_LAVA))
-			{
-				self = oldself;
-				return;
-			}
-			if (targ.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
-			{
-				targ.armorvalue -= 1;
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(targ.armorvalue)));
-				damage = 0;
-				targ.hitsound += 1;
-				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
-			}
-			if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-			if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker, FALSE))
-			{
-				damage = 0;
-				if (targ != attacker)
-				{
-					if (targ.classname == "player")
-					if (g_minstagib_nolaserdamage)
-						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
-
-					mirrordamage = 0;
-					force = '0 0 0';
-					// keep mirrorforce
-					attacker = targ;
-				}
-			}
-		}
-
 		if not(DEATH_ISSPECIAL(deathtype))
 		{
 			damage *= g_weapondamagefactor;
@@ -784,10 +747,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
-		GameHook_DamageMod = GameHook_ForceMod = 1;
+		GameHook_DamageMod = GameHook_ForceMod = GameHook_MirrorDamageMod = GameHook_MirrorForceMod = 1;
 		GameHookChain_DamageForceModsSet(targ, attacker, deathtype);
 		damage = damage * GameHook_DamageMod;
 		force = force * GameHook_ForceMod;
+		mirrordamage = mirrordamage * GameHook_MirrorDamageMod;
+		mirrorforce = mirrorforce * GameHook_MirrorForceMod;
 
 		// count the damage
 		if(attacker)

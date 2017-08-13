@@ -338,6 +338,45 @@ float minstagib_PlayerEffectsHandle() {
 	return TRUE;
 }
 
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) minstagib_PlayerDamageHandle_NextLink;
+float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+	if ((deathtype == DEATH_FALL)  ||
+		(deathtype == DEATH_DROWN) ||
+		(deathtype == DEATH_SLIME) ||
+		(deathtype == DEATH_LAVA))
+		return TRUE;
+
+	if (self.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
+	{
+		self.armorvalue -= 1;
+		centerprint(self, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(self.armorvalue)));
+		GameHookChain_PlayerDamageMod = 0;
+		self.hitsound += 1;
+		attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
+	}
+	return minstagib_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
+}
+
+var void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet_NextLink;
+void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+	if (attacker.classname == "player")
+	if (targ.classname == "player")
+	if (DEATH_ISWEAPON(deathtype, WEP_LASER))
+	if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker, FALSE))
+	{
+		GameHook_DamageMod = 0;
+		if (targ != attacker)
+		{
+			if (g_minstagib_nolaserdamage)
+				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
+
+			GameHook_ForceMod = 0;
+			GameHook_MirrorDamageMod = 0;
+		}
+	}
+	minstagib_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+}
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -377,6 +416,10 @@ void minstagib_init() {
 	GameHookChain_WelcomeMessageMod = minstagib_WelcomeMessageMod;
 	minstagib_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
 	GameHookChain_PlayerEffectsHandle = minstagib_PlayerEffectsHandle;
+	minstagib_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
+	GameHookChain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
+	minstagib_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = minstagib_DamageForceModsSet;
 }
 
 void spawnfunc_item_minst_cells (void) {
