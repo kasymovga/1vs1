@@ -33,6 +33,7 @@ void physic_aircraft_pre() {
 void physic_aircraft_post() {
 	//physic_velocity = self.velocity;
 	setorigin(self, aircraft.origin + '0 0 48');
+	physic_flags = self.flags;
 }
 
 void Ent_PhysicAircraft_Remove() {

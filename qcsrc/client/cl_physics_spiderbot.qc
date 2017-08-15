@@ -33,6 +33,7 @@ void physic_spiderbot_pre() {
 void physic_spiderbot_post() {
 	//physic_velocity = self.velocity;
 	setorigin(self, spider.origin + '0 0 48');
+	physic_flags = self.flags;
 }
 
 void Ent_PhysicSpiderbot_Remove() {
