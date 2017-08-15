@@ -856,4 +856,5 @@ void spawnfunc_vehicle_spiderbot()
 	self.shield_max = g_vehicle_spiderbot_shield;
 	self.shield_regen = g_vehicle_spiderbot_shield_regen;
 	self.shield_regen_dmgpause = g_vehicle_spiderbot_shield_regen_dmgpause;
+	PhysicEnableCSQC();
 }

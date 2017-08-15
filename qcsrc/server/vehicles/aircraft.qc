@@ -760,4 +760,5 @@ void spawnfunc_vehicle_aircraft()
 	self.shield_max = g_vehicle_aircraft_shield;
 	self.shield_regen = g_vehicle_aircraft_shield_regen;
 	self.shield_regen_dmgpause = g_vehicle_aircraft_shield_regen_dmgpause;
+	PhysicEnableCSQC();
 }

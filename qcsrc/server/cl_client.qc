@@ -1382,7 +1382,6 @@ void ClientConnect (void)
 	{
 		GameHookChain_RealClientConnect();
 		IRC_Announce_ClientConnect(self);
-		PhysicClientInit(self);
 		Check_ForRetard(self);
 	}
 
@@ -1473,7 +1472,7 @@ void ClientDisconnect (void)
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		IRC_Announce_ClientDisconnect(self);
-		PhysicClientClear(self);
+		GameHookChain_RealClientDisconnect();
 	}
 }
 

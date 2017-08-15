@@ -31,6 +31,7 @@ float developer_shtest;
 #endif
 
 float buttons_prev;
+float Physic_SendEntity(entity to, float sf);
 
 void Physic_OnJumpHook()
 {
@@ -526,6 +527,40 @@ void SV_PlayerPhysics()
 	self.watertype = physic_watertype;
 }
 
+var void() Physic_RealClientConnect_NextLink;
+void Physic_RealClientConnect()
+{
+	if not(self.player_physic)
+	{
+		self.player_physic = spawn();
+		self.player_physic.viewmodelforclient = self;
+		self.player_physic.owner = self;
+		Net_LinkEntity(self.player_physic, FALSE, 0, Physic_SendEntity);
+	}
+	self.player_physic.SendFlags = 3;
+	Physic_RealClientConnect_NextLink();
+}
+
+var void() Physic_RealClientDisconnect_NextLink;
+void Physic_RealClientDisconnect()
+{
+	if (self.player_physic)
+		remove(self.player_physic);
+
+	Physic_RealClientDisconnect_NextLink();
+}
+
+void PhysicEnableCSQC() {
+	if (sv_csqc_physic)
+		return;
+
+	sv_csqc_physic = TRUE;
+	Physic_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+	GameHookChain_RealClientConnect = Physic_RealClientConnect;
+	Physic_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
+	GameHookChain_RealClientDisconnect = Physic_RealClientDisconnect;
+}
+
 void PhysicReadCvars()
 {
 	//Common
@@ -559,7 +594,8 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_slicksurfaces);
 	CACHE_CVAR(sv_slicksurfaces_allowjump);
 	CACHE_CVAR(sv_pogostick);
-	CACHE_CVAR(sv_csqc_physic);
+	if (cvar("sv_csqc_physic"))
+		PhysicEnableCSQC();
 
 	//Server-side only
 	CACHE_CVAR(g_jetpack_fuel);
@@ -690,25 +726,4 @@ float Physic_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.teleport_time - time);
 	}
 	return TRUE;
-}
-
-void PhysicClientClear(entity plr)
-{
-	if (plr.player_physic)
-		remove(plr.player_physic);
-}
-
-void PhysicClientInit(entity plr)
-{
-	if not(sv_csqc_physic)
-		return;
-
-	if not(plr.player_physic)
-	{
-		plr.player_physic = spawn();
-		plr.player_physic.viewmodelforclient = plr;
-		plr.player_physic.owner = plr;
-		Net_LinkEntity(plr.player_physic, FALSE, 0, Physic_SendEntity);
-	}
-	plr.player_physic.SendFlags = 3;
 }
