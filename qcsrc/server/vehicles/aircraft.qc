@@ -671,7 +671,13 @@ void vewhicle_aircraft_dinit()
 	self.reset = aircraft_reset;
 }
 
+float vehicle_aircraft_readcvars_done;
 void vehicle_aircraft_readcvars() {
+	vehicles_init();
+	if (vehicle_aircraft_readcvars_done)
+		return;
+
+	vehicle_aircraft_readcvars_done = TRUE;
 	CACHE_CVAR(g_vehicle_aircraft_crush_dmg);
 	CACHE_CVAR(g_vehicle_aircraft_crush_force);
 	CACHE_CVAR(g_vehicle_aircraft_crush_minspeed);
@@ -730,6 +736,7 @@ float AircraftPhysic_SendEntity(entity to, float sf) {
 
 void spawnfunc_vehicle_aircraft()
 {
+	vehicle_aircraft_readcvars();
     // g_turrets_common_precash();
 
     precache_model ( "models/vhshield.md3");

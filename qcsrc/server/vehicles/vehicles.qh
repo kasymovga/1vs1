@@ -53,7 +53,7 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .void() vehicle_spawn;
 .float(float message) vehicle_message;
 
-void vehicles_readcvars();
+void vehicles_init();
 void vehicle_stdproc_regen();
 void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicle_stdproc_setcolormod();

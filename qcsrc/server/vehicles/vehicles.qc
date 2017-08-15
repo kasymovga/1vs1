@@ -165,10 +165,21 @@ void bugmenot()
     self.vehicle_message    = self.vehicle_exit;
 }
 
-void vehicles_readcvars() {
-	vehicle_spiderbot_readcvars();
-	vehicle_aircraft_readcvars();
+var void(float killed) vehicle_PlayerClear_NextLink;
+void vehicle_PlayerClear(float killed) {
+	vehicle_extract_player(self, TRUE);
+	vehicle_PlayerClear_NextLink(killed);
+}
+
+float vehicles_init_done;
+void vehicles_init() {
+	if (vehicles_init_done)
+		return;
+
 	precache_sound("onslaught/ons_hit1.wav");
 	precache_sound("onslaught/ons_hit2.wav");
+	vehicles_init_done = TRUE;
+	vehicle_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = vehicle_PlayerClear;
 }
 #endif

@@ -569,8 +569,6 @@ void PutObserverInServer(float frags_team_reset)
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
 
-	vehicle_extract_player(self, TRUE);
-
 	if (frags_team_reset || self.team <= 0)
 	if (self.killcount != -666)
 		bprint ("^4", self.netname, "^4 is spectating now\n");
@@ -1079,10 +1077,7 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
-	vehicle_extract_player(self, TRUE);
-	// in any case:
 	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
-
 	if(self.killindicator)
 	{
 		dprint("Cleaned up after a leaked kill indicator.\n");

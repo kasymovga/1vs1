@@ -757,7 +757,13 @@ void vewhicle_spiderbot_dinit()
 	self.reset = spiderbot_reset;
 }
 
+float vehicle_spiderbot_readcvars_done;
 void vehicle_spiderbot_readcvars() {
+	vehicles_init();
+	if (vehicle_spiderbot_readcvars_done)
+		return;
+
+	vehicle_spiderbot_readcvars_done = TRUE;
 	CACHE_CVAR(g_vehicle_spiderbot_crush_dmg);
 	CACHE_CVAR(g_vehicle_spiderbot_crush_force);
 	CACHE_CVAR(g_vehicle_spiderbot_crush_minspeed);
@@ -825,6 +831,7 @@ float SpiderbotPhysic_SendEntity(entity to, float sf) {
 
 void spawnfunc_vehicle_spiderbot()
 {
+	vehicle_spiderbot_readcvars();
     // g_turrets_common_precash();
 
     precache_model ( "models/vhshield.md3");
