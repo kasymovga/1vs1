@@ -85,6 +85,9 @@ float g_runematch_shuffletime;
 spawn point for runes in runematch
 */
 
+var void() RuneMatch_ServerFrame_NextLink;
+void RuneMatch_ServerFrame();
+
 float RunematchHandleFrags(entity attacker, entity targ, float f);
 
 void spawnfunc_runematch_spawn_point()
@@ -762,6 +765,10 @@ void runematch_init()
 	GameHook_WarmupAllowed = false_WarmupAllowed;
 	GameHook_FragLimitOverride = runematch_FragLimitOverride;
 	GameHook_LeadLimitOverride = runematch_LeadLimitOverride;
+	if (g_runematch_pointamt) {
+		RuneMatch_ServerFrame_NextLink = GameHookChain_ServerFrame;
+		GameHookChain_ServerFrame = RuneMatch_ServerFrame;
+	}
 }
 
 void runes_init() {
@@ -843,12 +850,10 @@ void runes_init() {
 float runematch_point_time;
 
 // give points to players who are holding runes
-void RuneMatchGivePoints()
+void RuneMatch_ServerFrame()
 {
 	entity rune;
-
-	if(!g_runematch || !g_runematch_pointamt)
-		return;
+	RuneMatch_ServerFrame_NextLink();
 
 	if(gameover)
 		return;
@@ -859,17 +864,9 @@ void RuneMatchGivePoints()
 	runematch_point_time = time + g_runematch_pointrate;
 
 	rune = world;
-	do
-	{
-		rune = find(rune, classname, "rune");
-		if(!rune)
-			return;
-
-		if(rune.owner.classname == "player")
-		{
+	while ((rune = find(rune, classname, "rune")))
+		if (rune.owner.classname == "player")
 			UpdateFrags(rune.owner, g_runematch_pointamt);
-		}
-	}while(rune);
 }
 
 float RunematchHandleFrags(entity attacker, entity targ, float f)

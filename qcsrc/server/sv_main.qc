@@ -126,7 +126,6 @@ StartFrame
 Called before each frame by the server
 =============
 */
-void RuneMatchGivePoints();
 float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
 void ReadyRestart();
@@ -196,8 +195,6 @@ void StartFrame (void)
 
 	AuditTeams();
 	GameHookChain_ServerFrame();
-
-	RuneMatchGivePoints();
 	bot_serverframe();
 
 	if(spawn_debugview)
