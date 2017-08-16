@@ -68,6 +68,9 @@ float g_runematch_rune_effects;
 //float g_runematch_rune_glow_color;
 //float g_runematch_rune_glow_size;
 float g_runematch_shuffletime;
+float g_runes;
+
+.float runes;
 
 /* rune ideas:
 
@@ -780,6 +783,7 @@ string runematch_AppendItemCodes(string s, entity plr) {
 }
 
 void runes_init() {
+	CACHE_CVAR(g_runes);
 	if not(g_runes)
 	if not(g_runematch)
 		return;

@@ -528,7 +528,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_grappling_hook);
 	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_norecoil);
-	CACHE_CVAR(g_runes);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
 	CACHE_CVAR(g_nadgets);
