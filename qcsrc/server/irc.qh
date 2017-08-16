@@ -4,8 +4,6 @@
 
 void IRC_Init(void);
 void IRC_Announce_PlayerChat(entity plr, string msg);
-void IRC_Announce_ClientConnect(entity plr);
-void IRC_Announce_ClientDisconnect(entity plr);
 void IRC_Announce_GameStart(void);
 void IRC_Announce_GameOver(void);
 void IRC_Announce_GameEvent(string estr);

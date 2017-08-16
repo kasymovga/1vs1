@@ -1381,7 +1381,6 @@ void ClientConnect (void)
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		GameHookChain_RealClientConnect();
-		IRC_Announce_ClientConnect(self);
 		Check_ForRetard(self);
 	}
 
@@ -1470,10 +1469,7 @@ void ClientDisconnect (void)
 	GetCvars(-1);
 
 	if (clienttype(self) == CLIENTTYPE_REAL)
-	{
-		IRC_Announce_ClientDisconnect(self);
 		GameHookChain_RealClientDisconnect();
-	}
 }
 
 .float BUTTON_CHAT;

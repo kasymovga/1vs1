@@ -37,6 +37,11 @@ float irc_reconnect_time;
 float irc_disconnections;
 float irc_gamestart_wasannounced;
 
+var void() IRC_Announce_RealClientConnect_NextLink;
+void IRC_Announce_RealClientConnect();
+var void() IRC_Announce_RealClientDisconnect_NextLink;
+void IRC_Announce_RealClientDisconnect();
+
 void IRC_Print(string str) {
 	if (sv_ircbot_silent)
 		bprint("\{3}", "^5IRC ", str, "\n");
@@ -221,6 +226,10 @@ void IRC_Init(void) {
     irc.nextthink = time + 5;
     
     IRC_Announce_GameStart();
+	IRC_Announce_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+	GameHookChain_RealClientConnect = IRC_Announce_RealClientConnect;
+	IRC_Announce_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
+	GameHookChain_RealClientDisconnect = IRC_Announce_RealClientDisconnect;
 }
 
 float IRC_IsIgnored(string mask) {
@@ -380,14 +389,17 @@ void IRC_Announce_Client(entity plr, float ispart) {
     IRC_Announce_Client_Callback(plr.netaddress, "", ctx);
 }
 
-void IRC_Announce_ClientConnect(entity plr) { if(!irc) return;
-    IRC_Announce_Client(plr, FALSE);
+void IRC_Announce_RealClientConnect() {
+    IRC_Announce_Client(self, FALSE);
     if (!irc_gamestart_wasannounced)
         IRC_Announce_GameStart();
+
+	IRC_Announce_RealClientConnect_NextLink();
 }
 
-void IRC_Announce_ClientDisconnect(entity plr) { if(!irc) return;
-    IRC_Announce_Client(plr, TRUE);
+void IRC_Announce_RealClientDisconnect() {
+    IRC_Announce_Client(self, TRUE);
+	IRC_Announce_RealClientDisconnect_NextLink();
 }
 
 void IRC_Defer_Update_Topic()
