@@ -1136,6 +1136,14 @@ void ctf_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	ctf_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
+var string(string s, entity plr) ctf_AppendItemCodes_NextLink;
+string ctf_AppendItemCodes(string s, entity plr) {
+	if(plr.flagcarried != world)
+		s = strcat(s, "F");
+
+	return ctf_AppendItemCodes_NextLink(s, plr);
+}
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
@@ -1196,6 +1204,8 @@ void ctf_init()
 	GameHook_FragLimitOverride = ctf_FragLimitOverride;
 	ctf_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = ctf_DamageForceModsSet;
+	ctf_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
+	GameHookChain_AppendItemCodes = ctf_AppendItemCodes;
 };
 
 void ctf_setstatus2(entity flag, float shift)

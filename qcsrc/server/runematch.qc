@@ -771,6 +771,14 @@ void runematch_init()
 	}
 }
 
+var string(string s, entity plr) runematch_AppendItemCodes_NextLink;
+string runematch_AppendItemCodes(string s, entity plr) {
+	if(plr.runes)
+		s = strcat(s, "R{", ftos(plr.runes), "}");
+
+	return runematch_AppendItemCodes_NextLink(s, plr);
+}
+
 void runes_init() {
 	if not(g_runes)
 	if not(g_runematch)
@@ -841,6 +849,8 @@ void runes_init() {
 	GameHookChain_DamageForceDone = runematch_DamageForceDone;
 	runematch_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = runematch_PlayerClear;
+	runematch_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
+	GameHookChain_AppendItemCodes = runematch_AppendItemCodes;
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;

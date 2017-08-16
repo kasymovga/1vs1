@@ -949,6 +949,14 @@ void kh_SpectateCopy(entity e) {
 	self.kh_state = e.kh_state;
 }
 
+var string(string s, entity plr) kh_AppendItemCodes_NextLink;
+string kh_AppendItemCodes(string s, entity plr) {
+	if(plr.kh_next)
+		s = strcat(s, "K");
+
+	return kh_AppendItemCodes_NextLink(s, plr);
+}
+
 void kh_init()  // sets up th KH environment
 {
 	CACHE_CVAR(g_balance_keyhunt_damageforcescale);
@@ -979,6 +987,8 @@ void kh_init()  // sets up th KH environment
 	GameHookChain_PlayerClear = kh_PlayerClear;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_SpectateCopy = kh_SpectateCopy;
+	kh_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
+	GameHookChain_AppendItemCodes = kh_AppendItemCodes;
 
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
 	precache_model("models/keyhunt/key-carried.md3");

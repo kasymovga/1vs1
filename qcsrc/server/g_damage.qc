@@ -158,14 +158,10 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");
-	if(player.flagcarried != world)
-		s = strcat(s, "F");
 	if(player.BUTTON_CHAT)
 		s = strcat(s, "T");
-	if(player.kh_next)
-		s = strcat(s, "K");
-	if(player.runes)
-		s = strcat(s, "|", ftos(player.runes));
+
+	s = GameHookChain_AppendItemCodes(s, player);
 	return s;
 }
 
