@@ -750,8 +750,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":no_use_ammunition");
 		if(!cvar("g_pickup_items"))
 			s = strcat(s, ":no_pickup_items");
-		if(cvar("g_instagib"))
-			s = strcat(s, ":instagib");
 		if(cvar("g_norecoil"))
 			s = strcat(s, ":norecoil");
 		if(cvar("g_minstagib"))
