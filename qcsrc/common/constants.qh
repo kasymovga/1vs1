@@ -277,6 +277,8 @@ enum {
 	STAT_GAMESTARTTIME,
 	STAT_STRENGTH_FINISHED,
 	STAT_INVINCIBLE_FINISHED,
+	STAT_SPEED_FINISHED,
+	STAT_INVISIBILITY_FINISHED,
 	STAT_DAMAGE_HITS, // Used by the weapon stats code, represents the total amount of damage done to other players
 	STAT_DAMAGE_FIRED, // Used by the weapon stats code, represents the total amount of potential damage fired
 	STAT_PRESSED_KEYS,

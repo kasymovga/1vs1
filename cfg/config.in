@@ -210,6 +210,9 @@ set sv_spawnreplace_weapon_shotgun weapon_uzi
 set sv_spawnreplace_weapon_chaingun weapon_uzi
 set sv_spawnreplace_weapon_hyperblaster weapon_hlac
 
+set sv_spawnreplace_item_haste item_speed
+set sv_spawnreplace_item_invis item_invisibility
+
 //Xonotic compat
 set sv_spawnreplace_misc_breakablemodel "func_breakable"
 set sv_spawnreplace_weapon_seeker "weapon_hagar"
@@ -274,6 +277,11 @@ set g_freeze_startdelay 10
 set g_freeze_unfroze_time 3
 set g_freeze_use_tdm_maps 1
 set g_freeze_winlimit 10
+
+set g_balance_powerup_invisibility_time 30
+set g_balance_powerup_speed_time 30
+set g_powerup_invisibility 1
+set g_powerup_speed 1
 
 set g_tdm_fraglimit 50
 set g_tdm_use_dm_maps 0

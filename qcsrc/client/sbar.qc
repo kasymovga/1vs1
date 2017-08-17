@@ -1606,6 +1606,30 @@ float Sbar_WouldDrawScoreboard() {
 	return 0;
 }
 
+void Sbar_DrawPowerupTimer(vector pos, float dt, string image) {
+	vector picsize;
+	picsize = '22 22 0';
+	float countdown_fontsize = 18;
+	if(dt > 0)
+	{
+		if(dt < 5)
+		{
+			drawpic_expanding_two(pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+				bound(0, (ceil(dt) - dt) / 0.5, 1));
+		}
+		else
+		{
+			drawpic(pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+		}
+		Sbar_DrawXNum(pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
+	else if(dt > -1)
+	{
+		drawpic_expanding(pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+			bound(0, -dt / 0.5, 1));
+	}
+}
+
 void CSQC_Strength_Timer() {
 	vector pos;
 	vector bottom;
@@ -1614,7 +1638,7 @@ void CSQC_Strength_Timer() {
 	bottom_y = CVAR(vid_conheight);
 	bottom_z = 0;
 
-	float stat_items, dt;
+	float stat_items;
 	stat_items = getstati(STAT_ITEMS);
 	/*
 	if not(stat_items & IT_STRENGTH)
@@ -1625,11 +1649,8 @@ void CSQC_Strength_Timer() {
 	if (getstati(STAT_HEALTH) <= 0)
 		return;
 
-	vector picsize;
-	float strength_time, invincibility_time, countdown_fontsize;
+	float strength_time, invincibility_time, speed_time, invisibility_time;
 
-	picsize = '22 22 0';
-	countdown_fontsize = 18;
 
 	if (CVAR(vid_conwidth) >= 800)
 		pos = bottom + '192 -46 0';
@@ -1639,51 +1660,21 @@ void CSQC_Strength_Timer() {
 	//strength
 	strength_time = getstatf(STAT_STRENGTH_FINISHED);
 	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
+	speed_time = getstatf(STAT_SPEED_FINISHED);
+	invisibility_time = getstatf(STAT_INVISIBILITY_FINISHED);
 
-	if (strength_time) {
-		dt = strength_time - time;
-		if(dt > 0)
-		{
-			if(dt < 5)
-			{
-				drawpic_expanding_two(pos, "gfx/hud/sb_str", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-					bound(0, (ceil(dt) - dt) / 0.5, 1));
-			}
-			else
-			{
-				drawpic(pos, "gfx/hud/sb_str", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-			}
-			Sbar_DrawXNum(pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		else if(dt > -1)
-		{
-			drawpic_expanding(pos, "gfx/hud/sb_str", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-				bound(0, -dt / 0.5, 1));
-		}
-	}
+	if (strength_time)
+		Sbar_DrawPowerupTimer(pos, strength_time - time, "gfx/hud/sb_str");
 
 	//invincibility
-	if (invincibility_time) {
-		dt = invincibility_time - time;
-		if(dt > 0)
-		{
-			if(dt < 5)
-			{
-				drawpic_expanding_two(pos - '0 -22 0', "gfx/hud/sb_invinc", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-					bound(0, (ceil(dt) - dt) / 0.5, 1));
-			}
-			else
-			{
-				drawpic(pos - '0 -22 0', "gfx/hud/sb_invinc", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-			}
-			Sbar_DrawXNum(pos - '40 -24 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		}
-		else if(dt > -1)
-		{
-			drawpic_expanding(pos - '0 -22 0', "gfx/hud/sb_invinc", picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
-				bound(0, -dt / 0.5, 1));
-		}
-	}
+	if (invincibility_time)
+		Sbar_DrawPowerupTimer(pos + '0 22', invincibility_time - time, "gfx/hud/sb_invinc");
+
+	if (invisibility_time)
+		Sbar_DrawPowerupTimer(pos + '80 0', invisibility_time - time, "gfx/hud/sb_str");
+
+	if (speed_time)
+		Sbar_DrawPowerupTimer(pos + '80 22', speed_time - time, "gfx/hud/sb_invinc");
 }
 
 #define CENTERPRINT_MAX_LINES 30

@@ -44,6 +44,50 @@ string sv_model_armormedium;
 string sv_model_armorbig;
 string sv_model_armorlarge;
 
+var float() powerup_speed_SpeedMod_NextLink;
+float powerup_speed_SpeedMod() {
+	if (self.speed_finished) {
+		if (time < self.speed_finished)
+			return powerup_speed_SpeedMod_NextLink() * 1.5;
+		else
+			self.speed_finished = 0;
+	}
+	return powerup_speed_SpeedMod_NextLink();
+}
+
+float powerup_speed_init_done;
+void powerup_speed_init() {
+	if (powerup_speed_init_done)
+		return;
+
+	powerup_speed_init_done = 1;
+	powerup_speed_SpeedMod_NextLink = GameHookChain_SpeedMod;
+	GameHookChain_SpeedMod = powerup_speed_SpeedMod;
+	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
+}
+
+var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_NextLink;
+float powerup_invisibility_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
+	if (plr.invisibility_finished) {
+		if (time < plr.invisibility_finished)
+			dalpha *= 0.05;
+		else
+			plr.invincible_finished = 0;
+	}
+	return powerup_invisibility_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
+}
+
+float powerup_invisibility_init_done;
+void powerup_invisibility_init() {
+	if (powerup_invisibility_init_done)
+		return;
+
+	powerup_invisibility_init_done = 1;
+	powerup_invisibility_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
+	GameHookChain_PlayerAlphaMod = powerup_invisibility_PlayerAlphaMod;
+	addstat(STAT_INVISIBILITY_FINISHED, AS_FLOAT, invisibility_finished);
+}
+
 #define ITEM_RESPAWN_TICKS 10
 
 #define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
@@ -60,10 +104,7 @@ floatfield Item_CounterField(float it)
 		case IT_ROCKETS:     return ammo_rockets;
 		case IT_CELLS:       return ammo_cells;
 		case IT_FUEL:        return ammo_fuel;
-		case IT_5HP:         return health;
-		case IT_25HP:        return health;
 		case IT_HEALTH:      return health;
-		case IT_ARMOR_SHARD: return armorvalue;
 		case IT_ARMOR:       return armorvalue;
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field");
@@ -180,9 +221,9 @@ void Item_Show (entity e, float mode)
 void Item_Respawn (void)
 {
 	Item_Show(self, 1);
-	if(!g_minstagib && self.items == IT_STRENGTH)
+	if(self.items == IT_STRENGTH)
 		sound (self, CHAN_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
-	else if(!g_minstagib && self.items == IT_INVINCIBLE)
+	else if(self.items == IT_INVINCIBLE)
 		sound (self, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else
 		sound (self, CHAN_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
@@ -213,21 +254,15 @@ void Item_RespawnCountdown (void)
 			{
 				switch(self.items)
 				{
-					case IT_STRENGTH:   name = "item-invis"; rgb = '0 0 1'; break;
 					case IT_NAILS:      name = "item-extralife"; rgb = '1 0 0'; break;
-					case IT_INVINCIBLE: name = "item-speed"; rgb = '1 0 1'; break;
-				}
-			}
-			else
-			{
-				switch(self.items)
-				{
-					case IT_STRENGTH:   name = "item-strength"; rgb = '0 0 1'; break;
-					case IT_INVINCIBLE: name = "item-shield"; rgb = '1 0 1'; break;
 				}
 			}
 			switch(self.items)
 			{
+				case IT_STRENGTH:       name = "item-strength"; rgb = '0 0 1'; break;
+				case IT_INVINCIBLE:     name = "item-shield"; rgb = '1 0 1'; break;
+				case IT_SPEED:          name = "item-speed"; rgb = '1 0 1'; break;
+				case IT_INVISIBILITY:   name = "item-invis"; rgb = '0 0 1'; break;
 				case IT_FUEL_REGEN:     name = "item-fuelregen"; rgb = '1 0.5 0'; break;
 				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
 			}
@@ -397,16 +432,16 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
 			}
-			//if (item.speed_finished)
-			//{
-			//	pickedup = TRUE;
-			//	player.speed_finished = max(player.speed_finished, time) + cvar("g_balance_powerup_speed_time");
-			//}
-			//if (item.slowmo_finished)
-			//{
-			//	pickedup = TRUE;
-			//	player.slowmo_finished = max(player.slowmo_finished, time) + (cvar("g_balance_powerup_slowmo_time") * cvar("g_balance_powerup_slowmo_speed"));
-			//}
+			if (item.speed_finished)
+			{
+				pickedup = TRUE;
+				player.speed_finished = max(player.speed_finished, time) + item.speed_finished;
+			}
+			if (item.invisibility_finished)
+			{
+				pickedup = TRUE;
+				player.invisibility_finished = max(player.invisibility_finished, time) + item.invisibility_finished;
+			}
 
 			if (item.health)
 			if (player.health < item.max_health)
@@ -787,7 +822,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if(itemid == IT_INVINCIBLE)
 			precache_sound ("misc/shield_respawn.wav");
 
-		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
+		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
 			self.target = "###item###"; // for finding the nearest item using find()
 	}
 
@@ -1043,7 +1078,7 @@ void spawnfunc_item_armor_small (void) {
 		self.armorvalue = cvar("g_pickup_armorsmall");
 	if(!self.max_armorvalue)
 		self.max_armorvalue = cvar("g_pickup_armorsmall_max");
-	StartItem (sv_model_armorsmall, "misc/armor1.wav", g_pickup_respawntime_armorsmall, g_pickup_respawntimejitter_armorsmall, "5 Armor", IT_ARMOR_SHARD, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItem (sv_model_armorsmall, "misc/armor1.wav", g_pickup_respawntime_armorsmall, g_pickup_respawntimejitter_armorsmall, "5 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_armor_medium (void) {
@@ -1075,7 +1110,7 @@ void spawnfunc_item_health_small (void) {
 		self.max_health = cvar("g_pickup_healthsmall_max");
 	if(!self.health)
 		self.health = cvar("g_pickup_healthsmall");
-	StartItem (sv_model_healthsmall, "misc/minihealth.wav", g_pickup_respawntime_healthsmall, g_pickup_respawntimejitter_healthsmall, "5 Health", IT_5HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItem (sv_model_healthsmall, "misc/minihealth.wav", g_pickup_respawntime_healthsmall, g_pickup_respawntimejitter_healthsmall, "5 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_health_medium (void) {
@@ -1083,7 +1118,7 @@ void spawnfunc_item_health_medium (void) {
 		self.max_health = cvar("g_pickup_healthmedium_max");
 	if(!self.health)
 		self.health = cvar("g_pickup_healthmedium");
-	StartItem (sv_model_healthmedium, "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItem (sv_model_healthmedium, "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_large (void) {
@@ -1091,7 +1126,7 @@ void spawnfunc_item_health_large (void) {
 		self.max_health = cvar("g_pickup_healthlarge_max");
 	if(!self.health)
 		self.health = cvar("g_pickup_healthlarge");
-	StartItem (sv_model_healthlarge, "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItem (sv_model_healthlarge, "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_mega (void) {
@@ -1121,6 +1156,24 @@ void spawnfunc_item_invincible (void) {
 
 	self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 	StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+}
+
+void spawnfunc_item_invisibility (void) {
+	if(!cvar("g_powerup_invisibility"))
+		return;
+
+	self.invisibility_finished = cvar("g_balance_powerup_invisibility_time");
+	StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+	powerup_invisibility_init();
+}
+
+void spawnfunc_item_speed (void) {
+	if(!cvar("g_powerup_speed"))
+		return;
+
+	self.speed_finished = cvar("g_balance_powerup_speed_time");
+	StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+	powerup_speed_init();
 }
 
 void spawnfunc_item_key_gold (void) {
@@ -1166,12 +1219,12 @@ float target_item_func_and(float a, float b)
 
 float target_item_func_itembitset(float a, float b)
 {
-	return (a - (a & (IT_PICKUPMASK | IT_STRENGTH | IT_INVINCIBLE))) | b;
+	return (a - (a & (IT_PICKUPMASK | IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY))) | b;
 }
 
 float target_item_func_itemand(float a, float b)
 {
-	return (a - (a & (IT_PICKUPMASK | IT_STRENGTH | IT_INVINCIBLE))) | (a & b);
+	return (a - (a & (IT_PICKUPMASK | IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY))) | (a & b);
 }
 
 float target_item_func_or(float a, float b)
@@ -1267,6 +1320,10 @@ void target_items_use (void)
 			activator.strength_finished = time + self.strength_finished;
 		if((self.items & activator.items) & IT_INVINCIBLE)
 			activator.invincible_finished = time + self.invincible_finished;
+		if((self.items & activator.items) & IT_SPEED)
+			activator.speed_finished = time + self.speed_finished;
+		if((self.items & activator.items) & IT_INVISIBILITY)
+			activator.invisibility_finished = time + self.invisibility_finished;
 	}
 	else if(self.spawnflags == 1) // AND/MIN
 	{
@@ -1284,6 +1341,10 @@ void target_items_use (void)
 			activator.strength_finished = min(activator.strength_finished, time + self.strength_finished);
 		if((self.items & activator.items) & IT_INVINCIBLE)
 			activator.invincible_finished = min(activator.invincible_finished, time + self.invincible_finished);
+		if((self.items & activator.items) & IT_SPEED)
+			activator.speed_finished = min(activator.speed_finished, time + self.speed_finished);
+		if((self.items & activator.items) & IT_INVISIBILITY)
+			activator.invisibility_finished = min(activator.invisibility_finished, time + self.invisibility_finished);
 	}
 	else if(self.spawnflags == 2) // OR/MAX
 	{
@@ -1301,6 +1362,10 @@ void target_items_use (void)
 			activator.strength_finished = max(activator.strength_finished, time + self.strength_finished);
 		if((self.items & activator.items) & IT_INVINCIBLE)
 			activator.invincible_finished = max(activator.invincible_finished, time + self.invincible_finished);
+		if((self.items & activator.items) & IT_SPEED)
+			activator.speed_finished = max(activator.speed_finished, time + self.speed_finished);
+		if((self.items & activator.items) & IT_INVISIBILITY)
+			activator.invisibility_finished = max(activator.invisibility_finished, time + self.invisibility_finished);
 	}
 	else if(self.spawnflags == 4) // ANDNOT/MIN
 	{
@@ -1318,12 +1383,20 @@ void target_items_use (void)
 			activator.strength_finished = min(activator.strength_finished, time + self.strength_finished);
 		if((self.items & activator.items) & IT_INVINCIBLE)
 			activator.invincible_finished = min(activator.invincible_finished, time + self.invincible_finished);
+		if((self.items & activator.items) & IT_SPEED)
+			activator.speed_finished = min(activator.speed_finished, time + self.speed_finished);
+		if((self.items & activator.items) & IT_INVISIBILITY)
+			activator.invisibility_finished = min(activator.invisibility_finished, time + self.invisibility_finished);
 	}
 
 	if not(activator.items & IT_STRENGTH)
 		activator.strength_finished = 0;
 	if not(activator.items & IT_INVINCIBLE)
 		activator.invincible_finished = 0;
+	if not(activator.items & IT_SPEED)
+		activator.speed_finished = 0;
+	if not(activator.items & IT_INVISIBILITY)
+		activator.invisibility_finished = 0;
 
 	if(activator.health > h0)
 		activator.pauserothealth_finished = max(activator.pauserothealth_finished, time + g_balance_pause_health_rot);
@@ -1357,6 +1430,10 @@ void spawnfunc_target_items (void)
 		self.strength_finished = cvar("g_balance_powerup_strength_time");
 	if(!self.invincible_finished)
 		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
+	if(!self.invisibility_finished)
+		self.invisibility_finished = cvar("g_balance_powerup_invisibility_time");
+	if(!self.speed_finished)
+		self.speed_finished = cvar("g_balance_powerup_speed_time");
 
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/itempickup.wav");
@@ -1376,6 +1453,8 @@ void spawnfunc_target_items (void)
 		else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
 		else if(argv(i) == "strength")               self.items |= IT_STRENGTH;
 		else if(argv(i) == "invincible")             self.items |= IT_INVINCIBLE;
+		else if(argv(i) == "speed")                  { self.items |= IT_SPEED; powerup_speed_init(); }
+		else if(argv(i) == "invisibility")           { self.items |= IT_INVISIBILITY; powerup_invisibility_init(); }
 		else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
 		else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
 		else

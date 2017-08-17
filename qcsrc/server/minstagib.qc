@@ -20,7 +20,6 @@ void minstagib_items (float itemid)
 		return;
 	}
 
-	local float rnd;
 	self.classname = "minstagib";
 
 	// replace rocket launchers and nex guns with ammo cells
@@ -33,23 +32,6 @@ void minstagib_items (float itemid)
 		return;
 	}
 
-	// randomize
-	rnd = random() * 3;
-	if (rnd <= 1)
-		itemid = IT_STRENGTH;
-	else if (rnd <= 2)
-		itemid = IT_NAILS;
-	else
-		itemid = IT_INVINCIBLE;
-
-	// replace with invis
-	if (itemid == IT_STRENGTH)
-	{
-		self.strength_finished = cvar("g_balance_powerup_strength_time");
-		StartItem ("models/items/g_strength.md3",
-			"misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Invisibility", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
-	}
 	// replace with extra lives
 	if (itemid == IT_NAILS)
 	{
@@ -59,15 +41,6 @@ void minstagib_items (float itemid)
 			"Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 
 	}
-	// replace with speed
-	if (itemid == IT_INVINCIBLE)
-	{
-		self.invincible_finished = cvar("g_balance_powerup_invincible_time");
-		StartItem ("models/items/g_invincible.md3",
-			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
-	}
-
 }
 
 float minst_no_auto_cells;
@@ -209,6 +182,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		sprint(player, "^3You picked up some extra lives\n");
 	}
 
+#if 0
 	// invis powerup
 	if (item.strength_finished)
 	{
@@ -226,6 +200,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		// play2(player, "announce/robotic/speed.wav");
 		player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
 	}
+#endif
 
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
@@ -234,7 +209,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
-	return TRUE;
+	return GameHookChain_ItemGiveToHandle_PickedUp;
 }
 
 var void() minstagib_HealthArmorFuelModsSet_NextLink;
@@ -274,23 +249,25 @@ float minstagib_ThrowWeaponAllowed(float doreduce) {
 	return minstagib_ThrowWeaponAllowed_NextLink(doreduce);
 }
 
+#if 0
 var float(entity plr, entity viewer, float dalpha) minstagib_PlayerAlphaMod_NextLink;
 float minstagib_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
 	return ((time < plr.strength_finished) ? g_minstagib_invis_alpha : 1) * minstagib_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
 }
+#endif
 
 void spawnfunc_minstagib_extra_lives() { minstagib_items(IT_NAILS); }
-void spawnfunc_minstagib_invisibility() { minstagib_items(IT_STRENGTH); }
-void spawnfunc_minstagib_speed() { minstagib_items(IT_INVINCIBLE); }
+//void spawnfunc_minstagib_invisibility() { minstagib_items(IT_STRENGTH); }
+//void spawnfunc_minstagib_speed() { minstagib_items(IT_INVINCIBLE); }
 
 var void() minstagib_EntityPreSpawn_NextLink;
 void minstagib_EntityPreSpawn() {
 	if (self.classname == "item_health_mega")
 		self.classname = "minstagib_extra_lives";
 	else if (self.classname == "item_strength")
-		self.classname = "minstagib_invisibility";
+		self.classname = "item_invisibility";
 	else if (self.classname == "item_invincible")
-		self.classname = "minstagib_speed";
+		self.classname = "item_speed";
 
 	minstagib_EntityPreSpawn_NextLink();
 }
@@ -298,6 +275,8 @@ void minstagib_EntityPreSpawn() {
 var float() minstagib_ItemForbidden_NextLink;
 float minstagib_ItemForbidden() {
 	if (self.classname != "minstagib")
+	if (self.classname != "item_speed")
+	if (self.classname != "item_invisibility")
 		return TRUE;
 
 	return minstagib_ItemForbidden_NextLink();
@@ -408,8 +387,10 @@ void minstagib_init() {
 	GameHookChain_SpeedMod = minstagib_SpeedMod;
 	minstagib_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
+#if 0
 	minstagib_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = minstagib_PlayerAlphaMod;
+#endif
 	minstagib_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
 	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
 	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;

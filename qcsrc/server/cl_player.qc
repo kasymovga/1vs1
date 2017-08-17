@@ -1525,7 +1525,6 @@ void VoiceMessage(string type, string msg)
 float Player_CalculateAlpha(entity plr, entity viewer) {
 	plr = Akimbo_Owner(plr);
 	float dalpha = max(0.01, default_player_alpha);
-
 	if(plr.classname == "observer") {
 		if(plr == viewer) {
 			return dalpha;
