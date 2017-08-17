@@ -1,39 +1,31 @@
 float rune_numspawns;
 
 float	RUNE_FIRST	= 1;
-float	RUNE_STRENGTH	= 1;
+
+float	RUNE_IGNITE	= 1;
 float	RUNE_DEFENSE	= 2;
 float	RUNE_REGEN	= 4;
 float	RUNE_SPEED	= 8;
 float	RUNE_VAMPIRE	= 16;
+
 float	RUNE_LAST	= 16;
 
 float	CURSE_FIRST	= 8192;
-float	CURSE_WEAK	= 8192;
+float	CURSE_BURNING	= 8192;
 float	CURSE_VULNER	= 16384;
 float	CURSE_VENOM	= 32768;
 float	CURSE_SLOW	= 65536;
-float	CURSE_EMPATHY	= 131072;
+float	CURSE_ALTRUISM	= 131072;
 float	CURSE_LAST	= 131072;
 float	CURSE_NONE	= 262144;
 
 float RUNE_COUNT = 5;
 
-float g_balance_curse_empathy_minhealth;
-float g_balance_curse_empathy_takedamage;
-float g_balance_curse_vulner_takedamage;
-float g_balance_curse_weak_damage;
-float g_balance_curse_weak_force;
-float g_balance_curse_venom_hpmod;
-float g_balance_curse_venom_limitmod;
-float g_balance_curse_venom_rotrate;
-float g_balance_rune_regen_combo_hpmod;
-float g_balance_rune_regen_combo_limitmod;
-float g_balance_rune_regen_combo_regenrate;
-float g_balance_rune_regen_combo_rotrate;
-float g_balance_rune_regen_hpmod;
-float g_balance_rune_regen_limitmod;
-float g_balance_rune_regen_regenrate;
+float g_balance_curse_altruism_damage_factor;
+float g_balance_curse_burning_damage_factor;
+float g_balance_curse_vulner_damage_factor;
+float g_balance_curse_venom_damage_factor;
+float g_balance_rune_regen_damage_factor;
 float g_balance_rune_speed_combo_jumpheight;
 float g_balance_rune_speed_jumpheight;
 float g_balance_curse_slow_jumpheight;
@@ -43,15 +35,9 @@ float g_balance_rune_speed_moverate;
 float g_balance_rune_speed_combo_atkrate;
 float g_balance_rune_speed_atkrate;
 float g_balance_curse_slow_atkrate;
-float g_balance_rune_defense_combo_takedamage;
-float g_balance_rune_defense_takedamage;
-float g_balance_rune_strength_combo_damage;
-float g_balance_rune_strength_combo_force;
-float g_balance_rune_strength_damage;
-float g_balance_rune_strength_force;
-float g_balance_rune_vampire_absorb;
-float g_balance_rune_vampire_combo_absorb;
-float g_balance_rune_vampire_maxhealth;
+float g_balance_rune_defense_damage_factor;
+float g_balance_rune_ignite_damage_factor;
+float g_balance_rune_vampire_damage_factor;
 float g_runematch_allow_same;
 float g_runematch_carried_runes_max;
 float g_runematch_curses;
@@ -176,8 +162,8 @@ float RunesCount(float r)
 
 string RuneName(float r)
 {
-	if(r == RUNE_STRENGTH)
-		return "^1Strength^7";
+	if(r == RUNE_IGNITE)
+		return "^1Ignite^7";
 	if(r == RUNE_DEFENSE)
 		return "^4Defense^7";
 	if(r == RUNE_REGEN)
@@ -187,23 +173,23 @@ string RuneName(float r)
 	if(r == RUNE_VAMPIRE)
 		return "^6Vampire^7";
 
-	if(r == CURSE_WEAK)
-		return "^1Weakness^7";
+	if(r == CURSE_BURNING)
+		return "^1Burning^7";
 	if(r == CURSE_VULNER)
 		return "^4Vulnerability^7";
 	if(r == CURSE_VENOM)
 		return "^2Venom^7";
 	if(r == CURSE_SLOW)
 		return "^3Slow^7";
-	if(r == CURSE_EMPATHY)
-		return "^6Empathy^7";
+	if(r == CURSE_ALTRUISM)
+		return "^6Altruism^7";
 	return strcat("^8[unnamed", ftos(r), "]^7");
 }
 
 vector RuneColormod(float r)
 {
 	vector _color;
-	if(r == RUNE_STRENGTH)
+	if(r == RUNE_IGNITE)
 		_color = '255 0 0';
 	if(r == RUNE_DEFENSE)
 		_color = '0 0 255';//'0 102 255';//
@@ -214,7 +200,7 @@ vector RuneColormod(float r)
 	if(r == RUNE_VAMPIRE)
 		_color = '64 0 128';//'108 0 217';//'128 0 255';//'179 0 204';//
 
-	if(r == CURSE_WEAK)
+	if(r == CURSE_BURNING)
 		_color = '255 0 0';
 	if(r == CURSE_VULNER)
 		_color = '0 0 255';//'0 102 255';//
@@ -222,7 +208,7 @@ vector RuneColormod(float r)
 		_color = '0 204 0';//'0 255 0';
 	if(r == CURSE_SLOW)
 		_color = 0.5*'185 185 0';//'255 255 0';
-	if(r == CURSE_EMPATHY)
+	if(r == CURSE_ALTRUISM)
 		_color = '179 0 204';//'128 0 255';
 
 	return _color * (1 / 255) * g_runematch_rune_color_strength;
@@ -300,11 +286,11 @@ void rune_touch()
 
 	//sprint(other, strcat("^3You have picked up ",
 	//	RuneName(self.runes & (RUNE_LAST*2-1)), " and "));
-	//sprint(other, strcat(RuneName(self.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY)), "\n"));
+	//sprint(other, strcat(RuneName(self.enemy.runes & (CURSE_BURNING | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_ALTRUISM)), "\n"));
 
 	bprint("^3", other.netname, "^7 has picked up ",
 		RuneName(self.runes & (RUNE_LAST*2-1)), "^7");
-	float curses = self.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY);
+	float curses = self.enemy.runes & (CURSE_BURNING | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_ALTRUISM);
 	if (curses)
 		bprint(" and ", RuneName(curses));
 	bprint("\n");
@@ -384,7 +370,7 @@ void DropRune(entity pl, entity e)
 
 	bprint("^3", pl.netname, "^7 has lost ",
 		RuneName(e.runes & (RUNE_LAST*2-1)), "^7");
-	float curses = e.enemy.runes & (CURSE_WEAK | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_EMPATHY);
+	float curses = e.enemy.runes & (CURSE_BURNING | CURSE_VULNER | CURSE_VENOM | CURSE_SLOW | CURSE_ALTRUISM);
 	if (curses)
 		bprint(" and ", RuneName(curses));
 	bprint("\n");
@@ -393,8 +379,8 @@ void DropRune(entity pl, entity e)
 float RuneMatchesCurse(float r, float c)
 {
 	float cr;
-	if(r & RUNE_STRENGTH)
-		cr = CURSE_WEAK;
+	if(r & RUNE_IGNITE)
+		cr = CURSE_BURNING;
 	else if(r & RUNE_DEFENSE)
 		cr = CURSE_VULNER;
 	else if(r & RUNE_REGEN)
@@ -402,7 +388,7 @@ float RuneMatchesCurse(float r, float c)
 	else if(r & RUNE_SPEED)
 		cr = CURSE_SLOW;
 	else if(r & RUNE_VAMPIRE)
-		cr = CURSE_EMPATHY;
+		cr = CURSE_ALTRUISM;
 	else return FALSE; // fixme: error?
 
 	if(c & cr)
@@ -597,35 +583,6 @@ float runematch_FragLimitOverride() { return cvar("g_runematch_point_limit"); }
 
 float runematch_LeadLimitOverride() { return cvar("g_runematch_point_leadlimit"); }
 
-var void() runematch_HealthArmorFuelModsSet_NextLink;
-void runematch_HealthArmorFuelModsSet() {
-	if (self.runes & RUNE_REGEN)
-	{
-		if (self.runes & CURSE_VENOM) // do we have both rune/curse?
-		{
-			GameHook_RegenMod *= g_balance_rune_regen_combo_regenrate;
-			GameHook_HealthMaxMod *= g_balance_rune_regen_combo_hpmod;
-			GameHook_ArmorHealthLimitMod *= g_balance_rune_regen_combo_limitmod;
-		}
-		else
-		{
-			GameHook_RegenMod *= g_balance_rune_regen_regenrate;
-			GameHook_HealthMaxMod *= g_balance_rune_regen_hpmod;
-			GameHook_ArmorHealthLimitMod *= g_balance_rune_regen_limitmod;
-		}
-	}
-	else if (self.runes & CURSE_VENOM)
-	{
-		GameHook_HealthMaxMod *= g_balance_curse_venom_hpmod;
-		if (self.runes & RUNE_REGEN) // do we have both rune/curse?
-			GameHook_RotMod *= g_balance_rune_regen_combo_rotrate;
-		else
-			GameHook_RotMod *= g_balance_curse_venom_rotrate;
-		GameHook_ArmorHealthLimitMod *= g_balance_curse_venom_limitmod;
-	}
-	runematch_HealthArmorFuelModsSet_NextLink();
-}
-
 var float() runematch_JumpVelocityMod_NextLink;
 float runematch_JumpVelocityMod() {
 	float jump_mod = 1;
@@ -676,78 +633,83 @@ float runematch_SpeedMod() {
 	return maxspd_mod;
 }
 
-var void(entity targ, entity attacker, float deathtype) runematch_DamageForceModsSet_NextLink;
-void runematch_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
-	// apply strength rune
-	if (attacker.runes & RUNE_STRENGTH)
-	{
-		if(attacker.runes & CURSE_WEAK) // have both curse & rune
-		{
-			GameHook_DamageMod = GameHook_DamageMod * g_balance_rune_strength_combo_damage;
-			GameHook_ForceMod = GameHook_ForceMod * g_balance_rune_strength_combo_force;
-		}
-		else
-		{
-			GameHook_DamageMod = GameHook_DamageMod * g_balance_rune_strength_damage;
-			GameHook_ForceMod = GameHook_ForceMod * g_balance_rune_strength_force;
-		}
-	}
-	else if (attacker.runes & CURSE_WEAK)
-	{
-		GameHook_DamageMod = GameHook_DamageMod * g_balance_curse_weak_damage;
-		GameHook_ForceMod = GameHook_ForceMod * g_balance_curse_weak_force;
-	}
+void healer_think() {
+	if (self.owner.classname == "player")
+	if (PLAYER_REALLY_ALIVE(self.owner))
+		Item_GiveTo(self, self.owner);
 
-	// apply defense rune
-	if (targ.runes & RUNE_DEFENSE)
-	{
-		if (targ.runes & CURSE_VULNER) // have both curse & rune
-			GameHook_DamageMod = GameHook_DamageMod * g_balance_rune_defense_combo_takedamage;
-		else
-			GameHook_DamageMod = GameHook_DamageMod * g_balance_rune_defense_takedamage;
-	}
-	else if (targ.runes & CURSE_VULNER)
-		GameHook_DamageMod = GameHook_DamageMod * g_balance_curse_vulner_takedamage;
+	remove(self);
+}
 
-	runematch_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+void healer_spawn(float health_amount, float _delay, entity _owner) {
+	if (health_amount < 1 && health_amount > -1)
+		return;
+
+	entity e = spawn();
+	e.classname = "healer";
+	e.reset = SUB_Remove;
+	e.health = health_amount;
+	if (health_amount > 0)
+		e.max_health = _owner.health + e.health;
+	else
+		e.max_health = _owner.health - e.health;
+
+	e.think = healer_think;
+	e.spawnshieldtime = TRUE;
+	e.owner = _owner;
+	if (health_amount > 0)
+		e.item_pickupsound = "misc/minihealth.wav";
+	else
+		e.item_pickupsound = "misc/bodyimpact1.wav";
+
+	e.nextthink = time + _delay;
+}
+
+void damage_next_frame() {
+	Damage(self.enemy, self.enemy, self.owner, self.dmg, DEATH_HURTTRIGGER, self.enemy.origin, '0 0 0');
+	remove(self);
 }
 
 var void(entity targ, entity attacker, float damage, vector force) runematch_DamageForceDone_NextLink;
 void runematch_DamageForceDone(entity targ, entity attacker, float damage, vector force) {
-	if(targ.classname == "player")
-	if(attacker.classname == "player")
-	if(attacker != targ && attacker.health > 2)
-	{
-		// Savage: vampire mode
-		if (attacker.runes & RUNE_VAMPIRE)
-		{
-		// apply vampire rune
-			if (attacker.runes & CURSE_EMPATHY) // have the curse too
+	float d;
+	if(targ.classname == "player") {
+		if(attacker.classname == "player") {
+			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker))
 			{
-				//attacker.health = attacker.health + damage * cvar("g_balance_rune_vampire_combo_absorb");
-				attacker.health = bound(
-					g_balance_curse_empathy_minhealth, // LA: was 3, now 40
-					attacker.health + damage * g_balance_rune_vampire_combo_absorb,
-					g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
-			}
-			else
-			{
-				//attacker.health = attacker.health + damage * cvar("g_balance_rune_vampire_absorb");
-				attacker.health = bound(
-					attacker.health,	// LA: was 3, but changed so that you can't lose health
-										// empathy won't let you gain health in the same way...
-					attacker.health + damage * g_balance_rune_vampire_absorb,
-					g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
+				if (attacker.runes & RUNE_VAMPIRE)
+					healer_spawn(damage * g_balance_rune_vampire_damage_factor, 0.5, attacker);
+
+				if (targ.runes & CURSE_ALTRUISM)
+					healer_spawn(damage * g_balance_curse_altruism_damage_factor, 0.5, attacker);
+
+				if (attacker.runes & RUNE_IGNITE)
+					Fire_AddDamage(targ, attacker, g_balance_rune_ignite_damage_factor * damage, 5, DEATH_HURTTRIGGER);
+
+				if (PLAYER_REALLY_ALIVE(targ)) {
+					if ((d = damage * g_balance_rune_defense_damage_factor) > 1)
+					if (targ.runes & RUNE_DEFENSE) {
+						entity e = spawn();
+						e.owner = targ;
+						e.enemy = attacker;
+						e.dmg = damage * g_balance_rune_defense_damage_factor;
+						e.think = damage_next_frame;
+						e.nextthink = time;
+					}
+					if (attacker.runes & CURSE_VULNER)
+						healer_spawn(-damage * g_balance_curse_vulner_damage_factor, 0, attacker);
 				}
+			}
+			if (PLAYER_REALLY_ALIVE(targ))
+				if (targ.runes & CURSE_BURNING)
+					if ((d = g_balance_curse_burning_damage_factor * damage) > 1)
+						Fire_AddDamage(targ, attacker, d, 5, DEATH_HURTTRIGGER);
 		}
-		// apply empathy curse
-		else if (attacker.runes & CURSE_EMPATHY)
-		{
-			attacker.health = bound(
-				g_balance_curse_empathy_minhealth, // LA: was 3, now 20
-				attacker.health + damage * g_balance_curse_empathy_takedamage,
-				attacker.health);
-		}
+		if (targ.runes & RUNE_REGEN)
+			healer_spawn(damage * g_balance_rune_regen_damage_factor, 1, targ);
+
+		if (targ.runes & CURSE_VENOM)
+			healer_spawn(-damage * g_balance_curse_venom_damage_factor, 0.5, targ);
 	}
 	runematch_DamageForceDone_NextLink(targ, attacker, damage, force);
 }
@@ -790,39 +752,23 @@ void runes_init() {
 
 	precache_model ("models/runematch/curse.mdl");
 	precache_model ("models/runematch/rune.mdl");
-	CACHE_CVAR(g_balance_curse_empathy_minhealth);
-	CACHE_CVAR(g_balance_curse_empathy_takedamage);
-	CACHE_CVAR(g_balance_curse_vulner_takedamage);
-	CACHE_CVAR(g_balance_curse_weak_damage);
-	CACHE_CVAR(g_balance_curse_weak_force);
-	CACHE_CVAR(g_balance_rune_regen_combo_hpmod);
-	CACHE_CVAR(g_balance_rune_regen_combo_limitmod);
-	CACHE_CVAR(g_balance_rune_regen_combo_regenrate);
-	CACHE_CVAR(g_balance_rune_regen_combo_rotrate);
-	CACHE_CVAR(g_balance_rune_regen_hpmod);
-	CACHE_CVAR(g_balance_rune_regen_limitmod);
-	CACHE_CVAR(g_balance_rune_regen_regenrate);
-	CACHE_CVAR(g_balance_curse_venom_hpmod);
-	CACHE_CVAR(g_balance_curse_venom_limitmod);
-	CACHE_CVAR(g_balance_curse_venom_rotrate);
+	CACHE_CVAR(g_balance_curse_altruism_damage_factor);
+	CACHE_CVAR(g_balance_curse_burning_damage_factor);
+	CACHE_CVAR(g_balance_curse_vulner_damage_factor);
+	CACHE_CVAR(g_balance_rune_regen_damage_factor);
+	CACHE_CVAR(g_balance_curse_venom_damage_factor);
 	CACHE_CVAR(g_balance_rune_speed_combo_jumpheight);
 	CACHE_CVAR(g_balance_rune_speed_jumpheight);
 	CACHE_CVAR(g_balance_curse_slow_jumpheight);
 	CACHE_CVAR(g_balance_curse_slow_moverate);
 	CACHE_CVAR(g_balance_rune_speed_combo_moverate);
 	CACHE_CVAR(g_balance_rune_speed_moverate);
-	CACHE_CVAR(g_balance_rune_vampire_absorb);
-	CACHE_CVAR(g_balance_rune_vampire_combo_absorb);
-	CACHE_CVAR(g_balance_rune_vampire_maxhealth);
+	CACHE_CVAR(g_balance_rune_vampire_damage_factor);
 	CACHE_CVAR(g_balance_rune_speed_combo_atkrate);
 	CACHE_CVAR(g_balance_rune_speed_atkrate);
 	CACHE_CVAR(g_balance_curse_slow_atkrate);
-	CACHE_CVAR(g_balance_rune_defense_combo_takedamage);
-	CACHE_CVAR(g_balance_rune_defense_takedamage);
-	CACHE_CVAR(g_balance_rune_strength_combo_damage);
-	CACHE_CVAR(g_balance_rune_strength_combo_force);
-	CACHE_CVAR(g_balance_rune_strength_damage);
-	CACHE_CVAR(g_balance_rune_strength_force);
+	CACHE_CVAR(g_balance_rune_defense_damage_factor);
+	CACHE_CVAR(g_balance_rune_ignite_damage_factor);
 	CACHE_CVAR(g_runematch_allow_same);
 	CACHE_CVAR(g_runematch_carried_runes_max);
 	CACHE_CVAR(g_runematch_curses);
@@ -839,16 +785,12 @@ void runes_init() {
 	//CACHE_CVAR(g_runematch_rune_glow_color);
 	//CACHE_CVAR(g_runematch_rune_glow_size);
 	CACHE_CVAR(g_runematch_shuffletime);
-	runematch_HealthArmorFuelModsSet_NextLink = GameHookChain_HealthArmorFuelModsSet;
-	GameHookChain_HealthArmorFuelModsSet = runematch_HealthArmorFuelModsSet;
 	runematch_JumpVelocityMod_NextLink = GameHookChain_JumpVelocityMod;
 	GameHookChain_JumpVelocityMod = runematch_JumpVelocityMod;
 	runematch_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = runematch_SpeedMod;
 	runematch_WeaponRateFactor_NextLink = GameHookChain_WeaponRateFactor;
 	GameHookChain_WeaponRateFactor = runematch_WeaponRateFactor;
-	runematch_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = runematch_DamageForceModsSet;
 	runematch_DamageForceDone_NextLink = GameHookChain_DamageForceDone;
 	GameHookChain_DamageForceDone = runematch_DamageForceDone;
 	runematch_PlayerClear_NextLink = GameHookChain_PlayerClear;

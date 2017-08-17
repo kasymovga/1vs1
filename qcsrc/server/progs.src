@@ -109,6 +109,7 @@ gamehooks.qh
 ../common/nadgets.qh
 nadgets/include.qh
 napalm.qh
+g_damage.qh
 
 scores_rules.qc
 

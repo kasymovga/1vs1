@@ -21,3 +21,4 @@ float warmup_start_ammo_fuel;
 float warmup_start_weapons;
 float g_weapon_stay;
 void Items_Init();
+float Item_GiveTo(entity item, entity player);
