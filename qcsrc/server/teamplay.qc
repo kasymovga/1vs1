@@ -282,8 +282,6 @@ void InitGameplayMode()
 	{
 		game = GAME_KEYHUNT;
 		ActivateTeamplay();
-		fraglimit_override = cvar("g_keyhunt_point_limit");
-		leadlimit_override = cvar("g_keyhunt_point_leadlimit");
 		kh_init();
 	}
 

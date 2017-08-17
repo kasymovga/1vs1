@@ -957,6 +957,9 @@ string kh_AppendItemCodes(string s, entity plr) {
 	return kh_AppendItemCodes_NextLink(s, plr);
 }
 
+float kh_FragLimitOverride() { return cvar("g_keyhunt_point_limit"); }
+float kh_LeadLimitOverride() { return cvar("g_keyhunt_point_leadlimit"); }
+
 void kh_init()  // sets up th KH environment
 {
 	CACHE_CVAR(g_balance_keyhunt_damageforcescale);
@@ -989,6 +992,8 @@ void kh_init()  // sets up th KH environment
 	GameHook_SpectateCopy = kh_SpectateCopy;
 	kh_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
 	GameHookChain_AppendItemCodes = kh_AppendItemCodes;
+	GameHook_FragLimitOverride = kh_FragLimitOverride;
+	GameHook_LeadLimitOverride = kh_LeadLimitOverride;
 
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
 	precache_model("models/keyhunt/key-carried.md3");
