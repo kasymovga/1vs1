@@ -294,6 +294,7 @@ void rune_touch()
 	if (curses)
 		bprint(" and ", RuneName(curses));
 	bprint("\n");
+	sound (other, CHAN_TRIGGER, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 }
 
 void rune_respawn()
@@ -752,6 +753,9 @@ void runes_init() {
 
 	precache_model ("models/runematch/curse.mdl");
 	precache_model ("models/runematch/rune.mdl");
+	precache_sound("misc/minihealth.wav");
+	precache_sound("misc/mediumhealth.wav");
+	precache_sound("misc/bodyimpact1.wav");
 	CACHE_CVAR(g_balance_curse_altruism_damage_factor);
 	CACHE_CVAR(g_balance_curse_burning_damage_factor);
 	CACHE_CVAR(g_balance_curse_vulner_damage_factor);
