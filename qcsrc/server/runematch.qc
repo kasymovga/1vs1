@@ -668,6 +668,7 @@ void healer_spawn(float health_amount, float _delay, entity _owner) {
 
 void damage_next_frame() {
 	Damage(self.enemy, self.enemy, self.owner, self.dmg, DEATH_HURTTRIGGER, self.enemy.origin, '0 0 0');
+	te_lightning2(world, self.owner.origin, self.enemy.origin);
 	remove(self);
 }
 
@@ -688,17 +689,24 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 					Fire_AddDamage(targ, attacker, g_balance_rune_ignite_damage_factor * damage, 5, DEATH_HURTTRIGGER);
 
 				if (PLAYER_REALLY_ALIVE(targ)) {
+					entity e;
 					if ((d = damage * g_balance_rune_defense_damage_factor) > 1)
 					if (targ.runes & RUNE_DEFENSE) {
-						entity e = spawn();
+						e = spawn();
 						e.owner = targ;
 						e.enemy = attacker;
 						e.dmg = damage * g_balance_rune_defense_damage_factor;
 						e.think = damage_next_frame;
 						e.nextthink = time;
 					}
-					if (attacker.runes & CURSE_VULNER)
-						healer_spawn(-damage * g_balance_curse_vulner_damage_factor, 0, attacker);
+					if (attacker.runes & CURSE_VULNER) {
+						e = spawn();
+						e.owner = attacker;
+						e.enemy = targ;
+						e.dmg = damage * g_balance_curse_vulner_damage_factor;
+						e.think = damage_next_frame;
+						e.nextthink = time;
+					}
 				}
 			}
 			if (PLAYER_REALLY_ALIVE(targ))
