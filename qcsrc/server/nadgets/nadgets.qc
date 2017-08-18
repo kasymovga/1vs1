@@ -577,6 +577,7 @@ void HG_AdvanceRegen(entity plr, float delta, float limit) {
 }
 
 void HG_PlayerPreThink(void) {
+	HG_PlayerPreThink_NextLink();
     if(time < game_starttime)
         return;
 
