@@ -720,9 +720,11 @@ void FixPlayermodel()
 		self.species = player_getspecies(); // model or skin has changed
 
 	if(!teams_matter)
-		if (sv_defaultplayercolors > -2)
-			if (self.clientcolors != sv_defaultplayercolors)
-				setcolor (self, sv_defaultplayercolors);
+		if (sv_defaultplayercolors > -2) {
+			float colors = GameHookChain_PlayerColorsMod(sv_defaultplayercolors);
+			if (self.clientcolors != colors)
+				setcolor (self, colors);
+		}
 }
 
 /*

@@ -573,6 +573,7 @@ void readlevelcvars(void)
 	Akimbo_Init();
 	Hat_Init();
 	Radio_Init();
+	BadAss_Init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

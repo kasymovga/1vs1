@@ -1,0 +1,2 @@
+float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
+

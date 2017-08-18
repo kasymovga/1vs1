@@ -110,6 +110,7 @@ gamehooks.qh
 nadgets/include.qh
 napalm.qh
 g_damage.qh
+badass.qh
 
 scores_rules.qc
 
@@ -283,3 +284,4 @@ survive.qc
 minstagib.qc
 radio.qc
 ../common/curl.qc
+badass.qc
