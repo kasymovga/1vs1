@@ -2790,18 +2790,12 @@ void Sbar_Draw (void)
 		a = getstati(GetAmmoStat(4)); // how much fuel do we have?
 
 		if (a > 0) { // if we have fuel, draw the amount
-			float invincibility_time, dt;
-			invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
-			dt = invincibility_time - time;
-			if (CVAR(vid_conwidth) >= 800) {
-				if (dt > 0) { // if the invincibility timer is active, draw fuel ammo elsewhere
-					pos_x = bottom_x + 140;
-					pos_y = bottom_y - 72;
-				}
-				else { // if the invincibility timer is inactive, draw the fuel ammo there (it's rare to have invincibility + fuel anyway)
-					pos_x = bottom_x + 140;
+			if (CVAR(vid_conwidth) >= 1000) {
+					pos_x = bottom_x - 360;
 					pos_y = bottom_y - 20;
-				}
+			} else if (CVAR(vid_conwidth) >= 800) {
+				pos_x = bottom_x - 200;
+				pos_y = bottom_y - 67;
 			}
 			else { // draw fuel on top of ammo if vid_conwidth < 800
 				pos_x = bottom_x - 200;
