@@ -123,6 +123,8 @@ bot/bot.qc
 
 g_subs.qc
 
+../common/rune.qh
+../common/rune.qc
 runematch.qc
 
 g_violence.qc

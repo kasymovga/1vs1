@@ -1,26 +1,5 @@
 float rune_numspawns;
 
-float	RUNE_FIRST	= 1;
-
-float	RUNE_IGNITE	= 1;
-float	RUNE_DEFENSE	= 2;
-float	RUNE_REGEN	= 4;
-float	RUNE_SPEED	= 8;
-float	RUNE_VAMPIRE	= 16;
-
-float	RUNE_LAST	= 16;
-
-float	CURSE_FIRST	= 8192;
-float	CURSE_BURNING	= 8192;
-float	CURSE_VULNER	= 16384;
-float	CURSE_VENOM	= 32768;
-float	CURSE_SLOW	= 65536;
-float	CURSE_ALTRUISM	= 131072;
-float	CURSE_LAST	= 131072;
-float	CURSE_NONE	= 262144;
-
-float RUNE_COUNT = 5;
-
 float g_balance_curse_altruism_damage_factor;
 float g_balance_curse_burning_damage_factor;
 float g_balance_curse_vulner_damage_factor;
@@ -158,32 +137,6 @@ float RunesCount(float r)
 			n++;
 
 	return n;
-}
-
-string RuneName(float r)
-{
-	if(r == RUNE_IGNITE)
-		return "^1Ignite^7";
-	if(r == RUNE_DEFENSE)
-		return "^4Defense^7";
-	if(r == RUNE_REGEN)
-		return "^2Vitality^7";
-	if(r == RUNE_SPEED)
-		return "^3Speed^7";
-	if(r == RUNE_VAMPIRE)
-		return "^6Vampire^7";
-
-	if(r == CURSE_BURNING)
-		return "^1Burning^7";
-	if(r == CURSE_VULNER)
-		return "^4Vulnerability^7";
-	if(r == CURSE_VENOM)
-		return "^2Venom^7";
-	if(r == CURSE_SLOW)
-		return "^3Slow^7";
-	if(r == CURSE_ALTRUISM)
-		return "^6Altruism^7";
-	return strcat("^8[unnamed", ftos(r), "]^7");
 }
 
 vector RuneColormod(float r)
@@ -813,6 +766,7 @@ void runes_init() {
 	e = spawn();
 	e.think = spawn_runes;
 	e.nextthink = time + 0.1;
+	addstat(STAT_RUNES, AS_INT, runes);
 }
 
 float runematch_point_time;

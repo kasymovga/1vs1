@@ -2757,9 +2757,9 @@ void Sbar_Draw (void)
 
 				float hgregen = Sbar_GetNadgetRegen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
 				vector hgrsize;
+				hgapos_y += 10;
                 if(hgregen && hgregen != 1) {
                     hgrsize = '70 3 0';
-                    hgapos_y += 10;
                     hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
                     hgrsize_x *= hgregen;
                     drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
@@ -2773,9 +2773,9 @@ void Sbar_Draw (void)
                     else
                         drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype2), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 
+					hgapos_y += 10;
                     if(hgregen2 && hgregen2 != 1) {
                         hgrsize = '70 3 0';
-                        hgapos_y += 10;
                         hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
                         hgrsize_x *= hgregen2;
                         drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
@@ -2814,6 +2814,22 @@ void Sbar_Draw (void)
 
 		// draw strength/invincibility icon and timer
 		CSQC_Strength_Timer();
+
+		a = getstati(STAT_RUNES);
+		if (a) {
+			pos_x = 0;
+			pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y - sbar_fontsize_spec_y;
+			s = "";
+			for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2) {
+				if (i & a)
+					s = strcat(s, " ", RuneName(i));
+			}
+			for (i = CURSE_FIRST; i <= CURSE_LAST; i *= 2) {
+				if (i & a)
+					s = strcat(s, " ", RuneName(i));
+			}
+			drawcolorcodedstring(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
+		}
 
 		// draw gametype specific icons
 		if(gametype == GAME_KEYHUNT)

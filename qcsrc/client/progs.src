@@ -15,6 +15,7 @@ csqc_builtins.qc
 ../common/cl_physics.qh
 ../common/cl_physics_spiderbot.qh
 ../common/cl_physics_aircraft.qh
+../common/rune.qh
 cl_physics.qh
 interpolate.qh
 teamradar.qh
@@ -94,3 +95,4 @@ location_request.qc
 dlc.qc
 ../common/dlc.qc
 radio.qc
+../common/rune.qc

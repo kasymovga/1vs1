@@ -70,7 +70,6 @@ void ClientUpdateMessage(string msg) {
 void search_and_precache(string s) {
 	float i;
 	string pic;
-	float n;
 	float glob = search_begin(s, TRUE, TRUE);
 	if (glob < 0)
 		return;
