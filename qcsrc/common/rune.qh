@@ -1,0 +1,18 @@
+float RUNE_FIRST	= 1;
+float RUNE_IGNITE	= 1;
+float RUNE_DEFENSE	= 2;
+float RUNE_REGEN	= 4;
+float RUNE_SPEED	= 8;
+float RUNE_VAMPIRE	= 16;
+float RUNE_LAST	= 16;
+float CURSE_FIRST	= 8192;
+float CURSE_BURNING	= 8192;
+float CURSE_VULNER	= 16384;
+float CURSE_VENOM	= 32768;
+float CURSE_SLOW	= 65536;
+float CURSE_ALTRUISM	= 131072;
+float CURSE_LAST	= 131072;
+float CURSE_NONE	= 262144;
+float RUNE_COUNT = 5;
+
+string RuneName(float r);
