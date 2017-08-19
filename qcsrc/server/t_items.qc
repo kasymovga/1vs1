@@ -285,7 +285,6 @@ floatfield Item_CounterField(float it)
 		case IT_NAILS:       return ammo_nails;
 		case IT_ROCKETS:     return ammo_rockets;
 		case IT_CELLS:       return ammo_cells;
-		case IT_FUEL:        return ammo_fuel;
 		case IT_HEALTH:      return health;
 		case IT_ARMOR:       return armorvalue;
 		// add more things here (health, armor)
@@ -301,7 +300,6 @@ string Item_CounterFieldName(float it)
 		case IT_NAILS:       return "nails";
 		case IT_ROCKETS:     return "rockets";
 		case IT_CELLS:       return "cells";
-		case IT_FUEL:        return "fuel";
 
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field name");
@@ -445,7 +443,6 @@ void Item_RespawnCountdown (void)
 				case IT_INVINCIBLE:     name = "item-shield"; rgb = '1 0 1'; break;
 				case IT_SPEED:          name = "item-speed"; rgb = '1 0 1'; break;
 				case IT_INVISIBILITY:   name = "item-invis"; rgb = '0 0 1'; break;
-				case IT_FUEL_REGEN:     name = "item-fuelregen"; rgb = '1 0.5 0'; break;
 				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
 			}
 			if(name)
@@ -1640,7 +1637,6 @@ void spawnfunc_target_items (void)
 		else if(argv(i) == "speed")                  { self.items |= IT_SPEED; powerup_speed_init(); }
 		else if(argv(i) == "invisibility")           { self.items |= IT_INVISIBILITY; powerup_invisibility_init(); }
 		else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
-		else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
 		else
 		{
 			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
@@ -1660,38 +1656,15 @@ void spawnfunc_target_items (void)
 	}
 }
 
-void spawnfunc_item_fuel(void)
+void spawnfunc_item_jetpack(void)
 {
-	if not(g_use_ammunition) {
+	if(g_grappling_hook || start_items & IT_JETPACK) {
 		remove(self);
 		return;
 	}
 	if(!self.ammo_fuel)
-		self.ammo_fuel = cvar("g_pickup_fuel");
-	StartItem ("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
-}
-
-void spawnfunc_item_fuel_regen(void)
-{
-	if(start_items & IT_FUEL_REGEN)
-	{
-		spawnfunc_item_fuel();
-		return;
-	}
-	StartItem ("models/items/g_fuelregen.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Fuel regenerator", IT_FUEL_REGEN, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
-}
-
-void spawnfunc_item_jetpack(void)
-{
-	if(g_grappling_hook)
-		return; // sorry, but these two can't coexist (same button); spawn fuel instead
-	if(!self.ammo_fuel)
 		self.ammo_fuel = cvar("g_pickup_fuel_jetpack");
-	if(start_items & IT_JETPACK)
-	{
-		spawnfunc_item_fuel();
-		return;
-	}
+
 	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
@@ -1894,17 +1867,15 @@ void Items_Init()
 		}
 	}
 
-	if (g_use_ammunition)
-	if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
-	{
-		g_grappling_hook = 0; // these two can't coexist, as they use the same button
-		start_items |= IT_FUEL_REGEN;
-		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-	}
-
-	if (g_jetpack)
+	if (g_jetpack) {
 		start_items |= IT_JETPACK;
+		if (g_use_ammunition) {
+			g_grappling_hook = 0; // these two can't coexist, as they use the same button
+			start_items |= IT_FUEL_REGEN;
+			start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+			warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+		}
+	}
 
 	if (g_weapon_stay == 2)
 	{
