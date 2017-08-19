@@ -815,8 +815,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	Nagger_Init();
 
-	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
-	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_DAMAGE_HITS, AS_INT, damage_hits);

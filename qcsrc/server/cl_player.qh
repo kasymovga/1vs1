@@ -1,3 +1,4 @@
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void Player_Init();
+void play_countdown(float finished, string samp);

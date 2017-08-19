@@ -598,8 +598,6 @@ void PutObserverInServer(float frags_team_reset)
 	self.fade_time = 0;
 	self.pain_frame = 0;
 	self.pain_finished = 0;
-	self.strength_finished = 0;
-	self.invincible_finished = 0;
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
@@ -836,8 +834,6 @@ void PutClientInServer()
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;
-		self.strength_finished = 0;
-		self.invincible_finished = 0;
 		self.pushltime = 0;
 		//self.speed_finished = 0;
 		//self.slowmo_finished = 0;
@@ -1752,7 +1748,7 @@ spectate mode routines
 ======================
 */
 void SpectateCopy(entity spectatee) {
-	GameHook_SpectateCopy(spectatee);
+	GameHookChain_SpectateCopy(spectatee);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -1764,8 +1760,6 @@ void SpectateCopy(entity spectatee) {
 	self.health = spectatee.health;
 	self.impulse = 0;
 	self.items = spectatee.items;
-	self.strength_finished = spectatee.strength_finished;
-	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;

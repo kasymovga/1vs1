@@ -181,27 +181,6 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		player.armorvalue = player.armorvalue + g_minstagib_extralives;
 		sprint(player, "^3You picked up some extra lives\n");
 	}
-
-#if 0
-	// invis powerup
-	if (item.strength_finished)
-	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
-		// sound not available
-		// play2(player, "announce/robotic/invisible.wav");
-		player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
-	}
-
-	// speed powerup
-	if (item.invincible_finished)
-	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
-		// sound not available
-		// play2(player, "announce/robotic/speed.wav");
-		player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
-	}
-#endif
-
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
 	{
@@ -249,16 +228,7 @@ float minstagib_ThrowWeaponAllowed(float doreduce) {
 	return minstagib_ThrowWeaponAllowed_NextLink(doreduce);
 }
 
-#if 0
-var float(entity plr, entity viewer, float dalpha) minstagib_PlayerAlphaMod_NextLink;
-float minstagib_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
-	return ((time < plr.strength_finished) ? g_minstagib_invis_alpha : 1) * minstagib_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
-}
-#endif
-
 void spawnfunc_minstagib_extra_lives() { minstagib_items(IT_NAILS); }
-//void spawnfunc_minstagib_invisibility() { minstagib_items(IT_STRENGTH); }
-//void spawnfunc_minstagib_speed() { minstagib_items(IT_INVINCIBLE); }
 
 var void() minstagib_EntityPreSpawn_NextLink;
 void minstagib_EntityPreSpawn() {
@@ -291,30 +261,6 @@ var float() minstagib_PlayerEffectsHandle_NextLink;
 float minstagib_PlayerEffectsHandle() {
 	minstagib_PlayerEffectsHandle_NextLink();
 	self.effects |= EF_FULLBRIGHT;
-	if (self.items & IT_STRENGTH) {
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		if (time > self.strength_finished) {
-			self.items &~= IT_STRENGTH;
-			sprint(self, "^3Invisibility has worn off\n");
-		}
-	} else {
-		if (time < self.strength_finished) {
-			self.items |= IT_STRENGTH;
-			sprint(self, "^3You are invisible\n");
-		}
-	}
-	if (self.items & IT_INVINCIBLE) {
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		if (time > self.invincible_finished) {
-			self.items = self.items - (self.items & IT_INVINCIBLE);
-			sprint(self, "^3Speed has worn off\n");
-		}
-	} else {
-		if (time < self.invincible_finished) {
-			self.items = self.items | IT_INVINCIBLE;
-			sprint(self, "^3You are on speed\n");
-		}
-	}
 	return TRUE;
 }
 

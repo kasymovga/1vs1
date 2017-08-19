@@ -120,6 +120,7 @@ float nb_RadarShowEnemiesAllowed() {
 	return TRUE;
 }
 
+var void(entity e) nb_SpectateCopy_NextLink;
 void nb_SpectateCopy(entity e) {
 	self.metertime = e.metertime;
 }
@@ -169,7 +170,8 @@ void nb_init() // Called early (worldspawn stage)
 	GameHook_ReloadAllowed = nb_ReloadAllowed;
 	nb_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
-	GameHook_SpectateCopy = nb_SpectateCopy;
+	nb_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = nb_SpectateCopy;
 	if (cvar("g_nexball_radar_showallplayers"))
 		GameHook_RadarShowEnemiesAllowed = nb_RadarShowEnemiesAllowed;
 

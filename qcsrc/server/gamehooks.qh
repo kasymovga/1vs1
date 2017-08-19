@@ -56,7 +56,7 @@ var float() GameHook_WeaponFrameHandle = { return FALSE; }
 var float() GameHook_ReloadAllowed = { return TRUE; }
 var float(float dropped) GameHookChain_ThrowWeaponAllowed = { return TRUE; }
 var float() GameHook_RadarShowEnemiesAllowed = { return FALSE; }
-var void(entity e) GameHook_SpectateCopy = {}
+var void(entity e) GameHookChain_SpectateCopy = {}
 float GameHook_DamageMod;
 float GameHook_ForceMod;
 float GameHook_MirrorDamageMod;

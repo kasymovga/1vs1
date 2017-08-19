@@ -271,43 +271,6 @@ void player_effects()
 	if (GameHookChain_PlayerEffectsHandle())
 		return;
 
-	if (self.items & IT_STRENGTH)
-	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		if not(g_powerup_strength_akimbo)
-			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.strength_finished)
-		{
-			self.items = self.items - (self.items & IT_STRENGTH);
-			sprint(self, "^3Strength has worn off\n");
-		}
-	}
-	else
-	{
-		if (time < self.strength_finished)
-		{
-			self.items = self.items | IT_STRENGTH;
-			sprint(self, "^3Strength infuses your weapons with devastating power\n");
-		}
-	}
-	if (self.items & IT_INVINCIBLE)
-	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-		if (time > self.invincible_finished)
-		{
-			self.items = self.items - (self.items & IT_INVINCIBLE);
-			sprint(self, "^3Shield has worn off\n");
-		}
-	}
-	else
-	{
-		if (time < self.invincible_finished)
-		{
-			self.items = self.items | IT_INVINCIBLE;
-			sprint(self, "^3Shield surrounds you\n");
-		}
-	}
 	if (g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;
 

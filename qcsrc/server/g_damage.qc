@@ -7,11 +7,6 @@ float bot_taunt;
 float bot_talk;
 float g_balance_firetransfer_damage;
 float g_balance_firetransfer_time;
-float g_balance_powerup_invincible_takedamage;
-float g_balance_powerup_strength_damage;
-float g_balance_powerup_strength_force;
-float g_balance_powerup_strength_selfdamage;
-float g_balance_powerup_strength_selfforce;
 float g_balance_selfdamagepercent;
 float g_friendlyfire;
 float g_mirrordamage;
@@ -154,10 +149,6 @@ string AppendItemcodes(string s, entity player)
 	if(w == 0)
 		w = player.cnt; // previous weapon!
 	s = strcat(s, ftos(w));
-	if(time < player.strength_finished)
-		s = strcat(s, "S");
-	if(time < player.invincible_finished)
-		s = strcat(s, "I");
 	if(player.BUTTON_CHAT)
 		s = strcat(s, "T");
 
@@ -720,25 +711,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 
-		// apply strength multiplier
-		if ((attacker.items & IT_STRENGTH) && !g_minstagib)
-		{
-			if(targ == attacker)
-			{
-				damage = damage * g_balance_powerup_strength_selfdamage;
-				force = force * g_balance_powerup_strength_selfforce;
-			}
-			else
-			{
-				damage = damage * g_balance_powerup_strength_damage;
-				force = force * g_balance_powerup_strength_force;
-			}
-		}
-
-		// apply invincibility multiplier
-		if (targ.items & IT_INVINCIBLE && !g_minstagib)
-			damage = damage * g_balance_powerup_invincible_takedamage;
-
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
@@ -1239,11 +1211,6 @@ void Damage_ReadCvars()
 	CACHE_CVAR(bot_talk);
 	CACHE_CVAR(g_balance_firetransfer_damage);
 	CACHE_CVAR(g_balance_firetransfer_time);
-	CACHE_CVAR(g_balance_powerup_invincible_takedamage);
-	CACHE_CVAR(g_balance_powerup_strength_damage);
-	CACHE_CVAR(g_balance_powerup_strength_force);
-	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
-	CACHE_CVAR(g_balance_powerup_strength_selfforce);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_mirrordamage);
 	CACHE_CVAR(g_teamdamage_threshold);

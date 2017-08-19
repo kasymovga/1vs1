@@ -34,6 +34,11 @@ float g_pickup_respawntimejitter_armormedium;
 float g_pickup_respawntimejitter_armorbig;
 float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
+float g_balance_powerup_invincible_takedamage;
+float g_balance_powerup_strength_damage;
+float g_balance_powerup_strength_force;
+float g_balance_powerup_strength_selfdamage;
+float g_balance_powerup_strength_selfforce;
 float g_use_ammunition;
 string sv_model_healthsmall;
 string sv_model_healthmedium;
@@ -43,6 +48,162 @@ string sv_model_armorsmall;
 string sv_model_armormedium;
 string sv_model_armorbig;
 string sv_model_armorlarge;
+
+var void(float killed) powerups_PlayerClear_NextLink;
+void powerups_PlayerClear(float killed) {
+	self.invincible_finished = 0;
+	self.invisibility_finished = 0;
+	self.strength_finished = 0;
+	self.speed_finished = 0;
+	powerups_PlayerClear_NextLink(killed);
+}
+
+var void(entity e) powerups_SpectateCopy_NextLink;
+void powerups_SpectateCopy(entity e) {
+	self.strength_finished = e.strength_finished;
+	self.invincible_finished = e.invincible_finished;
+	self.speed_finished = e.speed_finished;
+	self.invisibility_finished = e.invisibility_finished;
+	powerups_SpectateCopy_NextLink(e);
+}
+
+var string(string s, entity player) powerups_AppendItemCodes_NextLink;
+string powerups_AppendItemCodes(string s, entity plr) {
+	if(time < plr.strength_finished)
+		s = strcat(s, "S");
+	if(time < plr.invincible_finished)
+		s = strcat(s, "I");
+	if(time < plr.speed_finished)
+		s = strcat(s, "S");
+	if(time < plr.invisibility_finished)
+		s = strcat(s, "I");
+
+	return powerups_AppendItemCodes_NextLink(s, plr);
+}
+
+float powerups_init_done;
+void powerups_init() {
+	if (powerups_init_done)
+		return;
+
+	powerups_init_done = 1;
+	CACHE_CVAR(g_powerup_strength_akimbo);
+	powerups_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = powerups_PlayerClear;
+	powerups_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = powerups_SpectateCopy;
+	powerups_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
+	GameHookChain_AppendItemCodes = powerups_AppendItemCodes;
+}
+
+var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_NextLink;
+void powerup_invincible_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+	if (targ.items & IT_INVINCIBLE)
+		GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_invincible_takedamage;
+
+	powerup_invincible_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+}
+
+var float() powerup_invincible_PlayerEffectsHandle_NextLink;
+float powerup_invincible_PlayerEffectsHandle() {
+	if (self.items & IT_INVINCIBLE) {
+		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
+		if (time > self.invincible_finished) {
+			self.items = self.items - (self.items & IT_INVINCIBLE);
+			sprint(self, "^3Shield has worn off\n");
+		}
+	} else {
+		if (time < self.invincible_finished) {
+			self.items = self.items | IT_INVINCIBLE;
+			sprint(self, "^3Shield surrounds you\n");
+		}
+	}
+	return powerup_invincible_PlayerEffectsHandle_NextLink();
+}
+
+float powerup_invincible_init_done;
+void powerup_invincible_init() {
+	if (powerup_invincible_init_done)
+		return;
+
+	powerup_invincible_init_done = 1;
+	powerups_init();
+	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
+	powerup_invincible_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
+	GameHookChain_PlayerEffectsHandle = powerup_invincible_PlayerEffectsHandle;
+	powerup_invincible_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = powerup_invincible_DamageForceModsSet;
+}
+
+var void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForceModsSet_NextLink;
+void powerup_strength_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+	// apply strength multiplier
+	if ((attacker.items & IT_STRENGTH)) {
+		if(targ == attacker) {
+			GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_strength_selfdamage;
+			GameHook_ForceMod = GameHook_ForceMod * g_balance_powerup_strength_selfforce;
+		} else {
+			GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_strength_damage;
+			GameHook_ForceMod = GameHook_ForceMod * g_balance_powerup_strength_force;
+		}
+	}
+	powerup_strength_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+}
+
+var float() powerup_strength_PlayerEffectsHandle_NextLink;
+float powerup_strength_PlayerEffectsHandle() {
+	if (self.items & IT_STRENGTH) {
+		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+
+		if (time > self.strength_finished) {
+			self.items = self.items - (self.items & IT_STRENGTH);
+			sprint(self, "^3Strength has worn off\n");
+		}
+	} else {
+		if (time < self.strength_finished) {
+			self.items = self.items | IT_STRENGTH;
+			sprint(self, "^3Strength infuses your weapons with devastating power\n");
+		}
+	}
+	return powerup_strength_PlayerEffectsHandle_NextLink();
+}
+
+float powerup_strength_init_done;
+void powerup_strength_init() {
+	if (powerup_strength_init_done)
+		return;
+
+	powerup_strength_init_done = 1;
+	powerups_init();
+	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
+	if (g_powerup_strength_akimbo)
+		return;
+
+	powerup_strength_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
+	GameHookChain_PlayerEffectsHandle = powerup_strength_PlayerEffectsHandle;
+	powerup_strength_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = powerup_strength_DamageForceModsSet;
+}
+
+var float() powerup_speed_PlayerEffectsHandle_NextLink;
+float powerup_speed_PlayerEffectsHandle() {
+	if (self.items & IT_SPEED) {
+		play_countdown(self.speed_finished, "misc/poweroff.wav");
+		if (time > self.speed_finished) {
+			self.items = self.items - (self.items & IT_SPEED);
+			sprint(self, "^3Speed has worn off\n");
+		}
+	} else {
+		if (time < self.speed_finished) {
+			self.items = self.items | IT_SPEED;
+			sprint(self, "^3You are on speed\n");
+		}
+	}
+
+	return powerup_speed_PlayerEffectsHandle_NextLink();
+}
 
 var float() powerup_speed_SpeedMod_NextLink;
 float powerup_speed_SpeedMod() {
@@ -61,9 +222,29 @@ void powerup_speed_init() {
 		return;
 
 	powerup_speed_init_done = 1;
+	powerups_init();
 	powerup_speed_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = powerup_speed_SpeedMod;
+	powerup_speed_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
+	GameHookChain_PlayerEffectsHandle = powerup_speed_PlayerEffectsHandle;
 	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
+}
+
+var float() powerup_invisibility_PlayerEffectsHandle_NextLink;
+float powerup_invisibility_PlayerEffectsHandle() {
+	if (self.items & IT_INVISIBILITY) {
+		play_countdown(self.invisibility_finished, "misc/poweroff.wav");
+		if (time > self.invisibility_finished) {
+			self.items &~= IT_INVISIBILITY;
+			sprint(self, "^3Invisibility has worn off\n");
+		}
+	} else {
+		if (time < self.invisibility_finished) {
+			self.items |= IT_INVISIBILITY;
+			sprint(self, "^3You are invisible\n");
+		}
+	}
+	return powerup_invisibility_PlayerEffectsHandle_NextLink();
 }
 
 var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_NextLink;
@@ -83,8 +264,11 @@ void powerup_invisibility_init() {
 		return;
 
 	powerup_invisibility_init_done = 1;
+	powerups_init();
 	powerup_invisibility_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = powerup_invisibility_PlayerAlphaMod;
+	powerup_invisibility_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
+	GameHookChain_PlayerEffectsHandle = powerup_invisibility_PlayerEffectsHandle;
 	addstat(STAT_INVISIBILITY_FINISHED, AS_FLOAT, invisibility_finished);
 }
 
@@ -1148,6 +1332,7 @@ void spawnfunc_item_strength (void) {
 	precache_sound("weapons/strength_fire.wav");
 	self.strength_finished = cvar("g_balance_powerup_strength_time");
 	StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+	powerup_strength_init();
 }
 
 void spawnfunc_item_invincible (void) {
@@ -1156,6 +1341,7 @@ void spawnfunc_item_invincible (void) {
 
 	self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 	StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+	powerup_invincible_init();
 }
 
 void spawnfunc_item_invisibility (void) {
@@ -1451,8 +1637,8 @@ void spawnfunc_target_items (void)
 		if     (argv(i) == "unlimited_ammo")         self.items |= IT_UNLIMITED_AMMO;
 		else if(argv(i) == "unlimited_weapon_ammo")  self.items |= IT_UNLIMITED_WEAPON_AMMO;
 		else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
-		else if(argv(i) == "strength")               self.items |= IT_STRENGTH;
-		else if(argv(i) == "invincible")             self.items |= IT_INVINCIBLE;
+		else if(argv(i) == "strength")               { self.items |= IT_STRENGTH; powerup_strength_init(); }
+		else if(argv(i) == "invincible")             { self.items |= IT_INVINCIBLE; powerup_invisibility_init(); }
 		else if(argv(i) == "speed")                  { self.items |= IT_SPEED; powerup_speed_init(); }
 		else if(argv(i) == "invisibility")           { self.items |= IT_INVISIBILITY; powerup_invisibility_init(); }
 		else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
@@ -1553,6 +1739,11 @@ void Items_Init()
 	CACHE_CVAR(g_use_ammunition);
 	CACHE_CVAR(g_pickup_items);
 	CACHE_CVAR(g_pickup_weapons);
+	CACHE_CVAR(g_balance_powerup_invincible_takedamage);
+	CACHE_CVAR(g_balance_powerup_strength_damage);
+	CACHE_CVAR(g_balance_powerup_strength_force);
+	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
+	CACHE_CVAR(g_balance_powerup_strength_selfforce);
 	sv_model_healthsmall = cvar_string_zone_ifneeded("sv_model_healthsmall");
 	if (sv_model_healthsmall == "")
 		sv_model_healthsmall = "models/items/g_h1.md3";

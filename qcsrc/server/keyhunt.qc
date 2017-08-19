@@ -945,8 +945,10 @@ void kh_Reset() {
 	kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
 }
 
+var void(entity e) kh_SpectateCopy_NextLink;
 void kh_SpectateCopy(entity e) {
 	self.kh_state = e.kh_state;
+	kh_SpectateCopy_NextLink(e);
 }
 
 var string(string s, entity plr) kh_AppendItemCodes_NextLink;
@@ -989,7 +991,8 @@ void kh_init()  // sets up th KH environment
 	kh_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = kh_PlayerClear;
 	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_SpectateCopy = kh_SpectateCopy;
+	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = kh_SpectateCopy;
 	kh_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
 	GameHookChain_AppendItemCodes = kh_AppendItemCodes;
 	GameHook_FragLimitOverride = kh_FragLimitOverride;
