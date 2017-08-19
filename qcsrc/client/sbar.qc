@@ -1606,7 +1606,8 @@ float Sbar_WouldDrawScoreboard() {
 	return 0;
 }
 
-void Sbar_DrawPowerupTimer(vector pos, float dt, string image) {
+vector powerup_pos;
+void Sbar_DrawPowerupTimer(float dt, string image) {
 	vector picsize;
 	picsize = '22 22 0';
 	float countdown_fontsize = 18;
@@ -1614,67 +1615,56 @@ void Sbar_DrawPowerupTimer(vector pos, float dt, string image) {
 	{
 		if(dt < 5)
 		{
-			drawpic_expanding_two(pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+			drawpic_expanding_two(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 				bound(0, (ceil(dt) - dt) / 0.5, 1));
 		}
 		else
 		{
-			drawpic(pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
+			if (dt > 99)
+				dt = 99;
+
+			drawpic(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 		}
-		Sbar_DrawXNum(pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		Sbar_DrawXNum(powerup_pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
 	else if(dt > -1)
 	{
-		drawpic_expanding(pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+		drawpic_expanding(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 			bound(0, -dt / 0.5, 1));
 	}
+	powerup_pos_y -= 40;
 }
 
 void CSQC_Strength_Timer() {
-	vector pos;
-	vector bottom;
-
-	bottom_x = CVAR(vid_conwidth)/2;
-	bottom_y = CVAR(vid_conheight);
-	bottom_z = 0;
-
-	float stat_items;
-	stat_items = getstati(STAT_ITEMS);
-	/*
-	if not(stat_items & IT_STRENGTH)
-		if not(stat_items & IT_INVINCIBLE)
-			return;
-	*/
-
 	if (getstati(STAT_HEALTH) <= 0)
 		return;
 
-	float strength_time, invincibility_time, speed_time, invisibility_time;
+	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time;
 
-
-	if (CVAR(vid_conwidth) >= 800)
-		pos = bottom + '192 -46 0';
-	else
-		pos = bottom + '192 -94 0';
+	powerup_pos_x = CVAR(vid_conwidth) - 40;
+	powerup_pos_y = CVAR(vid_conheight) - 100;
 
 	//strength
 	strength_time = getstatf(STAT_STRENGTH_FINISHED);
 	invincibility_time = getstatf(STAT_INVINCIBLE_FINISHED);
 	speed_time = getstatf(STAT_SPEED_FINISHED);
 	invisibility_time = getstatf(STAT_INVISIBILITY_FINISHED);
+	jetpack_time = getstati(STAT_FUEL);
 
 	if (strength_time)
-		Sbar_DrawPowerupTimer(pos, strength_time - time, "gfx/hud/sb_str");
+		Sbar_DrawPowerupTimer(strength_time - time, "gfx/hud/sb_str");
 
-	//invincibility
 	if (invincibility_time)
-		Sbar_DrawPowerupTimer(pos + '0 22', invincibility_time - time, "gfx/hud/sb_invinc");
+		Sbar_DrawPowerupTimer(invincibility_time - time, "gfx/hud/sb_invinc");
 
 	if (invisibility_time)
-		Sbar_DrawPowerupTimer(pos + '80 0', invisibility_time - time, "gfx/hud/sb_str");
+		Sbar_DrawPowerupTimer(invisibility_time - time, "gfx/hud/sb_str");
 
 	if (speed_time)
-		Sbar_DrawPowerupTimer(pos + '80 22', speed_time - time, "gfx/hud/sb_invinc");
+		Sbar_DrawPowerupTimer(speed_time - time, "gfx/hud/sb_invinc");
+
+	if (jetpack_time)
+		Sbar_DrawPowerupTimer(jetpack_time, "gfx/hud/sb_fuel");
 }
 
 #define CENTERPRINT_MAX_LINES 30
@@ -2784,28 +2774,6 @@ void Sbar_Draw (void)
 #if 0
             }
 #endif
-		}
-
-		// fuel ammo
-		a = getstati(GetAmmoStat(4)); // how much fuel do we have?
-
-		if (a > 0) { // if we have fuel, draw the amount
-			if (CVAR(vid_conwidth) >= 1000) {
-					pos_x = bottom_x - 360;
-					pos_y = bottom_y - 20;
-			} else if (CVAR(vid_conwidth) >= 800) {
-				pos_x = bottom_x - 200;
-				pos_y = bottom_y - 67;
-			}
-			else { // draw fuel on top of ammo if vid_conwidth < 800
-				pos_x = bottom_x - 200;
-				pos_y = bottom_y - 45;
-			}
-			drawpic(pos - '0 2 0' + '52 0 0', GetAmmoPicture(4), '20 20 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			if (a > 10)
-				Sbar_DrawXNum(pos, a, 3, 0, 16, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			else
-				Sbar_DrawXNum(pos, a, 3, 0, 16, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		}
 
 		// draw scores and timer
