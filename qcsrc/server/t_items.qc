@@ -113,11 +113,12 @@ float powerup_invincible_PlayerEffectsHandle() {
 			self.items = self.items - (self.items & IT_INVINCIBLE);
 			sprint(self, "^3Shield has worn off\n");
 		}
-	} else {
+	} else if (self.invincible_finished) {
 		if (time < self.invincible_finished) {
 			self.items = self.items | IT_INVINCIBLE;
 			sprint(self, "^3Shield surrounds you\n");
-		}
+		} else if (time > self.invincible_finished + 1)
+			self.invincible_finished = 0;
 	}
 	return powerup_invincible_PlayerEffectsHandle_NextLink();
 }
@@ -161,11 +162,12 @@ float powerup_strength_PlayerEffectsHandle() {
 			self.items = self.items - (self.items & IT_STRENGTH);
 			sprint(self, "^3Strength has worn off\n");
 		}
-	} else {
+	} else if (self.strength_finished) {
 		if (time < self.strength_finished) {
 			self.items = self.items | IT_STRENGTH;
 			sprint(self, "^3Strength infuses your weapons with devastating power\n");
-		}
+		} else if (time > self.strength_finished + 1)
+			self.strength_finished = 0;
 	}
 	return powerup_strength_PlayerEffectsHandle_NextLink();
 }
@@ -195,11 +197,12 @@ float powerup_speed_PlayerEffectsHandle() {
 			self.items = self.items - (self.items & IT_SPEED);
 			sprint(self, "^3Speed has worn off\n");
 		}
-	} else {
+	} else if (self.speed_finished) {
 		if (time < self.speed_finished) {
 			self.items = self.items | IT_SPEED;
 			sprint(self, "^3You are on speed\n");
-		}
+		} else if (time > self.speed_finished + 1)
+			self.speed_finished = 0;
 	}
 
 	return powerup_speed_PlayerEffectsHandle_NextLink();
@@ -207,12 +210,9 @@ float powerup_speed_PlayerEffectsHandle() {
 
 var float() powerup_speed_SpeedMod_NextLink;
 float powerup_speed_SpeedMod() {
-	if (self.speed_finished) {
-		if (time < self.speed_finished)
-			return powerup_speed_SpeedMod_NextLink() * 1.5;
-		else
-			self.speed_finished = 0;
-	}
+	if (time < self.speed_finished)
+		return powerup_speed_SpeedMod_NextLink() * 1.5;
+
 	return powerup_speed_SpeedMod_NextLink();
 }
 
@@ -238,23 +238,21 @@ float powerup_invisibility_PlayerEffectsHandle() {
 			self.items &~= IT_INVISIBILITY;
 			sprint(self, "^3Invisibility has worn off\n");
 		}
-	} else {
+	} else if (self.invisibility_finished) {
 		if (time < self.invisibility_finished) {
 			self.items |= IT_INVISIBILITY;
 			sprint(self, "^3You are invisible\n");
-		}
+		} else if (time > self.invisibility_finished + 1)
+			self.invisibility_finished = 0;
 	}
 	return powerup_invisibility_PlayerEffectsHandle_NextLink();
 }
 
 var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_NextLink;
 float powerup_invisibility_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
-	if (plr.invisibility_finished) {
-		if (time < plr.invisibility_finished)
-			dalpha *= 0.05;
-		else
-			plr.invincible_finished = 0;
-	}
+	if (time < plr.invisibility_finished)
+		dalpha *= 0.05;
+
 	return powerup_invisibility_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
 }
 
