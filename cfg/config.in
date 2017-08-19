@@ -158,6 +158,11 @@ set g_pinata_drop_all 0
 set sv_gamemenu 0
 set sv_walkietalkie ""
 
+//Nexuiz compat
+set sv_spawnreplace_item_fuel "item_jetpack"
+set sv_spawnreplace_item_fuel_regen "item_jetpack"
+set sv_spawnreplace_weapon_minstanex "weapon_fireball"
+
 //Quake and Quake 3 compat
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"
