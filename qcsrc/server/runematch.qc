@@ -620,7 +620,7 @@ void healer_spawn(float health_amount, float _delay, entity _owner) {
 }
 
 void damage_next_frame() {
-	Damage(self.enemy, self.enemy, self.owner, self.dmg, DEATH_HURTTRIGGER, self.enemy.origin, '0 0 0');
+	Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_HURTTRIGGER, self.enemy.origin, '0 0 0');
 	te_lightning2(world, self.owner.origin, self.enemy.origin);
 	remove(self);
 }
@@ -633,30 +633,35 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker))
 			{
 				if (attacker.runes & RUNE_VAMPIRE)
-					healer_spawn(damage * g_balance_rune_vampire_damage_factor, 0.5, attacker);
+				if ((d = damage * g_balance_rune_vampire_damage_factor) >= 1)
+					healer_spawn(d, 0.5, attacker);
 
 				if (targ.runes & CURSE_ALTRUISM)
-					healer_spawn(damage * g_balance_curse_altruism_damage_factor, 0.5, attacker);
+				if ((d = damage * g_balance_curse_altruism_damage_factor) >= 1)
+					healer_spawn(d, 0.5, attacker);
 
 				if (attacker.runes & RUNE_IGNITE)
-					Fire_AddDamage(targ, attacker, g_balance_rune_ignite_damage_factor * damage, 5, DEATH_HURTTRIGGER);
+				if ((d = damage * g_balance_rune_ignite_damage_factor) >= 1)
+					Fire_AddDamage(targ, world, d, 5, DEATH_HURTTRIGGER);
 
 				if (PLAYER_REALLY_ALIVE(targ)) {
 					entity e;
-					if ((d = damage * g_balance_rune_defense_damage_factor) > 1)
-					if (targ.runes & RUNE_DEFENSE) {
+					if (targ.runes & RUNE_DEFENSE)
+					if ((d = damage * g_balance_rune_defense_damage_factor) >= 1) {
 						e = spawn();
 						e.owner = targ;
 						e.enemy = attacker;
-						e.dmg = damage * g_balance_rune_defense_damage_factor;
+						e.dmg = d;
 						e.think = damage_next_frame;
 						e.nextthink = time;
 					}
-					if (attacker.runes & CURSE_VULNER) {
+					if (attacker.runes & CURSE_VULNER)
+					if ((d = damage * g_balance_curse_vulner_damage_factor) >= 1) {
 						e = spawn();
-						e.owner = attacker;
-						e.enemy = targ;
-						e.dmg = damage * g_balance_curse_vulner_damage_factor;
+						e.origin = targ.origin;
+						e.owner = e;
+						e.enemy = attacker;
+						e.dmg = d;
 						e.think = damage_next_frame;
 						e.nextthink = time;
 					}
@@ -664,14 +669,16 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 			}
 			if (PLAYER_REALLY_ALIVE(targ))
 				if (targ.runes & CURSE_BURNING)
-					if ((d = g_balance_curse_burning_damage_factor * damage) > 1)
-						Fire_AddDamage(targ, attacker, d, 5, DEATH_HURTTRIGGER);
+					if ((d = g_balance_curse_burning_damage_factor * damage) >= 1)
+						Fire_AddDamage(targ, world, d, 5, DEATH_HURTTRIGGER);
 		}
 		if (targ.runes & RUNE_REGEN)
-			healer_spawn(damage * g_balance_rune_regen_damage_factor, 1, targ);
+		if ((d = damage * g_balance_rune_regen_damage_factor) >= 1)
+			healer_spawn(d, 1, targ);
 
 		if (targ.runes & CURSE_VENOM)
-			healer_spawn(-damage * g_balance_curse_venom_damage_factor, 0.5, targ);
+		if ((d = damage * g_balance_curse_venom_damage_factor) >= 1)
+			healer_spawn(-d, 0.5, targ);
 	}
 	runematch_DamageForceDone_NextLink(targ, attacker, damage, force);
 }
