@@ -2727,53 +2727,37 @@ void Sbar_Draw (void)
 #endif
             }
 
-#if 0
-            if(nadesector_pos) {
-                pos_y = 33;
-                pos = bottom - pos;
-                pos_x = nadesector_pos;
-                Sbar_DrawNadgetRegenSector(pos, hgtype, hgammo, getstatf(STAT_HGREGEN), getstatf(STAT_HGREGENRATE), getstatf(STAT_HGREGENMAX), getstati(STAT_HGREGENPAUSED), hgcd, hg_maxcd);
-                if(nadesector2_pos) {
-                    pos_x = nadesector2_pos;
-                    Sbar_DrawNadgetRegenSector(pos, getstati(STAT_HGTYPE2), getstati(STAT_HGAMMO2), getstatf(STAT_HGREGEN2), getstatf(STAT_HGREGENRATE2), getstatf(STAT_HGREGENMAX2), getstati(STAT_HGREGENPAUSED2), hgcd2, hg_maxcd2);
-                }
-            } else {
-#endif
-                // HUD doesn't support the nade sector - fallback to the old display method
-                if(hgammo)
-                    drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-                else
-                    drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+			string hgicon = HG_TypeToIcon(hgtype, TRUE, 0);
+			hgapos_x = CVAR(vid_conwidth / 2) + 154;
+			hgapos_y = CVAR(vid_conheight) - 44;
+			float hgregen = Sbar_GetNadgetRegen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
+			vector hgrsize;
+			if(hgregen && hgregen != 1) {
+				hgrsize = '64 16 0';
+				hgrsize_x *= hgregen;
+				drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+			}
+			hgapos -= '4 4';
+			Sbar_DrawXNum(hgapos, hgammo, 2, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			hgapos_x += 48;
+			drawpic(hgapos, hgicon, '22 22', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-				float hgregen = Sbar_GetNadgetRegen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
-				vector hgrsize;
-				hgapos_y += 10;
-                if(hgregen && hgregen != 1) {
-                    hgrsize = '70 3 0';
-                    hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
-                    hgrsize_x *= hgregen;
-                    drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
-                }
-                if(hgtype2) {
-                    hgapos_y += 5;
-                    hgammo = getstati(STAT_HGAMMO2);
-					float hgregen2 = Sbar_GetNadgetRegen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2) - hgregen2;
-                    if(hgammo)
-                        drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype2), "s: ^3", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-                    else
-                        drawcolorcodedstringcenter(hgapos, strcat(HG_TypeToExpandedName(hgtype2), "s: ^1", ftos(hgammo)), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-
-					hgapos_y += 10;
-                    if(hgregen2 && hgregen2 != 1) {
-                        hgrsize = '70 3 0';
-                        hgapos_x = (CVAR(vid_conwidth) - hgrsize_x) * 0.5;
-                        hgrsize_x *= hgregen2;
-                        drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5, DRAWFLAG_NORMAL);
-                    }
-                }
-#if 0
-            }
-#endif
+			if(hgtype2) {
+				hgicon = HG_TypeToIcon(hgtype2, TRUE, 0);
+				hgapos_y += 26;
+				hgapos_x -= 44;
+				float hgregen2 = Sbar_GetNadgetRegen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2) - hgregen2;
+				if(hgregen2 && hgregen2 != 1) {
+					hgrsize = '64 16 0';
+					hgrsize_x *= hgregen2;
+					drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED2), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+				}
+				hgapos -= '4 4';
+				hgammo = getstati(STAT_HGAMMO2);
+				Sbar_DrawXNum(hgapos, hgammo, 2, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				hgapos_x += 48;
+				drawpic(hgapos, hgicon, '22 22', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			}
 		}
 
 		// draw scores and timer
