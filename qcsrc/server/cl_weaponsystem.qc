@@ -515,7 +515,7 @@ void CL_Weaponentity_Think()
 	float useqcanimation = (sv_qcweaponanimation || self.wframe == WFRAME_MELEE);
 	if (self.state == WS_RAISE && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / g_balance_weaponswitchdelay;
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / W_WeaponRateFactorFor(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -525,7 +525,7 @@ void CL_Weaponentity_Think()
 	}
 	else if (self.state == WS_DROP && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / g_balance_weaponswitchdelay;
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / W_WeaponRateFactorFor(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
