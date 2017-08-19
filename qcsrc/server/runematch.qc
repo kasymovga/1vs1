@@ -706,6 +706,12 @@ string runematch_AppendItemCodes(string s, entity plr) {
 	return runematch_AppendItemCodes_NextLink(s, plr);
 }
 
+var void(entity e) runematch_SpectateCopy_NextLink;
+void runematch_SpectateCopy(entity e) {
+	self.runes = e.runes;
+	runematch_SpectateCopy_NextLink(e);
+}
+
 void runes_init() {
 	CACHE_CVAR(g_runes);
 	if not(g_runes)
@@ -762,6 +768,8 @@ void runes_init() {
 	GameHookChain_PlayerClear = runematch_PlayerClear;
 	runematch_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
 	GameHookChain_AppendItemCodes = runematch_AppendItemCodes;
+	runematch_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = runematch_SpectateCopy;
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;
