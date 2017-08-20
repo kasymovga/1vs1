@@ -64,6 +64,9 @@ void fillNexuizMutatorsDialog(entity me)
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.8, s);
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "g_runes", "Runes"));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 2, makeNexuizTextLabel(0, "Weapon & item mutators:"));
 	me.TR(me);
@@ -111,7 +114,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Laser:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_laser"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_laser"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -119,7 +122,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Shotgun:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_shotgun"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_shotgun"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -127,7 +130,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Uzi:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_uzi"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_uzi"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -135,7 +138,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Camping Rifle:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_campingrifle"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_campingrifle"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -143,7 +146,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Mortar:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_grenadelauncher"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_grenadelauncher"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -151,7 +154,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crylink:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_crylink"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_crylink"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -159,7 +162,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "HLAC:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_hlac"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_hlac"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -167,7 +170,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Electro:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_electro"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_electro"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -175,7 +178,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Nex:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_nex"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_nex"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -183,7 +186,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Hagar:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_hagar"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_hagar"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -191,7 +194,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Rocket Launcher:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_rocketlauncher"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_rocketlauncher"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -199,7 +202,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "FireBall:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_fireball"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_fireball"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -207,7 +210,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "HookGun:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_hook"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_hook"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -215,7 +218,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Porto:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_porto"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_porto"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -223,7 +226,7 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Supershotgun:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_supershotgun"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_supershotgun"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
@@ -231,11 +234,31 @@ void fillNexuizMutatorsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Zapper:"));
-		me.TD(me, 1, 1.2, s = makeNexuizTextSlider("g_start_weapon_zapper"));
+		me.TD(me, 1, 0.4, s = makeNexuizTextSlider("g_start_weapon_zapper"));
 			s.addValue(s, "Default", "-1");
 			s.addValue(s, "No", "0");
 			s.addValue(s, "Yes", "1");
 			s.configureNexuizTextSliderValues(s);
+
+	me.gotoRC(me, 0, 4.4); me.setFirstColumn(me, me.currentColumn);
+	me.TR(me);
+		me.TD(me, 1, 1.2, makeNexuizTextLabel(0, "Start ammo:"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.4, e = makeNexuizTextLabel(0, "Shells:"));
+		me.TD(me, 1, 0.6, s = makeNexuizSlider(0, 100, 5, "g_start_ammo_shells"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.4, e = makeNexuizTextLabel(0, "Rockets:"));
+		me.TD(me, 1, 0.6, s = makeNexuizSlider(0, 100, 5, "g_start_ammo_rockets"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.4, e = makeNexuizTextLabel(0, "Bullets:"));
+		me.TD(me, 1, 0.6, s = makeNexuizSlider(0, 100, 5, "g_start_ammo_nails"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.4, e = makeNexuizTextLabel(0, "Cells:"));
+		me.TD(me, 1, 0.6, s = makeNexuizSlider(0, 100, 5, "g_start_ammo_cells"));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton("OK", '0 0 0'));
