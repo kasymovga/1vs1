@@ -642,7 +642,7 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 
 				if (attacker.runes & RUNE_IGNITE)
 				if ((d = damage * g_balance_rune_ignite_damage_factor) >= 1)
-					Fire_AddDamage(targ, world, d, 5, DEATH_HURTTRIGGER);
+					Fire_AddDamage(targ, world, d, 5, DEATH_FIRE);
 
 				if (PLAYER_REALLY_ALIVE(targ)) {
 					entity e;
@@ -670,7 +670,7 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 			if (PLAYER_REALLY_ALIVE(targ))
 				if (targ.runes & CURSE_BURNING)
 					if ((d = g_balance_curse_burning_damage_factor * damage) >= 1)
-						Fire_AddDamage(targ, world, d, 5, DEATH_HURTTRIGGER);
+						Fire_AddDamage(targ, world, d, 5, DEATH_FIRE);
 		}
 		if (targ.runes & RUNE_REGEN)
 		if ((d = damage * g_balance_rune_regen_damage_factor) >= 1)
