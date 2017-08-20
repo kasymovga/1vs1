@@ -211,8 +211,9 @@ void rune_touch()
 		return;
 	}
 
-	if(other.classname != "player" || other.health < 1)
+	if(other.classname != "player" || PLAYER_DEAD(other))
 		return;
+
 	if(self.wait > time)
 		return; // "notouch" time isn't finished
 
