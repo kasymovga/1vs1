@@ -1061,5 +1061,11 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (cmd == "dlc_reload")
+	{
+		dlc_reload();
+		return;
+	}
+
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }

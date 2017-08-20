@@ -126,3 +126,35 @@ void dlc_init() {
 	if (s != "")
 		dlc_require(s);
 }
+
+entity dlc_wait_reload;
+
+void DLCWaitReload() {
+	if (dlc_ready_all()) {
+		float n = tokenizebyseparator(dlc_list, " ");
+		float i;
+		localcmd("\n");
+		for (i = 0; i < n; i++) {
+			if (argv(i) != "")
+				dlc_exec_cfg(argv(i));
+		}
+		remove(self);
+		dlc_wait_reload = world;
+	}
+	self.nextthink = time + 1;
+}
+
+void dlc_reload() {
+	string list = dlc_list;
+	string s;
+	while (list != "") {
+		s = car(list);
+		list = cdr(list);
+		dlc_load(s);
+	}
+	if not(dlc_wait_reload) {
+		dlc_wait_reload = spawn();
+		dlc_wait_reload.think = DLCWaitReload;
+		dlc_wait_reload.nextthink = time + 1;
+	}
+}
