@@ -6,6 +6,7 @@ msys.qh
 mbuiltin.qh
 ../common/util.qh
 ../common/miscfunctions.qh
+../common/ui.qh
 
 oo/base.h
 
@@ -44,3 +45,4 @@ nexuiz/util.qc
 ../common/items.qc
 ../common/curl.qc
 ../common/dlc.qc
+../common/ui.qc

@@ -108,6 +108,7 @@ void() m_init =
 			print("Loading dlc: ", s, "\n");
 		}
 	}
+	SetConWidthHeight();
 }
 
 void UpdateConWidthHeight()

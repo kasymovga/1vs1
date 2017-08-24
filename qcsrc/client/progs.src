@@ -34,6 +34,7 @@ location_request.qh
 dlc.qh
 ../common/dlc.qh
 ../common/nadgets.qh
+../common/ui.qh
 
 main.qh
 ../common/miscfunctions.qh
@@ -96,3 +97,4 @@ dlc.qc
 ../common/dlc.qc
 radio.qc
 ../common/rune.qc
+../common/ui.qc

@@ -399,6 +399,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
 	ent_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
 	ent_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
+	SetConWidthHeight();
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
