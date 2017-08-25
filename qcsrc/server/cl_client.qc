@@ -1067,15 +1067,16 @@ void ClientKill_Now_TeamChange()
 		JoinBestTeam( self, FALSE, FALSE );
 	}
 	else
-		SV_ChangeTeam(self.killindicator_teamchange - 1);
+		ChangeTeam(self, self.killindicator_teamchange);
 }
 
 void ClientKill_Now()
 {
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
+	else
+		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
-	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 	if(self.killindicator)
 	{
 		dprint("Cleaned up after a leaked kill indicator.\n");

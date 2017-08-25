@@ -7,6 +7,8 @@ float bot_vs_human;
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
+void ChangeTeam(entity pl, float dteam);
+
 // client counts for each team
 float c1, c2, c3, c4;
 // # of bots on those teams
@@ -505,18 +507,18 @@ void SetPlayerColors(entity pl, float _color)
 
 void SetPlayerTeam(entity pl, float t, float s, float noprint)
 {
-	float _color;
-
 	if(t == 4)
-		_color = COLOR_TEAM4 - 1;
+		pl.team = COLOR_TEAM4;
 	else if(t == 3)
-		_color = COLOR_TEAM3 - 1;
+		pl.team = COLOR_TEAM3;
 	else if(t == 2)
-		_color = COLOR_TEAM2 - 1;
+		pl.team = COLOR_TEAM2;
+	else if (t == 1)
+		pl.team = COLOR_TEAM1;
 	else
-		_color = COLOR_TEAM1 - 1;
+		return;
 
-	SetPlayerColors(pl,_color);
+	SetPlayerColors(pl, pl.team - 1);
 
 	if(!noprint && t != s)
 	{
@@ -840,7 +842,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		{
 			if(!only_return_best)
 			{
-				SetPlayerColors(pl, selectedteam - 1);
+				ChangeTeam(pl, selectedteam);
 				LogTeamchange(pl);
 			}
 			return selectedteam;
@@ -856,166 +858,121 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		TeamchangeFrags(self);
 		if(smallest == 1)
 		{
-			SetPlayerColors(pl, COLOR_TEAM1 - 1);
+			ChangeTeam(pl, COLOR_TEAM1);
 		}
 		else if(smallest == 2)
 		{
-			SetPlayerColors(pl, COLOR_TEAM2 - 1);
+			ChangeTeam(pl, COLOR_TEAM2);
 		}
 		else if(smallest == 3)
 		{
-			SetPlayerColors(pl, COLOR_TEAM3 - 1);
+			ChangeTeam(pl, COLOR_TEAM3);
 		}
 		else if(smallest == 4)
 		{
-			SetPlayerColors(pl, COLOR_TEAM4 - 1);
+			ChangeTeam(pl, COLOR_TEAM4);
 		}
 		else
 		{
 			error("smallest team: invalid team\n");
 		}
 		LogTeamchange(pl);
-		if(pl.deadflag == DEAD_NO)
-			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
 	}
 
 	return smallest;
 }
 
-//void() ctf_playerchanged;
 void SV_ChangeTeam(float _color)
 {
-	float scolor, dcolor, steam, dteam, dbotcount, scount, dcount;
-
-	// in normal deathmatch we can just apply the color and we're done
-	if(!teams_matter) {
-		SetPlayerColors(self, _color);
+	if(teams_matter)
 		return;
+
+	SetPlayerColors(self, _color);
+}
+
+void ChangeTeam(entity pl, float dteam) {
+	float dcount, scount;
+	CheckAllowedTeams(pl);
+	switch (dteam) {
+	case COLOR_TEAM1: if (c1 < 0) return; break;
+	case COLOR_TEAM2: if (c2 < 0) return; break;
+	case COLOR_TEAM3: if (c3 < 0) return; break;
+	case COLOR_TEAM4: if (c4 < 0) return; break;
 	}
-
-	scolor = self.clientcolors & 0x0F;
-	dcolor = _color & 0x0F;
-
-	if(scolor == COLOR_TEAM1 - 1)
-		steam = 1;
-	else if(scolor == COLOR_TEAM2 - 1)
-		steam = 2;
-	else if(scolor == COLOR_TEAM3 - 1)
-		steam = 3;
-	else // if(scolor == COLOR_TEAM4 - 1)
-		steam = 4;
-	if(dcolor == COLOR_TEAM1 - 1)
-		dteam = 1;
-	else if(dcolor == COLOR_TEAM2 - 1)
-		dteam = 2;
-	else if(dcolor == COLOR_TEAM3 - 1)
-		dteam = 3;
-	else // if(dcolor == COLOR_TEAM4 - 1)
-		dteam = 4;
-
-	CheckAllowedTeams(self);
-
-	if(dteam == 1 && c1 < 0) dteam = 4;
-	if(dteam == 4 && c4 < 0) dteam = 3;
-	if(dteam == 3 && c3 < 0) dteam = 2;
-	if(dteam == 2 && c2 < 0) dteam = 1;
-
-	// not changing teams
-	if(scolor == dcolor)
-	{
-		//bprint("same team change\n");
-		SetPlayerTeam(self, dteam, steam, TRUE);
-		return;
-	}
-
-	if(g_campaign)
-	{
-		sprint(self, "Team changes not allowed\n");
+	if(g_campaign) {
+		sprint(pl, "Team changes not allowed\n");
 		return; // changing teams is not allowed
 	}
-
-	if(g_changeteam_banned && self.wasplayer)
-	{
-		sprint(self, "Team changes not allowed\n");
+	if (g_changeteam_banned && pl.wasplayer) {
+		sprint(pl, "Team changes not allowed\n");
 		return;
 	}
-
-	if(g_balance_teams_prevent_imbalance)
+	float teamchange = (pl.team > 0);
+	if (g_balance_teams_prevent_imbalance)
+	if (pl.team != dteam)
 	{
 		// only allow changing to a smaller or equal size team
-
 		// find out what teams are available
-		//CheckAllowedTeams();
 		// count how many players on each team
-		GetTeamCounts(world);
+		GetTeamCounts(pl);
+		float cr1 = c1 - cb1;
+		float cr2 = c2 - cb2;
+		float cr3 = c3 - cb3;
+		float cr4 = c4 - cb4;
+		switch (pl.team) {
+		case COLOR_TEAM1: scount = cr1; break;
+		case COLOR_TEAM2: scount = cr2; break;
+		case COLOR_TEAM3: scount = cr3; break;
+		case COLOR_TEAM4: scount = cr4; break;
+		default:          scount = -1;
+		}
+		if(dteam == COLOR_TEAM1 && c1 >= 0)
+			dcount = cr1;
+		else if(dteam == COLOR_TEAM2 && c2 >= 0)
+			dcount = cr2;
+		else if(dteam == COLOR_TEAM3 && c3 >= 0)
+			dcount = cr3;
+		else if(dteam == COLOR_TEAM4 && c4 >= 0)
+			dcount = cr4;
 
-		// get desired team
-		if(dteam == 1 && c1 >= 0)//dcolor == COLOR_TEAM1 - 1)
-		{
-			dcount = c1;
-			dbotcount = cb1;
-		}
-		else if(dteam == 2 && c2 >= 0)//dcolor == COLOR_TEAM2 - 1)
-		{
-			dcount = c2;
-			dbotcount = cb2;
-		}
-		else if(dteam == 3 && c3 >= 0)//dcolor == COLOR_TEAM3 - 1)
-		{
-			dcount = c3;
-			dbotcount = cb3;
-		}
-		else if(dteam == 4 && c4 >= 0)//dcolor == COLOR_TEAM4 - 1)
-		{
-			dcount = c4;
-			dbotcount = cb4;
-		}
-		else
-		{
-			sprint(self, "Cannot change to an invalid team\n");
-
+		if (scount >= dcount)
+		if ((cr1 >= 0 && dcount > cr1)
+				|| (cr2 >= 0 && dcount > cr2)
+				|| (cr3 >= 0 && dcount > cr3)
+				|| (cr4 >= 0 && dcount > cr4)) {
+			sprint(pl, "Cannot change to a larger team\n");
 			return;
 		}
+	}
+	if (pl.team == dteam)
+		return;
+	else if (pl.classname == "player")
+		TeamchangeFrags(pl);
 
-		// get starting team
-		if(steam == 1)//scolor == COLOR_TEAM1 - 1)
-			scount = c1;
-		else if(steam == 2)//scolor == COLOR_TEAM2 - 1)
-			scount = c2;
-		else if(steam == 3)//scolor == COLOR_TEAM3 - 1)
-			scount = c3;
-		else if(steam == 4)//scolor == COLOR_TEAM4 - 1)
-			scount = c4;
-
-		if(scount) // started at a valid, nonempty team
-		{
-			// check if we're trying to change to a larger team that doens't have bots to swap with
-			if(dcount >= scount && dbotcount <= 0)
-			{
-				sprint(self, "Cannot change to a larger team\n");
-				return; // can't change to a larger team
-			}
+	entity oldself = self;
+	SetPlayerTeam(pl, TeamColorSkin(dteam), TeamColorSkin(pl.team), FALSE);
+	if(pl.classname == "player") {
+		if(pl.deadflag == DEAD_NO) // kill player when changing teams
+			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
+	} else if not(teamchange) {
+		self = pl;
+		LeaveSpectatorMode();
+		self = oldself;
+	}
+	entity e;
+	if (teamchange)
+	if (clienttype(pl) == CLIENTTYPE_REAL)
+	FOR_EACH_PLAYER(e)
+		if (clienttype(e) == CLIENTTYPE_BOT)
+		if (e.team == dteam) {
+			e.team = -1;
+			self = e;
+			PutClientInServer();
+			self = oldself;
+			break;
 		}
-	}
-
-//	bprint("allow change teams from ", ftos(steam), " to ", ftos(dteam), "\n");
-
-	if(self.classname == "player" && steam != dteam)
-	{
-		// reduce frags during a team change
-		TeamchangeFrags(self);
-	}
-
-	SetPlayerTeam(self, dteam, steam, FALSE);
-
-	if(self.classname == "player" && steam != dteam)
-	{
-		// kill player when changing teams
-		if(self.deadflag == DEAD_NO)
-			Damage(self, self, self, 100000, DEATH_TEAMCHANGE, self.origin, '0 0 0');
-	}
-	//ctf_playerchanged();
 }
+
 
 void ShufflePlayerOutOfTeam (float source_team)
 {

@@ -11,3 +11,4 @@ void FixClientCvars(entity e);
 void ClientKill_Now_TeamChange();
 void ClientInit_Spawn();
 void ClientInit_UpdateHookOrigin();
+void LeaveSpectatorMode();
