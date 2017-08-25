@@ -131,12 +131,14 @@ entity dlc_wait_reload;
 
 void DLCWaitReload() {
 	if (dlc_ready_all()) {
-		float n = tokenizebyseparator(dlc_list, " ");
-		float i;
 		localcmd("\n");
-		for (i = 0; i < n; i++) {
-			if (argv(i) != "")
-				dlc_exec_cfg(argv(i));
+		string list = dlc_list;
+		string s;
+		while (list != "") {
+			s = car(list);
+			list = cdr(list);
+			if (s != "")
+				dlc_exec_cfg(s);
 		}
 		remove(self);
 		dlc_wait_reload = world;
@@ -150,7 +152,8 @@ void dlc_reload() {
 	while (list != "") {
 		s = car(list);
 		list = cdr(list);
-		dlc_load(s);
+		if (s != "")
+			dlc_load(s);
 	}
 	if not(dlc_wait_reload) {
 		dlc_wait_reload = spawn();
