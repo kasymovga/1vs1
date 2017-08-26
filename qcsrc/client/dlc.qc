@@ -60,7 +60,6 @@ void Ent_DLCList(float new) {
 			if (s != "")
 			if not(dlc_load(s)) {
 				not_all_loaded = TRUE;
-				break;
 			}
 		}
 		if (not_all_loaded) {
