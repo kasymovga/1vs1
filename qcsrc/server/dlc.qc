@@ -13,13 +13,15 @@ void dlc_exec_cfg(string dlc_name) {
 
 void DLCWait() {
 	if (dlc_ready_all()) {
-		float n = tokenizebyseparator(dlc_list, " ");
-		float i;
+		string list, s;
+		list = dlc_list;
 		localcmd("\n");
-		for (i = 0; i < n; i++) {
-			if (argv(i) != "") {
-				dlc_exec_cfg(argv(i));
-				registercvar(dlc_init_cvar(argv(i)), "1");
+		while (list != "") {
+			s = car(list);
+			list = cdr(list);
+			if (s != "") {
+				dlc_exec_cfg(s);
+				registercvar(dlc_init_cvar(s), "1");
 			}
 		}
 		entity e;
@@ -66,23 +68,27 @@ void dlc_require_server_only(string dlc_name) {
 }
 
 void dlc_require(string dlc_name) {
-	float i, n;
-	n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-	string s;
+	string s, list;
+	list = cvar_string("sv_curl_serverpackages");
 	float add_to_server_packages;
 	add_to_server_packages = TRUE;
-	for (i = 0; i < n; i++)
-		if (argv(i) == strcat("rexdlc_", dlc_name, ".serverpackage"))
+	while (list != "") {
+		s = car(list);
+		list = cdr(list);
+		if (s == strcat("rexdlc_", dlc_name, ".serverpackage"))
 			add_to_server_packages = FALSE;
+	}
 
 	if (add_to_server_packages)
 		cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
 
-	n = tokenizebyseparator(dlc_list_send, " ");
-	for (i = 0; i < n; i++)
-		if (argv(i) == dlc_name)
+	list = dlc_list_send;
+	while (list != "") {
+		s = car(list);
+		list = cdr(list);
+		if (s == dlc_name)
 			return;
-
+	}
 	if not(dlc) {
 		dlc = spawn();
 		Net_LinkEntity(dlc, FALSE, 0, dlc_SendEntity);
