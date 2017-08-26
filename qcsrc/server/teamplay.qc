@@ -899,15 +899,11 @@ void ChangeTeam(entity pl, float dteam) {
 	case COLOR_TEAM3: if (c3 < 0) return; break;
 	case COLOR_TEAM4: if (c4 < 0) return; break;
 	}
-	if(g_campaign) {
+	float teamchange = (pl.team > 0);
+	if((g_campaign && teamchange) || (g_changeteam_banned && pl.wasplayer)) {
 		sprint(pl, "Team changes not allowed\n");
 		return; // changing teams is not allowed
 	}
-	if (g_changeteam_banned && pl.wasplayer) {
-		sprint(pl, "Team changes not allowed\n");
-		return;
-	}
-	float teamchange = (pl.team > 0);
 	if (g_balance_teams_prevent_imbalance)
 	if (pl.team != dteam)
 	{
