@@ -161,6 +161,13 @@ void dlc_reload() {
 		if (s != "")
 			dlc_load(s);
 	}
+	list = dlc_list_send;
+	while (list != "") {
+		s = car(list);
+		list = cdr(list);
+		if (s != "")
+			dlc_require(s);
+	}
 	if not(dlc_wait_reload) {
 		dlc_wait_reload = spawn();
 		dlc_wait_reload.think = DLCWaitReload;
