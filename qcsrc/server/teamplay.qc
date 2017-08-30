@@ -920,7 +920,6 @@ void ChangeTeam(entity pl, float dteam) {
 		case COLOR_TEAM2: scount = cr2; break;
 		case COLOR_TEAM3: scount = cr3; break;
 		case COLOR_TEAM4: scount = cr4; break;
-		default:          scount = -1;
 		}
 		if(dteam == COLOR_TEAM1 && c1 >= 0)
 			dcount = cr1;
@@ -931,11 +930,19 @@ void ChangeTeam(entity pl, float dteam) {
 		else if(dteam == COLOR_TEAM4 && c4 >= 0)
 			dcount = cr4;
 
-		if (scount >= dcount)
+		float largeteam;
+		largeteam = FALSE;
+		if (teamchange)
+			if (scount < dcount)
+				largeteam = TRUE;
+
 		if ((cr1 >= 0 && dcount > cr1)
 				|| (cr2 >= 0 && dcount > cr2)
 				|| (cr3 >= 0 && dcount > cr3)
 				|| (cr4 >= 0 && dcount > cr4)) {
+			largeteam = TRUE;
+		}
+		if (largeteam) {
 			sprint(pl, "Cannot change to a larger team\n");
 			return;
 		}
