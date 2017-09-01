@@ -364,11 +364,6 @@ void CSQC_UpdateView(float w, float h)
 	ColorTranslateMode = CVAR(cl_stripcolorcodes);
 	activeweapon = getstati(STAT_SWITCHWEAPON);
 
-	if(last_weapon != activeweapon) {
-		weapontime = time;
-		last_weapon = activeweapon;
-	}
-
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
 

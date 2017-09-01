@@ -66,6 +66,7 @@ float W_WeaponRateFactorFor(entity o)
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
+	W_ShowWeaponList(self);
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 }
@@ -796,6 +797,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		{
 			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
 
+
 			if(g_showweaponspawns)
 			{
 				entity e;
@@ -1204,4 +1206,12 @@ void W_Init()
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET, '0 0 0', '0 0 0');
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET_GLOWING, '0 0 0', '0 0 0');
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET_BIG, '0 0 0', '0 0 0');
+}
+
+void W_ShowWeaponList(entity pl) {
+	if (clienttype(pl) == CLIENTTYPE_REAL) {
+		msg_entity = pl;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_WEAPONLIST);
+	}
 }

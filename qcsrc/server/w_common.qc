@@ -16,6 +16,7 @@ void W_GiveWeapon (entity e, float wep, string name)
 	if not(g_minstagib)
 	if (other.classname == "player")
 	{
+		W_ShowWeaponList(other);
 		sprint (other, "You got the ^2");
 		sprint (other, name);
 		sprint (other, "\n");

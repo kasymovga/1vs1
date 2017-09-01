@@ -308,6 +308,8 @@ void CSQC_Init(void)
 #endif
 	registercvar("sbar_usecsqc", "1");
 	registercvar("sbar_columns", "default", CVAR_SAVE);
+	registercvar("sbar_weapons_fadetime", "2", CVAR_SAVE);
+	registercvar("sbar_weapons_fadespeed", "1", CVAR_SAVE);
 	localcmd("alias +nadget2 +button9\n");
 	localcmd("alias -nadget2 -button9\n");
 
@@ -1366,6 +1368,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RADIO:
 			Net_ReadRadio();
+			bHandled = true;
+			break;
+		case TE_CSQC_WEAPONLIST:
+			weapontime = time;
 			bHandled = true;
 			break;
 		default:

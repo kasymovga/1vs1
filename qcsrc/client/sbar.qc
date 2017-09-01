@@ -59,50 +59,42 @@ void Sbar_DrawWeapon_Clear()
 }
 void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 {
-	vector pos, vsize, fill_colour;
-	float value, idx, imp, sp, weapon_hit, weapon_damage, weapon_stats;
+	vector pos, vsize;
+	float value, idx, imp, sp;
 
 	imp = weaponimpulse[nr];
-	weapon_hit = weapon_hits[wc];
- 	weapon_damage = weapon_fired[wc];
 	if(imp == 0)
 		idx = 9;
 	else
 		idx = imp - 1;
 
-	value = (active) ? 1 : 0.6;
+	value = (active) ? 2 : 0.75;
 	color_x = color_y = color_z = value;
 
 	// width = 300, height = 100
-	const float w_width = 24, w_height = 12, w_space = 2, font_size = 8;
+	const float w_width = 48, w_height = 24, w_space = 2, font_size = 12;
 
 	sp = weaponspace[idx] + 1;
 	weaponspace[idx] = sp;
 
-	pos_x = (CVAR(vid_conwidth) + 6 - w_width * 9) * 0.5 + w_width * idx;
-	pos_y = (CVAR(vid_conheight) - w_height * sp) - 38; // move 38 pixels up
+	//pos_x = (CVAR(vid_conwidth) + 6 - w_width * 9) * 0.5 + w_width * idx;
+	//pos_y = (CVAR(vid_conheight) - w_height * sp) - 38; // move 38 pixels up
+	pos_x = CVAR(vid_conwidth) - w_width * sp - w_space;
+	pos_y = CVAR(vid_conheight) - 64 - w_height * (10 - idx);
 	pos_z = 0;
 	vsize_x = w_width;
 	vsize_y = w_height;
 	vsize_z = 0;
 	if (active)
-		drawpic(pos, "gfx/hud/sb_ammobg", vsize, color, value * fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr)), vsize, color, value * fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos, "gfx/hud/sb_ammobg", vsize, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr)), vsize, color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 	pos_x += w_space;
-	pos_y += w_space;
+	//pos_y += w_space;
 	vsize_x = font_size;
 	vsize_y = font_size;
 	vsize_z = 0;
-	drawstring(pos, ftos(imp), vsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
-	// draw the weapon accuracy on the HUD
-	if(CVAR(sbar_hud_accuracy))
- 	{
- 		weapon_stats = rint(100*weapon_hit/weapon_damage);
- 		fill_colour_x = 1 - 0.015 * weapon_stats;
- 		fill_colour_y = 1 - 0.015 * (100 - weapon_stats);
- 		drawstringright(pos + '22 0 0', strcat(ftos(weapon_stats),"%"), '6 6 0', fill_colour, sbar_alpha_fg, 0);
- 	}
+	if (sp == 1)
+		drawstring(pos, ftos(imp), vsize, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
 }
 
 void Sbar_DrawXNum (vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float highlighted, float stroke, float alpha, float dflags)
@@ -1641,8 +1633,8 @@ void CSQC_Strength_Timer() {
 
 	float strength_time, invincibility_time, speed_time, invisibility_time, jetpack_time;
 
-	powerup_pos_x = CVAR(vid_conwidth) - 40;
-	powerup_pos_y = CVAR(vid_conheight) - 100;
+	powerup_pos_x = CVAR(vid_conwidth) - 24;
+	powerup_pos_y = CVAR(vid_conheight) - 360;
 
 	//strength
 	strength_time = getstatf(STAT_STRENGTH_FINISHED);
@@ -2271,7 +2263,7 @@ void Sbar_Draw (void)
 
 	float i;
 	float weapon_stats;
-	float x, fade;
+	float x;
 	float stat_items, stat_weapons;
 
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
@@ -2474,9 +2466,6 @@ void Sbar_Draw (void)
 		stat_items = getstati(STAT_ITEMS);
 		stat_weapons = getstati(STAT_WEAPONS);
 
-		fade = 3.2 - 2 * (time - weapontime);
-		fade = bound(0.7, fade, 1);
-
 		vector bg_size; // hud background size
 		bg_size = '1600 58 0';
 
@@ -2552,15 +2541,18 @@ void Sbar_Draw (void)
 
 		// weapon icons
 		x = 1.0;
-		Sbar_DrawWeapon_Clear();
-		for(i = 1; i <= 24; ++i)
-		{
-			if(weaponimpulse[i-1] >= 0)
-			if(stat_weapons & x)
+		float fade = bound(0, CVAR(sbar_weapons_fadetime) - (time - weapontime) *  CVAR(sbar_weapons_fadespeed), 1);
+		if (fade) {
+			Sbar_DrawWeapon_Clear();
+			for(i = 1; i <= 24; ++i)
 			{
-				Sbar_DrawWeapon(i-1, fade, (i == activeweapon), i);
+				if(weaponimpulse[i-1] >= 0)
+				if(stat_weapons & x)
+				{
+					Sbar_DrawWeapon(i-1, fade, (i == activeweapon), i);
+				}
+				x *= 2;
 			}
-			x *= 2;
 		}
 
 		// ammo

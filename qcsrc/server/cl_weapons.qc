@@ -25,6 +25,8 @@ void W_SwitchWeapon(float imp)
 	if (self.switchweapon != imp)
 		if (client_hasweapon(self, imp, TRUE, TRUE))
 			W_SwitchWeapon_Force(self, imp);
+		else
+			W_ShowWeaponList(self);
 };
 
 .float weaponcomplainindex;
@@ -34,7 +36,6 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	n = tokenize_console(weaponorder);
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
-
 	if(dir == 0)
 		switchtonext = 1;
 
