@@ -624,10 +624,10 @@ void PhysicReadCvars()
 float Physic_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
+	entity oldself = self;
+	self = self.owner;
 	if not(sf & 3)
 	{
-		entity oldself = self;
-		self = self.owner;
 		if (self.classname == "player") sf |= 8;
 		if (self.deadflag) sf |= 16;
 		if (self.last_physic_ladder) sf |= 32;
@@ -638,7 +638,6 @@ float Physic_SendEntity(entity to, float sf)
 		if (self.movetype != MOVETYPE_WALK) sf |= 1024;
 		if (self.gravity && self.gravity != 1) sf |= 2048;
 		if (self.teleport_time - time >= 0) sf |= 4096;
-		self = oldself;
 	}
 	else
 		sf = sf & 7;
@@ -701,12 +700,12 @@ float Physic_SendEntity(entity to, float sf)
 	}
 	if (sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.owner.origin_x);
-		WriteCoord(MSG_ENTITY, self.owner.origin_y);
-		WriteCoord(MSG_ENTITY, self.owner.origin_z);
-		WriteCoord(MSG_ENTITY, self.owner.velocity_x);
-		WriteCoord(MSG_ENTITY, self.owner.velocity_y);
-		WriteCoord(MSG_ENTITY, self.owner.velocity_z);
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.velocity_x);
+		WriteCoord(MSG_ENTITY, self.velocity_y);
+		WriteCoord(MSG_ENTITY, self.velocity_z);
 		if ((sf & 32) && (sf & 64))
 		{
 			WriteCoord(MSG_ENTITY, self.ladder_entity.speed);
@@ -719,11 +718,13 @@ float Physic_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY, Physic_JumpVelocityFactor());
 		}
 		if (sf & 1024)
-			WriteByte(MSG_ENTITY, self.owner.movetype);
+			WriteByte(MSG_ENTITY, self.movetype);
 		if (sf & 2048)
 			WriteCoord(MSG_ENTITY, self.gravity);
 		if (sf & 4096)
 			WriteCoord(MSG_ENTITY, self.teleport_time - time);
+
 	}
+	self = oldself;
 	return TRUE;
 }
