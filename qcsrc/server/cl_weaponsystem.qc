@@ -48,9 +48,6 @@ float W_WeaponRateFactor()
 	entity oldself = self;
 	self = Akimbo_Owner(self);
 	t = (1.0 / g_weaponratefactor) * GameHookChain_WeaponRateFactor();
-	if (time < self.speed_finished)
-		t = t * 0.666;
-
 	self = oldself;
 	return t;
 }

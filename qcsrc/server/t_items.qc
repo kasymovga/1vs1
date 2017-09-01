@@ -1,3 +1,6 @@
+.float speed_finished;
+.float invincible_finished;
+.float invisibility_finished;
 float g_balance_pause_armor_rot;
 float g_balance_pause_fuel_regen;
 float g_balance_pause_fuel_rot;
@@ -189,6 +192,14 @@ void powerup_strength_init() {
 	GameHookChain_DamageForceModsSet = powerup_strength_DamageForceModsSet;
 }
 
+var float() powerup_speed_WeaponRateFactor_NextLink;
+float powerup_speed_WeaponRateFactor() {
+	if (time < self.speed_finished)
+		return powerup_speed_WeaponRateFactor_NextLink() * 0.666;
+
+	return powerup_speed_WeaponRateFactor_NextLink();
+}
+
 var float() powerup_speed_PlayerEffectsHandle_NextLink;
 float powerup_speed_PlayerEffectsHandle() {
 	if (self.items & IT_SPEED) {
@@ -227,7 +238,10 @@ void powerup_speed_init() {
 	GameHookChain_SpeedMod = powerup_speed_SpeedMod;
 	powerup_speed_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
 	GameHookChain_PlayerEffectsHandle = powerup_speed_PlayerEffectsHandle;
+	powerup_speed_WeaponRateFactor_NextLink = GameHookChain_WeaponRateFactor;
+	GameHookChain_WeaponRateFactor = powerup_speed_WeaponRateFactor;
 	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
+	PhysicEnableCSQC();
 }
 
 var float() powerup_invisibility_PlayerEffectsHandle_NextLink;
