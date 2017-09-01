@@ -1,2 +1,3 @@
 float IsFlying(entity a);
+void PhysicEnableCSQC();
 float g_jetpack_fuel;
