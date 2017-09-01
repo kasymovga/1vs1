@@ -2163,45 +2163,6 @@ void drawcolorcodedstringcenter(vector position, string text, vector scale, floa
 	drawcolorcodedstring(position, text, scale, alpha, flag);
 }
 
-float GetAmmoStat(float i)
-{
-	switch(i)
-	{
-		case 0: return STAT_SHELLS;
-		case 1: return STAT_NAILS;
-		case 2: return STAT_ROCKETS;
-		case 3: return STAT_CELLS;
-		case 4: return STAT_FUEL;
-		default: return -1;
-	}
-}
-
-float GetAmmoItemCode(float i)
-{
-	switch(i)
-	{
-		case 0: return IT_SHELLS;
-		case 1: return IT_NAILS;
-		case 2: return IT_ROCKETS;
-		case 3: return IT_CELLS;
-		case 4: return IT_FUEL;
-		default: return -1;
-	}
-}
-
-string GetAmmoPicture(float i)
-{
-	switch(i)
-	{
-		case 0: return "gfx/hud/sb_shells";
-		case 1: return "gfx/hud/sb_bullets";
-		case 2: return "gfx/hud/sb_rocket";
-		case 3: return "gfx/hud/sb_cells";
-		case 4: return "gfx/hud/sb_fuel";
-		default: return "";
-	}
-}
-
 void Sbar_Reset (void)
 {
 	// reset gametype specific icons
@@ -2261,6 +2222,23 @@ void Sbar_GameType_Init() {
 		Sbar_GameType_hud = CSQC_nb_hud;
 	else
 		Sbar_GameType_hud = SUB_Null;
+}
+
+void Sbar_DrawAmmo(vector pos, float a, float active, string image) {
+	float alpha;
+	if (active) {
+		alpha = 1;
+		drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '80 22 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	} else
+		alpha = 0.7;
+
+	drawpic(pos + '56 3 0', image, '18 18 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	if (a < 10)
+		color = '1 0 0';
+	else
+		color = '1 1 1';
+
+	Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, color, 0, 0, sbar_alpha_fg * alpha, DRAWFLAG_NORMAL);
 }
 
 void Sbar_Draw (void)
@@ -2587,54 +2565,52 @@ void Sbar_Draw (void)
 
 		// ammo
 		float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
-
-		for (i = 0; i < 4; ++i) {
-			a = getstati(GetAmmoStat(i)); // how much ammo do we have of type i?
-
-			if(CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < 800) { // force showing current ammo only with conwidths < 800
-				if (stat_items & GetAmmoItemCode(i)) {
-					if (CVAR(vid_conwidth) >= 800) {
-						pos_x = 230;
-						pos_y = 40;
-					} else {
-						pos_x = 206;
-						pos_y = 33;
-					}
-
-					pos = bottom - pos;
-					if(CVAR(vid_conwidth) >= 800)
-						drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '107 29 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					drawpic(pos + '76 3 0', GetAmmoPicture(i), '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					if(a < 10)
-						Sbar_DrawXNum(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-					else
-						Sbar_DrawXNum(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		if(CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < 800) { // force showing current ammo only with conwidths < 800
+			string ai;
+			float at;
+			if (stat_items & IT_SHELLS) { at = STAT_SHELLS; ai = "gfx/hud/sb_shells"; }
+			else if (stat_items & IT_NAILS) { at = STAT_NAILS; ai = "gfx/hud/sb_bullets"; }
+			else if (stat_items & IT_ROCKETS) { at = STAT_ROCKETS; ai = "gfx/hud/sb_rocket"; }
+			else if (stat_items & IT_CELLS) { at = STAT_CELLS; ai = "gfx/hud/sb_cells"; }
+			else at = 0;
+			if (at) {
+				a = getstati(at);
+				if (CVAR(vid_conwidth) >= 800) {
+					pos_x = 230;
+					pos_y = 40;
+				} else {
+					pos_x = 206;
+					pos_y = 33;
 				}
-			} else {
-				if (a > 0) {
-					switch (i) {
-						case 0: pos_x = 286; pos_y = 48; break; // shells
-						case 1: pos_x = 286; pos_y = 26; break; // bullets
-						case 2: pos_x = 200; pos_y = 48; break; // rockets
-						case 3: pos_x = 200; pos_y = 26; break; // cells
-					}
-
-					pos = bottom - pos;
-					if (stat_items & GetAmmoItemCode(i))
-						drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '80 22 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					drawpic(pos + '56 3 0', GetAmmoPicture(i), '18 18 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					if (a < 10) {
-						if(stat_items & GetAmmoItemCode(i))
-							Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-						else
-							Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0 0', 0, 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
-					} else {
-						if(stat_items & GetAmmoItemCode(i))
-							Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-						else
-							Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, '0.7 0.7 0.7', 0, 0, sbar_alpha_fg * 0.7, DRAWFLAG_NORMAL);
-					}
-				}
+				pos = bottom - pos;
+				if(CVAR(vid_conwidth) >= 800)
+					drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '107 29 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				if(a < 10)
+					Sbar_DrawXNum(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				else
+					Sbar_DrawXNum(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			}
+		} else {
+			a = getstati(STAT_SHELLS);
+			if (a > 0) {
+				pos_x = 286; pos_y = 48;
+				Sbar_DrawAmmo(bottom - pos, a, stat_items & IT_SHELLS, "gfx/hud/sb_shells");
+			}
+			a = getstati(STAT_NAILS);
+			if (a > 0) {
+				pos_x = 286; pos_y = 26;
+				Sbar_DrawAmmo(bottom - pos, a, stat_items & IT_NAILS, "gfx/hud/sb_bullets");
+			}
+			a = getstati(STAT_ROCKETS);
+			if (a > 0) {
+				pos_x = 200; pos_y = 48;
+				Sbar_DrawAmmo(bottom - pos, a, stat_items & IT_ROCKETS, "gfx/hud/sb_rocket");
+			}
+			a = getstati(STAT_CELLS);
+			if (a > 0) {
+				pos_x = 200; pos_y = 26;
+				Sbar_DrawAmmo(bottom - pos, a, stat_items & IT_CELLS, "gfx/hud/sb_cells");
 			}
 		}
 
