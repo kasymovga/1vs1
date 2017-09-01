@@ -400,3 +400,5 @@ float TeamNumber(float t, float d) {
 }
 
 #define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(TeamNumber(t, d))))
+
+void SUB_Null() { }

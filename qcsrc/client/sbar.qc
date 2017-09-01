@@ -2251,6 +2251,18 @@ float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen
 
 float hg_visual, hg_alpha;
 
+var void() Sbar_GameType_hud;
+void Sbar_GameType_Init() {
+	if(gametype == GAME_KEYHUNT)
+		Sbar_GameType_hud = CSQC_kh_hud;
+	else if(gametype == GAME_CTF)
+		Sbar_GameType_hud = CSQC_ctf_hud;
+	else if(gametype == GAME_NEXBALL)
+		Sbar_GameType_hud = CSQC_nb_hud;
+	else
+		Sbar_GameType_hud = SUB_Null;
+}
+
 void Sbar_Draw (void)
 {
 	// vectors for top right, bottom right, bottom and bottom left corners
@@ -2784,12 +2796,7 @@ void Sbar_Draw (void)
 		}
 
 		// draw gametype specific icons
-		if(gametype == GAME_KEYHUNT)
-			CSQC_kh_hud();
-		else if(gametype == GAME_CTF)
-			CSQC_ctf_hud();
-		else if(gametype == GAME_NEXBALL)
-			CSQC_nb_hud();
+		Sbar_GameType_hud();
 	}
 	return;
 }

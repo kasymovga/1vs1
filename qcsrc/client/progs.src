@@ -39,6 +39,7 @@ dlc.qh
 main.qh
 ../common/miscfunctions.qh
 radio.qh
+sbar.qh
 
 cvar.qc
 

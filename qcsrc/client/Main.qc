@@ -312,6 +312,7 @@ void CSQC_Init(void)
 	localcmd("alias -nadget2 -button9\n");
 
 	gametype = 0;
+	Sbar_GameType_Init();
 
 	// sbar_fields uses strunzone on the titles!
 	for(i = 0; i < MAX_SBAR_FIELDS; ++i)
@@ -1126,6 +1127,7 @@ void Gamemode_Init()
 		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), ";");
 		calledhooks |= HOOK_START;
 	}
+	Sbar_GameType_Init();
 }
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)

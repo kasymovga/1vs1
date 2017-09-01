@@ -4,10 +4,6 @@
 .vector server_angles;
 .float use_server_angles;
 
-void SUB_Null()
-{
-}
-
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
