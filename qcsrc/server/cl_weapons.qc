@@ -67,7 +67,8 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 					switchtolast = 1;
 			}
 			prev_valid = weaponwant;
-		}
+		} else
+			W_ShowWeaponList(pl);
 	}
 	if(first_valid)
 	{
