@@ -1849,7 +1849,7 @@ void ShowRespawnCountdown()
 void LeaveSpectatorMode()
 {
 	if(isJoinAllowed()) {
-		if(HG_ShowMenu(FALSE))
+		if (GameHookChain_JoinHandle())
 			return;
 
 		if(!teams_matter || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {

@@ -96,6 +96,14 @@ void HG_ObserverSpawn(void) {
     HG_GameHookChain_ObserverSpawn_Next();
 }
 
+var float() HG_JoinHandle_NextLink;
+float HG_JoinHandle() {
+	if (HG_ShowMenu(FALSE))
+		return TRUE;
+
+	return HG_JoinHandle_NextLink();
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -142,6 +150,8 @@ void HG_Init(void) {
 	GameHookChain_ClientCommandHandle = HG_ClientCommandHandle;
 	HG_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = HG_PlayerDamageHandle;
+	HG_JoinHandle_NextLink = GameHookChain_JoinHandle;
+	GameHookChain_JoinHandle = HG_JoinHandle;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
@@ -812,7 +822,7 @@ float HG_ShowMenu(float always) {
     if((self.hg_type1_picked && self.BUTTON_CHAT) && always < 2)
         return FALSE;
 
-    if(g_nadgets && HG_SelectableTypes(FALSE) != "" && (always || !self.hg_type1_picked || (g_nadgets_double && !self.hg_type2_picked)) && clienttype(self) == CLIENTTYPE_REAL) {
+    if(HG_SelectableTypes(FALSE) != "" && (always || !self.hg_type1_picked || (g_nadgets_double && !self.hg_type2_picked)) && clienttype(self) == CLIENTTYPE_REAL) {
         HG_WriteNadgetSelect();
         return TRUE;
     }
