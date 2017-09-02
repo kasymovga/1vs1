@@ -22,11 +22,12 @@ void W_Reload()
 // switch between weapons
 void W_SwitchWeapon(float imp)
 {
-	if (self.switchweapon != imp)
+	if (self.switchweapon != imp) {
 		if (client_hasweapon(self, imp, TRUE, TRUE))
 			W_SwitchWeapon_Force(self, imp);
 		else
 			W_ShowWeaponList(self);
+	}
 };
 
 .float weaponcomplainindex;
