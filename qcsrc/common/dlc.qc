@@ -20,11 +20,12 @@ float dlc_load(string dlc_name) {
 		s = car(list);
 		list = cdr(list);
 		if (s == dlc_name)
-			return TRUE;
+			goto skip_add_to_list;
 	}
 	s = strzone(strcat(dlc_list, " ", dlc_name));
 	unzone_ifneeded(dlc_list);
 	dlc_list = s;
+:skip_add_to_list
 	if (dlc_ready(dlc_name))
 		return TRUE;
 
