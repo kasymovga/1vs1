@@ -238,7 +238,6 @@ void aircraft_miniguns_do()
 
 float aircraft_physic_hook()
 {
-    vector ad;
     entity player,aircraft;
 
     player = self;
@@ -280,17 +279,9 @@ float aircraft_physic_hook()
 	else
 		aircraft_engine_off();
 
-
+	self.angles_x = -self.angles_x;
 	physic_aircraft();
-
-    aircraft.angles_x *= -1;
-    //player.angles_x *= -1;
-
-    ad = player.v_angle -  aircraft.angles;
-
-    aircraft.angles_x *= -1;
-    //player.angles_x *= -1;
-
+	self.angles_x = -self.angles_x;
 
 	setorigin(player, aircraft.origin + '0 0 48');
 	player.angles = aircraft.angles;
@@ -302,7 +293,7 @@ float aircraft_physic_hook()
 	//print("player.v_angle_x=", ftos(player.v_angle_x), "\n");
 	aircraft.vehicle_hudmodel.angles_z = aircraft.angles_z;
 	aircraft.vehicle_hudmodel.angles_y = aircraft.angles_y - player.v_angle_y;
-	aircraft.vehicle_hudmodel.angles_x = bound(-90, -1 * (player.v_angle_x + aircraft.angles_x), 90) * cos(aircraft.vehicle_hudmodel.angles_y * DEG2RAD);
+	aircraft.vehicle_hudmodel.angles_x = bound(-90, (aircraft.angles_x - player.v_angle_x), 90) * cos(aircraft.vehicle_hudmodel.angles_y * DEG2RAD);
 
 	if (aircraft.player_physic)
 		aircraft.player_physic.SendFlags |= 2;
@@ -721,7 +712,7 @@ float AircraftPhysic_SendEntity(entity to, float sf) {
 	}
 	if (sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);
+		WriteCoord(MSG_ENTITY, -self.vehicle.angles_x);
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_y);
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_z);
 		WriteCoord(MSG_ENTITY, self.vehicle.origin_x);
