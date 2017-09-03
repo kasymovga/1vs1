@@ -80,7 +80,7 @@ void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 	//pos_x = (CVAR(vid_conwidth) + 6 - w_width * 9) * 0.5 + w_width * idx;
 	//pos_y = (CVAR(vid_conheight) - w_height * sp) - 38; // move 38 pixels up
 	pos_x = CVAR(vid_conwidth) - w_width * sp - w_space;
-	pos_y = CVAR(vid_conheight) - 64 - w_height * (10 - idx);
+	pos_y = CVAR(vid_conheight) - 90 - w_height * (idx);
 	pos_z = 0;
 	vsize_x = w_width;
 	vsize_y = w_height;
@@ -2749,8 +2749,8 @@ void Sbar_Draw (void)
 
 		a = getstati(STAT_RUNES);
 		if (a) {
-			pos_x = 0;
-			pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y - sbar_fontsize_spec_y;
+			pos_x = CVAR(vid_conwidth) / 2;
+			pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y;
 			s = "";
 			for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2) {
 				if (i & a)
@@ -2760,7 +2760,7 @@ void Sbar_Draw (void)
 				if (i & a)
 					s = strcat(s, " ", RuneName(i));
 			}
-			drawcolorcodedstring(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
+			drawcolorcodedstringcenter(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
 		}
 
 		// draw gametype specific icons
