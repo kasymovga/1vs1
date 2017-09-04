@@ -1197,9 +1197,6 @@ void Ent_Init(float ignore)
 		forcefog = zone_ifneeded(ReadString());
 	}
 
-	if (sf & 8)
-		armorblockpercent = ReadByte() / 255.0;
-
 	if (sf & 16)
 		gamemenu = ReadByte();
 

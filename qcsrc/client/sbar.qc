@@ -2482,62 +2482,35 @@ void Sbar_Draw (void)
 			}
 		}
 
-		if(CVAR(sbar_hudselector) == 2) // combined health and armor display
-		{
-			vector v;
-			v = healtharmor_maxdamage(health, armor, armorblockpercent);
+		vector health_pos, armor_pos;
 
-			vector num_pos;
-			num_pos = bottom - '96 28 0';
-
-			x = floor(v_x + 1);
-
-			if(v_z) // fully armored
-			{
-				// here, armorideal > armor
-				drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-				drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_armor", '20 20 0', '1 1 1', sbar_alpha_fg * armor / v_y, DRAWFLAG_NORMAL);
-			}
-			else
-			{
-				drawpic(num_pos + '108 -4.5 0', "gfx/hud/sb_health", '20 20 0', '1 1 1', sbar_alpha_fg * v_y / armor, DRAWFLAG_NORMAL);
-				drawpic(num_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			}
-			Sbar_DrawXNum_Colored(num_pos, x, 24, sbar_alpha_fg); // draw the combined health and armor
+		if (CVAR(sbar_hudselector) == 0) { // old style layout with armor left of health
+			armor_pos = bottom - '96 28 0';
+			health_pos = bottom - '-14 28 0';
+		}
+		else {
+			health_pos = bottom - '96 28 0';
+			armor_pos = bottom - '-14 28 0';
 		}
 
-		else
+		// armor
+		x = armor;
+		if (x > 0)
 		{
-			vector health_pos, armor_pos;
-
-			if (CVAR(sbar_hudselector) == 0) { // old style layout with armor left of health
-				armor_pos = bottom - '96 28 0';
-				health_pos = bottom - '-14 28 0';
+			if (x > 45) {
+				drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				Sbar_DrawXNum_Colored(armor_pos, x, 24, sbar_alpha_fg);
 			}
 			else {
-				health_pos = bottom - '96 28 0';
-				armor_pos = bottom - '-14 28 0';
+				drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+				Sbar_DrawXNum_Colored(armor_pos, x, 24, (x+10)/55 * sbar_alpha_fg);
 			}
-
-			// armor
-			x = armor;
-			if (x > 0)
-			{
-				if (x > 45) {
-					drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-					Sbar_DrawXNum_Colored(armor_pos, x, 24, sbar_alpha_fg);
-				}
-				else {
-					drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
-					Sbar_DrawXNum_Colored(armor_pos, x, 24, (x+10)/55 * sbar_alpha_fg);
-				}
-			}
-
-			// health
-			x = health;
-			drawpic(health_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-			Sbar_DrawXNum_Colored(health_pos, x, 24, sbar_alpha_fg);
 		}
+
+		// health
+		x = health;
+		drawpic(health_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		Sbar_DrawXNum_Colored(health_pos, x, 24, sbar_alpha_fg);
 
 		// weapon icons
 		x = 1.0;
