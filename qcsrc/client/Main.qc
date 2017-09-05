@@ -394,6 +394,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_PHYSIC] = Ent_Physic;
 	ent_parsers[ENT_CLIENT_PHYSIC_SPIDERBOT] = Ent_PhysicSpiderbot;
 	ent_parsers[ENT_CLIENT_PHYSIC_AIRCRAFT] = Ent_PhysicAircraft;
+	ent_parsers[ENT_CLIENT_GAMESTATUS] = Ent_GameStatus;
 	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
 	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
 	ent_parsers[ENT_CLIENT_ENTCS_ENEMY] = Ent_ReadEntCSEnemy;
@@ -451,7 +452,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					print("trying to switch to unsupported team ", ftos(Team), "\n");
+					//print("trying to switch to unsupported team ", ftos(Team), "\n");
 					Team = COLOR_SPECTATOR;
 				}
 				break;
@@ -467,7 +468,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					print("trying to switch to unsupported team ", ftos(Team), "\n");
+					//print("trying to switch to unsupported team ", ftos(Team), "\n");
 					Team = COLOR_SPECTATOR;
 				}
 				break;

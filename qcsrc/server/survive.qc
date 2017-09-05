@@ -85,8 +85,7 @@ void survive_trigger() {
 		self.use();
 	}
 	survive_active = TRUE;
-	FOR_EACH_REALCLIENT(e)
-		centerprint(e, "^1New wave incoming!!!\n^1Try to survive\n");
+	GameStatus_Set("^1New wave incoming!!!\n^1Try to survive", 2);
 
 	self = oldself;
 	remove(self);
@@ -133,10 +132,10 @@ float survive_WinningCondition() {
 	//print("survive_WinningCondition()\n");
 	entity e, oldself, monster;
 	if (wave_not_found) {
-		FOR_EACH_REALCLIENT(e) {
-			centerprint(e, "^2All enemies destroyed!!!\n^2You successfully survived\n");
+		FOR_EACH_CLIENT(e)
 			e.winning = TRUE;
-		}
+
+		GameStatus_Set("^2All enemies destroyed!!!\n^2You successfully survived\n", 5);
 		e = find(world, targetname, "survive_success");
 		if (e) {
 			oldself = self;
@@ -188,9 +187,7 @@ float survive_WinningCondition() {
 	if (survive_plan_entity) {
 		float countdown = ceil(survive_plan_entity.nextthink - time);
 		if (survive_last_countdown != countdown) {
-			FOR_EACH_REALCLIENT(e)
-				centerprint(e, strcat("^3New wave starts in ", ftos(countdown), " seconds"));
-
+			GameStatus_Set(strcat("^3New wave starts in ", ftos(countdown), " seconds"), 1);
 			survive_last_countdown = countdown;
 		}
 	}

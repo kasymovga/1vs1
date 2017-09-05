@@ -54,8 +54,7 @@ void Roundbased_TeamArenaThink()
 		}
 	}
 	if (rb_team_check >= 0) {
-		FOR_EACH_REALCLIENT(plr)
-			centerprint(plr, "^2Awaiting players...\n");
+		GameStatus_Set("^2Awaiting players...\n", 1);
 
 		Roundbased_Active = 0;
 		Roundbased_SetRoundStart();
@@ -86,9 +85,9 @@ void Roundbased_TeamArenaThink()
 			rb_countdown_last = 0;
 			Roundbased_Active = 1;
 			FOR_EACH_REALCLIENT(plr) {
-				centerprint(plr, "^2New round started\n");
 				announce(plr, "announcer/robotic/begin.wav");
 			}
+			GameStatus_Set("^2New round started\n", 3);
 		}
 		else
 		{
@@ -102,10 +101,10 @@ void Roundbased_TeamArenaThink()
 			{
 				FOR_EACH_REALCLIENT(plr)
 				{
-					centerprint(plr, strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"));
 					if (countdown <= 3)
 						announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"));
 				}
+				GameStatus_Set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
 				rb_countdown_last = countdown;
 			}
 		}

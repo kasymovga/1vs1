@@ -96,6 +96,7 @@ cl_player.qh
 clientcommands.qh
 
 gametypevote.qh
+gamestatus.qh
 
 menu.qh
 gamemenu.qh
@@ -287,3 +288,4 @@ minstagib.qc
 radio.qc
 ../common/curl.qc
 badass.qc
+gamestatus.qc

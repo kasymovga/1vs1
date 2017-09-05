@@ -35,6 +35,7 @@ dlc.qh
 ../common/dlc.qh
 ../common/nadgets.qh
 ../common/ui.qh
+gamestatus.qh
 
 main.qh
 ../common/miscfunctions.qh
@@ -99,3 +100,4 @@ dlc.qc
 radio.qc
 ../common/rune.qc
 ../common/ui.qc
+gamestatus.qc
