@@ -817,7 +817,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	// don't join a team if we're not playing a team game
 	if not(teams_matter) {
-		self.team = 0;
+		pl.team = 0;
 		return 0;
 	}
 
@@ -842,7 +842,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		{
 			if(!only_return_best)
 			{
-				ChangeTeam(pl, selectedteam);
+				SetPlayerTeam(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
 				LogTeamchange(pl);
 			}
 			return selectedteam;
@@ -855,22 +855,22 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	if(!only_return_best)
 	{
-		TeamchangeFrags(self);
+		TeamchangeFrags(pl);
 		if(smallest == 1)
 		{
-			ChangeTeam(pl, COLOR_TEAM1);
+			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
 		}
 		else if(smallest == 2)
 		{
-			ChangeTeam(pl, COLOR_TEAM2);
+			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM2), TeamColorSkin(pl.team), FALSE);
 		}
 		else if(smallest == 3)
 		{
-			ChangeTeam(pl, COLOR_TEAM3);
+			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM3), TeamColorSkin(pl.team), FALSE);
 		}
 		else if(smallest == 4)
 		{
-			ChangeTeam(pl, COLOR_TEAM4);
+			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM4), TeamColorSkin(pl.team), FALSE);
 		}
 		else
 		{
