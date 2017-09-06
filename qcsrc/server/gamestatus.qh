@@ -1,0 +1,1 @@
+void GameStatus_Set(string status, float time);
