@@ -211,10 +211,6 @@ float spectatee_status;
 // short mapname
 string shortmapname;
 
-//remaining maptime announcer sounds, true when sound was already played
-float announcer_1min;
-float announcer_5min;
-
 // database for misc stuff
 float tempdb;
 vector hook_shotorigin;

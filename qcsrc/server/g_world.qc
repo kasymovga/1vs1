@@ -464,6 +464,8 @@ void precache()
     precache_sound ("announcer/robotic/2fragsleft.wav");
     precache_sound ("announcer/robotic/3fragsleft.wav");
     precache_sound ("announcer/robotic/terminated.wav");
+	precache_sound ("announcer/robotic/5minutesremain.wav");
+	precache_sound ("announcer/robotic/1minuteremains.wav");
 
     precache_model ("models/sprites/0.spr32");
     precache_model ("models/sprites/1.spr32");
@@ -1677,6 +1679,22 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
 }
 
+var void(float timelimit) check_time_remaining;
+void check_0min_remaining(float timelimit) { }
+void check_1min_remaining(float timelimit) {
+	if (time + 60 >= timelimit) {
+		play2all("announcer/robotic/1minuteremains.wav");
+		check_time_remaining = check_0min_remaining;
+	}
+}
+
+void check_5min_remaining(float timelimit) {
+	if (time + 300 >= timelimit) {
+		play2all("announcer/robotic/5minutesremain.wav");
+		check_time_remaining = check_1min_remaining;
+	}
+}
+
 /*
 ============
 CheckRules_World
@@ -1737,11 +1755,31 @@ void CheckRules_World()
 		return;
 	}
 
+	if (time < game_starttime + frametime) {
+		if (!inWarmupStage || time + 10 >= game_starttime) {
+			float f = game_starttime - time;
+			if (f >= 1) {
+				if (floor(f - frametime) != floor(f)) {
+					if (f < 4)
+						play2all(strcat("announcer/robotic/", ftos(floor(f)), ".wav"));
+
+					GameStatus_Set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
+				}
+			}
+			if (time >= game_starttime) {
+				GameStatus_Set("^1Begin!", 1);
+				play2all("announcer/robotic/begin.wav");
+				check_time_remaining = check_5min_remaining;
+			}
+		}
+	} else
+		check_time_remaining(timelimit);
+
 	if(checkrules_suddendeathend) {
 		if(!checkrules_suddendeathwarning)
 		{
 			checkrules_suddendeathwarning = TRUE;
-			bcenterprint(GameHook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"));
+			GameStatus_Set(GameHook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
 		}
 	} else {
 		if (timelimit)

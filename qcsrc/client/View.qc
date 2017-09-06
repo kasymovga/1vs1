@@ -12,30 +12,6 @@ float DPCONTENTS_SOLID = 1; // blocks player movement
 float DPCONTENTS_BODY = 32; // blocks player movement
 float DPCONTENTS_CORPSE = 64; // blocks player movement
 float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
-/**
- * Checks whether the server initiated a map restart (stat_game_starttime changed)
- *
- * TODO: Use a better solution where a common shared entitiy is used that contains
- * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
- * and STAT_FRAGLIMIT to be auto-sent)
- */
-void CheckForGamestartChange() {
-	float startTime;
-	startTime = getstatf(STAT_GAMESTARTTIME);
-	if (previous_game_starttime != startTime) {
-		if ((time + 5.0) < startTime) {
-			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(self, CHAN_VOICE, "announcer/robotic/prepareforbattle.wav", VOL_BASEVOICE, ATTN_NONE);
-		}
-		if (time < startTime) {
-			restartAnnouncer = spawn();
-			restartAnnouncer.think = restartAnnouncer_Think;
-			restartAnnouncer.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
-		}
-	}
-	previous_game_starttime = startTime;
-}
-
 float drawtime;
 
 #if 0
@@ -336,9 +312,6 @@ void CSQC_UpdateView(float w, float h)
 		localcmd("\ncl_hook_gameend;");
 		calledhooks |= HOOK_END;
 	}
-
-	CheckForGamestartChange();
-	maptimeAnnouncer();
 
 	fov = cvar("fov");
 	if(button_zoom || fov <= 59.5)
