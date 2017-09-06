@@ -569,12 +569,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	da = max(self.armorvalue, 0);
 
 	damage = damage * GameHookChain_PlayerDamageMod;
-	if(!DEATH_ISSPECIAL(deathtype))
-	{
-		damage *= sqrt(bound(1.0, self.cvar_cl_handicap, 100.0));
-		if(self != attacker)
-			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
-	}
 
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
