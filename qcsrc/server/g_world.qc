@@ -1679,8 +1679,8 @@ void ShuffleMaplist()
 	cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
 }
 
-var void(float timelimit) check_time_remaining;
 void check_0min_remaining(float timelimit) { }
+var void(float timelimit) check_time_remaining = check_0min_remaining;
 void check_1min_remaining(float timelimit) {
 	if (time + 60 >= timelimit) {
 		play2all("announcer/robotic/1minuteremains.wav");
