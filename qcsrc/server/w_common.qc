@@ -410,8 +410,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			lag = 0;
 		if(clienttype(self) != CLIENTTYPE_REAL)
 			lag = 0;
-		if(g_antilag != 2)
-			lag = 0; // only do hitscan, but no antilag
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)

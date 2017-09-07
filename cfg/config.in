@@ -1131,3 +1131,5 @@ set g_badass_color -2
 set g_badass_killcount 3
 set g_badass_kdr 1.5
 set g_badass_leader 1
+
+set g_antilag 2 "AntiLag"

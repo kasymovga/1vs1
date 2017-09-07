@@ -209,47 +209,6 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 		w_shotdir = normalize(trueaimpoint - w_shotorg);
 	}
 
-	if (antilag)
-	{
-		if (g_antilag == 1) // switch to "ghost" if not hitting original
-		{
-			traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
-			if (!trace_ent.takedamage)
-			{
-				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-				if (trace_ent.takedamage && trace_ent.classname == "player")
-				{
-					entity e;
-					e = trace_ent;
-					traceline(w_shotorg, e.origin, MOVE_NORMAL, ent);
-					if(trace_ent == e)
-						w_shotdir = normalize(trace_ent.origin - w_shotorg);
-				}
-			}
-		}
-		else if(g_antilag == 3) // client side hitscan
-		{
-			if (ent.cursor_trace_ent)                 // client was aiming at someone
-			if (ent.cursor_trace_ent != ent)         // just to make sure
-			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (ent.cursor_trace_ent.classname == "player") // and actually a player
-			{
-				// verify that the shot would miss without antilag
-				// (avoids an issue where guns would always shoot at their origin)
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent);
-				if (!trace_ent.takedamage)
-				{
-					// verify that the shot would hit if altered
-					traceline(w_shotorg, ent.cursor_trace_ent.origin, MOVE_NORMAL, ent);
-					if (trace_ent == ent.cursor_trace_ent)
-						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
-					else
-						print("antilag fail\n");
-				}
-			}
-		}
-	}
-
 	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
 
 	if (!g_norecoil)
