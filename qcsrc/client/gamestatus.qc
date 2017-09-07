@@ -1,18 +1,18 @@
 void GameStatus_Draw() {
-	vector pos, size;
+	vector pos, _size;
 	pos = self.origin;
 	string tail = self.message, head;
 	float n;
 	n = strstrofs(tail, "\n", 0);
-	size = sbar_fontsize * (1 + self.alpha) * 0.5;
+	_size = sbar_fontsize * (1 + self.alpha) * 0.5;
 	while (n >= 0) {
 		head = substring(tail, 0, n);
 		tail = substring(tail, n + 1, -1);
-		drawcolorcodedstringcenter(pos, head, size, self.alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstringcenter(pos, head, _size, self.alpha, DRAWFLAG_NORMAL);
 		n = strstrofs(tail, "\n", 0);
-		pos_y += size_y;
+		pos_y += _size_y;
 	}
-	drawcolorcodedstringcenter(pos, tail, size, self.alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstringcenter(pos, tail, _size, self.alpha, DRAWFLAG_NORMAL);
 }
 
 void GameStatus_Remove() {
