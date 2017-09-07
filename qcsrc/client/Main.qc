@@ -548,7 +548,6 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
-void TrueAim_Init();
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
@@ -558,8 +557,6 @@ void PostInit(void)
 	playerchecker = spawn();
 	playerchecker.think = Playerchecker_Think;
 	playerchecker.nextthink = time + 0.2;
-
-	TrueAim_Init();
 
 	postinit = true;
 }

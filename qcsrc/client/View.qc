@@ -102,102 +102,6 @@ vector GetCurrentFov(float fov)
 float zoomscript_caught;
 
 vector wcross_origin;
-entity trueaim;
-entity trueaim_rifle;
-
-#define SHOTTYPE_HITTEAM 1
-#define SHOTTYPE_HITOBSTRUCTION 2
-#define SHOTTYPE_HITWORLD 3
-#define SHOTTYPE_HITENEMY 4
-
-void TrueAim_Init()
-{
-	trueaim = spawn();
-	trueaim.classname = "trueaim";
-	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = spawn();
-	trueaim_rifle.classname = "trueaim_rifle";
-	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-}
-
-float EnemyHitCheck()
-{
-	float t;
-	wcross_origin = project_3d_to_2d(trace_endpos);
-	wcross_origin_z = 0;
-	if(trace_networkentity < 1)
-		return SHOTTYPE_HITWORLD;
-	if(trace_networkentity > maxclients)
-		return SHOTTYPE_HITWORLD;
-	t = GetPlayerColor(trace_networkentity - 1);
-	if(teamplay)
-	if(t == myteam)
-		return SHOTTYPE_HITTEAM;
-	if(t == COLOR_SPECTATOR)
-		return SHOTTYPE_HITWORLD;
-	return SHOTTYPE_HITENEMY;
-}
-
-float TrueAimCheck()
-{
-	float nudge = 1; // added to traceline target and subtracted from result
-	vector vecs, trueaimpoint, w_shotorg;
-	vector mi, ma, dv;
-	float shottype;
-
-	mi = ma = '0 0 0';
-
-	switch(activeweapon)
-	{
-		case WEP_TUBA: // no aim
-		case WEP_PORTO: // shoots from eye
-		case WEP_HOOK: // no trueaim
-		case WEP_GRENADE_LAUNCHER: // toss curve
-			return SHOTTYPE_HITWORLD;
-		case WEP_CAMPINGRIFLE:
-			if(zoomscript_caught)
-			{
-				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, trueaim);
-				return EnemyHitCheck();
-			}
-			break;
-	}
-
-	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
-
-	if(activeweapon == WEP_CAMPINGRIFLE)
-		traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, trueaim_rifle);
-	else
-		traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, trueaim);
-	trueaimpoint = trace_endpos;
-
-	if(vecs_x > 0)
-		vecs_y = -vecs_y;
-	else
-		vecs = '0 0 0';
-
-	dv = view_right * vecs_y + view_up * vecs_z;
-	w_shotorg = view_origin + dv;
-
-	// now move the vecs forward as much as requested if possible
-	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs_x + nudge), MOVE_NORMAL, trueaim); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
-	w_shotorg = trace_endpos - view_forward * nudge;
-
-	tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, trueaim);
-	shottype = EnemyHitCheck();
-	if(shottype != SHOTTYPE_HITWORLD)
-		return shottype;
-	
-#if 0
-	// FIXME WHY DOES THIS NOT WORK FOR THE ROCKET LAUNCHER?
-	// or rather, I know why, but see no fix
-	if(vlen(trace_endpos - trueaimpoint) > vlen(ma) + vlen(mi) + 1)
-		// yes, this is an ugly hack... but it seems good enough to find out whether the test hits the same place as the initial trace
-		return SHOTTYPE_HITOBSTRUCTION;
-#endif
-	
-	return SHOTTYPE_HITWORLD;
-}
 
 float vshield;
 void DrawTintEffects(void) {
@@ -258,8 +162,6 @@ void CSQC_UpdateView(float w, float h)
 {
 	entity e;
 	float fov;
-	float i, j;
-	vector v;
 	read_cvars();
 
 	dprint_load();
@@ -476,34 +378,12 @@ void CSQC_UpdateView(float w, float h)
 
         // crosshair goes VERY LAST
         if (draw_crosshair) {
-			// TrueAim check
-			float shottype;
 			float bullets, ring_scale;
 			// wcross_origin = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
-            if(CVAR(crosshair_hittest))
-			{
-				vector wcross_oldorigin;
-				wcross_oldorigin = wcross_origin;
-                shottype = TrueAimCheck();
-				if(shottype == SHOTTYPE_HITWORLD)
-				{
-					v = wcross_origin - wcross_oldorigin;
-					v_x /= CVAR(vid_conwidth);
-					v_y /= CVAR(vid_conheight);
-					if(vlen(v) > 0.01)
-						shottype = SHOTTYPE_HITOBSTRUCTION;
-				}
-				if(!CVAR(crosshair_hittest_showimpact))
-					wcross_origin = wcross_oldorigin;
-			}
-            else
-                shottype = SHOTTYPE_HITWORLD;
-
             string wcross_style;
             wcross_style = cvar_string("crosshair");
-
             if (wcross_style != "0") {
                 vector wcross_color, wcross_size;
                 string wcross_wep, wcross_name;
@@ -537,9 +417,6 @@ void CSQC_UpdateView(float w, float h)
 
                 wcross_name = strcat("gfx/crosshair", wcross_style);
 
-				if(shottype == SHOTTYPE_HITENEMY)
-					wcross_sizefloat *= CVAR(crosshair_hittest); // is not queried if hittest is 0
-
                 wcross_size = drawgetimagesize(wcross_name);
                 wcross_size_x *= wcross_sizefloat;
                 wcross_size_y *= wcross_sizefloat;
@@ -553,23 +430,10 @@ void CSQC_UpdateView(float w, float h)
 				else
 					bullets = 0;
 				
-                if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && CVAR(crosshair_hittest_blur) && !CVAR(chase_active)))
-                {
-                    wcross_alpha *= 0.04 * 0.75;
-                    for(i = -2; i <= 2; ++i)
-                        for(j = -2; j <= 2; ++j)
-						{
-							if (bullets)
-								drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x * ring_scale + i) - '0 0.5 0' * (wcross_size_y * ring_scale + j), strcat("gfx/hud/rifle_ring_", ftos(bullets)), wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
-                            drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x + i) - '0 0.5 0' * (wcross_size_y + j), wcross_name, wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
-						}
-                }
-                else
-                {
-					if (bullets)
-						drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x * ring_scale) - '0 0.5 0' * (wcross_size_y * ring_scale), strcat("gfx/hud/rifle_ring_", ftos(bullets)), wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
-                    drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x) - '0 0.5 0' * ( wcross_size_y), wcross_name, wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
-                }
+				if (bullets)
+					drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x * ring_scale) - '0 0.5 0' * (wcross_size_y * ring_scale), strcat("gfx/hud/rifle_ring_", ftos(bullets)), wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
+
+				drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x) - '0 0.5 0' * ( wcross_size_y), wcross_name, wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
 				if (CVAR(crosshair_dot))
 				{
 					vector dot_color = wcross_color;
