@@ -50,7 +50,6 @@ void survive_trigger() {
 		return;
 	}
 	entity oldself = self;
-	entity e;
 	survive_monster_quant = (1 - g_survive_monster_factor);
 	survive_active = FALSE;
 	FOR_EACH_CLIENT(self) {

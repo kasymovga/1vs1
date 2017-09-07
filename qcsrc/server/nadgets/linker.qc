@@ -20,7 +20,7 @@ void HG_Linker_Remove(void) {
 #define HEAL_PAUSEROT_DEFAULT -1
 void HG_Linker_Think(void) {
     entity p, e;
-    float denom, thealth, tarmor, sharefactor;
+    float denom, thealth, tarmor;
 
     if(!self.owner.iscreature || self.owner.team != self.team) {
         HG_Linker_Remove();
