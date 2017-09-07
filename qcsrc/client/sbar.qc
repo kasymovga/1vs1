@@ -6,7 +6,6 @@ float weapon_hits[WEP_COUNT];
 float weapon_fired[WEP_COUNT];
 float weapon_number;
 
-float last_weapon;
 float weapontime;
 
 float sbar_alpha_fg;
