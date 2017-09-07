@@ -5,12 +5,12 @@ void SetConWidthHeight() {
 
 	float ratio = width / height;
 	if (ratio < 1.33) {
-		float conwidth = 800;
-		cvar_set("vid_conwidth", ftos(conwidth));
-		cvar_set("vid_conheight", ftos(conwidth / ratio));
+		float _conwidth = 800;
+		cvar_set("vid_conwidth", ftos(_conwidth));
+		cvar_set("vid_conheight", ftos(_conwidth / ratio));
 	} else {
-		float conheight = 600;
-		cvar_set("vid_conheight", ftos(conheight));
-		cvar_set("vid_conwidth", ftos(conheight * ratio));
+		float _conheight = 600;
+		cvar_set("vid_conheight", ftos(_conheight));
+		cvar_set("vid_conwidth", ftos(_conheight * ratio));
 	}
 }
