@@ -196,6 +196,12 @@ float Freeze_FragLimitOverride() {
 	return cvar("g_freeze_winlimit");
 }
 
+var void(entity spectatee) Freeze_SpecateCopy_NextLink;
+void Freeze_SpecateCopy(entity spectatee) {
+	self.deadflag = spectatee.deadflag;
+	Freeze_SpecateCopy_NextLink(spectatee);
+}
+
 void Freeze_Init()
 {
 	CACHE_CVAR(g_freeze);
@@ -217,6 +223,8 @@ void Freeze_Init()
 	GameHookChain_SpeedMod = Freeze_SpeedMod;
 	Freeze_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Freeze_PlayerDamageHandle;
+	Freeze_SpecateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = Freeze_SpecateCopy;
 	GameHook_FragsHandle = Freeze_HandleFrags;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Freeze_FragLimitOverride;
