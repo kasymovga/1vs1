@@ -1109,17 +1109,8 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if(gametype == GAME_ONSLAUGHT) {
-		print(strcat("Using ", minimapname, " as minimap.\n"));
-		precache_pic("gfx/ons-cp-neutral.tga");
-		precache_pic("gfx/ons-cp-red.tga");
-		precache_pic("gfx/ons-cp-blue.tga");
-		precache_pic("gfx/ons-frame.tga");
-		precache_pic("gfx/ons-frame-team.tga");
-	} else if(gametype == GAME_KEYHUNT) {
-		precache_pic("gfx/sb_key_carrying");
-		precache_pic("gfx/sb_key_carrying_outline");
-	}
+	if(gametype == GAME_ONSLAUGHT)
+		search_and_precache("gfx/ons-*");
 
 	if not(isdemo())
 	{
