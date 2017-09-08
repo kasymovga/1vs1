@@ -403,7 +403,7 @@ void Ent_Physic(float isnew)
 		if (physic_movetype == MOVETYPE_NOCLIP)
 			self.dphitcontentsmask = 0;
 		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BODY;
 		if (f & 2048)
 			physic_gravity_factor = ReadCoord();
 		else
