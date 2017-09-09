@@ -310,7 +310,9 @@ void HG_Sentry_Levitate(void) {
     // FIXME: doesn't work properly without g_nadgets_sentry_levitation
     // TODO: maybe move this to CSQC
 
-    float shift; for(shift = 0; shift < PI * 2; shift += 0.1) {
+    float shift;
+	if (g_nadgets_sentry_levitation)
+	for(shift = 0; shift < PI * 2; shift += 0.1) {
         vector new_origin = self.origin + frametime * '0 0 8' * sin(self.spawntime + time + self.phase + shift);
         tracebox(new_origin, self.mins, self.maxs, new_origin, MOVE_NORMAL, self);
 
@@ -590,7 +592,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.team = self.team;
     e.realowner = self; // can't use owner here because we want to be blocked by it
     e.solid = SOLID_BBOX;
-    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : MOVETYPE_WALK);
+    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_hookable ? MOVETYPE_WALK : MOVETYPE_TOSS));
     e.angles = '0 360 0' * random();
     e.reset = HG_Sentry_Remove;
     e.think = HG_Sentry_Think;
