@@ -262,7 +262,7 @@ vector CSQCPhysic_SetCamera()
 			v = trace_endpos;
 		}
 		if (autocvar_cl_stairsmoothspeed) {
-			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time >= 0) {
+			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time > 0) {
 				stairsmoothz = v_z;
 			} else {
 				if (v_z > stairsmoothz) {
