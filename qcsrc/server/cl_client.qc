@@ -770,6 +770,7 @@ void PutClientInServer()
 			return;
 		}
 		PlayerClear(FALSE);
+		PhysicMarkAsTeleported(self);
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;

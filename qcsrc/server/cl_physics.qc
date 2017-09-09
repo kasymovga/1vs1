@@ -432,6 +432,7 @@ void Physic_FrameBeginHook()
 				if(self.movetype == MOVETYPE_NONE)
 					self.movetype = MOVETYPE_WALK;
 
+				PhysicMarkAsTeleported(self);
 				self.disableclientprediction = 0;
 			}
 		} else {
@@ -615,12 +616,6 @@ void PhysicReadCvars()
 	dodging_ReadCvars();
 }
 
-//3588
-//2048
-//1024
-//512
-//4
-
 float Physic_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
@@ -727,4 +722,11 @@ float Physic_SendEntity(entity to, float sf)
 	}
 	self = oldself;
 	return TRUE;
+}
+
+void PhysicMarkAsTeleported(entity pl) {
+	if (pl.player_physic)
+		pl.player_physic.SendFlags |= 4096;
+
+	self.teleport_time = time;
 }

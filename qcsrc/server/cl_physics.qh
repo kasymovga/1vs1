@@ -1,3 +1,4 @@
 float IsFlying(entity a);
 void PhysicEnableCSQC();
+void PhysicMarkAsTeleported(entity pl);
 float g_jetpack_fuel;

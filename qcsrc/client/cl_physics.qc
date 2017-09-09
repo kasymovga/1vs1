@@ -204,6 +204,7 @@ entity physic;
 float stairsmoothz;
 .vector pmove_origin;
 .vector pmove_velocity;
+float was_teleported;
 vector CSQCPhysic_SetCamera()
 {
 	vector v;
@@ -262,8 +263,9 @@ vector CSQCPhysic_SetCamera()
 			v = trace_endpos;
 		}
 		if (autocvar_cl_stairsmoothspeed) {
-			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time > 0) {
+			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time > 0 || was_teleported) {
 				stairsmoothz = v_z;
+				was_teleported = FALSE;
 			} else {
 				if (v_z > stairsmoothz) {
 					v_z = bound(v_z - sv_stepheight, stairsmoothz + frametime * autocvar_cl_stairsmoothspeed, v_z);
@@ -408,9 +410,10 @@ void Ent_Physic(float isnew)
 			physic_gravity_factor = ReadCoord();
 		else
 			physic_gravity_factor = 1;
-		if (f & 4096)
+		if (f & 4096) {
 			physic_start_teleport_time = ReadCoord();
-		else
+			was_teleported = TRUE;
+		} else
 			physic_start_teleport_time = -1;
 	}
 }
