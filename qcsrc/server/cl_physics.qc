@@ -429,8 +429,10 @@ void Physic_FrameBeginHook()
 		if (allowed_to_move)
 		{
 			if(self.disableclientprediction == 2) {
-				if(self.movetype == MOVETYPE_NONE)
+				if(self.movetype == MOVETYPE_NONE) {
 					self.movetype = MOVETYPE_WALK;
+					self.teleport_time = time + 1;
+				}
 
 				self.disableclientprediction = 0;
 			}
