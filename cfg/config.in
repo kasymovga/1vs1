@@ -1,3 +1,5 @@
+set bot_ai_custom_weapon_priority_mid "11 16 18 9 4 5 3 7 15 14 6 13 8 17 2 1"	"Desired weapons for middle distances ordered by priority"
+set bot_ai_custom_weapon_priority_close "11 16 17 7 3 13 14 18 8 6 4 2 5 15 1"	"Desired weapons for close distances ordered by priority"
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
 set bot_messages_fragged_priv "nice one|oh|just luck"
