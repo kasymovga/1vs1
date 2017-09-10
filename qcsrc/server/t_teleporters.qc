@@ -80,6 +80,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
 	UpdateCSQCProjectileAfterTeleport(player);
+	PhysicMarkAsTeleported(player);
 
 	if(player.classname == "player")
 	{
