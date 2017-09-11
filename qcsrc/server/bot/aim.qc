@@ -142,8 +142,7 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if (e.BUTTON_CHAT)
 		return FALSE;
-	if(g_minstagib)
-	if(e.items & IT_STRENGTH)
+	if(e.items & IT_INVISIBILITY)
 		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;

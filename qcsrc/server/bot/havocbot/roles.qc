@@ -218,8 +218,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			if (distance < 100 || distance > sradius)
 				continue;
 
-			if(g_minstagib)
-			if(head.items & IT_STRENGTH)
+			if(head.items & IT_INVISIBILITY)
 				continue;
 
 			// rate only visible enemies
