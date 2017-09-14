@@ -210,16 +210,6 @@ float minstagib_WeaponSpawnHandle(float wpn) {
 	return TRUE;
 }
 
-var float() minstagib_JumpVelocityMod_NextLink;
-float minstagib_JumpVelocityMod() {
-	return ((self.items & IT_INVINCIBLE) ? g_minstagib_speed_jumpheight : 1) * minstagib_JumpVelocityMod_NextLink();
-}
-
-var float() minstagib_SpeedMod_NextLink;
-float minstagib_SpeedMod() {
-	return ((self.items & IT_INVINCIBLE) ? g_minstagib_speed_moverate : 1) * minstagib_SpeedMod_NextLink();
-}
-
 var float(float doreduce) minstagib_ThrowWeaponAllowed_NextLink;
 float minstagib_ThrowWeaponAllowed(float doreduce) {
 	if (self.ammo_cells <= 0 || doreduce)
@@ -327,10 +317,6 @@ void minstagib_init() {
 	GameHookChain_HealthArmorFuelModsSet = minstagib_HealthArmorFuelModsSet;
 	minstagib_WeaponSpawnHandle_NextLink = GameHookChain_WeaponSpawnHandle;
 	GameHookChain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
-	minstagib_JumpVelocityMod_NextLink = GameHookChain_JumpVelocityMod;
-	GameHookChain_JumpVelocityMod = minstagib_JumpVelocityMod;
-	minstagib_SpeedMod_NextLink = GameHookChain_SpeedMod;
-	GameHookChain_SpeedMod = minstagib_SpeedMod;
 	minstagib_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
 #if 0
