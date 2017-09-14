@@ -13,8 +13,6 @@ float g_mirrordamage;
 float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
-float g_weapondamagefactor;
-float g_weaponforcefactor;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
@@ -702,15 +700,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 			}
 		}
-
-		if not(DEATH_ISSPECIAL(deathtype))
-		{
-			damage *= g_weapondamagefactor;
-			mirrordamage *= g_weapondamagefactor;
-			force = force * g_weaponforcefactor;
-			mirrorforce *= g_weaponforcefactor;
-		}
-
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
@@ -1216,8 +1205,6 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_teamdamage_threshold);
 	CACHE_CVAR(g_throughfloor_damage);
 	CACHE_CVAR(g_throughfloor_force);
-	CACHE_CVAR(g_weapondamagefactor);
-	CACHE_CVAR(g_weaponforcefactor);
 	CACHE_CVAR(g_balance_selfdamagepercent);
 	//Extra sounds
 	EXTRA_ANNOUNCER(meleefrag);
