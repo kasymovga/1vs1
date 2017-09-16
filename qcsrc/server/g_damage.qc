@@ -757,8 +757,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(IsFlying(targ))
 								yoda = 1;
 
-							if(g_minstagib)
-							if(targ.items & IT_STRENGTH)
+							if(targ.items & IT_INVISIBILITY)
 								yoda = 1;
 
 							if(deathtype & HITTYPE_HEADSHOT)

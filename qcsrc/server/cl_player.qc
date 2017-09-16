@@ -5,6 +5,7 @@ float g_chat_flood_lmax;
 float g_chat_flood_lmax_team;
 float g_chat_flood_lmax_tell;
 float g_chat_flood_notify_flooder;
+float g_chat_flood_damage_flooder;
 float g_chat_flood_spl;
 float g_chat_flood_spl_team;
 float g_chat_flood_spl_tell;
@@ -1181,6 +1182,8 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 			if(cmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
+		if (g_chat_flood_damage_flooder)
+			Damage(source, world, world, g_chat_flood_damage_flooder, DEATH_HURTTRIGGER, source.origin, '0 0 0');
 	}
 	else if(privatesay)
 	{
@@ -1549,6 +1552,7 @@ void Player_Init() {
 	CACHE_CVAR(g_chat_flood_lmax_team);
 	CACHE_CVAR(g_chat_flood_lmax_tell);
 	CACHE_CVAR(g_chat_flood_notify_flooder);
+	CACHE_CVAR(g_chat_flood_damage_flooder);
 	CACHE_CVAR(g_chat_flood_spl);
 	CACHE_CVAR(g_chat_flood_spl_team);
 	CACHE_CVAR(g_chat_flood_spl_tell);
