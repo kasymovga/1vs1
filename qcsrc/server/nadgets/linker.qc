@@ -35,7 +35,7 @@ void HG_Linker_Think(void) {
 #endif
 
     FOR_EACH_PLAYER(p) {
-        if(p.team != self.team || (!teams_matter && p != self.owner)) {
+        if(p.team != self.team || (!teamplay && p != self.owner)) {
             if(p.hg_linker == self)
                 p.hg_linker = world;
         } else if(p.hg_linker == self) {
@@ -69,7 +69,7 @@ void HG_Linker_Think(void) {
 
 #if 0
         if(self.hg_adept)
-            if(p != self.owner && !p.frozen && (!teams_matter || p.team != self.team))
+            if(p != self.owner && !p.frozen && (!teamplay || p.team != self.team))
                 HG_Linker_Adept_Push(p);
 #endif
     }
@@ -79,7 +79,7 @@ void HG_Linker_Think(void) {
 
     if(self.hg_adept)
         for(p = findchainflags(flags, FL_PROJECTILE); p; p = p.chain)
-            if(p.classname != "bullet" && p.owner != self.owner && (!teams_matter || p.owner.team != self.team))
+            if(p.classname != "bullet" && p.owner != self.owner && (!teamplay || p.owner.team != self.team))
                 HG_Linker_Adept_Push(p);
 #endif
 

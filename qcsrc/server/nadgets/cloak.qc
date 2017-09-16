@@ -68,7 +68,7 @@ float HG_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
 
     if(viewer && viewer != plr) {
         if(
-            (teams_matter && viewer.team == plr.team) ||
+            (teamplay && viewer.team == plr.team) ||
             // (viewer.hg_stealth && (!Buffs_Present(plr, BUFF_ADEPT) || Buffs_Present(viewer, BUFF_ADEPT))) ||
             viewer.hg_stealth ||
             viewer.classname != "player"

@@ -901,7 +901,7 @@ void UpdateSelectedPlayer()
 	if(self.cvar_cl_shownames == 0)
 		return;
 
-	if(self.cvar_cl_shownames == 1 && !teams_matter)
+	if(self.cvar_cl_shownames == 1 && !teamplay)
 		return;
 
 	makevectors(self.v_angle); // sets v_forward
@@ -950,7 +950,7 @@ void UpdateSelectedPlayer()
 			{
 				string namestr, healthstr;
 				namestr = playername(selected);
-				if(teams_matter)
+				if(teamplay)
 				{
 					healthstr = ftos(floor(selected.health));
 					if(self.team == selected.team)
@@ -1021,7 +1021,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 
 	if(source.classname != "player")
 		colorstr = "^0"; // black for spectators
-	else if(teams_matter)
+	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
 		teamsay = FALSE;
@@ -1411,7 +1411,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			break;
 		case VOICETYPE_TEAMRADIO:
 			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teams_matter || msg_entity.team == self.team)
+				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);

@@ -246,14 +246,14 @@ void HG_Sentry_Interrupt_Capture(void) {
 void HG_Sentry_SetOwner(entity sentry, entity newowner) {
     HG_Waypoint_Remove(sentry.hg_waypoint);
 
-    sentry.team = (teams_matter ? newowner.team : 0);
+    sentry.team = (teamplay ? newowner.team : 0);
     sentry.colormap = num_for_edict(newowner);
     sentry.aiment.colormap = sentry.colormap;
 
     if(newowner) {
         sentry.skin = 0;
         sentry.aiment.effects &~= EF_NODRAW;
-        sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * TeamColor((teams_matter ? sentry.team : COLOR_TEAM3));
+        sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * TeamColor((teamplay ? sentry.team : COLOR_TEAM3));
     } else {
         sentry.skin = 1;
         sentry.aiment.effects |= EF_NODRAW;
@@ -395,7 +395,7 @@ void HG_Sentry_Think(void) {
 
     HG_Sentry_Levitate();
 
-    if(o && ((teams_matter && self.team != o.team) || !o.iscreature))
+    if(o && ((teamplay && self.team != o.team) || !o.iscreature))
         o = world;
 
     if(!o || PLAYER_DEAD(o)) {
@@ -541,7 +541,7 @@ void HG_Sentry_Trigger(void) {
 
             Damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
             sound(e, CHAN_WEAPON, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"), VOL_BASE, ATTN_NORM);
-            W_Zapper_Attack2_Effect((teams_matter ? self.team : COLOR_TEAM3), o, end_visual);
+            W_Zapper_Attack2_Effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
 
 #if 0
             if(targ.takedamage && Buffs_Present(self, BUFF_ADEPT)) {

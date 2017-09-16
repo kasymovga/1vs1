@@ -154,7 +154,7 @@ void spawnfunc_info_player_deathmatch (void)
 
 void spawnpoint_use()
 {
-	if(teams_matter)
+	if(teamplay)
 	if(have_team_spawns)
 	{
 		self.team = activator.team;
@@ -635,7 +635,7 @@ void PutObserverInServer(float frags_team_reset)
 
 float RestrictSkin(float s)
 {
-	if(!teams_matter)
+	if(!teamplay)
 		return s;
 	if(s == 6)
 		return 6;
@@ -658,7 +658,7 @@ void FixPlayermodel()
 	if (sv_defaultcharacter) {
 		defaultskin = 0;
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			defaultmodel =
 					((self.team == COLOR_TEAM1) ? sv_defaultplayermodel_red :
@@ -717,7 +717,7 @@ void FixPlayermodel()
 	if(chmdl || oldskin != self.skinindex)
 		self.species = player_getspecies(); // model or skin has changed
 
-	if(!teams_matter)
+	if(!teamplay)
 		if (sv_defaultplayercolors > -2) {
 			float colors = GameHookChain_PlayerColorsMod(sv_defaultplayercolors);
 			if (self.clientcolors != colors)
@@ -985,7 +985,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	if (sf & 32) {
 		WriteByte(MSG_ENTITY, teamplay);
 		t = 0;
-		if(teams_matter) {
+		if(teamplay) {
 			CheckAllowedTeams(self);
 			if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
 		}
@@ -1180,7 +1180,7 @@ void ClientKill (void)
 void DoTeamChange(float destteam)
 {
 	float t, c0;
-	if(!teams_matter)
+	if(!teamplay)
 	{
 		if(destteam >= 0)
 			SetPlayerColors(self, destteam);
@@ -1294,7 +1294,7 @@ void ClientConnect (void)
 	} else if (sv_spectate == 1) {
 		self.classname = "observer";
 	} else {
-		if(teams_matter)
+		if(teamplay)
 		{
 			if(g_balance_teams || g_balance_teams_force)
 			{
@@ -1534,10 +1534,10 @@ float TeamBubble_customizeentityforclient()
 
 void UpdateTeamBubble()
 {
-	if (!self.modelindex || !teams_matter)
+	if (!self.modelindex || !teamplay)
 		return;
 	// spawn a teambubble entity if needed
-	if (!self.teambubbleentity && teams_matter)
+	if (!self.teambubbleentity && teamplay)
 	{
 		self.teambubbleentity = spawn();
 		self.teambubbleentity.owner = self;
@@ -1554,22 +1554,6 @@ void UpdateTeamBubble()
 		self.teambubbleentity.effects = EF_LOWPRECISION;
 	}
 }
-
-// LordHavoc: this hack will be removed when proper _pants/_shirt layers are
-// added to the model skins
-/*void UpdateColorModHack()
-{
-	local float c;
-	c = self.clientcolors & 15;
-	// LordHavoc: only bothering to support white, green, red, yellow, blue
-	     if (!teams_matter) self.colormod = '0 0 0';
-	else if (c ==  0) self.colormod = '1.00 1.00 1.00';
-	else if (c ==  3) self.colormod = '0.10 1.73 0.10';
-	else if (c ==  4) self.colormod = '1.73 0.10 0.10';
-	else if (c == 12) self.colormod = '1.22 1.22 0.10';
-	else if (c == 13) self.colormod = '0.10 0.10 1.73';
-	else self.colormod = '1 1 1';
-};*/
 
 void respawn(void)
 {
@@ -1850,7 +1834,7 @@ void LeaveSpectatorMode()
 		if (GameHookChain_JoinHandle())
 			return;
 
-		if(!teams_matter || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
+		if(!teamplay || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.classname = "player";
 			if(g_campaign || g_balance_teams || g_balance_teams_force)
 				JoinBestTeam(self, FALSE, TRUE);

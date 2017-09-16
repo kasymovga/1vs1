@@ -344,7 +344,7 @@ entity WaypointSprite_DeployFixed(
 )
 {
 	float t, maxdistance;
-	if(teams_matter)
+	if(teamplay)
 		t = self.team;
 	else
 		t = 0;
@@ -374,7 +374,7 @@ entity WaypointSprite_Attach(
 	float t, maxdistance;
 	if(self.waypointsprite_attachedforcarrier)
 		return world; // can't attach to FC
-	if(teams_matter)
+	if(teamplay)
 		t = self.team;
 	else
 		t = 0;

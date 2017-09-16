@@ -74,7 +74,7 @@ void HG_Shield_Discharge_Think(void) {
                  damage * g_nadgets_shield_damage_store_forcefactor, HG_SHIELD | HITTYPE_SECONDARY, targ);
 
     //W_SetHitscanVisuals(self.owner, end);
-    W_Zapper_Attack2_Effect((teams_matter ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
+    W_Zapper_Attack2_Effect((teamplay ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
 
     if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (IsDifferentTeam(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
         HG_Shield_Discharge_Arc(targ, self.owner, damage);
@@ -214,7 +214,7 @@ float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hi
     self.hg_shield_stored = min(g_nadgets_shield_damage_store_limit, self.hg_shield_stored + damage * g_nadgets_shield_damage_store);
 
     if(self.hg_shield_stored > o && time > self.hg_shield_nexteffect) {
-        //te_eleblast(hitloc, if(teams_matter) self.team else 0);
+        //te_eleblast(hitloc, if(teamplay) self.team else 0);
         self.hg_shield_nexteffect = time + 0.15;
     }
 

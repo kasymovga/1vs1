@@ -16,7 +16,7 @@ void GameMenu_Show() {
 	Menu_Add_Item(e, "Main Menu|togglemenu");
 	Menu_Add_Item(e, "Disconnect|disconnect");
 	Menu_Add_Item(e, "Return to Game");
-	if (teams_matter) {
+	if (teamplay) {
 		CheckAllowedTeams(self);
 		if (self.team <= 0) {
 			Menu_Add_Item(e, "Join Match|cmd join");

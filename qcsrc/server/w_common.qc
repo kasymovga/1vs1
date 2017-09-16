@@ -130,7 +130,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		if(ent.deadflag == DEAD_NO)
 			did_hit = 1;
 
-		if(teams_matter)
+		if(teamplay)
 		if(ent.team == self.team)
 			did_hit = 0;
 

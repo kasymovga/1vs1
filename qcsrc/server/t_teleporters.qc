@@ -1,6 +1,6 @@
 void trigger_teleport_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 

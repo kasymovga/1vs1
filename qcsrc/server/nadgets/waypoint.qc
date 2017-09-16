@@ -18,7 +18,7 @@ void HG_Waypoint_Update(string wpname) {
 
     if(!self.hg_waypoint) {
         float ownerhack = (/* self.hg_type == HG_BAIT || */ self.hg_type == HG_SENTRY);
-        float teamwp = (teams_matter && GRENVAR(self.hg_type, /*if(self.hg_adept) "adept_detect_enemies_teamwide" else */ "detect_enemies_teamwide"));
+        float teamwp = (teamplay && GRENVAR(self.hg_type, /*if(self.hg_adept) "adept_detect_enemies_teamwide" else */ "detect_enemies_teamwide"));
         entity o = (ownerhack ? self.realowner : self.owner);
         float t = (teamwp ? o.team : 0);
         o = (teamwp ? world : o);
@@ -97,7 +97,7 @@ void HG_Waypoint(void) {
 
         if(rng > 0) {
             FOR_EACH_PLAYER(plr) {
-                if(plr.team != self.team || !teams_matter)
+                if(plr.team != self.team || !teamplay)
                 if(plr != self.owner)
                 if not(PLAYER_DEAD(plr))
                 if(vlen(self.origin - plr.origin) < rng)

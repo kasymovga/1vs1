@@ -214,7 +214,7 @@ string gametype_patterns() {
 	string s = cvar_string("sv_gametype_patterns");
 	if (s == "") //Trying to guess
 	{
-		if (teams_matter)
+		if (teamplay)
 		{
 			s = "team|ctf";
 		}
@@ -244,7 +244,7 @@ void SV_OnEntityPreSpawnFunction()
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teams_matter, self.gametypefilter))
+	if not(isGametypeInFilter(game, teamplay, self.gametypefilter))
 	{
 		remove(self);
 		return;

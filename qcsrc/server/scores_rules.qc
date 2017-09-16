@@ -35,7 +35,7 @@ void ScoreRules_basics_end()
 void ScoreRules_generic()
 {
 	CheckAllowedTeams(world);
-	if(teams_matter)
+	if(teamplay)
 	{
 		CheckAllowedTeams(world);
 		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);

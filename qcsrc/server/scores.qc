@@ -890,7 +890,7 @@ float WinningCondition_Scores(float limit, float _leadlimit)
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper();
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
 		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);

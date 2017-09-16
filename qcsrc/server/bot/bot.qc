@@ -373,7 +373,7 @@ void bot_clientconnect()
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
 
-	if (teams_matter) {
+	if (teamplay) {
 		if(self.bot_forced_team==1)
 			self.bot_forced_team = COLOR_TEAM1;
 		else if(self.bot_forced_team==2)
@@ -433,7 +433,7 @@ void bot_removenewest()
 	local float besttime;
 	local entity best, head;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		bot_removefromlargestteam();
 		return;

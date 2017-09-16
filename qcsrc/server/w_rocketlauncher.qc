@@ -469,7 +469,7 @@ float w_rlauncher(float req)
 					// count potential damage according to type of target
 					if (targ == self)
 						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teams_matter)
+					else if (targ.team == self.team && teamplay)
 						teamdamage = teamdamage + d;
 					else if (bot_shouldattack(targ))
 						enemydamage = enemydamage + d;
@@ -479,9 +479,9 @@ float w_rlauncher(float req)
 			}
 			local float desirabledamage;
 			desirabledamage = enemydamage;
-			if (teamplay != 1/* && time > self.invincible_finished*/ && time > self.spawnshieldtime)
+			if (time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * g_balance_selfdamagepercent;
-			if (self.team && teamplay != 1)
+			if (self.team)
 				desirabledamage = desirabledamage - teamdamage;
 
 			missile = find(world, classname, "rocket");

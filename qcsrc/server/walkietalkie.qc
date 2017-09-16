@@ -54,7 +54,7 @@ void WalkieTalkie_Menu_Select(float n) {
 	if (self.classname != "player")
 		return;
 
-	float team_index = (teams_matter ? TeamColorSkin(self.team) : 0);
+	float team_index = (teamplay ? TeamColorSkin(self.team) : 0);
 	if (team_index)
 		team_index--;
 

@@ -819,9 +819,6 @@ void spawnfunc_item_flag_team1()
 		return;
 	}
 
-	//if(!cvar("teamplay"))
-	//	cvar_set("teamplay", "3");
-
 	// link flag into ctf_worldflaglist
 	self.ctf_worldflagnext = ctf_worldflaglist;
 	ctf_worldflaglist = self;
@@ -926,8 +923,6 @@ void spawnfunc_item_flag_team2()
 		remove(self);
 		return;
 	}
-	//if(!cvar("teamplay"))
-	//	cvar_set("teamplay", "3");
 
 	// link flag into ctf_worldflaglist
 	self.ctf_worldflagnext = ctf_worldflaglist;

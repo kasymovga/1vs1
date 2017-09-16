@@ -102,7 +102,7 @@ void W_Zapper_SpawnSpinner(void) {
 	s.owner = self;
 	s.viewmodelforclient = o;
 	s.colormap = self.colormap;
-	s.color = W_Zapper_BeamRGB((teams_matter ? self.team : COLOR_TEAM2));
+	s.color = W_Zapper_BeamRGB((teamplay ? self.team : COLOR_TEAM2));
 	s.think = W_Zapper_SpawnSpinner_Think;
 	s.nextthink = time;
 	s.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
@@ -548,7 +548,7 @@ void W_Zapper_Attack3(void) {
     e.alpha = 0.01;
 
 	e.skin = 0;
-    if(teams_matter)
+    if(teamplay)
         e.skin = TeamColorSkin(self.team);
     if(!e.skin)
         e.skin = TeamColorSkin(COLOR_TEAM2);

@@ -1443,7 +1443,7 @@ void DumpStats(float final)
 		}
 	}
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)

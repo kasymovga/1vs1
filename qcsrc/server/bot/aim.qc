@@ -122,12 +122,12 @@ float bot_shouldattack(entity e)
 	{
 		if (e == self)
 			return FALSE;
-		if (teams_matter)
+		if (teamplay)
 		if (e.team != 0)
 			return FALSE;
 	}
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(e.team==0)
 			return FALSE;

@@ -177,7 +177,7 @@ void HG_GenericProjectile_Touch(void) {
         if(HG_GenericProjectile_TryStick(other, v))
             return;
 
-        if(self.hg_type == HG_TRANSLOC && teams_matter && other.team == self.owner.team) {
+        if(self.hg_type == HG_TRANSLOC && teamplay && other.team == self.owner.team) {
 #if 0
             float adeptRev = (Buffs_Present(self.owner, BUFF_ADEPT) && CVAR(g_nadgets_transloc_adept_revive));
 

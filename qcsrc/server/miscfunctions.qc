@@ -234,7 +234,7 @@ void relocate_spawnpoint()
     if (!self.cnt)
         self.cnt = 1;
 
-    if (teams_matter)
+    if (teamplay)
         if (self.team)
             have_team_spawns = 1;
 
@@ -702,7 +702,7 @@ void centerprint(entity e, string s)
 string playername(entity p)
 {
     string t;
-    if (teams_matter && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && p.classname == "player")
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));

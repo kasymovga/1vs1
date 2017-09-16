@@ -174,7 +174,7 @@ void SV_ParseClientCommand(string s) {
 			PutClientInServer();
 		} else if(g_campaign || cvar("g_balance_teams") || cvar("g_balance_teams_force")) {
 			//JoinBestTeam(self, FALSE, TRUE);
-		} else if(teams_matter && !cvar("sv_spectate")) {
+		} else if(teamplay && !cvar("sv_spectate")) {
 			self.classname = "observer";
 			stuffcmd(self,"menu_showteamselect\n");
 			//GameMenu_Show();
@@ -200,7 +200,7 @@ void SV_ParseClientCommand(string s) {
 	} else if( cmd == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if( !teams_matter ) {
+		if( !teamplay ) {
 			sprint( self, "selecteam can only be used in teamgames\n");
 		} else if(g_campaign) {
 			//JoinBestTeam(self, 0);
@@ -437,7 +437,7 @@ void ReadyRestartForce()
 	readycount = 0;
 	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
-	if(cvar("teamplay_lockonrestart") && teams_matter) {
+	if(cvar("teamplay_lockonrestart") && teamplay) {
 		lockteams = 1;
 		bprint("^1The teams are now locked.\n");
 	}

@@ -939,7 +939,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			waypoint_spawnforitem(self);
 		}
 
-		if(teams_matter)
+		if(teamplay)
 		{
 			if(self.notteam)
 			{

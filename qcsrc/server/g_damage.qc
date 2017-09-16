@@ -56,7 +56,7 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.velocity = force;
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	if(teams_matter) {
+	if(teamplay) {
 		e.team = dmgowner.team;
 	}
 
@@ -84,7 +84,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 
 float IsDifferentTeam(entity a, entity b)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(a.team == b.team)
 			return 0;
@@ -280,7 +280,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (bot_talk)
 				if (random() <= bot_talk)
 				{
-					if (teams_matter && attacker.team == targ.team)
+					if (teamplay && attacker.team == targ.team)
 						Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
 					else
 						Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
@@ -299,7 +299,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if (bot_talk)
 			if (random() <= bot_talk)
 			{
-				if (teams_matter && attacker.team == targ.team)
+				if (teamplay && attacker.team == targ.team)
 				{
 					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_teamkilled"), strcat(attacker.netname, "^7: "));
 				}
@@ -311,7 +311,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 				}
 			}
-			if(teams_matter && attacker.team == targ.team)
+			if(teamplay && attacker.team == targ.team)
 			{
 				if(sv_gentle) {
 					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You went against a team mate!"));
@@ -672,13 +672,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 			else if(attacker.team == targ.team)
 			{
-				if(teamplay == 1)
-					damage = 0;
-				else if(attacker != targ)
+				if(attacker != targ)
 				{
-					if(teamplay == 3)
-						damage = 0;
-					else if(teamplay == 4)
+					if(teamplay)
 					{
 						if(targ.deadflag == DEAD_NO)
 						{
@@ -1314,7 +1310,7 @@ void ArcDamage_Recurse(entity targ, entity attacker, float damage, float deathty
     if(plr.deadflag == DEAD_NO || (plr.deadflag == DEAD_FREEZE && targetFrozen))
     if(!plr.hg_stealth || (targetTeamMates && plr.team == attacker.team))
     if(!plr.hitfield) {
-        float sameteam = (teams_matter && plr.team == attacker.team);
+        float sameteam = (teamplay && plr.team == attacker.team);
         if((!sameteam && (((plr.deadflag != DEAD_FREEZE) && targetAlive) || ((plr.deadflag == DEAD_FREEZE) && targetFrozen))) || (sameteam && targetTeamMates)) {
             dist = vlen(plr.origin - targ.origin);
             if(dist < shortest) {
@@ -1330,7 +1326,7 @@ void ArcDamage_Recurse(entity targ, entity attacker, float damage, float deathty
 
     if(newtarget) {
         ArcEffect(targ.origin + arcoffset, newtarget.origin + arcoffset,
-                  (targetTeamMates ? 0 : (teams_matter ? attacker.team : default_color)));
+                  (targetTeamMates ? 0 : (teamplay ? attacker.team : default_color)));
 
         Damage(newtarget, attacker, attacker, damage, deathtype, '0 0 0',
                normalize(newtarget.origin - targ.origin) * force);
@@ -1352,12 +1348,12 @@ void ArcDamage(entity targ, entity attacker, float damage, float deathtype,
                float range, float mul, float force, float default_color, .float hitfield) {
 
 #if 0
-    float targetTeamMates = (teams_matter && Buffs_Present(attacker, BUFF_MEDIC) && targ.team == attacker.team);
+    float targetTeamMates = (teamplay && Buffs_Present(attacker, BUFF_MEDIC) && targ.team == attacker.team);
 #else
     float targetTeamMates = 0;
 #endif
 
-    if(teams_matter && targ.team == attacker.team && !targetTeamMates)
+    if(teamplay && targ.team == attacker.team && !targetTeamMates)
         return;
 
     float targetFrozen = (targ.deadflag == DEAD_FREEZE) && !targetTeamMates;

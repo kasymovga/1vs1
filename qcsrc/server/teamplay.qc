@@ -20,7 +20,7 @@ float IsTeamBalanceForced()
 {
 	if(intermission_running)
 		return 0; // no rebalancing whatsoever please
-	if(!teams_matter)
+	if(!teamplay)
 		return 0;
 	if(g_campaign)
 		return 0;
@@ -153,7 +153,7 @@ void ReadGameCvars()
 		g_tdm = 1;
 	}
 
-	teams_matter = 0;
+	teamplay = 0;
 }
 
 void default_delayedinit()
@@ -164,16 +164,8 @@ void default_delayedinit()
 
 void ActivateTeamplay()
 {
-	float teamplay_default;
-	teamplay_default = cvar("teamplay_default");
-
-	if(teamplay_default)
-		teamplay = teamplay_default;
-	else
-		teamplay = 3;
+	teamplay = TRUE;
 	cvar_set("teamplay", ftos(teamplay));
-
-	teams_matter = 1;
 }
 
 float tdm_FragLimitOverride() {
@@ -186,7 +178,6 @@ void InitGameplayMode()
 
 	VoteReset();
 
-	teams_matter = 0;
 	cvar_set("teamplay", "0");
 
 	// make sure only ONE type is selected
@@ -332,7 +323,7 @@ void InitGameplayMode()
 		survive_init();
 	}
 
-	if(teams_matter)
+	if(teamplay)
 		entcs_init();
 
 	// save it (for the next startup)
@@ -354,11 +345,6 @@ void InitGameplayMode()
 		if(leadlimit_override >= 0)
 			cvar_set("leadlimit", ftos(leadlimit_override));
 	}
-
-	if(teams_matter && !teamplay)
-		teamplay = 3;
-	if(!teams_matter && teamplay)
-		teamplay = 0;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 
@@ -498,7 +484,7 @@ void SetPlayerColors(entity pl, float _color)
 	shirt = _color & 0xF0;
 
 
-	if(teams_matter) {
+	if(teamplay) {
 		setcolor(pl, 16*pants + pants);
 	} else {
 		setcolor(pl, shirt + pants);
@@ -816,7 +802,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
-	if not(teams_matter) {
+	if not(teamplay) {
 		pl.team = 0;
 		return 0;
 	}
@@ -884,7 +870,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 void SV_ChangeTeam(float _color)
 {
-	if(teams_matter)
+	if(teamplay)
 		return;
 
 	SetPlayerColors(self, _color);

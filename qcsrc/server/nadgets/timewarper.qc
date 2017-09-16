@@ -94,7 +94,7 @@ entity HG_TimeWarper_StartTimer(void) {
 
     Net_LinkEntity(e, FALSE, 0, inline float(entity to, float sf) {
         WriteByte(MSG_ENTITY, ENT_CLIENT_HGTWARP_INDICATOR);
-        WriteByte(MSG_ENTITY, if(teams_matter) self.owner.team else COLOR_TEAM2);
+        WriteByte(MSG_ENTITY, if(teamplay) self.owner.team else COLOR_TEAM2);
         WriteCoord(MSG_ENTITY, self.origin_x);
         WriteCoord(MSG_ENTITY, self.origin_y);
         WriteCoord(MSG_ENTITY, self.origin_z);
