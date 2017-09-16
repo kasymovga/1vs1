@@ -687,13 +687,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(attacker.dmg_team > teamdamage0)
 								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
 							mirrorforce = g_mirrordamage * vlen(force);
-							if(g_minstagib)
-							{
-								if(g_friendlyfire == 0)
-									damage = 0;
-							}
-							else
-								damage = g_friendlyfire * damage;
+							damage = g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 						}
 					}
@@ -802,20 +796,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;
-		if(g_minstagib)
-			if(mirrordamage > 0)
-			{
-				// just lose extra LIVES, don't kill the player for mirror damage
-				if(attacker.armorvalue > 0)
-				{
-					attacker.armorvalue = attacker.armorvalue - 1;
-					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
-					attacker.hitsound += 1;
-				}
-				mirrordamage = 0;
-			}
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
-		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
+		if not(GameHookChain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
+			Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
+		}
 	}
 }
 

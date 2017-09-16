@@ -275,22 +275,47 @@ float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float dama
 
 var void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet_NextLink;
 void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
-	if (attacker.classname == "player")
-	if (targ.classname == "player")
-	if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-	if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker, FALSE))
-	{
-		GameHook_DamageMod = 0;
-		if (targ != attacker)
+	if (targ.classname == "player") {
+		if (attacker.classname == "player")
+		if (DEATH_ISWEAPON(deathtype, WEP_LASER))
+		if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker, FALSE))
 		{
-			if (g_minstagib_nolaserdamage)
-				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
+			GameHook_DamageMod = 0;
+			if (targ != attacker)
+			{
+				if (g_minstagib_nolaserdamage)
+					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
 
-			GameHook_ForceMod = 0;
-			GameHook_MirrorDamageMod = 0;
+				GameHook_ForceMod = 0;
+				GameHook_MirrorDamageMod = 0;
+			}
+		}
+		if (teamplay == 4)
+		if (attacker != targ)
+		if (deathtype != DEATH_MIRRORDAMAGE)
+		if (deathtype != DEATH_NOAMMO)
+		if (deathtype != DEATH_TELEFRAG)
+		if (targ.deadflag == DEAD_NO)
+		if (attacker.team == targ.team) {
+			if (g_friendlyfire == 0)
+				GameHook_DamageMod = 0;
+			else
+				GameHook_DamageMod = GameHook_DamageMod / g_friendlyfire; //Restore value
 		}
 	}
 	minstagib_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+}
+
+
+float minstagib_MirrorDamageHandle(entity attacker, entity inflictor, float mirrordamage, vector force) {
+	if(mirrordamage > 0)
+	if(attacker.armorvalue > 0) {// just lose extra LIVES, don't kill the player for mirror damage
+		attacker.armorvalue = attacker.armorvalue - 1;
+		centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+		attacker.hitsound += 1;
+	}
+	Damage(attacker, inflictor, attacker, 0, DEATH_MIRRORDAMAGE, attacker.origin, force);
+	return TRUE;
 }
 
 void minstagib_init() {
@@ -319,10 +344,6 @@ void minstagib_init() {
 	GameHookChain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
 	minstagib_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
-#if 0
-	minstagib_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
-	GameHookChain_PlayerAlphaMod = minstagib_PlayerAlphaMod;
-#endif
 	minstagib_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
 	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
 	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;
@@ -335,6 +356,7 @@ void minstagib_init() {
 	GameHookChain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
 	minstagib_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = minstagib_DamageForceModsSet;
+	GameHookChain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
 }
 
 void spawnfunc_item_minst_cells (void) {
