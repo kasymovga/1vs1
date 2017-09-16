@@ -67,6 +67,9 @@ float entcs_customize_enemy()
 	if(o.team == other.team)
 		return FALSE;
 
+	if (Player_CalculateAlpha(o, other) < 0.25)
+		return FALSE;
+
 	return TRUE;
 }
 
