@@ -24,7 +24,7 @@ float entcs_customize_no_teamcheck()
 {
 	entity o;
 	o = self.owner;
-	if(o.deadflag != DEAD_NO)
+	if(PLAYER_REALLY_DEAD(o))
 		return FALSE;
 	if(o.classname != "player")
 		return FALSE;
@@ -38,7 +38,7 @@ float entcs_customize()
 {
 	entity o;
 	o = self.owner;
-	if(o.deadflag != DEAD_NO)
+	if(PLAYER_REALLY_DEAD(o))
 		return FALSE;
 	if(o.classname != "player")
 		return FALSE;
@@ -54,7 +54,7 @@ float entcs_customize_enemy()
 {
 	entity o;
 	o = self.owner;
-	if(o.deadflag != DEAD_NO)
+	if(PLAYER_REALLY_DEAD(o))
 		return FALSE;
 	if(o.classname != "player")
 		return FALSE;
