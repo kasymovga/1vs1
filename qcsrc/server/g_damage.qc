@@ -822,7 +822,6 @@ void Damage_RecordDamage(entity attacker, float deathtype, float damage)
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if not(inWarmupStage)
 	if(weaponid)
-	if(clienttype(attacker) == CLIENTTYPE_REAL)
 	{
 		// Track damage done and update the stat to be sent later in g_world.qc
 		attacker.actual_damage[weaponid] += damage;
@@ -961,7 +960,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							{
 								total_damage_to_creatures += finaldmg;
 
-								if(targ.flags & FL_CLIENT)
 								if(targ.deadflag == DEAD_NO)
 								if(targ != attacker)
 								if(!teamplay || targ.team != attacker.team)

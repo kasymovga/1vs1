@@ -33,9 +33,15 @@ void W_Supershotgun_Pellet_Touch()
 		Damage_DamageInfo(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
 	if (other && other.takedamage)
 	{
-		Damage(other, self, self.realowner, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
-		self.realowner.bullets_hit[self.realowner.weapon] += 1;
-		self.realowner.damage_hits = self.realowner.weapon + 64 * rint(self.realowner.bullets_hit[self.realowner.weapon]);
+		entity o = self.realowner;
+		Damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
+		if not(inWarmupStage)
+		if not(other.deadflag)
+		if (other != o)
+		if (!teamplay || other.team != self.realowner.team) {
+			o.bullets_hit[WEP_SUPERSHOTGUN] += 1;
+			o.damage_hits = WEP_SUPERSHOTGUN + 64 * rint(o.bullets_hit[WEP_SUPERSHOTGUN]);
+		}
 		self.cnt = 0;
 	}
 	if not(self.cnt)

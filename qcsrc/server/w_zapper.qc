@@ -227,7 +227,7 @@ void W_Zapper_Beam_Think(void) {
 	vector org = W_Zapper_GetVisualShootOrg(self.enemy);
 
     makevectors(self.owner.v_angle);
-    W_SetupShot(self.enemy, FALSE, 0, "", -1);
+    W_SetupShot(self.enemy, FALSE, 0, "", 0);
 
     float fract;
     entity targ;
@@ -259,16 +259,12 @@ void W_Zapper_Beam_Think(void) {
     for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
         float damage = g_balance_zapper_primary_damage;
         float force  = g_balance_zapper_primary_force;
-
+		o.bullets_fired[WEP_ZAPPER] += 1;
+		o.maxdamage_fired = WEP_ZAPPER + 64 * rint(o.bullets_fired[WEP_ZAPPER]);
         if(damageIsDps) {
             damage = damage * wantedTicrate;
             force = force * wantedTicrate;
         }
-
-		//RM Feature that Rexuiz dont have
-        //W_Accuracy_RegisterShot(o, o.weapon);
-        //W_Accuracy_RegisterHit(o, targ, o.weapon);
-
         if(targ.takedamage) {
             float d = vlen(end - w_shotorg) * fract;
 
@@ -280,9 +276,14 @@ void W_Zapper_Beam_Think(void) {
             damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
             force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
 
-            Damage(targ, self, self.owner, damage, WEP_ZAPPER, end, force * w_shotdir);
+            Damage(targ, self, o, damage, WEP_ZAPPER, end, force * w_shotdir);
+			if not(inWarmupStage)
+			if not(targ.deadflag)
+			if (!teamplay || targ.team != o.team) {
+				o.bullets_hit[WEP_ZAPPER] += 1;
+				o.damage_hits = WEP_ZAPPER + 64 * rint(o.bullets_hit[WEP_ZAPPER]);
+			}
         }
-
         if(fract < 1)
         if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
             Damage_DamageInfo(end, damage, 0, 0, force * w_shotdir, WEP_ZAPPER, self);
@@ -384,7 +385,7 @@ void W_Zapper_Attack2(void) {
     float range  = g_balance_zapper_secondary_range * accum;
 
     makevectors(self.v_angle);
-    W_SetupShot(self, TRUE, 5, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"), damage);
+    W_SetupShot(self, TRUE, 5, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"), 0);
 
     entity targ;
     vector end = w_shotorg + w_shotdir * range;
@@ -417,6 +418,11 @@ void W_Zapper_Attack2(void) {
 
 		entity o = Akimbo_Owner(self);
         Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * w_shotdir);
+		if not(inWarmupStage)
+		if (!teamplay || targ.team != o.team) {
+			o.bullets_hit[WEP_ZAPPER] += 1;
+			o.damage_hits = WEP_ZAPPER + 64 * rint(o.bullets_hit[WEP_ZAPPER]);
+		}
     }
 
     //Buffs_MEODP_Hitscan_End(pts);

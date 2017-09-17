@@ -126,7 +126,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		ent.railgunhit = FALSE;
 
 		//for stats so that team hit will count as a miss
-		if(ent.flags & FL_CLIENT)
+		if(ent.takedamage)
 		if(ent.deadflag == DEAD_NO)
 			did_hit = 1;
 
@@ -197,13 +197,10 @@ void W_BallisticBullet_Hit (void)
 		railgun_start = self.origin - 0.1 * self.velocity;
 		railgun_end = self.origin + 0.1 * self.velocity;
 
-		if(other.flags & FL_CLIENT)
+		if(other.takedamage)
 		if(other.deadflag == DEAD_NO)
+		if(!teamplay || self.owner.team != other.team)
 			hit = 1;
-
-		if(teamplay)
-		if(other.team == self.owner.team)
-			hit = 0;
 
 		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
@@ -218,7 +215,6 @@ void W_BallisticBullet_Hit (void)
 
 		//calculate hits for ballistic weapons
 		if not(inWarmupStage)
-		if not(self.owner.isbot)
 		{
 			if(hit)
 				self.owner.bullets_hit[self.owner.weapon] += 1;
