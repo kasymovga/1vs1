@@ -518,6 +518,9 @@ float Item_GiveTo(entity item, entity player)
 	pickedup = FALSE;
 	_switchweapon = FALSE;
 
+	if (time < game_starttime)
+		return FALSE;
+
 	if (GameHookChain_ItemGiveToHandle(item, player)) {
 		pickedup = GameHookChain_ItemGiveToHandle_PickedUp;
 		GameHookChain_ItemGiveToHandle_PickedUp = FALSE;
