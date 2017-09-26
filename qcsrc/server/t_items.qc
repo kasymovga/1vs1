@@ -919,6 +919,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 	{
+		if (self.scale)
+			self.scale = self.scale * sv_world_scale;
+		else
+			self.scale = sv_world_scale;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
