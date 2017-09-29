@@ -306,6 +306,7 @@ void W_WeaponFrame()
 {
 	vector fo, ri, up;
 
+	makevectors(self.v_angle);
 	if (GameHook_WeaponFrameHandle())
 		return;
 	if (!self.weaponentity || self.health < 1)
@@ -320,7 +321,6 @@ void W_WeaponFrame()
 		return;
 	}
 
-	makevectors(self.v_angle);
 	fo = v_forward; // save them in case the weapon think functions change it
 	ri = v_right;
 	up = v_up;
