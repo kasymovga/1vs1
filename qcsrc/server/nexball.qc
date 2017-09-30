@@ -259,6 +259,7 @@ void HideWeapon(entity e) {
 	e.message2 = e.weaponname;
 	e.weaponname = "";
 	e.weaponentity.cnt = 0;
+	e.exteriorweaponentity.cnt = 0;
 	entity akimbo_ghost = Akimbo_Ghost(e);
 	if (akimbo_ghost)
 	if (e != akimbo_ghost)
@@ -268,6 +269,7 @@ void HideWeapon(entity e) {
 void UnhideWeapon(entity e) {
 	e.weaponname = e.message2;
 	e.weaponentity.cnt = 0;
+	e.exteriorweaponentity.cnt = 0;
 	entity akimbo_ghost = Akimbo_Ghost(e);
 	if (akimbo_ghost)
 	if (e != akimbo_ghost)
