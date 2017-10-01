@@ -38,8 +38,9 @@ void HG_Cloak_Trigger(void) {
 
 void HG_Cloak_PlayerFrame(void) {
     if(self.hg_stealth) {
-        if(self.flagcarried)
-            DropFlag(self.flagcarried, world, world);
+        if(GameHook_PlayerIsCarrier(self))
+			GameHook_DropCarried(self);
+
         self.hg_wasstealth = TRUE;
         self.hg_stealthtime = time;
         if(self.hg_stealthalpha < 1)

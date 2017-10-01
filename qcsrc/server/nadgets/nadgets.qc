@@ -104,6 +104,15 @@ float HG_JoinHandle() {
 	return HG_JoinHandle_NextLink();
 }
 
+var float(entity plr) HG_PlayerCanBeCarrier_NextLink;
+float(entity plr) HG_PlayerCanBeCarrier {
+	if (HG_PlayerCanBeCarrier_NextLink(plr))
+	if not(plr.hg_stealth)
+		return TRUE;
+
+	return FALSE;
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -152,6 +161,8 @@ void HG_Init(void) {
 	GameHookChain_PlayerDamageHandle = HG_PlayerDamageHandle;
 	HG_JoinHandle_NextLink = GameHookChain_JoinHandle;
 	GameHookChain_JoinHandle = HG_JoinHandle;
+	HG_PlayerCanBeCarrier_NextLink = GameHookChain_PlayerCanBeCarrier;
+	GameHookChain_PlayerCanBeCarrier = HG_PlayerCanBeCarrier;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);

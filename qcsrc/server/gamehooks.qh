@@ -93,3 +93,7 @@ var string(string s, entity plr) GameHookChain_AppendItemCodes = { return s; }
 var float(float c) GameHookChain_PlayerColorsMod = { return c; }
 var float() GameHookChain_JoinHandle = { return FALSE; }
 var float(entity attacker, entity inflictor, float mirrordamage, vector force) GameHookChain_MirrorDamageHandle = { return FALSE; }
+var float(entity plr) GameHook_PlayerIsCarrier { return FALSE; }
+var void(entity plr) GameHook_DropCarried {}
+var float(entity plr) GameHookChain_PlayerCanBeCarrier { return TRUE; }
+var float(entity e) GameHook_TeleportationForbiddenFor { return FALSE; }

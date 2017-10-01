@@ -482,6 +482,9 @@ void FlagTouch()
 	if (other.health < 1) // ignore dead players
 		return;
 
+	if not(GameHookChain_PlayerCanBeCarrier(other))
+		return;
+
 	if (self.cnt == FLAG_CARRY)
 		return;
 
@@ -1139,6 +1142,10 @@ string ctf_AppendItemCodes(string s, entity plr) {
 	return ctf_AppendItemCodes_NextLink(s, plr);
 }
 
+float ctf_PlayerIsCarrier(entity plr) { return plr.flagcarried != world; }
+void ctf_DropCarried(entity plr) { DropFlag(plr.flagcarried, world, world); }
+float ctf_TeleportationForbiddenFor(entity e) { return e.classname == "item_flag_team"; }
+
 void ctf_init()
 {
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
@@ -1201,6 +1208,9 @@ void ctf_init()
 	GameHookChain_DamageForceModsSet = ctf_DamageForceModsSet;
 	ctf_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
 	GameHookChain_AppendItemCodes = ctf_AppendItemCodes;
+	GameHook_PlayerIsCarrier = ctf_PlayerIsCarrier;
+	GameHook_DropCarried = ctf_DropCarried;
+	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
 };
 
 void ctf_setstatus2(entity flag, float shift)

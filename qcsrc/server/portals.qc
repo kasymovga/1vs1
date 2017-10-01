@@ -146,8 +146,8 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
 
-	if(player.flagcarried)
-		DropFlag(player.flagcarried, player, world);
+	if(GameHook_PlayerIsCarrier(player))
+		GameHook_DropCarried(player);
 
 	if not(teleporter.enemy)
 	{
@@ -237,7 +237,7 @@ void Portal_Touch()
 		return; // handled by think
 #endif
 
-	if(other.classname == "item_flag_team")
+	if (GameHook_TeleportationForbiddenFor(other))
 		return; // never portal these
 
 	if(other.classname == "grapplinghook")

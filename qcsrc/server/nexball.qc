@@ -125,6 +125,10 @@ void nb_SpectateCopy(entity e) {
 	self.metertime = e.metertime;
 }
 
+float nb_PlayerIsCarrier(entity plr) { return plr.ballcarried != world; }
+void nb_DropCarried(entity plr) { DropBall(plr.ballcarried, plr.origin, plr.velocity); }
+float nb_TeleportationForbiddenFor(entity e) { return e.classname == "nexball_football" || e.classname == "nexball_basketball" || e.classname == "nexball_hockey"; }
+
 void nb_init() // Called early (worldspawn stage)
 {
 	CACHE_CVAR(g_nexball_meter_period); //sent with the client init entity
@@ -175,6 +179,9 @@ void nb_init() // Called early (worldspawn stage)
 	if (cvar("g_nexball_radar_showallplayers"))
 		GameHook_RadarShowEnemiesAllowed = nb_RadarShowEnemiesAllowed;
 
+	GameHook_PlayerIsCarrier = nb_PlayerIsCarrier;
+	GameHook_DropCarried = nb_DropCarried;
+	GameHook_TeleportationForbiddenFor = nb_TeleportationForbiddenFor;
 	InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
 	precache_model ("models/elaser.mdl");
 	precache_sound ("nexball/shoot1.wav");
@@ -514,8 +521,7 @@ void hockey_touch (void)
 
 void basketball_touch (void)
 {
-	if (other.ballcarried)
-	{
+	if (other.ballcarried || !GameHookChain_PlayerCanBeCarrier(other)) {
 		football_touch();
 		return;
 	}

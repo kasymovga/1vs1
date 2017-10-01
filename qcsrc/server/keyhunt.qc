@@ -484,7 +484,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
 
-void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
+void kh_Key_DropAll(entity player, float suicide, float died) // runs whenever a player dies
 {
 	entity key;
 	entity mypusher;
@@ -498,7 +498,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
 			PlayerScore_Add(player, SP_KH_LOSSES, 1);
-			bprint(player.netname, "^7 died and lost the ", key.netname, "\n");
+			bprint(player.netname, "^7 ", (died ? "died and " : ""), "lost the ", key.netname, "\n");
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
 			key.velocity = W_CalculateProjectileVelocity(player.velocity, g_balance_keyhunt_dropvelocity * v_forward);
@@ -525,6 +525,10 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 	if(other == self.enemy)
 		if(time < self.kh_droptime + g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
+
+	if not(GameHookChain_PlayerCanBeCarrier(other))
+		return;
+
 	kh_Key_Collect(self, other);
 }
 
@@ -928,15 +932,15 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 
 var void(float killed) kh_PlayerClear_NextLink;
 void kh_PlayerClear(float killed) {
-	kh_Key_DropAll(self, TRUE);
+	kh_Key_DropAll(self, TRUE, killed);
 	kh_PlayerClear_NextLink(killed);
 }
 
 float kh_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	if(self == attacker)
-		kh_Key_DropAll(self, TRUE);
+		kh_Key_DropAll(self, TRUE, TRUE);
 	else if((attacker.classname == "player" || attacker.classname == "gib"))
-		kh_Key_DropAll(self, FALSE);
+		kh_Key_DropAll(self, FALSE, TRUE);
 
 	return FALSE;
 }
@@ -961,6 +965,9 @@ string kh_AppendItemCodes(string s, entity plr) {
 
 float kh_FragLimitOverride() { return cvar("g_keyhunt_point_limit"); }
 float kh_LeadLimitOverride() { return cvar("g_keyhunt_point_leadlimit"); }
+float kh_PlayerIsCarrier(entity plr) { return plr.kh_next != world; }
+void kh_DropCarried(entity plr) { kh_Key_DropAll(plr, FALSE, FALSE); }
+float kh_TeleportationForbiddenFor(entity e) { return e.classname == STR_ITEM_KH_KEY; }
 
 void kh_init()  // sets up th KH environment
 {
@@ -997,6 +1004,9 @@ void kh_init()  // sets up th KH environment
 	GameHookChain_AppendItemCodes = kh_AppendItemCodes;
 	GameHook_FragLimitOverride = kh_FragLimitOverride;
 	GameHook_LeadLimitOverride = kh_LeadLimitOverride;
+	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
+	GameHook_DropCarried = kh_DropCarried;
+	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
 
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
 	precache_model("models/keyhunt/key-carried.md3");
