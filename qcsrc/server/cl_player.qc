@@ -579,7 +579,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 	save = bound(0, damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
-	take = bound(0, damage - take, damage);
+	take = bound(0, damage - save, damage);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
