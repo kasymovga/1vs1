@@ -50,7 +50,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 .entity pusher;
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float damage)
 {
-	entity oldself;
 	entity telefragger;
 	vector from;
 
@@ -109,14 +108,6 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 		if(player.isbot)
 			player.lastteleporttime = time;
-
-		// stop player name display
-		{
-			oldself = self;
-			self = player;
-			ClearSelectedPlayer();
-			self = oldself;
-		}
 	}
 }
 

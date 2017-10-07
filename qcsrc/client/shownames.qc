@@ -25,23 +25,22 @@ float E_ORIGIN      = 1; // vector
 #define SHOWNAMES_MINDISTANCE 1000
 #define SHOWNAMES_ORIGIN_OFFSET '0 0 64'
 
+float Shownames_PreDrawPlayer_Disabled() { return FALSE; }
+
 float Shownames_PreDrawPlayer() {
-    if(!CVAR(hud_shownames))
+    if(!CVAR(cl_shownames))
         return FALSE;
-
-    if (teamplay)
-    if not(CVAR(hud_shownames_enemies))
-	if (self.cnt)
-        return FALSE;
-
-	if not(ext_DP_CSQC_QUERYRENDERENTITY)
-		return FALSE;
 
 	float plr_entnum = self.sv_entnum + 1;
 
 	if(getentity(plr_entnum, E_ACTIVE)) {
 		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
 	} else
+		return FALSE;
+
+	vector v = normalize(self.iorigin - view_origin);
+	float a = normalize(view_forward) * v;
+	if (a < CVAR(cl_shownames_cos))
 		return FALSE;
 
 	if (self.cnt) {
@@ -116,5 +115,9 @@ void Shownames_DrawPlayer() {
 
 void Shownames_Init(entity plr) {
     plr.draw2d = Shownames_DrawPlayer;
-    plr.draw2d_pre = Shownames_PreDrawPlayer;
+	if (ext_DP_CSQC_QUERYRENDERENTITY)
+		plr.draw2d_pre = Shownames_PreDrawPlayer;
+	else
+		plr.draw2d_pre = Shownames_PreDrawPlayer_Disabled;
+
 }

@@ -457,8 +457,8 @@ string formatmessage(string msg)
         }
         else if (escape == "p")
         {
-            if (self.last_selected_player)
-                replacement = self.last_selected_player.netname;
+            if (self.cursor_trace_ent && self.cursor_trace_ent.classname == "player")
+                replacement = self.cursor_trace_ent.netname;
             else
                 replacement = "(nobody)";
         }
@@ -558,7 +558,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");
-	GetCvars_handleFloat(s, f, cvar_cl_shownames, "cl_shownames");
 	GetCvars_handleString(s, f, cvar_g_nexuizversion, "g_nexuizversion");
 	GetCvars_handleFloat(s, f, cvar_cl_gunalpha, "cl_gunalpha");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete);

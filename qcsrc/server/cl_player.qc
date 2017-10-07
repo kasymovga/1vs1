@@ -18,7 +18,6 @@ float g_respawn_mapsettings_waves;
 float g_respawn_waves;
 float g_voice_flood_spv;
 float g_voice_flood_spv_team;
-float sv_allow_shownames;
 float g_jetpack_attenuation;
 float g_fullbrightplayers;
 
@@ -716,7 +715,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// become fully visible
 		self.alpha = 1;
 		// clear selected player display
-		ClearSelectedPlayer();
 		if (g_pickup_drop_backpack)
 			DropBackPack (self.origin + (self.mins + self.maxs) * 0.5);
 		else
@@ -841,111 +839,6 @@ float UpdateSelectedPlayer_canSee(entity p, float mincosangle, float maxdist)
 		return -2;
 
 	return c;
-}
-
-void ClearSelectedPlayer()
-{
-	if(self.selected_player)
-	{
-		centerprint_expire(self, CENTERPRIO_POINT);
-		self.selected_player = world;
-		self.selected_player_display_needs_update = FALSE;
-	}
-}
-
-void UpdateSelectedPlayer()
-{
-	entity selected;
-	float selected_score;
-	selected = world;
-	selected_score = 0.95; // 18 degrees
-
-	if(!sv_allow_shownames)
-		return;
-
-	if(clienttype(self) != CLIENTTYPE_REAL)
-		return;
-
-	if(self.cvar_cl_shownames == 0)
-		return;
-
-	if(self.cvar_cl_shownames == 1 && !teamplay)
-		return;
-
-	makevectors(self.v_angle); // sets v_forward
-
-	// 1. cursor trace is always right
-	if(self.cursor_trace_ent && self.cursor_trace_ent.classname == "player" && !self.cursor_trace_ent.deadflag)
-	{
-		selected = self.cursor_trace_ent;
-	}
-	else
-	{
-		// 2. if we don't have a cursor trace, find the player which is least
-		//    mis-aimed at
-		entity p;
-		FOR_EACH_PLAYER(p)
-		{
-			float c;
-			c = UpdateSelectedPlayer_canSee(p, selected_score, 100); // 100 = 2.5 meters
-			if(c >= -1)
-			{
-				selected = p;
-				selected_score = c;
-			}
-		}
-	}
-
-	if(selected)
-	{
-		self.selected_player_display_timeout = time + self.cvar_scr_centertime;
-	}
-	else
-	{
-		if(time < self.selected_player_display_timeout)
-			if(UpdateSelectedPlayer_canSee(self.selected_player, 0.7, 200) >= -1) // 5 meters, 45 degrees
-				selected = self.selected_player;
-	}
-
-	if(selected)
-	{
-		if(selected == self.selected_player)
-		{
-			float save;
-			save = UpdateSelectedPlayer_countvalue(self.selected_player_count);
-			self.selected_player_count = self.selected_player_count + frametime;
-			if(save != UpdateSelectedPlayer_countvalue(self.selected_player_count))
-			{
-				string namestr, healthstr;
-				namestr = playername(selected);
-				if(teamplay)
-				{
-					healthstr = ftos(floor(selected.health));
-					if(self.team == selected.team)
-					{
-						namestr = strcat(namestr, " (", healthstr, "%)");
-						self.selected_player_display_needs_update = TRUE;
-					}
-				}
-				centerprint_atprio(self, CENTERPRIO_POINT, namestr);
-			}
-		}
-		else
-		{
-			ClearSelectedPlayer();
-			self.selected_player = selected;
-			self.selected_player_time = time;
-			self.selected_player_count = 0;
-			self.selected_player_display_needs_update = FALSE;
-		}
-	}
-	else
-	{
-		ClearSelectedPlayer();
-	}
-
-	if(self.selected_player)
-		self.last_selected_player = self.selected_player;
 }
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
@@ -1533,7 +1426,6 @@ void Player_Init() {
 	CACHE_CVAR(g_respawn_waves);
 	CACHE_CVAR(g_voice_flood_spv);
 	CACHE_CVAR(g_voice_flood_spv_team);
-	CACHE_CVAR(sv_allow_shownames);
 	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_fullbrightplayers);
 }

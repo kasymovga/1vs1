@@ -2018,9 +2018,6 @@ void PlayerPreThink (void)
 			self.effects = self.effects - (self.effects & EF_NODRAW);
 		}
 
-		if(frametime > 0) // don't do this in cl_movement frames, just in server ticks
-			UpdateSelectedPlayer();
-
 		//don't allow the player to turn around while game is paused!
 		if(timeoutStatus == 2) {
 			self.v_angle = self.lastV_angle;
