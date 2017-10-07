@@ -324,7 +324,6 @@ float minstagib_StartAmmoHandle() {
 	start_weapons = WEPBIT_MINSTANEX;
 	weapon_precache(WEP_MINSTANEX);
 	start_ammo_cells = cvar("g_minstagib_ammo_start");
-	start_ammo_fuel = cvar("g_start_ammo_fuel");
 	return TRUE;
 }
 

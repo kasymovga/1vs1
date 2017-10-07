@@ -1798,7 +1798,6 @@ void Items_Init()
 			start_ammo_nails = cvar("g_start_ammo_nails");
 			start_ammo_rockets = cvar("g_start_ammo_rockets");
 			start_ammo_cells = cvar("g_start_ammo_cells");
-			start_ammo_fuel = cvar("g_start_ammo_fuel");
 		}
 		else
 		{
@@ -1850,7 +1849,6 @@ void Items_Init()
 				warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
 				warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
 				warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
-				warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			}
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
