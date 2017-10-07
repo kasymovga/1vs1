@@ -318,6 +318,27 @@ float minstagib_MirrorDamageHandle(entity attacker, entity inflictor, float mirr
 	return TRUE;
 }
 
+float minstagib_StartAmmoHandle() {
+	start_health = 100;
+	start_armorvalue = 0;
+	start_weapons = WEPBIT_MINSTANEX;
+	weapon_precache(WEP_MINSTANEX);
+	start_ammo_cells = cvar("g_minstagib_ammo_start");
+	start_ammo_fuel = cvar("g_start_ammo_fuel");
+	return TRUE;
+}
+
+float minstagib_WarmupStartAmmoHandle() { return TRUE; }
+
+var void() minstagib_ItemRespawnCountDown_NextLink;
+void minstagib_ItemRespawnCountDown() {
+	if (self.items == IT_NAILS) {
+		GameHook_ItemName = "item-extralife";
+		GameHook_ItemColor = '1 0 0';
+	}
+	minstagib_ItemRespawnCountDown_NextLink();
+}
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -357,6 +378,10 @@ void minstagib_init() {
 	minstagib_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = minstagib_DamageForceModsSet;
 	GameHookChain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
+	GameHookChain_StartAmmoHandle = minstagib_StartAmmoHandle;
+	GameHookChain_WarmupStartAmmoHandle = minstagib_WarmupStartAmmoHandle;
+	minstagib_ItemRespawnCountDown_NextLink = GameHookChain_ItemRespawnCountDown;
+	GameHookChain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
 }
 
 void spawnfunc_item_minst_cells (void) {

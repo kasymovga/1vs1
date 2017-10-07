@@ -97,3 +97,8 @@ var float(entity plr) GameHook_PlayerIsCarrier { return FALSE; }
 var void(entity plr) GameHook_DropCarried {}
 var float(entity plr) GameHookChain_PlayerCanBeCarrier { return TRUE; }
 var float(entity e) GameHook_TeleportationForbiddenFor { return FALSE; }
+var float() GameHookChain_StartAmmoHandle { return FALSE; }
+var float() GameHookChain_WarmupStartAmmoHandle { return FALSE; }
+string GameHook_ItemName;
+vector GameHook_ItemColor;
+var void() GameHookChain_ItemRespawnCountDown {}

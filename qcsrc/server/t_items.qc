@@ -441,30 +441,22 @@ void Item_RespawnCountdown (void)
 		self.count += 1;
 		if(self.count == 1)
 		{
-			string name;
-			vector rgb;
-			name = string_null;
-			if(g_minstagib)
-			{
-				switch(self.items)
-				{
-					case IT_NAILS:      name = "item-extralife"; rgb = '1 0 0'; break;
-				}
-			}
+			GameHook_ItemName = string_null;
+			GameHookChain_ItemRespawnCountDown();
 			switch(self.items)
 			{
-				case IT_STRENGTH:       name = "item-strength"; rgb = '0 0 1'; break;
-				case IT_INVINCIBLE:     name = "item-shield"; rgb = '1 0 1'; break;
-				case IT_SPEED:          name = "item-speed"; rgb = '1 0 1'; break;
-				case IT_INVISIBILITY:   name = "item-invis"; rgb = '0 0 1'; break;
-				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
+				case IT_STRENGTH:       GameHook_ItemName = "item-strength"; GameHook_ItemColor = '0 0 1'; break;
+				case IT_INVINCIBLE:     GameHook_ItemName = "item-shield"; GameHook_ItemColor = '1 0 1'; break;
+				case IT_SPEED:          GameHook_ItemName = "item-speed"; GameHook_ItemColor = '1 0 1'; break;
+				case IT_INVISIBILITY:   GameHook_ItemName = "item-invis"; GameHook_ItemColor = '0 0 1'; break;
+				case IT_JETPACK:        GameHook_ItemName = "item-jetpack"; GameHook_ItemColor = '0.5 0.5 0.5'; break;
 			}
-			if(name)
+			if(GameHook_ItemName)
 			{
-				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+				WaypointSprite_Spawn(GameHook_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
 				if(self.waypointsprite_attached)
 				{
-					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, rgb);
+					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, GameHook_ItemColor);
 					//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 				}
@@ -1798,17 +1790,7 @@ void Items_Init()
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
-	if (g_minstagib)
-	{
-		start_health = 100;
-		start_armorvalue = 0;
-		start_weapons = WEPBIT_MINSTANEX;
-		weapon_precache(WEP_MINSTANEX);
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-
-	}
-	else
+	if not(GameHookChain_StartAmmoHandle())
 	{
 		if (g_use_ammunition)
 		{
@@ -1860,7 +1842,7 @@ void Items_Init()
 		warmup_start_armorvalue = start_armorvalue;
 		warmup_start_weapons = start_weapons;
 
-		if not(g_minstagib)
+		if not(GameHookChain_WarmupStartAmmoHandle())
 		{
 			if (g_use_ammunition)
 			{
