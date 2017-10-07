@@ -310,7 +310,7 @@ void CSQC_Init(void)
 	registercvar("sbar_columns", "default", CVAR_SAVE);
 	registercvar("sbar_weapons_fadetime", "2", CVAR_SAVE);
 	registercvar("sbar_weapons_fadespeed", "1", CVAR_SAVE);
-	registercvar("cl_shownames_cos", "0.85", CVAR_SAVE);
+	registercvar("cl_shownames_cos", "0.99", CVAR_SAVE);
 	localcmd("alias +nadget2 +button9\n");
 	localcmd("alias -nadget2 -button9\n");
 
