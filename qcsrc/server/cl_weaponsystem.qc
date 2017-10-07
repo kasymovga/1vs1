@@ -222,7 +222,6 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 			sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
 
 		if (ent.items & IT_STRENGTH)
-		if (!g_minstagib)
 			sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 
 		ent.lastshot_time = time;
