@@ -46,15 +46,6 @@ vector healtharmor_maxdamage(float h, float a, float armorblock)
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float damage)
-{
-	vector v;
-	v_y = bound(0, damage * armorblock, a); // save
-	v_x = bound(0, damage - v_y, damage); // take
-	v_z = 0;
-	return v;
-}
-
 void WeaponStats_Init()
 {
 	if(cvar_string("sv_weaponstats_killfile") != "" || cvar_string("sv_weaponstats_damagefile") != "")
