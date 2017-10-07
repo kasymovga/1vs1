@@ -14,9 +14,10 @@ void minstagib_items (float itemid)
 	if (self.classname == "droppedweapon")
 	{
 		self.ammo_cells = 25;
-		StartItem (get_weaponinfo(WEP_MINSTANEX).model,
-			"weapons/weaponpickup.wav", 15, 0,
-			"MinstaNex", 0, WEPBIT_MINSTANEX, FL_WEAPON, generic_pickupevalfunc, 1000);
+		self.weapon = 0;
+		StartItem ("models/items/g_h50.md3",
+			"misc/mediumhealth.wav", 15, 0,
+			"MinstaNex", 0, IT_HEALTH, 0, generic_pickupevalfunc, 1000);
 		return;
 	}
 
@@ -165,8 +166,6 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		// else if(item.items == IT_CELLS)
 		//	play2(player, "announce/robotic/ammo.wav");
 
-		if (item.weapons & WEPBIT_MINSTANEX)
-			W_GiveWeapon (player, WEP_MINSTANEX, "Nex");
 		if (item.ammo_cells)
 			player.ammo_cells = min (player.ammo_cells + g_minstagib_ammo_drop, 999);
 		player.health = 100;
@@ -356,6 +355,8 @@ void minstagib_init() {
 
 	precache_sound ("announcer/robotic/lastsecond.wav");
 	precache_sound ("announcer/robotic/narrowly.wav");
+	precache_sound("misc/mediumhealth.wav");
+	precache_model("models/items/g_h50.md3");
 	minstagib_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = minstagib_PlayerPreThink;
 	minstagib_ItemGiveToHandle_NextLink = GameHookChain_ItemGiveToHandle;
