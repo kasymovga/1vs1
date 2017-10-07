@@ -102,3 +102,4 @@ var float() GameHookChain_WarmupStartAmmoHandle { return FALSE; }
 string GameHook_ItemName;
 vector GameHook_ItemColor;
 var void() GameHookChain_ItemRespawnCountDown {}
+var float() GameHookChain_ArmorBlockPercentMod { return 1; }

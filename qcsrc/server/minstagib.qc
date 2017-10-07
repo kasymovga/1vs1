@@ -338,6 +338,8 @@ void minstagib_ItemRespawnCountDown() {
 	minstagib_ItemRespawnCountDown_NextLink();
 }
 
+float minstagib_ArmorBlockPercentMod() { return 0; }
+
 void minstagib_init() {
 	CACHE_CVAR(g_minstagib);
 	if not(g_minstagib)
@@ -381,6 +383,7 @@ void minstagib_init() {
 	GameHookChain_WarmupStartAmmoHandle = minstagib_WarmupStartAmmoHandle;
 	minstagib_ItemRespawnCountDown_NextLink = GameHookChain_ItemRespawnCountDown;
 	GameHookChain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
+	GameHookChain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;
 }
 
 void spawnfunc_item_minst_cells (void) {

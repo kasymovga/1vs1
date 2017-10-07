@@ -589,17 +589,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if (!g_minstagib)
-	{
-		v = healtharmor_applydamage(self.armorvalue, g_balance_armor_blockpercent, damage);
-		take = v_x;
-		save = v_y;
-	}
-	else
-	{
-		save = 0;
-		take = damage;
-	}
+	save = bound(0, damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
+	take = bound(0, damage - take, damage);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
