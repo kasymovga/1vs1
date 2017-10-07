@@ -547,7 +547,6 @@ void PlayerClear(float killed)
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	local float take, save, waves, sdelay, dh, da;
-	vector v;
 	float valid_damage_for_weaponstats;
 	GameHookChain_PlayerDamageMod = 1;
 	if (GameHookChain_PlayerDamageHandle(inflictor, attacker, damage, deathtype, hitloc, force))
