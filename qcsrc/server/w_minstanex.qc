@@ -1,4 +1,3 @@
-float g_balance_minstanex_ammo;
 float g_balance_minstanex_animtime;
 float g_balance_minstanex_refire;
 
@@ -64,16 +63,9 @@ void W_MinstaNex_Attack (void)
 		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	{
-		if (g_minstagib)
-			self.ammo_cells = self.ammo_cells - 1;
-		else
-			self.ammo_cells = self.ammo_cells - g_balance_minstanex_ammo;
-	}
+		self.ammo_cells = self.ammo_cells - 1;
 }
 
-
-void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
 
 float w_minstanex(float req)
 {
@@ -120,10 +112,7 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		if (g_minstagib)
-			return self.ammo_cells >= 1;
-		else
-			return self.ammo_cells >= g_balance_minstanex_ammo;
+		return self.ammo_cells >= 1;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
@@ -137,7 +126,6 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_minstanex_ammo);
 		CACHE_CVAR(g_balance_minstanex_animtime);
 		CACHE_CVAR(g_balance_minstanex_refire);
 	}

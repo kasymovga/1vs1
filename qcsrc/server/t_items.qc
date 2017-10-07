@@ -1216,11 +1216,6 @@ void spawnfunc_weapon_nex (void)
 	weapon_defaultspawnfunc(WEP_NEX);
 }
 
-void spawnfunc_weapon_minstanex (void)
-{
-	weapon_defaultspawnfunc(WEP_MINSTANEX);
-}
-
 void spawnfunc_weapon_rocketlauncher (void)
 {
 	weapon_defaultspawnfunc(WEP_ROCKET_LAUNCHER);
