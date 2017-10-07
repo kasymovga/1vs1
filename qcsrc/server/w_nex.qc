@@ -33,7 +33,7 @@ void W_Nex_Attack (void)
 	damage_goodhits = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
 
-	if(yoda && flying)
+	if((yoda && flying) || yoda > 1)
 		announce(self, "announcer/male/yoda.wav");
 	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "")
 	{

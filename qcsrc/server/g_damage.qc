@@ -743,12 +743,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
-							if(!g_minstagib)
 							if(IsFlying(targ))
-								yoda = 1;
+								yoda = max(1, yoda);
 
 							if(targ.items & IT_INVISIBILITY)
-								yoda = 1;
+								yoda = 2;
 
 							if(deathtype & HITTYPE_HEADSHOT)
 								headshot = 1;

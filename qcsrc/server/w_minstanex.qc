@@ -16,29 +16,13 @@ void W_MinstaNex_Attack (void)
 	headshot = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 
-	if(g_minstagib)
-	{
-		if(yoda)
-			announce(self, "announcer/male/yoda.wav");
-	}
-	else
-	{
-		if(yoda && flying)
-			announce(self, "announcer/male/yoda.wav");
-		if(headshot)
-		{
-			announce(self, "announcer/male/headshot.wav");
-			print("h\n");
-		}
-		if(damage_goodhits && self.minstanex_lasthit)
-		{
-			if(announce(self, "announcer/male/impressive.wav"))
-				damage_goodhits = 0; // only every second time
-		}
-	}
+	if(yoda > 1)
+		announce(self, "announcer/male/yoda.wav");
+
+	if(headshot)
+		announce(self, "announcer/male/headshot.wav");
 
 	self.minstanex_lasthit = damage_goodhits;
-
 	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
