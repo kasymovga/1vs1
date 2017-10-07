@@ -486,40 +486,27 @@ void DropBackPack(vector org)
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float take, save;
-	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, g_balance_armor_blockpercent, damage);
-	take = v_x;
-	save = v_y;
-
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
-		if (save > 10)
-			sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
-		else if (take > 30)
+		if (damage > 30)
 			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
-		else if (take > 10)
+		else if (damage > 10)
 			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 	}
 
-	if (take > 50)
+	if (damage > 50)
 		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
-	if (take > 100)
+	if (damage > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	self.armorvalue = self.armorvalue - save;
-	self.health = self.health - take;
-	// pause regeneration for 5 seconds
-	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_health_regen);
-	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
-	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
+	self.health = self.health - damage;
+	self.dmg_take = self.dmg_take + damage;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-
 	if (self.health <= -75 && self.modelindex != 0)
 	{
 		// don't use any animations as a gib
