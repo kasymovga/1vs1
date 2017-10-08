@@ -844,7 +844,7 @@ void Ent_ReadEntCS(float bIsNewEntity)
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
 	self.angles_y = ReadByte() * 360.0 / 256;
-	self.origin_z = self.angles_x = self.angles_z = 0;
+	self.angles_x = self.angles_z = 0;
 	self.classname = "entcs_receiver";
 	self.cnt = 0;
 	if (bIsNewEntity)

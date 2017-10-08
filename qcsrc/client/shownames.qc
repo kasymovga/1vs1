@@ -10,6 +10,7 @@
 .float sn_lastdraw;
 //.float sn_forcefrozen;
 .vector iorigin;
+.entity teambubble;
 
 float(float entitynum, float fldnum) getentity = #504;
 vector(float entitynum, float fldnum) getentityvec = #504;
@@ -40,6 +41,8 @@ float Shownames_PreDrawPlayer() {
 
 	if(getentity(plr_entnum, E_ACTIVE)) {
 		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
+		if (self.teambubble)
+			self.teambubble.cnt = 1;
 	} else
 		return FALSE;
 
@@ -118,6 +121,21 @@ void Shownames_DrawPlayer() {
     drawfont = oldfont;
 }
 
+void Shownames_TeamBubbleRemove() {
+	remove(self.teambubble);
+}
+
+void Shownames_TeamBubbleDraw() {
+	if (self.cnt) {
+		self.origin = self.owner.iorigin + '0 0 64';
+		self.cnt = 0;
+	} else
+		self.origin = self.owner.origin + '0 0 64';
+
+	self.scale = 1 + (vlen(view_origin - self.origin)) / 400;
+	R_AddEntity(self);
+}
+
 void Shownames_Init(entity plr) {
     plr.draw2d = Shownames_DrawPlayer;
 	if (ext_DP_CSQC_QUERYRENDERENTITY)
@@ -125,4 +143,14 @@ void Shownames_Init(entity plr) {
 	else
 		plr.draw2d_pre = Shownames_PreDrawPlayer_Disabled;
 
+	if (teamplay)
+	if not(plr.cnt) {
+		plr.entremove = Shownames_TeamBubbleRemove;
+		plr.teambubble = spawn();
+		precache_model("models/misc/teambubble.spr");
+		setmodel(plr.teambubble, "models/misc/teambubble.spr");
+		plr.teambubble.effects = EF_NODEPTHTEST;
+		plr.teambubble.owner = plr;
+		plr.teambubble.draw = Shownames_TeamBubbleDraw;
+	}
 }

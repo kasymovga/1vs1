@@ -338,11 +338,6 @@ void CSQC_UpdateView(float w, float h)
 	// draw radar
 	if(ons_showmap)
 		teamradar_view(TRUE, "");
-	else if (CVAR(cl_teamradar)) {
-		if ((CVAR(cl_teamradar) == 2 || teamplay))
-		if (draw_crosshair)
-			teamradar_view(FALSE, "");
-	}
 
 	// draw sbar
  	if(CVAR(r_letterbox) == 0) {

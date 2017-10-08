@@ -1396,7 +1396,6 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-.entity teambubbleentity;
 void ClientDisconnect (void)
 {
 	if not(self.flags & FL_CLIENT)
@@ -1433,9 +1432,6 @@ void ClientDisconnect (void)
 
 	if (self.chatbubbleentity)
 		remove (self.chatbubbleentity);
-
-	if (self.teambubbleentity)
-		remove (self.teambubbleentity);
 
 	if (self.killindicator)
 		remove (self.killindicator);
@@ -1512,52 +1508,6 @@ void UpdateChatBubble()
 	}
 }
 
-
-void TeamBubbleThink()
-{
-	self.nextthink = time;
-	if (!self.owner.modelindex || self.owner.teambubbleentity != self)
-	{
-		if(self.owner) // but why can that ever be world?
-			self.owner.teambubbleentity = world;
-		remove(self);
-		return;
-	}
-//	setorigin(self, self.owner.origin + '0 0 15' + self.owner.maxs_z * '0 0 1');  // bandwidth hog. setattachment does this now
-	if (self.owner.BUTTON_CHAT || self.owner.deadflag || self.owner.killindicator)
-		self.model = "";
-	else
-		self.model = self.mdl;
-
-};
-
-float TeamBubble_customizeentityforclient()
-{
-	return (self.owner != other && self.owner.team == other.team && other.killcount > -666);
-}
-
-void UpdateTeamBubble()
-{
-	if (!self.modelindex || !teamplay)
-		return;
-	// spawn a teambubble entity if needed
-	if (!self.teambubbleentity && teamplay)
-	{
-		self.teambubbleentity = spawn();
-		self.teambubbleentity.owner = self;
-		self.teambubbleentity.exteriormodeltoclient = self;
-		self.teambubbleentity.think = TeamBubbleThink;
-		self.teambubbleentity.nextthink = time;
-		setmodel(self.teambubbleentity, "models/misc/teambubble.spr"); // precision set below
-//		setorigin(self.teambubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.teambubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
-		setattachment(self.teambubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
-		self.teambubbleentity.mdl = self.teambubbleentity.model;
-		self.teambubbleentity.model = self.teambubbleentity.mdl;
-		self.teambubbleentity.customizeentityforclient = TeamBubble_customizeentityforclient;
-		self.teambubbleentity.effects = EF_LOWPRECISION;
-	}
-}
 
 void respawn(void)
 {
@@ -2201,7 +2151,6 @@ void PlayerPostThink (void)
 	if(self.classname == "player") {
 		CheckRules_Player();
 		UpdateChatBubble();
-		UpdateTeamBubble();
 		if (self.impulse)
 			ImpulseCommands();
 		if (intermission_running)
