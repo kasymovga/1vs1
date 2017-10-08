@@ -28,8 +28,13 @@ float E_ORIGIN      = 1; // vector
 float Shownames_PreDrawPlayer_Disabled() { return FALSE; }
 
 float Shownames_PreDrawPlayer() {
-    if(!CVAR(cl_shownames))
+    if(CVAR(cl_shownames) < 1)
         return FALSE;
+
+	if (CVAR(cl_shownames < 2))
+	if (teamplay)
+	if (self.cnt)
+		return FALSE;
 
 	float plr_entnum = self.sv_entnum + 1;
 

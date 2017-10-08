@@ -86,10 +86,6 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Damage kick:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.5, 0.05, "v_kicktime"));
-	me.TR(me);
-		sl = makeNexuizSlider(0.45, 0.75, 0.01, "cl_bobcycle");
-		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, sl, "View bobbing:"));
-		me.TD(me, 1, 2, sl);
 	
 	me.TR(me);
 	me.TR(me);
@@ -106,7 +102,15 @@ void fillNexuizPlayerSettingsTab(entity me)
 		me.TD(me, 1, 1.5, e0 = makeNexuizTextLabel(0, string_null));
 			e0.textEntity = main.weaponsDialog;
 			e0.allowCut = 1;
+
 	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Show names:"));
+		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_shownames"));
+			e.addValue(e, "Never", "0");
+			e.addValue(e, "Teammates", "1");
+			e.addValue(e, "All players", "2");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "crosshair_per_weapon", "Per weapon crosshairs"));
 		me.TD(me, 1, 1.3, e = makeNexuizCheckBox(1, "crosshair_color_override", "& crosshair colors"));
