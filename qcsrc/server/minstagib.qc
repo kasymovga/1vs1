@@ -1,3 +1,4 @@
+float g_minstagib;
 float g_minstagib_ammo_drop;
 float g_minstagib_extralives;
 float g_minstagib_speed_jumpheight;
