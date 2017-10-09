@@ -9,7 +9,7 @@ void walker_bullet() {
 	w_shotdir_x = v_forward_x;
 	w_shotdir_y = v_forward_y;
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet(w_shotorg, w_shotdir, 0.1, 5000, 5, 10, 0, 10, DEATH_TURRET, 0, 1, 0);
+    fireBallisticBullet(w_shotorg, w_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, 0, 1, 0);
     endFireBallisticBullet();
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3");
@@ -24,7 +24,7 @@ void walker_bullet() {
 }
 
 void walker_rocket_explode() {
-    RadiusDamage (self, self.owner, 100, 0, 100, world, 100, WEP_ROCKET_LAUNCHER, world);
+    RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, WEP_ROCKET_LAUNCHER, world);
     remove(self);
 }
 
@@ -107,6 +107,9 @@ void walker_hunt() {
 			self.bulletcounter = self.bulletcounter + 0.5;
 			entity missile = spawn();
 			missile.owner = self;
+			missile.dmg_edge = self.dmg_edge;
+			missile.dmg_radius = self.dmg_radius;
+			missile.dmg_force = self.dmg_force;
 			missile.classname = "walker_rocket";
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;

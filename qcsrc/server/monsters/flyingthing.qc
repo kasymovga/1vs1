@@ -4,7 +4,7 @@ void flyingthing_grenade_explode (void)
 {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, 50, 0, 100, world, 100, self.projectiledeathtype, other);
+	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
 	remove (self);
 }
 
@@ -47,6 +47,9 @@ void flyingthing_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = spawn();
 		gren.owner = self;
+		gren.dmg_edge = self.dmg_edge;
+		gren.dmg_radius = self.dmg_radius;
+		gren.dmg_force = self.dmg_force;
 		gren.classname = "grenade";
 		gren.movetype = MOVETYPE_FLY;
 		PROJECTILE_MAKETRIGGER(gren);

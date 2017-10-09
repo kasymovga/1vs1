@@ -13,7 +13,7 @@ void ewheel_idle() {
 void ewhell_proj_explode (void) {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage(self, self.owner, 25, 0, 25, world, 25, self.projectiledeathtype, other);
+	RadiusDamage(self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
 	remove (self);
 }
 
@@ -47,6 +47,9 @@ void ewheel_hunt() {
 			for (i = -1; i < 2; i += 2) {
 				entity proj = spawn();
 				proj.owner = self;
+				proj.dmg_edge = self.dmg_edge;
+				proj.dmg_radius = self.dmg_radius;
+				proj.dmg_force = self.dmg_force;
 				proj.classname = "ewheel bolt";
 				proj.movetype = MOVETYPE_FLYMISSILE;
 				proj.gravity = 0.01;

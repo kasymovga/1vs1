@@ -8,7 +8,7 @@ void spearguy_hunt() {
 		return;
 
 	vector v;
-	if (vlen(self.enemy.origin - self.origin) > 80) {
+	if (vlen(self.enemy.origin - self.origin) > self.dmg_radius) {
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 		v = monster_move_walk(600, 5, 500);
 	} else {
@@ -18,8 +18,8 @@ void spearguy_hunt() {
 		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			makevectors(self.angles);
-			te_lightning1(world, self.origin + normalize(v_forward) * 20, self.enemy.origin);
-			Damage(self.enemy, self, self, 50 * frametime, WEP_MELEE, self.enemy.origin, v_forward);
+			te_lightning1(world, self.origin + normalize(v_forward) * 20 + v_right * 10, self.enemy.origin);
+			Damage(self.enemy, self, self, self.dmg_edge * frametime, WEP_MELEE, self.enemy.origin, v_forward);
 		}
 	}
 	v = vectoangles(v);

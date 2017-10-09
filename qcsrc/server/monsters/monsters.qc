@@ -220,6 +220,9 @@ void monster_spawn_use() {
 void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.classname = "monster";
 	self.health = self.owner.health;
+	self.dmg_edge = self.owner.dmg_edge;
+	self.dmg_force = self.owner.dmg_force;
+	self.dmg_radius = self.owner.dmg_radius;
 	self.iscreature = TRUE;
 	self.bot_attack = TRUE;
 	self.team = self.owner.team;
@@ -326,7 +329,10 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.nextthink = 0;
 	self.dmg = max(self.cnt, 1);
 	self.reset = resetfunc;
+	self.dmg_edge = cvar(strcat("g_monster_", monster_classname(), "_damage"));
+	self.dmg_force = cvar(strcat("g_monster_", monster_classname(), "_force"));
 	self.health = cvar(strcat("g_monster_", monster_classname(), "_health"));
+	self.dmg_radius = cvar(strcat("g_monster_", monster_classname(), "_radius"));
 	if (teamplay)
 	if not(self.team)
 		self.team = -1;
