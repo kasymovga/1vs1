@@ -2458,9 +2458,9 @@ void Sbar_Draw (void)
 		else if(sb_showaccuracy)
 			Sbar_DrawAccuracyStats();
 
-		float armor, health;
+		float armor, _health;
 		armor = getstati(STAT_ARMOR);
-		health = getstati(STAT_HEALTH);
+		_health = getstati(STAT_HEALTH);
 
 		stat_items = getstati(STAT_ITEMS);
 		stat_weapons = getstati(STAT_WEAPONS);
@@ -2507,7 +2507,7 @@ void Sbar_Draw (void)
 		}
 
 		// health
-		x = health;
+		x = _health;
 		drawpic(health_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		Sbar_DrawXNum_Colored(health_pos, x, 24, sbar_alpha_fg);
 

@@ -232,3 +232,4 @@ vector angles_held;
 .float waterlevel; // direction jitter
 
 float camera_correction_needed;
+.float health;

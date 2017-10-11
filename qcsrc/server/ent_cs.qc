@@ -82,7 +82,7 @@ float entcs_send(entity to, float sf)
 	WriteShort(MSG_ENTITY, o.origin_x);
 	WriteShort(MSG_ENTITY, o.origin_y);
 	WriteShort(MSG_ENTITY, o.origin_z);
-	WriteByte(MSG_ENTITY, o.angles_y * 256.0 / 360);
+	WriteByte(MSG_ENTITY, bound(0, o.health, 255));
 	return TRUE;
 };
 

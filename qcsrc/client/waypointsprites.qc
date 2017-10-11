@@ -19,7 +19,6 @@ float waypointsprite_distancefadedistance;
 .float maxdistance;
 .float hideflags;
 .float spawntime;
-.float health;
 .float build_started;
 .float build_starthealth;
 .float build_finished;

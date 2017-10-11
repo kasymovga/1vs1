@@ -29,21 +29,20 @@ float E_ORIGIN      = 1; // vector
 float Shownames_PreDrawPlayer_Disabled() { return FALSE; }
 
 float Shownames_PreDrawPlayer() {
+	float plr_entnum = self.sv_entnum + 1;
+	if(getentity(plr_entnum, E_ACTIVE)) {
+		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
+		if (self.teambubble)
+			self.teambubble.cnt = 1;
+	} else
+		return FALSE;
+
     if(CVAR(cl_shownames) < 1)
         return FALSE;
 
 	if (CVAR(cl_shownames < 2))
 	if (teamplay)
 	if (self.cnt)
-		return FALSE;
-
-	float plr_entnum = self.sv_entnum + 1;
-
-	if(getentity(plr_entnum, E_ACTIVE)) {
-		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
-		if (self.teambubble)
-			self.teambubble.cnt = 1;
-	} else
 		return FALSE;
 
 	vector v = normalize(self.iorigin - view_origin);
@@ -133,6 +132,18 @@ void Shownames_TeamBubbleDraw() {
 		self.origin = self.owner.origin + '0 0 64';
 
 	self.scale = 1 + (vlen(view_origin - self.origin)) / 400;
+	float h = self.owner.health;
+	if (h < 100) {
+		float redfactor = 1 - h / 100;
+		redfactor *= redfactor;
+		self.colormod_x = 1 + redfactor;
+		self.colormod_y = self.colormod_z = 1 - redfactor;
+	} else {
+		float greenfactor = 1 - (h - 100) / 155;
+		greenfactor *= greenfactor;
+		self.colormod_y = 1 + greenfactor;
+		self.colormod_x = self.colormod_z = 1 - greenfactor;
+	}
 	R_AddEntity(self);
 }
 
