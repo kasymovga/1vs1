@@ -147,7 +147,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeNexuizButton("Radar, HUD & Waypoints...", '0 0 0'));
+		me.TD(me, 1, 2.2, e = makeNexuizButton("HUD & Waypoints...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.radarDialog;
 		me.TDempty(me, 0.5);
