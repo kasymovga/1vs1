@@ -34,8 +34,10 @@ float Shownames_PreDrawPlayer() {
 		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
 		if (self.teambubble)
 			self.teambubble.cnt = 1;
-	} else
-		return FALSE;
+	} else {
+		InterpolateOrigin_Do();
+		self.iorigin = self.origin;
+	}
 
     if(CVAR(cl_shownames) < 1)
         return FALSE;
