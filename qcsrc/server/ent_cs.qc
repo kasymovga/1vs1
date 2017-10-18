@@ -44,7 +44,6 @@ float entcs_customize()
 		return FALSE;
 	if(other == o)
 		return FALSE;
-	if(other.team > 0)
 	if(o.team != other.team)
 		return FALSE;
 	return TRUE;
@@ -56,13 +55,7 @@ float entcs_customize_enemy()
 	o = self.owner;
 	if(PLAYER_REALLY_DEAD(o))
 		return FALSE;
-	if(o.classname != "player")
-		return FALSE;
 
-	if (o == other)
-		return FALSE;
-
-	if(other.classname == "player")
 	if(teamplay)
 	if(o.team == other.team)
 		return FALSE;
