@@ -848,8 +848,6 @@ void Ent_ReadEntCS(float bIsNewEntity)
 	self.cnt = 0;
 	if (bIsNewEntity)
 		Shownames_Init(self);
-
-	InterpolateOrigin_Note();
 }
 
 void Ent_ReadEntCSEnemy(float bIsNewEntity)
