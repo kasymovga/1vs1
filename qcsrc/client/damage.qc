@@ -2,12 +2,9 @@
 
 void Ent_DamageInfo(float isNew)
 {
-	float hittype, dmg, rad, edge, thisdmg, forcemul;
+	float hittype;
 	float issilent;
-	vector force, org, thisforce;
-	entity oldself;
-
-	oldself = self;
+	vector force, org;
 
 	hittype = ReadShort();
 
@@ -18,67 +15,12 @@ void Ent_DamageInfo(float isNew)
 	org_y = ReadCoord();
 	org_z = ReadCoord();
 
-	dmg = ReadByte();
-	rad = ReadByte();
-	edge = ReadByte();
 	force = decompressShortVector(ReadShort());
 
 	self.team = ReadByte();
 
 	if not(isNew)
 		return;
-
-	if(rad < 0)
-	{
-		rad = -rad;
-		forcemul = -1;
-	}
-	else
-		forcemul = 1;
-
-	for(self = findradius(org, rad); self; self = self.chain)
-	{
-		if(rad)
-		{
-			thisdmg = vlen(self.origin - org) / rad;
-			if(thisdmg >= 1)
-				continue;
-			if(dmg)
-			{
-				thisdmg = dmg + (edge - dmg) * thisdmg;
-				thisforce = forcemul * vlen(force) * (thisdmg / dmg) * normalize(self.origin - org);
-			}
-			else
-			{
-				thisdmg = 0;
-				thisforce = forcemul * vlen(force) * normalize(self.origin - org);
-			}
-		}
-		else
-		{
-			thisdmg = dmg;
-			thisforce = forcemul * force;
-		}
-
-		//print("check ", ftos(num_for_edict(self)), " ", self.classname, "\n");
-		//print(ftos(self.damageforcescale), "\n");
-		//print(vtos(thisforce), "\n");
-		if(self.damageforcescale)
-			if(vlen(thisforce))
-			{
-				self.move_velocity = self.move_velocity + self.damageforcescale * thisforce;
-				self.move_flags &~= FL_ONGROUND;
-				//print("pushed ", ftos(num_for_edict(self)), " loose\n");
-			}
-
-		if(issilent)
-			self.silent = 1;
-
-		if(self.event_damage)
-			self.event_damage(thisdmg, hittype, org, thisforce);
-	}
-
-	self = oldself;
 
 	// TODO spawn particle effects and sounds based on hittype
 
