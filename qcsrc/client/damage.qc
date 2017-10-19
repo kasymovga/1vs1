@@ -254,3 +254,40 @@ void DamageInfo_Precache()
 	precache_sound("weapons/fireball_impact.wav");
 	precache_sound("weapons/fireball_impact2.wav");
 }
+
+void DamageIndicator_Draw() {
+	if (self.alpha <= 0)
+		return;
+
+	self.alpha -= frametime * 0.5;
+	self.origin_z += frametime * 25;
+	vector o = project_3d_to_2d(self.origin);
+    if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
+        return;
+
+	o_z = 0;
+	string s = ftos(self.cnt);
+	drawstring(o, s, '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+}
+
+void Ent_DamageIndicator(float bisnew);
+
+void DamageIndicator_Remove() {
+	entity e = spawn();
+	e.origin = self.origin;
+	e.cnt = self.cnt;
+	e.alpha = self.alpha;
+	e.draw2d = DamageIndicator_Draw;
+	e.think = SUB_Remove;
+	e.nextthink = time + self.alpha * 2;
+}
+
+void Ent_DamageIndicator(float bisnew) {
+	self.cnt = ReadByte();
+	self.origin_x = ReadShort();
+	self.origin_y = ReadShort();
+	self.origin_z = ReadShort();
+	self.alpha = 1;
+	self.draw2d = DamageIndicator_Draw;
+	self.entremove = DamageIndicator_Remove;
+}

@@ -82,6 +82,7 @@ info_messages.qh
 w_campingrifle.qh
 
 w_rocketlauncher.qh
+damageindicator.qh
 
 ../common/cl_physics.qh
 ../common/cl_physics_spiderbot.qh
@@ -289,3 +290,4 @@ radio.qc
 ../common/curl.qc
 badass.qc
 gamestatus.qc
+damageindicator.qc

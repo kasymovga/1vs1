@@ -2,6 +2,7 @@
 .float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
+.entity dmg_indicator;
 
 float bot_taunt;
 float bot_talk;
@@ -19,7 +20,6 @@ float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
 string sv_announcer_extra_twohits; //used in w_nex.qc
-
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
@@ -691,7 +691,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		force = force * GameHook_ForceMod;
 		mirrordamage = mirrordamage * GameHook_MirrorDamageMod;
 		mirrorforce = mirrorforce * GameHook_MirrorForceMod;
-
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
