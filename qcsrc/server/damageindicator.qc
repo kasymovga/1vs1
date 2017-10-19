@@ -4,7 +4,7 @@ float DamageIndicator_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DMG_INDICATOR);
 	float damage = self.dmg + 0.4;
 	if (self.dmg < 251)
-		WriteByte(MSG_ENTITY, bound(0, self.dmg, 255));
+		WriteByte(MSG_ENTITY, bound(0, damage, 255));
 	else if (self.dmg < 500)
 		WriteByte(MSG_ENTITY, 251);
 	else if (self.dmg < 1000)
