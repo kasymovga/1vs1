@@ -609,19 +609,6 @@ void backtrace(string msg)
     cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
 
-string Team_ColorCode(float teamid)
-{
-    if (teamid == COLOR_TEAM1)
-        return "^1";
-    else if (teamid == COLOR_TEAM2)
-        return "^4";
-    else if (teamid == COLOR_TEAM3)
-        return "^3";
-    else if (teamid == COLOR_TEAM4)
-        return "^6";
-    else
-        return "^7";
-}
 string Team_ColorName(float t)
 {
     // fixme: Search for team entities and get their .netname's!
@@ -635,6 +622,7 @@ string Team_ColorName(float t)
         return "Pink";
     return "Neutral";
 }
+
 string Team_ColorNameLowerCase(float t)
 {
     // fixme: Search for team entities and get their .netname's!

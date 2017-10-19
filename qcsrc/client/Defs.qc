@@ -233,3 +233,4 @@ vector angles_held;
 
 float camera_correction_needed;
 .float health;
+.float armorvalue;

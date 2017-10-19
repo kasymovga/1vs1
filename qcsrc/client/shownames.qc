@@ -97,9 +97,13 @@ void Shownames_DrawPlayer() {
     s = GetPlayerName(self.sv_entnum);
     float textsz = SHOWNAMES_FONTSIZE;
 
+	float _team;
     if(teamplay) {
-        s = strdecolorize(s);
-        s = textShortenToWidth(s, namesize, stringwidth_nocolors);
+		_team = GetPlayerColorForce(self.sv_entnum);
+        s = textShortenToWidth(strdecolorize(s), namesize, stringwidth_nocolors);
+        s = strcat(Team_ColorCode(_team), s);
+		if not(self.cnt)
+			s = strcat(s, " ^7(^1", ftos(self.health), (self.armorvalue ? strcat("^7/^2", ftos(self.armorvalue)): ""), "^7)");
     } else s = textShortenToWidth(s, namesize, stringwidth_colors);
 
     float width = stringwidth(s, TRUE);
@@ -113,10 +117,7 @@ void Shownames_DrawPlayer() {
 
 	namepos_x = namepos_x - 0.5 * width * textsz;
 
-    if(teamplay)
-        drawstring(namepos, s, textsz * '1 1 0', GetTeamRGB(GetPlayerColorForce(self.sv_entnum)) + '0.2 0.2 0.2', a, DRAWFLAG_NORMAL);
-    else
-        drawcolorcodedstring(namepos, s, textsz * '1 1 0', a, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(namepos, s, textsz * '1 1 0', a, DRAWFLAG_NORMAL);
     
     drawfont = oldfont;
 }

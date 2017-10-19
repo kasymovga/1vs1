@@ -76,6 +76,7 @@ float entcs_send(entity to, float sf)
 	WriteShort(MSG_ENTITY, o.origin_y);
 	WriteShort(MSG_ENTITY, o.origin_z);
 	WriteByte(MSG_ENTITY, bound(0, o.health, 255));
+	WriteByte(MSG_ENTITY, bound(0, o.armorvalue, 255));
 	return TRUE;
 };
 

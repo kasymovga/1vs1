@@ -844,6 +844,7 @@ void Ent_ReadEntCS(float bIsNewEntity)
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
 	self.health = ReadByte();
+	self.armorvalue = ReadByte();
 	self.classname = "entcs_receiver";
 	self.cnt = 0;
 	if (bIsNewEntity)
