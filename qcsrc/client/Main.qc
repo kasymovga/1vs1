@@ -290,6 +290,7 @@ void CSQC_Init(void)
 	registercvar("crosshair_supershotgun_color_red", "1", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_green", "0.5", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
+	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
 
 #ifndef CAMERATEST
 	if(isdemo())

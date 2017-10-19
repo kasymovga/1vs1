@@ -259,7 +259,7 @@ void DamageIndicator_Draw() {
 	if (self.alpha <= 0)
 		return;
 
-	self.alpha -= frametime * 0.5;
+	self.alpha -= frametime / CVAR(cl_damageindicator);
 	self.origin_z += frametime * 25;
 	vector o = project_3d_to_2d(self.origin);
     if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
@@ -293,7 +293,7 @@ void DamageIndicator_Remove() {
 	e.alpha = self.alpha;
 	e.draw2d = DamageIndicator_Draw;
 	e.think = SUB_Remove;
-	e.nextthink = time + self.alpha * 2;
+	e.nextthink = time + self.alpha * CVAR(cl_damageindicator);
 }
 
 void Ent_DamageIndicator(float bisnew) {
@@ -301,7 +301,9 @@ void Ent_DamageIndicator(float bisnew) {
 	self.origin_x = ReadShort();
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
-	self.alpha = 1;
-	self.draw2d = DamageIndicator_Draw;
-	self.entremove = DamageIndicator_Remove;
+	if (CVAR(cl_damageindicator) > 0) {
+		self.alpha = 1;
+		self.draw2d = DamageIndicator_Draw;
+		self.entremove = DamageIndicator_Remove;
+	}
 }
