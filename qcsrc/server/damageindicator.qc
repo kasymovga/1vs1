@@ -2,7 +2,20 @@ float sv_damageindicator_accumulate_interval;
 
 float DamageIndicator_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DMG_INDICATOR);
-	WriteByte(MSG_ENTITY, bound(0, self.dmg + 0.4, 255));
+	float damage = self.dmg + 0.4;
+	if (self.dmg < 251)
+		WriteByte(MSG_ENTITY, bound(0, self.dmg, 255));
+	else if (self.dmg < 500)
+		WriteByte(MSG_ENTITY, 251);
+	else if (self.dmg < 1000)
+		WriteByte(MSG_ENTITY, 252);
+	else if (self.dmg < 2000)
+		WriteByte(MSG_ENTITY, 253);
+	else if (self.dmg < 5000)
+		WriteByte(MSG_ENTITY, 254);
+	else
+		WriteByte(MSG_ENTITY, 255);
+
 	WriteShort(MSG_ENTITY, self.origin_x);
 	WriteShort(MSG_ENTITY, self.origin_y);
 	WriteShort(MSG_ENTITY, self.origin_z);
