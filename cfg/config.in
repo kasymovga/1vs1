@@ -1162,3 +1162,7 @@ set g_antilag 2 "AntiLag"
 set g_chat_flood_damage_flooder 25
 
 set cl_shownames_cos 0.99 "cosinus of show names field angle"
+
+set sv_damageindicator 1
+set sv_damageindicator_accumulate_interval 0.4
+set cl_damageindicator 1.5

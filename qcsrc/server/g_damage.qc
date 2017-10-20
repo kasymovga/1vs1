@@ -2,6 +2,7 @@
 .float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
+.entity dmg_indicator;
 
 float bot_taunt;
 float bot_talk;
@@ -20,7 +21,6 @@ string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
 string sv_announcer_extra_twohits; //used in w_nex.qc
 
-
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
@@ -28,9 +28,6 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
 	WriteCoord(MSG_ENTITY, floor(self.origin_y));
 	WriteCoord(MSG_ENTITY, floor(self.origin_z));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
 	WriteShort(MSG_ENTITY, self.oldorigin_x);
 	WriteByte(MSG_ENTITY, self.team);
 	return TRUE;
@@ -49,12 +46,7 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e = spawn();
 	setorigin(e, org);
 	e.projectiledeathtype = deathtype;
-	e.dmg = coredamage;
-	e.dmg_edge = edgedamage;
-	e.dmg_radius = rad;
-	e.dmg_force = vlen(force);
-	e.velocity = force;
-	e.oldorigin_x = compressShortVector(e.velocity);
+	e.oldorigin_x = compressShortVector(force);
 
 	if(teamplay) {
 		e.team = dmgowner.team;
@@ -699,7 +691,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		force = force * GameHook_ForceMod;
 		mirrordamage = mirrordamage * GameHook_MirrorDamageMod;
 		mirrorforce = mirrorforce * GameHook_MirrorForceMod;
-
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)

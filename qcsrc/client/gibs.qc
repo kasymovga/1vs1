@@ -126,8 +126,6 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 	gib.move_velocity = vconst * CVAR_OR(cl_gibs_velocity_scale, 1) + vrand * CVAR_OR(cl_gibs_velocity_random, 1) + '0 0 1' * CVAR(cl_gibs_velocity_up);
 	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity);
 	gib.move_time = time;
-	gib.damageforcescale = CVAR_OR(cl_gibs_damageforcescale, 3.5);
-
 	gib.nextthink = time + CVAR_OR(cl_gibs_lifetime, 14) * (1 + prandom() * 0.15);
 
 	RubbleLimit("gib", CVAR_OR(cl_gibs_maxcount,100), Gib_Delete);

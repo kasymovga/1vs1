@@ -290,6 +290,7 @@ void CSQC_Init(void)
 	registercvar("crosshair_supershotgun_color_red", "1", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_green", "0.5", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
+	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
 
 #ifndef CAMERATEST
 	if(isdemo())
@@ -402,6 +403,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_DLC_LIST] = Ent_DLCList;
 	ent_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
 	ent_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
+	ent_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
 	ent_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
 	SetConWidthHeight();
 }

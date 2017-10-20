@@ -193,6 +193,7 @@ void CopyBody(float keepvelocity)
 	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
 	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
 	self.scale = oldself.scale;
+	self.deadflag = oldself.deadflag;
 	if (keepvelocity == 1)
 		self.velocity = oldself.velocity;
 	self.oldvelocity = self.velocity;

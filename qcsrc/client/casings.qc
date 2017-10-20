@@ -62,14 +62,6 @@ void Casing_Touch()
 	self.nextthink = time + 0.2;
 }
 
-void Casing_Damage(float thisdmg, float hittype, vector org, vector thisforce)
-{
-	if(thisforce_z < 0)
-		thisforce_z = 0;
-	self.move_velocity = self.move_velocity + thisforce + '0 0 100';
-	self.move_flags &~= FL_ONGROUND;
-}
-
 void Ent_Casing(float isNew)
 {
 	entity casing;
@@ -95,7 +87,6 @@ void Ent_Casing(float isNew)
 		casing.move_movetype = MOVETYPE_BOUNCE;
 		casing.move_touch = Casing_Touch;
 		casing.move_time = time;
-		casing.event_damage = Casing_Damage;
 		casing.solid = SOLID_TRIGGER;
 
 		switch(casing.state)

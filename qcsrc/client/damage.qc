@@ -2,12 +2,9 @@
 
 void Ent_DamageInfo(float isNew)
 {
-	float hittype, dmg, rad, edge, thisdmg, forcemul;
+	float hittype;
 	float issilent;
-	vector force, org, thisforce;
-	entity oldself;
-
-	oldself = self;
+	vector force, org;
 
 	hittype = ReadShort();
 
@@ -18,67 +15,12 @@ void Ent_DamageInfo(float isNew)
 	org_y = ReadCoord();
 	org_z = ReadCoord();
 
-	dmg = ReadByte();
-	rad = ReadByte();
-	edge = ReadByte();
 	force = decompressShortVector(ReadShort());
 
 	self.team = ReadByte();
 
 	if not(isNew)
 		return;
-
-	if(rad < 0)
-	{
-		rad = -rad;
-		forcemul = -1;
-	}
-	else
-		forcemul = 1;
-
-	for(self = findradius(org, rad); self; self = self.chain)
-	{
-		if(rad)
-		{
-			thisdmg = vlen(self.origin - org) / rad;
-			if(thisdmg >= 1)
-				continue;
-			if(dmg)
-			{
-				thisdmg = dmg + (edge - dmg) * thisdmg;
-				thisforce = forcemul * vlen(force) * (thisdmg / dmg) * normalize(self.origin - org);
-			}
-			else
-			{
-				thisdmg = 0;
-				thisforce = forcemul * vlen(force) * normalize(self.origin - org);
-			}
-		}
-		else
-		{
-			thisdmg = dmg;
-			thisforce = forcemul * force;
-		}
-
-		//print("check ", ftos(num_for_edict(self)), " ", self.classname, "\n");
-		//print(ftos(self.damageforcescale), "\n");
-		//print(vtos(thisforce), "\n");
-		if(self.damageforcescale)
-			if(vlen(thisforce))
-			{
-				self.move_velocity = self.move_velocity + self.damageforcescale * thisforce;
-				self.move_flags &~= FL_ONGROUND;
-				//print("pushed ", ftos(num_for_edict(self)), " loose\n");
-			}
-
-		if(issilent)
-			self.silent = 1;
-
-		if(self.event_damage)
-			self.event_damage(thisdmg, hittype, org, thisforce);
-	}
-
-	self = oldself;
 
 	// TODO spawn particle effects and sounds based on hittype
 
@@ -311,4 +253,57 @@ void DamageInfo_Precache()
 	precache_sound("weapons/rocket_impact.wav");
 	precache_sound("weapons/fireball_impact.wav");
 	precache_sound("weapons/fireball_impact2.wav");
+}
+
+void DamageIndicator_Draw() {
+	if (self.alpha <= 0)
+		return;
+
+	self.alpha -= frametime / CVAR(cl_damageindicator);
+	self.origin_z += frametime * 25;
+	vector o = project_3d_to_2d(self.origin);
+    if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
+        return;
+
+	o_z = 0;
+	float d = self.cnt;
+	string s;
+	if (d < 251)
+		s = ftos(d);
+	else if (d == 251)
+		s = "250+";
+	else if (d == 252)
+		s = "500+";
+	else if (d == 253)
+		s = "1K+";
+	else if (d == 254)
+		s = "2K+";
+	else if (d == 255)
+		s = "5K+";
+
+	drawstring(o, s, '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+}
+
+void Ent_DamageIndicator(float bisnew);
+
+void DamageIndicator_Remove() {
+	entity e = spawn();
+	e.origin = self.origin;
+	e.cnt = self.cnt;
+	e.alpha = self.alpha;
+	e.draw2d = DamageIndicator_Draw;
+	e.think = SUB_Remove;
+	e.nextthink = time + self.alpha * CVAR(cl_damageindicator);
+}
+
+void Ent_DamageIndicator(float bisnew) {
+	self.cnt = ReadByte();
+	self.origin_x = ReadShort();
+	self.origin_y = ReadShort();
+	self.origin_z = ReadShort();
+	if (CVAR(cl_damageindicator) > 0) {
+		self.alpha = 1;
+		self.draw2d = DamageIndicator_Draw;
+		self.entremove = DamageIndicator_Remove;
+	}
 }

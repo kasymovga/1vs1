@@ -223,9 +223,6 @@ float servertime, serverprevtime, serverdeltatime;
 
 float ticrate;
 
-.float damageforcescale;
-.void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
-
 // only for Porto
 float angles_held_status;
 vector angles_held;
