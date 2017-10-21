@@ -5,6 +5,7 @@ float g_nadgets_cloak_stealthrate;
 float g_nadgets_cloak_usewhileactive;
 float g_nadgets_cloak_unstealthrate;
 float g_nadgets_cloak_actiondelay;
+float g_nadgets_cloak_spy;
 
 void HG_Cloak(void) {
     self.hg_stealth = self.hg_stealth + g_nadgets_cloak_duration/* * Buffs_NadgetPower(self)*/;
@@ -12,6 +13,10 @@ void HG_Cloak(void) {
     self.hg_stealth_protectionexpiretime = time + g_nadgets_cloak_damagereduction_time;
     pointparticles(particleeffectnum("smoke_ring"), self.origin + self.maxs_z * '0 0 0.5', '0 0 0', 10);
     sound(self, CHAN_AUTO, "misc/stealth.wav", VOL_BASE, ATTN_NORM);
+	entity e;
+	if (g_nadgets_cloak_spy)
+		FOR_EACH_PLAYER(e)
+			e.entcs.SendFlags |= 48;
 }
 
 void HG_Cloak_Trigger(void) {
@@ -103,6 +108,14 @@ HG_HOOKFUNCTION(cloak, Attack) {
     return HG_ATTACK_OK;
 }
 
+var float(entity plr, entity targ) HG_Cloak_PlayerCanSeeHealthFor_NextLink;
+float HG_Cloak_PlayerCanSeeHealthFor(entity plr, entity targ) {
+	if (targ.hg_stealth)
+		return TRUE;
+
+	return HG_Cloak_PlayerCanSeeHealthFor_NextLink(plr, targ);
+}
+
 HG_HOOKFUNCTION(cloak, Init) {
 	CACHE_CVAR(g_nadgets_cloak_cooldown_decloak);
 	CACHE_CVAR(g_nadgets_cloak_duration);
@@ -111,6 +124,7 @@ HG_HOOKFUNCTION(cloak, Init) {
 	CACHE_CVAR(g_nadgets_cloak_usewhileactive);
 	CACHE_CVAR(g_nadgets_cloak_unstealthrate);
     CACHE_CVAR(g_nadgets_cloak_actiondelay);
+    CACHE_CVAR(g_nadgets_cloak_spy);
 
     addstat(STAT_STEALTH, AS_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);
@@ -120,6 +134,11 @@ HG_HOOKFUNCTION(cloak, Init) {
 
     HG_Cloak_WeaponPrepareAttack_Next = GameHookChain_WeaponPrepareAttack;
     GameHookChain_WeaponPrepareAttack = HG_Cloak_WeaponPrepareAttack;
+
+	if (g_nadgets_cloak_spy) {
+		HG_Cloak_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
+		GameHookChain_PlayerCanSeeHealthFor = HG_Cloak_PlayerCanSeeHealthFor;
+	}
 
     return HG_INIT_OK;
 }

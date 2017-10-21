@@ -103,3 +103,4 @@ string GameHook_ItemName;
 vector GameHook_ItemColor;
 var void() GameHookChain_ItemRespawnCountDown {}
 var float() GameHookChain_ArmorBlockPercentMod { return 1; }
+var float(entity plr, entity targ) GameHookChain_PlayerCanSeeHealthFor { return FALSE; }

@@ -62,6 +62,10 @@ float entcs_send(entity to, float sf)
 	if (o.team == to.team)
 		sf |= 128;
 
+	if not(sf & 128)
+	if (GameHookChain_PlayerCanSeeHealthFor(o, to))
+		sf |= 128;
+
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1)
 		WriteByte(MSG_ENTITY, num_for_edict(o));

@@ -870,7 +870,9 @@ void Ent_ReadEntCS(float bIsNewEntity)
 
 		if (f & 32)
 			self.armorvalue = ReadByte();
-	}
+	} else
+		self.health = 0;
+
 	self.classname = "entcs_receiver";
 	if (bIsNewEntity)
 		Shownames_Init(self);

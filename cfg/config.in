@@ -946,6 +946,7 @@ set g_nadgets_cloak_damagereduction_factor 0.25
 set g_nadgets_cloak_damagereduction_time 1
 set g_nadgets_cloak_bonus_amount_multiplier 1
 set g_nadgets_cloak_bonus_random_weight 1
+set g_nadgets_cloak_spy 1
 
 // Hero Bait
 //set g_nadgets_bait_regen_time 40

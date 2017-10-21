@@ -101,9 +101,11 @@ void Shownames_DrawPlayer() {
 		_team = GetPlayerColorForce(self.sv_entnum);
         s = textShortenToWidth(strdecolorize(s), namesize, stringwidth_nocolors);
         s = strcat(Team_ColorCode(_team), s);
-		if not(self.cnt)
-			s = strcat(s, " ^7(^1", ftos(self.health), (self.armorvalue ? strcat("^7/^2", ftos(self.armorvalue)): ""), "^7)");
-    } else s = textShortenToWidth(s, namesize, stringwidth_colors);
+    } else
+		s = textShortenToWidth(s, namesize, stringwidth_colors);
+
+	if (self.health)
+		s = strcat(s, " ^7(^1", ftos(self.health), (self.armorvalue ? strcat("^7/^2", ftos(self.armorvalue)): ""), "^7)");
 
     float width = stringwidth(s, TRUE);
 
