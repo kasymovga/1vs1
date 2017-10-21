@@ -152,6 +152,8 @@ vector RuneColormod(float r)
 		_color = 0.35*'185 185 0';//255 230 0';//'255 255 0';
 	if(r == RUNE_VAMPIRE)
 		_color = '64 0 128';//'108 0 217';//'128 0 255';//'179 0 204';//
+	if(r == RUNE_HACKER)
+		_color = '64 128 128';//'108 0 217';//'128 0 255';//'179 0 204';//
 
 	if(r == CURSE_BURNING)
 		_color = '255 0 0';
@@ -163,6 +165,8 @@ vector RuneColormod(float r)
 		_color = 0.5*'185 185 0';//'255 255 0';
 	if(r == CURSE_ALTRUISM)
 		_color = '179 0 204';//'128 0 255';
+	if(r == CURSE_HACKED)
+		_color = '64 128 128';
 
 	return _color * (1 / 255) * g_runematch_rune_color_strength;
 }
@@ -720,6 +724,17 @@ void runematch_SpectateCopy(entity e) {
 	runematch_SpectateCopy_NextLink(e);
 }
 
+var float(entity plr, entity targ) runematch_PlayerVisibleTroughWallFor_NextLink;
+float runematch_PlayerVisibleTroughWallFor(entity plr, entity targ) {
+	if (targ.runes & RUNE_HACKER)
+		return TRUE;
+
+	if (plr.runes & CURSE_HACKED)
+		return TRUE;
+
+	return runematch_PlayerVisibleTroughWallFor_NextLink(plr, targ);
+}
+
 void runes_init() {
 	CACHE_CVAR(g_runes);
 	if not(g_runes)
@@ -779,6 +794,8 @@ void runes_init() {
 	GameHookChain_AppendItemCodes = runematch_AppendItemCodes;
 	runematch_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = runematch_SpectateCopy;
+	runematch_PlayerVisibleTroughWallFor_NextLink = GameHookChain_PlayerVisibleTroughWallFor;
+	GameHookChain_PlayerVisibleTroughWallFor = runematch_PlayerVisibleTroughWallFor;
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;

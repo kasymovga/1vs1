@@ -34,17 +34,16 @@ float entcs_customize()
 	if(other.enemy == o)
 		return FALSE;
 
-	if(teamplay) {
-		if(o.team != other.team) {
-			self.effects &~= EF_NODEPTHTEST;
-			if (Player_CalculateAlpha(o, other) < 0.25)
-				return FALSE;
-		} else {
-			self.effects |= EF_NODEPTHTEST;
-		}
+	if(teamplay && o.team == other.team) {
+		self.effects |= EF_NODEPTHTEST;
 	} else {
 		if (Player_CalculateAlpha(o, other) < 0.25)
 			return FALSE;
+
+		if (GameHookChain_PlayerVisibleTroughWallFor(o,other)) {
+			self.effects |= EF_NODEPTHTEST;
+		} else
+			self.effects &~= EF_NODEPTHTEST;
 	}
 	return TRUE;
 }
@@ -54,9 +53,8 @@ float entcs_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	sf = sf & 63;
 	entity o = self.owner;
-	if (teamplay)
-	if (to.team == o.team)
-		sf |= 64; //visible trough walls
+	if (self.effects & EF_NODEPTHTEST)
+		sf |= 64;
 
 	if (teamplay)
 	if (o.team == to.team)

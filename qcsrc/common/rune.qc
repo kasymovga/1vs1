@@ -10,6 +10,8 @@ string RuneName(float r)
 		return "^3Speed^7";
 	if(r == RUNE_VAMPIRE)
 		return "^6Vampire^7";
+	if(r == RUNE_HACKER)
+		return "^5Hacker^7";
 
 	if(r == CURSE_BURNING)
 		return "^1Burning^7";
@@ -21,5 +23,8 @@ string RuneName(float r)
 		return "^3Slow^7";
 	if(r == CURSE_ALTRUISM)
 		return "^6Altruism^7";
+	if(r == CURSE_HACKED)
+		return "^5Hacked^7";
+
 	return strcat("^8[unnamed", ftos(r), "]^7");
 }

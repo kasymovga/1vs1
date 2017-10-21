@@ -51,6 +51,7 @@ float Shownames_PreDrawPlayer() {
 		return FALSE;
 
 	if (self.cnt) {
+		print("traceline check\n");
 		traceline(self.iorigin, view_origin, 0, world);
 		if (trace_fraction < 1)
 			return FALSE;
