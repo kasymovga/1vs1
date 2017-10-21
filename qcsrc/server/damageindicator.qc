@@ -32,12 +32,20 @@ void DamageIndicator_Remove() {
 	remove(self);
 }
 
+float DamageIndicator_Customize() {
+	if (self.enemy == other)
+		return TRUE;
+
+	if (other.classname == "spectator")
+		if (other.enemy == self.enemy)
+			return TRUE;
+
+	return FALSE;
+}
+
 var void(entity targ, entity attacker, float damage, vector ignore) DamageIndicator_DamageForceDone_NextLink;
 void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage, vector ignore) {
 	DamageIndicator_DamageForceDone_NextLink(targ, attacker, damage, ignore);
-	if (clienttype(attacker) != CLIENTTYPE_REAL)
-		return;
-
 	if (targ == attacker)
 		return;
 
@@ -58,7 +66,7 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage,
 		e.think = DamageIndicator_Remove;
 		e.owner = targ;
 		e.enemy = attacker;
-		e.viewmodelforclient = attacker;
+		e.customizeentityforclient = DamageIndicator_Customize;
 		Net_LinkEntity(e, FALSE, 0, DamageIndicator_SendEntity);
 		targ.dmg_indicator = e;
 	}
