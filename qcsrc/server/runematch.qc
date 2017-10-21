@@ -253,6 +253,13 @@ void rune_touch()
 		bprint(" and ", RuneName(curses));
 	bprint("\n");
 	sound (other, CHAN_TRIGGER, "misc/mediumhealth.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+	entity e;
+	if (self.runes & RUNE_HACKER)
+		FOR_EACH_PLAYER(e)
+			e.entcs.SendFlags |= 16;
+
+	if (self.runes & CURSE_HACKED)
+		self.entcs.SendFlags |= 16;
 }
 
 void rune_respawn()
@@ -735,6 +742,17 @@ float runematch_PlayerVisibleTroughWallFor(entity plr, entity targ) {
 	return runematch_PlayerVisibleTroughWallFor_NextLink(plr, targ);
 }
 
+var float(entity plr, entity targ) runematch_PlayerCanSeeHealthFor_NextLink;
+float runematch_PlayerCanSeeHealthFor(entity plr, entity targ) {
+	if (plr.runes & RUNE_HACKER)
+		return TRUE;
+
+	if (targ.runes & CURSE_HACKED)
+		return TRUE;
+
+	return runematch_PlayerCanSeeHealthFor_NextLink(plr, targ);
+}
+
 void runes_init() {
 	CACHE_CVAR(g_runes);
 	if not(g_runes)
@@ -796,6 +814,8 @@ void runes_init() {
 	GameHookChain_SpectateCopy = runematch_SpectateCopy;
 	runematch_PlayerVisibleTroughWallFor_NextLink = GameHookChain_PlayerVisibleTroughWallFor;
 	GameHookChain_PlayerVisibleTroughWallFor = runematch_PlayerVisibleTroughWallFor;
+	runematch_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
+	GameHookChain_PlayerCanSeeHealthFor = runematch_PlayerCanSeeHealthFor;
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;

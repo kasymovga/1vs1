@@ -147,14 +147,9 @@ void Shownames_TeamBubbleDraw() {
 	R_AddEntity(self);
 }
 
-void Shownames_UpdateTeamBubble(entity plr) {
-	if (teamplay) {
-		if (plr.cnt) {
-			if (plr.teambubble) {
-				remove(plr.teambubble);
-				plr.teambubble = world;
-			}
-		} else {
+void Shownames_UpdateTeamBubble(entity plr, float show) {
+	if (show) {
+		if not(plr.teambubble) {
 			plr.entremove = Shownames_TeamBubbleRemove;
 			plr.teambubble = spawn();
 			precache_model("models/misc/teambubble.spr");
@@ -162,6 +157,11 @@ void Shownames_UpdateTeamBubble(entity plr) {
 			plr.teambubble.effects = EF_NODEPTHTEST;
 			plr.teambubble.owner = plr;
 			plr.teambubble.draw = Shownames_TeamBubbleDraw;
+		}
+	} else {
+		if (plr.teambubble) {
+			remove(plr.teambubble);
+			plr.teambubble = world;
 		}
 	}
 }
@@ -172,6 +172,4 @@ void Shownames_Init(entity plr) {
 		plr.draw2d_pre = Shownames_PreDrawPlayer;
 	else
 		plr.draw2d_pre = Shownames_PreDrawPlayer_Disabled;
-
-	Shownames_UpdateTeamBubble(plr);
 }

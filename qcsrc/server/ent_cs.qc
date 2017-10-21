@@ -13,8 +13,6 @@
 // it did when I added this) But you have to use .Version
 // Capital V
 
-.entity entcs;
-
 void entcs_init()
 {
 	print("Initializing ClientSide information entities\n");
@@ -51,17 +49,18 @@ float entcs_customize()
 float entcs_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
-	sf = sf & 63;
+	sf = sf & 31;
 	entity o = self.owner;
 	if (self.effects & EF_NODEPTHTEST)
 		sf |= 64;
 
 	if (teamplay)
-	if (o.team == to.team)
-		sf |= 128;
+	if (o.team == to.team) {
+		sf |= 160;
+	}
 
 	if not(sf & 128)
-	if (GameHookChain_PlayerCanSeeHealthFor(o, to))
+	if (GameHookChain_PlayerCanSeeHealthFor(to, o))
 		sf |= 128;
 
 	WriteByte(MSG_ENTITY, sf);
@@ -80,12 +79,10 @@ float entcs_send(entity to, float sf)
 			WriteShort(MSG_ENTITY, self.angles_y);
 	}
 
-	if (sf & 128) {
-		if (sf & 16)
-			WriteByte(MSG_ENTITY, bound(0, self.health, 255));
-
-		if (sf & 32)
-			WriteByte(MSG_ENTITY, bound(0, self.armorvalue, 255));
+	if (sf & 128)
+	if (sf & 16) {
+		WriteByte(MSG_ENTITY, bound(0, self.health, 255));
+		WriteByte(MSG_ENTITY, bound(0, self.armorvalue, 255));
 	}
 	return TRUE;
 }
@@ -107,14 +104,10 @@ void entcs_think()
 		self.angles_y = o.angles_y;
 		self.SendFlags |= 8;
 	}
-	if (o.health != floor(self.health)) {
+	if (o.health != floor(self.health) || o.armorvalue != floor(self.armorvalue)) {
 		self.health = o.health;
-		self.SendFlags |= 16;
-	}
-
-	if (o.armorvalue != floor(self.armorvalue)) {
 		self.armorvalue = o.armorvalue;
-		self.SendFlags |= 32;
+		self.SendFlags |= 16;
 	}
 }
 

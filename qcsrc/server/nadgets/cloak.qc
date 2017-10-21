@@ -16,7 +16,7 @@ void HG_Cloak(void) {
 	entity e;
 	if (g_nadgets_cloak_spy)
 		FOR_EACH_PLAYER(e)
-			e.entcs.SendFlags |= 48;
+			e.entcs.SendFlags |= 16;
 }
 
 void HG_Cloak_Trigger(void) {
@@ -110,7 +110,7 @@ HG_HOOKFUNCTION(cloak, Attack) {
 
 var float(entity plr, entity targ) HG_Cloak_PlayerCanSeeHealthFor_NextLink;
 float HG_Cloak_PlayerCanSeeHealthFor(entity plr, entity targ) {
-	if (targ.hg_stealth)
+	if (plr.hg_stealth)
 		return TRUE;
 
 	return HG_Cloak_PlayerCanSeeHealthFor_NextLink(plr, targ);

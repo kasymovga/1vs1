@@ -852,24 +852,20 @@ void Ent_ReadEntCS(float bIsNewEntity)
 
 		if (f & 8)
 			self.angles_y = ReadShort();
-
-		if (self.cnt) {
+		if (self.cnt)
 			self.cnt = FALSE;
-			Shownames_UpdateTeamBubble(self);
-		}
 	} else {
-		if not(self.cnt) {
+		if not(self.cnt)
 			self.cnt = TRUE;
-			if not(bIsNewEntity)
-				Shownames_UpdateTeamBubble(self);
-		}
 	}
-	if (f & 128) {
-		if (f & 16)
-			self.health = ReadByte();
+	if (teamplay)
+		Shownames_UpdateTeamBubble(self, f & 32);
 
-		if (f & 32)
+	if (f & 128) {
+		if (f & 16) {
+			self.health = ReadByte();
 			self.armorvalue = ReadByte();
+		}
 	} else
 		self.health = 0;
 

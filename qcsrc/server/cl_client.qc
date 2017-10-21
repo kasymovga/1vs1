@@ -743,6 +743,9 @@ void PutClientInServer()
 		self.team = -1;
 		self.just_connected = FALSE;
 	}
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.entcs.SendFlags |= 16;
 
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
@@ -754,7 +757,6 @@ void PutClientInServer()
 	if(self.classname == "player") {
 		entity spot, oldself;
 		local float currentlyPlaying;
-		entity e;
 
 		if (self.team < 0) {
 			if(clienttype(self) == CLIENTTYPE_BOT)

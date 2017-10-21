@@ -606,3 +606,5 @@ enum {
 .float lastdamage;
 
 null_t NULL; // FIXME: declare this in common, and get rid of string_null, func_null, etc. universally.
+.entity entcs;
+
