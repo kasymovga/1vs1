@@ -837,8 +837,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // BEGIN OPTIONAL CSQC FUNCTIONS
 void Ent_ReadEntCS(float bIsNewEntity)
 {
-	InterpolateOrigin_Undo();
-
 	float f = ReadByte();
 
 	if (f & 1)
@@ -846,11 +844,11 @@ void Ent_ReadEntCS(float bIsNewEntity)
 
 	if (f & 64) {
 		if (f & 2) {
-			self.oldorigin_x = ReadShort();
-			self.oldorigin_y = ReadShort();
+			self.origin_x = ReadShort();
+			self.origin_y = ReadShort();
 		}
 		if (f & 4)
-			self.oldorigin_z = ReadShort();
+			self.origin_z = ReadShort();
 
 		if (f & 8)
 			self.angles_y = ReadShort();

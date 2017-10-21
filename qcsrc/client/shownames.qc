@@ -35,7 +35,7 @@ float Shownames_PreDrawPlayer() {
 		if (self.teambubble)
 			self.teambubble.cnt = 1;
 	} else {
-		self.iorigin = self.oldorigin;
+		self.iorigin = self.origin;
 	}
     if(CVAR(cl_shownames) < 1)
         return FALSE;
