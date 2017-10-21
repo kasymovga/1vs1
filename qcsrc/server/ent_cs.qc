@@ -20,132 +20,121 @@ void entcs_init()
 	print("Initializing ClientSide information entities\n");
 };
 
-float entcs_customize_no_teamcheck()
-{
-	entity o;
-	o = self.owner;
-	if(PLAYER_REALLY_DEAD(o))
-		return FALSE;
-	if(o.classname != "player")
-		return FALSE;
-	if(other == o)
-		return FALSE;
-
-	return TRUE;
-}
-
 float entcs_customize()
 {
 	entity o;
 	o = self.owner;
 	if(PLAYER_REALLY_DEAD(o))
 		return FALSE;
-	if(o.classname != "player")
-		return FALSE;
+
 	if(other == o)
 		return FALSE;
-	if(o.team != other.team)
-		return FALSE;
-	return TRUE;
-}
 
-float entcs_customize_enemy()
-{
-	entity o;
-	o = self.owner;
-	if(PLAYER_REALLY_DEAD(o))
+	if(other.classname == "spectator")
+	if(other.enemy == o)
 		return FALSE;
 
-	if(teamplay)
-	if(o.team == other.team)
-		return FALSE;
-
-	if (Player_CalculateAlpha(o, other) < 0.25)
-		return FALSE;
-
+	if(teamplay) {
+		if(o.team != other.team) {
+			self.effects &~= EF_NODEPTHTEST;
+			if (Player_CalculateAlpha(o, other) < 0.25)
+				return FALSE;
+		} else {
+			self.effects |= EF_NODEPTHTEST;
+		}
+	} else {
+		if (Player_CalculateAlpha(o, other) < 0.25)
+			return FALSE;
+	}
 	return TRUE;
 }
 
 float entcs_send(entity to, float sf)
 {
-	entity o;
-	o = self.owner;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
-	WriteByte(MSG_ENTITY, num_for_edict(o));
-	WriteShort(MSG_ENTITY, o.origin_x);
-	WriteShort(MSG_ENTITY, o.origin_y);
-	WriteShort(MSG_ENTITY, o.origin_z);
-	WriteByte(MSG_ENTITY, bound(0, o.health, 255));
-	WriteByte(MSG_ENTITY, bound(0, o.armorvalue, 255));
-	return TRUE;
-};
+	sf = sf & 63;
+	entity o = self.owner;
+	if (teamplay)
+	if (to.team == o.team)
+		sf |= 64; //visible trough walls
 
-float entcs_send_enemy(entity to, float sf)
-{
-	entity o;
-	o = self.owner;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS_ENEMY);
-	WriteByte(MSG_ENTITY, num_for_edict(o));
+	if (teamplay)
+	if (o.team == to.team)
+		sf |= 128;
+
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & 1)
+		WriteByte(MSG_ENTITY, num_for_edict(o));
+
+	if (sf & 64) {
+		if (sf & 2) {
+			WriteShort(MSG_ENTITY, self.origin_x);
+			WriteShort(MSG_ENTITY, self.origin_y);
+		}
+		if (sf & 4)
+			WriteShort(MSG_ENTITY, self.origin_z);
+
+		if (sf & 8)
+			WriteShort(MSG_ENTITY, self.angles_y);
+	}
+
+	if (sf & 128) {
+		if (sf & 16)
+			WriteByte(MSG_ENTITY, bound(0, self.health, 255));
+
+		if (sf & 32)
+			WriteByte(MSG_ENTITY, bound(0, self.armorvalue, 255));
+	}
 	return TRUE;
-};
+}
 
 void entcs_think()
 {
 	self.nextthink = time;
-
-	entity o;
-	o = self.owner;
-
-	if(o.origin != self.origin || o.angles != self.angles)
-	{
-		setorigin(self, o.origin);
-		self.angles = o.angles;
-		if not(self.cnt)
-			self.SendFlags |= 1;
+	entity o = self.owner;
+	if (o.origin_x != self.origin_x || o.origin_y != self.origin_y) {
+		self.origin_x = o.origin_x;
+		self.origin_y = o.origin_y;
+		self.SendFlags |= 2;
 	}
-};
+	if (o.origin_z != self.origin_z) {
+		self.origin_z = o.origin_z;
+		self.SendFlags |= 4;
+	}
+	if (o.angles_y != self.angles_y) {
+		self.angles_y = o.angles_y;
+		self.SendFlags |= 8;
+	}
+	if (o.health != floor(self.health)) {
+		self.health = o.health;
+		self.SendFlags |= 16;
+	}
+
+	if (o.armorvalue != floor(self.armorvalue)) {
+		self.armorvalue = o.armorvalue;
+		self.SendFlags |= 32;
+	}
+}
 
 entity attach_entcs()
 {
 	local entity ent;
-
 	ent = spawn();
 	self.entcs = ent;
-	if (teamplay) {
-		ent.classname = "entcs_sender_v2";
-		ent.owner = self;
-		ent.think = entcs_think;
-		ent.nextthink = time;
-
-		Net_LinkEntity(ent, FALSE, 0, entcs_send);
-		if (GameHook_RadarShowEnemiesAllowed())
-			ent.customizeentityforclient = entcs_customize_no_teamcheck;
-		else
-			ent.customizeentityforclient = entcs_customize;
-
-		ent.entcs = spawn();
-		ent = ent.entcs;
-	}
-
-	ent.classname = "entcs_sender_v2_enemy";
+	ent.classname = "entcs_sender_v2";
 	ent.cnt = 1;
 	ent.owner = self;
 	ent.think = entcs_think;
 	ent.nextthink = time;
-
-	Net_LinkEntity(ent, TRUE, 0, entcs_send_enemy);
-	ent.customizeentityforclient = entcs_customize_enemy;
-
-
+	Net_LinkEntity(ent, TRUE, 0, entcs_send);
+	ent.customizeentityforclient = entcs_customize;
 	return ent;
-};
+}
 
 void detach_entcs()
 {
 	if (self.entcs) {
-		if (self.entcs.entcs)
-			remove(self.entcs.entcs);
 		remove(self.entcs);
 		self.entcs = world;
 	}
-};
+}

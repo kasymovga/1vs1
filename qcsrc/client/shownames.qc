@@ -35,9 +35,8 @@ float Shownames_PreDrawPlayer() {
 		if (self.teambubble)
 			self.teambubble.cnt = 1;
 	} else {
-		self.iorigin = self.origin;
+		self.iorigin = self.oldorigin;
 	}
-
     if(CVAR(cl_shownames) < 1)
         return FALSE;
 
@@ -123,30 +122,46 @@ void Shownames_DrawPlayer() {
 }
 
 void Shownames_TeamBubbleRemove() {
-	remove(self.teambubble);
+	if (self.teambubble)
+		remove(self.teambubble);
 }
 
 void Shownames_TeamBubbleDraw() {
-	if (self.cnt) {
-		self.origin = self.owner.iorigin + '0 0 64';
-		self.cnt = 0;
-	} else
-		self.origin = self.owner.origin + '0 0 64';
-
+	entity o = self.owner;
+	setorigin(self, o.iorigin + '0 0 64');
 	self.scale = 1 + (vlen(view_origin - self.origin)) / 400;
-	float h = self.owner.health;
+	float h = o.health;
 	if (h < 100) {
 		float redfactor = 1 - h / 100;
 		redfactor *= redfactor;
 		self.colormod_x = 1 + redfactor;
 		self.colormod_y = self.colormod_z = 1 - redfactor;
 	} else {
-		float greenfactor = 1 - (h - 100) / 155;
+		float greenfactor = (h - 100) / 155;
 		greenfactor *= greenfactor;
 		self.colormod_y = 1 + greenfactor;
 		self.colormod_x = self.colormod_z = 1 - greenfactor;
 	}
 	R_AddEntity(self);
+}
+
+void Shownames_UpdateTeamBubble(entity plr) {
+	if (teamplay) {
+		if (plr.cnt) {
+			if (plr.teambubble) {
+				remove(plr.teambubble);
+				plr.teambubble = world;
+			}
+		} else {
+			plr.entremove = Shownames_TeamBubbleRemove;
+			plr.teambubble = spawn();
+			precache_model("models/misc/teambubble.spr");
+			setmodel(plr.teambubble, "models/misc/teambubble.spr");
+			plr.teambubble.effects = EF_NODEPTHTEST;
+			plr.teambubble.owner = plr;
+			plr.teambubble.draw = Shownames_TeamBubbleDraw;
+		}
+	}
 }
 
 void Shownames_Init(entity plr) {
@@ -156,14 +171,5 @@ void Shownames_Init(entity plr) {
 	else
 		plr.draw2d_pre = Shownames_PreDrawPlayer_Disabled;
 
-	if (teamplay)
-	if not(plr.cnt) {
-		plr.entremove = Shownames_TeamBubbleRemove;
-		plr.teambubble = spawn();
-		precache_model("models/misc/teambubble.spr");
-		setmodel(plr.teambubble, "models/misc/teambubble.spr");
-		plr.teambubble.effects = EF_NODEPTHTEST;
-		plr.teambubble.owner = plr;
-		plr.teambubble.draw = Shownames_TeamBubbleDraw;
-	}
+	Shownames_UpdateTeamBubble(plr);
 }

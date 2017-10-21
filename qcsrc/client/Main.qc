@@ -87,7 +87,6 @@ void search_and_precache(string s) {
 
 string forcefog;
 void Ent_ReadEntCS(float bIsNewEntity);
-void Ent_ReadEntCSEnemy(float bIsNewEntity);
 void Ent_ScoresInfo(float ignore);
 void Ent_ReadPlayerScore(float ignore);
 void Ent_ReadTeamScore(float ignore);
@@ -398,7 +397,6 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_GAMESTATUS] = Ent_GameStatus;
 	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
 	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
-	ent_parsers[ENT_CLIENT_ENTCS_ENEMY] = Ent_ReadEntCSEnemy;
 	ent_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
 	ent_parsers[ENT_CLIENT_DLC_LIST] = Ent_DLCList;
 	ent_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
@@ -841,23 +839,41 @@ void Ent_ReadEntCS(float bIsNewEntity)
 {
 	InterpolateOrigin_Undo();
 
-	self.sv_entnum = ReadByte() - 1;
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
-	self.health = ReadByte();
-	self.armorvalue = ReadByte();
-	self.classname = "entcs_receiver";
-	self.cnt = 0;
-	if (bIsNewEntity)
-		Shownames_Init(self);
-}
+	float f = ReadByte();
 
-void Ent_ReadEntCSEnemy(float bIsNewEntity)
-{
-	self.sv_entnum = ReadByte() - 1;
-	self.classname = "entcs_receiver_enemy";
-	self.cnt = 1;
+	if (f & 1)
+		self.sv_entnum = ReadByte() - 1;
+
+	if (f & 64) {
+		if (f & 2) {
+			self.oldorigin_x = ReadShort();
+			self.oldorigin_y = ReadShort();
+		}
+		if (f & 4)
+			self.oldorigin_z = ReadShort();
+
+		if (f & 8)
+			self.angles_y = ReadShort();
+
+		if (self.cnt) {
+			self.cnt = FALSE;
+			Shownames_UpdateTeamBubble(self);
+		}
+	} else {
+		if not(self.cnt) {
+			self.cnt = TRUE;
+			if not(bIsNewEntity)
+				Shownames_UpdateTeamBubble(self);
+		}
+	}
+	if (f & 128) {
+		if (f & 16)
+			self.health = ReadByte();
+
+		if (f & 32)
+			self.armorvalue = ReadByte();
+	}
+	self.classname = "entcs_receiver";
 	if (bIsNewEntity)
 		Shownames_Init(self);
 }
