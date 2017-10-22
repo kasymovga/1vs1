@@ -412,7 +412,7 @@ float Client_customizeentityforclient()
 	entity modelsource;
 
 	self.alpha = Player_CalculateAlpha(self, other);
-	if (GameHookChain_PlayerVisibleTroughWallFor(self, other))
+	if (GameHookChain_PlayerVisibleThroughWallFor(self, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;

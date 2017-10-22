@@ -38,7 +38,7 @@ float entcs_customize()
 		if (Player_CalculateAlpha(o, other) < 0.25)
 			return FALSE;
 
-		if (GameHookChain_PlayerVisibleTroughWallFor(o,other)) {
+		if (GameHookChain_PlayerVisibleThroughWallFor(o,other)) {
 			self.effects |= EF_NODEPTHTEST;
 		} else
 			self.effects &~= EF_NODEPTHTEST;

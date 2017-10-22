@@ -765,15 +765,15 @@ void runematch_SpectateCopy(entity e) {
 	runematch_SpectateCopy_NextLink(e);
 }
 
-var float(entity plr, entity targ) runematch_PlayerVisibleTroughWallFor_NextLink;
-float runematch_PlayerVisibleTroughWallFor(entity plr, entity targ) {
+var float(entity plr, entity targ) runematch_PlayerVisibleThroughWallFor_NextLink;
+float runematch_PlayerVisibleThroughWallFor(entity plr, entity targ) {
 	if (targ.runes & RUNE_HACKER)
 		return TRUE;
 
 	if (plr.runes & CURSE_HACKED)
 		return TRUE;
 
-	return runematch_PlayerVisibleTroughWallFor_NextLink(plr, targ);
+	return runematch_PlayerVisibleThroughWallFor_NextLink(plr, targ);
 }
 
 var float(entity plr, entity targ) runematch_PlayerCanSeeHealthFor_NextLink;
@@ -846,8 +846,8 @@ void runes_init() {
 	GameHookChain_AppendItemCodes = runematch_AppendItemCodes;
 	runematch_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = runematch_SpectateCopy;
-	runematch_PlayerVisibleTroughWallFor_NextLink = GameHookChain_PlayerVisibleTroughWallFor;
-	GameHookChain_PlayerVisibleTroughWallFor = runematch_PlayerVisibleTroughWallFor;
+	runematch_PlayerVisibleThroughWallFor_NextLink = GameHookChain_PlayerVisibleThroughWallFor;
+	GameHookChain_PlayerVisibleThroughWallFor = runematch_PlayerVisibleThroughWallFor;
 	runematch_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
 	GameHookChain_PlayerCanSeeHealthFor = runematch_PlayerCanSeeHealthFor;
 	entity e;
