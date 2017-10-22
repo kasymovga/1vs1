@@ -246,6 +246,12 @@ set sv_jumppads_target_adjust_height 0
 set g_runes 0
 set g_runematch_carried_runes_max 3
 set g_runematch_curses 0
+set g_runematch_defense 1
+set g_runematch_hacker 0
+set g_runematch_ignite 1
+set g_runematch_speed 1
+set g_runematch_vampire 1
+set g_runematch_vitality 1
 set g_balance_curse_burning_damage_factor 0.3
 set g_balance_rune_ignite_damage_factor 0.3
 set g_balance_rune_regen_damage_factor 0.3

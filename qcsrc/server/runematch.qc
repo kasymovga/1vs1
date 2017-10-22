@@ -482,6 +482,40 @@ void spawn_runes()
 	curses_used = 0;
 
 	numrunes = RUNE_COUNT;
+	if not(cvar("g_runematch_ignite")) {
+		runes_used |= RUNE_IGNITE;
+		curses_used |= CURSE_BURNING;
+		numrunes--;
+	}
+	if not(cvar("g_runematch_vitality")) {
+		runes_used |= RUNE_REGEN;
+		curses_used |= CURSE_VENOM;
+		numrunes--;
+	}
+	if not(cvar("g_runematch_vampire")) {
+		runes_used |= RUNE_VAMPIRE;
+		curses_used |= CURSE_ALTRUISM;
+		numrunes--;
+	}
+	if not(cvar("g_runematch_defense")) {
+		runes_used |= RUNE_DEFENSE;
+		curses_used |= CURSE_VULNER;
+		numrunes--;
+	}
+	if not(cvar("g_runematch_speed")) {
+		runes_used |= RUNE_SPEED;
+		curses_used |= CURSE_SLOW;
+		numrunes--;
+	}
+	if not(cvar("g_runematch_hacker")) {
+		runes_used |= RUNE_HACKER;
+		curses_used |= CURSE_HACKED;
+		numrunes--;
+	}
+	if not(numrunes) {
+		runes_used = 0;
+		curses_used = 0;
+	}
 
 	while(numrunes > 0)
 	{
