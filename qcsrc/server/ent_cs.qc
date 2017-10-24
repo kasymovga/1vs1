@@ -25,6 +25,9 @@ float entcs_customize()
 	if(PLAYER_REALLY_DEAD(o))
 		return FALSE;
 
+	if (o.classname != "player")
+		return FALSE;
+
 	if(other == o)
 		return FALSE;
 
