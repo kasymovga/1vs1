@@ -350,6 +350,8 @@ void InitGameplayMode()
 
 	if (force_gametype_restore)
 		MapInfo_SwitchGameType(force_gametype_restore);
+
+	game_cvar_init();
 }
 
 string GetClientVersionMessage() {
