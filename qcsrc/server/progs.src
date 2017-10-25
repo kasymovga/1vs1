@@ -32,6 +32,7 @@ dlc.qh
 ../common/extresponse.qh
 ../common/ip2c.qh
 ip2c.qh
+w_common.qh
 
 csqcprojectile.qh
 csqceffects.qc

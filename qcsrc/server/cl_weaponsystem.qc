@@ -1160,6 +1160,7 @@ void W_Init()
 		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);
 	}
 	Melee_Init();
+	W_BallisticInit();
 
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET, '0 0 0', '0 0 0');
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET_GLOWING, '0 0 0', '0 0 0');

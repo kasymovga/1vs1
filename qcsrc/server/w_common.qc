@@ -1,3 +1,5 @@
+float g_ballistics_mindistance;
+float g_ballistics_materialconstant;
 .float bullets_hit[WEP_COUNT]; 		//for hitscan bullets hit
 .float bullets_fired[WEP_COUNT];	//for hitscan bullets fired
 
@@ -283,7 +285,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	// maxdist = 0.5 * v0 * v0 / constant
 	// dprint("max dist = ", ftos(maxdist), "\n");
 
-	if(maxdist <= cvar("g_ballistics_mindistance"))
+	if(maxdist <= g_ballistics_mindistance)
 		return 0;
 
 	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self);
@@ -368,7 +370,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	W_SetupProjectileVelocity(proj);
 	proj.angles = vectoangles(proj.velocity);
-	proj.dmg_radius = cvar("g_ballistics_materialconstant") / bulletconstant;
+	proj.dmg_radius = g_ballistics_materialconstant / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
 	proj.flags = FL_PROJECTILE;
@@ -516,4 +518,9 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 	// because recursive calls to RadiusDamage are not allowed
 	self.nextthink = time;
 	self.think = explode;
+}
+
+void W_BallisticInit() {
+	CACHE_CVAR(g_ballistics_materialconstant);
+	CACHE_CVAR(g_ballistics_mindistance);
 }
