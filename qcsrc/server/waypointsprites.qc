@@ -393,11 +393,6 @@ entity WaypointSprite_AttachCarrier(
 	entity e;
 	WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
 	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE);
-	if(e)
-	{
-		WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, g_balance_armor_blockpercent) * 2);
-		WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, g_balance_armor_blockpercent));
-	}
 	return e;
 }
 
