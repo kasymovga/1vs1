@@ -1527,6 +1527,7 @@ void NextLevel()
 	float f;
 
 	gameover = TRUE;
+	game_cvar_deinit();
 
 	intermission_running = 1;
 

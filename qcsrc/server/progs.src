@@ -107,6 +107,7 @@ hat.qh
 dodging.qh
 miscfunctions.qh
 ../common/miscfunctions.qh
+../menu-server/miscfunctions.qh
 gamehooks.qh
 ../common/nadgets.qh
 nadgets/include.qh
@@ -118,6 +119,7 @@ scores_rules.qc
 
 miscfunctions.qc
 ../common/miscfunctions.qc
+../menu-server/miscfunctions.qc
 
 waypointsprites.qc
 

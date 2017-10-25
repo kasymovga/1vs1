@@ -2112,30 +2112,3 @@ void dropentities(entity platform) {
         }
     }
 }
-
-string game_cvar_prefix;
-var float(string s) game_cvar_cvar;
-var string(string s) game_cvar_cvar_string;
-float game_cvar(string cvarname) {
-	string s = strcat(game_cvar_prefix, "_", cvarname);
-	if (game_cvar_cvar_string(s) != "")
-		return game_cvar_cvar(s);
-
-	return game_cvar_cvar(cvarname);
-}
-
-string game_cvar_string(string cvarname) {
-	string s = strcat(game_cvar_prefix, "_", cvarname);
-	if (game_cvar_cvar_string(s) != "")
-		return game_cvar_cvar_string(s);
-
-	return game_cvar_cvar_string(cvarname);
-}
-
-void game_cvar_init() {
-	game_cvar_prefix = MapInfo_String_FromType(MapInfo_CurrentGametype());
-	game_cvar_cvar = cvar;
-	game_cvar_cvar_string = cvar_string;
-	cvar = game_cvar;
-	cvar_string = game_cvar_string;
-}
