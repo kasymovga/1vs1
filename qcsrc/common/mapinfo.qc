@@ -1034,7 +1034,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_CTF: return "_g_ctf";
 		case MAPINFO_TYPE_RUNEMATCH: return "_g_runematch";
 		case MAPINFO_TYPE_CONQUEST: return "_g_conquest";
-		case MAPINFO_TYPE_KEYHUNT: return "_g_kh";
+		case MAPINFO_TYPE_KEYHUNT: return "_g_keyhunt";
 		case MAPINFO_TYPE_ASSAULT: return "_g_assault";
 		case MAPINFO_TYPE_ONSLAUGHT: return "_g_onslaught";
 		case MAPINFO_TYPE_RACE: return "_g_race";
