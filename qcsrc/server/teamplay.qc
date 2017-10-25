@@ -95,21 +95,21 @@ void LogTeamchange(entity pl)
 
 void WriteGameCvars()
 {
-	cvar_set("g_dm", ftos(g_dm));
-	cvar_set("g_tdm", ftos(g_tdm));
-	cvar_set("g_domination", ftos(g_domination));
-	cvar_set("g_ctf", ftos(g_ctf));
-	cvar_set("g_runematch", ftos(g_runematch));
-	cvar_set("g_conquest", ftos(g_conquest));
-	cvar_set("g_keyhunt", ftos(g_keyhunt));
-	cvar_set("g_assault", ftos(g_assault));
-	cvar_set("g_onslaught", ftos(g_onslaught));
-	cvar_set("g_race", ftos(g_race));
-	cvar_set("g_nexball", ftos(g_nexball));
-	cvar_set("g_cts", ftos(g_cts));
-	cvar_set("g_freeze", ftos(g_freeze));
-	cvar_set("g_clanarena", ftos(g_clanarena));
-	cvar_set("g_survive", ftos(g_survive));
+	cvar_set("_g_dm", ftos(g_dm));
+	cvar_set("_g_tdm", ftos(g_tdm));
+	cvar_set("_g_domination", ftos(g_domination));
+	cvar_set("_g_ctf", ftos(g_ctf));
+	cvar_set("_g_runematch", ftos(g_runematch));
+	cvar_set("_g_conquest", ftos(g_conquest));
+	cvar_set("_g_keyhunt", ftos(g_keyhunt));
+	cvar_set("_g_assault", ftos(g_assault));
+	cvar_set("_g_onslaught", ftos(g_onslaught));
+	cvar_set("_g_race", ftos(g_race));
+	cvar_set("_g_nexball", ftos(g_nexball));
+	cvar_set("_g_cts", ftos(g_cts));
+	cvar_set("_g_freeze", ftos(g_freeze));
+	cvar_set("_g_clanarena", ftos(g_clanarena));
+	cvar_set("_g_survive", ftos(g_survive));
 }
 
 void ReadGameCvars()
@@ -122,21 +122,21 @@ void ReadGameCvars()
 	prev = cvar("gamecfg");
 	for(i = 0; i < 2; ++i)
 	{
-		found += (g_dm = (!found && (prev != GAME_DEATHMATCH) && cvar("g_dm")));
-		found += (g_tdm = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("g_tdm")));
-		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("g_domination")));
-		found += (g_ctf = (!found && (prev != GAME_CTF) && cvar("g_ctf")));
-		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("g_runematch")));
-		found += (g_conquest = (!found && (prev != GAME_CONQUEST) && cvar("g_conquest")));
-		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("g_keyhunt")));
-		found += (g_assault = (!found && (prev != GAME_ASSAULT) && cvar("g_assault")));
-		found += (g_onslaught = (!found && (prev != GAME_ONSLAUGHT) && cvar("g_onslaught")));
-		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
-		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
-		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
-		found += (g_freeze = (!found && (prev != GAME_FREEZETAG) && cvar("g_freeze")));
-		found += (g_clanarena = (!found && (prev != GAME_CLANARENA) && cvar("g_clanarena")));
-		found += (g_survive = (!found && (prev != GAME_SURVIVE) && cvar("g_survive")));
+		found += (g_dm = (!found && (prev != GAME_DEATHMATCH) && cvar("_g_dm")));
+		found += (g_tdm = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("_g_tdm")));
+		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("_g_domination")));
+		found += (g_ctf = (!found && (prev != GAME_CTF) && cvar("_g_ctf")));
+		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("_g_runematch")));
+		found += (g_conquest = (!found && (prev != GAME_CONQUEST) && cvar("_g_conquest")));
+		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("_g_keyhunt")));
+		found += (g_assault = (!found && (prev != GAME_ASSAULT) && cvar("_g_assault")));
+		found += (g_onslaught = (!found && (prev != GAME_ONSLAUGHT) && cvar("_g_onslaught")));
+		found += (g_race = (!found && (prev != GAME_RACE) && cvar("_g_race")));
+		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("_g_nexball")));
+		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("_g_cts")));
+		found += (g_freeze = (!found && (prev != GAME_FREEZETAG) && cvar("_g_freeze")));
+		found += (g_clanarena = (!found && (prev != GAME_CLANARENA) && cvar("_g_clanarena")));
+		found += (g_survive = (!found && (prev != GAME_SURVIVE) && cvar("_g_survive")));
 
 		if(found)
 			break;

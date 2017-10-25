@@ -976,36 +976,16 @@ float MapInfo_CurrentFeatures()
 
 float MapInfo_CurrentGametype()
 {
-	if(cvar("g_domination"))
-		return MAPINFO_TYPE_DOMINATION;
-	else if(cvar("g_ctf"))
-		return MAPINFO_TYPE_CTF;
-	else if(cvar("g_runematch"))
-		return MAPINFO_TYPE_RUNEMATCH;
-	else if(cvar("g_conquest"))
-		return MAPINFO_TYPE_CONQUEST;
-	else if(cvar("g_tdm"))
-		return MAPINFO_TYPE_TEAM_DEATHMATCH;
-	else if(cvar("g_assault"))
-		return MAPINFO_TYPE_ASSAULT;
-	else if(cvar("g_keyhunt"))
-		return MAPINFO_TYPE_KEYHUNT;
-	else if(cvar("g_onslaught"))
-		return MAPINFO_TYPE_ONSLAUGHT;
-	else if(cvar("g_race"))
-		return MAPINFO_TYPE_RACE;
-	else if(cvar("g_nexball"))
-		return MAPINFO_TYPE_NEXBALL;
-	else if(cvar("g_cts"))
-		return MAPINFO_TYPE_CTS;
-	else if(cvar("g_freeze"))
-		return MAPINFO_TYPE_FREEZETAG;
-	else if(cvar("g_clanarena"))
-		return MAPINFO_TYPE_CLANARENA;
-	else if(cvar("g_survive"))
-		return MAPINFO_TYPE_SURVIVE;
-	else
-		return MAPINFO_TYPE_DEATHMATCH;
+	float f;
+	string s;
+	for (f = 1; f <= MAPINFO_TYPE_ALL; f *= 2) {
+		s = MapInfo_GetGameTypeCvar(f);
+		if (s != "")
+		if (cvar(s)) {
+			return f;
+		}
+	}
+	return MAPINFO_TYPE_DEATHMATCH;
 }
 
 float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
@@ -1046,21 +1026,21 @@ string MapInfo_GetGameTypeCvar(float t)
 {
 	switch(t)
 	{
-		case MAPINFO_TYPE_DEATHMATCH: return "g_dm";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "g_tdm";
-		case MAPINFO_TYPE_FREEZETAG: return "g_freeze";
-		case MAPINFO_TYPE_CLANARENA: return "g_clanarena";
-		case MAPINFO_TYPE_DOMINATION: return "g_domination";
-		case MAPINFO_TYPE_CTF: return "g_ctf";
-		case MAPINFO_TYPE_RUNEMATCH: return "g_runematch";
-		case MAPINFO_TYPE_CONQUEST: return "g_conquest";
-		case MAPINFO_TYPE_KEYHUNT: return "g_kh";
-		case MAPINFO_TYPE_ASSAULT: return "g_assault";
-		case MAPINFO_TYPE_ONSLAUGHT: return "g_onslaught";
-		case MAPINFO_TYPE_RACE: return "g_race";
-		case MAPINFO_TYPE_NEXBALL: return "g_nexball";
-		case MAPINFO_TYPE_CTS: return "g_cts";
-		case MAPINFO_TYPE_SURVIVE: return "g_survive";
+		case MAPINFO_TYPE_DEATHMATCH: return "_g_dm";
+		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "_g_tdm";
+		case MAPINFO_TYPE_FREEZETAG: return "_g_freeze";
+		case MAPINFO_TYPE_CLANARENA: return "_g_clanarena";
+		case MAPINFO_TYPE_DOMINATION: return "_g_domination";
+		case MAPINFO_TYPE_CTF: return "_g_ctf";
+		case MAPINFO_TYPE_RUNEMATCH: return "_g_runematch";
+		case MAPINFO_TYPE_CONQUEST: return "_g_conquest";
+		case MAPINFO_TYPE_KEYHUNT: return "_g_kh";
+		case MAPINFO_TYPE_ASSAULT: return "_g_assault";
+		case MAPINFO_TYPE_ONSLAUGHT: return "_g_onslaught";
+		case MAPINFO_TYPE_RACE: return "_g_race";
+		case MAPINFO_TYPE_NEXBALL: return "_g_nexball";
+		case MAPINFO_TYPE_CTS: return "_g_cts";
+		case MAPINFO_TYPE_SURVIVE: return "_g_survive";
 		default: return "";
 	}
 }
@@ -1068,21 +1048,14 @@ string MapInfo_GetGameTypeCvar(float t)
 void MapInfo_SwitchGameType(float t)
 {
 	cvar_set("gamecfg",      "0");
-	cvar_set("g_dm",         (t == MAPINFO_TYPE_DEATHMATCH)      ? "1" : "0");
-	cvar_set("g_tdm",        (t == MAPINFO_TYPE_TEAM_DEATHMATCH) ? "1" : "0");
-	cvar_set("g_freeze",     (t == MAPINFO_TYPE_FREEZETAG)       ? "1" : "0");
-	cvar_set("g_clanarena",  (t == MAPINFO_TYPE_CLANARENA)       ? "1" : "0");
-	cvar_set("g_domination", (t == MAPINFO_TYPE_DOMINATION)      ? "1" : "0");
-	cvar_set("g_ctf",        (t == MAPINFO_TYPE_CTF)             ? "1" : "0");
-	cvar_set("g_runematch",  (t == MAPINFO_TYPE_RUNEMATCH)       ? "1" : "0");
-	cvar_set("g_conquest",   (t == MAPINFO_TYPE_CONQUEST)        ? "1" : "0");
-	cvar_set("g_keyhunt",    (t == MAPINFO_TYPE_KEYHUNT)         ? "1" : "0");
-	cvar_set("g_assault",    (t == MAPINFO_TYPE_ASSAULT)         ? "1" : "0");
-	cvar_set("g_onslaught",  (t == MAPINFO_TYPE_ONSLAUGHT)       ? "1" : "0");
-	cvar_set("g_race",       (t == MAPINFO_TYPE_RACE)            ? "1" : "0");
-	cvar_set("g_nexball",    (t == MAPINFO_TYPE_NEXBALL)         ? "1" : "0");
-	cvar_set("g_cts",        (t == MAPINFO_TYPE_CTS)             ? "1" : "0");
-	cvar_set("g_survive",    (t == MAPINFO_TYPE_SURVIVE)         ? "1" : "0");
+	float f;
+	string s;
+	for (f = 1; f <= MAPINFO_TYPE_ALL; f *= 2) {
+		s = MapInfo_GetGameTypeCvar(f);
+		if (s != "") {
+			cvar_set(s, ((t == f) ? "1" : "0"));
+		}
+	}
 }
 
 void MapInfo_LoadMap(string s)
