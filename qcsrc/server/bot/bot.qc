@@ -647,8 +647,6 @@ void bot_serverframe()
 
 	if(time > bot_cvar_nextthink)
 	{
-		if(currentbots>0)
-			bot_custom_weapon_priority_setup();
 		bot_cvar_nextthink = time + 5;
 	}
 };
@@ -674,4 +672,5 @@ void bot_init()
 	bot_waypoints_init();
 	bot_scripting_init();
 	bot_havocbot_init();
+	bot_custom_weapon_priority_setup();
 };
