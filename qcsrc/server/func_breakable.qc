@@ -1,3 +1,4 @@
+float sv_breakable_debris;
 .entity sprite;
 
 .float dmg;
@@ -173,7 +174,7 @@ void func_breakable_destroy() {
 	activator = self.owner;
 
 	// now throw around the debris
-	if (cvar("sv_breakable_debris"))
+	if (sv_breakable_debris)
 	{
 		n = tokenize_console(self.debris);
 		for(i = 0; i < n; ++i)
@@ -237,9 +238,18 @@ void func_breakable_reset()
 		func_breakable_behave_restore();
 }
 
+float func_breakable_init_done;
+void func_breakable_init() {
+	if (func_breakable_init_done)
+		return;
+
+	CACHE_CVAR(sv_breakable_debris);
+}
+
 // destructible walls that can be used to trigger target_objective_decrease
 void spawnfunc_func_breakable() {
 	float n, i;
+	func_breakable_init();
 	if(!self.health)
 		self.health = 100;
 	self.max_health = self.health;

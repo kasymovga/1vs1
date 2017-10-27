@@ -575,7 +575,7 @@ void trigger_heal_touch()
 			if (other.health < self.max_health)
 			{
 				other.health = min(other.health + self.health, self.max_health);
-				other.pauserothealth_finished = max(other.pauserothealth_finished, time + cvar("g_balance_pause_health_rot"));
+				other.pauserothealth_finished = max(other.pauserothealth_finished, time + g_balance_pause_health_rot);
 				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}

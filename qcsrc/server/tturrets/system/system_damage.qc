@@ -279,8 +279,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         if(clienttype(attacker) == CLIENTTYPE_REAL)
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
-        if(cvar("g_friendlyfire"))
-            damage = damage * cvar("g_friendlyfire");
+        if(g_friendlyfire)
+            damage = damage * g_friendlyfire;
         else
             return;
     }

@@ -35,7 +35,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = cvar("sv_gravity");
+	grav = sv_gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -250,7 +250,7 @@ void trigger_push_findtarget()
 			remove(self);
 			return;
 		}
-		self.enemy.origin += self.enemy.origin + '0 0 1' * cvar("sv_jumppads_target_adjust_height");
+		self.enemy.origin = self.enemy.origin + '0 0 1' * cvar("sv_jumppads_target_adjust_height");
 
 		self.movedir = trigger_push_calculatevelocity(org, self.enemy, self.height);
 		flighttime = trigger_push_calculatevelocity_flighttime;
