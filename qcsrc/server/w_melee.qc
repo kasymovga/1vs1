@@ -16,6 +16,7 @@ float g_balance_melee_onehit;
 float g_balance_melee_refire;
 vector sv_player_melee_angles;
 vector sv_player_melee_origin;
+string sv_sound_melee;
 
 float bot_melee_love;
 
@@ -55,7 +56,7 @@ void W_Melee_Attack ()
 	if (g_balance_melee == 2 && Akimbo_Active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
 		return;
 
-	sound (Akimbo_Owner(self), CHAN_WEAPON, cvar_string("sv_sound_melee"), VOL_BASE, ATTN_NORM);
+	sound (Akimbo_Owner(self), CHAN_WEAPON, sv_sound_melee, VOL_BASE, ATTN_NORM);
 	entity melee = spawn();
 	melee.owner = Akimbo_Owner(self);
 	melee.think = W_Melee_Attack_Think;
@@ -100,7 +101,9 @@ void W_Melee_Attack_Check()
 
 void Melee_Init()
 {
-	precache_sound (cvar_string("sv_sound_melee"));
+	unzone_ifneeded(sv_sound_melee);
+	sv_sound_melee = cvar_string_zone_ifneeded("sv_sound_melee");
+	precache_sound (sv_sound_melee);
 	CACHE_CVAR(g_balance_melee);
 	CACHE_CVAR(g_balance_melee_animtime);
 	CACHE_CVAR(g_balance_melee_allow_crouched);
