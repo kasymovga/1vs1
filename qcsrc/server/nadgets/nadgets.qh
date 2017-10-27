@@ -61,7 +61,7 @@ typedef float(void) hg_hookfunc_t;
 .float hg_optout_nextround;
 .float hg_alwaysask;
 .float hg_altcharge;
-.float hg_adept;
+//.float hg_adept;
 
 var .float hg_ctx_next;
 var .float hg_ctx_type;

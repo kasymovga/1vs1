@@ -47,6 +47,7 @@ void HG_GenericProjectile_RadiusDamage(void) {
     float dmgmod = 1;
     float frcmod = 1;
 
+#if 0
     if(self.hg_adept) {
         if(GV("adept_damagemod")) {
             dmgmod = dmgmod * (1 + (GV("adept_damagemod") - 1) * self.hg_adept);
@@ -56,6 +57,7 @@ void HG_GenericProjectile_RadiusDamage(void) {
             frcmod = frcmod * (1 + (GV("adept_forcemod")  - 1) * self.hg_adept);
         }
     }
+#endif
 
     dmgmod *= pow(GV("damage_bouncemultiplier"), GV("bouncelimit") - self.cnt);
 
@@ -106,9 +108,11 @@ void HG_GenericProjectile_Explode(void) {
 float HG_GenericProjectile_TryStick(entity targ, vector normal) {
     float doStick;
 
+#if 0
     if(self.hg_adept)
         doStick = GRENVAR(self.hg_type, "adept_stick");
     else
+#endif
         doStick = GRENVAR(self.hg_type, "stick");
 
     if(!doStick || (targ.takedamage == DAMAGE_AIM && doStick < 2) || targ.solid == SOLID_CORPSE)
@@ -227,7 +231,9 @@ void HG_GenericProjectile_Touch(void) {
             return;
         } else if(self.hg_type == HG_LASER) {
             HG_GenericProjectile_RadiusDamage();
-        } else if(self.hg_type == HG_PLASMA && self.hg_adept) {
+        }
+#if 0
+		else if(self.hg_type == HG_PLASMA && self.hg_adept) {
             float pcount = cvar("g_nadgets_plasma_adept_projectiles_on_bounce");
 
             if(pcount > 0) {
@@ -241,6 +247,7 @@ void HG_GenericProjectile_Touch(void) {
                 self.velocity = oldvel;
             }
         }
+#endif
 
 :troll
         if(self.hg_type == HG_RAZE) {
@@ -316,7 +323,8 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
         e.angles_y = va_y - 90;
     }
 
-    float lt_override = GRENVAR(e.hg_type, strcat((e.hg_adept ? "adept_" : ""), "stick_lifetime_override"));
+    //float lt_override = GRENVAR(e.hg_type, strcat((e.hg_adept ? "adept_" : ""), "stick_lifetime_override"));
+    float lt_override = GRENVAR(e.hg_type, "stick_lifetime_override");
     if(lt_override > 0) {
         e.hg_deathtime = time + lt_override;
     }
@@ -431,10 +439,12 @@ void HG_GenericProjectile_Think(void) {
                     }
                 }
 
+#if 0
                 if(self.hg_adept && GV("adept_trailblaze") && time > self.hg_fireSpawnTime){
                     HG_GenericProjectile_ThrowNapalm();
                     self.hg_fireSpawnTime = time + GV("fire_spawninterval");
                 }
+#endif
             }
         }
     }
@@ -459,6 +469,7 @@ void HG_GenericProjectile_Think(void) {
 
     if(self.hg_detonable && self.hg_detonatetime) {
         if(time >= self.hg_detonatetime) {
+#if 0
             if(self.hg_type == HG_REMOTE && self.hg_adept) {
                 self.hg_adept = 0;
                 self.health = self.max_health;
@@ -469,9 +480,12 @@ void HG_GenericProjectile_Think(void) {
                 self.hg_sndcount = 0;
                 WaypointSprite_Disown(self.hg_waypoint, 0.5);
             } else {
+#endif
                 self.use();
                 return;
+#if 0
             }
+#endif
         } else if(time >= self.hg_nextsnd) {
             spamsound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
             self.hg_sndcount += 1;
@@ -633,19 +647,23 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     }
 #endif
 
+#if 0
     if(gren.hg_adept && GV("adept_detonable")) {
         gren.hg_detonable = GV("adept_detonable");
         gren.hg_detonatedelay = GV("adept_detonate_delay");
         gren.hg_detonateready = time + GV("adept_detonate_threshold");
     } else {
+#endif
         gren.hg_detonable = GV("detonable");
         gren.hg_detonatedelay = GV("detonate_delay");
         gren.hg_detonateready = time + GV("detonate_threshold");
+#if 0
     }
 
     if(gren.hg_adept && GV("adept_movetype"))
         gren.movetype = GV("adept_movetype");
     else
+#endif
         gren.movetype = GV("movetype");
 
     gren.gravity = GV("gravity");
@@ -654,26 +672,30 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 
     float lt;
     if(hgtype == HG_TRANSLOC && self.BUTTON_CROUCH) {
+#if 0
         if(gren.hg_adept) {
             lt = GV("adept_crouch_lifetime");
             if(!lt)
                 lt = GV("crouch_lifetime");
         } else
+#endif
             lt = GV("crouch_lifetime");
+#if 0
     } else if(gren.hg_adept) {
         lt = GV("adept_lifetime");
         if(!lt)
             lt = GV("lifetime");
-#if 0
         else if(hgtype == HG_REMOTE)
             lt = lt * Buffs_NadgetPower(self);
 #endif
     } else
         lt = GV("lifetime");
 
+#if 0
     if(gren.hg_adept)
         gren.cnt = GV("adept_bouncelimit");
     else
+#endif
         gren.cnt = GV("bouncelimit");
 
     if(self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face"))
@@ -689,12 +711,14 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.team = self.team;
     gren.hg_isbonus = self.hg_bonus;
 
+#if 0
     if(gren.hg_adept) {
         gren.health = GV("adept_health");
 
         if(gren.hg_type == HG_RAZE)
             gren.hg_fireSpawnTime = gren.hg_spawntime + GV("adept_trailblaze_delay");
     }
+#endif
 
     if(GV("takedamage") || gren.health) {
         gren.takedamage = DAMAGE_AIM;
