@@ -88,8 +88,8 @@ void HG_PlayerClear(float killed) {
 var void() HG_GameHookChain_ObserverSpawn_Next;
 
 void HG_ObserverSpawn(void) {
-    self.hg_type1_picked = 0;
-    self.hg_type2_picked = 0;
+    //self.hg_type1_picked = 0;
+    //self.hg_type2_picked = 0;
     self.hg_next1 = 0;
     self.hg_next2 = 0;
 
