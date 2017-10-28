@@ -1733,9 +1733,9 @@ void CheckRules_World()
 		return;
 	}
 
-	timelimit = nogame_cvar("timelimit") * 60;
-	fraglimit = nogame_cvar("fraglimit");
-	leadlimit = nogame_cvar("leadlimit");
+	timelimit = cvar("timelimit") * 60;
+	fraglimit = cvar("fraglimit");
+	leadlimit = cvar("leadlimit");
 
 	if(inWarmupStage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
