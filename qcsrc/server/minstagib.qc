@@ -4,6 +4,7 @@ float g_minstagib_extralives;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
 float g_minstagib_nolaserdamage;
+float minstagib_ammo;
 /* replace items in minstagib
  * IT_STRENGTH	 = invisibility
  * IT_NAILS	 = extra lives
@@ -14,11 +15,15 @@ void minstagib_items (float itemid)
 	// we don't want to replace dropped weapons ;)
 	if (self.classname == "droppedweapon")
 	{
+		if not(minstagib_ammo) {
+			remove(self);
+			return;
+		}
 		self.ammo_cells = 25;
 		self.weapon = 0;
-		StartItem ("models/items/g_h50.md3",
+		StartItem ("models/items/a_cells.md3",
 			"misc/mediumhealth.wav", 15, 0,
-			"MinstaNex", 0, IT_HEALTH, 0, generic_pickupevalfunc, 1000);
+			"HealthAndAmmo", 0, IT_HEALTH, 0, generic_pickupevalfunc, 1000);
 		return;
 	}
 
@@ -27,6 +32,10 @@ void minstagib_items (float itemid)
 	// replace rocket launchers and nex guns with ammo cells
 	if (itemid == IT_CELLS)
 	{
+		if not(minstagib_ammo) {
+			remove(self);
+			return;
+		}
 		self.ammo_cells = 1;
 		StartItem ("models/items/a_cells.md3",
 			"misc/itempickup.wav", 45, 0,
@@ -58,6 +67,7 @@ void minstagib_PlayerPreThink() {
 	if (time < self.minstagib_nextthink || self.deadflag || gameover)
 		return;
 
+	if not(self.items & IT_UNLIMITED_AMMO)
 	if (self.ammo_cells <= 0)
 	{
 		if (self.health == 5)
@@ -167,7 +177,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 		// else if(item.items == IT_CELLS)
 		//	play2(player, "announce/robotic/ammo.wav");
 
-		if (item.ammo_cells)
+		if not(player.items & IT_UNLIMITED_AMMO)
 			player.ammo_cells = min (player.ammo_cells + g_minstagib_ammo_drop, 999);
 		player.health = 100;
 	}
@@ -197,7 +207,6 @@ void minstagib_HealthArmorFuelModsSet() {
 	GameHook_HealthArmorRotRegen = FALSE;
 }
 
-var float(float wpn) minstagib_WeaponSpawnHandle_NextLink;
 float minstagib_WeaponSpawnHandle(float wpn) {
 	if (wpn == WEP_MINSTANEX ||wpn == WEP_NEX || wpn == WEP_ROCKET_LAUNCHER) {
 		minstagib_items(IT_CELLS);
@@ -206,7 +215,6 @@ float minstagib_WeaponSpawnHandle(float wpn) {
 	} else
 		remove(self);
 
-	minstagib_WeaponSpawnHandle_NextLink(wpn);
 	return TRUE;
 }
 
@@ -318,16 +326,21 @@ float minstagib_MirrorDamageHandle(entity attacker, entity inflictor, float mirr
 	return TRUE;
 }
 
-float minstagib_StartAmmoHandle() {
+float minstagib_StartAmmoHandle(float use_ammunition) {
 	start_health = 100;
 	start_armorvalue = 0;
 	start_weapons = WEPBIT_MINSTANEX;
 	weapon_precache(WEP_MINSTANEX);
-	start_ammo_cells = cvar("g_minstagib_ammo_start");
+	if (use_ammunition) {
+		start_ammo_cells = cvar("g_minstagib_ammo_start");
+		minstagib_ammo = TRUE;
+	} else 
+		start_items |= IT_UNLIMITED_AMMO;
+
 	return TRUE;
 }
 
-float minstagib_WarmupStartAmmoHandle() { return TRUE; }
+float minstagib_WarmupStartAmmoHandle(float use_ammunition) { return TRUE; }
 
 var void() minstagib_ItemRespawnCountDown_NextLink;
 void minstagib_ItemRespawnCountDown() {
@@ -350,6 +363,7 @@ void minstagib_init() {
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(g_minstagib_nolaserdamage);
+
 	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	if (g_minstagib_invis_alpha <= 0)
 		g_minstagib_invis_alpha = -1;
@@ -364,7 +378,6 @@ void minstagib_init() {
 	GameHookChain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
 	minstagib_HealthArmorFuelModsSet_NextLink = GameHookChain_HealthArmorFuelModsSet;
 	GameHookChain_HealthArmorFuelModsSet = minstagib_HealthArmorFuelModsSet;
-	minstagib_WeaponSpawnHandle_NextLink = GameHookChain_WeaponSpawnHandle;
 	GameHookChain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
 	minstagib_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;

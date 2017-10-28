@@ -1785,7 +1785,7 @@ void Items_Init()
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
-	if not(GameHookChain_StartAmmoHandle())
+	if not(GameHookChain_StartAmmoHandle(g_use_ammunition))
 	{
 		if (g_use_ammunition)
 		{
@@ -1836,7 +1836,7 @@ void Items_Init()
 		warmup_start_armorvalue = start_armorvalue;
 		warmup_start_weapons = start_weapons;
 
-		if not(GameHookChain_WarmupStartAmmoHandle())
+		if not(GameHookChain_WarmupStartAmmoHandle(g_use_ammunition))
 		{
 			if (g_use_ammunition)
 			{
