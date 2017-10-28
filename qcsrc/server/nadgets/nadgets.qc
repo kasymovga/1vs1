@@ -113,6 +113,30 @@ float(entity plr) HG_PlayerCanBeCarrier {
 	return FALSE;
 }
 
+var void(entity plr) HG_SpectateCopy_NextLink;
+void(entity plr) HG_SpectateCopy {
+	self.hg_power = plr.hg_power;
+	self.hg_type1 = plr.hg_type1;
+	self.hg_type2 = plr.hg_type2;
+	self.hg_next1 = plr.hg_next1;
+	self.hg_next2 = plr.hg_next2;
+	self.hg_ammo1 = plr.hg_ammo1;
+	self.hg_ammo2 = plr.hg_ammo2;
+	self.hg_regentime1 = plr.hg_regentime1;
+	self.hg_regentime2 = plr.hg_regentime2;
+	self.hg_maxregentime1 = plr.hg_maxregentime1;
+	self.hg_maxregentime2 = plr.hg_maxregentime2;
+	self.hg_regenpaused1 = plr.hg_regenpaused1;
+	self.hg_regenpaused2 = plr.hg_regenpaused2;
+	self.hg_regenrate1 = plr.hg_regenrate1;
+	self.hg_regenrate2 = plr.hg_regenrate2;
+	self.hg_bonus = plr.hg_bonus;
+	self.hg_bonustype = plr.hg_bonustype;
+	self.hg_detonables = plr.hg_detonables;
+	self.hg_launchspeed = plr.hg_launchspeed;
+	HG_SpectateCopy_NextLink(plr);
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -163,6 +187,8 @@ void HG_Init(void) {
 	GameHookChain_JoinHandle = HG_JoinHandle;
 	HG_PlayerCanBeCarrier_NextLink = GameHookChain_PlayerCanBeCarrier;
 	GameHookChain_PlayerCanBeCarrier = HG_PlayerCanBeCarrier;
+	HG_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = HG_SpectateCopy;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
