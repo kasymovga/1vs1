@@ -141,8 +141,10 @@ void HG_Shield_Model_Think(void) {
 
     self.colormod = '1 1 0';
     self.colormod_z = 1 - self.owner.hg_shieldpower;
+#if 0
     if(self.hg_adept && self.owner.hg_shieldpower == 1)
         self.colormod_z = 1;
+#endif
     setorigin(self, self.owner.origin);
     self.nextthink = time;
 }

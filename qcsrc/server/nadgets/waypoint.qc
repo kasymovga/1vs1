@@ -84,9 +84,11 @@ void HG_Waypoint(void) {
         detected = self.revprogress;
 #endif
     else {
+#if 0
         if(self.hg_adept && GRENVAR(self.hg_type, "adept_detect_enemies"))
             rng = GRENVAR(self.hg_type, "adept_detect_enemies");
         else
+#endif
             rng = GRENVAR(self.hg_type, "detect_enemies");
 
         if(!rng) {

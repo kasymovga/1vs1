@@ -162,8 +162,10 @@ HG_HOOKFUNCTION(linker, Attack) {
     if(e.team)
         e.skin = TeamColorSkin(e.team);
 
+#if 0
     if(e.hg_adept)
         e.skin += 5;
+#endif
 
     setorigin(e, self.origin + self.view_ofs);
     setsize(e, '-32 -32 0', '32 32 32');
