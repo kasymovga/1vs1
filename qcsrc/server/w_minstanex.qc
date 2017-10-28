@@ -71,7 +71,7 @@ float w_minstanex(float req)
 {
 	if (req == WR_AIM)
 	{
-		if(self.ammo_cells>0)
+		if (self.ammo_cells > 0 || self.items & IT_UNLIMITED_AMMO)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 		else
 			self.BUTTON_ATCK2 = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
