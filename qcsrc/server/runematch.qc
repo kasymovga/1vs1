@@ -732,6 +732,7 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 var void(float killed) runematch_PlayerClear_NextLink;
 void runematch_PlayerClear(float killed) {
 	DropAllRunes(self);
+	self.runes = 0;
 	runematch_PlayerClear_NextLink(killed);
 }
 
