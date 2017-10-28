@@ -12,22 +12,8 @@ float minstagib_ammo;
  */
 void minstagib_items (float itemid)
 {
-	// we don't want to replace dropped weapons ;)
-	if (self.classname == "droppedweapon")
-	{
-		if not(minstagib_ammo) {
-			remove(self);
-			return;
-		}
-		self.ammo_cells = 25;
-		self.weapon = 0;
-		StartItem ("models/items/a_cells.md3",
-			"misc/mediumhealth.wav", 15, 0,
-			"HealthAndAmmo", 0, IT_HEALTH, 0, generic_pickupevalfunc, 1000);
-		return;
-	}
-
-	self.classname = "minstagib";
+	if not(self.classname == "droppedweapon")
+		self.classname = "minstagib";
 
 	// replace rocket launchers and nex guns with ammo cells
 	if (itemid == IT_CELLS)
@@ -370,8 +356,6 @@ void minstagib_init() {
 
 	precache_sound ("announcer/robotic/lastsecond.wav");
 	precache_sound ("announcer/robotic/narrowly.wav");
-	precache_sound("misc/mediumhealth.wav");
-	precache_model("models/items/g_h50.md3");
 	minstagib_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = minstagib_PlayerPreThink;
 	minstagib_ItemGiveToHandle_NextLink = GameHookChain_ItemGiveToHandle;
