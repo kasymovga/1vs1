@@ -102,7 +102,6 @@ void ewheel_spawn() {
 	self.weaponentity = spawn();
 	setmodel(self.weaponentity, "models/turrets/ewheel-gun1.md3");
     setattachment(self.weaponentity, self, "tag_head");
-    setsize(self,'-32 -32 0','32 32 48');
 	self.species = SPECIES_ROBOT_SOLID;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
@@ -120,6 +119,7 @@ void ewheel_init() {
 }
 
 void spawnfunc_ewheel_spawn() {
+    setsize(self,'-32 -32 0','32 32 48');
 	monster_init(ewheel_init);
 	monster_prepare_spawn(ewheel_spawn, spawnfunc_ewheel_spawn);
 }

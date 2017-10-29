@@ -1146,10 +1146,18 @@ set g_monster_boss1_health 3000
 set g_monster_boss1_damage 50
 set g_monster_boss1_force 100
 set g_monster_boss1_radius 100
+set g_monster_bat_health 100
+set g_monster_bat_damage 50
+set g_monster_bat_force 100
+set g_monster_bat_radius 100
 set g_monster_ewheel_health 50
 set g_monster_ewheel_damage 25
 set g_monster_ewheel_force 25
 set g_monster_ewheel_radius 25
+set g_monster_fireguy_health 100
+set g_monster_fireguy_damage 50
+set g_monster_fireguy_force 100
+set g_monster_fireguy_radius 100
 set g_monster_flyingthing_health 100
 set g_monster_flyingthing_damage 50
 set g_monster_flyingthing_force 100
@@ -1173,6 +1181,7 @@ set g_monster_walker_health 500
 set g_monster_walker_damage 100
 set g_monster_walker_force 100
 set g_monster_walker_radius 100
+set g_monsters_spawn ""
 
 set sv_radio 0 "Enable the Radio - server-wide music broadcasting"
 set sv_radio_preload 1 "Download the next track in queue in advance to prevent silent gaps and desyncs"

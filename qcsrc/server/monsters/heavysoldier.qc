@@ -127,7 +127,6 @@ void heavysoldier_spawn() {
 
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
-	setsize(self, '-16 -16 -24', '16 16 45');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
@@ -141,6 +140,7 @@ void heavysoldier_init() {
 }
 
 void spawnfunc_heavysoldier_spawn() {
+	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(heavysoldier_init);
 	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_heavysoldier_spawn);
 }

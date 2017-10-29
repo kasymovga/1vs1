@@ -65,7 +65,6 @@ void spearguy_spawn() {
 	monster_prepare(spearguy_hunt, spearguy_walk, spearguy_idle);
 	setmodel(self, "models/player/lurk.zym");
 	self.movetype = MOVETYPE_WALK;
-	setsize(self, '-16 -16 -24', '16 16 45');
 	self.exteriorweaponentity = spawn();
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_rspear.md3");
@@ -83,6 +82,7 @@ void spearguy_init() {
 }
 
 void spawnfunc_spearguy_spawn() {
+	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(spearguy_init);
 	monster_prepare_spawn(spearguy_spawn, spawnfunc_spearguy_spawn);
 }

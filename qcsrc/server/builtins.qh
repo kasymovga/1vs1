@@ -72,4 +72,7 @@ string	precache_sound2 (string s)							= #76;
 string	precache_file2 (string s)							= #77;
 void(entity e) setspawnparms = #78;
 
+void(string s, ...) callfunction = #605;
+void(string s) isfunction = #607;
+
 string getextresponse(void) = #624;

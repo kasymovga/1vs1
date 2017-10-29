@@ -188,7 +188,6 @@ void walker_spawn() {
 	self.weaponentity = spawn();
 	setmodel(self.weaponentity, "models/turrets/walker_head_minigun.md3");
     setattachment(self.weaponentity, self, "tag_head");
-    setsize(self, WALKER_MIN, WALKER_MAX);
 	self.species = SPECIES_ROBOT_SOLID;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 0.1;
@@ -206,6 +205,7 @@ void walker_init() {
 }
 
 void spawnfunc_walker_spawn() {
+    setsize(self, WALKER_MIN, WALKER_MAX);
 	monster_init(walker_init);
 	monster_prepare_spawn(walker_spawn, spawnfunc_walker_spawn);
 }

@@ -117,8 +117,29 @@ void Teleport_Touch (void)
 
 	if (other.health < 1)
 		return;
-	if not(other.flags & FL_CLIENT)	// FIXME: Make missiles firable through the teleport too
+
+	if not(other.iscreature)	// FIXME: Make missiles firable through the teleport too
 		return;
+
+	if (other.classname != "player") {
+		if (other.mins_x < PL_MIN_x)
+			return;
+
+		if (other.mins_y < PL_MIN_y)
+			return;
+
+		if (other.mins_z < PL_MIN_z)
+			return;
+
+		if (other.maxs_x > PL_MAX_x)
+			return;
+
+		if (other.maxs_y > PL_MAX_y)
+			return;
+
+		if (other.maxs_z > PL_MAX_z)
+			return;
+	}
 
 	if(self.team)
 		if((self.spawnflags & 4 == 0) == (self.team != other.team))

@@ -115,6 +115,7 @@ nadgets/include.qh
 napalm.qh
 g_damage.qh
 badass.qh
+monsters/monsters.qh
 
 scores_rules.qc
 
@@ -287,6 +288,8 @@ monsters/spider.qc
 monsters/boss1.qc
 monsters/walker.qc
 monsters/ewheel.qc
+monsters/fireguy.qc
+monsters/bat.qc
 survive.qc
 minstagib.qc
 radio.qc

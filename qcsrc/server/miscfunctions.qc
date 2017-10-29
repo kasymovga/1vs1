@@ -1448,6 +1448,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
+		e.angles_x = 0;
+		e.angles_z = 0;
         dprint("Needed ", ftos(i + 1), " attempts\n");
         return TRUE;
     }

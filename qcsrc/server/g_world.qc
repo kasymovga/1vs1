@@ -577,6 +577,7 @@ void readlevelcvars(void)
 	Radio_Init();
 	BadAss_Init();
 	DamageIndicator_Init();
+	monsters_init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

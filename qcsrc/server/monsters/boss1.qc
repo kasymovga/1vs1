@@ -136,7 +136,6 @@ void boss1_spawn() {
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
 	self.scale = 3;
-	setsize(self, '-48 -48 -72', '64 64 135');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.max_health = self.health;
@@ -156,6 +155,7 @@ void boss1_init() {
 }
 
 void spawnfunc_boss1_spawn() {
+	setsize(self, '-48 -48 -72', '64 64 135');
 	monster_init(boss1_init);
 	monster_prepare_spawn(boss1_spawn, spawnfunc_boss1_spawn);
 }

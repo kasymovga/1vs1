@@ -201,6 +201,7 @@ void monster_spawn_think() {
 	self.owner = oldself;
 	self.reset = monster_die;
 	oldself.weapon_think();
+	setsize(self, oldself.mins, oldself.maxs);
 
 	self = oldself;
 	self.dmg = self.dmg - quant;
@@ -348,4 +349,50 @@ void spawnfunc_monster_walk_path() {
 	self.scale = 4;
 	self.solid = SOLID_NOT;
 #endif
+}
+
+void monsters_init() {
+	string monster_list = cvar_string("g_monsters_spawn");
+	string head, tail;
+	tail = monster_list;
+	float n, i;
+	string monster_name;
+	string monster_func;
+	string _monster_classname;
+	float monster_count;
+	entity monster;
+	entity oldself;
+	while (tail != "") {
+		head = car(tail);
+		tail = cdr(tail);
+		n = strstrofs(head, ":", 0);
+		if (n > 0) {
+			monster_name = substring(head, 0, n);
+			monster_count = stof(substring(head, n + 1, -1));
+		} else {
+			monster_name = head;
+			monster_count = 1;
+		}
+
+		_monster_classname = strzone(strcat(monster_name, "_spawn"));
+		monster_func = strcat("spawnfunc_", monster_name, "_spawn");
+		if (isfunction(monster_func)) {
+			for (i = 0; i < monster_count; i++) {
+				monster = spawn();
+				monster.classname = _monster_classname;
+				monster.cnt = 1;
+				monster.respawntime = 10;
+				monster.spawnflags = 3;
+				oldself = self;
+				self = monster;
+				callfunction(monster_func);
+				self = oldself;
+				if not(MoveToRandomMapLocation(monster, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
+					print("Cant find place for ", monster_name, "\n");
+					remove(monster);
+				}
+			}
+		} else
+			print("Function ", monster_func, " not found\n");
+	}
 }

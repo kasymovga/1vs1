@@ -102,7 +102,6 @@ void spider_spawn() {
 	self.species = SPECIES_ROBOT_SOLID;
 	self.movetype = MOVETYPE_WALK;
 	self.entremove = spider_remove;
-	setsize(self, '-16 -16 0', '16 16 24');
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
@@ -116,6 +115,7 @@ void spider_init() {
 }
 
 void spawnfunc_spider_spawn() {
+	setsize(self, '-16 -16 0', '16 16 24');
 	monster_init(spider_init);
 	monster_prepare_spawn(spider_spawn, spawnfunc_spider_spawn);
 }
