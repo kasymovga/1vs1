@@ -198,11 +198,9 @@ void RuneCarriedThink()
 			rnum = rcount;
 		rune = find(rune, classname, "rune");
 	}
-
 	ang_y = rnum*(360 / rcount) + mod(time, 360)*45;//180;
 
 	makevectors(ang);
-
 	setorigin(self, v_forward*32);
 }
 
@@ -240,6 +238,7 @@ void rune_touch()
 	self.touch = SUB_Null;
 
 	self.solid = SOLID_NOT;
+	self.movetype = MOVETYPE_NONE;
 	setorigin(self, self.origin);
 
 	//sprint(other, strcat("^3You have picked up ",
