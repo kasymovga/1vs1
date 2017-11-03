@@ -10,16 +10,23 @@ void InterpolateOrigin_Note()
 
 	dt = time - self.itime2;
 
-	if(self.iflags & IFLAG_PREVALID)
-		self.iflags |= IFLAG_VALID;
-	else
-		self.iflags |= IFLAG_PREVALID;
-
 	self.iorigin1 = self.iorigin2;
 	self.iorigin2 = self.origin;
 
 	if(self.iflags & IFLAG_AUTOANGLES)
 		self.angles = vectoangles(self.iorigin2 - self.iorigin1);
+
+	if(self.iflags & IFLAG_PREVALID) {
+		if not(self.iflags & IFLAG_VALID) {
+			self.iflags |= IFLAG_VALID;
+			if (self.iflags & IFLAG_ANGLES) {
+				fixedmakevectors(self.angles);
+				self.iforward2 = v_forward;
+				self.iup2 = v_up;
+			}
+		}
+	} else
+		self.iflags |= IFLAG_PREVALID;
 
 	if(self.iflags & IFLAG_ANGLES)
 	{
