@@ -70,7 +70,7 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage,
 		Net_LinkEntity(e, FALSE, 0, DamageIndicator_SendEntity);
 		targ.dmg_indicator = e;
 	}
-	setorigin(e, targ.origin);
+	setorigin(e, targ.origin + 0.5 * (targ.maxs + targ.mins));
 	e.SendFlags = 1;
 	e.dmg = e.dmg + damage;
 	e.nextthink = time + sv_damageindicator_accumulate_interval;
