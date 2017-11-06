@@ -2114,3 +2114,5 @@ void dropentities(entity platform) {
         }
     }
 }
+
+#define BoundToByte(x) ((x < 251) ? x : ((x < 500) ? 251 : ((x < 1000) ? 252 : ((x < 2000) ? 253 : ((x < 5000) ? 254 : 255)))))

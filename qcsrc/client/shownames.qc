@@ -105,7 +105,7 @@ void Shownames_DrawPlayer() {
 		s = textShortenToWidth(s, namesize, stringwidth_colors);
 
 	if (self.health)
-		s = strcat(s, " ^7(^1", ftos(self.health), (self.armorvalue ? strcat("^7/^2", ftos(self.armorvalue)): ""), "^7)");
+		s = strcat(s, " ^7(^1", UnboundFromByte(self.health), (self.armorvalue ? strcat("^7/^2", UnboundFromByte(self.armorvalue)): ""), "^7)");
 
     float width = stringwidth(s, TRUE);
 

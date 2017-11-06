@@ -266,22 +266,7 @@ void DamageIndicator_Draw() {
         return;
 
 	o_z = 0;
-	float d = self.cnt;
-	string s;
-	if (d < 251)
-		s = ftos(d);
-	else if (d == 251)
-		s = "250+";
-	else if (d == 252)
-		s = "500+";
-	else if (d == 253)
-		s = "1K+";
-	else if (d == 254)
-		s = "2K+";
-	else if (d == 255)
-		s = "5K+";
-
-	drawstring(o, s, '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+	drawstring(o, UnboundFromByte(self.cnt), '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
 }
 
 void Ent_DamageIndicator(float bisnew);

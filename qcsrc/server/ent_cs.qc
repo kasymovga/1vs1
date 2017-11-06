@@ -84,8 +84,8 @@ float entcs_send(entity to, float sf)
 
 	if (sf & 128)
 	if (sf & 16) {
-		WriteByte(MSG_ENTITY, bound(0, self.health, 255));
-		WriteByte(MSG_ENTITY, bound(0, self.armorvalue, 255));
+		WriteByte(MSG_ENTITY, BoundToByte(self.health));
+		WriteByte(MSG_ENTITY, BoundToByte(self.armorvalue));
 	}
 	return TRUE;
 }

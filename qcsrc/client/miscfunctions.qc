@@ -325,6 +325,8 @@ float TeamNumber(float t, float d) {
     }
 }
 
+#define UnboundFromByte(x) ((x < 251) ? ftos(x) : ((x == 251) ? "250+" : ((x == 252) ? "500+" : ((x == 253) ? "1K+" : ((x == 254) ? "2K+" : "5K+")))))
+
 #define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(TeamNumber(t, d))))
 
 void SUB_Null() { }
