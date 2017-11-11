@@ -10,7 +10,7 @@ post-builtins.qh
 constants.qh
 ../common/constants.qh
 ../common/util.qh
-../client-server/items.qh
+../common/items.qh
 location_request.qh
 
 defs.qh		// Should rename this, it has fields and globals
@@ -21,7 +21,7 @@ tturrets/include/turrets_early.qh
 vehicles/vehicles.qh
 
 campaign.qh
-../client-server/campaign_common.qh
+../menu-server/campaign_common.qh
 ../common/mapinfo.qh
 ../common/util.qc
 ../client-server/projinfo.qh
@@ -210,8 +210,8 @@ clientcommands.qc
 vote.qc
 
 campaign.qc
-../client-server/campaign_file.qc
-../client-server/campaign_setup.qc
+../menu-server/campaign_file.qc
+../menu-server/campaign_setup.qc
 
 ../common/gamecommand.qc
 gamecommand.qc
@@ -240,7 +240,7 @@ portals.qc
 target_spawn.qc
 func_breakable.qc
 
-../client-server/items.qc
+../common/items.qc
 
 csqcprojectile.qc
 irc.qc

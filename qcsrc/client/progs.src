@@ -7,7 +7,7 @@ csqc_constants.qc
 ../common/constants.qh
 csqc_builtins.qc
 ../common/util.qh
-../client-server/items.qh
+../common/items.qh
 ../common/extensions.qh
 
 ../client-server/projinfo.qh
@@ -83,7 +83,7 @@ bgmscript.qc
 ../client-server/projinfo.qc
 ../common/gamecommand.qc
 ../common/mapinfo.qc
-../client-server/items.qc
+../common/items.qc
 ../client-server/cl_physics.qc
 ../client-server/cl_physics_spiderbot.qc
 ../client-server/cl_physics_aircraft.qc

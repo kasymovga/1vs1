@@ -13,7 +13,7 @@ oo/base.h
 
 ../common/constants.qh
 ../common/mapinfo.qh
-../common/campaign_common.qh
+../menu-server/campaign_common.qh
 ../common/items.qh
 ../common/curl.qh
 ../common/dlc.qh
@@ -41,8 +41,8 @@ nexuiz/util.qc
 
 ../common/miscfunctions.qc
 ../menu-server/miscfunctions.qc
-../common/campaign_file.qc
-../common/campaign_setup.qc
+../menu-server/campaign_file.qc
+../menu-server/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/items.qc
 ../common/curl.qc
