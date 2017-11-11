@@ -10,7 +10,7 @@ post-builtins.qh
 constants.qh
 ../common/constants.qh
 ../common/util.qh
-../common/items.qh
+../client-server/items.qh
 location_request.qh
 
 defs.qh		// Should rename this, it has fields and globals
@@ -21,10 +21,10 @@ tturrets/include/turrets_early.qh
 vehicles/vehicles.qh
 
 campaign.qh
-../common/campaign_common.qh
+../client-server/campaign_common.qh
 ../common/mapinfo.qh
 ../common/util.qc
-../common/projinfo.qh
+../client-server/projinfo.qh
 
 ../common/dlc.qh
 dlc.qh
@@ -85,9 +85,9 @@ w_campingrifle.qh
 w_rocketlauncher.qh
 damageindicator.qh
 
-../common/cl_physics.qh
-../common/cl_physics_spiderbot.qh
-../common/cl_physics_aircraft.qh
+../client-server/cl_physics.qh
+../client-server/cl_physics_spiderbot.qh
+../client-server/cl_physics_aircraft.qh
 cl_physics.qh
 minstagib.qh
 
@@ -110,7 +110,7 @@ miscfunctions.qh
 ../common/miscfunctions.qh
 ../menu-server/miscfunctions.qh
 gamehooks.qh
-../common/nadgets.qh
+../client-server/nadgets.qh
 nadgets/include.qh
 napalm.qh
 g_damage.qh
@@ -129,8 +129,8 @@ bot/bot.qc
 
 g_subs.qc
 
-../common/rune.qh
-../common/rune.qc
+../client-server/rune.qh
+../client-server/rune.qc
 runematch.qc
 
 g_violence.qc
@@ -138,15 +138,15 @@ g_damage.qc
 
 teamplay.qc
 
-../common/cl_physics.qc
+../client-server/cl_physics.qc
 cl_physics.qc
 
 // tZork's libs
 //verbstack.qc
-../common/movelib.qc
+../client-server/movelib.qc
 //steerlib.qc
-../common/cl_physics_spiderbot.qc
-../common/cl_physics_aircraft.qc
+../client-server/cl_physics_spiderbot.qc
+../client-server/cl_physics_aircraft.qc
 //pathlib/pathlib.qh
 
 g_world.qc
@@ -210,8 +210,8 @@ clientcommands.qc
 vote.qc
 
 campaign.qc
-../common/campaign_file.qc
-../common/campaign_setup.qc
+../client-server/campaign_file.qc
+../client-server/campaign_setup.qc
 
 ../common/gamecommand.qc
 gamecommand.qc
@@ -240,7 +240,7 @@ portals.qc
 target_spawn.qc
 func_breakable.qc
 
-../common/items.qc
+../client-server/items.qc
 
 csqcprojectile.qc
 irc.qc
@@ -270,11 +270,11 @@ vehicles/vehicles.qc
 ../common/ip2c.qc
 ip2c.qc
 
-../common/projinfo.qc
+../client-server/projinfo.qc
 ../common/dlc.qc
 dlc.qc
 nadgets/include.qc
-../common/nadgets.qc
+../client-server/nadgets.qc
 napalm.qc
 gamemenu.qc
 walkietalkie.qc
