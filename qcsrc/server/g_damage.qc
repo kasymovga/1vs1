@@ -396,8 +396,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						bprint ("^1",s, "^1 was cooked by ", a, "\n");
 					else if (deathtype == DEATH_FALL)
 						bprint ("^1",s, "^1 was grounded by ", a, "\n");
-					else if (deathtype == DEATH_SHOOTING_STAR)
-						bprint ("^1",s, "^1 was shot into space by ", a, "\n");
 					else if (deathtype == DEATH_SWAMP)
 						bprint ("^1",s, "^1 was conserved by ", a, "\n");
 					else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
@@ -549,8 +547,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					bprint ("^1",s, "^1 tested gravity (and it worked)\n");
 				else
 					bprint ("^1",s, "^1 hit the ground with a crunch\n");
-			else if (deathtype == DEATH_SHOOTING_STAR)
-				bprint ("^1",s, "^1 became a shooting star\n");
 			else if (deathtype == DEATH_SWAMP)
 				if(sv_gentle)
 					bprint ("^1",s, "^1 discovered a swamp\n");
