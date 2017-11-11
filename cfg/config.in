@@ -554,7 +554,6 @@ set g_nadgets_type_selectable "normal remote plasma laser raze transloc shield l
 set g_nadgets_type_selectable_primary "normal remote plasma laser raze random" "A list of nadget types that players may pick as their primary in g_nadgets_double mode."
 set g_nadgets_type_selectable_secondary "transloc shield linker sentry timewarper random" "A list of nadget types that players may pick as their primary in g_nadgets_double mode."
 set g_nadgets_double 0 "Players have 2 different nadgets at once"
-set g_nadgets_oldhitboxes 0 "Use old tiny hitboxes for grenades (RM v1.6.0 and earlier). Not recommended for shootable grenades"
 set g_nadgets_detonate_on_death 0 "If enabled, all player's detonable grenades will be automatically triggered on death"
 set g_nadgets_remove_on_death 0 "If enabled, all player's released nadgets are removed on death. Set to 2 to also remove them on getting frozen or imprisoned"
 set g_nadgets_drop_on_death 0 "If enabled, players will drop their nadget on the ground if they die while charging it up"
