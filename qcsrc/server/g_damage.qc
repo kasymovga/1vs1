@@ -249,8 +249,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					bprint ("^1",s, "^1 thought he found a nice camping ground\n");
 				else if (deathtype == DEATH_MIRRORDAMAGE)
 					bprint ("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
-				else if (deathtype == DEATH_CHEAT)
-					bprint ("^1",s, "^1 unfairly eliminated himself\n");
 				else if (deathtype == DEATH_FIRE)
 					bprint ("^1",s, "^1 burned to death\n");
 				else if (deathtype != DEATH_TEAMCHANGE)
@@ -410,8 +408,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
 					else if(deathtype == DEATH_TOUCHEXPLODE)
 						bprint ("^1",s, "^1 was pushed into an accident by ^1", a, "\n");
-					else if(deathtype == DEATH_CHEAT)
-						bprint ("^1",s, "^1 was unfairly eliminated by ^1", a, "\n");
 					else if (deathtype == DEATH_FIRE)
 						bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
 					else
@@ -556,8 +552,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				bprint ("^1",s, "^1 was mowed down by a turret \n");
 			else if(deathtype == DEATH_TOUCHEXPLODE)
 				bprint ("^1",s, "^1 died in an accident\n");
-			else if(deathtype == DEATH_CHEAT)
-				bprint ("^1",s, "^1 was unfairly eliminated\n");
 			else if(deathtype == DEATH_FIRE)
 				if(sv_gentle)
 					bprint ("^1",s, "^1 felt a little hot\n");
