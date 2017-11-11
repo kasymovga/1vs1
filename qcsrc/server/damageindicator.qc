@@ -12,11 +12,16 @@ float DamageIndicator_SendEntity(entity to, float sf) {
 
 void DamageIndicator_Remove() {
 	entity e;
-	for (e = self.owner; e; e = e.dmg_indicator)
+	float i;
+	for (i = 0, e = self.owner; e && i < 7; e = e.dmg_indicator, i++)
 		if (e.dmg_indicator == self) {
 			e.dmg_indicator = self.dmg_indicator;
 			break;
 		}
+
+	if (i == 7) //something wrong with chain
+		self.owner.dmg_indicator = world;
+
 	remove(self);
 }
 
@@ -44,7 +49,11 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage,
 		return;
 
 	entity e;
-	for (e = targ.dmg_indicator; e ;e = e.dmg_indicator) {
+	float i;
+	for (i = 0, e = targ.dmg_indicator; e ;e = e.dmg_indicator, i++) {
+		if (i > 5) // too much damage indicators for one entity
+			return;
+
 		if (e.enemy == attacker)
 			break;
 	}
