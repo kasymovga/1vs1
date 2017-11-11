@@ -69,7 +69,7 @@ void CSQCProjectile_Init(float type) {
 	sizes = '0 0 0';
 	switch (type) {
 	case PROJECTILE_FIREBALL:
-		sizes = '12 -12 12';
+		sizes = '8 -8 8';
 		break;
 	case PROJECTILE_FIREMINE:
 		sizes = '4 -4 4';
