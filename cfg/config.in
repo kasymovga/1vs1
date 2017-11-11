@@ -1063,7 +1063,7 @@ set g_nadgets_raze_lifetime 4
 set g_nadgets_raze_health 50
 set g_nadgets_raze_takedamage 1
 set g_nadgets_raze_movement_delay 0.45
-set g_nadgets_raze_speed 20
+set g_nadgets_raze_speed 200
 set g_nadgets_raze_movement_speed 1200
 set g_nadgets_raze_damage 120
 set g_nadgets_raze_edgedamage 45
