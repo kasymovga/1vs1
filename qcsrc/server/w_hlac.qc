@@ -71,7 +71,7 @@ void W_HLAC_Attack (void)
 		self.punchangle_y = random () - 0.5;
 	}
 
-	missile = spawn ();
+	missile = CSQCProjectile(TRUE, PROJECTILE_HLAC, TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.classname = "hlacbolt";
 	// missile.dmg = issecondary;
@@ -95,10 +95,7 @@ void W_HLAC_Attack (void)
 
     missile.nextthink = time + g_balance_hlac_primary_lifetime;
 
-	missile.flags = FL_PROJECTILE;
 	missile.projectiledeathtype = WEP_HLAC;
-
-	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
 }
 
 void W_HLAC_Attack2f (void)
@@ -115,7 +112,7 @@ void W_HLAC_Attack2f (void)
 	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_hlac_secondary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = CSQCProjectile(TRUE, PROJECTILE_HLAC, TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.classname = "hlacbolt";
 	// missile.dmg = issecondary;
@@ -139,10 +136,7 @@ void W_HLAC_Attack2f (void)
 
     missile.nextthink = time + g_balance_hlac_secondary_lifetime;
 
-	missile.flags = FL_PROJECTILE;
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
-
-	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
 }
 
 void W_HLAC_Attack2 (void)
@@ -266,8 +260,7 @@ float w_hlac(float req)
 		CACHE_CVAR(g_balance_hlac_secondary_speed);
 		CACHE_CVAR(g_balance_hlac_secondary_spread);
 		CACHE_CVAR(g_balance_hlac_secondary_spread_crouchmod);
-
-		ProjInfo_RegisterAuto(PROJECTILE_HLAC, '0 0 0', '0 0 0');
+		CSQCProjectile_Init(PROJECTILE_HLAC);
 	}
 	return TRUE;
 };

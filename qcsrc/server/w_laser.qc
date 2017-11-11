@@ -53,7 +53,7 @@ void W_Laser_Attack (float issecondary)
 		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_laser_primary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.classname = "laserbolt";
 	missile.dmg = issecondary;
@@ -70,7 +70,6 @@ void W_Laser_Attack (float issecondary)
 		missile.projectiledeathtype |= HITTYPE_SECONDARY;
 
 	setorigin (missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
 
 	if (issecondary)
 		missile.velocity = w_shotdir * g_balance_laser_secondary_speed;
@@ -86,10 +85,6 @@ void W_Laser_Attack (float issecondary)
 		missile.nextthink = time + g_balance_laser_secondary_lifetime;
 	else
 		missile.nextthink = time + g_balance_laser_primary_lifetime;
-
-	missile.flags = FL_PROJECTILE;
-
-	CSQCProjectile(missile, TRUE, PROJECTILE_LASER, TRUE);
 }
 
 void spawnfunc_weapon_laser (void)
@@ -167,8 +162,7 @@ float w_laser(float req)
 		CACHE_CVAR(g_balance_laser_secondary_refire);
 		CACHE_CVAR(g_balance_laser_secondary_shotangle);
 		CACHE_CVAR(g_balance_laser_secondary_speed);
-
-		ProjInfo_RegisterAuto(PROJECTILE_LASER, '0 0 0', '0 0 0');
+		CSQCProjectile_Init(PROJECTILE_LASER);
 	}
 	return TRUE;
 };

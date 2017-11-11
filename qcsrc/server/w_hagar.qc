@@ -66,7 +66,7 @@ void W_Hagar_Attack (void)
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = CSQCProjectile(TRUE, PROJECTILE_HAGAR, TRUE);
 	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
@@ -78,16 +78,12 @@ void W_Hagar_Attack (void)
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR;
 	setorigin (missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
 
 	missile.movetype = MOVETYPE_FLY;
 	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
 	W_SetupProjectileVelocity(missile);
 
 	missile.angles = vectoangles (missile.velocity);
-	missile.flags = FL_PROJECTILE;
-
-	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
 }
 
 void W_Hagar_Attack2 (void)
@@ -101,7 +97,7 @@ void W_Hagar_Attack2 (void)
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = CSQCProjectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
 	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
@@ -114,7 +110,6 @@ void W_Hagar_Attack2 (void)
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
 	setorigin (missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
 
 	missile.movetype = MOVETYPE_BOUNCEMISSILE;
 	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
@@ -122,9 +117,6 @@ void W_Hagar_Attack2 (void)
 	missile.avelocity = '100 10 10';
 
 	missile.angles = vectoangles (missile.velocity);
-	missile.flags = FL_PROJECTILE;
-
-	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
 }
 
 void spawnfunc_weapon_hagar (void)
@@ -197,9 +189,8 @@ float w_hagar(float req)
 		CACHE_CVAR(g_balance_hagar_secondary_refire);
 		CACHE_CVAR(g_balance_hagar_secondary_speed);
 		CACHE_CVAR(g_balance_hagar_secondary_spread);
-
-		ProjInfo_RegisterAuto(PROJECTILE_HAGAR, '0 0 0', '0 0 0');
-		ProjInfo_RegisterAuto(PROJECTILE_HAGAR_BOUNCING, '0 0 0', '0 0 0');
+		CSQCProjectile_Init(PROJECTILE_HAGAR);
+		CSQCProjectile_Init(PROJECTILE_HAGAR_BOUNCING);
 	}
 	return TRUE;
 };

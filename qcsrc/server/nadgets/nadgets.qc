@@ -200,7 +200,6 @@ void HG_Init(void) {
         addstat(STAT_HGREGENRATE2, AS_FLOAT, hg_regenrate2);
     }
 
-	CACHE_CVAR(g_nadgets_oldhitboxes);
 	CACHE_CVAR(g_nadgets_detonatelaunches);
 
     #define HGDEF(id,shortname,longname,color) HG_Hook_Init_##shortname();
@@ -208,26 +207,16 @@ void HG_Init(void) {
     #undef HGDEF
 	HG_Precache();
 
-    if(g_nadgets_oldhitboxes) {
-        ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, '0 0 -3', '0 0 -3');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, '0 0 -3', '0 0 -3');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, '0 0 -3', '0 0 -3');
-        // ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, '0 0 -3', '0 0 -3');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, '0 0 -3', '0 0 -3');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, '0 0 -3', '0 0 -3');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, '0 0 -3', '0 0 -3');
-    } else {
-        ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        // ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '-1 -1 -1', HG_SIZE_DEFAULT * '1 1 1');
-        ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '-1 -1 -1', HG_SIZE_TRANSLOC * '1 1 1');
-    }
+	ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '1 -1 1');
+	ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '1 -1 1');
+	ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '1 -1 1');
+	// ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, HG_SIZE_DEFAULT * '-1 -1 -1');
+	ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '1 -1 1');
+	ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '1 -1 1');
+	ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '1 -1 1');
 
-    ProjInfo_RegisterAuto(PROJECTILE_HG_RAZE, '-16 -16 -3', '16 16 3');
-    ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA_SHARD, '0 0 -3', '0 0 -3');
+    ProjInfo_RegisterAuto(PROJECTILE_HG_RAZE, '16 -3 3');
+    ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
 
     HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
     GameHookChain_ObserverSpawn = HG_ObserverSpawn;

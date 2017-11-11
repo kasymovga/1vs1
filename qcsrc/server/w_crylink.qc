@@ -111,7 +111,7 @@ void W_Crylink_Attack (void)
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
-		proj = spawn ();
+		proj = CSQCProjectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -123,8 +123,6 @@ void W_Crylink_Attack (void)
 		//proj.gravity = 0.001;
 
 		setorigin (proj, w_shotorg);
-		setsize(proj, '0 0 0', '0 0 0');
-
 
 		s = '0 0 0';
 		if (counter == 0)
@@ -153,10 +151,6 @@ void W_Crylink_Attack (void)
 
 		//proj.glow_size = 20;
 
-		proj.flags = FL_PROJECTILE;
-
-		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
-
 		counter = counter + 1;
 	}
 }
@@ -175,7 +169,7 @@ void W_Crylink_Attack2 (void)
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
-		proj = spawn ();
+		proj = CSQCProjectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -187,8 +181,6 @@ void W_Crylink_Attack2 (void)
 		//proj.gravity = 0.001;
 
 		setorigin (proj, w_shotorg);
-		setsize(proj, '0 0 0', '0 0 0');
-
 		proj.velocity = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
 		W_SetupProjectileVelocity(proj);
 		proj.touch = W_Crylink_Touch2;
@@ -202,11 +194,6 @@ void W_Crylink_Attack2 (void)
 		proj.angles = vectoangles (proj.velocity);
 
 		//proj.glow_size = 20;
-
-		proj.flags = FL_PROJECTILE;
-
-		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
-
 		counter = counter + 1;
 	}
 }
@@ -320,9 +307,8 @@ float w_crylink(float req)
 		CACHE_CVAR(g_balance_crylink_secondary_shots);
 		CACHE_CVAR(g_balance_crylink_secondary_speed);
 		CACHE_CVAR(g_balance_crylink_secondary_spread);
-
-		ProjInfo_RegisterAuto(PROJECTILE_CRYLINK, '0 0 0', '0 0 0');
-		ProjInfo_RegisterAuto(PROJECTILE_CRYLINK_BOUNCING, '0 0 0', '0 0 0');
+		CSQCProjectile_Init(PROJECTILE_CRYLINK);
+		CSQCProjectile_Init(PROJECTILE_CRYLINK_BOUNCING);
 	}
 	return TRUE;
 };

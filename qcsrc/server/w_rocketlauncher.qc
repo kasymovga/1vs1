@@ -23,7 +23,6 @@ float g_balance_rocketlauncher_speed;
 float g_balance_rocketlauncher_speedaccel;
 float g_balance_rocketlauncher_speedstart;
 float g_balance_rocketlauncher_laserguided_missile;
-vector g_balance_rocketlauncher_projsize;
 
 .float rl_release;
 .float rl_detonate_later;
@@ -375,10 +374,10 @@ void W_Rocket_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
-	W_SetupShot_ProjectileSize (self, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize, FALSE, 5, "weapons/rocket_fire.wav", g_balance_rocketlauncher_damage);
+	W_SetupShot(self, FALSE, 5, "weapons/rocket_fire.wav", g_balance_rocketlauncher_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = CSQCProjectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
 	missile.owner = Akimbo_Owner(self);
 	missile.lastrocket = self;
 	self.lastrocket = missile;
@@ -399,15 +398,13 @@ void W_Rocket_Attack (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-	setsize (missile, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize); // give it some size so it can be shot
-
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	if(g_balance_rocketlauncher_laserguided_missile && self.laser_on)
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_laserguided_speedstart * g_weaponspeedfactor;
 	else
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
 	if (Akimbo_Active(self) == 2)
-		missile.velocity = missile.velocity * 1.5;
+		missile.velocity = missile.velocity * 0.66;
 	W_SetupProjectileVelocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
@@ -415,9 +412,6 @@ void W_Rocket_Attack (void)
 	missile.think = W_Rocket_Think;
 	missile.nextthink = time;
 	missile.cnt = time + g_balance_rocketlauncher_lifetime;
-	missile.flags = FL_PROJECTILE;
-
-	CSQCProjectile(missile, g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
@@ -425,8 +419,6 @@ void W_Rocket_Attack (void)
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
-
-	// common properties
 }
 
 void spawnfunc_weapon_rocketlauncher (void); // defined in t_items.qc
@@ -675,9 +667,7 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_speed);
 		CACHE_CVAR(g_balance_rocketlauncher_speedaccel);
 		CACHE_CVAR(g_balance_rocketlauncher_speedstart);
-		g_balance_rocketlauncher_projsize = stov(cvar_string("g_balance_rocketlauncher_projsize"));
-
-		ProjInfo_RegisterAuto(PROJECTILE_ROCKET, g_balance_rocketlauncher_projsize * -1, g_balance_rocketlauncher_projsize);
+		CSQCProjectile_Init(PROJECTILE_ROCKET);
 	}
 	return TRUE;
 };

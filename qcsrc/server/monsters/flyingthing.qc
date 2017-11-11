@@ -45,7 +45,7 @@ void flyingthing_hunt() {
 		vector _shotdir = self.enemy.origin - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = spawn();
+		entity gren = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 		gren.owner = self;
 		gren.dmg_edge = self.dmg_edge;
 		gren.dmg_radius = self.dmg_radius;
@@ -55,7 +55,6 @@ void flyingthing_hunt() {
 		PROJECTILE_MAKETRIGGER(gren);
 		gren.projectiledeathtype = WEP_ELECTRO;
 		setorigin(gren, _shotorg);
-		setsize(gren, '0 0 -3', '0 0 -3');
 
 		gren.nextthink = time + 5;
 		gren.think = adaptor_think2use;
@@ -65,9 +64,6 @@ void flyingthing_hunt() {
 		W_SetupProjectileVelocity(gren);
 
 		gren.angles = vectoangles (gren.velocity);
-		gren.flags = FL_PROJECTILE;
-
-		CSQCProjectile(gren, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 
 		self.attack_finished_single = time + 1 + random();
 	} else {
@@ -109,6 +105,7 @@ void flyingthing_spawn() {
 void flyingthing_init() {
 	precache_sound("weapons/electro_fire.wav");
 	precache_model("models/turrets/walker_mghead.md3");
+	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
 }
 
 void spawnfunc_flyingthing_spawn() {

@@ -151,7 +151,7 @@ void W_Porto_Attack (float out)
 
 	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn ();
+	gren = CSQCProjectile(TRUE, PROJECTILE_PORTO_RED, TRUE);
 	gren.owner = self;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
@@ -171,7 +171,6 @@ void W_Porto_Attack (float out)
 	}
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 0', '0 0 0');
 
 	gren.nextthink = time + g_balance_porto_primary_lifetime;
 	gren.think = W_Porto_Think;
@@ -182,15 +181,11 @@ void W_Porto_Attack (float out)
 	W_SetupProjectileVelocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
-	gren.flags = FL_PROJECTILE;
-
 	gren.playerid = self.playerid;
 	fixedmakevectors(vectoangles(gren.velocity));
 	gren.right_vector = v_right;
 
 	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-
-	CSQCProjectile(gren, TRUE, PROJECTILE_PORTO_RED, TRUE);
 }
 
 void spawnfunc_weapon_porto (void)
@@ -283,8 +278,8 @@ float w_porto(float req)
 		CACHE_CVAR(g_balance_porto_primary_speed);
 		CACHE_CVAR(g_balance_powerup_strength_force);
 
-		ProjInfo_RegisterAuto(PROJECTILE_PORTO_RED, '0 0 0', '0 0 0');
-		ProjInfo_RegisterAuto(PROJECTILE_PORTO_BLUE, '0 0 0', '0 0 0');
+		CSQCProjectile_Init(PROJECTILE_PORTO_RED);
+		CSQCProjectile_Init(PROJECTILE_PORTO_BLUE);
 	}
 	return TRUE;
 };

@@ -230,11 +230,11 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", g_balance_electro_primary_damage);
+	W_SetupShot(self, FALSE, 2, "weapons/electro_fire.wav", g_balance_electro_primary_damage);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn ();
+	proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 	proj.classname = "plasma_prim";
 	proj.owner = Akimbo_Owner(self);
 	proj.bot_dodge = TRUE;
@@ -253,25 +253,22 @@ void W_Electro_Attack()
 	W_SetupProjectileVelocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Plasma_TouchExplode;
-	setsize(proj, '0 0 -3', '0 0 -3');
-	proj.flags = FL_PROJECTILE;
-
 	//sound (proj, CHAN_PAIN, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 	//sounds bad
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 }
 
 void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", g_balance_electro_secondary_damage);
+	W_SetupShot(self, FALSE, 2, "weapons/electro_fire2.wav", g_balance_electro_secondary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn ();
+	proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
+	proj.gravity = 1;
 	proj.classname = "plasma";
 	proj.owner = Akimbo_Owner(self);
 	proj.use = W_Plasma_Explode;
@@ -291,13 +288,10 @@ void W_Electro_Attack2()
 	proj.velocity = (w_shotdir + randomvec() * g_balance_electro_secondary_spread) * g_balance_electro_secondary_speed + v_up * g_balance_electro_secondary_speed_up;
 	W_SetupProjectileVelocity(proj);
 	proj.touch = W_Plasma_Touch;
-	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_electro_secondary_damageforcescale;
 	proj.health = g_balance_electro_secondary_health;
 	proj.event_damage = W_Plasma_Damage;
-	proj.flags = FL_PROJECTILE;
-
 #if 0
 	entity p2;
 	p2 = spawn();
@@ -305,8 +299,6 @@ void W_Electro_Attack2()
 	setmodel(p2, "models/ebomb.mdl");
 	setsize(p2, proj.mins, proj.maxs);
 #endif
-
-	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 }
 
 void spawnfunc_weapon_electro (void)
@@ -489,9 +481,8 @@ float w_electro(float req)
 		CACHE_CVAR(g_balance_electro_secondary_speed);
 		CACHE_CVAR(g_balance_electro_secondary_speed_up);
 		CACHE_CVAR(g_balance_electro_secondary_spread);
-
-		ProjInfo_RegisterAuto(PROJECTILE_ELECTRO, '0 0 -3', '0 0 -3');
-		ProjInfo_RegisterAuto(PROJECTILE_ELECTRO_BEAM, '0 0 -3', '0 0 -3');
+		CSQCProjectile_Init(PROJECTILE_ELECTRO);
+		CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
 	}
 	return TRUE;
 };

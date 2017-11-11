@@ -76,7 +76,6 @@ var .float hg_ctx_regenpaused;
 
 .float hg_launchspeed;
 
-float g_nadgets_oldhitboxes;
 float g_nadgets_detonatelaunches;
 float g_nadgets_double;
 

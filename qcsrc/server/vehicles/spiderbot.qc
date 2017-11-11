@@ -142,8 +142,7 @@ void spiderbot_rocket_do()
     self.gun2.cnt = time + self.attack_finished_single;
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-    missile                    = spawn ();
-    setsize (missile, '-3 -1 -1', '3 1 1'); // give it some size so it can be shot
+    missile                 = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
     setorigin(missile,gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire")));
     te_explosion (missile.origin);
 
@@ -157,10 +156,7 @@ void spiderbot_rocket_do()
     missile.velocity        = normalize(v_forward + (v_up * g_vehicle_spiderbot_rocket_up) + randomvec() * g_vehicle_spiderbot_rocket_spread) * g_vehicle_spiderbot_rocket_speed;
     missile.angles          = vectoangles(missile.velocity);
     missile.think           = spiderbot_rocket_think;
-    missile.flags           = FL_PROJECTILE;
     missile.solid           = SOLID_BBOX;
-
-	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
 }
 
 void spiderbot_minigun_fire_Flash_Go() {
@@ -846,6 +842,7 @@ void spawnfunc_vehicle_spiderbot()
     precache_model ( "models/turrets/rocket.md3");
     precache_sound ( "weapons/rocket_impact.wav" );
     precache_sound ( "weapons/uzi_fire.wav" );
+	CSQCProjectile_Init(PROJECTILE_ROCKET);
 
     //self.team                = -1;
     self.think = vewhicle_spiderbot_dinit;

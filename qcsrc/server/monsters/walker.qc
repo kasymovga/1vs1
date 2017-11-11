@@ -105,7 +105,7 @@ void walker_hunt() {
 				w_shotorg = w_shotorg - v_right * 16;
 
 			self.bulletcounter = self.bulletcounter + 0.5;
-			entity missile = spawn();
+			entity missile = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE);
 			missile.owner = self;
 			missile.dmg_edge = self.dmg_edge;
 			missile.dmg_radius = self.dmg_radius;
@@ -119,7 +119,6 @@ void walker_hunt() {
 			missile.enemy = self.enemy;
 			PROJECTILE_MAKETRIGGER(missile);
 			missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-			setsize(missile, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 			setorigin(missile, w_shotorg);
 			missile.velocity = normalize(v_forward + v_up) * 600;
 			W_SetupProjectileVelocity(missile);
@@ -128,8 +127,6 @@ void walker_hunt() {
 			missile.think = walker_rocket_think;
 			missile.nextthink = time;
 			missile.cnt = time + 30;
-			missile.flags = FL_PROJECTILE;
-			CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE);
 		}
 		self.count = self.count - 1;
 		if not(self.count)
@@ -202,6 +199,7 @@ void walker_init() {
 	precache_model("models/turrets/walker_body.md3");
 	precache_model("models/turrets/walker_head_minigun.md3");
 	precache_sound("weapons/uzi_fire.wav");
+	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
 void spawnfunc_walker_spawn() {

@@ -32,9 +32,8 @@ void turret_plasma_attack()
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
-    proj                    = spawn ();
+    proj                    = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
     setorigin(proj, self.tur_shotorg);
-    setsize(proj, '-1 -1 -1', '1 1 1');
     proj.classname       = "plasmabomb";
     proj.owner           = self;
     proj.bot_dodge       = TRUE;
@@ -47,10 +46,7 @@ void turret_plasma_attack()
     proj.touch           = turret_plasma_projectile_explode;
     proj.flags           = FL_PROJECTILE;
     proj.enemy           = self.enemy;
-    proj.flags           = FL_PROJECTILE | FL_NOTARGET;
-
-    CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
-
+    proj.flags           |= FL_NOTARGET;
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
 }
@@ -60,9 +56,8 @@ void turret_plasma_dual_attack()
     entity proj;
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj                    = spawn ();
+    proj                    = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
     setorigin(proj, self.tur_shotorg);
-    setsize(proj, '0 0 0', '0 0 0');
     proj.classname       = "plasmabomb";
     proj.owner           = self;
     proj.bot_dodge       = TRUE;
@@ -75,11 +70,8 @@ void turret_plasma_dual_attack()
     proj.touch           = turret_plasma_projectile_explode;
     proj.flags           = FL_PROJECTILE;
     proj.enemy           = self.enemy;
-    proj.flags           = FL_PROJECTILE | FL_NOTARGET;
-
+    proj.flags           |= FL_NOTARGET;
     self.tur_head.frame += 1;
-
-    CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 }
 
 void turret_plasma_projectile_explode()
@@ -189,6 +181,7 @@ void spawnfunc_turret_plasma()
     g_turrets_common_precash();
     precache_model ("models/turrets/plasma.md3");
     precache_model ("models/turrets/base.md3");
+	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
 
     self.think = turret_plasma_std_init;
     self.nextthink = time + 0.5;
@@ -201,6 +194,7 @@ void spawnfunc_turret_plasma_dual()
 
     precache_model ("models/turrets/plasmad.md3");
     precache_model ("models/turrets/base.md3");
+	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
 
     self.think = turret_plasma_dual_init;
     self.nextthink = time + 0.5;

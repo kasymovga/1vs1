@@ -45,7 +45,7 @@ void ewheel_hunt() {
 			sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 			float i;
 			for (i = -1; i < 2; i += 2) {
-				entity proj = spawn();
+				entity proj = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);
 				proj.owner = self;
 				proj.dmg_edge = self.dmg_edge;
 				proj.dmg_radius = self.dmg_radius;
@@ -56,7 +56,6 @@ void ewheel_hunt() {
 				PROJECTILE_MAKETRIGGER(proj);
 				proj.projectiledeathtype = WEP_LASER;
 				setorigin(proj, _shotorg + v_right * i * 16);
-				setsize(proj, '0 0 0', '0 0 0');
 				proj.nextthink = time + 5;
 				proj.think = adaptor_think2use;
 				proj.use = ewhell_proj_explode;
@@ -64,8 +63,6 @@ void ewheel_hunt() {
 				proj.velocity = normalize(_shotdir) * 3200;
 				W_SetupProjectileVelocity(proj);
 				proj.angles = vectoangles (proj.velocity);
-				proj.flags = FL_PROJECTILE;
-				CSQCProjectile(proj, TRUE, PROJECTILE_LASER, TRUE);
 				self.attack_finished_single = time + 2 + random();
 			}
 		}
@@ -116,6 +113,7 @@ void ewheel_init() {
     precache_model ("models/turrets/ewheel-base2.md3");
     precache_model ("models/turrets/ewheel-gun1.md3");
 	precache_sound("weapons/uzi_fire.wav");
+	CSQCProjectile_Init(PROJECTILE_LASER);
 }
 
 void spawnfunc_ewheel_spawn() {

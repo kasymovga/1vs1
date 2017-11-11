@@ -152,11 +152,11 @@ void W_Fireball_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", g_balance_fireball_secondary_damage + g_balance_fireball_secondary_bfgdamage);
+	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire2.wav", g_balance_fireball_secondary_damage + g_balance_fireball_secondary_bfgdamage);
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn ();
+	proj = CSQCProjectile(TRUE, PROJECTILE_FIREBALL, TRUE);
 	proj.classname = "plasma_prim";
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = TRUE;
@@ -179,15 +179,11 @@ void W_Fireball_Attack2()
 	W_SetupProjectileVelocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Fireball_TouchExplode;
-	setsize(proj, '-16 -16 -16', '16 16 16');
-	proj.flags = FL_PROJECTILE;
-
-	CSQCProjectile(proj, TRUE, PROJECTILE_FIREBALL, TRUE);
 }
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
-	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 0, "", 0);
+	W_SetupShot(self, FALSE, 0, "", 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
 	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 }
@@ -290,13 +286,14 @@ void W_Fireball_Attack1()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", g_balance_fireball_primary_damage);
+	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire.wav", g_balance_fireball_primary_damage);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn ();
+	proj = CSQCProjectile(TRUE, PROJECTILE_FIREMINE, TRUE);
+	proj.gravity = 1;
 	proj.owner = proj.realowner = self;
 	proj.classname = "grenade";
 	proj.bot_dodge = TRUE;
@@ -305,7 +302,6 @@ void W_Fireball_Attack1()
 	proj.projectiledeathtype = WEP_FIREBALL;
 	proj.touch = W_Firemine_Touch;
 	PROJECTILE_MAKETRIGGER(proj);
-	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, w_shotorg);
 	proj.think = W_Firemine_Think;
 	proj.nextthink = time;
@@ -315,9 +311,6 @@ void W_Fireball_Attack1()
 	W_SetupProjectileVelocity(proj);
 
 	proj.angles = vectoangles(proj.velocity);
-	proj.flags = FL_PROJECTILE;
-
-	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
 }
 
 void spawnfunc_weapon_fireball (void)
@@ -450,9 +443,8 @@ float w_fireball(float req)
 		CACHE_CVAR(g_balance_fireball_secondary_refire);
 		CACHE_CVAR(g_balance_fireball_secondary_refire2);
 		CACHE_CVAR(g_balance_fireball_secondary_speed);
-
-		ProjInfo_RegisterAuto(PROJECTILE_FIREMINE, '-4 -4 -4', '4 4 4');
-		ProjInfo_RegisterAuto(PROJECTILE_FIREBALL, '-16 -16 -16', '16 16 16');
+		CSQCProjectile_Init(PROJECTILE_FIREMINE);
+		CSQCProjectile_Init(PROJECTILE_FIREBALL);
 	}
 	return TRUE;
 };

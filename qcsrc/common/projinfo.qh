@@ -11,13 +11,13 @@ enum {
 };
 
 float projinfo_type[NUM_PROJECTILES];
-vector projinfo_mins[NUM_PROJECTILES];
-vector projinfo_maxs[NUM_PROJECTILES];
+float projinfo_sizes[NUM_PROJECTILES];
 
 float projinfo_highest_registered;
 
-void ProjInfo_Register(float csqcid, float entrytype, vector mins, vector maxs);
-void ProjInfo_RegisterAuto(float csqcid, vector mins, vector maxs);
+void ProjInfo_Register(float csqcid, float entrytype, vector sizes);
+void ProjInfo_RegisterAuto(float csqcid, vector sizes);
+void ProjInfo_SetSize(entity e, float csqcid);
 
 #ifdef PROJINFO_ENABLE_ASSERTIONS
 void ProjInfo_AssertRegistered(float csqcid);

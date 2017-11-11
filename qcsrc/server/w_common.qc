@@ -349,12 +349,27 @@ void endFireBallisticBullet()
 }
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, dt;
+	float lag, dt, antilag;
 	entity pl, oldself, oldself_akimbo = self;
 	self = Akimbo_Owner(self);
 
 	entity proj;
-	proj = spawn();
+	if(g_antilag_bullets && pSpeed >= g_antilag_bullets)
+	{
+		antilag = TRUE;
+		proj = spawn();
+	} else {
+		antilag = FALSE;
+		if(tracereffects & EF_RED)
+			proj = CSQCProjectile(TRUE, PROJECTILE_BULLET_GLOWING, TRUE);
+		else
+			proj = CSQCProjectile(TRUE, PROJECTILE_BULLET, TRUE);
+
+		proj.think = SUB_Remove;
+		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
+		proj.touch = W_BallisticBullet_Touch;
+	}
+
 	proj.classname = "bullet";
 	proj.owner = self;
 	PROJECTILE_MAKETRIGGER(proj);
@@ -365,17 +380,12 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	}
 	else
 		proj.movetype = MOVETYPE_FLY;
-	proj.think = SUB_Remove;
-	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	W_SetupProjectileVelocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	proj.dmg_radius = g_ballistics_materialconstant / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
-	proj.flags = FL_PROJECTILE;
-
-	proj.touch = W_BallisticBullet_Touch;
 	proj.dmg = damage;
 	proj.dmg_edge = headshotbonus;
 	proj.dmg_force = force;
@@ -391,8 +401,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
 	}
 
-	if(g_antilag_bullets)
-	if(pSpeed >= g_antilag_bullets)
+	if(antilag)
 	{
 		float eff;
 
@@ -478,10 +487,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	}
 
 	self = oldself_akimbo;
-	if(tracereffects & EF_RED)
-		CSQCProjectile(proj, TRUE, PROJECTILE_BULLET_GLOWING, TRUE);
-	else
-		CSQCProjectile(proj, TRUE, PROJECTILE_BULLET, TRUE);
 }
 
 

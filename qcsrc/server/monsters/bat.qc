@@ -49,7 +49,7 @@ void bat_hunt() {
 		vector _shotdir = self.enemy.origin - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/crylink_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = spawn();
+		entity gren = CSQCProjectile(TRUE, PROJECTILE_CRYLINK, TRUE);
 		gren.owner = self;
 		gren.dmg_edge = self.dmg_edge;
 		gren.dmg_radius = self.dmg_radius;
@@ -59,8 +59,6 @@ void bat_hunt() {
 		PROJECTILE_MAKETRIGGER(gren);
 		gren.projectiledeathtype = WEP_CRYLINK;
 		setorigin(gren, _shotorg);
-		setsize(gren, '0 0 0', '0 0 0');
-
 		gren.nextthink = time + 5;
 		gren.think = adaptor_think2use;
 		gren.use = bat_grenade_explode;
@@ -69,10 +67,6 @@ void bat_hunt() {
 		W_SetupProjectileVelocity(gren);
 
 		gren.angles = vectoangles (gren.velocity);
-		gren.flags = FL_PROJECTILE;
-
-		CSQCProjectile(gren, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
-
 		self.attack_finished_single = time + 1 + random();
 	} else {
 		v = monster_move_fly(450, 5);
@@ -117,6 +111,7 @@ void bat_init() {
 	precache_sound("weapons/crylink_fire.wav");
 	precache_model("models/bat.md3");
 	dlc_require("bat");
+	CSQCProjectile_Init(PROJECTILE_CRYLINK);
 }
 
 void spawnfunc_bat_spawn() {

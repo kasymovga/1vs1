@@ -593,20 +593,6 @@ string HG_GenericProjectile_TypeToAttackSound(float hgtype) {
 #define GV(v) (GRENVAR(hgtype, v))
 
 entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
-    vector hitmins, hitmaxs;
-
-    if(hgtype == HG_RAZE) {
-        hitmins = '-16 -16 -3';
-        hitmaxs = ' 16  16  3';
-    } else if(g_nadgets_oldhitboxes) {
-        hitmins = '0 0 -3';
-        hitmaxs = '0 0 -3';
-    } else {
-        float sz = ((hgtype == HG_TRANSLOC) ? HG_SIZE_TRANSLOC : HG_SIZE_DEFAULT);
-        hitmins = '-1 -1 -1' * sz;
-        hitmaxs = ' 1  1  1' * sz;
-    }
-
     float hitmask;
 	switch(hgtype) {
 	case HG_RAZE:
@@ -620,8 +606,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 	}
 
     makevectors(self.((GV("noverticalvelocity")) ? angles : v_angle));
-    //W_SetupShot_ProjectileSize_HitMask(self, hitmins, hitmaxs, FALSE, 4, (silent ? "" : HG_GenericProjectile_TypeToAttackSound(hgtype)), -1, hitmask);
-    W_SetupShot_ProjectileSize(self, hitmins, hitmaxs, FALSE, 4, (silent ? "" : HG_GenericProjectile_TypeToAttackSound(hgtype)), -1);
+    W_SetupShot(self, FALSE, 4, (silent ? "" : HG_GenericProjectile_TypeToAttackSound(hgtype)), -1);
     pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
     vector a = vectoangles(w_shotdir);
@@ -629,7 +614,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     makevectors(a + ang);
     w_shotdir = v_forward;
 
-    entity gren = spawn();
+    entity gren = CSQCProjectile(hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE);
     gren.owner = self;
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
@@ -667,7 +652,6 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
         gren.movetype = GV("movetype");
 
     gren.gravity = GV("gravity");
-    setsize(gren, hitmins, hitmaxs);
     setorigin(gren, w_shotorg);
 
     float lt;
@@ -768,14 +752,11 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 
     gren.max_health = gren.health;
     gren.angles = vectoangles(gren.velocity);
-    gren.flags = FL_PROJECTILE;
     gren.hg_nadesused = self.hg_nadesused;
 
 #if 0
     Buffs_MEODP_Point_Attach(gren, HG_GenericProjectile_MEODP_Death);
 #endif
-
-    CSQCProjectile(gren, hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE);
 
     if(hgtype == HG_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
         Damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, HG_NAPALM, self.origin, '0 0 0');

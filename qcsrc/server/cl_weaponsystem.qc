@@ -145,9 +145,8 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
 .float lastshot_time;
-void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float maxdamage)
+void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, string snd, float maxdamage)
 {
-	float nudge = 1; // added to traceline target and subtracted from result
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
 	oldsolid = ent.dphitcontentsmask;
@@ -186,12 +185,6 @@ void W_SetupShot_Dir_ProjectileSize(entity ent, vector s_forward, vector mi, vec
 
 	w_shotorg = w_shotorg + dv;
 
-	// now move the shotorg forward as much as requested if possible
-	if(antilag)
-		tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-	else
-		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
-	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
 	if (Akimbo_Active(ent))
 		w_shotdir = s_forward;
@@ -1106,6 +1099,9 @@ void W_SetupProjectileVelocity(entity missile)
 		error("Unowned missile");
 
 	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, missile.velocity);
+	if not(missile.gravity)
+	if (missile.movetype == MOVETYPE_TOSS || missile.movetype == MOVETYPE_BOUNCE)
+		missile.gravity = 1;
 }
 
 void W_AttachToShotorg(entity flash, vector offset)
@@ -1162,9 +1158,9 @@ void W_Init()
 	Melee_Init();
 	W_BallisticInit();
 
-	ProjInfo_RegisterAuto(PROJECTILE_BULLET, '0 0 0', '0 0 0');
-	ProjInfo_RegisterAuto(PROJECTILE_BULLET_GLOWING, '0 0 0', '0 0 0');
-	ProjInfo_RegisterAuto(PROJECTILE_BULLET_BIG, '0 0 0', '0 0 0');
+	ProjInfo_RegisterAuto(PROJECTILE_BULLET, '0 0 0');
+	ProjInfo_RegisterAuto(PROJECTILE_BULLET_GLOWING, '0 0 0');
+	ProjInfo_RegisterAuto(PROJECTILE_BULLET_BIG, '0 0 0');
 }
 
 void W_ShowWeaponList(entity pl) {

@@ -484,9 +484,7 @@ void Ent_Projectile(float ignore)
 			default:
 				break;
 		}
-
-		self.mins = PROJINFO_PROPERTY(self.cnt, mins);
-		self.maxs = PROJINFO_PROPERTY(self.cnt, maxs);
+		ProjInfo_SetSize(self, self.cnt);
 	}
 
     if(f & 4) {
@@ -540,43 +538,28 @@ void ProjInfo_Read(void) {
 	float phighest = ReadByte();
 	float i;
 
-	for(i = 0; i <= phighest; ++i) {
+	for(i = 0; i < phighest; ++i) {
 		float type = ReadByte();
-		vector pmins = '0 0 0';
-		vector pmaxs = '0 0 0';
 
 		switch(type) {
 			case PROJINFO_TYPE_UNREGISTERED:
 			case PROJINFO_TYPE_POINT_000:
+				ProjInfo_Register(i + 1, type, '0 0 0');
 				break;
 
-			case PROJINFO_TYPE_POINT_00n3: {
-				pmins = pmaxs = '0 0 -3';
-			} break;
-
-			case PROJINFO_TYPE_UNCENTERED: {
-				pmaxs_x = ReadCoord();
-				pmaxs_y = ReadCoord();
-				pmaxs_z = ReadCoord();
-			} // intended fallthrough
+			case PROJINFO_TYPE_POINT_00n3:
+				ProjInfo_Register(i + 1, type, '0 -3 -3');
+				break;
 
 			case PROJINFO_TYPE_POINT:
-			case PROJINFO_TYPE_CENTERED: {
-				pmins_x = ReadCoord();
-				pmins_y = ReadCoord();
-				pmins_z = ReadCoord();
+			case PROJINFO_TYPE_CENTERED:
+			case PROJINFO_TYPE_UNCENTERED:
+				projinfo_type[i] = type;
+				projinfo_sizes[i] = ReadCoord();
+				break;
 
-				switch(type) {
-					case PROJINFO_TYPE_POINT: pmaxs = pmins; break;
-					case PROJINFO_TYPE_CENTERED:  pmaxs = pmins * -1; break;
-				}
-			} break;
-
-			default: {
+			default:
 				error(strcat("Invalid ProjInfo type ", ftos(type)));
-			}
 		}
-
-		ProjInfo_Register(i + 1, type, pmins, pmaxs);
 	}
 }

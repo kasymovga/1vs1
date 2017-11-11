@@ -10,16 +10,14 @@ void turret_flac_attack()
     turret_tag_fire_update();
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj = spawn ();
+    proj = CSQCProjectile(TRUE, PROJECTILE_HAGAR, TRUE);
     setorigin(proj, self.tur_shotorg);
-    setsize(proj, '0 0 0', '0 0 0');
     proj.classname          = "flac_projectile";
     proj.owner              = self;
     proj.bot_dodge          = TRUE;
     proj.bot_dodgerating    = self.shot_dmg;
     proj.solid              = SOLID_BBOX;
     proj.movetype           = MOVETYPE_FLYMISSILE;
-    proj.flags              = FL_PROJECTILE;
     proj.takedamage         = DAMAGE_NO;
     proj.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     proj.angles             = vectoangles(proj.velocity);
@@ -28,9 +26,6 @@ void turret_flac_attack()
     proj.nextthink          = time + max(self.tur_impacttime,(self.shot_radius * 3) / self.shot_speed);
     proj.enemy              = self.enemy;
     proj.cnt                = time + 5;
-
-    CSQCProjectile(proj, TRUE, PROJECTILE_HAGAR, TRUE);
-
     self.tur_head.frame = self.tur_head.frame + 1;
     if (self.tur_head.frame >= 4) self.tur_head.frame = 0;
 
@@ -113,6 +108,7 @@ void spawnfunc_turret_flac()
 {
     precache_model ("models/turrets/base.md3");
     precache_model ("models/turrets/flac.md3");
+	CSQCProjectile_Init(PROJECTILE_HAGAR);
 
     self.think = turret_flac_dinit;
     self.nextthink = time + 0.5;

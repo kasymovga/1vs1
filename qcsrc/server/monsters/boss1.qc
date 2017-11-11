@@ -42,18 +42,17 @@ void boss1_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		float i;
 		for (i = 0; i < 4; i++) {
-			entity gren = spawn();
+			entity gren =  CSQCProjectile(TRUE, PROJECTILE_GRENADE, TRUE);
 			gren.owner = self;
 			gren.dmg_edge = self.dmg_edge;
 			gren.dmg_radius = self.dmg_radius;
 			gren.dmg_force = self.dmg_force;
 			gren.classname = "grenade";
-			gren.movetype = MOVETYPE_BOUNCE;
+			gren.movetype = MOVETYPE_TOSS;
 			gren.gravity = 0.01;
 			PROJECTILE_MAKETRIGGER(gren);
 			gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
 			setorigin(gren, _shotorg);
-			setsize(gren, '0 0 -3', '0 0 -3');
 
 			gren.nextthink = time + 5;
 			gren.think = adaptor_think2use;
@@ -63,9 +62,6 @@ void boss1_hunt() {
 			W_SetupProjectileVelocity(gren);
 
 			gren.angles = vectoangles (gren.velocity);
-			gren.flags = FL_PROJECTILE;
-
-			CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 		}
 
 		self.attack_finished_single = time + 1 + random();
@@ -152,6 +148,7 @@ void boss1_init() {
 	precache_model("models/player/grunt.zym");
 	precache_model("models/weapons/v_gl.md3");
 	precache_sound("weapons/grenade_fire.wav");
+	CSQCProjectile_Init(PROJECTILE_GRENADE);
 }
 
 void spawnfunc_boss1_spawn() {

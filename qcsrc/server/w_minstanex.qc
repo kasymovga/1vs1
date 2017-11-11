@@ -128,6 +128,7 @@ float w_minstanex(float req)
 	{
 		CACHE_CVAR(g_balance_minstanex_animtime);
 		CACHE_CVAR(g_balance_minstanex_refire);
+		w_laser(WR_CVAR_CACHE);
 	}
 	return TRUE;
 };

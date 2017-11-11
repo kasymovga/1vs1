@@ -92,7 +92,8 @@ void HG_Plasma_Shard(float kickangle) {
     entity proj;
     vector kick;
 
-    proj = spawn();
+    proj = CSQCProjectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE);
+	proj.gravity = 1;
     proj.classname = "hg_plasma";
     proj.owner = self;
     proj.realowner = self.owner;
@@ -126,9 +127,7 @@ void HG_Plasma_Shard(float kickangle) {
 
     proj.velocity = kick + self.velocity;
     proj.touch = HG_Plasma_Shard_Touch;
-    setsize(proj, '0 0 -3', '0 0 -3');
     proj.takedamage = DAMAGE_NO;
-    proj.flags = FL_PROJECTILE;
     proj.hg_plasma_projrange = cvar("g_nadgets_plasma_projectile_dps_range");
     proj.hg_plasma_projdps = cvar("g_nadgets_plasma_projectile_dps") /* * Buffs_NadgetPower(self.realowner) */;
     proj.hg_plasma_projdps_delay = cvar("g_nadgets_plasma_projectile_dps_delay");
@@ -148,7 +147,6 @@ void HG_Plasma_Shard(float kickangle) {
 #endif
 
     sound(proj, CHAN_WEAPON, "weapons/electro_fire2.wav", VOL_BASE, ATTN_NORM);
-    CSQCProjectile(proj, TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE);
 #if 0
     proj.jb_proj_ownerstate = self.jb_proj_ownerstate;
 #endif

@@ -87,9 +87,8 @@ void turret_hk_attack()
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
-    missile                    = spawn ();
+    missile                  = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
     missile.solid            = SOLID_BBOX;
-    setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
     setorigin(missile, self.tur_shotorg);
 
     missile.scale            = 1;
@@ -107,16 +106,11 @@ void turret_hk_attack()
     missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
     missile.angles           = vectoangles(missile.velocity);
     missile.touch            = turret_hk_missile_explode; //turret_hk_missile_touch;
-    missile.flags            = FL_PROJECTILE;
     missile.enemy            = self.enemy;
     missile.team             = self.team;
     missile.cnt              = time + 30;
     missile.ticrate          = max(cvar("sys_ticrate"),0.05);
-
-	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
-
     te_explosion (missile.origin);
-
     if (self.tur_head.frame == 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 
@@ -441,6 +435,7 @@ void spawnfunc_turret_hk()
 {
     precache_model ("models/turrets/base.md3");
     precache_model ("models/turrets/hk.md3");
+	CSQCProjectile_Init(PROJECTILE_ROCKET);
 
     self.think = turret_hk_dinit;
     self.nextthink = time + 0.5;

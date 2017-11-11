@@ -81,7 +81,7 @@ void W_Hook_Attack2()
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
 	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", g_balance_hook_secondary_damage);
 
-	gren = spawn ();
+	gren = CSQCProjectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
 	gren.owner = self;
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
@@ -90,7 +90,6 @@ void W_Hook_Attack2()
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 0', '0 0 0');
 
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = adaptor_think2use;
@@ -102,12 +101,9 @@ void W_Hook_Attack2()
 		gren.velocity = gren.velocity + self.velocity;
 
 	gren.gravity = g_balance_hook_secondary_gravity;
-	//W_SetupProjectileVelocity(gren); // just falling down!
+	W_SetupProjectileVelocity(gren);
 
 	gren.angles = '0 0 0';
-	gren.flags = FL_PROJECTILE;
-
-	CSQCProjectile(gren, TRUE, PROJECTILE_HOOKBOMB, TRUE);
 }
 
 void spawnfunc_weapon_hook (void)
@@ -275,8 +271,7 @@ float w_hook(float req)
 		CACHE_CVAR(g_balance_hook_secondary_radius);
 		CACHE_CVAR(g_balance_hook_secondary_refire);
 		CACHE_CVAR(g_balance_hook_secondary_speed);
-
-		ProjInfo_RegisterAuto(PROJECTILE_HOOKBOMB, '0 0 0', '0 0 0');
+		CSQCProjectile_Init(PROJECTILE_HOOKBOMB);
 	}
 	return TRUE;
 };

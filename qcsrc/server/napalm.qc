@@ -81,13 +81,13 @@ void Napalm_Think(void) {
 
 entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_randfactor, float deathtype,
                     float burnradius, float burndamage, float burnedgedamage, float burntime) {
-    entity proj = spawn();
+    entity proj = CSQCProjectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE);
+	proj.gravity = 1;
     proj.classname = "napalm";
     proj.realowner = powner;
     proj.owner = powner;
     proj.projectiledeathtype = deathtype;
     proj.movetype = MOVETYPE_BOUNCE;
-    proj.flags = FL_PROJECTILE;
     proj.pushltime = time + lifetime + crandom() * lifetime_randfactor;
     proj.team = powner.team;
     proj.effects = EF_NODEPTHTEST;
@@ -108,11 +108,8 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.nextthink = time;
 
     PROJECTILE_MAKETRIGGER(proj);
-    setsize(proj, '0 0 -3', '0 0 -3');
     setorigin(proj, porg);
     //Buffs_MEODP_Point_Attach(proj, Buffs_MEODP_Death_Remove_Multiple);
-    CSQCProjectile(proj, TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE);
-
     return proj;
 }
 
@@ -123,6 +120,6 @@ void Napalm_Init(void) {
         return;
     }
 
-    ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, '0 0 -3', '0 0 -3');
+	CSQCProjectile_Init(PROJECTILE_HG_NAPALMSHARD);
     napalm_init_done = TRUE;
 }

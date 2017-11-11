@@ -105,12 +105,13 @@ void W_Grenade_Attack (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_primary_damage);
+	W_SetupShot(self, FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_primary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn ();
+	gren = CSQCProjectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE);
+	gren.gravity = 1;
 	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
@@ -119,7 +120,6 @@ void W_Grenade_Attack (void)
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
 	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 -3', '0 0 -3');
 
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = adaptor_think2use;
@@ -129,9 +129,6 @@ void W_Grenade_Attack (void)
 	W_SetupProjectileVelocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
-	gren.flags = FL_PROJECTILE;
-
-	CSQCProjectile(gren, TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE);
 }
 
 void W_Grenade_Attack2 (void)
@@ -140,12 +137,13 @@ void W_Grenade_Attack2 (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_secondary_ammo;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_secondary_damage);
+	W_SetupShot(self, FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_secondary_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn ();
+	gren = CSQCProjectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+	gren.gravity = 1;
 	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
@@ -153,7 +151,6 @@ void W_Grenade_Attack2 (void)
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
-	setsize(gren, '0 0 -3', '0 0 -3');
 	setorigin(gren, w_shotorg);
 
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
@@ -168,9 +165,6 @@ void W_Grenade_Attack2 (void)
 	W_SetupProjectileVelocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
-	gren.flags = FL_PROJECTILE;
-
-	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 }
 
 void spawnfunc_weapon_grenadelauncher (void)
@@ -277,9 +271,8 @@ float w_glauncher(float req)
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed_up);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary);
-
-		ProjInfo_RegisterAuto(PROJECTILE_GRENADE, '0 0 -3', '0 0 -3');
-		ProjInfo_RegisterAuto(PROJECTILE_GRENADE_BOUNCING, '0 0 -3', '0 0 -3');
+		CSQCProjectile_Init(PROJECTILE_GRENADE);
+		CSQCProjectile_Init(PROJECTILE_GRENADE_BOUNCING);
 	}
 	return TRUE;
 };
