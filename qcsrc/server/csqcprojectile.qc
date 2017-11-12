@@ -161,7 +161,6 @@ void ProjInfo_Send(void) {
 		float type = projinfo_type[i];
 
 		WriteByte(MSG_ENTITY, type);
-		float sizes;
 		switch(type) {
 			case PROJINFO_TYPE_UNREGISTERED:
 			case PROJINFO_TYPE_POINT_000:
