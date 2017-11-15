@@ -76,3 +76,6 @@ void(string s, ...) callfunction = #605;
 void(string s) isfunction = #607;
 
 string getextresponse(void) = #624;
+
+float(entity e, float s) getsurfacenumtriangles = #628;
+vector(entity e, float s, float n) getsurfacetriangle = #629;

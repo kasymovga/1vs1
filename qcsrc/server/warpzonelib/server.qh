@@ -1,0 +1,8 @@
+
+void WarpZone_StartFrame();
+float WarpZone_Projectile_Touch();
+void WarpZone_HandleObserver();
+
+// THESE must be defined by calling QC code:
+void WarpZone_PostTeleportPlayer_Callback(entity pl, entity wz);
+

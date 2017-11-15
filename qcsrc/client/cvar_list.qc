@@ -157,5 +157,6 @@ READ_CVARS_SECTION(32, 0)
 	CACHE_CVAR_DEF(sbar_weapons_fadetime, 2)
 	CACHE_CVAR_DEF(sbar_weapons_fadespeed, 1)
 	CACHE_CVAR_DEF(cl_damageindicator, 1.5)
+	CACHE_CVAR_DEF(cl_warpzone_sound_transition, 1)
 READ_CVARS_END(0)
 

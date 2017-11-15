@@ -592,23 +592,6 @@ void GetCvars(float f)
 	}
 }
 
-void backtrace(string msg)
-{
-    float dev, war;
-    dev = cvar("developer");
-    war = cvar("prvm_backtraceforwarnings");
-    cvar_set("developer", "1");
-    cvar_set("prvm_backtraceforwarnings", "1");
-    dprint("\n");
-    dprint("--- CUT HERE ---\nWARNING: ");
-    dprint(msg);
-    dprint("\n");
-    remove(world); // isn't there any better way to cause a backtrace?
-    dprint("\n--- CUT UNTIL HERE ---\n");
-    cvar_set("developer", ftos(dev));
-    cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
-
 string Team_ColorName(float t)
 {
     // fixme: Search for team entities and get their .netname's!

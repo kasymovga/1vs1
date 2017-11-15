@@ -648,12 +648,14 @@ float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector
 	return 1;
 }
 
+#if 0
 void fixedmakevectors(vector a)
 {
 	// a makevectors that actually inverts vectoangles
 	a_x = -a_x;
 	makevectors(a);
 }
+#endif
 #endif
 
 string fixPriorityList(string order, float from, float to, float subtract, float complete)
@@ -1154,6 +1156,7 @@ float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;};
 
 #ifndef MENUQC
+#if 0
 // angles transforms
 // angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
@@ -1188,6 +1191,7 @@ vector AnglesTransform_Invert(vector transform)
 	i_up_z = v_up_z;
 	return fixedvectoangles2(i_forward, i_up);
 }
+#endif
 
 vector AnglesTransform_TurnDirection(vector transform)
 {

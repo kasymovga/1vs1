@@ -23,7 +23,6 @@ vehicles/vehicles.qh
 campaign.qh
 ../menu-server/campaign_common.qh
 ../common/mapinfo.qh
-../common/util.qc
 ../client-server/projinfo.qh
 
 ../common/dlc.qh
@@ -116,6 +115,11 @@ napalm.qh
 g_damage.qh
 badass.qh
 monsters/monsters.qh
+../client-server/warpzonelib/anglestransform.qh
+../client-server/warpzonelib/common.qh
+warpzonelib/server.qh
+warpzonelib/util_server.qh
+../common/util.qc
 
 scores_rules.qc
 
@@ -297,3 +301,7 @@ radio.qc
 badass.qc
 gamestatus.qc
 damageindicator.qc
+../client-server/warpzonelib/anglestransform.qc
+../client-server/warpzonelib/common.qc
+warpzonelib/server.qc
+warpzonelib/util_server.qc

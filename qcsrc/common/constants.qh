@@ -1,3 +1,4 @@
+null_t NULL;
 // COMMIT-TODO: Update if necessary before committing
 // Revision 1: additional statistics sent (flag caps, returns, deaths)
 // Revision 2: Mapvote preview pictures
@@ -109,6 +110,9 @@ enum {
 	ENT_CLIENT_INIT_IP2C,
 	ENT_CLIENT_DMG_INDICATOR,
 	//ENT_CLIENT_TURRET,
+	ENT_CLIENT_WARPZONE_TELEPORTED,
+	ENT_CLIENT_WARPZONE,
+	ENT_CLIENT_WARPZONE_CAMERA,
 	ENT_CLIENT_COUNT,
 };
 

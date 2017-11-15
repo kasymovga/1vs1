@@ -41,6 +41,9 @@ main.qh
 ../common/miscfunctions.qh
 radio.qh
 sbar.qh
+../client-server/warpzonelib/anglestransform.qh
+../client-server/warpzonelib/common.qh
+warpzonelib/client.qh
 
 cvar.qc
 
@@ -101,3 +104,6 @@ radio.qc
 ../client-server/rune.qc
 ../common/ui.qc
 gamestatus.qc
+../client-server/warpzonelib/anglestransform.qc
+../client-server/warpzonelib/common.qc
+warpzonelib/client.qc

@@ -166,6 +166,7 @@ void StartFrame (void)
 
 	UncustomizeEntitiesRun();
 	InitializeEntitiesRun();
+	WarpZone_StartFrame();
 
 	sys_ticrate = cvar("sys_ticrate");
 

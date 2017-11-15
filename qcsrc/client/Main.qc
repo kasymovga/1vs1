@@ -403,6 +403,9 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
 	ent_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
 	ent_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
+	ent_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
+	ent_parsers[ENT_CLIENT_WARPZONE_CAMERA] = WarpZone_Camera_Read;
+	ent_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
 	SetConWidthHeight();
 }
 
