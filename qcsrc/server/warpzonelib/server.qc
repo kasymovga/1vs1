@@ -86,6 +86,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	if(player.classname == "player")
 		player.flags &~= FL_ONGROUND;
 
+	UpdateCSQCProjectileAfterTeleport(player);
 	WarpZone_PostTeleportPlayer_Callback(player, teleporter);
 }
 
