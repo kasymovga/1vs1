@@ -2,6 +2,7 @@
 .float warpzone_teleport_time;
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
+void WarpZone_FirstFrame();
 
 float sv_nowarpzones;
 
@@ -622,6 +623,11 @@ void spawnfunc_trigger_warpzone(void)
 	self.SendFlags = 0xFFFFFF;
 	self.effects |= EF_NODEPTHTEST;
 	self.warpzone_next = warpzone_first;
+	if not(warpzone_first) {
+		entity e = spawn();
+		e.think = WarpZone_FirstFrame;
+		e.nextthink = time;
+	}
 	warpzone_first = self;
 	WarpZone_ChainAdd(self);
 }
@@ -664,26 +670,24 @@ void spawnfunc_func_camera(void)
 	warpzone_camera_first = self;
 }
 
+void WarpZone_FirstFrame() {
+	entity e;
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		WarpZone_InitStep_FindTarget();
+	for(self = warpzone_position_first; self; self = self.warpzone_next)
+		WarpZonePosition_InitStep_FindTarget();
+	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+		WarpZoneCamera_InitStep_FindTarget();
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		WarpZone_InitStep_UpdateTransform();
+	for(self = warpzone_first; self; self = self.warpzone_next)
+		WarpZone_InitStep_FinalizeTransform();
+	self = e;
+}
+
 void WarpZone_StartFrame()
 {
 	entity e;
-	if(warpzone_initialized == 0)
-	{
-		warpzone_initialized = 1;
-		e = self;
-		for(self = warpzone_first; self; self = self.warpzone_next)
-			WarpZone_InitStep_FindTarget();
-		for(self = warpzone_position_first; self; self = self.warpzone_next)
-			WarpZonePosition_InitStep_FindTarget();
-		for(self = warpzone_camera_first; self; self = self.warpzone_next)
-			WarpZoneCamera_InitStep_FindTarget();
-		for(self = warpzone_first; self; self = self.warpzone_next)
-			WarpZone_InitStep_UpdateTransform();
-		for(self = warpzone_first; self; self = self.warpzone_next)
-			WarpZone_InitStep_FinalizeTransform();
-		self = e;
-	}
-
 	for(e = world; (e = nextent(e)); )
 		WarpZone_StoreProjectileData(e);
 }
