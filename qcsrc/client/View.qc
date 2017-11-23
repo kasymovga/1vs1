@@ -256,6 +256,7 @@ void CSQC_UpdateView(float w, float h)
 		view_set = 1;
 		view_origin = CSQCPhysic_SetCamera();
 	}
+	WarpZone_FixView();
 
 	// Set the console size vars
 
