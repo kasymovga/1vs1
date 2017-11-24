@@ -10,6 +10,8 @@ float g_weaponspeedfactor;
 
 vector w_shotorg;
 vector w_shotdir;
+vector w_shotpoint;
+vector w_shotorg_visual;
 
 .string weaponname;
 .float wframe;

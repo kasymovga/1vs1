@@ -663,8 +663,17 @@ void WarpZone_TraceLine_ThroughZone_stub(vector org, vector end, float nomonster
 		cb(org, trace_endpos, trace_endpos);
 }
 
+void WarpZone_DrawEffectTriangle_real(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb) {
+	WarpZone_TraceTriangle(org, org_visual, end, MOVE_NOMONSTERS, world, cb);
+}
+
+void WarpZone_DrawEffectTriangle_stub(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb) {
+	cb(org_visual, end, end);
+}
+
 void WarpZone_Init()
 {
+	WarpZone_DrawEffectTriangle = WarpZone_DrawEffectTriangle_stub;
 	WarpZone_TraceBox = tracebox;
 	WarpZone_TraceLine = traceline;
 	WarpZone_TraceBox_ThroughZone = WarpZone_TraceBox_ThroughZone_stub;
@@ -678,6 +687,7 @@ void WarpZone_Init()
 
 void WarpZone_Enable()
 {
+	WarpZone_DrawEffectTriangle = WarpZone_DrawEffectTriangle_real;
 	WarpZone_TraceBox = WarpZone_TraceBox_real;
 	WarpZone_TraceLine = WarpZone_TraceLine_real;
 	WarpZone_TraceBox_ThroughZone = WarpZone_TraceBox_ThroughZone_real;

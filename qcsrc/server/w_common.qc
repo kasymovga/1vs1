@@ -26,10 +26,16 @@ void W_GiveWeapon (entity e, float wep, string name)
 	self = oldself;
 }
 
+// for railgun damage (hitting multiple enemies)
+.float railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+.vector railgunhitdir;
+
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
 	entity oldself = self;
-	local vector hitloc, force, endpoint, dir;
+	local vector hitloc, endpoint, dir;
 	local entity ent, endent;
 	local float endq3surfaceflags;
 	//local entity explosion;
@@ -48,7 +54,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 	dir = normalize(end - start);
 	length = vlen(end - start);
-	force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
@@ -67,6 +72,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		// make the entity non-solid so we can hit the next one
 		trace_ent.railgunhit = TRUE;
 		trace_ent.railgunhitloc = end;
+		trace_ent.railgunhitdir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 
 		// stop if this is a wall
@@ -135,12 +141,12 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		if(ent.team == self.team)
 			did_hit = 0;
 
-		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * dir);
-		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * dir);
+		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
+		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
 
 		// apply the damage
 		if (ent.takedamage)
-			Damage (ent, self, self, bdamage * f, deathtype, hitloc, force * ffs);
+			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);

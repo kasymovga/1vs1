@@ -71,6 +71,8 @@ void WarpZone_Init();
 void WarpZone_Enable();
 void WarpZone_Shutdown();
 void WarpZone_ChainAdd(entity wz);
+var void(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb) WarpZone_DrawEffectTriangle;
+void WarpZone_DrawEffectTriangle_real(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb);
 
 .entity warpzone_chain;
 entity warpzone_chain_begin;
