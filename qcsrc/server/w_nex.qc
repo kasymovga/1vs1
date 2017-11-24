@@ -10,7 +10,34 @@ float g_balance_nex_refire;
 
 .float nex_lasthit;
 
+void NexWhoosh(vector start, vector end) {
+	entity pseudoprojectile;
+	vector beampos;
+	vector dir = normalize(end - start);
+	string snd;
+	float f;
+	FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
+	{
+		// nearest point on the beam
+		beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+
+		f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
+		if(f <= 0)
+			continue;
+
+		snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
+
+		if(!pseudoprojectile)
+			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
+	}
+
+	if(pseudoprojectile)
+		remove(pseudoprojectile);
+}
+
 void DrawNexBeamParticles(vector start, vector endpos, vector to) {
+	NexWhoosh(start, endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_NEXGUNBEAMPARTICLE);
 	

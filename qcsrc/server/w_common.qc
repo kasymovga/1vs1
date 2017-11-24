@@ -41,9 +41,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	//local entity explosion;
 	float did_hit;
 	float length;
-	vector beampos;
-	string snd;
-	entity pseudoprojectile;
 	float f, ffs;
 	self = Akimbo_Owner(self);
 
@@ -98,29 +95,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 	// spawn a temporary explosion entity for RadiusDamage calls
 	//explosion = spawn();
-
-	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_MINSTANEX || deathtype == WEP_NEX)
-	{
-		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
-		{
-			// nearest point on the beam
-			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
-
-			f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
-			if(f <= 0)
-				continue;
-
-			snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
-
-			if(!pseudoprojectile)
-				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
-		}
-
-		if(pseudoprojectile)
-			remove(pseudoprojectile);
-	}
 
 	// find all the entities the railgun hit and hurt them
 	ent = findfloat(world, railgunhit, TRUE);

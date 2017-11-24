@@ -3,6 +3,12 @@ float g_balance_minstanex_refire;
 
 .float minstanex_lasthit;
 
+float DrawMinstaNexBeamParticles_effect;
+void DrawMinstaNexBeamParticles(vector start, vector end, vector to) {
+	NexWhoosh(start, end);
+	trailparticles(world, DrawMinstaNexBeamParticles_effect, start, end);
+}
+
 void W_MinstaNex_Attack (void)
 {
 	float flying;
@@ -31,36 +37,38 @@ void W_MinstaNex_Attack (void)
 	    {
             case COLOR_TEAM1:   // Red
                 if(damage_goodhits)
-                    trailparticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3RED_HIT");
                 else
-                    trailparticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3RED");
                 break;
             case COLOR_TEAM2:   // Blue
                 if(damage_goodhits)
-                    trailparticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3BLUE_HIT");
                 else
-                    trailparticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3BLUE");
                 break;
             case COLOR_TEAM3:   // Yellow
                 if(damage_goodhits)
-                    trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3YELLOW_HIT");
                 else
-                    trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3YELLOW");
                 break;
             case COLOR_TEAM4:   // Pink
                 if(damage_goodhits)
-                    trailparticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3PINK_HIT");
                 else
-                    trailparticles(world, particleeffectnum("TE_TEI_G3PINK"), w_shotorg, trace_endpos);
+                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3PINK");
                 break;
 	    }
 	}
 	else
-        trailparticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, trace_endpos);
+        DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3");
+
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, w_shotpoint, DrawMinstaNexBeamParticles);
 
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
+		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_MINSTANEX, self);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - 1;
