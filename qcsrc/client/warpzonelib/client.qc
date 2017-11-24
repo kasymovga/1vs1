@@ -177,7 +177,7 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 #ifndef KEEP_ROLL
 var float cl_rollkillspeed = 10;
 #endif
-void WarpZone_FixView()
+void WarpZone_FixView_real()
 {
 	entity e;
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, vo;
@@ -250,5 +250,6 @@ void WarpZone_ShutdownHook() {
 }
 
 void WarpZone_EnableHook() {
+	WarpZone_FixView = WarpZone_FixView_real;
 	WarpZone_Outside();
 }
