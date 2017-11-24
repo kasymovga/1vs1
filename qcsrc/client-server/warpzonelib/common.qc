@@ -296,7 +296,15 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 
 vector WarpZone_UnTransformOrigin_real(entity wz, vector v)
 {
-	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v - wz.warpzone_shift);
+	vector vf, vr, vu;
+	vf = v_forward;
+	vr = v_right;
+	vu = v_up;
+	v = AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v - wz.warpzone_shift);
+	v_forward = vf;
+	v_right = vr;
+	v_up = vu;
+	return v;
 }
 
 vector WarpZone_UnTransformVelocity(entity wz, vector v)
