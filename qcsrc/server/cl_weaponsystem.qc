@@ -199,9 +199,10 @@ void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, 
 			traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 			// passing world, because we do NOT want it to touch dphitcontentsmask
 		else
-			traceline(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+			WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-		trueaimpoint = trace_endpos;
+		trueaimpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 		w_shotdir = normalize(trueaimpoint - w_shotorg);
 	}
 
