@@ -347,6 +347,22 @@ void endFireBallisticBullet()
 {
 	endzcurveparticles();
 }
+
+entity fireBallisticBullet_trace_callback_ent;
+float fireBallisticBullet_trace_callback_eff;
+void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
+{
+	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
+		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
+}
+
+void fireBallisticBulletNoGravity_trace_callback(vector start, vector hit, vector end)
+{
+	endzcurveparticles();
+	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
+		trailparticles(world, fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos);
+}
+
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
 	float lag, dt, antilag;
@@ -426,10 +442,12 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		for(;;)
 		{
+			fireBallisticBullet_trace_callback_ent = self;
+			fireBallisticBullet_trace_callback_eff = eff;
 			if (proj.gravity)
-				tracetoss(self, oldself, 0.05 * 0.125, 200);
+				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, fireBallisticBullet_trace_callback);
 			else
-				traceline(self.origin, start + proj.velocity * 1.25, FALSE, self);
+				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, fireBallisticBulletNoGravity_trace_callback);
 
 			if not(inWarmupStage)
 			if not(self.isbot)
@@ -438,16 +456,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
 			}
 
-			if(vlen(trace_endpos - self.origin) > 16)
-			{
-				if (proj.gravity)
-					zcurveparticles_from_tracetoss(eff, self.origin, trace_endpos, self.velocity);
-				else
-				{
-					endzcurveparticles();
-					trailparticles(world, eff, self.origin, trace_endpos);
-				}
-			}
 			if(trace_fraction == 1)
 				break;
 				// won't hit anything anytime soon (DP's
@@ -455,9 +463,10 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				// 0.05*0.125s, that is, 1.25 seconds
 
 			other = trace_ent;
-			dt = vlen(trace_endpos - self.origin) / vlen(self.velocity); // this is only approximate!
+			//dt = vlen(trace_endpos - self.origin) / vlen(self.velocity); // this is only approximate!
 			setorigin(self, trace_endpos);
-			self.velocity_z -= sv_gravity * dt;
+			self.velocity = WarpZone_tracetoss_velocity;
+			//self.velocity_z -= sv_gravity * dt;
 
 			if(!SUB_OwnerCheck())
 			{
