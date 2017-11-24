@@ -50,8 +50,6 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 	e.warpzone_targetorigin = other_org;
 	e.warpzone_angles = my_ang;
 	e.warpzone_targetangles = other_ang;
-	print("other_ang=", vtos(other_ang), "\n");
-	print("other_org=", vtos(other_org), "\n");
 	fixedmakevectors(my_ang); e.warpzone_forward = v_forward;
 	fixedmakevectors(other_ang); e.warpzone_targetforward = v_forward;
 	e.camera_transform = WarpZone_camera_transform;
@@ -627,7 +625,7 @@ void WarpZone_ChainAdd(entity wz)
 {
     for(var e = warpzone_chain_begin; e; e = e.warpzone_chain) {
         if(e == wz) {
-            backtrace("warpzone chain loop");
+            //backtrace("warpzone chain loop");
             return;
         }
     }
