@@ -184,16 +184,7 @@ void WarpZone_TraceBox_ThroughZone_real(vector org, vector mi, vector ma, vector
 	for(i = 10; i; i--)
 	{
 		WarpZone_trace_dir = normalize(end - org);
-#ifdef SVQC
-        #define __tracebox tracebox_skipnonsolid
-#else
-        #define __tracebox tracebox
-#endif
-
-        __tracebox(org, mi, ma, end, nomonsters, forent);
-
-#undef __tracebox
-
+        tracebox(org, mi, ma, end, nomonsters, forent);
 		if(cb)
 			cb(org, trace_endpos, end);
 		if(sol < 0)
