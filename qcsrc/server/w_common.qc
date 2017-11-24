@@ -444,10 +444,13 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		{
 			fireBallisticBullet_trace_callback_ent = self;
 			fireBallisticBullet_trace_callback_eff = eff;
-			if (proj.gravity)
+			if (proj.gravity) {
 				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, fireBallisticBullet_trace_callback);
-			else
+				self.velocity = WarpZone_tracetoss_velocity;
+			} else {
 				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, fireBallisticBulletNoGravity_trace_callback);
+				self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
+			}
 
 			if not(inWarmupStage)
 			if not(self.isbot)
@@ -463,10 +466,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				// 0.05*0.125s, that is, 1.25 seconds
 
 			other = trace_ent;
-			//dt = vlen(trace_endpos - self.origin) / vlen(self.velocity); // this is only approximate!
 			setorigin(self, trace_endpos);
-			self.velocity = WarpZone_tracetoss_velocity;
-			//self.velocity_z -= sv_gravity * dt;
 
 			if(!SUB_OwnerCheck())
 			{
