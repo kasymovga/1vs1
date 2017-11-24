@@ -792,17 +792,13 @@ void WarpZone_TraceToss_ThroughZone_stub(entity e, entity forent, float toss_fra
 		cb(e.origin, trace_endpos, trace_endpos);
 
 	WarpZone_tracetoss_velocity = e.velocity;
-	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
 	WarpZone_tracetoss_velocity_z -= sv_gravity * (vlen(trace_endpos - self.origin) / vlen(self.velocity));
-	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
 }
 
 void WarpZone_TraceToss_stub(entity e, entity forent, float toss_frametime, float toss_count) {
 	tracetoss(e, forent, toss_frametime, toss_count);
 	WarpZone_tracetoss_velocity = e.velocity;
-	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
 	WarpZone_tracetoss_velocity_z -= sv_gravity * (vlen(trace_endpos - self.origin) / vlen(self.velocity));
-	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
 }
 
 void WarpZone_EnableHook() {
