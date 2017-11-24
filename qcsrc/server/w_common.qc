@@ -507,11 +507,10 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 	dir = normalize(dir + randomvec() * spread);
 	end = start + dir * MAX_SHOT_DISTANCE;
 	traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
-
-    end = trace_endpos;
-
+    end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
 	{
+		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		pointparticles(particleeffectnum("TE_KNIGHTSPIKE"),end,trace_plane_normal * 2500,1);
 		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);

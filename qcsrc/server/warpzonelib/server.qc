@@ -624,6 +624,7 @@ void spawnfunc_trigger_warpzone(void)
 	self.effects |= EF_NODEPTHTEST;
 	self.warpzone_next = warpzone_first;
 	if not(warpzone_first) {
+		WarpZone_Enable();
 		entity e = spawn();
 		e.think = WarpZone_FirstFrame;
 		e.nextthink = time;
@@ -708,4 +709,112 @@ void WarpZone_HandleObserver() {
     v_forward = vf;
     v_right = vr;
     v_right = vu;
+}
+
+void WarpZone_TraceToss_ThroughZone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb)
+{
+	float g, dt;
+	vector vf, vr, vu, v0, o0;
+	entity wz;
+
+	vf = v_forward;
+	vr = v_right;
+	vu = v_up;
+	o0 = e.origin;
+	v0 = e.velocity;
+	WarpZone_trace_warpcount = 0;
+	WarpZone_Trace_InitTransform();
+	// if starting in warpzone, first transform
+	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
+	if(wz)
+	{
+		if(zone && wz != zone)
+		{
+			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
+
+			WarpZone_tracetoss_time = 0;
+			trace_endpos = o0;
+			goto fail;
+		}
+		WarpZone_Trace_AddTransform(wz);
+		setorigin(e, WarpZone_TransformOrigin(wz, e.origin));
+		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
+	}
+	WarpZone_MakeAllSolid();
+	g = cvar("sv_gravity") * e.gravity;
+	WarpZone_tracetoss_time = 0;
+	for(;;)
+	{
+		tracetoss_skipnonsolid(e, forent, toss_frametime, toss_count);
+		if(cb)
+			cb(e.origin, trace_endpos, trace_endpos);
+		e.origin = trace_endpos;
+		e.velocity_z -= WarpZone_tracetoss_time * g;
+		dt = vlen(e.origin - o0) / vlen(e.velocity);
+		WarpZone_tracetoss_time += dt;
+		if(trace_fraction >= 1)
+			break;
+		if(trace_ent.classname != "trigger_warpzone")
+			break;
+		if(trace_ent == wz)
+		{
+			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			break;
+		}
+		wz = trace_ent;
+		if(zone && wz != zone)
+			break;
+		WarpZone_Trace_AddTransform(wz);
+		// we hit a warpzone... so, let's perform the trace after the warp again
+		e.origin = WarpZone_TransformOrigin(wz, e.origin);
+		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
+		++WarpZone_trace_warpcount;
+	}
+	WarpZone_MakeAllOther();
+:fail
+	WarpZone_tracetoss_velocity = e.velocity;
+	v_forward = vf;
+	v_right = vr;
+	v_up = vu;
+	// restore old entity data (caller just uses trace_endpos, WarpZone_tracetoss_velocity and the transform)
+	e.velocity = v0;
+	e.origin = o0;
+}
+
+void WarpZone_TraceToss_real(entity e, entity forent, float toss_frametime, float toss_count)
+{
+	WarpZone_TraceToss_ThroughZone_real(e, forent, toss_frametime, toss_count, world, NULL);
+}
+
+void WarpZone_TraceToss_ThroughZone_stub(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb) {
+	tracetoss(e, forent, toss_frametime, toss_count);
+	if(cb)
+		cb(e.origin, trace_endpos, trace_endpos);
+
+	WarpZone_tracetoss_velocity = e.velocity;
+	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
+	WarpZone_tracetoss_velocity_z -= sv_gravity * (vlen(trace_endpos - self.origin) / vlen(self.velocity));
+	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
+}
+
+void WarpZone_TraceToss_stub(entity e, entity forent, float toss_frametime, float toss_count) {
+	tracetoss(e, forent, toss_frametime, toss_count);
+	WarpZone_tracetoss_velocity = e.velocity;
+	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
+	WarpZone_tracetoss_velocity_z -= sv_gravity * (vlen(trace_endpos - self.origin) / vlen(self.velocity));
+	print("WarpZone_tracetoss_velocity=", vtos(WarpZone_tracetoss_velocity), "\n");
+}
+
+void WarpZone_EnableHook() {
+	WarpZone_TraceToss = WarpZone_TraceToss_real;
+	WarpZone_TraceToss_ThroughZone = WarpZone_TraceToss_ThroughZone_real;
+}
+
+void WarpZone_InitHook() {
+	WarpZone_TraceToss = WarpZone_TraceToss_stub;
+	WarpZone_TraceToss_ThroughZone = WarpZone_TraceToss_ThroughZone_stub;
+	warpzone_sound_transition = 0;
+}
+
+void WarpZone_ShutdownHook() {
 }

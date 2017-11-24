@@ -150,7 +150,7 @@ void WarpZone_Trace_AddTransform(entity wz)
 	WarpZone_Accumulator_Add(WarpZone_trace_transform, wz);
 }
 
-void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb)
+void WarpZone_TraceBox_ThroughZone_real(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
 	float frac, sol;
 	vector o0, e0;
@@ -235,92 +235,15 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	v_up = vu;
 }
 
-void WarpZone_TraceBox(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent)
+void WarpZone_TraceBox_real(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent)
 {
 	WarpZone_TraceBox_ThroughZone(org, mi, ma, end, nomonsters, forent, world, NULL);
 }
 
-void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
+void WarpZone_TraceLine_real(vector org, vector end, float nomonsters, entity forent)
 {
 	WarpZone_TraceBox(org, '0 0 0', '0 0 0', end, nomonsters, forent);
 }
-
-#ifdef SVQC
-void WarpZone_TraceToss_ThroughZone(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb)
-{
-	float g, dt;
-	vector vf, vr, vu, v0, o0;
-	entity wz;
-
-	vf = v_forward;
-	vr = v_right;
-	vu = v_up;
-	o0 = e.origin;
-	v0 = e.velocity;
-	WarpZone_trace_warpcount = 0;
-	WarpZone_Trace_InitTransform();
-	// if starting in warpzone, first transform
-	wz = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
-	if(wz)
-	{
-		if(zone && wz != zone)
-		{
-			// we are in ANOTHER warpzone. This is bad. Make a zero length trace and return.
-
-			WarpZone_tracetoss_time = 0;
-			trace_endpos = o0;
-			goto fail;
-		}
-		WarpZone_Trace_AddTransform(wz);
-		setorigin(e, WarpZone_TransformOrigin(wz, e.origin));
-		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
-	}
-	WarpZone_MakeAllSolid();
-	g = cvar("sv_gravity") * e.gravity;
-	WarpZone_tracetoss_time = 0;
-	for(;;)
-	{
-		tracetoss_skipnonsolid(e, forent, toss_frametime, toss_count);
-		if(cb)
-			cb(e.origin, trace_endpos, trace_endpos);
-		e.origin = trace_endpos;
-		e.velocity_z -= WarpZone_tracetoss_time * g;
-		dt = vlen(e.origin - o0) / vlen(e.velocity);
-		WarpZone_tracetoss_time += dt;
-		if(trace_fraction >= 1)
-			break;
-		if(trace_ent.classname != "trigger_warpzone")
-			break;
-		if(trace_ent == wz)
-		{
-			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
-			break;
-		}
-		wz = trace_ent;
-		if(zone && wz != zone)
-			break;
-		WarpZone_Trace_AddTransform(wz);
-		// we hit a warpzone... so, let's perform the trace after the warp again
-		e.origin = WarpZone_TransformOrigin(wz, e.origin);
-		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
-		++WarpZone_trace_warpcount;
-	}
-	WarpZone_MakeAllOther();
-:fail
-	WarpZone_tracetoss_velocity = e.velocity;
-	v_forward = vf;
-	v_right = vr;
-	v_up = vu;
-	// restore old entity data (caller just uses trace_endpos, WarpZone_tracetoss_velocity and the transform)
-	e.velocity = v0;
-	e.origin = o0;
-}
-
-void WarpZone_TraceToss(entity e, entity forent, float toss_frametime, float toss_count)
-{
-	WarpZone_TraceToss_ThroughZone(e, forent, toss_frametime, toss_count, world, NULL);
-}
-#endif
 
 entity WarpZone_TrailParticles_trace_callback_own;
 float WarpZone_TrailParticles_trace_callback_eff;
@@ -346,12 +269,12 @@ float WarpZone_TargetPlaneDist(entity wz, vector v)
 	return (v - wz.warpzone_targetorigin) * wz.warpzone_targetforward;
 }
 
-vector WarpZone_TransformOrigin(entity wz, vector v)
+vector WarpZone_TransformOrigin_real(entity wz, vector v)
 {
 	return wz.warpzone_shift + AnglesTransform_Apply(wz.warpzone_transform, v);
 }
 
-vector WarpZone_TransformVelocity(entity wz, vector v)
+vector WarpZone_TransformVelocity_real(entity wz, vector v)
 {
 	return AnglesTransform_Apply(wz.warpzone_transform, v);
 }
@@ -382,7 +305,7 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 	return ang;
 }
 
-vector WarpZone_UnTransformOrigin(entity wz, vector v)
+vector WarpZone_UnTransformOrigin_real(entity wz, vector v)
 {
 	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v - wz.warpzone_shift);
 }
@@ -715,22 +638,62 @@ void WarpZone_ChainAdd(entity wz)
 
 float warpzone_sound_transition;
 
+void WarpZone_TraceLine_ThroughZone_real(vector org, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) {
+	WarpZone_TraceBox_ThroughZone_real(org, '0 0 0', '0 0 0', end, nomonsters, forent, zone, cb);
+}
+
+vector WarpZone_UnTransformOrigin_stub(entity wz, vector o) {
+	return o;
+}
+
+vector WarpZone_TransformOrigin_stub(entity wz, vector o) {
+	return o;
+}
+
+vector WarpZone_TransformVelocity_stub(entity wz, vector v) {
+	return v;
+}
+
+void WarpZone_TraceBox_ThroughZone_stub(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) {
+	tracebox(org, mi, ma, end, nomonsters, forent);
+	if(cb)
+		cb(org, trace_endpos, trace_endpos);
+}
+
+void WarpZone_TraceLine_ThroughZone_stub(vector org, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) {
+	traceline(org, end, nomonsters, forent);
+	if(cb)
+		cb(org, trace_endpos, trace_endpos);
+}
+
 void WarpZone_Init()
 {
-#ifdef CSQC
-	warpzone_sound_transition = CVAR(cl_warpzone_sound_transition);
-	warpzone_newstyle = checkextension("DP_CSQC_ROTATEMOVES");
-#else
-	warpzone_sound_transition = 0;
-#endif
+	WarpZone_TraceBox = tracebox;
+	WarpZone_TraceLine = traceline;
+	WarpZone_TraceBox_ThroughZone = WarpZone_TraceBox_ThroughZone_stub;
+	WarpZone_TraceLine_ThroughZone = WarpZone_TraceLine_ThroughZone_stub;
+	WarpZone_UnTransformOrigin = WarpZone_UnTransformOrigin_stub;
+	WarpZone_TransformOrigin = WarpZone_TransformOrigin_stub;
+	WarpZone_TransformVelocity = WarpZone_TransformVelocity_stub;
 	warpzone_chain_begin = world;
+	WarpZone_InitHook();
+}
+
+void WarpZone_Enable()
+{
+	WarpZone_TraceBox = WarpZone_TraceBox_real;
+	WarpZone_TraceLine = WarpZone_TraceLine_real;
+	WarpZone_TraceBox_ThroughZone = WarpZone_TraceBox_ThroughZone_real;
+	WarpZone_TraceLine_ThroughZone = WarpZone_TraceLine_ThroughZone_real;
+	WarpZone_UnTransformOrigin = WarpZone_UnTransformOrigin_real;
+	WarpZone_TransformOrigin = WarpZone_TransformOrigin_real;
+	WarpZone_TransformVelocity = WarpZone_TransformVelocity_real;
+	WarpZone_EnableHook();
 }
 
 void WarpZone_Shutdown()
 {
-#ifdef CSQC
-	WarpZone_Outside();
-#endif
+	WarpZone_ShutdownHook();
 }
 
 void WarpZone_Sound(entity e, float chan, string sound_path, float vol, float attn) {

@@ -49,6 +49,8 @@ void WarpZone_Read(float isnew)
 
     if(cvar("r_water_resolutionmultiplier") < 1)
         cvar_clientsettemp("r_water_resolutionmultiplier", "1");
+
+	WarpZone_Enable();
 }
 
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
@@ -236,4 +238,17 @@ void WarpZone_FixView()
 		input_angles = ang;
 	}
 	WarpZone_FixView_lastwarp = e;
+}
+
+void WarpZone_InitHook() {
+	warpzone_sound_transition = CVAR(cl_warpzone_sound_transition);
+	warpzone_newstyle = checkextension("DP_CSQC_ROTATEMOVES");
+}
+
+void WarpZone_ShutdownHook() {
+	WarpZone_Outside();
+}
+
+void WarpZone_EnableHook() {
+	WarpZone_Outside();
 }
