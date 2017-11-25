@@ -2,7 +2,7 @@
 .vector HookEnd;
 .float HookKillTime;
 
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag)
+void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
@@ -14,7 +14,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	length_tex = aspect * vlen(to - from) / thickness;
 
 	// direction is perpendicular to the view normal, and perpendicular to the axis
-	thickdir = normalize(cross(axis, view_origin - from));
+	thickdir = normalize(cross(axis, view_org - from));
 
 	A = from - thickdir * (thickness / 2);
 	B = from + thickdir * (thickness / 2);
@@ -71,7 +71,7 @@ void Draw_GrapplingHook()
 		tex = "particles/hook_green";
 		rgb = '.3 1 .3';
 	}
-	Draw_CylindricLine(b, a, 8, tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL);
+	Draw_CylindricLine(b, a, 8, tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, view_origin);
 }
 
 void Net_GrapplingHook()

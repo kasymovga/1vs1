@@ -19,8 +19,8 @@ float zapper_particles_trace_callback_beamoffs;
 
 void(vector dir) vectorvectors = #432;
 
-void zapper_particles_trace_callback(vector from, vector to) {
-    vector o = zapper_particles_trace_callback_origin;
+void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
+    vector o = WarpZone_TransformOrigin(WarpZone_trace_transform, zapper_particles_trace_callback_origin);
     vector rgb = Zapper_BeamRGB(self.team);
     string tex = "particles/zapper";
     float maxlen = vlen(to - o);
@@ -29,7 +29,7 @@ void zapper_particles_trace_callback(vector from, vector to) {
     float _alpha = self.alpha;
     rgb *= _alpha;
 
-    Draw_CylindricLine(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE);
+    Draw_CylindricLine(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin));
     zapper_particles_trace_callback_beamoffs += 0.03 * vlen(from - to) / zapper_beam_width;
 
 }
@@ -76,11 +76,13 @@ void Zapper_Draw(void) {
 
     if(first_person) {
         dynlight_org = start + view_forward;
-        zapper_particles_trace_callback(start - view_forward * zapper_shotorigin_x, start);
+        zapper_particles_trace_callback(start - view_forward * zapper_shotorigin_x, start, start);
     }
     //R_AddDynamicLight(dynlight_org, 50 * self.alpha, Zapper_BeamRGB(self.team));
-	zapper_particles_trace_callback(self.zapper_start, end);
-	vector v = normalize(end - start);
+	WarpZone_DrawEffectTriangle(view_origin, self.zapper_start, end, zapper_particles_trace_callback);
+	//zapper_particles_trace_callback(self.zapper_start, end);
+	vector v = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
+	end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 	end = end - v;
     pointparticles(rm_particleeffectnum_team("RM_ZAPPER", self.team, 2), end, v, frametime * 300);
 	pointparticles(rm_particleeffectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2), start, '0 0 0', frametime * 300);
@@ -105,7 +107,7 @@ void Zapper_Draw_Shield(void) {
     string tex = "particles/zapper";
     vector rgb = Zapper_BeamRGB(self.team) * 0.5;
 
-    Draw_CylindricLine(end, start,  12, tex, 0.03, 5 * time, rgb, self.alpha, DRAWFLAG_ADDITIVE);
+    Draw_CylindricLine(end, start,  12, tex, 0.03, 5 * time, rgb, self.alpha, DRAWFLAG_ADDITIVE, view_origin);
 
     if(self.alpha < 1)
         return;
@@ -199,7 +201,7 @@ void LightingArc_Draw(void) {
     }
 
     float i; for(i = 0; i < 5; ++i)
-        Draw_CylindricLine(self.origin, self.velocity, 25 * self.alpha, tex, 0.02, random(), '1 1 1', self.alpha, DRAWFLAG_ADDITIVE);
+        Draw_CylindricLine(self.origin, self.velocity, 25 * self.alpha, tex, 0.02, random(), '1 1 1', self.alpha, DRAWFLAG_ADDITIVE, view_origin);
 
     self.alpha = self.alpha - frametime * 3;
     if(self.alpha < 0)

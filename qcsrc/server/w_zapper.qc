@@ -256,6 +256,7 @@ void W_Zapper_Beam_Think(void) {
         wantedTicrate = dt;
         damageIsDps = TRUE;
     }
+	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir);
     for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
         float damage = g_balance_zapper_primary_damage;
         float force  = g_balance_zapper_primary_force;
@@ -276,7 +277,7 @@ void W_Zapper_Beam_Think(void) {
             damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
             force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
 
-            Damage(targ, self, o, damage, WEP_ZAPPER, end, force * w_shotdir);
+            Damage(targ, self, o, damage, WEP_ZAPPER, end, force * forcedir);
 			if not(inWarmupStage)
 			if not(targ.deadflag)
 			if (!teamplay || targ.team != o.team) {
@@ -286,7 +287,7 @@ void W_Zapper_Beam_Think(void) {
         }
         if(fract < 1)
         if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-            Damage_DamageInfo(end, damage, 0, 0, force * w_shotdir, WEP_ZAPPER, self);
+            Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER, self);
 
         if not(self.enemy.items & IT_UNLIMITED_AMMO)
             self.enemy.ammo_cells = self.enemy.ammo_cells - g_balance_zapper_primary_ammo;
@@ -301,10 +302,10 @@ void W_Zapper_Beam_Think(void) {
         self.zapper_beam_start = org;
     }
 
-    //vector nowarp_end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, end);
-    if(end != self.zapper_beam_end) {
+    vector nowarp_end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, end);
+    if(nowarp_end != self.zapper_beam_end) {
         self.SendFlags |= 4;
-        self.zapper_beam_end = end;
+        self.zapper_beam_end = nowarp_end;
     }
 
     if(self.enemy.zapper_heat >= 0) {
@@ -345,17 +346,23 @@ void W_Zapper_Attack1(void) {
 	e.nextthink = time;
 }
 
-void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
+float W_Zapper_Attack2_Effect_team;
+void W_Zapper_Attack2_Effect_cb(vector from, vector to, vector end) {
     WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
     WriteByte(MSG_BROADCAST, TE_CSQC_ZAPPERLIGHTNING);
 
-    WriteByte(MSG_BROADCAST, ateam);
+    WriteByte(MSG_BROADCAST, W_Zapper_Attack2_Effect_team);
     WriteCoord(MSG_BROADCAST, from_x);
     WriteCoord(MSG_BROADCAST, from_y);
     WriteCoord(MSG_BROADCAST, from_z);
     WriteCoord(MSG_BROADCAST, to_x);
     WriteCoord(MSG_BROADCAST, to_y);
     WriteCoord(MSG_BROADCAST, to_z);
+}
+
+void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
+	W_Zapper_Attack2_Effect_team = ateam;
+	W_Zapper_Attack2_Effect_cb(from, to, to);
 }
 
 void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
@@ -401,6 +408,7 @@ void W_Zapper_Attack2(void) {
     //W_SetHitscanVisuals(self, end);
 
     //vector end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir);
 
     if(targ.takedamage) {
         float d = vlen(end - w_shotorg) * trace_fraction;
@@ -417,7 +425,7 @@ void W_Zapper_Attack2(void) {
             W_Zapper_Attack2_Arc(targ, self, damage);
 
 		entity o = Akimbo_Owner(self);
-        Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * w_shotdir);
+        Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 		if not(inWarmupStage)
 		if (!teamplay || targ.team != o.team) {
 			o.bullets_hit[WEP_ZAPPER] += 1;
@@ -430,10 +438,12 @@ void W_Zapper_Attack2(void) {
     //W_Accuracy_RegisterShot(self, self.weapon);
     //W_Accuracy_RegisterHit(self, targ, self.weapon);
 
-    W_Zapper_Attack2_Effect(self.team, w_shotorg_visual, end);
+	W_Zapper_Attack2_Effect_team = self.team;
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
+    //W_Zapper_Attack2_Effect(self.team, w_shotorg_visual, end);
 
     if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-        Damage_DamageInfo(end, damage, 0, 0, force * w_shotdir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
+        Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
 
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
         self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
