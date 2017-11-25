@@ -30,7 +30,7 @@ void W_Shotgun_Attack (void)
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, 0, g_balance_shotgun_primary_force,
-				WEP_SHOTGUN, 0, g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
+				WEP_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_primary_ammo;
@@ -62,7 +62,7 @@ void W_Shotgun_Attack2 (void)
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,
-				WEP_SHOTGUN | HITTYPE_SECONDARY, 0, g_balance_shotgun_secondary_gravityfactor,
+				WEP_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
 				g_balance_shotgun_secondary_bulletconstant);
 	endFireBallisticBullet();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)

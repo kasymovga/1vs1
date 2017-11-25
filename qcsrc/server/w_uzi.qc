@@ -49,9 +49,9 @@ void W_Uzi_Attack (float deathtype)
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * W_WeaponRateFactor();
 
 	if (self.uzi_bulletcounter == 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, 0, g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 	else
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, 0, g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

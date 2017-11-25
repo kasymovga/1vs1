@@ -138,7 +138,7 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	}
 
-	fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, EF_RED, ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
+	fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
 	endFireBallisticBullet();
 
 	if (g_casings >= 2)

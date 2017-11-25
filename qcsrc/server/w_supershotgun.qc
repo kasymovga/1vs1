@@ -135,7 +135,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	{
 		for (sc = 0; sc < b; sc = sc + 1)
 			fireBallisticBullet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
-					d, 0, f, dtype, 0, g, bc);
+					d, 0, f, dtype, particleeffectnum("tr_bullet"), g, bc);
 		endFireBallisticBullet();
 	}
 	else

@@ -354,10 +354,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		proj = spawn();
 	} else {
 		antilag = FALSE;
-		if(tracereffects & EF_RED)
-			proj = CSQCProjectile(TRUE, PROJECTILE_BULLET_GLOWING, TRUE);
-		else
-			proj = CSQCProjectile(TRUE, PROJECTILE_BULLET, TRUE);
+		proj = CSQCProjectile(TRUE, PROJECTILE_BULLET, TRUE);
 
 		proj.think = SUB_Remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
@@ -397,13 +394,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	if(antilag)
 	{
-		float eff;
-
-		if(tracereffects & EF_RED)
-			eff = particleeffectnum("tr_rifle");
-		else
-			eff = particleeffectnum("tr_bullet");
-
 		// NOTE: this may severely throw off weapon balance
 		lag = ANTILAG_LATENCY(self);
 		if(lag < 0.001)
@@ -421,7 +411,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		for(;;)
 		{
 			fireBallisticBullet_trace_callback_ent = self;
-			fireBallisticBullet_trace_callback_eff = eff;
+			fireBallisticBullet_trace_callback_eff = tracereffects;
 			if (proj.gravity) {
 				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, fireBallisticBullet_trace_callback);
 				self.velocity = WarpZone_tracetoss_velocity;
@@ -474,28 +464,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	}
 
 	self = oldself_akimbo;
-}
-
-
-void fireBullet (vector start, vector dir, float spread, float damage, float force, float dtype, float tracer)
-{
-	vector  end;
-	//local entity e;
-
-	dir = normalize(dir + randomvec() * spread);
-	end = start + dir * MAX_SHOT_DISTANCE;
-	traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
-    end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
-	{
-		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
-		pointparticles(particleeffectnum("TE_KNIGHTSPIKE"),end,trace_plane_normal * 2500,1);
-		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);
-		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
-		//void(float effectnum, vector org, vector vel, float howmany) pointparticles = #337; // same as in CSQC
-	}
-	trace_endpos = end;
 }
 
 

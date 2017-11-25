@@ -26,7 +26,7 @@ void soldier_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/shotgun_fire.wav", VOL_BASE, ATTN_NORM);
 		float sc;
 		for (sc = 0; sc < 5; sc++)
-			fireBallisticBullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, WEP_SHOTGUN, 0, 0, 0);
+			fireBallisticBullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, WEP_SHOTGUN, particleeffectnum("tr_bullet"), 0, 0);
 		endFireBallisticBullet();
 		pointparticles(particleeffectnum("shotgun_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);
 		// casing code

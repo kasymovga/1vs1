@@ -74,16 +74,14 @@ void spiderbot_rocket_explode()
         return;
     }
 
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     org2 = findbetterlocation (self.origin, 16);
-    pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
     w_deathtypestring = "dident escape the rocket barrage";
 
     RadiusDamage (self, self.realowner,
      g_vehicle_spiderbot_rocket_damage,
      g_vehicle_spiderbot_rocket_edgedamage,
      g_vehicle_spiderbot_rocket_radius, world,
-     g_vehicle_spiderbot_rocket_force, DEATH_TURRET, world);
+     g_vehicle_spiderbot_rocket_force, WEP_ROCKET_LAUNCHER, world);
 
     remove (self);
 }
@@ -171,7 +169,7 @@ void spiderbot_minigun_fire_Flash_Go() {
 	self.nextthink = time + 0.02;
 }
 
-void spiderbot_minigun_fire(entity gun,float trail)
+void spiderbot_minigun_fire(entity gun)
 {
 
     entity flash;
@@ -182,8 +180,8 @@ void spiderbot_minigun_fire(entity gun,float trail)
     sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 
 	antilag_prepare(self);
-    fireBullet (v, v_forward, g_vehicle_spiderbot_minigun_spread, g_vehicle_spiderbot_minigun_damage,
-        g_vehicle_spiderbot_minigun_spread, DEATH_TURRET, 0);
+	fireBallisticBullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5,
+			g_vehicle_spiderbot_minigun_damage, 0, 0, WEP_UZI, particleeffectnum("EF_MGTURRETTRAIL"), 0, 0);
 
     if not (gun.enemy)
     {
@@ -200,8 +198,6 @@ void spiderbot_minigun_fire(entity gun,float trail)
     flash.angles_z = flash.v_angle_z + random() * 180;
     flash.alpha = 1;
     flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-    if(trail)
-        trailparticles(self, particleeffectnum("EF_MGTURRETTRAIL"), v, trace_endpos);
 }
 
 void spiderbot_miniguns_do()
@@ -223,19 +219,8 @@ void spiderbot_miniguns_do()
 		self.vehicle_hudmodel.gun2.angles_z = self.gun2.angles_z;
 
         self = self.owner;
-        if(self.uzi_bulletcounter == 1)
-        {
-            spiderbot_minigun_fire(self.vehicle.gun1,0);
-            spiderbot_minigun_fire(self.vehicle.gun2,1);
-            self.uzi_bulletcounter = 0;
-        }
-        else
-        {
-            spiderbot_minigun_fire(self.vehicle.gun1,1);
-            spiderbot_minigun_fire(self.vehicle.gun2,0);
-            self.uzi_bulletcounter = 1;
-        }
-
+		spiderbot_minigun_fire(self.vehicle.gun1);
+		spiderbot_minigun_fire(self.vehicle.gun2);
         self = self.vehicle;
         self.vehicle_heat += g_vehicle_spiderbot_minigun_heat * g_vehicle_spiderbot_minigun_refire;
         if(self.vehicle_heat >= 1)
@@ -632,11 +617,7 @@ void spiderbot_spawn()
 
 void spiderbot_blowup()
 {
-    sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-    pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
-
-    RadiusDamage (self, self, 100, 15, 250, world, 250, DEATH_TURRET, world);
-
+    RadiusDamage (self, self, 100, 15, 250, world, 250, WEP_ROCKET_LAUNCHER, world);
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.nextthink  = time + 10;
     self.think      = spiderbot_spawn;
@@ -840,7 +821,6 @@ void spawnfunc_vehicle_spiderbot()
     precache_model ( "models/onslaught/gen_gib3.md3");
 
     precache_model ( "models/turrets/rocket.md3");
-    precache_sound ( "weapons/rocket_impact.wav" );
     precache_sound ( "weapons/uzi_fire.wav" );
 	CSQCProjectile_Init(PROJECTILE_ROCKET);
 
