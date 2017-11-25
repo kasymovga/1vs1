@@ -498,7 +498,7 @@ vector WarpZone_RefSys_TransformVelocity_real(entity from, entity to, vector vel
 		vel = WarpZone_TransformVelocity(to.WarpZone_refsys, vel);
 	return vel;
 }
-vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang)
+vector WarpZone_RefSys_TransformAngles_real(entity from, entity to, vector ang)
 {
 	if(from.WarpZone_refsys)
 		ang = WarpZone_UnTransformAngles(from.WarpZone_refsys, ang);
@@ -698,10 +698,15 @@ entity WarpZone_RefSys_SpawnSameRefSys_stub(entity e) {
 	return spawn();
 }
 
+vector WarpZone_RefSys_TransformAngles_stub(entity from, entity to, vector ang) {
+	return ang;
+}
+
 void WarpZone_RefSys_BeginAddingIncrementally_stub(entity me, entity ref) {}
 
 void WarpZone_Init()
 {
+	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_stub;
 	WarpZone_RefSys_BeginAddingIncrementally = WarpZone_RefSys_BeginAddingIncrementally_stub;
 	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_stub;
 	WarpZone_RefSys_AddIncrementally = WarpZone_RefSys_AddIncrementally_stub;
@@ -722,6 +727,7 @@ void WarpZone_Init()
 
 void WarpZone_Enable()
 {
+	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_real;
 	WarpZone_RefSys_BeginAddingIncrementally = WarpZone_RefSys_BeginAddingIncrementally_real;
 	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_real;
 	WarpZone_RefSys_AddIncrementally = WarpZone_RefSys_AddIncrementally_real;

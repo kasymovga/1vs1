@@ -29,10 +29,14 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	R_EndPolygon();
 }
 
+string Draw_GrapplingHook_cb_tex;
+void Draw_GrapplingHook_cb(vector start, vector end, vector to) {
+	Draw_CylindricLine(start, end, 8, Draw_GrapplingHook_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin));
+}
+
 void Draw_GrapplingHook()
 {
 	vector a, b;
-	string tex;
 	vector rgb;
 	float t;
 
@@ -48,30 +52,30 @@ void Draw_GrapplingHook()
 
 	if(t == COLOR_TEAM1)
 	{
-		tex = "particles/hook_red";
+		Draw_GrapplingHook_cb_tex = "particles/hook_red";
 		rgb = '1 .3 .3';
 	}
 	else if(t == COLOR_TEAM2)
 	{
-		tex = "particles/hook_blue";
+		Draw_GrapplingHook_cb_tex = "particles/hook_blue";
 		rgb = '.3 .3 1';
 	}
 	else if(t == COLOR_TEAM3)
 	{
-		tex = "particles/hook_yellow";
+		Draw_GrapplingHook_cb_tex = "particles/hook_yellow";
 		rgb = '1 1 .3';
 	}
 	else if(t == COLOR_TEAM4)
 	{
-		tex = "particles/hook_pink";
+		Draw_GrapplingHook_cb_tex = "particles/hook_pink";
 		rgb = '1 .3 1';
 	}
 	else
 	{
-		tex = "particles/hook_green";
+		Draw_GrapplingHook_cb_tex = "particles/hook_green";
 		rgb = '.3 1 .3';
 	}
-	Draw_CylindricLine(b, a, 8, tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, view_origin);
+	WarpZone_DrawEffectTriangle(a, a, b, Draw_GrapplingHook_cb);
 }
 
 void Net_GrapplingHook()

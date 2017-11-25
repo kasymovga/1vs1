@@ -275,7 +275,8 @@ void GrapplingHookThink()
 	}
 
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin);
-	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
+	vector a = WarpZone_RefSys_TransformAngles(self, self.owner, self.angles);
+	makevectors(a_x * '-1 0 0' + a_y * '0 1 0');
 	te_beam(self.owner, myorg + v_forward * (-9), org);
 }
 
