@@ -561,7 +561,6 @@ void WarpZone_InitStep_FinalizeTransform()
 	self.touch = WarpZone_Touch;
 }
 
-float warpzone_initialized;
 entity warpzone_first;
 entity warpzone_position_first;
 entity warpzone_camera_first;
