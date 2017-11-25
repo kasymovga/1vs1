@@ -343,7 +343,7 @@ void fireBallisticBulletNoGravity_trace_callback(vector start, vector hit, vecto
 
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, dt, antilag;
+	float lag, antilag;
 	entity pl, oldself, oldself_akimbo = self;
 	self = Akimbo_Owner(self);
 
