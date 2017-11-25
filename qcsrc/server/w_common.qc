@@ -40,7 +40,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	local float endq3surfaceflags;
 	//local entity explosion;
 	float did_hit;
-	float length;
 	float f, ffs;
 	self = Akimbo_Owner(self);
 
@@ -50,7 +49,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	railgun_end = end;
 
 	dir = normalize(end - start);
-	length = vlen(end - start);
 
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;

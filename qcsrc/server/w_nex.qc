@@ -15,6 +15,7 @@ void NexWhoosh(vector start, vector end) {
 	vector beampos;
 	vector dir = normalize(end - start);
 	string snd;
+	float length = vlen(start - end);
 	float f;
 	FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
 	{
@@ -74,7 +75,7 @@ void W_Nex_Attack (void)
 		Damage_DamageInfo(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_NEX, self);
 
 	//beam and muzzle flash done on client
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, w_shotpoint, DrawNexBeamParticles);
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), DrawNexBeamParticles);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;

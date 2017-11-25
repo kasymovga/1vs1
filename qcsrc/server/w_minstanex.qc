@@ -64,7 +64,7 @@ void W_MinstaNex_Attack (void)
 	else
         DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3");
 
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, w_shotpoint, DrawMinstaNexBeamParticles);
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), DrawMinstaNexBeamParticles);
 
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
