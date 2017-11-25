@@ -281,6 +281,7 @@ void GrapplingHookThink()
 
 void GrapplingHookTouch (void)
 {
+	PROJECTILE_SKIPNONSOLID
 	if(SUB_OwnerCheck())
 		return;
 	if(SUB_NoImpactCheck())
@@ -310,8 +311,10 @@ void GrapplingHookTouch (void)
 	GrapplingHook_Stop();
 
 	if(other)
-		if(other.movetype != MOVETYPE_NONE)
+		if(other.movetype != MOVETYPE_NONE) {
 			SetMovetypeFollow(self, other);
+            WarpZone_RefSys_BeginAddingIncrementally(self, self.aiment);
+		}
 
 	//self.owner.disableclientprediction = TRUE;
 }
@@ -345,7 +348,7 @@ void FireGrapplingHook (void)
 	org = self.origin + self.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
 	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
 
-	missile = spawn ();
+	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = self;
 	self.hook = missile;
 	missile.classname = "grapplinghook";

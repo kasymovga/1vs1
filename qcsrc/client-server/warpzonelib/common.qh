@@ -56,13 +56,18 @@ vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
 void WarpZone_RefSys_Add(entity me, entity wz);
-void WarpZone_RefSys_AddIncrementally(entity me, entity ref);
-void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref);
-vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org);
-vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel);
+void WarpZone_RefSys_AddIncrementally_real(entity me, entity ref);
+var void(entity me, entity ref) WarpZone_RefSys_AddIncrementally;
+void WarpZone_RefSys_BeginAddingIncrementally_real(entity me, entity ref);
+var void(entity me, entity ref) WarpZone_RefSys_BeginAddingIncrementally;
+vector WarpZone_RefSys_TransformOrigin_real(entity from, entity to, vector org);
+var vector(entity from, entity to, vector org) WarpZone_RefSys_TransformOrigin;
+vector WarpZone_RefSys_TransformVelocity_real(entity from, entity to, vector vel);
+var vector(entity from, entity to, vector vel) WarpZone_RefSys_TransformVelocity;
 vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang);
 vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);
-entity WarpZone_RefSys_SpawnSameRefSys(entity me);
+entity WarpZone_RefSys_SpawnSameRefSys_real(entity me);
+var entity(entity me) WarpZone_RefSys_SpawnSameRefSys;
 
 vector WarpZoneLib_PlaneAndLineCross(vector planep, vector planen, vector linep, vector linev);
 void WarpZone_TraceTriangle(vector org, vector org_visual, vector end, float nomonster, entity forent, WarpZone_trace_callback_t cb);
