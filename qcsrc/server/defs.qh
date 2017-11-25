@@ -178,11 +178,6 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .float		dmg;
 
-// for railgun damage (hitting multiple enemies)
-.float railgunhit;
-.float railgunhitsolidbackup;
-.vector railgunhitloc;
-
 .float		air_finished;
 .float		dmgtime;
 
@@ -533,8 +528,6 @@ void ClientData_Touch(entity e);
 
 vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
-vector w_shotorg_visual;
-
 // the QC VM sucks
 #define BITXOR(v,b)        ((v) + (b) - 2 * ((v) & (b)))
 #define BITXOR_ASSIGN(v,b) ((v) += ((b) - 2 * ((v) & (b))))
@@ -605,6 +598,5 @@ enum {
 
 .float lastdamage;
 
-null_t NULL; // FIXME: declare this in common, and get rid of string_null, func_null, etc. universally.
 .entity entcs;
 

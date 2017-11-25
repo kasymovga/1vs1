@@ -6,7 +6,7 @@
 #define rld_size_y 16
 
 //float trace_dphitcontents;
-//float trace_networkentity;
+float trace_networkentity;
 //float Q3SURFACEFLAG_SLICK = 2; // low friction surface
 float DPCONTENTS_SOLID = 1; // blocks player movement
 float DPCONTENTS_BODY = 32; // blocks player movement
@@ -256,6 +256,7 @@ void CSQC_UpdateView(float w, float h)
 		view_set = 1;
 		view_origin = CSQCPhysic_SetCamera();
 	}
+	WarpZone_FixView();
 
 	// Set the console size vars
 

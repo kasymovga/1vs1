@@ -344,8 +344,15 @@ void Ent_Projectile(float ignore)
 			self.move_velocity = self.velocity;
 		}
 
-		if(time == self.spawntime || (self.count & 0x80) || (f & 0x20))
+		if(time == self.spawntime || (self.count & 0x80))
+		{
 			self.trail_oldorigin = self.origin;
+		}
+		if (f & 0x20)
+		if not(f & 0x80) {
+			self.trail_oldorigin = self.origin;
+			InterpolateOrigin_Note();
+		}
 	}
 
 	if(f & 2)

@@ -44,6 +44,9 @@ vector (vector v, vector w)							vectoangles2 = #51;
 
 void (string var, string val)						cvar_set = #72;
 
+float(float property, ...) setproperty = #303
+vector (float property) getpropertyvec = #303;
+float (float property) getproperty = #303;
 
 float()									ReadByte = #360;
 float()									ReadChar = #361;

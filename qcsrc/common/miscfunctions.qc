@@ -100,3 +100,20 @@ string cdr(string s)
 		return string_null;
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
+
+void backtrace(string msg)
+{
+    float dev, war;
+    dev = cvar("developer");
+    war = cvar("prvm_backtraceforwarnings");
+    cvar_set("developer", "1");
+    cvar_set("prvm_backtraceforwarnings", "1");
+    dprint("\n");
+    dprint("--- CUT HERE ---\nWARNING: ");
+    dprint(msg);
+    dprint("\n");
+    remove(world); // isn't there any better way to cause a backtrace?
+    dprint("\n--- CUT UNTIL HERE ---\n");
+    cvar_set("developer", ftos(dev));
+    cvar_set("prvm_backtraceforwarnings", ftos(war));
+}

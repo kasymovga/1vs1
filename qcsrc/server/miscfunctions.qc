@@ -592,23 +592,6 @@ void GetCvars(float f)
 	}
 }
 
-void backtrace(string msg)
-{
-    float dev, war;
-    dev = cvar("developer");
-    war = cvar("prvm_backtraceforwarnings");
-    cvar_set("developer", "1");
-    cvar_set("prvm_backtraceforwarnings", "1");
-    dprint("\n");
-    dprint("--- CUT HERE ---\nWARNING: ");
-    dprint(msg);
-    dprint("\n");
-    remove(world); // isn't there any better way to cause a backtrace?
-    dprint("\n--- CUT UNTIL HERE ---\n");
-    cvar_set("developer", ftos(dev));
-    cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
-
 string Team_ColorName(float t)
 {
     // fixme: Search for team entities and get their .netname's!
@@ -1332,7 +1315,7 @@ float projectile_skipnonsolid()
 	return FALSE;
 }
 
-#define PROJECTILE_SKIPNONSOLID if (sv_gameplayfix_skipnonsolid) if(projectile_skipnonsolid()) { return; }
+#define PROJECTILE_SKIPNONSOLID if (WarpZone_Projectile_Touch()) { UpdateCSQCProjectileAfterTeleport(self); return; } else if (sv_gameplayfix_skipnonsolid) if(projectile_skipnonsolid()) { return; }
 #define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
 
 void print_to(entity e, string s)

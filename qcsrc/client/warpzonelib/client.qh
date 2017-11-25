@@ -1,0 +1,10 @@
+void WarpZone_Read(float bIsNewEntity);
+void WarpZone_Camera_Read(float bIsNewEntity);
+void WarpZone_Teleported_Read(float isnew);
+
+var void() WarpZone_FixView = {}; // this saves the previous values
+entity WarpZone_FixView_lastwarp;
+float WarpZone_FixView_lasttime;
+void WarpZone_Outside();
+
+float warpzone_newstyle;

@@ -26,18 +26,20 @@ void W_GiveWeapon (entity e, float wep, string name)
 	self = oldself;
 }
 
+// for railgun damage (hitting multiple enemies)
+.float railgunhit;
+.float railgunhitsolidbackup;
+.vector railgunhitloc;
+.vector railgunhitdir;
+
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
 	entity oldself = self;
-	local vector hitloc, force, endpoint, dir;
+	local vector hitloc, endpoint, dir;
 	local entity ent, endent;
 	local float endq3surfaceflags;
 	//local entity explosion;
 	float did_hit;
-	float length;
-	vector beampos;
-	string snd;
-	entity pseudoprojectile;
 	float f, ffs;
 	self = Akimbo_Owner(self);
 
@@ -47,8 +49,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	railgun_end = end;
 
 	dir = normalize(end - start);
-	length = vlen(end - start);
-	force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
@@ -67,6 +67,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		// make the entity non-solid so we can hit the next one
 		trace_ent.railgunhit = TRUE;
 		trace_ent.railgunhitloc = end;
+		trace_ent.railgunhitdir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 
 		// stop if this is a wall
@@ -93,29 +94,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// spawn a temporary explosion entity for RadiusDamage calls
 	//explosion = spawn();
 
-	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_MINSTANEX || deathtype == WEP_NEX)
-	{
-		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
-		{
-			// nearest point on the beam
-			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
-
-			f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
-			if(f <= 0)
-				continue;
-
-			snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
-
-			if(!pseudoprojectile)
-				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
-		}
-
-		if(pseudoprojectile)
-			remove(pseudoprojectile);
-	}
-
 	// find all the entities the railgun hit and hurt them
 	ent = findfloat(world, railgunhit, TRUE);
 	while (ent)
@@ -135,12 +113,12 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		if(ent.team == self.team)
 			did_hit = 0;
 
-		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * dir);
-		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * dir);
+		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
+		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
 
 		// apply the damage
 		if (ent.takedamage)
-			Damage (ent, self, self, bdamage * f, deathtype, hitloc, force * ffs);
+			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
@@ -347,6 +325,22 @@ void endFireBallisticBullet()
 {
 	endzcurveparticles();
 }
+
+entity fireBallisticBullet_trace_callback_ent;
+float fireBallisticBullet_trace_callback_eff;
+void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
+{
+	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
+		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
+}
+
+void fireBallisticBulletNoGravity_trace_callback(vector start, vector hit, vector end)
+{
+	endzcurveparticles();
+	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
+		trailparticles(world, fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos);
+}
+
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
 	float lag, dt, antilag;
@@ -426,10 +420,15 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		for(;;)
 		{
-			if (proj.gravity)
-				tracetoss(self, oldself, 0.05 * 0.125, 200);
-			else
-				traceline(self.origin, start + proj.velocity * 1.25, FALSE, self);
+			fireBallisticBullet_trace_callback_ent = self;
+			fireBallisticBullet_trace_callback_eff = eff;
+			if (proj.gravity) {
+				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, fireBallisticBullet_trace_callback);
+				self.velocity = WarpZone_tracetoss_velocity;
+			} else {
+				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, fireBallisticBulletNoGravity_trace_callback);
+				self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
+			}
 
 			if not(inWarmupStage)
 			if not(self.isbot)
@@ -438,16 +437,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
 			}
 
-			if(vlen(trace_endpos - self.origin) > 16)
-			{
-				if (proj.gravity)
-					zcurveparticles_from_tracetoss(eff, self.origin, trace_endpos, self.velocity);
-				else
-				{
-					endzcurveparticles();
-					trailparticles(world, eff, self.origin, trace_endpos);
-				}
-			}
 			if(trace_fraction == 1)
 				break;
 				// won't hit anything anytime soon (DP's
@@ -455,9 +444,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				// 0.05*0.125s, that is, 1.25 seconds
 
 			other = trace_ent;
-			dt = vlen(trace_endpos - self.origin) / vlen(self.velocity); // this is only approximate!
 			setorigin(self, trace_endpos);
-			self.velocity_z -= sv_gravity * dt;
 
 			if(!SUB_OwnerCheck())
 			{
@@ -498,11 +485,10 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 	dir = normalize(dir + randomvec() * spread);
 	end = start + dir * MAX_SHOT_DISTANCE;
 	traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
-
-    end = trace_endpos;
-
+    end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
 	{
+		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		pointparticles(particleeffectnum("TE_KNIGHTSPIKE"),end,trace_plane_normal * 2500,1);
 		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);

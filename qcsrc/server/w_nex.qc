@@ -10,16 +10,44 @@ float g_balance_nex_refire;
 
 .float nex_lasthit;
 
-void SendCSQCNexBeamParticle() {
+void NexWhoosh(vector start, vector end) {
+	entity pseudoprojectile;
+	vector beampos;
+	vector dir = normalize(end - start);
+	string snd;
+	float length = vlen(start - end);
+	float f;
+	FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
+	{
+		// nearest point on the beam
+		beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+
+		f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
+		if(f <= 0)
+			continue;
+
+		snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
+
+		if(!pseudoprojectile)
+			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+		soundtoat(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
+	}
+
+	if(pseudoprojectile)
+		remove(pseudoprojectile);
+}
+
+void DrawNexBeamParticles(vector start, vector endpos, vector to) {
+	NexWhoosh(start, endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_NEXGUNBEAMPARTICLE);
 	
-	WriteCoord(MSG_BROADCAST, w_shotorg_visual_x);
-	WriteCoord(MSG_BROADCAST, w_shotorg_visual_y);
-	WriteCoord(MSG_BROADCAST, w_shotorg_visual_z);
-	WriteCoord(MSG_BROADCAST, trace_endpos_x);
-	WriteCoord(MSG_BROADCAST, trace_endpos_y);
-	WriteCoord(MSG_BROADCAST, trace_endpos_z);
+	WriteCoord(MSG_BROADCAST, start_x);
+	WriteCoord(MSG_BROADCAST, start_y);
+	WriteCoord(MSG_BROADCAST, start_z);
+	WriteCoord(MSG_BROADCAST, endpos_x);
+	WriteCoord(MSG_BROADCAST, endpos_y);
+	WriteCoord(MSG_BROADCAST, endpos_z);
 }
 
 void W_Nex_Attack (void)
@@ -41,13 +69,13 @@ void W_Nex_Attack (void)
 			damage_goodhits = 0; // only every second time
 	}
 	self.nex_lasthit = damage_goodhits;
-
-	//beam and muzzle flash done on client
-	SendCSQCNexBeamParticle();
 	
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * w_shotdir, WEP_NEX, self);
+		Damage_DamageInfo(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_NEX, self);
+
+	//beam and muzzle flash done on client
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), DrawNexBeamParticles);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;

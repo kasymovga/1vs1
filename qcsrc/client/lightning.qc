@@ -12,7 +12,7 @@ void LightningThink()
 		start = view_origin + view_forward * self.lightning_beam_shotorg_x + view_right * self.lightning_beam_shotorg_y + view_up * self.lightning_beam_shotorg_z;
 	}
 
-	Draw_CylindricLine(start, end, 32, "particles/hook_blue", 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL);
+	Draw_CylindricLine(start, end, 32, "particles/hook_blue", 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, view_origin);
 	self.nextthink = time;
 }
 
