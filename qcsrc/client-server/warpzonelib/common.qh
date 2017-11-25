@@ -37,7 +37,8 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector org_visua
 // also set: warpzone parameters, so WarpZone_TransformOrigin can transform vectors from blast's to victim's system
 .vector WarpZone_findradius_findorigin;
 .float WarpZone_findradius_findradius;
-entity WarpZone_FindRadius(vector org, float radius, float needlineofsight);
+var entity(vector org, float radius, float needlineofsight) WarpZone_FindRadius;
+entity WarpZone_FindRadius_real(vector org, float radius, float needlineofsight);
 
 float WarpZone_PlaneDist(entity wz, vector v);
 float WarpZone_TargetPlaneDist(entity wz, vector v);

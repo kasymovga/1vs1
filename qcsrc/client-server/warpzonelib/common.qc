@@ -410,13 +410,24 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 		e.enemy.WarpZone_findradius_hit = 0;
 	}
 }
-entity WarpZone_FindRadius(vector org, float rad, float needlineofsight)
+entity WarpZone_FindRadius_real(vector org, float rad, float needlineofsight)
 {
 	entity e0, e;
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
 	e0 = findchainfloat(WarpZone_findradius_hit, 1);
 	for(e = e0; e; e = e.chain)
 		e.WarpZone_findradius_hit = 0;
+	return e0;
+}
+
+entity WarpZone_FindRadius_stub(vector org, float rad, float needlineofsight)
+{
+	entity e0 = findradius(org, rad);
+	entity e;
+	for(e = e0; e; e = e.chain) {
+		e.WarpZone_findradius_nearest = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org);
+		e.WarpZone_findradius_dist = e.WarpZone_findradius_nearest - org;
+	}
 	return e0;
 }
 
@@ -673,6 +684,7 @@ void WarpZone_DrawEffectTriangle_stub(vector org, vector org_visual, vector end,
 
 void WarpZone_Init()
 {
+	WarpZone_FindRadius = WarpZone_FindRadius_stub;
 	WarpZone_DrawEffectTriangle = WarpZone_DrawEffectTriangle_stub;
 	WarpZone_TraceBox = tracebox;
 	WarpZone_TraceLine = traceline;
@@ -687,6 +699,7 @@ void WarpZone_Init()
 
 void WarpZone_Enable()
 {
+	WarpZone_FindRadius = WarpZone_FindRadius_real;
 	WarpZone_DrawEffectTriangle = WarpZone_DrawEffectTriangle_real;
 	WarpZone_TraceBox = WarpZone_TraceBox_real;
 	WarpZone_TraceLine = WarpZone_TraceLine_real;
