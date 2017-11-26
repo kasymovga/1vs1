@@ -593,7 +593,7 @@ void WarpZone_TraceTriangle(vector org, vector org_visual, vector end, float nom
 }
 
 float WarpZone_FindNearestOrigin_length;
-vector WarpZone_FindNearestOrigin(vector from, vector to, float trace_check)
+vector WarpZone_FindNearestOrigin_real(vector from, vector to, float trace_check)
 {
 	entity e;
 	float length_warped;
@@ -704,8 +704,23 @@ vector WarpZone_RefSys_TransformAngles_stub(entity from, entity to, vector ang) 
 
 void WarpZone_RefSys_BeginAddingIncrementally_stub(entity me, entity ref) {}
 
+vector WarpZone_FindNearestOrigin_stub(vector from, vector to, float trace_check) {
+    if(trace_check > 1) {
+        traceline(from, to, MOVE_NOMONSTERS, world);
+        if(vlen(trace_endpos - to) < 1) {
+            WarpZone_FindNearestOrigin_length = vlen(to - from);
+        } else {
+            WarpZone_FindNearestOrigin_length = -1;
+        }
+    } else {
+        WarpZone_FindNearestOrigin_length = vlen(to - from);
+    }
+	return to;
+}
+
 void WarpZone_Init()
 {
+	WarpZone_FindNearestOrigin = WarpZone_FindNearestOrigin_stub;
 	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_stub;
 	WarpZone_RefSys_BeginAddingIncrementally = WarpZone_RefSys_BeginAddingIncrementally_stub;
 	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_stub;
@@ -727,6 +742,7 @@ void WarpZone_Init()
 
 void WarpZone_Enable()
 {
+	WarpZone_FindNearestOrigin = WarpZone_FindNearestOrigin_real;
 	WarpZone_RefSys_TransformAngles = WarpZone_RefSys_TransformAngles_real;
 	WarpZone_RefSys_BeginAddingIncrementally = WarpZone_RefSys_BeginAddingIncrementally_real;
 	WarpZone_RefSys_SpawnSameRefSys = WarpZone_RefSys_SpawnSameRefSys_real;

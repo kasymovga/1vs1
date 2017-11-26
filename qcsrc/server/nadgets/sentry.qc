@@ -93,12 +93,12 @@ entity HG_Sentry_FindTarget(entity emitter) {
         if(HG_Sentry_TargetIsTaken(emitter, p))
             continue;
 
-#if 0
         t = WarpZone_FindNearestOrigin(o, p.origin + p.view_ofs, FALSE);
         dist = WarpZone_FindNearestOrigin_length;
-#endif
+#if 0
 		t = p.origin;
 		dist = vlen(o - t);
+#endif
 
         if(diffteam /* || (!diffteam && medicflag) */) {
             if(dist > mindist)
@@ -106,8 +106,8 @@ entity HG_Sentry_FindTarget(entity emitter) {
         } else if(dist > g_nadgets_sentry_beam_range)
             continue;
 
-        //WarpZone_TraceLine(o, t, MOVE_NORMAL, sentry);
-        traceline(o, t, MOVE_NORMAL, sentry);
+        WarpZone_TraceLine(o, t, MOVE_NORMAL, sentry);
+        //traceline(o, t, MOVE_NORMAL, sentry);
 
         if(trace_ent != p)
             continue;
@@ -130,17 +130,17 @@ void HG_Sentry_Beam_Think(void) {
     vector start = self.owner.origin + self.owner.view_ofs;
     vector end_transformed;
 
-#if 0
     end = WarpZone_FindNearestOrigin(start, end, TRUE);
     WarpZone_TraceLine(start, end, MOVE_NORMAL, self);
 
     targ = trace_ent;
     end_transformed = trace_endpos;
     end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-#endif
+#if 0
     traceline(start, end, MOVE_NORMAL, self);
     targ = trace_ent;
     end_transformed = trace_endpos;
+#endif
 
     if(!self.origin)
         self.origin = end;
@@ -150,7 +150,7 @@ void HG_Sentry_Beam_Think(void) {
     end = self.origin;
 
     if(targ.takedamage == DAMAGE_AIM && time > self.cnt) {
-        Damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, HG_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - /*WarpZone_TransformOrigin(WarpZone_trace_transform, start) */start));
+        Damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, HG_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - WarpZone_TransformOrigin(WarpZone_trace_transform, start)));
         self.cnt = time + 0.1; // FIXME: this is inaccurate
     }
 
@@ -468,8 +468,8 @@ void HG_Sentry_MEODP_Death(entity attacker, entity inflictor) {
 }
 
 void HG_Sentry_Trigger(void) {
-    entity e, aimtarg/*, aimtransform*/;
-    vector o, aimloc/*, aimloc_untransformed*/;
+    entity e, aimtarg, aimtransform;
+    vector o, aimloc, aimloc_untransformed;
 
     makevectors(self.v_angle);
     W_SetupShot(self, FALSE, 0, "", -1);
@@ -480,12 +480,10 @@ void HG_Sentry_Trigger(void) {
     while(trace_ent && trace_ent.classname == "hg_sentry" && !IsDifferentTeam(trace_ent, self))
         tracebox_antilag(self, trace_endpos + w_shotdir, '0 0 0', '0 0 0', trace_endpos + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self, TRUE);
 
-#if 0
-    aimtransform = WarpZone_trace_transform;
-    aimloc_untransformed = WarpZone_UnTransformOrigin(aimtransform, aimloc);
-#endif
     aimloc = trace_endpos;
     aimtarg = trace_ent;
+    aimtransform = WarpZone_trace_transform;
+    aimloc_untransformed = WarpZone_UnTransformOrigin(aimtransform, aimloc);
 
     float c_dmg = g_nadgets_sentry_shock_damage;
     float c_frc = g_nadgets_sentry_shock_force;
@@ -516,7 +514,6 @@ void HG_Sentry_Trigger(void) {
         tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc + normalize(aimloc - o), MOVE_NORMAL, self, ANTILAG_LATENCY(self));
 		entity targ = ((trace_fraction < 1) ? trace_ent : world);
 
-#if 0
         if(!IS_GOOD_HIT) {
             // Aiming through a warpzone, sentry can hit directly
             tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc, MOVE_NORMAL, self, TRUE);
@@ -526,14 +523,12 @@ void HG_Sentry_Trigger(void) {
         while(!IS_GOOD_HIT && wz) {
             // Sentry can hit neither directly nor through the warpzone we aimed through (if any).
             // Let's see if we can hit through another warpzone.
-            //tracebox_antilag(self, o, '0 0 0', '0 0 0', WarpZone_UnTransformOrigin(wz, aimloc), MOVE_NORMAL, self, TRUE);
+            tracebox_antilag(self, o, '0 0 0', '0 0 0', WarpZone_UnTransformOrigin(wz, aimloc), MOVE_NORMAL, self, TRUE);
             wz = wz.warpzone_chain;
         }
-#endif
 
         if(IS_GOOD_HIT) {
-            //vector end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-            vector end_visual = trace_endpos;
+            vector end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
             vector dir = normalize(end_visual - o);
             vector endpos = trace_endpos;
             float noimpact = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT);

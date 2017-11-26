@@ -362,7 +362,7 @@ void W_Zapper_Attack2_Effect_cb(vector from, vector to, vector end) {
 
 void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
 	W_Zapper_Attack2_Effect_team = ateam;
-	W_Zapper_Attack2_Effect_cb(from, to, to);
+	WarpZone_DrawEffectTriangle(from, from, to, W_Zapper_Attack2_Effect_cb);
 }
 
 void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
@@ -440,7 +440,6 @@ void W_Zapper_Attack2(void) {
 
 	W_Zapper_Attack2_Effect_team = self.team;
 	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
-    //W_Zapper_Attack2_Effect(self.team, w_shotorg_visual, end);
 
     if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
         Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);

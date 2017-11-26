@@ -14,28 +14,25 @@ vector Zapper_BeamRGB(float t) {
 }
 
 float zapper_beam_width;
-vector zapper_particles_trace_callback_origin;
 float zapper_particles_trace_callback_beamoffs;
 
 void(vector dir) vectorvectors = #432;
 
 void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
-    vector o = WarpZone_TransformOrigin(WarpZone_trace_transform, zapper_particles_trace_callback_origin);
     vector rgb = Zapper_BeamRGB(self.team);
     string tex = "particles/zapper";
-    float maxlen = vlen(to - o);
     float t = self.cnt + time;
 
     float _alpha = self.alpha;
     rgb *= _alpha;
 
-    Draw_CylindricLine(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin));
+    Draw_CylindricLine(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_FindNearestOrigin((from + to) * 0.5, view_origin, FALSE));
     zapper_particles_trace_callback_beamoffs += 0.03 * vlen(from - to) / zapper_beam_width;
 
 }
 
 void Zapper_Draw(void) {
-    vector start;
+    vector start, real_start;
 	vector end;
 
     float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
@@ -59,18 +56,19 @@ void Zapper_Draw(void) {
 				end = (start + view_forward * (vlen(self.zapper_start - self.zapper_end)));
 			else
 				end = (view_origin + view_forward * (vlen(self.zapper_start - self.zapper_end)));
+
+			real_start = view_origin;
 		} else {
 			end = self.zapper_end;
-			start = self.zapper_start;
+			real_start = start = self.zapper_start;
 		}
     } else {
         end = self.zapper_end;
-		start = self.zapper_start;
+		real_start = start = self.zapper_start;
 	}
 
 
     zapper_particles_trace_callback_beamoffs = -time * 5;
-    zapper_particles_trace_callback_origin = start;
 
     vector dynlight_org = self.zapper_start;
 
@@ -79,7 +77,7 @@ void Zapper_Draw(void) {
         zapper_particles_trace_callback(start - view_forward * zapper_shotorigin_x, start, start);
     }
     //R_AddDynamicLight(dynlight_org, 50 * self.alpha, Zapper_BeamRGB(self.team));
-	WarpZone_DrawEffectTriangle(view_origin, self.zapper_start, end, zapper_particles_trace_callback);
+	WarpZone_DrawEffectTriangle(real_start, self.zapper_start, end, zapper_particles_trace_callback);
 	//zapper_particles_trace_callback(self.zapper_start, end);
 	vector v = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
 	end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
