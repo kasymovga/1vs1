@@ -65,8 +65,7 @@ void HG_Shield_Discharge_Think(void) {
     targ = trace_ent;
     start = w_shotorg;
     end = trace_endpos;
-    //end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-    end_visual = trace_endpos;
+    end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 
     setorigin(self, end);
     RadiusDamage(self, self.owner, damage, damage * g_nadgets_shield_damage_store_edgefactor,
