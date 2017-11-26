@@ -534,7 +534,9 @@ void HG_Sentry_Trigger(void) {
             float noimpact = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT);
             vector force = c_frc * dir;
 
-            Damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
+			if (targ)
+				Damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
+
             sound(e, CHAN_WEAPON, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"), VOL_BASE, ATTN_NORM);
             W_Zapper_Attack2_Effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
 
