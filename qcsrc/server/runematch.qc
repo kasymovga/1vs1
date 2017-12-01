@@ -664,10 +664,57 @@ void healer_spawn(float health_amount, float _delay, entity _owner) {
 	e.nextthink = time + _delay;
 }
 
-void damage_next_frame() {
+void defense_attack_lightning(vector start, vector end, vector to) {
+	te_csqc_lightningarc(start, end);
+}
+
+entity defense_attack_chain;
+
+void defense_attack_think() {
+	traceline(self.owner.origin, self.enemy.origin, MOVE_NOMONSTERS, world);
+	vector v;
+	entity e;
+	if (trace_fraction < 1) {
+		v = WarpZone_FindNearestOrigin(self.owner.origin, self.enemy.origin, 1);
+		if (trace_fraction < 1)
+			goto finish;
+	} else
+		v = self.enemy.origin;
+
 	Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_HURTTRIGGER, self.enemy.origin, '0 0 0');
-	te_lightning2(world, self.owner.origin, self.enemy.origin);
+	WarpZone_DrawEffectTriangle(self.owner.origin, self.owner.origin, v, defense_attack_lightning);
+:finish
+	if (self == defense_attack_chain)
+		defense_attack_chain = self.chain;
+	else
+		for (e = defense_attack_chain; e; e = e.chain)
+			if (e.chain == self) {
+				e.chain = self.chain;
+				break;
+			}
 	remove(self);
+}
+
+void defense_attack_spawn(entity from, entity to, float d) {
+	entity e;
+	for (e = defense_attack_chain; e; e = e.chain)
+		if (e.owner == from)
+		if (e.enemy == to)
+			break;
+
+	if (e) {
+		e.dmg = e.dmg + d;
+		return;
+	}
+	e = spawn();
+	e.classname = "defense_attack";
+	e.owner = from;
+	e.enemy = to;
+	e.dmg = d;
+	e.think = defense_attack_think;
+	e.nextthink = time;
+	e.chain = defense_attack_chain;
+	defense_attack_chain = e;
 }
 
 var void(entity targ, entity attacker, float damage, vector force) runematch_DamageForceDone_NextLink;
@@ -690,26 +737,13 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 					Fire_AddDamage(targ, world, d, 5, DEATH_FIRE);
 
 				if (PLAYER_REALLY_ALIVE(targ)) {
-					entity e;
 					if (targ.runes & RUNE_DEFENSE)
-					if ((d = damage * g_balance_rune_defense_damage_factor) >= 1) {
-						e = spawn();
-						e.owner = targ;
-						e.enemy = attacker;
-						e.dmg = d;
-						e.think = damage_next_frame;
-						e.nextthink = time;
-					}
+					if ((d = damage * g_balance_rune_defense_damage_factor) >= 1)
+						defense_attack_spawn(targ, attacker, d);
+
 					if (attacker.runes & CURSE_VULNER)
-					if ((d = damage * g_balance_curse_vulner_damage_factor) >= 1) {
-						e = spawn();
-						e.origin = targ.origin;
-						e.owner = e;
-						e.enemy = attacker;
-						e.dmg = d;
-						e.think = damage_next_frame;
-						e.nextthink = time;
-					}
+					if ((d = damage * g_balance_curse_vulner_damage_factor) >= 1)
+						defense_attack_spawn(targ, attacker, d);
 				}
 			}
 			if (PLAYER_REALLY_ALIVE(targ))
