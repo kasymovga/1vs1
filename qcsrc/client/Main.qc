@@ -1328,14 +1328,6 @@ float CSQC_Parse_TempEntity()
 		// NOTE: Could just do return instead of break...
 	switch(nTEID)
 	{
-		case TE_CSQC_PICTURE:
-			Net_MapVote_Picture();
-			bHandled = true;
-			break;
-		case TE_CSQC_RACE:
-			Net_ReadRace();
-			bHandled = true;
-			break;
 		case 13: // TE_BEAM
 			Net_GrapplingHook();
 			bHandled = true;
@@ -1360,20 +1352,31 @@ float CSQC_Parse_TempEntity()
             Zapper_ReadLightning();
             bHandled = true;
             break;
-        case TE_CSQC_NADGETSELECT:
-			Net_ReadNadgetSelect();
-            bHandled = true;
-            break;
 		case TE_CSQC_BLAST:
 			Net_ReadBlast();
+			bHandled = true;
+			break;
+		case TE_CSQC_WEAPONLIST:
+			weapontime = time;
 			bHandled = true;
 			break;
 		case TE_CSQC_RADIO:
 			Net_ReadRadio();
 			bHandled = true;
 			break;
-		case TE_CSQC_WEAPONLIST:
-			weapontime = time;
+        case TE_CSQC_NADGETSELECT:
+			Net_ReadNadgetSelect();
+            bHandled = true;
+            break;
+		case TE_CSQC_WEAPONSELECT:
+			Net_ReadWeaponSelect();
+			break;
+		case TE_CSQC_PICTURE:
+			Net_MapVote_Picture();
+			bHandled = true;
+			break;
+		case TE_CSQC_RACE:
+			Net_ReadRace();
 			bHandled = true;
 			break;
 		default:

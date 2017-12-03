@@ -36,6 +36,7 @@ dlc.qh
 ../client-server/nadgets.qh
 ../common/ui.qh
 gamestatus.qh
+weaponselect.qh
 
 main.qh
 ../common/miscfunctions.qh
@@ -107,3 +108,4 @@ gamestatus.qc
 ../client-server/warpzonelib/anglestransform.qc
 ../client-server/warpzonelib/common.qc
 warpzonelib/client.qc
+weaponselect.qc
