@@ -137,6 +137,13 @@ void(entity plr) HG_SpectateCopy {
 	HG_SpectateCopy_NextLink(plr);
 }
 
+var float() HG_ThrowWeaponHandle_NextLink;
+float HG_ThrowWeaponHandle() {
+	HG_ThrowWeaponHandle_NextLink();
+	HG_Trigger();
+	return TRUE;
+}
+
 void HG_Init(void) {
     CACHE_CVAR(g_nadgets);
 	if not(g_nadgets)
@@ -222,6 +229,8 @@ void HG_Init(void) {
     GameHookChain_ObserverSpawn = HG_ObserverSpawn;
 	HG_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = HG_PlayerPreThink;
+	HG_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
+	GameHookChain_ThrowWeaponHandle = HG_ThrowWeaponHandle;
 
     Napalm_Init();
 }

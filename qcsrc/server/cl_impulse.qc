@@ -116,9 +116,7 @@ void ImpulseCommands (void)
 					if (vehicle_extract_player(self, FALSE))
 						break;
 
-					if (g_nadgets)
-						HG_Trigger();
-					else
+					if not(GameHookChain_ThrowWeaponHandle())
 						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 
 					break;

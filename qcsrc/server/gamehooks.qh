@@ -105,3 +105,4 @@ var void() GameHookChain_ItemRespawnCountDown {}
 var float() GameHookChain_ArmorBlockPercentMod { return 1; }
 var float(entity plr, entity targ) GameHookChain_PlayerCanSeeHealthFor { return FALSE; }
 var float(entity plr, entity targ) GameHookChain_PlayerVisibleThroughWallFor { return FALSE; }
+var float() GameHookChain_ThrowWeaponHandle { return FALSE; }
