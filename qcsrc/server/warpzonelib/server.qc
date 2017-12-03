@@ -4,8 +4,6 @@
 .entity warpzone_teleport_zone;
 void WarpZone_FirstFrame();
 
-float sv_nowarpzones;
-
 float               trace_allsolid_saved;
 float               trace_startsolid_saved;
 float               trace_fraction_saved;
@@ -76,7 +74,9 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
 	player.v_angle = to_angles;
+#ifdef WARPZONE_USE_FIXANGLE
 	player.fixangle = TRUE;
+#endif
 	player.velocity = to_velocity;
 
 	if(player.effects & EF_TELEPORT_BIT)
@@ -566,20 +566,8 @@ entity warpzone_position_first;
 entity warpzone_camera_first;
 .entity warpzone_next;
 
-float warpzone_maybe_remove(void) {
-    if(sv_nowarpzones) {
-        remove(self);
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
 void spawnfunc_misc_warpzone_position(void)
 {
-    if(warpzone_maybe_remove())
-        return;
-
 	// "target", "angles", "origin"
 	self.warpzone_next = warpzone_position_first;
 	warpzone_position_first = self;
@@ -590,9 +578,6 @@ void spawnfunc_trigger_warpzone_position(void)
 }
 void spawnfunc_trigger_warpzone(void)
 {
-    if(warpzone_maybe_remove())
-        return;
-
 	// warp zone entities must have:
 	// "killtarget" pointing to a target_position with a direction arrow
 	//              that points AWAY from the warp zone, and that is inside
@@ -642,9 +627,6 @@ vector WarpZone_Camera_camera_transform(vector org, vector ang)
 
 void spawnfunc_func_camera(void)
 {
-    if(warpzone_maybe_remove())
-        return;
-
 	if(!self.scale)
 		self.scale = self.modelscale;
 	if(!self.scale)
@@ -740,7 +722,7 @@ void WarpZone_TraceToss_ThroughZone_real(entity e, entity forent, float toss_fra
 		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
 	}
 	WarpZone_MakeAllSolid();
-	g = cvar("sv_gravity") * e.gravity;
+	g = sv_gravity * e.gravity;
 	WarpZone_tracetoss_time = 0;
 	for(;;)
 	{
