@@ -402,7 +402,7 @@ void FireGrapplingHook (void)
 
 void GrapplingHookFrame()
 {
-	float button_hook = BUTTON_HOOK_PRESSED;
+	float button_hook = self.BUTTON_HOOK;
 	if(g_grappling_hook && timeoutStatus != 2 && self.weapon != WEP_HOOK)
 	{
 		// offhand hook controls

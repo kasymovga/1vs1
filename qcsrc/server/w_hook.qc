@@ -125,7 +125,7 @@ float w_hook(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		float button_hook = BUTTON_HOOK_PRESSED;
+		float button_hook = self.BUTTON_HOOK;
 		if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
 		{
 			if(!self.hook)

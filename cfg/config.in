@@ -1224,3 +1224,5 @@ set _g_clanarena 0
 set _g_survive 0
 
 set sv_projectile_rocket_size "3 -3 3"
+
+set g_buttons_hookuse_swap 0

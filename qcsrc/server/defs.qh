@@ -7,16 +7,16 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 #define BUTTON_ATCK2  button3
 #define BUTTON_ZOOM   button4
 #define BUTTON_CROUCH button5
-#define BUTTON_HOOK   button6
+var .float BUTTON_HOOK = button6;
 #define BUTTON_INFO   button7
 #define BUTTON_CHAT   buttonchat
-#define BUTTON_USE    buttonuse
+var .float BUTTON_USE = buttonuse
 #define BUTTON_DRAG   button8
 
 // Globals
 
 float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_runematch, g_conquest, g_race, g_nexball, g_cts, g_clanarena, g_campaign, g_survive;
-float g_footsteps, g_grappling_hook, g_pinata, g_norecoil, g_nadgets;
+float g_footsteps, g_grappling_hook, g_pinata, g_norecoil;
 float g_pinata_drop_all;
 float g_warmup_limit;
 float g_warmup_allguns;
@@ -592,9 +592,6 @@ enum {
 };
 
 .float keys;
-
-#define BUTTON_NADGET  BUTTON_HOOK
-#define BUTTON_NADGET2 button9
 
 .float lastdamage;
 

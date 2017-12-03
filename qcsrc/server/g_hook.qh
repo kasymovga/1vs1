@@ -14,5 +14,3 @@ float HOOK_WAITING_FOR_RELEASE = 16;
 .float hook_state;
 
 void GrappleHookInit();
-
-#define BUTTON_HOOK_PRESSED (g_nadgets ? self.BUTTON_USE : self.BUTTON_HOOK)

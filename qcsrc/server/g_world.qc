@@ -532,7 +532,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
-	CACHE_CVAR(g_nadgets);
 
 	inWarmupStage = cvar("g_warmup");
 	CACHE_CVAR(g_warmup_limit);
@@ -579,6 +578,10 @@ void readlevelcvars(void)
 	DamageIndicator_Init();
 	monsters_init();
 	WarpZone_Init();
+	if (cvar("g_buttons_hookuse_swap")) {
+		BUTTON_HOOK = buttonuse;
+		BUTTON_USE = button6;
+	}
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

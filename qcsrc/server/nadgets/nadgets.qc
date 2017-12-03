@@ -40,7 +40,6 @@ float HG_PlayerCanFire(entity plr, float wep) {
 
 var void(entity menu) HG_GameMenuAddItems_NextLink;
 void HG_GameMenuAddItems(entity menu) {
-	if (g_nadgets)
 	if (self.team > 0 || self.classname == "player")
 		Menu_Add_Item(menu, "Switch Nadget|cmd picknade");
 
@@ -145,8 +144,7 @@ float HG_ThrowWeaponHandle() {
 }
 
 void HG_Init(void) {
-    CACHE_CVAR(g_nadgets);
-	if not(g_nadgets)
+	if not(cvar("g_nadgets"))
 		return;
 
 	dlc_require("rm_effects_v2");
@@ -298,7 +296,7 @@ void HG_SetContext(float isalt) {
 }
 
 void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float allowOptout) {
-    if(!g_nadgets || (allowOptout && p.hg_optout))
+    if((allowOptout && p.hg_optout))
         return;
 
     amount *= GRENVAR(hgtype, "bonus_amount_multiplier") /* * Buffs_NadgetBonusMultiplier(p) */;
@@ -336,7 +334,7 @@ void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float all
 }
 
 void HG_GiveRandomBonus(entity p, float amount, string reason, float allowOptout) {
-    if(!g_nadgets || (allowOptout && p.hg_optout))
+    if((allowOptout && p.hg_optout))
         return;
 
     RandomSelection_Init();
@@ -375,10 +373,6 @@ float HG_PlayerMayDetonate(entity p) {
 
 void HG_RemoveAll(entity plr) {
     entity n;
-
-    if(!g_nadgets)
-        return;
-
 	string c;
     for (n = nextent(world); n; n = nextent(n)) {
 		c = n.classname;
@@ -649,7 +643,7 @@ void HG_PlayerPreThink(void) {
 		mayfire = FALSE;
 
 	float held, isalt;
-	held = self.(g_nadgets_detonatelaunches ? hg_detonatepressed : BUTTON_NADGET);
+	held = self.(g_nadgets_detonatelaunches ? hg_detonatepressed : BUTTON_USE);
 
     float n_type;
 
@@ -883,9 +877,6 @@ void spawnfunc_target_bonusnadgets(void) {
 
 void HG_Pick(float tokens) {
 	if not(self.flags & FL_CLIENT)
-		return;
-
-	if(!g_nadgets)
 		return;
 
 	if(tokens < 2) {
