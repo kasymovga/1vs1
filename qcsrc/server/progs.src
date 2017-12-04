@@ -121,6 +121,7 @@ warpzonelib/server.qh
 warpzonelib/util_server.qh
 ../common/util.qc
 selectableweapon.qh
+twoweapons.qh
 
 scores_rules.qc
 
@@ -307,3 +308,4 @@ damageindicator.qc
 warpzonelib/server.qc
 warpzonelib/util_server.qc
 selectableweapon.qc
+twoweapons.qc

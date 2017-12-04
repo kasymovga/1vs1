@@ -579,6 +579,7 @@ void readlevelcvars(void)
 	monsters_init();
 	WarpZone_Init();
 	SelectableWeapon_Init();
+	TwoWeapons_Init();
 	if (cvar("g_buttons_hookuse_swap")) {
 		BUTTON_HOOK = buttonuse;
 		BUTTON_USE = button6;
