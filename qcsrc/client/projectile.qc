@@ -358,7 +358,7 @@ void Ent_Projectile(float ignore)
 	if(f & 2)
 	{
 		self.cnt = ReadByte();
-		ProjInfo_AssertRegistered(self.cnt);
+		//ProjInfo_AssertRegistered(self.cnt);
 
 		if (f & 16) {
 			self.team = ReadChar();
