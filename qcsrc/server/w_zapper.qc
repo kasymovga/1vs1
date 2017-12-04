@@ -33,6 +33,8 @@ float g_balance_zapper_secondary_shield_lifetime;
 float g_balance_zapper_secondary_shield_refire;
 float g_balance_zapper_secondary_range;
 float g_balance_zapper_secondary_refire;
+var .float zapper_buttonatck1 = BUTTON_ATCK;
+var .float zapper_buttonatck2 = BUTTON_ATCK2;
 
 .entity zapper_shield;
 .entity zapper_accumulator;
@@ -632,8 +634,8 @@ void W_Zapper_Accumulate(void) {
     float accumulate_end = 1;
     if (PlayerCanFire(self, TRUE) && self.weapon == WEP_ZAPPER) {
         if (self.zapper_accumulator.zapper_expire < time &&
-               (!self.BUTTON_ATCK2
-               || self.BUTTON_ATCK
+               (!self.zapper_buttonatck2
+               || self.zapper_buttonatck1
                || time > self.zapper_accumulator.zapper_accumulate)) {
             W_Zapper_Attack2();
             weapon_thinkf(WFRAME_FIRE2, g_balance_zapper_animtime, w_ready);
@@ -653,15 +655,15 @@ float w_zapper(float req) {
 
     if (req == WR_AIM) {
         if(vlen(self.origin-self.enemy.origin) < g_balance_zapper_primary_range)
-            self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+            self.zapper_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
         else
-            self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+            self.zapper_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
     } else if(req == WR_THINK) {
         W_Zapper_SpawnSpinner();
 		W_Zapper_Cooloff();
 
-        if(self.BUTTON_ATCK) {
-            if (self.BUTTON_ATCK2 && g_balance_zapper_secondary_shield == 2) {
+        if(self.zapper_buttonatck1) {
+            if (self.zapper_buttonatck2 && g_balance_zapper_secondary_shield == 2) {
                 if(weapon_prepareattack(1, -1)) {
                     if(self.zapper_heat >= 1 && g_balance_zapper_secondary_shield_heatup) {
                         //W_SwitchWeapon_OutOfAmmo(self);
@@ -694,7 +696,7 @@ float w_zapper(float req) {
                         weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, w_ready);
                 }
             }
-        } else if(self.BUTTON_ATCK2 && g_balance_zapper_secondary) {
+        } else if(self.zapper_buttonatck2 && g_balance_zapper_secondary) {
             if(g_balance_zapper_secondary_shield == 1) {
                 if(weapon_prepareattack(1, -1)) {
                     if(self.zapper_heat >= 1 && g_balance_zapper_secondary_shield_heatup) {
@@ -794,6 +796,10 @@ float w_zapper(float req) {
 		CACHE_CVAR(g_balance_zapper_secondary_shield_refire);
 		CACHE_CVAR(g_balance_zapper_secondary_range);
 		CACHE_CVAR(g_balance_zapper_secondary_refire);
+		if (cvar("g_balance_zapper_swap_buttons")) {
+			zapper_buttonatck1 = BUTTON_ATCK2;
+			zapper_buttonatck2 = BUTTON_ATCK;
+		}
 	}
     return TRUE;
 }

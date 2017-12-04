@@ -534,6 +534,7 @@ set g_balance_zapper_secondary_shield_lifetime 0
 set g_balance_zapper_secondary_shield_refire 1
 set g_balance_zapper_secondary_range 2000
 set g_balance_zapper_secondary_refire 1
+set g_balance_zapper_swap_buttons 0
 set g_start_weapon_zapper 0
 
 ///// BEGIN Handgrenades mutator /////
