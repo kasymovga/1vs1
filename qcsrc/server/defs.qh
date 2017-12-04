@@ -10,7 +10,7 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 var .float BUTTON_HOOK = button6;
 #define BUTTON_INFO   button7
 #define BUTTON_CHAT   buttonchat
-var .float BUTTON_USE = buttonuse
+var .float BUTTON_USE = buttonuse;
 #define BUTTON_DRAG   button8
 
 // Globals
