@@ -9,7 +9,9 @@ extensions.qh
 post-builtins.qh
 constants.qh
 ../common/constants.qh
+../client-server/constants.qh
 ../common/util.qh
+../client-server/util.qh
 ../common/items.qh
 location_request.qh
 
@@ -107,6 +109,7 @@ hat.qh
 dodging.qh
 miscfunctions.qh
 ../common/miscfunctions.qh
+../client-server/miscfunctions.qh
 ../menu-server/miscfunctions.qh
 gamehooks.qh
 ../client-server/nadgets.qh
@@ -120,6 +123,7 @@ monsters/monsters.qh
 warpzonelib/server.qh
 warpzonelib/util_server.qh
 ../common/util.qc
+../client-server/util.qc
 selectableweapon.qh
 twoweapons.qh
 
@@ -127,6 +131,7 @@ scores_rules.qc
 
 miscfunctions.qc
 ../common/miscfunctions.qc
+../client-server/miscfunctions.qc
 ../menu-server/miscfunctions.qc
 
 waypointsprites.qc

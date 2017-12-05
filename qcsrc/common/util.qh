@@ -69,8 +69,6 @@ string mmssss(float t);
 #define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
-string ScoreString(float vflags, float value);
-
 vector cross(vector a, vector b);
 
 void compressShortVector_init();
