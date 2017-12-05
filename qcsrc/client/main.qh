@@ -87,7 +87,6 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float ready;
 
 .void(void) draw;
-.void(void) draw2d_pre;
 .void(void) draw2d;
 var void(void) draw2d_null;
 float drawframetime;

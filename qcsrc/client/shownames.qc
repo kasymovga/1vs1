@@ -28,7 +28,9 @@ float E_ORIGIN      = 1; // vector
 
 float Shownames_PreDrawPlayer_Disabled() { return FALSE; }
 
-float Shownames_PreDrawPlayer() {
+var float() Shownames_PreDrawPlayer;
+
+float Shownames_PreDrawPlayer_Enabled() {
 	float plr_entnum = self.sv_entnum + 1;
 	if(getentity(plr_entnum, E_ACTIVE)) {
 		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
@@ -60,6 +62,9 @@ float Shownames_PreDrawPlayer() {
 }
 
 void Shownames_DrawPlayer() {
+	if not(Shownames_PreDrawPlayer())
+		return;
+
     float oldfont = drawfont;
     float dist = vlen(self.iorigin - view_origin);
     float a = SHOWNAMES_ALPHA;
@@ -169,7 +174,7 @@ void Shownames_UpdateTeamBubble(entity plr, float show) {
 void Shownames_Init(entity plr) {
     plr.draw2d = Shownames_DrawPlayer;
 	if (ext_DP_CSQC_QUERYRENDERENTITY)
-		plr.draw2d_pre = Shownames_PreDrawPlayer;
+		Shownames_PreDrawPlayer = Shownames_PreDrawPlayer_Enabled;
 	else
-		plr.draw2d_pre = Shownames_PreDrawPlayer_Disabled;
+		Shownames_PreDrawPlayer = Shownames_PreDrawPlayer_Disabled;
 }

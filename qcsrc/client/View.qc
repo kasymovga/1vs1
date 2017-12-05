@@ -328,10 +328,7 @@ void CSQC_UpdateView(float w, float h)
 		if not(self.draw2d)
 			continue;
 
-		if not(self.draw2d_pre)
-			self.draw2d();
-		else if (self.draw2d_pre())
-			self.draw2d();
+		self.draw2d();
 	}
 
 	self = e;
