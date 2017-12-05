@@ -26,6 +26,8 @@ float g_balance_uzi_sustained_gravityfactor;
 float g_balance_uzi_sustained_refire;
 float g_balance_uzi_sustained_spread;
 
+var .float uzi_buttonatck1 = BUTTON_ATCK;
+var .float uzi_buttonatck2 = BUTTON_ATCK2;
 .float uzi_bulletcounter;
 void W_Uzi_Attack (float deathtype)
 {
@@ -80,7 +82,7 @@ void uzi_fire1_02()
 		w_ready();
 		return;
 	}
-	if (self.BUTTON_ATCK)
+	if (self.uzi_buttonatck1)
 	{
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1))
@@ -101,21 +103,21 @@ float w_uzi(float req)
 {
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200 || !g_balance_uzi_first)
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			self.uzi_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 		{
-			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+			self.uzi_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
 		}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.uzi_buttonatck1)
 		if (weapon_prepareattack(0, 0))
 		{
 			self.uzi_bulletcounter = 1;
 			W_Uzi_Attack(WEP_UZI); // sets attack_finished
 			weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, uzi_fire1_02);
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.uzi_buttonatck2)
 		if (g_balance_uzi_first)
 		if (weapon_prepareattack(1, 0))
 		{
@@ -161,6 +163,10 @@ float w_uzi(float req)
 		CACHE_CVAR(g_balance_uzi_sustained_gravityfactor);
 		CACHE_CVAR(g_balance_uzi_sustained_refire);
 		CACHE_CVAR(g_balance_uzi_sustained_spread);
+		if (cvar("g_balance_uzi_swap_buttons")) {
+			uzi_buttonatck1 = BUTTON_ATCK2;
+			uzi_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };
