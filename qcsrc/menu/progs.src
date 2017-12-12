@@ -9,7 +9,7 @@ mbuiltin.qh
 ../menu-server/miscfunctions.qh
 ../common/ui.qh
 
-oo/base.h
+../client-menu/oo/base.h
 
 ../common/constants.qh
 ../common/mapinfo.qh
@@ -24,12 +24,12 @@ draw.qh
 skin.qh
 nexuiz/util.qh
 
-oo/classdefs.h
+../client-menu/oo/classdefs.h
 	classes.c
 
-oo/constructors.h
+../client-menu/oo/constructors.h
 	classes.c
-oo/implementation.h
+../client-menu/oo/implementation.h
 	classes.c
 
 ../common/util.qc
