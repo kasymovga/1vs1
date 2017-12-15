@@ -15,7 +15,7 @@ float sbar_border_thickness;
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
 
-vector color;
+vector _color;
 float SCOREBOARD_OFFSET = 50;
 
 void CSQC_kh_hudreset();
@@ -68,7 +68,7 @@ void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 		idx = imp - 1;
 
 	value = (active) ? 2 : 0.75;
-	color_x = color_y = color_z = value;
+	_color_x = _color_y = _color_z = value;
 
 	// width = 300, height = 100
 	const float w_width = 48, w_height = 24, w_space = 2, font_size = 12;
@@ -86,7 +86,7 @@ void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 	vsize_z = 0;
 	if (active)
 		drawpic(pos, "gfx/hud/sb_ammobg", vsize, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr)), vsize, color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr)), vsize, _color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 	pos_x += w_space;
 	//pos_y += w_space;
 	vsize_x = font_size;
@@ -191,36 +191,36 @@ void Sbar_DrawXNum (vector pos, float num, float digits, float showminusplus, fl
 void Sbar_DrawXNum_Colored (vector pos, float x, float lettersize, float alpha)
 {
 	if(x > 200) {
-		color_x = 0;
-		color_y = 1;
-		color_z = 0;
+		_color_x = 0;
+		_color_y = 1;
+		_color_z = 0;
 	}
 	else if(x > 150) {
-		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color_y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
-		color_z = 0;
+		_color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
+		_color_y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
+		_color_z = 0;
 	}
 	else if(x > 100) {
-		color_x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color_y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color_z = 1 - (x-100)*0.02; // blue value between 1 -> 0
+		_color_x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
+		_color_y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
+		_color_z = 1 - (x-100)*0.02; // blue value between 1 -> 0
 	}
 	else if(x > 50) {
-		color_x = 1;
-		color_y = 1;
-		color_z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+		_color_x = 1;
+		_color_y = 1;
+		_color_z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
 	}
 	else if(x > 20) {
-		color_x = 1;
-		color_y = (x-20)*90/27/100; // green value between 0 -> 1
-		color_z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+		_color_x = 1;
+		_color_y = (x-20)*90/27/100; // green value between 0 -> 1
+		_color_z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
 	}
 	else {
-		color_x = 1;
-		color_y = 0;
-		color_z = 0;
+		_color_x = 1;
+		_color_y = 0;
+		_color_z = 0;
 	}
-	Sbar_DrawXNum(pos, x, 3, 0, lettersize, color, 0, 0, alpha, DRAWFLAG_NORMAL);
+	Sbar_DrawXNum(pos, x, 3, 0, lettersize, _color, 0, 0, alpha, DRAWFLAG_NORMAL);
 }
 
 void Cmd_Sbar_SetFields(float argc);
@@ -1568,11 +1568,11 @@ void Sbar_Timer()
 		if (teamplay)
 			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', GetTeamRGB(myteam) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // timer bg color = myteam color
 		else {
-			color_x = CVAR(sbar_color_bg_r);
-			color_y = CVAR(sbar_color_bg_g);
-			color_z = CVAR(sbar_color_bg_b);
+			_color_x = CVAR(sbar_color_bg_r);
+			_color_y = CVAR(sbar_color_bg_g);
+			_color_z = CVAR(sbar_color_bg_b);
 
-			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', color, sbar_alpha_bg, DRAWFLAG_NORMAL);
+			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', _color, sbar_alpha_bg, DRAWFLAG_NORMAL);
 		}
 	}
 
@@ -2225,11 +2225,11 @@ void Sbar_DrawAmmo(vector pos, float a, float active, string image) {
 
 	drawpic(pos + '56 3 0', image, '18 18 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 	if (a < 10)
-		color = '1 0 0';
+		_color = '1 0 0';
 	else
-		color = '1 1 1';
+		_color = '1 1 1';
 
-	Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, color, 0, 0, sbar_alpha_fg * alpha, DRAWFLAG_NORMAL);
+	Sbar_DrawXNum(pos + '6 4.5 0', a, 3, 0, 16, _color, 0, 0, sbar_alpha_fg * alpha, DRAWFLAG_NORMAL);
 }
 
 void Sbar_Draw (void)
@@ -2473,11 +2473,11 @@ void Sbar_Draw (void)
 				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, GetTeamRGB(myteam) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // hud color = myteam color
 			else {
 				// allow for custom HUD colors in non-teamgames
-				color_x = CVAR(sbar_color_bg_r);
-				color_y = CVAR(sbar_color_bg_g);
-				color_z = CVAR(sbar_color_bg_b);
+				_color_x = CVAR(sbar_color_bg_r);
+				_color_y = CVAR(sbar_color_bg_g);
+				_color_z = CVAR(sbar_color_bg_b);
 
-				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, color, sbar_alpha_bg, DRAWFLAG_NORMAL);
+				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, _color, sbar_alpha_bg, DRAWFLAG_NORMAL);
 			}
 		}
 

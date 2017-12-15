@@ -1,3 +1,11 @@
+const float S_SHIFT = 1;
+const float S_CTRL = 2;
+const float S_ALT = 4;
+
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
+
 vector draw_shift;
 vector draw_scale;
 float draw_alpha;

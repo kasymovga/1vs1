@@ -20,8 +20,9 @@ mbuiltin.qh
 
 gamecommand.qh
 menu.qh
-draw.qh
-skin.qh
+../client-menu/draw.qh
+../client-menu/skin.qh
+../client-menu/nexuiz/util.qh
 nexuiz/util.qh
 
 ../client-menu/oo/classdefs.h
@@ -36,7 +37,8 @@ nexuiz/util.qh
 ../common/gamecommand.qc
 gamecommand.qc
 menu.qc
-draw.qc
+../client-menu/draw.qc
+../client-menu/nexuiz/util.qc
 nexuiz/util.qc
 
 ../common/miscfunctions.qc
