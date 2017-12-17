@@ -57,19 +57,19 @@ void hideNotifyContainer(entity me)
 			e.hideNotify(e);
 }
 
-void setAlphaOfContainer(entity me, entity other, float theAlpha)
+void setAlphaOfContainer(entity me, entity _other, float theAlpha)
 {
 	if(theAlpha <= 0)
 	{
-		if(other.Container_alpha > 0)
-			other.hideNotify(other);
+		if(_other.Container_alpha > 0)
+			_other.hideNotify(_other);
 	}
 	else // value > 0
 	{
-		if(other.Container_alpha <= 0)
-			other.showNotify(other);
+		if(_other.Container_alpha <= 0)
+			_other.showNotify(_other);
 	}
-	other.Container_alpha = theAlpha;
+	_other.Container_alpha = theAlpha;
 }
 
 void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize, .vector originField, .vector sizeField)
@@ -178,6 +178,7 @@ float mouseMoveContainer(entity me, vector pos)
 	f = me.focusedChild;
 	if(f)
 		return f.mouseMove(f, globalToBox(pos, f.Container_origin, f.Container_size));
+
 	return 0;
 }
 float mousePressContainer(entity me, vector pos)
@@ -205,17 +206,17 @@ float mouseReleaseContainer(entity me, vector pos)
 	return 0;
 }
 
-void addItemCenteredContainer(entity me, entity other, vector theSize, float theAlpha)
+void addItemCenteredContainer(entity me, entity _other, vector theSize, float theAlpha)
 {
-	me.addItem(me, other, '0.5 0.5 0' - 0.5 * theSize, theSize, theAlpha);
+	me.addItem(me, _other, '0.5 0.5 0' - 0.5 * theSize, theSize, theAlpha);
 }
 
-void addItemContainer(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
+void addItemContainer(entity me, entity _other, vector theOrigin, vector theSize, float theAlpha)
 {
-	if(other.parent)
+	if(_other.parent)
 		error("Can't add already added item!");
 
-	if(other.focusable)
+	if(_other.focusable)
 		me.focusable += 1;
 
 	if(theSize_x > 1)
@@ -231,42 +232,42 @@ void addItemContainer(entity me, entity other, vector theOrigin, vector theSize,
 	theOrigin_x = bound(0, theOrigin_x, 1 - theSize_x);
 	theOrigin_y = bound(0, theOrigin_y, 1 - theSize_y);
 
-	other.parent = me;
-	other.Container_origin = theOrigin;
-	other.Container_size = theSize;
-	me.setAlphaOf(me, other, theAlpha);
+	_other.parent = me;
+	_other.Container_origin = theOrigin;
+	_other.Container_size = theSize;
+	me.setAlphaOf(me, _other, theAlpha);
 
 	entity f, l;
 	f = me.firstChild;
 	l = me.lastChild;
 
 	if(l)
-		l.nextSibling = other;
+		l.nextSibling = _other;
 	else
-		me.firstChild = other;
+		me.firstChild = _other;
 
-	other.prevSibling = l;
-	other.nextSibling = NULL;
-	me.lastChild = other;
+	_other.prevSibling = l;
+	_other.nextSibling = NULL;
+	me.lastChild = _other;
 
 	draw_NeedResizeNotify = 1;
 }
 
-void removeItemContainer(entity me, entity other)
+void removeItemContainer(entity me, entity _other)
 {
-	if(other.parent != me)
+	if(_other.parent != me)
 		error("Can't remove from wrong container!");
 
-	if(other.focusable)
+	if(_other.focusable)
 		me.focusable -= 1;
 
-	other.parent = NULL;
+	_other.parent = NULL;
 
 	entity n, p, f, l;
 	f = me.firstChild;
 	l = me.lastChild;
-	n = other.nextSibling;
-	p = other.prevSibling;
+	n = _other.nextSibling;
+	p = _other.prevSibling;
 
 	if(p)
 		p.nextSibling = n;
@@ -279,39 +280,39 @@ void removeItemContainer(entity me, entity other)
 		me.lastChild = p;
 }
 
-void setFocusContainer(entity me, entity other)
+void setFocusContainer(entity me, entity _other)
 {
-	if(other)
+	if(_other)
 		if not(me.focused)
 			error("Trying to set focus in a non-focused control!");
-	if(me.focusedChild == other)
+	if(me.focusedChild == _other)
 		return;
-	//print(etos(me), ": focus changes from ", etos(me.focusedChild), " to ", etos(other), "\n");
+	//print(etos(me), ": focus changes from ", etos(me.focusedChild), " to ", etos(_other), "\n");
 	if(me.focusedChild)
 	{
 		me.focusedChild.focused = 0;
 		me.focusedChild.focusLeave(me.focusedChild);
 	}
-	if(other)
+	if(_other)
 	{
-		other.focused = 1;
-		other.focusEnter(other);
+		_other.focused = 1;
+		_other.focusEnter(_other);
 	}
-	me.focusedChild = other;
+	me.focusedChild = _other;
 }
 
-void moveItemAfterContainer(entity me, entity other, entity dest)
+void moveItemAfterContainer(entity me, entity _other, entity dest)
 {
-	// first: remove other from the chain
+	// first: remove _other from the chain
 	entity n, p, f, l;
 
-	if(other.parent != me)
+	if(_other.parent != me)
 		error("Can't move in wrong container!");
 
 	f = me.firstChild;
 	l = me.lastChild;
-	n = other.nextSibling;
-	p = other.prevSibling;
+	n = _other.nextSibling;
+	p = _other.prevSibling;
 
 	if(p)
 		p.nextSibling = n;
@@ -323,22 +324,22 @@ void moveItemAfterContainer(entity me, entity other, entity dest)
 	else
 		me.lastChild = p;
 	
-	// now other got removed. Insert it behind dest now.
-	other.prevSibling = dest;
+	// now _other got removed. Insert it behind dest now.
+	_other.prevSibling = dest;
 	if(dest)
-		other.nextSibling = dest.nextSibling;
+		_other.nextSibling = dest.nextSibling;
 	else
-		other.nextSibling = me.firstChild;
+		_other.nextSibling = me.firstChild;
 
 	if(dest)
-		dest.nextSibling = other;
+		dest.nextSibling = _other;
 	else
-		me.firstChild = other;
+		me.firstChild = _other;
 
-	if(other.nextSibling)
-		other.nextSibling.prevSibling = other;
+	if(_other.nextSibling)
+		_other.nextSibling.prevSibling = _other;
 	else
-		me.lastChild = other;
+		me.lastChild = _other;
 }
 
 entity preferredFocusedGrandChildContainer(entity me)

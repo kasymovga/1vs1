@@ -1,0 +1,8 @@
+void GUI_Show(float window);
+void GUI_Hide();
+
+enum {
+	GUI_TEAMSELECT,
+	GUI_GAMEMENU,
+	GUI_GAMESETTINGS,
+};

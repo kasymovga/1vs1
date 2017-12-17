@@ -9,6 +9,7 @@ mbuiltin.qh
 ../menu-server/miscfunctions.qh
 ../common/ui.qh
 
+../client-menu/util.qh
 ../client-menu/oo/base.h
 
 ../common/constants.qh
@@ -25,6 +26,7 @@ menu.qh
 ../client-menu/nexuiz/util.qh
 nexuiz/util.qh
 
+../client-menu/skin.qc
 ../client-menu/oo/classdefs.h
 	classes.c
 
@@ -50,3 +52,5 @@ nexuiz/util.qc
 ../common/curl.qc
 ../common/dlc.qc
 ../common/ui.qc
+
+../client-menu/util.qc

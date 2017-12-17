@@ -1,0 +1,3 @@
+void m_activate_window(entity wnd);
+void m_setpointerfocus(entity wnd);
+void m_focus_item_chain(entity outermost, entity innermost);

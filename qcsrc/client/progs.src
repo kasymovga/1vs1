@@ -47,6 +47,7 @@ sbar.qh
 ../client-server/warpzonelib/anglestransform.qh
 ../client-server/warpzonelib/common.qh
 warpzonelib/client.qh
+gui.qh
 
 cvar.qc
 
@@ -114,11 +115,13 @@ gamestatus.qc
 warpzonelib/client.qc
 weaponselect.qc
 
+../client-menu/util.qh
 ../client-menu/nexuiz/util.qh
-../client-menu/nexuiz/util.qc
-../client-menu/draw.qh
-../client-menu/draw.qc
 ../client-menu/skin.qh
+../client-menu/draw.qh
+../client-menu/nexuiz/util.qc
+../client-menu/skin.qc
+../client-menu/draw.qc
 ../client-menu/oo/base.h
 ../client-menu/oo/classdefs.h
 	classes.c
@@ -126,3 +129,6 @@ weaponselect.qc
 	classes.c
 ../client-menu/oo/implementation.h
 	classes.c
+
+gui.qc
+../client-menu/util.qc

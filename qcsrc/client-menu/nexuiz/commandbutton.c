@@ -26,12 +26,15 @@ void NexuizCommandButton_Click(entity me, entity other)
 {
 	//if(me.flags & COMMANDBUTTON_APPLY)
 	//	saveAllCvars(me.parent);
-#ifdef MENUQC
-	cmd("\n", me.onClickCommand, "\n");
+	localcmd("\n", me.onClickCommand, "\n");
 	//if(me.flags & COMMANDBUTTON_REVERT)
 	//	loadAllCvars(me.parent);
+#ifdef MENUQC
 	if(me.flags & COMMANDBUTTON_CLOSE)
 		m_goto(string_null);
+#endif
+#ifdef CSQC
+	GUI_Hide();
 #endif
 }
 

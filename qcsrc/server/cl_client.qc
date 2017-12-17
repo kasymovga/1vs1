@@ -1807,8 +1807,10 @@ void LeaveSpectatorMode()
 				centerprint(self,""); // clear MOTD
 			return;
 		} else {
-			stuffcmd(self,"menu_showteamselect\n");
-			//GameMenu_Show();
+			//stuffcmd(self,"menu_showteamselect\n");
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_TEAMSELECT);
 			return;
 		}
 	}

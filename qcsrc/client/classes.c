@@ -27,7 +27,8 @@
 #include "../client-menu/nexuiz/button.c"
 #include "../client-menu/nexuiz/commandbutton.c"
 #include "../client-menu/nexuiz/bigcommandbutton.c"
-#include "gui/dialog_teamselect.c"
+#include "../client-menu/nexuiz/dialog_teamselect.c"
+#include "gui/mainwindow.c"
 #undef draw
 #undef frame
 #undef conwidth

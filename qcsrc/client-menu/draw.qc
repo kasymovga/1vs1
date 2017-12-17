@@ -231,6 +231,7 @@ void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor
 {
 	if(theSize_x <= 0 || theSize_y <= 0)
 		error("Drawing zero size text?\n");
+
 	if(ICanHasKallerz)
 		drawcolorcodedstring(boxToGlobal(theOrigin, draw_shift, draw_scale), theText, boxToGlobalSize(theSize, draw_scale), theAlpha * draw_alpha, 0);
 	else

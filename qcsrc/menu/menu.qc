@@ -141,8 +141,6 @@ void UpdateConWidthHeight()
 float dlc_wait_frame;
 void() m_init_delayed =
 {
-	float fh, glob, n, i;
-	string s;
 
 	dprint_load();
 
@@ -162,46 +160,7 @@ void() m_init_delayed =
 
 	RegisterWeapons();
 
-	fh = -1;
-	if(cvar_string("menu_skin") != "")
-	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0)
-	if(cvar_defstring("menu_skin") != "")
-	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_defstring("menu_skin"));
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	if(fh < 0)
-	{
-		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
-	}
-	draw_currentSkin = strzone(draw_currentSkin);
-	while((s = fgets(fh)))
-	{
-		// these two are handled by skinlist.qc
-		if(substring(s, 0, 6) == "title ")
-			continue;
-		if(substring(s, 0, 7) == "author ")
-			continue;
-		n = tokenize_console(s);
-		if(n >= 2)
-			Skin_ApplySetting(argv(0), substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-	}
-	fclose(fh);
-
-	glob = search_begin(strcat(draw_currentSkin, "/*.tga"), TRUE, TRUE);
-	if(glob >= 0)
-	{
-		n = search_getsize(glob);
-		for(i = 0; i < n; ++i)
-			precache_pic(search_getfilename(glob, i));
-		search_end(glob);
-	}
-
+	SkinInit();
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
 	conwidth = conheight = -1;
@@ -787,60 +746,6 @@ void() m_shutdown =
 			e.destroy(e);
 	}
 };
-
-void m_focus_item_chain(entity outermost, entity innermost)
-{
-	if(innermost.parent != outermost)
-		m_focus_item_chain(outermost, innermost.parent);
-	innermost.parent.setFocus(innermost.parent, innermost);
-}
-
-void m_activate_window(entity wnd)
-{
-	entity par;
-	par = wnd.parent;
-	if(par)
-		m_activate_window(par);
-
-	if(par.instanceOfModalController)
-	{
-		if(wnd.tabSelectingButton)
-			// tabs
-			TabButton_Click(wnd.tabSelectingButton, wnd);
-		else
-			// root
-			par.initializeDialog(par, wnd);
-	}
-	else if(par.instanceOfNexposee)
-	{
-		// nexposee (sorry for violating abstraction here)
-		par.selectedChild = wnd;
-		par.animationState = 1;
-		setFocusContainer(par, NULL);
-	}
-	else if(par.instanceOfContainer)
-	{
-		// other containers
-		if(par.focused)
-			par.setFocus(par, wnd);
-	}
-}
-
-void m_setpointerfocus(entity wnd)
-{
-	if(wnd.instanceOfContainer)
-	{
-		entity focus = wnd.preferredFocusedGrandChild(wnd);
-		if(focus)
-		{
-			menuMousePos = focus.origin + 0.5 * focus.size;
-			menuMousePos_x *= 1 / conwidth;
-			menuMousePos_y *= 1 / conheight;
-			if(wnd.focused) // why does this never happen?
-				m_focus_item_chain(wnd, focus);
-		}
-	}
-}
 
 void(string itemname) m_goto =
 {
