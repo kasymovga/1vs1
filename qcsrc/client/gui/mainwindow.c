@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(MainWindow) EXTENDS(ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
-	ATTRIB(MainWindow, teamSelectDialog, entity, NULL);
+	ATTRIB(MainWindow, teamSelectDialog, entity, NULL)
 ENDCLASS(MainWindow)
 #endif
 

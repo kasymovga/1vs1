@@ -4,7 +4,6 @@
 #define frame frameGUI
 #define conwidth CVAR(vid_conwidth)
 #define conheight CVAR(vid_conheight)
-#define other _other
 #include "../client-menu/item.c"
 #include "../client-menu/item/container.c"
 #include "../client-menu/item/inputcontainer.c"
@@ -33,4 +32,3 @@
 #undef frame
 #undef conwidth
 #undef conheight
-#undef other

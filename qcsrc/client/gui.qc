@@ -42,14 +42,17 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 
 void GUI_Draw_Remove() {
 	if (GUI_alpha > 0)
-		GUI_alpha -= frametime;
+		GUI_alpha -= frametime * 5;
 	else {
 		GUI_RemoveRecursive(mainWindow);
+		unloadTooltips();
 		mainWindow = world;
 		return;
 	}
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
+	draw_reset();
+	drawBackground(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	draw_reset();
 	draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
@@ -58,13 +61,16 @@ void GUI_Draw_Remove() {
 }
 void GUI_Draw() {
 	if (GUI_alpha < 1)
-		GUI_alpha += frametime;
+		GUI_alpha += frametime * 5;
 
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
 	draw_reset();
+	drawBackground(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	draw_reset();
 	draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
+	m_tooltip(mainWindow, GUI_mouse_pos);
 	sb_hidescores = TRUE;
 	draw_crosshair = FALSE;
 	Mouse_Enable();
@@ -73,6 +79,7 @@ void GUI_Draw() {
 
 void GUI_Show(float window) {
 	SkinInit();
+	loadTooltips();
 	if (mainWindow)
 		GUI_RemoveRecursive(mainWindow);
 

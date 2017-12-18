@@ -1,3 +1,5 @@
 void m_activate_window(entity wnd);
 void m_setpointerfocus(entity wnd);
 void m_focus_item_chain(entity outermost, entity innermost);
+void drawBackground(string img, float a, float algn, float force1);
+void m_tooltip(entity wn, vector pos);

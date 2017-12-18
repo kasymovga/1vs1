@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-void RadioButton_Click(entity me, entity other);
+void RadioButton_Click(entity me, entity theOther);
 CLASS(RadioButton) EXTENDS(CheckBox)
 	METHOD(RadioButton, configureRadioButton, void(entity, string, float, string, float, float))
 	ATTRIB(RadioButton, checked, float, 0)
@@ -17,7 +17,7 @@ void configureRadioButtonRadioButton(entity me, string txt, float sz, string gfx
 	me.group = theGroup;
 	me.allowDeselect = doAllowDeselect;
 }
-void RadioButton_Click(entity me, entity other)
+void RadioButton_Click(entity me, entity theOther)
 {
 	if(me.checked)
 	{

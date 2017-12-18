@@ -1,14 +1,3 @@
-float tooltipdb;
-void loadTooltips()
-{
-	tooltipdb = db_load("tooltips.db");
-}
-void unloadTooltips()
-{
-	db_close(tooltipdb);
-	tooltipdb = -1;
-}
-
 void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
 	depthfirst(root, parent, firstChild, nextSibling, funcPre, funcPost, pass);

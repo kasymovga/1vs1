@@ -22,7 +22,7 @@ entity makeNexuizCommandButton(string theText, vector theColor, string theComman
 	return me;
 }
 
-void NexuizCommandButton_Click(entity me, entity other)
+void NexuizCommandButton_Click(entity me, entity theOther)
 {
 	//if(me.flags & COMMANDBUTTON_APPLY)
 	//	saveAllCvars(me.parent);

@@ -100,19 +100,15 @@ void resizeNotifyModalController(entity me, vector relOrigin, vector relSize, ve
 	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, ModalController_initialOrigin, ModalController_initialSize);
 }
 
-void switchStateModalController(entity me, entity theOther, float state, float skipAnimation)
+void switchStateModalController(entity me, entity theOther, float theState, float skipAnimation)
 {
 	float previousState;
 	previousState = theOther.ModalController_state;
-	if(state == previousState && !skipAnimation)
+	if(theState == previousState && !skipAnimation)
 		return;
 
-	if not(theOther) {
-		backtrace("ts");
-		return;
-	}
-	theOther.ModalController_state = state;
-	switch(state)
+	theOther.ModalController_state = theState;
+	switch(theState)
 	{
 		case 0:
 			theOther.ModalController_factor = 1 - theOther.Container_alpha / theOther.ModalController_initialAlpha;
