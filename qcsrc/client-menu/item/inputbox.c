@@ -82,7 +82,7 @@ void enterTextInputBox(entity me, string ch)
 	if(strlen(ch) + strlen(me.text) > me.maxLength)
 		return;
 	me.setText(me, strcat(substring(me.text, 0, me.cursorPos), ch, substring(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
-	me.cursorPos += strlen(ch);
+	me.cursorPos = me.cursorPos + strlen(ch);
 }
 
 float keyDownInputBox(entity me, float key, float ascii, float shift)

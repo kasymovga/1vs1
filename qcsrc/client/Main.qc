@@ -290,6 +290,7 @@ void CSQC_Init(void)
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
 	registercmd("showgamesettings");
+	registercmd("showvcall");
 
 	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
@@ -298,6 +299,7 @@ void CSQC_Init(void)
 	registercvar("crosshair_supershotgun_color_green", "0.5", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
 	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
+	registercvar("_menu_vote_string", "", 0);
 
 #ifndef CAMERATEST
 	if(isdemo())
@@ -627,6 +629,9 @@ float CSQC_ConsoleCommand(string strMessage)
 		return true;
 	} else if(strCmd == "showgamesettings") {
 		GUI_Show(GUI_GAMESETTINGS);
+		return true;
+	} else if(strCmd == "showvcall") {
+		GUI_Show(GUI_VCALL);
 		return true;
 	}
 
@@ -1194,6 +1199,29 @@ void GameMenu_Read() {
 	gamemenu_commands_count = i;
 }
 
+#define VOTE_COMMANDS_COUNT 16
+string vote_commands[VOTE_COMMANDS_COUNT];
+float vote_commands_count;
+
+void VoteCommands_Read() {
+	string s = ReadString();
+	string head, tail;
+	float i;
+	for (i = 0; i < vote_commands_count; i++) {
+		strunzone(vote_commands[i]);
+	}
+	for (head = car(s), tail = cdr(s); ;head = car(tail), tail = cdr(tail)) {
+		if (head == "") {
+			if (tail == "")
+				break;
+
+			continue;
+		}
+		vote_commands[vote_commands_count] = strzone(head);
+		vote_commands_count++;
+	}
+}
+
 void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
@@ -1234,6 +1262,8 @@ void Ent_Init(float ignore)
 		unzone_ifneeded(forcefog);
 		forcefog = zone_ifneeded(ReadString());
 	}
+	if (sf & 8)
+		VoteCommands_Read();
 
 	if (sf & 16)
 		GameMenu_Read();

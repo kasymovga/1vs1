@@ -30,9 +30,13 @@
 #include "../client-menu/nexuiz/slider.c"
 #include "../client-menu/nexuiz/textslider.c"
 #include "../client-menu/nexuiz/textlabel.c"
+#include "../client-menu/nexuiz/listbox.c"
+#include "../client-menu/nexuiz/inputbox.c"
+#include "gui/votelist.c"
 #include "gui/dialog_gamemenu.c"
 #include "gui/dialog_gamesettings.c"
 #include "gui/mainwindow.c"
+#include "gui/dialog_vcall.c"
 #undef draw
 #undef frame
 #undef conwidth

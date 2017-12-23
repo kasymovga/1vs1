@@ -45,11 +45,10 @@ void fillNexuizGameMenuDialog(entity me)
 	}
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Spectate", '0 0 0', "cmd spectate;", COMMANDBUTTON_CLOSE));
-#if 0
-	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Call a vote", '0 0 0', "menu_cmd directmenu VcallMenu;", COMMANDBUTTON_CLOSE));
-#endif
-		//setDependent(e, "_voting_allowed", 1, 1);
+	if (vote_commands_count) {
+		me.TR(me);
+			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Call a vote", '0 0 0', "showvcall;", COMMANDBUTTON_CLOSE));
+	}
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Disconnect", '0 0 0', "disconnect;", COMMANDBUTTON_CLOSE));

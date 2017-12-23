@@ -985,6 +985,9 @@ float ClientInit_SendEntity(entity to, float sf)
 		else
 			WriteString(MSG_ENTITY, "");
 	}
+	if (sf & 8) {
+		WriteString(MSG_ENTITY, cvar_string("sv_vote_commands"));
+	}
 	if (sf & 16)
 		GameMenu_Send();
 

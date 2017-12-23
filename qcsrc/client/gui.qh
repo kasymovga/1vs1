@@ -3,9 +3,11 @@ void GUI_Hide();
 entity GUI_gameMenuDialog;
 entity GUI_teamSelectDialog;
 entity GUI_gameSettingsDialog;
+entity GUI_voteCallDialog;
 
 enum {
 	GUI_TEAMSELECT,
 	GUI_GAMEMENU,
 	GUI_GAMESETTINGS,
+	GUI_VCALL,
 };

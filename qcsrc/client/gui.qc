@@ -122,6 +122,9 @@ void GUI_Show(float window) {
 	case GUI_GAMESETTINGS:
 		e = GUI_gameSettingsDialog;
 		break;
+	case GUI_VCALL:
+		e = GUI_voteCallDialog;
+		break;
 	}
 	if not(e) {
 		GUI_Hide();

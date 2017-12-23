@@ -18,6 +18,9 @@ void configureMainWindowMainWindow(entity me)
 	GUI_gameSettingsDialog = i = spawnNexuizGameSettingsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	GUI_voteCallDialog = i = spawnNexuizVcallDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);
 }
 #endif
