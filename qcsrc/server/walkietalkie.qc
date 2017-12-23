@@ -8,7 +8,7 @@ string WalkieTalkie_SoundPath(float n) {
 var void(void(string item, string cmd) Add_Item) WalkieTalkie_GameMenuAddItems_NextLink;
 void WalkieTalkie_GameMenuAddItems(void(string item, string cmd) Add_Item) {
 	if (sv_walkietalkie_count)
-		Add_Item("Walkie-Talkie", "cmd walkietalkie");
+		Add_Item("Walkie-Talkie", "cmd walkietalkie;");
 
 	WalkieTalkie_GameMenuAddItems_NextLink(Add_Item);
 }

@@ -8,6 +8,13 @@ void W_WriteSecondarySelect(void) {
     WriteInt24_t(MSG_ONE, g_start_weapon_selectable);
 }
 
+var void(void(string item, string cmd) Add_Item) SelectableWeapon_GameMenuAddItems_NextLink;
+void SelectableWeapon_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+	Add_Item("Switch Weapon", "cmd pickweapon;");
+	SelectableWeapon_GameMenuAddItems_NextLink(Add_Item);
+}
+
+
 var float(string cmd, float tokens) SelectableWeapon_ClientCommandHandle_NextLink;
 float SelectableWeapon_ClientCommandHandle(string cmd, float tokens) {
 	if (cmd == "pickweapon") {
@@ -76,4 +83,6 @@ void SelectableWeapon_Init() {
 	GameHookChain_ClientCommandHandle = SelectableWeapon_ClientCommandHandle;
 	SelectableWeapon_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = SelectableWeapon_Spawn;
+	SelectableWeapon_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = SelectableWeapon_GameMenuAddItems;
 }

@@ -40,7 +40,7 @@ float HG_PlayerCanFire(entity plr, float wep) {
 
 var void(void(string item, string cmd) Add_Item) HG_GameMenuAddItems_NextLink;
 void HG_GameMenuAddItems(void(string item, string cmd) Add_Item) {
-	Add_Item("Switch Nadget", "cmd picknade");
+	Add_Item("Switch Nadget", "cmd picknade;");
 	HG_GameMenuAddItems_NextLink(Add_Item);
 }
 

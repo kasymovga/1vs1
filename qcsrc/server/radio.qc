@@ -40,7 +40,7 @@ float Radio_GameCommandHandle(string cmd, float tokens);
 
 var void(void(string item, string cmd) Add_Item) Radio_GameMenuAddItems_NextLink;
 void Radio_GameMenuAddItems(void(string item, string cmd) Add_Item) {
-	Add_Item("Radio toggle", "cmd radiotoggle $_radio");
+	Add_Item("Radio toggle", "cmd radiotoggle $_radio;");
 	Radio_GameMenuAddItems_NextLink(Add_Item);
 }
 
