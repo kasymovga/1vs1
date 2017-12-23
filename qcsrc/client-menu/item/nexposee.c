@@ -20,6 +20,7 @@ CLASS(Nexposee) EXTENDS(Container)
 	METHOD(Nexposee, setNexposee, void(entity, entity, vector, float, float))
 	ATTRIB(Nexposee, mousePosition, vector, '0 0 0')
 	METHOD(Nexposee, pullNexposee, void(entity, entity, vector))
+	ATTRIB(Nexposee, instanceOfNexposee, float, 1)
 ENDCLASS(Nexposee)
 
 void ExposeeCloseButton_Click(entity button, entity theOther); // un-exposees the current state

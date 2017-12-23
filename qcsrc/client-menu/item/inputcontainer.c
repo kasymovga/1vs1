@@ -11,6 +11,7 @@ CLASS(InputContainer) EXTENDS(Container)
 	METHOD(InputContainer, _changeFocusXY, float(entity, vector))
 	ATTRIB(InputContainer, mouseFocusedChild, entity, NULL)
 	ATTRIB(InputContainer, isTabRoot, float, 0)
+	ATTRIB(InputContainer, instanceOfInputContainer, float, 1)
 ENDCLASS(InputContainer)
 #endif
 

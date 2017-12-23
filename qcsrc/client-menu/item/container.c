@@ -25,6 +25,7 @@ CLASS(Container) EXTENDS(Item)
 	ATTRIB(Container, lastChild, entity, NULL)
 	ATTRIB(Container, focusedChild, entity, NULL)
 	ATTRIB(Container, shown, float, 0)
+	ATTRIB(Container, instanceOfContainer, float, 1)
 ENDCLASS(Container)
 .entity nextSibling;
 .entity prevSibling;

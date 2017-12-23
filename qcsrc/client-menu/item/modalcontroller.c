@@ -16,6 +16,7 @@ CLASS(ModalController) EXTENDS(Container)
 	ATTRIB(ModalController, size, vector, '0 0 0')
 	ATTRIB(ModalController, previousButton, entity, NULL)
 	ATTRIB(ModalController, fadedAlpha, float, 0.3)
+	ATTRIB(ModalController, instanceOfModalController, float, 1)
 ENDCLASS(ModalController)
 
 .entity tabSelectingButton;
