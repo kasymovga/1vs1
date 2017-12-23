@@ -3,6 +3,7 @@ float GUI_mouseButtonsPressed;
 vector GUI_mouse_pos;
 vector GUI_mouse_pos_old;
 float GUI_alpha;
+float GUI_shiftState;
 
 void GUI_RemoveRecursive(entity me) {
 	entity e;
@@ -15,24 +16,38 @@ void GUI_RemoveRecursive(entity me) {
 }
 
 float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
+	float r;
+	r = FALSE;
 	draw_reset();
 	GUI_mouse_pos = globalToBoxSize(mouse_pos, draw_scale);
-	if (bInputType == 0)
-	if (nPrimary == K_ESCAPE) {
-		GUI_Hide();
-		return TRUE;
+	if (nPrimary == K_MOUSE1) {
+		if (bInputType == 0) { //Key down
+			if not(GUI_mouseButtonsPressed) {
+				mainWindow.mousePress(mainWindow, GUI_mouse_pos);
+				GUI_mouseButtonsPressed = TRUE;
+			}
+			r = TRUE;
+		} else { //Key up
+			if (GUI_mouseButtonsPressed) {
+				mainWindow.mouseRelease(mainWindow, GUI_mouse_pos);
+				GUI_mouseButtonsPressed = FALSE;
+			}
+		}
 	}
-	if (bInputType == 0 && nPrimary == K_MOUSE1) {
-		if not(GUI_mouseButtonsPressed) {
-			mainWindow.mousePress(mainWindow, GUI_mouse_pos);
-			GUI_mouseButtonsPressed = TRUE;
+	if (bInputType == 0) {
+		if(nPrimary == K_ALT) { GUI_shiftState |= S_ALT; r = TRUE; }
+		if(nPrimary == K_CTRL) { GUI_shiftState |= S_CTRL; r = TRUE; }
+		if(nPrimary == K_SHIFT) { GUI_shiftState |= S_SHIFT; r = TRUE; }
+		if (mainWindow.keyDown(mainWindow, nPrimary, nSecondary, GUI_shiftState)) {
+			return TRUE;
+		} else if (nPrimary == K_ESCAPE) {
+			GUI_Hide();
+			return TRUE;
 		}
-		GUI_mouseButtonsPressed = TRUE;
 	} else {
-		if (GUI_mouseButtonsPressed) {
-			mainWindow.mouseRelease(mainWindow, GUI_mouse_pos);
-		}
-		GUI_mouseButtonsPressed = FALSE;
+		if(nPrimary == K_ALT) { GUI_shiftState &~= (GUI_shiftState & S_ALT); r = TRUE; }
+		if(nPrimary == K_CTRL) { GUI_shiftState &~= (GUI_shiftState & S_CTRL); r = TRUE; }
+		if(nPrimary == K_SHIFT) { GUI_shiftState &~= (GUI_shiftState & S_SHIFT); r = TRUE; }
 	}
 	if (GUI_mouse_pos != GUI_mouse_pos_old) {
 		if (GUI_mouseButtonsPressed) {
@@ -42,7 +57,7 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 
 		GUI_mouse_pos_old = GUI_mouse_pos;
 	}
-	return TRUE;
+	return r;
 }
 
 void GUI_Draw_Remove() {
@@ -52,6 +67,9 @@ void GUI_Draw_Remove() {
 		GUI_RemoveRecursive(mainWindow);
 		unloadTooltips();
 		mainWindow = world;
+		if (CSQC_InputEvent_Callback == GUI_InputEvent)
+			CSQC_InputEvent_Callback = NULL;
+
 		return;
 	}
 	mainWindow.focusEnter(mainWindow);
@@ -88,16 +106,21 @@ void GUI_Show(float window) {
 	if (mainWindow)
 		GUI_RemoveRecursive(mainWindow);
 
+	GUI_mouseButtonsPressed = FALSE;
+	GUI_shiftState = FALSE;
 	mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 	mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
 	mainWindow.draw2d = GUI_Draw;
 	entity e;
 	switch (window) {
 	case GUI_TEAMSELECT:
-		e = mainWindow.teamSelectDialog;
+		e = GUI_teamSelectDialog;
 		break;
 	case GUI_GAMEMENU:
-		e = mainWindow.gameMenuDialog;
+		e = GUI_gameMenuDialog;
+		break;
+	case GUI_GAMESETTINGS:
+		e = GUI_gameSettingsDialog;
 		break;
 	}
 	if not(e) {

@@ -1,8 +1,6 @@
 #ifdef INTERFACE
 CLASS(MainWindow) EXTENDS(ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
-	ATTRIB(MainWindow, teamSelectDialog, entity, NULL)
-	ATTRIB(MainWindow, gameMenuDialog, entity, NULL)
 ENDCLASS(MainWindow)
 #endif
 
@@ -11,10 +9,13 @@ ENDCLASS(MainWindow)
 void configureMainWindowMainWindow(entity me)
 {
 	entity n, i;
-	me.gameMenuDialog = i = spawnNexuizGameMenuDialog();
+	GUI_gameMenuDialog = i = spawnNexuizGameMenuDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	me.teamSelectDialog = i = spawnNexuizTeamSelectDialog();
+	GUI_teamSelectDialog = i = spawnNexuizTeamSelectDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	GUI_gameSettingsDialog = i = spawnNexuizGameSettingsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);

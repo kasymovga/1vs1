@@ -27,7 +27,11 @@
 #include "../client-menu/nexuiz/commandbutton.c"
 #include "../client-menu/nexuiz/bigcommandbutton.c"
 #include "../client-menu/nexuiz/dialog_teamselect.c"
+#include "../client-menu/nexuiz/slider.c"
+#include "../client-menu/nexuiz/textslider.c"
+#include "../client-menu/nexuiz/textlabel.c"
 #include "gui/dialog_gamemenu.c"
+#include "gui/dialog_gamesettings.c"
 #include "gui/mainwindow.c"
 #undef draw
 #undef frame

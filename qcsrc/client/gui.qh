@@ -1,5 +1,8 @@
 void GUI_Show(float window);
 void GUI_Hide();
+entity GUI_gameMenuDialog;
+entity GUI_teamSelectDialog;
+entity GUI_gameSettingsDialog;
 
 enum {
 	GUI_TEAMSELECT,
