@@ -986,7 +986,7 @@ float ClientInit_SendEntity(entity to, float sf)
 			WriteString(MSG_ENTITY, "");
 	}
 	if (sf & 16)
-		WriteByte(MSG_ENTITY, sv_gamemenu);
+		GameMenu_Send();
 
 	if (sf & 32) {
 		WriteByte(MSG_ENTITY, teamplay);

@@ -807,7 +807,6 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
-float gamemenu;
 var float(float bInputType, float nPrimary, float nSecondary) CSQC_InputEvent_Callback_null;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
@@ -824,10 +823,8 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (nPrimary == K_ESCAPE)
 	if not(intermission)
 	if not(isdemo())
-	if (gamemenu)
 	{
-		GameMenu_Holder();
-		localcmd("\ncmd gamemenu\n");
+		GUI_Show(GUI_GAMEMENU);
 		return true;
 	}
 
@@ -1161,6 +1158,31 @@ void Fog_Force()
 		localcmd(strcat("\nfog ", forcefog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 }
 
+#define GAMEMENU_ITEMS_COUNT_MAX 16
+string gamemenu_items[GAMEMENU_ITEMS_COUNT_MAX];
+string gamemenu_commands[GAMEMENU_ITEMS_COUNT_MAX];
+float gamemenu_commands_count;
+
+void GameMenu_Read() {
+	float i;
+	string s;
+	for (i = 0; i < GAMEMENU_ITEMS_COUNT_MAX; i++) {
+		if (gamemenu_items[i] != "") {
+			strunzone(gamemenu_items[i]);
+			strunzone(gamemenu_commands[i]);
+		}
+	}
+	for (i = 0; i < GAMEMENU_ITEMS_COUNT_MAX; i++) {
+		s = ReadString();
+		if (s == "")
+			break;
+
+		gamemenu_items[i] = strzone(s);
+		gamemenu_commands[i] = strzone(ReadString());
+	}
+	gamemenu_commands_count = i;
+}
+
 void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
@@ -1203,7 +1225,7 @@ void Ent_Init(float ignore)
 	}
 
 	if (sf & 16)
-		gamemenu = ReadByte();
+		GameMenu_Read();
 
 	if (sf & 32) {
 		teamplay = ReadByte();

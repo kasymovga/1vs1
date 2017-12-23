@@ -62,7 +62,7 @@ float GameHook_ForceMod;
 float GameHook_MirrorDamageMod;
 float GameHook_MirrorForceMod;
 var void(entity targ, entity attacker, float deathtype) GameHookChain_DamageForceModsSet = {}
-var void(entity menu) GameHookChain_GameMenuAddItems = {};
+var void(void(string item, string cmd) Add_Item) GameHookChain_GameMenuAddItems = {};
 var float(string cmd, float tokens) GameHookChain_ClientCommandHandle = { return FALSE; }
 var float(string cmd, float tokens) GameHookChain_GameCommandHandle = { return FALSE; }
 var void() GameHookChain_EntityPreSpawn = {};

@@ -1,37 +1,9 @@
-void GameMenu_Select(float select) {
-	Menu_Remove_For(self, "gamemenu");
+void GameMenu_Add_Item(string item, string cmd) {
+	WriteString(MSG_ENTITY, item);
+	WriteString(MSG_ENTITY, cmd);
 }
 
-void GameMenu_Show() {
-	if not(sv_gamemenu) {
-		stuffcmd(self,"togglemenu\n");
-		return;
-	}
-
-	entity e = Menu_Prepare(self, "gamemenu", "Game Menu", 0, GameMenu_Select);
-	if not(e)
-		return;
-
-	Menu_Set_Flags(e, MENU_ESCAPE_ENABLE);
-	Menu_Add_Item(e, "Main Menu|togglemenu");
-	Menu_Add_Item(e, "Disconnect|disconnect");
-	Menu_Add_Item(e, "Return to Game");
-	if (teamplay) {
-		CheckAllowedTeams(self);
-		if (self.team <= 0) {
-			Menu_Add_Item(e, "Join Match|cmd join");
-		} else {
-			Menu_Add_Item(e, "Switch Team/Spectate|menu_showteamselect");
-		}
-	} else { 
-		if (self.classname == "spectator" || self.classname == "observer")
-			Menu_Add_Item(e, "Join Match|cmd join");
-		else
-			Menu_Add_Item(e, "Spectate|cmd spectate");
-	}
-	GameHookChain_GameMenuAddItems(e);
-}
-
-void GameMenu_Init() {
-	CACHE_CVAR(sv_gamemenu);
+void GameMenu_Send() {
+	GameHookChain_GameMenuAddItems(GameMenu_Add_Item);
+	WriteString(MSG_ENTITY, "");
 }

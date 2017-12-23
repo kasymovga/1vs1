@@ -177,7 +177,6 @@ void SV_ParseClientCommand(string s) {
 		} else if(teamplay && !cvar("sv_spectate")) {
 			self.classname = "observer";
 			stuffcmd(self,"menu_showteamselect\n");
-			//GameMenu_Show();
 		}
 	} else if(cmd == "sentcvar") { // new system
 		if(tokens == 2) // undefined cvar: use the default value on the server then
@@ -190,8 +189,6 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 		PlayerToSpec(self);
-	} else if (cmd == "gamemenu") {
-		GameMenu_Show();
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;

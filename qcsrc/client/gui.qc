@@ -17,6 +17,11 @@ void GUI_RemoveRecursive(entity me) {
 float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	draw_reset();
 	GUI_mouse_pos = globalToBoxSize(mouse_pos, draw_scale);
+	if (bInputType == 0)
+	if (nPrimary == K_ESCAPE) {
+		GUI_Hide();
+		return TRUE;
+	}
 	if (bInputType == 0 && nPrimary == K_MOUSE1) {
 		if not(GUI_mouseButtonsPressed) {
 			mainWindow.mousePress(mainWindow, GUI_mouse_pos);
@@ -37,7 +42,7 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 
 		GUI_mouse_pos_old = GUI_mouse_pos;
 	}
-	return FALSE;
+	return TRUE;
 }
 
 void GUI_Draw_Remove() {
@@ -90,6 +95,9 @@ void GUI_Show(float window) {
 	switch (window) {
 	case GUI_TEAMSELECT:
 		e = mainWindow.teamSelectDialog;
+		break;
+	case GUI_GAMEMENU:
+		e = mainWindow.gameMenuDialog;
 		break;
 	}
 	if not(e) {

@@ -569,7 +569,6 @@ void readlevelcvars(void)
 	Items_Init();
 	Player_Init();
 	runes_init();
-	GameMenu_Init();
 	WalkieTalkie_Init();
 	Akimbo_Init();
 	Hat_Init();

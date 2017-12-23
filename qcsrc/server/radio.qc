@@ -38,10 +38,10 @@ float Radio_ClientCommandHandle(string cmd, float tokens);
 var float(string cmd, float tokens) Radio_GameCommandHandle_NextLink;
 float Radio_GameCommandHandle(string cmd, float tokens);
 
-var void(entity menu) Radio_GameMenuAddItems_NextLink;
-void Radio_GameMenuAddItems(entity menu) {
-	Menu_Add_Item(menu, "Radio toggle|cmd radiotoggle $_radio");
-	Radio_GameMenuAddItems_NextLink(menu);
+var void(void(string item, string cmd) Add_Item) Radio_GameMenuAddItems_NextLink;
+void Radio_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+	Add_Item("Radio toggle", "cmd radiotoggle $_radio");
+	Radio_GameMenuAddItems_NextLink(Add_Item);
 }
 
 

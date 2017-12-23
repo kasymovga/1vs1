@@ -38,12 +38,10 @@ float HG_PlayerCanFire(entity plr, float wep) {
 	return HG_PlayerCanFire_NextLink(plr, wep);
 }
 
-var void(entity menu) HG_GameMenuAddItems_NextLink;
-void HG_GameMenuAddItems(entity menu) {
-	if (self.team > 0 || self.classname == "player")
-		Menu_Add_Item(menu, "Switch Nadget|cmd picknade");
-
-	HG_GameMenuAddItems_NextLink(menu);
+var void(void(string item, string cmd) Add_Item) HG_GameMenuAddItems_NextLink;
+void HG_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+	Add_Item("Switch Nadget", "cmd picknade");
+	HG_GameMenuAddItems_NextLink(Add_Item);
 }
 
 var void(float killed) HG_PlayerClear_NextLink;
