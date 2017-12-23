@@ -1,4 +1,5 @@
 float g_start_weapon_selectable;
+float selectable_weapon_for_bots;
 
 .float w_secondary_picked;
 void W_WriteSecondarySelect(void) {
@@ -56,8 +57,18 @@ var void(entity spot) SelectableWeapon_Spawn_NextLink;
 void SelectableWeapon_Spawn(entity spot) {
 	if (self.w_secondary_picked)
 		self.weapons |= W_WeaponBit(self.w_secondary_picked);
+	else if (clienttype(self) == CLIENTTYPE_BOT)
+		self.weapons |= W_WeaponBit(selectable_weapon_for_bots);
 
 	SelectableWeapon_Spawn_NextLink(spot);
+}
+
+var void(entity menu) SelectableWeapons_GameMenuAddItems_NextLink;
+void SelectableWeapons_GameMenuAddItems(entity menu) {
+	if (self.team > 0 || self.classname == "player")
+		Menu_Add_Item(menu, "Switch Weapon|cmd pickweapon");
+
+	SelectableWeapons_GameMenuAddItems_NextLink(menu);
 }
 
 void SelectableWeapon_Init() {
@@ -70,6 +81,7 @@ void SelectableWeapon_Init() {
 			e = get_weaponinfo(i);
 			if (head == e.netname) {
 				g_start_weapon_selectable |= W_WeaponBit(i);
+				selectable_weapon_for_bots = i;
 				weapon_precache(e.weapon);
 			}
 		}

@@ -256,7 +256,14 @@ void CSQC_Init(void)
 	if (cvar_string("sv_masterextra1") == "") {
 		localcmd("\nseta sv_master2 107.161.23.68\n");
 	}
-
+	if (cvar("cl_effects_lightningarc_segmentlength") == 24)
+	if not(cvar("cl_effects_lightningarc_simple")) {
+		cvar_set("cl_effects_lightningarc_segmentlength", "64");
+		cvar_set("cl_effects_lightningarc_drift_start", "0.45");
+		cvar_set("cl_effects_lightningarc_drift_end", "0.1");
+		cvar_set("cl_effects_lightningarc_branchfactor_start", "0.25");
+		cvar_set("cl_effects_lightningarc_branchfactor_add", "0.1");
+	}
 	check_unacceptable_compiler_bugs();
 
 	float i;

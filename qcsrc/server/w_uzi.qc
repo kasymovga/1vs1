@@ -77,7 +77,7 @@ void W_Uzi_Attack (float deathtype)
 // weapon frames
 void uzi_fire1_02()
 {
-	if(self.weapon != self.switchweapon) // abort immediately if switching
+	if(self.weapon != self.switchweapon || !PlayerCanFire(self, TRUE))
 	{
 		w_ready();
 		return;
