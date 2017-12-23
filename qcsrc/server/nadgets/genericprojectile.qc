@@ -649,9 +649,10 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
         gren.movetype = GV("adept_movetype");
     else
 #endif
-        gren.movetype = GV("movetype");
+	gren.movetype = GV("movetype");
+	if (gren.movetype == MOVETYPE_TOSS || gren.movetype == MOVETYPE_BOUNCE)
+		gren.gravity = GV("gravity");
 
-    gren.gravity = GV("gravity");
     setorigin(gren, w_shotorg);
 
     float lt;
