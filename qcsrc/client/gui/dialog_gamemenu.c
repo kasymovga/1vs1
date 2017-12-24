@@ -34,14 +34,11 @@ void fillNexuizGameMenuDialog(entity me)
 	if (teamplay) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Switch team", '0 0 0', "menu_cmd directmenu TeamSelect;", COMMANDBUTTON_CLOSE));
-			//setDependent(e, "_teams_available", 1, 1337);
 	}
 	float i, separator;
 	for (i = 0; i < gamemenu_commands_count; i++) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton(gamemenu_items[i], '0 0 0', gamemenu_commands[i], COMMANDBUTTON_CLOSE));
-			//setDependent(e, "_nadgets_select_available", 1, 1337);
-		
 	}
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Spectate", '0 0 0', "cmd spectate;", COMMANDBUTTON_CLOSE));
