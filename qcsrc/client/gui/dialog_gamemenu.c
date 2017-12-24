@@ -35,7 +35,7 @@ void fillNexuizGameMenuDialog(entity me)
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Switch team", '0 0 0', "menu_cmd directmenu TeamSelect;", COMMANDBUTTON_CLOSE));
 	}
-	float i, separator;
+	float i;
 	for (i = 0; i < gamemenu_commands_count; i++) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton(gamemenu_items[i], '0 0 0', gamemenu_commands[i], COMMANDBUTTON_CLOSE));

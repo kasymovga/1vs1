@@ -8,7 +8,7 @@ ENDCLASS(MainWindow)
 
 void configureMainWindowMainWindow(entity me)
 {
-	entity n, i;
+	entity i;
 	GUI_gameMenuDialog = i = spawnNexuizGameMenuDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);

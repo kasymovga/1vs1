@@ -23,7 +23,7 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.configureNexuizTextSliderValues(e);
 		if not(ext_DP_CSQC_QUERYRENDERENTITY) {
 			e.disabled = 1;
-			me.TDempty(me, 1, 1);
+			me.TDempty(me, 1);
 			me.TD(me, 1, 4, e = makeNexuizTextLabel(0, "Your client does not support this!!!"));
 			e.colorL = '1 0.5 0.5';
 		}
