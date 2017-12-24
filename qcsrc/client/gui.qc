@@ -4,6 +4,7 @@ vector GUI_mouse_pos;
 vector GUI_mouse_pos_old;
 float GUI_alpha;
 float GUI_shiftState;
+float GUI_currentWindow;
 
 void GUI_RemoveRecursive(entity me) {
 	entity e;
@@ -109,6 +110,7 @@ void GUI_Show(float window) {
 
 	GUI_mouseButtonsPressed = FALSE;
 	GUI_shiftState = FALSE;
+	GUI_currentWindow = window;
 	mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 	mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
 	mainWindow.draw2d = GUI_Draw;
@@ -139,5 +141,8 @@ void GUI_Show(float window) {
 }
 
 void GUI_Hide() {
-	mainWindow.draw2d = GUI_Draw_Remove;
+	if (GUI_currentWindow == GUI_GAMEMENU)
+		mainWindow.draw2d = GUI_Draw_Remove;
+	else
+		GUI_Show(GUI_GAMEMENU);
 }
