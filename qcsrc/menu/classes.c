@@ -36,7 +36,7 @@
 #include "../client-menu/nexuiz/textlabel.c"
 #include "../client-menu/nexuiz/slider.c"
 #include "nexuiz/slider_resolution.c"
-#include "nexuiz/checkbox.c"
+#include "../client-menu/nexuiz/checkbox.c"
 #include "nexuiz/radiobutton.c"
 #include "nexuiz/nexposee.c"
 #include "nexuiz/rootdialog.c"

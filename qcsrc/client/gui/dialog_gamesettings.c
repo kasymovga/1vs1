@@ -71,7 +71,7 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;cmd radiotoggle $_radio;", COMMANDBUTTON_APPLY));
 }
 
 #endif

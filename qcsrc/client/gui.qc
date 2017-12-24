@@ -111,8 +111,8 @@ void GUI_Show(float window) {
 		loadTooltips();
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
-		mainWindow.draw2d = GUI_Draw;
 	}
+	mainWindow.draw2d = GUI_Draw;
 	entity e;
 	switch (window) {
 	case GUI_TEAMSELECT:
@@ -129,6 +129,9 @@ void GUI_Show(float window) {
 		break;
 	case GUI_QUIT:
 		e = GUI_quitDialog;
+		break;
+	case GUI_RADIO:
+		e = GUI_radioDialog;
 		break;
 	}
 	if not(e) {

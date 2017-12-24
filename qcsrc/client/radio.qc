@@ -58,7 +58,7 @@ void Net_ReadRadio(void) {
 		return;
 	}
 
-	string fname = strzone(ReadString());
+	string fname = ReadString();
 	float f = ReadByte();
 	float loop = f & 1;
 	float force = f & 2;
@@ -83,7 +83,7 @@ void Net_ReadRadio(void) {
 
 	e = spawn();
 	e.classname = "radio";
-	e.netname = fname;
+	e.netname = strzone(fname);
 	e.think = Radio_Think;
 	e.nextthink = time;
 	e.cnt = time;

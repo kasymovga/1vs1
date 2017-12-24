@@ -25,6 +25,9 @@ void configureMainWindowMainWindow(entity me)
 	GUI_voteCallDialog = i = spawnNexuizVcallDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	GUI_radioDialog = i = spawnNexuizRadioDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	GUI_quitDialog = i = spawnNexuizQuitDialog();
 	i.close = QuitDialogClose;
 	i.configureDialog(i);

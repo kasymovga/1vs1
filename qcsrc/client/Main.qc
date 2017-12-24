@@ -289,6 +289,7 @@ void CSQC_Init(void)
 	registercmd("+button4");
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
+	registercmd("showradio");
 
 	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
@@ -298,6 +299,7 @@ void CSQC_Init(void)
 	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
 	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
 	registercvar("_menu_vote_string", "", 0);
+	registercvar("_radio", "1", CVAR_SAVE);
 
 #ifndef CAMERATEST
 	if(isdemo())
@@ -624,6 +626,9 @@ float CSQC_ConsoleCommand(string strMessage)
 		return true;
 	} else if(strCmd == "-showaccuracy") {
 		sb_showaccuracy = false;
+		return true;
+	} else if(strCmd == "showradio") {
+		GUI_Show(GUI_RADIO);
 		return true;
 	}
 
