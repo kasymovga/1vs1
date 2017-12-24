@@ -4,10 +4,12 @@ entity GUI_gameMenuDialog;
 entity GUI_teamSelectDialog;
 entity GUI_gameSettingsDialog;
 entity GUI_voteCallDialog;
+entity GUI_quitDialog;
 
 enum {
 	GUI_TEAMSELECT,
 	GUI_GAMEMENU,
 	GUI_GAMESETTINGS,
 	GUI_VCALL,
+	GUI_QUIT,
 };

@@ -6,6 +6,10 @@ ENDCLASS(MainWindow)
 
 #ifdef IMPLEMENTATION
 
+void QuitDialogClose(entity me) {
+	GUI_Hide();
+}
+
 void configureMainWindowMainWindow(entity me)
 {
 	entity i;
@@ -19,6 +23,10 @@ void configureMainWindowMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	GUI_voteCallDialog = i = spawnNexuizVcallDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	GUI_quitDialog = i = spawnNexuizQuitDialog();
+	i.close = QuitDialogClose;
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);

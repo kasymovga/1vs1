@@ -48,7 +48,7 @@
 #include "../client-menu/nexuiz/listbox.c"
 #include "nexuiz/serverlist.c"
 #include "../client-menu/nexuiz/inputbox.c"
-#include "nexuiz/dialog_quit.c"
+#include "../client-menu/nexuiz/dialog_quit.c"
 #include "nexuiz/dialog_multiplayer_create.c"
 #include "nexuiz/dialog_multiplayer_create_mutators.c"
 #include "nexuiz/dialog_multiplayer_create_advanced.c"

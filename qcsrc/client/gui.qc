@@ -128,6 +128,9 @@ void GUI_Show(float window) {
 	case GUI_VCALL:
 		e = GUI_voteCallDialog;
 		break;
+	case GUI_QUIT:
+		e = GUI_quitDialog;
+		break;
 	}
 	if not(e) {
 		GUI_Hide();

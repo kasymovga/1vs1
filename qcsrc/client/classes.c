@@ -32,6 +32,7 @@
 #include "../client-menu/nexuiz/textlabel.c"
 #include "../client-menu/nexuiz/listbox.c"
 #include "../client-menu/nexuiz/inputbox.c"
+#include "../client-menu/nexuiz/dialog_quit.c"
 #include "gui/votelist.c"
 #include "gui/dialog_gamemenu.c"
 #include "gui/dialog_gamesettings.c"

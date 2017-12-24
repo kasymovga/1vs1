@@ -289,8 +289,6 @@ void CSQC_Init(void)
 	registercmd("+button4");
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
-	registercmd("showgamesettings");
-	registercmd("showvcall");
 
 	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
@@ -626,12 +624,6 @@ float CSQC_ConsoleCommand(string strMessage)
 		return true;
 	} else if(strCmd == "-showaccuracy") {
 		sb_showaccuracy = false;
-		return true;
-	} else if(strCmd == "showgamesettings") {
-		GUI_Show(GUI_GAMESETTINGS);
-		return true;
-	} else if(strCmd == "showvcall") {
-		GUI_Show(GUI_VCALL);
 		return true;
 	}
 
