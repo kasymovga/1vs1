@@ -211,6 +211,9 @@ string Radio_Queue_GetFreeID(void) {
 	string qs = strcat(" ", cvar_string("_radio_queue"), " ");
 
 	for(id = 0 ;; ++id) {
+		if (id == radio_playing_queue)
+			continue;
+
 		string s = ftos(id);
 		if(strstrofs(qs, strcat(" ", s, " "), 0) < 0)
 			return s;
