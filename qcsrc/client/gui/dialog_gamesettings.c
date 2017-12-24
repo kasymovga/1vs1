@@ -16,24 +16,30 @@ void fillNexuizGameSettingsDialog(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, "Show names:"));
+		if not(ext_DP_CSQC_QUERYRENDERENTITY)
+			e.disabled = 1;
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_shownames"));
 			e.addValue(e, "Never", "0");
 			e.addValue(e, "Only for teammates", "1");
 			e.addValue(e, "Always", "2");
 			e.configureNexuizTextSliderValues(e);
-		if not(ext_DP_CSQC_QUERYRENDERENTITY) {
-			e.disabled = 1;
-			me.TDempty(me, 1);
-			me.TD(me, 1, 4, e = makeNexuizTextLabel(0, "Your client does not support this!!!"));
-			e.colorL = '1 0.5 0.5';
-		}
+			if not(ext_DP_CSQC_QUERYRENDERENTITY) {
+				e.disabled = 1;
+				me.TDempty(me, 1);
+				me.TD(me, 2, 4, e = makeNexuizTextLabel(0, "Your client does not support this!!!"));
+				e.colorL = '1 0.5 0.5';
+			}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, "Show names view sector:"));
+		if not(ext_DP_CSQC_QUERYRENDERENTITY)
+			e.disabled = 1;
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_shownames_cos"));
 			e.addValue(e, "Wide", "0");
 			e.addValue(e, "Narrow", "0.9");
 			e.addValue(e, "Very narrow", "0.99");
 			e.configureNexuizTextSliderValues(e);
+			if not(ext_DP_CSQC_QUERYRENDERENTITY)
+				e.disabled = 1;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, "Weapon opacity:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.05, 1, 0.05, "cl_gunalpha"));
