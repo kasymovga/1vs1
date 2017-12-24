@@ -89,6 +89,15 @@ void W_Zapper_SpawnSpinner_Think() {
 	self.nextthink = time;
 }
 
+float W_Zapper_Spinner_CustomizeEntityForClient() {
+	if (other.gameclient == CLIENT_OLDNEXUIZ)
+		self.effects |= EF_NODRAW;
+	else
+		self.effects &~= EF_NODRAW;
+
+	return CL_Weaponentity_CustomizeEntityForClient();
+}
+
 void W_Zapper_SpawnSpinner(void) {
     if (self.zapper_spinner)
         return;
@@ -107,7 +116,7 @@ void W_Zapper_SpawnSpinner(void) {
 	s.color = W_Zapper_BeamRGB((teamplay ? self.team : COLOR_TEAM2));
 	s.think = W_Zapper_SpawnSpinner_Think;
 	s.nextthink = time;
-	s.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	s.customizeentityforclient = W_Zapper_Spinner_CustomizeEntityForClient;
 
     setattachment(s, self.weaponentity, "shot");
 
