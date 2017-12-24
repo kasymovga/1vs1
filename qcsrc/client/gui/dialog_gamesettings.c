@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 8)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 9)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -85,6 +85,9 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, "Slow", "1");
 			e.addValue(e, "Stopped", "0");
 			e.configureNexuizTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_autoswitch", "Auto switch weapons on pickup"));
 	if not(ext_DP_CSQC_QUERYRENDERENTITY) {
 		me.TR(me);
 			me.TDempty(me, 0.25);
@@ -99,7 +102,7 @@ void fillNexuizGameSettingsDialog(entity me)
 	}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;sendcvar cl_autoswitch;", COMMANDBUTTON_CLOSE));
 }
 
 #endif
