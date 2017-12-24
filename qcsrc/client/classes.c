@@ -22,7 +22,7 @@
 #include "../client-menu/item/listbox.c"
 #include "../client-menu/item/inputbox.c"
 #include "../client-menu/nexuiz/dialog.c"
-#include "../client-menu/nexuiz/rootdialog.c"
+#include "gui/rootdialog.c"
 #include "../client-menu/nexuiz/button.c"
 #include "../client-menu/nexuiz/commandbutton.c"
 #include "../client-menu/nexuiz/bigcommandbutton.c"

@@ -103,17 +103,16 @@ void GUI_Draw() {
 }
 
 void GUI_Show(float window) {
-	SkinInit();
-	loadTooltips();
-	if (mainWindow)
-		GUI_RemoveRecursive(mainWindow);
-
 	GUI_mouseButtonsPressed = FALSE;
 	GUI_shiftState = FALSE;
 	GUI_currentWindow = window;
-	mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
-	mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
-	mainWindow.draw2d = GUI_Draw;
+	if not(mainWindow) {
+		SkinInit();
+		loadTooltips();
+		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
+		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
+		mainWindow.draw2d = GUI_Draw;
+	}
 	entity e;
 	switch (window) {
 	case GUI_TEAMSELECT:

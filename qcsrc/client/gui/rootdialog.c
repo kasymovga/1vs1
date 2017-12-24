@@ -16,11 +16,6 @@ ENDCLASS(NexuizRootDialog)
 #ifdef IMPLEMENTATION
 void closeNexuizRootDialog(entity me)
 {
-#ifdef MENUQC
-	m_goto(string_null);
-#endif
-#ifdef CSQC
 	GUI_Hide();
-#endif
 }
 #endif

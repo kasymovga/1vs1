@@ -39,7 +39,7 @@
 #include "nexuiz/checkbox.c"
 #include "nexuiz/radiobutton.c"
 #include "nexuiz/nexposee.c"
-#include "../client-menu/nexuiz/rootdialog.c"
+#include "nexuiz/rootdialog.c"
 #include "../client-menu/nexuiz/textslider.c"
 #include "nexuiz/colorbutton.c"
 #include "nexuiz/dialog_multiplayer_join.c"
