@@ -98,6 +98,7 @@ void GUI_Draw() {
 	draw_crosshair = FALSE;
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = GUI_InputEvent;
+	GUI_InputEvent(1, 0, 0); //workaround for old engines
 }
 
 void GUI_Show(float window) {
