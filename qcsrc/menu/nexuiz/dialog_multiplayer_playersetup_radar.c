@@ -22,7 +22,7 @@ string toStringNexuizRadarDialog(entity me)
 }
 void fillNexuizRadarDialog(entity me)
 {
-	entity e, sl;
+	entity e;
 	me.TR(me);
 		me.TD(me, 1, 4, makeNexuizTextLabel(0, "HUD settings:"));
 	me.TR(me);
