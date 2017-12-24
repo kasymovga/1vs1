@@ -1,2 +1,1 @@
 void Ent_Menu(float bIsNewEntity);
-void GameMenu_Holder();

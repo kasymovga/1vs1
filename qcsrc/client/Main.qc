@@ -289,6 +289,7 @@ void CSQC_Init(void)
 	registercmd("+button4");
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
+	registercmd("showradio");
 
 	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
@@ -297,6 +298,8 @@ void CSQC_Init(void)
 	registercvar("crosshair_supershotgun_color_green", "0.5", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
 	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
+	registercvar("_menu_vote_string", "", 0);
+	registercvar("_radio", "1", CVAR_SAVE);
 
 #ifndef CAMERATEST
 	if(isdemo())
@@ -624,6 +627,9 @@ float CSQC_ConsoleCommand(string strMessage)
 	} else if(strCmd == "-showaccuracy") {
 		sb_showaccuracy = false;
 		return true;
+	} else if(strCmd == "showradio") {
+		GUI_Show(GUI_RADIO);
+		return true;
 	}
 
 	if(camera_active)
@@ -814,7 +820,6 @@ void GameCommand(string msg)
 // bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
-float gamemenu;
 var float(float bInputType, float nPrimary, float nSecondary) CSQC_InputEvent_Callback_null;
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
@@ -831,10 +836,8 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (nPrimary == K_ESCAPE)
 	if not(intermission)
 	if not(isdemo())
-	if (gamemenu)
 	{
-		GameMenu_Holder();
-		localcmd("\ncmd gamemenu\n");
+		GUI_Show(GUI_GAMEMENU);
 		return true;
 	}
 
@@ -1168,6 +1171,54 @@ void Fog_Force()
 		localcmd(strcat("\nfog ", forcefog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 }
 
+#define GAMEMENU_ITEMS_COUNT_MAX 16
+string gamemenu_items[GAMEMENU_ITEMS_COUNT_MAX];
+string gamemenu_commands[GAMEMENU_ITEMS_COUNT_MAX];
+float gamemenu_commands_count;
+
+void GameMenu_Read() {
+	float i;
+	string s;
+	for (i = 0; i < GAMEMENU_ITEMS_COUNT_MAX; i++) {
+		if (gamemenu_items[i] != "") {
+			strunzone(gamemenu_items[i]);
+			strunzone(gamemenu_commands[i]);
+		}
+	}
+	for (i = 0; i < GAMEMENU_ITEMS_COUNT_MAX; i++) {
+		s = ReadString();
+		if (s == "")
+			break;
+
+		gamemenu_items[i] = strzone(s);
+		gamemenu_commands[i] = strzone(ReadString());
+	}
+	gamemenu_commands_count = i;
+}
+
+#define VOTE_COMMANDS_COUNT 16
+string vote_commands[VOTE_COMMANDS_COUNT];
+float vote_commands_count;
+
+void VoteCommands_Read() {
+	string s = ReadString();
+	string head, tail;
+	float i;
+	for (i = 0; i < vote_commands_count; i++) {
+		strunzone(vote_commands[i]);
+	}
+	for (head = car(s), tail = cdr(s); ;head = car(tail), tail = cdr(tail)) {
+		if (head == "") {
+			if (tail == "")
+				break;
+
+			continue;
+		}
+		vote_commands[vote_commands_count] = strzone(head);
+		vote_commands_count++;
+	}
+}
+
 void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
@@ -1208,9 +1259,11 @@ void Ent_Init(float ignore)
 		unzone_ifneeded(forcefog);
 		forcefog = zone_ifneeded(ReadString());
 	}
+	if (sf & 8)
+		VoteCommands_Read();
 
 	if (sf & 16)
-		gamemenu = ReadByte();
+		GameMenu_Read();
 
 	if (sf & 32) {
 		teamplay = ReadByte();
@@ -1385,6 +1438,11 @@ float CSQC_Parse_TempEntity()
 		case TE_CSQC_RACE:
 			Net_ReadRace();
 			bHandled = true;
+			break;
+		case TE_CSQC_TEAMSELECT:
+			if not(isdemo())
+				GUI_Show(GUI_TEAMSELECT);
+
 			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it

@@ -985,8 +985,11 @@ float ClientInit_SendEntity(entity to, float sf)
 		else
 			WriteString(MSG_ENTITY, "");
 	}
+	if (sf & 8) {
+		WriteString(MSG_ENTITY, cvar_string("sv_vote_commands"));
+	}
 	if (sf & 16)
-		WriteByte(MSG_ENTITY, sv_gamemenu);
+		GameMenu_Send();
 
 	if (sf & 32) {
 		WriteByte(MSG_ENTITY, teamplay);
@@ -1807,8 +1810,10 @@ void LeaveSpectatorMode()
 				centerprint(self,""); // clear MOTD
 			return;
 		} else {
-			stuffcmd(self,"menu_showteamselect\n");
-			//GameMenu_Show();
+			//stuffcmd(self,"menu_showteamselect\n");
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_TEAMSELECT);
 			return;
 		}
 	}

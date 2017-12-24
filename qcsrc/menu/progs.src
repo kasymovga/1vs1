@@ -9,7 +9,8 @@ mbuiltin.qh
 ../menu-server/miscfunctions.qh
 ../common/ui.qh
 
-oo/base.h
+../client-menu/util.qh
+../client-menu/oo/base.h
 
 ../common/constants.qh
 ../common/mapinfo.qh
@@ -20,23 +21,26 @@ oo/base.h
 
 gamecommand.qh
 menu.qh
-draw.qh
-skin.qh
+../client-menu/draw.qh
+../client-menu/skin.qh
+../client-menu/nexuiz/util.qh
 nexuiz/util.qh
 
-oo/classdefs.h
+../client-menu/skin.qc
+../client-menu/oo/classdefs.h
 	classes.c
 
-oo/constructors.h
+../client-menu/oo/constructors.h
 	classes.c
-oo/implementation.h
+../client-menu/oo/implementation.h
 	classes.c
 
 ../common/util.qc
 ../common/gamecommand.qc
 gamecommand.qc
 menu.qc
-draw.qc
+../client-menu/draw.qc
+../client-menu/nexuiz/util.qc
 nexuiz/util.qc
 
 ../common/miscfunctions.qc
@@ -48,3 +52,5 @@ nexuiz/util.qc
 ../common/curl.qc
 ../common/dlc.qc
 ../common/ui.qc
+
+../client-menu/util.qc

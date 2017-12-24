@@ -16,6 +16,7 @@ CLASS(ModalController) EXTENDS(Container)
 	ATTRIB(ModalController, size, vector, '0 0 0')
 	ATTRIB(ModalController, previousButton, entity, NULL)
 	ATTRIB(ModalController, fadedAlpha, float, 0.3)
+	ATTRIB(ModalController, instanceOfModalController, float, 1)
 ENDCLASS(ModalController)
 
 .entity tabSelectingButton;
@@ -100,35 +101,36 @@ void resizeNotifyModalController(entity me, vector relOrigin, vector relSize, ve
 	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, ModalController_initialOrigin, ModalController_initialSize);
 }
 
-void switchStateModalController(entity me, entity other, float state, float skipAnimation)
+void switchStateModalController(entity me, entity theOther, float theState, float skipAnimation)
 {
 	float previousState;
-	previousState = other.ModalController_state;
-	if(state == previousState && !skipAnimation)
+	previousState = theOther.ModalController_state;
+	if(theState == previousState && !skipAnimation)
 		return;
-	other.ModalController_state = state;
-	switch(state)
+
+	theOther.ModalController_state = theState;
+	switch(theState)
 	{
 		case 0:
-			other.ModalController_factor = 1 - other.Container_alpha / other.ModalController_initialAlpha;
+			theOther.ModalController_factor = 1 - theOther.Container_alpha / theOther.ModalController_initialAlpha;
 			// fading out
 			break;
 		case 1:
-			other.ModalController_factor = other.Container_alpha / other.ModalController_initialAlpha;
+			theOther.ModalController_factor = theOther.Container_alpha / theOther.ModalController_initialAlpha;
 			if(previousState == 0 && !skipAnimation)
 			{
-				other.Container_origin = other.ModalController_buttonOrigin;
-				other.Container_size = other.ModalController_buttonSize;
+				theOther.Container_origin = theOther.ModalController_buttonOrigin;
+				theOther.Container_size = theOther.ModalController_buttonSize;
 			}
 			// zooming in
 			break;
 		case 2:
-			other.ModalController_factor = bound(0, (1 - other.Container_alpha / other.ModalController_initialAlpha) / me.fadedAlpha, 1);
+			theOther.ModalController_factor = bound(0, (1 - theOther.Container_alpha / theOther.ModalController_initialAlpha) / me.fadedAlpha, 1);
 			// fading out halfway
 			break;
 	}
 	if(skipAnimation)
-		other.ModalController_factor = 1;
+		theOther.ModalController_factor = 1;
 }
 
 void drawModalController(entity me)
@@ -223,39 +225,39 @@ void drawModalController(entity me)
 	drawContainer(me);
 };
 
-void addTabModalController(entity me, entity other, entity tabButton)
+void addTabModalController(entity me, entity theOther, entity tabButton)
 {
-	me.addItem(me, other, '0 0 0', '1 1 1', 1);
+	me.addItem(me, theOther, '0 0 0', '1 1 1', 1);
 	tabButton.onClick = TabButton_Click;
-	tabButton.onClickEntity = other;
-	other.tabSelectingButton = tabButton;
-	if(other == me.firstChild)
+	tabButton.onClickEntity = theOther;
+	theOther.tabSelectingButton = tabButton;
+	if(theOther == me.firstChild)
 	{
 		tabButton.forcePressed = 1;
-		other.ModalController_controllingButton = tabButton;
-		me.showChild(me, other, '0 0 0', '0 0 0', 1);
+		theOther.ModalController_controllingButton = tabButton;
+		me.showChild(me, theOther, '0 0 0', '0 0 0', 1);
 	}
 }
 
-void addItemModalController(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
+void addItemModalController(entity me, entity theOther, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, other, theOrigin, theSize, (other == me.firstChild) ? theAlpha : 0);
-	other.ModalController_initialSize = other.Container_size;
-	other.ModalController_initialOrigin = other.Container_origin;
-	other.ModalController_initialAlpha = theAlpha; // hope Container never modifies this
+	addItemContainer(me, theOther, theOrigin, theSize, (theOther == me.firstChild) ? theAlpha : 0);
+	theOther.ModalController_initialSize = theOther.Container_size;
+	theOther.ModalController_initialOrigin = theOther.Container_origin;
+	theOther.ModalController_initialAlpha = theAlpha; // hope Container never modifies this
 }
 
-void showChildModalController(entity me, entity other, vector theOrigin, vector theSize, float skipAnimation)
+void showChildModalController(entity me, entity theOther, vector theOrigin, vector theSize, float skipAnimation)
 {
-	if(other.ModalController_state == 0 || skipAnimation)
+	if(theOther.ModalController_state == 0 || skipAnimation)
 	{
 		me.setFocus(me, NULL);
 		if(!skipAnimation)
 		{
-			other.ModalController_buttonOrigin = globalToBox(theOrigin, me.origin, me.size);
-			other.ModalController_buttonSize = globalToBoxSize(theSize, me.size);
+			theOther.ModalController_buttonOrigin = globalToBox(theOrigin, me.origin, me.size);
+			theOther.ModalController_buttonSize = globalToBoxSize(theSize, me.size);
 		}
-		me.switchState(me, other, 1, skipAnimation);
+		me.switchState(me, theOther, 1, skipAnimation);
 	} // zoom in from button (factor increases)
 }
 
@@ -266,16 +268,16 @@ void hideAllModalController(entity me, float skipAnimation)
 		me.hideChild(me, e, skipAnimation);
 }
 
-void hideChildModalController(entity me, entity other, float skipAnimation)
+void hideChildModalController(entity me, entity theOther, float skipAnimation)
 {
-	if(other.ModalController_state || skipAnimation)
+	if(theOther.ModalController_state || skipAnimation)
 	{
 		me.setFocus(me, NULL);
-		me.switchState(me, other, 0, skipAnimation);
-		if(other.ModalController_controllingButton)
+		me.switchState(me, theOther, 0, skipAnimation);
+		if(theOther.ModalController_controllingButton)
 		{
-			other.ModalController_controllingButton.forcePressed = 0;
-			other.ModalController_controllingButton = NULL;
+			theOther.ModalController_controllingButton.forcePressed = 0;
+			theOther.ModalController_controllingButton = NULL;
 		}
 	} // just alpha fade out (factor increases and decreases alpha)
 }

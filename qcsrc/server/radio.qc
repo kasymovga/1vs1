@@ -38,10 +38,10 @@ float Radio_ClientCommandHandle(string cmd, float tokens);
 var float(string cmd, float tokens) Radio_GameCommandHandle_NextLink;
 float Radio_GameCommandHandle(string cmd, float tokens);
 
-var void(entity menu) Radio_GameMenuAddItems_NextLink;
-void Radio_GameMenuAddItems(entity menu) {
-	Menu_Add_Item(menu, "Radio toggle|cmd radiotoggle $_radio");
-	Radio_GameMenuAddItems_NextLink(menu);
+var void(void(string item, string cmd) Add_Item) Radio_GameMenuAddItems_NextLink;
+void Radio_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+	Add_Item("Radio", "showradio;");
+	Radio_GameMenuAddItems_NextLink(Add_Item);
 }
 
 
@@ -351,10 +351,9 @@ float Radio_ClientCommandHandle(string cmd, float tokens) {
 //
 //        if(!o && self.radio_enabled)
 		if (stof(argv(1)))
-			stuffcmd(self, "cd reset; set _radio 0\n");
-		else {
 			Radio_SendPlay(self, TRUE);
-		}
+		else
+			stuffcmd(self, "cd reset\n");
 
 		return TRUE;
 	}

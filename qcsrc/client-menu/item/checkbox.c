@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-void CheckBox_Click(entity me, entity other);
+void CheckBox_Click(entity me, entity thOther);
 CLASS(CheckBox) EXTENDS(Button)
 	METHOD(CheckBox, configureCheckBox, void(entity, string, float, string))
 	METHOD(CheckBox, draw, void(entity))
@@ -18,7 +18,7 @@ void setCheckedCheckBox(entity me, float val)
 {
 	me.checked = val;
 }
-void CheckBox_Click(entity me, entity other)
+void CheckBox_Click(entity me, entity thOther)
 {
 	me.setChecked(me, !me.checked);
 }

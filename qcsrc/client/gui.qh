@@ -1,0 +1,17 @@
+void GUI_Show(float window);
+void GUI_Hide();
+entity GUI_gameMenuDialog;
+entity GUI_teamSelectDialog;
+entity GUI_gameSettingsDialog;
+entity GUI_voteCallDialog;
+entity GUI_quitDialog;
+entity GUI_radioDialog;
+
+enum {
+	GUI_TEAMSELECT,
+	GUI_GAMEMENU,
+	GUI_GAMESETTINGS,
+	GUI_VCALL,
+	GUI_QUIT,
+	GUI_RADIO,
+};

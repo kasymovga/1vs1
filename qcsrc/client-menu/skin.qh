@@ -1,3 +1,5 @@
+void SkinInit();
+string draw_currentSkin;
 #define SKINBEGIN
 #define SKINVECTOR(name,def) var vector SKIN##name = def
 #define SKINFLOAT(name,def) var float SKIN##name = def

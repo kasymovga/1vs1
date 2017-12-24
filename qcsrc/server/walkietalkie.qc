@@ -5,13 +5,12 @@ string WalkieTalkie_SoundPath(float n) {
 	return strcat("walkietalkie/", sv_walkietalkie[n], ".wav");
 }
 
-var void(entity menu) WalkieTalkie_GameMenuAddItems_NextLink;
-void WalkieTalkie_GameMenuAddItems(entity menu) {
+var void(void(string item, string cmd) Add_Item) WalkieTalkie_GameMenuAddItems_NextLink;
+void WalkieTalkie_GameMenuAddItems(void(string item, string cmd) Add_Item) {
 	if (sv_walkietalkie_count)
-	if (self.classname == "player")
-		Menu_Add_Item(menu, "Walkie-Talkie|cmd walkietalkie");
+		Add_Item("Walkie-Talkie", "cmd walkietalkie;");
 
-	WalkieTalkie_GameMenuAddItems_NextLink(menu);
+	WalkieTalkie_GameMenuAddItems_NextLink(Add_Item);
 }
 var float(string cmd, float tokens) WalkieTalkie_ClientCommandHandle_NextLink;
 float WalkieTalkie_ClientCommandHandle(string cmd, float tokens) {

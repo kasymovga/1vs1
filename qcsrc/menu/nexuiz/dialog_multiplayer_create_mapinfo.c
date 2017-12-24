@@ -35,6 +35,7 @@ CLASS(NexuizMapInfoDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizMapInfoDialog, currentMapDescription, string, string_null)
 	ATTRIB(NexuizMapInfoDialog, currentMapPreviewImage, string, string_null)
 	ATTRIB(NexuizMapInfoDialog, currentMapFeaturesText, string, string_null)
+	ATTRIB(NexuizMapInfoDialog, instanceOfNexuizMapInfoDialog, float, 1)
 ENDCLASS(NexuizMapInfoDialog)
 #endif
 

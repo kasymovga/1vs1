@@ -157,7 +157,6 @@ set g_pickup_drop_backpack 0
 set g_akimbo_weapons "laser"
 set g_powerup_strength_akimbo 0
 set g_pinata_drop_all 0
-set sv_gamemenu 0
 set sv_walkietalkie ""
 
 //Nexuiz compat

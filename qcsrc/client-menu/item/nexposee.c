@@ -20,9 +20,10 @@ CLASS(Nexposee) EXTENDS(Container)
 	METHOD(Nexposee, setNexposee, void(entity, entity, vector, float, float))
 	ATTRIB(Nexposee, mousePosition, vector, '0 0 0')
 	METHOD(Nexposee, pullNexposee, void(entity, entity, vector))
+	ATTRIB(Nexposee, instanceOfNexposee, float, 1)
 ENDCLASS(Nexposee)
 
-void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the current state
+void ExposeeCloseButton_Click(entity button, entity theOther); // un-exposees the current state
 #endif
 
 // animation states:
@@ -51,11 +52,11 @@ void closeNexposee(entity me)
 	// user must override this
 }
 
-void ExposeeCloseButton_Click(entity button, entity other)
+void ExposeeCloseButton_Click(entity button, entity theOther)
 {
-	other.selectedChild = other.focusedChild;
-	other.setFocus(other, NULL);
-	other.animationState = 3;
+	theOther.selectedChild = theOther.focusedChild;
+	theOther.setFocus(theOther, NULL);
+	theOther.animationState = 3;
 }
 
 void resizeNotifyNexposee(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -64,21 +65,21 @@ void resizeNotifyNexposee(entity me, vector relOrigin, vector relSize, vector ab
 	me.resizeNotifyLie(me, relOrigin, relSize, absOrigin, absSize, Nexposee_initialOrigin, Nexposee_initialSize);
 }
 
-void Nexposee_Calc_Scale(entity me, float scale)
+void Nexposee_Calc_Scale(entity me, float theScale)
 {
 	entity e;
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
-		e.Nexposee_smallOrigin = (e.Nexposee_initialOrigin - e.Nexposee_scaleCenter) * scale + e.Nexposee_scaleCenter;
-		e.Nexposee_smallSize = e.Nexposee_initialSize * scale;
+		e.Nexposee_smallOrigin = (e.Nexposee_initialOrigin - e.Nexposee_scaleCenter) * theScale + e.Nexposee_scaleCenter;
+		e.Nexposee_smallSize = e.Nexposee_initialSize * theScale;
 		if(e.Nexposee_align_x > 0)
-			e.Nexposee_smallOrigin_x = 1 - e.Nexposee_align_x * scale;
+			e.Nexposee_smallOrigin_x = 1 - e.Nexposee_align_x * theScale;
 		if(e.Nexposee_align_x < 0)
-			e.Nexposee_smallOrigin_x = -e.Nexposee_smallSize_x + e.Nexposee_align_x * scale;
+			e.Nexposee_smallOrigin_x = -e.Nexposee_smallSize_x + e.Nexposee_align_x * theScale;
 		if(e.Nexposee_align_y > 0)
-			e.Nexposee_smallOrigin_y = 1 - e.Nexposee_align_y * scale;
+			e.Nexposee_smallOrigin_y = 1 - e.Nexposee_align_y * theScale;
 		if(e.Nexposee_align_y < 0)
-			e.Nexposee_smallOrigin_y = -e.Nexposee_smallSize_y + e.Nexposee_align_y * scale;
+			e.Nexposee_smallOrigin_y = -e.Nexposee_smallSize_y + e.Nexposee_align_y * theScale;
 	}
 }
 
@@ -88,13 +89,13 @@ void calcNexposee(entity me)
 	 * patented by Apple
 	 * can't put that here ;)
 	 */
-	float scale;
+	float theScale;
 	entity e, e2;
 	vector emins, emaxs, e2mins, e2maxs;
 	
-	for(scale = 0.7;; scale *= 0.99)
+	for(theScale = 0.7;; theScale *= 0.99)
 	{
-		Nexposee_Calc_Scale(me, scale);
+		Nexposee_Calc_Scale(me, theScale);
 
 		for(e = me.firstChild; e; e = e.nextSibling)
 		{
@@ -122,17 +123,17 @@ void calcNexposee(entity me)
 :have_overlap
 	}
 
-	scale *= 0.95;
+	theScale *= 0.95;
 
-	Nexposee_Calc_Scale(me, scale);
+	Nexposee_Calc_Scale(me, theScale);
 }
 
-void setNexposeeNexposee(entity me, entity other, vector scalecenter, float a0, float a1)
+void setNexposeeNexposee(entity me, entity theOther, vector scalecenter, float a0, float a1)
 {
-	other.Nexposee_scaleCenter = scalecenter;
-	other.Nexposee_smallAlpha = a0;
-	me.setAlphaOf(me, other, a0);
-	other.Nexposee_mediumAlpha = a1;
+	theOther.Nexposee_scaleCenter = scalecenter;
+	theOther.Nexposee_smallAlpha = a0;
+	me.setAlphaOf(me, theOther, a0);
+	theOther.Nexposee_mediumAlpha = a1;
 }
 
 void drawNexposee(entity me)
@@ -350,12 +351,12 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 	return 0;
 }
 
-void addItemNexposee(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
+void addItemNexposee(entity me, entity theOther, vector theOrigin, vector theSize, float theAlpha)
 {
-	addItemContainer(me, other, theOrigin, theSize, theAlpha);
-	other.Nexposee_initialSize = other.Container_size;
-	other.Nexposee_initialOrigin = other.Container_origin;
-	other.Nexposee_initialAlpha = other.Container_alpha;
+	addItemContainer(me, theOther, theOrigin, theSize, theAlpha);
+	theOther.Nexposee_initialSize = theOther.Container_size;
+	theOther.Nexposee_initialOrigin = theOther.Container_origin;
+	theOther.Nexposee_initialAlpha = theOther.Container_alpha;
 }
 
 void focusEnterNexposee(entity me)
@@ -364,8 +365,8 @@ void focusEnterNexposee(entity me)
 		setFocusContainer(me, me.selectedChild);
 }
 
-void pullNexposeeNexposee(entity me, entity other, vector theAlign)
+void pullNexposeeNexposee(entity me, entity theOther, vector theAlign)
 {
-	other.Nexposee_align = theAlign;
+	theOther.Nexposee_align = theAlign;
 }
 #endif

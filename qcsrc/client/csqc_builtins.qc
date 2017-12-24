@@ -141,7 +141,7 @@ float ()								isserver = #350;
 void (float f)								setwantsmousemove = #343;
 string (float key)							getkeybind = #342;
 //string (float f)							chr = #78;
-string (float f)							chr = #78;
+string (float f)							chr = #223;
 float(string str, float ofs)						str2chr = #222;
 string(float c, ...)							chr2str = #223;
 

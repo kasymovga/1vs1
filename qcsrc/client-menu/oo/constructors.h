@@ -20,4 +20,4 @@
 #define METHOD(cname,name,prototype)       me.name = name##cname;
 #define ATTRIB(cname,name,type,val)        me.name = val;
 #define ATTRIBARRAY(cname,name,type,cnt)   me.name = me.name;
-#define ENDCLASS(cname)                    me.instanceOf##cname = 1; me.classname = #cname; return me; }
+#define ENDCLASS(cname)                    me.classname = #cname; return me; }

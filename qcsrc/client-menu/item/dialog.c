@@ -62,6 +62,7 @@ CLASS(Dialog) EXTENDS(InputContainer)
 	ATTRIB(Dialog, closeButtonImage, string, string_null)
 
 	ATTRIB(Dialog, frame, entity, NULL)
+	ATTRIB(Dialog, instanceOfDialog, float, 1)
 ENDCLASS(Dialog)
 #endif
 
