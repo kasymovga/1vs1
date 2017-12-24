@@ -91,6 +91,15 @@ void fillNexuizVideoSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Intensity:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.5, 2.0, 0.05, "r_hdr_scenebrightness"));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Max FPS:"));
+		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_maxfps"));
+			e.addValue(e, "125", "125");
+			e.addValue(e, "250", "250");
+			e.addValue(e, "500", "500");
+			e.addValue(e, "Unlimited", "0");
+			e.configureNexuizTextSliderValues(e);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', "vid_conwidth $menu_vid_conwidth; vid_conheight $menu_vid_conheight; vid_restart", COMMANDBUTTON_APPLY));

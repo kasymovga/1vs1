@@ -44,12 +44,10 @@ void fillNexuizInputSettingsTab(entity me)
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Sensitivity:"));
-		me.TD(me, 1, 2, e = makeNexuizSlider(1, 32, 0.2, "sensitivity"));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0.1, 10, 0.1, "sensitivity"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "UI mouse speed:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "m_filter", "Mouse filter"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(1.022, "m_pitch", "Invert mouse"));
 	me.TR(me);
