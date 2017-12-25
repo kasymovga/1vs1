@@ -146,7 +146,7 @@ void GUI_Show(float window) {
 }
 
 void GUI_Hide() {
-	if (GUI_currentWindow == GUI_GAMEMENU)
+	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT)
 		mainWindow.draw2d = GUI_Draw_Remove;
 	else
 		GUI_Show(GUI_GAMEMENU);
