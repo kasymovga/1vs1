@@ -14,10 +14,10 @@ void Akimbo_GhostHide(entity e) {
 	remove(self.exteriorweaponentity);
 	self.weaponentity = world;
 	self.exteriorweaponentity = world;
+	self = oldself;
 	if (self.weaponentity)
 		self.weaponentity.cnt = 0;
 
-	self = oldself;
 }
 
 void Akimbo_GhostRemove(entity e)
