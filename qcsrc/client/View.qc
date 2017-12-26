@@ -156,7 +156,6 @@ void CSQC_Demo_Camera();
 float Sbar_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
-string NextFrameCommand;
 void CSQC_spider_HUD();
 void CSQC_UpdateView(float w, float h)
 {
@@ -442,12 +441,6 @@ void CSQC_UpdateView(float w, float h)
         }
     }
 	Mouse_Draw();
-
-	if(NextFrameCommand)
-	{
-		localcmd("\n", NextFrameCommand, "\n");
-		NextFrameCommand = string_null;
-	}
 
 	// we must do this check AFTER a frame was rendered, or it won't work
 	if(cs_project_is_b0rked == 0)
