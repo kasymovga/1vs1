@@ -33,8 +33,6 @@ void turret_flac_attack()
 
 void turret_flac_projectile_explode()
 {
-    float ftmp;
-
     // FIXME: tur_impacttime is not accurate enougth, this is a dirty hakk to make flac work.
 
     //w_deathtypestring = "got caught in the flack.";
@@ -48,6 +46,7 @@ void turret_flac_projectile_explode()
     self.event_damage = SUB_Null;
 
 #ifdef TURRET_DEBUG
+    float ftmp;
     ftmp = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_HAGAR, world);
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + ftmp; //self.owner.shot_dmg;
     self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
