@@ -1,4 +1,7 @@
 void GameStatus_Draw() {
+	if (sb_hidescores)
+		return;
+
 	vector pos, _size;
 	pos = self.origin;
 	string tail = self.message, head;
