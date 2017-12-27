@@ -62,7 +62,7 @@ void fillNexuizGameMenuDialog(entity me)
 	}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Disconnect", '0 0 0', "disconnect;", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Disconnect", '0 0 0', "togglemenu;disconnect;", COMMANDBUTTON_CLOSE));
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Reconnect", '0 0 0', "disconnect; reconnect;", COMMANDBUTTON_CLOSE));
 	me.TR(me);
