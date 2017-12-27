@@ -1,6 +1,4 @@
 #define localcmd cmd
-
-#define NULL (null_entity)
 #define world NULL
 
 // constants
