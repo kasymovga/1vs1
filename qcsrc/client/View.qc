@@ -332,12 +332,11 @@ void CSQC_UpdateView(float w, float h)
 
 	self = e;
 
-	// draw radar
-	if(ons_showmap)
-		teamradar_view(TRUE, "");
+	if not(sb_hidescores) {
+		// draw radar
+		if(ons_showmap)
+			teamradar_view(TRUE, "");
 
-	// draw sbar
- 	if(CVAR(r_letterbox) == 0) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
 			if(spectatee_status > 0 || CVAR(cl_showpressedkeys) >= 2)
 				Sbar_DrawPressedKeys();
@@ -364,9 +363,8 @@ void CSQC_UpdateView(float w, float h)
     }
     else
     {
-        if(CVAR(r_letterbox) == 0)
-            if(CVAR(viewsize) < 120)
-				Sbar_Draw();
+		if(CVAR(viewsize) < 120)
+			Sbar_Draw();
 
         // crosshair goes VERY LAST
         if (draw_crosshair) {

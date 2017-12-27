@@ -1821,9 +1821,6 @@ void Sbar_DrawCenterPrint (void)
 	if(a <= 0)
 		return;
 
-	if (sb_hidescores)
-		return;
-
 	pos = centerprint_start;
 	for (i=0; i<centerprint_num; i = i + 1)
 	{
