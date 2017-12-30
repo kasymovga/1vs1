@@ -176,9 +176,6 @@ void nb_init() // Called early (worldspawn stage)
 	GameHookChain_ThrowWeaponAllowed = nb_ThrowWeaponAllowed;
 	nb_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = nb_SpectateCopy;
-	if (cvar("g_nexball_radar_showallplayers"))
-		GameHook_RadarShowEnemiesAllowed = nb_RadarShowEnemiesAllowed;
-
 	GameHook_PlayerIsCarrier = nb_PlayerIsCarrier;
 	GameHook_DropCarried = nb_DropCarried;
 	GameHook_TeleportationForbiddenFor = nb_TeleportationForbiddenFor;
