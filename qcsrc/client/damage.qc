@@ -274,6 +274,7 @@ void DamageIndicator_Remove() {
 	e.cnt = self.cnt;
 	e.alpha = self.alpha;
 	e.draw2d = DamageIndicator_Draw;
+	e.draw2dflag = 1;
 	e.think = SUB_Remove;
 	e.nextthink = time + self.alpha * CVAR(cl_damageindicator);
 }
@@ -286,6 +287,7 @@ void Ent_DamageIndicator(float bisnew) {
 	if (CVAR(cl_damageindicator) > 0) {
 		self.alpha = 1;
 		self.draw2d = DamageIndicator_Draw;
+		self.draw2dflag = 1;
 		self.entremove = DamageIndicator_Remove;
 	}
 }

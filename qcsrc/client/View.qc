@@ -323,32 +323,27 @@ void CSQC_UpdateView(float w, float h)
 
 	// draw 2D entities
 	e = self;
-	for(self = world; (self = nextent(self)); ) {
-		if not(self.draw2d)
-			continue;
-
+	for(self = findchainfloat(draw2dflag, 1); self; self = self.chain)
 		self.draw2d();
-	}
 
 	self = e;
 
-	if not(sb_hidescores) {
-		// draw radar
-		if(ons_showmap)
-			teamradar_view(TRUE, "");
+	// draw radar
+	if(ons_showmap)
+		teamradar_view(TRUE, "");
 
-		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
-			if(spectatee_status > 0 || CVAR(cl_showpressedkeys) >= 2)
-				Sbar_DrawPressedKeys();
-		}
-		
-		if (CVAR(cl_showspeed))
-			Sbar_ShowSpeed();
-		if (CVAR(cl_showacceleration))
-			Sbar_ShowAcceleration();
-		
- 		Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
+	if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
+		if(spectatee_status > 0 || CVAR(cl_showpressedkeys) >= 2)
+			Sbar_DrawPressedKeys();
 	}
+
+	if (CVAR(cl_showspeed))
+		Sbar_ShowSpeed();
+
+	if (CVAR(cl_showacceleration))
+		Sbar_ShowAcceleration();
+
+	Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 
     float hud;
     hud = getstati(STAT_HUD);
@@ -438,6 +433,15 @@ void CSQC_UpdateView(float w, float h)
             }
         }
     }
+	if (Draw2d_Post) {
+		e = self;
+		self = Draw2d_Post_self;
+		Draw2d_Post();
+		Draw2d_Post = NULL;
+		Draw2d_Post_self = NULL;
+		self = e;
+	}
+
 	Mouse_Draw();
 
 	// we must do this check AFTER a frame was rendered, or it won't work

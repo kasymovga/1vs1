@@ -68,6 +68,7 @@ void Ent_DLCList(float new) {
 				dlc_wait.think = DLCWait;
 				dlc_wait.nextthink = time + 1;
 				dlc_wait.draw2d = DLCDraw2d;
+				dlc_wait.draw2dflag = 1;
 			}
 		} else {
 			localcmd("\n");

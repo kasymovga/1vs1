@@ -173,4 +173,5 @@ void Net_ReadWeaponSelect(void) {
     mouse_enabled = TRUE;
 	entity e = spawn();
 	e.draw2d = WS_Draw;
+	e.draw2dflag = 1;
 }

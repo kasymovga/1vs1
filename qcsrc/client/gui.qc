@@ -102,6 +102,11 @@ void GUI_Draw() {
 	GUI_InputEvent(1, 0, 0); //workaround for old engines
 }
 
+void GUI_Draw_Set() {
+	Draw2d_Post_self = self;
+	Draw2d_Post = GUI_Draw;
+}
+
 void GUI_Show(float window) {
 	GUI_mouseButtonsPressed = FALSE;
 	GUI_shiftState = FALSE;
@@ -112,7 +117,8 @@ void GUI_Show(float window) {
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
 	}
-	mainWindow.draw2d = GUI_Draw;
+	mainWindow.draw2d = GUI_Draw_Set;
+	mainWindow.draw2dflag = 1;
 	entity e;
 	switch (window) {
 	case GUI_TEAMSELECT:
@@ -138,7 +144,6 @@ void GUI_Show(float window) {
 		GUI_Hide();
 		return;
 	}
-
 	m_activate_window(e);
 	m_setpointerfocus(e);
 	mainWindow.focused = 1;
@@ -146,8 +151,9 @@ void GUI_Show(float window) {
 }
 
 void GUI_Hide() {
-	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT)
+	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT) {
 		mainWindow.draw2d = GUI_Draw_Remove;
-	else
+		mainWindow.draw2dflag = 1;
+	} else
 		GUI_Show(GUI_GAMEMENU);
 }

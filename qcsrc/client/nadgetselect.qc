@@ -274,4 +274,5 @@ void Net_ReadNadgetSelect(void) {
     ns_active = TRUE;
 	entity e = spawn();
 	e.draw2d = NS_Draw;
+	e.draw2dflag = 1;
 }

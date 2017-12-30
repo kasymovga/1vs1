@@ -306,6 +306,7 @@ void Ent_WaypointSprite()
 		self.spawntime = time;
 
 	self.draw2d = Draw_WaypointSprite;
+	self.draw2dflag = 1;
 
 	InterpolateOrigin_Undo();
 

@@ -62,6 +62,7 @@ void ClientUpdateMessage_SetNextThink() {
 void ClientUpdateMessage(string msg) {
 	entity e = spawn();
 	e.draw2d = ClientUpdateMessage_Draw;
+	e.draw2dflag = 1;
 	e.nextthink = 1;
 	e.think = ClientUpdateMessage_SetNextThink;
 	e.bgmscript = msg;
@@ -704,6 +705,7 @@ void ShotOrg_Spawn()
 	debug_shotorg = spawn();
 	debug_shotorg.draw = ShotOrg_Draw;
 	debug_shotorg.draw2d = ShotOrg_Draw2D;
+	debug_shotorg.draw2dflag = 1;
 	debug_shotorg.renderflags = RF_VIEWMODEL;
 	debug_shotorg.effects = EF_FULLBRIGHT;
 	precache_model("models/shotorg_adjuster.md3");

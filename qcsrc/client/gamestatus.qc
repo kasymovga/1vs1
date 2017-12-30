@@ -26,6 +26,7 @@ void Ent_GameStatus(float isnew) {
 	self.origin_x = CVAR(vid_conwidth) / 2;
 	self.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 8;
 	self.draw2d = GameStatus_Draw;
+	self.draw2dflag = 1;
 	float f = ReadByte();
 	self.entremove = GameStatus_Remove;
 	if (f & 1)

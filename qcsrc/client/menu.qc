@@ -30,8 +30,10 @@ void Ent_Menu_Remove() {
 	Ent_Menu_Clear(255);
 	if (self == menu) {
 		menu = menu.menu_next;
-		if (menu)
+		if (menu) {
 			menu.draw2d = Menu_Draw;
+			menu.draw2dflag = 1;
+		}
 
 		menu_choiced = -1;
 		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
@@ -61,6 +63,7 @@ void Ent_Menu(float bIsNewEntity) {
 			menu = self;
 			menu_choiced = -1;
 			menu.draw2d = Menu_Draw;
+			menu.draw2dflag = 1;
 		} else {
 			e = menu;
 			while (e.menu_next)

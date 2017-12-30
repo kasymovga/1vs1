@@ -1,5 +1,4 @@
 void LocationRequest_Remove() {
-	location_request = world;
 	strunzone(self.netname);
 }
 
@@ -23,7 +22,7 @@ void LocationRequest_Draw() {
 	ons_showmap = FALSE;
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = LocationRequest_InputEvent;
-	teamradar_view(1.8, location_request.netname);
+	teamradar_view(1.8, self.netname);
 }
 
 void Ent_LocationRequest(float ignore) {
@@ -35,9 +34,5 @@ void Ent_LocationRequest(float ignore) {
 
 	self.netname = strzone(title);
 	self.draw2d = LocationRequest_Draw;
-
-	if (location_request) //already have one
-		self.draw2d = draw2d_null;
-
-	location_request = self;
+	self.draw2dflag = 1;
 }
