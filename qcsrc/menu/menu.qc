@@ -99,7 +99,6 @@ void() m_init =
 		}
 	}
 	string l = cvar_string("menu_dlc_list");
-	dlc_set_repos(cvar_string("sv_dlc_repository"));
 	while (l != "") {
 		s = car(l);
 		l = cdr(l);
