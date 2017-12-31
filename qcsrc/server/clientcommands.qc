@@ -254,13 +254,7 @@ void SV_ParseClientCommand(string s) {
 
 		if (s == "xonotic") {
 			self.gameclient = CLIENT_XONOTIC;
-			if ((s = cvar_string("sv_message_for_xonotic_players")) != "") {
-				float n = strstrofs(s, "USERNAME", 0);
-				if (n >= 0) {
-					s = strcat(substring(s, 0, n), self.netname, substring(s, n + 8, -1));
-				}
-				sprint(self, strcat("\{1}", s, "\n"));
-			}
+			self.muted = TRUE;
 			cvar_set("connections_xonotic", ftos(cvar("connections_xonotic") + 1));
 		} else if (s == "rexuiz") {
 			self.gameclient = CLIENT_REXUIZ;

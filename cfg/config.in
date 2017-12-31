@@ -347,8 +347,6 @@ seta hud_shownames 1
 seta hud_shownames_enemies 0
 seta cl_gunalpha 1
 
-set sv_message_for_xonotic_players ""
-
 set sv_door_shootable 1
 set sv_door_trigger_field "60 60 8"
 set sv_door_default_speed 100
