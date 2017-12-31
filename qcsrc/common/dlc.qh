@@ -1,3 +1,4 @@
+void dlc_set_repos(string repos);
 string dlc_repo;
 string dlc_list;
 string dlc_pk3_name(string dlc_name);

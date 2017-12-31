@@ -166,6 +166,8 @@ string (entity e, float s)						getsurfacetexture = #437;
 float (entity e, vector p)						getsurfacenearpoint = #438;
 vector (entity e, float s, vector p)					getsurfaceclippedpoint = #439;
 
+float(string url, float id) uri_get = #513;
+
 float (float a, float b) min = #94;
 float (float a, float b, float c) min3 = #94;
 float (float a, float b, float c, float d) min4 = #94;

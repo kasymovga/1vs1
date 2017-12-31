@@ -99,7 +99,7 @@ void() m_init =
 		}
 	}
 	string l = cvar_string("menu_dlc_list");
-	dlc_repo = cvar_string_zone_ifneeded("sv_dlc_repository");
+	dlc_set_repos(cvar_string("sv_dlc_repository"));
 	while (l != "") {
 		s = car(l);
 		l = cdr(l);

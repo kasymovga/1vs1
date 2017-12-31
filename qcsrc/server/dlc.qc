@@ -47,7 +47,7 @@ float dlc_SendEntity(entity to, float sf) {
 	}
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
-		WriteString(MSG_ENTITY, dlc_repo);
+		WriteString(MSG_ENTITY, cvar_string("sv_dlc_repository"));
 	}
 	if (sf & 2) {
 		WriteString(MSG_ENTITY, dlc_list_send);
@@ -103,7 +103,7 @@ void dlc_require(string dlc_name) {
 
 void dlc_init() {
 	string s;
-	dlc_repo = strzone(cvar_string("sv_dlc_repository"));
+	dlc_set_repos(cvar_string("sv_dlc_repository"));
 	string server_packages = cvar_string("sv_curl_serverpackages");
 	string server_packages_without_dlc = "";
 	while (server_packages != "") {

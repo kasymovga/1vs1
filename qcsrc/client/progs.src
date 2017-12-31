@@ -14,6 +14,7 @@ csqc_builtins.qc
 
 ../client-server/projinfo.qh
 ../common/mapinfo.qh
+../common/curl.qh
 ../client-server/cl_physics.qh
 ../client-server/cl_physics_spiderbot.qh
 ../client-server/cl_physics_aircraft.qh
@@ -114,6 +115,7 @@ gamestatus.qc
 ../client-server/warpzonelib/common.qc
 warpzonelib/client.qc
 weaponselect.qc
+../common/curl.qc
 
 ../client-menu/util.qh
 ../client-menu/nexuiz/util.qh

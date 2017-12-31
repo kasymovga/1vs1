@@ -44,8 +44,7 @@ void DLCDraw2d() {
 void Ent_DLCList(float new) {
 	float f = ReadByte();
 	if (f & 1) {
-		unzone_ifneeded(dlc_repo);
-		dlc_repo = zone_ifneeded(ReadString());
+		dlc_set_repos(ReadString());
 	}
 
 	if (f & 2) {
