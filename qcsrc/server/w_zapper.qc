@@ -768,6 +768,10 @@ float w_zapper(float req) {
         return W_Zapper_Attack1_CheckAmmo(self);
     else if(req == WR_CHECKAMMO2)
         return W_Zapper_Attack2_CheckAmmo(self);
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "was zapped by";
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_zapper_animtime);
