@@ -728,5 +728,5 @@ void PhysicMarkAsTeleported(entity pl) {
 	if (pl.player_physic)
 		pl.player_physic.SendFlags |= 4096;
 
-	self.teleport_time = time;
+	pl.teleport_time = time;
 }
