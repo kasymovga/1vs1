@@ -1229,3 +1229,5 @@ set g_buttons_hookuse_swap 0
 set g_start_weapon_selectable ""
 set g_twoweapons ""
 set g_twoweapons_invert_buttons 0
+
+set sv_antiengine 0
