@@ -140,3 +140,5 @@ float draw_crosshair;
 float teamplay;
 
 float sv_ip2country;
+float fov;
+float fov_zoomed;

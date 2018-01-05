@@ -28,7 +28,9 @@ float atan2(float y, float x)
 }
 #endif
 
-vector GetCurrentFov(float fov)
+float fovx, fovy;
+float old_vid_width, old_vid_height, old_viewzoom, old_fov, old_vid_pixelheight;
+vector GetCurrentFov()
 {
 	float zoomdir, zoomfactor, zoomspeed;
 
@@ -89,12 +91,25 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
+	if (old_viewzoom == current_viewzoom)
+	if (old_fov == fov)
+	if (old_vid_width == vid_width)
+	if (old_vid_height == vid_height)
+	if (old_vid_pixelheight == CVAR(vid_pixelheight))
+		goto skip;
+
+	old_viewzoom == current_viewzoom;
+	old_vid_width == vid_width;
+	old_vid_height == vid_height;
+	old_fov == fov;
+	old_vid_pixelheight == CVAR(vid_pixelheight);
 	float frustumx, frustumy, fovx, fovy;
+	fov_zoomed = fov * current_viewzoom;
 	frustumy = tan(fov * 0.00872664625997164788) * 0.75 * current_viewzoom;
 	frustumx = frustumy * vid_width / vid_height / CVAR(vid_pixelheight);
 	fovx = atan2(frustumx, 1) / 0.00872664625997164788;
 	fovy = atan2(frustumy, 1) / 0.00872664625997164788;
-
+:skip
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
@@ -160,7 +175,6 @@ void CSQC_spider_HUD();
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
-	float fov;
 	read_cvars();
 
 	dprint_load();
@@ -259,7 +273,7 @@ void CSQC_UpdateView(float w, float h)
 
 	// Set the console size vars
 
-	R_SetView(VF_FOV, GetCurrentFov(fov));
+	R_SetView(VF_FOV, GetCurrentFov());
 
 	// Camera for demo playback
 	if(camera_active)

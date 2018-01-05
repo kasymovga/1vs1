@@ -138,8 +138,8 @@ void Shownames_TeamBubbleRemove() {
 
 void Shownames_TeamBubbleDraw() {
 	entity o = self.owner;
+	self.scale = (1 + (vlen(view_origin - self.origin)) / 400) * (fov_zoomed / 120);
 	setorigin(self, o.iorigin + '0 0 64');
-	self.scale = 1 + (vlen(view_origin - self.origin)) / 400;
 	float h = o.health;
 	if (h < 100) {
 		float redfactor = 1 - h / 100;
