@@ -18,6 +18,9 @@ float g_balance_hagar_secondary_refire;
 float g_balance_hagar_secondary_speed;
 float g_balance_hagar_secondary_spread;
 
+var .float hagar_buttonatck1 = BUTTON_ATCK;
+var .float hagar_buttonatck2 = BUTTON_ATCK2;
+
 // NO bounce protection, as bounces are limited!
 void W_Hagar_Explode (void)
 {
@@ -128,21 +131,21 @@ float w_hagar(float req)
 {
 	if (req == WR_AIM)
 		if (random()>0.15)
-			self.BUTTON_ATCK = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
+			self.hagar_buttonatck1 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
 		else
 		{
 			// not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-			self.BUTTON_ATCK2 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
+			self.hagar_buttonatck2 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
 		}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.hagar_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_hagar_primary_refire))
 		{
 			W_Hagar_Attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, w_ready);
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.hagar_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire))
 		{
 			W_Hagar_Attack2();
@@ -191,6 +194,10 @@ float w_hagar(float req)
 		CACHE_CVAR(g_balance_hagar_secondary_spread);
 		CSQCProjectile_Init(PROJECTILE_HAGAR);
 		CSQCProjectile_Init(PROJECTILE_HAGAR_BOUNCING);
+		if (cvar("g_balance_hagar_swap_buttons")) {
+			hagar_buttonatck1 = BUTTON_ATCK2;
+			hagar_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };

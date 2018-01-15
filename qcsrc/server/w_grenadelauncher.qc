@@ -23,6 +23,9 @@ float g_balance_grenadelauncher_secondary_speed;
 float g_balance_grenadelauncher_secondary_speed_up;
 float g_balance_grenadelauncher_secondary;
 
+var .float gl_buttonatck1 = BUTTON_ATCK;
+var .float gl_buttonatck2 = BUTTON_ATCK2;
+
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
@@ -177,13 +180,13 @@ float w_glauncher(float req)
 {
 	if (req == WR_AIM)
 	{
-		self.BUTTON_ATCK = FALSE;
-		self.BUTTON_ATCK2 = FALSE;
+		self.gl_buttonatck1 = FALSE;
+		self.gl_buttonatck2 = FALSE;
 		if (self.bot_secondary_grenademooth == 0 || !g_balance_grenadelauncher_secondary)
 		{
 			if(bot_aim(g_balance_grenadelauncher_primary_speed, g_balance_grenadelauncher_primary_speed_up, g_balance_grenadelauncher_primary_lifetime, TRUE))
 			{
-				self.BUTTON_ATCK = TRUE;
+				self.gl_buttonatck1 = TRUE;
 				if(random() < 0.01) self.bot_secondary_grenademooth = 1;
 			}
 		}
@@ -191,20 +194,20 @@ float w_glauncher(float req)
 		{
 			if(bot_aim(g_balance_grenadelauncher_secondary_speed, g_balance_grenadelauncher_secondary_speed_up, g_balance_grenadelauncher_secondary_lifetime, TRUE))
 			{
-				self.BUTTON_ATCK2 = TRUE;
+				self.gl_buttonatck2 = TRUE;
 				if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 			}
 		}
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.gl_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire))
 		{
 			W_Grenade_Attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, w_ready);
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.gl_buttonatck2)
 		if (g_balance_grenadelauncher_secondary)
 		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire))
 		{
@@ -273,6 +276,10 @@ float w_glauncher(float req)
 		CACHE_CVAR(g_balance_grenadelauncher_secondary);
 		CSQCProjectile_Init(PROJECTILE_GRENADE);
 		CSQCProjectile_Init(PROJECTILE_GRENADE_BOUNCING);
+		if (cvar("g_balance_grenadelauncher_swap_buttons")) {
+			gl_buttonatck1 = BUTTON_ATCK2;
+			gl_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };

@@ -34,6 +34,8 @@ float g_balance_fireball_secondary_speed;
 .float bot_secondary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_secondarytime;
+var .float fireball_buttonatck1 = BUTTON_ATCK;
+var .float fireball_buttonatck2 = BUTTON_ATCK2;
 
 void W_Fireball_Explode (void)
 {
@@ -322,13 +324,13 @@ float w_fireball(float req)
 {
 	if (req == WR_AIM)
 	{
-		self.BUTTON_ATCK = FALSE;
-		self.BUTTON_ATCK2 = FALSE;
+		self.fireball_buttonatck1 = FALSE;
+		self.fireball_buttonatck2 = FALSE;
 		if (self.bot_secondary_fireballmooth == 0)
 		{
 			if(bot_aim(g_balance_fireball_primary_speed, g_balance_fireball_primary_speed_up, g_balance_fireball_primary_lifetime, TRUE))
 			{
-				self.BUTTON_ATCK = TRUE;
+				self.fireball_buttonatck1 = TRUE;
 				if(random() < 0.01) self.bot_secondary_fireballmooth = 1;
 			}
 		}
@@ -336,20 +338,20 @@ float w_fireball(float req)
 		{
 			if(bot_aim(g_balance_fireball_secondary_speed, 0, g_balance_fireball_secondary_lifetime, FALSE))
 			{
-				self.BUTTON_ATCK2 = TRUE;
+				self.fireball_buttonatck2 = TRUE;
 				if(random() < 0.02) self.bot_secondary_fireballmooth = 0;
 			}
 		}
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.fireball_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_fireball_primary_refire))
 		{
 			W_Fireball_Attack1();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_fireball_primary_animtime, w_ready);
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.fireball_buttonatck2)
 		if (time >= self.fireball_secondarytime)
 		if (weapon_prepareattack(1, g_balance_fireball_secondary_refire))
 		{
@@ -445,6 +447,10 @@ float w_fireball(float req)
 		CACHE_CVAR(g_balance_fireball_secondary_speed);
 		CSQCProjectile_Init(PROJECTILE_FIREMINE);
 		CSQCProjectile_Init(PROJECTILE_FIREBALL);
+		if (cvar("g_balance_fireball_swap_buttons")) {
+			fireball_buttonatck1 = BUTTON_ATCK2;
+			fireball_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };

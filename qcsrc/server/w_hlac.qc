@@ -25,6 +25,9 @@ float g_balance_hlac_secondary_speed;
 float g_balance_hlac_secondary_spread;
 float g_balance_hlac_secondary_spread_crouchmod;
 
+var .float hlac_buttonatck1 = BUTTON_ATCK;
+var .float hlac_buttonatck2 = BUTTON_ATCK2;
+
 .float HLAC_bulletcounter;
 void W_HLAC_Touch (void)
 {
@@ -168,7 +171,7 @@ void HLAC_fire1_02()
 		return;
 	}
 
-	if (self.BUTTON_ATCK)
+	if (self.hlac_buttonatck1)
 	{
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1))
@@ -197,10 +200,10 @@ void spawnfunc_weapon_hlac (void)
 float w_hlac(float req)
 {
 	if (req == WR_AIM)
-        self.BUTTON_ATCK = bot_aim(g_balance_hlac_primary_speed, 0, g_balance_hlac_primary_lifetime, FALSE);
+        self.hlac_buttonatck1 = bot_aim(g_balance_hlac_primary_speed, 0, g_balance_hlac_primary_lifetime, FALSE);
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.hlac_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_hlac_primary_refire))
 		{
 			self.HLAC_bulletcounter = 0;
@@ -208,7 +211,7 @@ float w_hlac(float req)
 			weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, HLAC_fire1_02);
 		}
 
-		if (self.BUTTON_ATCK2)
+		if (self.hlac_buttonatck2)
 		if (g_balance_hlac_secondary)
 		if (weapon_prepareattack(1, g_balance_hlac_secondary_refire))
 		{
@@ -261,6 +264,10 @@ float w_hlac(float req)
 		CACHE_CVAR(g_balance_hlac_secondary_spread);
 		CACHE_CVAR(g_balance_hlac_secondary_spread_crouchmod);
 		CSQCProjectile_Init(PROJECTILE_HLAC);
+		if (cvar("g_balance_hlac_swap_buttons")) {
+			hlac_buttonatck1 = BUTTON_ATCK2;
+			hlac_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };

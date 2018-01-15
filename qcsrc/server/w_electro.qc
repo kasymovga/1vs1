@@ -35,6 +35,8 @@ float g_balance_electro_secondary_spread;
 
 .float electro_count;
 .float electro_secondarytime;
+var .float electro_buttonatck1 = BUTTON_ATCK;
+var .float electro_buttonatck2 = BUTTON_ATCK2;
 
 void W_Plasma_Explode_Combo (void);
 
@@ -309,7 +311,7 @@ void spawnfunc_weapon_electro (void)
 void w_electro_checkattack()
 {
 	if(self.electro_count > 1)
-	if(self.BUTTON_ATCK2)
+	if(self.electro_buttonatck2)
 	if(weapon_prepareattack(1, -1))
 	{
 		W_Electro_Attack2();
@@ -323,7 +325,7 @@ void w_electro_checkattack()
 
 void w_electro_checkattack_lightning()
 {
-	if(self.BUTTON_ATCK)
+	if(self.electro_buttonatck1)
 	if(weapon_prepareattack(0, -1))
 	{
 		W_Electro_Attack_Lightning();
@@ -339,8 +341,8 @@ float w_electro(float req)
 {
 	if (req == WR_AIM)
 	{
-		self.BUTTON_ATCK=FALSE;
-		self.BUTTON_ATCK2=FALSE;
+		self.electro_buttonatck1=FALSE;
+		self.electro_buttonatck2=FALSE;
 		if(vlen(self.origin-self.enemy.origin) > g_balance_electro_secondary_speed)
 			self.bot_secondary_electromooth = 0;
 		if(self.bot_secondary_electromooth == 0)
@@ -359,7 +361,7 @@ float w_electro(float req)
 			}
 			if(bot_aim(aim_electro_speed, 0, aim_electro_lifetime, FALSE))
 			{
-				self.BUTTON_ATCK = TRUE;
+				self.electro_buttonatck1 = TRUE;
 				if(g_balance_electro_secondary && random() < sys_ticrate)
 					self.bot_secondary_electromooth = 1;
 			}
@@ -368,14 +370,14 @@ float w_electro(float req)
 		{
 			if(bot_aim(g_balance_electro_secondary_speed, g_balance_electro_secondary_speed_up, g_balance_electro_secondary_lifetime, TRUE))
 			{
-				self.BUTTON_ATCK2 = TRUE;
+				self.electro_buttonatck2 = TRUE;
 				if(random() < sys_ticrate * 3) self.bot_secondary_electromooth = 0;
 			}
 		}
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.electro_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_electro_primary_refire))
 		{
 			if (g_balance_electro_primary_lightning)
@@ -389,7 +391,7 @@ float w_electro(float req)
 				weapon_thinkf(WFRAME_FIRE1, g_balance_electro_primary_animtime, w_ready);
 			}
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.electro_buttonatck2)
 		if (time >= self.electro_secondarytime)
 		if (g_balance_electro_secondary)
 		if (weapon_prepareattack(1, g_balance_electro_secondary_refire))
@@ -483,6 +485,10 @@ float w_electro(float req)
 		CACHE_CVAR(g_balance_electro_secondary_spread);
 		CSQCProjectile_Init(PROJECTILE_ELECTRO);
 		CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
+		if (cvar("g_balance_electro_swap_buttons")) {
+			electro_buttonatck1 = BUTTON_ATCK2;
+			electro_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };

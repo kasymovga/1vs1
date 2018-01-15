@@ -36,6 +36,8 @@ float g_balance_crylink_secondary_spread;
 .float gravity;
 
 .entity realowner;
+var .float crylink_buttonatck1 = BUTTON_ATCK;
+var .float crylink_buttonatck2 = BUTTON_ATCK2;
 
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch (void)
@@ -228,19 +230,19 @@ float w_crylink(float req)
 	if (req == WR_AIM)
 	{
 		if (random() > 0.15)
-			self.BUTTON_ATCK = bot_aim(g_balance_crylink_primary_speed, 0, g_balance_crylink_primary_middle_lifetime, FALSE);
+			self.crylink_buttonatck1 = bot_aim(g_balance_crylink_primary_speed, 0, g_balance_crylink_primary_middle_lifetime, FALSE);
 		else
-			self.BUTTON_ATCK2 = bot_aim(g_balance_crylink_secondary_speed, 0, g_balance_crylink_secondary_middle_lifetime, FALSE);
+			self.crylink_buttonatck2 = bot_aim(g_balance_crylink_secondary_speed, 0, g_balance_crylink_secondary_middle_lifetime, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.crylink_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_crylink_primary_refire))
 		{
 			W_Crylink_Attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_crylink_primary_animtime, w_ready);
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.crylink_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_crylink_secondary_refire))
 		{
 			W_Crylink_Attack2();
@@ -309,6 +311,10 @@ float w_crylink(float req)
 		CACHE_CVAR(g_balance_crylink_secondary_spread);
 		CSQCProjectile_Init(PROJECTILE_CRYLINK);
 		CSQCProjectile_Init(PROJECTILE_CRYLINK_BOUNCING);
+		if (cvar("g_balance_crylink_swap_buttons")) {
+			crylink_buttonatck1 = BUTTON_ATCK2;
+			crylink_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };

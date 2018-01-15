@@ -19,6 +19,8 @@ float g_balance_shotgun_secondary_gravityfactor;
 float g_balance_shotgun_secondary_refire;
 float g_balance_shotgun_secondary_speed;
 float g_balance_shotgun_secondary_spread;
+var .float sg_buttonatck1 = BUTTON_ATCK;
+var .float sg_buttonatck2 = BUTTON_ATCK2;
 
 void W_Shotgun_Attack (void)
 {
@@ -102,18 +104,18 @@ float w_shotgun(float req)
 {
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin)>200 || !g_balance_shotgun_secondary)
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			self.sg_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
-			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+			self.sg_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK)
+		if (self.sg_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
 		{
 			W_Shotgun_Attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, w_ready);
 		}
-		if (self.BUTTON_ATCK2)
+		if (self.sg_buttonatck2)
 		if (g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire))
 		{
@@ -162,6 +164,10 @@ float w_shotgun(float req)
 		CACHE_CVAR(g_balance_shotgun_secondary_refire);
 		CACHE_CVAR(g_balance_shotgun_secondary_speed);
 		CACHE_CVAR(g_balance_shotgun_secondary_spread);
+		if (cvar("g_balance_shotgun_swap_buttons")) {
+			sg_buttonatck1 = BUTTON_ATCK2;
+			sg_buttonatck2 = BUTTON_ATCK;
+		}
 	}
 	return TRUE;
 };
