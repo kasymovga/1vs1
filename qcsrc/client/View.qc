@@ -98,12 +98,12 @@ vector GetCurrentFov()
 	if (old_vid_pixelheight == CVAR(vid_pixelheight))
 		goto skip;
 
-	old_viewzoom == current_viewzoom;
-	old_vid_width == vid_width;
-	old_vid_height == vid_height;
-	old_fov == fov;
-	old_vid_pixelheight == CVAR(vid_pixelheight);
-	float frustumx, frustumy, fovx, fovy;
+	old_viewzoom = current_viewzoom;
+	old_vid_width = vid_width;
+	old_vid_height = vid_height;
+	old_fov = fov;
+	old_vid_pixelheight = CVAR(vid_pixelheight);
+	float frustumx, frustumy;
 	fov_zoomed = fov * current_viewzoom;
 	frustumy = tan(fov * 0.00872664625997164788) * 0.75 * current_viewzoom;
 	frustumx = frustumy * vid_width / vid_height / CVAR(vid_pixelheight);
