@@ -1195,7 +1195,7 @@ void AuditTeams(float force)
 	if not(team_flags)
 		Teams_Note_Remove();
 
-	if not(force) {
+	if (!force && g_balance_teams_force >= 0) {
 		if (team_flags) {
 			if not(teams_note) {
 				teams_note = NoteLine_New(Teams_Note_Message);
@@ -1220,7 +1220,8 @@ void AuditTeams(float force)
 	if(c4 > toomany)
 		CauseRebalance(4, c4 - toomany);
 
-	AuditTeams(FALSE);
+	if (force)
+		AuditTeams(FALSE);
 }
 
 // code from here on is just to support maps that don't have team entities
