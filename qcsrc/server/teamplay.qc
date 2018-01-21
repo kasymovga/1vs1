@@ -8,26 +8,12 @@ string cache_mutatormsg;
 string cache_lastmutatormsg;
 
 void ChangeTeam(entity pl, float dteam);
+void AuditTeams(float force);
 
 // client counts for each team
 float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
-
-float audit_teams_time;
-
-float IsTeamBalanceForced()
-{
-	if(intermission_running)
-		return 0; // no rebalancing whatsoever please
-	if(!teamplay)
-		return 0;
-	if(g_campaign)
-		return 0;
-	if(!g_balance_teams_force)
-		return -1;
-	return 1;
-}
 
 void TeamchangeFrags(entity e)
 {
@@ -614,13 +600,6 @@ void CheckAllowedTeams (entity for_whom)
 	}
 }
 
-float PlayerValue(entity p)
-{
-	if(IsTeamBalanceForced() == 1)
-		return 1;
-	return 1;
-}
-
 // c1...c4 should be set to -1 (not allowed) or 0 (allowed).
 // teams that are allowed will now have their player counts stored in c1...c4
 void GetTeamCounts(entity ignore)
@@ -636,7 +615,7 @@ void GetTeamCounts(entity ignore)
 	{
 		if(head != ignore)// && head.netname != "")
 		{
-			value = PlayerValue(head);
+			value = 1;
 			if(clienttype(head) == CLIENTTYPE_BOT)
 				bvalue = value;
 			else
@@ -865,7 +844,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		}
 		LogTeamchange(pl);
 	}
-
+	AuditTeams(FALSE);
 	return smallest;
 }
 
@@ -891,7 +870,7 @@ void ChangeTeam(entity pl, float dteam) {
 		sprint(pl, "Team changes not allowed\n");
 		return; // changing teams is not allowed
 	}
-	if (g_balance_teams_prevent_imbalance)
+	if (g_balance_teams_prevent_imbalance || g_balance_teams_force)
 	if (pl.team != dteam)
 	{
 		// only allow changing to a smaller or equal size team
@@ -961,6 +940,7 @@ void ChangeTeam(entity pl, float dteam) {
 			self = oldself;
 			break;
 		}
+	AuditTeams(FALSE);
 }
 
 
@@ -1107,35 +1087,73 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 void CauseRebalance(float source_team, float howmany_toomany)
 {
-	if(IsTeamBalanceForced() == 1)
-	{
-		bprint("Rebalancing Teams\n");
-		ShufflePlayerOutOfTeam(source_team);
+	bprint("Rebalancing Teams\n");
+	ShufflePlayerOutOfTeam(source_team);
+}
+
+entity teams_note;
+
+void Teams_Note_Message() {
+	self.message = "^1Teamnumbers are unbalanced!\n^2Press ^3{menu_showteamselect}^2 to adjust";
+	if (self.dmg)
+		self.message = strcat(self.message, "\n^2Autobalance in ^1", ftos(ceil(self.dmg - time)), "^2 seconds");
+}
+
+float Teams_Note_Customize() {
+	switch (other.team) {
+	case COLOR_TEAM1: return self.cnt & 1;
+	case COLOR_TEAM2: return self.cnt & 2;
+	case COLOR_TEAM3: return self.cnt & 4;
+	case COLOR_TEAM4: return self.cnt & 8;
+	}
+	return FALSE;
+}
+
+void Teams_Note_Think() {
+	if (time > self.dmg) {
+		AuditTeams(TRUE);
+		return;
+	}
+	self.nextthink = time + 1;
+	self.SendFlags = 1;
+}
+
+void Teams_Note_Remove() {
+	if (teams_note) {
+		remove(teams_note);
+		teams_note = world;
 	}
 }
 
-// part of g_balance_teams_force
-// occasionally perform an audit of the teams to make
-// sure they're more or less balanced in player count.
-void AuditTeams()
+float FastTeamSwitchAllowed(entity plr, float targetteam) {
+	if (teams_note) {
+		switch (targetteam) {
+		case COLOR_TEAM1: if (teams_note.cnt & 1) return FALSE; break;
+		case COLOR_TEAM2: if (teams_note.cnt & 2) return FALSE; break;
+		case COLOR_TEAM3: if (teams_note.cnt & 4) return FALSE; break;
+		case COLOR_TEAM4: if (teams_note.cnt & 8) return FALSE; break;
+		}
+		switch (plr.team) {
+		case COLOR_TEAM1: return teams_note.cnt & 1;
+		case COLOR_TEAM2: return teams_note.cnt & 2;
+		case COLOR_TEAM3: return teams_note.cnt & 4;
+		case COLOR_TEAM4: return teams_note.cnt & 8;
+		}
+	}
+	return FALSE;
+}
+
+void AuditTeams(float force)
 {
 	float numplayers, numteams, smallest, toomany;
-	float balance;
-	balance = IsTeamBalanceForced();
-	if(balance == 0)
+	if(intermission_running)
+		return; // no rebalancing whatsoever please
+
+	if(g_campaign)
 		return;
-
-	if(audit_teams_time > time)
-		return;
-
-	audit_teams_time = time + 4 + random();
-
-//	bprint("Auditing teams\n");
 
 	CheckAllowedTeams(world);
 	GetTeamCounts(world);
-
-
 	numteams = numplayers = smallest = 0;
 	if(c1 >= 0)
 	{
@@ -1165,25 +1183,44 @@ void AuditTeams()
 			smallest = c4;
 	}
 
-	if(numplayers <= 0)
+	if(numplayers <= 0) {
+		Teams_Note_Remove();
 		return; // no players to move around
-	if(numteams < 2)
+	}
+	if(numteams < 2) {
 		return; // don't bother shuffling if for some reason there aren't any teams
-
+	}
 	toomany = smallest + 1;
+	float team_flags = ((c1 > toomany) ? 1 : 0) + ((c2 > toomany) ? 2 : 0) + ((c3 > toomany) ? 4 : 0) + ((c4 > toomany) ? 8 : 0);
+	if not(team_flags)
+		Teams_Note_Remove();
 
-	if(c1 && c1 > toomany)
+	if not(force) {
+		if (team_flags) {
+			if not(teams_note) {
+				teams_note = NoteLine_New(Teams_Note_Message);
+				teams_note.customizeentityforclient = Teams_Note_Customize;
+				if (g_balance_teams_force) {
+					teams_note.think = Teams_Note_Think;
+					teams_note.nextthink = time;
+					teams_note.dmg = time + g_balance_teams_force;
+				}
+			}
+			teams_note.cnt = team_flags;
+			teams_note.SendFlags = 1;
+		}
+		return;
+	}
+	if(c1 > toomany)
 		CauseRebalance(1, c1 - toomany);
-	if(c2 && c2 > toomany)
+	if(c2 > toomany)
 		CauseRebalance(2, c2 - toomany);
-	if(c3 && c3 > toomany)
+	if(c3 > toomany)
 		CauseRebalance(3, c3 - toomany);
-	if(c4 && c4 > toomany)
+	if(c4 > toomany)
 		CauseRebalance(4, c4 - toomany);
 
-	// if teams are still unbalanced, balance them further in the next audit,
-	// which will happen sooner (keep doing rapid audits until things are in order)
-	audit_teams_time = time + 0.7 + random()*0.3;
+	AuditTeams(FALSE);
 }
 
 // code from here on is just to support maps that don't have team entities

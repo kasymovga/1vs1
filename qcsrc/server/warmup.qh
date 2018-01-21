@@ -1,0 +1,5 @@
+float inWarmupStage;
+entity warmup_note;
+void Warmup_Init();
+void Warmup_Finish();
+void Warmup_UpdateNote();

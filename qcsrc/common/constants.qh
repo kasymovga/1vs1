@@ -6,7 +6,6 @@ const float GAME_DOMINATION		= 3;
 const float GAME_CTF			= 4;
 const float GAME_RUNEMATCH		= 5;
 const float GAME_CONQUEST		= 6;
-const float GAME_ARENA		= 7;
 const float GAME_KEYHUNT		= 8;
 const float GAME_ASSAULT		= 9;
 const float GAME_ONSLAUGHT	= 10;

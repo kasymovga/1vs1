@@ -1,5 +1,4 @@
 entity nagger;
-float readycount;
 float Nagger_SendEntity(entity to, float sendflags)
 {
 	float nags, i, f, b;
@@ -234,7 +233,7 @@ void SV_ParseClientCommand(string s) {
 					self.ready = TRUE;
 					bprint(self.netname, "^2 is ready\n");
 				}
-
+				Warmup_UpdateNote();
 				// cannot reset the game while a timeout is active!
 				if(!timeoutStatus)
 					ReadyCount();
@@ -420,8 +419,7 @@ void ReadyRestartForce()
 	readyrestart_happened = 1;
 	game_starttime = time + RESTART_COUNTDOWN;
 
-	inWarmupStage = 0; //once the game is restarted the game is in match stage
-
+	Warmup_Finish();
 	//reset the .ready status of all players (also spectators)
 	FOR_EACH_CLIENTSLOT(e)
 		e.ready = 0;
@@ -479,23 +477,19 @@ void ReadyRestart()
 void ReadyCount()
 {
 	local entity e;
-	local float r, p;
-
-	r = p = 0;
+	readycount = readywait = 0;
 
 	FOR_EACH_REALPLAYER(e)
 	{
-		p += 1;
+		++readywait;
 		if(e.ready)
-			r += 1;
+			++readycount;
 	}
-
-	readycount = r;
 
 	Nagger_ReadyCounted();
 
-	if(r) // at least one is ready
-	if(r == p) // and, everyone is ready
+	if(readycount) // at least one is ready
+	if(readycount == readywait) // and, everyone is ready
 		ReadyRestart();
 }
 

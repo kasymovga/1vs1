@@ -58,6 +58,28 @@ float sv_timeout;
 float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
+entity spectator_note;
+
+float Spectator_Note_Customize() {
+	if (other.classname == "player")
+		return FALSE;
+
+	return TRUE;
+}
+
+void Spectator_Note_Message() {
+	string s;
+	if (other.classname == "spectator") {
+		s = strcat("^1Spectating ^7", other.enemy.netname, "\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe");
+	} else if (other.classname == "observer")
+		s = "^1Observing\n^1Press ^3{+attack}^1 to spectate";
+
+	s = strcat(s, "\n^1Press ^3{+show_info}^1 for gamemode info");
+	if (other.team <= 0)
+		s = strcat(s, "\n^1Press ^3{+jump}^1 to join");
+
+	self.message = s;
+}
 
 float reset_on_join_done;
 
@@ -626,6 +648,7 @@ void PutObserverInServer(float frags_team_reset)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	spectator_note.SendFlags = 1;
 
 	if(sv_loddistance1)
 		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
@@ -962,7 +985,10 @@ void PlayerToSpec(entity player)
 
 		PutClientInServer();
 		self = oldself;
+		spectator_note.SendFlags = 1;
 	}
+	if (teamplay)
+		AuditTeams(FALSE);
 }
 
 float ClientInit_SendEntity(entity to, float sf)
@@ -1148,7 +1174,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 	if(!self.killindicator)
 	{
-		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO || FastTeamSwitchAllowed(self, targetteam))
 		{
 			ClientKill_Now();
 		}
@@ -1485,6 +1511,9 @@ void ClientDisconnect (void)
 
 	if (clienttype(self) == CLIENTTYPE_REAL)
 		GameHookChain_RealClientDisconnect();
+
+	if (teamplay)
+		AuditTeams(FALSE);
 }
 
 .float BUTTON_CHAT;
@@ -1768,6 +1797,7 @@ float SpectateNext() {
 		ClientSetView(self.enemy);
 		self.movetype = MOVETYPE_NONE;
 		SpectateCopy(self.enemy);
+		spectator_note.SendFlags = 1;
 		return 1;
 	} else {
 		return 0;
@@ -2268,6 +2298,8 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);
+	spectator_note = NoteLine_New(Spectator_Note_Message);
+	spectator_note.customizeentityforclient = Spectator_Note_Customize;
 }
 
 void PutTeamToServer(float t) {

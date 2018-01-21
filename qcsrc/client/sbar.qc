@@ -1065,6 +1065,8 @@ float lastpingstime;
 float scoreboard_bottom;
 void Sbar_DrawScoreboard()
 {
+	Sbar_UpdatePlayerTeams();
+
 	vector rgb, pos, tmp;
 	entity pl, tm;
 
@@ -1839,19 +1841,6 @@ void Sbar_DrawCenterPrint (void)
 	}
 }
 
-vector Sbar_DrawNoteLine(vector offset, string s)
-{
-	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-	drawcolorcodedstring(
-		offset - sbar_fontsize_x * '1 0 0' * stringwidth(s, TRUE),
-		s,
-		sbar_fontsize,
-		sbar_alpha_fg,
-		0
-	);
-	return offset + sbar_fontsize_y * '0 1 0';
-}
-
 void Sbar_DrawPressedKeys(void)
 {
 	vector pos, bgsize;
@@ -2270,9 +2259,6 @@ void Sbar_Draw (void)
  	weapon_number = weapon_stats & 63;
  	weapon_fired[weapon_number] = rint(weapon_stats / 64);
 
-	vector o; o = '1 0 0' * CVAR(vid_conwidth);
-	o_y = 28; // move spectator text slightly down to prevent overlapping the timer
-
 	string s;
 	vector pos;
 	pos = '0 0 0';
@@ -2282,143 +2268,6 @@ void Sbar_Draw (void)
 
 	if(getstati(STAT_PLAYER_STATE) == DEAD_FREEZE)
 		drawfill('0 0 0', bottomright, '1 1 1', 0.4, DRAWFLAG_ADDITIVE);
-
-	if(spectatee_status && !intermission)
-	{
-		drawfont = sbar_bigfont;
-		if(spectatee_status == -1)
-			s = "^1Observing";
-		else
-			s = GetPlayerName(spectatee_status - 1);
-		// spectated player name between HUD and chat area, aligned to the left
-		pos_x = bottomleft_x;
-		pos_y = bottom_y - 50 - sbar_fontsize_spec_y;
-		s = textShortenToWidth(s, CVAR(vid_conwidth)/2.5/sbar_fontsize_spec_x, stringwidth_colors);
-		drawcolorcodedstring(pos, s, sbar_fontsize_spec, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		drawfont = sbar_font;
-
-		// spectator text in the upper right corner
-		if(spectatee_status == -1)
-			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 to spectate");
-		else
-			s = strcat("^1Press ^3", getcommandkey("primary fire", "+attack"), "^1 for another player");
-		o = Sbar_DrawNoteLine(o, s);
-
-		if(spectatee_status == -1)
-			s = strcat("^1Use ^3", getcommandkey("next weapon", "weapnext"), "^1 or ^3", getcommandkey("previous weapon", "weapprev"), "^1 to change the speed");
-		else
-			s = strcat("^1Press ^3", getcommandkey("secondary fire", "+attack2"), "^1 to observe");
-		o = Sbar_DrawNoteLine(o, s);
-
-		s = strcat("^1Press ^3", getcommandkey("server info", "+show_info"), "^1 for gamemode info");
-		o = Sbar_DrawNoteLine(o, s);
-
-		if(gametype == GAME_ARENA)
-			s = "^1Wait for your turn to join";
-		else
-			s = strcat("^1Press ^3", getcommandkey("jump", "+jump"), "^1 to join");
-		o = Sbar_DrawNoteLine(o, s);
-
-		//show restart countdown:
-		if (time < getstatf(STAT_GAMESTARTTIME)) {
-			float countdown;
-			//we need to ceil, otherwise the countdown would be off by .5 when using round()
-			countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
-			s = strcat("^1Game starts in ^3", ftos(countdown), "^1 seconds");
-			o = Sbar_DrawNoteLine(o, s);
-		}
-	}
-	if(warmup_stage && !intermission)
-	{
-		s = "^2Currently in ^1warmup^2 stage!";
-		o = Sbar_DrawNoteLine(o, s);
-	}
-
-	// move more important stuff more to the middle so its more visible
-	o_y = CVAR(vid_conheight) * 0.66;
-
-	string blinkcolor;
-	if(mod(time, 1) >= 0.5)
-		blinkcolor = "^1";
-	else
-		blinkcolor = "^3";
-
-	if(ready_waiting && !intermission && !spectatee_status)
-	{
-		if(ready_waiting_for_me)
-		{
-			if(warmup_stage)
-				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " to end warmup");
-			else
-				s = strcat(blinkcolor, "Press ^3", getcommandkey("ready", "ready"), blinkcolor, " once you are ready");
-		}
-		else
-		{
-			if(warmup_stage)
-				s = strcat("^2Waiting for others to ready up to end warmup...");
-			else
-				s = strcat("^2Waiting for others to ready up...");
-		}
-		o = Sbar_DrawNoteLine(o, s);
-	}
-	else if(warmup_stage && !intermission && !spectatee_status)
-	{
-		s = strcat("^2Press ^3", getcommandkey("ready", "ready"), "^2 to end warmup");
-		o = Sbar_DrawNoteLine(o, s);
-	}
-	if(vote_waiting)
-	{
-		s = strcat("^2A vote has been called for ^1", vote_called_vote);
-		o = Sbar_DrawNoteLine(o, s);
-
-		if(vote_waiting_for_me)
-		{
-			s = strcat(blinkcolor, "Press ^3", getcommandkey("vote yes", "vyes"), blinkcolor, " to accept");
-			o = Sbar_DrawNoteLine(o, s);
-
-			s = strcat(blinkcolor, "Press ^3", getcommandkey("vote no", "vno"), blinkcolor, " to reject");
-			o = Sbar_DrawNoteLine(o, s);
-
-			s = strcat(blinkcolor, "Press ^3", getcommandkey("vote abstain", "vabstain"), blinkcolor, " to abstain");
-			o = Sbar_DrawNoteLine(o, s);
-		}
-		else
-		{
-			s = strcat("^2Waiting for others to vote...");
-			o = Sbar_DrawNoteLine(o, s);
-		}
-	}
-	if(teamplay && !intermission && !spectatee_status)
-	{
-		entity tm;
-		float ts_min, ts_max;
-		tm = teams.sort_next;
-		if (tm)
-		{
-			for(; tm.sort_next; tm = tm.sort_next)
-			{
-				if(!tm.team_size || tm.team == COLOR_SPECTATOR)
-					continue;
-				if(!ts_min) ts_min = tm.team_size;
-				else ts_min = min(ts_min, tm.team_size);
-				if(!ts_max) ts_max = tm.team_size;
-				else ts_max = max(ts_max, tm.team_size);
-			}
-			if ((ts_max - ts_min) > 1)
-			{
-				s = strcat(blinkcolor, "Teamnumbers are unbalanced!");
-				tm = GetTeam(myteam, false);
-				if (tm)
-				if (tm.team != COLOR_SPECTATOR)
-				if (tm.team_size == ts_max)
-					s = strcat(s, " Press ^3", getcommandkey("team menu", "menu_showteamselect"), blinkcolor, " to adjust");
-
-				o = Sbar_DrawNoteLine(o, s);
-			}
-		}
-	}
-
-	Sbar_UpdatePlayerTeams();
 
 	if (intermission == 2) // map voting screen
 	{

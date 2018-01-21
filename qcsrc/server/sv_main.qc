@@ -186,7 +186,6 @@ void StartFrame (void)
 	CreatureFrame ();
 	CheckRules_World ();
 
-	AuditTeams();
 	GameHookChain_ServerFrame();
 	bot_serverframe();
 

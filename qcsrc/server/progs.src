@@ -126,6 +126,8 @@ warpzonelib/util_server.qh
 ../client-server/util.qc
 selectableweapon.qh
 twoweapons.qh
+noteline.qh
+warmup.qh
 
 scores_rules.qc
 
@@ -314,3 +316,5 @@ warpzonelib/server.qc
 warpzonelib/util_server.qc
 selectableweapon.qc
 twoweapons.qc
+noteline.qc
+warmup.qc

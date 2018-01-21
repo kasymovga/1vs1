@@ -418,7 +418,9 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
 	ent_parsers[ENT_CLIENT_WARPZONE_CAMERA] = WarpZone_Camera_Read;
 	ent_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
+	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
 	SetConWidthHeight();
+	sbar_fontsize = '1 1 0';
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)

@@ -49,6 +49,7 @@ sbar.qh
 ../client-server/warpzonelib/common.qh
 warpzonelib/client.qh
 gui.qh
+noteline.qh
 
 cvar.qc
 
@@ -115,6 +116,7 @@ gamestatus.qc
 ../client-server/warpzonelib/common.qc
 warpzonelib/client.qc
 weaponselect.qc
+noteline.qc
 ../common/curl.qc
 
 ../client-menu/util.qh

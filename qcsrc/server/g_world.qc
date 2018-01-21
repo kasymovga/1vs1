@@ -533,13 +533,10 @@ void readlevelcvars(void)
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
 
-	inWarmupStage = cvar("g_warmup");
+	Warmup_Init();
 	CACHE_CVAR(g_warmup_limit);
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
-
-	if (!GameHook_WarmupAllowed() || g_campaign)
-		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	CACHE_CVAR(g_pinata);
 	CACHE_CVAR(g_pinata_drop_all);

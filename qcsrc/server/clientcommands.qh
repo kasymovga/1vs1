@@ -1,3 +1,5 @@
+float readycount;
+float readywait;
 void Nagger_Init();
 void ReadyRestartForce();
 void ReadyCount();
