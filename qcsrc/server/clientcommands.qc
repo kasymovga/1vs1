@@ -6,34 +6,10 @@ float Nagger_SendEntity(entity to, float sendflags)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
 
 	nags = 0;
-	if(readycount)
-	{
+	if (readycount)
 		nags |= 1;
-		if(to.ready == 0)
-			nags |= 2;
-	}
-	if(votecalled)
-	{
-		nags |= 4;
-		if(to.vote_vote == 0)
-			nags |= 8;
-	}
-	if(inWarmupStage)
-		nags |= 16;
-
-	if(sendflags & 128)
-		nags |= 128;
 
 	WriteByte(MSG_ENTITY, nags);
-
-	if(nags & 128)
-	{
-		if(votecalled)
-			WriteString(MSG_ENTITY, votecalledvote_display);
-		else
-			WriteString(MSG_ENTITY, "");
-	}
-
 	if(nags & 1)
 	{
 		for(i = 1; i <= maxclients; i += 8)
@@ -44,23 +20,13 @@ float Nagger_SendEntity(entity to, float sendflags)
 			WriteByte(MSG_ENTITY, f);
 		}
 	}
-
 	return TRUE;
 }
 void Nagger_Init()
 {
 	Net_LinkEntity(nagger = spawn(), FALSE, 0, Nagger_SendEntity);
 }
-void Nagger_VoteChanged()
-{
-	if(nagger)
-		nagger.SendFlags |= 128;
-}
-void Nagger_VoteCountChanged()
-{
-	if(nagger)
-		nagger.SendFlags |= 1;
-}
+
 void Nagger_ReadyCounted()
 {
 	if(nagger)

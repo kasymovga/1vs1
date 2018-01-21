@@ -108,12 +108,6 @@ float clienttime;
 float weaponimpulse[24];
 string getcommandkey(string text, string command);
 
-string vote_called_vote;
-float ready_waiting;
-float ready_waiting_for_me;
-float vote_waiting;
-float vote_waiting_for_me;
-
 float current_zoomfraction;
 
 float cs_project_is_b0rked;

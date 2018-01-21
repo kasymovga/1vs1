@@ -1042,33 +1042,23 @@ void Ent_Nagger(float ignore)
 
 	nags = ReadByte();
 
-	if(nags & 128)
-	{
-		if(vote_called_vote)
-			strunzone(vote_called_vote);
-		vote_called_vote = strzone(ColorTranslateRGB(ReadString()));
-	}
-
 	if(nags & 1)
 	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
-				playerslots[j].ready = 1;
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
 			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if not(f & b)
-					if(playerslots[j])
+				if(playerslots[j]) {
+					if (f & b)
+						playerslots[j].ready = 1;
+					else
 						playerslots[j].ready = 0;
+				}
 		}
-	}
-
-	ready_waiting = (nags & 1);
-	ready_waiting_for_me = (nags & 2);
-	vote_waiting = (nags & 4);
-	vote_waiting_for_me = (nags & 8);
-	warmup_stage = (nags & 16);
+	} else
+		for(i = 0; i < maxclients; i++)
+			if(playerslots[i])
+				playerslots[i].ready = 0;
 }
 
 void Ent_RandomSeed(float ignore)

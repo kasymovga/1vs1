@@ -695,7 +695,7 @@ string Sbar_GetField(entity pl, float field)
             return strcat(chr2str(char0), chr2str(char1));
 
 		case SP_NAME:
-			if(ready_waiting && pl.ready)
+			if(pl.ready)
 			{
 				sbar_field_icon0 = "gfx/sb_player_ready";
 			}
