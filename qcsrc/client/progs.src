@@ -63,7 +63,6 @@ teamplay.qc
 sbar.qc
 mapvoting.qc
 
-rubble.qc
 hook.qc
 lightning.qc
 particles.qc

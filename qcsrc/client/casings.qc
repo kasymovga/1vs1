@@ -1,8 +1,24 @@
 .float silent;
+float casing_count;
+entity casing_latest;
+entity casing_oldest;
 
 void Casing_Delete()
 {
+	if (self == casing_oldest)
+		casing_oldest = self.entchain;
+
+	if (self == casing_latest)
+		casing_latest = self.entchain_back;
+
+	if (self.entchain)
+		self.entchain.entchain_back = self.entchain_back;
+
+	if (self.entchain_back)
+		self.entchain_back.entchain = self.entchain;
+
     remove(self);
+	casing_count--;
 }
 
 void Casing_Draw()
@@ -64,9 +80,8 @@ void Casing_Touch()
 
 void Ent_Casing(float isNew)
 {
-	entity casing;
-
-	casing = RubbleNew("casing");
+	entity casing = spawn();
+	casing.classname= "casing";
 	casing.state = ReadByte();
 	casing.silent = (casing.state & 0x80);
 	casing.state = (casing.state & 0x7F);
@@ -79,6 +94,16 @@ void Ent_Casing(float isNew)
 	casing.angles_z = ReadByte() * 360 / 256;
 
 	if(CVAR(cl_casings) && isNew) {
+		if not(casing_oldest)
+			casing_oldest = casing;
+
+		if (casing_latest)
+			casing_latest.entchain = casing;
+
+		casing.entchain_back = casing_latest;
+		casing_latest = casing;
+		casing_count++;
+
 		casing.draw = Casing_Draw;
 		casing.move_origin = casing.origin;
 		casing.move_velocity = casing.velocity + 2 * prandomvec();
@@ -104,9 +129,16 @@ void Ent_Casing(float isNew)
 		setsize(casing, '0 0 -1', '0 0 -1');
 	}
     else
-        Casing_Delete();
+        remove(casing);
 
-	RubbleLimit("casing", CVAR_OR(cl_casings_maxcount, 100), Casing_Delete);
+	if (casing_count > CVAR_OR(cl_casings_maxcount, 100)) {
+		print("Removing old casings\n");
+		entity oldself = self;
+		self = casing_oldest;
+		Casing_Delete();
+		self = oldself;
+	}
+	//RubbleLimit("casing", CVAR_OR(cl_casings_maxcount, 100), Casing_Delete);
 }
 
 void Casings_Precache()

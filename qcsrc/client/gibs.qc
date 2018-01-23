@@ -1,8 +1,23 @@
 .float silent;
+entity gib_oldest, gib_latest;
+float gib_count;
 
 void Gib_Delete()
 {
+	if (self == gib_oldest)
+		gib_oldest = self.entchain;
+
+	if (self == gib_latest)
+		gib_latest = self.entchain_back;
+
+	if (self.entchain)
+		self.entchain.entchain_back = self.entchain_back;
+
+	if (self.entchain_back)
+		self.entchain_back.entchain = self.entchain;
+
 	remove(self);
+	gib_count--;
 }
 
 string species_prefix(float specnum)
@@ -103,10 +118,17 @@ void Gib_Draw()
 
 void TossGib (string mdlname, vector org, vector vconst, vector vrand, float specnum, float destroyontouch, float issilent)
 {
-	entity gib;
+	entity gib = spawn();
+	if not(gib_oldest)
+		gib_oldest = gib;
 
-	// TODO remove some gibs according to cl_nogibs
-	gib = RubbleNew("gib");
+	if (gib_latest)
+		gib_latest.entchain = gib;
+
+	gib.entchain_back = gib_latest;
+	gib_latest = gib;
+	gib_count++;
+	gib.classname = "gib";
 	gib.move_movetype = MOVETYPE_BOUNCE;
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
@@ -128,7 +150,13 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 	gib.move_time = time;
 	gib.nextthink = time + CVAR_OR(cl_gibs_lifetime, 14) * (1 + prandom() * 0.15);
 
-	RubbleLimit("gib", CVAR_OR(cl_gibs_maxcount,100), Gib_Delete);
+	if (gib_count > CVAR_OR(cl_gibs_maxcount,100)) {
+		entity oldself = self;
+		self = gib_oldest;
+		Gib_Delete();
+		self = oldself;
+	}
+	//RubbleLimit("gib", CVAR_OR(cl_gibs_maxcount,100), Gib_Delete);
 }
 
 void Ent_GibSplash(float isNew)
