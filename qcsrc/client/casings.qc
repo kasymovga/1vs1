@@ -132,7 +132,6 @@ void Ent_Casing(float isNew)
         remove(casing);
 
 	if (casing_count > CVAR_OR(cl_casings_maxcount, 100)) {
-		print("Removing old casings\n");
 		entity oldself = self;
 		self = casing_oldest;
 		Casing_Delete();
