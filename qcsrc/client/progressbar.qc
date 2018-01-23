@@ -1,5 +1,4 @@
 entity progressbar;
-.entity progressbar_chain;
 
 void ProgressBar_Draw() {
 	entity e;
@@ -9,7 +8,7 @@ void ProgressBar_Draw() {
 	fillrect = '200 10 0';
 	posleft = pos + '-100 0 0';
 	pos_y = CVAR(vid_conheight) - 100;
-	for (e = progressbar; e; e = e.progressbar_chain) {
+	for (e = progressbar; e; e = e.entchain) {
 		pos_x = left;
 		drawborderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		fillrect_x = 200 * (e.cnt / 100);
@@ -25,13 +24,13 @@ void Ent_ProgressBar_Remove() {
 	entity e;
 	strunzone(self.netname);
 	if (progressbar == self) {
-		progressbar = progressbar.progressbar_chain;
+		progressbar = progressbar.entchain;
 		if (progressbar)
 			progressbar.draw2dflag = 1;
 	} else
-		for (e = progressbar; e.progressbar_chain; e = e.progressbar_chain) {
-			if (e.progressbar_chain == self) {
-				e.progressbar_chain = self.progressbar_chain;
+		for (e = progressbar; e.entchain; e = e.entchain) {
+			if (e.entchain == self) {
+				e.entchain = self.entchain;
 				return;
 			}
 		}
@@ -48,12 +47,12 @@ void Ent_ProgressBar(float bIsNewEntity) {
 		if (progressbar)
 			progressbar.draw2dflag = 0;
 
-		for (e = progressbar; e; e = e.progressbar_chain)
+		for (e = progressbar; e; e = e.entchain)
 			if (e == self) //Already added in chain
 				return;
 
 		self.entremove = Ent_ProgressBar_Remove;
-		self.progressbar_chain = progressbar;
+		self.entchain = progressbar;
 		progressbar = self;
 		progressbar.draw2d = ProgressBar_Draw;
 		progressbar.draw2dflag = 1;
