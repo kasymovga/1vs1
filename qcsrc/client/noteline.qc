@@ -57,20 +57,21 @@ void NoteLine_Draw() {
 
 string NoteLine_PrepareLine(string s) {
 	float cmdkey, cmdkey_end;
-	while ((cmdkey = strstrofs(s, "{", 0)) > 0) {
+	for (cmdkey = 0; (cmdkey = strstrofs(s, "{", cmdkey)) >= 0;) {
 		cmdkey_end = strstrofs(s, "}", cmdkey);
 		if (cmdkey_end < 0)
 			break;
 
 		string s1, s2, s3;
 		s1 = substring(s, 0, cmdkey);
-		s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
-		if (s2 == "")
+		if (cmdkey + 1 == cmdkey_end) {
 			s2 = "{";
-		else
+		} else {
+			s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
 			s2 = getcommandkey(s2, s2);
-
+		}
 		s3 = substring(s, cmdkey_end + 1, -1);
+		cmdkey = strlen(s1) + strlen(s2);
 		s = strcat(s1, s2, s3);
 	}
 	return s;
