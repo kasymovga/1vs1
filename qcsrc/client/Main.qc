@@ -301,9 +301,10 @@ void CSQC_Init(void)
 	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
 	registercvar("_menu_vote_string", "", 0);
 	registercvar("_radio", "1", CVAR_SAVE);
+	isdemo_flag = isdemo();
 
 #ifndef CAMERATEST
-	if(isdemo())
+	if(isdemo_flag)
 	{
 #endif
 		registercmd("+forward");registercmd("-forward");
@@ -443,7 +444,7 @@ void CSQC_Shutdown(void)
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
 
-	if not(isdemo())
+	if not(isdemo_flag)
 	{
 		if not(calledhooks & HOOK_START)
 			localcmd("\n_cl_hook_gamestart nop;");
@@ -839,7 +840,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (bInputType == 0)
 	if (nPrimary == K_ESCAPE)
 	if not(intermission)
-	if not(isdemo())
+	if not(isdemo_flag)
 	{
 		GUI_Show(GUI_GAMEMENU);
 		return true;
@@ -1133,7 +1134,7 @@ void Gamemode_Init()
 	if(gametype == GAME_ONSLAUGHT)
 		search_and_precache("gfx/ons-*");
 
-	if not(isdemo())
+	if not(isdemo_flag)
 	{
 		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), ";");
 		calledhooks |= HOOK_START;
@@ -1434,7 +1435,7 @@ float CSQC_Parse_TempEntity()
 			bHandled = true;
 			break;
 		case TE_CSQC_TEAMSELECT:
-			if not(isdemo())
+			if not(isdemo_flag)
 				GUI_Show(GUI_TEAMSELECT);
 
 			bHandled = true;

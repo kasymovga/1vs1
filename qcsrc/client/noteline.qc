@@ -67,6 +67,9 @@ string NoteLine_PrepareLine(string s) {
 		if (cmdkey + 1 == cmdkey_end) {
 			s2 = "{";
 		} else {
+			if (isdemo_flag) // Bind help useless for demo
+				return "";
+
 			s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
 			s2 = getcommandkey(s2, s2);
 		}

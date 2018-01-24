@@ -45,7 +45,7 @@ vector GetCurrentFov()
 	zoomdir = button_zoom;
 	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
 		zoomdir += button_attack2;
-	if(spectatee_status > 0 || isdemo())
+	if(spectatee_status > 0 || isdemo_flag)
 	{
 		if(spectatorbutton_zoom)
 			zoomdir = 0 + !zoomdir;
@@ -221,7 +221,7 @@ void CSQC_UpdateView(float w, float h)
 	if(!postinit)
 		PostInit();
 
-	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	if(intermission && !isdemo_flag && !(calledhooks & HOOK_END))
 	if(calledhooks & HOOK_START)
 	{
 		localcmd("\ncl_hook_gameend;");
@@ -290,7 +290,7 @@ void CSQC_UpdateView(float w, float h)
 #ifdef CAMERATEST
 	else if(CVAR(camera_enable))
 #else
-	else if(CVAR(camera_enable) && isdemo())
+	else if(CVAR(camera_enable) && isdemo_flag)
 #endif
 	{
 		// Enable required Darkplaces cvars

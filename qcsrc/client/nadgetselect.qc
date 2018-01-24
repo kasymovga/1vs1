@@ -231,7 +231,7 @@ void Net_ReadNadgetSelect(void) {
     if(g_nadgets_double)
         opts_sec = ReadString();
 
-    if(isdemo())
+    if(isdemo_flag)
         return;
 
     if(!ns_active) {

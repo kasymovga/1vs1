@@ -18,7 +18,7 @@ void DLCWait() {
 	}
 	if not(localConnection) {
 		localcmd("r_restart;");
-		if not(isdemo())
+		if not(isdemo_flag)
 			localcmd("disconnect;reconnect\n");
 	} else {
 		l = dlc_list;

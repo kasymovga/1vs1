@@ -154,7 +154,7 @@ void Net_ReadWeaponSelect(void) {
 	if (ws_active)
 		return;
 
-    if(isdemo())
+    if(isdemo_flag)
         return;
 
     ws_width = 0;
