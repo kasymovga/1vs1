@@ -1437,6 +1437,7 @@ float CSQC_Parse_TempEntity()
 			if not(isdemo())
 				GUI_Show(GUI_TEAMSELECT);
 
+			bHandled = true;
 			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
