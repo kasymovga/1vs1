@@ -159,8 +159,7 @@ float GameCommand_Generic(string command)
 {
 	float argc;
 	float i, j, f, n;
-	vector rgb;
-	string s, s2, c;
+	string s, s2;
 	argc = tokenize_console(command);
 	if(argv(0) == "help")
 	{
