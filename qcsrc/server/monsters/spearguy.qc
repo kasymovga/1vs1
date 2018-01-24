@@ -73,6 +73,7 @@ void spearguy_spawn() {
 	self.damageforcescale = 1;
 	self.entremove = spearguy_remove;
 	self.netname = "Spearguy";
+	self.ammo_cells = 5;
 }
 
 void spearguy_init() {

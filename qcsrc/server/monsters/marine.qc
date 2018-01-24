@@ -1,10 +1,10 @@
-void soldier_idle();
-void soldier_guard();
-void soldier_walk();
+void marine_idle();
+void marine_guard();
+void marine_walk();
 
-void soldier_hunt() {
+void marine_hunt() {
 	self.nextthink = time;
-	if (monster_check_target(soldier_walk, soldier_guard))
+	if (monster_check_target(marine_walk, marine_guard))
 		return;
 
 	vector v;
@@ -16,6 +16,11 @@ void soldier_hunt() {
 			dofire = TRUE;
 	}
 	if (dofire) {
+		if (self.cnt)
+			self.cnt = self.cnt - 1;
+		else
+			self.cnt = 5;
+
 		v = vectoangles(self.enemy.origin - self.origin);
 		self.angles_y = v_y;
 		movelib_beak_simple(100 * frametime);
@@ -23,18 +28,20 @@ void soldier_hunt() {
 		makevectors(self.angles);
 		vector _shotdir = normalize(self.enemy.origin - self.origin);
 		vector _shotorg = self.origin + v_forward * 16;
-		sound (self, CHAN_WEAPON, "weapons/shotgun_fire.wav", VOL_BASE, ATTN_NORM);
-		float sc;
-		for (sc = 0; sc < 5; sc++)
-			fireBallisticBullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, WEP_SHOTGUN, particleeffectnum("tr_bullet"), 0, 0);
+		sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+		fireBallisticBullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, WEP_SHOTGUN, particleeffectnum("tr_bullet"), 0, 0);
 		endFireBallisticBullet();
-		pointparticles(particleeffectnum("shotgun_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);
+		pointparticles(particleeffectnum("uzi_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);
 		// casing code
 		if (g_casings >= 1)
 			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
-		self.attack_finished_single = time + 4 + random();
-		self.bulletcounter = time + 0.5;
+		if (self.cnt)
+			self.attack_finished_single = self.attack_finished_single + 0.1;
+		else
+			self.attack_finished_single = time + 4 + random();
+
+		self.bulletcounter = time + 1;
 	} else {
 		v = monster_move_walk(300, 5, 0);
 		v = vectoangles(v);
@@ -46,7 +53,7 @@ void soldier_hunt() {
 		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void soldier_idle() {
+void marine_idle() {
 	self.nextthink = time;
 	if (monster_look_for_player(2500, 500, 0, 1, 3)) {
 		return;
@@ -55,19 +62,19 @@ void soldier_idle() {
 	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void soldier_guard() {
+void marine_guard() {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	soldier_idle();
+	marine_idle();
 }
 
-void soldier_walk() {
+void marine_walk() {
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(soldier_idle, 100))
+	if (monster_walk_finished(marine_idle, 100))
 		return;
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
@@ -78,15 +85,15 @@ void soldier_walk() {
 
 }
 
-void soldier_remove() {
+void marine_remove() {
 	remove(self.exteriorweaponentity);
 }
 
-void soldier_spawn() {
-	monster_prepare(soldier_hunt, soldier_walk, soldier_idle);
-	setmodel(self, "models/player/shock.zym");
+void marine_spawn() {
+	monster_prepare(marine_hunt, marine_walk, marine_idle);
+	setmodel(self, "models/player/marine.zym");
 	self.movetype = MOVETYPE_WALK;
-	self.entremove = soldier_remove;
+	self.entremove = marine_remove;
 	if (self.team > 0)
 		self.colormap = 1024;
 	else
@@ -94,22 +101,22 @@ void soldier_spawn() {
 
 	self.exteriorweaponentity = spawn();
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_shotgun.md3");
+	setmodel(self.exteriorweaponentity, "models/weapons/v_uzi.md3");
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
-	self.netname = "Soldier";
-	self.ammo_shells = 5;
+	self.netname = "Marine";
+	self.ammo_nails = 20;
 }
 
-void soldier_init() {
-	precache_model("models/player/shock.zym");
-	precache_model("models/weapons/v_shotgun.md3");
-	precache_sound("weapons/shotgun_fire.wav");
+void marine_init() {
+	precache_model("models/player/marine.zym");
+	precache_model("models/weapons/v_uzi.md3");
+	precache_sound("weapons/uzi_fire.wav");
 }
 
-void spawnfunc_soldier_spawn() {
+void spawnfunc_marine_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
-	monster_init(soldier_init);
-	monster_prepare_spawn(soldier_spawn, spawnfunc_soldier_spawn);
+	monster_init(marine_init);
+	monster_prepare_spawn(marine_spawn, spawnfunc_marine_spawn);
 }

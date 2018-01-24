@@ -269,6 +269,7 @@ void rune_respawn()
 		self.solid = SOLID_TRIGGER;
 		self.touch = rune_touch;
 		self.think = rune_respawn;
+		self.movetype = MOVETYPE_TOSS;
 		self.nextthink = time + g_runematch_shuffletime;//30 + random()*5; // fixme: cvar
 	}
 	else

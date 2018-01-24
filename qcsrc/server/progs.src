@@ -299,10 +299,13 @@ monsters/heavysoldier.qc
 monsters/flyingthing.qc
 monsters/spider.qc
 monsters/boss1.qc
+monsters/boss2.qc
 monsters/walker.qc
 monsters/ewheel.qc
 monsters/fireguy.qc
 monsters/bat.qc
+monsters/rocketgirl.qc
+monsters/marine.qc
 survive.qc
 minstagib.qc
 radio.qc

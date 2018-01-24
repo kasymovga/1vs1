@@ -71,12 +71,37 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	return p;
 }
 
+void monster_drop_item(float item_code, string _model, string _sound, string _name, .float itemfield, float itemvalue) {
+	if (random(1) > 0.2)
+		return;
+
+	print("Item spawn\n");
+	entity e = self;
+	self = spawn();
+	self.classname = "droppedweapon";
+	self.itemfield = itemvalue;
+	setorigin(self, e.origin);
+	StartItem (_model, _sound, 15, 0, _name, item_code, 0, 0, generic_pickupevalfunc, 100);
+	self = e;
+}
+
 void monster_die() {
 	Violence_GibSplash(self, 1, 1, self.enemy);
 	self.solid = SOLID_NOT;
 	self.alpha = -1;
 	self.nextthink = time;
 	self.think = SUB_Remove;
+	if (self.ammo_shells)
+		monster_drop_item(IT_SHELLS, "models/items/a_shells.md3", "misc/itempickup.wav", "Shells", ammo_shells, self.ammo_shells);
+
+	if (self.ammo_nails)
+		monster_drop_item(IT_NAILS, "models/items/a_bullets.md3", "misc/itempickup.wav", "Bullets", ammo_nails, self.ammo_nails);
+
+	if (self.ammo_rockets)
+		monster_drop_item(IT_ROCKETS, "models/items/a_rockets.md3", "misc/itempickup.wav", "Rockets", ammo_rockets, self.ammo_rockets);
+
+	if (self.ammo_cells)
+		monster_drop_item(IT_CELLS, "models/items/a_cells.md3", "misc/itempickup.wav", "Cells", ammo_cells, self.ammo_cells);
 }
 
 void monster_corpse_event_damage() {
@@ -395,4 +420,9 @@ void monsters_init() {
 		} else
 			print("Function ", monster_func, " not found\n");
 	}
+	precache_model("models/items/a_bullets.md3");
+	precache_model("models/items/a_shells.md3");
+	precache_model("models/items/a_rockets.md3");
+	precache_model("models/items/a_cells.md3");
+	precache_sound("misc/itempickup.wav");
 }

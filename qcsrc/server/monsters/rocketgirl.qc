@@ -1,8 +1,8 @@
-void heavysoldier_idle();
-void heavysoldier_guard();
-void heavysoldier_walk();
+void rlgirl_idle();
+void rlgirl_guard();
+void rlgirl_walk();
 
-void heavysoldier_grenade_explode (void)
+void rlgirl_rocket_explode (void)
 {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
@@ -11,16 +11,16 @@ void heavysoldier_grenade_explode (void)
 	remove (self);
 }
 
-void heavysoldier_grenade_touch (void)
+void rlgirl_rocket_touch (void)
 {
 	PROJECTILE_TOUCH;
-	heavysoldier_grenade_explode();
+	rlgirl_rocket_explode();
 }
 
 
-void heavysoldier_hunt() {
+void rlgirl_hunt() {
 	self.nextthink = time;
-	if (monster_check_target(heavysoldier_walk, heavysoldier_guard))
+	if (monster_check_target(rlgirl_walk, rlgirl_guard))
 		return;
 
 	vector v;
@@ -33,37 +33,37 @@ void heavysoldier_hunt() {
 	}
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
-		v = vectoangles(self.enemy.origin - self.origin);
+		v = vectoangles(self.enemy.origin - self.origin - '0 0 20');
 		self.angles_y = v_y;
 		makevectors(self.angles);
 		vector _shotdir = self.enemy.origin - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
-		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = CSQCProjectile(TRUE, PROJECTILE_GRENADE, TRUE);
-		gren.owner = self;
-		gren.dmg_edge = self.dmg_edge;
-		gren.dmg_radius = self.dmg_radius;
-		gren.dmg_force = self.dmg_force;
-		gren.classname = "grenade";
-		gren.movetype = MOVETYPE_TOSS;
-		gren.gravity = 0.01;
-		PROJECTILE_MAKETRIGGER(gren);
-		gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
-		setorigin(gren, _shotorg);
+		sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
+		entity missile = CSQCProjectile(TRUE, PROJECTILE_ROCKET, TRUE);
+		missile.owner = self;
+		missile.dmg_edge = self.dmg_edge;
+		missile.dmg_radius = self.dmg_radius;
+		missile.dmg_force = self.dmg_force;
+		missile.classname = "rocket";
+		missile.movetype = MOVETYPE_FLY;
+		missile.gravity = 0;
+		PROJECTILE_MAKETRIGGER(missile);
+		missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
+		setorigin(missile, _shotorg);
 
-		gren.nextthink = time + 5;
-		gren.think = adaptor_think2use;
-		gren.use = heavysoldier_grenade_explode;
-		gren.touch = heavysoldier_grenade_touch;
-		gren.velocity = normalize(_shotdir) * 3200;
-		W_SetupProjectileVelocity(gren);
+		missile.nextthink = time + 5;
+		missile.think = adaptor_think2use;
+		missile.use = rlgirl_rocket_explode;
+		missile.touch = rlgirl_rocket_touch;
+		missile.velocity = normalize(_shotdir) * 800;
+		W_SetupProjectileVelocity(missile);
 
-		gren.angles = vectoangles (gren.velocity);
+		missile.angles = vectoangles (missile.velocity);
 
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else {
-		v = monster_move_walk(250, 5, 0);
+		v = monster_move_walk(400, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
@@ -73,7 +73,7 @@ void heavysoldier_hunt() {
 		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void heavysoldier_idle() {
+void rlgirl_idle() {
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -82,63 +82,63 @@ void heavysoldier_idle() {
 	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void heavysoldier_guard() {
+void rlgirl_guard() {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	heavysoldier_idle();
+	rlgirl_idle();
 }
 
-void heavysoldier_walk() {
+void rlgirl_walk() {
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(heavysoldier_idle, 100))
+	if (monster_walk_finished(rlgirl_idle, 100))
 		return;
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(150, 5, 0);
+	vector v = monster_move_walk(300, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 
 }
 
-void heavysoldier_remove() {
+void rlgirl_remove() {
 	remove(self.exteriorweaponentity);
 }
 
-void heavysoldier_spawn() {
-	monster_prepare(heavysoldier_hunt, heavysoldier_walk, heavysoldier_idle);
-	setmodel(self, "models/player/grunt.zym");
+void rlgirl_spawn() {
+	monster_prepare(rlgirl_hunt, rlgirl_walk, rlgirl_idle);
+	setmodel(self, "models/player/pyria.zym");
 	self.movetype = MOVETYPE_WALK;
 	self.exteriorweaponentity = spawn();
-	self.entremove = heavysoldier_remove;
+	self.entremove = rlgirl_remove;
 	if (self.team > 0)
 		self.colormap = 1024;
 	else
 		self.colormap = 1024 + 34;
 
 	setattachment(self.exteriorweaponentity, self, "bip01 r hand");
-	setmodel(self.exteriorweaponentity, "models/weapons/v_gl.md3");
+	setmodel(self.exteriorweaponentity, "models/weapons/v_rl.md3");
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
-	self.netname = "Heavy Soldier";
+	self.netname = "Rocket Girl";
 	self.ammo_rockets = 5;
 }
 
-void heavysoldier_init() {
-	precache_model("models/player/grunt.zym");
-	precache_model("models/weapons/v_gl.md3");
-	precache_sound("weapons/grenade_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_GRENADE);
+void rlgirl_init() {
+	precache_model("models/player/pyria.zym");
+	precache_model("models/weapons/v_rl.md3");
+	precache_sound("weapons/rocket_fire.wav");
+	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_heavysoldier_spawn() {
+void spawnfunc_rlgirl_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
-	monster_init(heavysoldier_init);
-	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_heavysoldier_spawn);
+	monster_init(rlgirl_init);
+	monster_prepare_spawn(rlgirl_spawn, spawnfunc_rlgirl_spawn);
 }

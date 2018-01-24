@@ -1151,6 +1151,9 @@ set g_monster_boss1_health 3000
 set g_monster_boss1_damage 50
 set g_monster_boss1_force 100
 set g_monster_boss1_radius 100
+set g_monster_boss2_health 3000
+set g_monster_boss2_damage 40
+set g_monster_boss2_force 40
 set g_monster_bat_health 100
 set g_monster_bat_damage 50
 set g_monster_bat_force 100
@@ -1171,6 +1174,9 @@ set g_monster_heavysoldier_health 100
 set g_monster_heavysoldier_damage 50
 set g_monster_heavysoldier_force 100
 set g_monster_heavysoldier_radius 100
+set g_monster_marine_damage 10
+set g_monster_marine_health 50
+set g_monster_marine_force 10
 set g_monster_soldier_health 50
 set g_monster_soldier_damage 10
 set g_monster_soldier_force 20
@@ -1182,6 +1188,10 @@ set g_monster_spider_health 100
 set g_monster_spider_damage 100
 set g_monster_spider_force 100
 set g_monster_spider_radius 150
+set g_monster_rlgirl_damage 100
+set g_monster_rlgirl_health 50
+set g_monster_rlgirl_force 100
+set g_monster_rlgirl_radius 100
 set g_monster_walker_health 500
 set g_monster_walker_damage 100
 set g_monster_walker_force 100

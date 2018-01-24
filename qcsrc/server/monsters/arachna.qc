@@ -1,8 +1,8 @@
-void fireguy_idle();
-void fireguy_guard();
-void fireguy_walk();
+void arachna_idle();
+void arachna_guard();
+void arachna_walk();
 
-void fireguy_grenade_explode (void)
+void arachna_grenade_explode (void)
 {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
@@ -11,13 +11,13 @@ void fireguy_grenade_explode (void)
 	remove (self);
 }
 
-void fireguy_grenade_touch (void)
+void arachna_grenade_touch (void)
 {
 	PROJECTILE_TOUCH;
-	fireguy_grenade_explode();
+	arachna_grenade_explode();
 }
 
-void fireguy_mine_touch(void)
+void arachna_mine_touch(void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
@@ -29,7 +29,7 @@ void fireguy_mine_touch(void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void fireguy_mine_think()
+void arachna_mine_think()
 {
 	if(time > self.pushltime)
 	{
@@ -56,9 +56,9 @@ void fireguy_mine_think()
 }
 
 
-void fireguy_hunt() {
+void arachna_hunt() {
 	self.nextthink = time;
-	if (monster_check_target(fireguy_walk, fireguy_guard))
+	if (monster_check_target(arachna_walk, arachna_guard))
 		return;
 
 	vector v;
@@ -88,10 +88,10 @@ void fireguy_hunt() {
 		proj.dmg_force = self.dmg_force;
 		proj.movetype = MOVETYPE_BOUNCE;
 		proj.projectiledeathtype = WEP_FIREBALL;
-		proj.touch = fireguy_mine_touch;
+		proj.touch = arachna_mine_touch;
 		PROJECTILE_MAKETRIGGER(proj);
 		setorigin(proj, _shotorg);
-		proj.think = fireguy_mine_think;
+		proj.think = arachna_mine_think;
 		proj.nextthink = time;
 		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 		proj.velocity = _shotdir * 500 + v_up * 50;
@@ -112,7 +112,7 @@ void fireguy_hunt() {
 		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void fireguy_idle() {
+void arachna_idle() {
 	self.nextthink = time;
 	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
 		return;
@@ -121,19 +121,19 @@ void fireguy_idle() {
 	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void fireguy_guard() {
+void arachna_guard() {
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	fireguy_idle();
+	arachna_idle();
 }
 
-void fireguy_walk() {
+void arachna_walk() {
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(fireguy_idle, 100))
+	if (monster_walk_finished(arachna_idle, 100))
 		return;
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
@@ -145,16 +145,16 @@ void fireguy_walk() {
 
 }
 
-void fireguy_remove() {
+void arachna_remove() {
 	remove(self.exteriorweaponentity);
 }
 
-void fireguy_spawn() {
-	monster_prepare(fireguy_hunt, fireguy_walk, fireguy_idle);
-	setmodel(self, "models/player/lycanthrope.zym");
+void arachna_spawn() {
+	monster_prepare(arachna_hunt, arachna_walk, arachna_idle);
+	setmodel(self, "models/player/arachna.md3");
 	self.movetype = MOVETYPE_WALK;
 	self.exteriorweaponentity = spawn();
-	self.entremove = fireguy_remove;
+	self.entremove = arachna_remove;
 	if (self.team > 0)
 		self.colormap = 1024;
 	else
@@ -166,18 +166,17 @@ void fireguy_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "FireGuy";
-	self.ammo_rockets = 10;
 }
 
-void fireguy_init() {
-	precache_model("models/player/lycanthrope.zym");
-	precache_model("models/weapons/v_fireball.md3");
-	precache_sound("weapons/fireball_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_FIREMINE);
+void arachna_init() {
+	precache_model("models/player/arachna.md3");
+	precache_model("models/weapons/v_rl.md3");
+	dlc_require("arachna");
+	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_fireguy_spawn() {
-	setsize(self, '-16 -16 -24', '16 16 45');
-	monster_init(fireguy_init);
-	monster_prepare_spawn(fireguy_spawn, spawnfunc_fireguy_spawn);
+void spawnfunc_arachna_spawn() {
+	setsize(self, '-16 -16 -24', '16 16 16');
+	monster_init(arachna_init);
+	monster_prepare_spawn(arachna_spawn, spawnfunc_arachna_spawn);
 }

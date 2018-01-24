@@ -193,6 +193,8 @@ void walker_spawn() {
 	self.entremove = walker_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.weaponentity.colormod = self.colormod;
+	self.ammo_rockets = 20;
+	self.ammo_nails = 50;
 }
 
 void walker_init() {
