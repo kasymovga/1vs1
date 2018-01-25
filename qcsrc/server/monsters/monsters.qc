@@ -75,7 +75,6 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 	if (random(1) > 0.2)
 		return;
 
-	print("Item spawn\n");
 	entity e = self;
 	self = spawn();
 	self.classname = "droppedweapon";
