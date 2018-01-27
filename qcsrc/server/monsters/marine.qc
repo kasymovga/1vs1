@@ -37,7 +37,7 @@ void marine_hunt() {
 			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
 		if (self.cnt)
-			self.attack_finished_single = self.attack_finished_single + 0.1;
+			self.attack_finished_single = max(self.attack_finished_single, time - frametime) + 0.1;
 		else
 			self.attack_finished_single = time + 4 + random();
 
