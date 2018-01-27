@@ -80,7 +80,7 @@ void boss2_hunt() {
 		self.attack_finished_single = time + 1 + random();
 		self.bulletcounter = time + 0.5;
 	} else {
-		v = monster_move_walk(300, 5, 0);
+		v = monster_move_walk(800, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
@@ -118,7 +118,7 @@ void boss2_walk() {
 		return;
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
-	vector v = monster_move_walk(200, 5, 0);
+	vector v = monster_move_walk(600, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
