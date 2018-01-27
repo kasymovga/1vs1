@@ -94,7 +94,7 @@ void fireguy_hunt() {
 		proj.think = fireguy_mine_think;
 		proj.nextthink = time;
 		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
-		proj.velocity = _shotdir * 500 + v_up * 50;
+		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
 		proj.pushltime = time + g_balance_fireball_primary_lifetime;
 		W_SetupProjectileVelocity(proj);
 		proj.angles = vectoangles(proj.velocity);
