@@ -195,6 +195,7 @@ void walker_spawn() {
 	self.weaponentity.colormod = self.colormod;
 	self.ammo_rockets = 20;
 	self.ammo_nails = 50;
+	self.frags = 3;
 }
 
 void walker_init() {

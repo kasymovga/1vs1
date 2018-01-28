@@ -226,6 +226,8 @@ void monster_spawn_think() {
 	self.reset = monster_die;
 	oldself.weapon_think();
 	setsize(self, oldself.mins, oldself.maxs);
+	if not(self.frags)
+		self.frags = 1;
 
 	self = oldself;
 	self.dmg = self.dmg - quant;
