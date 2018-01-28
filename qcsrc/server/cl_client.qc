@@ -656,7 +656,10 @@ void PutObserverInServer(float frags_team_reset)
 	if not(frags_team_reset)
 		return;
 
-	self.team = -1;
+	if (self.team != -1) {
+		self.team = -1;
+		SCOREKEEPER_TOUCH(self);
+	}
 
 	self.frags = FRAGS_SPECTATOR;
 }
@@ -781,6 +784,7 @@ void PutClientInServer()
 	if(self.classname == "player") {
 		entity spot, oldself;
 		local float currentlyPlaying;
+		float oldteam = self.team;
 
 		if (self.team < 0) {
 			if(clienttype(self) == CLIENTTYPE_BOT)
@@ -788,6 +792,8 @@ void PutClientInServer()
 
 			JoinBestTeam(self, FALSE, FALSE);
 		}
+		if (self.team != oldteam)
+			SCOREKEEPER_TOUCH(self);
 
 		spot = GameHook_SelectSpawnPoint();
 
@@ -986,9 +992,9 @@ void PlayerToSpec(entity player)
 		PutClientInServer();
 		self = oldself;
 		spectator_note.SendFlags = 1;
+		if (teamplay)
+			AuditTeams(FALSE);
 	}
-	if (teamplay)
-		AuditTeams(FALSE);
 }
 
 float ClientInit_SendEntity(entity to, float sf)

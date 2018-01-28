@@ -26,12 +26,15 @@ void RemovePlayer(entity player)
 
 	if(!pl)
 	{
+		self = player;
 		error("Trying to remove a player which is not in the playerlist!");
 		return;
 	}
 	parent.sort_next = player.sort_next;
 	if(player.sort_next)
 		player.sort_next.sort_prev = parent;
+
+	player.sort_prev = world;
 }
 
 void MoveToLast(entity e)

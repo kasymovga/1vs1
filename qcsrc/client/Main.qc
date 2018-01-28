@@ -529,54 +529,10 @@ float SetTeam(entity o, float Team)
 	return FALSE;
 }
 
-void Playerchecker_Think()
-{
-	float i;
-	entity e;
-	for(i = 0; i < maxclients; ++i)
-	{
-		e = playerslots[i];
-		if(GetPlayerName(i) == "")
-		{
-			if(e.sort_prev)
-			{
-				//print("playerchecker: KILL KILL KILL\n");
-				// player disconnected
-				SetTeam(e, -1);
-				RemovePlayer(e);
-				e.sort_prev = world;
-				//e.gotscores = 0;
-			}
-		}
-		else
-		{
-			if not(e.sort_prev)
-			{
-				//print("playerchecker: SPAWN SPAWN SPAWN\n");
-				// player connected
-				if not(e)
-					playerslots[i] = e = spawn();
-				e.sv_entnum = i;
-				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with Sbar_UpdatePlayerTeams
-				RegisterPlayer(e);
-				Sbar_UpdatePlayerPos(e);
-			}
-		}
-	}
-	self.nextthink = time + 0.2;
-}
-
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
 	localcmd(strcat("\ncl_cmd sbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
-
-	entity playerchecker;
-	playerchecker = spawn();
-	playerchecker.think = Playerchecker_Think;
-	playerchecker.nextthink = time + 0.2;
-
 	postinit = true;
 }
 
@@ -902,6 +858,7 @@ void Ent_RemovePlayerScore(float ignore)
 	if(self.owner)
 	{
 		SetTeam(self.owner, -1);
+		RemovePlayer(self.owner);
 		self.owner.gotscores = 0;
 		for(i = 0; i < MAX_SCORE; ++i)
 			self.owner.(scores[i]) = 0; // clear all scores
@@ -937,9 +894,10 @@ void Ent_ReadPlayerScore(float ignore)
 	o.sv_entnum = self.sv_entnum;
 	o.gotscores = 1;
 
-	//if not(o.sort_prev)
-	//	RegisterPlayer(o);
-	//playerchecker will do this for us later, if it has not already done so
+	if not(o.sort_prev)
+		RegisterPlayer(o);
+
+	SetTeam(o, GetPlayerColor(o.sv_entnum));
 
 	float sf, lf;
 #if MAX_SCORE <= 8

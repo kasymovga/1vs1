@@ -254,37 +254,6 @@ void Sbar_InitScores()
 	Cmd_Sbar_SetFields(0);
 }
 
-void Sbar_UpdatePlayerPos(entity pl);
-float SetTeam(entity pl, float Team);
-//float lastpnum;
-void Sbar_UpdatePlayerTeams()
-{
-	float Team;
-	entity pl, tmp;
-	float num;
-
-	num = 0;
-	for(pl = players.sort_next; pl; pl = pl.sort_next)
-	{
-		num += 1;
-		Team = GetPlayerColor(pl.sv_entnum);
-		if(SetTeam(pl, Team))
-		{
-			tmp = pl.sort_prev;
-			Sbar_UpdatePlayerPos(pl);
-			if(tmp)
-				pl = tmp;
-			else
-				pl = players.sort_next;
-		}
-	}
-	/*
-	if(num != lastpnum)
-		print(strcat("PNUM: ", ftos(num), "\n"));
-	lastpnum = num;
-	*/
-}
-
 float Sbar_ComparePlayerScores(entity left, entity right)
 {
 	float vl, vr;
@@ -1065,8 +1034,6 @@ float lastpingstime;
 float scoreboard_bottom;
 void Sbar_DrawScoreboard()
 {
-	Sbar_UpdatePlayerTeams();
-
 	vector rgb, pos, tmp;
 	entity pl, tm;
 

@@ -497,6 +497,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 	{
 		//bprint(pl.netname, " has changed to ", TeamNoName(t), "\n");
 		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
+		SCOREKEEPER_TOUCH(pl);
 	}
 
 	if(t != s)
