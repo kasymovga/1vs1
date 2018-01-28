@@ -138,4 +138,4 @@ float fov;
 float fov_zoomed;
 .entity entchain;
 .entity entchain_back;
-isdemo_flag;
+float isdemo_flag;
