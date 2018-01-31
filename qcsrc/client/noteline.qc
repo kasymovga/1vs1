@@ -57,6 +57,11 @@ void NoteLine_Draw() {
 
 string NoteLine_PrepareLine(string s) {
 	float cmdkey, cmdkey_end;
+	if (isdemo_flag) {
+		cmdkey = strstrofs(s, "\n", 0);
+		if (cmdkey >= 0)
+			s = substring(s, 0, cmdkey);
+	}
 	for (cmdkey = 0; (cmdkey = strstrofs(s, "{", cmdkey)) >= 0;) {
 		cmdkey_end = strstrofs(s, "}", cmdkey);
 		if (cmdkey_end < 0)
@@ -67,9 +72,6 @@ string NoteLine_PrepareLine(string s) {
 		if (cmdkey + 1 == cmdkey_end) {
 			s2 = "{";
 		} else {
-			if (isdemo_flag) // Bind help useless for demo
-				return "";
-
 			s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
 			s2 = getcommandkey(s2, s2);
 		}
