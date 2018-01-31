@@ -250,7 +250,7 @@ void drawNexuizServerList(entity me)
 
 	if(me.currentSortField == -1)
 	{
-		me.setSortOrder(me, SLIST_FIELD_PING, +1);
+		me.setSortOrder(me, SLIST_FIELD_NUMHUMANS, -1);
 		me.refreshServerList(me, 2);
 	}
 	else if(me.needsRefresh == 1)
