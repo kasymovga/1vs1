@@ -54,7 +54,6 @@ void fillNexuizEffectsSettingsTab(entity me)
 			e.addValue(e, "4x", "4");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Texture quality:"));
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("gl_picmip"));
 			e.addValue(e, "Lowest", "16");
@@ -89,6 +88,11 @@ void fillNexuizEffectsSettingsTab(entity me)
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Particle dist.:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Gibs count:"));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_gibs_maxcount"));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Casing count:"));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_casing_maxcount"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_decals", "Decals"));
 	me.TR(me);
@@ -125,9 +129,6 @@ void fillNexuizEffectsSettingsTab(entity me)
 			e.configureNexuizTextSliderValues(e);
 			setDependentAND(e, "r_glsl", 1, 1, "r_water", 1, 1);
 	me.TR(me);
-		if(cvar("developer"))
-			me.TD(me, 1, 3, e = makeNexuizCheckBoxEx(3, 0, "r_showsurfaces", "Show surfaces"));
-	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_shadow_realtime_dlight", "Realtime dynamic lighting"));
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_shadow_realtime_dlight_shadows", "Shadows"));
 			setDependent(e, "r_shadow_realtime_dlight", 1, 1);
@@ -142,7 +143,10 @@ void fillNexuizEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_bloom", "Bloom"));
 	me.TR(me);
-	
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_coronas", "Coronas"));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "r_deformvertexes", "Deform vertexes"));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Motion blur:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.1, "r_motionblur"));
