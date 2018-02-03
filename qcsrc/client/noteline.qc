@@ -5,15 +5,15 @@ void NoteLine_Draw();
 void NoteLine_Remove() {
 	entity e;
 	if (noteline == self) {
-		noteline = noteline.entchain;
+		noteline = noteline.sort_next;
 		if (noteline) {
 			noteline.draw2dflag = 1;
 			noteline.draw2d = NoteLine_Draw;
 		}
 	} else
-		for (e = noteline; e.entchain; e = e.entchain) {
-			if (e.entchain == self) {
-				e.entchain = self.entchain;
+		for (e = noteline; e.sort_next; e = e.sort_next) {
+			if (e.sort_next == self) {
+				e.sort_next = self.sort_next;
 				break;
 			}
 		}
@@ -39,7 +39,7 @@ void NoteLine_Draw() {
 	entity e;
 	string head, tail;
 	float n;
-	for (e = noteline; e; e = e.entchain) {
+	for (e = noteline; e; e = e.sort_next) {
 		NoteLine_Pos_y += sbar_fontsize_y * 0.5;
 		tail = e.message;
 		for (;;) {
@@ -89,12 +89,12 @@ void Ent_NoteLine(float bIsNew) {
 
 	self.message = strzone(NoteLine_PrepareLine(ReadString()));
 	entity e;
-	for (e = noteline; e; e = e.entchain) {
+	for (e = noteline; e; e = e.sort_next) {
 		if (e == self)
 			goto skip;
 	}
 	if (noteline) {
-		self.entchain = noteline;
+		self.sort_next = noteline;
 		noteline.draw2dflag = 0;
 		noteline.draw2d = world.draw2d;
 	}

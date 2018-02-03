@@ -54,7 +54,6 @@ noteline.qh
 cvar.qc
 
 ../client-server/movelib.qc
-sortlist.qc
 miscfunctions.qc
 ../common/miscfunctions.qc
 ../client-server/miscfunctions.qc

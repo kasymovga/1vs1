@@ -5,16 +5,16 @@ float gib_count;
 void Gib_Delete()
 {
 	if (self == gib_oldest)
-		gib_oldest = self.entchain;
+		gib_oldest = self.sort_next;
 
 	if (self == gib_latest)
-		gib_latest = self.entchain_back;
+		gib_latest = self.sort_prev;
 
-	if (self.entchain)
-		self.entchain.entchain_back = self.entchain_back;
+	if (self.sort_next)
+		self.sort_next.sort_prev = self.sort_prev;
 
-	if (self.entchain_back)
-		self.entchain_back.entchain = self.entchain;
+	if (self.sort_prev)
+		self.sort_prev.sort_next = self.sort_next;
 
 	remove(self);
 	gib_count--;
@@ -123,9 +123,9 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 		gib_oldest = gib;
 
 	if (gib_latest)
-		gib_latest.entchain = gib;
+		gib_latest.sort_next = gib;
 
-	gib.entchain_back = gib_latest;
+	gib.sort_prev = gib_latest;
 	gib_latest = gib;
 	gib_count++;
 	gib.classname = "gib";

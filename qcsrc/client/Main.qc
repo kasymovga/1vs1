@@ -337,8 +337,8 @@ void CSQC_Init(void)
 
 	calledhooks = 0;
 
-	teams = Sort_Spawn();
-	players = Sort_Spawn();
+	teams = spawn();
+	players = spawn();
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 

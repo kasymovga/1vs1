@@ -6,16 +6,16 @@ entity casing_oldest;
 void Casing_Delete()
 {
 	if (self == casing_oldest)
-		casing_oldest = self.entchain;
+		casing_oldest = self.sort_next;
 
 	if (self == casing_latest)
-		casing_latest = self.entchain_back;
+		casing_latest = self.sort_prev;
 
-	if (self.entchain)
-		self.entchain.entchain_back = self.entchain_back;
+	if (self.sort_next)
+		self.sort_next.sort_prev = self.sort_prev;
 
-	if (self.entchain_back)
-		self.entchain_back.entchain = self.entchain;
+	if (self.sort_prev)
+		self.sort_prev.sort_next = self.sort_next;
 
     remove(self);
 	casing_count--;
@@ -98,9 +98,9 @@ void Ent_Casing(float isNew)
 			casing_oldest = casing;
 
 		if (casing_latest)
-			casing_latest.entchain = casing;
+			casing_latest.sort_next = casing;
 
-		casing.entchain_back = casing_latest;
+		casing.sort_prev = casing_latest;
 		casing_latest = casing;
 		casing_count++;
 
