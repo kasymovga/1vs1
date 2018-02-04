@@ -1,3 +1,4 @@
+.entity scorekeeper;
 entity teamscorekeepers[16];
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];

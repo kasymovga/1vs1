@@ -1,5 +1,4 @@
 entity scores_initialized; // non-world when scores labels/rules have been set
-.entity scorekeeper;
 .float scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
 

@@ -52,7 +52,6 @@ float g_player_brightness;
 float g_spawnshieldtime;
 float g_spawnsound;
 float leadlimit;
-float sv_antiengine;
 float sv_spectate;
 float sv_timeout;
 float sv_timeout_number;
@@ -974,14 +973,6 @@ void PlayerToSpec(entity player)
 	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
 	if not(g_campaign)
 	if (sv_spectate) {
-		if (sv_antiengine) {
-			if (strstrofs(strdecolorize(player.netname), "Engine", 0) >= 0)
-			if (player.scorekeeper)
-			if (player.scorekeeper.scores[SP_SCORE] >= sv_antiengine) {
-				Ban_KickBanClient(player, 1200, 4, "Anti-Engine triggered");
-				return;
-			}
-		}
 		entity oldself = self;
 		self = player;
 		PlayerClear(FALSE);
@@ -2298,7 +2289,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_spawnshieldtime);
 	CACHE_CVAR(g_spawnsound);
 	CACHE_CVAR(leadlimit);
-	CACHE_CVAR(sv_antiengine);
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout);
 	CACHE_CVAR(sv_timeout_number);
