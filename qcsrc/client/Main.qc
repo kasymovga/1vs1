@@ -457,41 +457,11 @@ void CSQC_Shutdown(void)
 float SetTeam(entity o, float Team)
 {
 	entity tm;
-	if(teamplay)
-	{
-		switch(Team)
-		{
-			case -1:
-			case COLOR_TEAM1:
-			case COLOR_TEAM2:
-			case COLOR_TEAM3:
-			case COLOR_TEAM4:
-				break;
-			default:
-				if(GetTeam(Team, false) == NULL)
-				{
-					//print("trying to switch to unsupported team ", ftos(Team), "\n");
-					Team = COLOR_SPECTATOR;
-				}
-				break;
-		}
-	}
-	else
-	{
-		switch(Team)
-		{
-			case -1:
-			case 0:
-				break;
-			default:
-				if(GetTeam(Team, false) == NULL)
-				{
-					//print("trying to switch to unsupported team ", ftos(Team), "\n");
-					Team = COLOR_SPECTATOR;
-				}
-				break;
-		}
-	}
+	if (Team != -1)
+	if (teamplay || Team)
+	if not(GetTeam(Team, false))
+		Team = COLOR_SPECTATOR;
+
 	if(Team == -1) // leave
 	{
 		if(o.has_team)
@@ -509,7 +479,8 @@ float SetTeam(entity o, float Team)
 		{
 			//print("(CONNECT) enter team ", ftos(o.team), "\n");
 			o.team = Team;
-			tm = GetTeam(Team, true);
+			tm = GetTeam(Team, false);
+			if not(tm) tm = GetTeam(COLOR_SPECTATOR, false);
 			tm.team_size += 1;
 			o.has_team = 1;
 			return TRUE;
@@ -521,7 +492,8 @@ float SetTeam(entity o, float Team)
 			tm.team_size -= 1;
 			o.team = Team;
 			//print("(CHANGE) enter team ", ftos(o.team), "\n");
-			tm = GetTeam(Team, true);
+			tm = GetTeam(Team, false);
+			if not(tm) tm = GetTeam(COLOR_SPECTATOR, false);
 			tm.team_size += 1;
 			return TRUE;
 		}
@@ -1220,6 +1192,9 @@ void Ent_Init(float ignore)
 
 	if (sf & 32) {
 		teamplay = ReadByte();
+		if not(teamplay)
+			GetTeam(0, true);
+
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));
 		Sbar_InitScores();
