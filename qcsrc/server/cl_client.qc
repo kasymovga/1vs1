@@ -1294,6 +1294,30 @@ void Check_ForRetard(entity player) {
 	}
 }
 
+float ClientPreConnect_Abort() {
+	if (self.just_connected)
+		return FALSE;
+
+	if(Ban_MaybeEnforceBan(self))
+		return TRUE;
+
+	self.just_connected = TRUE;
+	self.team = -1;
+	self.retard = -1;
+	Check_ForRetard(self);
+	string s;
+	float i;
+	for (i = 0; ; ++i) {
+		s = cvar_string(strcat("sv_player_mute_namepattern", ftos(i)));
+		if (s == "")
+			break;
+
+		if (strstrofs(strdecolorize(self.netname), s, 0) >= 0)
+			self.muted = TRUE;
+	}
+	return FALSE;
+}
+
 /*
 =============
 ClientConnect
@@ -1305,23 +1329,17 @@ void ClientConnect (void)
 {
 	local string s;
 
-	if(self.flags & FL_CLIENT)
-	{
-		print("Warning: ClientConnect, but already connected!\n");
-		return;
-	}
+	if not(self.flags & FL_CLIENT) {
+		if (ClientPreConnect_Abort())
+			return;
 
-	if(Ban_MaybeEnforceBan(self))
-		return;
+		self.flags = FL_CLIENT;
+	}
 
 	DecodeLevelParms();
 
 	self.classname = "player_joining";
 	self.team = -1; //clear engine assigned values
-	self.just_connected = TRUE;
-
-	self.flags = FL_CLIENT;
-
 	if(player_count<0)
 	{
 		dprint("BUG player count is lower than zero, this cannot happen!\n");
@@ -1419,11 +1437,9 @@ void ClientConnect (void)
 	else
 		self.hitplotfh = -1;
 
-	self.retard = -1;
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		GameHookChain_RealClientConnect();
-		Check_ForRetard(self);
 	}
 
 	IP2C_SetCountry(self);

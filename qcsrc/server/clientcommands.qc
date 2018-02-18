@@ -91,6 +91,9 @@ void SV_ParseClientCommand(string s) {
 	string cmd;
 	float tokens;
 	entity e;
+	if not(self.flags & FL_CLIENT)
+	if (ClientPreConnect_Abort())
+		return;
 
 	tokens = tokenize_console(s);
 

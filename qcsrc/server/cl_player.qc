@@ -850,13 +850,6 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	float flood, privatemsgprefixlen;
 	entity head;
 
-	if(Ban_MaybeEnforceBan(source))
-		return;
-
-	if not(source.flags & FL_CLIENT)
-	if not(source.retard)
-		Check_ForRetard(source);
-
 	if(source.retard > 0) {
 		if (source.retard_last_say)
 		if (time - source.retard_last_say < 60)
