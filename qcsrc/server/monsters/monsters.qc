@@ -255,7 +255,7 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.team = self.owner.team;
 	self.weapon_think = hunt;
 	self.nextthink = time;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_MONSTERCLIP | DPCONTENTS_BOTCLIP;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_MONSTERCLIP | DPCONTENTS_BOTCLIP | DPCONTENTS_BODY;
 	string t = self.owner.target;
 	if (t == "")
 		t = self.target;
