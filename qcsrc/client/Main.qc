@@ -490,10 +490,13 @@ float SetTeam(entity o, float Team)
 			//print("(CHANGE) leave team ", ftos(o.team), "\n");
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
-			o.team = Team;
 			//print("(CHANGE) enter team ", ftos(o.team), "\n");
 			tm = GetTeam(Team, false);
-			if not(tm) tm = GetTeam(COLOR_SPECTATOR, false);
+			if not(tm) {
+				tm = GetTeam(COLOR_SPECTATOR, false);
+				Team = COLOR_SPECTATOR;
+			}
+			o.team = Team;
 			tm.team_size += 1;
 			return TRUE;
 		}
@@ -922,6 +925,8 @@ void Ent_ReadTeamScore(float ignore)
 		}
 
 	Sbar_UpdateTeamPos(o);
+	for(o = players.sort_next; o; o = o.sort_next)
+		SetTeam(o, GetPlayerColor(o.sv_entnum));
 }
 
 void Net_Reset()
