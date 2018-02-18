@@ -478,28 +478,23 @@ float SetTeam(entity o, float Team)
 		if not(o.has_team)
 		{
 			//print("(CONNECT) enter team ", ftos(o.team), "\n");
-			o.team = Team;
-			tm = GetTeam(Team, false);
-			if not(tm) tm = GetTeam(COLOR_SPECTATOR, false);
-			tm.team_size += 1;
 			o.has_team = 1;
-			return TRUE;
 		}
 		else if(Team != o.team)
 		{
-			//print("(CHANGE) leave team ", ftos(o.team), "\n");
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
-			//print("(CHANGE) enter team ", ftos(o.team), "\n");
-			tm = GetTeam(Team, false);
-			if not(tm) {
-				tm = GetTeam(COLOR_SPECTATOR, false);
-				Team = COLOR_SPECTATOR;
-			}
-			o.team = Team;
-			tm.team_size += 1;
-			return TRUE;
+		} else
+			return FALSE;
+
+		tm = GetTeam(Team, false);
+		if not(tm) {
+			tm = GetTeam(COLOR_SPECTATOR, false);
+			Team = COLOR_SPECTATOR;
 		}
+		o.team = Team;
+		tm.team_size += 1;
+		return TRUE;
 	}
 	return FALSE;
 }
