@@ -612,6 +612,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 		return world;
 	}
 
+	portal.angles_x = -ang_x; //Yes, totally retarded
 	setsize(portal, '-48 -48 -48', '48 48 48');
 	Portal_MakeWaitingPortal(portal);
 
@@ -626,8 +627,6 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	org = trace_endpos;
 	ang = fixedvectoangles2(trace_plane_normal, dir);
-	fixedmakevectors(ang);
-
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 		return 0;
@@ -646,8 +645,6 @@ float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	org = trace_endpos;
 	ang = fixedvectoangles2(trace_plane_normal, dir);
-	fixedmakevectors(ang);
-
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 	{
