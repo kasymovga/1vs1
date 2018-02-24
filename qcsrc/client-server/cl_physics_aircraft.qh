@@ -1,4 +1,4 @@
-#define aircraft_MIN '-75 -75 5'
+#define aircraft_MIN '-75 -75 -15'
 #define aircraft_MAX '75 75 105'
 
 float g_vehicle_aircraft_accel_up;

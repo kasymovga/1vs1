@@ -332,7 +332,6 @@ void aircraft_enter()
 
     //WriteAngle(MSG_ONE, self.tur_head.angles_z + self.angles_z);    // roll
     //self.owner.view_ofs = '0 0 0';
-    //self.tur_head.nodrawtoclient = self.owner;
 	self.player_physic = spawn();
 	self.player_physic.viewmodelforclient = self.owner;
 	self.player_physic.vehicle = self;
@@ -415,7 +414,6 @@ void aircraft_exit(float eject)
         self.team = self.spiderbot_spawnpnt.team ;
 
 	vehicle_stdproc_setcolormod();
-	self.tur_head.nodrawtoclient             = self;
 	setorigin(self.owner, exit_origin);
 	if(eject)
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
@@ -574,7 +572,7 @@ void vewhicle_aircraft_dinit()
     setmodel(self, "models/ebomb.mdl");
 	self.scale = 5;
 	setattachment(self.tur_head, self, "");
-	setorigin(self.tur_head, '0 0 6.4');
+	setorigin(self.tur_head, '0 0 2');
     setmodel(self.tur_head, "models/spiderbot/spiderbot_top.dpm");
 	self.tur_head.anim_start = 0;
 	self.tur_head.anim_end = 1;

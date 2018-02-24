@@ -429,10 +429,6 @@ void spiderbot_enter()
 		//other.angles_y = self.tur_head.angles_y + self.angles_y;
 		//other.fixangle = TRUE;
     }
-
-    //WriteAngle(MSG_ONE, self.tur_head.angles_z + self.angles_z);    // roll
-    //self.owner.view_ofs = '0 0 0';
-    //self.tur_head.nodrawtoclient = self.owner;
 	self.player_physic = spawn();
 	self.player_physic.viewmodelforclient = self.owner;
 	self.player_physic.vehicle = self;
@@ -514,9 +510,6 @@ void spiderbot_exit(float eject)
         self.team = self.spiderbot_spawnpnt.team ;
 
 	vehicle_stdproc_setcolormod();
-
-	self.tur_head.nodrawtoclient             = self;
-
 	setorigin(self.owner, exit_origin);
 	if(eject)
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
