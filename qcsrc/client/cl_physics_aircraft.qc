@@ -32,7 +32,13 @@ void physic_aircraft_pre() {
 
 void physic_aircraft_post() {
 	//physic_velocity = self.velocity;
-	setorigin(self, aircraft.origin + '0 0 48');
+	v = aircraft.origin + '0 0 48';
+	makevectors(input_angles);
+	tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * 160, MOVE_WORLDONLY, world);
+	v = trace_endpos;
+	tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * 80, MOVE_WORLDONLY, world);
+	v = trace_endpos;
+	setorigin(self, v);
 	physic_flags = self.flags;
 }
 

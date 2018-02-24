@@ -275,8 +275,7 @@ vector CSQCPhysic_SetCamera()
 				stairsmoothz = v_z;
 			}
 		}
-		if not(CVAR(chase_active))
-			R_SetView(VF_ORIGIN, v);
+		R_SetView(VF_ORIGIN, v);
 	}
 	else {
 		v = pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);

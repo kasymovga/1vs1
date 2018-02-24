@@ -32,7 +32,7 @@ void aircraft_enter();
 
 void aircraft_engine_on() {
 	if not(self.cnt) {
-		self.vehicle.modelflags |= MF_ROCKET;
+		self.modelflags |= MF_ROCKET;
 		soundtoat(MSG_ALL, self, '0 0 0', CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, ATTN_NORM); 
 		self.cnt = 1;
 	}
@@ -40,7 +40,7 @@ void aircraft_engine_on() {
 
 void aircraft_engine_off() {
 	if (self.cnt) {
-		self.vehicle.modelflags &~= MF_ROCKET;
+		self.modelflags &~= MF_ROCKET;
 		stopsoundto(MSG_ALL, self, CHAN_PLAYER);
 		self.cnt = 0;
 	}
@@ -109,14 +109,14 @@ void aircraft_rocket_do()
     if(self.gun2.cnt > time)
         return;
 
-    if(self.vehicle.frame > 7)
-        self.vehicle.frame = 0;
+    if(self.tur_head.frame > 7)
+        self.tur_head.frame = 0;
 
     if not (self.owner.BUTTON_ATCK2)
         return;
 
-    self.vehicle.frame += 1;
-    if(self.vehicle.frame > 7)
+    self.tur_head.frame += 1;
+    if(self.tur_head.frame > 7)
         self.attack_finished_single = g_vehicle_aircraft_rocket_reload;
     else
         self.attack_finished_single = g_vehicle_aircraft_rocket_refire;
@@ -125,7 +125,7 @@ void aircraft_rocket_do()
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
     missile                 = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
-    setorigin(missile,gettaginfo(self.vehicle,gettagindex(self.vehicle,"tag_fire")));
+    setorigin(missile,gettaginfo(self.tur_head, gettagindex(self.tur_head,"tag_fire")));
     te_explosion (missile.origin);
 
     missile.classname       = "aircraft_rocket";
@@ -186,7 +186,7 @@ void aircraft_minigun_fire(entity gun)
 
 void aircraft_miniguns_do()
 {
-    if ((self.owner.BUTTON_ATCK) && (self.owner.vehicle_heat < 1) && (self.vehicle.attack_finished_single < time))
+    if ((self.owner.BUTTON_ATCK) && (self.owner.vehicle_heat < 1) && (self.attack_finished_single < time))
     {
 		float rotation;
 		rotation = 720 * sys_ticrate / g_vehicle_aircraft_minigun_refire;
@@ -199,22 +199,18 @@ void aircraft_miniguns_do()
             self.gun1.angles_z = 0;
             self.gun2.angles_z = 360;
         }
-		self.vehicle_hudmodel.gun1.angles_z = self.gun1.angles_z;
-		self.vehicle_hudmodel.gun2.angles_z = self.gun2.angles_z;
 
-        self = self.owner;
-		aircraft_minigun_fire(self.vehicle.gun1);
-		aircraft_minigun_fire(self.vehicle.gun2);
+		aircraft_minigun_fire(self.gun1);
+		aircraft_minigun_fire(self.gun2);
 
-        self = self.vehicle;
         self.vehicle_heat += g_vehicle_aircraft_minigun_heat * g_vehicle_aircraft_minigun_refire;
         if(self.vehicle_heat >= 1)
         {
             self.vehicle_heat = 1;
-            self.vehicle.attack_finished_single = (1/g_vehicle_aircraft_minigun_cooldown)+time;
+            self.attack_finished_single = (1/g_vehicle_aircraft_minigun_cooldown)+time;
         }
         else
-            self.vehicle.attack_finished_single = g_vehicle_aircraft_minigun_refire + time;
+            self.attack_finished_single = g_vehicle_aircraft_minigun_refire + time;
     }
 }
 
@@ -239,17 +235,14 @@ float aircraft_physic_hook()
 		return 1;
 	}
 
-    player.exteriormodeltoclient = aircraft.vehicle;
-
-    self = aircraft;
-
     //anim_do();
+	self = aircraft;
     aircraft_miniguns_do();
     aircraft_rocket_do();
     vehicle_stdproc_regen();
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
-    player.rockets = aircraft.vehicle.frame;
+    player.rockets = aircraft.tur_head.frame;
 
     if(aircraft.gun2.cnt <= time)
         player.rockets_reload = 1;
@@ -261,21 +254,17 @@ float aircraft_physic_hook()
 	else
 		aircraft_engine_off();
 
-	self.angles_x = -self.angles_x;
+	//self.angles_x = -self.angles_x;
 	physic_aircraft();
-	self.angles_x = -self.angles_x;
+	//self.angles_x = -self.angles_x;
 
 	setorigin(player, aircraft.origin + '0 0 48');
 	player.angles = aircraft.angles;
-	//aircraft.vehicle.angles = aircraft.angles;
 	physic_velocity = player.velocity = '0 0 0';
     self = player;
 	//print("aircraft.angles_x=", ftos(aircraft.angles_x), "\n");
 	//print("aircraft.tur_head.angles_x=", ftos(aircraft.tur_head.angles_x), "\n");
 	//print("player.v_angle_x=", ftos(player.v_angle_x), "\n");
-	aircraft.vehicle_hudmodel.angles_z = aircraft.angles_z;
-	aircraft.vehicle_hudmodel.angles_y = aircraft.angles_y - player.v_angle_y;
-	aircraft.vehicle_hudmodel.angles_x = bound(-90, (aircraft.angles_x - player.v_angle_x), 90) * cos(aircraft.vehicle_hudmodel.angles_y * DEG2RAD);
 
 	if (aircraft.player_physic)
 		aircraft.player_physic.SendFlags |= 2;
@@ -311,7 +300,6 @@ void aircraft_enter()
     self.event_damage         = vehicle_stdproc_damage ;
     self.colormap             = self.owner.colormap;
     self.tur_head.colormap    = self.owner.colormap;
-    self.vehicle_hudmodel.viewmodelforclient = self.owner;
     self.owner.angles         = self.angles;
     self.owner.takedamage     = DAMAGE_NO;
     self.owner.solid          = SOLID_NOT;
@@ -325,10 +313,6 @@ void aircraft_enter()
     self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_aircraft_shield);
 	self.owner.vehicle_heat = self.vehicle_heat;
     self.team                   = self.owner.team;
-	setattachment(self.vehicle, other, "");
-	setattachment(self.tur_head, other, "");
-	setorigin(self.vehicle, '0 0 0');
-	setorigin(self.tur_head, '0 0 -16');
 	vehicle_stdproc_setcolormod();
 
     if(clienttype(other) == CLIENTTYPE_REAL)
@@ -385,10 +369,6 @@ void aircraft_exit(float eject)
     self.frame = 5;
     e = findchain(classname,"aircraft_rocket");
 	aircraft_engine_off();
-	setattachment(self.vehicle, self, "");
-	setattachment(self.tur_head, self, "");
-	setorigin(self.vehicle, '0 0 48');
-	setorigin(self.tur_head, '0 0 32');
 
 	exit_origin = trace_endpos;
 
@@ -435,7 +415,6 @@ void aircraft_exit(float eject)
         self.team = self.spiderbot_spawnpnt.team ;
 
 	vehicle_stdproc_setcolormod();
-	self.vehicle_hudmodel.viewmodelforclient = self;
 	self.tur_head.nodrawtoclient             = self;
 	setorigin(self.owner, exit_origin);
 	if(eject)
@@ -447,7 +426,6 @@ void aircraft_exit(float eject)
 	self.owner.angles_x = 0;
 	self.owner.angles_z = 0;
     self.owner = world;
-	self.angles_x = -self.angles_x;
 }
 
 void aircraft_touch()
@@ -540,7 +518,6 @@ void aircraft_die()
     self.takedamage = DAMAGE_NO;
     self.touch      = SUB_Null;
     self.deadflag    = DEAD_DEAD;
-	self.vehicle_hudmodel.viewmodelforclient = self;
 	self.frame = 0;
 	self.tur_head.frame = 0;
 	self.think = aircraft_blowup;
@@ -590,45 +567,23 @@ void vewhicle_aircraft_dinit()
     self.gun1 = spawn();
     self.gun2 = spawn();
     //self.vehicle_viewport = spawn();
-    self.vehicle_hudmodel = spawn();
-    self.vehicle_hudmodel.vehicle_hudmodel = spawn();
-    self.vehicle_hudmodel.gun1 = spawn();
-    self.vehicle_hudmodel.gun2 = spawn();
-	setattachment(self.vehicle_hudmodel.gun1, self.vehicle_hudmodel.vehicle_hudmodel, "");
-	setorigin(self.vehicle_hudmodel.gun1, '20 -20 20');
-	self.vehicle_hudmodel.gun1.angles = '0 0 0';
-	setattachment(self.vehicle_hudmodel.gun2, self.vehicle_hudmodel.vehicle_hudmodel, "");
-	setorigin(self.vehicle_hudmodel.gun2, '20 20 20');
-	self.vehicle_hudmodel.gun2.angles = '0 0 0';
-	self.vehicle = spawn();
     self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER;
     self.cvar_basename = "g_vehicle_aircraft";
 	self.vehicle_heat = 0;
 
-    setmodel (self.vehicle_hudmodel, "null");
-    setmodel (self.vehicle_hudmodel.vehicle_hudmodel, "models/spiderbot/cp.md3");
-	setattachment(self.vehicle_hudmodel.vehicle_hudmodel, self.vehicle_hudmodel, "");
-	setorigin (self.vehicle_hudmodel.vehicle_hudmodel, '-40 0 -20');
-    //setmodel (self.vehicle_viewport, "null");
-    setmodel(self, "null");
-	setmodel(self.tur_head, "models/ebomb.mdl");
-	self.vehicle.anim_start = 0;
-	self.vehicle.anim_end = 1;
+    setmodel(self, "models/ebomb.mdl");
+	self.scale = 5;
 	setattachment(self.tur_head, self, "");
-	self.tur_head.scale = 5;
-	setorigin(self.tur_head, '0 0 32');
-    //setmodel(self.vehicle, "models/spiderbot/spiderbot.dpm");
-    setmodel(self.vehicle, "models/spiderbot/spiderbot_top.dpm");
-	setattachment(self.vehicle, self, "");
-	setorigin(self.vehicle, '0 0 48');
-	self.vehicle.scale = 1.5;
+	setorigin(self.tur_head, '0 0 6.4');
+    setmodel(self.tur_head, "models/spiderbot/spiderbot_top.dpm");
+	self.tur_head.anim_start = 0;
+	self.tur_head.anim_end = 1;
+	self.tur_head.scale = 0.3;
     setmodel(self.gun1,"models/spiderbot/spiderbot_barrels.dpm");
     setmodel(self.gun2,"models/spiderbot/spiderbot_barrels.dpm");
-    setmodel(self.vehicle_hudmodel.gun1,"models/spiderbot/spiderbot_barrels.dpm");
-    setmodel(self.vehicle_hudmodel.gun2,"models/spiderbot/spiderbot_barrels.dpm");
 
-    setattachment(self.gun1,self.vehicle,"tag_hardpoint01");
-    setattachment(self.gun2,self.vehicle,"tag_hardpoint02");
+    setattachment(self.gun1,self.tur_head,"tag_hardpoint01");
+    setattachment(self.gun2,self.tur_head,"tag_hardpoint02");
 
     self.customizeentityforclient          = aircraft_customizeentityforclient;
 
@@ -676,6 +631,16 @@ void vehicle_aircraft_readcvars() {
 	CACHE_CVAR(g_vehicle_aircraft_speed_stop);
 	CACHE_CVAR(g_vehicle_aircraft_accel_up);
 	CACHE_CVAR(g_vehicle_aircraft_turnspeed);
+    precache_model ( "models/vhshield.md3");
+    precache_model ( "models/spiderbot/cp.md3");
+    precache_model ( "models/spiderbot/spiderbot_top.dpm");
+    precache_model ( "models/spiderbot/spiderbot_barrels.dpm");
+    precache_model ( "models/onslaught/gen_gib1.md3");
+    precache_model ( "models/onslaught/gen_gib2.md3");
+    precache_model ( "models/onslaught/gen_gib3.md3");
+    precache_model ( "models/turrets/rocket.md3");
+    precache_sound ( "weapons/uzi_fire.wav" );
+	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
 float AircraftPhysic_SendEntity(entity to, float sf) {
@@ -691,7 +656,7 @@ float AircraftPhysic_SendEntity(entity to, float sf) {
 	}
 	if (sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, -self.vehicle.angles_x);
+		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_y);
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_z);
 		WriteCoord(MSG_ENTITY, self.vehicle.origin_x);
@@ -709,18 +674,6 @@ void spawnfunc_vehicle_aircraft()
 	vehicle_aircraft_readcvars();
     // g_turrets_common_precash();
 
-    precache_model ( "models/vhshield.md3");
-    precache_model ( "models/spiderbot/cp.md3");
-    precache_model ( "models/spiderbot/spiderbot_top.dpm");
-    precache_model ( "models/spiderbot/spiderbot_barrels.dpm");
-    precache_model ( "models/onslaught/gen_gib1.md3");
-    precache_model ( "models/onslaught/gen_gib2.md3");
-    precache_model ( "models/onslaught/gen_gib3.md3");
-
-    precache_model ( "models/turrets/rocket.md3");
-    precache_sound ( "weapons/uzi_fire.wav" );
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
-
     //self.team                = -1;
     self.think = vewhicle_aircraft_dinit;
     self.nextthink = time + 0.5;
@@ -730,5 +683,4 @@ void spawnfunc_vehicle_aircraft()
 	self.shield_max = g_vehicle_aircraft_shield;
 	self.shield_regen = g_vehicle_aircraft_shield_regen;
 	self.shield_regen_dmgpause = g_vehicle_aircraft_shield_regen_dmgpause;
-	PhysicEnableCSQC();
 }

@@ -171,6 +171,15 @@ void vehicle_PlayerClear(float killed) {
 	vehicle_PlayerClear_NextLink(killed);
 }
 
+var float(entity plr, entity viewer, float dalpha) vehicle_PlayerAlphaMod_NextLink;
+float vehicle_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
+	if (plr.vehicle)
+	if (plr.vehicle.vehicle_flags & VHF_HIDEPLAYER)
+		dalpha = -1;
+
+	return vehicle_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
+}
+
 float vehicles_init_done;
 void vehicles_init() {
 	if (vehicles_init_done)
@@ -181,5 +190,8 @@ void vehicles_init() {
 	vehicles_init_done = TRUE;
 	vehicle_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = vehicle_PlayerClear;
+	vehicle_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
+	GameHookChain_PlayerAlphaMod = vehicle_PlayerAlphaMod;
+	PhysicEnableCSQC();
 }
 #endif

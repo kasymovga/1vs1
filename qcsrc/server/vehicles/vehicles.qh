@@ -28,8 +28,6 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .float vehicle_heat;
 
 .entity vehicle;
-.entity vehicle_viewport;
-.entity vehicle_hudmodel;
 .float vehicle_exit_time;
 
 .float anim_start;

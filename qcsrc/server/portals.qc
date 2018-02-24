@@ -346,7 +346,6 @@ void Portal_Disconnect(entity teleporter, entity destination)
 void Portal_Connect(entity teleporter, entity destination)
 {
 	teleporter.portal_transform = AnglesTransform_Divide(AnglesTransform_TurnDirection(destination.angles), teleporter.angles);
-
 	teleporter.enemy = destination;
 	destination.enemy = teleporter;
 	Portal_MakeInPortal(teleporter);

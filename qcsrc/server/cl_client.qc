@@ -680,11 +680,6 @@ void FixPlayermodel()
 
 	defaultmodel = "";
 
-	if (self.vehicle)
-	if (self.vehicle.vehicle_flags & VHF_HIDEPLAYER) {
-		defaultmodel = "null";
-		goto setdefaultmodel;
-	}
 	if (sv_defaultcharacter) {
 		defaultskin = 0;
 
