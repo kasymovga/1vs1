@@ -1253,3 +1253,5 @@ set sv_player_mute_namepattern0 ""
 set sv_player_mute_namepattern1 ""
 set sv_player_mute_namepattern2 ""
 set sv_player_mute_namepattern3 ""
+
+set g_mirrorforce 1 "Mirror force factor"

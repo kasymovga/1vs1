@@ -11,6 +11,7 @@ float g_balance_firetransfer_time;
 float g_balance_selfdamagepercent;
 float g_friendlyfire;
 float g_mirrordamage;
+float g_mirrorforce;
 float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
@@ -660,7 +661,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							attacker.dmg_team = attacker.dmg_team + damage;
 							if(attacker.dmg_team > teamdamage0)
 								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
-							mirrorforce = g_mirrordamage * vlen(force);
+							mirrorforce = g_mirrorforce * vlen(force);
 							damage = g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 						}
@@ -1155,6 +1156,7 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_balance_firetransfer_time);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_mirrordamage);
+	CACHE_CVAR(g_mirrorforce);
 	CACHE_CVAR(g_teamdamage_threshold);
 	CACHE_CVAR(g_throughfloor_damage);
 	CACHE_CVAR(g_throughfloor_force);
