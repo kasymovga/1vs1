@@ -1095,7 +1095,11 @@ Called when a client types 'kill' in the console
 
 void ClientKill_Now_TeamChange()
 {
-	if(self.killindicator_teamchange == -1)
+	if(self.killindicator_teamchange == -2)
+	{
+		PlayerToSpec(self);
+	}
+	else if(self.killindicator_teamchange == -1)
 	{
 		self.team = -1;
 		JoinBestTeam( self, FALSE, FALSE );

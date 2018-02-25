@@ -156,7 +156,7 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "spectate") {
 		if not(self.flags & FL_CLIENT)
 			return;
-		PlayerToSpec(self);
+		ClientKill_TeamChange(-2);
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
