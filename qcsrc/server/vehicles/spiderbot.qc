@@ -387,10 +387,6 @@ void spiderbot_think()
 
 void spiderbot_enter()
 {
-    // Remove this when bots know how to use the spiderbot
-    if not (clienttype(other) == CLIENTTYPE_REAL)
-        return;
-
     if(teamplay)
     if(self.team)
     if(self.team != other.team)

@@ -89,6 +89,7 @@ damageindicator.qh
 ../client-server/cl_physics.qh
 ../client-server/cl_physics_spiderbot.qh
 ../client-server/cl_physics_aircraft.qh
+../client-server/cl_physics_car.qh
 cl_physics.qh
 minstagib.qh
 
@@ -160,6 +161,7 @@ cl_physics.qc
 //steerlib.qc
 ../client-server/cl_physics_spiderbot.qc
 ../client-server/cl_physics_aircraft.qc
+../client-server/cl_physics_car.qc
 //pathlib/pathlib.qh
 
 g_world.qc

@@ -280,18 +280,15 @@ void aircraft_think()
 	if(self.vehicle_heat > 0)
 		self.vehicle_heat = max(self.vehicle_heat - g_vehicle_aircraft_minigun_cooldown * sys_ticrate,0);
 
-	if (self.owner)
+	if (self.owner) {
 		self.owner.vehicle_heat = self.vehicle_heat;
+	}
 
     self.nextthink = time;
 }
 
 void aircraft_enter()
 {
-    // Remove this when bots know how to use the aircraft
-    if not (clienttype(other) == CLIENTTYPE_REAL)
-        return;
-
     if(teamplay)
     if(self.team)
     if(self.team != other.team)

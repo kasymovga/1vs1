@@ -1,6 +1,7 @@
 #ifdef VEHICLES_ENABLED
 #include "spiderbot.qc"
 #include "aircraft.qc"
+#include "doyoulikemycar.qc"
 
 float vehicle_extract_player(entity plr, float eject)
 {

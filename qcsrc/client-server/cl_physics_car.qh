@@ -1,0 +1,9 @@
+#define car_MIN '-75 -75 5'
+#define car_MAX '75 75 105'
+
+float g_vehicle_car_speed;
+float g_vehicle_car_speed_stop;
+float g_vehicle_car_turnspeed;
+float g_vehicle_car_movement_inertia;
+
+float physic_car();

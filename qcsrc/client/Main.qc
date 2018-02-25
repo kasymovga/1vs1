@@ -407,6 +407,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_PHYSIC] = Ent_Physic;
 	ent_parsers[ENT_CLIENT_PHYSIC_SPIDERBOT] = Ent_PhysicSpiderbot;
 	ent_parsers[ENT_CLIENT_PHYSIC_AIRCRAFT] = Ent_PhysicAircraft;
+	ent_parsers[ENT_CLIENT_PHYSIC_CAR] = Ent_PhysicCar;
 	ent_parsers[ENT_CLIENT_GAMESTATUS] = Ent_GameStatus;
 	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
 	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;

@@ -18,6 +18,7 @@ csqc_builtins.qc
 ../client-server/cl_physics.qh
 ../client-server/cl_physics_spiderbot.qh
 ../client-server/cl_physics_aircraft.qh
+../client-server/cl_physics_car.qh
 ../client-server/rune.qh
 cl_physics.qh
 interpolate.qh
@@ -33,6 +34,7 @@ shownames.qh
 progressbar.qh
 cl_physics_spiderbot.qh
 cl_physics_aircraft.qh
+cl_physics_car.qh
 location_request.qh
 dlc.qh
 ../common/dlc.qh
@@ -96,9 +98,11 @@ bgmscript.qc
 ../client-server/cl_physics.qc
 ../client-server/cl_physics_spiderbot.qc
 ../client-server/cl_physics_aircraft.qc
+../client-server/cl_physics_car.qc
 cl_physics.qc
 cl_physics_spiderbot.qc
 cl_physics_aircraft.qc
+cl_physics_car.qc
 menu.qc
 mouse.qc
 shownames.qc

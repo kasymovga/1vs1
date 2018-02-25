@@ -426,6 +426,19 @@ set g_vehicle_spiderbot_speed_walk 600
 set g_vehicle_spiderbot_speed_stop 1600
 set g_vehicle_spiderbot_speed_strafe 600
 set g_vehicle_spiderbot_turnspeed 180
+set g_vehicle_car_speed 1600
+set g_vehicle_car_speed_stop 10
+set g_vehicle_car_turnspeed 90
+set g_vehicle_car_health 100
+set g_vehicle_car_movement_inertia 1
+set g_vehicle_car_wheel1_scale 0.3
+set g_vehicle_car_wheel2_scale 0.3
+set g_vehicle_car_wheel3_scale 0.3
+set g_vehicle_car_wheel4_scale 0.3
+set g_vehicle_car_wheel1_pos "15 -16 9"
+set g_vehicle_car_wheel2_pos "15 16 8"
+set g_vehicle_car_wheel3_pos "-37 -16 8"
+set g_vehicle_car_wheel4_pos "-37 16 8"
 
 set sv_player_hat ""
 set sv_player_hat_angles "0 0 0"
