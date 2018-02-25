@@ -179,9 +179,12 @@ void spiderbot_minigun_fire(entity gun)
 
     sound (gun, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 
+	entity e = self;
+	self = self.owner;
 	antilag_prepare(self);
 	fireBallisticBullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5,
 			g_vehicle_spiderbot_minigun_damage, 0, 0, WEP_UZI, particleeffectnum("EF_MGTURRETTRAIL"), 0, 0);
+	self = e;
 
     if not (gun.enemy)
     {
