@@ -245,7 +245,7 @@ float spiderbot_physic_hook()
     player.switchweapon = 0;
 
 
-    if(player.BUTTON_USE) {
+    if(player.BUTTON_USE || (spider.bot_nextthink && spider.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
@@ -427,7 +427,11 @@ void spiderbot_enter()
 		//other.angles_x = self.tur_head.angles_x + self.angles_x;
 		//other.angles_y = self.tur_head.angles_y + self.angles_y;
 		//other.fixangle = TRUE;
-    }
+		self.bot_nextthink = 0;
+    } else {
+		self.bot_nextthink = time + 5;
+	}
+
 	self.player_physic = spawn();
 	self.player_physic.viewmodelforclient = self.owner;
 	self.player_physic.vehicle = self;

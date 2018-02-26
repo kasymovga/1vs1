@@ -24,7 +24,7 @@ float car_physic_hook()
     player.switchweapon = 0;
 
 
-    if(player.BUTTON_USE) {
+    if(player.BUTTON_USE || (mycar.bot_nextthink && mycar.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
@@ -101,9 +101,6 @@ void car_think()
 
 void car_enter()
 {
-    if not (clienttype(other) == CLIENTTYPE_REAL)
-        return;
-
     if(teamplay)
     if(self.team)
     if(self.team != other.team)
@@ -137,7 +134,9 @@ void car_enter()
         WriteAngle(MSG_ONE, self.angles_x);    // tilt
         WriteAngle(MSG_ONE, self.angles_y);    // yaw
         WriteAngle(MSG_ONE, 0);    // roll
-    }
+		self.bot_nextthink = 0;
+    } else
+		self.bot_nextthink = time + 5;
 	self.player_physic = spawn();
 	self.player_physic.viewmodelforclient = self.owner;
 	self.player_physic.vehicle = self;
@@ -254,7 +253,6 @@ void car_spawn()
     self.nextthink = time;
 
     self.health = CCVAR("_health");
-    self.vehicle_shield = CCVAR("_shield");
     self.event_damage = vehicle_stdproc_damage;
     self.iscreature = TRUE;
     self.movetype   = MOVETYPE_WALK;

@@ -229,7 +229,7 @@ float aircraft_physic_hook()
     player.switchweapon = 0;
 
 
-    if(player.BUTTON_USE) {
+    if(player.BUTTON_USE || (aircraft.bot_nextthink && aircraft.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
@@ -328,7 +328,9 @@ void aircraft_enter()
 		//other.angles_x = self.tur_head.angles_x + self.angles_x;
 		//other.angles_y = self.tur_head.angles_y + self.angles_y;
 		//other.fixangle = TRUE;
-    }
+		self.bot_nextthink = 0;
+    } else
+		self.bot_nextthink = time + 5;
 
     //WriteAngle(MSG_ONE, self.tur_head.angles_z + self.angles_z);    // roll
     //self.owner.view_ofs = '0 0 0';
