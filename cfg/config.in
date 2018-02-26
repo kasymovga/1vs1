@@ -429,7 +429,9 @@ set g_vehicle_spiderbot_turnspeed 180
 set g_vehicle_car_speed 1600
 set g_vehicle_car_speed_stop 100
 set g_vehicle_car_turnspeed 270
-set g_vehicle_car_health 100
+set g_vehicle_car_health 500
+set g_vehicle_car_crush_dmg 500
+set g_vehicle_car_crush_force 500
 set g_vehicle_car_movement_inertia 1
 set g_vehicle_car_wheel1_scale 0.3
 set g_vehicle_car_wheel2_scale 0.3
