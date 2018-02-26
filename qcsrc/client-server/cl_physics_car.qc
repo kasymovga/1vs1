@@ -4,7 +4,7 @@ float physic_car()
 	makevectors(self.angles);
     if(self.flags & FL_ONGROUND) {
 		if (physic_v_angle_y != self.angles_y) {
-			float turn_angle_speed = g_vehicle_car_turnspeed * frametime;
+			float turn_angle_speed = g_vehicle_car_turnspeed * frametime * (vlen(self.velocity) / g_vehicle_car_speed);
 			while (self.angles_y - physic_v_angle_y > 180)
 				self.angles_y -= 360;
 

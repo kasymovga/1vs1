@@ -14,6 +14,7 @@ void car_enter();
 float car_physic_hook()
 {
     entity player,mycar;
+	vector v1, v2;
 
     player = self;
     mycar = self.vehicle;
@@ -52,8 +53,30 @@ float car_physic_hook()
 
 	physic_car();
 	makevectors(mycar.angles);
-	float rotate_factor = normalize(v_forward) * mycar.velocity;
+	v1 = v_forward;
+	v1_z = 0;
+	v2 = mycar.velocity;
+	v2_z = 0;
+	float a;
+
+	float rotate_factor = normalize(v1) * v2;
 	mycar.gun2.gun2.angles_x = mycar.gun2.angles_x = mycar.gun1.gun1.angles_x = mycar.gun1.angles_x = mycar.gun1.angles_x - rotate_factor * frametime;
+	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 100) {
+		//DORIFTO
+		v1 = vectoangles(mycar.velocity);
+		a = v1_y - mycar.angles_y;
+		while (a > 180) a -= 360;
+		while (a < -180) a += 360;
+	} else if (rotate_factor < 1 && rotate_factor > -1) {
+		a = 0;
+	} else {
+		a = player.v_angle_y - mycar.angles_y;
+		while (a > 180) a -= 360;
+		while (a < -180) a += 360;
+		if (rotate_factor < 0)
+			a = -a;
+	}
+	mycar.gun2.angles_y = mycar.gun1.angles_y = approach(mycar.gun1.angles_y, bound(-45, a, 45), frametime * 90);
 
 	setorigin(player, mycar.origin + '0 0 48');
 	player.angles = mycar.angles;
@@ -330,7 +353,7 @@ void vewhicle_car_dinit()
 	self.gun1.effects = EF_LOWPRECISION;
     setmodel(self.gun1, "models/car/wheel.md3");
 	setattachment(self.gun1, self, "");
-	self.gun1.scale = cvar("g_vehicle_car_wheel1_scale");;
+	self.gun1.scale = cvar("g_vehicle_car_wheel1_scale");
 	setorigin(self.gun1, stov(cvar_string("g_vehicle_car_wheel1_pos")));
 	self.gun1.angles = '0 0 180';
 
@@ -338,7 +361,7 @@ void vewhicle_car_dinit()
 	self.gun2.effects = EF_LOWPRECISION;
     setmodel(self.gun2, "models/car/wheel.md3");
 	setattachment(self.gun2, self, "");
-	self.gun2.scale = cvar("g_vehicle_car_wheel2_scale");;
+	self.gun2.scale = cvar("g_vehicle_car_wheel2_scale");
 	setorigin(self.gun2, stov(cvar_string("g_vehicle_car_wheel2_pos")));
 	//self.gun2.angles = '0 0 180';
 
@@ -346,7 +369,7 @@ void vewhicle_car_dinit()
 	self.gun1.gun1.effects = EF_LOWPRECISION;
     setmodel(self.gun1.gun1, "models/car/wheel.md3");
 	setattachment(self.gun1.gun1, self, "");
-	self.gun1.gun1.scale = cvar("g_vehicle_car_wheel3_scale");;
+	self.gun1.gun1.scale = cvar("g_vehicle_car_wheel3_scale");
 	setorigin(self.gun1.gun1, stov(cvar_string("g_vehicle_car_wheel3_pos")));
 	self.gun1.gun1.angles = '0 0 180';
 
@@ -354,7 +377,7 @@ void vewhicle_car_dinit()
 	self.gun2.gun2.effects = EF_LOWPRECISION;
     setmodel(self.gun2.gun2, "models/car/wheel.md3");
 	setattachment(self.gun2.gun2, self, "");
-	self.gun2.gun2.scale = cvar("g_vehicle_car_wheel4_scale");;
+	self.gun2.gun2.scale = cvar("g_vehicle_car_wheel4_scale");
 	setorigin(self.gun2.gun2, stov(cvar_string("g_vehicle_car_wheel4_pos")));
 	//self.gun2.gun2.angles = '0 0 180';
 
