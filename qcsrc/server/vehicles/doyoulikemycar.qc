@@ -109,6 +109,9 @@ void car_enter()
     if(self.team != other.team)
         return;
 
+	if (self.noise != "")
+		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+
     self.owner = other;
     self.switchweapon = other.switchweapon;
 
@@ -143,7 +146,6 @@ void car_enter()
 
 void car_exit(float eject)
 {
-    entity e;
 	vector exit_origin;
 	makevectors(self.angles);
 	if(eject)
@@ -168,20 +170,10 @@ void car_exit(float eject)
 		if (trace_fraction < 1)
 			exit_origin = self.origin + '0 0 64';
 	}
+	stopsound(self, CHAN_TRIGGER);
+	stopsound(self, CHAN_PROJECTILE);
 
 	exit_origin = trace_endpos;
-    while(e)
-    {
-        if(e.owner == self.owner)
-        {
-            e.realowner = self.owner;
-            e.owner = world;
-            //e.solid = SOLID_BBOX;
-            //e.think = SUB_Null;
-            //e.nextthink = -1;
-        }
-        e = e.chain;
-    }
 
     self.owner.switchweapon = self.switchweapon;
 
