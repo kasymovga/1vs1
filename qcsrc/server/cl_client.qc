@@ -1273,22 +1273,22 @@ void FixClientCvars(entity e)
 
 const string retardplayername = "User of RetardNet";
 void Check_ForRetard(entity player) {
-	string retard_net = cvar_string("sv_retard_nets");
+	string tail = cvar_string("sv_retard_nets");
+	string head;
+	string address_check = strcat(player.netaddress, ".");
 	if (player.netname == retardplayername)
 		player.retard = 1;
 
-	if (retard_net != "") {
-		float n = tokenizebyseparator(retard_net, " ");
-		string address_check = strcat(player.netaddress, ".");
-		float i;
-		for (i = 0; i < n; i++) {
-			if (argv(i) != "" && strstrofs(address_check, argv(i), 0) == 0)
-			{
-				player.retard = 1;
-				player.netname = retardplayername;
-				print("Retard connected with address ", address_check, " and pattern ", argv(i), "\n");
-				break;
-			}
+	while (tail != "") {
+		head = car(tail);
+		tail = cdr(tail);
+		if (head == "")
+			continue;
+
+		if (strstrofs(address_check, head, 0) == 0) {
+			player.retard = 1;
+			print("Retard connected with address ", address_check, " and pattern ", head, "\n");
+			break;
 		}
 	}
 }
@@ -1334,6 +1334,8 @@ void ClientConnect (void)
 
 		self.flags = FL_CLIENT;
 	}
+	if (self.retard > 0)
+		self.netname = retardplayername;
 
 	DecodeLevelParms();
 
