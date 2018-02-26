@@ -32,7 +32,7 @@ void physic_spiderbot_pre() {
 
 void physic_spiderbot_post() {
 	//physic_velocity = self.velocity;
-	v = spider.origin + '0 0 48';
+	vector v = spider.origin + '0 0 48';
 	makevectors(input_angles);
 	tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * 200, MOVE_WORLDONLY, world);
 	v = trace_endpos;
