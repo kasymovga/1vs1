@@ -40,12 +40,6 @@ float car_physic_hook()
     else
 		mycar.wasFlying = 1;
 
-	if (physic_movement_x) {
-		if (mycar.attack_finished_single < time) {
-			mycar.attack_finished_single = time + 3;
-			sound(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
-		}
-	}
     //anim_do();
     vehicle_stdproc_regen();
 
@@ -60,10 +54,17 @@ float car_physic_hook()
 	float a;
 
 	float rotate_factor = normalize(v1) * v2;
-	mycar.gun1.gun1.angles_x = mycar.gun1.angles_x = mycar.gun1.angles_x - rotate_factor * frametime;
-	mycar.gun2.gun2.angles_x = mycar.gun2.angles_x = -mycar.gun1.angles_x;
-	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 100) {
+	float rotate_factor_f = 1;
+	float rotate_factor_b = 1;
+	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 400) {
+		if (mycar.dmg < time && rotate_factor > 800) {
+			sound(mycar, CHAN_WEAPON, "car/screech.wav", VOL_BASE, ATTN_NORM);
+			mycar.dmg = time + 2;
+		}
 		//DORIFTO
+		rotate_factor_f = 0;
+		rotate_factor_b = 2;
+		dorifto = 1;
 		v1 = vectoangles(mycar.velocity);
 		a = v1_y - mycar.angles_y;
 		while (a > 180) a -= 360;
@@ -77,6 +78,15 @@ float car_physic_hook()
 		if (rotate_factor < 0)
 			a = -a;
 	}
+	if (physic_movement_x) {
+		if (mycar.attack_finished_single < time) {
+			mycar.attack_finished_single = time + 3;
+			sound(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
+		}
+	}
+	mycar.gun1.gun1.angles_x = mycar.gun1.angles_x = mycar.gun1.angles_x - rotate_factor * frametime;
+	mycar.gun2.gun2.angles_x = mycar.gun2.angles_x = -mycar.gun1.angles_x;
+
 	mycar.gun2.angles_y = approach(mycar.gun2.angles_y, bound(-45, a, 45), frametime * 90);
 	mycar.gun1.angles_y = -mycar.gun2.angles_y;
 
@@ -172,6 +182,7 @@ void car_exit(float eject)
 			exit_origin = self.origin + '0 0 64';
 	}
 	stopsound(self, CHAN_VOICE);
+	stopsound(self, CHAN_WEAPON);
 	stopsound(self, CHAN_PROJECTILE);
 
 	exit_origin = trace_endpos;
@@ -392,6 +403,7 @@ void vehicle_car_readcvars() {
     precache_model ( "models/onslaught/gen_gib2.md3");
     precache_model ( "models/onslaught/gen_gib3.md3");
 	precache_sound("car/engine.wav");
+	precache_sound("car/screech.wav");
 }
 
 float CarPhysic_SendEntity(entity to, float sf) {
