@@ -109,7 +109,7 @@ void car_enter()
         return;
 
 	if (self.noise != "")
-		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_VOICE, self.noise, VOL_BASE, ATTN_NORM);
 
     self.owner = other;
     self.switchweapon = other.switchweapon;
@@ -171,7 +171,7 @@ void car_exit(float eject)
 		if (trace_fraction < 1)
 			exit_origin = self.origin + '0 0 64';
 	}
-	stopsound(self, CHAN_TRIGGER);
+	stopsound(self, CHAN_VOICE);
 	stopsound(self, CHAN_PROJECTILE);
 
 	exit_origin = trace_endpos;
