@@ -433,14 +433,6 @@ set g_vehicle_car_health 500
 set g_vehicle_car_crush_dmg 500
 set g_vehicle_car_crush_force 500
 set g_vehicle_car_movement_inertia 1
-set g_vehicle_car_wheel1_scale 0.3
-set g_vehicle_car_wheel2_scale 0.3
-set g_vehicle_car_wheel3_scale 0.3
-set g_vehicle_car_wheel4_scale 0.3
-set g_vehicle_car_wheel1_pos "15 -16 9"
-set g_vehicle_car_wheel2_pos "15 16 8"
-set g_vehicle_car_wheel3_pos "-37 -16 8"
-set g_vehicle_car_wheel4_pos "-37 16 8"
 
 set sv_player_hat ""
 set sv_player_hat_angles "0 0 0"
