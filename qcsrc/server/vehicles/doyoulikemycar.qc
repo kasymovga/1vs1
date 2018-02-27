@@ -422,6 +422,9 @@ float CarPhysic_SendEntity(entity to, float sf) {
 void spawnfunc_vehicle_car()
 {
 	vehicle_car_readcvars();
+	if (self.noise != "")
+		precache_sound(self.noise);
+
     //self.team                = -1;
     self.think = vewhicle_car_dinit;
     self.nextthink = time + 0.5;
