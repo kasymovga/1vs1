@@ -18,11 +18,13 @@ float dlc_ready(string dlc_name) {
 string dlc_load_queue;
 float dlc_load_queue_sumit() {
 	string head, tail;
-	for (head = car(dlc_load_queue), tail = cdr(dlc_load_queue); tail != ""; head = car(tail), tail = cdr(tail)) {
+	for (head = car(dlc_load_queue), tail = cdr(dlc_load_queue); ; head = car(tail), tail = cdr(tail)) {
 		if (head == "")
 			continue;
 
 		dlc_load(head);
+		if (tail == "")
+			break;
 	}
 	unzone_ifneeded(dlc_load_queue);
 	dlc_load_queue = "";
