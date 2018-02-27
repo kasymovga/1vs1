@@ -372,10 +372,11 @@ void vewhicle_car_dinit()
 
 float vehicle_car_readcvars_done;
 void vehicle_car_readcvars() {
-	vehicles_init();
 	if (vehicle_car_readcvars_done)
 		return;
 
+	vehicles_init();
+	dlc_require("car");
 	vehicle_car_readcvars_done = TRUE;
 	CACHE_CVAR(g_vehicle_car_crush_dmg);
 	CACHE_CVAR(g_vehicle_car_crush_force);
