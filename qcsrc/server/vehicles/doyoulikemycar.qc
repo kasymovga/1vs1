@@ -64,7 +64,6 @@ float car_physic_hook()
 		//DORIFTO
 		rotate_factor_f = 0;
 		rotate_factor_b = 2;
-		dorifto = 1;
 		v1 = vectoangles(mycar.velocity);
 		a = v1_y - mycar.angles_y;
 		while (a > 180) a -= 360;
