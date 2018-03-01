@@ -325,20 +325,10 @@ void car_reset() {
 }
 
 void car_dlc_reset() {
-    precache_model ( "models/car/car.md3");
-    precache_model ( "models/car/wheel.md3");
-	precache_sound("car/engine.wav");
-	precache_sound("car/screech.wav");
-    setmodel(self, "models/car/car.md3");
-    setmodel(self.gun1, "models/car/wheel.md3");
 	setattachment(self.gun1, self, "wheel_f_l");
-    setmodel(self.gun2, "models/car/wheel.md3");
 	setattachment(self.gun2, self, "wheel_f_r");
-    setmodel(self.gun1.gun1, "models/car/wheel.md3");
 	setattachment(self.gun1.gun1, self, "wheel_b_l");
-    setmodel(self.gun2.gun2, "models/car/wheel.md3");
 	setattachment(self.gun2.gun2, self, "wheel_b_r");
-    setsize(self,car_MIN,car_MAX);
 }
 
 void vewhicle_car_dinit()
@@ -370,6 +360,12 @@ void vewhicle_car_dinit()
 	self.gun1.gun1.effects = EF_LOWPRECISION;
 	self.gun2.gun2 = spawn();
 	self.gun2.gun2.effects = EF_LOWPRECISION;
+    setmodel(self, "models/car/car.md3");
+    setmodel(self.gun1, "models/car/wheel.md3");
+    setmodel(self.gun2, "models/car/wheel.md3");
+    setmodel(self.gun1.gun1, "models/car/wheel.md3");
+    setmodel(self.gun2.gun2, "models/car/wheel.md3");
+    setsize(self,car_MIN,car_MAX);
 	self.dlc_reset = car_dlc_reset;
 	self.dlc_reset();
     self.customizeentityforclient          = car_customizeentityforclient;
@@ -398,6 +394,10 @@ void vehicle_car_readcvars() {
 	CACHE_CVAR(g_vehicle_car_speed_stop);
 	CACHE_CVAR(g_vehicle_car_speed);
 	CACHE_CVAR(g_vehicle_car_turnspeed);
+    precache_model ( "models/car/car.md3");
+    precache_model ( "models/car/wheel.md3");
+	precache_sound("car/engine.wav");
+	precache_sound("car/screech.wav");
     precache_model ( "models/onslaught/gen_gib1.md3");
     precache_model ( "models/onslaught/gen_gib2.md3");
     precache_model ( "models/onslaught/gen_gib3.md3");
