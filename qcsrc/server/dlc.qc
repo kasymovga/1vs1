@@ -2,10 +2,6 @@ entity dlc;
 string dlc_list_send;
 entity dlc_wait;
 
-string dlc_init_cvar(string dlc_name) {
-	return strcat("_dlc_initiated_", dlc_name);
-}
-
 void dlc_exec_cfg(string dlc_name) {
 	if (fexists(strcat("rexdlc_", dlc_name, "_server.cfg")))
 		localcmd(strcat("exec rexdlc_", dlc_name, "_server.cfg", "\n"));
@@ -47,7 +43,6 @@ void DLCWait() {
 			list = cdr(list);
 			if (s != "") {
 				dlc_exec_cfg(s);
-				registercvar(dlc_init_cvar(s), "1");
 			}
 		}
 		entity e;
@@ -90,9 +85,7 @@ float dlc_SendEntity(entity to, float sf) {
 void dlc_require_server_only(string dlc_name) {
 	if (dlc_load(dlc_name))
 		dlc_exec_cfg(dlc_name); //Just in case
-
-	if not(cvar(dlc_init_cvar(dlc_name)))
-	if not(dlc_wait) {
+	else if not(dlc_wait) {
 		dlc_wait = spawn();
 		dlc_wait.think = DLCWait;
 		dlc_wait.nextthink = time + 1;
