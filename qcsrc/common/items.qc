@@ -16,6 +16,14 @@ string weapon_modelname(string wname)
 void register_weapon_real(float id, float(float) func, float ammotype, float i, float normalweapon, float canclimb, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname, vector wcolor)
 {
 	entity e;
+#ifdef SVQC
+	e = weapon_info[id - 1];
+	if (e) {
+		strunzone(e.model);
+		strunzone(e.mdl);
+		remove(e);
+	}
+#endif
 	weapon_info[id - 1] = e = spawn();
 	e.classname = "weapon_info";
 	e.weapon = id;
@@ -23,11 +31,11 @@ void register_weapon_real(float id, float(float) func, float ammotype, float i, 
 	e.netname = shortname;
 	e.message = wname;
 	e.items = ammotype;
-	e.weapon_func = func;
 #ifndef MENUQC
 	e.colormod = wcolor;
 #endif
 #ifdef SVQC
+	e.weapon_func = func;
 	e.model = strzone(strcat("models/weapons/g_", weapon_modelname(modelname), ".md3"));
 	e.mdl = strzone(weapon_modelname(modelname));
 
@@ -50,9 +58,6 @@ void register_weapon_real(float id, float(float) func, float ammotype, float i, 
 		if (animparseerror)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
 	}
-#else
-	e.mdl = modelname;
-	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
 #endif
 	e.spawnflags = 0;
 	e.model2 = strzone(strcat("wpn-", e.mdl));
@@ -73,7 +78,6 @@ float w_null(float dummy)
 void register_weapons_done()
 {
 	entity wi;
-
 	dummy_weapon_info = spawn();
 	dummy_weapon_info.classname = "weapon_info";
 	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
@@ -160,5 +164,8 @@ void RegisterWeapons()
 	register_weapon(WEP_SUPERSHOTGUN,     w_supershotgun, IT_SHELLS,        8,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "supershotgun", "supershotgun",    "SuperShotgun",               '0.75 0.25 0');
 	register_weapon(WEP_ZAPPER,           w_zapper,       IT_CELLS,         5,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "zapper",       "zapper",          "Zapper",                     '0.5 0.5 1');
 
-	register_weapons_done();
+#ifdef SVQC
+	if not(dummy_weapon_info)
+#endif
+		register_weapons_done();
 }

@@ -27,6 +27,7 @@ void dlc_restart_server() {
 
 void dlc_reset_all() {
 	entity e = self;
+	RegisterWeapons();
 	for (self = nextent(world); self; self = nextent(self)) {
 		if (self.dlc_reset) {
 			print("DLC reset for ", self.classname, "\n");
