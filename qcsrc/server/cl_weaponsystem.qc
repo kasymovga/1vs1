@@ -270,6 +270,10 @@ float CL_ExterioirWeaponentity_CustomizeEntityForClient()
  *    g_tuba.md3 - pickup model
  */
 
+void CL_Weaponentity_dlc_reset() {
+	setattachment(self.weaponentity, self, "weapon");
+}
+
 void CL_Weaponentity_Think()
 {
 	float tb, v_shot_idx;
@@ -295,7 +299,6 @@ void CL_Weaponentity_Think()
 		self.cnt = self.owner.weapon;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
-
 		if (self.owner.weaponname != "")
 		{
 			// if there is a child entity, hide it until we're sure we use it
@@ -303,7 +306,7 @@ void CL_Weaponentity_Think()
 				self.weaponentity.model = "";
 			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
 			v_shot_idx = gettagindex(self, "shot"); // used later
-
+			self.dlc_reset = world.dlc_reset;
 			if(sv_qcweaponanimation)
 			{
 				self.angles = '0 0 0';
@@ -329,7 +332,8 @@ void CL_Weaponentity_Think()
 					if (!self.weaponentity)
 						self.weaponentity = spawn();
 					setmodel(self.weaponentity, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision does not matter
-					setattachment(self.weaponentity, self, "weapon");
+					self.dlc_reset = CL_Weaponentity_dlc_reset;
+					self.dlc_reset();
 				}
 				else
 				{
@@ -619,9 +623,32 @@ void CL_Weaponentity_Think()
 	}
 };
 
+void CL_ExteriorWeaponentity_dlc_reset() {
+	float tag_found;
+	if (self.owner.weaponname != "")
+		setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
+	else
+		self.model = "";
+
+	entity ao = Akimbo_Owner(self.owner);
+	if((tag_found = gettagindex(ao, "tag_weapon")))
+	{
+		self.tag_index = tag_found;
+		self.tag_entity = ao;
+	}
+	else {
+		setattachment(self, ao, "bip01 r hand");
+	}
+	// if that didn't find a tag, hide the exterior weapon model
+	if (!self.tag_index)
+		self.model = "";
+
+	if (Akimbo_Active(self.owner) == 2)
+		setorigin(self, '0 20 0');
+}
+
 void CL_ExteriorWeaponentity_Think()
 {
-	float tag_found;
 	self.nextthink = time;
 	if (self.owner.exteriorweaponentity != self)
 	{
@@ -638,26 +665,8 @@ void CL_ExteriorWeaponentity_Think()
 		self.cnt = self.owner.weapon;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
-		if (self.owner.weaponname != "")
-			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
-		else
-			self.model = "";
-
-		entity ao = Akimbo_Owner(self.owner);
-		if((tag_found = gettagindex(ao, "tag_weapon")))
-		{
-			self.tag_index = tag_found;
-			self.tag_entity = ao;
-		}
-		else
-			setattachment(self, ao, "bip01 r hand");
-
-		// if that didn't find a tag, hide the exterior weapon model
-		if (!self.tag_index)
-			self.model = "";
-
-		if (Akimbo_Active(self.owner) == 2)
-			setorigin(self, '0 20 0');
+		self.dlc_reset = CL_ExteriorWeaponentity_dlc_reset;
+		self.dlc_reset();
 	}
 	self.effects = self.owner.effects | EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance

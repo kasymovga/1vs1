@@ -1067,5 +1067,11 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (cmd == "dlc_reset")
+	{
+		dlc_reset_all();
+		return;
+	}
+
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }

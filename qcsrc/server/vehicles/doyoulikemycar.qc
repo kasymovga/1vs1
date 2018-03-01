@@ -276,8 +276,6 @@ void car_spawn()
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
 
-    setsize(self,car_MIN,car_MAX);
-
     setorigin(self,self.car_spawnpnt.origin);
     self.angles = self.car_spawnpnt.angles;
 
@@ -326,11 +324,27 @@ void car_reset() {
 	car_spawn();
 }
 
+void car_dlc_reset() {
+    precache_model ( "models/car/car.md3");
+    precache_model ( "models/car/wheel.md3");
+	precache_sound("car/engine.wav");
+	precache_sound("car/screech.wav");
+    setmodel(self, "models/car/car.md3");
+    setmodel(self.gun1, "models/car/wheel.md3");
+	setattachment(self.gun1, self, "wheel_f_l");
+    setmodel(self.gun2, "models/car/wheel.md3");
+	setattachment(self.gun2, self, "wheel_f_r");
+    setmodel(self.gun1.gun1, "models/car/wheel.md3");
+	setattachment(self.gun1.gun1, self, "wheel_b_l");
+    setmodel(self.gun2.gun2, "models/car/wheel.md3");
+	setattachment(self.gun2.gun2, self, "wheel_b_r");
+    setsize(self,car_MIN,car_MAX);
+}
+
 void vewhicle_car_dinit()
 {
     self.car_spawnpnt = spawn();
     self.car_spawnpnt.angles = self.angles;
-
     traceline(self.origin + '0 0 16', self.origin - '0 0 10000', MOVE_WORLDONLY, self);
     setorigin(self.car_spawnpnt,trace_endpos + '0 0 4');
     setorigin(self,self.car_spawnpnt.origin);
@@ -348,28 +362,16 @@ void vewhicle_car_dinit()
 	self.vehicle_heat = 0;
 
     //setmodel (self.vehicle_viewport, "null");
-    setmodel(self, "models/car/car.md3");
-
 	self.gun1 = spawn();
 	self.gun1.effects = EF_LOWPRECISION;
-    setmodel(self.gun1, "models/car/wheel.md3");
-	setattachment(self.gun1, self, "wheel_f_l");
-
 	self.gun2 = spawn();
 	self.gun2.effects = EF_LOWPRECISION;
-    setmodel(self.gun2, "models/car/wheel.md3");
-	setattachment(self.gun2, self, "wheel_f_r");
-
 	self.gun1.gun1 = spawn();
 	self.gun1.gun1.effects = EF_LOWPRECISION;
-    setmodel(self.gun1.gun1, "models/car/wheel.md3");
-	setattachment(self.gun1.gun1, self, "wheel_b_l");
-
 	self.gun2.gun2 = spawn();
 	self.gun2.gun2.effects = EF_LOWPRECISION;
-    setmodel(self.gun2.gun2, "models/car/wheel.md3");
-	setattachment(self.gun2.gun2, self, "wheel_b_r");
-
+	self.dlc_reset = car_dlc_reset;
+	self.dlc_reset();
     self.customizeentityforclient          = car_customizeentityforclient;
 
     //setorigin(self.vehicle_viewport,'35 0 -14');
@@ -396,13 +398,9 @@ void vehicle_car_readcvars() {
 	CACHE_CVAR(g_vehicle_car_speed_stop);
 	CACHE_CVAR(g_vehicle_car_speed);
 	CACHE_CVAR(g_vehicle_car_turnspeed);
-    precache_model ( "models/car/car.md3");
-    precache_model ( "models/car/wheel.md3");
     precache_model ( "models/onslaught/gen_gib1.md3");
     precache_model ( "models/onslaught/gen_gib2.md3");
     precache_model ( "models/onslaught/gen_gib3.md3");
-	precache_sound("car/engine.wav");
-	precache_sound("car/screech.wav");
 }
 
 float CarPhysic_SendEntity(entity to, float sf) {
