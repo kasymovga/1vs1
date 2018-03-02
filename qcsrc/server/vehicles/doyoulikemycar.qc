@@ -84,9 +84,7 @@ float car_physic_hook()
 		if (rotate_factor > 800) {
 			dorifto_effect_sound(mycar);
 			dorifto_effect_smoke_f(mycar);
-			dorifto_effect_smoke_b(mycar);
 		} else if (self.dmg + 1 > time) {
-			dorifto_effect_smoke_f(mycar);
 			dorifto_effect_smoke_b(mycar);
 		}
 
