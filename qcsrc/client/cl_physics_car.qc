@@ -32,7 +32,7 @@ void physic_car_pre() {
 
 void physic_car_post() {
 	//physic_velocity = self.velocity;
-	v = mycar.origin + '0 0 40';
+	vector v = mycar.origin + '0 0 40';
 	makevectors(input_angles);
 	tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * 60, MOVE_WORLDONLY, world);
 	v = trace_endpos;
