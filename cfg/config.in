@@ -132,6 +132,11 @@ set g_balance_shotgun_swap_buttons 0
 set g_balance_uzi_first 1
 set g_balance_rocketlauncher_laserguided_missile 0
 set g_balance_rocketlauncher_swap_buttons 0
+set g_balance_minstanex_explode 0
+set g_balance_minstanex_explode_damage 100
+set g_balance_minstanex_explode_edgedamage 0
+set g_balance_minstanex_explode_force 500
+set g_balance_minstanex_explode_radius 200
 set g_nexball_ball_scale 1 ""
 set g_nexball_ball_explosive_radius 1000
 set g_nexball_ball_explosive_damage 1000

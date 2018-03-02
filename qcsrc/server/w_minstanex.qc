@@ -1,5 +1,10 @@
 float g_balance_minstanex_animtime;
 float g_balance_minstanex_refire;
+float g_balance_minstanex_explode;
+float g_balance_minstanex_explode_damage;
+float g_balance_minstanex_explode_edgedamage;
+float g_balance_minstanex_explode_force;
+float g_balance_minstanex_explode_radius;
 
 .float minstanex_lasthit;
 
@@ -67,8 +72,15 @@ void W_MinstaNex_Attack (void)
 	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), DrawMinstaNexBeamParticles);
 
 	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
+		if (g_balance_minstanex_explode) {
+			entity e = spawn();
+			setorigin(e, trace_endpos);
+			RadiusDamage (e, Akimbo_Owner(self), g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, WEP_ROCKET_LAUNCHER, world);
+			remove(e);
+		}
 		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_MINSTANEX, self);
+	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - 1;
@@ -136,6 +148,11 @@ float w_minstanex(float req)
 	{
 		CACHE_CVAR(g_balance_minstanex_animtime);
 		CACHE_CVAR(g_balance_minstanex_refire);
+		CACHE_CVAR(g_balance_minstanex_explode);
+		CACHE_CVAR(g_balance_minstanex_explode_damage);
+		CACHE_CVAR(g_balance_minstanex_explode_edgedamage);
+		CACHE_CVAR(g_balance_minstanex_explode_force);
+		CACHE_CVAR(g_balance_minstanex_explode_radius);
 		w_laser(WR_CVAR_CACHE);
 	}
 	return TRUE;
