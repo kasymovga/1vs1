@@ -11,6 +11,29 @@ float CarPhysic_SendEntity(entity to, float sf);
 void car_exit(float eject);
 void car_enter();
 
+void dorifto_effect_sound(entity mycar) {
+	if (mycar.dmg < time ) {
+		sound(mycar, CHAN_WEAPON, "car/screech.wav", VOL_BASE, ATTN_NORM);
+		mycar.dmg = time + 2;
+	}
+}
+
+void dorifto_effect_smoke_f(entity mycar) {
+	if (mycar.gun1.dmg < time) {
+		mycar.gun1.dmg = time + 0.075;
+		pointparticles(particleeffectnum("smoking"), gettaginfo(mycar, gettagindex(mycar, "wheel_f_r")), '0 0 0', 1);
+		pointparticles(particleeffectnum("smoking"), gettaginfo(mycar, gettagindex(mycar, "wheel_f_l")), '0 0 0', 1);
+	}
+}
+
+void dorifto_effect_smoke_b(entity mycar) {
+	if (mycar.gun2.dmg < time) {
+		mycar.gun2.dmg = time + 0.075;
+		pointparticles(particleeffectnum("smoking"), gettaginfo(mycar, gettagindex(mycar, "wheel_b_r")), '0 0 0', 1);
+		pointparticles(particleeffectnum("smoking"), gettaginfo(mycar, gettagindex(mycar, "wheel_b_l")), '0 0 0', 1);
+	}
+}
+
 float car_physic_hook()
 {
     entity player,mycar;
@@ -57,11 +80,16 @@ float car_physic_hook()
 	float rotate_factor_f = 1;
 	float rotate_factor_b = 1;
 	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 400) {
-		if (mycar.dmg < time && rotate_factor > 800) {
-			sound(mycar, CHAN_WEAPON, "car/screech.wav", VOL_BASE, ATTN_NORM);
-			mycar.dmg = time + 2;
+		dorifto_effect_smoke_f(mycar);
+		if (rotate_factor > 800) {
+			dorifto_effect_sound(mycar);
+			dorifto_effect_smoke_f(mycar);
+			dorifto_effect_smoke_b(mycar);
+		} else if (self.dmg + 1 > time) {
+			dorifto_effect_smoke_f(mycar);
+			dorifto_effect_smoke_b(mycar);
 		}
-		//DORIFTO
+
 		rotate_factor_f = 0;
 		rotate_factor_b = 2;
 		v1 = vectoangles(mycar.velocity);
@@ -74,8 +102,20 @@ float car_physic_hook()
 		a = player.v_angle_y - mycar.angles_y;
 		while (a > 180) a -= 360;
 		while (a < -180) a += 360;
-		if (rotate_factor < 0)
+		if (rotate_factor < 50) {
 			a = -a;
+			if (physic_movement_x > 0) {
+				rotate_factor_b = -1;
+				dorifto_effect_smoke_b(mycar);
+				dorifto_effect_sound(mycar);
+			}
+		} else {
+			if (physic_movement_x < 0) {
+				rotate_factor_f = 0;
+				dorifto_effect_smoke_f(mycar);
+				dorifto_effect_sound(mycar);
+			}
+		}
 	}
 	if (physic_movement_x) {
 		if (mycar.attack_finished_single < time) {
