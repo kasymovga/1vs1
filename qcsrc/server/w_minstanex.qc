@@ -5,8 +5,22 @@ float g_balance_minstanex_explode_damage;
 float g_balance_minstanex_explode_edgedamage;
 float g_balance_minstanex_explode_force;
 float g_balance_minstanex_explode_radius;
+float g_balance_minstanex_laser;
+float g_balance_minstanex_laser_count;
+float g_balance_minstanex_laser_damage;
+float g_balance_minstanex_laser_edgedamage;
+float g_balance_minstanex_laser_force;
+float g_balance_minstanex_laser_lifetime;
+float g_balance_minstanex_laser_spread;
+float g_balance_minstanex_laser_speed;
+float g_balance_minstanex_laser_radius;
+float g_balance_minstanex_laser_refire;
+float g_balance_minstanex_laser_rapid;
+float g_balance_minstanex_laser_rapid_delay;
+float g_balance_minstanex_laser_rapid_refire;
 
 .float minstanex_lasthit;
+.float laser_hold;
 
 float DrawMinstaNexBeamParticles_effect;
 void DrawMinstaNexBeamParticles(vector start, vector end, vector to) {
@@ -86,6 +100,52 @@ void W_MinstaNex_Attack (void)
 		self.ammo_cells = self.ammo_cells - 1;
 }
 
+void W_MinstaNex_Laser_Projectile_Touch() {
+	PROJECTILE_TOUCH;
+	self.event_damage = SUB_Null;
+	RadiusDamage (self, self.owner, g_balance_minstanex_laser_damage, g_balance_minstanex_laser_edgedamage, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
+	remove (self);
+}
+
+void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
+	entity missile = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+	missile.owner = Akimbo_Owner(self);
+	missile.dmg = ff;
+	missile.classname = "laserbolt";
+	missile.bot_dodge = TRUE;
+	missile.bot_dodgerating = g_balance_minstanex_laser_damage;
+	missile.movetype = MOVETYPE_FLY;
+	PROJECTILE_MAKETRIGGER(missile);
+	missile.projectiledeathtype = WEP_LASER | HITTYPE_SECONDARY;
+	setorigin (missile, w_shotorg);
+	missile.velocity = _shotdir * g_balance_minstanex_laser_speed;
+	W_SetupProjectileVelocity(missile);
+	missile.angles = vectoangles (missile.velocity);
+	missile.touch = W_MinstaNex_Laser_Projectile_Touch;
+	missile.think = SUB_Remove;
+	missile.nextthink = time + g_balance_minstanex_laser_lifetime;
+}
+
+void W_MinstaNex_Laser_Attack() {
+	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_laser_secondary_damage);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	float f1 = g_balance_minstanex_laser_spread / g_balance_minstanex_laser_count;
+	float f2 = -0.5 * g_balance_minstanex_laser_spread;
+	float i;
+	vector v;
+	float ff = 1 / g_balance_minstanex_laser_count;
+	for (i = 0; i < g_balance_minstanex_laser_count; i++) {
+		v = w_shotdir + v_right * f2;
+		f2 += f1;
+		W_MinstaNex_Laser_Projectile(v, ff);
+	}
+}
+
+void W_MinstaNex_Laser_Attack_Rapid() {
+	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_laser_secondary_damage);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_MinstaNex_Laser_Projectile(w_shotdir, 1);
+}
 
 float w_minstanex(float req)
 {
@@ -106,13 +166,29 @@ float w_minstanex(float req)
 				weapon_thinkf(WFRAME_FIRE1, g_balance_minstanex_animtime, w_ready);
 			}
 		}
-		else if (self.BUTTON_ATCK2)
-		{
-			if (self.jump_interval <= time)
-			if (PLAYER_REALLY_ALIVE(self))
+		if (g_balance_minstanex_laser) {
+			if (self.BUTTON_ATCK2)
 			{
-				self.jump_interval = time + 0.9 * W_WeaponRateFactor();
-				W_Laser_Attack(FALSE);
+				if not(self.laser_hold) {
+					if (self.jump_interval <= time)
+					if (PlayerCanFire(self, WEP_LASER))
+					{
+						self.jump_interval = time + g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+						//W_Laser_Attack(FALSE);
+						W_MinstaNex_Laser_Attack();
+						if (g_balance_minstanex_laser_rapid)
+							self.laser_hold = time + g_balance_minstanex_laser_rapid_delay;
+					}
+				} else {
+					if (self.laser_hold <= time)
+					if (self.jump_interval <= time)
+					if (PlayerCanFire(self, WEP_LASER)) {
+						self.jump_interval = time + g_balance_minstanex_laser_rapid_refire * W_WeaponRateFactor();
+						W_MinstaNex_Laser_Attack_Rapid();
+					}
+				}
+			} else {
+				self.laser_hold = 0;
 			}
 		}
 	}
@@ -129,6 +205,7 @@ float w_minstanex(float req)
 	{
 		weapon_setup(WEP_MINSTANEX);
 		self.minstanex_lasthit = 0;
+		self.laser_hold = 0;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -153,6 +230,19 @@ float w_minstanex(float req)
 		CACHE_CVAR(g_balance_minstanex_explode_edgedamage);
 		CACHE_CVAR(g_balance_minstanex_explode_force);
 		CACHE_CVAR(g_balance_minstanex_explode_radius);
+		CACHE_CVAR(g_balance_minstanex_laser);
+		g_balance_minstanex_laser_count = max(1, cvar("g_balance_minstanex_laser_count"));
+		CACHE_CVAR(g_balance_minstanex_laser_damage);
+		CACHE_CVAR(g_balance_minstanex_laser_edgedamage);
+		CACHE_CVAR(g_balance_minstanex_laser_force);
+		CACHE_CVAR(g_balance_minstanex_laser_lifetime);
+		CACHE_CVAR(g_balance_minstanex_laser_speed);
+		CACHE_CVAR(g_balance_minstanex_laser_spread);
+		CACHE_CVAR(g_balance_minstanex_laser_radius);
+		CACHE_CVAR(g_balance_minstanex_laser_refire);
+		CACHE_CVAR(g_balance_minstanex_laser_rapid);
+		CACHE_CVAR(g_balance_minstanex_laser_rapid_delay);
+		CACHE_CVAR(g_balance_minstanex_laser_rapid_refire);
 		w_laser(WR_CVAR_CACHE);
 	}
 	return TRUE;

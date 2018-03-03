@@ -137,6 +137,19 @@ set g_balance_minstanex_explode_damage 100
 set g_balance_minstanex_explode_edgedamage 0
 set g_balance_minstanex_explode_force 500
 set g_balance_minstanex_explode_radius 200
+set g_balance_minstanex_laser 1
+set g_balance_minstanex_laser_count 1
+set g_balance_minstanex_laser_damage 35
+set g_balance_minstanex_laser_edgedamage 35
+set g_balance_minstanex_laser_force 400
+set g_balance_minstanex_laser_lifetime 10
+set g_balance_minstanex_laser_speed 9000
+set g_balance_minstanex_laser_spread 0
+set g_balance_minstanex_laser_radius 75
+set g_balance_minstanex_laser_refire 0.9
+set g_balance_minstanex_laser_rapid 0
+set g_balance_minstanex_laser_rapid_delay 0.6
+set g_balance_minstanex_laser_rapid_refire 0.35
 set g_nexball_ball_scale 1 ""
 set g_nexball_ball_explosive_radius 1000
 set g_nexball_ball_explosive_damage 1000
