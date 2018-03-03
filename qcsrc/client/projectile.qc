@@ -80,6 +80,22 @@ void Projectile_DrawTrail(vector to)
 		case PROJECTILE_ELECTRO_BEAM:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
+		case PROJECTILE_RM_LASER:
+			switch (self.team) {
+			case COLOR_TEAM2:
+				trailparticles(self, particleeffectnum("TE_TEI_G3BLUE_HIT"), from, to);
+				break;
+			case COLOR_TEAM3:
+				trailparticles(self, particleeffectnum("TE_TEI_G3YELLOW_HIT"), from, to);
+				break;
+			case COLOR_TEAM4:
+				trailparticles(self, particleeffectnum("TE_TEI_G3PINK_HIT"), from, to);
+				break;
+			default:
+				trailparticles(self, particleeffectnum("TE_TEI_G3RED_HIT"), from, to);
+				break;
+			}
+			break;
 		case PROJECTILE_GRENADE:
 			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to);
 			break;
@@ -378,7 +394,9 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_BULLET_GLOWING: setmodel(self, "models/tracer.mdl"); break;
 			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl"); break;
 			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl"); break;
-			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl"); break;
+			case PROJECTILE_ELECTRO_BEAM:
+			case PROJECTILE_RM_LASER:
+				setmodel(self, "models/elaser.mdl"); break;
 			case PROJECTILE_GRENADE:
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3"); break;
 			case PROJECTILE_LASER: setmodel(self, "models/laser.mdl"); break;
