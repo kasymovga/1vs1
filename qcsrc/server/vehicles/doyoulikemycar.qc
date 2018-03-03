@@ -77,19 +77,19 @@ float car_physic_hook()
 	float a;
 
 	float rotate_factor = normalize(v1) * v2;
-	float rotate_factor_f = 1;
-	float rotate_factor_b = 1;
-	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 400) {
-		dorifto_effect_smoke_f(mycar);
-		if (rotate_factor > 800) {
-			dorifto_effect_sound(mycar);
-			dorifto_effect_smoke_f(mycar);
-		} else if (self.dmg + 1 > time) {
-			dorifto_effect_smoke_b(mycar);
+	float rotate_factor_f = rotate_factor;
+	float rotate_factor_b = rotate_factor;
+	if (normalize(v1) * normalize(v2) < 0.75 && rotate_factor > 300) {
+		if (mycar.flags & FL_ONGROUND) {
+			if (rotate_factor > 700) {
+				dorifto_effect_sound(mycar);
+				dorifto_effect_smoke_f(mycar);
+			} else if (self.dmg + 1 > time) {
+				dorifto_effect_smoke_b(mycar);
+			}
 		}
-
 		rotate_factor_f = 0;
-		rotate_factor_b = 2;
+		rotate_factor_b = max(200, rotate_factor * 2);
 		v1 = vectoangles(mycar.velocity);
 		a = v1_y - mycar.angles_y;
 		while (a > 180) a -= 360;
@@ -102,12 +102,14 @@ float car_physic_hook()
 		while (a < -180) a += 360;
 		if (rotate_factor < 50) {
 			a = -a;
+			if (mycar.flags & FL_ONGROUND)
 			if (physic_movement_x > 0) {
-				rotate_factor_b = -1;
+				rotate_factor_b = max(200, rotate_factor * 2);
 				dorifto_effect_smoke_b(mycar);
 				dorifto_effect_sound(mycar);
 			}
 		} else {
+			if (mycar.flags & FL_ONGROUND)
 			if (physic_movement_x < 0) {
 				rotate_factor_f = 0;
 				dorifto_effect_smoke_f(mycar);
@@ -121,8 +123,11 @@ float car_physic_hook()
 			sound(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
-	mycar.gun1.gun1.angles_x = mycar.gun1.angles_x = mycar.gun1.angles_x - rotate_factor * frametime;
-	mycar.gun2.gun2.angles_x = mycar.gun2.angles_x = -mycar.gun1.angles_x;
+	mycar.gun1.gun1.angles_x = mycar.gun1.gun1.angles_x - rotate_factor_b * frametime;
+	mycar.gun1.angles_x = mycar.gun1.angles_x - rotate_factor_f * frametime;
+
+	mycar.gun2.gun2.angles_x = -mycar.gun1.gun1.angles_x;
+	mycar.gun2.angles_x = -mycar.gun1.angles_x;
 
 	mycar.gun2.angles_y = approach(mycar.gun2.angles_y, bound(-45, a, 45), frametime * 90);
 	mycar.gun1.angles_y = -mycar.gun2.angles_y;
