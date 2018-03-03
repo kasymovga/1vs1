@@ -199,20 +199,20 @@ void car_exit(float eject)
 	if(eject)
 		exit_origin = self.origin + '0 0 160';
 	else
-		exit_origin = self.origin + v_forward * 130 + '0 0 64';
+		exit_origin = self.origin + v_forward * 150 + '0 0 64';
 
 	tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 	if not(eject) {
 		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_right * 130 + '0 0 64';
+			exit_origin = self.origin - v_right * 150 + '0 0 64';
 			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1) {
-			exit_origin = self.origin + v_right * 130 + '0 0 64';
+			exit_origin = self.origin + v_right * 150 + '0 0 64';
 			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_forward * 130 + '0 0 64';
+			exit_origin = self.origin - v_forward * 150 + '0 0 64';
 			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1)
