@@ -275,7 +275,7 @@ float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float dama
 		(deathtype == DEATH_LAVA))
 		return TRUE;
 
-	if (self.armorvalue  && (deathtype != DEATH_HURTTRIGGER) && damage)
+	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && damage)
 	{
 		self.armorvalue -= min(damage, min(self.armorvalue, 100));
 		GameHookChain_PlayerDamageMod = 0;
