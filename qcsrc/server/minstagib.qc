@@ -1,6 +1,8 @@
 float g_minstagib;
 float g_minstagib_ammo_drop;
-float g_minstagib_extralives;
+float g_minstagib_armor_max;
+float g_minstagib_health_drop;
+float g_minstagib_health_max;
 float g_minstagib_invis_alpha;
 float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
@@ -19,14 +21,23 @@ void minstagib_items (float itemid)
 	// replace rocket launchers and nex guns with ammo cells
 	if (itemid == IT_CELLS)
 	{
-		if not(minstagib_ammo) {
+		if not(minstagib_ammo || g_minstagib_health_drop) {
 			remove(self);
 			return;
 		}
-		self.ammo_cells = 1;
-		StartItem ("models/items/a_cells.md3",
-			"misc/itempickup.wav", 45, 0,
-			"Nex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+		if (minstagib_ammo)
+			self.ammo_cells = 1;
+
+		if (g_minstagib_health_drop) {
+			self.health = 1;
+			StartItem (sv_model_healthlarge,
+				"misc/mediumhealth.wav", 45, 0,
+				"Health", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+		} else {
+			StartItem ("models/items/a_cells.md3",
+				"misc/itempickup.wav", 45, 0,
+				"Nex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+		}
 		return;
 	}
 
@@ -34,7 +45,7 @@ void minstagib_items (float itemid)
 	if (itemid == IT_NAILS)
 	{
 		self.max_health = 1;
-		StartItem (sv_model_healthmega,
+		StartItem (sv_model_armorlarge,
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 
@@ -123,6 +134,9 @@ void minstagib_PlayerPreThink() {
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/10.wav");
 		}
+		else {
+			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+		}
 	}
 	self.minstagib_nextthink = time + 1;
 }
@@ -148,6 +162,11 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	}
 
 	GameHookChain_ItemGiveToHandle_SwitchWeapon = TRUE;
+	if (item.health)
+	{
+		player.health = min(max(100, player.health + g_minstagib_health_drop), g_minstagib_health_max);
+		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+	}
 	if (item.ammo_cells)
 	{
 		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
@@ -166,16 +185,15 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 
 		if not(player.items & IT_UNLIMITED_AMMO)
 			player.ammo_cells = min (player.ammo_cells + g_minstagib_ammo_drop, 999);
-		player.health = 100;
+		player.health = max(100, player.health);
 	}
-
 	// extralife powerup
 	if (item.max_health)
 	{
 		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
-		player.armorvalue = player.armorvalue + g_minstagib_extralives;
+		player.armorvalue = min(player.armorvalue + 100, g_minstagib_armor_max);
 		sprint(player, "^3You picked up some extra lives\n");
 	}
 	if (item.ammo_fuel)
@@ -257,10 +275,9 @@ float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float dama
 		(deathtype == DEATH_LAVA))
 		return TRUE;
 
-	if (self.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
+	if (self.armorvalue  && (deathtype != DEATH_HURTTRIGGER) && damage)
 	{
-		self.armorvalue -= 1;
-		centerprint(self, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(self.armorvalue)));
+		self.armorvalue -= min(damage, min(self.armorvalue, 100));
 		GameHookChain_PlayerDamageMod = 0;
 		self.hitsound += 1;
 		attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
@@ -320,7 +337,8 @@ float minstagib_StartAmmoHandle(float use_ammunition) {
 	weapon_precache(WEP_MINSTANEX);
 	if (use_ammunition) {
 		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		minstagib_ammo = TRUE;
+		if (g_minstagib_ammo_drop)
+			minstagib_ammo = TRUE;
 	} else 
 		start_items |= IT_UNLIMITED_AMMO;
 
@@ -346,10 +364,12 @@ void minstagib_init() {
 		return;
 
 	CACHE_CVAR(g_minstagib_ammo_drop);
-	CACHE_CVAR(g_minstagib_extralives);
+	CACHE_CVAR(g_minstagib_armor_max);
 	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(g_minstagib_nolaserdamage);
+	CACHE_CVAR(g_minstagib_health_drop);
+	CACHE_CVAR(g_minstagib_health_max);
 
 	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	if (g_minstagib_invis_alpha <= 0)
