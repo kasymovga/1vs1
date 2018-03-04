@@ -103,7 +103,7 @@ void W_MinstaNex_Attack (void)
 void W_MinstaNex_Laser_Projectile_Touch() {
 	PROJECTILE_TOUCH;
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.owner, g_balance_minstanex_laser_damage, g_balance_minstanex_laser_edgedamage, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
+	RadiusDamage (self, self.owner, g_balance_minstanex_laser_damage * self.dmg, g_balance_minstanex_laser_edgedamage * self.dmg, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
 	remove (self);
 }
 
@@ -130,8 +130,13 @@ void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
 void W_MinstaNex_Laser_Attack() {
 	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_laser_secondary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	float f1 = g_balance_minstanex_laser_spread / g_balance_minstanex_laser_count;
-	float f2 = -0.5 * g_balance_minstanex_laser_spread;
+	float f1, f2;
+	if (g_balance_minstanex_laser_count > 1) {
+		f1 = g_balance_minstanex_laser_spread / (g_balance_minstanex_laser_count - 1);
+		f2 = -0.5 * g_balance_minstanex_laser_spread;
+	} else
+		f1 = f2 = 0;
+
 	float i;
 	vector v;
 	float ff = 1 / g_balance_minstanex_laser_count;
