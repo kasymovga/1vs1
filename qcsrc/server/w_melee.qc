@@ -168,6 +168,7 @@ float w_melee(float req)
 		}
 	}
 	else if (req == WR_PRECACHE) {
+		dlc_require("axe");
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_MELEE);
 	else if (req == WR_CHECKAMMO1)
