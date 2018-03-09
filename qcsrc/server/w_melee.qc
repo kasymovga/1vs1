@@ -80,7 +80,7 @@ void W_Melee_Attack (float melee_type, float axe)
 		melee.angles = sv_player_melee_angles;
 		melee.colormap = self.colormap;
 		setorigin(melee, sv_player_melee_origin);
-		setanim(melee, self.anim_melee, FALSE, TRUE, TRUE);
+		setanim(melee, self.anim_melee2, FALSE, TRUE, TRUE);
 		melee.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
 		melee.viewmodelforclient = self;
 	}
@@ -103,11 +103,11 @@ void W_Melee_Attack_Check()
 
 	float w_save = self.weapon;
 	self.switchweapon = self.weapon = WEP_MELEE;
-	float axe = (w_save == WEP_MELEE);
+	float axe = ((w_save == WEP_MELEE) && (g_balance_melee != 2));
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
 		W_Melee_Attack(g_balance_melee, axe);
-		weapon_thinkf((axe ? WFRAME_FIRE1 : WFRAME_MELEE), g_balance_melee_animtime, w_ready);
+		weapon_thinkf((axe ? WFRAME_FIRE1 : ((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE)), g_balance_melee_animtime, w_ready);
 	}
 	self.weapon = w_save;
 	self.switchweapon = w_save;
@@ -144,7 +144,7 @@ float W_Melee_Aim()
 	return self.bot_melee;
 }
 
-void spawnfunc_weapon_melee (void)
+void spawnfunc_weapon_axe (void)
 {
 	if (g_balance_melee && g_balance_melee != 2)
 		weapon_defaultspawnfunc(WEP_MELEE);

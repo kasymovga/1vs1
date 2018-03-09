@@ -16,6 +16,10 @@ vector sv_qcanimation_melee_morph1angles;
 vector sv_qcanimation_melee_morph2angles;
 vector sv_qcanimation_melee_morph1origin;
 vector sv_qcanimation_melee_morph2origin;
+vector sv_qcanimation_melee2_morph1angles;
+vector sv_qcanimation_melee2_morph2angles;
+vector sv_qcanimation_melee2_morph1origin;
+vector sv_qcanimation_melee2_morph2origin;
 float sv_qcweaponanimation;
 
 vector weapon_offset = '0 -10 0';
@@ -468,7 +472,7 @@ void CL_Weaponentity_Think()
 	self.angles = '0 0 0';
 	local float f;
 	f = 0;
-	float useqcanimation = (sv_qcweaponanimation || self.wframe == WFRAME_MELEE);
+	float useqcanimation = (sv_qcweaponanimation || self.wframe >= WFRAME_MELEE);
 	if (self.state == WS_RAISE && !intermission_running && g_balance_weaponswitchdelay)
 	{
 		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / W_WeaponRateFactorFor(self.owner)) / g_balance_weaponswitchdelay;
@@ -897,7 +901,7 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
-		if (sv_qcweaponanimation || fr == WFRAME_MELEE)
+		if (sv_qcweaponanimation || fr >= WFRAME_MELEE)
 		{
 			if (fr != WFRAME_IDLE)
 			{
@@ -970,6 +974,18 @@ void weapon_thinkf(float fr, float t, void() func)
 					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
 					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee_morph2origin;
 				}
+				else if (fr == WFRAME_MELEE2)
+				{
+					self.weapon_morph1time = time + t * 0.25;
+					self.weapon_morph1angles = sv_qcanimation_melee2_morph1angles;
+					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
+					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee2_morph1origin;
+
+					self.weapon_morph2time = time + t * 0.65;
+					self.weapon_morph2angles = sv_qcanimation_melee2_morph2angles;
+					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
+					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity) + sv_qcanimation_melee2_morph2origin;
+				}
 			}
 		}
 		else
@@ -1018,7 +1034,9 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (!self.crouch) // shoot anim stands up, this looks bad
 	{
 		local vector anim;
-		if (fr == WFRAME_MELEE)
+		if (fr == WFRAME_MELEE2)
+			anim = self.anim_melee2;
+		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE)
 			anim = self.anim_melee;
 		else
 			anim = self.anim_shoot;
@@ -1160,6 +1178,10 @@ void W_Init()
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
 	sv_qcanimation_melee_morph2origin = stov(cvar_string("sv_qcanimation_melee_morph2origin"));
+	sv_qcanimation_melee2_morph1angles = stov(cvar_string("sv_qcanimation_melee2_morph1angles"));
+	sv_qcanimation_melee2_morph2angles = stov(cvar_string("sv_qcanimation_melee2_morph2angles"));
+	sv_qcanimation_melee2_morph1origin = stov(cvar_string("sv_qcanimation_melee2_morph1origin"));
+	sv_qcanimation_melee2_morph2origin = stov(cvar_string("sv_qcanimation_melee2_morph2origin"));
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);

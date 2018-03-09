@@ -147,6 +147,7 @@ float sv_eventlog;
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
 .vector anim_melee; // player melee attack
+.vector anim_melee2; // player secondary melee attack
 
 // weapon animation vectors:
 .vector anim_fire1;
