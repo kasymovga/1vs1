@@ -1163,7 +1163,6 @@ void spawnfunc_misc_laser()
 .float radius;
 .float falloff;
 .float strength;
-.float lastpushtime;
 
 // targeted (directional) mode
 void trigger_impulse_touch1()

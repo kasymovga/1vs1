@@ -1316,7 +1316,7 @@ float projectile_skipnonsolid()
 }
 
 #define PROJECTILE_SKIPNONSOLID if (WarpZone_Projectile_Touch()) { UpdateCSQCProjectileAfterTeleport(self); return; } else if (sv_gameplayfix_skipnonsolid) if(projectile_skipnonsolid()) { return; }
-#define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
+#define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if (self.lastpushtime >= time) if (self.velocity * trace_plane_normal > 0) { setorigin(self, self.origin); return; } if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
 
 void print_to(entity e, string s)
 {

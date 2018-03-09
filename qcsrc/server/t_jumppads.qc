@@ -219,6 +219,7 @@ void trigger_push_touch()
 		}
 		UpdateCSQCProjectile(other);
 	}
+	other.lastpushtime = time;
 
 	if (self.spawnflags & PUSH_ONCE)
 	{
