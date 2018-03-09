@@ -7,20 +7,6 @@ void dlc_exec_cfg(string dlc_name) {
 		localcmd(strcat("exec rexdlc_", dlc_name, "_server.cfg", "\n"));
 }
 
-#if 0
-void dlc_restart_server() {
-	entity e;
-	if (self.cnt)
-	FOR_EACH_REALCLIENT(e)
-		if not(e.flags & FL_CLIENT) //Some clients not fully connected, can be dangerous restart right now
-		{
-			self.nextthink = time + 1;
-			self.cnt = self.cnt - 1;
-		}
-	localcmd("restart\n");
-}
-#endif
-
 void dlc_reset_all() {
 	entity e = self;
 	RegisterWeapons();
@@ -49,16 +35,11 @@ void DLCWait() {
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
 				localcmd("r_restart\n");
+				localcmd("restart\n"); //for sound
 				break;
 			}
 		remove(self);
 		dlc_wait = world;
-#if 0
-		e = spawn();
-		e.nextthink = time;
-		e.cnt = 15;
-		e.think = dlc_restart_server;
-#endif
 		localcmd("sv_cmd dlc_reset\n");
 		return;
 	}
