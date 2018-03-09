@@ -298,6 +298,12 @@ void CSQC_Init(void)
 	registercvar("crosshair_supershotgun_color_red", "1", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_green", "0.5", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_alpha", "1", CVAR_SAVE);
+	registercvar("crosshair_zapper", "", CVAR_SAVE);
+	registercvar("crosshair_zapper_size", "1", CVAR_SAVE);
+	registercvar("crosshair_zapper_color_blue", "1", CVAR_SAVE);
+	registercvar("crosshair_zapper_color_red", "0", CVAR_SAVE);
+	registercvar("crosshair_zapper_color_green", "0.7", CVAR_SAVE);
+	registercvar("crosshair_zapper_color_alpha", "1", CVAR_SAVE);
 	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
 	registercvar("_menu_vote_string", "", 0);
 	registercvar("_radio", "1", CVAR_SAVE);
