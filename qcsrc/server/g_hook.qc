@@ -80,6 +80,7 @@ void SetMovetypeFollow(entity ent, entity e)
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
 }
+#if 0
 void UnsetMovetypeFollow(entity ent)
 {
 	ent.hook_attack_time = 0;
@@ -87,13 +88,14 @@ void UnsetMovetypeFollow(entity ent)
 	PROJECTILE_MAKETRIGGER(ent);
 	ent.aiment = world;
 }
+#endif
 float LostMovetypeFollow(entity ent)
 {
-/*
+#if 0
 	if(ent.movetype != MOVETYPE_FOLLOW)
 		if(ent.aiment)
 			error("???");
-*/
+#endif
 	if(ent.aiment)
 	{
 		if(ent.aiment.classname != ent.aiment_classname)
@@ -205,8 +207,9 @@ void GrapplingHookThink()
 				Damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
+			if not(self.aiment)
+				RemoveGrapplingHook(self.owner);
 		}
-
 		if(g_grappling_hook_tarzan)
 		{
 			v = v0 = WarpZone_RefSys_TransformVelocity(self.owner, self, self.owner.velocity);
