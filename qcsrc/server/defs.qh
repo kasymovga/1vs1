@@ -592,3 +592,4 @@ enum {
 .float lastdamage;
 
 .entity entcs;
+.float lastpushtime;
