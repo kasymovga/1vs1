@@ -4,7 +4,6 @@ float g_balance_laser_primary_animtime;
 float g_balance_laser_primary_damage;
 float g_balance_laser_primary_edgedamage;
 float g_balance_laser_primary_force;
-//float g_balance_laser_primary_melee; //defined in defs.qh
 float g_balance_laser_primary_lifetime;
 float g_balance_laser_primary_radius;
 float g_balance_laser_primary_refire;
@@ -15,7 +14,6 @@ float g_balance_laser_secondary_animtime;
 float g_balance_laser_secondary_damage;
 float g_balance_laser_secondary_edgedamage;
 float g_balance_laser_secondary_force;
-//float g_balance_laser_secondary_melee; //defined in defs.qh
 float g_balance_laser_secondary_lifetime;
 float g_balance_laser_secondary_radius;
 float g_balance_laser_secondary_refire;
@@ -100,9 +98,7 @@ float w_laser(float req)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if (g_balance_laser_primary_melee)
-				W_Melee_Attack_Check();
-			else if (weapon_prepareattack(0, g_balance_laser_primary_refire))
+			if (weapon_prepareattack(0, g_balance_laser_primary_refire))
 			{
 				W_Laser_Attack(FALSE);
 				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, w_ready);
@@ -112,9 +108,7 @@ float w_laser(float req)
 		{
 			if(g_balance_laser_secondary)
 			{
-				if (g_balance_laser_secondary_melee)
-					W_Melee_Attack_Check();
-				else if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
+				if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
 				{
 					W_Laser_Attack(TRUE);
 					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, w_ready);
@@ -145,7 +139,6 @@ float w_laser(float req)
 		CACHE_CVAR(g_balance_laser_primary_damage);
 		CACHE_CVAR(g_balance_laser_primary_edgedamage);
 		CACHE_CVAR(g_balance_laser_primary_force);
-		CACHE_CVAR(g_balance_laser_primary_melee);
 		CACHE_CVAR(g_balance_laser_primary_lifetime);
 		CACHE_CVAR(g_balance_laser_primary_radius);
 		CACHE_CVAR(g_balance_laser_primary_refire);
@@ -156,7 +149,6 @@ float w_laser(float req)
 		CACHE_CVAR(g_balance_laser_secondary_damage);
 		CACHE_CVAR(g_balance_laser_secondary_edgedamage);
 		CACHE_CVAR(g_balance_laser_secondary_force);
-		CACHE_CVAR(g_balance_laser_secondary_melee);
 		CACHE_CVAR(g_balance_laser_secondary_lifetime);
 		CACHE_CVAR(g_balance_laser_secondary_radius);
 		CACHE_CVAR(g_balance_laser_secondary_refire);

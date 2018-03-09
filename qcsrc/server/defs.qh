@@ -32,9 +32,6 @@ float g_projectiles_newton_style;
 float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
 
-float g_balance_laser_primary_melee;
-float g_balance_laser_secondary_melee;
-
 float sv_clones;
 float sv_gentle;
 float sv_foginterval;
@@ -150,6 +147,7 @@ float sv_eventlog;
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
 .vector anim_melee; // player melee attack
+.vector anim_melee2; // player secondary melee attack
 
 // weapon animation vectors:
 .vector anim_fire1;

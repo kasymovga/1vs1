@@ -331,8 +331,7 @@ void player_setupanimsformodel()
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
 	self.anim_melee = stov(cvar_string("sv_player_melee_anim"));
-	if (self.anim_melee == '0 0 0')
-		self.anim_melee  = '23 1 1';
+	self.anim_melee2 = stov(cvar_string("sv_player_melee_anim2"));
 	animparseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);

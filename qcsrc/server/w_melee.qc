@@ -14,6 +14,7 @@ float g_balance_melee_force_up;
 float g_balance_melee_distance;
 float g_balance_melee_onehit;
 float g_balance_melee_refire;
+float g_balance_axe_damage;
 vector sv_player_melee_angles;
 vector sv_player_melee_origin;
 string sv_sound_melee;
@@ -33,12 +34,18 @@ void W_Melee_Attack_Think()
 	float damage_factor = (g_balance_melee_onehit ? 1 : (melee_frame / g_balance_melee_time));
 	makevectors(self.owner.v_angle);
 	W_SetupShot(self.owner, FALSE, 0, "", 0);
+	float damage;
+	if (self.dmg)
+		damage = g_balance_axe_damage;
+	else
+		damage = g_balance_melee_damage;
+
 	traceline_antilag(self.owner, w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * g_balance_melee_distance, MOVE_NORMAL, self, ANTILAG_LATENCY(self.owner));
 	if (trace_fraction < 1)
 	if (trace_ent)
 	if (trace_ent.takedamage)
 	{
-		Damage (trace_ent, self.owner, self.owner, g_balance_melee_damage * damage_factor,
+		Damage (trace_ent, self.owner, self.owner, damage * damage_factor,
 				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir) * g_balance_melee_force * damage_factor + '0 0 1' * g_balance_melee_force_up * damage_factor);
 		if (g_balance_melee_onehit)
 		{
@@ -51,9 +58,10 @@ void W_Melee_Attack_Think()
 	self.nextthink = time + g_balance_melee_ticrate;
 }
 
-void W_Melee_Attack ()
+void W_Melee_Attack (float melee_type, float axe)
 {
-	if (g_balance_melee == 2 && Akimbo_Active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
+	if (melee_type == 2)
+	if (Akimbo_Active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
 		return;
 
 	sound (Akimbo_Owner(self), CHAN_WEAPON, sv_sound_melee, VOL_BASE, ATTN_NORM);
@@ -65,13 +73,14 @@ void W_Melee_Attack ()
 	melee.melee_lastthink = melee.nextthink;
 	melee.nextthink += g_balance_melee_ticrate; //avoid frame with zero melee_frame
 	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	if (g_balance_melee == 2)
+	melee.dmg = axe;
+	if (melee_type == 2)
 	{
 		setmodel(melee, self.model);
 		melee.angles = sv_player_melee_angles;
 		melee.colormap = self.colormap;
 		setorigin(melee, sv_player_melee_origin);
-		setanim(melee, self.anim_melee, FALSE, TRUE, TRUE);
+		setanim(melee, self.anim_melee2, FALSE, TRUE, TRUE);
 		melee.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
 		melee.viewmodelforclient = self;
 	}
@@ -82,21 +91,26 @@ float W_Melee_Possible()
 {
 	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
 	if (self.weapon != WEP_CAMPINGRIFLE || g_balance_campingrifle_hotreload)
-	if (g_balance_melee || (self.weapon == WEP_LASER && (g_balance_laser_primary_melee || g_balance_laser_secondary_melee)))
+	if (g_balance_melee || (self.weapon == WEP_MELEE))
 		return TRUE;
 	return FALSE;
 }
 
 void W_Melee_Attack_Check()
 {
-	float items_save = self.items;
-	self.items |= IT_UNLIMITED_WEAPON_AMMO;
+	if (self.weapon != self.switchweapon)
+		return;
+
+	float w_save = self.weapon;
+	self.switchweapon = self.weapon = WEP_MELEE;
+	float axe = ((w_save == WEP_MELEE) && (g_balance_melee != 2));
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
-		W_Melee_Attack();
-		weapon_thinkf(WFRAME_MELEE, g_balance_melee_animtime, w_ready);
+		W_Melee_Attack(g_balance_melee, axe);
+		weapon_thinkf((axe ? WFRAME_FIRE1 : ((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE)), g_balance_melee_animtime, w_ready);
 	}
-	self.items = items_save;
+	self.weapon = w_save;
+	self.switchweapon = w_save;
 }
 
 void Melee_Init()
@@ -129,3 +143,46 @@ float W_Melee_Aim()
 		self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
 	return self.bot_melee;
 }
+
+void spawnfunc_weapon_axe (void)
+{
+	if (g_balance_melee && g_balance_melee != 2)
+		weapon_defaultspawnfunc(WEP_MELEE);
+	else
+		remove(self);
+}
+
+float w_melee(float req)
+{
+	if (req == WR_AIM) {
+		if (random() < bot_melee_love)
+		if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
+		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE))
+			self.BUTTON_ATCK = TRUE;
+	} else if (req == WR_THINK) {
+		if (self.BUTTON_ATCK || self.BUTTON_ATCK2)
+		if (weapon_prepareattack(0, g_balance_melee_refire))
+		{
+			W_Melee_Attack(1, 1);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, w_ready);
+		}
+	}
+	else if (req == WR_PRECACHE) {
+		dlc_require("axe");
+	} else if (req == WR_SETUP)
+		weapon_setup(WEP_MELEE);
+	else if (req == WR_CHECKAMMO1)
+		return TRUE;
+	else if (req == WR_CHECKAMMO2)
+		return TRUE;
+	else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "rekt himself";
+	else if (req == WR_KILLMESSAGE)
+		w_deathtypestring = "was smashed by";
+	else if (req == WR_CVAR_CACHE)
+	{
+		CACHE_CVAR(g_balance_axe_damage);
+		Melee_Init();
+	}
+	return TRUE;
+};
