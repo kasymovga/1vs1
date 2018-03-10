@@ -777,7 +777,7 @@ void PutClientInServer()
 
 	if(self.classname == "player") {
 		entity spot, oldself;
-		local float currentlyPlaying;
+		local float currentlyPlaying, i;
 		float oldteam = self.team;
 
 		if (self.team < 0) {
@@ -841,6 +841,11 @@ void PutClientInServer()
 
 		self.items = start_items;
 		self.switchweapon = w_getbestweapon(self);
+		if not(self.switchweapon)
+			for(i=WEP_FIRST; i <= WEP_LAST ; ++i)
+				if(client_hasweapon(self, i, TRUE, FALSE))
+					self.switchweapon = i;
+
 		self.cnt = self.switchweapon;
 		self.weapon = 0;
 		self.jump_interval = time;

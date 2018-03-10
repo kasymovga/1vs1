@@ -918,20 +918,17 @@ void havocbot_chooseweapon()
 	local float i;
 
 	// TODO: clean this up by moving it to weapon code
-	if(self.enemy==world)
+	// If no weapon was chosen get the first available weapon
+	if(self.weapon==0)
+	for(i=WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
-		// If no weapon was chosen get the first available weapon
-		if(self.weapon==0)
-		for(i=WEP_FIRST; i <= WEP_LAST ; ++i)
+		if(client_hasweapon(self, i, TRUE, FALSE))
 		{
-			if(client_hasweapon(self, i, TRUE, FALSE))
-			{
-				self.switchweapon = i;
-				return;
-			}
+			self.switchweapon = i;
+			return;
 		}
-		return;
 	}
+	return;
 
 	// Do not change weapon during the next second after a combo
 	i = time - self.lastcombotime;
