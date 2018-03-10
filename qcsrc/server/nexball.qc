@@ -474,7 +474,7 @@ void football_touch (void)
 		makevectors(other.v_angle);
 		self.velocity = other.velocity + v_forward * g_nexball_football_boost_forward + v_up * g_nexball_football_boost_up;
 	}
-	if (other.weaponentity.wframe == WFRAME_MELEE)
+	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1))
 	{
 		makevectors(other.v_angle);
 		self.velocity = self.velocity + v_forward * g_nexball_football_melee_boost_forward + v_up * g_nexball_football_melee_boost_up;
@@ -508,7 +508,7 @@ void hockey_touch (void)
 	makevectors(other.v_angle_y * '0 1 0');
 	self.velocity = other.velocity + v_forward * g_nexball_hockey_boost_forward;
 	self.velocity_z = 0;
-	if (other.weaponentity.wframe == WFRAME_MELEE)
+	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1))
 	{
 		self.velocity = self.velocity + v_forward * g_nexball_hockey_melee_boost_forward;
 		self.velocity_z = g_nexball_hockey_melee_boost_up;
