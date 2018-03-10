@@ -244,11 +244,17 @@ void CSQC_Init(void)
 	if (xonotic_client) {
 		localcmd("\ncmd gameclient xonotic\n");
 		ClientUpdateMessage("^3You play with Xonotic client on Rexuiz server.");
+		if not(cvar("mod_alias_force_animated")) {
+			localcmd("\nseta mod_alias_force_animated 1; r_restart\n");
+		}
 	} else if (fexists("rexuiz.cfg"))
 		localcmd("\ncmd gameclient rexuiz\n");
-	else if (autocvar_autocvar_check)
+	else if (autocvar_autocvar_check) {
 		localcmd("\ncmd gameclient nexuiz\n");
-	else {
+		if not(cvar("mod_alias_force_animated")) {
+			localcmd("\nseta mod_alias_force_animated 1; r_restart\n");
+		}
+	} else {
 		localcmd("\ncmd gameclient oldnexuiz\n");
 		ClientUpdateMessage("^3You play with really old Nexuiz client");
 	}
