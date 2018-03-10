@@ -207,8 +207,10 @@ void GrapplingHookThink()
 				Damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
-			if not(self.aiment)
+			if not(self.aiment) {
 				RemoveGrapplingHook(self.owner);
+				return;
+			}
 		}
 		if(g_grappling_hook_tarzan)
 		{
