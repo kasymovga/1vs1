@@ -116,8 +116,8 @@ void ewheel_init() {
 	CSQCProjectile_Init(PROJECTILE_LASER);
 }
 
-void spawnfunc_ewheel_spawn() {
+void spawnfunc_monster_ewheel_spawn() {
     setsize(self,'-32 -32 0','32 32 48');
 	monster_init(ewheel_init);
-	monster_prepare_spawn(ewheel_spawn, spawnfunc_ewheel_spawn);
+	monster_prepare_spawn(ewheel_spawn, spawnfunc_monster_ewheel_spawn);
 }

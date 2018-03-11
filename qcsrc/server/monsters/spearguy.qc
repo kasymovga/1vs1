@@ -82,8 +82,8 @@ void spearguy_init() {
 	precache_model("models/weapons/v_rspear.md3");
 }
 
-void spawnfunc_spearguy_spawn() {
+void spawnfunc_monster_spearguy_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(spearguy_init);
-	monster_prepare_spawn(spearguy_spawn, spawnfunc_spearguy_spawn);
+	monster_prepare_spawn(spearguy_spawn, spawnfunc_monster_spearguy_spawn);
 }

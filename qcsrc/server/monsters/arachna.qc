@@ -175,7 +175,7 @@ void arachna_init() {
 	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_arachna_spawn() {
+void spawnfunc_monster_arachna_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 16');
 	monster_init(arachna_init);
 	monster_prepare_spawn(arachna_spawn, spawnfunc_arachna_spawn);

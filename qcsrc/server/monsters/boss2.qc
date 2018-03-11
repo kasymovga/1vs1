@@ -163,8 +163,8 @@ void boss2_init() {
 	precache_sound("weapons/shotgun_fire.wav");
 }
 
-void spawnfunc_boss2_spawn() {
+void spawnfunc_monster_boss2_spawn() {
 	setsize(self, '-48 -48 -72', '64 64 135');
 	monster_init(boss2_init);
-	monster_prepare_spawn(boss2_spawn, spawnfunc_boss2_spawn);
+	monster_prepare_spawn(boss2_spawn, spawnfunc_monster_boss2_spawn);
 }

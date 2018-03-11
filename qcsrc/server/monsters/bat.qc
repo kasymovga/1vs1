@@ -114,8 +114,8 @@ void bat_init() {
 	CSQCProjectile_Init(PROJECTILE_CRYLINK);
 }
 
-void spawnfunc_bat_spawn() {
+void spawnfunc_monster_bat_spawn() {
 	setsize(self, '-32 -32 -32', '32 32 32');
 	monster_init(bat_init);
-	monster_prepare_spawn(bat_spawn, spawnfunc_bat_spawn);
+	monster_prepare_spawn(bat_spawn, spawnfunc_monster_bat_spawn);
 }

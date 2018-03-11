@@ -205,8 +205,8 @@ void walker_init() {
 	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_walker_spawn() {
+void spawnfunc_monster_walker_spawn() {
     setsize(self, WALKER_MIN, WALKER_MAX);
 	monster_init(walker_init);
-	monster_prepare_spawn(walker_spawn, spawnfunc_walker_spawn);
+	monster_prepare_spawn(walker_spawn, spawnfunc_monster_walker_spawn);
 }

@@ -176,8 +176,8 @@ void fireguy_init() {
 	CSQCProjectile_Init(PROJECTILE_FIREMINE);
 }
 
-void spawnfunc_fireguy_spawn() {
+void spawnfunc_monster_fireguy_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(fireguy_init);
-	monster_prepare_spawn(fireguy_spawn, spawnfunc_fireguy_spawn);
+	monster_prepare_spawn(fireguy_spawn, spawnfunc_monster_fireguy_spawn);
 }

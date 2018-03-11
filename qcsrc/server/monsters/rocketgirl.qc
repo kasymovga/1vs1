@@ -137,8 +137,8 @@ void rlgirl_init() {
 	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 
-void spawnfunc_rlgirl_spawn() {
+void spawnfunc_monster_rlgirl_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(rlgirl_init);
-	monster_prepare_spawn(rlgirl_spawn, spawnfunc_rlgirl_spawn);
+	monster_prepare_spawn(rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);
 }

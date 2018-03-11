@@ -256,6 +256,22 @@ set sv_spawnreplace_weapon_seeker "weapon_hagar"
 //Quake Live compat
 set sv_spawnreplace_func_advertisement "func_wall"
 
+//Previous monster names compat
+set sv_spawnreplace_arachna_spawn monster_arachna_spawn
+set sv_spawnreplace_bat_spawn monster_bat_spawn
+set sv_spawnreplace_boss1_spawn monster_boss1_spawn
+set sv_spawnreplace_boss2_spawn monster_boss2_spawn
+set sv_spawnreplace_ewheel_spawn monster_ewheel_spawn
+set sv_spawnreplace_fireguy_spawn monster_fireguy_spawn
+set sv_spawnreplace_flyingthing_spawn monster_flyingthing_spawn
+set sv_spawnreplace_heavysoldier_spawn monster_heavysoldier_spawn
+set sv_spawnreplace_marine_spawn monster_marine_spawn
+set sv_spawnreplace_rlgirl_spawn monster_rlgirl_spawn
+set sv_spawnreplace_soldier_spawn monster_soldier_spawn
+set sv_spawnreplace_spearguy_spawn monster_spearguy_spawn
+set sv_spawnreplace_spider_spawn monster_spider_spawn
+set sv_spawnreplace_walker_spawn monster_walker_spawn
+
 set sv_infomessages_interval "10"
 set sv_infomessage1 ""
 set sv_infomessage2 ""

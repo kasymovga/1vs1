@@ -152,8 +152,8 @@ void boss1_init() {
 	CSQCProjectile_Init(PROJECTILE_GRENADE);
 }
 
-void spawnfunc_boss1_spawn() {
+void spawnfunc_monster_boss1_spawn() {
 	setsize(self, '-48 -48 -72', '64 64 135');
 	monster_init(boss1_init);
-	monster_prepare_spawn(boss1_spawn, spawnfunc_boss1_spawn);
+	monster_prepare_spawn(boss1_spawn, spawnfunc_monster_boss1_spawn);
 }

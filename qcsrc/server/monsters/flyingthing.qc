@@ -108,8 +108,8 @@ void flyingthing_init() {
 	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
 }
 
-void spawnfunc_flyingthing_spawn() {
+void spawnfunc_monster_flyingthing_spawn() {
 	setsize(self, '-16 -16 -48', '16 16 0');
 	monster_init(flyingthing_init);
-	monster_prepare_spawn(flyingthing_spawn, spawnfunc_flyingthing_spawn);
+	monster_prepare_spawn(flyingthing_spawn, spawnfunc_monster_flyingthing_spawn);
 }

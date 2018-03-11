@@ -115,8 +115,8 @@ void marine_init() {
 	precache_sound("weapons/uzi_fire.wav");
 }
 
-void spawnfunc_marine_spawn() {
+void spawnfunc_monster_marine_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(marine_init);
-	monster_prepare_spawn(marine_spawn, spawnfunc_marine_spawn);
+	monster_prepare_spawn(marine_spawn, spawnfunc_monster_marine_spawn);
 }

@@ -108,8 +108,8 @@ void soldier_init() {
 	precache_sound("weapons/shotgun_fire.wav");
 }
 
-void spawnfunc_soldier_spawn() {
+void spawnfunc_monster_soldier_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(soldier_init);
-	monster_prepare_spawn(soldier_spawn, spawnfunc_soldier_spawn);
+	monster_prepare_spawn(soldier_spawn, spawnfunc_monster_soldier_spawn);
 }

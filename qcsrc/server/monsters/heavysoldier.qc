@@ -137,8 +137,8 @@ void heavysoldier_init() {
 	CSQCProjectile_Init(PROJECTILE_GRENADE);
 }
 
-void spawnfunc_heavysoldier_spawn() {
+void spawnfunc_monster_heavysoldier_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(heavysoldier_init);
-	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_heavysoldier_spawn);
+	monster_prepare_spawn(heavysoldier_spawn, spawnfunc_monster_heavysoldier_spawn);
 }

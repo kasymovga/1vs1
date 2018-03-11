@@ -114,8 +114,8 @@ void spider_init() {
 	precache_model("models/grenademodel.md3");
 }
 
-void spawnfunc_spider_spawn() {
+void spawnfunc_monster_spider_spawn() {
 	setsize(self, '-16 -16 0', '16 16 24');
 	monster_init(spider_init);
-	monster_prepare_spawn(spider_spawn, spawnfunc_spider_spawn);
+	monster_prepare_spawn(spider_spawn, spawnfunc_monster_spider_spawn);
 }
