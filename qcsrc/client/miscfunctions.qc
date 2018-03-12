@@ -27,7 +27,7 @@ void RemovePlayer(entity player)
 	if(!pl)
 	{
 		self = player;
-		error("Trying to remove a player which is not in the playerlist!");
+		print("Trying to remove a player which is not in the playerlist!");
 		return;
 	}
 	parent.sort_next = player.sort_next;

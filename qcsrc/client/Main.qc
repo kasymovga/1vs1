@@ -840,7 +840,7 @@ void Ent_ReadEntCS(float bIsNewEntity)
 
 void Ent_Remove();
 
-void Ent_RemovePlayerScore(float ignore)
+void Ent_RemovePlayerScore()
 {
 	float i;
 
@@ -852,6 +852,7 @@ void Ent_RemovePlayerScore(float ignore)
 		for(i = 0; i < MAX_SCORE; ++i)
 			self.owner.(scores[i]) = 0; // clear all scores
 	}
+	self.entremove = world.entremove;
 }
 
 void Ent_ReadPlayerScore(float ignore)
