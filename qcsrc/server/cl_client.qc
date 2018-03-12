@@ -2316,8 +2316,10 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);
-	spectator_note = NoteLine_New(Spectator_Note_Message);
-	spectator_note.customizeentityforclient = Spectator_Note_Customize;
+	if not(spectator_note) {
+		spectator_note = NoteLine_New(Spectator_Note_Message);
+		spectator_note.customizeentityforclient = Spectator_Note_Customize;
+	}
 }
 
 void PutTeamToServer(float t) {
