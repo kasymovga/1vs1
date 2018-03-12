@@ -246,7 +246,10 @@ float w_hook(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "has run into #'s gravity bomb";
+		if(w_deathtype & HITTYPE_SECONDARY)
+			w_deathtypestring = "has run into #'s gravity bomb";
+		else
+			w_deathtypestring = "was hooked by";
 	else if (req == WR_RESETPLAYER)
 	{
 		self.hook_refire = time;
