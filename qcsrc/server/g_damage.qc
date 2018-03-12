@@ -212,9 +212,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 
 			if(sv_gentle) {
-				if (deathtype == DEATH_CAMP)
-					bprint ("^1",s, "^1 thought he found a nice camping ground\n");
-				else if (deathtype == DEATH_MIRRORDAMAGE)
+				if (deathtype == DEATH_MIRRORDAMAGE)
 					bprint ("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
 				else
 					bprint ("^1",s, "^1 will be reinserted into the game due to his own actions\n");
