@@ -246,8 +246,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					bprint ("^1",s, "^1 died\n");
 				else if (deathtype == DEATH_NOAMMO)
 					bprint ("^7",s, "^7 committed suicide. What's the point of living without ammo?\n");
-				else if (deathtype == DEATH_CAMP)
-					bprint ("^1",s, "^1 thought he found a nice camping ground\n");
 				else if (deathtype == DEATH_MIRRORDAMAGE)
 					bprint ("^1",s, "^1 didn't become friends with the Lord of Teamplay\n");
 				else if (deathtype == DEATH_FIRE)
