@@ -928,7 +928,6 @@ void havocbot_chooseweapon()
 			return;
 		}
 	}
-	return;
 
 	// Do not change weapon during the next second after a combo
 	i = time - self.lastcombotime;
