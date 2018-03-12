@@ -48,6 +48,7 @@ And you should be done!
 ============================================*/
 
 float g_balance_grapplehook_airfriction;
+float g_balance_grapplehook_break_damage;
 float g_balance_grapplehook_damage;
 float g_balance_grapplehook_damage_interval;
 float g_balance_grapplehook_dontpull;
@@ -329,7 +330,13 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 {
 	if(self.health > 0)
 	{
-		self.health = self.health - damage;
+		float f;
+		if (attacker == self.owner)
+			f = g_balance_selfdamagepercent;
+		else
+			f = 1;
+
+		self.health = self.health - damage * f;
 		if (self.health <= 0)
 		{
 			if(attacker != self.owner)
@@ -337,6 +344,10 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 				self.owner.pusher = attacker;
 				self.owner.pushltime = time + g_maxpushtime;
 			}
+			if (g_balance_grapplehook_break_damage)
+			if (f)
+				Damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEP_HOOK, self.owner.origin, '0 0 0');
+
 			RemoveGrapplingHook(self.owner);
 		}
 	}
@@ -498,6 +509,7 @@ void GrapplingHookFrame()
 void GrappleHookInit()
 {
 	CACHE_CVAR(g_balance_grapplehook_airfriction);
+	CACHE_CVAR(g_balance_grapplehook_break_damage);
 	CACHE_CVAR(g_balance_grapplehook_damage);
 	CACHE_CVAR(g_balance_grapplehook_damage_interval);
 	CACHE_CVAR(g_balance_grapplehook_dontpull);
