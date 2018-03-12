@@ -189,11 +189,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
 				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(targ.team)));
 				return;
-			} else if (deathtype == DEATH_CAMP) {
-				if(sv_gentle)
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Reconsider your tactics, camper!"));
-				else
-					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Die camper!"));
 			} else if (deathtype == DEATH_NOAMMO) {
 				if(sv_gentle)
 					centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You are reinserted into the game for running out of ammo..."));
