@@ -308,6 +308,7 @@ monsters/fireguy.qc
 monsters/bat.qc
 monsters/rocketgirl.qc
 monsters/marine.qc
+monsters/uganda.qc
 survive.qc
 minstagib.qc
 radio.qc

@@ -1249,6 +1249,10 @@ set g_monster_walker_health 500
 set g_monster_walker_damage 100
 set g_monster_walker_force 100
 set g_monster_walker_radius 100
+set g_monster_ugandaknuckles_health 100
+set g_monster_ugandaknuckles_radius 150
+set g_monster_ugandaknuckles_damage 5
+set g_monster_ugandaknuckles_force 5
 set g_monsters_spawn ""
 
 set sv_radio 0 "Enable the Radio - server-wide music broadcasting"
