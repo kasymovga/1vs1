@@ -581,17 +581,11 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	}
 }
 
-// these are updated by each Damage call for use in button triggering and such
-entity damage_targ;
-entity damage_inflictor;
-entity damage_attacker;
-
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	float mirrordamage;
 	float mirrorforce;
 	float teamdamage0;
-	entity attacker_save;
 	mirrordamage = 0;
 	mirrorforce = 0;
 
@@ -601,10 +595,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	local entity oldself;
 	oldself = self;
 	self = targ;
-        damage_targ = targ;
-        damage_inflictor = inflictor;
-        damage_attacker = attacker;
-		attacker_save = attacker;
 
 	if(targ.classname == "player")
 		if(targ.hook)
@@ -768,7 +758,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
-		attacker = attacker_save;
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		if not(GameHookChain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
 			Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
