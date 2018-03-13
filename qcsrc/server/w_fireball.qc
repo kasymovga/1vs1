@@ -231,6 +231,10 @@ void W_Firemine_Think()
 		remove(self);
 		return;
 	}
+	if (self.waterlevel > 0) {
+		remove(self);
+		return;
+	}
 
 	// make it "hot" once it leaves its owner
 	if(self.owner)

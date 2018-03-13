@@ -68,6 +68,10 @@ void Napalm_Think(void) {
         remove(self);
         return;
     }
+	if (self.waterlevel > 0) {
+		remove(self);
+		return;
+	}
 
 #if 0
     if(self.projectiledeathtype != DEATH_HURTTRIGGER)
