@@ -1312,3 +1312,12 @@ set sv_player_mute_namepattern2 ""
 set sv_player_mute_namepattern3 ""
 
 set g_mirrorforce 1 "Mirror force factor"
+
+alias extendmatchtime "sv_cmd extendmatchtime"
+alias reducematchtime "sv_cmd reducematchtime"
+alias increasefraglimit "sv_cmd increasefraglimit"
+alias decreasefraglimit "sv_cmd decreasefraglimit"
+set fraglimit_max 50
+set fraglimit_min 5
+set fraglimit_increment 5
+set fraglimit_decrement 5

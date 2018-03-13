@@ -45,7 +45,6 @@ float g_balance_pause_fuel_rot_spawn;
 float g_balance_pause_health_regen_spawn;
 float g_balance_pause_health_rot_spawn;
 float g_changeteam_banned;
-float g_hitplots;
 float g_maxplayers;
 float g_maxplayers_spectator_blocktime;
 float g_player_brightness;
@@ -1435,14 +1434,6 @@ void ClientConnect (void)
 
 	SoundEntity_Attach(self);
 
-	if(g_hitplots || strstrofs(strcat(" ", cvar_string("g_hitplots_individuals"), " "), strcat(" ", self.netaddress, " "), 0) >= 0)
-	{
-		self.hitplotfh = fopen(strcat("hits-", matchid, "-", self.netaddress, "-", ftos(self.playerid), ".plot"), FILE_WRITE);
-		fputs(self.hitplotfh, strcat("#name ", self.netname, "\n"));
-	}
-	else
-		self.hitplotfh = -1;
-
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		GameHookChain_RealClientConnect();
@@ -1465,12 +1456,6 @@ void ClientDisconnect (void)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
-	}
-
-	if(self.hitplotfh >= 0)
-	{
-		fclose(self.hitplotfh);
-		self.hitplotfh = -1;
 	}
 
 	bot_clientdisconnect();
@@ -2304,7 +2289,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_balance_pause_health_regen_spawn);
 	CACHE_CVAR(g_balance_pause_health_rot_spawn);
 	CACHE_CVAR(g_changeteam_banned);
-	CACHE_CVAR(g_hitplots);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
 	CACHE_CVAR(g_player_brightness);

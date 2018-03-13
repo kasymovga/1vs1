@@ -253,3 +253,7 @@ string resolvemod(string m)
 	else
 		return m;
 }
+
+void menu_loadmap_prepare() {
+	localcmd("\ndisconnect; wait; g_campaign 0; maxplayers ", ftos(max(max(cvar("bot_number") + 1, cvar("minplayers")), cvar("menu_maxplayers"))), "; g_maplist_shufflenow");
+}

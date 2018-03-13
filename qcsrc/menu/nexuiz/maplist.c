@@ -278,7 +278,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	if(MapInfo_CheckMap(m))
 	{
-		localcmd("\nmenu_loadmap_prepare\n");
+		menu_loadmap_prepare();
 		if(cvar("menu_use_default_hostname"))
 			localcmd("hostname \"", strdecolorize(cvar_string("_cl_name")), "'s Nexuiz server\"\n");
 		MapInfo_LoadMap(m);

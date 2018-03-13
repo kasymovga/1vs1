@@ -14,3 +14,4 @@ void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValu
 string getZonedTooltipForIdentifier(string s);
 
 string resolvemod(string m);
+void menu_loadmap_prepare();

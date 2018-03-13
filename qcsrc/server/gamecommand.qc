@@ -1048,6 +1048,27 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (cmd == "extendmatchtime") {
+		cvar_set("timelimit", ftos(min(cvar("timelimit_max"), cvar("timelimit") + cvar("timelimit_increment"))));
+		bprint("\{1}^2Time limit extended to ", (ftos(cvar("timelimit"))), "\n");
+		return;
+	}
+	if (cmd == "reducematchtime") {
+		cvar_set("timelimit", ftos(max(cvar("timelimit_min"), cvar("timelimit") - cvar("timelimit_decrement"))));
+		bprint("\{1}^2Time limit reduced to ", (ftos(cvar("timelimit"))), "\n");
+		return;
+	}
+	if (cmd == "increasefraglimit") {
+		cvar_set("fraglimit", ftos(min(cvar("fraglimit_max"), cvar("fraglimit") + cvar("fraglimit_increment"))));
+		bprint("\{1}^2Frag limit increased to ", (ftos(cvar("fraglimit"))), "\n");
+		return;
+	}
+	if (cmd == "decreasefraglimit") {
+		cvar_set("fraglimit", ftos(max(cvar("fraglimit_min"), cvar("fraglimit") - cvar("fraglimit_decrement"))));
+		bprint("\{1}^2Frag limit decreased to ", (ftos(cvar("fraglimit"))), "\n");
+		return;
+	}
+
 	if (cmd == "rereadcvars")
 	{
 		readdynamiccvars();
