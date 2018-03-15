@@ -73,7 +73,8 @@ string NoteLine_PrepareLine(string s) {
 			s2 = "{";
 		} else {
 			s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
-			s2 = getcommandkey(s2, s2);
+			if (s2 != "")
+				s2 = getcommandkey(s2, s2);
 		}
 		s3 = substring(s, cmdkey_end + 1, -1);
 		cmdkey = strlen(s1) + strlen(s2);
