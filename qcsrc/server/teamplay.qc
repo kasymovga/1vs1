@@ -661,7 +661,7 @@ void GetTeamCounts(entity ignore)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, smallestteam, smallestteam_count, smallestteam_score, balance_type;
+	float totalteams, smallestteam_count, team_random;
 	totalteams = 0;
 
 	// find out what teams are available
@@ -702,13 +702,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	// c1...c4 now have counts of each team
 	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
 
-	smallestteam = 0;
 	smallestteam_count = 999999999;
-	smallestteam_score = 999999999;
-
-	// 2 gives priority to what team you're already on, 1 goes in order
-	// 2 doesn't seem to work though...
-	balance_type = 1;
 
 	if(bots_would_leave)
 	//if(pl.classname != "player")
@@ -719,63 +713,58 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 		c3 -= cb3 * 255.0/256;
 		c4 -= cb4 * 255.0/256;
 	}
+	if(c1 >= 0 && c1 < smallestteam_count)
+		smallestteam_count = c1;
 
-	if(balance_type == 1)
-	{
-		if(c1 >= 0 && (c1 < smallestteam_count || (c1 <= smallestteam_count && team1_score < smallestteam_score)))
-		{
-			smallestteam = 1;
-			smallestteam_count = c1;
-			smallestteam_score = team1_score;
-		}
-		if(c2 >= 0 && (c2 < smallestteam_count || (c2 <= smallestteam_count && team2_score < smallestteam_score)))
-		{
-			smallestteam = 2;
-			smallestteam_count = c2;
-			smallestteam_score = team2_score;
-		}
-		if(c3 >= 0 && (c3 < smallestteam_count || (c3 <= smallestteam_count && team3_score < smallestteam_score)))
-		{
-			smallestteam = 3;
-			smallestteam_count = c3;
-			smallestteam_score = team3_score;
-		}
-		if(c4 >= 0 && (c4 < smallestteam_count || (c4 <= smallestteam_count && team4_score < smallestteam_score)))
-		{
-			smallestteam = 4;
-			smallestteam_count = c4;
-			smallestteam_score = team4_score;
-		}
-	}
-	else
-	{
-		if(c1 >= 0 && (c1 < smallestteam_count ||
-					(c1 == smallestteam_count && self.team == COLOR_TEAM1) ) )
-		{
-			smallestteam = 1;
-			smallestteam_count = c1;
-		}
-		if(c2 >= 0 && c2 < (c2 < smallestteam_count ||
-					(c2 == smallestteam_count && self.team == COLOR_TEAM2) ) )
-		{
-			smallestteam = 2;
-			smallestteam_count = c2;
-		}
-		if(c3 >= 0 && c3 < (c3 < smallestteam_count ||
-					(c3 == smallestteam_count && self.team == COLOR_TEAM3) ) )
-		{
-			smallestteam = 3;
-			smallestteam_count = c3;
-		}
-		if(c4 >= 0 && c4 < (c4 < smallestteam_count ||
-					(c4 == smallestteam_count && self.team == COLOR_TEAM4) ) )
-		{
-			smallestteam = 4;
-			smallestteam_count = c4;
-		}
-	}
+	if(c2 >= 0 && c2 < smallestteam_count)
+		smallestteam_count = c2;
 
-	return smallestteam;
+	if(c3 >= 0 && c3 < smallestteam_count)
+		smallestteam_count = c3;
+
+	if(c4 >= 0 && c4 < smallestteam_count)
+		smallestteam_count = c4;
+
+	team_random = 0;
+	if (c1 == smallestteam_count)
+		team_random++;
+
+	if (c2 == smallestteam_count)
+		team_random++;
+
+	if (c3 == smallestteam_count)
+		team_random++;
+
+	if (c4 == smallestteam_count)
+		team_random++;
+
+	team_random = team_random * random();
+	if (c1 == smallestteam_count) {
+		if (team_random <= 1)
+			return 1;
+		else
+			team_random -= 1;
+	}
+	if (c2 == smallestteam_count) {
+		if (team_random <= 1)
+			return 2;
+		else
+			team_random -= 1;
+	}
+	if (c3 == smallestteam_count) {
+		if (team_random <= 1)
+			return 3;
+		else
+			team_random -= 1;
+	}
+	if (c4 == smallestteam_count) {
+		if (team_random <= 1)
+			return 4;
+		else
+			team_random -= 1;
+	}
+	//never gonna happen
+	return 1;
 }
 
 float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
