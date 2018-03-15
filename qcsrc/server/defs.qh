@@ -25,7 +25,6 @@ float g_jetpack;
 
 float g_maxpushtime;
 
-float g_antilag;
 float g_antilag_bullets;
 float g_casings;
 float g_projectiles_newton_style;

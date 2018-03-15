@@ -544,7 +544,6 @@ void readlevelcvars(void)
 	if not(inWarmupStage)
 		game_starttime = cvar("g_start_delay");
 
-	CACHE_CVAR(g_antilag);
 	CACHE_CVAR(g_antilag_bullets);
 	CACHE_CVAR(g_casings);
 	CACHE_CVAR(g_projectiles_newton_style);
