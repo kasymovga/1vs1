@@ -1152,6 +1152,7 @@ void VoteCommands_Read() {
 	for (i = 0; i < vote_commands_count; i++) {
 		strunzone(vote_commands[i]);
 	}
+	vote_commands_count = 0;
 	for (head = car(s), tail = cdr(s); ;head = car(tail), tail = cdr(tail)) {
 		if (head == "") {
 			if (tail == "")
@@ -1161,6 +1162,8 @@ void VoteCommands_Read() {
 		}
 		vote_commands[vote_commands_count] = strzone(head);
 		vote_commands_count++;
+		if (vote_commands_count >= VOTE_COMMANDS_COUNT)
+			return;
 	}
 }
 
