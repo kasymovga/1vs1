@@ -1318,3 +1318,5 @@ set fraglimit_max 50
 set fraglimit_min 5
 set fraglimit_increment 5
 set fraglimit_decrement 5
+
+alias shuffleteams "sv_cmd shuffleteams"

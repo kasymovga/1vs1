@@ -1047,7 +1047,46 @@ void GameCommand(string command)
 		}
 		return;
 	}
+	if (teamplay)
+	if (cmd == "shuffleteams")
+	{
+		CheckAllowedTeams(world);
+		float t = COLOR_TEAM4;
+		FOR_EACH_TEAMPLAYER(plr)
+		{
+			if (t == COLOR_TEAM4)
+				t = COLOR_TEAM1;
+			else if (t == COLOR_TEAM1)
+				t = COLOR_TEAM2;
+			else if (t == COLOR_TEAM2)
+				t = COLOR_TEAM3;
+			else if (t == COLOR_TEAM3)
+				t = COLOR_TEAM4;
 
+			for (i = 0; i < 2; i++) {
+				if (t == COLOR_TEAM1 && c1 < 0)
+					t = COLOR_TEAM2;
+
+				if (t == COLOR_TEAM2 && c2 < 0)
+					t = COLOR_TEAM3;
+
+				if (t == COLOR_TEAM3 && c3 < 0)
+					t = COLOR_TEAM4;
+
+				if (t == COLOR_TEAM4 && c4 < 0)
+					t = COLOR_TEAM1;
+			}
+			if (t != plr.team) {
+				PlayerToSpec(plr);
+				SetPlayerTeam(plr, TeamColorSkin(t), TeamColorSkin(t), FALSE);
+				e = self;
+				self = plr;
+				LeaveSpectatorMode();
+				self = e;
+			}
+		}
+		return;
+	}
 	if (cmd == "extendmatchtime") {
 		cvar_set("timelimit", ftos(min(cvar("timelimit_max"), cvar("timelimit") + cvar("timelimit_increment"))));
 		bprint("\{1}^2Time limit extended to ", (ftos(cvar("timelimit"))), "\n");
