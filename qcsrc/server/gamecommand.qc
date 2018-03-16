@@ -1050,10 +1050,10 @@ void GameCommand(string command)
 	if (teamplay)
 	if (cmd == "shuffleteams")
 	{
-		CheckAllowedTeams(world);
 		float t = COLOR_TEAM4;
 		FOR_EACH_TEAMPLAYER(plr)
 		{
+			CheckAllowedTeams(plr);
 			if (t == COLOR_TEAM4)
 				t = COLOR_TEAM1;
 			else if (t == COLOR_TEAM1)
@@ -1083,6 +1083,8 @@ void GameCommand(string command)
 				self = plr;
 				LeaveSpectatorMode();
 				self = e;
+				if (clienttype(plr) == CLIENTTYPE_REAL)
+					centerprint(plr, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(t)));
 			}
 		}
 		return;
