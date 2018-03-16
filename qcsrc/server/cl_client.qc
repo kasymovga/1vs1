@@ -2158,9 +2158,9 @@ Called every frame for each client after the physics are run
 void PlayerPostThink (void)
 {
 	// Savage: Check for nameless players
-	if (strlen(self.netname) < 1) {
-		self.netname = "Player";
-		stuffcmd(self, "seta _cl_name Player\n");
+	if (strlen(strdecolorize(self.netname)) < 1) {
+		self.netname = "Empty Name";
+		//stuffcmd(self, "seta _cl_name Player\n");
 	}
 
 	if (frametime)
