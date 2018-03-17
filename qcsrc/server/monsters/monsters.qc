@@ -345,7 +345,7 @@ void monster_init(void() init_func) {
 string monster_classname() {
 	float spawn_suffix = strstrofs(self.classname, "_spawn", 0);
 	if (spawn_suffix >= 0) {
-		return substring(self.classname, 0, spawn_suffix);
+		return substring(self.classname, 8, spawn_suffix);
 	}
 	return self.classname;
 }
