@@ -3,18 +3,19 @@ var float(string text, float handleColors) stringwidth;
 entity players;
 entity teams;
 
-float RegisterPlayer(entity player)
+void RegisterPlayer(entity player)
 {
 	entity pl;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
-		if(pl == player)
-			error("Player already registered!");
+		if(pl == player) {
+			print("Player already registered!\n");
+			return;
+		}
 	player.sort_next = players.sort_next;
 	player.sort_prev = players;
 	if(players.sort_next)
 		players.sort_next.sort_prev = player;
 	players.sort_next = player;
-	return true;
 }
 
 void RemovePlayer(entity player)
@@ -27,7 +28,7 @@ void RemovePlayer(entity player)
 	if(!pl)
 	{
 		self = player;
-		print("Trying to remove a player which is not in the playerlist!");
+		print("Trying to remove a player which is not in the playerlist!\n");
 		return;
 	}
 	parent.sort_next = player.sort_next;
