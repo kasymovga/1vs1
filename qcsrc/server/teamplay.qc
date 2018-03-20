@@ -661,7 +661,7 @@ void GetTeamCounts(entity ignore)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, smallestteam_count, team_random;
+	float totalteams, smallestteam_count, smallestteam_score, team_random;
 	totalteams = 0;
 
 	// find out what teams are available
@@ -703,6 +703,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
 
 	smallestteam_count = 999999999;
+	smallestteam_score = 999999999;
 
 	if(bots_would_leave)
 	//if(pl.classname != "player")
@@ -725,39 +726,59 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0 && c4 < smallestteam_count)
 		smallestteam_count = c4;
 
+	if (c1 == smallestteam_count)
+		smallestteam_score = min(smallestteam_score, team1_score);
+
+	if (c2 == smallestteam_count)
+		smallestteam_score = min(smallestteam_score, team2_score);
+
+	if (c3 == smallestteam_count)
+		smallestteam_score = min(smallestteam_score, team3_score);
+
+	if (c4 == smallestteam_count)
+		smallestteam_score = min(smallestteam_score, team4_score);
+
 	team_random = 0;
 	if (c1 == smallestteam_count)
+	if (smallestteam_score == team1_score)
 		team_random++;
 
 	if (c2 == smallestteam_count)
+	if (smallestteam_score == team2_score)
 		team_random++;
 
 	if (c3 == smallestteam_count)
+	if (smallestteam_score == team3_score)
 		team_random++;
 
 	if (c4 == smallestteam_count)
+	if (smallestteam_score == team4_score)
 		team_random++;
 
 	team_random = team_random * random();
-	if (c1 == smallestteam_count) {
+	if (c1 == smallestteam_count)
+	if (smallestteam_score == team1_score) {
 		if (team_random <= 1)
 			return 1;
 		else
 			team_random -= 1;
 	}
-	if (c2 == smallestteam_count) {
+	if (c2 == smallestteam_count)
+	if (smallestteam_score == team2_score) {
 		if (team_random <= 1)
 			return 2;
 		else
 			team_random -= 1;
 	}
-	if (c3 == smallestteam_count) {
+	if (c3 == smallestteam_count)
+	if (smallestteam_score == team3_score) {
 		if (team_random <= 1)
 			return 3;
 		else
 			team_random -= 1;
 	}
-	if (c4 == smallestteam_count) {
+	if (c4 == smallestteam_count)
+	if (smallestteam_score == team4_score) {
 		if (team_random <= 1)
 			return 4;
 		else
