@@ -59,6 +59,7 @@ g_subs.qh
 w_melee.qh
 
 irc.qh
+udpchat.qh
 
 akimbo.qh
 
@@ -324,3 +325,4 @@ selectableweapon.qc
 twoweapons.qc
 noteline.qc
 warmup.qc
+udpchat.qc

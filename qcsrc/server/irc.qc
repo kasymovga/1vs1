@@ -41,6 +41,9 @@ var void() IRC_Announce_RealClientConnect_NextLink;
 void IRC_Announce_RealClientConnect();
 var void() IRC_Announce_RealClientDisconnect_NextLink;
 void IRC_Announce_RealClientDisconnect();
+var void(entity plr, string msg) IRC_PublicPlayerChat_NextLink;
+void IRC_PublicPlayerChat(entity plr, string msg);
+
 
 void IRC_Print(string str) {
 	if (sv_ircbot_silent)
@@ -230,6 +233,8 @@ void IRC_Init(void) {
 	GameHookChain_RealClientConnect = IRC_Announce_RealClientConnect;
 	IRC_Announce_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
 	GameHookChain_RealClientDisconnect = IRC_Announce_RealClientDisconnect;
+	IRC_PublicPlayerChat_NextLink = GameHookChain_PublicPlayerChat;
+	GameHookChain_PublicPlayerChat = IRC_PublicPlayerChat;
 }
 
 float IRC_IsIgnored(string mask) {
@@ -348,9 +353,11 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
     }
 }
 
-void IRC_Announce_PlayerChat(entity plr, string msg) { if(!irc) return;
+void IRC_PublicPlayerChat(entity plr, string msg) {
 	if (clienttype(plr) == CLIENTTYPE_REAL || sv_ircbot_announce_chat_from_bots)
 		IRC_Privmsg(irc.cnt, irc.target, strcat("<", plr.netname, "^7> ", msg));
+
+	IRC_PublicPlayerChat_NextLink(plr, msg);
 }
 
 void IRC_Announce_Client_Callback(string ip, string cn, entity ctx) {
