@@ -1320,3 +1320,7 @@ set fraglimit_increment 5
 set fraglimit_decrement 5
 
 alias shuffleteams "sv_cmd shuffleteams"
+
+set sv_udpchat 0
+set sv_udpchat_server 127.0.0.1:16887
+set sv_udpchat_id "host"
