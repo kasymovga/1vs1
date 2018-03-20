@@ -27,7 +27,6 @@ void RemovePlayer(entity player)
 
 	if(!pl)
 	{
-		self = player;
 		print("Trying to remove a player which is not in the playerlist!\n");
 		return;
 	}
