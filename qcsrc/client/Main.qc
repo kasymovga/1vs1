@@ -852,7 +852,6 @@ void Ent_RemovePlayerScore()
 		for(i = 0; i < MAX_SCORE; ++i)
 			self.owner.(scores[i]) = 0; // clear all scores
 	}
-	self.entremove = world.entremove;
 }
 
 void Ent_ReadPlayerScore(float ignore)
