@@ -22,7 +22,12 @@ void UDPChat_ER_Response_Callback(float argc, string response) {
 	}
 
 	string msg = substring(response, argv_start_index(2), -1);
-	bprint("\{3}", "^5UDPCHAT: ", msg, "\n");
+	float colon = strstrofs(msg, ":", 0);
+	if (colon)
+		bprint("\{3}", "^5\x12 ^3", substring(msg, 0, colon), "^2:^5", substring(msg, colon + 1, -1), "\n");
+	else
+		bprint("\{3}", "^5\x12 ", msg, "\n");
+
 	if (sv_udpchat_server != "")
 	if (peer != sv_udpchat_server)
 		ER_Query(sv_udpchat_server, "extResponse udpchat " + msg);
@@ -37,14 +42,19 @@ void UDPChat_ER_Response_Callback(float argc, string response) {
 
 var void(entity source, string msg) UDPChat_PupblicPlayerChat_NextLink;
 void UDPChat_PupblicPlayerChat(entity source, string msg) {
+	if (clienttype(source) != CLIENTTYPE_REAL)
+		return;
+
+	string _netname = strreplace(":", "_", source.netname);
+	_netname = strreplace("@", "_", source.netname);
 	if (sv_udpchat_server != "")
-		ER_Query(sv_udpchat_server, "extResponse udpchat " + strdecolorize(source.netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg));
+		ER_Query(sv_udpchat_server, "extResponse udpchat " + strdecolorize(_netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg));
 
 	string s;
 	float i;
 	for (i = 1; (s = cvar_string(strcat("sv_udpchat_client", ftos(i)))) != ""; i++)
 		for (i = 1; (s = cvar_string(strcat("sv_udpchat_client", ftos(i)))) != ""; i++)
-			ER_Query(s, "extResponse udpchat " + strdecolorize(source.netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg));
+			ER_Query(s, "extResponse udpchat " + strdecolorize(_netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg));
 
 	UDPChat_PupblicPlayerChat_NextLink(source, msg);
 }
