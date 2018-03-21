@@ -23,7 +23,7 @@ void UDPChat_ER_Response_Callback(float argc, string response) {
 
 	string msg = substring(response, argv_start_index(2), -1);
 	float colon = strstrofs(msg, ":", 0);
-	if (colon)
+	if (colon >= 0)
 		bprint("\{3}", "^5\x12 ^3", substring(msg, 0, colon), "^2:^5", substring(msg, colon + 1, -1), "\n");
 	else
 		bprint("\{3}", "^5\x12 ", msg, "\n");
