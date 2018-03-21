@@ -56,7 +56,7 @@ var void(entity source, string msg) UDPChat_PupblicPlayerChat_NextLink;
 void UDPChat_PupblicPlayerChat(entity source, string msg) {
 	if (clienttype(source) == CLIENTTYPE_REAL) {
 		string _netname = strreplace(":", "_", source.netname);
-		_netname = strreplace("@", "_", source.netname);
+		_netname = strreplace("@", "_", _netname);
 		string text = strdecolorize(_netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg);
 		UDPChat_SendPacket(text);
 	}
