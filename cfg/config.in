@@ -1327,3 +1327,4 @@ set sv_udpchat_id "host"
 set sv_udpchat_client1 ""
 set sv_udpchat_client2 ""
 set sv_udpchat_client3 ""
+set sv_udpchat_spamstatus 10

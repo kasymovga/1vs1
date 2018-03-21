@@ -1,5 +1,6 @@
 string sv_udpchat_server;
 string sv_udpchat_id;
+float sv_udpchat_spamstatus;
 
 void UDPChat_ER_Response_Callback(float argc, string response) {
 	string s;
@@ -52,6 +53,25 @@ void UDPChat_SendPacket(string msg) {
 			ER_Query(s, packet);
 }
 
+void UDPChat_ShowPlayersStatus() {
+	if (time < 10)
+		return;
+
+	if not(sv_udpchat_spamstatus)
+		return;
+
+	float c = cvar("_sv_udpchat_msgsent") + 1;
+	if(c >= sv_udpchat_spamstatus) {
+		c = 0;
+		string s = strcat(" * server ", sv_udpchat_id, " have ", ftos(player_count), "/", ftos(maxclients), " clients");
+		if(currentbots > 0)
+			s = strcat(s, " (", ftos(currentbots), " bots)");
+
+		UDPChat_SendPacket(s);
+	}
+	cvar_set("_sv_udpchat_msgsent", ftos(c));
+}
+
 var void(entity source, string msg) UDPChat_PupblicPlayerChat_NextLink;
 void UDPChat_PupblicPlayerChat(entity source, string msg) {
 	if (clienttype(source) == CLIENTTYPE_REAL) {
@@ -59,6 +79,7 @@ void UDPChat_PupblicPlayerChat(entity source, string msg) {
 		_netname = strreplace("@", "_", _netname);
 		string text = strdecolorize(_netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg);
 		UDPChat_SendPacket(text);
+		UDPChat_ShowPlayersStatus();
 	}
 	UDPChat_PupblicPlayerChat_NextLink(source, msg);
 }
@@ -78,11 +99,13 @@ void UDPChat_Init() {
 		return;
 
 	sv_udpchat_server = cvar_string_zone_ifneeded("sv_udpchat_server");
+	CACHE_CVAR(sv_udpchat_spamstatus);
 	sv_udpchat_id = cvar_string_zone_ifneeded("sv_udpchat_id");
     ER_RegisterHandler("udpchat", UDPChat_ER_Response_Callback, world);
 	UDPChat_PupblicPlayerChat_NextLink = GameHookChain_PublicPlayerChat;
 	GameHookChain_PublicPlayerChat = UDPChat_PupblicPlayerChat;
 	UDPChat_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = UDPChat_RealClientConnect;
+	registercvar("_sv_udpchat_msgsent", "0");
 }
 
