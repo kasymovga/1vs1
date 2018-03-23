@@ -50,8 +50,8 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 	e.warpzone_targetorigin = other_org;
 	e.warpzone_angles = my_ang;
 	e.warpzone_targetangles = other_ang;
-	fixedmakevectors(my_ang); e.warpzone_forward = v_forward;
-	fixedmakevectors(other_ang); e.warpzone_targetforward = v_forward;
+	makevectors(my_ang); e.warpzone_forward = v_forward;
+	makevectors(other_ang); e.warpzone_targetforward = v_forward;
 	e.camera_transform = WarpZone_camera_transform;
 }
 

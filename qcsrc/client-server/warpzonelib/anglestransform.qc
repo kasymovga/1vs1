@@ -1,4 +1,3 @@
-#ifdef POSITIVE_PITCH_IS_DOWN
 vector fixedvectoangles(vector a)
 {
 	vector ang;
@@ -19,20 +18,12 @@ void fixedmakevectors2(vector a)
     a_x = -a_x;
     makevectors(a);
 }
-#else
-void fixedmakevectors(vector a)
-{
-	// a makevectors that actually inverts vectoangles
-	a_x = -a_x;
-	makevectors(a);
-}
-#endif
 
 // angles transforms
 // angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
 {
-	fixedmakevectors(transform);
+	makevectors(transform);
 	return v_forward * v_x
 		+ v_right   * (-v_y)
 		+ v_up      * v_z;
@@ -41,7 +32,7 @@ vector AnglesTransform_Apply(vector transform, vector v)
 vector AnglesTransform_Multiply(vector t1, vector t2)
 {
 	vector m_forward, m_up;
-	fixedmakevectors(t2); m_forward = v_forward; m_up = v_up;
+	makevectors(t2); m_forward = v_forward; m_up = v_up;
 	m_forward = AnglesTransform_Apply(t1, m_forward); m_up = AnglesTransform_Apply(t1, m_up);
 	return fixedvectoangles2(m_forward, m_up);
 }
@@ -49,7 +40,7 @@ vector AnglesTransform_Multiply(vector t1, vector t2)
 vector AnglesTransform_Invert(vector transform)
 {
 	vector i_forward, i_up;
-	fixedmakevectors(transform);
+	makevectors(transform);
 	// we want angles that turn v_forward into '1 0 0', v_right into '0 1 0' and v_up into '0 0 1'
 	// but these are orthogonal unit vectors!
 	// so to invert, we can simply fixedvectoangles the TRANSPOSED matrix
@@ -67,8 +58,6 @@ vector AnglesTransform_TurnDirectionFR(vector transform)
 {
 	// turn 180 degrees around v_up
 	// changes in-direction to out-direction
-	//fixedmakevectors(transform);
-	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
 	transform_x = -transform_x;
 	transform_y = 180 + transform_y;
 	transform_z = -transform_z;
@@ -82,8 +71,6 @@ vector AnglesTransform_TurnDirectionFU(vector transform)
 {
 	// turn 180 degrees around v_up
 	// changes in-direction to out-direction
-	//fixedmakevectors(transform);
-	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
 	transform_x = -transform_x;
 	transform_y = 180 + transform_y;
 	transform_z = 180 - transform_z;
@@ -152,7 +139,6 @@ vector AnglesTransform_CancelRoll(vector t)
 	return t;
 }
 
-#ifdef POSITIVE_PITCH_IS_DOWN
 vector AnglesTransform_ApplyToAngles(vector transform, vector v)
 {
 	v_x = -v_x;
@@ -183,38 +169,6 @@ vector AnglesTransform_ToVAngles(vector v)
 {
 	return v;
 }
-#else
-vector AnglesTransform_ApplyToAngles(vector transform, vector v)
-{
-	v = AnglesTransform_Multiply(transform, v);
-	return v;
-}
-vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
-{
-	v_x = -v_x;
-	v = AnglesTransform_Multiply(transform, v);
-	v_x = -v_x;
-	return v;
-}
-vector AnglesTransform_FromAngles(vector v)
-{
-	return v;
-}
-vector AnglesTransform_ToAngles(vector v)
-{
-	return v;
-}
-vector AnglesTransform_FromVAngles(vector v)
-{
-	v_x = -v_x;
-	return v;
-}
-vector AnglesTransform_ToVAngles(vector v)
-{
-	v_x = -v_x;
-	return v;
-}
-#endif
 
 vector AnglesTransform_Multiply_GetPostShift(vector t0, vector st0, vector t1, vector st1)
 {
