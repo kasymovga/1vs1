@@ -182,7 +182,7 @@ void W_Porto_Attack (float out)
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.playerid = self.playerid;
-	fixedmakevectors(vectoangles(gren.velocity));
+	makevectors(vectoangles(gren.velocity));
 	gren.right_vector = v_right;
 
 	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;

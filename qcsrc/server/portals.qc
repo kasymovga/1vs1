@@ -44,7 +44,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// this now is INSIDE the plane... can't use that
 
 	// shift it out
-	fixedmakevectors(teleporter.enemy.angles);
+	makevectors(teleporter.enemy.angles);
 
 	// first shift it ON the plane if needed
 	planeshift = ((teleporter.enemy.origin - to) * v_forward) + PlayerEdgeDistance(player, v_forward) + 1;
@@ -99,10 +99,10 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 
 		//print("reference: ", vtos(AnglesTransform_Multiply(transform, ang)), "\n");
 
-		fixedmakevectors(ang);
+		makevectors(ang);
 		old_forward = v_forward;
 		old_up = v_up;
-		fixedmakevectors(ang_y * '0 1 0');
+		makevectors(ang_y * '0 1 0');
 		old_yawforward = v_forward;
 
 		// their aiming directions are portalled...
@@ -121,7 +121,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 		{
 			// new_yawforward and new_yawup define the new aiming half-circle
 			// we "just" need to find out whether new_up or -new_up is in that half circle
-			ang = fixedvectoangles(new_forward); // this still gets us a nice pitch value...
+			ang = vectoangles(new_forward); // this still gets us a nice pitch value...
 			if(new_up * new_yawforward < 0)
 				new_up = -1 * new_up;
 			ang_y = vectoyaw(new_up); // this vector is the yaw we want
@@ -130,17 +130,15 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 		else
 		{
 			// good angles; here, "forward" suffices
-			ang = fixedvectoangles(new_forward);
+			ang = vectoangles(new_forward);
 			//print("GOOD path: ", vtos(ang), "\n");
 		}
-
-		ang_x = -ang_x;
 		ang_z = player.angles_z;
 	}
 	else
 	{
 		ang = player.angles;
-		ang = AnglesTransform_Multiply(transform, player.angles);
+		ang = AnglesTransform_Multiply(transform, ang);
 	}
 
 	// factor -1 allows chaining portals, but may be weird
@@ -185,7 +183,9 @@ float Portal_FindSafeOrigin(entity portal)
 	o = portal.origin;
 	portal.mins = PL_MIN - SAFERNUDGE;
 	portal.maxs = PL_MAX + SAFERNUDGE;
-	fixedmakevectors(portal.angles);
+	portal.angles_x = - portal.angles_x;
+	makevectors(portal.angles);
+	portal.angles_x = - portal.angles_x;
 	portal.origin += 16 * v_forward;
 	if(!move_out_of_solid(portal))
 	{
@@ -273,7 +273,9 @@ void Portal_Touch()
 		if(other.aiment.classname == "player")
 			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(self.aiment))
 				return; // cannot go through someone else's portal
-	fixedmakevectors(self.angles);
+	self.angles_x = -self.angles_x;
+	makevectors(self.angles);
+	self.angles_x = -self.angles_x;
 	g = frametime * '0 0 -1' * cvar("sv_gravity");
 	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, self.origin, v_forward, self.maxs_x))
 		return;
@@ -345,7 +347,10 @@ void Portal_Disconnect(entity teleporter, entity destination)
 
 void Portal_Connect(entity teleporter, entity destination)
 {
-	teleporter.portal_transform = AnglesTransform_Divide(AnglesTransform_TurnDirection(destination.angles), teleporter.angles);
+	vector a = destination.angles + '0 180 0';
+	teleporter.angles_x = -teleporter.angles_x;
+	teleporter.portal_transform = AnglesTransform_Multiply(a, AnglesTransform_Invert(teleporter.angles));
+	teleporter.angles_x = -teleporter.angles_x;
 	teleporter.enemy = destination;
 	destination.enemy = teleporter;
 	Portal_MakeInPortal(teleporter);
@@ -382,7 +387,7 @@ void Portal_Remove(entity portal, float killed)
 	// makes the portal vanish
 	if(killed)
 	{
-		fixedmakevectors(portal.angles);
+		makevectors(portal.angles);
 		sound(portal, CHAN_PROJECTILE, "porto/explode.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
@@ -438,7 +443,9 @@ void Portal_Think()
 
 	g = frametime * '0 0 -1' * cvar("sv_gravity");
 
-	fixedmakevectors(self.angles);
+	self.angles_x = -self.angles_x;
+	makevectors(self.angles);
+	self.angles_x = -self.angles_x;
 
 	FOR_EACH_PLAYER(e)
 	{
@@ -581,11 +588,29 @@ void Portal_ClearWithID(entity own, float id)
 		}
 }
 
+float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz)
+{
+	traceline(v0, v0 + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx, v0 + dvx + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx, v0 + dvx + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy, v0 + dvy + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy, v0 + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvz, v0 + dvz + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvz, v0 + dvz + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	return 1;
+}
 entity Portal_Spawn(entity own, vector org, vector ang)
 {
 	entity portal;
 
-	fixedmakevectors(ang);
+	ang_x = -ang_x;
+	makevectors(ang);
+	ang_x = -ang_x;
 	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 		return world;
 
@@ -611,7 +636,6 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 		return world;
 	}
 
-	portal.angles_x = -ang_x; //Yes, totally retarded
 	setsize(portal, '-48 -48 -48', '48 48 48');
 	Portal_MakeWaitingPortal(portal);
 
@@ -625,7 +649,7 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 	vector org;
 
 	org = trace_endpos;
-	ang = fixedvectoangles2(trace_plane_normal, dir);
+	ang = vectoangles(trace_plane_normal, dir);
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 		return 0;
@@ -643,7 +667,7 @@ float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float portal_id_val)
 	vector org;
 
 	org = trace_endpos;
-	ang = fixedvectoangles2(trace_plane_normal, dir);
+	ang = vectoangles(trace_plane_normal, dir);
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 	{

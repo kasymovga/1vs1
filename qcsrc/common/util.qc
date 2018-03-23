@@ -598,34 +598,6 @@ void compressShortVector_init()
 	}
 }
 
-#ifndef MENUQC
-float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz)
-{
-	traceline(v0, v0 + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	return 1;
-}
-
-#if 0
-void fixedmakevectors(vector a)
-{
-	// a makevectors that actually inverts vectoangles
-	a_x = -a_x;
-	makevectors(a);
-}
-#endif
-#endif
-
 string fixPriorityList(string order, float from, float to, float subtract, float complete)
 {
 	string neworder;
@@ -1122,58 +1094,6 @@ float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m
 
 // requires the same, but is a stronger condition
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;};
-
-#ifndef MENUQC
-#if 0
-// angles transforms
-// angles in fixedmakevectors/fixedvectoangles space
-vector AnglesTransform_Apply(vector transform, vector v)
-{
-	fixedmakevectors(transform);
-	return v_forward * v_x
-	     + v_right   * (-v_y)
-		 + v_up      * v_z;
-}
-
-vector AnglesTransform_Multiply(vector t1, vector t2)
-{
-	vector m_forward, m_up;
-	fixedmakevectors(t2); m_forward = v_forward; m_up = v_up;
-	m_forward = AnglesTransform_Apply(t1, m_forward); m_up = AnglesTransform_Apply(t1, m_up);
-	return fixedvectoangles2(m_forward, m_up);
-}
-
-vector AnglesTransform_Invert(vector transform)
-{
-	vector i_forward, i_up;
-	fixedmakevectors(transform);
-	// we want angles that turn v_forward into '1 0 0', v_right into '0 1 0' and v_up into '0 0 1'
-	// but these are orthogonal unit vectors!
-	// so to invert, we can simply fixedvectoangles the TRANSPOSED matrix
-	// TODO is this always -transform?
-	i_forward_x = v_forward_x;
-	i_forward_y = -v_right_x;
-	i_forward_z = v_up_x;
-	i_up_x = v_forward_z;
-	i_up_y = -v_right_z;
-	i_up_z = v_up_z;
-	return fixedvectoangles2(i_forward, i_up);
-}
-#endif
-
-vector AnglesTransform_TurnDirection(vector transform)
-{
-	// turn 180 degrees around v_up
-	// changes in-direction to out-direction
-	fixedmakevectors(transform);
-	return fixedvectoangles2(-1 * v_forward, 1 * v_up);
-}
-
-vector AnglesTransform_Divide(vector to_transform, vector from_transform)
-{
-	return AnglesTransform_Multiply(to_transform, AnglesTransform_Invert(from_transform));
-}
-#endif
 
 float textLengthUpToWidth(string theText, float maxWidth, textLengthUpToWidth_widthFunction_t w)
 {
