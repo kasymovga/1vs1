@@ -304,6 +304,7 @@ set g_balance_curse_vulner_damage_factor 0.3
 set g_balance_rune_defense_damage_factor 0.3
 set g_balance_rune_vampire_damage_factor 0.3
 set g_balance_curse_altruism_damage_factor 0.3
+set g_balance_rune_speed_jumpheight 1
 
 set gameversion_matter 0
 set g_start_weapon_supershotgun 0
