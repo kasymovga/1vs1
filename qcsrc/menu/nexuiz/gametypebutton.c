@@ -69,6 +69,6 @@ void GameTypeButton_Click(entity me, entity other)
 {
 	RadioButton_Click(me, other);
 	me.parent.gameTypeChangeNotify(me.parent);
-	game_cvar_init();
+	game_cvar_init(cvar_string("g_profile"));
 }
 #endif

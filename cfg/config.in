@@ -1328,3 +1328,29 @@ set sv_udpchat_client1 ""
 set sv_udpchat_client2 ""
 set sv_udpchat_client3 ""
 set sv_udpchat_spamstatus 10
+
+set g_profile "" "Config profile prefix"
+
+set akimbo_g_akimbo 1
+set akimbo_g_pinata 1
+set akimbo_g_pinata_drop_all 1
+
+set cra_g_start_weapon_laser 0
+set cra_g_start_weapon_shotgun 0
+set cra_g_start_weapon_uzi 0
+set cra_g_start_weapon_campingrifle 1
+set cra_g_start_weapon_mortar 0
+set cra_g_start_weapon_crylink 0
+set cra_g_start_weapon_electro 0
+set cra_g_start_weapon_zapper 0
+set cra_g_start_weapon_nex 0
+set cra_g_start_weapon_hagar 0
+set cra_g_start_weapon_supershotgun 0
+set cra_g_start_weapon_rocketlauncher 0
+set cra_g_start_weapon_fireball 0
+set cra_g_start_weapon_hook 0
+set cra_g_nadgets 1
+set cra_g_dodging 1
+set cra_g_walljump 1
+set cra_g_use_ammunition 0
+set cra_g_pickup_weapons 0
