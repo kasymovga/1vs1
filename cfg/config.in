@@ -1332,7 +1332,7 @@ set sv_udpchat_spamstatus 10
 
 set g_friendlyfire_force 0
 
-set g_profile "" "Config profile prefix"
+set g_profile "" "Config profile prefix, currently available: akimbo, cra, minsta, explosive_minsta"
 
 set akimbo_g_akimbo 1
 set akimbo_g_pinata 1
@@ -1357,3 +1357,37 @@ set cra_g_dodging 1
 set cra_g_walljump 1
 set cra_g_use_ammunition 0
 set cra_g_pickup_weapons 0
+set cra_g_grappling_hook 1
+set cra_g_balance_grapplehook_dontpull 1
+set cra_g_balance_grapplehook_gravity 1
+set cra_g_balance_grapplehook_speed_fly 1000
+set cra_g_shootfromeye 1
+set cra_g_buttons_hookuse_swap 1
+set cra_g_runes 1
+set cra_g_runematch_hacker 1
+set cra_g_runematch_carried_runes_max 2
+
+set minsta_g_minstagib 1
+set minsta_g_grappling_hook 1
+set minsta_g_balance_grapplehook_speed_fly 5000
+set minsta_g_balance_minstanex_refire 0.8
+set minsta_g_balance_selfdamagepercent 0
+
+set explosive_minsta_g_minstagib 1
+set explosive_minsta_g_grappling_hook 1
+set explosive_minsta_g_balance_grapplehook_speed_fly 5000
+set explosive_minsta_g_balance_grapplehook_damage_interval 0.1
+set explosive_minsta_g_balance_minstanex_refire 0.8
+set explosive_minsta_g_balance_selfdamagepercent 0
+set explosive_minsta_g_minstagib_nolaserdamage 0
+set explosive_minsta_g_balance_minstanex_explode 1
+set explosive_minsta_g_balance_grapplehook_health 5
+set explosive_minsta_g_balance_minstanex_laser_speed 4000
+set explosive_minsta_g_balance_minstanex_laser_count 3
+set explosive_minsta_g_balance_minstanex_laser_rapid 1
+set explosive_minsta_g_balance_minstanex_laser_spread 0.1
+set explosive_minsta_g_balance_minstanex_laser_damage 80
+set explosive_minsta_g_minstagib_health_drop 20
+set explosive_minsta_g_minstagib_health_max 200
+set explosive_minsta_g_minstagib_ammo_start 25
+set explosive_minsta_g_use_ammunition 1
