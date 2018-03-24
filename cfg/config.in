@@ -1320,6 +1320,8 @@ set fraglimit_min 5
 set fraglimit_increment 5
 set fraglimit_decrement 5
 
+set sv_vote_players_auto_abstain 0.5 "This part of players who ignore vote will be counted as abstain"
+
 alias shuffleteams "sv_cmd shuffleteams"
 
 set sv_udpchat 0

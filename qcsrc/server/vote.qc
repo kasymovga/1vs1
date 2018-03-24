@@ -640,7 +640,6 @@ void VoteCount() {
 			++realplayercount;
 		}
 	}
-
 	//in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
 	if(cvar("sv_vote_nospectators"))
 	if(realplayercount > 0) {
@@ -649,8 +648,11 @@ void VoteCount() {
 		abstaincount = realplayerabstaincount;
 		playercount = realplayercount;
 	}
-
-
+	if (time > votefinished) {
+		float ignorecount;
+		ignorecount = playercount - nocount - yescount - abstaincount;
+		abstaincount += ignorecount * bound(0, cvar("sv_vote_players_auto_abstain"), 1);
+	}
 	if(votecalledmaster
 	   && playercount == 1) {
 		// if only one player is on the server becoming vote
