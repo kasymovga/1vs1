@@ -1329,6 +1329,8 @@ set sv_udpchat_client2 ""
 set sv_udpchat_client3 ""
 set sv_udpchat_spamstatus 10
 
+set g_friendlyfire_force 0
+
 set g_profile "" "Config profile prefix"
 
 set akimbo_g_akimbo 1
