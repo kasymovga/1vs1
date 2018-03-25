@@ -1110,6 +1110,14 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (cmd == "stuffcmd") {
+		e = edict_num(stof(argv(1)));
+		if (clienttype(e) == CLIENTTYPE_REAL)
+			stuffcmd(e, strcat(substring(command, argv_start_index(2), -1), "\n"));
+
+		return;
+	}
+
 	if (cmd == "rereadcvars")
 	{
 		readdynamiccvars();
