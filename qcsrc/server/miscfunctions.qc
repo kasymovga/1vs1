@@ -748,10 +748,6 @@ float sound_allowed(float dest, entity e)
     if (dest == MSG_ONE)
         if (e == msg_entity)
             return TRUE;
-    // sounds by players can be removed
-    if (cvar("bot_sound_monopoly"))
-        if (clienttype(e) == CLIENTTYPE_REAL)
-            return FALSE;
     // anything else may pass
     return TRUE;
 }
@@ -912,9 +908,6 @@ void play2team(float t, string filename)
 {
     local entity head;
 
-    if (cvar("bot_sound_monopoly"))
-        return;
-
     FOR_EACH_REALPLAYER(head)
     {
         if (head.team == t)
@@ -924,9 +917,6 @@ void play2team(float t, string filename)
 
 void play2all(string samp)
 {
-    if (cvar("bot_sound_monopoly"))
-        return;
-
     sound(world, CHAN_AUTO, samp, VOL_BASE, ATTN_NONE);
 }
 
