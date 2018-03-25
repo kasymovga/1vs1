@@ -1339,6 +1339,7 @@ set g_profile "" "Config profile prefix, currently available: akimbo, cra, minst
 set akimbo_g_akimbo 1
 set akimbo_g_pinata 1
 set akimbo_g_pinata_drop_all 1
+set akimbo_g_akimbo_weapons all
 
 set cra_g_start_weapon_laser 0
 set cra_g_start_weapon_shotgun 0
