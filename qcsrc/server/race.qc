@@ -1101,6 +1101,7 @@ void race_init() {
 		GameHook_WarmupAllowed = race_WarmupAllowed;
 		GameHook_ClearScoreAllowed = race_ClearScoresAllowed;
 	}
+	ScoreRules_race();
 	GameHook_InitSpectator = race_InitSpectator;
 	GameHook_Reset = race_Reset;
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;
