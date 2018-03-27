@@ -107,6 +107,7 @@ menu.qh
 gamemenu.qh
 walkietalkie.qh
 hat.qh
+score_damage.qh
 
 dodging.qh
 miscfunctions.qh
@@ -326,3 +327,4 @@ twoweapons.qc
 noteline.qc
 warmup.qc
 udpchat.qc
+score_damage.qc

@@ -144,8 +144,11 @@ void ReadGameCvars()
 
 void default_delayedinit()
 {
-	if(!scores_initialized)
+	if(!scores_preinitialized)
 		ScoreRules_generic();
+
+	ScoreDamage_Init();
+	ScoreRules_basics_end();
 }
 
 void ActivateTeamplay()

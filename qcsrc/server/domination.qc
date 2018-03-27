@@ -432,7 +432,6 @@ void dom_delayedinit()
 	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
 	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
-	ScoreRules_basics_end();
 };
 
 entity dom_SelectSpawnPoint() {

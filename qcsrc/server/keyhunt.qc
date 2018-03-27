@@ -1052,7 +1052,6 @@ void kh_init()  // sets up th KH environment
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
 	float i;
 	entity key;
 	for (i = 0; i < kh_teams; i++) {

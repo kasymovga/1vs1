@@ -519,6 +519,7 @@ set ca_g_warmup_start_ammo_shells 30
 set ca_g_warmup_start_ammo_rockets 40
 set ca_g_warmup_start_ammo_cells 30
 set ca_g_balance_health_rotlinear 0
+set ca_g_score_damage 1
 
 set timelimit_default 15
 set fraglimit_default 10
@@ -1333,6 +1334,8 @@ set sv_udpchat_client3 ""
 set sv_udpchat_spamstatus 10
 
 set g_friendlyfire_force 0
+
+set g_score_damage 0
 
 set g_profile "" "Config profile prefix, currently available: akimbo, cra, minsta, explosive_minsta"
 

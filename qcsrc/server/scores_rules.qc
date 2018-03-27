@@ -7,6 +7,7 @@ float ScoreRules_teams;
 void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabled)
 {
 	float i;
+	scores_preinitialized = 1;
 	for(i = 0; i < MAX_SCORE; ++i)
 		ScoreInfo_SetLabel_PlayerScore(i, "", 0);
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
@@ -42,5 +43,4 @@ void ScoreRules_generic()
 	}
 	else
 		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
-	ScoreRules_basics_end();
 }

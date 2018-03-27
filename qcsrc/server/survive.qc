@@ -223,7 +223,6 @@ void survive_init() {
 
 	ScoreRules_basics(1, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
 
 	CACHE_CVAR(g_survive_wave_pause);
 	g_survive_monster_factor = bound(0, cvar("g_survive_monster_factor"), 1);

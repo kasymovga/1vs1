@@ -1083,7 +1083,6 @@ void ctf_delayedinit()
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
 };
 
 var void(float killed) ctf_PlayerClear_NextLink;
