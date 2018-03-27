@@ -180,6 +180,18 @@ float ScoreInfo_SendEntity(entity to, float sf)
 	return TRUE;
 }
 
+void ScoreInfo_SendDelayed_Think() {
+	self.SendFlags = self.flags;
+	self.flags = 0;
+	self.lastshot_time = time + 1;
+}
+
+void ScoreInfo_SendDelayed(entity e, float f) {
+	e.flags |= f;
+	if not(e.nextthink)
+		e.nextthink = max(e.lastshot_time, time);
+}
+
 void ScoreInfo_Init(float teams)
 {
 	if(scores_initialized)
@@ -253,7 +265,7 @@ void PlayerScore_Clear(entity player)
 	{
 		if(sk.(scores[i]) != 0)
 			if(scores_label[i] != "")
-				sk.SendFlags |= pow(2, i);
+				ScoreInfo_SendDelayed(sk, pow(2, i));
 		sk.(scores[i]) = 0;
 	}
 }
@@ -274,7 +286,7 @@ void Score_ClearAll()
 
 			if(sk.(scores[i]) != 0)
 				if(scores_label[i] != "")
-					sk.SendFlags |= pow(2, i);
+					ScoreInfo_SendDelayed(sk, pow(2, i));
 			sk.(scores[i]) = 0;
 		}
 	}
@@ -300,6 +312,7 @@ void PlayerScore_Attach(entity player)
 		error("player already has a scorekeeper");
 	sk = spawn();
 	sk.owner = player;
+	sk.think = ScoreInfo_SendDelayed_Think;
 	Net_LinkEntity(sk, FALSE, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
 }
@@ -324,8 +337,7 @@ float PlayerScore_Set(entity player, float scorefield, float score)
 			return 0;
 		error("Adding score to unknown player!");
 	}
-
-	s.SendFlags |= pow(2, scorefield);
+	ScoreInfo_SendDelayed(s, pow(2, scorefield));
 	return (s.(scores[scorefield]) = score);
 }
 
@@ -346,7 +358,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	}
 	if(score)
 		if(scores_label[scorefield] != "")
-			s.SendFlags |= pow(2, scorefield);
+			ScoreInfo_SendDelayed(s, pow(2, scorefield));
 	return (s.(scores[scorefield]) += score);
 }
 
