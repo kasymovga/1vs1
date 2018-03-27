@@ -1,5 +1,5 @@
-#define ST_ASSAULT_OBJECTIVES 1
-#define SP_ASSAULT_OBJECTIVES 4
+#define ST_ASSAULT_OBJECTIVES ST_GAME_SCORE1
+#define SP_ASSAULT_OBJECTIVES SP_GAME_SCORE1
 float assault_winning;
 float assault_roundend;
 float assault_secondround;

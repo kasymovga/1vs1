@@ -1,12 +1,12 @@
 #define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
 
-#define ST_KH_CAPS 1
-#define SP_KH_CAPS 4
-#define SP_KH_PUSHES 5
-#define SP_KH_DESTROYS 6
-#define SP_KH_PICKUPS 7
-#define SP_KH_KCKILLS 8
-#define SP_KH_LOSSES 9
+#define ST_KH_CAPS ST_GAME_SCORE1
+#define SP_KH_CAPS SP_GAME_SCORE1
+#define SP_KH_PUSHES SP_GAME_SCORE2
+#define SP_KH_DESTROYS SP_GAME_SCORE3
+#define SP_KH_PICKUPS SP_GAME_SCORE4
+#define SP_KH_KCKILLS SP_GAME_SCORE5
+#define SP_KH_LOSSES SP_GAME_SCORE6
 
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL

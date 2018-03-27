@@ -15,9 +15,9 @@ float g_domination_teams_override;
 
 #define DOMPOINTFRAGS frags
 
-#define ST_DOM_TICKS 1
-#define SP_DOM_TICKS 4
-#define SP_DOM_TAKES 5
+#define ST_DOM_TICKS ST_GAME_SCORE1
+#define SP_DOM_TICKS SP_GAME_SCORE1
+#define SP_DOM_TAKES SP_GAME_SCORE2
 
 .float enemy_playerid;
 .entity sprite;

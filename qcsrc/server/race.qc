@@ -33,10 +33,10 @@ void race_StartCompleting();
 float race_highest_checkpoint;
 float race_timed_checkpoint;
 
-#define ST_RACE_LAPS 1
-#define SP_RACE_LAPS 4
-#define SP_RACE_FASTEST 5
-#define SP_RACE_TIME 5
+#define ST_RACE_LAPS ST_GAME_SCORE1
+#define SP_RACE_LAPS SP_GAME_SCORE1
+#define SP_RACE_FASTEST SP_GAME_SCORE2
+#define SP_RACE_TIME SP_GAME_SCORE3
 void ScoreRules_race()
 {
 	ScoreRules_basics(race_teams, 0, 0, FALSE);

@@ -1,12 +1,12 @@
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 
-#define ST_CTF_CAPS 1
-#define SP_CTF_CAPS 4
-#define SP_CTF_PICKUPS 5
-#define SP_CTF_DROPS 6
-#define SP_CTF_FCKILLS 7
-#define SP_CTF_RETURNS 8
+#define ST_CTF_CAPS ST_GAME_SCORE1
+#define SP_CTF_CAPS SP_GAME_SCORE1
+#define SP_CTF_PICKUPS SP_GAME_SCORE2
+#define SP_CTF_DROPS SP_GAME_SCORE3
+#define SP_CTF_FCKILLS SP_GAME_SCORE4
+#define SP_CTF_RETURNS SP_GAME_SCORE5
 
 float g_balance_ctf_damageforcescale;
 float g_balance_ctf_delay_collect;
