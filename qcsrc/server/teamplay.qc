@@ -462,22 +462,15 @@ void PrintWelcomeMessage(entity pl)
 
 void SetPlayerColors(entity pl, float _color)
 {
-	/*string s;
-	s = ftos(cl);
-	stuffcmd(pl, strcat("color ", s, " ", s, "\n")  );
-	pl.team = cl + 1;
-	//pl.clientcolors = pl.clientcolors - (pl.clientcolors & 15) + cl;
-	pl.clientcolors = 16*cl + cl;*/
-
 	float pants, shirt;
 	pants = _color & 0x0F;
 	shirt = _color & 0xF0;
-
-
 	if(teamplay) {
 		setcolor(pl, 16*pants + pants);
 	} else {
+		float t = pl.team;
 		setcolor(pl, shirt + pants);
+		pl.team = t;
 	}
 }
 
@@ -501,7 +494,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		//bprint(pl.netname, " has changed to ", TeamNoName(t), "\n");
 		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
 	}
-	SCOREKEEPER_TOUCH(pl);
+	ScoreKeeper_Touch(pl);
 
 	if(t != s)
 		LogTeamchange(pl);

@@ -1009,3 +1009,8 @@ float WinningCondition_RanOutOfSpawns()
 	else
 		return FALSE;
 }
+
+void ScoreKeeper_Touch(entity e) {
+	if (e.scorekeeper)
+		ScoreInfo_SendDelayed(e.scorekeeper, 1);
+}

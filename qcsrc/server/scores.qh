@@ -125,4 +125,7 @@ entity PlayerScore_Sort(.float field);
 
 float WinningCondition_Scores(float limit, float leadlimit);
 float WinningCondition_RanOutOfSpawns();
-#define SCOREKEEPER_TOUCH(x) if (x.scorekeeper) x.scorekeeper.SendFlags |= 1
+
+void ScoreInfo_SendDelayed(entity e, float f);
+
+void ScoreKeeper_Touch(entity e);

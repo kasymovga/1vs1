@@ -656,7 +656,7 @@ void PutObserverInServer(float frags_team_reset)
 
 	if (self.team != -1) {
 		self.team = -1;
-		SCOREKEEPER_TOUCH(self);
+		ScoreKeeper_Touch(self);
 	}
 
 	self.frags = FRAGS_SPECTATOR;
@@ -745,7 +745,7 @@ void FixPlayermodel()
 		if (sv_defaultplayercolors > -2) {
 			float colors = GameHookChain_PlayerColorsMod(sv_defaultplayercolors);
 			if (self.clientcolors != colors)
-				setcolor (self, colors);
+				SetPlayerColors(self, colors);
 		}
 }
 
@@ -786,7 +786,7 @@ void PutClientInServer()
 			JoinBestTeam(self, FALSE, FALSE);
 		}
 		if (self.team != oldteam)
-			SCOREKEEPER_TOUCH(self);
+			ScoreKeeper_Touch(self);
 
 		spot = GameHook_SelectSpawnPoint();
 
@@ -980,6 +980,7 @@ void PlayerToSpec(entity player)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 
 		PutClientInServer();
+		ScoreKeeper_Touch(player);
 		self = oldself;
 		spectator_note.SendFlags = 1;
 		if (teamplay)
@@ -1847,6 +1848,7 @@ void LeaveSpectatorMode()
 			if(g_campaign)
 				campaign_bots_may_start = 1;
 			PutClientInServer();
+			ScoreKeeper_Touch(self);
 			if(self.classname == "player")
 				bprint ("^4", self.netname, "^4 is playing now\n");
 			if(!g_campaign)
