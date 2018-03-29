@@ -223,6 +223,7 @@ void SV_ParseClientCommand(string s) {
 		if (s == "xonotic") {
 			self.gameclient = CLIENT_XONOTIC;
 			self.muted = TRUE;
+			self.netname = "Unsupported client";
 			cvar_set("connections_xonotic", ftos(cvar("connections_xonotic") + 1));
 		} else if (s == "rexuiz") {
 			self.gameclient = CLIENT_REXUIZ;
@@ -346,6 +347,8 @@ void SV_ParseClientCommand(string s) {
 		{
 			if (cmd == "name") {
 				if (self.retard > 0)
+					return;
+				if (self.gameclient == CLIENT_XONOTIC)
 					return;
 				IRC_Announce_Name(self, argv(1));
 			}

@@ -44,27 +44,22 @@ void ClientUpdateMessage_Draw() {
 	msg = "^1WARNING: ^3Your client is not recommended!";
 	pos_y = 10;
 	pos_x = 10;
-	drawcolorcodedstring(pos, msg, '12 24 0', _alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, DRAWFLAG_NORMAL);
 
 	pos_y += 32;
-	drawcolorcodedstring(pos, self.bgmscript, '12 24 0', _alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, self.bgmscript, '18 36 0', _alpha, DRAWFLAG_NORMAL);
 
 	msg = "^3Please download and install Rexuiz from ^2http://rexuiz.top^7";
 	pos_y += 32;
-	drawcolorcodedstring(pos, msg, '12 24 0', _alpha, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, DRAWFLAG_NORMAL);
 }
 
-void ClientUpdateMessage_SetNextThink() {
-	self.nextthink = time + 10;
-	self.think = SUB_Remove;
-}
-
-void ClientUpdateMessage(string msg) {
+void ClientUpdateMessage(string msg, float timeout) {
 	entity e = spawn();
 	e.draw2d = ClientUpdateMessage_Draw;
 	e.draw2dflag = 1;
-	e.nextthink = 1;
-	e.think = ClientUpdateMessage_SetNextThink;
+	e.nextthink = time + timeout;
+	e.think = SUB_Remove;
 	e.bgmscript = msg;
 }
 
@@ -243,20 +238,20 @@ void CSQC_Init(void)
 	read_cvars_init();
 	if (xonotic_client) {
 		localcmd("\ncmd gameclient xonotic\n");
-		ClientUpdateMessage("^3You play with Xonotic client on Rexuiz server.");
+		ClientUpdateMessage("^3You play with Xonotic client on Rexuiz server.", 1000);
 		if not(cvar("mod_alias_force_animated")) {
 			localcmd("\nseta mod_alias_force_animated 1; r_restart\n");
 		}
-	} else if (fexists("rexuiz.cfg"))
+	} else if (fexists("rexuiz.cfg")) {
 		localcmd("\ncmd gameclient rexuiz\n");
-	else if (autocvar_autocvar_check) {
+	} else if (autocvar_autocvar_check) {
 		localcmd("\ncmd gameclient nexuiz\n");
 		if not(cvar("mod_alias_force_animated")) {
 			localcmd("\nseta mod_alias_force_animated 1; r_restart\n");
 		}
 	} else {
 		localcmd("\ncmd gameclient oldnexuiz\n");
-		ClientUpdateMessage("^3You play with really old Nexuiz client");
+		ClientUpdateMessage("^3You play with really old Nexuiz client", 10);
 	}
 
 	if (cvar_string("sv_master2") == "")
