@@ -420,7 +420,7 @@ string Sbar_DefaultColumnLayout()
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals ",
-		"-race,nexball/score");
+		"+ft/revs -race,nexball/score");
 }
 
 void Cmd_Sbar_SetFields(float argc)

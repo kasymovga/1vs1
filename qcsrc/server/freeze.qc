@@ -12,6 +12,7 @@ entity freeze_controller;
 .float unfroze_progress;
 .entity unfroze_pb;
 #define ICE_FRAME_TIME 0.2
+#define SP_REVIVE SP_GAME_SCORE1
 
 var float() Freeze_SpeedMod_NextLink;
 float Freeze_SpeedMod();
@@ -110,6 +111,7 @@ void Freeze_IceThink()
 
 		bprint ("^1", self.owner.netname, "^1 was revived by ", unfrozer.netname, "\n");
 		PlayerScore_Add(unfrozer, SP_SCORE, 1);
+		PlayerScore_Add(unfrozer, SP_REVIVE, 1);
 		self.owner.deadflag = DEAD_NO;
 		return;
 	}
@@ -235,7 +237,8 @@ void Freeze_Init()
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status",     SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_REVIVE, "revs", SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", 0);
 }
 
 float Freeze_SpeedMod() {
