@@ -25,7 +25,6 @@ void ugandaknuckles_hunt() {
 		if (self.attack_finished_single >= time + 2) {
 			setanim(self, '7 2 4', TRUE, TRUE, FALSE);
 			updateanim(self);
-			print("self.anim=", ftos(self.frame), "\n");
 		} else {
 			self.frame = 0;
 		}
