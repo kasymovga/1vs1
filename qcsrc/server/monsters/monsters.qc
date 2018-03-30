@@ -401,7 +401,7 @@ void monsters_init() {
 			monster_count = 1;
 		}
 
-		_monster_classname = strzone(strcat(monster_name, "_spawn"));
+		_monster_classname = strzone(strcat("monster_", monster_name, "_spawn"));
 		monster_func = strcat("spawnfunc_monster_", monster_name, "_spawn");
 		if (isfunction(monster_func)) {
 			for (i = 0; i < monster_count; i++) {
