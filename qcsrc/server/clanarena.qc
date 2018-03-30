@@ -80,5 +80,5 @@ void Clanarena_Init()
 	ca_controller.think = Clanarena_Think;
 	ca_controller.nextthink = time;
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status",     SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", 0);
 }
