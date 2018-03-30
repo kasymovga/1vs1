@@ -415,7 +415,7 @@ string Sbar_DefaultColumnLayout()
 	return strcat( // fteqcc sucks
 		"ping pl ?cn name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
-		"?damage +ca,ft,surv/status"
+		"?damage +ca,ft,surv/status "
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
