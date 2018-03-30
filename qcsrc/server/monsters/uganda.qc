@@ -21,11 +21,14 @@ void ugandaknuckles_hunt() {
 		sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
 	}
 	if (self.attack_finished_single >= time) {
-		movelib_beak_simple(100 * frametime);
-		if (self.attack_finished_single >= time - 1)
+		movelib_beak_simple(500 * frametime);
+		if (self.attack_finished_single >= time + 2) {
+			setanim(self, '7 2 4', TRUE, TRUE, FALSE);
+			updateanim(self);
+			print("self.anim=", ftos(self.frame), "\n");
+		} else {
 			self.frame = 0;
-		else
-			self.frame = 7;
+		}
 
 		v = self.enemy.origin - self.origin;
 	} else {
