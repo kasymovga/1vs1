@@ -524,7 +524,6 @@ void readlevelcvars(void)
 	if(sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 	CACHE_CVAR(sv_clones);
-	CACHE_CVAR(sv_gentle);
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_footsteps);
 	CACHE_CVAR(g_grappling_hook);

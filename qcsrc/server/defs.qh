@@ -32,7 +32,6 @@ float g_balance_armor_blockpercent;
 float g_balance_pause_fuel_regen;
 
 float sv_clones;
-float sv_gentle;
 float sv_foginterval;
 float sv_autotaunt;
 float sv_taunt;

@@ -607,28 +607,26 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		{
 			self.pain_finished = time + 0.5;	//Supajoe
 
-			if(sv_gentle < 1) {
-				if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
-				{
-					if (random() > 0.5)
-						setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
-					else
-						setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
-				}
+			if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
+			{
+				if (random() > 0.5)
+					setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+				else
+					setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+			}
 
-				if(sound_allowed(MSG_BROADCAST, attacker))
-				if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
-				// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
-				{
-					if(self.health > 75) // TODO make a "gentle" version?
-						PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-					else if(self.health > 50)
-						PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-					else if(self.health > 25)
-						PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-					else if(self.health > 1)
-						PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-				}
+			if(sound_allowed(MSG_BROADCAST, attacker))
+			if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
+			// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
+			{
+				if(self.health > 75) // TODO make a "gentle" version?
+					PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				else if(self.health > 50)
+					PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				else if(self.health > 25)
+					PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+				else if(self.health > 1)
+					PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
 			}
 
 			// throw off bot aim temporarily
@@ -685,7 +683,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(DEATH_WEAPONOF(deathtype), self.weapon);
 
-		if(sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN)
@@ -791,11 +788,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange();
-
-		if(sv_gentle > 0) {
-			// remove corpse
-			PlayerCorpseDamage (inflictor, attacker, 100.0, deathtype, hitloc, force);
-		}
 	}
 }
 
@@ -868,7 +860,7 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 		if(substring(msgin, 0, 1) == " ")
 			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 
-	msgin = formatmessage(msgin);
+	msgin = formatmessage(source, msgin);
 
 	if(msgin == "")
 		return;
@@ -1278,8 +1270,6 @@ void GlobalSound(string sample, float chan, float voicetype)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
-				break;
 			tauntrand = random();
 			FOR_EACH_REALCLIENT(msg_entity)
 				if (tauntrand < msg_entity.cvar_cl_autotaunt)
@@ -1295,8 +1285,6 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(self.deadflag == DEAD_NO)
 					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
 			if(!sv_taunt)
-				break;
-			if(sv_gentle)
 				break;
 			FOR_EACH_REALCLIENT(msg_entity)
 			{
