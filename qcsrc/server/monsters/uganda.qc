@@ -12,17 +12,29 @@ void ugandaknuckles_hunt() {
 	if (vlen(self.enemy.origin - self.origin) <= self.dmg_radius)
 	{
 		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-		if (trace_fraction == 1)
+		if (trace_fraction == 1) {
 			dofire = TRUE;
+			self.lastshot_time = time;
+		}
 	}
 	vector v;
 	if (dofire) {
-		self.attack_finished_single = time + 3;
-		sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
+		self.attack_finished_single = time + 3 + random(2);
+		float f = random(5);
+		if (f > 4)
+			sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
+		else if (f > 3)
+			sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
+		else if (f > 2)
+			sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
+		else if (f > 1)
+			sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
+		else
+			sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
 	}
 	if (self.attack_finished_single >= time) {
 		movelib_beak_simple(500 * frametime);
-		if (self.attack_finished_single >= time + 2) {
+		if (time - self.lastshot_time < 1) {
 			setanim(self, '7 2 4', TRUE, TRUE, FALSE);
 			updateanim(self);
 		} else {
@@ -31,7 +43,7 @@ void ugandaknuckles_hunt() {
 
 		v = self.enemy.origin - self.origin;
 	} else {
-		setanim(self, '2 6 12', TRUE, TRUE, FALSE);
+		setanim(self, '1 6 12', TRUE, TRUE, FALSE);
 		updateanim(self);
 		v = monster_move_walk(500, 5, 0);
 	}
@@ -62,7 +74,7 @@ void ugandaknuckles_walk() {
 	if (monster_walk_finished(ugandaknuckles_idle, 100))
 		return;
 
-	setanim(self, '2 6 12', TRUE, TRUE, FALSE);
+	setanim(self, '1 6 12', TRUE, TRUE, FALSE);
 	updateanim(self);
 	vector v = monster_move_walk(300, 5, 0);
 	v = vectoangles(v);
@@ -83,6 +95,11 @@ void ugandaknuckles_spawn() {
 void ugandaknuckles_init() {
 	precache_model("models/knuckles.md3");
 	precache_sound("douknowdawae.ogg");
+	precache_sound("myqueenyoulook.ogg");
+	precache_sound("quenisok.ogg");
+	precache_sound("isthisdawae.ogg");
+	precache_sound("youdunnodawae.ogg");
+	dlc_require("uganda");
 }
 
 void spawnfunc_monster_ugandaknuckles_spawn() {
