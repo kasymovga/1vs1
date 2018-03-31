@@ -231,6 +231,7 @@ float WR_CVAR_CACHE     = 12; // update cvar cache
 void weapon_defaultspawnfunc(float wpn);
 
 string w_deathtypestring;
+string w_fragprefix;
 float w_deathtype;
 
 void(entity client, string s) centerprint_builtin = #73;

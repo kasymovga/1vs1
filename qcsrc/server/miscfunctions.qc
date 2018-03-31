@@ -382,7 +382,7 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string formatmessage(string msg)
+string formatmessage(entity pl, string msg)
 {
     float p, p1, p2;
     float n;
@@ -415,43 +415,45 @@ string formatmessage(string msg)
         else if (escape == "n")
             replacement = "\n";
         else if (escape == "a")
-            replacement = ftos(floor(self.armorvalue));
+            replacement = ftos(floor(pl.armorvalue));
         else if (escape == "h")
-            replacement = ftos(floor(self.health));
+            replacement = ftos(floor(pl.health));
         else if (escape == "l")
-            replacement = NearestLocation(self.origin);
+            replacement = NearestLocation(pl.origin);
         else if (escape == "y")
-            replacement = NearestLocation(self.cursor_trace_endpos);
+            replacement = NearestLocation(pl.cursor_trace_endpos);
         else if (escape == "d")
-            replacement = NearestLocation(self.death_origin);
+            replacement = NearestLocation(pl.death_origin);
+        else if (escape == "s")
+			replacement = ftos(floor(vlen(self.velocity)));
         else if (escape == "w")
         {
             float wep;
-            wep = self.weapon;
+            wep = pl.weapon;
             if (!wep)
-                wep = self.switchweapon;
+                wep = pl.switchweapon;
             if (!wep)
-                wep = self.cnt;
+                wep = pl.cnt;
             replacement = W_Name(wep);
         }
         else if (escape == "W")
         {
-            if (self.items & IT_SHELLS) replacement = "shells";
-            else if (self.items & IT_NAILS) replacement = "bullets";
-            else if (self.items & IT_ROCKETS) replacement = "rockets";
-            else if (self.items & IT_CELLS) replacement = "cells";
+            if (pl.items & IT_SHELLS) replacement = "shells";
+            else if (pl.items & IT_NAILS) replacement = "bullets";
+            else if (pl.items & IT_ROCKETS) replacement = "rockets";
+            else if (pl.items & IT_CELLS) replacement = "cells";
             else replacement = "batteries"; // ;)
         }
         else if (escape == "x")
         {
-            replacement = self.cursor_trace_ent.netname;
-            if (!replacement || !self.cursor_trace_ent)
+            replacement = pl.cursor_trace_ent.netname;
+            if (!replacement || !pl.cursor_trace_ent)
                 replacement = "nothing";
         }
         else if (escape == "p")
         {
-            if (self.cursor_trace_ent && self.cursor_trace_ent.classname == "player")
-                replacement = self.cursor_trace_ent.netname;
+            if (pl.cursor_trace_ent && pl.cursor_trace_ent.classname == "player")
+                replacement = pl.cursor_trace_ent.netname;
             else
                 replacement = "(nobody)";
         }

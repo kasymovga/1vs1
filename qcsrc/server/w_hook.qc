@@ -245,12 +245,14 @@ float w_hook(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WR_KILLMESSAGE) {
 		if(w_deathtype & HITTYPE_SECONDARY)
 			w_deathtypestring = "has run into #'s gravity bomb";
-		else
+		else {
 			w_deathtypestring = "was hooked by";
-	else if (req == WR_RESETPLAYER)
+			w_fragprefix = "^xF44HOOK";
+		}
+	} else if (req == WR_RESETPLAYER)
 	{
 		self.hook_refire = time;
 	}

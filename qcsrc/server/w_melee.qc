@@ -177,9 +177,10 @@ float w_melee(float req)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "rekt himself";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WR_KILLMESSAGE) {
+		w_fragprefix = "^xF80MELEE";
 		w_deathtypestring = "was smashed by";
-	else if (req == WR_CVAR_CACHE)
+	} else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_axe_damage);
 		Melee_Init();

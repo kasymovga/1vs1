@@ -305,7 +305,6 @@ void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype)
 		if (attacker != targ)
 		if (deathtype != DEATH_MIRRORDAMAGE)
 		if (deathtype != DEATH_NOAMMO)
-		if (deathtype != DEATH_TELEFRAG)
 		if (targ.deadflag == DEAD_NO)
 		if (attacker.team == targ.team) {
 			if (g_friendlyfire == 0)

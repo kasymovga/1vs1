@@ -32,13 +32,15 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 					{
 						if(head.classname == "player")
 						if(head.health >= 1)
+						if not(teamplay && head.team == player.team) {
 							++tdeath_hit;
-						Damage (head, teleporter, telefragger, damage, DEATH_TELEFRAG, head.origin, '0 0 0');
+							Damage (head, teleporter, telefragger, damage, WEP_PORTO, head.origin, '0 0 0');
+						}
 					}
 					else if (telefragger.health < 1) // corpses gib
-						Damage (head, teleporter, telefragger, damage, DEATH_TELEFRAG, head.origin, '0 0 0');
+						Damage (head, teleporter, telefragger, damage, WEP_PORTO, head.origin, '0 0 0');
 					else // dead bodies and monsters gib themselves instead of telefragging
-						Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG, telefragger.origin, '0 0 0');
+						Damage (telefragger, teleporter, telefragger, 10000, WEP_PORTO, telefragger.origin, '0 0 0');
 				}
 }
 

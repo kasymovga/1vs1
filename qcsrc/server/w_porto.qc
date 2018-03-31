@@ -260,9 +260,10 @@ float w_porto(float req)
 		weapon_setup(WEP_PORTO);
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "felt # doing the impossible to him";
-	else if (req == WR_RESETPLAYER)
+	else if (req == WR_KILLMESSAGE) {
+		w_fragprefix = "^6TELE";
+		w_deathtypestring = "was telefragged by";
+	} else if (req == WR_RESETPLAYER)
 	{
 		self.porto_current_in = world;
 		self.porto_current_out = world;

@@ -228,9 +228,10 @@ float w_minstanex(float req)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WR_KILLMESSAGE) {
+		w_fragprefix = "^5INSTA";
 		w_deathtypestring = "has been vaporized by";
-	else if (req == WR_RESETPLAYER)
+	} else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
 	}

@@ -181,6 +181,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			s = targ.netname;
 		a = attacker.netname;
 
+		w_fragprefix = "";
 		if (targ == attacker)
 		{
 			if not(clienttype(attacker) == CLIENTTYPE_REAL)
@@ -294,9 +295,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						announce(attacker, sv_announcer_extra_firstblood);
 				}
 
-				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You fragged ^7", s));
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were fragged by ^7", a));
-				attacker.taunt_soundtime = time + 1;
 
 				w = DEATH_WEAPONOF(deathtype);
 				if(WEP_VALID(w))
@@ -309,15 +307,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						bprint("^1", s, "^1 ", w_deathtypestring, " ", a, "\n");
 					else
 						bprint("^1", s, "^1 ", substring(w_deathtypestring, 0, p), a, "^1", substring(w_deathtypestring, p+1, strlen(w_deathtypestring) - (p+1)), "\n");
-				}
-				else if (deathtype == DEATH_TELEFRAG)
-				{
-					bprint ("^1",s, "^1 was telefragged by ", a, "\n");
-					if (sv_announcer_extra_telefrag != "")
-					{
-						announce(attacker, sv_announcer_extra_telefrag);
-						announce(targ, sv_announcer_extra_telefrag);
-					}
 				}
 				else if (deathtype == DEATH_DROWN)
 					bprint ("^1",s, "^1 was drowned by ", a, "\n");
@@ -342,7 +331,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				else if (deathtype == DEATH_FIRE)
 					bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
 				else
-					bprint ("^1",s, "^1 was fragged by ", a, "\n");
+					bprint ("^1",s, "^1 was ", w_fragprefix, "^1fragged by ", a, "\n");
 
 				GiveFrags(attacker, targ, 1);
 
@@ -405,6 +394,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						announce(targ, sv_announcer_extra_meleefrag);
 						announce(attacker, sv_announcer_extra_meleefrag);
 				}
+				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", w_fragprefix, "^4fragged ^7", s));
+				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", w_fragprefix, "^1fragged by ^7", a));
+				attacker.taunt_soundtime = time + 1;
 				attacker.lastfrag = fragtime;
 			}
 		}
@@ -461,7 +453,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	float mirrordamage;
 	float mirrorforce;
-	float teamdamage0;
 	mirrordamage = 0;
 	mirrorforce = 0;
 
@@ -506,36 +497,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
-		// nullify damage if teamplay is on
-		if(deathtype != DEATH_TELEFRAG)
-		if(targ.classname == "player")
-		{
-			if(attacker.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
-			{
-				damage = 0;
-				force = '0 0 0';
-			}
-			else if(attacker.team == targ.team)
-			{
-				if(attacker != targ)
-				{
-					if(teamplay)
-					{
-						if(targ.deadflag == DEAD_NO)
-						{
-							teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
-							attacker.dmg_team = attacker.dmg_team + damage;
-							if(attacker.dmg_team > teamdamage0)
-								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
-							mirrorforce = g_mirrorforce * vlen(force);
-							damage = g_friendlyfire * damage;
-							force = g_friendlyfire_force * force;
-							// mirrordamage will be used LATER
-						}
-					}
-				}
-			}
-		}
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
