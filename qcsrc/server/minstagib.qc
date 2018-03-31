@@ -171,7 +171,6 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	{
 		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
 		// play some cool sounds ;)
-		centerprint(player, "\n");
 		if (clienttype(player) == CLIENTTYPE_REAL)
 		{
 			if(player.health <= 5)
