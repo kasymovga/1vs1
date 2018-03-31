@@ -682,7 +682,13 @@ string Sbar_GetField(entity pl, float field)
 			}
 			return GetPlayerName(pl.sv_entnum);
 		case SP_STATUS_STRING:
-			return ((pl.(scores[SP_STATUS]) == 0) ? "ALIVE" : "DEAD");
+			if ((pl.(scores[SP_STATUS]) == 0)) {
+				sbar_field_rgb = '0.25 1 0.25';
+				return "\x13";
+			} else {
+				sbar_field_rgb = '0.25 0.25 0.25';
+				return "\x15";
+			}
 
 		case SP_FRAGS:
 			f = pl.(scores[SP_KILLS]);
