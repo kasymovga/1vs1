@@ -497,6 +497,34 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
+		if(targ.classname == "player")
+		{
+			if(attacker.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			{
+				damage = 0;
+				force = '0 0 0';
+			}
+			else if(attacker.team == targ.team)
+			{
+				if(attacker != targ)
+				{
+					if(teamplay)
+					{
+						if(targ.deadflag == DEAD_NO)
+						{
+							teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
+							attacker.dmg_team = attacker.dmg_team + damage;
+							if(attacker.dmg_team > teamdamage0)
+								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
+							mirrorforce = g_mirrorforce * vlen(force);
+							damage = g_friendlyfire * damage;
+							force = g_friendlyfire_force * force;
+							// mirrordamage will be used LATER
+						}
+					}
+				}
+			}
+		}
 		if (targ == attacker)
 			damage = damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
