@@ -1396,6 +1396,7 @@ set explosive_minsta_g_balance_minstanex_laser_spread 0.1
 set explosive_minsta_g_balance_minstanex_laser_damage 80
 set explosive_minsta_g_minstagib_health_drop 20
 set explosive_minsta_g_minstagib_health_max 200
-set explosive_minsta_g_minstagib_ammo_start 25
+set explosive_minsta_g_minstagib_ammo_start 50
 set explosive_minsta_g_use_ammunition 1
 set explosive_minsta_g_score_damage 0
+set explosive_minsta_g_minstagib_ammo_drop 25
