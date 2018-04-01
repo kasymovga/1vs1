@@ -881,8 +881,6 @@ void Ent_ReadPlayerScore(float ignore)
 	if not(o.sort_prev)
 		RegisterPlayer(o);
 
-	SetTeam(o, GetPlayerColor(o.sv_entnum));
-
 	float sf, lf;
 #if MAX_SCORE <= 8
 	sf = ReadByte();
@@ -900,6 +898,14 @@ void Ent_ReadPlayerScore(float ignore)
 			else
 				o.(scores[i]) = ReadChar();
 		}
+
+	if (sf & SP_TEAM_BIT) {
+		float t = o.scores[SP_TEAM];
+		if (t < 0)
+			t = COLOR_SPECTATOR;
+
+		SetTeam(o, t);
+	}
 
 	if(o.sort_prev)
 		Sbar_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
@@ -935,7 +941,7 @@ void Ent_ReadTeamScore(float ignore)
 
 	Sbar_UpdateTeamPos(o);
 	for(o = players.sort_next; o; o = o.sort_next)
-		SetTeam(o, GetPlayerColor(o.sv_entnum));
+		SetTeam(o, o.scores[SP_TEAM]);
 }
 
 void Net_Reset()

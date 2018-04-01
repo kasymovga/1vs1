@@ -1011,6 +1011,5 @@ float WinningCondition_RanOutOfSpawns()
 }
 
 void ScoreKeeper_Touch(entity e) {
-	if (e.scorekeeper)
-		ScoreInfo_SendDelayed(e.scorekeeper, 1);
+	PlayerScore_Set(e, SP_TEAM, e.team);
 }

@@ -598,7 +598,8 @@ void PutObserverInServer(float frags_team_reset)
 	if (self.killcount != -666)
 		bprint ("^4", self.netname, "^4 is spectating now\n");
 
-	PlayerScore_Clear(self); // clear scores when needed
+	if (self.team >= 0)
+		PlayerScore_Clear(self); // clear scores when needed
 
 	self.spectatortime = time;
 
@@ -1353,6 +1354,7 @@ void ClientConnect (void)
 	}
 
 	PlayerScore_Attach(self);
+	ScoreKeeper_Touch(self);
 	ClientData_Attach();
 
 	bot_clientconnect();
