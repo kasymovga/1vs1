@@ -512,7 +512,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					{
 						if(targ.deadflag == DEAD_NO)
 						{
-							teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
+							float teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
 							attacker.dmg_team = attacker.dmg_team + damage;
 							if(attacker.dmg_team > teamdamage0)
 								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
