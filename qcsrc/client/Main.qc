@@ -863,7 +863,7 @@ void Ent_ReadPlayerScore(float ignore)
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != self.sv_entnum)
 	{
-		print("A CSQC entity changed its owner!\n");
+		//print("A CSQC entity changed its owner!\n");
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -1045,7 +1045,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	if(self.enttype)
 		if(t != self.enttype)
 		{
-			print("A CSQC entity changed its type!\n");
+			//print("A CSQC entity changed its type!\n");
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
