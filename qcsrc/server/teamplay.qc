@@ -722,6 +722,10 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(c4 >= 0 && c4 < smallestteam_count)
 		smallestteam_count = c4;
 
+	if (c1 == smallestteam_count && pl.team == COLOR_TEAM1) return 1;
+	if (c2 == smallestteam_count && pl.team == COLOR_TEAM2) return 2;
+	if (c3 == smallestteam_count && pl.team == COLOR_TEAM3) return 3;
+	if (c4 == smallestteam_count && pl.team == COLOR_TEAM4) return 4;
 	if (c1 == smallestteam_count)
 		smallestteam_score = min(smallestteam_score, team1_score);
 
