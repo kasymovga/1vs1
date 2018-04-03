@@ -77,7 +77,7 @@ void W_SwitchWeapon_Force(entity e, float w)
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
 .float lastshot_time;
-void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, string snd, float maxdamage)
+void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, string snd, float maxhits)
 {
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
@@ -86,14 +86,8 @@ void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, 
 	ent = Akimbo_Owner(ent);
 	antilag_prepare(ent);
 	// Track max damage and set the stat to be sent later in g_world.qc
-	if (maxdamage > 0)
-	if not(inWarmupStage)
-	{
-		float f = ent.max_damage[ent.weapon];
-		f += maxdamage;
-		(ent.max_damage[ent.weapon]) = f;
-		ent.maxdamage_fired = ent.weapon + 64 * rint(f);
-	}
+	if (maxhits > 0)
+		Damage_RecordFires(ent, ent.weapon, maxhits);
 
 	if(ent_orig.weaponentity.movedir_x > 0)
 	{

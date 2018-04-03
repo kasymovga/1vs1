@@ -28,7 +28,7 @@ void W_Shotgun_Attack (void)
 	local entity flash;
 
 	W_SetupShot (self, g_antilag_bullets && g_balance_shotgun_primary_speed >= g_antilag_bullets,
-			5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_damage);
+			5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, 0, g_balance_shotgun_primary_force,
@@ -60,7 +60,7 @@ void W_Shotgun_Attack2 (void)
 	local entity flash;
 
 	W_SetupShot (self, g_antilag_bullets && g_balance_shotgun_secondary_speed >= g_antilag_bullets,
-			5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_damage);
+			5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,

@@ -1,2 +1,5 @@
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
-
+void Damage_RecordHits(entity attacker, entity targ, float deathtype, float hits);
+void Damage_RecordFires(entity attacker, float deathtype, float fires);
+.float bullets_hit[WEP_COUNT]; 		//for hitscan bullets hit
+.float bullets_fired[WEP_COUNT];	//for hitscan bullets fired

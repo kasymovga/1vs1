@@ -20,4 +20,4 @@ vector w_shotorg_visual;
 void W_Init();
 void W_ShowWeaponList(entity pl);
 
-#define W_SetupShot(ent,antilag,recoil,snd,maxdamage) W_SetupShot_Dir(ent, v_forward, antilag, recoil, snd, maxdamage)
+#define W_SetupShot(ent,antilag,recoil,snd,maxhits) W_SetupShot_Dir(ent, v_forward, antilag, recoil, snd, maxhits)

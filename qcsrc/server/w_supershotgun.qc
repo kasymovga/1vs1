@@ -35,13 +35,7 @@ void W_Supershotgun_Pellet_Touch()
 	{
 		entity o = self.realowner;
 		Damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
-		if not(inWarmupStage)
-		if not(other.deadflag)
-		if (other != o)
-		if (!teamplay || other.team != self.realowner.team) {
-			o.bullets_hit[WEP_SUPERSHOTGUN] += 1;
-			o.damage_hits = WEP_SUPERSHOTGUN + 64 * rint(o.bullets_hit[WEP_SUPERSHOTGUN]);
-		}
+		Damage_RecordHits(o, other, WEP_SUPERSHOTGUN, 1);
 		self.cnt = 0;
 	}
 	if not(self.cnt)
@@ -113,7 +107,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 		dtype = WEP_SUPERSHOTGUN;
 		bounces = g_balance_supershotgun_primary_bounces;
 	}
-	W_SetupShot (self, ballistic && g_antilag_bullets && s >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", d);
+	W_SetupShot (self, ballistic && g_antilag_bullets && s >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", b);
 
 	if (barrels == 3)
 	{

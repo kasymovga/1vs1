@@ -195,7 +195,7 @@ float W_Electro_Ligtning_Send(entity to, float sf)
 void W_Electro_Attack_Lightning()
 {
 	float damage = g_balance_electro_primary_damage;
-	W_SetupShot(self, FALSE, 0, "", damage);
+	W_SetupShot(self, FALSE, 0, "", 1);
 	if (!self.lightning_beam) {
 		self.lightning_beam = spawn();
 		setorigin(self.lightning_beam, self.origin);
@@ -217,7 +217,7 @@ void W_Electro_Attack_Lightning()
 		if (trace_ent && trace_ent.takedamage)
 		{
 			Damage (trace_ent, self, self, damage, WEP_ELECTRO, trace_endpos, w_shotdir * g_balance_electro_primary_force);
-			Damage_RecordDamage(self, WEP_ELECTRO, damage);
+			Damage_RecordHits(self, trace_ent, WEP_ELECTRO, 1);
 		}
 		if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 			pointparticles(particleeffectnum("machinegun_impact"), trace_endpos, '0 0 0', 0);
@@ -232,7 +232,7 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
-	W_SetupShot(self, FALSE, 2, "weapons/electro_fire.wav", g_balance_electro_primary_damage);
+	W_SetupShot(self, FALSE, 2, "weapons/electro_fire.wav", 1);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -264,7 +264,7 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot(self, FALSE, 2, "weapons/electro_fire2.wav", g_balance_electro_secondary_damage);
+	W_SetupShot(self, FALSE, 2, "weapons/electro_fire2.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

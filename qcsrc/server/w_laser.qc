@@ -46,9 +46,9 @@ void W_Laser_Attack (float issecondary)
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(issecondary)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_laser_secondary_damage);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", 1);
 	else
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_laser_primary_damage);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);

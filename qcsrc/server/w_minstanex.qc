@@ -33,7 +33,7 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", 0);
+	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", 1);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -130,7 +130,7 @@ void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
 void W_MinstaNex_Laser_Attack_Setup() {
 	float w_safe = self.weapon;
 	self.weapon = WEP_LASER;
-	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", g_balance_minstanex_laser_damage);
+	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", 1);
 	self.weapon = w_safe;
 }
 

@@ -37,6 +37,7 @@ void W_Hook_ExplodeThink (void)
 
 	f = self.dmg_last - dmg_remaining_next;
 	self.dmg_last = dmg_remaining_next;
+	Damage_RecordFires(self.owner, WEP_HOOK, 1);
 
 	RadiusDamage (self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -79,7 +80,7 @@ void W_Hook_Attack2()
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", g_balance_hook_secondary_damage);
+	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", 0);
 
 	gren = CSQCProjectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
 	gren.owner = self;

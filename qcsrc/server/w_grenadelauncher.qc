@@ -108,7 +108,7 @@ void W_Grenade_Attack (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
-	W_SetupShot(self, FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_primary_damage);
+	W_SetupShot(self, FALSE, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -140,7 +140,7 @@ void W_Grenade_Attack2 (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_secondary_ammo;
-	W_SetupShot(self, FALSE, 4, "weapons/grenade_fire.wav", g_balance_grenadelauncher_secondary_damage);
+	W_SetupShot(self, FALSE, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

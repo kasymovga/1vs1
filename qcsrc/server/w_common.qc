@@ -1,7 +1,5 @@
 float g_ballistics_mindistance;
 float g_ballistics_materialconstant;
-.float bullets_hit[WEP_COUNT]; 		//for hitscan bullets hit
-.float bullets_fired[WEP_COUNT];	//for hitscan bullets fired
 
 void W_GiveWeapon (entity e, float wep, string name)
 {
@@ -39,11 +37,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	local entity ent, endent;
 	local float endq3surfaceflags;
 	//local entity explosion;
-	float did_hit;
 	float f, ffs;
 	self = Akimbo_Owner(self);
-
-	did_hit = 0;
 
 	railgun_start = start;
 	railgun_end = end;
@@ -105,13 +100,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		ent.railgunhit = FALSE;
 
 		//for stats so that team hit will count as a miss
-		if(ent.takedamage)
-		if(ent.deadflag == DEAD_NO)
-			did_hit = 1;
-
-		if(teamplay)
-		if(ent.team == self.team)
-			did_hit = 0;
+		Damage_RecordHits(self, ent, self.weapon, 1);
 
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
@@ -126,20 +115,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 		// advance to the next entity
 		ent = findfloat(ent, railgunhit, TRUE);
-	}
-
-	//calculate hits and fired shots for hitscan
-	if not(inWarmupStage)
-	if not(self.isbot)
-	{
-		self.bullets_fired[self.weapon] += 1;
-
-		if(did_hit)
-			self.bullets_hit[self.weapon] += 1;
-
-		// update the client and store in addstat() in g_world
-		self.damage_hits = self.weapon + 64 * rint(self.bullets_hit[self.weapon]);
-		self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
 	}
 
 	// we're done with the explosion entity, remove it
@@ -158,9 +133,6 @@ void W_BallisticBullet_Hit (void)
 {
 	float f;
 
-	float hit;
-	hit = 0;
-
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 
 	if(other.solid == SOLID_BSP)
@@ -176,12 +148,8 @@ void W_BallisticBullet_Hit (void)
 		railgun_start = self.origin - 0.1 * self.velocity;
 		railgun_end = self.origin + 0.1 * self.velocity;
 
-		if(other.takedamage)
-		if(other.deadflag == DEAD_NO)
-		if(!teamplay || self.owner.team != other.team)
-			hit = 1;
-
 		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
+		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1);
 		damage_headshotbonus = 0;
 
 		if(self.dmg_edge != 0)
@@ -191,17 +159,6 @@ void W_BallisticBullet_Hit (void)
 			if(yoda)
 				announce(self.owner, "announcer/male/awesome.wav");
 		}
-
-		//calculate hits for ballistic weapons
-		if not(inWarmupStage)
-		{
-			if(hit)
-				self.owner.bullets_hit[self.owner.weapon] += 1;
-			// update the client
-			self.owner.damage_hits = self.owner.weapon + 64 * rint(self.owner.bullets_hit[self.owner.weapon]);
-		}
-
-		//sound (self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	self.enemy = other; // don't hit the same player twice with the same bullet
@@ -384,14 +341,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	proj.oldvelocity = proj.velocity;
 
-	//calculate fired bullets for ballistics
-	if not(inWarmupStage)
-	if not(self.isbot)
-	{
-		self.bullets_fired[self.weapon] += 1;
-		self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
-	}
-
 	if(antilag)
 	{
 		// NOTE: this may severely throw off weapon balance
@@ -418,13 +367,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			} else {
 				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, fireBallisticBulletNoGravity_trace_callback);
 				self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
-			}
-
-			if not(inWarmupStage)
-			if not(self.isbot)
-			{
-				self.bullets_fired[self.weapon] += 1;
-				self.maxdamage_fired = self.weapon + 64 * rint(self.bullets_fired[self.weapon]);
 			}
 
 			if(trace_fraction == 1)

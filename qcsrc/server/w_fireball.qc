@@ -76,8 +76,6 @@ void W_Fireball_Explode (void)
 			dir = normalize(e.origin + e.view_ofs - self.origin);
 			Damage(e, self, self.realowner, g_balance_fireball_secondary_bfgdamage * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, g_balance_fireball_secondary_bfgforce * dir);
 			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
-
-			Damage_RecordDamage(self.owner, self.projectiledeathtype, g_balance_fireball_secondary_bfgdamage * points);
 		}
 	}
 
@@ -154,7 +152,7 @@ void W_Fireball_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire2.wav", g_balance_fireball_secondary_damage + g_balance_fireball_secondary_bfgdamage);
+	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire2.wav", 1);
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -257,6 +255,9 @@ void W_Firemine_Think()
 void W_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
+	if not(self.dmg)
+		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1);
+
 	if (other.takedamage == DAMAGE_AIM)
 	if(Fire_AddDamage(other, self.realowner, g_balance_fireball_primary_damage, g_balance_fireball_primary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
 	{
@@ -292,7 +293,7 @@ void W_Fireball_Attack1()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire.wav", g_balance_fireball_primary_damage);
+	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire.wav", 1);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
