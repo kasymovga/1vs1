@@ -1062,12 +1062,39 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	return pos;
 }
 
+float nextplayerscheck;
 float lastpingstime;
 float scoreboard_bottom;
 void Sbar_DrawScoreboard()
 {
 	vector rgb, pos, tmp;
 	entity pl, tm;
+
+	if (nextplayerscheck < time) { //Check for downloaders
+	       float i;
+	       entity e;
+	       for(i = 0; i < maxclients; ++i) {
+	               e = playerslots[i];
+	               if(GetPlayerName(i) == "") {
+	                       if(e.sort_prev) {
+	                               SetTeam(e, -1);
+	                               RemovePlayer(e);
+	                               e.sort_prev = world;
+	                       }
+	               } else {
+	                       if not(e.sort_prev) {
+	                               if not(e)
+	                                       playerslots[i] = e = spawn();
+
+	                               e.sv_entnum = i;
+	                               SetTeam(e, COLOR_SPECTATOR);
+	                               RegisterPlayer(e);
+	                               Sbar_UpdatePlayerPos(e);
+	                       }
+	               }
+	       }
+	       nextplayerscheck = time + 1;
+	}
 
 	if(time > lastpingstime + 10)
 	{

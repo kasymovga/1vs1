@@ -137,6 +137,7 @@ float sv_ip2country;
 float fov;
 float fov_zoomed;
 float isdemo_flag;
+float SetTeam(entity o, float Team);
 
 .entity sort_next;
 .entity sort_prev;
