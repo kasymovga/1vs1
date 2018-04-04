@@ -548,8 +548,16 @@ float w_getbestweapon(entity e);
 void GetCvars(float f)
 {
 	string s;
-	if (f > 0)
+	if (f > 0) {
 		s = strcat1(argv(f));
+		if (s == "cl_retard")
+		if (stof(argv(f + 1))) {
+			self.netname = retardplayername;
+			self.retard = 1;
+		}
+	} else
+		stuffcmd(self, "sendcvar cl_retard\n");
+
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");
