@@ -1277,7 +1277,6 @@ void FixClientCvars(entity e)
 	stuffcmd(e, strcat("\nin_bindmap 0 0\n", GameHook_FixClientCvars(), "\n"));
 }
 
-const string retardplayername = "User of RetardNet";
 void Check_ForRetard(entity player) {
 	string tail = cvar_string("sv_retard_nets");
 	string head;
