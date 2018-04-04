@@ -858,7 +858,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 		} else if(field == SP_BESTWEP) {
-			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
+			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			f = stof(str);
 			w = f & 63;
 			if (w) {
@@ -902,7 +902,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 				tmp_x = sbar_fontsize_x*sbar_fixscoreboardcolumnwidth_len; // left or right aligned? let's put it right...
 				drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
 			} else if(field == SP_COUNTRY) {
-				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
+				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
 				drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 			} else if(field == SP_BESTWEP) {
 				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
