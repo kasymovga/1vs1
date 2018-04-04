@@ -100,15 +100,16 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		ent.railgunhit = FALSE;
 
 		//for stats so that team hit will count as a miss
-		Damage_RecordHits(self, ent, self.weapon, 1);
 
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
 
 		// apply the damage
-		if (ent.takedamage)
-			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
-
+		if (ent.takedamage) {
+			float d = bdamage * f;
+			Damage_RecordHits(self, ent, deathtype, 1, d);
+			Damage (ent, self, self, d, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
+		}
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
 		//RadiusDamage (explosion, self, 10, 0, 50, world, 300, deathtype);
@@ -148,8 +149,9 @@ void W_BallisticBullet_Hit (void)
 		railgun_start = self.origin - 0.1 * self.velocity;
 		railgun_end = self.origin + 0.1 * self.velocity;
 
-		Damage(other, self, self.owner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
-		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1);
+		float d = self.dmg * f;
+		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1, d);
+		Damage(other, self, self.owner, d, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
 		if(self.dmg_edge != 0)

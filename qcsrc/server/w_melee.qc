@@ -45,10 +45,10 @@ void W_Melee_Attack_Think()
 	if (trace_ent)
 	if (trace_ent.takedamage)
 	{
+		Damage_RecordHits(self.owner, trace_ent, WEP_MELEE, 1, damage * damage_factor);
 		Damage (trace_ent, self.owner, self.owner, damage * damage_factor,
 				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir) * g_balance_melee_force * damage_factor + '0 0 1' * g_balance_melee_force_up * damage_factor);
 
-		Damage_RecordHits(self.owner, trace_ent, WEP_MELEE, 1);
 		if (g_balance_melee_onehit)
 		{
 			self.think = SUB_Remove;

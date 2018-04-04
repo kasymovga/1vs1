@@ -415,7 +415,7 @@ string Sbar_DefaultColumnLayout()
 	return strcat( // fteqcc sucks
 		"ping pl ?cn name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
-		"?damage +ca,ft,surv/status "
+		"?damage ?bestwep +ca,ft,surv/status "
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
@@ -799,6 +799,8 @@ string Sbar_FixScoreboardColumnWidth(float i, string str)
 	}
 	else if(field == SP_COUNTRY)
 		sbar_fixscoreboardcolumnwidth_len = stringwidth("XX", FALSE);
+	else if(field == SP_BESTWEP)
+		sbar_fixscoreboardcolumnwidth_len = stringwidth("XXXXXX", FALSE);
 	else
 		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, FALSE);
 
@@ -813,7 +815,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 {
 	vector tmp;
 	string str;
-	float i, field;
+	float i, field, f, w;
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
 
@@ -855,6 +857,16 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		} else if(field == SP_COUNTRY) {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+		} else if(field == SP_BESTWEP) {
+			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
+			f = stof(str);
+			w = f & 63;
+			if (w) {
+				f = (f - w) / 64;
+				drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+				tmp_x = tmp_x - 2 * sbar_fontsize_x;
+				drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
+			}
 		} else {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
@@ -889,6 +901,19 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 			if(field == SP_NAME) {
 				tmp_x = sbar_fontsize_x*sbar_fixscoreboardcolumnwidth_len; // left or right aligned? let's put it right...
 				drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
+			} else if(field == SP_COUNTRY) {
+				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
+				drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+			} else if(field == SP_BESTWEP) {
+				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
+				f = stof(str);
+				w = f & 63;
+				if (w) {
+					f = (f - w) / 64;
+					drawpic(pos - tmp, strcat("gfx/hud/inv_weapon", ftos(w - 1)), '2 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+					tmp_x = tmp_x - 2 * sbar_fontsize_x;
+					drawstring(pos - tmp, strcat(ftos(f), "%"), sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
+				}
 			} else {
 				tmp_x = sbar_fontsize_x*sbar_fixscoreboardcolumnwidth_len;
 				drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);

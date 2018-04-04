@@ -1336,6 +1336,7 @@ set sv_udpchat_spamstatus 10
 set g_friendlyfire_force 0
 
 set g_score_damage 0
+set g_score_bestweapon 0
 
 set g_profile "" "Config profile prefix, currently available: akimbo, cra, minsta, explosive_minsta"
 

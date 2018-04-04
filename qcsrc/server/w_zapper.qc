@@ -287,8 +287,8 @@ void W_Zapper_Beam_Think(void) {
             damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
             force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
 
+			Damage_RecordHits(o, targ, WEP_ZAPPER, 1, damage);
             Damage(targ, self, o, damage, WEP_ZAPPER, end, force * forcedir);
-			Damage_RecordHits(o, targ, WEP_ZAPPER, 1);
         }
         if(fract < 1)
         if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
@@ -430,8 +430,8 @@ void W_Zapper_Attack2(void) {
             W_Zapper_Attack2_Arc(targ, self, damage);
 
 		entity o = Akimbo_Owner(self);
+		Damage_RecordHits(o, targ, WEP_ZAPPER, 1, damage);
         Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
-		Damage_RecordHits(o, targ, WEP_ZAPPER, 1);
     }
 
     //Buffs_MEODP_Hitscan_End(pts);

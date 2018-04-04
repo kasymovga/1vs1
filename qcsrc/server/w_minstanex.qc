@@ -90,7 +90,9 @@ void W_MinstaNex_Attack (void)
 		if (g_balance_minstanex_explode) {
 			entity e = spawn();
 			setorigin(e, trace_endpos);
-			RadiusDamage (e, Akimbo_Owner(self), g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, WEP_ROCKET_LAUNCHER, world);
+			entity o = Akimbo_Owner(self);
+			RadiusDamage (e, o, g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, 0, world);
+			pointparticles(particleeffectnum("rocket_explode"), trace_endpos, '0 0 0', 1);
 			remove(e);
 		}
 		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_MINSTANEX, self);

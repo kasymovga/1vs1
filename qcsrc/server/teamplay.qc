@@ -148,6 +148,7 @@ void default_delayedinit()
 		ScoreRules_generic();
 
 	ScoreDamage_Init();
+	Damage_RecordInit();
 	ScoreRules_basics_end();
 }
 

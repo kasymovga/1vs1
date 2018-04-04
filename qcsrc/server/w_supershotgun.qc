@@ -34,8 +34,8 @@ void W_Supershotgun_Pellet_Touch()
 	if (other && other.takedamage)
 	{
 		entity o = self.realowner;
+		Damage_RecordHits(o, other, WEP_SUPERSHOTGUN, 1, self.dmg);
 		Damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
-		Damage_RecordHits(o, other, WEP_SUPERSHOTGUN, 1);
 		self.cnt = 0;
 	}
 	if not(self.cnt)

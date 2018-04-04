@@ -210,13 +210,14 @@ enum {
 	SP_COUNTRY,
 	SP_TEAM,
 #define SP_TEAM_BIT 128
+	SP_BESTWEP,
 	SP_GAME_SCORE1,
 	SP_GAME_SCORE2,
 	SP_GAME_SCORE3,
 	SP_GAME_SCORE4,
 	SP_GAME_SCORE5,
 	SP_GAME_SCORE6,
-#define MAX_SCORE 14
+#define MAX_SCORE 15
 };
 
 // game mode specific indices are not in common/, but in server/scores_rules.qc!

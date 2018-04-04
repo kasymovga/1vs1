@@ -319,7 +319,6 @@ void turret_hk_missile_think()
 void turret_hk_missile_explode()
 {
     vector org2;
-    float d;
 
     if(self.event_damage != SUB_Null)
     {
@@ -337,12 +336,7 @@ void turret_hk_missile_explode()
     org2 = findbetterlocation (self.origin, 16);
 
     self.event_damage = SUB_Null;
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
-
-#ifdef TURRET_DEBUG
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#endif
+    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
 
     // Target dead, get another is still targeting the same.
     if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
