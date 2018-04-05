@@ -181,7 +181,7 @@ float ScoreInfo_SendEntity(entity to, float sf)
 }
 
 void ScoreInfo_SendDelayed_Think() {
-	self.SendFlags = self.flags;
+	self.SendFlags = self.SendFlags | self.flags;
 	self.flags = 0;
 	self.lastshot_time = time + 1;
 }
