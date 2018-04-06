@@ -343,21 +343,6 @@ void InitGameplayMode()
 	game_cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 }
 
-string GetClientVersionMessage() {
-	local string versionmsg;
-	if (self.version_mismatch) {
-		if(self.version < cvar("gameversion")) {
-			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
-		} else {
-			versionmsg = "^3This server is using an outdated Rexuiz version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
-		}
-	} else {
-		versionmsg = "^2client version and server version are compatible.^8";
-	}
-	return versionmsg;
-}
-
-
 void PrintWelcomeMessage(entity pl)
 {
 	string s, modifications, motd;
@@ -422,10 +407,7 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	local string versionmessage;
-	versionmessage = GetClientVersionMessage();
-
-	s = strcat(s, NEWLINES, "This is Rexuiz ", cvar_string("g_nexuizversion"), "\n", versionmessage);
+	s = strcat(s, NEWLINES, "This is Rexuiz ", cvar_string("g_nexuizversion"), "\n");
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")

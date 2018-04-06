@@ -1412,9 +1412,6 @@ void ClientConnect (void)
 	// Wazat's grappling hook
 	SetGrappleHookBindings();
 
-	// get version info from player
-	stuffcmd(self, "cmd clientversion $gameversion\n");
-
 	// get other cvars from player
 	GetCvars(0);
 
