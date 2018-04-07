@@ -33,7 +33,7 @@ void W_Melee_Attack_Think()
 	}
 	float damage_factor = (g_balance_melee_onehit ? 1 : (melee_frame / g_balance_melee_time));
 	makevectors(self.owner.v_angle);
-	W_SetupShot(self.owner, FALSE, 0, "", 1);
+	W_SetupShot(self.owner, FALSE, 0, "", (self.dmg ? 1 : 0));
 	float damage;
 	if (self.dmg)
 		damage = g_balance_axe_damage;
@@ -45,7 +45,9 @@ void W_Melee_Attack_Think()
 	if (trace_ent)
 	if (trace_ent.takedamage)
 	{
-		Damage_RecordHits(self.owner, trace_ent, WEP_MELEE, 1, damage * damage_factor);
+		if (self.dmg)
+			Damage_RecordHits(self.owner, trace_ent, WEP_MELEE, 1, damage * damage_factor);
+
 		Damage (trace_ent, self.owner, self.owner, damage * damage_factor,
 				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir) * g_balance_melee_force * damage_factor + '0 0 1' * g_balance_melee_force_up * damage_factor);
 
