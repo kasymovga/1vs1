@@ -10,6 +10,10 @@ string vote_note_message1;
 string vote_note_message2;
 string vote_note_message3;
 
+string sv_announcer_extra_vote_now;
+string sv_announcer_extra_vote_failed;
+string sv_announcer_extra_vote_passed;
+
 void Vote_Note_Clear() {
 	if (vote_note_message1 == "")
 		return;
@@ -225,6 +229,9 @@ float GameCommand_Vote(string s, entity e) {
 						vote_note = NoteLine_New(Vote_Note_Message);
 						votecalledmaster = FALSE;
 						votefinished = time + cvar("sv_vote_timeout");
+						if (sv_announcer_extra_vote_now != "")
+							play2all(sv_announcer_extra_vote_now);
+
 						votecaller = e; // remember who called the vote
 						if(e) {
 							e.vote_vote = 1; // of course you vote yes
@@ -266,6 +273,9 @@ float GameCommand_Vote(string s, entity e) {
 					votecalledvote_display = strzone("^3master");
 					vote_note = NoteLine_New(Vote_Note_Message);
 					votefinished = time + cvar("sv_vote_timeout");
+					if (sv_announcer_extra_vote_now != "")
+						play2all(sv_announcer_extra_vote_now);
+
 					votecaller = e; // remember who called the vote
 					if(e) {
 						e.vote_vote = 1; // of course you vote yes
@@ -543,6 +553,8 @@ void VoteAccept() {
 					  // no wait for next vote
 	}
 	VoteReset();
+	if (sv_announcer_extra_vote_passed)
+		play2all(sv_announcer_extra_vote_passed);
 }
 
 void VoteReject() {
@@ -550,6 +562,8 @@ void VoteReject() {
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
 	VoteReset();
+	if (sv_announcer_extra_vote_passed)
+		play2all(sv_announcer_extra_vote_failed);
 }
 
 void VoteTimeout() {
@@ -710,4 +724,16 @@ void VoteCount() {
 		}
 	}
 	Vote_Note_Update();
+}
+
+void Vote_Init() {
+	unzone_ifneeded(sv_announcer_extra_vote_now);
+	unzone_ifneeded(sv_announcer_extra_vote_failed);
+	unzone_ifneeded(sv_announcer_extra_vote_passed);
+	sv_announcer_extra_vote_now = cvar_string_zone_ifneeded("sv_announcer_extra_vote_now");
+	sv_announcer_extra_vote_failed = cvar_string_zone_ifneeded("sv_announcer_extra_vote_failed");
+	sv_announcer_extra_vote_passed = cvar_string_zone_ifneeded("sv_announcer_extra_vote_passed");
+	precache_sound(sv_announcer_extra_vote_now);
+	precache_sound(sv_announcer_extra_vote_failed);
+	precache_sound(sv_announcer_extra_vote_passed);
 }

@@ -602,6 +602,8 @@ void readdynamiccvars() {
 
 	if not(default_weapon_alpha)
 		default_weapon_alpha = 1;
+
+	Vote_Init();
 }
 
 float world_already_spawned;

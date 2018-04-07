@@ -23,3 +23,4 @@ void VoteReject();
 void VoteTimeout();
 void VoteStop(entity stopper);
 void VoteCount();
+void Vote_Init();
