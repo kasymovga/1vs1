@@ -1217,9 +1217,13 @@ void Ent_Init(float ignore)
 
 	if (sf & 32) {
 		teamplay = ReadByte();
-		if not(teamplay)
+		if not(teamplay) {
 			GetTeam(0, true);
-
+			entity o;
+			for(o = players.sort_next; o; o = o.sort_next)
+				if (o.gotscores)
+					SetTeam(o, o.scores[SP_TEAM]);
+		}
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));
 		Sbar_InitScores();
