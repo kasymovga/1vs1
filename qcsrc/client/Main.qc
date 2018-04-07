@@ -276,6 +276,12 @@ void CSQC_Init(void)
 	tempdb = db_create();
 	compressShortVector_init();
 
+	crosshairdot_tex = "gfx/crosshair6";
+	if (fexists("gfx/crosshairdot.tga"))
+		crosshairdot_tex = "gfx/crosshairdot.tga";
+	else if (fexists("gfx/crosshairdot.png"))
+		crosshairdot_tex = "gfx/crosshairdot.png";
+
 	drawfont = 0;
 
 	for(i = 0; i < 255; ++i)
