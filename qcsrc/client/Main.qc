@@ -311,9 +311,8 @@ void CSQC_Init(void)
 	registercvar("crosshair_axe_color_green", "0.35", CVAR_SAVE);
 	registercvar("crosshair_axe_color_blue", "0.2", CVAR_SAVE);
 	registercvar("crosshair_axe_color_alpha", "0.75", CVAR_SAVE);
-	registercvar("cl_damageindicator", "1.5", CVAR_SAVE);
+	registercvar("crosshair_dot_color", "1 1 1", CVAR_SAVE);
 	registercvar("_menu_vote_string", "", 0);
-	registercvar("_radio", "1", CVAR_SAVE);
 	isdemo_flag = isdemo();
 
 #ifndef CAMERATEST
@@ -333,9 +332,6 @@ void CSQC_Init(void)
 #endif
 	registercvar("sbar_usecsqc", "1");
 	registercvar("sbar_columns", "default", CVAR_SAVE);
-	registercvar("sbar_weapons_fadetime", "2", CVAR_SAVE);
-	registercvar("sbar_weapons_fadespeed", "1", CVAR_SAVE);
-	registercvar("cl_shownames_cos", "0.99", CVAR_SAVE);
 	localcmd("alias +nadget2 +button9\n");
 	localcmd("alias -nadget2 -button9\n");
 
