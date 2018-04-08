@@ -13,5 +13,5 @@ void ScoreDamage_Init() {
 
 	ScoreDamage_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = ScoreDamage_PlayerDamageHandle;
-	ScoreInfo_SetLabel_PlayerScore(SP_DAMAGE, "damage", SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_DAMAGE, "damage", 0);
 }
