@@ -75,7 +75,7 @@ void read_cvars_init() {
 	} else {
 		registercvar_save = registercvar_save_old;
 	}
-	register_autocvars(); //needed for old engines
+	register_autocvars();
 	if (autocvar_autocvar_check) {
 		//print("Auto cvars working, good\n");
 		read_cvars = read_cvars_dummy;
