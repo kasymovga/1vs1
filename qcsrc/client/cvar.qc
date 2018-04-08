@@ -1,14 +1,18 @@
 var void() read_cvars;
 
+float(string varname, float setflags, float unsetflags) cvar_altertype = #505;
+
+var void(string varname, string val) registercvar_save;
+
 #define CVAR(x) autocvar_##x
 #define CVAR_OR(x,y) (autocvar_##x ? autocvar_##x : y)
 
-#define CACHE_CVAR(x) registercvar(#x, "0", 0);
-#define CACHE_CVAR_DEF(x,y) registercvar(#x, ftos(y), CVAR_SAVE);
-#define CACHE_CVAR_VEC(x) registercvar(#x, "", 0);
-#define READ_CVARS_BEGIN(x,y) void register_autocvars() {
+#define CACHE_CVAR(x) float autocvar_##x;
+#define CACHE_CVAR_DEF(x,y) var float autocvar_##x = y;
+#define CACHE_CVAR_VEC(x) vector autocvar_##x;
+#define READ_CVARS_BEGIN(x,y)
 #define READ_CVARS_SECTION(x,y)
-#define READ_CVARS_END(x) }
+#define READ_CVARS_END(x)
 #include "cvar_list.qc"
 #undef CACHE_CVAR
 #undef CACHE_CVAR_DEF
@@ -17,12 +21,12 @@ var void() read_cvars;
 #undef READ_CVARS_SECTION
 #undef READ_CVARS_END
 
-#define CACHE_CVAR(x) float autocvar_##x;
-#define CACHE_CVAR_DEF(x,y) var float autocvar_##x = y;
-#define CACHE_CVAR_VEC(x) vector autocvar_##x;
-#define READ_CVARS_BEGIN(x,y)
+#define CACHE_CVAR(x) 
+#define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { print(#x, "\n") ; registercvar_save(#x, ftos(y)); }
+#define CACHE_CVAR_VEC(x) 
+#define READ_CVARS_BEGIN(x,y) void register_autocvars() {
 #define READ_CVARS_SECTION(x,y)
-#define READ_CVARS_END(x)
+#define READ_CVARS_END(x) }
 #include "cvar_list.qc"
 #undef CACHE_CVAR
 #undef CACHE_CVAR_DEF
@@ -45,13 +49,33 @@ var void() read_cvars;
 #undef READ_CVARS_SECTION
 #undef READ_CVARS_END
 
+void registercvar_save_old(string varname, string val) {
+	registercvar(varname, val, CVAR_SAVE);
+}
+
+void registercvar_save_awful(string varname, string val) {
+	localcmd(strcat("\nseta ", varname, " ", val, "\n"));
+}
+
+void registercvar_save_rm(string varname, string val) {
+	cvar_altertype(varname, 2, 0);
+}
+
 float autocvar_autocvar_check;
 void read_cvars_dummy() { };
 void read_cvars_init() {
-	register_autocvars(); //needed for old engines
 	cvar_set("autocvar_check", "0");
 	autocvar_autocvar_check = 0;
 	cvar_set("autocvar_check", "1");
+	if (autocvar_autocvar_check) {
+		if (checkextension("DP_RM_CVAR_ALTERTYPE"))
+			registercvar_save = registercvar_save_rm;
+		else
+			registercvar_save = registercvar_save_awful;
+	} else {
+		registercvar_save = registercvar_save_old;
+	}
+	register_autocvars(); //needed for old engines
 	if (autocvar_autocvar_check) {
 		//print("Auto cvars working, good\n");
 		read_cvars = read_cvars_dummy;
