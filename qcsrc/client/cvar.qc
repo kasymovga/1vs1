@@ -22,7 +22,7 @@ var void(string varname, string val) registercvar_save;
 #undef READ_CVARS_END
 
 #define CACHE_CVAR(x) 
-#define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { print(#x, "\n") ; registercvar_save(#x, ftos(y)); }
+#define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { registercvar_save(#x, ftos(y)); }
 #define CACHE_CVAR_VEC(x) 
 #define READ_CVARS_BEGIN(x,y) void register_autocvars() {
 #define READ_CVARS_SECTION(x,y)
