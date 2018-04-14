@@ -83,75 +83,6 @@ float reset_on_join_done;
 
 void FixPlayermodel();
 
-float ClientData_Send(entity to, float sf)
-{
-	if(to != self.owner)
-	{
-		error("wtf");
-		return FALSE;
-	}
-
-	entity e;
-
-	e = to;
-	if(to.classname == "spectator")
-		e = to.enemy;
-
-	sf = 0;
-
-	if(e.race_completed)
-		sf |= 1; // forced scoreboard
-	if(to.spectatee_status)
-		sf |= 2; // spectator ent number follows
-	if(e.zoomstate)
-		sf |= 4; // zoomed
-	if(e.porto_v_angle_held)
-		sf |= 8; // angles held
-
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
-	WriteByte(MSG_ENTITY, sf);
-
-	if(sf & 2)
-		WriteByte(MSG_ENTITY, to.spectatee_status);
-
-	if(sf & 8)
-	{
-		WriteAngle(MSG_ENTITY, e.v_angle_x);
-		WriteAngle(MSG_ENTITY, e.v_angle_y);
-	}
-
-	return TRUE;
-}
-
-void ClientData_Attach()
-{
-	Net_LinkEntity(self.clientdata = spawn(), FALSE, 0, ClientData_Send);
-	self.clientdata.drawonlytoclient = self;
-	self.clientdata.owner = self;
-}
-
-void ClientData_Detach()
-{
-	remove(self.clientdata);
-	self.clientdata = world;
-}
-
-void ClientData_Touch(entity e)
-{
-	e.clientdata.SendFlags = 1;
-
-	// make it spectatable
-	entity e2;
-	FOR_EACH_REALCLIENT(e2)
-	{
-		if(e2 != e)
-			if(e2.classname == "spectator")
-				if(e2.enemy == e)
-					e2.clientdata.SendFlags = 1;
-	}
-}
-
-
 #define SPAWNPOINT_SCORE frags
 
 .string netname_previous;
@@ -1354,7 +1285,6 @@ void ClientConnect (void)
 
 	PlayerScore_Attach(self);
 	ScoreKeeper_Touch(self);
-	ClientData_Attach();
 
 	bot_clientconnect();
 
@@ -1495,7 +1425,6 @@ void ClientDisconnect (void)
 		if(self.weaponentity.lasertarget)
 			remove(self.weaponentity.lasertarget);
 
-	ClientData_Detach();
 	PlayerScore_Detach(self);
 
 	if(self.netname_previous)
@@ -1674,17 +1603,6 @@ void player_regen (void)
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 }
 
-float zoomstate_set;
-void SetZoomState(float z)
-{
-	if(z != self.zoomstate)
-	{
-		self.zoomstate = z;
-		ClientData_Touch(self);
-	}
-	zoomstate_set = 1;
-}
-
 void GetPressedKeys(void) {
 	dodging_GetPressedKeys();
 	if (self.movement_x > 0) // get if movement keys are pressed
@@ -1762,7 +1680,6 @@ void SpectateCopy(entity spectatee) {
 	self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
-	SetZoomState(spectatee.zoomstate);
 }
 
 float SpectateUpdate() {
@@ -1990,8 +1907,6 @@ void PlayerPreThink (void)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		checkSpectatorBlock();
 
-	zoomstate_set = 0;
-
 	if(self.netname_previous != self.netname)
 	{
 		if(sv_eventlog)
@@ -2104,20 +2019,16 @@ void PlayerPreThink (void)
 		SpectatorThink();
 	}
 
-	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX));
-
 	float oldspectatee_status;
-	oldspectatee_status = self.spectatee_status;
+	oldspectatee_status = self.spectatee_status & 255;
 	if(self.classname == "spectator")
-		self.spectatee_status = num_for_edict(self.enemy);
+		self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
 	else if(self.classname == "observer")
 		self.spectatee_status = num_for_edict(self);
 	else
-		self.spectatee_status = 0;
-	if(self.spectatee_status != oldspectatee_status)
+		self.spectatee_status = (self.BUTTON_ZOOM ? 256 : 0);
+	if((self.spectatee_status & 255) != (oldspectatee_status & 255))
 	{
-		ClientData_Touch(self);
 		GameHook_InitSpectator();
 	}
 

@@ -33,6 +33,8 @@ void race_StartCompleting();
 float race_highest_checkpoint;
 float race_timed_checkpoint;
 
+void race_ClearTime(entity e);
+
 #define ST_RACE_LAPS ST_GAME_SCORE1
 #define SP_RACE_LAPS SP_GAME_SCORE1
 #define SP_RACE_FASTEST SP_GAME_SCORE2
@@ -128,9 +130,12 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 
 void race_InitSpectator()
 {
-	if(g_race_qualifying)
-		if(msg_entity.enemy.race_laptime)
-			race_SendNextCheckpoint(msg_entity.enemy, 1);
+	if(g_race_qualifying) {
+		if(self.enemy.race_laptime)
+			race_SendNextCheckpoint(self.enemy, 1);
+		else
+			race_ClearTime(self);
+	}
 }
 
 void race_SendTime(entity e, float cp, float t, float tvalid)
@@ -171,7 +176,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				e.race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
 				bprint(e.netname, "^7 has finished the race.\n");
-				ClientData_Touch(e);
 			}
 		}
 	}
@@ -608,7 +612,6 @@ void race_AbandonRaceCheck(entity p)
 		p.race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
 		bprint(p.netname, "^7 has abandoned the race.\n");
-		ClientData_Touch(p);
 	}
 }
 

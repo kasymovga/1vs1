@@ -42,22 +42,12 @@ vector GetCurrentFov()
 		if(zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
-	zoomdir = button_zoom;
-	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX) // do NOT use switchweapon here
-		zoomdir += button_attack2;
+	zoomdir = any_button_zoom;
 	if(spectatee_status > 0 || isdemo_flag)
-	{
-		if(spectatorbutton_zoom)
-			zoomdir = 0 + !zoomdir;
-			// do not even THINK about removing this 0
-			// _I_ know what I am doing
-			// fteqcc does not
-	}
+	if(spectatorbutton_zoom)
+		zoomdir = (zoomdir ? 0 : 1);
 
-	if(zoomdir)
-		zoomin_effect = 0;
-
-	if(zoomin_effect || camera_active)
+	if(camera_active)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
 	}
@@ -179,7 +169,9 @@ void CSQC_UpdateView(float w, float h)
 
 	dprint_load();
 	WaypointSprite_Load();
-
+	spectatee_status = getstati(STAT_SPECSTATUS);
+	spectatorbutton_zoom = spectatee_status & 256;
+	spectatee_status = spectatee_status & 255;
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);
 	else
@@ -229,9 +221,13 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	fov = cvar("fov");
-	if(button_zoom || fov <= 59.5)
+	any_button_zoom = button_zoom;
+	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX)
+		any_button_zoom += button_attack2;
+
+	if(any_button_zoom || fov <= 59.5)
 	{
-		if(!zoomscript_caught)
+		if(!button_zoom)
 		{
 			localcmd("+button4\n");
 			zoomscript_caught = 1;

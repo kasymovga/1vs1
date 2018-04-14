@@ -8,8 +8,6 @@ float g_balance_powerup_strength_force;
 
 .entity porto_current_in;
 .entity porto_current_out;
-.vector porto_v_angle; // holds "held" view angles
-.float porto_v_angle_held;
 .vector right_vector;
 
 void W_Porto_Success (void)
@@ -195,8 +193,6 @@ void spawnfunc_weapon_porto (void)
 
 float w_porto(float req)
 {
-	vector v_angle_save;
-
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -206,29 +202,6 @@ float w_porto(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(self.porto_v_angle_held)
-		{
-			if(!self.BUTTON_ATCK2)
-			{
-				self.porto_v_angle_held = 0;
-
-				ClientData_Touch(self);
-			}
-		}
-		else
-		{
-			if(self.BUTTON_ATCK2)
-			{
-				self.porto_v_angle = self.v_angle;
-				self.porto_v_angle_held = 1;
-
-				ClientData_Touch(self);
-			}
-		}
-		v_angle_save = self.v_angle;
-		if(self.porto_v_angle_held)
-			makevectors(self.porto_v_angle); // override the previously set angles
-
 		if (self.BUTTON_ATCK)
 		if (!self.porto_current_in)
 		if (!self.porto_forbidden)

@@ -344,9 +344,6 @@ void CL_Weaponentity_Think()
 			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE, akimbo_active);
 			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE, akimbo_active) - v0;
 		}
-		self.owner.stat_shotorg = compressShotOrigin(self.movedir);
-		self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
-
 		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
 		// check if an instant weapon switch occurred

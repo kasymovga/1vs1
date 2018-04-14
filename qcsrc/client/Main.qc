@@ -87,7 +87,6 @@ void Ent_ScoresInfo(float ignore);
 void Ent_ReadPlayerScore(float ignore);
 void Ent_ReadTeamScore(float ignore);
 void Ent_Nagger(float ignore);
-void Ent_ClientData(float ignore);
 void Ent_RandomSeed(float ignore);
 void Ent_Init(float ignore);
 
@@ -414,7 +413,6 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_CASING] = Ent_Casing;
 	ent_parsers[ENT_CLIENT_INIT] = Ent_Init;
 	ent_parsers[ENT_CLIENT_MAPVOTE] = Ent_MapVote;
-	ent_parsers[ENT_CLIENT_CLIENTDATA] = Ent_ClientData;
 	ent_parsers[ENT_CLIENT_RANDOMSEED] = Ent_RandomSeed;
 	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
 	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
@@ -546,7 +544,7 @@ float CSQC_ConsoleCommand(string strMessage)
 			return false;
 		}
 		button_zoom = 1;
-		return true;
+		return false;
 	} else if(strCmd == "-button4") { // zoom
 		if(ignore_minus_zoom)
 		{
@@ -554,7 +552,7 @@ float CSQC_ConsoleCommand(string strMessage)
 			return false;
 		}
 		button_zoom = 0;
-		return true;
+		return false;
 	} else if(strCmd == "+button3") { // secondary
 		button_attack2 = 1;
 		return false;
@@ -950,45 +948,6 @@ void Net_Reset()
 {
 }
 
-void Ent_ClientData(float ignore)
-{
-	float f;
-	float newspectatee_status;
-
-	f = ReadByte();
-
-	//sb_showscores_force = (f & 1);
-
-	if(f & 2)
-	{
-		newspectatee_status = ReadByte();
-		if(newspectatee_status == player_localentnum)
-			newspectatee_status = -1; // observing
-	}
-	else
-		newspectatee_status = 0;
-
-	spectatorbutton_zoom = (f & 4);
-
-	if(f & 8)
-	{
-		angles_held_status = 1;
-		angles_held_x = ReadAngle();
-		angles_held_y = ReadAngle();
-		angles_held_z = 0;
-	}
-	else
-		angles_held_status = 0;
-
-	if(newspectatee_status != spectatee_status)
-	{
-		// clear race stuff
-		race_laptime = 0;
-		race_checkpointtime = 0;
-	}
-	spectatee_status = newspectatee_status;
-}
-
 void Ent_Nagger(float ignore)
 {
 	float nags, i, j, b, f;
@@ -1327,8 +1286,6 @@ void Net_ReadRace()
 
 void Net_ReadSpawn()
 {
-	zoomin_effect = 1;
-	current_viewzoom = 0.6;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

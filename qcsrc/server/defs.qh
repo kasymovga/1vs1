@@ -519,8 +519,6 @@ void SUB_UseTargets();
 .void() reset; // if set, an entity is reset using this
 .void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 
-void ClientData_Touch(entity e);
-
 vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
 // the QC VM sucks
@@ -545,8 +543,6 @@ float servertime, serverprevtime, serverframetime;
 .float floodcontrol_chattell;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
-
-.float stat_shotorg; // networked stat for trueaim HUD
 
 string matchid;
 .string noise4;
