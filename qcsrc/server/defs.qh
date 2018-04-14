@@ -562,7 +562,6 @@ float client_cefc_accumulatortime;
 // #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
 
 .float spectatee_status;
-.float zoomstate;
 .float restriction;
 
 .entity clientdata;
