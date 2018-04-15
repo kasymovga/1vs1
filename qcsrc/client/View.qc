@@ -227,7 +227,8 @@ void CSQC_UpdateView(float w, float h)
 
 	if(any_button_zoom || fov <= 59.5)
 	{
-		if(!button_zoom)
+		if not(zoomscript_caught)
+		if not(button_zoom)
 		{
 			localcmd("+button4\n");
 			zoomscript_caught = 1;
