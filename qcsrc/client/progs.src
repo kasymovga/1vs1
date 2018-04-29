@@ -39,7 +39,7 @@ location_request.qh
 dlc.qh
 ../common/dlc.qh
 ../client-server/nadgets.qh
-../common/ui.qh
+../client-menu/ui.qh
 gamestatus.qh
 weaponselect.qh
 main.qh
@@ -112,7 +112,7 @@ dlc.qc
 ../common/dlc.qc
 radio.qc
 ../client-server/rune.qc
-../common/ui.qc
+../client-menu/ui.qc
 gamestatus.qc
 ../client-server/warpzonelib/anglestransform.qc
 ../client-server/warpzonelib/common.qc
