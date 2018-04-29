@@ -103,11 +103,10 @@ void WarpZone_Teleported_Read(float isnew)
 	if(!isnew)
 		return;
 	self.warpzone_transform = v;
-	WarpZone_FixView_lasttime = time;
 	if(warpzone_newstyle) {
 		setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES)));
 		CL_RotateMoves(v);
-	} else if (!WarpZone_FixView_lastwarp) {
+	} else {
 		input_angles = WarpZone_TransformVAngles(self, input_angles);
 		R_SetView(VF_ANGLES, input_angles);
 		R_SetView(VF_CL_VIEWANGLES, input_angles);
@@ -120,7 +119,6 @@ float warpzone_fixingview_drawexteriormodel;
 //float warpzone_fixingview_forwardspeed;
 void WarpZone_Inside()
 {
-	WarpZone_FixView_lasttime = time;
 	if(warpzone_fixingview || !warpzone_newstyle)
 		return;
 	warpzone_fixingview = 1;
@@ -196,8 +194,7 @@ void WarpZone_FixView_real()
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
-		if (warpzone_newstyle || e != WarpZone_FixView_lastwarp)
-			ang = WarpZone_TransformVAngles(e, ang);
+		ang = WarpZone_TransformVAngles(e, ang);
 		WarpZone_Inside();
 	}
 	else
@@ -237,7 +234,6 @@ void WarpZone_FixView_real()
 		pmove_org = org - vo;
 		input_angles = ang;
 	}
-	WarpZone_FixView_lastwarp = e;
 }
 
 void WarpZone_InitHook() {
