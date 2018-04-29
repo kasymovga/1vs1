@@ -1,7 +1,6 @@
 .float restart_jump;
 .entity player_physic;
 
-float sv_doublejump;
 float speedmeter;
 float g_nick_flood_penalty_yellow;
 float g_nick_flood_penalty_red;
@@ -38,17 +37,6 @@ void Physic_OnJumpHook()
 		PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 	self.restart_jump = -1; // restart jump anim next time
 	self.oldvelocity_z = physic_velocity_z;
-
-	if(sv_doublejump)
-	{
-		// we're moving upwards at physic_velocity_z
-		// only allow jumping after we got 3 units upwards
-		// so we for sure leave the FL_ONGROUND check
-		//
-		// but as this sucks because of factoring in gravity, we'll just do it
-		// for 4 units, and constant velocity
-		self.doublejump_nextjumptime = time + 4 / max(40, physic_velocity_z); // max 0.1s blocking of jumps
-	}
 }
 
 void Physic_CheckWaterJumpHook()
@@ -115,15 +103,6 @@ void Physic_CheckGroundHook()
 	self.flags = physic_flags;
 	if(IsFlying(self))
 		self.wasFlying = 1;
-
-	if(physic_is_player)
-	if(sv_doublejump)
-	{
-		physic_flags &~= FL_ONGROUND;
-		tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-		if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
-			physic_flags |= FL_ONGROUND;
-	}
 }
 
 void Physic_OnCrouchHook()
@@ -462,7 +441,6 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_nick_flood_penalty_red);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
-	CACHE_CVAR(sv_doublejump);
 	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
 }
