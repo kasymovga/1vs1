@@ -383,14 +383,10 @@ set g_walljump_smokeparticle_num 10 "ThexDarksider <3 Akari"
 set sv_gametypevote ""
 set sv_gametypevote_time 10
 set g_dodging 0 "Master switch for dodging"
-set g_dodging_wall_dodging 0 "set to 1 to allow dodging off walls. 0 to disable"
 set g_dodging_delay 0.5 "determines how long a player has to wait to be able to dodge again after dodging"
 set g_dodging_frozen_factor 0.5
 set g_dodging_up_speed 200 "the jump velocity of the dodge"
 set g_dodging_horiz_speed 400 "the horizontal velocity of the dodge"
-set g_dodging_ramp_time 0.1 "a ramp so that the horizontal part of the dodge is added smoothly (seconds)"
-set g_dodging_height_threshold 10 "the maximum height above ground where to allow dodging"
-set g_dodging_wall_distance_threshold 10 "the maximum distance from a wall that still allows dodging"
 set g_dodging_sound 1 "if 1 dodging makes a sound. if 0 dodging is silent"
 
 set sv_retard_nets ""

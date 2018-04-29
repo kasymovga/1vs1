@@ -8,12 +8,6 @@ float g_nick_flood_penalty_red;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float sv_csqc_physic;
-float g_walljump;
-float g_walljump_delay;
-float g_walljump_force;
-float g_walljump_smokeparticle_num;
-float g_walljump_velocity_xy_factor;
-float g_walljump_velocity_z_factor;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -216,6 +210,9 @@ float Physic_MaxSpeedMod()
 
 .float last_physic_ladder;
 .float last_can_use_jetpack;
+.float buttons_old;
+.vector v_angle_old;
+.vector movement_old;
 void Physic_FrameEndHook()
 {
 	self.last_physic_ladder = physic_ladder;
@@ -224,126 +221,6 @@ void Physic_FrameEndHook()
 
 .float() PlayerPhysplug;
 
-.vector movement_old;
-.float buttons_old;
-.vector v_angle_old;
-
-vector PlayerTouchWall ()
-{
-	local float dist, max_normal;
-	local vector start, end;
-	dist = 10;
-	max_normal = 0.2;
-	start = self.origin;
-	end = start + v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
-	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		return trace_plane_normal;
-	end = start - v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
-	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		return trace_plane_normal;
-	end = start + v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
-	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		return trace_plane_normal;
-	end = start - v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
-	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		return trace_plane_normal;
-	return '0 0 0';
-}
-
-float dodging_PlayerPhysics()
-{
-	float common_factor;
-	float new_velocity_gain;
-	float velocity_difference;
-	float clean_up_and_do_nothing;
-	float forcemod;
-	forcemod = 1;
-
-	new_velocity_gain = 0;
-	clean_up_and_do_nothing = 0;
-
-	if(!g_dodging)
-		return 0;
-
-	// when swimming, no dodging allowed..
-	if (self.waterlevel >= WATERLEVEL_SWIMMING)
-		clean_up_and_do_nothing = 1;
-
-	if (clean_up_and_do_nothing != 0) {
-		self.dodging_action = 0;
-		self.dodging_direction_x = 0;
-		self.dodging_direction_y = 0;
-		return 0;
-	}
-
-	// make sure v_up, v_right and v_forward are sane
-	makevectors(self.angles);
-
-	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
-	// will be called ramp_time/frametime times = 2 times. so, we need to
-	// add 0.5 * the total speed each frame until the dodge action is done..
-	common_factor = frametime / g_dodging_ramp_time;
-
-	// if ramp time is smaller than frametime we get problems ;D
-	if (common_factor > 1)
-		common_factor = 1;
-
-	new_velocity_gain = self.dodging_velocity_gain - (common_factor * g_dodging_horiz_speed * forcemod);
-	if (new_velocity_gain < 0)
-		new_velocity_gain = 0;
-
-	velocity_difference = self.dodging_velocity_gain - new_velocity_gain;
-
-	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
-	if (self.dodging_action == 1) {
-		//disable jump key during dodge accel phase
-		if (self.movement_z > 0) self.movement_z = 0;
-
-		physic_velocity =
-			  physic_velocity
-			+ ((self.dodging_direction_y * velocity_difference) * v_right)
-			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
-
-		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;
-	}
-
-	// the up part of the dodge is a single shot action
-	if (self.dodging_single_action == 1) {
-		self.flags &~= FL_ONGROUND;
-
-		physic_velocity =
-			  physic_velocity
-			+ (g_dodging_up_speed * forcemod * v_up);
-
-		if (g_dodging_sound == 1)
-			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-
-		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
-
-		self.dodging_single_action = 0;
-	}
-
-	// are we done with the dodging ramp yet?
-	if((self.dodging_action == 1) && ((time - self.last_dodging_time) > g_dodging_ramp_time))
-	{
-		// reset state so next dodge can be done correctly
-		self.dodging_action = 0;
-		self.dodging_direction_x = 0;
-		self.dodging_direction_y = 0;
-	}
-
-	return 0;
-}
-
-.float lastwj;
 void Physic_FrameBeginHook()
 {
 	float buttons;
@@ -443,36 +320,6 @@ void Physic_FrameBeginHook()
 		physic_movetype = self.movetype;
 	}
 
-	//TODO: move to common part
-	if (g_walljump)
-	if not(physic_cantjump)
-	if (physic_is_player)
-	if (physic_movetype == MOVETYPE_WALK)
-	if not(self.hook.state)
-	if (physic_button_jump)
-	if not(physic_flags & FL_ONGROUND)
-	if (time - self.lastwj > g_walljump_delay)
-	{
-		local vector plane_normal;
-		plane_normal = PlayerTouchWall ();
-		if (plane_normal != '0 0 0')
-		{
-			self.lastwj = time;
-			float wj_force = g_walljump_force;
-			float wj_xy_factor = g_walljump_velocity_xy_factor;
-			float wj_z_factor = g_walljump_velocity_z_factor;
-			physic_velocity_x += plane_normal_x * wj_force;
-			physic_velocity_x /= wj_xy_factor;
-			physic_velocity_y += plane_normal_y * wj_force;
-			physic_velocity_y /= wj_xy_factor;
-			physic_velocity_z = sv_jumpvelocity * wj_z_factor;
-			if (physic_crouch) physic_velocity_z *= -1; // thanks Synap for the idea
-			self.oldvelocity = physic_velocity;
-			pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
-			PlayerSound (playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-		}
-	}
-
 
 	if (!self.fixangle)
 	{
@@ -481,7 +328,6 @@ void Physic_FrameBeginHook()
 		self.angles_z = 0;
 	}
 	self.items &~= IT_USING_JETPACK;
-	dodging_PlayerPhysics();
 
 	physic_button_crouch = self.BUTTON_CROUCH;
 }
@@ -595,6 +441,17 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_slicksurfaces);
 	CACHE_CVAR(sv_slicksurfaces_allowjump);
 	CACHE_CVAR(sv_pogostick);
+	CACHE_CVAR(sv_disable_crouch);
+	CACHE_CVAR(g_walljump);
+	CACHE_CVAR(g_walljump_delay);
+	CACHE_CVAR(g_walljump_force);
+	CACHE_CVAR(g_walljump_velocity_xy_factor);
+	CACHE_CVAR(g_walljump_velocity_z_factor);
+	CACHE_CVAR(g_dodging);
+	CACHE_CVAR(g_dodging_delay);
+	CACHE_CVAR(g_dodging_frozen_factor);
+	CACHE_CVAR(g_dodging_horiz_speed);
+	CACHE_CVAR(g_dodging_up_speed);
 	if (cvar("sv_csqc_physic"))
 		PhysicEnableCSQC();
 
@@ -606,14 +463,8 @@ void PhysicReadCvars()
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(sv_doublejump);
-	CACHE_CVAR(sv_disable_crouch);
-	CACHE_CVAR(g_walljump);
-	CACHE_CVAR(g_walljump_delay);
-	CACHE_CVAR(g_walljump_force);
+	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
-	CACHE_CVAR(g_walljump_velocity_xy_factor);
-	CACHE_CVAR(g_walljump_velocity_z_factor);
-	dodging_ReadCvars();
 }
 
 float Physic_SendEntity(entity to, float sf)
@@ -621,6 +472,7 @@ float Physic_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
 	entity oldself = self;
 	self = self.owner;
+	float dodging_flags;
 	if not(sf & 3)
 	{
 		if (self.classname == "player") sf |= 8;
@@ -633,6 +485,17 @@ float Physic_SendEntity(entity to, float sf)
 		if (self.movetype != MOVETYPE_WALK) sf |= 1024;
 		if (self.gravity && self.gravity != 1) sf |= 2048;
 		if (self.teleport_time - time >= 0) sf |= 4096;
+		if (self.lastwj > 0) sf |= 8192;
+		if (g_dodging) {
+			dodging_flags = 0;
+			if (self.last_dodging_time > 0) dodging_flags |= 1;
+			if (self.last_FORWARD_KEY_time > 0) dodging_flags |= 2;
+			if (self.last_BACKWARD_KEY_time > 0) dodging_flags |= 4;
+			if (self.last_LEFT_KEY_time > 0) dodging_flags |= 8;
+			if (self.last_RIGHT_KEY_time > 0) dodging_flags |= 16;
+			if (dodging_flags)
+				sf |= 16384;
+		}
 	}
 	else
 		sf = sf & 7;
@@ -669,8 +532,23 @@ float Physic_SendEntity(entity to, float sf)
 				+ (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
-				+ (sv_gameplayfix_q2airaccelerate ? 16 :0);
+				+ (sv_gameplayfix_q2airaccelerate ? 16 : 0)
+				+ (g_walljump ? 32 : 0)
+				+ (g_dodging ? 64 : 0)
+				;
 		WriteByte(MSG_ENTITY, switches);
+		if (g_walljump) {
+			WriteCoord(MSG_ENTITY, g_walljump_delay);
+			WriteCoord(MSG_ENTITY, g_walljump_force);
+			WriteCoord(MSG_ENTITY, g_walljump_velocity_xy_factor);
+			WriteCoord(MSG_ENTITY, g_walljump_velocity_z_factor);
+		}
+		if (g_dodging) {
+			WriteCoord(MSG_ENTITY, g_dodging_horiz_speed);
+			WriteCoord(MSG_ENTITY, g_dodging_up_speed);
+			WriteCoord(MSG_ENTITY, g_dodging_delay);
+			WriteCoord(MSG_ENTITY, g_dodging_frozen_factor);
+		}
 	}
 	if (sf & 2)
 	{
@@ -718,6 +596,16 @@ float Physic_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.gravity);
 		if (sf & 4096)
 			WriteCoord(MSG_ENTITY, self.teleport_time - time);
+		if (sf & 8192)
+			WriteCoord(MSG_ENTITY, self.lastwj);
+		if (sf & 16384) {
+			WriteByte(MSG_ENTITY, dodging_flags);
+			if (dodging_flags & 1) WriteCoord(MSG_ENTITY, self.last_dodging_time);
+			if (dodging_flags & 2) WriteCoord(MSG_ENTITY, self.last_FORWARD_KEY_time);
+			if (dodging_flags & 4) WriteCoord(MSG_ENTITY, self.last_BACKWARD_KEY_time);
+			if (dodging_flags & 8) WriteCoord(MSG_ENTITY, self.last_LEFT_KEY_time);
+			if (dodging_flags & 16) WriteCoord(MSG_ENTITY, self.last_RIGHT_KEY_time);
+		}
 
 	}
 	self = oldself;

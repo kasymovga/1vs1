@@ -102,6 +102,122 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 	physic_velocity += accelspeed * acceldir;
 }
 
+// these are used to store the last key press time for each of the keys..
+.float lastkeys;
+.float last_FORWARD_KEY_time;
+.float last_BACKWARD_KEY_time;
+.float last_LEFT_KEY_time;
+.float last_RIGHT_KEY_time;
+
+void dodging() {
+	vector tap_direction;
+	tap_direction_x = 0;
+	tap_direction_y = 0;
+	float dodge_detected;
+
+	if (physic_deadflag == DEAD_FREEZE) {
+		if not(g_dodging_frozen_factor)
+			return;
+	} else if (physic_deadflag)
+		return;
+
+	dodge_detected = 0;
+    float dodging_timeout = 0.2;
+
+	// first check if the last dodge is far enough back in time so we can dodge again
+	if (self.last_dodging_time > 0)
+		return;
+
+	if not(physic_flags & FL_ONGROUND)
+		return;
+
+	if (physic_movement_x > 0) {
+		// is this a state change?
+		if (!(self.lastkeys & KEY_FORWARD)) {
+			if (self.last_FORWARD_KEY_time > 0)	{
+				tap_direction_x = 1.0;
+				dodge_detected = 1;
+			}
+ 			self.last_FORWARD_KEY_time = dodging_timeout;
+ 		}
+		self.lastkeys |= KEY_FORWARD;
+	} else
+		self.lastkeys &~= KEY_FORWARD;
+
+	if (physic_movement_x < 0) {
+		// is this a state change?
+ 		if (!(self.lastkeys & KEY_BACKWARD)) {
+			tap_direction_x = -1.0;
+			if (self.last_BACKWARD_KEY_time > 0) {
+				dodge_detected = 1;
+			}
+ 			self.last_BACKWARD_KEY_time = dodging_timeout;
+ 		}
+		self.lastkeys |= KEY_BACKWARD;
+	} else
+		self.lastkeys &~= KEY_BACKWARD;
+
+	if (physic_movement_y > 0) {
+		// is this a state change?
+		if (!(self.lastkeys & KEY_RIGHT)) {
+			tap_direction_y = 1.0;
+			if (self.last_RIGHT_KEY_time > 0) {
+				dodge_detected = 1;
+			}
+ 			self.last_RIGHT_KEY_time = dodging_timeout;
+ 		}
+		self.lastkeys |= KEY_RIGHT;
+	} else
+		self.lastkeys &~= KEY_RIGHT;
+
+	if (physic_movement_y < 0) {
+		// is this a state change?
+		if (!(self.lastkeys & KEY_LEFT)) {
+			tap_direction_y = -1.0;
+			if (self.last_LEFT_KEY_time > 0) {
+				dodge_detected = 1;
+			}
+ 			self.last_LEFT_KEY_time = dodging_timeout;
+ 		}
+		self.lastkeys |= KEY_LEFT;
+	} else
+		self.lastkeys &~= KEY_LEFT;
+
+	if (dodge_detected == 1) {
+		vector dodge_velocity;
+		if (physic_waterlevel >= WATERLEVEL_SWIMMING)
+			return;
+
+		makevectors(self.angles);
+
+		self.flags &~= FL_ONGROUND;
+
+		if (tap_direction_x)
+		if (tap_direction_y)
+			tap_direction *= sqrt(0.5);
+
+		dodge_velocity = v_forward * g_dodging_horiz_speed * tap_direction_x
+				+ v_right * g_dodging_horiz_speed * tap_direction_y
+				+ g_dodging_up_speed * v_up;
+
+		if (physic_deadflag == DEAD_FREEZE)
+			dodge_velocity *= g_dodging_frozen_factor;
+
+		physic_velocity_x = dodge_velocity_x;
+		physic_velocity_y = dodge_velocity_y;
+		physic_velocity_z += dodge_velocity_z;
+#ifdef SVQC
+		if (g_dodging_sound)
+			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+
+		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
+#endif
+		self.last_dodging_time = g_dodging_delay;
+
+	}
+	return;
+}
+
 /*
 =============
 PlayerJump
@@ -109,6 +225,36 @@ PlayerJump
 When you press the jump key
 =============
 */
+vector PlayerTouchWall ()
+{
+	local float dist, max_normal;
+	local vector start, end;
+	dist = 10;
+	max_normal = 0.2;
+	start = self.origin;
+	end = start + v_forward * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	end = start - v_forward * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	end = start + v_right * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	end = start - v_right * 100;
+	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		return trace_plane_normal;
+	return '0 0 0';
+}
+
 
 void PlayerJump (void)
 {
@@ -123,6 +269,39 @@ void PlayerJump (void)
 
 		return;
 	}
+	if(physic_cantjump)
+		return;
+
+	if (physic_movetype != MOVETYPE_WALK)
+		return;
+
+	if (g_walljump)
+	//if not(self.hook.state)
+	if not(physic_flags & FL_ONGROUND)
+	if (self.lastwj <= 0)
+	{
+		makevectors(self.angles);
+		local vector plane_normal;
+		plane_normal = PlayerTouchWall ();
+		if (plane_normal != '0 0 0')
+		{
+			self.lastwj = g_walljump_delay;
+			float wj_force = g_walljump_force;
+			float wj_xy_factor = g_walljump_velocity_xy_factor;
+			float wj_z_factor = g_walljump_velocity_z_factor;
+			physic_velocity_x += plane_normal_x * wj_force;
+			physic_velocity_x /= wj_xy_factor;
+			physic_velocity_y += plane_normal_y * wj_force;
+			physic_velocity_y /= wj_xy_factor;
+			physic_velocity_z = sv_jumpvelocity * wj_z_factor;
+			if (physic_crouch) physic_velocity_z *= -1; // thanks Synap for the idea
+			#ifdef SVQC
+			pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
+			PlayerSound (playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			#endif
+		}
+	}
+
 
 	if not(physic_flags & FL_ONGROUND)
 	if not((physic_flags & FL_SLICK) && sv_slicksurfaces_allowjump)
@@ -131,9 +310,6 @@ void PlayerJump (void)
 	if(!sv_pogostick)
 		if (!(physic_flags & FL_JUMPRELEASED))
 			return;
-
-	if(physic_cantjump)
-		return;
 
 	if(!(physic_lastflags & FL_ONGROUND) && (physic_flags & FL_ONGROUND))
 		Physic_LandingHook();
@@ -182,6 +358,22 @@ void PlayerPhysics()
 {
 	local vector wishvel, wishdir, v;
 	local float wishspeed, f, maxspd_mod, maxairspd, airaccel;
+	if (g_dodging) {
+		if (self.lastwj > 0)
+			self.lastwj -= frametime;
+
+		if (self.last_FORWARD_KEY_time > 0)
+			self.last_FORWARD_KEY_time -= frametime;
+		if (self.last_BACKWARD_KEY_time > 0)
+			self.last_BACKWARD_KEY_time -= frametime;
+		if (self.last_LEFT_KEY_time > 0)
+			self.last_LEFT_KEY_time -= frametime;
+		if (self.last_RIGHT_KEY_time > 0)
+			self.last_RIGHT_KEY_time -= frametime;
+	}
+	
+	if (self.last_dodging_time > 0)
+		self.last_dodging_time -= frametime;
 	
 	Physic_FrameBeginHook();
     if(physic_plug)
@@ -241,8 +433,11 @@ void PlayerPhysics()
 	{
 		if (physic_button_jump)
 			PlayerJump ();
-		else
+		else {
 			physic_flags |= FL_JUMPRELEASED;
+			if (g_dodging)
+				dodging();
+		}
 
 		if (physic_waterlevel == WATERLEVEL_SWIMMING)
 			CheckWaterJump ();
