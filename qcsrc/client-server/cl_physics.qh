@@ -29,6 +29,16 @@ float g_jetpack_antigravity;
 float g_jetpack_maxspeed_side;
 float g_jetpack_maxspeed_up;
 float sv_disable_crouch;
+float g_walljump;
+float g_walljump_delay;
+float g_walljump_force;
+float g_walljump_velocity_xy_factor;
+float g_walljump_velocity_z_factor;
+float g_dodging;
+float g_dodging_horiz_speed;
+float g_dodging_up_speed;
+float g_dodging_delay;
+float g_dodging_frozen_factor;
 
 float physic_deadflag;
 float physic_cantjump;
@@ -73,5 +83,7 @@ var float() physic_plug;
 .vector stand_mins;
 .vector stand_maxs;
 .vector stand_view_ofs;
+.float lastwj;
+.float last_dodging_time;
 
 const var float() physic_plug_null;

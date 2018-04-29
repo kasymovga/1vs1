@@ -205,6 +205,12 @@ float stairsmoothz;
 .vector pmove_origin;
 .vector pmove_velocity;
 float was_teleported;
+float physic_lastwj;
+float physic_last_dodging;
+float physic_last_FORWARD_KEY_time;
+float physic_last_BACKWARD_KEY_time;
+float physic_last_RIGHT_KEY_time;
+float physic_last_LEFT_KEY_time;
 vector CSQCPhysic_SetCamera()
 {
 	vector v;
@@ -234,6 +240,15 @@ vector CSQCPhysic_SetCamera()
 			self.view_ofs = self.stand_view_ofs;
 		}
 		
+		self.lastwj = physic_lastwj;
+		if (g_dodging) {
+			self.last_dodging_time = physic_last_dodging;
+			self.last_FORWARD_KEY_time = physic_last_FORWARD_KEY_time;
+			self.last_BACKWARD_KEY_time = physic_last_BACKWARD_KEY_time;
+			self.last_RIGHT_KEY_time = physic_last_RIGHT_KEY_time;
+			self.last_LEFT_KEY_time = physic_last_LEFT_KEY_time;
+			self.lastkeys = getstatf(STAT_PRESSED_KEYS);
+		}
 		for (i = servercommandframe + 1; i <= n; i++)
 		{
 			if not(RetrieveMovementFrame(i))
@@ -340,6 +355,21 @@ void Ent_Physic(float isnew)
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
 		sv_gameplayfix_q2airaccelerate = switches & 16;
+		g_walljump = switches & 32;
+		g_dodging = switches & 64;
+		if (g_walljump) {
+			g_walljump_delay = ReadCoord();
+			g_walljump_force = ReadCoord();
+			g_walljump_velocity_xy_factor = ReadCoord();
+			g_walljump_velocity_z_factor = ReadCoord();
+		}
+		if (g_dodging) {
+			g_dodging_horiz_speed = ReadCoord();
+			g_dodging_up_speed = ReadCoord();
+			g_dodging_delay = ReadCoord();
+			g_dodging_frozen_factor = ReadCoord();
+		}
+			
 	}
 	else if not(self.cnt)
 	{
@@ -414,5 +444,25 @@ void Ent_Physic(float isnew)
 			was_teleported = TRUE;
 		} else
 			physic_start_teleport_time = -1;
+
+		if (f & 8192) {
+			physic_lastwj = ReadCoord();
+		} else
+			physic_lastwj = 0;
+
+		if (f & 16384) {
+			float dodging_flags = ReadByte();
+			if (dodging_flags & 1) physic_last_dodging = ReadCoord();
+			if (dodging_flags & 2) physic_last_FORWARD_KEY_time = ReadCoord();
+			if (dodging_flags & 4) physic_last_BACKWARD_KEY_time = ReadCoord();
+			if (dodging_flags & 8) physic_last_LEFT_KEY_time = ReadCoord();
+			if (dodging_flags & 16) physic_last_RIGHT_KEY_time = ReadCoord();
+		} else if (g_dodging) {
+			physic_last_dodging = 0;
+			physic_last_FORWARD_KEY_time = 0;
+			physic_last_BACKWARD_KEY_time = 0;
+			physic_last_LEFT_KEY_time = 0;
+			physic_last_RIGHT_KEY_time = 0;
+		}
 	}
 }

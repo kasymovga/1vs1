@@ -109,7 +109,6 @@ walkietalkie.qh
 hat.qh
 score_damage.qh
 
-dodging.qh
 miscfunctions.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
@@ -275,8 +274,6 @@ clanarena.qc
 menu.qc
 
 gametypevote.qc
-
-dodging.qc
 
 progressbar.qc
 
