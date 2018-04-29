@@ -15,6 +15,10 @@ void spawnfunc_info_null (void)
 
 void setanim(entity e, vector anim, float looping, float override, float restart)
 {
+	if (g_akimbo_animation_shift)
+	if (Akimbo_Active(e))
+		anim_x = anim_x + g_akimbo_animation_shift;
+
 	if (anim_x == e.animstate_startframe)
 	if (anim_y == e.animstate_numframes)
 	if (anim_z == e.animstate_framerate)

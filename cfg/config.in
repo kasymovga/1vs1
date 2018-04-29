@@ -187,6 +187,8 @@ set g_balance_campingrifle_swap_buttons 0
 set sv_disable_crouch 0
 set g_pickup_drop_backpack 0
 set g_akimbo_weapons "laser"
+set g_akimbo_use_left_hand 0
+set g_akimbo_use_left_hand_rotate "0 0 0"
 set g_powerup_strength_akimbo 0
 set g_pinata_drop_all 0
 set sv_walkietalkie ""

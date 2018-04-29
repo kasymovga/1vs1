@@ -21,6 +21,7 @@ vector sv_qcanimation_melee2_morph2angles;
 vector sv_qcanimation_melee2_morph1origin;
 vector sv_qcanimation_melee2_morph2origin;
 float sv_qcweaponanimation;
+float g_akimbo_use_left_hand;
 
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
@@ -552,20 +553,25 @@ void CL_ExteriorWeaponentity_dlc_reset() {
 		self.model = "";
 
 	entity ao = Akimbo_Owner(self.owner);
+	float akimbo_weapon = (Akimbo_Active(self.owner) == 2);
 	if((tag_found = gettagindex(ao, "tag_weapon")))
 	{
 		self.tag_index = tag_found;
 		self.tag_entity = ao;
 	}
-	else {
+	else if (akimbo_weapon && g_akimbo_use_left_hand) {
+		if (akimbo_weapon)
+			setattachment(self, ao, "bip01 l hand");
+
+		self.angles = stov(cvar_string("g_akimbo_use_left_hand_rotate"));
+	} else {
 		setattachment(self, ao, "bip01 r hand");
+		if (akimbo_weapon)
+			setorigin(self, '0 20 0');
 	}
 	// if that didn't find a tag, hide the exterior weapon model
 	if (!self.tag_index)
 		self.model = "";
-
-	if (Akimbo_Active(self.owner) == 2)
-		setorigin(self, '0 20 0');
 }
 
 void CL_ExteriorWeaponentity_Think()
@@ -1091,6 +1097,7 @@ void W_Init()
 	CACHE_CVAR(sv_qcweaponanimation);
 	CACHE_CVAR(g_weaponspeedfactor);
 	CACHE_CVAR(g_weaponratefactor);
+	CACHE_CVAR(g_akimbo_use_left_hand);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));

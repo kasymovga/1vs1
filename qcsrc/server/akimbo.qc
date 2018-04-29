@@ -139,6 +139,7 @@ void Akimbo_Init()
 	if not(g_powerup_strength_akimbo)
 		return;
 
+	CACHE_CVAR(g_akimbo_animation_shift);
 	Akimbo_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Akimbo_PlayerClear;
 }
