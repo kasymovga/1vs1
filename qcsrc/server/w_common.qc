@@ -227,7 +227,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 
 	vector v = self.origin + normalize(vel) * maxdist;
 	traceline(self.origin, v, MOVE_NORMAL, self);
-	traceline(v, trace_endpos, MOVE_NORMAL, self);
+	traceline(trace_endpos, self.origin, MOVE_NORMAL, self);
 
 	if(trace_fraction == 1) // 1: we never got out of solid
 		return 0;
