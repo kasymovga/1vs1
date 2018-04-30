@@ -317,12 +317,6 @@ void GameCommand(string command)
 		return;
 	}
 
-	if(cmd == "debug_shotorg")
-	{
-		debug_shotorg = stov(argv(1));
-		return;
-	}
-
 	if(cmd == "gettaginfo") if(argc >= 4)
 	{
 		e = spawn();

@@ -100,9 +100,6 @@ void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, 
 	vecs_visual = ent_orig.weaponentity.shotorg_visual;
 	vecs_visual_y = -vecs_visual_y;
 
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
-
 	dv = v_right * vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs;
 

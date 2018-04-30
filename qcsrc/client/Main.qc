@@ -607,55 +607,6 @@ float CSQC_ConsoleCommand(string strMessage)
 }
 
 .vector view_ofs;
-entity debug_shotorg;
-void ShotOrg_Draw()
-{
-	self.origin = view_origin + view_forward * self.view_ofs_x + view_right * self.view_ofs_y + view_up * self.view_ofs_z;
-	self.angles = view_angles;
-	self.angles_x = -self.angles_x;
-	if not(self.cnt)
-		R_AddEntity(self);
-}
-void ShotOrg_Draw2D()
-{
-	vector coord2d_topleft, coord2d_topright, coord2d;
-	string s;
-	vector fs;
-
-	s = vtos(self.view_ofs);
-	s = substring(s, 1, strlen(s) - 2);
-	if(tokenize_console(s) == 3)
-		s = strcat(argv(0), " ", argv(1), " ", argv(2));
-
-	coord2d_topleft = project_3d_to_2d(self.origin + view_up * 4 - view_right * 4);
-	coord2d_topright = project_3d_to_2d(self.origin + view_up * 4 + view_right * 4);
-
-	fs = '1 1 0' * ((coord2d_topright_x - coord2d_topleft_x) / stringwidth(s, FALSE));
-
-	coord2d = coord2d_topleft;
-	if(fs_x < 8)
-	{
-		coord2d_x += (coord2d_topright_x - coord2d_topleft_x) * (1 - 8 / fs_x) * 0.5;
-		fs = '8 8 0';
-	}
-	coord2d_y -= fs_y;
-	coord2d_z = 0;
-	drawstring(coord2d, s, fs, '1 1 1', 1, 0);
-}
-
-void ShotOrg_Spawn()
-{
-	debug_shotorg = spawn();
-	debug_shotorg.draw = ShotOrg_Draw;
-	debug_shotorg.draw2d = ShotOrg_Draw2D;
-	debug_shotorg.draw2dflag = 1;
-	debug_shotorg.renderflags = RF_VIEWMODEL;
-	debug_shotorg.effects = EF_FULLBRIGHT;
-	precache_model("models/shotorg_adjuster.md3");
-	setmodel(debug_shotorg, "models/shotorg_adjuster.md3");
-	debug_shotorg.scale = 2;
-	debug_shotorg.view_ofs = '25 8 -8';
-}
 
 void GameCommand(string msg)
 {
@@ -701,49 +652,6 @@ void GameCommand(string msg)
 		blurtest_power = stof(argv(3));
 	}
 #endif
-	else if(cmd == "shotorg_move") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs + stov(argv(1));
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_movez") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs + stof(argv(1)) * (debug_shotorg.view_ofs * (1 / debug_shotorg.view_ofs_x)); // closer/farther, same xy pos
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_set") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = stov(argv(1));
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_setz") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs * (stof(argv(1)) / debug_shotorg.view_ofs_x); // closer/farther, same xy pos
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_toggle_hide") {
-		if(debug_shotorg)
-		{
-			debug_shotorg.cnt = !debug_shotorg.cnt;
-		}
-	}
-	else if(cmd == "shotorg_end") {
-		if(debug_shotorg)
-		{
-			print(vtos(debug_shotorg.view_ofs), "\n");
-			remove(debug_shotorg);
-			debug_shotorg = world;
-		}
-		localcmd("sv_cmd debug_shotorg\n");
-	}
 	else if(cmd == "sendcvar") {
 	}
 	else if(cmd == "handlevote") {

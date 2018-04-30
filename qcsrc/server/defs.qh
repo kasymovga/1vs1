@@ -518,8 +518,6 @@ void SUB_UseTargets();
 .void() reset; // if set, an entity is reset using this
 .void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 
-vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
-
 // the QC VM sucks
 #define BITXOR(v,b)        ((v) + (b) - 2 * ((v) & (b)))
 #define BITXOR_ASSIGN(v,b) ((v) += ((b) - 2 * ((v) & (b))))
