@@ -886,19 +886,6 @@ void spawnfunc_light (void)
 	remove(self);
 }
 
-float TryFile( string pFilename )
-{
-	local float lHandle;
-	dprint("TryFile(\"", pFilename, "\")\n");
-	lHandle = fopen( pFilename, FILE_READ );
-	if( lHandle != -1 ) {
-		fclose( lHandle );
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-};
-
 string GetGametype()
 {
 	return GametypeNameFromType(game);
