@@ -449,7 +449,13 @@ void Ent_Physic(float isnew)
 			physic_lastwj = ReadCoord();
 		} else
 			physic_lastwj = 0;
-
+		if (g_dodging) {
+			physic_last_dodging = 0;
+			physic_last_FORWARD_KEY_time = 0;
+			physic_last_BACKWARD_KEY_time = 0;
+			physic_last_LEFT_KEY_time = 0;
+			physic_last_RIGHT_KEY_time = 0;
+		}
 		if (f & 16384) {
 			float dodging_flags = ReadByte();
 			if (dodging_flags & 1) physic_last_dodging = ReadCoord();
@@ -457,12 +463,6 @@ void Ent_Physic(float isnew)
 			if (dodging_flags & 4) physic_last_BACKWARD_KEY_time = ReadCoord();
 			if (dodging_flags & 8) physic_last_LEFT_KEY_time = ReadCoord();
 			if (dodging_flags & 16) physic_last_RIGHT_KEY_time = ReadCoord();
-		} else if (g_dodging) {
-			physic_last_dodging = 0;
-			physic_last_FORWARD_KEY_time = 0;
-			physic_last_BACKWARD_KEY_time = 0;
-			physic_last_LEFT_KEY_time = 0;
-			physic_last_RIGHT_KEY_time = 0;
 		}
 	}
 }
