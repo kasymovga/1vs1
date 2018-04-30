@@ -883,7 +883,6 @@ void spawnfunc_worldspawn (void)
 
 void spawnfunc_light (void)
 {
-	//makestatic (self); // Who the f___ did that?
 	remove(self);
 }
 
