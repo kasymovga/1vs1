@@ -139,6 +139,7 @@ float sv_ip2country;
 float fov;
 float fov_zoomed;
 float isdemo_flag;
+float player_deadflag;
 float SetTeam(entity o, float Team);
 
 .entity sort_next;

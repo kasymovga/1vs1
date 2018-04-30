@@ -2229,7 +2229,7 @@ void Sbar_Draw (void)
 	sbar_fontsize = Sbar_GetFontsize(CVAR(sbar_fontsize));
 	sbar_fontsize_spec = Sbar_GetFontsize(CVAR(sbar_fontsize_spec));
 
-	if(getstati(STAT_PLAYER_STATE) == DEAD_FREEZE)
+	if(player_deadflag == DEAD_FREEZE)
 		drawfill('0 0 0', bottomright, '1 1 1', 0.4, DRAWFLAG_ADDITIVE);
 
 	if (intermission == 2) // map voting screen

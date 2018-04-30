@@ -411,7 +411,8 @@ void PlayerPhysics()
 	maxspd_mod = Physic_MaxSpeedMod();
 
 	// if dead, behave differently
-	if (physic_deadflag)
+	if (physic_deadflag != DEAD_NO)
+	if (physic_deadflag != DEAD_FREEZE)
 		goto end;
 
 	if(sv_slicksurfaces)

@@ -319,11 +319,7 @@ void SV_PlayerPhysics()
 	physic_flags = self.flags;
 	physic_velocity = self.velocity;
 	physic_cantjump = (PLAYER_DEAD(self) || (time < self.doublejump_nextjumptime));
-	if (PLAYER_REALLY_DEAD(self))
-		physic_deadflag = self.deadflag;
-	else
-		physic_deadflag = 0;
-
+	physic_deadflag = self.deadflag;
 	physic_crouch = self.crouch;
 	physic_button_jump = self.BUTTON_JUMP;
 	physic_v_angle = self.v_angle;
@@ -454,7 +450,6 @@ float Physic_SendEntity(entity to, float sf)
 	if not(sf & 3)
 	{
 		if (self.classname == "player") sf |= 8;
-		if (PLAYER_REALLY_DEAD(self)) sf |= 16;
 		if (self.last_physic_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
 		if (self.last_can_use_jetpack) sf |= 128;

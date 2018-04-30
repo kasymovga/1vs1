@@ -225,6 +225,7 @@ vector CSQCPhysic_SetCamera()
 		pmove_org = self.origin;
 		self.velocity = physic_velocity = self.pmove_velocity;
 		physic_teleport_time = physic_start_teleport_time;
+		physic_deadflag = player_deadflag;
 		if (physic_plug_pre)
 			physic_plug_pre();
 
@@ -406,7 +407,6 @@ void Ent_Physic(float isnew)
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
 		physic_is_player = f & 8;
-		physic_deadflag = f & 16;
 		physic_ladder = f & 32;	
 		physic_ladder_iswater = f & 64;	
 		physic_can_use_jetpack = f & 128;

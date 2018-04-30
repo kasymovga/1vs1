@@ -170,6 +170,7 @@ void CSQC_UpdateView(float w, float h)
 	dprint_load();
 	WaypointSprite_Load();
 	spectatee_status = getstati(STAT_SPECSTATUS);
+	player_deadflag = getstati(STAT_PLAYER_STATE);
 	spectatorbutton_zoom = spectatee_status & 256;
 	spectatee_status = spectatee_status & 255;
 	if(spectatee_status)
