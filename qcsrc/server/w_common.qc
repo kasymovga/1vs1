@@ -225,12 +225,24 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	if(maxdist <= g_ballistics_mindistance)
 		return 0;
 
+	vector dir = normalize(vel);
 	vector v = self.origin + normalize(vel) * maxdist;
-	traceline(self.origin, v, MOVE_NORMAL, self);
-	traceline(trace_endpos, self.origin, MOVE_NORMAL, self);
+	vector org = self.origin + dir;
+	float i;
+	for (i = 1; i < 4; i++) {
+		traceline(org, v, MOVE_NORMAL, self);
+		if (trace_fraction > 0)
+			break;
 
-	if(trace_fraction == 1) // 1: we never got out of solid
-		return 0;
+		org = org + dir;
+	}
+	if (trace_startsolid) {
+		traceline(trace_endpos, self.origin, MOVE_NORMAL, self);
+		if(trace_fraction == 1) {// 1: we never got out of solid
+			return 0;
+		}
+	} else
+		trace_endpos = org;
 
 	self.W_BallisticBullet_LeaveSolid_origin = trace_endpos;
 
