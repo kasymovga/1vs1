@@ -103,8 +103,6 @@ void GameCommand(string command)
 		print("  loaddb filename\n");
 		print("  allready\n");
 		print("  effectindexdump\n");
-		print("  radarmap [--force] [--quit | --loop] [sharpness]\n");
-		print("  bbox\n");
 		print("  cvar_changes\n");
 		print("  find classname\n");
 		GameCommand_Vote("help", world);
