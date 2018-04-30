@@ -225,7 +225,9 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	if(maxdist <= g_ballistics_mindistance)
 		return 0;
 
-	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self);
+	vector v = self.origin + normalize(vel) * maxdist;
+	traceline(self.origin, v, MOVE_NORMAL, self);
+	traceline(v, trace_endpos, MOVE_NORMAL, self);
 
 	if(trace_fraction == 1) // 1: we never got out of solid
 		return 0;
