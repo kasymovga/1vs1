@@ -267,38 +267,6 @@ void cvar_changes_init()
 	cvar_changes = strzone(cvar_changes);
 }
 
-void detect_maptype()
-{
-#if 0
-	vector o, v;
-	float i;
-
-	for(;;)
-	{
-		o = world.mins;
-		o_x += random() * (world.maxs_x - world.mins_x);
-		o_y += random() * (world.maxs_y - world.mins_y);
-		o_z += random() * (world.maxs_z - world.mins_z);
-
-		tracebox(o, PL_MIN, PL_MAX, o - '0 0 32768', MOVE_WORLDONLY, world);
-		if(trace_fraction == 1)
-			continue;
-
-		v = trace_endpos;
-
-		for(i = 0; i < 64; i += 4)
-		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, world);
-	if(trace_fraction == 1)
-		continue;
-			print(ftos(i), " -> ", vtos(trace_endpos), "\n");
-		}
-
-		break;
-	}
-#endif
-}
-
 entity randomseed;
 float RandomSeed_Send(entity to, float sf)
 {
@@ -832,8 +800,6 @@ void spawnfunc_worldspawn (void)
 
 	next_pingtime = time + 5;
 	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);
-
-	detect_maptype();
 
 	lsmaps_reply = "^7Maps available: ";
 	for(i = 0, j = 0; i < MapInfo_count; ++i)
