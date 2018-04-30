@@ -9,7 +9,6 @@ void SetConWidthHeight() {
 	if (width < 1 || height < 1)
 		return;
 
-	float i;
 	float ratio = width / height;
 #if 0
 	registercvar("vid_conpixelalign_factor", "8");
