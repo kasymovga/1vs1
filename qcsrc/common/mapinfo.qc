@@ -654,6 +654,9 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 
 	MapInfo_Map_bspname = pFilename;
 
+	if not(fexists(strcat("maps/", pFilename, ".bsp"))) {
+		return 0;
+	}
 	// default all generic fields so they have "good" values in case something fails
 	fn = strcat("maps/", pFilename, ".mapinfo");
 	fh = fopen(fn, FILE_READ);
