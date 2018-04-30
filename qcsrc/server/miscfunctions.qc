@@ -108,9 +108,6 @@ string STR_OBSERVER = "observer";
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
 
-float logfile_open;
-float logfile;
-
 void bcenterprint(string s)
 {
     // TODO replace by MSG_ALL (would show it to spectators too, though)?
@@ -132,54 +129,6 @@ float PlayerCanFire(entity plr, float wep) {
 		return FALSE;
 
 	return GameHookChain_PlayerCanFire(plr, wep);
-}
-
-void GameLogEcho(string s)
-{
-    string fn;
-    float matches;
-
-    if (cvar("sv_eventlog_files"))
-    {
-        if (!logfile_open)
-        {
-            logfile_open = TRUE;
-            matches = cvar("sv_eventlog_files_counter") + 1;
-            cvar_set("sv_eventlog_files_counter", ftos(matches));
-            fn = ftos(matches);
-            if (strlen(fn) < 8)
-                fn = strcat(substring("00000000", 0, 8 - strlen(fn)), fn);
-            fn = strcat(cvar_string("sv_eventlog_files_nameprefix"), fn, cvar_string("sv_eventlog_files_namesuffix"));
-            logfile = fopen(fn, FILE_APPEND);
-            fputs(logfile, ":logversion:3\n");
-        }
-        if (logfile >= 0)
-        {
-            if (cvar("sv_eventlog_files_timestamps"))
-                fputs(logfile, strcat(":time:", strftime(TRUE, "%Y-%m-%d %H:%M:%S", "\n", s, "\n")));
-            else
-                fputs(logfile, strcat(s, "\n"));
-        }
-    }
-    if (cvar("sv_eventlog_console"))
-    {
-        print(s, "\n");
-    }
-}
-
-void GameLogInit()
-{
-    logfile_open = 0;
-    // will be opened later
-}
-
-void GameLogClose()
-{
-    if (logfile_open && logfile >= 0)
-    {
-        fclose(logfile);
-        logfile = -1;
-    }
 }
 
 float spawnpoint_nag;
@@ -1495,8 +1444,6 @@ void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, ve
 string GetGametype(); // g_world.qc
 void write_recordmarker(entity pl, float tstart, float dt)
 {
-    GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));
-
     // also write a marker into demo files for demotc-race-record-extractor to find
     stuffcmd(pl,
              strcat(

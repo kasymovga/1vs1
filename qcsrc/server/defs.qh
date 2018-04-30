@@ -58,8 +58,6 @@ float maxclients;
 
 float sv_gameplayfix_skipnonsolid;
 
-float sv_eventlog;
-
 // Fields
 
 .void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;

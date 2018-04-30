@@ -240,8 +240,6 @@ float GameCommand_Vote(string s, entity e) {
 						tmp = strcat("^2* ^3", VoteNetname(votecaller), "^2 calls a vote for ", votecalledvote_display);
 						bprint("\{1}", tmp, "\n");
 						IRC_Announce_Vote(tmp);
-						if(sv_eventlog)
-							GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
 						VoteCount(); // needed if you are the only one
 					} else {
 						print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
@@ -284,8 +282,6 @@ float GameCommand_Vote(string s, entity e) {
 					tmp = strcat("^2* ^3", VoteNetname(votecaller), "^2 calls a vote to become ^3master^2");
 					bprint("\{1}", tmp, "\n");
 					IRC_Announce_Vote(tmp);
-					if(sv_eventlog)
-						GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
 					VoteCount(); // needed if you are the only one
 				}
 			} else {
@@ -303,8 +299,6 @@ float GameCommand_Vote(string s, entity e) {
 					tmp = strcat("^2* ^3", VoteNetname(e), "^2 used his ^3master^2 status to do ^2", RemapVote_display, "^2");
 					bprint("\{1}", tmp, "\n");
 					IRC_Announce_Vote(tmp);
-					if(sv_eventlog)
-						GameLogEcho(strcat(":vote:vdo:", ftos(e.playerid), ":", RemapVote_display));
 					localcmd(strcat(RemapVote_vote, "\n"));
 				} else {
 					print_to(e, "^1This command is not ok. See 'vhelp' for more info.");
@@ -325,8 +319,6 @@ float GameCommand_Vote(string s, entity e) {
 					tmp = strcat("^2* ^3", VoteNetname(e), "^2 logged in as ^3master^2");
 					bprint("\{1}", tmp, "\n");
 					IRC_Announce_Vote(tmp);
-					if(sv_eventlog)
-						GameLogEcho(strcat(":vote:vlogin:", ftos(e.playerid)));
 				}
 				else
 					print("REJECTED master login from ", VoteNetname(e), "\n");
@@ -577,8 +569,6 @@ void VoteStop(entity stopper) {
 	string tmp = strcat("^2* ^3", VoteNetname(stopper), "^2 stopped ^3", VoteNetname(votecaller), "^2's vote");
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
-	if(sv_eventlog)
-		GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid)));
 	if(stopper == votecaller) {
 		// no wait for next vote so you can correct your vote
 		if(votecaller) {
@@ -608,15 +598,6 @@ void VoteSpam(float abstaincount, float notvoters, float mincount, string result
 	}
 	bprint(s);
 	IRC_Announce_Vote(substring(s, 1, strlen(s) - 2));
-	if(sv_eventlog)
-	{
-		s = strcat(":vote:v", result, ":", ftos(yescount));
-		s = strcat(s, ":", ftos(nocount));
-		s = strcat(s, ":", ftos(abstaincount));
-		s = strcat(s, ":", ftos(notvoters));
-		s = strcat(s, ":", ftos(mincount));
-		GameLogEcho(s);
-	}
 }
 
 void VoteCount() {

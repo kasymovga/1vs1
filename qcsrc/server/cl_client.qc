@@ -1262,8 +1262,6 @@ Called when a client connects to the server
 */
 void ClientConnect (void)
 {
-	local string s;
-
 	if not(self.flags & FL_CLIENT) {
 		if (ClientPreConnect_Abort())
 			return;
@@ -1312,16 +1310,6 @@ void ClientConnect (void)
 	}
 
 	self.playerid = (playerid_last = playerid_last + 1);
-	if(sv_eventlog)
-	{
-		if(clienttype(self) == CLIENTTYPE_REAL)
-			GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", self.netaddress, ":", self.netname));
-		else
-			GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":bot:", self.netname));
-		s = strcat(":team:", ftos(self.playerid), ":");
-		s = strcat(s, ftos(self.team));
-		GameLogEcho(s);
-	}
 	self.netname_previous = strzone(self.netname);
 
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
@@ -1392,8 +1380,6 @@ void ClientDisconnect (void)
 	if(self.entcs)
 		detach_entcs();
 
-	if(sv_eventlog)
-		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
 
@@ -1908,8 +1894,6 @@ void PlayerPreThink (void)
 
 	if(self.netname_previous != self.netname)
 	{
-		if(sv_eventlog)
-			GameLogEcho(strcat(":name:", ftos(self.playerid), ":", self.netname));
 		if(self.netname_previous)
 			strunzone(self.netname_previous);
 		self.netname_previous = strzone(self.netname);

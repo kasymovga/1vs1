@@ -149,25 +149,6 @@ string AppendItemcodes(string s, entity player)
 	return s;
 }
 
-void LogDeath(string mode, float deathtype, entity killer, entity killed)
-{
-	string s;
-	if(!sv_eventlog)
-		return;
-	s = strcat(":kill:", mode);
-	s = strcat(s, ":", ftos(killer.playerid));
-	s = strcat(s, ":", ftos(killed.playerid));
-	s = strcat(s, ":type=", ftos(deathtype));
-	s = strcat(s, ":items=");
-	s = AppendItemcodes(s, killer);
-	if(killed != killer)
-	{
-		s = strcat(s, ":victimitems=");
-		s = AppendItemcodes(s, killed);
-	}
-	GameLogEcho(s);
-}
-
 void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix);
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
@@ -224,7 +205,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if(deathtype != DEATH_TEAMCHANGE)
 			{
-				LogDeath("suicide", deathtype, targ, targ);
 				GiveFrags(attacker, targ, -1);
 			}
 			if (targ.killcount > 2)
@@ -280,8 +260,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					bprint ("^1",a,"^1 ended a ",ftos(attacker.killcount)," kill spree by killing a team mate\n");
 				}
 				attacker.killcount = 0;
-
-				LogDeath("tk", deathtype, attacker, targ);
 			}
 			else
 			{
@@ -345,9 +323,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				if (attacker.killcount > 2) {
 					bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
 				}
-
-				LogDeath("frag", deathtype, attacker, targ);
-
 				float fragtime = time;
 
 				if (attacker.killcount == 3)
@@ -438,8 +413,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				bprint ("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
-
-			LogDeath("accident", deathtype, targ, targ);
 		}
 		targ.death_origin = targ.origin;
 		if(targ != attacker)

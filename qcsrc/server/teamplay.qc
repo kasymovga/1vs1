@@ -67,18 +67,6 @@ void tdm_init();
 void nb_init();
 void entcs_init();
 
-void LogTeamchange(entity pl)
-{
-	string str;
-	if(!sv_eventlog)
-		return;
-	if(pl.playerid < 1)
-		return;
-	str = strcat(":team:", ftos(pl.playerid), ":");
-	str = strcat(str, ftos(pl.team));
-	GameLogEcho(str);
-}
-
 void WriteGameCvars()
 {
 	cvar_set("_g_dm", ftos(g_dm));
@@ -478,9 +466,6 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
 	}
 	ScoreKeeper_Touch(pl);
-
-	if(t != s)
-		LogTeamchange(pl);
 }
 
 // set c1...c4 to show what teams are allowed
@@ -803,7 +788,6 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 			if(!only_return_best)
 			{
 				SetPlayerTeam(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
-				LogTeamchange(pl);
 			}
 			return selectedteam;
 		}
@@ -836,7 +820,6 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		{
 			error("smallest team: invalid team\n");
 		}
-		LogTeamchange(pl);
 	}
 	AuditTeams(FALSE);
 	return smallest;

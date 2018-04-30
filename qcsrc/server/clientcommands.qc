@@ -196,8 +196,6 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");
-		if (sv_eventlog)
-			GameLogEcho(strcat(":gameclient:", ftos(self.playerid), ":", s));
 
 		if (s == "xonotic") {
 			self.gameclient = CLIENT_XONOTIC;
@@ -393,9 +391,6 @@ void ReadyRestartForce()
 		FOR_EACH_REALPLAYER(e)
 			e.allowedTimeouts = cvar("sv_timeout_number");
 	}
-
-	if(sv_eventlog)
-		GameLogEcho(":restart");
 }
 
 void ReadyRestart()

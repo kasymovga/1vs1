@@ -194,17 +194,6 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 	return e.team;
 }
 
-void LogNB(string mode, entity actor)
-{
-	string s;
-	if(!sv_eventlog)
-		return;
-	s = strcat(":nexball:", mode);
-	if(actor != world)
-		s = strcat(s, ":", ftos(actor.playerid));
-	GameLogEcho(s);
-}
-
 void ball_restart (void)
 {
 	if(self.owner)
@@ -406,7 +395,6 @@ void InitBall (void)
 	self.team = FALSE;
 	sound (self, CHAN_PROJECTILE, self.noise1, VOL_BASE, ATTN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
-	LogNB("init", world);
 }
 
 void ResetBall (void)
@@ -417,8 +405,6 @@ void ResetBall (void)
 		self.touch = SUB_Null;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
-		if(!self.cnt)
-			LogNB("resetidle", world);
 		self.cnt = 2;
 		self.nextthink = time;
 	} else if (self.cnt < 4) { // step 2 and 3
@@ -525,7 +511,6 @@ void basketball_touch (void)
 	if (!self.cnt && other.classname == "player" && (other.playerid != self.dropperid || time > self.ctf_droptime + g_nexball_delay_collect)) {
 		if (other.health <= 0)
 			return;
-		LogNB("caught", other);
 		GiveBall(other, self);
 	} else if (other.solid == SOLID_BSP) {
 		sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
@@ -564,25 +549,21 @@ void GoalTouch (void)
 
 	if        (ball.team == self.team) //owngoal (regular goals)
 	{
-		LogNB("owngoal", ball.pusher);
 		bprint("Boo! ", pname, "^7 scored a goal against his own team!\n");
 		pscore = -1;
 	} else if (self.team == GOAL_FAULT) {
-		LogNB("fault", ball.pusher);
 		if (nb_teams == 2)
 			bprint(ColoredTeamName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
 			bprint(ColoredTeamName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
 		pscore = -1;
 	} else if (self.team == GOAL_OUT) {
-		LogNB("out", ball.pusher);
 		if ((self.spawnflags & GOAL_TOUCHPLAYER) && ball.owner)
 			bprint(pname, "^7 went out of bounds.\n");
 		else
 			bprint("The ball was returned.\n");
 		pscore = 0;
 	} else {                           //score
-		LogNB(strcat("goal:", ftos(self.team)), ball.pusher);
 		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", ColoredTeamName(ball.team), ".\n");
 		pscore = 1;
 	}

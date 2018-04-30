@@ -207,7 +207,6 @@ void cvar_changes_init()
 		BADPREFIX("sv_allowdownloads_");
 		BADPREFIX("sv_autodemo");
 		BADPREFIX("sv_curl_");
-		BADPREFIX("sv_eventlog");
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADCVAR("g_banned_list");
@@ -521,7 +520,6 @@ void readlevelcvars(void)
 		tracetoss = tracetoss_skipnonsolid;
 	} else
 		tracetoss = tracetoss_wrapper;
-	CACHE_CVAR(sv_eventlog);
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(g_balance_armor_blockpercent);
 	CACHE_CVAR(spawn_debug);
@@ -710,30 +708,7 @@ void spawnfunc_worldspawn (void)
 	//if (g_domination)
 	//	dom_init();
 
-	GameLogInit(); // prepare everything
-	if(sv_eventlog)
-	{
-		s = strcat(cvar_string("sv_eventlog_files_counter"), ".");
-		s = strcat(s, ftos(random()));
-		matchid = strzone(s);
-
-		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
-		s = ":gameinfo:mutators:LIST";
-		if(cvar("g_grappling_hook"))
-			s = strcat(s, ":grappling_hook");
-		if(!cvar("g_use_ammunition"))
-			s = strcat(s, ":no_use_ammunition");
-		if(!cvar("g_pickup_items"))
-			s = strcat(s, ":no_pickup_items");
-		if(cvar("g_norecoil"))
-			s = strcat(s, ":norecoil");
-		if(cvar("g_minstagib"))
-			s = strcat(s, ":minstagib");
-		GameLogEcho(s);
-		GameLogEcho(":gameinfo:end");
-	}
-	else
-		matchid = strzone(ftos(random()));
+	matchid = strzone(ftos(random()));
 
 	cvar_set("nextmap", "");
 
@@ -1334,23 +1309,14 @@ void DumpStats(float final)
 	local float file;
 	local string s;
 	local float to_console;
-	local float to_eventlog;
 	local float to_file;
 	local float i;
 
 	to_console = cvar("sv_logscores_console");
-	to_eventlog = sv_eventlog;
 	to_file = cvar("sv_logscores_file");
 
 	if(!final)
-	{
 		to_console = TRUE; // always print printstats replies
-		to_eventlog = FALSE; // but never print them to the event log
-	}
-
-	if(to_eventlog)
-		if(cvar("sv_eventlog_console"))
-			to_console = FALSE; // otherwise we get the output twice
 
 	if(final)
 		s = ":scores:";
@@ -1360,8 +1326,6 @@ void DumpStats(float final)
 
 	if(to_console)
 		print(s, "\n");
-	if(to_eventlog)
-		GameLogEcho(s);
 	if(to_file)
 	{
 		file = fopen(cvar_string("sv_logscores_filename"), FILE_APPEND);
@@ -1374,8 +1338,6 @@ void DumpStats(float final)
 	s = strcat(":labels:player:", GetPlayerScoreString(world, 0));
 	if(to_console)
 		print(s, "\n");
-	if(to_eventlog)
-		GameLogEcho(s);
 	if(to_file)
 		fputs(file, strcat(s, "\n"));
 
@@ -1392,8 +1354,6 @@ void DumpStats(float final)
 
 			if(to_console)
 				print(s, other.netname, "\n");
-			if(to_eventlog)
-				GameLogEcho(strcat(s, ftos(other.playerid), ":", other.netname));
 			if(to_file)
 				fputs(file, strcat(s, other.netname, "\n"));
 		}
@@ -1404,8 +1364,6 @@ void DumpStats(float final)
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
 			print(s, "\n");
-		if(to_eventlog)
-			GameLogEcho(s);
 		if(to_file)
 			fputs(file, strcat(s, "\n"));
 
@@ -1415,8 +1373,6 @@ void DumpStats(float final)
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
 				print(s, "\n");
-			if(to_eventlog)
-				GameLogEcho(s);
 			if(to_file)
 				fputs(file, strcat(s, "\n"));
 		}
@@ -1424,8 +1380,6 @@ void DumpStats(float final)
 
 	if(to_console)
 		print(":end\n");
-	if(to_eventlog)
-		GameLogEcho(":end");
 	if(to_file)
 	{
 		fputs(file, ":end\n");
@@ -1505,10 +1459,6 @@ void NextLevel()
 
 	DumpStats(TRUE);
 
-	if(sv_eventlog)
-		GameLogEcho(":gameover");
-
-	GameLogClose();
 	IRC_Announce_GameOver();
 
 	FOR_EACH_CLIENT(other)
@@ -1826,8 +1776,6 @@ string MapVote_Suggest(string m)
 	if(mapvote_suggestions[i] != "")
 		strunzone(mapvote_suggestions[i]);
 	mapvote_suggestions[i] = strzone(m);
-	if(sv_eventlog)
-		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(self.playerid)));
 	return strcat("Suggestion of ", m, " accepted.");
 }
 
@@ -2021,32 +1969,6 @@ void MapVote_TouchVotes(entity voter)
 
 float MapVote_Finished(float mappos)
 {
-	string result;
-	float i;
-	float didntvote;
-
-	if(sv_eventlog)
-	{
-		result = strcat(":vote:finished:", mapvote_maps[mappos]);
-		result = strcat(result, ":", ftos(mapvote_votes[mappos]), "::");
-		didntvote = mapvote_voters;
-		for(i = 0; i < mapvote_count; ++i)
-			if(mapvote_maps[i] != "")
-			{
-				didntvote -= mapvote_votes[i];
-				if(i != mappos)
-				{
-					result = strcat(result, ":", mapvote_maps[i]);
-					result = strcat(result, ":", ftos(mapvote_votes[i]));
-				}
-			}
-		result = strcat(result, ":didn't vote:", ftos(didntvote));
-
-		GameLogEcho(result);
-		if(mapvote_maps_suggested[mappos])
-			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
-	}
-
 	FOR_EACH_REALCLIENT(other)
 		FixClientCvars(other);
 
@@ -2145,8 +2067,6 @@ float MapVote_CheckRules_2()
 						}
 				}
 			result = strcat(result, ":didn't vote:", ftos(didntvote));
-			if(sv_eventlog)
-				GameLogEcho(result);
 		}
 
 	return FALSE;

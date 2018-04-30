@@ -242,18 +242,6 @@ void place_flag()
 	InitializeEntity(self, ctf_captureshield_spawn, INITPRIO_SETLOCATION);
 };
 
-void LogCTF(string mode, float flagteam, entity actor)
-{
-	string s;
-	if(!sv_eventlog)
-		return;
-	s = strcat(":ctf:", mode);
-	s = strcat(s, ":", ftos(flagteam));
-	if(actor != world)
-		s = strcat(s, ":", ftos(actor.playerid));
-	GameLogEcho(s);
-}
-
 void RegenFlag(entity e)
 {
 	if(e.classname != "item_flag_team")
@@ -347,7 +335,6 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
 		backtrace("Flag carrier had no flag sprite?!?");
 	}
-	LogCTF("dropped", p.team, p);
 	sound (self, CHAN_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
@@ -446,7 +433,6 @@ void FlagThink()
 		{
 			bprint("The ", self.netname, " has returned to base\n");
 			sound (self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
-			LogCTF("returned", self.team, world);
 			ReturnFlag(self);
 		}
 		return;
@@ -533,7 +519,6 @@ void FlagTouch()
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-		LogCTF("capture", other.flagcarried.team, other);
 		// give credit to the individual player
 		UpdateFrags(other, CTF_SCORE_VALUE(score_capture));
 
@@ -584,7 +569,6 @@ void FlagTouch()
 		UpdateFrags(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
-		LogCTF("steal", self.team, other);
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 		FOR_EACH_PLAYER(player)
@@ -639,7 +623,6 @@ void FlagTouch()
 					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
-			LogCTF("return", self.team, other);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
@@ -667,7 +650,6 @@ void FlagTouch()
 
 			UpdateFrags(other, f);
 			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
-			LogCTF("pickup", self.team, other);
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 			FOR_EACH_PLAYER(player)

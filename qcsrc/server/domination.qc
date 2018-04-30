@@ -25,17 +25,6 @@ float g_domination_teams_override;
 
 void() dom_controlpoint_setup;
 
-void LogDom(string mode, float team_before, entity actor)
-{
-	string s;
-	if(!sv_eventlog)
-		return;
-	s = strcat(":dom:", mode);
-	s = strcat(s, ":", ftos(team_before));
-	s = strcat(s, ":", ftos(actor.playerid));
-	GameLogEcho(s);
-}
-
 void() dom_spawnteams;
 
 void dompoint_captured ()
@@ -49,7 +38,6 @@ void dompoint_captured ()
 	real_team = self.cnt;
 	self.cnt = -1;
 
-	LogDom("taken", self.team, self.dmg_inflictor);
 	self.dmg_inflictor = world;
 
 	self.goalentity = head;
