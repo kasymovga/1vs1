@@ -144,7 +144,6 @@ void kh_Controller_Think()  // called a lot
 // frags 0: no frags
 void kh_Scores_Event(entity player, entity key, float frags_player, float frags_owner)  // update the score when a key is captured
 {
-	string s;
 	if(intermission_running)
 		return;
 	if(frags_player)
