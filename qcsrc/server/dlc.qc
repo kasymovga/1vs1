@@ -2,9 +2,110 @@ entity dlc;
 string dlc_list_send;
 entity dlc_wait;
 
+string trimspaces(string s) {
+	string c;
+	for (;;) {
+		c = substring(s, 0, 1);
+		if (c == " " || c == "\t") {
+			s = substring (s, 1, -1);
+			continue;
+		}
+		break;
+	}
+	float n;
+	for (;;) {
+		n = strlen(s) - 1;
+		if (n < 0) break;
+		c = substring(s, n, 1);
+		if (c == " " || c == "\t") {
+			s = substring (s, 0, n);
+			continue;
+		}
+		break;
+	}
+	return s;
+}
+
+void dlc_settemp(string name, string value) {
+	float n = cvar("_dlc_settemps_count");
+	print("DLC set temp: ", name, " = ", value, "\n");
+	string s1 = strcat("_dlc_settemp_name", ftos(n));
+	string s2 = strcat("_dlc_settemp_savevalue", ftos(n));
+	registercvar(s1, "");
+	registercvar(s2, "");
+	cvar_set(s1, name);
+	cvar_set(s2, cvar_string(name));
+	cvar_set(name, value);
+	cvar_set("_dlc_settemps_count", ftos(n + 1));
+}
+
+void dlc_load_settemps_from(string s) {
+	float f;
+	string line, c;
+	string cvar_name, cvar_value;
+	float space, tab, separator;
+	f = fopen(s, FILE_READ);
+	if (f < 0) return;
+	while ((line = trimspaces(fgets(f)))) {
+		c = substring(line, 0, 1);
+		if (c == "#" || c == "/") continue;
+		space = strstrofs(line, " ", 0);
+		tab = strstrofs(line, "\t", 0);
+		if (space > 0 && tab > 0)
+			separator = min(space, tab);
+		else if (space > 0)
+			separator = space;
+		else if (tab > 0)
+			separator = tab;
+		else
+			continue;
+
+		cvar_name = substring(line, 0, separator);
+		cvar_value = trimspaces(substring(line, separator + 1, -1));
+		dlc_settemp(cvar_name, cvar_value);
+	}
+	fclose(f);
+}
+
 void dlc_exec_cfg(string dlc_name) {
+	dlc_load_settemps_from(strcat("rexdlc_", dlc_name, "_settemps.cfg"));
 	if (fexists(strcat("rexdlc_", dlc_name, "_server.cfg")))
 		localcmd(strcat("exec rexdlc_", dlc_name, "_server.cfg", "\n"));
+}
+
+void dlc_unload_settemps() {
+	float n = cvar("_dlc_settemps_count");
+	float i;
+	for (i = 0; i < n; i++) {
+		cvar_set(cvar_string(strcat("_dlc_settemp_name", ftos(i))), cvar_string(strcat("_dlc_settemp_savevalue", ftos(i))));
+	}
+	cvar_set("_dlc_settemps_count", "0");
+}
+
+void dlc_load_exts() {
+	dlc_unload_settemps();
+	float search = search_begin("rexext_*.cfg", TRUE, TRUE);
+	float n = search_getsize(search);
+	float i;
+	string s, head, tail;
+	float add_to_server_packages;
+	for (i = 0; i < n; i++) {
+		add_to_server_packages = TRUE;
+		s = search_getfilename(search, i);
+		dlc_load_settemps_from(s);
+		tail = cvar_string("sv_curl_serverpackages");
+		while (tail != "") {
+			head = car(tail);
+			tail = cdr(tail);
+			if (head == s) {
+				add_to_server_packages = FALSE;
+				break;
+			}
+		}
+		if (add_to_server_packages)
+			cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", s));
+	}
+	search_end(search);
 }
 
 void dlc_reset_all() {
@@ -24,6 +125,7 @@ void DLCWait() {
 		string list, s;
 		list = dlc_list;
 		localcmd("\n");
+		dlc_load_exts();
 		while (list != "") {
 			s = car(list);
 			list = cdr(list);
@@ -109,6 +211,7 @@ void dlc_require(string dlc_name) {
 
 void dlc_init() {
 	string s;
+	registercvar("_dlc_settemps_count", "0");
 	dlc_set_repos(cvar_string("sv_dlc_repository"));
 	string server_packages = cvar_string("sv_curl_serverpackages");
 	string server_packages_without_dlc = "";
@@ -116,10 +219,11 @@ void dlc_init() {
 		s = car(server_packages);
 		server_packages = cdr(server_packages);
 		if (s != "")
-		if (strstrofs(s, "rexdlc_", 0) != 0)
+		if (strstrofs(s, "rexdlc_", 0) != 0 && strstrofs(s, "rexext_", 0) != 0)
 			server_packages_without_dlc = strcat(server_packages_without_dlc, " ", s);
 	}
 	cvar_set("sv_curl_serverpackages", server_packages_without_dlc);
+	dlc_load_exts();
 	string dlc_extra = cvar_string("sv_dlc_extra");
 	while (dlc_extra != "") {
 		s = car(dlc_extra);
@@ -139,6 +243,10 @@ void dlc_init() {
 		dlc_require(s);
 }
 
+void dlc_finish() {
+	dlc_unload_settemps();
+}
+
 entity dlc_wait_reload;
 
 void DLCWaitReload() {
@@ -146,6 +254,7 @@ void DLCWaitReload() {
 		localcmd("\n");
 		string list = dlc_list;
 		string s;
+		dlc_load_exts();
 		while (list != "") {
 			s = car(list);
 			list = cdr(list);

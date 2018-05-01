@@ -3,3 +3,4 @@ void dlc_init();
 void dlc_reload();
 .void() dlc_reset;
 void dlc_reset_all();
+void dlc_finish();

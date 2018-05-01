@@ -2279,6 +2279,7 @@ void SV_Shutdown()
 	if(gameover > 1) // shutting down already?
 		return;
 
+	dlc_finish();
 	gameover = 2; // 2 = server shutting down
 
 	if(world_initialized > 0)
