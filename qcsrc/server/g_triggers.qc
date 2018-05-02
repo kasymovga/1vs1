@@ -407,7 +407,7 @@ void spawnfunc_trigger_relay()
 void delay_use()
 {
     self.think = SUB_UseTargets;
-    self.nextthink = self.wait;
+    self.nextthink = time + self.wait;
 }
 
 void delay_reset()
