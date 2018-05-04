@@ -434,6 +434,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_WARPZONE_CAMERA] = WarpZone_Camera_Read;
 	ent_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
 	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
+	ent_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;
 	SetConWidthHeight();
 	sbar_fontsize = '1 1 0';
 }
@@ -1210,10 +1211,6 @@ float CSQC_Parse_TempEntity()
 		// NOTE: Could just do return instead of break...
 	switch(nTEID)
 	{
-		case 13: // TE_BEAM
-			Net_GrapplingHook();
-			bHandled = true;
-			break;
 		case TE_CSQC_SPAWN:
 			Net_ReadSpawn();
 			bHandled = true;

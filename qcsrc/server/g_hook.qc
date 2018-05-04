@@ -114,6 +114,7 @@ void RemoveGrapplingHook(entity pl)
 {
 	if(pl.hook == world)
 		return;
+	remove(pl.hook.hook);
 	remove(pl.hook);
 	pl.hook = world;
 	if(pl.movetype == MOVETYPE_FLY)
@@ -137,12 +138,36 @@ void GrapplingHook_Stop()
 	self.hook_length = -1;
 }
 
+float GrapplingHook_SendEntity(entity to, float sf) {
+	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
+	WriteByte(MSG_ENTITY, sf);
+	entity hook = self.owner;
+	if (sf & 1)
+		WriteByte(MSG_ENTITY, num_for_edict(hook.owner));
+
+	vector v;
+	if (sf & 4) {
+		v = hook.pos1;
+		WriteCoord(MSG_ENTITY, v_x);
+		WriteCoord(MSG_ENTITY, v_y);
+		WriteCoord(MSG_ENTITY, v_z);
+	}
+	if (sf & 8) {
+		v = hook.pos2;
+		WriteCoord(MSG_ENTITY, v_x);
+		WriteCoord(MSG_ENTITY, v_y);
+		WriteCoord(MSG_ENTITY, v_z);
+	}
+	return TRUE;
+}
+
 void GrapplingHookThink()
 {
 	float spd, dist, newlength;
 	vector dir, org, myorg, end, v, v0, dv;
 	if(PLAYER_DEAD(self.owner) || self.owner.hook != self)	// how did that happen?
 	{														// well, better fix it anyway
+		remove(self.hook);
 		remove(self);
 		return;
 	}
@@ -283,7 +308,16 @@ void GrapplingHookThink()
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin);
 	vector a = WarpZone_RefSys_TransformAngles(self, self.owner, self.angles);
 	makevectors(a_x * '-1 0 0' + a_y * '0 1 0');
-	te_beam(self.owner, myorg + v_forward * (-9), org);
+	myorg = myorg + v_forward * (-9);
+	if (myorg != self.pos1) {
+		self.pos1 = myorg;
+		self.hook.SendFlags |= 4;
+	}
+	if (org != self.pos2) {
+		self.pos2 = org;
+		self.hook.SendFlags |= 8;
+	}
+	//te_beam(self.owner, myorg + v_forward * (-9), org);
 }
 
 void GrapplingHookTouch (void)
@@ -367,6 +401,9 @@ void FireGrapplingHook (void)
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = self;
+	missile.hook = spawn();
+	missile.hook.owner = missile;
+	Net_LinkEntity(missile.hook, FALSE, 0, GrapplingHook_SendEntity);
 	self.hook = missile;
 	missile.classname = "grapplinghook";
 

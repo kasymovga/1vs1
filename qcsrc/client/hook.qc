@@ -1,6 +1,5 @@
 .vector HookStart;
 .vector HookEnd;
-.float HookKillTime;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
 {
@@ -39,16 +38,16 @@ void Draw_GrapplingHook()
 	vector a, b;
 	vector rgb;
 	float t;
+	entity o = self.owner;
+	float owner_entnum = self.owner.sv_entnum + 1;
 
-	if(time >= self.HookKillTime)
-		return;
-	if(self.sv_entnum == player_localentnum - 1)
+	if(owner_entnum == player_localentnum || owner_entnum == spectatee_status)
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
 	else
 		a = self.HookStart;
 	b = self.HookEnd;
 
-	t = GetPlayerColorForce(self.sv_entnum);
+	t = GetPlayerColorForce(owner_entnum - 1);
 
 	if(t == COLOR_TEAM1)
 	{
@@ -78,30 +77,24 @@ void Draw_GrapplingHook()
 	WarpZone_DrawEffectTriangle(a, a, b, Draw_GrapplingHook_cb);
 }
 
-void Net_GrapplingHook()
-{
-	float i;
-	vector start, end;
-	entity p;
-
-	i = ReadShort();
-	end_x = ReadCoord();
-	end_y = ReadCoord();
-	end_z = ReadCoord();
-	start_x = ReadCoord();
-	start_y = ReadCoord();
-	start_z = ReadCoord();
-
-	if(i <= 0 || i >= 256) // not owned by a client
-		return;
-	--i;
-
-	p = playerslots[i];
-	if(!p)
-		return;
-
-	p.HookKillTime = time + 0.1;
-	p.HookStart = start;
-	p.HookEnd = end;
-	p.draw = Draw_GrapplingHook;
+void Ent_GrapplingHook(float f, float ignore) {
+	float f = ReadByte();
+	float owner_num;
+	if (f & 1) {
+		owner_num = ReadByte();
+		self.sv_entnum = owner_num;
+		if(owner_num > 0 && owner_num < 256)
+			self.owner = players[owner_num];
+	}
+	if (f & 4) {
+		self.HookEnd_x = ReadCoord();
+		self.HookEnd_y = ReadCoord();
+		self.HookEnd_z = ReadCoord();
+	}
+	if (f & 8) {
+		self.HookStart_x = ReadCoord();
+		self.HookStart_y = ReadCoord();
+		self.HookStart_z = ReadCoord();
+	}
+	self.draw = Draw_GrapplingHook;
 }
