@@ -1,5 +1,4 @@
 .vector HookStart;
-.vector HookEnd;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
 {
