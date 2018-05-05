@@ -130,8 +130,8 @@ void GrapplingHook_Stop()
 	sound (self, CHAN_PROJECTILE, "weapons/hook_impact.wav", VOL_BASE, ATTN_NORM);
 
 	self.state = 1;
-	self.think = GrapplingHookThink;
-	self.nextthink = time;
+	self.hook.think = GrapplingHookThink;
+	self.hook.nextthink = time;
 	self.touch = SUB_Null;
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
@@ -165,22 +165,26 @@ void GrapplingHookThink()
 {
 	float spd, dist, newlength;
 	vector dir, org, myorg, end, v, v0, dv;
+	entity oldself = self;
+	self = self.owner;
 	if(PLAYER_DEAD(self.owner) || self.owner.hook != self)	// how did that happen?
 	{														// well, better fix it anyway
 		remove(self.hook);
 		remove(self);
+		self = oldself;
 		return;
 	}
 	if(LostMovetypeFollow(self))
 	{
 		RemoveGrapplingHook(self.owner);
+		self = oldself;
 		return;
 	}
 
     if(self.aiment)
         WarpZone_RefSys_AddIncrementally(self, self.aiment);
 
-	self.nextthink = time;
+	self.hook.nextthink = time;
 
 	makevectors(self.owner.v_angle);
 	org = self.owner.origin + self.owner.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
@@ -317,7 +321,7 @@ void GrapplingHookThink()
 		self.pos2 = org;
 		self.hook.SendFlags |= 8;
 	}
-	//te_beam(self.owner, myorg + v_forward * (-9), org);
+	self = oldself;
 }
 
 void GrapplingHookTouch (void)
@@ -423,8 +427,8 @@ void FireGrapplingHook (void)
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 	missile.touch = GrapplingHookTouch;
-	missile.think = GrapplingHookThink;
-	missile.nextthink = time + 0.1;
+	missile.hook.think = GrapplingHookThink;
+	missile.hook.nextthink = time + 0.1;
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 
@@ -434,7 +438,7 @@ void FireGrapplingHook (void)
 	missile.damageforcescale = 0;
 
 	entity oldself = self;
-	self = missile;
+	self = missile.hook;
 	GrapplingHookThink();
 	self = oldself;
 }
