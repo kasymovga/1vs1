@@ -168,47 +168,57 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	return '0 0 0';
 }
 
-var float cl_rollkillspeed = 10;
+float angzlast;
 void WarpZone_FixView_real()
 {
 	entity e;
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3;
 	float f;
 	org = view_origin;
-	if (warpzone_view)
-		view_angles = WarpZone_UnTransformAngles(warpzone_view, view_angles);
-
-	ang = view_angles;
 
 	e = WarpZone_Find(org, org);
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
-		ang = WarpZone_TransformVAngles(e, ang);
+		if (warpzone_view == e)
+			ang = view_angles;
+		else {
+			if (warpzone_view)
+				view_angles = WarpZone_UnTransformAngles(warpzone_view, view_angles);
+
+			ang = WarpZone_TransformVAngles(e, view_angles);
+		}
 		WarpZone_Inside();
 		if not(warpzone_view)
 			warpzone_view_commandframe = physic_lastcommandframe;
 	}
-	else
+	else {
 		WarpZone_Outside();
+		if (warpzone_view)
+			ang = WarpZone_UnTransformAngles(warpzone_view, view_angles);
+		else
+			ang = view_angles;
+	}
 
 	warpzone_view = e;
-	float rick;
-	if(cl_rollkillspeed)
-		f = max(0, (1 - frametime * cl_rollkillspeed));
-	else
-		f = 0;
+	if (angzlast)
+	if not(e) {
+		f = max(0, (1 - frametime * 10));
 
-	rick = ang_z;
-	if (rick > 180)
-		rick -= 360;
-	else if (rick < -180)
-		rick += 360;
+		if (ang_z > 180)
+			ang_z -= 360;
+		else if (ang_z < -180)
+			ang_z += 360;
 
-	ang_z = rick * f;
-	if (rick || e)
+		ang_z = ang_z * f;
+		if (ang_z < 1)
+		if (ang_z > -1)
+			ang_z = 0;
+	}
+	if (angzlast || e) {
+		angzlast = ang_z;
 		R_SetView(VF_ANGLES, ang);
-
+	}
 	if (e)
 		R_SetView(VF_ORIGIN, org);
 
@@ -222,7 +232,7 @@ void WarpZone_FixView_real()
 	if (v != '0 0 0')
 		R_SetView(VF_ORIGIN, org);
 
-	if (rick || e)
+	if (angzlast || e)
 		R_SetView(VF_CL_VIEWANGLES, ang);
 }
 
