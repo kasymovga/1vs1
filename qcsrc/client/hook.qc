@@ -1,5 +1,3 @@
-.vector HookStart;
-
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
 {
 	// I want to draw a quad...
@@ -44,8 +42,15 @@ void Draw_GrapplingHook()
 	b = self.origin;
 	if(!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == spectatee_status)) {
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
-	} else
-		a = self.HookStart;
+	} else {
+		entity e = self;
+		self = self.enemy;
+		if (self)
+			InterpolateOrigin_Do();
+
+		a = self.origin;
+		self = e;
+	}
 
 	t = GetPlayerColorForce(owner_entnum - 1);
 
@@ -77,6 +82,13 @@ void Draw_GrapplingHook()
 	WarpZone_DrawEffectTriangle(a, a, b, Draw_GrapplingHook_cb);
 }
 
+void Remove_GrapplingHook() {
+	if (self.enemy) {
+		remove(self.enemy);
+		self.enemy = world;
+	}
+}
+
 void Ent_GrapplingHook(float ignore) {
 	float f = ReadByte();
 	float owner_num;
@@ -85,19 +97,30 @@ void Ent_GrapplingHook(float ignore) {
 		self.sv_entnum = owner_num;
 		if(owner_num > 0 && owner_num < 256)
 			self.owner = players[owner_num];
+
+		self.draw = Draw_GrapplingHook;
+		self.entremove = Remove_GrapplingHook;
+		if not(self.enemy)
+			self.enemy = spawn();
 	}
 	if (f & 4) {
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
-        InterpolateOrigin_Note();
+		InterpolateOrigin_Note();
 		if (f & 16)
 			InterpolateOrigin_Note();
 	}
 	if (f & 8) {
-		self.HookStart_x = ReadCoord();
-		self.HookStart_y = ReadCoord();
-		self.HookStart_z = ReadCoord();
+		entity e = self;
+		self = self.enemy;
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		InterpolateOrigin_Note();
+		if (f & 16)
+			InterpolateOrigin_Note();
+
+		self = e;
 	}
-	self.draw = Draw_GrapplingHook;
 }
