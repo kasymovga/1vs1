@@ -65,7 +65,6 @@ sbar.qc
 mapvoting.qc
 
 hook.qc
-lightning.qc
 particles.qc
 laser.qc
 projectile.qc

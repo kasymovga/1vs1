@@ -105,8 +105,6 @@ set g_pickup_respawntimejitter_armormedium 0
 set g_pickup_respawntimejitter_armorbig 0
 set g_pickup_respawntimejitter_armorlarge 0
 set g_balance_crylink_swap_buttons 0
-set g_balance_electro_primary_lightning_length 1000
-set g_balance_electro_primary_lightning 0
 set g_balance_electro_secondary 1
 set g_balance_electro_swap_buttons 0
 set g_balance_grenadelauncher_secondary 1

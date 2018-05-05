@@ -416,7 +416,6 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_RANDOMSEED] = Ent_RandomSeed;
 	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
 	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
-	ent_parsers[ENT_CLIENT_LIGHTNING] = Ent_Lightning;
 	ent_parsers[ENT_CLIENT_PHYSIC] = Ent_Physic;
 	ent_parsers[ENT_CLIENT_PHYSIC_SPIDERBOT] = Ent_PhysicSpiderbot;
 	ent_parsers[ENT_CLIENT_PHYSIC_AIRCRAFT] = Ent_PhysicAircraft;
