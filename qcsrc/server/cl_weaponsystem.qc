@@ -632,15 +632,15 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	local float weaponbit, f;
 	local entity oldself;
 
-	if(time < self.hasweapon_complain_spam)
+	if(time < cl.hasweapon_complain_spam)
 		complain = 0;
 	if(complain)
-		self.hasweapon_complain_spam = time + 0.2;
+		cl.hasweapon_complain_spam = time + 0.2;
 
 	if (wpn < WEP_FIRST || wpn > WEP_LAST)
 	{
 		if (complain)
-			sprint(self, "Invalid weapon\n");
+			sprint(cl, "Invalid weapon\n");
 		return FALSE;
 	}
 	weaponbit = W_WeaponBit(wpn);
@@ -674,6 +674,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		return TRUE;
 	}
 	if (complain)
+	if (clienttype(cl) == CLIENTTYPE_REAL)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
@@ -700,7 +701,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						s,
 						1, 0,
 						world, e.origin,
-						self, 0,
+						cl, 0,
 						world, enemy,
 						0
 					);
