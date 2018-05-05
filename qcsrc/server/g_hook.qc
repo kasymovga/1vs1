@@ -141,19 +141,19 @@ void GrapplingHook_Stop()
 float GrapplingHook_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	WriteByte(MSG_ENTITY, sf);
-	entity hook = self.owner;
+	entity _hook = self.owner;
 	if (sf & 1)
-		WriteByte(MSG_ENTITY, num_for_edict(hook.owner));
+		WriteByte(MSG_ENTITY, num_for_edict(_hook.owner));
 
 	vector v;
 	if (sf & 4) {
-		v = hook.pos1;
+		v = _hook.pos1;
 		WriteCoord(MSG_ENTITY, v_x);
 		WriteCoord(MSG_ENTITY, v_y);
 		WriteCoord(MSG_ENTITY, v_z);
 	}
 	if (sf & 8) {
-		v = hook.pos2;
+		v = _hook.pos2;
 		WriteCoord(MSG_ENTITY, v_x);
 		WriteCoord(MSG_ENTITY, v_y);
 		WriteCoord(MSG_ENTITY, v_z);
@@ -432,6 +432,11 @@ void FireGrapplingHook (void)
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
+
+	entity oldself = self;
+	self = missile;
+	GrapplingHookThink();
+	self = oldself;
 }
 
 //  void GrapplingHookFrame()
