@@ -201,24 +201,25 @@ void WarpZone_FixView_real()
 	}
 
 	warpzone_view = e;
-	if (angzlast)
-	if not(e) {
-		f = max(0, (1 - frametime * 10));
-
-		if (ang_z > 180)
-			ang_z -= 360;
-		else if (ang_z < -180)
-			ang_z += 360;
-
-		ang_z = ang_z * f;
-		if (ang_z < 1)
-		if (ang_z > -1)
-			ang_z = 0;
-	}
 	if (angzlast || e) {
+		if not(e) {
+			f = max(0, (1 - frametime * 10));
+
+			if (ang_z > 180)
+				ang_z -= 360;
+			else if (ang_z < -180)
+				ang_z += 360;
+
+			ang_z = ang_z * f;
+			if (ang_z < 1)
+			if (ang_z > -1)
+				ang_z = 0;
+		}
 		angzlast = ang_z;
 		R_SetView(VF_ANGLES, ang);
+		R_SetView(VF_CL_VIEWANGLES, ang);
 	}
+
 	if (e)
 		R_SetView(VF_ORIGIN, org);
 
@@ -231,9 +232,6 @@ void WarpZone_FixView_real()
 	org = org + v;
 	if (v != '0 0 0')
 		R_SetView(VF_ORIGIN, org);
-
-	if (angzlast || e)
-		R_SetView(VF_CL_VIEWANGLES, ang);
 }
 
 void WarpZone_InitHook() {
