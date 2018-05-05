@@ -314,14 +314,6 @@ vector CSQCPhysic_SetCamera()
 	return v;
 }
 
-void Physic_InitCheck()
-{
-	if (self.cnt)
-		return;
-	localcmd("cmd csqc_physic_reinit\n");
-	self.nextthink = time + 1;
-}
-
 void Ent_Physic(float isnew)
 {
 	float f = ReadShort();
@@ -331,7 +323,6 @@ void Ent_Physic(float isnew)
 		if (cvar("cl_movement_replay"))
 			cvar_clientsettemp("cl_movement_replay", "0");
 
-		self.cnt = 1;
 		sv_stepheight = ReadCoord();
 		sv_gravity = ReadCoord();
 		sv_maxairspeed = ReadCoord();
@@ -378,12 +369,6 @@ void Ent_Physic(float isnew)
 			g_dodging_delay = ReadCoord();
 			g_dodging_frozen_factor = ReadCoord();
 		}
-			
-	}
-	else if not(self.cnt)
-	{
-		self.think = Physic_InitCheck;
-		self.nextthink = time;
 	}
 	if (f & 2)
 	{
