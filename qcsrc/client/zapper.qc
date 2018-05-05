@@ -1,5 +1,4 @@
 
-.vector zapper_start;
 .vector zapper_shotorg;
 .float zapper_akimbo;
 
@@ -30,6 +29,14 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
 
 }
 
+void Zapper_Interpolate() {
+	InterpolateOrigin_Do();
+	entity e = self;
+	self = self.enemy;
+	InterpolateOrigin_Do();
+	self = e;
+}
+
 void Zapper_Draw(void) {
     vector start, real_start;
 	vector end;
@@ -38,8 +45,6 @@ void Zapper_Draw(void) {
 
     float first_person = FALSE;
 
-	InterpolateOrigin_Do();
-
     zapper_beam_width = 12;
 
 	vector zapper_shotorigin = self.zapper_shotorg;
@@ -47,35 +52,34 @@ void Zapper_Draw(void) {
 		if not(CVAR(chase_active)) {
 			camera_correction_needed = TRUE;
 			start = view_origin + view_forward * zapper_shotorigin_x + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
-			self.zapper_start = start;
 			zapper_beam_width = 8;
 			first_person = TRUE;
 			if (self.zapper_akimbo)
-				end = (start + view_forward * (vlen(self.zapper_start - self.origin)));
+				end = (start + view_forward * (vlen(start - self.origin)));
 			else
-				end = (view_origin + view_forward * (vlen(self.zapper_start - self.origin)));
+				end = (view_origin + view_forward * (vlen(start - self.origin)));
 
 			real_start = view_origin;
 		} else {
+			Zapper_Interpolate();
 			end = self.origin;
-			real_start = start = self.zapper_start;
+			real_start = start = self.enemy.origin;
 		}
     } else {
         end = self.origin;
-		real_start = start = self.zapper_start;
+		real_start = start = self.enemy.origin;
 	}
-
 
     zapper_particles_trace_callback_beamoffs = -time * 5;
 
-    vector dynlight_org = self.zapper_start;
+    vector dynlight_org = start;
 
     if(first_person) {
         dynlight_org = start + view_forward;
         zapper_particles_trace_callback(start - view_forward * zapper_shotorigin_x, start, start);
     }
     //R_AddDynamicLight(dynlight_org, 50 * self.alpha, Zapper_BeamRGB(self.team));
-	WarpZone_DrawEffectTriangle(real_start, self.zapper_start, end, zapper_particles_trace_callback);
+	WarpZone_DrawEffectTriangle(real_start, start, end, zapper_particles_trace_callback);
 	//zapper_particles_trace_callback(self.zapper_start, end);
 	vector v = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
 	end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
@@ -85,20 +89,17 @@ void Zapper_Draw(void) {
 }
 
 void Zapper_Draw_Shield(void) {
-    InterpolateOrigin_Do();
-
     float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
-
-	if not(autocvar_chase_active)
-    if (self.sv_entnum == me) {
+	vector start, end;
+	if (!CVAR(chase_active) && self.sv_entnum == me) {
         vector zapper_shotorigin = self.zapper_shotorg;
-        self.zapper_start = view_origin + view_forward * (zapper_shotorigin_x - 1) + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
-        self.origin = self.zapper_start + view_forward * 30;
-    }
-
-    vector start = self.zapper_start;
-    vector end = self.origin;
-
+        start = view_origin + view_forward * (zapper_shotorigin_x - 1) + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
+		end = start + view_forward * 30;
+    } else {
+		Zapper_Interpolate();
+		start = self.enemy.origin;;
+		end = self.origin;
+	}
     string tex = "particles/zapper";
     vector rgb = Zapper_BeamRGB(self.team) * 0.5;
 
@@ -117,6 +118,9 @@ void Zapper_Draw_Shield(void) {
 
 .float snd_looping;
 void Zapper_Remove(void) {
+	if (self.enemy)
+		remove(self.enemy);
+
     sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
@@ -136,6 +140,8 @@ void Zapper_Read(float t) {
             self.draw = Zapper_Draw;
             sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
         }
+		if not(self.enemy)
+			self.enemy = spawn();
 
         self.entremove = Zapper_Remove;
 
@@ -152,9 +158,16 @@ void Zapper_Read(float t) {
     }
 
     if(sf & 2) {
-        self.zapper_start_x = ReadCoord();
-        self.zapper_start_y = ReadCoord();
-        self.zapper_start_z = ReadCoord();
+		entity e = self;
+		self = self.enemy;
+        self.origin_x = ReadCoord();
+        self.origin_y = ReadCoord();
+        self.origin_z = ReadCoord();
+        InterpolateOrigin_Note();
+		if (sf & 64)
+			InterpolateOrigin_Note();
+
+		self = e;
     }
 
     if(sf & 4) {
