@@ -211,7 +211,7 @@ float physic_last_FORWARD_KEY_time;
 float physic_last_BACKWARD_KEY_time;
 float physic_last_RIGHT_KEY_time;
 float physic_last_LEFT_KEY_time;
-vector CSQCPhysic_SetCamera()
+vector CSQCPhysic_SetViewOrg()
 {
 	vector v;
 	if(physic && servercommandframe && clientcommandframe)
@@ -278,15 +278,7 @@ vector CSQCPhysic_SetCamera()
 		self = oldself;
 		frametime = frametime_save;
 		v = physic.origin + physic.view_ofs;
-
-		if (CVAR(chase_active)) {
-			makevectors(input_angles);
-			tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
-			v = trace_endpos;
-			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
-			v = trace_endpos;
-		}
-		if (autocvar_cl_stairsmoothspeed) {
+		if (CVAR(cl_stairsmoothspeed)) {
 			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time > 0 || was_teleported) {
 				stairsmoothz = v_z;
 				was_teleported = FALSE;
@@ -312,6 +304,22 @@ vector CSQCPhysic_SetCamera()
 	}
 
 	return v;
+}
+
+void CSQCPhysic_SetCamera() {
+	if (physic)
+	if (servercommandframe)
+	if (clientcommandframe) {
+		vector v = view_origin;
+		if (CVAR(chase_active)) {
+			makevectors(view_angles);
+			tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
+			v = trace_endpos;
+			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
+			v = trace_endpos;
+			R_SetView(VF_ORIGIN, v);
+		}
+	}
 }
 
 void Ent_Physic(float isnew)

@@ -260,8 +260,9 @@ void CSQC_UpdateView(float w, float h)
 	if(!intermission || !view_set)
 	{
 		view_angles = input_angles;
-		view_origin = CSQCPhysic_SetCamera();
+		view_origin = CSQCPhysic_SetViewOrg();
 		WarpZone_FixView();
+		CSQCPhysic_SetCamera();
 		makevectors(view_angles);
 		view_forward = v_forward;
 		view_right = v_right;

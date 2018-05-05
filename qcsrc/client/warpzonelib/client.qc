@@ -232,6 +232,9 @@ void WarpZone_FixView_real()
 	org = org + v;
 	if (v != '0 0 0')
 		R_SetView(VF_ORIGIN, org);
+
+	view_origin = org;
+	view_angles = ang;
 }
 
 void WarpZone_InitHook() {
