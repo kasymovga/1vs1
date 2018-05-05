@@ -6,3 +6,5 @@ var void() WarpZone_FixView = {}; // this saves the previous values
 void WarpZone_Outside();
 
 float warpzone_newstyle;
+float warpzone_view_commandframe;
+entity warpzone_view;

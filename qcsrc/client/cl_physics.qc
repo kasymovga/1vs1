@@ -255,6 +255,13 @@ vector CSQCPhysic_SetCamera()
 			if not(RetrieveMovementFrame(i))
 				break;
 
+			if (warpzone_view)
+			if (i >= warpzone_view_commandframe) {
+				//print("warp input angles correction ", ftos(i), " ", vtos(input_angles));
+				input_angles = WarpZone_UnTransformAngles(warpzone_view, input_angles);
+				//print(" ", vtos(input_angles), "\n");
+			}
+
 			frametime = input_timelength;
 			physic_button_crouch = input_buttons & 16;
 			physic_movement = input_movevalues;
@@ -264,6 +271,7 @@ vector CSQCPhysic_SetCamera()
 			
 			PlayerPhysics();
 		}
+		physic_lastcommandframe = i;
 
 		if (physic_plug_post)
 			physic_plug_post();

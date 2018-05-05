@@ -1,5 +1,3 @@
-entity warpzone_view;
-
 void WarpZone_Read(float isnew)
 {
 	if not(self.enemy)
@@ -106,14 +104,9 @@ void WarpZone_Teleported_Read(float isnew)
 		return;
 	self.warpzone_transform = v;
 	if(warpzone_newstyle) {
-		setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES)));
 		CL_RotateMoves(v);
-	} else {
-		input_angles = WarpZone_TransformVAngles(self, input_angles);
-		R_SetView(VF_ANGLES, input_angles);
-		R_SetView(VF_CL_VIEWANGLES, input_angles);
 	}
-	//warpzone_view = world;
+	warpzone_view = world;
 }
 
 float warpzone_fixingview;
@@ -175,9 +168,7 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	return '0 0 0';
 }
 
-#ifndef KEEP_ROLL
 var float cl_rollkillspeed = 10;
-#endif
 void WarpZone_FixView_real()
 {
 	entity e;
@@ -195,12 +186,13 @@ void WarpZone_FixView_real()
 		org = WarpZone_TransformOrigin(e, org);
 		ang = WarpZone_TransformVAngles(e, ang);
 		WarpZone_Inside();
+		if not(warpzone_view)
+			warpzone_view_commandframe = physic_lastcommandframe;
 	}
 	else
 		WarpZone_Outside();
 
 	warpzone_view = e;
-#ifndef KEEP_ROLL
 	float rick;
 	if(cl_rollkillspeed)
 		f = max(0, (1 - frametime * cl_rollkillspeed));
@@ -213,19 +205,25 @@ void WarpZone_FixView_real()
 	else if (rick < -180)
 		rick += 360;
 
-	rick *= f;
-	ang_z = rick;
-#endif
-	R_SetView(VF_ORIGIN, org);
-	R_SetView(VF_ANGLES, ang);
+	ang_z = rick * f;
+	if (rick || e)
+		R_SetView(VF_ANGLES, ang);
+
+	if (e)
+		R_SetView(VF_ORIGIN, org);
+
 	nearclip = '0 0 1' * (CVAR(r_nearclip) * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);
 	corner1 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + nearclip);
 	corner2 = cs_unproject('0 1 0' * CVAR(vid_conheight) + nearclip);
 	corner3 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + '0 1 0' * CVAR(vid_conheight) + nearclip);
-	org = org + WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
-	R_SetView(VF_ORIGIN, org);
-	R_SetView(VF_CL_VIEWANGLES, ang);
+	vector v = WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
+	org = org + v;
+	if (v != '0 0 0')
+		R_SetView(VF_ORIGIN, org);
+
+	if (rick || e)
+		R_SetView(VF_CL_VIEWANGLES, ang);
 }
 
 void WarpZone_InitHook() {
