@@ -97,7 +97,7 @@ void Zapper_Draw_Shield(void) {
 		end = start + view_forward * 30;
     } else {
 		Zapper_Interpolate();
-		start = self.enemy.origin;;
+		start = self.enemy.origin;
 		end = self.origin;
 	}
     string tex = "particles/zapper";
@@ -118,9 +118,10 @@ void Zapper_Draw_Shield(void) {
 
 .float snd_looping;
 void Zapper_Remove(void) {
-	if (self.enemy)
+	if (self.enemy) {
 		remove(self.enemy);
-
+		self.enemy = world;
+	}
     sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
