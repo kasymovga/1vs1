@@ -184,9 +184,10 @@ void WarpZone_FixView_real()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, vo;
 	float f;
 	org = view_origin;
-	ang = view_angles;
 	if (warpzone_view)
-		ang = WarpZone_UnTransformAngles(warpzone_view, ang);
+		view_angles = WarpZone_UnTransformAngles(warpzone_view, view_angles);
+
+	ang = view_angles;
 
 	e = WarpZone_Find(org, org);
 	if(e)
@@ -217,15 +218,13 @@ void WarpZone_FixView_real()
 #endif
 	R_SetView(VF_ORIGIN, org);
 	R_SetView(VF_ANGLES, ang);
-	if(warpzone_newstyle) {
-		nearclip = '0 0 1' * (CVAR(r_nearclip) * 1.125);
-		corner0 = cs_unproject('0 0 0' + nearclip);
-		corner1 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + nearclip);
-		corner2 = cs_unproject('0 1 0' * CVAR(vid_conheight) + nearclip);
-		corner3 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + '0 1 0' * CVAR(vid_conheight) + nearclip);
-		org = org + WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
-		R_SetView(VF_ORIGIN, org);
-	}
+	nearclip = '0 0 1' * (CVAR(r_nearclip) * 1.125);
+	corner0 = cs_unproject('0 0 0' + nearclip);
+	corner1 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + nearclip);
+	corner2 = cs_unproject('0 1 0' * CVAR(vid_conheight) + nearclip);
+	corner3 = cs_unproject('1 0 0' * CVAR(vid_conwidth) + '0 1 0' * CVAR(vid_conheight) + nearclip);
+	org = org + WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
+	R_SetView(VF_ORIGIN, org);
 	R_SetView(VF_CL_VIEWANGLES, ang);
 }
 

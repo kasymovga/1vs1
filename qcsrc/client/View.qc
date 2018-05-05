@@ -260,14 +260,14 @@ void CSQC_UpdateView(float w, float h)
 	if(!intermission || !view_set)
 	{
 		view_angles = input_angles;
+		view_origin = CSQCPhysic_SetCamera();
+		WarpZone_FixView();
 		makevectors(view_angles);
 		view_forward = v_forward;
 		view_right = v_right;
 		view_up = v_up;
 		view_set = 1;
-		view_origin = CSQCPhysic_SetCamera();
 	}
-	WarpZone_FixView();
 
 	// Set the console size vars
 
