@@ -181,7 +181,7 @@ var float cl_rollkillspeed = 10;
 void WarpZone_FixView_real()
 {
 	entity e;
-	vector org, ang, nearclip, corner0, corner1, corner2, corner3, vo;
+	vector org, ang, nearclip, corner0, corner1, corner2, corner3;
 	float f;
 	org = view_origin;
 	if (warpzone_view)
