@@ -139,55 +139,45 @@ float W_Zapper_Attack2_CheckAmmo(entity p) {
 
 float W_Zapper_Beam_Send(entity to, float sf) {
     sf &~= 24;
-
-    float o = num_for_edict(self.owner);
-
+	entity _owner = self.owner;
+    float o = num_for_edict(_owner);
     if(o > maxclients) {
         o = 0;
 	}
-
     if(!o) {
         sf |= 16;
     }
-
     if(self.classname == "zapper_shield_beam")
         WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER_SHIELD);
     else {
         WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER);
-		if (Akimbo_Active(self.owner)) {
+		if (Akimbo_Active(_owner)) {
 			sf |= 8;
 		}
 	}
-
-
     WriteByte(MSG_ENTITY, sf);
-
     if(sf & 1) {
         if(o)
             WriteByte(MSG_ENTITY, o);
         else
             WriteByte(MSG_ENTITY, self.team);
     }
-
     if(sf & 2) {
         WriteCoord(MSG_ENTITY, self.zapper_beam_start_x);
         WriteCoord(MSG_ENTITY, self.zapper_beam_start_y);
         WriteCoord(MSG_ENTITY, self.zapper_beam_start_z);
     }
-
     if(sf & 4) {
         WriteCoord(MSG_ENTITY, self.zapper_beam_end_x);
         WriteCoord(MSG_ENTITY, self.zapper_beam_end_y);
         WriteCoord(MSG_ENTITY, self.zapper_beam_end_z);
     }
-
     if(sf & 32) {
 		entity e = self.enemy.weaponentity;
         WriteCoord(MSG_ENTITY, e.shotorg_visual_x);
         WriteCoord(MSG_ENTITY, -e.shotorg_visual_y);
         WriteCoord(MSG_ENTITY, e.shotorg_visual_z);
     }
-
     return TRUE;
 }
 
@@ -317,6 +307,8 @@ void W_Zapper_Beam_Think(void) {
         self.enemy.zapper_heat = bound(0, self.enemy.zapper_heat + (g_balance_zapper_primary_heatup * frametime) / rate, 1);
         self.enemy.zapper_coolofftime = time + frametime;
     }
+	if (o.teleport_time == time)
+		self.SendFlags |= 70;
 
 	ATTACK_FINISHED(self.enemy) = time + g_balance_zapper_primary_refire * rate;
 

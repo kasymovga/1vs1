@@ -1,6 +1,5 @@
 
 .vector zapper_start;
-.vector zapper_end;
 .vector zapper_shotorg;
 .float zapper_akimbo;
 
@@ -40,30 +39,29 @@ void Zapper_Draw(void) {
     float first_person = FALSE;
 
 	InterpolateOrigin_Do();
-    self.zapper_end = self.origin;
 
     zapper_beam_width = 12;
 
 	vector zapper_shotorigin = self.zapper_shotorg;
     if(self.sv_entnum == me) {
-		if not(autocvar_chase_active) {
+		if not(CVAR(chase_active)) {
 			camera_correction_needed = TRUE;
 			start = view_origin + view_forward * zapper_shotorigin_x + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
 			self.zapper_start = start;
 			zapper_beam_width = 8;
 			first_person = TRUE;
 			if (self.zapper_akimbo)
-				end = (start + view_forward * (vlen(self.zapper_start - self.zapper_end)));
+				end = (start + view_forward * (vlen(self.zapper_start - self.origin)));
 			else
-				end = (view_origin + view_forward * (vlen(self.zapper_start - self.zapper_end)));
+				end = (view_origin + view_forward * (vlen(self.zapper_start - self.origin)));
 
 			real_start = view_origin;
 		} else {
-			end = self.zapper_end;
+			end = self.origin;
 			real_start = start = self.zapper_start;
 		}
     } else {
-        end = self.zapper_end;
+        end = self.origin;
 		real_start = start = self.zapper_start;
 	}
 
@@ -88,7 +86,6 @@ void Zapper_Draw(void) {
 
 void Zapper_Draw_Shield(void) {
     InterpolateOrigin_Do();
-    self.zapper_end = self.origin;
 
     float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
 
@@ -96,11 +93,11 @@ void Zapper_Draw_Shield(void) {
     if (self.sv_entnum == me) {
         vector zapper_shotorigin = self.zapper_shotorg;
         self.zapper_start = view_origin + view_forward * (zapper_shotorigin_x - 1) + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
-        self.zapper_end = self.zapper_start + view_forward * 30;
+        self.origin = self.zapper_start + view_forward * 30;
     }
 
     vector start = self.zapper_start;
-    vector end = self.zapper_end;
+    vector end = self.origin;
 
     string tex = "particles/zapper";
     vector rgb = Zapper_BeamRGB(self.team) * 0.5;
@@ -161,11 +158,12 @@ void Zapper_Read(float t) {
     }
 
     if(sf & 4) {
-        self.zapper_end_x = ReadCoord();
-        self.zapper_end_y = ReadCoord();
-        self.zapper_end_z = ReadCoord();
-        setorigin(self, self.zapper_end);
+        self.origin_x = ReadCoord();
+        self.origin_y = ReadCoord();
+        self.origin_z = ReadCoord();
         InterpolateOrigin_Note();
+		if (sf & 64)
+			InterpolateOrigin_Note();
     }
 
 	if (sf & 8) {
