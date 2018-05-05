@@ -38,14 +38,15 @@ void Draw_GrapplingHook()
 	vector a, b;
 	vector rgb;
 	float t;
+	InterpolateOrigin_Do();
 	entity o = self.owner;
 	float owner_entnum = self.owner.sv_entnum + 1;
 
-	if(owner_entnum == player_localentnum || owner_entnum == spectatee_status)
+	b = self.origin;
+	if(!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == spectatee_status)) {
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
-	else
+	} else
 		a = self.HookStart;
-	b = self.HookEnd;
 
 	t = GetPlayerColorForce(owner_entnum - 1);
 
@@ -77,7 +78,7 @@ void Draw_GrapplingHook()
 	WarpZone_DrawEffectTriangle(a, a, b, Draw_GrapplingHook_cb);
 }
 
-void Ent_GrapplingHook(float f, float ignore) {
+void Ent_GrapplingHook(float ignore) {
 	float f = ReadByte();
 	float owner_num;
 	if (f & 1) {
@@ -87,9 +88,12 @@ void Ent_GrapplingHook(float f, float ignore) {
 			self.owner = players[owner_num];
 	}
 	if (f & 4) {
-		self.HookEnd_x = ReadCoord();
-		self.HookEnd_y = ReadCoord();
-		self.HookEnd_z = ReadCoord();
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+        InterpolateOrigin_Note();
+		if (f & 16)
+			InterpolateOrigin_Note();
 	}
 	if (f & 8) {
 		self.HookStart_x = ReadCoord();

@@ -321,6 +321,9 @@ void GrapplingHookThink()
 		self.pos2 = org;
 		self.hook.SendFlags |= 8;
 	}
+	if (self.owner.teleport_time == time)
+		self.hook.SendFlags |= 20;
+
 	self = oldself;
 }
 
