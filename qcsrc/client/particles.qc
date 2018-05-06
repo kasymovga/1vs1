@@ -226,14 +226,47 @@ void Ent_PointParticles()
 }
 
 .float glow_color; // palette index
+vector snowrain_mins, snowrain_maxs;
+float snowrain_count;
+var float snowrain_nextthink = 0.5;
+void SnowOrRain_SetBBox(float d) {
+	snowrain_count = 0;
+	if (time < snowrain_nextthink)
+		return;
+
+	snowrain_nextthink += 0.1;
+	snowrain_mins = self.mins + self.origin;
+	snowrain_maxs= self.maxs + self.origin;
+	snowrain_mins_x = max(view_origin_x - d, snowrain_mins_x);
+	snowrain_mins_y = max(view_origin_y - d, snowrain_mins_y);
+	snowrain_maxs_x = min(view_origin_x + d, snowrain_maxs_x);
+	snowrain_maxs_y = min(view_origin_y + d, snowrain_maxs_y);
+	if (snowrain_mins_x >= snowrain_maxs_x)
+		return;
+
+	if (snowrain_mins_y >= snowrain_maxs_y)
+		return;
+
+	float skyz = view_origin_z + d * 0.5;
+	if (snowrain_maxs_z > skyz) {
+		tracebox('0 0 0', snowrain_mins, snowrain_maxs, '0 0 1' * (skyz - snowrain_maxs_z), MOVE_WORLDONLY, world);
+		snowrain_maxs = snowrain_maxs + trace_endpos;
+		snowrain_mins = snowrain_mins + trace_endpos;
+	}
+	snowrain_count = self.count * (((snowrain_maxs_x - snowrain_mins_x) * (snowrain_maxs_y - snowrain_mins_y)) / ((self.maxs_x - self.mins_x) * (self.maxs_y - self.mins_x))) * 0.1;
+}
 void Draw_Rain()
 {
-    te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, self.count * drawframetime, self.glow_color);
+	SnowOrRain_SetBBox(CVAR(cl_particles_rain_distance));
+	if (snowrain_count)
+		te_particlerain(snowrain_mins, snowrain_maxs, self.velocity, snowrain_count, self.glow_color);
 }
 
 void Draw_Snow()
 {
-    te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, self.count * drawframetime, self.glow_color);
+	SnowOrRain_SetBBox(CVAR(cl_particles_snow_distance));
+	if (snowrain_count)
+		te_particlesnow(snowrain_mins, snowrain_maxs, self.velocity, snowrain_count, self.glow_color);
 }
 
 void Ent_RainOrSnow()

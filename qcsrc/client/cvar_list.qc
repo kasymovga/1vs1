@@ -159,5 +159,7 @@ READ_CVARS_SECTION(32, 33)
 	CACHE_CVAR_DEF(cl_warpzone_sound_transition, 1)
 READ_CVARS_SECTION(33, 0)
 	CACHE_CVAR(r_nearclip)
+	CACHE_CVAR_DEF(cl_particles_rain_distance, 300)
+	CACHE_CVAR_DEF(cl_particles_snow_distance, 300)
 READ_CVARS_END(0)
 
