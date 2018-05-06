@@ -377,9 +377,9 @@ void CSQC_UpdateView(float w, float h)
         // crosshair goes VERY LAST
         if (draw_crosshair) {
 			float bullets, ring_scale;
-			wcross_origin = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
-			//wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
-			//wcross_origin_z = 0;
+			//wcross_origin = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
+			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+			wcross_origin_z = 0;
             string wcross_style;
             wcross_style = cvar_string("crosshair");
             if (wcross_style != "0") {
