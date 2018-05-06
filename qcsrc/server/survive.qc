@@ -144,7 +144,8 @@ float survive_WinningCondition() {
 			self = e;
 			activator = world;
 			other = world;
-			self.use();
+			if (self.use)
+				self.use();
 			self = oldself;
 		}
 		return TRUE;
