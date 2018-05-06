@@ -69,19 +69,22 @@ void survive_trigger() {
 
 	for (self = world; (self = find(self, targetname, wave_string())); ) {
 		activator = survive_plan_entity;
-		self.use();
+		if (self.use)
+			self.use();
 	}
 	float i;
 	float wave_to_max = wave_number + 10;
 	for (i = wave_number; i < wave_to_max; i++)
 	for (self = world; (self = find(self, targetname, strcat("waveto", ftos(i)))); ) {
 		activator = survive_plan_entity;
-		self.use();
+		if (self.use)
+			self.use();
 	}
 	for (i = 1; i <= wave_number; i++)
 	for (self = world; (self = find(self, targetname, strcat("wavefrom", ftos(i)))); ) {
 		activator = survive_plan_entity;
-		self.use();
+		if (self.use)
+			self.use();
 	}
 	survive_active = TRUE;
 	GameStatus_Set("^1New wave incoming!!!\n^1Try to survive", 2);
