@@ -92,7 +92,7 @@ void WarpZone_Camera_Read(float isnew)
 	setsize(self, self.mins, self.maxs);
 }
 
-entity warpzone_missed;
+entity warpzone_passed;
 void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
@@ -102,12 +102,11 @@ void WarpZone_Teleported_Read(float isnew)
 	if(!isnew)
 		return;
 
-	if (warpzone_view)
-		warpzone_view = world;
-	else { //WZ was not predicted, so we need additional correction for view angles
-		warpzone_missed = spawn();
-		warpzone_missed.warpzone_transform = v;
-	}
+	if (warpzone_passed)
+		remove(warpzone_passed);
+
+	warpzone_passed = spawn();
+	warpzone_passed.warpzone_transform = v;
 }
 
 float warpzone_fixingview;
@@ -169,31 +168,22 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	return '0 0 0';
 }
 
-float angzlast;
+float warpzone_fixangles;
 void WarpZone_FixView_real()
 {
 	entity e;
-	vector org, ang, nearclip, corner0, corner1, corner2, corner3;
+	vector org, nearclip, corner0, corner1, corner2, corner3;
 	float f;
 	org = view_origin;
-	if (warpzone_missed) {
-		view_angles = WarpZone_TransformVAngles(warpzone_missed, view_angles);
-		angzlast = TRUE;
-		remove(warpzone_missed);
-		warpzone_missed = world;
-	}
-
 	e = WarpZone_Find(org, org);
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
-		if (warpzone_view == e)
-			ang = view_angles;
-		else {
+		if (warpzone_view != e) {
 			if (warpzone_view)
-				view_angles = WarpZone_UnTransformAngles(warpzone_view, view_angles);
+				view_angles = WarpZone_UnTransformVAngles(warpzone_view, view_angles);
 
-			ang = WarpZone_TransformVAngles(e, view_angles);
+			view_angles = WarpZone_TransformVAngles(e, view_angles);
 		}
 		WarpZone_Inside();
 		if not(warpzone_view)
@@ -201,30 +191,42 @@ void WarpZone_FixView_real()
 	}
 	else {
 		WarpZone_Outside();
-		if (warpzone_view)
-			ang = WarpZone_UnTransformVAngles(warpzone_view, view_angles);
-		else
-			ang = view_angles;
-	}
+		if (warpzone_view) {
+			if not(warpzone_passed) {
+				view_angles = WarpZone_UnTransformVAngles(warpzone_view, view_angles);
+				warpzone_fixangles = TRUE;
+			} else
+				view_angles = view_angles;
+		} else
+			view_angles = view_angles;
 
+		if (warpzone_passed) {
+			if not(warpzone_view)
+				view_angles = WarpZone_TransformVAngles(warpzone_passed, view_angles);
+
+			warpzone_fixangles = TRUE;
+			remove(warpzone_passed);
+			warpzone_passed = world;
+		}
+	}
 	warpzone_view = e;
-	if (angzlast || e) {
+	if (warpzone_fixangles || e) {
 		if not(e) {
 			f = max(0, (1 - frametime * 10));
 
-			if (ang_z > 180)
-				ang_z -= 360;
-			else if (ang_z < -180)
-				ang_z += 360;
+			if (view_angles_z > 180)
+				view_angles_z -= 360;
+			else if (view_angles_z < -180)
+				view_angles_z += 360;
 
-			ang_z = ang_z * f;
-			if (ang_z < 1)
-			if (ang_z > -1)
-				ang_z = 0;
+			view_angles_z = view_angles_z * f;
+			if (view_angles_z < 1)
+			if (view_angles_z > -1)
+				view_angles_z = 0;
 		}
-		angzlast = ang_z;
-		R_SetView(VF_ANGLES, ang);
-		R_SetView(VF_CL_VIEWANGLES, ang);
+		warpzone_fixangles = view_angles_z;
+		R_SetView(VF_ANGLES, view_angles);
+		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
 
 	if (e)
@@ -241,7 +243,6 @@ void WarpZone_FixView_real()
 		R_SetView(VF_ORIGIN, org);
 
 	view_origin = org;
-	view_angles = ang;
 }
 
 void WarpZone_InitHook() {
