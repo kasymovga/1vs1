@@ -92,20 +92,14 @@ void WarpZone_Camera_Read(float isnew)
 	setsize(self, self.mins, self.maxs);
 }
 
-void CL_RotateMoves(vector ang) = #638;
 void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
-	self.classname = "warpzone_teleported";
 	v_x = ReadCoord();
 	v_y = ReadCoord();
 	v_z = ReadCoord();
 	if(!isnew)
 		return;
-	self.warpzone_transform = v;
-	if(warpzone_newstyle) {
-		CL_RotateMoves(v);
-	}
 	warpzone_view = world;
 }
 
