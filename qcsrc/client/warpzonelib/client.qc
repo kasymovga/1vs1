@@ -92,6 +92,7 @@ void WarpZone_Camera_Read(float isnew)
 	setsize(self, self.mins, self.maxs);
 }
 
+entity warpzone_missed;
 void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
@@ -100,7 +101,13 @@ void WarpZone_Teleported_Read(float isnew)
 	v_z = ReadCoord();
 	if(!isnew)
 		return;
-	warpzone_view = world;
+
+	if (warpzone_view)
+		warpzone_view = world;
+	else { //WZ was not predicted, so we need additional correction for view angles
+		warpzone_missed = spawn();
+		warpzone_missed.warpzone_transform = v;
+	}
 }
 
 float warpzone_fixingview;
@@ -169,6 +176,11 @@ void WarpZone_FixView_real()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3;
 	float f;
 	org = view_origin;
+	if (warpzone_missed) {
+		view_angles = WarpZone_TransformOrigin(warpzone_missed, view_angles);
+		remove(warpzone_missed);
+		warpzone_missed = world;
+	}
 
 	e = WarpZone_Find(org, org);
 	if(e)
