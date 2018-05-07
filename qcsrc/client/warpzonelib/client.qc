@@ -177,7 +177,8 @@ void WarpZone_FixView_real()
 	float f;
 	org = view_origin;
 	if (warpzone_missed) {
-		view_angles = WarpZone_TransformOrigin(warpzone_missed, view_angles);
+		view_angles = WarpZone_TransformVAngles(warpzone_missed, view_angles);
+		angzlast = TRUE;
 		remove(warpzone_missed);
 		warpzone_missed = world;
 	}
@@ -201,7 +202,7 @@ void WarpZone_FixView_real()
 	else {
 		WarpZone_Outside();
 		if (warpzone_view)
-			ang = WarpZone_UnTransformAngles(warpzone_view, view_angles);
+			ang = WarpZone_UnTransformVAngles(warpzone_view, view_angles);
 		else
 			ang = view_angles;
 	}
