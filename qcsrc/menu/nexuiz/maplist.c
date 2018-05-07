@@ -24,7 +24,6 @@ CLASS(NexuizMapList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizMapList, lastClickedTime, float, 0)
 
 	ATTRIB(NexuizMapList, lastGametype, float, 0)
-	ATTRIB(NexuizMapList, lastFeatures, float, 0)
 
 	ATTRIB(NexuizMapList, origin, vector, '0 0 0')
 	ATTRIB(NexuizMapList, itemAbsSize, vector, '0 0 0')
@@ -199,10 +198,9 @@ void refilterNexuizMapList(entity me)
 {
 	float i, j, n;
 	string s;
-	float gt, f;
+	float gt;
 	gt = MapInfo_CurrentGametype();
-	f = MapInfo_CurrentFeatures();
-	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	MapInfo_FilterGametype(gt, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	me.nItems = MapInfo_count;
 	for(i = 0; i < MapInfo_count; ++i)
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
@@ -223,10 +221,9 @@ void refilterNexuizMapList(entity me)
 			);
 	}
 	me.g_maplistCache = strzone(s);
-	if(gt != me.lastGametype || f != me.lastFeatures)
+	if(gt != me.lastGametype)
 	{
 		me.lastGametype = gt;
-		me.lastFeatures = f;
 		me.setSelected(me, 0);
 	}
 }
@@ -240,7 +237,7 @@ void MapList_All(entity btn, entity me)
 {
 	float i;
 	string s;
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MAPINFO_FLAG_FORBIDDEN, 0); // all
+	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, MAPINFO_FLAG_FORBIDDEN, 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
 		s = strcat(s, " ", MapInfo_BSPName_ByID(i));

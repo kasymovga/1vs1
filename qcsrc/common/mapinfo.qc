@@ -170,7 +170,7 @@ float _MapInfo_FilterList_cmp(float i, float j, entity pass)
 	return strcasecmp(a, b);
 }
 
-float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate)
+float MapInfo_FilterGametype(float pGametype, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate)
 {
 	float i, j;
 	if not(_MapInfo_filtered_allocated)
@@ -189,7 +189,6 @@ float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequi
 				return 0;
 			}
 		if((MapInfo_Map_supportedGametypes & pGametype) != 0)
-		if((MapInfo_Map_supportedFeatures & pFeatures) == pFeatures)
 		if((MapInfo_Map_flags & pFlagsForbidden) == 0)
 		if((MapInfo_Map_flags & pFlagsRequired) == pFlagsRequired)
 			bufstr_set(_MapInfo_filtered, ++j, ftos(i));
@@ -968,15 +967,6 @@ string MapInfo_FixName(string s)
 	return MapInfo_FindName_match;
 }
 
-float MapInfo_CurrentFeatures()
-{
-	float req;
-	req = 0;
-	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_minstagib") || cvar("g_rocketarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
-		req |= MAPINFO_FEATURE_WEAPONS;
-	return req;
-}
-
 float MapInfo_CurrentGametype()
 {
 	float f;
@@ -997,8 +987,6 @@ float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with t
 		return 0;
 	if((MapInfo_Map_supportedGametypes & MapInfo_CurrentGametype()) == 0)
 		return 0;
-	if((MapInfo_Map_supportedFeatures & MapInfo_CurrentFeatures()) != MapInfo_CurrentFeatures())
-		return 0;
 	return 1;
 }
 
@@ -1016,10 +1004,7 @@ float MapInfo_GetGameTypes(string s) // returns 0 if the map can't be played wit
 	if (!MapInfo_Get_ByName(s, 1, 0))
 		return 0;
 
-	if((MapInfo_Map_supportedFeatures & MapInfo_CurrentFeatures()) != MapInfo_CurrentFeatures())
-		r = 0;
-	else
-		r = MapInfo_Map_supportedGametypes;
+	r = MapInfo_Map_supportedGametypes;
 
 	MapInfo_ClearTemps();
 	return r;
@@ -1079,7 +1064,7 @@ string MapInfo_ListAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 
 	// to make absolutely sure:
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
+	MapInfo_FilterGametype(MapInfo_CurrentGametype(), pRequiredFlags, pForbiddenFlags, 0);
 
 	out = "";
 	for(i = 0; i < MapInfo_count; ++i)
