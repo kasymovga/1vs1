@@ -204,6 +204,37 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	return 1;
 }
 
+
+float WarpZone_Shadow_CustomizeEntity() {
+	if (other == self.owner)
+		return FALSE;
+
+	self.alpha = Player_CalculateAlpha(self.owner, other);
+	return TRUE;
+}
+
+.entity wz_shadow;
+void WarpZone_Shadow_Think() {
+	if (self.owner.wz_shadow != self) {
+		remove(self);
+		return;
+	}
+	entity o = self.owner;
+	if (WarpZone_Find(o.origin + o.mins, o.origin + o.maxs) != self.enemy) {
+		self.owner.wz_shadow = world;
+		remove(self);
+		return;
+	}
+
+	self.nextthink = time;
+	setmodel(self, self.owner.model);
+	self.frame = self.owner.frame;
+	self.colormap = self.owner.colormap;
+	self.color = self.owner.color;
+	self.angles = WarpZone_TransformAngles(self.enemy, self.owner.angles);
+	setorigin(self, WarpZone_TransformOrigin(self.enemy, self.owner.origin));
+}
+
 void WarpZone_Touch (void)
 {
 	entity oldself;
@@ -221,8 +252,21 @@ void WarpZone_Touch (void)
 	if(WarpZoneLib_ExactTrigger_Touch())
 		return;
 
-	if(WarpZone_PlaneDist(self, other.origin + other.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
+	if(WarpZone_PlaneDist(self, other.origin + other.view_ofs) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
+		if (other.classname == "player")
+		{
+			entity e = other.wz_shadow;
+			if (!e || e.enemy != self) {
+				e = other.wz_shadow = spawn();
+				e.enemy = self;
+				e.customizeentityforclient = WarpZone_Shadow_CustomizeEntity;
+				e.nextthink = time;
+				e.think = WarpZone_Shadow_Think;
+				e.owner = other;
+			}
+		}
 		return;
+	}
 
 	float f;
 	// number of frames we need to go back:
