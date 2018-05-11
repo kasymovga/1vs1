@@ -36,8 +36,7 @@ void Draw_GrapplingHook()
 	vector rgb;
 	float t;
 	InterpolateOrigin_Do();
-	entity o = self.owner;
-	float owner_entnum = self.owner.sv_entnum + 1;
+	float owner_entnum = self.sv_entnum;
 
 	b = self.origin;
 	if(!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == spectatee_status)) {
@@ -97,9 +96,6 @@ void Ent_GrapplingHook(float ignore) {
 	if (f & 1) {
 		owner_num = ReadByte();
 		self.sv_entnum = owner_num;
-		if(owner_num > 0 && owner_num < 256)
-			self.owner = players[owner_num];
-
 		self.draw = Draw_GrapplingHook;
 		self.entremove = Remove_GrapplingHook;
 		if not(self.enemy)
