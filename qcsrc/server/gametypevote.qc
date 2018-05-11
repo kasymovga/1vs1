@@ -45,7 +45,7 @@ float GameTypeVote_Think() {
 		gametypevote = Menu_Prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"), GameTypeVote_Select);
 		t = 1;
 		gametypes_count = 0;
-		for (i = 0; i < 15; i++) {
+		for (i = 0; i < 22; i++) {
 			if (!nextmap_types || (t & nextmap_types))
 			if (t & gametypevote_available)
 			{
