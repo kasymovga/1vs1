@@ -31,15 +31,8 @@ void physic_spiderbot_pre() {
 }
 
 void physic_spiderbot_post() {
-	//physic_velocity = self.velocity;
-	vector v = spider.origin + '0 0 48';
-	makevectors(input_angles);
-	tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * 200, MOVE_WORLDONLY, world);
-	v = trace_endpos;
-	tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * 100, MOVE_WORLDONLY, world);
-	v = trace_endpos;
-	setorigin(self, v);
 	physic_flags = self.flags;
+	setorigin(self, spider.origin + '0 0 48');
 }
 
 void Ent_PhysicSpiderbot_Remove() {
@@ -47,6 +40,7 @@ void Ent_PhysicSpiderbot_Remove() {
 	physic_plug_pre = physic_plug_nopostpre;
 	physic_plug = physic_plug_null;
 	physic_plug_post = physic_plug_nopostpre;
+	physic_plug_adjust_view = physic_plug_no_adjust_view;
 }
 
 void Ent_PhysicSpiderbot(float isnew)
@@ -56,6 +50,9 @@ void Ent_PhysicSpiderbot(float isnew)
 		physic_plug = physic_spiderbot_hook;
 		physic_plug_pre = physic_spiderbot_pre;
 		physic_plug_post = physic_spiderbot_post;
+		vehicle_adjust_view_up = 120;
+		vehicle_adjust_view_back = 200;
+		physic_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicSpiderbot_Remove;
 		spider = self;
 		spider.solid = SOLID_BBOX;

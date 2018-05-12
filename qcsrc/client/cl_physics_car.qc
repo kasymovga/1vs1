@@ -31,14 +31,7 @@ void physic_car_pre() {
 }
 
 void physic_car_post() {
-	//physic_velocity = self.velocity;
-	vector v = mycar.origin + '0 0 40';
-	makevectors(input_angles);
-	tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * 60, MOVE_WORLDONLY, world);
-	v = trace_endpos;
-	tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * 320, MOVE_WORLDONLY, world);
-	v = trace_endpos;
-	setorigin(self, v);
+	self.origin = mycar.origin + '0 0 40';
 	physic_flags = self.flags;
 }
 
@@ -47,6 +40,7 @@ void Ent_PhysicCar_Remove() {
 	physic_plug_pre = physic_plug_nopostpre;
 	physic_plug = physic_plug_null;
 	physic_plug_post = physic_plug_nopostpre;
+	physic_plug_adjust_view = physic_plug_no_adjust_view;
 }
 
 void Ent_PhysicCar(float isnew)
@@ -56,6 +50,9 @@ void Ent_PhysicCar(float isnew)
 		physic_plug = physic_car_hook;
 		physic_plug_pre = physic_car_pre;
 		physic_plug_post = physic_car_post;
+		vehicle_adjust_view_up = 100;
+		vehicle_adjust_view_back = 220;
+		physic_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicCar_Remove;
 		mycar = self;
 		mycar.solid = SOLID_BBOX;

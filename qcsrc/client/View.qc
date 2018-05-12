@@ -364,10 +364,14 @@ void CSQC_UpdateView(float w, float h)
     {
         vector sz;
         CSQC_spider_HUD();
-        sz = drawgetimagesize(SPIDER_CROSS);
-        sz_x *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
-        sz_y *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
-        drawpic('0.5 0 0' * (CVAR(vid_conwidth) - sz_x) + '0 0.5 0' * (CVAR(vid_conheight) - sz_y), SPIDER_CROSS, sz, '1 1 1', CVAR_OR(cl_vehicle_spiderbot_cross_alpha,0.6), DRAWFLAG_NORMAL);
+		if (draw_crosshair) {
+			sz = drawgetimagesize(SPIDER_CROSS);
+			sz_x *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
+			sz_y *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
+			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+			wcross_origin_z = 0;
+			drawpic(wcross_origin - 0.5 * sz, SPIDER_CROSS, sz, '1 1 1', CVAR_OR(cl_vehicle_spiderbot_cross_alpha,0.6), DRAWFLAG_NORMAL);
+		}
     }
     else
     {

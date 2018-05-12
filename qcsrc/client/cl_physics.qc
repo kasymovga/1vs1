@@ -11,6 +11,16 @@ float physic_can_use_jetpack;
 float physic_start_teleport_time;
 float physic_start_crouch;
 
+vector vehicle_adjust_view() {
+	vector v = view_origin;
+	makevectors(view_angles);
+	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, MOVE_WORLDONLY, world);
+	v = trace_endpos;
+	tracebox(v, '-8 -8 -8', '8 8 8', v + '0 0 40' + v_up * vehicle_adjust_view_up, MOVE_WORLDONLY, world);
+	v = trace_endpos;
+	return v;
+}
+
 void PM_ClientMovement_UpdateStatus(float ground)
 {
 	if (physic_movetype == MOVETYPE_WALK)
@@ -310,13 +320,17 @@ void CSQCPhysic_SetCamera() {
 	if (physic)
 	if (servercommandframe)
 	if (clientcommandframe) {
-		vector v = view_origin;
+		vector v;
 		if (CVAR(chase_active)) {
+			v = view_origin;
 			makevectors(view_angles);
-			tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
+			tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
 			v = trace_endpos;
-			tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
+			tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			v = trace_endpos;
+			R_SetView(VF_ORIGIN, v);
+		} else if (physic_plug_adjust_view) {
+			v = physic_plug_adjust_view();
 			R_SetView(VF_ORIGIN, v);
 		}
 	}

@@ -31,14 +31,7 @@ void physic_aircraft_pre() {
 }
 
 void physic_aircraft_post() {
-	//physic_velocity = self.velocity;
-	vector v = aircraft.origin + '0 0 48';
-	makevectors(input_angles);
-	tracebox(v, '-1 -1 -1', '1 1 1', v - v_forward * 200, MOVE_WORLDONLY, world);
-	v = trace_endpos;
-	tracebox(v, '-1 -1 -1', '1 1 1', v + v_up * 100, MOVE_WORLDONLY, world);
-	v = trace_endpos;
-	setorigin(self, v);
+	setorigin(self, aircraft.origin + '0 0 48');
 	physic_flags = self.flags;
 }
 
@@ -47,6 +40,7 @@ void Ent_PhysicAircraft_Remove() {
 	physic_plug_pre = physic_plug_nopostpre;
 	physic_plug = physic_plug_null;
 	physic_plug_post = physic_plug_nopostpre;
+	physic_plug_adjust_view = physic_plug_no_adjust_view;
 }
 
 void Ent_PhysicAircraft(float isnew)
@@ -56,6 +50,9 @@ void Ent_PhysicAircraft(float isnew)
 		physic_plug = physic_aircraft_hook;
 		physic_plug_pre = physic_aircraft_pre;
 		physic_plug_post = physic_aircraft_post;
+		vehicle_adjust_view_up = 120;
+		vehicle_adjust_view_back = 200;
+		physic_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicAircraft_Remove;
 		aircraft = self;
 		aircraft.solid = SOLID_BBOX;
