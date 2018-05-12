@@ -18,6 +18,7 @@ var void(entity spot) Hat_Spawn_NextLink;
 void Hat_Spawn(entity spot) {
 	self.hat = spawn();
 	setmodel(self.hat, sv_player_hat);
+	self.hat.owner = self;
 	self.hat.scale = sv_player_hat_scale;
 	setattachment(self.hat, self, sv_player_hat_attachment);
 	self.hat.angles = sv_player_hat_angles;
