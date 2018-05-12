@@ -12,11 +12,12 @@ float physic_start_teleport_time;
 float physic_start_crouch;
 
 vector vehicle_adjust_view() {
-	vector v = view_origin;
 	makevectors(view_angles);
+	vector v = view_origin;
+	v_z += vehicle_adjust_view_start_offs;
 	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, MOVE_WORLDONLY, world);
 	v = trace_endpos;
-	tracebox(v, '-8 -8 -8', '8 8 8', v + '0 0 40' + v_up * vehicle_adjust_view_up, MOVE_WORLDONLY, world);
+	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * vehicle_adjust_view_up, MOVE_WORLDONLY, world);
 	v = trace_endpos;
 	return v;
 }
@@ -224,7 +225,7 @@ float physic_last_LEFT_KEY_time;
 vector CSQCPhysic_SetViewOrg()
 {
 	vector v;
-	if(physic && servercommandframe && clientcommandframe)
+	if(physic && servercommandframe && clientcommandframe && !spectatee_status)
 	{
 		float frametime_save = frametime;
 		float i;
@@ -321,18 +322,19 @@ void CSQCPhysic_SetCamera() {
 	if (servercommandframe)
 	if (clientcommandframe) {
 		vector v;
-		if (CVAR(chase_active)) {
+		if (physic_plug_adjust_view)
+			v = physic_plug_adjust_view();
+		else
 			v = view_origin;
+
+		if (CVAR(chase_active)) {
 			makevectors(view_angles);
 			tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
 			v = trace_endpos;
 			tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			v = trace_endpos;
-			R_SetView(VF_ORIGIN, v);
-		} else if (physic_plug_adjust_view) {
-			v = physic_plug_adjust_view();
-			R_SetView(VF_ORIGIN, v);
 		}
+		R_SetView(VF_ORIGIN, v);
 	}
 }
 

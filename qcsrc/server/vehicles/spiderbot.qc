@@ -354,7 +354,7 @@ float spiderbot_physic_hook()
     //player.angles_x *= -1;
 
 
-	setorigin(player, spider.origin + '0 0 48');
+	vehicle_adjust_player_position(player, spider, SPIDERBOT_VIEW_START_OFFSET, SPIDERBOT_VIEW_BACK, SPIDERBOT_VIEW_UP);
 	player.angles = spider.angles;
 	//spider.vehicle.angles = spider.angles;
 	physic_velocity = '0 0 0';

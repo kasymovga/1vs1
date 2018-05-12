@@ -4,6 +4,7 @@ const var void() physic_plug_nopostpre;
 var vector() physic_plug_adjust_view;
 float vehicle_adjust_view_up;
 float vehicle_adjust_view_back;
+float vehicle_adjust_view_start_offs;
 vector vehicle_adjust_view();
 const var vector() physic_plug_no_adjust_view;
 

@@ -1,5 +1,8 @@
 #define car_MIN '-90 -90 5'
 #define car_MAX '90 90 105'
+#define CAR_VIEW_BACK 220
+#define CAR_VIEW_UP 100
+#define CAR_VIEW_START_OFFSET 40
 
 float g_vehicle_car_speed;
 float g_vehicle_car_speed_stop;

@@ -1,5 +1,8 @@
 #define spiderbot_MIN '-75 -75 5'
 #define spiderbot_MAX '75 75 105'
+#define SPIDERBOT_VIEW_BACK 200
+#define SPIDERBOT_VIEW_UP 120
+#define SPIDERBOT_VIEW_START_OFFSET 40
 
 float g_vehicle_spiderbot_jump_accel;
 float g_vehicle_spiderbot_jump_up;

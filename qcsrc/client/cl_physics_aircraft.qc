@@ -50,8 +50,9 @@ void Ent_PhysicAircraft(float isnew)
 		physic_plug = physic_aircraft_hook;
 		physic_plug_pre = physic_aircraft_pre;
 		physic_plug_post = physic_aircraft_post;
-		vehicle_adjust_view_up = 120;
-		vehicle_adjust_view_back = 200;
+		vehicle_adjust_view_up = AIRCRAFT_VIEW_UP;
+		vehicle_adjust_view_back = AIRCRAFT_VIEW_BACK;
+		vehicle_adjust_view_start_offs = AIRCRAFT_VIEW_START_OFFSET;
 		physic_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicAircraft_Remove;
 		aircraft = self;

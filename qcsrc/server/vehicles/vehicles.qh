@@ -57,5 +57,6 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
 void vehicle_stdproc_setcolormod();
 float vehicle_extract_player(entity plr, float eject);
 float player_can_use_vehicle(entity plr);
+void vehicle_adjust_player_position(entity plr, entity veh, float start_offset, float back, float up);
 
 #endif

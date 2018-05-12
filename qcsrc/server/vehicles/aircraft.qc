@@ -261,7 +261,7 @@ float aircraft_physic_hook()
 	physic_aircraft();
 	//self.angles_x = -self.angles_x;
 
-	setorigin(player, aircraft.origin + '0 0 48');
+	vehicle_adjust_player_position(player, aircraft, AIRCRAFT_VIEW_START_OFFSET, AIRCRAFT_VIEW_BACK, AIRCRAFT_VIEW_UP);
 	player.angles = aircraft.angles;
 	physic_velocity = player.velocity = '0 0 0';
     self = player;

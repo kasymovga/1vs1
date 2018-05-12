@@ -3,6 +3,16 @@
 #include "aircraft.qc"
 #include "doyoulikemycar.qc"
 
+void vehicle_adjust_player_position(entity plr, entity veh, float start_offs, float back, float up) {
+	makevectors(plr.v_angle);
+	vector v = veh.origin;
+	v_z += start_offs;
+	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * back, MOVE_WORLDONLY, world);
+	v = trace_endpos;
+	tracebox(v, '-8 -8 -8', '8 8 8', v + v_up * up, MOVE_WORLDONLY, world);
+	setorigin(plr, trace_endpos);
+}
+
 float vehicle_extract_player(entity plr, float eject)
 {
 	if not(plr.vehicle)

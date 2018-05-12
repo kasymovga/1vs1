@@ -50,8 +50,9 @@ void Ent_PhysicCar(float isnew)
 		physic_plug = physic_car_hook;
 		physic_plug_pre = physic_car_pre;
 		physic_plug_post = physic_car_post;
-		vehicle_adjust_view_up = 100;
-		vehicle_adjust_view_back = 220;
+		vehicle_adjust_view_up = CAR_VIEW_UP;
+		vehicle_adjust_view_back = CAR_VIEW_BACK;
+		vehicle_adjust_view_start_offs = CAR_VIEW_START_OFFSET;
 		physic_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicCar_Remove;
 		mycar = self;

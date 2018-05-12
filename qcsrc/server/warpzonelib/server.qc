@@ -245,15 +245,14 @@ void WarpZone_Touch (void)
 	if(time <= other.warpzone_teleport_finishtime) // already teleported this frame
 		return;
 
-	// FIXME needs a better check to know what is safe to teleport and what not
-	if(other.movetype == MOVETYPE_NONE || other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
-		return;
-
 	if(WarpZoneLib_ExactTrigger_Touch())
 		return;
 
+	if(other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
+		return;
+
 	if(WarpZone_PlaneDist(self, other.origin + other.view_ofs) >= 0) {// wrong side of the trigger_warpzone (don't teleport yet)
-		if (other.classname == "player")
+		if (other.modelindex)
 		{
 			entity e = other.wz_shadow;
 			if (!e || e.enemy != self) {
@@ -267,6 +266,9 @@ void WarpZone_Touch (void)
 		}
 		return;
 	}
+	// FIXME needs a better check to know what is safe to teleport and what not
+	if(other.movetype == MOVETYPE_NONE)
+		return;
 
 	float f;
 	// number of frames we need to go back:

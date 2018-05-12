@@ -50,8 +50,9 @@ void Ent_PhysicSpiderbot(float isnew)
 		physic_plug = physic_spiderbot_hook;
 		physic_plug_pre = physic_spiderbot_pre;
 		physic_plug_post = physic_spiderbot_post;
-		vehicle_adjust_view_up = 120;
-		vehicle_adjust_view_back = 200;
+		vehicle_adjust_view_up = SPIDERBOT_VIEW_UP;
+		vehicle_adjust_view_back = SPIDERBOT_VIEW_BACK;
+		vehicle_adjust_view_start_offs = SPIDERBOT_VIEW_START_OFFSET;
 		physic_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicSpiderbot_Remove;
 		spider = self;

@@ -132,7 +132,7 @@ float car_physic_hook()
 	mycar.gun2.angles_y = approach(mycar.gun2.angles_y, bound(-45, a, 45), frametime * 90);
 	mycar.gun1.angles_y = -mycar.gun2.angles_y;
 
-	setorigin(player, mycar.origin + '0 0 48');
+	vehicle_adjust_player_position(player, mycar, CAR_VIEW_START_OFFSET, CAR_VIEW_BACK, CAR_VIEW_UP);
 	player.angles = mycar.angles;
 	physic_velocity = '0 0 0';
 	player.velocity = mycar.velocity;
