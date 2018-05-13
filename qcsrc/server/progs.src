@@ -231,7 +231,7 @@ campaign.qc
 ../menu-server/campaign_file.qc
 ../menu-server/campaign_setup.qc
 
-../common/gamecommand.qc
+../menu-server/gamecommand.qc
 gamecommand.qc
 
 keyhunt.qc
