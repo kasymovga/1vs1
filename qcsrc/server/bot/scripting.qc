@@ -903,7 +903,7 @@ float bot_cmd_keypress_handler(string key, float enabled)
 	{
 		case "all":
 			if(enabled)
-				self.bot_cmd_keys = power2of(20) - 1; // >:)
+				self.bot_cmd_keys = pow(2, 20) - 1; // >:)
 			else
 				self.bot_cmd_keys = BOT_CMD_KEY_NONE;
 		case "forward":

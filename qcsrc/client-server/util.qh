@@ -1,1 +1,29 @@
+#define TIME_FACTOR 100
+#define TIME_ENCODED_TOSTRING(n) mmssss(n)
+#define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
+#define TIME_DECODE(n) ((n) / TIME_FACTOR)
+
 string ScoreString(float vflags, float value);
+vector cross(vector a, vector b);
+float mod(float a, float b);
+float isGametypeInFilter(float gt, float tp, string pattern);
+
+#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+string mmsss(float t);
+string mmssss(float t);
+float lengthLogTable[128];
+void compressShortVector_init();
+
+// database (NOTE: keys are case sensitive)
+void db_save(float db, string filename);
+void db_dump(float db, string pFilename);
+
+// stringbuffer loading/saving
+void buf_save(float buf, string filename);
+
+string mi_shortname;
+vector mi_min;
+vector mi_max;
+void get_mi_min_max(float mode);
+float almost_equals(float a, float b);
+float boxesoverlap(vector m1, vector m2, vector m3, vector m4);

@@ -796,6 +796,17 @@ float UpdateSelectedPlayer_countvalue(float v)
 	return max(0, (v - 1.0) / 0.5);
 }
 
+float dist_point_line(vector p, vector l0, vector ldir)
+{
+	ldir = normalize(ldir);
+
+	// remove the component in line direction
+	p = p - (p * ldir) * ldir;
+
+	// vlen of the remaining vector
+	return vlen(p);
+}
+
 // returns: -2 if no hit, otherwise cos of the angle
 // uses the global v_angle
 float UpdateSelectedPlayer_canSee(entity p, float mincosangle, float maxdist)

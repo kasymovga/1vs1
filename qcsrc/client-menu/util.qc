@@ -343,3 +343,17 @@ void m_tooltip(entity wnd, vector pos)
 #undef conwidth
 #undef conheight
 #endif
+
+float almost_in_bounds(float a, float b, float c)
+{
+	float eps;
+	eps = (max(a, -a) + max(c, -c)) * 0.001;
+	return b == median(a - eps, b, c + eps);
+}
+
+float median(float a, float b, float c)
+{
+	if(a < c)
+		return bound(a, b, c);
+	return bound(c, b, a);
+}

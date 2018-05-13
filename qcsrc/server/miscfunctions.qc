@@ -2039,3 +2039,33 @@ void dropentities(entity platform) {
 }
 
 #define BoundToByte(x) ((x < 251) ? x : ((x < 500) ? 251 : ((x < 1000) ? 252 : ((x < 2000) ? 253 : ((x < 5000) ? 254 : 255)))))
+
+void RandomSelection_Init()
+{
+	RandomSelection_totalweight = 0;
+	RandomSelection_chosen_ent = world;
+	RandomSelection_chosen_float = 0;
+	RandomSelection_chosen_string = string_null;
+	RandomSelection_best_priority = -1;
+}
+void RandomSelection_Add(entity e, float f, string s, float weight, float priority)
+{
+	if(priority > RandomSelection_best_priority)
+	{
+		RandomSelection_best_priority = priority;
+		RandomSelection_chosen_ent = e;
+		RandomSelection_chosen_float = f;
+		RandomSelection_chosen_string = s;
+		RandomSelection_totalweight = weight;
+	}
+	else if(priority == RandomSelection_best_priority)
+	{
+		RandomSelection_totalweight += weight;
+		if(random() * RandomSelection_totalweight <= weight)
+		{
+			RandomSelection_chosen_ent = e;
+			RandomSelection_chosen_float = f;
+			RandomSelection_chosen_string = s;
+		}
+	}
+}

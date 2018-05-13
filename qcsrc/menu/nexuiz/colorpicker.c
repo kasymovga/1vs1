@@ -16,6 +16,91 @@ entity makeNexuizColorpicker(entity theTextbox);
 #endif
 
 #ifdef IMPLEMENTATION
+
+vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
+{
+	vector rgb;
+
+	hue -= 6 * floor(hue / 6);
+
+	//else if(ma == rgb_x)
+	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
+	if(hue <= 1)
+	{
+		rgb_x = ma;
+		rgb_y = hue * (ma - mi) + mi;
+		rgb_z = mi;
+	}
+	//else if(ma == rgb_y)
+	//	hue = 60 * (rgb_z - rgb_x) / (ma - mi) + 120;
+	else if(hue <= 2)
+	{
+		rgb_x = (2 - hue) * (ma - mi) + mi;
+		rgb_y = ma;
+		rgb_z = mi;
+	}
+	else if(hue <= 3)
+	{
+		rgb_x = mi;
+		rgb_y = ma;
+		rgb_z = (hue - 2) * (ma - mi) + mi;
+	}
+	//else // if(ma == rgb_z)
+	//	hue = 60 * (rgb_x - rgb_y) / (ma - mi) + 240;
+	else if(hue <= 4)
+	{
+		rgb_x = mi;
+		rgb_y = (4 - hue) * (ma - mi) + mi;
+		rgb_z = ma;
+	}
+	else if(hue <= 5)
+	{
+		rgb_x = (hue - 4) * (ma - mi) + mi;
+		rgb_y = mi;
+		rgb_z = ma;
+	}
+	//else if(ma == rgb_x)
+	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
+	else // if(hue <= 6)
+	{
+		rgb_x = ma;
+		rgb_y = mi;
+		rgb_z = (6 - hue) * (ma - mi) + mi;
+	}
+
+	return rgb;
+}
+
+
+vector hsl_to_rgb(vector hsl)
+{
+	float mi, ma, maminusmi;
+
+	if(hsl_z <= 0.5)
+		maminusmi = hsl_y * 2 * hsl_z;
+	else
+		maminusmi = hsl_y * (2 - 2 * hsl_z);
+
+	// hsl_z     = 0.5 * mi + 0.5 * ma
+	// maminusmi =     - mi +       ma
+	mi = hsl_z - 0.5 * maminusmi;
+	ma = hsl_z + 0.5 * maminusmi;
+
+	return hue_mi_ma_to_rgb(hsl_x, mi, ma);
+}
+
+
+string rgb_to_hexcolor(vector rgb)
+{
+	return
+		strcat(
+			"^x",
+			DEC_TO_HEXDIGIT(floor(rgb_x * 15 + 0.5)),
+			DEC_TO_HEXDIGIT(floor(rgb_y * 15 + 0.5)),
+			DEC_TO_HEXDIGIT(floor(rgb_z * 15 + 0.5))
+		);
+}
+
 entity makeNexuizColorpicker(entity theTextbox)
 {
 	entity me;

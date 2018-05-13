@@ -27,6 +27,54 @@ void cvar_clientsettemp_restore()
 			cvar_set(e.netname, e.message);
 }
 
+vector mi_picmin; // adjusted mins that map to the picture (square)
+vector mi_picmax; // adjusted maxs that map to the picture (square)
+vector mi_pictexcoord0; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_pictexcoord1; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_pictexcoord2; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_pictexcoord3; // texcoords of the image corners (after transforming, these are 2D coords too)
+void get_mi_min_max_texcoords(float mode)
+{
+	vector extend;
+
+	get_mi_min_max(mode);
+
+	mi_picmin = mi_min;
+	mi_picmax = mi_max;
+
+	// extend mi_picmax to get a square aspect ratio
+	// center the map in that area
+	extend = mi_picmax - mi_picmin;
+	if(extend_y > extend_x)
+	{
+		mi_picmin_x -= (extend_y - extend_x) * 0.5;
+		mi_picmax_x += (extend_y - extend_x) * 0.5;
+	}
+	else
+	{
+		mi_picmin_y -= (extend_x - extend_y) * 0.5;
+		mi_picmax_y += (extend_x - extend_y) * 0.5;
+	}
+
+	// add another some percent
+	extend = (mi_picmax - mi_picmin) * (1 / 64.0);
+	mi_picmin -= extend;
+	mi_picmax += extend;
+
+	// calculate the texcoords
+	mi_pictexcoord0 = mi_pictexcoord1 = mi_pictexcoord2 = mi_pictexcoord3 = '0 0 0';
+	// first the two corners of the origin
+	mi_pictexcoord0_x = (mi_min_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
+	mi_pictexcoord0_y = (mi_min_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	mi_pictexcoord2_x = (mi_max_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
+	mi_pictexcoord2_y = (mi_max_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	// then the other corners
+	mi_pictexcoord1_x = mi_pictexcoord0_x;
+	mi_pictexcoord1_y = mi_pictexcoord2_y;
+	mi_pictexcoord3_x = mi_pictexcoord2_x;
+	mi_pictexcoord3_y = mi_pictexcoord0_y;
+}
+
 #ifdef USE_FTE
 float __engine_check;
 #endif
@@ -265,8 +313,6 @@ void CSQC_Init(void)
 		cvar_set("cl_effects_lightningarc_branchfactor_start", "0.25");
 		cvar_set("cl_effects_lightningarc_branchfactor_add", "0.1");
 	}
-	check_unacceptable_compiler_bugs();
-
 	float i;
 	CSQC_CheckEngine();
 	dprint_load();
@@ -620,13 +666,8 @@ void GameCommand(string msg)
 		print("  radar\n");
 		print("  sbar_columns_set ...\n");
 		print("  sbar_columns_help\n");
-		GameCommand_Generic("help");
 		return;
 	}
-
-	if(GameCommand_Generic(msg))
-		return;
-
 	string cmd;
 	cmd = argv(0);
 	if(cmd == "mv_download") {

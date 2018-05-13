@@ -11,6 +11,7 @@ constants.qh
 ../common/constants.qh
 ../client-server/constants.qh
 ../common/util.qh
+../menu-server/util.qh
 ../client-server/util.qh
 ../common/items.qh
 location_request.qh
@@ -24,7 +25,7 @@ vehicles/vehicles.qh
 
 campaign.qh
 ../menu-server/campaign_common.qh
-../common/mapinfo.qh
+../menu-server/mapinfo.qh
 ../client-server/projinfo.qh
 
 ../common/dlc.qh
@@ -126,6 +127,7 @@ warpzonelib/server.qh
 warpzonelib/util_server.qh
 ../common/util.qc
 ../client-server/util.qc
+../menu-server/util.qc
 selectableweapon.qh
 twoweapons.qh
 noteline.qh
@@ -240,7 +242,7 @@ conquest.qc
 
 ipban.qc
 
-../common/mapinfo.qc
+../menu-server/mapinfo.qc
 
 race.qc
 

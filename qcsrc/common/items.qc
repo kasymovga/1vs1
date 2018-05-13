@@ -27,7 +27,7 @@ void register_weapon_real(float id, float(float) func, float ammotype, float i, 
 	weapon_info[id - 1] = e = spawn();
 	e.classname = "weapon_info";
 	e.weapon = id;
-	e.weapons = power2of(id - 1);
+	e.weapons = pow(2, id - 1);
 	e.netname = shortname;
 	e.message = wname;
 	e.items = ammotype;
@@ -128,10 +128,12 @@ entity get_weaponinfo(float id)
 		return w;
 	return dummy_weapon_info;
 }
+#ifndef CSQC
 string W_FixWeaponOrder(string order, float complete)
 {
 	return fixPriorityList(order, WEP_FIRST, WEP_LAST, 230 - WEP_FIRST, complete);
 }
+#endif
 
 #ifdef SVQC
 #define register_weapon(id,func,ammotype,i,normalweapon,canclimb,weapontype,pickupbasevalue,modelname,shortname,wname,wclr) \

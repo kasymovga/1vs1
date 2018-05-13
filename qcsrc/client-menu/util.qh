@@ -3,3 +3,10 @@ void m_setpointerfocus(entity wnd);
 void m_focus_item_chain(entity outermost, entity innermost);
 void drawBackground(string img, float a, float algn, float force1);
 void m_tooltip(entity wn, vector pos);
+float almost_in_bounds(float a, float b, float c);
+float median(float a, float b, float c);
+
+string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
+#define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
+#define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
+#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))

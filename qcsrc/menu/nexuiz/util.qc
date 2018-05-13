@@ -246,6 +246,18 @@ void preMenuDraw()
 	}
 }
 
+string getcurrentmod()
+{
+	float n;
+	string m;
+	m = cvar_string("fs_gamedir");
+	n = tokenize_console(m);
+	if(n == 0)
+		return "data";
+	else
+		return argv(n - 1);
+}
+
 string resolvemod(string m)
 {
 	if(m == "=")
@@ -256,4 +268,33 @@ string resolvemod(string m)
 
 void menu_loadmap_prepare() {
 	localcmd("\ndisconnect; wait; g_campaign 0; maxplayers ", ftos(max(max(cvar("bot_number") + 1, cvar("minplayers")), cvar("menu_maxplayers"))), "; g_maplist_shufflenow");
+}
+
+void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
+{
+	entity e;
+	e = start;
+	funcPre(pass, e);
+	while(e.downleft)
+	{
+		e = e.downleft;
+		funcPre(pass, e);
+	}
+	funcPost(pass, e);
+	while(e != start)
+	{
+		if(e.right)
+		{
+			e = e.right;
+			funcPre(pass, e);
+			while(e.downleft)
+			{
+				e = e.downleft;
+				funcPre(pass, e);
+			}
+		}
+		else
+			e = e.up;
+		funcPost(pass, e);
+	}
 }

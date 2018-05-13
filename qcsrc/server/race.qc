@@ -1,4 +1,6 @@
 #define MAX_CHECKPOINTS 255
+#define RACE_RECORD "/race100record/"
+#define CTS_RECORD "/cts100record/"
 
 .float race_penalty_accumulator;
 .string race_penalty_reason;

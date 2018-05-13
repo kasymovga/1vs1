@@ -1,3 +1,12 @@
 void traceline_skipnonsolid(vector start, vector end, float t, entity forent);
 void tracebox_skipnonsolid(vector start, vector mi, vector ma, vector end, float nomonst, entity forent);
 float crandom (void);
+void WriteInt24_t(float dest, float val);
+float compressShortVector(vector vec);
+
+vector solve_quadratic(float a, float b, float c);
+// solution 1 -> x
+// solution 2 -> y
+// z = 1 if a real solution exists, 0 if not
+// if no real solution exists, x contains the real part and y the imaginary part of the complex solutions x+iy and x-iy
+

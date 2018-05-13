@@ -8,12 +8,12 @@ mbuiltin.qh
 ../common/miscfunctions.qh
 ../menu-server/miscfunctions.qh
 ../client-menu/ui.qh
-
 ../client-menu/util.qh
+../menu-server/util.qh
 ../client-menu/oo/base.h
 
 ../common/constants.qh
-../common/mapinfo.qh
+../menu-server/mapinfo.qh
 ../menu-server/campaign_common.qh
 ../common/items.qh
 ../common/curl.qh
@@ -47,10 +47,11 @@ nexuiz/util.qc
 ../menu-server/miscfunctions.qc
 ../menu-server/campaign_file.qc
 ../menu-server/campaign_setup.qc
-../common/mapinfo.qc
+../menu-server/mapinfo.qc
 ../common/items.qc
 ../common/curl.qc
 ../common/dlc.qc
 ../client-menu/ui.qc
 
 ../client-menu/util.qc
+../menu-server/util.qc
