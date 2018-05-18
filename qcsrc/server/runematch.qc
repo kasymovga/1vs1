@@ -5,6 +5,7 @@ float g_balance_curse_burning_damage_factor;
 float g_balance_curse_vulner_damage_factor;
 float g_balance_curse_venom_damage_factor;
 float g_balance_rune_regen_damage_factor;
+float g_balance_rune_regen_max_health;
 float g_balance_rune_speed_combo_jumpheight;
 float g_balance_rune_speed_jumpheight;
 float g_balance_curse_slow_jumpheight;
@@ -17,6 +18,7 @@ float g_balance_curse_slow_atkrate;
 float g_balance_rune_defense_damage_factor;
 float g_balance_rune_ignite_damage_factor;
 float g_balance_rune_vampire_damage_factor;
+float g_balance_rune_vampire_max_health;
 float g_runematch_allow_same;
 float g_runematch_carried_runes_max;
 float g_runematch_curses;
@@ -727,6 +729,7 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 			{
 				if (attacker.runes & RUNE_VAMPIRE)
 				if ((d = damage * g_balance_rune_vampire_damage_factor) >= 1)
+				if (attacker.health < g_balance_rune_vampire_max_health)
 					healer_spawn(d, 0.5, attacker);
 
 				if (targ.runes & CURSE_ALTRUISM)
@@ -754,6 +757,7 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 		}
 		if (targ.runes & RUNE_REGEN)
 		if ((d = damage * g_balance_rune_regen_damage_factor) >= 1)
+		if (targ.health < g_balance_rune_regen_max_health)
 			healer_spawn(d, 1, targ);
 
 		if (targ.runes & CURSE_VENOM)
@@ -838,6 +842,7 @@ void runes_init() {
 	CACHE_CVAR(g_balance_curse_burning_damage_factor);
 	CACHE_CVAR(g_balance_curse_vulner_damage_factor);
 	CACHE_CVAR(g_balance_rune_regen_damage_factor);
+	CACHE_CVAR(g_balance_rune_regen_max_health);
 	CACHE_CVAR(g_balance_curse_venom_damage_factor);
 	CACHE_CVAR(g_balance_rune_speed_combo_jumpheight);
 	CACHE_CVAR(g_balance_rune_speed_jumpheight);
@@ -846,6 +851,7 @@ void runes_init() {
 	CACHE_CVAR(g_balance_rune_speed_combo_moverate);
 	CACHE_CVAR(g_balance_rune_speed_moverate);
 	CACHE_CVAR(g_balance_rune_vampire_damage_factor);
+	CACHE_CVAR(g_balance_rune_vampire_max_health);
 	CACHE_CVAR(g_balance_rune_speed_combo_atkrate);
 	CACHE_CVAR(g_balance_rune_speed_atkrate);
 	CACHE_CVAR(g_balance_curse_slow_atkrate);
