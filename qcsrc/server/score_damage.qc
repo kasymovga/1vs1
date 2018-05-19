@@ -2,6 +2,7 @@ var float(entity inflictor, entity attacker, float damage, float deathtype, vect
 float ScoreDamage_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.scorekeeper)
 	if (!teamplay || attacker.team != self.team)
+	if (deathtype != WEP_PORTO)
 		PlayerScore_Add(attacker, SP_DAMAGE, damage);
 
 	return ScoreDamage_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);

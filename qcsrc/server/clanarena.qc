@@ -42,6 +42,7 @@ float Clanarena_HandleFrags(entity attacker, entity targ, float f) {
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Clanarena_PlayerDamageHandle_NextLink;
 float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.flags & FL_CLIENT)
+	if (deathtype != WEP_PORTO)
 	if (attacker.team != self.team) {
 		PlayerScore_Add(attacker, SP_SCORE, damage / 10);
 		attacker.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
