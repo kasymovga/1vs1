@@ -5,33 +5,41 @@ float g_badass_kdr;
 float g_badass_health_limit;
 float g_badass_armor_limit;
 
-var float(float c) BadAss_PlayerColorsMod_NextLink;
-float BadAss_PlayerColorsMod(float c) {
+float BadAss_Check() {
 	if (g_badass_killcount)
 	if (self.killcount >= g_badass_killcount)
-		c = g_badass_color;
+		return TRUE;
 
 	if (g_badass_leader)
 	if (WinningConditionHelper_topscore >= g_badass_leader)
 	if (WinningConditionHelper_topscore == self.scorekeeper.scores[SP_SCORE])
-		c = g_badass_color;
+		return TRUE;
 
 	if (g_badass_kdr) {
 		entity sk = self.scorekeeper;
 		if (sk.scores[SP_KILLS] / max(sk.scores[SP_DEATHS], 1) >= g_badass_kdr)
-			c = g_badass_color;
+			return TRUE;
 	}
+	return FALSE;
+}
+
+var float(float c) BadAss_PlayerColorsMod_NextLink;
+float BadAss_PlayerColorsMod(float c) {
+	if (BadAss_Check())
+		c = g_badass_color;
+
 	return BadAss_PlayerColorsMod_NextLink(c);
 }
 
 var void() BadAss_HealthArmorFuelModsSet_NextLink;
 void BadAss_HealthArmorFuelModsSet() {
-	if (g_badass_health_limit)
-		self.health = min(g_badass_health_limit, self.health);
+	if (BadAss_Check()) {
+		if (g_badass_health_limit)
+			self.health = min(g_badass_health_limit, self.health);
 
-	if (g_badass_armor_limit)
-		self.armorvalue = min(g_badass_armor_limit, self.armorvalue);
-
+		if (g_badass_armor_limit)
+			self.armorvalue = min(g_badass_armor_limit, self.armorvalue);
+	}
 	BadAss_HealthArmorFuelModsSet_NextLink();
 }
 
