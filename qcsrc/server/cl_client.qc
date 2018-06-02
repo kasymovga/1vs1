@@ -1247,8 +1247,10 @@ float ClientPreConnect_Abort() {
 		if (s == "")
 			break;
 
-		if (strstrofs(strdecolorize(self.netname), s, 0) >= 0)
+		if (strstrofs(strdecolorize(self.netname), s, 0) >= 0) {
+			print(self.netname, " muted with pattern ", s, "\n");
 			self.muted = TRUE;
+		}
 	}
 	return FALSE;
 }
@@ -1392,6 +1394,7 @@ void ClientDisconnect (void)
 	// Here, everything has been done that requires this player to be a client.
 
 	self.flags &~= FL_CLIENT;
+	self.just_connected = FALSE;
 
 	if (self.chatbubbleentity)
 		remove (self.chatbubbleentity);
