@@ -54,6 +54,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.ice.owner = self;
 	self.ice.think = Ice_Think;
 	self.ice.nextthink = time;
+	self.ice.team = self.team;
 	self.ice.colormod = TeamColor(self.team);
 	WaypointSprite_AttachCarrier("helpme", self);
 	setattachment(self.ice, self, "");
@@ -83,6 +84,10 @@ void Ice_Think()
 		return;
 
 	float oldprogress = self.unfroze_progress;
+	if (self.team != self.owner.team) {
+		self.team = self.owner.team;
+		self.colormod = TeamColor(self.team);
+	}
 	entity e, unfrozer;
 	unfrozer = world;
 	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100)
