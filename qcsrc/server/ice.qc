@@ -189,6 +189,12 @@ float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float damage, fl
 	return TRUE;
 }
 
+var void(entity spectatee) Ice_SpecateCopy_NextLink;
+void Ice_SpecateCopy(entity spectatee) {
+	self.deadflag = spectatee.deadflag;
+	Ice_SpecateCopy_NextLink(spectatee);
+}
+
 void Ice_Init() {
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
@@ -201,16 +207,14 @@ void Ice_Init() {
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
 	GameHook_DeathHandle = Ice_DeathHandle;
-
 	Ice_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Ice_PlayerClear;
-
 	Ice_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = Ice_SpeedMod;
-
 	Ice_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Ice_Spawn;
-
 	Ice_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Ice_PlayerDamageHandle;
+	Ice_SpecateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = Ice_SpecateCopy;
 }
