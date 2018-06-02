@@ -1275,6 +1275,8 @@ set g_badass_color -2
 set g_badass_killcount 3
 set g_badass_kdr 1.5
 set g_badass_leader 1
+set g_badass_health_limit 0
+set g_badass_armor_limit 0
 
 set g_chat_flood_damage_flooder 25
 
