@@ -1,22 +1,8 @@
 float g_freeze_enddelay;
-float g_freeze_slowdown;
 float g_freeze_startdelay;
-float g_freeze_unfroze_time;
-float sv_model_ice_scale;
-float sv_model_ice_z;
-float sv_model_ice_alpha;
-string ice_model;
 entity freeze_controller;
-.entity ice;
-.entity last_unfrozer;
-.float unfroze_progress;
-.entity unfroze_pb;
-#define ICE_FRAME_TIME 0.2
 #define SP_REVIVE SP_GAME_SCORE1
 
-var float() Freeze_SpeedMod_NextLink;
-float Freeze_SpeedMod();
-float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype);
 void Freeze_PlayerClear(float killed);
 float Freeze_HandleFrags(entity attacker, entity targ, float f);
 
@@ -31,165 +17,12 @@ void Freeze_Spawn(entity spot)
 {
 	Roundbased_NeedCheckTeams();
 	Freeze_Spawn_NextLink(spot);
-	if (Roundbased_Active)
-		Freeze_DeathHandle(world, world, 0);
-}
-
-void Freeze_IceThink()
-{
-	self.nextthink = time + ICE_FRAME_TIME;
-	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self)
-	{
-		if (self.unfroze_pb) //for self.owner.ice != self case
-			remove(self.unfroze_pb);
-		self.unfroze_pb = world;
-
-		entity oldself = self;
-		self = self.owner;
-		Freeze_PlayerClear(FALSE);
-		self = oldself;
-		return;
-	}
-
-	if not(Roundbased_Active)
-		return;
-
-	float oldprogress = self.unfroze_progress;
-	entity e, unfrozer;
-	unfrozer = world;
-	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100)
-	{
-		unfrozer = self.last_unfrozer;
-	}
-	else FOR_EACH_PLAYER(e)
-	{
-		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100)
-			continue;
-
-		unfrozer = e;
-		break;
-	}
-	if (unfrozer != self.last_unfrozer)
-	{
-		if (self.unfroze_pb)
-			remove(self.unfroze_pb);
-
-		if (unfrozer) {
-			self.unfroze_pb = ProgressBar_Create("Reviving", unfrozer);
-			if not(self.owner.unfroze_pb)
-				self.owner.unfroze_pb = ProgressBar_Create("Reviving", self.owner);
-		} else {
-			if (self.owner.unfroze_pb)
-				remove(self.owner.unfroze_pb);
-
-			self.owner.unfroze_pb = world;
-			self.unfroze_pb = world;
-		}
-	}
-
-	self.last_unfrozer = unfrozer;
-	if (unfrozer)
-	{
-		self.unfroze_progress += ICE_FRAME_TIME;
-		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
-			if (self.unfroze_pb)
-				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
-
-		if (clienttype(self.owner) == CLIENTTYPE_REAL)
-			if (self.owner.unfroze_pb)
-				ProgressBar_SetValue(self.owner.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
-
-		unfrozer.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
-	}
-	if (self.unfroze_progress >= g_freeze_unfroze_time)
-	{
-		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
-			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
-
-		if (clienttype(self.owner) == CLIENTTYPE_REAL)
-			centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
-
-		bprint ("^1", self.owner.netname, "^1 was revived by ", unfrozer.netname, "\n");
-		PlayerScore_Add(unfrozer, SP_SCORE, 1);
-		PlayerScore_Add(unfrozer, SP_REVIVE, 1);
-		self.owner.deadflag = DEAD_NO;
-		return;
-	}
-
-	if (self.unfroze_progress == oldprogress)
-	if (oldprogress != 0)
-		self.unfroze_progress = min(0, oldprogress - ICE_FRAME_TIME);
-
-	if (self.unfroze_progress != oldprogress)
-		self.alpha = sv_model_ice_alpha * max(0.01, (g_freeze_unfroze_time - self.unfroze_progress));
-}
-
-float Freeze_DeathHandle(entity attacker, entity inflictor, float deathtype)
-{
-	if not(Roundbased_Active)
-		return FALSE;
-
-	PlayerClear(TRUE);
-	Roundbased_NeedCheckTeams();
-
-	if (self.deadflag == DEAD_FREEZE)
-		return TRUE;
-
-	if (deathtype)
-		Obituary(attacker, inflictor, self, deathtype);
-
-	self.deadflag = DEAD_FREEZE;
-	self.health = start_health;
-	PlayerScore_Set(self, SP_STATUS, 1);
-	if (self.ice)
-		return TRUE;
-
-	self.ice = spawn();
-	self.ice.alpha = sv_model_ice_alpha;
-	self.ice.scale = sv_model_ice_scale;
-	self.ice.owner = self;
-	self.ice.think = Freeze_IceThink;
-	self.ice.nextthink = time;
-	self.ice.colormod = TeamColor(self.team);
-	WaypointSprite_AttachCarrier("helpme", self);
-	setattachment(self.ice, self, "");
-	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
-	setmodel(self.ice, ice_model);
-	return TRUE;
-}
-
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Freeze_PlayerDamageHandle_NextLink;
-float Freeze_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
-	if not(self.deadflag == DEAD_FREEZE)
-		return Freeze_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
-
-	if (deathtype == DEATH_SLIME ||
-			deathtype == DEATH_LAVA ||
-			deathtype == DEATH_HURTTRIGGER)
-		PutClientInServer();
-
-	self.unfroze_progress = 0;
-
-	return TRUE;
 }
 
 var void(float killed) Freeze_PlayerClear_NextLink;
 void Freeze_PlayerClear(float killed)
 {
-	if (self.ice)
-		remove(self.ice);
-
-	if (self.unfroze_pb)
-		remove(self.unfroze_pb);
-
-	if (self.ice.unfroze_pb)
-		remove(self.ice.unfroze_pb);
-
 	PlayerScore_Set(self, SP_STATUS, 0);
-	self.unfroze_pb = world;
-	self.ice = world;
-	WaypointSprite_DetachCarrier(self);
 	Roundbased_NeedCheckTeams();
 	Freeze_PlayerClear_NextLink(killed);
 }
@@ -204,27 +37,34 @@ void Freeze_SpecateCopy(entity spectatee) {
 	Freeze_SpecateCopy_NextLink(spectatee);
 }
 
+float Freeze_IceSkipThink() {
+	return !Roundbased_Active;
+}
+
+void Freeze_IceUnfroze(entity unfrozer) {
+	PlayerScore_Set(self.owner, SP_STATUS, 0);
+	PlayerScore_Add(unfrozer, SP_SCORE, 1);
+	PlayerScore_Add(unfrozer, SP_REVIVE, 1);
+}
+
+void Freeze_IceFrozenStatus() {
+	PlayerScore_Set(self, SP_STATUS, 1);
+}
+
 void Freeze_Init()
 {
+	IceHook_SkipThink = Freeze_IceSkipThink;
+	IceHook_SkipDeathHandle = Freeze_IceSkipThink;
+	IceHook_Unfroze = Freeze_IceUnfroze;
+	IceHook_FrozenStatus = Freeze_IceFrozenStatus;
+	Ice_Init();
 	CACHE_CVAR(g_freeze);
 	CACHE_CVAR(g_freeze_enddelay);
-	CACHE_CVAR(g_freeze_slowdown);
 	CACHE_CVAR(g_freeze_startdelay);
-	CACHE_CVAR(g_freeze_unfroze_time);
-	if (g_freeze_unfroze_time <= 0)
-		g_freeze_unfroze_time = 1;
-	CACHE_CVAR(sv_model_ice_alpha);
-	CACHE_CVAR(sv_model_ice_scale);
-	CACHE_CVAR(sv_model_ice_z);
-	GameHook_DeathHandle = Freeze_DeathHandle;
 	Freeze_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Freeze_Spawn;
 	Freeze_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Freeze_PlayerClear;
-	Freeze_SpeedMod_NextLink = GameHookChain_SpeedMod;
-	GameHookChain_SpeedMod = Freeze_SpeedMod;
-	Freeze_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = Freeze_PlayerDamageHandle;
 	Freeze_SpecateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = Freeze_SpecateCopy;
 	GameHook_FragsHandle = Freeze_HandleFrags;
@@ -234,19 +74,9 @@ void Freeze_Init()
 	freeze_controller.think = Freeze_Think;
 	freeze_controller.nextthink = time;
 	Roundbased_Init(g_freeze_enddelay, g_freeze_startdelay);
-	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
-	precache_model(ice_model);
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	ScoreInfo_SetLabel_PlayerScore(SP_REVIVE, "revs", SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", 0);
-}
-
-float Freeze_SpeedMod() {
-	float f = Freeze_SpeedMod_NextLink();
-	if (self.deadflag == DEAD_FREEZE)
-		return g_freeze_slowdown * f;
-
-	return f;
 }
 
 float Freeze_HandleFrags(entity attacker, entity targ, float f) {

@@ -1202,6 +1202,7 @@ set g_nadgets_raze_fire_spawninterval 0.1
 set g_survive_wave_pause 20
 set g_survive_wave_skip 0
 set g_survive_monster_factor 0.5
+set g_survive_freeze 1
 
 set g_monster_boss1_health 3000
 set g_monster_boss1_damage 50

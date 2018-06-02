@@ -1,0 +1,7 @@
+void Ice_Think();
+void Ice_Init();
+var float() IceHook_SkipThink;
+var float() IceHook_SkipDeathHandle;
+var void(entity unfrozer) IceHook_Unfroze;
+var void() IceHook_FrozenStatus;
+float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype);

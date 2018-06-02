@@ -15,6 +15,7 @@ void monster_set_route() {
 	else
 		FOR_EACH_PLAYER(p)
 			if (p.health >= 1)
+			if (p.deadflag == DEAD_NO)
 				navigation_routerating(p, 10000, 10000);
 
 	navigation_goalrating_end();
@@ -31,7 +32,8 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	entity p = world;
 	if not(gameover)
 	FOR_EACH_PLAYER(e)
-	if (e.health >= 1) {
+	if (e.health >= 1)
+	if (e.deadflag == DEAD_NO) {
 		if (teamplay) {
 			if not(self.team)
 				continue;
@@ -306,7 +308,7 @@ float monster_walk_finished(void() idle, float dist) {
 }
 
 float monster_check_target(void() walk, void() guard) {
-	if (self.enemy.health < 1) {
+	if (self.enemy.health < 1 || self.enemy.deadflag != DEAD_NO) {
 		self.enemy = world;
 		if (self.message2 != "")
 			self.enemy = find(world, targetname, self.message2);

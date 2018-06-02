@@ -65,6 +65,7 @@ udpchat.qh
 akimbo.qh
 
 freeze.qh
+ice.qh
 radio.qh
 ../common/curl.qh
 
@@ -327,3 +328,4 @@ noteline.qc
 warmup.qc
 udpchat.qc
 score_damage.qc
+ice.qc
