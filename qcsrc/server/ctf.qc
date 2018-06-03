@@ -335,6 +335,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
 		backtrace("Flag carrier had no flag sprite?!?");
 	}
+	GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 dropped"), 1);
 	sound (self, CHAN_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
@@ -534,6 +535,7 @@ void FlagTouch()
 		}
 
 		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
+		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Team^7 scores"), 1);
 		WaypointSprite_DetachCarrier(other);
 		if(self.speedrunning)
 			FakeTimeLimit(other, -1);
@@ -569,6 +571,7 @@ void FlagTouch()
 		UpdateFrags(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
+		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 		FOR_EACH_PLAYER(player)
@@ -623,6 +626,7 @@ void FlagTouch()
 					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
+			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
@@ -650,6 +654,7 @@ void FlagTouch()
 
 			UpdateFrags(other, f);
 			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
+			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 			FOR_EACH_PLAYER(player)
