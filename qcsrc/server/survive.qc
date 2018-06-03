@@ -223,6 +223,11 @@ void survive_IceFrozenStatus() {
 	PlayerScore_Set(self, SP_STATUS, 1);
 }
 
+float survive_DeathHandle(entity attacker, entity inflictor, float deathtype) {
+	survive_IceFrozenStatus();
+	return FALSE;
+}
+
 void survive_init() {
 	CACHE_CVAR(g_survive_freeze);
 	if (g_survive_freeze) {
@@ -231,6 +236,8 @@ void survive_init() {
 		IceHook_Unfroze = survive_IceUnfroze;
 		IceHook_FrozenStatus = survive_IceFrozenStatus;
 		Ice_Init();
+	} else {
+		GameHook_DeathHandle = survive_DeathHandle;
 	}
 	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
