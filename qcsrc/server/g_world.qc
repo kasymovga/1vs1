@@ -393,6 +393,7 @@ void precache()
     precache_sound ("misc/gib_splat03.wav");
     precache_sound ("misc/gib_splat04.wav");
     precache_sound ("misc/hit.wav");
+	precache_sound ("misc/menu2.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
     PrecacheGlobalSound((globalsound_waterfall = "misc/outwater"));
@@ -1441,6 +1442,7 @@ void NextLevel()
 			gameover_message = strcat(gameover_message, "\nThe winner is ", WinningConditionHelper_winner.netname);
 	}
 	GameStatus_Set(GameHook_GameOverMessageMod(gameover_message), 30);
+	play2all("misc/menu2.wav");
 
 	intermission_running = 1;
 
