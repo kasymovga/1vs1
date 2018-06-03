@@ -7,6 +7,7 @@ float g_survive_monster_factor;
 float survive_monster_quant;
 entity survive_plan_entity;
 string survive_gameover_message;
+string survive_wave_prefix;
 
 string wave_string() {
 	return strcat("wave", ftos(wave_number));
@@ -84,7 +85,9 @@ void survive_trigger() {
 			self.use();
 	}
 	survive_active = TRUE;
-	GameStatus_Set("^1New wave incoming!!!\n^1Try to survive", 2);
+	GameStatus_Set("^1New wave incoming!\n^1Try to survive", 2);
+	FOR_EACH_REALCLIENT(self)
+		announce(self, "announcer/robotic/begin.wav");
 
 	self = oldself;
 	remove(self);
@@ -98,6 +101,9 @@ void survive_plan() {
 	survive_plan_entity.think = survive_trigger;
 	survive_plan_entity.nextthink = time + g_survive_wave_pause;
 	survive_plan_entity.team = -1; //Fake team
+	if (survive_active)
+		survive_wave_prefix = "^2Wave cleared!";
+
 	survive_active = FALSE;
 	entity oldself = self;
 	FOR_EACH_CLIENT(self) {
@@ -106,6 +112,8 @@ void survive_plan() {
 				self.classname = "player";
 				PutClientInServer();
 			}
+			if (clienttype(self) == CLIENTTYPE_REAL)
+				announce_force(self, "domination/claim.wav");
 		}
 	}
 	self = oldself;
@@ -189,7 +197,11 @@ float survive_WinningCondition() {
 	if (survive_plan_entity) {
 		float countdown = ceil(survive_plan_entity.nextthink - time);
 		if (survive_last_countdown != countdown) {
-			GameStatus_Set(strcat("^3New wave starts in ", ftos(countdown), " seconds"), 1);
+			GameStatus_Set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
+			FOR_EACH_REALCLIENT(e)
+				if (countdown <= 3)
+					announce(e, strcat("announcer/robotic/", ftos(countdown), ".wav"));
+
 			survive_last_countdown = countdown;
 		}
 	}
@@ -237,6 +249,11 @@ string survive_GameOverMessageMod(string s) {
 
 void survive_init() {
 	survive_gameover_message = "^3No time left, game finished";
+	precache_sound("domination/claim.wav");
+	precache_sound("announcer/robotic/begin.wav");
+	precache_sound("announcer/robotic/3.wav");
+	precache_sound("announcer/robotic/2.wav");
+	precache_sound("announcer/robotic/1.wav");
 	CACHE_CVAR(g_survive_freeze);
 	if (g_survive_freeze) {
 		IceHook_SkipThink = survive_IceSkipThink;
