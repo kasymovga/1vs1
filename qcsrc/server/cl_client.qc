@@ -541,9 +541,8 @@ void PutObserverInServer(float frags_team_reset)
 	self.solid = SOLID_NOT;
 	self.movetype = MOVETYPE_NOCLIP;
 	self.flags = FL_CLIENT | FL_NOTARGET;
-	self.armorvalue = 666;
+	self.armorvalue = 0;
 	self.effects = 0;
-	self.armorvalue = start_armorvalue;
 	self.pauserotarmor_finished = 0;
 	self.pauserothealth_finished = 0;
 	self.pauseregen_finished = 0;
