@@ -536,7 +536,7 @@ void PutObserverInServer(float frags_team_reset)
 
 	self.classname = "observer";
 	self.iscreature = FALSE;
-	self.health = -666;
+	self.health = 1;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
 	self.movetype = MOVETYPE_NOCLIP;

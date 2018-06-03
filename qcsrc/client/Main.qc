@@ -728,7 +728,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if (bInputType == 0)
 	if (nPrimary == K_ESCAPE)
-	if not(intermission)
 	if not(isdemo_flag)
 	{
 		GUI_Show(GUI_GAMEMENU);
@@ -1302,6 +1301,14 @@ float CSQC_Parse_TempEntity()
 			if not(isdemo_flag)
 				GUI_Show(GUI_TEAMSELECT);
 
+			bHandled = true;
+			break;
+		case TE_CSQC_GAMEOVER:
+			if(calledhooks & HOOK_START)
+			{
+				localcmd("\ncl_hook_gameend;");
+				calledhooks |= HOOK_END;
+			}
 			bHandled = true;
 			break;
 		default:

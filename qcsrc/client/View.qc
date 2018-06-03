@@ -223,13 +223,6 @@ void CSQC_UpdateView(float w, float h)
 	if(!postinit)
 		PostInit();
 
-	if(intermission && !isdemo_flag && !(calledhooks & HOOK_END))
-	if(calledhooks & HOOK_START)
-	{
-		localcmd("\ncl_hook_gameend;");
-		calledhooks |= HOOK_END;
-	}
-
 	fov = cvar("fov");
 	any_button_zoom = button_zoom;
 	if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX)

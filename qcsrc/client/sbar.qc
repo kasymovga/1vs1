@@ -1648,13 +1648,7 @@ void Sbar_Timer()
 float Sbar_WouldDrawScoreboard() {
 	if (sb_showscores)
 		return 1;
-	else if (intermission == 1)
-		return 1;
-	else if (intermission == 2)
-		return 1;
 	else if (getstati(STAT_HEALTH) <= 0 && CVAR(cl_deathscoreboard))
-		return 1;
-	else if(sb_showscores_force)
 		return 1;
 	return 0;
 }
@@ -2266,7 +2260,7 @@ void Sbar_Draw (void)
 	if(player_deadflag == DEAD_FREEZE)
 		drawfill('0 0 0', bottomright, '1 1 1', 0.4, DRAWFLAG_ADDITIVE);
 
-	if (intermission == 2) // map voting screen
+	if (mv_active) // map voting screen
 	{
 		if(sb_showscores) {
 			Sbar_DrawScoreboard();
@@ -2283,11 +2277,11 @@ void Sbar_Draw (void)
 
 		Sbar_Reset();
 	}
-	else if (sb_showscores_force || getstati(STAT_HEALTH) <= 0 || intermission == 1)
+	else if (getstati(STAT_HEALTH) <= 0)
 	{
   		if(sb_showaccuracy)
   			Sbar_DrawAccuracyStats();
-		else if (sb_showscores || !sb_hidescores)
+		else if (!sb_hidescores)
 			Sbar_DrawScoreboard();
 		Sbar_Score();
 		Sbar_Timer();

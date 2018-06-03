@@ -1393,8 +1393,6 @@ void FixIntermissionClient(entity e)
 		e.angles = e.v_angle;
 		e.angles_x = -e.angles_x;
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		e.health = -2342;
-		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
 		e.solid = SOLID_NOT;
 		e.movetype = MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
@@ -1410,8 +1408,6 @@ void FixIntermissionClient(entity e)
 			s = cvar_string("sv_intermission_cdtrack");
 			if(s != "")
 				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
-			msg_entity = e;
-			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}
 	}
 
@@ -1435,6 +1431,16 @@ void NextLevel()
 
 	gameover = TRUE;
 	game_cvar_deinit();
+	string gameover_message;
+	gameover_message = "^2Game finished!";
+	if (teamplay) {
+		if (WinningConditionHelper_winnerteam > 0)
+			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(WinningConditionHelper_winnerteam), Team_ColorName(WinningConditionHelper_winnerteam), " Team^2 wins!");
+	} else {
+		if (WinningConditionHelper_winner)
+			gameover_message = strcat(gameover_message, "\nThe winner is ", WinningConditionHelper_winner.netname);
+	}
+	GameStatus_Set(GameHook_GameOverMessageMod(gameover_message), 30);
 
 	intermission_running = 1;
 
@@ -1466,6 +1472,8 @@ void NextLevel()
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
 	}
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_GAMEOVER);
 
 	minTotalFrags = 0;
 	maxTotalFrags = 0;
@@ -2082,19 +2090,6 @@ void MapVote_Tick()
 	totalvotes = 0;
 	FOR_EACH_REALCLIENT(other)
 	{
-		// hide scoreboard again
-		if(other.health != 2342)
-		{
-			other.health = 2342;
-			other.impulse = 0;
-			if(clienttype(other) == CLIENTTYPE_REAL)
-			{
-				msg_entity = other;
-				WriteByte(MSG_ONE, SVC_FINALE);
-				WriteString(MSG_ONE, "");
-			}
-		}
-
 		// clear possibly invalid votes
 		if(mapvote_maps[other.mapvote - 1] == "")
 			other.mapvote = 0;

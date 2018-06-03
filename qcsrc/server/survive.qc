@@ -6,6 +6,7 @@ float g_survive_freeze;
 float g_survive_monster_factor;
 float survive_monster_quant;
 entity survive_plan_entity;
+string survive_gameover_message;
 
 string wave_string() {
 	return strcat("wave", ftos(wave_number));
@@ -133,7 +134,7 @@ float survive_WinningCondition() {
 		FOR_EACH_CLIENT(e)
 			e.winning = TRUE;
 
-		GameStatus_Set("^2All enemies destroyed!!!\n^2You successfully survived\n", 5);
+		survive_gameover_message = "^2All enemies destroyed!\n^2You successfully survived\n";
 		e = find(world, targetname, "survive_success");
 		if (e) {
 			oldself = self;
@@ -148,8 +149,10 @@ float survive_WinningCondition() {
 	}
 
 	if (survive_active)
-	if not(survive_has_alive_players())
+	if not(survive_has_alive_players()) {
+		survive_gameover_message = "^1No alive players left!\n^1Nobody survived\n";
 		return TRUE;
+	}
 
 	monster = find(world, classname, "monster");
 	if not(monster)
@@ -228,7 +231,12 @@ float survive_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	return FALSE;
 }
 
+string survive_GameOverMessageMod(string s) {
+	return survive_gameover_message;
+}
+
 void survive_init() {
+	survive_gameover_message = "^3No time left, game finished";
 	CACHE_CVAR(g_survive_freeze);
 	if (g_survive_freeze) {
 		IceHook_SkipThink = survive_IceSkipThink;
@@ -241,6 +249,7 @@ void survive_init() {
 	}
 	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
+	GameHook_GameOverMessageMod = survive_GameOverMessageMod;
 
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;
