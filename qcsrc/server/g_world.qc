@@ -1677,7 +1677,7 @@ void CheckRules_World()
 				check_time_remaining = check_5min_remaining;
 			}
 		}
-	} else
+	} else if (timelimit)
 		check_time_remaining(timelimit);
 
 	if(checkrules_suddendeathend) {
