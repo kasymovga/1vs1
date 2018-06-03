@@ -228,13 +228,13 @@ void Ent_PointParticles()
 .float glow_color; // palette index
 vector snowrain_mins, snowrain_maxs;
 float snowrain_count;
-var float snowrain_nextthink = 0.5;
+float snowrain_nextthink;
 void SnowOrRain_SetBBox(float d) {
 	snowrain_count = 0;
 	if (time < snowrain_nextthink)
 		return;
 
-	snowrain_nextthink += 0.1;
+	snowrain_nextthink = max(time, snowrain_nextthink + 0.1);
 	snowrain_mins = self.mins + self.origin;
 	snowrain_maxs= self.maxs + self.origin;
 	snowrain_mins_x = max(view_origin_x - d, snowrain_mins_x);
