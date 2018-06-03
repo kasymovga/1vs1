@@ -7,13 +7,14 @@ void GameStatus_Draw() {
 	string tail = self.message, head;
 	float n;
 	n = strstrofs(tail, "\n", 0);
-	_size = sbar_fontsize * (1 + self.alpha) * 0.5;
+	_size = sbar_fontsize * (2 + self.alpha) * 0.5;
 	while (n >= 0) {
 		head = substring(tail, 0, n);
 		tail = substring(tail, n + 1, -1);
 		drawcolorcodedstringcenter(pos, head, _size, self.alpha, DRAWFLAG_NORMAL);
 		n = strstrofs(tail, "\n", 0);
 		pos_y += _size_y;
+		_size *= 0.8;
 	}
 	drawcolorcodedstringcenter(pos, tail, _size, self.alpha, DRAWFLAG_NORMAL);
 }
