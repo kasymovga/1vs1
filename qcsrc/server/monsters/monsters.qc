@@ -286,7 +286,7 @@ float monster_walk_finished(void() idle, float dist) {
 
 	vector v = self.enemy.origin - self.origin;
 	v_z = 0;
-	if (self.owner.spawnflags & 2 && vlen(v) < dist) {
+	if (vlen(v) < dist) {
 		if (self.enemy.target != "")
 			self.enemy = find(world, targetname, self.enemy.target);
 		else
