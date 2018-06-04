@@ -335,8 +335,8 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
 		backtrace("Flag carrier had no flag sprite?!?");
 	}
-	GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 dropped"), 1);
-	sound (self, CHAN_TRIGGER, self.noise4, VOL_BASE, ATTN_NONE);
+	GameStatus_Set(strcat(Team_ColorCode(e.team), Team_ColorName(e.team), " Flag^7 dropped"), 1);
+	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
 	e.damageforcescale = g_balance_ctf_damageforcescale;
