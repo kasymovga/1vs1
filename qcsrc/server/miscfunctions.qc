@@ -539,7 +539,7 @@ void GetCvars(float f)
 	{
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
-		else if (!self.fake_init && s == "cl_gunalign")
+		else if (s == "cl_gunalign")
 			ClientInit_UpdateHookOrigin();
 	}
 }

@@ -561,8 +561,6 @@ float client_cefc_accumulatortime;
 
 .entity clientdata;
 
-.entity fake_init;
-
 .float retard;
 
 .float gameclient;
