@@ -572,6 +572,7 @@ void FlagTouch()
 		self.dropperid = other.playerid;
 		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
+		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 		FOR_EACH_PLAYER(player)
@@ -655,6 +656,7 @@ void FlagTouch()
 			UpdateFrags(other, f);
 			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
+			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
 			FOR_EACH_PLAYER(player)
