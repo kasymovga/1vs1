@@ -447,8 +447,7 @@ void SV_ParseClientCommand(string s) {
 				return;
 
 			Client_MuteIfNeeded(argv(1));
-			if (join_time_ok)
-				IRC_Announce_Name(self, argv(1));
+			IRC_Announce_Name(self, argv(1));
 		}
 		clientcommand(self,s);
 	}
