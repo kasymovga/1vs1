@@ -41,5 +41,6 @@ void Warmup_Finish() {
 	if (inWarmupStage) {
 		inWarmupStage = 0; //once the game is restarted the game is in match stage
 		remove(warmup_note);
+		play2all("announcer/robotic/prepareforbattle.wav");
 	}
 }

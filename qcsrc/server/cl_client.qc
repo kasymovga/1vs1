@@ -693,6 +693,8 @@ void PutClientInServer()
 	if (self.just_connected) {
 		self.team = -1;
 		self.just_connected = FALSE;
+		if (time + 5 < game_starttime)
+			announce(self, "announcer/robotic/prepareforbattle.wav");
 	}
 	entity e;
 	FOR_EACH_PLAYER(e)
