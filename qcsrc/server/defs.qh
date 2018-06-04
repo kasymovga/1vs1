@@ -531,8 +531,6 @@ float servertime, serverprevtime, serverframetime;
 .vector prevorigin;
 
 //flood fields
-.float nickspamtime; // time of last nick change
-.float nickspamcount;
 .float floodcontrol_chat;
 .float floodcontrol_chatteam;
 .float floodcontrol_chattell;

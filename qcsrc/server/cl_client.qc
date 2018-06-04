@@ -1239,18 +1239,6 @@ float ClientPreConnect_Abort() {
 	self.team = -1;
 	self.retard = -1;
 	Check_ForRetard(self);
-	string s;
-	float i;
-	for (i = 0; ; ++i) {
-		s = cvar_string(strcat("sv_player_mute_namepattern", ftos(i)));
-		if (s == "")
-			break;
-
-		if (strstrofs(strdecolorize(self.netname), s, 0) >= 0) {
-			print(self.netname, " muted with pattern ", s, "\n");
-			self.muted = TRUE;
-		}
-	}
 	return FALSE;
 }
 
@@ -1418,6 +1406,7 @@ void ClientDisconnect (void)
 
 	self.playerid = 0;
 	self.retard = 0;
+	self.muted = 0;
 	ReadyCount();
 
 	// free cvars

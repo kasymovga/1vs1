@@ -193,6 +193,21 @@ float cmd_floodcheck()
 	return FALSE;
 }
 
+void Client_MuteIfNeeded(string _name) {
+	string s;
+	float i;
+	for (i = 0; ; ++i) {
+		s = cvar_string(strcat("sv_player_mute_namepattern", ftos(i)));
+		if (s == "")
+			break;
+
+		if (strstrofs(strdecolorize(_name), s, 0) >= 0) {
+			print(_name, " muted with pattern ", s, "\n");
+			self.muted = TRUE;
+		}
+	}
+}
+
 void SV_ParseClientCommand(string s) {
 	string cmd;
 	float tokens;
@@ -424,28 +439,17 @@ void SV_ParseClientCommand(string s) {
 			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
 			return;
 		}
+		if (cmd == "name") {
+			if (self.retard > 0)
+				return;
 
-		if(self.jointime > 0 && time > self.jointime + 10 && time > self.nickspamtime) // allow any changes in the first 10 seconds since joining
-		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?
-		{
-			if (cmd == "name") {
-				if (self.retard > 0)
-					return;
-				if (self.gameclient == CLIENT_XONOTIC)
-					return;
+			if (self.gameclient == CLIENT_XONOTIC)
+				return;
+
+			Client_MuteIfNeeded(argv(1));
+			if (join_time_ok)
 				IRC_Announce_Name(self, argv(1));
-			}
-			if(self.nickspamtime == 0 || time > self.nickspamtime + cvar("g_nick_flood_timeout"))
-				// good, no serious flood
-				self.nickspamcount = 1;
-			else
-				self.nickspamcount += 1;
-			self.nickspamtime = time + cvar("g_nick_flood_penalty");
-
-			if (timeoutStatus == 2) //when game is paused, no flood protection
-				self.nickspamcount = self.nickspamtime = 0;
 		}
-
 		clientcommand(self,s);
 	}
 }

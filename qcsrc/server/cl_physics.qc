@@ -2,8 +2,6 @@
 .entity player_physic;
 
 float speedmeter;
-float g_nick_flood_penalty_yellow;
-float g_nick_flood_penalty_red;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float sv_csqc_physic;
@@ -214,23 +212,6 @@ void Physic_FrameBeginHook()
 	self.buttons_old = buttons;
 	self.movement_old = physic_movement;
 	self.v_angle_old = self.v_angle;
-
-	if(time < self.nickspamtime)
-	if(self.nickspamcount >= g_nick_flood_penalty_yellow)
-	{
-		// slight annoyance for nick change scripts
-		physic_movement = -1 * physic_movement;
-		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = self.BUTTON_ZOOM = self.BUTTON_CROUCH = self.BUTTON_HOOK = self.BUTTON_USE = 0;
-
-		if(self.nickspamcount >= g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
-		{
-			self.angles_x = random() * 360;
-			self.angles_y = random() * 360;
-			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = 1;
-		}
-	}
-
 #if 0
 	float shtest_score;
 	if(time > self.shtest_next)
@@ -433,8 +414,6 @@ void PhysicReadCvars()
 	//Server-side only
 	CACHE_CVAR(g_jetpack_fuel);
 	CACHE_CVAR(speedmeter);
-	CACHE_CVAR(g_nick_flood_penalty_yellow);
-	CACHE_CVAR(g_nick_flood_penalty_red);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(g_dodging_sound);
