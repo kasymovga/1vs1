@@ -85,8 +85,6 @@ void FixPlayermodel();
 
 #define SPAWNPOINT_SCORE frags
 
-.string netname_previous;
-
 void spawnfunc_info_player_survivor (void)
 {
 	spawnfunc_info_player_deathmatch();
@@ -1313,7 +1311,6 @@ void ClientConnect (void)
 	}
 
 	self.playerid = (playerid_last = playerid_last + 1);
-	self.netname_previous = strzone(self.netname);
 
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 
@@ -1414,8 +1411,6 @@ void ClientDisconnect (void)
 
 	PlayerScore_Detach(self);
 
-	if(self.netname_previous)
-		strunzone(self.netname_previous);
 	if(self.clientstatus)
 		strunzone(self.clientstatus);
 
@@ -1892,13 +1887,6 @@ void PlayerPreThink (void)
 	if(blockSpectators && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		checkSpectatorBlock();
-
-	if(self.netname_previous != self.netname)
-	{
-		if(self.netname_previous)
-			strunzone(self.netname_previous);
-		self.netname_previous = strzone(self.netname);
-	}
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
