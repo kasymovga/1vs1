@@ -42,10 +42,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
 
 	entity e;
-
-	if(!sound_allowed(MSG_BROADCAST, dmgowner))
-		deathtype |= 0x8000;
-
 	e = spawn();
 	setorigin(e, org);
 	e.projectiledeathtype = deathtype;

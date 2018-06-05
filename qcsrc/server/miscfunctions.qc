@@ -654,29 +654,9 @@ void weapon_precache(float wpn)
 	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
 }
 
-/*
-// TODO sound pack system
-string soundpack;
-
-string precache_sound_builtin (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
-string precache_sound(string s)
-{
-	return precache_sound_builtin(strcat(soundpack, s));
-}
-void play2(entity e, string filename)
-{
-	stuffcmd(e, strcat("play2 ", soundpack, filename, "\n"));
-}
-void sound(entity e, float chan, string samp, float vol, float atten)
-{
-	sound_builtin(e, chan, strcat(soundpack, samp), vol, atten);
-}
-*/
-
 // Sound functions
 string precache_sound (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
+void(entity e, float chan, string samp, float vol, float atten) sound = #8;
 float precache_sound_index (string s) = #19;
 
 #define SND_VOLUME      1
@@ -684,38 +664,9 @@ float precache_sound_index (string s) = #19;
 #define SND_LARGEENTITY 8
 #define SND_LARGESOUND  16
 
-float sound_allowed(float dest, entity e)
-{
-    // sounds from world may always pass
-    for (;;)
-    {
-        if (e.classname == "body")
-            e = e.enemy;
-        if (e.owner && e.owner != e)
-            e = e.owner;
-        else
-            break;
-    }
-    // sounds to self may always pass
-    if (dest == MSG_ONE)
-        if (e == msg_entity)
-            return TRUE;
-    // anything else may pass
-    return TRUE;
-}
-
-void sound(entity e, float chan, string samp, float vol, float atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    sound_builtin(e, chan, samp, vol, atten);
-}
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
     float entno, idx;
-
-    if (!sound_allowed(dest, e))
-        return;
 
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
@@ -762,10 +713,6 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
 void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
 {
     vector o;
-
-    if (!sound_allowed(dest, e))
-        return;
-
     o = e.origin + 0.5 * (e.mins + e.maxs);
     soundtoat(dest, e, o, chan, samp, vol, atten);
 }
@@ -776,10 +723,6 @@ void soundat(entity e, vector o, float chan, string samp, float vol, float atten
 void stopsoundto(float dest, entity e, float chan)
 {
     float entno;
-
-    if (!sound_allowed(dest, e))
-        return;
-
     entno = num_for_edict(e);
 
     if (entno >= 8192)
@@ -809,9 +752,6 @@ void stopsoundto(float dest, entity e, float chan)
 }
 void stopsound(entity e, float chan)
 {
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-
     stopsoundto(MSG_BROADCAST, e, chan); // unreliable, gets there fast
     stopsoundto(MSG_ALL, e, chan); // in case of packet loss
 }
@@ -844,9 +784,6 @@ float announce(entity player, string msg)
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
 float spamsound(entity e, float chan, string samp, float vol, float atten)
 {
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return FALSE;
-
     if (time > e.announcetime)
     {
         e.announcetime = time;

@@ -18,10 +18,6 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	vector org;
 
 	org = self.origin + self.view_ofs + self.weaponentity.spawnorigin_x * v_forward - self.weaponentity.spawnorigin_y * v_right + self.weaponentity.spawnorigin_z * v_up;
-
-	if(!sound_allowed(MSG_BROADCAST, casingowner))
-		casingtype |= 0x80;
-
 	e = spawn();
 	e.state = casingtype;
 	setorigin(e, org);

@@ -98,8 +98,6 @@ entity CSQCProjectile(float clientanimate, float type, float docull)
 	e.csqcprojectile_clientanimate = clientanimate;
 
 	e.csqcprojectile_type = type;
-	if(!sound_allowed(MSG_BROADCAST, e))
-		type |= 0x80;
 
 	e.flags = FL_PROJECTILE;
 	return e;

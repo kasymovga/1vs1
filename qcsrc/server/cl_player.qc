@@ -481,13 +481,10 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	if(sound_allowed(MSG_BROADCAST, attacker))
-	{
-		if (damage > 30)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
-		else if (damage > 10)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
-	}
+	if (damage > 30)
+		sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+	else if (damage > 10)
+		sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 
 	if (damage > 50)
 		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
@@ -580,16 +577,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 	save = bound(0, damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
 	take = bound(0, damage - save, damage);
-
-	if(sound_allowed(MSG_BROADCAST, attacker))
-	{
-		if (save > 10)
-			sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
-		else if (take > 30)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
-		else if (take > 10)
-			sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
-	}
+	if (save > 10)
+		sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+	else if (take > 30)
+		sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+	else if (take > 10)
+		sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
 
 	if (take > 50)
 		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
@@ -615,7 +608,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 					setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
 			}
 
-			if(sound_allowed(MSG_BROADCAST, attacker))
 			if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
 			// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 			{
@@ -683,13 +675,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(DEATH_WEAPONOF(deathtype), self.weapon);
 
-		if(sound_allowed(MSG_BROADCAST, attacker))
-		{
-			if(deathtype == DEATH_DROWN)
-				PlayerSound(playersound_drown, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-			else
-				PlayerSound(playersound_death, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
-		}
+		if(deathtype == DEATH_DROWN)
+			PlayerSound(playersound_drown, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+		else
+			PlayerSound(playersound_death, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
 
 		// get rid of kill indicator
 		if(self.killindicator)
