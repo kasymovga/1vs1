@@ -1103,6 +1103,7 @@ void Sbar_DrawScoreboard()
 {
 	vector rgb, pos, tmp;
 	entity pl, tm;
+	draw_crosshair = FALSE;
 
 	if (nextplayerscheck < time) { //Check for downloaders
 	       float i;
@@ -1643,14 +1644,6 @@ void Sbar_Timer()
 		drawpic(topright - '53 0 0' + '0 1 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
 	Sbar_DrawXNum(topright - '36 0 0' - '3 0 0' + '0 2 0', seconds, -2, 0, 18, timer_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-}
-
-float Sbar_WouldDrawScoreboard() {
-	if (sb_showscores)
-		return 1;
-	else if (getstati(STAT_HEALTH) <= 0 && CVAR(cl_deathscoreboard))
-		return 1;
-	return 0;
 }
 
 vector powerup_pos;
@@ -2260,6 +2253,7 @@ void Sbar_Draw (void)
 	if(player_deadflag == DEAD_FREEZE)
 		drawfill('0 0 0', bottomright, '1 1 1', 0.4, DRAWFLAG_ADDITIVE);
 
+	float _health = getstati(STAT_HEALTH);
 	if (mv_active) // map voting screen
 	{
 		if(sb_showscores) {
@@ -2277,15 +2271,16 @@ void Sbar_Draw (void)
 
 		Sbar_Reset();
 	}
-	else if (getstati(STAT_HEALTH) <= 0)
+	else if (_health <= 0 || observer_status)
 	{
   		if(sb_showaccuracy)
   			Sbar_DrawAccuracyStats();
-		else if (!sb_hidescores)
-			Sbar_DrawScoreboard();
+		else if (!sb_hidescores) {
+			if (sb_showscores || (_health <= 0 && !sb_hidescores && CVAR(cl_deathscoreboard)))
+				Sbar_DrawScoreboard();
+		}
 		Sbar_Score();
 		Sbar_Timer();
-
 		Sbar_Reset();
   	}
 	else
@@ -2295,10 +2290,8 @@ void Sbar_Draw (void)
 		else if(sb_showaccuracy)
 			Sbar_DrawAccuracyStats();
 
-		float armor, _health;
+		float armor;
 		armor = getstati(STAT_ARMOR);
-		_health = getstati(STAT_HEALTH);
-
 		stat_items = getstati(STAT_ITEMS);
 		stat_weapons = getstati(STAT_WEAPONS);
 

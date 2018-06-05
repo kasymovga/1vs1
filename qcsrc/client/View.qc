@@ -167,7 +167,6 @@ void CSQC_kh_hud(void);
 void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
-float Sbar_WouldDrawScoreboard ();
 float view_set;
 float camera_mode;
 void CSQC_spider_HUD();
@@ -182,6 +181,7 @@ void CSQC_UpdateView(float w, float h)
 	player_deadflag = getstati(STAT_PLAYER_STATE);
 	spectatorbutton_zoom = spectatee_status & 256;
 	spectatee_status = spectatee_status & 255;
+	observer_status = (spectatee_status ? (spectatee_status == player_localentnum) : 0);
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);
 	else
@@ -303,11 +303,6 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	sb_hidescores = FALSE;
-	if (Sbar_WouldDrawScoreboard())
-		draw_crosshair = FALSE;
-	else
-		draw_crosshair = TRUE;
-
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
 
 	// Draw the Engine Status Bar (the default Quake HUD)
@@ -348,7 +343,7 @@ void CSQC_UpdateView(float w, float h)
 		teamradar_view(TRUE, "");
 
 	if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
-		if(spectatee_status > 0 || CVAR(cl_showpressedkeys) >= 2)
+		if ((spectatee_status > 0 && !observer_status) || CVAR(cl_showpressedkeys) >= 2)
 			Sbar_DrawPressedKeys();
 	}
 
@@ -360,6 +355,7 @@ void CSQC_UpdateView(float w, float h)
 
 	Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 
+	draw_crosshair = !observer_status && !sb_hidescores;
     float hud;
     hud = getstati(STAT_HUD);
     if(hud == HUD_SPIDERBOT)

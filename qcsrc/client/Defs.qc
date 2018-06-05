@@ -206,6 +206,7 @@ string race_othercheckpointenemy;
 
 // Spectating
 float spectatee_status;
+float observer_status;
 
 // short mapname
 string shortmapname;
