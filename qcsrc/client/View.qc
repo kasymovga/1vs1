@@ -163,8 +163,6 @@ void DrawTintEffects(void) {
 #endif
 }
 
-void CSQC_kh_hud(void);
-void CSQC_ctf_hud(void);
 void PostInit(void);
 void CSQC_Demo_Camera();
 float view_set;
