@@ -2222,14 +2222,14 @@ void Client_GetCvars() {
 }
 
 void Client_GetCvars_Parse() {
-	string s = argv(1);
-	string val = argv(2);
-	if (s == "cl_retard")
-	if (stof(val)) {
-		self.netname = retardplayername;
-		self.retard = 1;
-	}
-	if (s == "cl_autowitch")
+	string s = strcat1(argv(1));
+	string val = strcat1(argv(2));
+	if (s == "cl_retard") {
+		if (stof(val)) {
+			self.netname = retardplayername;
+			self.retard = 1;
+		}
+	} else if (s == "cl_autoswitch")
 		self.autoswitch = stof(val);
 	else if (s == "cl_playerdetailreduction")
 		self.cvar_cl_playerdetailreduction = stof(val);
