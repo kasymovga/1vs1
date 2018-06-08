@@ -12,3 +12,6 @@ void ClientKill_Now_TeamChange();
 void ClientInit_Spawn();
 void ClientInit_UpdateHookOrigin();
 void LeaveSpectatorMode();
+void Client_GetCvars();
+void Client_GetCvars_Parse();
+void Client_GetCvars_Free();

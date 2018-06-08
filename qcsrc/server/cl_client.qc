@@ -1319,7 +1319,7 @@ void ClientConnect (void)
 	SetGrappleHookBindings();
 
 	// get other cvars from player
-	GetCvars(0);
+	Client_GetCvars();
 
 	attach_entcs();
 
@@ -1410,7 +1410,7 @@ void ClientDisconnect (void)
 	ReadyCount();
 
 	// free cvars
-	GetCvars(-1);
+	Client_GetCvars_Free();
 
 	if (clienttype(self) == CLIENTTYPE_REAL)
 		GameHookChain_RealClientDisconnect();
@@ -2189,4 +2189,91 @@ void PutTeamToServer(float t) {
 			PutClientInServer();
 			self = oldself;
 		}
+}
+
+void Client_GetCvars() {
+	stuffcmd(self, "sendcvar cl_retard\n"
+			"sendcvar cl_autoswitch\n"
+			"sendcvar cl_playerdetailreduction\n"
+			"sendcvar scr_centertime\n"
+			"sendcvar cl_gunalpha\n"
+			"sendcvar cl_weaponpriority\n"
+			"sendcvar cl_weaponpriority0\n"
+			"sendcvar cl_weaponpriority1\n"
+			"sendcvar cl_weaponpriority2\n"
+			"sendcvar cl_weaponpriority3\n"
+			"sendcvar cl_weaponpriority4\n"
+			"sendcvar cl_weaponpriority5\n"
+			"sendcvar cl_weaponpriority6\n"
+			"sendcvar cl_weaponpriority7\n"
+			"sendcvar cl_weaponpriority8\n"
+			"sendcvar cl_weaponpriority9\n"
+			"sendcvar cl_autotaunt\n"
+			"sendcvar cl_voice_directional\n"
+			"sendcvar cl_voice_directional_taunt_attenuation\n"
+			"sendcvar cl_hitsound\n"
+	);
+#ifdef ALLOW_FORCEMODELS
+	stuffcmd(self, "sendcvar cl_forceplayermodels\n"
+			"sendcvar cl_forceplayermodelsfromnexuiz\n"
+	);
+#endif
+	stuffcmd(self, "sendcvar cl_gunalign\n");
+}
+
+void Client_GetCvars_Parse() {
+	string s = argv(1);
+	string val = argv(2);
+	if (s == "cl_retard")
+	if (stof(val)) {
+		self.netname = retardplayername;
+		self.retard = 1;
+	}
+	if (s == "cl_autowitch")
+		self.autoswitch = stof(val);
+	else if (s == "cl_playerdetailreduction")
+		self.cvar_cl_playerdetailreduction = stof(val);
+	else if (s == "scr_centertime")
+		self.cvar_scr_centertime = stof(val);
+	else if (s == "cl_gunalpha")
+		self.cvar_cl_gunalpha = stof(val);
+	else if (s == "cl_weaponpriority") {
+		unzone_ifneeded(self.cvar_cl_weaponpriority);
+		self.cvar_cl_weaponpriority = strzone(W_FixWeaponOrder_ForceComplete(val));
+	} else if (substring(s, 0, 17) == "cl_weaponpriority") {
+		float ind = stof(substring(s, 17, 1));
+		unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
+		(self.cvar_cl_weaponpriorities[ind]) = strzone(W_FixWeaponOrder_AllowIncomplete(val));
+	} else if (s == "cl_autotaunt")
+		self.cvar_cl_autotaunt = stof(val);
+	else if (s == "cl_voice_directional")
+		self.cvar_cl_voice_directional = stof(val);
+	else if (s == "cl_voice_directional_taunt_attenuation")
+		self.cvar_cl_voice_directional_taunt_attenuation = stof(val);
+	else if (s == "cl_hitsound")
+		self.cvar_cl_hitsound = stof(val);
+#ifdef ALLOW_FORCEMODELS
+	else if (s == "cl_forceplayermodels")
+		self.cvar_cl_forceplayermodels = stof(val);
+	else if (s == "cl_forceplayermodelsfromnexuiz")
+		self.cvar_cl_forceplayermodelsfromnexuiz = stof(val);
+#endif
+	else if (s == "cl_gunalign")
+		self.cvar_cl_gunalign = stof(val);
+
+	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
+	if (s == "cl_weaponpriority")
+		self.switchweapon = w_getbestweapon(self);
+	else if (s == "cl_gunalign")
+		ClientInit_UpdateHookOrigin();
+}
+
+void Client_GetCvars_Free() {
+	unzone_ifneeded(self.cvar_cl_weaponpriority);
+	self.cvar_cl_weaponpriority = "";
+	float i;
+	for (i = 0; i < 10; i++) {
+		unzone_ifneeded(self.cvar_cl_weaponpriorities[i]);
+		(self.cvar_cl_weaponpriorities[i]) = "";
+	}
 }

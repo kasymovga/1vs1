@@ -1,0 +1,1 @@
+float w_getbestweapon(entity e);

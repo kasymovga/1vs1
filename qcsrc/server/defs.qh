@@ -302,7 +302,6 @@ float default_weapon_alpha;
 .float cvar_cl_gunalpha;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;
-.string cvar_g_nexuizversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
 #ifdef ALLOW_FORCEMODELS

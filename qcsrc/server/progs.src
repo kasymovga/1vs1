@@ -133,6 +133,7 @@ selectableweapon.qh
 twoweapons.qh
 noteline.qh
 warmup.qh
+cl_weapons.qh
 
 scores_rules.qc
 
