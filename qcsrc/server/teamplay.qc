@@ -1129,6 +1129,9 @@ void AuditTeams(float force)
 	if(g_campaign)
 		return;
 
+	if (bot_vs_human)
+		return;
+
 	CheckAllowedTeams(world);
 	GetTeamCounts(world);
 	numteams = numplayers = smallest = 0;
