@@ -447,7 +447,7 @@ void Cmd_Sbar_Help(float argc)
 string Sbar_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
-		"ping pl ?cn id name | ",
+		"ping pl ?cn name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
 		"?damage ?bestwep +ca,ft,surv/status "
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
