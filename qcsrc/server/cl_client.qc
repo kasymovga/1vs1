@@ -2240,6 +2240,7 @@ void Client_GetCvars_Parse() {
 	else if (s == "cl_weaponpriority") {
 		unzone_ifneeded(self.cvar_cl_weaponpriority);
 		self.cvar_cl_weaponpriority = strzone(W_FixWeaponOrder_ForceComplete(val));
+		self.switchweapon = w_getbestweapon(self);
 	} else if (substring(s, 0, 17) == "cl_weaponpriority") {
 		float ind = stof(substring(s, 17, 1));
 		unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
@@ -2258,14 +2259,10 @@ void Client_GetCvars_Parse() {
 	else if (s == "cl_forceplayermodelsfromnexuiz")
 		self.cvar_cl_forceplayermodelsfromnexuiz = stof(val);
 #endif
-	else if (s == "cl_gunalign")
+	else if (s == "cl_gunalign") {
 		self.cvar_cl_gunalign = stof(val);
-
-	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
-	if (s == "cl_weaponpriority")
-		self.switchweapon = w_getbestweapon(self);
-	else if (s == "cl_gunalign")
 		ClientInit_UpdateHookOrigin();
+	}
 }
 
 void Client_GetCvars_Free() {
