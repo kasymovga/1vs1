@@ -440,14 +440,19 @@ void SV_ParseClientCommand(string s) {
 			return;
 		}
 		if (cmd == "name") {
+			string name = substring(s, argv_start_index(1), -1);
 			if (self.retard > 0)
 				return;
 
 			if (self.gameclient == CLIENT_XONOTIC)
 				return;
 
-			Client_MuteIfNeeded(argv(1));
-			IRC_Announce_Name(self, argv(1));
+			Client_MuteIfNeeded(name);
+			IRC_Announce_Name(self, name);
+			if (strlen(strdecolorize(name)) > 48) {
+				name = substring(name, 0, 47);
+				s = strcat("name ", substring(name, 0, 47), "~");
+			}
 		}
 		clientcommand(self,s);
 	}
