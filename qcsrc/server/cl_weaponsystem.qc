@@ -150,10 +150,10 @@ float CL_Weaponentity_CustomizeEntityForClient()
 		if(other.enemy == self.viewmodelforclient)
 			self.viewmodelforclient = other;
 
-	self.alpha = Player_CalculateAlpha(self.owner, self.owner);
-	if (other.cvar_cl_gunalpha)
-		self.alpha *= other.cvar_cl_gunalpha;
-
+	entity e = self.viewmodelforclient;
+	self.alpha = Player_CalculateAlpha(self.owner, e);
+	if (e.cvar_cl_gunalpha)
+		self.alpha *= e.cvar_cl_gunalpha;
 
 	return TRUE;
 }
