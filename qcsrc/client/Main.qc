@@ -1106,11 +1106,6 @@ void Ent_Init(float ignore)
 		for(i = 0; i < 24; ++i)
 			weaponimpulse[i] = ReadByte() - 1;
 	}
-	if (sf & 2) {
-		hook_shotorigin_x = ReadCoord();
-		hook_shotorigin_y = ReadCoord();
-		hook_shotorigin_z = ReadCoord();
-	}
 
 	if (sf & 4) {
 		unzone_ifneeded(forcefog);

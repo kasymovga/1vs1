@@ -1,3 +1,4 @@
+.vector hook_shootorg;
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
 {
 	// I want to draw a quad...
@@ -40,6 +41,7 @@ void Draw_GrapplingHook()
 
 	b = self.origin;
 	if(!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == spectatee_status)) {
+		vector hook_shotorigin = self.hook_shootorg;
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
 		if (warpzone_view)
 			a = WarpZone_UnTransformOrigin(warpzone_view, a);
@@ -100,6 +102,11 @@ void Ent_GrapplingHook(float ignore) {
 		self.entremove = Remove_GrapplingHook;
 		if not(self.enemy)
 			self.enemy = spawn();
+	}
+	if (f & 2) {
+		self.hook_shootorg_x = ReadChar();
+		self.hook_shootorg_y = ReadChar();
+		self.hook_shootorg_z = ReadChar();
 	}
 	if (f & 4) {
 		self.origin_x = ReadCoord();

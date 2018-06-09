@@ -146,6 +146,19 @@ float GrapplingHook_SendEntity(entity to, float sf) {
 		WriteByte(MSG_ENTITY, num_for_edict(_hook.owner));
 
 	vector v;
+	if (sf & 2) {
+		if(_hook.owner.weapon == WEP_HOOK) {
+			entity oldself = self;
+			self = _hook;
+			v = shotorg_adjust('26 9 -16', TRUE, TRUE, FALSE);
+			self = oldself;
+		} else
+			v = '8 -8 -12';
+
+		WriteChar(MSG_ENTITY, v_x);
+		WriteChar(MSG_ENTITY, v_y);
+		WriteChar(MSG_ENTITY, v_z);
+	}
 	if (sf & 4) {
 		v = _hook.pos1;
 		WriteCoord(MSG_ENTITY, v_x);
@@ -571,10 +584,6 @@ void GrappleHookInit()
 	CACHE_CVAR(g_balance_grapplehook_speed_pull);
 	CACHE_CVAR(g_balance_grapplehook_stretch);
 	CACHE_CVAR(g_grappling_hook_tarzan);
-	if(g_grappling_hook)
-		hook_shotorigin = '8 -8 -12';
-	else
-		hook_shotorigin = shotorg_adjust('26.2148 9.2059 -15.9772', TRUE, FALSE, FALSE);
 }
 
 void SetGrappleHookBindings()
