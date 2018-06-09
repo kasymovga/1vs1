@@ -884,6 +884,8 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	else
 		namestr = source.netname;
 
+	namestr = strcat(namestr, "^0#", ftos(num_for_edict(source)));
+
 	if(privatesay)
 	{
 		msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");

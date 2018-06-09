@@ -77,7 +77,7 @@ void UDPChat_PupblicPlayerChat(entity source, string msg) {
 	if (clienttype(source) == CLIENTTYPE_REAL) {
 		string _netname = strreplace(":", "_", source.netname);
 		_netname = strreplace("@", "_", _netname);
-		string text = strdecolorize(_netname) + "@" + sv_udpchat_id + ": " + strdecolorize(msg);
+		string text = strcat(strdecolorize(_netname), "#", ftos(num_for_edict(source)), "@", sv_udpchat_id, ": ", strdecolorize(msg));
 		UDPChat_SendPacket(text);
 		UDPChat_ShowPlayersStatus();
 	}

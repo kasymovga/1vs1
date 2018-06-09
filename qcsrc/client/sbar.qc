@@ -714,7 +714,7 @@ string Sbar_GetField(entity pl, float field)
 					sbar_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
 				}
 			}
-			return strcat(GetPlayerName(pl.sv_entnum), "^0(#", ftos(pl.sv_entnum + 1), ")");
+			return strcat(GetPlayerName(pl.sv_entnum), "^0#", ftos(pl.sv_entnum + 1));
 		case SP_STATUS_STRING:
 			if ((pl.(scores[SP_STATUS]) == 0)) {
 				sbar_field_rgb = '0.25 1 0.25';
