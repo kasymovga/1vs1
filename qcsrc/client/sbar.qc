@@ -447,7 +447,7 @@ void Cmd_Sbar_Help(float argc)
 string Sbar_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
-		"ping pl ?cn name | ",
+		"ping pl ?cn id name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
 		"?damage ?bestwep +ca,ft,surv/status "
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
@@ -714,7 +714,7 @@ string Sbar_GetField(entity pl, float field)
 					sbar_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
 				}
 			}
-			return GetPlayerName(pl.sv_entnum);
+			return strcat(GetPlayerName(pl.sv_entnum), "^0(#", ftos(pl.sv_entnum + 1), ")");
 		case SP_STATUS_STRING:
 			if ((pl.(scores[SP_STATUS]) == 0)) {
 				sbar_field_rgb = '0.25 1 0.25';
