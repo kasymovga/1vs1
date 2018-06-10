@@ -1,6 +1,7 @@
 void ugandaknuckles_idle();
 void ugandaknuckles_guard();
 void ugandaknuckles_walk();
+float uganda_sound_ready;
 
 void ugandaknuckles_hunt() {
 	float dofire;
@@ -21,16 +22,18 @@ void ugandaknuckles_hunt() {
 	if (dofire) {
 		self.attack_finished_single = time + 3 + random(2);
 		float f = random(5);
-		if (f > 4)
-			sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
-		else if (f > 3)
-			sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
-		else if (f > 2)
-			sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
-		else if (f > 1)
-			sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
-		else
-			sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
+		if (uganda_sound_ready) {
+			if (f > 4)
+				sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
+			else if (f > 3)
+				sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
+			else if (f > 2)
+				sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
+			else if (f > 1)
+				sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
+			else
+				sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
+		}
 	}
 	if (self.attack_finished_single >= time) {
 		movelib_beak_simple(500 * frametime);
@@ -92,14 +95,30 @@ void ugandaknuckles_spawn() {
 	self.netname = "Uganda Knuckles";
 }
 
+entity uganda_precache;
+
 void ugandaknuckles_init() {
 	precache_model("models/knuckles.md3");
-	precache_sound("douknowdawae.ogg");
-	precache_sound("myqueenyoulook.ogg");
-	precache_sound("quenisok.ogg");
-	precache_sound("isthisdawae.ogg");
-	precache_sound("youdunnodawae.ogg");
 	dlc_require("uganda");
+	if (dlc_ready("uganda"))
+		uganda_sound_ready = TRUE;
+
+	if (uganda_sound_ready) {
+		precache_sound("douknowdawae.ogg");
+		precache_sound("myqueenyoulook.ogg");
+		precache_sound("quenisok.ogg");
+		precache_sound("isthisdawae.ogg");
+		precache_sound("youdunnodawae.ogg");
+		if (uganda_precache) {
+			remove(uganda_precache);
+			uganda_precache = world;
+		}
+	} else {
+		if not(uganda_precache) {
+			uganda_precache = spawn();
+			uganda_precache.dlc_reset = ugandaknuckles_init;
+		}
+	}
 }
 
 void spawnfunc_monster_ugandaknuckles_spawn() {

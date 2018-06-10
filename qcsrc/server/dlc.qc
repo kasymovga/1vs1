@@ -110,7 +110,6 @@ void dlc_load_exts() {
 
 void dlc_reset_all() {
 	entity e = self;
-	RegisterWeapons();
 	for (self = nextent(world); self; self = nextent(self)) {
 		if (self.dlc_reset) {
 			print("DLC reset for ", self.classname, "\n");
@@ -118,6 +117,13 @@ void dlc_reset_all() {
 		}
 	}
 	self = e;
+	RegisterWeapons();
+	float i, wbit;
+	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
+		wbit = W_WeaponBit(i);
+		if ((weaponsInMap & wbit) || (start_weapons & wbit))
+			get_weaponinfo(i).weapon_func(WR_PRECACHE);
+	}
 }
 
 void DLCWait() {
@@ -136,8 +142,7 @@ void DLCWait() {
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
-				localcmd("r_restart\n");
-				localcmd("restart\n"); //for sound
+				localcmd("slowmo 0; r_restart; slowmo 1\n");
 				break;
 			}
 		remove(self);

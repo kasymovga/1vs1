@@ -274,9 +274,9 @@ void HG_GenericProjectile_Touch(void) {
             }
         }
 
-        if(self.hg_type == HG_LASER)
-            spamsound(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
-        else {
+        if(self.hg_type == HG_LASER) {
+			if (hg_sound_ready) spamsound(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
+        } else {
             float r;
             r = random() * 6;
             if(r < 1)
@@ -487,7 +487,7 @@ void HG_GenericProjectile_Think(void) {
             }
 #endif
         } else if(time >= self.hg_nextsnd) {
-            spamsound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
+			if (hg_sound_ready) spamsound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
             self.hg_sndcount += 1;
             self.hg_nextsnd = time + max((self.hg_detonatedelay * 0.3) / (pow(self.hg_sndcount, 1.2)), 0.1);
         }
@@ -584,7 +584,7 @@ void HG_GenericProjectile_MEODP_Death(entity attacker, entity inflictor) {
 string HG_GenericProjectile_TypeToAttackSound(float hgtype) {
     switch(hgtype) {
         case HG_LASER:
-            return RM_SOUND_LASER_PRIMARY;
+            return (hg_sound_ready ? RM_SOUND_LASER_PRIMARY : "");
         default:
             return "weapons/grenade_fire.wav";
     }

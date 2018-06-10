@@ -85,6 +85,8 @@ float hg_context_isaltintended;
 float hg_ammo_used;
 float hg_ammo_available;
 
+float hg_sound_ready;
+
 #define hg_type hg_type1
 #define GRENVARNAME(t,v) strcat("g_nadgets_", HG_TypeToName(t), "_", (v))
 #define GRENVAR(t,v) (cvar(GRENVARNAME(t,v)))

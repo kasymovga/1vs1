@@ -145,11 +145,6 @@ void HG_Init(void) {
 	if not(cvar("g_nadgets"))
 		return;
 
-	dlc_require("rm_effects_v2");
-	dlc_require("rm_laser");
-	dlc_require("rm_arc");
-	dlc_require("pryaxe_balls");
-	dlc_require("nadgets");
     CACHE_CVAR(g_nadgets_double);
 	CACHE_CVAR(g_nadgets_detonate_on_death);
 	CACHE_CVAR(g_nadgets_sentry_disown_on_death);
@@ -231,8 +226,20 @@ void HG_Init(void) {
     Napalm_Init();
 }
 
+entity hg_precache;
 void HG_Precache(void) {
-    precache_sound("hk/alarm.wav");
+	dlc_require("rm_effects_v2");
+	dlc_require("rm_laser");
+	dlc_require("rm_arc");
+	dlc_require("pryaxe_balls");
+	dlc_require("nadgets");
+	if (dlc_ready("rm_laser"))
+	if (dlc_ready("nadgets"))
+		hg_sound_ready = TRUE;
+
+    precache_model("models/ctf/shield.md3");
+    precache_model("models/rtzsentry.iqm");
+    precache_sound("kh/alarm.wav");
     precache_sound("weapons/grenade_bounce1.wav");
     precache_sound("weapons/grenade_bounce2.wav");
     precache_sound("weapons/grenade_bounce3.wav");
@@ -240,26 +247,35 @@ void HG_Precache(void) {
     precache_sound("weapons/grenade_bounce5.wav");
     precache_sound("weapons/grenade_bounce6.wav");
     precache_sound("weapons/grenade_fire.wav");
-    precache_sound("weapons/grenade_stick.wav");
-    precache_sound("weapons/rm_nadebeep.wav");
     precache_sound("weapons/electro_bounce.wav");
     precache_sound("weapons/rocket_mode.wav");
     precache_sound("weapons/nexfire.wav");
     precache_sound("weapons/electro_fire2.wav");
     precache_sound("weapons/electro_fly.wav");
-    precache_sound("misc/arc1.wav");
-    precache_sound("misc/arc2.wav");
     precache_sound("porto/expire.wav");
     precache_sound("porto/bounce.wav");
     precache_sound("misc/powerup_shield.wav");
-    precache_sound("misc/gg.wav");
-    precache_sound("misc/stealth.wav");
-    precache_sound("misc/unstealth.wav");
-    precache_sound("kh/capture.wav");
-    precache_sound(RM_SOUND_LASER_PRIMARY);
-    precache_sound(RM_SOUND_LASER_SECONDARY);
-    precache_model("models/ctf/shield.md3");
-    precache_model("models/rtzsentry.iqm");
+	if (hg_sound_ready) {
+		precache_sound("misc/gg.wav");
+		precache_sound("misc/stealth.wav");
+		precache_sound("misc/unstealth.wav");
+		precache_sound("kh/capture.wav");
+		precache_sound(RM_SOUND_LASER_PRIMARY);
+		precache_sound(RM_SOUND_LASER_SECONDARY);
+		precache_sound("weapons/grenade_stick.wav");
+		precache_sound("weapons/rm_nadebeep.wav");
+		precache_sound("misc/arc1.wav");
+		precache_sound("misc/arc2.wav");
+		if (hg_precache) {
+			remove(hg_precache);
+			hg_precache = world;
+		}
+	} else {
+		if not(hg_precache) {
+			hg_precache = spawn();
+			hg_precache.dlc_reset  = HG_Precache;
+		}
+	}
 }
 
 void HG_SetContext(float isalt) {

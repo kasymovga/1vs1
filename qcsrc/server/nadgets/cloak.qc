@@ -12,7 +12,7 @@ void HG_Cloak(void) {
     self.fire_endtime = 0;
     self.hg_stealth_protectionexpiretime = time + g_nadgets_cloak_damagereduction_time;
     pointparticles(particleeffectnum("smoke_ring"), self.origin + self.maxs_z * '0 0 0.5', '0 0 0', 10);
-    sound(self, CHAN_AUTO, "misc/stealth.wav", VOL_BASE, ATTN_NORM);
+    if (hg_sound_ready) sound(self, CHAN_AUTO, "misc/stealth.wav", VOL_BASE, ATTN_NORM);
 	entity e;
 	if (g_nadgets_cloak_spy)
 		FOR_EACH_PLAYER(e)
@@ -60,7 +60,7 @@ void HG_Cloak_PlayerFrame(void) {
                     HG_SetCooldown(hg_ctx_next, 0, g_nadgets_cloak_cooldown_decloak);
             })
 
-            sound(self, CHAN_AUTO, "misc/unstealth.wav", VOL_BASE, ATTN_NORM);
+            if (hg_sound_ready) sound(self, CHAN_AUTO, "misc/unstealth.wav", VOL_BASE, ATTN_NORM);
         }
         if(self.hg_stealthalpha)
             self.hg_stealthalpha = approach(self.hg_stealthalpha, 0, frametime * g_nadgets_cloak_unstealthrate);
