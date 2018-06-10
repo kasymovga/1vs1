@@ -44,6 +44,10 @@ void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 			vote == "mute") {
 		me.voteType = 2;
 		me.nItems = 255;
+	} else if (vote == "gotomap" || vote == "chmap" || vote == "nextmap") {
+		localcmd("cmd lsmaps2\n");
+		me.voteType = 3;
+		me.nItems = max(1, available_maps_count);
 	} else {
 		me.voteType = 0;
 	}
@@ -56,21 +60,32 @@ void setSelectedNexuizVoteArgsList(entity me, float i)
 	if (i >= me.nItems)
 		return;
 
+	string vote = vote_commands[me.voteList.selectedItem];
+	string s = "";
 	if (me.voteType == 1 || me.voteType == 2) {
 		entity e = playerslots[i];
 		if (e) {
-			string vote = vote_commands[me.voteList.selectedItem];
-			string s;
 			if (me.voteType == 1)
 				s = strcat(vote, " # ", ftos(e.sv_entnum + 1));
 			else
 				s = strcat(vote, " ", ftos(e.sv_entnum + 1));
 
-			s = strcat(s, " reason");
-			me.voteList.textBox.setText(me.voteList.textBox, s);
-			me.voteList.textBox.cursorPos = strlen(s);
+			if (vote == "kick" || vote == "kickban")
+				s = strcat(s, " reason");
 		}
+	} else if (me.voteType == 3) {
+		float j;
+		s = available_maps;
+		for (j = 0; j < i; j++) {
+			s = cdr(s);
+		}
+		s = car(s);
+		s = strcat(vote, " ", s);
+		me.voteList.textBox.setText(me.voteList.textBox, s);
+		me.voteList.textBox.cursorPos = strlen(s);
 	}
+	me.voteList.textBox.setText(me.voteList.textBox, s);
+	me.voteList.textBox.cursorPos = strlen(s);
 }
 
 void resizeNotifyNexuizVoteArgsList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -84,17 +99,27 @@ void resizeNotifyNexuizVoteArgsList(entity me, vector relOrigin, vector relSize,
 
 void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float isSelected)
 {
+	if(isSelected)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+
+	string s = "";
+
 	if (me.voteType == 1 || me.voteType == 2) {
-		string s;
-		if(isSelected)
-			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 		entity  e = playerslots[i];
 		if (e)
 			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(GetPlayerName(e.sv_entnum)));
 
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	} else if (me.voteType == 3) {
+		me.nItems = available_maps_count;
+		s = available_maps;
+		float j;
+		for (j = 0; j < i; j++) {
+			s = cdr(s);
+		}
+		s = car(s);
 	}
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 
 #endif

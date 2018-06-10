@@ -314,6 +314,11 @@ void SV_ParseClientCommand(string s) {
 		sprint(self, maplist_reply);
 	} else if(cmd == "lsmaps") {
 		sprint(self, lsmaps_reply);
+	} else if(cmd == "lsmaps2") {
+		msg_entity = self;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_MAPLIST);
+		WriteString(MSG_ONE, substring(lsmaps_reply2, 0, 768));
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");

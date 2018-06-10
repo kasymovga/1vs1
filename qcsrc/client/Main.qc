@@ -6,6 +6,9 @@
 
 var void(float) ent_parsers[ENT_CLIENT_COUNT];
 
+string available_maps;
+float available_maps_count;
+
 void cvar_clientsettemp(string cv, string val)
 {
 	entity e;
@@ -1303,6 +1306,17 @@ float CSQC_Parse_TempEntity()
 			{
 				localcmd("\ncl_hook_gameend;");
 				calledhooks |= HOOK_END;
+			}
+			bHandled = true;
+			break;
+		case TE_CSQC_MAPLIST:
+			unzone_ifneeded(available_maps);
+			available_maps = zone_ifneeded(ReadString());
+			string s = available_maps;
+			available_maps_count = 0;
+			while (s != "") {
+				s = cdr(s);
+				available_maps_count++;
 			}
 			bHandled = true;
 			break;

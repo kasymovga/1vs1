@@ -776,6 +776,7 @@ void spawnfunc_worldspawn (void)
 	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);
 
 	lsmaps_reply = "^7Maps available: ";
+	lsmaps_reply2 = "";
 	for(i = 0, j = 0; i < MapInfo_count; ++i)
 	{
 		if(MapInfo_Get_ByID(i))
@@ -787,9 +788,11 @@ void spawnfunc_worldspawn (void)
 					col = "^3";
 				++j;
 				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
+				lsmaps_reply2 = strcat(lsmaps_reply2, MapInfo_Map_bspname, " ");
 			}
 	}
 	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
+	lsmaps_reply2 = strzone(lsmaps_reply2);
 
 	maplist_reply = "^7Maps in list: ";
 	n = tokenize_console(cvar_string("g_maplist"));
