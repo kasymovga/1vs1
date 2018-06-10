@@ -1349,6 +1349,13 @@ set akimbo_g_akimbo 1
 set akimbo_g_pinata 1
 set akimbo_g_pinata_drop_all 1
 set akimbo_g_akimbo_weapons all
+set akimbo_ca_g_pinata 1
+set akimbo_ca_g_pinata_drop_all 1
+set akimbo_ca_g_start_delay 0
+set akimbo_ca_g_pickup_cells 5
+set akimbo_ca_g_pickup_rockets 5
+set akimbo_ca_g_pickup_bullets 10
+set akimbo_ca_g_pickup_shells 5
 
 set cra_g_start_weapon_laser 0
 set cra_g_start_weapon_shotgun 0
