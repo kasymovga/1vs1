@@ -34,6 +34,7 @@
 #include "../client-menu/nexuiz/inputbox.c"
 #include "../client-menu/nexuiz/dialog_quit.c"
 #include "../client-menu/nexuiz/checkbox.c"
+#include "gui/voteargslist.c"
 #include "gui/votelist.c"
 #include "gui/dialog_gamemenu.c"
 #include "gui/dialog_gamesettings.c"

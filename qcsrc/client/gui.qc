@@ -61,6 +61,7 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	return r;
 }
 
+float gui_con_chat_save;
 void GUI_Draw_Remove() {
 	if (GUI_alpha > 0)
 		GUI_alpha -= frametime * 5;
@@ -68,6 +69,7 @@ void GUI_Draw_Remove() {
 		GUI_RemoveRecursive(mainWindow);
 		unloadTooltips();
 		mainWindow = world;
+		cvar_set("con_chat", ftos(gui_con_chat_save));
 		if (CSQC_InputEvent_Callback == GUI_InputEvent)
 			CSQC_InputEvent_Callback = NULL;
 
@@ -110,6 +112,8 @@ void GUI_Show(float window) {
 	GUI_shiftState = FALSE;
 	GUI_currentWindow = window;
 	if not(mainWindow) {
+		gui_con_chat_save = cvar("con_chat");
+		cvar_set("con_chat", "0");
 		SkinInit();
 		loadTooltips();
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);

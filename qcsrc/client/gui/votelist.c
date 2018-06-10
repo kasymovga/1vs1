@@ -7,6 +7,7 @@ CLASS(NexuizVoteList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizVoteList, textBox, entity, NULL)
 	ATTRIB(NexuizVoteList, realUpperMargin, float, 0)
 	ATTRIB(NexuizCvarList, columnNameOrigin, float, 0)
+	ATTRIB(NexuizCvarList, voteArgsList, entity, NULL)
 ENDCLASS(NexuizVoteList)
 entity makeNexuizVoteList();
 #endif
@@ -30,6 +31,7 @@ void configureNexuizVoteListNexuizVoteList(entity me)
 void setSelectedNexuizVoteList(entity me, float i)
 {
 	setSelectedListBox(me, i);
+	me.voteArgsList.setVoteType(me.voteArgsList, vote_commands[i]);
     string s = strcat(vote_commands[i], " ");
     me.textBox.setText(me.textBox, s);
     me.textBox.cursorPos = strlen(s);
