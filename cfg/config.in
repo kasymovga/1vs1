@@ -514,7 +514,7 @@ set ca_g_powerup_shield 0
 set ca_g_powerup_strength 0
 set ca_g_start_ammo_nails 50
 set ca_g_start_ammo_shells 30
-set ca_g_start_ammo_rockets 30
+set ca_g_start_ammo_rockets 60
 set ca_g_start_ammo_cells 30
 set ca_g_warmup_start_ammo_nails 50
 set ca_g_warmup_start_ammo_shells 30
