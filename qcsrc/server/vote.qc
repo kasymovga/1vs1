@@ -192,6 +192,10 @@ float GameCommand_Vote(string s, entity e) {
 		print_to(e, "  vote COMMANDS ARGUMENTS. See 'vhelp' for more info.");
 		return TRUE;
 	} else if(argv(0) == "vote") {
+		if (g_campaign) {
+			print_to(e, "^1You can't use vote in campaing mode!");
+			return TRUE;
+		}
 		if(argv(1) == "") {
 			print_to(e, "^1You have to supply a vote command. See 'vhelp' for more info.");
 		} else if(argv(1) == "help") {
