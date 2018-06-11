@@ -19,6 +19,7 @@ entity makeNexuizVoteArgsList();
 entity makeNexuizVoteArgsList(void)
 {
 	entity me;
+	localcmd("cmd lsmaps2\n");
 	me = spawnNexuizVoteArgsList();
 	me.configureNexuizVoteArgsList(me);
 	me.nItems = 0;
@@ -45,7 +46,6 @@ void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 		me.voteType = 2;
 		me.nItems = 255;
 	} else if (vote == "gotomap" || vote == "chmap" || vote == "nextmap") {
-		localcmd("cmd lsmaps2\n");
 		me.voteType = 3;
 		me.nItems = max(1, available_maps_count);
 	} else {
