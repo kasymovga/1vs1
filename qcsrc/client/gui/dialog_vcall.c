@@ -24,7 +24,7 @@ void fillNexuizVcallDialog(entity me)
 	
 	me.TR(me);
 		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Available votes:"));
-		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Possible args:"));
+		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Possible arguments:"));
 	me.TR(me);
         me.TD(me, 13, 10, vlist = makeNexuizVoteList());
         me.TD(me, 13, 10, vlist.voteArgsList = makeNexuizVoteArgsList());
