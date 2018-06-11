@@ -25,6 +25,7 @@ entity makeNexuizVoteList(void)
 void configureNexuizVoteListNexuizVoteList(entity me)
 {
     me.nItems = vote_commands_count;
+	me.selectedItem = -1;
 	me.configureNexuizListBox(me);
 }
 

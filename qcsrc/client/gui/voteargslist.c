@@ -33,9 +33,11 @@ void configureNexuizVoteArgsListNexuizVoteArgsList(entity me)
 
 void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 	me.nItems = 0;
+	float new_voteType;
+	new_voteType = 0;
 	if (vote == "kick" ||
 			vote == "kickban") {
-		me.voteType = 1;
+		new_voteType = 1;
 		me.nItems = 255;
 	} else if (vote == "movetoteam_auto" ||
 			vote == "movetoteam_blue" ||
@@ -43,13 +45,16 @@ void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 			vote == "movetoteam_yellow" ||
 			vote == "movetoteam_ping" ||
 			vote == "mute") {
-		me.voteType = 2;
+		new_voteType = 2;
 		me.nItems = 255;
 	} else if (vote == "gotomap" || vote == "chmap" || vote == "nextmap") {
-		me.voteType = 3;
+		new_voteType = 3;
 		me.nItems = max(1, available_maps_count);
-	} else {
-		me.voteType = 0;
+	}
+	me.selectedItem = -1;
+	if (new_voteType != me.voteType) {
+		me.voteType = new_voteType;
+		me.scrollPos = 0;
 	}
 
 }
