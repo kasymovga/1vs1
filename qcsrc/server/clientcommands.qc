@@ -318,7 +318,7 @@ void SV_ParseClientCommand(string s) {
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_MAPLIST);
-		WriteString(MSG_ONE, substring(lsmaps_reply2, 0, 768));
+		WriteString(MSG_ONE, lsmaps_reply2);
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");
