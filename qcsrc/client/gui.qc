@@ -112,6 +112,7 @@ void GUI_Show(float window) {
 	GUI_currentWindow = window;
 	if not(mainWindow) {
 		con_chat_save = cvar("con_chat");
+		con_chat_was_changed = TRUE;
 		cvar_set("con_chat", "0");
 		SkinInit();
 		loadTooltips();

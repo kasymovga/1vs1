@@ -9,6 +9,7 @@ var void(float) ent_parsers[ENT_CLIENT_COUNT];
 string available_maps;
 float available_maps_count;
 float con_chat_save;
+float con_chat_was_changed;
 
 void cvar_clientsettemp(string cv, string val)
 {
@@ -504,7 +505,8 @@ void CSQC_Shutdown(void)
 	db_close(tempdb);
 
 	cvar_clientsettemp_restore();
-	cvar_set("con_chat", ftos(con_chat_save));
+	if (con_chat_was_changed)
+		cvar_set("con_chat", ftos(con_chat_save));
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
