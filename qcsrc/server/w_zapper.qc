@@ -19,6 +19,7 @@ float g_balance_zapper_secondary_ammo;
 float g_balance_zapper_secondary_arc;
 float g_balance_zapper_secondary_arc_force;
 float g_balance_zapper_secondary_arc_range;
+float g_balance_zapper_secondary_bounces;
 float g_balance_zapper_secondary_charge_time;
 float g_balance_zapper_secondary_damage;
 float g_balance_zapper_secondary_damagefalloff_forcehalflife;
@@ -375,6 +376,39 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
     );
 }
 
+void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float fraction, float range, float bounces, float damage, float force) {
+	traceline_antilag(self, start, end, FALSE, (fraction ? world : self), ANTILAG_LATENCY(self));
+	entity targ = trace_ent;
+	vector _shotdir = normalize(end - start);
+	end = trace_endpos;
+	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, _shotdir);
+	fraction = fraction + (1 - fraction) * trace_fraction;
+	if(targ.takedamage) {
+		float d = vlen(end - start) * fraction;
+		float mindist = g_balance_zapper_secondary_damagefalloff_mindist;
+		float maxdist = g_balance_zapper_secondary_damagefalloff_maxdist;
+		float halflifedist = g_balance_zapper_secondary_damagefalloff_halflife;
+		float forcehalflifedist = g_balance_zapper_secondary_damagefalloff_forcehalflife;
+		damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
+		force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
+		if(targ.iscreature)
+			W_Zapper_Attack2_Arc(targ, self, damage);
+
+		entity o = Akimbo_Owner(self);
+		Damage_RecordHits(o, targ, WEP_ZAPPER, 1, damage);
+		Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
+	} else if (trace_plane_normal != '0 0 0' && trace_fraction < 1) {
+		vector reflect_dir = _shotdir - 2 * (_shotdir * trace_plane_normal) * trace_plane_normal;
+		if (bounces > 0) {
+			W_Zapper_Attack2_Beam(end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, damage, force);
+		}
+	}
+	W_Zapper_Attack2_Effect_team = self.team;
+	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
+	if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
+}
+
 void W_Zapper_Attack2(void) {
     float accum_time = g_balance_zapper_secondary_accumulate;
     float charge_time;
@@ -398,52 +432,8 @@ void W_Zapper_Attack2(void) {
 
     W_SetupShot(self, TRUE, 5, snd, 1);
 
-    entity targ;
     vector end = w_shotorg + w_shotdir * range;
-    //entity pts = Buffs_MEODP_Hitscan_Begin(self);
-
-    //ExactHitscan_Begin();
-    traceline_antilag(self, w_shotorg, end, FALSE, self, ANTILAG_LATENCY(self));
-    //ExactHitscan_End();
-
-    targ = trace_ent;
-    end = trace_endpos;
-
-    //W_SetHitscanVisuals(self, end);
-
-    //vector end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir);
-
-    if(targ.takedamage) {
-        float d = vlen(end - w_shotorg) * trace_fraction;
-
-        float mindist = g_balance_zapper_secondary_damagefalloff_mindist;
-        float maxdist = g_balance_zapper_secondary_damagefalloff_maxdist;
-        float halflifedist = g_balance_zapper_secondary_damagefalloff_halflife;
-        float forcehalflifedist = g_balance_zapper_secondary_damagefalloff_forcehalflife;
-
-        damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
-        force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
-
-        if(targ.iscreature)
-            W_Zapper_Attack2_Arc(targ, self, damage);
-
-		entity o = Akimbo_Owner(self);
-		Damage_RecordHits(o, targ, WEP_ZAPPER, 1, damage);
-        Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
-    }
-
-    //Buffs_MEODP_Hitscan_End(pts);
-
-    //W_Accuracy_RegisterShot(self, self.weapon);
-    //W_Accuracy_RegisterHit(self, targ, self.weapon);
-
-	W_Zapper_Attack2_Effect_team = self.team;
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
-
-    if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-        Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
-
+	W_Zapper_Attack2_Beam(w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, damage, force);
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
         self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
 }
@@ -789,6 +779,7 @@ float w_zapper(float req) {
 		CACHE_CVAR(g_balance_zapper_secondary_arc);
 		CACHE_CVAR(g_balance_zapper_secondary_arc_force);
 		CACHE_CVAR(g_balance_zapper_secondary_arc_range);
+		CACHE_CVAR(g_balance_zapper_secondary_bounces);
 		CACHE_CVAR(g_balance_zapper_secondary_charge_time);
 		CACHE_CVAR(g_balance_zapper_secondary_damage);
 		CACHE_CVAR(g_balance_zapper_secondary_damagefalloff_forcehalflife);
