@@ -378,10 +378,10 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
 
 void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float fraction, float range, float bounces, float damage, float force) {
 	traceline_antilag(self, start, end, FALSE, (fraction ? world : self), ANTILAG_LATENCY(self));
+	vector plane_normal = trace_plane_normal;
 	entity targ = trace_ent;
-	vector _shotdir = normalize(end - start);
+	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
 	end = trace_endpos;
-	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, _shotdir);
 	fraction = fraction + (1 - fraction) * trace_fraction;
 	if(targ.takedamage) {
 		float d = vlen(end - start) * fraction;
@@ -397,14 +397,17 @@ void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float 
 		entity o = Akimbo_Owner(self);
 		Damage_RecordHits(o, targ, WEP_ZAPPER, 1, damage);
 		Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
-	} else if (trace_plane_normal != '0 0 0' && trace_fraction < 1) {
-		vector reflect_dir = _shotdir - 2 * (_shotdir * trace_plane_normal) * trace_plane_normal;
+	}
+	W_Zapper_Attack2_Effect_team = self.team;
+	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
+	if not(targ.takedamage)
+	if (plane_normal != '0 0 0')
+	if (fraction < 1) {
+		vector reflect_dir = forcedir - 2 * (forcedir * plane_normal) * plane_normal;
 		if (bounces > 0) {
 			W_Zapper_Attack2_Beam(end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, damage, force);
 		}
 	}
-	W_Zapper_Attack2_Effect_team = self.team;
-	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
 	if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
 }
