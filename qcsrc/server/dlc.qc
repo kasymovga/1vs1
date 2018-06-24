@@ -85,6 +85,9 @@ void dlc_unload_settemps() {
 void dlc_load_exts() {
 	dlc_unload_settemps();
 	float search = search_begin("rexext_*.cfg", TRUE, TRUE);
+	if (search < 0)
+		return;
+
 	float n = search_getsize(search);
 	float i;
 	string s, head, tail;
