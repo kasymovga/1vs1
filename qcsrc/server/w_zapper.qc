@@ -399,17 +399,19 @@ void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float 
 		Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 	}
 	W_Zapper_Attack2_Effect_team = self.team;
-	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
+	if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
+
 	if not(targ.takedamage)
 	if (plane_normal != '0 0 0')
+	if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	if (fraction < 1) {
 		vector reflect_dir = forcedir - 2 * (forcedir * plane_normal) * plane_normal;
 		if (bounces > 0) {
 			W_Zapper_Attack2_Beam(end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, damage, force);
 		}
 	}
-	if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
+	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
 }
 
 void W_Zapper_Attack2(void) {
