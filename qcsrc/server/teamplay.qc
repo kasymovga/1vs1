@@ -1055,6 +1055,10 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	// move the player to the new team
 	TeamchangeFrags(selected);
+	entity oldself = self;
+	self = selected;
+	PlayerClear(FALSE);
+	self = oldself;
 	SetPlayerTeam(selected, smallestteam, source_team, FALSE);
 
 	if(selected.deadflag == DEAD_NO)
