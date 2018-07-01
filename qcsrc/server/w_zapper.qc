@@ -376,8 +376,8 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
     );
 }
 
-void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float fraction, float range, float bounces, float damage, float force) {
-	traceline_antilag(self, start, end, FALSE, (fraction ? world : self), ANTILAG_LATENCY(self));
+void W_Zapper_Attack2_Beam(entity o, vector start, vector start_visual, vector end, float fraction, float range, float bounces, float damage, float force) {
+	traceline_antilag(o, start, end, FALSE, (fraction ? world : o), ANTILAG_LATENCY(o));
 	vector plane_normal = trace_plane_normal;
 	entity targ = trace_ent;
 	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
@@ -392,15 +392,14 @@ void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float 
 		damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
 		force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
 		if(targ.iscreature)
-			W_Zapper_Attack2_Arc(targ, self, damage);
+			W_Zapper_Attack2_Arc(targ, o, damage);
 
-		entity o = Akimbo_Owner(self);
 		Damage_RecordHits(o, targ, WEP_ZAPPER, 1, damage);
 		Damage(targ, o, o, damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 	}
-	W_Zapper_Attack2_Effect_team = self.team;
+	W_Zapper_Attack2_Effect_team = o.team;
 	if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, self);
+		Damage_DamageInfo(end, damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, o);
 
 	if not(targ.takedamage)
 	if (plane_normal != '0 0 0')
@@ -408,7 +407,7 @@ void W_Zapper_Attack2_Beam(vector start, vector start_visual, vector end, float 
 	if (fraction < 1) {
 		vector reflect_dir = forcedir - 2 * (forcedir * plane_normal) * plane_normal;
 		if (bounces > 0) {
-			W_Zapper_Attack2_Beam(end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, damage, force);
+			W_Zapper_Attack2_Beam(o, end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, damage, force);
 		}
 	}
 	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
@@ -438,7 +437,7 @@ void W_Zapper_Attack2(void) {
     W_SetupShot(self, TRUE, 5, snd, 1);
 
     vector end = w_shotorg + w_shotdir * range;
-	W_Zapper_Attack2_Beam(w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, damage, force);
+	W_Zapper_Attack2_Beam(Akimbo_Owner(self), w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, damage, force);
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
         self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
 }
