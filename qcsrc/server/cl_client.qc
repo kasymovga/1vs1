@@ -2030,7 +2030,8 @@ void PlayerPostThink (void)
 		} else
 			maxidle = 0;
 
-		if (maxidle) {
+		if (maxidle)
+		if not(intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {
 				announce(self, "announcer/robotic/terminated.wav");
