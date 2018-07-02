@@ -18,14 +18,11 @@ float prandom()
 vector prandomvec()
 {
 	vector v;
-
-	do
-	{
-		v_x = prandom();
-		v_y = prandom();
-		v_z = prandom();
-	}
-	while(v * v > 1);
+	v_x = prandom();
+	v_y = prandom();
+	v_z = prandom();
+	if (vlen(v) > 1)
+		v = v * 0.57735;
 
 	return v;
 }
