@@ -45,6 +45,8 @@ float g_ctf_flagcarrier_selfdamage;
 float g_ctf_flagcarrier_selfforce;
 float g_ctf_flagscore_kill;
 float g_ctf_personalscore_kill;
+float g_ctf_showenemycarrier;
+float g_ctf_showenemycarrier_delay;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -457,6 +459,17 @@ void flag_cap_ring_spawn(vector org)
 	shockwave_spawn("models/ctf/shockwavetransring.md3", org - '0 0 15', -0.8, 0, 1);
 };
 
+float ctf_flagcarrier_visible() {
+	if (other.team == self.owner.team)
+		return TRUE;
+
+	if (g_ctf_showenemycarrier)
+	if (time > self.owner.flagcarried.flagpickuptime + g_ctf_showenemycarrier_delay) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
 void FlagTouch()
 {
 	if(gameover) return;
@@ -583,6 +596,9 @@ void FlagTouch()
 		setorigin(self, FLAG_CARRY_POS);
 		setattachment(self, other, "");
 		WaypointSprite_AttachCarrier("flagcarrier", other);
+		WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team, SPRITERULE_TEAMPLAY);
+		WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
+		other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
 		WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 		WaypointSprite_Ping(self.sprite);
 
@@ -669,6 +685,9 @@ void FlagTouch()
 			self.damageforcescale = 0;
 			self.takedamage = DAMAGE_NO;
 			WaypointSprite_AttachCarrier("flagcarrier", other);
+			WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team, SPRITERULE_TEAMPLAY);
+			WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
+			other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ctf_flagcarrier_visible;
 			WaypointSprite_UpdateTeamRadar(other.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 		}
 	}
@@ -803,6 +822,19 @@ Keys:
  (default ctf/respawn.wav)
 */
 
+float ctf_runhere_visibility() {
+	if (other.flagcarried)
+	if (other.team == self.owner.team)
+	if (self.owner.cnt == FLAG_BASE)
+		return TRUE;
+
+	return FALSE;
+}
+
+float ctf_base_visibility() {
+	return !ctf_runhere_visibility();
+}
+
 void spawnfunc_item_flag_team1()
 {
 	if (!g_ctf)
@@ -875,6 +907,9 @@ void spawnfunc_item_flag_team1()
 	self.basewaypoint = self.nearestwaypoint;
 
 	WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
+	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
+	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_attached);
+	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_runhere_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
 
 	precache_model("models/ctf/shield.md3");
@@ -980,6 +1015,9 @@ void spawnfunc_item_flag_team2()
 	self.basewaypoint = self.nearestwaypoint;
 
 	WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
+	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
+	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_attached);
+	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_runhere_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
 
 	precache_model("models/ctf/shield.md3");
@@ -1172,6 +1210,8 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
 	CACHE_CVAR(g_ctf_flagscore_kill);
 	CACHE_CVAR(g_ctf_personalscore_kill);
+	CACHE_CVAR(g_ctf_showenemycarrier);
+	CACHE_CVAR(g_ctf_showenemycarrier_delay);
 	if(g_campaign)
 		g_ctf_win_mode = 2;
 	else

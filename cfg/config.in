@@ -545,6 +545,9 @@ set g_conquest_teamscore_alternative 1
 set g_conquest_use_ons 0
 set g_conquest_use_ctf_and_dom 0
 
+set g_ctf_showenemycarrier 1
+set g_ctf_showenemycarrier_delay 30
+
 set sv_model_healthlarge ""
 set sv_model_healthmedium ""
 set sv_model_healthmega ""
