@@ -33,12 +33,14 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", 1);
+	antilag_begin(Akimbo_Owner(self));
+	W_SetupShot (self, 0, "weapons/minstanexfire.wav", 1);
 
 	yoda = 0;
 	damage_goodhits = 0;
 	headshot = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	antilag_end();
 
 	if(yoda > 1)
 		announce(self, "announcer/male/yoda.wav");
@@ -132,7 +134,7 @@ void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
 void W_MinstaNex_Laser_Attack_Setup() {
 	float w_safe = self.weapon;
 	self.weapon = WEP_LASER;
-	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", 1);
+	W_SetupShot_Dir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
 	self.weapon = w_safe;
 }
 

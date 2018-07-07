@@ -33,14 +33,16 @@ void W_Melee_Attack_Think()
 	}
 	float damage_factor = (g_balance_melee_onehit ? 1 : (melee_frame / g_balance_melee_time));
 	makevectors(self.owner.v_angle);
-	W_SetupShot(self.owner, FALSE, 0, "", (self.dmg ? 1 : 0));
+	antilag_begin(self.owner);
+	W_SetupShot(self.owner, 0, "", (self.dmg ? 1 : 0));
 	float damage;
 	if (self.dmg)
 		damage = g_balance_axe_damage;
 	else
 		damage = g_balance_melee_damage;
 
-	traceline_antilag(self.owner, w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * g_balance_melee_distance, MOVE_NORMAL, self, ANTILAG_LATENCY(self.owner));
+	WarpZone_TraceLine(w_shotorg - (w_shotdir * 20), w_shotorg + w_shotdir * g_balance_melee_distance, MOVE_NORMAL, self);
+	antilag_end();
 	if (trace_fraction < 1)
 	if (trace_ent)
 	if (trace_ent.takedamage)

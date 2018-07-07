@@ -78,14 +78,12 @@ void W_SwitchWeapon_Force(entity e, float w)
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
 .float lastshot_time;
-void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, string snd, float maxhits)
+void W_SetupShot_Dir(entity ent, vector s_forward, float recoil, string snd, float maxhits)
 {
 	local float oldsolid;
 	vector vecs, vecs_visual, dv;
-	oldsolid = ent.dphitcontentsmask;
 	entity ent_orig = ent;
 	ent = Akimbo_Owner(ent);
-	antilag_prepare(ent);
 	// Track max damage and set the stat to be sent later in g_world.qc
 	if (maxhits > 0)
 		Damage_RecordFires(ent, ent.weapon, maxhits);
@@ -112,23 +110,17 @@ void W_SetupShot_Dir(entity ent, vector s_forward, float antilag, float recoil, 
 		w_shotdir = s_forward;
 	else
 	{
+		float dphitcontentsmask_save = ent.dphitcontentsmask;
 		if(ent.weapon == WEP_CAMPINGRIFLE)
 			ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		else
 			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-		if(antilag)
-			traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-			// passing world, because we do NOT want it to touch dphitcontentsmask
-		else
-			WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
 
-		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+		ent.dphitcontentsmask = dphitcontentsmask_save;
 		w_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 		w_shotdir = normalize(w_shotpoint - w_shotorg);
 	}
-
-	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
-
 	if (!g_norecoil)
 		ent.punchangle_x = recoil * -1;
 

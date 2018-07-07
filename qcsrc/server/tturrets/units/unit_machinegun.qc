@@ -9,6 +9,7 @@ void turret_machinegun_attack()
     entity flash;
 
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+	beginFireBallisticBullet(self.shot_speed);
     fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, WEP_UZI, particleeffectnum("tr_bullet"), 1, cvar("g_balance_uzi_bulletconstant"));
     endFireBallisticBullet();
 

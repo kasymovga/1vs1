@@ -107,7 +107,10 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 		dtype = WEP_SUPERSHOTGUN;
 		bounces = g_balance_supershotgun_primary_bounces;
 	}
-	W_SetupShot (self, ballistic && g_antilag_bullets && s >= g_antilag_bullets, 5, "weapons/shotgun_fire.wav", b);
+	if (ballistic)
+		beginFireBallisticBullet(s);
+
+	W_SetupShot (self, 5, "weapons/shotgun_fire.wav", b);
 
 	if (barrels == 3)
 	{

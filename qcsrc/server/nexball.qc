@@ -855,7 +855,7 @@ void W_Nexball_Attack (float t)
 	if (!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot (self, FALSE, 4, "nexball/shoot1.wav",0);
+	W_SetupShot (self, 4, "nexball/shoot1.wav",0);
 	tracebox(w_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{

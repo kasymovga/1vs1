@@ -376,7 +376,7 @@ void W_Rocket_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
-	W_SetupShot(self, FALSE, 5, "weapons/rocket_fire.wav", 1);
+	W_SetupShot(self, 5, "weapons/rocket_fire.wav", 1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound

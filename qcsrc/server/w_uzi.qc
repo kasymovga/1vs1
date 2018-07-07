@@ -40,7 +40,8 @@ void W_Uzi_Attack (float deathtype)
 		else
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_sustained_ammo;
 	}
-	W_SetupShot (self, g_antilag_bullets && g_balance_uzi_speed >= g_antilag_bullets, 0, "weapons/uzi_fire.wav", 1);
+	beginFireBallisticBullet(g_balance_uzi_speed);
+	W_SetupShot (self, 0, "weapons/uzi_fire.wav", 1);
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;

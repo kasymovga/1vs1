@@ -273,16 +273,6 @@ void main (void)
 
 }
 
-// Misc
-
-/*
-==================
-traceline_antilag
-
-A version of traceline that must be used by SOLID_SLIDEBOX things that want to hit SOLID_CORPSE things with a trace attack
-Additionally it moves players back into the past before the trace and restores them afterward.
-==================
-*/
 #define SKIPNONSOLID_ESCAPE_STEP 0.1
 void traceline_skipnonsolid(vector start, vector end, float t, entity forent) {
     float prev_trace_fract = 0;
@@ -362,66 +352,6 @@ void tracetoss_skipnonsolid(entity ent, entity ignore, float toss_frametime, flo
     ent.avelocity = avelocity_save;
     ent.origin = origin_save;
     ent.angles = angles_save;
-}
-
-void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
-{
-	local entity player;
-	local float oldsolid;
-
-	// check whether antilagged traces are enabled
-	if (lag < 0.001)
-		lag = 0;
-	if (clienttype(forent) != CLIENTTYPE_REAL)
-		lag = 0; // only antilag for clients
-
-	// change shooter to SOLID_BBOX so the shot can hit corpses
-	if(source)
-	{
-		oldsolid = source.dphitcontentsmask;
-		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	}
-
-	if (lag)
-	{
-		// take players back into the past
-		player = player_list;
-		while (player)
-		{
-			antilag_takeback(player, time - lag);
-			player = player.nextplayer;
-		}
-	}
-
-	// do the trace
-	WarpZone_TraceBox (v1, mi, ma, v2, nomonst, forent);
-
-	// restore players to current positions
-	if (lag)
-	{
-		player = player_list;
-		while (player)
-		{
-			antilag_restore(player);
-			player = player.nextplayer;
-		}
-	}
-
-	// restore shooter solid type
-	if(source)
-		source.dphitcontentsmask = oldsolid;
-}
-void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
-{
-	tracebox_antilag_force(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag);
-}
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
-{
-	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
-}
-void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
-{
-	tracebox_antilag_force(source, v1, mi, ma, v2, nomonst, forent, lag);
 }
 
 /*

@@ -230,15 +230,17 @@ void W_Zapper_Beam_Think(void) {
 	vector org = W_Zapper_GetVisualShootOrg(self.enemy);
 
     makevectors(self.owner.v_angle);
-    W_SetupShot(self.enemy, FALSE, 0, "", 0);
+    entity o = self.owner;
+	antilag_begin(o);
+    W_SetupShot(self.enemy, 0, "", 0);
 
     float fract;
     entity targ;
     vector end = w_shotorg + w_shotdir * self.zapper_range;
-    entity o = self.owner;
 
     //ExactHitscan_Begin();
-    traceline_antilag(o, w_shotorg, end, FALSE, o, ANTILAG_LATENCY(o));
+    traceline(w_shotorg, end, FALSE, o);
+	antilag_end();
     //ExactHitscan_End();
 
     targ = trace_ent;
@@ -377,7 +379,7 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
 }
 
 void W_Zapper_Attack2_Beam(entity o, vector start, vector start_visual, vector end, float fraction, float range, float bounces, float damage, float force) {
-	traceline_antilag(o, start, end, FALSE, (fraction ? world : o), ANTILAG_LATENCY(o));
+	WarpZone_TraceLine(start, end, FALSE, (fraction ? world : o));
 	vector plane_normal = trace_plane_normal;
 	entity targ = trace_ent;
 	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
@@ -434,10 +436,13 @@ void W_Zapper_Attack2(void) {
 	else
 		snd = "";
 
-    W_SetupShot(self, TRUE, 5, snd, 1);
+	antilag_begin(Akimbo_Owner(self));
+    W_SetupShot(self, 5, snd, 1);
 
     vector end = w_shotorg + w_shotdir * range;
-	W_Zapper_Attack2_Beam(Akimbo_Owner(self), w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, damage, force);
+	entity o = Akimbo_Owner(self);
+	W_Zapper_Attack2_Beam(o, w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, damage, force);
+	antilag_end();
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
         self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
 }

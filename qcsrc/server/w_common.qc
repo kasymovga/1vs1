@@ -53,7 +53,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// note down which entities were hit so we can damage them later
 	while (1)
 	{
-		traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
+		WarpZone_TraceLine(start, end, FALSE, self);
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -294,9 +294,13 @@ void W_BallisticBullet_Touch (void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
+float fireBallisticBulletHitScan;
 void endFireBallisticBullet()
 {
 	endzcurveparticles();
+	if (fireBallisticBulletHitScan) {
+		antilag_end();
+	}
 }
 
 entity fireBallisticBullet_trace_callback_ent;
@@ -314,21 +318,24 @@ void fireBallisticBulletNoGravity_trace_callback(vector start, vector hit, vecto
 		trailparticles(world, fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos);
 }
 
+void beginFireBallisticBullet(float pSpeed) {
+	fireBallisticBulletHitScan = (g_antilag_bullets && pSpeed >= g_antilag_bullets);
+	if (fireBallisticBulletHitScan) {
+		entity o = Akimbo_Owner(self);
+		antilag_begin(o);
+	}
+}
+
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, antilag;
-	entity pl, oldself, oldself_akimbo = self;
+	entity oldself, oldself_akimbo = self;
 	self = Akimbo_Owner(self);
-
 	entity proj;
-	if(g_antilag_bullets && pSpeed >= g_antilag_bullets)
+	if(fireBallisticBulletHitScan)
 	{
-		antilag = TRUE;
 		proj = spawn();
 	} else {
-		antilag = FALSE;
 		proj = CSQCProjectile(TRUE, PROJECTILE_BULLET, TRUE);
-
 		proj.think = SUB_Remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = W_BallisticBullet_Touch;
@@ -357,19 +364,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	proj.oldvelocity = proj.velocity;
 
-	if(antilag)
+	if(fireBallisticBulletHitScan)
 	{
-		// NOTE: this may severely throw off weapon balance
-		lag = ANTILAG_LATENCY(self);
-		if(lag < 0.001)
-			lag = 0;
-		if(clienttype(self) != CLIENTTYPE_REAL)
-			lag = 0;
-
-		if(lag)
-			FOR_EACH_PLAYER(pl)
-				antilag_takeback(pl, time - lag);
-
 		oldself = self;
 		self = proj;
 
@@ -410,17 +406,10 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			W_BallisticBullet_LeaveSolid_think();
 		}
 		self = oldself;
-
-		if(lag)
-			FOR_EACH_PLAYER(pl)
-				antilag_restore(pl);
-
 		remove(proj);
-
 		self = oldself_akimbo;
 		return;
 	}
-
 	self = oldself_akimbo;
 }
 

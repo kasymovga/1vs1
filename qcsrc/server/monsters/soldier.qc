@@ -25,6 +25,7 @@ void soldier_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/shotgun_fire.wav", VOL_BASE, ATTN_NORM);
 		float sc;
+		beginFireBallisticBullet(1000);
 		for (sc = 0; sc < 5; sc++)
 			fireBallisticBullet(_shotorg, _shotdir, self.dmg_radius, 1000, 5, self.dmg_edge, 0, self.dmg_force, WEP_SHOTGUN, particleeffectnum("tr_bullet"), 0, 0);
 		endFireBallisticBullet();

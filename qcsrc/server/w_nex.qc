@@ -55,11 +55,13 @@ void W_Nex_Attack (void)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", 1);
+	antilag_begin(Akimbo_Owner(self));
+	W_SetupShot (self, 5, "weapons/nexfire.wav", 1);
 
 	yoda = 0;
 	damage_goodhits = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
+	antilag_end();
 
 	if((yoda && flying) || yoda > 1)
 		announce(self, "announcer/male/yoda.wav");

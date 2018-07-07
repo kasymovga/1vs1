@@ -472,13 +472,14 @@ void HG_Sentry_Trigger(void) {
     vector o, aimloc, aimloc_untransformed;
 
     makevectors(self.v_angle);
-    W_SetupShot(self, FALSE, 0, "", -1);
+	antilag_begin(self);
+    W_SetupShot(self, 0, "", -1);
     o = w_shotorg;
 
-    tracebox_antilag(self, o, '0 0 0', '0 0 0', o + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self, ANTILAG_LATENCY(self));
+    WarpZone_TraceLine(o, o + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
     while(trace_ent && trace_ent.classname == "hg_sentry" && !IsDifferentTeam(trace_ent, self))
-        tracebox_antilag(self, trace_endpos + w_shotdir, '0 0 0', '0 0 0', trace_endpos + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self, TRUE);
+        WarpZone_TraceLine(trace_endpos + w_shotdir, trace_endpos + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
     aimloc = trace_endpos;
     aimtarg = trace_ent;
@@ -508,22 +509,19 @@ void HG_Sentry_Trigger(void) {
 
         #define IS_GOOD_HIT (vlen(trace_endpos - aimloc) < 1 || (aimtarg && aimtarg.takedamage && trace_ent == aimtarg))
 
-        // Aiming directly, sentry can hit directly -OR- aiming through a warpzone, sentry can hit through the same warpzone
-        //tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc_untransformed, MOVE_NORMAL, self, TRUE);
-
-        tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc + normalize(aimloc - o), MOVE_NORMAL, self, ANTILAG_LATENCY(self));
+        WarpZone_TraceLine(o, aimloc + normalize(aimloc - o), MOVE_NORMAL, self);
 		entity targ = ((trace_fraction < 1) ? trace_ent : world);
 
         if(!IS_GOOD_HIT) {
             // Aiming through a warpzone, sentry can hit directly
-            tracebox_antilag(self, o, '0 0 0', '0 0 0', aimloc, MOVE_NORMAL, self, TRUE);
+            WarpZone_TraceLine(o, aimloc, MOVE_NORMAL, self);
         }
 
         entity wz = warpzone_chain_begin;
         while(!IS_GOOD_HIT && wz) {
             // Sentry can hit neither directly nor through the warpzone we aimed through (if any).
             // Let's see if we can hit through another warpzone.
-            tracebox_antilag(self, o, '0 0 0', '0 0 0', WarpZone_UnTransformOrigin(wz, aimloc), MOVE_NORMAL, self, TRUE);
+            WarpZone_TraceLine(o, WarpZone_UnTransformOrigin(wz, aimloc), MOVE_NORMAL, self);
             wz = wz.warpzone_chain;
         }
 
@@ -562,6 +560,7 @@ void HG_Sentry_Trigger(void) {
 
         #undef IS_GOOD_HIT
     }
+	antilag_end();
 
     if(triggered)
         sound(self, CHAN_WEAPON2, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);

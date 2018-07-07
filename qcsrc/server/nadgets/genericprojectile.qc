@@ -606,7 +606,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 	}
 
     makevectors(self.((GV("noverticalvelocity")) ? angles : v_angle));
-    W_SetupShot(self, FALSE, 4, (silent ? "" : HG_GenericProjectile_TypeToAttackSound(hgtype)), -1);
+    W_SetupShot(self, 4, (silent ? "" : HG_GenericProjectile_TypeToAttackSound(hgtype)), -1);
     pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
     vector a = vectoangles(w_shotdir);

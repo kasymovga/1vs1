@@ -84,7 +84,66 @@ void antilag_restore(entity e)
 	setorigin(e, e.antilag_saved_origin);
 }
 
-void antilag_prepare(entity plr)
-{
-	antilag_context_index = antilag_find(plr, ANTILAG_LATENCY(plr));
+float antilag_oldhitmask;
+float antilag_lag;
+entity antilag_source;
+void antilag_begin(entity source) {
+	if (clienttype(source) != CLIENTTYPE_REAL)
+		antilag_lag = 0; // only antilag for clients
+	else
+		antilag_lag = ANTILAG_LATENCY(source);
+
+	antilag_context_index = antilag_find(source, antilag_lag);
+	// change shooter to SOLID_BBOX so the shot can hit corpses
+	antilag_source = source;
+	if(source)
+	{
+		antilag_oldhitmask = source.dphitcontentsmask;
+		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	}
+	if (antilag_lag)
+	{
+		// take players back into the past
+		entity player;
+		float past = time - antilag_lag;
+		for (player = player_list; player; player = player.nextplayer)
+			if (player != source) {
+				antilag_takeback(player, past);
+			}
+	}
 }
+
+void antilag_end() {
+	// restore players to current positions
+	if (antilag_lag)
+	{
+		entity player;
+		for (player = player_list; player; player = player.nextplayer)
+			if (player != antilag_source)
+				antilag_restore(player);
+	}
+	// restore shooter solid type
+	if(antilag_source)
+		antilag_source.dphitcontentsmask = antilag_oldhitmask;
+}
+
+void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent)
+{
+	antilag_begin(source);
+	// do the trace
+	WarpZone_TraceBox (v1, mi, ma, v2, nomonst, forent);
+	antilag_end();
+}
+void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent)
+{
+	tracebox_antilag_force(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent);
+}
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent)
+{
+	traceline_antilag_force(source, v1, v2, nomonst, forent);
+}
+void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent)
+{
+	tracebox_antilag_force(source, v1, mi, ma, v2, nomonst, forent);
+}
+

@@ -3,9 +3,15 @@ float antilag_find(entity e, float t);
 vector antilag_takebackorigin(entity e, float t);
 void antilag_takeback(entity e, float t);
 void antilag_restore(entity e);
-void antilag_prepare(entity plr);
 
 .float antilag_debug;
 
 #define ANTILAG_LATENCY(e) (e.antilag_debug ? e.antilag_debug : min(0.4, e.ping * 0.001))
 // add one ticrate?
+
+void antilag_begin(entity source);
+void antilag_end();
+void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent);
+void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent);
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent);
+void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent);

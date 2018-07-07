@@ -80,7 +80,7 @@ void W_Hook_Attack2()
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", 0);
+	W_SetupShot (self, 4, "weapons/hookbomb_fire.wav", 0);
 
 	gren = CSQCProjectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
 	gren.owner = self;

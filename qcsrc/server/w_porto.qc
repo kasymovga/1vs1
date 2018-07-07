@@ -142,7 +142,7 @@ void W_Porto_Attack (float out)
 {
 	local entity gren;
 
-	W_SetupShot (self, FALSE, 4, "porto/fire.wav", 0);
+	W_SetupShot (self, 4, "porto/fire.wav", 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;

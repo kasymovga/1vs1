@@ -152,7 +152,7 @@ void W_Fireball_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire2.wav", 1);
+	W_SetupShot(self, 2, "weapons/fireball_fire2.wav", 1);
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -183,7 +183,7 @@ void W_Fireball_Attack2()
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
-	W_SetupShot(self, FALSE, 0, "", 0);
+	W_SetupShot(self, 0, "", 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
 	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 }
@@ -293,7 +293,7 @@ void W_Fireball_Attack1()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot(self, FALSE, 2, "weapons/fireball_fire.wav", 1);
+	W_SetupShot(self, 2, "weapons/fireball_fire.wav", 1);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
