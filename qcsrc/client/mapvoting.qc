@@ -188,6 +188,7 @@ void MapVote_Draw()
 	float tsize;
 	vector dist;
 
+	draw_crosshair = FALSE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	xmin = CVAR(vid_conwidth)*0.05; // 5% border must suffice
 	xmax = CVAR(vid_conwidth) - xmin;
