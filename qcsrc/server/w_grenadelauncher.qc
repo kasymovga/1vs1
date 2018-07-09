@@ -111,7 +111,7 @@ void W_Grenade_Attack (void)
 	W_SetupShot(self, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	gren = CSQCProjectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE);
 	gren.gravity = 1;
@@ -143,7 +143,7 @@ void W_Grenade_Attack2 (void)
 	W_SetupShot(self, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	gren = CSQCProjectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 	gren.gravity = 1;

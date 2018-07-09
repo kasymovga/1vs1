@@ -147,7 +147,7 @@ void W_Electro_Attack()
 
 	W_SetupShot(self, 2, "weapons/electro_fire.wav", 1);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 	proj.classname = "plasma_prim";
@@ -180,7 +180,7 @@ void W_Electro_Attack2()
 	W_SetupShot(self, 2, "weapons/electro_fire2.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 	proj.gravity = 1;

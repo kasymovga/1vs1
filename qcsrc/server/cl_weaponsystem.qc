@@ -101,7 +101,7 @@ void W_SetupShot_Dir(entity ent, vector s_forward, float recoil, string snd, flo
 	dv = v_right * vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs;
 
-	w_shotorg_visual = w_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z);
+	w_shotorg_visual = w_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 16;
 
 	w_shotorg = w_shotorg + dv;
 

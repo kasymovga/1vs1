@@ -154,7 +154,7 @@ void W_Fireball_Attack2()
 
 	W_SetupShot(self, 2, "weapons/fireball_fire2.wav", 1);
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	proj = CSQCProjectile(TRUE, PROJECTILE_FIREBALL, TRUE);
 	proj.classname = "plasma_prim";
@@ -185,7 +185,7 @@ void W_Fireball_AttackEffect(float i, vector f_diff)
 {
 	W_SetupShot(self, 0, "", 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
-	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 }
 
 void W_Fireball_Attack2_Frame4()
@@ -297,7 +297,7 @@ void W_Fireball_Attack1()
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	proj = CSQCProjectile(TRUE, PROJECTILE_FIREMINE, TRUE);
 	proj.gravity = 1;

@@ -49,7 +49,7 @@ void W_Laser_Attack (float issecondary)
 		W_SetupShot_Dir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	else
 		W_SetupShot_Dir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);
 	missile.owner = Akimbo_Owner(self);

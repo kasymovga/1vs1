@@ -144,7 +144,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - a;
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
 
 	if (g_casings >= 1)
 		for (sc = 0; sc < a; sc = sc + 1)

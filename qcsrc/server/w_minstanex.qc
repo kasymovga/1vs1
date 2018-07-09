@@ -49,7 +49,7 @@ void W_MinstaNex_Attack (void)
 		announce(self, "announcer/male/headshot.wav");
 
 	self.minstanex_lasthit = damage_goodhits;
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	if(teamplay)
@@ -140,7 +140,7 @@ void W_MinstaNex_Laser_Attack_Setup() {
 
 void W_MinstaNex_Laser_Attack() {
 	W_MinstaNex_Laser_Attack_Setup();
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 	float f1, f2;
 	if (g_balance_minstanex_laser_count > 1) {
 		f1 = g_balance_minstanex_laser_spread / (g_balance_minstanex_laser_count - 1);
@@ -160,7 +160,7 @@ void W_MinstaNex_Laser_Attack() {
 
 void W_MinstaNex_Laser_Attack_Rapid() {
 	W_MinstaNex_Laser_Attack_Setup();
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 	W_MinstaNex_Laser_Projectile(w_shotdir, 1);
 }
 

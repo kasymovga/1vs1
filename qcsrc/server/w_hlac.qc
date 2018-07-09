@@ -67,7 +67,7 @@ void W_HLAC_Attack (void)
         spread = spread * g_balance_hlac_primary_spread_crouchmod;
 
 	W_SetupShot (self, 3, "weapons/lasergun_fire.wav", 1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -113,7 +113,7 @@ void W_HLAC_Attack2f (void)
         spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
 	W_SetupShot (self, 3, "weapons/lasergun_fire.wav", 1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_HLAC, TRUE);
 	missile.owner = Akimbo_Owner(self);

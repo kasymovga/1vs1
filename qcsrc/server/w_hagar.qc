@@ -67,7 +67,7 @@ void W_Hagar_Attack (void)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_primary_ammo;
 	W_SetupShot (self, 2, "weapons/hagar_fire.wav", 1);
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_HAGAR, TRUE);
 	missile.owner = missile.realowner = Akimbo_Owner(self);
@@ -98,7 +98,7 @@ void W_Hagar_Attack2 (void)
 	W_SetupShot (self, 2, "weapons/hagar_fire.wav", 1);
 	//W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
 	missile.owner = missile.realowner = Akimbo_Owner(self);

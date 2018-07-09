@@ -57,7 +57,7 @@ void W_Uzi_Attack (float deathtype)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
 	endFireBallisticBullet();
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	// muzzle flash for 1st person view
 	flash = spawn();

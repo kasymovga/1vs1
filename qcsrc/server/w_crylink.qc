@@ -110,7 +110,7 @@ void W_Crylink_Attack (void)
 	up = v_up;
 
 	shots = g_balance_crylink_primary_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
 		proj = CSQCProjectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
@@ -168,7 +168,7 @@ void W_Crylink_Attack2 (void)
 	W_SetupShot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
 
 	shots = g_balance_crylink_secondary_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
 		proj = CSQCProjectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
