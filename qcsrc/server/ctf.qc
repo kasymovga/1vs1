@@ -835,6 +835,13 @@ float ctf_base_visibility() {
 	return !ctf_runhere_visibility();
 }
 
+float ctf_flag_visibility() {
+	if (self.owner.cnt == FLAG_DROPPED)
+		return TRUE;
+
+	return FALSE;
+}
+
 void spawnfunc_item_flag_team1()
 {
 	if (!g_ctf)
@@ -908,8 +915,10 @@ void spawnfunc_item_flag_team1()
 
 	WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
 	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
-	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_attached);
-	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_runhere_visibility;
+	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_deployed_fixed);
+	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
+	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, FALSE);
+	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
 
 	precache_model("models/ctf/shield.md3");
@@ -1016,8 +1025,10 @@ void spawnfunc_item_flag_team2()
 
 	WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
 	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
-	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_attached);
-	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_runhere_visibility;
+	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_deployed_fixed);
+	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
+	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, FALSE);
+	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
 
 	precache_model("models/ctf/shield.md3");
