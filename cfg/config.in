@@ -394,8 +394,8 @@ set g_dodging_sound 1 "if 1 dodging makes a sound. if 0 dodging is silent"
 
 set sv_retard_nets ""
 set sv_retard_say "Moo|Moo?|Moo!|Moo..."
-alias retard "prvm_edictset server $1 cl_retard 1"
-alias unretard "prvm_edictset server $1 cl_retard -1"
+alias retard "prvm_edictset server $1 retard 1"
+alias unretard "prvm_edictset server $1 retard -1"
 
 seta hud_shownames 1
 seta hud_shownames_enemies 0
