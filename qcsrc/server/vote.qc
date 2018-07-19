@@ -422,7 +422,7 @@ void VoteHelp(entity e) {
 string VoteNetname(entity e)
 {
 	if(e) {
-		return e.netname;
+		return strcat(e.netname, "^0#", ftos(num_for_edict(e)));
 	} else {
 		if(cvar_string("sv_adminnick") != "") {
 			return cvar_string("sv_adminnick");
