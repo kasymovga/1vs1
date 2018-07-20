@@ -126,24 +126,3 @@ void antilag_end() {
 	if(antilag_source)
 		antilag_source.dphitcontentsmask = antilag_oldhitmask;
 }
-
-void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent)
-{
-	antilag_begin(source);
-	// do the trace
-	WarpZone_TraceBox (v1, mi, ma, v2, nomonst, forent);
-	antilag_end();
-}
-void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent)
-{
-	tracebox_antilag_force(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent);
-}
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent)
-{
-	traceline_antilag_force(source, v1, v2, nomonst, forent);
-}
-void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent)
-{
-	tracebox_antilag_force(source, v1, mi, ma, v2, nomonst, forent);
-}
-

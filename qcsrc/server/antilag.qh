@@ -11,7 +11,3 @@ void antilag_restore(entity e);
 
 void antilag_begin(entity source);
 void antilag_end();
-void tracebox_antilag_force (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent);
-void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent);
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent);
-void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent);
