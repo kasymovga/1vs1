@@ -1330,6 +1330,9 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 }
 
 void Team_AutoSwap_Check() {
+	if (gameover)
+		return;
+
 	if not(g_balance_teams_autoswap)
 		return;
 
