@@ -1,6 +1,9 @@
 float g_balance_teams;
 float g_balance_teams_force;
 float g_balance_teams_prevent_imbalance;
+float g_balance_teams_autoswap;
+float g_balance_teams_autoswap_zerolead;
+float g_balance_teams_autoswap_lead;
 float g_changeteam_banned;
 float bot_vs_human;
 
@@ -14,6 +17,10 @@ void AuditTeams(float force);
 float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
+
+void Balance_Centerprint(entity e) {
+	centerprint(e, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(e.team)));
+}
 
 void TeamchangeFrags(entity e)
 {
@@ -1063,7 +1070,8 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(selected.team)));
+
+	Balance_Centerprint(selected);
 }
 
 void CauseRebalance(float source_team, float howmany_toomany)
@@ -1252,8 +1260,100 @@ void tdm_init()
 void Teamplay_ReadCvars()
 {
 	CACHE_CVAR(g_balance_teams);
+	CACHE_CVAR(g_balance_teams_autoswap);
+	CACHE_CVAR(g_balance_teams_autoswap_zerolead);
+	CACHE_CVAR(g_balance_teams_autoswap_lead);
 	CACHE_CVAR(g_balance_teams_force);
 	CACHE_CVAR(g_balance_teams_prevent_imbalance);
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(bot_vs_human);
 };
+
+float autoswap_last_time;
+void Team_AutoSwap_BestWithWorst(float from, float to) {
+	entity best = world, worst = world;
+	entity e;
+	autoswap_last_time = time;
+	FOR_EACH_PLAYER(e) {
+		if (e.team == from) {
+			if (best) {
+				if (PlayerScore_Compare(best.scorekeeper, e.scorekeeper) < 0)
+					best = e;
+			} else
+				best = e;
+		}
+	}
+	FOR_EACH_PLAYER(e) {
+		if (e.team == to) {
+			if (worst) {
+				if (PlayerScore_Compare(worst.scorekeeper, e.scorekeeper) > 0)
+					worst = e;
+			} else
+				worst = e;
+		}
+	}
+	if (best) {
+		//print("Autoswap: ", best.netname, "\n");
+		//print("Autoswap: ", worst.netname, "\n");
+		if (c1 - c2 == 0 && worst) {
+			PlayerToSpec(best);
+			PlayerToSpec(worst);
+			SetPlayerTeam(best, TeamColorSkin(to), TeamColorSkin(from), FALSE);
+			SetPlayerTeam(worst, TeamColorSkin(from), TeamColorSkin(to), FALSE);
+			e = self;
+			self = best;
+			LeaveSpectatorMode();
+			self = worst;
+			LeaveSpectatorMode();
+			self = e;
+			Balance_Centerprint(best);
+			Balance_Centerprint(worst);
+		} else if ((c1 < c2 && from == COLOR_TEAM2) || (c1 > c2 && from == COLOR_TEAM1)) {
+			PlayerToSpec(best);
+			SetPlayerTeam(best, TeamColorSkin(to), TeamColorSkin(from), FALSE);
+			e = self;
+			self = best;
+			LeaveSpectatorMode();
+			self = e;
+			Balance_Centerprint(best);
+			if (fabs(c1 - c2) == 1 && worst) {
+				PlayerToSpec(worst);
+				SetPlayerTeam(worst, TeamColorSkin(from), TeamColorSkin(to), FALSE);
+				e = self;
+				self = worst;
+				LeaveSpectatorMode();
+				self = e;
+			}
+		}
+	}
+
+}
+
+void Team_AutoSwap_Check() {
+	if not(g_balance_teams_autoswap)
+		return;
+
+	if (autoswap_last_time + 1 >= time)
+		return;
+
+	CheckAllowedTeams(world);
+	GetTeamCounts(world);
+	if (c1 >= 0)
+	if (c2 >= 0)
+	if (c3 < 0)
+	if (c4 < 0)
+	if (c1 + c2 > 2)
+	{
+		float t1 = TeamScore_GetCompareValue(COLOR_TEAM1);
+		float t2 = TeamScore_GetCompareValue(COLOR_TEAM2);
+		if (g_balance_teams_autoswap_zerolead && t1 == 0 && t2 >= g_balance_teams_autoswap_zerolead) {
+			Team_AutoSwap_BestWithWorst(COLOR_TEAM2, COLOR_TEAM1);
+		} else if (g_balance_teams_autoswap_zerolead && t2 == 0 && t1 >= g_balance_teams_autoswap_zerolead) {
+			Team_AutoSwap_BestWithWorst(COLOR_TEAM1, COLOR_TEAM2);
+		} else if (g_balance_teams_autoswap_lead && t1 - t2 >= g_balance_teams_autoswap_lead) {
+			Team_AutoSwap_BestWithWorst(COLOR_TEAM1, COLOR_TEAM2);
+		} else if (g_balance_teams_autoswap_lead && t2 - t1 >= g_balance_teams_autoswap_lead) {
+			Team_AutoSwap_BestWithWorst(COLOR_TEAM2, COLOR_TEAM1);
+		}
+	}
+}

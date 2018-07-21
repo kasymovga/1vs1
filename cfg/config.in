@@ -1284,6 +1284,10 @@ set g_badass_leader 1
 set g_badass_health_limit 0
 set g_badass_armor_limit 0
 
+set g_balance_teams_autoswap 0
+set g_balance_teams_autoswap_zerolead 0
+set g_balance_teams_autoswap_lead 5
+
 set g_chat_flood_damage_flooder 25
 
 set cl_shownames_cos 0.99 "cosinus of show names field angle"

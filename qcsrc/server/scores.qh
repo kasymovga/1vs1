@@ -129,3 +129,4 @@ float WinningCondition_RanOutOfSpawns();
 void ScoreInfo_SendDelayed(entity e, float f);
 
 void ScoreKeeper_Touch(entity e);
+float PlayerScore_Compare(entity t1, entity t2);

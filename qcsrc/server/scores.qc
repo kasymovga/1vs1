@@ -6,6 +6,7 @@ float teamscores_flags[MAX_TEAMSCORE];
 float teamscores_entities_count;
 var .float scores_primary;
 var .float teamscores_primary;
+float teamscores_primary_scorefield;
 float scores_flags_primary;
 float teamscores_flags_primary;
 
@@ -113,7 +114,12 @@ float TeamScore_AddToTeam(float t, float scorefield, float score)
 	if(score)
 		if(teamscores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
-	return (s.(teamscores[scorefield]) += score);
+	(s.(teamscores[scorefield]) += score);
+	if (score)
+	if (scorefield == teamscores_primary_scorefield)
+		defer(1, Team_AutoSwap_Check);
+
+	return s.(teamscores[scorefield]);
 }
 
 float TeamScore_Add(entity player, float scorefield, float score)
@@ -158,6 +164,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	if(scoreflags & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
 	{
 		teamscores_primary = teamscores[i];
+		teamscores_primary_scorefield = i;
 		teamscores_flags_primary = scoreflags;
 	}
 }
