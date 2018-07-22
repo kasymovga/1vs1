@@ -1329,6 +1329,7 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 
 }
 
+float autoswap_lastmaxscore;
 void Team_AutoSwap_Check() {
 	if (gameover)
 		return;
@@ -1339,16 +1340,24 @@ void Team_AutoSwap_Check() {
 	if (autoswap_last_time + 1 >= time)
 		return;
 
+	if (bot_vs_human)
+		return;
+
 	CheckAllowedTeams(world);
 	GetTeamCounts(world);
 	if (c1 >= 0)
 	if (c2 >= 0)
 	if (c3 < 0)
 	if (c4 < 0)
-	if (c1 + c2 > 2)
+	if (c1 - cb1 + c2 - cb2 > 2)
 	{
 		float t1 = TeamScore_GetCompareValue(COLOR_TEAM1);
 		float t2 = TeamScore_GetCompareValue(COLOR_TEAM2);
+		float maxscore = max(t1, t2);
+		if (maxscore == autoswap_lastmaxscore)
+			return;
+
+		autoswap_lastmaxscore = maxscore;
 		if (g_balance_teams_autoswap_zerolead && t1 == 0 && t2 >= g_balance_teams_autoswap_zerolead) {
 			Team_AutoSwap_BestWithWorst(COLOR_TEAM2, COLOR_TEAM1);
 		} else if (g_balance_teams_autoswap_zerolead && t2 == 0 && t1 >= g_balance_teams_autoswap_zerolead) {
