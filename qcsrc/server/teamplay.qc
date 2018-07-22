@@ -2,6 +2,8 @@ float g_balance_teams;
 float g_balance_teams_force;
 float g_balance_teams_prevent_imbalance;
 float g_balance_teams_autoswap;
+float g_balance_teams_autoswap_required_humans;
+float g_balance_teams_autoswap_interval;
 float g_balance_teams_autoswap_zerolead;
 float g_balance_teams_autoswap_lead;
 float g_changeteam_banned;
@@ -1261,6 +1263,8 @@ void Teamplay_ReadCvars()
 {
 	CACHE_CVAR(g_balance_teams);
 	CACHE_CVAR(g_balance_teams_autoswap);
+	CACHE_CVAR(g_balance_teams_autoswap_required_humans);
+	CACHE_CVAR(g_balance_teams_autoswap_interval);
 	CACHE_CVAR(g_balance_teams_autoswap_zerolead);
 	CACHE_CVAR(g_balance_teams_autoswap_lead);
 	CACHE_CVAR(g_balance_teams_force);
@@ -1337,7 +1341,7 @@ void Team_AutoSwap_Check() {
 	if not(g_balance_teams_autoswap)
 		return;
 
-	if (autoswap_last_time + 1 >= time)
+	if (autoswap_last_time + g_balance_teams_autoswap_interval >= time)
 		return;
 
 	if (bot_vs_human)
@@ -1349,7 +1353,8 @@ void Team_AutoSwap_Check() {
 	if (c2 >= 0)
 	if (c3 < 0)
 	if (c4 < 0)
-	if (c1 - cb1 + c2 - cb2 > 2)
+	if (c1 + c2 > 2)
+	if (c1 - cb1 + c2 - cb2 >= g_balance_teams_autoswap_required_humans)
 	{
 		float t1 = TeamScore_GetCompareValue(COLOR_TEAM1);
 		float t2 = TeamScore_GetCompareValue(COLOR_TEAM2);
