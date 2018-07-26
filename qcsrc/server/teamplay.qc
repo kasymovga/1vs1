@@ -575,7 +575,7 @@ void CheckAllowedTeams (entity for_whom)
 				c1 = -1;
 		}
 	}
-	if (for_whom == autoswap_last_best) {
+	if (for_whom && for_whom == autoswap_last_best) {
 		if (autoswap_last_from == COLOR_TEAM1)
 			c1 = -1;
 		else if (autoswap_last_from == COLOR_TEAM2)
