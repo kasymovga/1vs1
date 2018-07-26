@@ -1022,7 +1022,7 @@ void ClientKill_Now_TeamChange()
 		JoinBestTeam( self, FALSE, FALSE );
 	}
 	else
-		ChangeTeam(self, self.killindicator_teamchange);
+		ChangeTeam(self, self.killindicator_teamchange, FALSE);
 }
 
 void ClientKill_Now()
@@ -1396,8 +1396,11 @@ void ClientDisconnect (void)
 	if (clienttype(self) == CLIENTTYPE_REAL)
 		GameHookChain_RealClientDisconnect();
 
-	if (teamplay)
+	if (teamplay) {
 		AuditTeams(FALSE);
+		if (autoswap_last_best == self)
+			autoswap_last_best = world;
+	}
 }
 
 .float BUTTON_CHAT;

@@ -1285,6 +1285,7 @@ set g_badass_health_limit 0
 set g_badass_armor_limit 0
 
 set g_balance_teams_autoswap 0
+set g_balance_teams_autoswap_from_small_team_minplayers 9
 set g_balance_teams_autoswap_interval 60
 set g_balance_teams_autoswap_required_humans 3
 set g_balance_teams_autoswap_zerolead 0

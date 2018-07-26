@@ -538,6 +538,7 @@ void GameCommand(string command)
 	if (cmd == "shuffleteams")
 	{
 		float t = COLOR_TEAM4;
+		autoswap_last_best = world;
 		FOR_EACH_TEAMPLAYER(plr)
 		{
 			CheckAllowedTeams(plr);

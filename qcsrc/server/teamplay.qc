@@ -2,17 +2,20 @@ float g_balance_teams;
 float g_balance_teams_force;
 float g_balance_teams_prevent_imbalance;
 float g_balance_teams_autoswap;
+float g_balance_teams_autoswap_from_small_team_minplayers;
 float g_balance_teams_autoswap_required_humans;
 float g_balance_teams_autoswap_interval;
 float g_balance_teams_autoswap_zerolead;
 float g_balance_teams_autoswap_lead;
 float g_changeteam_banned;
 float bot_vs_human;
+float autoswap_last_from;
+entity autoswap_last_best;
 
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
-void ChangeTeam(entity pl, float dteam);
+void ChangeTeam(entity pl, float dteam, float nobalance);
 void AuditTeams(float force);
 
 // client counts for each team
@@ -572,6 +575,16 @@ void CheckAllowedTeams (entity for_whom)
 				c1 = -1;
 		}
 	}
+	if (for_whom == autoswap_last_best) {
+		if (autoswap_last_from == COLOR_TEAM1)
+			c1 = -1;
+		else if (autoswap_last_from == COLOR_TEAM2)
+			c2 = -1;
+		else if (autoswap_last_from == COLOR_TEAM3)
+			c3 = -1;
+		else if (autoswap_last_from == COLOR_TEAM4)
+			c4 = -1;
+	}
 }
 
 // c1...c4 should be set to -1 (not allowed) or 0 (allowed).
@@ -634,38 +647,12 @@ void GetTeamCounts(entity ignore)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, smallestteam_count, smallestteam_score, team_random;
-	totalteams = 0;
+	float smallestteam_count, smallestteam_score, team_random;
 
 	// find out what teams are available
 	//CheckAllowedTeams();
 
 	// make sure there are at least 2 teams to join
-	if(c1 >= 0)
-		totalteams = totalteams + 1;
-	if(c2 >= 0)
-		totalteams = totalteams + 1;
-	if(c3 >= 0)
-		totalteams = totalteams + 1;
-	if(c4 >= 0)
-		totalteams = totalteams + 1;
-
-	if(bot_vs_human)
-		totalteams += 1;
-
-	if(totalteams <= 1)
-	{
-		if(g_domination)
-			error("Too few teams available for domination\n");
-		else if(g_ctf)
-			error("Too few teams available for ctf\n");
-		else if(g_keyhunt)
-			error("Too few teams available for key hunt\n");
-		else if(g_survive) {}
-		else
-			error("Too few teams available for team deathmatch\n");
-	}
-
 	// count how many players are in each team
 	if(ignore_pl)
 		GetTeamCounts(pl);
@@ -842,7 +829,7 @@ void SV_ChangeTeam(float _color)
 	SetPlayerColors(self, _color);
 }
 
-void ChangeTeam(entity pl, float dteam) {
+void ChangeTeam(entity pl, float dteam, float nobalance) {
 	float dcount, scount;
 	CheckAllowedTeams(pl);
 	switch (dteam) {
@@ -856,6 +843,7 @@ void ChangeTeam(entity pl, float dteam) {
 		sprint(pl, "Team changes not allowed\n");
 		return; // changing teams is not allowed
 	}
+	if not(nobalance)
 	if (g_balance_teams_prevent_imbalance || g_balance_teams_force)
 	if (pl.team != dteam)
 	{
@@ -915,18 +903,20 @@ void ChangeTeam(entity pl, float dteam) {
 		self = oldself;
 	}
 	entity e;
-	if (teamchange)
-	if (clienttype(pl) == CLIENTTYPE_REAL)
-	FOR_EACH_PLAYER(e)
-		if (clienttype(e) == CLIENTTYPE_BOT)
-		if (e.team == dteam) {
-			e.team = -1;
-			self = e;
-			PutClientInServer();
-			self = oldself;
-			break;
-		}
-	AuditTeams(FALSE);
+	if not(nobalance) {
+		if (teamchange)
+		if (clienttype(pl) == CLIENTTYPE_REAL)
+		FOR_EACH_PLAYER(e)
+			if (clienttype(e) == CLIENTTYPE_BOT)
+			if (e.team == dteam) {
+				e.team = -1;
+				self = e;
+				PutClientInServer();
+				self = oldself;
+				break;
+			}
+		AuditTeams(FALSE);
+	}
 }
 
 
@@ -1063,6 +1053,9 @@ void ShufflePlayerOutOfTeam (float source_team)
 	}
 
 	// move the player to the new team
+	if (autoswap_last_best == selected)
+		autoswap_last_best = world;
+
 	TeamchangeFrags(selected);
 	entity oldself = self;
 	self = selected;
@@ -1263,6 +1256,7 @@ void Teamplay_ReadCvars()
 {
 	CACHE_CVAR(g_balance_teams);
 	CACHE_CVAR(g_balance_teams_autoswap);
+	CACHE_CVAR(g_balance_teams_autoswap_from_small_team_minplayers);
 	CACHE_CVAR(g_balance_teams_autoswap_required_humans);
 	CACHE_CVAR(g_balance_teams_autoswap_interval);
 	CACHE_CVAR(g_balance_teams_autoswap_zerolead);
@@ -1278,6 +1272,7 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 	entity best = world, worst = world;
 	entity e;
 	autoswap_last_time = time;
+	autoswap_last_from = from;
 	FOR_EACH_PLAYER(e) {
 		if (e.team == from) {
 			if (best) {
@@ -1296,38 +1291,20 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 				worst = e;
 		}
 	}
+	autoswap_last_best = best;
 	if (best) {
-		//print("Autoswap: ", best.netname, "\n");
-		//print("Autoswap: ", worst.netname, "\n");
 		if (c1 - c2 == 0 && worst) {
-			PlayerToSpec(best);
-			PlayerToSpec(worst);
-			SetPlayerTeam(best, TeamColorSkin(to), TeamColorSkin(from), FALSE);
-			SetPlayerTeam(worst, TeamColorSkin(from), TeamColorSkin(to), FALSE);
-			e = self;
-			self = best;
-			LeaveSpectatorMode();
-			self = worst;
-			LeaveSpectatorMode();
-			self = e;
-			Balance_Centerprint(best);
-			Balance_Centerprint(worst);
+			ChangeTeam(best, to, TRUE);
+			ChangeTeam(worst, from, TRUE);
 		} else if ((c1 < c2 && from == COLOR_TEAM2) || (c1 > c2 && from == COLOR_TEAM1)) {
-			PlayerToSpec(best);
-			SetPlayerTeam(best, TeamColorSkin(to), TeamColorSkin(from), FALSE);
-			e = self;
-			self = best;
-			LeaveSpectatorMode();
-			self = e;
-			Balance_Centerprint(best);
+			ChangeTeam(best, to, TRUE);
 			if (fabs(c1 - c2) == 1 && worst) {
-				PlayerToSpec(worst);
-				SetPlayerTeam(worst, TeamColorSkin(from), TeamColorSkin(to), FALSE);
-				e = self;
-				self = worst;
-				LeaveSpectatorMode();
-				self = e;
-			}
+				ChangeTeam(worst, from, TRUE);
+			} else
+				AuditTeams(FALSE);
+		} else if ((c1 == c2 + 1 && from == COLOR_TEAM2) || (c1 + 1 == c2 && from == COLOR_TEAM1) && worst && c1 + c2 >= g_balance_teams_autoswap_from_small_team_minplayers) {
+			ChangeTeam(best, to, TRUE);
+			ChangeTeam(worst, from, TRUE);
 		}
 	}
 
