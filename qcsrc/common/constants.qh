@@ -15,6 +15,7 @@ const float GAME_CTS = 13;
 const float GAME_FREEZETAG = 14;
 const float GAME_CLANARENA = 15;
 const float GAME_SURVIVE = 16;
+const float GAME_SINGLE = 17;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;

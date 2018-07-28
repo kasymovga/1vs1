@@ -96,6 +96,7 @@ void WriteGameCvars()
 	cvar_set("_g_freeze", ftos(g_freeze));
 	cvar_set("_g_clanarena", ftos(g_clanarena));
 	cvar_set("_g_survive", ftos(g_survive));
+	cvar_set("_g_single", ftos(g_single));
 }
 
 void ReadGameCvars()
@@ -123,6 +124,7 @@ void ReadGameCvars()
 		found += (g_freeze = (!found && (prev != GAME_FREEZETAG) && cvar("_g_freeze")));
 		found += (g_clanarena = (!found && (prev != GAME_CLANARENA) && cvar("_g_clanarena")));
 		found += (g_survive = (!found && (prev != GAME_SURVIVE) && cvar("_g_survive")));
+		found += (g_single = (!found && (prev != GAME_SINGLE) && cvar("_g_single")));
 
 		if(found)
 			break;
@@ -310,6 +312,10 @@ void InitGameplayMode()
 		game = GAME_SURVIVE;
 		ActivateTeamplay();
 		survive_init();
+	}
+
+	if (g_single) {
+		Single_Init();
 	}
 
 	if(teamplay)

@@ -15,7 +15,7 @@ var .float BUTTON_USE = buttonuse;
 
 // Globals
 
-float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_runematch, g_conquest, g_race, g_nexball, g_cts, g_clanarena, g_campaign, g_survive;
+float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_runematch, g_conquest, g_race, g_nexball, g_cts, g_clanarena, g_campaign, g_survive, g_single;
 float g_footsteps, g_grappling_hook, g_pinata, g_norecoil;
 float g_pinata_drop_all;
 float g_warmup_limit;

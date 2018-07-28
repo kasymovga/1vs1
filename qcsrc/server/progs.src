@@ -15,6 +15,7 @@ constants.qh
 ../client-server/util.qh
 ../common/items.qh
 location_request.qh
+single.qh
 
 defs.qh		// Should rename this, it has fields and globals
 
@@ -330,3 +331,4 @@ warmup.qc
 udpchat.qc
 score_damage.qc
 ice.qc
+single.qc

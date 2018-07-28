@@ -514,6 +514,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
 	else if(t == "cts")     return MAPINFO_TYPE_CTS;
 	else if(t == "surv")    return MAPINFO_TYPE_SURVIVE;
+	else if(t == "single")  return MAPINFO_TYPE_SINGLE;
 	else if(t == "all")     return MAPINFO_TYPE_ALL;
 	else                    return 0;
 }
@@ -534,7 +535,8 @@ string MapInfo_String_FromType(float t)
 	else if(t == MAPINFO_TYPE_RACE           ) return "rc"     ;
 	else if(t == MAPINFO_TYPE_NEXBALL        ) return "nexball";
 	else if(t == MAPINFO_TYPE_CTS            ) return "cts"    ;
-	else if(t == MAPINFO_TYPE_SURVIVE        ) return "surv"    ;
+	else if(t == MAPINFO_TYPE_SURVIVE        ) return "surv"   ;
+	else if(t == MAPINFO_TYPE_SINGLE         ) return "single" ;
 	else                                       return "wtf"    ;
 }
 
@@ -569,6 +571,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Clan Arena";
 	} else if (t == MAPINFO_TYPE_SURVIVE) {
 		return "Survival";
+	} else if (t == MAPINFO_TYPE_SINGLE) {
+		return "Single Player";
 	}
 	return "WTF";
 }
@@ -1029,6 +1033,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_NEXBALL: return "_g_nexball";
 		case MAPINFO_TYPE_CTS: return "_g_cts";
 		case MAPINFO_TYPE_SURVIVE: return "_g_survive";
+		case MAPINFO_TYPE_SINGLE: return "_g_single";
 		default: return "";
 	}
 }

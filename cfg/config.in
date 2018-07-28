@@ -1210,6 +1210,28 @@ set g_survive_wave_skip 0
 set g_survive_monster_factor 0.5
 set g_survive_freeze 1
 
+set single_g_pickup_respawntime_weapon -1
+set single_g_pickup_respawntime_healthsmall -1
+set single_g_pickup_respawntime_healthmedium -1
+set single_g_pickup_respawntime_healthlarge -1
+set single_g_pickup_respawntime_healthmega -1
+set single_g_pickup_respawntime_armorsmall -1
+set single_g_pickup_respawntime_armormedium -1
+set single_g_pickup_respawntime_armorbig -1
+set single_g_pickup_respawntime_armorlarge -1
+set single_g_pickup_respawntime_powerup -1
+set single_g_pickup_respawntime_ammo -1
+set single_g_maxplayers 1
+set single_g_balance_health_regen 0
+set single_g_balance_health_rot 0
+set single_g_balance_armor_regen 0
+set single_g_balance_armor_rot 0
+set single_g_balance_health_start 100
+set single_g_pickup_healthlarge_max 100
+set single_g_pickup_healthmedium_max 100
+set single_g_pickup_armormedium_max 100
+set single_g_pickup_armorbig_max 100
+
 set g_monster_boss1_health 3000
 set g_monster_boss1_damage 50
 set g_monster_boss1_force 100
@@ -1314,6 +1336,7 @@ set _g_cts 0
 set _g_freeze 0
 set _g_clanarena 0
 set _g_survive 0
+set _g_single 0
 
 set sv_projectile_rocket_size "3 -3 3"
 
