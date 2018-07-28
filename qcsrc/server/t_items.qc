@@ -488,6 +488,10 @@ void Item_ScheduleRespawnIn(entity e, float t)
 
 void Item_ScheduleRespawn(entity e)
 {
+	if (e.respawntime < 0) {
+		Item_Show(e, -1);
+		return;
+	}
 	Item_Show(e, 0);
 	Item_ScheduleRespawnIn(e, ITEM_RESPAWNTIME(e));
 }
