@@ -128,9 +128,19 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	if (self.health < 1) {
 		GameHook_MonsterKilled(attacker);
 		entity o = self.owner;
+		float quant = GameHook_MonsterQuant();
 		if (o.spawnflags & 1) {
 			o.nextthink = time + o.respawntime;
-			o.dmg = o.dmg + GameHook_MonsterQuant();
+			o.dmg = o.dmg + quant;
+		}
+		o.frags = o.frags - quant;
+		if (o.frags < quant)
+		if (o.dmg < quant) {
+			activator = attacker;
+			entity oldself = self;
+			self = o;
+			SUB_UseTargets();
+			self = oldself;
 		}
 		self.enemy = attacker;
 		if (self.anim_die1 != '0 0 0')
@@ -233,6 +243,7 @@ void monster_spawn_think() {
 
 	self = oldself;
 	self.dmg = self.dmg - quant;
+	self.frags = self.frags + quant;
 	self.nextthink = time + self.respawntime;
 }
 
@@ -358,6 +369,7 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.use = monster_spawn_use;
 	self.nextthink = 0;
 	self.dmg = max(self.cnt, 1);
+	self.frags = 0;
 	self.reset = resetfunc;
 	self.dmg_edge = cvar(strcat("g_monster_", monster_classname(), "_damage"));
 	self.dmg_force = cvar(strcat("g_monster_", monster_classname(), "_force"));
