@@ -1,14 +1,8 @@
 float single_level_finished;
 
-void Single_EndLevel_Touch() {
+void Single_EndLevel() {
 	single_level_finished = TRUE;
 	campaign_won = TRUE;
-}
-
-void spawnfunc_trigger_endlevel() {
-	EXACTTRIGGER_INIT;
-	self.touch = Single_EndLevel_Touch;
-	self.use = Single_EndLevel_Touch;
 }
 
 float Single_WinningCondition() {
@@ -30,4 +24,7 @@ void Single_Init() {
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
 	Single_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Single_Spawn;
+	entity e = spawn();
+	e.targetname = "endlevel";
+	e.use = Single_EndLevel;
 }
