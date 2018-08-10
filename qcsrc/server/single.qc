@@ -19,9 +19,16 @@ string Single_GameOverMessageMod(string s) {
 	return "Level finished";
 }
 
+float Single_Return0() {
+	return 0;
+}
+
 void Single_Init() {
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
+	GameHook_FragLimitOverride = Single_Return0;
+	GameHook_TimeLimitOverride = Single_Return0;
+	GameHook_LeadLimitOverride = Single_Return0;
 	Single_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Single_Spawn;
 	entity e = spawn();
