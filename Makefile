@@ -35,4 +35,4 @@ $(CFG_NAME) : cfg/config.in Makefile
 
 cl.pk3 : $(CL_PROGNAME)
 	HASH=`md5sum $(CL_PROGNAME) | head -c 8`; DATE=`stat -c %y $(CL_PROGNAME) | head -c 19 | sed 's/[ :-]//g'`; NAME="$(PK3_NAME)-$$DATE$$HASH.pk3";\
-if test ! -f "$$NAME" -o $(CL_PROGNAME) -nt "$$NAME"; then rm -f $(PK3_NAME)*.pk3; zip "$$NAME" $(CL_PROGNAME); fi
+if test ! -f "$$NAME" -o $(CL_PROGNAME) -nt "$$NAME"; then rm -f $(PK3_NAME)*.pk3; REXEXT_NAME="rexext_$$DATE$$HASH.cfg"; echo // > $$REXEXT_NAME; zip "$$NAME" $(CL_PROGNAME) $$REXEXT_NAME; rm -f $$REXEXT_NAME; fi
