@@ -442,3 +442,63 @@ void monsters_init() {
 	precache_model("models/items/a_cells.md3");
 	precache_sound("misc/itempickup.wav");
 }
+
+void monster_group_reset() {
+}
+
+void monster_group_counter_remove() {
+	self.owner.enemy = world;
+	entity e;
+	while ((e = find(e, target2, self.targetname))) {
+		e.target2 = "";
+	}
+	strunzone(self.targetname);
+	remove(self);
+}
+
+void monster_group_counter_use() {
+	self.cnt = self.cnt - 1;
+	if (self.cnt <= 0) {
+		SUB_UseTargets();
+		self.use = world.use;
+		self.think = monster_group_counter_remove;
+		self.nextthink = time;
+	}
+}
+
+void monster_group_use() {
+	if (self.enemy)
+		return;
+
+	entity e = world;
+	entity group = spawn();
+	group.targetname = strzone(strcat("_monster_group", ftos(self.cnt)));
+	while ((e = find(e, targetname, self.target))) {
+		e.target2 = group.targetname;
+	}
+	group.use = monster_group_counter_use;
+	group.target = self.target2;
+	group.owner = self;
+	group.reset = monster_group_counter_remove;
+	group.cnt = 0;
+	self.enemy = group;
+	entity oldself = self;
+	while ((e = find(e, targetname, oldself.target))) {
+		group.cnt = group.cnt + 1;
+		self = e;
+		self.use();
+	}
+	if (group.cnt <= 0) {
+		self = group;
+		monster_group_counter_remove();
+	}
+	self = oldself;
+}
+
+float monster_groups;
+void spawnfunc_monster_group() {
+	self.reset = monster_group_reset;
+	self.use = monster_group_use;
+	monster_groups++;
+	self.cnt = monster_groups;
+}
