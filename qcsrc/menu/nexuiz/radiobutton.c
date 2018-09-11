@@ -51,64 +51,35 @@ void setCheckedNexuizRadioButton(entity me, float val)
 }
 void loadCvarsNexuizRadioButton(entity me)
 {
-	if(me.cvarValue)
-	{
-		if(me.cvarName)
-			me.checked = (cvar_string(me.cvarName) == me.cvarValue);
-	}
-	else
-	{
-		if(me.cvarName)
-		{
-			me.checked = !!cvar(me.cvarName);
-		}
-		else
-		{
-			// this is difficult
-			// this is the "generic" selection... but at this time, not
-			// everything is constructed yet.
-			// we need to set this later in draw()
-			me.checked = 0;
-		}
-	}
+	if(me.cvarName)
+		me.checked = (cvar_string(me.cvarName) == me.cvarValue);
 }
 void drawNexuizRadioButton(entity me)
 {
-	if not(me.cvarValue)
-		if not(me.cvarName)
-		{
-			// this is the "other" option
-			// always select this if none other is
-			entity e;
-			float found;
-			found = 0;
-			for(e = me.parent.firstChild; e; e = e.nextSibling)
-				if(e.group == me.group)
-					if(e.checked)
-						found = 1;
-			if(!found)
-				me.setChecked(me, 1);
-		}
+	if not(me.cvarName)
+	{
+		// this is the "other" option
+		// always select this if none other is
+		entity e;
+		float found;
+		found = 0;
+		for(e = me.parent.firstChild; e; e = e.nextSibling)
+			if(e.group == me.group)
+				if(e.checked)
+					found = 1;
+		if(!found)
+			me.setChecked(me, 1);
+	}
 	drawCheckBox(me);
 }
 void saveCvarsNexuizRadioButton(entity me)
 {
-	if(me.cvarValue)
+	if(me.cvarName)
 	{
-		if(me.cvarName)
-		{
-			if(me.checked)
-				cvar_set(me.cvarName, me.cvarValue);
-			else if(me.cvarOffValue)
-				cvar_set(me.cvarName, me.cvarOffValue);
-		}
-	}
-	else
-	{
-		if(me.cvarName)
-		{
-			cvar_set(me.cvarName, ftos(me.checked));
-		}
+		if(me.checked)
+			cvar_set(me.cvarName, me.cvarValue);
+		else if(me.cvarOffValue)
+			cvar_set(me.cvarName, me.cvarOffValue);
 	}
 }
 #endif
