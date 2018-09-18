@@ -685,6 +685,11 @@ void turret_think()
     entity e;
 
     self.nextthink = time + self.ticrate;
+	if (time < game_starttime)
+		return;
+
+	if (gameover)
+		return;
 
     // ONS uses somewhat backwards linking.
     if (teamplay)
