@@ -81,7 +81,6 @@ void GUI_Draw_Remove() {
 	draw_reset();
 	draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
-	sb_hidescores = TRUE;
 }
 void GUI_Draw() {
 	if (GUI_alpha < 1)
@@ -95,7 +94,6 @@ void GUI_Draw() {
 	draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
 	m_tooltip(mainWindow, GUI_mouse_pos);
-	sb_hidescores = TRUE;
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = GUI_InputEvent;
 	GUI_InputEvent(1, 0, 0); //workaround for old engines
