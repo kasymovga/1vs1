@@ -224,18 +224,6 @@ void cvar_changes_init()
 		// mapinfo
 		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
-		BADCVAR("g_assault");
-		BADCVAR("g_ctf");
-		BADCVAR("g_dm");
-		BADCVAR("g_domination");
-		BADCVAR("g_keyhunt");
-		BADCVAR("g_keyhunt_teams");
-		BADCVAR("g_onslaught");
-		BADCVAR("g_race");
-		BADCVAR("g_cts");
-		BADCVAR("g_runematch");
-		BADCVAR("g_tdm");
-		BADCVAR("g_nexball");
 		BADCVAR("teamplay");
 
 		// long
