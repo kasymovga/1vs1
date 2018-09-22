@@ -1,3 +1,11 @@
+void monster_sound(entity m, string s) {
+	if (s != "")
+	if (m.watersound_finished < time) {
+		m.watersound_finished = time + 5;
+		sound(m, CHAN_TRIGGER, s, VOL_BASE, ATTN_NORM);
+	}
+}
+
 void monster_set_route() {
 	float f1, f2;
 	entity p;
@@ -25,6 +33,7 @@ void monster_set_route() {
 	}
 }
 
+float notice_sound_finished;
 entity monster_look_for_player(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter) {
 	entity e;
 	vector v;
@@ -69,6 +78,10 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		self.enemy = p;
 		self.attack_finished_single = time + random() * attack_delay_jitter + attack_delay;
 		self.think();
+		if (time > notice_sound_finished) {
+			monster_sound(self, self.noise1);
+			notice_sound_finished = time + 5;
+		}
 	}
 	return p;
 }
@@ -92,6 +105,7 @@ void monster_die() {
 	self.alpha = -1;
 	self.nextthink = time;
 	self.think = SUB_Remove;
+
 	if (self.ammo_shells)
 		monster_drop_item(IT_SHELLS, "models/items/a_shells.md3", "misc/itempickup.wav", "Shells", ammo_shells, self.ammo_shells);
 
@@ -105,7 +119,11 @@ void monster_die() {
 		monster_drop_item(IT_CELLS, "models/items/a_cells.md3", "misc/itempickup.wav", "Cells", ammo_cells, self.ammo_cells);
 }
 
-void monster_corpse_event_damage() {
+void monster_corpse_event_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+	if (attacker.classname != "monster")
+		self.health = self.health - damage;
+
+	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < -200)
 		monster_die();
 }
@@ -113,7 +131,7 @@ void monster_corpse_event_damage() {
 void monster_die_animated() {
 	setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
 	self.movetype = MOVETYPE_TOSS;
-	self.solid = SOLID_TRIGGER;
+	self.solid = SOLID_CORPSE;
 	self.nextthink = time + 5;
 	self.think = monster_die;
 	self.event_damage = monster_corpse_event_damage;
@@ -126,6 +144,8 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
+		stopsound(self, CHAN_TRIGGER);
+		monster_sound(self, self.noise2);
 		GameHook_MonsterKilled(attacker);
 		entity o = self.owner;
 		float quant = GameHook_MonsterQuant();
@@ -148,6 +168,7 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 		else
 			monster_die();
 	} else if (attacker.classname == "player") {
+		monster_sound(self, self.noise3);
 		if (self.enemy) {
 			if (self.enemy.classname == "monster_walk_path")
 				self.message2 = self.enemy.targetname;
@@ -263,6 +284,9 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	self.dmg_edge = self.owner.dmg_edge;
 	self.dmg_force = self.owner.dmg_force;
 	self.dmg_radius = self.owner.dmg_radius;
+	self.noise1 = self.owner.noise1;
+	self.noise2 = self.owner.noise2;
+	self.noise3 = self.owner.noise3;
 	self.iscreature = TRUE;
 	self.bot_attack = TRUE;
 	self.team = self.owner.team;
@@ -382,6 +406,14 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	if (self.targetname == "") {
 		self.nextthink = time;
 	}
+	if (self.noise1 != "")
+		precache_sound(self.noise1);
+
+	if (self.noise2 != "")
+		precache_sound(self.noise2);
+
+	if (self.noise3 != "")
+		precache_sound(self.noise3);
 }
 
 void spawnfunc_monster_walk_path() {

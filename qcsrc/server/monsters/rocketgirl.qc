@@ -140,5 +140,7 @@ void rlgirl_init() {
 void spawnfunc_monster_rlgirl_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(rlgirl_init);
+	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
+	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
 	monster_prepare_spawn(rlgirl_spawn, spawnfunc_monster_rlgirl_spawn);
 }

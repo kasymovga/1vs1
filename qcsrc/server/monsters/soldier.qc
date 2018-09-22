@@ -112,5 +112,7 @@ void soldier_init() {
 void spawnfunc_monster_soldier_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(soldier_init);
+	self.noise1 = "player/torus/incoming.ogg";
+	self.noise3 = "player/torus/pain50.ogg";
 	monster_prepare_spawn(soldier_spawn, spawnfunc_monster_soldier_spawn);
 }

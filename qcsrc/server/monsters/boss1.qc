@@ -155,5 +155,8 @@ void boss1_init() {
 void spawnfunc_monster_boss1_spawn() {
 	setsize(self, '-48 -48 -72', '64 64 135');
 	monster_init(boss1_init);
+	self.noise1 = "player/torus/incoming.ogg";
+	self.noise2 = "player/torus/death.ogg";
+	self.noise3 = "player/torus/pain50.ogg";
 	monster_prepare_spawn(boss1_spawn, spawnfunc_monster_boss1_spawn);
 }
