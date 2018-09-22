@@ -2258,6 +2258,7 @@ void RestoreGame()
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 	WeaponStats_Init();
+	dlc_reload();
 }
 
 void SV_Shutdown()

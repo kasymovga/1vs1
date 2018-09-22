@@ -269,6 +269,13 @@ void DLCWaitReload() {
 			if (s != "")
 				dlc_exec_cfg(s);
 		}
+		localcmd("sv_cmd dlc_reset\n");
+		entity e;
+		FOR_EACH_REALCLIENT(e)
+			if (e.netaddress == "local") {
+				localcmd("slowmo 0; r_restart; slowmo 1\n");
+				break;
+			}
 		remove(self);
 		dlc_wait_reload = world;
 	}
