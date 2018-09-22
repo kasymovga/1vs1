@@ -353,7 +353,13 @@ void CSQC_UpdateView(float w, float h)
 
 	Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
 
-	draw_crosshair = !observer_status && !sb_hidescores;
+	if (observer_status)
+		draw_crosshair = FALSE;
+	else if (sb_hidescores)
+		draw_crosshair = FALSE;
+	else
+		draw_crosshair = TRUE;
+
     float hud;
     hud = getstati(STAT_HUD);
     if(hud == HUD_SPIDERBOT)
