@@ -102,11 +102,6 @@ void Gib_Draw()
 	if(wasfreed(self))
 		return;
 
-	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
-		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_SLIGHTBLOOD")), oldorg, self.origin);
-	else
-		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);
-
 	self.renderflags = 0;
 	self.alpha = bound(0, self.nextthink - time, 1);
 
