@@ -703,11 +703,6 @@ Keys:
 */
 void spawnfunc_info_player_team1()
 {
-	if(g_assault)
-	{
-		remove(self);
-		return;
-	}
 	self.team = COLOR_TEAM1; // red
 	spawnfunc_info_player_deathmatch();
 };
@@ -723,11 +718,6 @@ Keys:
 */
 void spawnfunc_info_player_team2()
 {
-	if(g_assault)
-	{
-		remove(self);
-		return;
-	}
 	self.team = COLOR_TEAM2; // blue
 	spawnfunc_info_player_deathmatch();
 };
@@ -743,11 +733,6 @@ Keys:
 */
 void spawnfunc_info_player_team3()
 {
-	if(g_assault)
-	{
-		remove(self);
-		return;
-	}
 	self.team = COLOR_TEAM3; // yellow
 	spawnfunc_info_player_deathmatch();
 };
@@ -763,11 +748,6 @@ Keys:
 */
 void spawnfunc_info_player_team4()
 {
-	if(g_assault)
-	{
-		remove(self);
-		return;
-	}
 	self.team = COLOR_TEAM4; // purple
 	spawnfunc_info_player_deathmatch();
 };

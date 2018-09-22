@@ -32,7 +32,7 @@ void fillNexuizServerCreateTab(entity me)
 	float n;
 
 	me.TR(me);
-		n = 8;
+		n = 7;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_dm", "DM"));
 			e0 = e;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_runematch", "Runematch"));
@@ -47,10 +47,10 @@ void fillNexuizServerCreateTab(entity me)
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_conquest", "Conquest"));
 			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_survive", "Survival"));
-			if(e.checked) e0 = NULL;
 	me.TR(me);
 		n = 7;
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_survive", "Survival"));
+			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_tdm", "TDM"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_ctf", "CTF"));
@@ -58,8 +58,6 @@ void fillNexuizServerCreateTab(entity me)
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_domination", "Domination"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_keyhunt", "Key Hunt"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_assault", "Assault"));
 			if(e.checked) e0 = NULL;
 		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_onslaught", "Onslaught"));
 			if(e.checked) e0 = NULL;

@@ -15,7 +15,7 @@ var .float BUTTON_USE = buttonuse;
 
 // Globals
 
-float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_runematch, g_conquest, g_race, g_nexball, g_cts, g_clanarena, g_campaign, g_survive, g_single;
+float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_runematch, g_conquest, g_race, g_nexball, g_cts, g_clanarena, g_campaign, g_survive, g_single;
 float g_footsteps, g_grappling_hook, g_pinata, g_norecoil;
 float g_pinata_drop_all;
 float g_warmup_limit;
@@ -359,9 +359,6 @@ float bot_waypoints_for_items;
 #define ATTACK_FINISHED_FOR(ent,w) ((ent).attack_finished_single)
 #endif
 #define ATTACK_FINISHED(ent) ATTACK_FINISHED_FOR(ent,(ent).weapon)
-
-// assault game mode: Which team is attacking in this round?
-float assault_attacker_team;
 
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;

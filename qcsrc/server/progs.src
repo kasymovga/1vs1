@@ -72,8 +72,6 @@ radio.qh
 
 clanarena.qh
 
-assault.qh
-
 conquest.qh
 survive.qh
 
@@ -238,8 +236,6 @@ campaign.qc
 gamecommand.qc
 
 keyhunt.qc
-
-assault.qc
 
 conquest.qc
 

@@ -88,7 +88,6 @@ void WriteGameCvars()
 	cvar_set("_g_runematch", ftos(g_runematch));
 	cvar_set("_g_conquest", ftos(g_conquest));
 	cvar_set("_g_keyhunt", ftos(g_keyhunt));
-	cvar_set("_g_assault", ftos(g_assault));
 	cvar_set("_g_onslaught", ftos(g_onslaught));
 	cvar_set("_g_race", ftos(g_race));
 	cvar_set("_g_nexball", ftos(g_nexball));
@@ -116,7 +115,6 @@ void ReadGameCvars()
 		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("_g_runematch")));
 		found += (g_conquest = (!found && (prev != GAME_CONQUEST) && cvar("_g_conquest")));
 		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("_g_keyhunt")));
-		found += (g_assault = (!found && (prev != GAME_ASSAULT) && cvar("_g_assault")));
 		found += (g_onslaught = (!found && (prev != GAME_ONSLAUGHT) && cvar("_g_onslaught")));
 		found += (g_race = (!found && (prev != GAME_RACE) && cvar("_g_race")));
 		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("_g_nexball")));
@@ -267,13 +265,6 @@ void InitGameplayMode()
 		game = GAME_KEYHUNT;
 		ActivateTeamplay();
 		kh_init();
-	}
-
-	if(g_assault)
-	{
-		game = GAME_ASSAULT;
-		assault_init();
-		ActivateTeamplay();
 	}
 
 	if(g_onslaught)
@@ -517,8 +508,6 @@ void CheckAllowedTeams (entity for_whom)
 		teament_name = "tdm_team";
 	else if(g_nexball)
 		teament_name = "nexball_team";
-	else if(g_assault)
-		c1 = c2 = 0; // Assault always has 2 teams
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
