@@ -1232,6 +1232,10 @@ set single_g_pickup_healthmedium_max 100
 set single_g_pickup_armormedium_max 100
 set single_g_pickup_armorbig_max 100
 
+set g_monster_arachna_health 90
+set g_monster_arachna_damage 40
+set g_monster_arachna_force 100
+set g_monster_arachna_radius 100
 set g_monster_boss1_health 3000
 set g_monster_boss1_damage 50
 set g_monster_boss1_force 100

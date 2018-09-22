@@ -661,6 +661,11 @@ float CSQC_ConsoleCommand(string strMessage)
 
 .vector view_ofs;
 
+entity spawnentity;
+void spawnentity_Draw() {
+	R_AddEntity(self);
+}
+
 void GameCommand(string msg)
 {
 	float argc;
@@ -706,6 +711,18 @@ void GameCommand(string msg)
 		localcmd(strcat("cmd vote ", argv(1), "\n"));
 	} else if(cmd == "modelprecache") {
 		precache_model(argv(1));
+	}
+	else if(cmd == "spawnentity") {
+		if (spawnentity)
+			remove(spawnentity);
+
+		spawnentity = spawn();
+		spawnentity.draw = spawnentity_Draw;
+		setorigin(spawnentity, view_origin + view_forward * 100);
+		spawnentity.effects = EF_TELEPORT_BIT;
+		precache_model(argv(1));
+		setmodel(spawnentity, argv(1));
+		spawnentity.frame = stof(argv(2));
 	}
 	else
 	{
