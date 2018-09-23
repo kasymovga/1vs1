@@ -389,22 +389,8 @@ void havocbot_chooserole()
 	dprint("choosing a role...\n");
 	navigation_clearroute();
 	self.bot_strategytime = 0;
-	if (g_ctf)
-		havocbot_chooserole_ctf();
-	else if (g_domination)
-		havocbot_chooserole_dom();
-	else if (g_keyhunt)
-		havocbot_chooserole_kh();
-	else if (g_race || g_cts)
-		havocbot_chooserole_race();
-	else if (g_onslaught)
-		havocbot_chooserole_ons();
-	else if (g_conquest)
-		havocbot_chooserole_conquest();
-	else if (g_freeze)
-		havocbot_chooserole_ft();
-	else // assume anything else is deathmatch
-		havocbot_chooserole_dm();
+	GameHook_BotChooseRole();
+
 };
 
 void havocbot_role_init()

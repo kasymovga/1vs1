@@ -1,4 +1,3 @@
-#include "bot.qh"
 #include "aim.qh"
 #include "navigation.qh"
 #include "waypoints.qh"

@@ -1230,6 +1230,7 @@ void ctf_init()
 	GameHook_PlayerIsCarrier = ctf_PlayerIsCarrier;
 	GameHook_DropCarried = ctf_DropCarried;
 	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
+	GameHook_BotChooseRole = havocbot_chooserole_ctf;
 };
 
 void ctf_setstatus2(entity flag, float shift)

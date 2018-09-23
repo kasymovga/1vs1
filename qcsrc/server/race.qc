@@ -1129,4 +1129,5 @@ void race_init() {
 	GameHook_ReadyRestartHard = race_ReadyRestartHard;
 	GameHook_LeadLimitOverride = race_LeadLimitOverride;
 	GameHook_FragLimitOverride = race_FragLimitOverride;
+	GameHook_BotChooseRole = havocbot_chooserole_race;
 }

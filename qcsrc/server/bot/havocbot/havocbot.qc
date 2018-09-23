@@ -1,4 +1,3 @@
-#include "havocbot.qh"
 #include "role_ctf.qc"
 #include "role_onslaught.qc"
 #include "role_keyhunt.qc"

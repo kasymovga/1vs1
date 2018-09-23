@@ -994,6 +994,7 @@ void kh_init()  // sets up th KH environment
 	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
 	GameHook_DropCarried = kh_DropCarried;
 	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
+	GameHook_BotChooseRole = havocbot_chooserole_kh;
 
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
 	precache_model("models/keyhunt/key-carried.md3");

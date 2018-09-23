@@ -114,6 +114,7 @@ miscfunctions.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
 ../menu-server/miscfunctions.qh
+bot/bot.qh
 gamehooks.qh
 ../client-server/nadgets.qh
 nadgets/include.qh

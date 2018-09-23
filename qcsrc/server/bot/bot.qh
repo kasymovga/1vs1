@@ -1,3 +1,4 @@
+#include "havocbot/havocbot.qh"
 /*
  * Globals and Fields
  */

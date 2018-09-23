@@ -107,3 +107,4 @@ var float(entity plr, entity targ) GameHookChain_PlayerCanSeeHealthFor { return 
 var float(entity plr, entity targ) GameHookChain_PlayerVisibleThroughWallFor { return FALSE; }
 var float() GameHookChain_ThrowWeaponHandle { return FALSE; }
 var void(entity source, string msg) GameHookChain_PublicPlayerChat = {}
+var void() GameHook_BotChooseRole = { havocbot_chooserole_dm(); }
