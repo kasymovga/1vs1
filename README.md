@@ -15,7 +15,7 @@ make QCC=/path/to/rmqcc
 
 ## Installing
 
-Copy `1vs1.dat` and `cl_1vs1-*.pk3` to your ~/.nexuiz/data or ~/.rexuiz/data directory.
+Copy `1vs1.dat`, `1vs1.cfg` and `cl_1vs1-*.pk3` to your ~/.nexuiz/data or ~/.rexuiz/data directory.
 Add this line at beginning of `server.cfg`:
 ~~~~
 exec 1vs1.cfg
