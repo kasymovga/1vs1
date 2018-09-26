@@ -138,7 +138,7 @@ void arachna_init() {
 }
 
 void spawnfunc_monster_arachna_spawn() {
-	setsize(self, '-16 -16 -24', '16 16 16');
+	setsize(self, '-16 -16 -24', '16 16 32');
 	monster_init(arachna_init);
 	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
 	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
