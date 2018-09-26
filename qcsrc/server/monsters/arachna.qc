@@ -115,11 +115,6 @@ void arachna_spawn() {
 	self.species = SPECIES_ALIEN;
 	self.exteriorweaponentity = spawn();
 	self.entremove = arachna_remove;
-	if (self.team > 0)
-		self.colormap = 1024;
-	else
-		self.colormap = 1024 + 68;
-
 	self.exteriorweaponentity.scale = 0.6;
 	setattachment(self.exteriorweaponentity, self, "tag_weapon");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_electro.md3");
