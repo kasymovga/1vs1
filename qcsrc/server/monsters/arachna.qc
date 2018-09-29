@@ -52,9 +52,8 @@ void arachna_hunt() {
 		proj.touch = arachna_grenade_touch;
 		PROJECTILE_MAKETRIGGER(proj);
 		setorigin(proj, _shotorg);
-		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 		proj.velocity = normalize(_shotdir) * 1600;
-		proj.pushltime = time + g_balance_fireball_primary_lifetime;
+		proj.pushltime = time + 10;
 		W_SetupProjectileVelocity(proj);
 		proj.angles = vectoangles(proj.velocity);
 
