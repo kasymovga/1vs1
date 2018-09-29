@@ -145,7 +145,6 @@ void boss2_spawn() {
 	setmodel(self.exteriorweaponentity, "models/weapons/v_shotgun.md3");
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
-	self.damageforcescale = 1;
 	self.netname = "Big Soldier";
 	self.scale = 3;
 	self.damageforcescale = 0.01;
