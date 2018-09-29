@@ -1243,6 +1243,10 @@ set g_monster_boss1_radius 100
 set g_monster_boss2_health 3000
 set g_monster_boss2_damage 40
 set g_monster_boss2_force 40
+set g_monster_boss3_health 2000
+set g_monster_boss3_damage 40
+set g_monster_boss3_force 100
+set g_monster_boss3_radius 100
 set g_monster_bat_health 100
 set g_monster_bat_damage 50
 set g_monster_bat_force 100

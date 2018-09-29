@@ -1,0 +1,158 @@
+void boss3_idle();
+void boss3_guard();
+void boss3_walk();
+
+void boss3_grenade_explode (void)
+{
+	self.event_damage = SUB_Null;
+	self.takedamage = DAMAGE_NO;
+	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
+
+	remove (self);
+}
+
+void boss3_grenade_touch (void)
+{
+	PROJECTILE_TOUCH;
+	boss3_grenade_explode();
+}
+
+void boss3_hunt() {
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	self.nextthink = time;
+	self.colormod = '1 1 1' + '0.125 -0.125 0.125' * sin(time);
+	if (monster_check_target(boss3_walk, boss3_guard))
+		return;
+
+	vector v;
+	float dofire;
+	dofire = FALSE;
+	if (self.attack_finished_single < time) {
+		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
+		if (trace_fraction == 1)
+			dofire = TRUE;
+	}
+	if (dofire) {
+		movelib_beak_simple(100 * frametime);
+		v = vectoangles(self.enemy.origin - self.origin);
+		self.angles_y = v_y;
+		makevectors(self.angles);
+		vector _shotdir = self.enemy.origin - self.origin;
+		vector _shotorg = self.origin + v_forward * 16;
+		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
+
+		float i;
+		for (i = 0; i < 6; i++) {
+			entity proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO, TRUE);
+			proj.owner = proj.realowner = self;
+			proj.classname = "grenade";
+			proj.bot_dodge = TRUE;
+			proj.bot_dodgerating = self.dmg_edge;
+			proj.dmg_edge = self.dmg_edge;
+			proj.dmg_radius = self.dmg_radius;
+			proj.dmg_force = self.dmg_force;
+			proj.movetype = MOVETYPE_FLY;
+			proj.projectiledeathtype = WEP_ELECTRO;
+			proj.touch = boss3_grenade_touch;
+			PROJECTILE_MAKETRIGGER(proj);
+			setorigin(proj, _shotorg);
+			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
+			proj.pushltime = time + 10;
+			W_SetupProjectileVelocity(proj);
+			proj.angles = vectoangles(proj.velocity);
+		}
+
+		self.attack_finished_single = time + 3 + random();
+		self.bulletcounter = time + 0.5;
+	} else {
+		v = monster_move_walk(1200, 5, 0);
+		v = vectoangles(v);
+		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
+	}
+	if (time > self.bulletcounter)
+		setanim(self, '16 1 1', TRUE, TRUE, FALSE);
+	else
+		setanim(self, '8 1 1', TRUE, TRUE, FALSE);
+}
+
+void boss3_idle() {
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	self.colormod = '1 1 1' + '-0.125 0.125 0.125' * sin(time);
+	self.nextthink = time;
+	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
+		return;
+	}
+	movelib_beak_simple(100 * frametime);
+	setanim(self, '23 1 1', TRUE, TRUE, FALSE);
+}
+
+void boss3_guard() {
+	self.angles_y = self.angles_y + frametime * 45 * random();
+	if (self.angles_y > 360)
+		self.angles_y = self.angles_y - 360;
+	boss3_idle();
+}
+
+void boss3_walk() {
+	self.nextthink = time;
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	self.colormod = '1 1 1' + '0.125 0.125 -0.125' * sin(time);
+	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
+		return;
+	}
+	if (monster_walk_finished(boss3_idle, 100))
+		return;
+
+	setanim(self, '15 1 1', TRUE, TRUE, FALSE);
+	//self.velocity = normalize(v) * 400;
+	vector v = monster_move_walk(600, 5, 0);
+	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
+	v = vectoangles(v);
+	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+
+}
+
+void boss3_remove() {
+	WaypointSprite_DetachCarrier(self);
+	remove(self.exteriorweaponentity);
+}
+
+void boss3_spawn() {
+	monster_prepare(boss3_hunt, boss3_walk, boss3_idle);
+	setmodel(self, "models/arachna/arachna.md3");
+	self.movetype = MOVETYPE_WALK;
+	self.species = SPECIES_ALIEN;
+	self.exteriorweaponentity = spawn();
+	self.entremove = boss3_remove;
+	self.scale = 3;
+	self.exteriorweaponentity.scale = 0.6;
+	setattachment(self.exteriorweaponentity, self, "tag_weapon");
+	setmodel(self.exteriorweaponentity, "models/weapons/v_electro.md3");
+	self.takedamage = DAMAGE_AIM;
+	self.solid = SOLID_BBOX;
+	self.damageforcescale = 0.1;
+	self.netname = "Giant Arachna";
+	self.frags = 10;
+	self.anim_die1 = '1 1 1';
+	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_UpdateMaxHealth(e, self.health);
+	WaypointSprite_UpdateHealth(e, self.health);
+	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
+}
+
+void boss3_init() {
+	precache_model("models/arachna/arachna.md3");
+	precache_model("models/weapons/v_electro.md3");
+	precache_sound("weapons/electro_fire.wav");
+	dlc_require("arachna");
+	CSQCProjectile_Init(PROJECTILE_ELECTRO);
+}
+
+void spawnfunc_monster_boss3_spawn() {
+	setsize(self, '-32 -32 -72', '32 32 96');
+	monster_init(boss3_init);
+	self.noise1 = "player/pyria-skadi/coms/incoming.ogg";
+	self.noise3 = "player/pyria-skadi/player/pain50.ogg";
+	monster_prepare_spawn(boss3_spawn, spawnfunc_monster_boss3_spawn);
+}
+

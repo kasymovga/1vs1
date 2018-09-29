@@ -303,6 +303,7 @@ monsters/flyingthing.qc
 monsters/spider.qc
 monsters/boss1.qc
 monsters/boss2.qc
+monsters/boss3.qc
 monsters/walker.qc
 monsters/ewheel.qc
 monsters/fireguy.qc
