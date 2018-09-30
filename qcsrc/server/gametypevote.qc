@@ -1,12 +1,13 @@
 float gametypevote_finished;
 float gametypevote_start;
-float gametypevote_available;
+string sv_gametypevote;
 entity gametypevote;
 
 float gametypes[MENU_ITEMS_MAXCOUNT];
 string gametypes_descr[MENU_ITEMS_MAXCOUNT];
 float gametypes_votes[MENU_ITEMS_MAXCOUNT];
 float gametypes_count;
+float gametypes_mapinfo_mask;
 
 .float gametypevote_select;
 
@@ -43,11 +44,21 @@ float GameTypeVote_Think() {
 
 		gametypevote_start = time;
 		gametypevote = Menu_Prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"), GameTypeVote_Select);
-		t = 1;
 		gametypes_count = 0;
-		for (i = 0; i < 22; i++) {
-			if (!nextmap_types || (t & nextmap_types))
-			if (t & gametypevote_available)
+		string head, tail;
+		tail = sv_gametypevote;
+		float gametype_vote_mask = 
+		float mapinfo_type;
+		while (tail != "") {
+			head = car(tail);
+			tail = cdr(tail);
+			t = MapInfo_Type_FromString(head);
+			if (t <= 0)
+				continue;
+
+			mapinfo_type = MapInfo_GameTypeToMapInfoType(t);
+			if (!nextmap_types || (mapinfo_type & nextmap_types))
+			if (mapinfo_type & gametypes_mapinfo_mask)
 			{
 				gametypes[gametypes_count] = t;
 				Menu_Add_Item(gametypevote, GameTypeVote_GetDescr(gametypes_count));
@@ -55,7 +66,6 @@ float GameTypeVote_Think() {
 				if (gametypes_count == MENU_ITEMS_MAXCOUNT)
 					break;
 			}
-			t *= 2;
 		}
 	}
 	if (gametypes_count < 1) {
@@ -115,14 +125,19 @@ void GameTypeVote_Select(float select) {
 }
 
 float GameTypeVote_Mask() {
-	return gametypevote_available;
+	return gametypes_mapinfo_mask;
 }
 
 void GameTypeVote_Init() {
-	float i, n;
-	n = tokenizebyseparator(cvar_string("sv_gametypevote"), " ");
-	gametypevote_available = 0;
-	for (i = 0; i < n; i++) {
-		gametypevote_available |= MapInfo_Type_FromString(argv(i));
+	sv_gametypevote = cvar_string_zone_ifneeded("sv_gametypevote");
+	string head, tail;
+	tail = sv_gametypevote;
+	gametypes_mapinfo_mask = 0;
+	while (tail != "") {
+		head = car(tail);
+		tail = cdr(tail);
+		if (head != "") {
+			gametypes_mapinfo_mask = gametypes_mapinfo_mask | MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(head));
+		}
 	}
 }

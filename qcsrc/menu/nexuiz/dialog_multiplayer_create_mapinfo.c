@@ -5,7 +5,7 @@ CLASS(NexuizMapInfoDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizMapInfoDialog, title, string, "Map Information")
 	ATTRIB(NexuizMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
 	ATTRIB(NexuizMapInfoDialog, intendedWidth, float, 0.85)
-	ATTRIB(NexuizMapInfoDialog, rows, float, 9)
+	ATTRIB(NexuizMapInfoDialog, rows, float, 16)
 	ATTRIB(NexuizMapInfoDialog, columns, float, 10)
 
 	ATTRIB(NexuizMapInfoDialog, previewImage, entity, NULL)
@@ -14,18 +14,7 @@ CLASS(NexuizMapInfoDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizMapInfoDialog, descriptionLabel, entity, NULL)
 	ATTRIB(NexuizMapInfoDialog, featuresLabel, entity, NULL)
 
-	ATTRIB(NexuizMapInfoDialog, typeDeathmatchLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeTDMLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeRuneLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeDominationLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeClanArenaLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeKeyHuntLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeCTFLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeOnslaughtLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeRaceLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeCTSLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeNexballLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeFreezeTagLabel, entity, NULL)
+	ATTRIB(NexuizMapInfoDialog, typeLabelNext, entity, NULL)
 
 	ATTRIB(NexuizMapInfoDialog, currentMapIndex, float, 0)
 	ATTRIB(NexuizMapInfoDialog, currentMapBSPName, string, string_null)
@@ -68,26 +57,19 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 	me.featuresLabel.setText(me.featuresLabel, me.currentMapFeaturesText);
 	me.previewImage.src = me.currentMapPreviewImage;
 
-	me.typeDeathmatchLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH);
-	me.typeTDMLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH);
-	me.typeDominationLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DOMINATION);
-	me.typeClanArenaLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CLANARENA);
-	me.typeRuneLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RUNEMATCH);
-	me.typeKeyHuntLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEYHUNT);
-	me.typeCTFLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF);
-	me.typeAssaultLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ASSAULT);
-	me.typeOnslaughtLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ONSLAUGHT);
-	me.typeRaceLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE);
-	me.typeCTSLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTS);
-	me.typeNexballLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_NEXBALL);
-	me.typeFreezeTagLabel.disabled = !(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_FREEZETAG);
-
+	entity e;
+	float t;
+	t = GAME_DEATHMATCH;
+	for (e = me.typeLabelNext; e; e = e.typeLabelNext) {
+		e.disabled = !(MapInfo_Map_supportedGametypes & MapInfo_GameTypeToMapInfoType(t));
+		t++;
+	}
 	MapInfo_ClearTemps();
 }
 void fillNexuizMapInfoDialog(entity me)
 {
 	entity e;
-	float w, wgt;
+	float w;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, me.rows - 2, 3, e = makeNexuizImage(string_null, 4.0/3.0));
@@ -111,37 +93,17 @@ void fillNexuizMapInfoDialog(entity me)
 			e.allowCut = 1;
 			me.featuresLabel = e;
 	me.TR(me);
-		me.TD(me, 1, w, e = makeNexuizTextLabel(0, "Game types:"));
-	me.TR(me); wgt = (w-0.2)/5;
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "DM"));
-			me.typeDeathmatchLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "TDM"));
-			me.typeTDMLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Rune"));
-			me.typeRuneLabel = e;
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Domination"));
-			me.typeDominationLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Key Hunt"));
-			me.typeKeyHuntLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "CTF"));
-			me.typeCTFLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Onslaught"));
-			me.typeOnslaughtLabel = e;
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Race"));
-			me.typeRaceLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "CTS"));
-			me.typeCTSLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Nexball"));
-			me.typeNexballLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "FreezeTag"));
-			me.typeFreezeTagLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Clan Arena"));
-			me.typeClanArenaLabel = e;
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Game types:"));
+		float i;
+		e = me;
+		for (i = GAME_DEATHMATCH; i < GAME_END; i++) {
+			me.TD(me, 1, 2, e.typeLabelNext = makeNexuizTextLabel(0, MapInfo_HumanString_FromType(i)));
+			e = e.typeLabelNext;
+			if not(mod(i, 2)) {
+				me.TR(me);
+				me.TDempty(me, 1);
+			}
+		}
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizTextLabel(0.5, ""));

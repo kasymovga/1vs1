@@ -1205,8 +1205,14 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_showenemycarrier_delay);
 	if(g_campaign)
 		g_ctf_win_mode = 2;
+	else if (g_catf)
+		g_ctf_win_mode = 0;
 	else
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
+
+	if not(g_ctf) {
+		g_ctf = 1;
+	}
 
 	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));

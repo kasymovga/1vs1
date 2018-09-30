@@ -200,7 +200,7 @@ void refilterNexuizMapList(entity me)
 	string s;
 	float gt;
 	gt = MapInfo_CurrentGametype();
-	MapInfo_FilterGametype(gt, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(gt), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	me.nItems = MapInfo_count;
 	for(i = 0; i < MapInfo_count; ++i)
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));

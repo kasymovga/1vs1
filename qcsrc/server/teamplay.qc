@@ -244,9 +244,13 @@ void InitGameplayMode()
 		dom_init();
 	}
 
-	if(g_ctf)
+	if(g_ctf || g_catf)
 	{
-		game = GAME_CTF;
+		if (g_ctf)
+			game = GAME_CTF;
+		else
+			game = GAME_CATF;
+
 		ActivateTeamplay();
 		ctf_init();
 	}

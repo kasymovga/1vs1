@@ -1,3 +1,19 @@
+float MAPINFO_TYPE_CTF				= 1;
+float MAPINFO_TYPE_ONSLAUGHT		= 4;
+float MAPINFO_TYPE_RACE				= 8;
+float MAPINFO_TYPE_DEATHMATCH		= 16;
+float MAPINFO_TYPE_TEAM_DEATHMATCH	= 32;
+float MAPINFO_TYPE_DOMINATION		= 64;
+float MAPINFO_TYPE_RUNEMATCH		= 128;
+float MAPINFO_TYPE_CONQUEST			= 256;
+float MAPINFO_TYPE_KEYHUNT			= 1024;
+float MAPINFO_TYPE_NEXBALL          = 2048;
+float MAPINFO_TYPE_CTS              = 4096;
+float MAPINFO_TYPE_FREEZETAG        = 8192;
+float MAPINFO_TYPE_CLANARENA        = 16384;
+float MAPINFO_TYPE_SURVIVE          = 32768;
+float MAPINFO_TYPE_SINGLE           = 65536;
+
 // generic string stuff
 float startsWith(string haystack, string needle)
 {
@@ -497,75 +513,78 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType)
 
 float MapInfo_Type_FromString(string t)
 {
-	if     (t == "dm")      return MAPINFO_TYPE_DEATHMATCH;
-	else if(t == "tdm")     return MAPINFO_TYPE_TEAM_DEATHMATCH;
-	else if(t == "ft")      return MAPINFO_TYPE_FREEZETAG;
-	else if(t == "ca")      return MAPINFO_TYPE_CLANARENA;
-	else if(t == "dom")     return MAPINFO_TYPE_DOMINATION;
-	else if(t == "ctf")     return MAPINFO_TYPE_CTF;
-	else if(t == "rune")    return MAPINFO_TYPE_RUNEMATCH;
-	else if(t == "conq")    return MAPINFO_TYPE_CONQUEST;
-	else if(t == "kh")      return MAPINFO_TYPE_KEYHUNT;
-	else if(t == "ons")     return MAPINFO_TYPE_ONSLAUGHT;
-	else if(t == "rc")      return MAPINFO_TYPE_RACE;
-	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
-	else if(t == "cts")     return MAPINFO_TYPE_CTS;
-	else if(t == "surv")    return MAPINFO_TYPE_SURVIVE;
-	else if(t == "single")  return MAPINFO_TYPE_SINGLE;
-	else if(t == "all")     return MAPINFO_TYPE_ALL;
+	if     (t == "dm")      return GAME_DEATHMATCH;
+	else if(t == "tdm")     return GAME_TEAM_DEATHMATCH;
+	else if(t == "ft")      return GAME_FREEZETAG;
+	else if(t == "ca")      return GAME_CLANARENA;
+	else if(t == "dom")     return GAME_DOMINATION;
+	else if(t == "ctf")     return GAME_CTF;
+	else if(t == "catf")    return GAME_CATF;
+	else if(t == "rune")    return GAME_RUNEMATCH;
+	else if(t == "conq")    return GAME_CONQUEST;
+	else if(t == "kh")      return GAME_KEYHUNT;
+	else if(t == "ons")     return GAME_ONSLAUGHT;
+	else if(t == "rc")      return GAME_RACE;
+	else if(t == "nexball") return GAME_NEXBALL;
+	else if(t == "cts")     return GAME_CTS;
+	else if(t == "surv")    return GAME_SURVIVE;
+	else if(t == "single")  return GAME_SINGLE;
 	else                    return 0;
 }
 
 string MapInfo_String_FromType(float t)
 {
-	if     (t == MAPINFO_TYPE_DEATHMATCH     ) return "dm"     ;
-	else if(t == MAPINFO_TYPE_TEAM_DEATHMATCH) return "tdm"    ;
-	else if(t == MAPINFO_TYPE_FREEZETAG      ) return "ft"     ;
-	else if(t == MAPINFO_TYPE_CLANARENA      ) return "ca"     ;
-	else if(t == MAPINFO_TYPE_DOMINATION     ) return "dom"    ;
-	else if(t == MAPINFO_TYPE_CTF            ) return "ctf"    ;
-	else if(t == MAPINFO_TYPE_RUNEMATCH      ) return "rune"   ;
-	else if(t == MAPINFO_TYPE_CONQUEST       ) return "conq"   ;
-	else if(t == MAPINFO_TYPE_KEYHUNT        ) return "kh"     ;
-	else if(t == MAPINFO_TYPE_ONSLAUGHT      ) return "ons"    ;
-	else if(t == MAPINFO_TYPE_RACE           ) return "rc"     ;
-	else if(t == MAPINFO_TYPE_NEXBALL        ) return "nexball";
-	else if(t == MAPINFO_TYPE_CTS            ) return "cts"    ;
-	else if(t == MAPINFO_TYPE_SURVIVE        ) return "surv"   ;
-	else if(t == MAPINFO_TYPE_SINGLE         ) return "single" ;
-	else                                       return "wtf"    ;
+	if     (t == GAME_DEATHMATCH     ) return "dm"     ;
+	else if(t == GAME_TEAM_DEATHMATCH) return "tdm"    ;
+	else if(t == GAME_FREEZETAG      ) return "ft"     ;
+	else if(t == GAME_CLANARENA      ) return "ca"     ;
+	else if(t == GAME_DOMINATION     ) return "dom"    ;
+	else if(t == GAME_CTF            ) return "ctf"    ;
+	else if(t == GAME_CATF           ) return "catf"   ;
+	else if(t == GAME_RUNEMATCH      ) return "rune"   ;
+	else if(t == GAME_CONQUEST       ) return "conq"   ;
+	else if(t == GAME_KEYHUNT        ) return "kh"     ;
+	else if(t == GAME_ONSLAUGHT      ) return "ons"    ;
+	else if(t == GAME_RACE           ) return "rc"     ;
+	else if(t == GAME_NEXBALL        ) return "nexball";
+	else if(t == GAME_CTS            ) return "cts"    ;
+	else if(t == GAME_SURVIVE        ) return "surv"   ;
+	else if(t == GAME_SINGLE         ) return "single" ;
+	else                               return "wtf"    ;
 }
 
 string MapInfo_HumanString_FromType(float t) {
-	if (t == MAPINFO_TYPE_DEATHMATCH) {
+	if (t == GAME_DEATHMATCH) {
 		return "Deathmatch";
-	} else if (t == MAPINFO_TYPE_DOMINATION) {
+	} else if (t == GAME_DOMINATION) {
 		return "Domination";
-	} else if (t == MAPINFO_TYPE_TEAM_DEATHMATCH) {
+	} else if (t == GAME_TEAM_DEATHMATCH) {
 		return "Team Deathmatch";
-	} else if (t == MAPINFO_TYPE_CTF) {
+	} else if (t == GAME_CTF) {
 		return "Capture The Flag";
-	} else if (t == MAPINFO_TYPE_RUNEMATCH) {
+	} else if (t == GAME_CATF) {
+		return "CTF with CA";
+	} else if (t == GAME_RUNEMATCH) {
 		return "Runematch";
-	} else if (t == MAPINFO_TYPE_CONQUEST) {
+	} else if (t == GAME_CONQUEST) {
 		return "Conquest";
-	} else if (t == MAPINFO_TYPE_NEXBALL) {
+	} else if (t == GAME_NEXBALL) {
 		return "Nexball";
-	} else if (t == MAPINFO_TYPE_ONSLAUGHT) {
+	} else if (t == GAME_ONSLAUGHT) {
 		return "Onslaught";
-	} else if (t == MAPINFO_TYPE_KEYHUNT) {
+	} else if (t == GAME_KEYHUNT) {
 		return "Key Hunt";
-	} else if (t == MAPINFO_TYPE_CTS) {
+	} else if (t == GAME_CTS) {
 		return "CTS";
-	} else if (t == MAPINFO_TYPE_RACE) {
+	} else if (t == GAME_RACE) {
 		return "Race";
-	} else if (t == MAPINFO_TYPE_FREEZETAG) {
+	} else if (t == GAME_FREEZETAG) {
 		return "Freeze Tag";
-	} else if (t == MAPINFO_TYPE_CLANARENA) {
+	} else if (t == GAME_CLANARENA) {
 		return "Clan Arena";
-	} else if (t == MAPINFO_TYPE_SURVIVE) {
+	} else if (t == GAME_SURVIVE) {
 		return "Survival";
-	} else if (t == MAPINFO_TYPE_SINGLE) {
+	} else if (t == GAME_SINGLE) {
 		return "Single Player";
 	}
 	return "WTF";
@@ -775,7 +794,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
-			f = MapInfo_Type_FromString(t);
+			f = MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t));
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f);
 			else
@@ -901,8 +920,11 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		_MapInfo_Map_ApplyGametype("30 20", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
 
 	if(pGametypeToSet)
-		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
+		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet)) {
+			print("MapInfo_Map_supportedGametypes = ", ftos(MapInfo_Map_supportedGametypes), "\n");
+			print("pGametypeToSet = ", ftos(pGametypeToSet), "\n");
 			error("Can't select the requested game type. Bailing out.");
+		}
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
 		return r;
@@ -968,21 +990,21 @@ float MapInfo_CurrentGametype()
 {
 	float f;
 	string s;
-	for (f = 1; f <= MAPINFO_TYPE_ALL; f *= 2) {
+	for (f = 1; f < GAME_END; f++) {
 		s = MapInfo_GetGameTypeCvar(f);
 		if (s != "")
 		if (cvar(s)) {
 			return f;
 		}
 	}
-	return MAPINFO_TYPE_DEATHMATCH;
+	return GAME_DEATHMATCH;
 }
 
 float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
 {
 	if(!MapInfo_Get_ByName(s, 1, 0))
 		return 0;
-	if((MapInfo_Map_supportedGametypes & MapInfo_CurrentGametype()) == 0)
+	if((MapInfo_Map_supportedGametypes & MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype())) == 0)
 		return 0;
 	return 1;
 }
@@ -1011,23 +1033,45 @@ string MapInfo_GetGameTypeCvar(float t)
 {
 	switch(t)
 	{
-		case MAPINFO_TYPE_DEATHMATCH: return "_g_dm";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "_g_tdm";
-		case MAPINFO_TYPE_FREEZETAG: return "_g_freeze";
-		case MAPINFO_TYPE_CLANARENA: return "_g_clanarena";
-		case MAPINFO_TYPE_DOMINATION: return "_g_domination";
-		case MAPINFO_TYPE_CTF: return "_g_ctf";
-		case MAPINFO_TYPE_RUNEMATCH: return "_g_runematch";
-		case MAPINFO_TYPE_CONQUEST: return "_g_conquest";
-		case MAPINFO_TYPE_KEYHUNT: return "_g_keyhunt";
-		case MAPINFO_TYPE_ONSLAUGHT: return "_g_onslaught";
-		case MAPINFO_TYPE_RACE: return "_g_race";
-		case MAPINFO_TYPE_NEXBALL: return "_g_nexball";
-		case MAPINFO_TYPE_CTS: return "_g_cts";
-		case MAPINFO_TYPE_SURVIVE: return "_g_survive";
-		case MAPINFO_TYPE_SINGLE: return "_g_single";
+		case GAME_DEATHMATCH: return "_g_dm";
+		case GAME_TEAM_DEATHMATCH: return "_g_tdm";
+		case GAME_FREEZETAG: return "_g_freeze";
+		case GAME_CLANARENA: return "_g_clanarena";
+		case GAME_DOMINATION: return "_g_domination";
+		case GAME_CTF: return "_g_ctf";
+		case GAME_CATF: return "_g_catf";
+		case GAME_RUNEMATCH: return "_g_runematch";
+		case GAME_CONQUEST: return "_g_conquest";
+		case GAME_KEYHUNT: return "_g_keyhunt";
+		case GAME_ONSLAUGHT: return "_g_onslaught";
+		case GAME_RACE: return "_g_race";
+		case GAME_NEXBALL: return "_g_nexball";
+		case GAME_CTS: return "_g_cts";
+		case GAME_SURVIVE: return "_g_survive";
+		case GAME_SINGLE: return "_g_single";
 		default: return "";
 	}
+}
+
+float MapInfo_GameTypeToMapInfoType(float t) {
+	switch (t) {
+		case GAME_DEATHMATCH:      return MAPINFO_TYPE_DEATHMATCH;
+		case GAME_TEAM_DEATHMATCH: return MAPINFO_TYPE_TEAM_DEATHMATCH;
+		case GAME_FREEZETAG:       return MAPINFO_TYPE_FREEZETAG;
+		case GAME_CLANARENA:       return MAPINFO_TYPE_CLANARENA;
+		case GAME_DOMINATION:      return MAPINFO_TYPE_DOMINATION;
+		case GAME_CTF:             return MAPINFO_TYPE_CTF;
+		case GAME_CATF:            return MAPINFO_TYPE_CTF;
+		case GAME_RUNEMATCH:       return MAPINFO_TYPE_RUNEMATCH;
+		case GAME_CONQUEST:        return MAPINFO_TYPE_CONQUEST;
+		case GAME_KEYHUNT:         return MAPINFO_TYPE_KEYHUNT;
+		case GAME_ONSLAUGHT:       return MAPINFO_TYPE_ONSLAUGHT;
+		case GAME_RACE:            return MAPINFO_TYPE_RACE;
+		case GAME_CTS:             return MAPINFO_TYPE_CTS;
+		case GAME_SURVIVE:         return MAPINFO_TYPE_SURVIVE;
+		case GAME_SINGLE:          return MAPINFO_TYPE_SINGLE;
+	}
+	return 0;
 }
 
 void MapInfo_SwitchGameType(float t)
@@ -1035,7 +1079,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("gamecfg",      "0");
 	float f;
 	string s;
-	for (f = 1; f <= MAPINFO_TYPE_ALL; f *= 2) {
+	for (f = GAME_DEATHMATCH; f < GAME_END; f++) {
 		s = MapInfo_GetGameTypeCvar(f);
 		if (s != "") {
 			cvar_set(s, ((t == f) ? "1" : "0"));
@@ -1061,7 +1105,7 @@ string MapInfo_ListAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 
 	// to make absolutely sure:
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), pRequiredFlags, pForbiddenFlags, 0);
+	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), pRequiredFlags, pForbiddenFlags, 0);
 
 	out = "";
 	for(i = 0; i < MapInfo_count; ++i)
@@ -1088,7 +1132,7 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		MapInfo_SwitchGameType(t);
 	}
 	cvar_settemp_restore();
-	MapInfo_Get_ByName(s, 1, MapInfo_CurrentGametype());
+	MapInfo_Get_ByName(s, 1, MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()));
 }
 
 void MapInfo_ClearTemps()

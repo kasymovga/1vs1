@@ -133,7 +133,7 @@ void GotoFirstMap()
 		cvar_set("g_maplist_index", ftos(n - 1)); // jump to map 0 in GotoNextMap
 
 		MapInfo_Enumerate();
-		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+		MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 
 		if(!DoNextMapOverride())
 			GotoNextMap();
@@ -304,7 +304,7 @@ void spawnfunc___init_dedicated_server(void)
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
 
 void precache()
@@ -707,7 +707,7 @@ void spawnfunc_worldspawn (void)
 	Ban_Init();
 
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype() | GameTypeVote_Mask(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
+	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
@@ -2107,7 +2107,7 @@ void MapVote_Start()
 		return;
 
 	MapInfo_Enumerate();
-	if(MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
+	if(MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
 		mapvote_run = TRUE;
 }
 void MapVote_Think()
@@ -2142,7 +2142,7 @@ void MapVote_Think()
 
 string GotoMap(string m)
 {
-	if not(MapInfo_GetGameTypes(m) & (MapInfo_CurrentGametype() | GameTypeVote_Mask()))
+	if not(MapInfo_GetGameTypes(m) & (MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask()))
 		return "The map you chose is not available on this server.";
 	cvar_set("nextmap", m);
 	cvar_set("timelimit", "-1");
@@ -2256,7 +2256,7 @@ void RestoreGame()
 	// Mapinfo
 	MapInfo_Shutdown();
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
+	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 	WeaponStats_Init();
 	dlc_reload();
 }

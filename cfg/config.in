@@ -1333,6 +1333,7 @@ set _g_dm 0
 set _g_tdm 0
 set _g_domination 0
 set _g_ctf 0
+set _g_catf 0
 set _g_runematch 0
 set _g_conquest 0
 set _g_keyhunt 0

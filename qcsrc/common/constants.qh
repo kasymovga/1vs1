@@ -1,20 +1,24 @@
 null_t NULL;
 
-const float GAME_DEATHMATCH		= 1;
-const float GAME_TEAM_DEATHMATCH	= 2;
-const float GAME_DOMINATION		= 3;
-const float GAME_CTF			= 4;
-const float GAME_RUNEMATCH		= 5;
-const float GAME_CONQUEST		= 6;
-const float GAME_KEYHUNT		= 8;
-const float GAME_ONSLAUGHT	= 10;
-const float GAME_RACE	= 11;
-const float GAME_NEXBALL = 12;
-const float GAME_CTS = 13;
-const float GAME_FREEZETAG = 14;
-const float GAME_CLANARENA = 15;
-const float GAME_SURVIVE = 16;
-const float GAME_SINGLE = 17;
+enum {
+	GAME_DEATHMATCH = 1,
+	GAME_TEAM_DEATHMATCH,
+	GAME_DOMINATION,
+	GAME_CTF,
+	GAME_CATF,
+	GAME_RUNEMATCH,
+	GAME_CONQUEST,
+	GAME_KEYHUNT,
+	GAME_ONSLAUGHT,
+	GAME_RACE,
+	GAME_NEXBALL,
+	GAME_CTS,
+	GAME_FREEZETAG,
+	GAME_CLANARENA,
+	GAME_SURVIVE,
+	GAME_SINGLE,
+	GAME_END
+};
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
