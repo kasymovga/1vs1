@@ -276,19 +276,24 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if not(GameHookChain_ThrowWeaponAllowed(doreduce))
 		return;
-	if not(g_pickup_items)
-		return;
-	if not(g_pickup_weapons)
-		return;
-	if(!W_IsWeaponThrowable(w))
-		return;
-
 	wb = W_WeaponBit(w);
+	float akimbo_throw = Akimbo_Throw(wb);
+	if not(akimbo_throw) {
+		if not(g_pickup_items)
+			return;
+		if not(g_pickup_weapons)
+			return;
+		if(!W_IsWeaponThrowable(w))
+			return;
+	}
+
 	if(self.weapons & wb != wb)
 		return;
 
-	self.weapons &~= wb;
-	W_SwitchWeapon_Force(self, w_getbestweapon(self));
+	if not(akimbo_throw) {
+		self.weapons &~= wb;
+		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+	}
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 	if not(a)
 		return;

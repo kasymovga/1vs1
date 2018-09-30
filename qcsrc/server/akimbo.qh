@@ -1,3 +1,4 @@
+float Akimbo_Throw(float wbit);
 void Akimbo_WeaponFrame();
 void Akimbo_Init();
 entity Akimbo_Owner(entity e);

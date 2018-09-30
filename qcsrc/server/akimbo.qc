@@ -1,6 +1,7 @@
 .float akimbo_weapons;
 .entity akimbo_ghost;
 float g_akimbo_weapons;
+float g_akimbo_throwable;
 float weapons_with_akimbo_support;
 void Akimbo_Clear(entity e);
 
@@ -103,6 +104,15 @@ void Akimbo_PlayerClear(float killed) {
 	Akimbo_PlayerClear_NextLink(killed);
 }
 
+float Akimbo_Throw(float wbit) {
+	if (g_akimbo_weapons)
+	if (self.akimbo_weapons & wbit) {
+		self.akimbo_weapons &~= wbit;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 void Akimbo_Init()
 {
 	float i, j, n;
@@ -140,6 +150,7 @@ void Akimbo_Init()
 		return;
 
 	CACHE_CVAR(g_akimbo_animation_shift);
+	CACHE_CVAR(g_akimbo_throwable);
 	Akimbo_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Akimbo_PlayerClear;
 }
