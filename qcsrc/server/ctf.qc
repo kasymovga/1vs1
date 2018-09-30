@@ -332,11 +332,11 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		WaypointSprite_Ping(p.waypointsprite_attachedforcarrier);
 		WaypointSprite_DetachCarrier(p);
 	}
-	else
-	{
-		bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
-		backtrace("Flag carrier had no flag sprite?!?");
-	}
+	//else
+	//{
+	//	bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
+	//	backtrace("Flag carrier had no flag sprite?!?");
+	//}
 	GameStatus_Set(strcat(Team_ColorCode(e.team), Team_ColorName(e.team), " Flag^7 dropped"), 1);
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 
