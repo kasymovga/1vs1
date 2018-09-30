@@ -153,7 +153,7 @@ void Ice_Think()
 		self.unfroze_progress = min(0, oldprogress - ICE_FRAME_TIME);
 
 	if (self.unfroze_progress != oldprogress)
-		self.alpha = sv_model_ice_alpha * max(0.01, (g_freeze_unfroze_time - self.unfroze_progress));
+		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.unfroze_progress / g_freeze_unfroze_time));
 }
 
 var void(float killed) Ice_PlayerClear_NextLink;
