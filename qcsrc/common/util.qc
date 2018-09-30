@@ -186,6 +186,7 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_TEAM_DEATHMATCH) return "tdm";
 	else if (g == GAME_DOMINATION) return "dom";
 	else if (g == GAME_CTF) return "ctf";
+	else if (g == GAME_CATF) return "catf";
 	else if (g == GAME_RUNEMATCH) return "rune";
 	else if (g == GAME_KEYHUNT) return "kh";
 	else if (g == GAME_ONSLAUGHT) return "ons";

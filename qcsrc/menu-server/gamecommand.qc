@@ -54,7 +54,7 @@ float GameCommand_Generic(string command)
 		else if(argv(1) == "cleanup")
 		{
 			MapInfo_Enumerate();
-			MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+			MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 			n = tokenizebyseparator(cvar_string("g_maplist"), " ");
 			s2 = "";
 			for(i = 0; i < n; ++i)

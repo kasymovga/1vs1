@@ -7,6 +7,7 @@ float rb_team_alive;
 float rb_enddelay;
 float rb_startdelay;
 float rb_after_warmup;
+float rb_score_field;
 float round_warmup;
 
 float Roundbased_Active;
@@ -25,6 +26,7 @@ float Roundbased_PlayerCanFire(entity plr, float wep) {
 }
 
 void Roundbased_SetRoundStart() {
+	Roundbased_Active = 0;
 	Roundbased_RestartTime = time + rb_enddelay;
 	round_warmup = Roundbased_RestartTime + rb_startdelay;
 }
@@ -58,7 +60,6 @@ void Roundbased_ServerFrame()
 	if (rb_team_check >= 0) {
 		GameStatus_Set("^2Awaiting players...\n", 1);
 
-		Roundbased_Active = 0;
 		Roundbased_SetRoundStart();
 		rb_need_check_teams = 0;
 		return;
@@ -138,7 +139,7 @@ void Roundbased_ServerFrame()
 		rb_need_check_teams = 0;
 	}
 	if (rb_team_alive > 0 && rb_have_death_players)
-		TeamScore_AddToTeam(rb_team_alive, ST_SCORE, 1);
+		TeamScore_AddToTeam(rb_team_alive, rb_score_field, 1);
 	else if (rb_team_alive < 0)
 		return;
 
@@ -154,7 +155,6 @@ void Roundbased_ServerFrame()
 		FOR_EACH_REALCLIENT(plr)
 			announce_force(plr, announce_sound);
 
-		Roundbased_Active = 0;
 		Roundbased_SetRoundStart();
 	}
 }
@@ -176,6 +176,10 @@ void Roundbased_DamageForceModsSet(entity targ, entity attacker, float deathtype
 	Roundbased_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
+void Roundbased_SetScoreField(float sf) {
+	rb_score_field = sf;
+}
+
 void Roundbased_Init(float enddelay, float startdelay) {
 	precache_sound("domination/claim.wav");
 	precache_sound("announcer/robotic/begin.wav");
@@ -185,6 +189,7 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	precache_sound("ctf/blue_capture.wav");
 	precache_sound("ctf/red_capture.wav");
 	Roundbased_NeedCheckTeams();
+	rb_score_field = ST_SCORE;
 	rb_enddelay = enddelay;
 	rb_startdelay = startdelay;
 	Roundbased_RestartTime = 0;

@@ -473,6 +473,9 @@ float ctf_flagcarrier_visible() {
 void FlagTouch()
 {
 	if(gameover) return;
+	if (g_catf)
+	if not(Roundbased_Active)
+		return;
 
 	local float t;
 	local entity player;
@@ -533,6 +536,9 @@ void FlagTouch()
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
+		if (g_catf)
+			Roundbased_SetRoundStart();
+
 		// give credit to the individual player
 		UpdateFrags(other, CTF_SCORE_VALUE(score_capture));
 
@@ -1237,6 +1243,12 @@ void ctf_init()
 	GameHook_DropCarried = ctf_DropCarried;
 	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
 	GameHook_BotChooseRole = havocbot_chooserole_ctf;
+
+	if (g_catf) {
+		Roundbased_Init(cvar("g_catf_enddelay"), cvar("g_catf_startdelay"));
+		Clanarena_Init_Shared();
+		Roundbased_SetScoreField(ST_CTF_CAPS);
+	}
 };
 
 void ctf_setstatus2(entity flag, float shift)

@@ -217,6 +217,8 @@ cl_client.qc
 t_plats.qc
 antilag.qc
 
+roundbased.qc
+clanarena_shared.qc
 ctf.qc
 domination.qc
 mode_onslaught.qc
@@ -266,8 +268,6 @@ irc.qc
 akimbo.qc
 
 info_messages.qc
-
-roundbased.qc
 
 freeze.qc
 

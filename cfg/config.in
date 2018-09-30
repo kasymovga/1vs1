@@ -525,6 +525,39 @@ set ca_g_warmup_start_ammo_cells 30
 set ca_g_balance_health_rotlinear 0
 set ca_g_score_damage 1
 
+set g_catf_enddelay 3
+set g_catf_startdelay 10
+set catf_g_start_weapon_shotgun 1
+set catf_g_start_weapon_uzi 1
+set catf_g_start_weapon_grenadelauncher 1
+set catf_g_start_weapon_crylink 1
+set catf_g_start_weapon_electro 1
+set catf_g_start_weapon_nex 1
+set catf_g_start_weapon_hagar 1
+set catf_g_start_weapon_rocketlauncher 1
+set catf_g_pickup_items 0
+set catf_g_warmup_start_armor 200
+set catf_g_warmup_start_health 200
+set catf_g_balance_armor_start 200
+set catf_g_balance_armor_rot 0
+set catf_g_balance_armor_regen 0
+set catf_g_balance_health_start 200
+set catf_g_balance_health_rot 0
+set catf_g_balance_health_regen 0
+set catf_g_powerup_superhealth 0
+set catf_g_powerup_shield 0
+set catf_g_powerup_strength 0
+set catf_g_start_ammo_nails 50
+set catf_g_start_ammo_shells 30
+set catf_g_start_ammo_rockets 60
+set catf_g_start_ammo_cells 30
+set catf_g_warmup_start_ammo_nails 50
+set catf_g_warmup_start_ammo_shells 30
+set catf_g_warmup_start_ammo_rockets 40
+set catf_g_warmup_start_ammo_cells 30
+set catf_g_balance_health_rotlinear 0
+set catf_g_score_damage 1
+
 set timelimit_default 15
 set fraglimit_default 10
 
@@ -1401,6 +1434,13 @@ set akimbo_ca_g_pickup_cells 5
 set akimbo_ca_g_pickup_rockets 5
 set akimbo_ca_g_pickup_bullets 10
 set akimbo_ca_g_pickup_shells 5
+set akimbo_catf_g_pinata 1
+set akimbo_catf_g_pinata_drop_all 1
+set akimbo_catf_g_start_delay 0
+set akimbo_catf_g_pickup_cells 5
+set akimbo_catf_g_pickup_rockets 5
+set akimbo_catf_g_pickup_bullets 10
+set akimbo_catf_g_pickup_shells 5
 
 set cra_g_start_weapon_laser 0
 set cra_g_start_weapon_shotgun 0
