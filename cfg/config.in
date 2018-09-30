@@ -559,6 +559,9 @@ set catf_g_warmup_start_ammo_cells 30
 set catf_g_balance_health_rotlinear 0
 set catf_g_score_damage 1
 
+set g_ctft_startdelay 5
+set g_ctft_enddelay 5
+
 set timelimit_default 15
 set fraglimit_default 10
 
