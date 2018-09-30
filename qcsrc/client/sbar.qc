@@ -450,7 +450,7 @@ string Sbar_DefaultColumnLayout()
 		"ping pl ?cn name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
 		"?damage ?bestwep +ca,ft,surv,catf/status "
-		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
+		"+ctf,catf/caps +ctf,catf/pickups +ctf,catf/fckills +ctf,catf/returns ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals ",
