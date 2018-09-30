@@ -520,6 +520,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "dom")     return GAME_DOMINATION;
 	else if(t == "ctf")     return GAME_CTF;
 	else if(t == "catf")    return GAME_CATF;
+	else if(t == "ctft")    return GAME_CTFT;
 	else if(t == "rune")    return GAME_RUNEMATCH;
 	else if(t == "conq")    return GAME_CONQUEST;
 	else if(t == "kh")      return GAME_KEYHUNT;
@@ -541,6 +542,7 @@ string MapInfo_String_FromType(float t)
 	else if(t == GAME_DOMINATION     ) return "dom"    ;
 	else if(t == GAME_CTF            ) return "ctf"    ;
 	else if(t == GAME_CATF           ) return "catf"   ;
+	else if(t == GAME_CTFT           ) return "ctfa"   ;
 	else if(t == GAME_RUNEMATCH      ) return "rune"   ;
 	else if(t == GAME_CONQUEST       ) return "conq"   ;
 	else if(t == GAME_KEYHUNT        ) return "kh"     ;
@@ -564,6 +566,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Capture The Flag";
 	} else if (t == GAME_CATF) {
 		return "CTF with CA";
+	} else if (t == GAME_CTFT) {
+		return "CTF with FT";
 	} else if (t == GAME_RUNEMATCH) {
 		return "Runematch";
 	} else if (t == GAME_CONQUEST) {
@@ -1040,6 +1044,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case GAME_DOMINATION: return "_g_domination";
 		case GAME_CTF: return "_g_ctf";
 		case GAME_CATF: return "_g_catf";
+		case GAME_CTFT: return "_g_ctft";
 		case GAME_RUNEMATCH: return "_g_runematch";
 		case GAME_CONQUEST: return "_g_conquest";
 		case GAME_KEYHUNT: return "_g_keyhunt";
@@ -1062,6 +1067,7 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 		case GAME_DOMINATION:      return MAPINFO_TYPE_DOMINATION;
 		case GAME_CTF:             return MAPINFO_TYPE_CTF;
 		case GAME_CATF:            return MAPINFO_TYPE_CTF;
+		case GAME_CTFT:            return MAPINFO_TYPE_CTF;
 		case GAME_RUNEMATCH:       return MAPINFO_TYPE_RUNEMATCH;
 		case GAME_CONQUEST:        return MAPINFO_TYPE_CONQUEST;
 		case GAME_KEYHUNT:         return MAPINFO_TYPE_KEYHUNT;

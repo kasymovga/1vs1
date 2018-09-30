@@ -449,12 +449,12 @@ string Sbar_DefaultColumnLayout()
 	return strcat( // fteqcc sucks
 		"ping pl ?cn name | ",
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
-		"?damage ?bestwep +ca,ft,surv,catf/status "
-		"+ctf,catf/caps +ctf,catf/pickups +ctf,catf/fckills +ctf,catf/returns ",
+		"?damage ?bestwep +ca,ft,surv,catf,ctft/status "
+		"+ctf,catf,ctft/caps +ctf,catf,ctft/pickups +ctf,catf,ctft/fckills +ctf,catf,ctft/returns ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals ",
-		"+ft/revs -race,nexball/score");
+		"+ft,ctft/revs -race,nexball/score");
 }
 
 void Cmd_Sbar_SetFields(float argc)

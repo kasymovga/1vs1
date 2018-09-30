@@ -473,7 +473,7 @@ float ctf_flagcarrier_visible() {
 void FlagTouch()
 {
 	if(gameover) return;
-	if (g_catf)
+	if (g_catf || g_ctft)
 	if not(Roundbased_Active)
 		return;
 
@@ -536,7 +536,7 @@ void FlagTouch()
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-		if (g_catf)
+		if (g_catf || g_ctft)
 			Roundbased_SetRoundStart();
 
 		// give credit to the individual player
@@ -1107,6 +1107,14 @@ void ctf_delayedinit()
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
+	if (g_catf) {
+		Clanarena_Init_Shared("catf");
+		Roundbased_SetScoreField(ST_CTF_CAPS);
+	} else if (g_ctft) {
+		Freeze_Init_Shared("ctft");
+		Roundbased_SetScoreField(ST_CTF_CAPS);
+		GameHook_BotChooseRole = havocbot_chooserole_ft;
+	}
 };
 
 var void(float killed) ctf_PlayerClear_NextLink;
@@ -1211,7 +1219,7 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_showenemycarrier_delay);
 	if(g_campaign)
 		g_ctf_win_mode = 2;
-	else if (g_catf)
+	else if (g_catf || g_ctft)
 		g_ctf_win_mode = 0;
 	else
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
@@ -1243,11 +1251,6 @@ void ctf_init()
 	GameHook_DropCarried = ctf_DropCarried;
 	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
 	GameHook_BotChooseRole = havocbot_chooserole_ctf;
-
-	if (g_catf) {
-		Clanarena_Init_Shared("catf");
-		Roundbased_SetScoreField(ST_CTF_CAPS);
-	}
 };
 
 void ctf_setstatus2(entity flag, float shift)

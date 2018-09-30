@@ -86,6 +86,7 @@ void WriteGameCvars()
 	cvar_set("_g_domination", ftos(g_domination));
 	cvar_set("_g_ctf", ftos(g_ctf));
 	cvar_set("_g_catf", ftos(g_catf));
+	cvar_set("_g_ctft", ftos(g_ctft));
 	cvar_set("_g_runematch", ftos(g_runematch));
 	cvar_set("_g_conquest", ftos(g_conquest));
 	cvar_set("_g_keyhunt", ftos(g_keyhunt));
@@ -114,6 +115,7 @@ void ReadGameCvars()
 		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("_g_domination")));
 		found += (g_ctf = (!found && (prev != GAME_CTF) && cvar("_g_ctf")));
 		found += (g_catf = (!found && (prev != GAME_CATF) && cvar("_g_catf")));
+		found += (g_ctft = (!found && (prev != GAME_CTFT) && cvar("_g_ctft")));
 		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("_g_runematch")));
 		found += (g_conquest = (!found && (prev != GAME_CONQUEST) && cvar("_g_conquest")));
 		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("_g_keyhunt")));
@@ -246,12 +248,14 @@ void InitGameplayMode()
 		dom_init();
 	}
 
-	if(g_ctf || g_catf)
+	if(g_ctf || g_catf || g_ctft)
 	{
 		if (g_ctf)
 			game = GAME_CTF;
-		else
+		else if (g_catf)
 			game = GAME_CATF;
+		else if (g_ctft)
+			game = GAME_CTFT;
 
 		ActivateTeamplay();
 		ctf_init();
