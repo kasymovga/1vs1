@@ -1,5 +1,3 @@
-float g_clanarena_enddelay;
-float g_clanarena_startdelay;
 float g_clanarena_healthrotpause_on_damage;
 
 float Clanarena_HandleFrags(entity attacker, entity targ, float f) {
@@ -28,15 +26,12 @@ float Clanarena_FragLimitOverride() {
 
 void Clanarena_Init()
 {
-	CACHE_CVAR(g_clanarena_startdelay);
-	CACHE_CVAR(g_clanarena_enddelay);
 	CACHE_CVAR(g_clanarena_healthrotpause_on_damage);
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
-	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
-	Clanarena_Init_Shared();
+	Clanarena_Init_Shared("clanarena");
 }

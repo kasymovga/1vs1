@@ -1245,8 +1245,7 @@ void ctf_init()
 	GameHook_BotChooseRole = havocbot_chooserole_ctf;
 
 	if (g_catf) {
-		Roundbased_Init(cvar("g_catf_enddelay"), cvar("g_catf_startdelay"));
-		Clanarena_Init_Shared();
+		Clanarena_Init_Shared("catf");
 		Roundbased_SetScoreField(ST_CTF_CAPS);
 	}
 };
