@@ -1,14 +1,6 @@
-entity ca_controller;
-
 float g_clanarena_enddelay;
 float g_clanarena_startdelay;
 float g_clanarena_healthrotpause_on_damage;
-
-void Clanarena_Think()
-{
-	self.nextthink = time;
-	Roundbased_TeamArenaThink();
-}
 
 var void(entity spot) Clanarena_Spawn_NextLink;
 void Clanarena_Spawn(entity spot) {
@@ -77,9 +69,6 @@ void Clanarena_Init()
 	Clanarena_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Clanarena_PlayerClear;
 	Roundbased_Init(g_clanarena_enddelay, g_clanarena_startdelay);
-	ca_controller = spawn();
-	ca_controller.think = Clanarena_Think;
-	ca_controller.nextthink = time;
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", 0);
 }

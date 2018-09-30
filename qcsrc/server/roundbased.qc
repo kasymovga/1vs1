@@ -29,8 +29,10 @@ void Roundbased_SetRoundStart() {
 	round_warmup = Roundbased_RestartTime + rb_startdelay;
 }
 
-void Roundbased_TeamArenaThink()
+var void() Roundbased_ServerFrame_NextLink;
+void Roundbased_ServerFrame()
 {
+	Roundbased_ServerFrame_NextLink();
 	if (gameover)
 		return;
 
@@ -195,4 +197,7 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
 	Roundbased_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = Roundbased_DamageForceModsSet;
+
+	Roundbased_ServerFrame_NextLink = GameHookChain_ServerFrame;
+	GameHookChain_ServerFrame = Roundbased_ServerFrame;
 }

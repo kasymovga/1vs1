@@ -1,16 +1,9 @@
 float g_freeze_enddelay;
 float g_freeze_startdelay;
-entity freeze_controller;
 #define SP_REVIVE SP_GAME_SCORE1
 
 void Freeze_PlayerClear(float killed);
 float Freeze_HandleFrags(entity attacker, entity targ, float f);
-
-void Freeze_Think()
-{
-	self.nextthink = time;
-	Roundbased_TeamArenaThink();
-}
 
 var void(entity spot) Freeze_Spawn_NextLink;
 void Freeze_Spawn(entity spot)
@@ -63,9 +56,6 @@ void Freeze_Init()
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = Freeze_FragLimitOverride;
 	GameHook_BotChooseRole = havocbot_chooserole_ft;
-	freeze_controller = spawn();
-	freeze_controller.think = Freeze_Think;
-	freeze_controller.nextthink = time;
 	Roundbased_Init(g_freeze_enddelay, g_freeze_startdelay);
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	ScoreInfo_SetLabel_PlayerScore(SP_REVIVE, "revs", SFL_SORT_PRIO_SECONDARY);
