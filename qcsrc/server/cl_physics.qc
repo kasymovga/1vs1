@@ -11,7 +11,6 @@ float sv_csqc_physic;
 .float swamp_slowdown;
 .float lastground;
 .float spectatorspeed;
-.float doublejump_nextjumptime;
 
 #if 0
 float developer_shtest;
@@ -299,7 +298,7 @@ void SV_PlayerPhysics()
 
 	physic_flags = self.flags;
 	physic_velocity = self.velocity;
-	physic_cantjump = (PLAYER_DEAD(self) || (time < self.doublejump_nextjumptime));
+	physic_cantjump = PLAYER_DEAD(self);
 	physic_deadflag = self.deadflag;
 	physic_crouch = self.crouch;
 	physic_button_jump = self.BUTTON_JUMP;
