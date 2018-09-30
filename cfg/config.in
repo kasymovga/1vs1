@@ -525,8 +525,8 @@ set ca_g_warmup_start_ammo_cells 30
 set ca_g_balance_health_rotlinear 0
 set ca_g_score_damage 1
 
-set g_catf_enddelay 3
-set g_catf_startdelay 10
+set g_catf_enddelay 5
+set g_catf_startdelay 5
 set catf_g_start_weapon_shotgun 1
 set catf_g_start_weapon_uzi 1
 set catf_g_start_weapon_grenadelauncher 1
