@@ -21,7 +21,6 @@ CLASS(NexuizMapInfoDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizMapInfoDialog, typeClanArenaLabel, entity, NULL)
 	ATTRIB(NexuizMapInfoDialog, typeKeyHuntLabel, entity, NULL)
 	ATTRIB(NexuizMapInfoDialog, typeCTFLabel, entity, NULL)
-	ATTRIB(NexuizMapInfoDialog, typeAssaultLabel, entity, NULL)
 	ATTRIB(NexuizMapInfoDialog, typeOnslaughtLabel, entity, NULL)
 	ATTRIB(NexuizMapInfoDialog, typeRaceLabel, entity, NULL)
 	ATTRIB(NexuizMapInfoDialog, typeCTSLabel, entity, NULL)
@@ -129,8 +128,6 @@ void fillNexuizMapInfoDialog(entity me)
 			me.typeKeyHuntLabel = e;
 		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "CTF"));
 			me.typeCTFLabel = e;
-		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Assault"));
-			me.typeAssaultLabel = e;
 		me.TD(me, 1, wgt, e = makeNexuizTextLabel(0, "Onslaught"));
 			me.typeOnslaughtLabel = e;
 	me.TR(me);
