@@ -5,6 +5,7 @@ float g_freeze_slowdown;
 float sv_model_ice_scale;
 float sv_model_ice_z;
 float sv_model_ice_alpha;
+float sv_model_ice_use_skins;
 .entity ice;
 .entity last_unfrozer;
 .float unfroze_progress;
@@ -55,7 +56,11 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.ice.think = Ice_Think;
 	self.ice.nextthink = time;
 	self.ice.team = self.team;
-	self.ice.colormod = TeamColor(self.team);
+	if (sv_model_ice_use_skins)
+		self.ice.skin = TeamColorSkin(self.team);
+	else
+		self.ice.colormod = TeamColor(self.team);
+
 	WaypointSprite_AttachCarrier("helpme", self);
 	setattachment(self.ice, self, "");
 	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
@@ -211,6 +216,7 @@ void Ice_Init() {
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);
 	CACHE_CVAR(sv_model_ice_z);
+	CACHE_CVAR(sv_model_ice_use_skins);
 	GameHook_DeathHandle = Ice_DeathHandle;
 	Ice_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Ice_PlayerClear;

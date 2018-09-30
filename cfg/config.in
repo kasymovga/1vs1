@@ -363,6 +363,7 @@ set sv_model_ice "models/ebomb.mdl"
 set sv_model_ice_alpha 0.5
 set sv_model_ice_scale "8"
 set sv_model_ice_z "15"
+set sv_model_ice_use_skins 0
 
 set g_minstagib_nolaserdamage 1
 set g_minstagib_health_drop 0
