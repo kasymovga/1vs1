@@ -344,8 +344,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "runematch_spawn_point")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;
-				else if(v == "target_assault_roundend")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ONSLAUGHT;
 				else if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
@@ -376,7 +374,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	diameter = vlen(mapMaxs - mapMins);
 
-	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF | MAPINFO_TYPE_ASSAULT | MAPINFO_TYPE_RACE | MAPINFO_TYPE_NEXBALL);
+	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF | MAPINFO_TYPE_RACE | MAPINFO_TYPE_NEXBALL);
 	if(twoBaseModes && (MapInfo_Map_supportedGametypes == twoBaseModes))
 	{
 		// we have a CTF-only or Assault-only map. Don't add other modes then,
@@ -431,7 +429,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType)
 	if(!(pThisType & pWantedType))
 		return;
 	
-	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
+	if(pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
 	}
@@ -508,7 +506,6 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "rune")    return MAPINFO_TYPE_RUNEMATCH;
 	else if(t == "conq")    return MAPINFO_TYPE_CONQUEST;
 	else if(t == "kh")      return MAPINFO_TYPE_KEYHUNT;
-	else if(t == "as")      return MAPINFO_TYPE_ASSAULT;
 	else if(t == "ons")     return MAPINFO_TYPE_ONSLAUGHT;
 	else if(t == "rc")      return MAPINFO_TYPE_RACE;
 	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
@@ -530,7 +527,6 @@ string MapInfo_String_FromType(float t)
 	else if(t == MAPINFO_TYPE_RUNEMATCH      ) return "rune"   ;
 	else if(t == MAPINFO_TYPE_CONQUEST       ) return "conq"   ;
 	else if(t == MAPINFO_TYPE_KEYHUNT        ) return "kh"     ;
-	else if(t == MAPINFO_TYPE_ASSAULT        ) return "as"     ;
 	else if(t == MAPINFO_TYPE_ONSLAUGHT      ) return "ons"    ;
 	else if(t == MAPINFO_TYPE_RACE           ) return "rc"     ;
 	else if(t == MAPINFO_TYPE_NEXBALL        ) return "nexball";
@@ -549,8 +545,6 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Team Deathmatch";
 	} else if (t == MAPINFO_TYPE_CTF) {
 		return "Capture The Flag";
-	} else if (t == MAPINFO_TYPE_ASSAULT) {
-		return "Assault";
 	} else if (t == MAPINFO_TYPE_RUNEMATCH) {
 		return "Runematch";
 	} else if (t == MAPINFO_TYPE_CONQUEST) {
@@ -710,7 +704,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF)             fputs(fh, "type ctf 300 20 10\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RUNEMATCH)       fputs(fh, "type rune 200 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEYHUNT)         fputs(fh, "type kh 1000 20 3\n");
-		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ASSAULT)         fputs(fh, "type as 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE)            fputs(fh, "type rc 20 5 7 15\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ONSLAUGHT)       fputs(fh, "type ons 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_NEXBALL)         fputs(fh, "type nexball 5 20\n");
@@ -1027,7 +1020,6 @@ string MapInfo_GetGameTypeCvar(float t)
 		case MAPINFO_TYPE_RUNEMATCH: return "_g_runematch";
 		case MAPINFO_TYPE_CONQUEST: return "_g_conquest";
 		case MAPINFO_TYPE_KEYHUNT: return "_g_keyhunt";
-		case MAPINFO_TYPE_ASSAULT: return "_g_assault";
 		case MAPINFO_TYPE_ONSLAUGHT: return "_g_onslaught";
 		case MAPINFO_TYPE_RACE: return "_g_race";
 		case MAPINFO_TYPE_NEXBALL: return "_g_nexball";
