@@ -2129,7 +2129,7 @@ void Sbar_Reset (void)
 	// reset gametype specific icons
 	if(gametype == GAME_KEYHUNT)
 		CSQC_kh_hudreset();
-	else if(gametype == GAME_CTF)
+	else if(gametype == GAME_CTF || gametype == GAME_CATF || gametype == GAME_CTFT)
 		CSQC_ctf_hudreset();
 }
 
@@ -2177,7 +2177,7 @@ var void() Sbar_GameType_hud;
 void Sbar_GameType_Init() {
 	if(gametype == GAME_KEYHUNT)
 		Sbar_GameType_hud = CSQC_kh_hud;
-	else if(gametype == GAME_CTF)
+	else if(gametype == GAME_CTF || gametype == GAME_CATF || gametype == GAME_CTFT)
 		Sbar_GameType_hud = CSQC_ctf_hud;
 	else if(gametype == GAME_NEXBALL)
 		Sbar_GameType_hud = CSQC_nb_hud;
