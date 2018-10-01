@@ -1076,6 +1076,7 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 		case GAME_CTS:             return MAPINFO_TYPE_CTS;
 		case GAME_SURVIVE:         return MAPINFO_TYPE_SURVIVE;
 		case GAME_SINGLE:          return MAPINFO_TYPE_SINGLE;
+		case GAME_NEXBALL:         return MAPINFO_TYPE_NEXBALL;
 	}
 	return 0;
 }
