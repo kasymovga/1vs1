@@ -229,7 +229,6 @@ void InitGameplayMode()
 	{
 		game = GAME_FREEZETAG;
 		ActivateTeamplay();
-		tdm_init();
 		Freeze_Init();
 	}
 
@@ -237,7 +236,6 @@ void InitGameplayMode()
 	{
 		game = GAME_CLANARENA;
 		ActivateTeamplay();
-		tdm_init();
 		Clanarena_Init();
 	}
 
