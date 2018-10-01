@@ -391,5 +391,5 @@ float Radio_GameCommandHandle(string cmd, float tokens) {
             stuffcmd(e, "radio 1\n");
         return TRUE;
     }
-	return FALSE;
+	return Radio_GameCommandHandle_NextLink(cmd, tokens);
 }
