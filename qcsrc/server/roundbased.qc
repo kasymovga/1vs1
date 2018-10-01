@@ -31,6 +31,13 @@ void Roundbased_SetRoundStart() {
 	round_warmup = Roundbased_RestartTime + rb_startdelay;
 }
 
+void Roundbased_SetRoundStartWithWinner(float winner) {
+	rb_winner_team = winner;
+	Roundbased_Active = 0;
+	Roundbased_RestartTime = time + rb_enddelay;
+	round_warmup = Roundbased_RestartTime + rb_startdelay;
+}
+
 var void() Roundbased_ServerFrame_NextLink;
 void Roundbased_ServerFrame()
 {
@@ -59,8 +66,7 @@ void Roundbased_ServerFrame()
 	}
 	if (rb_team_check >= 0) {
 		GameStatus_Set("^2Awaiting players...\n", 1);
-
-		Roundbased_SetRoundStart();
+		Roundbased_SetRoundStartWithWinner(0);
 		rb_need_check_teams = 0;
 		return;
 	}
@@ -97,6 +103,8 @@ void Roundbased_ServerFrame()
 			string winner_message;
 			if (rb_winner_team > 0)
 				winner_message = strcat("^2Round finished!\n", Team_ColorCode(rb_winner_team), Team_ColorName(rb_winner_team), " Team^2 wins!\n");
+			else if (rb_winner_team < 0)
+				winner_message = "^1Round aborted!\n";
 			else
 				winner_message = "";
 			float countdown = ceil(round_warmup - time);
@@ -180,6 +188,16 @@ void Roundbased_SetScoreField(float sf) {
 	rb_score_field = sf;
 }
 
+var float(string cmd, float tokens) Roundbased_GameCommandHandle_NextLink;
+float Roundbased_GameCommandHandle(string cmd, float tokens) {
+	if (cmd == "endround") {
+		if (Roundbased_Active) {
+			Roundbased_SetRoundStartWithWinner(-1);
+		}
+	}
+	return Roundbased_GameCommandHandle_NextLink(cmd, tokens);
+}
+
 void Roundbased_Init(float enddelay, float startdelay) {
 	precache_sound("domination/claim.wav");
 	precache_sound("announcer/robotic/begin.wav");
@@ -202,7 +220,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
 	Roundbased_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = Roundbased_DamageForceModsSet;
-
 	Roundbased_ServerFrame_NextLink = GameHookChain_ServerFrame;
 	GameHookChain_ServerFrame = Roundbased_ServerFrame;
+	Roundbased_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
+	GameHookChain_GameCommandHandle = Roundbased_GameCommandHandle;
 }

@@ -574,6 +574,7 @@ set sv_dlc_maps ""
 set sv_dlc_server_only ""
 set _map_dlc ""
 alias dlc_require "sv_cmd dlc_require $*"
+alias endround "sv_cmd endround"
 
 set g_conquest 0
 set g_conquest_capture_time 5

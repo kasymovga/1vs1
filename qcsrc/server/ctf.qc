@@ -537,7 +537,7 @@ void FlagTouch()
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 		if (g_catf || g_ctft)
-			Roundbased_SetRoundStart();
+			Roundbased_SetRoundStartWithWinner(other.team);
 
 		// give credit to the individual player
 		UpdateFrags(other, CTF_SCORE_VALUE(score_capture));
