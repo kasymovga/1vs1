@@ -607,7 +607,10 @@ void GameCommand(string command)
 	}
 
 	if (cmd == "bprint") {
-		bprint(substring(command, argv_start_index(1), -1), "\n");
+		FOR_EACH_REALCLIENT(e) {
+			if (e.netaddress != "local")
+				sprint(e, strcat(substring(command, argv_start_index(1), -1), "\n"));
+		}
 		return;
 	}
 
