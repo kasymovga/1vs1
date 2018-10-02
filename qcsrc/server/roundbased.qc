@@ -191,9 +191,10 @@ void Roundbased_SetScoreField(float sf) {
 var float(string cmd, float tokens) Roundbased_GameCommandHandle_NextLink;
 float Roundbased_GameCommandHandle(string cmd, float tokens) {
 	if (cmd == "endround") {
-		if (Roundbased_Active) {
+		if (Roundbased_Active)
 			Roundbased_SetRoundStartWithWinner(-1);
-		}
+
+		return TRUE;
 	}
 	return Roundbased_GameCommandHandle_NextLink(cmd, tokens);
 }
