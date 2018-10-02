@@ -1,3 +1,4 @@
+float g_runematch;
 float rune_numspawns;
 
 float g_balance_curse_altruism_damage_factor;
@@ -776,9 +777,7 @@ void runematch_PlayerClear(float killed) {
 
 void runematch_init()
 {
-	if not(g_runematch)
-		return;
-
+	g_runematch = 1;
 	GameHook_FragsHandle = RunematchHandleFrags;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_WarmupAllowed = false_WarmupAllowed;

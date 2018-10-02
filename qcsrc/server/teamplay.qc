@@ -81,69 +81,23 @@ void entcs_init();
 
 void WriteGameCvars()
 {
-	cvar_set("_g_dm", ftos(g_dm));
-	cvar_set("_g_tdm", ftos(g_tdm));
-	cvar_set("_g_domination", ftos(g_domination));
-	cvar_set("_g_ctf", ftos(g_ctf));
-	cvar_set("_g_catf", ftos(g_catf));
-	cvar_set("_g_ctft", ftos(g_ctft));
-	cvar_set("_g_runematch", ftos(g_runematch));
-	cvar_set("_g_conquest", ftos(g_conquest));
-	cvar_set("_g_keyhunt", ftos(g_keyhunt));
-	cvar_set("_g_onslaught", ftos(g_onslaught));
-	cvar_set("_g_race", ftos(g_race));
-	cvar_set("_g_nexball", ftos(g_nexball));
-	cvar_set("_g_cts", ftos(g_cts));
-	cvar_set("_g_freeze", ftos(g_freeze));
-	cvar_set("_g_clanarena", ftos(g_clanarena));
-	cvar_set("_g_survive", ftos(g_survive));
-	cvar_set("_g_single", ftos(g_single));
+	float i;
+	for (i = GAME_DEATHMATCH; i < GAME_END; i++) {
+		cvar_set(MapInfo_GetGameTypeCvar(i), ftos(game == i));
+	}
 }
 
 void ReadGameCvars()
 {
-	float found;
-	float prev;
-	float i;
-
-	found = 0;
-	prev = cvar("gamecfg");
-	for(i = 0; i < 2; ++i)
-	{
-		found += (g_dm = (!found && (prev != GAME_DEATHMATCH) && cvar("_g_dm")));
-		found += (g_tdm = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("_g_tdm")));
-		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("_g_domination")));
-		found += (g_ctf = (!found && (prev != GAME_CTF) && cvar("_g_ctf")));
-		found += (g_catf = (!found && (prev != GAME_CATF) && cvar("_g_catf")));
-		found += (g_ctft = (!found && (prev != GAME_CTFT) && cvar("_g_ctft")));
-		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("_g_runematch")));
-		found += (g_conquest = (!found && (prev != GAME_CONQUEST) && cvar("_g_conquest")));
-		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("_g_keyhunt")));
-		found += (g_onslaught = (!found && (prev != GAME_ONSLAUGHT) && cvar("_g_onslaught")));
-		found += (g_race = (!found && (prev != GAME_RACE) && cvar("_g_race")));
-		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("_g_nexball")));
-		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("_g_cts")));
-		found += (g_freeze = (!found && (prev != GAME_FREEZETAG) && cvar("_g_freeze")));
-		found += (g_clanarena = (!found && (prev != GAME_CLANARENA) && cvar("_g_clanarena")));
-		found += (g_survive = (!found && (prev != GAME_SURVIVE) && cvar("_g_survive")));
-		found += (g_single = (!found && (prev != GAME_SINGLE) && cvar("_g_single")));
-
-		if(found)
-			break;
-
-		prev = -1; // second attempt takes place WITHOUT prev set
-	}
-
-	if(!found)
-		g_dm = 1;
-
-	if(g_dm && cvar("deathmatch_force_teamplay"))
-	{
-		g_dm = 0;
-		g_tdm = 1;
-	}
-
+	game = GAME_DEATHMATCH;
 	teamplay = 0;
+	float i;
+	for (i = GAME_DEATHMATCH; i < GAME_END; i++) {
+		if (cvar(MapInfo_GetGameTypeCvar(i))) {
+			game = i;
+			break;
+		}
+	}
 }
 
 void default_delayedinit()
@@ -176,7 +130,6 @@ void InitGameplayMode()
 
 	// make sure only ONE type is selected
 	ReadGameCvars();
-	WriteGameCvars();
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
@@ -212,108 +165,80 @@ void InitGameplayMode()
 	ReadGameCvars();
 
 	gamemode_name = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
-	if(g_dm)
+	if(game == GAME_TEAM_DEATHMATCH)
 	{
-		game = GAME_DEATHMATCH;
-	}
-
-	if(g_tdm)
-	{
-		game = GAME_TEAM_DEATHMATCH;
 		ActivateTeamplay();
 		GameHook_FragLimitOverride = tdm_FragLimitOverride;
 		tdm_init();
 	}
 
-	if(g_freeze)
+	if(game == GAME_FREEZETAG)
 	{
-		game = GAME_FREEZETAG;
 		ActivateTeamplay();
 		Freeze_Init();
 	}
 
-	if(g_clanarena)
+	if(game == GAME_CLANARENA)
 	{
-		game = GAME_CLANARENA;
 		ActivateTeamplay();
 		Clanarena_Init();
 	}
 
-	if(g_domination)
+	if(game == GAME_DOMINATION)
 	{
-		game = GAME_DOMINATION;
 		ActivateTeamplay();
 		dom_init();
 	}
 
-	if(g_ctf || g_catf || g_ctft)
+	if(game == GAME_CTF || game == GAME_CATF || game == GAME_CTFT)
 	{
-		if (g_ctf)
-			game = GAME_CTF;
-		else if (g_catf)
-			game = GAME_CATF;
-		else if (g_ctft)
-			game = GAME_CTFT;
-
 		ActivateTeamplay();
 		ctf_init();
 	}
 
-	if(g_runematch)
+	if(game == GAME_RUNEMATCH)
 	{
-		game = GAME_RUNEMATCH;
 		if(cvar("deathmatch_force_teamplay"))
 			ActivateTeamplay();
 
 		runematch_init();
 	}
 
-	if(g_keyhunt)
+	if(game == GAME_KEYHUNT)
 	{
-		game = GAME_KEYHUNT;
 		ActivateTeamplay();
 		kh_init();
 	}
 
-	if(g_onslaught)
+	if(game == GAME_ONSLAUGHT)
 	{
-		game = GAME_ONSLAUGHT;
 		ActivateTeamplay();
 		onslaught_init();
 	}
 
-	if(g_cts)
-		game = GAME_CTS;
-
-	if(g_race)
-		game = GAME_RACE;
-
-	if(g_race || g_cts)
+	if(game == GAME_RACE || game == GAME_CTS)
 		race_init();
 
 
-	if(g_nexball)
+	if(game == GAME_NEXBALL)
 	{
-		game = GAME_NEXBALL;
 		ActivateTeamplay();
 		nb_init();
 	}
 
-	if (g_conquest)
+	if (game == GAME_CONQUEST)
 	{
-		game = GAME_CONQUEST;
 		ActivateTeamplay();
 		conquest_init();
 	}
 
-	if (g_survive)
+	if (game == GAME_SURVIVE)
 	{
-		game = GAME_SURVIVE;
 		ActivateTeamplay();
 		survive_init();
 	}
 
-	if (g_single) {
+	if (game == GAME_SINGLE) {
 		Single_Init();
 	}
 
@@ -346,6 +271,7 @@ void InitGameplayMode()
 		MapInfo_SwitchGameType(force_gametype_restore);
 
 	game_cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
+	WriteGameCvars();
 }
 
 void PrintWelcomeMessage(entity pl)
@@ -495,7 +421,7 @@ void CheckAllowedTeams (entity for_whom)
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	if(g_onslaught)
+	if(game == GAME_ONSLAUGHT)
 	{
 		// onslaught is special
 		head = findchain(classname, "onslaught_generator");
@@ -508,20 +434,20 @@ void CheckAllowedTeams (entity for_whom)
 			head = head.chain;
 		}
 	}
-	else if(g_domination)
+	else if(game == GAME_DOMINATION)
 		teament_name = "dom_team";
-	else if(g_ctf)
+	else if(game == GAME_CTF)
 		teament_name = "ctf_team";
-	else if(g_tdm)
+	else if(game == GAME_DEATHMATCH)
 		teament_name = "tdm_team";
-	else if(g_nexball)
+	else if(game == GAME_NEXBALL)
 		teament_name = "nexball_team";
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_keyhunt)
+		if(game == GAME_KEYHUNT)
 			dm = kh_teams;
-		else if(g_race)
+		else if(game == GAME_RACE)
 			dm = race_teams;
 		else
 			dm = 2;
@@ -530,7 +456,7 @@ void CheckAllowedTeams (entity for_whom)
 			c1 = c2 = c3 = c4 = 0;
 		else if(dm >= 3)
 			c1 = c2 = c3 = 0;
-		else if (g_survive)
+		else if (game == GAME_SURVIVE)
 			c1 = 0;
 		else
 			c1 = c2 = 0;
@@ -542,7 +468,7 @@ void CheckAllowedTeams (entity for_whom)
 		head = find(world, classname, teament_name);
 		while(head)
 		{
-			if(!(g_domination && head.netname == ""))
+			if(!(game == GAME_DOMINATION && head.netname == ""))
 			{
 				if(head.team == COLOR_TEAM1)
 					c1 = 0;

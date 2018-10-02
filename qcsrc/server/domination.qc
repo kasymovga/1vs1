@@ -5,6 +5,7 @@ by LordHavoc (lordhavoc@ghdigital.com)
 
 */
 
+float g_domination;
 float g_domination_default_teams;
 float g_domination_point_amt;
 //float g_domination_point_capturetime;
@@ -432,6 +433,7 @@ float dom_LeadLimitOverride() { return cvar("g_domination_point_leadlimit"); }
 
 void dom_init()
 {
+	g_domination = 1;
 	CACHE_CVAR(g_domination_default_teams);
 	CACHE_CVAR(g_domination_point_amt);
 	//CACHE_CVAR(g_domination_point_capturetime);

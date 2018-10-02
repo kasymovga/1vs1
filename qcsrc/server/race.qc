@@ -2,6 +2,9 @@
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
 
+float g_race;
+float g_cts;
+
 .float race_penalty_accumulator;
 .string race_penalty_reason;
 .float race_checkpoint; // player: next checkpoint that has to be reached
@@ -1062,7 +1065,8 @@ float race_LeadLimitOverride() {
 }
 
 void race_init() {
-	if (g_race) {
+	if (game == GAME_RACE) {
+		g_race = 1;
 		float qualifying_override;
 		qualifying_override = -1;
 		if(cvar("g_race_teams"))
@@ -1092,8 +1096,10 @@ void race_init() {
 				g_race_qualifying = 0;
 		}
 	}
-	if (g_cts)
+	if (game == GAME_CTS) {
+		g_cts = 1;
 		g_race_qualifying = 1;
+	}
 
 	if (g_race_qualifying)
 		independent_players = 1;

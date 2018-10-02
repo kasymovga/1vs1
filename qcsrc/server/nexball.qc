@@ -17,6 +17,7 @@
 #define GOAL_FAULT -1
 #define GOAL_OUT -2
 
+float g_nexball;
 float g_nexball_basketball_carrier_speed;
 float g_nexball_football_boost_forward;
 float g_nexball_football_boost_up;
@@ -131,6 +132,7 @@ float nb_TeleportationForbiddenFor(entity e) { return e.classname == "nexball_fo
 
 void nb_init() // Called early (worldspawn stage)
 {
+	g_nexball = 1;
 	CACHE_CVAR(g_nexball_meter_period); //sent with the client init entity
 	if (g_nexball_meter_period <= 0)
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users

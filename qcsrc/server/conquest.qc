@@ -1,3 +1,4 @@
+float g_conquest;
 float g_conquest_capture_time;
 float g_conquest_lasthope_time;
 float g_conquest_score_capture;
@@ -351,6 +352,7 @@ void conquest_ctf_and_dom_EntityPreSpawn() {
 }
 
 void conquest_init() {
+	g_conquest = 1;
 	precache_model("models/onslaught/controlpoint_pad.md3");
 	precache_model("models/ctf/flags.md3");
 	precache_sound("ctf/blue_capture.wav");

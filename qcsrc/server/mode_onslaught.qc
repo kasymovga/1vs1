@@ -1,3 +1,4 @@
+float g_onslaught;
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
 void onslaught_link_checkupdate();
@@ -1405,6 +1406,7 @@ float onslaught_WinningCondition()
 }
 
 void onslaught_init() {
+	g_onslaught = 1;
 	GameHook_DeathHandle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = onslaught_Spawn;

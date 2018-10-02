@@ -8,6 +8,7 @@
 #define SP_CTF_FCKILLS SP_GAME_SCORE4
 #define SP_CTF_RETURNS SP_GAME_SCORE5
 
+float g_ctf;
 float g_balance_ctf_damageforcescale;
 float g_balance_ctf_delay_collect;
 float g_ctf_allow_drop;
@@ -473,7 +474,7 @@ float ctf_flagcarrier_visible() {
 void FlagTouch()
 {
 	if(gameover) return;
-	if (g_catf || g_ctft)
+	if (game == GAME_CATF || game == GAME_CTFT)
 	if not(Roundbased_Active)
 		return;
 
@@ -536,7 +537,7 @@ void FlagTouch()
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
 		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-		if (g_catf || g_ctft)
+		if (game == GAME_CATF || game == GAME_CTFT)
 			Roundbased_SetRoundStartWithWinner(other.team);
 
 		// give credit to the individual player
@@ -1107,10 +1108,10 @@ void ctf_delayedinit()
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
-	if (g_catf) {
+	if (game == GAME_CATF) {
 		Clanarena_Init_Shared("catf");
 		Roundbased_SetScoreField(ST_CTF_CAPS);
-	} else if (g_ctft) {
+	} else if (game == GAME_CTFT) {
 		Freeze_Init_Shared("ctft");
 		Roundbased_SetScoreField(ST_CTF_CAPS);
 		GameHook_BotChooseRole = havocbot_chooserole_ft;
@@ -1179,6 +1180,7 @@ float ctf_TeleportationForbiddenFor(entity e) { return e.classname == "item_flag
 
 void ctf_init()
 {
+	g_ctf = 1;
 	CACHE_CVAR(g_balance_ctf_damageforcescale);
 	CACHE_CVAR(g_balance_ctf_delay_collect);
 	CACHE_CVAR(g_ctf_allow_drop);
@@ -1219,14 +1221,10 @@ void ctf_init()
 	CACHE_CVAR(g_ctf_showenemycarrier_delay);
 	if(g_campaign)
 		g_ctf_win_mode = 2;
-	else if (g_catf || g_ctft)
+	else if (game == GAME_CATF || game == GAME_CTFT)
 		g_ctf_win_mode = 0;
 	else
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
-
-	if not(g_ctf) {
-		g_ctf = 1;
-	}
 
 	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
