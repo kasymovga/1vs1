@@ -606,6 +606,11 @@ void GameCommand(string command)
 		return;
 	}
 
+	if (cmd == "bprint") {
+		bprint(substring(command, argv_start_index(1), -1), "\n");
+		return;
+	}
+
 	if (cmd == "rereadcvars")
 	{
 		readdynamiccvars();

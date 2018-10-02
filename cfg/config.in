@@ -1368,6 +1368,8 @@ set sv_damageindicator 1
 set sv_damageindicator_accumulate_interval 0.4
 set cl_damageindicator 1.5
 
+alias bprint "sv_cmd bprint $*"
+alias bprint_gtswitch "bprint Game type switched to $*"
 set _g_dm 0
 set _g_tdm 0
 set _g_domination 0
@@ -1377,7 +1379,6 @@ set _g_ctft 0
 set _g_runematch 0
 set _g_conquest 0
 set _g_keyhunt 0
-set _g_assault 0
 set _g_onslaught 0
 set _g_race 0
 set _g_nexball 0
@@ -1386,6 +1387,24 @@ set _g_freeze 0
 set _g_clanarena 0
 set _g_survive 0
 set _g_single 0
+alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_runematch 0; _g_conquest 0; _g_keyhunt 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0"
+alias gametype_dm "reset_gametype; _g_dm 1; bprint_gtswitch ^3Deathmatch"
+alias gametype_tdm "reset_gametype; _g_tdm 1; bprint_gtswitch ^3Team Deathmatch"
+alias gametype_dom "reset_gametype; _g_domination 1; bprint_gtswitch ^3Domination"
+alias gametype_ctf "reset_gametype; _g_ctf 1; bprint_gtswitch ^3Capture The Flag"
+alias gametype_catf "reset_gametype; _g_catf 1; bprint_gtswitch ^3CTF with CA"
+alias gametype_ctft "reset_gametype; _g_ctft 1; bprint_gtswitch ^3CTF with FT"
+alias gametype_rune "reset_gametype; _g_runematch 1; bprint_gtswitch ^3Runematch"
+alias gametype_conq "reset_gametype; _g_conquest 1; bprint_gtswitch ^3Conquest"
+alias gametype_kh "reset_gametype; _g_keyhunt 1; bprint_gtswitch ^3Key Hunt"
+alias gametype_ons "reset_gametype; _g_onslaught 1; bprint_gtswitch ^3Onslaught"
+alias gametype_race "reset_gametype; _g_race 1; bprint_gtswitch ^3Race"
+alias gametype_nexball "reset_gametype; _g_nexball 1; bprint_gtswitch ^3Nexball"
+alias gametype_cts "reset_gametype; _g_cts 1; bprint_gtswitch ^3CTS"
+alias gametype_ft "reset_gametype; _g_freeze 1; bprint_gtswitch ^3Freeze Tag"
+alias gametype_ca "reset_gametype; _g_clanarena 1; bprint_gtswitch ^3Clan Arena"
+alias gametype_surv "reset_gametype; _g_survive 1; bprint_gtswitch ^3Survive"
+alias gametype "gametype_$1"
 
 set sv_projectile_rocket_size "3 -3 3"
 
