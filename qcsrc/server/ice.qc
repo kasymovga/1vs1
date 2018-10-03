@@ -26,6 +26,15 @@ void Ice_Remove() {
 	WaypointSprite_DetachCarrier(self);
 }
 
+float Ice_Customize() {
+	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
+		self.effects |= EF_NODEPTHTEST;
+	else
+		self.effects &~= EF_NODEPTHTEST;
+
+	return TRUE;
+}
+
 float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 {
 	if (IceHook_SkipDeathHandle)
@@ -56,6 +65,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.ice.think = Ice_Think;
 	self.ice.nextthink = time;
 	self.ice.team = self.team;
+	self.ice.customizeentityforclient = Ice_Customize;
 	if (sv_model_ice_use_skins)
 		self.ice.skin = TeamColorSkin(self.team);
 	else
