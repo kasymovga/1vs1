@@ -806,6 +806,7 @@ void runematch_SpectateCopy(entity e) {
 var float(entity plr, entity targ) runematch_PlayerVisibleThroughWallFor_NextLink;
 float runematch_PlayerVisibleThroughWallFor(entity plr, entity targ) {
 	if (targ.runes & RUNE_HACKER)
+	if (PLAYER_ALIVE(plr))
 		return TRUE;
 
 	if (plr.runes & CURSE_HACKED)
