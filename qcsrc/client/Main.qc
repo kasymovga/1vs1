@@ -719,7 +719,6 @@ void GameCommand(string msg)
 		spawnentity = spawn();
 		spawnentity.draw = spawnentity_Draw;
 		setorigin(spawnentity, view_origin + view_forward * 100);
-		spawnentity.effects = EF_TELEPORT_BIT;
 		precache_model(argv(1));
 		setmodel(spawnentity, argv(1));
 		spawnentity.frame = stof(argv(2));
