@@ -237,6 +237,7 @@ vector CSQCPhysic_SetViewOrg()
 		self.velocity = physic_velocity = self.pmove_velocity;
 		physic_teleport_time = physic_start_teleport_time;
 		physic_deadflag = player_deadflag;
+		physic_cantjump = (physic_deadflag != DEAD_NO);
 		if (physic_plug_pre)
 			physic_plug_pre();
 
