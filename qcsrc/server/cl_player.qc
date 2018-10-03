@@ -162,6 +162,7 @@ void CopyBody(float keepvelocity)
 	self.classname = "body";
 	self.damageforcescale = oldself.damageforcescale;
 	self.effects = oldself.effects;
+	self.effects &~= EF_NODEPTHTEST;
 	self.event_damage = oldself.event_damage;
 	self.animstate_startframe = oldself.animstate_startframe;
 	self.animstate_numframes = oldself.animstate_numframes;
