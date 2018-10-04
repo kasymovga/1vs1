@@ -369,7 +369,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		oldself = self;
 		self = proj;
 
-		for(;;)
+		float i;
+		for(i = 0; i < 100; i++)
 		{
 			fireBallisticBullet_trace_callback_ent = self;
 			fireBallisticBullet_trace_callback_eff = tracereffects;
