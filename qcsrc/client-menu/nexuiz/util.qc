@@ -14,11 +14,14 @@ string getZonedTooltipForIdentifier(string s)
 	string t;
 	if(s == "")
 		return string_null;
-	t = db_get(tooltipdb, s);
-	if(t == "-")
-		return string_null;
-	if(t != "")
-		return strzone(t);
+
+	if (tooltipdb >= 0) {
+		t = db_get(tooltipdb, s);
+		if(t == "-")
+			return string_null;
+		if(t != "")
+			return strzone(t);
+	}
 #ifndef CSQC
 	t = cvar_description(s);
 	if(t != "" && t != "custom cvar")
