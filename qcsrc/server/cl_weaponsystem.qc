@@ -80,7 +80,6 @@ void W_SwitchWeapon_Force(entity e, float w)
 .float lastshot_time;
 void W_SetupShot_Dir(entity ent, vector s_forward, float recoil, string snd, float maxhits)
 {
-	local float oldsolid;
 	vector vecs, vecs_visual, dv;
 	entity ent_orig = ent;
 	ent = Akimbo_Owner(ent);
