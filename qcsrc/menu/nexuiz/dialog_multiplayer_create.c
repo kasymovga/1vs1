@@ -188,6 +188,8 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 	l2 = me.checkboxFraglimitMapinfo;
 	switch(gt)
 	{
+		case GAME_CATF:
+		case GAME_CTFT:            GameType_ConfigureSliders(e, l, l2, "Win limit:",   1,   20,  1, "capturelimit_override");    break;
 		case GAME_CTF:             GameType_ConfigureSliders(e, l, l2, "Capture limit:",   1,   20,  1, "capturelimit_override");    break;
 		case GAME_DOMINATION:      GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "g_domination_point_limit"); break;
 		case GAME_KEYHUNT:         GameType_ConfigureSliders(e, l, l2, "Point limit:",   200, 1500, 50, "g_keyhunt_point_limit");    break;

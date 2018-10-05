@@ -30,7 +30,6 @@ string profile_description(string profile_name) {
 
 string toStringNexuizMutatorsDialog(entity me)
 {
-	string s;
 	return profile_description(cvar_string("g_profile"));
 }
 
