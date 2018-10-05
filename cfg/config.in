@@ -1480,7 +1480,7 @@ set cra_g_start_weapon_laser 0
 set cra_g_start_weapon_shotgun 0
 set cra_g_start_weapon_uzi 0
 set cra_g_start_weapon_campingrifle 1
-set cra_g_start_weapon_mortar 0
+set cra_g_start_weapon_grenadelauncher 0
 set cra_g_start_weapon_crylink 0
 set cra_g_start_weapon_electro 0
 set cra_g_start_weapon_zapper 0
