@@ -28,46 +28,27 @@ entity makeNexuizServerCreateTab()
 
 void fillNexuizServerCreateTab(entity me)
 {
-	entity e, e0;
+	entity e, selected;
 	float n;
 
-	me.TR(me);
-		n = 7;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_dm", "DM"));
-			e0 = e;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_runematch", "Runematch"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_race", "Race"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_cts", "Race CTS"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_clanarena", "Clan Arena"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_freeze", "FreezeTag"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_conquest", "Conquest"));
-			if(e.checked) e0 = NULL;
-	me.TR(me);
-		n = 7;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_survive", "Survival"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_tdm", "TDM"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_ctf", "CTF"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_domination", "Domination"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_keyhunt", "Key Hunt"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_onslaught", "Onslaught"));
-			if(e.checked) e0 = NULL;
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, "_g_nexball", "Nexball"));
-			if(e.checked) e0 = NULL;
-		if(e0)
-		{
-			//print("NO CHECK\n");
-			e0.setChecked(e0, 1);
-		}
+	float i;
+	n = 8;
+	selected = NULL;
+	for (i = GAME_DEATHMATCH; i < GAME_SINGLE; i++) {
+		if (mod(i - 1, n) == 0)
+			me.TR(me);
+
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, MapInfo_GetGameTypeCvar(i), MapInfo_HumanString_FromType(i)));
+			if not(selected)
+				selected = e;
+			else if(e.checked)
+				selected = e;
+	}
+	if(selected)
+	{
+		//print("NO CHECK\n");
+		selected.setChecked(selected, 1);
+	}
 	me.TR(me);
 	me.TR(me);
 		me.mapListBox = makeNexuizMapList();
@@ -213,7 +194,6 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 		case GAME_RUNEMATCH:       GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "g_runematch_point_limit");  break;
 		case GAME_RACE:            GameType_ConfigureSliders(e, l, l2, "Laps:",            1,   25,  1, "g_race_laps_limit");        break;
 		case GAME_NEXBALL:         GameType_ConfigureSliders(e, l, l2, "Goals:",           1,   50,  1, "g_nexball_goallimit");      break;
-		case GAME_ASSAULT:         GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
 		case GAME_ONSLAUGHT:       GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
 		case GAME_CTS:             GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
 		case GAME_FREEZETAG:       GameType_ConfigureSliders(e, l, l2, "Win limit:",       1,   50,  1, "g_freeze_winlimit");        break;
