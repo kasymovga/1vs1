@@ -147,9 +147,9 @@ void fillNexuizServerCreateTab(entity me)
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
-		me.TD(me, 1, 2, e0 = makeNexuizTextLabel(0, string_null));
-			e0.textEntity = main.mutatorsDialog;
-			e0.allowCut = 1;
+		me.TD(me, 1, 2, e = makeNexuizTextLabel(0, string_null));
+			e.textEntity = main.mutatorsDialog;
+			e.allowCut = 1;
 
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Multiplayer_Create"));
