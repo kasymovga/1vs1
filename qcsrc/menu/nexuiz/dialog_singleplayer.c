@@ -7,75 +7,39 @@ CLASS(NexuizSingleplayerDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizSingleplayerDialog, rows, float, 24)
 	ATTRIB(NexuizSingleplayerDialog, columns, float, 5)
 	ATTRIB(NexuizSingleplayerDialog, campaignBox, entity, NULL)
+	ATTRIB(NexuizSingleplayerDialog, btnSurv, entity, NULL)
+	ATTRIB(NexuizSingleplayerDialog, btnAT, entity, NULL)
 ENDCLASS(NexuizSingleplayerDialog)
 #endif
 
 #ifdef IMPLEMENTATION
 
-void InstantAction_LoadMap(entity btn, entity dummy)
-{
-	float glob, i, n, fh;
-	string s;
-	glob = search_begin("maps/*.instantaction", TRUE, TRUE);
-	if(glob < 0)
-		return;
-	i = ceil(random() * search_getsize(glob)) - 1;
-	fh = fopen(search_getfilename(glob, i), FILE_READ);
-	search_end(glob);
-	if(fh < 0)
-		return;
-	while((s = fgets(fh)))
-	{
-		if(substring(s, 0, 4) == "set ")
-			s = substring(s, 4, strlen(s) - 4);
-		n = tokenize_console(s);
-		if(argv(0) == "bot_number")
-			cvar_set("bot_number", argv(1));
-		else if(argv(0) == "skill")
-			cvar_set("skill", argv(1));
-		else if(argv(0) == "timelimit")
-			cvar_set("timelimit_override", argv(1));
-		else if(argv(0) == "fraglimit")
-			cvar_set("fraglimit_override", argv(1));
-		else if(argv(0) == "changelevel")
-		{
-			fclose(fh);
-			menu_loadmap_prepare();
-			MapInfo_SwitchGameType(GAME_DEATHMATCH);
-			MapInfo_LoadMap(argv(1));
-			cvar_set("lastlevel", "1");
-			return;
-		}
-	}
-	fclose(fh);
+void SwitchTo(entity btn, entity me) {
+	me.btnSurv.forcePressed = 0;
+	me.btnAT.forcePressed = 0;
+	btn.forcePressed = 1;
+	if (btn == me.btnSurv)
+		cvar_set("g_campaign_name", "rexsurvival");
+	else
+		cvar_set("g_campaign_name", "rexuiz");
+	me.campaignBox.loadCvars(me.campaignBox);
 }
 
 void fillNexuizSingleplayerDialog(entity me)
 {
-	entity e, btnPrev, btnNext, lblTitle;
+	entity e;
 
 	me.TR(me);
-		me.TDempty(me, (me.columns - 3) / 2);
-		me.TD(me, 2, 3, e = makeNexuizBigButton("Instant action! (random map with bots)", '0 0 0'));
-			e.onClick = InstantAction_LoadMap;
-			e.onClickEntity = NULL;
+		me.TD(me, 1, 2.5, me.btnSurv = makeNexuizButton("Survival Campaign", '0 0 0'));
+		me.btnSurv.onClick = SwitchTo;
+		me.btnSurv.onClickEntity = me;
+		me.TD(me, 1, 2.5, me.btnAT = makeNexuizButton("Arena Training", '0 0 0'));
+		me.btnAT.onClick = SwitchTo;
+		me.btnAT.onClickEntity = me;
 	me.TR(me);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, btnPrev = makeNexuizButton("<<", '0 0 0'));
-		me.TD(me, 1, me.columns - 2, lblTitle = makeNexuizTextLabel(0.5, "???"));
-		me.TD(me, 1, 1, btnNext = makeNexuizButton(">>", '0 0 0'));
-	me.TR(me);
-		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeNexuizCampaignList());
-			btnPrev.onClick = MultiCampaign_Prev;
-			btnPrev.onClickEntity = me.campaignBox;
-			btnNext.onClick = MultiCampaign_Next;
-			btnNext.onClickEntity = me.campaignBox;
-			me.campaignBox.buttonNext = btnNext;
-			me.campaignBox.buttonPrev = btnPrev;
-			me.campaignBox.labelTitle = lblTitle;
-			me.campaignBox.campaignGo(me.campaignBox, 0);
-
+		me.TD(me, me.rows - 4, me.columns, me.campaignBox = makeNexuizCampaignList());
+	SwitchTo(me.btnSurv, me);
 	me.gotoRC(me, me.rows - 1, 0);
 		//me.TD(me, 1, 2, e = makeNexuizModButton("Singleplayer"));
 		me.TD(me, 1, me.columns , e = makeNexuizButton("Start Singleplayer!", '0 0 0'));
