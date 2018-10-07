@@ -96,8 +96,10 @@ void cvar_settemp(string pKey, string pValue)
 	cvar_set("settemp_list", strcat("1 ", pKey, " ", cvar_string("settemp_var"), " ", cvar_string("settemp_list")));
 #ifdef MENUQC
 	registercvar(cvar_string("settemp_var"), "", 0);
+	registercvar(pKey, "", 0);
 #else
 	registercvar(cvar_string("settemp_var"), "");
+	registercvar(pKey, "");
 #endif
 	cvar_set(cvar_string("settemp_var"), cvar_string(pKey));
 	cvar_set("settemp_var", strcat(cvar_string("settemp_var"), "x"));
