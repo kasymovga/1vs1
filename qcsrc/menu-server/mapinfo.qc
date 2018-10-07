@@ -654,7 +654,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 {
 	string fn;
 	string s, t;
-	float fh, fh2;
+	float fh;
 	float r, f, n, i;
 	string acl;
 
@@ -731,13 +731,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_ONSLAUGHT)       fputs(fh, "type ons 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_NEXBALL)         fputs(fh, "type nexball 5 20\n");
 		if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTS)             fputs(fh, "type cts 20 -1\n");
-
-		fh2 = fopen(strcat("scripts/", pFilename, ".arena"), FILE_READ);
-		if(fh2 >= 0)
-		{
-			fclose(fh2);
-			fputs(fh, "settemp_for_type all sv_q3acompat_machineshotgunswap 1\n");
-		}
 
 		fputs(fh, "// optional: fog density red green blue alpha mindist maxdist\n");
 		fputs(fh, "// optional: settemp_for_type (all|gametypename) cvarname value\n");
