@@ -1,7 +1,10 @@
 #define ICE_FRAME_TIME 0.2
 string ice_model;
 float g_freeze_unfroze_time;
+float g_freeze_unfroze_interruption;
 float g_freeze_slowdown;
+float g_freeze_autorevive_delay;
+float g_freeze_autorevive_time;
 float sv_model_ice_scale;
 float sv_model_ice_z;
 float sv_model_ice_alpha;
@@ -71,6 +74,11 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	else
 		self.ice.colormod = TeamColor(self.team);
 
+	if (g_freeze_autorevive_delay > 0)
+		self.ice.fade_time = time + g_freeze_autorevive_delay;
+	else
+		self.ice.fade_time = 0;
+
 	WaypointSprite_AttachCarrier("helpme", self);
 	setattachment(self.ice, self, "");
 	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
@@ -117,6 +125,10 @@ void Ice_Think()
 		unfrozer = e;
 		break;
 	}
+	if not(unfrozer)
+	if (time > self.fade_time)
+		unfrozer = self;
+
 	if (unfrozer != self.last_unfrozer)
 	{
 		if (self.unfroze_pb)
@@ -134,11 +146,17 @@ void Ice_Think()
 			self.unfroze_pb = world;
 		}
 	}
-
-	self.last_unfrozer = unfrozer;
+	float unfroze_scale;
+	if (unfrozer.classname == "player") {
+		self.last_unfrozer = unfrozer;
+		unfroze_scale = 1;
+	} else {
+		self.last_unfrozer = world;
+		unfroze_scale = g_freeze_unfroze_time / g_freeze_autorevive_time;
+	}
 	if (unfrozer)
 	{
-		self.unfroze_progress += ICE_FRAME_TIME;
+		self.unfroze_progress += ICE_FRAME_TIME * unfroze_scale;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			if (self.unfroze_pb)
 				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
@@ -154,10 +172,14 @@ void Ice_Think()
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
 
-		if (clienttype(self.owner) == CLIENTTYPE_REAL)
-			centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
-
-		bprint ("^1", self.owner.netname, "^1 was revived by ", unfrozer.netname, "\n");
+		if (unfrozer.classname == "player") {
+			bprint ("^1", self.owner.netname, "^1 was revived by ", unfrozer.netname, "\n");
+			if (clienttype(self.owner) == CLIENTTYPE_REAL)
+				centerprint(self.owner, strcat("^4You revived by ^7", unfrozer.netname, "\n"));
+		} else {
+			bprint ("^1", self.owner.netname, "^1 was autorevived\n");
+			centerprint(self.owner, "^4You autorevived\n");
+		}
 		IceHook_Unfroze(unfrozer);
 		self.owner.deadflag = DEAD_NO;
 		return;
@@ -165,7 +187,7 @@ void Ice_Think()
 
 	if (self.unfroze_progress == oldprogress)
 	if (oldprogress != 0)
-		self.unfroze_progress = min(0, oldprogress - ICE_FRAME_TIME);
+		self.unfroze_progress = max(0, oldprogress - ICE_FRAME_TIME);
 
 	if (self.unfroze_progress != oldprogress)
 		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.unfroze_progress / g_freeze_unfroze_time));
@@ -199,6 +221,15 @@ float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float damage, fl
 	if not(self.deadflag == DEAD_FREEZE)
 		return Ice_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
 
+	if (attacker)
+	if (attacker.team != self.team)
+	if (g_freeze_unfroze_interruption || (self.ice.fade_time && time > self.ice.fade_time)) {
+		if (g_freeze_autorevive_delay > 0)
+			self.ice.fade_time = time + g_freeze_autorevive_delay;
+
+		self.ice.alpha = sv_model_ice_alpha;
+		self.ice.unfroze_progress = 0;
+	}
 	if (deathtype == DEATH_SLIME ||
 			deathtype == DEATH_LAVA ||
 			deathtype == DEATH_HURTTRIGGER)
@@ -219,9 +250,15 @@ void Ice_Init() {
 	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
 	precache_model(ice_model);
 	CACHE_CVAR(g_freeze_unfroze_time);
+	CACHE_CVAR(g_freeze_unfroze_interruption);
 	CACHE_CVAR(g_freeze_slowdown);
+	CACHE_CVAR(g_freeze_autorevive_delay);
+	CACHE_CVAR(g_freeze_autorevive_time);
 	if (g_freeze_unfroze_time <= 0)
 		g_freeze_unfroze_time = 1;
+
+	if (g_freeze_autorevive_time <= 0)
+		g_freeze_autorevive_time = 1;
 
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);

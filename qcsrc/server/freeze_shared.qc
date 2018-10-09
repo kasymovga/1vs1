@@ -13,8 +13,10 @@ float Freeze_IceSkipThink() {
 
 void Freeze_IceUnfroze(entity unfrozer) {
 	PlayerScore_Set(self.owner, SP_STATUS, 0);
-	PlayerScore_Add(unfrozer, SP_SCORE, 1);
-	PlayerScore_Add(unfrozer, SP_REVIVE, 1);
+	if (unfrozer.classname == "player") {
+		PlayerScore_Add(unfrozer, SP_SCORE, 1);
+		PlayerScore_Add(unfrozer, SP_REVIVE, 1);
+	}
 }
 
 void Freeze_IceFrozenStatus() {

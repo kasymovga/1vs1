@@ -347,8 +347,11 @@ set g_freeze_enddelay 3
 set g_freeze_slowdown 0.1
 set g_freeze_startdelay 10
 set g_freeze_unfroze_time 3
+set g_freeze_unfroze_interfere 0
 set g_freeze_use_tdm_maps 1
 set g_freeze_winlimit 10
+set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
+set g_freeze_autorevive_time 10
 
 set g_balance_powerup_invisibility_time 30
 set g_balance_powerup_speed_time 30
