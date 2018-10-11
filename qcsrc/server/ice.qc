@@ -126,6 +126,7 @@ void Ice_Think()
 		break;
 	}
 	if not(unfrozer)
+	if (g_freeze_autorevive_delay > 0)
 	if (time > self.fade_time)
 		unfrozer = self;
 
