@@ -390,8 +390,11 @@ set g_walljump_smokeparticle_num 10 "ThexDarksider <3 Akari"
 
 set sv_gametypevote ""
 set sv_gametypevote_time 10
-set g_dodging 0 "Master switch for dodging"
+set g_dodging 0 "Dodging"
+set g_dodging_frozen 1 "Dodging in frozen condition"
 set g_dodging_delay 0.5 "determines how long a player has to wait to be able to dodge again after dodging"
+set g_dodging_frozen 1 "Dodging when frozen"
+set g_dodging_frozen_delay 1 "Delay for dodging when frozen"
 set g_dodging_frozen_factor 0.5
 set g_dodging_up_speed 200 "the jump velocity of the dodge"
 set g_dodging_horiz_speed 600 "the horizontal velocity of the dodge"

@@ -404,6 +404,8 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_walljump_velocity_z_factor);
 	CACHE_CVAR(g_dodging);
 	CACHE_CVAR(g_dodging_delay);
+	CACHE_CVAR(g_dodging_frozen);
+	CACHE_CVAR(g_dodging_frozen_delay);
 	CACHE_CVAR(g_dodging_frozen_factor);
 	CACHE_CVAR(g_dodging_horiz_speed);
 	CACHE_CVAR(g_dodging_up_speed);
@@ -486,6 +488,7 @@ float Physic_SendEntity(entity to, float sf)
 				+ (sv_gameplayfix_q2airaccelerate ? 16 : 0)
 				+ (g_walljump ? 32 : 0)
 				+ (g_dodging ? 64 : 0)
+				+ (g_dodging_frozen ? 128 : 0)
 				;
 		WriteByte(MSG_ENTITY, switches);
 		if (g_walljump) {
@@ -498,6 +501,7 @@ float Physic_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY, g_dodging_horiz_speed);
 			WriteCoord(MSG_ENTITY, g_dodging_up_speed);
 			WriteCoord(MSG_ENTITY, g_dodging_delay);
+			WriteCoord(MSG_ENTITY, g_dodging_frozen_delay);
 			WriteCoord(MSG_ENTITY, g_dodging_frozen_factor);
 		}
 	}

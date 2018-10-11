@@ -111,16 +111,20 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 
 void dodging() {
 	vector tap_direction;
-	tap_direction_x = 0;
-	tap_direction_y = 0;
 	float dodge_detected;
+	float frozen = (physic_deadflag == DEAD_FREEZE);
+	if not(frozen)
+	if not(g_dodging)
+		return;
 
-	if (physic_deadflag == DEAD_FREEZE) {
-		if not(g_dodging_frozen_factor)
+	if (frozen) {
+		if not(g_dodging_frozen)
 			return;
 	} else if (physic_deadflag)
 		return;
 
+	tap_direction_x = 0;
+	tap_direction_y = 0;
 	dodge_detected = 0;
     float dodging_timeout = 0.2;
 
@@ -131,57 +135,72 @@ void dodging() {
 	if not(physic_flags & FL_ONGROUND)
 		return;
 
-	if (physic_movement_x > 0) {
-		// is this a state change?
-		if (!(self.lastkeys & KEY_FORWARD)) {
-			if (self.last_FORWARD_KEY_time > 0)	{
-				tap_direction_x = 1.0;
-				dodge_detected = 1;
-			}
- 			self.last_FORWARD_KEY_time = dodging_timeout;
- 		}
-		self.lastkeys |= KEY_FORWARD;
-	} else
-		self.lastkeys &~= KEY_FORWARD;
+	if (frozen) {
+		if (physic_movement_y > 0)
+			tap_direction_y = 1;
+		else if (physic_movement_y < 0)
+			tap_direction_y = -1;
 
-	if (physic_movement_x < 0) {
-		// is this a state change?
- 		if (!(self.lastkeys & KEY_BACKWARD)) {
-			tap_direction_x = -1.0;
-			if (self.last_BACKWARD_KEY_time > 0) {
-				dodge_detected = 1;
-			}
- 			self.last_BACKWARD_KEY_time = dodging_timeout;
- 		}
-		self.lastkeys |= KEY_BACKWARD;
-	} else
-		self.lastkeys &~= KEY_BACKWARD;
+		if (physic_movement_x > 0)
+			tap_direction_x = 1;
+		else if (physic_movement_x < 0)
+			tap_direction_x = -1;
 
-	if (physic_movement_y > 0) {
-		// is this a state change?
-		if (!(self.lastkeys & KEY_RIGHT)) {
-			tap_direction_y = 1.0;
-			if (self.last_RIGHT_KEY_time > 0) {
-				dodge_detected = 1;
+		if (tap_direction_x || tap_direction_y)
+			dodge_detected = 1;
+	} else {
+		if (physic_movement_x > 0) {
+			// is this a state change?
+			if (!(self.lastkeys & KEY_FORWARD)) {
+				if (self.last_FORWARD_KEY_time > 0)	{
+					tap_direction_x = 1.0;
+					dodge_detected = 1;
+				}
+				self.last_FORWARD_KEY_time = dodging_timeout;
 			}
- 			self.last_RIGHT_KEY_time = dodging_timeout;
- 		}
-		self.lastkeys |= KEY_RIGHT;
-	} else
-		self.lastkeys &~= KEY_RIGHT;
+			self.lastkeys |= KEY_FORWARD;
+		} else
+			self.lastkeys &~= KEY_FORWARD;
 
-	if (physic_movement_y < 0) {
-		// is this a state change?
-		if (!(self.lastkeys & KEY_LEFT)) {
-			tap_direction_y = -1.0;
-			if (self.last_LEFT_KEY_time > 0) {
-				dodge_detected = 1;
+		if (physic_movement_x < 0) {
+			// is this a state change?
+			if (!(self.lastkeys & KEY_BACKWARD)) {
+				tap_direction_x = -1.0;
+				if (self.last_BACKWARD_KEY_time > 0) {
+					dodge_detected = 1;
+				}
+				self.last_BACKWARD_KEY_time = dodging_timeout;
 			}
- 			self.last_LEFT_KEY_time = dodging_timeout;
- 		}
-		self.lastkeys |= KEY_LEFT;
-	} else
-		self.lastkeys &~= KEY_LEFT;
+			self.lastkeys |= KEY_BACKWARD;
+		} else
+			self.lastkeys &~= KEY_BACKWARD;
+
+		if (physic_movement_y > 0) {
+			// is this a state change?
+			if (!(self.lastkeys & KEY_RIGHT)) {
+				tap_direction_y = 1.0;
+				if (self.last_RIGHT_KEY_time > 0) {
+					dodge_detected = 1;
+				}
+				self.last_RIGHT_KEY_time = dodging_timeout;
+			}
+			self.lastkeys |= KEY_RIGHT;
+		} else
+			self.lastkeys &~= KEY_RIGHT;
+
+		if (physic_movement_y < 0) {
+			// is this a state change?
+			if (!(self.lastkeys & KEY_LEFT)) {
+				tap_direction_y = -1.0;
+				if (self.last_LEFT_KEY_time > 0) {
+					dodge_detected = 1;
+				}
+				self.last_LEFT_KEY_time = dodging_timeout;
+			}
+			self.lastkeys |= KEY_LEFT;
+		} else
+			self.lastkeys &~= KEY_LEFT;
+	}
 
 	if (dodge_detected == 1) {
 		vector dodge_velocity;
@@ -200,7 +219,7 @@ void dodging() {
 				+ v_right * g_dodging_horiz_speed * tap_direction_y
 				+ g_dodging_up_speed * v_up;
 
-		if (physic_deadflag == DEAD_FREEZE)
+		if (frozen)
 			dodge_velocity *= g_dodging_frozen_factor;
 
 		physic_velocity_x = dodge_velocity_x;
@@ -212,7 +231,7 @@ void dodging() {
 
 		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
 #endif
-		self.last_dodging_time = g_dodging_delay;
+		self.last_dodging_time = (frozen ? g_dodging_frozen_delay : g_dodging_delay);
 
 	}
 	return;
@@ -436,10 +455,8 @@ void PlayerPhysics()
 			PlayerJump ();
 		else {
 			physic_flags |= FL_JUMPRELEASED;
-			if (g_dodging)
-				dodging();
+			dodging();
 		}
-
 		if (physic_waterlevel == WATERLEVEL_SWIMMING)
 			CheckWaterJump ();
 	}

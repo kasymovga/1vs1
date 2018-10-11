@@ -382,6 +382,7 @@ void Ent_Physic(float isnew)
 		sv_gameplayfix_q2airaccelerate = switches & 16;
 		g_walljump = switches & 32;
 		g_dodging = switches & 64;
+		g_dodging_frozen = switches & 128;
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
 			g_walljump_force = ReadCoord();
@@ -392,6 +393,7 @@ void Ent_Physic(float isnew)
 			g_dodging_horiz_speed = ReadCoord();
 			g_dodging_up_speed = ReadCoord();
 			g_dodging_delay = ReadCoord();
+			g_dodging_frozen_delay = ReadCoord();
 			g_dodging_frozen_factor = ReadCoord();
 		}
 	}

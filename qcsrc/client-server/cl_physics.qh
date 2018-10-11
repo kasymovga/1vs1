@@ -38,6 +38,8 @@ float g_dodging;
 float g_dodging_horiz_speed;
 float g_dodging_up_speed;
 float g_dodging_delay;
+float g_dodging_frozen;
+float g_dodging_frozen_delay;
 float g_dodging_frozen_factor;
 
 float physic_deadflag;
