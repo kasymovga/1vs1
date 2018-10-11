@@ -294,6 +294,7 @@ set sv_jumppads_target_adjust_height 0
 
 set g_runes 0
 set g_runematch_carried_runes_max 3
+set g_runematch_teams 2 "Teams count for deathmatch_force_teamplay"
 set g_runematch_curses 0
 set g_runematch_defense 1
 set g_runematch_hacker 0
@@ -343,6 +344,7 @@ set g_balance_supershotgun_secondary_speed 1500
 set g_balance_supershotgun_secondary_spread 0.15
 
 set g_balance_campingrifle_hotreload 0
+set g_freeze_teams 2
 set g_freeze_enddelay 3
 set g_freeze_slowdown 0.1
 set g_freeze_startdelay 10
@@ -498,6 +500,7 @@ set sv_player_hat_scale 1
 set g_turrets_targetscan_playersonly 0
 
 set g_clanarena_use_tdm_maps 1
+set g_clanarena_teams 2
 set g_clanarena_winlimit 10
 set g_clanarena_enddelay 3
 set g_clanarena_startdelay 10

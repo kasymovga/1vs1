@@ -150,12 +150,11 @@ g_subs.qc
 
 ../client-server/rune.qh
 ../client-server/rune.qc
-runematch.qc
-
 g_violence.qc
 g_damage.qc
 
 teamplay.qc
+runematch.qc
 
 ../client-server/cl_physics.qc
 cl_physics.qc

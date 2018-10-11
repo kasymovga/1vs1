@@ -1006,6 +1006,7 @@ void kh_init()  // sets up th KH environment
 	if(kh_teams < 2)
 		kh_teams = cvar("g_keyhunt_teams");
 	kh_teams = bound(2, kh_teams, 4);
+	SetTeamCount(kh_teams);
 
 	// make a KH entity for controlling the game
 	kh_controller = spawn();
@@ -1032,7 +1033,7 @@ void kh_init()  // sets up th KH environment
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
-	ScoreRules_basics(kh_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
+	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
 	ScoreInfo_SetLabel_TeamScore  (ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);

@@ -1051,6 +1051,7 @@ void spawnfunc_ctf_team()
 	}
 	self.classname = "ctf_team";
 	self.team = self.cnt + 1;
+	SetAllowedTeam(self.team);
 };
 
 // code from here on is just to support maps that don't have control point and team entities
@@ -1103,8 +1104,7 @@ void ctf_delayedinit()
 			break;
 	}
 
-	CheckAllowedTeams(world);
-	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
 	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      sp_caps);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);

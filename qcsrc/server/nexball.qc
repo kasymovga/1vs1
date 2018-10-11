@@ -626,6 +626,7 @@ void spawnfunc_nexball_team (void)
 {
 	if(!g_nexball) { remove(self); return; }
 	self.team = self.cnt + 1;
+	SetAllowedTeam(self.team);
 }
 
 void nb_spawnteam (string teamname, float teamcolor)
@@ -636,8 +637,10 @@ void nb_spawnteam (string teamname, float teamcolor)
 	e.classname = "nexball_team";
 	e.netname = teamname;
 	e.cnt = teamcolor;
-	e.team = e.cnt + 1;
-	nb_teams += 1;
+	entity oldself = self;
+	self = e;
+	spawnfunc_nexball_team();
+	self = oldself;
 };
 
 void nb_spawnteams (void)
@@ -661,7 +664,9 @@ void nb_delayedinit (void)
 	if (find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
 
-	ScoreRules_basics(nb_teams, 0, 0, TRUE);
+	CheckAllowedTeams(world);
+	nb_teams = 4 + c1 + c2 + c3 + c4;
+	ScoreRules_basics(0, 0, TRUE);
 	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);

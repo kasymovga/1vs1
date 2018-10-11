@@ -813,6 +813,7 @@ void spawnfunc_onslaught_generator()
 	local entity e;
 	if (!self.team)
 		objerror("team must be set");
+	SetAllowedTeam(self.team);
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;

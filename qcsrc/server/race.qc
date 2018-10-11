@@ -46,7 +46,7 @@ void race_ClearTime(entity e);
 #define SP_RACE_TIME SP_GAME_SCORE3
 void ScoreRules_race()
 {
-	ScoreRules_basics(race_teams, 0, 0, FALSE);
+	ScoreRules_basics(0, 0, FALSE);
 	if(race_teams)
 	{
 		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
@@ -1073,6 +1073,7 @@ void race_init() {
 		{
 			ActivateTeamplay();
 			race_teams = bound(2, cvar("g_race_teams"), 4);
+			SetTeamCount(race_teams);
 		}
 		else
 			race_teams = 0;

@@ -262,6 +262,7 @@ void survive_init_delayed() {
 }
 
 void survive_init() {
+	SetTeamCount(1);
 	survive_gameover_message = "^3No time left, game finished";
 	precache_sound("domination/claim.wav");
 	precache_sound("announcer/robotic/begin.wav");
@@ -281,7 +282,7 @@ void survive_init() {
 	survive_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = survive_Spawn;
 
-	ScoreRules_basics(1, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", 0);
 	if (g_survive_freeze)
 		ScoreInfo_SetLabel_PlayerScore(SP_REVIVE, "revs", SFL_SORT_PRIO_SECONDARY);

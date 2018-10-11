@@ -243,7 +243,7 @@ Keys:
 
 void spawnfunc_dom_team()
 {
-	if(!g_domination || g_domination_teams_override >= 2)
+	if(!g_domination)
 	{
 		remove(self);
 		return;
@@ -262,6 +262,8 @@ void spawnfunc_dom_team()
 	// this would have to be changed if used in quakeworld
 	if(self.cnt)
 		self.team = self.cnt + 1; // WHY are these different anyway?
+
+	SetAllowedTeam(self.team);
 };
 
 void dom_controlpoint_setup()
@@ -338,7 +340,6 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	local entity oldself;
 	oldself = self;
 	self = spawn();
-	self.classname = "dom_team";
 	self.netname = teamname;
 	self.cnt = teamcolor;
 	self.model = pointmodel;
@@ -346,17 +347,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.noise = capsound;
 	self.noise1 = capnarration;
 	self.message = capmessage;
-
-	// this code is identical to spawnfunc_dom_team
-	setmodel(self, self.model); // precision not needed
-	self.mdl = self.model;
-	self.dmg = self.modelindex;
-	self.model = "";
-	self.modelindex = 0;
-	// this would have to be changed if used in quakeworld
-	self.team = self.cnt + 1;
-
-	//eprint(self);
+	spawnfunc_dom_team();
 	self = oldself;
 };
 
@@ -377,6 +368,7 @@ void dom_spawnpoint(vector org)
 void dom_spawnteams()
 {
 	float numteams;
+	SetTeamCount(0);
 	if(g_domination_teams_override < 2)
 		numteams = g_domination_default_teams;
 	else
@@ -396,7 +388,7 @@ void dom_delayedinit()
 	local entity head;
 
 	// if no teams are found, spawn defaults, if custom teams are set, use them
-	if (find(world, classname, "dom_team") == world || g_domination_teams_override >= 2)
+	if (find(world, classname, "dom_team") == world || g_domination_teams_override > 1)
 		dom_spawnteams();
 	// if no control points are found, spawn defaults
 	if (find(world, classname, "dom_controlpoint") == world)
@@ -416,8 +408,7 @@ void dom_delayedinit()
 		sp_domticks = SFL_SORT_PRIO_PRIMARY;
 	else
 		sp_score = SFL_SORT_PRIO_PRIMARY;
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), sp_score, sp_score, TRUE);
+	ScoreRules_basics(sp_score, sp_score, TRUE);
 	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
 	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);

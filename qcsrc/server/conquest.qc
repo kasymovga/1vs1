@@ -180,9 +180,10 @@ void spawnfunc_conquest_cp() {
 	}
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	self.classname = "conquest_cp";
-	if (self.team > 0)
+	if (self.team > 0) {
 		conquest_cp_capture(self.team);
-
+		SetAllowedTeam(self.team);
+	}
 	self.cnt = self.team;
 	self.solid = SOLID_TRIGGER;
 	self.reset = conquest_cp_reset;

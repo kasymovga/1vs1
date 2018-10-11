@@ -777,6 +777,9 @@ void runematch_PlayerClear(float killed) {
 
 void runematch_init()
 {
+	if (teamplay)
+		SetTeamCount(bound(2, cvar("g_runematch_teams"), 4));
+
 	g_runematch = 1;
 	GameHook_FragsHandle = RunematchHandleFrags;
 	GameHook_WinCountDown = stub_WinCountDown;

@@ -411,77 +411,35 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 	ScoreKeeper_Touch(pl);
 }
 
+float at1, at2, at3, at4;
+void SetAllowedTeam(float _team) {
+	if (_team == COLOR_TEAM1)
+		at1 = TRUE;
+	else if (_team == COLOR_TEAM2)
+		at2 = TRUE;
+	else if (_team == COLOR_TEAM3)
+		at3 = TRUE;
+	else if (_team == COLOR_TEAM4)
+		at4 = TRUE;
+}
+
+void SetTeamCount(float c) {
+	at1 = at2 = at3 = at4 = 0;
+	if (c > 0) at1 = 1;
+	if (c > 1) at2 = 1;
+	if (c > 2) at3 = 1;
+	if (c > 3) at4 = 1;
+}
+
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {
-	float dm;
-	entity head;
-	string teament_name;
-
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
-
-	if(game == GAME_ONSLAUGHT)
-	{
-		// onslaught is special
-		head = findchain(classname, "onslaught_generator");
-		while (head)
-		{
-			if (head.team == COLOR_TEAM1) c1 = 0;
-			if (head.team == COLOR_TEAM2) c2 = 0;
-			if (head.team == COLOR_TEAM3) c3 = 0;
-			if (head.team == COLOR_TEAM4) c4 = 0;
-			head = head.chain;
-		}
-	}
-	else if(game == GAME_DOMINATION)
-		teament_name = "dom_team";
-	else if(game == GAME_CTF)
-		teament_name = "ctf_team";
-	else if(game == GAME_DEATHMATCH)
-		teament_name = "tdm_team";
-	else if(game == GAME_NEXBALL)
-		teament_name = "nexball_team";
-	else
-	{
-		// cover anything else by treating it like tdm with no teams spawned
-		if(game == GAME_KEYHUNT)
-			dm = kh_teams;
-		else if(game == GAME_RACE)
-			dm = race_teams;
-		else
-			dm = 2;
-
-		if(dm >= 4)
-			c1 = c2 = c3 = c4 = 0;
-		else if(dm >= 3)
-			c1 = c2 = c3 = 0;
-		else if (game == GAME_SURVIVE)
-			c1 = 0;
-		else
-			c1 = c2 = 0;
-	}
-
-	// find out what teams are allowed if necessary
-	if(teament_name)
-	{
-		head = find(world, classname, teament_name);
-		while(head)
-		{
-			if(!(game == GAME_DOMINATION && head.netname == ""))
-			{
-				if(head.team == COLOR_TEAM1)
-					c1 = 0;
-				else if(head.team == COLOR_TEAM2)
-					c2 = 0;
-				else if(head.team == COLOR_TEAM3)
-					c3 = 0;
-				else if(head.team == COLOR_TEAM4)
-					c4 = 0;
-			}
-			head = find(head, classname, teament_name);
-		}
-	}
+	if (at1) c1 = 0;
+	if (at2) c2 = 0;
+	if (at3) c3 = 0;
+	if (at4) c4 = 0;
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
 	if(c3==-1&&c4==-1)
@@ -1151,29 +1109,26 @@ void tdm_spawnteam (string teamname, float teamcolor)
 	e.team = e.cnt + 1;
 };
 
-// spawn some default teams if the map is not set up for tdm
-void tdm_spawnteams()
-{
-	float numteams;
-
-	numteams = cvar("g_tdm_teams_override");
-	if(numteams < 2)
-		numteams = cvar("g_tdm_teams");
-	numteams = bound(2, numteams, 4);
-
-	tdm_spawnteam("Red", COLOR_TEAM1-1);
-	tdm_spawnteam("Blue", COLOR_TEAM2-1);
-	if(numteams >= 3)
-		tdm_spawnteam("Yellow", COLOR_TEAM3-1);
-	if(numteams >= 4)
-		tdm_spawnteam("Pink", COLOR_TEAM4-1);
-};
-
 void tdm_delayedinit()
 {
 	// if no teams are found, spawn defaults
-	if (find(world, classname, "tdm_team") == world)
-		tdm_spawnteams();
+	entity e;
+	for (e = find(world, classname, "tdm_team"); e; e = find(e, classname, "tdm_team")) {
+		SetAllowedTeam(e.team);
+	}
+	CheckAllowedTeams(world);
+	if (c1 + c2 + c3 + c4 < -2) {
+		SetTeamCount(0);
+		float numteams = cvar("g_tdm_teams_override");
+		if(numteams < 2)
+			numteams = cvar("g_tdm_teams");
+
+		numteams = bound(2, numteams, 4);
+		SetAllowedTeam(COLOR_TEAM1);
+		SetAllowedTeam(COLOR_TEAM2);
+		if (numteams > 2) SetAllowedTeam(COLOR_TEAM3);
+		if (numteams > 3) SetAllowedTeam(COLOR_TEAM4);
+	}
 };
 
 void tdm_init()
