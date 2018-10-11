@@ -2179,6 +2179,7 @@ void PutTeamToServer(float t) {
 void Client_GetCvars() {
 	stuffcmd(self, "sendcvar cl_retard\n"
 			"sendcvar cl_autoswitch\n"
+			"sendcvar cl_saboteur\n"
 			"sendcvar cl_playerdetailreduction\n"
 			"sendcvar scr_centertime\n"
 			"sendcvar cl_gunalpha\n"
@@ -2216,6 +2217,8 @@ void Client_GetCvars_Parse() {
 		}
 	} else if (s == "cl_autoswitch")
 		self.autoswitch = stof(val);
+	else if (s == "cl_saboteur")
+		self.saboteur = stof(val);
 	else if (s == "cl_playerdetailreduction")
 		self.cvar_cl_playerdetailreduction = stof(val);
 	else if (s == "scr_centertime")

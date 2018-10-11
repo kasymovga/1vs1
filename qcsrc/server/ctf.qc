@@ -486,6 +486,9 @@ void FlagTouch()
 	if (other.health < 1) // ignore dead players
 		return;
 
+	if (other.saboteur) //ignore saboteurs
+		return;
+
 	if not(GameHookChain_PlayerCanBeCarrier(other))
 		return;
 
