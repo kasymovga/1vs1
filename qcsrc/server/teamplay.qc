@@ -1117,9 +1117,10 @@ void tdm_delayedinit()
 		SetAllowedTeam(e.team);
 	}
 	CheckAllowedTeams(world);
-	if (c1 + c2 + c3 + c4 < -2) {
+	float teams_override = cvar("g_tdm_teams_override");
+	if (c1 + c2 + c3 + c4 < -2 || teams_override > 1) {
 		SetTeamCount(0);
-		float numteams = cvar("g_tdm_teams_override");
+		float numteams = teams_override;
 		if(numteams < 2)
 			numteams = cvar("g_tdm_teams");
 
