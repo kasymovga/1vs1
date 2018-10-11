@@ -158,15 +158,19 @@ void Ice_Think()
 	if (unfrozer)
 	{
 		self.unfroze_progress += ICE_FRAME_TIME * unfroze_scale;
-		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
+		if (clienttype(unfrozer) == CLIENTTYPE_REAL) {
 			if (self.unfroze_pb)
 				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
+		} else
+			unfrozer.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
 
-		if (clienttype(self.owner) == CLIENTTYPE_REAL)
+		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
 			if (self.owner.unfroze_pb)
 				ProgressBar_SetValue(self.owner.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
-
-		unfrozer.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
+		} else {
+			self.owner.movement = '0 0 0';
+			self.owner.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
+		}
 	}
 	if (self.unfroze_progress >= g_freeze_unfroze_time)
 	{
