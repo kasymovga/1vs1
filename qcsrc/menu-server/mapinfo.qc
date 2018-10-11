@@ -1087,7 +1087,7 @@ void MapInfo_LoadMap(string s)
 	if(!MapInfo_CheckMap(s))
 	{
 		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
-		MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
+		MapInfo_SwitchGameType(GAME_DEATHMATCH);
 	}
 	localcmd(strcat("\nsettemp_restore\nchangelevel ", s, "\n"));
 }
@@ -1115,15 +1115,15 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		if(MapInfo_Map_supportedGametypes <= 0)
 			error("Mapinfo system is not functional at all. BAILED OUT.\n");
 
-		t = 1;
-		while(!(MapInfo_Map_supportedGametypes & 1))
-		{
-			t *= 2;
-			MapInfo_Map_supportedGametypes = floor(MapInfo_Map_supportedGametypes / 2);
-		}
-		// t is now a supported mode!
 		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to a supported mode.\n");
-		MapInfo_SwitchGameType(t);
+		for (t = GAME_DEATHMATCH; t < GAME_END; t++) {
+			if (MapInfo_GameTypeToMapInfoType(t) & MapInfo_Map_supportedGametypes) {
+				MapInfo_SwitchGameType(t);
+				break;
+			}
+		}
+		if (t == GAME_END)
+			print("No supported game mode for map!!! How can this possible?\n");
 	}
 	cvar_settemp_restore();
 	MapInfo_Get_ByName(s, 1, MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()));
