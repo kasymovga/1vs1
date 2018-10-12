@@ -1018,14 +1018,6 @@ void kh_init()  // sets up th KH environment
 	}
 }
 
-void kh_finalize()
-{
-	// to be called before intermission
-	kh_FinishRound();
-	remove(kh_controller);
-	kh_controller = world;
-}
-
 void kh_update_state()
 {
 	entity player;

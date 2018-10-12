@@ -15,7 +15,6 @@ void kh_FinishRound();
 void kh_StartRound();
 void kh_EnableTrackingDevice();
 void kh_init();
-void kh_finalize();
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e);
 float kh_Key_waypointsprite_visible_for_player(entity e);
 float kh_HandleFrags(entity attacker, entity targ, float f);
