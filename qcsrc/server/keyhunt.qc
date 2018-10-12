@@ -9,7 +9,6 @@
 #define SP_KH_LOSSES SP_GAME_SCORE6
 
 // #define KH_PLAYER_USE_ATTACHMENT
-// #define KH_PLAYER_USE_CARRIEDMODEL
 // #define KH_KEY_ATTACHMENT_DEBUG
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
@@ -68,8 +67,6 @@ string kh_sound_drop = "kh/drop.wav";
 string kh_sound_collect = "kh/collect.wav";
 string kh_sound_alarm = "kh/alarm.wav";  // the new siren/alarm
 
-float kh_key_dropped, kh_key_carried;
-
 float g_balance_keyhunt_damageforcescale;
 float g_balance_keyhunt_delay_collect;
 float g_balance_keyhunt_delay_drop;
@@ -111,7 +108,6 @@ void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occas
 
 void kh_Controller_Think()  // called a lot
 {
-	entity e;
 	if(intermission_running)
 		return;
 	if(self.cnt > 0)
@@ -199,7 +195,6 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.nextthink = time;
 	key.damageforcescale = 0;
 	key.takedamage = DAMAGE_NO;
-	key.modelindex = kh_key_carried;
 }
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
@@ -238,7 +233,6 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.damageforcescale = g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
-	key.modelindex = kh_key_dropped;
 	key.kh_previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
@@ -375,8 +369,7 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_Key_Damage;
 	key.takedamage = DAMAGE_YES;
-	key.modelindex = kh_key_dropped;
-	key.model = "key";
+	setmodel(key, "models/keyhunt/key.md3");
 	key.kh_dropperteam = 0;
 	key.effects &~= EF_NODRAW;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
@@ -854,7 +847,6 @@ void kh_StartRound()  // runs at the start of each round
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	entity player;
 	GameStatus_Set("", 1);
 	kh_tracking_enabled = TRUE;
 }
@@ -985,9 +977,6 @@ void kh_init()  // sets up th KH environment
 	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
 	GameHook_BotChooseRole = havocbot_chooserole_kh;
 
-#ifdef KH_PLAYER_USE_CARRIEDMODEL
-	precache_model("models/keyhunt/key-carried.md3");
-#endif
 	precache_model("models/keyhunt/key.md3");
 
 	// setup variables
@@ -1001,23 +990,12 @@ void kh_init()  // sets up th KH environment
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
 	kh_Controller_SetThink(0, "", kh_WaitForPlayers);
-
-	setmodel(kh_controller, "models/keyhunt/key.md3");
-	kh_key_dropped = kh_controller.modelindex;
 	/*
 	dprint(vtos(kh_controller.mins));
 	dprint(vtos(kh_controller.maxs));
 	dprint("\n");
 	*/
-#ifdef KH_PLAYER_USE_CARRIEDMODEL
-	setmodel(kh_controller, "models/keyhunt/key-carried.md3");
-	kh_key_carried = kh_controller.modelindex;
-#else
-	kh_key_carried = kh_key_dropped;
-#endif
 
-	kh_controller.model = "";
-	kh_controller.modelindex = 0;
 	kh_controller.reset2 = kh_Reset;
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
