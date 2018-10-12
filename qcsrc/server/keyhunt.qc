@@ -124,11 +124,7 @@ void kh_Controller_Think()  // called a lot
 			else
 				s = kh_Controller_Waitmsg;
 
-			//dprint(s, "\n");
-
-			FOR_EACH_PLAYER(e)
-				if(clienttype(e) == CLIENTTYPE_REAL)
-					centerprint_atprio(e, CENTERPRIO_SPAM, s);
+			GameStatus_Set(s, 2);
 		}
 		self.cnt -= 1;
 	}
@@ -830,10 +826,7 @@ void kh_StartRound()  // runs at the start of each round
 		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
 		return;
 	}
-
-	FOR_EACH_PLAYER(player)
-		if(clienttype(player) == CLIENTTYPE_REAL)
-			centerprint_expire(player, CENTERPRIO_SPAM);
+	GameStatus_Set("", 1);
 
 	entity key;
 	i = 0;
@@ -856,17 +849,13 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	kh_Controller_SetThink(g_balance_keyhunt_delay_tracking, "Scanning frequency range...", kh_EnableTrackingDevice);
+	kh_Controller_SetThink(g_balance_keyhunt_delay_tracking, "\nScanning frequency range...", kh_EnableTrackingDevice);
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
 	entity player;
-
-	FOR_EACH_PLAYER(player)
-		if(clienttype(player) == CLIENTTYPE_REAL)
-			centerprint_expire(player, CENTERPRIO_SPAM);
-
+	GameStatus_Set("", 1);
 	kh_tracking_enabled = TRUE;
 }
 
