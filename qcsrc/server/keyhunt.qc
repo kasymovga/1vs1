@@ -618,9 +618,15 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	{
 		float f;
 		f = DistributeEvenly_Get(1);
-		kh_Scores_Event(key.owner, key, f, 0);
-		PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+		if (kh_roundbased)
+			PlayerScore_Add(key.owner, SP_KH_CAPS, 1);
+		else {
+			PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+			kh_Scores_Event(key.owner, key, f, 0);
+		}
 	}
+	if (kh_roundbased)
+		TeamScore_AddToTeam(teem, ST_KH_CAPS, 1);
 
 	first = TRUE;
 	FOR_EACH_KH_KEY(key)
