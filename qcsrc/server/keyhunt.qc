@@ -1066,7 +1066,7 @@ void kh_init()  // sets up th KH environment
 		else if (game == GAME_KEYHUNT_FT)
 			Freeze_Init_Shared("khft");
 
-		Roundbased_SetScoreField(ST_CTF_CAPS);
+		Roundbased_SetScoreField(ST_KH_CAPS);
 	}
 	float i;
 	entity key;
