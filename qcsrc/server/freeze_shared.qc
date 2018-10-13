@@ -1,4 +1,4 @@
-#define SP_REVIVE SP_GAME_SCORE6
+#define SP_REVIVE SP_GAME_SCORE7
 
 var void(entity spot) Freeze_Spawn_NextLink;
 void Freeze_Spawn(entity spot)

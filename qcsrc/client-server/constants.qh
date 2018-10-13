@@ -218,7 +218,8 @@ enum {
 	SP_GAME_SCORE4,
 	SP_GAME_SCORE5,
 	SP_GAME_SCORE6,
-#define MAX_SCORE 15
+	SP_GAME_SCORE7,
+#define MAX_SCORE 16
 };
 
 // game mode specific indices are not in common/, but in server/scores_rules.qc!

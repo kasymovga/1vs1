@@ -263,7 +263,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		{
 			// No longer a key carrier
 			if(!kh_no_radar_circles)
+			if(key.owner.waypointsprite_attachedforcarrier)
 				WaypointSprite_Ping(key.owner.waypointsprite_attachedforcarrier);
+
 			WaypointSprite_DetachCarrier(key.owner);
 		}
 	}
@@ -1033,7 +1035,6 @@ void kh_init()  // sets up th KH environment
 	// make a KH entity for controlling the game
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
-	kh_Controller_SetThink(0, "", kh_WaitForPlayers);
 	/*
 	dprint(vtos(kh_controller.mins));
 	dprint(vtos(kh_controller.maxs));
@@ -1045,6 +1046,11 @@ void kh_init()  // sets up th KH environment
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 	if (game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT)
 		kh_roundbased = TRUE;
+
+	if (kh_roundbased)
+		kh_Controller_SetThink(0, "", kh_WaitRoundBegin);
+	else
+		kh_Controller_SetThink(0, "", kh_WaitForPlayers);
 
 	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
 	ScoreInfo_SetLabel_TeamScore  (ST_KH_CAPS,      "caps",      (kh_roundbased ? SFL_SORT_PRIO_PRIMARY : SFL_SORT_PRIO_SECONDARY));

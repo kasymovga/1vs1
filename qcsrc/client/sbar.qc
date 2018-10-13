@@ -451,10 +451,10 @@ string Sbar_DefaultColumnLayout()
 		"-teams,race/kills -teams/deaths -teams,race/suicides -race,dm,tdm/frags ", // tdm already has this in "score"
 		"?damage ?bestwep +ca,ft,surv,catf,ctft/status "
 		"+ctf,catf,ctft/caps +ctf,catf,ctft/pickups +ctf,catf,ctft/fckills +ctf,catf,ctft/returns ",
-		"+kh/caps +kh/pushes +kh/destroyed ",
+		"+kh,khca,khft/caps +kh,khca,khft/pushes +kh,khca,khft/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals ",
-		"+ft,ctft/revs -race,nexball/score");
+		"+ft,ctft,khft/revs -race,nexball/score");
 }
 
 void Cmd_Sbar_SetFields(float argc)
