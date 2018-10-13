@@ -55,7 +55,6 @@ string MapInfo_ListAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 
 // gets a gametype from a string
 float MapInfo_Type_FromString(string t);
-string MapInfo_String_FromType(float t);
 string MapInfo_GetGameTypeCvar(float t);
 void MapInfo_SwitchGameType(float t);
 string MapInfo_HumanString_FromType(float t);
