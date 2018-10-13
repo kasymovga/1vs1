@@ -30,6 +30,7 @@ float KH_KEY_BRIGHTNESS = 2;
 
 string kh_Controller_Waitmsg;
 float kh_no_radar_circles;
+float kh_roundbased;
 
 // kh_state
 //     bits  0- 4: team of key 1, or 0 for no such key, or 30 for dropped, or 31 for self
@@ -120,7 +121,8 @@ void kh_Controller_Think()  // called a lot
 			else
 				s = kh_Controller_Waitmsg;
 
-			GameStatus_Set(s, 2);
+			if not(kh_roundbased)
+				GameStatus_Set(s, 2);
 		}
 		self.cnt -= 1;
 	}
@@ -492,6 +494,10 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 	if(intermission_running)
 		return;
 
+	if (kh_roundbased)
+	if not(Roundbased_Active)
+		return;
+
 	if(self.owner) // already carried
 		return;
 	if(other.classname != "player")
@@ -624,6 +630,8 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 			first = FALSE;
 		}
 	bprint("^7 captured the keys for the ", ColoredTeamName(teem), "\n");
+	if (kh_roundbased)
+		Roundbased_SetRoundStartWithWinner(other.team);
 
 	first = TRUE;
 	midpoint = '0 0 0';
@@ -740,7 +748,11 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 	play2all(kh_sound_destroy);
 	te_tarexplosion(lostkey.origin);
 
-	kh_FinishRound();
+	if (kh_roundbased) {
+		FOR_EACH_KH_KEY(key)
+			kh_Key_Hide(key);
+	} else
+		kh_FinishRound();
 }
 
 void kh_FinishRound()  // runs when a team captures the keys
@@ -796,7 +808,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing == "")
-		kh_Controller_SetThink(g_balance_keyhunt_delay_round, "Round starts in ", kh_StartRound);
+		kh_Controller_SetThink((kh_roundbased ? 0 : g_balance_keyhunt_delay_round), "Round starts in ", kh_StartRound);
 	else
 		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
 }
@@ -819,7 +831,8 @@ void kh_StartRound()  // runs at the start of each round
 		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), kh_WaitForPlayers);
 		return;
 	}
-	GameStatus_Set("", 1);
+	if not(kh_roundbased)
+		GameStatus_Set("", 1);
 
 	entity key;
 	i = 0;
@@ -842,12 +855,15 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	kh_Controller_SetThink(g_balance_keyhunt_delay_tracking, "\nScanning frequency range...", kh_EnableTrackingDevice);
+	if (g_keyhunt_showenemycarrier)
+		kh_Controller_SetThink((kh_roundbased ? 0 : g_balance_keyhunt_delay_tracking), "\nScanning frequency range...", kh_EnableTrackingDevice);
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	GameStatus_Set("", 1);
+	if not(kh_roundbased)
+		GameStatus_Set("", 1);
+
 	kh_tracking_enabled = TRUE;
 }
 
@@ -913,8 +929,18 @@ float kh_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	return FALSE;
 }
 
+void kh_WaitRoundBegin() {
+	if (Roundbased_Active)
+		kh_Controller_SetThink(0, "", kh_WaitForPlayers);
+	else
+		kh_Controller_SetThink(1, "", kh_WaitRoundBegin);
+}
+
 void kh_Reset() {
-	kh_Controller_SetThink(cvar("g_balance_keyhunt_delay_round")+(game_starttime - time), "", kh_StartRound);
+	if (kh_roundbased)
+		kh_Controller_SetThink(0, "", kh_WaitRoundBegin);
+	else
+		kh_Controller_SetThink(g_balance_keyhunt_delay_round + max(0, game_starttime - time), "", kh_WaitForPlayers);
 }
 
 var void(entity e) kh_SpectateCopy_NextLink;
@@ -931,8 +957,20 @@ string kh_AppendItemCodes(string s, entity plr) {
 	return kh_AppendItemCodes_NextLink(s, plr);
 }
 
-float kh_FragLimitOverride() { return cvar("g_keyhunt_point_limit"); }
-float kh_LeadLimitOverride() { return cvar("g_keyhunt_point_leadlimit"); }
+float kh_FragLimitOverride() {
+	if (game == GAME_KEYHUNT_CA)
+		return cvar("g_khca_point_limit");
+
+	return cvar("g_keyhunt_point_limit");
+}
+
+float kh_LeadLimitOverride() {
+	if (game == GAME_KEYHUNT_CA)
+		return cvar("g_khca_point_leadlimit");
+
+	return cvar("g_keyhunt_point_leadlimit");
+}
+
 float kh_PlayerIsCarrier(entity plr) { return plr.kh_next != world; }
 void kh_DropCarried(entity plr) { kh_Key_DropAll(plr, FALSE, FALSE); }
 float kh_TeleportationForbiddenFor(entity e) { return e.classname == STR_ITEM_KH_KEY; }
@@ -999,15 +1037,21 @@ void kh_init()  // sets up th KH environment
 	kh_controller.reset2 = kh_Reset;
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
+	if (game == GAME_KEYHUNT_CA)
+		kh_roundbased = TRUE;
 
 	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_TeamScore  (ST_KH_CAPS,      "caps",      (kh_roundbased ? SFL_SORT_PRIO_PRIMARY : SFL_SORT_PRIO_SECONDARY));
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS,  "destroyed", SFL_LOWER_IS_BETTER);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
+	if (kh_roundbased) {
+		Clanarena_Init_Shared("khca");
+		Roundbased_SetScoreField(ST_CTF_CAPS);
+	}
 	float i;
 	entity key;
 	for (i = 0; i < kh_teams; i++) {

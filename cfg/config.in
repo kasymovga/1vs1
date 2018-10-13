@@ -161,6 +161,10 @@ set g_nexball_hockey_bouncefactor 0.8
 set g_nexball_hockey_melee_boost_forward "400"
 set g_nexball_hockey_melee_boost_up "250"
 set g_keyhunt_showenemycarrier 1
+set g_khca_point_limit 15
+set g_khca_point_leadlimit 0
+set g_khca_startdelay 5
+set g_khca_enddelay 5
 set force_gametype ""
 set skill_auto_min 10
 set skill_auto_max 30
@@ -1388,6 +1392,7 @@ set _g_ctft 0
 set _g_runematch 0
 set _g_conquest 0
 set _g_keyhunt 0
+set _g_khca 0
 set _g_onslaught 0
 set _g_race 0
 set _g_nexball 0
@@ -1409,6 +1414,7 @@ alias gametype_conq "reset_gametype; _g_conquest 1; bprint_gtswitch ^3Conquest"
 alias gametype_conquest gametype_conq
 alias gametype_kh "reset_gametype; _g_keyhunt 1; bprint_gtswitch ^3Key Hunt"
 alias gametype_keyhunt gametype_kh
+alias gametype_khca "reset_gametype; _g_khca 1; bprint_gtswitch ^3Key Hunt with CA"
 alias gametype_ons "reset_gametype; _g_onslaught 1; bprint_gtswitch ^3Onslaught"
 alias gametype_onslaught gametype_ons
 alias gametype_race "reset_gametype; _g_race 1; bprint_gtswitch ^3Race"

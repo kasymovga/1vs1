@@ -204,7 +204,7 @@ void InitGameplayMode()
 		runematch_init();
 	}
 
-	if(game == GAME_KEYHUNT)
+	if(game == GAME_KEYHUNT || game == GAME_KEYHUNT_CA)
 	{
 		ActivateTeamplay();
 		kh_init();

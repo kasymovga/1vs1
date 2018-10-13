@@ -524,6 +524,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "rune")    return GAME_RUNEMATCH;
 	else if(t == "conq")    return GAME_CONQUEST;
 	else if(t == "kh")      return GAME_KEYHUNT;
+	else if(t == "khca")    return GAME_KEYHUNT_CA;
 	else if(t == "ons")     return GAME_ONSLAUGHT;
 	else if(t == "rc")      return GAME_RACE;
 	else if(t == "nexball") return GAME_NEXBALL;
@@ -546,6 +547,7 @@ string MapInfo_String_FromType(float t)
 	else if(t == GAME_RUNEMATCH      ) return "rune"   ;
 	else if(t == GAME_CONQUEST       ) return "conq"   ;
 	else if(t == GAME_KEYHUNT        ) return "kh"     ;
+	else if(t == GAME_KEYHUNT_CA     ) return "khca"   ;
 	else if(t == GAME_ONSLAUGHT      ) return "ons"    ;
 	else if(t == GAME_RACE           ) return "rc"     ;
 	else if(t == GAME_NEXBALL        ) return "nexball";
@@ -578,6 +580,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Onslaught";
 	} else if (t == GAME_KEYHUNT) {
 		return "Key Hunt";
+	} else if (t == GAME_KEYHUNT_CA) {
+		return "Key Hunt with CA";
 	} else if (t == GAME_CTS) {
 		return "CTS";
 	} else if (t == GAME_RACE) {
@@ -1035,6 +1039,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case GAME_RUNEMATCH: return "_g_runematch";
 		case GAME_CONQUEST: return "_g_conquest";
 		case GAME_KEYHUNT: return "_g_keyhunt";
+		case GAME_KEYHUNT_CA: return "_g_khca";
 		case GAME_ONSLAUGHT: return "_g_onslaught";
 		case GAME_RACE: return "_g_race";
 		case GAME_NEXBALL: return "_g_nexball";
@@ -1058,6 +1063,7 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 		case GAME_RUNEMATCH:       return MAPINFO_TYPE_RUNEMATCH;
 		case GAME_CONQUEST:        return MAPINFO_TYPE_CONQUEST;
 		case GAME_KEYHUNT:         return MAPINFO_TYPE_KEYHUNT;
+		case GAME_KEYHUNT_CA:      return MAPINFO_TYPE_KEYHUNT;
 		case GAME_ONSLAUGHT:       return MAPINFO_TYPE_ONSLAUGHT;
 		case GAME_RACE:            return MAPINFO_TYPE_RACE;
 		case GAME_CTS:             return MAPINFO_TYPE_CTS;
