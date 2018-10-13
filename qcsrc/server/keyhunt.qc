@@ -961,11 +961,17 @@ float kh_FragLimitOverride() {
 	if (game == GAME_KEYHUNT_CA)
 		return cvar("g_khca_point_limit");
 
+	if (game == GAME_KEYHUNT_FT)
+		return cvar("g_khft_point_limit");
+
 	return cvar("g_keyhunt_point_limit");
 }
 
 float kh_LeadLimitOverride() {
 	if (game == GAME_KEYHUNT_CA)
+		return cvar("g_khca_point_leadlimit");
+
+	if (game == GAME_KEYHUNT_FT)
 		return cvar("g_khca_point_leadlimit");
 
 	return cvar("g_keyhunt_point_leadlimit");
@@ -1037,7 +1043,7 @@ void kh_init()  // sets up th KH environment
 	kh_controller.reset2 = kh_Reset;
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
-	if (game == GAME_KEYHUNT_CA)
+	if (game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT)
 		kh_roundbased = TRUE;
 
 	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
@@ -1049,7 +1055,11 @@ void kh_init()  // sets up th KH environment
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
 	if (kh_roundbased) {
-		Clanarena_Init_Shared("khca");
+		if (game == GAME_KEYHUNT_CA)
+			Clanarena_Init_Shared("khca");
+		else if (game == GAME_KEYHUNT_FT)
+			Freeze_Init_Shared("khft");
+
 		Roundbased_SetScoreField(ST_CTF_CAPS);
 	}
 	float i;

@@ -2127,7 +2127,7 @@ void drawcolorcodedstringcenter(vector position, string text, vector scale, floa
 void Sbar_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == GAME_KEYHUNT || gametype == GAME_KEYHUNT_CA)
+	if(gametype == GAME_KEYHUNT || gametype == GAME_KEYHUNT_CA || gametype == GAME_KEYHUNT_FT)
 		CSQC_kh_hudreset();
 	else if(gametype == GAME_CTF || gametype == GAME_CATF || gametype == GAME_CTFT)
 		CSQC_ctf_hudreset();
@@ -2175,7 +2175,7 @@ float hg_visual, hg_alpha;
 
 var void() Sbar_GameType_hud;
 void Sbar_GameType_Init() {
-	if(gametype == GAME_KEYHUNT || gametype == GAME_KEYHUNT_CA)
+	if(gametype == GAME_KEYHUNT || gametype == GAME_KEYHUNT_CA || gametype == GAME_KEYHUNT_FT)
 		Sbar_GameType_hud = CSQC_kh_hud;
 	else if(gametype == GAME_CTF || gametype == GAME_CATF || gametype == GAME_CTFT)
 		Sbar_GameType_hud = CSQC_ctf_hud;

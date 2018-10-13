@@ -193,7 +193,8 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 		case GAME_CTF:             GameType_ConfigureSliders(e, l, l2, "Capture limit:",   1,   20,  1, "capturelimit_override");    break;
 		case GAME_DOMINATION:      GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "g_domination_point_limit"); break;
 		case GAME_KEYHUNT:         GameType_ConfigureSliders(e, l, l2, "Point limit:",   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case GAME_KEYHUNT_CA:      GameType_ConfigureSliders(e, l, l2, "Point limit:",   1, 30, 1, "g_khca_point_limit");    break;
+		case GAME_KEYHUNT_CA:      GameType_ConfigureSliders(e, l, l2, "Win limit:",   1, 30, 1, "g_khca_point_limit");    break;
+		case GAME_KEYHUNT_FT:      GameType_ConfigureSliders(e, l, l2, "Win limit:",   1, 30, 1, "g_khft_point_limit");    break;
 		case GAME_RUNEMATCH:       GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "g_runematch_point_limit");  break;
 		case GAME_RACE:            GameType_ConfigureSliders(e, l, l2, "Laps:",            1,   25,  1, "g_race_laps_limit");        break;
 		case GAME_NEXBALL:         GameType_ConfigureSliders(e, l, l2, "Goals:",           1,   50,  1, "g_nexball_goallimit");      break;

@@ -166,6 +166,10 @@ set g_khca_point_limit 15
 set g_khca_point_leadlimit 0
 set g_khca_startdelay 5
 set g_khca_enddelay 5
+set g_khft_point_limit 15
+set g_khft_point_leadlimit 0
+set g_khft_startdelay 5
+set g_khft_enddelay 5
 set force_gametype ""
 set skill_auto_min 10
 set skill_auto_max 30
@@ -1394,6 +1398,7 @@ set _g_runematch 0
 set _g_conquest 0
 set _g_keyhunt 0
 set _g_khca 0
+set _g_khft 0
 set _g_onslaught 0
 set _g_race 0
 set _g_nexball 0
@@ -1402,7 +1407,7 @@ set _g_freeze 0
 set _g_clanarena 0
 set _g_survive 0
 set _g_single 0
-alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_runematch 0; _g_conquest 0; _g_keyhunt 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0"
+alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_runematch 0; _g_conquest 0; _g_keyhunt 0; _g_khca 0; _g_khft 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0"
 alias gametype_dm "reset_gametype; _g_dm 1; bprint_gtswitch ^3Deathmatch"
 alias gametype_tdm "reset_gametype; _g_tdm 1; bprint_gtswitch ^3Team Deathmatch"
 alias gametype_dom "reset_gametype; _g_domination 1; bprint_gtswitch ^3Domination"
@@ -1416,6 +1421,7 @@ alias gametype_conquest gametype_conq
 alias gametype_kh "reset_gametype; _g_keyhunt 1; bprint_gtswitch ^3Key Hunt"
 alias gametype_keyhunt gametype_kh
 alias gametype_khca "reset_gametype; _g_khca 1; bprint_gtswitch ^3Key Hunt with CA"
+alias gametype_khft "reset_gametype; _g_khft 1; bprint_gtswitch ^3Key Hunt with FT"
 alias gametype_ons "reset_gametype; _g_onslaught 1; bprint_gtswitch ^3Onslaught"
 alias gametype_onslaught gametype_ons
 alias gametype_race "reset_gametype; _g_race 1; bprint_gtswitch ^3Race"
