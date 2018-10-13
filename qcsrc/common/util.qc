@@ -199,6 +199,7 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_CLANARENA) return "ca";
 	else if (g == GAME_CONQUEST) return "conq";
 	else if (g == GAME_SURVIVE) return "surv";
+	else if (g == GAME_SINGLE) return "single";
 	return "dm";
 }
 

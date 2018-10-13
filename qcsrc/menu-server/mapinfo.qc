@@ -534,29 +534,6 @@ float MapInfo_Type_FromString(string t)
 	else                    return 0;
 }
 
-string MapInfo_String_FromType(float t)
-{
-	if     (t == GAME_DEATHMATCH     ) return "dm"     ;
-	else if(t == GAME_TEAM_DEATHMATCH) return "tdm"    ;
-	else if(t == GAME_FREEZETAG      ) return "ft"     ;
-	else if(t == GAME_CLANARENA      ) return "ca"     ;
-	else if(t == GAME_DOMINATION     ) return "dom"    ;
-	else if(t == GAME_CTF            ) return "ctf"    ;
-	else if(t == GAME_CATF           ) return "catf"   ;
-	else if(t == GAME_CTFT           ) return "ctfa"   ;
-	else if(t == GAME_RUNEMATCH      ) return "rune"   ;
-	else if(t == GAME_CONQUEST       ) return "conq"   ;
-	else if(t == GAME_KEYHUNT        ) return "kh"     ;
-	else if(t == GAME_KEYHUNT_CA     ) return "khca"   ;
-	else if(t == GAME_ONSLAUGHT      ) return "ons"    ;
-	else if(t == GAME_RACE           ) return "rc"     ;
-	else if(t == GAME_NEXBALL        ) return "nexball";
-	else if(t == GAME_CTS            ) return "cts"    ;
-	else if(t == GAME_SURVIVE        ) return "surv"   ;
-	else if(t == GAME_SINGLE         ) return "single" ;
-	else                               return "wtf"    ;
-}
-
 string MapInfo_HumanString_FromType(float t) {
 	if (t == GAME_DEATHMATCH) {
 		return "Deathmatch";
@@ -815,6 +792,9 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 
 				if (cvar("g_clanarena_use_tdm_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CLANARENA;
+
+				if (cvar("g_keyhunt_use_tdm_maps"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
 			}
 		}
 		else if(t == "size")

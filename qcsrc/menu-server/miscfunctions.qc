@@ -83,7 +83,7 @@ void game_cvar_init(string profile) {
 
 	nogame_cvar = cvar;
 	nogame_cvar_string = cvar_string;
-	game_cvar_prefix = MapInfo_String_FromType(MapInfo_CurrentGametype());
+	game_cvar_prefix = GametypeNameFromType(MapInfo_CurrentGametype());
 	profile_cvar_prefix = zone_ifneeded(profile);
 	cvar = game_cvar;
 	cvar_string = game_cvar_string;
