@@ -2,6 +2,10 @@ float single_level_finished;
 
 void Single_EndLevel() {
 	single_level_finished = TRUE;
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.winning = 1;
+
 	campaign_won = TRUE;
 }
 
