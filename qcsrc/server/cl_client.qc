@@ -2034,6 +2034,7 @@ void PlayerPostThink (void)
 			maxidle = 0;
 
 		if (maxidle)
+		if not(g_campaign)
 		if not(intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {
