@@ -21,8 +21,6 @@ float g_voice_flood_spv_team;
 float g_jetpack_attenuation;
 float g_fullbrightplayers;
 
-float weaponstats_buffer;
-
 vector healtharmor_maxdamage(float h, float a, float armorblock)
 {
 	// NOTE: we'll always choose the SMALLER value...
