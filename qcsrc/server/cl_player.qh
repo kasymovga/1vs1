@@ -1,5 +1,3 @@
-void WeaponStats_Init();
-void WeaponStats_Shutdown();
 void Player_Init();
 void PlayerClear(float killed);
 void play_countdown(float finished, string samp);

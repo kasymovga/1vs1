@@ -744,8 +744,6 @@ void spawnfunc_worldspawn (void)
 		}
 	}
 
-	WeaponStats_Init();
-
 	addstat(STAT_WEAPONS, AS_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -2257,7 +2255,6 @@ void RestoreGame()
 	MapInfo_Shutdown();
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
-	WeaponStats_Init();
 	dlc_reload();
 }
 
@@ -2283,7 +2280,6 @@ void SV_Shutdown()
 		// tell the bot system the game is ending now
 		bot_endgame();
 
-		WeaponStats_Shutdown();
 		MapInfo_Shutdown();
 		InfoMessages_Shutdown();
         IP2C_ShutdownSV();
