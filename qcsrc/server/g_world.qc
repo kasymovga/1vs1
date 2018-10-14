@@ -560,6 +560,11 @@ void readdynamiccvars() {
 	Vote_Init();
 }
 
+void DB_Init() {
+	ServerProgsDB = db_load("server.db");
+	TemporaryDB = db_create();
+}
+
 float world_already_spawned;
 void spawnfunc_worldspawn (void)
 {
@@ -605,9 +610,7 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	ServerProgsDB = db_load("server.db");
-
-	TemporaryDB = db_create();
+	DB_Init();
 
 	/*
 	TODO sound pack system
@@ -2249,13 +2252,11 @@ void RestoreGame()
 	// some things then break, so let's work around them...
 
 	// Progs DB (capture records)
-	ServerProgsDB = db_load("server.db");
-
+	DB_Init();
 	// Mapinfo
-	MapInfo_Shutdown();
-	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
-	dlc_reload();
+	MapInfo_OnRestore();
+	if not(dlc_ready_all())
+		dlc_reload();
 }
 
 void SV_Shutdown()

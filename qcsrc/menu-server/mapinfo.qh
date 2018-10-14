@@ -65,8 +65,8 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, string s, float recurs
 
 void MapInfo_Cache_Destroy(); // disable caching
 void MapInfo_Cache_Create(); // enable caching
-void MapInfo_Cache_Invalidate(); // delete cache if any, but keep enabled
 
 void MapInfo_ClearTemps(); // call this when done with mapinfo for this frame
 
 void MapInfo_Shutdown(); // call this in the shutdown handler
+void MapInfo_OnRestore();

@@ -83,14 +83,6 @@ void MapInfo_Cache_Create()
 	_MapInfo_Cache_Active = 1;
 }
 
-void MapInfo_Cache_Invalidate()
-{
-	if(!_MapInfo_Cache_Active)
-		return;
-
-	MapInfo_Cache_Create();
-}
-
 void MapInfo_Cache_Store()
 {
 	float i;
@@ -155,7 +147,7 @@ void MapInfo_Enumerate()
 {
 	if(_MapInfo_globopen)
 		search_end(_MapInfo_globhandle);
-	MapInfo_Cache_Invalidate();
+	MapInfo_Cache_Create();
 	_MapInfo_globhandle = search_begin("maps/*.bsp", TRUE, TRUE);
 	_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
 	_MapInfo_globopen = 1;
@@ -1169,4 +1161,12 @@ float MapInfo_RequiredFlags()
 		f |= MAPINFO_FLAG_FRUSTRATING;
 
 	return f;
+}
+
+void MapInfo_OnRestore() {
+	_MapInfo_filtered_allocated = FALSE;
+	_MapInfo_globopen = FALSE;
+	_MapInfo_Cache_Active = FALSE;
+	MapInfo_Enumerate();
+	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
 }
