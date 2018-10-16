@@ -70,20 +70,6 @@ void powerups_SpectateCopy(entity e) {
 	powerups_SpectateCopy_NextLink(e);
 }
 
-var string(string s, entity player) powerups_AppendItemCodes_NextLink;
-string powerups_AppendItemCodes(string s, entity plr) {
-	if(time < plr.strength_finished)
-		s = strcat(s, "S");
-	if(time < plr.invincible_finished)
-		s = strcat(s, "I");
-	if(time < plr.speed_finished)
-		s = strcat(s, "S");
-	if(time < plr.invisibility_finished)
-		s = strcat(s, "I");
-
-	return powerups_AppendItemCodes_NextLink(s, plr);
-}
-
 float powerups_init_done;
 void powerups_init() {
 	if (powerups_init_done)
@@ -95,8 +81,6 @@ void powerups_init() {
 	GameHookChain_PlayerClear = powerups_PlayerClear;
 	powerups_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = powerups_SpectateCopy;
-	powerups_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
-	GameHookChain_AppendItemCodes = powerups_AppendItemCodes;
 }
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_NextLink;

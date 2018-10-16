@@ -792,14 +792,6 @@ void runematch_init()
 	}
 }
 
-var string(string s, entity plr) runematch_AppendItemCodes_NextLink;
-string runematch_AppendItemCodes(string s, entity plr) {
-	if(plr.runes)
-		s = strcat(s, "R{", ftos(plr.runes), "}");
-
-	return runematch_AppendItemCodes_NextLink(s, plr);
-}
-
 var void(entity e) runematch_SpectateCopy_NextLink;
 void runematch_SpectateCopy(entity e) {
 	self.runes = e.runes;
@@ -886,8 +878,6 @@ void runes_init() {
 	GameHookChain_DamageForceDone = runematch_DamageForceDone;
 	runematch_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = runematch_PlayerClear;
-	runematch_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
-	GameHookChain_AppendItemCodes = runematch_AppendItemCodes;
 	runematch_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = runematch_SpectateCopy;
 	runematch_PlayerVisibleThroughWallFor_NextLink = GameHookChain_PlayerVisibleThroughWallFor;

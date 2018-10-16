@@ -89,7 +89,6 @@ var void() GameHookChain_ServerFrame = {}
 var float() GameHookChain_ItemForbidden = { return FALSE; }
 var string(string s) GameHookChain_WelcomeMessageMod = { return s; }
 var float() GameHookChain_PlayerEffectsHandle = { return FALSE; }
-var string(string s, entity plr) GameHookChain_AppendItemCodes = { return s; }
 var float(float c) GameHookChain_PlayerColorsMod = { return c; }
 var float() GameHookChain_JoinHandle = { return FALSE; }
 var float(entity attacker, entity inflictor, float mirrordamage, vector force) GameHookChain_MirrorDamageHandle = { return FALSE; }

@@ -129,22 +129,6 @@ void GiveFrags (entity attacker, entity targ, float f)
 		UpdateFrags(attacker, f);
 }
 
-string AppendItemcodes(string s, entity player)
-{
-	float w;
-	w = player.weapon;
-	//if(w == 0)
-	//	w = player.switchweapon;
-	if(w == 0)
-		w = player.cnt; // previous weapon!
-	s = strcat(s, ftos(w));
-	if(player.BUTTON_CHAT)
-		s = strcat(s, "T");
-
-	s = GameHookChain_AppendItemCodes(s, player);
-	return s;
-}
-
 void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix);
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {

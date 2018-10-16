@@ -957,14 +957,6 @@ void kh_SpectateCopy(entity e) {
 	kh_SpectateCopy_NextLink(e);
 }
 
-var string(string s, entity plr) kh_AppendItemCodes_NextLink;
-string kh_AppendItemCodes(string s, entity plr) {
-	if(plr.kh_next)
-		s = strcat(s, "K");
-
-	return kh_AppendItemCodes_NextLink(s, plr);
-}
-
 float kh_FragLimitOverride() {
 	if (game == GAME_KEYHUNT_CA)
 		return cvar("g_khca_point_limit");
@@ -1020,8 +1012,6 @@ void kh_init()  // sets up th KH environment
 	GameHook_WinCountDown = stub_WinCountDown;
 	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = kh_SpectateCopy;
-	kh_AppendItemCodes_NextLink = GameHookChain_AppendItemCodes;
-	GameHookChain_AppendItemCodes = kh_AppendItemCodes;
 	GameHook_FragLimitOverride = kh_FragLimitOverride;
 	GameHook_LeadLimitOverride = kh_LeadLimitOverride;
 	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
