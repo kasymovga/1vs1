@@ -505,26 +505,36 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType)
 
 float MapInfo_Type_FromString(string t)
 {
-	if     (t == "dm")      return GAME_DEATHMATCH;
-	else if(t == "tdm")     return GAME_TEAM_DEATHMATCH;
-	else if(t == "ft")      return GAME_FREEZETAG;
-	else if(t == "ca")      return GAME_CLANARENA;
-	else if(t == "dom")     return GAME_DOMINATION;
-	else if(t == "ctf")     return GAME_CTF;
-	else if(t == "catf")    return GAME_CATF;
-	else if(t == "ctft")    return GAME_CTFT;
-	else if(t == "rune")    return GAME_RUNEMATCH;
-	else if(t == "conq")    return GAME_CONQUEST;
-	else if(t == "kh")      return GAME_KEYHUNT;
-	else if(t == "khca")    return GAME_KEYHUNT_CA;
-	else if(t == "khft")    return GAME_KEYHUNT_FT;
-	else if(t == "ons")     return GAME_ONSLAUGHT;
-	else if(t == "rc")      return GAME_RACE;
-	else if(t == "nexball") return GAME_NEXBALL;
-	else if(t == "cts")     return GAME_CTS;
-	else if(t == "surv")    return GAME_SURVIVE;
-	else if(t == "single")  return GAME_SINGLE;
-	else                    return 0;
+	if     (t == "dm")         return GAME_DEATHMATCH;
+	else if(t == "tdm")        return GAME_TEAM_DEATHMATCH;
+	else if(t == "ft" ||
+	        t == "freeze" ||
+	        t == "frezetag")   return GAME_FREEZETAG;
+	else if(t == "ca" ||
+	        t == "clanarena")  return GAME_CLANARENA;
+	else if(t == "dom" ||
+	        t == "domination") return GAME_DOMINATION;
+	else if(t == "ctf")        return GAME_CTF;
+	else if(t == "catf")       return GAME_CATF;
+	else if(t == "ctft")       return GAME_CTFT;
+	else if(t == "rune" ||
+	        t == "runematch")  return GAME_RUNEMATCH;
+	else if(t == "conq" ||
+	        t == "conquest")   return GAME_CONQUEST;
+	else if(t == "kh" ||
+	        t == "keyhunt")    return GAME_KEYHUNT;
+	else if(t == "khca")       return GAME_KEYHUNT_CA;
+	else if(t == "khft")       return GAME_KEYHUNT_FT;
+	else if(t == "ons")        return GAME_ONSLAUGHT;
+	else if(t == "rc" ||
+	        t == "race")       return GAME_RACE;
+	else if(t == "nexball" ||
+	        t == "nb" )        return GAME_NEXBALL;
+	else if(t == "cts")        return GAME_CTS;
+	else if(t == "surv" ||
+	        t == "survive")    return GAME_SURVIVE;
+	else if(t == "single")     return GAME_SINGLE;
+	else                       return 0;
 }
 
 string MapInfo_HumanString_FromType(float t) {
