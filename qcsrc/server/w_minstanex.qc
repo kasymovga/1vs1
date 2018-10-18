@@ -138,6 +138,14 @@ void W_MinstaNex_Laser_Attack_Setup() {
 	self.weapon = w_safe;
 }
 
+float W_MinstaNex_PlayerCanFire() {
+	float w_safe = self.weapon;
+	self.weapon = WEP_LASER;
+	float r = PlayerCanFire(self, TRUE);
+	self.weapon = w_safe;
+	return r;
+}
+
 void W_MinstaNex_Laser_Attack() {
 	W_MinstaNex_Laser_Attack_Setup();
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
@@ -188,7 +196,7 @@ float w_minstanex(float req)
 			{
 				if not(self.laser_hold) {
 					if (self.jump_interval <= time)
-					if (PlayerCanFire(self, WEP_LASER))
+					if (W_MinstaNex_PlayerCanFire())
 					{
 						self.jump_interval = time + g_balance_minstanex_laser_refire * W_WeaponRateFactor();
 						//W_Laser_Attack(FALSE);
@@ -199,7 +207,7 @@ float w_minstanex(float req)
 				} else {
 					if (self.laser_hold <= time)
 					if (self.jump_interval <= time)
-					if (PlayerCanFire(self, WEP_LASER)) {
+					if (W_MinstaNex_PlayerCanFire()) {
 						self.jump_interval = time + g_balance_minstanex_laser_rapid_refire * W_WeaponRateFactor();
 						W_MinstaNex_Laser_Attack_Rapid();
 					}
