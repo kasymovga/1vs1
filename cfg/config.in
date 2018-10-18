@@ -136,7 +136,7 @@ set g_balance_minstanex_explode 0
 set g_balance_minstanex_explode_damage 100
 set g_balance_minstanex_explode_edgedamage 0
 set g_balance_minstanex_explode_force 500
-set g_balance_minstanex_explode_radius 200
+set g_balance_minstanex_explode_radius 100
 set g_balance_minstanex_laser 1
 set g_balance_minstanex_laser_count 1
 set g_balance_minstanex_laser_damage 35
