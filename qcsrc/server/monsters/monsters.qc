@@ -222,6 +222,9 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	v_z = 0;
 	dir_z_save = v_z;
 	vel_z_save = self.velocity_z;
+	if not(self.flags & FL_ONGROUND)
+		_speed = _speed * 0.5;
+
 	movelib_move_simple(v, _speed, blend_factor * frametime);
 	v_z = dir_z_save;
 	self.velocity_z = vel_z_save;
