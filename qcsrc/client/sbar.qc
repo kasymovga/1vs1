@@ -1573,7 +1573,8 @@ void Sbar_Score()
 
 void Sbar_Timer()
 {
-	float timelimit, elapsedTime, minutes, seconds, timeleft, minutesLeft, secondsLeft;
+	float timelimit, elapsedTime, minutes, seconds, timeleft, starttime, hideminutes;
+	hideminutes = FALSE;
 	vector bgpos, timer_color;
 	bgpos = '0 0 0';
 
@@ -1582,25 +1583,22 @@ void Sbar_Timer()
 	topright_x = CVAR(vid_conwidth);
 
 	timelimit = getstatf(STAT_TIMELIMIT);
+	starttime = getstatf(STAT_GAMESTARTTIME);
 
-	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
-	timeleft = ceil(timeleft);
-	minutesLeft = floor(timeleft / 60);
-	secondsLeft = timeleft - minutesLeft*60;
-
-	if(minutesLeft >= 5 || warmup_stage || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
+	timeleft = timelimit * 60 + starttime - time;
+	if(timeleft >= 300 || warmup_stage || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
 		timer_color = '1 1 1'; //white
-	else if(minutesLeft >= 1)
+	else if(timeleft >= 60)
 		timer_color = '1 1 0'; //yellow
 	else
 		timer_color = '1 0 0'; //red
 
 	if (CVAR(sbar_increment_maptime) || timelimit == 0 || warmup_stage) {
-		if (time < getstatf(STAT_GAMESTARTTIME)) {
+		if (time < starttime) {
 			//while restart is still active, show 00:00
 			minutes = seconds = 0;
 		} else {
-			elapsedTime = floor(time - getstatf(STAT_GAMESTARTTIME)); //127
+			elapsedTime = floor(time - starttime);
 			minutes = floor(elapsedTime / 60);
 			seconds = elapsedTime - minutes*60;
 		}
@@ -1613,10 +1611,17 @@ void Sbar_Timer()
 		bgpos_y = 0;
 		bgpos_z = 0;
 	} else {
-		minutes = minutesLeft;
-		seconds = secondsLeft;
-		if (minutes == 0)
-		bgpos_x = topright_x - 36 - 7 - 12;
+		if (timeleft < 0) {
+			timeleft = max(0, -1 - timeleft);
+		} else {
+			if (timeleft < 60)
+				hideminutes = TRUE;
+		}
+		timeleft = ceil(timeleft);
+		minutes = floor(timeleft / 60);
+		seconds = timeleft - minutes*60;
+		if (hideminutes)
+			bgpos_x = topright_x - 36 - 7 - 12;
 		else if (minutes < 10) // nudge the timer background left if more digits are drawn
 			bgpos_x = topright_x - 54 - 17 - 12;
 		else if (minutes < 100)
@@ -1638,8 +1643,7 @@ void Sbar_Timer()
 			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', _color, sbar_alpha_bg, DRAWFLAG_NORMAL);
 		}
 	}
-
-	if(minutesLeft >= 1 || CVAR(sbar_increment_maptime) || timelimit == 0 || warmup_stage) {
+	if not(hideminutes) {
 		Sbar_DrawXNum(topright - '103 0 0' + '0 2 0', minutes, 3, 0, 18, timer_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(topright - '53 0 0' + '0 1 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
