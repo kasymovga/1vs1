@@ -1591,3 +1591,7 @@ set explosive_minsta_g_minstagib_ammo_start 50
 set explosive_minsta_g_use_ammunition 1
 set explosive_minsta_g_score_damage 0
 set explosive_minsta_g_minstagib_ammo_drop 25
+
+alias _fs_rescan_alias_disable "unalias fs_rescan"
+alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; sv_cmd dlc_reload; _fs_rescan_alias_enable\""
+_fs_rescan_alias_enable

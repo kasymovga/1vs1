@@ -75,6 +75,20 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 		ParseServerListLine(argv(i));
 }
 
+void() menu_dlc_reload =
+{
+	string s;
+	string l = cvar_string("menu_dlc_list");
+	while (l != "") {
+		s = car(l);
+		l = cdr(l);
+		if (s != "") {
+			dlc_load(s);
+			print("Loading dlc: ", s, "\n");
+		}
+	}
+}
+
 void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
@@ -96,15 +110,7 @@ void() m_init =
 			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
-	string l = cvar_string("menu_dlc_list");
-	while (l != "") {
-		s = car(l);
-		l = cdr(l);
-		if (s != "") {
-			dlc_load(s);
-			print("Loading dlc: ", s, "\n");
-		}
-	}
+	menu_dlc_reload();
 	SetConWidthHeight();
 }
 

@@ -93,6 +93,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "dlc_reload")
+	{
+		menu_dlc_reload();
+		return;
+	}
+
 #if 0
 	if(argv(0) == "tokentest")
 	{
