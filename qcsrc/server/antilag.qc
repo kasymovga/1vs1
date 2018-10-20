@@ -3,7 +3,9 @@
 var float antilag_times[ANTILAG_MAX_ORIGINS];
 float antilag_index;
 .vector antilag_saved_origin;
+.entity antilag_chain;
 
+entity _antilag_chain;
 float antilag_context_index;
 
 void antilag_record(float t) {
@@ -17,6 +19,9 @@ void antilag_record(float t) {
 	entity e;
 	antilag_times[antilag_index] = t;
 	FOR_EACH_PLAYER(e)
+		e.(antilag_origins[antilag_index]) = e.origin;
+
+	for (e = _antilag_chain; e; e = e.antilag_chain)
 		e.(antilag_origins[antilag_index]) = e.origin;
 }
 
@@ -93,7 +98,8 @@ void antilag_begin(entity source) {
 	else
 		antilag_lag = ANTILAG_LATENCY(source);
 
-	antilag_context_index = antilag_find(source, time - antilag_lag);
+	float past = time - antilag_lag;
+	antilag_context_index = antilag_find(source, past);
 	// change shooter to SOLID_BBOX so the shot can hit corpses
 	antilag_source = source;
 	if(source)
@@ -104,12 +110,14 @@ void antilag_begin(entity source) {
 	if (antilag_lag)
 	{
 		// take players back into the past
-		entity player;
-		float past = time - antilag_lag;
-		for (player = player_list; player; player = player.nextplayer)
-			if (player != source) {
-				antilag_takeback(player, past);
+		entity e;
+		FOR_EACH_PLAYER(e)
+			if (e != source) {
+				antilag_takeback(e, past);
 			}
+
+		for (e = _antilag_chain; e; e = e.antilag_chain)
+			antilag_takeback(e, past);
 	}
 }
 
@@ -117,12 +125,33 @@ void antilag_end() {
 	// restore players to current positions
 	if (antilag_lag)
 	{
-		entity player;
-		for (player = player_list; player; player = player.nextplayer)
-			if (player != antilag_source)
-				antilag_restore(player);
+		entity e;
+		FOR_EACH_PLAYER(e)
+			if (e != antilag_source)
+				antilag_restore(e);
+
+		for (e = _antilag_chain; e; e = e.antilag_chain)
+			antilag_restore(e);
 	}
 	// restore shooter solid type
 	if(antilag_source)
 		antilag_source.dphitcontentsmask = antilag_oldhitmask;
+}
+
+void antilag_remove(entity e) {
+	if (_antilag_chain == e) {
+		_antilag_chain = e.antilag_chain;
+	}
+	entity e0;
+	for (e0 = _antilag_chain; e0.antilag_chain; e0 = e0.antilag_chain)
+		if (e0.antilag_chain == e) {
+			e0.antilag_chain = e.antilag_chain;
+			return;
+		}
+}
+
+void antilag_add(entity e) {
+	e.antilag_chain = _antilag_chain;
+	_antilag_chain = e;
+	antilag_teleported(e);
 }

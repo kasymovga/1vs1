@@ -513,20 +513,23 @@ void W_Zapper_Shield_Blocker_Push(entity p) {
     }
 }
 
+void W_Zapper_Shield_Blocker_SetOrigin(entity _shield) {
+    vector o = _shield.owner.origin + _shield.owner.view_ofs;
+    vector a = _shield.owner.angles;
+    _shield.oldorigin = o;
+    makevectors(a);
+    _shield.angles = a;
+    setorigin(_shield, o - v_forward * 85);
+}
+
 void W_Zapper_Shield_Blocker_Think(void) {
     if(self.owner.zapper_shield != self.zapper_shield) {
+		antilag_remove(self);
         remove(self);
         return;
     }
-
+	W_Zapper_Shield_Blocker_SetOrigin(self);
     entity e;
-    vector o = self.owner.origin + self.owner.view_ofs;
-    vector a = self.owner.angles;
-    self.oldorigin = o;
-
-    makevectors(a);
-    self.angles = a;
-    setorigin(self, o - v_forward * 85);
     FOR_EACH_PLAYER(e) if(e != self.owner)
         W_Zapper_Shield_Blocker_Push(e);
 
@@ -535,21 +538,6 @@ void W_Zapper_Shield_Blocker_Think(void) {
             W_Zapper_Shield_Blocker_Push(e);
 
     self.nextthink = time;
-}
-
-void W_Zapper_FixShieldBlockerOrigin(entity plr) {
-    if(!plr.zapper_shield.zapper_shield)
-        return;
-
-    vector fwd = v_forward, up = v_up, right = v_right;
-
-    makevectors(plr.angles);
-    plr.zapper_shield.zapper_shield.angles = plr.angles;
-    setorigin(plr.zapper_shield.zapper_shield, plr.origin + plr.view_ofs - v_forward * 85);
-
-    v_forward = fwd;
-    v_up = up;
-    v_right = right;
 }
 
 void W_Zapper_Attack3(void) {
@@ -598,6 +586,8 @@ void W_Zapper_Attack3(void) {
     b.solid = SOLID_BSP;
     b.alpha = -1;
     setmodel(b, "models/vhshield.md3");
+	W_Zapper_Shield_Blocker_SetOrigin(b);
+	antilag_add(b);
 
     e.zapper_shield = b;
 }
