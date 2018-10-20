@@ -893,6 +893,7 @@ void PutClientInServer()
 		}
 		player_effects();
 		GameHookChain_Spawn(spot);
+		antilag_teleported(self);
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 	}

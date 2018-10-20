@@ -2161,8 +2161,7 @@ string GotoMap(string m)
 
 void EndFrame()
 {
-	float altime;
-	FOR_EACH_REALCLIENT(self)
+	FOR_EACH_CLIENT(self)
 	{
 		if(self.classname == "spectator")
 		{
@@ -2178,16 +2177,12 @@ void EndFrame()
 			else if(self.hitsound && self.cvar_cl_hitsound)
 				play2(self, "misc/hit.wav");
 		}
-	}
-	altime = time + frametime;
-	// add 1 frametime because client shows everything with
-	// 1 frame of lag (cl_nolerp 0).
-	FOR_EACH_CLIENT(self)
-	{
 		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
-		antilag_record(self, altime);
 	}
+	// add 1 frametime because client shows everything with
+	// 1 frame of lag (cl_nolerp 0).
+	antilag_record(time + frametime);
 
     /*
     if(roundstate != roundstate_old) {

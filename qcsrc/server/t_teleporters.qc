@@ -79,6 +79,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
+	antilag_teleported(player);
 
 	UpdateCSQCProjectileAfterTeleport(player);
 	PhysicMarkAsTeleported(player);
