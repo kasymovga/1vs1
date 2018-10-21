@@ -219,7 +219,7 @@ float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, flo
 	if not(sv_csqc_physic)
 		self.owner.movetype   = MOVETYPE_NOCLIP;
 
-    self.owner.PlayerPhysplug = spiderbot_physic_hook;
+    self.owner.PlayerPhysplug = phys_plug;
     self.owner.vehicle        = self;
     self.owner.event_damage   = SUB_Null;
     self.owner.hud            = _hud;
