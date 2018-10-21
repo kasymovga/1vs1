@@ -209,7 +209,17 @@ float WarpZone_Shadow_CustomizeEntity() {
 	if (other == self.owner)
 		return FALSE;
 
-	self.alpha = Player_CalculateAlpha(self.owner, other);
+	entity o = self.owner;
+	if (o.customizeentityforclient) {
+		entity e = self;
+		self = o;
+		float f = self.customizeentityforclient();
+		self = e;
+		if not(f)
+			return FALSE;
+	}
+	self.alpha = o.alpha;
+	self.effects = o.effects;
 	return TRUE;
 }
 
@@ -225,14 +235,14 @@ void WarpZone_Shadow_Think() {
 		remove(self);
 		return;
 	}
-
 	self.nextthink = time;
-	setmodel(self, self.owner.model);
-	self.frame = self.owner.frame;
-	self.colormap = self.owner.colormap;
-	self.color = self.owner.color;
-	self.angles = WarpZone_TransformAngles(self.enemy, self.owner.angles);
-	setorigin(self, WarpZone_TransformOrigin(self.enemy, self.owner.origin));
+	setmodel(self, o.model);
+	self.frame = o.frame;
+	self.colormap = o.colormap;
+	self.color = o.color;
+	self.angles = WarpZone_TransformAngles(self.enemy, o.angles);
+	self.skin = o.skin;
+	setorigin(self, WarpZone_TransformOrigin(self.enemy, o.origin));
 }
 
 void WarpZone_Touch (void)
