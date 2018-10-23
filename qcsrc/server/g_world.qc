@@ -2161,7 +2161,7 @@ string GotoMap(string m)
 
 void EndFrame()
 {
-	FOR_EACH_CLIENT(self)
+	FOR_EACH_REALCLIENT(self)
 	{
 		if(self.classname == "spectator")
 		{
@@ -2177,6 +2177,8 @@ void EndFrame()
 			else if(self.hitsound && self.cvar_cl_hitsound)
 				play2(self, "misc/hit.wav");
 		}
+	}
+	FOR_EACH_CLIENT(self) {
 		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
 	}
