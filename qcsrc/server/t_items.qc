@@ -483,7 +483,7 @@ void Item_ScheduleRespawn(entity e)
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
+	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
 float Item_GiveTo(entity item, entity player)
@@ -1048,7 +1048,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.effects = self.effects | EF_NODRAW; // marker for item team search
 		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
-	else if(self.flags & FL_POWERUP) // do not spawn powerups initially!
+	else if(self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
 		Item_ScheduleInitialRespawn(self);
 }
 
