@@ -33,10 +33,23 @@ void monster_set_route() {
 	}
 }
 
+vector monster_checkpoint(entity e) {
+	float x_perm = e.maxs_x - e.mins_x;
+	float y_perm = e.maxs_y - e.mins_y;
+	float z_perm = e.maxs_z - e.mins_z;
+	vector v;
+	v = e.origin - e.mins;
+	v_x = v_x + x_perm * random();
+	v_y = v_y + y_perm * random();
+	v_z = v_z + z_perm * random();
+	return v;
+}
+
 float notice_sound_finished;
 entity monster_look_for_player(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter) {
 	entity e;
 	vector v;
+	vector checkpoint;
 	float f;
 	entity p = world;
 	if not(gameover)
@@ -52,16 +65,18 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		}
 		f = vlen(e.origin - self.origin);
 		if (f <= heardistance) {
-			traceline(self.origin, e.origin, MOVE_WORLDONLY, self);
+			checkpoint = monster_checkpoint(e);
+			traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, self);
 			if (trace_fraction == 1) {
 				p = e;
 				break;
 			}
 		} else if (f <= distance) {
+			checkpoint = monster_checkpoint(e);
 			v = normalize(e.origin - self.origin);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
-				traceline(self.origin, e.origin, MOVE_WORLDONLY, self);
+				traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, self);
 				if (trace_fraction == 1) {
 					distance = f;
 					p = e;
