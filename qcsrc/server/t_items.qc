@@ -85,9 +85,11 @@ void powerups_init() {
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_NextLink;
 void powerup_invincible_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
-	if (targ.items & IT_INVINCIBLE)
+	if (targ.items & IT_INVINCIBLE) {
 		GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_invincible_takedamage;
-
+		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
+			GameHook_DamageMod = 0;
+	}
 	powerup_invincible_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
