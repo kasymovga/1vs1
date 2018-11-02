@@ -638,7 +638,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 	}
 	if(item.spawnshieldtime)
-	if((it = item.items & IT_KEY1))
+	if((it = item.items & (IT_KEY1 | IT_KEY2)))
 	{
 		pickedup = TRUE;
 		player.keys |= it;
@@ -1359,6 +1359,13 @@ void spawnfunc_item_speed (void) {
 void spawnfunc_item_key_gold (void) {
 	self.origin_z = self.origin_z + 40;
 	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Gold Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
+	self.colormod = '1 1 0';
+	self.mins_z = self.mins_z - 40;
+}
+
+void spawnfunc_item_key_silver (void) {
+	self.origin_z = self.origin_z + 40;
+	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Silver Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
 	self.mins_z = self.mins_z - 40;
 }
 
