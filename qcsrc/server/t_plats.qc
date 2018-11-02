@@ -889,12 +889,16 @@ void door_trigger_touch()
 	//if not(other.iscreature && other.deadflag == DEAD_NO)
 	//	return;
 
-	if (other.classname != "player")
+	if not(other.iscreature)
 		return;
 
 	if (self.owner.items)
-	if not(other.keys & self.owner.items)
+	if not(other.keys & self.owner.items) {
+		if (clienttype(other) == CLIENTTYPE_REAL)
+			centerprint (other, "This door required key");
+
 		return;
+	}
 
 	if (time < self.attack_finished_single)
 		return;
@@ -935,7 +939,7 @@ Prints messages
 */
 void door_touch()
 {
-	if(other.classname != "player")
+	if not(other.iscreature)
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
@@ -1146,12 +1150,10 @@ void LinkDoors()
 
 			if (self.health)
 				starte.health = self.health;
+			if (self.items)
+				starte.items = self.items;
 			IFTARGETED
 				starte.targetname = self.targetname;
-			else if (self.health || (!self.items && cvar("sv_door_shootable"))) {
-				self.takedamage = DAMAGE_YES;
-				self.event_damage = door_damage;
-			}
 			if (self.message != "")
 				starte.message = self.message;
 
@@ -1168,13 +1170,12 @@ void LinkDoors()
 			self = self.owner;
 
 			if (self.health)
-				return;
+				break;
 			IFTARGETED
-				return;
+				break;
 
 			self.owner.trigger_field = spawn_field(cmins, cmaxs);
-
-			return;
+			break;
 		}
 
 		if (EntitiesTouching(self,t))
@@ -1199,6 +1200,15 @@ void LinkDoors()
 				cmaxs_z = t.absmax_z;
 		}
 	} while (1 );
+	if (starte.targetname == "" || starte.nottargeted)
+	if (starte.health > 0 || (!starte.items && cvar("sv_door_shootable"))) {
+		for (t = starte; ;) {
+			t.takedamage = DAMAGE_YES;
+			t.event_damage = door_damage;
+			if ((t = t.enemy) == starte)
+				break;
+		}
+	}
 
 };
 
