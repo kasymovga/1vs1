@@ -42,6 +42,9 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage,
 	if (targ == attacker)
 		return;
 
+	if not(targ.event_damage)
+		return;
+
 	if not(targ.modelindex)
 		return;
 

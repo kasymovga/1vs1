@@ -85,9 +85,11 @@ void powerups_init() {
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_NextLink;
 void powerup_invincible_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
-	if (targ.items & IT_INVINCIBLE)
+	if (targ.items & IT_INVINCIBLE) {
 		GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_invincible_takedamage;
-
+		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
+			GameHook_DamageMod = 0;
+	}
 	powerup_invincible_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
@@ -483,7 +485,7 @@ void Item_ScheduleRespawn(entity e)
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
+	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
 float Item_GiveTo(entity item, entity player)
@@ -1048,7 +1050,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.effects = self.effects | EF_NODRAW; // marker for item team search
 		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
-	else if(self.flags & FL_POWERUP) // do not spawn powerups initially!
+	else if(self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
 		Item_ScheduleInitialRespawn(self);
 }
 

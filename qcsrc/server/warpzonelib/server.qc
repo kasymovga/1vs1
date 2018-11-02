@@ -55,6 +55,7 @@ void restore_trace_globals(void) {
 
 void WarpZone_PostTeleportPlayer_Callback(entity player, entity teleporter) {
 	PhysicMarkAsTeleported(player);
+	antilag_teleported(player);
 }
 
 void WarpZone_StoreProjectileData(entity e)

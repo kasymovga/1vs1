@@ -146,129 +146,34 @@ float car_physic_hook()
 
 void car_think()
 {
-    if(self.flags & FL_ONGROUND)
+	if not(self.owner)
+    if (self.flags & FL_ONGROUND)
     {
         movelib_beak_simple(g_vehicle_car_speed_stop * frametime);
-        //movelib_groundalign4point(300,100);
+		self.angles_x *= -1;
+		makevectors(self.angles);
+		self.angles_x *= -1;
+		movelib_groundalign4point(75, 75, 1);
     }
     self.nextthink = time;
 }
 
 void car_enter()
 {
-    if(teamplay)
-    if(self.team)
-    if(self.team != other.team)
-        return;
+	if not(vehicle_enter(self.angles, car_physic_hook, 0, CarPhysic_SendEntity))
+		return;
 
-	if (self.noise != "")
-		sound(self, CHAN_VOICE, self.noise, VOL_BASE, ATTN_NORM);
-
-    self.owner = other;
-    self.switchweapon = other.switchweapon;
-
-    self.event_damage         = vehicle_stdproc_damage ;
-    self.colormap             = self.owner.colormap;
-    self.owner.angles         = self.angles;
-    self.owner.takedamage     = DAMAGE_NO;
-    self.owner.solid          = SOLID_NOT;
-	if not(sv_csqc_physic)
-		self.owner.movetype   = MOVETYPE_NOCLIP;
-
-    self.owner.PlayerPhysplug = car_physic_hook;
-    self.owner.vehicle        = self;
-    self.owner.event_damage   = SUB_Null;
-    self.owner.vehicle_health = (self.health / g_vehicle_car_health);
-    self.team                   = self.owner.team;
+	self.colormap             = self.owner.colormap;
 	vehicle_stdproc_setcolormod();
-
-    if(clienttype(other) == CLIENTTYPE_REAL)
-    {
-        msg_entity = other;
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, self.angles_x);    // tilt
-        WriteAngle(MSG_ONE, self.angles_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
-		self.bot_nextthink = 0;
-    } else
-		self.bot_nextthink = time + 5;
-	self.player_physic = spawn();
-	self.player_physic.viewmodelforclient = self.owner;
-	self.player_physic.vehicle = self;
-	Net_LinkEntity(self.player_physic, FALSE, 0, CarPhysic_SendEntity);
 }
 
 void car_exit(float eject)
 {
-	vector exit_origin;
-	makevectors(self.angles);
-	if(eject)
-		exit_origin = self.origin + '0 0 160';
-	else
-		exit_origin = self.origin + v_forward * 150 + '0 0 64';
-
-	tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-	if not(eject) {
-		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_right * 150 + '0 0 64';
-			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-		}
-		if (trace_fraction < 1) {
-			exit_origin = self.origin + v_right * 150 + '0 0 64';
-			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-		}
-		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_forward * 150 + '0 0 64';
-			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-		}
-		if (trace_fraction < 1)
-			exit_origin = self.origin + '0 0 64';
-	}
-	stopsound(self, CHAN_VOICE);
-	stopsound(self, CHAN_WEAPON);
-	stopsound(self, CHAN_PROJECTILE);
-
-	exit_origin = trace_endpos;
-
-    self.owner.switchweapon = self.switchweapon;
-
-    self.velocity = '0 0 0';
-    if(clienttype(self.owner) == CLIENTTYPE_REAL)
-    {
-        msg_entity = self.owner;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity( MSG_ONE, self.owner);
-
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, 0);    // tilt
-        WriteAngle(MSG_ONE, self.angles_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
-    }
-
+	vehicle_stdproc_exit(eject, 160, 64, 160);
     self.think = car_think;
     self.nextthink = time;
-    self.owner.takedamage     = DAMAGE_AIM;
-    self.owner.solid          = SOLID_SLIDEBOX;
-    self.owner.movetype       = MOVETYPE_WALK;
-
 	self.colormap            = 1024;
-
-    if not (teamplay)
-        self.team                = 0;
-    else
-        self.team = self.car_spawnpnt.team ;
-
 	vehicle_stdproc_setcolormod();
-	setorigin(self.owner, exit_origin);
-	if(eject)
-	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
-
-	if (self.player_physic)
-		remove(self.player_physic);
-
-	self.owner.angles_x = 0;
-	self.owner.angles_z = 0;
-    self.owner = world;
 }
 
 void car_touch()

@@ -283,98 +283,31 @@ void aircraft_think()
 
 	if (self.owner) {
 		self.owner.vehicle_heat = self.vehicle_heat;
+	} else {
+        movelib_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
 	}
-
     self.nextthink = time;
 }
 
 void aircraft_enter()
 {
-    if(teamplay)
-    if(self.team)
-    if(self.team != other.team)
-        return;
+	if not(vehicle_enter(self.tur_head.angles + self.angles, aircraft_physic_hook, HUD_SPIDERBOT, AircraftPhysic_SendEntity))
+		return;
 
-    self.owner = other;
-    self.switchweapon = other.switchweapon;
-
-    self.event_damage         = vehicle_stdproc_damage ;
-    self.colormap             = self.owner.colormap;
-    self.tur_head.colormap    = self.owner.colormap;
-    self.owner.angles         = self.angles;
-    self.owner.takedamage     = DAMAGE_NO;
-    self.owner.solid          = SOLID_NOT;
-	if not(sv_csqc_physic)
-		self.owner.movetype   = MOVETYPE_NOCLIP;
-    self.owner.PlayerPhysplug = aircraft_physic_hook;
-    self.owner.vehicle        = self;
-    self.owner.event_damage   = SUB_Null;
-    self.owner.hud            = HUD_SPIDERBOT;
-    self.owner.vehicle_health = (self.health / g_vehicle_aircraft_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_aircraft_shield);
+	self.owner.vehicle_health = (self.health / g_vehicle_aircraft_health);
+	self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_aircraft_shield);
 	self.owner.vehicle_heat = self.vehicle_heat;
-    self.team                   = self.owner.team;
+	self.colormap             = self.owner.colormap;
+	self.tur_head.colormap    = self.owner.colormap;
 	vehicle_stdproc_setcolormod();
-
-    if(clienttype(other) == CLIENTTYPE_REAL)
-    {
-        msg_entity = other;
-        //WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        //WriteEntity(MSG_ONE, self.vehicle_viewport);
-
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x);    // tilt
-        WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
-		//other.angles_x = self.tur_head.angles_x + self.angles_x;
-		//other.angles_y = self.tur_head.angles_y + self.angles_y;
-		//other.fixangle = TRUE;
-		self.bot_nextthink = 0;
-    } else
-		self.bot_nextthink = time + 5;
-
-    //WriteAngle(MSG_ONE, self.tur_head.angles_z + self.angles_z);    // roll
-    //self.owner.view_ofs = '0 0 0';
-	self.player_physic = spawn();
-	self.player_physic.viewmodelforclient = self.owner;
-	self.player_physic.vehicle = self;
-	Net_LinkEntity(self.player_physic, FALSE, 0, AircraftPhysic_SendEntity);
+	self.tur_head.colormap    = self.owner.colormap;
 }
 
 void aircraft_exit(float eject)
 {
-	vector exit_origin;
-	makevectors(self.angles);
-	if(eject)
-		exit_origin = self.origin + '0 0 160';
-	else
-		exit_origin = self.origin + v_forward * 130 + '0 0 64';
-
-	tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-	if not(eject) {
-		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_right * 130 + '0 0 64';
-			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-		}
-		if (trace_fraction < 1) {
-			exit_origin = self.origin + v_right * 130 + '0 0 64';
-			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-		}
-		if (trace_fraction < 1) {
-			exit_origin = self.origin - v_forward * 130 + '0 0 64';
-			tracebox(self.origin + '0 0 20', PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
-		}
-		if (trace_fraction < 1)
-			exit_origin = self.origin + '0 0 64';
-	}
+	vehicle_stdproc_exit(eject, 160, 64, 160);
     entity e;
-    self.frame = 5;
-    e = findchain(classname,"aircraft_rocket");
-	aircraft_engine_off();
-
-	exit_origin = trace_endpos;
-
-    while(e)
+    for(e = findchain(classname,"spiderbot_rocket"); e; e = e.chain)
     {
         if(e.owner == self.owner)
         {
@@ -384,49 +317,13 @@ void aircraft_exit(float eject)
             //e.think = SUB_Null;
             //e.nextthink = -1;
         }
-        e = e.chain;
     }
-
-    self.owner.switchweapon = self.switchweapon;
-
-    self.velocity = '0 0 0';
-    if(clienttype(self.owner) == CLIENTTYPE_REAL)
-    {
-        msg_entity = self.owner;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity( MSG_ONE, self.owner);
-
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
-        WriteAngle(MSG_ONE, 0);    // tilt
-        WriteAngle(MSG_ONE, self.angles_y);    // yaw
-        WriteAngle(MSG_ONE, 0);    // roll
-    }
-
+	aircraft_engine_off();
     self.think = aircraft_think;
     self.nextthink = time;
-    self.owner.takedamage     = DAMAGE_AIM;
-    self.owner.solid          = SOLID_SLIDEBOX;
-    self.owner.movetype       = MOVETYPE_WALK;
-
 	self.colormap            = 1024;
 	self.tur_head.colormap   = 1024;
-
-    if not(teamplay)
-        self.team = 0;
-	else
-        self.team = self.spiderbot_spawnpnt.team ;
-
 	vehicle_stdproc_setcolormod();
-	setorigin(self.owner, exit_origin);
-	if(eject)
-	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
-
-	if (self.player_physic)
-		remove(self.player_physic);
-
-	self.owner.angles_x = 0;
-	self.owner.angles_z = 0;
-    self.owner = world;
 }
 
 void aircraft_touch()

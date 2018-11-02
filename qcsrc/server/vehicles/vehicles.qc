@@ -28,9 +28,8 @@ float vehicle_extract_player(entity plr, float eject)
 	plr.view_ofs       = PL_VIEW_OFS;
 	plr.hud            = HUD_NORMAL;
 	plr.event_damage   = PlayerDamage;
+	plr.lastpushtime = time;
     setsize(plr,PL_MIN,PL_MAX);
-
-
 	return 1;
 }
 
@@ -170,7 +169,6 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
 void bugmenot()
 {
     self.vehicle_exit       = self.vehicle_exit;
-    self.vehicle_enter      = self.vehicle_exit;
     self.vehicle_die        = self.vehicle_exit;
     self.vehicle_spawn      = self.vehicle_exit;
     self.vehicle_message    = self.vehicle_exit;
@@ -204,5 +202,112 @@ void vehicles_init() {
 	vehicle_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = vehicle_PlayerAlphaMod;
 	PhysicEnableCSQC();
+}
+
+float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, float)phys_send ) {
+    if(teamplay)
+    if(self.team)
+    if(self.team != other.team)
+        return FALSE;
+
+    self.owner = other;
+    self.switchweapon = other.switchweapon;
+    self.event_damage         = vehicle_stdproc_damage ;
+    self.owner.angles         = self.angles;
+    self.owner.takedamage     = DAMAGE_NO;
+    self.owner.solid          = SOLID_NOT;
+	if not(sv_csqc_physic)
+		self.owner.movetype   = MOVETYPE_NOCLIP;
+
+    self.owner.PlayerPhysplug = phys_plug;
+    self.owner.vehicle        = self;
+    self.owner.event_damage   = SUB_Null;
+    self.owner.hud            = _hud;
+    self.team                 = self.owner.team;
+    if(clienttype(other) == CLIENTTYPE_REAL)
+    {
+        msg_entity = other;
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
+        WriteAngle(MSG_ONE, ang_x);    // tilt
+        WriteAngle(MSG_ONE, ang_y);    // yaw
+        WriteAngle(MSG_ONE, 0);    // roll
+		self.bot_nextthink = 0;
+    } else {
+		self.bot_nextthink = time + 5;
+	}
+	self.player_physic = spawn();
+	self.player_physic.viewmodelforclient = self.owner;
+	self.player_physic.vehicle = self;
+	Net_LinkEntity(self.player_physic, FALSE, 0, phys_send);
+	return TRUE;
+}
+
+void vehicle_speed_keeper_think() { //something reset velocity to 0 0 0, fix this
+	self.enemy.velocity = self.velocity;
+	remove(self);
+}
+
+void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float range) {
+	vector exit_origin;
+	makevectors(self.angles);
+	if(eject)
+		exit_origin = self.origin + '0 0 1' * eject_range;
+	else
+		exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
+
+	tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+	if not(eject) {
+		if (trace_fraction < 1) {
+			exit_origin = self.origin - v_right * range + '0 0 1' * exit_up;
+			tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+		}
+		if (trace_fraction < 1) {
+			exit_origin = self.origin + v_right * range + '0 0 1' * exit_up;
+			tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+		}
+		if (trace_fraction < 1) {
+			exit_origin = self.origin - v_forward * range + '0 0 1' * exit_up;
+			tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+		}
+		if (trace_fraction < 1)
+			exit_origin = self.origin + '0 0 1' * exit_up;
+	}
+	exit_origin = trace_endpos;
+    self.owner.switchweapon = self.switchweapon;
+    if(clienttype(self.owner) == CLIENTTYPE_REAL)
+    {
+        msg_entity = self.owner;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity( MSG_ONE, self.owner);
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);  // 10 = SVC_SETVIEWANGLES
+        WriteAngle(MSG_ONE, 0);    // tilt
+        WriteAngle(MSG_ONE, self.angles_y);    // yaw
+        WriteAngle(MSG_ONE, 0);    // roll
+    }
+    self.owner.takedamage     = DAMAGE_AIM;
+    self.owner.solid          = SOLID_SLIDEBOX;
+    self.owner.movetype       = MOVETYPE_WALK;
+    if not (teamplay)
+        self.team = 0;
+    else
+        self.team = self.enemy.team ;
+
+	setorigin(self.owner, exit_origin);
+	self.owner.velocity = self.velocity;
+	if(eject) {
+	    self.owner.velocity = self.owner.velocity + (v_up + v_forward * 0.25) * 750;
+	}
+
+	entity e = spawn();
+	e.enemy = self.owner;
+	e.velocity = self.velocity;
+	e.think = vehicle_speed_keeper_think;
+	e.nextthink = time;
+	if (self.player_physic)
+		remove(self.player_physic);
+
+	self.owner.angles_x = 0;
+	self.owner.angles_z = 0;
+    self.owner = world;
 }
 #endif

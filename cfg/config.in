@@ -1308,6 +1308,7 @@ set single_g_pickup_respawntime_armorbig -1
 set single_g_pickup_respawntime_armorlarge -1
 set single_g_pickup_respawntime_powerup -1
 set single_g_pickup_respawntime_ammo -1
+set single_g_pickup_respawntimejitter_powerup 0
 set single_g_maxplayers 1
 set single_g_balance_health_regen 0
 set single_g_balance_health_rot 0
