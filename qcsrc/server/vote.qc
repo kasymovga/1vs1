@@ -216,6 +216,9 @@ float GameCommand_Vote(string s, entity e) {
 				}
 				else if(votecalled) {
 					print_to(e, "^1There is already a vote called.");
+				}
+				else if(e.retard > 0) {
+					print_to(e, "^1Error: You can not call a vote");
 				} else {
 					local string vote;
 					vote = VoteParse(s, argc);
