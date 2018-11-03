@@ -896,6 +896,11 @@ void door_trigger_touch()
 	if not(other.iscreature)
 		return;
 
+	if (time < self.attack_finished_single)
+		return;
+
+	self.attack_finished_single = time + 1;
+
 	if (self.owner.items)
 	if not(other.keys & self.owner.items) {
 		if (clienttype(other) == CLIENTTYPE_REAL) {
@@ -904,10 +909,6 @@ void door_trigger_touch()
 		}
 		return;
 	}
-
-	if (time < self.attack_finished_single)
-		return;
-	self.attack_finished_single = time + 1;
 
 	activator = other;
 
@@ -950,8 +951,7 @@ void door_touch()
 		return;
 
 	self.owner.attack_finished_single = time + 2;
-
-	if (!(self.owner.dmg) && (self.owner.message != ""))
+	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == STATE_BOTTOM)
 	{
 		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.owner.message);
