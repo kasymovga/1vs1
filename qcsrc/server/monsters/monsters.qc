@@ -38,7 +38,7 @@ vector monster_checkpoint(entity e) {
 	float y_perm = e.maxs_y - e.mins_y;
 	float z_perm = e.maxs_z - e.mins_z;
 	vector v;
-	v = e.origin - e.mins;
+	v = e.origin + e.mins;
 	v_x = v_x + x_perm * random();
 	v_y = v_y + y_perm * random();
 	v_z = v_z + z_perm * random();
