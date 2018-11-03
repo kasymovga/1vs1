@@ -2296,9 +2296,6 @@ void spikeshooter_spike_touch(void) {
 }
 
 void spikeshooter_use(void) {
-	if (self.attack_finished_single > time)
-		return;
-
 	entity spike = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
 	setorigin(spike, self.origin);
 	PROJECTILE_MAKETRIGGER(spike);
@@ -2308,7 +2305,6 @@ void spikeshooter_use(void) {
 	spike.movetype = MOVETYPE_FLY;
 	spike.touch = spikeshooter_spike_touch;
 	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-	self.attack_finished_single = self.attack_finished_single + 1;
 }
 
 void spawnfunc_trap_spikeshooter(void) {
