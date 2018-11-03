@@ -2271,28 +2271,6 @@ void spawnfunc_trigger_roundstate(void) {
     }
 }
 
-void FireRoundstateTriggers(void) {
-	/*
-    while((activator = find(activator, classname, "trigger_roundstate"))) {
-        if(activator.cnt == roundstate)
-            using(self = activator)
-                activator.use();
-
-        if(activator.spawnflags & 1) {
-            activator = activator {
-                cnt: 0,
-                think: SUB_Remove,
-                nextthink: time
-            };
-        }
-    }
-    */
-}
-
-/*
- * misc
- */
-
 void spawnfunc_func_nowalljump(void) {
     EXACTTRIGGER_INIT;
 

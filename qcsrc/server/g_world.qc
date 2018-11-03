@@ -2185,14 +2185,6 @@ void EndFrame()
 	// add 1 frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0).
 	antilag_record(time + frametime);
-
-    /*
-    if(roundstate != roundstate_old) {
-        defer(0, FireRoundstateTriggers);
-        localcmd("\nsv_hook_roundstatechanged ", ftos(roundstate), "\n");
-        roundstate_old = roundstate;
-    }
-    */
 }
 
 
