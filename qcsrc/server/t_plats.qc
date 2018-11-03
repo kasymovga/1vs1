@@ -321,8 +321,12 @@ void func_train_find()
 	if (!self.target)
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - (self.train_nomins ? '0 0 0' : self.mins));
-	self.nextthink = self.ltime + 1;
-	self.think = train_next;
+	IFTARGETED {
+		self.use = train_next;
+	} else {
+		self.nextthink = self.ltime + 1;
+		self.think = train_next;
+	}
 };
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
