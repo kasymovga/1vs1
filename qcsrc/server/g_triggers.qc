@@ -196,6 +196,7 @@ void SUB_UseTargets_PreventReuse() {
 
 float	SPAWNFLAG_NOMESSAGE = 1;
 float	SPAWNFLAG_NOTOUCH = 1;
+float	SPAWNFLAG_PLAYERONLY = 4;
 
 // the wait time has passed, so set back up for another activation
 void multi_wait()
@@ -267,6 +268,9 @@ void multi_touch()
 		if(self.team == other.team)
 			return;
 	}
+	if (self.spawnflags & SPAWNFLAG_PLAYERONLY)
+	if (other.classname != "player")
+		return;
 
 // if the trigger has an angles field, check player's facing direction
 	if (self.movedir != '0 0 0')
