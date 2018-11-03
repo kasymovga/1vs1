@@ -2279,3 +2279,38 @@ void spawnfunc_func_nowalljump(void) {
             other.lastwj = time + frametime;
     };
 }
+
+void spikeshooter_spike_touch(void) {
+	PROJECTILE_TOUCH;
+	if(other.solid == SOLID_BSP)
+		Damage_DamageInfo(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
+	if (other && other.takedamage)
+	{
+		Damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
+	}
+	remove(self);
+}
+
+void spikeshooter_use(void) {
+	if (self.attack_finished_single > time)
+		return;
+
+	entity spike = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	setorigin(spike, self.origin);
+	PROJECTILE_MAKETRIGGER(spike);
+	spike.velocity = self.movedir * 800;
+	spike.think = SUB_Remove;
+	spike.nextthink = time + 10;
+	spike.movetype = MOVETYPE_FLY;
+	spike.touch = spikeshooter_spike_touch;
+	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+	self.attack_finished_single = self.attack_finished_single + 1;
+}
+
+void spawnfunc_trap_spikeshooter(void) {
+	makevectors(self.angles);
+	self.movedir = normalize(v_forward);
+	self.use = spikeshooter_use;
+	precache_sound("weapons/uzi_fire.wav");
+	CSQCProjectile_Init(PROJECTILE_BULLET_BIG);
+}
