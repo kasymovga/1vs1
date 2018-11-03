@@ -238,6 +238,15 @@ set sv_spawnreplace_item_fuel_regen "item_jetpack"
 set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 
 //Quake and Quake 3 compat
+set sv_spawnreplace_monster_army monster_soldier_spawn
+set sv_spawnreplace_monster_knight monster_spearguy_spawn
+set sv_spawnreplace_monster_dog monster_spider_spawn
+set sv_spawnreplace_monster_demon1 monster_heavysoldier_spawn
+set sv_spawnreplace_monster_ogre monster_fireguy_spawn
+set sv_spawnreplace_monster_shambler monster_arachna_spawn
+set sv_spawnreplace_monster_wizard monster_flyingthing_spawn
+set sv_spawnreplace_monster_zombie monster_marine_spawn
+
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"
 set sv_spawnreplace_ammo_grenades "item_rockets"
