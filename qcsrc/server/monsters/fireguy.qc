@@ -36,6 +36,10 @@ void fireguy_mine_think()
 		remove(self);
 		return;
 	}
+	if (self.waterlevel > 0) {
+		remove(self);
+		return;
+	}
 
 	// make it "hot" once it leaves its owner
 	if(self.owner)
