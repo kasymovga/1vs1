@@ -907,6 +907,7 @@ void door_trigger_touch()
 
 	if (self.owner.items)
 	if not(other.keys & self.owner.items) {
+		if (self.owner.state == STATE_BOTTOM)
 		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, "This door required key");
 			play2(other, "misc/talk.wav");
