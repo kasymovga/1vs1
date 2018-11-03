@@ -645,6 +645,10 @@ void spawnfunc_func_button()
 	if (!self.lip)
 		self.lip = 4;
 
+	if (self.sounds > 0)
+	if (self.noise == "")
+		self.noise = "misc/menu1.wav";
+
     if(self.noise != "")
         precache_sound(self.noise);
 
@@ -894,9 +898,10 @@ void door_trigger_touch()
 
 	if (self.owner.items)
 	if not(other.keys & self.owner.items) {
-		if (clienttype(other) == CLIENTTYPE_REAL)
+		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, "This door required key");
-
+			play2(other, "misc/talk.wav");
+		}
 		return;
 	}
 
@@ -948,9 +953,10 @@ void door_touch()
 
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
-		if (other.flags & FL_CLIENT)
+		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.owner.message);
-		play2(other, "misc/talk.wav");
+			play2(other, "misc/talk.wav");
+		}
 	}
 };
 
@@ -1597,9 +1603,10 @@ void secret_touch()
 
 	if (self.message)
 	{
-		if (other.flags & FL_CLIENT)
+		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.message);
-		play2(other, "misc/talk.wav");
+			play2(other, "misc/talk.wav");
+		}
 	}
 };
 
