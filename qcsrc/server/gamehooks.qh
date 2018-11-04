@@ -113,3 +113,4 @@ var void() GameHook_DecodeLevelParms = {}
 var float() GameHook_ForbidSpectators = { return FALSE; }
 var float() GameHook_EquipPlayer = { return FALSE; }
 var float() GameHook_SameLevel = { return FALSE; }
+var float() GameHook_MonsterTeamSwitchable = { return TRUE; }

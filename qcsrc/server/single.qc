@@ -13,6 +13,8 @@ void Single_EndLevel() {
 
 	if (self.netname != "")
 		cvar_set("nextmap", self.netname);
+	else
+		print("no nextmap found\n");
 }
 
 float Single_WinningCondition() {
@@ -36,6 +38,24 @@ float Single_DeathHandle() {
 	return FALSE;
 }
 
+void Single_IceFrozenStatus() {
+	entity e;
+	FOR_EACH_PLAYER(e) {
+		if (e.deadflag == DEAD_NO)
+			return;
+	}
+	single_level_finished = TRUE;
+	campaign_won = FALSE;
+}
+
+float Single_IceSkipDeathHandle() {
+	return !self.wasplayer;
+}
+
+void Single_IceUnfroze() {
+	return;
+}
+
 void single_init_delayed(void) {
 	entity e;
 	string s;
@@ -46,9 +66,16 @@ void single_init_delayed(void) {
 			s = substring(e.target, 9, -1);
 			map_target = spawn();
 			map_target.netname = strzone(s);
+			print("endlevel with nextmap: ", s, "\n");
 			map_target.targetname = e.target;
 			map_target.use = Single_EndLevel;
 		}
+	}
+	if (game == GAME_COOP) {
+		IceHook_FrozenStatus = Single_IceFrozenStatus;
+		IceHook_SkipDeathHandle = Single_IceSkipDeathHandle;
+		IceHook_Unfroze = Single_IceUnfroze;
+		Ice_Init();
 	}
 }
 
@@ -92,11 +119,19 @@ float Single_ForbidSpectators() {
 
 float Single_EquipPlayer() {
 	self.ammo_fuel = 0;
+	if (self.wasplayer) {
+		Single_SetNewParms();
+		Single_DecodeLevelParms();
+	}
 	return TRUE;
 }
 
 float Single_SameLevel() {
 	return !campaign_won;
+}
+
+float Single_MonsterTeamSwitchable() {
+	return FALSE;
 }
 
 void Single_Init() {
@@ -112,8 +147,13 @@ void Single_Init() {
 	GameHook_SetNewParms = Single_SetNewParms;
 	GameHook_SetChangeParms = Single_SetChangeParms;
 	GameHook_DecodeLevelParms = Single_DecodeLevelParms;
+	GameHook_MonsterTeamSwitchable = Single_MonsterTeamSwitchable;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
 	InitializeEntity(world, single_init_delayed, INITPRIO_GAMETYPE);
+	if (game == GAME_COOP) {
+		ActivateTeamplay();
+		SetTeamCount(1);
+	}
 }

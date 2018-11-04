@@ -731,7 +731,6 @@ void PutClientInServer()
 		}
 		PlayerClear(FALSE);
 		PhysicMarkAsTeleported(self);
-		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
@@ -895,6 +894,7 @@ void PutClientInServer()
 		player_effects();
 		GameHookChain_Spawn(spot);
 		antilag_teleported(self);
+		self.wasplayer = TRUE;
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 	}
@@ -2043,6 +2043,7 @@ void PlayerPostThink (void)
 
 		if (maxidle)
 		if not(g_campaign)
+		if not(GameHook_ForbidSpectators())
 		if not(intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {

@@ -96,6 +96,7 @@ set g_pickup_respawntime_armorsmall 15
 set g_pickup_respawntime_armormedium 20
 set g_pickup_respawntime_armorbig 30
 set g_pickup_respawntime_armorlarge 30
+set g_pickup_respawntime_key 60
 set g_pickup_respawntimejitter_healthsmall 0
 set g_pickup_respawntimejitter_healthmedium 0
 set g_pickup_respawntimejitter_healthlarge 0
@@ -104,6 +105,7 @@ set g_pickup_respawntimejitter_armorsmall 0
 set g_pickup_respawntimejitter_armormedium 0
 set g_pickup_respawntimejitter_armorbig 0
 set g_pickup_respawntimejitter_armorlarge 0
+set g_pickup_respawntimejitter_key 15
 set g_balance_crylink_swap_buttons 0
 set g_balance_electro_secondary 1
 set g_balance_electro_swap_buttons 0
@@ -1317,7 +1319,8 @@ set single_g_pickup_respawntime_armorbig -1
 set single_g_pickup_respawntime_armorlarge -1
 set single_g_pickup_respawntime_powerup -1
 set single_g_pickup_respawntime_ammo -1
-set single_g_pickup_respawntimejitter_powerup 0
+set single_g_pickup_respawntime_key -1
+set single_g_pickup_respawntimejitter_key -1
 set single_g_maxplayers 1
 set single_g_balance_health_regen 0
 set single_g_balance_health_rot 0
@@ -1328,6 +1331,31 @@ set single_g_pickup_healthlarge_max 100
 set single_g_pickup_healthmedium_max 100
 set single_g_pickup_armormedium_max 100
 set single_g_pickup_armorbig_max 100
+
+set coop_g_weapon_stay 1
+set coop_g_pickup_respawntime_healthsmall -1
+set coop_g_pickup_respawntime_healthmedium -1
+set coop_g_pickup_respawntime_healthlarge -1
+set coop_g_pickup_respawntime_healthmega -1
+set coop_g_pickup_respawntime_armorsmall -1
+set coop_g_pickup_respawntime_armormedium -1
+set coop_g_pickup_respawntime_armorbig -1
+set coop_g_pickup_respawntime_armorlarge -1
+set coop_g_pickup_respawntime_powerup -1
+set coop_g_pickup_respawntime_ammo -1
+set coop_g_pickup_respawntimejitter_powerup 0
+set coop_g_pickup_respawntime_key 0.1
+set coop_g_pickup_respawntimejitter_key 0
+set coop_g_maxplayers 1
+set coop_g_balance_health_regen 0
+set coop_g_balance_health_rot 0
+set coop_g_balance_armor_regen 0
+set coop_g_balance_armor_rot 0
+set coop_g_balance_health_start 100
+set coop_g_pickup_healthlarge_max 100
+set coop_g_pickup_healthmedium_max 100
+set coop_g_pickup_armormedium_max 100
+set coop_g_pickup_armorbig_max 100
 
 set g_monster_arachna_health 90
 set g_monster_arachna_damage 40
@@ -1447,7 +1475,8 @@ set _g_freeze 0
 set _g_clanarena 0
 set _g_survive 0
 set _g_single 0
-alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_runematch 0; _g_conquest 0; _g_keyhunt 0; _g_khca 0; _g_khft 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0"
+set _g_coop 0
+alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_runematch 0; _g_conquest 0; _g_keyhunt 0; _g_khca 0; _g_khft 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0; _g_coop 0"
 alias gametype_dm "reset_gametype; _g_dm 1; bprint_gtswitch ^3Deathmatch"
 alias gametype_tdm "reset_gametype; _g_tdm 1; bprint_gtswitch ^3Team Deathmatch"
 alias gametype_dom "reset_gametype; _g_domination 1; bprint_gtswitch ^3Domination"
@@ -1474,6 +1503,7 @@ alias gametype_ca "reset_gametype; _g_clanarena 1; bprint_gtswitch ^3Clan Arena"
 alias gametype_clanarena gametype_ca
 alias gametype_surv "reset_gametype; _g_survive 1; bprint_gtswitch ^3Survive"
 alias gametype_survivie gametype_surv
+alias gametype_coop "reset_gametype; _g_coop 1; bprint_gtswitch ^3Cooperative"
 alias gametype "gametype_$1"
 
 set sv_projectile_rocket_size "3 -3 3"

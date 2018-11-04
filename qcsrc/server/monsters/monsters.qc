@@ -296,6 +296,7 @@ void monster_spawn_use() {
 		self.reset();
 
 	if (activator)
+	if (GameHook_MonsterTeamSwitchable())
 		self.team = activator.team;
 
 	self.think();
