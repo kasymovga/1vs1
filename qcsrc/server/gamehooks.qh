@@ -107,3 +107,9 @@ var float(entity plr, entity targ) GameHookChain_PlayerVisibleThroughWallFor { r
 var float() GameHookChain_ThrowWeaponHandle { return FALSE; }
 var void(entity source, string msg) GameHookChain_PublicPlayerChat = {}
 var void() GameHook_BotChooseRole = { havocbot_chooserole_dm(); }
+var void() GameHook_SetNewParms = {}
+var void() GameHook_SetChangeParms = {}
+var void() GameHook_DecodeLevelParms = {}
+var float() GameHook_ForbidSpectators = { return FALSE; }
+var float() GameHook_EquipPlayer = { return FALSE; }
+var float() GameHook_SameLevel = { return FALSE; }
