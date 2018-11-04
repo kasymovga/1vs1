@@ -1360,12 +1360,14 @@ void spawnfunc_item_key_gold (void) {
 	self.origin_z = self.origin_z + 40;
 	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Gold Key", IT_KEY2, 0, 0, generic_pickupevalfunc, 100000);
 	self.colormod = '1 1 0';
+	self.effects = EF_FULLBRIGHT | EF_STARDUST;
 	self.mins_z = self.mins_z - 40;
 }
 
 void spawnfunc_item_key_silver (void) {
 	self.origin_z = self.origin_z + 40;
 	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Silver Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
+	self.effects = EF_FULLBRIGHT | EF_STARDUST;
 	self.mins_z = self.mins_z - 40;
 }
 
