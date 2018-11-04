@@ -224,7 +224,7 @@ void spawnfunc_func_plat()
 		self.noise1 = "plats/plat2.wav";
 	}
 
-	if (self.sounds == 2)
+	if (self.sounds >= 2)
 	{
 		precache_sound ("plats/medplat1.wav");
 		precache_sound ("plats/medplat2.wav");
