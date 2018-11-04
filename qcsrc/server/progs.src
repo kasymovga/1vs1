@@ -331,3 +331,4 @@ udpchat.qc
 score_damage.qc
 ice.qc
 single.qc
+g_lights.qc
