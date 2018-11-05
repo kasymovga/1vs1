@@ -108,6 +108,11 @@ void Single_DecodeLevelParms() {
 	self.ammo_rockets = parm9;
 	self.ammo_cells = parm10;
 	self.weapons = parm11;
+	float i, j;
+	for(i = WEP_FIRST, j = 1; i <= WEP_LAST; ++i, j *= 2) {
+		if (self.weapons & j)
+			weapon_precache(i);
+	}
 }
 
 float Single_ForbidSpectators() {
