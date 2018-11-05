@@ -321,10 +321,11 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	if (t == "")
 		t = self.target;
 
-	if (t != "")
-	if (t == "monster_walk_path" || t == "path_corner")
+	if (t != "") {
 		self.enemy = find(world, targetname, t);
-
+		if (self.enemy.classname != "monster_walk_path" && self.enemy.classname != "path_corner")
+			self.enemy = world;
+	}
 	if (self.enemy || self.owner.spawnflags & 2) {
 		self.think = walk;
 		//print("Prepare route\n");
