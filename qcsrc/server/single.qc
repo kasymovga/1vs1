@@ -1,9 +1,6 @@
 float single_level_finished;
 
 void Single_EndLevel() {
-	if (activator.classname != "player" || activator.deadflag != DEAD_NO)
-		return;
-
 	single_level_finished = TRUE;
 	entity e;
 	FOR_EACH_PLAYER(e)
