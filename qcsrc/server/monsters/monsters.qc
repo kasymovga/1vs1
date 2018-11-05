@@ -86,7 +86,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	}
 	if (p) {
 		if (self.enemy)
-		if (self.enemy.classname == "monster_walk_path")
+		if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
 			self.message2 = self.enemy.targetname;
 
 		self.think = self.weapon_think;
@@ -185,7 +185,7 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	} else if (attacker.classname == "player") {
 		monster_sound(self, self.noise3);
 		if (self.enemy) {
-			if (self.enemy.classname == "monster_walk_path")
+			if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
 				self.message2 = self.enemy.targetname;
 			else
 				return;
@@ -322,6 +322,7 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 		t = self.target;
 
 	if (t != "")
+	if (t == "monster_walk_path" || t == "path_corner")
 		self.enemy = find(world, targetname, t);
 
 	if (self.enemy || self.owner.spawnflags & 2) {
