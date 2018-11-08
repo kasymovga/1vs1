@@ -685,6 +685,8 @@ void Item_Touch (void)
 	if(!Item_GiveTo(self, other))
 		return;
 
+	activator = other;
+	SUB_UseTargets();
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 
 	if (substring(self.classname, 0, 7) == "dropped")
@@ -1009,7 +1011,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			precache_sound ("misc/shield_respawn.wav");
 
 		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
-			self.target = "###item###"; // for finding the nearest item using find()
+			self.targetname = "###item###"; // for finding the nearest item using find()
 	}
 
 	self.bot_pickup = TRUE;

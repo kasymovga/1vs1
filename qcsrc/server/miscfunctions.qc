@@ -233,7 +233,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     localhead = find(world, field, value);
     while (localhead)
     {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
+        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.targetname == "###item###")
             dist = localhead.oldorigin;
         else
             dist = localhead.origin;
@@ -324,7 +324,7 @@ string NearestLocation(vector p)
     }
     else
     {
-        loc = findnearest(p, target, "###item###", '1 1 4');
+        loc = findnearest(p, targetname, "###item###", '1 1 4');
         if (loc)
             ret = loc.netname;
     }
