@@ -13,16 +13,24 @@ keys:
 "weaponmodel" model
 "START_OFF" spawnfunc_light will be in off state until targeted
 */
+float dynlight_customize() {
+	if (vlen(self.origin - other.origin) > 2000)
+		return FALSE;
+
+	return TRUE;
+}
+
 void dynlight_on()
 {
 	self.light_lev = self.dmg;
-	setmodel(self, self.weaponmodel);
+	if (self.weaponmodel != "")
+		setmodel(self.enemy, self.weaponmodel);
 }
 
 void dynlight_off()
 {
 	self.light_lev = 0;
-	setmodel(self, "");
+	setmodel(self.enemy, "");
 }
 
 void dynlight_use()
@@ -50,8 +58,13 @@ void spawnfunc_dynlight()
 	self.pflags = PFLAGS_FULLDYNAMIC;
 	self.dmg = self.light_lev;
 	self.use = dynlight_use;
-	if (self.weaponmodel != "")
+	self.customizeentityforclient = dynlight_customize;
+	self.effects = EF_NODEPTHTEST;
+	if (self.weaponmodel != "") {
 		precache_model(self.weaponmodel);
+		self.enemy = spawn();
+		setattachment(self.enemy, self, "");
+	}
 
 	self.solid = SOLID_NOT;
 	self.light_lev = 0;
