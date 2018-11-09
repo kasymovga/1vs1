@@ -1,3 +1,7 @@
+#define MONSTER_IGNOREFIRE 1
+#define MONSTER_IGNORESLIME 2
+#define MONSTER_IGNOREDROWN 4
+
 void monster_sound(entity m, string s) {
 	if (s != "")
 	if (m.watersound_finished < time) {
@@ -157,6 +161,16 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 		self.health = self.health - damage;
 
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+	if (deathtype == DEATH_LAVA || deathtype == DEATH_FIRE) {
+		if (self.flags & MONSTER_IGNOREFIRE)
+			return;
+	} else if (deathtype == DEATH_SLIME) {
+		if (self.flags & MONSTER_IGNORESLIME)
+			return;
+	} else if (deathtype == DEATH_DROWN) {
+		if (self.flags & MONSTER_IGNOREDROWN)
+			return;
+	}
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		stopsound(self, CHAN_TRIGGER);

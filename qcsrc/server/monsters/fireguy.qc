@@ -171,6 +171,7 @@ void fireguy_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "FireGuy";
 	self.ammo_rockets = 10;
+	self.flags = MONSTER_IGNOREFIRE;
 }
 
 void fireguy_init() {
