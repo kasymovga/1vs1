@@ -2013,3 +2013,42 @@ void spawnfunc_func_magicwall(void) {
     self.reset();
     self.nextthink = time;
 }
+
+void trigger_door_check_use() {
+	entity e;
+	float state_to_check;
+	if (self.spawnflags & 1)
+		state_to_check = STATE_BOTTOM;
+	else
+		state_to_check = STATE_TOP;
+
+	float total, correct;
+	total = correct = 0;
+	string t = self.target;
+	for (e = find(world, targetname, t); e; e = find(e, targetname, t)) {
+		total++;
+		print(ftos(e.state), " ? ", ftos(state_to_check), "\n");
+		if (e.state == state_to_check) {
+			correct++;
+			print("Door checked ok\n");
+		}
+	}
+	self.target = "";
+	self.state = STATE_BOTTOM;
+	if (self.spawnflags & 2) { //OR check (at least one door in needed state)
+		if (correct > 0) {
+			SUB_UseTargets();
+			self.state = STATE_TOP;
+		}
+	} else { //AND check (all doors in needed state)
+		if (total == correct) {
+			SUB_UseTargets();
+			self.state = STATE_TOP;
+		}
+	}
+	self.target = t;
+}
+
+void spawnfunc_trigger_door_check() {
+	self.use = trigger_door_check_use;
+}
