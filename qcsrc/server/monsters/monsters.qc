@@ -204,10 +204,6 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 
 		return;
 	}
-	if (attacker.classname != "monster")
-		self.health = self.health - damage;
-
-	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 	if (deathtype == DEATH_LAVA || deathtype == DEATH_FIRE) {
 		if (self.flags & MONSTER_IGNOREFIRE)
 			return;
@@ -218,6 +214,10 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 		if (self.flags & MONSTER_IGNOREDROWN)
 			return;
 	}
+	if (attacker.classname != "monster")
+		self.health = self.health - damage;
+
+	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		stopsound(self, CHAN_TRIGGER);
