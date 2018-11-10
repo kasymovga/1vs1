@@ -102,3 +102,22 @@ void Net_ReadBlast(void) {
     sound(e, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     remove(e);
 }
+
+void Net_ReadBigLightningarc(void) {
+	vector from, to;
+
+    from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
+    to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
+
+	vector vd = to - from;
+	vector v1 = from;
+	vector v2;
+	float pert = vlen(v1) * 0.05;
+	float en = particleeffectnum("RM_LIGHTNING_TEAM2");
+	for (i = 1; i <= 4; i++) {
+		v2 = from + (vd * 0.2 * i) + randomvec() * pert;
+		trailparticles(world, en, v1, v2);
+		v1 = v2;
+	}
+	trailparticles(world, en, v1, to);
+}
