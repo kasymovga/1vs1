@@ -2027,11 +2027,8 @@ void trigger_door_check_use() {
 	string t = self.target;
 	for (e = find(world, targetname, t); e; e = find(e, targetname, t)) {
 		total++;
-		print(ftos(e.state), " ? ", ftos(state_to_check), "\n");
-		if (e.state == state_to_check) {
+		if (e.state == state_to_check)
 			correct++;
-			print("Door checked ok\n");
-		}
 	}
 	self.target = "";
 	self.state = STATE_BOTTOM;
