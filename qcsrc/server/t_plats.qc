@@ -321,7 +321,7 @@ void func_train_find()
 	if (!self.target)
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - (self.train_nomins ? '0 0 0' : self.mins));
-	IFTARGETED {
+	if (self.targetname != "" && find(world, target, self.targetname)) {
 		self.use = train_next;
 	} else {
 		self.nextthink = self.ltime + 1;
