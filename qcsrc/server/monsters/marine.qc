@@ -51,7 +51,7 @@ void marine_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void marine_idle() {
@@ -108,6 +108,7 @@ void marine_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "Marine";
 	self.ammo_nails = 20;
+	self.view_ofs = '0 0 35';
 }
 
 void marine_init() {

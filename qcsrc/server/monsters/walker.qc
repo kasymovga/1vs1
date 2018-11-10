@@ -24,28 +24,18 @@ void walker_bullet() {
 	flash.effects   = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 }
 
-void walker_rocket_explode() {
-    RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, WEP_ROCKET_LAUNCHER, world);
-    remove(self);
-}
-
 void walker_rocket_event_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce) {
     self.health = self.health - damage;
     self.velocity = self.velocity + vforce;
     if (self.health <= 0) {
-        self.think = walker_rocket_explode;
+        self.think = monster_proj_explode;
 		self.nextthink = time;
 	}
 }
 
-void walker_rocket_touch() {
-	PROJECTILE_TOUCH;
-	walker_rocket_explode();
-}
-
 void walker_rocket_think() {
 	if (time > self.cnt) {
-		walker_rocket_explode();
+		monster_proj_explode();
 		return;
 	}
 	vector v;
@@ -124,7 +114,7 @@ void walker_hunt() {
 			missile.velocity = normalize(v_forward + v_up) * 600;
 			W_SetupProjectileVelocity(missile);
 			missile.angles = vectoangles(missile.velocity);
-			missile.touch = walker_rocket_touch;
+			missile.touch = monster_proj_touch;
 			missile.think = walker_rocket_think;
 			missile.nextthink = time;
 			missile.cnt = time + 30;
@@ -197,6 +187,7 @@ void walker_spawn() {
 	self.ammo_rockets = 20;
 	self.ammo_nails = 50;
 	self.frags = 3;
+	self.view_ofs = '0 0 50';
 }
 
 void walker_init() {

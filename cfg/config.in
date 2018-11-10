@@ -1372,6 +1372,10 @@ set g_monster_boss3_health 2000
 set g_monster_boss3_damage 40
 set g_monster_boss3_force 100
 set g_monster_boss3_radius 100
+set g_monster_boss4_health 1000
+set g_monster_boss4_damage 200
+set g_monster_boss4_force 100
+set g_monster_boss4_radius 150
 set g_monster_bat_health 100
 set g_monster_bat_damage 50
 set g_monster_bat_force 100

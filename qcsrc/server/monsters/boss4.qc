@@ -1,20 +1,18 @@
-void fireguy_idle();
-void fireguy_guard();
-void fireguy_walk();
+void boss4_idle();
+void boss4_guard();
+void boss4_walk();
 
-void fireguy_mine_touch(void)
-{
-	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, self.dmg_edge, 2, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
-	{
-		remove(self);
-		return;
+float boss4_prethink_skip(void) {
+	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
+	if (self.owner.spawnflags & MONSTER_SPAWN_SHIELDED)
+	if not(self.spawnflags & MONSTER_SPAWN_SHIELDED) {
+		setanim(self, '9 1 1', TRUE, TRUE, FALSE);
+		return TRUE;
 	}
-	self.projectiledeathtype |= HITTYPE_BOUNCE;
+	return FALSE;
 }
 
-void fireguy_mine_think()
+void boss4_mine_think()
 {
 	if(time > self.pushltime)
 	{
@@ -26,15 +24,17 @@ void fireguy_mine_think()
 		return;
 	}
 
-	W_Fireball_LaserPlay(0.1, self.dmg_radius, self.dmg_edge, 0, 4);
-
+	W_Fireball_LaserPlay(0.1, self.dmg_radius, self.dmg_edge * 0.25, 0, 4);
 	self.nextthink = time + 0.1;
 }
 
 
-void fireguy_hunt() {
+void boss4_hunt() {
 	self.nextthink = time;
-	if (monster_check_target(fireguy_walk, fireguy_guard))
+	if (boss4_prethink_skip())
+		return;
+
+	if (monster_check_target(boss4_walk, boss4_guard))
 		return;
 
 	vector v;
@@ -45,6 +45,7 @@ void fireguy_hunt() {
 		if (trace_fraction == 1)
 			dofire = TRUE;
 	}
+	float stay = self.owner.spawnflags & MONSTER_SPAWN_STAYSTILL;
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
 		v = vectoangles(self.enemy.origin - self.origin);
@@ -54,7 +55,7 @@ void fireguy_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 
-		entity proj = CSQCProjectile(TRUE, PROJECTILE_FIREMINE, TRUE);
+		entity proj = CSQCProjectile(TRUE, PROJECTILE_FIREBALL, TRUE);
 		proj.owner = proj.realowner = self;
 		proj.classname = "grenade";
 		proj.bot_dodge = TRUE;
@@ -62,75 +63,95 @@ void fireguy_hunt() {
 		proj.dmg_edge = self.dmg_edge;
 		proj.dmg_radius = self.dmg_radius;
 		proj.dmg_force = self.dmg_force;
-		proj.movetype = MOVETYPE_BOUNCE;
+		proj.movetype = MOVETYPE_FLY;
 		proj.projectiledeathtype = WEP_FIREBALL;
-		proj.touch = fireguy_mine_touch;
+		proj.touch = monster_proj_touch;
 		PROJECTILE_MAKETRIGGER(proj);
 		setorigin(proj, _shotorg);
-		proj.think = fireguy_mine_think;
+		proj.think = boss4_mine_think;
 		proj.nextthink = time;
 		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
-		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
-		proj.pushltime = time + 10;
+		proj.velocity = normalize(_shotdir) * 600;
+		proj.pushltime = time + 20;
 		W_SetupProjectileVelocity(proj);
 		proj.angles = vectoangles(proj.velocity);
 
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
+	} else if (stay) {
+		movelib_beak_simple(100 * frametime);
+		v = vectoangles(normalize(self.enemy.origin - self.origin));
+		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	} else {
-		v = monster_move_walk(250, 5, 0);
+		v = monster_move_walk(750, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
-	if (time > self.bulletcounter)
-		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
-	else
+	if (time > self.bulletcounter) {
+		if (stay)
+			setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		else
+			setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+	} else
 		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
-void fireguy_idle() {
+void boss4_idle() {
 	self.nextthink = time;
-	if (monster_look_for_player(2000, 500, 0, 1, 3)) {
+	if (boss4_prethink_skip())
 		return;
-	}
+
+	if (monster_look_for_player(2000, 500, 0, 1, 3))
+		return;
+
 	movelib_beak_simple(100 * frametime);
 	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
-void fireguy_guard() {
+void boss4_guard() {
+	if (boss4_prethink_skip()) {
+		self.nextthink = time;
+		return;
+	}
 	self.angles_y = self.angles_y + frametime * 45 * random();
 	if (self.angles_y > 360)
 		self.angles_y = self.angles_y - 360;
-	fireguy_idle();
+	boss4_idle();
 }
 
-void fireguy_walk() {
+void boss4_walk() {
 	self.nextthink = time;
+	if (boss4_prethink_skip())
+		return;
+
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(fireguy_idle, 100))
+	if (monster_walk_finished(boss4_idle, 100))
 		return;
 
 	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(150, 5, 0);
+	vector v = monster_move_walk(450, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
 
 }
 
-void fireguy_remove() {
+void boss4_remove() {
 	remove(self.exteriorweaponentity);
+	remove(self.fire_burner);
+	WaypointSprite_DetachCarrier(self);
 }
 
-void fireguy_spawn() {
-	monster_prepare(fireguy_hunt, fireguy_walk, fireguy_idle);
+void boss4_spawn() {
+	monster_prepare(boss4_hunt, boss4_walk, boss4_idle);
 	setmodel(self, "models/player/lycanthrope.zym");
+	self.scale = 3;
 	self.movetype = MOVETYPE_WALK;
 	self.exteriorweaponentity = spawn();
-	self.entremove = fireguy_remove;
+	self.entremove = boss4_remove;
 	if (self.team > 0)
 		self.colormap = 1024;
 	else
@@ -141,23 +162,34 @@ void fireguy_spawn() {
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
-	self.netname = "FireGuy";
+	self.netname = "Big FireGuy";
+	self.max_health = self.health;
+	self.damageforcescale = 0.01;
 	self.ammo_rockets = 10;
 	self.flags = MONSTER_IGNOREFIRE;
-	self.view_ofs = '0 0 35';
+	self.anim_die1 = '0 1 0.5';
+	self.view_ofs = '0 0 105';
+	self.fire_burner = spawn();
+	setattachment(self.fire_burner, self, "Bip01 Head");
+	self.fire_burner.effects = EF_FLAME;
+	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	WaypointSprite_UpdateMaxHealth(e, self.health);
+	WaypointSprite_UpdateHealth(e, self.health);
+	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');
 }
 
-void fireguy_init() {
+void boss4_init() {
 	precache_model("models/player/lycanthrope.zym");
 	precache_model("models/weapons/v_fireball.md3");
 	precache_sound("weapons/fireball_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_FIREMINE);
+	CSQCProjectile_Init(PROJECTILE_FIREBALL);
 }
 
-void spawnfunc_monster_fireguy_spawn() {
-	setsize(self, '-16 -16 -24', '16 16 45');
-	monster_init(fireguy_init);
+void spawnfunc_monster_boss4_spawn() {
+	setsize(self, '-48 -48 -72', '64 64 135');
+	monster_init(boss4_init);
 	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
+	self.noise2 = "player/carni-lycan/player/death2.ogg";
 	self.noise3 = "player/carni-lycan/player/pain50.ogg";
-	monster_prepare_spawn(fireguy_spawn, spawnfunc_monster_fireguy_spawn);
+	monster_prepare_spawn(boss4_spawn, spawnfunc_monster_boss4_spawn);
 }

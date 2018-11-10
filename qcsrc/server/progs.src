@@ -312,6 +312,7 @@ monsters/rocketgirl.qc
 monsters/marine.qc
 monsters/uganda.qc
 monsters/arachna.qc
+monsters/boss4.qc
 survive.qc
 minstagib.qc
 radio.qc

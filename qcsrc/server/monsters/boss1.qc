@@ -2,22 +2,6 @@ void boss1_idle();
 void boss1_guard();
 void boss1_walk();
 
-void boss1_grenade_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void boss1_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	boss1_grenade_explode();
-}
-
-
 void boss1_hunt() {
 	self.nextthink = time;
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
@@ -56,8 +40,8 @@ void boss1_hunt() {
 
 			gren.nextthink = time + 5;
 			gren.think = adaptor_think2use;
-			gren.use = boss1_grenade_explode;
-			gren.touch = boss1_grenade_touch;
+			gren.use = monster_proj_explode;
+			gren.touch = monster_proj_touch;
 			gren.velocity = normalize(_shotdir + randomvec() * 0.05 * vlen(_shotdir)) * 3200;
 			W_SetupProjectileVelocity(gren);
 
@@ -74,7 +58,7 @@ void boss1_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void boss1_idle() {
@@ -139,6 +123,7 @@ void boss1_spawn() {
 	self.netname = "Big Soldier";
 	self.anim_die1 = '0 1 0.5';
 	self.frags = 10;
+	self.view_ofs = '0 0 105';
 	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);

@@ -1,20 +1,5 @@
 void flyingthing_walk();
 
-void flyingthing_grenade_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-	remove (self);
-}
-
-void flyingthing_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	flyingthing_grenade_explode();
-}
-
-
 void flyingthing_idle() {
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
@@ -58,8 +43,8 @@ void flyingthing_hunt() {
 
 		gren.nextthink = time + 5;
 		gren.think = adaptor_think2use;
-		gren.use = flyingthing_grenade_explode;
-		gren.touch = flyingthing_grenade_touch;
+		gren.use = monster_proj_explode;
+		gren.touch = monster_proj_touch;
 		gren.velocity = normalize(_shotdir) * 2400;
 		W_SetupProjectileVelocity(gren);
 
@@ -100,6 +85,7 @@ void flyingthing_spawn() {
 	self.solid = SOLID_BBOX;
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
+	self.view_ofs = '0 0 -16';
 }
 
 void flyingthing_init() {

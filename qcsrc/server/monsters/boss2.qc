@@ -87,7 +87,7 @@ void boss2_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void boss2_idle() {
@@ -150,6 +150,7 @@ void boss2_spawn() {
 	self.damageforcescale = 0.01;
 	self.anim_die1 = '0 1 0.5';
 	self.frags = 10;
+	self.view_ofs = '0 0 105';
 	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);

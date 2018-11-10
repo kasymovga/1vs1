@@ -2,21 +2,6 @@ void boss3_idle();
 void boss3_guard();
 void boss3_walk();
 
-void boss3_grenade_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void boss3_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	boss3_grenade_explode();
-}
-
 void boss3_hunt() {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	self.nextthink = time;
@@ -53,7 +38,7 @@ void boss3_hunt() {
 			proj.dmg_force = self.dmg_force;
 			proj.movetype = MOVETYPE_FLY;
 			proj.projectiledeathtype = WEP_ELECTRO;
-			proj.touch = boss3_grenade_touch;
+			proj.touch = monster_proj_touch;
 			PROJECTILE_MAKETRIGGER(proj);
 			setorigin(proj, _shotorg);
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
@@ -134,6 +119,7 @@ void boss3_spawn() {
 	self.netname = "Giant Arachna";
 	self.frags = 10;
 	self.anim_die1 = '1 1 1';
+	self.view_ofs = '0 0 48';
 	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);
