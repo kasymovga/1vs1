@@ -38,10 +38,8 @@ float GameTypeVote_Think() {
 		return FALSE;
 	}
 	if not(gametypevote) {
-		print("Game type vote initialized\n");
 		nextmap = cvar_string("nextmap");
 		nextmap_types = MapInfo_GetGameTypes(nextmap);
-
 		gametypevote_start = time;
 		gametypevote = Menu_Prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"), GameTypeVote_Select);
 		gametypes_count = 0;
