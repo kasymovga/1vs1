@@ -40,18 +40,20 @@ void boss4_hunt() {
 	vector v;
 	float dofire;
 	dofire = FALSE;
+	vector eo;
 	if (self.attack_finished_single < time) {
-		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
+		eo = monster_checkpoint(self.enemy);
+		traceline(self.origin, eo, MOVE_WORLDONLY, world);
 		if (trace_fraction == 1)
 			dofire = TRUE;
 	}
 	float stay = self.owner.spawnflags & MONSTER_SPAWN_STAYSTILL;
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
-		v = vectoangles(self.enemy.origin - self.origin);
+		v = vectoangles(eo - self.origin);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = self.enemy.origin - self.origin;
+		vector _shotdir = eo - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 
@@ -64,22 +66,22 @@ void boss4_hunt() {
 		proj.dmg_radius = self.dmg_radius;
 		proj.dmg_force = self.dmg_force;
 		proj.movetype = MOVETYPE_FLY;
-		proj.projectiledeathtype = WEP_FIREBALL;
+		proj.projectiledeathtype = WEP_ROCKET_LAUNCHER;
 		proj.touch = monster_proj_touch;
 		PROJECTILE_MAKETRIGGER(proj);
 		setorigin(proj, _shotorg);
 		proj.think = boss4_mine_think;
 		proj.nextthink = time;
 		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
-		proj.velocity = normalize(_shotdir) * 600;
+		proj.velocity = normalize(_shotdir) * 1000;
 		proj.pushltime = time + 20;
 		W_SetupProjectileVelocity(proj);
 		proj.angles = vectoangles(proj.velocity);
 
-		self.attack_finished_single = time + 3 + random();
+		self.attack_finished_single = time + 1 + random();
 		self.bulletcounter = time + 0.5;
 	} else if (stay) {
-		movelib_beak_simple(100 * frametime);
+		movelib_beak_simple(1000 * frametime);
 		v = vectoangles(normalize(self.enemy.origin - self.origin));
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	} else {
