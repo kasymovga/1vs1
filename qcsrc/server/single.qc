@@ -10,8 +10,6 @@ void Single_EndLevel() {
 
 	if (self.netname != "")
 		cvar_set("nextmap", self.netname);
-	else
-		print("no nextmap found\n");
 }
 
 float Single_WinningCondition() {
