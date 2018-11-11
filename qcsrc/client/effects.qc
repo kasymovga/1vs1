@@ -114,6 +114,7 @@ void Net_ReadBigLightningarc(void) {
 	vector v2;
 	float pert = vlen(v1) * 0.05;
 	float en = particleeffectnum("RM_LIGHTNING_TEAM2");
+	float i;
 	for (i = 1; i <= 4; i++) {
 		v2 = from + (vd * 0.2 * i) + randomvec() * pert;
 		trailparticles(world, en, v1, v2);
