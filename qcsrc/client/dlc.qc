@@ -65,7 +65,7 @@ void Ent_DLCList(float new) {
 			if not(dlc_wait) {
 				dlc_wait = spawn();
 				dlc_wait.think = DLCWait;
-				dlc_wait.nextthink = time + 1;
+				dlc_wait.nextthink = time + 0.2;
 				dlc_wait.draw2d = DLCDraw2d;
 				dlc_wait.draw2dflag = 1;
 			}

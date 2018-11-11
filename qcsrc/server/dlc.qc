@@ -179,7 +179,7 @@ void dlc_require_server_only(string dlc_name) {
 	else if not(dlc_wait) {
 		dlc_wait = spawn();
 		dlc_wait.think = DLCWait;
-		dlc_wait.nextthink = time + 1;
+		dlc_wait.nextthink = time + 0.2;
 	}
 }
 
@@ -301,6 +301,6 @@ void dlc_reload() {
 	if not(dlc_wait_reload) {
 		dlc_wait_reload = spawn();
 		dlc_wait_reload.think = DLCWaitReload;
-		dlc_wait_reload.nextthink = time + 1;
+		dlc_wait_reload.nextthink = time + 0.2;
 	}
 }
