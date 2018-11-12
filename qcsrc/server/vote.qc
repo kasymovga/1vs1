@@ -607,6 +607,21 @@ void VoteSpam(float abstaincount, float notvoters, float mincount, string result
 	IRC_Announce_Vote(substring(s, 1, strlen(s) - 2));
 }
 
+float VoteCheckDupIP(entity pl, float allowed_dups) {
+	entity e;
+	FOR_EACH_REALCLIENT(e)
+		if (e.netaddress == pl.netaddress) {
+			if (allowed_dups <= 0)
+				return TRUE;
+
+			if (e == pl)
+				break;
+
+			allowed_dups = allowed_dups - 1;
+		}
+	return FALSE;
+}
+
 void VoteCount() {
 	local float playercount;
 	playercount = 0;
@@ -619,9 +634,14 @@ void VoteCount() {
 	local float realplayercount;
 	local float realplayerabstaincount;
 	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
-
+	float allowed_dups = cvar("sv_vote_limit_from_single_address");
 	FOR_EACH_REALCLIENT(player)
 	{
+		if (allowed_dups > 0)
+		if (player != votecaller)
+		if (VoteCheckDupIP(player, allowed_dups))
+			continue;
+
 		if(player.vote_vote == -1) {
 			++nocount;
 		} else if(player.vote_vote == 1) {
