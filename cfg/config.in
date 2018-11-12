@@ -645,6 +645,8 @@ set g_conquest_use_ctf_and_dom 0
 
 set g_ctf_showenemycarrier 1
 set g_ctf_showenemycarrier_delay 30
+set g_ctf_dropbutton_use 1 "drop flag with +use bind"
+set g_ctf_dropbutton_hook 0 "drop flag with +hook bind"
 
 set sv_model_healthlarge ""
 set sv_model_healthmedium ""
@@ -1607,6 +1609,8 @@ set cra_g_buttons_hookuse_swap 1
 set cra_g_runes 1
 set cra_g_runematch_hacker 1
 set cra_g_runematch_carried_runes_max 2
+set cra_g_ctf_dropbutton_use 0
+set cra_g_ctf_dropbutton_hook 1
 
 set minsta_g_minstagib 1
 set minsta_g_grappling_hook 1

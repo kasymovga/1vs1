@@ -48,6 +48,8 @@ float g_ctf_flagscore_kill;
 float g_ctf_personalscore_kill;
 float g_ctf_showenemycarrier;
 float g_ctf_showenemycarrier_delay;
+float g_ctf_dropbutton_use;
+float g_ctf_dropbutton_hook;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -451,7 +453,7 @@ void FlagThink()
 	}
 
 	if(g_ctf_allow_drop)
-	if(e.BUTTON_USE)
+	if((g_ctf_dropbutton_use && e.BUTTON_USE) || (g_ctf_dropbutton_hook && e.BUTTON_HOOK))
 		DropFlag(self, e, world);
 };
 
@@ -1082,6 +1084,45 @@ void ctf_spawnteams()
 
 void ctf_delayedinit()
 {
+	CACHE_CVAR(g_balance_ctf_damageforcescale);
+	CACHE_CVAR(g_balance_ctf_delay_collect);
+	CACHE_CVAR(g_ctf_allow_drop);
+	CACHE_CVAR(g_ctf_captimerecord_always);
+	CACHE_CVAR(g_ctf_default_teams);
+	CACHE_CVAR(g_ctf_flag_capture_effects);
+	CACHE_CVAR(g_ctf_flag_pickup_effects);
+	CACHE_CVAR(g_ctf_flag_returntime);
+	CACHE_CVAR(g_ctf_personalpenalty_drop);
+	CACHE_CVAR(g_ctf_personalpenalty_returned);
+	CACHE_CVAR(g_ctf_personalpenalty_suicidedrop);
+	CACHE_CVAR(g_ctf_personalscore_capture);
+	CACHE_CVAR(g_ctf_personalscore_pickup_base);
+	CACHE_CVAR(g_ctf_personalscore_pickup_dropped_early);
+	CACHE_CVAR(g_ctf_personalscore_pickup_dropped_late);
+	CACHE_CVAR(g_ctf_personalscore_return);
+	CACHE_CVAR(g_ctf_personalscore_return_by_killer);
+	CACHE_CVAR(g_ctf_personalscore_return_rogue);
+	CACHE_CVAR(g_ctf_personalscore_return_rogue_by_killer);
+	CACHE_CVAR(g_ctf_flagpenalty_drop);
+	CACHE_CVAR(g_ctf_flagpenalty_returned);
+	CACHE_CVAR(g_ctf_flagpenalty_suicidedrop);
+	CACHE_CVAR(g_ctf_flagscore_capture);
+	CACHE_CVAR(g_ctf_flagscore_pickup_base);
+	CACHE_CVAR(g_ctf_flagscore_pickup_dropped_early);
+	CACHE_CVAR(g_ctf_flagscore_pickup_dropped_late);
+	CACHE_CVAR(g_ctf_flagscore_return);
+	CACHE_CVAR(g_ctf_flagscore_return_by_killer);
+	CACHE_CVAR(g_ctf_flagscore_return_rogue);
+	CACHE_CVAR(g_ctf_flagscore_return_rogue_by_killer);
+	CACHE_CVAR(g_ctf_ignore_frags);
+	CACHE_CVAR(g_ctf_flagcarrier_selfdamage);
+	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
+	CACHE_CVAR(g_ctf_flagscore_kill);
+	CACHE_CVAR(g_ctf_personalscore_kill);
+	CACHE_CVAR(g_ctf_showenemycarrier);
+	CACHE_CVAR(g_ctf_showenemycarrier_delay);
+	CACHE_CVAR(g_ctf_dropbutton_use);
+	CACHE_CVAR(g_ctf_dropbutton_hook);
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "ctf_team") == world)
 		ctf_spawnteams();
@@ -1175,45 +1216,8 @@ float ctf_TeleportationForbiddenFor(entity e) { return e.classname == "item_flag
 
 void ctf_init()
 {
-	g_ctf = 1;
-	CACHE_CVAR(g_balance_ctf_damageforcescale);
-	CACHE_CVAR(g_balance_ctf_delay_collect);
-	CACHE_CVAR(g_ctf_allow_drop);
-	CACHE_CVAR(g_ctf_captimerecord_always);
-	CACHE_CVAR(g_ctf_default_teams);
-	CACHE_CVAR(g_ctf_flag_capture_effects);
-	CACHE_CVAR(g_ctf_flag_pickup_effects);
-	CACHE_CVAR(g_ctf_flag_returntime);
-	CACHE_CVAR(g_ctf_personalpenalty_drop);
-	CACHE_CVAR(g_ctf_personalpenalty_returned);
-	CACHE_CVAR(g_ctf_personalpenalty_suicidedrop);
-	CACHE_CVAR(g_ctf_personalscore_capture);
-	CACHE_CVAR(g_ctf_personalscore_pickup_base);
-	CACHE_CVAR(g_ctf_personalscore_pickup_dropped_early);
-	CACHE_CVAR(g_ctf_personalscore_pickup_dropped_late);
-	CACHE_CVAR(g_ctf_personalscore_return);
-	CACHE_CVAR(g_ctf_personalscore_return_by_killer);
-	CACHE_CVAR(g_ctf_personalscore_return_rogue);
-	CACHE_CVAR(g_ctf_personalscore_return_rogue_by_killer);
 	CACHE_CVAR(g_ctf_reverse);
-	CACHE_CVAR(g_ctf_flagpenalty_drop);
-	CACHE_CVAR(g_ctf_flagpenalty_returned);
-	CACHE_CVAR(g_ctf_flagpenalty_suicidedrop);
-	CACHE_CVAR(g_ctf_flagscore_capture);
-	CACHE_CVAR(g_ctf_flagscore_pickup_base);
-	CACHE_CVAR(g_ctf_flagscore_pickup_dropped_early);
-	CACHE_CVAR(g_ctf_flagscore_pickup_dropped_late);
-	CACHE_CVAR(g_ctf_flagscore_return);
-	CACHE_CVAR(g_ctf_flagscore_return_by_killer);
-	CACHE_CVAR(g_ctf_flagscore_return_rogue);
-	CACHE_CVAR(g_ctf_flagscore_return_rogue_by_killer);
-	CACHE_CVAR(g_ctf_ignore_frags);
-	CACHE_CVAR(g_ctf_flagcarrier_selfdamage);
-	CACHE_CVAR(g_ctf_flagcarrier_selfforce);
-	CACHE_CVAR(g_ctf_flagscore_kill);
-	CACHE_CVAR(g_ctf_personalscore_kill);
-	CACHE_CVAR(g_ctf_showenemycarrier);
-	CACHE_CVAR(g_ctf_showenemycarrier_delay);
+	g_ctf = 1;
 	if(g_campaign)
 		g_ctf_win_mode = 2;
 	else if (game == GAME_CATF || game == GAME_CTFT)
