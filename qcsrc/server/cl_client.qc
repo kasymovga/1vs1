@@ -731,7 +731,6 @@ void PutClientInServer()
 		}
 		PlayerClear(FALSE);
 		PhysicMarkAsTeleported(self);
-		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
@@ -746,29 +745,30 @@ void PutClientInServer()
 		self.dmg = 2;
 		self.keys = 0;
 
-		if(inWarmupStage)
-		{
-			self.ammo_shells = warmup_start_ammo_shells;
-			self.ammo_nails = warmup_start_ammo_nails;
-			self.ammo_rockets = warmup_start_ammo_rockets;
-			self.ammo_cells = warmup_start_ammo_cells;
-			self.ammo_fuel = warmup_start_ammo_fuel;
-			self.health = warmup_start_health;
-			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+		if not(GameHook_EquipPlayer()) {
+			if(inWarmupStage)
+			{
+				self.ammo_shells = warmup_start_ammo_shells;
+				self.ammo_nails = warmup_start_ammo_nails;
+				self.ammo_rockets = warmup_start_ammo_rockets;
+				self.ammo_cells = warmup_start_ammo_cells;
+				self.ammo_fuel = warmup_start_ammo_fuel;
+				self.health = warmup_start_health;
+				self.armorvalue = warmup_start_armorvalue;
+				self.weapons = warmup_start_weapons;
+			}
+			else
+			{
+				self.ammo_shells = start_ammo_shells;
+				self.ammo_nails = start_ammo_nails;
+				self.ammo_rockets = start_ammo_rockets;
+				self.ammo_cells = start_ammo_cells;
+				self.ammo_fuel = start_ammo_fuel;
+				self.health = start_health;
+				self.armorvalue = start_armorvalue;
+				self.weapons = start_weapons;
+			}
 		}
-		else
-		{
-			self.ammo_shells = start_ammo_shells;
-			self.ammo_nails = start_ammo_nails;
-			self.ammo_rockets = start_ammo_rockets;
-			self.ammo_cells = start_ammo_cells;
-			self.ammo_fuel = start_ammo_fuel;
-			self.health = start_health;
-			self.armorvalue = start_armorvalue;
-			self.weapons = start_weapons;
-		}
-
 		self.items = start_items;
 		self.switchweapon = w_getbestweapon(self);
 		if not(self.switchweapon)
@@ -894,6 +894,7 @@ void PutClientInServer()
 		player_effects();
 		GameHookChain_Spawn(spot);
 		antilag_teleported(self);
+		self.wasplayer = TRUE;
 	} else if(self.classname == "observer") {
 		PutObserverInServer(TRUE);
 	}
@@ -903,6 +904,7 @@ void PlayerToSpec(entity player)
 {
 	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
 	if not(g_campaign)
+	if not(GameHook_ForbidSpectators())
 	if (sv_spectate) {
 		entity oldself = self;
 		self = player;
@@ -974,6 +976,7 @@ void SetNewParms (void)
 {
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
+	GameHook_SetNewParms();
 }
 
 /*
@@ -985,6 +988,7 @@ void SetChangeParms (void)
 {
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
+	GameHook_SetChangeParms();
 }
 
 /*
@@ -1001,6 +1005,7 @@ void DecodeLevelParms (void)
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
+	GameHook_DecodeLevelParms();
 }
 
 /*
@@ -1260,6 +1265,8 @@ void ClientConnect (void)
 	if (g_campaign) {
 		self.classname = "player";
 		campaign_bots_may_start = 1;
+	} else if (GameHook_ForbidSpectators()) {
+		self.classname = "player";
 	} else if (sv_spectate == 1) {
 		self.classname = "observer";
 	} else {
@@ -2036,6 +2043,7 @@ void PlayerPostThink (void)
 
 		if (maxidle)
 		if not(g_campaign)
+		if not(GameHook_ForbidSpectators())
 		if not(intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {

@@ -238,7 +238,7 @@ void InitGameplayMode()
 		survive_init();
 	}
 
-	if (game == GAME_SINGLE) {
+	if (game == GAME_SINGLE || game == GAME_COOP) {
 		Single_Init();
 	}
 

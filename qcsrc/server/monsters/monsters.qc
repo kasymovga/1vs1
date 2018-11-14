@@ -1,4 +1,28 @@
-void monster_sound(entity m, string s) {
+#define MONSTER_IGNOREFIRE 1
+#define MONSTER_IGNORESLIME 2
+#define MONSTER_IGNOREDROWN 4
+
+#define MONSTER_SPAWN_AUTORESPAWN 1
+#define MONSTER_SPAWN_FREEHUNT 2
+#define MONSTER_SPAWN_STAYSTILL 4
+#define MONSTER_SPAWN_SHIELDED 8
+
+void monster_proj_explode(void) {
+	self.event_damage = SUB_Null;
+	self.takedamage = DAMAGE_NO;
+	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
+	remove (self);
+}
+
+void monster_proj_touch(void) {
+	PROJECTILE_TOUCH;
+	monster_proj_explode();
+}
+
+void monster_sound(entity m, string s, float force) {
+	if (force)
+		m.watersound_finished = 0;
+
 	if (s != "")
 	if (m.watersound_finished < time) {
 		m.watersound_finished = time + 5;
@@ -38,7 +62,7 @@ vector monster_checkpoint(entity e) {
 	float y_perm = e.maxs_y - e.mins_y;
 	float z_perm = e.maxs_z - e.mins_z;
 	vector v;
-	v = e.origin - e.mins;
+	v = e.origin + e.mins;
 	v_x = v_x + x_perm * random();
 	v_y = v_y + y_perm * random();
 	v_z = v_z + z_perm * random();
@@ -66,7 +90,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		f = vlen(e.origin - self.origin);
 		if (f <= heardistance) {
 			checkpoint = monster_checkpoint(e);
-			traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, self);
+			traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
 			if (trace_fraction == 1) {
 				p = e;
 				break;
@@ -76,7 +100,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 			v = normalize(e.origin - self.origin);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
-				traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, self);
+				traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
 				if (trace_fraction == 1) {
 					distance = f;
 					p = e;
@@ -86,7 +110,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	}
 	if (p) {
 		if (self.enemy)
-		if (self.enemy.classname == "monster_walk_path")
+		if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
 			self.message2 = self.enemy.targetname;
 
 		self.think = self.weapon_think;
@@ -94,7 +118,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		self.attack_finished_single = time + random() * attack_delay_jitter + attack_delay;
 		self.think();
 		if (time > notice_sound_finished) {
-			monster_sound(self, self.noise1);
+			monster_sound(self, self.noise1, FALSE);
 			notice_sound_finished = time + 5;
 		}
 	}
@@ -115,10 +139,21 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 }
 
 void monster_die() {
+	//self.view_ofs = self.mins_z  + (self.maxs_z - self.mins_z) * 0.25;
 	Violence_GibSplash(self, 1, 1, self.enemy);
 	self.solid = SOLID_NOT;
 	self.alpha = -1;
 	self.nextthink = time;
+	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
+		entity e;
+		e = world;
+		while ((e = find(e, targetname, "monster_shield_destroy"))) {
+			if (e.owner == self) {
+				remove(e);
+				break;
+			}
+		}
+	}
 	self.think = SUB_Remove;
 
 	if (self.ammo_shells)
@@ -153,6 +188,32 @@ void monster_die_animated() {
 }
 
 void monster_event_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
+        entity sh = spawn();
+        sh.alpha = 0.5;
+        sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
+		setmodel(sh, "models/vhshield.md3");
+        //sh.scale = 1.25;
+        sh.effects = EF_LOWPRECISION;
+        sh.angles = vectoangles(normalize(-force));
+		sh.nextthink = time + 0.2;
+		sh.think = SUB_Remove;
+		setorigin(sh, hitloc + normalize(force) * sh.scale * 100);
+		if (clienttype(attacker) == CLIENTTYPE_REAL)
+			centerprint(attacker, "Enemy protected by shield!");
+
+		return;
+	}
+	if (deathtype == DEATH_LAVA || deathtype == DEATH_FIRE) {
+		if (self.flags & MONSTER_IGNOREFIRE)
+			return;
+	} else if (deathtype == DEATH_SLIME) {
+		if (self.flags & MONSTER_IGNORESLIME)
+			return;
+	} else if (deathtype == DEATH_DROWN) {
+		if (self.flags & MONSTER_IGNOREDROWN)
+			return;
+	}
 	if (attacker.classname != "monster")
 		self.health = self.health - damage;
 
@@ -160,7 +221,7 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		stopsound(self, CHAN_TRIGGER);
-		monster_sound(self, self.noise2);
+		monster_sound(self, self.noise2, FALSE);
 		GameHook_MonsterKilled(attacker);
 		entity o = self.owner;
 		float quant = GameHook_MonsterQuant();
@@ -183,9 +244,9 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 		else
 			monster_die();
 	} else if (attacker.classname == "player") {
-		monster_sound(self, self.noise3);
+		monster_sound(self, self.noise3, FALSE);
 		if (self.enemy) {
-			if (self.enemy.classname == "monster_walk_path")
+			if (self.enemy.classname == "monster_walk_path" || self.enemy.classname == "path_corner")
 				self.message2 = self.enemy.targetname;
 			else
 				return;
@@ -218,6 +279,11 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	float dir_z_save;
 	float vel_z_save;
 	vector v;
+	if (self.waterlevel == WATERLEVEL_SUBMERGED) {
+		_speed *= 0.5;
+		if(self.air_finished < time + 6)
+			self.velocity_z += (_speed - self.velocity_z) * frametime;
+	}
 	if (rushdistance)
 	if (self.enemy)
 	if (rushdistance > vlen(self.origin - self.enemy.origin)) {
@@ -258,6 +324,20 @@ vector monster_move_fly(float _speed, float blend_factor) {
 	return v;
 }
 
+void monster_shield_restore(void) {
+	self.owner.spawnflags |= MONSTER_SPAWN_SHIELDED;
+}
+
+void monster_shield_destroy(void) {
+	self.owner.spawnflags &~= MONSTER_SPAWN_SHIELDED;
+	if (clienttype(activator) == CLIENTTYPE_REAL) {
+		monster_sound(self.owner, self.owner.noise3, TRUE);
+		centerprint(activator, "Enemy shield is broken!");
+	}
+	self.nextthink = time + 10;
+	self.think = monster_shield_restore;
+}
+
 void monster_spawn_think() {
 	float quant = GameHook_MonsterQuant();
 	if (teamplay)
@@ -276,6 +356,14 @@ void monster_spawn_think() {
 	self.owner = oldself;
 	self.reset = monster_die;
 	oldself.weapon_think();
+	self.spawnflags = oldself.spawnflags;
+	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
+		precache_model("models/vhshield.md3");
+		entity shield_destroy = spawn();
+		shield_destroy.owner = self;
+		shield_destroy.targetname = "monster_shield_destroy";
+		shield_destroy.use = monster_shield_destroy;
+	}
 	setsize(self, oldself.mins, oldself.maxs);
 	if not(self.frags)
 		self.frags = 1;
@@ -291,6 +379,7 @@ void monster_spawn_use() {
 		self.reset();
 
 	if (activator)
+	if (GameHook_MonsterTeamSwitchable())
 		self.team = activator.team;
 
 	self.think();
@@ -315,9 +404,11 @@ void monster_prepare(void() hunt, void() walk, void() idle) {
 	if (t == "")
 		t = self.target;
 
-	if (t != "")
+	if (t != "") {
 		self.enemy = find(world, targetname, t);
-
+		if (self.enemy.classname != "monster_walk_path" && self.enemy.classname != "path_corner")
+			self.enemy = world;
+	}
 	if (self.enemy || self.owner.spawnflags & 2) {
 		self.think = walk;
 		//print("Prepare route\n");
@@ -477,11 +568,11 @@ void monsters_init() {
 				oldself = self;
 				self = monster;
 				callfunction(monster_func);
-				self = oldself;
 				if not(MoveToRandomMapLocation(monster, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
 					print("Cant find place for ", monster_name, "\n");
-					remove(monster);
+					SUB_Remove();
 				}
+				self = oldself;
 			}
 		} else
 			print("Function ", monster_func, " not found\n");

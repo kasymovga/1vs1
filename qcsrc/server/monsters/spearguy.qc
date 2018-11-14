@@ -74,6 +74,7 @@ void spearguy_spawn() {
 	self.entremove = spearguy_remove;
 	self.netname = "Spearguy";
 	self.ammo_cells = 5;
+	self.view_ofs = '0 0 35';
 }
 
 void spearguy_init() {

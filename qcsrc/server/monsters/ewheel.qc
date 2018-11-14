@@ -10,18 +10,6 @@ void ewheel_idle() {
 	updateanim(self);
 }
 
-void ewhell_proj_explode (void) {
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage(self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-	remove (self);
-}
-
-void ewhell_proj_touch (void) {
-	PROJECTILE_TOUCH;
-	ewhell_proj_explode();
-}
-
 void ewheel_hunt() {
 	self.nextthink = time;
 	if (monster_check_target(ewheel_walk, ewheel_idle))
@@ -58,8 +46,8 @@ void ewheel_hunt() {
 				setorigin(proj, _shotorg + v_right * i * 16);
 				proj.nextthink = time + 5;
 				proj.think = adaptor_think2use;
-				proj.use = ewhell_proj_explode;
-				proj.touch = ewhell_proj_touch;
+				proj.use = monster_proj_explode;
+				proj.touch = monster_proj_touch;
 				proj.velocity = normalize(_shotdir) * 3200;
 				W_SetupProjectileVelocity(proj);
 				proj.angles = vectoangles (proj.velocity);

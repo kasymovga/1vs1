@@ -2,22 +2,6 @@ void heavysoldier_idle();
 void heavysoldier_guard();
 void heavysoldier_walk();
 
-void heavysoldier_grenade_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void heavysoldier_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	heavysoldier_grenade_explode();
-}
-
-
 void heavysoldier_hunt() {
 	self.nextthink = time;
 	if (monster_check_target(heavysoldier_walk, heavysoldier_guard))
@@ -53,8 +37,8 @@ void heavysoldier_hunt() {
 
 		gren.nextthink = time + 5;
 		gren.think = adaptor_think2use;
-		gren.use = heavysoldier_grenade_explode;
-		gren.touch = heavysoldier_grenade_touch;
+		gren.use = monster_proj_explode;
+		gren.touch = monster_proj_touch;
 		gren.velocity = normalize(_shotdir) * 3200;
 		W_SetupProjectileVelocity(gren);
 
@@ -70,7 +54,7 @@ void heavysoldier_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void heavysoldier_idle() {
@@ -128,6 +112,7 @@ void heavysoldier_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "Heavy Soldier";
 	self.ammo_rockets = 5;
+	self.view_ofs = '0 0 35';
 }
 
 void heavysoldier_init() {

@@ -44,7 +44,7 @@ void soldier_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void soldier_idle() {
@@ -101,6 +101,7 @@ void soldier_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "Soldier";
 	self.ammo_shells = 5;
+	self.view_ofs = '0 0 35';
 }
 
 void soldier_init() {

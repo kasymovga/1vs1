@@ -2,21 +2,6 @@ void fireguy_idle();
 void fireguy_guard();
 void fireguy_walk();
 
-void fireguy_grenade_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void fireguy_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	fireguy_grenade_explode();
-}
-
 void fireguy_mine_touch(void)
 {
 	PROJECTILE_TOUCH;
@@ -36,18 +21,9 @@ void fireguy_mine_think()
 		remove(self);
 		return;
 	}
-
-	// make it "hot" once it leaves its owner
-	if(self.owner)
-	{
-		if(vlen(self.origin - self.owner.origin - self.owner.view_ofs) > self.dmg_radius)
-		{
-			self.cnt += 1;
-			if(self.cnt == 3)
-				self.owner = world;
-		}
-		else
-			self.cnt = 0;
+	if (self.waterlevel > 0) {
+		remove(self);
+		return;
 	}
 
 	W_Fireball_LaserPlay(0.1, self.dmg_radius, self.dmg_edge, 0, 4);
@@ -95,7 +71,7 @@ void fireguy_hunt() {
 		proj.nextthink = time;
 		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
-		proj.pushltime = time + g_balance_fireball_primary_lifetime;
+		proj.pushltime = time + 10;
 		W_SetupProjectileVelocity(proj);
 		proj.angles = vectoangles(proj.velocity);
 
@@ -109,7 +85,7 @@ void fireguy_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void fireguy_idle() {
@@ -167,6 +143,8 @@ void fireguy_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "FireGuy";
 	self.ammo_rockets = 10;
+	self.flags = MONSTER_IGNOREFIRE;
+	self.view_ofs = '0 0 35';
 }
 
 void fireguy_init() {
@@ -179,5 +157,7 @@ void fireguy_init() {
 void spawnfunc_monster_fireguy_spawn() {
 	setsize(self, '-16 -16 -24', '16 16 45');
 	monster_init(fireguy_init);
+	self.noise1 = "player/carni-lycan/coms/incoming.ogg";
+	self.noise3 = "player/carni-lycan/player/pain50.ogg";
 	monster_prepare_spawn(fireguy_spawn, spawnfunc_monster_fireguy_spawn);
 }

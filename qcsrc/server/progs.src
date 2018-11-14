@@ -312,6 +312,7 @@ monsters/rocketgirl.qc
 monsters/marine.qc
 monsters/uganda.qc
 monsters/arachna.qc
+monsters/boss4.qc
 survive.qc
 minstagib.qc
 radio.qc
@@ -331,3 +332,4 @@ udpchat.qc
 score_damage.qc
 ice.qc
 single.qc
+g_lights.qc

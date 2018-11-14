@@ -121,6 +121,7 @@ void arachna_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Arachna";
+	self.view_ofs = '0 0 16';
 }
 
 void arachna_init() {

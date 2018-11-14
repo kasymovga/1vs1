@@ -1284,6 +1284,10 @@ float CSQC_Parse_TempEntity()
             Net_ReadLightningarc();
             bHandled = true;
             break;
+        case TE_CSQC_BIGLIGHTNINGARC:
+            Net_ReadBigLightningarc();
+            bHandled = true;
+            break;
         case TE_CSQC_ZAPPERLIGHTNING:
             Zapper_ReadLightning();
             bHandled = true;

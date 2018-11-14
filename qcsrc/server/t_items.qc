@@ -638,8 +638,11 @@ float Item_GiveTo(entity item, entity player)
 		}
 	}
 	if(item.spawnshieldtime)
-	if((it = item.items & IT_KEY1))
+	if((it = item.items & (IT_KEY1 | IT_KEY2)))
 	{
+		if ((player.keys & it) == it)
+			goto skip;
+
 		pickedup = TRUE;
 		player.keys |= it;
 	}
@@ -682,6 +685,8 @@ void Item_Touch (void)
 	if(!Item_GiveTo(self, other))
 		return;
 
+	activator = other;
+	SUB_UseTargets();
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 
 	if (substring(self.classname, 0, 7) == "dropped")
@@ -1006,7 +1011,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			precache_sound ("misc/shield_respawn.wav");
 
 		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
-			self.target = "###item###"; // for finding the nearest item using find()
+			self.targetname = "###item###"; // for finding the nearest item using find()
 	}
 
 	self.bot_pickup = TRUE;
@@ -1358,8 +1363,17 @@ void spawnfunc_item_speed (void) {
 
 void spawnfunc_item_key_gold (void) {
 	self.origin_z = self.origin_z + 40;
-	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Gold Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
-	self.mins_z = self.mins_z - 40;
+	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Gold Key", IT_KEY2, 0, 0, generic_pickupevalfunc, 100000);
+	self.colormod = '1 1 0';
+	self.effects = EF_FULLBRIGHT | EF_STARDUST;
+	self.mins_z = self.mins_z - 48;
+}
+
+void spawnfunc_item_key_silver (void) {
+	self.origin_z = self.origin_z + 40;
+	StartItem ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Silver Key", IT_KEY1, 0, 0, generic_pickupevalfunc, 100000);
+	self.effects = EF_FULLBRIGHT | EF_STARDUST;
+	self.mins_z = self.mins_z - 48;
 }
 
 float target_item_func_set(float a, float b)

@@ -118,6 +118,9 @@ void SUB_UseTargets_Ex(float preventReuse)
 		t.message = self.message;
 		t.killtarget = self.killtarget;
 		t.target = self.target;
+		t.target2 = self.target2;
+		t.target3 = self.target3;
+		t.target4 = self.target4;
 		return;
 	}
 
@@ -196,6 +199,7 @@ void SUB_UseTargets_PreventReuse() {
 
 float	SPAWNFLAG_NOMESSAGE = 1;
 float	SPAWNFLAG_NOTOUCH = 1;
+float	SPAWNFLAG_PLAYERONLY = 4;
 
 // the wait time has passed, so set back up for another activation
 void multi_wait()
@@ -267,6 +271,9 @@ void multi_touch()
 		if(self.team == other.team)
 			return;
 	}
+	if (self.spawnflags & SPAWNFLAG_PLAYERONLY)
+	if (other.classname != "player")
+		return;
 
 // if the trigger has an angles field, check player's facing direction
 	if (self.movedir != '0 0 0')
@@ -2271,28 +2278,6 @@ void spawnfunc_trigger_roundstate(void) {
     }
 }
 
-void FireRoundstateTriggers(void) {
-	/*
-    while((activator = find(activator, classname, "trigger_roundstate"))) {
-        if(activator.cnt == roundstate)
-            using(self = activator)
-                activator.use();
-
-        if(activator.spawnflags & 1) {
-            activator = activator {
-                cnt: 0,
-                think: SUB_Remove,
-                nextthink: time
-            };
-        }
-    }
-    */
-}
-
-/*
- * misc
- */
-
 void spawnfunc_func_nowalljump(void) {
     EXACTTRIGGER_INIT;
 
@@ -2300,4 +2285,74 @@ void spawnfunc_func_nowalljump(void) {
         if(other.classname == "player")
             other.lastwj = time + frametime;
     };
+}
+
+void spikeshooter_spike_touch(void) {
+	PROJECTILE_TOUCH;
+	if(other.solid == SOLID_BSP)
+		Damage_DamageInfo(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
+	if (other && other.takedamage)
+	{
+		Damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
+	}
+	remove(self);
+}
+
+void spikeshooter_use(void) {
+	entity spike = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	setorigin(spike, self.origin);
+	PROJECTILE_MAKETRIGGER(spike);
+	spike.velocity = self.movedir * 800;
+	spike.think = SUB_Remove;
+	spike.nextthink = time + 10;
+	spike.movetype = MOVETYPE_FLY;
+	spike.touch = spikeshooter_spike_touch;
+	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+}
+
+void spawnfunc_trap_spikeshooter(void) {
+	makevectors(self.angles);
+	self.movedir = normalize(v_forward);
+	self.use = spikeshooter_use;
+	precache_sound("weapons/uzi_fire.wav");
+	CSQCProjectile_Init(PROJECTILE_BULLET_BIG);
+}
+
+void misc_lightning_spark(void) {
+	if (time > self.attack_finished_single) {
+		stopsound(self, CHAN_TRIGGER);
+		stopsound(self.enemy, CHAN_TRIGGER);
+		return;
+	}
+	self.nextthink = time + 0.1;
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_BIGLIGHTNINGARC);
+	WriteCoord(MSG_BROADCAST, self.origin_x);
+	WriteCoord(MSG_BROADCAST, self.origin_y);
+	WriteCoord(MSG_BROADCAST, self.origin_z);
+	WriteCoord(MSG_BROADCAST, self.enemy.origin_x);
+	WriteCoord(MSG_BROADCAST, self.enemy.origin_y);
+	WriteCoord(MSG_BROADCAST, self.enemy.origin_z);
+}
+
+void misc_lightning_use(void) {
+	if (self.nextthink)
+		return;
+
+	sound(self, CHAN_TRIGGER, "ambient/sparks1.ogg", VOL_BASE, ATTN_NORM);
+	sound(self.enemy, CHAN_TRIGGER, "ambient/sparks1.ogg", VOL_BASE, ATTN_NORM);
+	self.attack_finished_single = time + 0.5;
+	misc_lightning_spark();
+}
+
+void misc_lightning_findtarget(void) {
+	self.enemy = find(world, targetname, self.target);
+}
+
+void spawnfunc_misc_lightning(void) {
+	InitializeEntity(self, misc_lightning_findtarget, INITPRIO_FINDTARGET);
+	self.use = misc_lightning_use;
+	self.think = misc_lightning_spark;
+	precache_sound("ambient/sparks1.ogg");
+	dlc_require("rm_effects_v2");
 }

@@ -2,22 +2,6 @@ void rlgirl_idle();
 void rlgirl_guard();
 void rlgirl_walk();
 
-void rlgirl_rocket_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void rlgirl_rocket_touch (void)
-{
-	PROJECTILE_TOUCH;
-	rlgirl_rocket_explode();
-}
-
-
 void rlgirl_hunt() {
 	self.nextthink = time;
 	if (monster_check_target(rlgirl_walk, rlgirl_guard))
@@ -53,8 +37,8 @@ void rlgirl_hunt() {
 
 		missile.nextthink = time + 5;
 		missile.think = adaptor_think2use;
-		missile.use = rlgirl_rocket_explode;
-		missile.touch = rlgirl_rocket_touch;
+		missile.use = monster_proj_explode;
+		missile.touch = monster_proj_touch;
 		missile.velocity = normalize(_shotdir) * 800;
 		W_SetupProjectileVelocity(missile);
 
@@ -70,7 +54,7 @@ void rlgirl_hunt() {
 	if (time > self.bulletcounter)
 		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void rlgirl_idle() {
@@ -128,6 +112,7 @@ void rlgirl_spawn() {
 	self.damageforcescale = 1;
 	self.netname = "Rocket Girl";
 	self.ammo_rockets = 5;
+	self.view_ofs = '0 0 35';
 }
 
 void rlgirl_init() {

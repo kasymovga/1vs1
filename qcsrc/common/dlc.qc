@@ -35,6 +35,7 @@ float URI_FIND_WORKING_REPO;
 string dlc_repo_check;
 string dlc_repo_check_list;
 void dlc_find_working_repo();
+entity dlc_repo_checker;
 
 void dlc_find_working_repo_callback(float id, float status, string data) {
 	if (dlc_repo_finded)
@@ -60,6 +61,9 @@ void dlc_find_working_repo_callback(float id, float status, string data) {
 void dlc_find_working_repo() {
 	if not(URI_FIND_WORKING_REPO)
 		URI_FIND_WORKING_REPO = URI_RegisterHandler(dlc_find_working_repo_callback);
+
+	if (dlc_ready_all())
+		return;
 
 	if (dlc_repo_check != "") {//have active check
 		return;
@@ -97,7 +101,13 @@ float dlc_load(string dlc_name) {
 	if (dlc_repo_finded)
 		localcmd("\ncurl --pak ", dlc_url(dlc_name), "\n");
 	else {
-		dlc_find_working_repo();
+#ifndef MENUQC
+		if not(dlc_repo_checker) {
+			dlc_repo_checker = spawn();
+			dlc_repo_checker.think = dlc_find_working_repo;
+			dlc_repo_checker.nextthink = time + 0.4;
+		}
+#endif
 		localcmd("\ncurl --pak ", dlc_pk3_name(dlc_name), "\n");
 		s = strcat(dlc_load_queue, " ", dlc_name);
 		unzone_ifneeded(dlc_load_queue);
@@ -116,6 +126,12 @@ float dlc_ready_all() {
 		if not(dlc_ready(s))
 			return FALSE;
 	}
+#ifndef MENUQC
+	if (dlc_repo_checker) {
+		remove(dlc_repo_checker);
+		dlc_repo_checker = world;
+	}
+#endif
 	return TRUE;
 }
 

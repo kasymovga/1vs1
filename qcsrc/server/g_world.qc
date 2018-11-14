@@ -1138,7 +1138,7 @@ float DoNextMapOverride()
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
-	if (cvar("samelevel")) // if samelevel is set, stay on same level
+	if (cvar("samelevel") || GameHook_SameLevel()) // if samelevel is set, stay on same level
 	{
 		// this does not work because it tries to exec maps/nexdm01.mapcfg (which doesn't exist, it should be trying maps/dm_nexdm01.mapcfg for example)
 		//localcmd(strcat("exec \"maps/", mapname, ".mapcfg\"\n"));
@@ -2185,14 +2185,6 @@ void EndFrame()
 	// add 1 frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0).
 	antilag_record(time + frametime);
-
-    /*
-    if(roundstate != roundstate_old) {
-        defer(0, FireRoundstateTriggers);
-        localcmd("\nsv_hook_roundstatechanged ", ftos(roundstate), "\n");
-        roundstate_old = roundstate;
-    }
-    */
 }
 
 

@@ -224,7 +224,7 @@ void spawnfunc_func_plat()
 		self.noise1 = "plats/plat2.wav";
 	}
 
-	if (self.sounds == 2)
+	if (self.sounds >= 2)
 	{
 		precache_sound ("plats/medplat1.wav");
 		precache_sound ("plats/medplat2.wav");
@@ -321,8 +321,12 @@ void func_train_find()
 	if (!self.target)
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - (self.train_nomins ? '0 0 0' : self.mins));
-	self.nextthink = self.ltime + 1;
-	self.think = train_next;
+	if (self.targetname != "" && find(world, target, self.targetname)) {
+		self.use = train_next;
+	} else {
+		self.nextthink = self.ltime + 1;
+		self.think = train_next;
+	}
 };
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
@@ -645,6 +649,10 @@ void spawnfunc_func_button()
 	if (!self.lip)
 		self.lip = 4;
 
+	if (self.sounds > 0)
+	if (self.noise == "")
+		self.noise = "misc/menu1.wav";
+
     if(self.noise != "")
         precache_sound(self.noise);
 
@@ -889,16 +897,23 @@ void door_trigger_touch()
 	//if not(other.iscreature && other.deadflag == DEAD_NO)
 	//	return;
 
-	if (other.classname != "player")
-		return;
-
-	if (self.owner.items)
-	if not(other.keys & self.owner.items)
+	if not(other.iscreature)
 		return;
 
 	if (time < self.attack_finished_single)
 		return;
+
 	self.attack_finished_single = time + 1;
+
+	if (self.owner.items)
+	if not(other.keys & self.owner.items) {
+		if (self.owner.state == STATE_BOTTOM)
+		if (clienttype(other) == CLIENTTYPE_REAL) {
+			centerprint (other, "This door required key");
+			play2(other, "misc/talk.wav");
+		}
+		return;
+	}
 
 	activator = other;
 
@@ -935,18 +950,18 @@ Prints messages
 */
 void door_touch()
 {
-	if(other.classname != "player")
+	if not(other.iscreature)
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
 
 	self.owner.attack_finished_single = time + 2;
-
-	if (!(self.owner.dmg) && (self.owner.message != ""))
+	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == STATE_BOTTOM)
 	{
-		if (other.flags & FL_CLIENT)
+		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.owner.message);
-		play2(other, "misc/talk.wav");
+			play2(other, "misc/talk.wav");
+		}
 	}
 };
 
@@ -1146,12 +1161,10 @@ void LinkDoors()
 
 			if (self.health)
 				starte.health = self.health;
+			if (self.items)
+				starte.items = self.items;
 			IFTARGETED
 				starte.targetname = self.targetname;
-			else if (self.health || (!self.items && cvar("sv_door_shootable"))) {
-				self.takedamage = DAMAGE_YES;
-				self.event_damage = door_damage;
-			}
 			if (self.message != "")
 				starte.message = self.message;
 
@@ -1168,13 +1181,12 @@ void LinkDoors()
 			self = self.owner;
 
 			if (self.health)
-				return;
+				break;
 			IFTARGETED
-				return;
+				break;
 
 			self.owner.trigger_field = spawn_field(cmins, cmaxs);
-
-			return;
+			break;
 		}
 
 		if (EntitiesTouching(self,t))
@@ -1199,6 +1211,15 @@ void LinkDoors()
 				cmaxs_z = t.absmax_z;
 		}
 	} while (1 );
+	if (starte.targetname == "" || starte.nottargeted)
+	if (starte.health > 0 || (!starte.items && cvar("sv_door_shootable"))) {
+		for (t = starte; ;) {
+			t.takedamage = DAMAGE_YES;
+			t.event_damage = door_damage;
+			if ((t = t.enemy) == starte)
+				break;
+		}
+	}
 
 };
 
@@ -1587,9 +1608,10 @@ void secret_touch()
 
 	if (self.message)
 	{
-		if (other.flags & FL_CLIENT)
+		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.message);
-		play2(other, "misc/talk.wav");
+			play2(other, "misc/talk.wav");
+		}
 	}
 };
 
@@ -1990,4 +2012,40 @@ void spawnfunc_func_magicwall(void) {
     // self.clipgroup = CLIPGROUP_OBSERVER;
     self.reset();
     self.nextthink = time;
+}
+
+void trigger_door_check_use() {
+	entity e;
+	float state_to_check;
+	if (self.spawnflags & 1)
+		state_to_check = STATE_BOTTOM;
+	else
+		state_to_check = STATE_TOP;
+
+	float total, correct;
+	total = correct = 0;
+	string t = self.target;
+	for (e = find(world, targetname, t); e; e = find(e, targetname, t)) {
+		total++;
+		if (e.state == state_to_check)
+			correct++;
+	}
+	self.target = "";
+	self.state = STATE_BOTTOM;
+	if (self.spawnflags & 2) { //OR check (at least one door in needed state)
+		if (correct > 0) {
+			SUB_UseTargets();
+			self.state = STATE_TOP;
+		}
+	} else { //AND check (all doors in needed state)
+		if (total == correct) {
+			SUB_UseTargets();
+			self.state = STATE_TOP;
+		}
+	}
+	self.target = t;
+}
+
+void spawnfunc_trigger_door_check() {
+	self.use = trigger_door_check_use;
 }
