@@ -107,6 +107,10 @@ void arachna_remove() {
 	remove(self.exteriorweaponentity);
 }
 
+void arachna_dlc_reset() {
+	setattachment(self.exteriorweaponentity, self, "tag_weapon");
+}
+
 void arachna_spawn() {
 	monster_prepare(arachna_hunt, arachna_walk, arachna_idle);
 	setmodel(self, "models/arachna/arachna.md3");
@@ -115,13 +119,13 @@ void arachna_spawn() {
 	self.exteriorweaponentity = spawn();
 	self.entremove = arachna_remove;
 	self.exteriorweaponentity.scale = 0.6;
-	setattachment(self.exteriorweaponentity, self, "tag_weapon");
 	setmodel(self.exteriorweaponentity, "models/weapons/v_electro.md3");
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Arachna";
 	self.view_ofs = '0 0 16';
+	self.dlc_reset = arachna_dlc_reset;
 }
 
 void arachna_init() {
