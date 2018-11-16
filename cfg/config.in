@@ -241,6 +241,7 @@ set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn
+set sv_spawnreplace_monster_enforcer monster_rlgirl_spawn
 set sv_spawnreplace_monster_knight monster_spearguy_spawn
 set sv_spawnreplace_monster_dog monster_spider_spawn
 set sv_spawnreplace_monster_demon1 monster_heavysoldier_spawn
