@@ -5,6 +5,13 @@ void drawcolorcodedstringcenter(vector, string, vector, float, float);
 float weapon_hits[WEP_COUNT];
 float weapon_fired[WEP_COUNT];
 float weapon_number;
+float stat_items;
+// vectors for top right, bottom right, bottom and bottom left corners
+vector topright;
+vector bottom;
+vector bottomright;
+vector bottomleft;
+
 
 float weapontime;
 
@@ -56,6 +63,7 @@ void CSQC_kh_hudreset();
 void CSQC_kh_hud();
 void CSQC_ctf_hudreset();
 void CSQC_ctf_hud();
+void CSQC_single_hud();
 void CSQC_nb_hud();
 void Sbar_FinaleOverlay()
 {
@@ -1352,11 +1360,6 @@ void Sbar_Score()
 	entity tm, pl, me;
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
 
- 	vector bottomright;
- 	bottomright_x = CVAR(vid_conwidth);
- 	bottomright_y = CVAR(vid_conheight);
- 	bottomright_z = 0;
-
 	score_pos = bottomright - '196 42 0';
 	secondary_score_pos = score_pos + '132 -6 0';
 
@@ -1577,10 +1580,6 @@ void Sbar_Timer()
 	hideminutes = FALSE;
 	vector bgpos, timer_color;
 	bgpos = '0 0 0';
-
-	vector topright;
-	topright = '0 0 0';
-	topright_x = CVAR(vid_conwidth);
 
 	timelimit = getstatf(STAT_TIMELIMIT);
 	starttime = getstatf(STAT_GAMESTARTTIME);
@@ -2185,6 +2184,8 @@ void Sbar_GameType_Init() {
 		Sbar_GameType_hud = CSQC_ctf_hud;
 	else if(gametype == GAME_NEXBALL)
 		Sbar_GameType_hud = CSQC_nb_hud;
+	else if(gametype == GAME_SINGLE || gametype == GAME_COOP)
+		Sbar_GameType_hud = CSQC_single_hud;
 	else
 		Sbar_GameType_hud = SUB_Null;
 }
@@ -2208,13 +2209,6 @@ void Sbar_DrawAmmo(vector pos, float a, float active, string image) {
 
 void Sbar_Draw (void)
 {
-	// vectors for top right, bottom right, bottom and bottom left corners
-
-	vector topright;
-	vector bottom;
-	vector bottomright;
-	vector bottomleft;
-
 	topright_x = CVAR(vid_conwidth);
 	topright_y = 0;
 	topright_z = 0;
@@ -2237,7 +2231,7 @@ void Sbar_Draw (void)
 	float i;
 	float weapon_stats;
 	float x;
-	float stat_items, stat_weapons;
+	float stat_weapons;
 
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
  	weapon_number = weapon_stats & 63;
@@ -2575,6 +2569,15 @@ void Sbar_Draw (void)
 	return;
 }
 
+void CSQC_single_hud(void)
+{
+	if (stat_items & IT_KEY1)
+		drawpic (bottomleft - '-30 44 0', "gfx/hud/sb_kh_blue", '20 40', '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	if (stat_items & IT_KEY2)
+		drawpic (bottomleft - '-68 44 0', "gfx/hud/sb_kh_yellow", '20 40', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+}
+
 // CTF HUD
 float redflag_prevframe, blueflag_prevframe; // status during previous frame
 float redflag_prevstatus, blueflag_prevstatus; // last remembered status
@@ -2587,17 +2590,12 @@ void CSQC_ctf_hudreset(void)
 
 void CSQC_ctf_hud(void)
 {
-	vector bottomleft, redflag_pos, blueflag_pos, sz;
+	vector redflag_pos, blueflag_pos, sz;
 	float f; // every function should have that
-	bottomleft_x = 0;
-	bottomleft_y = CVAR(vid_conheight);
-	bottomleft_z = 0;
 
 	float redflag, blueflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
-	float stat_items;
 
-	stat_items = getstati(STAT_ITEMS);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 
@@ -2722,11 +2720,6 @@ void CSQC_kh_hud(void)
 	float a, aa;
 	vector p, pa, kh_size, kh_asize;
 
-	vector bottomleft;
-	bottomleft_x = 0;
-	bottomleft_y = CVAR(vid_conheight);
-	bottomleft_z = 0;
-
 	p_x = 6;
 	p_y = CVAR(vid_conheight) - 34 - 3;
 	p_z = 0;
@@ -2833,10 +2826,9 @@ void CSQC_kh_hud(void)
 
 void CSQC_nb_hud(void)
 {
-	float stat_items, nb_pb;
+	float nb_pb;
 	vector pos;
 
-	stat_items = getstati(STAT_ITEMS);
 	nb_pb = getstatf(STAT_NB_METERSTART);
 
 	pos_x = 4;

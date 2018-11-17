@@ -134,6 +134,13 @@ float Single_MonsterTeamSwitchable() {
 	return FALSE;
 }
 
+var void() Single_PlayerPreThink_NextLink;
+void Single_PlayerPreThink() {
+	self.items &~= (IT_KEY1 | IT_KEY2);
+	self.items |= self.keys;
+	Single_PlayerPreThink_NextLink();
+}
+
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	GameHook_ForbidSpectators = Single_ForbidSpectators;
@@ -148,6 +155,8 @@ void Single_Init() {
 	GameHook_SetChangeParms = Single_SetChangeParms;
 	GameHook_DecodeLevelParms = Single_DecodeLevelParms;
 	GameHook_MonsterTeamSwitchable = Single_MonsterTeamSwitchable;
+	Single_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = Single_PlayerPreThink;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
