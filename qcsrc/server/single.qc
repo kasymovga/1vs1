@@ -81,7 +81,7 @@ void Single_SetNewParms() {
 	parm8 = 0;
 	parm9 = 0;
 	parm10 = 0;
-	parm11 = 3;
+	parm11 = start_weapons;
 }
 
 void Single_SetChangeParms() {
@@ -198,7 +198,6 @@ void coop_teleporter_use(void) {
 }
 
 void spawnfunc_coop_teleporter(void) {
-	if (game != GAME_SINGLE)
 	if (game != GAME_COOP) {
 		remove(self);
 		return;
