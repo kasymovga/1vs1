@@ -508,6 +508,9 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.dmg_force = cvar(strcat("g_monster_", monster_classname(), "_force"));
 	self.health = cvar(strcat("g_monster_", monster_classname(), "_health"));
 	self.dmg_radius = cvar(strcat("g_monster_", monster_classname(), "_radius"));
+	if (!self.respawntime)
+		self.respawntime = 1;
+
 	if (teamplay)
 	if not(self.team)
 		self.team = -1;
