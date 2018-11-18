@@ -2032,7 +2032,7 @@ void PlayerPostThink (void)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop, maxidle;
-		if (sv_maxidle_forcespec && self.classname == "player") {
+		if (sv_maxidle_forcespec && sv_spectate && self.classname == "player") {
 			maxidle = sv_maxidle_forcespec;
 			drop = FALSE;
 		} else if (sv_maxidle) {
