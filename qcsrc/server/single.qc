@@ -143,7 +143,9 @@ void Single_PlayerPreThink() {
 
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
-	GameHook_ForbidSpectators = Single_ForbidSpectators;
+	if (game == GAME_SINGLE)
+		GameHook_ForbidSpectators = Single_ForbidSpectators;
+
 	GameHook_EquipPlayer = Single_EquipPlayer;
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
