@@ -82,6 +82,7 @@ void Single_SetNewParms() {
 	parm9 = 0;
 	parm10 = 0;
 	parm11 = start_weapons;
+	parm12 = FALSE;
 }
 
 void Single_SetChangeParms() {
@@ -93,23 +94,30 @@ void Single_SetChangeParms() {
 		parm9 = self.ammo_rockets;
 		parm10 = self.ammo_cells;
 		parm11 = self.weapons;
+		parm12 = TRUE;
 	} else {
 		Single_SetNewParms();
 	}
 }
 
+.float default_equip;
 void Single_DecodeLevelParms() {
-	self.health = parm5;
-	self.armorvalue = parm6;
-	self.ammo_shells = parm7;
-	self.ammo_nails = parm8;
-	self.ammo_rockets = parm9;
-	self.ammo_cells = parm10;
-	self.weapons = parm11;
-	float i, j;
-	for(i = WEP_FIRST, j = 1; i <= WEP_LAST; ++i, j *= 2) {
-		if (self.weapons & j)
-			weapon_precache(i);
+	if (parm12) {
+		self.health = parm5;
+		self.armorvalue = parm6;
+		self.ammo_shells = parm7;
+		self.ammo_nails = parm8;
+		self.ammo_rockets = parm9;
+		self.ammo_cells = parm10;
+		self.weapons = parm11;
+		self.default_equip = FALSE;
+		float i, j;
+		for(i = WEP_FIRST, j = 1; i <= WEP_LAST; ++i, j *= 2) {
+			if (self.weapons & j)
+				weapon_precache(i);
+		}
+	} else {
+		self.default_equip = TRUE; //Hack for force default equip
 	}
 }
 
@@ -117,10 +125,15 @@ float Single_ForbidSpectators() {
 	return TRUE;
 }
 
+float Coop_ForbidSpectators() {
+	return parm12;
+}
+
 float Single_EquipPlayer() {
 	self.ammo_fuel = 0;
-	if (self.wasplayer) {
+	if (self.wasplayer || self.default_equip) {
 		Single_SetNewParms();
+		parm12 = TRUE;
 		Single_DecodeLevelParms();
 	}
 	return TRUE;
@@ -145,6 +158,9 @@ void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	if (game == GAME_SINGLE)
 		GameHook_ForbidSpectators = Single_ForbidSpectators;
+
+	if (game == GAME_COOP)
+		GameHook_ForbidSpectators = Coop_ForbidSpectators;
 
 	GameHook_EquipPlayer = Single_EquipPlayer;
 	GameHook_WinningCondition = Single_WinningCondition;
