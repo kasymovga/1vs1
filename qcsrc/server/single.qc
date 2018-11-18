@@ -72,6 +72,9 @@ void single_init_delayed(void) {
 		IceHook_Unfroze = Single_IceUnfroze;
 		Ice_Init();
 	}
+	registercvar("_single_transit_weapons", "0");
+	float weps = cvar("_single_transit_weapons");
+	cvar_set("_single_transit_weapons", ftos(weps | weaponsInMap | start_weapons));
 }
 
 void Single_SetNewParms() {
@@ -111,11 +114,6 @@ void Single_DecodeLevelParms() {
 		self.ammo_cells = parm10;
 		self.weapons = parm11;
 		self.default_equip = FALSE;
-		float i, j;
-		for(i = WEP_FIRST, j = 1; i <= WEP_LAST; ++i, j *= 2) {
-			if (self.weapons & j)
-				weapon_precache(i);
-		}
 	} else {
 		self.default_equip = TRUE; //Hack for force default equip
 	}
@@ -182,6 +180,12 @@ void Single_Init() {
 	if (game == GAME_COOP) {
 		ActivateTeamplay();
 		SetTeamCount(1);
+	}
+	float weps = cvar("_single_transit_weapons");
+	float i, j;
+	for(i = WEP_FIRST, j = 1; i <= WEP_LAST; ++i, j *= 2) {
+		if (weps & j)
+			weapon_precache(i);
 	}
 }
 
