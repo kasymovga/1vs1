@@ -166,3 +166,49 @@ void Single_Init() {
 		SetTeamCount(1);
 	}
 }
+
+void coop_teleporter_think(void) {
+	if (self.solid == SOLID_TRIGGER) {
+		self.alpha = approach(self.alpha, 1, 1);
+		if (self.alpha > 0.99)
+			return;
+	} else {
+		self.alpha = approach(self.alpha, 0, 1);
+		if (self.alpha < 0.01) {
+			self.alpha = -1;
+			return;
+		}
+	}
+	self.nextthink = time;
+}
+
+void coop_teleporter_use(void) {
+	if (self.solid == SOLID_TRIGGER) {
+		self.solid = SOLID_NOT;
+		self.effects &~= EF_STARDUST;
+	} else {
+		self.solid = SOLID_TRIGGER;
+		self.effects |= EF_STARDUST;
+		if (self.alpha < 0)
+			self.alpha = 0.01;
+	}
+	self.nextthink = time;
+}
+
+void spawnfunc_coop_teleporter(void) {
+	if (game != GAME_SINGLE)
+	if (game != GAME_COOP) {
+		remove(self);
+		return;
+	}
+	precache_model("models/portal.md3");
+	spawnfunc_trigger_teleport();
+	setmodel(self, "models/portal.md3");
+	setsize(self, '-32 -32 0', '32 32 40');
+	self.angles_x = 90;
+	self.angles_z = 0;
+	self.alpha = -1;
+	self.think = coop_teleporter_think;
+	self.use = coop_teleporter_use;
+	self.use();
+}
