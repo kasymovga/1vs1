@@ -83,12 +83,12 @@ void single_init_delayed(void) {
 }
 
 void Single_SetNewParms() {
-	parm5 = 100;
-	parm6 = 0;
-	parm7 = 25;
-	parm8 = 0;
-	parm9 = 0;
-	parm10 = 0;
+	parm5 = start_health;
+	parm6 = start_armorvalue;
+	parm7 = start_ammo_shells;
+	parm8 = start_ammo_nails;
+	parm9 = start_ammo_rockets;
+	parm10 = start_ammo_cells;
 	parm11 = start_weapons;
 	parm12 = FALSE;
 }
@@ -132,17 +132,16 @@ float Single_ForbidSpectators() {
 }
 
 float Coop_ForbidSpectators() {
-	return !self.default_equip;
+	if not(self.default_equip)
+		return FALSE;
+
+	return TRUE;
 }
 
 float Single_EquipPlayer() {
-	self.ammo_fuel = 0;
-	if (self.default_equip) {
-		Single_SetNewParms();
-		parm12 = TRUE;
-		Single_DecodeLevelParms();
-	}
-	self.default_equip = TRUE;
+	if (self.default_equip)
+		return FALSE;
+
 	return TRUE;
 }
 
@@ -177,6 +176,12 @@ void Coop_PlayerClear(float killed) {
 	campaign_won = FALSE;
 }
 
+var void(entity) Single_Spawn_NextLink;
+void Single_Spawn(entity e) {
+	self.default_equip = TRUE;
+	Single_Spawn_NextLink(e);
+}
+
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	if (game == GAME_SINGLE)
@@ -200,6 +205,8 @@ void Single_Init() {
 	GameHook_MonsterTeamSwitchable = Single_MonsterTeamSwitchable;
 	Single_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = Single_PlayerPreThink;
+	Single_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = Single_Spawn;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
