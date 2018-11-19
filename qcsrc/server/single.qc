@@ -131,7 +131,7 @@ float Single_ForbidSpectators() {
 	return FALSE;
 }
 
-float Single_EquipPlayer() {
+float Single_EquipPlayerHandle() {
 	if (self.default_equip)
 		return FALSE;
 
@@ -178,12 +178,11 @@ void Single_Spawn(entity e) {
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	GameHook_ForbidSpectators = Single_ForbidSpectators;
-
 	if (game == GAME_COOP) {
 		Coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
 		GameHookChain_PlayerClear = Coop_PlayerClear;
 	}
-	GameHook_EquipPlayer = Single_EquipPlayer;
+	GameHook_EquipPlayerHandle = Single_EquipPlayerHandle;
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
 	GameHook_FragLimitOverride = Single_Return0;

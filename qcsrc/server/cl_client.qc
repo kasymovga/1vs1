@@ -745,7 +745,7 @@ void PutClientInServer()
 		self.dmg = 2;
 		self.keys = 0;
 
-		if not(GameHook_EquipPlayer()) {
+		if not(GameHook_EquipPlayerHandle()) {
 			if(inWarmupStage)
 			{
 				self.ammo_shells = warmup_start_ammo_shells;
