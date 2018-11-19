@@ -736,6 +736,7 @@ float w_zapper(float req) {
 		dlc_require("pryaxe_balls");
 		dlc_require("rm_arc");
 		dlc_require("zapper_v2");
+		dlc_sounds();
 		zapper_sound_ready = FALSE;
 		if (dlc_ready("rm_arc"))
 		if (dlc_ready("zapper_v2")) {

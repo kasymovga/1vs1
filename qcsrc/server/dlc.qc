@@ -1,6 +1,9 @@
 entity dlc;
 string dlc_list_send;
 entity dlc_wait;
+float dlc_sounds_added;
+
+void dlc_sounds() { dlc_sounds_added = TRUE; }
 
 string trimspaces(string s) {
 	string c;
@@ -159,10 +162,13 @@ void DLCWait() {
 
 float dlc_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_LIST);
-	sf &~= 4;
+	sf &~= 12;
 	if (to.netaddress == "local") {
 		sf |= 4;
 	}
+	if (dlc_sounds_added)
+		sf |= 8;
+
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		WriteString(MSG_ENTITY, cvar_string("sv_dlc_repository"));

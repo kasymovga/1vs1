@@ -1,5 +1,6 @@
 entity dlc_wait;
 float localConnection;
+float reconnect_needed;
 
 void DLCWait() {
 	if not(dlc_ready_all()) {
@@ -19,6 +20,7 @@ void DLCWait() {
 	if not(localConnection) {
 		localcmd("r_restart;");
 		if not(isdemo_flag)
+		if (reconnect_needed)
 			localcmd("disconnect;reconnect\n");
 	} else {
 		l = dlc_list;
@@ -89,4 +91,7 @@ void Ent_DLCList(float new) {
 		localConnection = TRUE;
 	else
 		localConnection = FALSE;
+
+	if (f & 8)
+		reconnect_needed = TRUE;
 }

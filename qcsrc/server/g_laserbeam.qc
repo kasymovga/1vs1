@@ -106,6 +106,7 @@ void func_laserbeam_init(void) {
 
     dlc_require("zapper_v1");
     dlc_require("rm_effects_v2");
+	dlc_sounds();
     precache_sound("weapons/zapper_fly.wav");
 }
 

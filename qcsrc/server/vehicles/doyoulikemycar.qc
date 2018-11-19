@@ -353,6 +353,7 @@ void vehicle_car_readcvars() {
 
 	vehicles_init();
 	dlc_require("car_v1");
+	dlc_sounds();
 	vehicle_car_readcvars_done = TRUE;
 	CACHE_CVAR(g_vehicle_car_crush_dmg);
 	CACHE_CVAR(g_vehicle_car_crush_force);

@@ -100,6 +100,7 @@ entity uganda_precache;
 void ugandaknuckles_init() {
 	precache_model("models/knuckles.md3");
 	dlc_require("uganda");
+	dlc_sounds();
 	if (dlc_ready("uganda"))
 		uganda_sound_ready = TRUE;
 

@@ -233,6 +233,7 @@ void HG_Precache(void) {
 	dlc_require("rm_arc");
 	dlc_require("pryaxe_balls");
 	dlc_require("nadgets");
+	dlc_sounds();
 	if (dlc_ready("rm_laser"))
 	if (dlc_ready("nadgets"))
 		hg_sound_ready = TRUE;
