@@ -278,8 +278,8 @@ void DLCWaitReload() {
 			}
 		remove(self);
 		dlc_wait_reload = world;
-	}
-	self.nextthink = time + 1;
+	} else
+		self.nextthink = time + 1;
 }
 
 void dlc_reload() {
