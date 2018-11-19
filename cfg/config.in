@@ -1350,7 +1350,6 @@ set coop_g_pickup_respawntime_ammo -1
 set coop_g_pickup_respawntimejitter_powerup 0
 set coop_g_pickup_respawntime_key 0.1
 set coop_g_pickup_respawntimejitter_key 0
-set coop_g_maxplayers 1
 set coop_g_balance_health_regen 0
 set coop_g_balance_health_rot 0
 set coop_g_balance_armor_regen 0
