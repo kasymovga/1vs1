@@ -94,7 +94,7 @@ void Single_SetNewParms() {
 }
 
 void Single_SetChangeParms() {
-	if (self.classname == "player" && self.deadflag == DEAD_NO) {
+	if (self.classname == "player" && (self.deadflag == DEAD_NO || campaign_won)) {
 		parm5 = self.health;
 		parm6 = self.armorvalue;
 		parm7 = self.ammo_shells;
@@ -125,20 +125,24 @@ void Single_DecodeLevelParms() {
 }
 
 float Single_ForbidSpectators() {
-	return TRUE;
+	if not(self.default_equip) //For just connected players who carried equip from previous level
+		return TRUE;
+
+	return FALSE;
 }
 
 float Coop_ForbidSpectators() {
-	return parm12;
+	return !self.default_equip;
 }
 
 float Single_EquipPlayer() {
 	self.ammo_fuel = 0;
-	if (self.wasplayer || self.default_equip) {
+	if (self.default_equip) {
 		Single_SetNewParms();
 		parm12 = TRUE;
 		Single_DecodeLevelParms();
 	}
+	self.default_equip = TRUE;
 	return TRUE;
 }
 
@@ -157,14 +161,32 @@ void Single_PlayerPreThink() {
 	Single_PlayerPreThink_NextLink();
 }
 
+var void(float) Coop_PlayerClear_NextLink;
+void Coop_PlayerClear(float killed) {
+	Coop_PlayerClear_NextLink(killed);
+	if (self.classname != "disconnecting")
+		return;
+
+	entity e;
+	FOR_EACH_PLAYER(e) { //last alive player leave
+		if (e != self)
+		if (e.deadflag == DEAD_NO)
+			return;
+	}
+	single_level_finished = TRUE;
+	campaign_won = FALSE;
+}
+
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	if (game == GAME_SINGLE)
 		GameHook_ForbidSpectators = Single_ForbidSpectators;
 
-	if (game == GAME_COOP)
+	if (game == GAME_COOP) {
 		GameHook_ForbidSpectators = Coop_ForbidSpectators;
-
+		Coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
+		GameHookChain_PlayerClear = Coop_PlayerClear;
+	}
 	GameHook_EquipPlayer = Single_EquipPlayer;
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
