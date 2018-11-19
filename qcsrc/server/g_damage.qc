@@ -409,6 +409,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	float mirrorforce;
 	mirrordamage = 0;
 	mirrorforce = 0;
+	if (targ.flags & FL_GODMODE)
+	if (deathtype != DEATH_HURTTRIGGER)
+	if (deathtype != DEATH_TEAMCHANGE)
+		damage = 0;
+
 
 	if (gameover || targ.killcount == -666)
 		return;
