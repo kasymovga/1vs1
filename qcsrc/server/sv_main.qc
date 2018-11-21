@@ -21,7 +21,6 @@ void CreatureFrame (void)
 					if(self.air_finished < time + 9)
 						PlayerSound(playersound_gasp, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 					self.air_finished = time + 12;
-					self.dmg = 2;
 				}
 				else if (self.air_finished < time)
 				{	// drown!
@@ -64,7 +63,6 @@ void CreatureFrame (void)
 					self.dmgtime = 0;
 				}
 				self.air_finished = time + 12;
-				self.dmg = 2;
 			}
 			// check for falling damage
 			if(!self.hook.state)
