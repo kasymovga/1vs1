@@ -485,7 +485,7 @@ void FlagTouch()
 	local string s, s0, h0, h1;
 	if (other.classname != "player")
 		return;
-	if (other.health < 1) // ignore dead players
+	if (PLAYER_DEAD(other)) // ignore dead players
 		return;
 
 	if (other.saboteur) //ignore saboteurs
