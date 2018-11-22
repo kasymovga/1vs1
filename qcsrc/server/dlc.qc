@@ -1,9 +1,7 @@
 entity dlc;
 string dlc_list_send;
 entity dlc_wait;
-float dlc_sounds_added;
-
-void dlc_sounds() { dlc_sounds_added = TRUE; }
+string dlc_sounds;
 
 string trimspaces(string s) {
 	string c;
@@ -166,7 +164,7 @@ float dlc_SendEntity(entity to, float sf) {
 	if (to.netaddress == "local") {
 		sf |= 4;
 	}
-	if (dlc_sounds_added)
+	if (dlc_sounds != "")
 		sf |= 8;
 
 	WriteByte(MSG_ENTITY, sf);
@@ -175,6 +173,9 @@ float dlc_SendEntity(entity to, float sf) {
 	}
 	if (sf & 2) {
 		WriteString(MSG_ENTITY, dlc_list_send);
+	}
+	if (sf & 8) {
+		WriteString(MSG_ENTITY, dlc_sounds);
 	}
 	return TRUE;
 }
@@ -309,4 +310,80 @@ void dlc_reload() {
 		dlc_wait_reload.think = DLCWaitReload;
 		dlc_wait_reload.nextthink = time + 0.2;
 	}
+}
+
+void dlc_precache_sound(string s) {
+	string l, head;
+	l = dlc_sounds;
+	while (l != "") {
+		head = car(l);
+		l = cdr(l);
+		if (head == s)
+			return;
+	}
+	string dlc_sounds_new = strcat(dlc_sounds, " ", s);
+	unzone_ifneeded(dlc_sounds);
+	dlc_sounds = strzone(dlc_sounds_new);
+	dlc.SendFlags |= 8;
+}
+
+void dlc_sound_think() {
+	if (time > self.pushltime) {
+		remove(self);
+		return;
+	}
+	if (self.origin != self.owner.origin) {
+		setorigin(self, self.owner.origin);
+		self.SendFlags |= 1;
+	}
+	self.nextthink = time;
+}
+
+float dlc_sound_SendEntity(entity to, float sf) {
+	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_SOUND);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & 1) {
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+	}
+	if (sf & 2) {
+		WriteString(MSG_ENTITY, self.message);
+		WriteByte(MSG_ENTITY, self.cnt);
+		WriteCoord(MSG_ENTITY, self.scale);
+		WriteCoord(MSG_ENTITY, self.health);
+	}
+	return TRUE;
+}
+
+void dlc_sound(entity e, float chan, string s, float vol, float attn) {
+	entity snd = spawn();
+	snd.cnt = chan;
+	snd.message = s;
+	snd.scale = vol;
+	snd.health = attn;
+	snd.think = SUB_Remove;
+	snd.nextthink = time + 0.5;
+	snd.origin = e.origin;
+	snd.owner = e;
+	Net_LinkEntity(snd, FALSE, 0, dlc_sound_SendEntity);
+}
+
+void dlc_sound_follow(entity e, float chan, string s, float vol, float attn) {
+	dlc_sound(e, chan, s, vol, attn);
+	entity snd;
+	snd.think = dlc_sound_think;
+	snd.nextthink = time;
+	snd.pushltime = time + 2;
+}
+
+float dlc_spamsound(entity e, float chan, string samp, float vol, float attn)
+{
+    if (time > e.announcetime)
+    {
+        e.announcetime = time;
+        dlc_sound(e, chan, samp, vol, attn);
+        return TRUE;
+    }
+    return FALSE;
 }

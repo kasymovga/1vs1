@@ -275,7 +275,7 @@ void HG_GenericProjectile_Touch(void) {
         }
 
         if(self.hg_type == HG_LASER) {
-			if (hg_sound_ready) spamsound(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
+			dlc_spamsound(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
         } else {
             float r;
             r = random() * 6;
@@ -299,7 +299,7 @@ void HG_GenericProjectile_Touch(void) {
 }
 
 void HG_GenericProjectile_Stick(entity targ, vector normal) {
-    spamsound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
+    dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
 
     // TODO: A better, more general fix
     if(targ.classname == "misc_terminal")
@@ -487,7 +487,7 @@ void HG_GenericProjectile_Think(void) {
             }
 #endif
         } else if(time >= self.hg_nextsnd) {
-			if (hg_sound_ready) spamsound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
+			dlc_sound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
             self.hg_sndcount += 1;
             self.hg_nextsnd = time + max((self.hg_detonatedelay * 0.3) / (pow(self.hg_sndcount, 1.2)), 0.1);
         }
@@ -581,15 +581,6 @@ void HG_GenericProjectile_MEODP_Death(entity attacker, entity inflictor) {
 }
 #endif
 
-string HG_GenericProjectile_TypeToAttackSound(float hgtype) {
-    switch(hgtype) {
-        case HG_LASER:
-            return (hg_sound_ready ? RM_SOUND_LASER_PRIMARY : "");
-        default:
-            return "weapons/grenade_fire.wav";
-    }
-}
-
 #define GV(v) (GRENVAR(hgtype, v))
 
 entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
@@ -606,7 +597,12 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 	}
 
     makevectors(self.((GV("noverticalvelocity")) ? angles : v_angle));
-    W_SetupShot(self, 4, (silent ? "" : HG_GenericProjectile_TypeToAttackSound(hgtype)), -1);
+	if (hgtype == HG_LASER)
+		dlc_sound(self, CHAN_WEAPON, RM_SOUND_LASER_PRIMARY, VOL_BASE, ATTN_NORM);
+	else
+		sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
+
+    W_SetupShot(self, 4, "", -1);
     pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
     vector a = vectoangles(w_shotdir);

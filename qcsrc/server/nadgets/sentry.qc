@@ -535,7 +535,7 @@ void HG_Sentry_Trigger(void) {
 			if (targ)
 				Damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
 
-            if (hg_sound_ready) sound(e, CHAN_WEAPON, strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav"), VOL_BASE, ATTN_NORM);
+            dlc_sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             W_Zapper_Attack2_Effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
 
 #if 0
@@ -620,7 +620,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     c.color = '0.3 0.3 0.3' + 0.7 * TeamColor(((self.team > 0) ? self.team : COLOR_TEAM3));
     c.owner = self;
     c.effects |= EF_DOUBLESIDED;
-    sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);
+    dlc_sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);
 
     e.aiment = c;
 
@@ -632,7 +632,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     }
 
     // TODO: a better sound?
-    if (hg_sound_ready) spamsound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
+    dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
     return HG_ATTACK_OK;
 }
 

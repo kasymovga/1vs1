@@ -4,4 +4,7 @@ void dlc_reload();
 .void() dlc_reset;
 void dlc_reset_all();
 void dlc_finish();
-void dlc_sounds();
+void dlc_precache_sound(string s);
+void dlc_sound(entity e, float chan, string s, float vol, float attn);
+void dlc_sound_follow(entity e, float chan, string s, float vol, float attn);
+float dlc_spamsound(entity e, float chan, string s, float vol, float attn);

@@ -136,10 +136,10 @@ void Zapper_Read(float t) {
 
         if(t == ENT_CLIENT_ZAPPER_SHIELD) {
             self.draw = Zapper_Draw_Shield;
-            sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
+            dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
         } else {
             self.draw = Zapper_Draw;
-            sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
+            dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
         }
 		if not(self.enemy)
 			self.enemy = spawn();
