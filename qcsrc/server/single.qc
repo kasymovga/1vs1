@@ -13,6 +13,7 @@ void Single_EndLevel() {
 }
 
 float Single_WinningCondition() {
+	WinningConditionHelper(); // set worldstatus
 	return single_level_finished;
 }
 
