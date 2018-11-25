@@ -135,12 +135,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a;
 	float p, w;
 
-	if (targ.classname == "player" || targ.classname == "corpse")
+	if (targ.classname == "player")
 	{
-		if (targ.classname == "corpse")
-			s = "A corpse";
-		else
-			s = targ.netname;
+		s = targ.netname;
 		a = attacker.netname;
 
 		w_fragprefix = "";
@@ -190,7 +187,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if (targ.killcount > 2)
 				bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
 		}
-		else if (attacker.classname == "player" || attacker.classname == "gib")
+		else if (attacker.classname == "player")
 		{
 			if not(clienttype(attacker) == CLIENTTYPE_REAL)
 			{

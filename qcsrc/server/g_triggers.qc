@@ -1180,9 +1180,7 @@ void trigger_impulse_touch1()
 
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
-	if (other.classname != "corpse")
 	if (other.classname != "body")
-	if (other.classname != "gib")
 	if (other.classname != "missile")
 	if (other.classname != "rocket")
 	if (other.classname != "casing")
@@ -1231,9 +1229,7 @@ void trigger_impulse_touch2()
 
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
-	if (other.classname != "corpse")
 	if (other.classname != "body")
-	if (other.classname != "gib")
 	if (other.classname != "missile")
 	if (other.classname != "rocket")
 	if (other.classname != "casing")
@@ -1268,9 +1264,7 @@ void trigger_impulse_touch3()
 
 	// FIXME: Better checking for what to push and not.
 	if not(other.iscreature)
-	if (other.classname != "corpse")
 	if (other.classname != "body")
-	if (other.classname != "gib")
 	if (other.classname != "missile")
 	if (other.classname != "rocket")
 	if (other.classname != "casing")

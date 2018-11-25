@@ -319,10 +319,6 @@ float sv_loddistance2;
 .float modelindex_lod1;
 .float modelindex_lod2;
 
-#define NUM_JUMPPADSUSED 3
-.float jumppadcount;
-.entity jumppadsused[NUM_JUMPPADSUSED];
-
 string gamemode_name;
 
 float startitem_failed;

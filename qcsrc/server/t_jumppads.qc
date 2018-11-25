@@ -129,10 +129,7 @@ void trigger_push_touch()
 {
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
 	if (!other.iscreature)
-	if (other.classname != "corpse")
 	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "casing")
 	if (other.classname != "droppedweapon")
 	if (!other.projectiledeathtype || other.classname == "bullet")
 		return;
@@ -153,7 +150,7 @@ void trigger_push_touch()
 
 	other.velocity = self.movedir;
 
-	if (other.classname == "player")
+	if (other.iscreature)
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		other.oldvelocity = other.velocity;
@@ -167,27 +164,8 @@ void trigger_push_touch()
 		}
 		local float ct;
 		ct = clienttype(other);
-		if( ct == CLIENTTYPE_REAL)
-		{
-			local float i;
-			local float found;
-			found = FALSE;
-			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
-				if(other.(jumppadsused[i]) == self)
-					found = TRUE;
-			if(!found)
-			{
-				other.(jumppadsused[mod(other.jumppadcount, NUM_JUMPPADSUSED)]) = self;
-				other.jumppadcount = other.jumppadcount + 1;
-			}
-
-			if(self.message)
-				centerprint(other, self.message);
-		}
-		else if(ct == CLIENTTYPE_BOT)
+		if(ct == CLIENTTYPE_BOT)
 			other.lastteleporttime = time;
-		else
-			other.jumppadcount = TRUE;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
