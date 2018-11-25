@@ -1148,6 +1148,12 @@ void DoTeamChange(float destteam)
 			SetPlayerColors(self, destteam);
 		return;
 	}
+	if (self.team <= 0)
+	if (destteam > 0)
+	if not(isJoinAllowed()) {
+		centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
+		return;
+	}
 	if(self.classname == "player")
 	if(destteam == -1)
 	{
@@ -1756,8 +1762,9 @@ float isJoinAllowed() {
 
 	local entity e;
 	local float currentlyPlaying;
-	FOR_EACH_REALPLAYER(e) {
-		if(e.classname == "player")
+	FOR_EACH_REALCLIENT(e) {
+		if (e != self) //avoid wrong self-counting in teamplay
+		if (e.classname == "player" || (teamplay && e.team > 0))
 			currentlyPlaying += 1;
 	}
 	if(currentlyPlaying < g_maxplayers)
