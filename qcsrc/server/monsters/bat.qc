@@ -1,20 +1,5 @@
 void bat_walk();
 
-void bat_grenade_explode (void)
-{
-	self.event_damage = SUB_Null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, -self.dmg_force, self.projectiledeathtype, other);
-	remove (self);
-}
-
-void bat_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	bat_grenade_explode();
-}
-
-
 void bat_idle() {
 	updateanim(self);
 	self.nextthink = time;
@@ -61,8 +46,8 @@ void bat_hunt() {
 		setorigin(gren, _shotorg);
 		gren.nextthink = time + 5;
 		gren.think = adaptor_think2use;
-		gren.use = bat_grenade_explode;
-		gren.touch = bat_grenade_touch;
+		gren.use = monster_proj_explode;
+		gren.touch = monster_proj_touch;
 		gren.velocity = normalize(_shotdir) * 2400;
 		W_SetupProjectileVelocity(gren);
 
