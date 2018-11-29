@@ -283,6 +283,7 @@ void train_wait()
 };
 
 float sv_gameplayfix_trainnomins;
+float sv_gameplayfix_trainnowait;
 
 void train_next()
 {
@@ -298,7 +299,7 @@ void train_next()
 	float _speed = (targ.speed ? targ.speed : self.speed);
 	if(self.wait < 0)
 	{
-		if (self.targetname != "")
+		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
 			SUB_CalcMove(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, SUB_Null);
 		else
 			SUB_CalcMove(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, train_next);
@@ -338,6 +339,7 @@ void spawnfunc_func_train()
 {
 	if not(func_train_init_done) {
 		CACHE_CVAR(sv_gameplayfix_trainnomins);
+		CACHE_CVAR(sv_gameplayfix_trainnowait);
 		func_train_init_done = TRUE;
 	}
 	if (self.noise != "")
