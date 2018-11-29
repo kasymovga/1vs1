@@ -251,6 +251,8 @@ set sv_spawnreplace_monster_ogre monster_fireguy_spawn
 set sv_spawnreplace_monster_shambler monster_arachna_spawn
 set sv_spawnreplace_monster_wizard monster_flyingthing_spawn
 set sv_spawnreplace_monster_zombie monster_marine_spawn
+set sv_spawnreplace_monster_fish monster_fish_spawn
+set sv_spawnreplace_monster_hell_knight monster_butcher_spawn
 
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"
@@ -1384,6 +1386,10 @@ set g_monster_bat_health 100
 set g_monster_bat_damage 50
 set g_monster_bat_force 100
 set g_monster_bat_radius 100
+set g_monster_butcher_health 200
+set g_monster_butcher_damage 100
+set g_monster_butcher_force 150
+set g_monster_butcher_radius 100
 set g_monster_ewheel_health 50
 set g_monster_ewheel_damage 25
 set g_monster_ewheel_force 25
@@ -1392,6 +1398,10 @@ set g_monster_fireguy_health 100
 set g_monster_fireguy_damage 50
 set g_monster_fireguy_force 100
 set g_monster_fireguy_radius 100
+set g_monster_fish_health 50
+set g_monster_fish_damage 25
+set g_monster_fish_force 25
+set g_monster_fish_radius 50
 set g_monster_flyingthing_health 100
 set g_monster_flyingthing_damage 50
 set g_monster_flyingthing_force 100
