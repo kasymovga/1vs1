@@ -452,7 +452,8 @@ float monster_walk_finished(void() idle, float dist) {
 }
 
 float monster_check_target(void() walk, void() guard) {
-	if (self.enemy.health < 1 || self.enemy.deadflag != DEAD_NO) {
+	entity e = self.enemy;
+	if (e.health < 1 || e.deadflag != DEAD_NO || !e.takedamage) {
 		self.enemy = world;
 		if (self.message2 != "")
 			self.enemy = find(world, targetname, self.message2);
