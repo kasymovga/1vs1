@@ -931,7 +931,7 @@ void kh_PlayerClear(float killed) {
 float kh_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	if(self == attacker)
 		kh_Key_DropAll(self, TRUE, TRUE);
-	else if((attacker.classname == "player" || attacker.classname == "gib"))
+	else if((attacker.classname == "player"))
 		kh_Key_DropAll(self, FALSE, TRUE);
 
 	return FALSE;

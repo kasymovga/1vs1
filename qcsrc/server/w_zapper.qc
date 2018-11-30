@@ -36,7 +36,6 @@ float g_balance_zapper_secondary_range;
 float g_balance_zapper_secondary_refire;
 var .float zapper_buttonatck1 = BUTTON_ATCK;
 var .float zapper_buttonatck2 = BUTTON_ATCK2;
-float zapper_sound_ready;
 
 .entity zapper_shield;
 .entity zapper_accumulator;
@@ -324,7 +323,7 @@ void W_Zapper_Attack1(void) {
     if(!W_Zapper_Attack1_CheckAmmo(self))
         return;
 
-    if (zapper_sound_ready) sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
+    dlc_sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
 
     entity e = spawn();
     e.classname = "zapper_beam";
@@ -431,13 +430,10 @@ void W_Zapper_Attack2(void) {
 
     makevectors(self.v_angle);
 	string snd;
-	if (zapper_sound_ready)
-		snd = strcat("misc/arc", ftos(1 + (random() > 0.5)), ".wav");
-	else
-		snd = "";
-
-	antilag_begin(Akimbo_Owner(self));
-    W_SetupShot(self, 5, snd, 1);
+	entity ao = Akimbo_Owner(self);
+	antilag_begin(ao);
+	dlc_sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
+    W_SetupShot(self, 5, "", 1);
 
     vector end = w_shotorg + w_shotdir * range;
 	entity o = Akimbo_Owner(self);
@@ -563,7 +559,7 @@ void W_Zapper_Attack3(void) {
 
     self.zapper_shield = e;
 
-    if (zapper_sound_ready) sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
+    dlc_sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
 
     entity b = spawn();
     b.classname = "zapper_shield_beam";
@@ -726,14 +722,12 @@ float w_zapper(float req) {
 		dlc_require("pryaxe_balls");
 		dlc_require("rm_arc");
 		dlc_require("zapper_v2");
-		zapper_sound_ready = FALSE;
 		if (dlc_ready("rm_arc"))
 		if (dlc_ready("zapper_v2")) {
-			zapper_sound_ready = TRUE;
-			precache_sound("weapons/zapper_fire.wav") &&
-			precache_sound("weapons/zapper_fly.wav") &&
-			precache_sound("misc/arc1.wav") &&
-			precache_sound("misc/arc2.wav");
+			dlc_precache_sound("weapons/zapper_fire.wav");
+			dlc_precache_sound("weapons/zapper_fly.wav");
+			dlc_precache_sound("misc/arc1.wav");
+			dlc_precache_sound("misc/arc2.wav");
 		}
     } else if(req == WR_RESETPLAYER){
         if(g_balance_zapper_primary_heatup || (g_balance_zapper_secondary_shield && g_balance_zapper_secondary_shield_heatup))

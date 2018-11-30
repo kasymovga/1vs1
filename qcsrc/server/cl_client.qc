@@ -742,10 +742,9 @@ void PutClientInServer()
 		self.takedamage = DAMAGE_AIM;
 		self.effects = 0;
 		self.air_finished = time + 12;
-		self.dmg = 2;
 		self.keys = 0;
 
-		if not(GameHook_EquipPlayer()) {
+		if not(GameHook_EquipPlayerHandle()) {
 			if(inWarmupStage)
 			{
 				self.ammo_shells = warmup_start_ammo_shells;
@@ -1147,6 +1146,12 @@ void DoTeamChange(float destteam)
 	{
 		if(destteam >= 0)
 			SetPlayerColors(self, destteam);
+		return;
+	}
+	if (self.team <= 0)
+	if (destteam > 0)
+	if not(isJoinAllowed()) {
+		centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
 		return;
 	}
 	if(self.classname == "player")
@@ -1757,8 +1762,9 @@ float isJoinAllowed() {
 
 	local entity e;
 	local float currentlyPlaying;
-	FOR_EACH_REALPLAYER(e) {
-		if(e.classname == "player")
+	FOR_EACH_REALCLIENT(e) {
+		if (e != self) //avoid wrong self-counting in teamplay
+		if (e.classname == "player" || (teamplay && e.team > 0))
 			currentlyPlaying += 1;
 	}
 	if(currentlyPlaying < g_maxplayers)
@@ -2032,7 +2038,7 @@ void PlayerPostThink (void)
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop, maxidle;
-		if (sv_maxidle_forcespec && self.classname == "player") {
+		if (sv_maxidle_forcespec && sv_spectate && self.classname == "player") {
 			maxidle = sv_maxidle_forcespec;
 			drop = FALSE;
 		} else if (sv_maxidle) {

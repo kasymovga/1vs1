@@ -19,6 +19,8 @@ set sv_announcer_extra_vote_now "" "Additional announcer sound"
 set sv_announcer_extra_vote_failed "" "Additional announcer sound"
 set sv_announcer_extra_vote_passed "" "Additional announcer sound"
 set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
+set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
+set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
 set sv_gameplayfix_skipnonsolid 0 "Allow shooting through non-solid curve surfaces."
 set sv_gametype_patterns "" "For compatibility with Q3/QL maps. Patterns to filter items by gametype, separated by '|'. Possible values: ffa, team, duel"
 set sv_player_melee_anim "9 1 1"
@@ -241,6 +243,7 @@ set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn
+set sv_spawnreplace_monster_enforcer monster_rlgirl_spawn
 set sv_spawnreplace_monster_knight monster_spearguy_spawn
 set sv_spawnreplace_monster_dog monster_spider_spawn
 set sv_spawnreplace_monster_demon1 monster_heavysoldier_spawn
@@ -248,6 +251,8 @@ set sv_spawnreplace_monster_ogre monster_fireguy_spawn
 set sv_spawnreplace_monster_shambler monster_arachna_spawn
 set sv_spawnreplace_monster_wizard monster_flyingthing_spawn
 set sv_spawnreplace_monster_zombie monster_marine_spawn
+set sv_spawnreplace_monster_fish monster_fish_spawn
+set sv_spawnreplace_monster_hell_knight monster_butcher_spawn
 
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"
@@ -399,7 +404,7 @@ set g_freeze_enddelay 3
 set g_freeze_slowdown 0.1
 set g_freeze_startdelay 10
 set g_freeze_unfroze_time 3
-set g_freeze_unfroze_interfere 0
+set g_freeze_unfroze_interruption 0
 set g_freeze_use_tdm_maps 1
 set g_freeze_winlimit 10
 set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
@@ -1348,7 +1353,6 @@ set coop_g_pickup_respawntime_ammo -1
 set coop_g_pickup_respawntimejitter_powerup 0
 set coop_g_pickup_respawntime_key 0.1
 set coop_g_pickup_respawntimejitter_key 0
-set coop_g_maxplayers 1
 set coop_g_balance_health_regen 0
 set coop_g_balance_health_rot 0
 set coop_g_balance_armor_regen 0
@@ -1382,6 +1386,10 @@ set g_monster_bat_health 100
 set g_monster_bat_damage 50
 set g_monster_bat_force 100
 set g_monster_bat_radius 100
+set g_monster_butcher_health 200
+set g_monster_butcher_damage 100
+set g_monster_butcher_force 150
+set g_monster_butcher_radius 100
 set g_monster_ewheel_health 50
 set g_monster_ewheel_damage 25
 set g_monster_ewheel_force 25
@@ -1390,6 +1398,10 @@ set g_monster_fireguy_health 100
 set g_monster_fireguy_damage 50
 set g_monster_fireguy_force 100
 set g_monster_fireguy_radius 100
+set g_monster_fish_health 50
+set g_monster_fish_damage 25
+set g_monster_fish_force 25
+set g_monster_fish_radius 50
 set g_monster_flyingthing_health 100
 set g_monster_flyingthing_damage 50
 set g_monster_flyingthing_force 100

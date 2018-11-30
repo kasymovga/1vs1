@@ -38,7 +38,7 @@ HG_HOOKFUNCTION(gg, Attack) {
     }
 
     if(pwned) {
-        if (hg_sound_ready) sound(self, CHAN_AUTO, "misc/gg.wav", 1, ATTN_NORM);
+        dlc_sound(self, CHAN_AUTO, "misc/gg.wav", 1, ATTN_NORM);
         return HG_ATTACK_OK;
     } else {
         //bigprint_spec(self, "Nobody to win against!", "", 1);

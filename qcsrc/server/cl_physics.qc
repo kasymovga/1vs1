@@ -50,9 +50,6 @@ void Physic_LandingHook()
 {
 	if(speedmeter)
 		dprint(strcat("landing velocity: ", vtos(physic_velocity), " (abs: ", ftos(vlen(physic_velocity)), ")\n"));
-	if(self.jumppadcount > 1)
-		dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
-	self.jumppadcount = 0;
 	if(self.lastground < time - 0.3)
 		physic_velocity = physic_velocity * (1 - sv_friction_on_land);
 }

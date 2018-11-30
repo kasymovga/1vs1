@@ -1,7 +1,6 @@
 void ugandaknuckles_idle();
 void ugandaknuckles_guard();
 void ugandaknuckles_walk();
-float uganda_sound_ready;
 
 void ugandaknuckles_hunt() {
 	float dofire;
@@ -22,18 +21,16 @@ void ugandaknuckles_hunt() {
 	if (dofire) {
 		self.attack_finished_single = time + 3 + random(2);
 		float f = random(5);
-		if (uganda_sound_ready) {
-			if (f > 4)
-				sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
-			else if (f > 3)
-				sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
-			else if (f > 2)
-				sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
-			else if (f > 1)
-				sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
-			else
-				sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
-		}
+		if (f > 4)
+			dlc_sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
+		else if (f > 3)
+			dlc_sound(self, CHAN_WEAPON, "quenisok.ogg", VOL_BASE, ATTN_NORM);
+		else if (f > 2)
+			dlc_sound(self, CHAN_WEAPON, "douknowdawae.ogg", VOL_BASE, ATTN_NORM);
+		else if (f > 1)
+			dlc_sound(self, CHAN_WEAPON, "isthisdawae.ogg", VOL_BASE, ATTN_NORM);
+		else
+			dlc_sound(self, CHAN_WEAPON, "youdunnodawae.ogg", VOL_BASE, ATTN_NORM);
 	}
 	if (self.attack_finished_single >= time) {
 		movelib_beak_simple(500 * frametime);
@@ -95,30 +92,14 @@ void ugandaknuckles_spawn() {
 	self.netname = "Uganda Knuckles";
 }
 
-entity uganda_precache;
-
 void ugandaknuckles_init() {
 	precache_model("models/knuckles.md3");
 	dlc_require("uganda");
-	if (dlc_ready("uganda"))
-		uganda_sound_ready = TRUE;
-
-	if (uganda_sound_ready) {
-		precache_sound("douknowdawae.ogg");
-		precache_sound("myqueenyoulook.ogg");
-		precache_sound("quenisok.ogg");
-		precache_sound("isthisdawae.ogg");
-		precache_sound("youdunnodawae.ogg");
-		if (uganda_precache) {
-			remove(uganda_precache);
-			uganda_precache = world;
-		}
-	} else {
-		if not(uganda_precache) {
-			uganda_precache = spawn();
-			uganda_precache.dlc_reset = ugandaknuckles_init;
-		}
-	}
+	dlc_precache_sound("douknowdawae.ogg");
+	dlc_precache_sound("myqueenyoulook.ogg");
+	dlc_precache_sound("quenisok.ogg");
+	dlc_precache_sound("isthisdawae.ogg");
+	dlc_precache_sound("youdunnodawae.ogg");
 }
 
 void spawnfunc_monster_ugandaknuckles_spawn() {

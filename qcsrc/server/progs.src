@@ -313,6 +313,8 @@ monsters/marine.qc
 monsters/uganda.qc
 monsters/arachna.qc
 monsters/boss4.qc
+monsters/fish.qc
+monsters/butcher.qc
 survive.qc
 minstagib.qc
 radio.qc

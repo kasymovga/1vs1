@@ -275,6 +275,22 @@ vector monster_get_direction() {
 	return normalize(v);
 }
 
+vector monster_move_swim(float _speed, float blend_factor) {
+	vector v = '0 0 0';
+	if (self.waterlevel < WATERLEVEL_SWIMMING) {
+		movelib_beak_simple(blend_factor * frametime);
+		self.gravity = 1;
+		return v;
+	}
+	self.gravity = 0.01;
+	v = normalize(self.enemy.origin - self.origin);
+	if (self.waterlevel == WATERLEVEL_SUBMERGED) {
+		v_z = v_z + 0.5 * vlen(v);
+	}
+	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
+	return v;
+}
+
 vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	float dir_z_save;
 	float vel_z_save;
@@ -452,7 +468,8 @@ float monster_walk_finished(void() idle, float dist) {
 }
 
 float monster_check_target(void() walk, void() guard) {
-	if (self.enemy.health < 1 || self.enemy.deadflag != DEAD_NO) {
+	entity e = self.enemy;
+	if (e.health < 1 || e.deadflag != DEAD_NO || !e.takedamage) {
 		self.enemy = world;
 		if (self.message2 != "")
 			self.enemy = find(world, targetname, self.message2);
@@ -508,6 +525,9 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.dmg_force = cvar(strcat("g_monster_", monster_classname(), "_force"));
 	self.health = cvar(strcat("g_monster_", monster_classname(), "_health"));
 	self.dmg_radius = cvar(strcat("g_monster_", monster_classname(), "_radius"));
+	if (!self.respawntime)
+		self.respawntime = 1;
+
 	if (teamplay)
 	if not(self.team)
 		self.team = -1;

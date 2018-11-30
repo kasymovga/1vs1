@@ -485,6 +485,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
 	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
 	ent_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;
+	ent_parsers[ENT_CLIENT_DLC_SOUND] = Ent_DLCSound;
 	SetConWidthHeight();
 	sbar_fontsize = '1 1 0';
 }

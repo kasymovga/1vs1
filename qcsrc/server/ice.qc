@@ -208,6 +208,7 @@ void Ice_PlayerClear(float killed)
 var void(entity spot) Ice_Spawn_NextLink;
 void Ice_Spawn(entity spot)
 {
+	Ice_Spawn_NextLink(spot);
 	Ice_DeathHandle(world, world, 0);
 }
 

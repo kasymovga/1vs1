@@ -548,7 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// escape a lava pit or similar
 		//self.pushltime = 0;
 	}
-	else if(attacker.classname == "player" || attacker.classname == "gib")
+	else if(attacker.classname == "player")
 	{
 		self.pusher = attacker;
 		self.pushltime = time + g_maxpushtime;

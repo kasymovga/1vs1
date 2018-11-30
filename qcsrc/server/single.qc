@@ -13,6 +13,7 @@ void Single_EndLevel() {
 }
 
 float Single_WinningCondition() {
+	WinningConditionHelper(); // set worldstatus
 	return single_level_finished;
 }
 
@@ -72,20 +73,29 @@ void single_init_delayed(void) {
 		IceHook_Unfroze = Single_IceUnfroze;
 		Ice_Init();
 	}
+	float weps = cvar("_single_transit_weapons");
+	float i, j;
+	for(i = WEP_FIRST, j = 1; i < WEP_LAST; ++i, j *= 2) {
+		if (weps & j)
+			weapon_precache(i);
+	}
+	registercvar("_single_transit_weapons", "0");
+	cvar_set("_single_transit_weapons", ftos(weps | weaponsInMap | start_weapons));
 }
 
 void Single_SetNewParms() {
-	parm5 = 100;
-	parm6 = 0;
-	parm7 = 25;
-	parm8 = 0;
-	parm9 = 0;
-	parm10 = 0;
-	parm11 = 3;
+	parm5 = start_health;
+	parm6 = start_armorvalue;
+	parm7 = start_ammo_shells;
+	parm8 = start_ammo_nails;
+	parm9 = start_ammo_rockets;
+	parm10 = start_ammo_cells;
+	parm11 = start_weapons;
+	parm12 = FALSE;
 }
 
 void Single_SetChangeParms() {
-	if (self.classname == "player" && self.deadflag == DEAD_NO) {
+	if (self.classname == "player" && (self.deadflag == DEAD_NO || campaign_won)) {
 		parm5 = self.health;
 		parm6 = self.armorvalue;
 		parm7 = self.ammo_shells;
@@ -93,36 +103,39 @@ void Single_SetChangeParms() {
 		parm9 = self.ammo_rockets;
 		parm10 = self.ammo_cells;
 		parm11 = self.weapons;
+		parm12 = TRUE;
 	} else {
 		Single_SetNewParms();
 	}
 }
 
+.float default_equip;
 void Single_DecodeLevelParms() {
-	self.health = parm5;
-	self.armorvalue = parm6;
-	self.ammo_shells = parm7;
-	self.ammo_nails = parm8;
-	self.ammo_rockets = parm9;
-	self.ammo_cells = parm10;
-	self.weapons = parm11;
-	float i, j;
-	for(i = WEP_FIRST, j = 1; i <= WEP_LAST; ++i, j *= 2) {
-		if (self.weapons & j)
-			weapon_precache(i);
+	if (parm12) {
+		self.health = parm5;
+		self.armorvalue = parm6;
+		self.ammo_shells = parm7;
+		self.ammo_nails = parm8;
+		self.ammo_rockets = parm9;
+		self.ammo_cells = parm10;
+		self.weapons = parm11;
+		self.default_equip = FALSE;
+	} else {
+		self.default_equip = TRUE; //Hack for force default equip
 	}
 }
 
 float Single_ForbidSpectators() {
-	return TRUE;
+	if not(self.default_equip) //For just connected players who carried equip from previous level
+		return TRUE;
+
+	return FALSE;
 }
 
-float Single_EquipPlayer() {
-	self.ammo_fuel = 0;
-	if (self.wasplayer) {
-		Single_SetNewParms();
-		Single_DecodeLevelParms();
-	}
+float Single_EquipPlayerHandle() {
+	if (self.default_equip)
+		return FALSE;
+
 	return TRUE;
 }
 
@@ -134,10 +147,43 @@ float Single_MonsterTeamSwitchable() {
 	return FALSE;
 }
 
+var void() Single_PlayerPreThink_NextLink;
+void Single_PlayerPreThink() {
+	self.items &~= (IT_KEY1 | IT_KEY2);
+	self.items |= self.keys;
+	Single_PlayerPreThink_NextLink();
+}
+
+var void(float) Coop_PlayerClear_NextLink;
+void Coop_PlayerClear(float killed) {
+	Coop_PlayerClear_NextLink(killed);
+	if (self.classname != "disconnecting")
+		return;
+
+	entity e;
+	FOR_EACH_PLAYER(e) { //last alive player leave
+		if (e != self)
+		if (e.deadflag == DEAD_NO)
+			return;
+	}
+	single_level_finished = TRUE;
+	campaign_won = FALSE;
+}
+
+var void(entity) Single_Spawn_NextLink;
+void Single_Spawn(entity e) {
+	self.default_equip = TRUE;
+	Single_Spawn_NextLink(e);
+}
+
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	GameHook_ForbidSpectators = Single_ForbidSpectators;
-	GameHook_EquipPlayer = Single_EquipPlayer;
+	if (game == GAME_COOP) {
+		Coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
+		GameHookChain_PlayerClear = Coop_PlayerClear;
+	}
+	GameHook_EquipPlayerHandle = Single_EquipPlayerHandle;
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
 	GameHook_FragLimitOverride = Single_Return0;
@@ -148,6 +194,10 @@ void Single_Init() {
 	GameHook_SetChangeParms = Single_SetChangeParms;
 	GameHook_DecodeLevelParms = Single_DecodeLevelParms;
 	GameHook_MonsterTeamSwitchable = Single_MonsterTeamSwitchable;
+	Single_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = Single_PlayerPreThink;
+	Single_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = Single_Spawn;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
@@ -156,4 +206,49 @@ void Single_Init() {
 		ActivateTeamplay();
 		SetTeamCount(1);
 	}
+}
+
+void coop_teleporter_think(void) {
+	if (self.solid == SOLID_TRIGGER) {
+		self.alpha = approach(self.alpha, 1, 1);
+		if (self.alpha > 0.99)
+			return;
+	} else {
+		self.alpha = approach(self.alpha, 0, 1);
+		if (self.alpha < 0.01) {
+			self.alpha = -1;
+			return;
+		}
+	}
+	self.nextthink = time;
+}
+
+void coop_teleporter_use(void) {
+	if (self.solid == SOLID_TRIGGER) {
+		self.solid = SOLID_NOT;
+		self.effects &~= EF_STARDUST;
+	} else {
+		self.solid = SOLID_TRIGGER;
+		self.effects |= EF_STARDUST;
+		if (self.alpha < 0)
+			self.alpha = 0.01;
+	}
+	self.nextthink = time;
+}
+
+void spawnfunc_coop_teleporter(void) {
+	if (game != GAME_COOP) {
+		remove(self);
+		return;
+	}
+	precache_model("models/portal.md3");
+	spawnfunc_trigger_teleport();
+	setmodel(self, "models/portal.md3");
+	setsize(self, '-32 -32 0', '32 32 40');
+	self.angles_x = 90;
+	self.angles_z = 0;
+	self.alpha = -1;
+	self.think = coop_teleporter_think;
+	self.use = coop_teleporter_use;
+	self.use();
 }

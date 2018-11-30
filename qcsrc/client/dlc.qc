@@ -1,5 +1,29 @@
 entity dlc_wait;
 float localConnection;
+string dlc_sounds;
+float dlc_sounds_ready;
+
+void dlc_precache_sounds() {
+	print("dlc_precache_sounds\n");
+	string s, l;
+	l = dlc_sounds;
+	while (l != "") {
+		s = car(l);
+		l = cdr(l);
+		if (s != "") {
+			precache_sound(s);
+		}
+	}
+	dlc_sounds_ready = TRUE;
+}
+
+void dlc_sound(entity e, float c, string s, float v, float a) {
+	if not(dlc_sounds_ready) {
+		print("dlc_sound: not ready\n");
+		return;
+	}
+	sound(e, c, s, v, a);
+}
 
 void DLCWait() {
 	if not(dlc_ready_all()) {
@@ -16,10 +40,9 @@ void DLCWait() {
 		if (fexists(strcat("rexdlc_", s, "_client.cfg")))
 			localcmd(strcat("exec rexdlc_", s, "_client.cfg", "\n"));
 	}
+	dlc_precache_sounds();
 	if not(localConnection) {
-		localcmd("r_restart;");
-		if not(isdemo_flag)
-			localcmd("disconnect;reconnect\n");
+		localcmd("r_restart\n");
 	} else {
 		l = dlc_list;
 		while (l != "") {
@@ -47,10 +70,10 @@ void Ent_DLCList(float new) {
 		dlc_set_repos(ReadString());
 	}
 
+	float not_all_loaded;
 	if (f & 2) {
 		string list = ReadString();
 		string s;
-		float not_all_loaded;
 		not_all_loaded = FALSE;
 		string l = list;
 		while (l != "") {
@@ -89,4 +112,31 @@ void Ent_DLCList(float new) {
 		localConnection = TRUE;
 	else
 		localConnection = FALSE;
+
+	if (f & 8) {
+		unzone_ifneeded(dlc_sounds);
+		dlc_sounds = strzone(ReadString());
+		if (not_all_loaded)
+			dlc_sounds_ready = FALSE;
+		else
+			dlc_precache_sounds();
+	}
+}
+
+void Ent_DLCSound(float new) {
+	float sf = ReadByte();
+	if (sf & 1) {
+		vector v;
+		v_x = ReadCoord();
+		v_y = ReadCoord();
+		v_z = ReadCoord();
+		setorigin(self, v);
+	}
+	if (sf & 2) {
+		string s = ReadString();
+		self.cnt = ReadByte();
+		float vol = ReadCoord();
+		float attn = ReadCoord();
+		dlc_sound(self, self.cnt, s, vol, attn);
+	}
 }

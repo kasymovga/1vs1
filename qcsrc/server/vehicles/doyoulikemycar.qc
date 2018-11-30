@@ -6,7 +6,6 @@ float g_vehicle_car_crush_minspeed;
 float g_vehicle_car_health;
 float g_vehicle_car_health_regen;
 float g_vehicle_car_health_regen_dmgpause;
-float car_sound_ready;
 
 float CarPhysic_SendEntity(entity to, float sf);
 void car_exit(float eject);
@@ -14,7 +13,7 @@ void car_enter();
 
 void dorifto_effect_sound(entity mycar) {
 	if (mycar.dmg < time ) {
-		if (car_sound_ready) sound(mycar, CHAN_WEAPON, "car/screech.wav", VOL_BASE, ATTN_NORM);
+		dlc_sound_follow(mycar, CHAN_WEAPON, "car/screech.wav", VOL_BASE, ATTN_NORM);
 		mycar.dmg = time + 2;
 	}
 }
@@ -121,7 +120,7 @@ float car_physic_hook()
 	if (physic_movement_x) {
 		if (mycar.attack_finished_single < time) {
 			mycar.attack_finished_single = time + 3;
-			if (car_sound_ready) sound(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
+			dlc_sound_follow(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	mycar.gun1.gun1.angles_x = mycar.gun1.gun1.angles_x - rotate_factor_b * frametime;
@@ -327,25 +326,6 @@ void vewhicle_car_dinit()
 	self.reset = car_reset;
 }
 
-entity car_precache;
-void car_load_sounds() {
-	if (dlc_ready("car_v1")) {
-		car_sound_ready = TRUE;
-		precache_sound("car/engine.wav");
-		precache_sound("car/screech.wav");
-		if (car_precache) {
-			remove(car_precache);
-			car_precache = world;
-		}
-	} else {
-		if not(car_sound_ready)
-		if not(car_precache) {
-			car_precache = spawn();
-			car_precache.dlc_reset = car_load_sounds;
-		}
-	}
-}
-
 float vehicle_car_readcvars_done;
 void vehicle_car_readcvars() {
 	if (vehicle_car_readcvars_done)
@@ -367,7 +347,8 @@ void vehicle_car_readcvars() {
     precache_model ( "models/onslaught/gen_gib1.md3");
     precache_model ( "models/onslaught/gen_gib2.md3");
     precache_model ( "models/onslaught/gen_gib3.md3");
-	car_load_sounds();
+	dlc_precache_sound("car/engine.wav");
+	dlc_precache_sound("car/screech.wav");
 }
 
 float CarPhysic_SendEntity(entity to, float sf) {

@@ -105,7 +105,7 @@ float dlc_load(string dlc_name) {
 		if not(dlc_repo_checker) {
 			dlc_repo_checker = spawn();
 			dlc_repo_checker.think = dlc_find_working_repo;
-			dlc_repo_checker.nextthink = time + 0.4;
+			dlc_repo_checker.nextthink = time + 2;
 		}
 #endif
 		localcmd("\ncurl --pak ", dlc_pk3_name(dlc_name), "\n");

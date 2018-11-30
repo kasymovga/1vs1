@@ -485,7 +485,7 @@ void FlagTouch()
 	local string s, s0, h0, h1;
 	if (other.classname != "player")
 		return;
-	if (other.health < 1) // ignore dead players
+	if (PLAYER_DEAD(other)) // ignore dead players
 		return;
 
 	if (other.saboteur) //ignore saboteurs
@@ -1172,7 +1172,7 @@ void ctf_PlayerClear(float killed) {
 
 float ctf_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	if (self.flagcarried) {
-		if(attacker.classname != "player" && attacker.classname != "gib")
+		if(attacker.classname != "player")
 			DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
 		else if(attacker.team == self.team)
 			DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill

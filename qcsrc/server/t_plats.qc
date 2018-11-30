@@ -19,8 +19,6 @@ float	STATE_BOTTOM	= 1;
 float	STATE_UP		= 2;
 float	STATE_DOWN		= 3;
 
-.float train_nomins;
-
 .entity trigger_field;
 
 void() plat_center_touch;
@@ -284,6 +282,9 @@ void train_wait()
 		stopsoundto(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
 };
 
+float sv_gameplayfix_trainnomins;
+float sv_gameplayfix_trainnowait;
+
 void train_next()
 {
 	local entity targ;
@@ -294,20 +295,17 @@ void train_next()
 	self.wait = targ.wait;
 	if (!self.wait)
 		self.wait = 0.1;
+
+	float _speed = (targ.speed ? targ.speed : self.speed);
 	if(self.wait < 0)
 	{
-		if (targ.speed)
-			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), targ.speed, train_next);
+		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
+			SUB_CalcMove(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, SUB_Null);
 		else
-			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), self.speed, train_next);
+			SUB_CalcMove(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, train_next);
 	}
 	else
-	{
-		if (targ.speed)
-			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), targ.speed, train_wait);
-		else
-			SUB_CalcMove(targ.origin - (self.train_nomins ? '0 0 0' : self.mins), self.speed, train_wait);
-	}
+		SUB_CalcMove(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, train_wait);
 
 	if(self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
@@ -320,14 +318,17 @@ void func_train_find()
 	self.target = targ.target;
 	if (!self.target)
 		objerror("func_train_find: no next target");
-	setorigin(self, targ.origin - (self.train_nomins ? '0 0 0' : self.mins));
+	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
 	if (self.targetname != "" && find(world, target, self.targetname)) {
 		self.use = train_next;
 	} else {
+		self.targetname = "";
 		self.nextthink = self.ltime + 1;
 		self.think = train_next;
 	}
 };
+
+float func_train_init_done;
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
 Ridable platform, targets spawnfunc_path_corner path to follow.
@@ -336,6 +337,11 @@ target : targetname of first spawnfunc_path_corner (starts here)
 */
 void spawnfunc_func_train()
 {
+	if not(func_train_init_done) {
+		CACHE_CVAR(sv_gameplayfix_trainnomins);
+		CACHE_CVAR(sv_gameplayfix_trainnowait);
+		func_train_init_done = TRUE;
+	}
 	if (self.noise != "")
 		precache_sound(self.noise);
 
