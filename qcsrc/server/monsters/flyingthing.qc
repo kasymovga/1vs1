@@ -1,6 +1,7 @@
 void flyingthing_walk();
 
 void flyingthing_idle() {
+	self.movetype = MOVETYPE_FLY;
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
@@ -9,6 +10,7 @@ void flyingthing_idle() {
 }
 
 void flyingthing_hunt() {
+	self.movetype = MOVETYPE_WALK;
 	self.nextthink = time;
 	if (monster_check_target(flyingthing_walk, flyingthing_idle))
 		return;
@@ -60,6 +62,7 @@ void flyingthing_hunt() {
 }
 
 void flyingthing_walk() {
+	self.movetype = MOVETYPE_WALK;
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
@@ -76,7 +79,7 @@ void flyingthing_walk() {
 }
 
 void flyingthing_spawn() {
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = MOVETYPE_FLY;
 	self.species = SPECIES_ROBOT_SOLID;
 	self.netname = "Flying Thing";
 	monster_set_fly();

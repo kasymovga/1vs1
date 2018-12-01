@@ -1,6 +1,7 @@
 void bat_walk();
 
 void bat_idle() {
+	self.movetype = MOVETYPE_FLY;
 	updateanim(self);
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
@@ -10,6 +11,7 @@ void bat_idle() {
 }
 
 void bat_hunt() {
+	self.movetype = MOVETYPE_WALK;
 	updateanim(self);
 	self.nextthink = time;
 	if (monster_check_target(bat_walk, bat_idle))
@@ -62,6 +64,7 @@ void bat_hunt() {
 }
 
 void bat_walk() {
+	self.movetype = MOVETYPE_WALK;
 	updateanim(self);
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
@@ -79,7 +82,7 @@ void bat_walk() {
 }
 
 void bat_spawn() {
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = MOVETYPE_FLY;
 	self.species = SPECIES_ALIEN;
 	self.netname = "Hell Bat";
 	monster_set_fly();
