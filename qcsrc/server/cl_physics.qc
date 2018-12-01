@@ -58,10 +58,7 @@ float IsFlying(entity a)
 {
 	if(a.flags & FL_ONGROUND)
 		return 0;
-	if(a.waterlevel >= WATERLEVEL_SWIMMING)
-		return 0;
-	traceline(a.origin, a.origin - '0 0 48', MOVE_NORMAL, a);
-	if(trace_fraction < 1)
+	if(a.waterlevel)
 		return 0;
 	return 1;
 }
@@ -69,19 +66,17 @@ float IsFlying(entity a)
 .float wasFlying;
 void Physic_CheckGroundHook()
 {
-	if(physic_flags & FL_ONGROUND)
-	if(self.wasFlying)
-	{
-		self.wasFlying = 0;
-
-		if(self.waterlevel < WATERLEVEL_SWIMMING)
-		if(time >= self.ladder_time)
-		if not(self.hook)
-		{
-			self.nextstep = time + 0.3 + random() * 0.1;
-			if (self.waterlevel > 0) {
-					GlobalSound(globalsound_waterfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-			} else {
+	if (physic_is_player)
+	if (self.wasFlying) {
+		if (self.waterlevel) {
+			self.nextstep = time + 0.5;
+			GlobalSound(globalsound_waterfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		} else {
+			if(self.flags & FL_ONGROUND)
+			if(time >= self.ladder_time)
+			if not(self.hook)
+			{
+				self.nextstep = time + 0.2;
 				trace_dphitq3surfaceflags = 0;
 				tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
 				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
@@ -94,9 +89,7 @@ void Physic_CheckGroundHook()
 			}
 		}
 	}
-	self.flags = physic_flags;
-	if(IsFlying(self))
-		self.wasFlying = 1;
+	self.wasFlying = IsFlying(self);
 }
 
 void Physic_OnCrouchHook()

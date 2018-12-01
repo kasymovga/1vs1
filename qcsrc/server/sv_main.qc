@@ -21,6 +21,12 @@ void CreatureFrame (void)
 					if(self.air_finished < time + 9)
 						PlayerSound(playersound_gasp, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
 					self.air_finished = time + 12;
+					if (self.nextstep < time)
+					if (self.waterlevel < WATERLEVEL_SUBMERGED)
+					if (vlen(self.velocity) > 220) {
+						self.nextstep = time + 1.5;
+						sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE * 0.25, ATTN_NORM);
+					}
 				}
 				else if (self.air_finished < time)
 				{	// drown!
@@ -84,12 +90,10 @@ void CreatureFrame (void)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)
 			{
-				if((time > self.nextstep) || (time < (self.nextstep - 10.0)))
+				if((time > self.nextstep))
 				{
 					self.nextstep = time + 0.3 + random() * 0.1;
-					if (self.waterlevel > 0) {
-							GlobalSound(globalsound_waterstep, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-					} else {
+					if not(self.waterlevel) {
 						trace_dphitq3surfaceflags = 0;
 						tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
 						if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
