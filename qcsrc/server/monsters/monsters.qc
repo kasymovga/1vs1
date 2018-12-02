@@ -291,6 +291,20 @@ vector monster_move_swim(float _speed, float blend_factor) {
 	return v;
 }
 
+void monster_move_fly_idle(float _speed, float blend_factor) {
+	if (self.waterlevel) {
+		movelib_move_simple('0 0 1', _speed, blend_factor * frametime);
+		return;
+	}
+	if (self.velocity != '0 0 0') {
+		float f = max(0,vlen(self.velocity) - _speed * frametime);
+		if (f) {
+			self.velocity = normalize(self.velocity) * f;
+		} else
+			self.velocity = '0 0 0';
+	}
+}
+
 vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	float dir_z_save;
 	float vel_z_save;
@@ -335,7 +349,7 @@ vector monster_move_fly(float _speed, float blend_factor) {
 	}
 	vector v;
 	v = monster_get_direction();
-	v_z = v_z + 0.5 * vlen(v);
+	v_z = v_z + 0.5;
 	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
 }

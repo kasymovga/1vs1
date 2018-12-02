@@ -6,7 +6,7 @@ void flyingthing_idle() {
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
 	}
-	movelib_beak_simple(100 * frametime);
+	monster_move_fly_idle(100, 5);
 }
 
 void flyingthing_hunt() {
