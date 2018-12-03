@@ -14,6 +14,7 @@ constants.qh
 ../menu-server/util.qh
 ../client-server/util.qh
 ../common/items.qh
+sound.qh
 location_request.qh
 single.qh
 
@@ -138,6 +139,7 @@ cl_weapons.qh
 scores_rules.qc
 
 miscfunctions.qc
+sound.qc
 ../common/miscfunctions.qc
 ../client-server/miscfunctions.qc
 ../menu-server/miscfunctions.qc

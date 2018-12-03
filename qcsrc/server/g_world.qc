@@ -364,9 +364,9 @@ void precache()
 
     if (g_footsteps)
     {
-        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
-        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
-        PrecacheGlobalSound((globalsound_waterstep = "ambient/water"));
+        precache_randomsound("misc/footstep0", 6);
+        precache_randomsound("misc/metalfootstep0", 6);
+        precache_sound("ambient/water.wav");
     }
 
     // gore and miscellaneous sounds
@@ -376,15 +376,12 @@ void precache()
     precache_sound ("misc/bodyimpact1.wav");
     precache_sound ("misc/bodyimpact2.wav");
     precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
+	precache_randomsound("misc/gib_splat0", 4);
     precache_sound ("misc/hit.wav");
 	precache_sound ("misc/menu2.wav");
-    PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
-    PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-    PrecacheGlobalSound((globalsound_waterfall = "misc/outwater"));
+    precache_randomsound("misc/hitground", 4);
+    precache_randomsound("misc/metalhitground", 4);
+    precache_sound("misc/outwater.wav");
     precache_sound ("misc/null.wav");
     precache_sound ("misc/spawn.wav");
     precache_sound ("misc/talk.wav");

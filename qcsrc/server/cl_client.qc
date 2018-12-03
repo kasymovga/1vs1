@@ -2001,7 +2001,18 @@ void PlayerPreThink (void)
 		oldself = self; self = self.teamkill_soundsource;
 		oldpusher = self.pusher; self.pusher = oldself;
 
-		PlayerSound(playersound_teamshoot, CHAN_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		if(self.pusher)
+		if(self.pusher.team == self.team)
+		{
+			msg_entity = self.pusher;
+			if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+			{
+				if(msg_entity.cvar_cl_voice_directional == 1)
+					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
+				else
+					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_NONE);
+			}
+		}
 
 		self.pusher = oldpusher;
 		self = oldself;
@@ -2011,7 +2022,18 @@ void PlayerPreThink (void)
 	if(time > self.taunt_soundtime)
 	{
 		self.taunt_soundtime = 0;
-		PlayerSound(playersound_taunt, CHAN_VOICE, VOICETYPE_AUTOTAUNT);
+		if (sv_taunt)
+		if (sv_autotaunt) {
+			float tauntrand = random();
+			FOR_EACH_REALCLIENT(msg_entity)
+				if (tauntrand < msg_entity.cvar_cl_autotaunt)
+				{
+					if (msg_entity.cvar_cl_voice_directional >= 1)
+						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					else
+						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, ATTN_NONE);
+				}
+		}
 	}
 
 	target_voicescript_next(self);

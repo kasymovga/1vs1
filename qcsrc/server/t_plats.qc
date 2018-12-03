@@ -915,7 +915,15 @@ void door_trigger_touch()
 	if not(other.keys & self.owner.items) {
 		if (self.owner.state == STATE_BOTTOM)
 		if (clienttype(other) == CLIENTTYPE_REAL) {
-			centerprint (other, "This door required key");
+			string s;
+			if  (self.owner.items & IT_KEY1)
+				s = "Silver Key";
+			else if (self.owner.items & IT_KEY2)
+				s = "Gold Key";
+			else if (self.owner.items)
+				s = "Unknown Key";
+
+			centerprint (other, strcat("This door required ", s));
 			play2(other, "misc/talk.wav");
 		}
 		return;

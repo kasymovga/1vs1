@@ -19,7 +19,7 @@ void CreatureFrame (void)
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
 					if(self.air_finished < time + 9)
-						PlayerSound(playersound_gasp, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+						sound(self, CHAN_PLAYER, self.playersound_gasp, VOL_BASE, ATTN_NORM);
 					self.air_finished = time + 12;
 					if (self.nextstep < time)
 					if (self.waterlevel < WATERLEVEL_SUBMERGED)
@@ -99,9 +99,9 @@ void CreatureFrame (void)
 						if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 						{
 							if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-								GlobalSound(globalsound_metalstep, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+								sound(self, CHAN_PLAYER, randomsound("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
 							else
-								GlobalSound(globalsound_step, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+								sound(self, CHAN_PLAYER, randomsound("misc/footstep0", 6), VOL_BASE, ATTN_NORM);
 						}
 					}
 				}

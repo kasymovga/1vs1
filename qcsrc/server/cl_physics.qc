@@ -31,7 +31,8 @@ void Physic_OnJumpHook()
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
-		PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		sound(self, CHAN_PLAYER, self.playersound_jump, VOL_BASE, ATTN_NORM);
+
 	self.restart_jump = -1; // restart jump anim next time
 	self.oldvelocity_z = physic_velocity_z;
 }
@@ -70,7 +71,7 @@ void Physic_CheckGroundHook()
 	if (self.wasFlying) {
 		if (self.waterlevel) {
 			self.nextstep = time + 0.5;
-			GlobalSound(globalsound_waterfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE, ATTN_NORM);
 		} else {
 			if(self.flags & FL_ONGROUND)
 			if(time >= self.ladder_time)
@@ -82,9 +83,9 @@ void Physic_CheckGroundHook()
 				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 				{
 					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-						GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+						sound(self, CHAN_PLAYER, randomsound("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 					else
-						GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+						sound(self, CHAN_PLAYER, randomsound("misc/hitground", 4), VOL_BASE, ATTN_NORM);
 				}
 			}
 		}
