@@ -981,7 +981,7 @@ float kh_PlayerIsCarrier(entity plr) { return plr.kh_next != world; }
 void kh_DropCarried(entity plr) { kh_Key_DropAll(plr, FALSE, FALSE); }
 float kh_TeleportationForbiddenFor(entity e) { return e.classname == STR_ITEM_KH_KEY; }
 
-void kh_init()  // sets up th KH environment
+void kh_init_delayed()  // sets up th KH environment
 {
 	CACHE_CVAR(g_balance_keyhunt_damageforcescale);
 	CACHE_CVAR(g_balance_keyhunt_delay_collect);
@@ -1000,45 +1000,9 @@ void kh_init()  // sets up th KH environment
 	CACHE_CVAR(g_balance_keyhunt_score_push);
 	CACHE_CVAR(g_balance_keyhunt_throwvelocity);
 	CACHE_CVAR(g_keyhunt_showenemycarrier);
-	precache_sound(kh_sound_capture);
-	precache_sound(kh_sound_destroy);
-	precache_sound(kh_sound_drop);
-	precache_sound(kh_sound_collect);
-	precache_sound(kh_sound_alarm);  // the new siren
-	GameHook_FragsHandle = kh_HandleFrags;
-	GameHook_DeathHandle = kh_DeathHandle;
-	kh_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = kh_PlayerClear;
-	GameHook_WinCountDown = stub_WinCountDown;
-	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = kh_SpectateCopy;
-	GameHook_FragLimitOverride = kh_FragLimitOverride;
-	GameHook_LeadLimitOverride = kh_LeadLimitOverride;
-	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
-	GameHook_DropCarried = kh_DropCarried;
-	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
-	GameHook_BotChooseRole = havocbot_chooserole_kh;
-
-	precache_model("models/keyhunt/key.md3");
-
-	// setup variables
-	kh_teams = cvar("g_keyhunt_teams_override");
-	if(kh_teams < 2)
-		kh_teams = cvar("g_keyhunt_teams");
-	kh_teams = bound(2, kh_teams, 4);
-	SetTeamCount(kh_teams);
-
-	// make a KH entity for controlling the game
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
-	/*
-	dprint(vtos(kh_controller.mins));
-	dprint(vtos(kh_controller.maxs));
-	dprint("\n");
-	*/
-
 	kh_controller.reset2 = kh_Reset;
-
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 	if (game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT)
 		kh_roundbased = TRUE;
@@ -1072,6 +1036,35 @@ void kh_init()  // sets up th KH environment
 		kh_worldkeylist = key;
 		key.team = kh_Team_ByID(i);
 	}
+}
+
+void kh_init() {
+	InitializeEntity(world, kh_init_delayed, INITPRIO_GAMETYPE);
+	precache_sound(kh_sound_capture);
+	precache_sound(kh_sound_destroy);
+	precache_sound(kh_sound_drop);
+	precache_sound(kh_sound_collect);
+	precache_sound(kh_sound_alarm);  // the new siren
+	GameHook_FragsHandle = kh_HandleFrags;
+	GameHook_DeathHandle = kh_DeathHandle;
+	kh_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = kh_PlayerClear;
+	GameHook_WinCountDown = stub_WinCountDown;
+	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = kh_SpectateCopy;
+	GameHook_FragLimitOverride = kh_FragLimitOverride;
+	GameHook_LeadLimitOverride = kh_LeadLimitOverride;
+	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
+	GameHook_DropCarried = kh_DropCarried;
+	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
+	GameHook_BotChooseRole = havocbot_chooserole_kh;
+	precache_model("models/keyhunt/key.md3");
+	kh_teams = cvar("g_keyhunt_teams_override");
+	if(kh_teams < 2)
+		kh_teams = cvar("g_keyhunt_teams");
+
+	kh_teams = bound(2, kh_teams, 4);
+	SetTeamCount(kh_teams);
 }
 
 void kh_update_state()
