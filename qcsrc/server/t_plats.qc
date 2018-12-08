@@ -319,7 +319,7 @@ void func_train_find()
 	if (!self.target)
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
-	if (self.targetname != "" && find(world, target, self.targetname)) {
+	if (self.targetname != "" && find(world, target, self.targetname) && !sv_gameplayfix_trainnowait) {
 		self.use = train_next;
 	} else {
 		self.targetname = "";
