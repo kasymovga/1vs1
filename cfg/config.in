@@ -1388,7 +1388,7 @@ set g_monster_bat_damage 50
 set g_monster_bat_force 100
 set g_monster_bat_radius 100
 set g_monster_butcher_health 200
-set g_monster_butcher_damage 100
+set g_monster_butcher_damage 50
 set g_monster_butcher_force 150
 set g_monster_butcher_radius 100
 set g_monster_ewheel_health 50
