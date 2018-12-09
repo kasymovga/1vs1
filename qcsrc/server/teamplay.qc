@@ -139,6 +139,11 @@ void InitGameplayMode()
 	cvar_set("timelimit", cvar_string("timelimit_default"));
 	cvar_set("fraglimit", cvar_string("fraglimit_default"));
 	MapInfo_LoadMapSettings(mapname);
+	if (MapInfo_Map_description == "<DESCRIPTION>")
+		map_description = "";
+	else
+		map_description = zone_ifneeded(MapInfo_Map_description);
+
 	float force_gametype_restore = 0;
 	string force_gametype = cvar_string("force_gametype");
 	if (force_gametype != "")
@@ -273,106 +278,6 @@ void InitGameplayMode()
 	game_cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	WriteGameCvars();
 }
-
-void PrintWelcomeMessage(entity pl)
-{
-	string s, modifications, motd;
-
-	if(self.cvar_scr_centertime == 0) return;
-
-	if(g_campaign)
-	{
-		if(self.classname == "player" && !self.BUTTON_INFO)
-			return;
-	}
-	else
-	{
-		if((time - self.jointime) > cvar("welcome_message_time") && !self.BUTTON_INFO)
-			return;
-	}
-
-	if( !(timeoutStatus >= 1) ) { //really print the WelcomeMessage to the player every frame when timeout-seconds are shown or the game is restarted, to make sure that the shown number is accurate
-		if(self.welcomemessage_time > time) return;
-		self.welcomemessage_time = time + max(0.5, self.cvar_scr_centertime * 0.6);
-	}
-
-	if(g_campaign)
-	{
-		centerprint(pl, campaign_message);
-		return;
-	}
-
-//TODO GreEn`mArine: make the timeout-messages clientside as well (just like the ready restart countdown)!
-	if(!self.BUTTON_INFO)
-	{
-		// TODO get rid of this too
-		local string specString;
-		specString = NEWLINES;
-		//if(time < game_starttime) //also show the countdown when being a spectator
-		//	specString = strcat(specString, "\n\n^1Game starts in ", ftos(ceil(game_starttime - time)), " seconds^7");
-		//else
-		if (timeoutStatus != 0)
-			specString = strcat(specString, "\n\n", getTimeoutText(1));
-		else
-		{
-			if(self.classname == "player")
-				return;
-			goto normal;
-		}
-		return centerprint_atprio(self, CENTERPRIO_SPAM, specString);
-	}
-
-:normal
-	modifications = GameHookChain_WelcomeMessageMod("");
-	if(cvar("sv_gravity") < 800)
-		modifications = strcat(modifications, ", Low gravity");
-	if(g_footsteps)
-		modifications = strcat(modifications, ", Steps");
-	if(g_grappling_hook)
-		modifications = strcat(modifications, ", Hook");
-	if(g_pinata)
-		modifications = strcat(modifications, ", Pinata");
-	if(g_weapon_stay)
-		modifications = strcat(modifications, ", Weapons stay");
-	if(g_jetpack)
-		modifications = strcat(modifications, ", Jet pack");
-	modifications = substring(modifications, 2, strlen(modifications) - 2);
-
-	s = strcat(s, NEWLINES, "This is Rexuiz ", cvar_string("g_nexuizversion"), "\n");
-	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
-
-	if(modifications != "")
-		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if(timeoutStatus != 0)
-		s = strcat(s, "\n\n", getTimeoutText(1));
-
-	if (g_grappling_hook)
-		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
-
-	if(cache_lastmutatormsg != cvar_string("g_mutatormsg"))
-	{
-		if(cache_lastmutatormsg)
-			strunzone(cache_lastmutatormsg);
-		if(cache_mutatormsg)
-			strunzone(cache_mutatormsg);
-		cache_lastmutatormsg = strzone(cvar_string("g_mutatormsg"));
-		cache_mutatormsg = strzone(cache_lastmutatormsg);
-	}
-
-	if (cache_mutatormsg != "") {
-		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
-	}
-
-	motd = cvar_string("sv_motd");
-	if (motd != "") {
-		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
-	}
-	s = strcat(s, "\n");
-
-	centerprint(pl, s);
-}
-
 
 void SetPlayerColors(entity pl, float _color)
 {

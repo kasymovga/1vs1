@@ -1159,6 +1159,13 @@ void Ent_Init(float ignore)
 		ProjInfo_Read();
 	}
 
+	if (sf & 128) {
+		unzone_ifneeded(map_description);
+		map_description = zone_ifneeded(ReadString());
+		unzone_ifneeded(motd);
+		motd = zone_ifneeded(ReadString());
+	}
+
 	if(!postinit)
 		PostInit();
 }

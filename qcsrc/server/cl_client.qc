@@ -72,7 +72,7 @@ void Spectator_Note_Message() {
 	} else if (other.classname == "observer")
 		s = "^1Observing\n^1Press ^3{+attack}^1 to spectate";
 
-	s = strcat(s, "\n^1Press ^3{+show_info}^1 for gamemode info");
+	s = strcat(s, "\n^1Game type is ^3", MapInfo_HumanString_FromType(game));
 	if (other.team <= 0)
 		s = strcat(s, "\n^1Press ^3{+jump}^1 to join");
 
@@ -956,6 +956,42 @@ float ClientInit_SendEntity(entity to, float sf)
 		ProjInfo_Send();
 	}
 
+	if (sf & 128) {
+		WriteString(MSG_ENTITY, map_description); 
+		string s;
+		string modifications = GameHookChain_WelcomeMessageMod("");
+		if(cvar("sv_gravity") < 800)
+			modifications = strcat(modifications, ", Low gravity");
+		if(g_footsteps)
+			modifications = strcat(modifications, ", Steps");
+		if(g_grappling_hook)
+			modifications = strcat(modifications, ", Hook");
+		if(g_pinata)
+			modifications = strcat(modifications, ", Pinata");
+		if(g_weapon_stay)
+			modifications = strcat(modifications, ", Weapons stay");
+		if(g_jetpack)
+			modifications = strcat(modifications, ", Jet pack");
+		modifications = substring(modifications, 2, strlen(modifications) - 2);
+
+		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
+
+		if(modifications != "")
+			s = strcat(s, "\n^8active modifications: ^3", modifications, "^8");
+
+		if(timeoutStatus != 0)
+			s = strcat(s, "\n", getTimeoutText(1));
+
+		if (g_campaign)
+			s = campaign_message;
+		else {
+			string motd = cvar_string("sv_motd");
+			if (motd != "")
+				s = strcat(s, "\n\n^8MOTD:\n^7", strreplace("\\n", "\n", cvar_string("sv_motd")));
+		}
+		WriteString(MSG_ENTITY, s);
+	}
+
 	return TRUE;
 }
 
@@ -1816,7 +1852,6 @@ void ObserverThink()
 			}
 		}
 	}
-	PrintWelcomeMessage(self);
 }
 
 void SpectatorThink()
@@ -1854,7 +1889,6 @@ void SpectatorThink()
 			}
 		}
 	}
-	PrintWelcomeMessage(self);
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -1880,9 +1914,6 @@ void PlayerPreThink (void)
 //			bprint(self.classname, "\n");
 
 		CheckRules_Player();
-
-		PrintWelcomeMessage(self);
-
 		if (intermission_running)
 		{
 			IntermissionThink ();	// otherwise a button could be missed between
