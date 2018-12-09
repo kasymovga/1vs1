@@ -261,6 +261,10 @@ void survive_init_delayed() {
 	}
 }
 
+float survive_return0() {
+	return 0;
+}
+
 void survive_init() {
 	SetTeamCount(1);
 	survive_gameover_message = "^3No time left, game finished";
@@ -274,6 +278,8 @@ void survive_init() {
 	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
 	GameHook_GameOverMessageMod = survive_GameOverMessageMod;
+	GameHook_FragLimitOverride = survive_return0;
+	GameHook_LeadLimitOverride = survive_return0;
 
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;
