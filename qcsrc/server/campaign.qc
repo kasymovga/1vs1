@@ -8,6 +8,7 @@ float campaign_level;
 float campaign_won;
 string campaign_index_var;
 float checkrules_equality;
+float g_campaign_skill;
 
 float CampaignBailout(string s)
 {
@@ -73,11 +74,11 @@ void CampaignPreInit()
 		CampaignBailout("unknown map");
 		return;
 	}
-
-	baseskill = cvar("g_campaign_skill");
-	baseskill = baseskill + campaign_botskill[0];
-	if(baseskill < 0)
-		baseskill = 0;
+	CACHE_CVAR(g_campaign_skill);
+	baseskill = bound(1, g_campaign_skill + 1, 4);
+	float minskill = baseskill * 5 - 4;
+	float maxskill = baseskill * 10;
+	baseskill = bound(minskill, campaign_botskill[0] * baseskill * 0.5, maxskill);
 
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
@@ -222,6 +223,7 @@ void CampaignPostIntermission()
 		CampaignFile_Unload();
 		return;
 	}
+	cvar_set_builtin("g_campaign_skill", ftos(g_campaign_skill));
 	if (campaign_map_transition)
 		CampaignSetupCvarsOnly(0);
 	else

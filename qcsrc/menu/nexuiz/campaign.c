@@ -235,6 +235,8 @@ void CampaignList_LoadMap(entity btn, entity me)
 {
 	if(me.selectedItem >= me.nItems || me.selectedItem < 0)
 		return;
+
+	cvar_set("g_campaign_skill", cvar_string("menu_campaign_skill"));
 	CampaignSetup(me.selectedItem);
 }
 
