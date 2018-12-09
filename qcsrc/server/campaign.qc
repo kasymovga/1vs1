@@ -50,14 +50,13 @@ void cvar_set_campaignwrapper(string theCvar, string theValue)
 
 float Campaign_Invalid()
 {
-	string thismapname, wantedmapname;
-	thismapname = GetMapname();
-	wantedmapname = campaign_gametype[0];
-	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname))
+	//string thismapname = GetMapname();
+	string s = campaign_gametype[0];
+	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(s))
 		return CampaignBailout("wrong game type!");
-	wantedmapname = campaign_mapname[0];
-	if(wantedmapname != thismapname)
-		return CampaignBailout(strcat("wrong map: ", wantedmapname, " != ", thismapname));
+	//wantedmapname = campaign_mapname[0];
+	//if(wantedmapname != thismapname)
+	//	return CampaignBailout(strcat("wrong map: ", wantedmapname, " != ", thismapname));
 	return 0;
 }
 
@@ -194,7 +193,7 @@ void CampaignPreIntermission()
 		// sound!
 	}
 
-	if(campaign_won)
+	if(campaign_won && !campaign_map_transition)
 	{
 		if(campaign_entries < 2)
 		{
@@ -216,15 +215,18 @@ void CampaignPostIntermission()
 {
 	// NOTE: campaign_won is 0 or 1, that is, points to the next level
 
-	if(campaign_won && campaign_entries < 2)
+	if(!campaign_map_transition && campaign_won && campaign_entries < 2)
 	{
 		// last map won!
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;
 	}
+	if (campaign_map_transition)
+		CampaignSetupCvarsOnly(0);
+	else
+		CampaignSetup(campaign_won);
 
-	CampaignSetup(campaign_won);
 	CampaignFile_Unload();
 	strunzone(campaign_message);
 	strunzone(campaign_index_var);

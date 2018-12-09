@@ -8,8 +8,10 @@ void Single_EndLevel() {
 
 	campaign_won = TRUE;
 
-	if (self.netname != "")
+	if (self.netname != "") {
 		cvar_set("nextmap", self.netname);
+		campaign_map_transition = TRUE;
+	}
 }
 
 float Single_WinningCondition() {
@@ -31,6 +33,7 @@ float Single_Return0() {
 float Single_DeathHandle() {
 	single_level_finished = TRUE;
 	campaign_won = FALSE;
+	campaign_map_transition = TRUE;
 	return FALSE;
 }
 
@@ -73,14 +76,14 @@ void single_init_delayed(void) {
 		IceHook_Unfroze = Single_IceUnfroze;
 		Ice_Init();
 	}
-	float weps = cvar("_single_transit_weapons");
+	float weps = cvar_builtin("_single_transit_weapons");
 	float i, j;
 	for(i = WEP_FIRST, j = 1; i < WEP_LAST; ++i, j *= 2) {
 		if (weps & j)
 			weapon_precache(i);
 	}
 	registercvar("_single_transit_weapons", "0");
-	cvar_set("_single_transit_weapons", ftos(weps | weaponsInMap | start_weapons));
+	cvar_set_builtin("_single_transit_weapons", ftos(weps | weaponsInMap | start_weapons));
 }
 
 void Single_SetNewParms() {

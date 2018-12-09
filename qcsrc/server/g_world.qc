@@ -1117,8 +1117,10 @@ float DoNextMapOverride()
 	if(g_campaign)
 	{
 		CampaignPostIntermission();
-		alreadychangedlevel = TRUE;
-		return TRUE;
+		if (!campaign_map_transition) {
+			alreadychangedlevel = TRUE;
+			return TRUE;
+		}
 	}
 	if(cvar("quit_when_empty"))
 	{
