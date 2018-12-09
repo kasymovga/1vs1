@@ -6,12 +6,12 @@ void boss2_pellet_touch()
 {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
+		Damage_DamageInfo(self.origin, self.dmg_edge, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
 
 	if (other && other.takedamage)
 	{
 		entity o = self.realowner;
-		Damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
+		Damage(other, self, o, self.dmg_edge, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
 		self.cnt = 0;
 	}
 	if not(self.cnt)
@@ -38,8 +38,8 @@ void boss2_pellet(vector start, vector dir)
 	W_SetupProjectileVelocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	setorigin(proj, start);
-	proj.touch = W_Supershotgun_Pellet_Touch;
-	proj.dmg = self.dmg;
+	proj.touch = boss2_pellet_touch;
+	proj.dmg_edge = self.dmg_edge;
 	proj.dmg_force = self.dmg_force;
 	proj.projectiledeathtype = WEP_SUPERSHOTGUN;
 	proj.oldvelocity = proj.velocity;
