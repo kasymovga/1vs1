@@ -23,31 +23,26 @@ void SwitchTo(entity btn, entity me) {
 	me.campaignBox.loadCvars(me.campaignBox);
 }
 
+entity addCampaign(entity me, entity e, string _title, string cfg) {
+	if not(fexists(strcat("maps/campaign", cfg, ".txt")))
+		return e;
+
+	me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton(_title, '0 0 0'));
+	e = e.btnGame;
+	e.cvarName = cfg;
+	e.onClick = SwitchTo;
+	e.onClickEntity = me;
+	return e;
+}
+
 void fillNexuizSingleplayerDialog(entity me)
 {
 	entity e;
-
 	me.TR(me);
-		me.TD(me, 1, 1.1, me.btnGame = makeNexuizButton("Classic Campaign", '0 0 0'));
-		e = me.btnGame;
-		e.cvarName = "rexclassic";
-		e.onClick = SwitchTo;
-		e.onClickEntity = me;
-		me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton("Survival Campaign", '0 0 0'));
-		e = e.btnGame;
-		e.cvarName = "rexsurvival";
-		e.onClick = SwitchTo;
-		e.onClickEntity = me;
-		me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton("Arena Training", '0 0 0'));
-		e = e.btnGame;
-		e.cvarName = "rexuiz";
-		e.onClick = SwitchTo;
-		e.onClickEntity = me;
-		me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton("Single Player (Demo)", '0 0 0'));
-		e = e.btnGame;
-		e.cvarName = "spdemo";
-		e.onClick = SwitchTo;
-		e.onClickEntity = me;
+		e = addCampaign(me, me, "Classic Campaign", "rexclassic");
+		e = addCampaign(me, e, "Survival Campaign", "rexsurvival");
+		e = addCampaign(me, e, "Arena Training", "rexuiz");
+		e = addCampaign(me, e, "Single Player (Demo)", "spdemo");
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, me.rows - 5, me.columns, me.campaignBox = makeNexuizCampaignList());
