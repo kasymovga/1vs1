@@ -162,6 +162,9 @@ void car_enter()
 	if not(vehicle_enter(self.angles, car_physic_hook, 0, CarPhysic_SendEntity))
 		return;
 
+	if (self.noise != "")
+		sound(self, CHAN_VOICE, self.noise, VOL_BASE, ATTN_NORM);
+
 	self.colormap             = self.owner.colormap;
 	vehicle_stdproc_setcolormod();
 }
@@ -172,6 +175,7 @@ void car_exit(float eject)
     self.think = car_think;
     self.nextthink = time;
 	self.colormap            = 1024;
+	stopsound(self, CHAN_VOICE);
 	vehicle_stdproc_setcolormod();
 }
 
