@@ -45,6 +45,7 @@ void fireguy_hunt() {
 		if (trace_fraction == 1)
 			dofire = TRUE;
 	}
+	float stay = self.owner.spawnflags & MONSTER_SPAWN_STAYSTILL;
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
 		v = vectoangles(self.enemy.origin - self.origin);
@@ -77,14 +78,21 @@ void fireguy_hunt() {
 
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
+	} else if (stay) {
+		movelib_beak_simple(1000 * frametime);
+		v = vectoangles(normalize(self.enemy.origin - self.origin));
+		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	} else {
 		v = monster_move_walk(250, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
-	if (time > self.bulletcounter)
-		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
-	else
+	if (time > self.bulletcounter) {
+		if (stay)
+			setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		else
+			setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+	} else
 		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
