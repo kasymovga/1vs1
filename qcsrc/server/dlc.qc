@@ -356,7 +356,7 @@ float dlc_sound_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-void dlc_sound(entity e, float chan, string s, float vol, float attn) {
+entity dlc_sound(entity e, float chan, string s, float vol, float attn) {
 	entity snd = spawn();
 	snd.cnt = chan;
 	snd.message = s;
@@ -367,11 +367,11 @@ void dlc_sound(entity e, float chan, string s, float vol, float attn) {
 	snd.origin = e.origin;
 	snd.owner = e;
 	Net_LinkEntity(snd, FALSE, 0, dlc_sound_SendEntity);
+	return snd;
 }
 
 void dlc_sound_follow(entity e, float chan, string s, float vol, float attn) {
-	dlc_sound(e, chan, s, vol, attn);
-	entity snd;
+	entity snd = dlc_sound(e, chan, s, vol, attn);
 	snd.think = dlc_sound_think;
 	snd.nextthink = time;
 	snd.pushltime = time + 2;
