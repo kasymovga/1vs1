@@ -139,6 +139,9 @@ void GUI_Show(float window) {
 	case GUI_RADIO:
 		e = GUI_radioDialog;
 		break;
+	case GUI_SAVELOAD:
+		e = GUI_saveLoad;
+		break;
 	}
 	if not(e) {
 		GUI_Hide();
@@ -151,7 +154,7 @@ void GUI_Show(float window) {
 }
 
 void GUI_Hide() {
-	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT) {
+	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT || GUI_currentWindow == GUI_SAVELOAD) {
 		mainWindow.draw2d = GUI_Draw_Remove;
 		mainWindow.draw2dflag = 1;
 	} else

@@ -1131,6 +1131,13 @@ void Ent_Init(float ignore)
 			weaponimpulse[i] = ReadByte() - 1;
 	}
 
+	if (sf & 2) {
+		i = ReadByte();
+		g_campaign = i & 1;
+		sv_spectate = i & 2;
+		localgame = i & 4;
+	}
+
 	if (sf & 4) {
 		unzone_ifneeded(forcefog);
 		forcefog = zone_ifneeded(ReadString());

@@ -921,6 +921,19 @@ float ClientInit_SendEntity(entity to, float sf)
 		for(i = 1; i <= 24; ++i)
 			WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
 	}
+	if (sf & 2) {
+		t = 0;
+		if (g_campaign)
+			t |= 1;
+
+		if (sv_spectate)
+			t |= 2;
+
+		if (to.netaddress == "local")
+			t |= 4;
+
+		WriteByte(MSG_ENTITY, t);
+	}
 	if (sf & 4) {
 		if(sv_foginterval && world.fog != "")
 			WriteString(MSG_ENTITY, world.fog);
