@@ -349,13 +349,6 @@ Client_customizeentityforclient
 LOD reduction
 =============
 */
-void Client_uncustomizeentityforclient()
-{
-	if(self.modelindex == 0) // no need to uncustomize then
-		return;
-	self.modelindex = self.modelindex_lod0;
-	self.skin = self.skinindex;
-}
 
 float Client_customizeentityforclient()
 {
@@ -576,9 +569,7 @@ void PutObserverInServer(float frags_team_reset)
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	spectator_note.SendFlags = 1;
-
-	if(sv_loddistance1)
-		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
+	self.customizeentityforclient = world.customizeentityforclient;
 
 	if not(frags_team_reset)
 		return;
@@ -823,7 +814,7 @@ void PutClientInServer()
 		});
 
 		if(sv_loddistance1)
-			SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
+			self.customizeentityforclient = Client_customizeentityforclient;
 
 		self.model = "";
 		FixPlayermodel();

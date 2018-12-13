@@ -722,24 +722,6 @@ void InitializeEntitiesRun()
     }
 }
 
-.float uncustomizeentityforclient_set;
-.void(void) uncustomizeentityforclient;
-void(void) SUB_Nullpointer = #0;
-void UncustomizeEntitiesRun()
-{
-    entity oldself;
-    oldself = self;
-    for (self = world; (self = findfloat(self, uncustomizeentityforclient_set, 1)); )
-        self.uncustomizeentityforclient();
-    self = oldself;
-}
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
-{
-    e.customizeentityforclient = customizer;
-    e.uncustomizeentityforclient = uncustomizer;
-    e.uncustomizeentityforclient_set = (uncustomizer != SUB_Nullpointer);
-}
-
 .float nottargeted;
 #define IFTARGETED if(!self.nottargeted && self.targetname != "")
 

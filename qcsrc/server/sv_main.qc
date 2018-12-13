@@ -166,7 +166,6 @@ void StartFrame (void)
 	if(RedirectionThink())
 		return;
 
-	UncustomizeEntitiesRun();
 	InitializeEntitiesRun();
 
 	sys_ticrate = cvar("sys_ticrate");
