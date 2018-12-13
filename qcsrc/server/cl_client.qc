@@ -1358,8 +1358,6 @@ void ClientConnect (void)
 	if(!sv_foginterval && world.fog != "")
 		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	SoundEntity_Attach(self);
-
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		GameHookChain_RealClientConnect();
@@ -1391,8 +1389,6 @@ void ClientDisconnect (void)
 
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
-
-	SoundEntity_Detach(self);
 
 	self.classname = "disconnecting";
 

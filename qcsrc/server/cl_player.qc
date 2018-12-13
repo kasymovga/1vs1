@@ -188,13 +188,17 @@ void player_effects()
 {
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
-		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
-		self.modelflags |= MF_ROCKET;
+		if not(self.modelflags & MF_ROCKET) {
+			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
+			self.modelflags |= MF_ROCKET;
+		}
 	}
 	else
 	{
-		SoundEntity_StopSound(self, CHAN_PLAYER);
-		self.modelflags &~= MF_ROCKET;
+		if (self.modelflags & MF_ROCKET) {
+			stopsound(self, CHAN_TRIGGER);
+			self.modelflags &~= MF_ROCKET;
+		}
 	}
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME);

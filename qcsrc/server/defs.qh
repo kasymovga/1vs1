@@ -444,8 +444,6 @@ void SUB_UseTargets();
 
 float servertime, serverprevtime, serverframetime;
 
-.entity soundentity;
-
 .float ammo_fuel;
 
 .vector prevorigin;
