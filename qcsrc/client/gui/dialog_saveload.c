@@ -52,10 +52,8 @@ void LoadGame(entity btn, entity me) {
 
 void SaveGame(entity btn, entity me) {
 	float slot = GetSlotNumber(me);
-	localcmd("\nseta _slot_description");
-	localcmd(ftos(slot));
-	localcmd(" \"");
-	localcmd(strftime(TRUE, "%Y %b %e %H:%M:%S"));
+	localcmd(strcat("\nseta _slot_description", ftos(slot), " \""));
+	localcmd(strcat(shortmapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
 	localcmd(strcat("\nsave slot", ftos(slot), "\n"));
 	GUI_Hide();
