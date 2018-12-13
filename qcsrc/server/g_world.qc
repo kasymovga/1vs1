@@ -1922,7 +1922,7 @@ float MapVote_SendEntity(entity to, float sf)
 						pakfile = whichpack(strcat(mapfile, ".jpg"));
 					if(pakfile == "")
 						pakfile = whichpack(strcat(mapfile, ".png"));
-					for(o = strstr(pakfile, "/", 0)+1; o > 0; o = strstr(pakfile, "/", 0)+1)
+					for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 						pakfile = substring(pakfile, o, 999);
 					WriteString(MSG_ENTITY, pakfile);
 				}

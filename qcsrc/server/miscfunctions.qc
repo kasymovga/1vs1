@@ -193,29 +193,6 @@ void relocate_spawnpoint()
     }
 }
 
-#define strstr strstrofs
-/*
-// NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
-// IT WILL MOST PROBABLY DESTROY _ALL_ OTHER TEMP
-// STRINGS AND TAKE QUITE LONG. haystack and needle MUST
-// BE CONSTANT OR strzoneD!
-float strstr(string haystack, string needle, float offset)
-{
-	float len, endpos;
-	string found;
-	len = strlen(needle);
-	endpos = strlen(haystack) - len;
-	while(offset <= endpos)
-	{
-		found = substring(haystack, offset, len);
-		if(found == needle)
-			return offset;
-		offset = offset + 1;
-	}
-	return -1;
-}
-*/
-
 float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
 float nearest_length[NUM_NEAREST_ENTITIES];
@@ -344,8 +321,8 @@ string formatmessage(entity pl, string msg)
         if (n < 1)
             break; // too many replacements
         n = n - 1;
-        p1 = strstr(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-        p2 = strstr(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+        p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+        p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
         if (p1 < 0)
             p1 = p2;
