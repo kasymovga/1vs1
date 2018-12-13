@@ -291,8 +291,6 @@ void spawnfunc___init_dedicated_server(void)
 	cvar_set = cvar_set_builtin;
 	dprint_load(); // load dprint status from cvar
 
-	remove = remove_unsafely;
-
 	entity e;
 	e = spawn();
 	e.think = GotoFirstMap;
@@ -584,8 +582,6 @@ void spawnfunc_worldspawn (void)
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = TRUE;
-
-	remove = remove_safely; // during spawning, watch what you remove!
 
 	if(cvar_string("cvar_check_default") != "bypass")
 	{

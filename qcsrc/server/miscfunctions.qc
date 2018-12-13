@@ -575,128 +575,46 @@ float ExactTriggerHit()
 #define EXACTTRIGGER_TOUCH if not(ExactTriggerHit()) return
 #define EXACTTRIGGER_INIT  InitSolidBSPTrigger(); self.solid = SOLID_TRIGGER
 
-#define INITPRIO_FIRST              0
-#define INITPRIO_GAMETYPE           0
-#define INITPRIO_GAMETYPE_FALLBACK  1
-#define INITPRIO_CVARS              5
-#define INITPRIO_FINDTARGET        10
-#define INITPRIO_DROPTOFLOOR       20
-#define INITPRIO_SETLOCATION       90
-#define INITPRIO_LINKDOORS         91
-#define INITPRIO_LAST              99
-
-.void(void) initialize_entity;
-.float initialize_entity_order;
-.entity initialize_entity_next;
-entity initialize_entity_first;
-
-void make_safe_for_remove(entity e)
-{
-    if (e.initialize_entity)
-    {
-        entity ent, prev;
-        for (ent = initialize_entity_first; ent; )
-        {
-            if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
-            {
-                //print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
-                // skip it in linked list
-                if (prev)
-                {
-                    prev.initialize_entity_next = ent.initialize_entity_next;
-                    ent = prev.initialize_entity_next;
-                }
-                else
-                {
-                    initialize_entity_first = ent.initialize_entity_next;
-                    ent = initialize_entity_first;
-                }
-            }
-            else
-            {
-                prev = ent;
-                ent = ent.initialize_entity_next;
-            }
-        }
-    }
-}
+enum {
+	INITPRIO_FIRST,
+	INITPRIO_GAMETYPE,
+	INITPRIO_GAMETYPE_FALLBACK,
+	INITPRIO_CVARS,
+	INITPRIO_FINDTARGET,
+	INITPRIO_DROPTOFLOOR,
+	INITPRIO_SETLOCATION,
+	INITPRIO_LINKDOORS,
+	INITPRIO_LAST,
+};
 
 void objerror(string s)
 {
-    make_safe_for_remove(self);
     objerror_builtin(s);
 }
 
-void remove_unsafely(entity e)
+void InitializeEntity(entity for_e, void(void) func, float order)
 {
-    remove_builtin(e);
-}
-
-void remove_safely(entity e)
-{
-    make_safe_for_remove(e);
-    remove_builtin(e);
-}
-
-void InitializeEntity(entity e, void(void) func, float order)
-{
-    entity prev, cur;
-
-    if (!e || e.initialize_entity)
-    {
-        // make a proxy initializer entity
-        entity e_old;
-        e_old = e;
-        e = spawn();
-        e.classname = "initialize_entity";
-        e.enemy = e_old;
-    }
-
-    e.initialize_entity = func;
-    e.initialize_entity_order = order;
-
-    cur = initialize_entity_first;
-    for (;;)
-    {
-        if (!cur || cur.initialize_entity_order > order)
-        {
-            // insert between prev and cur
-            if (prev)
-                prev.initialize_entity_next = e;
-            else
-                initialize_entity_first = e;
-            e.initialize_entity_next = cur;
-            return;
-        }
-        prev = cur;
-        cur = cur.initialize_entity_next;
-    }
+	entity e = spawn();
+	e.classname = "initialize_entity";
+	e.enemy = for_e;
+    e.think = func;
+    e.cnt = order;
 }
 void InitializeEntitiesRun()
 {
-    entity startoflist;
-    startoflist = initialize_entity_first;
-    initialize_entity_first = world;
-    for (self = startoflist; self; )
-    {
-        entity e;
-        var void(void) func;
-        e = self.initialize_entity_next;
-        func = self.initialize_entity;
-        self.initialize_entity_order = 0;
-        self.initialize_entity = func_null;
-        self.initialize_entity_next = world;
-        if (self.classname == "initialize_entity")
-        {
-            entity e_old;
-            e_old = self.enemy;
-            remove_builtin(self);
-            self = e_old;
-        }
-        //dprint("Delayed initialization: ", self.classname, "\n");
-        func();
-        self = e;
-    }
+	entity oldself = self;
+	entity e;
+	float i;
+	for (i = INITPRIO_FIRST; i <= INITPRIO_LAST; i++)
+		for (e = find(world, classname, "initialize_entity"); e; e = find(e, classname, "initialize_entity")) {
+			if (e.cnt != i)
+				continue;
+
+			self = e.enemy;
+			e.think();
+			remove(e);
+		}
+	self = oldself;
 }
 
 .float nottargeted;

@@ -126,7 +126,6 @@ entity SelectSpawnPoint (float anypoint);
 void ReadyRestart();
 void StartFrame (void)
 {
-	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
 	serverframetime = frametime;

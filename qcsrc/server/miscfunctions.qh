@@ -1,6 +1,4 @@
-var void remove(entity e);
 void objerror(string s);
-void play2all(string samp);
 void backtrace(string msg);
 float RandomSelection_totalweight;
 float RandomSelection_best_priority;
