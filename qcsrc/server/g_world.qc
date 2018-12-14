@@ -564,7 +564,6 @@ float world_already_spawned;
 void spawnfunc_worldspawn (void)
 {
 	gettaginfo_parent = 0;
-	gettaginfo_name = "";
 	gettaginfo_offset = '0 0 0';
 	gettaginfo_forward = '0 0 0';
 	gettaginfo_right = '0 0 0';
