@@ -568,7 +568,7 @@ void spawnfunc_worldspawn (void)
 	gettaginfo_forward = '0 0 0';
 	gettaginfo_right = '0 0 0';
 	gettaginfo_up = '0 0 0';
-	trace_dphittexturename = "";
+	//trace_dphittexturename = "";
 
 	float fd, l, i, j, n;
 	string s, col;

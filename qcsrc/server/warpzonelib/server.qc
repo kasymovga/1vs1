@@ -14,7 +14,7 @@ entity              trace_ent_saved;
 float               trace_dpstartcontents_saved;
 float               trace_dphitcontents_saved;
 float               trace_dphitq3surfaceflags_saved;
-string              trace_dphittexturename_saved;
+//string              trace_dphittexturename_saved;
 vector              v_forward_saved;
 vector              v_up_saved;
 vector              v_right_saved;
@@ -30,7 +30,7 @@ void save_trace_globals(void) {
     trace_dpstartcontents_saved = trace_dpstartcontents;
     trace_dphitcontents_saved = trace_dphitcontents;
     trace_dphitq3surfaceflags_saved = trace_dphitq3surfaceflags;
-    trace_dphittexturename_saved = trace_dphittexturename;
+    //trace_dphittexturename_saved = trace_dphittexturename;
     v_forward_saved = v_forward;
     v_up_saved = v_up;
     v_right_saved = v_right;
@@ -47,7 +47,7 @@ void restore_trace_globals(void) {
     trace_dpstartcontents = trace_dpstartcontents_saved;
     trace_dphitcontents = trace_dphitcontents_saved;
     trace_dphitq3surfaceflags = trace_dphitq3surfaceflags_saved;
-    trace_dphittexturename = trace_dphittexturename_saved;
+    //trace_dphittexturename = trace_dphittexturename_saved;
     v_forward = v_forward_saved;
     v_up = v_up_saved;
     v_right = v_right_saved;
