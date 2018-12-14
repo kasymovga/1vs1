@@ -1087,12 +1087,6 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_
 	return vecs;
 }
 
-vector(entity ent, float tagindex) gettaginfo = {
-	vector v = gettaginfo_builtin(ent, tagindex);
-	gettaginfo_name = "";
-	return v;
-}
-
 void attach_sameorigin(entity e, entity to, string tag)
 {
     vector org, t_forward, t_left, t_up, e_forward, e_up;
