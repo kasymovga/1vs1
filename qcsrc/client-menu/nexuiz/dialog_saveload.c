@@ -70,7 +70,7 @@ void SaveGame(entity btn, entity me) {
 void SlotSelect(entity btn, entity me) {
 	entity e;
 #ifdef MENUQC
-	if (e.forcePressed) //double-click
+	if (btn.forcePressed) //double-click
 		LoadGame(e, me);
 #endif
 	for (e = me.saveSlot; e; e = e.saveSlot) {
