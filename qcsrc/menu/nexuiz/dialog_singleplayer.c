@@ -47,11 +47,14 @@ void fillNexuizSingleplayerDialog(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 5, me.columns, me.campaignBox = makeNexuizCampaignList());
 	me.gotoRC(me, me.rows - 3, 0);
-		me.TD(me, 1, 1, makeNexuizTextLabel(0, "Difficulty:"));
-		me.TD(me, 1, 1, makeNexuizRadioButton(1, "menu_campaign_skill", "0", "Easy"));
-		me.TD(me, 1, 1, makeNexuizRadioButton(1, "menu_campaign_skill", "1", "Medium"));
-		me.TD(me, 1, 1, makeNexuizRadioButton(1, "menu_campaign_skill", "2", "Hard"));
-		me.TD(me, 1, 1, makeNexuizRadioButton(1, "menu_campaign_skill", "3", "Insane"));
+		me.TD(me, 1, 0.5, makeNexuizTextLabel(0, "Difficulty:"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "0", "Easy"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "1", "Medium"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "2", "Hard"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "3", "Insane"));
+		me.TD(me, 1, 2.5, e = makeNexuizButton("Load Game...", '0 0 0'));
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.saveLoadDialog;
 
 	SwitchTo(me.btnGame, me);
 	me.gotoRC(me, me.rows - 1, 0);

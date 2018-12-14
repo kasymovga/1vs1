@@ -1,14 +1,20 @@
 #ifdef INTERFACE
+#ifdef CSQC
+#define SAVELOADTITLE "Save/Load Game"
+#else
+#define SAVELOADTITLE "Load Game"
+#endif
 CLASS(NexuizSaveLoadDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizSaveLoadDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	METHOD(NexuizSaveLoadDialog, configureDialog, void(entity))
-	ATTRIB(NexuizSaveLoadDialog, title, string, "Save/Load")
+	ATTRIB(NexuizSaveLoadDialog, title, string, SAVELOADTITLE)
 	ATTRIB(NexuizSaveLoadDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizSaveLoadDialog, intendedWidth, float, 0.5)
 	ATTRIB(NexuizSaveLoadDialog, rows, float, 7)
 	ATTRIB(NexuizSaveLoadDialog, columns, float, 6)
-	ATTRIB(NexuizSaveLoadDialog, name, string, "Save/Load")
+	ATTRIB(NexuizSaveLoadDialog, name, string, SAVELOADTITLE)
 ENDCLASS(NexuizSaveLoadDialog)
+#undef SAVELOADTITLE
 #endif
 
 #ifdef IMPLEMENTATION
@@ -46,21 +52,27 @@ void LoadGame(entity btn, entity me) {
 	float slot = GetSlotNumber(me);
 	if (SaveSlotNotEmpty(slot)) {
 		localcmd(strcat("\nload slot", ftos(slot), "\n"));
-		GUI_Hide();
+		me.close(me);
 	}
 }
 
+#ifdef CSQC
 void SaveGame(entity btn, entity me) {
 	float slot = GetSlotNumber(me);
 	localcmd(strcat("\nseta _slot_description", ftos(slot), " \""));
 	localcmd(strcat(shortmapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
 	localcmd(strcat("\nsave slot", ftos(slot), "\n"));
-	GUI_Hide();
+	me.close(me);
 }
+#endif
 
 void SlotSelect(entity btn, entity me) {
 	entity e;
+#ifdef MENUQC
+	if (e.forcePressed) //double-click
+		LoadGame(e, me);
+#endif
 	for (e = me.saveSlot; e; e = e.saveSlot) {
 		e.forcePressed = 0;
 	}
@@ -83,11 +95,18 @@ void fillNexuizSaveLoadDialog(entity me)
 	}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizButton("Load", '0 0 0'));
-		e.onClick = LoadGame;
-		e.onClickEntity = me;
-		me.TD(me, 1, 3, e = makeNexuizButton("Save", '0 0 0'));
+#ifdef CSQC
+		float button_width = 3;
+#else
+		float button_width = 6;
+#endif
+#ifdef CSQC
+		me.TD(me, 1, button_width, e = makeNexuizButton("Save", '0 0 0'));
 		e.onClick = SaveGame;
+		e.onClickEntity = me;
+#endif
+		me.TD(me, 1, button_width, e = makeNexuizButton("Load", '0 0 0'));
+		e.onClick = LoadGame;
 		e.onClickEntity = me;
 }
 #endif

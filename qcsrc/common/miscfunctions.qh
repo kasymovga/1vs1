@@ -3,4 +3,6 @@ void SUB_Remove();
 string car(string s);
 string cdr(string s);
 string cvar_string_zone_ifneeded(string s);
+void unzone_ifneeded(string s);
+string zone_ifneeded(string s);
 float fexists(string path);
