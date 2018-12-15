@@ -51,7 +51,7 @@ float GetSlotNumber(entity e) {
 void LoadGame(entity btn, entity me) {
 	float slot = GetSlotNumber(me);
 	if (SaveSlotNotEmpty(slot)) {
-		localcmd(strcat("\nload slot", ftos(slot), "\n"));
+		localcmd(strcat("\nmaxplayers 1; load slot", ftos(slot), "\n"));
 		me.close(me);
 	}
 }
