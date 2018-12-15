@@ -1050,11 +1050,6 @@ void weapon_thinkf(float fr, float t, void() func)
 	}
 };
 
-void weapon_boblayer1(float spd, vector org)
-{
-	// VorteX: haste can be added here
-};
-
 vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 {
 	vector mdirection;
