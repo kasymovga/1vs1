@@ -1,4 +1,12 @@
 float single_level_finished;
+float _single_transit_weapons;
+
+var void() Single_Shutdown_NextLink;
+void Single_Shutdown() {
+	registercvar("_single_transit_weapons", "0");
+	cvar_set_builtin("_single_transit_weapons", ftos(_single_transit_weapons | weaponsInMap | start_weapons)); //builting function for avoid campaign wrapper
+	Single_Shutdown_NextLink();
+}
 
 void Single_EndLevel() {
 	single_level_finished = TRUE;
@@ -76,14 +84,12 @@ void single_init_delayed(void) {
 		IceHook_Unfroze = Single_IceUnfroze;
 		Ice_Init();
 	}
-	float weps = cvar_builtin("_single_transit_weapons");
+	_single_transit_weapons = cvar_builtin("_single_transit_weapons"); //builtin to avoid campaign intercepting
 	float i, j;
 	for(i = WEP_FIRST, j = 1; i < WEP_LAST; ++i, j *= 2) {
-		if (weps & j)
+		if (_single_transit_weapons & j)
 			weapon_precache(i);
 	}
-	registercvar("_single_transit_weapons", "0");
-	cvar_set_builtin("_single_transit_weapons", ftos(weps | weaponsInMap | start_weapons));
 }
 
 void Single_SetNewParms() {
@@ -201,6 +207,8 @@ void Single_Init() {
 	GameHookChain_PlayerPreThink = Single_PlayerPreThink;
 	Single_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Single_Spawn;
+	Single_Shutdown_NextLink = GameHookChain_Shutdown;
+	GameHookChain_Shutdown = Single_Shutdown;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;

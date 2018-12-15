@@ -2266,7 +2266,7 @@ void SV_Shutdown()
 
 		MapInfo_Shutdown();
 		InfoMessages_Shutdown();
-        IP2C_ShutdownSV();
+		GameHookChain_Shutdown();
 	}
 	else if(world_initialized == 0)
 	{
