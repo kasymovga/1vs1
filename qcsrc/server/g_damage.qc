@@ -18,6 +18,7 @@ float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
 string sv_announcer_extra_meleefrag;
+string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;
@@ -270,17 +271,26 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					bprint ("^1",s, "^1 was slimed by ", a, "\n");
 				else if (deathtype == DEATH_LAVA)
 					bprint ("^1",s, "^1 was cooked by ", a, "\n");
-				else if (deathtype == DEATH_FALL)
+				else if (deathtype == DEATH_FALL) {
 					bprint ("^1",s, "^1 was grounded by ", a, "\n");
-				else if (deathtype == DEATH_SWAMP)
+					if (sv_announcer_extra_pushfrag != "") {
+						announce(targ, sv_announcer_extra_pushfrag);
+						announce(attacker, sv_announcer_extra_pushfrag);
+					}
+				} else if (deathtype == DEATH_SWAMP)
 					bprint ("^1",s, "^1 was conserved by ", a, "\n");
-				else if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-				{
-					p = strstrofs(inflictor.message2, "#", 0);
-					if(p < 0)
-						bprint("^1", s, "^1 ", inflictor.message2, " ", a, "\n");
-					else
-						bprint("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
+				else if (deathtype == DEATH_HURTTRIGGER) {
+					if (sv_announcer_extra_pushfrag != "") {
+						announce(targ, sv_announcer_extra_pushfrag);
+						announce(attacker, sv_announcer_extra_pushfrag);
+					}
+					if (inflictor.message2 != "") {
+						p = strstrofs(inflictor.message2, "#", 0);
+						if(p < 0)
+							bprint("^1", s, "^1 ", inflictor.message2, " ", a, "\n");
+						else
+							bprint("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
+					}
 				}
 				else if(deathtype == DEATH_TURRET)
 					bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
@@ -990,6 +1000,7 @@ void Damage_ReadCvars()
 	CACHE_CVAR(g_balance_selfdamagepercent);
 	//Extra sounds
 	EXTRA_ANNOUNCER(meleefrag);
+	EXTRA_ANNOUNCER(pushfrag);
 	CACHE_CVAR(sv_announcer_extra_doublekill_interval);
 	if (sv_announcer_extra_doublekill_interval) {
 		EXTRA_ANNOUNCER(doublekill);
