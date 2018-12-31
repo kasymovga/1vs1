@@ -14,6 +14,8 @@ float g_chat_flood_damage_flooder;
 float g_chat_flood_spl;
 float g_chat_flood_spl_team;
 float g_chat_flood_spl_tell;
+string g_chat_forbidden_words;
+float g_chat_forbidden_words_set_retard;
 float g_chat_nospectators;
 float g_chat_teamcolors;
 float g_respawn_delay;
@@ -742,6 +744,21 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
 	entity head;
+	if (g_chat_forbidden_words != "") {
+		string s1, s2 = g_chat_forbidden_words;
+		for (; s2 != ""; s2 = cdr(s2)) {
+			s1 = car(s2);
+			if (s1 == "") continue;
+			if (strstrofs(strtolower(strdecolorize(msgin)), s1, 0) >= 0) {
+				if (g_chat_forbidden_words_set_retard)
+					source.retard = 1;
+				else
+					source.muted = 1;
+
+				break;
+			}
+		}
+	}
 
 	if(source.retard > 0) {
 		if (source.retard_last_say)
@@ -1227,4 +1244,6 @@ void Player_Init() {
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_fullbrightplayers);
+	g_chat_forbidden_words = zone_ifneeded(strtolower(cvar_string("g_chat_forbidden_words")));
+	CACHE_CVAR(g_chat_forbidden_words_set_retard);
 }
