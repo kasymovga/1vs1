@@ -72,7 +72,7 @@ void Spectator_Note_Message() {
 	} else if (other.classname == "observer")
 		s = "^1Observing\n^1Press ^3{+attack}^1 to spectate";
 
-	s = strcat(s, "\n^1Press ^3{+show_info}^1 for gamemode info");
+	s = strcat(s, "\n^1Game type is ^3", MapInfo_HumanString_FromType(game));
 	if (other.team <= 0)
 		s = strcat(s, "\n^1Press ^3{+jump}^1 to join");
 
@@ -349,13 +349,6 @@ Client_customizeentityforclient
 LOD reduction
 =============
 */
-void Client_uncustomizeentityforclient()
-{
-	if(self.modelindex == 0) // no need to uncustomize then
-		return;
-	self.modelindex = self.modelindex_lod0;
-	self.skin = self.skinindex;
-}
 
 float Client_customizeentityforclient()
 {
@@ -576,9 +569,7 @@ void PutObserverInServer(float frags_team_reset)
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	spectator_note.SendFlags = 1;
-
-	if(sv_loddistance1)
-		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
+	self.customizeentityforclient = world.customizeentityforclient;
 
 	if not(frags_team_reset)
 		return;
@@ -823,7 +814,7 @@ void PutClientInServer()
 		});
 
 		if(sv_loddistance1)
-			SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
+			self.customizeentityforclient = Client_customizeentityforclient;
 
 		self.model = "";
 		FixPlayermodel();
@@ -930,6 +921,19 @@ float ClientInit_SendEntity(entity to, float sf)
 		for(i = 1; i <= 24; ++i)
 			WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
 	}
+	if (sf & 2) {
+		t = 0;
+		if (g_campaign)
+			t |= 1;
+
+		if (sv_spectate)
+			t |= 2;
+
+		if (to.netaddress == "local")
+			t |= 4;
+
+		WriteByte(MSG_ENTITY, t);
+	}
 	if (sf & 4) {
 		if(sv_foginterval && world.fog != "")
 			WriteString(MSG_ENTITY, world.fog);
@@ -954,6 +958,42 @@ float ClientInit_SendEntity(entity to, float sf)
 
 	if(sf & 64) {
 		ProjInfo_Send();
+	}
+
+	if (sf & 128) {
+		WriteString(MSG_ENTITY, map_description); 
+		string s;
+		string modifications = GameHookChain_WelcomeMessageMod("");
+		if(cvar("sv_gravity") < 800)
+			modifications = strcat(modifications, ", Low gravity");
+		if(g_footsteps)
+			modifications = strcat(modifications, ", Steps");
+		if(g_grappling_hook)
+			modifications = strcat(modifications, ", Hook");
+		if(g_pinata)
+			modifications = strcat(modifications, ", Pinata");
+		if(g_weapon_stay)
+			modifications = strcat(modifications, ", Weapons stay");
+		if(g_jetpack)
+			modifications = strcat(modifications, ", Jet pack");
+		modifications = substring(modifications, 2, strlen(modifications) - 2);
+
+		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
+
+		if(modifications != "")
+			s = strcat(s, "\n^8active modifications: ^3", modifications, "^8");
+
+		if(timeoutStatus != 0)
+			s = strcat(s, "\n", getTimeoutText(1));
+
+		if (g_campaign)
+			s = campaign_message;
+		else {
+			string motd = cvar_string("sv_motd");
+			if (motd != "")
+				s = strcat(s, "\n\n^8MOTD:\n^7", strreplace("\\n", "\n", cvar_string("sv_motd")));
+		}
+		WriteString(MSG_ENTITY, s);
 	}
 
 	return TRUE;
@@ -1331,8 +1371,6 @@ void ClientConnect (void)
 	if(!sv_foginterval && world.fog != "")
 		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	SoundEntity_Attach(self);
-
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
 		GameHookChain_RealClientConnect();
@@ -1364,8 +1402,6 @@ void ClientDisconnect (void)
 
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
-
-	SoundEntity_Detach(self);
 
 	self.classname = "disconnecting";
 
@@ -1816,7 +1852,6 @@ void ObserverThink()
 			}
 		}
 	}
-	PrintWelcomeMessage(self);
 }
 
 void SpectatorThink()
@@ -1854,7 +1889,6 @@ void SpectatorThink()
 			}
 		}
 	}
-	PrintWelcomeMessage(self);
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -1880,9 +1914,6 @@ void PlayerPreThink (void)
 //			bprint(self.classname, "\n");
 
 		CheckRules_Player();
-
-		PrintWelcomeMessage(self);
-
 		if (intermission_running)
 		{
 			IntermissionThink ();	// otherwise a button could be missed between
@@ -2001,7 +2032,18 @@ void PlayerPreThink (void)
 		oldself = self; self = self.teamkill_soundsource;
 		oldpusher = self.pusher; self.pusher = oldself;
 
-		PlayerSound(playersound_teamshoot, CHAN_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		if(self.pusher)
+		if(self.pusher.team == self.team)
+		{
+			msg_entity = self.pusher;
+			if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+			{
+				if(msg_entity.cvar_cl_voice_directional == 1)
+					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
+				else
+					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_NONE);
+			}
+		}
 
 		self.pusher = oldpusher;
 		self = oldself;
@@ -2011,7 +2053,18 @@ void PlayerPreThink (void)
 	if(time > self.taunt_soundtime)
 	{
 		self.taunt_soundtime = 0;
-		PlayerSound(playersound_taunt, CHAN_VOICE, VOICETYPE_AUTOTAUNT);
+		if (sv_taunt)
+		if (sv_autotaunt) {
+			float tauntrand = random();
+			FOR_EACH_REALCLIENT(msg_entity)
+				if (tauntrand < msg_entity.cvar_cl_autotaunt)
+				{
+					if (msg_entity.cvar_cl_voice_directional >= 1)
+						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					else
+						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, ATTN_NONE);
+				}
+		}
 	}
 
 	target_voicescript_next(self);

@@ -507,7 +507,7 @@ void LODmodel_attach()
 	}
 
 	if(self.lodmodelindex1)
-		SetCustomizer(self, LOD_customize, LOD_uncustomize);
+		self.customizeentityforclient = LOD_customize;
 }
 
 void SetBrushEntityModel()

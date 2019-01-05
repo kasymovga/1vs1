@@ -16,6 +16,7 @@ var .float BUTTON_USE = buttonuse;
 // Globals
 
 float g_campaign;
+float campaign_map_transition;
 float g_footsteps, g_grappling_hook, g_pinata, g_norecoil;
 float g_pinata_drop_all;
 float g_warmup_limit;
@@ -40,6 +41,8 @@ float spawn_debug;
 float spawn_debugview;
 
 float g_telefrags;
+
+string map_description;
 
 entity	activator;
 string	string_null;
@@ -323,11 +326,6 @@ string gamemode_name;
 
 float startitem_failed;
 
-void DropFlag(entity flag, entity penalty_receiver, entity attacker);
-void DropBall(entity ball, vector org, vector vel);
-void DropAllRunes(entity pl);
-
-
 typedef .float floatfield;
 floatfield Item_CounterField(float it);
 
@@ -391,76 +389,6 @@ float next_pingtime;
 .float SendFlags;
 .float(entity to, float sendflags) SendEntity;
 
-// player sounds, voice messages
-// TODO implemented fall and falling
-#define ALLPLAYERSOUNDS \
-		_VOICEMSG(death) \
-		_VOICEMSG(drown) \
-		_VOICEMSG(gasp) \
-		_VOICEMSG(jump) \
-		_VOICEMSG(pain25) \
-		_VOICEMSG(pain50) \
-		_VOICEMSG(pain75) \
-		_VOICEMSG(pain100)
-#define ALLVOICEMSGS \
-		_VOICEMSG(attack) \
-		_VOICEMSG(attackinfive) \
-		_VOICEMSG(meet) \
-		_VOICEMSG(seenflag) \
-		_VOICEMSG(taunt) \
-		_VOICEMSG(teamshoot)
-
-#define _VOICEMSG(m) .string playersound_##m;
-ALLPLAYERSOUNDS
-ALLVOICEMSGS
-#undef _VOICEMSG
-
-// reserved sound names for the future (models lack sounds for them):
-//		_VOICEMSG(affirmative) \
-//		_VOICEMSG(attacking) \
-//		_VOICEMSG(defending) \
-//		_VOICEMSG(roaming) \
-//		_VOICEMSG(onmyway) \
-//		_VOICEMSG(droppedflag) \
-//		_VOICEMSG(flagcarriertakingdamage) \
-//		_VOICEMSG(negative) \
-//		_VOICEMSG(seenenemy) \
-//		_VOICEMSG(fall) \
-//		_VOICEMSG(getflag) \
-//		_VOICEMSG(incoming) \
-//		_VOICEMSG(coverme) \
-//		_VOICEMSG(needhelp) \
-//		_VOICEMSG(defend) \
-//		_VOICEMSG(freelance) \
-//		_VOICEMSG(falling) \
-
-string globalsound_fall;
-string globalsound_metalfall;
-string globalsound_waterfall;
-string globalsound_step;
-string globalsound_metalstep;
-string globalsound_waterstep;
-
-#define VOICETYPE_PLAYERSOUND 10
-#define VOICETYPE_TEAMRADIO 11
-#define VOICETYPE_LASTATTACKER 12
-#define VOICETYPE_LASTATTACKER_ONLY 13
-#define VOICETYPE_AUTOTAUNT 14
-#define VOICETYPE_TAUNT 15
-
-void PrecachePlayerSounds(string f);
-void PrecacheGlobalSound(string samplestring);
-void UpdatePlayerSounds();
-void ClearPlayerSounds();
-void PlayerSound(.string samplefield, float channel, float voicetype);
-void GlobalSound(string samplestring, float channel, float voicetype);
-void VoiceMessage(string type, string message);
-
-// autotaunt system
-.float cvar_cl_autotaunt;
-.float cvar_cl_voice_directional;
-.float cvar_cl_voice_directional_taunt_attenuation;
-
 .float version_mismatch;
 
 float independent_players;
@@ -515,8 +443,6 @@ void SUB_UseTargets();
 .float wasplayer;
 
 float servertime, serverprevtime, serverframetime;
-
-.entity soundentity;
 
 .float ammo_fuel;
 

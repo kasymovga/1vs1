@@ -319,7 +319,7 @@ void func_train_find()
 	if (!self.target)
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
-	if (self.targetname != "" && find(world, target, self.targetname)) {
+	if (self.targetname != "" && find(world, target, self.targetname) && !sv_gameplayfix_trainnowait) {
 		self.use = train_next;
 	} else {
 		self.targetname = "";
@@ -915,7 +915,15 @@ void door_trigger_touch()
 	if not(other.keys & self.owner.items) {
 		if (self.owner.state == STATE_BOTTOM)
 		if (clienttype(other) == CLIENTTYPE_REAL) {
-			centerprint (other, "This door required key");
+			string s;
+			if  (self.owner.items & IT_KEY1)
+				s = "Silver Key";
+			else if (self.owner.items & IT_KEY2)
+				s = "Gold Key";
+			else if (self.owner.items)
+				s = "Unknown Key";
+
+			centerprint (other, strcat("This door required ", s));
 			play2(other, "misc/talk.wav");
 		}
 		return;

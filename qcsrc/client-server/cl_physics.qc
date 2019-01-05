@@ -227,7 +227,7 @@ void dodging() {
 		physic_velocity_z += dodge_velocity_z;
 #ifdef SVQC
 		if (g_dodging_sound)
-			PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			sound(self, CHAN_PLAYER, randomsound_bystr(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
 		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
 #endif
@@ -316,7 +316,7 @@ void PlayerJump (void)
 			if (physic_crouch) physic_velocity_z *= -1; // thanks Synap for the idea
 			#ifdef SVQC
 			pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
-			PlayerSound (playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			sound(self, CHAN_PLAYER, randomsound_bystr(self.playersound_jump), VOL_BASE, ATTN_NORM);
 			#endif
 		}
 	}

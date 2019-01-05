@@ -21,6 +21,7 @@ float sbar_border_thickness;
 
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
+float centerprint_num;
 
 vector _color;
 float SCOREBOARD_OFFSET = 50;
@@ -1158,82 +1159,36 @@ void Sbar_DrawScoreboard()
 	pos_y = ymin;
 	pos_z = 0;
 
-	// Heading
-	drawfont = sbar_bigfont;
-	drawstringcenter('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	//drawfont = sbar_bigfont;
+	//drawstringcenter('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 
-	pos_y += 24 + 4;
-	pos_y += sbar_fontsize_y;
-
+	//pos_y += 24 + 4;
+	//pos_y += sbar_fontsize_y;
 	drawfont = sbar_font;
-
-	// Draw the scoreboard
-	vector bg_size;
-	bg_size = drawgetimagesize("gfx/hud/sb_scoreboard_bg");
-
-	if(teamplay)
-	{
-		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		{
-			if(tm.team == COLOR_SPECTATOR)
-				continue;
-
-			rgb = GetTeamRGB(tm.team);
-
-			Sbar_DrawXNum(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
-
-			if(ts_primary != ts_secondary)
-				Sbar_DrawXNum(pos - '4.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 4, 0, sbar_fontsize_y * 1, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
-
-			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
-		}
-	}
-	else
-	{
-		rgb_x = CVAR(sbar_color_bg_r);
-		rgb_y = CVAR(sbar_color_bg_g);
-		rgb_z = CVAR(sbar_color_bg_b);
-
-		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		{
-			if(tm.team == COLOR_SPECTATOR)
-				continue;
-
-			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
-		}
-	}
-
-	tmp = pos + '0 1.5 0' * sbar_fontsize_y;
-	pos_y += 3 * sbar_fontsize_y;
-
-	// List spectators
-	float specs;
-	specs = 0;
-	for(pl = players.sort_next; pl; pl = pl.sort_next)
-	{
-		if(pl.team != COLOR_SPECTATOR)
-			continue;
-		Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
-		pos_y += 1.25 * sbar_fontsize_y;
-		++specs;
-	}
-
-	if(specs)
-		drawstring(tmp, "Spectators", sbar_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("playing on ^2", shortmapname, "^7");
+	str = strcat("^7Playing ^3", strtoupper(GametypeNameFromType(gametype)), "^7 on ^2", shortmapname);
+	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
+	pos_y += sbar_fontsize_y;
+	if (map_description != "") {
+		str = strcat("^7(", map_description, "^7)");
+		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
+		pos_y += sbar_fontsize_y;
+	}
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
 	if(tl > 0)
-		str = strcat(str, " for ^1", ftos(tl), " minutes^7");
+		str = strcat("^7for ^1", ftos(tl), " minutes^7");
+	else
+		str = "";
+
 	if(fl > 0)
 	{
 		if(tl > 0)
 			str = strcat(str, " or");
+
 		if(teamplay)
 		{
 			str = strcat(str, " until ^3", ScoreString(teamscores_flags[ts_primary], fl));
@@ -1280,12 +1235,84 @@ void Sbar_DrawScoreboard()
 				str = strcat(str, " ", scores_label[ps_primary]);
 		}
 	}
+	if (str != "") {
+		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
+		pos_y += sbar_fontsize_y;
+	}
+	pos_y += sbar_fontsize_y;
 
+	// Draw the scoreboard
+	vector bg_size;
+	bg_size = drawgetimagesize("gfx/hud/sb_scoreboard_bg");
 
-	pos_y += 1.2 * sbar_fontsize_y;
-	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
+	if(teamplay)
+	{
+		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		{
+			if(tm.team == COLOR_SPECTATOR)
+				continue;
 
-	scoreboard_bottom = pos_y + 2 * sbar_fontsize_y;
+			rgb = GetTeamRGB(tm.team);
+
+			Sbar_DrawXNum(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
+
+			if(ts_primary != ts_secondary)
+				Sbar_DrawXNum(pos - '4.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 4, 0, sbar_fontsize_y * 1, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
+
+			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
+		}
+	}
+	else
+	{
+		rgb_x = CVAR(sbar_color_bg_r);
+		rgb_y = CVAR(sbar_color_bg_g);
+		rgb_z = CVAR(sbar_color_bg_b);
+
+		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		{
+			if(tm.team == COLOR_SPECTATOR)
+				continue;
+
+			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
+		}
+	}
+
+	tmp = pos + '0 0.75 0' * sbar_fontsize_y;
+	pos_y += 2 * sbar_fontsize_y;
+
+	// List spectators
+	float specs;
+	specs = 0;
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+	{
+		if(pl.team != COLOR_SPECTATOR)
+			continue;
+		Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
+		pos_y += 1.25 * sbar_fontsize_y;
+		++specs;
+	}
+	if(specs) {
+		drawstring(tmp, "Spectators", sbar_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		pos_y += 2 * sbar_fontsize_y;
+	}
+	scoreboard_bottom = pos_y;
+	if (centerprint_num < 1) {
+		string tail = motd;
+		float n;
+		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
+		while (tail != "") {
+			n = strstrofs(tail, "\n", 0);
+			if (n < 0) {
+				str = tail;
+				tail = "";
+			} else {
+				str = substring(tail, 0, n);
+				tail = substring(tail, n + 1, -1);
+			}
+			drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
+			pos_y += sbar_fontsize_y;
+		}
+	}
 }
 
 string MakeRaceString(float cp, float mytime, float histime, float lapdelta, string hisname)
@@ -1715,7 +1742,6 @@ string centerprint_messages[CENTERPRINT_MAX_LINES];
 float centerprint_width[CENTERPRINT_MAX_LINES];
 vector centerprint_start;
 float centerprint_expire;
-float centerprint_num;
 float centerprint_offset_hint;
 vector centerprint_fontsize;
 
@@ -1870,9 +1896,10 @@ void Sbar_DrawCenterPrint (void)
 	a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
 	//sz = 1.2 / (a + 0.2);
 
-	if(a <= 0)
+	if(a <= 0) {
+		centerprint_num = 0;
 		return;
-
+	}
 	pos = centerprint_start;
 	for (i=0; i<centerprint_num; i = i + 1)
 	{

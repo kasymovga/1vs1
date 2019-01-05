@@ -261,7 +261,7 @@ float spiderbot_physic_hook()
     {
 		if (self.wasFlying || vlen(self.velocity) > 100)
 		if (self.nextstep <= time) {
-			GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+			sound(self, CHAN_PLAYER, randomsound("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 			self.nextstep = time + 0.2;
 		}
 

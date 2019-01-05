@@ -8,6 +8,7 @@ float campaign_level;
 float campaign_won;
 string campaign_index_var;
 float checkrules_equality;
+float g_campaign_skill;
 
 float CampaignBailout(string s)
 {
@@ -50,14 +51,13 @@ void cvar_set_campaignwrapper(string theCvar, string theValue)
 
 float Campaign_Invalid()
 {
-	string thismapname, wantedmapname;
-	thismapname = GetMapname();
-	wantedmapname = campaign_gametype[0];
-	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(wantedmapname))
+	//string thismapname = GetMapname();
+	string s = campaign_gametype[0];
+	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(s))
 		return CampaignBailout("wrong game type!");
-	wantedmapname = campaign_mapname[0];
-	if(wantedmapname != thismapname)
-		return CampaignBailout(strcat("wrong map: ", wantedmapname, " != ", thismapname));
+	//wantedmapname = campaign_mapname[0];
+	//if(wantedmapname != thismapname)
+	//	return CampaignBailout(strcat("wrong map: ", wantedmapname, " != ", thismapname));
 	return 0;
 }
 
@@ -74,11 +74,11 @@ void CampaignPreInit()
 		CampaignBailout("unknown map");
 		return;
 	}
-
-	baseskill = cvar("g_campaign_skill");
-	baseskill = baseskill + campaign_botskill[0];
-	if(baseskill < 0)
-		baseskill = 0;
+	CACHE_CVAR(g_campaign_skill);
+	baseskill = bound(1, g_campaign_skill + 1, 4);
+	float minskill = baseskill * 5 - 4;
+	float maxskill = baseskill * 10;
+	baseskill = bound(minskill, campaign_botskill[0] * baseskill * 0.5, maxskill);
 
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
@@ -104,7 +104,7 @@ void CampaignPreInit()
 
 	title = campaign_shortdesc[0];
 	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(strcat("\n\n\n\n\n\n\n\n\n\n^1\n", title, "\n^3\n", campaign_longdesc[0], "\n\n^1press jump to enter the game"));
+	campaign_message = strzone(campaign_longdesc[0]);
 	strunzone(title);
 }
 
@@ -194,7 +194,7 @@ void CampaignPreIntermission()
 		// sound!
 	}
 
-	if(campaign_won)
+	if(campaign_won && !campaign_map_transition)
 	{
 		if(campaign_entries < 2)
 		{
@@ -216,15 +216,19 @@ void CampaignPostIntermission()
 {
 	// NOTE: campaign_won is 0 or 1, that is, points to the next level
 
-	if(campaign_won && campaign_entries < 2)
+	if(!campaign_map_transition && campaign_won && campaign_entries < 2)
 	{
 		// last map won!
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;
 	}
+	cvar_set_builtin("g_campaign_skill", ftos(g_campaign_skill));
+	if (campaign_map_transition)
+		CampaignSetupCvarsOnly(0);
+	else
+		CampaignSetup(campaign_won);
 
-	CampaignSetup(campaign_won);
 	CampaignFile_Unload();
 	strunzone(campaign_message);
 	strunzone(campaign_index_var);

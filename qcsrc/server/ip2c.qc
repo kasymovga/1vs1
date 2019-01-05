@@ -54,6 +54,12 @@ float IP2C_GameCommandHandle(string cmd, float tokens) {
 	return FALSE;
 }
 
+var void() IP2C_ShutdownHook_NextLink;
+void IP2C_ShutdownHook(void) {
+	IP2C_Shutdown();
+	IP2C_ShutdownHook_NextLink();
+}
+
 void IP2C_InitSV(void) {
     CACHE_CVAR(sv_ip2country);
     CACHE_CVAR(sv_ip2country_allow_fakeflag);
@@ -76,11 +82,6 @@ void IP2C_InitSV(void) {
     }
 	IP2C_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = IP2C_GameCommandHandle;
-}
-
-void IP2C_ShutdownSV(void) {
-    if(!sv_ip2country)
-        return;
-
-	IP2C_Shutdown();
+	IP2C_ShutdownHook_NextLink = GameHookChain_Shutdown;
+	GameHookChain_Shutdown = IP2C_ShutdownHook;
 }

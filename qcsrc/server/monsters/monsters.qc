@@ -291,6 +291,20 @@ vector monster_move_swim(float _speed, float blend_factor) {
 	return v;
 }
 
+void monster_move_fly_idle(float _speed, float blend_factor) {
+	if (self.waterlevel) {
+		movelib_move_simple('0 0 1', _speed, blend_factor * frametime);
+		return;
+	}
+	if (self.velocity != '0 0 0') {
+		float f = max(0,vlen(self.velocity) - _speed * frametime);
+		if (f) {
+			self.velocity = normalize(self.velocity) * f;
+		} else
+			self.velocity = '0 0 0';
+	}
+}
+
 vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	float dir_z_save;
 	float vel_z_save;
@@ -335,7 +349,7 @@ vector monster_move_fly(float _speed, float blend_factor) {
 	}
 	vector v;
 	v = monster_get_direction();
-	v_z = v_z + 0.5 * vlen(v);
+	v_z = v_z + 0.5;
 	movelib_move_simple(normalize(v), _speed, blend_factor * frametime);
 	return v;
 }
@@ -513,6 +527,8 @@ string monster_classname() {
 	return substring(self.classname, 8, -1);
 }
 
+float monster_difficulty;
+
 void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.weapon_think = spawnfunc;
 	self.think = monster_spawn_think;
@@ -521,9 +537,9 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.dmg = max(self.cnt, 1);
 	self.frags = 0;
 	self.reset = resetfunc;
-	self.dmg_edge = cvar(strcat("g_monster_", monster_classname(), "_damage"));
+	self.dmg_edge = cvar(strcat("g_monster_", monster_classname(), "_damage")) * monster_difficulty;
 	self.dmg_force = cvar(strcat("g_monster_", monster_classname(), "_force"));
-	self.health = cvar(strcat("g_monster_", monster_classname(), "_health"));
+	self.health = cvar(strcat("g_monster_", monster_classname(), "_health")) * monster_difficulty;
 	self.dmg_radius = cvar(strcat("g_monster_", monster_classname(), "_radius"));
 	if (!self.respawntime)
 		self.respawntime = 1;
@@ -554,6 +570,13 @@ void spawnfunc_monster_walk_path() {
 }
 
 void monsters_init() {
+	float g_monster_difficulty;
+	if (g_campaign)
+		g_monster_difficulty = g_campaign_skill;
+	else
+		g_monster_difficulty = cvar("g_monster_difficulty");
+
+	monster_difficulty = 0.5 + bound(0, g_monster_difficulty, 3) * 0.25;
 	string monster_list = cvar_string("g_monsters_spawn");
 	string head, tail;
 	tail = monster_list;

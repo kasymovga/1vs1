@@ -62,7 +62,6 @@ void Akimbo_WeaponFrame()
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, w_ready);
-			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 			oldself.weaponentity.cnt = 0;
 		}
 		self.ammo_shells = oldself.ammo_shells;

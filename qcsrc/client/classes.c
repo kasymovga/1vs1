@@ -41,6 +41,7 @@
 #include "gui/dialog_radio.c"
 #include "gui/mainwindow.c"
 #include "gui/dialog_vcall.c"
+#include "../client-menu/nexuiz/dialog_saveload.c"
 #undef draw
 #undef frame
 #undef conwidth

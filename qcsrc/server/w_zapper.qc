@@ -429,7 +429,6 @@ void W_Zapper_Attack2(void) {
     float range  = g_balance_zapper_secondary_range * accum;
 
     makevectors(self.v_angle);
-	string snd;
 	entity ao = Akimbo_Owner(self);
 	antilag_begin(ao);
 	dlc_sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);

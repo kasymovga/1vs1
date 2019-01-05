@@ -193,29 +193,6 @@ void relocate_spawnpoint()
     }
 }
 
-#define strstr strstrofs
-/*
-// NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
-// IT WILL MOST PROBABLY DESTROY _ALL_ OTHER TEMP
-// STRINGS AND TAKE QUITE LONG. haystack and needle MUST
-// BE CONSTANT OR strzoneD!
-float strstr(string haystack, string needle, float offset)
-{
-	float len, endpos;
-	string found;
-	len = strlen(needle);
-	endpos = strlen(haystack) - len;
-	while(offset <= endpos)
-	{
-		found = substring(haystack, offset, len);
-		if(found == needle)
-			return offset;
-		offset = offset + 1;
-	}
-	return -1;
-}
-*/
-
 float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
 float nearest_length[NUM_NEAREST_ENTITIES];
@@ -344,8 +321,8 @@ string formatmessage(entity pl, string msg)
         if (n < 1)
             break; // too many replacements
         n = n - 1;
-        p1 = strstr(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-        p2 = strstr(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+        p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+        p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
         if (p1 < 0)
             p1 = p2;
@@ -522,161 +499,6 @@ void weapon_precache(float wpn)
 	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
 }
 
-// Sound functions
-string precache_sound (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound = #8;
-float precache_sound_index (string s) = #19;
-
-#define SND_VOLUME      1
-#define SND_ATTENUATION 2
-#define SND_LARGEENTITY 8
-#define SND_LARGESOUND  16
-
-void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
-{
-    float entno, idx;
-
-    entno = num_for_edict(e);
-    idx = precache_sound_index(samp);
-
-    float sflags;
-    sflags = 0;
-
-    atten = floor(atten * 64);
-    vol = floor(vol * 255);
-
-    if (vol != 255)
-        sflags |= SND_VOLUME;
-    if (atten != 64)
-        sflags |= SND_ATTENUATION;
-    if (entno >= 8192)
-        sflags |= SND_LARGEENTITY;
-    if (idx >= 256)
-        sflags |= SND_LARGESOUND;
-
-    WriteByte(dest, SVC_SOUND);
-    WriteByte(dest, sflags);
-    if (sflags & SND_VOLUME)
-        WriteByte(dest, vol);
-    if (sflags & SND_ATTENUATION)
-        WriteByte(dest, atten);
-    if (sflags & SND_LARGEENTITY)
-    {
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
-    }
-    else
-    {
-        WriteShort(dest, entno * 8 + chan);
-    }
-    if (sflags & SND_LARGESOUND)
-        WriteShort(dest, idx);
-    else
-        WriteByte(dest, idx);
-
-    WriteCoord(dest, o_x);
-    WriteCoord(dest, o_y);
-    WriteCoord(dest, o_z);
-}
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
-{
-    vector o;
-    o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(dest, e, o, chan, samp, vol, atten);
-}
-void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
-{
-    soundtoat(MSG_BROADCAST, e, o, chan, samp, vol, atten);
-}
-void stopsoundto(float dest, entity e, float chan)
-{
-    float entno;
-    entno = num_for_edict(e);
-
-    if (entno >= 8192)
-    {
-        float idx, sflags;
-        idx = precache_sound_index("misc/null.wav");
-        sflags = SND_LARGEENTITY;
-        if (idx >= 256)
-            sflags |= SND_LARGESOUND;
-        WriteByte(dest, SVC_SOUND);
-        WriteByte(dest, sflags);
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
-        if (sflags & SND_LARGESOUND)
-            WriteShort(dest, idx);
-        else
-            WriteByte(dest, idx);
-        WriteCoord(dest, e.origin_x);
-        WriteCoord(dest, e.origin_y);
-        WriteCoord(dest, e.origin_z);
-    }
-    else
-    {
-        WriteByte(dest, SVC_STOPSOUND);
-        WriteShort(dest, entno * 8 + chan);
-    }
-}
-void stopsound(entity e, float chan)
-{
-    stopsoundto(MSG_BROADCAST, e, chan); // unreliable, gets there fast
-    stopsoundto(MSG_ALL, e, chan); // in case of packet loss
-}
-
-void play2(entity e, string filename)
-{
-    //stuffcmd(e, strcat("play2 ", filename, "\n"));
-    msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CHAN_AUTO, filename, VOL_BASE, ATTN_NONE);
-}
-
-.float announcetime;
-float announce_force(entity player, string msg)
-{
-	if not(clienttype(player) == CLIENTTYPE_REAL)
-		return FALSE;
-
-	player.announcetime = time + 0.8;
-	play2(player, msg);
-	return TRUE;
-}
-
-float announce(entity player, string msg)
-{
-    if (time > player.announcetime)
-		return announce_force(player, msg);
-
-    return FALSE;
-}
-// use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
-float spamsound(entity e, float chan, string samp, float vol, float atten)
-{
-    if (time > e.announcetime)
-    {
-        e.announcetime = time;
-        sound(e, chan, samp, vol, atten);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-void play2team(float t, string filename)
-{
-    local entity head;
-
-    FOR_EACH_REALPLAYER(head)
-    {
-        if (head.team == t)
-            play2(head, filename);
-    }
-}
-
-void play2all(string samp)
-{
-    sound(world, CHAN_AUTO, samp, VOL_BASE, ATTN_NONE);
-}
-
 void PrecachePlayerSounds(string f);
 void precache_all_models(string pattern)
 {
@@ -753,146 +575,46 @@ float ExactTriggerHit()
 #define EXACTTRIGGER_TOUCH if not(ExactTriggerHit()) return
 #define EXACTTRIGGER_INIT  InitSolidBSPTrigger(); self.solid = SOLID_TRIGGER
 
-#define INITPRIO_FIRST              0
-#define INITPRIO_GAMETYPE           0
-#define INITPRIO_GAMETYPE_FALLBACK  1
-#define INITPRIO_CVARS              5
-#define INITPRIO_FINDTARGET        10
-#define INITPRIO_DROPTOFLOOR       20
-#define INITPRIO_SETLOCATION       90
-#define INITPRIO_LINKDOORS         91
-#define INITPRIO_LAST              99
-
-.void(void) initialize_entity;
-.float initialize_entity_order;
-.entity initialize_entity_next;
-entity initialize_entity_first;
-
-void make_safe_for_remove(entity e)
-{
-    if (e.initialize_entity)
-    {
-        entity ent, prev;
-        for (ent = initialize_entity_first; ent; )
-        {
-            if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
-            {
-                //print("make_safe_for_remove: getting rid of initializer ", etos(ent), "\n");
-                // skip it in linked list
-                if (prev)
-                {
-                    prev.initialize_entity_next = ent.initialize_entity_next;
-                    ent = prev.initialize_entity_next;
-                }
-                else
-                {
-                    initialize_entity_first = ent.initialize_entity_next;
-                    ent = initialize_entity_first;
-                }
-            }
-            else
-            {
-                prev = ent;
-                ent = ent.initialize_entity_next;
-            }
-        }
-    }
-}
+enum {
+	INITPRIO_FIRST,
+	INITPRIO_GAMETYPE,
+	INITPRIO_GAMETYPE_FALLBACK,
+	INITPRIO_CVARS,
+	INITPRIO_FINDTARGET,
+	INITPRIO_DROPTOFLOOR,
+	INITPRIO_SETLOCATION,
+	INITPRIO_LINKDOORS,
+	INITPRIO_LAST,
+};
 
 void objerror(string s)
 {
-    make_safe_for_remove(self);
     objerror_builtin(s);
 }
 
-void remove_unsafely(entity e)
+void InitializeEntity(entity for_e, void(void) func, float order)
 {
-    remove_builtin(e);
-}
-
-void remove_safely(entity e)
-{
-    make_safe_for_remove(e);
-    remove_builtin(e);
-}
-
-void InitializeEntity(entity e, void(void) func, float order)
-{
-    entity prev, cur;
-
-    if (!e || e.initialize_entity)
-    {
-        // make a proxy initializer entity
-        entity e_old;
-        e_old = e;
-        e = spawn();
-        e.classname = "initialize_entity";
-        e.enemy = e_old;
-    }
-
-    e.initialize_entity = func;
-    e.initialize_entity_order = order;
-
-    cur = initialize_entity_first;
-    for (;;)
-    {
-        if (!cur || cur.initialize_entity_order > order)
-        {
-            // insert between prev and cur
-            if (prev)
-                prev.initialize_entity_next = e;
-            else
-                initialize_entity_first = e;
-            e.initialize_entity_next = cur;
-            return;
-        }
-        prev = cur;
-        cur = cur.initialize_entity_next;
-    }
+	entity e = spawn();
+	e.classname = "initialize_entity";
+	e.enemy = for_e;
+    e.think = func;
+    e.cnt = order;
 }
 void InitializeEntitiesRun()
 {
-    entity startoflist;
-    startoflist = initialize_entity_first;
-    initialize_entity_first = world;
-    for (self = startoflist; self; )
-    {
-        entity e;
-        var void(void) func;
-        e = self.initialize_entity_next;
-        func = self.initialize_entity;
-        self.initialize_entity_order = 0;
-        self.initialize_entity = func_null;
-        self.initialize_entity_next = world;
-        if (self.classname == "initialize_entity")
-        {
-            entity e_old;
-            e_old = self.enemy;
-            remove_builtin(self);
-            self = e_old;
-        }
-        //dprint("Delayed initialization: ", self.classname, "\n");
-        func();
-        self = e;
-    }
-}
+	entity oldself = self;
+	entity e;
+	float i;
+	for (i = INITPRIO_FIRST; i <= INITPRIO_LAST; i++)
+		for (e = find(world, classname, "initialize_entity"); e; e = find(e, classname, "initialize_entity")) {
+			if (e.cnt != i)
+				continue;
 
-.float uncustomizeentityforclient_set;
-.void(void) uncustomizeentityforclient;
-void(void) SUB_Nullpointer = #0;
-void UncustomizeEntitiesRun()
-{
-    entity oldself;
-    oldself = self;
-    for (self = world; (self = findfloat(self, uncustomizeentityforclient_set, 1)); )
-        self.uncustomizeentityforclient();
-    self = oldself;
-}
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
-{
-    e.customizeentityforclient = customizer;
-    e.uncustomizeentityforclient = uncustomizer;
-    e.uncustomizeentityforclient_set = (uncustomizer != SUB_Nullpointer);
+			self = e.enemy;
+			e.think();
+			remove(e);
+		}
+	self = oldself;
 }
 
 .float nottargeted;
@@ -1256,117 +978,6 @@ void write_recordmarker(entity pl, float tstart, float dt)
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
 
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter)
-{
-	switch(self.owner.cvar_cl_gunalign)
-	{
-		case 1: // right
-			break;
-
-		case 2: // left
-			vecs_y = -vecs_y;
-			break;
-
-		default:
-		case 3:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs_y = 0;
-				vecs_z -= 4;
-			}
-			else
-			{
-				// right
-			}
-			break;
-
-		case 4:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs_y = 0;
-				vecs_z -= 4;
-			}
-			else
-			{
-				// left
-				vecs_y = -vecs_y;
-			}
-			break;
-	}
-	return vecs;
-}
-
-vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active)
-{
-	string s;
-	vector v;
-	if (akimbo_active)
-	{
-		if (akimbo_active == 2)
-			vecs_y = -vecs_y;
-		if not(visual)
-		{
-			if (cvar("g_shootfromeye"))
-				vecs_z = 0;
-			else if (cvar("g_shootfromcenter"))
-				vecs_z -= 0;
-			else if ((s = cvar_string("g_shootfromfixedorigin")) != "")
-			{
-				v = stov(s);
-				if (v_x != 0)
-					vecs_x = v_x;
-				vecs_z = v_z;
-			}
-		}
-		vecs_y = vecs_y * 1.2;
-		return vecs;
-	}
-
-	if (cvar("g_shootfromeye"))
-	{
-		if (visual)
-		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
-		}
-		else
-		{
-			vecs_y = 0;
-			vecs_z = 0;
-		}
-	}
-	else if (cvar("g_shootfromcenter"))
-	{
-		if (visual)
-		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
-		}
-		else
-		{
-			vecs_y = 0;
-			vecs_z -= 4;
-		}
-	}
-	else if (cvar("g_shootfromclient"))
-	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (cvar("g_shootfromclient") >= 2));
-	}
-	else if ((s = cvar_string("g_shootfromfixedorigin")) != "")
-	{
-		v = stov(s);
-		if (y_is_right)
-			v_y = -v_y;
-		if (v_x != 0)
-			vecs_x = v_x;
-		vecs_y = v_y;
-		vecs_z = v_z;
-	}
-	return vecs;
-}
-
-
-
 void attach_sameorigin(entity e, entity to, string tag)
 {
     vector org, t_forward, t_left, t_up, e_forward, e_up;
@@ -1446,44 +1057,6 @@ vector gettaginfo_relative(entity e, float tag)
     gettaginfo_relative_ent.frame = e.frame;
     return gettaginfo(gettaginfo_relative_ent, tag);
 }
-
-void SoundEntity_StartSound(entity pl, float chan, string samp, float vol, float attn)
-{
-    float p;
-    p = pow(2, chan);
-    if (pl.soundentity.cnt & p)
-        return;
-    soundtoat(MSG_ALL, pl.soundentity, gettaginfo(pl.soundentity, 0), chan, samp, vol, attn);
-    pl.soundentity.cnt |= p;
-}
-
-void SoundEntity_StopSound(entity pl, float chan)
-{
-    float p;
-    p = pow(2, chan);
-    if (pl.soundentity.cnt & p)
-    {
-        stopsoundto(MSG_ALL, pl.soundentity, chan);
-        pl.soundentity.cnt &~= p;
-    }
-}
-
-void SoundEntity_Attach(entity pl)
-{
-    pl.soundentity = spawn();
-    pl.soundentity.classname = "soundentity";
-    pl.soundentity.owner = pl;
-    setattachment(pl.soundentity, pl, "");
-    setmodel(pl.soundentity, "null");
-}
-
-void SoundEntity_Detach(entity pl)
-{
-    float i;
-    for (i = 0; i <= 7; ++i)
-        SoundEntity_StopSound(pl, i);
-}
-
 
 float ParseCommandPlayerSlotTarget_firsttoken;
 entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) // idx = start index

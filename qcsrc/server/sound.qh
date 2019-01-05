@@ -1,0 +1,14 @@
+void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten);
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
+void soundat(entity e, vector o, float chan, string samp, float vol, float atten);
+void stopsoundto(float dest, entity e, float chan);
+void stopsound(entity e, float chan);
+void play2(entity e, string filename);
+float announce_force(entity player, string msg);
+float announce(entity player, string msg);
+float spamsound(entity e, float chan, string samp, float vol, float atten);
+void play2team(float t, string filename);
+void play2all(string samp);
+string randomsound(string s, float n);
+string randomsound_bystr(string s);
+void precache_randomsound(string s, float n);

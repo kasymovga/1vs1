@@ -84,7 +84,6 @@ void butcher_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Crazy Butcher";
-	self.ammo_cells = 5;
 	self.scale = 2;
 	self.view_ofs = '0 0 35';
 }

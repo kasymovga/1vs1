@@ -7,46 +7,56 @@ CLASS(NexuizSingleplayerDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizSingleplayerDialog, rows, float, 24)
 	ATTRIB(NexuizSingleplayerDialog, columns, float, 5)
 	ATTRIB(NexuizSingleplayerDialog, campaignBox, entity, NULL)
-	ATTRIB(NexuizSingleplayerDialog, btnSurv, entity, NULL)
-	ATTRIB(NexuizSingleplayerDialog, btnAT, entity, NULL)
-	ATTRIB(NexuizSingleplayerDialog, btnSP, entity, NULL)
+	ATTRIB(NexuizSingleplayerDialog, btnGame, entity, NULL)
 ENDCLASS(NexuizSingleplayerDialog)
 #endif
 
 #ifdef IMPLEMENTATION
 
 void SwitchTo(entity btn, entity me) {
-	me.btnSurv.forcePressed = 0;
-	me.btnAT.forcePressed = 0;
+	entity e;
+	for (e = me.btnGame; e; e = e.btnGame) {
+		e.forcePressed = 0;
+	}
 	btn.forcePressed = 1;
-	if (btn == me.btnSurv)
-		cvar_set("g_campaign_name", "rexsurvival");
-	else if (btn == me.btnAT)
-		cvar_set("g_campaign_name", "rexuiz");
-	else
-		cvar_set("g_campaign_name", "spdemo");
-
+	cvar_set("g_campaign_name", btn.cvarName);
 	me.campaignBox.loadCvars(me.campaignBox);
+}
+
+entity addCampaign(entity me, entity e, string _title, string cfg) {
+	if not(fexists(strcat("maps/campaign", cfg, ".txt")))
+		return e;
+
+	me.TD(me, 1, 1.1, e.btnGame = makeNexuizButton(_title, '0 0 0'));
+	e = e.btnGame;
+	e.cvarName = cfg;
+	e.onClick = SwitchTo;
+	e.onClickEntity = me;
+	return e;
 }
 
 void fillNexuizSingleplayerDialog(entity me)
 {
 	entity e;
+	me.TR(me);
+		e = addCampaign(me, me, "Classic Campaign", "rexclassic");
+		e = addCampaign(me, e, "Survival Campaign", "rexsurvival");
+		e = addCampaign(me, e, "Arena Training", "rexuiz");
+		e = addCampaign(me, e, "Single Player (Demo)", "spdemo");
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, me.rows - 5, me.columns, me.campaignBox = makeNexuizCampaignList());
+	me.gotoRC(me, me.rows - 3, 0);
+		me.TD(me, 1, 0.5, makeNexuizTextLabel(0, "Difficulty:"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "0", "Easy"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "1", "Medium"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "2", "Hard"));
+		me.TD(me, 1, 0.5, makeNexuizRadioButton(1, "menu_campaign_skill", "3", "Insane"));
+		me.TD(me, 1, 2.5, e = makeNexuizButton("Load Game...", '0 0 0'));
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.saveLoadDialog;
 
-	me.TR(me);
-		me.TD(me, 1, 1.5, me.btnSurv = makeNexuizButton("Survival Campaign", '0 0 0'));
-		me.btnSurv.onClick = SwitchTo;
-		me.btnSurv.onClickEntity = me;
-		me.TD(me, 1, 1.5, me.btnAT = makeNexuizButton("Arena Training", '0 0 0'));
-		me.btnAT.onClick = SwitchTo;
-		me.btnAT.onClickEntity = me;
-		me.TD(me, 1, 1.5, me.btnSP = makeNexuizButton("Single Player (Demo)", '0 0 0'));
-		me.btnSP.onClick = SwitchTo;
-		me.btnSP.onClickEntity = me;
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, me.rows - 4, me.columns, me.campaignBox = makeNexuizCampaignList());
-	SwitchTo(me.btnSurv, me);
+	SwitchTo(me.btnGame, me);
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns , e = makeNexuizButton("Start Game!", '0 0 0'));
 			e.onClick = CampaignList_LoadMap;

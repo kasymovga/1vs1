@@ -31,7 +31,8 @@ void Physic_OnJumpHook()
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
-		PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		sound(self, CHAN_PLAYER, self.playersound_jump, VOL_BASE, ATTN_NORM);
+
 	self.restart_jump = -1; // restart jump anim next time
 	self.oldvelocity_z = physic_velocity_z;
 }
@@ -58,10 +59,7 @@ float IsFlying(entity a)
 {
 	if(a.flags & FL_ONGROUND)
 		return 0;
-	if(a.waterlevel >= WATERLEVEL_SWIMMING)
-		return 0;
-	traceline(a.origin, a.origin - '0 0 48', MOVE_NORMAL, a);
-	if(trace_fraction < 1)
+	if(a.waterlevel)
 		return 0;
 	return 1;
 }
@@ -69,34 +67,30 @@ float IsFlying(entity a)
 .float wasFlying;
 void Physic_CheckGroundHook()
 {
-	if(physic_flags & FL_ONGROUND)
-	if(self.wasFlying)
-	{
-		self.wasFlying = 0;
-
-		if(self.waterlevel < WATERLEVEL_SWIMMING)
-		if(time >= self.ladder_time)
-		if not(self.hook)
-		{
-			self.nextstep = time + 0.3 + random() * 0.1;
-			if (self.waterlevel > 0) {
-					GlobalSound(globalsound_waterfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
-			} else {
+	if (physic_is_player)
+	if (self.wasFlying) {
+		if (self.waterlevel) {
+			self.nextstep = time + 0.5;
+			sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE, ATTN_NORM);
+		} else {
+			if(self.flags & FL_ONGROUND)
+			if(time >= self.ladder_time)
+			if not(self.hook)
+			{
+				self.nextstep = time + 0.2;
 				trace_dphitq3surfaceflags = 0;
 				tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
 				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 				{
 					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-						GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+						sound(self, CHAN_PLAYER, randomsound("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 					else
-						GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+						sound(self, CHAN_PLAYER, randomsound("misc/hitground", 4), VOL_BASE, ATTN_NORM);
 				}
 			}
 		}
 	}
-	self.flags = physic_flags;
-	if(IsFlying(self))
-		self.wasFlying = 1;
+	self.wasFlying = IsFlying(self);
 }
 
 void Physic_OnCrouchHook()

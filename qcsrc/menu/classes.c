@@ -78,3 +78,4 @@
 #include "nexuiz/colorpicker.c"
 #include "nexuiz/cvarlist.c"
 #include "nexuiz/dialog_settings_misc_cvars.c"
+#include "../client-menu/nexuiz/dialog_saveload.c"

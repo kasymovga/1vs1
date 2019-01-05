@@ -291,8 +291,6 @@ void spawnfunc___init_dedicated_server(void)
 	cvar_set = cvar_set_builtin;
 	dprint_load(); // load dprint status from cvar
 
-	remove = remove_unsafely;
-
 	entity e;
 	e = spawn();
 	e.think = GotoFirstMap;
@@ -364,9 +362,9 @@ void precache()
 
     if (g_footsteps)
     {
-        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
-        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
-        PrecacheGlobalSound((globalsound_waterstep = "ambient/water"));
+        precache_randomsound("misc/footstep0", 6);
+        precache_randomsound("misc/metalfootstep0", 6);
+        precache_sound("ambient/water.wav");
     }
 
     // gore and miscellaneous sounds
@@ -376,15 +374,12 @@ void precache()
     precache_sound ("misc/bodyimpact1.wav");
     precache_sound ("misc/bodyimpact2.wav");
     precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
+	precache_randomsound("misc/gib_splat0", 4);
     precache_sound ("misc/hit.wav");
 	precache_sound ("misc/menu2.wav");
-    PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
-    PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-    PrecacheGlobalSound((globalsound_waterfall = "misc/outwater"));
+    precache_randomsound("misc/hitground", 4);
+    precache_randomsound("misc/metalhitground", 4);
+    precache_sound("misc/outwater.wav");
     precache_sound ("misc/null.wav");
     precache_sound ("misc/spawn.wav");
     precache_sound ("misc/talk.wav");
@@ -569,12 +564,11 @@ float world_already_spawned;
 void spawnfunc_worldspawn (void)
 {
 	gettaginfo_parent = 0;
-	gettaginfo_name = "";
 	gettaginfo_offset = '0 0 0';
 	gettaginfo_forward = '0 0 0';
 	gettaginfo_right = '0 0 0';
 	gettaginfo_up = '0 0 0';
-	trace_dphittexturename = "";
+	//trace_dphittexturename = "";
 
 	float fd, l, i, j, n;
 	string s, col;
@@ -587,8 +581,6 @@ void spawnfunc_worldspawn (void)
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = TRUE;
-
-	remove = remove_safely; // during spawning, watch what you remove!
 
 	if(cvar_string("cvar_check_default") != "bypass")
 	{
@@ -1120,8 +1112,10 @@ float DoNextMapOverride()
 	if(g_campaign)
 	{
 		CampaignPostIntermission();
-		alreadychangedlevel = TRUE;
-		return TRUE;
+		if (!campaign_map_transition) {
+			alreadychangedlevel = TRUE;
+			return TRUE;
+		}
 	}
 	if(cvar("quit_when_empty"))
 	{
@@ -1923,7 +1917,7 @@ float MapVote_SendEntity(entity to, float sf)
 						pakfile = whichpack(strcat(mapfile, ".jpg"));
 					if(pakfile == "")
 						pakfile = whichpack(strcat(mapfile, ".png"));
-					for(o = strstr(pakfile, "/", 0)+1; o > 0; o = strstr(pakfile, "/", 0)+1)
+					for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 						pakfile = substring(pakfile, o, 999);
 					WriteString(MSG_ENTITY, pakfile);
 				}
@@ -2272,7 +2266,7 @@ void SV_Shutdown()
 
 		MapInfo_Shutdown();
 		InfoMessages_Shutdown();
-        IP2C_ShutdownSV();
+		GameHookChain_Shutdown();
 	}
 	else if(world_initialized == 0)
 	{

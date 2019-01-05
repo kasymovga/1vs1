@@ -36,6 +36,8 @@ float		clientcommandframe;	//player movement
 float		servercommandframe;	//clientframe echoed off the server
 
 string		mapname;
+string map_description;
+string motd;
 
 //
 // global variables set by built in functions

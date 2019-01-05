@@ -68,6 +68,7 @@ void ResetBall();
 void basketball_touch();
 void football_touch();
 void hockey_touch();
+void DropBall(entity ball, vector org, vector vel);
 
 var void(float killed) nb_PlayerClear_NextLink;
 void nb_PlayerClear(float killed) {

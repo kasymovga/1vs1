@@ -1,3 +1,8 @@
+// autotaunt system
+.float cvar_cl_autotaunt;
+.float cvar_cl_voice_directional;
+.float cvar_cl_voice_directional_taunt_attenuation;
+
 float g_chat_flood_burst;
 float g_chat_flood_burst_team;
 float g_chat_flood_burst_tell;
@@ -9,6 +14,8 @@ float g_chat_flood_damage_flooder;
 float g_chat_flood_spl;
 float g_chat_flood_spl_team;
 float g_chat_flood_spl_tell;
+string g_chat_forbidden_words;
+float g_chat_forbidden_words_set_retard;
 float g_chat_nospectators;
 float g_chat_teamcolors;
 float g_respawn_delay;
@@ -101,8 +108,6 @@ void CopyBody(float keepvelocity)
 	self.takedamage = oldself.takedamage;
 	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
-	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
-	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
 	self.scale = oldself.scale;
 	self.deadflag = oldself.deadflag;
 	if (keepvelocity == 1)
@@ -185,13 +190,17 @@ void player_effects()
 {
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
-		SoundEntity_StartSound(self, CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
-		self.modelflags |= MF_ROCKET;
+		if not(self.modelflags & MF_ROCKET) {
+			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
+			self.modelflags |= MF_ROCKET;
+		}
 	}
 	else
 	{
-		SoundEntity_StopSound(self, CHAN_PLAYER);
-		self.modelflags &~= MF_ROCKET;
+		if (self.modelflags & MF_ROCKET) {
+			stopsound(self, CHAN_TRIGGER);
+			self.modelflags &~= MF_ROCKET;
+		}
 	}
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME);
@@ -521,14 +530,17 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
 			// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 			{
+				string pain_sound;
 				if(self.health > 75) // TODO make a "gentle" version?
-					PlayerSound(playersound_pain100, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					pain_sound = self.playersound_pain100;
 				else if(self.health > 50)
-					PlayerSound(playersound_pain75, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					pain_sound = self.playersound_pain75;
 				else if(self.health > 25)
-					PlayerSound(playersound_pain50, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					pain_sound = self.playersound_pain50;
 				else if(self.health > 1)
-					PlayerSound(playersound_pain25, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+					pain_sound = self.playersound_pain25;
+
+				sound(self, CHAN_PAIN, randomsound_bystr(pain_sound), VOL_BASE, ATTN_NORM);
 			}
 
 			// throw off bot aim temporarily
@@ -568,9 +580,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		defer_ClientKill_Now_TeamChange = FALSE;
 
 		if(deathtype == DEATH_DROWN)
-			PlayerSound(playersound_drown, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+			sound(self, CHAN_PAIN, randomsound_bystr(self.playersound_drown), VOL_BASE, ATTN_NORM);
 		else
-			PlayerSound(playersound_death, CHAN_PAIN, VOICETYPE_PLAYERSOUND);
+			sound(self, CHAN_PAIN, randomsound_bystr(self.playersound_death), VOL_BASE, ATTN_NORM);
 
 		// get rid of kill indicator
 		if(self.killindicator)
@@ -732,6 +744,21 @@ void Say(entity source, float teamsay, entity privatesay, string msgin, float fl
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
 	entity head;
+	if (g_chat_forbidden_words != "") {
+		string s1, s2 = g_chat_forbidden_words;
+		for (; s2 != ""; s2 = cdr(s2)) {
+			s1 = car(s2);
+			if (s1 == "") continue;
+			if (strstrofs(strtolower(strdecolorize(msgin)), s1, 0) >= 0) {
+				if (g_chat_forbidden_words_set_retard)
+					source.retard = 1;
+				else
+					source.muted = 1;
+
+				break;
+			}
+		}
+	}
 
 	if(source.retard > 0) {
 		if (source.retard_last_say)
@@ -973,15 +1000,6 @@ void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, st
 	Say(source, teamsay, privatesay, strcat(prefix, argv(n)), FALSE);
 }
 
-float GetVoiceMessageVoiceType(string type)
-{
-	if(type == "taunt")
-		return VOICETYPE_TAUNT;
-	if(type == "teamshoot")
-		return VOICETYPE_LASTATTACKER;
-	return VOICETYPE_TEAMRADIO;
-}
-
 string allvoicesamples;
 float GetPlayerSoundSampleField_notFound;
 float GetPlayerSoundSampleField_fixed;
@@ -1013,22 +1031,6 @@ float GetPlayerSoundSampleField_fixed;
 	return playersound_taunt;
 }
 
-void PrecacheGlobalSound(string samplestring)
-{
-	float n, i;
-	tokenize_console(samplestring);
-	n = stof(argv(1));
-	if(n > 0)
-	{
-		for(i = 1; i <= n; ++i)
-			precache_sound(strcat(argv(0), ftos(i), ".wav"));
-	}
-	else
-	{
-		precache_sound(strcat(argv(0), ".wav"));
-	}
-}
-
 void PrecachePlayerSounds(string f)
 {
 	float fh;
@@ -1043,7 +1045,7 @@ void PrecachePlayerSounds(string f)
 			dprint("Invalid sound info line: ", s, "\n");
 			continue;
 		}
-		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
+		precache_randomsound(argv(1), stof(argv(2)));
 	}
 	fclose(fh);
 
@@ -1102,112 +1104,10 @@ void UpdatePlayerSounds()
 	LoadPlayerSounds(strcat(self.model, ".sounds"), 0);
 }
 
-void GlobalSound(string sample, float chan, float voicetype)
-{
-	float n;
-	float tauntrand;
-
-	if(sample == "")
-		return;
-
-	tokenize_console(sample);
-	n = stof(argv(1));
-	if(n > 0)
-		sample = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
-	else
-		sample = strcat(argv(0), ".wav"); // randomization
-
-	switch(voicetype)
-	{
-		case VOICETYPE_LASTATTACKER_ONLY:
-			if(self.pusher)
-				if(self.pusher.team == self.team)
-				{
-					msg_entity = self.pusher;
-					if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					{
-						if(msg_entity.cvar_cl_voice_directional == 1)
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
-						else
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-					}
-				}
-			break;
-		case VOICETYPE_LASTATTACKER:
-			if(self.pusher)
-				if(self.pusher.team == self.team)
-				{
-					msg_entity = self.pusher;
-					if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					{
-						if(msg_entity.cvar_cl_voice_directional == 1)
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
-						else
-							soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-					}
-					msg_entity = self;
-					if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
-				}
-			break;
-		case VOICETYPE_TEAMRADIO:
-			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teamplay || msg_entity.team == self.team)
-				{
-					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
-					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-				}
-			break;
-		case VOICETYPE_AUTOTAUNT:
-			if(!sv_autotaunt)
-				break;
-			if(!sv_taunt)
-				break;
-			tauntrand = random();
-			FOR_EACH_REALCLIENT(msg_entity)
-				if (tauntrand < msg_entity.cvar_cl_autotaunt)
-				{
-					if (msg_entity.cvar_cl_voice_directional >= 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
-					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-				}
-			break;
-		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
-				if(self.deadflag == DEAD_NO)
-					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
-			if(!sv_taunt)
-				break;
-			FOR_EACH_REALCLIENT(msg_entity)
-			{
-				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
-				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
-			}
-		case VOICETYPE_PLAYERSOUND:
-			sound(self, chan, sample, VOL_BASE, ATTN_NORM);
-			break;
-		default:
-			backtrace("Invalid voice type!");
-			break;
-	}
-}
-
-void PlayerSound(.string samplefield, float chan, float voicetype)
-{
-	string sample;
-	sample = self.samplefield;
-	GlobalSound(sample, chan, voicetype);
-}
-
 void VoiceMessage(string type, string msg)
 {
 	var .string sample;
-	var float voicetype, ownteam;
+	float ownteam;
 	sample = GetVoiceMessageSampleField(type);
 
 	if(GetPlayerSoundSampleField_notFound)
@@ -1216,15 +1116,13 @@ void VoiceMessage(string type, string msg)
 		return;
 	}
 
-	voicetype = GetVoiceMessageVoiceType(type);
-	ownteam = (voicetype == VOICETYPE_TEAMRADIO);
-
+	ownteam = (type != "taunt" && type != "teamshot");
 	float flood;
 	float flood_spv;
 	var .float flood_field;
 
 	flood = 0;
-	if(ownteam)
+	if (ownteam)
 	{
 		flood_spv = g_voice_flood_spv_team;
 		flood_field = floodcontrol_voiceteam;
@@ -1246,8 +1144,50 @@ void VoiceMessage(string type, string msg)
 	if (msg != "")
 		Say(self, ownteam, world, msg, 0);
 
-	if (!flood)
-		PlayerSound(sample, CHAN_VOICE, voicetype);
+	if (flood)
+		return;
+
+	string s = randomsound_bystr(self.sample);
+	if (type == "taunt") {
+		if(self.classname == "player")
+			if(self.deadflag == DEAD_NO)
+				setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+		if(!sv_taunt)
+			return;
+
+		FOR_EACH_REALCLIENT(msg_entity)
+		{
+			if (msg_entity.cvar_cl_voice_directional >= 1)
+				soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+			else
+				soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
+		}
+	} else if (type == "teamshoot") {
+		if(self.pusher)
+			if(self.pusher.team == self.team)
+			{
+				msg_entity = self.pusher;
+				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				{
+					if(msg_entity.cvar_cl_voice_directional == 1)
+						soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
+					else
+						soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
+				}
+				msg_entity = self;
+				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+					soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
+			}
+	} else {
+		FOR_EACH_REALCLIENT(msg_entity)
+			if(!teamplay || msg_entity.team == self.team)
+			{
+				if(msg_entity.cvar_cl_voice_directional == 1)
+					soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
+				else
+					soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
+			}
+	}
 }
 
 float Player_CalculateAlpha(entity plr, entity viewer) {
@@ -1304,4 +1244,6 @@ void Player_Init() {
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_fullbrightplayers);
+	g_chat_forbidden_words = zone_ifneeded(strtolower(cvar_string("g_chat_forbidden_words")));
+	CACHE_CVAR(g_chat_forbidden_words_set_retard);
 }

@@ -22,6 +22,9 @@ vector sv_qcanimation_melee2_morph1origin;
 vector sv_qcanimation_melee2_morph2origin;
 float sv_qcweaponanimation;
 float g_akimbo_use_left_hand;
+float g_shootfromcenter;
+float g_shootfromclient;
+float g_shootfromeye;
 
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
@@ -46,6 +49,96 @@ vector weapon_adjust = '10 0 -15';
 void(float fr, float t, void() func) weapon_thinkf;
 
 #define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
+
+vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter)
+{
+	switch(self.owner.cvar_cl_gunalign)
+	{
+		case 1: // right
+			break;
+
+		case 2: // left
+			vecs_y = -vecs_y;
+			break;
+
+		default:
+		case 3:
+			if(allowcenter) // 2: allow center handedness
+			{
+				// center
+				vecs_y = 0;
+				vecs_z -= 4;
+			}
+			else
+			{
+				// right
+			}
+			break;
+
+		case 4:
+			if(allowcenter) // 2: allow center handedness
+			{
+				// center
+				vecs_y = 0;
+				vecs_z -= 4;
+			}
+			else
+			{
+				// left
+				vecs_y = -vecs_y;
+			}
+			break;
+	}
+	return vecs;
+}
+
+vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active)
+{
+	if (akimbo_active)
+	{
+		if (akimbo_active == 2)
+			vecs_y = -vecs_y;
+		if not(visual)
+		{
+			if (g_shootfromeye)
+				vecs_z = 0;
+			else if (g_shootfromcenter)
+				vecs_z -= 4;
+		}
+		vecs_y = vecs_y * 1.2;
+		return vecs;
+	}
+
+	if (g_shootfromeye)
+	{
+		if (visual)
+		{
+			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+		}
+		else
+		{
+			vecs_y = 0;
+			vecs_z = 0;
+		}
+	}
+	else if (g_shootfromcenter)
+	{
+		if (visual)
+		{
+			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+		}
+		else
+		{
+			vecs_y = 0;
+			vecs_z -= 4;
+		}
+	}
+	else if (g_shootfromclient)
+	{
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, (g_shootfromclient >= 2));
+	}
+	return vecs;
+}
 
 float W_WeaponRateFactor()
 {
@@ -957,11 +1050,6 @@ void weapon_thinkf(float fr, float t, void() func)
 	}
 };
 
-void weapon_boblayer1(float spd, vector org)
-{
-	// VorteX: haste can be added here
-};
-
 vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 {
 	vector mdirection;
@@ -1087,6 +1175,9 @@ void W_Init()
 	CACHE_CVAR(g_weaponspeedfactor);
 	CACHE_CVAR(g_weaponratefactor);
 	CACHE_CVAR(g_akimbo_use_left_hand);
+	CACHE_CVAR(g_shootfromcenter);
+	CACHE_CVAR(g_shootfromclient);
+	CACHE_CVAR(g_shootfromeye);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));

@@ -19,5 +19,6 @@ vector w_shotorg_visual;
 
 void W_Init();
 void W_ShowWeaponList(entity pl);
+vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active);
 
 #define W_SetupShot(ent,recoil,snd,maxhits) W_SetupShot_Dir(ent, v_forward, recoil, snd, maxhits)
