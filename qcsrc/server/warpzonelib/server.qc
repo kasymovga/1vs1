@@ -205,7 +205,6 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	return 1;
 }
 
-
 float WarpZone_Shadow_CustomizeEntity() {
 	if (other == self.owner)
 		return FALSE;
@@ -226,24 +225,43 @@ float WarpZone_Shadow_CustomizeEntity() {
 
 .entity wz_shadow;
 void WarpZone_Shadow_Think() {
+	float remove_needed;
+	remove_needed = FALSE;
 	if (self.owner.wz_shadow != self) {
-		remove(self);
-		return;
+		remove_needed = TRUE;
 	}
 	entity o = self.owner;
 	if (WarpZone_Find(o.origin + o.mins, o.origin + o.maxs) != self.enemy) {
 		self.owner.wz_shadow = world;
+		remove_needed = TRUE;
+	}
+	if (remove_needed) {
+		if (self.takedamage)
+			antilag_remove(self);
+
 		remove(self);
 		return;
 	}
 	self.nextthink = time;
-	setmodel(self, o.model);
+	if (self.modelindex != o.modelindex)
+		setmodel(self, o.model);
+
+	setsize(self, o.mins, o.maxs);
 	self.frame = o.frame;
 	self.colormap = o.colormap;
 	self.color = o.color;
 	self.angles = WarpZone_TransformAngles(self.enemy, o.angles);
 	self.skin = o.skin;
+	self.solid = o.solid;
 	setorigin(self, WarpZone_TransformOrigin(self.enemy, o.origin));
+}
+
+void WarpZone_Shadow_EventDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+	if (RadiusDamage_running) //No need proxy splash damage
+		return;
+
+	Damage(self.owner, inflictor, attacker, damage, deathtype, WarpZone_UnTransformOrigin(self.enemy, hitloc), WarpZone_UnTransformVelocity(self.enemy, force));
+	self.velocity = '0 0 0';
 }
 
 void WarpZone_Touch (void)
@@ -268,11 +286,19 @@ void WarpZone_Touch (void)
 			entity e = other.wz_shadow;
 			if (!e || e.enemy != self) {
 				e = other.wz_shadow = spawn();
+				e.classname = "wzshadow";
 				e.enemy = self;
 				e.customizeentityforclient = WarpZone_Shadow_CustomizeEntity;
 				e.nextthink = time;
 				e.think = WarpZone_Shadow_Think;
 				e.owner = other;
+				e.solid = other.solid;
+				if (other.takedamage) {
+					e.takedamage = other.takedamage;
+					e.event_damage = WarpZone_Shadow_EventDamage;
+				}
+				if (antilag_have(e))
+					antilag_add(e);
 			}
 		}
 		return;
@@ -840,9 +866,20 @@ void WarpZone_TraceToss_stub(entity e, entity forent, float toss_frametime, floa
 	WarpZone_tracetoss_velocity_z -= sv_gravity * (vlen(trace_endpos - self.origin) / vlen(self.velocity));
 }
 
+var void(entity targ, entity attacker, float deathtype) WarpZone_DamageForceModsSet_NextLink;
+void WarpZone_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+	if (targ.classname == "wzshadow") {
+		GameHook_DamageMod = GameHook_ForceMod = GameHook_MirrorDamageMod = GameHook_MirrorForceMod = 1;
+		return;
+	}
+	WarpZone_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+}
+
 void WarpZone_EnableHook() {
 	WarpZone_TraceToss = WarpZone_TraceToss_real;
 	WarpZone_TraceToss_ThroughZone = WarpZone_TraceToss_ThroughZone_real;
+	WarpZone_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = WarpZone_DamageForceModsSet;
 }
 
 void WarpZone_InitHook() {

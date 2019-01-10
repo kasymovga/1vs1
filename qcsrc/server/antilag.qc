@@ -155,3 +155,16 @@ void antilag_add(entity e) {
 	_antilag_chain = e;
 	antilag_teleported(e);
 }
+
+float antilag_have(entity e) {
+	if (clienttype(e) != CLIENTTYPE_NOTACLIENT)
+	if (e.classname == "player")
+		return TRUE;
+
+	entity e0;
+	for (e0 = _antilag_chain; e0.antilag_chain; e0 = e0.antilag_chain)
+		if (e0.antilag_chain == e)
+			return TRUE;
+
+	return FALSE;
+}

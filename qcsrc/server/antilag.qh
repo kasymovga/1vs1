@@ -5,3 +5,4 @@ void antilag_begin(entity source);
 void antilag_end();
 void antilag_add(entity e);
 void antilag_remove(entity e);
+float antilag_have(entity e);
