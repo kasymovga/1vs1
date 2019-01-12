@@ -1375,8 +1375,7 @@ void ClientConnect (void)
 	{
 		GameHookChain_RealClientConnect();
 	}
-
-	IP2C_SetCountry(self);
+	GameHookChain_ClientConnect();
 }
 
 /*

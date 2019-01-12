@@ -60,6 +60,12 @@ void IP2C_ShutdownHook(void) {
 	IP2C_ShutdownHook_NextLink();
 }
 
+var void() IP2C_ClientConnect_NextLink;
+void IP2C_ClientConnect(void) {
+	IP2C_SetCountry(self);
+	IP2C_ClientConnect_NextLink();
+}
+
 void IP2C_InitSV(void) {
     CACHE_CVAR(sv_ip2country);
     CACHE_CVAR(sv_ip2country_allow_fakeflag);
@@ -84,4 +90,6 @@ void IP2C_InitSV(void) {
 	GameHookChain_GameCommandHandle = IP2C_GameCommandHandle;
 	IP2C_ShutdownHook_NextLink = GameHookChain_Shutdown;
 	GameHookChain_Shutdown = IP2C_ShutdownHook;
+	IP2C_ClientConnect_NextLink = GameHookChain_ClientConnect;
+	GameHookChain_ClientConnect = IP2C_ClientConnect;
 }
