@@ -227,6 +227,7 @@ float w_hook(float req)
 		precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
 		precache_sound ("weapons/hook_fire.wav");
 		precache_sound ("weapons/hookbomb_fire.wav");
+		GrappleHookInit();
 	}
 	else if (req == WR_SETUP)
 	{

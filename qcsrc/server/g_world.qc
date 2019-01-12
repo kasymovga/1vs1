@@ -476,7 +476,6 @@ void readlevelcvars(void)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_footsteps);
-	CACHE_CVAR(g_grappling_hook);
 	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_norecoil);
 	CACHE_CVAR(sv_autotaunt);
@@ -541,7 +540,7 @@ void readdynamiccvars() {
 	bot_init();
 	Client_ReadCvars();
 	Teamplay_ReadCvars();
-	GrappleHookInit();
+	GrappleHookReadCvars();
 	turret_readcvars();
 	WaypointSprite_Init();
 	default_player_alpha = cvar("g_player_alpha");

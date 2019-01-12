@@ -568,7 +568,40 @@ void GrapplingHookFrame()
 	// note: The hook entity does the actual pulling
 }
 
+var void() GrappleHook_RealClientConnect_NextLink;
+void GrappleHook_RealClientConnect(void) {
+	// this function has been modified for Nexuiz
+	// don't remove these lines! old server or demos coud overwrite the new aliases
+	stuffcmd(self, "alias +hook +button6\n");
+	stuffcmd(self, "alias -hook -button6\n");
+	GrappleHook_RealClientConnect_NextLink();
+}
+
+var void(entity targ, entity attacker, float deathtype) GrappleHook_DamageForceModsSet_NextLink;
+void GrappleHook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+	if(targ.classname == "player")
+		if(targ.hook)
+			if(targ.hook.aiment)
+				if(targ.hook.aiment == attacker)
+					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
+
+	GrappleHook_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+}
+
+float GrappleHookInit_done;
 void GrappleHookInit()
+{
+	if (GrappleHookInit_done)
+		return;
+
+	GrappleHookInit_done = TRUE;
+	GrappleHook_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+	GameHookChain_RealClientConnect = GrappleHook_RealClientConnect;
+	GrappleHook_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = GrappleHook_DamageForceModsSet;
+}
+
+void GrappleHookReadCvars()
 {
 	CACHE_CVAR(g_balance_grapplehook_airfriction);
 	CACHE_CVAR(g_balance_grapplehook_break_damage);
@@ -584,12 +617,7 @@ void GrappleHookInit()
 	CACHE_CVAR(g_balance_grapplehook_speed_pull);
 	CACHE_CVAR(g_balance_grapplehook_stretch);
 	CACHE_CVAR(g_grappling_hook_tarzan);
-}
-
-void SetGrappleHookBindings()
-{
-	// this function has been modified for Nexuiz
-	// don't remove these lines! old server or demos coud overwrite the new aliases
-	stuffcmd(self, "alias +hook +button6\n");
-	stuffcmd(self, "alias -hook -button6\n");
+	CACHE_CVAR(g_grappling_hook);
+	if (g_grappling_hook)
+		GrappleHookInit();
 }

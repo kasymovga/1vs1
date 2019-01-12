@@ -2,7 +2,6 @@
 .entity		hook;
 void GrapplingHookFrame();
 void RemoveGrapplingHook(entity pl);
-void SetGrappleHookBindings();
 // (note: you can change the hook impulse #'s to whatever you please)
 .float hook_time;
 
@@ -14,3 +13,4 @@ float HOOK_WAITING_FOR_RELEASE = 16;
 .float hook_state;
 
 void GrappleHookInit();
+void GrappleHookReadCvars();

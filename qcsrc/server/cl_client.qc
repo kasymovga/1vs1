@@ -1349,9 +1349,6 @@ void ClientConnect (void)
 	// spawnfunc_waypoint sprites
 	WaypointSprite_InitClient(self);
 
-	// Wazat's grappling hook
-	SetGrappleHookBindings();
-
 	// get other cvars from player
 	Client_GetCvars();
 

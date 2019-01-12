@@ -421,19 +421,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (deathtype != DEATH_TEAMCHANGE)
 		damage = 0;
 
-
 	if (gameover || targ.killcount == -666)
 		return;
 
 	local entity oldself;
 	oldself = self;
 	self = targ;
-
-	if(targ.classname == "player")
-		if(targ.hook)
-			if(targ.hook.aiment)
-				if(targ.hook.aiment == attacker)
-					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
@@ -445,7 +438,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				return;
 			}
 	}
-
 	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 	{
 		// These are ALWAYS lethal
