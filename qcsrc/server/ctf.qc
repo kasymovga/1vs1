@@ -489,6 +489,7 @@ void FlagTouch()
 		return;
 
 	if (other.saboteur) //ignore saboteurs
+	if (other.team != self.team)
 		return;
 
 	if not(GameHookChain_PlayerCanBeCarrier(other))
