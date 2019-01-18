@@ -880,11 +880,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         if (trace_fraction < minviewdistance / vlen(delta))
             continue;
 
-        // rule 5: don't want to look at sky
-        if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-            continue;
-
-        // rule 6: we must not end up in trigger_hurt
+        // rule 5: we must not end up in trigger_hurt
         if (tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
         {
             dprint("trigger_hurt! ouch! and nothing else could find it!\n");
@@ -899,6 +895,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     if (i < attempts)
     {
         setorigin(e, start);
+		e.flags &~= FL_ONGROUND;
         e.angles = vectoangles(end - start);
 		e.angles_x = 0;
 		e.angles_z = 0;
