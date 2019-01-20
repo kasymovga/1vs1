@@ -81,7 +81,6 @@ float g_balance_keyhunt_score_capture;
 float g_balance_keyhunt_score_carrierfrag;
 float g_balance_keyhunt_score_collect;
 float g_balance_keyhunt_score_destroyed;
-float g_balance_keyhunt_score_destroyed_ownfactor;
 float g_balance_keyhunt_score_push;
 float g_balance_keyhunt_throwvelocity;
 float g_keyhunt_showenemycarrier;
@@ -401,11 +400,6 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	}
 
 	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
-
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE);
-	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
-	WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
-
 	kh_Key_AssignTo(key, initial_owner);
 }
 
@@ -414,11 +408,6 @@ void kh_Key_Hide(entity key)  // runs after when all the keys have been collecte
 	entity o;
 	o = key.owner;
 	kh_Key_AssignTo(key, world);
-	if(o) // it was attached
-		WaypointSprite_Kill(key.waypointsprite_attachedforcarrier);
-	else // it was dropped
-		WaypointSprite_DetachCarrier(key);
-
 	key.solid = SOLID_NOT;
 	key.effects |= EF_NODRAW;
 
@@ -513,6 +502,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 	if not(GameHookChain_PlayerCanBeCarrier(other))
 		return;
 
+	self.think = kh_Key_Think; //in case of kh_Key_MoveToRandomLocation_Think
 	kh_Key_Collect(self, other);
 }
 
@@ -560,7 +550,7 @@ void kh_Key_Think()  // runs all the time
 		}
 	}
 
-	// if in nodrop or time over, end the round
+	// if in nodrop or time over, respawn key
 	if not(self.owner)
 	if not(self.effects & EF_NODRAW)
 		if(time > self.pain_finished)
@@ -611,13 +601,11 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	entity key;
 	float score;
 	score = (kh_teams - 1) * g_balance_keyhunt_score_capture;
-	DistributeEvenly_Init(score, kh_teams);
+	float f = floor(score / kh_teams);
 	// twice the score for 3 team games, three times the score for 4 team games!
 	// note: for a win by destroying the key, this should NOT be applied
 	FOR_EACH_KH_KEY(key)
 	{
-		float f;
-		f = DistributeEvenly_Get(1);
 		if (kh_roundbased)
 			PlayerScore_Add(key.owner, SP_KH_CAPS, 1);
 		else {
@@ -669,12 +657,23 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	kh_FinishRound();
 }
 
+void kh_Key_MoveToRandomLocation_Think() {
+	vector v = self.origin;
+	if (MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
+		bprint("The ", self.netname, "^7 respawned\n");
+		self.pain_finished = time + g_balance_keyhunt_delay_return;
+		self.think = kh_Key_Think;
+		play2all(kh_sound_destroy);
+		te_tarexplosion(v);
+	}
+	self.nextthink = time;
+}
+
 void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a flag carrier off the map
 {
 	entity player, key, attacker;
 	float players;
 	float mykeys;
-	float f;
 
 	attacker = world;
 	if(lostkey.pusher)
@@ -696,8 +695,6 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 	}
 	else
 	{
-		float fragsleft, i, j, thisteam;
-
 		FOR_EACH_PLAYER(player)
 			if(player.team != teem)
 				++players;
@@ -713,54 +710,9 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
 			PlayerScore_Add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
 
-		DistributeEvenly_Init(g_balance_keyhunt_score_destroyed, mykeys * g_balance_keyhunt_score_destroyed_ownfactor + players);
-
-		FOR_EACH_KH_KEY(key)
-			if(key.owner && key.team != teem)
-			{
-				f = DistributeEvenly_Get(g_balance_keyhunt_score_destroyed_ownfactor);
-				kh_Scores_Event(key.owner, world, f, 0);
-			}
-
-		fragsleft = DistributeEvenly_Get(players);
-
-		// Now distribute these among all other teams...
-		j = kh_teams - 1;
-		for(i = 0; i < kh_teams; ++i)
-		{
-			thisteam = kh_Team_ByID(i);
-			if(thisteam == teem) // bad boy, no cookie - this WILL happen
-				continue;
-
-			players = 0;
-			FOR_EACH_PLAYER(player)
-				if(player.team == thisteam)
-					++players;
-
-			DistributeEvenly_Init(fragsleft, j);
-			fragsleft = DistributeEvenly_Get(j - 1);
-			DistributeEvenly_Init(DistributeEvenly_Get(1), players);
-
-			FOR_EACH_PLAYER(player)
-				if(player.team == thisteam)
-				{
-					f = DistributeEvenly_Get(1);
-					kh_Scores_Event(player, world, f, 0);
-				}
-
-			--j;
-		}
-
 		bprint("The ", ColoredTeamName(teem), "^7 could not take care of the ", lostkey.netname, "\n");
 	}
-	play2all(kh_sound_destroy);
-	te_tarexplosion(lostkey.origin);
-
-	if (kh_roundbased) {
-		FOR_EACH_KH_KEY(key)
-			kh_Key_Hide(key);
-	} else
-		kh_FinishRound();
+	lostkey.think = kh_Key_MoveToRandomLocation_Think;
 }
 
 void kh_FinishRound()  // runs when a team captures the keys
@@ -879,10 +831,13 @@ float kh_Key_waypointsprite_visible_for_player(entity e) // ??
 {
 	if(!kh_tracking_enabled)
 		return FALSE;
-	if(!self.owner)
-		return TRUE;
+
+	if (self.owner.effects & EF_NODRAW)
+		return FALSE;
+
 	if(!self.owner.owner)
 		return TRUE;
+
 	return FALSE;  // draw only when key is not owned
 }
 
@@ -996,7 +951,6 @@ void kh_init_delayed()  // sets up th KH environment
 	CACHE_CVAR(g_balance_keyhunt_score_carrierfrag);
 	CACHE_CVAR(g_balance_keyhunt_score_collect);
 	CACHE_CVAR(g_balance_keyhunt_score_destroyed);
-	CACHE_CVAR(g_balance_keyhunt_score_destroyed_ownfactor);
 	CACHE_CVAR(g_balance_keyhunt_score_push);
 	CACHE_CVAR(g_balance_keyhunt_throwvelocity);
 	CACHE_CVAR(g_keyhunt_showenemycarrier);
@@ -1035,6 +989,9 @@ void kh_init_delayed()  // sets up th KH environment
 		key.kh_worldkeynext = kh_worldkeylist;
 		kh_worldkeylist = key;
 		key.team = kh_Team_ByID(i);
+		WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, 0, key, waypointsprite_attachedforcarrier, FALSE);
+		key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
+		WaypointSprite_UpdateTeamRadar(key.waypointsprite_attachedforcarrier, RADARICON_FLAG, '0 1 1');
 	}
 }
 
