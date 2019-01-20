@@ -906,34 +906,21 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 	{
-		if (self.scale)
-			self.scale = self.scale * sv_world_scale;
-		else
-			self.scale = sv_world_scale;
-
-		self.reset = Item_Reset;
 		// it's a level item
-		if(self.spawnflags & 1)
-			self.noalign = 1;
-		if (self.noalign)
-			self.movetype = MOVETYPE_NONE;
-		else
-			self.movetype = MOVETYPE_TOSS;
-		// do item filtering according to game mode and other things
-		if (!self.noalign)
+		if(self.notq3a)
 		{
-			// first nudge it off the floor a little bit to avoid math errors
-			setorigin(self, self.origin + '0 0 1');
-			// set item size before we spawn a spawnfunc_waypoint
-			if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 48' * sv_world_scale);
-			else
-				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 32' * sv_world_scale);
-			// note droptofloor returns FALSE if stuck/or would fall too far
-			droptofloor();
-			waypoint_spawnforitem(self);
+			// We aren't TA or something like that, so we keep the Q3A entities
+			print("removed non-Q3A ", self.classname, "\n");
+			startitem_failed = TRUE;
+			remove (self);
+			return;
 		}
-
+		if (!g_pickup_items || GameHookChain_ItemForbidden())
+		{
+			startitem_failed = TRUE;
+			remove (self);
+			return;
+		}
 		if(teamplay)
 		{
 			if(self.notteam)
@@ -954,16 +941,32 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				return;
 			}
 		}
+		if (self.scale)
+			self.scale = self.scale * sv_world_scale;
+		else
+			self.scale = sv_world_scale;
 
-		if(self.notq3a)
+		if(self.spawnflags & 1)
+			self.noalign = 1;
+		if (self.noalign)
+			self.movetype = MOVETYPE_NONE;
+		else
+			self.movetype = MOVETYPE_TOSS;
+		// do item filtering according to game mode and other things
+		if (!self.noalign)
 		{
-			// We aren't TA or something like that, so we keep the Q3A entities
-			print("removed non-Q3A ", self.classname, "\n");
-			startitem_failed = TRUE;
-			remove (self);
-			return;
+			// first nudge it off the floor a little bit to avoid math errors
+			setorigin(self, self.origin + '0 0 1');
+			// set item size before we spawn a spawnfunc_waypoint
+			if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
+				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 48' * sv_world_scale);
+			else
+				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 32' * sv_world_scale);
+			// note droptofloor returns FALSE if stuck/or would fall too far
+			droptofloor();
+			waypoint_spawnforitem(self);
 		}
-
+		self.reset = Item_Reset;
 		/*
 		 * can't do it that way, as it would break maps
 		 * TODO make a target_give like entity another way, that perhaps has
@@ -993,13 +996,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 		weaponsInMap |= weaponid;
-		if (!g_pickup_items || GameHookChain_ItemForbidden())
-		{
-			startitem_failed = TRUE;
-			remove (self);
-			return;
-		}
-
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
 		precache_sound ("misc/itemrespawn.wav");
@@ -1313,9 +1309,10 @@ void spawnfunc_item_health_large (void) {
 }
 
 void spawnfunc_item_health_mega (void) {
-	if(!cvar("g_powerup_superhealth"))
+	if(!cvar("g_powerup_superhealth")) {
+		remove(self);
 		return;
-
+	}
 	if(!self.max_health)
 		self.max_health = cvar("g_pickup_healthmega_max");
 	if(!self.health)
@@ -1325,9 +1322,10 @@ void spawnfunc_item_health_mega (void) {
 
 // support old misnamed entities
 void spawnfunc_item_strength (void) {
-	if(!cvar("g_powerup_strength"))
+	if(!cvar("g_powerup_strength")) {
+		remove(self);
 		return;
-
+	}
 	precache_sound("weapons/strength_fire.wav");
 	self.strength_finished = cvar("g_balance_powerup_strength_time");
 	StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
@@ -1335,27 +1333,30 @@ void spawnfunc_item_strength (void) {
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!cvar("g_powerup_shield"))
+	if(!cvar("g_powerup_shield")) {
+		remove(self);
 		return;
-
+	}
 	self.invincible_finished = cvar("g_balance_powerup_invincible_time");
 	StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	powerup_invincible_init();
 }
 
 void spawnfunc_item_invisibility (void) {
-	if(!cvar("g_powerup_invisibility"))
+	if(!cvar("g_powerup_invisibility")) {
+		remove(self);
 		return;
-
+	}
 	self.invisibility_finished = cvar("g_balance_powerup_invisibility_time");
 	StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	powerup_invisibility_init();
 }
 
 void spawnfunc_item_speed (void) {
-	if(!cvar("g_powerup_speed"))
+	if(!cvar("g_powerup_speed")) {
+		remove(self);
 		return;
-
+	}
 	self.speed_finished = cvar("g_balance_powerup_speed_time");
 	StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	powerup_speed_init();
