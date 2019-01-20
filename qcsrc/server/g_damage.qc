@@ -226,7 +226,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 						Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 				}
 			}
-			if(teamplay && attacker.team == targ.team)
+			if(teamplay && attacker.team == targ.team && !targ.saboteur)
 			{
 				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
 				bprint ("^1", a, "^1 mows down a team mate\n");
@@ -462,7 +462,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(attacker.team == targ.team)
+			else if(attacker.team == targ.team && !targ.saboteur)
 			{
 				if(attacker != targ)
 				{
