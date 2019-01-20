@@ -785,7 +785,7 @@ string getrecords()
         return strcat("Records on this server:\n", s);
 }
 
-float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float shiftdistance)
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
@@ -795,12 +795,25 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     org = world.mins;
     delta = world.maxs - world.mins;
+	entity firstspot = findchain(classname, "info_player_deathmatch");
+	RandomSelection_Init();
+	entity spot;
+	for(spot = firstspot; spot; spot = spot.chain)
+		RandomSelection_Add(spot, 0, string_null, 1, 1);
 
     for (i = 0; i < attempts; ++i)
     {
-        start_x = org_x + random() * delta_x;
-        start_y = org_y + random() * delta_y;
-        start_z = org_z + random() * delta_z;
+		start = RandomSelection_chosen_ent.origin;
+		if (RandomSelection_chosen_ent.mins_z > e.mins_z)
+			start_z = start_z - e.mins_z + RandomSelection_chosen_ent.mins_z;
+
+        end_x = random() - 0.5;
+        end_y = random() - 0.5;
+        end_z = random() / 2;
+        end = start + normalize(end) * (vlen(delta) * random() + shiftdistance);
+        tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
+		end = start;
+		start = trace_endpos;
 
         // rule 1: start inside world bounds, and outside
         // solid, and don't start from somewhere where you can
@@ -818,43 +831,10 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         // rule 2: if we are too high, lower the point
         if (trace_fraction * delta_z > maxaboveground)
             start = trace_endpos + '0 0 1' * maxaboveground;
+
         enddown = trace_endpos;
 
-        // rule 3: make sure we aren't outside the map. This only works
-        // for somewhat well formed maps. A good rule of thumb is that
-        // the map should have a convex outside hull.
-        // these can be traceLINES as we already verified the starting box
-        mstart = start + 0.5 * (e.mins + e.maxs);
-        traceline(mstart, mstart + '1 0 0' * delta_x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        traceline(mstart, mstart - '1 0 0' * delta_x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        traceline(mstart, mstart + '0 1 0' * delta_y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        traceline(mstart, mstart - '0 1 0' * delta_y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        traceline(mstart, mstart + '0 0 1' * delta_z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-
-        // find a random vector to "look at"
-        end_x = org_x + random() * delta_x;
-        end_y = org_y + random() * delta_y;
-        end_z = org_z + random() * delta_z;
-        end = start + normalize(end - start) * vlen(delta);
-
-        // rule 4: start TO end must not be too short
-        tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
-        if (trace_startsolid)
-            continue;
-        if (trace_fraction < minviewdistance / vlen(delta))
-            continue;
-
-        // rule 5: we must not end up in trigger_hurt
+        // rule 3: we must not end up in trigger_hurt
         if (tracebox_hits_trigger_hurt(start, e.mins, e.maxs, enddown))
         {
             dprint("trigger_hurt! ouch! and nothing else could find it!\n");
@@ -868,9 +848,9 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     if (i < attempts)
     {
-        setorigin(e, start);
+        setorigin(e, trace_endpos);
 		e.flags &~= FL_ONGROUND;
-        e.angles = vectoangles(end - start);
+        e.angles = vectoangles(start - end);
 		e.angles_x = 0;
 		e.angles_z = 0;
         dprint("Needed ", ftos(i + 1), " attempts\n");
