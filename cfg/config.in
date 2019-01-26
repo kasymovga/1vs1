@@ -236,6 +236,11 @@ set g_akimbo_animation_shift 0
 set g_powerup_strength_akimbo 0
 set g_pinata_drop_all 0
 set sv_walkietalkie ""
+set g_player_pushfactor 0.5
+set g_player_pushdamage 25
+set g_player_pushdamage_speed 2000
+set g_player_trampledamage 25
+set g_player_trampledamage_speed 1000
 
 //Nexuiz compat
 set sv_spawnreplace_item_fuel "item_jetpack"

@@ -496,4 +496,5 @@ enum {
 .entity entcs;
 .float lastpushtime;
 .float saboteur;
+.float pushfactor;
 string lsmaps_reply2;

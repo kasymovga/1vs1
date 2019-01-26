@@ -20,6 +20,7 @@ float sv_servermodelsonly;
 float sv_reset_on_join;
 float g_teamdamage_resetspeed;
 float g_forced_respawn;
+float g_player_pushfactor;
 float g_balance_armor_regen;
 float g_balance_armor_regenlinear;
 float g_balance_armor_regenstable;
@@ -580,6 +581,7 @@ void PutObserverInServer(float frags_team_reset)
 	}
 
 	self.frags = FRAGS_SPECTATOR;
+	self.touch = world.touch;
 }
 
 float RestrictSkin(float s)
@@ -734,6 +736,8 @@ void PutClientInServer()
 		self.effects = 0;
 		self.air_finished = time + 12;
 		self.keys = 0;
+		self.touch = Player_Touch;
+		self.pushfactor = g_player_pushfactor;
 
 		if not(GameHook_EquipPlayerHandle()) {
 			if(inWarmupStage)
@@ -2214,6 +2218,7 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
 	CACHE_CVAR(g_player_brightness);
+	CACHE_CVAR(g_player_pushfactor);
 	CACHE_CVAR(g_spawnshieldtime);
 	CACHE_CVAR(g_spawnsound);
 	CACHE_CVAR(leadlimit);
