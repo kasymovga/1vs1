@@ -1,11 +1,6 @@
-#define car_spawnpnt enemy
-
 float g_vehicle_car_crush_dmg;
 float g_vehicle_car_crush_force;
 float g_vehicle_car_crush_minspeed;
-float g_vehicle_car_health;
-float g_vehicle_car_health_regen;
-float g_vehicle_car_health_regen_dmgpause;
 
 float CarPhysic_SendEntity(entity to, float sf);
 void car_exit(float eject);
@@ -215,25 +210,11 @@ void car_spawn()
 {
     self.think = car_think;
     self.nextthink = time;
-
-    self.health = CCVAR("_health");
-    self.event_damage = vehicle_stdproc_damage;
-    self.iscreature = TRUE;
     self.movetype   = MOVETYPE_WALK;
-    self.solid      = SOLID_SLIDEBOX;
-    self.takedamage = DAMAGE_AIM;
     self.touch      = car_touch;
     self.alpha      = 1;
 	self.colormap = 1024;
-	self.deadflag    = DEAD_NO;
-    self.bot_attack = TRUE;
-
-    setorigin(self,self.car_spawnpnt.origin);
-    self.angles = self.car_spawnpnt.angles;
-
-	vehicle_stdproc_setcolormod();
-
-    pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
+	vehicle_stdproc_spawn();
 }
 
 void car_blowup()
@@ -248,14 +229,6 @@ void car_blowup()
 
 void car_die()
 {
-
-    self.health = 0;
-    self.event_damage = SUB_Null;
-    self.iscreature = FALSE;
-    self.solid      = SOLID_NOT;
-    self.takedamage = DAMAGE_NO;
-    self.touch      = SUB_Null;
-    self.deadflag    = DEAD_DEAD;
 	self.think = car_blowup;
 	self.nextthink = time;
 
@@ -285,22 +258,21 @@ void car_dlc_reset() {
 
 void vewhicle_car_dinit()
 {
-    self.car_spawnpnt = spawn();
-    self.car_spawnpnt.angles = self.angles;
+    self.enemy = spawn();
+    self.enemy.angles = self.angles;
     traceline(self.origin + '0 0 16', self.origin - '0 0 10000', MOVE_WORLDONLY, self);
-    setorigin(self.car_spawnpnt,trace_endpos + '0 0 4');
-    setorigin(self,self.car_spawnpnt.origin);
+    setorigin(self.enemy,trace_endpos + '0 0 4');
+    setorigin(self,self.enemy.origin);
 
     if(self.team && !teamplay)
         self.team = 0;
     else
-        self.car_spawnpnt.team = self.team;
+        self.enemy.team = self.team;
 
     if (self.netname == "")      self.netname     = "car";
 
     //self.vehicle_viewport = spawn();
     self.vehicle_flags = VHF_HEALTHREGEN | VHF_HIDEPLAYER;
-    self.cvar_basename = "g_vehicle_car";
 	self.vehicle_heat = 0;
 
     //setmodel (self.vehicle_viewport, "null");
@@ -324,7 +296,6 @@ void vewhicle_car_dinit()
 
     //setorigin(self.vehicle_viewport,'35 0 -14');
     car_spawn();
-
     self.vehicle_die = car_die;
     self.vehicle_exit = car_exit;
 	self.reset = car_reset;
@@ -341,7 +312,6 @@ void vehicle_car_readcvars() {
 	CACHE_CVAR(g_vehicle_car_crush_dmg);
 	CACHE_CVAR(g_vehicle_car_crush_force);
 	CACHE_CVAR(g_vehicle_car_crush_minspeed);
-	CACHE_CVAR(g_vehicle_car_health);
 	CACHE_CVAR(g_vehicle_car_movement_inertia);
 	CACHE_CVAR(g_vehicle_car_speed_stop);
 	CACHE_CVAR(g_vehicle_car_speed);
@@ -383,13 +353,11 @@ float CarPhysic_SendEntity(entity to, float sf) {
 void spawnfunc_vehicle_car()
 {
 	vehicle_car_readcvars();
+    self.cvar_basename = "g_vehicle_car";
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-    //self.team                = -1;
     self.think = vewhicle_car_dinit;
     self.nextthink = time + 0.5;
-	self.health_max = g_vehicle_car_health;
-	self.health_regen = g_vehicle_car_health_regen;
-	self.health_regen_dmgpause = g_vehicle_car_health_regen_dmgpause;
+	vehicle_stdproc_prepare();
 }
