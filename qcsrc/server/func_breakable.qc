@@ -129,6 +129,7 @@ void func_breakable_behave_restore()
 	self.state = 0;
 	setsize(self, self.mins_save, self.maxs_save);
 	func_breakable_colormod();
+	setorigin(self, self.spawnorigin);
 }
 
 void func_breakable_destroyed()
@@ -250,6 +251,7 @@ void func_breakable_init() {
 void spawnfunc_func_breakable() {
 	float n, i;
 	func_breakable_init();
+	model_movable_init();
 	if(!self.health)
 		self.health = 100;
 	self.max_health = self.health;
@@ -296,6 +298,7 @@ void spawnfunc_func_breakable() {
 	self.team_saved = self.team;
 
 	self.reset = func_breakable_reset;
+	self.spawnorigin = self.origin;
 	func_breakable_reset();
 
 	if(self.napalm_count > 0) {

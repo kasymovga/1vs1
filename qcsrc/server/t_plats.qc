@@ -1964,7 +1964,7 @@ void func_magicwall_start_transition(float sol, void(void) done) {
 }
 
 void spawnfunc_func_magicwall(void) {
-    G_MODEL_INIT(SOLID_BSP)
+    model_init(SOLID_BSP);
 
     if(self.alpha_solid <= 0)
         self.alpha_solid = 1;

@@ -497,4 +497,5 @@ enum {
 .float lastpushtime;
 .float saboteur;
 .float pushfactor;
+.float friction;
 string lsmaps_reply2;

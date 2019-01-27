@@ -115,33 +115,69 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	return TRUE;
 }
 
+void model_think() {
+	entity e = self.enemy;
+	if (e.flags & FL_ONGROUND) {
+		float z_save = e.velocity_z;
+		e.velocity = e.velocity - e.velocity * frametime * e.friction;
+		e.velocity_z = z_save;
+	}
+	if (e.SendEntity == g_clientmodel_genericsendentity) {
+		e.SendFlags |= 2;
+	}
+	self.nextthink = time;
+}
 
-#define G_MODEL_INIT(sol) \
-	SetBrushEntityModel(); \
-	if(!self.scale) self.scale = self.modelscale; \
-	self.use = g_model_setcolormaptoactivator; \
-	InitializeEntity(self, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
+void model_reset() {
+	setorigin(self.enemy, self.spawnorigin);
+	self.enemy.velocity = '0 0 0';
+}
+
+void model_movable_init() {
+	if (self.pushfactor > 0) {
+		entity e = spawn();
+		e.enemy = self;
+		e.think = model_think;
+		e.nextthink = time;
+		e.spawnorigin = self.origin;
+		e.reset = model_reset;
+	}
+}
+
+void model_init_common_delayed() {
+	g_model_dropbyspawnflags();
+	model_movable_init();
+}
+
+void model_init_common(float sol) {
+	if(!self.scale) self.scale = self.modelscale;
+	self.use = g_model_setcolormaptoactivator;
+	InitializeEntity(self, model_init_common_delayed, INITPRIO_DROPTOFLOOR);
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT;
+}
 
-#define G_CLIENTMODEL_INIT(sol) \
-	SetBrushEntityModelNoLOD(); \
-	if(!self.scale) self.scale = self.modelscale; \
-	self.use = g_clientmodel_setcolormaptoactivator; \
-	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
-	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
+void model_init(float sol) {
+	SetBrushEntityModel();
+	model_init_common(sol);
+}
+
+void clientmodel_init(float sol) {
+	SetBrushEntityModelNoLOD();
+	model_init_common(sol);
+	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0;
 	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
+}
 
 // non-solid model entities:
-void spawnfunc_misc_gamemodel()         { G_MODEL_INIT      (SOLID_NOT) } // model entity
-void spawnfunc_misc_clientmodel()       { G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
-void spawnfunc_misc_models()            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+void spawnfunc_misc_gamemodel()         { model_init      (SOLID_NOT);} // model entity
+void spawnfunc_misc_clientmodel()       { clientmodel_init(SOLID_NOT);} // model entity
+void spawnfunc_misc_models()            { model_init      (SOLID_NOT);} // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
-void spawnfunc_func_illusionary()       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
-void spawnfunc_func_clientillusionary() { G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
-void spawnfunc_func_static()            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
+void spawnfunc_func_illusionary()       { model_init      (SOLID_NOT);} // Q1 name (WARNING: MISPREDICTED)
+void spawnfunc_func_clientillusionary() { clientmodel_init(SOLID_NOT);} // brush entity
+void spawnfunc_func_static()            { model_init      (SOLID_NOT);} // DEPRECATED old alias name from some other game
 
 // solid brush entities
-void spawnfunc_func_wall()              { G_MODEL_INIT      (SOLID_BSP) } // Q1 name
-void spawnfunc_func_clientwall()        { G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+void spawnfunc_func_wall()              { model_init      (SOLID_BSP);} // Q1 name
+void spawnfunc_func_clientwall()        { clientmodel_init(SOLID_BSP);} // brush entity (WARNING: MISPREDICTED)
