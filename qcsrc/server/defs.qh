@@ -187,7 +187,6 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float pauserothealth_finished;
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
-.string item_pickupsound;
 
 // definitions for weaponsystem
 

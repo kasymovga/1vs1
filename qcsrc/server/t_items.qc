@@ -518,7 +518,7 @@ float Item_GiveTo(entity item, entity player)
 					if (Akimbo_GiveWeapon (player, i, item.netname))
 					{
 						pickedup = TRUE;
-						sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+						sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 					}
 
 			if not(pickedup)
@@ -655,7 +655,7 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -1014,7 +1014,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
 	self.mdl = itemmodel;
-	self.item_pickupsound = pickupsound;
+	self.noise = pickupsound;
 	// let mappers override respawntime
 	if(!self.respawntime) // both set
 	{

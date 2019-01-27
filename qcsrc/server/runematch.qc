@@ -661,9 +661,9 @@ void healer_spawn(float health_amount, float _delay, entity _owner) {
 	e.spawnshieldtime = TRUE;
 	e.owner = _owner;
 	if (health_amount > 0)
-		e.item_pickupsound = "misc/minihealth.wav";
+		e.noise = "misc/minihealth.wav";
 	else
-		e.item_pickupsound = "misc/bodyimpact1.wav";
+		e.noise = "misc/bodyimpact1.wav";
 
 	e.nextthink = time + _delay;
 }
