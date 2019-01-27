@@ -1254,11 +1254,8 @@ void Player_Touch() {
 	float push_speed = vlen(push_velocity);
 	if (push_speed > damage_speed * other.pushfactor && damage > 0 && other.takedamage)
 		Damage(other, self, self, damage * (push_speed / damage_speed), DEATH_FALL, other.origin, push_velocity);
-	else {
+	else
 		other.velocity = other.velocity + push_velocity;
-		other.pusher = self;
-		other.pushltime = time + g_maxpushtime;
-	}
 }
 
 void Player_Init() {
