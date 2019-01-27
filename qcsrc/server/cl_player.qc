@@ -1238,7 +1238,7 @@ void Player_Touch() {
 	if (velocity_norm * trace_plane_normal >= 0) //wrong direction
 		return;
 
-	vector push_velocity = self.velocity - velocity_norm * max(0, velocity_norm * other.velocity);
+	vector push_velocity = self.velocity * other.pushfactor - velocity_norm * max(0, velocity_norm * other.velocity);
 	if (normalize(push_velocity) * trace_plane_normal >= 0) //wrong direction
 		return;
 
@@ -1250,13 +1250,13 @@ void Player_Touch() {
 		damage_speed = g_player_pushdamage_speed;
 	}
 	float push_speed = vlen(push_velocity);
-	if (push_speed > damage_speed && damage > 0)
-		Damage(other, self, self, damage * (push_speed / damage_speed), DEATH_FALL, other.origin, push_velocity * other.pushfactor);
-	else
-		other.velocity = other.velocity + push_velocity * other.pushfactor;
-
-	other.pusher = self;
-	other.pushltime = time + g_maxpushtime;
+	if (push_speed > damage_speed * other.pushfactor && damage > 0 && other.takedamage)
+		Damage(other, self, self, damage * (push_speed / damage_speed), DEATH_FALL, other.origin, push_velocity);
+	else if (trace_plane_normal != '0 0 1') {
+		other.velocity = other.velocity + push_velocity;
+		other.pusher = self;
+		other.pushltime = time + g_maxpushtime;
+	}
 }
 
 void Player_Init() {
