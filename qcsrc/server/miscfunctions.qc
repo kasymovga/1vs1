@@ -788,7 +788,7 @@ string getrecords()
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float shiftdistance)
 {
     float m, i;
-    vector start, org, delta, end, enddown, mstart;
+    vector start, org, delta, end, enddown;
 
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
