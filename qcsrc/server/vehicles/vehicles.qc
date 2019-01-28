@@ -310,41 +310,4 @@ void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float r
 	self.owner.angles_z = 0;
     self.owner = world;
 }
-
-void vehicle_stdproc_die() {
-    self.health = 0;
-    self.event_damage = SUB_Null;
-    self.iscreature = FALSE;
-    self.solid      = SOLID_NOT;
-    self.takedamage = DAMAGE_NO;
-    self.touch      = SUB_Null;
-    self.deadflag    = DEAD_DEAD;
-}
-
-void vehicle_stdproc_spawn() {
-    self.health = self.health_max;
-    self.vehicle_shield = self.shield_max;
-    self.event_damage = vehicle_stdproc_damage;
-    self.iscreature = TRUE;
-    self.solid      = SOLID_SLIDEBOX;
-    self.takedamage = DAMAGE_AIM;
-	self.deadflag    = DEAD_NO;
-    self.bot_attack = TRUE;
-    self.event_damage = vehicle_stdproc_damage;
-    setorigin(self,self.enemy.origin);
-    self.angles = self.enemy.angles;
-	antilag_teleported(self);
-	vehicle_stdproc_setcolormod();
-    pointparticles(particleeffectnum("teleport"), self.origin + (self.mins + self.maxs) * 0.5, '0 0 0', 1);
-}
-
-void vehicle_stdproc_prepare() {
-	self.health_max = CCVAR("_health");
-	self.health_regen = CCVAR("_health_regen");
-	self.health_regen_dmgpause = CCVAR("_health_regen_dmgpause");
-	self.shield_max = CCVAR("_shield");
-	self.shield_regen = CCVAR("_shield_regen");
-	self.shield_regen_dmgpause = CCVAR("_shield_regen_dmgpause");
-	antilag_add(self);
-}
 #endif

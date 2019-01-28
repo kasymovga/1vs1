@@ -18,6 +18,8 @@
 #define MODEL_SPIDERBOT_JUMP_END 155
 #define MODEL_SPIDERBOT_JUMP_LENGTH 31
 
+#define spiderbot_spawnpnt enemy
+
 float g_vehicle_spiderbot_crush_dmg;
 float g_vehicle_spiderbot_crush_force;
 float g_vehicle_spiderbot_crush_minspeed;
@@ -26,6 +28,9 @@ float g_vehicle_spiderbot_head_pitchlimit_up;
 float g_vehicle_spiderbot_head_pitchspeed;
 float g_vehicle_spiderbot_head_turnlimit;
 float g_vehicle_spiderbot_head_turnspeed;
+float g_vehicle_spiderbot_health;
+float g_vehicle_spiderbot_health_regen;
+float g_vehicle_spiderbot_health_regen_dmgpause;
 float g_vehicle_spiderbot_minigun_cooldown;
 float g_vehicle_spiderbot_minigun_damage;
 float g_vehicle_spiderbot_minigun_heat;
@@ -42,6 +47,9 @@ float g_vehicle_spiderbot_rocket_speed;
 float g_vehicle_spiderbot_rocket_spread;
 float g_vehicle_spiderbot_rocket_turnrate;
 float g_vehicle_spiderbot_rocket_up;
+float g_vehicle_spiderbot_shield;
+float g_vehicle_spiderbot_shield_regen;
+float g_vehicle_spiderbot_shield_regen_dmgpause;
 
 float SpiderbotPhysic_SendEntity(entity to, float sf);
 void spiderbot_exit(float eject);
@@ -387,8 +395,8 @@ void spiderbot_enter()
 	if not(vehicle_enter(self.tur_head.angles + self.angles, spiderbot_physic_hook, HUD_SPIDERBOT, SpiderbotPhysic_SendEntity))
 		return;
 
-    self.owner.vehicle_health = (self.health / self.health_max);
-    self.owner.vehicle_shield = (self.vehicle_shield / self.shield_max);
+    self.owner.vehicle_health = (self.health / g_vehicle_spiderbot_health);
+    self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_spiderbot_shield);
 	self.owner.vehicle_heat = self.vehicle_heat;
     self.colormap             = self.owner.colormap;
     self.tur_head.colormap    = self.owner.colormap;
@@ -462,13 +470,30 @@ void spiderbot_spawn()
     self.frame = 5;
     self.think = spiderbot_think;
     self.nextthink = time;
+
+    self.health = CCVAR("_health");
+    self.vehicle_shield = CCVAR("_shield");
+    self.event_damage = vehicle_stdproc_damage;
+    self.iscreature = TRUE;
     self.movetype   = MOVETYPE_WALK;
+    self.solid      = SOLID_SLIDEBOX;
+    self.takedamage = DAMAGE_AIM;
     self.touch      = spiderbot_touch;
     self.alpha      = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
     self.tur_head.angles = '0 0 0';
 	self.colormap = 1024;
 	self.tur_head.colormap = 1024;
-	vehicle_stdproc_spawn();
+	self.deadflag    = DEAD_NO;
+    self.bot_attack = TRUE;
+
+    setsize(self,spiderbot_MIN,spiderbot_MAX);
+
+    setorigin(self,self.spiderbot_spawnpnt.origin);
+    self.angles = self.spiderbot_spawnpnt.angles;
+
+	vehicle_stdproc_setcolormod();
+
+    pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 }
 
 void spiderbot_blowup()
@@ -483,7 +508,14 @@ void spiderbot_blowup()
 
 void spiderbot_die()
 {
-	vehicle_stdproc_die();
+
+    self.health = 0;
+    self.event_damage = SUB_Null;
+    self.iscreature = FALSE;
+    self.solid      = SOLID_NOT;
+    self.takedamage = DAMAGE_NO;
+    self.touch      = SUB_Null;
+    self.deadflag    = DEAD_DEAD;
 	self.frame = 0;
 	self.tur_head.frame = 0;
 	self.think = spiderbot_blowup;
@@ -508,17 +540,17 @@ void spiderbot_reset() {
 
 void vewhicle_spiderbot_dinit()
 {
-    self.enemy = spawn();
-    self.enemy.angles = self.angles;
+    self.spiderbot_spawnpnt = spawn();
+    self.spiderbot_spawnpnt.angles = self.angles;
 
     traceline(self.origin + '0 0 16', self.origin - '0 0 10000', MOVE_WORLDONLY, self);
-    setorigin(self.enemy,trace_endpos + '0 0 4');
-    setorigin(self,self.enemy.origin);
+    setorigin(self.spiderbot_spawnpnt,trace_endpos + '0 0 4');
+    setorigin(self,self.spiderbot_spawnpnt.origin);
 
     if(self.team && !teamplay)
         self.team = 0;
     else
-        self.enemy.team = self.team;
+        self.spiderbot_spawnpnt.team = self.team;
 
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);
@@ -534,6 +566,7 @@ void vewhicle_spiderbot_dinit()
     self.gun2 = spawn();
     //self.vehicle_viewport = spawn();
     self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER;
+    self.cvar_basename = "g_vehicle_spiderbot";
 	self.vehicle_heat = 0;
 
 	spiderbot_stop(self);
@@ -559,7 +592,6 @@ void vewhicle_spiderbot_dinit()
     self.vehicle_die = spiderbot_die;
     self.vehicle_exit = spiderbot_exit;
 	self.reset = spiderbot_reset;
-    setsize(self,spiderbot_MIN,spiderbot_MAX);
 }
 
 float vehicle_spiderbot_readcvars_done;
@@ -577,6 +609,7 @@ void vehicle_spiderbot_readcvars() {
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchspeed);
 	CACHE_CVAR(g_vehicle_spiderbot_head_turnlimit);
 	CACHE_CVAR(g_vehicle_spiderbot_head_turnspeed);
+	CACHE_CVAR(g_vehicle_spiderbot_health);
 	CACHE_CVAR(g_vehicle_spiderbot_jump_accel);
 	CACHE_CVAR(g_vehicle_spiderbot_jump_up);
 	CACHE_CVAR(g_vehicle_spiderbot_minigun_cooldown);
@@ -596,6 +629,9 @@ void vehicle_spiderbot_readcvars() {
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_spread);
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_turnrate);
 	CACHE_CVAR(g_vehicle_spiderbot_rocket_up);
+	CACHE_CVAR(g_vehicle_spiderbot_shield);
+	CACHE_CVAR(g_vehicle_spiderbot_shield_regen);
+	CACHE_CVAR(g_vehicle_spiderbot_shield_regen_dmgpause);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_stop);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_strafe);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_walk);
@@ -644,8 +680,15 @@ float SpiderbotPhysic_SendEntity(entity to, float sf) {
 void spawnfunc_vehicle_spiderbot()
 {
 	vehicle_spiderbot_readcvars();
-    self.cvar_basename = "g_vehicle_spiderbot";
+    // g_turrets_common_precash();
+
+    //self.team                = -1;
     self.think = vewhicle_spiderbot_dinit;
     self.nextthink = time + 0.5;
-	vehicle_stdproc_prepare();
+	self.health_max = g_vehicle_spiderbot_health;
+	self.health_regen = g_vehicle_spiderbot_health_regen;
+	self.health_regen_dmgpause = g_vehicle_spiderbot_health_regen_dmgpause;
+	self.shield_max = g_vehicle_spiderbot_shield;
+	self.shield_regen = g_vehicle_spiderbot_shield_regen;
+	self.shield_regen_dmgpause = g_vehicle_spiderbot_shield_regen_dmgpause;
 }

@@ -59,8 +59,5 @@ float player_can_use_vehicle(entity plr);
 void vehicle_adjust_player_position(entity plr, entity veh, float start_offset, float back, float up);
 float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, float)phys_send );
 void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float range);
-void vehicle_stdproc_spawn();
-void vehicle_stdproc_die();
-void vehicle_stdproc_prepare();
 
 #endif
