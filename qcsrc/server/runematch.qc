@@ -728,11 +728,6 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 		if(attacker.classname == "player") {
 			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker))
 			{
-				if (attacker.runes & RUNE_VAMPIRE)
-				if ((d = damage * g_balance_rune_vampire_damage_factor) >= 1)
-				if (attacker.health < g_balance_rune_vampire_max_health)
-					healer_spawn(d, 0.5, attacker);
-
 				if (targ.runes & CURSE_ALTRUISM)
 				if ((d = damage * g_balance_curse_altruism_damage_factor) >= 1)
 					healer_spawn(d, 0.5, attacker);
@@ -742,6 +737,11 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 					Fire_AddDamage(targ, world, d, 5, DEATH_FIRE);
 
 				if (PLAYER_REALLY_ALIVE(targ)) {
+					if (attacker.runes & RUNE_VAMPIRE)
+					if ((d = damage * g_balance_rune_vampire_damage_factor) >= 1)
+					if (attacker.health < g_balance_rune_vampire_max_health)
+						healer_spawn(d, 0.5, attacker);
+
 					if (targ.runes & RUNE_DEFENSE)
 					if ((d = damage * g_balance_rune_defense_damage_factor) >= 1)
 						defense_attack_spawn(targ, attacker, d);
