@@ -51,7 +51,7 @@ float IP2C_GameCommandHandle(string cmd, float tokens) {
 	if(IP2C_GameCommand(cmd, tokens))
 		return TRUE;
 
-	return FALSE;
+	return IP2C_GameCommandHandle_NextLink(cmd, tokens);
 }
 
 var void() IP2C_ShutdownHook_NextLink;
