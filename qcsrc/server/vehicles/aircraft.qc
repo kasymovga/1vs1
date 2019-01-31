@@ -433,11 +433,6 @@ void aircraft_die()
 	}
 }
 
-void aircraft_reset() {
-	aircraft_die();
-	aircraft_spawn();
-}
-
 void vewhicle_aircraft_dinit()
 {
     self.aircraft_spawnpnt = spawn();
@@ -491,7 +486,8 @@ void vewhicle_aircraft_dinit()
 
     self.vehicle_die = aircraft_die;
     self.vehicle_exit = aircraft_exit;
-	self.reset = aircraft_reset;
+    self.vehicle_spawn = aircraft_spawn;
+	self.reset = vehicle_reset;
 }
 
 float vehicle_aircraft_readcvars_done;

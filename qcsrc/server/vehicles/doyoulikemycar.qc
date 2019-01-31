@@ -271,11 +271,6 @@ void car_die()
 	}
 }
 
-void car_reset() {
-	car_die();
-	car_spawn();
-}
-
 void car_dlc_reset() {
 	setattachment(self.gun1, self, "wheel_f_l");
 	setattachment(self.gun2, self, "wheel_f_r");
@@ -327,7 +322,8 @@ void vewhicle_car_dinit()
 
     self.vehicle_die = car_die;
     self.vehicle_exit = car_exit;
-	self.reset = car_reset;
+    self.vehicle_spawn = car_spawn;
+	self.reset = vehicle_reset;
 }
 
 float vehicle_car_readcvars_done;

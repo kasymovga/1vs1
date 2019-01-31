@@ -42,9 +42,6 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .float shield_regen_dmgpause;
 .float health_regen_dmgpause;
 
-#define VHEF_NORMAL 0
-#define VHEF_EJECT 1
-
 .void(float exit_flags) vehicle_exit;
 .void() vehicle_die;
 .void() vehicle_spawn;
@@ -59,5 +56,6 @@ float player_can_use_vehicle(entity plr);
 void vehicle_adjust_player_position(entity plr, entity veh, float start_offset, float back, float up);
 float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, float)phys_send );
 void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float range);
+void vehicle_reset();
 
 #endif

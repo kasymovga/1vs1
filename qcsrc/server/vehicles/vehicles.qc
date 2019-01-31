@@ -158,20 +158,17 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
     if(self.health <= 0)
     {
         if(self.owner)
-            vehicle_extract_player(self.owner, VHEF_EJECT);
+            vehicle_extract_player(self.owner, TRUE);
 
         self.vehicle_die();
     }
-
-
 }
 
-void bugmenot()
-{
-    self.vehicle_exit       = self.vehicle_exit;
-    self.vehicle_die        = self.vehicle_exit;
-    self.vehicle_spawn      = self.vehicle_exit;
-    self.vehicle_message    = self.vehicle_exit;
+void vehicle_reset() {
+	if(self.owner)
+		vehicle_extract_player(self.owner, TRUE);
+
+	self.vehicle_spawn();
 }
 
 var void(float killed) vehicle_PlayerClear_NextLink;
