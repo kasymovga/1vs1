@@ -1,5 +1,3 @@
-#define aircraft_spawnpnt enemy
-
 float g_vehicle_aircraft_crush_dmg;
 float g_vehicle_aircraft_crush_force;
 float g_vehicle_aircraft_crush_minspeed;
@@ -387,8 +385,8 @@ void aircraft_spawn()
 
     setsize(self,aircraft_MIN,aircraft_MAX);
 
-    setorigin(self,self.aircraft_spawnpnt.origin);
-    self.angles = self.aircraft_spawnpnt.angles;
+    setorigin(self,self.enemy.origin);
+    self.angles = self.enemy.angles;
 
 	vehicle_stdproc_setcolormod();
 
@@ -435,17 +433,17 @@ void aircraft_die()
 
 void vewhicle_aircraft_dinit()
 {
-    self.aircraft_spawnpnt = spawn();
-    self.aircraft_spawnpnt.angles = self.angles;
+    self.enemy = spawn();
+    self.enemy.angles = self.angles;
 
     traceline(self.origin + '0 0 16', self.origin - '0 0 10000', MOVE_WORLDONLY, self);
-    setorigin(self.aircraft_spawnpnt,trace_endpos + '0 0 4');
-    setorigin(self,self.aircraft_spawnpnt.origin);
+    setorigin(self.enemy,trace_endpos + '0 0 4');
+    setorigin(self,self.enemy.origin);
 
     if(self.team && !teamplay)
         self.team = 0;
     else
-        self.aircraft_spawnpnt.team = self.team;
+        self.enemy.team = self.team;
 
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);

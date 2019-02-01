@@ -1,5 +1,3 @@
-#define car_spawnpnt enemy
-
 float g_vehicle_car_crush_dmg;
 float g_vehicle_car_crush_force;
 float g_vehicle_car_crush_minspeed;
@@ -228,8 +226,8 @@ void car_spawn()
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
 
-    setorigin(self,self.car_spawnpnt.origin);
-    self.angles = self.car_spawnpnt.angles;
+    setorigin(self,self.enemy.origin);
+    self.angles = self.enemy.angles;
 
 	vehicle_stdproc_setcolormod();
 
@@ -280,16 +278,16 @@ void car_dlc_reset() {
 
 void vewhicle_car_dinit()
 {
-    self.car_spawnpnt = spawn();
-    self.car_spawnpnt.angles = self.angles;
+    self.enemy = spawn();
+    self.enemy.angles = self.angles;
     traceline(self.origin + '0 0 16', self.origin - '0 0 10000', MOVE_WORLDONLY, self);
-    setorigin(self.car_spawnpnt,trace_endpos + '0 0 4');
-    setorigin(self,self.car_spawnpnt.origin);
+    setorigin(self.enemy,trace_endpos + '0 0 4');
+    setorigin(self,self.enemy.origin);
 
     if(self.team && !teamplay)
         self.team = 0;
     else
-        self.car_spawnpnt.team = self.team;
+        self.enemy.team = self.team;
 
     if (self.netname == "")      self.netname     = "car";
 

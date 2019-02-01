@@ -18,8 +18,6 @@
 #define MODEL_SPIDERBOT_JUMP_END 155
 #define MODEL_SPIDERBOT_JUMP_LENGTH 31
 
-#define spiderbot_spawnpnt enemy
-
 float g_vehicle_spiderbot_crush_dmg;
 float g_vehicle_spiderbot_crush_force;
 float g_vehicle_spiderbot_crush_minspeed;
@@ -488,8 +486,8 @@ void spiderbot_spawn()
 
     setsize(self,spiderbot_MIN,spiderbot_MAX);
 
-    setorigin(self,self.spiderbot_spawnpnt.origin);
-    self.angles = self.spiderbot_spawnpnt.angles;
+    setorigin(self,self.enemy.origin);
+    self.angles = self.enemy.angles;
 
 	vehicle_stdproc_setcolormod();
 
@@ -535,17 +533,17 @@ void spiderbot_die()
 
 void vewhicle_spiderbot_dinit()
 {
-    self.spiderbot_spawnpnt = spawn();
-    self.spiderbot_spawnpnt.angles = self.angles;
+    self.enemy = spawn();
+    self.enemy.angles = self.angles;
 
     traceline(self.origin + '0 0 16', self.origin - '0 0 10000', MOVE_WORLDONLY, self);
-    setorigin(self.spiderbot_spawnpnt,trace_endpos + '0 0 4');
-    setorigin(self,self.spiderbot_spawnpnt.origin);
+    setorigin(self.enemy,trace_endpos + '0 0 4');
+    setorigin(self,self.enemy.origin);
 
     if(self.team && !teamplay)
         self.team = 0;
     else
-        self.spiderbot_spawnpnt.team = self.team;
+        self.enemy.team = self.team;
 
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);
