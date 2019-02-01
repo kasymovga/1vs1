@@ -721,6 +721,15 @@ void defense_attack_spawn(entity from, entity to, float d) {
 	defense_attack_chain = e;
 }
 
+float runematch_targ_prev_deadflag;
+float runematch_targ_prev_runes;
+var void(entity targ, entity attacker, float deathtype) runematch_DamageForceModsSet_NextLink;
+void(entity targ, entity attacker, float deathtype) runematch_DamageForceModsSet {
+	runematch_targ_prev_runes = targ.runes;
+	runematch_targ_prev_deadflag = targ.deadflag;
+	runematch_DamageForceModsSet_NextLink(attacker, targ, deathtype);
+}
+
 var void(entity targ, entity attacker, float damage, vector force) runematch_DamageForceDone_NextLink;
 void runematch_DamageForceDone(entity targ, entity attacker, float damage, vector force) {
 	float d;
@@ -728,7 +737,7 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 		if(attacker.classname == "player") {
 			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker))
 			{
-				if (targ.runes & CURSE_ALTRUISM)
+				if (runematch_targ_prev_runes & CURSE_ALTRUISM)
 				if ((d = damage * g_balance_curse_altruism_damage_factor) >= 1)
 					healer_spawn(d, 0.5, attacker);
 
@@ -736,13 +745,13 @@ void runematch_DamageForceDone(entity targ, entity attacker, float damage, vecto
 				if ((d = damage * g_balance_rune_ignite_damage_factor) >= 1)
 					Fire_AddDamage(targ, world, d, 5, DEATH_FIRE);
 
-				if (PLAYER_REALLY_ALIVE(targ)) {
+				if (runematch_targ_prev_deadflag == DEAD_NO) {
 					if (attacker.runes & RUNE_VAMPIRE)
 					if ((d = damage * g_balance_rune_vampire_damage_factor) >= 1)
 					if (attacker.health < g_balance_rune_vampire_max_health)
 						healer_spawn(d, 0.5, attacker);
 
-					if (targ.runes & RUNE_DEFENSE)
+					if (runematch_targ_prev_runes & RUNE_DEFENSE)
 					if ((d = damage * g_balance_rune_defense_damage_factor) >= 1)
 						defense_attack_spawn(targ, attacker, d);
 
@@ -884,6 +893,8 @@ void runes_init() {
 	GameHookChain_PlayerVisibleThroughWallFor = runematch_PlayerVisibleThroughWallFor;
 	runematch_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
 	GameHookChain_PlayerCanSeeHealthFor = runematch_PlayerCanSeeHealthFor;
+	runematch_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = runematch_DamageForceModsSet;
 	entity e;
 	e = spawn();
 	e.think = spawn_runes;
