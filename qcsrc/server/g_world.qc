@@ -1,6 +1,10 @@
 float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
+float g_balance_falldamage_deadminspeed;
+float g_balance_falldamage_factor;
+float g_balance_falldamage_minspeed;
+float g_balance_falldamage_maxdamage;
 
 string GetMapname();
 string GetGametype();
@@ -534,6 +538,10 @@ void readlevelcvars(void)
 }
 
 void readdynamiccvars() {
+	CACHE_CVAR(g_balance_falldamage_deadminspeed);
+	CACHE_CVAR(g_balance_falldamage_factor);
+	CACHE_CVAR(g_balance_falldamage_minspeed);
+	CACHE_CVAR(g_balance_falldamage_maxdamage);
 	W_Init();
 	Damage_ReadCvars();
 	PhysicReadCvars();

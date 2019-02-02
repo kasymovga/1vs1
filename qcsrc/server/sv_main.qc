@@ -71,16 +71,14 @@ void CreatureFrame (void)
 				self.air_finished = time + 12;
 			}
 			// check for falling damage
-			if(!self.hook.state)
-			{
-				dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-				if (self.deadflag)
-					dm = (dm - cvar("g_balance_falldamage_deadminspeed")) * cvar("g_balance_falldamage_factor");
-				else
-					dm = min((dm - cvar("g_balance_falldamage_minspeed")) * cvar("g_balance_falldamage_factor"), cvar("g_balance_falldamage_maxdamage"));
-				if (dm > 0)
-					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
-			}
+			dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+			if (self.deadflag)
+				dm = (dm - g_balance_falldamage_deadminspeed) * g_balance_falldamage_factor;
+			else
+				dm = min((dm - g_balance_falldamage_minspeed) * g_balance_falldamage_factor, g_balance_falldamage_maxdamage);
+
+			if (dm > 0)
+				Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 
 			// play stupid sounds
 			if (g_footsteps)

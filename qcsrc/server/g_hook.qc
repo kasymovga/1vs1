@@ -532,10 +532,18 @@ void GrappleHook_RealClientConnect(void) {
 var void(entity targ, entity attacker, float deathtype) GrappleHook_DamageForceModsSet_NextLink;
 void GrappleHook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	if(targ.classname == "player")
-		if(targ.hook)
+		if(targ.hook) {
 			if(targ.hook.aiment)
 				if(targ.hook.aiment == attacker)
 					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
+
+			if (targ.hook.state)
+			if not(attacker)
+			if (deathtype == DEATH_FALL) {
+				GameHook_DamageMod = 0;
+				GameHook_ForceMod = 0;
+			}
+		}
 
 	GrappleHook_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
