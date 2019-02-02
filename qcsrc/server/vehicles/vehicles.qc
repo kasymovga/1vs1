@@ -148,7 +148,7 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
 
     if(self.owner)
     {
-        self.owner.vehicle_health = self.health / CCVAR("_health");
+        self.owner.vehicle_health = self.health / self.health_max;
 
         if(self.vehicle_flags & VHF_HASSHIELD)
             self.owner.vehicle_shield = self.vehicle_shield / cvar(strcat(self.cvar_basename,"_shield"));
@@ -306,5 +306,15 @@ void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float r
 	self.owner.angles_x = 0;
 	self.owner.angles_z = 0;
     self.owner = world;
+}
+
+void(string name, void() delayed_init) vehicle_stdproc_init {
+	self.health_max = cvar(strcat("g_vehicle_", name, "_health"));
+	self.health_regen = cvar(strcat("g_vehicle_", name, "_health_regen"));
+	self.health_regen_dmgpause = cvar(strcat("g_vehicle_", name, "_health_regen_dmgpause"));
+	self.shield_max = cvar(strcat("g_vehicle_", name, "_shield"));
+	self.shield_regen = cvar(strcat("g_vehicle_", name, "_shield_regen"));
+	self.shield_regen_dmgpause = cvar(strcat("g_vehicle_", name, "_shield_regen_dmgpause"));
+	InitializeEntity(self, delayed_init, INITPRIO_DROPTOFLOOR);
 }
 #endif

@@ -1,9 +1,6 @@
 float g_vehicle_car_crush_dmg;
 float g_vehicle_car_crush_force;
 float g_vehicle_car_crush_minspeed;
-float g_vehicle_car_health;
-float g_vehicle_car_health_regen;
-float g_vehicle_car_health_regen_dmgpause;
 
 float CarPhysic_SendEntity(entity to, float sf);
 void car_exit(float eject);
@@ -214,7 +211,7 @@ void car_spawn()
     self.think = car_think;
     self.nextthink = time;
 
-    self.health = CCVAR("_health");
+    self.health = self.health_max;
     self.event_damage = vehicle_stdproc_damage;
     self.iscreature = TRUE;
     self.movetype   = MOVETYPE_WALK;
@@ -276,7 +273,7 @@ void car_dlc_reset() {
 	setattachment(self.gun2.gun2, self, "wheel_b_r");
 }
 
-void vewhicle_car_dinit()
+void car_dinit()
 {
     self.enemy = spawn();
     self.enemy.angles = self.angles;
@@ -335,7 +332,6 @@ void vehicle_car_readcvars() {
 	CACHE_CVAR(g_vehicle_car_crush_dmg);
 	CACHE_CVAR(g_vehicle_car_crush_force);
 	CACHE_CVAR(g_vehicle_car_crush_minspeed);
-	CACHE_CVAR(g_vehicle_car_health);
 	CACHE_CVAR(g_vehicle_car_movement_inertia);
 	CACHE_CVAR(g_vehicle_car_speed_stop);
 	CACHE_CVAR(g_vehicle_car_speed);
@@ -380,10 +376,5 @@ void spawnfunc_vehicle_car()
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-    //self.team                = -1;
-    self.think = vewhicle_car_dinit;
-    self.nextthink = time + 0.5;
-	self.health_max = g_vehicle_car_health;
-	self.health_regen = g_vehicle_car_health_regen;
-	self.health_regen_dmgpause = g_vehicle_car_health_regen_dmgpause;
+	vehicle_stdproc_init("car", car_dinit);
 }

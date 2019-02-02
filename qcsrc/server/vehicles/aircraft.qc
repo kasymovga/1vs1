@@ -1,9 +1,6 @@
 float g_vehicle_aircraft_crush_dmg;
 float g_vehicle_aircraft_crush_force;
 float g_vehicle_aircraft_crush_minspeed;
-float g_vehicle_aircraft_health;
-float g_vehicle_aircraft_health_regen;
-float g_vehicle_aircraft_health_regen_dmgpause;
 float g_vehicle_aircraft_minigun_cooldown;
 float g_vehicle_aircraft_minigun_damage;
 float g_vehicle_aircraft_minigun_heat;
@@ -20,9 +17,6 @@ float g_vehicle_aircraft_rocket_speed;
 float g_vehicle_aircraft_rocket_spread;
 float g_vehicle_aircraft_rocket_turnrate;
 float g_vehicle_aircraft_rocket_up;
-float g_vehicle_aircraft_shield;
-float g_vehicle_aircraft_shield_regen;
-float g_vehicle_aircraft_shield_regen_dmgpause;
 
 float AircraftPhysic_SendEntity(entity to, float sf);
 void aircraft_exit(float eject);
@@ -292,8 +286,8 @@ void aircraft_enter()
 	if not(vehicle_enter(self.tur_head.angles + self.angles, aircraft_physic_hook, HUD_SPIDERBOT, AircraftPhysic_SendEntity))
 		return;
 
-	self.owner.vehicle_health = (self.health / g_vehicle_aircraft_health);
-	self.owner.vehicle_shield = (self.vehicle_shield / g_vehicle_aircraft_shield);
+	self.owner.vehicle_health = (self.health / self.health_max);
+	self.owner.vehicle_shield = (self.vehicle_shield / self.shield_max);
 	self.owner.vehicle_heat = self.vehicle_heat;
 	self.colormap             = self.owner.colormap;
 	self.tur_head.colormap    = self.owner.colormap;
@@ -368,8 +362,8 @@ void aircraft_spawn()
     self.think = aircraft_think;
     self.nextthink = time;
 
-    self.health = CCVAR("_health");
-    self.vehicle_shield = CCVAR("_shield");
+    self.health = self.health_max;
+    self.vehicle_shield = self.shield_max;
     self.event_damage = vehicle_stdproc_damage;
     self.iscreature = TRUE;
     self.movetype   = MOVETYPE_WALK;
@@ -431,7 +425,7 @@ void aircraft_die()
 	}
 }
 
-void vewhicle_aircraft_dinit()
+void aircraft_dinit()
 {
     self.enemy = spawn();
     self.enemy.angles = self.angles;
@@ -498,7 +492,6 @@ void vehicle_aircraft_readcvars() {
 	CACHE_CVAR(g_vehicle_aircraft_crush_dmg);
 	CACHE_CVAR(g_vehicle_aircraft_crush_force);
 	CACHE_CVAR(g_vehicle_aircraft_crush_minspeed);
-	CACHE_CVAR(g_vehicle_aircraft_health);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_cooldown);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_damage);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_heat);
@@ -516,9 +509,6 @@ void vehicle_aircraft_readcvars() {
 	CACHE_CVAR(g_vehicle_aircraft_rocket_spread);
 	CACHE_CVAR(g_vehicle_aircraft_rocket_turnrate);
 	CACHE_CVAR(g_vehicle_aircraft_rocket_up);
-	CACHE_CVAR(g_vehicle_aircraft_shield);
-	CACHE_CVAR(g_vehicle_aircraft_shield_regen);
-	CACHE_CVAR(g_vehicle_aircraft_shield_regen_dmgpause);
 	CACHE_CVAR(g_vehicle_aircraft_speed);
 	CACHE_CVAR(g_vehicle_aircraft_speed_stop);
 	CACHE_CVAR(g_vehicle_aircraft_accel_up);
@@ -564,15 +554,5 @@ float AircraftPhysic_SendEntity(entity to, float sf) {
 void spawnfunc_vehicle_aircraft()
 {
 	vehicle_aircraft_readcvars();
-    // g_turrets_common_precash();
-
-    //self.team                = -1;
-    self.think = vewhicle_aircraft_dinit;
-    self.nextthink = time + 0.5;
-	self.health_max = g_vehicle_aircraft_health;
-	self.health_regen = g_vehicle_aircraft_health_regen;
-	self.health_regen_dmgpause = g_vehicle_aircraft_health_regen_dmgpause;
-	self.shield_max = g_vehicle_aircraft_shield;
-	self.shield_regen = g_vehicle_aircraft_shield_regen;
-	self.shield_regen_dmgpause = g_vehicle_aircraft_shield_regen_dmgpause;
+	vehicle_stdproc_init("aircraft", aircraft_dinit);
 }

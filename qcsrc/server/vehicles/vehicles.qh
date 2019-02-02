@@ -8,9 +8,6 @@ float SVC_SETVIEWPORT = 5;    // Net.Protocol 0x05
 float SVC_SETVIEWANGLES = 10; // Net.Protocol 0x0A
 float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 
-#define CCVAR(part) cvar(strcat(self.cvar_basename,part))
-//.string cvar_basename;
-
 .float vehicle_flags;
 #define VHF_HASSHIELD 2
 #define VHF_SHIELDREGEN 4
@@ -48,6 +45,7 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 .float(float message) vehicle_message;
 
 void vehicles_init();
+void vehicle_stdproc_init(string name, void() delayed_init);
 void vehicle_stdproc_regen();
 void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicle_stdproc_setcolormod();
