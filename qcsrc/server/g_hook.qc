@@ -459,25 +459,6 @@ void FireGrapplingHook (void)
 	self = oldself;
 }
 
-//  void GrapplingHookFrame()
-//  {
-//         // this function has been modified for Nexuiz
-// -       if (self.BUTTON_HOOK && g_grappling_hook)
-//         {
-// -               if (!self.hook && self.hook_time <= time && !self.button6_pressed_before)
-// -                       if (timeoutStatus != 2) //only allow the player to fire the grappling hook if the game is not paused (timeout)
-// -                               FireGrapplingHook();
-//         }
-// -       else
-//         {
-//                 if (self.hook)
-//                         RemoveGrapplingHook(self);
-//         }
-// -       self.button6_pressed_before = self.BUTTON_HOOK;
-//         /*
-//         // if I have no hook or it's not pulling yet, make sure I'm not flying!
-//         if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-
 void GrapplingHookFrame()
 {
 	float button_hook = self.BUTTON_HOOK;
@@ -537,35 +518,6 @@ void GrapplingHookFrame()
 			RemoveGrapplingHook(self);
 		self.hook_state &~= HOOK_REMOVING;
 	}
-
-	/*
-	// if I have no hook or it's not pulling yet, make sure I'm not flying!
-	if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-	{
-		self.movetype = MOVETYPE_WALK;
-	}
-	if(self.impulse == GRAPHOOK_FIRE && self.hook_time <= time && g_grappling_hook)
-	{
-		// fire hook
-		FireGrapplingHook();
-		return;
-	}
-	else if(self.hookimpulse == GRAPHOOK_RELEASE)
-	{
-		// remove hook, reset movement type
-		RemoveGrapplingHook(self);
-		return;
-	}
-	*/
-	/*else // make sure the player's movetype is correct
-	{
-		//if(self.hook == world && self.movetype == MOVETYPE_FLY)
-		if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-		{
-			self.movetype = MOVETYPE_WALK;
-		}
-	}*/
-	// note: The hook entity does the actual pulling
 }
 
 var void() GrappleHook_RealClientConnect_NextLink;

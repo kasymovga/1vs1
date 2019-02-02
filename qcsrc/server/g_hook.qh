@@ -3,7 +3,6 @@
 void GrapplingHookFrame();
 void RemoveGrapplingHook(entity pl);
 // (note: you can change the hook impulse #'s to whatever you please)
-.float hook_time;
 
 float HOOK_FIRING = 1;
 float HOOK_REMOVING = 2;

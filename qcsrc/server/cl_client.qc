@@ -549,7 +549,6 @@ void PutObserverInServer(float frags_team_reset)
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
-	self.hook_time = 0;
 	PutClientToSpot(spot);
 	setsize (self, '0 0 0', '0 0 0');
 	self.items = 0;
@@ -800,7 +799,6 @@ void PutClientInServer()
 		// players have no think function
 		self.think = SUB_Null;
 		self.nextthink = 0;
-		self.hook_time = 0;
 		self.dmg_team = 0;
 
 		PutClientToSpot(spot);
