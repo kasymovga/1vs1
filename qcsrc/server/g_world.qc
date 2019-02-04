@@ -373,7 +373,6 @@ void precache()
 
     // gore and miscellaneous sounds
     //precache_sound ("misc/h2ohit.wav");
-    precache_model ("models/hook.md3");
     precache_sound ("misc/armorimpact.wav");
     precache_sound ("misc/bodyimpact1.wav");
     precache_sound ("misc/bodyimpact2.wav");
@@ -448,24 +447,6 @@ void precache()
     precache_sound ("weapons/weapon_switch.wav");
     precache_sound ("weapons/weaponpickup.wav");
     precache_sound ("weapons/unavailable.wav");
-	precache_sound ("weapons/hook_fire.wav"); // hook
-	precache_sound ("weapons/hook_impact.wav"); // hook
-
-    if (cvar("sv_precacheweapons"))
-    {
-        //precache weapon models/sounds
-        local float wep;
-        wep = WEP_FIRST;
-        while (wep <= WEP_LAST)
-        {
-            weapon_precache(wep);
-            wep = wep + 1;
-        }
-    }
-
-    precache_model("models/elaser.mdl");
-    precache_model("models/laser.mdl");
-    precache_model("models/ebomb.mdl");
 }
 
 

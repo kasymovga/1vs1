@@ -513,15 +513,15 @@ void vehicle_aircraft_readcvars() {
 	CACHE_CVAR(g_vehicle_aircraft_speed_stop);
 	CACHE_CVAR(g_vehicle_aircraft_accel_up);
 	CACHE_CVAR(g_vehicle_aircraft_turnspeed);
-    precache_model ( "models/vhshield.md3");
-    precache_model ( "models/spiderbot/cp.md3");
-    precache_model ( "models/spiderbot/spiderbot_top.dpm");
-    precache_model ( "models/spiderbot/spiderbot_barrels.dpm");
-    precache_model ( "models/onslaught/gen_gib1.md3");
-    precache_model ( "models/onslaught/gen_gib2.md3");
-    precache_model ( "models/onslaught/gen_gib3.md3");
-    precache_model ( "models/turrets/rocket.md3");
-    precache_sound ( "weapons/uzi_fire.wav" );
+    precache_model("models/vhshield.md3");
+    precache_model("models/spiderbot/spiderbot_top.dpm");
+    precache_model("models/spiderbot/spiderbot_barrels.dpm");
+    precache_model("models/onslaught/gen_gib1.md3");
+    precache_model("models/onslaught/gen_gib2.md3");
+    precache_model("models/onslaught/gen_gib3.md3");
+    precache_model("models/turrets/rocket.md3");
+	precache_model("models/ebomb.mdl");
+    precache_sound("weapons/uzi_fire.wav" );
 	CSQCProjectile_Init(PROJECTILE_ROCKET);
 }
 

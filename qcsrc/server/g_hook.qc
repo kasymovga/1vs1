@@ -553,6 +553,9 @@ void GrappleHookInit()
 	if (GrappleHookInit_done)
 		return;
 
+    precache_model("models/hook.md3");
+	precache_sound("weapons/hook_fire.wav");
+	precache_sound("weapons/hook_impact.wav");
 	GrappleHookInit_done = TRUE;
 	GrappleHook_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = GrappleHook_RealClientConnect;
