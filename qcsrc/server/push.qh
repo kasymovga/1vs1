@@ -1,0 +1,2 @@
+void(void) push_touch;
+void(void) push_init;

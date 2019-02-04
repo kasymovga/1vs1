@@ -139,6 +139,7 @@ void model_movable_init() {
 	if (self.pushfactor > 0) {
 		self.damageforcescale = self.pushfactor;
 		self.takedamage = DAMAGE_AIM;
+		self.touch = push_touch;
 		entity e = spawn();
 		e.enemy = self;
 		e.think = model_think;

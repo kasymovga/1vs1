@@ -560,6 +560,7 @@ void readdynamiccvars() {
 		default_weapon_alpha = 1;
 
 	Vote_Init();
+	push_init();
 }
 
 void DB_Init() {

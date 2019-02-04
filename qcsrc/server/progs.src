@@ -99,6 +99,7 @@ minstagib.qh
 cl_client.qh
 
 cl_player.qh
+push.qh
 
 clientcommands.qh
 
@@ -214,6 +215,7 @@ cl_impulse.qc
 ent_cs.qc
 
 cl_player.qc
+push.qc
 cl_client.qc
 t_plats.qc
 antilag.qc

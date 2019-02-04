@@ -735,7 +735,7 @@ void PutClientInServer()
 		self.effects = 0;
 		self.air_finished = time + 12;
 		self.keys = 0;
-		self.touch = Player_Touch;
+		self.touch = push_touch;
 		self.pushfactor = g_player_pushfactor;
 
 		if not(GameHook_EquipPlayerHandle()) {
