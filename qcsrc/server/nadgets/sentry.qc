@@ -20,7 +20,7 @@ float g_nadgets_sentry_shock_damage;
 float g_nadgets_sentry_shock_force;
 float g_nadgets_sentry_shock_energy_cost;
 float g_nadgets_sentry_friction;
-float g_nadgets_sentry_hookable;
+float g_nadgets_sentry_pushfactor;
 
 .float spawntime;
 
@@ -327,7 +327,7 @@ void HG_Sentry_Levitate(void) {
     // dampen velocity to prevent the sentry from moving forever, i.e. after being hook-dragged.
     self.velocity = self.velocity * (1 - frametime * g_nadgets_sentry_friction);
 
-    if(g_nadgets_sentry_levitation && g_nadgets_sentry_hookable) {
+    if(g_nadgets_sentry_levitation && g_nadgets_sentry_pushfactor) {
         // this hack is used to benefit from the "step" elevation of MOVETYPE_WALK while dragging a levitating sentry.
         // very low .gravaity is assigned to the sentry at spawn, which makes it seem like the sentry is still floating while being dragged.
 
@@ -588,7 +588,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.team = self.team;
     e.realowner = self; // can't use owner here because we want to be blocked by it
     e.solid = SOLID_BBOX;
-    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_hookable ? MOVETYPE_WALK : MOVETYPE_TOSS));
+    e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_pushfactor ? MOVETYPE_WALK : MOVETYPE_TOSS));
     e.angles = '0 360 0' * random();
     e.reset = HG_Sentry_Remove;
     e.think = HG_Sentry_Think;
@@ -601,7 +601,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.event_damage = HG_Sentry_Damage;
     e.cnt = time + g_nadgets_sentry_beam_initialdelay;
     e.spawntime = time;
-    e.damageforcescale = e.pushfactor = g_nadgets_sentry_hookable;
+    e.damageforcescale = e.pushfactor = g_nadgets_sentry_pushfactor;
 
     if(g_nadgets_sentry_levitation) {
         // also see HG_Sentry_Levitate
@@ -659,6 +659,6 @@ HG_HOOKFUNCTION(sentry, Init) {
 	CACHE_CVAR(g_nadgets_sentry_shock_force);
 	CACHE_CVAR(g_nadgets_sentry_shock_energy_cost);
     CACHE_CVAR(g_nadgets_sentry_friction);
-    CACHE_CVAR(g_nadgets_sentry_hookable);
+    CACHE_CVAR(g_nadgets_sentry_pushfactor);
     return HG_INIT_OK;
 }
