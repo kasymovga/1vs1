@@ -7,7 +7,9 @@ void(void) push_touch {
 	if not(other)
 		return;
 
-	if not(other.pushfactor > 0)
+	float _pushfactor = min(1, other.pushfactor * (0.5 / self.pushfactor));
+
+	if not(_pushfactor > 0)
 	if not(other.takedamage)
 		return;
 
@@ -16,7 +18,7 @@ void(void) push_touch {
 	if (velocity_norm * trace_plane_normal >= 0) //wrong direction
 		return;
 
-	vector push_velocity = self.velocity * other.pushfactor - velocity_norm * max(0, velocity_norm * other.velocity);
+	vector push_velocity = self.velocity * _pushfactor - velocity_norm * max(0, velocity_norm * other.velocity);
 	if (normalize(push_velocity) * trace_plane_normal >= 0) //wrong direction
 		return;
 
@@ -30,7 +32,7 @@ void(void) push_touch {
 		damage_speed = g_push_damage_speed;
 	}
 	float push_speed = vlen(push_velocity);
-	if (push_speed > damage_speed * other.pushfactor && damage > 0 && other.takedamage)
+	if (push_speed > damage_speed * _pushfactor && damage > 0 && other.takedamage)
 		Damage(other, self, self, damage * (push_speed / damage_speed), DEATH_FALL, other.origin, push_velocity);
 	else
 		other.velocity = other.velocity + push_velocity;
