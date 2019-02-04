@@ -601,7 +601,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.event_damage = HG_Sentry_Damage;
     e.cnt = time + g_nadgets_sentry_beam_initialdelay;
     e.spawntime = time;
-    e.hookable = g_nadgets_sentry_hookable;
+    e.damageforcescale = e.pushfactor = g_nadgets_sentry_hookable;
 
     if(g_nadgets_sentry_levitation) {
         // also see HG_Sentry_Levitate
