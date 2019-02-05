@@ -1480,25 +1480,6 @@ void NextLevel()
 	// WriteByte (MSG_ALL, SVC_INTERMISSION);
 };
 
-/*
-============
-CheckRules_Player
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules_Player()
-{
-	if (gameover)	// someone else quit the game already
-		return;
-
-	if(self.deadflag == DEAD_NO)
-		self.play_time += frametime;
-
-	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
-	//   (div0: and that in CheckRules_World please)
-};
-
 float checkrules_equality;
 float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;

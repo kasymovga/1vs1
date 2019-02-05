@@ -1908,10 +1908,10 @@ void PlayerPreThink (void)
 		checkSpectatorBlock();
 
 	if(self.classname == "player") {
-//		if(self.netname == "Wazat")
-//			bprint(self.classname, "\n");
+		if(self.deadflag == DEAD_NO)
+		if not(gameover)
+			self.play_time += frametime;
 
-		CheckRules_Player();
 		if (intermission_running)
 		{
 			IntermissionThink ();	// otherwise a button could be missed between
@@ -2127,7 +2127,6 @@ void PlayerPostThink (void)
 	}
 
 	if(self.classname == "player") {
-		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)
 			ImpulseCommands();
