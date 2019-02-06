@@ -239,7 +239,7 @@ float spiderbot_physic_hook()
     player.switchweapon = 0;
 
 
-    if(player.BUTTON_USE || (spider.bot_nextthink && spider.bot_nextthink < time)) {
+    if(player.BUTTON_HOOK || player.BUTTON_USE || (spider.bot_nextthink && spider.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}

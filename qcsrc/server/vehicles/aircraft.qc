@@ -222,7 +222,7 @@ float aircraft_physic_hook()
     player.switchweapon = 0;
 
 
-    if(player.BUTTON_USE || (aircraft.bot_nextthink && aircraft.bot_nextthink < time)) {
+    if(player.BUTTON_HOOK || player.BUTTON_USE || (aircraft.bot_nextthink && aircraft.bot_nextthink < time)) {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
