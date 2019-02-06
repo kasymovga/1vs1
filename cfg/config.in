@@ -260,6 +260,8 @@ set sv_spawnreplace_monster_zombie monster_marine_spawn
 set sv_spawnreplace_monster_fish monster_fish_spawn
 set sv_spawnreplace_monster_hell_knight monster_butcher_spawn
 set sv_spawnreplace_monster_shalrath monster_walker_spawn
+set sv_spawnreplace_item_key2 "item_key_gold"
+set sv_spawnreplace_item_key1 "item_key_silver"
 
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"

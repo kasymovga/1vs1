@@ -1293,8 +1293,14 @@ void spawnfunc_func_door()
 	self.blocked = door_blocked;
 	self.use = door_use;
 
-    if(self.spawnflags & 8)
-        self.dmg = 10000;
+    if(self.spawnflags & 8) {
+		if (self.wait < 0)
+			self.items |= IT_KEY2;
+		else
+			self.dmg = 10000;
+	}
+    if(self.spawnflags & 16)
+		self.items |= IT_KEY1;
 
     if(self.dmg && (!self.message))
 		self.message = "was squished";
