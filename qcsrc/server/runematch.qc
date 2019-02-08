@@ -653,9 +653,9 @@ void healer_spawn(float health_amount, float _delay, entity _owner) {
 	e.reset = SUB_Remove;
 	e.health = health_amount;
 	if (health_amount > 0)
-		e.max_health = _owner.health + e.health;
+		e.max_health = (g_balance_rune_vampire_max_health ? g_balance_rune_vampire_max_health : 999);
 	else
-		e.max_health = _owner.health - e.health;
+		e.max_health = 999;
 
 	e.think = healer_think;
 	e.spawnshieldtime = TRUE;
