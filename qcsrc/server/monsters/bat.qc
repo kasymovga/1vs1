@@ -93,6 +93,7 @@ void bat_spawn() {
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
 	setanim(self, '0 7 7', TRUE, TRUE, FALSE);
+	self.damageforcescale = 1;
 }
 
 void bat_init() {

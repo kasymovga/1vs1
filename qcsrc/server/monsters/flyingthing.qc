@@ -89,6 +89,7 @@ void flyingthing_spawn() {
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
 	self.view_ofs = '0 0 -16';
+	self.damageforcescale = 1;
 }
 
 void flyingthing_init() {
