@@ -1347,6 +1347,7 @@ set single_g_pickup_healthlarge_max 100
 set single_g_pickup_healthmedium_max 100
 set single_g_pickup_armormedium_max 100
 set single_g_pickup_armorbig_max 100
+set single_g_balance_laser_primary_force 0
 
 set coop_g_weapon_stay 1
 set coop_g_pickup_respawntime_healthsmall -1
@@ -1371,6 +1372,7 @@ set coop_g_pickup_healthlarge_max 100
 set coop_g_pickup_healthmedium_max 100
 set coop_g_pickup_armormedium_max 100
 set coop_g_pickup_armorbig_max 100
+set coop_g_balance_laser_primary_force 0
 
 set g_monster_difficulty 2 "Monster difficulty, 0 - Easy, 1 - Medium, 2 - Hard, 3 - Insane"
 set g_monster_pushfactor 0.25
