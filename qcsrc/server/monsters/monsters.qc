@@ -7,6 +7,8 @@
 #define MONSTER_SPAWN_STAYSTILL 4
 #define MONSTER_SPAWN_SHIELDED 8
 
+float g_monster_pushfactor;
+
 void monster_proj_explode(void) {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
@@ -386,6 +388,10 @@ void monster_spawn_think() {
 	self.owner = oldself;
 	self.reset = monster_die;
 	oldself.weapon_think();
+	self.pushfactor = self.damageforcescale * g_monster_pushfactor;
+	if (self.pushfactor) {
+		self.touch = push_touch;
+	}
 	self.spawnflags = oldself.spawnflags;
 	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
 		precache_model("models/vhshield.md3");
@@ -506,6 +512,7 @@ float monster_check_target(void() walk, void() guard) {
 float monster_common_init_done;
 void monster_common_init() {
 	precache_sound("misc/teleport.wav");
+	CACHE_CVAR(g_monster_pushfactor);
 }
 
 void monster_init(void() init_func) {
