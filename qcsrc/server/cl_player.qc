@@ -118,7 +118,6 @@ void CopyBody(float keepvelocity)
 	//self.weapon = oldself.weapon;
 	setorigin(self, oldself.origin);
 	setsize(self, oldself.mins, oldself.maxs);
-	self.prevorigin = oldself.origin;
 	self.reset = SUB_Remove;
 
 	self = oldself;

@@ -443,8 +443,6 @@ float servertime, serverprevtime, serverframetime;
 
 .float ammo_fuel;
 
-.vector prevorigin;
-
 //flood fields
 .float floodcontrol_chat;
 .float floodcontrol_chatteam;

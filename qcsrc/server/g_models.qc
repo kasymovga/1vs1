@@ -123,8 +123,8 @@ void model_think() {
 		e.velocity_z = z_save;
 	}
 	if (e.SendEntity == g_clientmodel_genericsendentity)
-	if (e.origin != e.prevorigin) {
-		e.prevorigin = e.origin;
+	if (e.origin != e.pos1) {
+		e.pos1 = e.origin;
 		e.SendFlags |= 2;
 	}
 	self.nextthink = time;
@@ -144,7 +144,7 @@ void model_movable_init() {
 		e.enemy = self;
 		e.think = model_think;
 		e.nextthink = time;
-		e.prevorigin = self.origin;
+		e.pos1 = self.origin;
 		e.spawnorigin = self.origin;
 		e.reset = model_reset;
 	}

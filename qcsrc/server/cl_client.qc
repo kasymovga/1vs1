@@ -495,7 +495,6 @@ void PutClientToSpot(entity spot) {
 	self.crouch = FALSE;
 	self.view_ofs = PL_VIEW_OFS;
 	setorigin (self, spot.origin);
-	self.prevorigin = self.origin;
 	ClientSetView(self);
 }
 
@@ -1971,8 +1970,6 @@ void PlayerPreThink (void)
 			ShowRespawnCountdown();
 			return;
 		}
-
-		self.prevorigin = self.origin;
 
 		FixPlayermodel();
 
