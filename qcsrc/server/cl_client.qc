@@ -1957,9 +1957,6 @@ void PlayerPreThink (void)
 		}
 
 		FixPlayermodel();
-
-		GrapplingHookFrame();
-
 		W_WeaponFrame();
 		Akimbo_WeaponFrame();
 		if(frametime)

@@ -1,6 +1,5 @@
 // Wazat's grappling hook
 .entity		hook;
-void GrapplingHookFrame();
 void RemoveGrapplingHook(entity pl);
 // (note: you can change the hook impulse #'s to whatever you please)
 

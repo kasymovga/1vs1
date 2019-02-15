@@ -458,9 +458,13 @@ void FireGrapplingHook (void)
 	self = oldself;
 }
 
-void GrapplingHookFrame()
-{
+var void() GrappleHook_PlayerPreThink_NextLink;
+void() GrappleHook_PlayerPreThink {
+	GrappleHook_PlayerPreThink_NextLink();
 	float button_hook = self.BUTTON_HOOK;
+	if (PLAYER_DEAD(self))
+		return;
+
 	if(g_grappling_hook && timeoutStatus != 2 && self.weapon != WEP_HOOK)
 	{
 		// offhand hook controls
@@ -547,6 +551,12 @@ void GrappleHook_DamageForceModsSet(entity targ, entity attacker, float deathtyp
 	GrappleHook_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
+var void(float killed) GrappleHook_PlayerClear_NextLink;
+void(float killed) GrappleHook_PlayerClear {
+	RemoveGrapplingHook(self);
+	GrappleHook_PlayerClear_NextLink(killed);
+}
+
 float GrappleHookInit_done;
 void GrappleHookInit()
 {
@@ -561,6 +571,10 @@ void GrappleHookInit()
 	GameHookChain_RealClientConnect = GrappleHook_RealClientConnect;
 	GrappleHook_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = GrappleHook_DamageForceModsSet;
+	GrappleHook_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = GrappleHook_PlayerPreThink;
+	GrappleHook_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = GrappleHook_PlayerClear;
 }
 
 void GrappleHookReadCvars()

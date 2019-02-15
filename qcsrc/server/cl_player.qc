@@ -443,8 +443,6 @@ void PlayerClear(float killed)
 		weapon_action(j, WR_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
-	RemoveGrapplingHook(self); // Wazat's Grappling Hook
-
 	GameHookChain_PlayerClear(killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
