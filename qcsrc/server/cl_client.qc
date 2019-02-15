@@ -964,25 +964,10 @@ float ClientInit_SendEntity(entity to, float sf)
 	if (sf & 128) {
 		WriteString(MSG_ENTITY, map_description); 
 		string s;
-		string modifications = GameHookChain_WelcomeMessageMod("");
-		if(cvar("sv_gravity") < 800)
-			modifications = strcat(modifications, ", Low gravity");
-		if(g_footsteps)
-			modifications = strcat(modifications, ", Steps");
-		if(g_grappling_hook)
-			modifications = strcat(modifications, ", Hook");
-		if(g_pinata)
-			modifications = strcat(modifications, ", Pinata");
-		if(g_weapon_stay)
-			modifications = strcat(modifications, ", Weapons stay");
-		if(g_jetpack)
-			modifications = strcat(modifications, ", Jet pack");
-		modifications = substring(modifications, 2, strlen(modifications) - 2);
-
 		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
-
-		if(modifications != "")
-			s = strcat(s, "\n^8active modifications: ^3", modifications, "^8");
+		string profile = cvar_string("g_profile");
+		if(profile != "")
+			s = strcat(s, "\n^8g_profile ^3", profile, "^8");
 
 		if(timeoutStatus != 0)
 			s = strcat(s, "\n", getTimeoutText(1));

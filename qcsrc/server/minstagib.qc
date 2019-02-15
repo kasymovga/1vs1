@@ -254,11 +254,6 @@ float minstagib_ItemForbidden() {
 	return minstagib_ItemForbidden_NextLink();
 }
 
-var string(string s) minstagib_WelcomeMessageMod_NextLink;
-string minstagib_WelcomeMessageMod(string s) {
-	return strcat(minstagib_WelcomeMessageMod_NextLink(s), ", MinstaGib");
-}
-
 var float() minstagib_PlayerEffectsHandle_NextLink;
 float minstagib_PlayerEffectsHandle() {
 	minstagib_PlayerEffectsHandle_NextLink();
@@ -388,8 +383,6 @@ void minstagib_init() {
 	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
 	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;
 	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
-	minstagib_WelcomeMessageMod_NextLink = GameHookChain_WelcomeMessageMod;
-	GameHookChain_WelcomeMessageMod = minstagib_WelcomeMessageMod;
 	minstagib_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
 	GameHookChain_PlayerEffectsHandle = minstagib_PlayerEffectsHandle;
 	minstagib_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;

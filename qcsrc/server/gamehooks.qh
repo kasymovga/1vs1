@@ -88,7 +88,6 @@ var void() GameHookChain_ClientConnect = {}
 var void() GameHookChain_RealClientDisconnect = {}
 var void() GameHookChain_ServerFrame = {}
 var float() GameHookChain_ItemForbidden = { return FALSE; }
-var string(string s) GameHookChain_WelcomeMessageMod = { return s; }
 var float() GameHookChain_PlayerEffectsHandle = { return FALSE; }
 var float(float c) GameHookChain_PlayerColorsMod = { return c; }
 var float() GameHookChain_JoinHandle = { return FALSE; }
