@@ -353,9 +353,6 @@ float bot_waypoints_for_items;
 #endif
 #define ATTACK_FINISHED(ent) ATTACK_FINISHED_FOR(ent,(ent).weapon)
 
-// speedrun: when 1, player auto teleports back when capture timeout happens
-.float speedrunning;
-
 // Q3 support
 .float notteam;
 .float notsingle;

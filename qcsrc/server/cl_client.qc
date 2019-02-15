@@ -848,9 +848,6 @@ void PutClientInServer()
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
 		self.colormod = '1 1 1' * g_player_brightness;
-
-		self.speedrunning = FALSE;
-
 		if(spawn_debug)
 		{
 			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
