@@ -341,20 +341,6 @@ void aircraft_touch()
     aircraft_enter();
 }
 
-float aircraft_customizeentityforclient()
-{
-	//if (self.owner == other) {
-	//	if (self.alpha > 0)
-	//		self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
-	//} else if (self.alpha < 0)
-	//	self.alpha = 1;
-
-    if(self.deadflag == DEAD_DEAD)
-        return FALSE;
-
-    return TRUE;
-}
-
 //void aircraft_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void aircraft_spawn()
 {
@@ -470,7 +456,7 @@ void aircraft_dinit()
     setattachment(self.gun1,self.tur_head,"tag_hardpoint01");
     setattachment(self.gun2,self.tur_head,"tag_hardpoint02");
 
-    self.customizeentityforclient          = aircraft_customizeentityforclient;
+    self.customizeentityforclient = vehicle_stdproc_customizeentityforclient;
 
     //setorigin(self.vehicle_viewport,'35 0 -14');
     self.tur_aimpos = self.origin;

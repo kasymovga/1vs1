@@ -55,5 +55,6 @@ void vehicle_adjust_player_position(entity plr, entity veh, float start_offset, 
 float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, float)phys_send );
 void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float range);
 void vehicle_reset();
+float() vehicle_stdproc_customizeentityforclient;
 
 #endif

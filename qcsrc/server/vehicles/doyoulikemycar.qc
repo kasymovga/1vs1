@@ -197,14 +197,6 @@ void car_touch()
     car_enter();
 }
 
-float car_customizeentityforclient()
-{
-    if(self.deadflag == DEAD_DEAD)
-        return FALSE;
-
-    return TRUE;
-}
-
 //void car_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void car_spawn()
 {
@@ -310,7 +302,7 @@ void car_dinit()
     setsize(self,car_MIN,car_MAX);
 	self.dlc_reset = car_dlc_reset;
 	self.dlc_reset();
-    self.customizeentityforclient          = car_customizeentityforclient;
+    self.customizeentityforclient = vehicle_stdproc_customizeentityforclient;
 
     //setorigin(self.vehicle_viewport,'35 0 -14');
     car_spawn();

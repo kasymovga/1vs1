@@ -318,6 +318,13 @@ void vehicle_stdproc_exit(float eject, float eject_range, float exit_up, float r
     self.owner = world;
 }
 
+float() vehicle_stdproc_customizeentityforclient {
+    if(self.deadflag == DEAD_DEAD)
+        return FALSE;
+
+    return TRUE;
+}
+
 void(string name, void() delayed_init) vehicle_stdproc_init {
 	self.health_max = cvar(strcat("g_vehicle_", name, "_health"));
 	self.health_regen = cvar(strcat("g_vehicle_", name, "_health_regen"));

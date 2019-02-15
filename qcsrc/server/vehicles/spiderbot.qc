@@ -442,20 +442,6 @@ void spiderbot_touch()
     spiderbot_enter();
 }
 
-float spiderbot_customizeentityforclient()
-{
-	//if (self.owner == other) {
-	//	if (self.alpha > 0)
-	//		self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
-	//} else if (self.alpha < 0)
-	//	self.alpha = 1;
-
-    if(self.deadflag == DEAD_DEAD)
-        return FALSE;
-
-    return TRUE;
-}
-
 //void spiderbot_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void spiderbot_spawn()
 {
@@ -570,7 +556,7 @@ void spiderbot_dinit()
     setattachment(self.gun2,self.tur_head,"tag_hardpoint02");
 
     self.tur_head.owner = self;
-    self.customizeentityforclient          = spiderbot_customizeentityforclient;
+    self.customizeentityforclient = vehicle_stdproc_customizeentityforclient;
 
     //setorigin(self.vehicle_viewport,'35 0 -14');
     self.tur_aimpos = self.origin;
