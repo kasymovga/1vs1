@@ -1589,49 +1589,6 @@ void player_regen (void)
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 }
 
-void GetPressedKeys(void) {
-	if (self.movement_x > 0) // get if movement keys are pressed
-	{	// forward key pressed
-		self.pressedkeys |= KEY_FORWARD;
-		self.pressedkeys &~= KEY_BACKWARD;
-	}
-	else if (self.movement_x < 0)
-	{	// backward key pressed
-		self.pressedkeys |= KEY_BACKWARD;
-		self.pressedkeys &~= KEY_FORWARD;
-	}
-	else
-	{	// no x input
-		self.pressedkeys &~= KEY_FORWARD;
-		self.pressedkeys &~= KEY_BACKWARD;
-	}
-
-	if (self.movement_y > 0)
-	{	// right key pressed
-		self.pressedkeys |= KEY_RIGHT;
-		self.pressedkeys &~= KEY_LEFT;
-	}
-	else if (self.movement_y < 0)
-	{	// left key pressed
-		self.pressedkeys |= KEY_LEFT;
-		self.pressedkeys &~= KEY_RIGHT;
-	}
-	else
-	{	// no y input
-		self.pressedkeys &~= KEY_RIGHT;
-		self.pressedkeys &~= KEY_LEFT;
-	}
-
-	if (self.BUTTON_JUMP) // get if jump and crouch keys are pressed
-		self.pressedkeys |= KEY_JUMP;
-	else
-		self.pressedkeys &~= KEY_JUMP;
-	if (self.BUTTON_CROUCH)
-		self.pressedkeys |= KEY_CROUCH;
-	else
-		self.pressedkeys &~= KEY_CROUCH;
-}
-
 /*
 ======================
 spectate mode routines
@@ -2112,7 +2069,18 @@ void PlayerPostThink (void)
 		if (intermission_running)
 			return;		// intermission or finale
 
-		GetPressedKeys();
+		self.pressedkeys = 0;
+		if (self.movement_x > 0)
+			self.pressedkeys |= KEY_FORWARD;
+		else if (self.movement_x < 0)
+			self.pressedkeys |= KEY_BACKWARD;
+
+		if (self.movement_y > 0)
+			self.pressedkeys |= KEY_RIGHT;
+		else if (self.movement_y < 0)
+			self.pressedkeys |= KEY_LEFT;
+
+		self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
 	}
 
 	/*
