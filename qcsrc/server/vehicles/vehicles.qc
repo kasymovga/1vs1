@@ -186,6 +186,14 @@ float vehicle_PlayerAlphaMod(entity plr, entity viewer, float dalpha) {
 	return vehicle_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
 }
 
+var float(void) vehicle_ThrowWeaponHandle_NextLink;
+float(void) vehicle_ThrowWeaponHandle {
+	if (vehicle_extract_player(self, FALSE))
+		return TRUE;
+
+	return vehicle_ThrowWeaponHandle_NextLink();
+}
+
 float vehicles_init_done;
 void vehicles_init() {
 	if (vehicles_init_done)
@@ -198,6 +206,8 @@ void vehicles_init() {
 	GameHookChain_PlayerClear = vehicle_PlayerClear;
 	vehicle_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = vehicle_PlayerAlphaMod;
+	vehicle_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
+	GameHookChain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
 	PhysicEnableCSQC();
 }
 

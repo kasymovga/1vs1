@@ -77,9 +77,6 @@ void ImpulseCommands (void)
 					W_PreviousWeapon (2);
 					break;
 				case 17:
-					if (vehicle_extract_player(self, FALSE))
-						break;
-
 					if not(GameHookChain_ThrowWeaponHandle())
 						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 
