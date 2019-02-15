@@ -1,39 +1,3 @@
-// from dpmod
-void printsurfaceinfo(entity e, vector v)
-{
-	local float surfnum, numpoints, vnum;
-	local string s;
-	local vector n;
-	surfnum = getsurfacenearpoint(e, v);
-	if (surfnum >= 0)
-	{
-		sprint(self, "texture: ");
-		s = getsurfacetexture(e, surfnum);
-		sprint(self, s);
-		sprint(self, " normal: ");
-		n = getsurfacenormal(e, surfnum);
-		sprint(self, vtos(n));
-		sprint(self, " ");
-		numpoints = getsurfacenumpoints(e, surfnum);
-		sprint(self, ftos(numpoints));
-		sprint(self, " verts:");
-		vnum = 0;
-		while (vnum < numpoints)
-		{
-			sprint(self, " ");
-			n = getsurfacepoint(e, surfnum, vnum);
-			sprint(self, vtos(n));
-			vnum = vnum + 1;
-		}
-		sprint(self, " point tested: ");
-		sprint(self, vtos(v));
-		sprint(self, " nearest point on surface: ");
-		n = getsurfaceclippedpoint(e, surfnum, v);
-		sprint(self, vtos(n));
-		sprint(self, "\n");
-	}
-};
-
 /*
  * Impulse map:
  *
