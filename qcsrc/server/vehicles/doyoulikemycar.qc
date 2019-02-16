@@ -1,7 +1,3 @@
-float g_vehicle_car_crush_dmg;
-float g_vehicle_car_crush_force;
-float g_vehicle_car_crush_minspeed;
-
 float CarPhysic_SendEntity(entity to, float sf);
 void car_exit(float eject);
 void car_enter();
@@ -311,9 +307,6 @@ void vehicle_car_readcvars() {
 	vehicles_init();
 	dlc_require("car_v1");
 	vehicle_car_readcvars_done = TRUE;
-	CACHE_CVAR(g_vehicle_car_crush_dmg);
-	CACHE_CVAR(g_vehicle_car_crush_force);
-	CACHE_CVAR(g_vehicle_car_crush_minspeed);
 	CACHE_CVAR(g_vehicle_car_movement_inertia);
 	CACHE_CVAR(g_vehicle_car_speed_stop);
 	CACHE_CVAR(g_vehicle_car_speed);

@@ -18,9 +18,6 @@
 #define MODEL_SPIDERBOT_JUMP_END 155
 #define MODEL_SPIDERBOT_JUMP_LENGTH 31
 
-float g_vehicle_spiderbot_crush_dmg;
-float g_vehicle_spiderbot_crush_force;
-float g_vehicle_spiderbot_crush_minspeed;
 float g_vehicle_spiderbot_head_pitchlimit_down;
 float g_vehicle_spiderbot_head_pitchlimit_up;
 float g_vehicle_spiderbot_head_pitchspeed;
@@ -565,9 +562,6 @@ void vehicle_spiderbot_readcvars() {
 		return;
 
 	vehicle_spiderbot_readcvars_done = TRUE;
-	CACHE_CVAR(g_vehicle_spiderbot_crush_dmg);
-	CACHE_CVAR(g_vehicle_spiderbot_crush_force);
-	CACHE_CVAR(g_vehicle_spiderbot_crush_minspeed);
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchlimit_down);
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchlimit_up);
 	CACHE_CVAR(g_vehicle_spiderbot_head_pitchspeed);

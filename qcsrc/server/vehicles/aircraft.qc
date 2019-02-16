@@ -1,6 +1,3 @@
-float g_vehicle_aircraft_crush_dmg;
-float g_vehicle_aircraft_crush_force;
-float g_vehicle_aircraft_crush_minspeed;
 float g_vehicle_aircraft_minigun_cooldown;
 float g_vehicle_aircraft_minigun_damage;
 float g_vehicle_aircraft_minigun_heat;
@@ -465,9 +462,6 @@ void vehicle_aircraft_readcvars() {
 		return;
 
 	vehicle_aircraft_readcvars_done = TRUE;
-	CACHE_CVAR(g_vehicle_aircraft_crush_dmg);
-	CACHE_CVAR(g_vehicle_aircraft_crush_force);
-	CACHE_CVAR(g_vehicle_aircraft_crush_minspeed);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_cooldown);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_damage);
 	CACHE_CVAR(g_vehicle_aircraft_minigun_heat);

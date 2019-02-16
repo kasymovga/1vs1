@@ -479,9 +479,6 @@ set sv_door_shootable 1
 set sv_door_trigger_field "60 60 8"
 set sv_door_default_speed 100
 
-set g_vehicle_aircraft_crush_dmg 100
-set g_vehicle_aircraft_crush_force 200
-set g_vehicle_aircraft_crush_minspeed 600
 set g_vehicle_aircraft_health 200
 set g_vehicle_aircraft_health_regen 0
 set g_vehicle_aircraft_health_regen_dmgpause 10
@@ -509,9 +506,6 @@ set g_vehicle_aircraft_shield_regen_dmgpause 5
 set g_vehicle_aircraft_speed 800
 set g_vehicle_aircraft_speed_stop 100
 set g_vehicle_aircraft_turnspeed 180
-set g_vehicle_spiderbot_crush_dmg 100
-set g_vehicle_spiderbot_crush_force 200
-set g_vehicle_spiderbot_crush_minspeed 600
 set g_vehicle_spiderbot_head_pitchspeed 360
 set g_vehicle_spiderbot_head_pitchlimit_up 20
 set g_vehicle_spiderbot_head_pitchlimit_down -20
@@ -550,9 +544,6 @@ set g_vehicle_car_speed 1600
 set g_vehicle_car_speed_stop 100
 set g_vehicle_car_turnspeed 270
 set g_vehicle_car_health 500
-set g_vehicle_car_crush_dmg 500
-set g_vehicle_car_crush_force 500
-set g_vehicle_car_crush_minspeed 500
 set g_vehicle_car_movement_inertia 1
 
 set sv_player_hat ""
