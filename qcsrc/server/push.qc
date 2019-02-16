@@ -7,7 +7,8 @@ void(void) push_touch {
 	if not(other)
 		return;
 
-	float _pushfactor = min(1, other.pushfactor * (0.5 / self.pushfactor));
+	float pushfactor_nomin = other.pushfactor * (0.5 / self.pushfactor);
+	float _pushfactor = min(1, pushfactor_nomin);
 
 	if not(_pushfactor > 0)
 	if not(other.takedamage)
@@ -32,8 +33,8 @@ void(void) push_touch {
 		damage_speed = g_push_damage_speed;
 	}
 	float push_speed = vlen(push_velocity);
-	if (push_speed > damage_speed * _pushfactor && damage > 0 && other.takedamage)
-		Damage(other, self, self, damage * (push_speed / damage_speed), DEATH_FALL, other.origin, push_velocity);
+	if (push_speed > damage_speed && damage > 0 && other.takedamage)
+		Damage(other, self, ((self.owner.classname == "player") ? self.owner : self), damage * (push_speed / (damage_speed / pushfactor_nomin)), DEATH_FALL, other.origin, push_velocity);
 	else
 		other.velocity = other.velocity + push_velocity;
 }

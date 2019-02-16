@@ -238,9 +238,9 @@ set g_pinata_drop_all 0
 set sv_walkietalkie ""
 set g_player_pushfactor 0.5
 set g_push_damage 25
-set g_push_damage_speed 1200
+set g_push_damage_speed 500
 set g_push_trampledamage 25
-set g_push_trampledamage_speed 800
+set g_push_trampledamage_speed 400
 
 //Nexuiz compat
 set sv_spawnreplace_item_fuel "item_jetpack"
