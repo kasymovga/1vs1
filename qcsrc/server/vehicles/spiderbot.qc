@@ -421,21 +421,10 @@ void spiderbot_exit(float eject)
 
 void spiderbot_touch()
 {
-    if(self.owner)
-    {
-        if(vlen(self.velocity) < g_vehicle_spiderbot_crush_minspeed)
-            return;
+	push_touch();
+	if (self.owner || other.classname != "player")
+		return;
 
-        if(other.classname != "player")
-            return;
-
-		float f = vlen(self.velocity - other.velocity);
-		if (f > g_vehicle_spiderbot_crush_minspeed) {
-			f /= g_vehicle_spiderbot_speed_walk;
-			Damage(other,self,self.owner,g_vehicle_spiderbot_crush_dmg * f,DEATH_TURRET,'0 0 0', normalize(other.origin - self.origin) * g_vehicle_spiderbot_crush_force * f);
-		}
-        return;
-    }
 	if not(player_can_use_vehicle(other))
 		return;
 
@@ -463,6 +452,7 @@ void spiderbot_spawn()
 	self.tur_head.colormap = 1024;
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
+	self.pushfactor = 0.1;
 
     setsize(self,spiderbot_MIN,spiderbot_MAX);
 

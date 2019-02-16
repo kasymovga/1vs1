@@ -320,21 +320,10 @@ void aircraft_exit(float eject)
 
 void aircraft_touch()
 {
-    if(self.owner)
-    {
-        if(vlen(self.velocity) < g_vehicle_aircraft_crush_minspeed)
-            return;
+	push_touch();
+	if (self.owner || other.classname != "player")
+		return;
 
-        if(other.classname != "player")
-            return;
-
-		float f = vlen(self.velocity - other.velocity);
-		if (f > 600) {
-			f /= 600;
-			Damage(other,self,self.owner,g_vehicle_aircraft_crush_dmg * f,DEATH_TURRET,'0 0 0', normalize(other.origin - self.origin) * g_vehicle_aircraft_crush_force * f);
-		}
-        return;
-    }
 	if not(player_can_use_vehicle(other))
 		return;
 
@@ -362,6 +351,7 @@ void aircraft_spawn()
 	self.tur_head.colormap = 1024;
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
+	self.pushfactor = 0.2;
 
     setsize(self,aircraft_MIN,aircraft_MAX);
 
