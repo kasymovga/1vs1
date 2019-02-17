@@ -234,6 +234,7 @@ void HG_Precache(void) {
 	dlc_require("nadgets");
     precache_model("models/ctf/shield.md3");
     precache_model("models/rtzsentry.iqm");
+	precache_model("models/ebomb.mdl");
     precache_sound("kh/alarm.wav");
     precache_sound("weapons/grenade_bounce1.wav");
     precache_sound("weapons/grenade_bounce2.wav");
