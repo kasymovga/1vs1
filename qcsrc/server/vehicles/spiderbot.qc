@@ -39,6 +39,7 @@ float g_vehicle_spiderbot_rocket_speed;
 float g_vehicle_spiderbot_rocket_spread;
 float g_vehicle_spiderbot_rocket_turnrate;
 float g_vehicle_spiderbot_rocket_up;
+float g_vehicle_spiderbot_pushfactor;
 
 float SpiderbotPhysic_SendEntity(entity to, float sf);
 void spiderbot_exit(float eject);
@@ -449,7 +450,7 @@ void spiderbot_spawn()
 	self.tur_head.colormap = 1024;
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
-	self.pushfactor = 0.1;
+	self.pushfactor = g_vehicle_spiderbot_pushfactor;
 
     setsize(self,spiderbot_MIN,spiderbot_MAX);
 
@@ -590,6 +591,7 @@ void vehicle_spiderbot_readcvars() {
 	CACHE_CVAR(g_vehicle_spiderbot_speed_strafe);
 	CACHE_CVAR(g_vehicle_spiderbot_speed_walk);
 	CACHE_CVAR(g_vehicle_spiderbot_turnspeed);
+	CACHE_CVAR(g_vehicle_spiderbot_pushfactor);
     precache_model ( "models/vhshield.md3");
     precache_model ( "models/spiderbot/cp.md3");
     precache_model ( "models/spiderbot/spiderbot.dpm");

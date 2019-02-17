@@ -14,6 +14,7 @@ float g_vehicle_aircraft_rocket_speed;
 float g_vehicle_aircraft_rocket_spread;
 float g_vehicle_aircraft_rocket_turnrate;
 float g_vehicle_aircraft_rocket_up;
+float g_vehicle_aircraft_pushfactor;
 
 float AircraftPhysic_SendEntity(entity to, float sf);
 void aircraft_exit(float eject);
@@ -348,7 +349,7 @@ void aircraft_spawn()
 	self.tur_head.colormap = 1024;
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
-	self.pushfactor = 0.2;
+	self.pushfactor = g_vehicle_aircraft_pushfactor;
 
     setsize(self,aircraft_MIN,aircraft_MAX);
 
@@ -479,6 +480,7 @@ void vehicle_aircraft_readcvars() {
 	CACHE_CVAR(g_vehicle_aircraft_rocket_spread);
 	CACHE_CVAR(g_vehicle_aircraft_rocket_turnrate);
 	CACHE_CVAR(g_vehicle_aircraft_rocket_up);
+	CACHE_CVAR(g_vehicle_aircraft_pushfactor);
 	CACHE_CVAR(g_vehicle_aircraft_speed);
 	CACHE_CVAR(g_vehicle_aircraft_speed_stop);
 	CACHE_CVAR(g_vehicle_aircraft_accel_up);

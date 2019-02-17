@@ -1,3 +1,5 @@
+float g_vehicle_car_pushfactor;
+
 float CarPhysic_SendEntity(entity to, float sf);
 void car_exit(float eject);
 void car_enter();
@@ -199,7 +201,7 @@ void car_spawn()
 	self.colormap = 1024;
 	self.deadflag    = DEAD_NO;
     self.bot_attack = TRUE;
-	self.pushfactor = 0.1;
+	self.pushfactor = g_vehicle_car_pushfactor;
 
     setorigin(self,self.enemy.origin);
     self.angles = self.enemy.angles;
@@ -307,6 +309,7 @@ void vehicle_car_readcvars() {
 	vehicles_init();
 	dlc_require("car_v1");
 	vehicle_car_readcvars_done = TRUE;
+	CACHE_CVAR(g_vehicle_car_pushfactor);
 	CACHE_CVAR(g_vehicle_car_movement_inertia);
 	CACHE_CVAR(g_vehicle_car_speed_stop);
 	CACHE_CVAR(g_vehicle_car_speed);

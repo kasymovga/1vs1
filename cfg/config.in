@@ -506,6 +506,7 @@ set g_vehicle_aircraft_shield_regen_dmgpause 5
 set g_vehicle_aircraft_speed 800
 set g_vehicle_aircraft_speed_stop 100
 set g_vehicle_aircraft_turnspeed 180
+set g_vehicle_aircraft_pushfactor 0.2
 set g_vehicle_spiderbot_head_pitchspeed 360
 set g_vehicle_spiderbot_head_pitchlimit_up 20
 set g_vehicle_spiderbot_head_pitchlimit_down -20
@@ -540,11 +541,13 @@ set g_vehicle_spiderbot_speed_walk 600
 set g_vehicle_spiderbot_speed_stop 1600
 set g_vehicle_spiderbot_speed_strafe 600
 set g_vehicle_spiderbot_turnspeed 180
+set g_vehicle_spiderbot_pushfactor 0.1
 set g_vehicle_car_speed 1600
 set g_vehicle_car_speed_stop 100
 set g_vehicle_car_turnspeed 270
 set g_vehicle_car_health 500
 set g_vehicle_car_movement_inertia 1
+set g_vehicle_car_pushfactor 0.05
 
 set sv_player_hat ""
 set sv_player_hat_angles "0 0 0"
