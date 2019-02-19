@@ -416,7 +416,6 @@ vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damag
 // may be useful to all weapons
 .float bulletcounter;
 
-void target_voicescript_next(entity pl);
 void target_voicescript_clear(entity pl);
 
 .string target2;

@@ -1551,80 +1551,57 @@ void spawnfunc_trigger_gamestart() {
 		InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);
 }
 
-
-
-
-.entity voicescript; // attached voice script
-.float voicescript_index; // index of next voice, or -1 to use the randomized ones
-.float voicescript_nextthink; // time to play next voice
-.float voicescript_voiceend; // time when this voice ends
+.entity voicescript_ctrl; // attached voice script
 
 void target_voicescript_clear(entity pl)
 {
-	pl.voicescript = world;
+	pl.voicescript_ctrl = world;
+}
+
+void() voicescript_ctrl_think {
+	entity vs = self.enemy;
+	entity pl = self.owner;
+	float i, n, dt;
+
+	if (pl.voicescript_ctrl != self || pl.classname != "player" || gameover) {
+		remove(self);
+		return;
+	}
+	// get the next voice...
+	n = tokenize_console(vs.message);
+	if(self.cnt < vs.cnt)
+		i = self.cnt * 2;
+	else if(n > self.cnt * 2)
+		i = mod(self.cnt - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
+	else
+		i = -1;
+
+	if(i >= 0) {
+		play2(pl, strcat(vs.netname, "/", argv(i), ".wav"));
+		dt = stof(argv(i + 1));
+		if(dt >= 0)
+			self.nextthink = time + dt + vs.wait * (0.5 * random());
+		else
+			self.nextthink = time - dt;
+
+		self.cnt += 1;
+	} else {
+		pl.voicescript_ctrl = world; // stop trying then
+		remove(self);
+	}
 }
 
 void target_voicescript_use()
 {
-	if(activator.voicescript != self)
+	if(activator.voicescript_ctrl.enemy != self)
 	{
-		activator.voicescript = self;
-		activator.voicescript_index = 0;
-		activator.voicescript_nextthink = time + self.delay;
-	}
-}
-
-void target_voicescript_next(entity pl)
-{
-	entity vs;
-	float i, n, dt;
-
-	vs = pl.voicescript;
-	if(!vs)
-		return;
-	if(vs.message == "")
-		return;
-	if(pl.classname != "player")
-		return;
-	if(gameover)
-		return;
-
-	if(time >= pl.voicescript_voiceend)
-	{
-		if(time >= pl.voicescript_nextthink)
-		{
-			// get the next voice...
-			n = tokenize_console(vs.message);
-
-			if(pl.voicescript_index < vs.cnt)
-				i = pl.voicescript_index * 2;
-			else if(n > vs.cnt * 2)
-				i = mod(pl.voicescript_index - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
-			else
-				i = -1;
-
-			if(i >= 0)
-			{
-				play2(pl, strcat(vs.netname, "/", argv(i), ".wav"));
-				dt = stof(argv(i + 1));
-				if(dt >= 0)
-				{
-					pl.voicescript_voiceend = time + dt;
-					pl.voicescript_nextthink = pl.voicescript_voiceend + vs.wait * (0.5 + random());
-				}
-				else
-				{
-					pl.voicescript_voiceend = time - dt;
-					pl.voicescript_nextthink = pl.voicescript_voiceend;
-				}
-
-				pl.voicescript_index += 1;
-			}
-			else
-			{
-				pl.voicescript = world; // stop trying then
-			}
-		}
+		entity vsctrl = spawn();
+		vsctrl.owner = activator;
+		vsctrl.enemy = self;
+		vsctrl.think = voicescript_ctrl_think;
+		vsctrl.cnt = 0;
+		vsctrl.nextthink = max(activator.voicescript_ctrl.nextthink, time + self.delay);
+		activator.voicescript_ctrl = vsctrl;
 	}
 }
 
@@ -1639,6 +1616,10 @@ void spawnfunc_target_voicescript()
 	// delay: initial delay before the first message
 
 	float i, n;
+	if (self.message == "") {
+		remove(self);
+		return;
+	}
 	self.use = target_voicescript_use;
 
 	n = tokenize_console(self.message);

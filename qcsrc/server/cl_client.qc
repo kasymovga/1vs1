@@ -1997,8 +1997,6 @@ void PlayerPreThink (void)
 				}
 		}
 	}
-
-	target_voicescript_next(self);
 }
 
 /*
