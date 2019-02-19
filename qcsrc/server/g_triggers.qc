@@ -1553,11 +1553,6 @@ void spawnfunc_trigger_gamestart() {
 
 .entity voicescript_ctrl; // attached voice script
 
-void target_voicescript_clear(entity pl)
-{
-	pl.voicescript_ctrl = world;
-}
-
 void() voicescript_ctrl_think {
 	entity vs = self.enemy;
 	entity pl = self.owner;
@@ -1605,6 +1600,13 @@ void target_voicescript_use()
 	}
 }
 
+var void(entity spot) target_voicescript_Spawn_NextLink;
+void(entity spot) target_voicescript_Spawn {
+	self.voicescript_ctrl = world;
+	target_voicescript_Spawn_NextLink(spot);
+}
+
+float spawnfunc_target_voicescript_initialized;
 void spawnfunc_target_voicescript()
 {
 	// netname: directory of the sound files
@@ -1616,6 +1618,11 @@ void spawnfunc_target_voicescript()
 	// delay: initial delay before the first message
 
 	float i, n;
+	if not(spawnfunc_target_voicescript_initialized) {
+		target_voicescript_Spawn_NextLink = GameHookChain_Spawn;
+		GameHookChain_Spawn = target_voicescript_Spawn;
+		spawnfunc_target_voicescript_initialized = TRUE;
+	}
 	if (self.message == "") {
 		remove(self);
 		return;

@@ -857,8 +857,6 @@ void PutClientInServer()
 		if (g_spawnsound)
 			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
-		target_voicescript_clear(self);
-
 		oldself = self;
 		self = spot;
 			activator = oldself;
