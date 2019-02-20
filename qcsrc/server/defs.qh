@@ -381,7 +381,6 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 float next_pingtime;
 
-.float Version;
 .float SendFlags;
 .float(entity to, float sendflags) SendEntity;
 

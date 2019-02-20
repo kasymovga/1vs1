@@ -876,7 +876,6 @@ void spawnfunc_func_rain()
 		self.count = 65535;
 
 	self.state = 1; // 1 is rain, 0 is snow
-	self.Version = 1;
 
 	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
 };
@@ -914,7 +913,6 @@ void spawnfunc_func_snow()
 		self.count = 65535;
 
 	self.state = 0; // 1 is rain, 0 is snow
-	self.Version = 1;
 
 	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
 };
