@@ -23,9 +23,10 @@ float GetPlayerColorForce(float i)
 
 float GetPlayerColor(float i)
 {
-	if not(playerslots[i].gotscores) // unconnected
+	entity pl = playerslots[i];
+	if not(pl.gotscores) // unconnected
 		return COLOR_SPECTATOR;
-	else if(stof(getplayerkey(i, "frags")) == FRAGS_SPECTATOR)
+	else if(pl.team == COLOR_SPECTATOR)
 		return COLOR_SPECTATOR;
 	else
 		return GetPlayerColorForce(i);

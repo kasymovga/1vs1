@@ -386,7 +386,7 @@ float next_pingtime;
 
 float independent_players;
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
-#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
+#define MAKE_INDEPENDENT_PLAYER(e) ((e).solid = SOLID_TRIGGER)
 // we're using + here instead of , because fteqcc sucks
 
 string clientstuff;

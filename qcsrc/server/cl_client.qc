@@ -578,7 +578,6 @@ void PutObserverInServer(float frags_team_reset)
 		ScoreKeeper_Touch(self);
 	}
 
-	self.frags = FRAGS_SPECTATOR;
 	self.touch = world.touch;
 }
 
@@ -726,7 +725,6 @@ void PutClientInServer()
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
 		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-		self.frags = FRAGS_PLAYER;
 		if(independent_players)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;

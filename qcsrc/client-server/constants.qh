@@ -310,11 +310,6 @@ float HITTYPE_RESERVED = 0x1000; // unused yet
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
 #define WEP_VALID(w)                  ((w) >= WEP_FIRST && (w) <= WEP_LAST)
 
-#define FRAGS_PLAYER 0
-#define FRAGS_SPECTATOR -666
-#define FRAGS_PLAYER_NONSOLID -616
-// we can use this frags value for both
-
 //misc. stuff
 #define NEWLINES "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 

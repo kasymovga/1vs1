@@ -303,11 +303,6 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 	vl = GetPlayerColor(left.sv_entnum);
 	vr = GetPlayerColor(right.sv_entnum);
 
-	if(!left.gotscores)
-		vl = COLOR_SPECTATOR;
-	if(!right.gotscores)
-		vr = COLOR_SPECTATOR;
-
 	if(vl > vr)
 		return true;
 	if(vl < vr)
@@ -878,7 +873,6 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 	}
 
 	tmp_y = 0;
-
 	for(i = 0; i < sbar_num_fields; ++i)
 	{
 		field = sbar_field[i];
@@ -916,14 +910,18 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		}
 
 		tmp_x = sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
-		if(sbar_field_icon0 != "")
-			drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha, DRAWFLAG_NORMAL);
-		if(sbar_field_icon1 != "")
-			drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha, DRAWFLAG_NORMAL);
-		if(sbar_field_icon2 != "")
-			drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha, DRAWFLAG_NORMAL);
-	}
+		if(field == SP_NAME)
+		if not(is_spec) {
+			if(sbar_field_icon0 != "")
+				drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha, DRAWFLAG_NORMAL);
 
+			if(sbar_field_icon1 != "")
+				drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha, DRAWFLAG_NORMAL);
+
+			if(sbar_field_icon2 != "")
+				drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha, DRAWFLAG_NORMAL);
+		}
+	}
 	if(sbar_field[i] == SP_SEPARATOR)
 	{
 		pos_x = xmax;
@@ -963,13 +961,15 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 			}
 
 			tmp_x = sbar_fontsize_x*sbar_size[i];
-			if(sbar_field_icon0 != "")
-				drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha, DRAWFLAG_NORMAL);
-			if(sbar_field_icon1 != "")
-				drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha, DRAWFLAG_NORMAL);
-			if(sbar_field_icon2 != "")
-				drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha, DRAWFLAG_NORMAL);
-
+			if(field == SP_NAME)
+			if not(is_spec) {
+				if(sbar_field_icon0 != "")
+					drawpic(pos - tmp, sbar_field_icon0, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon0_alpha, DRAWFLAG_NORMAL);
+				if(sbar_field_icon1 != "")
+					drawpic(pos - tmp, sbar_field_icon1, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon1_rgb, sbar_field_icon1_alpha, DRAWFLAG_NORMAL);
+				if(sbar_field_icon2 != "")
+					drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha, DRAWFLAG_NORMAL);
+			}
 			pos_x -= sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
 		}
 	}
