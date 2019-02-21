@@ -35,7 +35,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 	e.animstate_startframe = anim_x;
 	e.animstate_numframes = anim_y;
 	e.animstate_framerate = anim_z;
-	e.animstate_starttime = servertime - 0.1 * serverframetime; // shift it a little bit into the past to prevent float inaccuracy hiccups
+	e.animstate_starttime = time - 0.01; // shift it a little bit into the past to prevent float inaccuracy hiccups
 	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
 	e.animstate_looping = looping;
 	e.animstate_override = override;

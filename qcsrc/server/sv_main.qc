@@ -124,10 +124,6 @@ entity SelectSpawnPoint (float anypoint);
 void ReadyRestart();
 void StartFrame (void)
 {
-	serverprevtime = servertime;
-	servertime = time;
-	serverframetime = frametime;
-
 	ER_Update();
 
 #ifdef PROFILING

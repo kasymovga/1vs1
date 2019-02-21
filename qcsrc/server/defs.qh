@@ -430,8 +430,6 @@ void SUB_UseTargets();
 
 .float wasplayer;
 
-float servertime, serverprevtime, serverframetime;
-
 .float ammo_fuel;
 
 //flood fields
