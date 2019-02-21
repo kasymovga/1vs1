@@ -681,59 +681,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-float UpdateSelectedPlayer_countvalue(float v)
-{
-	return max(0, (v - 1.0) / 0.5);
-}
-
-float dist_point_line(vector p, vector l0, vector ldir)
-{
-	ldir = normalize(ldir);
-
-	// remove the component in line direction
-	p = p - (p * ldir) * ldir;
-
-	// vlen of the remaining vector
-	return vlen(p);
-}
-
-// returns: -2 if no hit, otherwise cos of the angle
-// uses the global v_angle
-float UpdateSelectedPlayer_canSee(entity p, float mincosangle, float maxdist)
-{
-	vector so, d;
-	float c;
-
-	if(p == self)
-		return -2;
-
-	if(p.deadflag)
-		return -2;
-
-	so = self.origin + self.view_ofs;
-	d = p.origin - so;
-
-	// misaimed?
-	if(dist_point_line(d, '0 0 0', v_forward) > maxdist)
-		return -2;
-
-	// now find the cos of the angle...
-	c = normalize(d) * v_forward;
-
-	if(c <= mincosangle)
-		return -2;
-
-	// not visible in any way? forget it
-	if(!checkpvs(so, p))
-		return -2;
-
-	traceline(so, p.origin, MOVE_NOMONSTERS, self);
-	if(trace_fraction < 1)
-		return -2;
-
-	return c;
-}
-
 .float muted; // to be used by prvm_edictset server playernumber muted 1
 .float retard_last_say;
 void Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
