@@ -634,13 +634,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			waves = g_respawn_mapsettings_waves;
 		}
 		if(!sdelay)
-			sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
-		if(!sdelay)
 			sdelay = g_respawn_delay;
-		if(!waves)
-			waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
+
 		if(!waves)
 			waves = g_respawn_waves;
+
 		if(waves)
 			self.death_time = ceil((time + sdelay) / waves) * waves;
 		else

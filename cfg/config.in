@@ -1662,6 +1662,19 @@ set explosive_minsta_g_use_ammunition 1
 set explosive_minsta_g_score_damage 0
 set explosive_minsta_g_minstagib_ammo_drop 25
 
+alias g_ctf_respawn_delay "set ctf_g_respawn_delay $1"
+alias g_dm_respawn_delay "set dm_g_respawn_delay $1"
+alias g_dom_respawn_delay "set dom_g_respawn_delay $1"
+alias g_lms_respawn_delay "set lms_g_respawn_delay $1"
+alias g_rune_respawn_delay "set rune_g_respawn_delay $1"
+alias g_tdm_respawn_delay "set tdm_g_respawn_delay $1"
+alias g_ctf_respawn_waves "set ctf_g_respawn_waves $1"
+alias g_dm_respawn_waves "set dm_g_respawn_waves $1"
+alias g_dom_respawn_waves "set dom_g_respawn_waves $1"
+alias g_lms_respawn_waves "set lms_g_respawn_waves $1"
+alias g_rune_respawn_waves "set rune_g_respawn_waves $1"
+alias g_tdm_respawn_waves "set tdm_g_respawn_waves $1"
+
 alias _fs_rescan_alias_disable "unalias fs_rescan"
 alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; sv_cmd dlc_reload; _fs_rescan_alias_enable\""
 _fs_rescan_alias_enable
