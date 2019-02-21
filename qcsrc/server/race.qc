@@ -377,15 +377,6 @@ void checkpoint_passed()
 {
 	string oldmsg;
 
-	if(other.classname == "porto")
-	{
-		// do not allow portalling through checkpoints
-		trace_plane_normal = normalize(-1 * other.velocity);
-		self = other;
-		W_Porto_Fail();
-		return;
-	}
-
 	/*
 	 * Trigger targets
 	 */
@@ -400,13 +391,6 @@ void checkpoint_passed()
 
 	if(other.classname != "player")
 		return;
-
-	/*
-	 * Remove unauthorized equipment
-	 */
-	Portal_ClearAll(other);
-
-	other.porto_forbidden = 2; // decreased by 1 each StartFrame
 
 	if(other.race_checkpoint == -1 || other.race_checkpoint == self.race_checkpoint)
 	{

@@ -394,8 +394,6 @@ string clientstuff;
 .float weapons;
 .float pressedkeys;
 
-.float porto_forbidden;
-
 .string fog;
 
 string cvar_changes;

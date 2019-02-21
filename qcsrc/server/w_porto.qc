@@ -204,7 +204,6 @@ float w_porto(float req)
 	{
 		if (self.BUTTON_ATCK)
 		if (!self.porto_current_in)
-		if (!self.porto_forbidden)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
 			W_Porto_Attack(FALSE);
@@ -212,7 +211,6 @@ float w_porto(float req)
 		}
 		if (self.BUTTON_ATCK2)
 		if (!self.porto_current_out)
-		if (!self.porto_forbidden)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
 			W_Porto_Attack(TRUE);
