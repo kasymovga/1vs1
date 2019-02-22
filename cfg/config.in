@@ -405,6 +405,7 @@ set g_balance_supershotgun_secondary_gravityfactor 0
 set g_balance_supershotgun_secondary_refire 0.6
 set g_balance_supershotgun_secondary_speed 1500
 set g_balance_supershotgun_secondary_spread 0.15
+set g_weaponreplace_supershotgun ""
 
 set g_balance_campingrifle_hotreload 0
 set g_freeze_teams 2
@@ -708,6 +709,7 @@ set g_balance_zapper_secondary_range 2000
 set g_balance_zapper_secondary_refire 1
 set g_balance_zapper_swap_buttons 0
 set g_start_weapon_zapper 0
+set g_weaponreplace_zapper ""
 
 set g_balance_axe_damage 300
 set g_start_weapon_axe 0
