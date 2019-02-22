@@ -12,9 +12,6 @@ float bot_vs_human;
 float autoswap_last_from;
 entity autoswap_last_best;
 
-string cache_mutatormsg;
-string cache_lastmutatormsg;
-
 void ChangeTeam(entity pl, float dteam, float nobalance);
 void AuditTeams(float force);
 
@@ -252,9 +249,6 @@ void InitGameplayMode()
 
 	// save it (for the next startup)
 	cvar_set("gamecfg", ftos(game));
-
-	cache_mutatormsg = strzone("");
-	cache_lastmutatormsg = strzone("");
 
 	// enforce the server's universal frag/time limits
 	if(!g_campaign)
