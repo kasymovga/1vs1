@@ -50,3 +50,4 @@ void PrecachePlayerSounds(string f);
 void UpdatePlayerSounds();
 void ClearPlayerSounds();
 void VoiceMessage(string type, string message);
+void() player_setup_model;

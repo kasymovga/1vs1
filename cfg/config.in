@@ -241,6 +241,24 @@ set g_push_damage 25
 set g_push_damage_speed 500
 set g_push_trampledamage 25
 set g_push_trampledamage_speed 400
+set g_player_forcemodel "models/player/nexus.zym"
+set g_player_forcemodel_red "models/player/nexus.zym"
+set g_player_forcemodel_blue "models/player/nexus.zym"
+set g_player_forcemodel_yellow "models/player/nexus.zym"
+set g_player_forcemodel_pink "models/player/nexus.zym"
+set g_player_forcecolor 51
+set g_player_forcecolor_red -1
+set g_player_forcecolor_blue -1
+set g_player_forcecolor_yellow -1
+set g_player_forcecolor_pink -1
+set g_player_forceskin 6
+set g_player_forceskin_red -1
+set g_player_forceskin_blue -1
+set g_player_forceskin_yellow -1
+set g_player_forceskin_pink -1
+set campaign_g_player_forcemodel "0"
+set campaign_g_player_forceskin "-1"
+set campaign_g_player_forcecolor "-1"
 
 //Nexuiz compat
 set sv_spawnreplace_item_fuel "item_jetpack"

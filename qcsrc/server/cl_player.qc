@@ -27,6 +27,22 @@ float g_voice_flood_spv;
 float g_voice_flood_spv_team;
 float g_jetpack_attenuation;
 float g_fullbrightplayers;
+string g_player_forcemodel;
+string g_player_forcemodel_red;
+string g_player_forcemodel_blue;
+string g_player_forcemodel_yellow;
+string g_player_forcemodel_pink;
+float g_player_forcecolor;
+float g_player_forcecolor_red;
+float g_player_forcecolor_blue;
+float g_player_forcecolor_yellow;
+float g_player_forcecolor_pink;
+float g_player_forceskin;
+float g_player_forceskin_red;
+float g_player_forceskin_blue;
+float g_player_forceskin_yellow;
+float g_player_forceskin_pink;
+float sv_servermodelsonly;
 
 vector healtharmor_maxdamage(float h, float a, float armorblock)
 {
@@ -1163,6 +1179,148 @@ float Player_CalculateAlpha(entity plr, entity viewer) {
 	return sa;
 }
 
+void(entity e, string modelname) player_setup_lod {
+	string s;
+	if(sv_loddistance1)
+	{
+		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
+		if(fexists(s))
+		{
+			setmodel(e, s); // players have high precision
+			self.modelindex_lod1 = self.modelindex;
+		}
+		else
+			self.modelindex_lod1 = -1;
+
+		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
+		if(fexists(s))
+		{
+			setmodel(e, s); // players have high precision
+			self.modelindex_lod2 = self.modelindex;
+		}
+		else
+			self.modelindex_lod2 = -1;
+
+		precache_model(modelname);
+		setmodel(e, modelname); // players have high precision
+		self.modelindex_lod0 = self.modelindex;
+		if(self.modelindex_lod1 < 0)
+			self.modelindex_lod1 = self.modelindex;
+
+		if(self.modelindex_lod2 < 0)
+			self.modelindex_lod2 = self.modelindex;
+	} else {
+		precache_model(modelname);
+		setmodel(e, modelname); // players have high precision
+		self.modelindex_lod0 = self.modelindex;
+	}
+	s = whichpack(self.model);
+	self.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
+	player_setupanimsformodel();
+	UpdatePlayerSounds();
+}
+
+string PLAYER_FALLBACKMODEL = "models/player/marine.zym";
+string(string plyermodel) player_check_model {
+	if(strlen(plyermodel) < 4)
+		return PLAYER_FALLBACKMODEL;
+	if( substring(plyermodel,0,14) != "models/player/")
+		return PLAYER_FALLBACKMODEL;
+	else if(sv_servermodelsonly)
+	{
+		if(substring(plyermodel,-4,4) != ".zym")
+		if(substring(plyermodel,-4,4) != ".dpm")
+		if(substring(plyermodel,-4,4) != ".md3")
+		if(substring(plyermodel,-4,4) != ".psk")
+			return PLAYER_FALLBACKMODEL;
+		// forbid the LOD models
+		if(substring(plyermodel, -9,5) == "_lod1")
+			return PLAYER_FALLBACKMODEL;
+		if(substring(plyermodel, -9,5) == "_lod2")
+			return PLAYER_FALLBACKMODEL;
+		if(plyermodel != strtolower(plyermodel))
+			return PLAYER_FALLBACKMODEL;
+		if(!fexists(plyermodel))
+			return PLAYER_FALLBACKMODEL;
+	}
+	return plyermodel;
+}
+
+void() player_setup_model {
+	string forcemodel;
+	float forceskin, forcecolor, chmdl, oldskin;
+	vector m1, m2;
+	if(teamplay)
+	{
+		forcemodel =
+				((self.team == COLOR_TEAM1) ? g_player_forcemodel_red :
+				((self.team == COLOR_TEAM2) ? g_player_forcemodel_blue :
+				((self.team == COLOR_TEAM3) ? g_player_forcemodel_yellow :
+				((self.team == COLOR_TEAM4) ? g_player_forcemodel_pink : g_player_forcemodel))));
+
+		if (forcemodel == "")
+			forcemodel = g_player_forcemodel;
+
+		forceskin =
+				((self.team == COLOR_TEAM1) ? g_player_forceskin_red :
+				((self.team == COLOR_TEAM2) ? g_player_forceskin_blue :
+				((self.team == COLOR_TEAM3) ? g_player_forceskin_yellow :
+				((self.team == COLOR_TEAM4) ? g_player_forceskin_pink : g_player_forceskin))));
+
+		if (forceskin < 0)
+			forceskin = g_player_forceskin;
+
+		forcecolor =
+				((self.team == COLOR_TEAM1) ? g_player_forcecolor_red :
+				((self.team == COLOR_TEAM2) ? g_player_forcecolor_blue :
+				((self.team == COLOR_TEAM3) ? g_player_forcecolor_yellow :
+				((self.team == COLOR_TEAM4) ? g_player_forcecolor_pink : g_player_forcecolor))));
+
+		if (forcecolor < 0)
+			forcecolor = (self.team - 1) * 17;
+	} else {
+		forceskin = g_player_forceskin;
+		forcecolor = g_player_forcecolor;
+	}
+	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
+		self.model = ""; // force the != checks to return true
+
+	if(forcemodel != "" && forcemodel != "0")
+	{
+		if (forcemodel != self.model)
+		{
+			m1 = self.mins;
+			m2 = self.maxs;
+			player_setup_lod(self, forcemodel);
+			setsize(self, m1, m2);
+			chmdl = TRUE;
+		}
+		oldskin = self.skinindex;
+		if (forceskin >= 0)
+			self.skinindex = forceskin;
+	} else {
+		if (self.playermodel != self.model)
+		{
+			self.playermodel = player_check_model(self.playermodel);
+			m1 = self.mins;
+			m2 = self.maxs;
+			player_setup_lod(self, self.playermodel);
+			setsize(self, m1, m2);
+			chmdl = TRUE;
+		}
+		oldskin = self.skinindex;
+		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
+	}
+	if(chmdl || oldskin != self.skinindex)
+		self.species = player_getspecies(); // model or skin has changed
+
+	if (forcecolor > -2) {
+		float colors = GameHookChain_PlayerColorsMod(forcecolor);
+		if (self.clientcolors != colors)
+			SetPlayerColors(self, colors);
+	}
+}
+
 void Player_Init() {
 	CACHE_CVAR(g_chat_flood_burst);
 	CACHE_CVAR(g_chat_flood_burst_team);
@@ -1188,4 +1346,19 @@ void Player_Init() {
 	CACHE_CVAR(g_fullbrightplayers);
 	g_chat_forbidden_words = zone_ifneeded(strtolower(cvar_string("g_chat_forbidden_words")));
 	CACHE_CVAR(g_chat_forbidden_words_set_retard);
+	CACHE_CVAR_STR(g_player_forcemodel);
+	CACHE_CVAR_STR(g_player_forcemodel_red);
+	CACHE_CVAR_STR(g_player_forcemodel_blue);
+	CACHE_CVAR_STR(g_player_forcemodel_yellow);
+	CACHE_CVAR_STR(g_player_forcemodel_pink);
+	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor, -2);
+	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_red, -2);
+	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_blue, -2);
+	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_yellow, -2);
+	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_pink, -2);
+	CACHE_CVAR(g_player_forceskin);
+	CACHE_CVAR(g_player_forceskin_red);
+	CACHE_CVAR(g_player_forceskin_blue);
+	CACHE_CVAR(g_player_forceskin_yellow);
+	CACHE_CVAR(g_player_forceskin_pink);
 }

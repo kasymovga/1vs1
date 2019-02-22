@@ -1,22 +1,4 @@
 float g_spawn_furthest;
-float g_teamdamage_resetspeed;
-float g_forced_respawn;
-float sv_defaultcharacter;
-float sv_defaultplayercolors;
-string sv_defaultplayermodel;
-string sv_defaultplayermodel_red;
-string sv_defaultplayermodel_blue;
-string sv_defaultplayermodel_yellow;
-string sv_defaultplayermodel_pink;
-float sv_defaultplayerskin;
-float sv_defaultplayerskin_red;
-float sv_defaultplayerskin_blue;
-float sv_defaultplayerskin_yellow;
-float sv_defaultplayerskin_pink;
-float sv_servermodelsonly;
-float sv_reset_on_join;
-float g_spawn_furthest;
-float sv_servermodelsonly;
 float sv_reset_on_join;
 float g_teamdamage_resetspeed;
 float g_forced_respawn;
@@ -81,8 +63,6 @@ void Spectator_Note_Message() {
 }
 
 float reset_on_join_done;
-
-void FixPlayermodel();
 
 #define SPAWNPOINT_SCORE frags
 
@@ -311,40 +291,6 @@ entity SelectSpawnPoint (float anypoint)
 
 /*
 =============
-CheckPlayerModel
-
-Checks if the argument string can be a valid playermodel.
-Returns a valid one in doubt.
-=============
-*/
-string FallbackPlayerModel = "models/player/marine.zym";
-string CheckPlayerModel(string plyermodel) {
-	if(strlen(plyermodel) < 4)
-		return FallbackPlayerModel;
-	if( substring(plyermodel,0,14) != "models/player/")
-		return FallbackPlayerModel;
-	else if(sv_servermodelsonly)
-	{
-		if(substring(plyermodel,-4,4) != ".zym")
-		if(substring(plyermodel,-4,4) != ".dpm")
-		if(substring(plyermodel,-4,4) != ".md3")
-		if(substring(plyermodel,-4,4) != ".psk")
-			return FallbackPlayerModel;
-		// forbid the LOD models
-		if(substring(plyermodel, -9,5) == "_lod1")
-			return FallbackPlayerModel;
-		if(substring(plyermodel, -9,5) == "_lod2")
-			return FallbackPlayerModel;
-		if(plyermodel != strtolower(plyermodel))
-			return FallbackPlayerModel;
-		if(!fexists(plyermodel))
-			return FallbackPlayerModel;
-	}
-	return plyermodel;
-}
-
-/*
-=============
 Client_customizeentityforclient
 
 LOD reduction
@@ -428,56 +374,6 @@ float Client_customizeentityforclient()
 	return TRUE;
 }
 
-void setmodel_lod(entity e, string modelname)
-{
-	string s;
-
-	if(sv_loddistance1)
-	{
-		// FIXME: this only supports 3-letter extensions
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod1 = self.modelindex;
-		}
-		else
-			self.modelindex_lod1 = -1;
-
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod2 = self.modelindex;
-		}
-		else
-			self.modelindex_lod2 = -1;
-
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-
-		if(self.modelindex_lod1 < 0)
-			self.modelindex_lod1 = self.modelindex;
-
-		if(self.modelindex_lod2 < 0)
-			self.modelindex_lod2 = self.modelindex;
-	}
-	else
-	{
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-			// save it for possible player model forcing
-	}
-
-	s = whichpack(self.model);
-	self.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
-
-	player_setupanimsformodel();
-	UpdatePlayerSounds();
-}
-
 void ClientSetView(entity to) {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
 		return;
@@ -553,7 +449,7 @@ void PutObserverInServer(float frags_team_reset)
 	self.items = 0;
 	self.weapons = 0;
 	self.model = "";
-	FixPlayermodel();
+	player_setup_model();
 	self.model = "";
 	self.modelindex = 0;
 	self.weapon = 0;
@@ -579,93 +475,6 @@ void PutObserverInServer(float frags_team_reset)
 	}
 
 	self.touch = world.touch;
-}
-
-float RestrictSkin(float s)
-{
-	if(!teamplay)
-		return s;
-	if(s == 6)
-		return 6;
-	return mod(s, 3);
-}
-
-void FixPlayermodel()
-{
-	local string defaultmodel;
-	local float defaultskin, chmdl, oldskin;
-	local vector m1, m2;
-
-	defaultmodel = "";
-
-	if (sv_defaultcharacter) {
-		defaultskin = 0;
-
-		if(teamplay)
-		{
-			defaultmodel =
-					((self.team == COLOR_TEAM1) ? sv_defaultplayermodel_red :
-					((self.team == COLOR_TEAM2) ? sv_defaultplayermodel_blue :
-					((self.team == COLOR_TEAM3) ? sv_defaultplayermodel_yellow :
-					((self.team == COLOR_TEAM4) ? sv_defaultplayermodel_pink : sv_defaultplayermodel))));
-
-			defaultskin =
-					((self.team == COLOR_TEAM1) ? sv_defaultplayerskin_red :
-					((self.team == COLOR_TEAM2) ? sv_defaultplayerskin_blue :
-					((self.team == COLOR_TEAM3) ? sv_defaultplayerskin_yellow :
-					((self.team == COLOR_TEAM4) ? sv_defaultplayerskin_pink : sv_defaultplayerskin))));
-		}
-
-		if(defaultmodel == "")
-		{
-			defaultmodel = sv_defaultplayermodel;
-			defaultskin = sv_defaultplayerskin;
-		}
-	}
-	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
-	{
-		if(self.model != "")
-			bprint("\{1}^1Player ", self.netname, "^1 has a zero modelindex, trying to fix...\n");
-		self.model = ""; // force the != checks to return true
-	}
-	if(defaultmodel != "")
-	{
-:setdefaultmodel
-		if (defaultmodel != self.model)
-		{
-			m1 = self.mins;
-			m2 = self.maxs;
-			setmodel_lod (self, defaultmodel);
-			setsize (self, m1, m2);
-			chmdl = TRUE;
-		}
-
-		oldskin = self.skinindex;
-		self.skinindex = defaultskin;
-	} else {
-		if (self.playermodel != self.model)
-		{
-			self.playermodel = CheckPlayerModel(self.playermodel);
-			m1 = self.mins;
-			m2 = self.maxs;
-			setmodel_lod (self, self.playermodel);
-			setsize (self, m1, m2);
-			chmdl = TRUE;
-		}
-
-		oldskin = self.skinindex;
-		self.skinindex = RestrictSkin(stof(self.playerskin));
-	}
-
-	if(chmdl || oldskin != self.skinindex)
-		self.species = player_getspecies(); // model or skin has changed
-
-	if(!teamplay)
-		if (sv_defaultplayercolors > -2) {
-			float colors = GameHookChain_PlayerColorsMod(sv_defaultplayercolors);
-			if (self.clientcolors != colors)
-				SetPlayerColors(self, colors);
-		}
 }
 
 /*
@@ -816,7 +625,7 @@ void PutClientInServer()
 			self.customizeentityforclient = Client_customizeentityforclient;
 
 		self.model = "";
-		FixPlayermodel();
+		player_setup_model();
 
 		self.stand_view_ofs = PL_VIEW_OFS;
 		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
@@ -1906,7 +1715,7 @@ void PlayerPreThink (void)
 			return;
 		}
 
-		FixPlayermodel();
+		player_setup_model();
 		W_WeaponFrame();
 		Akimbo_WeaponFrame();
 		if(frametime)
@@ -2095,31 +1904,7 @@ void PlayerPostThink (void)
 
 void Client_ReadCvars()
 {
-	string s;
 	CACHE_CVAR(g_spawn_furthest);
-	CACHE_CVAR(sv_defaultcharacter);
-	CACHE_CVAR(sv_defaultplayerskin);
-	CACHE_CVAR(sv_defaultplayerskin_red);
-	CACHE_CVAR(sv_defaultplayerskin_blue);
-	CACHE_CVAR(sv_defaultplayerskin_yellow);
-	CACHE_CVAR(sv_defaultplayerskin_pink);
-	unzone_ifneeded(sv_defaultplayermodel);
-	unzone_ifneeded(sv_defaultplayermodel_red);
-	unzone_ifneeded(sv_defaultplayermodel_blue);
-	unzone_ifneeded(sv_defaultplayermodel_yellow);
-	unzone_ifneeded(sv_defaultplayermodel_pink);
-	sv_defaultplayermodel = cvar_string_zone_ifneeded("sv_defaultplayermodel");
-	sv_defaultplayermodel_red = cvar_string_zone_ifneeded("sv_defaultplayermodel_red");
-	sv_defaultplayermodel_blue = cvar_string_zone_ifneeded("sv_defaultplayermodel_blue");
-	sv_defaultplayermodel_yellow = cvar_string_zone_ifneeded("sv_defaultplayermodel_yellow");
-	sv_defaultplayermodel_pink = cvar_string_zone_ifneeded("sv_defaultplayermodel_pink");
-	s = cvar_string("sv_defaultplayercolors");
-	if (s == "")
-		sv_defaultplayercolors = -2;
-	else
-		sv_defaultplayercolors = stof(s);
-
-	CACHE_CVAR(sv_servermodelsonly);
 	CACHE_CVAR(sv_reset_on_join);
 	CACHE_CVAR(g_teamdamage_resetspeed);
 	CACHE_CVAR(g_forced_respawn);

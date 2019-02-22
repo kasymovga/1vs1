@@ -28,6 +28,8 @@ float GetPlayerColor(float i)
 		return COLOR_SPECTATOR;
 	else if(pl.team == COLOR_SPECTATOR)
 		return COLOR_SPECTATOR;
+	else if (teamplay)
+		return pl.team;
 	else
 		return GetPlayerColorForce(i);
 }

@@ -73,6 +73,8 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
 
 #define CACHE_CVAR(x) x = cvar(#x)
+#define CACHE_CVAR_STR(x) unzone_ifneeded(x); x = cvar_string_zone_ifneeded(#x)
+#define CACHE_CVAR_CHECK_EMPTY(x,y) x = ((cvar_string(#x) != "") ? cvar(#x) : y)
 
 #define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)
 #define PLAYER_DEAD(x) (x.deadflag)

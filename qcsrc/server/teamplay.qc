@@ -269,13 +269,13 @@ void SetPlayerColors(entity pl, float _color)
 	float pants, shirt;
 	pants = _color & 0x0F;
 	shirt = _color & 0xF0;
-	if(teamplay) {
+	float t = pl.team;
+	if(teamplay)
 		setcolor(pl, 16*pants + pants);
-	} else {
-		float t = pl.team;
+	else
 		setcolor(pl, shirt + pants);
-		pl.team = t;
-	}
+
+	pl.team = t;
 }
 
 void SetPlayerTeam(entity pl, float t, float s, float noprint)
@@ -290,8 +290,6 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		pl.team = COLOR_TEAM1;
 	else
 		return;
-
-	SetPlayerColors(pl, pl.team - 1);
 
 	if(!noprint && t != s)
 	{
@@ -600,7 +598,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 void SV_ChangeTeam(float _color)
 {
-	if(teamplay)
+	if (teamplay)
 		return;
 
 	SetPlayerColors(self, _color);
