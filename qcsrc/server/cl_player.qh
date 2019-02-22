@@ -40,7 +40,7 @@ ALLVOICEMSGS
 //		_VOICEMSG(defend) \
 //		_VOICEMSG(freelance) \
 //		_VOICEMSG(falling) \
-void Player_Init();
+void() player_init;
 void PlayerClear(float killed);
 void play_countdown(float finished, string samp);
 float Player_CalculateAlpha(entity plr, entity viewer);

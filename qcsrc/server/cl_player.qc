@@ -1248,6 +1248,7 @@ void() player_setup_model {
 	} else {
 		forceskin = g_player_forceskin;
 		forcecolor = g_player_forcecolor;
+		forcemodel = g_player_forcemodel;
 	}
 	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
 		self.model = ""; // force the != checks to return true
@@ -1288,7 +1289,23 @@ void() player_setup_model {
 	}
 }
 
-void Player_Init() {
+void(string s) player_precache_model {
+	if (s == "" || s == "0")
+		return;
+
+	precache_model(s);
+	PrecachePlayerSounds(strcat(s, ".sounds"));
+}
+
+void() player_init {
+	// Precache all player models if desired
+	if (cvar("sv_precacheplayermodels")) {
+		PrecachePlayerSounds("sound/player/default.sounds");
+		precache_all_models("models/player/*.zym");
+		precache_all_models("models/player/*.dpm");
+		precache_all_models("models/player/*.md3");
+		precache_all_models("models/player/*.psk");
+	}
 	CACHE_CVAR(g_chat_flood_burst);
 	CACHE_CVAR(g_chat_flood_burst_team);
 	CACHE_CVAR(g_chat_flood_burst_tell);
@@ -1311,13 +1328,20 @@ void Player_Init() {
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_fullbrightplayers);
-	g_chat_forbidden_words = zone_ifneeded(strtolower(cvar_string("g_chat_forbidden_words")));
+	CACHE_CVAR_STR(g_chat_forbidden_words);
 	CACHE_CVAR(g_chat_forbidden_words_set_retard);
 	CACHE_CVAR_STR(g_player_forcemodel);
+	player_precache_model(g_player_forcemodel);
 	CACHE_CVAR_STR(g_player_forcemodel_red);
 	CACHE_CVAR_STR(g_player_forcemodel_blue);
 	CACHE_CVAR_STR(g_player_forcemodel_yellow);
 	CACHE_CVAR_STR(g_player_forcemodel_pink);
+	if (teamplay) {
+		player_precache_model(g_player_forcemodel_red);
+		player_precache_model(g_player_forcemodel_blue);
+		player_precache_model(g_player_forcemodel_yellow);
+		player_precache_model(g_player_forcemodel_pink);
+	}
 	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor, -2);
 	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_red, -2);
 	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_blue, -2);

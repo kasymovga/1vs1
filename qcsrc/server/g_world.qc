@@ -317,52 +317,6 @@ void precache()
     if (cvar("g_turrets"))
         turrets_precash();
 #endif
-
-    // Precache all player models if desired
-    if (cvar("sv_precacheplayermodels"))
-    {
-        PrecachePlayerSounds("sound/player/default.sounds");
-        precache_all_models("models/player/*.zym");
-        precache_all_models("models/player/*.dpm");
-        precache_all_models("models/player/*.md3");
-        precache_all_models("models/player/*.psk");
-    }
-
-    if (cvar("sv_defaultcharacter"))
-    {
-        string s;
-        s = cvar_string("sv_defaultplayermodel_red");
-        if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
-        s = cvar_string("sv_defaultplayermodel_blue");
-        if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
-        s = cvar_string("sv_defaultplayermodel_yellow");
-        if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
-        s = cvar_string("sv_defaultplayermodel_pink");
-        if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
-        s = cvar_string("sv_defaultplayermodel");
-        if (s != "")
-        {
-            precache_model(s);
-            PrecachePlayerSounds(strcat(s, ".sounds"));
-        }
-    }
-
     if (g_footsteps)
     {
         precache_randomsound("misc/footstep0", 6);
@@ -494,7 +448,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_telefrags);
 	minstagib_init();
 	Items_Init();
-	Player_Init();
 	runes_init();
 	WalkieTalkie_Init();
 	Akimbo_Init();
@@ -541,6 +494,7 @@ void readdynamiccvars() {
 
 	Vote_Init();
 	push_init();
+	player_init();
 }
 
 void DB_Init() {
