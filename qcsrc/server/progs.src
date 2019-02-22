@@ -75,6 +75,12 @@ clanarena.qh
 
 conquest.qh
 survive.qh
+ctf.qh
+domination.qh
+ent_cs.qh
+runematch.qh
+mode_onslaught.qh
+nexball.qh
 
 progressbar.qh
 

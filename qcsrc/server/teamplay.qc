@@ -12,6 +12,8 @@ float bot_vs_human;
 float autoswap_last_from;
 entity autoswap_last_best;
 
+void() tdm_init;
+
 void ChangeTeam(entity pl, float dteam, float nobalance);
 void AuditTeams(float force);
 
@@ -67,14 +69,6 @@ string TeamNoName(float t)
 		return "Pink Team";
 	return "Neutral Team";
 }
-
-void dom_init();
-void ctf_init();
-void onslaught_init();
-void runematch_init();
-void tdm_init();
-void nb_init();
-void entcs_init();
 
 void WriteGameCvars()
 {
