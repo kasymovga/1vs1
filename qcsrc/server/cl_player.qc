@@ -44,39 +44,6 @@ float g_player_forceskin_yellow;
 float g_player_forceskin_pink;
 float sv_servermodelsonly;
 
-vector healtharmor_maxdamage(float h, float a, float armorblock)
-{
-	// NOTE: we'll always choose the SMALLER value...
-	float healthdamage, armordamage, armorideal;
-	vector v;
-	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
-	armordamage = a + (h - 1); // damage we can take if we could use more armor
-	armorideal = healthdamage * armorblock;
-	v_y = armorideal;
-	if(armordamage < healthdamage)
-	{
-		v_x = armordamage;
-		v_z = 1;
-	}
-	else
-	{
-		v_x = healthdamage;
-		v_z = 0;
-	}
-	return v;
-}
-
-// changes by LordHavoc on 03/29/04 and 03/30/04 at Vermeulen's request
-// merged player_run and player_stand to player_anim
-// added death animations to player_anim
-// can now spawn thrown weapons from anywhere, not just from players
-// thrown weapons now fade out after 20 seconds
-// created PlayerGib function
-// PlayerDie no longer uses hitloc or damage
-// PlayerDie now supports dying animations as well as gibbing
-// cleaned up PlayerDie a lot
-// added CopyBody
-
 .entity pusher;
 .float pushltime;
 

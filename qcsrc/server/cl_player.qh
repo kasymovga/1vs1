@@ -43,7 +43,6 @@ ALLVOICEMSGS
 void Player_Init();
 void PlayerClear(float killed);
 void play_countdown(float finished, string samp);
-vector healtharmor_maxdamage(float h, float a, float armorblock);
 float Player_CalculateAlpha(entity plr, entity viewer);
 
 void PrecachePlayerSounds(string f);
