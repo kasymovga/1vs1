@@ -16,32 +16,6 @@ void() MapVote_Start;
 void() MapVote_Think;
 void MapVote_Spawn();
 
-void fteqcc_testbugs()
-{
-	float a, b;
-
-	if(!cvar("developer_fteqccbugs"))
-		return;
-
-	dprint("*** fteqcc test: checking for bugs...\n");
-
-	a = 1;
-	b = 5;
-	if(sqrt(a) - sqrt(b - a) == 0)
-		dprint("*** fteqcc test: found same-function-twice bug\n");
-	else
-		dprint("*** fteqcc test: same-function-twice bug got FINALLY FIXED! HOORAY!\n");
-
-	world.cnt = -10;
-	world.enemy = world;
-	world.enemy.cnt += 10;
-	if(world.cnt > 0.2 || world.cnt < -0.2) // don't error out if it's just roundoff errors
-		dprint("*** fteqcc test: found += bug\n");
-	else
-		dprint("*** fteqcc test: += bug got FINALLY FIXED! HOORAY!\n");
-	world.cnt = 0;
-}
-
 /**
  * Takes care of pausing and unpausing the game.
  * Centerprints the information about an upcoming or active timeout to all active
@@ -638,8 +612,6 @@ void spawnfunc_worldspawn (void)
 
 	if(g_campaign)
 		CampaignPostInit();
-
-	fteqcc_testbugs();
 
 	Ban_Init();
 
