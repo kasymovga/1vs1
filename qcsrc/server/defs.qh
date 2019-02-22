@@ -241,8 +241,6 @@ float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-.float welcomemessage_time;
-
 // minstagib vars
 .float jump_interval;    // laser refire
 

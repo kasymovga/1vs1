@@ -1125,9 +1125,6 @@ void ClientConnect (void)
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 
 	bprint ("^4", self.netname, "^4 connected\n");
-
-	self.welcomemessage_time = 0;
-
 	stuffcmd(self, strcat(clientstuff, "\n"));
 	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
@@ -1572,11 +1569,9 @@ void ObserverThink()
 		}
 	} else if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP) {
-			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
-			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			if(SpectateNext() == 1) {
 				self.classname = "spectator";
@@ -1599,11 +1594,9 @@ void SpectatorThink()
 {
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && self.team <= 0) {
-			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
-			self.welcomemessage_time = 0;
 			self.flags &~= FL_JUMPRELEASED;
 			if(SpectateNext() == 1) {
 				self.classname = "spectator";
@@ -1612,7 +1605,6 @@ void SpectatorThink()
 				PutClientInServer();
 			}
 		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
-			self.welcomemessage_time = 0;
 			PutObserverInServer(FALSE);
 		} else {
 			if(!SpectateUpdate())
