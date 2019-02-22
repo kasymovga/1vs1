@@ -26,11 +26,6 @@ void Balance_Centerprint(entity e) {
 	centerprint(e, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(e.team)));
 }
 
-void TeamchangeFrags(entity e)
-{
-	PlayerScore_Clear(e);
-}
-
 vector TeamColor(float teem)
 {
 	switch(teem)
@@ -570,7 +565,6 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 	if(!only_return_best)
 	{
-		TeamchangeFrags(pl);
 		if(smallest == 1)
 		{
 			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
@@ -664,8 +658,6 @@ void ChangeTeam(entity pl, float dteam, float nobalance) {
 	}
 	if (pl.team == dteam)
 		return;
-	else if (pl.classname == "player")
-		TeamchangeFrags(pl);
 
 	entity oldself = self;
 	SetPlayerTeam(pl, TeamColorSkin(dteam), TeamColorSkin(pl.team), FALSE);
@@ -831,7 +823,6 @@ void ShufflePlayerOutOfTeam (float source_team)
 	if (autoswap_last_best == selected)
 		autoswap_last_best = world;
 
-	TeamchangeFrags(selected);
 	entity oldself = self;
 	self = selected;
 	PlayerClear(FALSE);
