@@ -153,7 +153,6 @@ float sv_gameplayfix_skipnonsolid;
 .vector anim_idle;
 .vector anim_reload;
 
-void() player_setupanimsformodel;
 void setanim(entity e, vector anim, float looping, float override, float restart);
 
 .string mdl;
@@ -370,8 +369,6 @@ float have_team_spawns;
 .entity killindicator;
 .float killindicator_teamchange;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
-
 float lockteams;
 
 .float parm_idlesince;
@@ -398,8 +395,6 @@ string cvar_changes;
 
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;
-
-void W_Porto_Remove (entity p);
 
 .float projectiledeathtype;
 

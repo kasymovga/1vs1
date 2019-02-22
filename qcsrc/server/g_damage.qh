@@ -1,3 +1,4 @@
+void(entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Damage;
 float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 void Damage_RecordHits(entity attacker, entity targ, float deathtype, float hits, float damage);
 void Damage_RecordFires(entity attacker, float deathtype, float fires);
