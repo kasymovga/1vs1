@@ -104,7 +104,6 @@ void default_delayedinit()
 void ActivateTeamplay()
 {
 	teamplay = TRUE;
-	cvar_set("teamplay", ftos(teamplay));
 }
 
 float tdm_FragLimitOverride() {
@@ -116,8 +115,6 @@ void InitGameplayMode()
 	float fraglimit_override, timelimit_override, leadlimit_override;
 
 	VoteReset();
-
-	cvar_set("teamplay", "0");
 
 	// make sure only ONE type is selected
 	ReadGameCvars();

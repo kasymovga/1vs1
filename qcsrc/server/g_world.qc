@@ -228,7 +228,6 @@ void cvar_changes_init()
 		// mapinfo
 		BADCVAR("timelimit");
 		BADCVAR("fraglimit");
-		BADCVAR("teamplay");
 
 		// long
 		BADCVAR("hostname");
