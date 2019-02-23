@@ -568,6 +568,7 @@ void objerror(string s)
     objerror_builtin(s);
 }
 
+float initialize_entities_done;
 void InitializeEntity(entity for_e, void(void) func, float order)
 {
 	entity e = spawn();
@@ -575,9 +576,14 @@ void InitializeEntity(entity for_e, void(void) func, float order)
 	e.enemy = for_e;
     e.think = func;
     e.cnt = order;
+	initialize_entities_done = FALSE;
 }
+
 void InitializeEntitiesRun()
 {
+	if (initialize_entities_done)
+		return;
+
 	entity oldself = self;
 	entity e;
 	float i;
@@ -591,6 +597,7 @@ void InitializeEntitiesRun()
 			remove(e);
 		}
 	self = oldself;
+	initialize_entities_done = TRUE;
 }
 
 .float nottargeted;
