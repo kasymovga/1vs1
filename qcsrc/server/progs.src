@@ -142,6 +142,7 @@ twoweapons.qh
 noteline.qh
 warmup.qh
 cl_weapons.qh
+gametype.qh
 
 scores_rules.qc
 
@@ -163,6 +164,7 @@ g_violence.qc
 g_damage.qc
 
 teamplay.qc
+gametype.qc
 runematch.qc
 
 ../client-server/cl_physics.qc

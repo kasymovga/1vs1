@@ -577,8 +577,8 @@ void spawnfunc_worldspawn (void)
 
 	Map_MarkAsRecent(mapname);
 
-	precache_model ("null"); // we need this one before InitGameplayMode
-	InitGameplayMode();
+	precache_model("null"); // we need this one before gametype_init. or maybe not
+	gametype_init();
 	sv_world_scale = cvar("sv_world_scale");
 	if (sv_world_scale <= 0)
 		sv_world_scale = 1;
