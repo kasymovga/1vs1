@@ -168,6 +168,7 @@ void cvar_changes_init()
 		BADPREFIX("net_slist_");
 		BADPREFIX("r_");
 		BADPREFIX("sbar_");
+		BADPREFIX("hud_");
 		BADPREFIX("scr_");
 		BADPREFIX("userbind");
 		BADPREFIX("v_");
@@ -187,6 +188,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_curl_");
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
+		BADPREFIX("sv_world");
 		BADCVAR("g_banned_list");
 		BADCVAR("log_dest_udp");
 		BADCVAR("log_file");
