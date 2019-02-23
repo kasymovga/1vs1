@@ -41,7 +41,7 @@ void DLCWait() {
 			localcmd(strcat("exec rexdlc_", s, "_client.cfg", "\n"));
 	}
 	dlc_precache_sounds();
-	if not(localConnection) {
+	if (!localConnection || isdemo_flag) {
 		localcmd("r_restart\n");
 	} else {
 		l = dlc_list;
