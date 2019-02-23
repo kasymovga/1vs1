@@ -43,6 +43,7 @@ float g_player_forceskin_blue;
 float g_player_forceskin_yellow;
 float g_player_forceskin_pink;
 float sv_servermodelsonly;
+float g_balance_armor_blockpercent;
 
 .entity pusher;
 .float pushltime;
@@ -1352,4 +1353,5 @@ void() player_init {
 	CACHE_CVAR(g_player_forceskin_blue);
 	CACHE_CVAR(g_player_forceskin_yellow);
 	CACHE_CVAR(g_player_forceskin_pink);
+	CACHE_CVAR(g_balance_armor_blockpercent);
 }

@@ -416,7 +416,6 @@ void readlevelcvars(void)
 	} else
 		tracetoss = tracetoss_wrapper;
 	CACHE_CVAR(g_maxpushtime);
-	CACHE_CVAR(g_balance_armor_blockpercent);
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
