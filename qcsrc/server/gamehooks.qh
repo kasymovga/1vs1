@@ -115,3 +115,4 @@ var float() GameHook_EquipPlayerHandle = { return FALSE; }
 var float() GameHook_SameLevel = { return FALSE; }
 var float() GameHook_MonsterTeamSwitchable = { return TRUE; }
 var void() GameHookChain_Shutdown = {}
+var float(float tempo) GameHookChain_TempoMod = { return tempo; }

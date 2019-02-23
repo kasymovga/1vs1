@@ -1,0 +1,226 @@
+#define TIMEOUT_SLOWMO_VALUE 0.0001
+entity timeout; //responsible for centerprinting the timeout countdowns and playing sounds
+entity timeout_initiator; // contains the entity of the player who started the last timeout
+float timeout_remaining_time; // contains the time in seconds that the active timeout has left
+float timeout_remaining_leadtime; // contains the number of seconds left of the leadtime (before the timeout starts)
+
+/**
+ * When sv_timeout is used this function returs strings like
+ * "Timeout begins in 2 seconds!\n" or "Timeout ends in 23 seconds!\n".
+ * Called by centerprint functions
+ * @param addOneSecond boolean, set to 1 if the welcome-message centerprint asks for the text
+ */
+string(float addOneSecond) timeout_text {
+	string retStr;
+	if (timeoutStatus == 1) {
+		if (addOneSecond == 1) {
+			retStr = strcat("Timeout begins in ", ftos(timeout_remaining_leadtime + 1), " seconds!\n");
+		}
+		else {
+			retStr = strcat("Timeout begins in ", ftos(timeout_remaining_leadtime), " seconds!\n");
+		}
+		return retStr;
+	}
+	else if (timeoutStatus == 2) {
+		if (addOneSecond) {
+			retStr = strcat("Timeout ends in ", ftos(timeout_remaining_time + 1), " seconds!\n");
+			//don't show messages like "Timeout ends in 0 seconds"...
+			if ((timeout_remaining_time + 1) > 0)
+				return retStr;
+			else
+				return "";
+		}
+		else {
+			retStr = strcat("Timeout ends in ", ftos(timeout_remaining_time), " seconds!\n");
+			//don't show messages like "Timeout ends in 0 seconds"...
+			if (timeout_remaining_time > 0)
+				return retStr;
+			else
+				return "";
+		}
+	}
+	else return "";
+}
+
+/**
+ * Takes care of pausing and unpausing the game.
+ * Centerprints the information about an upcoming or active timeout to all active
+ * players. Also plays reminder sounds.
+ */
+void() timeout_handler_think {
+	string timeStr;
+	entity plr;
+	if (timeoutStatus == 1) {
+		if (timeout_remaining_leadtime > 0) {
+			//centerprint the information to every player
+			timeStr = timeout_text(0);
+			FOR_EACH_REALCLIENT(plr) {
+				centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+			}
+			timeout_remaining_leadtime -= 1;
+			//think again in 1 second:
+			self.nextthink = time + 1;
+		}
+		else {
+			//now pause the game:
+			timeoutStatus = 2;
+			//reset all the flood variables
+			FOR_EACH_CLIENT(plr) {
+				plr.floodcontrol_chat = plr.floodcontrol_chatteam = plr.floodcontrol_chattell = plr.floodcontrol_voice = plr.floodcontrol_voiceteam = 0;
+			}
+			//copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
+			FOR_EACH_REALPLAYER(plr) {
+				plr.lastV_angle = plr.v_angle;
+			}
+			self.nextthink = time;
+			slowmo_update();
+		}
+	}
+	else if (timeoutStatus == 2) {
+		if (timeout_remaining_time > 0) {
+			timeStr = timeout_text(0);
+			FOR_EACH_REALCLIENT(plr) {
+				centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+			}
+			if(timeout_remaining_time == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
+				play2all("announcer/robotic/prepareforbattle.wav");
+			}
+			timeout_remaining_time -= 1;
+			self.nextthink = time + TIMEOUT_SLOWMO_VALUE;
+		}
+		else {
+			//unpause the game again
+			timeout_remaining_time = timeoutStatus = 0;
+			//and unlock the fixed view again once there is no timeout active anymore
+			FOR_EACH_REALPLAYER(plr) {
+				plr.fixangle = FALSE;
+			}
+			//get rid of the countdown message
+			FOR_EACH_REALCLIENT(plr) {
+				centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+			}
+			remove(self);
+			return;
+		}
+
+	}
+	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
+		FOR_EACH_REALCLIENT(plr) {
+			centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+		}
+		remove(self);
+		return;
+	}
+}
+
+void() timeout_evaluate_timeout {
+	if (inWarmupStage && !g_warmup_allow_timeout)
+		return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
+	if (time < game_starttime )
+		return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
+	if (timeoutStatus != 2) {
+		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
+		if (cvar("timelimit")) {
+			//a timelimit was used
+			float myTl;
+			myTl = cvar("timelimit");
+
+			float lastPossibleTimeout;
+			lastPossibleTimeout = (myTl*60) - cvar("sv_timeout_leadtime") - 1;
+
+			if (lastPossibleTimeout < time - game_starttime)
+				return sprint(self, "^7Error: It is too late to call a timeout now!\n");
+		}
+	}
+	//player may not call a timeout if he has no calls left
+	if (self.allowedTimeouts < 1)
+		return sprint(self, "^7Error: You already used all your timeout calls for this map!\n");
+	//now all required checks are passed
+	self.allowedTimeouts -= 1;
+	bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
+	timeout_remaining_time = cvar("sv_timeout_length");
+	timeout_remaining_leadtime = cvar("sv_timeout_leadtime");
+	timeout_initiator = self;
+	if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
+		timeoutStatus = 1;
+		//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
+		timeout = spawn();
+		timeout.think = timeout_handler_think;
+	}
+	timeout.nextthink = time; //always let the entity think asap
+
+	//inform all connected clients about the timeout call
+	play2all("announcer/robotic/timeoutcalled.wav");
+}
+
+void() timeout_evaluate_timein {
+	if (!timeoutStatus)
+		return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
+
+	if (self != timeout_initiator)
+		return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
+
+	if (timeoutStatus == 1) {
+		timeout_remaining_time = timeoutStatus = 0;
+		timeout.nextthink = time; //timeout has to take care of it immediately
+		bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
+	} else if (timeoutStatus == 2) {
+		//only shorten the timeout_remaining_time if it makes sense
+		if (timeout_remaining_time > (cvar("sv_timeout_resumetime") + 1)) {
+			bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
+			timeout_remaining_time = cvar("sv_timeout_resumetime");
+			timeout.nextthink = time; //timeout has to take care of it immediately
+		}
+		else
+			sprint(self, "^7Error: Your resumegame call was discarded!\n");
+	}
+}
+
+var float(string cmd, float tokens) timeout_ClientCommandHandle_NextLink;
+float(string cmd, float tokens) timeout_ClientCommandHandle {
+	if (self.flags & FL_CLIENT) {
+		if (cmd == "timeout" || (cmd == "timeoutin" && timeoutStatus == 0)) {
+			if(self.classname == "player") {
+				if(votecalled)
+					sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
+				else
+					timeout_evaluate_timeout();
+			}
+			else
+				sprint(self, "^7Error: only players can call a timeout!\n");
+
+			return TRUE;
+		}
+		if(cmd == "timein" || (cmd == "timeoutin" && timeoutStatus != 0)) {
+			timeout_evaluate_timein();
+			return TRUE;
+		}
+	}
+	return timeout_ClientCommandHandle_NextLink(cmd, tokens);
+}
+
+var float(float tempo) timeout_TempoMod_NextLink;
+float(float tempo) timeout_TempoMod {
+	if (timeoutStatus == 2)
+		return TIMEOUT_SLOWMO_VALUE;
+
+	return timeout_TempoMod_NextLink(tempo);
+}
+
+var void(void(string item, string cmd) Add_Item) timeout_GameMenuAddItems_NextLink;
+void timeout_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+	Add_Item("Timeout/Timein", "cmd timeoutin");
+	timeout_GameMenuAddItems_NextLink(Add_Item);
+}
+
+void() timeout_init {
+	if not(cvar("sv_timeout"))
+		return;
+
+	timeout_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
+	GameHookChain_ClientCommandHandle = timeout_ClientCommandHandle;
+	timeout_TempoMod_NextLink = GameHookChain_TempoMod;
+	GameHookChain_TempoMod = timeout_TempoMod;
+	timeout_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = timeout_GameMenuAddItems;
+}

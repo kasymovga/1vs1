@@ -62,9 +62,13 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 }
 
 void GUI_Draw_Remove() {
-	if (GUI_alpha > 0)
-		GUI_alpha -= frametime * 5;
-	else {
+	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
+	if (GUI_alpha > 0) {
+		if (timescale < 1)
+			GUI_alpha -= 0.05;
+		else
+			GUI_alpha -= frametime * 5;
+	} else {
 		GUI_RemoveRecursive(mainWindow);
 		unloadTooltips();
 		mainWindow = world;
@@ -83,9 +87,13 @@ void GUI_Draw_Remove() {
 	mainWindow.drawGUI(mainWindow);
 }
 void GUI_Draw() {
-	if (GUI_alpha < 1)
-		GUI_alpha += frametime * 5;
-
+	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
+	if (GUI_alpha < 1) {
+		if (timescale < 1)
+			GUI_alpha += 0.05;
+		else
+			GUI_alpha += frametime * 5;
+	}
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
 	draw_reset();

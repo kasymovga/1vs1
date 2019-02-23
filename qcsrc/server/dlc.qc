@@ -146,7 +146,7 @@ void DLCWait() {
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
-				localcmd("slowmo 0; r_restart; slowmo 1\n");
+				localcmd("dlc_pause; r_restart; dlc_unpause\n");
 				break;
 			}
 		remove(self);
@@ -224,6 +224,43 @@ void dlc_require(string dlc_name) {
 	dlc_require_server_only(dlc_name);
 }
 
+float dlc_pause;
+
+var float(string cmd, float argc) dlc_GameCommandHandle_NextLink;
+float(string cmd, float argc) dlc_GameCommandHandle {
+	if (cmd == "dlc_require")
+	if (argv(1) != "") {
+		dlc_require(argv(1));
+		return TRUE;
+	}
+	if (cmd == "dlc_reload") {
+		dlc_reload();
+		return TRUE;
+	}
+	if (cmd == "dlc_reset") {
+		dlc_reset_all();
+		return TRUE;
+	}
+	if (cmd == "dlc_pause") {
+		dlc_pause = TRUE;
+		return TRUE;
+	}
+	if (cmd == "dlc_unpause") {
+		dlc_pause = FALSE;
+		slowmo_update();
+		return TRUE;
+	}
+	return dlc_GameCommandHandle_NextLink(cmd, argc);
+}
+
+var float(float tempo) dlc_TempoMod_NextLink;
+float(float tempo) dlc_TempoMod {
+	if (dlc_pause)
+		return 0;
+
+	return dlc_TempoMod_NextLink(tempo);
+}
+
 void dlc_init() {
 	string s;
 	registercvar("_dlc_settemps_count", "0");
@@ -256,6 +293,11 @@ void dlc_init() {
 	s = cvar_string("_map_dlc");
 	if (s != "")
 		dlc_require(s);
+
+	dlc_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
+	GameHookChain_GameCommandHandle = dlc_GameCommandHandle;
+	dlc_TempoMod_NextLink = GameHookChain_TempoMod;
+	GameHookChain_TempoMod = dlc_TempoMod;
 }
 
 void dlc_finish() {
@@ -280,7 +322,7 @@ void DLCWaitReload() {
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
-				localcmd("slowmo 0; r_restart; slowmo 1\n");
+				localcmd("dlc_pause; r_restart; dlc_unpause\n");
 				break;
 			}
 		remove(self);

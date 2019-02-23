@@ -111,6 +111,10 @@ void CreatureFrame (void)
 	self = oldself;
 }
 
+void() slowmo_update {
+	slowmo = GameHookChain_TempoMod(1);
+	cvar_set("slowmo", ftos(slowmo));
+}
 
 /*
 =============
@@ -125,6 +129,7 @@ void ReadyRestart();
 void StartFrame (void)
 {
 	ER_Update();
+	slowmo_update();
 
 #ifdef PROFILING
 	if(time > client_cefc_accumulatortime + 1)
@@ -162,9 +167,6 @@ void StartFrame (void)
 	InitializeEntitiesRun();
 
 	sys_ticrate = cvar("sys_ticrate");
-
-	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
-		orig_slowmo = cvar("slowmo"); // slowmo will be restored after the timeout
 
 	skill = cvar("skill");
 

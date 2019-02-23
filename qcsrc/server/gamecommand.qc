@@ -620,24 +620,5 @@ void GameCommand(string command)
 		return;
 	}
 
-	if (cmd == "dlc_require")
-	if (argv(1) != "")
-	{
-		dlc_require(argv(1));
-		return;
-	}
-
-	if (cmd == "dlc_reload")
-	{
-		dlc_reload();
-		return;
-	}
-
-	if (cmd == "dlc_reset")
-	{
-		dlc_reset_all();
-		return;
-	}
-
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }

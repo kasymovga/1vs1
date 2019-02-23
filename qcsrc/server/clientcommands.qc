@@ -378,25 +378,6 @@ void SV_ParseClientCommand(string s) {
 			wordwrap_sprint(cmd, 1111);
 	} else if(cmd == "suggestmap") {
 		sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
-	} else if(cmd == "timeout") {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if(cvar("sv_timeout")) {
-			if(self.classname == "player") {
-				if(votecalled)
-					sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
-				else
-					evaluateTimeout();
-			}
-			else
-				sprint(self, "^7Error: only players can call a timeout!\n");
-		}
-	} else if(cmd == "timein") {
-		if not(self.flags & FL_CLIENT)
-			return;
-		if(cvar("sv_timeout")) {
-			evaluateTimein();
-		}
 	} else if(cmd == "teamstatus") {
 		Score_NicePrint(self);
 	} else if(cmd == "cvar_changes") {
@@ -568,85 +549,4 @@ void restartTimer_Think() {
 	remove(self);
 	restart_active = 0;
 	return;
-}
-
-/**
- * Checks whether the player who calls the timeout is allowed to do so.
- * If so, it initializes the timeout countdown. It also checks whether another
- * timeout was already running at this time and reacts correspondingly.
- *
- * affected globals/fields: .allowedTimeouts, remainingTimeoutTime, remainingLeadTime,
- *                          timeoutInitiator, timeoutStatus, timeoutHandler
- *
- * This function is called when a player issues the calltimeout command.
- */
-void evaluateTimeout() {
-	if (inWarmupStage && !g_warmup_allow_timeout)
-		return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
-	if (time < game_starttime )
-		return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
-	if (timeoutStatus != 2) {
-		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-		if (cvar("timelimit")) {
-			//a timelimit was used
-			local float myTl;
-			myTl = cvar("timelimit");
-
-			local float lastPossibleTimeout;
-			lastPossibleTimeout = (myTl*60) - cvar("sv_timeout_leadtime") - 1;
-
-			if (lastPossibleTimeout < time - game_starttime)
-				return sprint(self, "^7Error: It is too late to call a timeout now!\n");
-		}
-	}
-	//player may not call a timeout if he has no calls left
-	if (self.allowedTimeouts < 1)
-		return sprint(self, "^7Error: You already used all your timeout calls for this map!\n");
-	//now all required checks are passed
-	self.allowedTimeouts -= 1;
-	bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
-	remainingTimeoutTime = cvar("sv_timeout_length");
-	remainingLeadTime = cvar("sv_timeout_leadtime");
-	timeoutInitiator = self;
-	if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
-		timeoutStatus = 1;
-		//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
-		timeoutHandler = spawn();
-		timeoutHandler.think = timeoutHandler_Think;
-	}
-	timeoutHandler.nextthink = time; //always let the entity think asap
-
-	//inform all connected clients about the timeout call
-	play2all("announcer/robotic/timeoutcalled.wav");
-}
-
-/**
- * Checks whether a player is allowed to resume the game. If he is allowed to do it,
- * and the lead time for the timeout is still active, this countdown just will be aborted (the
- * game will never be paused). Otherwise the remainingTimeoutTime will be set to the corresponding
- * value of the cvar sv_timeout_resumetime.
- *
- * This function is called when a player issues the resumegame command.
- */
-void evaluateTimein() {
-	if (!timeoutStatus)
-		return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
-	if (self != timeoutInitiator)
-		return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
-	if (timeoutStatus == 1) {
-		remainingTimeoutTime = timeoutStatus = 0;
-		timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-		bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
-	}
-	else if (timeoutStatus == 2) {
-		//only shorten the remainingTimeoutTime if it makes sense
-		if( remainingTimeoutTime > (cvar("sv_timeout_resumetime") + 1) ) {
-			bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
-			remainingTimeoutTime = cvar("sv_timeout_resumetime");
-			timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-		}
-		else
-			sprint(self, "^7Error: Your resumegame call was discarded!\n");
-
-	}
 }

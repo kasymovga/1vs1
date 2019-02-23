@@ -16,86 +16,6 @@ void() MapVote_Start;
 void() MapVote_Think;
 void MapVote_Spawn();
 
-/**
- * Takes care of pausing and unpausing the game.
- * Centerprints the information about an upcoming or active timeout to all active
- * players. Also plays reminder sounds.
- */
-void timeoutHandler_Think() {
-	local string timeStr;
-	local entity plr;
-	if (timeoutStatus == 1) {
-		if (remainingLeadTime > 0) {
-			//centerprint the information to every player
-			timeStr = getTimeoutText(0);
-			FOR_EACH_REALCLIENT(plr) {
-				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
-				}
-			}
-			remainingLeadTime -= 1;
-			//think again in 1 second:
-			self.nextthink = time + 1;
-		}
-		else {
-			//now pause the game:
-			timeoutStatus = 2;
-			//reset all the flood variables
-			FOR_EACH_CLIENT(plr) {
-				plr.floodcontrol_chat = plr.floodcontrol_chatteam = plr.floodcontrol_chattell = plr.floodcontrol_voice = plr.floodcontrol_voiceteam = 0;
-			}
-			cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
-			//copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
-			FOR_EACH_REALPLAYER(plr) {
-				plr.lastV_angle = plr.v_angle;
-			}
-			self.nextthink = time;
-		}
-	}
-	else if (timeoutStatus == 2) {
-		if (remainingTimeoutTime > 0) {
-			timeStr = getTimeoutText(0);
-			FOR_EACH_REALCLIENT(plr) {
-				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
-				}
-			}
-			if(remainingTimeoutTime == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
-				play2all("announcer/robotic/prepareforbattle.wav");
-			}
-			remainingTimeoutTime -= 1;
-			self.nextthink = time + TIMEOUT_SLOWMO_VALUE;
-		}
-		else {
-			//unpause the game again
-			remainingTimeoutTime = timeoutStatus = 0;
-			cvar_set("slowmo", ftos(orig_slowmo));
-			//and unlock the fixed view again once there is no timeout active anymore
-			FOR_EACH_REALPLAYER(plr) {
-				plr.fixangle = FALSE;
-			}
-			//get rid of the countdown message
-			FOR_EACH_REALCLIENT(plr) {
-				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, "");
-				}
-			}
-			remove(self);
-			return;
-		}
-
-	}
-	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
-		FOR_EACH_REALCLIENT(plr) {
-			if(plr.classname == "player") {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, "");
-			}
-		}
-		remove(self);
-		return;
-	}
-}
-
 void GotoFirstMap()
 {
 	float n;
@@ -435,6 +355,7 @@ void readlevelcvars(void)
 	SelectableWeapon_Init();
 	TwoWeapons_Init();
 	UDPChat_Init();
+	timeout_init();
 	if (cvar("g_buttons_hookuse_swap")) {
 		BUTTON_HOOK = buttonuse;
 		BUTTON_USE = button6;

@@ -421,10 +421,7 @@ void centerprint_atprio(entity e, float prio, string s)
     if (prio >= e.centerprint_priority)
     {
         e.centerprint_priority = prio;
-        if (timeoutStatus == 2)
-            e.centerprint_expires = time + (e.cvar_scr_centertime * TIMEOUT_SLOWMO_VALUE);
-        else
-            e.centerprint_expires = time + e.cvar_scr_centertime;
+		e.centerprint_expires = time + (e.cvar_scr_centertime * max(slowmo, 0.0001));
         centerprint_builtin(e, s);
     }
 }

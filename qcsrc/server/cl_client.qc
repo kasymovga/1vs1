@@ -35,7 +35,6 @@ float g_spawnshieldtime;
 float g_spawnsound;
 float leadlimit;
 float sv_spectate;
-float sv_timeout;
 float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
@@ -771,9 +770,6 @@ float ClientInit_SendEntity(entity to, float sf)
 		if(profile != "")
 			s = strcat(s, "\n^8g_profile ^3", profile, "^8");
 
-		if(timeoutStatus != 0)
-			s = strcat(s, "\n", getTimeoutText(1));
-
 		if (g_campaign)
 			s = campaign_message;
 		else {
@@ -1278,47 +1274,6 @@ void respawn(void)
 	CopyBody(1);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer();
-}
-
-/**
- * When sv_timeout is used this function returs strings like
- * "Timeout begins in 2 seconds!\n" or "Timeout ends in 23 seconds!\n".
- * Called by centerprint functions
- * @param addOneSecond boolean, set to 1 if the welcome-message centerprint asks for the text
- */
-string getTimeoutText(float addOneSecond) {
-	if (!sv_timeout || !timeoutStatus)
-		return "";
-
-	local string retStr;
-	if (timeoutStatus == 1) {
-		if (addOneSecond == 1) {
-			retStr = strcat("Timeout begins in ", ftos(remainingLeadTime + 1), " seconds!\n");
-		}
-		else {
-			retStr = strcat("Timeout begins in ", ftos(remainingLeadTime), " seconds!\n");
-		}
-		return retStr;
-	}
-	else if (timeoutStatus == 2) {
-		if (addOneSecond) {
-			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime + 1), " seconds!\n");
-			//don't show messages like "Timeout ends in 0 seconds"...
-			if ((remainingTimeoutTime + 1) > 0)
-				return retStr;
-			else
-				return "";
-		}
-		else {
-			retStr = strcat("Timeout ends in ", ftos(remainingTimeoutTime), " seconds!\n");
-			//don't show messages like "Timeout ends in 0 seconds"...
-			if (remainingTimeoutTime > 0)
-				return retStr;
-			else
-				return "";
-		}
-	}
-	else return "";
 }
 
 float CalcRegen(float current, float stable, float regenfactor, float regenframetime)
@@ -1935,7 +1890,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_spawnsound);
 	CACHE_CVAR(leadlimit);
 	CACHE_CVAR(sv_spectate);
-	CACHE_CVAR(sv_timeout);
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);

@@ -81,6 +81,7 @@ ent_cs.qh
 runematch.qh
 mode_onslaught.qh
 nexball.qh
+timeout.qh
 
 progressbar.qh
 
@@ -347,3 +348,4 @@ score_damage.qc
 ice.qc
 single.qc
 g_lights.qc
+timeout.qc
