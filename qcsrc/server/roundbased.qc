@@ -163,6 +163,12 @@ void Roundbased_ServerFrame()
 		FOR_EACH_REALCLIENT(plr)
 			announce_force(plr, announce_sound);
 
+		FOR_EACH_CLIENT(plr) {
+			if (plr.classname == "player")
+			if (plr.deadflag == DEAD_NO) {
+				bprint(plr.netname, " - ^1H:", ftos(floor(plr.health)), "^0|^2A:", ftos(floor(plr.armorvalue)), "\n");
+			}
+		}
 		Roundbased_SetRoundStart();
 	}
 }
