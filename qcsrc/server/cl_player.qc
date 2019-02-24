@@ -1226,17 +1226,11 @@ void() player_setup_model {
 				((self.team == COLOR_TEAM3) ? g_player_forcemodel_yellow :
 				((self.team == COLOR_TEAM4) ? g_player_forcemodel_pink : g_player_forcemodel))));
 
-		if (forcemodel == "")
-			forcemodel = g_player_forcemodel;
-
 		forceskin =
 				((self.team == COLOR_TEAM1) ? g_player_forceskin_red :
 				((self.team == COLOR_TEAM2) ? g_player_forceskin_blue :
 				((self.team == COLOR_TEAM3) ? g_player_forceskin_yellow :
 				((self.team == COLOR_TEAM4) ? g_player_forceskin_pink : g_player_forceskin))));
-
-		if (forceskin < 0)
-			forceskin = g_player_forceskin;
 
 		forcecolor =
 				((self.team == COLOR_TEAM1) ? g_player_forcecolor_red :
@@ -1379,4 +1373,31 @@ void() player_init {
 		g_player_forcecolor = cvar("sv_defaultplayercolors");
 		g_player_forceskin = cvar("sv_defaultplayerskin");
 	}
+	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
+		unzone_ifneeded(g_player_forcemodel_blue);
+		g_player_forcemodel_blue = zone_ifneeded(g_player_forcemodel);
+	}
+	if (g_player_forcemodel_red == "" || g_player_forcemodel_red == "0") {
+		unzone_ifneeded(g_player_forcemodel_red);
+		g_player_forcemodel_red = zone_ifneeded(g_player_forcemodel);
+	}
+	if (g_player_forcemodel_yellow == "" || g_player_forcemodel_yellow == "0") {
+		unzone_ifneeded(g_player_forcemodel_yellow);
+		g_player_forcemodel_yellow = zone_ifneeded(g_player_forcemodel);
+	}
+	if (g_player_forcemodel_pink == "" || g_player_forcemodel_pink == "0") {
+		unzone_ifneeded(g_player_forcemodel_pink);
+		g_player_forcemodel_pink = zone_ifneeded(g_player_forcemodel);
+	}
+	if (g_player_forceskin_blue < 0)
+		g_player_forceskin_blue = g_player_forceskin;
+
+	if (g_player_forceskin_red < 0)
+		g_player_forceskin_red = g_player_forceskin;
+
+	if (g_player_forceskin_yellow < 0)
+		g_player_forceskin_yellow = g_player_forceskin;
+
+	if (g_player_forceskin_pink < 0)
+		g_player_forceskin_pink = g_player_forceskin;
 }
