@@ -242,10 +242,10 @@ set g_push_damage_speed 500
 set g_push_trampledamage 25
 set g_push_trampledamage_speed 400
 set g_player_forcemodel "models/player/nexus.zym"
-set g_player_forcemodel_red "models/player/nexus.zym"
-set g_player_forcemodel_blue "models/player/nexus.zym"
-set g_player_forcemodel_yellow "models/player/nexus.zym"
-set g_player_forcemodel_pink "models/player/nexus.zym"
+set g_player_forcemodel_red "0"
+set g_player_forcemodel_blue "0"
+set g_player_forcemodel_yellow "0"
+set g_player_forcemodel_pink "0"
 set g_player_forcecolor 51
 set g_player_forcecolor_red -1
 set g_player_forcecolor_blue -1

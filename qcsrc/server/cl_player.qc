@@ -1354,4 +1354,29 @@ void() player_init {
 	CACHE_CVAR(g_player_forceskin_yellow);
 	CACHE_CVAR(g_player_forceskin_pink);
 	CACHE_CVAR(g_balance_armor_blockpercent);
+	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
+		string s;
+		if ((s = cvar_string("sv_defaultplayermodel")) != "") {
+			unzone_ifneeded(g_player_forcemodel);
+			g_player_forcemodel = zone_ifneeded(s);
+		}
+		if ((s = cvar_string("sv_defaultplayermodel_blue")) != "") {
+			unzone_ifneeded(g_player_forcemodel_blue);
+			g_player_forcemodel_blue = zone_ifneeded(s);
+		}
+		if ((s = cvar_string("sv_defaultplayermodel_red")) != "") {
+			unzone_ifneeded(g_player_forcemodel_red);
+			g_player_forcemodel_red = zone_ifneeded(s);
+		}
+		if ((s = cvar_string("sv_defaultplayermodel_yellow")) != "") {
+			unzone_ifneeded(g_player_forcemodel_yellow);
+			g_player_forcemodel_yellow = zone_ifneeded(s);
+		}
+		if ((s = cvar_string("sv_defaultplayermodel_pink")) != "") {
+			unzone_ifneeded(g_player_forcemodel_pink);
+			g_player_forcemodel_pink = zone_ifneeded(s);
+		}
+		g_player_forcecolor = cvar("sv_defaultplayercolors");
+		g_player_forceskin = cvar("sv_defaultplayerskin");
+	}
 }
