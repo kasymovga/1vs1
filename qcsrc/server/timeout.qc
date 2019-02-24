@@ -119,15 +119,14 @@ void() timeout_evaluate_timeout {
 	if (time < game_starttime )
 		return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
 	if (timeoutStatus != 2) {
-		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-		if (cvar("timelimit")) {
-			//a timelimit was used
-			float myTl;
-			myTl = cvar("timelimit");
+		if (timeoutStatus == 1)
+			return;
 
+		float timelimit;
+		timelimit = cvar("timelimit");
+		if (timelimit) {
 			float lastPossibleTimeout;
-			lastPossibleTimeout = (myTl*60) - cvar("sv_timeout_leadtime") - 1;
-
+			lastPossibleTimeout = (timelimit * 60) - cvar("sv_timeout_leadtime") - 1;
 			if (lastPossibleTimeout < time - game_starttime)
 				return sprint(self, "^7Error: It is too late to call a timeout now!\n");
 		}
@@ -153,27 +152,35 @@ void() timeout_evaluate_timeout {
 	play2all("announcer/robotic/timeoutcalled.wav");
 }
 
-void() timeout_evaluate_timein {
-	if (!timeoutStatus)
-		return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
-
-	if (self != timeout_initiator)
-		return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
+void(entity plr) timeout_evaluate_timein {
+	if (plr && plr != timeout_initiator)
+		return sprint(plr, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
 
 	if (timeoutStatus == 1) {
 		timeout_remaining_time = timeoutStatus = 0;
 		timeout.nextthink = time; //timeout has to take care of it immediately
-		bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
+		bprint(strcat("^7The timeout was aborted by ", plr.netname, " !\n"));
 	} else if (timeoutStatus == 2) {
 		//only shorten the timeout_remaining_time if it makes sense
 		if (timeout_remaining_time > (cvar("sv_timeout_resumetime") + 1)) {
-			bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
+			bprint(strcat("^1Attention: ^7", plr.netname, " resumed the game! Prepare for battle!\n"));
 			timeout_remaining_time = cvar("sv_timeout_resumetime");
 			timeout.nextthink = time; //timeout has to take care of it immediately
 		}
-		else
-			sprint(self, "^7Error: Your resumegame call was discarded!\n");
 	}
+}
+
+var float(string cmd, float tokens) timeout_GameCommandHandle_NextLink;
+float(string cmd, float tokens) timeout_GameCommandHandle {
+	if (cmd == "timeout" || (cmd == "timeoutin" && timeoutStatus == 0)) {
+		timeout_evaluate_timeout();
+		return TRUE;
+	}
+	if(cmd == "timein" || (cmd == "timeoutin" && timeoutStatus != 0)) {
+		timeout_evaluate_timein(world);
+		return TRUE;
+	}
+	return timeout_GameCommandHandle_NextLink(cmd, tokens);
 }
 
 var float(string cmd, float tokens) timeout_ClientCommandHandle_NextLink;
@@ -192,7 +199,7 @@ float(string cmd, float tokens) timeout_ClientCommandHandle {
 			return TRUE;
 		}
 		if(cmd == "timein" || (cmd == "timeoutin" && timeoutStatus != 0)) {
-			timeout_evaluate_timein();
+			timeout_evaluate_timein(self);
 			return TRUE;
 		}
 	}
@@ -209,7 +216,7 @@ float(float tempo) timeout_TempoMod {
 
 var void(void(string item, string cmd) Add_Item) timeout_GameMenuAddItems_NextLink;
 void timeout_GameMenuAddItems(void(string item, string cmd) Add_Item) {
-	Add_Item("Timeout/Timein", "cmd timeoutin");
+	Add_Item("Timeout/Timein", "cmd timeoutin;");
 	timeout_GameMenuAddItems_NextLink(Add_Item);
 }
 
@@ -219,6 +226,8 @@ void() timeout_init {
 
 	timeout_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
 	GameHookChain_ClientCommandHandle = timeout_ClientCommandHandle;
+	timeout_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
+	GameHookChain_GameCommandHandle = timeout_GameCommandHandle;
 	timeout_TempoMod_NextLink = GameHookChain_TempoMod;
 	GameHookChain_TempoMod = timeout_TempoMod;
 	timeout_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;

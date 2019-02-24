@@ -1698,3 +1698,5 @@ alias g_tdm_respawn_waves "set tdm_g_respawn_waves $1"
 alias _fs_rescan_alias_disable "unalias fs_rescan"
 alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; sv_cmd dlc_reload; _fs_rescan_alias_enable\""
 _fs_rescan_alias_enable
+alias timeout "sv_cmd timeout; cmd timeout"
+alias timein "sv_cmd timein; cmd timein"
