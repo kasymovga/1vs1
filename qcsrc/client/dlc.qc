@@ -43,14 +43,14 @@ void DLCWait() {
 	dlc_precache_sounds();
 	if (!localConnection || isdemo_flag) {
 		localcmd("r_restart\n");
-	} else {
-		l = dlc_list;
-		while (l != "") {
-			s = car(l);
-			l = cdr(l);
-			if (s != "")
-				localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
-		}
+	}
+	l = dlc_list;
+	while (l != "") {
+		s = car(l);
+		l = cdr(l);
+		if (s != "")
+		if (fexists(strcat("rexdlc_", s, "_client_post.cfg")))
+			localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
 	}
 	remove(self);
 	dlc_wait = world;
