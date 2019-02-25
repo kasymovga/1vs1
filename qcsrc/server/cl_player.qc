@@ -343,40 +343,6 @@ void player_anim (void)
 		setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 }
 
-void SpawnThrownWeapon (vector org, float w)
-{
-	if(g_pinata)
-	{
-		float j;
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			if(self.weapons & W_WeaponBit(j))
-				if(W_IsWeaponThrowable(j) || g_pinata_drop_all)
-					W_ThrowNewWeapon(self, j, FALSE, self.origin, randomvec() * 175 + '0 0 325');
-		}
-	}
-	else
-		W_ThrowWeapon(randomvec() * 125 + '0 0 200', org - self.origin, FALSE);
-}
-
-void DropBackPack(vector org)
-{
-	entity ammopack, oldself;
-	ammopack = spawn();
-	ammopack.ammo_cells = self.ammo_cells;
-	ammopack.ammo_rockets = self.ammo_rockets;
-	ammopack.ammo_shells = self.ammo_shells;
-	ammopack.ammo_nails = self.ammo_nails;
-	ammopack.ammo_fuel = self.ammo_fuel;
-	ammopack.classname = "droppedbackpack";
-	ammopack.colormap = self.colormap;
-	setorigin(ammopack, org);
-	oldself = self;
-	self = ammopack;
-	StartItem (sv_model_backpack, "misc/itempickup.wav", 0, 0, "ammopack", IT_AMMO, W_WeaponBit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
-	self = oldself;
-}
-
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
@@ -586,11 +552,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// become fully visible
 		self.alpha = 1;
 		// clear selected player display
-		if (g_pickup_drop_backpack)
-			DropBackPack (self.origin + (self.mins + self.maxs) * 0.5);
-		else
-			// throw a weapon
-			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		if not(GameHookChain_ThrowWeaponOnDeathHandle())
+			W_ThrowWeapon(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
+
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		PlayerClear(TRUE);

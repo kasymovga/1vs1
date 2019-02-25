@@ -1693,7 +1693,6 @@ void Items_Init()
 	CACHE_CVAR(g_balance_pause_health_regen);
 	CACHE_CVAR(g_balance_pause_health_rot);
 	CACHE_CVAR(g_fullbrightitems);
-	CACHE_CVAR(g_pickup_drop_backpack);
 	CACHE_CVAR(g_pickup_respawntime_weapon);
 	CACHE_CVAR(g_pickup_respawntime_ammo);
 	CACHE_CVAR(g_pickup_respawntime_healthsmall);
@@ -1761,15 +1760,6 @@ void Items_Init()
 	if (sv_model_armorlarge == "")
 		sv_model_armorlarge = "models/items/g_a25.md3";
 
-	if (g_pickup_drop_backpack)
-	{
-		sv_model_backpack = cvar_string("sv_model_backpack");
-		if (sv_model_backpack == "")
-			sv_model_backpack = "models/items/g_jetpack.md3";
-		else
-			sv_model_backpack = strzone(sv_model_backpack);
-		precache_model(sv_model_backpack);
-	}
 	CACHE_CVAR(g_weapon_stay);
 	if (!g_weapon_stay && (cvar("deathmatch") == 2))
 		g_weapon_stay = 1;

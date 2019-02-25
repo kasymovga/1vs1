@@ -319,10 +319,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_warmup_limit);
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
-
-	CACHE_CVAR(g_pinata);
-	CACHE_CVAR(g_pinata_drop_all);
-
 	if not(inWarmupStage)
 		game_starttime = cvar("g_start_delay");
 
@@ -391,6 +387,8 @@ void readdynamiccvars() {
 	Vote_Init();
 	push_init();
 	player_init();
+	backpack_init();
+	pinata_init();
 }
 
 void DB_Init() {

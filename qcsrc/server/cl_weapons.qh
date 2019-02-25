@@ -1,1 +1,3 @@
 float w_getbestweapon(entity e);
+float(float w) W_IsWeaponThrowable;
+string(entity own, float wpn, float doreduce, vector org, vector velo) W_ThrowNewWeapon;

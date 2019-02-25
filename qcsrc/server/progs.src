@@ -86,6 +86,8 @@ timeout.qh
 progressbar.qh
 
 t_items.qh
+backpack.qh
+pinata.qh
 
 cl_weaponsystem.qh
 
@@ -218,6 +220,8 @@ w_zapper.qc
 g_laserbeam.qc
 
 t_items.qc
+backpack.qc
+pinata.qc
 cl_weapons.qc
 cl_impulse.qc
 
