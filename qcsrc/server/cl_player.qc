@@ -1290,17 +1290,10 @@ void() player_init {
 	CACHE_CVAR_STR(g_chat_forbidden_words);
 	CACHE_CVAR(g_chat_forbidden_words_set_retard);
 	CACHE_CVAR_STR(g_player_forcemodel);
-	player_precache_model(g_player_forcemodel);
 	CACHE_CVAR_STR(g_player_forcemodel_red);
 	CACHE_CVAR_STR(g_player_forcemodel_blue);
 	CACHE_CVAR_STR(g_player_forcemodel_yellow);
 	CACHE_CVAR_STR(g_player_forcemodel_pink);
-	if (teamplay) {
-		player_precache_model(g_player_forcemodel_red);
-		player_precache_model(g_player_forcemodel_blue);
-		player_precache_model(g_player_forcemodel_yellow);
-		player_precache_model(g_player_forcemodel_pink);
-	}
 	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor, -2);
 	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_red, -2);
 	CACHE_CVAR_CHECK_EMPTY(g_player_forcecolor_blue, -2);
@@ -1364,4 +1357,12 @@ void() player_init {
 
 	if (g_player_forceskin_pink < 0)
 		g_player_forceskin_pink = g_player_forceskin;
+
+	player_precache_model(g_player_forcemodel);
+	if (teamplay) {
+		player_precache_model(g_player_forcemodel_red);
+		player_precache_model(g_player_forcemodel_blue);
+		player_precache_model(g_player_forcemodel_yellow);
+		player_precache_model(g_player_forcemodel_pink);
+	}
 }
