@@ -354,18 +354,6 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
-	{
-		// make the item translucent green and not touchable
-		e.model = e.mdl;
-		e.solid = SOLID_TRIGGER; // can STILL be picked up!
-		e.effects |= EF_STARDUST;
-		//e.colormod = '0.2 1 0.2';
-		//e.alpha = 0.5; // will be overridden by CEFC though...
-		e.customizeentityforclient = Item_Customize;
-
-		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
-	}
 	else if(g_ghost_items)
 	{
 		// make the item translucent green and not touchable
@@ -509,7 +497,7 @@ float Item_GiveTo(entity item, entity player)
 		_switchweapon = GameHookChain_ItemGiveToHandle_SwitchWeapon;
 		GameHookChain_ItemGiveToHandle_SwitchWeapon = FALSE;
 	} else {
-		if (g_weapon_stay == 1)
+		if (g_weapon_stay)
 		if not(item.flags & FL_NO_WEAPON_STAY)
 		if (item.flags & FL_WEAPON)
 		{
@@ -693,7 +681,7 @@ void Item_Touch (void)
 		remove (self);
 	else if not(self.spawnshieldtime)
 		return;
-	else if((self.flags & FL_WEAPON) && !(self.flags & FL_NO_WEAPON_STAY) && (g_weapon_stay == 1 || g_weapon_stay == 2))
+	else if((self.flags & FL_WEAPON) && !(self.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 		return;
 	else
 	{
@@ -778,7 +766,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	if(player.weapons & item.weapons == item.weapons)
 	{
 		// If I can pick it up
-		if(g_weapon_stay == 1 || g_weapon_stay == 2 || !item.spawnshieldtime)
+		if(g_weapon_stay || !item.spawnshieldtime)
 			c = 0;
 		else if(player.ammo_cells || player.ammo_shells || player.ammo_nails || player.ammo_rockets)
 		{
@@ -1174,16 +1162,6 @@ void weapon_defaultspawnfunc(float wpn)
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
 		self.flags |= FL_NO_WEAPON_STAY;
-
-	if(g_weapon_stay == 2 && self.classname != "droppedweapon")
-	{
-		self.ammo_shells = 0;
-		self.ammo_nails = 0;
-		self.ammo_cells = 0;
-		self.ammo_rockets = 0;
-		// weapon stay 2: don't use ammo on weapon pickups; instead
-		// initialize all ammo types to the pickup ammo unless set by g_start_ammo_*
-	}
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
@@ -1761,8 +1739,6 @@ void Items_Init()
 		sv_model_armorlarge = "models/items/g_a25.md3";
 
 	CACHE_CVAR(g_weapon_stay);
-	if (!g_weapon_stay && (cvar("deathmatch") == 2))
-		g_weapon_stay = 1;
 	CACHE_CVAR(g_ghost_items);
 	if(g_ghost_items >= 1)
 		g_ghost_items = 0.13; // default alpha value
@@ -1868,19 +1844,6 @@ void Items_Init()
 			warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		}
 	}
-
-	if (g_weapon_stay == 2)
-	{
-		if (!start_ammo_shells) start_ammo_shells = cvar("g_pickup_shells");
-		if (!start_ammo_nails) start_ammo_nails = cvar("g_pickup_nails");
-		if (!start_ammo_cells) start_ammo_cells = cvar("g_pickup_cells");
-		if (!start_ammo_rockets) start_ammo_rockets = cvar("g_pickup_rockets");
-		if (!warmup_start_ammo_shells) warmup_start_ammo_shells = cvar("g_pickup_shells");
-		if (!warmup_start_ammo_nails) warmup_start_ammo_nails = cvar("g_pickup_nails");
-		if (!warmup_start_ammo_cells) warmup_start_ammo_cells = cvar("g_pickup_cells");
-		if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = cvar("g_pickup_rockets");
-	}
-
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_cells = max(0, start_ammo_cells);
