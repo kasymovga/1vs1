@@ -1327,8 +1327,8 @@ void() player_init {
 			unzone_ifneeded(g_player_forcemodel_pink);
 			g_player_forcemodel_pink = zone_ifneeded(s);
 		}
-		g_player_forcecolor = cvar("sv_defaultplayercolors");
-		g_player_forceskin = cvar("sv_defaultplayerskin");
+		g_player_forcecolor = ((cvar_string("sv_defaultplayercolors") == "") ? -2 : cvar("sv_defaultplayercolors"));
+		g_player_forceskin = ((cvar_string("sv_defaultplayerskin") == "") ? -1 : cvar("sv_defaultplayerskin"));
 	}
 	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
 		unzone_ifneeded(g_player_forcemodel_blue);

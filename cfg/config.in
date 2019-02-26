@@ -259,7 +259,7 @@ set g_player_forceskin_yellow -1
 set g_player_forceskin_pink -1
 set campaign_g_player_forcemodel "0"
 set campaign_g_player_forceskin "-1"
-set campaign_g_player_forcecolor "-1"
+set campaign_g_player_forcecolor "-2"
 
 //Nexuiz compat
 set sv_spawnreplace_item_fuel "item_jetpack"
