@@ -1423,7 +1423,6 @@ void CheckRules_World()
 {
 	float timelimit;
 	float fraglimit;
-	float leadlimit;
 
 	VoteThink();
 	MapVote_Think();

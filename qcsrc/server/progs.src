@@ -175,13 +175,10 @@ runematch.qc
 cl_physics.qc
 
 // tZork's libs
-//verbstack.qc
 ../client-server/movelib.qc
-//steerlib.qc
 ../client-server/cl_physics_spiderbot.qc
 ../client-server/cl_physics_aircraft.qc
 ../client-server/cl_physics_car.qc
-//pathlib/pathlib.qh
 
 g_world.qc
 g_casings.qc
