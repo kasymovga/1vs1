@@ -1,19 +1,12 @@
 float g_spawn_furthest;
-float sv_reset_on_join;
-float g_player_pushfactor;
 float g_balance_kill_delay;
 float g_changeteam_banned;
 float g_maxplayers;
-float g_player_brightness;
-float g_spawnshieldtime;
-float g_spawnsound;
 float leadlimit;
 float sv_spectate;
 float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
-
-float reset_on_join_done;
 
 #define SPAWNPOINT_SCORE frags
 
@@ -240,91 +233,6 @@ entity SelectSpawnPoint (float anypoint)
 	return spot;
 }
 
-/*
-=============
-Client_customizeentityforclient
-
-LOD reduction
-=============
-*/
-
-float Client_customizeentityforclient()
-{
-	entity modelsource;
-
-	self.alpha = Player_CalculateAlpha(self, other);
-	if (GameHookChain_PlayerVisibleThroughWallFor(self, other))
-		self.effects |= EF_NODEPTHTEST;
-	else
-		self.effects &~= EF_NODEPTHTEST;
-
-	if(self.alpha < 0)
-		return FALSE;
-
-	if(self.modelindex == 0)
-		return TRUE;
-
-	// forcemodel stuff
-
-#ifdef PROFILING
-	float t0;
-	t0 = gettime(GETTIME_HIRES); // reference
-#endif
-
-	modelsource = self;
-
-#ifdef ALLOW_FORCEMODELS
-	if(other.cvar_cl_forceplayermodelsfromnexuiz)
-		if not(self.modelindex_lod0_from_nexuiz)
-			modelsource = other;
-	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
-		modelsource = other;
-#endif
-
-	self.skin = modelsource.skinindex;
-
-#if 0
-	if(modelsource == self)
-		self.skin = modelsource.skinindex;
-	else
-		self.skin = mod(modelsource.skinindex, 3); // forbid the fbskins as forced skins
-#endif
-
-	// self: me
-	// other: the player viewing me
-	float distance;
-	float f;
-
-	if(other.cvar_cl_playerdetailreduction <= 0)
-	{
-		if(other.cvar_cl_playerdetailreduction <= -2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(other.cvar_cl_playerdetailreduction <= -1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-	else
-	{
-		distance = vlen(self.origin - other.origin);
-		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
-		if(f > sv_loddistance2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(f > sv_loddistance1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-
-#ifdef PROFILING
-	float t1;
-	t1 = gettime(GETTIME_HIRES); // reference
-	client_cefc_accumulator += (t1 - t0);
-#endif
-
-	return TRUE;
-}
-
 void ClientSetView(entity to) {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
 		return;
@@ -343,89 +251,6 @@ void PutClientToSpot(entity spot) {
 	self.view_ofs = PL_VIEW_OFS;
 	setorigin (self, spot.origin);
 	ClientSetView(self);
-}
-
-/*
-=============
-PutObserverInServer
-
-putting a client as observer in the server
-=============
-*/
-void PutObserverInServer(float frags_team_reset)
-{
-	entity	spot;
-
-	GameHookChain_ObserverSpawn();
-	PlayerClear(FALSE);
-
-	spot = SelectSpawnPoint (TRUE);
-	if(!spot)
-		error("No spawnpoints for observers?!?\n");
-
-	if (frags_team_reset || self.team <= 0)
-	if (self.killcount != -666)
-		bprint ("^4", self.netname, "^4 is spectating now\n");
-
-	if (self.team >= 0)
-		PlayerScore_Clear(self); // clear scores when needed
-
-	self.spectatortime = time;
-
-	self.classname = "observer";
-	self.iscreature = FALSE;
-	self.health = 1;
-	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_NOCLIP;
-	self.flags = FL_CLIENT | FL_NOTARGET;
-	self.armorvalue = 0;
-	self.effects = 0;
-	self.pauserotarmor_finished = 0;
-	self.pauserothealth_finished = 0;
-	self.pauseregen_finished = 0;
-	self.damageforcescale = 0;
-	self.death_time = 0;
-	self.dead_frame = 0;
-	self.alpha = 0;
-	self.scale = 0;
-	self.fade_time = 0;
-	self.pain_frame = 0;
-	self.pain_finished = 0;
-	self.pushltime = 0;
-	self.think = SUB_Null;
-	self.nextthink = 0;
-	PutClientToSpot(spot);
-	setsize (self, '0 0 0', '0 0 0');
-	self.items = 0;
-	self.weapons = 0;
-	self.model = "";
-	player_setup_model();
-	self.model = "";
-	self.modelindex = 0;
-	self.weapon = 0;
-	self.weaponmodel = "";
-	self.weaponentity = world;
-	self.exteriorweaponentity = world;
-	self.killcount = -666;
-	self.velocity = '0 0 0';
-	self.avelocity = '0 0 0';
-	self.punchangle = '0 0 0';
-	self.punchvector = '0 0 0';
-	self.oldvelocity = self.velocity;
-	self.fire_endtime = -1;
-	spectator_note.SendFlags = 1;
-	self.customizeentityforclient = world.customizeentityforclient;
-
-	if not(frags_team_reset)
-		return;
-
-	if (self.team != -1) {
-		self.team = -1;
-		ScoreKeeper_Touch(self);
-	}
-
-	self.touch = world.touch;
 }
 
 /*
@@ -456,10 +281,8 @@ void PutClientInServer()
 		self.classname = "observer";
 
 	if(self.classname == "player") {
-		entity spot, oldself;
-		local float currentlyPlaying, i;
+		entity spot;
 		float oldteam = self.team;
-
 		if (self.team < 0) {
 			if(clienttype(self) == CLIENTTYPE_BOT)
 				self.team = self.bot_forced_team;
@@ -470,177 +293,17 @@ void PutClientInServer()
 			ScoreKeeper_Touch(self);
 
 		spot = GameHook_SelectSpawnPoint();
-
 		if(!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
 				centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
 
 			print(self.netname, " not have place to spawn\n");
-			PutObserverInServer(FALSE);
+			spectator_observer_spawn(FALSE);
 			return;
 		}
-		PlayerClear(FALSE);
-		PhysicMarkAsTeleported(self);
-		self.iscreature = TRUE;
-		self.movetype = MOVETYPE_WALK;
-		self.solid = SOLID_SLIDEBOX;
-		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-		if(independent_players)
-			MAKE_INDEPENDENT_PLAYER(self);
-		self.flags = FL_CLIENT;
-		self.takedamage = DAMAGE_AIM;
-		self.effects = 0;
-		self.air_finished = time + 12;
-		self.keys = 0;
-		self.touch = push_touch;
-		self.pushfactor = g_player_pushfactor;
-
-		if not(GameHook_EquipPlayerHandle()) {
-			if(inWarmupStage)
-			{
-				self.ammo_shells = warmup_start_ammo_shells;
-				self.ammo_nails = warmup_start_ammo_nails;
-				self.ammo_rockets = warmup_start_ammo_rockets;
-				self.ammo_cells = warmup_start_ammo_cells;
-				self.ammo_fuel = warmup_start_ammo_fuel;
-				self.health = warmup_start_health;
-				self.armorvalue = warmup_start_armorvalue;
-				self.weapons = warmup_start_weapons;
-			}
-			else
-			{
-				self.ammo_shells = start_ammo_shells;
-				self.ammo_nails = start_ammo_nails;
-				self.ammo_rockets = start_ammo_rockets;
-				self.ammo_cells = start_ammo_cells;
-				self.ammo_fuel = start_ammo_fuel;
-				self.health = start_health;
-				self.armorvalue = start_armorvalue;
-				self.weapons = start_weapons;
-			}
-		}
-		self.items = start_items;
-		self.switchweapon = w_getbestweapon(self);
-		if not(self.switchweapon)
-			for(i=WEP_FIRST; i <= WEP_LAST ; ++i)
-				if(client_hasweapon(self, i, TRUE, FALSE))
-					self.switchweapon = i;
-
-		self.cnt = self.switchweapon;
-		self.weapon = 0;
-		self.jump_interval = time;
-
-		self.spawnshieldtime = time + g_spawnshieldtime;
-		self.pauserotarmor_finished = time + g_balance_pause_armor_rot_spawn;
-		self.pauserothealth_finished = time + g_balance_pause_health_rot_spawn;
-		self.pauserotfuel_finished = time + g_balance_pause_fuel_rot_spawn;
-		self.pauseregen_finished = time + g_balance_pause_health_regen_spawn;
-		//extend the pause of rotting if client was reset at the beginning of the countdown
-		if(!restart_active && time < game_starttime) {
-			self.spawnshieldtime += game_starttime - time;
-			self.pauserotarmor_finished += game_starttime - time;
-			self.pauserothealth_finished += game_starttime - time;
-			self.pauseregen_finished += game_starttime - time;
-		}
-		self.damageforcescale = 2;
-		self.death_time = 0;
-		self.dead_frame = 0;
-		self.alpha = 0;
-		self.scale = sv_world_scale;
-		self.fade_time = 0;
-		self.pain_frame = 0;
-		self.pain_finished = 0;
-		self.pushltime = 0;
-		//self.speed_finished = 0;
-		//self.slowmo_finished = 0;
-		// players have no think function
-		self.think = SUB_Null;
-		self.nextthink = 0;
-		self.dmg_team = 0;
-
-		PutClientToSpot(spot);
-		self.velocity = '0 0 0';
-		self.avelocity = '0 0 0';
-		self.punchangle = '0 0 0';
-		self.punchvector = '0 0 0';
-		self.oldvelocity = self.velocity;
-		self.fire_endtime = -1;
-
-		msg_entity = self;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_SPAWN);
-		});
-
-		if(sv_loddistance1)
-			self.customizeentityforclient = Client_customizeentityforclient;
-
-		self.model = "";
-		player_setup_model();
-
-		self.stand_view_ofs = PL_VIEW_OFS;
-		self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
-		setsize (self, PL_MIN, PL_MAX);
-		self.stand_mins = PL_MIN;
-		self.stand_maxs = PL_MAX;
-		self.crouch_mins = PL_CROUCH_MIN;
-		self.crouch_maxs = PL_CROUCH_MAX;
-		self.spawnorigin = spot.origin;
-		// don't reset back to last position, even if new position is stuck in solid
-		self.oldorigin = self.origin;
-
-		self.event_damage = PlayerDamage;
-
-		self.bot_attack = TRUE;
-
-		self.statdraintime = time + 5;
-		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
-
-		if(self.killcount == -666) {
-			PlayerScore_Clear(self);
-			self.killcount = 0;
-		}
-
-		self.cnt = WEP_LASER;
-
-		CL_SpawnWeaponentity();
-		self.alpha = default_player_alpha;
-		self.colormod = '1 1 1' * g_player_brightness;
-		if(spawn_debug)
-		{
-			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
-			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
-		}
-
-		if (g_spawnsound)
-			sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-
-		oldself = self;
-		self = spot;
-			activator = oldself;
-				SUB_UseTargets();
-			activator = world;
-		self = oldself;
-
-		if (sv_reset_on_join)
-		if not(reset_on_join_done)
-		{
-			FOR_EACH_REALPLAYER(e)
-				if(e.classname == "player")
-					currentlyPlaying += 1;
-			if (currentlyPlaying == sv_reset_on_join)
-			{
-				reset_on_join_done = TRUE;
-				if (time > game_starttime)
-					ReadyRestartForce();
-			}
-		}
-		player_effects();
-		GameHookChain_Spawn(spot);
-		antilag_teleported(self);
-		self.wasplayer = TRUE;
+		player_spawn(spot);
 	} else if(self.classname == "observer") {
-		PutObserverInServer(TRUE);
+		spectator_observer_spawn(TRUE);
 	}
 }
 
@@ -1370,15 +1033,10 @@ void PlayerPostThink (void)
 void Client_ReadCvars()
 {
 	CACHE_CVAR(g_spawn_furthest);
-	CACHE_CVAR(sv_reset_on_join);
 	CACHE_CVAR(g_balance_kill_delay);
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
-	CACHE_CVAR(g_player_brightness);
-	CACHE_CVAR(g_player_pushfactor);
-	CACHE_CVAR(g_spawnshieldtime);
-	CACHE_CVAR(g_spawnsound);
 	CACHE_CVAR(leadlimit);
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout_number);

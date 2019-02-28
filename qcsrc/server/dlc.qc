@@ -198,8 +198,10 @@ void dlc_require(string dlc_name) {
 	while (list != "") {
 		s = car(list);
 		list = cdr(list);
-		if (s == strcat("rexdlc_", dlc_name, ".serverpackage"))
+		if (s == strcat("rexdlc_", dlc_name, ".serverpackage")) {
 			add_to_server_packages = FALSE;
+			break;
+		}
 	}
 
 	if (add_to_server_packages)

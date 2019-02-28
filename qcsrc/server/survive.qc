@@ -38,7 +38,7 @@ void survive_Spawn(entity spot) {
 		PlayerScore_Set(self, SP_STATUS, 0);
 		return;
 	}
-	PutObserverInServer(FALSE);
+	spectator_observer_spawn(FALSE);
 	PlayerScore_Set(self, SP_STATUS, 1);
 }
 

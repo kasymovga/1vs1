@@ -69,6 +69,13 @@ float g_balance_pause_health_regen_spawn;
 float g_balance_pause_health_rot_spawn;
 float g_forced_respawn;
 float g_teamdamage_resetspeed;
+float sv_reset_on_join;
+float g_player_brightness;
+float g_spawnshieldtime;
+float g_spawnsound;
+float g_player_pushfactor;
+float reset_on_join_done;
+
 
 .entity pusher;
 .float pushltime;
@@ -1493,6 +1500,197 @@ void() player_think {
 	}
 }
 
+#define player_customizeentityforclient Client_customizeentityforclient
+float() player_customizeentityforclient {
+	entity modelsource;
+
+	self.alpha = Player_CalculateAlpha(self, other);
+	if (GameHookChain_PlayerVisibleThroughWallFor(self, other))
+		self.effects |= EF_NODEPTHTEST;
+	else
+		self.effects &~= EF_NODEPTHTEST;
+
+	if(self.alpha < 0)
+		return FALSE;
+
+	if(self.modelindex == 0)
+		return TRUE;
+
+	modelsource = self;
+#ifdef ALLOW_FORCEMODELS
+	if(other.cvar_cl_forceplayermodelsfromnexuiz)
+		if not(self.modelindex_lod0_from_nexuiz)
+			modelsource = other;
+	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
+		modelsource = other;
+#endif
+	self.skin = modelsource.skinindex;
+	float distance;
+	float f;
+	if(other.cvar_cl_playerdetailreduction <= 0) {
+		if(other.cvar_cl_playerdetailreduction <= -2)
+			self.modelindex = modelsource.modelindex_lod2;
+		else if(other.cvar_cl_playerdetailreduction <= -1)
+			self.modelindex = modelsource.modelindex_lod1;
+		else
+			self.modelindex = modelsource.modelindex_lod0;
+	} else {
+		distance = vlen(self.origin - other.origin);
+		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
+		if(f > sv_loddistance2)
+			self.modelindex = modelsource.modelindex_lod2;
+		else if(f > sv_loddistance1)
+			self.modelindex = modelsource.modelindex_lod1;
+		else
+			self.modelindex = modelsource.modelindex_lod0;
+	}
+	return TRUE;
+}
+
+void(entity spot) player_spawn {
+	float currentlyPlaying, i;
+	entity e, oldself;
+	PlayerClear(FALSE);
+	PhysicMarkAsTeleported(self);
+	self.iscreature = TRUE;
+	self.movetype = MOVETYPE_WALK;
+	self.solid = SOLID_SLIDEBOX;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	if(independent_players)
+		MAKE_INDEPENDENT_PLAYER(self);
+
+	self.flags = FL_CLIENT;
+	self.takedamage = DAMAGE_AIM;
+	self.effects = 0;
+	self.air_finished = time + 12;
+	self.keys = 0;
+	self.touch = push_touch;
+	self.pushfactor = g_player_pushfactor;
+	if not(GameHook_EquipPlayerHandle()) {
+		if(inWarmupStage) {
+			self.ammo_shells = warmup_start_ammo_shells;
+			self.ammo_nails = warmup_start_ammo_nails;
+			self.ammo_rockets = warmup_start_ammo_rockets;
+			self.ammo_cells = warmup_start_ammo_cells;
+			self.ammo_fuel = warmup_start_ammo_fuel;
+			self.health = warmup_start_health;
+			self.armorvalue = warmup_start_armorvalue;
+			self.weapons = warmup_start_weapons;
+		} else {
+			self.ammo_shells = start_ammo_shells;
+			self.ammo_nails = start_ammo_nails;
+			self.ammo_rockets = start_ammo_rockets;
+			self.ammo_cells = start_ammo_cells;
+			self.ammo_fuel = start_ammo_fuel;
+			self.health = start_health;
+			self.armorvalue = start_armorvalue;
+			self.weapons = start_weapons;
+		}
+	}
+	self.items = start_items;
+	self.switchweapon = w_getbestweapon(self);
+	if not(self.switchweapon)
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if(client_hasweapon(self, i, TRUE, FALSE))
+				self.switchweapon = i;
+
+	self.cnt = self.switchweapon;
+	self.weapon = 0;
+	self.jump_interval = time;
+	self.spawnshieldtime = time + g_spawnshieldtime;
+	self.pauserotarmor_finished = time + g_balance_pause_armor_rot_spawn;
+	self.pauserothealth_finished = time + g_balance_pause_health_rot_spawn;
+	self.pauserotfuel_finished = time + g_balance_pause_fuel_rot_spawn;
+	self.pauseregen_finished = time + g_balance_pause_health_regen_spawn;
+	//extend the pause of rotting if client was reset at the beginning of the countdown
+	if(!restart_active && time < game_starttime) {
+		self.spawnshieldtime += game_starttime - time;
+		self.pauserotarmor_finished += game_starttime - time;
+		self.pauserothealth_finished += game_starttime - time;
+		self.pauseregen_finished += game_starttime - time;
+	}
+	self.damageforcescale = 2;
+	self.death_time = 0;
+	self.dead_frame = 0;
+	self.alpha = 0;
+	self.scale = sv_world_scale;
+	self.fade_time = 0;
+	self.pain_frame = 0;
+	self.pain_finished = 0;
+	self.pushltime = 0;
+	self.think = world.think;
+	self.nextthink = 0;
+	self.dmg_team = 0;
+	PutClientToSpot(spot);
+	self.velocity = '0 0 0';
+	self.avelocity = '0 0 0';
+	self.punchangle = '0 0 0';
+	self.punchvector = '0 0 0';
+	self.oldvelocity = self.velocity;
+	self.fire_endtime = -1;
+	msg_entity = self;
+	WRITESPECTATABLE_MSG_ONE({
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_SPAWN);
+	});
+	if(sv_loddistance1)
+		self.customizeentityforclient = player_customizeentityforclient;
+
+	self.model = "";
+	player_setup_model();
+	self.stand_view_ofs = PL_VIEW_OFS;
+	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
+	setsize (self, PL_MIN, PL_MAX);
+	self.stand_mins = PL_MIN;
+	self.stand_maxs = PL_MAX;
+	self.crouch_mins = PL_CROUCH_MIN;
+	self.crouch_maxs = PL_CROUCH_MAX;
+	self.spawnorigin = spot.origin;
+	// don't reset back to last position, even if new position is stuck in solid
+	self.oldorigin = self.origin;
+	self.event_damage = PlayerDamage;
+	self.bot_attack = TRUE;
+	self.statdraintime = time + 5;
+	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
+	if(self.killcount == -666) {
+		PlayerScore_Clear(self);
+		self.killcount = 0;
+	}
+	self.cnt = WEP_LASER;
+	CL_SpawnWeaponentity();
+	self.alpha = default_player_alpha;
+	self.colormod = '1 1 1' * g_player_brightness;
+	if(spawn_debug) {
+		sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
+		remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
+	}
+	if (g_spawnsound)
+		sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+
+	oldself = self;
+	self = spot;
+	activator = oldself;
+	SUB_UseTargets();
+	activator = world;
+	self = oldself;
+	if (sv_reset_on_join)
+	if not(reset_on_join_done) {
+		FOR_EACH_REALPLAYER(e)
+			if(e.classname == "player")
+				currentlyPlaying += 1;
+
+		if (currentlyPlaying == sv_reset_on_join) {
+			reset_on_join_done = TRUE;
+			if (time > game_starttime)
+				ReadyRestartForce();
+		}
+	}
+	player_effects();
+	GameHookChain_Spawn(spot);
+	antilag_teleported(self);
+	self.wasplayer = TRUE;
+}
+
 void() player_init {
 	// Precache all player models if desired
 	if (cvar("sv_precacheplayermodels")) {
@@ -1569,6 +1767,11 @@ void() player_init {
 	CACHE_CVAR(g_balance_pause_health_rot_spawn);
 	CACHE_CVAR(g_forced_respawn);
 	CACHE_CVAR(g_teamdamage_resetspeed);
+	CACHE_CVAR(sv_reset_on_join);
+	CACHE_CVAR(g_player_brightness);
+	CACHE_CVAR(g_player_pushfactor);
+	CACHE_CVAR(g_spawnshieldtime);
+	CACHE_CVAR(g_spawnsound);
 	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
 		string s;
 		if ((s = cvar_string("sv_defaultplayermodel")) != "") {

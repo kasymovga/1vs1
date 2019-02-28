@@ -111,10 +111,10 @@ void() spectator_think {
 				PutClientInServer();
 			}
 		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
-			PutObserverInServer(FALSE);
+			spectator_observer_spawn(FALSE);
 		} else {
 			if(!SpectateUpdate())
-				PutObserverInServer(FALSE);
+				spectator_observer_spawn(FALSE);
 		}
 	} else {
 		if (!(self.BUTTON_ATCK || self.BUTTON_ATCK2)) {
@@ -196,6 +196,81 @@ void() spectator_to_player {
 
 void() spectator_note_update {
 	spectator_note.SendFlags = 1;
+}
+
+void(float frags_team_reset) spectator_observer_spawn {
+	entity	spot;
+
+	GameHookChain_ObserverSpawn();
+	PlayerClear(FALSE);
+
+	spot = SelectSpawnPoint (TRUE);
+	if(!spot)
+		error("No spawnpoints for observers?!?\n");
+
+	if (frags_team_reset || self.team <= 0)
+	if (self.killcount != -666)
+		bprint ("^4", self.netname, "^4 is spectating now\n");
+
+	if (self.team >= 0)
+		PlayerScore_Clear(self); // clear scores when needed
+
+	self.spectatortime = time;
+
+	self.classname = "observer";
+	self.iscreature = FALSE;
+	self.health = 1;
+	self.takedamage = DAMAGE_NO;
+	self.solid = SOLID_NOT;
+	self.movetype = MOVETYPE_NOCLIP;
+	self.flags = FL_CLIENT | FL_NOTARGET;
+	self.armorvalue = 0;
+	self.effects = 0;
+	self.pauserotarmor_finished = 0;
+	self.pauserothealth_finished = 0;
+	self.pauseregen_finished = 0;
+	self.damageforcescale = 0;
+	self.death_time = 0;
+	self.dead_frame = 0;
+	self.alpha = 0;
+	self.scale = 0;
+	self.fade_time = 0;
+	self.pain_frame = 0;
+	self.pain_finished = 0;
+	self.pushltime = 0;
+	self.think = SUB_Null;
+	self.nextthink = 0;
+	PutClientToSpot(spot);
+	setsize (self, '0 0 0', '0 0 0');
+	self.items = 0;
+	self.weapons = 0;
+	self.model = "";
+	player_setup_model();
+	self.model = "";
+	self.modelindex = 0;
+	self.weapon = 0;
+	self.weaponmodel = "";
+	self.weaponentity = world;
+	self.exteriorweaponentity = world;
+	self.killcount = -666;
+	self.velocity = '0 0 0';
+	self.avelocity = '0 0 0';
+	self.punchangle = '0 0 0';
+	self.punchvector = '0 0 0';
+	self.oldvelocity = self.velocity;
+	self.fire_endtime = -1;
+	spectator_note.SendFlags = 1;
+	self.customizeentityforclient = world.customizeentityforclient;
+
+	if not(frags_team_reset)
+		return;
+
+	if (self.team != -1) {
+		self.team = -1;
+		ScoreKeeper_Touch(self);
+	}
+
+	self.touch = world.touch;
 }
 
 void() spectator_init {

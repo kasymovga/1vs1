@@ -2054,6 +2054,7 @@ void RestoreGame()
 	DB_Init();
 	// Mapinfo
 	MapInfo_OnRestore();
+	readdynamiccvars();
 	if not(dlc_ready_all())
 		dlc_reload();
 }

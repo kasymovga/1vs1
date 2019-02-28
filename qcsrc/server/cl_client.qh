@@ -5,7 +5,6 @@ float g_maxplayers_spectator_blocktime;
 
 void Client_ReadCvars();
 float ClientPreConnect_Abort();
-void PutObserverInServer(float frags_team_reset);
 void PutClientInServer();
 void PutTeamToServer(float t);
 entity SelectSpawnPoint (float anypoint);
@@ -16,3 +15,4 @@ void Client_GetCvars();
 void Client_GetCvars_Parse();
 void Client_GetCvars_Free();
 void ClientSetView(entity to);
+void PutClientToSpot(entity spot);

@@ -8,7 +8,7 @@ void Clanarena_Spawn(entity spot) {
 		return;
 	}
 	PlayerScore_Set(self, SP_STATUS, 1);
-	PutObserverInServer(FALSE);
+	spectator_observer_spawn(FALSE);
 }
 
 float Clanarena_DeathHandle(entity attacker, entity inflictor, float deathtype) {
