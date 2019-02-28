@@ -2,7 +2,6 @@ float g_spawn_furthest;
 float g_balance_kill_delay;
 float g_changeteam_banned;
 float g_maxplayers;
-float leadlimit;
 float sv_spectate;
 float sv_timeout_number;
 float sv_maxidle;
@@ -958,7 +957,6 @@ void Client_ReadCvars()
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
-	CACHE_CVAR(leadlimit);
 	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
