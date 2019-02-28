@@ -44,11 +44,36 @@ float g_player_forceskin_yellow;
 float g_player_forceskin_pink;
 float sv_servermodelsonly;
 float g_balance_armor_blockpercent;
+float g_balance_armor_regen;
+float g_balance_armor_regenlinear;
+float g_balance_armor_regenstable;
+float g_balance_armor_rot;
+float g_balance_armor_rotlinear;
+float g_balance_armor_rotstable;
+float g_balance_fuel_limit;
+float g_balance_fuel_regen;
+float g_balance_fuel_regenlinear;
+float g_balance_fuel_regenstable;
+float g_balance_fuel_rot;
+float g_balance_fuel_rotlinear;
+float g_balance_fuel_rotstable;
+float g_balance_health_regen;
+float g_balance_health_regenlinear;
+float g_balance_health_regenstable;
+float g_balance_health_rot;
+float g_balance_health_rotlinear;
+float g_balance_health_rotstable;
+float g_balance_pause_armor_rot_spawn;
+float g_balance_pause_fuel_rot_spawn;
+float g_balance_pause_health_regen_spawn;
+float g_balance_pause_health_rot_spawn;
+float g_forced_respawn;
+float g_teamdamage_resetspeed;
 
 .entity pusher;
 .float pushltime;
 
-void CopyBody(float keepvelocity)
+void player_copy_body(float keepvelocity)
 {
 	local entity oldself;
 	if (self.effects & EF_NODRAW)
@@ -106,6 +131,13 @@ void CopyBody(float keepvelocity)
 
 	self = oldself;
 }
+
+void(void) player_respawn {
+	player_copy_body(1);
+	self.effects |= EF_NODRAW; // prevent another CopyBody
+	PutClientInServer();
+}
+
 
 float player_getspecies()
 {
@@ -1256,6 +1288,211 @@ void(string s) player_precache_model {
 	PrecachePlayerSounds(strcat(s, ".sounds"));
 }
 
+void(entity player) player_to_spec
+{
+	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
+	if not(g_campaign)
+	if not(GameHook_ForbidSpectators())
+	if (sv_spectate) {
+		entity oldself = self;
+		self = player;
+		PlayerClear(FALSE);
+		player.classname = "observer";
+		if(blockSpectators)
+			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+
+		PutClientInServer();
+		ScoreKeeper_Touch(player);
+		self = oldself;
+		spectator_note_update();
+		if (teamplay)
+			AuditTeams(FALSE);
+	}
+}
+
+float(float current, float stable, float regenfactor, float regenframetime) player_calc_regen {
+	if(current > stable)
+		return current;
+	else if(current > stable - 0.25) // when close enough, "snap"
+		return stable;
+	else
+		return min(stable, current + (stable - current) * regenfactor * regenframetime);
+}
+
+float(float current, float stable, float rotfactor, float rotframetime) player_calc_rot {
+	if(current < stable)
+		return current;
+	else if(current < stable + 0.25) // when close enough, "snap"
+		return stable;
+	else
+		return max(stable, current + (stable - current) * rotfactor * rotframetime);
+}
+
+float(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit) player_calc_rot_regen {
+	if(current > rotstable)
+	{
+		if(rotframetime > 0)
+		{
+			current = player_calc_rot(current, rotstable, rotfactor, rotframetime);
+			current = max(rotstable, current - rotlinear * rotframetime);
+		}
+	}
+	else if(current < regenstable)
+	{
+		if(regenframetime > 0)
+		{
+			current = player_calc_regen(current, regenstable, regenfactor, regenframetime);
+			current = min(regenstable, current + regenlinear * regenframetime);
+		}
+	}
+
+	if(current > limit)
+		current = limit;
+
+	return current;
+}
+
+void() player_respawn_countdown {
+	float number;
+	if(self.deadflag == DEAD_NO) // just respawned?
+		return;
+	else {
+		number = ceil(self.death_time - time);
+		if(number <= 0)
+			return;
+
+		if(number <= self.respawn_countdown) {
+			self.respawn_countdown = number - 1;
+			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
+				announce(self, strcat("announcer/robotic/", ftos(number), ".wav"));
+		}
+	}
+}
+
+
+void() player_regen {
+	float minh, maxh, limith, limita;
+	GameHook_HealthArmorRotRegen = GameHook_HealthMaxMod = GameHook_ArmorHealthLimitMod = GameHook_RegenMod = GameHook_RotMod = 1;
+	GameHookChain_HealthArmorFuelModsSet();
+	if (GameHook_HealthArmorRotRegen)
+	{
+		limith = g_balance_health_limit * GameHook_ArmorHealthLimitMod;
+		maxh = g_balance_health_rotstable * GameHook_HealthMaxMod;
+		minh = g_balance_health_regenstable * GameHook_HealthMaxMod;
+		self.health = player_calc_rot_regen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, GameHook_RotMod * frametime * (time > self.pauserothealth_finished), limith);
+		// if player rotted to death...  die!
+		if(self.health < 1)
+			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+		limita = g_balance_armor_limit * GameHook_ArmorHealthLimitMod;
+		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotarmor_finished), limita);
+
+	}
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
+}
+
+.float items_added;
+void() player_think {
+	if(self.deadflag == DEAD_NO)
+	if not(gameover)
+		self.play_time += frametime;
+
+	if(self.teleport_time)
+	if(time > self.teleport_time) {
+		self.teleport_time = 0;
+		self.effects = self.effects - (self.effects & EF_NODRAW);
+	}
+
+	//don't allow the player to turn around while game is paused!
+	if(timeoutStatus == 2) {
+		self.v_angle = self.lastV_angle;
+		self.angles = self.lastV_angle;
+		self.fixangle = TRUE;
+	}
+	GameHookChain_PlayerPreThink();
+
+	if(frametime) {
+		Fire_ApplyDamage(self);
+		player_effects();
+	}
+	if (PLAYER_REALLY_DEAD(self)) {
+		float button_pressed;
+		if(frametime)
+			player_anim();
+
+		button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
+		if (self.deadflag == DEAD_DYING) {
+			if(g_forced_respawn)
+				self.deadflag = DEAD_RESPAWNING;
+			else if(!button_pressed)
+				self.deadflag = DEAD_DEAD;
+		} else if (self.deadflag == DEAD_DEAD) {
+			if(button_pressed)
+				self.deadflag = DEAD_RESPAWNABLE;
+		} else if (self.deadflag == DEAD_RESPAWNABLE) {
+			if(!button_pressed)
+				self.deadflag = DEAD_RESPAWNING;
+		} else if (self.deadflag == DEAD_RESPAWNING) {
+			if(time > self.death_time) {
+				self.death_time = time + 1; // only retry once a second
+				player_respawn();
+			}
+		}
+		player_respawn_countdown();
+		return;
+	}
+	player_setup_model();
+	W_WeaponFrame();
+	Akimbo_WeaponFrame();
+	if(frametime) {
+		self.items &~= self.items_added;
+		self.items_added = 0;
+		if(self.items & IT_JETPACK)
+			if(self.items & IT_FUEL_REGEN || self.ammo_fuel >= 0.01)
+				self.items_added |= IT_FUEL;
+
+		self.items |= self.items_added;
+		player_regen();
+		player_anim();
+	}
+	self.dmg_team = max(0, self.dmg_team - g_teamdamage_resetspeed * frametime);
+	if(self.teamkill_soundtime)
+	if(time > self.teamkill_soundtime) {
+		self.teamkill_soundtime = 0;
+		entity oldpusher, oldself;
+		oldself = self; self = self.teamkill_soundsource;
+		oldpusher = self.pusher; self.pusher = oldself;
+		if(self.pusher)
+		if(self.pusher.team == self.team) {
+			msg_entity = self.pusher;
+			if(clienttype(msg_entity) == CLIENTTYPE_REAL) {
+				if(msg_entity.cvar_cl_voice_directional == 1)
+					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
+				else
+					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_NONE);
+			}
+		}
+		self.pusher = oldpusher;
+		self = oldself;
+	}
+	if(self.taunt_soundtime)
+	if(time > self.taunt_soundtime) {
+		self.taunt_soundtime = 0;
+		if (sv_taunt)
+		if (sv_autotaunt) {
+			float tauntrand = random();
+			FOR_EACH_REALCLIENT(msg_entity)
+				if (tauntrand < msg_entity.cvar_cl_autotaunt)
+				{
+					if (msg_entity.cvar_cl_voice_directional >= 1)
+						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					else
+						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, ATTN_NONE);
+				}
+		}
+	}
+}
+
 void() player_init {
 	// Precache all player models if desired
 	if (cvar("sv_precacheplayermodels")) {
@@ -1305,6 +1542,33 @@ void() player_init {
 	CACHE_CVAR(g_player_forceskin_yellow);
 	CACHE_CVAR(g_player_forceskin_pink);
 	CACHE_CVAR(g_balance_armor_blockpercent);
+	CACHE_CVAR(g_balance_armor_regen);
+	CACHE_CVAR(g_balance_armor_regenlinear);
+	CACHE_CVAR(g_balance_armor_regenstable);
+	CACHE_CVAR(g_balance_armor_rot);
+	CACHE_CVAR(g_balance_armor_rotlinear);
+	CACHE_CVAR(g_balance_armor_rotstable);
+	CACHE_CVAR(g_balance_armor_limit);
+	CACHE_CVAR(g_balance_fuel_limit);
+	CACHE_CVAR(g_balance_fuel_regen);
+	CACHE_CVAR(g_balance_fuel_regenlinear);
+	CACHE_CVAR(g_balance_fuel_regenstable);
+	CACHE_CVAR(g_balance_fuel_rot);
+	CACHE_CVAR(g_balance_fuel_rotlinear);
+	CACHE_CVAR(g_balance_fuel_rotstable);
+	CACHE_CVAR(g_balance_health_limit);
+	CACHE_CVAR(g_balance_health_regen);
+	CACHE_CVAR(g_balance_health_regenlinear);
+	CACHE_CVAR(g_balance_health_regenstable);
+	CACHE_CVAR(g_balance_health_rot);
+	CACHE_CVAR(g_balance_health_rotlinear);
+	CACHE_CVAR(g_balance_health_rotstable);
+	CACHE_CVAR(g_balance_pause_armor_rot_spawn);
+	CACHE_CVAR(g_balance_pause_fuel_rot_spawn);
+	CACHE_CVAR(g_balance_pause_health_regen_spawn);
+	CACHE_CVAR(g_balance_pause_health_rot_spawn);
+	CACHE_CVAR(g_forced_respawn);
+	CACHE_CVAR(g_teamdamage_resetspeed);
 	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
 		string s;
 		if ((s = cvar_string("sv_defaultplayermodel")) != "") {

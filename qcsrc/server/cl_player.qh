@@ -51,3 +51,5 @@ void ClearPlayerSounds();
 void VoiceMessage(string type, string message);
 void() player_setup_model;
 void() player_setupanimsformodel;
+void(entity player) player_to_spec;
+void() player_think;

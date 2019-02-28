@@ -372,6 +372,7 @@ void readdynamiccvars() {
 	PhysicReadCvars();
 	bot_init();
 	Client_ReadCvars();
+	spectator_init();
 	Teamplay_ReadCvars();
 	GrappleHookReadCvars();
 	turret_readcvars();

@@ -1,5 +1,7 @@
 float g_balance_health_limit;
 float g_balance_armor_limit;
+float sv_spectate;
+float g_maxplayers_spectator_blocktime;
 
 void Client_ReadCvars();
 float ClientPreConnect_Abort();
@@ -10,8 +12,7 @@ entity SelectSpawnPoint (float anypoint);
 void FixClientCvars(entity e);
 void ClientKill_Now_TeamChange();
 void ClientInit_Spawn();
-void LeaveSpectatorMode();
 void Client_GetCvars();
 void Client_GetCvars_Parse();
 void Client_GetCvars_Free();
-void PlayerToSpec(entity player);
+void ClientSetView(entity to);

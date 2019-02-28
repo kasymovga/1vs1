@@ -481,7 +481,7 @@ void ChangeTeam(entity pl, float dteam, float nobalance) {
 			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
 	} else if not(teamchange) {
 		self = pl;
-		LeaveSpectatorMode();
+		spectator_to_player();
 		self = oldself;
 	}
 	entity e;

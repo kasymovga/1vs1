@@ -530,7 +530,7 @@ void GameCommand(string command)
 	{
 		FOR_EACH_PLAYER(plr)
 		{
-			PlayerToSpec(plr);
+			player_to_spec(plr);
 		}
 		return;
 	}
@@ -565,11 +565,11 @@ void GameCommand(string command)
 					t = COLOR_TEAM1;
 			}
 			if (t != plr.team) {
-				PlayerToSpec(plr);
+				player_to_spec(plr);
 				SetPlayerTeam(plr, TeamColorSkin(t), TeamColorSkin(t), FALSE);
 				e = self;
 				self = plr;
-				LeaveSpectatorMode();
+				spectator_to_player();
 				self = e;
 				if (clienttype(plr) == CLIENTTYPE_REAL)
 					centerprint(plr, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(t)));

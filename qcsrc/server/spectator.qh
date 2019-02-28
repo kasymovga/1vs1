@@ -1,0 +1,3 @@
+void() spectator_init;
+void() spectator_to_player;
+void() spectator_note_update;

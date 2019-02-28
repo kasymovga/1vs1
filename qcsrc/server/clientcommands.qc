@@ -261,7 +261,7 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if (self.classname != "player" && !lockteams)
-			LeaveSpectatorMode();
+			spectator_to_player();
 	} else if( cmd == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
 			return;
