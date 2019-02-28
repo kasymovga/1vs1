@@ -101,6 +101,7 @@ void bot_removefromlargestteam();
 void bot_removenewest();
 void autoskill(float factor);
 void bot_serverframe();
+void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix);
 
 .void() bot_ai;
 .float(entity player, entity item) bot_pickupevalfunc;

@@ -650,6 +650,16 @@ void bot_serverframe()
 	}
 };
 
+void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix)
+{
+	float n;
+	if (msglist == "")
+		return;
+	n = floor(random() * tokenizebyseparator(msglist, "|"));
+	chat_say(source, teamsay, privatesay, strcat(prefix, argv(n)), FALSE);
+}
+
+
 void bot_init()
 {
 	CACHE_CVAR(bot_ai_dangerdetectioninterval);

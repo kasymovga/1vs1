@@ -710,6 +710,7 @@ void ClientConnect (void)
 	}
 
 	self.playerid = (playerid_last = playerid_last + 1);
+	chat_bubble_spawn();
 
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 
@@ -756,7 +757,6 @@ ClientDisconnect
 Called when a client disconnects from the server
 =============
 */
-.entity chatbubbleentity;
 void ClientDisconnect (void)
 {
 	if not(self.flags & FL_CLIENT)
@@ -781,9 +781,6 @@ void ClientDisconnect (void)
 
 	self.flags &~= FL_CLIENT;
 	self.just_connected = FALSE;
-
-	if (self.chatbubbleentity)
-		remove (self.chatbubbleentity);
 
 	if (self.killindicator)
 		remove (self.killindicator);
@@ -819,45 +816,6 @@ void ClientDisconnect (void)
 		AuditTeams(FALSE);
 		if (autoswap_last_best == self)
 			autoswap_last_best = world;
-	}
-}
-
-.float BUTTON_CHAT;
-void ChatBubbleThink()
-{
-	self.nextthink = time;
-	if (!self.owner.modelindex || self.owner.chatbubbleentity != self)
-	{
-		if(self.owner) // but why can that ever be world?
-			self.owner.chatbubbleentity = world;
-		remove(self);
-		return;
-	}
-	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag))
-		self.model = self.mdl;
-	else
-		self.model = "";
-};
-
-void UpdateChatBubble()
-{
-	if (!self.modelindex)
-		return;
-	// spawn a chatbubble entity if needed
-	if (!self.chatbubbleentity)
-	{
-		self.chatbubbleentity = spawn();
-		self.chatbubbleentity.owner = self;
-		self.chatbubbleentity.exteriormodeltoclient = self;
-		self.chatbubbleentity.think = ChatBubbleThink;
-		self.chatbubbleentity.nextthink = time;
-		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
-		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
-		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
-		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
-		self.chatbubbleentity.model = "";
-		self.chatbubbleentity.effects = EF_LOWPRECISION;
 	}
 }
 
@@ -989,45 +947,8 @@ void PlayerPostThink (void)
 			self.idlekick_lasttimeleft = timeleft;
 		}
 	}
-
-	if(self.classname == "player") {
-		UpdateChatBubble();
-		if (self.impulse)
-			ImpulseCommands();
-		if (intermission_running)
-			return;		// intermission or finale
-
-		self.pressedkeys = 0;
-		if (self.movement_x > 0)
-			self.pressedkeys |= KEY_FORWARD;
-		else if (self.movement_x < 0)
-			self.pressedkeys |= KEY_BACKWARD;
-
-		if (self.movement_y > 0)
-			self.pressedkeys |= KEY_RIGHT;
-		else if (self.movement_y < 0)
-			self.pressedkeys |= KEY_LEFT;
-
-		self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
-	}
-
-	/*
-	float i;
-	for(i = 0; i < 1000; ++i)
-	{
-		vector end;
-		end = self.origin + '0 0 1024' + 512 * randomvec();
-		tracebox(self.origin, self.mins, self.maxs, end, MOVE_NORMAL, self);
-		if(trace_fraction < 1)
-		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		{
-			print("I HIT SOLID: ", vtos(self.origin), " -> ", vtos(end), "\n");
-			break;
-		}
-	}
-	*/
-
-	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
+	if(self.classname == "player")
+		player_post_think();
 }
 
 void Client_ReadCvars()

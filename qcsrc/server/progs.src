@@ -147,7 +147,7 @@ noteline.qh
 warmup.qh
 cl_weapons.qh
 gametype.qh
-
+chat.qh
 scores_rules.qc
 
 miscfunctions.qc
@@ -229,6 +229,7 @@ cl_impulse.qc
 ent_cs.qc
 
 cl_player.qc
+chat.qc
 spectator.qc
 push.qc
 cl_client.qc
