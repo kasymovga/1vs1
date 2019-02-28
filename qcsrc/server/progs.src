@@ -76,10 +76,10 @@ clanarena.qh
 conquest.qh
 survive.qh
 ctf.qh
-domination.qh
+dom.qh
 ent_cs.qh
 runematch.qh
-mode_onslaught.qh
+onslaught.qh
 nexball.qh
 timeout.qh
 
@@ -237,8 +237,8 @@ roundbased.qc
 clanarena_shared.qc
 freeze_shared.qc
 ctf.qc
-domination.qc
-mode_onslaught.qc
+dom.qc
+onslaught.qc
 nexball.qc
 g_hook.qc
 
