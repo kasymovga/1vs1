@@ -1,0 +1,2 @@
+void() mapvote_start;
+void() mapvote_think;

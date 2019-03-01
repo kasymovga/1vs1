@@ -140,7 +140,6 @@ void Nagger_ReadyCounted()
 }
 
 void ReadyCount();
-string MapVote_Suggest(string m);
 
 entity GetPlayer(string name)
 {
@@ -234,7 +233,7 @@ void SV_ParseClientCommand(string s) {
 
 	if(GameCommand_Vote(s, self)) {
 		return;
-	} else if(GameCommand_MapVote(argv(0))) {
+	} else if(mapvote_client_command(argv(0))) {
 		return;
 	} else if(cmd == "autoswitch") {
 		// be backwards compatible with older clients (enabled)
@@ -376,8 +375,6 @@ void SV_ParseClientCommand(string s) {
 			sprint(self, "ERROR: unsupported info command\n");
 		else
 			wordwrap_sprint(cmd, 1111);
-	} else if(cmd == "suggestmap") {
-		sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
 	} else if(cmd == "teamstatus") {
 		Score_NicePrint(self);
 	} else if(cmd == "cvar_changes") {

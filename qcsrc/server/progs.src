@@ -149,7 +149,7 @@ cl_weapons.qh
 gametype.qh
 chat.qh
 scores_rules.qc
-
+mapvote.qh
 miscfunctions.qc
 sound.qc
 ../common/miscfunctions.qc
@@ -181,6 +181,7 @@ cl_physics.qc
 ../client-server/cl_physics_car.qc
 
 g_world.qc
+mapvote.qc
 g_casings.qc
 
 t_jumppads.qc
