@@ -311,7 +311,7 @@ void GameCommand(string command)
 
 	if(cmd == "__FORCE_READY_RESTART")
 	{
-		reset_map(FALSE);
+		world_reset(FALSE);
 		return;
 	}
 

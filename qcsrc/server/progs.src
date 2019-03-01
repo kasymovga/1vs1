@@ -149,6 +149,7 @@ warmup.qh
 cl_weapons.qh
 gametype.qh
 chat.qh
+teamplay.qh
 scores_rules.qc
 mapvote.qh
 miscfunctions.qc
@@ -156,7 +157,6 @@ sound.qc
 ../common/miscfunctions.qc
 ../client-server/miscfunctions.qc
 ../menu-server/miscfunctions.qc
-
 waypointsprites.qc
 
 bot/bot.qc

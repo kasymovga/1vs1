@@ -1,6 +1,9 @@
 float g_spawn_furthest;
 #define SPAWNPOINT_SCORE frags
 
+void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
+void() spawnpoint_use;
+
 float spawn_relocate_claim_once;
 void() spawn_relocate {
     // nudge off the floor

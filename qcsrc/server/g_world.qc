@@ -1567,3 +1567,45 @@ void SV_OnEntityPreSpawnFunction()
 	}
 	GameHookChain_EntityPreSpawn();
 }
+
+void(float dorespawn) world_reset {
+	entity oldself;
+	oldself = self;
+	GameHook_Reset();
+	for(self = world; (self = nextent(self)); )
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT) {
+		if(self.reset) {
+			self.reset();
+			continue;
+		}
+		if(self.team_saved)
+			self.team = self.team_saved;
+
+		if(self.flags & FL_PROJECTILE) // remove any projectiles left
+		{
+			stopsound(self, CHAN_PAIN);
+			remove(self);
+		}
+	}
+	for(self = world; (self = nextent(self)); )
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	{
+		if(self.reset2)
+		{
+			self.reset2();
+			continue;
+		}
+	}
+	if(dorespawn)
+	FOR_EACH_CLIENT(self) {
+		if(self.flags & FL_CLIENT)				// reset all players
+		if (self.classname == "player") {
+			self.killcount = 0;
+			self.velocity = '0 0 0';
+			self.avelocity = '0 0 0';
+			self.movement = '0 0 0';
+			PutClientInServer();
+		}
+	}
+	self = oldself;
+}

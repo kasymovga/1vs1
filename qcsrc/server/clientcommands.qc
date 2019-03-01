@@ -538,7 +538,7 @@ void ReadyCount()
  * is set)
  */
 void restartTimer_Think() {
-	reset_map(TRUE);
+	world_reset(TRUE);
 	Score_ClearAll();
 	remove(self);
 	restart_active = 0;

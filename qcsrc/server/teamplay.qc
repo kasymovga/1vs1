@@ -22,8 +22,72 @@ float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
+string Team_ColorName(float t)
+{
+    // fixme: Search for team entities and get their .netname's!
+    if (t == COLOR_TEAM1)
+        return "Red";
+    if (t == COLOR_TEAM2)
+        return "Blue";
+    if (t == COLOR_TEAM3)
+        return "Yellow";
+    if (t == COLOR_TEAM4)
+        return "Pink";
+    return "Neutral";
+}
+
+string Team_ColorNameLowerCase(float t)
+{
+    // fixme: Search for team entities and get their .netname's!
+    if (t == COLOR_TEAM1)
+        return "red";
+    if (t == COLOR_TEAM2)
+        return "blue";
+    if (t == COLOR_TEAM3)
+        return "yellow";
+    if (t == COLOR_TEAM4)
+        return "pink";
+    return "neutral";
+}
+
+
 void Balance_Centerprint(entity e) {
 	centerprint(e, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(e.team)));
+}
+
+vector TeamColorMod(float teamcolor) {
+    if (teamcolor == COLOR_TEAM1)
+		return '1.8 0.6 0.6';
+    else if (teamcolor == COLOR_TEAM2)
+		return '0.6 0.6 1.8';
+    else if (teamcolor == COLOR_TEAM3)
+		return '1.4 1.4 0.2';
+    else if (teamcolor == COLOR_TEAM4)
+		return '1.4 0.2 1.4';
+
+	return '0 0 0';
+}
+
+float Team_Index(float t) {
+    switch(t) {
+        case COLOR_TEAM1: return 0;
+        case COLOR_TEAM2: return 1;
+        case COLOR_TEAM3: return 2;
+        case COLOR_TEAM4: return 3;
+    }
+
+    return -1;
+}
+
+float Team_FromIndex(float i) {
+    switch(i) {
+        case 0: return COLOR_TEAM1;
+        case 1: return COLOR_TEAM2;
+        case 2: return COLOR_TEAM3;
+        case 3: return COLOR_TEAM4;
+    }
+
+    return 0;
 }
 
 vector TeamColor(float teem)

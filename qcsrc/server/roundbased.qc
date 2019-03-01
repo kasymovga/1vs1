@@ -79,7 +79,7 @@ void Roundbased_ServerFrame()
 		}
 		if (Roundbased_RestartTime)
 		if (time >= Roundbased_RestartTime) {
-			reset_map(FALSE);
+			world_reset(FALSE);
 			Roundbased_RestartTime = 0;
 			oldself = self;
 			FOR_EACH_TEAMPLAYER(plr) {

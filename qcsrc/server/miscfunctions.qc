@@ -1,10 +1,6 @@
 void droptofloor();
 .vector dropped_origin;
 
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
-void() spawnpoint_use;
-string ColoredTeamName(float t);
-
 void move_out_of_solid_expand(entity e, vector by, float t)
 {
     float eps = 0.0625;
@@ -206,34 +202,6 @@ string NearestLocation(vector p)
             ret = loc.netname;
     }
     return ret;
-}
-
-string Team_ColorName(float t)
-{
-    // fixme: Search for team entities and get their .netname's!
-    if (t == COLOR_TEAM1)
-        return "Red";
-    if (t == COLOR_TEAM2)
-        return "Blue";
-    if (t == COLOR_TEAM3)
-        return "Yellow";
-    if (t == COLOR_TEAM4)
-        return "Pink";
-    return "Neutral";
-}
-
-string Team_ColorNameLowerCase(float t)
-{
-    // fixme: Search for team entities and get their .netname's!
-    if (t == COLOR_TEAM1)
-        return "red";
-    if (t == COLOR_TEAM2)
-        return "blue";
-    if (t == COLOR_TEAM3)
-        return "yellow";
-    if (t == COLOR_TEAM4)
-        return "pink";
-    return "neutral";
 }
 
 #define CENTERPRIO_POINT 1
@@ -978,66 +946,6 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 		return 1;
 }
 
-/**
- * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
- * Sets the 'warmup' global variable.
- */
-void reset_map(float dorespawn)
-{
-	entity oldself;
-	oldself = self;
-
-	GameHook_Reset();
-
-	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
-	{
-		if(self.reset)
-		{
-			self.reset();
-			continue;
-		}
-
-		if(self.team_saved)
-			self.team = self.team_saved;
-
-		if(self.flags & FL_PROJECTILE) // remove any projectiles left
-		{
-			stopsound(self, CHAN_PAIN);
-			remove(self);
-		}
-	}
-
-	// Waypoints and assault start come LAST
-	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
-	{
-		if(self.reset2)
-		{
-			self.reset2();
-			continue;
-		}
-	}
-
-	// Moving the player reset code here since the player-reset depends
-	// on spawnpoint entities which have to be reset first --blub
-	if(dorespawn)
-	FOR_EACH_CLIENT(self) {
-		if(self.flags & FL_CLIENT)				// reset all players
-		if (self.classname == "player") {
-			//PlayerScore_Clear(self);
-			self.killcount = 0;
-			//stop the player from moving so that he stands still once he gets respawned
-			self.velocity = '0 0 0';
-			self.avelocity = '0 0 0';
-			self.movement = '0 0 0';
-			PutClientInServer();
-		}
-	}
-
-	self = oldself;
-}
-
 void defer_think() {
 	entity oldself = self;
 	self = self.enemy;
@@ -1062,41 +970,6 @@ vector CircleSpreadVector(float side, float up, float sangle) {
     return  side * v_forward * cos(sangle) +
             side * v_right   * sin(sangle) +
             up   * v_up;
-}
-
-vector TeamColorMod(float teamcolor) {
-    if (teamcolor == COLOR_TEAM1)
-		return '1.8 0.6 0.6';
-    else if (teamcolor == COLOR_TEAM2)
-		return '0.6 0.6 1.8';
-    else if (teamcolor == COLOR_TEAM3)
-		return '1.4 1.4 0.2';
-    else if (teamcolor == COLOR_TEAM4)
-		return '1.4 0.2 1.4';
-
-	return '0 0 0';
-}
-
-float Team_Index(float t) {
-    switch(t) {
-        case COLOR_TEAM1: return 0;
-        case COLOR_TEAM2: return 1;
-        case COLOR_TEAM3: return 2;
-        case COLOR_TEAM4: return 3;
-    }
-
-    return -1;
-}
-
-float Team_FromIndex(float i) {
-    switch(i) {
-        case 0: return COLOR_TEAM1;
-        case 1: return COLOR_TEAM2;
-        case 2: return COLOR_TEAM3;
-        case 3: return COLOR_TEAM4;
-    }
-
-    return 0;
 }
 
 void dropentities(entity platform) {
