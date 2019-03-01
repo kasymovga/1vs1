@@ -93,20 +93,6 @@ void bcenterprint(string s)
         centerprint(head, s);
 }
 
-float PlayerCanFire(entity plr, float wep) {
-	if (PLAYER_DEAD(plr))
-		return FALSE;
-
-	if (time < game_starttime)
-	if (!restart_active)
-		return FALSE;
-
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
-		return FALSE;
-
-	return GameHookChain_PlayerCanFire(plr, wep);
-}
-
 float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
 float nearest_length[NUM_NEAREST_ENTITIES];

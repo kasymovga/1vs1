@@ -53,3 +53,4 @@ void() player_setup_model;
 void() player_setupanimsformodel;
 void(entity player) player_to_spec;
 void() player_think;
+float(entity plr, float wep) player_can_fire;

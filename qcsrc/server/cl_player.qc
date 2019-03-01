@@ -1474,6 +1474,19 @@ void(string pattern) player_precache_all_models {
     search_end(globhandle);
 }
 
+float(entity plr, float wep) player_can_fire {
+	if (PLAYER_DEAD(plr))
+		return FALSE;
+
+	if (time < game_starttime)
+	if (!restart_active)
+		return FALSE;
+
+	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
+		return FALSE;
+
+	return GameHookChain_PlayerCanFire(plr, wep);
+}
 
 void() player_init {
 	// Precache all player models if desired

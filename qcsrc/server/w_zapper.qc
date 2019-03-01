@@ -195,7 +195,7 @@ float W_Zapper_Beam_Expired(float secondary) {
     if(self.owner.weapon != WEP_ZAPPER)
         return TRUE;
 
-    if(!PlayerCanFire(o, TRUE))
+    if(!player_can_fire(o, TRUE))
         return TRUE;
 
 	if not(o.items & IT_UNLIMITED_WEAPON_AMMO) {
@@ -614,7 +614,7 @@ void W_Zapper_Accumulate(void) {
     self.nextthink = time;
     self = self.owner;
     float accumulate_end = 1;
-    if (PlayerCanFire(self, TRUE) && self.weapon == WEP_ZAPPER) {
+    if (player_can_fire(self, TRUE) && self.weapon == WEP_ZAPPER) {
         if (self.zapper_accumulator.zapper_expire < time &&
                (!self.zapper_buttonatck2
                || self.zapper_buttonatck1

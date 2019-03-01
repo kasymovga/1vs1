@@ -40,7 +40,7 @@ float player_can_use_vehicle(entity plr) {
     if(plr.classname != "player")
         return FALSE;
 
-	if not(PlayerCanFire(plr, FALSE))
+	if not(player_can_fire(plr, FALSE))
 		return FALSE;
 
     if(plr.vehicle != world)

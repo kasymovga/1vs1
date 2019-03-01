@@ -141,7 +141,7 @@ void W_MinstaNex_Laser_Attack_Setup() {
 float W_MinstaNex_PlayerCanFire() {
 	float w_safe = self.weapon;
 	self.weapon = WEP_LASER;
-	float r = PlayerCanFire(self, TRUE);
+	float r = player_can_fire(self, TRUE);
 	self.weapon = w_safe;
 	return r;
 }

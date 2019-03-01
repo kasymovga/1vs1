@@ -284,7 +284,7 @@ void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype)
 	if (targ.classname == "player") {
 		if (attacker.classname == "player")
 		if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-		if (g_minstagib_nolaserdamage || !PlayerCanFire(attacker, FALSE))
+		if (g_minstagib_nolaserdamage || !player_can_fire(attacker, FALSE))
 		{
 			GameHook_DamageMod = 0;
 			if (targ != attacker)

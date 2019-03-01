@@ -638,7 +638,7 @@ void HG_PlayerPreThink(void) {
     if(time < self.hg_plasmalock || PLAYER_DEAD(self))
         mayfire = FALSE;
 #endif
-	if not(PlayerCanFire(self, FALSE))
+	if not(player_can_fire(self, FALSE))
 		mayfire = FALSE;
 
 	float held, isalt;

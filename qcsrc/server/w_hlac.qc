@@ -165,7 +165,7 @@ void W_HLAC_Attack2 (void)
 // weapon frames
 void HLAC_fire1_02()
 {
-	if(self.weapon != self.switchweapon || !PlayerCanFire(self, TRUE))
+	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE))
 	{
 		w_ready();
 		return;

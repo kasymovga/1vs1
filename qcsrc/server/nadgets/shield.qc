@@ -38,7 +38,7 @@ void HG_Shield_Discharge_Think(void) {
     else
         damage = min(max(0, self.owner.hg_shield_stored) + armorval, g_nadgets_shield_damage_store_burstamount);
 
-    if(damage <= 0 || !self.owner || !self.owner.iscreature || !PlayerCanFire(self.owner, FALSE)) {
+    if(damage <= 0 || !self.owner || !self.owner.iscreature || !player_can_fire(self.owner, FALSE)) {
         remove(self);
         return;
     }

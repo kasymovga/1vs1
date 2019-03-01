@@ -1151,3 +1151,419 @@ void SV_Shutdown()
 	}
 	require_spawnfunc_prefix = 0;
 }
+
+void CreatureFrame (void)
+{
+	local entity oldself;
+	local float dm;
+	oldself = self;
+	self = findfloat(world, iscreature, TRUE);
+	while (self)
+	{
+		if (self.movetype != MOVETYPE_NOCLIP)
+		{
+			if (self.waterlevel)
+			{
+				if (!(self.flags & FL_INWATER))
+				{
+					self.flags |= FL_INWATER;
+					self.dmgtime = 0;
+				}
+				if (self.waterlevel != WATERLEVEL_SUBMERGED)
+				{
+					if(self.air_finished < time + 9)
+						sound(self, CHAN_PLAYER, randomsound_bystr(self.playersound_gasp), VOL_BASE, ATTN_NORM);
+					self.air_finished = time + 12;
+					if (self.nextstep < time)
+					if (self.waterlevel < WATERLEVEL_SUBMERGED)
+					if (vlen(self.velocity) > 220) {
+						self.nextstep = time + 1.5;
+						sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE * 0.25, ATTN_NORM);
+					}
+				}
+				else if (self.air_finished < time)
+				{	// drown!
+					if (!self.deadflag)
+					if (self.pain_finished < time)
+					{
+						Damage (self, world, world, 5, DEATH_DROWN, self.origin, '0 0 0');
+						self.pain_finished = time + 0.5;
+					}
+				}
+				if (self.dmgtime < time)
+				{
+					self.dmgtime = time + 0.1;
+					if (self.watertype == CONTENT_LAVA)
+					{
+						if (self.watersound_finished < time)
+						{
+							self.watersound_finished = time + 0.5;
+							sound (self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+						}
+						Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+					}
+					else if (self.watertype == CONTENT_SLIME)
+					{
+						if (self.watersound_finished < time)
+						{
+							self.watersound_finished = time + 0.5;
+							sound (self, CHAN_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+						}
+						Damage (self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+					}
+				}
+			}
+			else
+			{
+				if (self.flags & FL_INWATER)
+				{
+					// play leave water sound
+					self.flags &~= FL_INWATER;
+					self.dmgtime = 0;
+				}
+				self.air_finished = time + 12;
+			}
+			// check for falling damage
+			dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+			if (self.deadflag)
+				dm = (dm - g_balance_falldamage_deadminspeed) * g_balance_falldamage_factor;
+			else
+				dm = min((dm - g_balance_falldamage_minspeed) * g_balance_falldamage_factor, g_balance_falldamage_maxdamage);
+
+			if (dm > 0)
+				Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+
+			// play stupid sounds
+			if (g_footsteps)
+			if (!gameover)
+			if (self.flags & FL_ONGROUND)
+			if (vlen(self.velocity) > sv_maxspeed * 0.6)
+			if (!self.deadflag)
+			if (time < self.lastground + 0.2)
+			{
+				if((time > self.nextstep))
+				{
+					self.nextstep = time + 0.3 + random() * 0.1;
+					if not(self.waterlevel) {
+						trace_dphitq3surfaceflags = 0;
+						tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+						if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+						{
+							if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+								sound(self, CHAN_PLAYER, randomsound("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
+							else
+								sound(self, CHAN_PLAYER, randomsound("misc/footstep0", 6), VOL_BASE, ATTN_NORM);
+						}
+					}
+				}
+			}
+			self.oldvelocity = self.velocity;
+		}
+		self = findfloat(self, iscreature, TRUE);
+	}
+	self = oldself;
+}
+
+void() slowmo_update {
+	slowmo = GameHookChain_TempoMod(1);
+	cvar_set("slowmo", ftos(slowmo));
+}
+
+/*
+=============
+StartFrame
+
+Called before each frame by the server
+=============
+*/
+float RedirectionThink();
+void ReadyRestart();
+void StartFrame (void)
+{
+	ER_Update();
+	slowmo_update();
+
+#ifdef PROFILING
+	if(time > client_cefc_accumulatortime + 1)
+	{
+		float t, pp, c_seeing, c_seen;
+		entity cl;
+		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
+		print("CEFC time: ", ftos(t * 1000), "ms; ");
+		c_seeing = 0;
+		c_seen = 0;
+		FOR_EACH_CLIENT(cl)
+		{
+			if(clienttype(cl) == CLIENTTYPE_REAL)
+				++c_seeing;
+			if(cl.classname == "player")
+				++c_seen;
+		}
+		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
+		print("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
+
+		client_cefc_accumulatortime = time;
+		client_cefc_accumulator = 0;
+	}
+#endif
+
+	dprint_load(); // load dprint status from cvar
+
+	entity e;
+	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
+		CSQCProjectile_Check(e);
+
+	if(RedirectionThink())
+		return;
+
+	InitializeEntitiesRun();
+
+	sys_ticrate = cvar("sys_ticrate");
+
+	skill = cvar("skill");
+
+	// if in warmup stage and limit for warmup is hit start match
+	if (inWarmupStage)
+	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
+	 || (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60))
+	{
+		ReadyRestart();
+		return;
+	}
+
+	CreatureFrame ();
+	CheckRules_World ();
+
+	GameHookChain_ServerFrame();
+	bot_serverframe();
+
+	if(spawn_debugview)
+	{
+		random_selection_init();
+		for(self = world; (self = find(self, classname, "player")); )
+			random_selection_add(self, 0, string_null, 1, 0);
+		self = random_selection_chosen_ent;
+		spawn_select(0);
+	}
+}
+
+string gametype_patterns() {
+	string s = cvar_string("sv_gametype_patterns");
+	if (s == "") //Trying to guess
+	{
+		if (teamplay)
+		{
+			s = "team|ctf";
+		}
+		else if(cvar("g_maxplayers") == 2)
+		{
+			s = "tournament|duel";
+		}
+		else
+		{
+			s = "ffa";
+		}
+	}
+	return s;
+}
+
+.vector originjitter;
+.vector anglesjitter;
+.float anglejitter;
+.string gametypefilter;
+.string gametype;
+.string not_gametype;
+.string cvarfilter;
+void SV_OnEntityPreSpawnFunction()
+{
+	if(!self) //Skip pre-spawn function for world.
+		return;
+	string s;
+	float i, n;
+	if(self.gametypefilter != "")
+	if not(isGametypeInFilter(game, teamplay, self.gametypefilter))
+	{
+		remove(self);
+		return;
+	}
+	if (self.gametype != "")
+	{
+		s = gametype_patterns();
+		float matched;
+		matched = 0;
+		n = tokenizebyseparator(s, "|");
+		for (i = 0; i < n; i++)
+		{
+			s = argv(i);
+			if(s == "")
+				continue;
+			if(strstrofs(self.gametype, s, 0) >= 0)
+			{
+				print(strcat("Found pattern '", s, "' for entity '", self.classname, "' with gametype '", self.gametype, "'\n"));
+				matched = 1;
+				break;
+			}
+		}
+		if not(matched)
+		{
+			print(strcat("Removed entity '", self.classname, "' with gametype '", self.gametype, "' because no patterns found\n"));
+			remove(self);
+			return;
+		}
+	}
+	if (self.not_gametype != "")
+	{
+		s = gametype_patterns();
+		n = tokenizebyseparator(s, "|");
+		for (i = 0; i < n; i++)
+		{
+			s = argv(i);
+			if(s == "")
+				continue;
+			if(strstrofs(self.not_gametype, s, 0) >= 0)
+			{
+				print(strcat("Removed entity '", self.classname, "' with not allowed gametype '", self.not_gametype, "' because patterns found\n"));
+				remove(self);
+				return;
+			}
+		}
+	}
+	if(self.cvarfilter != "")
+	{
+		float o, inv;
+		string k, v;
+		inv = 0;
+
+		s = self.cvarfilter;
+		if(substring(s, 0, 1) == "+")
+		{
+			s = substring(s, 1, -1);
+		}
+		else if(substring(s, 0, 1) == "-")
+		{
+			inv = 1;
+			s = substring(s, 1, -1);
+		}
+
+		n = tokenize(s);
+		for(i = 0; i < n; ++i)
+		{
+			s = argv(i);
+			// syntax:
+			// var>x
+			// var<x
+			// var>=x
+			// var<=x
+			// var==x
+			// var!=x
+			// var===x
+			// var!==x
+			if((o = strstrofs(s, ">=", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) < stof(v))
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "<=", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) > stof(v))
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, ">", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+1, -1);
+				if(cvar(k) <= stof(v))
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "<", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+1, -1);
+				if(cvar(k) >= stof(v))
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "==", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) != stof(v))
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "!=", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) == stof(v))
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "===", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar_string(k) != v)
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "!==", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar_string(k) == v)
+					goto cvar_fail;
+			}
+			else if(substring(s, 0, 1) == "!")
+			{
+				k = substring(s, 1, -1);
+				if(cvar(k))
+					goto cvar_fail;
+			}
+			else
+			{
+				k = s;
+				if not(cvar(k))
+					goto cvar_fail;
+			}
+		}
+		inv = !inv;
+:cvar_fail
+		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
+		if not(inv)
+		{
+			//print("cvarfilter fail\n");
+			remove(self);
+			return;
+		}
+	}
+
+	// support special -1 and -2 angle from radiant
+	if (self.angles == '0 -1 0')
+		self.angles = '-90 0 0';
+	else if (self.angles == '0 -2 0')
+		self.angles = '+90 0 0';
+
+	if(self.originjitter_x != 0)
+		self.origin_x = self.origin_x + (random() * 2 - 1) * self.originjitter_x;
+	if(self.originjitter_y != 0)
+		self.origin_y = self.origin_y + (random() * 2 - 1) * self.originjitter_y;
+	if(self.originjitter_z != 0)
+		self.origin_z = self.origin_z + (random() * 2 - 1) * self.originjitter_z;
+	if(self.anglesjitter_x != 0)
+		self.angles_x = self.angles_x + (random() * 2 - 1) * self.anglesjitter_x;
+	if(self.anglesjitter_y != 0)
+		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglesjitter_y;
+	if(self.anglesjitter_z != 0)
+		self.angles_z = self.angles_z + (random() * 2 - 1) * self.anglesjitter_z;
+	if(self.anglejitter != 0)
+		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
+
+	string repl = cvar_string(strcat("sv_spawnreplace_", self.classname));
+	if(repl != "")
+	{
+		print("Entity ", self.classname, " replaced with ", repl, "\n");
+		self.classname = strzone(repl);
+	}
+	GameHookChain_EntityPreSpawn();
+}
