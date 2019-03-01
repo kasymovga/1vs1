@@ -308,27 +308,6 @@ string Item_CounterFieldName(float it)
 
 .float max_armorvalue;
 
-float Item_Customize()
-{
-	if(self.spawnshieldtime)
-		return TRUE;
-	if(self.weapons != (self.weapons & other.weapons))
-	{
-		self.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
-		return TRUE;
-	}
-	else
-	{
-		if(g_ghost_items)
-		{
-			self.alpha = g_ghost_items;
-			return TRUE;
-		}
-		else
-			return FALSE;
-	}
-}
-
 void Item_Show (entity e, float mode)
 {
 	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT;
@@ -349,7 +328,7 @@ void Item_Show (entity e, float mode)
 		e.model = string_null;
 		e.solid = SOLID_NOT;
 		//e.colormod = '0 0 0';
-		e.alpha = 0;
+		e.alpha = -1;
 		e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
