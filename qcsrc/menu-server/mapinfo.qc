@@ -648,6 +648,8 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	string acl;
 
 	acl = cvar_string("g_mapinfo_settemp_acl");
+	if (pFilename == "")
+		return 0;
 
 	if(strstrofs(pFilename, "/", 0) >= 0)
 	{
@@ -985,6 +987,9 @@ float MapInfo_CurrentGametype()
 
 float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
 {
+	if (s == "")
+		return 0;
+
 	if(!MapInfo_Get_ByName(s, 1, 0))
 		return 0;
 	if((MapInfo_Map_supportedGametypes & MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype())) == 0)
