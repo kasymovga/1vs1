@@ -222,87 +222,6 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string formatmessage(entity pl, string msg)
-{
-    float p, p1, p2;
-    float n;
-    string escape;
-    string replacement;
-    p = 0;
-    n = 7;
-    while (1)
-    {
-        if (n < 1)
-            break; // too many replacements
-        n = n - 1;
-        p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-        p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
-
-        if (p1 < 0)
-            p1 = p2;
-        if (p2 < 0)
-            p2 = p1;
-        p = min(p1, p2);
-
-        if (p < 0)
-            break;
-        replacement = substring(msg, p, 2);
-        escape = substring(msg, p + 1, 1);
-        if (escape == "%")
-            replacement = "%";
-        else if (escape == "\\")
-            replacement = "\\";
-        else if (escape == "n")
-            replacement = "\n";
-        else if (escape == "a")
-            replacement = ftos(floor(pl.armorvalue));
-        else if (escape == "h")
-            replacement = ftos(floor(pl.health));
-        else if (escape == "l")
-            replacement = NearestLocation(pl.origin);
-        else if (escape == "y")
-            replacement = NearestLocation(pl.cursor_trace_endpos);
-        else if (escape == "d")
-            replacement = NearestLocation(pl.death_origin);
-        else if (escape == "s")
-			replacement = ftos(floor(vlen(self.velocity)));
-        else if (escape == "w")
-        {
-            float wep;
-            wep = pl.weapon;
-            if (!wep)
-                wep = pl.switchweapon;
-            if (!wep)
-                wep = pl.cnt;
-            replacement = W_Name(wep);
-        }
-        else if (escape == "W")
-        {
-            if (pl.items & IT_SHELLS) replacement = "shells";
-            else if (pl.items & IT_NAILS) replacement = "bullets";
-            else if (pl.items & IT_ROCKETS) replacement = "rockets";
-            else if (pl.items & IT_CELLS) replacement = "cells";
-            else replacement = "batteries"; // ;)
-        }
-        else if (escape == "x")
-        {
-            replacement = pl.cursor_trace_ent.netname;
-            if (!replacement || !pl.cursor_trace_ent)
-                replacement = "nothing";
-        }
-        else if (escape == "p")
-        {
-            if (pl.cursor_trace_ent && pl.cursor_trace_ent.classname == "player")
-                replacement = pl.cursor_trace_ent.netname;
-            else
-                replacement = "(nobody)";
-        }
-        msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
-        p = p + strlen(replacement);
-    }
-    return msg;
-}
-
 string Team_ColorName(float t)
 {
     // fixme: Search for team entities and get their .netname's!
@@ -389,16 +308,6 @@ string playername(entity p)
         return p.netname;
 }
 
-vector randompos(vector m1, vector m2)
-{
-    local vector v;
-    m2 = m2 - m1;
-    v_x = m2_x * random() + m1_x;
-    v_y = m2_y * random() + m1_y;
-    v_z = m2_z * random() + m1_z;
-    return  v;
-};
-
 entity get_weaponinfo(float w);
 
 void weapon_precache(float wpn)
@@ -408,33 +317,6 @@ void weapon_precache(float wpn)
 	precache_model(strcat("models/weapons/v_", s, ".md3"));
 	precache_model(strcat("models/weapons/h_", s, ".dpm"));
 	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
-}
-
-void PrecachePlayerSounds(string f);
-void precache_all_models(string pattern)
-{
-    float globhandle, i, n;
-    string f;
-
-    globhandle = search_begin(pattern, TRUE, FALSE);
-    if (globhandle < 0)
-        return;
-    n = search_getsize(globhandle);
-    for (i = 0; i < n; ++i)
-    {
-		//print(search_getfilename(globhandle, i), "\n");
-		f = search_getfilename(globhandle, i);
-		if(sv_loddistance1)
-			precache_model(f);
-		if(substring(f, -9,5) == "_lod1")
-			continue;
-		if(substring(f, -9,5) == "_lod2")
-			continue;
-		if(!sv_loddistance1)
-			precache_model(f);
-		PrecachePlayerSounds(strcat(f, ".sounds"));
-    }
-    search_end(globhandle);
 }
 
 // sorry, but using \ in macros breaks line numbers
@@ -1098,57 +980,6 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 {
 	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
-}
-
-float randombit(float bits)
-{
-	if not(bits & (bits-1)) // this ONLY holds for powers of two!
-		return bits;
-
-	float n, f, b, r;
-
-	r = random();
-	b = 0;
-	n = 0;
-
-	for(f = 1; f <= bits; f *= 2)
-	{
-		if(bits & f)
-		{
-			++n;
-			r *= n;
-			if(r <= 1)
-				b = f;
-			else
-				r = (r - 1) / (n - 1);
-		}
-	}
-
-	return b;
-}
-
-float randombits(float bits, float k, float error_return)
-{
-	float r;
-	r = 0;
-	while(k > 0 && bits != r)
-	{
-		r += randombit(bits - r);
-		--k;
-	}
-	if(error_return)
-		if(k > 0)
-			return -1; // all
-	return r;
-}
-
-void randombit_test(float bits, float iter)
-{
-	while(iter > 0)
-	{
-		print(ftos(randombit(bits)), "\n");
-		--iter;
-	}
 }
 
 float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)

@@ -7,3 +7,4 @@ string random_selection_chosen_string;
 void() random_selection_init;
 void(entity e, float f, string s, float weight, float priority) random_selection_add;
 vector(float side, float up, float up_min, float up_min_rand) random_spread_vector;
+vector(vector m1, vector m2) random_pos;

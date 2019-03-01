@@ -351,11 +351,9 @@ void SV_ParseClientCommand(string s) {
 			if (substring(argv(1), 0, 1) == "/")
 				GameCommand_Vote(strcat("vote call ", substring(s, strstrofs(s, "/", 0) + 1, -1)), self);
 		}
-		//clientcommand(self, formatmessage(s));
 	} else if(cmd == "say_team") {
 		if(tokens >= 2)
 			chat_say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
-		//clientcommand(self, formatmessage(s));
 	} else if(cmd == "tell") {
 		e = GetCommandPlayerSlotTargetFromTokenizedCommand(tokens, 1);
 		if(e && tokens > ParseCommandPlayerSlotTarget_firsttoken)
@@ -368,7 +366,6 @@ void SV_ParseClientCommand(string s) {
 				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
 			sprint(self, "ERROR: usage: tell # playerid text...\n");
 		}
-		//clientcommand(self, formatmessage(s));
 	} else if(cmd == "info") {
 		cmd = cvar_string(strcat("sv_info_", argv(1)));
 		if(cmd == "")

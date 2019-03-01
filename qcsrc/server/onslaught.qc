@@ -433,11 +433,11 @@ void onslaught_generator_damage_think()
 	if(random() < 0.9 - self.owner.health / self.owner.max_health)
 		if(random() < 0.01)
 		{
-			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
+			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + random_pos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
 			sound(self, CHAN_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
-			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
+			pointparticles(particleeffectnum("torch_small"), self.origin + random_pos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
 };
 
 void onslaught_generator_damage_spawn(entity gd_owner)
@@ -481,7 +481,7 @@ void onslaught_generator_deaththink()
 	// Spawn fire balls
 	for(i=0;i < 10;++i)
 	{
-		org = self.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
+		org = self.origin + random_pos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
 		pointparticles(particleeffectnum("onslaught_generator_gib_explode"), org, '0 0 0', 1);
 	}
 
@@ -493,7 +493,7 @@ void onslaught_generator_deaththink()
 	}
 
 	// Particles
-	org = self.origin + randompos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
+	org = self.origin + random_pos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
 	pointparticles(particleeffectnum("onslaught_generator_smallexplosion"), org, '0 0 0', 1);
 
 	// rays
@@ -1031,7 +1031,7 @@ void onslaught_controlpoint_icon_think()
 	// damaged fx
 	if(random() < 0.6 - self.health / self.max_health)
 	{
-		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
+		pointparticles(particleeffectnum("electricity_sparks"), self.origin + random_pos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
 			sound(self, CHAN_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);

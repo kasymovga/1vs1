@@ -1449,14 +1449,40 @@ void(entity spot) player_spawn {
 	self.wasplayer = TRUE;
 }
 
+void(string pattern) player_precache_all_models {
+    float globhandle, i, n;
+    string f;
+
+    globhandle = search_begin(pattern, TRUE, FALSE);
+    if (globhandle < 0)
+        return;
+    n = search_getsize(globhandle);
+    for (i = 0; i < n; ++i)
+    {
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		if(sv_loddistance1)
+			precache_model(f);
+		if(substring(f, -9,5) == "_lod1")
+			continue;
+		if(substring(f, -9,5) == "_lod2")
+			continue;
+		if(!sv_loddistance1)
+			precache_model(f);
+		PrecachePlayerSounds(strcat(f, ".sounds"));
+    }
+    search_end(globhandle);
+}
+
+
 void() player_init {
 	// Precache all player models if desired
 	if (cvar("sv_precacheplayermodels")) {
 		PrecachePlayerSounds("sound/player/default.sounds");
-		precache_all_models("models/player/*.zym");
-		precache_all_models("models/player/*.dpm");
-		precache_all_models("models/player/*.md3");
-		precache_all_models("models/player/*.psk");
+		player_precache_all_models("models/player/*.zym");
+		player_precache_all_models("models/player/*.dpm");
+		player_precache_all_models("models/player/*.md3");
+		player_precache_all_models("models/player/*.psk");
 	}
 	CACHE_CVAR(g_chat_flood_burst);
 	CACHE_CVAR(g_chat_flood_burst_team);
