@@ -415,7 +415,7 @@ void dom_delayedinit()
 };
 
 entity dom_SelectSpawnPoint() {
-	return SelectSpawnPoint(TRUE);
+	return spawn_select(TRUE);
 }
 
 float dom_FragLimitOverride() { return cvar("g_domination_point_limit"); }

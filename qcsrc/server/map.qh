@@ -1,0 +1,7 @@
+string() map_list_next_get;
+void() map_goto_first_map;
+string(string m) map_goto;
+void(string m) map_mark_as_recent;
+float(string m) map_is_recent;
+void(string nextmapname) map_next_set;
+entity(entity firstspot, entity playerlist, float mindist, float teamcheck) spawn_filter_out_of_bad_spots;

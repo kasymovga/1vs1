@@ -1553,6 +1553,16 @@ alias gametype_surv "reset_gametype; _g_survive 1; bprint_gtswitch ^3Survive"
 alias gametype_survivie gametype_surv
 alias gametype_coop "reset_gametype; _g_coop 1; bprint_gtswitch ^3Cooperative"
 alias gametype "gametype_$1"
+alias cl_hook_gamestart_ca ""
+alias cl_hook_gamestart_ft ""
+alias cl_hook_gamestart_khca ""
+alias cl_hook_gamestart_khft ""
+alias cl_hook_gamestart_catf ""
+alias cl_hook_gamestart_ctft ""
+alias cl_hook_gamestart_coop ""
+alias cl_hook_gamestart_surv ""
+alias cl_hook_gamestart_single ""
+alias cl_hook_gamestart_conq ""
 
 set sv_projectile_rocket_size "3 -3 3"
 

@@ -1319,7 +1319,7 @@ void onslaught_LocationRequest_Callback(float x, float y) {
 entity onslaught_SelectSpawnPoint() {
 	entity e, selected;
 	if not(self.ons_spawn_area_z)
-		return SelectSpawnPoint(FALSE);
+		return spawn_select(FALSE);
 
 	vector v;
 	float fmin, f;

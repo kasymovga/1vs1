@@ -1,0 +1,2 @@
+entity (float anypoint) spawn_select;
+void() spawn_init;

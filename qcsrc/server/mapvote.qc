@@ -38,7 +38,7 @@ string(string m) mapvote_suggest {
 	if(!m)
 		return "The map you suggested is not available on this server.";
 	if(!cvar("g_maplist_votable_override_mostrecent"))
-		if(Map_IsRecent(m))
+		if(map_is_recent(m))
 			return "This server does not allow for recent maps to be played again. Please be patient for some rounds.";
 
 	if(!MapInfo_CheckMap(m))
@@ -93,16 +93,16 @@ void() mapvote_init {
 			mapvote_add_votable(mapvote_suggestions[floor(random() * mapvote_suggestion_ptr)], TRUE);
 
 	for(i = 0; i < 100 && mapvote_count < nmax; ++i)
-		mapvote_add_votable(GetNextMap(), FALSE);
+		mapvote_add_votable(map_list_next_get(), FALSE);
 
 	if(mapvote_count == 0) {
 		bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
 		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(cvar("g_maplist_shuffle"))
-			ShuffleMaplist();
+			map_list_shuffle();
 		localcmd("\nmenu_cmd sync\n");
 		for(i = 0; i < 100 && mapvote_count < nmax; ++i)
-			mapvote_add_votable(GetNextMap(), FALSE);
+			mapvote_add_votable(map_list_next_get(), FALSE);
 	}
 	mapvote_count_real = mapvote_count;
 	if(mapvote_abstain)
@@ -230,8 +230,8 @@ float(float mappos) mapvote_finished {
 	FOR_EACH_REALCLIENT(other)
 		FixClientCvars(other);
 
-	Map_Goto_SetStr(mapvote_maps[mappos]);
-	Map_Goto();
+	map_next_set(mapvote_maps[mappos]);
+	map_change();
 	alreadychangedlevel = TRUE;
 	return TRUE;
 }
@@ -364,11 +364,11 @@ void mapvote_think() {
 	mapvote_nextthink = time + 0.5;
 	if(!mapvote_initialized) {
 		mapvote_initialized = TRUE;
-		if(DoNextMapOverride())
+		if(map_do_next_override())
 			return;
 			
 		if(!cvar("g_maplist_votable") || player_count <= 0) {
-			GotoNextMap();
+			map_goto_next();
 			return;
 		}
 		mapvote_init();

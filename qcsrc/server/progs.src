@@ -17,9 +17,9 @@ constants.qh
 sound.qh
 location_request.qh
 single.qh
-
+map.qh
 defs.qh		// Should rename this, it has fields and globals
-
+spawn.qh
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
 
@@ -181,6 +181,7 @@ cl_physics.qc
 ../client-server/cl_physics_car.qc
 
 g_world.qc
+map.qc
 mapvote.qc
 g_casings.qc
 
@@ -233,7 +234,7 @@ push.qc
 cl_client.qc
 t_plats.qc
 antilag.qc
-
+spawn.qc
 roundbased.qc
 clanarena_shared.qc
 freeze_shared.qc

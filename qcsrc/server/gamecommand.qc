@@ -1,5 +1,3 @@
-string GotoMap(string m);
-
 void EffectIndexDump()
 {
 	float d;
@@ -142,7 +140,7 @@ void GameCommand(string command)
 
 	if(cmd == "gotomap") if(argc == 2)
 	{
-		print(GotoMap(argv(1)), "\n");
+		print(map_goto(argv(1)), "\n");
 		return;
 	}
 

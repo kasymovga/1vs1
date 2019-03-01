@@ -11,9 +11,9 @@ var void() GameHook_PhysicFrameBegin = {}
 var void() GameHookChain_PlayerPreThink = {}
 var entity() GameHook_SelectSpawnPoint = {
 	entity spot;
-	spot = SelectSpawnPoint (FALSE);
+	spot = spawn_select(FALSE);
 	if not(spot)
-		spot = SelectSpawnPoint(TRUE);
+		spot = spawn_select(TRUE);
 
 	return spot;
 }

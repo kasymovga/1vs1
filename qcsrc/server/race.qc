@@ -213,15 +213,15 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						rr = CTS_RECORD;
 					else
 						rr = RACE_RECORD;
-					grecordtime = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
-					grecordholder = db_get(ServerProgsDB, strcat(GetMapname(), rr, "netname"));
+					grecordtime = stof(db_get(ServerProgsDB, strcat(mapname, rr, "time")));
+					grecordholder = db_get(ServerProgsDB, strcat(mapname, rr, "netname"));
 					if(grecordholder == e.netname)
 						grecordholder = "";
 					if(grecordtime == 0)
 					{
 						bprint(e.netname, "^7 set the all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-						db_put(ServerProgsDB, strcat(GetMapname(), rr, "time"), ftos(t));
-						db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname"), e.netname);
+						db_put(ServerProgsDB, strcat(mapname, rr, "time"), ftos(t));
+						db_put(ServerProgsDB, strcat(mapname, rr, "netname"), e.netname);
 						write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 					}
 					else if(t < grecordtime)
@@ -230,8 +230,8 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 							bprint(e.netname, "^7 broke his all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
 						else
 							bprint(e.netname, "^7 broke ", grecordholder, "^7's all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-						db_put(ServerProgsDB, strcat(GetMapname(), rr, "time"), ftos(t));
-						db_put(ServerProgsDB, strcat(GetMapname(), rr, "netname"), e.netname);
+						db_put(ServerProgsDB, strcat(mapname, rr, "time"), ftos(t));
+						db_put(ServerProgsDB, strcat(mapname, rr, "netname"), e.netname);
 						write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 					}
 					else
@@ -495,7 +495,7 @@ void trigger_race_checkpoint_verify()
 			// race only (middle of the race)
 			g_race_qualifying = 0;
 			self.race_place = 0;
-			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
+			if(!spawn_filter_out_of_bad_spots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for respawning in race) - bailing out"));
 
 			if(i == 0)
@@ -503,7 +503,7 @@ void trigger_race_checkpoint_verify()
 				// qualifying only
 				g_race_qualifying = 1;
 				self.race_place = race_lowest_place_spawn;
-				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
+				if(!spawn_filter_out_of_bad_spots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 
 				// race only (initial spawn)
@@ -511,7 +511,7 @@ void trigger_race_checkpoint_verify()
 				for(p = 1; p <= race_highest_place_spawn; ++p)
 				{
 					self.race_place = p;
-					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
+					if(!spawn_filter_out_of_bad_spots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
 						error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for initially spawning in race) - bailing out"));
 				}
 			}
@@ -523,7 +523,7 @@ void trigger_race_checkpoint_verify()
 		self.race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
 		self.race_place = race_lowest_place_spawn;
-		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
+		if(!spawn_filter_out_of_bad_spots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
 			error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 	}
 
@@ -646,7 +646,7 @@ entity race_PreSpawn()
 		race_PreparePlayer();
 
 	race_AbandonRaceCheck(self);
-	return SelectSpawnPoint(FALSE);
+	return spawn_select(FALSE);
 }
 
 var void(entity spot) race_Spawn_NextLink;

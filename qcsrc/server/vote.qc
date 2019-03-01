@@ -444,7 +444,7 @@ string ValidateMap(string m, entity e)
 		return string_null;
 	}
 	if(!cvar("sv_vote_override_mostrecent"))
-		if(Map_IsRecent(m))
+		if(map_is_recent(m))
 		{
 			print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
 			return string_null;

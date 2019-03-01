@@ -203,8 +203,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 
 	GameHookChain_ObserverSpawn();
 	PlayerClear(FALSE);
-
-	spot = SelectSpawnPoint (TRUE);
+	spot = spawn_select(TRUE);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
 

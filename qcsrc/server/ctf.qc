@@ -471,7 +471,7 @@ void FlagTouch()
 			t = time - other.flagcarried.flagpickuptime;
 			s = ftos_decimals(t, 2);
 			s0 = ftos_decimals(flagcaptimerecord, 2);
-			h0 = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
+			h0 = db_get(ServerProgsDB, strcat(mapname, "/captimerecord/netname"));
 			h1 = other.netname;
 			if(h0 == h1)
 				h0 = "his";
@@ -481,16 +481,16 @@ void FlagTouch()
 			{
 				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, " seconds\n");
 				flagcaptimerecord = t;
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(t));
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), h1);
+				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/time"), ftos(t));
+				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/netname"), h1);
 				write_recordmarker(other, time - t, t);
 			}
 			else if (t < flagcaptimerecord)
 			{
 				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", breaking ", strcat(h0, " previous record of ", s0, " seconds\n"));
 				flagcaptimerecord = t;
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(t));
-				db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), h1);
+				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/time"), ftos(t));
+				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/netname"), h1);
 				write_recordmarker(other, time - t, t);
 			}
 			else
@@ -1180,7 +1180,7 @@ void ctf_init()
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
 
 	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
-	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
+	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(mapname, "/captimerecord/time")));
 
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");

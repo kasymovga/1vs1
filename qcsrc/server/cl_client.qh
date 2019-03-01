@@ -7,7 +7,6 @@ void Client_ReadCvars();
 float ClientPreConnect_Abort();
 void PutClientInServer();
 void PutTeamToServer(float t);
-entity SelectSpawnPoint (float anypoint);
 void FixClientCvars(entity e);
 void ClientKill_Now_TeamChange();
 void ClientInit_Spawn();
