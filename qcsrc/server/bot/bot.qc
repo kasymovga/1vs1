@@ -134,7 +134,7 @@ void bot_setnameandstuff()
 		print(strcat("Error: Can not open the bot configuration file '",cvar_string("bot_config_file"),"'\n"));
 	else
 	{
-		RandomSelection_Init();
+		random_selection_init();
 		for(;;)
 		{
 			readfile = fgets(file);
@@ -155,9 +155,9 @@ void bot_setnameandstuff()
 					break;
 				}
 			}
-			RandomSelection_Add(world, 0, readfile, 1, prio);
+			random_selection_add(world, 0, readfile, 1, prio);
 		}
-		readfile = RandomSelection_chosen_string;
+		readfile = random_selection_chosen_string;
 		fclose(file);
 	}
 

@@ -740,16 +740,16 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     org = world.mins;
     delta = world.maxs - world.mins;
 	entity firstspot = findchain(classname, "info_player_deathmatch");
-	RandomSelection_Init();
+	random_selection_init();
 	entity spot;
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_Add(spot, 0, string_null, 1, 1);
+		random_selection_add(spot, 0, string_null, 1, 1);
 
     for (i = 0; i < attempts; ++i)
     {
-		start = RandomSelection_chosen_ent.origin;
-		if (RandomSelection_chosen_ent.mins_z > e.mins_z)
-			start_z = start_z - e.mins_z + RandomSelection_chosen_ent.mins_z;
+		start = random_selection_chosen_ent.origin;
+		if (random_selection_chosen_ent.mins_z > e.mins_z)
+			start_z = start_z - e.mins_z + random_selection_chosen_ent.mins_z;
 
         end_x = random() - 0.5;
         end_y = random() - 0.5;
@@ -1241,14 +1241,6 @@ void defer(float t, void() callback) {
 	defer_for(self, t, callback);
 }
 
-vector RandomSpreadVector(float side, float up, float up_min, float up_min_rand) {
-    vector v;
-	v_x = crandom() * 2 * side;
-	v_y = crandom() * 2 * side;
-	v_z = max(up * random(), up_min + up_min_rand * crandom() * 2);
-	return v;
-}
-
 vector CircleSpreadVector(float side, float up, float sangle) {
     return  side * v_forward * cos(sangle) +
             side * v_right   * sin(sangle) +
@@ -1312,33 +1304,3 @@ void dropentities(entity platform) {
 }
 
 #define BoundToByte(x) ((x < 251) ? x : ((x < 500) ? 251 : ((x < 1000) ? 252 : ((x < 2000) ? 253 : ((x < 5000) ? 254 : 255)))))
-
-void RandomSelection_Init()
-{
-	RandomSelection_totalweight = 0;
-	RandomSelection_chosen_ent = world;
-	RandomSelection_chosen_float = 0;
-	RandomSelection_chosen_string = string_null;
-	RandomSelection_best_priority = -1;
-}
-void RandomSelection_Add(entity e, float f, string s, float weight, float priority)
-{
-	if(priority > RandomSelection_best_priority)
-	{
-		RandomSelection_best_priority = priority;
-		RandomSelection_chosen_ent = e;
-		RandomSelection_chosen_float = f;
-		RandomSelection_chosen_string = s;
-		RandomSelection_totalweight = weight;
-	}
-	else if(priority == RandomSelection_best_priority)
-	{
-		RandomSelection_totalweight += weight;
-		if(random() * RandomSelection_totalweight <= weight)
-		{
-			RandomSelection_chosen_ent = e;
-			RandomSelection_chosen_float = f;
-			RandomSelection_chosen_string = s;
-		}
-	}
-}

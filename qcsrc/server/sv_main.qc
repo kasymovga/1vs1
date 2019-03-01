@@ -186,10 +186,10 @@ void StartFrame (void)
 
 	if(spawn_debugview)
 	{
-		RandomSelection_Init();
+		random_selection_init();
 		for(self = world; (self = find(self, classname, "player")); )
-			RandomSelection_Add(self, 0, string_null, 1, 0);
-		self = RandomSelection_chosen_ent;
+			random_selection_add(self, 0, string_null, 1, 0);
+		self = random_selection_chosen_ent;
 		spawn_select(0);
 	}
 }

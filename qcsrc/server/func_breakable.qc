@@ -159,7 +159,7 @@ void func_breakable_launch_napalm(void) {
 
     for(var c = 0; c < nc; ++c) {
         Napalm_Spawn(self.owner, self.origin, 3, 0.15, DEATH_HURTTRIGGER, 180, 80, 20, 1.5) {
-            velocity: RandomSpreadVector(70, 300, 300, 10)
+            velocity: random_spread_vector(70, 300, 300, 10)
         };
     }
 

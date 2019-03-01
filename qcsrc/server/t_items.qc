@@ -666,16 +666,16 @@ void Item_Touch (void)
 	{
 		if(self.team)
 		{
-			RandomSelection_Init();
+			random_selection_init();
 			for(head = world; (head = findfloat(head, team, self.team)); )
 			{
 				if(head.flags & FL_ITEM)
 				{
 					Item_Show(head, -1);
-					RandomSelection_Add(head, 0, string_null, head.cnt, 0);
+					random_selection_add(head, 0, string_null, head.cnt, 0);
 				}
 			}
-			e = RandomSelection_chosen_ent;
+			e = random_selection_chosen_ent;
 		}
 		else
 			e = self;
@@ -691,10 +691,10 @@ void Item_FindTeam()
 	{
 		// marker for item team search
 		dprint("Initializing item team ", ftos(self.team), "\n");
-		RandomSelection_Init();
+		random_selection_init();
 		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
-			RandomSelection_Add(head, 0, string_null, head.cnt, 0);
-		e = RandomSelection_chosen_ent;
+			random_selection_add(head, 0, string_null, head.cnt, 0);
+		e = random_selection_chosen_ent;
 		e.state = 0;
 		Item_Show(e, 1);
 

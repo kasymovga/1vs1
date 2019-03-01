@@ -264,19 +264,19 @@ float() mapvote_check_rules2 {
 	if(mapvote_abstain)
 		mapvote_voters_real -= mapvote_votes[mapvote_count - 1];
 
-	RandomSelection_Init();
+	random_selection_init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
-		RandomSelection_Add(world, i, string_null, 1, mapvote_votes[i]);
+		random_selection_add(world, i, string_null, 1, mapvote_votes[i]);
 
-	firstPlace = RandomSelection_chosen_float;
-	firstPlaceVotes = RandomSelection_best_priority;
-	RandomSelection_Init();
+	firstPlace = random_selection_chosen_float;
+	firstPlaceVotes = random_selection_best_priority;
+	random_selection_init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
 		if(i != firstPlace)
-			RandomSelection_Add(world, i, string_null, 1, mapvote_votes[i]);
+			random_selection_add(world, i, string_null, 1, mapvote_votes[i]);
 
-	secondPlace = RandomSelection_chosen_float;
-	secondPlaceVotes = RandomSelection_best_priority;
+	secondPlace = random_selection_chosen_float;
+	secondPlaceVotes = random_selection_best_priority;
 	if(firstPlace == -1)
 		error("No first place in map vote... WTF?");
 

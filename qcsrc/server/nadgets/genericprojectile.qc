@@ -31,7 +31,7 @@ void HG_GenericProjectile_ThrowNapalm(void) {
         );
             e.owner = self; // don't collide with the GenericProjectile that spawned it
             //e.jb_proj_ownerstate = self.jb_proj_ownerstate;
-            e.velocity = RandomSpreadVector(
+            e.velocity = random_spread_vector(
                 GRENVAR(self.hg_type, "spread_xy"),
                 GRENVAR(self.hg_type, "spread_z"),
                 GRENVAR(self.hg_type, "spread_z_min"),

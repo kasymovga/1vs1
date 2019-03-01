@@ -94,7 +94,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 	float d;
 	vector p;
 
-	RandomSelection_Init();
+	random_selection_init();
 	for(e = findradius(self.origin, dist); e; e = e.chain)
 	if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || IsDifferentTeam(e, self))
 	{
@@ -109,16 +109,16 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 			if(/* trace_startsolid || */ trace_fraction != 1)
 				continue;
 			e.fireball_impactvec = p;
-			RandomSelection_Add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+			random_selection_add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
 		}
 	}
-	if(RandomSelection_chosen_ent)
+	if(random_selection_chosen_ent)
 	{
-		d = vlen(self.origin - RandomSelection_chosen_ent.fireball_impactvec);
+		d = vlen(self.origin - random_selection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
-		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
-		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Fire_AddDamage(random_selection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
+		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec);
+		pointparticles(particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 

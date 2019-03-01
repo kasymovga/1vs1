@@ -117,7 +117,7 @@ void HG_Plasma_Shard(float kickangle) {
             kickangle
         );
     } else {
-        kick = RandomSpreadVector(
+        kick = random_spread_vector(
             cvar("g_nadgets_plasma_spread_xy"),
             cvar("g_nadgets_plasma_spread_z"),   // FIXME: globals ending with _[xyz] wreak havoc...
             cvar("g_nadgets_plasma_spread_z_min"),

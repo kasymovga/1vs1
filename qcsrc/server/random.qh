@@ -1,0 +1,9 @@
+void() random_seed_spawn;
+float random_selection_totalweight;
+float random_selection_best_priority;
+entity random_selection_chosen_ent;
+float random_selection_chosen_float;
+string random_selection_chosen_string;
+void() random_selection_init;
+void(entity e, float f, string s, float weight, float priority) random_selection_add;
+vector(float side, float up, float up_min, float up_min_rand) random_spread_vector;

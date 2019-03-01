@@ -159,15 +159,15 @@ void Teleport_Touch (void)
 	}
 	else
 	{
-		RandomSelection_Init();
+		random_selection_init();
 		for(e = world; (e = find(e, targetname, self.target)); )
 		{
 			if(e.cnt)
-				RandomSelection_Add(e, 0, string_null, e.cnt, 0);
+				random_selection_add(e, 0, string_null, e.cnt, 0);
 			else
-				RandomSelection_Add(e, 0, string_null, 1, 0);
+				random_selection_add(e, 0, string_null, 1, 0);
 		}
-		e = RandomSelection_chosen_ent;
+		e = random_selection_chosen_ent;
 	}
 
 	if(!e)

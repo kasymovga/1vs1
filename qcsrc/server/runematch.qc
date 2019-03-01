@@ -82,13 +82,13 @@ entity rune_find_spawnpoint()
 	if(rune_numspawns < RUNE_COUNT)
 		return world;
 
-	RandomSelection_Init();
+	random_selection_init();
 
 	for(e = world; (e = find(e, classname, "runematch_spawn_point")); )
 		if(e.owner == world)
-			RandomSelection_Add(e, 0, string_null, e.cnt, 0);
+			random_selection_add(e, 0, string_null, e.cnt, 0);
 
-	return RandomSelection_chosen_ent;
+	return random_selection_chosen_ent;
 }
 
 float rune_spawn_somewhere(entity e)
@@ -522,19 +522,19 @@ void spawn_runes()
 
 	while(numrunes > 0)
 	{
-		RandomSelection_Init();
+		random_selection_init();
 		for(rn = RUNE_FIRST; rn <= RUNE_LAST; rn *= 2)
 			if not(runes_used & rn)
-				RandomSelection_Add(world, rn, string_null, 1, 1);
-		rn = RandomSelection_chosen_float;
+				random_selection_add(world, rn, string_null, 1, 1);
+		rn = random_selection_chosen_float;
 
 		if (g_runematch_curses) {
-			RandomSelection_Init();
+			random_selection_init();
 			for(cs = CURSE_FIRST; cs <= CURSE_LAST; cs *= 2)
 				if not(curses_used & cs)
 					if not(!g_runematch_allow_same && cs == RuneMatchesCurse(rn, cs))
-						RandomSelection_Add(world, cs, string_null, 1, 1);
-			cs = RandomSelection_chosen_float;
+						random_selection_add(world, cs, string_null, 1, 1);
+			cs = random_selection_chosen_float;
 		} else
 			cs = CURSE_NONE;
 

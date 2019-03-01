@@ -2035,16 +2035,16 @@ void spawnfunc_trigger_relay_random(void) {
     self.classname = "trigger_relay";
 
     self.use = inline void(void) {
-        RandomSelection_Init();
+        random_selection_init();
 
         SUB_ForEachTarget(self, inline float(entity e, float _f, vector _v, string _s, entity _e) {
             e.sub_target_used = time;
-            RandomSelection_Add(e, 0, NULL, 1, 1);
+            random_selection_add(e, 0, NULL, 1, 1);
             return FALSE;
         }, FALSE, NULL, NULL, NULL, NULL);
 
-        if(RandomSelection_chosen_ent) {
-            RandomSelection_chosen_ent.sub_target_used = -1;
+        if(random_selection_chosen_ent) {
+            random_selection_chosen_ent.sub_target_used = -1;
             SUB_UseTargets_PreventReuse();
         }
     };

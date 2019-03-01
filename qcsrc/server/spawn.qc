@@ -194,11 +194,11 @@ entity(entity firstspot, float lower, float upper, float exponent) spawn_weighte
 	// weight of a point: bound(lower, mindisttoplayer, upper)^exponent
 	// multiplied by spot.cnt (useful if you distribute many spawnpoints in a small area)
 	entity spot;
-	RandomSelection_Init();
+	random_selection_init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_Add(spot, 0, string_null, pow(bound(lower, spot.SPAWNPOINT_SCORE, upper), exponent) * spot.cnt, spot.SPAWNPOINT_SCORE >= lower);
+		random_selection_add(spot, 0, string_null, pow(bound(lower, spot.SPAWNPOINT_SCORE, upper), exponent) * spot.cnt, spot.SPAWNPOINT_SCORE >= lower);
 
-	return RandomSelection_chosen_ent;
+	return random_selection_chosen_ent;
 }
 
 entity (float anypoint) spawn_select {

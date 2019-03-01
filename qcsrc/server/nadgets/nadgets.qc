@@ -336,19 +336,19 @@ void HG_GiveRandomBonus(entity p, float amount, string reason, float allowOptout
     if((allowOptout && p.hg_optout))
         return;
 
-    RandomSelection_Init();
+    random_selection_init();
 
     float n;
     for(n = HG_START; n <= HG_END; ++n) {
         //if(g_freeze || (n != HG_BAIT)) {
             float w = GRENVAR(n, "bonus_random_weight");
             if(w)
-                RandomSelection_Add(world, n, "", w, 1);
+                random_selection_add(world, n, "", w, 1);
         //}
     }
 
-    if(RandomSelection_chosen_float)
-        HG_GiveBonus(p, RandomSelection_chosen_float, amount, reason, allowOptout);
+    if(random_selection_chosen_float)
+        HG_GiveBonus(p, random_selection_chosen_float, amount, reason, allowOptout);
 }
 
 float HG_RegenTime(entity e) {
@@ -399,13 +399,13 @@ float HG_PlayerNadgetType(entity e) {
 
 
     if(picked == HG_RANDOM) {
-        RandomSelection_Init();
+        random_selection_init();
         float n; for(i = 0; i < argc; ++i) {
             n = HG_NameToType(argv(i));
             if(n != HG_RANDOM && (!hg_context_isalt || n != e.hg_type1_picked))
-                RandomSelection_Add(world, n, "", 1, 0);
+                random_selection_add(world, n, "", 1, 0);
         }
-        picked = RandomSelection_chosen_float;
+        picked = random_selection_chosen_float;
     }
 
     e.hg_ctx_type_picked = picked;
