@@ -1380,8 +1380,9 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
 }
 
-void Sbar_Score()
-{
+void()Sbar_Score_Disabled {};
+var void()Sbar_Score = {};
+void()Sbar_Score_Default {
 	float score, distribution, leader;
 	vector score_pos, secondary_score_pos, distribution_color;
 	entity tm, pl, me;
@@ -2211,10 +2212,13 @@ void Sbar_GameType_Init() {
 		Sbar_GameType_hud = CSQC_ctf_hud;
 	else if(gametype == GAME_NEXBALL)
 		Sbar_GameType_hud = CSQC_nb_hud;
-	else if(gametype == GAME_SINGLE || gametype == GAME_COOP)
+	else if(gametype == GAME_SINGLE || gametype == GAME_COOP) {
 		Sbar_GameType_hud = CSQC_single_hud;
-	else
+		Sbar_Score = Sbar_Score_Disabled;
+	} else {
 		Sbar_GameType_hud = SUB_Null;
+		Sbar_Score = Sbar_Score_Default;
+	}
 }
 
 void Sbar_DrawAmmo(vector pos, float a, float active, string image) {
