@@ -229,7 +229,7 @@ void dodging() {
 		if (g_dodging_sound)
 			sound(self, CHAN_PLAYER, randomsound_bystr(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
-		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
+		anim_set(self, self.anim_jump, TRUE, FALSE, TRUE);
 #endif
 		self.last_dodging_time = (frozen ? g_dodging_frozen_delay : g_dodging_delay);
 

@@ -38,7 +38,7 @@ dlc.qh
 ../common/ip2c.qh
 ip2c.qh
 w_common.qh
-
+anim.qh
 csqcprojectile.qh
 csqceffects.qc
 
@@ -301,7 +301,7 @@ vehicles/vehicles.qc
 
 ../common/ip2c.qc
 ip2c.qc
-
+anim.qc
 ../client-server/projinfo.qc
 ../common/dlc.qc
 dlc.qc

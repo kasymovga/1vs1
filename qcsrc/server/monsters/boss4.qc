@@ -6,7 +6,7 @@ float boss4_prethink_skip(void) {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);
 	if (self.owner.spawnflags & MONSTER_SPAWN_SHIELDED)
 	if not(self.spawnflags & MONSTER_SPAWN_SHIELDED) {
-		setanim(self, '9 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '9 1 1', TRUE, TRUE, FALSE);
 		return TRUE;
 	}
 	return FALSE;
@@ -91,11 +91,11 @@ void boss4_hunt() {
 	}
 	if (time > self.bulletcounter) {
 		if (stay)
-			setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 		else
-			setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	} else
-		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void boss4_idle() {
@@ -107,7 +107,7 @@ void boss4_idle() {
 		return;
 
 	movelib_beak_simple(100 * frametime);
-	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
 void boss4_guard() {
@@ -132,7 +132,7 @@ void boss4_walk() {
 	if (monster_walk_finished(boss4_idle, 100))
 		return;
 
-	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(450, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);

@@ -446,7 +446,7 @@ void CL_Weaponentity_Think()
 		self.weapon_morph2time = 0;
 		self.weapon_morph3time = 0;
 		self.weapon_morph4time = 0;
-		setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+		anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 	}
 
 	tb = (self.effects & EF_TELEPORT_BIT);
@@ -1004,7 +1004,7 @@ void weapon_thinkf(float fr, float t, void() func)
 			else if (fr == WFRAME_RELOAD)
 				a = self.weaponentity.anim_reload;
 			a_z *= g_weaponratefactor;
-			setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
+			anim_set(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
 		}
 	}
 
@@ -1046,7 +1046,7 @@ void weapon_thinkf(float fr, float t, void() func)
 		else
 			anim = self.anim_shoot;
 		anim_z = anim_y / t;
-		setanim(self, anim, FALSE, TRUE, TRUE);
+		anim_set(self, anim, FALSE, TRUE, TRUE);
 	}
 };
 

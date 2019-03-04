@@ -55,9 +55,9 @@ void boss3_hunt() {
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
 	if (time > self.bulletcounter)
-		setanim(self, '16 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '16 1 1', TRUE, TRUE, FALSE);
 	else
-		setanim(self, '8 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '8 1 1', TRUE, TRUE, FALSE);
 }
 
 void boss3_idle() {
@@ -68,7 +68,7 @@ void boss3_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	setanim(self, '23 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '23 1 1', TRUE, TRUE, FALSE);
 }
 
 void boss3_guard() {
@@ -88,7 +88,7 @@ void boss3_walk() {
 	if (monster_walk_finished(boss3_idle, 100))
 		return;
 
-	setanim(self, '15 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '15 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(600, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);

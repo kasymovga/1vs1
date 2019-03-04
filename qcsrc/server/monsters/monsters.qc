@@ -181,7 +181,7 @@ void monster_corpse_event_damage(entity inflictor, entity attacker, float damage
 }
 
 void monster_die_animated() {
-	setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
+	anim_set(self, self.anim_die1, FALSE, TRUE, TRUE);
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
 	self.nextthink = time + 5;

@@ -1,7 +1,7 @@
 void fish_walk();
 
 void fish_idle() {
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
 		return;
@@ -10,7 +10,7 @@ void fish_idle() {
 }
 
 void fish_hunt() {
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_check_target(fish_walk, fish_idle))
 		return;
@@ -26,10 +26,10 @@ void fish_hunt() {
 		if (trace_ent) {
 			Damage(trace_ent, self, self, self.dmg_edge * frametime, WEP_MELEE, trace_endpos, v_forward);
 		}
-		setanim(self, '1 18 18', TRUE, TRUE, FALSE);
+		anim_set(self, '1 18 18', TRUE, TRUE, FALSE);
 		movelib_beak_simple(50 * frametime);
 	} else {
-		setanim(self, '40 18 18', TRUE, TRUE, FALSE);
+		anim_set(self, '40 18 18', TRUE, TRUE, FALSE);
 		v = monster_move_swim(450, 5);
 		if (v != '0 0 0') {
 			v = vectoangles(v);
@@ -40,7 +40,7 @@ void fish_hunt() {
 }
 
 void fish_walk() {
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(1000, 500, 0, 1, 1)) {
 		return;
@@ -67,7 +67,7 @@ void fish_spawn() {
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
 	self.flags = MONSTER_IGNOREDROWN;
-	setanim(self, '40 18 18', TRUE, TRUE, FALSE);
+	anim_set(self, '40 18 18', TRUE, TRUE, FALSE);
 }
 
 void fish_init() {

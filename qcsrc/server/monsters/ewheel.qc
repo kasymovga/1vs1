@@ -6,8 +6,8 @@ void ewheel_idle() {
 		return;
 	}
 	movelib_beak_simple(50 * frametime);
-	setanim(self, '0 0 0', TRUE, TRUE, FALSE);
-	updateanim(self);
+	anim_set(self, '0 0 0', TRUE, TRUE, FALSE);
+	anim_update(self);
 }
 
 void ewheel_hunt() {

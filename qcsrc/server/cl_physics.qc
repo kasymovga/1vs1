@@ -26,9 +26,9 @@ float Physic_SendEntity(entity to, float sf);
 void Physic_OnJumpHook()
 {
 	if (physic_crouch)
-		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
+		anim_set(self, self.anim_duckjump, FALSE, TRUE, TRUE);
 	else
-		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
+		anim_set(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
 		sound(self, CHAN_PLAYER, self.playersound_jump, VOL_BASE, ATTN_NORM);
@@ -95,7 +95,7 @@ void Physic_CheckGroundHook()
 
 void Physic_OnCrouchHook()
 {
-	setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
+	anim_set(self, self.anim_duck, FALSE, TRUE, TRUE);
 }
 
 float Physic_CanUseJetPack()

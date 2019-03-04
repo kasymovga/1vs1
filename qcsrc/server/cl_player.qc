@@ -274,52 +274,52 @@ void player_setupanimsformodel()
 	self.anim_backleft  = '22 1 1';
 	self.anim_melee = stov(cvar_string("sv_player_melee_anim"));
 	self.anim_melee2 = stov(cvar_string("sv_player_melee_anim2"));
-	animparseerror = FALSE;
+	anim_parseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
 	if (animfile >= 0)
 	{
-		self.anim_die1         = animparseline(animfile);
-		self.anim_die2         = animparseline(animfile);
-		self.anim_draw         = animparseline(animfile);
-		self.anim_duck         = animparseline(animfile);
-		self.anim_duckwalk     = animparseline(animfile);
-		self.anim_duckjump     = animparseline(animfile);
-		self.anim_duckidle     = animparseline(animfile);
-		self.anim_idle         = animparseline(animfile);
-		self.anim_jump         = animparseline(animfile);
-		self.anim_pain1        = animparseline(animfile);
-		self.anim_pain2        = animparseline(animfile);
-		self.anim_shoot        = animparseline(animfile);
-		self.anim_taunt        = animparseline(animfile);
-		self.anim_run          = animparseline(animfile);
-		self.anim_runbackwards = animparseline(animfile);
-		self.anim_strafeleft   = animparseline(animfile);
-		self.anim_straferight  = animparseline(animfile);
-		self.anim_forwardright = animparseline(animfile);
-		self.anim_forwardleft  = animparseline(animfile);
-		self.anim_backright    = animparseline(animfile);
-		self.anim_backleft     = animparseline(animfile);
+		self.anim_die1         = anim_parseline(animfile);
+		self.anim_die2         = anim_parseline(animfile);
+		self.anim_draw         = anim_parseline(animfile);
+		self.anim_duck         = anim_parseline(animfile);
+		self.anim_duckwalk     = anim_parseline(animfile);
+		self.anim_duckjump     = anim_parseline(animfile);
+		self.anim_duckidle     = anim_parseline(animfile);
+		self.anim_idle         = anim_parseline(animfile);
+		self.anim_jump         = anim_parseline(animfile);
+		self.anim_pain1        = anim_parseline(animfile);
+		self.anim_pain2        = anim_parseline(animfile);
+		self.anim_shoot        = anim_parseline(animfile);
+		self.anim_taunt        = anim_parseline(animfile);
+		self.anim_run          = anim_parseline(animfile);
+		self.anim_runbackwards = anim_parseline(animfile);
+		self.anim_strafeleft   = anim_parseline(animfile);
+		self.anim_straferight  = anim_parseline(animfile);
+		self.anim_forwardright = anim_parseline(animfile);
+		self.anim_forwardleft  = anim_parseline(animfile);
+		self.anim_backright    = anim_parseline(animfile);
+		self.anim_backleft     = anim_parseline(animfile);
 		fclose(animfile);
 
 		// derived anims
 		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
 		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
 
-		if (animparseerror)
+		if (anim_parseerror)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
 	}
 	else
 		dprint("File ", animfilename, " not found, assuming legacy .zym model animation timings\n");
 	// reset animstate now
-	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+	anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 };
 
 void player_anim (void)
 {
-	updateanim(self);
+	anim_update(self);
 	if (self.weaponentity)
-		updateanim(self.weaponentity);
+		anim_update(self.weaponentity);
 
 	if (self.deadflag != DEAD_NO && self.deadflag != DEAD_FREEZE)
 	{
@@ -340,46 +340,46 @@ void player_anim (void)
 		if (!(self.flags & FL_ONGROUND))
 		{
 			if (self.crouch)
-				setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+				anim_set(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
 			else
-				setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+				anim_set(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
 			self.restart_jump = FALSE;
 		}
 		else if (self.crouch)
 		{
 			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
-				setanim(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
 			else
-				setanim(self, self.anim_duckidle, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_duckidle, TRUE, FALSE, FALSE);
 		}
 		else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20)
 		{
 			if (self.movement_x > 0 && self.movement_y == 0)
-				setanim(self, self.anim_run, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_run, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y == 0)
-				setanim(self, self.anim_runbackwards, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_runbackwards, TRUE, FALSE, FALSE);
 			else if (self.movement_x == 0 && self.movement_y > 0)
-				setanim(self, self.anim_straferight, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_straferight, TRUE, FALSE, FALSE);
 			else if (self.movement_x == 0 && self.movement_y < 0)
-				setanim(self, self.anim_strafeleft, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_strafeleft, TRUE, FALSE, FALSE);
 			else if (self.movement_x > 0 && self.movement_y > 0)
-				setanim(self, self.anim_forwardright, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_forwardright, TRUE, FALSE, FALSE);
 			else if (self.movement_x > 0 && self.movement_y < 0)
-				setanim(self, self.anim_forwardleft, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_forwardleft, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y > 0)
-				setanim(self, self.anim_backright, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_backright, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y < 0)
-				setanim(self, self.anim_backleft, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_backleft, TRUE, FALSE, FALSE);
 			else
-				setanim(self, self.anim_run, TRUE, FALSE, FALSE);
+				anim_set(self, self.anim_run, TRUE, FALSE, FALSE);
 		}
 		else
-			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
+			anim_set(self, self.anim_idle, TRUE, FALSE, FALSE);
 	}
 
 	if (self.weaponentity)
 	if (!self.weaponentity.animstate_override)
-		setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
+		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -508,9 +508,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 			{
 				if (random() > 0.5)
-					setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+					anim_set(self, self.anim_pain1, FALSE, TRUE, TRUE);
 				else
-					setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+					anim_set(self, self.anim_pain2, FALSE, TRUE, TRUE);
 			}
 
 			if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
@@ -636,12 +636,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_countdown = -1; // do not count down
 		if (random() < 0.5)
 		{
-			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
+			anim_set(self, self.anim_die1, FALSE, TRUE, TRUE);
 			self.dead_frame = self.anim_dead1_x;
 		}
 		else
 		{
-			setanim(self, self.anim_die2, FALSE, TRUE, TRUE);
+			anim_set(self, self.anim_die2, FALSE, TRUE, TRUE);
 			self.dead_frame = self.anim_dead2_x;
 		}
 		// set damage function to corpse damage
@@ -817,7 +817,7 @@ void VoiceMessage(string type, string msg)
 	if (type == "taunt") {
 		if(self.classname == "player")
 			if(self.deadflag == DEAD_NO)
-				setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+				anim_set(self, self.anim_taunt, FALSE, TRUE, TRUE);
 		if(!sv_taunt)
 			return;
 

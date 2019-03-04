@@ -151,8 +151,6 @@ float sv_gameplayfix_skipnonsolid;
 .vector anim_idle;
 .vector anim_reload;
 
-void setanim(entity e, vector anim, float looping, float override, float restart);
-
 .string mdl;
 
 .string playermodel;

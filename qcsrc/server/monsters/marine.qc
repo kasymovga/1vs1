@@ -55,11 +55,11 @@ void marine_hunt() {
 	}
 	if (time > self.bulletcounter) {
 		if (stay)
-			setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+			anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 		else
-			setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+			anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	} else
-		setanim(self, '11 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '11 1 1', TRUE, TRUE, FALSE);
 }
 
 void marine_idle() {
@@ -68,7 +68,7 @@ void marine_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
 void marine_guard() {
@@ -86,7 +86,7 @@ void marine_walk() {
 	if (monster_walk_finished(marine_idle, 100))
 		return;
 
-	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	vector v = monster_move_walk(200, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);

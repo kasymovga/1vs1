@@ -84,8 +84,8 @@ void walker_hunt() {
 			self.bulletcounter = self.bulletcounter + 0.1;
 			//Minigun
 			w_shotorg = self.origin + v_forward * 32;
-			setanim(self.weaponentity, '0 12 12', TRUE, TRUE, FALSE);
-			updateanim(self.weaponentity);
+			anim_set(self.weaponentity, '0 12 12', TRUE, TRUE, FALSE);
+			anim_update(self.weaponentity);
 			walker_bullet();
 		} else {
 			//Rockets
@@ -124,14 +124,14 @@ void walker_hunt() {
 			self.cnt = 0;
 	}
 	if (self.flags & FL_ONGROUND) {
-		setanim(self, '5 20 25', TRUE, TRUE, FALSE);
-		updateanim(self);
+		anim_set(self, '5 20 25', TRUE, TRUE, FALSE);
+		anim_update(self);
 		vector v = monster_move_walk(400, 5, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
 	} else {
-		setanim(self, '95 5 25', TRUE, TRUE, FALSE);
-		updateanim(self);
+		anim_set(self, '95 5 25', TRUE, TRUE, FALSE);
+		anim_update(self);
 	}
 }
 
@@ -143,8 +143,8 @@ void walker_walk() {
 	if (monster_walk_finished(walker_idle, 100))
 		return;
 
-	setanim(self, '5 20 25', TRUE, TRUE, FALSE);
-	updateanim(self);
+	anim_set(self, '5 20 25', TRUE, TRUE, FALSE);
+	anim_update(self);
 	if (self.flags & FL_ONGROUND) {
 		vector v = monster_move_walk(400, 5, 0);
 		v = vectoangles(v);
@@ -166,8 +166,8 @@ void walker_idle() {
 		return;
 	}
 	movelib_beak_simple(100 * frametime);
-	setanim(self, '0 0 0', TRUE, TRUE, FALSE);
-	updateanim(self);
+	anim_set(self, '0 0 0', TRUE, TRUE, FALSE);
+	anim_update(self);
 }
 
 void walker_spawn() {

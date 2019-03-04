@@ -49,13 +49,13 @@ void register_weapon_real(float id, float(float) func, float ammotype, float i, 
 	e.anim_reload = '3 1 0.01';
 	if (animfile >= 0)
 	{
-		animparseerror = FALSE;
-		e.anim_fire1  = animparseline(animfile);
-		e.anim_fire2  = animparseline(animfile);
-		e.anim_idle   = animparseline(animfile);
-		e.anim_reload = animparseline(animfile);
+		anim_parseerror = FALSE;
+		e.anim_fire1  = anim_parseline(animfile);
+		e.anim_fire2  = anim_parseline(animfile);
+		e.anim_idle   = anim_parseline(animfile);
+		e.anim_reload = anim_parseline(animfile);
 		fclose(animfile);
-		if (animparseerror)
+		if (anim_parseerror)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
 	}
 #endif

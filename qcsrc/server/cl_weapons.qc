@@ -343,7 +343,7 @@ void W_WeaponFrame()
 			weapon_thinkf(WFRAME_IDLE, 0, w_ready);
 		} else if (self.weaponentity.state == WS_CLEAR)
 		{
-			setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
+			anim_set(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(self.switchweapon, WR_SETUP);

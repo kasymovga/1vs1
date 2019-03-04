@@ -9,12 +9,12 @@ void spearguy_hunt() {
 
 	vector v;
 	if (vlen(self.enemy.origin - self.origin) > self.dmg_radius) {
-		setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		v = monster_move_walk(600, 5, 500);
 	} else {
 		v = self.enemy.origin - self.origin;
 		movelib_beak_simple(100 * frametime);
-		setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+		anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			makevectors(self.angles);
@@ -32,7 +32,7 @@ void spearguy_idle() {
 		return;
 
 	movelib_beak_simple(100 * frametime);
-	setanim(self, '7 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
 }
 
 void spearguy_guard() {
@@ -48,7 +48,7 @@ void spearguy_walk() {
 	if (monster_walk_finished(spearguy_idle, 100))
 		return;
 
-	setanim(self, '13 1 1', TRUE, TRUE, FALSE);
+	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(400, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);

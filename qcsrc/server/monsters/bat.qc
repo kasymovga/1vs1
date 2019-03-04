@@ -2,7 +2,7 @@ void bat_walk();
 
 void bat_idle() {
 	self.movetype = MOVETYPE_FLY;
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
@@ -12,7 +12,7 @@ void bat_idle() {
 
 void bat_hunt() {
 	self.movetype = MOVETYPE_WALK;
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_check_target(bat_walk, bat_idle))
 		return;
@@ -65,7 +65,7 @@ void bat_hunt() {
 
 void bat_walk() {
 	self.movetype = MOVETYPE_WALK;
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(3000, 500, 0, 1, 1)) {
 		return;
@@ -92,7 +92,7 @@ void bat_spawn() {
 	self.scale = 2;
 	self.gravity = 0.01;
 	self.takedamage = DAMAGE_AIM;
-	setanim(self, '0 7 7', TRUE, TRUE, FALSE);
+	anim_set(self, '0 7 7', TRUE, TRUE, FALSE);
 	self.damageforcescale = 1;
 }
 

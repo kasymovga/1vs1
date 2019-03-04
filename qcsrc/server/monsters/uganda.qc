@@ -35,16 +35,16 @@ void ugandaknuckles_hunt() {
 	if (self.attack_finished_single >= time) {
 		movelib_beak_simple(500 * frametime);
 		if (time - self.lastshot_time < 1) {
-			setanim(self, '7 2 4', TRUE, TRUE, FALSE);
-			updateanim(self);
+			anim_set(self, '7 2 4', TRUE, TRUE, FALSE);
+			anim_update(self);
 		} else {
 			self.frame = 0;
 		}
 
 		v = self.enemy.origin - self.origin;
 	} else {
-		setanim(self, '1 6 12', TRUE, TRUE, FALSE);
-		updateanim(self);
+		anim_set(self, '1 6 12', TRUE, TRUE, FALSE);
+		anim_update(self);
 		v = monster_move_walk(500, 5, 0);
 	}
 	v = vectoangles(v);
@@ -74,8 +74,8 @@ void ugandaknuckles_walk() {
 	if (monster_walk_finished(ugandaknuckles_idle, 100))
 		return;
 
-	setanim(self, '1 6 12', TRUE, TRUE, FALSE);
-	updateanim(self);
+	anim_set(self, '1 6 12', TRUE, TRUE, FALSE);
+	anim_update(self);
 	vector v = monster_move_walk(300, 5, 0);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);

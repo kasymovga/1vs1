@@ -3,7 +3,7 @@ void butcher_guard();
 void butcher_walk();
 
 void butcher_hunt() {
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_check_target(butcher_walk, butcher_guard))
 		return;
@@ -34,9 +34,9 @@ void butcher_hunt() {
 		}
 		v = self.enemy.origin - self.origin;
 		movelib_beak_simple(200 * frametime);
-		setanim(self, '55 15 15', TRUE, TRUE, FALSE);
+		anim_set(self, '55 15 15', TRUE, TRUE, FALSE);
 	} else {
-		setanim(self, '22 6 6', TRUE, TRUE, FALSE);
+		anim_set(self, '22 6 6', TRUE, TRUE, FALSE);
 		v = monster_move_walk(500, 5, 500);
 	}
 	v = vectoangles(v);
@@ -44,13 +44,13 @@ void butcher_hunt() {
 }
 
 void butcher_idle() {
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if (monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
 
 	movelib_beak_simple(100 * frametime);
-	setanim(self, '1 13 13', TRUE, TRUE, FALSE);
+	anim_set(self, '1 13 13', TRUE, TRUE, FALSE);
 }
 
 void butcher_guard() {
@@ -59,7 +59,7 @@ void butcher_guard() {
 }
 
 void butcher_walk() {
-	updateanim(self);
+	anim_update(self);
 	self.nextthink = time;
 	if(monster_look_for_player(1500, 500, 0, 0, 0))
 		return;
@@ -67,7 +67,7 @@ void butcher_walk() {
 	if (monster_walk_finished(butcher_idle, 100))
 		return;
 
-	setanim(self, '14 8 8', TRUE, TRUE, FALSE);
+	anim_set(self, '14 8 8', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
 	vector v = monster_move_walk(300, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
