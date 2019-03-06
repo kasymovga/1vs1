@@ -41,10 +41,10 @@ void ProjInfo_Register(float csqcid, float entrytype, vector sizes) {
 void ProjInfo_RegisterAuto(float csqcid, vector sizes) {
     float type;
 
-    if(sizes_y == sizes_z) {
+    if(sizes_x == 0 && sizes_y == sizes_z) {
         if(sizes == '0 0 0') {
             type = PROJINFO_TYPE_POINT_000;
-        } else if(sizes == '0 0 -3') {
+        } else if(sizes == '0 -3 -3') {
             type = PROJINFO_TYPE_POINT_00n3;
         } else {
             type = PROJINFO_TYPE_POINT;
