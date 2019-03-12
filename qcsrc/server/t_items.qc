@@ -272,7 +272,7 @@ void powerup_invisibility_init() {
 
 #define ITEM_RESPAWN_TICKS 10
 
-#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
+#define ITEM_RESPAWNTIME(i)         ((i).respawntime + random_2() * (i).respawntimejitter)
 	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
 #define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
 	// range: 10 .. respawntime + respawntimejitter

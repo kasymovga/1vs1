@@ -150,10 +150,10 @@ entity FindLaserTarget(entity e, float dist_variance, float dot_variance)
 
 		// gain points for being in front
 		points = points + ((dot+1)*0.5) * 500
-			* (1 + crandom()*dot_variance);
+			* (1 + random_2()*dot_variance);
 		// gain points for being close away
 		points = points + (1 - dist/maxdist) * 1000
-			* (1 + crandom()*dot_variance);
+			* (1 + random_2()*dot_variance);
 
 		traceline(e.origin, head.origin, TRUE, self);
 		if(trace_fraction < 1)

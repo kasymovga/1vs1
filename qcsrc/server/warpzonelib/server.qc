@@ -470,21 +470,26 @@ float WarpZone_CheckProjectileImpact()
 
 	return TRUE;
 }
-float WarpZone_Projectile_Touch()
-{
+
+var float() WarpZone_ProjectileTouchHandle_NextLink;
+float() WarpZone_ProjectileTouchHandle {
 	if(other.classname == "trigger_warpzone")
-		return TRUE;
+		goto return_true;
+
 	if(WarpZone_CheckProjectileImpact())
-		return TRUE;
+		goto return_true;
+
 	if(self.warpzone_teleport_time == time) // already got teleported this frame? no collision then please
 	{
 		setorigin(self, self.warpzone_oldorigin);
 		self.velocity = self.warpzone_oldvelocity;
 		self.angles = self.warpzone_oldangles;
-		return TRUE;
+		goto return_true;
 	}
-
-	return FALSE;
+	return WarpZone_ProjectileTouchHandle_NextLink();
+:return_true
+	UpdateCSQCProjectileAfterTeleport(self);
+	return TRUE;
 }
 
 void WarpZone_InitStep_FindTarget()
@@ -810,7 +815,7 @@ void WarpZone_TraceToss_ThroughZone_real(entity e, entity forent, float toss_fra
 	WarpZone_tracetoss_time = 0;
 	for(;;)
 	{
-		tracetoss_skipnonsolid(e, forent, toss_frametime, toss_count);
+		tracetoss(e, forent, toss_frametime, toss_count);
 		if(cb)
 			cb(e.origin, trace_endpos, trace_endpos);
 		e.origin = trace_endpos;
@@ -880,6 +885,8 @@ void WarpZone_EnableHook() {
 	WarpZone_TraceToss_ThroughZone = WarpZone_TraceToss_ThroughZone_real;
 	WarpZone_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = WarpZone_DamageForceModsSet;
+	WarpZone_ProjectileTouchHandle_NextLink = GameHookChain_ProjectileTouchHandle;
+	GameHookChain_ProjectileTouchHandle = WarpZone_ProjectileTouchHandle;
 }
 
 void WarpZone_InitHook() {

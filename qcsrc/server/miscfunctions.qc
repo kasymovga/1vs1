@@ -521,24 +521,7 @@ float SUB_NoImpactCheck()
 
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
-float projectile_skipnonsolid()
-{
-	//if (!sv_gameplayfix_skipnonsolid)
-	//	backtrace("Skip nonsolid code activated when disabled");
-	if(!other && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID) && !(trace_dphitcontents & self.dphitcontentsmask)) {
-		//Trying correct origin
-		tracebox_skipnonsolid(self.origin, self.mins, self.maxs, self.origin + (self.velocity * (1 - trace_fraction) * frametime), FALSE, self);
-		if (trace_fraction == 1) // The way is clear
-			setorigin(self, trace_endpos);
-		else // We can't move right to trace_endpos, because we can go through solid surface.
-			setorigin(self, self.origin + ((trace_endpos - self.origin) * 0.99));
-		UpdateCSQCProjectileNextFrame(self);
-		return TRUE;
-	}
-	return FALSE;
-}
-
-#define PROJECTILE_SKIPNONSOLID if (WarpZone_Projectile_Touch()) { UpdateCSQCProjectileAfterTeleport(self); return; } else if (sv_gameplayfix_skipnonsolid) if(projectile_skipnonsolid()) { return; }
+#define PROJECTILE_SKIPNONSOLID if (GameHookChain_ProjectileTouchHandle()) { return; }
 #define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if (self.lastpushtime >= time) if (self.velocity * trace_plane_normal > 0) { setorigin(self, self.origin); return; } if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
 
 void print_to(entity e, string s)

@@ -23,7 +23,7 @@ spawn.qh
 random.qh
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
-
+skipnonsolid.qh
 vehicles/vehicles.qh
 
 campaign.qh
@@ -298,7 +298,7 @@ progressbar.qc
 location_request.qc
 
 vehicles/vehicles.qc
-
+skipnonsolid.qc
 ../common/ip2c.qc
 ip2c.qc
 anim.qc

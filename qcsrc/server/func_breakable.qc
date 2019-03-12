@@ -59,9 +59,9 @@ void LaunchDebris (string debrisname, vector force) =
 	dbr.solid = self.debrissolid;
 	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
-	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * crandom();
-	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * crandom();
-	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * crandom();
+	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * random_2();
+	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * random_2();
+	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * random_2();
 	self.velocity = self.velocity + force * self.debrisdamageforcescale;
 	dbr.avelocity_x = random()*self.debrisavelocityjitter_x;
 	dbr.avelocity_y = random()*self.debrisavelocityjitter_y;
@@ -69,7 +69,7 @@ void LaunchDebris (string debrisname, vector force) =
 	dbr.damageforcescale = self.debrisdamageforcescale;
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
-	SUB_SetFade(dbr, time + self.debristime + crandom() * self.debristimejitter, self.debrisfadetime);
+	SUB_SetFade(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
 };
 
 void func_breakable_colormod()
@@ -197,7 +197,7 @@ void func_breakable_destroy() {
 	if(self.respawntime)
 	{
 		self.think = func_breakable_restore;
-		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
+		self.nextthink = time + self.respawntime + random_2() * self.respawntimejitter;
 	}
 
 	oldmsg = self.message;

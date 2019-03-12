@@ -193,57 +193,6 @@ void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeed, void() fu
 	self = oldself;
 }
 
-/*
-==================
-main
-
-unused but required by the engine
-==================
-*/
-void main (void)
-{
-
-}
-
-#define SKIPNONSOLID_ESCAPE_STEP 0.1
-void traceline_skipnonsolid(vector start, vector end, float t, entity forent) {
-    float prev_trace_fract = 0;
-    float tries;
-    for (tries = 10; tries > 0; tries--) {
-        traceline_real(start, end, t, forent);
-        if(trace_fraction == 1)
-            break;
-        trace_fraction = prev_trace_fract + (trace_fraction * (1 - prev_trace_fract));
-        if(trace_ent || !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
-            break;
-        if (trace_endpos == start) {
-            start += normalize(end - start) * SKIPNONSOLID_ESCAPE_STEP;
-        } else
-            start = trace_endpos;
-        prev_trace_fract = trace_fraction;
-    }
-    if (tries == 0) print("Can't escape from nonsolid!\n");
-}
-
-void tracebox_skipnonsolid(vector start, vector mi, vector ma, vector end, float nomonst, entity forent) {
-    float prev_trace_fract = 0;
-    float tries;
-    for (tries = 10; tries > 0; tries--) {
-        tracebox_real(start, mi, ma, end, nomonst, forent);
-        if(trace_fraction == 1)
-            break;
-        trace_fraction = prev_trace_fract + (trace_fraction * (1 - prev_trace_fract));
-        if(trace_ent || !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
-            break;
-        if (trace_endpos == start) {
-            start += normalize(end - start) * SKIPNONSOLID_ESCAPE_STEP;
-        } else
-            start = trace_endpos;
-        prev_trace_fract = trace_fraction;
-    }
-    if (tries == 0) print("Can't escape from nonsolid!\n");
-}
-
 void tracetoss_wrapper(entity ent, entity ignore, float toss_frametime, float toss_count) {
 	vector v0;
 	float g0;
@@ -255,35 +204,6 @@ void tracetoss_wrapper(entity ent, entity ignore, float toss_frametime, float to
 	ent.velocity= v0;
 	ent.gravity = g0;
 	return;
-}
-void tracetoss_skipnonsolid(entity ent, entity ignore, float toss_frametime, float toss_count) {
-    //Almost full copy of darkplaces tracetoss but with tracebox_skipnonsolid instead tracebox.
-    float i, tries;
-    vector end;
-    vector velocity_save = ent.velocity;
-    vector avelocity_save = ent.avelocity;
-    vector origin_save = ent.origin;
-    vector angles_save = ent.angles;
-    for (i = 0; i < toss_count; i++) {
-        ent.velocity_y = ent.velocity_y - (ent.gravity * (vlen(trace_endpos - ent.origin) / vlen(ent.velocity)));
-        ent.angles = ent.angles + (ent.avelocity *  toss_frametime);
-        end = ent.origin + (ent.velocity * toss_frametime);
-        for (tries = 10; tries > 0; tries--) {
-            tracebox_real(ent.origin, ent.mins, ent.maxs, end, FALSE, ent);
-            if (trace_endpos == ent.origin)
-                ent.origin += normalize(ent.velocity) * SKIPNONSOLID_ESCAPE_STEP;
-            else
-                ent.origin = trace_endpos;
-            if(trace_fraction == 1 || trace_ent || !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
-                break;
-        }
-        if (trace_fraction < 1) break;
-    }
-    if (tries == 0) print("Can't escape from nonsolid!\n");
-    ent.velocity = velocity_save;
-    ent.avelocity = avelocity_save;
-    ent.origin = origin_save;
-    ent.angles = angles_save;
 }
 
 /*
@@ -325,18 +245,6 @@ vector findbetterlocation (vector org, float mindist)
 	}
 
 	return org;
-}
-
-/*
-==================
-crandom
-
-Returns a random number between -1.0 and 1.0
-==================
-*/
-float crandom (void)
-{
-	return 2 * (random () - 0.5);
 }
 
 .string lodtarget1;

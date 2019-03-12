@@ -1,9 +1,9 @@
 entity randomseed;
 vector(float side, float up, float up_min, float up_min_rand) random_spread_vector {
     vector v;
-	v_x = crandom() * 2 * side;
-	v_y = crandom() * 2 * side;
-	v_z = max(up * random(), up_min + up_min_rand * crandom() * 2);
+	v_x = random_2() * 2 * side;
+	v_y = random_2() * 2 * side;
+	v_z = max(up * random(), up_min + up_min_rand * random_2() * 2);
 	return v;
 }
 
@@ -69,5 +69,8 @@ vector(vector m1, vector m2) random_pos {
     v_y = m2_y * random() + m1_y;
     v_z = m2_z * random() + m1_z;
     return  v;
-};
+}
 
+float() random_2 {
+	return random() * 2 - 1;
+}

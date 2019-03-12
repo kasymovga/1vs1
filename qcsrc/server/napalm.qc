@@ -92,7 +92,7 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.owner = powner;
     proj.projectiledeathtype = deathtype;
     proj.movetype = MOVETYPE_BOUNCE;
-    proj.pushltime = time + lifetime + crandom() * lifetime_randfactor;
+    proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
     proj.team = powner.team;
     proj.effects = EF_NODEPTHTEST;
     //proj.meodp_point_offs = '0 0 64';

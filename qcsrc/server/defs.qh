@@ -57,8 +57,6 @@ float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
 
-float sv_gameplayfix_skipnonsolid;
-
 // Fields
 
 .void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;

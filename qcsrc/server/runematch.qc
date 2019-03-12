@@ -334,7 +334,7 @@ void DropRune(entity pl, entity e)
 
 	// toss from player
 	setorigin(e, pl.origin + '0 0 10');
-	e.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
+	e.velocity = '0 0 200' + '0 100 0'*random_2() + '100 0 0'*random_2();
 
 
 	bprint("^3", pl.netname, "^7 has lost ",
