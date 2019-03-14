@@ -185,12 +185,34 @@ void Single_Spawn(entity e) {
 	Single_Spawn_NextLink(e);
 }
 
+var void() Coop_ObserverSpawn_NextLink;
+void() Coop_ObserverSpawn {
+	Coop_ObserverSpawn_NextLink();
+	entity e;
+	float have_players;
+	have_players = FALSE;
+	FOR_EACH_PLAYER(e) { //last alive player become spectator
+		if (e != self) {
+			if (e.deadflag == DEAD_NO)
+				return;
+
+			have_players = TRUE;
+		}
+	}
+	if (have_players) {
+		single_level_finished = TRUE;
+		campaign_won = FALSE;
+	}
+}
+
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	GameHook_ForbidSpectators = Single_ForbidSpectators;
 	if (game == GAME_COOP) {
 		Coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
 		GameHookChain_PlayerClear = Coop_PlayerClear;
+		Coop_ObserverSpawn_NextLink = GameHookChain_ObserverSpawn;
+		GameHookChain_ObserverSpawn = Coop_ObserverSpawn;
 	}
 	GameHook_EquipPlayerHandle = Single_EquipPlayerHandle;
 	GameHook_WinningCondition = Single_WinningCondition;
