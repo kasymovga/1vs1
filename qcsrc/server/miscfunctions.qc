@@ -836,8 +836,6 @@ entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) /
     return world;
 }
 
-.float scale2;
-
 float modeleffect_SendEntity(entity to, float sf)
 {
 	float f;
@@ -877,7 +875,7 @@ float modeleffect_SendEntity(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.avelocity_z);
 	}
 	WriteShort(MSG_ENTITY, self.scale * 256.0);
-	WriteShort(MSG_ENTITY, self.scale2 * 256.0);
+	WriteShort(MSG_ENTITY, self.dmg * 256.0);
 	WriteByte(MSG_ENTITY, self.teleport_time * 100.0);
 	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
 	WriteByte(MSG_ENTITY, self.alpha * 255.0);
@@ -906,10 +904,10 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 	else
 		e.scale = -s0;
 	if(s2 >= 0)
-		e.scale2 = s2 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.dmg = s2 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
 	else
-		e.scale2 = -s2;
-	sz = max(e.scale, e.scale2);
+		e.dmg = -s2;
+	sz = max(e.scale, e.dmg);
 	setsize(e, e.mins * sz, e.maxs * sz);
 	Net_LinkEntity(e, FALSE, 0.1, modeleffect_SendEntity);
 }
