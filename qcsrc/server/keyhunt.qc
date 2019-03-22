@@ -830,6 +830,7 @@ void kh_EnableTrackingDevice()  // runs after each round
 float kh_Key_waypointsprite_visible_for_player(entity e) // ??
 {
 	if(!kh_tracking_enabled)
+	if (g_keyhunt_showenemycarrier)
 		return FALSE;
 
 	if (self.owner.effects & EF_NODRAW)
@@ -986,6 +987,7 @@ void kh_init_delayed()  // sets up th KH environment
 	entity key;
 	for (i = 0; i < kh_teams; i++) {
 		key = spawn();
+		key.effects = EF_NODRAW;
 		key.kh_worldkeynext = kh_worldkeylist;
 		kh_worldkeylist = key;
 		key.team = kh_Team_ByID(i);
