@@ -1,4 +1,6 @@
 // autotaunt system
+float sv_autotaunt;
+float sv_taunt;
 .float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
@@ -1569,6 +1571,8 @@ void() player_init {
 	CACHE_CVAR(g_player_pushfactor);
 	CACHE_CVAR(g_spawnshieldtime);
 	CACHE_CVAR(g_spawnsound);
+	CACHE_CVAR(sv_autotaunt);
+	CACHE_CVAR(sv_taunt);
 	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
 		string s;
 		if ((s = cvar_string("sv_defaultplayermodel")) != "") {

@@ -31,8 +31,6 @@ float g_projectiles_newton_style;
 float g_balance_pause_fuel_regen;
 
 float sv_foginterval;
-float sv_autotaunt;
-float sv_taunt;
 float sv_world_scale;
 
 float spawn_debug;

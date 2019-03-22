@@ -240,9 +240,6 @@ void readlevelcvars(void)
 	CACHE_CVAR(g_footsteps);
 	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_norecoil);
-	CACHE_CVAR(sv_autotaunt);
-	CACHE_CVAR(sv_taunt);
-
 	Warmup_Init();
 	CACHE_CVAR(g_warmup_limit);
 	CACHE_CVAR(g_warmup_allguns);
