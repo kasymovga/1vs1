@@ -159,6 +159,7 @@ void dodging() {
 				self.last_FORWARD_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_FORWARD;
+			self.lastkeys &~= KEY_BACKWARD;
 		} else
 			self.lastkeys &~= KEY_FORWARD;
 
@@ -172,6 +173,7 @@ void dodging() {
 				self.last_BACKWARD_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_BACKWARD;
+			self.lastkeys &~= KEY_FORWARD;
 		} else
 			self.lastkeys &~= KEY_BACKWARD;
 
@@ -185,6 +187,7 @@ void dodging() {
 				self.last_RIGHT_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_RIGHT;
+			self.lastkeys &~= KEY_LEFT;
 		} else
 			self.lastkeys &~= KEY_RIGHT;
 
@@ -198,6 +201,7 @@ void dodging() {
 				self.last_LEFT_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_LEFT;
+			self.lastkeys &~= KEY_RIGHT;
 		} else
 			self.lastkeys &~= KEY_LEFT;
 	}
