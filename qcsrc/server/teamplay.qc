@@ -17,8 +17,6 @@ void() tdm_init;
 void ChangeTeam(entity pl, float dteam, float nobalance);
 void AuditTeams(float force);
 
-// client counts for each team
-float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
@@ -294,7 +292,7 @@ void GetTeamCounts(entity ignore)
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
-float FindSmallestTeam(entity pl, float ignore_pl)
+float FindSmallestTeam(entity pl)
 {
 	float smallestteam_count, smallestteam_score, team_random;
 
@@ -303,10 +301,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// make sure there are at least 2 teams to join
 	// count how many players are in each team
-	if(ignore_pl)
-		GetTeamCounts(pl);
-	else
-		GetTeamCounts(world);
+	GetTeamCounts(pl);
 
 	// c1...c4 now have counts of each team
 	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
@@ -401,19 +396,16 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	return 1;
 }
 
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
+void JoinBestTeam(entity pl, float forcebestteam)
 {
 	float smallest, selectedteam;
-
 	// don't join a team if we're not playing a team game
 	if not(teamplay) {
 		pl.team = 0;
-		return 0;
+		return;
 	}
-
 	// find out what teams are available
 	CheckAllowedTeams(pl);
-
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
@@ -428,45 +420,27 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 			selectedteam = pl.team;
 		else
 			selectedteam = -1;
-		if(selectedteam > 0)
-		{
-			if(!only_return_best)
-			{
-				SetPlayerTeam(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
-			}
-			return selectedteam;
+
+		if(selectedteam > 0) {
+			SetPlayerTeam(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
+			return;
 		}
 		// otherwise end up on the smallest team (handled below)
 	}
+	smallest = FindSmallestTeam(pl);
+	if(smallest == 1)
+		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
+	else if(smallest == 2)
+		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM2), TeamColorSkin(pl.team), FALSE);
+	else if(smallest == 3)
+		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM3), TeamColorSkin(pl.team), FALSE);
+	else if(smallest == 4)
+		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM4), TeamColorSkin(pl.team), FALSE);
+	else
+		error("smallest team: invalid team\n");
 
-	smallest = FindSmallestTeam(pl, TRUE);
-
-
-	if(!only_return_best)
-	{
-		if(smallest == 1)
-		{
-			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
-		}
-		else if(smallest == 2)
-		{
-			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM2), TeamColorSkin(pl.team), FALSE);
-		}
-		else if(smallest == 3)
-		{
-			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM3), TeamColorSkin(pl.team), FALSE);
-		}
-		else if(smallest == 4)
-		{
-			SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM4), TeamColorSkin(pl.team), FALSE);
-		}
-		else
-		{
-			error("smallest team: invalid team\n");
-		}
-	}
 	AuditTeams(FALSE);
-	return smallest;
+	return;
 }
 
 void SV_ChangeTeam(float _color)

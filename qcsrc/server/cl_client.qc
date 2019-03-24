@@ -60,7 +60,7 @@ void PutClientInServer()
 			if(clienttype(self) == CLIENTTYPE_BOT)
 				self.team = self.bot_forced_team;
 
-			JoinBestTeam(self, FALSE, FALSE);
+			JoinBestTeam(self, FALSE);
 		}
 		if (self.team != oldteam)
 			ScoreKeeper_Touch(self);
@@ -214,7 +214,7 @@ void ClientKill_Now_TeamChange()
 	else if(self.killindicator_teamchange == -1)
 	{
 		self.team = -1;
-		JoinBestTeam( self, FALSE, FALSE );
+		JoinBestTeam(self, FALSE);
 	}
 	else
 		ChangeTeam(self, self.killindicator_teamchange, FALSE);
@@ -348,7 +348,7 @@ void DoTeamChange(float destteam)
 	if(destteam == -1)
 	{
 		CheckAllowedTeams(self);
-		t = FindSmallestTeam(self, TRUE);
+		t = FindSmallestTeam(self);
 		switch(self.team)
 		{
 			case COLOR_TEAM1: c0 = c1; break;

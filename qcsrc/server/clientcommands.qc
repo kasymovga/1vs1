@@ -267,7 +267,6 @@ void SV_ParseClientCommand(string s) {
 		if( !teamplay ) {
 			sprint( self, "selecteam can only be used in teamgames\n");
 		} else if(g_campaign) {
-			//JoinBestTeam(self, 0);
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {

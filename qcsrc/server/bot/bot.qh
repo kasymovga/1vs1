@@ -114,7 +114,3 @@ float sv_maxspeed;
 
 void() havocbot_setupbot;
 void() bot_init;
-
-float c1, c2, c3, c4;
-void CheckAllowedTeams(entity for_whom); void GetTeamCounts(entity other);
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);

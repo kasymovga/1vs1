@@ -168,7 +168,7 @@ void() spectator_to_player {
 		if(!teamplay || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.classname = "player";
 			if(g_campaign || g_balance_teams || g_balance_teams_force)
-				JoinBestTeam(self, FALSE, TRUE);
+				JoinBestTeam(self, TRUE);
 
 			if(g_campaign)
 				campaign_bots_may_start = 1;

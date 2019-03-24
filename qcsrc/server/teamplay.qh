@@ -1,1 +1,6 @@
+// client counts for each team
+float c1, c2, c3, c4;
+void JoinBestTeam(entity pl, float forcebestteam);
+float FindSmallestTeam(entity pl);
+void GetTeamCounts(entity ignore);
 string ColoredTeamName(float t);
