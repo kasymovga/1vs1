@@ -326,13 +326,12 @@ void bot_relinkplayerlist()
 		e.nextplayer = e.chain;
 		if (clienttype(e) == CLIENTTYPE_BOT)
 		{
+			e.nextbot = world;
 			if (prevbot)
 				prevbot.nextbot = e;
 			else
-			{
 				bot_list = e;
-				bot_list.nextbot = world;
-			}
+
 			prevbot = e;
 			currentbots = currentbots + 1;
 		}
