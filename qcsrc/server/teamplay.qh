@@ -4,3 +4,4 @@ void JoinBestTeam(entity pl, float forcebestteam);
 float FindSmallestTeam(entity pl);
 void GetTeamCounts(entity ignore);
 string ColoredTeamName(float t);
+void() teams_balance_check;

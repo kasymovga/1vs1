@@ -117,7 +117,7 @@ float TeamScore_AddToTeam(float t, float scorefield, float score)
 	(s.(teamscores[scorefield]) += score);
 	if (score)
 	if (scorefield == teamscores_primary_scorefield)
-		defer(1, Team_AutoSwap_Check);
+		defer(1, teams_balance_check);
 
 	return s.(teamscores[scorefield]);
 }

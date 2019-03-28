@@ -7,10 +7,14 @@ float g_balance_teams_autoswap_required_humans;
 float g_balance_teams_autoswap_interval;
 float g_balance_teams_autoswap_zerolead;
 float g_balance_teams_autoswap_lead;
+float g_balance_teams_adjust_sizes;
+float g_balance_teams_adjust_sizes_factor;
 float g_changeteam_banned;
 float bot_vs_human;
 float autoswap_last_from;
 entity autoswap_last_best;
+float team_size_adjust;
+float team_size_adjust_value;
 
 void() tdm_init;
 
@@ -286,6 +290,21 @@ void GetTeamCounts(entity ignore)
 					cb4 = cb4 + bvalue;
 				}
 			}
+		}
+	}
+	float n = c1 + c2;
+	if (c1 >= 0)
+	if (c2 >= 0)
+	if (c3 < 0)
+	if (c4 < 0)
+	if (n > 2)
+	if (team_size_adjust) {
+		float f = ceil((n + ((ignore.team > 0) ? 0 : 1)) * team_size_adjust_value * g_balance_teams_adjust_sizes_factor);
+		f = bound(0, f, n - 2);
+		if (team_size_adjust == COLOR_TEAM1) {
+			c1 = c1 + f;
+		} else if (team_size_adjust == COLOR_TEAM2) {
+			c2 = c2 + f;
 		}
 	}
 }
@@ -807,13 +826,15 @@ void AuditTeams(float force)
 				teams_note = NoteLine_New(Teams_Note_Message);
 				teams_note.customizeentityforclient = Teams_Note_Customize;
 				if (g_balance_teams_force) {
-					teams_note.think = Teams_Note_Think;
-					teams_note.nextthink = time;
 					teams_note.dmg = time + g_balance_teams_force;
 				}
 			}
 			teams_note.cnt = team_flags;
 			teams_note.SendFlags = 1;
+			if (g_balance_teams_force) {
+				teams_note.think = Teams_Note_Think;
+				teams_note.nextthink = time;
+			}
 		}
 		return;
 	}
@@ -880,6 +901,8 @@ void Teamplay_ReadCvars()
 	CACHE_CVAR(g_balance_teams_autoswap_lead);
 	CACHE_CVAR(g_balance_teams_force);
 	CACHE_CVAR(g_balance_teams_prevent_imbalance);
+	CACHE_CVAR(g_balance_teams_adjust_sizes);
+	CACHE_CVAR(g_balance_teams_adjust_sizes_factor);
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(bot_vs_human);
 };
@@ -928,17 +951,31 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 }
 
 float autoswap_lastmaxscore;
-void Team_AutoSwap_Check() {
+void() teams_balance_check {
 	if (gameover)
 		return;
 
-	if not(g_balance_teams_autoswap)
+	if (bot_vs_human)
 		return;
 
+	float t1 = TeamScore_GetCompareValue(COLOR_TEAM1);
+	float t2 = TeamScore_GetCompareValue(COLOR_TEAM2);
+	if (g_balance_teams_adjust_sizes > 0) {
+		float f = t2 - t1;
+		team_size_adjust = 0;
+		if (f >= g_balance_teams_adjust_sizes) {
+			team_size_adjust = COLOR_TEAM2;
+			team_size_adjust_value = (f / g_balance_teams_adjust_sizes);
+		} else if (f <= -g_balance_teams_adjust_sizes) {
+			team_size_adjust = COLOR_TEAM1;
+			team_size_adjust_value = (f / -g_balance_teams_adjust_sizes);
+		}
+		AuditTeams(FALSE);
+	}
 	if (autoswap_last_time + g_balance_teams_autoswap_interval >= time)
 		return;
 
-	if (bot_vs_human)
+	if not(g_balance_teams_autoswap)
 		return;
 
 	CheckAllowedTeams(world);
@@ -950,8 +987,6 @@ void Team_AutoSwap_Check() {
 	if (c1 + c2 > 2)
 	if (c1 - cb1 + c2 - cb2 >= g_balance_teams_autoswap_required_humans)
 	{
-		float t1 = TeamScore_GetCompareValue(COLOR_TEAM1);
-		float t2 = TeamScore_GetCompareValue(COLOR_TEAM2);
 		float maxscore = max(t1, t2);
 		if (maxscore == autoswap_lastmaxscore)
 			return;
