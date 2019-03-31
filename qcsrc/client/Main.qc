@@ -519,6 +519,7 @@ void CSQC_Shutdown(void)
 		if not(calledhooks & HOOK_END)
 			localcmd("\ncl_hook_gameend;");
 	}
+	trip_shutdown();
 }
 
 .float has_team;
@@ -1358,6 +1359,9 @@ float CSQC_Parse_TempEntity()
 				available_maps_count++;
 			}
 			bHandled = true;
+			break;
+		case TE_CSQC_TRIP:
+			trip_net_read();
 			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it

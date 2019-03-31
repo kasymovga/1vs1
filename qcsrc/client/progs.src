@@ -78,6 +78,7 @@ zapper.qc
 //vehicles/spiderbot.qc
 ../client-server/nadgets.qc
 nadgetselect.qc
+trip.qc
 Main.qc
 View.qc
 interpolate.qc

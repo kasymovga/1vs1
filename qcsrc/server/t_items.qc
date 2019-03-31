@@ -26,6 +26,7 @@ float g_pickup_respawntime_armormedium;
 float g_pickup_respawntime_armorbig;
 float g_pickup_respawntime_armorlarge;
 float g_pickup_respawntime_powerup;
+float g_pickup_respawntime_mushroom;
 float g_pickup_respawntimejitter_weapon;
 float g_pickup_respawntimejitter_ammo;
 float g_pickup_respawntimejitter_healthsmall;
@@ -37,6 +38,7 @@ float g_pickup_respawntimejitter_armormedium;
 float g_pickup_respawntimejitter_armorbig;
 float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
+float g_pickup_respawntimejitter_mushroom;
 float g_balance_powerup_invincible_takedamage;
 float g_balance_powerup_strength_damage;
 float g_balance_powerup_strength_force;
@@ -51,6 +53,7 @@ string sv_model_armorsmall;
 string sv_model_armormedium;
 string sv_model_armorbig;
 string sv_model_armorlarge;
+string sv_model_mushroom;
 
 var void(float killed) powerups_PlayerClear_NextLink;
 void powerups_PlayerClear(float killed) {
@@ -630,6 +633,7 @@ float Item_GiveTo(entity item, entity player)
 	return 1;
 }
 
+float item_touch_picked;
 void Item_Touch (void)
 {
 	entity e, head;
@@ -649,9 +653,11 @@ void Item_Touch (void)
 	if (self.owner == other)
 		return;
 
+	item_touch_picked = FALSE;
 	if(!Item_GiveTo(self, other))
 		return;
 
+	item_touch_picked = TRUE;
 	activator = other;
 	SUB_UseTargets();
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
@@ -1642,6 +1648,24 @@ void spawnfunc_item_jetpack(void)
 //Q1 compat
 void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_health_mega();else spawnfunc_item_health_medium();}
 
+//1st april joke
+void() mushroom_touch {
+	Item_Touch();
+	if (item_touch_picked) {
+		msg_entity = other;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_TRIP);
+		WriteByte(MSG_ONE, 15);
+	}
+}
+
+void() spawnfunc_item_mushroom {
+	self.max_health = cvar("g_pickup_healthmushroom_max");
+	self.health = cvar("g_pickup_healthmushroom");
+	StartItem (sv_model_mushroom, "misc/megahealth.wav", g_pickup_respawntime_mushroom, g_pickup_respawntimejitter_mushroom, "Mushroom", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+	self.touch = mushroom_touch;
+}
+
 void Items_Init()
 {
 	CACHE_CVAR(g_balance_pause_armor_rot);
@@ -1672,6 +1696,8 @@ void Items_Init()
 	CACHE_CVAR(g_pickup_respawntimejitter_armorbig);
 	CACHE_CVAR(g_pickup_respawntimejitter_armorlarge);
 	CACHE_CVAR(g_pickup_respawntimejitter_powerup);
+	CACHE_CVAR(g_pickup_respawntime_mushroom);
+	CACHE_CVAR(g_pickup_respawntimejitter_mushroom);
 	CACHE_CVAR(g_pickup_shells_max);
 	CACHE_CVAR(g_pickup_nails_max);
 	CACHE_CVAR(g_pickup_rockets_max);
@@ -1700,6 +1726,10 @@ void Items_Init()
 	sv_model_healthmega = cvar_string_zone_ifneeded("sv_model_healthmega");
 	if (sv_model_healthmega == "")
 		sv_model_healthmega = "models/items/g_h100.md3";
+
+	sv_model_mushroom = cvar_string_zone_ifneeded("sv_model_mushroom");
+	if (sv_model_mushroom == "")
+		sv_model_mushroom = "models/items/g_h100.md3";
 
 	sv_model_armorsmall = cvar_string_zone_ifneeded("sv_model_armorsmall");
 	if (sv_model_armorsmall == "")
