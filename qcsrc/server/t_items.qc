@@ -54,6 +54,7 @@ string sv_model_armormedium;
 string sv_model_armorbig;
 string sv_model_armorlarge;
 string sv_model_mushroom;
+string sv_sound_mushroom;
 
 var void(float killed) powerups_PlayerClear_NextLink;
 void powerups_PlayerClear(float killed) {
@@ -1656,6 +1657,8 @@ void() mushroom_touch {
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_TRIP);
 		WriteByte(MSG_ONE, 15);
+		if (sv_sound_mushroom != "")
+			announce(other, sv_sound_mushroom);
 	}
 }
 
@@ -1730,6 +1733,10 @@ void Items_Init()
 	sv_model_mushroom = cvar_string_zone_ifneeded("sv_model_mushroom");
 	if (sv_model_mushroom == "")
 		sv_model_mushroom = "models/items/g_h100.md3";
+
+	sv_sound_mushroom = cvar_string_zone_ifneeded("sv_sound_mushroom");
+	if (sv_sound_mushroom != "")
+		precache_sound(sv_sound_mushroom);
 
 	sv_model_armorsmall = cvar_string_zone_ifneeded("sv_model_armorsmall");
 	if (sv_model_armorsmall == "")
