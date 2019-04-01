@@ -639,6 +639,7 @@ void Item_Touch (void)
 {
 	entity e, head;
 
+	item_touch_picked = FALSE;
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 	{
@@ -654,7 +655,6 @@ void Item_Touch (void)
 	if (self.owner == other)
 		return;
 
-	item_touch_picked = FALSE;
 	if(!Item_GiveTo(self, other))
 		return;
 
@@ -1652,7 +1652,8 @@ void spawnfunc_item_health (void) {if (self.spawnflags & 2) spawnfunc_item_healt
 //1st april joke
 void() mushroom_touch {
 	Item_Touch();
-	if (item_touch_picked) {
+	if (item_touch_picked)
+	if (clienttype(other) == CLIENTTYPE_REAL) {
 		msg_entity = other;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_TRIP);
