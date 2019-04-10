@@ -610,24 +610,26 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
+	float player_score;
 	FOR_EACH_CLIENT(head)
 	{
+		player_score = head.scorekeeper.scores[SP_SCORE];
 		if(head.team == steam)
 		{
 			if(head.isbot)
 			{
-				if(head.totalfrags < lowest_bot_score)
+				if(player_score < lowest_bot_score)
 				{
 					lowest_bot = head;
-					lowest_bot_score = head.totalfrags;
+					lowest_bot_score = player_score;
 				}
 			}
 			else
 			{
-				if(head.totalfrags < lowest_player_score)
+				if(player_score < lowest_player_score)
 				{
 					lowest_player = head;
-					lowest_player_score = head.totalfrags;
+					lowest_player_score = player_score;
 				}
 			}
 		}
