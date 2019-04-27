@@ -906,11 +906,6 @@ void door_trigger_touch()
 	if not(other.iscreature)
 		return;
 
-	if (time < self.attack_finished_single)
-		return;
-
-	self.attack_finished_single = time + 1;
-
 	if (self.owner.items)
 	if not(other.keys & self.owner.items) {
 		if (self.owner.state == STATE_BOTTOM)
@@ -923,8 +918,11 @@ void door_trigger_touch()
 			else if (self.owner.items)
 				s = "Unknown Key";
 
+			if (time >= self.attack_finished_single) {
+				self.attack_finished_single = time + 1;
+				play2(other, "misc/talk.wav");
+			}
 			centerprint (other, strcat("This door required ", s));
-			play2(other, "misc/talk.wav");
 		}
 		return;
 	}
