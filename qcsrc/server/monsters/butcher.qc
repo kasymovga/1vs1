@@ -50,7 +50,7 @@ void butcher_idle() {
 		return;
 
 	movelib_beak_simple(100 * frametime);
-	anim_set(self, '1 13 13', TRUE, TRUE, FALSE);
+	anim_set(self, '1 12 12', TRUE, TRUE, FALSE);
 }
 
 void butcher_guard() {
@@ -72,7 +72,7 @@ void butcher_walk() {
 	vector v = monster_move_walk(300, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 
 }
 
