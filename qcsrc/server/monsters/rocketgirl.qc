@@ -47,7 +47,7 @@ void rlgirl_hunt() {
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else {
-		v = monster_move_walk(400, 5, 0);
+		v = monster_move_walk(400, 25, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
@@ -78,15 +78,15 @@ void rlgirl_walk() {
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(rlgirl_idle, 100))
+	if (monster_walk_finished(rlgirl_idle, 40))
 		return;
 
 	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 	//self.velocity = normalize(v) * 400;
-	vector v = monster_move_walk(300, 5, 0);
+	vector v = monster_move_walk(300, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 
 }
 

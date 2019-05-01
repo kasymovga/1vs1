@@ -49,7 +49,7 @@ void marine_hunt() {
 		v = vectoangles(normalize(self.enemy.origin - self.origin));
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	} else {
-		v = monster_move_walk(300, 5, 0);
+		v = monster_move_walk(300, 25, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 	}
@@ -83,14 +83,14 @@ void marine_walk() {
 	if (monster_look_for_player(1500, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(marine_idle, 100))
+	if (monster_walk_finished(marine_idle, 40))
 		return;
 
 	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
-	vector v = monster_move_walk(200, 5, 0);
+	vector v = monster_move_walk(200, 25, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 
 }
 

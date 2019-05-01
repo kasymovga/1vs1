@@ -78,7 +78,7 @@ void heavysoldier_walk() {
 	if (monster_look_for_player(1000, 500, 0, 1, 3)) {
 		return;
 	}
-	if (monster_walk_finished(heavysoldier_idle, 100))
+	if (monster_walk_finished(heavysoldier_idle, 40))
 		return;
 
 	anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
@@ -86,7 +86,7 @@ void heavysoldier_walk() {
 	vector v = monster_move_walk(150, 5, 0);
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
-	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);
 
 }
 

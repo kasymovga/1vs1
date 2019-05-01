@@ -88,6 +88,7 @@ void bat_spawn() {
 	monster_set_fly();
 	monster_prepare(bat_hunt, bat_walk, bat_idle);
 	setmodel(self, "models/bat.md3");
+	self.colormod = '3 2 1';
 	self.solid = SOLID_BBOX;
 	self.scale = 2;
 	self.gravity = 0.01;

@@ -111,7 +111,7 @@ void walker_hunt() {
 			PROJECTILE_MAKETRIGGER(missile);
 			missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
 			setorigin(missile, w_shotorg);
-			missile.velocity = normalize(v_forward + v_up) * 600;
+			missile.velocity = normalize(v_forward + v_up * 0.5) * 600;
 			W_SetupProjectileVelocity(missile);
 			missile.angles = vectoangles(missile.velocity);
 			missile.touch = monster_proj_touch;
@@ -126,7 +126,7 @@ void walker_hunt() {
 	if (self.flags & FL_ONGROUND) {
 		anim_set(self, '5 20 25', TRUE, TRUE, FALSE);
 		anim_update(self);
-		vector v = monster_move_walk(400, 5, 0);
+		vector v = monster_move_walk(400, 25, 0);
 		v = vectoangles(v);
 		self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
 	} else {
@@ -146,9 +146,9 @@ void walker_walk() {
 	anim_set(self, '5 20 25', TRUE, TRUE, FALSE);
 	anim_update(self);
 	if (self.flags & FL_ONGROUND) {
-		vector v = monster_move_walk(400, 5, 0);
+		vector v = monster_move_walk(400, 25, 0);
 		v = vectoangles(v);
-		self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
+		self.angles_y = approach_angle(self.angles_y, v_y, 180 * frametime);
 	}
 }
 

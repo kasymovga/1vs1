@@ -313,7 +313,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	vector v;
 	if (self.waterlevel == WATERLEVEL_SUBMERGED) {
 		_speed *= 0.5;
-		if(self.air_finished < time + 6)
+		//if(self.air_finished < time + 6)
 			self.velocity_z += (_speed - self.velocity_z) * frametime;
 	}
 	if (rushdistance)

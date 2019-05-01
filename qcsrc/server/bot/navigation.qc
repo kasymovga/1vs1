@@ -71,8 +71,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			debugnode(org);
 		#endif
 
-		if (dist <= 0)
+		if (dist <= 0) {
 			break;
+		}
 		if (stepdist > dist)
 			stepdist = dist;
 		dist = dist - stepdist;
@@ -774,24 +775,15 @@ void navigation_routerating(entity e, float f, float rangebias)
 		}
 		nwp = e.nearestwaypoint;
 	}
-
-	//dprint("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")\n");
-	if (nwp)
-	if (nwp.wpcost < 10000000)
-	{
-		//te_wizspike(nwp.wpnearestpoint);
-	//	dprint(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = ");
+	if (!nwp && nwp.wpcost < 10000000)
 		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint)));
-		//dprint("considering ", e.classname, " (with rating ", ftos(f), ")\n");
-		//dprint(ftos(f));
-		if (navigation_bestrating < f)
-		{
-		//	dprint("ground path: added goal ", e.classname, " (with rating ", ftos(f), ")\n");
-			navigation_bestrating = f;
-			navigation_bestgoal = e;
-		}
+	else
+		f = 0;
+
+	if (navigation_bestrating < f) {
+		navigation_bestrating = f;
+		navigation_bestgoal = e;
 	}
-	//dprint("\n");
 };
 
 // adds an item to the the goal stack with the path to a given item
