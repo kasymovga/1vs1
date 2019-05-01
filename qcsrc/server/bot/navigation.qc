@@ -775,7 +775,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		}
 		nwp = e.nearestwaypoint;
 	}
-	if (!nwp && nwp.wpcost < 10000000)
+	if (nwp && nwp.wpcost < 10000000)
 		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint)));
 	else
 		f = 0;
