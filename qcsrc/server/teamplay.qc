@@ -749,6 +749,10 @@ void Teams_Note_Remove() {
 	}
 }
 
+void() Teams_Note_Reset {
+	AuditTeams(TRUE);
+}
+
 float FastTeamSwitchAllowed(entity plr, float targetteam) {
 	if (teams_note) {
 		switch (targetteam) {
@@ -829,6 +833,7 @@ void AuditTeams(float force)
 				teams_note.customizeentityforclient = Teams_Note_Customize;
 				if (g_balance_teams_force) {
 					teams_note.dmg = time + g_balance_teams_force;
+					teams_note.reset = Teams_Note_Reset;
 				}
 			}
 			teams_note.cnt = team_flags;
