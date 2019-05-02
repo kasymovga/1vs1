@@ -1,4 +1,5 @@
 float bot_navigation_ignoreplayers;
+float waypoints_count;
 
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
@@ -68,6 +69,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	else
 		w.model = "";
 
+	waypoints_count++;
 	return w;
 };
 
@@ -364,6 +366,13 @@ float waypoint_load_links()
 	local float file, tokens, c, found;
 	local entity wp_from, wp_to;
 	local vector wp_to_pos, wp_from_pos;
+	s = db_get(ServerProgsDB, strcat(mapname, "/waypoints/count"));
+	if (waypoints_count != stof(s)) {
+		if (s != "")
+			print("Waypoints count changed, force relink (expecting ", s, ", getting ", ftos(waypoints_count), ")\n");
+
+		return FALSE;
+	}
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.cache");
 	file = fopen(filename, FILE_READ);
@@ -375,7 +384,6 @@ float waypoint_load_links()
 		dprint(" failed\n");
 		return FALSE;
 	}
-
 	while (1)
 	{
 		s = fgets(file);
@@ -620,6 +628,8 @@ void waypoint_save_links()
 		w = w.chain;
 	}
 	fclose(file);
+	db_put(ServerProgsDB, strcat(mapname, "/waypoints/count"), ftos(waypoints_count));
+
 	botframe_cachedwaypointlinks = TRUE;
 
 	print("saved ");
