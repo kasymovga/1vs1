@@ -57,18 +57,16 @@ void boss2_hunt() {
 	vector v;
 	float dofire;
 	dofire = FALSE;
-	if (self.attack_finished_single < time) {
-		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-		if (trace_fraction == 1)
-			dofire = TRUE;
-	}
+	if (self.attack_finished_single < time)
+		dofire = monster_look_to(self.enemy);
+
 	if (dofire) {
-		v = vectoangles(self.enemy.origin - self.origin);
+		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		movelib_beak_simple(100 * frametime);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = normalize(self.enemy.origin - self.origin);
+		vector _shotdir = normalize(monster_look_to_end - self.origin);
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/shotgun_fire.wav", VOL_BASE, ATTN_NORM);
 		float sc;

@@ -10,17 +10,15 @@ void rlgirl_hunt() {
 	vector v;
 	float dofire;
 	dofire = FALSE;
-	if (self.attack_finished_single < time) {
-		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-		if (trace_fraction == 1)
-			dofire = TRUE;
-	}
+	if (self.attack_finished_single < time)
+		dofire = monster_look_to(self.enemy);
+
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
-		v = vectoangles(self.enemy.origin - self.origin - '0 0 20');
+		v = vectoangles(monster_look_to_end - self.origin - '0 0 20');
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = self.enemy.origin - self.origin;
+		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 		entity missile = CSQCProjectile(TRUE, PROJECTILE_ROCKET, TRUE);

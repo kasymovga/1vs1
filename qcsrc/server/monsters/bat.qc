@@ -21,19 +21,16 @@ void bat_hunt() {
 	float dofire;
 	dofire = FALSE;
 	if (self.attack_finished_single < time) {
-		if (vlen(self.origin - self.enemy.origin) < 500) {
-			traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-			if (trace_fraction == 1)
-				dofire = TRUE;
-		}
+		if (vlen(self.origin - self.enemy.origin) < 500)
+			dofire = monster_look_to(self.enemy);
 	}
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
-		v = vectoangles(self.enemy.origin - self.origin);
+		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		self.angles_x = v_x;
 		makevectors(self.angles);
-		vector _shotdir = self.enemy.origin - self.origin;
+		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/crylink_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = CSQCProjectile(TRUE, PROJECTILE_CRYLINK, TRUE);

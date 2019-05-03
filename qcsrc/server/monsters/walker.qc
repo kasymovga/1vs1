@@ -66,11 +66,8 @@ void walker_hunt() {
 	float dofire;
 	dofire = FALSE;
 	if (self.attack_finished_single < time)
-	{
-		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-		if (trace_fraction == 1)
-			dofire = TRUE;
-	}
+		dofire = monster_look_to(self.enemy);
+
 	if (dofire) {
 		self.cnt = random();
 		self.attack_finished_single = time + 5;

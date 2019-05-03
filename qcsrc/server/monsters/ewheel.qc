@@ -18,11 +18,9 @@ void ewheel_hunt() {
 	vector v;
 	float dofire;
 	dofire = FALSE;
-	if (self.attack_finished_single < time) {
-		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
-		if (trace_fraction == 1)
-			dofire = TRUE;
-	}
+	if (self.attack_finished_single < time)
+		dofire = monster_look_to(self.enemy);
+
 	if (dofire) {
 		makevectors(self.angles);
 		if (v_forward * normalize(self.enemy.origin - self.origin) > 0.75) {

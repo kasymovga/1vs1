@@ -40,20 +40,16 @@ void boss4_hunt() {
 	vector v;
 	float dofire;
 	dofire = FALSE;
-	vector eo;
-	if (self.attack_finished_single < time) {
-		eo = monster_checkpoint(self.enemy);
-		traceline(self.origin, eo, MOVE_WORLDONLY, world);
-		if (trace_fraction == 1)
-			dofire = TRUE;
-	}
+	if (self.attack_finished_single < time)
+		dofire = monster_look_to(self.enemy);
+
 	float stay = self.owner.spawnflags & MONSTER_SPAWN_STAYSTILL;
 	if (dofire) {
 		movelib_beak_simple(100 * frametime);
-		v = vectoangles(eo - self.origin);
+		v = vectoangles(monster_look_to_end - self.origin);
 		self.angles_y = v_y;
 		makevectors(self.angles);
-		vector _shotdir = eo - self.origin;
+		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 

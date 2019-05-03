@@ -693,3 +693,14 @@ void spawnfunc_monster_group() {
 	monster_groups++;
 	self.cnt = monster_groups;
 }
+
+
+vector monster_look_to_end;
+float(entity _enemy) monster_look_to {
+	monster_look_to_end = monster_checkpoint(self.enemy);
+	traceline(self.origin, monster_look_to_end, MOVE_WORLDONLY, world);
+	if (trace_fraction == 1)
+		return TRUE;
+
+	return FALSE;
+}
