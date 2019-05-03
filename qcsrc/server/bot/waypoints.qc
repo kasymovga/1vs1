@@ -290,6 +290,7 @@ void spawnfunc_waypoint()
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(self);
 	//waypoint_schedulerelink(self);
+	waypoints_count++;
 };
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
@@ -366,15 +367,8 @@ float waypoint_load_links()
 	local float file, tokens, c, found;
 	local entity wp_from, wp_to;
 	local vector wp_to_pos, wp_from_pos;
-	s = db_get(ServerProgsDB, strcat(mapname, "/waypoints/count"));
-	if (waypoints_count != stof(s)) {
-		if (s != "")
-			print("Waypoints count changed, force relink (expecting ", s, ", getting ", ftos(waypoints_count), ")\n");
-
-		return FALSE;
-	}
 	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.cache");
+	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
 	file = fopen(filename, FILE_READ);
 
 	if (file < 0)
@@ -455,9 +449,9 @@ float waypoint_load_links()
 
 	dprint("loaded ");
 	dprint(ftos(c));
-	dprint(" waypoint links from maps/");
-	dprint(mapname);
-	dprint(".waypoints.cache\n");
+	dprint(" waypoint links from ");
+	dprint(filename);
+	dprint("\n");
 
 	botframe_cachedwaypointlinks = TRUE;
 	return TRUE;
@@ -566,7 +560,7 @@ void waypoint_save_links()
 	local float file, c, i;
 	local entity w, link;
 	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.cache");
+	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
 	file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
@@ -628,15 +622,14 @@ void waypoint_save_links()
 		w = w.chain;
 	}
 	fclose(file);
-	db_put(ServerProgsDB, strcat(mapname, "/waypoints/count"), ftos(waypoints_count));
 
 	botframe_cachedwaypointlinks = TRUE;
 
 	print("saved ");
 	print(ftos(c));
-	print(" waypoints links to maps/");
-	print(mapname);
-	print(".waypoints.cache\n");
+	print(" waypoints links to ");
+	print(filename);
+	print("\n");
 };
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
