@@ -873,7 +873,7 @@ void Ent_ReadPlayerScore(float ignore)
 		}
 
 	if (sf & SP_TEAM_BIT) {
-		float t = o.scores[SP_TEAM];
+		float t = o.scores[SP_TEAM_FIELD];
 		if (t < 0)
 			t = COLOR_SPECTATOR;
 
@@ -913,8 +913,9 @@ void Ent_ReadTeamScore(float ignore)
 		}
 
 	Sbar_UpdateTeamPos(o);
-	for(o = players.sort_next; o; o = o.sort_next)
-		SetTeam(o, o.scores[SP_TEAM]);
+	if (SP_TEAM_BIT)
+		for(o = players.sort_next; o; o = o.sort_next)
+			SetTeam(o, o.scores[SP_TEAM_FIELD]);
 }
 
 void Net_Reset()
@@ -1104,12 +1105,36 @@ void VoteCommands_Read() {
 void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
-	float i;
+	float i, j;
+	entity o;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadByte();
+	string s;
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
-		scores_label[i] = strzone(ReadString());
+		s = strzone(ReadString());
+		if (s == "country")
+			SP_COUNTRY_FIELD = i;
+		else if (s == "kills")
+			SP_KILLS_FIELD = i;
+		else if (s == "bestwep")
+			SP_BESTWEP_FIELD = i;
+		else if (s == "suicides")
+			SP_SUICIDES_FIELD = i;
+		else if (s == "deaths")
+			SP_DEATHS_FIELD = i;
+		else if (s == "team") {
+			print("team score info\n");
+			SP_TEAM_BIT = 1;
+			SP_TEAM_FIELD = i;
+			for (j = 0; j < i; j++) SP_TEAM_BIT = SP_TEAM_BIT * 2;
+			for (o = players.sort_next; o; o = o.sort_next)
+				if (o.gotscores)
+					SetTeam(o, o.scores[SP_TEAM_FIELD]);
+		} else if (s == "status")
+			SP_STATUS_FIELD = i;
+
+		scores_label[i] = s;
 		scores_flags[i] = ReadByte();
 	}
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
@@ -1154,9 +1179,10 @@ void Ent_Init(float ignore)
 		if not(teamplay) {
 			GetTeam(0, true);
 			entity o;
-			for(o = players.sort_next; o; o = o.sort_next)
-				if (o.gotscores)
-					SetTeam(o, o.scores[SP_TEAM]);
+			if (SP_TEAM_BIT)
+				for(o = players.sort_next; o; o = o.sort_next)
+					if (o.gotscores)
+						SetTeam(o, o.scores[SP_TEAM_FIELD]);
 		}
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));

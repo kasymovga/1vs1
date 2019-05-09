@@ -150,7 +150,6 @@ cl_weapons.qh
 gametype.qh
 chat.qh
 teamplay.qh
-scores_rules.qc
 mapvote.qh
 miscfunctions.qc
 sound.qc

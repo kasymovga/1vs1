@@ -40,28 +40,24 @@ float race_timed_checkpoint;
 
 void race_ClearTime(entity e);
 
-#define ST_RACE_LAPS ST_GAME_SCORE1
-#define SP_RACE_LAPS SP_GAME_SCORE1
-#define SP_RACE_FASTEST SP_GAME_SCORE2
-#define SP_RACE_TIME SP_GAME_SCORE3
-void ScoreRules_race()
+float ST_RACE_LAPS;
+float SP_RACE_LAPS;
+float SP_RACE_FASTEST;
+float SP_RACE_TIME;
+void scores_race()
 {
-	ScoreRules_basics(0, 0, FALSE);
+	scores_basics(0, 0, FALSE);
 	if(race_teams)
 	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else if(g_race_qualifying)
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else
-	{
-		//ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      0);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		ST_RACE_LAPS = scores_register_team_score("laps", SFL_SORT_PRIO_PRIMARY);
+		SP_RACE_LAPS = scores_register_score("laps", SFL_SORT_PRIO_PRIMARY);
+		SP_RACE_TIME = scores_register_score("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	} else if(g_race_qualifying) {
+		SP_RACE_FASTEST = scores_register_score("fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+	} else {
+		//ST_RACE_LAPS = scores_register_team_score("laps", 0);
+		SP_RACE_LAPS = scores_register_score("laps", SFL_SORT_PRIO_PRIMARY);
+		SP_RACE_TIME = scores_register_score("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
 }
 
@@ -161,16 +157,16 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		float s;
 		if(g_race_qualifying)
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = scores_player_add(e, SP_RACE_FASTEST, 0);
 			if(!s || t < s)
-				PlayerScore_Add(e, SP_RACE_FASTEST, t - s);
+				scores_player_add(e, SP_RACE_FASTEST, t - s);
 		}
 		else
 		{
-			s = PlayerScore_Add(e, SP_RACE_TIME, 0);
+			s = scores_player_add(e, SP_RACE_TIME, 0);
 			snew = TIME_ENCODE(time - game_starttime);
-			PlayerScore_Add(e, SP_RACE_TIME, snew - s);
-			l = PlayerTeamScore_Add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
+			scores_player_add(e, SP_RACE_TIME, snew - s);
+			l = scores_player_team_add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
 
 			if(cvar("fraglimit"))
 				if(l >= cvar("fraglimit"))
@@ -280,7 +276,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		oth = race_checkpoint_lastplayers[cp];
 		if(oth)
 		{
-			lself = PlayerScore_Add(e, SP_RACE_LAPS, 0);
+			lself = scores_player_add(e, SP_RACE_LAPS, 0);
 			lother = race_checkpoint_lastlaps[cp];
 			othtime = race_checkpoint_lasttimes[cp];
 		}
@@ -713,17 +709,17 @@ void race_Reset()
 {
 	float s;
 
-	Score_NicePrint(world);
+	scores_nice_print(world);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place);
+	scores_sort(race_place);
 
 	entity e;
 	FOR_EACH_CLIENT(e)
 	{
 		if(e.race_place)
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = scores_player_add(e, SP_RACE_FASTEST, 0);
 			if(!s)
 				e.race_place = 0;
 		}
@@ -737,7 +733,7 @@ void race_Reset()
 		cvar_set("fraglimit", ftos(race_fraglimit));
 		cvar_set("leadlimit", ftos(race_leadlimit));
 		cvar_set("timelimit", ftos(race_timelimit));
-		ScoreRules_race();
+		scores_race();
 	}
 }
 
@@ -908,7 +904,7 @@ float race_OvertimeHandle() {
 		FOR_EACH_PLAYER(head)
 		{
 			++totalplayers;
-			if(PlayerScore_Add(head, SP_RACE_FASTEST, 0))
+			if(scores_player_add(head, SP_RACE_FASTEST, 0))
 				++playerswithlaps;
 			if(head.ready)
 				++readyplayers;
@@ -1096,7 +1092,7 @@ void race_init() {
 		GameHook_WarmupAllowed = race_WarmupAllowed;
 		GameHook_ClearScoreAllowed = race_ClearScoresAllowed;
 	}
-	ScoreRules_race();
+	scores_race();
 	GameHook_InitSpectator = race_InitSpectator;
 	GameHook_Reset = race_Reset;
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;

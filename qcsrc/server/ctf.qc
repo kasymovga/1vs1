@@ -1,12 +1,12 @@
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 
-#define ST_CTF_CAPS ST_GAME_SCORE1
-#define SP_CTF_CAPS SP_GAME_SCORE1
-#define SP_CTF_PICKUPS SP_GAME_SCORE2
-#define SP_CTF_DROPS SP_GAME_SCORE3
-#define SP_CTF_FCKILLS SP_GAME_SCORE4
-#define SP_CTF_RETURNS SP_GAME_SCORE5
+float ST_CTF_CAPS;
+float SP_CTF_CAPS;
+float SP_CTF_PICKUPS;
+float SP_CTF_DROPS;
+float SP_CTF_FCKILLS;
+float SP_CTF_RETURNS;
 
 float g_ctf;
 float g_balance_ctf_damageforcescale;
@@ -83,7 +83,7 @@ float ctf_handle_frags(entity attacker, entity targ, float f) {
 		return f;
 
 	if (targ.flagcarried) {
-		PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
+		scores_player_add(attacker, SP_CTF_FCKILLS, 1);
 		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
 		if not(f)
 			UpdateFrags(attacker, f);
@@ -100,7 +100,7 @@ float ctf_captureshield_shielded(entity p)
 	if(captureshield_max_ratio <= 0)
 		return FALSE;
 
-	s = PlayerScore_Add(p, SP_SCORE, 0);
+	s = scores_player_add(p, SP_SCORE, 0);
 	if(s >= -captureshield_min_negscore)
 		return FALSE;
 
@@ -109,7 +109,7 @@ float ctf_captureshield_shielded(entity p)
 	{
 		if(e.team != p.team)
 			continue;
-		se = PlayerScore_Add(e, SP_SCORE, 0);
+		se = scores_player_add(e, SP_SCORE, 0);
 		if(se <= s)
 			++players_worseeq;
 		++players_total;
@@ -305,7 +305,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 		UpdateFrags(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
 		UpdateFrags(p, -CTF_SCORE_VALUE(penalty_drop));
-	PlayerScore_Add(p, SP_CTF_DROPS, +1);
+	scores_player_add(p, SP_CTF_DROPS, +1);
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
@@ -501,7 +501,7 @@ void FlagTouch()
 		else
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
-		PlayerTeamScore_Add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
+		scores_player_team_add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 		if (game == GAME_CATF || game == GAME_CTFT)
 			Roundbased_SetRoundStartWithWinner(other.team);
 
@@ -549,7 +549,7 @@ void FlagTouch()
 		bprint(other.netname, "^7 got the ", self.netname, "\n");
 		UpdateFrags(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
-		PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
+		scores_player_add(other, SP_CTF_PICKUPS, 1);
 		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
 		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -583,15 +583,15 @@ void FlagTouch()
 			FOR_EACH_PLAYER(player)
 				if(player.playerid == self.dropperid)
 				{
-					PlayerScore_Add(player, SP_SCORE, -CTF_SCORE_VALUE(penalty_returned));
+					scores_player_add(player, SP_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 					ctf_captureshield_update(player, 0); // shield only
 				}
 
 			// punish the team who was last carrying it
 			if(self.team == COLOR_TEAM1)
-				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
+				scores_team_add_to(COLOR_TEAM2, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 			else
-				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
+				scores_team_add_to(COLOR_TEAM1, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 
 			// reward the player who returned it
 			if(other.playerid == self.playerid) // is this the guy who killed the FC last?
@@ -608,7 +608,7 @@ void FlagTouch()
 				else
 					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
-			PlayerScore_Add(other, SP_CTF_RETURNS, 1);
+			scores_player_add(other, SP_CTF_RETURNS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
@@ -636,7 +636,7 @@ void FlagTouch()
 			//print("score is ", ftos(f), "\n");
 
 			UpdateFrags(other, f);
-			PlayerScore_Add(other, SP_CTF_PICKUPS, 1);
+			scores_player_add(other, SP_CTF_PICKUPS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -1098,14 +1098,13 @@ void ctf_delayedinit()
 			sp_score = SFL_SORT_PRIO_PRIMARY;
 			break;
 	}
-
-	ScoreRules_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      sp_caps);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
+	scores_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
+	ST_CTF_CAPS = scores_register_team_score("caps", sp_caps);
+	SP_CTF_CAPS = scores_register_score("caps", SFL_SORT_PRIO_SECONDARY);
+	SP_CTF_PICKUPS = scores_register_score("pickups", 0);
+	SP_CTF_FCKILLS = scores_register_score("fckills", 0);
+	SP_CTF_RETURNS = scores_register_score("returns", 0);
+	SP_CTF_DROPS = scores_register_score("drops", SFL_LOWER_IS_BETTER);
 	if (game == GAME_CATF) {
 		Clanarena_Init_Shared("catf");
 		Roundbased_SetScoreField(ST_CTF_CAPS);

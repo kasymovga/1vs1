@@ -63,7 +63,7 @@ void PutClientInServer()
 			JoinBestTeam(self, FALSE);
 		}
 		if (self.team != oldteam)
-			ScoreKeeper_Touch(self);
+			scores_touch(self);
 
 		spot = GameHook_SelectSpawnPoint();
 		if(!spot) {
@@ -118,7 +118,7 @@ float ClientInit_SendEntity(entity to, float sf)
 		WriteByte(MSG_ENTITY, teamplay);
 		t = 0;
 		if(teamplay) {
-			CheckAllowedTeams(self);
+			teams_check_allowed(self);
 			if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
 		}
 		WriteByte(MSG_ENTITY, t);
@@ -347,7 +347,7 @@ void DoTeamChange(float destteam)
 	if(self.classname == "player")
 	if(destteam == -1)
 	{
-		CheckAllowedTeams(self);
+		teams_check_allowed(self);
 		t = FindSmallestTeam(self);
 		switch(self.team)
 		{
@@ -452,8 +452,8 @@ void ClientConnect (void)
 		player_count = 0;
 	}
 
-	PlayerScore_Attach(self);
-	ScoreKeeper_Touch(self);
+	scores_attach(self);
+	scores_touch(self);
 
 	bot_clientconnect();
 
@@ -567,7 +567,7 @@ void ClientDisconnect (void)
 		if(self.weaponentity.lasertarget)
 			remove(self.weaponentity.lasertarget);
 
-	PlayerScore_Detach(self);
+	scores_detach(self);
 
 	if(self.clientstatus)
 		strunzone(self.clientstatus);

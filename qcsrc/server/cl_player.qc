@@ -1048,7 +1048,7 @@ void(entity player) player_to_spec
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 
 		PutClientInServer();
-		ScoreKeeper_Touch(player);
+		scores_touch(player);
 		self = oldself;
 		spectator_note_update();
 		if (teamplay)
@@ -1413,7 +1413,7 @@ void(entity spot) player_spawn {
 	self.statdraintime = time + 5;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 	if(self.killcount == -666) {
-		PlayerScore_Clear(self);
+		scores_clear(self);
 		self.killcount = 0;
 	}
 	self.cnt = WEP_LASER;

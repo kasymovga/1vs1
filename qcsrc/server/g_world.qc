@@ -548,7 +548,6 @@ void spawnfunc_worldspawn (void)
 	world_initialized = 1;
 	IRC_Init();
 	InfoMessages_Init();
-    IP2C_InitSV();
 }
 
 void spawnfunc_light (void)
@@ -690,7 +689,7 @@ void DumpStats(float final)
 			fputs(file, strcat(s, "\n"));
 	}
 
-	s = strcat(":labels:player:", GetPlayerScoreString(world, 0));
+	s = strcat(":labels:player:", scores_player_string(world, 0));
 	if(to_console)
 		print(s, "\n");
 	if(to_file)
@@ -700,7 +699,7 @@ void DumpStats(float final)
 	{
 		if ((clienttype(other) == CLIENTTYPE_REAL) || (clienttype(other) == CLIENTTYPE_BOT && cvar("sv_logscores_bots")))
 		{
-			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
+			s = strcat(":player:see-labels:", scores_player_string(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
 			if(other.classname == "player")
 				s = strcat(s, ftos(other.team), ":");
@@ -716,7 +715,7 @@ void DumpStats(float final)
 
 	if(teamplay)
 	{
-		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
+		s = strcat(":labels:teamscores:", scores_team_string(0, 0));
 		if(to_console)
 			print(s, "\n");
 		if(to_file)
@@ -724,7 +723,7 @@ void DumpStats(float final)
 
 		for(i = 1; i < 16; ++i)
 		{
-			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
+			s = strcat(":teamscores:see-labels:", scores_team_string(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
 				print(s, "\n");

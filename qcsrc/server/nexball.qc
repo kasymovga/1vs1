@@ -1,7 +1,7 @@
 //EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
-#define ST_NEXBALL_GOALS ST_GAME_SCORE1
-#define SP_NEXBALL_GOALS SP_GAME_SCORE1
-#define SP_NEXBALL_FAULTS SP_GAME_SCORE2
+float ST_NEXBALL_GOALS;
+float SP_NEXBALL_GOALS;
+float SP_NEXBALL_FAULTS;
 #define BALL_EFFECTMASK 1229
 #define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
 #define BALL_MAXS '16 16 16'
@@ -576,16 +576,16 @@ void GoalTouch (void)
 	if(ball.team && pscore)
 	{
 		if (nb_teams == 2 && pscore < 0)
-			TeamScore_AddToTeam(otherteam, ST_NEXBALL_GOALS, -pscore);
+			scores_team_add_to(otherteam, ST_NEXBALL_GOALS, -pscore);
 		else
-			TeamScore_AddToTeam(ball.team, ST_NEXBALL_GOALS, pscore);
+			scores_team_add_to(ball.team, ST_NEXBALL_GOALS, pscore);
 	}
 	if (isclient)
 	{
 		if (pscore > 0)
-			PlayerScore_Add(ball.pusher, SP_NEXBALL_GOALS, pscore);
+			scores_player_add(ball.pusher, SP_NEXBALL_GOALS, pscore);
 		else if (pscore < 0)
-			PlayerScore_Add(ball.pusher, SP_NEXBALL_FAULTS, -pscore);
+			scores_player_add(ball.pusher, SP_NEXBALL_FAULTS, -pscore);
 	}
 
 	if (ball.owner) // Happens on spawnflag GOAL_TOUCHPLAYER
@@ -665,12 +665,12 @@ void nb_delayedinit (void)
 	if (find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
 
-	CheckAllowedTeams(world);
+	teams_check_allowed(world);
 	nb_teams = 4 + c1 + c2 + c3 + c4;
-	ScoreRules_basics(0, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	scores_basics(0, 0, TRUE);
+	ST_NEXBALL_GOALS = scores_register_team_score("goals", SFL_SORT_PRIO_PRIMARY);
+	SP_NEXBALL_GOALS = scores_register_score("goals", SFL_SORT_PRIO_PRIMARY);
+	SP_NEXBALL_FAULTS = scores_register_score("faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
 }
 
 //=======================//

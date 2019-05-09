@@ -193,39 +193,9 @@ const float HUD_SPIDERBOT = 10;
 #define SFL_SORT_PRIO_SECONDARY 4
 #define SFL_SORT_PRIO_PRIMARY   8
 #define SFL_SORT_PRIO_MASK     12
-
-/**
- * Score indices
- */
-
-enum {
-	ST_SCORE = 0,
-	ST_GAME_SCORE1,
-#define MAX_TEAMSCORE 2
-};
-
-enum {
-	SP_KILLS = 0,
-	SP_DEATHS,
-	SP_SUICIDES,
-	SP_SCORE,
-	SP_DAMAGE,
-	SP_STATUS,
-	SP_COUNTRY,
-	SP_TEAM,
-#define SP_TEAM_BIT 128
-	SP_BESTWEP,
-	SP_GAME_SCORE1,
-	SP_GAME_SCORE2,
-	SP_GAME_SCORE3,
-	SP_GAME_SCORE4,
-	SP_GAME_SCORE5,
-	SP_GAME_SCORE6,
-	SP_GAME_SCORE7,
+#define SFL_NOCLEAR            16
 #define MAX_SCORE 16
-};
-
-// game mode specific indices are not in common/, but in server/scores_rules.qc!
+#define MAX_TEAMSCORE 2
 
 // this sets sounds and other properties of the projectiles in csqc
 enum {

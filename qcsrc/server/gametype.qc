@@ -19,11 +19,12 @@ void() gametype_readcvars {
 
 void() gametype_default_delayed_init {
 	if(!scores_preinitialized)
-		ScoreRules_generic();
+		scores_generic();
 
 	ScoreDamage_Init();
 	Damage_RecordInit();
-	ScoreRules_basics_end();
+	IP2C_InitSV();
+	scores_basics_end();
 }
 
 void() gametype_init {

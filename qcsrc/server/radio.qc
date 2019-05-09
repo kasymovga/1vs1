@@ -347,7 +347,7 @@ float Radio_ClientCommandHandle(string cmd, float tokens) {
 //
 //        float o = self.radio_enabled;
 //        self.radio_enabled = stof(argv(1));
-//        PlayerScore_SetFlagsBoolean(self, SPFLAG_MUTE, !self.radio_enabled);
+//        scores_player_setFlagsBoolean(self, SPFLAG_MUTE, !self.radio_enabled);
 //
 //        if(!o && self.radio_enabled)
 		if (stof(argv(1)))

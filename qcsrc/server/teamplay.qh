@@ -5,3 +5,4 @@ float FindSmallestTeam(entity pl);
 void GetTeamCounts(entity ignore);
 string ColoredTeamName(float t);
 void() teams_balance_check;
+void(entity pl) teams_check_allowed;

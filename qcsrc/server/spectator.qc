@@ -174,7 +174,7 @@ void() spectator_to_player {
 				campaign_bots_may_start = 1;
 
 			PutClientInServer();
-			ScoreKeeper_Touch(self);
+			scores_touch(self);
 			if(self.classname == "player")
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
@@ -212,7 +212,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 		bprint ("^4", self.netname, "^4 is spectating now\n");
 
 	if (self.team >= 0)
-		PlayerScore_Clear(self); // clear scores when needed
+		scores_clear(self); // clear scores when needed
 
 	self.spectatortime = time;
 
@@ -266,7 +266,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 
 	if (self.team != -1) {
 		self.team = -1;
-		ScoreKeeper_Touch(self);
+		scores_touch(self);
 	}
 
 	self.touch = world.touch;

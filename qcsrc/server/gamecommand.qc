@@ -267,7 +267,7 @@ void GameCommand(string command)
 	}
 	if (cmd == "teamstatus")
 	{
-		Score_NicePrint(world);
+		scores_nice_print(world);
 		return;
 	}
 	if (cmd == "allready")
@@ -539,7 +539,7 @@ void GameCommand(string command)
 		autoswap_last_best = world;
 		FOR_EACH_TEAMPLAYER(plr)
 		{
-			CheckAllowedTeams(plr);
+			teams_check_allowed(plr);
 			if (t == COLOR_TEAM4)
 				t = COLOR_TEAM1;
 			else if (t == COLOR_TEAM1)

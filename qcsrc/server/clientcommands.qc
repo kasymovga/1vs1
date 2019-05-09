@@ -372,7 +372,7 @@ void SV_ParseClientCommand(string s) {
 		else
 			wordwrap_sprint(cmd, 1111);
 	} else if(cmd == "teamstatus") {
-		Score_NicePrint(self);
+		scores_nice_print(self);
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
 	} else if(cmd == "menu_select") {
@@ -488,7 +488,6 @@ void ReadyRestartForce()
 
 void ReadyRestart()
 {
-	// no arena, assault support yet...
 	if(GameHook_ReadyRestartHard() | gameover | intermission_running) {
 		localcmd("\nrestart\n");
 		return;
@@ -501,7 +500,7 @@ void ReadyRestart()
 	//of the countdown if sv_ready_restart_after_countdown is off!
 	//Otherwise scores could be manipulated during the countdown!
 	if (!cvar("sv_ready_restart_after_countdown"))
-		Score_ClearAll();
+		scores_clear_all();
 }
 
 /**
@@ -538,7 +537,7 @@ void ReadyCount()
  */
 void restartTimer_Think() {
 	world_reset(TRUE);
-	Score_ClearAll();
+	scores_clear_all();
 	remove(self);
 	restart_active = 0;
 	return;

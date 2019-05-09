@@ -53,6 +53,17 @@ const float COLOR_SPECTATOR = 1337;
 #define SP_PL -6
 #define SP_FRAGS -7
 #define SP_STATUS_STRING -8
+#define SP_COUNTRY -9
+#define SP_STATUS -10
+#define SP_BESTWEP -12
+float SP_COUNTRY_FIELD;
+float SP_TEAM_FIELD;
+float SP_TEAM_BIT;
+float SP_STATUS_FIELD;
+float SP_KILLS_FIELD;
+float SP_BESTWEP_FIELD;
+float SP_SUICIDES_FIELD;
+float SP_DEATHS_FIELD;
 
 #define SP_SEPARATOR -100
 

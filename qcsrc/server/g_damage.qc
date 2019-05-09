@@ -1,3 +1,4 @@
+float SP_BESTWEP;
 .float dmg;
 .float dmg_edge;
 .float dmg_force;
@@ -91,7 +92,7 @@ float IsDifferentTeam(entity a, entity b)
 
 void UpdateFrags(entity player, float f)
 {
-	PlayerTeamScore_AddScore(player, f);
+	scores_player_team_add_score(player, f);
 }
 
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it
@@ -106,21 +107,21 @@ void GiveFrags (entity attacker, entity targ, float f)
 		if(targ == attacker)
 		{
 			// suicide
-			PlayerScore_Add(attacker, SP_SUICIDES, 1);
+			scores_player_add(attacker, SP_SUICIDES, 1);
 		}
 		else
 		{
 			// teamkill
-			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			scores_player_add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
 		}
 	}
 	else
 	{
 		// regular frag
-		PlayerScore_Add(attacker, SP_KILLS, 1);
+		scores_player_add(attacker, SP_KILLS, 1);
 	}
 
-	PlayerScore_Add(targ, SP_DEATHS, 1);
+	scores_player_add(targ, SP_DEATHS, 1);
 
 	f = GameHook_FragsHandle(attacker, targ, f);
 
@@ -394,7 +395,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			else
 				bprint ("^1",s, "^1 died\n");
 			GiveFrags(targ, targ, -1);
-			if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
+			if(scores_player_add(targ, SP_SCORE, 0) == -5) {
 				announce(targ, "announcer/male/botlike.wav");
 			}
 
@@ -622,7 +623,7 @@ void Damage_RecordFires(entity attacker, float deathtype, float shots)
 			float bestwep = s.scores[SP_BESTWEP] & 63;
 			if (weaponid == bestwep) {
 				f = rint(attacker.bullets_hit[weaponid] * 100 / f) * 64 + weaponid;
-				PlayerScore_Set(attacker, SP_BESTWEP, f);
+				scores_player_set(attacker, SP_BESTWEP, f);
 			}
 		}
 	}
@@ -651,7 +652,7 @@ void Damage_RecordHits(entity attacker, entity targ, float deathtype, float hits
 			if (attacker.actual_damage[bestwep] <= d) {
 				float f;
 				f = rint(h * 100 / attacker.bullets_fired[weaponid]) * 64 + weaponid;
-				PlayerScore_Set(attacker, SP_BESTWEP, f);
+				scores_player_set(attacker, SP_BESTWEP, f);
 			}
 		}
 		attacker.damage_hits = weaponid + 64 * rint(attacker.bullets_hit[weaponid]);
@@ -661,7 +662,7 @@ void Damage_RecordHits(entity attacker, entity targ, float deathtype, float hits
 void Damage_RecordInit() {
 	CACHE_CVAR(g_score_bestweapon);
 	if (g_score_bestweapon)
-		ScoreInfo_SetLabel_PlayerScore(SP_BESTWEP, "bestwep", 0);
+		SP_BESTWEP = scores_register_score("bestwep", 0);
 }
 
 float RadiusDamage_running;

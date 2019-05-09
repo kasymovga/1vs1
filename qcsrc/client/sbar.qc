@@ -543,7 +543,7 @@ void Cmd_Sbar_SetFields(float argc)
 			sbar_field[sbar_num_fields] = SP_NAME;
 			have_name = 1;
 		} else if(str == "status") {
-			sbar_field[sbar_num_fields] = SP_STATUS_STRING;
+			sbar_field[sbar_num_fields] = SP_STATUS;
 		} else if(str == "|") {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
 			have_separator = 1;
@@ -563,7 +563,11 @@ void Cmd_Sbar_SetFields(float argc)
 				continue;
 			}
 :found
-			sbar_field[sbar_num_fields] = j;
+			if(str == "bestwep")
+				sbar_field[sbar_num_fields] = SP_BESTWEP;
+			else
+				sbar_field[sbar_num_fields] = j;
+
 			if(j == ps_primary)
 				have_primary = 1;
 			if(j == ps_secondary)
@@ -694,8 +698,8 @@ string Sbar_GetField(entity pl, float field)
 			return str;
 
 		case SP_COUNTRY:
-            float char0 = pl.(scores[SP_COUNTRY]) & 0xff;
-            float char1 = floor(pl.(scores[SP_COUNTRY]) / 256) & 0xff;
+            float char0 = pl.(scores[SP_COUNTRY_FIELD]) & 0xff;
+            float char1 = floor(pl.(scores[SP_COUNTRY_FIELD]) / 256) & 0xff;
 
             if(!char0 || !char1)
                 return "";
@@ -719,8 +723,8 @@ string Sbar_GetField(entity pl, float field)
 				}
 			}
 			return strcat(GetPlayerName(pl.sv_entnum), "^0#", ftos(pl.sv_entnum + 1));
-		case SP_STATUS_STRING:
-			if ((pl.(scores[SP_STATUS]) == 0)) {
+		case SP_STATUS:
+			if ((pl.(scores[SP_STATUS_FIELD]) == 0)) {
 				sbar_field_rgb = '0.25 1 0.25';
 				return "\x13";
 			} else {
@@ -729,13 +733,13 @@ string Sbar_GetField(entity pl, float field)
 			}
 
 		case SP_FRAGS:
-			f = pl.(scores[SP_KILLS]);
-			f -= pl.(scores[SP_SUICIDES]);
+			f = pl.(scores[SP_KILLS_FIELD]);
+			f -= pl.(scores[SP_SUICIDES_FIELD]);
 			return ftos(f);
 
 		case SP_KDRATIO:
-			num = pl.(scores[SP_KILLS]);
-			denom = pl.(scores[SP_DEATHS]);
+			num = pl.(scores[SP_KILLS_FIELD]);
+			denom = pl.(scores[SP_DEATHS_FIELD]);
 
 			if(denom == 0) {
 				sbar_field_rgb = '0 1 0';
@@ -750,6 +754,10 @@ string Sbar_GetField(entity pl, float field)
 			if(tmp > 0)
 				str = substring(str, 0, tmp+2);
 			return str;
+
+		case SP_BESTWEP:
+			tmp = pl.(scores[SP_BESTWEP_FIELD]);
+			return ScoreString(0, tmp);
 
 		default:
 			tmp = pl.(scores[field]);

@@ -4,17 +4,17 @@ void Clanarena_Spawn(entity spot) {
 	Roundbased_NeedCheckTeams();
 	if not(Roundbased_Active)
 	if not(Roundbased_RestartTime) {
-		PlayerScore_Set(self, SP_STATUS, 0);
+		scores_player_set(self, SP_STATUS, 0);
 		return;
 	}
-	PlayerScore_Set(self, SP_STATUS, 1);
+	scores_player_set(self, SP_STATUS, 1);
 	spectator_observer_spawn(FALSE);
 }
 
 float Clanarena_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 	Roundbased_NeedCheckTeams();
 	if (Roundbased_Active)
-		PlayerScore_Set(self, SP_STATUS, 1);
+		scores_player_set(self, SP_STATUS, 1);
 
 	return FALSE;
 }
@@ -33,5 +33,5 @@ void Clanarena_Init_Shared(string gt) {
 	GameHookChain_PlayerClear = Clanarena_PlayerClear;
 	Clanarena_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Clanarena_Spawn;
-	ScoreInfo_SetLabel_PlayerScore(SP_STATUS, "status", 0);
+	SP_STATUS = scores_register_score("status", 0);
 }

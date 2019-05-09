@@ -389,7 +389,7 @@ void bot_removefromlargestteam()
 {
 	local float besttime, bestcount, thiscount;
 	local entity best, head;
-	CheckAllowedTeams(world);
+	teams_check_allowed(world);
 	GetTeamCounts(world);
 	head = findchainfloat(isbot, TRUE);
 	if (!head)

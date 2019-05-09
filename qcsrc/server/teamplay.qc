@@ -172,7 +172,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		//bprint(pl.netname, " has changed to ", TeamNoName(t), "\n");
 		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
 	}
-	ScoreKeeper_Touch(pl);
+	scores_touch(pl);
 }
 
 float at1, at2, at3, at4;
@@ -196,8 +196,7 @@ void SetTeamCount(float c) {
 }
 
 // set c1...c4 to show what teams are allowed
-void CheckAllowedTeams (entity for_whom)
-{
+void(entity for_whom) teams_check_allowed {
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 	if (at1) c1 = 0;
@@ -310,13 +309,13 @@ void GetTeamCounts(entity ignore)
 }
 
 // returns # of smallest team (1, 2, 3, 4)
-// NOTE: Assumes CheckAllowedTeams has already been called!
+// NOTE: Assumes teams_check_allowed has already been called!
 float FindSmallestTeam(entity pl)
 {
 	float smallestteam_count, smallestteam_score, team_random;
 
 	// find out what teams are available
-	//CheckAllowedTeams();
+	//teams_check_allowed();
 
 	// make sure there are at least 2 teams to join
 	// count how many players are in each team
@@ -424,7 +423,7 @@ void JoinBestTeam(entity pl, float forcebestteam)
 		return;
 	}
 	// find out what teams are available
-	CheckAllowedTeams(pl);
+	teams_check_allowed(pl);
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
@@ -472,7 +471,7 @@ void SV_ChangeTeam(float _color)
 
 void ChangeTeam(entity pl, float dteam, float nobalance) {
 	float dcount, scount;
-	CheckAllowedTeams(pl);
+	teams_check_allowed(pl);
 	switch (dteam) {
 	case COLOR_TEAM1: if (c1 < 0) return; break;
 	case COLOR_TEAM2: if (c2 < 0) return; break;
@@ -783,7 +782,7 @@ void AuditTeams(float force)
 	if (bot_vs_human)
 		return;
 
-	CheckAllowedTeams(world);
+	teams_check_allowed(world);
 	GetTeamCounts(world);
 	numteams = numplayers = smallest = 0;
 	if(c1 >= 0)
@@ -876,7 +875,7 @@ void tdm_delayedinit()
 	for (e = find(world, classname, "tdm_team"); e; e = find(e, classname, "tdm_team")) {
 		SetAllowedTeam(e.team);
 	}
-	CheckAllowedTeams(world);
+	teams_check_allowed(world);
 	float teams_override = cvar("g_tdm_teams_override");
 	if (c1 + c2 + c3 + c4 < -2 || teams_override > 1) {
 		SetTeamCount(0);
@@ -923,7 +922,7 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 	FOR_EACH_PLAYER(e) {
 		if (e.team == from) {
 			if (best) {
-				if (PlayerScore_Compare(best.scorekeeper, e.scorekeeper) < 0)
+				if (scores_compare_players(best.scorekeeper, e.scorekeeper) < 0)
 					best = e;
 			} else
 				best = e;
@@ -932,7 +931,7 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 	FOR_EACH_PLAYER(e) {
 		if (e.team == to) {
 			if (worst) {
-				if (PlayerScore_Compare(worst.scorekeeper, e.scorekeeper) > 0)
+				if (scores_compare_players(worst.scorekeeper, e.scorekeeper) > 0)
 					worst = e;
 			} else
 				worst = e;
@@ -965,8 +964,8 @@ void() teams_balance_check {
 	if (bot_vs_human)
 		return;
 
-	float t1 = TeamScore_GetCompareValue(COLOR_TEAM1);
-	float t2 = TeamScore_GetCompareValue(COLOR_TEAM2);
+	float t1 = scores_team_comparable_value(COLOR_TEAM1);
+	float t2 = scores_team_comparable_value(COLOR_TEAM2);
 	if (g_balance_teams_adjust_sizes > 0) {
 		float f = t2 - t1;
 		team_size_adjust = 0;
@@ -985,7 +984,7 @@ void() teams_balance_check {
 	if not(g_balance_teams_autoswap)
 		return;
 
-	CheckAllowedTeams(world);
+	teams_check_allowed(world);
 	GetTeamCounts(world);
 	if (c1 >= 0)
 	if (c2 >= 0)
