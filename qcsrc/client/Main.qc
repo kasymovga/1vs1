@@ -1124,7 +1124,6 @@ void Ent_ScoresInfo(float ignore)
 		else if (s == "deaths")
 			SP_DEATHS_FIELD = i;
 		else if (s == "team") {
-			print("team score info\n");
 			SP_TEAM_BIT = 1;
 			SP_TEAM_FIELD = i;
 			for (j = 0; j < i; j++) SP_TEAM_BIT = SP_TEAM_BIT * 2;
