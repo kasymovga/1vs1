@@ -888,7 +888,7 @@ void Ent_ReadPlayerScore(float ignore)
 
 void Ent_ReadTeamScore(float ignore)
 {
-	float i;
+	float i, t;
 	entity o;
 
 	self.team = ReadByte();
@@ -915,7 +915,13 @@ void Ent_ReadTeamScore(float ignore)
 	Sbar_UpdateTeamPos(o);
 	if (SP_TEAM_BIT)
 		for(o = players.sort_next; o; o = o.sort_next)
-			SetTeam(o, o.scores[SP_TEAM_FIELD]);
+			if (o.gotscores) {
+				t = o.scores[SP_TEAM_FIELD];
+				if (t < 0)
+					t = COLOR_SPECTATOR;
+
+				SetTeam(o, t);
+			}
 }
 
 void Net_Reset()
@@ -1105,7 +1111,7 @@ void VoteCommands_Read() {
 void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
-	float i, j;
+	float i, j, t;
 	entity o;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadByte();
@@ -1128,8 +1134,13 @@ void Ent_ScoresInfo(float ignore)
 			SP_TEAM_FIELD = i;
 			for (j = 0; j < i; j++) SP_TEAM_BIT = SP_TEAM_BIT * 2;
 			for (o = players.sort_next; o; o = o.sort_next)
-				if (o.gotscores)
-					SetTeam(o, o.scores[SP_TEAM_FIELD]);
+				if (o.gotscores) {
+					t = o.scores[SP_TEAM_FIELD];
+					if (t < 0)
+						t = COLOR_SPECTATOR;
+
+					SetTeam(o, t);
+				}
 		} else if (s == "status")
 			SP_STATUS_FIELD = i;
 
@@ -1177,12 +1188,13 @@ void Ent_Init(float ignore)
 		teamplay = ReadByte();
 		if not(teamplay) {
 			GetTeam(0, true);
-			entity o;
-			if (SP_TEAM_BIT)
-				for(o = players.sort_next; o; o = o.sort_next)
-					if (o.gotscores)
-						SetTeam(o, o.scores[SP_TEAM_FIELD]);
 		}
+		entity o;
+		if (SP_TEAM_BIT)
+			for(o = players.sort_next; o; o = o.sort_next)
+				if (o.gotscores)
+					SetTeam(o, o.scores[SP_TEAM_FIELD]);
+
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));
 		Sbar_InitScores();
