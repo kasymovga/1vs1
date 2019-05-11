@@ -1,5 +1,5 @@
-float Casing_SendEntity(entity to, float sf)
-{
+#define casing_send Casing_SendEntity
+float(entity to, float sf) casing_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteCoord(MSG_ENTITY, self.origin_x);
@@ -12,11 +12,9 @@ float Casing_SendEntity(entity to, float sf)
 	return TRUE;
 }
 
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner)
-{
+void(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner) casing_spawn {
 	entity e;
 	vector org;
-
 	org = self.origin + self.view_ofs + self.weaponentity.spawnorigin_x * v_forward - self.weaponentity.spawnorigin_y * v_right + self.weaponentity.spawnorigin_z * v_up;
 	e = spawn();
 	e.state = casingtype;
@@ -24,7 +22,5 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	e.velocity = vel;
 	e.angles = ang;
 	e.oldorigin_x = compressShortVector(e.velocity);
-
-	Net_LinkEntity(e, TRUE, 0.2, Casing_SendEntity);
-		// 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
+	Net_LinkEntity(e, TRUE, 0.2, casing_send); // 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
 }

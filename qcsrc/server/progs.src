@@ -182,8 +182,7 @@ cl_physics.qc
 g_world.qc
 map.qc
 mapvote.qc
-g_casings.qc
-
+casing.qc
 t_jumppads.qc
 t_teleporters.qc
 g_triggers.qc

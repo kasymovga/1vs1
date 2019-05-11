@@ -145,7 +145,7 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 	endFireBallisticBullet();
 
 	if (g_casings >= 2)
-		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+		casing_spawn (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 	
 	self.campingrifle_bulletcounter = self.campingrifle_bulletcounter - 1;
 	W_CampingRifle_CheckMaxBullets();
