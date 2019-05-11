@@ -71,71 +71,71 @@ void minstagib_PlayerPreThink() {
 		if (self.health <= 5)
 		{
 			centerprint(self, "you're dead now...\n");
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/terminated.wav");
 		}
 		else if (self.health <= 10)
 		{
 			centerprint(self, "^11^7 second left to find some ammo\n");
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/1.wav");
 		}
 		else if (self.health <= 20)
 		{
 			centerprint(self, "^12^7 seconds left to find some ammo\n");
-			Damage(self, self, self, self.health - 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, self.health - 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/2.wav");
 		}
 		else if (self.health <= 30)
 		{
 			centerprint(self, "^13^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/3.wav");
 		}
 		else if (self.health <= 40)
 		{
 			centerprint(self, "^14^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/4.wav");
 		}
 		else if (self.health <= 50)
 		{
 			centerprint(self, "^15^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/5.wav");
 		}
 		else if (self.health <= 60)
 		{
 			centerprint(self, "^36^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/6.wav");
 		}
 		else if (self.health <= 70)
 		{
 			centerprint(self, "^37^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/7.wav");
 		}
 		else if (self.health <= 80)
 		{
 			centerprint(self, "^38^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/8.wav");
 		}
 		else if (self.health <= 90)
 		{
 			centerprint(self, "^39^7 seconds left to find some ammo\n");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/9.wav");
 		}
 		else if (self.health <= 100)
 		{
 			centerprint(self, "get some ammo or\nyou'll be dead in ^310^7 seconds...");
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			announce(self, "announcer/robotic/10.wav");
 		}
 		else {
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 		}
 	}
 	self.minstagib_nextthink = time + 1;
@@ -261,22 +261,22 @@ float minstagib_PlayerEffectsHandle() {
 	return TRUE;
 }
 
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) minstagib_PlayerDamageHandle_NextLink;
-float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) minstagib_PlayerDamageHandle_NextLink;
+float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if ((deathtype == DEATH_FALL)  ||
 		(deathtype == DEATH_DROWN) ||
 		(deathtype == DEATH_SLIME) ||
 		(deathtype == DEATH_LAVA))
 		return TRUE;
 
-	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && damage)
+	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && _damage)
 	{
-		self.armorvalue -= min(damage, min(self.armorvalue, 100));
+		self.armorvalue -= min(_damage, min(self.armorvalue, 100));
 		GameHookChain_PlayerDamageMod = 0;
 		self.hitsound += 1;
 		attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 	}
-	return minstagib_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
+	return minstagib_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
 
 var void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet_NextLink;
@@ -319,7 +319,7 @@ float minstagib_MirrorDamageHandle(entity attacker, entity inflictor, float mirr
 		centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
 		attacker.hitsound += 1;
 	}
-	Damage(attacker, inflictor, attacker, 0, DEATH_MIRRORDAMAGE, attacker.origin, force);
+	damage(attacker, inflictor, attacker, 0, DEATH_MIRRORDAMAGE, attacker.origin, force);
 	return TRUE;
 }
 

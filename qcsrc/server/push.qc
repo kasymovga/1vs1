@@ -14,7 +14,7 @@ void(void) push_touch {
 	if not(other.takedamage)
 		return;
 
-	float damage, damage_speed;
+	float _damage, damage_speed;
 	vector velocity_norm = normalize(self.velocity);
 	if (velocity_norm * trace_plane_normal >= 0) //wrong direction
 		return;
@@ -24,17 +24,17 @@ void(void) push_touch {
 		return;
 
 	if (trace_plane_normal == '0 0 1') {
-		damage = g_push_trampledamage;
+		_damage = g_push_trampledamage;
 		damage_speed = g_push_trampledamage_speed;
 		push_velocity_x = 0;
 		push_velocity_y = 0;
 	} else {
-		damage = g_push_damage;
+		_damage = g_push_damage;
 		damage_speed = g_push_damage_speed;
 	}
 	float push_speed = vlen(push_velocity);
-	if (push_speed > damage_speed && damage > 0 && other.takedamage)
-		Damage(other, self, ((self.owner.classname == "player") ? self.owner : self), damage * (push_speed / (damage_speed / pushfactor_nomin)), DEATH_FALL, other.origin, push_velocity);
+	if (push_speed > damage_speed && _damage > 0 && other.takedamage)
+		damage(other, self, ((self.owner.classname == "player") ? self.owner : self), _damage * (push_speed / (damage_speed / pushfactor_nomin)), DEATH_FALL, other.origin, push_velocity);
 	else
 		other.velocity = other.velocity + push_velocity;
 }

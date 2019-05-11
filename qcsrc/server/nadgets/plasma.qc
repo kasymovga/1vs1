@@ -14,7 +14,7 @@ void HG_Plasma_Shard_Explode(void) {
     float p = Buffs_NadgetPower(self.realowner);
 #endif
 
-    RadiusDamage(self, self.realowner,
+    damage_radius(self, self.realowner,
         cvar("g_nadgets_plasma_projectile_damage") /* * p */,
         cvar("g_nadgets_plasma_projectile_edgedamage") /* * p */,
         cvar("g_nadgets_plasma_projectile_radius"),
@@ -70,7 +70,7 @@ void HG_Plasma_Shard_Think(void) {
 		if (trace_ent != e)
 			continue;
 
-		Damage(e, self, self.realowner,
+		damage(e, self, self.realowner,
 				pdmg,
 				HG_PLASMA | HITTYPE_BOUNCE, trace_endpos,
 				'0 0 0');

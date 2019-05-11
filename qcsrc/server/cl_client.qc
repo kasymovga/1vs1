@@ -225,7 +225,7 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 	else
-		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+		damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
 	if(self.killindicator)
 	{

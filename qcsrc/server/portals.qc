@@ -400,14 +400,14 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Portal_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(deathtype == WEP_PORTO)
 		return;
 	if(attacker != self.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(self.aiment))
 			return;
-	self.health -= damage;
+	self.health -= _damage;
 	if(self.health < 0)
 		Portal_Remove(self, 1);
 }

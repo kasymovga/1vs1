@@ -36,7 +36,7 @@ float sv_breakable_debris;
 
 .vector mins_save, maxs_save;
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -189,7 +189,7 @@ void func_breakable_destroy() {
 		sound (self, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 
 	if(self.dmg)
-		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
+		damage_radius(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
 
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
@@ -207,7 +207,7 @@ void func_breakable_destroy() {
 	self.message = oldmsg;
 }
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void func_breakable_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.state == 1)
 		return;
@@ -219,7 +219,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 			return;
 	if(self.sprite)
 		WaypointSprite_Ping(self.sprite);
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	func_breakable_colormod();
 
 	if(self.health <= 0)

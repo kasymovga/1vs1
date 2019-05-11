@@ -221,11 +221,11 @@ float Ice_SpeedMod() {
 	return f;
 }
 
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Ice_PlayerDamageHandle_NextLink;
-float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) Ice_PlayerDamageHandle_NextLink;
+float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if not(self.deadflag == DEAD_FREEZE)
-		return Ice_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
+		return Ice_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 
 	if (attacker)
 	if (attacker.team != self.team)

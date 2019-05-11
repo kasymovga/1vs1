@@ -6,7 +6,7 @@ void turret_hellion_dinit();
 void turret_hellion_attack();
 void turret_hellion_missile_explode();
 void turret_hellion_missile_think();
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce);
+void turret_hellion_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce);
 
 void turret_hellion_postthink()
 {
@@ -60,9 +60,9 @@ void turret_hellion_attack()
 
 }
 
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_hellion_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
 {
-    self.health = self.health - damage;
+    self.health = self.health - _damage;
     self.velocity = self.velocity + vforce;
     if (self.health <= 0) turret_hellion_missile_explode();
 }
@@ -144,7 +144,7 @@ void turret_hellion_missile_explode()
 
     //w_deathtypestring = "could not dodge the twin missiles.";
     self.event_damage = SUB_Null;
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
+    damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
 
     // Target dead, get another is still targeting the same.
     if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))

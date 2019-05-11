@@ -99,7 +99,7 @@ void shieldhit_think()
     //self.think = SUB_Remove;
 }
 
-void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicle_stdproc_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 
     float ddmg_take;
@@ -128,7 +128,7 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
         sh.nextthink = time;
 
 
-        self.vehicle_shield -= damage;
+        self.vehicle_shield -= _damage;
         if(self.vehicle_shield < 0)
         {
             sh.colormod = '10 0 -1';
@@ -139,7 +139,7 @@ void vehicle_stdproc_damage(entity inflictor, entity attacker, float damage, flo
         }
     }
     else
-        self.health -= damage;
+        self.health -= _damage;
 
 	if (random() < 0.5)
 		sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);

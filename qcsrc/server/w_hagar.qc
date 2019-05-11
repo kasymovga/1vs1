@@ -25,7 +25,7 @@ var .float hagar_buttonatck2 = BUTTON_ATCK2;
 void W_Hagar_Explode (void)
 {
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.realowner, g_balance_hagar_primary_damage, g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, world, g_balance_hagar_primary_force, self.projectiledeathtype, other);
+	damage_radius (self, self.realowner, g_balance_hagar_primary_damage, g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, world, g_balance_hagar_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -33,7 +33,7 @@ void W_Hagar_Explode (void)
 void W_Hagar_Explode2 (void)
 {
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.realowner, g_balance_hagar_secondary_damage, g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, world, g_balance_hagar_secondary_force, self.projectiledeathtype, other);
+	damage_radius (self, self.realowner, g_balance_hagar_secondary_damage, g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, world, g_balance_hagar_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }

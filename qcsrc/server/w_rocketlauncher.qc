@@ -101,13 +101,13 @@ void W_Rocket_Explode (void)
 
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(teams_is_different(self.owner, other))
 				if(IsFlying(other))
 					announce(self.owner, "announcer/male/airshot.wav");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, g_balance_rocketlauncher_damage, g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, world, g_balance_rocketlauncher_force, self.projectiledeathtype, other);
+	damage_radius (self, self.owner, g_balance_rocketlauncher_damage, g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, world, g_balance_rocketlauncher_force, self.projectiledeathtype, other);
 
 	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
 	{
@@ -358,11 +358,11 @@ void W_Rocket_Touch (void)
 	W_Rocket_Explode ();
 }
 
-void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Rocket_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	self.angles = vectoangles(self.velocity);
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);

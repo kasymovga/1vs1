@@ -5,7 +5,7 @@ void trigger_teleport_use()
 }
 
 float tdeath_hit;
-void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float damage)
+void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage)
 {
 	entity head;
 	vector deathmin;
@@ -34,13 +34,13 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 						if(head.health >= 1)
 						if not(teamplay && head.team == player.team) {
 							++tdeath_hit;
-							Damage (head, teleporter, telefragger, damage, WEP_PORTO, head.origin, '0 0 0');
+							damage (head, teleporter, telefragger, _damage, WEP_PORTO, head.origin, '0 0 0');
 						}
 					}
 					else if (telefragger.health < 1) // corpses gib
-						Damage (head, teleporter, telefragger, damage, WEP_PORTO, head.origin, '0 0 0');
+						damage (head, teleporter, telefragger, _damage, WEP_PORTO, head.origin, '0 0 0');
 					else // dead bodies and monsters gib themselves instead of telefragging
-						Damage (telefragger, teleporter, telefragger, 10000, WEP_PORTO, telefragger.origin, '0 0 0');
+						damage (telefragger, teleporter, telefragger, 10000, WEP_PORTO, telefragger.origin, '0 0 0');
 				}
 }
 
@@ -50,7 +50,7 @@ void spawn_tdeath(vector v0, entity e, vector v)
 }
 
 .entity pusher;
-void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float damage)
+void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage)
 {
 	entity telefragger;
 	vector from;
@@ -90,7 +90,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if (player.takedamage)
 		if (player.deadflag == DEAD_NO)
 		if (GameHook_TelefragsAllowed())
-			tdeath(player, teleporter, telefragger, telefragmin, telefragmax, damage);
+			tdeath(player, teleporter, telefragger, telefragmin, telefragmax, _damage);
 
 		// player no longer is on ground
 		player.flags &~= FL_ONGROUND;

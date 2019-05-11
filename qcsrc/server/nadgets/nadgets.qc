@@ -15,8 +15,8 @@ void HG_ForceDetonateAll(void);
 
 var void() HG_PlayerPreThink_NextLink;
 void HG_PlayerPreThink();
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) HG_PlayerDamageHandle_NextLink;
-float HG_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) HG_PlayerDamageHandle_NextLink;
+float HG_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
@@ -321,7 +321,7 @@ void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float all
         if(check == p)
             //bigprint(e, strcat("^7You got a ^3", n, "^7 bonus!"), reason, 3);
             centerprint(e, strcat("^7You got a ^3", n, "^7 bonus!", "\n", reason));
-        else if(IsDifferentTeam(check, p))
+        else if(teams_is_different(check, p))
             //bigprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!"), strcat("Given to ^3", p.netname, " ^7(", reason, ")"), 3);
             centerprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!\nGiven to ^3", p.netname, " ^7(", reason, ")"));
         else
@@ -943,7 +943,7 @@ void HG_Pick(float tokens) {
 	})
 }
 
-float HG_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
-	GameHookChain_PlayerDamageMod = HG_Shield_Damage(attacker, damage, deathtype, hitloc);
-	return HG_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
+float HG_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+	GameHookChain_PlayerDamageMod = HG_Shield_Damage(attacker, _damage, deathtype, hitloc);
+	return HG_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }

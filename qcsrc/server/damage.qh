@@ -1,0 +1,6 @@
+void(entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) damage;
+void(entity attacker, entity targ, float deathtype, float hits, float damage) damage_record_hits;
+void(entity attacker, float deathtype, float fires) damage_record_fires;
+void() damage_record_init;
+.float bullets_hit[WEP_COUNT]; 		//for hitscan bullets hit
+.float bullets_fired[WEP_COUNT];	//for hitscan bullets fired

@@ -160,7 +160,7 @@ void() hook_think {
 			if (self.aiment.takedamage)
 			while (self.hook_attack_time <= time)
 			{
-				Damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
+				damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
 			if not(self.aiment) {
@@ -290,7 +290,7 @@ void(void) hook_touch {
 	//self.owner.disableclientprediction = TRUE;
 }
 
-void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) hook_damage {
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) hook_damage {
 	if(self.health > 0)
 	{
 		float f;
@@ -299,7 +299,7 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		else
 			f = 1;
 
-		self.health = self.health - damage * f;
+		self.health = self.health - _damage * f;
 		if (self.health <= 0)
 		{
 			if(attacker != self.owner)
@@ -309,7 +309,7 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 			}
 			if (g_balance_grapplehook_break_damage)
 			if (f)
-				Damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEP_HOOK, self.owner.origin, '0 0 0');
+				damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEP_HOOK, self.owner.origin, '0 0 0');
 
 			hook_remove(self.owner);
 		}

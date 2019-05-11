@@ -603,7 +603,7 @@ void GoalTouch (void)
 		local float i;
 		local vector expl_orig;
 		local entity temp;
-		RadiusDamage(ball, ball.pusher, g_nexball_ball_explosive_damage, 0, g_nexball_ball_explosive_radius, ball, g_nexball_ball_explosive_force, DEATH_HURTTRIGGER, world);
+		damage_radius(ball, ball.pusher, g_nexball_ball_explosive_damage, 0, g_nexball_ball_explosive_radius, ball, g_nexball_ball_explosive_force, DEATH_HURTTRIGGER, world);
 		for (i = 0; i < 16; i++)
 		{
 			expl_orig = ball.origin + '-100 -100 0' + random() * '200 0 0' + random() * '0 200 0' + random() * '0 0 200';

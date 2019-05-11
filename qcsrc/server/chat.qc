@@ -306,7 +306,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		}
 		if (g_chat_flood_damage_flooder)
 		if not(source.deadflag)
-			Damage(source, world, world, g_chat_flood_damage_flooder, DEATH_HURTTRIGGER, source.origin, '0 0 0');
+			damage(source, world, world, g_chat_flood_damage_flooder, DEATH_HURTTRIGGER, source.origin, '0 0 0');
 	}
 	else if(privatesay)
 	{

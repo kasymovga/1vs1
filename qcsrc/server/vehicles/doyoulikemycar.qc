@@ -213,7 +213,7 @@ void car_spawn()
 
 void car_blowup()
 {
-    RadiusDamage (self, self, 100, 15, 250, world, 250, WEP_ROCKET_LAUNCHER, world);
+    damage_radius (self, self, 100, 15, 250, world, 250, WEP_ROCKET_LAUNCHER, world);
     self.alpha = -1;
     self.nextthink  = time + 10;
     self.think      = car_spawn;

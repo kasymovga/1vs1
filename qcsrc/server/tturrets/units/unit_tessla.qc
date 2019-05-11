@@ -3,7 +3,7 @@ void turret_tesla_dinit();
 void turret_tesla_fire();
 
 .float toasted;
-entity toast(entity from, float range, float damage)
+entity toast(entity from, float range, float _damage)
 {
     entity e;
     entity etarget;
@@ -40,7 +40,7 @@ entity toast(entity from, float range, float damage)
     {
         te_smallflash(etarget.origin);
         te_csqc_lightningarc(from.origin,etarget.origin);
-        Damage(etarget,self,self,damage,DEATH_TURRET,etarget.origin,'0 0 0');
+        damage(etarget,self,self,_damage,DEATH_TURRET,etarget.origin,'0 0 0');
         etarget.toasted = 1;
     }
 

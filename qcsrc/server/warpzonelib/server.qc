@@ -256,11 +256,11 @@ void WarpZone_Shadow_Think() {
 	setorigin(self, WarpZone_TransformOrigin(self.enemy, o.origin));
 }
 
-void WarpZone_Shadow_EventDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
-	if (RadiusDamage_running) //No need proxy splash damage
+void WarpZone_Shadow_EventDamage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+	if (damage_radius_running) //No need proxy splash damage
 		return;
 
-	Damage(self.owner, inflictor, attacker, damage, deathtype, WarpZone_UnTransformOrigin(self.enemy, hitloc), WarpZone_UnTransformVelocity(self.enemy, force));
+	damage(self.owner, inflictor, attacker, _damage, deathtype, WarpZone_UnTransformOrigin(self.enemy, hitloc), WarpZone_UnTransformVelocity(self.enemy, force));
 	self.velocity = '0 0 0';
 }
 

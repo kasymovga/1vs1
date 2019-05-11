@@ -369,24 +369,24 @@ void(void) player_anim {
 		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 }
 
-void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) player_corpse_damage {
-	violence_gib_splash_at(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_corpse_damage {
+	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 
 	// damage resistance (ignore most of the damage from a bullet or similar)
-	damage = max(damage - 5, 1);
+	_damage = max(_damage - 5, 1);
 
-	if (damage > 30)
+	if (_damage > 30)
 		sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
-	else if (damage > 10)
+	else if (_damage > 10)
 		sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 
-	if (damage > 50)
+	if (_damage > 50)
 		violence_gib_splash_at(hitloc, force * -0.1, 3, 1, self, attacker);
-	if (damage > 100)
+	if (_damage > 100)
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	self.health = self.health - damage;
-	self.dmg_take = self.dmg_take + damage;//max(take - 10, 0);
+	self.health = self.health - _damage;
+	self.dmg_take = self.dmg_take + _damage;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 	if (self.health <= -75 && self.modelindex != 0)
 	{
@@ -422,6 +422,7 @@ void(float killed) player_clear {
 	WaypointSprite_PlayerDead();
 }
 
+float checkrules_firstblood;
 void(entity attacker, entity inflictor, entity targ, float deathtype) player_obituary {
 	string	s, a;
 	float p, w;
@@ -696,16 +697,16 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 }
 
 #define player_damage PlayerDamage
-void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) player_damage {
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
 	local float take, save, waves, sdelay, dh, da;
 	GameHookChain_PlayerDamageMod = 1;
-	if (GameHookChain_PlayerDamageHandle(inflictor, attacker, damage, deathtype, hitloc, force))
+	if (GameHookChain_PlayerDamageHandle(inflictor, attacker, _damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 
-	damage = damage * GameHookChain_PlayerDamageMod;
+	_damage = _damage * GameHookChain_PlayerDamageMod;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
@@ -722,8 +723,8 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		d = inflictor.origin - self.origin;
 		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
 		force = v_right * vlen(force);
-		violence_gib_splash_at(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
-		violence_gib_splash_at(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
+		violence_gib_splash_at(ear1, force * -1, 2, bound(0, _damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
+		violence_gib_splash_at(ear2, force,      2, bound(0, _damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
 		if(f > 0)
 		{
 			hitloc = ear1;
@@ -736,10 +737,10 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		}
 	}
 	else
-		violence_gib_splash_at(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+		violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 
-	save = bound(0, damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
-	take = bound(0, damage - save, damage);
+	save = bound(0, _damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
+	take = bound(0, _damage - save, _damage);
 	if (save > 10)
 		sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
 	else if (take > 30)
@@ -789,7 +790,7 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 
 			// throw off bot aim temporarily
 			local float shake;
-			shake = damage * 5 / (bound(0,skill,100) + 1);
+			shake = _damage * 5 / (bound(0,skill,100) + 1);
 			self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 			self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
 		}

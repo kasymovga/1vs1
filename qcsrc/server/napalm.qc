@@ -9,7 +9,7 @@ void Napalm_Burn(void) {
     vector p;
 
     float dtype = self.projectiledeathtype;
-    float damage = self.napalm_burn_damage;
+    float _damage = self.napalm_burn_damage;
     float edgedamage = self.napalm_burn_edgedamage;
     float dist = self.napalm_burn_radius;
     float burntime = self.napalm_burn_time;
@@ -27,24 +27,11 @@ void Napalm_Burn(void) {
 
     for(e = findradius(self.origin, dist); e; e = e.chain) if(e.takedamage == DAMAGE_AIM) {
         if(dtype != DEATH_HURTTRIGGER && e.classname == "player") {
-            sameteam = !IsDifferentTeam(o, e);
-
-#if 0
-            if(!ismedic) {
-#endif
-                if(sameteam && o != e)
-                    if(!cvar("g_friendlyfire"))
-                            continue;
-
-#if 0
-                if(!Buffs_TenacityDamage(e, o, damage, dtype))
-                    continue;
-#endif
-#if 0
-            }
-#endif
+            sameteam = !teams_is_different(o, e);
+			if(sameteam && o != e)
+				if(!cvar("g_friendlyfire"))
+						continue;
         }
-
         p = e.origin;
         p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
         p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
@@ -57,7 +44,7 @@ void Napalm_Burn(void) {
             if(trace_fraction < 1)
                 continue;
 
-            d = damage + (edgedamage - damage) * (vlen(self.origin - p) / dist);
+            d = _damage + (edgedamage - _damage) * (vlen(self.origin - p) / dist);
             fire_add_damage(e, o, d * burntime, burntime, dtype);
         }
     }

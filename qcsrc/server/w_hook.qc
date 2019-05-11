@@ -37,11 +37,10 @@ void W_Hook_ExplodeThink (void)
 
 	f = self.dmg_last - dmg_remaining_next;
 	self.dmg_last = dmg_remaining_next;
-	Damage_RecordFires(self.owner, WEP_HOOK, 1);
-
-	RadiusDamage (self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
+	damage_record_fires(self.owner, WEP_HOOK, 1);
+	damage_radius (self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
-	//RadiusDamage (self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, self.dmg_force * f, self.projectiledeathtype, world);
+	//damage_radius (self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, self.dmg_force * f, self.projectiledeathtype, world);
 
 	if(dt < self.dmg_duration)
 		self.nextthink = time + 0.05; // soon

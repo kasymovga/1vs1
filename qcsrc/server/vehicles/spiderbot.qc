@@ -67,7 +67,7 @@ void spiderbot_rocket_explode()
     org2 = findbetterlocation (self.origin, 16);
     w_deathtypestring = "dident escape the rocket barrage";
 
-    RadiusDamage (self, self.realowner,
+    damage_radius (self, self.realowner,
      g_vehicle_spiderbot_rocket_damage,
      g_vehicle_spiderbot_rocket_edgedamage,
      g_vehicle_spiderbot_rocket_radius, world,
@@ -464,7 +464,7 @@ void spiderbot_spawn()
 
 void spiderbot_blowup()
 {
-    RadiusDamage (self, self, 100, 15, 250, world, 250, WEP_ROCKET_LAUNCHER, world);
+    damage_radius (self, self, 100, 15, 250, world, 250, WEP_ROCKET_LAUNCHER, world);
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.nextthink  = time + 10;
     self.think      = spiderbot_spawn;

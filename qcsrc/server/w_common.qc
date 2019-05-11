@@ -86,7 +86,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		ent = findfloat(ent, railgunhit, TRUE);
 	}
 
-	// spawn a temporary explosion entity for RadiusDamage calls
+	// spawn a temporary explosion entity for damage_radius calls
 	//explosion = spawn();
 
 	// find all the entities the railgun hit and hurt them
@@ -107,12 +107,12 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		// apply the damage
 		if (ent.takedamage) {
 			float d = bdamage * f;
-			Damage_RecordHits(self, ent, deathtype, 1, d);
-			Damage (ent, self, self, d, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
+			damage_record_hits(self, ent, deathtype, 1, d);
+			damage(ent, self, self, d, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
 		}
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
-		//RadiusDamage (explosion, self, 10, 0, 50, world, 300, deathtype);
+		//damage_radius (explosion, self, 10, 0, 50, world, 300, deathtype);
 
 		// advance to the next entity
 		ent = findfloat(ent, railgunhit, TRUE);
@@ -137,7 +137,7 @@ void W_BallisticBullet_Hit (void)
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 
 	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
+		damage_info(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
 
 	if(other && other != self.enemy)
 	{
@@ -150,8 +150,8 @@ void W_BallisticBullet_Hit (void)
 		railgun_end = self.origin + 0.1 * self.velocity;
 
 		float d = self.dmg * f;
-		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1, d);
-		Damage(other, self, self.owner, d, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
+		damage_record_hits(self.owner, other, self.projectiledeathtype, 1, d);
+		damage(other, self, self.owner, d, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 
 		if(self.dmg_edge != 0)
@@ -186,7 +186,7 @@ void W_BallisticBullet_LeaveSolid_think()
 	{
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
-		Damage_DamageInfo(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
+		damage_info(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
 	}
 
 	UpdateCSQCProjectile(self);
@@ -316,7 +316,7 @@ void beginFireBallisticBullet(float pSpeed) {
 	}
 }
 
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
 	entity oldself, oldself_akimbo = self;
 	self = Akimbo_Owner(self);
@@ -347,7 +347,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	proj.dmg_radius = g_ballistics_materialconstant / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
-	proj.dmg = damage;
+	proj.dmg = _damage;
 	proj.dmg_edge = headshotbonus;
 	proj.dmg_force = force;
 	proj.projectiledeathtype = dtype;
@@ -412,7 +412,7 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 	self.owner = attacker;
 
 	// do not explode NOW but in the NEXT FRAME!
-	// because recursive calls to RadiusDamage are not allowed
+	// because recursive calls to damage_radius are not allowed
 	self.nextthink = time;
 	self.think = explode;
 }

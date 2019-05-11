@@ -6,12 +6,12 @@ void boss2_pellet_touch()
 {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg_edge, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
+		damage_info(self.origin, self.dmg_edge, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
 
 	if (other && other.takedamage)
 	{
 		entity o = self.realowner;
-		Damage(other, self, o, self.dmg_edge, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
+		damage(other, self, o, self.dmg_edge, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
 		self.cnt = 0;
 	}
 	if not(self.cnt)

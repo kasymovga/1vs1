@@ -30,14 +30,14 @@ void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(teams_is_different(self.owner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
 						announce(self.owner, "announcer/male/airshot.wav");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, g_balance_grenadelauncher_primary_damage, g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, world, g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
+	damage_radius (self, self.owner, g_balance_grenadelauncher_primary_damage, g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, world, g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -46,13 +46,13 @@ void W_Grenade_Explode2 (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(teams_is_different(self.owner, other))
 				if(IsFlying(other))
 					announce(self.owner, "announcer/male/airshot.wav");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, g_balance_grenadelauncher_secondary_damage, g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, world, g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
+	damage_radius (self, self.owner, g_balance_grenadelauncher_secondary_damage, g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, world, g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -90,11 +90,11 @@ void W_Grenade_Touch2 (void)
 	}
 }
 
-void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Grenade_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
 		W_PrepareExplosionByDamage(attacker, self.think);

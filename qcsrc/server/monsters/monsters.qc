@@ -12,7 +12,7 @@ float g_monster_pushfactor;
 void monster_proj_explode(void) {
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
+	damage_radius (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
 	remove (self);
 }
 
@@ -171,9 +171,9 @@ void monster_die() {
 		monster_drop_item(IT_CELLS, "models/items/a_cells.md3", "misc/itempickup.wav", "Cells", ammo_cells, self.ammo_cells);
 }
 
-void monster_corpse_event_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+void monster_corpse_event_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.classname != "monster")
-		self.health = self.health - damage;
+		self.health = self.health - _damage;
 
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < -200)
@@ -189,7 +189,7 @@ void monster_die_animated() {
 	self.event_damage = monster_corpse_event_damage;
 }
 
-void monster_event_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+void monster_event_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if (self.spawnflags & MONSTER_SPAWN_SHIELDED) {
         entity sh = spawn();
         sh.alpha = 0.5;
@@ -217,9 +217,9 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 			return;
 	}
 	if (attacker.classname != "monster")
-		self.health = self.health - damage;
+		self.health = self.health - _damage;
 
-	violence_gib_splash_at(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		stopsound(self, CHAN_TRIGGER);

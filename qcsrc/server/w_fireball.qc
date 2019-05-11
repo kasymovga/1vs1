@@ -50,7 +50,7 @@ void W_Fireball_Explode (void)
 
 	// 1. dist damage
 	d = (self.owner.health + self.owner.armorvalue);
-	RadiusDamage (self, self.realowner, g_balance_fireball_secondary_damage, g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, world, g_balance_fireball_secondary_force, self.projectiledeathtype, other);
+	damage_radius (self, self.realowner, g_balance_fireball_secondary_damage, g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, world, g_balance_fireball_secondary_force, self.projectiledeathtype, other);
 	if(self.realowner.health + self.realowner.armorvalue >= d)
 	if(!self.cnt)
 	{
@@ -58,7 +58,7 @@ void W_Fireball_Explode (void)
 
 		// 2. bfg effect
 		for(e = findradius(self.origin, g_balance_fireball_secondary_bfgradius); e; e = e.chain)
-		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || IsDifferentTeam(e, self))
+		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || teams_is_different(e, self))
 		{
 			// can we see fireball?
 			traceline(e.origin + e.view_ofs, self.origin, MOVE_NORMAL, e);
@@ -74,7 +74,7 @@ void W_Fireball_Explode (void)
 			if(points <= 0)
 				continue;
 			dir = normalize(e.origin + e.view_ofs - self.origin);
-			Damage(e, self, self.realowner, g_balance_fireball_secondary_bfgdamage * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, g_balance_fireball_secondary_bfgforce * dir);
+			damage(e, self, self.realowner, g_balance_fireball_secondary_bfgdamage * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, g_balance_fireball_secondary_bfgforce * dir);
 			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
 		}
 	}
@@ -88,7 +88,7 @@ void W_Fireball_TouchExplode (void)
 	W_Fireball_Explode ();
 }
 
-void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, float burntime)
+void W_Fireball_LaserPlay(float dt, float dist, float _damage, float edgedamage, float burntime)
 {
 	entity e;
 	float d;
@@ -96,7 +96,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 
 	random_selection_init();
 	for(e = findradius(self.origin, dist); e; e = e.chain)
-	if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || IsDifferentTeam(e, self))
+	if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || teams_is_different(e, self))
 	{
 		p = e.origin;
 		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
@@ -115,7 +115,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 	if(random_selection_chosen_ent)
 	{
 		d = vlen(self.origin - random_selection_chosen_ent.fireball_impactvec);
-		d = damage + (edgedamage - damage) * (d / dist);
+		d = _damage + (edgedamage - _damage) * (d / dist);
 		fire_add_damage(random_selection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec);
 		pointparticles(particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec - self.origin, 1);
@@ -136,11 +136,11 @@ void W_Fireball_Think()
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Fireball_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
 		self.cnt = 1;
@@ -256,7 +256,7 @@ void W_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if not(self.dmg)
-		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
+		damage_record_hits(self.owner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
 
 	if (other.takedamage == DAMAGE_AIM)
 	if(fire_add_damage(other, self.realowner, g_balance_fireball_primary_damage, g_balance_fireball_primary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)

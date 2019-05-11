@@ -99,14 +99,14 @@ void HG_Linker_Think(void) {
                         newhealth = newhealth + min(self.hg_linker_hps, max(0, lim - newhealth));
                     }
 
-                    Heal(p, self, self.owner,
+                    heal(p, self, self.owner,
                             max(0, newhealth - p.health), max(0, newarmor - p.armorvalue), 0, 0, HG_LINKER | HITTYPE_SECONDARY,
                             HEAL_PAUSEROT_DEFAULT, HEAL_PAUSEROT_DEFAULT, '0 0 0', '0 0 0');
 
                     p.health = newhealth;
                     p.armorvalue = newarmor;
                 } else {
-                    Heal(p, self, self.owner, self.hg_linker_hps, 0, 0, 0, HG_LINKER,
+                    heal(p, self, self.owner, self.hg_linker_hps, 0, 0, 0, HG_LINKER,
                          HEAL_PAUSEROT_DEFAULT, HEAL_PAUSEROT_DEFAULT, '0 0 0', '0 0 0');
                 }
             }

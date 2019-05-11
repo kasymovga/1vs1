@@ -45,7 +45,7 @@ void swampslug_think(void)
 	// Slug still alive, so we are still in the swamp
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
-	Damage (self.owner, self, self, self.dmg, DEATH_SWAMP, other.origin, '0 0 0');
+	damage(self.owner, self, self, self.dmg, DEATH_SWAMP, other.origin, '0 0 0');
 
 	self.nextthink = time + self.swamp_interval;
 }

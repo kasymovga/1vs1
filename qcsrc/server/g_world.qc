@@ -288,7 +288,8 @@ void readdynamiccvars() {
 	CACHE_CVAR(g_balance_falldamage_minspeed);
 	CACHE_CVAR(g_balance_falldamage_maxdamage);
 	W_Init();
-	Damage_ReadCvars();
+	damage_init();
+	fire_init();
 	PhysicReadCvars();
 	bot_init();
 	spawn_init();
@@ -1178,7 +1179,7 @@ void CreatureFrame (void)
 					if (!self.deadflag)
 					if (self.pain_finished < time)
 					{
-						Damage (self, world, world, 5, DEATH_DROWN, self.origin, '0 0 0');
+						damage(self, world, world, 5, DEATH_DROWN, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
@@ -1192,7 +1193,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
 						}
-						Damage (self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						damage(self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
@@ -1201,7 +1202,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CHAN_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
 						}
-						Damage (self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						damage(self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
 				}
 			}
@@ -1223,7 +1224,7 @@ void CreatureFrame (void)
 				dm = min((dm - g_balance_falldamage_minspeed) * g_balance_falldamage_factor, g_balance_falldamage_maxdamage);
 
 			if (dm > 0)
-				Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+				damage(self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 
 			// play stupid sounds
 			if (g_footsteps)

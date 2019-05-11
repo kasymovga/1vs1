@@ -46,22 +46,8 @@ void HG_GenericProjectile_RadiusDamage(void) {
     //float p = Buffs_NadgetPower(self.owner);
     float dmgmod = 1;
     float frcmod = 1;
-
-#if 0
-    if(self.hg_adept) {
-        if(GV("adept_damagemod")) {
-            dmgmod = dmgmod * (1 + (GV("adept_damagemod") - 1) * self.hg_adept);
-        }
-
-        if(GV("adept_forcemod")) {
-            frcmod = frcmod * (1 + (GV("adept_forcemod")  - 1) * self.hg_adept);
-        }
-    }
-#endif
-
     dmgmod *= pow(GV("damage_bouncemultiplier"), GV("bouncelimit") - self.cnt);
-
-    RadiusDamage(self, self.owner,
+    damage_radius(self, self.owner,
                        GV("damage") * /*p * */ dmgmod,
                        GV("edgedamage") * /*p * */ dmgmod,
                        GV("radius"),
@@ -73,14 +59,6 @@ void HG_GenericProjectile_RadiusDamage(void) {
 }
 
 void HG_GenericProjectile_Explode(void) {
-#if 0
-    if(other.takedamage == DAMAGE_AIM)
-        if(other.classname == "player")
-            if(IsDifferentTeam(self.owner, other))
-                if(IsFlying(other))
-                    CSQCMessage_Praise(self.owner, CSQCMSG_PRAISEFLAG_AIRSHOT);
-#endif
-
     self.event_damage = SUB_Null;
     self.takedamage = DAMAGE_NO;
 
@@ -544,14 +522,14 @@ void HG_GenericProjectile_ChangeOwner(entity o) {
     self.team = o.team;
 }
 
-void HG_GenericProjectile_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+void HG_GenericProjectile_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
     if(DEATH_ISHG(deathtype))
         return;
     if(self.health <= 0)
         return;
     if(!self.hg_state)
         return;
-    self.health = self.health - damage;
+    self.health = self.health - _damage;
     if(self.health <= 0) {
         if(self.hg_type != HG_TRANSLOC)
         if(attacker.classname == "player")
@@ -570,16 +548,6 @@ void HG_GenericProjectile_Remove(void) {
 
     remove(self);
 }
-
-#if 0
-void HG_GenericProjectile_MEODP_Death(entity attacker, entity inflictor) {
-    self.takedamage = DAMAGE_AIM;
-    self.health = max(10, self.health);
-    self.event_damage = HG_GenericProjectile_Damage;
-    self.hg_state = 1;
-    Damage(self, inflictor, attacker, self.health, DEATH_MEODP, self.meodp_point.origin, '0 0 0');
-}
-#endif
 
 #define GV(v) (GRENVAR(hgtype, v))
 
@@ -653,32 +621,11 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 
     float lt;
     if(hgtype == HG_TRANSLOC && self.BUTTON_CROUCH) {
-#if 0
-        if(gren.hg_adept) {
-            lt = GV("adept_crouch_lifetime");
-            if(!lt)
-                lt = GV("crouch_lifetime");
-        } else
-#endif
-            lt = GV("crouch_lifetime");
-#if 0
-    } else if(gren.hg_adept) {
-        lt = GV("adept_lifetime");
-        if(!lt)
-            lt = GV("lifetime");
-        else if(hgtype == HG_REMOTE)
-            lt = lt * Buffs_NadgetPower(self);
-#endif
+		lt = GV("crouch_lifetime");
     } else
         lt = GV("lifetime");
 
-#if 0
-    if(gren.hg_adept)
-        gren.cnt = GV("adept_bouncelimit");
-    else
-#endif
-        gren.cnt = GV("bouncelimit");
-
+	gren.cnt = GV("bouncelimit");
     if(self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face"))
 		gren.hg_deathtime = time + 0.01;
 	else
@@ -691,16 +638,6 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.reset = HG_GenericProjectile_Remove;
     gren.team = self.team;
     gren.hg_isbonus = self.hg_bonus;
-
-#if 0
-    if(gren.hg_adept) {
-        gren.health = GV("adept_health");
-
-        if(gren.hg_type == HG_RAZE)
-            gren.hg_fireSpawnTime = gren.hg_spawntime + GV("adept_trailblaze_delay");
-    }
-#endif
-
     if(GV("takedamage") || gren.health) {
         gren.takedamage = DAMAGE_AIM;
         gren.event_damage = HG_GenericProjectile_Damage;
@@ -741,22 +678,11 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     }
 
     W_SetupProjectileVelocity(gren);
-
-#if 0
-    if(!gren.clipgroup)
-        gren.clipgroup = CLIPGROUP_PLAYERMASK(self) | hgtype;
-#endif
-
     gren.max_health = gren.health;
     gren.angles = vectoangles(gren.velocity);
     gren.hg_nadesused = self.hg_nadesused;
-
-#if 0
-    Buffs_MEODP_Point_Attach(gren, HG_GenericProjectile_MEODP_Death);
-#endif
-
     if(hgtype == HG_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
-        Damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, HG_NAPALM, self.origin, '0 0 0');
+        damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, HG_NAPALM, self.origin, '0 0 0');
     }
 
     if(hgtype == HG_TRANSLOC) {

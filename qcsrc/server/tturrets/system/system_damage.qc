@@ -1,7 +1,7 @@
 /*
 * Trow a turret gib
 */
-void turret_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_gib_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
 {
     self.velocity += vforce;
 }
@@ -180,10 +180,6 @@ void turret_stdproc_die()
                          '0.2 0.2 0.2',
                          self.tur_head,time + 0.5 + (random() * 0.5));
     }
-
-// Go boom
-    //RadiusDamage (self,self, min(self.ammo,50),min(self.ammo,50) * 0.25,250,world,min(self.ammo,50)*5,DEATH_TURRET,world);
-
     if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
     {
         if (self.turret_diehook)
@@ -254,7 +250,7 @@ void turret_stdproc_respawn()
 /*
 * Standard damage proc.
 */
-void turret_stdproc_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_stdproc_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
 {
     entity baseent;
 
@@ -280,21 +276,19 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
         if(g_friendlyfire)
-            damage = damage * g_friendlyfire;
+            _damage = _damage * g_friendlyfire;
         else
             return;
     }
 
-    self.health = self.health - damage;
+    self.health = self.health - _damage;
 
     // thorw head slightly off aim when hit?
     if (self.classname == "turret_head")
         if (baseent.damage_flags & TFL_DMG_HEADSHAKE)
         {
-            //baseent.tur_aimoff_x += (random() * damage);
-            //baseent.tur_aimoff_y += ((random()*0.75) * damage);
-            self.angles_x = self.angles_x + (-0.5 + random()) * damage;
-            self.angles_y = self.angles_y + (-0.5 + random()) * damage;
+            self.angles_x = self.angles_x + (-0.5 + random()) * _damage;
+            self.angles_y = self.angles_y + (-0.5 + random()) * _damage;
         }
 
     if (baseent.turrcaps_flags & TFL_TURRCAPS_MOVE)

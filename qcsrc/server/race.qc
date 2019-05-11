@@ -436,7 +436,7 @@ void checkpoint_passed()
 	else
 	{
 		if(self.spawnflags & 4)
-			Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 	}
 }
 

@@ -68,7 +68,7 @@ void W_Plasma_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
+			if(teams_is_different(self.owner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
 						announce(self.owner, "announcer/male/electrobitch.wav");
@@ -77,12 +77,12 @@ void W_Plasma_Explode (void)
 	self.takedamage = DAMAGE_NO;
 	if (self.movetype == MOVETYPE_BOUNCE)
 	{
-		RadiusDamage (self, self.owner, g_balance_electro_secondary_damage, g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, world, g_balance_electro_secondary_force, self.projectiledeathtype, other);
+		damage_radius (self, self.owner, g_balance_electro_secondary_damage, g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, world, g_balance_electro_secondary_force, self.projectiledeathtype, other);
 	}
 	else
 	{
 		W_Plasma_TriggerCombo(self.origin, g_balance_electro_primary_comboradius, self.owner);
-		RadiusDamage (self, self.owner, g_balance_electro_primary_damage, g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, world, g_balance_electro_primary_force, self.projectiledeathtype, other);
+		damage_radius (self, self.owner, g_balance_electro_primary_damage, g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, world, g_balance_electro_primary_force, self.projectiledeathtype, other);
 	}
 
 	remove (self);
@@ -94,7 +94,7 @@ void W_Plasma_Explode_Combo (void)
 	W_Plasma_TriggerCombo(self.origin, g_balance_electro_combo_comboradius, self.owner);
 
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.owner, g_balance_electro_combo_damage, g_balance_electro_combo_edgedamage, g_balance_electro_combo_radius, world, g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
+	damage_radius (self, self.owner, g_balance_electro_combo_damage, g_balance_electro_combo_edgedamage, g_balance_electro_combo_radius, world, g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
 	remove (self);
 }
 
@@ -115,12 +115,12 @@ void W_Plasma_TouchExplode (void)
 	W_Plasma_Explode ();
 }
 
-void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Plasma_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
 		self.takedamage = DAMAGE_NO;

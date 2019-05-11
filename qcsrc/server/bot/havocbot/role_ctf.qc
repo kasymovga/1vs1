@@ -264,7 +264,7 @@ void havocbot_role_ctf_carrier()
 		{
 			// Can't navigate to my own base, suicide!
 			// TODO: drop it and wander around
-			Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+			damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 			return;
 		}
 	}

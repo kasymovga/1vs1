@@ -534,7 +534,7 @@ void ChangeTeam(entity pl, float dteam, float nobalance) {
 	SetPlayerTeam(pl, TeamColorSkin(dteam), TeamColorSkin(pl.team), FALSE);
 	if(pl.classname == "player") {
 		if(pl.deadflag == DEAD_NO) // kill player when changing teams
-			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
+			damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
 	} else if not(teamchange) {
 		self = pl;
 		spectator_to_player();
@@ -703,7 +703,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	SetPlayerTeam(selected, smallestteam, source_team, FALSE);
 
 	if(selected.deadflag == DEAD_NO)
-		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
+		damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
 
 	Balance_Centerprint(selected);
 }
@@ -1009,3 +1009,15 @@ void() teams_balance_check {
 		}
 	}
 }
+
+float(entity a, entity b) teams_is_different {
+	if(teamplay) {
+		if(a.team == b.team)
+			return 0;
+	} else {
+		if(a == b)
+			return 0;
+	}
+	return 1;
+}
+

@@ -25,7 +25,7 @@ float g_onslaught_cp_buildtime;
 float g_onslaught_cp_health;
 float g_onslaught_cp_regen;
 
-void ons_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void ons_gib_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
 {
 	self.velocity = self.velocity + vforce;
 }
@@ -517,10 +517,10 @@ void onslaught_generator_deaththink()
 	self.count = self.count - 1;
 };
 
-void onslaught_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void onslaught_generator_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	local float i;
-	if (damage <= 0)
+	if (_damage <= 0)
 		return;
 	if(inWarmupStage)
 		return;
@@ -544,7 +544,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 			play2team(self.team, "onslaught/generator_underattack.wav");
 		}
 	}
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 	// choose an animation frame based on health
 	self.frame = 10 * bound(0, (1 - self.health / self.max_health), 1);
@@ -607,7 +607,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		setmodel(self, "models/onslaught/generator_dmg1.md3");
 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
-	if(random() < damage/220)
+	if(random() < _damage/220)
 	{
 		sound(self, CHAN_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 		i = random();
@@ -631,7 +631,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	}
 
 	//throw some gibs on damage
-	if(random() < damage/200+0.2)
+	if(random() < _damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
 };
@@ -861,12 +861,12 @@ void spawnfunc_onslaught_generator()
 float ons_notification_time_team1;
 float ons_notification_time_team2;
 
-void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	float nag;
 
-	if (damage <= 0)
+	if (_damage <= 0)
 		return;
 	if (self.owner.isshielded)
 	{
@@ -905,7 +905,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 			play2team(self.team, "onslaught/controlpoint_underattack.wav");
 	}
 
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if(self.owner.iscaptured)
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
 	else

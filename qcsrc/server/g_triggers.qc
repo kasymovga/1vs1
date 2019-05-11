@@ -288,14 +288,14 @@ void multi_touch()
 	multi_trigger ();
 };
 
-void multi_eventdamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void multi_eventdamage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if (!self.takedamage)
 		return;
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
 		self.enemy = attacker;
@@ -497,7 +497,7 @@ void trigger_hurt_touch()
 		{
 			EXACTTRIGGER_TOUCH;
 			other.triggerhurttime = time + 1;
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
 	else
@@ -2268,10 +2268,10 @@ void spawnfunc_func_nowalljump(void) {
 void spikeshooter_spike_touch(void) {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
+		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
 	if (other && other.takedamage)
 	{
-		Damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
+		damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
 	}
 	remove(self);
 }

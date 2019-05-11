@@ -19,7 +19,7 @@ void spearguy_hunt() {
 		if (trace_fraction == 1) {
 			makevectors(self.angles);
 			te_lightning1(world, self.origin + normalize(v_forward) * 20 + v_right * 10, self.enemy.origin);
-			Damage(self.enemy, self, self, self.dmg_edge * frametime, WEP_MELEE, self.enemy.origin, v_forward);
+			damage(self.enemy, self, self, self.dmg_edge * frametime, WEP_MELEE, self.enemy.origin, v_forward);
 		}
 	}
 	v = vectoangles(v);

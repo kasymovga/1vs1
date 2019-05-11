@@ -20,19 +20,11 @@ HG_HOOKFUNCTION(gg, Attack) {
             allow = (vlen(trace_endpos - e) < 5);
 
         if(allow) {
-            Damage(p, world, self, g_nadgets_gg_damage, HG_GG, e, normalize(e - o) * 1000);
+            damage(p, world, self, g_nadgets_gg_damage, HG_GG, e, normalize(e - o) * 1000);
             trailparticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), o, e + randomvec() * 10);
-
-#if 0
-            if(Buffs_Present(self, BUFF_ADEPT)) {
-                float i; for(i = 0; i < 4; ++i)
-                    te_csqc_lightningarc(o, e + randomvec() * 10, TRUE, Team_FromIndex(i));
-            }
-#endif
-
             ++pwned;
         }
     }

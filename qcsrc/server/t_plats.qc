@@ -3,13 +3,13 @@ void generic_plat_blocked()
 {
     if(self.dmg && other.takedamage != DAMAGE_NO) {
         if(self.dmgtime2 < time) {
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
             self.dmgtime2 = time + self.dmgtime;
         }
 
         // Gib dead/dying stuff
         if(other.deadflag != DEAD_NO)
-            Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+            damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
     }
 }
 
@@ -143,13 +143,13 @@ void plat_trigger_use()
 void plat_crush()
 {
     if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+        damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
     } else {
         if((self.dmg) && (other.takedamage != DAMAGE_NO)) {   // Shall we bite?
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
             // Gib dead/dying stuff
             if(other.deadflag != DEAD_NO)
-                Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+                damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
         }
 
         if (self.state == 4)
@@ -591,12 +591,12 @@ void button_touch()
 	button_fire ();
 };
 
-void button_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void button_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
 	//	if (activator.classname != "player")
@@ -704,11 +704,11 @@ void door_blocked()
 {
 
     if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+        damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
     } else {
 
         if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 
          //Dont chamge direction for dead or dying stuff
         if(other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
@@ -734,22 +734,10 @@ void door_blocked()
         } else {
             //gib dying stuff just to make sure
             if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-                Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+                damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
         }
     }
-
-	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
-// if a door has a negative wait, it would never come back if blocked,
-// so let it just squash the object to death real fast
-/*	if (self.wait >= 0)
-	{
-		if (self.state == STATE_DOWN)
-			door_go_up ();
-		else
-			door_go_down ();
-	}
-*/
-};
+}
 
 
 void door_hit_top()
@@ -934,13 +922,13 @@ void door_trigger_touch()
 };
 
 
-void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void door_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	local entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
+	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -982,11 +970,11 @@ void door_generic_plat_blocked()
 {
 
     if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+        damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
     } else {
 
         if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 
          //Dont chamge direction for dead or dying stuff
         if(other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
@@ -1000,22 +988,10 @@ void door_generic_plat_blocked()
         } else {
             //gib dying stuff just to make sure
             if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-                Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+                damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
         }
     }
-
-	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
-// if a door has a negative wait, it would never come back if blocked,
-// so let it just squash the object to death real fast
-/*	if (self.wait >= 0)
-	{
-		if (self.state == STATE_DOWN)
-			door_rotating_go_up ();
-		else
-			door_rotating_go_down ();
-	}
-*/
-};
+}
 
 
 void door_rotating_hit_top()
@@ -1605,8 +1581,7 @@ void secret_blocked()
 	if (time < self.attack_finished_single)
 		return;
 	self.attack_finished_single = time + 0.5;
-	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
-};
+}
 
 /*
 ==============

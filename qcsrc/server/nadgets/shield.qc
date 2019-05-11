@@ -19,8 +19,8 @@ float g_nadgets_shield_immobile;
 float g_nadgets_shield_health;
 float g_nadgets_shield_diminish;
 
-void HG_Shield_Discharge_Arc(entity targ, entity attacker, float damage) {
-    arc_damage(targ, attacker, damage, HG_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
+void HG_Shield_Discharge_Arc(entity targ, entity attacker, float _damage) {
+    arc_damage(targ, attacker, _damage, HG_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
         g_nadgets_shield_damage_store_arc_range, g_nadgets_shield_damage_store_arc,
         g_nadgets_shield_damage_store_arc_pushback, COLOR_TEAM3, shield_arc_hit
     );
@@ -29,16 +29,16 @@ void HG_Shield_Discharge_Arc(entity targ, entity attacker, float damage) {
 void HG_Shield_Discharge_Think(void) {
     entity targ;
     vector start, end, end_visual;
-    float damage;
+    float _damage;
 
     float armorval = (g_nadgets_shield_damage_store_allow_armor_drain ? (self.owner.armorvalue / g_nadgets_shield_damage_store_allow_armor_drain) : 0);
 
     if(self.owner.hg_shield_stored < -1)
-        damage = 0;
+        _damage = 0;
     else
-        damage = min(max(0, self.owner.hg_shield_stored) + armorval, g_nadgets_shield_damage_store_burstamount);
+        _damage = min(max(0, self.owner.hg_shield_stored) + armorval, g_nadgets_shield_damage_store_burstamount);
 
-    if(damage <= 0 || !self.owner || !self.owner.iscreature || !player_can_fire(self.owner, FALSE)) {
+    if(_damage <= 0 || !self.owner || !self.owner.iscreature || !player_can_fire(self.owner, FALSE)) {
         remove(self);
         return;
     }
@@ -46,9 +46,9 @@ void HG_Shield_Discharge_Think(void) {
     float armordamage = 0;
 
     if(self.owner.hg_shield_stored < 0) {
-        armordamage = damage;
+        armordamage = _damage;
     } else {
-        self.owner.hg_shield_stored -= damage;
+        self.owner.hg_shield_stored -= _damage;
         armordamage = -max(0, self.owner.hg_shield_stored);
         if(self.owner.hg_shield_stored <= 0)
             self.owner.hg_shield_stored = -1;
@@ -70,15 +70,15 @@ void HG_Shield_Discharge_Think(void) {
     end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 
     setorigin(self, end);
-    RadiusDamage(self, self.owner, damage, damage * g_nadgets_shield_damage_store_edgefactor,
+    damage_radius(self, self.owner, _damage, _damage * g_nadgets_shield_damage_store_edgefactor,
                  g_nadgets_shield_damage_store_radius, world,
-                 damage * g_nadgets_shield_damage_store_forcefactor, HG_SHIELD | HITTYPE_SECONDARY, targ);
+                 _damage * g_nadgets_shield_damage_store_forcefactor, HG_SHIELD | HITTYPE_SECONDARY, targ);
 
     //W_SetHitscanVisuals(self.owner, end);
     W_Zapper_Attack2_Effect((teamplay ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
 
-    if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (IsDifferentTeam(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
-        HG_Shield_Discharge_Arc(targ, self.owner, damage);
+    if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (teams_is_different(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
+        HG_Shield_Discharge_Arc(targ, self.owner, _damage);
     }
 
     self.nextthink = time + g_nadgets_shield_damage_store_burstdelay;
@@ -196,8 +196,8 @@ void HG_Shield_PlayerFrame(void) {
 
 .float hg_shield_nexteffect;
 
-float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hitloc) {
-    if not(damage && attacker.iscreature && self.hg_shield)
+float HG_Shield_Damage(entity attacker, float _damage, float deathtype, vector hitloc) {
+    if not(_damage && attacker.iscreature && self.hg_shield)
         return 1;
 
     if(DEATH_HGTYPE(deathtype) == HG_TRANSLOC && g_nadgets_transloc_counters_shield) {
@@ -209,12 +209,12 @@ float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hi
         return 1;
 
     vector offs = '0 0 1' * self.maxs_z * 0.5;
-    float reflect    = damage * g_nadgets_shield_damage_reflect * self.hg_shieldpower;
+    float reflect    = _damage * g_nadgets_shield_damage_reflect * self.hg_shieldpower;
     float takefactor = 1 - (1 - g_nadgets_shield_damage_take)   * self.hg_shieldpower;
-    float absorb     = damage * (1 - takefactor);
+    float absorb     = _damage * (1 - takefactor);
 
     float o = self.hg_shield_stored;
-    self.hg_shield_stored = min(g_nadgets_shield_damage_store_limit, self.hg_shield_stored + damage * g_nadgets_shield_damage_store);
+    self.hg_shield_stored = min(g_nadgets_shield_damage_store_limit, self.hg_shield_stored + _damage * g_nadgets_shield_damage_store);
 
     if(self.hg_shield_stored > o && time > self.hg_shield_nexteffect) {
         //te_eleblast(hitloc, if(teamplay) self.team else 0);
@@ -234,7 +234,7 @@ float HG_Shield_Damage(entity attacker, float damage, float deathtype, vector hi
         end = trace_endpos;
 
         if(trace_ent.takedamage)
-            Damage(trace_ent, self, self, reflect, HG_SHIELD, end, '0 0 0');
+            damage(trace_ent, self, self, reflect, HG_SHIELD, end, '0 0 0');
 
         trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW"), start, end);
     }

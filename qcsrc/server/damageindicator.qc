@@ -2,8 +2,8 @@ float sv_damageindicator_accumulate_interval;
 
 float DamageIndicator_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DMG_INDICATOR);
-	float damage = self.dmg + 0.4;
-	WriteByte(MSG_ENTITY, BoundToByte(damage));
+	float _damage = self.dmg + 0.4;
+	WriteByte(MSG_ENTITY, BoundToByte(_damage));
 	WriteShort(MSG_ENTITY, self.origin_x);
 	WriteShort(MSG_ENTITY, self.origin_y);
 	WriteShort(MSG_ENTITY, self.origin_z);
@@ -36,9 +36,9 @@ float DamageIndicator_Customize() {
 	return FALSE;
 }
 
-var void(entity targ, entity attacker, float damage, vector ignore) DamageIndicator_DamageForceDone_NextLink;
-void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage, vector ignore) {
-	DamageIndicator_DamageForceDone_NextLink(targ, attacker, damage, ignore);
+var void(entity targ, entity attacker, float _damage, vector ignore) DamageIndicator_DamageForceDone_NextLink;
+void DamageIndicator_DamageForceDone(entity targ, entity attacker, float _damage, vector ignore) {
+	DamageIndicator_DamageForceDone_NextLink(targ, attacker, _damage, ignore);
 	if (targ == attacker)
 		return;
 
@@ -72,7 +72,7 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float damage,
 	}
 	setorigin(e, targ.origin + 0.5 * (targ.maxs + targ.mins));
 	e.SendFlags = 1;
-	e.dmg = e.dmg + damage;
+	e.dmg = e.dmg + _damage;
 	e.nextthink = time + sv_damageindicator_accumulate_interval;
 }
 

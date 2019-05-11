@@ -8,16 +8,16 @@ float Clanarena_HandleFrags(entity attacker, entity targ, float f) {
 	return 0;
 }
 
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) Clanarena_PlayerDamageHandle_NextLink;
-float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) Clanarena_PlayerDamageHandle_NextLink;
+float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if (attacker.flags & FL_CLIENT)
 	if (deathtype != WEP_PORTO)
 	if (attacker.team != self.team) {
-		scores_player_add(attacker, SP_SCORE, damage / 10);
+		scores_player_add(attacker, SP_SCORE, _damage / 10);
 		attacker.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
 		self.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
 	}
-	return Clanarena_PlayerDamageHandle_NextLink(inflictor, attacker, damage, deathtype, hitloc, force);
+	return Clanarena_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
 
 float Clanarena_FragLimitOverride() {

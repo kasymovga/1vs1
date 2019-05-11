@@ -26,9 +26,9 @@ void W_Laser_Touch (void)
 
 	self.event_damage = SUB_Null;
 	if (self.dmg)
-		RadiusDamage (self, self.owner, g_balance_laser_secondary_damage, g_balance_laser_secondary_edgedamage, g_balance_laser_secondary_radius, world, g_balance_laser_secondary_force, self.projectiledeathtype, other);
+		damage_radius (self, self.owner, g_balance_laser_secondary_damage, g_balance_laser_secondary_edgedamage, g_balance_laser_secondary_radius, world, g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else
-		RadiusDamage (self, self.owner, g_balance_laser_primary_damage, g_balance_laser_primary_edgedamage, g_balance_laser_primary_radius, world, g_balance_laser_primary_force, self.projectiledeathtype, other);
+		damage_radius (self, self.owner, g_balance_laser_primary_damage, g_balance_laser_primary_edgedamage, g_balance_laser_primary_radius, world, g_balance_laser_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }

@@ -24,8 +24,8 @@ void walker_bullet() {
 	flash.effects   = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 }
 
-void walker_rocket_event_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce) {
-    self.health = self.health - damage;
+void walker_rocket_event_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) {
+    self.health = self.health - _damage;
     self.velocity = self.velocity + vforce;
     if (self.health <= 0) {
         self.think = monster_proj_explode;

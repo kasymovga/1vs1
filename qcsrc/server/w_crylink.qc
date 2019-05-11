@@ -52,7 +52,7 @@ void W_Crylink_Touch (void)
 		f = g_balance_crylink_primary_bouncedamagefactor;
 	if(self.alpha)
 		f *= self.alpha;
-	RadiusDamage (self, self.realowner, g_balance_crylink_primary_damage * f, g_balance_crylink_primary_edgedamage * f, g_balance_crylink_primary_radius, world, g_balance_crylink_primary_force * f, self.projectiledeathtype, other);
+	damage_radius (self, self.realowner, g_balance_crylink_primary_damage * f, g_balance_crylink_primary_edgedamage * f, g_balance_crylink_primary_radius, world, g_balance_crylink_primary_force * f, self.projectiledeathtype, other);
 	if (finalhit)
 	{
 		remove (self);
@@ -79,7 +79,7 @@ void W_Crylink_Touch2 (void)
 		f = g_balance_crylink_secondary_bouncedamagefactor;
 	if(self.alpha)
 		f *= self.alpha;
-	RadiusDamage (self, self.realowner, g_balance_crylink_secondary_damage * f, g_balance_crylink_secondary_edgedamage * f, g_balance_crylink_secondary_radius, world, g_balance_crylink_secondary_force * f, self.projectiledeathtype, other);
+	damage_radius (self, self.realowner, g_balance_crylink_secondary_damage * f, g_balance_crylink_secondary_edgedamage * f, g_balance_crylink_secondary_radius, world, g_balance_crylink_secondary_force * f, self.projectiledeathtype, other);
 	if (finalhit)
 	{
 		remove (self);

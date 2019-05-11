@@ -131,7 +131,7 @@ void fire_apply_damage(entity e)
 
 	hi = e.fire_owner.hitsound;
 	ty = e.fire_owner.typehitsound;
-	Damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
+	damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
 		e.fire_owner.hitsound = hi;

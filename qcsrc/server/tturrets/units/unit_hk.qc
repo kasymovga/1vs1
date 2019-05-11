@@ -9,7 +9,7 @@ void turret_hk_dinit();
 void turret_hk_attack();
 void turret_hk_missile_explode();
 void turret_hk_missile_think();
-void turret_hk_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void turret_hk_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 float turret_hk_addtarget(entity e_target,entity e_sender);
 //void turret_hk_missile_touch();
 
@@ -67,14 +67,14 @@ float hk_is_valid_target(entity e_target)
     return 1;
 }
 
-void turret_hk_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void turret_hk_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
     if (attacker.team == self.team)
-        damage *= 0.5;
+        _damage *= 0.5;
 
     self.velocity += force;
 
-    self.health -= damage;
+    self.health -= _damage;
 
     if (self.health <= 0)
         turret_hk_missile_explode();
@@ -336,7 +336,7 @@ void turret_hk_missile_explode()
     org2 = findbetterlocation (self.origin, 16);
 
     self.event_damage = SUB_Null;
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
+    damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
 
     // Target dead, get another is still targeting the same.
     if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))

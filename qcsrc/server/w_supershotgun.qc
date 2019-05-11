@@ -30,12 +30,12 @@ void W_Supershotgun_Pellet_Touch()
 {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
+		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
 	if (other && other.takedamage)
 	{
 		entity o = self.realowner;
-		Damage_RecordHits(o, other, WEP_SUPERSHOTGUN, 1, self.dmg);
-		Damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
+		damage_record_hits(o, other, WEP_SUPERSHOTGUN, 1, self.dmg);
+		damage(other, self, o, self.dmg, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity));
 		self.cnt = 0;
 	}
 	if not(self.cnt)
@@ -49,7 +49,7 @@ void W_Supershotgun_Pellet_Touch()
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed, float damage, float force, float dtype, float gravityfactor, float bounces)
+void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces)
 {
 	entity proj;
 	proj = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
@@ -65,7 +65,7 @@ void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed,
 	proj.angles = vectoangles(proj.velocity);
 	setorigin(proj, start);
 	proj.touch = W_Supershotgun_Pellet_Touch;
-	proj.dmg = damage;
+	proj.dmg = _damage;
 	proj.dmg_force = force;
 	proj.projectiledeathtype = dtype;
 	proj.oldvelocity = proj.velocity;

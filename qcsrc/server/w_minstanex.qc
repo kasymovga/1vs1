@@ -93,11 +93,11 @@ void W_MinstaNex_Attack (void)
 			entity e = spawn();
 			setorigin(e, trace_endpos);
 			entity o = Akimbo_Owner(self);
-			RadiusDamage (e, o, g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, 0, world);
+			damage_radius (e, o, g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, 0, world);
 			pointparticles(particleeffectnum("rocket_explode"), trace_endpos, '0 0 0', 1);
 			remove(e);
 		}
-		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_MINSTANEX, self);
+		damage_info(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_MINSTANEX, self);
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -107,7 +107,7 @@ void W_MinstaNex_Attack (void)
 void W_MinstaNex_Laser_Projectile_Touch() {
 	PROJECTILE_TOUCH;
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.owner, g_balance_minstanex_laser_damage * self.dmg, g_balance_minstanex_laser_edgedamage * self.dmg, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
+	damage_radius (self, self.owner, g_balance_minstanex_laser_damage * self.dmg, g_balance_minstanex_laser_edgedamage * self.dmg, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
 	remove (self);
 }
 

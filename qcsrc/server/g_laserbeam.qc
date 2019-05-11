@@ -37,7 +37,7 @@ void func_laserbeam_think(void) {
     var targ = trace_ent;
 
     if(targ.takedamage && time > self.cnt) {
-        Damage(targ, self, world, self.dmg, DEATH_HURTTRIGGER, end, 10 * normalize(end - o));
+        damage(targ, self, world, self.dmg, DEATH_HURTTRIGGER, end, 10 * normalize(end - o));
         self.cnt = time + 0.1;
     }
 

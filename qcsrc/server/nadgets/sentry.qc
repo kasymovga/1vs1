@@ -41,7 +41,7 @@ float HG_Sentry_TargetIsValid(entity emitter, entity e) {
     if(PLAYER_DEAD(e))
         return FALSE;
 
-    if(!IsDifferentTeam(e, sentry.realowner)/* && !Buffs_Present(sentry.realowner, BUFF_MEDIC) */)
+    if(!teams_is_different(e, sentry.realowner)/* && !Buffs_Present(sentry.realowner, BUFF_MEDIC) */)
         return FALSE;
 
     if(HG_Sentry_TargetIsTaken(emitter, e))
@@ -78,7 +78,7 @@ entity HG_Sentry_FindTarget(entity emitter) {
         return world;
 
     FOR_EACH_PLAYER(p) if not(PLAYER_DEAD(p)) {
-        diffteam = (p != sentry.realowner && IsDifferentTeam(sentry, p));
+        diffteam = (p != sentry.realowner && teams_is_different(sentry, p));
 
 #if 0
         if(diffteam) {
@@ -150,7 +150,7 @@ void HG_Sentry_Beam_Think(void) {
     end = self.origin;
 
     if(targ.takedamage == DAMAGE_AIM && time > self.cnt) {
-        Damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, HG_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - WarpZone_TransformOrigin(WarpZone_trace_transform, start)));
+        damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, HG_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - WarpZone_TransformOrigin(WarpZone_trace_transform, start)));
         self.cnt = time + 0.1; // FIXME: this is inaccurate
     }
 
@@ -431,32 +431,24 @@ void HG_Sentry_Think(void) {
     setorigin(self.aiment, self.origin + self.view_ofs);
     self.aiment.scale = bound(0.01, self.hg_sentry_energy, 1);
     self.aiment.light_lev = 100 + self.aiment.scale * 200;
-
-#if 0
-    o = self;
-    self = self.aiment;
-    HealParticleEmitter(o.realowner);
-    self = o;
-#endif
-
     self.nextthink = time;
 }
 
-void HG_Sentry_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) {
-    if(!self.realowner || IsDifferentTeam(attacker, self.realowner)) {
+void HG_Sentry_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+    if(!self.realowner || teams_is_different(attacker, self.realowner)) {
         if(DEATH_ISHG(deathtype))
-            damage *= g_nadgets_sentry_damagefactor_nadgets;
+            _damage *= g_nadgets_sentry_damagefactor_nadgets;
         else
-            damage *= g_nadgets_sentry_damagefactor;
+            _damage *= g_nadgets_sentry_damagefactor;
 
-        self.health = bound(0, self.health - damage, self.health);
+        self.health = bound(0, self.health - _damage, self.health);
     } else {
         if(DEATH_ISHG(deathtype))
-            damage *= g_nadgets_sentry_repairfactor_nadgets;
+            _damage *= g_nadgets_sentry_repairfactor_nadgets;
         else
-            damage *= g_nadgets_sentry_repairfactor;
+            _damage *= g_nadgets_sentry_repairfactor;
 
-        Heal(self, inflictor, attacker, damage, 0, g_nadgets_sentry_health, 0, deathtype, 0, 0, hitloc, '0 0 0');
+        heal(self, inflictor, attacker, _damage, 0, g_nadgets_sentry_health, 0, deathtype, 0, 0, hitloc, '0 0 0');
     }
 
     if(self.health <= 0)
@@ -478,7 +470,7 @@ void HG_Sentry_Trigger(void) {
 
     WarpZone_TraceLine(o, o + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
-    while(trace_ent && trace_ent.classname == "hg_sentry" && !IsDifferentTeam(trace_ent, self))
+    while(trace_ent && trace_ent.classname == "hg_sentry" && !teams_is_different(trace_ent, self))
         WarpZone_TraceLine(trace_endpos + w_shotdir, trace_endpos + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
     aimloc = trace_endpos;
@@ -533,26 +525,12 @@ void HG_Sentry_Trigger(void) {
             vector force = c_frc * dir;
 
 			if (targ)
-				Damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
+				damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
 
             dlc_sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             W_Zapper_Attack2_Effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
-
-#if 0
-            if(targ.takedamage && Buffs_Present(self, BUFF_ADEPT)) {
-                var arc = CVAR(g_nadgets_sentry_adept_shock_arc);
-
-                if(arc) {
-                    ArcDamage(targ, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
-                        CVAR(g_nadgets_sentry_adept_shock_arc_range), arc,
-                        CVAR(g_nadgets_sentry_adept_shock_arc_force), COLOR_TEAM3, sentry_arc_hit
-                    );
-                }
-            }
-#endif
-
             if(targ.solid == SOLID_BSP && !noimpact)
-                Damage_DamageInfo(endpos, c_dmg, 0, 0, force, WEP_ZAPPER | HITTYPE_SECONDARY, self);
+                damage_info(endpos, c_dmg, 0, 0, force, WEP_ZAPPER | HITTYPE_SECONDARY, self);
 
             e.hg_sentry_energy = bound(0, e.hg_sentry_energy - c_cost, 1);
             ++triggered;

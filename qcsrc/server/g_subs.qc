@@ -7,6 +7,20 @@ void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
 
+vector NearestPointOnBox(entity box, vector org)
+{
+	vector m1, m2, nearest;
+
+	m1 = box.mins + box.origin;
+	m2 = box.maxs + box.origin;
+
+	nearest_x = bound(m1_x, org_x, m2_x);
+	nearest_y = bound(m1_y, org_y, m2_y);
+	nearest_z = bound(m1_z, org_z, m2_z);
+
+	return nearest;
+}
+
 void spawnfunc_info_null (void)
 {
 	remove(self);
@@ -257,7 +271,6 @@ vector findbetterlocation (vector org, float mindist)
 .float loddistance1;
 .float loddistance2;
 
-vector NearestPointOnBox(entity box, vector org);
 float LOD_customize()
 {
 	float d;
