@@ -140,9 +140,9 @@ void kh_Scores_Event(entity player, entity key, float frags_player, float frags_
 	if(intermission_running)
 		return;
 	if(frags_player)
-		UpdateFrags(player, frags_player);
+		scores_player_team_add_score(player, frags_player);
 	if(key && key.owner && frags_owner)
-		UpdateFrags(key.owner, frags_owner);
+		scores_player_team_add_score(key.owner, frags_owner);
 }
 
 vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it can run 2 or 3 times.

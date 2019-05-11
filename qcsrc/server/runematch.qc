@@ -921,7 +921,7 @@ void RuneMatch_ServerFrame()
 	rune = world;
 	while ((rune = find(rune, classname, "rune")))
 		if (rune.owner.classname == "player")
-			UpdateFrags(rune.owner, g_runematch_pointamt);
+			scores_player_team_add_score(rune.owner, g_runematch_pointamt);
 }
 
 float RunematchHandleFrags(entity attacker, entity targ, float f)

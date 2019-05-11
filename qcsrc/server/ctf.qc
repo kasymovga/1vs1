@@ -86,7 +86,7 @@ float ctf_handle_frags(entity attacker, entity targ, float f) {
 		scores_player_add(attacker, SP_CTF_FCKILLS, 1);
 		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
 		if not(f)
-			UpdateFrags(attacker, f);
+			scores_player_team_add_score(attacker, f);
 	}
 	return f;
 }
@@ -302,9 +302,9 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	bprint(p.netname, "^7 lost the ", e.netname, "\n");
 
 	if(penalty_receiver)
-		UpdateFrags(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
+		scores_player_team_add_score(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
-		UpdateFrags(p, -CTF_SCORE_VALUE(penalty_drop));
+		scores_player_team_add_score(p, -CTF_SCORE_VALUE(penalty_drop));
 	scores_player_add(p, SP_CTF_DROPS, +1);
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
@@ -506,7 +506,7 @@ void FlagTouch()
 			Roundbased_SetRoundStartWithWinner(other.team);
 
 		// give credit to the individual player
-		UpdateFrags(other, CTF_SCORE_VALUE(score_capture));
+		scores_player_team_add_score(other, CTF_SCORE_VALUE(score_capture));
 
 		if (g_ctf_flag_capture_effects) {
 			if (other.team == COLOR_TEAM1) { // red team scores effect
@@ -547,7 +547,7 @@ void FlagTouch()
 		self.cnt = FLAG_CARRY;
 		self.angles = '0 0 0';
 		bprint(other.netname, "^7 got the ", self.netname, "\n");
-		UpdateFrags(other, CTF_SCORE_VALUE(score_pickup_base));
+		scores_player_team_add_score(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
 		scores_player_add(other, SP_CTF_PICKUPS, 1);
 		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
@@ -597,16 +597,16 @@ void FlagTouch()
 			if(other.playerid == self.playerid) // is this the guy who killed the FC last?
 			{
 				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					UpdateFrags(other, CTF_SCORE_VALUE(score_return_by_killer));
+					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_by_killer));
 				else
-					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue_by_killer));
+					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue_by_killer));
 			}
 			else
 			{
 				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					UpdateFrags(other, CTF_SCORE_VALUE(score_return));
+					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return));
 				else
-					UpdateFrags(other, CTF_SCORE_VALUE(score_return_rogue));
+					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			scores_player_add(other, SP_CTF_RETURNS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 returned"), 1);
@@ -635,7 +635,7 @@ void FlagTouch()
 			self.dropperid = other.playerid;
 			//print("score is ", ftos(f), "\n");
 
-			UpdateFrags(other, f);
+			scores_player_team_add_score(other, f);
 			scores_player_add(other, SP_CTF_PICKUPS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
