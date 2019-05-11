@@ -723,11 +723,13 @@ void Item_FindTeam()
 
 void Item_Reset()
 {
+	if(self.waypointsprite_attached)
+		WaypointSprite_Kill(self.waypointsprite_attached);
+
 	Item_Show(self, !self.state);
 	setorigin (self, self.origin);
 	self.think = SUB_Null;
 	self.nextthink = 0;
-
 	if(self.flags & FL_POWERUP) // do not spawn powerups initially!
 		Item_ScheduleInitialRespawn(self);
 }
