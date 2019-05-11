@@ -82,8 +82,7 @@ float reset_on_join_done;
 .entity pusher;
 .float pushltime;
 
-void player_copy_body(float keepvelocity)
-{
+void(float keepvelocity) player_copy_body {
 	local entity oldself;
 	if (self.effects & EF_NODRAW)
 		return;
@@ -148,8 +147,7 @@ void(void) player_respawn {
 }
 
 
-float player_getspecies()
-{
+float() player_getspecies {
 	local float glob, i, j, fh, len, s, sk;
 	local string fn, l;
 
@@ -202,16 +200,14 @@ float player_getspecies()
 	return s;
 }
 
-void play_countdown(float finished, string samp)
-{
+void(float finished, string samp) play_countdown {
 	if(clienttype(self) == CLIENTTYPE_REAL)
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
 				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
 }
 
-void player_effects()
-{
+void() player_effects {
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 	{
 		if not(self.modelflags & MF_ROCKET) {
@@ -246,8 +242,7 @@ void player_effects()
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 }
 
-void player_setupanimsformodel()
-{
+void() player_setupanimsformodel {
 	local string animfilename;
 	local float animfile;
 	// defaults for legacy .zym models without animinfo files
@@ -315,10 +310,9 @@ void player_setupanimsformodel()
 		dprint("File ", animfilename, " not found, assuming legacy .zym model animation timings\n");
 	// reset animstate now
 	anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
-};
+}
 
-void player_anim (void)
-{
+void(void) player_anim {
 	anim_update(self);
 	if (self.weaponentity)
 		anim_update(self.weaponentity);
@@ -384,8 +378,7 @@ void player_anim (void)
 		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 }
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
+void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) player_corpse_damage {
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 	// damage resistance (ignore most of the damage from a bullet or similar)
@@ -419,8 +412,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 
-void PlayerClear(float killed)
-{
+void(float killed) player_clear {
 	float j;
 	if (killed)
 		Portal_ClearAllLater(self);
@@ -439,8 +431,8 @@ void PlayerClear(float killed)
 	WaypointSprite_PlayerDead();
 }
 
-void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
+#define player_damage PlayerDamage
+void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) player_damage {
 	local float take, save, waves, sdelay, dh, da;
 	GameHookChain_PlayerDamageMod = 1;
 	if (GameHookChain_PlayerDamageHandle(inflictor, attacker, damage, deathtype, hitloc, force))
@@ -598,7 +590,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		PlayerClear(TRUE);
+		player_clear(TRUE);
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -647,7 +639,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.dead_frame = self.anim_dead2_x;
 		}
 		// set damage function to corpse damage
-		self.event_damage = PlayerCorpseDamage;
+		self.event_damage = player_corpse_damage;
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
 		// set up to fade out later
@@ -669,38 +661,37 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 }
 
 string allvoicesamples;
-float GetPlayerSoundSampleField_notFound;
-float GetPlayerSoundSampleField_fixed;
-.string GetVoiceMessageSampleField(string type)
+float player_voice_message_sample_not_found;
+float player_voice_message_sample_fixed;
+.string player_voice_message_sample_field(string type)
 {
-	GetPlayerSoundSampleField_notFound = 0;
-	GetPlayerSoundSampleField_fixed = 0;
+	player_voice_message_sample_not_found = 0;
+	player_voice_message_sample_fixed = 0;
 	switch(type)
 	{
 #define _VOICEMSG(m) case #m: return playersound_##m;
 		ALLVOICEMSGS
 #undef _VOICEMSG
 	}
-	GetPlayerSoundSampleField_notFound = 1;
+	player_voice_message_sample_not_found = 1;
 	return playersound_taunt;
 }
 
 .string GetPlayerSoundSampleField(string type)
 {
-	GetPlayerSoundSampleField_notFound = 0;
-	GetPlayerSoundSampleField_fixed = 0;
+	player_voice_message_sample_not_found = 0;
+	player_voice_message_sample_fixed = 0;
 	switch(type)
 	{
 #define _VOICEMSG(m) case #m: return playersound_##m;
 		ALLPLAYERSOUNDS
 #undef _VOICEMSG
 	}
-	GetPlayerSoundSampleField_notFound = 1;
+	player_voice_message_sample_not_found = 1;
 	return playersound_taunt;
 }
 
-void PrecachePlayerSounds(string f)
-{
+void(string f) player_precache_sounds {
 	float fh;
 	string s;
 	fh = fopen(f, FILE_READ);
@@ -726,7 +717,7 @@ void PrecachePlayerSounds(string f)
 	}
 }
 
-void ClearPlayerSounds()
+void player_clear_sounds()
 {
 #define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = string_null; }
 	ALLPLAYERSOUNDS
@@ -734,8 +725,7 @@ void ClearPlayerSounds()
 #undef _VOICEMSG
 }
 
-void LoadPlayerSounds(string f, float first)
-{
+void(string f, float first) player_load_sounds {
 	float fh;
 	string s;
 	var .string field;
@@ -747,11 +737,11 @@ void LoadPlayerSounds(string f, float first)
 		if(tokenize_console(s) != 3)
 			continue;
 		field = GetPlayerSoundSampleField(argv(0));
-		if(GetPlayerSoundSampleField_notFound)
-			field = GetVoiceMessageSampleField(argv(0));
-		if(GetPlayerSoundSampleField_notFound)
+		if(player_voice_message_sample_not_found)
+			field = player_voice_message_sample_field(argv(0));
+		if(player_voice_message_sample_not_found)
 			continue;
-		if(GetPlayerSoundSampleField_fixed)
+		if(player_voice_message_sample_fixed)
 			if not(first)
 				continue;
 		if(self.field)
@@ -762,23 +752,22 @@ void LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
-void UpdatePlayerSounds()
-{
+void() player_update_sounds {
 	if(self.modelindex == self.modelindex_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
-	ClearPlayerSounds();
-	LoadPlayerSounds("sound/player/default.sounds", 1);
-	LoadPlayerSounds(strcat(self.model, ".sounds"), 0);
+	player_clear_sounds();
+	player_load_sounds("sound/player/default.sounds", 1);
+	player_load_sounds(strcat(self.model, ".sounds"), 0);
 }
 
-void VoiceMessage(string type, string msg)
+void player_voice_message(string type, string msg)
 {
 	var .string sample;
 	float ownteam;
-	sample = GetVoiceMessageSampleField(type);
+	sample = player_voice_message_sample_field(type);
 
-	if(GetPlayerSoundSampleField_notFound)
+	if(player_voice_message_sample_not_found)
 	{
 		sprint(self, strcat("Invalid voice. Use one of: ", allvoicesamples, "\n"));
 		return;
@@ -858,7 +847,7 @@ void VoiceMessage(string type, string msg)
 	}
 }
 
-float Player_CalculateAlpha(entity plr, entity viewer) {
+float(entity plr, entity viewer) player_calculate_alpha {
 	plr = Akimbo_Owner(plr);
 	float dalpha = max(0.01, default_player_alpha);
 	if(plr.classname == "observer") {
@@ -927,7 +916,7 @@ void(entity e, string modelname) player_setup_lod {
 	s = whichpack(self.model);
 	self.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
 	player_setupanimsformodel();
-	UpdatePlayerSounds();
+	player_update_sounds();
 }
 
 string PLAYER_FALLBACKMODEL = "models/player/marine.zym";
@@ -1031,7 +1020,7 @@ void(string s) player_precache_model {
 		return;
 
 	precache_model(s);
-	PrecachePlayerSounds(strcat(s, ".sounds"));
+	player_precache_sounds(strcat(s, ".sounds"));
 }
 
 void(entity player) player_to_spec
@@ -1042,7 +1031,7 @@ void(entity player) player_to_spec
 	if (sv_spectate) {
 		entity oldself = self;
 		self = player;
-		PlayerClear(FALSE);
+		player_clear(FALSE);
 		player.classname = "observer";
 		if(blockSpectators)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
@@ -1264,7 +1253,7 @@ void() player_post_think {
 float() player_customizeentityforclient {
 	entity modelsource;
 
-	self.alpha = Player_CalculateAlpha(self, other);
+	self.alpha = player_calculate_alpha(self, other);
 	if (GameHookChain_PlayerVisibleThroughWallFor(self, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
@@ -1310,7 +1299,7 @@ float() player_customizeentityforclient {
 void(entity spot) player_spawn {
 	float currentlyPlaying, i;
 	entity e, oldself;
-	PlayerClear(FALSE);
+	player_clear(FALSE);
 	PhysicMarkAsTeleported(self);
 	self.iscreature = TRUE;
 	self.movetype = MOVETYPE_WALK;
@@ -1408,7 +1397,7 @@ void(entity spot) player_spawn {
 	self.spawnorigin = spot.origin;
 	// don't reset back to last position, even if new position is stuck in solid
 	self.oldorigin = self.origin;
-	self.event_damage = PlayerDamage;
+	self.event_damage = player_damage;
 	self.bot_attack = TRUE;
 	self.statdraintime = time + 5;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
@@ -1471,7 +1460,7 @@ void(string pattern) player_precache_all_models {
 			continue;
 		if(!sv_loddistance1)
 			precache_model(f);
-		PrecachePlayerSounds(strcat(f, ".sounds"));
+		player_precache_sounds(strcat(f, ".sounds"));
     }
     search_end(globhandle);
 }
@@ -1493,7 +1482,7 @@ float(entity plr, float wep) player_can_fire {
 void() player_init {
 	// Precache all player models if desired
 	if (cvar("sv_precacheplayermodels")) {
-		PrecachePlayerSounds("sound/player/default.sounds");
+		player_precache_sounds("sound/player/default.sounds");
 		player_precache_all_models("models/player/*.zym");
 		player_precache_all_models("models/player/*.dpm");
 		player_precache_all_models("models/player/*.md3");

@@ -44,7 +44,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	if (IceHook_SkipDeathHandle())
 		return FALSE;
 
-	PlayerClear(TRUE);
+	player_clear(TRUE);
 	Roundbased_NeedCheckTeams();
 
 	if (self.deadflag == DEAD_FREEZE)

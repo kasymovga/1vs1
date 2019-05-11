@@ -38,7 +38,7 @@ float entcs_customize()
 	if(teamplay && o.team == other.team) {
 		self.effects |= EF_NODEPTHTEST;
 	} else {
-		if (Player_CalculateAlpha(o, other) < 0.25)
+		if (player_calculate_alpha(o, other) < 0.25)
 			return FALSE;
 
 		if (GameHookChain_PlayerVisibleThroughWallFor(o,other)) {

@@ -239,7 +239,7 @@ float CL_Weaponentity_CustomizeEntityForClient()
 
 float CL_ExterioirWeaponentity_CustomizeEntityForClient()
 {
-    self.alpha = Player_CalculateAlpha(self.owner, other);
+    self.alpha = player_calculate_alpha(self.owner, other);
     return (self.alpha > 0);
 }
 
@@ -457,7 +457,7 @@ void CL_Weaponentity_Think()
 	self.effects |= tb;
 
 	self.colormap = self.owner.colormap;
-	self.alpha = Player_CalculateAlpha(self.owner, self.owner);
+	self.alpha = player_calculate_alpha(self.owner, self.owner);
 	if (self.owner.cvar_cl_gunalpha)
 		self.alpha *= self.owner.cvar_cl_gunalpha;
 

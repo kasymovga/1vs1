@@ -547,11 +547,7 @@ void ClientDisconnect (void)
 	bprint ("^4 disconnected\n");
 
 	self.classname = "disconnecting";
-
-	PlayerClear(FALSE);
-
-	// Here, everything has been done that requires this player to be a client.
-
+	player_clear(FALSE);
 	self.flags &~= FL_CLIENT;
 	self.just_connected = FALSE;
 
@@ -572,7 +568,7 @@ void ClientDisconnect (void)
 	if(self.clientstatus)
 		strunzone(self.clientstatus);
 
-	ClearPlayerSounds();
+	player_clear_sounds();
 
 	self.playerid = 0;
 	self.retard = 0;

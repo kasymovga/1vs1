@@ -698,7 +698,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	entity oldself = self;
 	self = selected;
-	PlayerClear(FALSE);
+	player_clear(FALSE);
 	self = oldself;
 	SetPlayerTeam(selected, smallestteam, source_team, FALSE);
 

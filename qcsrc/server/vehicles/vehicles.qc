@@ -27,7 +27,7 @@ float vehicle_extract_player(entity plr, float eject)
     plr.vehicle        = world;
 	plr.view_ofs       = PL_VIEW_OFS;
 	plr.hud            = HUD_NORMAL;
-	plr.event_damage   = PlayerDamage;
+	plr.event_damage   = player_damage;
 	plr.lastpushtime = time;
     setsize(plr,PL_MIN,PL_MAX);
 	return 1;

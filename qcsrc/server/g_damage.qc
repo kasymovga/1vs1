@@ -207,7 +207,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					local entity oldself;
 					oldself = self;
 					self = attacker;
-					VoiceMessage("taunt", "");
+					player_voice_message("taunt", "");
 					self = oldself;
 				}
 			}
