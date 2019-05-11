@@ -4,47 +4,6 @@
 
         Contact: Wazat1@gmail.com
 
-
-Installation instructions:
---------------------------
-
-1. Place hook.c in your gamec source directory with the other source files.
-
-2. Add this line to the bottom of progs.src:
-
-gamec/hook.c
-
-3. Open defs.h and add these lines to the very bottom:
-
-// Wazat's grappling hook
-.entity		hook;
-void GrapplingHookFrame();
-void RemoveGrapplingHook(entity pl);
-void SetGrappleHookBindings();
-// hook impulses
-float GRAPHOOK_FIRE		= 20;
-float GRAPHOOK_RELEASE		= 21;
-// (note: you can change the hook impulse #'s to whatever you please)
-
-4. Open client.c and add this to the top of PutClientInServer():
-
-	RemoveGrapplingHook(self); // Wazat's Grappling Hook
-
-5. Find ClientConnect() (in client.c) and add these lines to the bottom:
-
-	// Wazat's grappling hook
-	SetGrappleHookBindings();
-
-6. Still in client.c, find PlayerPreThink and add this line just above the call to W_WeaponFrame:
-
- 	GrapplingHookFrame();
-
-7. Build and test the mod.  You'll want to bind a key to "+hook" like this:
-bind ctrl "+hook"
-
-And you should be done!
-
-
 ============================================*/
 
 float g_balance_grapplehook_airfriction;
@@ -67,8 +26,7 @@ vector hook_shotorigin;
 .float aiment_deadflag;
 .float hook_attack_time;
 
-void SetMovetypeFollow(entity ent, entity e)
-{
+void(entity ent, entity e) hook_follow {
 	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
 	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid
 	ent.aiment = e; // make the hole follow bmodel
@@ -80,24 +38,9 @@ void SetMovetypeFollow(entity ent, entity e)
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
 }
-#if 0
-void UnsetMovetypeFollow(entity ent)
-{
-	ent.hook_attack_time = 0;
-	ent.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(ent);
-	ent.aiment = world;
-}
-#endif
-float LostMovetypeFollow(entity ent)
-{
-#if 0
-	if(ent.movetype != MOVETYPE_FOLLOW)
-		if(ent.aiment)
-			error("???");
-#endif
-	if(ent.aiment)
-	{
+
+float(entity ent) hook_lost_follow {
+	if(ent.aiment) {
 		if(ent.aiment.classname != ent.aiment_classname)
 			return 1;
 		if(ent.aiment.deadflag != ent.aiment_deadflag)
@@ -109,8 +52,7 @@ float LostMovetypeFollow(entity ent)
 .float hook_length;
 .float hook_switchweapon;
 
-void RemoveGrapplingHook(entity pl)
-{
+void(entity pl) hook_remove {
 	if(pl.hook == world)
 		return;
 	remove(pl.hook.hook);
@@ -122,14 +64,13 @@ void RemoveGrapplingHook(entity pl)
 	//pl.disableclientprediction = FALSE;
 }
 
-void GrapplingHookThink();
-void GrapplingHook_Stop()
-{
+void() hook_think;
+void hook_stop() {
 	pointparticles(particleeffectnum("grapple_impact"), self.origin, '0 0 0', 1);
 	sound (self, CHAN_PROJECTILE, "weapons/hook_impact.wav", VOL_BASE, ATTN_NORM);
 
 	self.state = 1;
-	self.hook.think = GrapplingHookThink;
+	self.hook.think = hook_think;
 	self.hook.nextthink = time;
 	self.touch = SUB_Null;
 	self.velocity = '0 0 0';
@@ -137,7 +78,7 @@ void GrapplingHook_Stop()
 	self.hook_length = -1;
 }
 
-float GrapplingHook_SendEntity(entity to, float sf) {
+float(entity to, float sf) hook_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	WriteByte(MSG_ENTITY, sf);
 	entity _hook = self.owner;
@@ -173,8 +114,7 @@ float GrapplingHook_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-void GrapplingHookThink()
-{
+void() hook_think {
 	float spd, dist, newlength;
 	vector dir, org, myorg, end, v, v0, dv;
 	entity oldself = self;
@@ -186,9 +126,9 @@ void GrapplingHookThink()
 		self = oldself;
 		return;
 	}
-	if(LostMovetypeFollow(self))
+	if(hook_lost_follow(self))
 	{
-		RemoveGrapplingHook(self.owner);
+		hook_remove(self.owner);
 		self = oldself;
 		return;
 	}
@@ -201,32 +141,6 @@ void GrapplingHookThink()
 	makevectors(self.owner.v_angle);
 	org = self.owner.origin + self.owner.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
     myorg = WarpZone_RefSys_TransformOrigin(self.owner, self, org);
-
-#if 0
-	tracebox(org, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self.owner);
-	// do not hit players with this, as they tend to get in the way just too often
-	// NOTE: this assumes sky brushes cannot get in the way
-	// if they can, assume the map is broken! :P
-	if(trace_fraction < 1 && (!self.aiment || trace_ent != self.aiment))
-	{
-		// 0. stop it
-		if(self.state != 1)
-			GrapplingHook_Stop();
-
-		// 1. detach the hook
-		if(self.aiment)
-			UnsetMovetypeFollow(self);
-
-		// 2. cut it off
-		setorigin(self, trace_endpos);
-
-		// 3. reattach the hook
-		if(trace_ent)
-			if(trace_ent.movetype != MOVETYPE_NONE)
-				SetMovetypeFollow(self, trace_ent);
-	}
-#endif
-
 	if(self.hook_length < 0)
 		self.hook_length = vlen(myorg - self.origin);
 
@@ -238,7 +152,7 @@ void GrapplingHookThink()
 
 		if (self.aiment) {
 			if not(player_can_fire(self.owner, FALSE)) {
-				RemoveGrapplingHook(self.owner);
+				hook_remove(self.owner);
 				return;
 			}
 			if (g_balance_grapplehook_damage_interval)
@@ -250,7 +164,7 @@ void GrapplingHookThink()
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
 			if not(self.aiment) {
-				RemoveGrapplingHook(self.owner);
+				hook_remove(self.owner);
 				return;
 			}
 		}
@@ -339,14 +253,13 @@ void GrapplingHookThink()
 	self = oldself;
 }
 
-void GrapplingHookTouch (void)
-{
+void(void) hook_touch {
 	PROJECTILE_SKIPNONSOLID
 	if(SUB_OwnerCheck())
 		return;
 	if(SUB_NoImpactCheck())
 	{
-		RemoveGrapplingHook(self.owner);
+		hook_remove(self.owner);
 		return;
 	}
 
@@ -363,24 +276,21 @@ void GrapplingHookTouch (void)
 		else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		{
 			dprint("Detected and prevented the sky-grapple bug.\n");
-			RemoveGrapplingHook(self.owner);
+			hook_remove(self.owner);
 			return;
 		}
 	}
-
-	GrapplingHook_Stop();
-
+	hook_stop();
 	if(other)
 		if(other.movetype != MOVETYPE_NONE) {
-			SetMovetypeFollow(self, other);
+			hook_follow(self, other);
             WarpZone_RefSys_BeginAddingIncrementally(self, self.aiment);
 		}
 
 	//self.owner.disableclientprediction = TRUE;
 }
 
-void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
+void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) hook_damage {
 	if(self.health > 0)
 	{
 		float f;
@@ -401,13 +311,12 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 			if (f)
 				Damage(self.owner, inflictor, attacker, g_balance_grapplehook_break_damage * f, WEP_HOOK, self.owner.origin, '0 0 0');
 
-			RemoveGrapplingHook(self.owner);
+			hook_remove(self.owner);
 		}
 	}
 }
 
-void FireGrapplingHook (void)
-{
+void(void) hook_fire {
 	local entity missile;
 	local vector org;
 
@@ -422,7 +331,7 @@ void FireGrapplingHook (void)
 	missile.owner = self;
 	missile.hook = spawn();
 	missile.hook.owner = missile;
-	Net_LinkEntity(missile.hook, FALSE, 0, GrapplingHook_SendEntity);
+	Net_LinkEntity(missile.hook, FALSE, 0, hook_send);
 	self.hook = missile;
 	missile.classname = "grapplinghook";
 
@@ -441,26 +350,26 @@ void FireGrapplingHook (void)
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
-	missile.touch = GrapplingHookTouch;
-	missile.hook.think = GrapplingHookThink;
+	missile.touch = hook_touch;
+	missile.hook.think = hook_think;
 	missile.hook.nextthink = time + 0.1;
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
 
 	missile.health = g_balance_grapplehook_health;//120
-	missile.event_damage = GrapplingHook_Damage;
+	missile.event_damage = hook_damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
 
 	entity oldself = self;
 	self = missile.hook;
-	GrapplingHookThink();
+	hook_think();
 	self = oldself;
 }
 
-var void() GrappleHook_PlayerPreThink_NextLink;
-void() GrappleHook_PlayerPreThink {
-	GrappleHook_PlayerPreThink_NextLink();
+var void() hook_PlayerPreThink_NextLink;
+void() hook_PlayerPreThink {
+	hook_PlayerPreThink_NextLink();
 	float button_hook = self.BUTTON_HOOK;
 	if (PLAYER_DEAD(self))
 		return;
@@ -511,34 +420,36 @@ void() GrappleHook_PlayerPreThink {
 	if (self.hook_state & HOOK_FIRING)
 	{
 		if (self.hook)
-			RemoveGrapplingHook(self);
-		FireGrapplingHook();
+			hook_remove(self);
+
+		hook_fire();
 		self.hook_state &~= HOOK_FIRING;
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{
 		if (self.hook)
-			RemoveGrapplingHook(self);
+			hook_remove(self);
+
 		self.hook_state &~= HOOK_REMOVING;
 	}
 }
 
-var void() GrappleHook_RealClientConnect_NextLink;
-void GrappleHook_RealClientConnect(void) {
+var void() hook_RealClientConnect_NextLink;
+void hook_RealClientConnect(void) {
 	// this function has been modified for Nexuiz
 	// don't remove these lines! old server or demos coud overwrite the new aliases
 	stuffcmd(self, "alias +hook +button6\n");
 	stuffcmd(self, "alias -hook -button6\n");
-	GrappleHook_RealClientConnect_NextLink();
+	hook_RealClientConnect_NextLink();
 }
 
-var void(entity targ, entity attacker, float deathtype) GrappleHook_DamageForceModsSet_NextLink;
-void GrappleHook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
+var void(entity targ, entity attacker, float deathtype) hook_DamageForceModsSet_NextLink;
+void hook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	if(targ.classname == "player")
 		if(targ.hook) {
 			if(targ.hook.aiment)
 				if(targ.hook.aiment == attacker)
-					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
+					hook_remove(targ); // STOP THAT, you parasite!
 
 			if (targ.hook.state)
 			if not(attacker)
@@ -548,37 +459,17 @@ void GrappleHook_DamageForceModsSet(entity targ, entity attacker, float deathtyp
 			}
 		}
 
-	GrappleHook_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+	hook_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
-var void(float killed) GrappleHook_PlayerClear_NextLink;
-void(float killed) GrappleHook_PlayerClear {
-	RemoveGrapplingHook(self);
-	GrappleHook_PlayerClear_NextLink(killed);
+var void(float killed) hook_PlayerClear_NextLink;
+void(float killed) hook_PlayerClear {
+	hook_remove(self);
+	hook_PlayerClear_NextLink(killed);
 }
 
-float GrappleHookInit_done;
-void GrappleHookInit()
-{
-	if (GrappleHookInit_done)
-		return;
-
-    precache_model("models/hook.md3");
-	precache_sound("weapons/hook_fire.wav");
-	precache_sound("weapons/hook_impact.wav");
-	GrappleHookInit_done = TRUE;
-	GrappleHook_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-	GameHookChain_RealClientConnect = GrappleHook_RealClientConnect;
-	GrappleHook_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = GrappleHook_DamageForceModsSet;
-	GrappleHook_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = GrappleHook_PlayerPreThink;
-	GrappleHook_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = GrappleHook_PlayerClear;
-}
-
-void GrappleHookReadCvars()
-{
+float hook_init_done;
+void(float force) hook_init {
 	CACHE_CVAR(g_balance_grapplehook_airfriction);
 	CACHE_CVAR(g_balance_grapplehook_break_damage);
 	CACHE_CVAR(g_balance_grapplehook_damage);
@@ -594,6 +485,23 @@ void GrappleHookReadCvars()
 	CACHE_CVAR(g_balance_grapplehook_stretch);
 	CACHE_CVAR(g_grappling_hook_tarzan);
 	CACHE_CVAR(g_grappling_hook);
-	if (g_grappling_hook)
-		GrappleHookInit();
+	if not(g_grappling_hook)
+	if not(force)
+		return;
+
+	if (hook_init_done)
+		return;
+
+	hook_init_done = TRUE;
+    precache_model("models/hook.md3");
+	precache_sound("weapons/hook_fire.wav");
+	precache_sound("weapons/hook_impact.wav");
+	hook_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+	GameHookChain_RealClientConnect = hook_RealClientConnect;
+	hook_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = hook_DamageForceModsSet;
+	hook_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = hook_PlayerPreThink;
+	hook_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = hook_PlayerClear;
 }

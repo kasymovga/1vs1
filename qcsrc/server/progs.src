@@ -43,9 +43,7 @@ csqcprojectile.qh
 csqceffects.qc
 
 portals.qh
-
-g_hook.qh
-
+hook.qh
 scores.qh
 
 ipban.qh
@@ -234,8 +232,7 @@ ctf.qc
 dom.qc
 onslaught.qc
 nexball.qc
-g_hook.qc
-
+hook.qc
 t_swamp.qc
 
 clientcommands.qc

@@ -295,7 +295,7 @@ void readdynamiccvars() {
 	Client_ReadCvars();
 	spectator_init();
 	Teamplay_ReadCvars();
-	GrappleHookReadCvars();
+	hook_init(FALSE);
 	turret_readcvars();
 	WaypointSprite_Init();
 	default_player_alpha = cvar("g_player_alpha");

@@ -151,7 +151,7 @@ void Teleport_Touch (void)
 	EXACTTRIGGER_TOUCH;
 
 	if(other.classname == "player")
-		RemoveGrapplingHook(other);
+		hook_remove(other);
 
 	if(self.enemy)
 	{
