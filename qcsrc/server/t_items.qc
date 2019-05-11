@@ -44,6 +44,10 @@ float g_balance_powerup_strength_damage;
 float g_balance_powerup_strength_force;
 float g_balance_powerup_strength_selfdamage;
 float g_balance_powerup_strength_selfforce;
+float g_powerup_strength_droppable;
+float g_powerup_invisibility_droppable;
+float g_powerup_shield_droppable;
+float g_powerup_speed_droppable;
 float g_use_ammunition;
 string sv_model_healthsmall;
 string sv_model_healthmedium;
@@ -56,8 +60,38 @@ string sv_model_armorlarge;
 string sv_model_mushroom;
 string sv_sound_mushroom;
 
+void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
+
+float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickupbasevalue;};
+
+void(.float powerupfield, string _model, string _sound, string _name, float it) powerup_drop {
+	entity oldself;
+	if (self.powerupfield > 0) {
+		entity e = spawn();
+		e.classname = "droppedpowerup";
+		e.powerupfield = self.powerupfield - time;
+		setorigin(e, self.origin);
+		oldself = self;
+		self = e;
+		StartItem(_model, _sound, 0, 0, _name, it, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+		self = oldself;
+	}
+}
+
 var void(float killed) powerups_PlayerClear_NextLink;
 void powerups_PlayerClear(float killed) {
+	if (g_powerup_strength_droppable)
+		powerup_drop(strength_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Strength Powerup", IT_STRENGTH);
+
+	if (g_powerup_shield_droppable)
+		powerup_drop(invincible_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_INVINCIBLE);
+
+	if (g_powerup_invisibility_droppable)
+		powerup_drop(invisibility_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Invisibility", IT_INVISIBILITY);
+
+	if (g_powerup_speed_droppable)
+		powerup_drop(speed_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_SPEED);
+
 	self.invincible_finished = 0;
 	self.invisibility_finished = 0;
 	self.strength_finished = 0;
@@ -81,6 +115,10 @@ void powerups_init() {
 
 	powerups_init_done = 1;
 	CACHE_CVAR(g_powerup_strength_akimbo);
+	CACHE_CVAR(g_powerup_strength_droppable);
+	CACHE_CVAR(g_powerup_invisibility_droppable);
+	CACHE_CVAR(g_powerup_shield_droppable);
+	CACHE_CVAR(g_powerup_speed_droppable);
 	powerups_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = powerups_PlayerClear;
 	powerups_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
@@ -734,18 +772,6 @@ void Item_Reset()
 		Item_ScheduleInitialRespawn(self);
 }
 
-// Savage: used for item garbage-collection
-// TODO: perhaps nice special effect?
-void RemoveItem(void)
-{
-	remove(self);
-}
-
-// pickup evaluation functions
-// these functions decide how desirable an item is to the bots
-
-float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickupbasevalue;};
-
 float weapon_pickupevalfunc(entity player, entity item)
 {
 	float c, i, j, position;
@@ -868,10 +894,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.reset = SUB_Remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
-		// Savage: remove thrown items after a certain period of time ("garbage collection")
-		self.think = RemoveItem;
-		self.nextthink = time + 60;
-		// don't drop if in a NODROP zone (such as lava)
+		SUB_SetFade(self, time + 60, 1);
 		traceline(self.origin, self.origin, MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{

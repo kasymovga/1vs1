@@ -240,6 +240,10 @@ set g_akimbo_use_left_hand 0
 set g_akimbo_use_left_hand_rotate "0 0 0"
 set g_akimbo_animation_shift 0
 set g_powerup_strength_akimbo 0
+set g_powerup_strength_droppable 1
+set g_powerup_shield_droppable 1
+set g_powerup_invisibility_droppable 1
+set g_powerup_speed_droppable 1
 set g_pinata_drop_all 0
 set sv_walkietalkie ""
 set g_player_pushfactor 0.5
