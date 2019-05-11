@@ -1033,3 +1033,30 @@ void() scores_basics_end {
 void() scores_generic {
 	scores_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
 }
+
+void(entity attacker, entity targ, float f) scores_give_frag {
+	if(gameover)
+		return;
+
+	if(f < 0) {
+		if(targ == attacker)
+		{
+			// suicide
+			scores_player_add(attacker, SP_SUICIDES, 1);
+		}
+		else
+		{
+			// teamkill
+			scores_player_add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+		}
+	} else {
+		// regular frag
+		scores_player_add(attacker, SP_KILLS, 1);
+	}
+	scores_player_add(targ, SP_DEATHS, 1);
+	f = GameHook_FragsHandle(attacker, targ, f);
+	attacker.totalfrags += f;
+	if(f)
+		scores_player_team_add_score(attacker, f);
+}
+

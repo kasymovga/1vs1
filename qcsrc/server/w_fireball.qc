@@ -109,14 +109,14 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 			if(/* trace_startsolid || */ trace_fraction != 1)
 				continue;
 			e.fireball_impactvec = p;
-			random_selection_add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+			random_selection_add(e, 0, string_null, 1 / (1 + d), !fire_is_burning(e));
 		}
 	}
 	if(random_selection_chosen_ent)
 	{
 		d = vlen(self.origin - random_selection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
-		Fire_AddDamage(random_selection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
+		fire_add_damage(random_selection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec);
 		pointparticles(particleeffectnum("fireball_laser"), self.origin, random_selection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
@@ -259,7 +259,7 @@ void W_Firemine_Touch (void)
 		Damage_RecordHits(self.owner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
 
 	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, g_balance_fireball_primary_damage, g_balance_fireball_primary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
+	if(fire_add_damage(other, self.realowner, g_balance_fireball_primary_damage, g_balance_fireball_primary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
 	{
 		remove(self);
 		return;

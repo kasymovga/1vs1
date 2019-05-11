@@ -130,6 +130,7 @@ gamehooks.qh
 nadgets/include.qh
 napalm.qh
 g_damage.qh
+fire.qh
 badass.qh
 monsters/monsters.qh
 ../client-server/warpzonelib/anglestransform.qh
@@ -163,7 +164,8 @@ g_subs.qc
 ../client-server/rune.qc
 violence.qc
 g_damage.qc
-
+fire.qc
+arc.qc
 teamplay.qc
 gametype.qc
 runematch.qc

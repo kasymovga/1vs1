@@ -6,7 +6,7 @@ void fireguy_mine_touch(void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, self.dmg_edge, 2, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
+	if(fire_add_damage(other, self.realowner, self.dmg_edge, 2, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
 	{
 		remove(self);
 		return;

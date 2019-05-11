@@ -371,7 +371,7 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float damage) {
     if(arc <= 0)
         return;
 
-    ArcDamage(targ, attacker, damage, WEP_ZAPPER | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
+    arc_damage(targ, attacker, damage, WEP_ZAPPER | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
         g_balance_zapper_secondary_arc_range, arc,
         g_balance_zapper_secondary_arc_force, COLOR_TEAM2, zapper_arc_hit
     );

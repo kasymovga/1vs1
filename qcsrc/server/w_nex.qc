@@ -7,6 +7,7 @@ float g_balance_nex_damagefalloff_maxdist;
 float g_balance_nex_damagefalloff_mindist;
 float g_balance_nex_force;
 float g_balance_nex_refire;
+string sv_announcer_extra_twohits;
 
 .float nex_lasthit;
 
@@ -129,6 +130,9 @@ float w_nex(float req)
 		CACHE_CVAR(g_balance_nex_damagefalloff_mindist);
 		CACHE_CVAR(g_balance_nex_force);
 		CACHE_CVAR(g_balance_nex_refire);
+		CACHE_CVAR_STR(sv_announcer_extra_twohits);
+		if (sv_announcer_extra_twohits != "")
+			precache_sound(sv_announcer_extra_twohits);
 	}
 	return TRUE;
 };

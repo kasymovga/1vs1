@@ -58,7 +58,7 @@ void Napalm_Burn(void) {
                 continue;
 
             d = damage + (edgedamage - damage) * (vlen(self.origin - p) / dist);
-            Fire_AddDamage(e, o, d * burntime, burntime, dtype);
+            fire_add_damage(e, o, d * burntime, burntime, dtype);
         }
     }
 }

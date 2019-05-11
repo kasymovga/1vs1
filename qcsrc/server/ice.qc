@@ -51,7 +51,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 		return TRUE;
 
 	if (deathtype)
-		Obituary(attacker, inflictor, self, deathtype);
+		player_obituary(attacker, inflictor, self, deathtype);
 
 	self.deadflag = DEAD_FREEZE;
 	self.health = start_health;

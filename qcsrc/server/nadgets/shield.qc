@@ -20,7 +20,7 @@ float g_nadgets_shield_health;
 float g_nadgets_shield_diminish;
 
 void HG_Shield_Discharge_Arc(entity targ, entity attacker, float damage) {
-    ArcDamage(targ, attacker, damage, HG_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
+    arc_damage(targ, attacker, damage, HG_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
         g_nadgets_shield_damage_store_arc_range, g_nadgets_shield_damage_store_arc,
         g_nadgets_shield_damage_store_arc_pushback, COLOR_TEAM3, shield_arc_hit
     );

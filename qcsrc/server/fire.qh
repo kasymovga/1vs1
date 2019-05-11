@@ -1,0 +1,2 @@
+void() fire_init;
+float(entity e, entity o, float d, float t, float dt) fire_add_damage;

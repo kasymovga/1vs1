@@ -17,6 +17,7 @@ void(entity player) scores_detach;
  */
 float(entity player, float scorefield, float score) scores_player_add;
 float(entity player, float scorefield, float score) scores_player_set;
+void(entity attacker, entity targ, float f) scores_give_frag;
 
 /**
  * Initialize the score of this player if needed.
