@@ -293,7 +293,7 @@ void readdynamiccvars() {
 	PhysicReadCvars();
 	bot_init();
 	spawn_init();
-	Client_ReadCvars();
+	client_initialize();
 	spectator_init();
 	Teamplay_ReadCvars();
 	hook_init(FALSE);
@@ -542,7 +542,7 @@ void spawnfunc_worldspawn (void)
 
 	records_reply = strzone(getrecords());
 
-	ClientInit_Spawn();
+	client_init_spawn();
 	random_seed_spawn();
 
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), ";");

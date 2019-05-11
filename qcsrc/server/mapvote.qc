@@ -228,7 +228,7 @@ void(entity voter) mapvote_touch_votes {
 
 float(float mappos) mapvote_finished {
 	FOR_EACH_REALCLIENT(other)
-		FixClientCvars(other);
+		client_fix_cvars(other);
 
 	map_next_set(mapvote_maps[mappos]);
 	map_change();

@@ -249,7 +249,6 @@ void checkSpectatorBlock();
 .float winning;
 .float jointime;
 
-float isJoinAllowed();
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 float slowmo;

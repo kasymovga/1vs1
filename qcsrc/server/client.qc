@@ -6,7 +6,7 @@ float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
 
-void ClientSetView(entity to) {
+void(entity to) client_set_view {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
 		return;
 
@@ -15,7 +15,7 @@ void ClientSetView(entity to) {
 	WriteEntity(MSG_ONE, to);
 }
 
-void PutClientToSpot(entity spot) {
+void(entity spot) client_put_to_spot{
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
@@ -23,7 +23,7 @@ void PutClientToSpot(entity spot) {
 	self.crouch = FALSE;
 	self.view_ofs = PL_VIEW_OFS;
 	setorigin (self, spot.origin);
-	ClientSetView(self);
+	client_set_view(self);
 }
 
 /*
@@ -80,7 +80,8 @@ void PutClientInServer()
 	}
 }
 
-float ClientInit_SendEntity(entity to, float sf)
+#define ClientInit_SendEntity client_init_send
+float client_init_send(entity to, float sf)
 {
 	float i, t;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
@@ -150,10 +151,9 @@ float ClientInit_SendEntity(entity to, float sf)
 }
 
 entity client_init;
-void ClientInit_Spawn()
-{
+void() client_init_spawn {
 	client_init = spawn();
-	Net_LinkEntity(client_init, FALSE, 0, ClientInit_SendEntity);
+	Net_LinkEntity(client_init, FALSE, 0, client_init_send);
 }
 
 /*
@@ -340,7 +340,7 @@ void DoTeamChange(float destteam)
 	}
 	if (self.team <= 0)
 	if (destteam > 0)
-	if not(isJoinAllowed()) {
+	if not(client_join_allowed()) {
 		centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
 		return;
 	}
@@ -384,33 +384,11 @@ void DoTeamChange(float destteam)
 	ClientKill_TeamChange(destteam);
 }
 
-void FixClientCvars(entity e)
-{
+void (entity e) client_fix_cvars{
 	stuffcmd(e, strcat("\nin_bindmap 0 0\n", GameHook_FixClientCvars(), "\n"));
 }
 
-void Check_ForRetard(entity player) {
-	string tail = cvar_string("sv_retard_nets");
-	string head;
-	string address_check = strcat(player.netaddress, ".");
-	if (player.netname == retardplayername)
-		player.retard = 1;
-
-	while (tail != "") {
-		head = car(tail);
-		tail = cdr(tail);
-		if (head == "")
-			continue;
-
-		if (strstrofs(address_check, head, 0) == 0) {
-			player.retard = 1;
-			print("Retard connected with address ", address_check, " and pattern ", head, "\n");
-			break;
-		}
-	}
-}
-
-float ClientPreConnect_Abort() {
+float() client_preconnect_abort {
 	if (self.just_connected)
 		return FALSE;
 
@@ -420,7 +398,24 @@ float ClientPreConnect_Abort() {
 	self.just_connected = TRUE;
 	self.team = -1;
 	self.retard = -1;
-	Check_ForRetard(self);
+	string tail = cvar_string("sv_retard_nets");
+	string head;
+	string address_check = strcat(self.netaddress, ".");
+	if (self.netname == retardplayername)
+		self.retard = 1;
+
+	while (tail != "") {
+		head = car(tail);
+		tail = cdr(tail);
+		if (head == "")
+			continue;
+
+		if (strstrofs(address_check, head, 0) == 0) {
+			self.retard = 1;
+			print("Retard connected with address ", address_check, " and pattern ", head, "\n");
+			break;
+		}
+	}
 	return FALSE;
 }
 
@@ -434,7 +429,7 @@ Called when a client connects to the server
 void ClientConnect (void)
 {
 	if not(self.flags & FL_CLIENT) {
-		if (ClientPreConnect_Abort())
+		if (client_preconnect_abort())
 			return;
 
 		self.flags = FL_CLIENT;
@@ -491,14 +486,12 @@ void ClientConnect (void)
 	stuffcmd(self, strcat(clientstuff, "\n"));
 	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
-
-	FixClientCvars(self);
-
+	client_fix_cvars(self);
 	// spawnfunc_waypoint sprites
 	WaypointSprite_InitClient(self);
 
 	// get other cvars from player
-	Client_GetCvars();
+	client_cvars_request();
 	entcs_attach();
 	bot_relinkplayerlist();
 
@@ -569,10 +562,7 @@ void ClientDisconnect (void)
 	self.retard = 0;
 	self.muted = 0;
 	ReadyCount();
-
-	// free cvars
-	Client_GetCvars_Free();
-
+	client_cvars_free();
 	if (clienttype(self) == CLIENTTYPE_REAL)
 		GameHookChain_RealClientDisconnect();
 
@@ -589,12 +579,12 @@ void ClientDisconnect (void)
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return bool TRUE if the player is allowed to join, false otherwise
  */
-float isJoinAllowed() {
+float() client_join_allowed {
 	if (!g_maxplayers)
 		return TRUE;
 
-	local entity e;
-	local float currentlyPlaying;
+	entity e;
+	float currentlyPlaying;
 	FOR_EACH_REALCLIENT(e) {
 		if (e != self) //avoid wrong self-counting in teamplay
 		if (e.classname == "player" || (teamplay && e.team > 0))
@@ -715,8 +705,7 @@ void PlayerPostThink (void)
 		player_post_think();
 }
 
-void Client_ReadCvars()
-{
+void() client_initialize {
 	CACHE_CVAR(g_balance_kill_delay);
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(g_maxplayers);
@@ -727,20 +716,7 @@ void Client_ReadCvars()
 	CACHE_CVAR(sv_maxidle_forcespec);
 }
 
-void PutTeamToServer(float t) {
-	entity e, oldself;
-	FOR_EACH_CLIENT(e)
-		if (e.team == t)
-		if (e.classname != "player") {
-			e.classname = "player";
-			oldself = self;
-			self = e;
-			PutClientInServer();
-			self = oldself;
-		}
-}
-
-void Client_GetCvars() {
+void client_cvars_request() {
 	stuffcmd(self, "sendcvar cl_retard\n"
 			"sendcvar cl_autoswitch\n"
 			"sendcvar cl_saboteur\n"
@@ -771,7 +747,7 @@ void Client_GetCvars() {
 	stuffcmd(self, "sendcvar cl_gunalign\n");
 }
 
-void Client_GetCvars_Parse() {
+void() client_cvars_parse {
 	string s = strcat1(argv(1));
 	string val = strcat1(argv(2));
 	if (s == "cl_retard") {
@@ -816,12 +792,27 @@ void Client_GetCvars_Parse() {
 	}
 }
 
-void Client_GetCvars_Free() {
+void() client_cvars_free {
 	unzone_ifneeded(self.cvar_cl_weaponpriority);
 	self.cvar_cl_weaponpriority = "";
 	float i;
 	for (i = 0; i < 10; i++) {
 		unzone_ifneeded(self.cvar_cl_weaponpriorities[i]);
 		(self.cvar_cl_weaponpriorities[i]) = "";
+	}
+}
+
+void(string _name) client_mute_ifneeded {
+	string s;
+	float i;
+	for (i = 0; ; ++i) {
+		s = cvar_string(strcat("sv_player_mute_namepattern", ftos(i)));
+		if (s == "")
+			break;
+
+		if (strstrofs(strdecolorize(_name), s, 0) >= 0) {
+			print(_name, " muted with pattern ", s, "\n");
+			self.muted = TRUE;
+		}
 	}
 }

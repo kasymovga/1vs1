@@ -192,27 +192,12 @@ float cmd_floodcheck()
 	return FALSE;
 }
 
-void Client_MuteIfNeeded(string _name) {
-	string s;
-	float i;
-	for (i = 0; ; ++i) {
-		s = cvar_string(strcat("sv_player_mute_namepattern", ftos(i)));
-		if (s == "")
-			break;
-
-		if (strstrofs(strdecolorize(_name), s, 0) >= 0) {
-			print(_name, " muted with pattern ", s, "\n");
-			self.muted = TRUE;
-		}
-	}
-}
-
 void SV_ParseClientCommand(string s) {
 	string cmd;
 	float tokens;
 	entity e;
 	if not(self.flags & FL_CLIENT)
-	if (ClientPreConnect_Abort())
+	if (client_preconnect_abort())
 		return;
 
 	tokens = tokenize_console(s);
@@ -251,7 +236,7 @@ void SV_ParseClientCommand(string s) {
 			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
 			tokens = tokenize_console(s);
 		}
-		Client_GetCvars_Parse();
+		client_cvars_parse();
 	} else if(cmd == "spectate") {
 		if not(self.flags & FL_CLIENT)
 			return;
@@ -426,7 +411,7 @@ void SV_ParseClientCommand(string s) {
 			if (self.gameclient == CLIENT_XONOTIC)
 				return;
 
-			Client_MuteIfNeeded(name);
+			client_mute_ifneeded(name);
 			IRC_Announce_Name(self, name);
 			if (strlen(strdecolorize(name)) > 48) {
 				name = substring(name, 0, 47);

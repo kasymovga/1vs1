@@ -7,3 +7,4 @@ string ColoredTeamName(float t);
 void() teams_balance_check;
 void(entity pl) teams_check_allowed;
 float(entity a, entity b) teams_is_different;
+void(float t) teams_spawn_team;

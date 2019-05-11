@@ -131,7 +131,7 @@ void conquest_cp_think_capture() {
 			SUB_UseTargets();
 
 			if (self.team > 0)
-				PutTeamToServer(self.team);
+				teams_spawn_team(self.team);
 
 			WaypointSprite_Ping(self.sprite);
 			conquest_update_waypoint();

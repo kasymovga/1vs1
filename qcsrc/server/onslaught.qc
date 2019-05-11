@@ -1076,7 +1076,7 @@ void onslaught_controlpoint_icon_buildthink()
 		self = oself;
 
 		if (self.target != "")
-			PutTeamToServer(self.team);
+			teams_spawn_team(self.team);
 	}
 	self.alpha = self.health / self.max_health;
 	// colormod flash when shot

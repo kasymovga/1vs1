@@ -1021,3 +1021,15 @@ float(entity a, entity b) teams_is_different {
 	return 1;
 }
 
+void(float t) teams_spawn_team {
+	entity e, oldself;
+	FOR_EACH_CLIENT(e)
+		if (e.team == t)
+		if (e.classname != "player") {
+			e.classname = "player";
+			oldself = self;
+			self = e;
+			PutClientInServer();
+			self = oldself;
+		}
+}

@@ -87,7 +87,7 @@ float() spectator_spectate_next {
 		self.enemy = other;
 	}
 	if(self.enemy.classname == "player") {
-		ClientSetView(self.enemy);
+		client_set_view(self.enemy);
 		self.movetype = MOVETYPE_NONE;
 		spectator_spectate_copy(self.enemy);
 		spectator_note.SendFlags = 1;
@@ -161,7 +161,7 @@ void() spectator_observer_think {
 }
 
 void() spectator_to_player {
-	if(isJoinAllowed()) {
+	if(client_join_allowed()) {
 		if (GameHookChain_JoinHandle())
 			return;
 
@@ -239,7 +239,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
-	PutClientToSpot(spot);
+	client_put_to_spot(spot);
 	setsize (self, '0 0 0', '0 0 0');
 	self.items = 0;
 	self.weapons = 0;

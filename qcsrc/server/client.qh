@@ -1,0 +1,18 @@
+float g_balance_health_limit;
+float g_balance_armor_limit;
+float sv_spectate;
+float g_maxplayers_spectator_blocktime;
+
+void client_initialize();
+float() client_preconnect_abort;
+void PutClientInServer();
+void(entity e) client_fix_cvars;
+void ClientKill_Now_TeamChange();
+void() client_init_spawn;
+void() client_cvars_request;
+void() client_cvars_parse;
+void() client_cvars_free;
+void(entity to) client_set_view;
+void(entity spot) client_put_to_spot;
+void(string _name) client_mute_ifneeded;
+float() client_join_allowed;

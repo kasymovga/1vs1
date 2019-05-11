@@ -104,7 +104,7 @@ damageindicator.qh
 cl_physics.qh
 minstagib.qh
 
-cl_client.qh
+client.qh
 player.qh
 spectator.qh
 push.qh
@@ -219,13 +219,12 @@ t_items.qc
 backpack.qc
 pinata.qc
 cl_weapons.qc
-cl_impulse.qc
 entcs.qc
 player.qc
 chat.qc
 spectator.qc
 push.qc
-cl_client.qc
+client.qc
 t_plats.qc
 antilag.qc
 spawn.qc
