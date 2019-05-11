@@ -78,7 +78,7 @@ conquest.qh
 survive.qh
 ctf.qh
 dom.qh
-ent_cs.qh
+entcs.qh
 runematch.qh
 onslaught.qh
 nexball.qh
@@ -218,8 +218,7 @@ backpack.qc
 pinata.qc
 cl_weapons.qc
 cl_impulse.qc
-
-ent_cs.qc
+entcs.qc
 player.qc
 chat.qc
 spectator.qc
@@ -346,5 +345,5 @@ udpchat.qc
 score_damage.qc
 ice.qc
 single.qc
-g_lights.qc
+dynlight.qc
 timeout.qc

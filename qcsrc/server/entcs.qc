@@ -13,13 +13,11 @@
 // it did when I added this) But you have to use .Version
 // Capital V
 
-void entcs_init()
-{
+void() entcs_init {
 	print("Initializing ClientSide information entities\n");
 };
 
-float entcs_customize()
-{
+float() entcs_customize {
 	entity o;
 	o = self.owner;
 	if(PLAYER_REALLY_DEAD(o))
@@ -49,8 +47,7 @@ float entcs_customize()
 	return TRUE;
 }
 
-float entcs_send(entity to, float sf)
-{
+float(entity to, float sf) entcs_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
@@ -90,8 +87,7 @@ float entcs_send(entity to, float sf)
 	return TRUE;
 }
 
-void entcs_think()
-{
+void() entcs_think {
 	self.nextthink = time;
 	entity o = self.owner;
 	if (o.origin_x != self.origin_x || o.origin_y != self.origin_y) {
@@ -114,8 +110,7 @@ void entcs_think()
 	}
 }
 
-entity attach_entcs()
-{
+entity() entcs_attach {
 	local entity ent;
 	ent = spawn();
 	self.entcs = ent;
@@ -129,8 +124,7 @@ entity attach_entcs()
 	return ent;
 }
 
-void detach_entcs()
-{
+void() entcs_detach {
 	if (self.entcs) {
 		remove(self.entcs);
 		self.entcs = world;

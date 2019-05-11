@@ -499,9 +499,7 @@ void ClientConnect (void)
 
 	// get other cvars from player
 	Client_GetCvars();
-
-	attach_entcs();
-
+	entcs_attach();
 	bot_relinkplayerlist();
 
 	self.spectatortime = time;
@@ -539,10 +537,7 @@ void ClientDisconnect (void)
 	}
 
 	bot_clientdisconnect();
-
-	if(self.entcs)
-		detach_entcs();
-
+	entcs_detach();
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
 
