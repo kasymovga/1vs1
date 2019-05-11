@@ -1,5 +1,20 @@
 .float muted; // to be used by prvm_edictset server playernumber muted 1
 .float retard_last_say;
+float g_chat_flood_burst;
+float g_chat_flood_burst_team;
+float g_chat_flood_burst_tell;
+float g_chat_flood_lmax;
+float g_chat_flood_lmax_team;
+float g_chat_flood_lmax_tell;
+float g_chat_flood_notify_flooder;
+float g_chat_flood_damage_flooder;
+float g_chat_flood_spl;
+float g_chat_flood_spl_team;
+float g_chat_flood_spl_tell;
+string g_chat_forbidden_words;
+float g_chat_forbidden_words_set_retard;
+float g_chat_nospectators;
+float g_chat_teamcolors;
 
 string(entity pl, string msg) chat_formatmessage {
     float p, p1, p2;
@@ -360,4 +375,22 @@ void() chat_bubble_spawn {
 	e.effects = EF_LOWPRECISION | EF_NODRAW;
 	e.playerid = self.playerid;
 	setmodel(e, "models/misc/chatbubble.spr");
+}
+
+void() chat_init {
+	CACHE_CVAR(g_chat_flood_burst);
+	CACHE_CVAR(g_chat_flood_burst_team);
+	CACHE_CVAR(g_chat_flood_burst_tell);
+	CACHE_CVAR(g_chat_flood_lmax);
+	CACHE_CVAR(g_chat_flood_lmax_team);
+	CACHE_CVAR(g_chat_flood_lmax_tell);
+	CACHE_CVAR(g_chat_flood_notify_flooder);
+	CACHE_CVAR(g_chat_flood_damage_flooder);
+	CACHE_CVAR(g_chat_flood_spl);
+	CACHE_CVAR(g_chat_flood_spl_team);
+	CACHE_CVAR(g_chat_flood_spl_tell);
+	CACHE_CVAR(g_chat_nospectators);
+	CACHE_CVAR(g_chat_teamcolors);
+	CACHE_CVAR_STR(g_chat_forbidden_words);
+	CACHE_CVAR(g_chat_forbidden_words_set_retard);
 }

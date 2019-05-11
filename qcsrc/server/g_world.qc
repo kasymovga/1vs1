@@ -311,6 +311,7 @@ void readdynamiccvars() {
 	player_init();
 	backpack_init();
 	pinata_init();
+	chat_init();
 }
 
 void DB_Init() {

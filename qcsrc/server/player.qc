@@ -4,22 +4,6 @@ float sv_taunt;
 .float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
-
-float g_chat_flood_burst;
-float g_chat_flood_burst_team;
-float g_chat_flood_burst_tell;
-float g_chat_flood_lmax;
-float g_chat_flood_lmax_team;
-float g_chat_flood_lmax_tell;
-float g_chat_flood_notify_flooder;
-float g_chat_flood_damage_flooder;
-float g_chat_flood_spl;
-float g_chat_flood_spl_team;
-float g_chat_flood_spl_tell;
-string g_chat_forbidden_words;
-float g_chat_forbidden_words_set_retard;
-float g_chat_nospectators;
-float g_chat_teamcolors;
 float g_respawn_delay;
 float g_respawn_mapsettings;
 float g_respawn_mapsettings_delay;
@@ -83,6 +67,8 @@ string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
+float bot_taunt;
+float bot_talk;
 
 .entity pusher;
 .float pushltime;
@@ -1766,19 +1752,6 @@ void() player_init {
 		player_precache_all_models("models/player/*.md3");
 		player_precache_all_models("models/player/*.psk");
 	}
-	CACHE_CVAR(g_chat_flood_burst);
-	CACHE_CVAR(g_chat_flood_burst_team);
-	CACHE_CVAR(g_chat_flood_burst_tell);
-	CACHE_CVAR(g_chat_flood_lmax);
-	CACHE_CVAR(g_chat_flood_lmax_team);
-	CACHE_CVAR(g_chat_flood_lmax_tell);
-	CACHE_CVAR(g_chat_flood_notify_flooder);
-	CACHE_CVAR(g_chat_flood_damage_flooder);
-	CACHE_CVAR(g_chat_flood_spl);
-	CACHE_CVAR(g_chat_flood_spl_team);
-	CACHE_CVAR(g_chat_flood_spl_tell);
-	CACHE_CVAR(g_chat_nospectators);
-	CACHE_CVAR(g_chat_teamcolors);
 	CACHE_CVAR(g_respawn_delay);
 	CACHE_CVAR(g_respawn_mapsettings);
 	CACHE_CVAR(g_respawn_mapsettings_delay);
@@ -1788,8 +1761,6 @@ void() player_init {
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_fullbrightplayers);
-	CACHE_CVAR_STR(g_chat_forbidden_words);
-	CACHE_CVAR(g_chat_forbidden_words_set_retard);
 	CACHE_CVAR_STR(g_player_forcemodel);
 	CACHE_CVAR_STR(g_player_forcemodel_red);
 	CACHE_CVAR_STR(g_player_forcemodel_blue);
@@ -1911,4 +1882,6 @@ void() player_init {
 	EXTRA_ANNOUNCER(telefrag);
 	EXTRA_ANNOUNCER(firstblood);
 #undef EXTRA_ANNOUNCER
+	CACHE_CVAR(bot_taunt);
+	CACHE_CVAR(bot_talk);
 }

@@ -5,8 +5,6 @@ float SP_BESTWEP;
 .float dmg_radius;
 .entity dmg_indicator;
 
-float bot_taunt;
-float bot_talk;
 float g_score_bestweapon;
 float g_balance_selfdamagepercent;
 float g_friendlyfire;
@@ -467,8 +465,6 @@ void RadiusDamage (entity inflictor, entity attacker, float coredamage, float ed
 
 void Damage_ReadCvars()
 {
-	CACHE_CVAR(bot_taunt);
-	CACHE_CVAR(bot_talk);
 	CACHE_CVAR(g_friendlyfire);
 	CACHE_CVAR(g_friendlyfire_force);
 	CACHE_CVAR(g_mirrordamage);
