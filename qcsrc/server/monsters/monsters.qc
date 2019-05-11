@@ -142,7 +142,7 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 
 void monster_die() {
 	//self.view_ofs = self.mins_z  + (self.maxs_z - self.mins_z) * 0.25;
-	Violence_GibSplash(self, 1, 1, self.enemy);
+	violence_gib_splash(self, 1, 1, self.enemy);
 	self.solid = SOLID_NOT;
 	self.alpha = -1;
 	self.nextthink = time;
@@ -219,7 +219,7 @@ void monster_event_damage(entity inflictor, entity attacker, float damage, float
 	if (attacker.classname != "monster")
 		self.health = self.health - damage;
 
-	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+	violence_gib_splash_at(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
 		stopsound(self, CHAN_TRIGGER);

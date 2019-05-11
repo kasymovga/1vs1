@@ -379,7 +379,7 @@ void(void) player_anim {
 }
 
 void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) player_corpse_damage {
-	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+	violence_gib_splash_at(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
@@ -390,9 +390,9 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
 
 	if (damage > 50)
-		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+		violence_gib_splash_at(hitloc, force * -0.1, 3, 1, self, attacker);
 	if (damage > 100)
-		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
 	self.health = self.health - damage;
 	self.dmg_take = self.dmg_take + damage;//max(take - 10, 0);
@@ -405,7 +405,7 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		// view just above the floor
 		self.view_ofs = '0 0 4';
 
-		Violence_GibSplash(self, 1, 1, attacker);
+		violence_gib_splash(self, 1, 1, attacker);
 		self.modelindex = 0; // restore later
 		self.solid = SOLID_NOT; // restore later
 	}
@@ -458,8 +458,8 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		d = inflictor.origin - self.origin;
 		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
 		force = v_right * vlen(force);
-		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
-		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
+		violence_gib_splash_at(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
+		violence_gib_splash_at(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
 		if(f > 0)
 		{
 			hitloc = ear1;
@@ -472,7 +472,7 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		}
 	}
 	else
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+		violence_gib_splash_at(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 	save = bound(0, damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
 	take = bound(0, damage - save, damage);
@@ -484,9 +484,9 @@ void(entity inflictor, entity attacker, float damage, float deathtype, vector hi
 		sound (self, CHAN_PROJECTILE, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
 
 	if (take > 50)
-		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+		violence_gib_splash_at(hitloc, force * -0.1, 3, 1, self, attacker);
 	if (take > 100)
-		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
 	if (time > self.spawnshieldtime)
 	{

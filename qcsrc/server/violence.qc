@@ -1,5 +1,5 @@
-float Violence_GibSplash_SendEntity(entity to, float sf)
-{
+#define violence_gib_splash_send Violence_GibSplash_SendEntity
+float(entity to, float sf) violence_gib_splash_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
@@ -11,10 +11,8 @@ float Violence_GibSplash_SendEntity(entity to, float sf)
 }
 
 // TODO maybe convert this to a TE?
-void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
-{
+void(vector org, vector dir, float type, float amount, entity gibowner, entity attacker) violence_gib_splash_at {
 	entity e;
-
 	e = spawn();
 	e.classname = "gibsplash";
 	e.cnt = amount;
@@ -22,13 +20,10 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.state |= 8 * self.species; // gib type, ranges from 0 to 15
 	setorigin(e, org);
 	e.velocity = dir;
-
 	e.oldorigin_x = compressShortVector(e.velocity);
-
-	Net_LinkEntity(e, FALSE, 0.2, Violence_GibSplash_SendEntity);
+	Net_LinkEntity(e, FALSE, 0.2, violence_gib_splash_send);
 }
 
-void Violence_GibSplash(entity source, float type, float amount, entity attacker)
-{
-	Violence_GibSplash_At(source.origin + source.view_ofs, source.velocity, type, amount, source, attacker);
+void(entity source, float type, float amount, entity attacker) violence_gib_splash {
+	violence_gib_splash_at(source.origin + source.view_ofs, source.velocity, type, amount, source, attacker);
 }

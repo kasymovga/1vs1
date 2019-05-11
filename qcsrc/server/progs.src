@@ -163,7 +163,7 @@ g_subs.qc
 
 ../client-server/rune.qh
 ../client-server/rune.qc
-g_violence.qc
+violence.qc
 g_damage.qc
 
 teamplay.qc
