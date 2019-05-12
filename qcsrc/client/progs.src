@@ -2,7 +2,7 @@ csprogs.dat
 pre.qh
 
 ../common/util-pre.qh
-Defs.qc
+defs.qc
 csqc_constants.qc
 ../common/constants.qh
 ../client-server/constants.qh
@@ -79,8 +79,8 @@ zapper.qc
 ../client-server/nadgets.qc
 nadgetselect.qc
 trip.qc
-Main.qc
-View.qc
+main.qc
+view.qc
 interpolate.qc
 teamradar.qc
 waypointsprites.qc
