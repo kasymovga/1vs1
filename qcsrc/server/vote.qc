@@ -594,14 +594,14 @@ void VoteSpam(float abstaincount, float notvoters, float mincount, string result
 		s = strcat(s, ftos(nocount), "^2 (^1");
 		s = strcat(s, ftos(ceil(mincount)), "^2 needed), ^1");
 		s = strcat(s, ftos(floor(abstaincount)), "^2 didn't care, ^1");
-		s = strcat(s, ftos(notvoters), "^2 didn't vote\n");
+		s = strcat(s, ftos(ceil(notvoters)), "^2 didn't vote\n");
 	}
 	else
 	{
 		s = strcat("\{1}^2* vote results: ^1", ftos(yescount), "^2:^1");
 		s = strcat(s, ftos(nocount), "^2, ^1");
 		s = strcat(s, ftos(floor(abstaincount)), "^2 didn't care, ^1");
-		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
+		s = strcat(s, ftos(ceil(notvoters)), "^2 didn't have to vote\n");
 	}
 	bprint(s);
 	IRC_Announce_Vote(substring(s, 1, strlen(s) - 2));
