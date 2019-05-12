@@ -757,9 +757,10 @@ void() client_cvars_parse {
 		}
 	} else if (s == "cl_autoswitch")
 		self.autoswitch = stof(val);
-	else if (s == "cl_saboteur")
-		self.saboteur = stof(val);
-	else if (s == "cl_playerdetailreduction")
+	else if (s == "cl_saboteur") {
+		if (stof(val))
+			self.saboteur = 1;
+	} else if (s == "cl_playerdetailreduction")
 		self.cvar_cl_playerdetailreduction = stof(val);
 	else if (s == "scr_centertime")
 		self.cvar_scr_centertime = stof(val);
