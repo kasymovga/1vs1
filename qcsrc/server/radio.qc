@@ -357,7 +357,7 @@ float Radio_ClientCommandHandle(string cmd, float tokens) {
 
 		return TRUE;
 	}
-	return FALSE;
+	return Radio_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
 float Radio_GameCommandHandle(string cmd, float tokens) {
