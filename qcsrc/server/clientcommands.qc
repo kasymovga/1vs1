@@ -367,9 +367,6 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "mylocation") {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else {
-		//if(ctf_clientcommand())
-		//	return;
-		// grep for Cmd_AddCommand_WithClientCommand to find them all
 		if(cmd != "status")
 		if(cmd != "max")
 		if(cmd != "monster")
@@ -381,8 +378,6 @@ void SV_ParseClientCommand(string s) {
 		if(cmd != "fly")
 		if(cmd != "noclip")
 		if(cmd != "give")
-		//if(cmd != "say") // handled above
-		//if(cmd != "say_team") // handled above
 		if(cmd != "kill")
 		if(cmd != "pause")
 		if(cmd != "ping")
