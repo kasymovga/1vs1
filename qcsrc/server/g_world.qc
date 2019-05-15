@@ -8,8 +8,7 @@ float g_balance_falldamage_maxdamage;
 
 string GetGametype();
 
-void cvar_changes_init()
-{
+void() world_cvar_changes_init {
 	float h;
 	string k, v, d;
 	float n, i;
@@ -25,7 +24,7 @@ void cvar_changes_init()
 	for(i = 0; i < n; ++i)
 	{
 		k = bufstr_get(h, i);
-		v = cvar_string(k);
+		v = cvar_string_builtin(k);
 		d = cvar_defstring(k);
 		if(v == d)
 			continue;
@@ -41,13 +40,20 @@ void cvar_changes_init()
 		BADPREFIX("sv_mapformat");
 
 		// client
-		BADPREFIX("b");
-		BADPREFIX("a");
+		BADPREFIX("bgm");
+		BADPREFIX("amb");
 		BADPREFIX("snd");
 		BADPREFIX("show");
 		BADPREFIX("scr");
 		BADPREFIX("sens");
-		BADPREFIX("c");
+		BADPREFIX("cl_");
+		BADPREFIX("conn");
+		BADPREFIX("cros");
+		BADPREFIX("cs");
+		BADPREFIX("cu");
+		BADPREFIX("cvar");
+		BADPREFIX("con");
+		BADPREFIX("ch");
 		BADPREFIX("g_campaign");
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
@@ -409,6 +415,7 @@ void spawnfunc_worldspawn (void)
 	// 63 testing
 	lightstyle(63, "a");
 
+	world_cvar_changes_init();
 	CACHE_CVAR(g_campaign);
 	if(g_campaign)
 		CampaignPreInit();
@@ -507,7 +514,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
 
 	next_pingtime = time + 5;
-	InitializeEntity(self, cvar_changes_init, INITPRIO_CVARS);
 
 	lsmaps_reply = "^7Maps available: ";
 	lsmaps_reply2 = "";
