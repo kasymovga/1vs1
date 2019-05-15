@@ -25,39 +25,45 @@ void cvar_changes_init()
 	for(i = 0; i < n; ++i)
 	{
 		k = bufstr_get(h, i);
+		v = cvar_string(k);
+		d = cvar_defstring(k);
+		if(v == d)
+			continue;
 
 #define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
 #define BADCVAR(p) if(k == p) continue
 		// internal
-		BADPREFIX("csqc_");
-		BADPREFIX("cvar_check_");
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
 		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
+		BADCVAR("slowmo");
+		BADPREFIX("sv_mapformat");
 
 		// client
-		BADPREFIX("cl_");
-		BADPREFIX("con_");
+		BADPREFIX("b");
+		BADPREFIX("a");
+		BADPREFIX("snd");
+		BADPREFIX("show");
+		BADPREFIX("scr");
+		BADPREFIX("sens");
+		BADPREFIX("c");
 		BADPREFIX("g_campaign");
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
-		BADPREFIX("menu_");
+		BADPREFIX("m");
 		BADPREFIX("net_slist_");
 		BADPREFIX("r_");
 		BADPREFIX("sbar_");
 		BADPREFIX("hud_");
-		BADPREFIX("scr_");
 		BADPREFIX("userbind");
-		BADPREFIX("v_");
-		BADPREFIX("vid_");
-		BADPREFIX("crosshair");
-		BADCVAR("mod_q3bsp_lightmapmergepower");
-		BADCVAR("mod_q3bsp_nolightmaps");
+		BADPREFIX("v");
+		BADPREFIX("mod");
 
 		// private
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_chat_flood_");
+		BADPREFIX("g_chat_forbidden_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
 		BADPREFIX("settemp_");
@@ -67,17 +73,22 @@ void cvar_changes_init()
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_world");
+		BADPREFIX("sv_infomessage");
+		BADPREFIX("sv_retard_");
+		BADPREFIX("sv_player_mute_namepattern");
+		BADPREFIX("sv_ircbot");
+		BADPREFIX("sv_udpchat");
 		BADCVAR("g_banned_list");
 		BADCVAR("log_dest_udp");
 		BADCVAR("log_file");
-		BADCVAR("net_address");
-		BADCVAR("port");
 		BADCVAR("savedgamecfg");
-		BADCVAR("sv_heartbeatperoid");
+		BADCVAR("sv_heartbeatperiod");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
+		BADCVAR("sys_first_run");
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timestamps");
+		BADCVAR("sv_progs");
 
 		// mapinfo
 		BADCVAR("timelimit");
@@ -91,16 +102,10 @@ void cvar_changes_init()
 #undef BADPREFIX
 #undef BADCVAR
 
-		v = cvar_string(k);
-		d = cvar_defstring(k);
-		if(v != d)
-		{
-			cvar_changes = strcat(cvar_changes, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_changes) > 16384)
-			{
-				cvar_changes = "// too many settings have been changed to show them here\n";
-				break;
-			}
+		cvar_changes = strcat(cvar_changes, k, " \"", v, "\" // \"", d, "\"\n");
+		if(strlen(cvar_changes) > 16384) {
+			cvar_changes = "// too many settings have been changed to show them here\n";
+			break;
 		}
 	}
 	buf_del(h);
