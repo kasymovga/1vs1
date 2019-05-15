@@ -95,6 +95,7 @@ void() world_cvar_changes_init {
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timestamps");
 		BADCVAR("sv_progs");
+		BADCVAR("sv_sysinfo_checker");
 
 		// mapinfo
 		BADCVAR("timelimit");
@@ -283,6 +284,7 @@ void readlevelcvars(void)
 	TwoWeapons_Init();
 	UDPChat_Init();
 	timeout_init();
+	sysinfo_init();
 	if (cvar("g_buttons_hookuse_swap")) {
 		BUTTON_HOOK = buttonuse;
 		BUTTON_USE = button6;

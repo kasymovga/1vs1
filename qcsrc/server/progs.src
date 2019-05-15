@@ -45,7 +45,7 @@ csqceffects.qc
 portals.qh
 hook.qh
 scores.qh
-
+sysinfo.qh
 ipban.qh
 
 race.qh
@@ -347,3 +347,4 @@ ice.qc
 single.qc
 dynlight.qc
 timeout.qc
+sysinfo.qc

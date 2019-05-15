@@ -488,6 +488,10 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_DLC_SOUND] = Ent_DLCSound;
 	SetConWidthHeight();
 	sbar_fontsize = '1 1 0';
+	string s = strcat(cvar_string("cmdline"), " ", cvar_string("gl_info_renderer"), " ", cvar_string("gl_info_version"));
+	s = strcat(s, " ", cvar_string("vid_width"), "x", cvar_string("vid_height"));
+	s = strcat(s, " ", ftos(ceil(cvar("sys_memsize_physical") / 512) * 512));
+	localcmd(strcat("\ncmd sysinfo ", s, "\n"));
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
