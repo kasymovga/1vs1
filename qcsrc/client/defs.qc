@@ -36,8 +36,6 @@ float		clientcommandframe;	//player movement
 float		servercommandframe;	//clientframe echoed off the server
 
 string		mapname;
-string map_description;
-string motd;
 
 //
 // global variables set by built in functions
@@ -229,3 +227,5 @@ float ticrate;
 float camera_correction_needed;
 .float health;
 .float armorvalue;
+string map_description;
+string motd;
