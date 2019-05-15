@@ -378,6 +378,7 @@ void() chat_bubble_spawn {
 }
 
 void() chat_init {
+	precache_model ("models/misc/chatbubble.spr");
 	CACHE_CVAR(g_chat_flood_burst);
 	CACHE_CVAR(g_chat_flood_burst_team);
 	CACHE_CVAR(g_chat_flood_burst_tell);

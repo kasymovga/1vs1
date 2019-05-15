@@ -147,8 +147,6 @@ void spawnfunc___init_dedicated_server(void)
 void precache()
 {
     // gamemode related things
-    precache_model ("models/misc/chatbubble.spr");
-    precache_model ("models/misc/teambubble.spr");
 #ifdef TTURRETS_ENABLED
     if (cvar("g_turrets"))
         turrets_precash();
