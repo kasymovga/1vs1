@@ -696,6 +696,7 @@ set sv_model_armorlarge ""
 set sv_model_mushroom ""
 
 set sv_maxidle_forcespec 120
+set sv_maxconnects_per_address 0
 
 set sv_ip2country 0
 set sv_ip2country_allow_fakeflag 0

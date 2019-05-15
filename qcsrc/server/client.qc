@@ -5,6 +5,7 @@ float sv_spectate;
 float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
+float sv_maxconnects_per_address;
 
 void(entity to) client_set_view {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
@@ -395,6 +396,20 @@ float() client_preconnect_abort {
 	if(Ban_MaybeEnforceBan(self))
 		return TRUE;
 
+	entity e;
+	if (sv_maxconnects_per_address > 0) {
+		float n;
+		n = 0;
+		FOR_EACH_CLIENT(e)
+			if (e.netaddress == self.netaddress)
+				n++;
+
+		if (n + 1 > sv_maxconnects_per_address) {
+			sprint(self, strcat("^1Connections limit for ", self.netaddress, " exceeded\n"));
+			dropclient(self);
+			return TRUE;
+		}
+	}
 	self.just_connected = TRUE;
 	self.team = -1;
 	self.retard = -1;
@@ -714,6 +729,7 @@ void() client_initialize {
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);
+	CACHE_CVAR(sv_maxconnects_per_address);
 }
 
 void client_cvars_request() {
