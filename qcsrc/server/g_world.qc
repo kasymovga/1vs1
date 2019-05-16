@@ -6,8 +6,6 @@ float g_balance_falldamage_factor;
 float g_balance_falldamage_minspeed;
 float g_balance_falldamage_maxdamage;
 
-string GetGametype();
-
 void() world_cvar_changes_init {
 	float h;
 	string k, v, d;
@@ -556,7 +554,7 @@ void spawnfunc_worldspawn (void)
 	client_init_spawn();
 	random_seed_spawn();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), ";");
+	localcmd("\n_sv_hook_gamestart ", GametypeNameFromType(game), ";");
 
 	world_initialized = 1;
 	IRC_Init();
@@ -568,16 +566,6 @@ void spawnfunc_light (void)
 	remove(self);
 }
 
-string GetGametype()
-{
-	return GametypeNameFromType(game);
-}
-
-void GameResetCfg()
-{
-	// settings persist, except...
-	localcmd("\nsettemp_restore\n");
-};
 
 /*
 ============
@@ -689,7 +677,7 @@ void DumpStats(float final)
 		s = ":scores:";
 	else
 		s = ":status:";
-	s = strcat(s, GetGametype(), "_", mapname, ":", ftos(rint(time)));
+	s = strcat(s, GametypeNameFromType(game), "_", mapname, ":", ftos(rint(time)));
 
 	if(to_console)
 		print(s, "\n");

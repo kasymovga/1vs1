@@ -377,7 +377,7 @@ void WinningConditionHelper()
 	entity secondscorekeeper;
 	entity sk;
 
-	s = GetGametype();
+	s = GametypeNameFromType(game);
 	s = strcat(s, ":", cvar_string("g_nexuizversion"));
 	s = strcat(s, "::", scores_player_string(world, 2)); // make this 1 once we can
 

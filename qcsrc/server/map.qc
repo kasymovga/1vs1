@@ -166,7 +166,7 @@ void(float position) map_goto_set_index {
 }
 
 void() map_change {
-	GameResetCfg();
+	localcmd("\nsettemp_restore\n");
 	MapInfo_LoadMap(getmapname_stored);
 }
 
@@ -340,13 +340,6 @@ float() map_do_next_override {
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
-	if(cvar("lastlevel"))
-	{
-		GameResetCfg();
-		localcmd("set lastlevel 0\ntogglemenu\n");
-		alreadychangedlevel = TRUE;
-		return TRUE;
-	}
 	return FALSE;
 };
 
