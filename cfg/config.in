@@ -501,8 +501,6 @@ set sv_retard_say "Moo|Moo?|Moo!|Moo..."
 alias retard "prvm_edictset server $1 retard 1"
 alias unretard "prvm_edictset server $1 retard -1"
 
-seta hud_shownames 1
-seta hud_shownames_enemies 0
 seta cl_gunalpha 1
 
 set sv_door_shootable 1
