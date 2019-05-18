@@ -68,6 +68,10 @@ set g_balance_fireball_primary_speed 1000
 set g_balance_fireball_secondary_ammo 25
 set g_balance_fireball_secondary_damage 250
 set g_balance_nex_ammo 10
+set g_balance_crylink_primary_ammo 3
+set g_balance_crylink_secondmary_ammo 4
+set g_balance_electro_secondary_refire 0.25
+set g_balance_electro_secondary_animtime 0.25
 
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
