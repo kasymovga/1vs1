@@ -75,6 +75,9 @@ set g_balance_electro_secondary_animtime 0.25
 set g_balance_rune_speed_atkrate 0.8
 set g_nexball_meter_period 2
 set g_voice_flood_spv 20
+set g_balance_electro_primary_ammo 3
+set g_balance_hlac_primary_ammo 1
+set g_balance_hlac_secondary_ammo 6
 
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
@@ -798,7 +801,7 @@ set g_balance_zapper_primary_refire 0.3
 set g_balance_zapper_primary_ticrate 0.1
 set g_balance_zapper_secondary 1
 set g_balance_zapper_secondary_accumulate 0
-set g_balance_zapper_secondary_ammo 5
+set g_balance_zapper_secondary_ammo 7
 set g_balance_zapper_secondary_bounces 5
 set g_balance_zapper_secondary_charge_time 5
 set g_balance_zapper_secondary_damage 80
