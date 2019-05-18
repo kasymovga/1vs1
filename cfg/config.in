@@ -72,6 +72,9 @@ set g_balance_crylink_primary_ammo 3
 set g_balance_crylink_secondmary_ammo 4
 set g_balance_electro_secondary_refire 0.25
 set g_balance_electro_secondary_animtime 0.25
+set g_balance_rune_speed_atkrate 0.8
+set g_nexball_meter_period 2
+set g_voice_flood_spv 20
 
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
@@ -211,7 +214,7 @@ set g_balance_melee_onehit 0 ""
 set g_balance_melee_time 0.4 ""
 set g_balance_melee_ticrate 0.1 ""
 set g_balance_melee_refire 1.2 ""
-set g_balance_nexball_primary_shootatmaxmeter 0 ""
+set g_balance_nexball_primary_shootatmaxmeter 1
 set g_balance_shotgun_secondary 1
 set g_balance_shotgun_swap_buttons 0
 set g_balance_uzi_first 1
@@ -281,6 +284,7 @@ set khca_g_warmup_start_ammo_rockets 40
 set khca_g_warmup_start_ammo_cells 60
 set khca_g_balance_health_rotlinear 0
 set khca_g_score_damage 1
+set nexball_g_start_weapon_shotgun 0
 set g_khft_point_limit 15
 set g_khft_point_leadlimit 0
 set g_khft_startdelay 5
@@ -406,7 +410,7 @@ set sv_spawnreplace_team_CTF_redplayer info_player_team1
 set sv_spawnreplace_team_CTF_blueplayer info_player_team2
 
 set sv_spawnreplace_weapon_machinegun "weapon_uzi"
-set sv_spawnreplace_weapon_lightning "weapon_electro"
+set sv_spawnreplace_weapon_lightning "weapon_zapper"
 set sv_spawnreplace_weapon_plasmagun "weapon_hlac"
 set sv_spawnreplace_weapon_railgun "weapon_nex"
 set sv_spawnreplace_weapon_bfg "weapon_fireball"
@@ -516,7 +520,7 @@ set g_freeze_enddelay 3
 set g_freeze_slowdown 0.1
 set g_freeze_startdelay 10
 set g_freeze_unfroze_time 3
-set g_freeze_unfroze_interruption 0
+set g_freeze_unfroze_interruption 1
 set g_freeze_use_tdm_maps 1
 set g_freeze_winlimit 10
 set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
