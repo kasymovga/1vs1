@@ -19,7 +19,6 @@ float(string cmd, float tokens) sysinfo_ClientCommandHandle {
 		tmp = strreplace("?", "", tmp);
 		if (tmp != "")
 		if (self.sysinfo == "") {
-			print(self.netname, " has sysinfo: ", tmp, "\n");
 			self.sysinfo = strzone(tmp);
 			if (sv_sysinfo_checker != "")
 				uri_get(strcat(sv_sysinfo_checker, tmp), URI_SYSINFO_CHECKER);
@@ -42,7 +41,6 @@ void(float id, float status, string data) sysinfo_uri_callback {
         print(strcat("sysinfo checker failed, status: ", ftos(status)));
         return;
     }
-	print("sysinfo check answer: ", data, "\n");
 	string head, tail, _info;
 	tail = data;
 	_info = car(tail);

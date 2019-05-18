@@ -140,6 +140,7 @@ set sv_ircbot_update_topic_hostname 1
 set sv_ircbot_update_topic_serverempty 1
 set sv_ircbot_update_topic_serverfull 1
 set sv_sysinfo_checker ""
+alias sysinfoget "prvm_edictget server $1 sysinfo"
 set sv_sound_melee "sound/nexball/shoot2.wav" "Sound for melee attack"
 set sv_sound_mushroom ""
 set sv_model_campingrifle "" "Custom weapon model for rifle"
