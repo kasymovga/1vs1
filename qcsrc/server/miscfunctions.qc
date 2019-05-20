@@ -57,25 +57,9 @@ float move_out_of_solid_with_type(entity e, float t)
 }
 #define move_out_of_solid(x) move_out_of_solid_with_type(x, MOVE_WORLDONLY)
 
-string STR_PLAYER = "player";
-string STR_SPECTATOR = "spectator";
-string STR_OBSERVER = "observer";
-
-#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
-#define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
-
 #define CACHE_CVAR(x) x = cvar(#x)
 #define CACHE_CVAR_STR(x) unzone_ifneeded(x); x = cvar_string_zone_ifneeded(#x)
 #define CACHE_CVAR_CHECK_EMPTY(x,y) x = ((cvar_string(#x) != "") ? cvar(#x) : y)
-
-#define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)
-#define PLAYER_DEAD(x) (x.deadflag)
-#define PLAYER_REALLY_DEAD(x) (x.deadflag > 0 && x.deadflag <= DEAD_RESPAWNING)
-#define PLAYER_REALLY_ALIVE(x) (!x.deadflag)
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
@@ -265,7 +249,7 @@ void weapon_precache(float wpn)
 }
 
 // sorry, but using \ in macros breaks line numbers
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
+#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == "spectator" && msg_entity.enemy == varname)) statement msg_entity = varname
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 

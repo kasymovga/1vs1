@@ -174,7 +174,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		player.warpzone_teleport_finishtime += frametime - dt;
 
 #ifndef WARPZONE_USE_FIXANGLE
-	if(player.classname == STR_PLAYER)
+	if(player.classname == "player")
 	{
 		// instead of fixangle, send the transform to the client for smoother operation
 		player.fixangle = FALSE;

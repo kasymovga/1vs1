@@ -16,3 +16,6 @@ void(entity to) client_set_view;
 void(entity spot) client_put_to_spot;
 void(string _name) client_mute_ifneeded;
 float() client_join_allowed;
+#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
+#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
+#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
