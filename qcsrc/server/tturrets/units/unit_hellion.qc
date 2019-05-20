@@ -131,7 +131,6 @@ void turret_hellion_missile_think()
 
 void turret_hellion_missile_explode()
 {
-    vector org2;
     if(self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
@@ -139,13 +138,9 @@ void turret_hellion_missile_explode()
         self.nextthink = time;
         return;
     }
-
-    org2 = findbetterlocation (self.origin, 16);
-
     //w_deathtypestring = "could not dodge the twin missiles.";
     self.event_damage = SUB_Null;
     damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
-
     // Target dead, get another is still targeting the same.
     if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
         self.owner.enemy = world;

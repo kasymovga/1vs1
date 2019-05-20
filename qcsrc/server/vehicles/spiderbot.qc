@@ -54,8 +54,6 @@ void spiderbot_stop(entity spider) {
 
 void spiderbot_rocket_explode()
 {
-    vector org2;
-
     if(self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
@@ -63,10 +61,7 @@ void spiderbot_rocket_explode()
         self.nextthink = time;
         return;
     }
-
-    org2 = findbetterlocation (self.origin, 16);
     w_deathtypestring = "dident escape the rocket barrage";
-
     damage_radius (self, self.realowner,
      g_vehicle_spiderbot_rocket_damage,
      g_vehicle_spiderbot_rocket_edgedamage,

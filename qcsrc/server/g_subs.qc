@@ -220,47 +220,6 @@ void tracetoss_wrapper(entity ent, entity ignore, float toss_frametime, float to
 	return;
 }
 
-/*
-==================
-findbetterlocation
-
-Returns a point at least 12 units away from walls
-(useful for explosion animations, although the blast is performed where it really happened)
-Ripped from DPMod
-==================
-*/
-vector findbetterlocation (vector org, float mindist)
-{
-	vector	loc;
-	vector vec;
-	float c, h;
-
-	vec = mindist * '1 0 0';
-	c = 0;
-	while (c < 6)
-	{
-		traceline (org, org + vec, TRUE, world);
-		vec = vec * -1;
-		if (trace_fraction < 1)
-		{
-			loc = trace_endpos;
-			traceline (loc, loc + vec, TRUE, world);
-			if (trace_fraction >= 1)
-				org = loc + vec;
-		}
-		if (c & 1)
-		{
-			h = vec_y;
-			vec_y = vec_x;
-			vec_x = vec_z;
-			vec_z = h;
-		}
-		c = c + 1;
-	}
-
-	return org;
-}
-
 .string lodtarget1;
 .string lodtarget2;
 .string lodmodel1;

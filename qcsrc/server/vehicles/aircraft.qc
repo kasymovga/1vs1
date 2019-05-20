@@ -38,8 +38,6 @@ void aircraft_engine_off() {
 
 void aircraft_rocket_explode()
 {
-    vector org2;
-
     if(self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
@@ -47,10 +45,7 @@ void aircraft_rocket_explode()
         self.nextthink = time;
         return;
     }
-
-    org2 = findbetterlocation (self.origin, 16);
     w_deathtypestring = "dident escape the rocket barrage";
-
     damage_radius (self, self.realowner,
      g_vehicle_aircraft_rocket_damage,
      g_vehicle_aircraft_rocket_edgedamage,

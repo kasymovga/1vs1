@@ -51,8 +51,6 @@ void turret_mlrs_rocket_touch()
 
 void turret_mlrs_rocket_explode()
 {
-    vector org2;
-
     if(self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
@@ -60,20 +58,7 @@ void turret_mlrs_rocket_explode()
         self.nextthink = time;
         return;
     }
-
-
-    org2 = findbetterlocation (self.origin, 16);
-    //w_deathtypestring = "dident escape the rocket barrage";
-#ifdef TURRET_DEBUG
-    float d;
-
-    d = damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET, world);
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#else
     damage_radius (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
-#endif
-
     // Target dead, Tell turret.
     if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
         self.owner.enemy = world;

@@ -318,8 +318,6 @@ void turret_hk_missile_think()
 
 void turret_hk_missile_explode()
 {
-    vector org2;
-
     if(self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
@@ -332,9 +330,6 @@ void turret_hk_missile_explode()
         return;
 
     //w_deathtypestring = "got hunted to extinction";
-    //vector	org2;
-    org2 = findbetterlocation (self.origin, 16);
-
     self.event_damage = SUB_Null;
     damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
 
