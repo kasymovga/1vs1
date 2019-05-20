@@ -80,15 +80,6 @@ string STR_OBSERVER = "observer";
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
 
-void bcenterprint(string s)
-{
-    // TODO replace by MSG_ALL (would show it to spectators too, though)?
-    entity head;
-    FOR_EACH_PLAYER(head)
-    if (clienttype(head) == CLIENTTYPE_REAL)
-        centerprint(head, s);
-}
-
 float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
 float nearest_length[NUM_NEAREST_ENTITIES];
@@ -944,12 +935,6 @@ void defer_for(entity e_for, float t, void() callback) {
 
 void defer(float t, void() callback) {
 	defer_for(self, t, callback);
-}
-
-vector CircleSpreadVector(float side, float up, float sangle) {
-    return  side * v_forward * cos(sangle) +
-            side * v_right   * sin(sangle) +
-            up   * v_up;
 }
 
 void dropentities(entity platform) {

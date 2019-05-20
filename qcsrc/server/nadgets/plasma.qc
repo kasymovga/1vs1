@@ -111,11 +111,8 @@ void HG_Plasma_Shard(float kickangle) {
     proj.movetype = MOVETYPE_BOUNCE;
 
     if(cvar("g_nadgets_plasma_spread_circle")) {
-        kick = CircleSpreadVector(
-            cvar("g_nadgets_plasma_spread_xy"),
-            cvar("g_nadgets_plasma_spread_z_min"),
-            kickangle
-        );
+		float side = cvar("g_nadgets_plasma_spread_xy");
+		kick = side * v_forward * cos(kickangle) + side * v_right * sin(kickangle) + cvar("g_nadgets_plasma_spread_z_min") * v_up;
     } else {
         kick = random_spread_vector(
             cvar("g_nadgets_plasma_spread_xy"),

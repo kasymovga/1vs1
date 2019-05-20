@@ -802,14 +802,7 @@ void InitiateOvertime()
 		else
 			minutesPlural = " ^3minutes";
 
-		bcenterprint(
-			strcat(
-				"^3Now playing ^1OVERTIME^3!\n\n^3Added ^1",
-				ftos(cvar("timelimit_overtime")),
-				minutesPlural,
-				" to the game!"
-			)
-		);
+		GameStatus_Set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("timelimit_overtime")), minutesPlural, " to the game!"), 1);
 	} else if (!checkrules_suddendeathend)
 		checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
 }
