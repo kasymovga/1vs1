@@ -73,7 +73,7 @@ float(entity to, float sendflags) scores_team_send {
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.teamscores[i]);
+				net_write_int24(MSG_ENTITY, self.teamscores[i]);
 			else
 				WriteChar(MSG_ENTITY, self.teamscores[i]);
 		}
@@ -87,7 +87,7 @@ void(float t, string name) scores_spawn_team {
 	ts.classname = "csqc_score_team";
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
-	Net_LinkEntity(ts, FALSE, 0, scores_team_send);
+	net_link_entity(ts, FALSE, 0, scores_team_send);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
 }
@@ -232,7 +232,7 @@ float(entity to, float sendflags) scores_send_entity {
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.scores[i]);
+				net_write_int24(MSG_ENTITY, self.scores[i]);
 			else
 				WriteChar(MSG_ENTITY, self.scores[i]);
 		}
@@ -298,7 +298,7 @@ void(entity player) scores_attach {
 	sk = spawn();
 	sk.owner = player;
 	sk.think = scores_send_delayed_think;
-	Net_LinkEntity(sk, FALSE, 0, PlayerScore_SendEntity);
+	net_link_entity(sk, FALSE, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
 }
 
@@ -1015,7 +1015,7 @@ void() scores_basics_end {
 	} else {
 		scores_initialized = spawn();
 		scores_initialized.classname = "ent_client_scoreinfo";
-		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
+		net_link_entity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
 	}
 	if(c1 >= 0)
 		scores_spawn_team(COLOR_TEAM1, "Red");

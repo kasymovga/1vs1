@@ -93,7 +93,7 @@ entity CSQCProjectile(float clientanimate, float type, float docull)
 {
 	entity e = spawn();
 	ProjInfo_SetSize(e, type);
-	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
+	net_link_entity(e, docull, 0, CSQCProjectile_SendEntity);
 
 	e.csqcprojectile_clientanimate = clientanimate;
 

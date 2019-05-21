@@ -248,11 +248,6 @@ void weapon_precache(float wpn)
 	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
 }
 
-// sorry, but using \ in macros breaks line numbers
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == "spectator" && msg_entity.enemy == varname)) statement msg_entity = varname
-#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
-
 vector ExactTriggerHit_mins;
 vector ExactTriggerHit_maxs;
 float ExactTriggerHit_Recurse()
@@ -348,34 +343,6 @@ void InitializeEntitiesRun()
 
 .float nottargeted;
 #define IFTARGETED if(!self.nottargeted && self.targetname != "")
-
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc)
-{
-    vector mi, ma;
-
-    if (e.classname == "")
-        e.classname = "net_linked";
-
-    if (e.model == "" || self.modelindex == 0)
-    {
-        mi = e.mins;
-        ma = e.maxs;
-        setmodel(e, "null");
-        setsize(e, mi, ma);
-    }
-
-    e.SendEntity = sendfunc;
-    e.SendFlags = 0xFFFFFF;
-
-    if (!docull)
-        e.effects |= EF_NODEPTHTEST;
-
-    if (dt)
-    {
-        e.nextthink = time + dt;
-        e.think = SUB_Remove;
-    }
-}
 
 void adaptor_think2touch()
 {
@@ -883,7 +850,7 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 		e.dmg = -s2;
 	sz = max(e.scale, e.dmg);
 	setsize(e, e.mins * sz, e.maxs * sz);
-	Net_LinkEntity(e, FALSE, 0.1, modeleffect_SendEntity);
+	net_link_entity(e, FALSE, 0.1, modeleffect_SendEntity);
 }
 
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2)

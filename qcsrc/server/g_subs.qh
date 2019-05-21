@@ -1,6 +1,3 @@
-void WriteInt24_t(float dest, float val);
-float compressShortVector(vector vec);
-
 vector solve_quadratic(float a, float b, float c);
 // solution 1 -> x
 // solution 2 -> y

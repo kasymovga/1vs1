@@ -154,7 +154,7 @@ float client_init_send(entity to, float sf)
 entity client_init;
 void() client_init_spawn {
 	client_init = spawn();
-	Net_LinkEntity(client_init, FALSE, 0, client_init_send);
+	net_link_entity(client_init, FALSE, 0, client_init_send);
 }
 
 /*

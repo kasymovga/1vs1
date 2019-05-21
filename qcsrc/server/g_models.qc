@@ -171,7 +171,7 @@ void clientmodel_init(float sol) {
 	SetBrushEntityModelNoLOD();
 	model_init_common(sol);
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0;
-	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
+	net_link_entity(self, TRUE, 0, g_clientmodel_genericsendentity);
 }
 
 // non-solid model entities:

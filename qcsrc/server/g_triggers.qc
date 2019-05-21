@@ -708,8 +708,8 @@ float pointparticles_SendEntity(entity to, float fl)
 		WriteShort(MSG_ENTITY, self.cnt);
 		if(fl & 0x20)
 		{
-			WriteShort(MSG_ENTITY, compressShortVector(self.velocity));
-			WriteShort(MSG_ENTITY, compressShortVector(self.movedir));
+			WriteShort(MSG_ENTITY, net_compress_vec(self.velocity));
+			WriteShort(MSG_ENTITY, net_compress_vec(self.movedir));
 		}
 		if(fl & 0x40)
 		{
@@ -789,7 +789,7 @@ void spawnfunc_func_pointparticles()
 	if(!self.cnt)
 		self.cnt = particleeffectnum(self.mdl);
 
-	Net_LinkEntity(self, FALSE, 0, pointparticles_SendEntity);
+	net_link_entity(self, FALSE, 0, pointparticles_SendEntity);
 
 	IFTARGETED
 	{
@@ -838,7 +838,7 @@ float rainsnow_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.maxs_x - self.mins_x);
 	WriteCoord(MSG_ENTITY, self.maxs_y - self.mins_y);
 	WriteCoord(MSG_ENTITY, self.maxs_z - self.mins_z);
-	WriteShort(MSG_ENTITY, compressShortVector(self.dest));
+	WriteShort(MSG_ENTITY, net_compress_vec(self.dest));
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
 	return 1;
@@ -877,7 +877,7 @@ void spawnfunc_func_rain()
 
 	self.state = 1; // 1 is rain, 0 is snow
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	net_link_entity(self, FALSE, 0, rainsnow_SendEntity);
 };
 
 
@@ -914,7 +914,7 @@ void spawnfunc_func_snow()
 
 	self.state = 0; // 1 is rain, 0 is snow
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	net_link_entity(self, FALSE, 0, rainsnow_SendEntity);
 };
 
 
@@ -1150,7 +1150,7 @@ void spawnfunc_misc_laser()
 
 	self.mangle = self.angles;
 
-	Net_LinkEntity(self, FALSE, 0, laser_SendEntity);
+	net_link_entity(self, FALSE, 0, laser_SendEntity);
 
 	IFTARGETED
 	{

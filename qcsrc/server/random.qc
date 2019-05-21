@@ -24,7 +24,7 @@ void() random_seed_think {
 void() random_seed_spawn {
 	randomseed = spawn();
 	randomseed.think = RandomSeed_Think;
-	Net_LinkEntity(randomseed, FALSE, 0, RandomSeed_Send);
+	net_link_entity(randomseed, FALSE, 0, RandomSeed_Send);
 
 	entity oldself;
 	oldself = self;

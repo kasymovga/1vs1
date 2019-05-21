@@ -18,7 +18,7 @@ float ProgressBar_SendEntity(entity to, float sf) {
 
 entity ProgressBar_Create(string name, entity plr) {
 	entity e = spawn();
-	Net_LinkEntity(e, FALSE, 0, ProgressBar_SendEntity);
+	net_link_entity(e, FALSE, 0, ProgressBar_SendEntity);
 	e.netname = name;
 	if (plr)
 		e.customizeentityforclient = ProgressBar_CustomizeEntityForClient;

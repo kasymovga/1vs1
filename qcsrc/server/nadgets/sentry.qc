@@ -180,7 +180,7 @@ entity HG_Sentry_Beam_Spawn(entity emitter) {
     e.think = HG_Sentry_Beam_Think;
     e.nextthink = time;
 
-    Net_LinkEntity(e, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(e, FALSE, 0, W_Zapper_Beam_Send);
 
     return e;
 }

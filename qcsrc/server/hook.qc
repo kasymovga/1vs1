@@ -331,7 +331,7 @@ void(void) hook_fire {
 	missile.owner = self;
 	missile.hook = spawn();
 	missile.hook.owner = missile;
-	Net_LinkEntity(missile.hook, FALSE, 0, hook_send);
+	net_link_entity(missile.hook, FALSE, 0, hook_send);
 	self.hook = missile;
 	missile.classname = "grapplinghook";
 

@@ -215,7 +215,7 @@ float(entity to, float sf) mapvote_send {
 }
 
 void() mapvote_spawn {
-	Net_LinkEntity(mapvote_ent = spawn(), FALSE, 0, mapvote_send);
+	net_link_entity(mapvote_ent = spawn(), FALSE, 0, mapvote_send);
 }
 
 void() mapvote_touch_mask {

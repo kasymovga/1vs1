@@ -6,7 +6,7 @@ void W_WriteSecondarySelect(void) {
     msg_entity = self;
     WriteByte(MSG_ONE, SVC_TEMPENTITY);
     WriteByte(MSG_ONE, TE_CSQC_WEAPONSELECT);
-    WriteInt24_t(MSG_ONE, g_start_weapon_selectable);
+    net_write_int24(MSG_ONE, g_start_weapon_selectable);
 }
 
 var void(void(string item, string cmd) Add_Item) SelectableWeapon_GameMenuAddItems_NextLink;

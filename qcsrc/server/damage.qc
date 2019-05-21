@@ -37,13 +37,13 @@ void damage_info(vector org, float coredamage, float edgedamage, float rad, vect
 	e = spawn();
 	setorigin(e, org);
 	e.projectiledeathtype = deathtype;
-	e.oldorigin_x = compressShortVector(force);
+	e.oldorigin_x = net_compress_vec(force);
 
 	if(teamplay) {
 		e.team = dmgowner.team;
 	}
 
-	Net_LinkEntity(e, FALSE, 0.2, damage_info_send);
+	net_link_entity(e, FALSE, 0.2, damage_info_send);
 }
 
 #define DAMAGE_CENTERPRINT_SPACER NEWLINES

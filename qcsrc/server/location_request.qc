@@ -40,6 +40,6 @@ entity LocationRequest_Create(entity plr, string title, void(float x, float y)ca
 	e.location_request_callback = callback;
 	e.customizeentityforclient = LocationRequest_CustomizeEntityForClient;
 	plr.location_request = e;
-	Net_LinkEntity(e, FALSE, 0, LocationRequest_SendEntity);
+	net_link_entity(e, FALSE, 0, LocationRequest_SendEntity);
 	return e;
 }

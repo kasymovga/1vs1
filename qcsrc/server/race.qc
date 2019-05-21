@@ -124,7 +124,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 		else
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_QUALIFYING);
 		WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player will be at next
-		WriteInt24_t(MSG_ONE, recordtime);
+		net_write_int24(MSG_ONE, recordtime);
 		WriteString(MSG_ONE, recordholder);
 	});
 }
@@ -263,8 +263,8 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				WriteByte(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-				WriteInt24_t(MSG_ONE, t); // time to that intermediate
-				WriteInt24_t(MSG_ONE, recordtime); // previously best time
+				net_write_int24(MSG_ONE, t); // time to that intermediate
+				net_write_int24(MSG_ONE, recordtime); // previously best time
 				WriteString(MSG_ONE, recordholder); // record holder
 			});
 		}
@@ -291,13 +291,13 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
 			if(e == oth)
 			{
-				WriteInt24_t(MSG_ONE, 0);
+				net_write_int24(MSG_ONE, 0);
 				WriteByte(MSG_ONE, 0);
 				WriteString(MSG_ONE, "");
 			}
 			else
 			{
-				WriteInt24_t(MSG_ONE, TIME_ENCODE(time - race_checkpoint_lasttimes[cp]));
+				net_write_int24(MSG_ONE, TIME_ENCODE(time - race_checkpoint_lasttimes[cp]));
 				WriteByte(MSG_ONE, lself - lother);
 				WriteString(MSG_ONE, oth.netname); // record holder
 			}
@@ -315,13 +315,13 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
 			if(e == oth)
 			{
-				WriteInt24_t(MSG_ONE, 0);
+				net_write_int24(MSG_ONE, 0);
 				WriteByte(MSG_ONE, 0);
 				WriteString(MSG_ONE, "");
 			}
 			else
 			{
-				WriteInt24_t(MSG_ONE, TIME_ENCODE(time - othtime));
+				net_write_int24(MSG_ONE, TIME_ENCODE(time - othtime));
 				WriteByte(MSG_ONE, lother - lself);
 				WriteString(MSG_ONE, e.netname); // record holder
 			}

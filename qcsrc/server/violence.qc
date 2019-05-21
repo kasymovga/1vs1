@@ -20,8 +20,8 @@ void(vector org, vector dir, float type, float amount, entity gibowner, entity a
 	e.state |= 8 * self.species; // gib type, ranges from 0 to 15
 	setorigin(e, org);
 	e.velocity = dir;
-	e.oldorigin_x = compressShortVector(e.velocity);
-	Net_LinkEntity(e, FALSE, 0.2, violence_gib_splash_send);
+	e.oldorigin_x = net_compress_vec(e.velocity);
+	net_link_entity(e, FALSE, 0.2, violence_gib_splash_send);
 }
 
 void(entity source, float type, float amount, entity attacker) violence_gib_splash {

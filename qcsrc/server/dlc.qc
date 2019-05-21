@@ -216,7 +216,7 @@ void dlc_require(string dlc_name) {
 	}
 	if not(dlc) {
 		dlc = spawn();
-		Net_LinkEntity(dlc, FALSE, 0, dlc_SendEntity);
+		net_link_entity(dlc, FALSE, 0, dlc_SendEntity);
 	} else
 		dlc.SendFlags |= 2;
 
@@ -410,7 +410,7 @@ entity dlc_sound(entity e, float chan, string s, float vol, float attn) {
 	snd.nextthink = time + 0.5;
 	snd.origin = e.origin;
 	snd.owner = e;
-	Net_LinkEntity(snd, FALSE, 0, dlc_sound_SendEntity);
+	net_link_entity(snd, FALSE, 0, dlc_sound_SendEntity);
 	return snd;
 }
 

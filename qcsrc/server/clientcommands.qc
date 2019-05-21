@@ -130,7 +130,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 }
 void Nagger_Init()
 {
-	Net_LinkEntity(nagger = spawn(), FALSE, 0, Nagger_SendEntity);
+	net_link_entity(nagger = spawn(), FALSE, 0, Nagger_SendEntity);
 }
 
 void Nagger_ReadyCounted()

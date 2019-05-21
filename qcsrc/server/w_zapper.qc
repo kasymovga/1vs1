@@ -336,7 +336,7 @@ void W_Zapper_Attack1(void) {
     e.zapper_dmgdelay = g_balance_zapper_primary_ticrate;
     e.zapper_lastdmg = time - e.zapper_dmgdelay * W_WeaponRateFactor();
 
-    Net_LinkEntity(e, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(e, FALSE, 0, W_Zapper_Beam_Send);
 
     self.zapper_beam = e;
 	entity oldself = self;
@@ -568,7 +568,7 @@ void W_Zapper_Attack3(void) {
     b.owner = Akimbo_Owner(self);
     b.zapper_shield = e;
 
-    Net_LinkEntity(b, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(b, FALSE, 0, W_Zapper_Beam_Send);
 
     e.zapper_beam = b;
 

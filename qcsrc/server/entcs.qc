@@ -119,7 +119,7 @@ entity() entcs_attach {
 	ent.owner = self;
 	ent.think = entcs_think;
 	ent.nextthink = time;
-	Net_LinkEntity(ent, TRUE, 0, entcs_send);
+	net_link_entity(ent, TRUE, 0, entcs_send);
 	ent.customizeentityforclient = entcs_customize;
 	return ent;
 }

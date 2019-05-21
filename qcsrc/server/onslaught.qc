@@ -1303,7 +1303,7 @@ void spawnfunc_onslaught_link()
 	if (self.target == "" || self.target2 == "")
 		objerror("target and target2 must be set\n");
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
-	Net_LinkEntity(self, FALSE, 0, onslaught_link_send);
+	net_link_entity(self, FALSE, 0, onslaught_link_send);
 };
 
 .vector ons_spawn_area;

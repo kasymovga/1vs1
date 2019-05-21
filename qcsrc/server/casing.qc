@@ -21,6 +21,6 @@ void(vector vel, float randomvel, vector ang, vector avel, float randomavel, flo
 	setorigin(e, org);
 	e.velocity = vel;
 	e.angles = ang;
-	e.oldorigin_x = compressShortVector(e.velocity);
-	Net_LinkEntity(e, TRUE, 0.2, casing_send); // 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
+	e.oldorigin_x = net_compress_vec(e.velocity);
+	net_link_entity(e, TRUE, 0.2, casing_send); // 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
 }

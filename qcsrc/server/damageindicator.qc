@@ -67,7 +67,7 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float _damage
 		e.owner = targ;
 		e.enemy = attacker;
 		e.customizeentityforclient = DamageIndicator_Customize;
-		Net_LinkEntity(e, FALSE, 0, DamageIndicator_SendEntity);
+		net_link_entity(e, FALSE, 0, DamageIndicator_SendEntity);
 		targ.dmg_indicator = e;
 	}
 	setorigin(e, targ.origin + 0.5 * (targ.maxs + targ.mins));

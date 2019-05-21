@@ -245,7 +245,7 @@ float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, flo
 	self.player_physic = spawn();
 	self.player_physic.viewmodelforclient = self.owner;
 	self.player_physic.vehicle = self;
-	Net_LinkEntity(self.player_physic, FALSE, 0, phys_send);
+	net_link_entity(self.player_physic, FALSE, 0, phys_send);
 	return TRUE;
 }
 

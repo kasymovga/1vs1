@@ -328,7 +328,7 @@ void Physic_RealClientConnect()
 		self.player_physic = spawn();
 		self.player_physic.viewmodelforclient = self;
 		self.player_physic.owner = self;
-		Net_LinkEntity(self.player_physic, FALSE, 0, Physic_SendEntity);
+		net_link_entity(self.player_physic, FALSE, 0, Physic_SendEntity);
 	}
 	self.player_physic.SendFlags = 3;
 	Physic_RealClientConnect_NextLink();

@@ -26,7 +26,7 @@ void GameStatus_Think() {
 void GameStatus_Set(string status, float _delay) {
 	if not(game_status) {
 		game_status = spawn();
-		Net_LinkEntity(game_status, FALSE, 0, GameStatus_SendEntity);
+		net_link_entity(game_status, FALSE, 0, GameStatus_SendEntity);
 	}
 	if (game_status.message != status) {
 		unzone_ifneeded(game_status.message);

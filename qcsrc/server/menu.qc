@@ -55,7 +55,7 @@ entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeo
 	if (plr)
 		e.customizeentityforclient = Menu_CustomizeEntityForClient;
 
-	Net_LinkEntity(e, FALSE, 0, Menu_SendEntity);
+	net_link_entity(e, FALSE, 0, Menu_SendEntity);
 	e.menu_chain = _menu_chain;
 	_menu_chain = e;
 	return e;

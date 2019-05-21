@@ -57,7 +57,7 @@ antilag.qh
 vote.qh
 
 g_subs.qh
-
+net.qh
 w_melee.qh
 
 irc.qh
@@ -160,7 +160,7 @@ waypointsprites.qc
 bot/bot.qc
 random.qc
 g_subs.qc
-
+net.qc
 ../client-server/rune.qh
 ../client-server/rune.qc
 violence.qc

@@ -322,7 +322,7 @@ entity WaypointSprite_Spawn(
 	wp.customizeentityforclient = WaypointSprite_Customize;
 	wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;
 	wp.reset2 = WaypointSprite_Reset;
-	Net_LinkEntity(wp, FALSE, 0, WaypointSprite_SendEntity);
+	net_link_entity(wp, FALSE, 0, WaypointSprite_SendEntity);
 	return wp;
 }
 
