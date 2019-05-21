@@ -142,20 +142,12 @@ void spawnfunc___init_dedicated_server(void)
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
 
-void precache()
-{
-    // gamemode related things
+void() world_precache {
 #ifdef TTURRETS_ENABLED
     if (cvar("g_turrets"))
         turrets_precash();
-#endif
-    if (g_footsteps)
-    {
-        precache_randomsound("misc/footstep0", 6);
-        precache_randomsound("misc/metalfootstep0", 6);
-        precache_sound("ambient/water.wav");
-    }
 
+#endif
     // gore and miscellaneous sounds
     //precache_sound ("misc/h2ohit.wav");
     precache_sound ("misc/armorimpact.wav");
@@ -245,7 +237,6 @@ void readlevelcvars(void)
 	if(sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 	CACHE_CVAR(sv_foginterval);
-	CACHE_CVAR(g_footsteps);
 	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_norecoil);
 	Warmup_Init();
@@ -281,6 +272,7 @@ void readlevelcvars(void)
 	UDPChat_Init();
 	timeout_init();
 	sysinfo_init();
+	footsteps_init();
 	if (cvar("g_buttons_hookuse_swap")) {
 		BUTTON_HOOK = buttonuse;
 		BUTTON_USE = button6;
@@ -445,7 +437,7 @@ void spawnfunc_worldspawn (void)
 		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
-	precache();
+	world_precache();
 
 	//if (g_domination)
 	//	dom_init();
@@ -1218,30 +1210,6 @@ void CreatureFrame (void)
 			if (dm > 0)
 				damage(self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 
-			// play stupid sounds
-			if (g_footsteps)
-			if (!gameover)
-			if (self.flags & FL_ONGROUND)
-			if (vlen(self.velocity) > sv_maxspeed * 0.6)
-			if (!self.deadflag)
-			if (time < self.lastground + 0.2)
-			{
-				if((time > self.nextstep))
-				{
-					self.nextstep = time + 0.3 + random() * 0.1;
-					if not(self.waterlevel) {
-						trace_dphitq3surfaceflags = 0;
-						tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-						if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-						{
-							if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-								sound(self, CHAN_PLAYER, randomsound("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
-							else
-								sound(self, CHAN_PLAYER, randomsound("misc/footstep0", 6), VOL_BASE, ATTN_NORM);
-						}
-					}
-				}
-			}
 			self.oldvelocity = self.velocity;
 		}
 		self = findfloat(self, iscreature, TRUE);

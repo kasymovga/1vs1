@@ -25,7 +25,7 @@ random.qh
 tturrets/include/turrets_early.qh
 skipnonsolid.qh
 vehicles/vehicles.qh
-
+footsteps.qh
 campaign.qh
 ../menu-server/campaign_common.qh
 ../menu-server/mapinfo.qh
@@ -180,7 +180,7 @@ cl_physics.qc
 ../client-server/cl_physics_spiderbot.qc
 ../client-server/cl_physics_aircraft.qc
 ../client-server/cl_physics_car.qc
-
+footsteps.qc
 g_world.qc
 map.qc
 mapvote.qc

@@ -17,7 +17,7 @@ var .float BUTTON_USE = buttonuse;
 
 float g_campaign;
 float campaign_map_transition;
-float g_footsteps, g_grappling_hook, g_norecoil;
+float g_grappling_hook, g_norecoil;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
