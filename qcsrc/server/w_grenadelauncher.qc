@@ -113,7 +113,7 @@ void W_Grenade_Attack (void)
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	gren = CSQCProjectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE);
+	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE);
 	gren.gravity = 1;
 	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
@@ -145,7 +145,7 @@ void W_Grenade_Attack2 (void)
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	gren = CSQCProjectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
 	gren.gravity = 1;
 	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
@@ -274,8 +274,8 @@ float w_glauncher(float req)
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed_up);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary);
-		CSQCProjectile_Init(PROJECTILE_GRENADE);
-		CSQCProjectile_Init(PROJECTILE_GRENADE_BOUNCING);
+		projectile_init(PROJECTILE_GRENADE);
+		projectile_init(PROJECTILE_GRENADE_BOUNCING);
 		if (cvar("g_balance_grenadelauncher_swap_buttons")) {
 			gl_buttonatck1 = BUTTON_ATCK2;
 			gl_buttonatck2 = BUTTON_ATCK;

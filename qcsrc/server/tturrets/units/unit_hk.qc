@@ -87,7 +87,7 @@ void turret_hk_attack()
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
-    missile                  = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
+    missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
     missile.solid            = SOLID_BBOX;
     setorigin(missile, self.tur_shotorg);
 
@@ -313,7 +313,7 @@ void turret_hk_missile_think()
     //}
 #endif
 
-	UpdateCSQCProjectile(self);
+	projectile_update(self);
 }
 
 void turret_hk_missile_explode()
@@ -416,7 +416,7 @@ void spawnfunc_turret_hk()
 {
     precache_model ("models/turrets/base.md3");
     precache_model ("models/turrets/hk.md3");
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
+	projectile_init(PROJECTILE_ROCKET);
 
     self.think = turret_hk_dinit;
     self.nextthink = time + 0.5;

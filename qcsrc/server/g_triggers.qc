@@ -2277,7 +2277,7 @@ void spikeshooter_spike_touch(void) {
 }
 
 void spikeshooter_use(void) {
-	entity spike = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
 	setorigin(spike, self.origin);
 	PROJECTILE_MAKETRIGGER(spike);
 	spike.velocity = self.movedir * 800;
@@ -2293,7 +2293,7 @@ void spawnfunc_trap_spikeshooter(void) {
 	self.movedir = normalize(v_forward);
 	self.use = spikeshooter_use;
 	precache_sound("weapons/uzi_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_BULLET_BIG);
+	projectile_init(PROJECTILE_BULLET_BIG);
 }
 
 void misc_lightning_spark(void) {
@@ -2340,7 +2340,7 @@ void trigger_gravity_remove(entity own)
 {
 	if(own.trigger_gravity_check.owner == own)
 	{
-		UpdateCSQCProjectile(own);
+		projectile_update(own);
 		own.gravity = own.trigger_gravity_check.gravity;
 		remove(own.trigger_gravity_check);
 	}
@@ -2417,7 +2417,7 @@ void trigger_gravity_touch()
 		other.gravity = g;
 		if(self.noise != "")
 			sound (other, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
-		UpdateCSQCProjectile(other);
+		projectile_update(other);
 	}
 }
 

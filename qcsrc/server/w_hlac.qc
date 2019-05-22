@@ -74,7 +74,7 @@ void W_HLAC_Attack (void)
 		self.punchangle_y = random () - 0.5;
 	}
 
-	missile = CSQCProjectile(TRUE, PROJECTILE_HLAC, TRUE);
+	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.classname = "hlacbolt";
 	// missile.dmg = issecondary;
@@ -115,7 +115,7 @@ void W_HLAC_Attack2f (void)
 	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = CSQCProjectile(TRUE, PROJECTILE_HLAC, TRUE);
+	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.classname = "hlacbolt";
 	// missile.dmg = issecondary;
@@ -263,7 +263,7 @@ float w_hlac(float req)
 		CACHE_CVAR(g_balance_hlac_secondary_speed);
 		CACHE_CVAR(g_balance_hlac_secondary_spread);
 		CACHE_CVAR(g_balance_hlac_secondary_spread_crouchmod);
-		CSQCProjectile_Init(PROJECTILE_HLAC);
+		projectile_init(PROJECTILE_HLAC);
 		if (cvar("g_balance_hlac_swap_buttons")) {
 			hlac_buttonatck1 = BUTTON_ATCK2;
 			hlac_buttonatck2 = BUTTON_ATCK;

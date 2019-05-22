@@ -30,7 +30,7 @@ void flyingthing_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+		entity gren = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 		gren.owner = self;
 		gren.dmg_edge = self.dmg_edge;
 		gren.dmg_radius = self.dmg_radius;
@@ -93,7 +93,7 @@ void flyingthing_spawn() {
 void flyingthing_init() {
 	precache_sound("weapons/electro_fire.wav");
 	precache_model("models/turrets/walker_mghead.md3");
-	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
+	projectile_init(PROJECTILE_ELECTRO_BEAM);
 }
 
 void spawnfunc_monster_flyingthing_spawn() {

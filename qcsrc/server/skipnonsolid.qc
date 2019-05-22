@@ -76,7 +76,7 @@ float() skipnonsolid_ProjectileTouchHandle {
 			setorigin(self, trace_endpos);
 		else // We can't move right to trace_endpos, because we can go through solid surface.
 			setorigin(self, self.origin + ((trace_endpos - self.origin) * 0.99));
-		UpdateCSQCProjectile(self);
+		projectile_update(self);
 		return TRUE;
 	}
 	return skipnonsolid_ProjectileTouchHandle_NextLink();

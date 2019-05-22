@@ -55,7 +55,7 @@ void walker_rocket_think() {
 		self.velocity = v_forward * 600;
 		self.velocity_z = -self.velocity_z;
 	}
-	UpdateCSQCProjectile(self);
+	projectile_update(self);
 }
 
 void walker_hunt() {
@@ -93,7 +93,7 @@ void walker_hunt() {
 				w_shotorg = w_shotorg - v_right * 16;
 
 			self.bulletcounter = self.bulletcounter + 0.5;
-			entity missile = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE);
+			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE);
 			missile.owner = self;
 			missile.dmg_edge = self.dmg_edge;
 			missile.dmg_radius = self.dmg_radius;
@@ -191,7 +191,7 @@ void walker_init() {
 	precache_model("models/turrets/walker_body.md3");
 	precache_model("models/turrets/walker_head_minigun.md3");
 	precache_sound("weapons/uzi_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
+	projectile_init(PROJECTILE_ROCKET);
 }
 
 void spawnfunc_monster_walker_spawn() {

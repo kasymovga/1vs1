@@ -149,7 +149,7 @@ void W_Porto_Attack (float out)
 
 	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	gren = CSQCProjectile(TRUE, PROJECTILE_PORTO_RED, TRUE);
+	gren = projectile(TRUE, PROJECTILE_PORTO_RED, TRUE);
 	gren.owner = self;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
@@ -250,8 +250,8 @@ float w_porto(float req)
 		CACHE_CVAR(g_balance_porto_primary_speed);
 		CACHE_CVAR(g_balance_powerup_strength_force);
 
-		CSQCProjectile_Init(PROJECTILE_PORTO_RED);
-		CSQCProjectile_Init(PROJECTILE_PORTO_BLUE);
+		projectile_init(PROJECTILE_PORTO_RED);
+		projectile_init(PROJECTILE_PORTO_BLUE);
 	}
 	return TRUE;
 };

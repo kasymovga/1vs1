@@ -255,9 +255,9 @@ void() hook_think {
 
 void(void) hook_touch {
 	PROJECTILE_SKIPNONSOLID
-	if(SUB_OwnerCheck())
+	if(PROJECTILE_OWNER_CHECK())
 		return;
-	if(SUB_NoImpactCheck())
+	if(projectile_no_impact_check())
 	{
 		hook_remove(self.owner);
 		return;

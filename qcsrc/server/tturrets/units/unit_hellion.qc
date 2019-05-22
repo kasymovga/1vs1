@@ -32,7 +32,7 @@ void turret_hellion_attack()
     // switch tubes
     //self.tur_shotorg_y = self.tur_shotorg_y * -1;
 
-    missile = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+    missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
     setorigin(missile, self.tur_shotorg);
 
     missile.classname          = "hellion_missile";
@@ -96,7 +96,7 @@ void turret_hellion_missile_think()
         // Accelerate
         self.velocity = olddir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
 
-        UpdateCSQCProjectile(self);
+        projectile_update(self);
 
         return;
     }
@@ -126,7 +126,7 @@ void turret_hellion_missile_think()
     if (itime < 0.05)
         self.think = turret_hellion_missile_explode;
 
-    UpdateCSQCProjectile(self);
+    projectile_update(self);
 }
 
 void turret_hellion_missile_explode()
@@ -183,7 +183,7 @@ void spawnfunc_turret_hellion()
 {
     precache_model ("models/turrets/hellion.md3");
     precache_model ("models/turrets/base.md3");
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
+	projectile_init(PROJECTILE_ROCKET);
 
     self.think = turret_hellion_dinit;
     self.nextthink = time + 0.5;

@@ -19,7 +19,7 @@ void turret_mlrs_attack()
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
-    missile                    = CSQCProjectile(TRUE, PROJECTILE_ROCKET, FALSE); // no cull, fly sound
+    missile                    = projectile(TRUE, PROJECTILE_ROCKET, FALSE); // no cull, fly sound
     setorigin(missile, self.tur_shotorg);
     missile.classname          = "mlrs_missile";
     missile.owner              = self;
@@ -100,7 +100,7 @@ void spawnfunc_turret_mlrs()
 {
     precache_model ("models/turrets/mlrs.md3");
     precache_model ("models/turrets/base.md3");
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
+	projectile_init(PROJECTILE_ROCKET);
 
     self.think = turret_mlrs_dinit;
     self.nextthink = time + 0.5;

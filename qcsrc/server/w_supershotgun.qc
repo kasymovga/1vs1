@@ -52,7 +52,7 @@ void W_Supershotgun_Pellet_Touch()
 void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces)
 {
 	entity proj;
-	proj = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
 	proj.classname = "bullet";
 	proj.realowner = proj.owner = Akimbo_Owner(self);
 	PROJECTILE_MAKETRIGGER(proj);
@@ -240,7 +240,7 @@ float w_supershotgun(float req)
 		CACHE_CVAR(g_balance_supershotgun_secondary_refire);
 		CACHE_CVAR(g_balance_supershotgun_secondary_speed);
 		CACHE_CVAR(g_balance_supershotgun_secondary_spread);
-		CSQCProjectile_Init(PROJECTILE_BULLET_BIG);
+		projectile_init(PROJECTILE_BULLET_BIG);
 	}
 	return TRUE;
 };

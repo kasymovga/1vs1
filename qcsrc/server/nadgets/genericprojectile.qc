@@ -131,16 +131,16 @@ float HG_GenericProjectile_TryStick(entity targ, vector normal) {
 
 void HG_GenericProjectile_Touch(void) {
     PROJECTILE_SKIPNONSOLID
-    if(SUB_OwnerCheck())
+    if(PROJECTILE_OWNER_CHECK())
         return;
 
     if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
-        UpdateCSQCProjectileNextFrame(self);
+        projectile_update_next_frame(self);
 
-    if(SUB_NoImpactCheck()) {
+    if(projectile_no_impact_check()) {
         if(self.hg_type == HG_TRANSLOC || self.hg_type == HG_RAZE) {
             if(trace_dphitcontents & DPCONTENTS_PLAYERCLIP) {
-                UpdateCSQCProjectileNextFrame(self);
+                projectile_update_next_frame(self);
                 goto troll;
             }
             self.use();
@@ -347,9 +347,9 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
 #endif
 
     e.csqcprojectile_clientanimate = FALSE;
-    UpdateCSQCProjectile(e);
+    projectile_update(e);
     e.SendFlags = 0xFFFFFF;
-    UpdateCSQCProjectileAngles(e);
+    projectile_update_angles(e);
     e.effects |= EF_NODEPTHTEST; // no culling please
     move_out_of_solid(e, MOVE_WORLDONLY);
 }
@@ -363,13 +363,13 @@ void HG_GenericProjectile_Think(void) {
         vector o = self.oldorigin;
 
         if(self.origin != self.oldorigin) {
-            UpdateCSQCProjectile(self);
+            projectile_update(self);
             self.oldorigin = self.origin;
         }
 
         if(self.movetype == MOVETYPE_FOLLOW) {
             if(self.angles != self.hg_oldangles) {
-                UpdateCSQCProjectileAngles(self);
+                projectile_update_angles(self);
                 self.hg_oldangles = self.angles;
             }
 
@@ -377,7 +377,7 @@ void HG_GenericProjectile_Think(void) {
                 self.aiment = world;
                 self.movetype = MOVETYPE_TOSS;
                 setorigin(self, o);
-                UpdateCSQCProjectile(self);
+                projectile_update(self);
             }
         }
     }
@@ -578,7 +578,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     makevectors(a + ang);
     w_shotdir = v_forward;
 
-    entity gren = CSQCProjectile(hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE);
+    entity gren = projectile(hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE);
     gren.owner = self;
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;

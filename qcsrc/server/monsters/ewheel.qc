@@ -31,7 +31,7 @@ void ewheel_hunt() {
 			sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 			float i;
 			for (i = -1; i < 2; i += 2) {
-				entity proj = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);
+				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE);
 				proj.owner = self;
 				proj.dmg_edge = self.dmg_edge;
 				proj.dmg_radius = self.dmg_radius;
@@ -99,7 +99,7 @@ void ewheel_init() {
     precache_model ("models/turrets/ewheel-base2.md3");
     precache_model ("models/turrets/ewheel-gun1.md3");
 	precache_sound("weapons/uzi_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_LASER);
+	projectile_init(PROJECTILE_LASER);
 }
 
 void spawnfunc_monster_ewheel_spawn() {

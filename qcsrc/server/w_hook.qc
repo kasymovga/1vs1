@@ -81,7 +81,7 @@ void W_Hook_Attack2()
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 
-	gren = CSQCProjectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
+	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
 	gren.owner = self;
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
@@ -277,7 +277,7 @@ float w_hook(float req)
 		CACHE_CVAR(g_balance_hook_secondary_radius);
 		CACHE_CVAR(g_balance_hook_secondary_refire);
 		CACHE_CVAR(g_balance_hook_secondary_speed);
-		CSQCProjectile_Init(PROJECTILE_HOOKBOMB);
+		projectile_init(PROJECTILE_HOOKBOMB);
 	}
 	return TRUE;
 };

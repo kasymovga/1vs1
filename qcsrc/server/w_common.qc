@@ -166,7 +166,7 @@ void W_BallisticBullet_LeaveSolid_think()
 		damage_info(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
 	}
 
-	UpdateCSQCProjectile(self);
+	projectile_update(self);
 }
 
 float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
@@ -302,7 +302,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	{
 		proj = spawn();
 	} else {
-		proj = CSQCProjectile(TRUE, PROJECTILE_BULLET, TRUE);
+		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE);
 		proj.think = SUB_Remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = W_BallisticBullet_Touch;
@@ -358,9 +358,9 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			other = trace_ent;
 			setorigin(self, trace_endpos);
 
-			if(!SUB_OwnerCheck())
+			if(!PROJECTILE_OWNER_CHECK())
 			{
-				if(SUB_NoImpactCheck())
+				if(projectile_no_impact_check())
 					break;
 
 				// hit the player

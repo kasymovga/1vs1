@@ -220,7 +220,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	{
 		self.velocity = self.velocity + self.damageforcescale * force;
 		self.flags &~= FL_ONGROUND;
-		UpdateCSQCProjectile(self);
+		projectile_update(self);
 	}
 	// apply damage
 	if (_damage != 0 || (self.damageforcescale && vlen(force)))

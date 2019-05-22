@@ -89,7 +89,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	if(player.classname == "player")
 		player.flags &~= FL_ONGROUND;
 
-	UpdateCSQCProjectileAfterTeleport(player);
+	projectile_update_after_teleport(player);
 	WarpZone_PostTeleportPlayer_Callback(player, teleporter);
 }
 
@@ -488,7 +488,7 @@ float() WarpZone_ProjectileTouchHandle {
 	}
 	return WarpZone_ProjectileTouchHandle_NextLink();
 :return_true
-	UpdateCSQCProjectileAfterTeleport(self);
+	projectile_update_after_teleport(self);
 	return TRUE;
 }
 

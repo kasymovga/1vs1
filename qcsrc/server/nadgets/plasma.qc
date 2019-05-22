@@ -92,7 +92,7 @@ void HG_Plasma_Shard(float kickangle) {
     entity proj;
     vector kick;
 
-    proj = CSQCProjectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE);
+    proj = projectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE);
 	proj.gravity = 1;
     proj.classname = "hg_plasma";
     proj.owner = self;

@@ -156,7 +156,7 @@ void W_Fireball_Attack2()
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = CSQCProjectile(TRUE, PROJECTILE_FIREBALL, TRUE);
+	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE);
 	proj.classname = "plasma_prim";
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = TRUE;
@@ -299,7 +299,7 @@ void W_Fireball_Attack1()
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = CSQCProjectile(TRUE, PROJECTILE_FIREMINE, TRUE);
+	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE);
 	proj.gravity = 1;
 	proj.owner = proj.realowner = self;
 	proj.classname = "grenade";
@@ -450,8 +450,8 @@ float w_fireball(float req)
 		CACHE_CVAR(g_balance_fireball_secondary_refire);
 		CACHE_CVAR(g_balance_fireball_secondary_refire2);
 		CACHE_CVAR(g_balance_fireball_secondary_speed);
-		CSQCProjectile_Init(PROJECTILE_FIREMINE);
-		CSQCProjectile_Init(PROJECTILE_FIREBALL);
+		projectile_init(PROJECTILE_FIREMINE);
+		projectile_init(PROJECTILE_FIREBALL);
 		if (cvar("g_balance_fireball_swap_buttons")) {
 			fireball_buttonatck1 = BUTTON_ATCK2;
 			fireball_buttonatck2 = BUTTON_ATCK;

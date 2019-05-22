@@ -10,7 +10,7 @@ void turret_flac_attack()
     turret_tag_fire_update();
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj = CSQCProjectile(TRUE, PROJECTILE_HAGAR, TRUE);
+    proj = projectile(TRUE, PROJECTILE_HAGAR, TRUE);
     setorigin(proj, self.tur_shotorg);
     proj.classname          = "flac_projectile";
     proj.owner              = self;
@@ -90,7 +90,7 @@ void spawnfunc_turret_flac()
 {
     precache_model ("models/turrets/base.md3");
     precache_model ("models/turrets/flac.md3");
-	CSQCProjectile_Init(PROJECTILE_HAGAR);
+	projectile_init(PROJECTILE_HAGAR);
 
     self.think = turret_flac_dinit;
     self.nextthink = time + 0.5;

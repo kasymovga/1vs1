@@ -8,7 +8,7 @@ void HG_Linker_Adept_Push(entity p) {
     if(vlen(p.origin - self.origin) <= self.hg_linker_range) {
         float v = max(400, vlen(p.velocity));
         p.velocity = normalize(p.origin - self.origin) * v;
-        UpdateCSQCProjectile(p);
+        projectile_update(p);
     }
 }
 

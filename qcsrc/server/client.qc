@@ -127,7 +127,7 @@ float client_init_send(entity to, float sf)
 	}
 
 	if(sf & 64) {
-		ProjInfo_Send();
+		projectile_info_send();
 	}
 
 	if (sf & 128) {

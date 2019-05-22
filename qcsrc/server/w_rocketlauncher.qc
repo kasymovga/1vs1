@@ -347,7 +347,7 @@ void W_Rocket_Think (void)
 	}
 
 	if(self.csqcprojectile_clientanimate == 0)
-		UpdateCSQCProjectile(self);
+		projectile_update(self);
 }
 
 void W_Rocket_Touch (void)
@@ -379,7 +379,7 @@ void W_Rocket_Attack (void)
 	weapon_setup_shot(self, 5, "weapons/rocket_fire.wav", 1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = CSQCProjectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
+	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
 	missile.owner = Akimbo_Owner(self);
 	missile.lastrocket = self;
 	self.lastrocket = missile;
@@ -669,7 +669,7 @@ float w_rlauncher(float req)
 		CACHE_CVAR(g_balance_rocketlauncher_speed);
 		CACHE_CVAR(g_balance_rocketlauncher_speedaccel);
 		CACHE_CVAR(g_balance_rocketlauncher_speedstart);
-		CSQCProjectile_Init(PROJECTILE_ROCKET);
+		projectile_init(PROJECTILE_ROCKET);
 		if (cvar("g_balance_rocketlauncher_swap_buttons")) {
 			rl_buttonatck1 = BUTTON_ATCK2;
 			rl_buttonatck2 = BUTTON_ATCK;

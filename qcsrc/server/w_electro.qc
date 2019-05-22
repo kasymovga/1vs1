@@ -149,7 +149,7 @@ void W_Electro_Attack()
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 	proj.classname = "plasma_prim";
 	proj.owner = Akimbo_Owner(self);
 	proj.bot_dodge = TRUE;
@@ -182,7 +182,7 @@ void W_Electro_Attack2()
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
+	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
 	proj.gravity = 1;
 	proj.classname = "plasma";
 	proj.owner = Akimbo_Owner(self);
@@ -373,8 +373,8 @@ float w_electro(float req)
 		CACHE_CVAR(g_balance_electro_secondary_speed);
 		CACHE_CVAR(g_balance_electro_secondary_speed_up);
 		CACHE_CVAR(g_balance_electro_secondary_spread);
-		CSQCProjectile_Init(PROJECTILE_ELECTRO);
-		CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
+		projectile_init(PROJECTILE_ELECTRO);
+		projectile_init(PROJECTILE_ELECTRO_BEAM);
 		if (cvar("g_balance_electro_swap_buttons")) {
 			electro_buttonatck1 = BUTTON_ATCK2;
 			electro_buttonatck2 = BUTTON_ATCK;

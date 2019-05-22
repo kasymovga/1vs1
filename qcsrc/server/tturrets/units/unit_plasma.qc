@@ -32,7 +32,7 @@ void turret_plasma_attack()
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
-    proj                    = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+    proj                    = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
     setorigin(proj, self.tur_shotorg);
     proj.classname       = "plasmabomb";
     proj.owner           = self;
@@ -56,7 +56,7 @@ void turret_plasma_dual_attack()
     entity proj;
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj                    = CSQCProjectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+    proj                    = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
     setorigin(proj, self.tur_shotorg);
     proj.classname       = "plasmabomb";
     proj.owner           = self;
@@ -158,7 +158,7 @@ void spawnfunc_turret_plasma()
     g_turrets_common_precash();
     precache_model ("models/turrets/plasma.md3");
     precache_model ("models/turrets/base.md3");
-	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
+	projectile_init(PROJECTILE_ELECTRO_BEAM);
 
     self.think = turret_plasma_std_init;
     self.nextthink = time + 0.5;
@@ -171,7 +171,7 @@ void spawnfunc_turret_plasma_dual()
 
     precache_model ("models/turrets/plasmad.md3");
     precache_model ("models/turrets/base.md3");
-	CSQCProjectile_Init(PROJECTILE_ELECTRO_BEAM);
+	projectile_init(PROJECTILE_ELECTRO_BEAM);
 
     self.think = turret_plasma_dual_init;
     self.nextthink = time + 0.5;

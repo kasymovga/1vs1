@@ -33,7 +33,7 @@ void bat_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/crylink_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = CSQCProjectile(TRUE, PROJECTILE_CRYLINK, TRUE);
+		entity gren = projectile(TRUE, PROJECTILE_CRYLINK, TRUE);
 		gren.owner = self;
 		gren.dmg_edge = self.dmg_edge;
 		gren.dmg_radius = self.dmg_radius;
@@ -98,7 +98,7 @@ void bat_init() {
 	precache_sound("weapons/crylink_fire.wav");
 	precache_model("models/bat.md3");
 	dlc_require("bat");
-	CSQCProjectile_Init(PROJECTILE_CRYLINK);
+	projectile_init(PROJECTILE_CRYLINK);
 }
 
 void spawnfunc_monster_bat_spawn() {

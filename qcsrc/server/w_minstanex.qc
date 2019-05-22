@@ -112,7 +112,7 @@ void W_MinstaNex_Laser_Projectile_Touch() {
 }
 
 void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
-	entity missile = CSQCProjectile(TRUE, (g_balance_minstanex_explode ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE);
+	entity missile = projectile(TRUE, (g_balance_minstanex_explode ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.team = self.team;
 	missile.dmg = ff;
@@ -271,9 +271,9 @@ float w_minstanex(float req)
 		CACHE_CVAR(g_balance_minstanex_laser_rapid_refire);
 		if (g_balance_minstanex_explode) {
 			dlc_require("rm_effects_v2");
-			CSQCProjectile_Init(PROJECTILE_RM_LASER);
+			projectile_init(PROJECTILE_RM_LASER);
 		} else
-			CSQCProjectile_Init(PROJECTILE_LASER);
+			projectile_init(PROJECTILE_LASER);
 	}
 	return TRUE;
 };

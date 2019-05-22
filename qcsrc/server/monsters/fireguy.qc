@@ -53,7 +53,7 @@ void fireguy_hunt() {
 		vector _shotorg = self.origin + v_forward * 12;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 
-		entity proj = CSQCProjectile(TRUE, PROJECTILE_FIREMINE, TRUE);
+		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE);
 		proj.owner = proj.realowner = self;
 		proj.classname = "grenade";
 		proj.bot_dodge = TRUE;
@@ -157,7 +157,7 @@ void fireguy_init() {
 	precache_model("models/player/lycanthrope.zym");
 	precache_model("models/weapons/v_fireball.md3");
 	precache_sound("weapons/fireball_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_FIREMINE);
+	projectile_init(PROJECTILE_FIREMINE);
 }
 
 void spawnfunc_monster_fireguy_spawn() {

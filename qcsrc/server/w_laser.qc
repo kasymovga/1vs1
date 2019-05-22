@@ -49,7 +49,7 @@ void W_Laser_Attack (float issecondary)
 		weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);
+	missile = projectile(TRUE, PROJECTILE_LASER, TRUE);
 	missile.owner = Akimbo_Owner(self);
 	missile.classname = "laserbolt";
 	missile.dmg = issecondary;
@@ -152,7 +152,7 @@ float w_laser(float req)
 		CACHE_CVAR(g_balance_laser_secondary_refire);
 		CACHE_CVAR(g_balance_laser_secondary_shotangle);
 		CACHE_CVAR(g_balance_laser_secondary_speed);
-		CSQCProjectile_Init(PROJECTILE_LASER);
+		projectile_init(PROJECTILE_LASER);
 	}
 	return TRUE;
 };

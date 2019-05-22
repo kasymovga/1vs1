@@ -72,7 +72,7 @@ void Napalm_Think(void) {
 
 entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_randfactor, float deathtype,
                     float burnradius, float burndamage, float burnedgedamage, float burntime) {
-    entity proj = CSQCProjectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE);
+    entity proj = projectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE);
 	proj.gravity = 1;
     proj.classname = "napalm";
     proj.realowner = powner;
@@ -111,6 +111,6 @@ void Napalm_Init(void) {
         return;
     }
 
-	CSQCProjectile_Init(PROJECTILE_HG_NAPALMSHARD);
+	projectile_init(PROJECTILE_HG_NAPALMSHARD);
     napalm_init_done = TRUE;
 }

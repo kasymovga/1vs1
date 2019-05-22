@@ -504,7 +504,7 @@ void W_Zapper_Shield_Blocker_Push(entity p) {
     if(vlen(p.origin - self.oldorigin) <= 90) {
         float v = max(600, vlen(p.velocity));
         p.velocity = normalize(p.origin - self.oldorigin) * v;
-        UpdateCSQCProjectile(p);
+        projectile_update(p);
     }
 }
 

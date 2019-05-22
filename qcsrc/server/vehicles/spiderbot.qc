@@ -90,7 +90,7 @@ void spiderbot_rocket_think()
 
     if not (self.realowner.vehicle)
     {
-        UpdateCSQCProjectile(self);
+        projectile_update(self);
         return;
     }
 
@@ -100,7 +100,7 @@ void spiderbot_rocket_think()
     newdir += randomvec() * g_vehicle_spiderbot_rocket_noise;
     self.velocity = normalize(olddir + newdir * g_vehicle_spiderbot_rocket_turnrate) * g_vehicle_spiderbot_rocket_speed;
 
-    UpdateCSQCProjectile(self);
+    projectile_update(self);
 }
 
 void spiderbot_rocket_do()
@@ -125,7 +125,7 @@ void spiderbot_rocket_do()
     self.gun2.cnt = time + self.attack_finished_single;
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-    missile                 = CSQCProjectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+    missile                 = projectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
     setorigin(missile,gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire")));
     te_explosion (missile.origin);
 
@@ -597,7 +597,7 @@ void vehicle_spiderbot_readcvars() {
     precache_model ( "models/onslaught/gen_gib3.md3");
     precache_model ( "models/turrets/rocket.md3");
     precache_sound ( "weapons/uzi_fire.wav" );
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
+	projectile_init(PROJECTILE_ROCKET);
 }
 
 float SpiderbotPhysic_SendEntity(entity to, float sf) {

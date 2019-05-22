@@ -69,7 +69,7 @@ void W_Hagar_Attack (void)
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = CSQCProjectile(TRUE, PROJECTILE_HAGAR, TRUE);
+	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE);
 	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
@@ -100,7 +100,7 @@ void W_Hagar_Attack2 (void)
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = CSQCProjectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
+	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
 	missile.owner = missile.realowner = Akimbo_Owner(self);
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
@@ -192,8 +192,8 @@ float w_hagar(float req)
 		CACHE_CVAR(g_balance_hagar_secondary_refire);
 		CACHE_CVAR(g_balance_hagar_secondary_speed);
 		CACHE_CVAR(g_balance_hagar_secondary_spread);
-		CSQCProjectile_Init(PROJECTILE_HAGAR);
-		CSQCProjectile_Init(PROJECTILE_HAGAR_BOUNCING);
+		projectile_init(PROJECTILE_HAGAR);
+		projectile_init(PROJECTILE_HAGAR_BOUNCING);
 		if (cvar("g_balance_hagar_swap_buttons")) {
 			hagar_buttonatck1 = BUTTON_ATCK2;
 			hagar_buttonatck2 = BUTTON_ATCK;

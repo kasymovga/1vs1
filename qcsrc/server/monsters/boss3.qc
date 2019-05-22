@@ -26,7 +26,7 @@ void boss3_hunt() {
 
 		float i;
 		for (i = 0; i < 6; i++) {
-			entity proj = CSQCProjectile(TRUE, PROJECTILE_ELECTRO, TRUE);
+			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE);
 			proj.owner = proj.realowner = self;
 			proj.classname = "grenade";
 			proj.bot_dodge = TRUE;
@@ -129,7 +129,7 @@ void boss3_init() {
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
 	dlc_require("arachna");
-	CSQCProjectile_Init(PROJECTILE_ELECTRO);
+	projectile_init(PROJECTILE_ELECTRO);
 }
 
 void spawnfunc_monster_boss3_spawn() {

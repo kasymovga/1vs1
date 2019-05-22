@@ -419,44 +419,6 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
     return trace_hits_box(start, end, thmi - ma, thma - mi);
 }
 
-float SUB_NoImpactCheck()
-{
-	// zero hitcontents = this is not the real impact, but either the
-	// mirror-impact of something hitting the projectile instead of the
-	// projectile hitting the something, or a touchareagrid one. Neither of
-	// these stop the projectile from moving, so...
-	if(trace_dphitcontents == 0)
-	{
-		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		checkclient();
-	}
-    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        return 1;
-    if (other == world && self.size != '0 0 0')
-    {
-        vector tic;
-        tic = self.velocity * sys_ticrate;
-        tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
-        traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
-        if (trace_fraction >= 1)
-        {
-            dprint("Odd... did not hit...?\n");
-        }
-        else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        {
-            dprint("Detected and prevented the sky-grapple bug.\n");
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-#define SUB_OwnerCheck() (other && (other == self.owner))
-
-#define PROJECTILE_SKIPNONSOLID if (GameHookChain_ProjectileTouchHandle()) { return; }
-#define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(SUB_OwnerCheck()) return; if (self.lastpushtime >= time) if (self.velocity * trace_plane_normal > 0) { setorigin(self, self.origin); return; } if(SUB_NoImpactCheck()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) UpdateCSQCProjectileNextFrame(self); } while(0)
-
 void print_to(entity e, string s)
 {
     if (e)
@@ -886,7 +848,7 @@ void dropentities(entity platform) {
     while((e = findflags(e, flags, FL_ONGROUND))) {
         if(boxesoverlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
             e.flags &~= FL_ONGROUND;
-            UpdateCSQCProjectileNextFrame(e);
+            projectile_update_next_frame(e);
         }
     }
 
@@ -895,7 +857,7 @@ void dropentities(entity platform) {
             e.movetype = MOVETYPE_TOSS;
             e.aiment = world;
             e.flags &~= FL_ONGROUND;
-            UpdateCSQCProjectileNextFrame(e);
+            projectile_update_next_frame(e);
         }
     }
 }

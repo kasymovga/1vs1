@@ -39,7 +39,7 @@ dlc.qh
 ip2c.qh
 w_common.qh
 anim.qh
-csqcprojectile.qh
+projectile.qh
 csqceffects.qc
 
 portals.qh
@@ -269,8 +269,7 @@ target_spawn.qc
 func_breakable.qc
 
 ../common/items.qc
-
-csqcprojectile.qc
+projectile.qc
 irc.qc
 
 akimbo.qc

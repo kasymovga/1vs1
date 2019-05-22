@@ -195,7 +195,7 @@ void trigger_push_touch()
 				other.gravity = 1;
 				break;
 		}
-		UpdateCSQCProjectile(other);
+		projectile_update(other);
 	}
 	other.lastpushtime = time;
 

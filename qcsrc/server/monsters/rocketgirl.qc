@@ -21,7 +21,7 @@ void rlgirl_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-		entity missile = CSQCProjectile(TRUE, PROJECTILE_ROCKET, TRUE);
+		entity missile = projectile(TRUE, PROJECTILE_ROCKET, TRUE);
 		missile.owner = self;
 		missile.dmg_edge = self.dmg_edge;
 		missile.dmg_radius = self.dmg_radius;
@@ -117,7 +117,7 @@ void rlgirl_init() {
 	precache_model("models/player/pyria.zym");
 	precache_model("models/weapons/v_rl.md3");
 	precache_sound("weapons/rocket_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_ROCKET);
+	projectile_init(PROJECTILE_ROCKET);
 }
 
 void spawnfunc_monster_rlgirl_spawn() {

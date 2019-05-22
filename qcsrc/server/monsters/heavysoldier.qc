@@ -21,7 +21,7 @@ void heavysoldier_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = CSQCProjectile(TRUE, PROJECTILE_GRENADE, TRUE);
+		entity gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE);
 		gren.owner = self;
 		gren.dmg_edge = self.dmg_edge;
 		gren.dmg_radius = self.dmg_radius;
@@ -117,7 +117,7 @@ void heavysoldier_init() {
 	precache_model("models/player/grunt.zym");
 	precache_model("models/weapons/v_gl.md3");
 	precache_sound("weapons/grenade_fire.wav");
-	CSQCProjectile_Init(PROJECTILE_GRENADE);
+	projectile_init(PROJECTILE_GRENADE);
 }
 
 void spawnfunc_monster_heavysoldier_spawn() {

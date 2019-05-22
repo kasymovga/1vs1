@@ -27,7 +27,7 @@ void boss2_pellet_touch()
 void boss2_pellet(vector start, vector dir)
 {
 	entity proj;
-	proj = CSQCProjectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
 	proj.classname = "bullet";
 	proj.realowner = proj.owner = self;
 	PROJECTILE_MAKETRIGGER(proj);

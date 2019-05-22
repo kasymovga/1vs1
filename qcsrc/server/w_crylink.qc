@@ -64,7 +64,7 @@ void W_Crylink_Touch (void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	// commented out as it causes a little hitch...
 	//if(proj.cnt == 0)
-	//	CSQCProjectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
+	//	projectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
 void W_Crylink_Touch2 (void)
@@ -91,7 +91,7 @@ void W_Crylink_Touch2 (void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	// commented out as it causes a little hitch...
 	//if(proj.cnt == 0)
-	//	CSQCProjectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
+	//	projectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
 void W_Crylink_Attack (void)
@@ -113,7 +113,7 @@ void W_Crylink_Attack (void)
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
-		proj = CSQCProjectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
+		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -171,7 +171,7 @@ void W_Crylink_Attack2 (void)
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
-		proj = CSQCProjectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
+		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 		proj.realowner = proj.owner = Akimbo_Owner(self);
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
@@ -289,8 +289,8 @@ float w_crylink(float req)
 		CACHE_CVAR(g_balance_crylink_secondary_shots);
 		CACHE_CVAR(g_balance_crylink_secondary_speed);
 		CACHE_CVAR(g_balance_crylink_secondary_spread);
-		CSQCProjectile_Init(PROJECTILE_CRYLINK);
-		CSQCProjectile_Init(PROJECTILE_CRYLINK_BOUNCING);
+		projectile_init(PROJECTILE_CRYLINK);
+		projectile_init(PROJECTILE_CRYLINK_BOUNCING);
 		if (cvar("g_balance_crylink_swap_buttons")) {
 			crylink_buttonatck1 = BUTTON_ATCK2;
 			crylink_buttonatck2 = BUTTON_ATCK;

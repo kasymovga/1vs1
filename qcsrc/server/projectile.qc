@@ -1,8 +1,40 @@
 .float csqcprojectile_type;
 .float csqcprojectile_sendangles;
 
-float CSQCProjectile_SendEntity(entity to, float sf)
-{
+float() projectile_no_impact_check {
+	// zero hitcontents = this is not the real impact, but either the
+	// mirror-impact of something hitting the projectile instead of the
+	// projectile hitting the something, or a touchareagrid one. Neither of
+	// these stop the projectile from moving, so...
+	if(trace_dphitcontents == 0)
+	{
+		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		checkclient();
+	}
+    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+        return 1;
+    if (other == world && self.size != '0 0 0')
+    {
+        vector tic;
+        tic = self.velocity * sys_ticrate;
+        tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
+        traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
+        if (trace_fraction >= 1)
+        {
+            dprint("Odd... did not hit...?\n");
+        }
+        else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+        {
+            dprint("Detected and prevented the sky-grapple bug.\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+
+float(entity to, float sf) projectile_send {
 	sf = sf & 31;
 	if (self.teleport_time) {
 		sf |= 32;
@@ -58,16 +90,15 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 }
 
 .vector csqcprojectile_oldorigin;
-void CSQCProjectile_Check(entity e)
-{
+void(entity e) projectile_check {
 	if(e.csqcprojectile_clientanimate)
 	if(e.flags & FL_ONGROUND)
 	if(e.origin != e.csqcprojectile_oldorigin)
-		UpdateCSQCProjectile(e);
+		projectile_update(e);
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
-void CSQCProjectile_Init(float type) {
+void(float type) projectile_init {
 	vector sizes;
 	sizes = '0 0 0';
 	switch (type) {
@@ -89,11 +120,10 @@ void CSQCProjectile_Init(float type) {
 	ProjInfo_RegisterAuto(type, sizes);
 }
 
-entity CSQCProjectile(float clientanimate, float type, float docull)
-{
+entity(float clientanimate, float type, float docull) projectile {
 	entity e = spawn();
 	ProjInfo_SetSize(e, type);
-	net_link_entity(e, docull, 0, CSQCProjectile_SendEntity);
+	net_link_entity(e, docull, 0, projectile_send);
 
 	e.csqcprojectile_clientanimate = clientanimate;
 
@@ -103,18 +133,16 @@ entity CSQCProjectile(float clientanimate, float type, float docull)
 	return e;
 }
 
-void UpdateCSQCProjectile(entity e)
-{
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+void(entity e) projectile_update {
+	if(e.SendEntity == projectile_send)
 	{
 		// send new origin data
 		e.SendFlags |= 1;
 	}
 }
 
-void UpdateCSQCProjectileAngles(entity e)
-{
-    if(e.SendEntity == CSQCProjectile_SendEntity)
+void(entity e) projectile_update_angles {
+    if(e.SendEntity == projectile_send)
     {
         // send new angles data (does nothing in predictive mode)
         e.SendFlags |= 4;
@@ -122,9 +150,8 @@ void UpdateCSQCProjectileAngles(entity e)
     }
 }
 
-void UpdateCSQCProjectileAfterTeleport(entity e)
-{
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+void(entity e) projectile_update_after_teleport {
+	if(e.SendEntity == projectile_send)
 	{
 		// send new origin data and mark as teleported
 		e.teleport_time = time;
@@ -135,30 +162,26 @@ void UpdateCSQCProjectileAfterTeleport(entity e)
 .void(void) csqcprojectile_oldthink;
 .float csqcprojectile_oldnextthink;
 
-void CSQCProjectile_Update_Think()
-{
-	UpdateCSQCProjectile(self);
+void() projectile_update_think {
+	projectile_update(self);
 	self.think = self.csqcprojectile_oldthink;
 	self.nextthink = max(time, self.csqcprojectile_oldnextthink);
 }
 
-void UpdateCSQCProjectileNextFrame(entity e)
-{
-	if(e.SendEntity == CSQCProjectile_SendEntity)
-	if(e.think != CSQCProjectile_Update_Think)
+void(entity e) projectile_update_next_frame {
+	if(e.SendEntity == projectile_send)
+	if(e.think != projectile_update_think)
 	{
 		e.csqcprojectile_oldthink = e.think;
 		e.csqcprojectile_oldnextthink = e.nextthink;
-		e.think = CSQCProjectile_Update_Think;
+		e.think = projectile_update_think;
 		e.nextthink = time;
 	}
 }
 
-void ProjInfo_Send(void) {
+void(void) projectile_info_send {
 	float i;
-
 	WriteByte(MSG_ENTITY, projinfo_highest_registered);
-
 	for(i = 0; i < projinfo_highest_registered; ++i) {
 		float type = projinfo_type[i];
 
