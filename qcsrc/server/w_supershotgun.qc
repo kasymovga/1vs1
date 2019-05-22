@@ -244,3 +244,7 @@ float w_supershotgun(float req)
 	}
 	return TRUE;
 };
+
+void(void) spawnfunc_weapon_supershotgun {
+	weapon_defaultspawnfunc(WEP_SUPERSHOTGUN);
+}

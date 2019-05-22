@@ -136,3 +136,8 @@ float w_nex(float req)
 	}
 	return TRUE;
 };
+
+void(void) spawnfunc_weapon_nex {
+	weapon_defaultspawnfunc(WEP_NEX);
+}
+

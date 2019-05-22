@@ -208,7 +208,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		self = wep;
 		weapon_defaultspawnfunc(wpn);
 		self = oldself;
-		if(startitem_failed)
+		if(item_start_failed)
 			return string_null;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
@@ -221,7 +221,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		self = wep;
 		weapon_defaultspawnfunc(wpn);
 		self = oldself;
-		if(startitem_failed)
+		if(item_start_failed)
 			return string_null;
 		if(doreduce)
 		{
@@ -229,11 +229,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			{
 				if(wa & j)
 				{
-					ammofield = Item_CounterField(j);
+					ammofield = item_counter_field(j);
 					thisammo = min(own.ammofield, wep.ammofield);
 					wep.ammofield = thisammo;
 					own.ammofield -= thisammo;
-					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
+					s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(j));
 				}
 			}
 			s = substring(s, 5, -1);
@@ -430,3 +430,128 @@ void W_WeaponFrame()
 		self.currentammo = 1;
 #endif
 }
+
+float internalteam;
+void weapon_defaultspawnfunc(float wpn)
+{
+	entity e;
+	float t;
+	var .float ammofield;
+	string s;
+	entity oldself;
+	float i, j;
+	if not(g_pickup_weapons) {
+		remove(self);
+		return;
+	}
+	if (GameHookChain_WeaponSpawnHandle(float wpn))
+		return;
+
+	// set the respawntime in advance (so replaced weapons can copy it)
+
+	if(!self.respawntime)
+	{
+		e = get_weaponinfo(wpn);
+		if(e.items == IT_SUPERWEAPON)
+		{
+			self.respawntime = g_pickup_respawntime_powerup;
+			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
+		}
+		else
+		{
+			self.respawntime = g_pickup_respawntime_weapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
+		}
+	}
+
+	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
+	{
+		e = get_weaponinfo(wpn);
+		s = cvar_string(strcat("g_weaponreplace_", e.netname));
+		if(s == "0")
+		{
+			remove(self);
+			item_start_failed = TRUE;
+			return;
+		}
+		t = tokenize_console(s);
+		if(t >= 2)
+		{
+			self.team = --internalteam;
+			oldself = self;
+			for(i = 1; i < t; ++i)
+			{
+				s = argv(i);
+				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+				{
+					e = get_weaponinfo(j);
+					if(e.netname == s)
+					{
+						self = spawn();
+						copyentity(oldself, self);
+						self.classname = "replacedweapon";
+						weapon_defaultspawnfunc(j);
+						break;
+					}
+				}
+				if(j > WEP_LAST)
+				{
+					print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+				}
+			}
+			self = oldself;
+		}
+		if(t >= 1)
+		{
+			s = argv(0);
+			wpn = 0;
+			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+			{
+				e = get_weaponinfo(j);
+				if(e.netname == s)
+				{
+					wpn = j;
+					break;
+				}
+			}
+			if(j > WEP_LAST)
+			{
+				print("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+			}
+		}
+		if(wpn == 0)
+		{
+			remove(self);
+			item_start_failed = TRUE;
+			return;
+		}
+	}
+
+	e = get_weaponinfo(wpn);
+
+	if(e.items && e.items != IT_SUPERWEAPON)
+	{
+		for(i = 0, j = 1; i < 24; ++i, j *= 2)
+		{
+			if(e.items & j)
+			{
+				ammofield = item_counter_field(j);
+				if(!self.ammofield)
+					self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
+			}
+		}
+	}
+	else
+	{
+		self.flags |= FL_NO_WEAPON_STAY;
+	}
+
+	// weapon stay isn't supported for teamed weapons
+	if(self.team)
+		self.flags |= FL_NO_WEAPON_STAY;
+
+	item_start(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	if (self.modelindex) // don't precache if self was removed
+		weapon_precache(e.weapon);
+}
+

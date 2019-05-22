@@ -171,3 +171,7 @@ float w_uzi(float req)
 	}
 	return TRUE;
 };
+
+void(void) spawnfunc_weapon_uzi {
+	weapon_defaultspawnfunc(WEP_UZI);
+}

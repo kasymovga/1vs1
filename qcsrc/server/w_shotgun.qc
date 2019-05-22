@@ -172,3 +172,7 @@ float w_shotgun(float req)
 	}
 	return TRUE;
 };
+
+void(void) spawnfunc_weapon_shotgun {
+	weapon_defaultspawnfunc(WEP_SHOTGUN);
+}

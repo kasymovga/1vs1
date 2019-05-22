@@ -293,10 +293,7 @@ float sv_loddistance2;
 
 string gamemode_name;
 
-float startitem_failed;
-
 typedef .float floatfield;
-floatfield Item_CounterField(float it);
 
 float W_AmmoItemCode(float wpn);
 float W_WeaponBit(float wpn);

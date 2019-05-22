@@ -136,7 +136,7 @@ void monster_drop_item(float item_code, string _model, string _sound, string _na
 	self.classname = "droppedweapon";
 	self.itemfield = itemvalue;
 	setorigin(self, e.origin);
-	StartItem (_model, _sound, 15, 0, _name, item_code, 0, 0, generic_pickupevalfunc, 100);
+	item_start(_model, _sound, 15, 0, _name, item_code, 0, 0, item_generic_pickupevalfunc, 100);
 	self = e;
 }
 

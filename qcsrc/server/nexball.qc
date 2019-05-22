@@ -729,7 +729,7 @@ void SpawnBall (void)
 	self.think = InitBall;
 	self.nextthink = game_starttime + g_nexball_delay_start;
 	self.bot_pickup = TRUE;
-	self.bot_pickupevalfunc = generic_pickupevalfunc;
+	self.bot_pickupevalfunc = item_generic_pickupevalfunc;
 	self.bot_pickupbasevalue = BOT_PICKUP_RATING_HIGH;
 }
 

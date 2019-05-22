@@ -110,7 +110,7 @@ void spawnfunc_weapon_hook (void)
 {
 	if(g_grappling_hook) // offhand hook
 	{
-		startitem_failed = TRUE;
+		item_start_failed = TRUE;
 		remove(self);
 		return;
 	}

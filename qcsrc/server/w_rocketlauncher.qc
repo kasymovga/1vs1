@@ -677,3 +677,7 @@ float w_rlauncher(float req)
 	}
 	return TRUE;
 };
+
+void(void) spawnfunc_weapon_rocketlauncher {
+	weapon_defaultspawnfunc(WEP_ROCKET_LAUNCHER);
+}

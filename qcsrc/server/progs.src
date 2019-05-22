@@ -84,7 +84,8 @@ timeout.qh
 
 progressbar.qh
 
-t_items.qh
+item.qh
+powerup.qh
 backpack.qh
 pinata.qh
 
@@ -215,7 +216,8 @@ w_zapper.qc
 
 g_laserbeam.qc
 
-t_items.qc
+item.qc
+powerup.qc
 backpack.qc
 pinata.qc
 cl_weapons.qc

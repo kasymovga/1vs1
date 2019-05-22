@@ -257,7 +257,7 @@ void readlevelcvars(void)
 	CACHE_CVAR(spawn_debugview);
 	CACHE_CVAR(g_telefrags);
 	minstagib_init();
-	Items_Init();
+	item_init();
 	runes_init();
 	WalkieTalkie_Init();
 	Akimbo_Init();

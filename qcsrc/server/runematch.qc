@@ -639,7 +639,7 @@ float runematch_SpeedMod() {
 void healer_think() {
 	if (self.owner.classname == "player")
 	if (PLAYER_REALLY_ALIVE(self.owner))
-		Item_GiveTo(self, self.owner);
+		item_give_to(self, self.owner);
 
 	remove(self);
 }

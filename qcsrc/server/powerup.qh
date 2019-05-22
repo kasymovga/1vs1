@@ -1,0 +1,4 @@
+void() powerup_strength_init;
+void() powerup_invincible_init;
+void() powerup_speed_init;
+void() powerup_invisibility_init;
