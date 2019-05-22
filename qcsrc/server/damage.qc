@@ -432,6 +432,17 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 	damage_radius_running = 0;
 }
 
+void(entity attacker, void() explode) damage_prepare_explosion {
+	self.takedamage = DAMAGE_NO;
+	self.event_damage = SUB_Null;
+	self.owner = attacker;
+
+	// do not explode NOW but in the NEXT FRAME!
+	// because recursive calls to damage_radius are not allowed
+	self.nextthink = time;
+	self.think = explode;
+}
+
 void damage_init()
 {
 	CACHE_CVAR(g_friendlyfire);

@@ -365,7 +365,7 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float _damage, float de
 	self.health = self.health - _damage;
 	self.angles = vectoangles(self.velocity);
 	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);
+		damage_prepare_explosion(attacker, W_Rocket_Explode);
 }
 
 void W_Rocket_Attack (void)

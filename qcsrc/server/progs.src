@@ -37,7 +37,7 @@ dlc.qh
 ../common/extresponse.qh
 ../common/ip2c.qh
 ip2c.qh
-w_common.qh
+bullet.qh
 anim.qh
 projectile.qh
 csqceffects.qc
@@ -187,8 +187,7 @@ t_jumppads.qc
 t_teleporters.qc
 g_triggers.qc
 g_models.qc
-w_common.qc
-
+bullet.qc
 w_melee.qc
 w_laser.qc
 w_shotgun.qc

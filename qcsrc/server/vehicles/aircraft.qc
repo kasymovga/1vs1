@@ -150,10 +150,10 @@ void aircraft_minigun_fire(entity gun)
 
 	entity e = self;
 	self = self.owner;
-	beginFireBallisticBullet(10000);
-	fireBallisticBullet(v, v_forward, g_vehicle_aircraft_minigun_spread, 10000, 5,
+	bullet_begin(10000);
+	bullet(v, v_forward, g_vehicle_aircraft_minigun_spread, 10000, 5,
 			g_vehicle_aircraft_minigun_damage, 0, 0, WEP_UZI, particleeffectnum("EF_MGTURRETTRAIL"), 0, 0);
-	endFireBallisticBullet();
+	bullet_end();
 	self = e;
 
     if not (gun.enemy)

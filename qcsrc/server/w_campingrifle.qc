@@ -127,7 +127,7 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_nails -= pAmmo;
 
-	beginFireBallisticBullet(pSpeed);
+	bullet_begin(pSpeed);
 	if(deathtype & HITTYPE_SECONDARY)
 		weapon_setup_shot (self, 2, "weapons/campingrifle_fire2.wav", 1);
 	else
@@ -141,8 +141,8 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	}
 
-	fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
-	endFireBallisticBullet();
+	bullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
+	bullet_end();
 
 	if (g_casings >= 2)
 		casing_spawn (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);

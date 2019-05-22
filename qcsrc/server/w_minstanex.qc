@@ -31,7 +31,7 @@ void DrawMinstaNexBeamParticles(vector start, vector end, vector to) {
 void W_MinstaNex_Attack (void)
 {
 	float flying;
-	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+	flying = IsFlying(self); // do this BEFORE to make the trace values from bullet_railgun last
 
 	antilag_begin(Akimbo_Owner(self));
 	weapon_setup_shot (self, 0, "weapons/minstanexfire.wav", 1);
@@ -39,7 +39,7 @@ void W_MinstaNex_Attack (void)
 	yoda = 0;
 	damage_goodhits = 0;
 	headshot = 0;
-	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	bullet_railgun (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 	antilag_end();
 
 	if(yoda > 1)

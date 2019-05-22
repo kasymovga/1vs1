@@ -225,7 +225,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float _damage, flo
 	if(self.health <= 0)
 	{
 		debrisforce = force;
-		W_PrepareExplosionByDamage(attacker, func_breakable_destroy);
+		damage_prepare_explosion(attacker, func_breakable_destroy);
 	}
 }
 

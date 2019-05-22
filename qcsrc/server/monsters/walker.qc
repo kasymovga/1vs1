@@ -9,9 +9,9 @@ void walker_bullet() {
 	w_shotdir_x = v_forward_x;
 	w_shotdir_y = v_forward_y;
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-	beginFireBallisticBullet(5000);
-    fireBallisticBullet(w_shotorg, w_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 0);
-    endFireBallisticBullet();
+	bullet_begin(5000);
+    bullet(w_shotorg, w_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 0);
+    bullet_end();
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3");
 	setattachment(flash, self.weaponentity, "tag_fire");

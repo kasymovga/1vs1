@@ -27,14 +27,14 @@ void W_Shotgun_Attack (void)
 	float	sc;
 	local entity flash;
 
-	beginFireBallisticBullet(g_balance_shotgun_primary_speed);
+	bullet_begin(g_balance_shotgun_primary_speed);
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
+		bullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, 0, g_balance_shotgun_primary_force,
 				WEP_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
-	endFireBallisticBullet();
+	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_primary_ammo;
 
@@ -60,14 +60,14 @@ void W_Shotgun_Attack2 (void)
 	float	sc;
 	local entity flash;
 
-	beginFireBallisticBullet(g_balance_shotgun_secondary_speed);
+	bullet_begin(g_balance_shotgun_secondary_speed);
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
+		bullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,
 				WEP_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
 				g_balance_shotgun_secondary_bulletconstant);
-	endFireBallisticBullet();
+	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
 

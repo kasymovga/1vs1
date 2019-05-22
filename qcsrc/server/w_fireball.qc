@@ -144,7 +144,7 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float _damage, float 
 	if (self.health <= 0)
 	{
 		self.cnt = 1;
-		W_PrepareExplosionByDamage(attacker, W_Fireball_Explode);
+		damage_prepare_explosion(attacker, W_Fireball_Explode);
 	}
 }
 

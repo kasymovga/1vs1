@@ -54,14 +54,14 @@ void DrawNexBeamParticles(vector start, vector endpos, vector to) {
 void W_Nex_Attack (void)
 {
 	float flying;
-	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+	flying = IsFlying(self); // do this BEFORE to make the trace values from bullet_railgun last
 
 	antilag_begin(Akimbo_Owner(self));
 	weapon_setup_shot (self, 5, "weapons/nexfire.wav", 1);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
+	bullet_railgun (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
 	antilag_end();
 
 	if((yoda && flying) || yoda > 1)

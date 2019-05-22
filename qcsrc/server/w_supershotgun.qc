@@ -108,7 +108,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 		bounces = g_balance_supershotgun_primary_bounces;
 	}
 	if (ballistic)
-		beginFireBallisticBullet(s);
+		bullet_begin(s);
 
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", b);
 
@@ -131,9 +131,9 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	if (ballistic)
 	{
 		for (sc = 0; sc < b; sc = sc + 1)
-			fireBallisticBullet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
+			bullet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
 					d, 0, f, dtype, particleeffectnum("tr_bullet"), g, bc);
-		endFireBallisticBullet();
+		bullet_end();
 	}
 	else
 	{

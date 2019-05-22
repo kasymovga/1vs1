@@ -97,7 +97,7 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float _damage, float d
 	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
-		W_PrepareExplosionByDamage(attacker, self.think);
+		damage_prepare_explosion(attacker, self.think);
 	}
 }
 

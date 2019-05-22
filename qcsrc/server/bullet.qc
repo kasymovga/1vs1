@@ -7,8 +7,7 @@ float g_ballistics_materialconstant;
 .vector railgunhitloc;
 .vector railgunhitdir;
 
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
-{
+void(vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype) bullet_railgun {
 	entity oldself = self;
 	local vector hitloc, endpoint, dir;
 	local entity ent, endent;
@@ -107,8 +106,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 .float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
-void W_BallisticBullet_Hit (void)
-{
+void(void) bullet_hit {
 	float f;
 
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
@@ -143,19 +141,19 @@ void W_BallisticBullet_Hit (void)
 	self.enemy = other; // don't hit the same player twice with the same bullet
 }
 
-.void(void) W_BallisticBullet_LeaveSolid_think_save;
-.float W_BallisticBullet_LeaveSolid_nextthink_save;
-.vector W_BallisticBullet_LeaveSolid_origin;
-.vector W_BallisticBullet_LeaveSolid_velocity;
+.void(void) bullet_leave_solid_think_save;
+.float bullet_leave_solid_nextthink_save;
+.vector bullet_leave_solid_origin;
+.vector bullet_leave_solid_velocity;
 
-void W_BallisticBullet_LeaveSolid_think()
+void bullet_leave_solid_think()
 {
-	setorigin(self, self.W_BallisticBullet_LeaveSolid_origin);
-	self.velocity = self.W_BallisticBullet_LeaveSolid_velocity;
+	setorigin(self, self.bullet_leave_solid_origin);
+	self.velocity = self.bullet_leave_solid_velocity;
 
-	self.think = self.W_BallisticBullet_LeaveSolid_think_save;
-	self.nextthink = max(time, self.W_BallisticBullet_LeaveSolid_nextthink_save);
-	self.W_BallisticBullet_LeaveSolid_think_save = SUB_Null;
+	self.think = self.bullet_leave_solid_think_save;
+	self.nextthink = max(time, self.bullet_leave_solid_nextthink_save);
+	self.bullet_leave_solid_think_save = SUB_Null;
 
 	self.flags &~= FL_ONGROUND;
 
@@ -169,7 +167,7 @@ void W_BallisticBullet_LeaveSolid_think()
 	projectile_update(self);
 }
 
-float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
+float bullet_leave_solid(entity e, vector vel, float constant)
 {
 	// move the entity along its velocity until it's out of solid, then let it resume
 
@@ -211,7 +209,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	} else
 		trace_endpos = org;
 
-	self.W_BallisticBullet_LeaveSolid_origin = trace_endpos;
+	self.bullet_leave_solid_origin = trace_endpos;
 
 	dst = vlen(trace_endpos - self.origin);
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
@@ -229,31 +227,29 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	// solution - and these times are very small anyway
 	//print("dt = ", ftos(dt), "\n");
 
-	self.W_BallisticBullet_LeaveSolid_think_save = self.think;
-	self.W_BallisticBullet_LeaveSolid_nextthink_save = self.nextthink;
-	self.think = W_BallisticBullet_LeaveSolid_think;
+	self.bullet_leave_solid_think_save = self.think;
+	self.bullet_leave_solid_nextthink_save = self.nextthink;
+	self.think = bullet_leave_solid_think;
 	self.nextthink = time + dt;
 
 	vel = vel * velfactor;
 
 	self.velocity = '0 0 0';
 	self.flags |= FL_ONGROUND; // prevent moving
-	self.W_BallisticBullet_LeaveSolid_velocity = vel;
+	self.bullet_leave_solid_velocity = vel;
 
 	return 1;
 }
 
-void W_BallisticBullet_Touch (void)
-{
-	if(self.think == W_BallisticBullet_LeaveSolid_think) // skip this!
+void(void) bullet_touch {
+	if(self.think == bullet_leave_solid_think) // skip this!
 		return;
 
 	PROJECTILE_TOUCH;
-	W_BallisticBullet_Hit ();
+	bullet_hit();
 
 	// go through solid!
-	if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius))
-	{
+	if(!bullet_leave_solid(self, self.velocity, self.dmg_radius)) {
 		remove(self);
 		return;
 	}
@@ -261,51 +257,49 @@ void W_BallisticBullet_Touch (void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-float fireBallisticBulletHitScan;
-void endFireBallisticBullet()
-{
+float bulletHitScan;
+void() bullet_end {
 	endzcurveparticles();
-	if (fireBallisticBulletHitScan) {
+	if (bulletHitScan) {
 		antilag_end();
 	}
 }
 
-entity fireBallisticBullet_trace_callback_ent;
-float fireBallisticBullet_trace_callback_eff;
-void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
+entity bullet_trace_callback_ent;
+float bullet_trace_callback_eff;
+void bullet_trace_callback(vector start, vector hit, vector end)
 {
-	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
-		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
+	if(vlen(trace_endpos - bullet_trace_callback_ent.origin) > 16)
+		zcurveparticles_from_tracetoss(bullet_trace_callback_eff, bullet_trace_callback_ent.origin, trace_endpos, bullet_trace_callback_ent.velocity);
 }
 
-void fireBallisticBulletNoGravity_trace_callback(vector start, vector hit, vector end)
+void bullet_no_gravity_trace_callback(vector start, vector hit, vector end)
 {
 	endzcurveparticles();
-	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
-		trailparticles(world, fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos);
+	if(vlen(trace_endpos - bullet_trace_callback_ent.origin) > 16)
+		trailparticles(world, bullet_trace_callback_eff, bullet_trace_callback_ent.origin, trace_endpos);
 }
 
-void beginFireBallisticBullet(float pSpeed) {
-	fireBallisticBulletHitScan = (g_antilag_bullets && pSpeed >= g_antilag_bullets);
-	if (fireBallisticBulletHitScan) {
+void bullet_begin(float pSpeed) {
+	bulletHitScan = (g_antilag_bullets && pSpeed >= g_antilag_bullets);
+	if (bulletHitScan) {
 		entity o = Akimbo_Owner(self);
 		antilag_begin(o);
 	}
 }
 
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
-{
+void(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
 	entity oldself, oldself_akimbo = self;
 	self = Akimbo_Owner(self);
 	entity proj;
-	if(fireBallisticBulletHitScan)
+	if(bulletHitScan)
 	{
 		proj = spawn();
 	} else {
 		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE);
 		proj.think = SUB_Remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
-		proj.touch = W_BallisticBullet_Touch;
+		proj.touch = bullet_touch;
 	}
 
 	proj.classname = "bullet";
@@ -331,7 +325,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	proj.oldvelocity = proj.velocity;
 
-	if(fireBallisticBulletHitScan)
+	if(bulletHitScan)
 	{
 		oldself = self;
 		self = proj;
@@ -339,13 +333,13 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		float i;
 		for(i = 0; i < 100; i++)
 		{
-			fireBallisticBullet_trace_callback_ent = self;
-			fireBallisticBullet_trace_callback_eff = tracereffects;
+			bullet_trace_callback_ent = self;
+			bullet_trace_callback_eff = tracereffects;
 			if (proj.gravity) {
-				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, fireBallisticBullet_trace_callback);
+				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, bullet_trace_callback);
 				self.velocity = WarpZone_tracetoss_velocity;
 			} else {
-				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, fireBallisticBulletNoGravity_trace_callback);
+				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, bullet_no_gravity_trace_callback);
 				self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
 			}
 
@@ -364,14 +358,14 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 					break;
 
 				// hit the player
-				W_BallisticBullet_Hit ();
+				bullet_hit();
 			}
 
 			// go through solid!
-			if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius))
+			if(!bullet_leave_solid(self, self.velocity, self.dmg_radius))
 				break;
 
-			W_BallisticBullet_LeaveSolid_think();
+			bullet_leave_solid_think();
 		}
 		self = oldself;
 		remove(proj);
@@ -381,20 +375,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	self = oldself_akimbo;
 }
 
-
-void W_PrepareExplosionByDamage(entity attacker, void() explode)
-{
-	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
-	self.owner = attacker;
-
-	// do not explode NOW but in the NEXT FRAME!
-	// because recursive calls to damage_radius are not allowed
-	self.nextthink = time;
-	self.think = explode;
-}
-
-void W_BallisticInit() {
+void bullet_init() {
 	CACHE_CVAR(g_ballistics_materialconstant);
 	CACHE_CVAR(g_ballistics_mindistance);
 }

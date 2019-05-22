@@ -40,7 +40,7 @@ void W_Uzi_Attack (float deathtype)
 		else
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_sustained_ammo;
 	}
-	beginFireBallisticBullet(g_balance_uzi_speed);
+	bullet_begin(g_balance_uzi_speed);
 	weapon_setup_shot (self, 0, "weapons/uzi_fire.wav", 1);
 	if (!g_norecoil)
 	{
@@ -52,10 +52,10 @@ void W_Uzi_Attack (float deathtype)
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 
 	if (self.uzi_bulletcounter == 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
+		bullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 	else
-		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
-	endFireBallisticBullet();
+		bullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+	bullet_end();
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
