@@ -142,7 +142,7 @@ void W_Porto_Attack (float out)
 {
 	local entity gren;
 
-	W_SetupShot (self, 4, "porto/fire.wav", 0);
+	weapon_setup_shot (self, 4, "porto/fire.wav", 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -176,7 +176,7 @@ void W_Porto_Attack (float out)
 	gren.velocity = w_shotdir * g_balance_porto_primary_speed;
 	if(self.items & IT_STRENGTH)
 		gren.velocity = gren.velocity * g_balance_powerup_strength_force;
-	W_SetupProjectileVelocity(gren);
+	weapon_setup_projectile_velocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.playerid = self.playerid;
@@ -207,14 +207,14 @@ float w_porto(float req)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
 			W_Porto_Attack(FALSE);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (!self.porto_current_out)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
 			W_Porto_Attack(TRUE);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)

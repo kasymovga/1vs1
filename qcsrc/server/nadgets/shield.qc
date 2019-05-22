@@ -61,7 +61,7 @@ void HG_Shield_Discharge_Think(void) {
 
     makevectors(self.owner.v_angle);
 	antilag_begin(self.owner);
-    W_SetupShot(self.owner, 0, "weapons/nexfire.wav", -1);
+    weapon_setup_shot(self.owner, 0, "weapons/nexfire.wav", -1);
     WarpZone_TraceLine(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self.owner);
 	antilag_end();
     targ = trace_ent;

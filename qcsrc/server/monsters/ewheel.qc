@@ -47,7 +47,7 @@ void ewheel_hunt() {
 				proj.use = monster_proj_explode;
 				proj.touch = monster_proj_touch;
 				proj.velocity = normalize(_shotdir) * 3200;
-				W_SetupProjectileVelocity(proj);
+				weapon_setup_projectile_velocity(proj);
 				proj.angles = vectoangles (proj.velocity);
 				self.attack_finished_single = time + 2 + random();
 			}

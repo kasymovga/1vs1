@@ -1,0 +1,78 @@
+// VorteX: static frame globals
+float WFRAME_DONTCHANGE = -1;
+float WFRAME_FIRE1 = 0;
+float WFRAME_FIRE2 = 1;
+float WFRAME_IDLE = 2;
+float WFRAME_RELOAD = 3;
+float WFRAME_MELEE = 4;
+float WFRAME_MELEE2 = 5;
+
+float g_weaponspeedfactor;
+
+vector w_shotorg;
+vector w_shotdir;
+vector w_shotpoint;
+vector w_shotorg_visual;
+
+
+.entity weaponentity;
+.entity exteriorweaponentity;
+.float switchweapon;
+.float autoswitch;
+// VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
+.float weapon_nextthink;
+.void() weapon_think;
+
+// weapon states (self.weaponentity.state)
+float WS_CLEAR			= 0; // no weapon selected
+float WS_RAISE			= 1; // raise frame
+float WS_DROP			= 2; // deselecting frame
+float WS_INUSE			= 3; // fire state
+float WS_READY			= 4; // idle frame
+
+// weapon requests
+float WR_SETUP		    = 1; // setup weapon data
+float WR_THINK		    = 2; // logic to run every frame
+float WR_CHECKAMMO1	    = 3; // checks ammo for weapon
+float WR_CHECKAMMO2	    = 4; // checks ammo for weapon
+float WR_AIM		    = 5; // runs bot aiming code for this weapon
+float WR_PRECACHE	    = 6; // precaches models/sounds used by this weapon
+float WR_SUICIDEMESSAGE = 7; // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
+float WR_KILLMESSAGE    = 8; // sets w_deathtypestring or leaves it alone
+float WR_RELOAD         = 9; // does not need to do anything
+float WR_RESETPLAYER    = 10; // does not need to do anything
+float WR_CLEAR          = 11; // clear resources used by this weapon
+float WR_CVAR_CACHE     = 12; // update cvar cache
+
+
+.string weaponname;
+.float wframe;
+.vector shotorg_visual;
+
+void(float wpn) weapon_defaultspawnfunc;
+float weapon_action(float wpn, float wrequest);
+void(entity e, float wep, string name) weapon_give;
+void(float windex) weapon_setup;
+void(entity flash, vector offset) weapon_attach_to_shotorg;
+float() weapon_rate_factor;
+float(entity o) weapon_rate_factor_for;
+void() weapon_clear;
+float() weapon_model_customize;
+void() weapon_ready;
+void(entity missile) weapon_setup_projectile_velocity;
+vector weapon_shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active);
+#define weapon_setup_shot(ent,recoil,snd,maxhits) weapon_setup_shotdir(ent, v_forward, recoil, snd, maxhits)
+void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir;
+float(entity e) weapon_best;
+float(float w) weapon_throwable;
+string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new;
+void(float wpn) weapon_precache;
+void(entity pl) weapon_show_list;
+void(entity e, float w) weapon_switch_force;
+string(float weaponid) weapon_name;
+float(float wpn) weapon_bit;
+void(float imp) weapon_switch;
+void(float fr, float t, void() func) weapon_thinkf;
+float(float secondary, float attacktime) weapon_prepareattack;
+void() weapon_ready;
+void() weapon_init;

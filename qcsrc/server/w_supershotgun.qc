@@ -61,7 +61,7 @@ void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed,
 	proj.think = SUB_Remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * spread) * pSpeed;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	setorigin(proj, start);
 	proj.touch = W_Supershotgun_Pellet_Touch;
@@ -110,7 +110,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	if (ballistic)
 		beginFireBallisticBullet(s);
 
-	W_SetupShot (self, 5, "weapons/shotgun_fire.wav", b);
+	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", b);
 
 	if (barrels == 3)
 	{
@@ -156,7 +156,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	flash.think = SUB_Remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 
 void W_Supershotgun_Attack2()
@@ -164,11 +164,11 @@ void W_Supershotgun_Attack2()
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (self.ammo_shells < g_balance_supershotgun_secondary_ammo)
 	{
-		w_ready();
+		weapon_ready();
 		return;
 	}
 	W_Supershotgun_Attack(TRUE, 2, g_balance_supershotgun_secondary_ballistic);
-	weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_refire - g_balance_supershotgun_secondary_animtime, w_ready);
+	weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_refire - g_balance_supershotgun_secondary_animtime, weapon_ready);
 }
 
 float w_supershotgun(float req)
@@ -184,7 +184,7 @@ float w_supershotgun(float req)
 		if (weapon_prepareattack(0, g_balance_supershotgun_primary_refire))
 		{
 			W_Supershotgun_Attack(FALSE, 3, g_balance_supershotgun_primary_ballistic);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_supershotgun_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_supershotgun_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (g_balance_supershotgun_secondary)

@@ -48,7 +48,7 @@ void bat_hunt() {
 		gren.use = monster_proj_explode;
 		gren.touch = monster_proj_touch;
 		gren.velocity = normalize(_shotdir) * 2400;
-		W_SetupProjectileVelocity(gren);
+		weapon_setup_projectile_velocity(gren);
 
 		gren.angles = vectoangles (gren.velocity);
 		self.attack_finished_single = time + 1 + random();

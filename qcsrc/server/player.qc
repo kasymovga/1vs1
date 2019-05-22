@@ -850,7 +850,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.alpha = 1;
 		// clear selected player display
 		if not(GameHookChain_ThrowWeaponOnDeathHandle())
-			W_ThrowWeapon(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
+			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
 
 		// print an obituary message
 		player_obituary(attacker, inflictor, self, deathtype);
@@ -1441,7 +1441,7 @@ void() player_think {
 		return;
 	}
 	player_setup_model();
-	W_WeaponFrame();
+	weapon_frame();
 	Akimbo_WeaponFrame();
 	if(frametime) {
 		self.items &~= self.items_added;
@@ -1537,7 +1537,7 @@ void(void) player_impulse {
 	{
 		// weapon switching impulses
 		if(self.deadflag == DEAD_NO)
-			W_NextWeaponOnImpulse(imp);
+			weapon_next_on_impulse(imp);
 		else
 			self.impulse = imp; // retry in next frame
 	}
@@ -1548,39 +1548,39 @@ void(void) player_impulse {
 			switch(imp)
 			{
 				case 10:
-					W_NextWeapon (0);
+					weapon_next(0);
 					break;
 				case 11:
-					W_SwitchWeapon (self.cnt); // previously used
+					weapon_switch(self.cnt); // previously used
 					break;
 				case 12:
-					W_PreviousWeapon (0);
+					weapon_previous(0);
 					break;
 				case 13:
-					W_SwitchWeapon (w_getbestweapon(self));
+					weapon_switch(weapon_best(self));
 					break;
 				case 14:
-					W_NextWeaponOnImpulse(0);
+					weapon_next_on_impulse(0);
 					break;
 				case 15:
-					W_NextWeapon (2);
+					weapon_next(2);
 					break;
 				case 16:
-					W_PreviousWeapon (2);
+					weapon_previous(2);
 					break;
 				case 17:
 					if not(GameHookChain_ThrowWeaponHandle())
-						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
+						weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 
 					break;
 				case 18:
-					W_NextWeapon (1);
+					weapon_next(1);
 					break;
 				case 19:
-					W_PreviousWeapon (1);
+					weapon_previous(1);
 					break;
 				case 20:
-					W_Reload ();
+					weapon_reload();
 					break;
 			}
 		}
@@ -1594,7 +1594,7 @@ void(void) player_impulse {
 			// custom order weapon cycling
 			i = mod(imp, 10);
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
-			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
+			weapon_cycle(self.(cvar_cl_weaponpriorities[i]), m);
 		}
 		else
 			self.impulse = imp; // retry in next frame
@@ -1606,7 +1606,7 @@ void(void) player_impulse {
 				if (imp >= 234)
 					imp--;
 			}
-			W_SwitchWeapon (imp - 230 + WEP_FIRST);
+			weapon_switch(imp - 230 + WEP_FIRST);
 		} else
 			self.impulse = imp; // retry in next frame
 	}
@@ -1937,10 +1937,10 @@ void(entity spot) player_spawn {
 		}
 	}
 	self.items = start_items;
-	self.switchweapon = w_getbestweapon(self);
+	self.switchweapon = weapon_best(self);
 	if not(self.switchweapon)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(client_hasweapon(self, i, TRUE, FALSE))
+			if(player_hasweapon(self, i, TRUE, FALSE))
 				self.switchweapon = i;
 
 	self.cnt = self.switchweapon;
@@ -2006,7 +2006,7 @@ void(entity spot) player_spawn {
 		self.killcount = 0;
 	}
 	self.cnt = WEP_LASER;
-	CL_SpawnWeaponentity();
+	weapon_model_spawn();
 	self.alpha = default_player_alpha;
 	self.colormod = '1 1 1' * g_player_brightness;
 	if(spawn_debug) {
@@ -2078,6 +2078,95 @@ float(entity plr, float wep) player_can_fire {
 
 	return GameHookChain_PlayerCanFire(plr, wep);
 }
+
+.float hasweapon_complain_spam;
+float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
+	local float weaponbit, f;
+	local entity oldself;
+
+	if(time < cl.hasweapon_complain_spam)
+		complain = 0;
+	if(complain)
+		cl.hasweapon_complain_spam = time + 0.2;
+
+	if (wpn < WEP_FIRST || wpn > WEP_LAST)
+	{
+		if (complain)
+			sprint(cl, "Invalid weapon\n");
+		return FALSE;
+	}
+	weaponbit = weapon_bit(wpn);
+	if (cl.weapons & weaponbit)
+	{
+		if (andammo)
+		{
+			if(cl.items & IT_UNLIMITED_WEAPON_AMMO)
+			{
+				f = 1;
+			}
+			else
+			{
+				oldself = self;
+				self = cl;
+				f = weapon_action(wpn, WR_CHECKAMMO1);
+				f = f + weapon_action(wpn, WR_CHECKAMMO2);
+				self = oldself;
+			}
+			if (!f)
+			{
+				if (complain)
+				if(clienttype(cl) == CLIENTTYPE_REAL)
+				{
+					play2(cl, "weapons/unavailable.wav");
+					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
+				}
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+	if (complain)
+	if (clienttype(cl) == CLIENTTYPE_REAL)
+	{
+		// DRESK - 3/16/07
+		// Report Proper Weapon Status / Modified Weapon Ownership Message
+		if(weaponsInMap & weaponbit)
+		{
+			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
+
+
+			if(g_showweaponspawns)
+			{
+				entity e;
+				string s;
+
+				e = get_weaponinfo(wpn);
+				s = e.model2;
+
+				for(e = world; (e = findfloat(e, weapons, weaponbit)); )
+				{
+					if(e.classname == "droppedweapon")
+						continue;
+					if not(e.flags & FL_ITEM)
+						continue;
+					WaypointSprite_Spawn(
+						s,
+						1, 0,
+						world, e.origin,
+						cl, 0,
+						world, enemy,
+						0
+					);
+				}
+			}
+		}
+		else
+			sprint(cl, strcat("The ^2", weapon_name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
+
+		play2(cl, "weapons/unavailable.wav");
+	}
+	return FALSE;
+};
 
 void() player_init {
 	// Precache all player models if desired

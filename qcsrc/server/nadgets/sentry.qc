@@ -465,7 +465,7 @@ void HG_Sentry_Trigger(void) {
 
     makevectors(self.v_angle);
 	antilag_begin(self);
-    W_SetupShot(self, 0, "", -1);
+    weapon_setup_shot(self, 0, "", -1);
     o = w_shotorg;
 
     WarpZone_TraceLine(o, o + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);

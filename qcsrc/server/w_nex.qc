@@ -57,7 +57,7 @@ void W_Nex_Attack (void)
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
 	antilag_begin(Akimbo_Owner(self));
-	W_SetupShot (self, 5, "weapons/nexfire.wav", 1);
+	weapon_setup_shot (self, 5, "weapons/nexfire.wav", 1);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -97,7 +97,7 @@ float w_nex(float req)
 			if (weapon_prepareattack(0, g_balance_nex_refire))
 			{
 				W_Nex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_nex_animtime, w_ready);
+				weapon_thinkf(WFRAME_FIRE1, g_balance_nex_animtime, weapon_ready);
 			}
 		}
 	}

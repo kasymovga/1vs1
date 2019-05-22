@@ -90,7 +90,7 @@ float(entity to, float sf) hook_send {
 		if(_hook.owner.weapon == WEP_HOOK) {
 			entity oldself = self;
 			self = _hook;
-			v = shotorg_adjust('26 9 -16', TRUE, TRUE, FALSE);
+			v = weapon_shotorg_adjust('26 9 -16', TRUE, TRUE, FALSE);
 			self = oldself;
 		} else
 			v = '8 -8 -12';
@@ -345,7 +345,7 @@ void(void) hook_fire {
 	missile.state = 0; // not latched onto anything
 
 	missile.velocity = v_forward * g_balance_grapplehook_speed_fly;
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
@@ -407,7 +407,7 @@ void() hook_PlayerPreThink {
 	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
 	{
 		if(button_hook && !self.hook_switchweapon)
-			W_SwitchWeapon(WEP_HOOK);
+			weapon_switch(WEP_HOOK);
 	}
 	self.hook_switchweapon = button_hook;
 

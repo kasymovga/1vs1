@@ -288,7 +288,7 @@ void readdynamiccvars() {
 	CACHE_CVAR(g_balance_falldamage_factor);
 	CACHE_CVAR(g_balance_falldamage_minspeed);
 	CACHE_CVAR(g_balance_falldamage_maxdamage);
-	W_Init();
+	weapon_init();
 	damage_init();
 	fire_init();
 	PhysicReadCvars();

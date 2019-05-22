@@ -570,7 +570,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 	else
 		sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 
-    W_SetupShot(self, 4, "", -1);
+    weapon_setup_shot(self, 4, "", -1);
     pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
     vector a = vectoangles(w_shotdir);
@@ -677,7 +677,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
         gren.hg_maxVelocity = w_shotdir * GV("speedscale_maxspeed") + v_up * upspd;
     }
 
-    W_SetupProjectileVelocity(gren);
+    weapon_setup_projectile_velocity(gren);
     gren.max_health = gren.health;
     gren.angles = vectoangles(gren.velocity);
     gren.hg_nadesused = self.hg_nadesused;

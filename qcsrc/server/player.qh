@@ -54,6 +54,7 @@ void() player_setupanimsformodel;
 void(entity player) player_to_spec;
 void() player_think;
 float(entity plr, float wep) player_can_fire;
+float(entity cl, float wpn, float andammo, float complain) player_hasweapon;
 #define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)
 #define PLAYER_DEAD(x) (x.deadflag)
 #define PLAYER_REALLY_DEAD(x) (x.deadflag > 0 && x.deadflag <= DEAD_RESPAWNING)

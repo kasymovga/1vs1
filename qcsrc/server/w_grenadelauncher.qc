@@ -108,7 +108,7 @@ void W_Grenade_Attack (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
-	W_SetupShot(self, 4, "weapons/grenade_fire.wav", 1);
+	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
@@ -129,7 +129,7 @@ void W_Grenade_Attack (void)
 	gren.use = W_Grenade_Explode;
 	gren.touch = (bounce ? W_Grenade_Touch2 : W_Grenade_Touch1);
 	gren.velocity = w_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
-	W_SetupProjectileVelocity(gren);
+	weapon_setup_projectile_velocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
 }
@@ -140,7 +140,7 @@ void W_Grenade_Attack2 (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_secondary_ammo;
-	W_SetupShot(self, 4, "weapons/grenade_fire.wav", 1);
+	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
@@ -165,7 +165,7 @@ void W_Grenade_Attack2 (void)
 	gren.damageforcescale = g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.velocity = w_shotdir * g_balance_grenadelauncher_secondary_speed + v_up * g_balance_grenadelauncher_secondary_speed_up;
-	W_SetupProjectileVelocity(gren);
+	weapon_setup_projectile_velocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
 }
@@ -205,14 +205,14 @@ float w_glauncher(float req)
 		if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire))
 		{
 			W_Grenade_Attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
 		}
 		if (self.gl_buttonatck2)
 		if (g_balance_grenadelauncher_secondary)
 		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire))
 		{
 			W_Grenade_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)

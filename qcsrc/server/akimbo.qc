@@ -58,10 +58,10 @@ void Akimbo_WeaponFrame()
 			self.weapons = oldself.weapons;
 			self.owner = oldself;
 			self.cvar_cl_gunalpha = oldself.cvar_cl_gunalpha;
-			CL_SpawnWeaponentity();
+			weapon_model_spawn();
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_SETUP);
-			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, w_ready);
+			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
 			oldself.weaponentity.cnt = 0;
 		}
 		self.ammo_shells = oldself.ammo_shells;
@@ -81,7 +81,7 @@ void Akimbo_WeaponFrame()
 		self.origin = oldself.origin;
 		self.cnt = oldself.cnt;
 		self.items = oldself.items;
-		W_WeaponFrame();
+		weapon_frame();
 		oldself.ammo_shells = self.ammo_shells;
 		oldself.ammo_cells = self.ammo_cells;
 		oldself.ammo_nails = self.ammo_nails;
@@ -139,7 +139,7 @@ void Akimbo_Init()
 			for (j = WEP_FIRST; j <= WEP_LAST; j++)
 				if (argv(i) == get_weaponinfo(j).netname)
 				{
-					g_akimbo_weapons |= W_WeaponBit(j);
+					g_akimbo_weapons |= weapon_bit(j);
 					break;
 				}
 	}
@@ -174,7 +174,7 @@ entity Akimbo_Ghost(entity e)
 
 float Akimbo_GiveWeapon(entity p, float wpn, string name)
 {
-	float wpnbit = W_WeaponBit(wpn);
+	float wpnbit = weapon_bit(wpn);
 	if (wpnbit & p.akimbo_weapons)
 		return FALSE;
 
@@ -191,7 +191,7 @@ float Akimbo_GiveWeapon(entity p, float wpn, string name)
 
 float Akimbo_DropWeapon(entity p, float wpn, string name)
 {
-	float wpnbit = W_WeaponBit(wpn);
+	float wpnbit = weapon_bit(wpn);
 	if not(g_akimbo_weapons & wpnbit)
 		return FALSE;
 
@@ -225,7 +225,7 @@ void Akimbo_Clear(entity e)
 
 float Akimbo_HaveWeapon(entity e, float wpn)
 {
-	float wpnbit = W_WeaponBit(wpn);
+	float wpnbit = weapon_bit(wpn);
 #if 0
 	if (cvar("g_akimbo_force") && (wpn & weapons_with_akimbo_support))
 		return TRUE;

@@ -38,7 +38,7 @@ void rlgirl_hunt() {
 		missile.use = monster_proj_explode;
 		missile.touch = monster_proj_touch;
 		missile.velocity = normalize(_shotdir) * 800;
-		W_SetupProjectileVelocity(missile);
+		weapon_setup_projectile_velocity(missile);
 
 		missile.angles = vectoangles (missile.velocity);
 

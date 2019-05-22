@@ -177,44 +177,6 @@ float maxclients;
 .float pauserothealth_finished;
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
-
-// definitions for weaponsystem
-
-.entity weaponentity;
-.entity exteriorweaponentity;
-.float switchweapon;
-.float autoswitch;
-float weapon_action(float wpn, float wrequest);
-float client_hasweapon(entity cl, float wpn, float andammo, float complain);
-void w_clear();
-void w_ready();
-// VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
-.float weapon_nextthink;
-.void() weapon_think;
-
-// weapon states (self.weaponentity.state)
-float WS_CLEAR			= 0; // no weapon selected
-float WS_RAISE			= 1; // raise frame
-float WS_DROP			= 2; // deselecting frame
-float WS_INUSE			= 3; // fire state
-float WS_READY			= 4; // idle frame
-
-// weapon requests
-float WR_SETUP		    = 1; // setup weapon data
-float WR_THINK		    = 2; // logic to run every frame
-float WR_CHECKAMMO1	    = 3; // checks ammo for weapon
-float WR_CHECKAMMO2	    = 4; // checks ammo for weapon
-float WR_AIM		    = 5; // runs bot aiming code for this weapon
-float WR_PRECACHE	    = 6; // precaches models/sounds used by this weapon
-float WR_SUICIDEMESSAGE = 7; // sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
-float WR_KILLMESSAGE    = 8; // sets w_deathtypestring or leaves it alone
-float WR_RELOAD         = 9; // does not need to do anything
-float WR_RESETPLAYER    = 10; // does not need to do anything
-float WR_CLEAR          = 11; // clear resources used by this weapon
-float WR_CVAR_CACHE     = 12; // update cvar cache
-
-void weapon_defaultspawnfunc(float wpn);
-
 string w_deathtypestring;
 string w_fragprefix;
 float w_deathtype;
@@ -294,10 +256,6 @@ float sv_loddistance2;
 string gamemode_name;
 
 typedef .float floatfield;
-
-float W_AmmoItemCode(float wpn);
-float W_WeaponBit(float wpn);
-string W_Name(float weaponid);
 
 void FixIntermissionClient(entity e);
 

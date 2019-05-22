@@ -71,7 +71,7 @@ void W_CampingRifle_ReloadedAndReady()
 	W_CampingRifle_CheckMaxBullets();
 	t = ATTACK_FINISHED(self) - g_balance_campingrifle_reloadtime - 1;
 	ATTACK_FINISHED(self) = t;
-	w_ready();
+	weapon_ready();
 }
 
 void W_CampingRifle_Reload()
@@ -110,7 +110,7 @@ void W_CampingRifle_Reload()
 
 void W_CampingRifle_CheckReloadAndReady()
 {
-	w_ready();
+	weapon_ready();
 	if (g_balance_campingrifle_hotreload)
 	{
 		self.campingrifle_hotreloadtime = time + g_balance_campingrifle_reloadtime;
@@ -119,7 +119,7 @@ void W_CampingRifle_CheckReloadAndReady()
 	if (self.campingrifle_bulletcounter <= 0)
 		W_CampingRifle_Reload();
 	else
-		w_ready();
+		weapon_ready();
 }
 
 void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant)
@@ -129,9 +129,9 @@ void W_CampingRifle_FireBullet(float pSpread, float pDamage, float pHeadshotAdde
 
 	beginFireBallisticBullet(pSpeed);
 	if(deathtype & HITTYPE_SECONDARY)
-		W_SetupShot (self, 2, "weapons/campingrifle_fire2.wav", 1);
+		weapon_setup_shot (self, 2, "weapons/campingrifle_fire2.wav", 1);
 	else
-		W_SetupShot (self, 2, "weapons/campingrifle_fire.wav", 1);
+		weapon_setup_shot (self, 2, "weapons/campingrifle_fire.wav", 1);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 2000, 1);
 

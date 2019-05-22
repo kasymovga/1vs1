@@ -1,5 +1,3 @@
-void(float imp) W_SwitchWeapon;
-
 float g_balance_laser_primary_animtime;
 float g_balance_laser_primary_damage;
 float g_balance_laser_primary_edgedamage;
@@ -46,9 +44,9 @@ void W_Laser_Attack (float issecondary)
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(issecondary)
-		W_SetupShot_Dir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
+		weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	else
-		W_SetupShot_Dir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
+		weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_LASER, TRUE);
@@ -73,7 +71,7 @@ void W_Laser_Attack (float issecondary)
 		missile.velocity = w_shotdir * g_balance_laser_secondary_speed;
 	else
 		missile.velocity = w_shotdir * g_balance_laser_primary_speed;
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
@@ -101,7 +99,7 @@ float w_laser(float req)
 			if (weapon_prepareattack(0, g_balance_laser_primary_refire))
 			{
 				W_Laser_Attack(FALSE);
-				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, w_ready);
+				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, weapon_ready);
 			}
 		}
 		if (self.BUTTON_ATCK2)
@@ -111,13 +109,13 @@ float w_laser(float req)
 				if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
 				{
 					W_Laser_Attack(TRUE);
-					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, weapon_ready);
 				}
 			}
 			else
 			{
 				if(self.switchweapon == WEP_LASER) // don't do this if already switching
-					W_SwitchWeapon (self.cnt);
+					weapon_switch(self.cnt);
 			}
 		}
 	}

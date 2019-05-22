@@ -28,7 +28,7 @@ void W_Shotgun_Attack (void)
 	local entity flash;
 
 	beginFireBallisticBullet(g_balance_shotgun_primary_speed);
-	W_SetupShot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
+	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
@@ -51,7 +51,7 @@ void W_Shotgun_Attack (void)
 	flash.think = SUB_Remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	weapon_attach_to_shotorg(flash, '5 0 0');
 
 }
 
@@ -61,7 +61,7 @@ void W_Shotgun_Attack2 (void)
 	local entity flash;
 
 	beginFireBallisticBullet(g_balance_shotgun_secondary_speed);
-	W_SetupShot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
+	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,
@@ -84,14 +84,14 @@ void W_Shotgun_Attack2 (void)
 	flash.think = SUB_Remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 
 // weapon frames
 void shotgun_fire2_03()
 {
 	W_Shotgun_Attack2();
-	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, w_ready);
+	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_ready);
 }
 void shotgun_fire2_02()
 {
@@ -114,7 +114,7 @@ float w_shotgun(float req)
 		if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
 		{
 			W_Shotgun_Attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, weapon_ready);
 		}
 		if (self.sg_buttonatck2)
 		if (g_balance_shotgun_secondary)

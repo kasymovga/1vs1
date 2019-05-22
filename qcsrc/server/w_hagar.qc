@@ -65,7 +65,7 @@ void W_Hagar_Attack (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_primary_ammo;
-	W_SetupShot (self, 2, "weapons/hagar_fire.wav", 1);
+	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
@@ -84,7 +84,7 @@ void W_Hagar_Attack (void)
 
 	missile.movetype = MOVETYPE_FLY;
 	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 
 	missile.angles = vectoangles (missile.velocity);
 }
@@ -95,8 +95,8 @@ void W_Hagar_Attack2 (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_secondary_ammo;
-	W_SetupShot (self, 2, "weapons/hagar_fire.wav", 1);
-	//W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
+	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
+	//weapon_setup_shot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
@@ -116,7 +116,7 @@ void W_Hagar_Attack2 (void)
 
 	missile.movetype = MOVETYPE_BOUNCEMISSILE;
 	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 	missile.avelocity = '100 10 10';
 
 	missile.angles = vectoangles (missile.velocity);
@@ -143,13 +143,13 @@ float w_hagar(float req)
 		if (weapon_prepareattack(0, g_balance_hagar_primary_refire))
 		{
 			W_Hagar_Attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, weapon_ready);
 		}
 		if (self.hagar_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire))
 		{
 			W_Hagar_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)

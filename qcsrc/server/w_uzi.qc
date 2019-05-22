@@ -41,7 +41,7 @@ void W_Uzi_Attack (float deathtype)
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_sustained_ammo;
 	}
 	beginFireBallisticBullet(g_balance_uzi_speed);
-	W_SetupShot (self, 0, "weapons/uzi_fire.wav", 1);
+	weapon_setup_shot (self, 0, "weapons/uzi_fire.wav", 1);
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -49,7 +49,7 @@ void W_Uzi_Attack (float deathtype)
 	}
 
 	// this attack_finished just enforces a cooldown at the end of a burst
-	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * W_WeaponRateFactor();
+	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 
 	if (self.uzi_bulletcounter == 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
@@ -68,7 +68,7 @@ void W_Uzi_Attack (float deathtype)
 	flash.frame = 2;
 	flash.alpha = 1;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	weapon_attach_to_shotorg(flash, '5 0 0');
 
 	// casing code
 	if (g_casings >= 2)
@@ -80,7 +80,7 @@ void uzi_fire1_02()
 {
 	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE))
 	{
-		w_ready();
+		weapon_ready();
 		return;
 	}
 	if (self.uzi_buttonatck1)
@@ -88,8 +88,8 @@ void uzi_fire1_02()
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			w_ready();
+			weapon_switch_force(self, weapon_best(self));
+			weapon_ready();
 			return;
 		}
 		self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
@@ -97,7 +97,7 @@ void uzi_fire1_02()
 		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, uzi_fire1_02);
 	}
 	else
-		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, w_ready);
+		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
 };
 
 float w_uzi(float req)
@@ -124,7 +124,7 @@ float w_uzi(float req)
 		{
 			self.uzi_bulletcounter = 1;
 			W_Uzi_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
-			weapon_thinkf(WFRAME_FIRE2, g_balance_uzi_first_refire, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)

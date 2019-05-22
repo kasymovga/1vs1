@@ -145,7 +145,7 @@ void W_Electro_Attack()
 {
 	local entity proj;
 
-	W_SetupShot(self, 2, "weapons/electro_fire.wav", 1);
+	weapon_setup_shot(self, 2, "weapons/electro_fire.wav", 1);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
@@ -165,7 +165,7 @@ void W_Electro_Attack()
 		self.ammo_cells = self.ammo_cells - g_balance_electro_primary_ammo;
 	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = w_shotdir * g_balance_electro_primary_speed;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Plasma_TouchExplode;
 	//sound (proj, CHAN_PAIN, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
@@ -177,7 +177,7 @@ void W_Electro_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot(self, 2, "weapons/electro_fire2.wav", 1);
+	weapon_setup_shot(self, 2, "weapons/electro_fire2.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
@@ -201,7 +201,7 @@ void W_Electro_Attack2()
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.velocity = (w_shotdir + randomvec() * g_balance_electro_secondary_spread) * g_balance_electro_secondary_speed + v_up * g_balance_electro_secondary_speed_up;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 	proj.touch = W_Plasma_Touch;
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_electro_secondary_damageforcescale;
@@ -233,7 +233,7 @@ void w_electro_checkattack()
 		return;
 	}
 
-	w_ready();
+	weapon_ready();
 }
 
 .float bot_secondary_electromooth;
@@ -281,7 +281,7 @@ float w_electro(float req)
 		if (weapon_prepareattack(0, g_balance_electro_primary_refire))
 		{
 			W_Electro_Attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_electro_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_electro_primary_animtime, weapon_ready);
 		}
 		if (self.electro_buttonatck2)
 		if (time >= self.electro_secondarytime)

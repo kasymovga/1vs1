@@ -96,7 +96,7 @@ float W_Zapper_Spinner_CustomizeEntityForClient() {
 	else
 		self.effects &~= EF_NODRAW;
 
-	return CL_Weaponentity_CustomizeEntityForClient();
+	return weapon_model_customize();
 }
 
 void W_Zapper_SpawnSpinner(void) {
@@ -231,7 +231,7 @@ void W_Zapper_Beam_Think(void) {
     makevectors(self.owner.v_angle);
     entity o = self.owner;
 	antilag_begin(o);
-    W_SetupShot(self.enemy, 0, "", 0);
+    weapon_setup_shot(self.enemy, 0, "", 0);
 
     float fract;
     entity targ;
@@ -247,7 +247,7 @@ void W_Zapper_Beam_Think(void) {
     fract = trace_fraction;
 
     float dt = time - self.zapper_lastdmg;
-    float rate = W_WeaponRateFactorFor(o);
+    float rate = weapon_rate_factor_for(o);
     float damageIsDps = FALSE;
 
     if(dt < frametime)
@@ -334,7 +334,7 @@ void W_Zapper_Attack1(void) {
     e.zapper_range = g_balance_zapper_primary_range;
     e.zapper_expire = time + g_balance_zapper_primary_lifetime;
     e.zapper_dmgdelay = g_balance_zapper_primary_ticrate;
-    e.zapper_lastdmg = time - e.zapper_dmgdelay * W_WeaponRateFactor();
+    e.zapper_lastdmg = time - e.zapper_dmgdelay * weapon_rate_factor();
 
     net_link_entity(e, FALSE, 0, W_Zapper_Beam_Send);
 
@@ -423,7 +423,7 @@ void W_Zapper_Attack2(void) {
             charge_time = accum_time;
     }
 
-    float accum  = (accum_time ? (min(1, (time - self.zapper_accumulate) * W_WeaponRateFactorFor(self.owner) / charge_time)) : 1);
+    float accum  = (accum_time ? (min(1, (time - self.zapper_accumulate) * weapon_rate_factor_for(self.owner) / charge_time)) : 1);
     float _damage = g_balance_zapper_secondary_damage * accum;
     float force  = g_balance_zapper_secondary_force * accum;
     float range  = g_balance_zapper_secondary_range * accum;
@@ -432,7 +432,7 @@ void W_Zapper_Attack2(void) {
 	entity ao = Akimbo_Owner(self);
 	antilag_begin(ao);
 	dlc_sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
-    W_SetupShot(self, 5, "", 1);
+    weapon_setup_shot(self, 5, "", 1);
 
     vector end = w_shotorg + w_shotdir * range;
 	entity o = Akimbo_Owner(self);
@@ -451,7 +451,7 @@ void W_Zapper_Shield_Beam_Think(void) {
 
 	vector end;
 #if 0
-    W_SetupShot(self, TRUE, 5, "", 0);
+    weapon_setup_shot(self, TRUE, 5, "", 0);
 	vector org = w_shotorg_visual;
 #endif
     vector org = W_Zapper_GetVisualShootOrg(self.enemy);
@@ -491,7 +491,7 @@ void W_Zapper_Shield_Think(void) {
 			self.owner.zapper_coolofftime = time + frametime;
 		}
 
-		ATTACK_FINISHED(self.owner) = self.owner.zapper_shieldready = time + g_balance_zapper_secondary_shield_refire * W_WeaponRateFactorFor(self.owner);
+		ATTACK_FINISHED(self.owner) = self.owner.zapper_shieldready = time + g_balance_zapper_secondary_shield_refire * weapon_rate_factor_for(self.owner);
     }
 
     self.nextthink = time;
@@ -551,9 +551,9 @@ void W_Zapper_Attack3(void) {
         e.skin = TeamColorSkin(COLOR_TEAM2);
 
     // This copies the entity! e becomes a viewmodel, the copy is attached to shotorg.
-    W_AttachToShotorg(e, '-120 0 0');
+    weapon_attach_to_shotorg(e, '-120 0 0');
 
-    // needs to be done AFTER W_AttachToShotorg
+    // needs to be done AFTER weapon_attach_to_shotorg
     //e.customizeentityforclient = W_Zapper_Shield_CustomizeEntityForClient;
 
     self.zapper_shield = e;
@@ -620,7 +620,7 @@ void W_Zapper_Accumulate(void) {
                || self.zapper_buttonatck1
                || time > self.zapper_accumulator.zapper_accumulate)) {
             W_Zapper_Attack2();
-            weapon_thinkf(WFRAME_FIRE2, g_balance_zapper_animtime, w_ready);
+            weapon_thinkf(WFRAME_FIRE2, g_balance_zapper_animtime, weapon_ready);
         } else
             accumulate_end = 0;
     }
@@ -659,7 +659,7 @@ float w_zapper(float req) {
                         }
 
                         if(dofire)
-                            weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, w_ready);
+                            weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
                     }
                 }
            } else if(weapon_prepareattack(0, -1)) {
@@ -675,7 +675,7 @@ float w_zapper(float req) {
                     }
 
                     if(dofire)
-                        weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, w_ready);
+                        weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
                 }
             }
         } else if(self.zapper_buttonatck2 && g_balance_zapper_secondary) {
@@ -693,7 +693,7 @@ float w_zapper(float req) {
                         }
 
                         if(dofire)
-                            weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, w_ready);
+                            weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
                     }
                 }
             } else if(g_balance_zapper_secondary_accumulate) {
@@ -706,11 +706,11 @@ float w_zapper(float req) {
                     self.zapper_accumulator.nextthink = time;
                     self.zapper_accumulator.zapper_expire = time + g_balance_zapper_animtime;
                     sound(self, CHAN_WEAPON2, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
-                    weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, w_ready);
+                    weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
                 }
             } else if(weapon_prepareattack(1, g_balance_zapper_secondary_refire)) {
                 W_Zapper_Attack2();
-                weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, w_ready);
+                weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
             }
         }
     } else if(req == WR_PRECACHE) {

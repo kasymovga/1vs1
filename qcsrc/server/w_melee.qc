@@ -34,7 +34,7 @@ void W_Melee_Attack_Think()
 	float damage_factor = (g_balance_melee_onehit ? 1 : (melee_frame / g_balance_melee_time));
 	makevectors(self.owner.v_angle);
 	antilag_begin(self.owner);
-	W_SetupShot(self.owner, 0, "", (self.dmg ? 1 : 0));
+	weapon_setup_shot(self.owner, 0, "", (self.dmg ? 1 : 0));
 	float _damage;
 	if (self.dmg)
 		_damage = g_balance_axe_damage;
@@ -87,7 +87,7 @@ void W_Melee_Attack (float melee_type, float axe)
 		melee.colormap = self.colormap;
 		setorigin(melee, sv_player_melee_origin);
 		anim_set(melee, self.anim_melee2, FALSE, TRUE, TRUE);
-		melee.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+		melee.customizeentityforclient = weapon_model_customize;
 		melee.viewmodelforclient = self;
 	}
 	self.bot_melee = FALSE;
@@ -113,7 +113,7 @@ void W_Melee_Attack_Check()
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
 		W_Melee_Attack(g_balance_melee, axe);
-		weapon_thinkf((axe ? WFRAME_FIRE1 : ((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE)), g_balance_melee_animtime, w_ready);
+		weapon_thinkf((axe ? WFRAME_FIRE1 : ((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE)), g_balance_melee_animtime, weapon_ready);
 	}
 	self.weapon = w_save;
 	self.switchweapon = w_save;
@@ -170,7 +170,7 @@ float w_melee(float req)
 		if (weapon_prepareattack(0, g_balance_melee_refire))
 		{
 			W_Melee_Attack(1, 1);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE) {

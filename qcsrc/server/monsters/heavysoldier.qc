@@ -38,7 +38,7 @@ void heavysoldier_hunt() {
 		gren.use = monster_proj_explode;
 		gren.touch = monster_proj_touch;
 		gren.velocity = normalize(_shotdir) * 3200;
-		W_SetupProjectileVelocity(gren);
+		weapon_setup_projectile_velocity(gren);
 
 		gren.angles = vectoangles (gren.velocity);
 

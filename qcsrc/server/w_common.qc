@@ -1,29 +1,6 @@
 float g_ballistics_mindistance;
 float g_ballistics_materialconstant;
 
-void W_GiveWeapon (entity e, float wep, string name)
-{
-	entity oldself;
-
-	if (!wep)
-		return;
-
-	e.weapons = e.weapons | W_WeaponBit(wep);
-
-	oldself = self;
-	self = e;
-
-	if (other.classname == "player")
-	{
-		W_ShowWeaponList(other);
-		sprint (other, "You got the ^2");
-		sprint (other, name);
-		sprint (other, "\n");
-	}
-
-	self = oldself;
-}
-
 // for railgun damage (hitting multiple enemies)
 .float railgunhit;
 .float railgunhitsolidbackup;
@@ -342,7 +319,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	else
 		proj.movetype = MOVETYPE_FLY;
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	proj.dmg_radius = g_ballistics_materialconstant / bulletconstant;
 	// so: bulletconstant = bullet mass / area of bullet circle

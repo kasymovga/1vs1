@@ -66,7 +66,7 @@ void W_HLAC_Attack (void)
     if(self.crouch)
         spread = spread * g_balance_hlac_primary_spread_crouchmod;
 
-	W_SetupShot (self, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 	if (!g_norecoil)
 	{
@@ -90,7 +90,7 @@ void W_HLAC_Attack (void)
 
     missile.velocity = (w_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
 
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
 	missile.touch = W_HLAC_Touch;
@@ -112,7 +112,7 @@ void W_HLAC_Attack2f (void)
     if(self.crouch)
         spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
-	W_SetupShot (self, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(TRUE, PROJECTILE_HLAC, TRUE);
@@ -131,7 +131,7 @@ void W_HLAC_Attack2f (void)
 
     missile.velocity = (w_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
 
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
 	missile.touch = W_HLAC_Touch2;
@@ -167,7 +167,7 @@ void HLAC_fire1_02()
 {
 	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE))
 	{
-		w_ready();
+		weapon_ready();
 		return;
 	}
 
@@ -176,19 +176,19 @@ void HLAC_fire1_02()
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			w_ready();
+			weapon_switch_force(self, weapon_best(self));
+			weapon_ready();
 			return;
 		}
 
-		ATTACK_FINISHED(self) = time + g_balance_hlac_primary_refire * W_WeaponRateFactor();
+		ATTACK_FINISHED(self) = time + g_balance_hlac_primary_refire * weapon_rate_factor();
 		W_HLAC_Attack();
 		self.HLAC_bulletcounter = self.HLAC_bulletcounter + 1;
         weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, HLAC_fire1_02);
 	}
 	else
 	{
-		weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_animtime, w_ready);
+		weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_animtime, weapon_ready);
 	}
 };
 
@@ -216,7 +216,7 @@ float w_hlac(float req)
 		if (weapon_prepareattack(1, g_balance_hlac_secondary_refire))
 		{
 			W_HLAC_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_hlac_secondary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_hlac_secondary_animtime, weapon_ready);
 		}
 
 	}

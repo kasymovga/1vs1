@@ -34,7 +34,7 @@ void W_MinstaNex_Attack (void)
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
 	antilag_begin(Akimbo_Owner(self));
-	W_SetupShot (self, 0, "weapons/minstanexfire.wav", 1);
+	weapon_setup_shot (self, 0, "weapons/minstanexfire.wav", 1);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -124,7 +124,7 @@ void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
 	missile.projectiledeathtype = WEP_LASER | HITTYPE_SECONDARY;
 	setorigin (missile, w_shotorg);
 	missile.velocity = _shotdir * g_balance_minstanex_laser_speed;
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 	missile.touch = W_MinstaNex_Laser_Projectile_Touch;
 	missile.think = SUB_Remove;
@@ -134,7 +134,7 @@ void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
 void W_MinstaNex_Laser_Attack_Setup() {
 	float w_safe = self.weapon;
 	self.weapon = WEP_LASER;
-	W_SetupShot_Dir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shotdir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
 	self.weapon = w_safe;
 }
 
@@ -188,7 +188,7 @@ float w_minstanex(float req)
 			if (weapon_prepareattack(0, g_balance_minstanex_refire))
 			{
 				W_MinstaNex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_minstanex_animtime, w_ready);
+				weapon_thinkf(WFRAME_FIRE1, g_balance_minstanex_animtime, weapon_ready);
 			}
 		}
 		if (g_balance_minstanex_laser) {
@@ -198,7 +198,7 @@ float w_minstanex(float req)
 					if (self.jump_interval <= time)
 					if (W_MinstaNex_PlayerCanFire())
 					{
-						self.jump_interval = time + g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+						self.jump_interval = time + g_balance_minstanex_laser_refire * weapon_rate_factor();
 						//W_Laser_Attack(FALSE);
 						W_MinstaNex_Laser_Attack();
 						if (g_balance_minstanex_laser_rapid)
@@ -208,7 +208,7 @@ float w_minstanex(float req)
 					if (self.laser_hold <= time)
 					if (self.jump_interval <= time)
 					if (W_MinstaNex_PlayerCanFire()) {
-						self.jump_interval = time + g_balance_minstanex_laser_rapid_refire * W_WeaponRateFactor();
+						self.jump_interval = time + g_balance_minstanex_laser_rapid_refire * weapon_rate_factor();
 						W_MinstaNex_Laser_Attack_Rapid();
 					}
 				}

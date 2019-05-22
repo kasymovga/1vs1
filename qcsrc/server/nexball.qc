@@ -305,7 +305,7 @@ void GiveBall (entity plyr, entity ball)
 	plyr.pov_ball.owner = plyr;
 	plyr.pov_ball.solid = SOLID_NOT;
 	plyr.pov_ball.classname = "pov_ball";
-	plyr.pov_ball.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	plyr.pov_ball.customizeentityforclient = weapon_model_customize;
 	plyr.pov_ball.viewmodelforclient = plyr;
 	setmodel(plyr.pov_ball, ball.model);
 	setorigin(plyr.pov_ball, BALL_POV);
@@ -863,7 +863,7 @@ void W_Nexball_Attack (float t)
 	if (!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot (self, 4, "nexball/shoot1.wav",0);
+	weapon_setup_shot (self, 4, "nexball/shoot1.wav",0);
 	tracebox(w_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -885,7 +885,7 @@ void W_Nexball_Attack (float t)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
-	DropBall (ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * g_balance_nexball_primary_speed * mul));
+	DropBall (ball, w_shotorg, weapon_calculate_projectile_velocity(self.velocity, w_shotdir * g_balance_nexball_primary_speed * mul));
 	//TODO: use the speed_up cvar too ??
 }
 

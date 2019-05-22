@@ -67,7 +67,7 @@ string(entity pl, string msg) chat_formatmessage {
                 wep = pl.switchweapon;
             if (!wep)
                 wep = pl.cnt;
-            replacement = W_Name(wep);
+            replacement = weapon_name(wep);
         }
         else if (escape == "W")
         {

@@ -152,7 +152,7 @@ void W_Fireball_Attack2()
 {
 	local entity proj;
 
-	W_SetupShot(self, 2, "weapons/fireball_fire2.wav", 1);
+	weapon_setup_shot(self, 2, "weapons/fireball_fire2.wav", 1);
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
@@ -176,14 +176,14 @@ void W_Fireball_Attack2()
 
 	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = w_shotdir * g_balance_fireball_secondary_speed;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Fireball_TouchExplode;
 }
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
-	W_SetupShot(self, 0, "", 0);
+	weapon_setup_shot(self, 0, "", 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
 	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 }
@@ -191,7 +191,7 @@ void W_Fireball_AttackEffect(float i, vector f_diff)
 void W_Fireball_Attack2_Frame4()
 {
 	W_Fireball_Attack2();
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, w_ready);
+	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_ready);
 }
 
 void W_Fireball_Attack2_Frame3()
@@ -293,7 +293,7 @@ void W_Fireball_Attack1()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot(self, 2, "weapons/fireball_fire.wav", 1);
+	weapon_setup_shot(self, 2, "weapons/fireball_fire.wav", 1);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
@@ -315,7 +315,7 @@ void W_Fireball_Attack1()
 	proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 	proj.velocity = w_shotdir * g_balance_fireball_primary_speed + v_up * g_balance_fireball_primary_speed_up;
 	proj.pushltime = time + g_balance_fireball_primary_lifetime;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 
 	proj.angles = vectoangles(proj.velocity);
 }
@@ -354,7 +354,7 @@ float w_fireball(float req)
 		if (weapon_prepareattack(0, g_balance_fireball_primary_refire))
 		{
 			W_Fireball_Attack1();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_fireball_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_fireball_primary_animtime, weapon_ready);
 		}
 		if (self.fireball_buttonatck2)
 		if (time >= self.fireball_secondarytime)

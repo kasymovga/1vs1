@@ -784,12 +784,12 @@ void() client_cvars_parse {
 		self.cvar_cl_gunalpha = stof(val);
 	else if (s == "cl_weaponpriority") {
 		unzone_ifneeded(self.cvar_cl_weaponpriority);
-		self.cvar_cl_weaponpriority = strzone(W_FixWeaponOrder_ForceComplete(val));
-		self.switchweapon = w_getbestweapon(self);
+		self.cvar_cl_weaponpriority = strzone(weapon_fix_order_force_complete(val));
+		self.switchweapon = weapon_best(self);
 	} else if (substring(s, 0, 17) == "cl_weaponpriority") {
 		float ind = stof(substring(s, 17, 1));
 		unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
-		(self.cvar_cl_weaponpriorities[ind]) = strzone(W_FixWeaponOrder_AllowIncomplete(val));
+		(self.cvar_cl_weaponpriorities[ind]) = strzone(weapon_fix_order_allow_incomplete(val));
 	} else if (s == "cl_autotaunt")
 		self.cvar_cl_autotaunt = stof(val);
 	else if (s == "cl_voice_directional")

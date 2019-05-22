@@ -115,10 +115,10 @@ void W_Rocket_Explode (void)
 		{
 			self.owner.cnt = WEP_ROCKET_LAUNCHER;
 			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.owner.switchweapon = weapon_best(self.owner);
 		}
 		if(g_balance_rocketlauncher_laserguided_missile)
-			ATTACK_FINISHED(self.owner) = time + g_balance_rocketlauncher_refire * W_WeaponRateFactor();
+			ATTACK_FINISHED(self.owner) = time + g_balance_rocketlauncher_refire * weapon_rate_factor();
 	}
 	remove (self);
 }
@@ -289,7 +289,7 @@ void W_Rocket_Think (void)
 				self.velocity = newdir * velspeed;					// make me fly in the new direction at my flight speed
 				self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
 
-				ATTACK_FINISHED(self.owner) = time + 0.2 * W_WeaponRateFactor();
+				ATTACK_FINISHED(self.owner) = time + 0.2 * weapon_rate_factor();
 			}
 		}
 		else
@@ -376,7 +376,7 @@ void W_Rocket_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
-	W_SetupShot(self, 5, "weapons/rocket_fire.wav", 1);
+	weapon_setup_shot(self, 5, "weapons/rocket_fire.wav", 1);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = CSQCProjectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0 && !g_balance_rocketlauncher_laserguided_missile, PROJECTILE_ROCKET, FALSE); // because of fly sound
@@ -407,7 +407,7 @@ void W_Rocket_Attack (void)
 		missile.velocity = w_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
 	if (Akimbo_Active(self) == 2)
 		missile.velocity = missile.velocity * 0.66;
-	W_SetupProjectileVelocity(missile);
+	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
 	missile.touch = W_Rocket_Touch;
@@ -420,7 +420,7 @@ void W_Rocket_Attack (void)
 	setmodel (flash, "models/flash.md3"); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 
 void spawnfunc_weapon_rocketlauncher (void); // defined in t_items.qc
@@ -546,7 +546,7 @@ float w_rlauncher(float req)
 					if (weapon_prepareattack(0, g_balance_rocketlauncher_refire))
 					{
 						W_Rocket_Attack();
-						weapon_thinkf(WFRAME_FIRE1, g_balance_rocketlauncher_animtime, w_ready);
+						weapon_thinkf(WFRAME_FIRE1, g_balance_rocketlauncher_animtime, weapon_ready);
 					}
 				}
 				self.rl_release = 0;
@@ -571,7 +571,7 @@ float w_rlauncher(float req)
 				if(weapon_prepareattack(0, g_balance_rocketlauncher_refire))
 				{
 					W_Rocket_Attack();
-					weapon_thinkf(WFRAME_FIRE1, g_balance_rocketlauncher_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, g_balance_rocketlauncher_animtime, weapon_ready);
 					self.rl_release = 0;
 				}
 			}

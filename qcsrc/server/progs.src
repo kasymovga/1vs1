@@ -88,9 +88,6 @@ item.qh
 powerup.qh
 backpack.qh
 pinata.qh
-
-cl_weaponsystem.qh
-
 info_messages.qh
 
 w_campingrifle.qh
@@ -146,7 +143,7 @@ selectableweapon.qh
 twoweapons.qh
 noteline.qh
 warmup.qh
-cl_weapons.qh
+weapon.qh
 gametype.qh
 chat.qh
 teamplay.qh
@@ -190,8 +187,6 @@ t_jumppads.qc
 t_teleporters.qc
 g_triggers.qc
 g_models.qc
-
-cl_weaponsystem.qc
 w_common.qc
 
 w_melee.qc
@@ -220,7 +215,7 @@ item.qc
 powerup.qc
 backpack.qc
 pinata.qc
-cl_weapons.qc
+weapon.qc
 entcs.qc
 player.qc
 chat.qc

@@ -1,11 +1,4 @@
-/*
-===========================================================================
-
-  CLIENT WEAPONSYSTEM CODE
-  Bring back W_Weaponframe
-
-===========================================================================
-*/
+#define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
 
 float g_balance_weaponswitchdelay;
 float g_showweaponspawns;
@@ -29,7 +22,6 @@ float g_shootfromeye;
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
 
-.vector shotorg_visual;
 .vector weapon_morph0origin;
 .vector weapon_morph0angles;
 .float  weapon_morph0time;
@@ -46,102 +38,643 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
 
-void(float fr, float t, void() func) weapon_thinkf;
+void weapon_reload() {
+	if not(GameHook_ReloadAllowed())
+		return;
 
-#define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
-
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter)
-{
-	switch(self.owner.cvar_cl_gunalign)
+	if(self.switchweapon == self.weapon)
+	if(self.weaponentity.state == WS_READY)
 	{
-		case 1: // right
-			break;
-
-		case 2: // left
-			vecs_y = -vecs_y;
-			break;
-
-		default:
-		case 3:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs_y = 0;
-				vecs_z -= 4;
-			}
-			else
-			{
-				// right
-			}
-			break;
-
-		case 4:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs_y = 0;
-				vecs_z -= 4;
-			}
-			else
-			{
-				// left
-				vecs_y = -vecs_y;
-			}
-			break;
+		if (W_Melee_Possible())
+			W_Melee_Attack_Check();
+		else
+			weapon_action(self.weapon, WR_RELOAD);
 	}
-	return vecs;
+	entity oldself = self;
+	self = Akimbo_Ghost(self);
+	if (self)
+	if (self != oldself)
+		weapon_reload();
+	self = oldself;
 }
 
-vector shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active)
+void weapon_show_list(entity pl) {
+	if (clienttype(pl) == CLIENTTYPE_REAL) {
+		msg_entity = pl;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_WEAPONLIST);
+	}
+}
+
+void(entity e, float w) weapon_switch_force {
+	weapon_show_list(self);
+	e.cnt = e.switchweapon;
+	e.switchweapon = w;
+}
+
+// switch between weapons
+void weapon_switch(float imp)
 {
-	if (akimbo_active)
+	if (self.switchweapon != imp) {
+		if (player_hasweapon(self, imp, TRUE, TRUE))
+			weapon_switch_force(self, imp);
+		else
+			weapon_show_list(self);
+	}
+};
+
+.float weaponcomplainindex;
+float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, float complain)
+{
+	float n, i, weaponwant, first_valid, prev_valid, switchtonext, switchtolast, c;
+	n = tokenize_console(weaponorder);
+	switchtonext = switchtolast = 0;
+	first_valid = prev_valid = 0;
+	if(dir == 0)
+		switchtonext = 1;
+
+	c = 0;
+
+	for(i = 0; i < n; ++i)
 	{
-		if (akimbo_active == 2)
-			vecs_y = -vecs_y;
-		if not(visual)
+		weaponwant = stof(argv(i));
+		if(imp >= 0)
+			if((get_weaponinfo(weaponwant)).impulse != imp)
+				continue;
+
+		++c;
+
+		if(player_hasweapon(pl, weaponwant, TRUE, FALSE))
 		{
-			if (g_shootfromeye)
-				vecs_z = 0;
-			else if (g_shootfromcenter)
-				vecs_z -= 4;
+			if(switchtonext)
+				return weaponwant;
+			if(!first_valid)
+				first_valid = weaponwant;
+			if(weaponwant == pl.switchweapon)
+			{
+				if(dir >= 0)
+					switchtonext = 1;
+				else if(prev_valid)
+					return prev_valid;
+				else
+					switchtolast = 1;
+			}
+			prev_valid = weaponwant;
+		} else
+			weapon_show_list(pl);
+	}
+	if(first_valid)
+	{
+		if(switchtolast)
+			return prev_valid;
+		else
+			return first_valid;
+	}
+	// complain (but only for one weapon on the button that has been pressed)
+	if(complain)
+	{
+		self.weaponcomplainindex += 1;
+		c = mod(self.weaponcomplainindex, c) + 1;
+		for(i = 0; i < n; ++i)
+		{
+			weaponwant = stof(argv(i));
+			if(imp >= 0)
+				if((get_weaponinfo(weaponwant)).impulse != imp)
+					continue;
+
+			--c;
+			if(c == 0)
+			{
+				player_hasweapon(pl, weaponwant, TRUE, TRUE);
+				break;
+			}
 		}
-		vecs_y = vecs_y * 1.2;
-		return vecs;
+	}
+	return 0;
+}
+
+void weapon_cycle(string weaponorder, float dir)
+{
+	float w;
+	w = weaypon_cycle_get(self, weaponorder, dir, -1, 1);
+	if(w > 0)
+		weapon_switch(w);
+}
+
+void weapon_next_on_impulse(float imp)
+{
+	float w;
+	w = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, +1, imp, 1);
+	if(w > 0)
+		weapon_switch(w);
+}
+
+// next weapon
+void weapon_next(float list)
+{
+	if(list == 0)
+		weapon_cycle(weaponpriority_hudselector_0, -1);
+	else if(list == 1)
+		weapon_cycle(weaponpriority_hudselector_1, -1);
+	else if(list == 2)
+		weapon_cycle(self.cvar_cl_weaponpriority, -1);
+}
+
+// prev weapon
+void(float list) weapon_previous {
+	if(list == 0)
+		weapon_cycle(weaponpriority_hudselector_0, +1);
+	else if(list == 1)
+		weapon_cycle(weaponpriority_hudselector_1, +1);
+	else if(list == 2)
+		weapon_cycle(self.cvar_cl_weaponpriority, +1);
+}
+
+string weapon_fix_order_allow_incomplete(string order)
+{
+	return W_FixWeaponOrder(order, 0);
+}
+
+string weapon_fix_order_force_complete(string order)
+{
+	if(order == "")
+		order = cvar_string("cl_weaponpriority");
+	return W_FixWeaponOrder(order, 1);
+}
+
+float weapon_best(entity e)
+{
+	return weaypon_cycle_get(e, e.cvar_cl_weaponpriority, 0, -1, 0);
+};
+
+// generic weapons table
+// TODO should they be macros instead?
+float weapon_action(float wpn, float wrequest)
+{
+	return (get_weaponinfo(wpn)).weapon_func(wrequest);
+};
+
+string(float weaponid) weapon_name {
+	return (get_weaponinfo(weaponid)).message;
+}
+
+float(float wpn) weapon_bit {
+	return (get_weaponinfo(wpn)).weapons;
+}
+
+float weapon_ammo_item_code(float wpn)
+{
+	return (get_weaponinfo(wpn)).items;
+}
+
+void weapon_thrown_think()
+{
+	self.solid = SOLID_TRIGGER;
+	self.owner = world;
+	SUB_SetFade(self, time + 20, 1);
+}
+
+// returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
+string weapon_throw_new(entity own, float wpn, float doreduce, vector org, vector velo)
+{
+	entity oldself, wep;
+	float wa, thisammo, i, j;
+	string s;
+	var .float ammofield;
+
+	wep = spawn();
+
+	setorigin(wep, org);
+	wep.classname = "droppedweapon";
+	wep.velocity = velo;
+	wep.owner = wep.enemy = own;
+	wep.flags |= FL_TOSSED;
+	wep.colormap = own.colormap;
+
+	wa = weapon_ammo_item_code(wpn);
+	if(wa == IT_SUPERWEAPON || wa == 0)
+	{
+		oldself = self;
+		self = wep;
+		weapon_defaultspawnfunc(wpn);
+		self = oldself;
+		if(item_start_failed)
+			return string_null;
+		wep.think = weapon_thrown_think;
+		wep.nextthink = time + 0.5;
+		return "";
+	}
+	else
+	{
+		s = "";
+		oldself = self;
+		self = wep;
+		weapon_defaultspawnfunc(wpn);
+		self = oldself;
+		if(item_start_failed)
+			return string_null;
+		if(doreduce)
+		{
+			for(i = 0, j = 1; i < 24; ++i, j *= 2)
+			{
+				if(wa & j)
+				{
+					ammofield = item_counter_field(j);
+					thisammo = min(own.ammofield, wep.ammofield);
+					wep.ammofield = thisammo;
+					own.ammofield -= thisammo;
+					s = strcat(s, " and ", ftos(thisammo), " ", item_counter_field_name(j));
+				}
+			}
+			s = substring(s, 5, -1);
+		}
+		wep.think = weapon_thrown_think;
+		wep.nextthink = time + 0.5;
+		return s;
+	}
+}
+
+float weapon_throwable(float w)
+{
+	float wb, wa;
+	wb = weapon_bit(w);
+	if(!wb)
+		return 0;
+	wa = weapon_ammo_item_code(w);
+	if(start_weapons & wb)
+	{
+		if(wa == IT_SUPERWEAPON && start_items & IT_UNLIMITED_SUPERWEAPONS)
+			return 0;
+		if(wa != IT_SUPERWEAPON && start_items & IT_UNLIMITED_WEAPON_AMMO)
+			return 0;
+		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
+		if(wa == 0)
+			return 0;
 	}
 
-	if (g_shootfromeye)
+	return 1;
+}
+
+// toss current weapon
+void weapon_throw(vector velo, vector delta, float doreduce)
+{
+	local float w, wb;
+	string a;
+
+	w = self.weapon;
+	if (w == 0)
+		return; // just in case
+	if not(GameHookChain_ThrowWeaponAllowed(doreduce))
+		return;
+	wb = weapon_bit(w);
+	float akimbo_throw = Akimbo_Throw(wb);
+	if not(akimbo_throw) {
+		if not(g_pickup_items)
+			return;
+		if not(g_pickup_weapons)
+			return;
+		if(!weapon_throwable(w))
+			return;
+	}
+
+	if(self.weapons & wb != wb)
+		return;
+
+	if not(akimbo_throw) {
+		self.weapons &~= wb;
+		weapon_switch_force(self, weapon_best(self));
+	}
+	a = weapon_throw_new(self, w, doreduce, self.origin + delta, velo);
+	if not(a)
+		return;
+	if(self.health >= 1)
 	{
-		if (visual)
+		if(a == "")
+			sprint(self, strcat("You dropped the ^2", weapon_name(w), "\n"));
+		else
+			sprint(self, strcat("You dropped the ^2", weapon_name(w), " with ", a, "\n"));
+	}
+};
+
+// Bringed back weapon frame
+void weapon_frame()
+{
+	vector fo, ri, up;
+
+	makevectors(self.v_angle);
+	if (GameHook_WeaponFrameHandle())
+		return;
+	if (!self.weaponentity || self.health < 1)
+		return; // Dead player can't use weapons and injure impulse commands
+
+	if(!self.switchweapon)
+	{
+		self.weapon = 0;
+		self.weaponentity.state = WS_CLEAR;
+		self.weaponname = "";
+		self.items &~= IT_AMMO;
+		return;
+	}
+
+	fo = v_forward; // save them in case the weapon think functions change it
+	ri = v_right;
+	up = v_up;
+
+	// Change weapon
+	if (self.weapon != self.switchweapon)
+	{
+		if (!g_balance_weaponswitchdelay)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+			if (Akimbo_Active(self) > 1)
+			if not(Akimbo_HaveWeapon(self, self.switchweapon))
+				return;
+			weapon_action(self.weapon, WR_CLEAR);
+			weapon_action(self.switchweapon, WR_SETUP);
+			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
+		} else if (self.weaponentity.state == WS_CLEAR)
+		{
+			anim_set(self, self.anim_draw, FALSE, TRUE, TRUE);
+			self.weaponentity.state = WS_RAISE;
+			weapon_action(self.weapon, WR_CLEAR);
+			weapon_action(self.switchweapon, WR_SETUP);
+			// VorteX: add player model weapon select frame here
+			// setcustomframe(PlayerWeaponRaise);
+			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
+		}
+		else if (self.weaponentity.state == WS_READY)
+		{
+#ifndef INDEPENDENT_ATTACK_FINISHED
+			if(ATTACK_FINISHED(self) <= time + frametime * 0.5)
+			{
+#endif
+			weapon_action(self.weapon, WR_CLEAR);
+			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
+			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			self.weaponentity.state = WS_DROP;
+			// set up weapon switch think in the future, and start drop anim
+			weapon_thinkf(WFRAME_DONTCHANGE, g_balance_weaponswitchdelay, weapon_clear);
+#ifndef INDEPENDENT_ATTACK_FINISHED
+			}
+#endif
+		}
+	}
+
+	float wb;
+	wb = weapon_bit(self.weapon);
+
+	// call the think code which may fire the weapon
+	// and do so multiple times to resolve framerate dependency issues if the
+	// server framerate is very low and the weapon fire rate very high
+	local float c;
+	c = 0;
+	while (c < 5)
+	{
+		c = c + 1;
+		if(wb && ((self.weapons & wb) == 0))
+		{
+			weapon_switch_force(self, weapon_best(self));
+			wb = 0;
+		}
+		if(wb)
+		{
+			v_forward = fo;
+			v_right = ri;
+			v_up = up;
+			if (self.bot_melee)
+				W_Melee_Attack_Check();
+			else
+				weapon_action(self.weapon, WR_THINK);
+		}
+		if (time + frametime * 0.5 >= self.weapon_nextthink)
+		{
+			if(self.weapon_think)
+			{
+				v_forward = fo;
+				v_right = ri;
+				v_up = up;
+				self.weapon_think();
+			}
+			else
+				bprint("\{1}^1ERROR: undefined weapon think function for ", self.netname, "\n");
+		}
+	}
+
+	// don't let attack_finished fall behind when not firing (must be after weapon_setup calls!)
+	//if (ATTACK_FINISHED(self) < time)
+	//	ATTACK_FINISHED(self) = time;
+
+	//if (self.weapon_nextthink < time)
+	//	self.weapon_nextthink = time;
+
+	// update currentammo incase it has changed
+#if 0
+	if (self.items & IT_CELLS)
+		self.currentammo = self.ammo_cells;
+	else if (self.items & IT_ROCKETS)
+		self.currentammo = self.ammo_rockets;
+	else if (self.items & IT_NAILS)
+		self.currentammo = self.ammo_nails;
+	else if (self.items & IT_SHELLS)
+		self.currentammo = self.ammo_shells;
+	else
+		self.currentammo = 1;
+#endif
+}
+
+void(float wpn) weapon_precache {
+	string s = get_weaponinfo(wpn).mdl;
+	precache_model(strcat("models/weapons/g_", s, ".md3"));
+	precache_model(strcat("models/weapons/v_", s, ".md3"));
+	precache_model(strcat("models/weapons/h_", s, ".dpm"));
+	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
+}
+
+float internalteam;
+void(float wpn) weapon_defaultspawnfunc {
+	entity e;
+	float t;
+	var .float ammofield;
+	string s;
+	entity oldself;
+	float i, j;
+	if not(g_pickup_weapons) {
+		remove(self);
+		return;
+	}
+	if (GameHookChain_WeaponSpawnHandle(float wpn))
+		return;
+
+	// set the respawntime in advance (so replaced weapons can copy it)
+
+	if(!self.respawntime)
+	{
+		e = get_weaponinfo(wpn);
+		if(e.items == IT_SUPERWEAPON)
+		{
+			self.respawntime = g_pickup_respawntime_powerup;
+			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
 		}
 		else
 		{
-			vecs_y = 0;
-			vecs_z = 0;
+			self.respawntime = g_pickup_respawntime_weapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
 		}
 	}
-	else if (g_shootfromcenter)
+
+	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
-		if (visual)
+		e = get_weaponinfo(wpn);
+		s = cvar_string(strcat("g_weaponreplace_", e.netname));
+		if(s == "0")
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+			remove(self);
+			item_start_failed = TRUE;
+			return;
 		}
-		else
+		t = tokenize_console(s);
+		if(t >= 2)
 		{
-			vecs_y = 0;
-			vecs_z -= 4;
+			self.team = --internalteam;
+			oldself = self;
+			for(i = 1; i < t; ++i)
+			{
+				s = argv(i);
+				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+				{
+					e = get_weaponinfo(j);
+					if(e.netname == s)
+					{
+						self = spawn();
+						copyentity(oldself, self);
+						self.classname = "replacedweapon";
+						weapon_defaultspawnfunc(j);
+						break;
+					}
+				}
+				if(j > WEP_LAST)
+				{
+					print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+				}
+			}
+			self = oldself;
+		}
+		if(t >= 1)
+		{
+			s = argv(0);
+			wpn = 0;
+			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+			{
+				e = get_weaponinfo(j);
+				if(e.netname == s)
+				{
+					wpn = j;
+					break;
+				}
+			}
+			if(j > WEP_LAST)
+			{
+				print("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+			}
+		}
+		if(wpn == 0)
+		{
+			remove(self);
+			item_start_failed = TRUE;
+			return;
 		}
 	}
-	else if (g_shootfromclient)
+
+	e = get_weaponinfo(wpn);
+
+	if(e.items && e.items != IT_SUPERWEAPON)
 	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (g_shootfromclient >= 2));
+		for(i = 0, j = 1; i < 24; ++i, j *= 2)
+		{
+			if(e.items & j)
+			{
+				ammofield = item_counter_field(j);
+				if(!self.ammofield)
+					self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
+			}
+		}
 	}
-	return vecs;
+	else
+	{
+		self.flags |= FL_NO_WEAPON_STAY;
+	}
+
+	// weapon stay isn't supported for teamed weapons
+	if(self.team)
+		self.flags |= FL_NO_WEAPON_STAY;
+
+	item_start(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	if (self.modelindex) // don't precache if self was removed
+		weapon_precache(e.weapon);
 }
 
-float W_WeaponRateFactor()
-{
+// Setup weapon for client (after this raise frame will be launched)
+void(float windex) weapon_setup {
+	entity e;
+	e = get_weaponinfo(windex);
+	self.items &~= IT_AMMO;
+	self.items = self.items | e.items;
+
+	// the two weapon entities will notice this has changed and update their models
+	self.weapon = windex;
+	self.weaponname = e.mdl;
+	self.bulletcounter = 0;
+}
+
+// perform weapon to attack (weaponstate and attack_finished check is here)
+float(float secondary, float attacktime) weapon_prepareattack {
+	if(!GameHookChain_WeaponPrepareAttack(secondary, attacktime)) {
+		return FALSE;
+	}
+
+	if(attacktime >= 0)
+	{
+		// don't fire if previous attack is not finished
+		if (ATTACK_FINISHED(self) > time + frametime * 0.5)
+			return FALSE;
+		// don't fire while changing weapon
+		if (self.weaponentity.state != WS_READY)
+			return FALSE;
+	}
+	// do not even think about shooting if switching
+	if(self.switchweapon != self.weapon)
+		return FALSE;
+
+	if not(player_can_fire(self, TRUE))
+		return FALSE;
+
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
+	{
+		if (Akimbo_Active(self) < 2)
+			weapon_switch_force(self, weapon_best(self));
+		return FALSE;
+	}
+
+	self.weaponentity.state = WS_INUSE;
+
+	self.spawnshieldtime = min(self.spawnshieldtime, time); // kill spawn shield when you fire
+
+	// if the weapon hasn't been firing continuously, reset the timer
+	if(attacktime >= 0)
+	{
+		if (ATTACK_FINISHED(self) < time - frametime * 1.5)
+		{
+			ATTACK_FINISHED(self) = time;
+			//dprint("resetting attack finished to ", ftos(time), "\n");
+		}
+		ATTACK_FINISHED(self) = ATTACK_FINISHED(self) + attacktime * weapon_rate_factor();
+	}
+	self.bulletcounter += 1;
+	//dprint("attack finished ", ftos(ATTACK_FINISHED(self)), "\n");
+	return TRUE;
+}
+
+float() weapon_rate_factor {
 	float t;
 	entity oldself = self;
 	self = Akimbo_Owner(self);
@@ -150,85 +683,15 @@ float W_WeaponRateFactor()
 	return t;
 }
 
-float W_WeaponRateFactorFor(entity o)
-{
+float(entity o) weapon_rate_factor_for {
 	entity oldself = self;
 	self = o;
-	float f = W_WeaponRateFactor();
+	float f = weapon_rate_factor();
 	self = oldself;
 	return f;
 }
 
-void W_SwitchWeapon_Force(entity e, float w)
-{
-	W_ShowWeaponList(self);
-	e.cnt = e.switchweapon;
-	e.switchweapon = w;
-}
-
-
-// this function calculates w_shotorg and w_shotdir based on the weapon model
-// offset, trueaim and antilag, and won't put w_shotorg inside a wall.
-// make sure you call makevectors first (FIXME?)
-.float lastshot_time;
-void W_SetupShot_Dir(entity ent, vector s_forward, float recoil, string snd, float maxhits)
-{
-	vector vecs, vecs_visual, dv;
-	entity ent_orig = ent;
-	ent = Akimbo_Owner(ent);
-	// Track max damage and set the stat to be sent later in g_world.qc
-	if (maxhits > 0)
-		damage_record_fires(ent, ent.weapon, maxhits);
-
-	if(ent_orig.weaponentity.movedir_x > 0)
-	{
-		vecs = ent_orig.weaponentity.movedir;
-		vecs_y = -vecs_y;
-	}
-	else
-		vecs = '0 0 0';
-	vecs_visual = ent_orig.weaponentity.shotorg_visual;
-	vecs_visual_y = -vecs_visual_y;
-
-	dv = v_right * vecs_y + v_up * vecs_z;
-	w_shotorg = ent.origin + ent.view_ofs;
-
-	w_shotorg_visual = w_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 16;
-
-	w_shotorg = w_shotorg + dv;
-
-	// calculate the shotdir from the chosen shotorg
-	if (Akimbo_Active(ent))
-		w_shotdir = s_forward;
-	else
-	{
-		float dphitcontentsmask_save = ent.dphitcontentsmask;
-		if(ent.weapon == WEP_CAMPINGRIFLE)
-			ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-		else
-			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
-		ent.dphitcontentsmask = dphitcontentsmask_save;
-		w_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-		w_shotdir = normalize(w_shotpoint - w_shotorg);
-	}
-	if (!g_norecoil)
-		ent.punchangle_x = recoil * -1;
-
-	if (ent.lastshot_time < time) {
-		if (snd != "")
-			sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
-
-		if (ent.items & IT_STRENGTH)
-			sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
-
-		ent.lastshot_time = time;
-	}
-};
-
-float CL_Weaponentity_CustomizeEntityForClient()
-{
+float() weapon_model_customize {
 	self.viewmodelforclient = Akimbo_Owner(self.owner);
 	if(other.classname == "spectator")
 		if(other.enemy == self.viewmodelforclient)
@@ -237,7 +700,7 @@ float CL_Weaponentity_CustomizeEntityForClient()
 	return TRUE;
 }
 
-float CL_ExterioirWeaponentity_CustomizeEntityForClient()
+float weapon_model_exterior_customize()
 {
     self.alpha = player_calculate_alpha(self.owner, other);
     return (self.alpha > 0);
@@ -276,11 +739,11 @@ float CL_ExterioirWeaponentity_CustomizeEntityForClient()
  *    g_tuba.md3 - pickup model
  */
 
-void CL_Weaponentity_dlc_reset() {
+void weapon_model_dlc_reset() {
 	setattachment(self.weaponentity, self, "weapon");
 }
 
-void CL_Weaponentity_Think()
+void weapon_model_think()
 {
 	float tb, v_shot_idx;
 	self.nextthink = time;
@@ -338,7 +801,7 @@ void CL_Weaponentity_Think()
 					if (!self.weaponentity)
 						self.weaponentity = spawn();
 					setmodel(self.weaponentity, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision does not matter
-					self.dlc_reset = CL_Weaponentity_dlc_reset;
+					self.dlc_reset = weapon_model_dlc_reset;
 					self.dlc_reset();
 				}
 				else
@@ -422,9 +885,9 @@ void CL_Weaponentity_Think()
 			vector v0;
 			v0 = self.movedir;
 			float akimbo_active = Akimbo_Active(self.owner);
-			self.movedir = shotorg_adjust(v0, FALSE, FALSE, akimbo_active);
-			self.shotorg_visual = shotorg_adjust(v0, FALSE, TRUE, akimbo_active);
-			self.view_ofs = shotorg_adjust(v0, FALSE, TRUE, akimbo_active) - v0;
+			self.movedir = weapon_shotorg_adjust(v0, FALSE, FALSE, akimbo_active);
+			self.shotorg_visual = weapon_shotorg_adjust(v0, FALSE, TRUE, akimbo_active);
+			self.view_ofs = weapon_shotorg_adjust(v0, FALSE, TRUE, akimbo_active) - v0;
 		}
 		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
@@ -474,7 +937,7 @@ void CL_Weaponentity_Think()
 	float useqcanimation = (sv_qcweaponanimation || self.wframe >= WFRAME_MELEE);
 	if (self.state == WS_RAISE && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / W_WeaponRateFactorFor(self.owner)) / g_balance_weaponswitchdelay;
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / weapon_rate_factor_for(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -484,7 +947,7 @@ void CL_Weaponentity_Think()
 	}
 	else if (self.state == WS_DROP && !intermission_running && g_balance_weaponswitchdelay)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / W_WeaponRateFactorFor(self.owner)) / g_balance_weaponswitchdelay;
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / weapon_rate_factor_for(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
 		if (useqcanimation)
 		{
@@ -624,9 +1087,9 @@ void CL_Weaponentity_Think()
 		self.owner.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self);
 
 	}
-};
+}
 
-void CL_ExteriorWeaponentity_dlc_reset() {
+void weapon_model_exterior_dlc_reset() {
 	float tag_found;
 	if (self.owner.weaponname != "")
 		setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
@@ -655,7 +1118,7 @@ void CL_ExteriorWeaponentity_dlc_reset() {
 		self.model = "";
 }
 
-void CL_ExteriorWeaponentity_Think()
+void weapon_model_exterior_think()
 {
 	self.nextthink = time;
 	if (self.owner.exteriorweaponentity != self)
@@ -673,17 +1136,17 @@ void CL_ExteriorWeaponentity_Think()
 		self.cnt = self.owner.weapon;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
-		self.dlc_reset = CL_ExteriorWeaponentity_dlc_reset;
+		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
 	}
 	self.effects = self.owner.effects | EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
 
 	self.colormap = self.owner.colormap;
-};
+}
 
 // spawning weaponentity for client
-void CL_SpawnWeaponentity()
+void weapon_model_spawn()
 {
 	self.weaponentity = spawn();
 	self.weaponentity.classname = "weaponentity";
@@ -694,8 +1157,8 @@ void CL_SpawnWeaponentity()
 	self.weaponentity.angles = '0 0 0';
 	self.weaponentity.viewmodelforclient = Akimbo_Owner(self);
 	self.weaponentity.flags = 0;
-	self.weaponentity.think = CL_Weaponentity_Think;
-	self.weaponentity.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	self.weaponentity.think = weapon_model_think;
+	self.weaponentity.customizeentityforclient = weapon_model_customize;
 	self.weaponentity.nextthink = time;
 
 	self.exteriorweaponentity = spawn();
@@ -705,183 +1168,10 @@ void CL_SpawnWeaponentity()
 	self.exteriorweaponentity.owner = self;
 	setorigin(self.exteriorweaponentity, '0 0 0');
 	self.exteriorweaponentity.angles = '0 0 0';
-	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
-	self.exteriorweaponentity.customizeentityforclient = CL_ExterioirWeaponentity_CustomizeEntityForClient;
+	self.exteriorweaponentity.think = weapon_model_exterior_think;
+	self.exteriorweaponentity.customizeentityforclient = weapon_model_exterior_customize;
 	self.exteriorweaponentity.nextthink = time;
-};
-
-.float hasweapon_complain_spam;
-float client_hasweapon(entity cl, float wpn, float andammo, float complain)
-{
-	local float weaponbit, f;
-	local entity oldself;
-
-	if(time < cl.hasweapon_complain_spam)
-		complain = 0;
-	if(complain)
-		cl.hasweapon_complain_spam = time + 0.2;
-
-	if (wpn < WEP_FIRST || wpn > WEP_LAST)
-	{
-		if (complain)
-			sprint(cl, "Invalid weapon\n");
-		return FALSE;
-	}
-	weaponbit = W_WeaponBit(wpn);
-	if (cl.weapons & weaponbit)
-	{
-		if (andammo)
-		{
-			if(cl.items & IT_UNLIMITED_WEAPON_AMMO)
-			{
-				f = 1;
-			}
-			else
-			{
-				oldself = self;
-				self = cl;
-				f = weapon_action(wpn, WR_CHECKAMMO1);
-				f = f + weapon_action(wpn, WR_CHECKAMMO2);
-				self = oldself;
-			}
-			if (!f)
-			{
-				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL)
-				{
-					play2(cl, "weapons/unavailable.wav");
-					sprint(cl, strcat("You don't have any ammo for the ^2", W_Name(wpn), "\n"));
-				}
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	if (complain)
-	if (clienttype(cl) == CLIENTTYPE_REAL)
-	{
-		// DRESK - 3/16/07
-		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if(weaponsInMap & weaponbit)
-		{
-			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
-
-
-			if(g_showweaponspawns)
-			{
-				entity e;
-				string s;
-
-				e = get_weaponinfo(wpn);
-				s = e.model2;
-
-				for(e = world; (e = findfloat(e, weapons, weaponbit)); )
-				{
-					if(e.classname == "droppedweapon")
-						continue;
-					if not(e.flags & FL_ITEM)
-						continue;
-					WaypointSprite_Spawn(
-						s,
-						1, 0,
-						world, e.origin,
-						cl, 0,
-						world, enemy,
-						0
-					);
-				}
-			}
-		}
-		else
-			sprint(cl, strcat("The ^2", W_Name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
-
-		play2(cl, "weapons/unavailable.wav");
-	}
-	return FALSE;
-};
-
-// Weapon subs
-void w_clear()
-{
-	if (self.weapon != -1)
-		self.weapon = 0;
-	if (self.weaponentity)
-	{
-		self.weaponentity.state = WS_CLEAR;
-		self.weaponentity.effects = 0;
-	}
-};
-
-void w_ready()
-{
-	if (self.weaponentity)
-		self.weaponentity.state = WS_READY;
-	weapon_thinkf(WFRAME_IDLE, 1000000, w_ready);
-};
-
-// Setup weapon for client (after this raise frame will be launched)
-void weapon_setup(float windex)
-{
-	entity e;
-	e = get_weaponinfo(windex);
-	self.items &~= IT_AMMO;
-	self.items = self.items | e.items;
-
-	// the two weapon entities will notice this has changed and update their models
-	self.weapon = windex;
-	self.weaponname = e.mdl;
-	self.bulletcounter = 0;
-};
-
-// perform weapon to attack (weaponstate and attack_finished check is here)
-float weapon_prepareattack(float secondary, float attacktime)
-{
-	if(!GameHookChain_WeaponPrepareAttack(secondary, attacktime)) {
-		return FALSE;
-	}
-
-	if(attacktime >= 0)
-	{
-		// don't fire if previous attack is not finished
-		if (ATTACK_FINISHED(self) > time + frametime * 0.5)
-			return FALSE;
-		// don't fire while changing weapon
-		if (self.weaponentity.state != WS_READY)
-			return FALSE;
-	}
-	// do not even think about shooting if switching
-	if(self.switchweapon != self.weapon)
-		return FALSE;
-
-	if not(player_can_fire(self, TRUE))
-		return FALSE;
-
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
-	{
-		if (Akimbo_Active(self) < 2)
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-		return FALSE;
-	}
-
-	self.weaponentity.state = WS_INUSE;
-
-	self.spawnshieldtime = min(self.spawnshieldtime, time); // kill spawn shield when you fire
-
-	// if the weapon hasn't been firing continuously, reset the timer
-	if(attacktime >= 0)
-	{
-		if (ATTACK_FINISHED(self) < time - frametime * 1.5)
-		{
-			ATTACK_FINISHED(self) = time;
-			//dprint("resetting attack finished to ", ftos(time), "\n");
-		}
-		ATTACK_FINISHED(self) = ATTACK_FINISHED(self) + attacktime * W_WeaponRateFactor();
-	}
-	self.bulletcounter += 1;
-	//dprint("attack finished ", ftos(ATTACK_FINISHED(self)), "\n");
-	return TRUE;
-};
+}
 
 void weapon_thinkf(float fr, float t, void() func)
 {
@@ -1012,15 +1302,15 @@ void weapon_thinkf(float fr, float t, void() func)
 	v_right = or;
 	v_up = ou;
 
-	if(self.weapon_think == w_ready && func != w_ready && self.weaponentity.state == WS_RAISE)
+	if(self.weapon_think == weapon_ready && func != weapon_ready && self.weaponentity.state == WS_RAISE)
 	{
 		backtrace("Tried to override initial weapon think function - should this really happen?");
 	}
 
-	t *= W_WeaponRateFactor();
+	t *= weapon_rate_factor();
 
 	// VorteX: haste can be added here
-	if (self.weapon_think == w_ready)
+	if (self.weapon_think == weapon_ready)
 	{
 		self.weapon_nextthink = time;
 		//dprint("started firing at ", ftos(time), "\n");
@@ -1048,9 +1338,86 @@ void weapon_thinkf(float fr, float t, void() func)
 		anim_z = anim_y / t;
 		anim_set(self, anim, FALSE, TRUE, TRUE);
 	}
-};
+}
 
-vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
+// Weapon subs
+void() weapon_clear {
+	if (self.weapon != -1)
+		self.weapon = 0;
+
+	if (self.weaponentity) {
+		self.weaponentity.state = WS_CLEAR;
+		self.weaponentity.effects = 0;
+	}
+}
+
+void() weapon_ready {
+	if (self.weaponentity)
+		self.weaponentity.state = WS_READY;
+
+	weapon_thinkf(WFRAME_IDLE, 1000000, weapon_ready);
+}
+
+// this function calculates w_shotorg and w_shotdir based on the weapon model
+// offset, trueaim and antilag, and won't put w_shotorg inside a wall.
+// make sure you call makevectors first (FIXME?)
+.float lastshot_time;
+void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir {
+	vector vecs, vecs_visual, dv;
+	entity ent_orig = ent;
+	ent = Akimbo_Owner(ent);
+	// Track max damage and set the stat to be sent later in g_world.qc
+	if (maxhits > 0)
+		damage_record_fires(ent, ent.weapon, maxhits);
+
+	if(ent_orig.weaponentity.movedir_x > 0)
+	{
+		vecs = ent_orig.weaponentity.movedir;
+		vecs_y = -vecs_y;
+	}
+	else
+		vecs = '0 0 0';
+	vecs_visual = ent_orig.weaponentity.shotorg_visual;
+	vecs_visual_y = -vecs_visual_y;
+
+	dv = v_right * vecs_y + v_up * vecs_z;
+	w_shotorg = ent.origin + ent.view_ofs;
+
+	w_shotorg_visual = w_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 16;
+
+	w_shotorg = w_shotorg + dv;
+
+	// calculate the shotdir from the chosen shotorg
+	if (Akimbo_Active(ent))
+		w_shotdir = s_forward;
+	else
+	{
+		float dphitcontentsmask_save = ent.dphitcontentsmask;
+		if(ent.weapon == WEP_CAMPINGRIFLE)
+			ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+		else
+			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
+		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+		ent.dphitcontentsmask = dphitcontentsmask_save;
+		w_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+		w_shotdir = normalize(w_shotpoint - w_shotorg);
+	}
+	if (!g_norecoil)
+		ent.punchangle_x = recoil * -1;
+
+	if (ent.lastshot_time < time) {
+		if (snd != "")
+			sound (ent, CHAN_WEAPON, snd, VOL_BASE, ATTN_NORM);
+
+		if (ent.items & IT_STRENGTH)
+			sound (ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+
+		ent.lastshot_time = time;
+	}
+}
+
+vector weapon_calculate_projectile_velocity(vector pvelocity, vector mvelocity)
 {
 	vector mdirection;
 	float mspeed;
@@ -1120,19 +1487,105 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity)
 	return outvelocity;
 }
 
-void W_SetupProjectileVelocity(entity missile)
-{
+vector(vector vecs, float y_is_right, float allowcenter) weapon_shotorg_adjustfromclient {
+	switch(self.owner.cvar_cl_gunalign)
+	{
+		case 1: // right
+			break;
+
+		case 2: // left
+			vecs_y = -vecs_y;
+			break;
+
+		default:
+		case 3:
+			if(allowcenter) // 2: allow center handedness
+			{
+				// center
+				vecs_y = 0;
+				vecs_z -= 4;
+			}
+			else
+			{
+				// right
+			}
+			break;
+
+		case 4:
+			if(allowcenter) // 2: allow center handedness
+			{
+				// center
+				vecs_y = 0;
+				vecs_z -= 4;
+			}
+			else
+			{
+				// left
+				vecs_y = -vecs_y;
+			}
+			break;
+	}
+	return vecs;
+}
+
+vector(vector vecs, float y_is_right, float visual, float akimbo_active) weapon_shotorg_adjust {
+	if (akimbo_active)
+	{
+		if (akimbo_active == 2)
+			vecs_y = -vecs_y;
+		if not(visual)
+		{
+			if (g_shootfromeye)
+				vecs_z = 0;
+			else if (g_shootfromcenter)
+				vecs_z -= 4;
+		}
+		vecs_y = vecs_y * 1.2;
+		return vecs;
+	}
+
+	if (g_shootfromeye)
+	{
+		if (visual)
+		{
+			vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+		}
+		else
+		{
+			vecs_y = 0;
+			vecs_z = 0;
+		}
+	}
+	else if (g_shootfromcenter)
+	{
+		if (visual)
+		{
+			vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, TRUE);
+		}
+		else
+		{
+			vecs_y = 0;
+			vecs_z -= 4;
+		}
+	}
+	else if (g_shootfromclient)
+	{
+		vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, (g_shootfromclient >= 2));
+	}
+	return vecs;
+}
+
+void(entity missile) weapon_setup_projectile_velocity {
 	if(missile.owner == world)
 		error("Unowned missile");
 
-	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, missile.velocity);
+	missile.velocity = weapon_calculate_projectile_velocity(missile.owner.velocity, missile.velocity);
 	if not(missile.gravity)
 	if (missile.movetype == MOVETYPE_TOSS || missile.movetype == MOVETYPE_BOUNCE)
 		missile.gravity = 1;
 }
 
-void W_AttachToShotorg(entity flash, vector offset)
-{
+void(entity flash, vector offset) weapon_attach_to_shotorg {
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
@@ -1164,8 +1617,24 @@ void W_AttachToShotorg(entity flash, vector offset)
 	}
 }
 
-void W_Init()
-{
+void(entity e, float wep, string name) weapon_give {
+	entity oldself;
+	if (!wep)
+		return;
+
+	e.weapons = e.weapons | weapon_bit(wep);
+	oldself = self;
+	self = e;
+	if (other.classname == "player") {
+		weapon_show_list(other);
+		sprint (other, "You got the ^2");
+		sprint (other, name);
+		sprint (other, "\n");
+	}
+	self = oldself;
+}
+
+void() weapon_init {
 	float i;
 	CACHE_CVAR(g_balance_weaponswitchdelay);
 	CACHE_CVAR(g_projectiles_newton_style_2_minfactor);
@@ -1196,12 +1665,4 @@ void W_Init()
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET, '0 0 0');
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET_GLOWING, '0 0 0');
 	ProjInfo_RegisterAuto(PROJECTILE_BULLET_BIG, '0 0 0');
-}
-
-void W_ShowWeaponList(entity pl) {
-	if (clienttype(pl) == CLIENTTYPE_REAL) {
-		msg_entity = pl;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_WEAPONLIST);
-	}
 }

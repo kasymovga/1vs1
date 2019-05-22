@@ -79,7 +79,7 @@ void W_Hook_Attack2()
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
-	W_SetupShot (self, 4, "weapons/hookbomb_fire.wav", 0);
+	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 
 	gren = CSQCProjectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
 	gren.owner = self;
@@ -101,7 +101,7 @@ void W_Hook_Attack2()
 		gren.velocity = gren.velocity + self.velocity;
 
 	gren.gravity = g_balance_hook_secondary_gravity;
-	W_SetupProjectileVelocity(gren);
+	weapon_setup_projectile_velocity(gren);
 
 	gren.angles = '0 0 0';
 }
@@ -137,7 +137,7 @@ float w_hook(float req)
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 					self.ammo_cells = self.ammo_cells - g_balance_hook_primary_fuel;
 				self.hook_state |= HOOK_FIRING;
-				weapon_thinkf(WFRAME_FIRE1, g_balance_hook_primary_animtime, w_ready);
+				weapon_thinkf(WFRAME_FIRE1, g_balance_hook_primary_animtime, weapon_ready);
 			}
 		}
 
@@ -146,7 +146,7 @@ float w_hook(float req)
 			if (weapon_prepareattack(1, g_balance_hook_secondary_refire))
 			{
 				W_Hook_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, g_balance_hook_secondary_animtime, w_ready);
+				weapon_thinkf(WFRAME_FIRE2, g_balance_hook_secondary_animtime, weapon_ready);
 			}
 		}
 
@@ -183,7 +183,7 @@ float w_hook(float req)
 						{
 							self.ammo_cells = 0;
 							self.hook_state |= HOOK_REMOVING;
-							W_SwitchWeapon_Force(self, w_getbestweapon(self));
+							weapon_switch_force(self, weapon_best(self));
 						}
 					}
 				}

@@ -109,7 +109,7 @@ void walker_hunt() {
 			missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
 			setorigin(missile, w_shotorg);
 			missile.velocity = normalize(v_forward + v_up * 0.5) * 600;
-			W_SetupProjectileVelocity(missile);
+			weapon_setup_projectile_velocity(missile);
 			missile.angles = vectoangles(missile.velocity);
 			missile.touch = monster_proj_touch;
 			missile.think = walker_rocket_think;

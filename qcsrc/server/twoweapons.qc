@@ -5,16 +5,16 @@ var .float twoweapons_buttonatck2 = BUTTON_ATCK2;
 var void() TwoWeapons_PlayerPreThink_NextLink;
 void TwoWeapons_PlayerPreThink() {
 	if (self.twoweapons_buttonatck1)
-		W_SwitchWeapon(g_twoweapons);
+		weapon_switch(g_twoweapons);
 	else if (self.twoweapons_buttonatck2) {
 		if (!self.switchweapon || self.switchweapon == g_twoweapons) {
 			float lastwep = self.cnt;
 			if (lastwep && lastwep != g_twoweapons) {
-				W_SwitchWeapon(lastwep);
+				weapon_switch(lastwep);
 				if (self.switchweapon != lastwep)
-					W_NextWeapon(0);
+					weapon_next(0);
 			} else
-				W_NextWeapon(0);
+				weapon_next(0);
 		}
 	}
 }

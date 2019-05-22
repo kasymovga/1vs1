@@ -71,7 +71,7 @@ void fireguy_hunt() {
 		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
 		proj.pushltime = time + 10;
-		W_SetupProjectileVelocity(proj);
+		weapon_setup_projectile_velocity(proj);
 		proj.angles = vectoangles(proj.velocity);
 
 		self.attack_finished_single = time + 3 + random();

@@ -502,7 +502,7 @@ void havocbot_movetogoal()
 		else if(self.health>g_balance_rocketlauncher_damage*0.5)
 		{
 			if(self.velocity_z < 0)
-			if(client_hasweapon(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE))
+			if(player_hasweapon(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE))
 			{
 				self.movement_x = sv_maxspeed;
 
@@ -857,7 +857,7 @@ void havocbot_chooseweapon()
 	if(self.weapon==0)
 	for(i=WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
-		if(client_hasweapon(self, i, TRUE, FALSE))
+		if(player_hasweapon(self, i, TRUE, FALSE))
 		{
 			self.switchweapon = i;
 			return;
@@ -921,7 +921,7 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
+				if ( player_hasweapon(self, w, TRUE, FALSE) ){
 					if ( self.weapon == w && combo)
 						continue;
 					self.switchweapon = w;
@@ -934,7 +934,7 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
+				if ( player_hasweapon(self, w, TRUE, FALSE) ){
 					if ( self.weapon == w && combo)
 						continue;
 					self.switchweapon = w;
@@ -946,7 +946,7 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, TRUE, FALSE) ){
+			if ( player_hasweapon(self, w, TRUE, FALSE) ){
 				if ( self.weapon == w && combo)
 					continue;
 				self.switchweapon = w;

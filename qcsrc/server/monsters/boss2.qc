@@ -35,7 +35,7 @@ void boss2_pellet(vector start, vector dir)
 	proj.think = SUB_Remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * 0.1) * 2000;
-	W_SetupProjectileVelocity(proj);
+	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	setorigin(proj, start);
 	proj.touch = boss2_pellet_touch;

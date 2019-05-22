@@ -605,7 +605,7 @@ float bot_cmd_select_weapon()
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(self, id, TRUE, FALSE))
+	if(player_hasweapon(self, id, TRUE, FALSE))
 		self.switchweapon = id;
 	else
 		return CMD_STATUS_ERROR;

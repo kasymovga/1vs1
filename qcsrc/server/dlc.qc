@@ -124,7 +124,7 @@ void dlc_reset_all() {
 	RegisterWeapons();
 	float i, wbit;
 	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
-		wbit = W_WeaponBit(i);
+		wbit = weapon_bit(i);
 		if ((weaponsInMap & wbit) || (start_weapons & wbit))
 			get_weaponinfo(i).weapon_func(WR_PRECACHE);
 	}

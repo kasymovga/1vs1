@@ -255,7 +255,7 @@ float(entity item, entity player) item_give_to {
 		if (item.flags & FL_WEAPON)
 		{
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if (W_WeaponBit(i) & item.weapons & player.weapons)
+				if (weapon_bit(i) & item.weapons & player.weapons)
 					if (Akimbo_GiveWeapon (player, i, item.netname))
 					{
 						pickedup = TRUE;
@@ -273,10 +273,10 @@ float(entity item, entity player) item_give_to {
 		// if the player is using their best weapon before items are given, they
 		// probably want to switch to an even better weapon after items are given
 		if (player.autoswitch)
-		if (player.switchweapon == w_getbestweapon(player))
+		if (player.switchweapon == weapon_best(player))
 			_switchweapon = TRUE;
 
-		if not(player.weapons & W_WeaponBit(player.switchweapon))
+		if not(player.weapons & weapon_bit(player.switchweapon))
 			_switchweapon = TRUE;
 
 		if(item.spawnshieldtime)
@@ -325,7 +325,7 @@ float(entity item, entity player) item_give_to {
 				if not(player.weapons & e.weapons)
 				{
 					pickedup = TRUE;
-					W_GiveWeapon (player, e.weapon, item.netname);
+					weapon_give(player, e.weapon, item.netname);
 				}
 				else if (Akimbo_GiveWeapon (player, e.weapon, item.netname))
 					pickedup = TRUE;
@@ -398,8 +398,8 @@ float(entity item, entity player) item_give_to {
 
 	sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
-		if (player.switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, w_getbestweapon(player));
+		if (player.switchweapon != weapon_best(player))
+			weapon_switch_force(player, weapon_best(player));
 
 	return 1;
 }
@@ -1063,7 +1063,7 @@ void target_items_use (void)
 	float _switchweapon;
 	_switchweapon = FALSE;
 	if (activator.autoswitch)
-		if (activator.switchweapon == w_getbestweapon(activator))
+		if (activator.switchweapon == weapon_best(activator))
 			_switchweapon = TRUE;
 
 	a0 = activator.armorvalue;
@@ -1178,10 +1178,10 @@ void target_items_use (void)
 	if(activator.armorvalue > a0)
 		activator.pauserotarmor_finished = max(activator.pauserothealth_finished, time + g_balance_pause_health_rot);
 
-	if not(activator.weapons & W_WeaponBit(activator.switchweapon))
+	if not(activator.weapons & weapon_bit(activator.switchweapon))
 		_switchweapon = TRUE;
 	if(_switchweapon)
-		W_SwitchWeapon_Force(activator, w_getbestweapon(activator));
+		weapon_switch_force(activator, weapon_best(activator));
 
 	if(target_item_changed)
 		centerprint(activator, self.message);

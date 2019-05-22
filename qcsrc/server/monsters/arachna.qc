@@ -52,7 +52,7 @@ void arachna_hunt() {
 		setorigin(proj, _shotorg);
 		proj.velocity = normalize(_shotdir) * 1600;
 		proj.pushltime = time + 10;
-		W_SetupProjectileVelocity(proj);
+		weapon_setup_projectile_velocity(proj);
 		proj.angles = vectoangles(proj.velocity);
 
 		self.attack_finished_single = time + 3 + random();

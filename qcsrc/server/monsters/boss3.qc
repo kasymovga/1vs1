@@ -41,7 +41,7 @@ void boss3_hunt() {
 			setorigin(proj, _shotorg);
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
 			proj.pushltime = time + 10;
-			W_SetupProjectileVelocity(proj);
+			weapon_setup_projectile_velocity(proj);
 			proj.angles = vectoangles(proj.velocity);
 		}
 

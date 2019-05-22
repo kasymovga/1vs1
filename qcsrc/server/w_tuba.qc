@@ -82,7 +82,7 @@ void W_Tuba_Attack(float hittype)
 {
 	vector o;
 	float c;
-	W_SetupShot(self, 2, "", 1);
+	weapon_setup_shot(self, 2, "", 1);
 	if(self.tuba_notecount)
 	{
 		self.tuba_notecount = FALSE;
@@ -125,13 +125,13 @@ float w_tuba(float req)
 		if (weapon_prepareattack(0, g_balance_tuba_refire))
 		{
 			W_Tuba_Attack(0);
-			weapon_thinkf(WFRAME_FIRE1, g_balance_tuba_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_tuba_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (weapon_prepareattack(1, g_balance_tuba_refire))
 		{
 			W_Tuba_Attack(HITTYPE_SECONDARY);
-			weapon_thinkf(WFRAME_FIRE2, g_balance_tuba_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_tuba_animtime, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)

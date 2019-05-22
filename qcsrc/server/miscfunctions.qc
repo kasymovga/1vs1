@@ -239,15 +239,6 @@ string playername(entity p)
 
 entity get_weaponinfo(float w);
 
-void weapon_precache(float wpn)
-{
-	string s = get_weaponinfo(wpn).mdl;
-	precache_model(strcat("models/weapons/g_", s, ".md3"));
-	precache_model(strcat("models/weapons/v_", s, ".md3"));
-	precache_model(strcat("models/weapons/h_", s, ".dpm"));
-	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
-}
-
 vector ExactTriggerHit_mins;
 vector ExactTriggerHit_maxs;
 float ExactTriggerHit_Recurse()

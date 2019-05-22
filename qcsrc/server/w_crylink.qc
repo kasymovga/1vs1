@@ -104,7 +104,7 @@ void W_Crylink_Attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_primary_ammo;
 
-	W_SetupShot (self, 2, "weapons/crylink_fire.wav", g_balance_crylink_primary_shots);
+	weapon_setup_shot (self, 2, "weapons/crylink_fire.wav", g_balance_crylink_primary_shots);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -138,7 +138,7 @@ void W_Crylink_Attack (void)
 		s = s * g_balance_crylink_primary_spread;
 		proj.velocity = (w_shotdir + right * s_y + up * s_z) * g_balance_crylink_primary_speed;
 //		proj.velocity = (w_shotdir + randomvec() * g_balance_crylink_primary_spread) * g_balance_crylink_primary_speed;
-		W_SetupProjectileVelocity(proj);
+		weapon_setup_projectile_velocity(proj);
 		proj.touch = W_Crylink_Touch;
 		if(counter == 0)
 			SUB_SetFade(proj, time + g_balance_crylink_primary_middle_lifetime, g_balance_crylink_primary_middle_fadetime);
@@ -165,7 +165,7 @@ void W_Crylink_Attack2 (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
 
-	W_SetupShot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
+	weapon_setup_shot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
 
 	shots = g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
@@ -184,7 +184,7 @@ void W_Crylink_Attack2 (void)
 
 		setorigin (proj, w_shotorg);
 		proj.velocity = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
-		W_SetupProjectileVelocity(proj);
+		weapon_setup_projectile_velocity(proj);
 		proj.touch = W_Crylink_Touch2;
 		if(counter == (shots - 1) / 2)
 			SUB_SetFade(proj, time + g_balance_crylink_secondary_middle_lifetime, g_balance_crylink_secondary_middle_fadetime);
@@ -220,13 +220,13 @@ float w_crylink(float req)
 		if (weapon_prepareattack(0, g_balance_crylink_primary_refire))
 		{
 			W_Crylink_Attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_crylink_primary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_crylink_primary_animtime, weapon_ready);
 		}
 		if (self.crylink_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_crylink_secondary_refire))
 		{
 			W_Crylink_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_crylink_secondary_animtime, w_ready);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_crylink_secondary_animtime, weapon_ready);
 		}
 	}
 	else if (req == WR_PRECACHE)
