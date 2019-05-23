@@ -62,6 +62,9 @@ void Akimbo_WeaponFrame()
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
+			self = self.weaponentity;
+			self.think();
+			self = oldself.akimbo_ghost;
 			oldself.weaponentity.cnt = 0;
 		}
 		self.ammo_shells = oldself.ammo_shells;
