@@ -23,3 +23,4 @@ float item_start_failed;
 float(entity item, entity player) item_give_to;
 floatfield(float it) item_counter_field;
 float(entity player, entity item) item_generic_pickupevalfunc;
+voidfunc(string s) item_spawnfunc_for;

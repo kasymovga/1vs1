@@ -497,30 +497,7 @@ void(float wpn) weapon_defaultspawnfunc {
 	string s;
 	entity oldself;
 	float i, j;
-	if not(g_pickup_weapons) {
-		remove(self);
-		return;
-	}
-	if (GameHookChain_WeaponSpawnHandle(float wpn))
-		return;
-
-	// set the respawntime in advance (so replaced weapons can copy it)
-
-	if(!self.respawntime)
-	{
-		e = get_weaponinfo(wpn);
-		if(e.items == IT_SUPERWEAPON)
-		{
-			self.respawntime = g_pickup_respawntime_powerup;
-			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
-		}
-		else
-		{
-			self.respawntime = g_pickup_respawntime_weapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
-		}
-	}
-
+	var void() item_spawnfunc;
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
 		e = get_weaponinfo(wpn);
@@ -553,7 +530,12 @@ void(float wpn) weapon_defaultspawnfunc {
 				}
 				if(j > WEP_LAST)
 				{
-					print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+					item_spawnfunc = item_spawnfunc_for(s);
+					if (item_spawnfunc) {
+						self = spawn();
+						item_spawnfunc();
+					} else
+						print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 				}
 			}
 			self = oldself;
@@ -573,6 +555,11 @@ void(float wpn) weapon_defaultspawnfunc {
 			}
 			if(j > WEP_LAST)
 			{
+				item_spawnfunc = item_spawnfunc_for(s);
+				if (item_spawnfunc) {
+					item_spawnfunc();
+					return;
+				}
 				print("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
@@ -581,6 +568,29 @@ void(float wpn) weapon_defaultspawnfunc {
 			remove(self);
 			item_start_failed = TRUE;
 			return;
+		}
+	}
+	if not(g_pickup_weapons) {
+		remove(self);
+		return;
+	}
+	if (GameHookChain_WeaponSpawnHandle(float wpn))
+		return;
+
+	// set the respawntime in advance (so replaced weapons can copy it)
+
+	if(!self.respawntime)
+	{
+		e = get_weaponinfo(wpn);
+		if(e.items == IT_SUPERWEAPON)
+		{
+			self.respawntime = g_pickup_respawntime_powerup;
+			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
+		}
+		else
+		{
+			self.respawntime = g_pickup_respawntime_weapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
 		}
 	}
 

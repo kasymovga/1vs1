@@ -1278,6 +1278,24 @@ void() spawnfunc_item_mushroom {
 	self.touch = item_mushroom_touch;
 }
 
+voidfunc(string s) item_spawnfunc_for {
+#define RETURN_SPAWNFUNC_FOR(x) if (s == #x) return spawnfunc_item_##x;
+	RETURN_SPAWNFUNC_FOR(health_small)
+	RETURN_SPAWNFUNC_FOR(health_medium)
+	RETURN_SPAWNFUNC_FOR(health_large)
+	RETURN_SPAWNFUNC_FOR(health_mega)
+	RETURN_SPAWNFUNC_FOR(armor_small)
+	RETURN_SPAWNFUNC_FOR(armor_medium)
+	RETURN_SPAWNFUNC_FOR(armor_big)
+	RETURN_SPAWNFUNC_FOR(armor_large)
+	RETURN_SPAWNFUNC_FOR(bullets)
+	RETURN_SPAWNFUNC_FOR(cells)
+	RETURN_SPAWNFUNC_FOR(rockets)
+	RETURN_SPAWNFUNC_FOR(shells)
+#undef RETURN_SPAWNFUNC_FOR
+	return func_null;
+}
+
 void item_init()
 {
 	CACHE_CVAR(g_balance_pause_armor_rot);
