@@ -74,8 +74,7 @@ void W_HLAC_Attack (void)
 		self.punchangle_y = random () - 0.5;
 	}
 
-	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE);
-	missile.owner = Akimbo_Owner(self);
+	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	missile.classname = "hlacbolt";
 	// missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;
@@ -115,8 +114,7 @@ void W_HLAC_Attack2f (void)
 	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE);
-	missile.owner = Akimbo_Owner(self);
+	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	missile.classname = "hlacbolt";
 	// missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;

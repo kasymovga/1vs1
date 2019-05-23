@@ -120,8 +120,9 @@ void(float type) projectile_init {
 	ProjInfo_RegisterAuto(type, sizes);
 }
 
-entity(float clientanimate, float type, float docull) projectile {
+entity(float clientanimate, float type, float docull, entity _owner) projectile {
 	entity e = spawn();
+	e.owner = Akimbo_Owner(_owner);
 	ProjInfo_SetSize(e, type);
 	net_link_entity(e, docull, 0, projectile_send);
 

@@ -578,8 +578,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     makevectors(a + ang);
     w_shotdir = v_forward;
 
-    entity gren = projectile(hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE);
-    gren.owner = self;
+    entity gren = projectile(hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE, self);
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
     gren.bot_dodgerating = GV("damage") + 300;

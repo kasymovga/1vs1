@@ -81,8 +81,7 @@ void W_Hook_Attack2()
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 
-	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE);
-	gren.owner = self;
+	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = g_balance_hook_secondary_damage;

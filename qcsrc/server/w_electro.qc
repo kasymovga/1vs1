@@ -149,9 +149,8 @@ void W_Electro_Attack()
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 	proj.classname = "plasma_prim";
-	proj.owner = Akimbo_Owner(self);
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_electro_primary_damage;
 	proj.use = W_Plasma_Explode;
@@ -182,10 +181,9 @@ void W_Electro_Attack2()
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
+	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
 	proj.gravity = 1;
 	proj.classname = "plasma";
-	proj.owner = Akimbo_Owner(self);
 	proj.use = W_Plasma_Explode;
 	proj.think = adaptor_think2use;
 	proj.bot_dodge = TRUE;

@@ -109,12 +109,11 @@ void aircraft_rocket_do()
     self.gun2.cnt = time + self.attack_finished_single;
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-    missile                 = projectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+    missile                 = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
     setorigin(missile,gettaginfo(self.tur_head, gettagindex(self.tur_head,"tag_fire")));
     te_explosion (missile.origin);
 
     missile.classname       = "aircraft_rocket";
-    missile.owner           = self;
     missile.realowner       = self.owner;
     missile.bot_dodge       = TRUE;
     missile.bot_dodgerating = 75;

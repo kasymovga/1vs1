@@ -32,11 +32,10 @@ void turret_hellion_attack()
     // switch tubes
     //self.tur_shotorg_y = self.tur_shotorg_y * -1;
 
-    missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+    missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
     setorigin(missile, self.tur_shotorg);
 
     missile.classname          = "hellion_missile";
-    missile.owner              = self;
     missile.bot_dodge          = TRUE;
     missile.bot_dodgerating    = self.shot_dmg;
     missile.takedamage         = DAMAGE_YES;

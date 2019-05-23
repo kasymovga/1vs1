@@ -26,8 +26,8 @@ void boss3_hunt() {
 
 		float i;
 		for (i = 0; i < 6; i++) {
-			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE);
-			proj.owner = proj.realowner = self;
+			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
+			proj.realowner = proj.owner;
 			proj.classname = "grenade";
 			proj.bot_dodge = TRUE;
 			proj.bot_dodgerating = self.dmg_edge;

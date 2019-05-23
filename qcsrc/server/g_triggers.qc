@@ -2275,7 +2275,7 @@ void spikeshooter_spike_touch(void) {
 }
 
 void spikeshooter_use(void) {
-	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, world);
 	setorigin(spike, self.origin);
 	PROJECTILE_MAKETRIGGER(spike);
 	spike.velocity = self.movedir * 800;

@@ -10,10 +10,9 @@ void turret_flac_attack()
     turret_tag_fire_update();
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj = projectile(TRUE, PROJECTILE_HAGAR, TRUE);
+    proj = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
     setorigin(proj, self.tur_shotorg);
     proj.classname          = "flac_projectile";
-    proj.owner              = self;
     proj.bot_dodge          = TRUE;
     proj.bot_dodgerating    = self.shot_dmg;
     proj.solid              = SOLID_BBOX;

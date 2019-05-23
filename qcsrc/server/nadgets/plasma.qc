@@ -92,10 +92,9 @@ void HG_Plasma_Shard(float kickangle) {
     entity proj;
     vector kick;
 
-    proj = projectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE);
+    proj = projectile(TRUE, PROJECTILE_HG_PLASMA_SHARD, FALSE, self);
 	proj.gravity = 1;
     proj.classname = "hg_plasma";
-    proj.owner = self;
     proj.realowner = self.owner;
     proj.team = proj.owner.team;
     proj.use = HG_Plasma_Shard_Explode;

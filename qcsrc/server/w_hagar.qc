@@ -69,8 +69,8 @@ void W_Hagar_Attack (void)
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE);
-	missile.owner = missile.realowner = Akimbo_Owner(self);
+	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
+	missile.realowner = missile.owner;
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_primary_damage;
@@ -100,8 +100,8 @@ void W_Hagar_Attack2 (void)
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
-	missile.owner = missile.realowner = Akimbo_Owner(self);
+	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE, self);
+	missile.realowner = missile.owner;
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_secondary_damage;

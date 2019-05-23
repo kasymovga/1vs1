@@ -93,8 +93,7 @@ void walker_hunt() {
 				w_shotorg = w_shotorg - v_right * 16;
 
 			self.bulletcounter = self.bulletcounter + 0.5;
-			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE);
-			missile.owner = self;
+			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self);
 			missile.dmg_edge = self.dmg_edge;
 			missile.dmg_radius = self.dmg_radius;
 			missile.dmg_force = self.dmg_force;

@@ -24,8 +24,7 @@ void boss1_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		float i;
 		for (i = 0; i < 4; i++) {
-			entity gren =  projectile(TRUE, PROJECTILE_GRENADE, TRUE);
-			gren.owner = self;
+			entity gren =  projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
 			gren.dmg_edge = self.dmg_edge;
 			gren.dmg_radius = self.dmg_radius;
 			gren.dmg_force = self.dmg_force;

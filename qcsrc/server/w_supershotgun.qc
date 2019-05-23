@@ -52,9 +52,9 @@ void W_Supershotgun_Pellet_Touch()
 void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces)
 {
 	entity proj;
-	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
 	proj.classname = "bullet";
-	proj.realowner = proj.owner = Akimbo_Owner(self);
+	proj.realowner = proj.owner;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.movetype = (gravityfactor ? MOVETYPE_BOUNCE : MOVETYPE_BOUNCEMISSILE);
 	proj.gravity = gravityfactor;

@@ -149,8 +149,7 @@ void W_Porto_Attack (float out)
 
 	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	gren = projectile(TRUE, PROJECTILE_PORTO_RED, TRUE);
-	gren.owner = self;
+	gren = projectile(TRUE, PROJECTILE_PORTO_RED, TRUE, self);
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;

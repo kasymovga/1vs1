@@ -113,8 +113,8 @@ void W_Crylink_Attack (void)
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
-		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
-		proj.realowner = proj.owner = Akimbo_Owner(self);
+		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
+		proj.realowner = proj.owner;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = g_balance_crylink_primary_damage;
@@ -171,8 +171,8 @@ void W_Crylink_Attack2 (void)
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
 	while (counter < shots)
 	{
-		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
-		proj.realowner = proj.owner = Akimbo_Owner(self);
+		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
+		proj.realowner = proj.owner;
 		proj.classname = "spike";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = g_balance_crylink_secondary_damage;

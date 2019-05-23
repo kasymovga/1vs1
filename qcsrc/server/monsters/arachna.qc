@@ -37,8 +37,7 @@ void arachna_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 
-		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE);
-		proj.owner = proj.realowner = self;
+		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
 		proj.classname = "grenade";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = self.dmg_edge;

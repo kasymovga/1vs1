@@ -561,11 +561,6 @@ void ClientDisconnect (void)
 
 	bot_relinkplayerlist();
 
-	// remove laserdot
-	if(self.weaponentity)
-		if(self.weaponentity.lasertarget)
-			remove(self.weaponentity.lasertarget);
-
 	scores_detach(self);
 
 	if(self.clientstatus)

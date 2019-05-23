@@ -113,9 +113,8 @@ void W_Grenade_Attack (void)
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE);
+	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
 	gren.gravity = 1;
-	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = g_balance_grenadelauncher_primary_damage;
@@ -145,9 +144,8 @@ void W_Grenade_Attack2 (void)
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
 	gren.gravity = 1;
-	gren.owner = Akimbo_Owner(self);
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = g_balance_grenadelauncher_secondary_damage;

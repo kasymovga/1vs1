@@ -27,9 +27,9 @@ void boss2_pellet_touch()
 void boss2_pellet(vector start, vector dir)
 {
 	entity proj;
-	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE);
+	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
 	proj.classname = "bullet";
-	proj.realowner = proj.owner = self;
+	proj.realowner = proj.owner;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.movetype = MOVETYPE_BOUNCEMISSILE;
 	proj.think = SUB_Remove;

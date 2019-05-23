@@ -290,20 +290,19 @@ void bullet_begin(float pSpeed) {
 
 void(vector start, vector dir, float spread, float pSpeed, float lifetime, float _damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant) bullet {
 	entity oldself, oldself_akimbo = self;
-	self = Akimbo_Owner(self);
 	entity proj;
 	if(bulletHitScan)
 	{
 		proj = spawn();
+		proj.owner = self;
+		self = Akimbo_Owner(self);
 	} else {
-		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE);
+		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
 		proj.think = SUB_Remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}
-
 	proj.classname = "bullet";
-	proj.owner = self;
 	PROJECTILE_MAKETRIGGER(proj);
 	if(gravityfactor > 0)
 	{

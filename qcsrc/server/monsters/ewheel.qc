@@ -31,8 +31,7 @@ void ewheel_hunt() {
 			sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 			float i;
 			for (i = -1; i < 2; i += 2) {
-				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE);
-				proj.owner = self;
+				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
 				proj.dmg_edge = self.dmg_edge;
 				proj.dmg_radius = self.dmg_radius;
 				proj.dmg_force = self.dmg_force;

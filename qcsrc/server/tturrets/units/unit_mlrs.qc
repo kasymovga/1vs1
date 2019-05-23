@@ -19,10 +19,9 @@ void turret_mlrs_attack()
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
-    missile                    = projectile(TRUE, PROJECTILE_ROCKET, FALSE); // no cull, fly sound
+    missile                    = projectile(TRUE, PROJECTILE_ROCKET, FALSE, self); // no cull, fly sound
     setorigin(missile, self.tur_shotorg);
     missile.classname          = "mlrs_missile";
-    missile.owner              = self;
     missile.bot_dodge          = TRUE;
     missile.bot_dodgerating    = self.shot_dmg;
     missile.takedamage         = DAMAGE_NO;

@@ -112,8 +112,7 @@ void W_MinstaNex_Laser_Projectile_Touch() {
 }
 
 void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
-	entity missile = projectile(TRUE, (g_balance_minstanex_explode ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE);
-	missile.owner = Akimbo_Owner(self);
+	entity missile = projectile(TRUE, (g_balance_minstanex_explode ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE, self);
 	missile.team = self.team;
 	missile.dmg = ff;
 	missile.classname = "laserbolt";

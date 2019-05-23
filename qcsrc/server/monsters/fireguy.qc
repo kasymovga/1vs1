@@ -53,8 +53,8 @@ void fireguy_hunt() {
 		vector _shotorg = self.origin + v_forward * 12;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 
-		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE);
-		proj.owner = proj.realowner = self;
+		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
+		proj.realowner = proj.owner;
 		proj.classname = "grenade";
 		proj.bot_dodge = TRUE;
 		proj.bot_dodgerating = self.dmg_edge;

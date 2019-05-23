@@ -156,9 +156,9 @@ void W_Fireball_Attack2()
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE);
+	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
 	proj.classname = "plasma_prim";
-	proj.owner = proj.realowner = self;
+	proj.realowner = proj.owner;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_fireball_secondary_damage;
 	proj.pushltime = time + g_balance_fireball_secondary_lifetime;
@@ -299,9 +299,9 @@ void W_Fireball_Attack1()
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE);
+	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
 	proj.gravity = 1;
-	proj.owner = proj.realowner = self;
+	proj.realowner = proj.owner;
 	proj.classname = "grenade";
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_fireball_primary_damage;

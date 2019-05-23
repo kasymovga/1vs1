@@ -49,8 +49,7 @@ void W_Laser_Attack (float issecondary)
 		weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
-	missile = projectile(TRUE, PROJECTILE_LASER, TRUE);
-	missile.owner = Akimbo_Owner(self);
+	missile = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
 	missile.classname = "laserbolt";
 	missile.dmg = issecondary;
 	missile.bot_dodge = TRUE;

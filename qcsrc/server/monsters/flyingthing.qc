@@ -30,8 +30,7 @@ void flyingthing_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-		entity gren = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
-		gren.owner = self;
+		entity gren = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
 		gren.dmg_edge = self.dmg_edge;
 		gren.dmg_radius = self.dmg_radius;
 		gren.dmg_force = self.dmg_force;

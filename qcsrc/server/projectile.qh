@@ -4,7 +4,7 @@
 
 .float csqcprojectile_clientanimate;
 
-entity(float clientanimate, float type, float docull) projectile;
+entity(float clientanimate, float type, float docull, entity _owner) projectile;
 void(entity e) projectile_update;
 void(entity e) projectile_update_after_teleport;
 void(entity e) projectile_update_next_frame;

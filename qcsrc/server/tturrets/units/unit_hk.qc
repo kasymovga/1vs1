@@ -87,13 +87,12 @@ void turret_hk_attack()
 
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
-    missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
+    missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
     missile.solid            = SOLID_BBOX;
     setorigin(missile, self.tur_shotorg);
 
     missile.scale            = 1;
     missile.classname        = "hk_missile";
-    missile.owner            = self;
     missile.bot_dodge        = TRUE;
     missile.bot_dodgerating  = self.shot_dmg;
     missile.takedamage       = DAMAGE_YES;

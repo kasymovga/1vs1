@@ -72,15 +72,14 @@ void Napalm_Think(void) {
 
 entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_randfactor, float deathtype,
                     float burnradius, float burndamage, float burnedgedamage, float burntime) {
-    entity proj = projectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE);
+    entity proj = projectile(TRUE, PROJECTILE_HG_NAPALMSHARD, TRUE, powner);
 	proj.gravity = 1;
     proj.classname = "napalm";
-    proj.realowner = powner;
-    proj.owner = powner;
+    proj.realowner = proj.owner;
     proj.projectiledeathtype = deathtype;
     proj.movetype = MOVETYPE_BOUNCE;
     proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
-    proj.team = powner.team;
+    proj.team = self.owner.team;
     proj.effects = EF_NODEPTHTEST;
     //proj.meodp_point_offs = '0 0 64';
 
