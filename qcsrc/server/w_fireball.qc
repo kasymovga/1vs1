@@ -256,7 +256,7 @@ void W_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if not(self.dmg)
-		damage_record_hits(self.owner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
+		damage_record_hits(self.realowner, other, self.projectiledeathtype, 1, g_balance_fireball_primary_damage);
 
 	if (other.takedamage == DAMAGE_AIM)
 	if(fire_add_damage(other, self.realowner, g_balance_fireball_primary_damage, g_balance_fireball_primary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
