@@ -1771,6 +1771,21 @@ set cra_g_runematch_hacker 1
 set cra_g_runematch_carried_runes_max 2
 set cra_g_ctf_dropbutton_use 0
 set cra_g_ctf_dropbutton_hook 1
+set cra_g_weaponreplace_nex armor_big
+set cra_g_weaponreplace_rocketlauncher armor_medium
+set cra_g_weaponreplace_uzi health_medium
+set cra_g_weaponreplace_fireball armor_large
+set cra_g_weaponreplace_minstanex health_mega
+set cra_g_weaponreplace_porto health_large
+set cra_g_weaponreplace_hook health_medium
+set cra_g_weaponreplace_shotgun health_small
+set cra_g_weaponreplace_supershotgun health_medium
+set cra_g_weaponreplace_zapper armor_medium
+set cra_g_weaponreplace_electro armor_medium
+set cra_g_weaponreplace_crylink health_medium
+set cra_g_weaponreplace_hlac health_medium
+set cra_g_weaponreplace_grenadelauncher health_medium
+set cra_g_weaponreplace_hagar armor_medium
 
 set minsta_g_minstagib 1
 set minsta_g_grappling_hook 1
