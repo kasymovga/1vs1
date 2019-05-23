@@ -59,8 +59,7 @@ void HG_Linker_Think(void) {
 
             if(time > p.hg_linker_effecttime) {
                 FOR_EACH_PLAYER(e) if(e != p) if(e.hg_linker == self) if(time > e.hg_linker_effecttime) IF_HG_LINKER_APPLICABLE(e) {
-                    //te_csqc_lightningarc(p.origin, e.origin, FALSE, e.team);
-                    te_csqc_lightningarc(p.origin, e.origin);
+                    effect_lightningarc(p.origin, e.origin);
                 }
             }
 

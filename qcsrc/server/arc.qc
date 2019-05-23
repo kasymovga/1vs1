@@ -1,7 +1,5 @@
 void arc_effect(vector from, vector to, float t) {
-    // te_csqc_lightningarc(from, to, TRUE, t);
-    // W_Zapper_Attack2_Effect(t, from, to);
-    te_csqc_lightningarc(from, to);
+    effect_lightningarc(from, to);
 }
 
 void arc_damage_recurse(entity targ, entity attacker, float _damage, float deathtype,

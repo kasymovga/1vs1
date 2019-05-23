@@ -41,8 +41,6 @@ set g_maplist_votable_nodetail "0"
 set sv_vote_change "1"
 set sv_vote_commands "restart gotomap endmatch endround nextmap kick kickban"
 set net_messagetimeout "30"
-set g_weaponreplace_campingrifle "nex"
-set g_weaponreplace_minstanex "fireball"
 set g_fullbrightitems "1"
 set g_fullbrightplayers "1"
 set g_projectiles_newton_style_2_minfactor "1"
@@ -355,6 +353,7 @@ set campaign_g_player_forcecolor "-2"
 set sv_spawnreplace_item_fuel "item_jetpack"
 set sv_spawnreplace_item_fuel_regen "item_jetpack"
 set sv_spawnreplace_weapon_minstanex "weapon_fireball"
+set sv_spawnreplace_weapon_campingrifle "weapon_nex"
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn

@@ -1,0 +1,7 @@
+void(vector from,vector to) effect_lightningarc;
+void(vector loc) effect_blast;
+void() effect_curveparticles_end;
+void(float effectno, vector start, vector end, float end_dz, float spd) effect_curveparticles;
+void(float effectno, vector start, vector end, vector vel) effect_curveparticles_from_tracetoss;
+void(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2) effect_model_spawn;
+void(string m, vector org, float sz, float t1, float t2) effect_shockwave_spawn;

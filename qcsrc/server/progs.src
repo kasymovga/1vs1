@@ -40,8 +40,7 @@ ip2c.qh
 bullet.qh
 anim.qh
 projectile.qh
-csqceffects.qc
-
+effect.qh
 portals.qh
 hook.qh
 scores.qh
@@ -286,7 +285,7 @@ gametypevote.qc
 progressbar.qc
 
 location_request.qc
-
+effect.qc
 vehicles/vehicles.qc
 skipnonsolid.qc
 ../common/ip2c.qc

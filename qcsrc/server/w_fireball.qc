@@ -54,7 +54,7 @@ void W_Fireball_Explode (void)
 	if(self.realowner.health + self.realowner.armorvalue >= d)
 	if(!self.cnt)
 	{
-		modeleffect_spawn("models/sphere/sphere.md3", 0, 0, self.origin, '0 0 0', '0 0 0', '0 0 0', 0, g_balance_fireball_secondary_bfgradius, 0.2, 0.05, 0.25);
+		effect_model_spawn("models/sphere/sphere.md3", 0, 0, self.origin, '0 0 0', '0 0 0', '0 0 0', 0, g_balance_fireball_secondary_bfgradius, 0.2, 0.05, 0.25);
 
 		// 2. bfg effect
 		for(e = findradius(self.origin, g_balance_fireball_secondary_bfgradius); e; e = e.chain)

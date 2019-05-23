@@ -669,7 +669,7 @@ void healer_spawn(float health_amount, float _delay, entity _owner) {
 }
 
 void defense_attack_lightning(vector start, vector end, vector to) {
-	te_csqc_lightningarc(start, end);
+	effect_lightningarc(start, end);
 }
 
 entity defense_attack_chain;

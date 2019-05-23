@@ -116,7 +116,7 @@ void(void) bullet_hit {
 
 	if(other && other != self.enemy)
 	{
-		endzcurveparticles();
+		effect_curveparticles_end();
 
 		headshot = 0;
 		yoda = 0;
@@ -259,7 +259,7 @@ void(void) bullet_touch {
 
 float bulletHitScan;
 void() bullet_end {
-	endzcurveparticles();
+	effect_curveparticles_end();
 	if (bulletHitScan) {
 		antilag_end();
 	}
@@ -270,12 +270,12 @@ float bullet_trace_callback_eff;
 void bullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(trace_endpos - bullet_trace_callback_ent.origin) > 16)
-		zcurveparticles_from_tracetoss(bullet_trace_callback_eff, bullet_trace_callback_ent.origin, trace_endpos, bullet_trace_callback_ent.velocity);
+		effect_curveparticles_from_tracetoss(bullet_trace_callback_eff, bullet_trace_callback_ent.origin, trace_endpos, bullet_trace_callback_ent.velocity);
 }
 
 void bullet_no_gravity_trace_callback(vector start, vector hit, vector end)
 {
-	endzcurveparticles();
+	effect_curveparticles_end();
 	if(vlen(trace_endpos - bullet_trace_callback_ent.origin) > 16)
 		trailparticles(world, bullet_trace_callback_eff, bullet_trace_callback_ent.origin, trace_endpos);
 }

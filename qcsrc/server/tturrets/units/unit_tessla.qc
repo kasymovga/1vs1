@@ -39,7 +39,7 @@ entity toast(entity from, float range, float _damage)
     if (etarget)
     {
         te_smallflash(etarget.origin);
-        te_csqc_lightningarc(from.origin,etarget.origin);
+        effect_lightningarc(from.origin,etarget.origin);
         damage(etarget,self,self,_damage,DEATH_TURRET,etarget.origin,'0 0 0');
         etarget.toasted = 1;
     }
@@ -131,7 +131,7 @@ void turret_tesla_postthink()
         f = f*f;
         if(f > random())
             if(random() < 0.1)
-                te_csqc_lightningarc(self.tur_shotorg,self.tur_shotorg + (randomvec() * 350));
+                effect_lightningarc(self.tur_shotorg,self.tur_shotorg + (randomvec() * 350));
     }
 }
 

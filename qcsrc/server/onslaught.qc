@@ -381,7 +381,7 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 
 void onslaught_generator_ring_spawn(vector org)
 {
-	modeleffect_spawn("models/onslaught/shockwavetransring.md3", 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, -16, 0.1, 1.25, 0.25);
+	effect_model_spawn("models/onslaught/shockwavetransring.md3", 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, -16, 0.1, 1.25, 0.25);
 };
 
 void onslaught_generator_ray_think()
@@ -417,7 +417,7 @@ void onslaught_generator_ray_spawn(vector org)
 
 void onslaught_generator_shockwave_spawn(vector org)
 {
-	shockwave_spawn("models/onslaught/shockwave.md3", org, -64, 0.75, 0.5);
+	effect_shockwave_spawn("models/onslaught/shockwave.md3", org, -64, 0.75, 0.5);
 };
 
 void onslaught_generator_damage_think()

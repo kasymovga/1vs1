@@ -75,7 +75,7 @@ void HG_Plasma_Shard_Think(void) {
 				HG_PLASMA | HITTYPE_BOUNCE, trace_endpos,
 				'0 0 0');
 
-		te_csqc_lightningarc(o, e.origin);
+		effect_lightningarc(o, e.origin);
 	}
 #if 0
     HealParticleEmitter(self.realowner);
