@@ -15,7 +15,6 @@ float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
 
-#define damage_info_send  Damage_DamageInfo_SendEntity
 float damage_info_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);

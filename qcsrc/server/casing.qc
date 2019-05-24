@@ -1,4 +1,3 @@
-#define casing_send Casing_SendEntity
 float(entity to, float sf) casing_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);
 	WriteByte(MSG_ENTITY, self.state); // actually type

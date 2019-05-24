@@ -50,7 +50,6 @@ vector(entity t1, entity t2, .float field, float fieldflags, vector previous) sc
  * teamscore entities
  */
 
-#define scores_team_send TeamScore_SendEntity
 float(entity to, float sendflags) scores_team_send {
 	float i, p, longflags;
 
@@ -174,7 +173,6 @@ float (string label, float scoreflags) scores_register_team_score {
 	return scores_team_registered - 1;
 }
 
-#define scores_send_info ScoreInfo_SendEntity
 float(entity to, float sf) scores_send_info {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
@@ -192,7 +190,6 @@ float(entity to, float sf) scores_send_info {
 	return TRUE;
 }
 
-#define scores_send_delayed_think ScoreInfo_SendDelayed_Think
 void() scores_send_delayed_think {
 	self.SendFlags = self.SendFlags | self.flags;
 	self.flags = 0;
@@ -209,7 +206,6 @@ void(entity e, float f) scores_send_delayed {
  * per-player score entities
  */
 
-#define scores_send_entity PlayerScore_SendEntity
 float(entity to, float sendflags) scores_send_entity {
 	float i, p, longflags;
 
@@ -298,7 +294,7 @@ void(entity player) scores_attach {
 	sk = spawn();
 	sk.owner = player;
 	sk.think = scores_send_delayed_think;
-	net_link_entity(sk, FALSE, 0, PlayerScore_SendEntity);
+	net_link_entity(sk, FALSE, 0, scores_send_entity);
 	player.scorekeeper = sk;
 }
 
@@ -1015,7 +1011,7 @@ void() scores_basics_end {
 	} else {
 		scores_initialized = spawn();
 		scores_initialized.classname = "ent_client_scoreinfo";
-		net_link_entity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
+		net_link_entity(scores_initialized, FALSE, 0, scores_send_info);
 	}
 	if(c1 >= 0)
 		scores_spawn_team(COLOR_TEAM1, "Red");

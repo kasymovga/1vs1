@@ -695,7 +695,6 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		targ.killcount = 0;
 }
 
-#define player_damage PlayerDamage
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
 	local float take, save, waves, sdelay, dh, da;
 	GameHookChain_PlayerDamageMod = 1;
@@ -1849,7 +1848,6 @@ void() player_post_think {
 	self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
 }
 
-#define player_customizeentityforclient Client_customizeentityforclient
 float() player_customizeentityforclient {
 	entity modelsource;
 

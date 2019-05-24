@@ -1,4 +1,3 @@
-#define violence_gib_splash_send Violence_GibSplash_SendEntity
 float(entity to, float sf) violence_gib_splash_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type

@@ -81,7 +81,6 @@ void PutClientInServer()
 	}
 }
 
-#define ClientInit_SendEntity client_init_send
 float client_init_send(entity to, float sf)
 {
 	float i, t;
