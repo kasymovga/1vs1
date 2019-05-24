@@ -183,7 +183,9 @@ world.qc
 map.qc
 mapvote.qc
 casing.qc
-t_jumppads.qc
+trigger_push.qc
+target.qc
+info.qc
 t_teleporters.qc
 g_triggers.qc
 g_models.qc
@@ -207,9 +209,7 @@ w_tuba.qc
 w_fireball.qc
 w_supershotgun.qc
 w_zapper.qc
-
-g_laserbeam.qc
-
+func_laserbeam.qc
 item.qc
 powerup.qc
 backpack.qc

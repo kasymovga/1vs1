@@ -301,6 +301,3 @@ void spawnfunc_target_push() {
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 };
-
-void spawnfunc_info_notnull() {};
-void spawnfunc_target_position() {};

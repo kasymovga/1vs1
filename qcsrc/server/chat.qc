@@ -52,11 +52,11 @@ string(entity pl, string msg) chat_formatmessage {
         else if (escape == "h")
             replacement = ftos(floor(pl.health));
         else if (escape == "l")
-            replacement = NearestLocation(pl.origin);
+            replacement = target_location_nearest(pl.origin);
         else if (escape == "y")
-            replacement = NearestLocation(pl.cursor_trace_endpos);
+            replacement = target_location_nearest(pl.cursor_trace_endpos);
         else if (escape == "d")
-            replacement = NearestLocation(pl.death_origin);
+            replacement = target_location_nearest(pl.death_origin);
         else if (escape == "s")
 			replacement = ftos(floor(vlen(self.velocity)));
         else if (escape == "w")

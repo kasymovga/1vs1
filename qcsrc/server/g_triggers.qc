@@ -611,37 +611,6 @@ void spawnfunc_trigger_heal()
 
 
 
-// TODO add a way to do looped sounds with sound(); then complete this entity
-.float volume, atten;
-void target_speaker_use() {sound(self, CHAN_TRIGGER, self.noise, VOL_BASE * self.volume, self.atten);}
-
-void spawnfunc_target_speaker()
-{
-	if(self.noise)
-		precache_sound (self.noise);
-	IFTARGETED
-	{
-		if(!self.atten)
-			self.atten = ATTN_NORM;
-		else if(self.atten < 0)
-			self.atten = 0;
-		if(!self.volume)
-			self.volume = 1;
-		self.use = target_speaker_use;
-	}
-	else
-	{
-		if(!self.atten)
-			self.atten = ATTN_STATIC;
-		else if(self.atten < 0)
-			self.atten = 0;
-		if(!self.volume)
-			self.volume = 1;
-		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
-	}
-};
-
-
 void spawnfunc_func_stardust() {
 	self.effects = EF_STARDUST;
 }
@@ -1547,99 +1516,6 @@ void spawnfunc_trigger_gamestart() {
 		InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);
 }
 
-.entity voicescript_ctrl; // attached voice script
-
-void() voicescript_ctrl_think {
-	entity vs = self.enemy;
-	entity pl = self.owner;
-	float i, n, dt;
-
-	if (pl.voicescript_ctrl != self || pl.classname != "player" || gameover) {
-		remove(self);
-		return;
-	}
-	// get the next voice...
-	n = tokenize_console(vs.message);
-	if(self.cnt < vs.cnt)
-		i = self.cnt * 2;
-	else if(n > self.cnt * 2)
-		i = mod(self.cnt - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
-	else
-		i = -1;
-
-	if(i >= 0) {
-		play2(pl, strcat(vs.netname, "/", argv(i), ".wav"));
-		dt = stof(argv(i + 1));
-		if(dt >= 0)
-			self.nextthink = time + dt + vs.wait * (0.5 * random());
-		else
-			self.nextthink = time - dt;
-
-		self.cnt += 1;
-	} else {
-		pl.voicescript_ctrl = world; // stop trying then
-		remove(self);
-	}
-}
-
-void target_voicescript_use()
-{
-	if(activator.voicescript_ctrl.enemy != self)
-	{
-		entity vsctrl = spawn();
-		vsctrl.owner = activator;
-		vsctrl.enemy = self;
-		vsctrl.think = voicescript_ctrl_think;
-		vsctrl.cnt = 0;
-		vsctrl.nextthink = max(activator.voicescript_ctrl.nextthink, time + self.delay);
-		activator.voicescript_ctrl = vsctrl;
-	}
-}
-
-var void(entity spot) target_voicescript_Spawn_NextLink;
-void(entity spot) target_voicescript_Spawn {
-	self.voicescript_ctrl = world;
-	target_voicescript_Spawn_NextLink(spot);
-}
-
-float spawnfunc_target_voicescript_initialized;
-void spawnfunc_target_voicescript()
-{
-	// netname: directory of the sound files
-	// message: list of "sound file" duration "sound file" duration, a *, and again a list
-	//          foo1 4.1 foo2 4.0 foo3 -3.1 * fool1 1.1 fool2 7.1 fool3 9.1 fool4 3.7
-	//          Here, a - in front of the duration means that no delay is to be
-	//          added after this message
-	// wait: average time between messages
-	// delay: initial delay before the first message
-
-	float i, n;
-	if not(spawnfunc_target_voicescript_initialized) {
-		target_voicescript_Spawn_NextLink = GameHookChain_Spawn;
-		GameHookChain_Spawn = target_voicescript_Spawn;
-		spawnfunc_target_voicescript_initialized = TRUE;
-	}
-	if (self.message == "") {
-		remove(self);
-		return;
-	}
-	self.use = target_voicescript_use;
-
-	n = tokenize_console(self.message);
-	self.cnt = n / 2;
-	for(i = 0; i+1 < n; i += 2)
-	{
-		if(argv(i) == "*")
-		{
-			self.cnt = i / 2;
-			++i;
-		}
-		precache_sound(strcat(self.netname, "/", argv(i), ".wav"));
-	}
-}
-
-
-
 void trigger_relay_teamcheck_use()
 {
 	if(activator.team)
@@ -1886,23 +1762,6 @@ void spawnfunc_func_water()
 	EXACTTRIGGER_INIT;
 	self.touch = func_ladder_touch;
 };
-
-void target_delay_use() {
-	self.nextthink = time + self.wait;
-	self.think = SUB_UseTargets;
-}
-
-void target_delay_init() {
-	IFTARGETED
-		return;
-	self.use();
-}
-
-void spawnfunc_target_delay() {
-	self.use = target_delay_use;
-	self.reset = target_delay_init;
-	InitializeEntity(self, target_delay_init, INITPRIO_SETLOCATION);
-}
 
 void trigger_always_init() {
 	self.nextthink = time;

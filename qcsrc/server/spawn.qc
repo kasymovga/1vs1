@@ -1,7 +1,6 @@
 float g_spawn_furthest;
 #define SPAWNPOINT_SCORE frags
 
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
 void() spawnpoint_use;
 
 float spawn_relocate_claim_once;
@@ -56,21 +55,6 @@ void() spawn_relocate {
         setsize(e, '-8 -8 -8', '8 8 8');
         e.solid = SOLID_TRIGGER;
     }
-}
-
-
-void(void) spawnfunc_info_player_survivor {
-	spawnfunc_info_player_deathmatch();
-}
-
-void(void) spawnfunc_info_player_start {
-	spawnfunc_info_player_deathmatch();
-}
-
-void(void) spawnfunc_info_player_deathmatch {
-	self.classname = "info_player_deathmatch";
-	waypoint_spawnforitem(self);
-	spawn_relocate();
 }
 
 void() spawnpoint_use {

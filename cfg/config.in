@@ -354,6 +354,8 @@ set sv_spawnreplace_item_fuel "item_jetpack"
 set sv_spawnreplace_item_fuel_regen "item_jetpack"
 set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 set sv_spawnreplace_weapon_campingrifle "weapon_nex"
+set sv_spawnreplace_info_player_survivor info_player_deathmatch
+set sv_spawnreplace_info_player_start info_player_deathmatch
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn

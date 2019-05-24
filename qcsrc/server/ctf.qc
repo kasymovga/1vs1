@@ -659,65 +659,6 @@ void FlagTouch()
 	}
 };
 
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player
-in team one (Red).
-
-Keys:
-"angle"
- viewing angle when spawning
-*/
-void spawnfunc_info_player_team1()
-{
-	self.team = COLOR_TEAM1; // red
-	spawnfunc_info_player_deathmatch();
-};
-//self.team = 4;self.classname = "info_player_start";spawnfunc_info_player_start();};
-
-/*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in
-team two (Blue).
-
-Keys:
-"angle"
- viewing angle when spawning
-*/
-void spawnfunc_info_player_team2()
-{
-	self.team = COLOR_TEAM2; // blue
-	spawnfunc_info_player_deathmatch();
-};
-//self.team = 13;self.classname = "info_player_start";spawnfunc_info_player_start();};
-
-/*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in
-team three (Yellow).
-
-Keys:
-"angle"
- viewing angle when spawning
-*/
-void spawnfunc_info_player_team3()
-{
-	self.team = COLOR_TEAM3; // yellow
-	spawnfunc_info_player_deathmatch();
-};
-
-
-/*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in
-team four (Magenta).
-
-Keys:
-"angle"
- viewing angle when spawning
-*/
-void spawnfunc_info_player_team4()
-{
-	self.team = COLOR_TEAM4; // purple
-	spawnfunc_info_player_deathmatch();
-};
-
 void item_flag_reset()
 {
 	DropFlag(self, world, world);

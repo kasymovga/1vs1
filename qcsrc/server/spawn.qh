@@ -1,2 +1,3 @@
 entity (float anypoint) spawn_select;
 void() spawn_init;
+void() spawn_relocate;
