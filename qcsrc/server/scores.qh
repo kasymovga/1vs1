@@ -79,16 +79,16 @@ void(entity to) scores_nice_print;
 /**
  * Sets the following results for the current scores entities.
  */
-void WinningConditionHelper();
-float WinningConditionHelper_topscore;      ///< highest score
-float WinningConditionHelper_secondscore;   ///< second highest score
-float WinningConditionHelper_winnerteam;    ///< the color of the winning team, or -1 if none
-float WinningConditionHelper_secondteam;    ///< the color of the second team, or -1 if none
-float WinningConditionHelper_equality;      ///< we have no winner
-entity WinningConditionHelper_winner;       ///< the winning player, or world if none
-entity WinningConditionHelper_second;       ///< the second player, or world if none
-float WinningConditionHelper_lowerisbetter; ///< lower is better, duh
-float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
+void scores_winning_condition_helper();
+float scores_winning_condition_helper_topscore;      ///< highest score
+float scores_winning_condition_helper_secondscore;   ///< second highest score
+float scores_winning_condition_helper_winnerteam;    ///< the color of the winning team, or -1 if none
+float scores_winning_condition_helper_secondteam;    ///< the color of the second team, or -1 if none
+float scores_winning_condition_helper_equality;      ///< we have no winner
+entity scores_winning_condition_helper_winner;       ///< the winning player, or world if none
+entity scores_winning_condition_helper_second;       ///< the second player, or world if none
+float scores_winning_condition_helper_lowerisbetter; ///< lower is better, duh
+float scores_winning_condition_helper_zeroisworst;   ///< zero is worst, duh
 #define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999
 
 /**
@@ -112,8 +112,7 @@ string(float tm, float shortString) scores_team_string;
  */
 entity(.float field) scores_sort;
 
-float WinningCondition_Scores(float limit, float leadlimit);
-float WinningCondition_RanOutOfSpawns();
+float scores_winning_condition(float limit, float leadlimit);
 
 void(entity e) scores_touch;
 float(entity t1, entity t2) scores_compare_players;

@@ -227,7 +227,7 @@ void() world_precache {
 }
 
 
-void readlevelcvars(void)
+void world_static_init(void)
 {
 #ifdef ALLOW_FORCEMODELS
 	CACHE_CVAR(sv_clforceplayermodels);
@@ -283,7 +283,7 @@ void readlevelcvars(void)
 	registercvar("connections_oldnexuiz", "0");
 }
 
-void readdynamiccvars() {
+void world_dynamic_init() {
 	CACHE_CVAR(g_balance_falldamage_deadminspeed);
 	CACHE_CVAR(g_balance_falldamage_factor);
 	CACHE_CVAR(g_balance_falldamage_minspeed);
@@ -316,7 +316,7 @@ void readdynamiccvars() {
 	chat_init();
 }
 
-void DB_Init() {
+void world_db_init() {
 	ServerProgsDB = db_load("server.db");
 	TemporaryDB = db_create();
 }
@@ -353,7 +353,7 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	DB_Init();
+	world_db_init();
 
 	/*
 	TODO sound pack system
@@ -427,8 +427,8 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 	GameTypeVote_Init();
-	readlevelcvars();
-	readdynamiccvars();
+	world_static_init();
+	world_dynamic_init();
 	HG_Init();
 
 	player_count = 0;
@@ -771,7 +771,72 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 float checkrules_overtimesadded; //how many overtimes have been already added
 
-void InitiateOvertime()
+float() world_check_rules_run_out_spawns {
+	entity head;
+
+	if(!have_team_spawns)
+		return FALSE;
+
+	if(!some_spawn_has_been_used)
+		return FALSE;
+
+	team1_score = team2_score = team3_score = team4_score = 0;
+
+	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
+	{
+		if(head.team == COLOR_TEAM1)
+			team1_score = 1;
+		else if(head.team == COLOR_TEAM2)
+			team2_score = 1;
+		else if(head.team == COLOR_TEAM3)
+			team3_score = 1;
+		else if(head.team == COLOR_TEAM4)
+			team4_score = 1;
+	}
+
+	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
+	{
+		if(head.team == COLOR_TEAM1)
+			team1_score = 1;
+		else if(head.team == COLOR_TEAM2)
+			team2_score = 1;
+		else if(head.team == COLOR_TEAM3)
+			team3_score = 1;
+		else if(head.team == COLOR_TEAM4)
+			team4_score = 1;
+	}
+
+	world_winners_clear();
+	if(team1_score + team2_score + team3_score + team4_score == 0)
+	{
+		checkrules_equality = TRUE;
+		return TRUE;
+	}
+	else if(team1_score + team2_score + team3_score + team4_score == 1)
+	{
+		float t, i;
+		if(team1_score) t = COLOR_TEAM1;
+		if(team2_score) t = COLOR_TEAM2;
+		if(team3_score) t = COLOR_TEAM3;
+		if(team4_score) t = COLOR_TEAM4;
+		teams_check_allowed(world);
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
+		{
+			if(t != COLOR_TEAM1) if(c1 >= 0) scores_team_add_to(COLOR_TEAM1, i, -1000);
+			if(t != COLOR_TEAM2) if(c2 >= 0) scores_team_add_to(COLOR_TEAM2, i, -1000);
+			if(t != COLOR_TEAM3) if(c3 >= 0) scores_team_add_to(COLOR_TEAM3, i, -1000);
+			if(t != COLOR_TEAM4) if(c4 >= 0) scores_team_add_to(COLOR_TEAM4, i, -1000);
+		}
+
+		world_winners_add(team, t);
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
+
+void world_overtime()
 {
 	// Check first whether normal overtimes could be added before initiating suddendeath mode
 	// - for this timelimit_overtime needs to be >0 of course
@@ -800,16 +865,14 @@ void InitiateOvertime()
 }
 
 // set the .winning flag for exactly those players with a given field value
-void SetWinners(.float field, float value)
-{
+void(.float field, float value) world_winners_set {
 	entity head;
 	FOR_EACH_PLAYER(head)
 		head.winning = (head.field == value);
 }
 
 // set the .winning flag for those players with a given field value
-void AddWinners(.float field, float value)
-{
+void(.float field, float value) world_winners_add {
 	entity head;
 	FOR_EACH_PLAYER(head)
 		if(head.field == value)
@@ -817,26 +880,25 @@ void AddWinners(.float field, float value)
 }
 
 // clear the .winning flags
-void ClearWinners(void)
-{
+void(void) world_winners_clear {
 	entity head;
 	FOR_EACH_PLAYER(head)
 		head.winning = 0;
 }
 
-void check_0min_remaining(float timelimit) { }
-var void(float timelimit) check_time_remaining = check_0min_remaining;
-void check_1min_remaining(float timelimit) {
+void world_check_0min_remaining(float timelimit) { }
+var void(float timelimit) world_check_time_remaining = world_check_0min_remaining;
+void world_check_1min_remaining(float timelimit) {
 	if (time + 60 >= timelimit) {
 		play2all("announcer/robotic/1minuteremains.wav");
-		check_time_remaining = check_0min_remaining;
+		world_check_time_remaining = world_check_0min_remaining;
 	}
 }
 
-void check_5min_remaining(float timelimit) {
+void world_check_5min_remaining(float timelimit) {
 	if (time + 300 >= timelimit) {
 		play2all("announcer/robotic/5minutesremain.wav");
-		check_time_remaining = check_1min_remaining;
+		world_check_time_remaining = world_check_1min_remaining;
 	}
 }
 
@@ -854,11 +916,11 @@ void() world_gameover {
 	string gameover_message;
 	gameover_message = "^2Game finished!";
 	if (teamplay) {
-		if (WinningConditionHelper_winnerteam > 0)
-			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(WinningConditionHelper_winnerteam), Team_ColorName(WinningConditionHelper_winnerteam), " Team^2 wins!");
+		if (scores_winning_condition_helper_winnerteam > 0)
+			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(scores_winning_condition_helper_winnerteam), Team_ColorName(scores_winning_condition_helper_winnerteam), " Team^2 wins!");
 	} else {
-		if (WinningConditionHelper_winner)
-			gameover_message = strcat(gameover_message, "\nThe winner is ", WinningConditionHelper_winner.netname);
+		if (scores_winning_condition_helper_winner)
+			gameover_message = strcat(gameover_message, "\nThe winner is ", scores_winning_condition_helper_winner.netname);
 	}
 	GameStatus_Set(GameHook_GameOverMessageMod(gameover_message), 30);
 	play2all("misc/menu2.wav");
@@ -907,13 +969,12 @@ void() world_gameover {
 
 /*
 ============
-CheckRules_World
+world_check_rules
 
 Exit deathmatch games upon conditions
 ============
 */
-void CheckRules_World()
-{
+void() world_check_rules {
 	float timelimit;
 	float fraglimit;
 
@@ -966,11 +1027,11 @@ void CheckRules_World()
 			if (time >= game_starttime) {
 				GameStatus_Set("^1Begin!", 1);
 				play2all("announcer/robotic/begin.wav");
-				check_time_remaining = check_5min_remaining;
+				world_check_time_remaining = world_check_5min_remaining;
 			}
 		}
 	} else if (timelimit)
-		check_time_remaining(timelimit);
+		world_check_time_remaining(timelimit);
 
 	if(checkrules_suddendeathend) {
 		if(!checkrules_suddendeathwarning)
@@ -982,8 +1043,8 @@ void CheckRules_World()
 		if (timelimit)
 		if (time >= timelimit) {
 			if (GameHook_OvertimeAllowed()) {
-				if (WinningConditionHelper_equality) {
-					InitiateOvertime();
+				if (scores_winning_condition_helper_equality) {
+					world_overtime();
 				} else {
 					world_gameover();
 					return;
@@ -999,7 +1060,7 @@ void CheckRules_World()
 		return;
 	}
 	if (checkrules_suddendeathend)
-	if (time >= checkrules_suddendeathend || !WinningConditionHelper_equality)
+	if (time >= checkrules_suddendeathend || !scores_winning_condition_helper_equality)
 	{
 		world_gameover();
 		return;
@@ -1036,12 +1097,12 @@ void EndFrame()
 
 
 /*
- * RedirectionThink:
+ * world_redirection_think:
  * returns TRUE if redirecting
  */
 float redirection_timeout;
 float redirection_nextthink;
-float RedirectionThink()
+float world_redirection_think()
 {
 	float clients_found;
 
@@ -1088,10 +1149,10 @@ void RestoreGame()
 	// some things then break, so let's work around them...
 
 	// Progs DB (capture records)
-	DB_Init();
+	world_db_init();
 	// Mapinfo
 	MapInfo_OnRestore();
-	readdynamiccvars();
+	world_dynamic_init();
 	if not(dlc_ready_all())
 		dlc_reload();
 }
@@ -1229,7 +1290,7 @@ StartFrame
 Called before each frame by the server
 =============
 */
-float RedirectionThink();
+float world_redirection_think();
 void ReadyRestart();
 void StartFrame (void)
 {
@@ -1266,7 +1327,7 @@ void StartFrame (void)
 	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
 		projectile_check(e);
 
-	if(RedirectionThink())
+	if(world_redirection_think())
 		return;
 
 	InitializeEntitiesRun();
@@ -1285,7 +1346,7 @@ void StartFrame (void)
 	}
 
 	CreatureFrame ();
-	CheckRules_World ();
+	world_check_rules();
 
 	GameHookChain_ServerFrame();
 	bot_serverframe();

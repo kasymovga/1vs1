@@ -18,11 +18,11 @@ var entity() GameHook_SelectSpawnPoint = {
 	return spot;
 }
 var float(float fraglimit, float _leadlimit) GameHook_WinningCondition = {
-	if (WinningCondition_RanOutOfSpawns()) {
+	if (world_check_rules_run_out_spawns()) {
 		bprint("Hey! Someone ran out of spawns!\n");
 		return TRUE;
 	}
-	return WinningCondition_Scores(fraglimit, _leadlimit);
+	return scores_winning_condition(fraglimit, _leadlimit);
 }
 var float() GameHook_OvertimeHandle = { return FALSE; }
 var float() GameHook_OvertimeAllowed = { return TRUE; }

@@ -222,7 +222,7 @@ float conquest_WinningCondition()
 	t1 = t2 = 0;
 
 	one_of_team_cannot_spawn = FALSE;
-	WinningConditionHelper(); // set worldstatus
+	scores_winning_condition_helper(); // set worldstatus
 	if(inWarmupStage)
 		return FALSE;
 
@@ -268,15 +268,15 @@ float conquest_WinningCondition()
 
 	if (t1 + t2 < 2) {
 		// game over, only one team remains (or none)
-		ClearWinners();
+		world_winners_clear();
 		string announce_sound;
 		announce_sound = "domination/claim.wav";
 		if (t1) {
-			SetWinners(team, COLOR_TEAM1);
+			world_winners_set(team, COLOR_TEAM1);
 			announce_sound = "ctf/red_capture.wav";
 		}
 		if (t2) {
-			SetWinners(team, COLOR_TEAM2);
+			world_winners_set(team, COLOR_TEAM2);
 			announce_sound = "ctf/blue_capture.wav";
 		}
 		if (t1 + t2 > 0)

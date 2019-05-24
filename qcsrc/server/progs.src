@@ -19,6 +19,7 @@ location_request.qh
 single.qh
 map.qh
 defs.qh		// Should rename this, it has fields and globals
+world.qh
 spawn.qh
 random.qh
 //// tZork Turrets ////
@@ -178,7 +179,7 @@ cl_physics.qc
 ../client-server/cl_physics_aircraft.qc
 ../client-server/cl_physics_car.qc
 footsteps.qc
-g_world.qc
+world.qc
 map.qc
 mapvote.qc
 casing.qc

@@ -363,8 +363,7 @@ float(entity t1, entity t2) scores_compare_players {
 	return result_x;
 }
 
-void WinningConditionHelper()
-{
+void() scores_winning_condition_helper {
 	float c;
 	string s;
 	entity p;
@@ -388,8 +387,8 @@ void WinningConditionHelper()
 			if(teamscorekeepers[t])
 				s = strcat(s, ":", ftos(t+1), ":", scores_team_string(t+1, 1));
 
-		WinningConditionHelper_winnerteam = -1;
-		WinningConditionHelper_secondteam = -1;
+		scores_winning_condition_helper_winnerteam = -1;
+		scores_winning_condition_helper_secondteam = -1;
 		winnerscorekeeper = world;
 		secondscorekeeper = world;
 		for(t = 0; t < 16; ++t)
@@ -398,8 +397,8 @@ void WinningConditionHelper()
 			c = scores_compare_teams(winnerscorekeeper, sk);
 			if(c < 0)
 			{
-				WinningConditionHelper_secondteam = WinningConditionHelper_winnerteam;
-				WinningConditionHelper_winnerteam = t + 1;
+				scores_winning_condition_helper_secondteam = scores_winning_condition_helper_winnerteam;
+				scores_winning_condition_helper_winnerteam = t + 1;
 				secondscorekeeper = winnerscorekeeper;
 				winnerscorekeeper = sk;
 			}
@@ -408,28 +407,28 @@ void WinningConditionHelper()
 				c = scores_compare_teams(secondscorekeeper, sk);
 				if(c < 0)
 				{
-					WinningConditionHelper_secondteam = t + 1;
+					scores_winning_condition_helper_secondteam = t + 1;
 					secondscorekeeper = sk;
 				}
 			}
 		}
 
-		WinningConditionHelper_equality = (scores_compare_teams(winnerscorekeeper, secondscorekeeper) == 0);
-		if(WinningConditionHelper_equality)
-			WinningConditionHelper_winnerteam = WinningConditionHelper_secondteam = -1;
+		scores_winning_condition_helper_equality = (scores_compare_teams(winnerscorekeeper, secondscorekeeper) == 0);
+		if(scores_winning_condition_helper_equality)
+			scores_winning_condition_helper_winnerteam = scores_winning_condition_helper_secondteam = -1;
 
-		WinningConditionHelper_topscore = winnerscorekeeper.teamscores_primary;
-		WinningConditionHelper_secondscore = secondscorekeeper.teamscores_primary;
-		WinningConditionHelper_lowerisbetter = (teamscores_flags_primary & SFL_LOWER_IS_BETTER);
-		WinningConditionHelper_zeroisworst = (teamscores_flags_primary & SFL_ZERO_IS_WORST);
+		scores_winning_condition_helper_topscore = winnerscorekeeper.teamscores_primary;
+		scores_winning_condition_helper_secondscore = secondscorekeeper.teamscores_primary;
+		scores_winning_condition_helper_lowerisbetter = (teamscores_flags_primary & SFL_LOWER_IS_BETTER);
+		scores_winning_condition_helper_zeroisworst = (teamscores_flags_primary & SFL_ZERO_IS_WORST);
 
-		WinningConditionHelper_winner = world; // not supported in teamplay
-		WinningConditionHelper_second = world; // not supported in teamplay
+		scores_winning_condition_helper_winner = world; // not supported in teamplay
+		scores_winning_condition_helper_second = world; // not supported in teamplay
 	}
 	else
 	{
-		WinningConditionHelper_winner = world;
-		WinningConditionHelper_second = world;
+		scores_winning_condition_helper_winner = world;
+		scores_winning_condition_helper_second = world;
 		winnerscorekeeper = world;
 		secondscorekeeper = world;
 		FOR_EACH_PLAYER(p)
@@ -438,8 +437,8 @@ void WinningConditionHelper()
 			c = scores_compare_players(winnerscorekeeper, sk);
 			if(c < 0)
 			{
-				WinningConditionHelper_second = WinningConditionHelper_winner;
-				WinningConditionHelper_winner = p;
+				scores_winning_condition_helper_second = scores_winning_condition_helper_winner;
+				scores_winning_condition_helper_winner = p;
 				secondscorekeeper = winnerscorekeeper;
 				winnerscorekeeper = sk;
 			}
@@ -448,48 +447,48 @@ void WinningConditionHelper()
 				c = scores_compare_players(secondscorekeeper, sk);
 				if(c < 0)
 				{
-					WinningConditionHelper_second = p;
+					scores_winning_condition_helper_second = p;
 					secondscorekeeper = sk;
 				}
 			}
 		}
 
-		WinningConditionHelper_equality = (scores_compare_players(winnerscorekeeper, secondscorekeeper) == 0);
-		if(WinningConditionHelper_equality)
-			WinningConditionHelper_winner = WinningConditionHelper_second = world;
+		scores_winning_condition_helper_equality = (scores_compare_players(winnerscorekeeper, secondscorekeeper) == 0);
+		if(scores_winning_condition_helper_equality)
+			scores_winning_condition_helper_winner = scores_winning_condition_helper_second = world;
 
-		WinningConditionHelper_topscore = winnerscorekeeper.scores_primary;
-		WinningConditionHelper_secondscore = secondscorekeeper.scores_primary;
-		WinningConditionHelper_lowerisbetter = (scores_flags_primary & SFL_LOWER_IS_BETTER);
-		WinningConditionHelper_zeroisworst = (scores_flags_primary & SFL_ZERO_IS_WORST);
+		scores_winning_condition_helper_topscore = winnerscorekeeper.scores_primary;
+		scores_winning_condition_helper_secondscore = secondscorekeeper.scores_primary;
+		scores_winning_condition_helper_lowerisbetter = (scores_flags_primary & SFL_LOWER_IS_BETTER);
+		scores_winning_condition_helper_zeroisworst = (scores_flags_primary & SFL_ZERO_IS_WORST);
 
-		WinningConditionHelper_winnerteam = -1; // no teamplay
-		WinningConditionHelper_secondteam = -1; // no teamplay
+		scores_winning_condition_helper_winnerteam = -1; // no teamplay
+		scores_winning_condition_helper_secondteam = -1; // no teamplay
 	}
 
 	if(teamscores_flags_primary & SFL_TIME)
-		WinningConditionHelper_topscore /= 10;
+		scores_winning_condition_helper_topscore /= 10;
 
-	if(WinningConditionHelper_topscore == 0)
+	if(scores_winning_condition_helper_topscore == 0)
 	{
 		if(scores_flags_primary & SFL_ZERO_IS_WORST)
 		{
-			if(WinningConditionHelper_lowerisbetter)
-				WinningConditionHelper_topscore = 999999999;
+			if(scores_winning_condition_helper_lowerisbetter)
+				scores_winning_condition_helper_topscore = 999999999;
 			else
-				WinningConditionHelper_topscore = -999999999;
+				scores_winning_condition_helper_topscore = -999999999;
 		}
-		WinningConditionHelper_equality = 0;
+		scores_winning_condition_helper_equality = 0;
 	}
 
-	if(WinningConditionHelper_secondscore == 0)
+	if(scores_winning_condition_helper_secondscore == 0)
 	{
 		if(scores_flags_primary & SFL_ZERO_IS_WORST)
 		{
-			if(WinningConditionHelper_lowerisbetter)
-				WinningConditionHelper_secondscore = 999999999;
+			if(scores_winning_condition_helper_lowerisbetter)
+				scores_winning_condition_helper_secondscore = 999999999;
 			else
-				WinningConditionHelper_secondscore = -999999999;
+				scores_winning_condition_helper_secondscore = -999999999;
 		}
 	}
 
@@ -856,10 +855,9 @@ void(entity to) scores_nice_print {
 }
 
 float leaderfrags;
-float WinningCondition_Scores(float limit, float _leadlimit)
-{
+float(float limit, float _leadlimit) scores_winning_condition {
 	// TODO make everything use THIS winning condition (except LMS)
-	WinningConditionHelper();
+	scores_winning_condition_helper();
 
 	if(teamplay)
 	{
@@ -869,105 +867,40 @@ float WinningCondition_Scores(float limit, float _leadlimit)
 		team4_score = scores_team_comparable_value(COLOR_TEAM4);
 	}
 
-	ClearWinners();
-	if(WinningConditionHelper_winner)
-		WinningConditionHelper_winner.winning = 1;
-	if(WinningConditionHelper_winnerteam >= 0)
-		SetWinners(team, WinningConditionHelper_winnerteam);
+	world_winners_clear();
+	if(scores_winning_condition_helper_winner)
+		scores_winning_condition_helper_winner.winning = 1;
+	if(scores_winning_condition_helper_winnerteam >= 0)
+		world_winners_set(team, scores_winning_condition_helper_winnerteam);
 
-	if(WinningConditionHelper_lowerisbetter)
+	if(scores_winning_condition_helper_lowerisbetter)
 	{
-		WinningConditionHelper_topscore = -WinningConditionHelper_topscore;
-		WinningConditionHelper_secondscore = -WinningConditionHelper_secondscore;
+		scores_winning_condition_helper_topscore = -scores_winning_condition_helper_topscore;
+		scores_winning_condition_helper_secondscore = -scores_winning_condition_helper_secondscore;
 		limit = -limit;
 	}
 
-	if(WinningConditionHelper_zeroisworst)
+	if(scores_winning_condition_helper_zeroisworst)
 		_leadlimit = 0; // not supported in this mode
 
 	if (limit)
-	if (leaderfrags != WinningConditionHelper_topscore)
+	if (leaderfrags != scores_winning_condition_helper_topscore)
 	{
-		leaderfrags = WinningConditionHelper_topscore;
+		leaderfrags = scores_winning_condition_helper_topscore;
 		GameHook_WinCountDown(limit - leaderfrags);
 	}
-	if (WinningConditionHelper_equality)
+	if (scores_winning_condition_helper_equality)
 		return FALSE;
 
-	if (WinningConditionHelper_topscore) {
-		if (limit && (WinningConditionHelper_topscore >= limit))
+	if (scores_winning_condition_helper_topscore) {
+		if (limit && (scores_winning_condition_helper_topscore >= limit))
 			return TRUE;
 
-		if (_leadlimit && (WinningConditionHelper_topscore - WinningConditionHelper_secondscore >= _leadlimit))
+		if (_leadlimit && (scores_winning_condition_helper_topscore - scores_winning_condition_helper_secondscore >= _leadlimit))
 			return TRUE;
 	}
 
 	return FALSE;
-}
-
-float WinningCondition_RanOutOfSpawns()
-{
-	entity head;
-
-	if(!have_team_spawns)
-		return FALSE;
-
-	if(!some_spawn_has_been_used)
-		return FALSE;
-
-	team1_score = team2_score = team3_score = team4_score = 0;
-
-	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
-	{
-		if(head.team == COLOR_TEAM1)
-			team1_score = 1;
-		else if(head.team == COLOR_TEAM2)
-			team2_score = 1;
-		else if(head.team == COLOR_TEAM3)
-			team3_score = 1;
-		else if(head.team == COLOR_TEAM4)
-			team4_score = 1;
-	}
-
-	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
-	{
-		if(head.team == COLOR_TEAM1)
-			team1_score = 1;
-		else if(head.team == COLOR_TEAM2)
-			team2_score = 1;
-		else if(head.team == COLOR_TEAM3)
-			team3_score = 1;
-		else if(head.team == COLOR_TEAM4)
-			team4_score = 1;
-	}
-
-	ClearWinners();
-	if(team1_score + team2_score + team3_score + team4_score == 0)
-	{
-		checkrules_equality = TRUE;
-		return TRUE;
-	}
-	else if(team1_score + team2_score + team3_score + team4_score == 1)
-	{
-		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
-		teams_check_allowed(world);
-		for(i = 0; i < MAX_TEAMSCORE; ++i)
-		{
-			if(t != COLOR_TEAM1) if(c1 >= 0) scores_team_add_to(COLOR_TEAM1, i, -1000);
-			if(t != COLOR_TEAM2) if(c2 >= 0) scores_team_add_to(COLOR_TEAM2, i, -1000);
-			if(t != COLOR_TEAM3) if(c3 >= 0) scores_team_add_to(COLOR_TEAM3, i, -1000);
-			if(t != COLOR_TEAM4) if(c4 >= 0) scores_team_add_to(COLOR_TEAM4, i, -1000);
-		}
-
-		AddWinners(team, t);
-		return TRUE;
-	}
-	else
-		return FALSE;
 }
 
 void scores_touch(entity e) {

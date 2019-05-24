@@ -882,14 +882,14 @@ float race_WinningCondition_NonQualifying(float fraglimit)
 	if(n && (n == c))
 		return TRUE;
 
-	return WinningCondition_Scores(fraglimit, 0);
+	return scores_winning_condition(fraglimit, 0);
 }
 
 float race_WinningCondition(float fraglimit, float ignore) {
 	if(!g_race_qualifying)
 		return race_WinningCondition_NonQualifying(fraglimit);
 	else if(g_race_qualifying == 2)
-		return WinningCondition_Scores(fraglimit, 0);
+		return scores_winning_condition(fraglimit, 0);
 
 	return FALSE;
 }

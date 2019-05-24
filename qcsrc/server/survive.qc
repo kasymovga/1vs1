@@ -132,7 +132,7 @@ float survive_checkNextWave() {
 
 float survive_last_countdown;
 float survive_WinningCondition() {
-	WinningConditionHelper(); // set worldstatus
+	scores_winning_condition_helper(); // set worldstatus
 	if (time < game_starttime)
 		return FALSE;
 

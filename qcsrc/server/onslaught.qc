@@ -1371,7 +1371,7 @@ float onslaught_WinningCondition()
 	entity head;
 	local float t1, t2, t3, t4;
 
-	WinningConditionHelper(); // set worldstatus
+	scores_winning_condition_helper(); // set worldstatus
 
 	if(inWarmupStage)
 		return FALSE;
@@ -1393,11 +1393,11 @@ float onslaught_WinningCondition()
 	if (t1 + t2 + t3 + t4 < 2)
 	{
 		// game over, only one team remains (or none)
-		ClearWinners();
-		if (t1) SetWinners(team, COLOR_TEAM1);
-		if (t2) SetWinners(team, COLOR_TEAM2);
-		if (t3) SetWinners(team, COLOR_TEAM3);
-		if (t4) SetWinners(team, COLOR_TEAM4);
+		world_winners_clear();
+		if (t1) world_winners_set(team, COLOR_TEAM1);
+		if (t2) world_winners_set(team, COLOR_TEAM2);
+		if (t3) world_winners_set(team, COLOR_TEAM3);
+		if (t4) world_winners_set(team, COLOR_TEAM4);
 		dprint("Have a winner, ending game.\n");
 		return TRUE;
 	}

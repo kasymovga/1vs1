@@ -614,7 +614,7 @@ void GameCommand(string command)
 
 	if (cmd == "rereadcvars")
 	{
-		readdynamiccvars();
+		world_dynamic_init();
 		return;
 	}
 
