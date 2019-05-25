@@ -1898,7 +1898,7 @@ void(entity spot) player_spawn {
 	float currentlyPlaying, i;
 	entity e, oldself;
 	player_clear(FALSE);
-	PhysicMarkAsTeleported(self);
+	physic_mark_as_teleported(self);
 	self.iscreature = TRUE;
 	self.movetype = MOVETYPE_WALK;
 	self.solid = SOLID_SLIDEBOX;

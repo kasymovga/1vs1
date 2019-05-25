@@ -218,7 +218,7 @@ void() powerup_speed_init {
 	powerup_speed_WeaponRateFactor_NextLink = GameHookChain_WeaponRateFactor;
 	GameHookChain_WeaponRateFactor = powerup_speed_WeaponRateFactor;
 	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
-	PhysicEnableCSQC();
+	physic_csqc_enable();
 }
 
 var float() powerup_invisibility_PlayerEffectsHandle_NextLink;

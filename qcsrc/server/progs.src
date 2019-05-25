@@ -99,7 +99,7 @@ damageindicator.qh
 ../client-server/cl_physics_spiderbot.qh
 ../client-server/cl_physics_aircraft.qh
 ../client-server/cl_physics_car.qh
-cl_physics.qh
+physics.qh
 minstagib.qh
 
 client.qh
@@ -170,7 +170,7 @@ gametype.qc
 runematch.qc
 
 ../client-server/cl_physics.qc
-cl_physics.qc
+physics.qc
 
 // tZork's libs
 ../client-server/movelib.qc

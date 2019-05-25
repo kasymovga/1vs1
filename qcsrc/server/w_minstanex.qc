@@ -31,7 +31,7 @@ void DrawMinstaNexBeamParticles(vector start, vector end, vector to) {
 void W_MinstaNex_Attack (void)
 {
 	float flying;
-	flying = IsFlying(self); // do this BEFORE to make the trace values from bullet_railgun last
+	flying = physic_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
 
 	antilag_begin(Akimbo_Owner(self));
 	weapon_setup_shot (self, 0, "weapons/minstanexfire.wav", 1);

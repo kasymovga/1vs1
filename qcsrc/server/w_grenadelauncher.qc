@@ -32,7 +32,7 @@ void W_Grenade_Explode (void)
 		if(other.classname == "player")
 			if(teams_is_different(self.owner, other))
 				if(other.deadflag == DEAD_NO)
-					if(IsFlying(other))
+					if(physic_is_flying(other))
 						announce(self.owner, "announcer/male/airshot.wav");
 
 	self.event_damage = SUB_Null;
@@ -47,7 +47,7 @@ void W_Grenade_Explode2 (void)
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(teams_is_different(self.owner, other))
-				if(IsFlying(other))
+				if(physic_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav");
 
 	self.event_damage = SUB_Null;

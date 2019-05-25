@@ -836,7 +836,7 @@ void runes_init() {
 	if not(g_runematch)
 		return;
 
-	PhysicEnableCSQC();
+	physic_csqc_enable();
 	precache_model ("models/runematch/curse.mdl");
 	precache_model ("models/runematch/rune.mdl");
 	precache_sound("misc/minihealth.wav");

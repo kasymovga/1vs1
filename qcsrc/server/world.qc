@@ -291,7 +291,7 @@ void world_dynamic_init() {
 	weapon_init();
 	damage_init();
 	fire_init();
-	PhysicReadCvars();
+	physic_init();
 	bot_init();
 	spawn_init();
 	client_initialize();

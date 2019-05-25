@@ -62,7 +62,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 	antilag_teleported(player);
 	projectile_update_after_teleport(player);
-	PhysicMarkAsTeleported(player);
+	physic_mark_as_teleported(player);
 	if(player.classname == "player") {
 		if (g_telefrags)
 		if (player.takedamage)

@@ -21,7 +21,7 @@ float developer_shtest;
 #endif
 
 float buttons_prev;
-float Physic_SendEntity(entity to, float sf);
+float physic_send(entity to, float sf);
 
 void Physic_OnJumpHook()
 {
@@ -55,7 +55,7 @@ void Physic_LandingHook()
 		physic_velocity = physic_velocity * (1 - sv_friction_on_land);
 }
 
-float IsFlying(entity a)
+float physic_is_flying(entity a)
 {
 	if(a.flags & FL_ONGROUND)
 		return 0;
@@ -90,7 +90,7 @@ void Physic_CheckGroundHook()
 			}
 		}
 	}
-	self.wasFlying = IsFlying(self);
+	self.wasFlying = physic_is_flying(self);
 }
 
 void Physic_OnCrouchHook()
@@ -259,7 +259,7 @@ void Physic_FrameBeginHook()
 				if(self.movetype == MOVETYPE_NONE)
 					self.movetype = MOVETYPE_WALK;
 
-				PhysicMarkAsTeleported(self);
+				physic_mark_as_teleported(self);
 				self.disableclientprediction = 0;
 			}
 		} else {
@@ -328,7 +328,7 @@ void Physic_RealClientConnect()
 		self.player_physic = spawn();
 		self.player_physic.viewmodelforclient = self;
 		self.player_physic.owner = self;
-		net_link_entity(self.player_physic, FALSE, 0, Physic_SendEntity);
+		net_link_entity(self.player_physic, FALSE, 0, physic_send);
 	}
 	self.player_physic.SendFlags = 3;
 	Physic_RealClientConnect_NextLink();
@@ -343,7 +343,7 @@ void Physic_RealClientDisconnect()
 	Physic_RealClientDisconnect_NextLink();
 }
 
-void PhysicEnableCSQC() {
+void physic_csqc_enable() {
 	if (sv_csqc_physic)
 		return;
 
@@ -354,7 +354,7 @@ void PhysicEnableCSQC() {
 	GameHookChain_RealClientDisconnect = Physic_RealClientDisconnect;
 }
 
-void PhysicReadCvars()
+void physic_init()
 {
 	//Common
 	CACHE_CVAR(sv_stepheight);
@@ -401,7 +401,7 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_dodging_horiz_speed);
 	CACHE_CVAR(g_dodging_up_speed);
 	if (cvar("sv_csqc_physic"))
-		PhysicEnableCSQC();
+		physic_csqc_enable();
 
 	//Server-side only
 	CACHE_CVAR(g_jetpack_fuel);
@@ -412,7 +412,7 @@ void PhysicReadCvars()
 	CACHE_CVAR(g_walljump_smokeparticle_num);
 }
 
-float Physic_SendEntity(entity to, float sf)
+float physic_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
 	entity oldself = self;
@@ -558,7 +558,7 @@ float Physic_SendEntity(entity to, float sf)
 	return TRUE;
 }
 
-void PhysicMarkAsTeleported(entity pl) {
+void physic_mark_as_teleported(entity pl) {
 	if (pl.player_physic)
 		pl.player_physic.SendFlags |= 4096;
 
