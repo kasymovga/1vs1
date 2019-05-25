@@ -354,10 +354,6 @@ set sv_spawnreplace_item_fuel "item_jetpack"
 set sv_spawnreplace_item_fuel_regen "item_jetpack"
 set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 set sv_spawnreplace_weapon_campingrifle "weapon_nex"
-set sv_spawnreplace_info_player_survivor info_player_deathmatch
-set sv_spawnreplace_info_player_start info_player_deathmatch
-set sv_spawnreplace_misc_teleporter_dest info_teleport_destination
-set sv_spawnreplace_target_teleporter info_teleport_destination
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn
@@ -375,6 +371,11 @@ set sv_spawnreplace_monster_shalrath monster_walker_spawn
 set sv_spawnreplace_monster_tarbaby monster_flyingthing_spawn
 set sv_spawnreplace_item_key2 "item_key_gold"
 set sv_spawnreplace_item_key1 "item_key_silver"
+set sv_spawnreplace_misc_teleporter_dest info_teleport_destination
+set sv_spawnreplace_target_teleporter info_teleport_destination
+set sv_spawnreplace_info_player_survivor info_player_deathmatch
+set sv_spawnreplace_info_player_start info_player_deathmatch
+set sv_spawnreplace_trap_spikeshooter misc_spikeshooter
 
 set sv_spawnreplace_ammo_shells "item_bullets"
 set sv_spawnreplace_ammo_bullets "item_shells"

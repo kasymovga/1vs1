@@ -788,7 +788,7 @@ void spawnfunc_trigger_impulse()
 /*QUAKED spawnfunc_trigger_flipflop (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ENABLED
 "Flip-flop" trigger gate... lets only every second trigger event through
 */
-void flipflop_use()
+void trigger_flipflop_use()
 {
 	self.state = !self.state;
 	if(self.state)
@@ -799,14 +799,14 @@ void spawnfunc_trigger_flipflop()
 {
 	if(self.spawnflags & 1)
 		self.state = 1;
-	self.use = flipflop_use;
+	self.use = trigger_flipflop_use;
 	self.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }
 
 /*QUAKED spawnfunc_trigger_monoflop (.5 .5 .5) (-8 -8 -8) (8 8 8)
 "Mono-flop" trigger gate... turns one trigger event into one "on" and one "off" event, separated by a delay of "wait"
 */
-void monoflop_use()
+void trigger_monoflop_use()
 {
 	self.nextthink = time + self.wait;
 	self.enemy = activator;
@@ -815,7 +815,7 @@ void monoflop_use()
 	self.state = 1;
 	trigger_use_targets();
 }
-void monoflop_fixed_use()
+void trigger_monoflop_fixed_use()
 {
 	if(self.state)
 		return;
@@ -825,14 +825,14 @@ void monoflop_fixed_use()
 	trigger_use_targets();
 }
 
-void monoflop_think()
+void trigger_monoflop_think()
 {
 	self.state = 0;
 	activator = self.enemy;
 	trigger_use_targets();
 }
 
-void monoflop_reset()
+void trigger_monoflop_reset()
 {
 	self.state = 0;
 	self.nextthink = 0;
@@ -842,40 +842,39 @@ void spawnfunc_trigger_monoflop()
 {
 	if(!self.wait)
 		self.wait = 1;
+
 	if(self.spawnflags & 1)
-		self.use = monoflop_fixed_use;
+		self.use = trigger_monoflop_fixed_use;
 	else
-		self.use = monoflop_use;
-	self.think = monoflop_think;
+		self.use = trigger_monoflop_use;
+
+	self.think = trigger_monoflop_think;
 	self.state = 0;
-	self.reset = monoflop_reset;
+	self.reset = trigger_monoflop_reset;
 }
 
-void multivibrator_send()
+void trigger_multivibrator_send()
 {
 	float newstate;
 	float cyclestart;
-
 	cyclestart = floor((time + self.phase) / (self.wait + self.respawntime)) * (self.wait + self.respawntime) - self.phase;
-
 	newstate = (time < cyclestart + self.wait);
-
 	activator = self;
 	if(self.state != newstate)
 		trigger_use_targets();
-	self.state = newstate;
 
+	self.state = newstate;
 	if(self.state)
 		self.nextthink = cyclestart + self.wait + 0.01;
 	else
 		self.nextthink = cyclestart + self.wait + self.respawntime + 0.01;
 }
 
-void multivibrator_toggle()
+void trigger_multivibrator_toggle()
 {
 	if(self.nextthink == 0)
 	{
-		multivibrator_send();
+		trigger_multivibrator_send();
 	}
 	else
 	{
@@ -888,7 +887,7 @@ void multivibrator_toggle()
 	}
 }
 
-void multivibrator_reset()
+void trigger_multivibrator_reset()
 {
 	if(!(self.spawnflags & 1))
 		self.nextthink = 0; // wait for a trigger event
@@ -915,23 +914,22 @@ void spawnfunc_trigger_multivibrator()
 		self.respawntime = self.wait;
 
 	self.state = 0;
-	self.use = multivibrator_toggle;
-	self.think = multivibrator_send;
+	self.use = trigger_multivibrator_toggle;
+	self.think = trigger_multivibrator_send;
 	self.nextthink = time;
-
 	IFTARGETED
-		multivibrator_reset();
+		trigger_multivibrator_reset();
 }
 
 
-void gamestart_use() {
+void trigger_gamestart_use() {
 	activator = self;
 	trigger_use_targets();
 	remove(self);
 }
 
 void spawnfunc_trigger_gamestart() {
-	self.use = gamestart_use;
+	self.use = trigger_gamestart_use;
 	self.reset2 = spawnfunc_trigger_gamestart;
 
 	if(self.wait)
@@ -940,7 +938,7 @@ void spawnfunc_trigger_gamestart() {
 		self.nextthink = game_starttime + self.wait;
 	}
 	else
-		InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);
+		InitializeEntity(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
 }
 
 void trigger_relay_teamcheck_use()
@@ -1508,35 +1506,12 @@ void spawnfunc_trigger_roundstate(void) {
     self.use = trigger_use_targets;
 
     if(self.cnt == 0 /*ROUNDSTATE_GAMEINIT*/) {
-        InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);
+        InitializeEntity(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
     } else if(self.cnt == 4 /*ROUNDSTATE_WARMUP*/) {
     	self.reset2 = trigger_roundstate_warmup;
     } else {
     	print("trigger_roundstate: roundstate " + self.cnt + " is not supported\n");
     }
-}
-
-void spikeshooter_spike_touch(void) {
-	PROJECTILE_TOUCH;
-	if(other.solid == SOLID_BSP)
-		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
-	if (other && other.takedamage)
-	{
-		damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
-	}
-	remove(self);
-}
-
-void spikeshooter_use(void) {
-	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, world);
-	setorigin(spike, self.origin);
-	PROJECTILE_MAKETRIGGER(spike);
-	spike.velocity = self.movedir * 800;
-	spike.think = SUB_Remove;
-	spike.nextthink = time + 10;
-	spike.movetype = MOVETYPE_FLY;
-	spike.touch = spikeshooter_spike_touch;
-	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 }
 
 .entity trigger_gravity_check;
@@ -1733,4 +1708,40 @@ void(void) spawnfunc_trigger_swamp {
 
 	if(self.swamp_slowdown <= 0)
 		self.swamp_slowdown = 0.5;
+}
+
+void trigger_door_check_use() {
+	entity e;
+	float state_to_check;
+	if (self.spawnflags & 1)
+		state_to_check = STATE_BOTTOM;
+	else
+		state_to_check = STATE_TOP;
+
+	float total, correct;
+	total = correct = 0;
+	string t = self.target;
+	for (e = find(world, targetname, t); e; e = find(e, targetname, t)) {
+		total++;
+		if (e.state == state_to_check)
+			correct++;
+	}
+	self.target = "";
+	self.state = STATE_BOTTOM;
+	if (self.spawnflags & 2) { //OR check (at least one door in needed state)
+		if (correct > 0) {
+			trigger_use_targets();
+			self.state = STATE_TOP;
+		}
+	} else { //AND check (all doors in needed state)
+		if (total == correct) {
+			trigger_use_targets();
+			self.state = STATE_TOP;
+		}
+	}
+	self.target = t;
+}
+
+void spawnfunc_trigger_door_check() {
+	self.use = trigger_door_check_use;
 }

@@ -48,8 +48,8 @@ scores.qh
 sysinfo.qh
 ipban.qh
 trigger.qh
+func.qh
 race.qh
-
 keyhunt.qh
 
 antilag.qh
@@ -219,7 +219,6 @@ chat.qc
 spectator.qc
 push.qc
 client.qc
-t_plats.qc
 antilag.qc
 spawn.qc
 roundbased.qc

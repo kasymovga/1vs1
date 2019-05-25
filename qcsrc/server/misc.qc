@@ -36,10 +36,33 @@ void(void) spawnfunc_misc_follow {
 	InitializeEntity(self, misc_follow_init, INITPRIO_FINDTARGET);
 }
 
-void(void) spawnfunc_trap_spikeshooter {
+void misc_spikeshooter_spike_touch(void) {
+	PROJECTILE_TOUCH;
+	if(other.solid == SOLID_BSP)
+		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), WEP_UZI, self);
+	if (other && other.takedamage)
+	{
+		damage(other, self, world, 20, DEATH_TURRET, self.origin, 20 * normalize(self.velocity));
+	}
+	remove(self);
+}
+
+void misc_spikeshooter_use(void) {
+	entity spike = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, world);
+	setorigin(spike, self.origin);
+	PROJECTILE_MAKETRIGGER(spike);
+	spike.velocity = self.movedir * 800;
+	spike.think = SUB_Remove;
+	spike.nextthink = time + 10;
+	spike.movetype = MOVETYPE_FLY;
+	spike.touch = misc_spikeshooter_spike_touch;
+	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+}
+
+void(void) spawnfunc_misc_spikeshooter {
 	makevectors(self.angles);
 	self.movedir = normalize(v_forward);
-	self.use = spikeshooter_use;
+	self.use = misc_spikeshooter_use;
 	precache_sound("weapons/uzi_fire.wav");
 	projectile_init(PROJECTILE_BULLET_BIG);
 }

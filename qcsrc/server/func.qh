@@ -1,0 +1,4 @@
+float	STATE_TOP		= 0;
+float	STATE_BOTTOM	= 1;
+float	STATE_UP		= 2;
+float	STATE_DOWN		= 3;
