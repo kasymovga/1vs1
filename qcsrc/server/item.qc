@@ -430,7 +430,7 @@ void item_touch (void)
 
 	item_touch_picked = TRUE;
 	activator = other;
-	SUB_UseTargets();
+	trigger_use_targets();
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 
 	if (substring(self.classname, 0, 7) == "dropped")

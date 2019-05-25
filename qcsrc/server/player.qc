@@ -2017,7 +2017,7 @@ void(entity spot) player_spawn {
 	oldself = self;
 	self = spot;
 	activator = oldself;
-	SUB_UseTargets();
+	trigger_use_targets();
 	activator = world;
 	self = oldself;
 	if (sv_reset_on_join)

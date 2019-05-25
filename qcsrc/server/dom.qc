@@ -82,7 +82,7 @@ void dompoint_captured ()
 	self.team = real_team;
 	self.delay = 0;
 	activator = self;
-	SUB_UseTargets ();
+	trigger_use_targets ();
 	self.delay = old_delay;
 	self.team = old_team;
 

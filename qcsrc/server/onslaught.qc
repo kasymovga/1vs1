@@ -952,7 +952,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		oself = self;
 		self = self.owner;
 		activator = self;
-		SUB_UseTargets ();
+		trigger_use_targets ();
 		self = oself;
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
@@ -998,7 +998,7 @@ void onslaught_controlpoint_icon_think()
 		oself = self;
 		self = self.owner;
 		activator = self;
-		SUB_UseTargets ();
+		trigger_use_targets ();
 		self = oself;
 
 		self.owner.team = t;
@@ -1072,7 +1072,7 @@ void onslaught_controlpoint_icon_buildthink()
 		oself = self;
 		self = self.owner;
 		activator = self;
-		SUB_UseTargets ();
+		trigger_use_targets ();
 		self = oself;
 
 		if (self.target != "")
@@ -1150,7 +1150,7 @@ void onslaught_controlpoint_reset()
 	onslaught_updatelinks();
 
 	activator = self;
-	SUB_UseTargets(); // to reset the structures, playerspawns etc.
+	trigger_use_targets(); // to reset the structures, playerspawns etc.
 }
 
 /*QUAKED spawnfunc_onslaught_controlpoint (0 .5 .8) (-32 -32 0) (32 32 128)

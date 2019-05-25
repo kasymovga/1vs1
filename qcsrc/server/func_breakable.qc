@@ -203,7 +203,7 @@ void func_breakable_destroy() {
 	oldmsg = self.message;
 	self.message = "";
 	other = self;
-	SUB_UseTargets();
+	trigger_use_targets();
 	self.message = oldmsg;
 }
 

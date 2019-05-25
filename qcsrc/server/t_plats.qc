@@ -511,7 +511,7 @@ void button_wait()
 	self.nextthink = self.ltime + self.wait;
 	self.think = button_return;
 	activator = self.enemy;
-	SUB_UseTargets();
+	trigger_use_targets();
 	self.frame = 1;			// use alternate textures
 };
 
@@ -797,7 +797,7 @@ void door_go_up()
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
-	SUB_UseTargets();
+	trigger_use_targets();
 	self.message = oldmessage;
 };
 
@@ -1049,7 +1049,7 @@ void door_rotating_go_up()
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
-	SUB_UseTargets();
+	trigger_use_targets();
 	self.message = oldmessage;
 };
 
@@ -1475,7 +1475,7 @@ void fd_secret_use()
 
 	message_save = self.message;
 	self.message = ""; // no more message
-	SUB_UseTargets();				// fire all targets / killtargets
+	trigger_use_targets();				// fire all targets / killtargets
 	self.message = message_save;
 
 	self.velocity = '0 0 0';
@@ -1923,12 +1923,12 @@ void trigger_door_check_use() {
 	self.state = STATE_BOTTOM;
 	if (self.spawnflags & 2) { //OR check (at least one door in needed state)
 		if (correct > 0) {
-			SUB_UseTargets();
+			trigger_use_targets();
 			self.state = STATE_TOP;
 		}
 	} else { //AND check (all doors in needed state)
 		if (total == correct) {
-			SUB_UseTargets();
+			trigger_use_targets();
 			self.state = STATE_TOP;
 		}
 	}

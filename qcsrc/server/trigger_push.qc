@@ -4,7 +4,7 @@ float PUSH_SILENT		= 2;
 .float pushltime;
 .float height;
 
-void() SUB_UseTargets;
+void() trigger_use_targets;
 
 float trigger_push_calculatevelocity_flighttime;
 
@@ -177,7 +177,7 @@ void trigger_push_touch()
 		oldself = self;
 		activator = other;
 		self = self.enemy;
-		SUB_UseTargets();
+		trigger_use_targets();
 		self = oldself;
 	}
 

@@ -128,7 +128,7 @@ void conquest_cp_think_capture() {
 				play2team(self.team, "onslaught/controlpoint_built.ogg");
 			}
 			activator = self;
-			SUB_UseTargets();
+			trigger_use_targets();
 
 			if (self.team > 0)
 				teams_spawn_team(self.team);

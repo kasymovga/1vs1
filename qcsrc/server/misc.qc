@@ -92,3 +92,240 @@ void(void) spawnfunc_misc_teleporter {
 	setsize(self, '-32 -32 -48', '32 32 48');
 	spawnfunc_trigger_teleport();
 }
+
+.float modelscale;
+void(void) misc_laser_aim {
+	vector a;
+	if(self.enemy)
+	{
+		if(self.spawnflags & 2)
+		{
+			if(self.enemy.origin != self.mangle)
+			{
+				self.mangle = self.enemy.origin;
+				self.SendFlags |= 2;
+			}
+		}
+		else
+		{
+			a = vectoangles(self.enemy.origin - self.origin);
+			a_x = -a_x;
+			if(a != self.mangle)
+			{
+				self.mangle = a;
+				self.SendFlags |= 2;
+			}
+		}
+	}
+	else
+	{
+		if(self.angles != self.mangle)
+		{
+			self.mangle = self.angles;
+			self.SendFlags |= 2;
+		}
+	}
+	if(self.origin != self.oldorigin)
+	{
+		self.SendFlags |= 1;
+		self.oldorigin = self.origin;
+	}
+}
+
+void(void) misc_laser_init {
+	if(self.target != "")
+		self.enemy = find(world, targetname, self.target);
+}
+
+.entity pusher;
+void(void) misc_laser_think {
+	vector o;
+	entity oldself;
+
+	self.nextthink = time;
+
+	if(!self.state)
+		return;
+
+	misc_laser_aim();
+
+	if(self.enemy)
+	{
+		o = self.enemy.origin;
+		if not(self.spawnflags & 2)
+			o = self.origin + normalize(o - self.origin) * 32768;
+	}
+	else
+	{
+		makevectors(self.mangle);
+		o = self.origin + v_forward * 32768;
+	}
+
+	if(self.dmg)
+	{
+		if(self.dmg < 0)
+			bullet_railgun(self.origin, o, 100000, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
+		else
+			bullet_railgun(self.origin, o, self.dmg * frametime, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
+	}
+
+	if(self.enemy.target != "") // DETECTOR laser
+	{
+		traceline(self.origin, o, MOVE_NORMAL, self);
+		if(trace_ent.iscreature)
+		{
+			self.pusher = trace_ent;
+			if(!self.count)
+			{
+				self.count = 1;
+
+				oldself = self;
+				self = self.enemy;
+				activator = self.pusher;
+				trigger_use_targets();
+				self = oldself;
+			}
+		}
+		else
+		{
+			if(self.count)
+			{
+				self.count = 0;
+
+				oldself = self;
+				self = self.enemy;
+				activator = self.pusher;
+				trigger_use_targets();
+				self = oldself;
+			}
+		}
+	}
+}
+
+float(entity to, float fl) misc_laser_send {
+	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
+	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
+	if(self.spawnflags & 2)
+		fl |= 0x80;
+	if(self.alpha)
+		fl |= 0x40;
+	if(self.scale != 1 || self.modelscale != 1)
+		fl |= 0x20;
+	WriteByte(MSG_ENTITY, fl);
+	if(fl & 1)
+	{
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+	}
+	if(fl & 8)
+	{
+		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		if(fl & 0x40)
+			WriteByte(MSG_ENTITY, self.alpha * 255.0);
+		if(fl & 0x20)
+		{
+			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
+			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
+		}
+		WriteShort(MSG_ENTITY, self.cnt + 1);
+	}
+	if(fl & 2)
+	{
+		if(fl & 0x80)
+		{
+			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
+			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
+			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+		}
+		else
+		{
+			WriteAngle(MSG_ENTITY, self.mangle_x);
+			WriteAngle(MSG_ENTITY, self.mangle_y);
+		}
+	}
+	if(fl & 4)
+		WriteByte(MSG_ENTITY, self.state);
+	return 1;
+}
+
+void misc_laser_use()
+{
+	self.state = !self.state;
+	self.SendFlags |= 4;
+	misc_laser_aim();
+}
+
+void(void) misc_laser_reset {
+	if(self.spawnflags & 1)
+		self.state = 1;
+	else
+		self.state = 0;
+}
+
+/*QUAKED spawnfunc_misc_laser (.5 .5 .5) ? START_ON DEST_IS_FIXED
+Any object touching the beam will be hurt
+Keys:
+"target"
+ spawnfunc_target_position where the laser ends
+"mdl"
+ name of beam end effect to use
+"colormod"
+ color of the beam (default: red)
+"dmg"
+ damage per second (-1 for a laser that kills immediately)
+*/
+void(void) spawnfunc_misc_laser {
+	if(self.mdl)
+	{
+		if(self.mdl == "none")
+			self.cnt = -1;
+		else
+		{
+			self.cnt = particleeffectnum(self.mdl);
+			if(self.cnt < 0)
+				if(self.dmg)
+					self.cnt = particleeffectnum("laser_deadly");
+		}
+	}
+	else if(!self.cnt)
+	{
+		if(self.dmg)
+			self.cnt = particleeffectnum("laser_deadly");
+		else
+			self.cnt = -1;
+	}
+	if(self.cnt < 0)
+		self.cnt = -1;
+
+	if(self.colormod == '0 0 0')
+		if(!self.alpha)
+			self.colormod = '1 0 0';
+	if(!self.message)
+		self.message = "saw the light";
+	if (!self.message2)
+		self.message2 = "was pushed into a laser by";
+	if(!self.scale)
+		self.scale = 1;
+	if(!self.modelscale)
+		self.modelscale = 1;
+	self.think = misc_laser_think;
+	self.nextthink = time;
+	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);
+
+	self.mangle = self.angles;
+
+	net_link_entity(self, FALSE, 0, misc_laser_send);
+
+	IFTARGETED
+	{
+		self.reset = misc_laser_reset;
+		misc_laser_reset();
+		self.use = misc_laser_use;
+	}
+	else
+		self.state = 1;
+}
+

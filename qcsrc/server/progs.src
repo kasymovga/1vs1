@@ -47,7 +47,7 @@ hook.qh
 scores.qh
 sysinfo.qh
 ipban.qh
-
+trigger.qh
 race.qh
 
 keyhunt.qh

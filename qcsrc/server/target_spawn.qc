@@ -333,7 +333,7 @@ void trigger_relay_if_use()
 		n = !n;
 
 	if(n)
-		SUB_UseTargets();
+		trigger_use_targets();
 }
 
 void spawnfunc_trigger_relay_if()

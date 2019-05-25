@@ -1,19 +1,16 @@
-void SUB_DontUseTargets()
-{
-}
+void trigger_dont_use_targets() { }
 
-
-void DelayThink()
+void trigger_delay_think()
 {
 	activator = self.enemy;
-	SUB_UseTargets ();
+	trigger_use_targets ();
 	remove(self);
 };
 
 float foreachtarget_callid;
 .float targethandled;
 
-void SUB_ForEachTarget_Recurse(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) {
+void trigger_for_each_target_recurse(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) {
     float i;
     string targname;
     entity targ;
@@ -38,27 +35,27 @@ void SUB_ForEachTarget_Recurse(entity s, float(entity, float, vector, string, en
                 targ.targethandled = foreachtarget_callid;
 
                 if(recursive)
-                    SUB_ForEachTarget_Recurse(targ, cback, recursive, fdata, vdata, sdata, edata);
+                    trigger_for_each_target_recurse(targ, cback, recursive, fdata, vdata, sdata, edata);
             }
         }
     }
 }
 
-void SUB_ForEachTarget(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) {
+void trigger_for_each_target(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) {
 	foreachtarget_callid++;
-    SUB_ForEachTarget_Recurse(s, cback, recursive, fdata, vdata, sdata, edata);
+    trigger_for_each_target_recurse(s, cback, recursive, fdata, vdata, sdata, edata);
 }
 
 entity linktargets_ent;
 entity linktargets_first;
 var .entity linktargets_fld;
 
-entity SUB_LinkTargets(entity ent, .entity fld, float recursive) {
+entity(entity ent, .entity fld, float recursive) trigger_link_targets {
     linktargets_ent = world;
     linktargets_first = world;
     linktargets_fld = fld;
 
-    SUB_ForEachTarget(ent, inline float(entity targ, float _f, vector _v, string _s, entity _e) {
+    trigger_for_each_target(ent, inline float(entity targ, float _f, vector _v, string _s, entity _e) {
         if(linktargets_ent)
             linktargets_ent.linktargets_fld = targ;
         else
@@ -76,12 +73,12 @@ entity SUB_LinkTargets(entity ent, .entity fld, float recursive) {
 
 /*
 ==============================
-SUB_UseTargets
+trigger_use_targets
 
 the global "activator" should be set to the entity that initiated the firing.
 
 If self.delay is set, a DelayedUse entity will be created that will actually
-do the SUB_UseTargets after that many seconds have passed.
+do the trigger_use_targets after that many seconds have passed.
 
 Centerprints any self.message to the activator.
 
@@ -96,7 +93,7 @@ match (string)self.target and call their .use function
 
 .float sub_target_used;
 
-void SUB_UseTargets_Ex(float preventReuse)
+void trigger_use_targets_ex(float preventReuse)
 {
 	entity t, stemp, otemp, act;
 	string s;
@@ -111,7 +108,7 @@ void SUB_UseTargets_Ex(float preventReuse)
 		t = spawn();
 		t.classname = "DelayedUse";
 		t.nextthink = time + self.delay;
-		t.think = DelayThink;
+		t.think = trigger_delay_think;
 		t.enemy = activator;
 		t.message = self.message;
 		t.killtarget = self.killtarget;
@@ -185,12 +182,12 @@ void SUB_UseTargets_Ex(float preventReuse)
 	other = otemp;
 }
 
-void SUB_UseTargets() {
-    SUB_UseTargets_Ex(FALSE);
+void(void) trigger_use_targets {
+    trigger_use_targets_ex(FALSE);
 }
 
-void SUB_UseTargets_PreventReuse() {
-    SUB_UseTargets_Ex(TRUE);
+void trigger_use_targets_prevent_reuse() {
+    trigger_use_targets_ex(TRUE);
 }
 
 //=============================================================================
@@ -200,7 +197,7 @@ float	SPAWNFLAG_NOTOUCH = 1;
 float	SPAWNFLAG_PLAYERONLY = 4;
 
 // the wait time has passed, so set back up for another activation
-void multi_wait()
+void trigger_multiple_wait()
 {
 	if (self.max_health)
 	{
@@ -214,7 +211,7 @@ void multi_wait()
 // the trigger was just touched/killed/used
 // self.enemy should be set to the activator so it can be held through a delay
 // so wait for the delay time before firing
-void multi_trigger()
+void trigger_multiple_fire()
 {
 	if (self.nextthink > time)
 	{
@@ -237,11 +234,11 @@ void multi_trigger()
 
 	activator = self.enemy;
 	other = self.goalentity;
-	SUB_UseTargets();
+	trigger_use_targets();
 
 	if (self.wait > 0)
 	{
-		self.think = multi_wait;
+		self.think = trigger_multiple_wait;
 		self.nextthink = time + self.wait;
 	}
 	else
@@ -251,14 +248,14 @@ void multi_trigger()
 	}
 };
 
-void multi_use()
+void trigger_multiple_use()
 {
 	self.goalentity = other;
 	self.enemy = activator;
-	multi_trigger();
+	trigger_multiple_fire();
 };
 
-void multi_touch()
+void trigger_multiple_touch()
 {
 	if not(self.spawnflags & 2)
 	{
@@ -285,10 +282,10 @@ void multi_touch()
 
 	self.enemy = other;
 	self.goalentity = other;
-	multi_trigger ();
+	trigger_multiple_fire ();
 };
 
-void multi_eventdamage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
+void trigger_multiple_eventdamage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if (!self.takedamage)
 		return;
@@ -300,14 +297,14 @@ void multi_eventdamage (entity inflictor, entity attacker, float _damage, float 
 	{
 		self.enemy = attacker;
 		self.goalentity = inflictor;
-		multi_trigger();
+		trigger_multiple_fire();
 	}
 }
 
-void multi_reset()
+void trigger_multiple_reset()
 {
 	if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
-		self.touch = multi_touch;
+		self.touch = trigger_multiple_touch;
 	if (self.max_health)
 	{
 		self.health = self.max_health;
@@ -333,7 +330,7 @@ set "message" to text string
 */
 void spawnfunc_trigger_multiple()
 {
-	self.reset = multi_reset;
+	self.reset = trigger_multiple_reset;
 	if (self.sounds == 1)
 	{
 		precache_sound ("misc/secret.wav");
@@ -352,7 +349,7 @@ void spawnfunc_trigger_multiple()
 
 	if (!self.wait)
 		self.wait = 0.2;
-	self.use = multi_use;
+	self.use = trigger_multiple_use;
 
 	EXACTTRIGGER_INIT;
 
@@ -363,7 +360,7 @@ void spawnfunc_trigger_multiple()
 		if (self.spawnflags & SPAWNFLAG_NOTOUCH)
 			objerror ("health and notouch don't make sense\n");
 		self.max_health = self.health;
-		self.event_damage = multi_eventdamage;
+		self.event_damage = trigger_multiple_eventdamage;
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 		setorigin (self, self.origin);	// make sure it links into the world
@@ -372,7 +369,7 @@ void spawnfunc_trigger_multiple()
 	{
 		if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
 		{
-			self.touch = multi_touch;
+			self.touch = trigger_multiple_touch;
 			setorigin (self, self.origin);	// make sure it links into the world
 		}
 	}
@@ -405,17 +402,17 @@ This fixed size trigger cannot be touched, it can only be fired by other events.
 */
 void spawnfunc_trigger_relay()
 {
-	self.use = SUB_UseTargets;
+	self.use = trigger_use_targets;
 	self.reset = spawnfunc_trigger_relay; // this spawnfunc resets fully
 };
 
-void delay_use()
+void trigger_delay_use()
 {
-    self.think = SUB_UseTargets;
+    self.think = trigger_use_targets;
     self.nextthink = time + self.wait;
 }
 
-void delay_reset()
+void trigger_delay_reset()
 {
 	self.think = SUB_Null;
 }
@@ -425,14 +422,14 @@ void spawnfunc_trigger_delay()
     if(!self.wait)
         self.wait = 1;
 
-    self.use = delay_use;
-    self.reset = delay_reset;
+    self.use = trigger_delay_use;
+    self.reset = trigger_delay_reset;
 }
 
 //=============================================================================
 
 
-void counter_use()
+void trigger_counter_use()
 {
 	self.count = self.count - 1;
 	if (self.count < 0)
@@ -459,13 +456,13 @@ void counter_use()
 	&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 		centerprint(activator, "Sequence completed!");
 	self.enemy = activator;
-	multi_trigger ();
+	trigger_multiple_fire ();
 };
 
-void counter_reset()
+void trigger_counter_reset()
 {
 	self.count = self.cnt;
-	multi_reset();
+	trigger_multiple_reset();
 }
 
 /*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage
@@ -482,8 +479,8 @@ void spawnfunc_trigger_counter()
 		self.count = 2;
 	self.cnt = self.count;
 
-	self.use = counter_use;
-	self.reset = counter_reset;
+	self.use = trigger_counter_use;
+	self.reset = trigger_counter_reset;
 };
 
 .float triggerhurttime;
@@ -608,252 +605,6 @@ void spawnfunc_trigger_heal()
 //End trigger_heal
 //
 //////////////////////////////////////////////////////////////
-
-
-
-
-
-.float modelscale;
-void misc_laser_aim()
-{
-	vector a;
-	if(self.enemy)
-	{
-		if(self.spawnflags & 2)
-		{
-			if(self.enemy.origin != self.mangle)
-			{
-				self.mangle = self.enemy.origin;
-				self.SendFlags |= 2;
-			}
-		}
-		else
-		{
-			a = vectoangles(self.enemy.origin - self.origin);
-			a_x = -a_x;
-			if(a != self.mangle)
-			{
-				self.mangle = a;
-				self.SendFlags |= 2;
-			}
-		}
-	}
-	else
-	{
-		if(self.angles != self.mangle)
-		{
-			self.mangle = self.angles;
-			self.SendFlags |= 2;
-		}
-	}
-	if(self.origin != self.oldorigin)
-	{
-		self.SendFlags |= 1;
-		self.oldorigin = self.origin;
-	}
-}
-
-void misc_laser_init()
-{
-	if(self.target != "")
-		self.enemy = find(world, targetname, self.target);
-}
-
-.entity pusher;
-void misc_laser_think()
-{
-	vector o;
-	entity oldself;
-
-	self.nextthink = time;
-
-	if(!self.state)
-		return;
-
-	misc_laser_aim();
-
-	if(self.enemy)
-	{
-		o = self.enemy.origin;
-		if not(self.spawnflags & 2)
-			o = self.origin + normalize(o - self.origin) * 32768;
-	}
-	else
-	{
-		makevectors(self.mangle);
-		o = self.origin + v_forward * 32768;
-	}
-
-	if(self.dmg)
-	{
-		if(self.dmg < 0)
-			bullet_railgun(self.origin, o, 100000, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
-		else
-			bullet_railgun(self.origin, o, self.dmg * frametime, 0, 0, 0, 0, 0, DEATH_HURTTRIGGER);
-	}
-
-	if(self.enemy.target != "") // DETECTOR laser
-	{
-		traceline(self.origin, o, MOVE_NORMAL, self);
-		if(trace_ent.iscreature)
-		{
-			self.pusher = trace_ent;
-			if(!self.count)
-			{
-				self.count = 1;
-
-				oldself = self;
-				self = self.enemy;
-				activator = self.pusher;
-				SUB_UseTargets();
-				self = oldself;
-			}
-		}
-		else
-		{
-			if(self.count)
-			{
-				self.count = 0;
-
-				oldself = self;
-				self = self.enemy;
-				activator = self.pusher;
-				SUB_UseTargets();
-				self = oldself;
-			}
-		}
-	}
-}
-
-float laser_SendEntity(entity to, float fl)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
-	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
-	if(self.spawnflags & 2)
-		fl |= 0x80;
-	if(self.alpha)
-		fl |= 0x40;
-	if(self.scale != 1 || self.modelscale != 1)
-		fl |= 0x20;
-	WriteByte(MSG_ENTITY, fl);
-	if(fl & 1)
-	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
-	}
-	if(fl & 8)
-	{
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
-		if(fl & 0x40)
-			WriteByte(MSG_ENTITY, self.alpha * 255.0);
-		if(fl & 0x20)
-		{
-			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
-			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
-		}
-		WriteShort(MSG_ENTITY, self.cnt + 1);
-	}
-	if(fl & 2)
-	{
-		if(fl & 0x80)
-		{
-			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
-		}
-		else
-		{
-			WriteAngle(MSG_ENTITY, self.mangle_x);
-			WriteAngle(MSG_ENTITY, self.mangle_y);
-		}
-	}
-	if(fl & 4)
-		WriteByte(MSG_ENTITY, self.state);
-	return 1;
-}
-
-/*QUAKED spawnfunc_misc_laser (.5 .5 .5) ? START_ON DEST_IS_FIXED
-Any object touching the beam will be hurt
-Keys:
-"target"
- spawnfunc_target_position where the laser ends
-"mdl"
- name of beam end effect to use
-"colormod"
- color of the beam (default: red)
-"dmg"
- damage per second (-1 for a laser that kills immediately)
-*/
-void laser_use()
-{
-	self.state = !self.state;
-	self.SendFlags |= 4;
-	misc_laser_aim();
-}
-
-void laser_reset()
-{
-	if(self.spawnflags & 1)
-		self.state = 1;
-	else
-		self.state = 0;
-}
-
-void spawnfunc_misc_laser()
-{
-	if(self.mdl)
-	{
-		if(self.mdl == "none")
-			self.cnt = -1;
-		else
-		{
-			self.cnt = particleeffectnum(self.mdl);
-			if(self.cnt < 0)
-				if(self.dmg)
-					self.cnt = particleeffectnum("laser_deadly");
-		}
-	}
-	else if(!self.cnt)
-	{
-		if(self.dmg)
-			self.cnt = particleeffectnum("laser_deadly");
-		else
-			self.cnt = -1;
-	}
-	if(self.cnt < 0)
-		self.cnt = -1;
-
-	if(self.colormod == '0 0 0')
-		if(!self.alpha)
-			self.colormod = '1 0 0';
-	if(!self.message)
-		self.message = "saw the light";
-	if (!self.message2)
-		self.message2 = "was pushed into a laser by";
-	if(!self.scale)
-		self.scale = 1;
-	if(!self.modelscale)
-		self.modelscale = 1;
-	self.think = misc_laser_think;
-	self.nextthink = time;
-	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);
-
-	self.mangle = self.angles;
-
-	net_link_entity(self, FALSE, 0, laser_SendEntity);
-
-	IFTARGETED
-	{
-		self.reset = laser_reset;
-		laser_reset();
-		self.use = laser_use;
-	}
-	else
-		self.state = 1;
-}
 
 // tZorks trigger impulse / gravity
 .float radius;
@@ -1041,7 +792,7 @@ void flipflop_use()
 {
 	self.state = !self.state;
 	if(self.state)
-		SUB_UseTargets();
+		trigger_use_targets();
 }
 
 void spawnfunc_trigger_flipflop()
@@ -1062,7 +813,7 @@ void monoflop_use()
 	if(self.state)
 		return;
 	self.state = 1;
-	SUB_UseTargets();
+	trigger_use_targets();
 }
 void monoflop_fixed_use()
 {
@@ -1071,14 +822,14 @@ void monoflop_fixed_use()
 	self.nextthink = time + self.wait;
 	self.state = 1;
 	self.enemy = activator;
-	SUB_UseTargets();
+	trigger_use_targets();
 }
 
 void monoflop_think()
 {
 	self.state = 0;
 	activator = self.enemy;
-	SUB_UseTargets();
+	trigger_use_targets();
 }
 
 void monoflop_reset()
@@ -1111,7 +862,7 @@ void multivibrator_send()
 
 	activator = self;
 	if(self.state != newstate)
-		SUB_UseTargets();
+		trigger_use_targets();
 	self.state = newstate;
 
 	if(self.state)
@@ -1130,7 +881,7 @@ void multivibrator_toggle()
 	{
 		if(self.state)
 		{
-			SUB_UseTargets();
+			trigger_use_targets();
 			self.state = 0;
 		}
 		self.nextthink = 0;
@@ -1175,7 +926,7 @@ void spawnfunc_trigger_multivibrator()
 
 void gamestart_use() {
 	activator = self;
-	SUB_UseTargets();
+	trigger_use_targets();
 	remove(self);
 }
 
@@ -1199,18 +950,18 @@ void trigger_relay_teamcheck_use()
 		if(self.spawnflags & 2)
 		{
 			if(activator.team != self.team)
-				SUB_UseTargets();
+				trigger_use_targets();
 		}
 		else
 		{
 			if(activator.team == self.team)
-				SUB_UseTargets();
+				trigger_use_targets();
 		}
 	}
 	else
 	{
 		if(self.spawnflags & 1)
-			SUB_UseTargets();
+			trigger_use_targets();
 	}
 }
 
@@ -1237,14 +988,14 @@ void trigger_disablerelay_use()
 
 	for(e = world; (e = find(e, targetname, self.target)); )
 	{
-		if(e.use == SUB_UseTargets)
+		if(e.use == trigger_use_targets)
 		{
-			e.use = SUB_DontUseTargets;
+			e.use = trigger_dont_use_targets;
 			++a;
 		}
-		else if(e.use == SUB_DontUseTargets)
+		else if(e.use == trigger_dont_use_targets)
 		{
-			e.use = SUB_UseTargets;
+			e.use = trigger_use_targets;
 			++b;
 		}
 	}
@@ -1346,7 +1097,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	{
 		oldself = activator = self;
 		self = ear;
-		SUB_UseTargets();
+		trigger_use_targets();
 		self = oldself;
 	}
 
@@ -1417,7 +1168,7 @@ void spawnfunc_trigger_magicear()
 
 void trigger_always_init() {
 	self.nextthink = time;
-	self.think = SUB_UseTargets;
+	self.think = trigger_use_targets;
 }
 
 void spawnfunc_trigger_always() {
@@ -1471,9 +1222,9 @@ void trigger_cycle_reset(void) {
 }
 
 void trigger_cycle_use(void) {
-    SUB_UseTargets_PreventReuse();
+    trigger_use_targets_prevent_reuse();
     self.target = trigger_cycle_find_next_target(self.target);
-    SUB_UseTargets_PreventReuse();
+    trigger_use_targets_prevent_reuse();
 }
 
 void spawnfunc_trigger_cycle(void) {
@@ -1534,7 +1285,7 @@ void spawnfunc_trigger_relay_chance(void) {
 
     self.use = inline void(void) {
         if(random() < self.cnt)
-            SUB_UseTargets();
+            trigger_use_targets();
     };
 
     self.reset = spawnfunc_trigger_relay_chance;
@@ -1546,7 +1297,7 @@ void spawnfunc_trigger_relay_random(void) {
     self.use = inline void(void) {
         random_selection_init();
 
-        SUB_ForEachTarget(self, inline float(entity e, float _f, vector _v, string _s, entity _e) {
+        trigger_for_each_target(self, inline float(entity e, float _f, vector _v, string _s, entity _e) {
             e.sub_target_used = time;
             random_selection_add(e, 0, NULL, 1, 1);
             return FALSE;
@@ -1554,7 +1305,7 @@ void spawnfunc_trigger_relay_random(void) {
 
         if(random_selection_chosen_ent) {
             random_selection_chosen_ent.sub_target_used = -1;
-            SUB_UseTargets_PreventReuse();
+            trigger_use_targets_prevent_reuse();
         }
     };
 
@@ -1571,7 +1322,7 @@ void spawnfunc_trigger_relay_foreachplayer(void) {
     self.use = inline void(void) {
         using(activator = world)
             FOR_EACH_PLAYER(activator)
-                SUB_UseTargets();
+                trigger_use_targets();
     };
 
     self.reset = spawnfunc_trigger_relay_foreachplayer;
@@ -1649,7 +1400,7 @@ float aggregate_or(entity e, .entity next) {
 
 float statefunc_aggregate_targets(statefunc_aggr_t aggr) {
     statechain_push();
-    var s = aggr(SUB_LinkTargets(self, statechain_next, FALSE), statechain_next);
+    var s = aggr(trigger_link_targets(self, statechain_next, FALSE), statechain_next);
     statechain_pop();
     return s;
 }
@@ -1691,7 +1442,7 @@ void spawnfunc_trigger_state(void) {
         dprint("State ^3", self.targetname, "^7 is now ^2", ftos(self.state), "\n");
 
         if((self.state && self.spawnflags & TSTATE_USE_ON) || (!self.state && self.spawnflags & TSTATE_USE_OFF))
-            SUB_UseTargets();
+            trigger_use_targets();
     };
 }
 
@@ -1719,7 +1470,7 @@ void spawnfunc_trigger_relay_ifstate(void) {
             s = !s;
 
         if(s > 0) // XXX: why is this necessary?
-            SUB_UseTargets();
+            trigger_use_targets();
     };
 
     InitializeEntity(self, inline void(void) {
@@ -1747,14 +1498,14 @@ void trigger_roundstate_warmup(void) {
 	self.reset2 = trigger_roundstate_warmup;
 	InitializeEntity(self, inline void(void) {
 		activator = self;
-		SUB_UseTargets();
+		trigger_use_targets();
 	}, INITPRIO_FINDTARGET);
 }
 
 void spawnfunc_trigger_roundstate(void) {
     self.classname = "trigger_roundstate";
     self.reset2 = spawnfunc_trigger_roundstate;
-    self.use = SUB_UseTargets;
+    self.use = trigger_use_targets;
 
     if(self.cnt == 0 /*ROUNDSTATE_GAMEINIT*/) {
         InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);

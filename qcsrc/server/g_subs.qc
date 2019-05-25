@@ -5,7 +5,7 @@ float SUB_False() { return 0; }
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
-//void() SUB_UseTargets;
+//void() trigger_use_targets;
 
 vector NearestPointOnBox(entity box, vector org)
 {

@@ -237,7 +237,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 			activator = attacker;
 			entity oldself = self;
 			self = o;
-			SUB_UseTargets();
+			trigger_use_targets();
 			self = oldself;
 		}
 		self.enemy = attacker;
@@ -650,7 +650,7 @@ void monster_group_counter_remove() {
 void monster_group_counter_use() {
 	self.cnt = self.cnt - 1;
 	if (self.cnt <= 0) {
-		SUB_UseTargets();
+		trigger_use_targets();
 		self.use = world.use;
 		self.think = monster_group_counter_remove;
 		self.nextthink = time;

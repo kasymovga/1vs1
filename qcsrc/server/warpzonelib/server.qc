@@ -337,7 +337,7 @@ void WarpZone_Touch (void)
 
 		save1 = self.target; self.target = NULL;
 		save2 = self.target3; self.target3 = NULL;
-		SUB_UseTargets();
+		trigger_use_targets();
 		if not(self.target) self.target = save1;
 		if not(self.target3) self.target3 = save2;
 
@@ -345,7 +345,7 @@ void WarpZone_Touch (void)
 		self = self.enemy;
 		save1 = self.target; self.target = NULL;
 		save2 = self.target2; self.target2 = NULL;
-		SUB_UseTargets();
+		trigger_use_targets();
 		if not(self.target) self.target = save1;
 		if not(self.target2) self.target2 = save2;
 		self = oldself;

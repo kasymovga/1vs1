@@ -122,7 +122,7 @@ void(void) spawnfunc_target_voicescript {
 
 void(void) target_delay_use {
 	self.nextthink = time + self.wait;
-	self.think = SUB_UseTargets;
+	self.think = trigger_use_targets;
 }
 
 void(void) target_delay_init {

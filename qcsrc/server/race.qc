@@ -381,7 +381,7 @@ void checkpoint_passed()
 		activator = other;
 		oldmsg = self.message;
 		self.message = "";
-		SUB_UseTargets();
+		trigger_use_targets();
 		self.message = oldmsg;
 	}
 
@@ -410,7 +410,7 @@ void checkpoint_passed()
 			activator = other;
 			oldmsg = self.message;
 			self.message = "";
-			SUB_UseTargets();
+			trigger_use_targets();
 			self.message = oldmsg;
 		}
 

@@ -154,7 +154,7 @@ void(void) teleport_touch {
 		oldself = self;
 		activator = other;
 		self = e;
-		SUB_UseTargets();
+		trigger_use_targets();
 		self = oldself;
 	}
 }

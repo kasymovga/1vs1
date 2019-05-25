@@ -384,7 +384,7 @@ void spawnfunc_func_magicwall(void) {
     self.touch = inline void(void) {
         if(other.classname == "player" && !PLAYER_DEAD(other))
             using(activator = other)
-                SUB_UseTargets();
+                trigger_use_targets();
     };
 
     // self.clipgroup = CLIPGROUP_OBSERVER;
