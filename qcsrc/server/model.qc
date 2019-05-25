@@ -1,7 +1,7 @@
 .float modelscale;
+float(entity to, float sf) model_client_send;
 
-void g_model_setcolormaptoactivator (void)
-{
+void(void) model_setcolormaptoactivator {
 	if(teamplay)
 	{
 		if(activator.team)
@@ -11,17 +11,13 @@ void g_model_setcolormaptoactivator (void)
 	}
 	else
 		self.colormap = floor(random() * 256);
+
 	self.colormap |= 1024; // RENDER_COLORMAPPED
+	if (self.SendEntity == model_client_send)
+		self.SendFlags |= 1;
 }
 
-void g_clientmodel_setcolormaptoactivator (void)
-{
-	g_model_setcolormaptoactivator();
-	self.SendFlags |= 1;
-}
-
-void g_model_dropbyspawnflags()
-{
+void(void) model_dropbyspawnflags {
 	if(self.spawnflags & 3 == 1) // ALIGN_ORIGIN
 	{
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
@@ -37,19 +33,11 @@ void g_model_dropbyspawnflags()
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
 		setorigin(self, trace_endpos - '0 0 1' * self.mins_z);
 	}
-}
-
-void g_clientmodel_dropbyspawnflags()
-{
-	vector o0;
-	o0 = self.origin;
-	g_model_dropbyspawnflags();
-	if(self.origin != o0)
+	if (self.SendEntity == model_client_send)
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, float sf)
-{
+float(entity to, float sf) model_client_send {
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;
@@ -115,14 +103,14 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	return TRUE;
 }
 
-void model_think() {
+void(void) model_think {
 	entity e = self.enemy;
 	if (e.flags & FL_ONGROUND) {
 		float z_save = e.velocity_z;
 		e.velocity = e.velocity - e.velocity * frametime * e.friction;
 		e.velocity_z = z_save;
 	}
-	if (e.SendEntity == g_clientmodel_genericsendentity)
+	if (e.SendEntity == model_client_send)
 	if (e.origin != e.pos1) {
 		e.pos1 = e.origin;
 		e.SendFlags |= 2;
@@ -130,12 +118,12 @@ void model_think() {
 	self.nextthink = time;
 }
 
-void model_reset() {
+void(void) model_reset {
 	setorigin(self.enemy, self.spawnorigin);
 	self.enemy.velocity = '0 0 0';
 }
 
-void model_movable_init() {
+void(void) model_movable_init {
 	if (self.pushfactor > 0) {
 		self.damageforcescale = self.pushfactor;
 		self.takedamage = DAMAGE_AIM;
@@ -150,14 +138,14 @@ void model_movable_init() {
 	}
 }
 
-void model_init_common_delayed() {
-	g_model_dropbyspawnflags();
+void(void) model_init_common_delayed {
+	model_dropbyspawnflags();
 	model_movable_init();
 }
 
-void model_init_common(float sol) {
+void(float sol) model_init_common {
 	if(!self.scale) self.scale = self.modelscale;
-	self.use = g_model_setcolormaptoactivator;
+	self.use = model_setcolormaptoactivator;
 	InitializeEntity(self, model_init_common_delayed, INITPRIO_DROPTOFLOOR);
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT;
 }
@@ -167,23 +155,9 @@ void model_init(float sol) {
 	model_init_common(sol);
 }
 
-void clientmodel_init(float sol) {
+void model_client_init(float sol) {
 	SetBrushEntityModelNoLOD();
 	model_init_common(sol);
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0;
-	net_link_entity(self, TRUE, 0, g_clientmodel_genericsendentity);
+	net_link_entity(self, TRUE, 0, model_client_send);
 }
-
-// non-solid model entities:
-void spawnfunc_misc_gamemodel()         { model_init      (SOLID_NOT);} // model entity
-void spawnfunc_misc_clientmodel()       { clientmodel_init(SOLID_NOT);} // model entity
-void spawnfunc_misc_models()            { model_init      (SOLID_NOT);} // DEPRECATED old compat entity with confusing name, do not use
-
-// non-solid brush entities:
-void spawnfunc_func_illusionary()       { model_init      (SOLID_NOT);} // Q1 name (WARNING: MISPREDICTED)
-void spawnfunc_func_clientillusionary() { clientmodel_init(SOLID_NOT);} // brush entity
-void spawnfunc_func_static()            { model_init      (SOLID_NOT);} // DEPRECATED old alias name from some other game
-
-// solid brush entities
-void spawnfunc_func_wall()              { model_init      (SOLID_BSP);} // Q1 name
-void spawnfunc_func_clientwall()        { clientmodel_init(SOLID_BSP);} // brush entity (WARNING: MISPREDICTED)

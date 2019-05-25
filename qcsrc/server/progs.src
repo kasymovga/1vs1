@@ -188,7 +188,7 @@ target.qc
 info.qc
 t_teleporters.qc
 g_triggers.qc
-g_models.qc
+model.qc
 bullet.qc
 w_melee.qc
 w_laser.qc
@@ -209,7 +209,6 @@ w_tuba.qc
 w_fireball.qc
 w_supershotgun.qc
 w_zapper.qc
-func_laserbeam.qc
 item.qc
 powerup.qc
 backpack.qc
@@ -266,7 +265,9 @@ portals.qc
 
 target_spawn.qc
 func_breakable.qc
-
+func_laserbeam.qc
+func.qc
+misc.qc
 ../common/items.qc
 projectile.qc
 irc.qc

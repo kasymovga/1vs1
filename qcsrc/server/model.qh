@@ -1,0 +1,2 @@
+void(float sol) model_init;
+void(float sol) model_client_init;
