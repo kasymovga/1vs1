@@ -26,32 +26,8 @@ void HG_Transloc_Explode(void) {
     a_x = self.owner.v_angle_x;
     makevectors(a);
 
-    //tdeath_hit = 0;
-    //tdeath_deathtype = self.hg_type;
-    TeleportPlayer(self, self.owner, self.origin, a, v_forward * (0.5 + 0.5 /* * Buffs_NadgetPower(self.owner) */ ) * (
+    teleport(self, self.owner, self.origin, a, v_forward * (0.5 + 0.5 /* * Buffs_NadgetPower(self.owner) */ ) * (
                     cvar("g_nadgets_transloc_push_base")
                   + cvar("g_nadgets_transloc_push_playerfactor") * vlen(self.owner.velocity)
                   + cvar("g_nadgets_transloc_push_projfactor")   * vlen(self.velocity)), '0 0 0', '0 0 0', cvar("g_nadgets_transloc_damage"));
-    //tdeath_deathtype = 0;
-
-#if 0
-    if(tdeath_fragged && !self.hg_isbonus) {
-        float b = CVAR(g_nadgets_transloc_telefragbonus);
-
-        if(b) HG_DO_IN_ALL_CONTEXTS({
-            self.owner.hg_ctx_ammo += b * tdeath_fragged;
-            HG_SetRegenTime(self.owner, HG_RegenTime(self.owner));
-        })
-    }
-
-    if(cvar("g_nadgets_transloc_reloadonuse") && self.owner.weapon && (self.owner.weaponentity.wframe != WFRAME_RELOAD || tdeath_hit)) {
-		entity oldself = self;
-        self = self.owner;
-		weapon_action(self.weapon, WR_ACTIVERELOAD);
-		if(tdeath_hit)
-			ATTACK_FINISHED(self) = TRUE;
-
-		self = oldself;
-    }
-#endif
 }

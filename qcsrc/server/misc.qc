@@ -82,3 +82,13 @@ void(void) spawnfunc_misc_lightning {
 	precache_sound("ambient/sparks1.ogg");
 	dlc_require("rm_effects_v2");
 }
+
+//Q2 compat
+void(void) spawnfunc_misc_teleporter {
+	entity e = spawn();
+	e.scale = 2;
+	setorigin(e, self.origin);
+	setmodel(e, "models/ebomb.mdl");
+	setsize(self, '-32 -32 -48', '32 32 48');
+	spawnfunc_trigger_teleport();
+}

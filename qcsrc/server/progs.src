@@ -34,7 +34,7 @@ campaign.qh
 
 ../common/dlc.qh
 dlc.qh
-
+teleport.qh
 ../common/extresponse.qh
 ../common/ip2c.qh
 ip2c.qh
@@ -186,7 +186,7 @@ casing.qc
 trigger_push.qc
 target.qc
 info.qc
-t_teleporters.qc
+teleport.qc
 trigger.qc
 model.qc
 bullet.qc

@@ -1892,3 +1892,7 @@ void spawnfunc_trigger_gravity()
 			self.state = FALSE;
 	}
 }
+
+void(void) spawnfunc_trigger_teleport {
+	teleport_setup();
+}

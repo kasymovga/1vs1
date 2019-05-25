@@ -1,20 +1,11 @@
-void trigger_teleport_use()
-{
-	if(teamplay)
-		self.team = activator.team;
-}
-
-float tdeath_hit;
-void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage)
-{
+void(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage) teleport_death {
 	entity head;
 	vector deathmin;
 	vector deathmax;
 	float deathradius;
 	deathmin = player.absmin;
 	deathmax = player.absmax;
-	if(telefragmin != telefragmax)
-	{
+	if(telefragmin != telefragmax) {
 		if(deathmin_x > telefragmin_x) deathmin_x = telefragmin_x;
 		if(deathmin_y > telefragmin_y) deathmin_y = telefragmin_y;
 		if(deathmin_z > telefragmin_z) deathmin_z = telefragmin_z;
@@ -33,7 +24,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 						if(head.classname == "player")
 						if(head.health >= 1)
 						if not(teamplay && head.team == player.team) {
-							++tdeath_hit;
+							++teleport_death_hit;
 							damage (head, teleporter, telefragger, _damage, WEP_PORTO, head.origin, '0 0 0');
 						}
 					}
@@ -44,24 +35,15 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 				}
 }
 
-void spawn_tdeath(vector v0, entity e, vector v)
-{
-	tdeath(e, e, e, '0 0 0', '0 0 0', 10000);
-}
-
-.entity pusher;
-void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage)
-{
+void(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage) teleport {
 	entity telefragger;
 	vector from;
-
 	if(teleporter.owner)
 		telefragger = teleporter.owner;
 	else
 		telefragger = player;
 
 	makevectors (to_angles);
-
 	if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 	{
 		sound (player, CHAN_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
@@ -69,7 +51,6 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		pointparticles(particleeffectnum("teleport"), to + v_forward * 32, '0 0 0', 1);
 		self.pushltime = time + 0.2;
 	}
-
 	// Relocate the player
 	// assuming to allows PL_MIN to PL_MAX box and some more
 	from = player.origin;
@@ -80,42 +61,37 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 	antilag_teleported(player);
-
 	projectile_update_after_teleport(player);
 	PhysicMarkAsTeleported(player);
-
-	if(player.classname == "player")
-	{
+	if(player.classname == "player") {
 		if (g_telefrags)
 		if (player.takedamage)
 		if (player.deadflag == DEAD_NO)
 		if (GameHook_TelefragsAllowed())
-			tdeath(player, teleporter, telefragger, telefragmin, telefragmax, _damage);
+			teleport_death(player, teleporter, telefragger, telefragmin, telefragmax, _damage);
 
 		// player no longer is on ground
 		player.flags &~= FL_ONGROUND;
-
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
-
 		// reset tracking of who pushed you into a hazard (for kill credit)
-		if(teleporter.owner)
-		{
+		if(teleporter.owner) {
 			player.pusher = teleporter.owner;
 			player.pushltime = time + g_maxpushtime;
-		}
-		else
-		{
+		} else {
 			player.pushltime = 0;
 		}
-
 		if(player.isbot)
 			player.lastteleporttime = time;
 	}
 }
 
-void Teleport_Touch (void)
-{
+void(void) teleport_use {
+	if(teamplay)
+		self.team = activator.team;
+}
+
+void(void) teleport_touch {
 	entity oldself, e;
 
 	if (other.health < 1)
@@ -143,22 +119,17 @@ void Teleport_Touch (void)
 		if (other.maxs_z > PL_MAX_z)
 			return;
 	}
-
 	if(self.team)
 		if((self.spawnflags & 4 == 0) == (self.team != other.team))
 			return;
 
 	EXACTTRIGGER_TOUCH;
-
 	if(other.classname == "player")
 		hook_remove(other);
 
-	if(self.enemy)
-	{
+	if(self.enemy) {
 		e = self.enemy;
-	}
-	else
-	{
+	} else {
 		random_selection_init();
 		for(e = world; (e = find(e, targetname, self.target)); )
 		{
@@ -169,22 +140,17 @@ void Teleport_Touch (void)
 		}
 		e = random_selection_chosen_ent;
 	}
-
-	if(!e)
-	{
+	if(!e) {
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 	}
 
 	makevectors(e.mangle);
-
 	if(e.speed)
 		if(vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
 
-	TeleportPlayer(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', 10000);
-
-	if(e.target)
-	{
+	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', 10000);
+	if(e.target) {
 		oldself = self;
 		activator = other;
 		self = e;
@@ -193,35 +159,7 @@ void Teleport_Touch (void)
 	}
 }
 
-void spawnfunc_info_teleport_destination (void)
-{
-	self.classname = "info_teleport_destination";
-
-	self.mangle = self.angles;
-	self.angles = '0 0 0';
-
-	//setorigin (self, self.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
-	setorigin (self, self.origin);
-
-	IFTARGETED
-	{
-	}
-	else
-		objerror ("^3Teleport destination without a targetname");
-}
-
-void spawnfunc_misc_teleporter_dest (void)
-{
-	spawnfunc_info_teleport_destination();
-}
-
-void spawnfunc_target_teleporter (void)
-{
-	spawnfunc_info_teleport_destination();
-}
-
-void teleport_findtarget (void)
-{
+void(void) teleport_findtarget {
 	entity e;
 	float n;
 
@@ -254,34 +192,17 @@ void teleport_findtarget (void)
 	}
 
 	// now enable touch
-	self.touch = Teleport_Touch;
+	self.touch = teleport_touch;
 }
 
-void spawnfunc_trigger_teleport (void)
-{
+void(void) teleport_setup {
 	self.angles = '0 0 0';
-
 	EXACTTRIGGER_INIT;
-
-	self.use = trigger_teleport_use;
-
+	self.use = teleport_use;
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
-
-	if (!self.target)
-	{
+	if (!self.target) {
 		objerror ("Teleporter with no target");
 		return;
 	}
-}
-
-void spawnfunc_misc_teleporter (void) //Q2 compat
-{
-	entity e = spawn();
-	e.scale = 2;
-	setorigin(e, self.origin);
-	setmodel(e, "models/ebomb.mdl");
-	self.mins = '-32 -32 -48';
-	self.maxs = '32 32 48';
-	spawnfunc_trigger_teleport();
 }

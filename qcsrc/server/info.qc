@@ -69,3 +69,14 @@ void(void) spawnfunc_info_location {
     self.classname = "target_location";
     self.message = self.netname;
 }
+
+void(void) spawnfunc_info_teleport_destination {
+	self.classname = "info_teleport_destination";
+	self.mangle = self.angles;
+	self.angles = '0 0 0';
+	//setorigin (self, self.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
+	setorigin (self, self.origin);
+	IFTARGETED {
+	} else
+		objerror("^3Teleport destination without a targetname");
+}

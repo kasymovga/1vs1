@@ -1,0 +1,3 @@
+void(void) teleport_setup;
+float teleport_death_hit;
+void(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float _damage) teleport;
