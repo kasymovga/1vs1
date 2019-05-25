@@ -1,5 +1,11 @@
 void(void) spawnfunc_info_notnull {};
 
+void(void) spawnfunc_info_null {
+	remove(self);
+	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
+}
+
+
 void(void) spawnfunc_info_player_deathmatch {
 	self.classname = "info_player_deathmatch";
 	waypoint_spawnforitem(self);

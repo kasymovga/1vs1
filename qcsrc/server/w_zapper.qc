@@ -277,8 +277,8 @@ void W_Zapper_Beam_Think(void) {
             float halflifedist = g_balance_zapper_primary_damagefalloff_halflife;
             float forcehalflifedist = g_balance_zapper_primary_damagefalloff_forcehalflife;
 
-            _damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
-            force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
+            _damage *= bullet_exponential_falloff(mindist, maxdist, halflifedist, d);
+            force  *= bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, d);
 
 			damage_record_hits(o, targ, WEP_ZAPPER, 1, _damage);
             damage(targ, self, o, _damage, WEP_ZAPPER, end, force * forcedir);
@@ -390,8 +390,8 @@ void W_Zapper_Attack2_Beam(entity o, vector start, vector start_visual, vector e
 		float maxdist = g_balance_zapper_secondary_damagefalloff_maxdist;
 		float halflifedist = g_balance_zapper_secondary_damagefalloff_halflife;
 		float forcehalflifedist = g_balance_zapper_secondary_damagefalloff_forcehalflife;
-		_damage *= ExponentialFalloff(mindist, maxdist, halflifedist, d);
-		force  *= ExponentialFalloff(mindist, maxdist, forcehalflifedist, d);
+		_damage *= bullet_exponential_falloff(mindist, maxdist, halflifedist, d);
+		force  *= bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, d);
 		if(targ.iscreature)
 			W_Zapper_Attack2_Arc(targ, o, _damage);
 

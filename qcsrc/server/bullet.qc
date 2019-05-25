@@ -7,6 +7,16 @@ float g_ballistics_materialconstant;
 .vector railgunhitloc;
 .vector railgunhitdir;
 
+float(float mindist, float maxdist, float halflifedist, float d) bullet_exponential_falloff {
+	if(halflifedist > 0)
+		return pow(0.5, (bound(mindist, d, maxdist) - mindist) / halflifedist);
+	else if(halflifedist < 0)
+		return pow(0.5, (bound(mindist, d, maxdist) - maxdist) / halflifedist);
+	else
+		return 1;
+}
+
+
 void(vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype) bullet_railgun {
 	entity oldself = self;
 	local vector hitloc, endpoint, dir;
@@ -77,8 +87,8 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 
 		//for stats so that team hit will count as a miss
 
-		f = ExponentialFalloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
-		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
+		f = bullet_exponential_falloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
+		ffs = bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
 
 		// apply the damage
 		if (ent.takedamage) {

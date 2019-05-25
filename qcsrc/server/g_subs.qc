@@ -21,12 +21,6 @@ vector NearestPointOnBox(entity box, vector org)
 	return nearest;
 }
 
-void spawnfunc_info_null (void)
-{
-	remove(self);
-	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
-}
-
 /*
 ==================
 SUB_VanishOrRemove

@@ -548,16 +548,6 @@ entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) /
     return world;
 }
 
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
-{
-	if(halflifedist > 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - mindist) / halflifedist);
-	else if(halflifedist < 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - maxdist) / halflifedist);
-	else
-		return 1;
-}
-
 void defer_think() {
 	entity oldself = self;
 	self = self.enemy;
