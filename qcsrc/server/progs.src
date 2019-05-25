@@ -187,7 +187,7 @@ trigger_push.qc
 target.qc
 info.qc
 t_teleporters.qc
-g_triggers.qc
+trigger.qc
 model.qc
 bullet.qc
 w_melee.qc

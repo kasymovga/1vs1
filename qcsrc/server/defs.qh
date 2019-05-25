@@ -405,3 +405,8 @@ enum {
 .float pushfactor;
 .float friction;
 string lsmaps_reply2;
+.string bgmscript;
+.float bgmscriptattack;
+.float bgmscriptdecay;
+.float bgmscriptsustain;
+.float bgmscriptrelease;
