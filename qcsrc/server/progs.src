@@ -231,8 +231,6 @@ dom.qc
 onslaught.qc
 nexball.qc
 hook.qc
-t_swamp.qc
-
 clientcommands.qc
 
 vote.qc
