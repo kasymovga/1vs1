@@ -442,8 +442,6 @@ void spawnfunc_worldspawn (void)
 	//if (g_domination)
 	//	dom_init();
 
-	matchid = strzone(ftos(random()));
-
 	cvar_set("nextmap", "");
 
 	if(g_campaign)

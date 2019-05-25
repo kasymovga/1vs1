@@ -361,7 +361,6 @@ void SUB_UseTargets();
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
 
-string matchid;
 .string noise4;
 
 .float damage_hits, maxdamage_fired;
