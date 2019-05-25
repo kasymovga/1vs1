@@ -31,7 +31,7 @@ campaign.qh
 ../menu-server/campaign_common.qh
 ../menu-server/mapinfo.qh
 ../client-server/projinfo.qh
-
+cvar.qh
 ../common/dlc.qh
 dlc.qh
 teleport.qh
@@ -121,7 +121,6 @@ score_damage.qh
 miscfunctions.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
-../menu-server/miscfunctions.qh
 bot/bot.qh
 gamehooks.qh
 ../client-server/nadgets.qh
@@ -283,7 +282,7 @@ menu.qc
 gametypevote.qc
 
 progressbar.qc
-
+cvar.qc
 location_request.qc
 effect.qc
 vehicles/vehicles.qc

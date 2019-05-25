@@ -144,6 +144,5 @@ void() gametype_init {
 	if (force_gametype_restore)
 		MapInfo_SwitchGameType(force_gametype_restore);
 
-	game_cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	gametype_writecvars();
 }

@@ -1,0 +1,2 @@
+void cvar_init(string profile);
+void cvar_deinit();

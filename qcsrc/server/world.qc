@@ -414,6 +414,7 @@ void spawnfunc_worldspawn (void)
 
 	precache_model("null"); // we need this one before gametype_init. or maybe not
 	gametype_init();
+	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	sv_world_scale = cvar("sv_world_scale");
 	if (sv_world_scale <= 0)
 		sv_world_scale = 1;
@@ -910,7 +911,7 @@ void() world_gameover {
 	float score;
 	float f;
 	gameover = TRUE;
-	game_cvar_deinit();
+	cvar_deinit();
 	string gameover_message;
 	gameover_message = "^2Game finished!";
 	if (teamplay) {

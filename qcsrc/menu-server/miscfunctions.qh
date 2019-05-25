@@ -1,3 +1,0 @@
-void game_cvar_init(string profile);
-var float(string s) nogame_cvar;
-var string(string s) nogame_cvar_string;

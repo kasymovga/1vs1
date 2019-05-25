@@ -6,7 +6,6 @@ msys.qh
 mbuiltin.qh
 ../common/util.qh
 ../common/miscfunctions.qh
-../menu-server/miscfunctions.qh
 ../client-menu/ui.qh
 ../client-menu/util.qh
 ../menu-server/util.qh
