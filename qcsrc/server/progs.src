@@ -68,7 +68,7 @@ freeze.qh
 ice.qh
 radio.qh
 ../common/curl.qh
-
+ready.qh
 clanarena.qh
 
 conquest.qh
@@ -105,9 +105,6 @@ client.qh
 player.qh
 spectator.qh
 push.qh
-
-clientcommands.qh
-
 gametypevote.qh
 gamestatus.qh
 
@@ -227,8 +224,6 @@ dom.qc
 onslaught.qc
 nexball.qc
 hook.qc
-clientcommands.qc
-
 vote.qc
 
 campaign.qc
@@ -236,8 +231,7 @@ campaign.qc
 ../menu-server/campaign_setup.qc
 
 ../menu-server/gamecommand.qc
-gamecommand.qc
-
+cmd.qc
 keyhunt.qc
 
 conquest.qc
@@ -267,7 +261,7 @@ projectile.qc
 irc.qc
 
 akimbo.qc
-
+ready.qc
 info_messages.qc
 defer.qc
 freeze.qc

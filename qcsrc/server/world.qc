@@ -506,7 +506,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_WEAPONS, AS_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
-	Nagger_Init();
+	ready_nagger_init();
 
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
@@ -1305,7 +1305,6 @@ Called before each frame by the server
 =============
 */
 float world_redirection_think();
-void ReadyRestart();
 void StartFrame (void)
 {
 	ER_Update();
@@ -1355,7 +1354,7 @@ void StartFrame (void)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
 	 || (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60))
 	{
-		ReadyRestart();
+		ready_restart();
 		return;
 	}
 

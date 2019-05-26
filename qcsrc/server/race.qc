@@ -915,7 +915,7 @@ float race_OvertimeHandle() {
 		if(readyplayers || playerswithlaps >= 2)
 		{
 			checkrules_suddendeathend = 0;
-			ReadyRestart(); // go to race
+			ready_restart(); // go to race
 			return TRUE;
 		}
 	}

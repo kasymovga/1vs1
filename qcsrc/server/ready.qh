@@ -1,0 +1,5 @@
+void(void) ready_nagger_init;
+float ready_restart_happened;
+void(void) ready_restart_force;
+void(void) ready_count;
+void(void) ready_restart;

@@ -570,7 +570,7 @@ void ClientDisconnect (void)
 	self.playerid = 0;
 	self.retard = 0;
 	self.muted = 0;
-	ReadyCount();
+	ready_count();
 	client_cvars_free();
 	if (clienttype(self) == CLIENTTYPE_REAL)
 		GameHookChain_RealClientDisconnect();

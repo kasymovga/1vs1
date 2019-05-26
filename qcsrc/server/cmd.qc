@@ -1,68 +1,4 @@
-void EffectIndexDump()
-{
-	float d;
-	float fh;
-	string s;
-
-	d = db_create();
-
-	print("begin of effects list\n");
-	db_put(d, "TE_GUNSHOT", "1"); print("effect TE_GUNSHOT is ", ftos(particleeffectnum("TE_GUNSHOT")), "\n");
-	db_put(d, "TE_GUNSHOTQUAD", "1"); print("effect TE_GUNSHOTQUAD is ", ftos(particleeffectnum("TE_GUNSHOTQUAD")), "\n");
-	db_put(d, "TE_SPIKE", "1"); print("effect TE_SPIKE is ", ftos(particleeffectnum("TE_SPIKE")), "\n");
-	db_put(d, "TE_SPIKEQUAD", "1"); print("effect TE_SPIKEQUAD is ", ftos(particleeffectnum("TE_SPIKEQUAD")), "\n");
-	db_put(d, "TE_SUPERSPIKE", "1"); print("effect TE_SUPERSPIKE is ", ftos(particleeffectnum("TE_SUPERSPIKE")), "\n");
-	db_put(d, "TE_SUPERSPIKEQUAD", "1"); print("effect TE_SUPERSPIKEQUAD is ", ftos(particleeffectnum("TE_SUPERSPIKEQUAD")), "\n");
-	db_put(d, "TE_WIZSPIKE", "1"); print("effect TE_WIZSPIKE is ", ftos(particleeffectnum("TE_WIZSPIKE")), "\n");
-	db_put(d, "TE_KNIGHTSPIKE", "1"); print("effect TE_KNIGHTSPIKE is ", ftos(particleeffectnum("TE_KNIGHTSPIKE")), "\n");
-	db_put(d, "TE_EXPLOSION", "1"); print("effect TE_EXPLOSION is ", ftos(particleeffectnum("TE_EXPLOSION")), "\n");
-	db_put(d, "TE_EXPLOSIONQUAD", "1"); print("effect TE_EXPLOSIONQUAD is ", ftos(particleeffectnum("TE_EXPLOSIONQUAD")), "\n");
-	db_put(d, "TE_TAREXPLOSION", "1"); print("effect TE_TAREXPLOSION is ", ftos(particleeffectnum("TE_TAREXPLOSION")), "\n");
-	db_put(d, "TE_TELEPORT", "1"); print("effect TE_TELEPORT is ", ftos(particleeffectnum("TE_TELEPORT")), "\n");
-	db_put(d, "TE_LAVASPLASH", "1"); print("effect TE_LAVASPLASH is ", ftos(particleeffectnum("TE_LAVASPLASH")), "\n");
-	db_put(d, "TE_SMALLFLASH", "1"); print("effect TE_SMALLFLASH is ", ftos(particleeffectnum("TE_SMALLFLASH")), "\n");
-	db_put(d, "TE_FLAMEJET", "1"); print("effect TE_FLAMEJET is ", ftos(particleeffectnum("TE_FLAMEJET")), "\n");
-	db_put(d, "EF_FLAME", "1"); print("effect EF_FLAME is ", ftos(particleeffectnum("EF_FLAME")), "\n");
-	db_put(d, "TE_BLOOD", "1"); print("effect TE_BLOOD is ", ftos(particleeffectnum("TE_BLOOD")), "\n");
-	db_put(d, "TE_SPARK", "1"); print("effect TE_SPARK is ", ftos(particleeffectnum("TE_SPARK")), "\n");
-	db_put(d, "TE_PLASMABURN", "1"); print("effect TE_PLASMABURN is ", ftos(particleeffectnum("TE_PLASMABURN")), "\n");
-	db_put(d, "TE_TEI_G3", "1"); print("effect TE_TEI_G3 is ", ftos(particleeffectnum("TE_TEI_G3")), "\n");
-	db_put(d, "TE_TEI_SMOKE", "1"); print("effect TE_TEI_SMOKE is ", ftos(particleeffectnum("TE_TEI_SMOKE")), "\n");
-	db_put(d, "TE_TEI_BIGEXPLOSION", "1"); print("effect TE_TEI_BIGEXPLOSION is ", ftos(particleeffectnum("TE_TEI_BIGEXPLOSION")), "\n");
-	db_put(d, "TE_TEI_PLASMAHIT", "1"); print("effect TE_TEI_PLASMAHIT is ", ftos(particleeffectnum("TE_TEI_PLASMAHIT")), "\n");
-	db_put(d, "EF_STARDUST", "1"); print("effect EF_STARDUST is ", ftos(particleeffectnum("EF_STARDUST")), "\n");
-	db_put(d, "TR_ROCKET", "1"); print("effect TR_ROCKET is ", ftos(particleeffectnum("TR_ROCKET")), "\n");
-	db_put(d, "TR_GRENADE", "1"); print("effect TR_GRENADE is ", ftos(particleeffectnum("TR_GRENADE")), "\n");
-	db_put(d, "TR_BLOOD", "1"); print("effect TR_BLOOD is ", ftos(particleeffectnum("TR_BLOOD")), "\n");
-	db_put(d, "TR_WIZSPIKE", "1"); print("effect TR_WIZSPIKE is ", ftos(particleeffectnum("TR_WIZSPIKE")), "\n");
-	db_put(d, "TR_SLIGHTBLOOD", "1"); print("effect TR_SLIGHTBLOOD is ", ftos(particleeffectnum("TR_SLIGHTBLOOD")), "\n");
-	db_put(d, "TR_KNIGHTSPIKE", "1"); print("effect TR_KNIGHTSPIKE is ", ftos(particleeffectnum("TR_KNIGHTSPIKE")), "\n");
-	db_put(d, "TR_VORESPIKE", "1"); print("effect TR_VORESPIKE is ", ftos(particleeffectnum("TR_VORESPIKE")), "\n");
-	db_put(d, "TR_NEHAHRASMOKE", "1"); print("effect TR_NEHAHRASMOKE is ", ftos(particleeffectnum("TR_NEHAHRASMOKE")), "\n");
-	db_put(d, "TR_NEXUIZPLASMA", "1"); print("effect TR_NEXUIZPLASMA is ", ftos(particleeffectnum("TR_NEXUIZPLASMA")), "\n");
-	db_put(d, "TR_GLOWTRAIL", "1"); print("effect TR_GLOWTRAIL is ", ftos(particleeffectnum("TR_GLOWTRAIL")), "\n");
-	db_put(d, "SVC_PARTICLE", "1"); print("effect SVC_PARTICLE is ", ftos(particleeffectnum("SVC_PARTICLE")), "\n");
-
-	fh = fopen("effectinfo.txt", FILE_READ);
-	while((s = fgets(fh)))
-	{
-		tokenize(s); // tokenize_console would hit the loop counter :(
-		if(argv(0) == "effect")
-		{
-			if(db_get(d, argv(1)) != "1")
-			{
-				if(particleeffectnum(argv(1)) >= 0)
-					print("effect ", argv(1), " is ", ftos(particleeffectnum(argv(1))), "\n");
-				db_put(d, argv(1), "1");
-			}
-		}
-	}
-	print("end of effects list\n");
-
-	db_close(d);
-}
-
-void make_mapinfo_Think()
+void cmd_make_mapinfo_think()
 {
 	if(MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1))
 	{
@@ -72,7 +8,6 @@ void make_mapinfo_Think()
 	}
 	else
 	{
-		self.think = make_mapinfo_Think;
 		self.nextthink = time;
 	}
 }
@@ -100,7 +35,6 @@ void GameCommand(string command)
 		print("  dumpdb filename\n");
 		print("  loaddb filename\n");
 		print("  allready\n");
-		print("  effectindexdump\n");
 		print("  cvar_changes\n");
 		print("  find classname\n");
 		GameCommand_Vote("help", world);
@@ -132,7 +66,7 @@ void GameCommand(string command)
 	{
 		e = spawn();
 		e.classname = "make_mapinfo";
-		e.think = make_mapinfo_Think;
+		e.think = cmd_make_mapinfo_think;
 		e.nextthink = time;
 		MapInfo_Enumerate();
 		return;
@@ -272,12 +206,7 @@ void GameCommand(string command)
 	}
 	if (cmd == "allready")
 	{
-		ReadyRestart();
-		return;
-	}
-	if (cmd == "effectindexdump")
-	{
-		EffectIndexDump();
+		ready_restart();
 		return;
 	}
 	if (cmd == "cvar_changes")
@@ -619,4 +548,244 @@ void GameCommand(string command)
 	}
 
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+}
+
+.float cmd_floodtime;
+.float cmd_floodcount;
+float cmd_floodcheck()
+{
+	if (timeoutStatus != 2)
+	{
+		if(time == self.cmd_floodtime)
+		{
+			self.cmd_floodcount += 1;
+			if(self.cmd_floodcount > 8)
+				return TRUE;
+		}
+		else
+		{
+			self.cmd_floodtime = time;
+			self.cmd_floodcount = 1;
+		}
+	}
+	return FALSE;
+}
+
+void SV_ParseClientCommand(string s) {
+	string cmd;
+	float tokens;
+	entity e;
+	if not(self.flags & FL_CLIENT)
+	if (client_preconnect_abort())
+		return;
+
+	tokens = tokenize_console(s);
+
+	cmd = argv(0);
+	if(cmd != "sentcvar")
+	if(cmd != "pause")
+	if(cmd != "prespawn")
+	if(cmd != "spawn")
+	if(cmd != "begin")
+	{
+		if(cmd_floodcheck())
+			return;
+	}
+
+	if (GameHookChain_ClientCommandHandle(cmd, tokens))
+		return;
+
+	if(GameCommand_Vote(s, self)) {
+		return;
+	} else if(mapvote_client_command(argv(0))) {
+		return;
+	} else if(cmd == "autoswitch") {
+		// be backwards compatible with older clients (enabled)
+		self.autoswitch = ("0" != argv(1));
+		local string autoswitchmsg;
+		if (self.autoswitch) {
+			autoswitchmsg = "on";
+		} else {
+			autoswitchmsg = "off";
+		}
+		sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));
+	} else if(cmd == "sentcvar") { // new system
+		if(tokens == 2) // undefined cvar: use the default value on the server then
+		{
+			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+			tokens = tokenize_console(s);
+		}
+		client_cvars_parse();
+	} else if(cmd == "spectate") {
+		if not(self.flags & FL_CLIENT)
+			return;
+		ClientKill_TeamChange(-2);
+	} else if(cmd == "join") {
+		if not(self.flags & FL_CLIENT)
+			return;
+		if (self.classname != "player" && !lockteams)
+			spectator_to_player();
+	} else if( cmd == "selectteam" ) {
+		if not(self.flags & FL_CLIENT)
+			return;
+		if( !teamplay ) {
+			sprint( self, "selecteam can only be used in teamgames\n");
+		} else if(g_campaign) {
+		} else if(lockteams) {
+			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+		} else if( argv(1) == "red" ) {
+			DoTeamChange(COLOR_TEAM1);
+		} else if( argv(1) == "blue" ) {
+			DoTeamChange(COLOR_TEAM2);
+		} else if( argv(1) == "yellow" ) {
+			DoTeamChange(COLOR_TEAM3);
+		} else if( argv(1) == "pink" ) {
+			DoTeamChange(COLOR_TEAM4);
+		} else if( argv(1) == "auto" ) {
+			DoTeamChange(-1);
+		} else {
+			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
+		}
+	} else if(cmd == "ready") {
+		if not(self.flags & FL_CLIENT)
+			return;
+
+		if(inWarmupStage || cvar("sv_ready_restart") || GameHook_ReadyAllowed())
+		{
+			if(!ready_restart_happened || cvar("sv_ready_restart_repeatable"))
+			{
+				if (self.ready) // toggle
+				{
+					self.ready = FALSE;
+					bprint(self.netname, "^2 is ^1NOT^2 ready\n");
+				}
+				else
+				{
+					self.ready = TRUE;
+					bprint(self.netname, "^2 is ready\n");
+				}
+				Warmup_UpdateNote();
+				// cannot reset the game while a timeout is active!
+				if(!timeoutStatus)
+					ready_count();
+			} else {
+				sprint(self, "^1Game has already been restarted\n");
+			}
+		}
+	} else if(cmd == "maplist") {
+		sprint(self, maplist_reply);
+	} else if(cmd == "lsmaps") {
+		sprint(self, lsmaps_reply);
+	} else if(cmd == "lsmaps2") {
+		msg_entity = self;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_MAPLIST);
+		WriteString(MSG_ONE, lsmaps_reply2);
+	} else if(cmd == "gameclient") {
+		s = argv(1);
+		print("Game client for ", self.netname, ": ", s, "\n");
+
+		if (s == "xonotic") {
+			self.gameclient = CLIENT_XONOTIC;
+			self.muted = TRUE;
+			self.netname = "Unsupported client";
+			cvar_set("connections_xonotic", ftos(cvar("connections_xonotic") + 1));
+		} else if (s == "rexuiz") {
+			self.gameclient = CLIENT_REXUIZ;
+			cvar_set("connections_rexuiz", ftos(cvar("connections_rexuiz") + 1));
+		} else if (s == "nexuiz") {
+			self.gameclient = CLIENT_NEXUIZ;
+			cvar_set("connections_nexuiz", ftos(cvar("connections_nexuiz") + 1));
+		} else if (s == "oldnexuiz") {
+			self.gameclient = CLIENT_OLDNEXUIZ;
+			cvar_set("connections_oldnexuiz", ftos(cvar("connections_oldnexuiz") + 1));
+		}
+	} else if(cmd == "records") {
+		sprint(self, records_reply);
+	} else if(cmd == "voice") {
+		if(tokens >= 3)
+			player_voice_message(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
+		else
+			player_voice_message(argv(1), "");
+	} else if(cmd == "say") {
+		if(tokens >= 2)
+		{
+			chat_say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (substring(argv(1), 0, 1) == "/")
+				GameCommand_Vote(strcat("vote call ", substring(s, strstrofs(s, "/", 0) + 1, -1)), self);
+		}
+	} else if(cmd == "say_team") {
+		if(tokens >= 2)
+			chat_say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+	} else if(cmd == "tell") {
+		e = client_entity_from_argv(tokens, 1);
+		if(e && tokens > client_entity_from_argv_firsttoken)
+		{
+			chat_say(self, FALSE, e, substring(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)), TRUE);
+		}
+		else
+		{
+			if(tokens > client_entity_from_argv_firsttoken)
+				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)));
+			sprint(self, "ERROR: usage: tell # playerid text...\n");
+		}
+	} else if(cmd == "teamstatus") {
+		scores_nice_print(self);
+	} else if(cmd == "cvar_changes") {
+		sprint(self, cvar_changes);
+	} else if(cmd == "menu_select") {
+		Menu_Select(argv(1), stof(argv(2)));
+	} else if(cmd == "location_select") {
+		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
+	} else if(cmd == "mylocation") {
+		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
+	} else {
+		if(cmd != "status")
+		if(cmd != "max")
+		if(cmd != "monster")
+		if(cmd != "scrag")
+		if(cmd != "wraith")
+		if(cmd != "gimme")
+		if(cmd != "god")
+		if(cmd != "notarget")
+		if(cmd != "fly")
+		if(cmd != "noclip")
+		if(cmd != "give")
+		if(cmd != "kill")
+		if(cmd != "pause")
+		if(cmd != "ping")
+		if(cmd != "name")
+		if(cmd != "color")
+		if(cmd != "rate")
+		if(cmd != "pmodel")
+		if(cmd != "playermodel")
+		if(cmd != "playerskin")
+		if(cmd != "prespawn")
+		if(cmd != "spawn")
+		if(cmd != "begin")
+		if(cmd != "pings")
+		if(cmd != "sv_startdownload")
+		if(cmd != "download")
+		if(cmd != "rate_burstsize")
+		{
+			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
+			return;
+		}
+		if (cmd == "name") {
+			string name = substring(s, argv_start_index(1), -1);
+			if (self.retard > 0)
+				return;
+
+			if (self.gameclient == CLIENT_XONOTIC)
+				return;
+
+			client_mute_ifneeded(name);
+			IRC_Announce_Name(self, name);
+			if (strlen(strdecolorize(name)) > 48) {
+				name = substring(name, 0, 47);
+				s = strcat("name ", substring(name, 0, 47), "~");
+			}
+		}
+		clientcommand(self,s);
+	}
 }

@@ -2027,7 +2027,7 @@ void(entity spot) player_spawn {
 		if (currentlyPlaying == sv_reset_on_join) {
 			reset_on_join_done = TRUE;
 			if (time > game_starttime)
-				ReadyRestartForce();
+				ready_restart_force();
 		}
 	}
 	player_effects();
