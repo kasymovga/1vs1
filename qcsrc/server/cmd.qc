@@ -65,7 +65,7 @@ void GameCommand(string command)
 
 	if(cmd == "printstats")
 	{
-		DumpStats(FALSE);
+		world_dump_stats(FALSE);
 		return;
 	}
 

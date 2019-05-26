@@ -665,7 +665,7 @@ RULES
 ===============================================================================
 */
 
-void DumpStats(float final)
+void world_dump_stats(float final)
 {
 	local float file;
 	local string s;
@@ -946,7 +946,7 @@ void() world_gameover {
 		intermission_exittime = -1;
 
 	VoteReset();
-	DumpStats(TRUE);
+	world_dump_stats(TRUE);
 	IRC_Announce_GameOver();
 	FOR_EACH_CLIENT(other)
 	{
