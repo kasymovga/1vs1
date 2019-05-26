@@ -143,7 +143,6 @@ void ReadyCount();
 
 //float ctf_clientcommand();
 float readyrestart_happened;
-void spawnfunc_func_breakable();
 
 .float cmd_floodtime;
 .float cmd_floodcount;
