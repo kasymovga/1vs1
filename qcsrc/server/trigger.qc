@@ -41,7 +41,8 @@ void(void) trigger_solid_brush_init {
 // to mean no restrictions, so use a yaw of 360 instead.
 	if (self.movedir == '0 0 0')
 	if (self.angles != '0 0 0')
-		SetMovedir ();
+		entity_movedir_setup();
+
 	self.solid = SOLID_BSP;
 	model_setup();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
@@ -594,12 +595,12 @@ void spawnfunc_trigger_hurt()
 	trigger_hurt_last = self;
 };
 
-float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
+float trigger_tracebox_hits_hurt(vector start, vector mi, vector ma, vector end)
 {
 	entity th;
 
 	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
-		if(tracebox_hits_box(start, mi, ma, end, th.absmin, th.absmax))
+		if(trace_box_hits_box(start, mi, ma, end, th.absmin, th.absmax))
 			return TRUE;
 
 	return FALSE;
@@ -989,7 +990,7 @@ void spawnfunc_trigger_gamestart() {
 		self.nextthink = game_starttime + self.wait;
 	}
 	else
-		InitializeEntity(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
+		entity_initialize(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
 }
 
 void trigger_relay_teamcheck_use()
@@ -1222,7 +1223,7 @@ void trigger_always_init() {
 
 void spawnfunc_trigger_always() {
 	self.reset = trigger_always_init;
-	InitializeEntity(self, trigger_always_init, INITPRIO_LAST);
+	entity_initialize(self, trigger_always_init, INITPRIO_LAST);
 }
 
 void func_moveentity_think() {
@@ -1522,7 +1523,7 @@ void spawnfunc_trigger_relay_ifstate(void) {
             trigger_use_targets();
     };
 
-    InitializeEntity(self, inline void(void) {
+    entity_initialize(self, inline void(void) {
         while((var e = find(e, targetname, self.killtarget))) {
             if(e.statefunc) {
                 self.killtarget = NULL;
@@ -1545,7 +1546,7 @@ void spawnfunc_trigger_relay_ifstate(void) {
 
 void trigger_roundstate_warmup(void) {
 	self.reset2 = trigger_roundstate_warmup;
-	InitializeEntity(self, inline void(void) {
+	entity_initialize(self, inline void(void) {
 		activator = self;
 		trigger_use_targets();
 	}, INITPRIO_FINDTARGET);
@@ -1557,7 +1558,7 @@ void spawnfunc_trigger_roundstate(void) {
     self.use = trigger_use_targets;
 
     if(self.cnt == 0 /*ROUNDSTATE_GAMEINIT*/) {
-        InitializeEntity(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
+        entity_initialize(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
     } else if(self.cnt == 4 /*ROUNDSTATE_WARMUP*/) {
     	self.reset2 = trigger_roundstate_warmup;
     } else {

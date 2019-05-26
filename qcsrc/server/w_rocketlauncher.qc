@@ -66,7 +66,7 @@ void W_Rocket_RemoteExplode()
 	{
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > g_balance_rocketlauncher_radius) // safety device
+			: (vlen(entity_nearest_point_on_box(self.owner, self.origin) - self.origin) > g_balance_rocketlauncher_radius) // safety device
 		)
 		{
 			other = world;
@@ -97,7 +97,7 @@ vector rocket_steerto(vector thisdir, vector goaldir, float maxturn_cos)
 	//   (1 + f * X)^2 = maxturn^2 * (1 + X*X + 2 * X * f)
 	//   0 = (m^2 - f^2) * x^2 + (2 * f * (m^2 - 1)) * x + (m^2 - 1)
 	m2 = maxturn_cos * maxturn_cos;
-	v = solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
+	v = math_solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
 	return normalize(thisdir + goaldir * v_y); // the larger solution!
 }
 
@@ -229,7 +229,7 @@ void W_Rocket_Attack (void)
 	// muzzle flash for 1st person view
 	flash = spawn ();
 	setmodel (flash, "models/flash.md3"); // precision set below
-	SUB_SetFade (flash, time, 0.1);
+	entity_fade_setup(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');
 }

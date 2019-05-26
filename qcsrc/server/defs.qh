@@ -301,7 +301,6 @@ float have_team_spawns;
 float lockteams;
 
 .float parm_idlesince;
-float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;
 

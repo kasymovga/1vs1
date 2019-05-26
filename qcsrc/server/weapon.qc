@@ -231,7 +231,7 @@ void weapon_thrown_think()
 {
 	self.solid = SOLID_TRIGGER;
 	self.owner = world;
-	SUB_SetFade(self, time + 20, 1);
+	entity_fade_setup(self, time + 20, 1);
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
@@ -1465,7 +1465,7 @@ vector weapon_calculate_projectile_velocity(vector pvelocity, vector mvelocity)
 		// |(mdirection * pvelocity) * pvelocity - pvelocity| = mspeed
 
 		vector solution;
-		solution = solve_quadratic(1, -2 * (mdirection * pvelocity), pvelocity * pvelocity - mspeed * mspeed);
+		solution = math_solve_quadratic(1, -2 * (mdirection * pvelocity), pvelocity * pvelocity - mspeed * mspeed);
 		if(solution_z)
 			outspeed = solution_y; // the larger one
 		else

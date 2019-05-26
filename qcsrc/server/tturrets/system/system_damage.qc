@@ -19,7 +19,7 @@ void turret_trowgib(
     gib.classname = "turret_gib";
     setmodel(gib,smodel);
     setorigin(gib,v_from);
-    SUB_SetFade(gib,time + f_lifetime,2);
+    entity_fade_setup(gib,time + f_lifetime,2);
 
     gib.solid              = SOLID_BBOX;
 
@@ -38,7 +38,7 @@ void turret_trowgib(
         burn.effects        = EF_LOWPRECISION;//|EF_FLAME;
         setattachment(burn,gib,"");
         setorigin(burn,(gib.mins + gib.maxs) * 0.5);
-        SUB_SetFade(burn,time + (f_lifetime * 0.5) ,2);
+        entity_fade_setup(burn,time + (f_lifetime * 0.5) ,2);
     }
 }
 
@@ -60,7 +60,7 @@ void turret_gib_boom()
 
         setorigin(gib,self.origin);
 
-        SUB_SetFade(gib,time + 5,2);
+        entity_fade_setup(gib,time + 5,2);
 
         gib.solid              = SOLID_BBOX;
 

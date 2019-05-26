@@ -200,7 +200,7 @@ void(void) teleport_setup {
 	EXACTTRIGGER_INIT;
 	self.use = teleport_use;
 	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
+	entity_initialize(self, teleport_findtarget, INITPRIO_FINDTARGET);
 	if (!self.target) {
 		objerror ("Teleporter with no target");
 		return;

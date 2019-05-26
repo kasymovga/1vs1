@@ -274,7 +274,7 @@ void survive_init() {
 	precache_sound("announcer/robotic/2.wav");
 	precache_sound("announcer/robotic/1.wav");
 	CACHE_CVAR(g_survive_freeze);
-	InitializeEntity(world, survive_init_delayed, INITPRIO_GAMETYPE);
+	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
 	GameHook_GameOverMessageMod = survive_GameOverMessageMod;

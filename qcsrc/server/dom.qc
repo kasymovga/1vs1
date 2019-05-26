@@ -303,7 +303,7 @@ void dom_controlpoint_setup()
 	self.flags = FL_ITEM;
 	setsize(self, '-32 -32 -32', '32 32 32');
 	setorigin(self, self.origin + '0 0 20');
-	droptofloor();
+	entity_droptofloor();
 
 	waypoint_spawnforitem(self);
 	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite);
@@ -446,6 +446,6 @@ void dom_init()
 	GameHook_FragLimitOverride = dom_FragLimitOverride;
 	GameHook_LeadLimitOverride = dom_LeadLimitOverride;
 	GameHook_BotChooseRole = havocbot_chooserole_dom;
-	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
+	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);
 };
 

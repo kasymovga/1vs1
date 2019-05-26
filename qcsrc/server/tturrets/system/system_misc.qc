@@ -166,7 +166,7 @@ void paint_target(entity onwho, float f_size, vector v_color, float f_time)
     e.velocity = (v_color * 32); // + '0 0 1' * 64;
 
     e.colormod = v_color;
-    SUB_SetFade(e,time,f_time);
+    entity_fade_setup(e,time,f_time);
 }
 
 void paint_target2(entity onwho, float f_size, vector v_color, float f_time)
@@ -186,7 +186,7 @@ void paint_target2(entity onwho, float f_size, vector v_color, float f_time)
     e.avelocity_x = -128;
 
     e.colormod = v_color;
-    SUB_SetFade(e,time,f_time);
+    entity_fade_setup(e,time,f_time);
 }
 
 void paint_target3(vector where, float f_size, vector v_color, float f_time)
@@ -200,7 +200,7 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
     e.movetype = MOVETYPE_NONE;
     e.velocity = '0 0 0';
     e.colormod = v_color;
-    SUB_SetFade(e,time,f_time);
+    entity_fade_setup(e,time,f_time);
 }
 
 /*

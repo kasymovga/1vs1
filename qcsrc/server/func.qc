@@ -328,7 +328,7 @@ void func_magicwall_start_transition(float sol, void(void) done) {
     self.solid = sol;
 
     if(!sol)
-        dropentities(self);
+        entity_drop_entities(self);
 
     if(self.speed < 0) {
         self.alpha = self.MAGICWALL_ALPHAFIELD(self);
@@ -835,7 +835,7 @@ void spawnfunc_func_train()
 	self.effects |= EF_LOWPRECISION;
 
 	// wait for targets to spawn
-	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
+	entity_initialize(self, func_train_find, INITPRIO_SETLOCATION);
 
 	self.blocked = func_generic_plat_blocked;
 	if(self.dmg & (!self.message))
@@ -1100,7 +1100,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 */
 void spawnfunc_func_button()
 {
-	SetMovedir ();
+	entity_movedir_setup();
 
 	if not(func_moving_brush_init())
 		return;
@@ -1701,7 +1701,7 @@ void spawnfunc_func_door()
 {
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
-	SetMovedir ();
+	entity_movedir_setup();
 
 	self.max_health = self.health;
 	if not(func_moving_brush_init())
@@ -1747,7 +1747,7 @@ void spawnfunc_func_door()
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
-		InitializeEntity(self, func_door_init_startopen, INITPRIO_SETLOCATION);
+		entity_initialize(self, func_door_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = STATE_BOTTOM;
 
@@ -1755,7 +1755,7 @@ void spawnfunc_func_door()
 
 // func_doors_link can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.
-	InitializeEntity(self, func_doors_link, INITPRIO_LINKDOORS);
+	entity_initialize(self, func_doors_link, INITPRIO_LINKDOORS);
 
 	self.reset = func_door_reset;
 };
@@ -1864,7 +1864,7 @@ void spawnfunc_func_door_rotating()
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
-		InitializeEntity(self, func_door_rotating_init_startopen, INITPRIO_SETLOCATION);
+		entity_initialize(self, func_door_rotating_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = STATE_BOTTOM;
 
@@ -1878,7 +1878,7 @@ void spawnfunc_func_door_rotating()
 
 // func_doors_link can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.
-	InitializeEntity(self, func_doors_link, INITPRIO_LINKDOORS);
+	entity_initialize(self, func_doors_link, INITPRIO_LINKDOORS);
 
 	self.reset = func_door_rotating_reset;
 };
@@ -2345,5 +2345,5 @@ void spawnfunc_func_vectormamamam()
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
 
-	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
+	entity_initialize(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }

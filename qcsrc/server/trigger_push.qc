@@ -76,7 +76,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			vz = -vz;
 
 	vector solution;
-	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
+	solution = math_solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
 	if(!solution_z)
 		solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
@@ -264,7 +264,7 @@ void trigger_push_findtarget()
 void spawnfunc_trigger_push()
 {
 	if (self.speed)
-		SetMovedir ();
+		entity_movedir_setup();
 
 	EXACTTRIGGER_INIT;
 
@@ -281,12 +281,12 @@ void spawnfunc_trigger_push()
 	precache_sound (self.noise);
 
 	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
+	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 };
 
 void spawnfunc_target_push() {
 	if (self.speed)
-		SetMovedir ();
+		entity_movedir_setup();
 
 	self.use = trigger_push_touch;
 	//self.touch = trigger_push_touch;
@@ -299,5 +299,5 @@ void spawnfunc_target_push() {
 	precache_sound (self.noise);
 
 	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
+	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 };

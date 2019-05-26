@@ -332,6 +332,6 @@ void(string name, void() delayed_init) vehicle_stdproc_init {
 	self.shield_max = cvar(strcat("g_vehicle_", name, "_shield"));
 	self.shield_regen = cvar(strcat("g_vehicle_", name, "_shield_regen"));
 	self.shield_regen_dmgpause = cvar(strcat("g_vehicle_", name, "_shield_regen_dmgpause"));
-	InitializeEntity(self, delayed_init, INITPRIO_DROPTOFLOOR);
+	entity_initialize(self, delayed_init, INITPRIO_DROPTOFLOOR);
 }
 #endif

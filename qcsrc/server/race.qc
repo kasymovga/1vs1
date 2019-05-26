@@ -587,7 +587,7 @@ void spawnfunc_trigger_race_checkpoint()
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 
-	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
+	entity_initialize(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
 void race_AbandonRaceCheck(entity p)

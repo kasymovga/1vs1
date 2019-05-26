@@ -70,7 +70,7 @@ void spawnfunc_runematch_spawn_point()
 	}
 
 	setsize(self, '0 0 -35', '0 0 0');
-	droptofloor();
+	entity_droptofloor();
 	++rune_numspawns;
 }
 
@@ -107,7 +107,7 @@ float rune_spawn_somewhere(entity e)
 	}
 	else
 	{
-		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+		if(entity_move_to_random_location(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 		{
 			// great
 			makevectors(self.angles),

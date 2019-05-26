@@ -53,13 +53,12 @@ race.qh
 keyhunt.qh
 model.qh
 antilag.qh
-
+math.qh
 vote.qh
-
-g_subs.qh
+entity.qh
 net.qh
 w_melee.qh
-
+trace.qh
 irc.qh
 udpchat.qh
 
@@ -273,11 +272,11 @@ akimbo.qc
 info_messages.qc
 
 freeze.qc
-
+trace.qc
 clanarena.qc
-
+entity.qc
 menu.qc
-
+math.qc
 gametypevote.qc
 progressbar.qc
 cvar.qc

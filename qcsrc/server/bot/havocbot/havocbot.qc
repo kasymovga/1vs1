@@ -458,11 +458,11 @@ void havocbot_movetogoal()
 	if not(self.flags & FL_ONGROUND)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
-		if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
+		if(trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
 		if(self.items & IT_JETPACK)
 		{
 			tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', MOVE_NOMONSTERS, self);
-			if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos + '0 0 1' ))
+			if(trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos + '0 0 1' ))
 			{
 				if(self.velocity_z<0)
 				{
@@ -686,7 +686,7 @@ void havocbot_movetogoal()
 					{
 						// if ain't a safe goal with "holes" (like the jumpad on soylent)
 						// and there is a trigger_hurt below
-						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
+						if(trigger_tracebox_hits_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
 							if (self.goalcurrent.classname == "player" || self.goalcurrent.classname == "droppedweapon")

@@ -273,7 +273,7 @@ void HG_Sentry_SetOwner(entity sentry, entity newowner) {
 }
 
 void HG_Sentry_Remove(void) {
-    dropentities(self);
+    entity_drop_entities(self);
     HG_Sentry_Interrupt_Capture();
 
     if(self.realowner.classname == "player")
@@ -554,7 +554,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     setsize(e, HG_SENTRY_MINS, HG_SENTRY_MAXS);
     setorigin(e, o);
 
-    if(!move_out_of_solid(e, MOVE_NOMONSTERS)) {
+    if(!entity_move_out_of_solid(e, MOVE_NOMONSTERS)) {
         remove(e);
         //bigprint_spec(self, "Can't put a sentry here!", "", 1);
         centerprint(self, "Can't put a sentry here!");

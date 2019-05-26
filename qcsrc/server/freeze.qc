@@ -14,5 +14,5 @@ void Freeze_Init()
 	GameHook_BotChooseRole = havocbot_chooserole_ft;
 	GameHook_FragLimitOverride = Freeze_FragLimitOverride;
 	SetTeamCount(bound(2, cvar("g_freeze_teams"), 4));
-	InitializeEntity(world, Freeze_Init_Delayed, INITPRIO_GAMETYPE);
+	entity_initialize(world, Freeze_Init_Delayed, INITPRIO_GAMETYPE);
 }

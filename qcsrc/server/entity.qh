@@ -1,0 +1,23 @@
+enum {
+	INITPRIO_FIRST,
+	INITPRIO_GAMETYPE,
+	INITPRIO_GAMETYPE_FALLBACK,
+	INITPRIO_CVARS,
+	INITPRIO_FINDTARGET,
+	INITPRIO_DROPTOFLOOR,
+	INITPRIO_SETLOCATION,
+	INITPRIO_LINKDOORS,
+	INITPRIO_LAST,
+};
+
+.vector dropped_origin;
+void(entity for_e, void(void) func, float order) entity_initialize;
+void(void) entity_initialize_run;
+void(entity platform) entity_drop_entities;
+void(void) entity_droptofloor;
+vector(entity box, vector org) entity_nearest_point_on_box;
+float(entity e, float t) entity_move_out_of_solid_with_type;
+#define entity_move_out_of_solid(x) entity_move_out_of_solid_with_type(x, MOVE_WORLDONLY)
+float(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float shiftdistance) entity_move_to_random_location;
+void() entity_movedir_setup;
+void(entity ent, float when, float fadetime) entity_fade_setup;

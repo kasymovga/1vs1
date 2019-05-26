@@ -111,7 +111,7 @@ float HG_GenericProjectile_TryStick(entity targ, vector normal) {
             vector oorig = self.origin;
             setsize(self, PL_MIN, PL_MAX);
 
-            if(!move_out_of_solid(self, MOVE_NOMONSTERS)) {
+            if(!entity_move_out_of_solid(self, MOVE_NOMONSTERS)) {
                 if(!self.hg_isbonus) HG_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == HG_TRANSLOC)
                     self.owner.hg_ctx_ammo += 1;)
 
@@ -247,7 +247,7 @@ void HG_GenericProjectile_Touch(void) {
                     dir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal;
                     self.velocity = dir * spd;
                     setorigin(self, self.origin + self.velocity * frametime);
-                    move_out_of_solid(self, MOVE_NOMONSTERS);
+                    entity_move_out_of_solid(self, MOVE_NOMONSTERS);
                 }
             }
         }
@@ -351,7 +351,7 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
     e.SendFlags = 0xFFFFFF;
     projectile_update_angles(e);
     e.effects |= EF_NODEPTHTEST; // no culling please
-    move_out_of_solid(e, MOVE_WORLDONLY);
+    entity_move_out_of_solid(e, MOVE_WORLDONLY);
 }
 
 .vector hg_oldangles;
@@ -395,7 +395,7 @@ void HG_GenericProjectile_Think(void) {
                     self.velocity = self.hg_minVelocity;
                 } else {
                     setorigin(self, self.origin + self.movedir * 5);
-                    move_out_of_solid(self, MOVE_NOMONSTERS);
+                    entity_move_out_of_solid(self, MOVE_NOMONSTERS);
                     self.velocity = self.hg_deferredVel;
                     sound(self, CHAN_WEAPON2, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
                     pointparticles(particleeffectnum("smoke_ring"), self.origin, -self.velocity, 10);

@@ -37,7 +37,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 				head = head.chain;
 				continue;
 			}
-			if(tracebox_hits_trigger_hurt(head.origin, head.mins, head.maxs, trace_endpos))
+			if(trigger_tracebox_hits_hurt(head.origin, head.mins, head.maxs, trace_endpos))
 			{
 				head = head.chain;
 				continue;
@@ -239,7 +239,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 				if( t != CONTENT_SOLID )
 				if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
 					continue;
-				if(tracebox_hits_trigger_hurt(head.origin, head.mins, head.maxs, trace_endpos))
+				if(trigger_tracebox_hits_hurt(head.origin, head.mins, head.maxs, trace_endpos))
 					continue;
 			}
 

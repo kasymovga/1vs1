@@ -234,7 +234,7 @@ void Single_Init() {
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
-	InitializeEntity(world, single_init_delayed, INITPRIO_GAMETYPE);
+	entity_initialize(world, single_init_delayed, INITPRIO_GAMETYPE);
 	if (game == GAME_COOP) {
 		ActivateTeamplay();
 		SetTeamCount(1);

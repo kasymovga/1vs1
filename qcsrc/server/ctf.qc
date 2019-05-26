@@ -230,10 +230,10 @@ void place_flag()
 	}
 	else
 	{
-		droptofloor();
+		entity_droptofloor();
 		self.movetype = MOVETYPE_TOSS;
 	}
-	InitializeEntity(self, ctf_captureshield_spawn, INITPRIO_SETLOCATION);
+	entity_initialize(self, ctf_captureshield_spawn, INITPRIO_SETLOCATION);
 };
 
 void RegenFlag(entity e)
@@ -1119,7 +1119,7 @@ void ctf_init()
 	else
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
 
-	InitializeEntity(world, ctf_delayedinit, INITPRIO_GAMETYPE);
+	entity_initialize(world, ctf_delayedinit, INITPRIO_GAMETYPE);
 	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(mapname, "/captimerecord/time")));
 
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");

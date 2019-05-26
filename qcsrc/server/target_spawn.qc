@@ -318,7 +318,7 @@ void spawnfunc_target_spawn()
 	self.use = target_spawn_use;
 	self.message = strzone(strreplace("'", "\"", self.message));
 	self.target_spawn_id = ++target_spawn_count;
-	InitializeEntity(self, target_spawn_spawnfirst, INITPRIO_LAST);
+	entity_initialize(self, target_spawn_spawnfirst, INITPRIO_LAST);
 }
 
 

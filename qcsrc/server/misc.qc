@@ -75,7 +75,7 @@ void(void) misc_follow_init {
 }
 
 void(void) spawnfunc_misc_follow {
-	InitializeEntity(self, misc_follow_init, INITPRIO_FINDTARGET);
+	entity_initialize(self, misc_follow_init, INITPRIO_FINDTARGET);
 }
 
 void misc_spikeshooter_spike_touch(void) {
@@ -141,7 +141,7 @@ void(void) misc_lightning_findtarget {
 }
 
 void(void) spawnfunc_misc_lightning {
-	InitializeEntity(self, misc_lightning_findtarget, INITPRIO_FINDTARGET);
+	entity_initialize(self, misc_lightning_findtarget, INITPRIO_FINDTARGET);
 	self.use = misc_lightning_use;
 	self.think = misc_lightning_spark;
 	precache_sound("ambient/sparks1.ogg");
@@ -378,7 +378,7 @@ void(void) spawnfunc_misc_laser {
 		self.modelscale = 1;
 	self.think = misc_laser_think;
 	self.nextthink = time;
-	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);
+	entity_initialize(self, misc_laser_init, INITPRIO_FINDTARGET);
 
 	self.mangle = self.angles;
 

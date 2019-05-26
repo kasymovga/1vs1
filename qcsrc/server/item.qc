@@ -624,7 +624,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 		self.reset = SUB_Remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
-		SUB_SetFade(self, time + 60, 1);
+		entity_fade_setup(self, time + 60, 1);
 		traceline(self.origin, self.origin, MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{
@@ -691,8 +691,8 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 48' * sv_world_scale);
 			else
 				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 32' * sv_world_scale);
-			// note droptofloor returns FALSE if stuck/or would fall too far
-			droptofloor();
+			// note entity_droptofloor returns FALSE if stuck/or would fall too far
+			entity_droptofloor();
 			waypoint_spawnforitem(self);
 		}
 		self.reset = item_reset;
@@ -778,7 +778,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 		if(!self.cnt)
 			self.cnt = 1; // item probability weight
 		self.effects = self.effects | EF_NODRAW; // marker for item team search
-		InitializeEntity(self, item_find_team, INITPRIO_FINDTARGET);
+		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
 	}
 	else if(self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);

@@ -842,9 +842,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 			}
 		}
-
-        dropentities(self);
-
+        entity_drop_entities(self);
 		// become fully visible
 		self.alpha = 1;
 		// clear selected player display
@@ -906,7 +904,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
 		// set up to fade out later
-		SUB_SetFade (self, time + 12 + random () * 4, 1);
+		entity_fade_setup(self, time + 12 + random () * 4, 1);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
 		{

@@ -250,7 +250,7 @@ void world_static_init(void)
 	CACHE_CVAR(g_casings);
 	CACHE_CVAR(g_projectiles_newton_style);
 	CACHE_CVAR(g_balance_pause_fuel_regen);
-	tracetoss = tracetoss_wrapper;
+	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(spawn_debug);
@@ -1329,7 +1329,7 @@ void StartFrame (void)
 	if(world_redirection_think())
 		return;
 
-	InitializeEntitiesRun();
+	entity_initialize_run();
 
 	sys_ticrate = cvar("sys_ticrate");
 

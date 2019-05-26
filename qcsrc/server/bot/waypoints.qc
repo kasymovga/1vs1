@@ -30,7 +30,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	if(!w.wpisbox)
 	{
 		setsize(w, PL_MIN - '1 1 0', PL_MAX + '1 1 0');
-		if(!move_out_of_solid(w))
+		if(!entity_move_out_of_solid(w))
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
 			{

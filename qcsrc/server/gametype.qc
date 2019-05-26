@@ -140,7 +140,7 @@ void() gametype_init {
 		if(leadlimit_override >= 0)
 			cvar_set("leadlimit", ftos(leadlimit_override));
 	}
-	InitializeEntity(world, gametype_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);
+	entity_initialize(world, gametype_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);
 	if (force_gametype_restore)
 		MapInfo_SwitchGameType(force_gametype_restore);
 

@@ -111,6 +111,6 @@ void func_laserbeam_init(void) {
 
 void spawnfunc_func_laserbeam(void) {
     setsize(self, '-4 -4 -4', '4 4 4');
-    move_out_of_solid(self, MOVE_WORLDONLY);
-    InitializeEntity(self, func_laserbeam_init, INITPRIO_FINDTARGET);
+    entity_move_out_of_solid(self, MOVE_WORLDONLY);
+    entity_initialize(self, func_laserbeam_init, INITPRIO_FINDTARGET);
 }

@@ -141,11 +141,11 @@ void W_Crylink_Attack (void)
 		weapon_setup_projectile_velocity(proj);
 		proj.touch = W_Crylink_Touch;
 		if(counter == 0)
-			SUB_SetFade(proj, time + g_balance_crylink_primary_middle_lifetime, g_balance_crylink_primary_middle_fadetime);
+			entity_fade_setup(proj, time + g_balance_crylink_primary_middle_lifetime, g_balance_crylink_primary_middle_fadetime);
 		else if(counter <= 3)
-			SUB_SetFade(proj, time + g_balance_crylink_primary_star_lifetime, g_balance_crylink_primary_star_fadetime);
+			entity_fade_setup(proj, time + g_balance_crylink_primary_star_lifetime, g_balance_crylink_primary_star_fadetime);
 		else
-			SUB_SetFade(proj, time + g_balance_crylink_primary_other_lifetime, g_balance_crylink_primary_other_fadetime);
+			entity_fade_setup(proj, time + g_balance_crylink_primary_other_lifetime, g_balance_crylink_primary_other_fadetime);
 		proj.cnt = g_balance_crylink_primary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 
@@ -187,9 +187,9 @@ void W_Crylink_Attack2 (void)
 		weapon_setup_projectile_velocity(proj);
 		proj.touch = W_Crylink_Touch2;
 		if(counter == (shots - 1) / 2)
-			SUB_SetFade(proj, time + g_balance_crylink_secondary_middle_lifetime, g_balance_crylink_secondary_middle_fadetime);
+			entity_fade_setup(proj, time + g_balance_crylink_secondary_middle_lifetime, g_balance_crylink_secondary_middle_fadetime);
 		else
-			SUB_SetFade(proj, time + g_balance_crylink_secondary_line_lifetime, g_balance_crylink_secondary_line_fadetime);
+			entity_fade_setup(proj, time + g_balance_crylink_secondary_line_lifetime, g_balance_crylink_secondary_line_fadetime);
 		proj.cnt = g_balance_crylink_secondary_bounces;
 		//proj.scale = 1 + 1 * proj.cnt;
 

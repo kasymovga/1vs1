@@ -893,7 +893,7 @@ void tdm_delayedinit()
 
 void tdm_init()
 {
-	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
+	entity_initialize(world, tdm_delayedinit, INITPRIO_GAMETYPE);
 };
 
 void Teamplay_ReadCvars()

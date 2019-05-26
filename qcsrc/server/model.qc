@@ -23,7 +23,7 @@ float(void) model_lod_customize {
 	}
 
 	// TODO csqc network this so it only gets sent once
-	d = vlen(NearestPointOnBox(self, other.origin) - other.origin);
+	d = vlen(entity_nearest_point_on_box(self, other.origin) - other.origin);
 	if(d < self.loddistance1)
 		self.modelindex = self.modelindex_lod0;
 	else if(!self.modelindex_lod2 || d < self.loddistance2)
@@ -87,7 +87,7 @@ void(void) model_setup {
  	if(self.model != "") {
  		precache_model(self.model);
  		setmodel(self, self.model); // no precision needed
-		InitializeEntity(self, model_lod_attach, INITPRIO_FINDTARGET);
+		entity_initialize(self, model_lod_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
 	if(self.scale)
@@ -254,7 +254,7 @@ void(void) model_init_common_delayed {
 void(float sol) model_init_common {
 	if(!self.scale) self.scale = self.modelscale;
 	self.use = model_setcolormaptoactivator;
-	InitializeEntity(self, model_init_common_delayed, INITPRIO_DROPTOFLOOR);
+	entity_initialize(self, model_init_common_delayed, INITPRIO_DROPTOFLOOR);
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT;
 }
 

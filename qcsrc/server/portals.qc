@@ -187,7 +187,7 @@ float Portal_FindSafeOrigin(entity portal)
 	makevectors(portal.angles);
 	portal.angles_x = - portal.angles_x;
 	portal.origin += 16 * v_forward;
-	if(!move_out_of_solid(portal))
+	if(!entity_move_out_of_solid(portal))
 	{
 #ifdef DEBUG
 		print("NO SAFE ORIGIN\n");
@@ -396,7 +396,7 @@ void Portal_Remove(entity portal, float killed)
 	{
 		Portal_MakeBrokenPortal(portal);
 		sound(portal, CHAN_PROJECTILE, "porto/expire.wav", VOL_BASE, ATTN_NORM);
-		SUB_SetFade(portal, time, 0.5);
+		entity_fade_setup(portal, time, 0.5);
 	}
 }
 

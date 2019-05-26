@@ -1,0 +1,3 @@
+float(vector start, vector end, vector thmi, vector thma) trace_hits_box;
+float(vector start, vector mi, vector ma, vector end, vector thmi, vector thma) trace_box_hits_box;
+void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_toss_wrapper;

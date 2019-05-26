@@ -659,7 +659,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 
 void kh_Key_MoveToRandomLocation_Think() {
 	vector v = self.origin;
-	if (MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
+	if (entity_move_to_random_location(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 30, 1024, 256)) {
 		bprint("The ", self.netname, "^7 respawned\n");
 		self.pain_finished = time + g_balance_keyhunt_delay_return;
 		self.think = kh_Key_Think;
@@ -998,7 +998,7 @@ void kh_init_delayed()  // sets up th KH environment
 }
 
 void kh_init() {
-	InitializeEntity(world, kh_init_delayed, INITPRIO_GAMETYPE);
+	entity_initialize(world, kh_init_delayed, INITPRIO_GAMETYPE);
 	precache_sound(kh_sound_capture);
 	precache_sound(kh_sound_destroy);
 	precache_sound(kh_sound_drop);

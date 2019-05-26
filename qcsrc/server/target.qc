@@ -134,7 +134,7 @@ void(void) target_delay_init {
 void(void) spawnfunc_target_delay {
 	self.use = target_delay_use;
 	self.reset = target_delay_init;
-	InitializeEntity(self, target_delay_init, INITPRIO_SETLOCATION);
+	entity_initialize(self, target_delay_init, INITPRIO_SETLOCATION);
 }
 
 float NUM_NEAREST_ENTITIES = 4;
