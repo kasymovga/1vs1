@@ -471,15 +471,16 @@ set sv_world_scale 1
 set sv_jumppads_target_adjust_height 0
 
 set g_runes 0
-set g_runematch_carried_runes_max 3
-set g_runematch_teams 2 "Teams count for deathmatch_force_teamplay"
-set g_runematch_curses 0
-set g_runematch_defense 1
-set g_runematch_hacker 0
-set g_runematch_ignite 1
-set g_runematch_speed 1
-set g_runematch_vampire 1
-set g_runematch_vitality 1
+set g_runes_carried_runes_max 3
+set g_runes_defense 1
+set g_runes_hacker 0
+set g_runes_ignite 1
+set g_runes_speed 1
+set g_runes_vampire 1
+set g_runes_vitality 1
+set g_runes_shuffletime 5
+set g_runes_respawntime 45
+set g_runes_drop_runes_max 5
 set g_balance_curse_burning_damage_factor 0.3
 set g_balance_rune_ignite_damage_factor 0.3
 set g_balance_rune_regen_damage_factor 0.3
@@ -491,6 +492,13 @@ set g_balance_curse_altruism_damage_factor 0.3
 set g_balance_rune_speed_jumpheight 1
 set g_balance_rune_vampire_max_health 300
 set g_balance_rune_regen_max_health 400
+set sv_model_rune_ignite "models/runematch/rune.mdl"
+set sv_model_rune_speed "models/runematch/rune.mdl"
+set sv_model_rune_vitality "models/runematch/rune.mdl"
+set sv_model_rune_hacker "models/runematch/rune.mdl"
+set sv_model_rune_defense "models/runematch/rune.mdl"
+set sv_model_rune_vampire "models/runematch/rune.mdl"
+set sv_model_rune_decor "models/runematch/curse.mdl"
 
 set g_start_weapon_supershotgun 0
 
@@ -1607,7 +1615,6 @@ set _g_domination 0
 set _g_ctf 0
 set _g_catf 0
 set _g_ctft 0
-set _g_runematch 0
 set _g_conquest 0
 set _g_keyhunt 0
 set _g_khca 0
@@ -1621,7 +1628,7 @@ set _g_clanarena 0
 set _g_survive 0
 set _g_single 0
 set _g_coop 0
-alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_runematch 0; _g_conquest 0; _g_keyhunt 0; _g_khca 0; _g_khft 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0; _g_coop 0"
+alias reset_gametype "_g_dm 0; _g_tdm 0; _g_domination 0; _g_ctf 0; _g_catf 0; _g_ctft 0; _g_conquest 0; _g_keyhunt 0; _g_khca 0; _g_khft 0; _g_onslaught 0; _g_race 0; _g_nexball 0; _g_freeze 0; _g_clanarena 0; _g_survive 0; _g_single 0; _g_coop 0"
 alias gametype_dm "reset_gametype; _g_dm 1; bprint_gtswitch ^3Deathmatch"
 alias gametype_tdm "reset_gametype; _g_tdm 1; bprint_gtswitch ^3Team Deathmatch"
 alias gametype_dom "reset_gametype; _g_domination 1; bprint_gtswitch ^3Domination"
@@ -1629,7 +1636,6 @@ alias gametype_domination gametype_dom
 alias gametype_ctf "reset_gametype; _g_ctf 1; bprint_gtswitch ^3Capture The Flag"
 alias gametype_catf "reset_gametype; _g_catf 1; bprint_gtswitch ^3CTF with CA"
 alias gametype_ctft "reset_gametype; _g_ctft 1; bprint_gtswitch ^3CTF with FT"
-alias gametype_rune "reset_gametype; _g_runematch 1; bprint_gtswitch ^3Runematch"
 alias gametype_conq "reset_gametype; _g_conquest 1; bprint_gtswitch ^3Conquest"
 alias gametype_conquest gametype_conq
 alias gametype_kh "reset_gametype; _g_keyhunt 1; bprint_gtswitch ^3Key Hunt"

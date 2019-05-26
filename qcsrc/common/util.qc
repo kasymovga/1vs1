@@ -188,7 +188,6 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_CTF) return "ctf";
 	else if (g == GAME_CATF) return "catf";
 	else if (g == GAME_CTFT) return "ctft";
-	else if (g == GAME_RUNEMATCH) return "rune";
 	else if (g == GAME_KEYHUNT) return "kh";
 	else if (g == GAME_KEYHUNT_CA) return "khca";
 	else if (g == GAME_KEYHUNT_FT) return "khft";

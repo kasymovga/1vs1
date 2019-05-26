@@ -76,7 +76,7 @@ survive.qh
 ctf.qh
 dom.qh
 entcs.qh
-runematch.qh
+rune.qh
 onslaught.qh
 nexball.qh
 timeout.qh
@@ -162,7 +162,7 @@ fire.qc
 arc.qc
 teamplay.qc
 gametype.qc
-runematch.qc
+rune.qc
 
 ../client-server/cl_physics.qc
 physics.qc

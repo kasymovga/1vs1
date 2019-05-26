@@ -89,12 +89,6 @@ void() gametype_init {
 		ActivateTeamplay();
 		ctf_init();
 	}
-	if(game == GAME_RUNEMATCH) {
-		if(cvar("deathmatch_force_teamplay"))
-			ActivateTeamplay();
-
-		runematch_init();
-	}
 	if(game == GAME_KEYHUNT || game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT) {
 		ActivateTeamplay();
 		kh_init();

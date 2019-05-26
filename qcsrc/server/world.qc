@@ -258,7 +258,7 @@ void world_static_init(void)
 	CACHE_CVAR(g_telefrags);
 	minstagib_init();
 	item_init();
-	runes_init();
+	rune_init();
 	WalkieTalkie_Init();
 	Akimbo_Init();
 	Hat_Init();

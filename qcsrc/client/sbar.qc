@@ -2593,11 +2593,7 @@ void Sbar_Draw (void)
 			s = "";
 			for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2) {
 				if (i & a)
-					s = strcat(s, " ", RuneName(i));
-			}
-			for (i = CURSE_FIRST; i <= CURSE_LAST; i *= 2) {
-				if (i & a)
-					s = strcat(s, " ", RuneName(i));
+					s = strcat(s, " ", rune_name(i));
 			}
 			drawcolorcodedstringcenter(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
 		}
