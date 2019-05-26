@@ -4,9 +4,6 @@ float(entity to, float sf) model_client_send;
 .string lodtarget2;
 .string lodmodel1;
 .string lodmodel2;
-.float lodmodelindex0;
-.float lodmodelindex1;
-.float lodmodelindex2;
 .float loddistance1;
 .float loddistance2;
 
@@ -17,22 +14,22 @@ float(void) model_lod_customize {
 	{
 		d = cvar("loddebug");
 		if(d == 1)
-			self.modelindex = self.lodmodelindex0;
+			self.modelindex = self.modelindex_lod0;
 		else if(d == 2)
-			self.modelindex = self.lodmodelindex1;
+			self.modelindex = self.modelindex_lod1;
 		else // if(d == 3)
-			self.modelindex = self.lodmodelindex2;
+			self.modelindex = self.modelindex_lod2;
 		return TRUE;
 	}
 
 	// TODO csqc network this so it only gets sent once
 	d = vlen(NearestPointOnBox(self, other.origin) - other.origin);
 	if(d < self.loddistance1)
-		self.modelindex = self.lodmodelindex0;
-	else if(!self.lodmodelindex2 || d < self.loddistance2)
-		self.modelindex = self.lodmodelindex1;
+		self.modelindex = self.modelindex_lod0;
+	else if(!self.modelindex_lod2 || d < self.loddistance2)
+		self.modelindex = self.modelindex_lod1;
 	else
-		self.modelindex = self.lodmodelindex2;
+		self.modelindex = self.modelindex_lod2;
 
 	return TRUE;
 }
@@ -45,7 +42,7 @@ void(void) model_lod_attach {
 	if(!self.loddistance2)
 		self.loddistance2 = 2000;
 
-	self.lodmodelindex0 = self.modelindex;
+	self.modelindex_lod0 = self.modelindex;
 	if(self.lodtarget1 != "") {
 		e = find(world, targetname, self.lodtarget1);
 		if(e) {
@@ -70,19 +67,19 @@ void(void) model_lod_attach {
 
 		precache_model(self.lodmodel1);
 		setmodel(self, self.lodmodel1);
-		self.lodmodelindex1 = self.modelindex;
+		self.modelindex_lod1 = self.modelindex;
 
 		if(self.lodmodel2 != "")
 		{
 			precache_model(self.lodmodel2);
 			setmodel(self, self.lodmodel2);
-			self.lodmodelindex2 = self.modelindex;
+			self.modelindex_lod2 = self.modelindex;
 		}
 
-		self.modelindex = self.lodmodelindex0;
+		self.modelindex = self.modelindex_lod0;
 		setsize(self, mi, ma);
 	}
-	if(self.lodmodelindex1)
+	if(self.modelindex_lod1)
 		self.customizeentityforclient = model_lod_customize;
 }
 
