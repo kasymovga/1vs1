@@ -812,7 +812,7 @@ void spawnfunc_onslaught_generator()
 
 	local entity e;
 	if (!self.team)
-		objerror("team must be set");
+		entity_abort("team must be set");
 	SetAllowedTeam(self.team);
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
@@ -1275,9 +1275,9 @@ void onslaught_link_delayed()
 	self.goalentity = find(world, targetname, self.target);
 	self.enemy = find(world, targetname, self.target2);
 	if (!self.goalentity)
-		objerror("can not find target\n");
+		entity_abort("can not find target\n");
 	if (!self.enemy)
-		objerror("can not find target2\n");
+		entity_abort("can not find target2\n");
 	dprint(etos(self.goalentity), " linked with ", etos(self.enemy), "\n");
 	self.SendFlags |= 3;
 	self.think = onslaught_link_checkupdate;
@@ -1301,7 +1301,7 @@ void spawnfunc_onslaught_link()
 		return;
 	}
 	if (self.target == "" || self.target2 == "")
-		objerror("target and target2 must be set\n");
+		entity_abort("target and target2 must be set\n");
 	entity_initialize(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
 	net_link_entity(self, FALSE, 0, onslaught_link_send);
 };

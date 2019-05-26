@@ -14,7 +14,7 @@ void W_Porto_Success (void)
 {
 	if(self.owner == world)
 	{
-		objerror("Cannot succeed successfully: no owner\n");
+		entity_abort("Cannot succeed successfully: no owner\n");
 		return;
 	}
 
@@ -29,7 +29,7 @@ void W_Porto_Fail ()
 {
 	if(self.owner == world)
 	{
-		objerror("Cannot fail successfully: no owner\n");
+		entity_abort("Cannot fail successfully: no owner\n");
 		return;
 	}
 

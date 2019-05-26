@@ -218,7 +218,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						bprint(e.netname, "^7 set the all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
 						db_put(ServerProgsDB, strcat(mapname, rr, "time"), ftos(t));
 						db_put(ServerProgsDB, strcat(mapname, rr, "netname"), e.netname);
-						write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
+						client_write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 					}
 					else if(t < grecordtime)
 					{
@@ -228,7 +228,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 							bprint(e.netname, "^7 broke ", grecordholder, "^7's all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
 						db_put(ServerProgsDB, strcat(mapname, rr, "time"), ftos(t));
 						db_put(ServerProgsDB, strcat(mapname, rr, "netname"), e.netname);
-						write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
+						client_write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 					}
 					else
 					{

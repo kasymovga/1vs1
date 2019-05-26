@@ -78,5 +78,5 @@ void(void) spawnfunc_info_teleport_destination {
 	setorigin (self, self.origin);
 	IFTARGETED {
 	} else
-		objerror("^3Teleport destination without a targetname");
+		entity_abort("^3Teleport destination without a targetname");
 }

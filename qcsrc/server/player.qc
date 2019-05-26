@@ -2162,7 +2162,17 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 		play2(cl, "weapons/unavailable.wav");
 	}
 	return FALSE;
-};
+}
+
+// decolorizes and team colors the player name when needed
+string(entity p) player_name {
+    string t;
+    if (teamplay && !intermission_running && p.classname == "player") {
+        t = Team_ColorCode(p.team);
+        return strcat(t, strdecolorize(p.netname));
+    } else
+        return p.netname;
+}
 
 void() player_init {
 	// Precache all player models if desired

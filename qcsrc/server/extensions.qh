@@ -1684,6 +1684,7 @@ string(float fhandle) fgets = #112; // reads a line of text from the file and re
 void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
 float(string s) strlen = #114; // returns how many characters are in a string
 string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
+string strcat1(string s) = #115; // copies a string to a tempstring (so one can strunzone it) //FRIK_FILE
 string operator+(string s1, string s2) = #115;
 string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring
 vector(string s) stov = #117; // returns vector value from a string

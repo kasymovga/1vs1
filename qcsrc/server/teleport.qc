@@ -176,7 +176,7 @@ void(void) teleport_findtarget {
 	if(n == 0)
 	{
 		// no dest!
-		objerror ("Teleporter with nonexistant target");
+		entity_abort("Teleporter with nonexistant target");
 		return;
 	}
 	else if(n == 1)
@@ -202,7 +202,7 @@ void(void) teleport_setup {
 	// this must be called to spawn the teleport waypoints for bots
 	entity_initialize(self, teleport_findtarget, INITPRIO_FINDTARGET);
 	if (!self.target) {
-		objerror ("Teleporter with no target");
+		entity_abort("Teleporter with no target");
 		return;
 	}
 }

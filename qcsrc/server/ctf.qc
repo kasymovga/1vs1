@@ -483,7 +483,7 @@ void FlagTouch()
 				flagcaptimerecord = t;
 				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/netname"), h1);
-				write_recordmarker(other, time - t, t);
+				client_write_recordmarker(other, time - t, t);
 			}
 			else if (t < flagcaptimerecord)
 			{
@@ -491,7 +491,7 @@ void FlagTouch()
 				flagcaptimerecord = t;
 				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/time"), ftos(t));
 				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/netname"), h1);
-				write_recordmarker(other, time - t, t);
+				client_write_recordmarker(other, time - t, t);
 			}
 			else
 			{

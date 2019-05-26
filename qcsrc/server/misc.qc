@@ -50,7 +50,7 @@ void(void) misc_follow_init {
 	src = find(world, targetname, self.killtarget);
 	dst = find(world, targetname, self.target);
 	if(!src || !dst) {
-		objerror("follow: could not find target/killtarget");
+		entity_abort("follow: could not find target/killtarget");
 		return;
 	}
 	if(self.spawnflags & 1) {

@@ -410,7 +410,7 @@ void spawnfunc_trigger_multiple()
 	if (self.health)
 	{
 		if (self.spawnflags & SPAWNFLAG_NOTOUCH)
-			objerror ("health and notouch don't make sense\n");
+			entity_abort("health and notouch don't make sense\n");
 		self.max_health = self.health;
 		self.event_damage = trigger_multiple_eventdamage;
 		self.takedamage = DAMAGE_YES;
@@ -693,7 +693,7 @@ void trigger_impulse_touch1()
     targ = find(world, targetname, self.target);
     if(!targ)
     {
-        objerror("trigger_force without a (valid) .target!\n");
+        entity_abort("trigger_force without a (valid) .target!\n");
         remove(self);
         return;
     }
@@ -1533,7 +1533,7 @@ void spawnfunc_trigger_relay_ifstate(void) {
         }
 
         if(!self.enemy)
-            objerror("trigger_relay_ifstate does not point to a valid state entity");
+            entity_abort("trigger_relay_ifstate does not point to a valid state entity");
     }, INITPRIO_FINDTARGET);
 }
 

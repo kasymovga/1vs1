@@ -154,7 +154,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		return;
 
 	if(g_chat_teamcolors)
-		namestr = playername(source);
+		namestr = player_name(source);
 	else
 		namestr = source.netname;
 
@@ -167,7 +167,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		msgstr = strcat(msgstr, msgin);
 		cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
 		if(g_chat_teamcolors)
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
+			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", player_name(privatesay), ": ^7");
 		else
 			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
 	}
@@ -279,7 +279,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	}
 
 	if(flood)
-		print("NOTE: ", playername(source), "^7 is flooding.\n");
+		print("NOTE: ", player_name(source), "^7 is flooding.\n");
 	else if (!teamsay && !privatesay && source.retard <= 0 && !source.muted)
 		GameHookChain_PublicPlayerChat(source, msgin);
 

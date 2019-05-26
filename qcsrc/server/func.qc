@@ -19,7 +19,7 @@ float(void) func_moving_brush_init {
 	self.movetype = MOVETYPE_PUSH;
 	if(self.modelindex == 0)
 	{
-		objerror("func_moving_brush_init: no brushes found!");
+		entity_abort("func_moving_brush_init: no brushes found!");
 		return 0;
 	}
 	return 1;
@@ -443,7 +443,7 @@ void(vector tdest, float tspeed, void() func) func_calc_move {
 	vector	delta;
 	float	traveltime;
 	if (!tspeed)
-		objerror ("No speed is defined!");
+		entity_abort("No speed is defined!");
 
 	self.think1 = func;
 	self.finaldest = tdest;
@@ -489,7 +489,7 @@ void(vector destangle, float tspeed, void() func) func_calc_angle_move {
 	float	traveltime;
 
 	if (!tspeed)
-		objerror ("No speed is defined!");
+		entity_abort("No speed is defined!");
 
 	// take the shortest distance for the angles
 	self.angles_x -= 360 * floor((self.angles_x - destangle_x) / 360 + 0.5);
@@ -637,7 +637,7 @@ void func_plat_crush()
         else if (self.state == 3)
             func_plat_go_up ();
         else
-            objerror ("func_plat_crush: bad self.state\n");
+            entity_abort("func_plat_crush: bad self.state\n");
     }
 };
 
@@ -645,7 +645,7 @@ void func_plat_use()
 {
 	self.use = stdproc_nothing;
 	if (self.state != 4)
-		objerror ("func_plat_use: not in up state");
+		entity_abort("func_plat_use: not in up state");
 	func_plat_go_down();
 };
 
@@ -771,7 +771,7 @@ void func_train_next()
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	if (!self.target)
-		objerror("func_train_next: no next target");
+		entity_abort("func_train_next: no next target");
 	self.wait = targ.wait;
 	if (!self.wait)
 		self.wait = 0.1;
@@ -797,7 +797,7 @@ void func_train_find()
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	if (!self.target)
-		objerror("func_train_find: no next target");
+		entity_abort("func_train_find: no next target");
 	setorigin(self, targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins));
 	if (self.targetname != "" && find(world, target, self.targetname) && !sv_gameplayfix_trainnowait) {
 		self.use = func_train_next;
@@ -826,7 +826,7 @@ void spawnfunc_func_train()
 		precache_sound(self.noise);
 
 	if (!self.target)
-		objerror("func_train without a target");
+		entity_abort("func_train without a target");
 	if (!self.speed)
 		self.speed = 100;
 
@@ -1289,7 +1289,7 @@ void func_door_fire()
 	local entity	starte;
 
 	if (self.owner != self)
-		objerror ("func_door_fire: self.owner != self");
+		entity_abort("func_door_fire: self.owner != self");
 
 	oself = self;
 
@@ -1625,7 +1625,7 @@ void func_doors_link()
 		if (func_doors_touching(self,t))
 		{
 			if (t.enemy)
-				objerror ("cross connected doors");
+				entity_abort("cross connected doors");
 
 			self.enemy = t;
 			self = t;
@@ -2279,7 +2279,7 @@ void func_vectormamamam_findtarget()
 		self.wp03 = find(world, targetname, self.target4);
 
 	if(!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
-		objerror("No reference entity found, so there is nothing to move. Aborting.");
+		entity_abort("No reference entity found, so there is nothing to move. Aborting.");
 
 	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
 

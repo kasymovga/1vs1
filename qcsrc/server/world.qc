@@ -321,6 +321,21 @@ void world_db_init() {
 	TemporaryDB = db_create();
 }
 
+string world_getrecords() {
+    float i;
+    string s;
+    s = "";
+	for (i = 0; i < MapInfo_count; ++i)
+		if (MapInfo_Get_ByID(i))
+			s = strcat(s, GameHook_RecordForMap(MapInfo_Map_bspname));
+
+    MapInfo_ClearTemps();
+    if (s == "")
+        return "No records are available on this server.\n";
+    else
+        return strcat("Records on this server:\n", s);
+}
+
 float world_already_spawned;
 void spawnfunc_worldspawn (void)
 {
@@ -540,7 +555,7 @@ void spawnfunc_worldspawn (void)
 	maplist_reply = strzone(strcat(maplist_reply, "\n"));
 	MapInfo_ClearTemps();
 
-	records_reply = strzone(getrecords());
+	records_reply = zone_ifneeded(world_getrecords());
 
 	client_init_spawn();
 	random_seed_spawn();

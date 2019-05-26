@@ -225,7 +225,7 @@ void trigger_push_findtarget()
 		self.enemy = find(world, targetname, self.target);
 		if (!self.enemy)
 		{
-			objerror("trigger_push: target not found\n");
+			entity_abort("trigger_push: target not found\n");
 			remove(self);
 			return;
 		}

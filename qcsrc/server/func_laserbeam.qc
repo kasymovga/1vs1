@@ -94,7 +94,7 @@ void func_laserbeam_init(void) {
         self.enemy = find(world, targetname, self.target);
 
         if(!self.enemy)
-            objerror("func_laser has an invalid target");
+            entity_abort("func_laser has an invalid target");
     } else if(!self.t_length)
         self.t_length = MAX_SHOT_DISTANCE;
 

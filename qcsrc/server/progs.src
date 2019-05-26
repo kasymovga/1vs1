@@ -117,7 +117,6 @@ walkietalkie.qh
 hat.qh
 score_damage.qh
 
-miscfunctions.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
 bot/bot.qh

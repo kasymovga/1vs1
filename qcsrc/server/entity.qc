@@ -64,8 +64,7 @@ void() entity_movedir_setup {
 	self.angles = '0 0 0';
 }
 
-void objerror(string s)
-{
+void(string s) entity_abort {
     objerror_builtin(s);
 }
 

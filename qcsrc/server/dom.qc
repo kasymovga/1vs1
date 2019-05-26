@@ -274,7 +274,7 @@ void dom_controlpoint_setup()
 	while(head && head.netname != "")
 		head = find(head, classname, "dom_team");
 	if (!head)
-		objerror("no spawnfunc_dom_team with netname \"\" found\n");
+		entity_abort("no spawnfunc_dom_team with netname \"\" found\n");
 
 	// copy important properties from spawnfunc_dom_team entity
 	self.goalentity = head;
