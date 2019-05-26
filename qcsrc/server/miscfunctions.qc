@@ -400,18 +400,6 @@ void attach_sameorigin(entity e, entity to, string tag)
     setorigin(e, e.origin);
 }
 
-void detach_sameorigin(entity e)
-{
-    vector org;
-    org = gettaginfo(e, 0);
-    e.angles = fixedvectoangles2(v_forward, v_up);
-    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
-        e.angles_x = -e.angles_x;
-    setorigin(e, org);
-    setattachment(e, world, "");
-    setorigin(e, e.origin);
-}
-
 void follow_sameorigin(entity e, entity to)
 {
     e.movetype = MOVETYPE_FOLLOW; // make the hole follow
@@ -419,11 +407,6 @@ void follow_sameorigin(entity e, entity to)
     e.punchangle = to.angles; // the original angles of bmodel
     e.view_ofs = e.origin - to.origin; // relative origin
     e.v_angle = e.angles - to.angles; // relative angles
-}
-
-void unfollow_sameorigin(entity e)
-{
-    e.movetype = MOVETYPE_NONE;
 }
 
 entity gettaginfo_relative_ent;
