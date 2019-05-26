@@ -141,32 +141,6 @@ void Nagger_ReadyCounted()
 
 void ReadyCount();
 
-entity GetPlayer(string name)
-{
-	float num;
-	entity e;
-	string ns;
-
-	if(substring(name, 0, 1) == "#") {
-		num = stof(substring(name, 1, 999));
-		if(num >= 1 && num <= maxclients) {
-			for((e = world); num > 0; --num, (e = nextent(e)))
-				;
-			//if(clienttype(e) == CLIENTTYPE_REAL)
-			if(e.classname == "player")
-				return e;
-		}
-	} else {
-		ns = strdecolorize(name);
-		FOR_EACH_REALPLAYER(e) {
-			if(!strcasecmp(strdecolorize(e.netname), ns)) {
-				return e;
-			}
-		}
-	}
-	return world;
-}
-
 //float ctf_clientcommand();
 float readyrestart_happened;
 void spawnfunc_func_breakable();
