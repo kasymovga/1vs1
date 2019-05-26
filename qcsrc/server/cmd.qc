@@ -1,3 +1,10 @@
+void(entity e, string s) cmd_print_to {
+    if (e)
+        sprint(e, strcat(s, "\n"));
+    else
+        print(s, "\n");
+}
+
 void cmd_make_mapinfo_think()
 {
 	if(MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1))

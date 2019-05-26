@@ -91,7 +91,7 @@ void W_Hook_Attack2()
 	setorigin(gren, w_shotorg);
 
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
-	gren.think = adaptor_think2use;
+	gren.think = projectile_think2use;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
 

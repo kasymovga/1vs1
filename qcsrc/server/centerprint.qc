@@ -1,6 +1,3 @@
-
-
-
 #define CENTERPRIO_POINT 1
 #define CENTERPRIO_SPAM 2
 #define CENTERPRIO_VOTE 4
@@ -44,24 +41,4 @@ void centerprint_expire(entity e, float prio)
 void centerprint(entity e, string s)
 {
     centerprint_atprio(e, CENTERPRIO_NORMAL, s);
-}
-
-void adaptor_think2use()
-{
-    entity o, a;
-    o = other;
-    a = activator;
-    activator = world;
-    other = world;
-    self.use();
-    other = o;
-    activator = a;
-}
-
-void print_to(entity e, string s)
-{
-    if (e)
-        sprint(e, strcat(s, "\n"));
-    else
-        print(s, "\n");
 }

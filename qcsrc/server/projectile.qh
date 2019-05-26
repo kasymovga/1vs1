@@ -13,3 +13,4 @@ float() projectile_no_impact_check;
 void(float type) projectile_init;
 
 void(void) projectile_info_send;
+void(void) projectile_think2use;

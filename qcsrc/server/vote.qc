@@ -132,7 +132,7 @@ entity GetKickVoteVictim(string vote, string cmd, entity caller)
 		return e;
 	}
 
-	print_to(caller, strcat("Usage: ", cmd, " ", argv(0), " #playernumber (as in \"status\")\n"));
+	cmd_print_to(caller, strcat("Usage: ", cmd, " ", argv(0), " #playernumber (as in \"status\")\n"));
 	return world;
 }
 
@@ -189,46 +189,46 @@ float GameCommand_Vote(string s, entity e) {
 	argc = tokenize_console(s);
 	string tmp;
 	if(argv(0) == "help") {
-		print_to(e, "  vote COMMANDS ARGUMENTS. See 'vhelp' for more info.");
+		cmd_print_to(e, "  vote COMMANDS ARGUMENTS. See 'vhelp' for more info.");
 		return TRUE;
 	} else if(argv(0) == "vote") {
 		if (g_campaign) {
-			print_to(e, "^1You can't use vote in campaing mode!");
+			cmd_print_to(e, "^1You can't use vote in campaing mode!");
 			return TRUE;
 		}
 		if(argv(1) == "") {
-			print_to(e, "^1You have to supply a vote command. See 'vhelp' for more info.");
+			cmd_print_to(e, "^1You have to supply a vote command. See 'vhelp' for more info.");
 		} else if(argv(1) == "help") {
 			VoteHelp(e);
 		} else if(argv(1) == "status") {
 			if(votecalled) {
-				print_to(e, strcat("^7Vote for ", votecalledvote_display, "^7 called by ^7", VoteNetname(votecaller), "^7."));
+				cmd_print_to(e, strcat("^7Vote for ", votecalledvote_display, "^7 called by ^7", VoteNetname(votecaller), "^7."));
 			} else {
-				print_to(e, "^1No vote called.");
+				cmd_print_to(e, "^1No vote called.");
 			}
 		} else if(argv(1) == "call") {
 			if(!e || cvar("sv_vote_call")) {
 				if(cvar("sv_vote_nospectators") && e && e.classname != "player") {
-					print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
+					cmd_print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
 				}
 				else if(timeoutStatus) { //don't allow a vote call during a timeout
-					print_to(e, "^1Error: You can not call a vote while a timeout is active.");
+					cmd_print_to(e, "^1Error: You can not call a vote while a timeout is active.");
 				}
 				else if(votecalled) {
-					print_to(e, "^1There is already a vote called.");
+					cmd_print_to(e, "^1There is already a vote called.");
 				}
 				else if(e.retard > 0) {
-					print_to(e, "^1Error: You can not call a vote");
+					cmd_print_to(e, "^1Error: You can not call a vote");
 				} else {
 					local string vote;
 					vote = VoteParse(s, argc);
 					if(vote == "") {
-						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
+						cmd_print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
 					} else if(e
 						&& time < e.vote_next) {
-							print_to(e, strcat("^1You have to wait ^2", ftos(e.vote_next - time), "^1 seconds before you can again call a vote."));
+							cmd_print_to(e, strcat("^1You have to wait ^2", ftos(e.vote_next - time), "^1 seconds before you can again call a vote."));
 					} else if(VoteCheckNasty(vote)) {
-						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
+						cmd_print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 					} else if(RemapVote(vote, "vcall", e)) {
 						votecalledvote = strzone(RemapVote_vote);
 						votecalledvote_display = strzone(RemapVote_display);
@@ -249,15 +249,15 @@ float GameCommand_Vote(string s, entity e) {
 						IRC_Announce_Vote(tmp);
 						VoteCount(); // needed if you are the only one
 					} else {
-						print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
+						cmd_print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
 					}
 				}
 			} else {
-				print_to(e, "^1Vote calling is NOT allowed.");
+				cmd_print_to(e, "^1Vote calling is NOT allowed.");
 			}
 		} else if(argv(1) == "stop") {
 			if(!votecalled) {
-				print_to(e, "^1No vote called.");
+				cmd_print_to(e, "^1No vote called.");
 			} else if(e == votecaller) { // the votecaller can stop a vote
 				VoteStop(e);
 			} else if(!e) { // server admin / console can too
@@ -265,12 +265,12 @@ float GameCommand_Vote(string s, entity e) {
 			} else if(e.vote_master) { // masters can too
 				VoteStop(e);
 			} else {
-				print_to(e, "^1You are not allowed to stop that Vote.");
+				cmd_print_to(e, "^1You are not allowed to stop that Vote.");
 			}
 		} else if(argv(1) == "master") {
 			if(cvar("sv_vote_master")) {
 				if(votecalled) {
-					print_to(e, "^1There is already a vote called.");
+					cmd_print_to(e, "^1There is already a vote called.");
 				} else {
 					votecalled = TRUE;
 					votecalledmaster = TRUE;
@@ -292,26 +292,26 @@ float GameCommand_Vote(string s, entity e) {
 					VoteCount(); // needed if you are the only one
 				}
 			} else {
-				print_to(e, "^1Vote to become master is NOT allowed.");
+				cmd_print_to(e, "^1Vote to become master is NOT allowed.");
 			}
 		} else if(argv(1) == "do") {
 			if(!e || e.vote_master) {
 				local string dovote;
 				dovote = VoteParse(s, argc);
 				if(dovote == "") {
-					print_to(e, "^1Your command was empty. See 'vhelp' for more info.");
+					cmd_print_to(e, "^1Your command was empty. See 'vhelp' for more info.");
 				} else if(VoteCheckNasty(dovote)) {
-					print_to(e, "Syntax error in command. See 'vhelp' for more info.");
+					cmd_print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 				} else if(RemapVote(dovote, "vdo", e)) { // strcat seems to be necessary
 					tmp = strcat("^2* ^3", VoteNetname(e), "^2 used his ^3master^2 status to do ^2", RemapVote_display, "^2");
 					bprint("\{1}", tmp, "\n");
 					IRC_Announce_Vote(tmp);
 					localcmd(strcat(RemapVote_vote, "\n"));
 				} else {
-					print_to(e, "^1This command is not ok. See 'vhelp' for more info.");
+					cmd_print_to(e, "^1This command is not ok. See 'vhelp' for more info.");
 				}
 			} else {
-				print_to(e, "^1You are NOT a master.  You might need to login or vote to become master first. See 'vhelp' for more info.");
+				cmd_print_to(e, "^1You are NOT a master.  You might need to login or vote to become master first. See 'vhelp' for more info.");
 			}
 		} else if(argv(1) == "login") {
 			local string masterpwd;
@@ -331,58 +331,58 @@ float GameCommand_Vote(string s, entity e) {
 					print("REJECTED master login from ", VoteNetname(e), "\n");
 			}
 			else
-				print_to(e, "^1Login to become master is NOT allowed.");
+				cmd_print_to(e, "^1Login to become master is NOT allowed.");
 		} else if(argv(1) == "yes") {
 			if(!votecalled) {
-				print_to(e, "^1No vote called.");
+				cmd_print_to(e, "^1No vote called.");
 			} else if (!e) {
-				print_to(e, "^1You can't vote from the server console.");
+				cmd_print_to(e, "^1You can't vote from the server console.");
 			} else if(e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
-				print_to(e, "^1You accepted the vote.");
+				cmd_print_to(e, "^1You accepted the vote.");
 				e.vote_vote = 1;
 				centerprint_expire(e, CENTERPRIO_VOTE);
 				if(!cvar("sv_vote_singlecount")) {
 					VoteCount();
 				}
 			} else {
-				print_to(e, "^1You have already voted.");
+				cmd_print_to(e, "^1You have already voted.");
 			}
 		} else if(argv(1) == "no") {
 			if(!votecalled) {
-				print_to(e, "^1No vote called.");
+				cmd_print_to(e, "^1No vote called.");
 			} else if (!e) {
-				print_to(e, "^1You can't vote from the server console.");
+				cmd_print_to(e, "^1You can't vote from the server console.");
 			} else if(e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
-				print_to(e, "^1You rejected the vote.");
+				cmd_print_to(e, "^1You rejected the vote.");
 				e.vote_vote = -1;
 				centerprint_expire(e, CENTERPRIO_VOTE);
 				if(!cvar("sv_vote_singlecount")) {
 					VoteCount();
 				}
 			} else {
-				print_to(e, "^1You have already voted.");
+				cmd_print_to(e, "^1You have already voted.");
 			}
 		} else if(argv(1) == "abstain" || argv(1) == "dontcare") {
 			if(!votecalled) {
-				print_to(e, "^1No vote called.");
+				cmd_print_to(e, "^1No vote called.");
 			} else if (!e) {
-				print_to(e, "^1You can't vote from the server console.");
+				cmd_print_to(e, "^1You can't vote from the server console.");
 			} else if(e.vote_vote == 0
 				  || cvar("sv_vote_change")) {
-				print_to(e, "^1You abstained from your vote.");
+				cmd_print_to(e, "^1You abstained from your vote.");
 				e.vote_vote = -2;
 				centerprint_expire(e, CENTERPRIO_VOTE);
 				if(!cvar("sv_vote_singlecount")) {
 					VoteCount();
 				}
 			} else {
-				print_to(e, "^1You have already voted.");
+				cmd_print_to(e, "^1You have already voted.");
 			}
 		} else {
 			// ignore this?
-			print_to(e, "^1Unknown vote command.");
+			cmd_print_to(e, "^1Unknown vote command.");
 		}
 		return TRUE;
 	}
@@ -405,21 +405,21 @@ void VoteHelp(entity e) {
 		vcalldis = " ^1(disabled)";
 	}
 
-	print_to(e, "^7You can use voting with \"^2cmd vote help^7\" \"^2cmd vote status^7\" \"^2cmd vote call ^3COMMAND ARGUMENTS^7\" \"^2cmd vote stop^7\" \"^2cmd vote master^7\" \"^2cmd vote login^7\" \"^2cmd vote do ^3COMMAND ARGUMENTS^7\" \"^2cmd vote yes^7\" \"^2cmd vote no^7\" \"^2cmd vote abstain^7\" \"^2cmd vote dontcare^7\".");
-	print_to(e, "^7Or if your version is up to date you can use these aliases \"^2vhelp^7\" \"^2vstatus^7\" \"^2vcall ^3COMMAND ARGUMENTS^7\" \"^2vstop^7\" \"^2vmaster^7\" \"^2vlogin^7\" \"^2vdo ^3COMMAND ARGUMENTS^7\" \"^2vyes^7\" \"^2vno^7\" \"^2abstain^7\" \"^2vdontcare^7\".");
-	print_to(e, "^7\"^2help^7\" shows this info.");
-	print_to(e, "^7\"^2status^7\" shows if there is a vote called and who called it.");
-	print_to(e, strcat("^7\"^2call^7\" is used to call a vote. See the list of allowed commands.", vcalldis, "^7"));
-	print_to(e, "^7\"^2stop^7\" can be used by the vote caller or an admin to stop a vote and maybe correct it.");
-	print_to(e, strcat("^7\"^2master^7\" call a vote to become master who can execute commands without a vote", vmasterdis, "^7"));
-	print_to(e, strcat("^7\"^2login^7\" login to become master who can execute commands without a vote.", vlogindis, "^7"));
-	print_to(e, "^7\"^2do^7\" executes a command if you are a master. See the list of allowed commands.");
-	print_to(e, "^7\"^2yes^7\", \"^2no^7\", \"^2abstain^7\" and \"^2dontcare^7\" to make your vote.");
-	print_to(e, "^7If enough of the players vote yes the vote is accepted.");
-	print_to(e, "^7If enough of the players vote no the vote is rejected.");
-	print_to(e, strcat("^7If neither the vote will timeout after ", cvar_string("sv_vote_timeout"), "^7 seconds."));
-	print_to(e, "^7You can call a vote for or execute these commands:");
-	print_to(e, strcat("^3", cvar_string("sv_vote_commands"), "^7 and maybe further ^3arguments^7"));
+	cmd_print_to(e, "^7You can use voting with \"^2cmd vote help^7\" \"^2cmd vote status^7\" \"^2cmd vote call ^3COMMAND ARGUMENTS^7\" \"^2cmd vote stop^7\" \"^2cmd vote master^7\" \"^2cmd vote login^7\" \"^2cmd vote do ^3COMMAND ARGUMENTS^7\" \"^2cmd vote yes^7\" \"^2cmd vote no^7\" \"^2cmd vote abstain^7\" \"^2cmd vote dontcare^7\".");
+	cmd_print_to(e, "^7Or if your version is up to date you can use these aliases \"^2vhelp^7\" \"^2vstatus^7\" \"^2vcall ^3COMMAND ARGUMENTS^7\" \"^2vstop^7\" \"^2vmaster^7\" \"^2vlogin^7\" \"^2vdo ^3COMMAND ARGUMENTS^7\" \"^2vyes^7\" \"^2vno^7\" \"^2abstain^7\" \"^2vdontcare^7\".");
+	cmd_print_to(e, "^7\"^2help^7\" shows this info.");
+	cmd_print_to(e, "^7\"^2status^7\" shows if there is a vote called and who called it.");
+	cmd_print_to(e, strcat("^7\"^2call^7\" is used to call a vote. See the list of allowed commands.", vcalldis, "^7"));
+	cmd_print_to(e, "^7\"^2stop^7\" can be used by the vote caller or an admin to stop a vote and maybe correct it.");
+	cmd_print_to(e, strcat("^7\"^2master^7\" call a vote to become master who can execute commands without a vote", vmasterdis, "^7"));
+	cmd_print_to(e, strcat("^7\"^2login^7\" login to become master who can execute commands without a vote.", vlogindis, "^7"));
+	cmd_print_to(e, "^7\"^2do^7\" executes a command if you are a master. See the list of allowed commands.");
+	cmd_print_to(e, "^7\"^2yes^7\", \"^2no^7\", \"^2abstain^7\" and \"^2dontcare^7\" to make your vote.");
+	cmd_print_to(e, "^7If enough of the players vote yes the vote is accepted.");
+	cmd_print_to(e, "^7If enough of the players vote no the vote is rejected.");
+	cmd_print_to(e, strcat("^7If neither the vote will timeout after ", cvar_string("sv_vote_timeout"), "^7 seconds."));
+	cmd_print_to(e, "^7You can call a vote for or execute these commands:");
+	cmd_print_to(e, strcat("^3", cvar_string("sv_vote_commands"), "^7 and maybe further ^3arguments^7"));
 }
 
 string VoteNetname(entity e)
@@ -440,18 +440,18 @@ string ValidateMap(string m, entity e)
 	m = MapInfo_FixName(m);
 	if(!m)
 	{
-		print_to(e, "This map is not available on this server.");
+		cmd_print_to(e, "This map is not available on this server.");
 		return string_null;
 	}
 	if(!cvar("sv_vote_override_mostrecent"))
 		if(map_is_recent(m))
 		{
-			print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
+			cmd_print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
 			return string_null;
 		}
 	if not(MapInfo_GetGameTypes(m) & (MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask()))
 	{
-		print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
+		cmd_print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
 		return string_null;
 	}
 
@@ -683,7 +683,7 @@ void VoteCount() {
 		// called the vote because this function is called
 		// by SV_ParseClientCommand. Maybe all voting should
 		// be disabled for a single player?
-		print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
+		cmd_print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
 		if(votecaller) {
 			votecaller.vote_next = 0;
 		}

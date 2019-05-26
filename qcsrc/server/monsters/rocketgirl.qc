@@ -33,7 +33,7 @@ void rlgirl_hunt() {
 		setorigin(missile, _shotorg);
 
 		missile.nextthink = time + 5;
-		missile.think = adaptor_think2use;
+		missile.think = projectile_think2use;
 		missile.use = monster_proj_explode;
 		missile.touch = monster_proj_touch;
 		missile.velocity = normalize(_shotdir) * 800;

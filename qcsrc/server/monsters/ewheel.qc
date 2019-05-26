@@ -42,7 +42,7 @@ void ewheel_hunt() {
 				proj.projectiledeathtype = WEP_LASER;
 				setorigin(proj, _shotorg + v_right * i * 16);
 				proj.nextthink = time + 5;
-				proj.think = adaptor_think2use;
+				proj.think = projectile_think2use;
 				proj.use = monster_proj_explode;
 				proj.touch = monster_proj_touch;
 				proj.velocity = normalize(_shotdir) * 3200;

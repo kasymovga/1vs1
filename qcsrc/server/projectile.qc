@@ -180,6 +180,17 @@ void(entity e) projectile_update_next_frame {
 	}
 }
 
+void(void) projectile_think2use {
+    entity o, a;
+    o = other;
+    a = activator;
+    activator = world;
+    other = world;
+    self.use();
+    other = o;
+    activator = a;
+}
+
 void(void) projectile_info_send {
 	float i;
 	WriteByte(MSG_ENTITY, projinfo_highest_registered);

@@ -36,7 +36,7 @@ void boss1_hunt() {
 			setorigin(gren, _shotorg);
 
 			gren.nextthink = time + 5;
-			gren.think = adaptor_think2use;
+			gren.think = projectile_think2use;
 			gren.use = monster_proj_explode;
 			gren.touch = monster_proj_touch;
 			gren.velocity = normalize(_shotdir + randomvec() * 0.05 * vlen(_shotdir)) * 3200;

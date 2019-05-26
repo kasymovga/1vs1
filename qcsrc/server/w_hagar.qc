@@ -76,7 +76,7 @@ void W_Hagar_Attack (void)
 	missile.bot_dodgerating = g_balance_hagar_primary_damage;
 	missile.touch = W_Hagar_Touch;
 	missile.use = W_Hagar_Explode;
-	missile.think = adaptor_think2use;
+	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_primary_lifetime;
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR;
@@ -108,7 +108,7 @@ void W_Hagar_Attack2 (void)
 	missile.touch = W_Hagar_Touch2;
 	missile.cnt = 0;
 	missile.use = W_Hagar_Explode;
-	missile.think = adaptor_think2use;
+	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_secondary_lifetime_min + random() * g_balance_hagar_secondary_lifetime_rand;
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;

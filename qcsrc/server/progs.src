@@ -113,7 +113,7 @@ gamemenu.qh
 walkietalkie.qh
 hat.qh
 score_damage.qh
-
+cmd.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
 bot/bot.qh
@@ -143,7 +143,7 @@ chat.qh
 teamplay.qh
 mapvote.qh
 stdproc.qh
-miscfunctions.qc
+centerprint.qc
 sound.qc
 ../common/miscfunctions.qc
 ../client-server/miscfunctions.qc

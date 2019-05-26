@@ -136,7 +136,7 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float _damage, float de
 		else
 		{
 			self.use = W_Plasma_Explode;
-			self.think = adaptor_think2use;
+			self.think = projectile_think2use;
 		}
 	}
 }
@@ -154,7 +154,7 @@ void W_Electro_Attack()
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_electro_primary_damage;
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use;
+	proj.think = projectile_think2use;
 	proj.nextthink = time + g_balance_electro_primary_lifetime;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO;
@@ -185,7 +185,7 @@ void W_Electro_Attack2()
 	proj.gravity = 1;
 	proj.classname = "plasma";
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use;
+	proj.think = projectile_think2use;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_electro_secondary_damage;
 	proj.nextthink = time + g_balance_electro_secondary_lifetime;

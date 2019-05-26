@@ -779,7 +779,7 @@ void(entity to, float t, float w) scores_nice_print_team {
 			s = strcat(s, " ", scores_nice_print_item_color(fl), strpad(-w, substring(s2, 0, w)));
 		}
 
-	print_to(to, s);
+	cmd_print_to(to, s);
 }
 
 void(entity to, entity p, float w) scores_nice_print_player {
@@ -812,7 +812,7 @@ void(entity to, entity p, float w) scores_nice_print_player {
 			s = strcat(s, " ", scores_nice_print_item_color(fl), strpad(-w, ScoreString(fl, sc)));
 		}
 
-	print_to(to, s);
+	cmd_print_to(to, s);
 }
 
 .float score_dummyfield;
@@ -847,9 +847,9 @@ void(entity to) scores_nice_print {
 	if(p.classname != "player")
 	{
 		if not(t)
-			print_to(to, "Spectators:");
+			cmd_print_to(to, "Spectators:");
 
-		print_to(to, strcat("  ", p.netname));
+		cmd_print_to(to, strcat("  ", p.netname));
 		t = 1;
 	}
 }
