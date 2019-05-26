@@ -280,7 +280,7 @@ void spawnfunc_func_breakable() {
 		self.dmg_force = 200;
 
 	self.mdl = self.model;
-	SetBrushEntityModel();
+	model_setup();
 	self.mins_save = self.mins;
 	self.maxs_save = self.maxs;
 

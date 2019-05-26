@@ -1,2 +1,4 @@
+void(void) model_setup;
+void(void) model_setup_no_lod;
 void(float sol) model_init;
 void(float sol) model_client_init;

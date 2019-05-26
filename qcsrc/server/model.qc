@@ -1,5 +1,116 @@
 .float modelscale;
 float(entity to, float sf) model_client_send;
+.string lodtarget1;
+.string lodtarget2;
+.string lodmodel1;
+.string lodmodel2;
+.float lodmodelindex0;
+.float lodmodelindex1;
+.float lodmodelindex2;
+.float loddistance1;
+.float loddistance2;
+
+float(void) model_lod_customize {
+	float d;
+
+	if(cvar("loddebug"))
+	{
+		d = cvar("loddebug");
+		if(d == 1)
+			self.modelindex = self.lodmodelindex0;
+		else if(d == 2)
+			self.modelindex = self.lodmodelindex1;
+		else // if(d == 3)
+			self.modelindex = self.lodmodelindex2;
+		return TRUE;
+	}
+
+	// TODO csqc network this so it only gets sent once
+	d = vlen(NearestPointOnBox(self, other.origin) - other.origin);
+	if(d < self.loddistance1)
+		self.modelindex = self.lodmodelindex0;
+	else if(!self.lodmodelindex2 || d < self.loddistance2)
+		self.modelindex = self.lodmodelindex1;
+	else
+		self.modelindex = self.lodmodelindex2;
+
+	return TRUE;
+}
+
+void(void) model_lod_attach {
+	entity e;
+	if(!self.loddistance1)
+		self.loddistance1 = 1000;
+
+	if(!self.loddistance2)
+		self.loddistance2 = 2000;
+
+	self.lodmodelindex0 = self.modelindex;
+	if(self.lodtarget1 != "") {
+		e = find(world, targetname, self.lodtarget1);
+		if(e) {
+			self.lodmodel1 = e.model;
+			remove(e);
+		}
+	}
+	if(self.lodtarget2 != "") {
+		e = find(world, targetname, self.lodtarget2);
+		if(e) {
+			self.lodmodel2 = e.model;
+			remove(e);
+		}
+	}
+	if(cvar("loddebug") < 0) {
+		self.lodmodel1 = self.lodmodel2 = ""; // don't even initialize
+	}
+	if(self.lodmodel1 != "") {
+		vector mi, ma;
+		mi = self.mins;
+		ma = self.maxs;
+
+		precache_model(self.lodmodel1);
+		setmodel(self, self.lodmodel1);
+		self.lodmodelindex1 = self.modelindex;
+
+		if(self.lodmodel2 != "")
+		{
+			precache_model(self.lodmodel2);
+			setmodel(self, self.lodmodel2);
+			self.lodmodelindex2 = self.modelindex;
+		}
+
+		self.modelindex = self.lodmodelindex0;
+		setsize(self, mi, ma);
+	}
+	if(self.lodmodelindex1)
+		self.customizeentityforclient = model_lod_customize;
+}
+
+void(void) model_setup {
+ 	if(self.model != "") {
+ 		precache_model(self.model);
+ 		setmodel(self, self.model); // no precision needed
+		InitializeEntity(self, model_lod_attach, INITPRIO_FINDTARGET);
+ 	}
+	setorigin(self, self.origin);
+	if(self.scale)
+		setsize(self, self.mins * self.scale, self.maxs * self.scale);
+	else
+		setsize(self, self.mins, self.maxs);
+}
+
+void(void) model_setup_no_lod {
+ 	if(self.model != "") {
+ 		precache_model(self.model);
+ 		setmodel(self, self.model); // no precision needed
+ 	}
+	setorigin(self, self.origin);
+	if(self.scale)
+		setsize(self, self.mins * self.scale, self.maxs * self.scale);
+	else
+		setsize(self, self.mins, self.maxs);
+}
+
 
 void(void) model_setcolormaptoactivator {
 	if(teamplay)
@@ -151,12 +262,12 @@ void(float sol) model_init_common {
 }
 
 void model_init(float sol) {
-	SetBrushEntityModel();
+	model_setup();
 	model_init_common(sol);
 }
 
 void model_client_init(float sol) {
-	SetBrushEntityModelNoLOD();
+	model_setup_no_lod();
 	model_init_common(sol);
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0;
 	net_link_entity(self, TRUE, 0, model_client_send);

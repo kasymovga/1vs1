@@ -43,7 +43,7 @@ void(void) trigger_solid_brush_init {
 	if (self.angles != '0 0 0')
 		SetMovedir ();
 	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
+	model_setup();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
 //	self.modelindex = 0;
 	self.model = "";

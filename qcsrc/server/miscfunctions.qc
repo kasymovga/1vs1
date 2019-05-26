@@ -360,55 +360,6 @@ void write_recordmarker(entity pl, float tstart, float dt)
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
 
-void attach_sameorigin(entity e, entity to, string tag)
-{
-    vector org, t_forward, t_left, t_up, e_forward, e_up;
-    vector org0, ang0;
-    float tagscale;
-
-    ang0 = e.angles;
-    org0 = e.origin;
-
-    org = e.origin - gettaginfo(to, gettagindex(to, tag));
-    tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag
-    t_forward = v_forward * tagscale;
-    t_left = v_right * -tagscale;
-    t_up = v_up * tagscale;
-
-    e.origin_x = org * t_forward;
-    e.origin_y = org * t_left;
-    e.origin_z = org * t_up;
-
-    // current forward and up directions
-    if not(substring(e.model, 0, 1) == "*") // bmodels have their own rules
-        e.angles_x = -e.angles_x;
-    makevectors(e.angles);
-
-    // untransform forward, up!
-    e_forward_x = v_forward * t_forward;
-    e_forward_y = v_forward * t_left;
-    e_forward_z = v_forward * t_up;
-    e_up_x = v_up * t_forward;
-    e_up_y = v_up * t_left;
-    e_up_z = v_up * t_up;
-
-    e.angles = vectoangles(e_forward, e_up);
-    if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
-        e.angles_x = -e.angles_x;
-
-    setattachment(e, to, tag);
-    setorigin(e, e.origin);
-}
-
-void follow_sameorigin(entity e, entity to)
-{
-    e.movetype = MOVETYPE_FOLLOW; // make the hole follow
-    e.aiment = to; // make the hole follow bmodel
-    e.punchangle = to.angles; // the original angles of bmodel
-    e.view_ofs = e.origin - to.origin; // relative origin
-    e.v_angle = e.angles - to.angles; // relative angles
-}
-
 entity gettaginfo_relative_ent;
 vector gettaginfo_relative(entity e, float tag)
 {

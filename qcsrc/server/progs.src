@@ -51,7 +51,7 @@ trigger.qh
 func.qh
 race.qh
 keyhunt.qh
-
+model.qh
 antilag.qh
 
 vote.qh
@@ -279,7 +279,6 @@ clanarena.qc
 menu.qc
 
 gametypevote.qc
-
 progressbar.qc
 cvar.qc
 location_request.qc

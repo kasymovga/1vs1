@@ -15,7 +15,7 @@ float(void) func_moving_brush_init {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
+	model_setup();
 	self.movetype = MOVETYPE_PUSH;
 	if(self.modelindex == 0)
 	{
@@ -218,7 +218,7 @@ void(void) spawnfunc_func_rain {
 	self.angles = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.solid = SOLID_NOT;
-	SetBrushEntityModel();
+	model_setup();
 	if (!self.cnt)
 		self.cnt = 12;
 
@@ -256,7 +256,7 @@ void(void) spawnfunc_func_snow {
 	self.angles = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.solid = SOLID_NOT;
-	SetBrushEntityModel();
+	model_setup();
 	if (!self.cnt)
 		self.cnt = 12;
 
