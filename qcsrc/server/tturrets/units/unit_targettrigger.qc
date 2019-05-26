@@ -36,7 +36,6 @@ void spawnfunc_turret_targettrigger()
         return;
     }
 
-    InitTrigger ();
-
+	EXACTTRIGGER_INIT;
     self.touch = turret_targettrigger_touch;
 }

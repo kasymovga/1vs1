@@ -125,50 +125,6 @@ string playername(entity p)
 
 entity get_weaponinfo(float w);
 
-vector ExactTriggerHit_mins;
-vector ExactTriggerHit_maxs;
-float ExactTriggerHit_Recurse()
-{
-    float s;
-    entity se;
-    float f;
-
-    tracebox('0 0 0', ExactTriggerHit_mins, ExactTriggerHit_maxs, '0 0 0', MOVE_NORMAL, other);
-    if not(trace_ent)
-        return 0;
-    if (trace_ent == self)
-        return 1;
-
-    se = trace_ent;
-    s = se.solid;
-    se.solid = SOLID_NOT;
-    f = ExactTriggerHit_Recurse();
-    se.solid = s;
-
-    return f;
-}
-
-float ExactTriggerHit()
-{
-    float f, s;
-
-    if not(self.modelindex)
-        return 1;
-
-    s = self.solid;
-    self.solid = SOLID_BSP;
-    ExactTriggerHit_mins = other.absmin;
-    ExactTriggerHit_maxs = other.absmax;
-    f = ExactTriggerHit_Recurse();
-    self.solid = s;
-
-    return f;
-}
-
-// WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH if not(ExactTriggerHit()) return
-#define EXACTTRIGGER_INIT  InitSolidBSPTrigger(); self.solid = SOLID_TRIGGER
-
 enum {
 	INITPRIO_FIRST,
 	INITPRIO_GAMETYPE,

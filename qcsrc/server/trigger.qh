@@ -1,1 +1,7 @@
 void(void) trigger_use_targets;
+
+void(void) trigger_solid_brush_init;
+float(void) trigger_exact_hit;
+// WARNING: this kills the trace globals
+#define EXACTTRIGGER_TOUCH if not(trigger_exact_hit()) return
+#define EXACTTRIGGER_INIT  trigger_solid_brush_init(); self.solid = SOLID_TRIGGER

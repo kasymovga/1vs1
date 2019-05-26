@@ -11,6 +11,21 @@ void(void) spawnfunc_func_stardust {
 	self.effects = EF_STARDUST;
 }
 
+float(void) func_moving_brush_init {
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+	self.solid = SOLID_BSP;
+	SetBrushEntityModel();
+	self.movetype = MOVETYPE_PUSH;
+	if(self.modelindex == 0)
+	{
+		objerror("func_moving_brush_init: no brushes found!");
+		return 0;
+	}
+	return 1;
+};
+
+
 float(entity to, float fl) func_pointparticles_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
 	// optional features to save space
@@ -710,7 +725,7 @@ void spawnfunc_func_plat()
 	self.angles = '0 0 0';
 
 	self.classname = "plat";
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	self.effects |= EF_LOWPRECISION;
 	setsize (self, self.mins , self.maxs);
@@ -815,7 +830,7 @@ void spawnfunc_func_train()
 	if (!self.speed)
 		self.speed = 100;
 
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -872,7 +887,7 @@ void spawnfunc_func_rotating()
 
     self.dmgtime2 = time;
 
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	// no EF_LOWPRECISION here, as rounding angles is bad
 
@@ -941,7 +956,7 @@ void spawnfunc_func_bobbing()
 	else // Z
 		self.movedir = '0 0 1' * self.height;
 
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 
 	// wait for targets to spawn
@@ -1087,7 +1102,7 @@ void spawnfunc_func_button()
 {
 	SetMovedir ();
 
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -1689,7 +1704,7 @@ void spawnfunc_func_door()
 	SetMovedir ();
 
 	self.max_health = self.health;
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	self.effects |= EF_LOWPRECISION;
 	self.classname = "door";
@@ -1809,7 +1824,7 @@ void spawnfunc_func_door_rotating()
 	self.angles = '0 0 0';
 
 	self.max_health = self.health;
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	//self.effects |= EF_LOWPRECISION;
 	self.classname = "door_rotating";
@@ -2078,7 +2093,7 @@ void spawnfunc_func_door_secret()
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
 	self.classname = "door";
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -2167,7 +2182,7 @@ void spawnfunc_func_fourier()
 	if(self.netname == "")
 		self.netname = "1 0 0 0 1";
 
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 
 	// wait for targets to spawn
@@ -2320,7 +2335,7 @@ void spawnfunc_func_vectormamamam()
 	if(self.netname == "")
 		self.netname = "1 0 0 0 1";
 
-	if not(InitMovingBrushTrigger())
+	if not(func_moving_brush_init())
 		return;
 
 	// wait for targets to spawn

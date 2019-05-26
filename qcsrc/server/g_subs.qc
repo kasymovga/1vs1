@@ -231,49 +231,6 @@ void SetMovedir()
 	self.angles = '0 0 0';
 };
 
-void InitTrigger()
-{
-// trigger angles are used for one-way touches.  An angle of 0 is assumed
-// to mean no restrictions, so use a yaw of 360 instead.
-	if (self.movedir == '0 0 0')
-	if (self.angles != '0 0 0')
-		SetMovedir ();
-	self.solid = SOLID_TRIGGER;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE;
-	self.modelindex = 0;
-	self.model = "";
-};
-
-void InitSolidBSPTrigger()
-{
-// trigger angles are used for one-way touches.  An angle of 0 is assumed
-// to mean no restrictions, so use a yaw of 360 instead.
-	if (self.movedir == '0 0 0')
-	if (self.angles != '0 0 0')
-		SetMovedir ();
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
-//	self.modelindex = 0;
-	self.model = "";
-};
-
-float InitMovingBrushTrigger()
-{
-// trigger angles are used for one-way touches.  An angle of 0 is assumed
-// to mean no restrictions, so use a yaw of 360 instead.
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_PUSH;
-	if(self.modelindex == 0)
-	{
-		objerror("InitMovingBrushTrigger: no brushes found!");
-		return 0;
-	}
-	return 1;
-};
-
 vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 {
 	vector v;

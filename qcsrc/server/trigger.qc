@@ -1,3 +1,54 @@
+vector trigger_exact_hit_mins;
+vector trigger_exact_hit_maxs;
+float(void) trigger_exact_hit_recurse {
+    float s;
+    entity se;
+    float f;
+
+    tracebox('0 0 0', trigger_exact_hit_mins, trigger_exact_hit_maxs, '0 0 0', MOVE_NORMAL, other);
+    if not(trace_ent)
+        return 0;
+    if (trace_ent == self)
+        return 1;
+
+    se = trace_ent;
+    s = se.solid;
+    se.solid = SOLID_NOT;
+    f = trigger_exact_hit_recurse();
+    se.solid = s;
+
+    return f;
+}
+
+float(void) trigger_exact_hit {
+    float f, s;
+
+    if not(self.modelindex)
+        return 1;
+
+    s = self.solid;
+    self.solid = SOLID_BSP;
+    trigger_exact_hit_mins = other.absmin;
+    trigger_exact_hit_maxs = other.absmax;
+    f = trigger_exact_hit_recurse();
+    self.solid = s;
+
+    return f;
+}
+
+void(void) trigger_solid_brush_init {
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+	if (self.movedir == '0 0 0')
+	if (self.angles != '0 0 0')
+		SetMovedir ();
+	self.solid = SOLID_BSP;
+	SetBrushEntityModel();
+	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+//	self.modelindex = 0;
+	self.model = "";
+}
+
 void trigger_dont_use_targets() { }
 
 void trigger_delay_think()
