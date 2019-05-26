@@ -7,7 +7,7 @@ void HG_Plasma_Shard_Explode(void) {
     }
 #endif
 
-    self.event_damage = SUB_Null;
+    self.event_damage = stdproc_nothing;
     self.takedamage = DAMAGE_NO;
     //self.damage_noinfo = FALSE;
 #if 0

@@ -497,7 +497,7 @@ void() item_reset {
 
 	item_show(self, !self.state);
 	setorigin (self, self.origin);
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 	self.nextthink = 0;
 	if(self.flags & FL_POWERUP) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);

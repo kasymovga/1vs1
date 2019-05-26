@@ -234,11 +234,11 @@ void rune_touch()
 
 	other.runes = other.runes | self.runes | self.enemy.runes;
 
-	//self.think = SUB_Null;
+	//self.think = stdproc_nothing;
 	//self.nextthink = 0;
 	self.think = RuneCarriedThink;
 	self.nextthink = time;
-	self.touch = SUB_Null;
+	self.touch = stdproc_nothing;
 
 	self.solid = SOLID_NOT;
 	self.movetype = MOVETYPE_NONE;

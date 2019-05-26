@@ -24,7 +24,7 @@ var .float hagar_buttonatck2 = BUTTON_ATCK2;
 // NO bounce protection, as bounces are limited!
 void W_Hagar_Explode (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.realowner, g_balance_hagar_primary_damage, g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, world, g_balance_hagar_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
@@ -32,7 +32,7 @@ void W_Hagar_Explode (void)
 
 void W_Hagar_Explode2 (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.realowner, g_balance_hagar_secondary_damage, g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, world, g_balance_hagar_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);

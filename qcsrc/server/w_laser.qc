@@ -22,7 +22,7 @@ void W_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	if (self.dmg)
 		damage_radius (self, self.owner, g_balance_laser_secondary_damage, g_balance_laser_secondary_edgedamage, g_balance_laser_secondary_radius, world, g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else

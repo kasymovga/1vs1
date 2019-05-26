@@ -225,11 +225,11 @@ void car_die()
 {
 
     self.health = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = stdproc_nothing;
     self.iscreature = FALSE;
     self.solid      = SOLID_NOT;
     self.takedamage = DAMAGE_NO;
-    self.touch      = SUB_Null;
+    self.touch      = stdproc_nothing;
     self.deadflag    = DEAD_DEAD;
 	self.think = car_blowup;
 	self.nextthink = time;

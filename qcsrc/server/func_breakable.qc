@@ -114,7 +114,7 @@ void func_breakable_behave_destroyed()
 {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.state = 1;
 	setsize(self, '0 0 0', '0 0 0');
 	func_breakable_colormod();

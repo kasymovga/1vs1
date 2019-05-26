@@ -73,7 +73,7 @@ void W_Plasma_Explode (void)
 					if(physic_is_flying(other))
 						announce(self.owner, "announcer/male/electrobitch.wav");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
 	if (self.movetype == MOVETYPE_BOUNCE)
 	{
@@ -93,7 +93,7 @@ void W_Plasma_Explode_Combo (void)
 
 	W_Plasma_TriggerCombo(self.origin, g_balance_electro_combo_comboradius, self.owner);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.owner, g_balance_electro_combo_damage, g_balance_electro_combo_edgedamage, g_balance_electro_combo_radius, world, g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
 	remove (self);
 }

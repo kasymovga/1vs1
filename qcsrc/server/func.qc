@@ -374,7 +374,7 @@ void spawnfunc_func_magicwall(void) {
     self.reset = inline void(void) {
         self.solid = self.oldsolid;
         self.alpha = self.MAGICWALL_ALPHAFIELD(self);
-        self.think = SUB_Null;
+        self.think = stdproc_nothing;
     };
 
     self.use = if(self.spawnflags & SPAWNFLAG_MW_TOGGLE)
@@ -643,7 +643,7 @@ void func_plat_crush()
 
 void func_plat_use()
 {
-	self.use = SUB_Null;
+	self.use = stdproc_nothing;
 	if (self.state != 4)
 		objerror ("func_plat_use: not in up state");
 	func_plat_go_down();
@@ -670,7 +670,7 @@ void func_plat_reset()
 		self.enemy.wait = 0;
 
 	self.velocity = '0 0 0';
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 	self.nextthink = 0;
 	stopsound(self, CHAN_TRIGGER);
 }
@@ -780,7 +780,7 @@ void func_train_next()
 	if(self.wait < 0)
 	{
 		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
-			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, SUB_Null);
+			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, stdproc_nothing);
 		else
 			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, func_train_next);
 	}
@@ -895,7 +895,7 @@ void spawnfunc_func_rotating()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 
 	// TODO make a reset function for this one
 }
@@ -966,7 +966,7 @@ void spawnfunc_func_bobbing()
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -1694,7 +1694,7 @@ void func_door_reset()
 	setorigin(self, self.pos1);
 	self.velocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 }
 
 void spawnfunc_func_door()
@@ -1793,7 +1793,7 @@ void func_door_rotating_reset()
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 }
 
 void func_door_rotating_init_startopen()
@@ -2061,7 +2061,7 @@ void func_secret_reset()
 		self.takedamage = DAMAGE_YES;
 	}
 	setorigin(self, self.oldorigin);
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -2192,7 +2192,7 @@ void spawnfunc_func_fourier()
 	controller.nextthink = time + 1;
 	controller.think = func_fourier_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -2340,7 +2340,7 @@ void spawnfunc_func_vectormamamam()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;

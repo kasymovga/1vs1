@@ -339,15 +339,15 @@ void SV_ParseClientCommand(string s) {
 		if(tokens >= 2)
 			chat_say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 	} else if(cmd == "tell") {
-		e = GetCommandPlayerSlotTargetFromTokenizedCommand(tokens, 1);
-		if(e && tokens > ParseCommandPlayerSlotTarget_firsttoken)
+		e = client_entity_from_argv(tokens, 1);
+		if(e && tokens > client_entity_from_argv_firsttoken)
 		{
-			chat_say(self, FALSE, e, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)), TRUE);
+			chat_say(self, FALSE, e, substring(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)), TRUE);
 		}
 		else
 		{
-			if(tokens > ParseCommandPlayerSlotTarget_firsttoken)
-				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
+			if(tokens > client_entity_from_argv_firsttoken)
+				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken)));
 			sprint(self, "ERROR: usage: tell # playerid text...\n");
 		}
 	} else if(cmd == "info") {

@@ -43,7 +43,7 @@ void W_Rocket_Explode (void)
 				if(physic_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
 	damage_radius (self, self.owner, g_balance_rocketlauncher_damage, g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, world, g_balance_rocketlauncher_force, self.projectiledeathtype, other);
 

@@ -144,11 +144,11 @@ void turret_stdproc_die()
 
     self.alpha             = -1;
     self.tur_head.alpha    = self.alpha;
-    self.customizeentityforclient = SUB_False;
-    self.tur_head.customizeentityforclient = SUB_False;
+    self.customizeentityforclient = stdproc_false;
+    self.tur_head.customizeentityforclient = stdproc_false;
 
-    self.event_damage           = SUB_Null;
-    self.tur_head.event_damage  = SUB_Null;
+    self.event_damage           = stdproc_nothing;
+    self.tur_head.event_damage  = stdproc_nothing;
     self.takedamage             = DAMAGE_NO;
     self.tur_head.takedamage    = self.takedamage;
 
@@ -219,8 +219,8 @@ void turret_stdproc_respawn()
 
     self.alpha = 1;
     self.tur_head.alpha     = self.alpha;
-    self.customizeentityforclient = SUB_True;
-    self.tur_head.customizeentityforclient = SUB_True;
+    self.customizeentityforclient = stdproc_true;
+    self.tur_head.customizeentityforclient = stdproc_true;
 
 
     self.takedamage = DAMAGE_AIM;
@@ -301,8 +301,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float _damage, fl
 
     if (self.health <= 0)
     {
-        baseent.event_damage           = SUB_Null;
-        baseent.tur_head.event_damage  = SUB_Null;
+        baseent.event_damage           = stdproc_nothing;
+        baseent.tur_head.event_damage  = stdproc_nothing;
         baseent.takedamage             = DAMAGE_NO;
         baseent.tur_head.takedamage    = baseent.takedamage;
         baseent.nextthink = time;

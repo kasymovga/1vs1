@@ -35,7 +35,7 @@ void W_Grenade_Explode (void)
 					if(physic_is_flying(other))
 						announce(self.owner, "announcer/male/airshot.wav");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
 	damage_radius (self, self.owner, g_balance_grenadelauncher_primary_damage, g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, world, g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
 
@@ -50,7 +50,7 @@ void W_Grenade_Explode2 (void)
 				if(physic_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
 	damage_radius (self, self.owner, g_balance_grenadelauncher_secondary_damage, g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, world, g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
 

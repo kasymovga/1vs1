@@ -827,3 +827,65 @@ void(string _name) client_mute_ifneeded {
 		}
 	}
 }
+
+entity(float tokens, float idx) client_entity_from_argv {
+    string s;
+    entity e, head;
+    float n;
+
+    s = string_null;
+
+    client_entity_from_argv_firsttoken = -1;
+
+    if (tokens > idx)
+    {
+        if (substring(argv(idx), 0, 1) == "#")
+        {
+            s = substring(argv(idx), 1, -1);
+            ++idx;
+            if (s == "")
+                if (tokens > idx)
+                {
+                    s = argv(idx);
+                    ++idx;
+                }
+			client_entity_from_argv_firsttoken = idx;
+            if (s == ftos(stof(s)))
+            {
+                e = edict_num(stof(s));
+                if (e.flags & FL_CLIENT)
+                    return e;
+            }
+        }
+        else
+        {
+            // it must be a nick name
+            s = argv(idx);
+            ++idx;
+			client_entity_from_argv_firsttoken = idx;
+
+            n = 0;
+            FOR_EACH_CLIENT(head)
+            if (head.netname == s)
+            {
+                e = head;
+                ++n;
+            }
+            if (n == 1)
+                return e;
+
+            s = strdecolorize(s);
+            n = 0;
+            FOR_EACH_CLIENT(head)
+            if (strdecolorize(head.netname) == s)
+            {
+                e = head;
+                ++n;
+            }
+            if (n == 1)
+                return e;
+        }
+    }
+
+    return world;
+}

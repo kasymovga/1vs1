@@ -42,7 +42,7 @@ void turret_flac_projectile_explode()
         // OMG HAXX!
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
     }
-    self.event_damage = SUB_Null;
+    self.event_damage = stdproc_nothing;
 
 #ifdef TURRET_DEBUG
     float ftmp;

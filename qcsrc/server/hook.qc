@@ -72,7 +72,7 @@ void hook_stop() {
 	self.state = 1;
 	self.hook.think = hook_think;
 	self.hook.nextthink = time;
-	self.touch = SUB_Null;
+	self.touch = stdproc_nothing;
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.hook_length = -1;

@@ -221,7 +221,7 @@ float survive_MonsterQuant() {
 }
 
 void spawnfunc_survive_wave() {
-	self.use = SUB_Null;
+	self.use = stdproc_nothing;
 }
 
 float survive_IceSkipThink() {

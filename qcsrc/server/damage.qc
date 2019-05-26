@@ -433,7 +433,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 
 void(entity attacker, void() explode) damage_prepare_explosion {
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.owner = attacker;
 
 	// do not explode NOW but in the NEXT FRAME!

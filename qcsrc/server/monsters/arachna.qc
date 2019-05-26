@@ -4,7 +4,7 @@ void arachna_walk();
 
 void arachna_grenade_explode (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
 	damage_radius (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
 

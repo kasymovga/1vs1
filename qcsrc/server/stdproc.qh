@@ -1,0 +1,3 @@
+void stdproc_nothing() {};
+float stdproc_true() { return 1; }
+float stdproc_false() { return 0; }

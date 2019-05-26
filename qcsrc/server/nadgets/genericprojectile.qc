@@ -59,7 +59,7 @@ void HG_GenericProjectile_RadiusDamage(void) {
 }
 
 void HG_GenericProjectile_Explode(void) {
-    self.event_damage = SUB_Null;
+    self.event_damage = stdproc_nothing;
     self.takedamage = DAMAGE_NO;
 
     switch(self.hg_type) {
@@ -642,7 +642,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
         gren.event_damage = HG_GenericProjectile_Damage;
     } else {
         gren.takedamage = DAMAGE_NO;
-        gren.event_damage = SUB_Null;
+        gren.event_damage = stdproc_nothing;
     }
 
     if(!gren.health)

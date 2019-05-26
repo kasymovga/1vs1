@@ -296,7 +296,7 @@ void trigger_multiple_fire()
 	else
 	{	// we can't just remove (self) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		self.touch = SUB_Null;
+		self.touch = stdproc_nothing;
 	}
 };
 
@@ -363,7 +363,7 @@ void trigger_multiple_reset()
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 	self.team = self.team_saved;
 }
 
@@ -466,7 +466,7 @@ void trigger_delay_use()
 
 void trigger_delay_reset()
 {
-	self.think = SUB_Null;
+	self.think = stdproc_nothing;
 }
 
 void spawnfunc_trigger_delay()
@@ -1303,7 +1303,7 @@ void spawnfunc_trigger_killcredit(void) {
     self.reset = inline void(void) {
         self.enemy = world;
         self.solid = SOLID_NOT;
-        self.think = SUB_Null;
+        self.think = stdproc_nothing;
     };
 
     self.touch = inline void(void) {
@@ -1479,7 +1479,7 @@ void trigger_state_init(void(void) reset_f, statefunc_t state_f) {
     self.reset = reset_f;
     self.statefunc = statefunc_invertible;
     self.statefunc2 = state_f;
-    self.use = SUB_Null; // dummy default to ensure that ForEachTarget works on it
+    self.use = stdproc_nothing; // dummy default to ensure that ForEachTarget works on it
 }
 
 void spawnfunc_trigger_state(void) {

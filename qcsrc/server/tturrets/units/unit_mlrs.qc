@@ -50,9 +50,9 @@ void turret_mlrs_rocket_touch()
 
 void turret_mlrs_rocket_explode()
 {
-    if(self.event_damage != SUB_Null)
+    if(self.event_damage != stdproc_nothing)
     {
-        self.event_damage = SUB_Null;
+        self.event_damage = stdproc_nothing;
         self.think = turret_mlrs_rocket_explode;
         self.nextthink = time;
         return;

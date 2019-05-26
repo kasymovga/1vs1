@@ -464,8 +464,8 @@ void HG_FadeOut(entity n) {
     n.solid = SOLID_NOT;
     n.takedamage = DAMAGE_NO;
     n.hg_detonable_updated = FALSE;
-    n.event_damage = SUB_Null;
-    n.use = SUB_Null;
+    n.event_damage = stdproc_nothing;
+    n.use = stdproc_nothing;
     n.think = HG_FadeOut_Think;
     n.nextthink = time;
 }

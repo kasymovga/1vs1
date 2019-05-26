@@ -33,7 +33,7 @@ void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 
     damage_radius (self, self.owner, g_balance_hlac_primary_damage, g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, world, g_balance_hlac_primary_force, self.projectiledeathtype, other);
 
@@ -44,7 +44,7 @@ void W_HLAC_Touch2 (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 
     damage_radius (self, self.owner, g_balance_hlac_secondary_damage, g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, world, g_balance_hlac_secondary_force, self.projectiledeathtype, other);
 

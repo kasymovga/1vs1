@@ -228,7 +228,7 @@ float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, flo
 
     self.owner.PlayerPhysplug = phys_plug;
     self.owner.vehicle        = self;
-    self.owner.event_damage   = SUB_Null;
+    self.owner.event_damage   = stdproc_nothing;
     self.owner.hud            = _hud;
     self.team                 = self.owner.team;
     if(clienttype(other) == CLIENTTYPE_REAL)

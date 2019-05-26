@@ -163,7 +163,7 @@ void bullet_leave_solid_think()
 
 	self.think = self.bullet_leave_solid_think_save;
 	self.nextthink = max(time, self.bullet_leave_solid_nextthink_save);
-	self.bullet_leave_solid_think_save = SUB_Null;
+	self.bullet_leave_solid_think_save = stdproc_nothing;
 
 	self.flags &~= FL_ONGROUND;
 

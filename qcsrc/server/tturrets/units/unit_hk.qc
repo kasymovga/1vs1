@@ -317,9 +317,9 @@ void turret_hk_missile_think()
 
 void turret_hk_missile_explode()
 {
-    if(self.event_damage != SUB_Null)
+    if(self.event_damage != stdproc_nothing)
     {
-        self.event_damage = SUB_Null;
+        self.event_damage = stdproc_nothing;
         self.think = turret_hk_missile_explode;
         self.nextthink = time;
         return;
@@ -329,7 +329,7 @@ void turret_hk_missile_explode()
         return;
 
     //w_deathtypestring = "got hunted to extinction";
-    self.event_damage = SUB_Null;
+    self.event_damage = stdproc_nothing;
     damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
 
     // Target dead, get another is still targeting the same.

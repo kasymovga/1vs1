@@ -106,7 +106,7 @@ void W_MinstaNex_Attack (void)
 
 void W_MinstaNex_Laser_Projectile_Touch() {
 	PROJECTILE_TOUCH;
-	self.event_damage = SUB_Null;
+	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.owner, g_balance_minstanex_laser_damage * self.dmg, g_balance_minstanex_laser_edgedamage * self.dmg, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
 	remove (self);
 }

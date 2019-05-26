@@ -1,0 +1,2 @@
+void(float t, void() callback) defer;
+void(entity e_for, float t, void() callback) defer_for;

@@ -324,7 +324,7 @@ void GiveBall (entity plyr, entity ball)
 
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
-	ball.touch = SUB_Null;
+	ball.touch = stdproc_nothing;
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
@@ -405,7 +405,7 @@ void ResetBall (void)
 	if (self.cnt < 2) { // step 1
 		if (time == self.teamtime)
 			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
-		self.touch = SUB_Null;
+		self.touch = stdproc_nothing;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
 		self.cnt = 2;
@@ -596,7 +596,7 @@ void GoalTouch (void)
 	ball.cnt = 1;
 	ball.think = ResetBall;
 	if (ball.classname == "nexball_basketball")
-		ball.touch = football_touch; // better than SUB_Null: football control until the ball gets reset
+		ball.touch = football_touch; // better than stdproc_nothing: football control until the ball gets reset
 	ball.nextthink = time + g_nexball_delay_goal * (self.team != GOAL_OUT);
 	if (ball.explosive)
 	{

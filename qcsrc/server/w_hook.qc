@@ -50,8 +50,8 @@ void W_Hook_ExplodeThink (void)
 
 void W_Hook_Explode2 (void)
 {
-	self.event_damage = SUB_Null;
-	self.touch = SUB_Null;
+	self.event_damage = stdproc_nothing;
+	self.touch = stdproc_nothing;
 	self.effects |= EF_NODRAW;
 
 	self.think = W_Hook_ExplodeThink;

@@ -60,9 +60,6 @@ string playername(entity p)
         return p.netname;
 }
 
-.float nottargeted;
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
-
 void adaptor_think2use()
 {
     entity o, a;
@@ -121,89 +118,3 @@ vector gettaginfo_relative(entity e, float tag)
     gettaginfo_relative_ent.frame = e.frame;
     return gettaginfo(gettaginfo_relative_ent, tag);
 }
-
-float ParseCommandPlayerSlotTarget_firsttoken;
-entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) // idx = start index
-{
-    string s;
-    entity e, head;
-    float n;
-
-    s = string_null;
-
-    ParseCommandPlayerSlotTarget_firsttoken = -1;
-
-    if (tokens > idx)
-    {
-        if (substring(argv(idx), 0, 1) == "#")
-        {
-            s = substring(argv(idx), 1, -1);
-            ++idx;
-            if (s == "")
-                if (tokens > idx)
-                {
-                    s = argv(idx);
-                    ++idx;
-                }
-			ParseCommandPlayerSlotTarget_firsttoken = idx;
-            if (s == ftos(stof(s)))
-            {
-                e = edict_num(stof(s));
-                if (e.flags & FL_CLIENT)
-                    return e;
-            }
-        }
-        else
-        {
-            // it must be a nick name
-            s = argv(idx);
-            ++idx;
-			ParseCommandPlayerSlotTarget_firsttoken = idx;
-
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (head.netname == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
-
-            s = strdecolorize(s);
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (strdecolorize(head.netname) == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
-        }
-    }
-
-    return world;
-}
-
-void defer_think() {
-	entity oldself = self;
-	self = self.enemy;
-	oldself.use();
-	self = oldself;
-	remove(self);
-}
-
-void defer_for(entity e_for, float t, void() callback) {
-	entity e = spawn();
-	e.use = callback;
-	e.enemy = e_for;
-	e.nextthink = t + time;
-	e.think = defer_think;
-}
-
-void defer(float t, void() callback) {
-	defer_for(self, t, callback);
-}
-
-#define BoundToByte(x) ((x < 251) ? x : ((x < 500) ? 251 : ((x < 1000) ? 252 : ((x < 2000) ? 253 : ((x < 5000) ? 254 : 255)))))

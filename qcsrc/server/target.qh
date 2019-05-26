@@ -1,0 +1,2 @@
+.float nottargeted;
+#define IFTARGETED if(!self.nottargeted && self.targetname != "")

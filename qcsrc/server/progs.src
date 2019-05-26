@@ -61,9 +61,9 @@ w_melee.qh
 trace.qh
 irc.qh
 udpchat.qh
-
+defer.qh
 akimbo.qh
-
+target.qh
 freeze.qh
 ice.qh
 radio.qh
@@ -146,6 +146,7 @@ gametype.qh
 chat.qh
 teamplay.qh
 mapvote.qh
+stdproc.qh
 miscfunctions.qc
 sound.qc
 ../common/miscfunctions.qc
@@ -155,7 +156,6 @@ waypointsprites.qc
 
 bot/bot.qc
 random.qc
-g_subs.qc
 net.qc
 ../client-server/rune.qh
 ../client-server/rune.qc
@@ -270,7 +270,7 @@ irc.qc
 akimbo.qc
 
 info_messages.qc
-
+defer.qc
 freeze.qc
 trace.qc
 clanarena.qc

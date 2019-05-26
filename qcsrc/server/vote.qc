@@ -92,11 +92,11 @@ entity GetKickVoteVictim(string vote, string cmd, entity caller)
 	tokens = tokenize_console(vote);
 	ns = "";
 
-	e = GetCommandPlayerSlotTargetFromTokenizedCommand(tokens, 1);
+	e = client_entity_from_argv(tokens, 1);
 	if(e)
 	{
-		if(ParseCommandPlayerSlotTarget_firsttoken < tokens)
-			GetKickVoteVictim_reason = substring(vote, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken));
+		if(client_entity_from_argv_firsttoken < tokens)
+			GetKickVoteVictim_reason = substring(vote, argv_start_index(client_entity_from_argv_firsttoken), argv_end_index(-1) - argv_start_index(client_entity_from_argv_firsttoken));
 		else
 			GetKickVoteVictim_reason = "";
 

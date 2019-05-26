@@ -54,9 +54,9 @@ void spiderbot_stop(entity spider) {
 
 void spiderbot_rocket_explode()
 {
-    if(self.event_damage != SUB_Null)
+    if(self.event_damage != stdproc_nothing)
     {
-        self.event_damage = SUB_Null;
+        self.event_damage = stdproc_nothing;
         self.think = spiderbot_rocket_explode;
         self.nextthink = time;
         return;
@@ -399,7 +399,7 @@ void spiderbot_exit(float eject)
             e.realowner = self.owner;
             e.owner = world;
             //e.solid = SOLID_BBOX;
-            //e.think = SUB_Null;
+            //e.think = stdproc_nothing;
             //e.nextthink = -1;
         }
     }
@@ -470,11 +470,11 @@ void spiderbot_die()
 {
 
     self.health = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = stdproc_nothing;
     self.iscreature = FALSE;
     self.solid      = SOLID_NOT;
     self.takedamage = DAMAGE_NO;
-    self.touch      = SUB_Null;
+    self.touch      = stdproc_nothing;
     self.deadflag    = DEAD_DEAD;
 	self.frame = 0;
 	self.tur_head.frame = 0;

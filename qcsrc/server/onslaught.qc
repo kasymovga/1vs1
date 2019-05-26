@@ -574,7 +574,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float _damage
 		self.islinked = FALSE;
 		self.isshielded = FALSE;
 		self.takedamage = DAMAGE_NO; // can't be hurt anymore
-		self.event_damage = SUB_Null; // won't do anything if hurt
+		self.event_damage = stdproc_nothing; // won't do anything if hurt
 		self.count = 0;	// reset counter
 		self.think = onslaught_generator_deaththink; // explosion sequence
 		self.nextthink = time; // start exploding immediately
@@ -1141,8 +1141,8 @@ void onslaught_controlpoint_reset()
 	self.isshielded = TRUE;
 	self.enemy.solid = SOLID_NOT;
 	self.enemy.colormap = self.colormap;
-	self.think = self.enemy.think = SUB_Null;
-	self.nextthink = 0; // don't like SUB_Null :P
+	self.think = self.enemy.think = stdproc_nothing;
+	self.nextthink = 0; // don't like stdproc_nothing :P
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
