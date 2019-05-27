@@ -354,6 +354,7 @@ set sv_spawnreplace_item_fuel "item_jetpack"
 set sv_spawnreplace_item_fuel_regen "item_jetpack"
 set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 set sv_spawnreplace_weapon_campingrifle "weapon_nex"
+set sv_spawnreplace_runematch_spawn_point rune_spawn_point
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn
@@ -481,6 +482,7 @@ set g_runes_vitality 1
 set g_runes_shuffletime 5
 set g_runes_respawntime 45
 set g_runes_drop_runes_max 5
+set g_runes_fixedspawns 1
 set g_balance_rune_ignite_damage_factor 0.3
 set g_balance_rune_regen_damage_factor 0.3
 set g_balance_rune_defense_damage_factor 0.3

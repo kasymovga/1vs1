@@ -26,31 +26,19 @@ string sv_model_rune_decor;
 
 .float runes;
 
-/* rune ideas:
-
-	Doom/Death
-	Rune: When you damage enemies, you have a slight chance of instant-killing them (porportional to damage dealt / their health)
-	Curse: When you are damaged, you have a chance of being instant-killed
-
-	Vengence/Slothful
-	Rune: The lower your health below 100, the more damage you deal (does not decrease your damage if you're above 100)
-	Curse: The higher your health (up to 100), the less damage you deal (at 100 hp deal 1/5th damage)
-
-*/
-
-/*QUAKED spawnfunc_runematch_spawn_point (1 0 0) (-16 -16 -24) (16 16 24)
+/*QUAKED spawnfunc_rune_spawn_point (1 0 0) (-16 -16 -24) (16 16 24)
 spawn point for runes in runematch
 */
 
-void spawnfunc_runematch_spawn_point()
+void spawnfunc_rune_spawn_point()
 {
-	if(!g_runes || !cvar("g_runematch_fixedspawns"))
+	if(!g_runes || !cvar("g_runes_fixedspawns"))
 	{
 		remove(self);
 		return;
 	}
 
-	setsize(self, '0 0 -35', '0 0 0');
+	setsize(self, '-12 -12 -35', '12 12 0');
 	entity_droptofloor();
 	++rune_numspawns;
 }
@@ -415,7 +403,7 @@ void rune_spawn_all()
 				setmodel(e.enemy, "models/runematch/curse.mdl");
 
 			setattachment(e.enemy, e, "");
-			setsize(e, '0 0 -35', '0 0 0');
+			setsize(e, '-12 -12 -35', '12 12 0');
 			e.enemy.colormod = e.colormod = rune_colormod(rn);
 			e.effects = e.enemy.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
 
