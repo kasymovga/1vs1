@@ -12,6 +12,11 @@ float g_pickup_nails_max;
 float g_pickup_rockets_max;
 float g_pickup_cells_max;
 float g_pickup_fuel_max;
+float g_pickup_shells;
+float g_pickup_nails;
+float g_pickup_rockets;
+float g_pickup_cells;
+float g_pickup_fuel;
 float g_ghost_items;
 float g_pickup_items;
 float g_pickup_weapons;
@@ -40,6 +45,32 @@ float g_pickup_respawntimejitter_armorlarge;
 float g_pickup_respawntimejitter_powerup;
 float g_pickup_respawntimejitter_mushroom;
 float g_use_ammunition;
+float g_pickup_armorsmall;
+float g_pickup_armorsmall_max;
+float g_pickup_armormedium;
+float g_pickup_armormedium_max;
+float g_pickup_armorbig;
+float g_pickup_armorbig_max;
+float g_pickup_armorlarge;
+float g_pickup_armorlarge_max;
+float g_pickup_healthsmall;
+float g_pickup_healthsmall_max;
+float g_pickup_healthmedium;
+float g_pickup_healthmedium_max;
+float g_pickup_healthlarge;
+float g_pickup_healthlarge_max;
+float g_pickup_healthmega;
+float g_pickup_healthmega_max;
+float g_pickup_fuel_jetpack;
+float g_powerup_superhealth;
+float g_powerup_strength;
+float g_powerup_speed;
+float g_powerup_invisibility;
+float g_powerup_shield;
+float g_balance_powerup_strength_time;
+float g_balance_powerup_invisibility_time;
+float g_balance_powerup_invincible_time;
+float g_balance_powerup_speed_time;
 string sv_model_healthsmall;
 string sv_model_healthmedium;
 string sv_model_healthlarge;
@@ -785,151 +816,155 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 }
 
 void spawnfunc_item_rockets (void) {
-	if not(g_use_ammunition) {
+	if (!g_use_ammunition || g_pickup_rockets <= 0) {
 		remove(self);
 		return;
 	}
-	if(!self.ammo_rockets)
-		self.ammo_rockets = cvar("g_pickup_rockets");
+	self.ammo_rockets = g_pickup_rockets;
 	item_start ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
 void spawnfunc_item_bullets (void) {
-	if not(g_use_ammunition) {
+	if (!g_use_ammunition || g_pickup_nails <= 0) {
 		remove(self);
 		return;
 	}
-	if(!self.ammo_nails)
-		self.ammo_nails = cvar("g_pickup_nails");
+	self.ammo_nails = g_pickup_nails;
 	item_start ("models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
 void spawnfunc_item_cells (void) {
-	if not(g_use_ammunition) {
+	if (!g_use_ammunition || g_pickup_cells <= 0) {
 		remove(self);
 		return;
 	}
-	if(!self.ammo_cells)
-		self.ammo_cells = cvar("g_pickup_cells");
+	self.ammo_cells = g_pickup_cells;
 	item_start ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
 void spawnfunc_item_shells (void) {
-	if not(g_use_ammunition) {
+	if (!g_use_ammunition || g_pickup_shells <= 0) {
 		remove(self);
 		return;
 	}
-	if(!self.ammo_shells)
-		self.ammo_shells = cvar("g_pickup_shells");
+	self.ammo_shells = g_pickup_shells;
 	item_start ("models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
 }
 
 void spawnfunc_item_armor_small (void) {
-	if(!self.armorvalue)
-		self.armorvalue = cvar("g_pickup_armorsmall");
-	if(!self.max_armorvalue)
-		self.max_armorvalue = cvar("g_pickup_armorsmall_max");
+	if (g_pickup_armorsmall <= 0) {
+		remove(self);
+		return;
+	}
+	self.armorvalue = g_pickup_armorsmall;
+	self.max_armorvalue = g_pickup_armorsmall_max;
 	item_start (sv_model_armorsmall, "misc/armor1.wav", g_pickup_respawntime_armorsmall, g_pickup_respawntimejitter_armorsmall, "5 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_armor_medium (void) {
-	if(!self.armorvalue)
-		self.armorvalue = cvar("g_pickup_armormedium");
-	if(!self.max_armorvalue)
-		self.max_armorvalue = cvar("g_pickup_armormedium_max");
+	if (g_pickup_armormedium <= 0) {
+		remove(self);
+		return;
+	}
+	self.armorvalue = g_pickup_armormedium;
+	self.max_armorvalue = g_pickup_armormedium_max;
 	item_start (sv_model_armormedium, "misc/armor10.wav", g_pickup_respawntime_armormedium, g_pickup_respawntimejitter_armormedium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_armor_big (void) {
-	if(!self.armorvalue)
-		self.armorvalue = cvar("g_pickup_armorbig");
-	if(!self.max_armorvalue)
-		self.max_armorvalue = cvar("g_pickup_armorbig_max");
+	if (g_pickup_armorbig <= 0) {
+		remove(self);
+		return;
+	}
+	self.armorvalue = g_pickup_armorbig;
+	self.max_armorvalue = g_pickup_armorbig_max;
 	item_start (sv_model_armorbig, "misc/armor17_5.wav", g_pickup_respawntime_armorbig, g_pickup_respawntimejitter_armorbig, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
 }
 
 void spawnfunc_item_armor_large (void) {
-	if(!self.armorvalue)
-		self.armorvalue = cvar("g_pickup_armorlarge");
-	if(!self.max_armorvalue)
-		self.max_armorvalue = cvar("g_pickup_armorlarge_max");
+	if (g_pickup_armorlarge <= 0) {
+		remove(self);
+		return;
+	}
+	self.armorvalue = g_pickup_armorlarge;
+	self.max_armorvalue = g_pickup_armorlarge_max;
 	item_start (sv_model_armorlarge, "misc/armor25.wav", g_pickup_respawntime_armorlarge, g_pickup_respawntimejitter_armorlarge, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
 
 void spawnfunc_item_health_small (void) {
-	if(!self.max_health)
-		self.max_health = cvar("g_pickup_healthsmall_max");
-	if(!self.health)
-		self.health = cvar("g_pickup_healthsmall");
+	if (g_pickup_healthsmall <= 0) {
+		remove(self);
+		return;
+	}
+	self.health = g_pickup_healthsmall;
+	self.max_health = g_pickup_healthsmall_max;
 	item_start (sv_model_healthsmall, "misc/minihealth.wav", g_pickup_respawntime_healthsmall, g_pickup_respawntimejitter_healthsmall, "5 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
 void spawnfunc_item_health_medium (void) {
-	if(!self.max_health)
-		self.max_health = cvar("g_pickup_healthmedium_max");
-	if(!self.health)
-		self.health = cvar("g_pickup_healthmedium");
+	if (g_pickup_healthmedium <= 0) {
+		remove(self);
+		return;
+	}
+	self.max_health = g_pickup_healthmedium_max;
+	self.health = g_pickup_healthmedium;
 	item_start (sv_model_healthmedium, "misc/mediumhealth.wav", g_pickup_respawntime_healthmedium, g_pickup_respawntimejitter_healthmedium, "25 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_large (void) {
-	if(!self.max_health)
-		self.max_health = cvar("g_pickup_healthlarge_max");
-	if(!self.health)
-		self.health = cvar("g_pickup_healthlarge");
+	self.max_health = g_pickup_healthlarge_max;
+	self.health = g_pickup_healthlarge;
 	item_start (sv_model_healthlarge, "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
 }
 
 void spawnfunc_item_health_mega (void) {
-	if(!cvar("g_powerup_superhealth")) {
+	if(!g_powerup_superhealth) {
 		remove(self);
 		return;
 	}
-	if(!self.max_health)
-		self.max_health = cvar("g_pickup_healthmega_max");
-	if(!self.health)
-		self.health = cvar("g_pickup_healthmega");
+	self.max_health = g_pickup_healthmega_max;
+	self.health = g_pickup_healthmega;
 	item_start (sv_model_healthmega, "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
 
 // support old misnamed entities
 void spawnfunc_item_strength (void) {
-	if(!cvar("g_powerup_strength")) {
+	if(!g_powerup_strength) {
 		remove(self);
 		return;
 	}
 	precache_sound("weapons/strength_fire.wav");
-	self.strength_finished = cvar("g_balance_powerup_strength_time");
+	self.strength_finished = g_balance_powerup_strength_time;
 	item_start ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_strength_init();
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!cvar("g_powerup_shield")) {
+	if(!g_powerup_shield) {
 		remove(self);
 		return;
 	}
-	self.invincible_finished = cvar("g_balance_powerup_invincible_time");
+	self.invincible_finished = g_balance_powerup_invincible_time;
 	item_start ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_invincible_init();
 }
 
 void spawnfunc_item_invisibility (void) {
-	if(!cvar("g_powerup_invisibility")) {
+	if(!g_powerup_invisibility) {
 		remove(self);
 		return;
 	}
-	self.invisibility_finished = cvar("g_balance_powerup_invisibility_time");
+	self.invisibility_finished = g_balance_powerup_invisibility_time;
 	item_start ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Invisibility", IT_INVISIBILITY, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_invisibility_init();
 }
 
 void spawnfunc_item_speed (void) {
-	if(!cvar("g_powerup_speed")) {
+	if(!g_powerup_speed) {
 		remove(self);
 		return;
 	}
-	self.speed_finished = cvar("g_balance_powerup_speed_time");
+	self.speed_finished = g_balance_powerup_speed_time;
 	item_start ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Speed", IT_SPEED, 0, FL_POWERUP, item_generic_pickupevalfunc, 100000);
 	powerup_speed_init();
 }
@@ -1248,9 +1283,7 @@ void spawnfunc_item_jetpack(void)
 		remove(self);
 		return;
 	}
-	if(!self.ammo_fuel)
-		self.ammo_fuel = cvar("g_pickup_fuel_jetpack");
-
+	self.ammo_fuel = g_pickup_fuel_jetpack;
 	item_start ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
@@ -1336,6 +1369,37 @@ void item_init()
 	CACHE_CVAR(g_use_ammunition);
 	CACHE_CVAR(g_pickup_items);
 	CACHE_CVAR(g_pickup_weapons);
+	CACHE_CVAR(g_pickup_shells);
+	CACHE_CVAR(g_pickup_nails);
+	CACHE_CVAR(g_pickup_rockets);
+	CACHE_CVAR(g_pickup_cells);
+	CACHE_CVAR(g_pickup_fuel);
+	CACHE_CVAR(g_pickup_armorsmall);
+	CACHE_CVAR(g_pickup_armorsmall_max);
+	CACHE_CVAR(g_pickup_armormedium);
+	CACHE_CVAR(g_pickup_armormedium_max);
+	CACHE_CVAR(g_pickup_armorbig);
+	CACHE_CVAR(g_pickup_armorbig_max);
+	CACHE_CVAR(g_pickup_armorlarge);
+	CACHE_CVAR(g_pickup_armorlarge_max);
+	CACHE_CVAR(g_pickup_healthsmall);
+	CACHE_CVAR(g_pickup_healthsmall_max);
+	CACHE_CVAR(g_pickup_healthmedium);
+	CACHE_CVAR(g_pickup_healthmedium_max);
+	CACHE_CVAR(g_pickup_healthlarge);
+	CACHE_CVAR(g_pickup_healthlarge_max);
+	CACHE_CVAR(g_pickup_healthmega);
+	CACHE_CVAR(g_pickup_healthmega_max);
+	CACHE_CVAR(g_pickup_fuel_jetpack);
+	CACHE_CVAR(g_powerup_superhealth);
+	CACHE_CVAR(g_powerup_strength);
+	CACHE_CVAR(g_powerup_speed);
+	CACHE_CVAR(g_powerup_invisibility);
+	CACHE_CVAR(g_powerup_shield);
+	CACHE_CVAR(g_balance_powerup_strength_time);
+	CACHE_CVAR(g_balance_powerup_invisibility_time);
+	CACHE_CVAR(g_balance_powerup_invincible_time);
+	CACHE_CVAR(g_balance_powerup_speed_time);
 	sv_model_healthsmall = cvar_string_zone_ifneeded("sv_model_healthsmall");
 	if (sv_model_healthsmall == "")
 		sv_model_healthsmall = "models/items/g_h1.md3";
