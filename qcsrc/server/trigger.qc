@@ -1797,3 +1797,20 @@ void trigger_door_check_use() {
 void spawnfunc_trigger_door_check() {
 	self.use = trigger_door_check_use;
 }
+
+void(void) trigger_relay_if_use {
+	float n;
+	n = self.count;
+
+	// TODO make this generic AND faster than nextent()ing through all, if somehow possible
+	n = (cvar_string(self.netname) == cvar_string(self.message));
+	if(self.spawnflags & 1)
+		n = !n;
+
+	if(n)
+		trigger_use_targets();
+}
+
+void(void) spawnfunc_trigger_relay_if {
+	self.use = trigger_relay_if_use;
+}

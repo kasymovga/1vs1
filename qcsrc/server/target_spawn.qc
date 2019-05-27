@@ -284,7 +284,7 @@ void target_spawn_spawnfirst()
 		target_spawn_use();
 }
 
-void initialize_field_db()
+void target_spawn_initialize_field_db()
 {
 	if(!target_spawn_initialized)
 	{
@@ -314,29 +314,9 @@ void initialize_field_db()
 
 void spawnfunc_target_spawn()
 {
-	initialize_field_db();
+	target_spawn_initialize_field_db();
 	self.use = target_spawn_use;
 	self.message = strzone(strreplace("'", "\"", self.message));
 	self.target_spawn_id = ++target_spawn_count;
 	entity_initialize(self, target_spawn_spawnfirst, INITPRIO_LAST);
 }
-
-
-void trigger_relay_if_use()
-{
-	float n;
-	n = self.count;
-
-	// TODO make this generic AND faster than nextent()ing through all, if somehow possible
-	n = (cvar_string(self.netname) == cvar_string(self.message));
-	if(self.spawnflags & 1)
-		n = !n;
-
-	if(n)
-		trigger_use_targets();
-}
-
-void spawnfunc_trigger_relay_if()
-{
-	self.use = trigger_relay_if_use;
-};
