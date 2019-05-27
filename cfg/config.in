@@ -1777,8 +1777,8 @@ set cra_g_balance_grapplehook_speed_fly 1000
 set cra_g_shootfromeye 1
 set cra_g_buttons_hookuse_swap 1
 set cra_g_runes 1
-set cra_g_runematch_hacker 1
-set cra_g_runematch_carried_runes_max 2
+set cra_g_runes_hacker 1
+set cra_g_runes_carried_runes_max 2
 set cra_g_ctf_dropbutton_use 0
 set cra_g_ctf_dropbutton_hook 1
 set cra_g_weaponreplace_nex armor_big
