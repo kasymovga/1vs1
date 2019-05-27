@@ -255,41 +255,13 @@ set g_khca_point_limit 15
 set g_khca_point_leadlimit 0
 set g_khca_startdelay 5
 set g_khca_enddelay 5
-set khca_g_start_weapon_shotgun 1
-set khca_g_start_weapon_uzi 1
-set khca_g_start_weapon_grenadelauncher 1
-set khca_g_start_weapon_crylink 1
-set khca_g_start_weapon_electro 1
-set khca_g_start_weapon_nex 1
-set khca_g_start_weapon_hagar 1
-set khca_g_start_weapon_rocketlauncher 1
-set khca_g_pickup_items 0
-set khca_g_warmup_start_armor 200
-set khca_g_warmup_start_health 200
-set khca_g_balance_armor_start 200
-set khca_g_balance_armor_rot 0
-set khca_g_balance_armor_regen 0
-set khca_g_balance_health_start 200
-set khca_g_balance_health_rot 0
-set khca_g_balance_health_regen 0
-set khca_g_powerup_superhealth 0
-set khca_g_powerup_shield 0
-set khca_g_powerup_strength 0
-set khca_g_start_ammo_nails 50
-set khca_g_start_ammo_shells 30
-set khca_g_start_ammo_rockets 60
-set khca_g_start_ammo_cells 60
-set khca_g_warmup_start_ammo_nails 50
-set khca_g_warmup_start_ammo_shells 30
-set khca_g_warmup_start_ammo_rockets 40
-set khca_g_warmup_start_ammo_cells 60
-set khca_g_balance_health_rotlinear 0
-set khca_g_score_damage 1
+set khca_inherit "ca kh"
 set nexball_g_start_weapon_shotgun 0
 set g_khft_point_limit 15
 set g_khft_point_leadlimit 0
 set g_khft_startdelay 5
 set g_khft_enddelay 5
+set khft_inherit "ft kh"
 set force_gametype ""
 set skill_auto_min 10
 set skill_auto_max 30
@@ -538,6 +510,30 @@ set g_freeze_use_tdm_maps 1
 set g_freeze_winlimit 10
 set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
 set g_freeze_autorevive_time 10
+set ft_g_start_weapon_shotgun 1
+set ft_g_start_weapon_uzi 1
+set ft_g_start_weapon_grenadelauncher 1
+set ft_g_start_weapon_crylink 1
+set ft_g_start_weapon_zapper 1
+set ft_g_start_weapon_nex 1
+set ft_g_start_weapon_hagar 1
+set ft_g_start_weapon_rocketlauncher 1
+set ft_g_start_ammo_nails 50
+set ft_g_start_ammo_cells 50
+set ft_g_start_ammo_rockets 25
+set ft_g_weaponreplace_nex item_cells
+set ft_g_weaponreplace_electro item_cells
+set ft_g_weaponreplace_crylink item_cells
+set ft_g_weaponreplace_hlac item_cells
+set ft_g_weaponreplace_zapper item_cells
+set ft_g_weaponreplace_uzi item_bullets
+set ft_g_weaponreplace_campingrifle item_bullets
+set ft_g_weaponreplace_shotgun item_shells
+set ft_g_weaponreplace_supershotgun item_shells
+set ft_g_weaponreplace_hagar item_rockets
+set ft_g_weaponreplace_grenadelauncher item_rockets
+set ft_g_weaponreplace_rocketlauncher item_rockets
+set ft_g_weaponreplace_fireball item_rockets
 
 set g_balance_powerup_invisibility_time 30
 set g_balance_powerup_speed_time 30
@@ -714,39 +710,11 @@ set ca_g_score_damage 1
 
 set g_catf_enddelay 5
 set g_catf_startdelay 5
-set catf_g_start_weapon_shotgun 1
-set catf_g_start_weapon_uzi 1
-set catf_g_start_weapon_grenadelauncher 1
-set catf_g_start_weapon_crylink 1
-set catf_g_start_weapon_electro 1
-set catf_g_start_weapon_nex 1
-set catf_g_start_weapon_hagar 1
-set catf_g_start_weapon_rocketlauncher 1
-set catf_g_pickup_items 0
-set catf_g_warmup_start_armor 200
-set catf_g_warmup_start_health 200
-set catf_g_balance_armor_start 200
-set catf_g_balance_armor_rot 0
-set catf_g_balance_armor_regen 0
-set catf_g_balance_health_start 200
-set catf_g_balance_health_rot 0
-set catf_g_balance_health_regen 0
-set catf_g_powerup_superhealth 0
-set catf_g_powerup_shield 0
-set catf_g_powerup_strength 0
-set catf_g_start_ammo_nails 50
-set catf_g_start_ammo_shells 30
-set catf_g_start_ammo_rockets 60
-set catf_g_start_ammo_cells 60
-set catf_g_warmup_start_ammo_nails 50
-set catf_g_warmup_start_ammo_shells 30
-set catf_g_warmup_start_ammo_rockets 40
-set catf_g_warmup_start_ammo_cells 60
-set catf_g_balance_health_rotlinear 0
-set catf_g_score_damage 1
+set catf_inherit "ca ctf"
 
 set g_ctft_startdelay 5
 set g_ctft_enddelay 5
+set ctft_inherit "ft ctf"
 
 set timelimit_default 15
 set fraglimit_default 10
@@ -1464,30 +1432,11 @@ set single_g_pickup_armormedium_max 100
 set single_g_pickup_armorbig_max 100
 set single_g_balance_laser_primary_force 0
 
+set coop_inherit "single"
 set coop_g_weapon_stay 1
-set coop_g_pickup_respawntime_healthsmall -1
-set coop_g_pickup_respawntime_healthmedium -1
-set coop_g_pickup_respawntime_healthlarge -1
-set coop_g_pickup_respawntime_healthmega -1
-set coop_g_pickup_respawntime_armorsmall -1
-set coop_g_pickup_respawntime_armormedium -1
-set coop_g_pickup_respawntime_armorbig -1
-set coop_g_pickup_respawntime_armorlarge -1
-set coop_g_pickup_respawntime_powerup -1
-set coop_g_pickup_respawntime_ammo -1
 set coop_g_pickup_respawntimejitter_powerup 0
 set coop_g_pickup_respawntime_key 0.1
 set coop_g_pickup_respawntimejitter_key 0
-set coop_g_balance_health_regen 0
-set coop_g_balance_health_rot 0
-set coop_g_balance_armor_regen 0
-set coop_g_balance_armor_rot 0
-set coop_g_balance_health_start 100
-set coop_g_pickup_healthlarge_max 100
-set coop_g_pickup_healthmedium_max 100
-set coop_g_pickup_armormedium_max 100
-set coop_g_pickup_armorbig_max 100
-set coop_g_balance_laser_primary_force 0
 
 set g_monster_difficulty 2 "Monster difficulty, 0 - Easy, 1 - Medium, 2 - Hard, 3 - Insane"
 set g_monster_pushfactor 0.25
@@ -1748,6 +1697,20 @@ set akimbo_khca_g_pickup_cells 10
 set akimbo_khca_g_pickup_rockets 5
 set akimbo_khca_g_pickup_bullets 10
 set akimbo_khca_g_pickup_shells 5
+set akimbo_ft_g_weaponreplace_nex nex
+set akimbo_ft_g_weaponreplace_electro zapper
+set akimbo_ft_g_weaponreplace_crylink crylink
+set akimbo_ft_g_weaponreplace_shotgun shotgun
+set akimbo_ft_g_weaponreplace_supershotgun supeshotgun
+set akimbo_ft_g_weaponreplace_zapper zapper
+set akimbo_ft_g_weaponreplace_hlac crylink
+set akimbo_ft_g_weaponreplace_grenadelauncher grenadelauncher
+set akimbo_ft_g_weaponreplace_rocketlauncher rocketlauncher
+set akimbo_ft_g_weaponreplace_uzi uzi
+set akimbo_ft_g_weaponreplace_campingrifle uzi
+set akimbo_ft_g_weaponreplace_fireball rocketlauncher
+set akimbo_ft_g_weaponreplace_minstanex nex
+set akimbo_ft_g_weaponreplace_hagar hagar
 
 set cra_g_start_weapon_laser 0
 set cra_g_start_weapon_shotgun 0
@@ -1802,12 +1765,8 @@ set minsta_g_balance_minstanex_refire 0.8
 set minsta_g_balance_selfdamagepercent 0
 set minsta_g_score_damage 0
 
-set explosive_minsta_g_minstagib 1
-set explosive_minsta_g_grappling_hook 1
-set explosive_minsta_g_balance_grapplehook_speed_fly 5000
+set explosive_minsta_inherit minsta
 set explosive_minsta_g_balance_grapplehook_damage_interval 0.1
-set explosive_minsta_g_balance_minstanex_refire 0.8
-set explosive_minsta_g_balance_selfdamagepercent 0
 set explosive_minsta_g_minstagib_nolaserdamage 0
 set explosive_minsta_g_balance_minstanex_explode 1
 set explosive_minsta_g_balance_grapplehook_health 5
@@ -1820,7 +1779,6 @@ set explosive_minsta_g_minstagib_health_drop 20
 set explosive_minsta_g_minstagib_health_max 200
 set explosive_minsta_g_minstagib_ammo_start 50
 set explosive_minsta_g_use_ammunition 1
-set explosive_minsta_g_score_damage 0
 set explosive_minsta_g_minstagib_ammo_drop 25
 
 alias g_ctf_respawn_delay "set ctf_g_respawn_delay $1"
