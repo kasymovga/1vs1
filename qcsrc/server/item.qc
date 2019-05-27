@@ -1477,21 +1477,13 @@ void item_init()
 			start_items |= IT_UNLIMITED_AMMO;
 		}
 
-		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
+		for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
 			e = get_weaponinfo(i);
 			if (!(e.weapon))
 				continue;
 
 			t = cvar(strcat("g_start_weapon_", e.netname));
-
-			if (t < 0) // "default" weapon selection
-			{
-				t = (i == WEP_LASER || i == WEP_SHOTGUN);
-			}
-
-			if (t)
-			{
+			if (t > 0) {
 				start_weapons |= e.weapons;
 				weapon_precache(e.weapon);
 			}

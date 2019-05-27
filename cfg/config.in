@@ -76,6 +76,23 @@ set g_voice_flood_spv 20
 set g_balance_electro_primary_ammo 3
 set g_balance_hlac_primary_ammo 1
 set g_balance_hlac_secondary_ammo 6
+set g_start_weapon_laser 1 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_shotgun 1 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_uzi 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_grenadelauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_electro 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_crylink 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_nex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_hagar 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_rocketlauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_minstanex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_porto 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_hook 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_weapon_stay 0 "if set, weapons stay after they were picked up"
 
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
@@ -171,7 +188,6 @@ set sv_slicksurfaces "0" "Enable slick surfaces"
 set sv_slicksurfaces_allowjump "1" "Enable jumps on slick surfaces"
 set sv_reset_on_join "0" "Reset map when this client count join game"
 set g_pickup_weapons 1
-set g_weapon_stay 0 "if set, weapons stay after they were picked up"
 set g_pickup_respawntime_healthsmall 15
 set g_pickup_respawntime_healthmedium 15
 set g_pickup_respawntime_healthlarge 20
@@ -219,7 +235,6 @@ set g_balance_nexball_primary_shootatmaxmeter 1
 set g_balance_shotgun_secondary 1
 set g_balance_shotgun_swap_buttons 0
 set g_balance_uzi_first 1
-set g_balance_rocketlauncher_laserguided_missile 0
 set g_balance_rocketlauncher_swap_buttons 0
 set g_balance_minstanex_explode 0
 set g_balance_minstanex_explode_damage 100
@@ -239,29 +254,6 @@ set g_balance_minstanex_laser_refire 0.9
 set g_balance_minstanex_laser_rapid 0
 set g_balance_minstanex_laser_rapid_delay 0.6
 set g_balance_minstanex_laser_rapid_refire 0.35
-set g_nexball_ball_scale 1 ""
-set g_nexball_ball_explosive_radius 1000
-set g_nexball_ball_explosive_damage 1000
-set g_nexball_ball_explosive_force 1000
-set g_nexball_football_melee_boost_forward "200"
-set g_nexball_football_melee_boost_up "150"
-set g_nexball_hockey_boost_forward "100"
-set g_nexball_hockey_bouncefactor 0.8
-set g_nexball_hockey_melee_boost_forward "400"
-set g_nexball_hockey_melee_boost_up "250"
-set g_keyhunt_showenemycarrier 1
-set g_keyhunt_use_tdm_maps 0
-set g_khca_point_limit 15
-set g_khca_point_leadlimit 0
-set g_khca_startdelay 5
-set g_khca_enddelay 5
-set khca_inherit "ca kh"
-set nexball_g_start_weapon_shotgun 0
-set g_khft_point_limit 15
-set g_khft_point_leadlimit 0
-set g_khft_startdelay 5
-set g_khft_enddelay 5
-set khft_inherit "ft kh"
 set force_gametype ""
 set skill_auto_min 10
 set skill_auto_max 30
@@ -500,49 +492,10 @@ set g_balance_supershotgun_secondary_spread 0.15
 set g_weaponreplace_supershotgun ""
 
 set g_balance_campingrifle_hotreload 0
-set g_freeze_teams 2
-set g_freeze_enddelay 3
-set g_freeze_slowdown 0.1
-set g_freeze_startdelay 10
-set g_freeze_unfroze_time 3
-set g_freeze_unfroze_interruption 1
-set g_freeze_use_tdm_maps 1
-set g_freeze_winlimit 10
-set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
-set g_freeze_autorevive_time 10
-set ft_g_start_weapon_shotgun 1
-set ft_g_start_weapon_uzi 1
-set ft_g_start_weapon_grenadelauncher 1
-set ft_g_start_weapon_crylink 1
-set ft_g_start_weapon_zapper 1
-set ft_g_start_weapon_nex 1
-set ft_g_start_weapon_hagar 1
-set ft_g_start_weapon_rocketlauncher 1
-set ft_g_start_ammo_nails 50
-set ft_g_start_ammo_cells 50
-set ft_g_start_ammo_rockets 25
-set ft_g_weaponreplace_nex item_cells
-set ft_g_weaponreplace_electro item_cells
-set ft_g_weaponreplace_crylink item_cells
-set ft_g_weaponreplace_hlac item_cells
-set ft_g_weaponreplace_zapper item_cells
-set ft_g_weaponreplace_uzi item_bullets
-set ft_g_weaponreplace_campingrifle item_bullets
-set ft_g_weaponreplace_shotgun item_shells
-set ft_g_weaponreplace_supershotgun item_shells
-set ft_g_weaponreplace_hagar item_rockets
-set ft_g_weaponreplace_grenadelauncher item_rockets
-set ft_g_weaponreplace_rocketlauncher item_rockets
-set ft_g_weaponreplace_fireball item_rockets
-
 set g_balance_powerup_invisibility_time 30
 set g_balance_powerup_speed_time 30
 set g_powerup_invisibility 1
 set g_powerup_speed 1
-
-set g_tdm_fraglimit 50
-set g_tdm_use_dm_maps 0
-set g_tdm_use_ctf_maps 0
 
 set sv_model_ice "models/ebomb.mdl"
 set sv_model_ice_alpha 0.5
@@ -671,51 +624,6 @@ set sv_player_hat_scale 1
 
 set g_turrets_targetscan_playersonly 0
 
-set g_clanarena_use_tdm_maps 1
-set g_clanarena_teams 2
-set g_clanarena_winlimit 10
-set g_clanarena_enddelay 3
-set g_clanarena_startdelay 10
-set g_clanarena_healthrotpause_on_damage 20
-set ca_g_start_weapon_shotgun 1
-set ca_g_start_weapon_uzi 1
-set ca_g_start_weapon_grenadelauncher 1
-set ca_g_start_weapon_crylink 1
-set ca_g_start_weapon_electro 1
-set ca_g_start_weapon_nex 1
-set ca_g_start_weapon_hagar 1
-set ca_g_start_weapon_rocketlauncher 1
-set ca_g_pickup_items 0
-set ca_g_warmup_start_armor 200
-set ca_g_warmup_start_health 200
-set ca_g_balance_armor_start 200
-set ca_g_balance_armor_rot 0
-set ca_g_balance_armor_regen 0
-set ca_g_balance_health_start 200
-set ca_g_balance_health_rot 0
-set ca_g_balance_health_regen 0
-set ca_g_powerup_superhealth 0
-set ca_g_powerup_shield 0
-set ca_g_powerup_strength 0
-set ca_g_start_ammo_nails 50
-set ca_g_start_ammo_shells 30
-set ca_g_start_ammo_rockets 60
-set ca_g_start_ammo_cells 60
-set ca_g_warmup_start_ammo_nails 50
-set ca_g_warmup_start_ammo_shells 30
-set ca_g_warmup_start_ammo_rockets 40
-set ca_g_warmup_start_ammo_cells 60
-set ca_g_balance_health_rotlinear 0
-set ca_g_score_damage 1
-
-set g_catf_enddelay 5
-set g_catf_startdelay 5
-set catf_inherit "ca ctf"
-
-set g_ctft_startdelay 5
-set g_ctft_enddelay 5
-set ctft_inherit "ft ctf"
-
 set timelimit_default 15
 set fraglimit_default 10
 
@@ -728,19 +636,6 @@ set sv_dlc_server_only ""
 set _map_dlc ""
 alias dlc_require "sv_cmd dlc_require $*"
 alias endround "sv_cmd endround"
-
-set g_conquest 0
-set g_conquest_capture_time 5
-set g_conquest_lasthope_time 60
-set g_conquest_score_capture 10
-set g_conquest_teamscore_alternative 1
-set g_conquest_use_ons 0
-set g_conquest_use_ctf_and_dom 0
-
-set g_ctf_showenemycarrier 1
-set g_ctf_showenemycarrier_delay 30
-set g_ctf_dropbutton_use 1 "drop flag with +use bind"
-set g_ctf_dropbutton_hook 0 "drop flag with +hook bind"
 
 set sv_model_healthlarge ""
 set sv_model_healthmedium ""
@@ -1402,42 +1297,6 @@ set g_nadgets_raze_fire_spawninterval 0.1
 
 ///// END Handgrenades mutator /////
 
-set g_survive_wave_pause 20
-set g_survive_wave_skip 0
-set g_survive_monster_factor 0.5
-set g_survive_freeze 1
-
-set single_g_pickup_respawntime_weapon -1
-set single_g_pickup_respawntime_healthsmall -1
-set single_g_pickup_respawntime_healthmedium -1
-set single_g_pickup_respawntime_healthlarge -1
-set single_g_pickup_respawntime_healthmega -1
-set single_g_pickup_respawntime_armorsmall -1
-set single_g_pickup_respawntime_armormedium -1
-set single_g_pickup_respawntime_armorbig -1
-set single_g_pickup_respawntime_armorlarge -1
-set single_g_pickup_respawntime_powerup -1
-set single_g_pickup_respawntime_ammo -1
-set single_g_pickup_respawntime_key -1
-set single_g_pickup_respawntimejitter_key -1
-set single_g_maxplayers 1
-set single_g_balance_health_regen 0
-set single_g_balance_health_rot 0
-set single_g_balance_armor_regen 0
-set single_g_balance_armor_rot 0
-set single_g_balance_health_start 100
-set single_g_pickup_healthlarge_max 100
-set single_g_pickup_healthmedium_max 100
-set single_g_pickup_armormedium_max 100
-set single_g_pickup_armorbig_max 100
-set single_g_balance_laser_primary_force 0
-
-set coop_inherit "single"
-set coop_g_weapon_stay 1
-set coop_g_pickup_respawntimejitter_powerup 0
-set coop_g_pickup_respawntime_key 0.1
-set coop_g_pickup_respawntimejitter_key 0
-
 set g_monster_difficulty 2 "Monster difficulty, 0 - Easy, 1 - Medium, 2 - Hard, 3 - Insane"
 set g_monster_pushfactor 0.25
 set g_monster_arachna_health 90
@@ -1555,6 +1414,50 @@ set sv_damageindicator_accumulate_interval 0.4
 set cl_damageindicator 1.5
 
 alias bprint "sv_cmd bprint $*; echo $*"
+set sv_projectile_rocket_size "3 -3 3"
+
+set g_buttons_hookuse_swap 0
+
+set g_start_weapon_selectable ""
+set g_twoweapons ""
+set g_twoweapons_invert_buttons 0
+
+set sv_player_mute_namepattern0 ""
+set sv_player_mute_namepattern1 ""
+set sv_player_mute_namepattern2 ""
+set sv_player_mute_namepattern3 ""
+
+set g_mirrorforce 1 "Mirror force factor"
+
+alias extendmatchtime "sv_cmd extendmatchtime"
+alias reducematchtime "sv_cmd reducematchtime"
+alias increasefraglimit "sv_cmd increasefraglimit"
+alias decreasefraglimit "sv_cmd decreasefraglimit"
+set fraglimit_max 50
+set fraglimit_min 5
+set fraglimit_increment 5
+set fraglimit_decrement 5
+
+set sv_vote_players_auto_abstain 0.5 "This part of players who ignore vote will be counted as abstain"
+set sv_vote_limit_from_single_address 0 "Allowed vote count from single network address (0 and negative values mean no limit)"
+
+alias shuffleteams "sv_cmd shuffleteams"
+
+set sv_udpchat 0
+set sv_udpchat_server 127.0.0.1:16887
+set sv_udpchat_id "host"
+set sv_udpchat_client1 ""
+set sv_udpchat_client2 ""
+set sv_udpchat_client3 ""
+set sv_udpchat_spamstatus 10
+
+set g_friendlyfire_force 0
+
+set g_score_damage 0
+set g_score_bestweapon 0
+
+
+//Game types
 alias bprint_gtswitch "bprint Game type switched to $*"
 set _g_dm 0
 set _g_tdm 0
@@ -1624,48 +1527,171 @@ alias sv_hook_gamestart_surv ""
 alias sv_hook_gamestart_single ""
 alias sv_hook_gamestart_conq ""
 
-set sv_projectile_rocket_size "3 -3 3"
+set g_tdm_fraglimit 50
+set g_tdm_use_dm_maps 0
+set g_tdm_use_ctf_maps 0
 
-set g_buttons_hookuse_swap 0
+set g_nexball_ball_scale 1 ""
+set g_nexball_ball_explosive_radius 1000
+set g_nexball_ball_explosive_damage 1000
+set g_nexball_ball_explosive_force 1000
+set g_nexball_football_melee_boost_forward "200"
+set g_nexball_football_melee_boost_up "150"
+set g_nexball_hockey_boost_forward "100"
+set g_nexball_hockey_bouncefactor 0.8
+set g_nexball_hockey_melee_boost_forward "400"
+set g_nexball_hockey_melee_boost_up "250"
+set nexball_g_start_weapon_shotgun 0
 
-set g_start_weapon_selectable ""
-set g_twoweapons ""
-set g_twoweapons_invert_buttons 0
+set g_keyhunt_showenemycarrier 1
+set g_keyhunt_use_tdm_maps 0
 
-set sv_player_mute_namepattern0 ""
-set sv_player_mute_namepattern1 ""
-set sv_player_mute_namepattern2 ""
-set sv_player_mute_namepattern3 ""
+set g_khca_point_limit 15
+set g_khca_point_leadlimit 0
+set g_khca_startdelay 5
+set g_khca_enddelay 5
+set khca_inherit "ca kh"
 
-set g_mirrorforce 1 "Mirror force factor"
+set g_khft_point_limit 15
+set g_khft_point_leadlimit 0
+set g_khft_startdelay 5
+set g_khft_enddelay 5
+set khft_inherit "ft kh"
 
-alias extendmatchtime "sv_cmd extendmatchtime"
-alias reducematchtime "sv_cmd reducematchtime"
-alias increasefraglimit "sv_cmd increasefraglimit"
-alias decreasefraglimit "sv_cmd decreasefraglimit"
-set fraglimit_max 50
-set fraglimit_min 5
-set fraglimit_increment 5
-set fraglimit_decrement 5
+set g_clanarena_use_tdm_maps 1
+set g_clanarena_teams 2
+set g_clanarena_winlimit 10
+set g_clanarena_enddelay 3
+set g_clanarena_startdelay 10
+set g_clanarena_healthrotpause_on_damage 20
+set ca_g_start_weapon_shotgun 1
+set ca_g_start_weapon_uzi 1
+set ca_g_start_weapon_grenadelauncher 1
+set ca_g_start_weapon_crylink 1
+set ca_g_start_weapon_electro 1
+set ca_g_start_weapon_nex 1
+set ca_g_start_weapon_hagar 1
+set ca_g_start_weapon_rocketlauncher 1
+set ca_g_pickup_items 0
+set ca_g_warmup_start_armor 200
+set ca_g_warmup_start_health 200
+set ca_g_balance_armor_start 200
+set ca_g_balance_armor_rot 0
+set ca_g_balance_armor_regen 0
+set ca_g_balance_health_start 200
+set ca_g_balance_health_rot 0
+set ca_g_balance_health_regen 0
+set ca_g_powerup_superhealth 0
+set ca_g_powerup_shield 0
+set ca_g_powerup_strength 0
+set ca_g_start_ammo_nails 50
+set ca_g_start_ammo_shells 30
+set ca_g_start_ammo_rockets 60
+set ca_g_start_ammo_cells 60
+set ca_g_warmup_start_ammo_nails 50
+set ca_g_warmup_start_ammo_shells 30
+set ca_g_warmup_start_ammo_rockets 40
+set ca_g_warmup_start_ammo_cells 60
+set ca_g_balance_health_rotlinear 0
+set ca_g_score_damage 1
 
-set sv_vote_players_auto_abstain 0.5 "This part of players who ignore vote will be counted as abstain"
-set sv_vote_limit_from_single_address 0 "Allowed vote count from single network address (0 and negative values mean no limit)"
+set g_catf_enddelay 5
+set g_catf_startdelay 5
+set catf_inherit "ca ctf"
 
-alias shuffleteams "sv_cmd shuffleteams"
+set g_ctft_startdelay 5
+set g_ctft_enddelay 5
+set ctft_inherit "ft ctf"
 
-set sv_udpchat 0
-set sv_udpchat_server 127.0.0.1:16887
-set sv_udpchat_id "host"
-set sv_udpchat_client1 ""
-set sv_udpchat_client2 ""
-set sv_udpchat_client3 ""
-set sv_udpchat_spamstatus 10
+set g_freeze_teams 2
+set g_freeze_enddelay 3
+set g_freeze_slowdown 0.1
+set g_freeze_startdelay 10
+set g_freeze_unfroze_time 3
+set g_freeze_unfroze_interruption 1
+set g_freeze_use_tdm_maps 1
+set g_freeze_winlimit 10
+set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
+set g_freeze_autorevive_time 10
+set ft_g_start_weapon_shotgun 1
+set ft_g_start_weapon_uzi 1
+set ft_g_start_weapon_grenadelauncher 1
+set ft_g_start_weapon_crylink 1
+set ft_g_start_weapon_zapper 1
+set ft_g_start_weapon_nex 1
+set ft_g_start_weapon_hagar 1
+set ft_g_start_weapon_rocketlauncher 1
+set ft_g_start_ammo_nails 50
+set ft_g_start_ammo_cells 50
+set ft_g_start_ammo_rockets 25
+set ft_g_weaponreplace_nex item_cells
+set ft_g_weaponreplace_electro item_cells
+set ft_g_weaponreplace_crylink item_cells
+set ft_g_weaponreplace_hlac item_cells
+set ft_g_weaponreplace_zapper item_cells
+set ft_g_weaponreplace_uzi item_bullets
+set ft_g_weaponreplace_campingrifle item_bullets
+set ft_g_weaponreplace_shotgun item_shells
+set ft_g_weaponreplace_supershotgun item_shells
+set ft_g_weaponreplace_hagar item_rockets
+set ft_g_weaponreplace_grenadelauncher item_rockets
+set ft_g_weaponreplace_rocketlauncher item_rockets
+set ft_g_weaponreplace_fireball item_rockets
 
-set g_friendlyfire_force 0
+set g_survive_wave_pause 20
+set g_survive_wave_skip 0
+set g_survive_monster_factor 0.5
+set g_survive_freeze 1
 
-set g_score_damage 0
-set g_score_bestweapon 0
+set single_g_pickup_respawntime_weapon -1
+set single_g_pickup_respawntime_healthsmall -1
+set single_g_pickup_respawntime_healthmedium -1
+set single_g_pickup_respawntime_healthlarge -1
+set single_g_pickup_respawntime_healthmega -1
+set single_g_pickup_respawntime_armorsmall -1
+set single_g_pickup_respawntime_armormedium -1
+set single_g_pickup_respawntime_armorbig -1
+set single_g_pickup_respawntime_armorlarge -1
+set single_g_pickup_respawntime_powerup -1
+set single_g_pickup_respawntime_ammo -1
+set single_g_pickup_respawntime_key -1
+set single_g_pickup_respawntimejitter_key -1
+set single_g_maxplayers 1
+set single_g_balance_health_regen 0
+set single_g_balance_health_rot 0
+set single_g_balance_armor_regen 0
+set single_g_balance_armor_rot 0
+set single_g_balance_health_start 100
+set single_g_pickup_healthlarge_max 100
+set single_g_pickup_healthmedium_max 100
+set single_g_pickup_armormedium_max 100
+set single_g_pickup_armorbig_max 100
+set single_g_balance_laser_primary_force 0
 
+set coop_inherit "single"
+set coop_g_weapon_stay 1
+set coop_g_pickup_respawntimejitter_powerup 0
+set coop_g_pickup_respawntime_key 0.1
+set coop_g_pickup_respawntimejitter_key 0
+
+set g_conquest 0
+set g_conquest_capture_time 5
+set g_conquest_lasthope_time 60
+set g_conquest_score_capture 10
+set g_conquest_teamscore_alternative 1
+set g_conquest_use_ons 0
+set g_conquest_use_ctf_and_dom 0
+
+set g_ctf_showenemycarrier 1
+set g_ctf_showenemycarrier_delay 30
+set g_ctf_dropbutton_use 1 "drop flag with +use bind"
+set g_ctf_dropbutton_hook 0 "drop flag with +hook bind"
+
+set race_g_start_weapon_laser 0
+
+set cts_g_start_weapon_laser 0
+
+//Profiles
 set g_profile "" "Config profile prefix, currently available: akimbo, cra, minsta, explosive_minsta"
 
 set akimbo_g_akimbo 1
