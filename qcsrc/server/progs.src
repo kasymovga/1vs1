@@ -141,6 +141,7 @@ weapon.qh
 gametype.qh
 chat.qh
 teamplay.qh
+tdm.qh
 mapvote.qh
 stdproc.qh
 centerprint.qc
@@ -161,6 +162,7 @@ heal.qc
 fire.qc
 arc.qc
 teamplay.qc
+tdm.qc
 gametype.qc
 rune.qc
 
