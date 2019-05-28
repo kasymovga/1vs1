@@ -436,6 +436,7 @@ set sv_world_scale 1
 set sv_jumppads_target_adjust_height 0
 
 set g_runes 0
+set g_runes_count 5
 set g_runes_carried_runes_max 3
 set g_runes_defense 1
 set g_runes_hacker 0
@@ -1764,6 +1765,7 @@ set cra_g_balance_grapplehook_speed_fly 1000
 set cra_g_shootfromeye 1
 set cra_g_buttons_hookuse_swap 1
 set cra_g_runes 1
+set cra_g_runes_count 7
 set cra_g_runes_hacker 1
 set cra_g_runes_carried_runes_max 2
 set cra_g_ctf_dropbutton_use 0
