@@ -9,6 +9,8 @@ float g_balance_rune_defense_damage_factor;
 float g_balance_rune_ignite_damage_factor;
 float g_balance_rune_vampire_damage_factor;
 float g_balance_rune_vampire_max_health;
+float g_balance_rune_stun_moverate;
+float g_balance_rune_stun_time;
 float g_runes_carried_runes_max;
 float g_runes_drop_runes_max;
 float g_runes_respawntime;
@@ -23,9 +25,11 @@ string sv_model_rune_vitality;
 string sv_model_rune_hacker;
 string sv_model_rune_defense;
 string sv_model_rune_vampire;
+string sv_model_rune_stun;
 string sv_model_rune_decor;
 
 .float runes;
+.entity rune_stun;
 
 /*QUAKED spawnfunc_rune_spawn_point (1 0 0) (-16 -16 -24) (16 16 24)
 spawn point for runes in runematch
@@ -49,7 +53,7 @@ entity rune_find_spawnpoint()
 {
 	entity e;
 
-	if(rune_numspawns < RUNE_COUNT)
+	if(rune_numspawns < g_runes_count)
 		return world;
 
 	random_selection_init();
@@ -127,6 +131,8 @@ vector rune_colormod(float r)
 		_color = '64 0 128';//'108 0 217';//'128 0 255';//'179 0 204';//
 	if(r == RUNE_HACKER)
 		_color = '64 128 128';//'108 0 217';//'128 0 255';//'179 0 204';//
+	if(r == RUNE_STUN)
+		_color = '128 128 192';//'108 0 217';//'128 0 255';//'179 0 204';//
 
 	return _color * (1 / 255);
 }
@@ -190,7 +196,7 @@ void rune_touch()
 
 	self.owner = other;
 	setattachment(self, other, "");
-
+	self.enemy.alpha = -1;
 	other.runes = other.runes | self.runes;
 
 	//self.think = stdproc_nothing;
@@ -283,6 +289,7 @@ void rune_drop(entity pl, entity e)
 	// toss from player
 	setorigin(e, pl.origin + '0 0 10');
 	e.velocity = '0 0 200' + '0 100 0'*random_2() + '100 0 0'*random_2();
+	e.enemy.alpha = 0;
 
 
 	bprint("^3", pl.netname, "^7 has lost ",
@@ -365,6 +372,9 @@ void rune_spawn_all()
 	if (cvar("g_runes_hacker")) {
 		runes_enabled |= RUNE_HACKER;
 	}
+	if (cvar("g_runes_stun")) {
+		runes_enabled |= RUNE_STUN;
+	}
 	random_queue_start();
 	for(rn = RUNE_FIRST; rn <= RUNE_LAST; rn *= 2)
 	{
@@ -401,6 +411,8 @@ void rune_spawn_all()
 			setmodel(e, sv_model_rune_vitality);
 		else if (rn == RUNE_HACKER && sv_model_rune_hacker != "")
 			setmodel(e, sv_model_rune_hacker);
+		else if (rn == RUNE_STUN && sv_model_rune_stun != "")
+			setmodel(e, sv_model_rune_stun);
 		else
 			setmodel(e, "models/runematch/rune.mdl"); // precision set below
 
@@ -443,7 +455,10 @@ var float() rune_SpeedMod_NextLink;
 float rune_SpeedMod() {
 	float maxspd_mod = rune_SpeedMod_NextLink();
 	if(self.runes & RUNE_SPEED)
-		maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
+		maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate * (self.alpha / g_balance_rune_stun_time);
+
+	if (self.rune_stun)
+		maxspd_mod = maxspd_mod * g_balance_rune_stun_moverate;
 
 	return maxspd_mod;
 }
@@ -533,6 +548,23 @@ void defense_attack_spawn(entity from, entity to, float d) {
 	defense_attack_chain = e;
 }
 
+void(void) rune_stun_think {
+	if (self != self.owner.rune_stun) {
+		remove(self);
+		remove(self.enemy);
+		return;
+	}
+	self.alpha = self.alpha - frametime;
+	self.enemy.alpha = self.alpha;
+	if (self.alpha < 0) {
+		remove(self);
+		remove(self.enemy);
+		self.owner.rune_stun = world;
+		return;
+	}
+	self.nextthink = time;
+}
+
 float rune_targ_prev_deadflag;
 float rune_targ_prev_runes;
 var void(entity targ, entity attacker, float deathtype) rune_DamageForceModsSet_NextLink;
@@ -545,14 +577,31 @@ void(entity targ, entity attacker, float deathtype) rune_DamageForceModsSet {
 var void(entity targ, entity attacker, float _damage, vector force) rune_DamageForceDone_NextLink;
 void rune_DamageForceDone(entity targ, entity attacker, float _damage, vector force) {
 	float d;
+	entity e;
 	if(targ.classname == "player") {
 		if(attacker.classname == "player") {
 			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker))
 			{
+				if (attacker.runes & RUNE_STUN) {
+					if not(targ.rune_stun) {
+						e = spawn();
+						e.nextthink = time;
+						e.think = rune_stun_think;
+						e.owner = targ;
+						e.scale = 0.25;
+						e.enemy = spawn();
+						e.enemy.scale = 0.25;
+						targ.rune_stun = e;
+						setattachment(targ.rune_stun, targ, "");
+						setmodel(e, "models/teamfx/electricityarcs_player.md3");
+						setmodel(e.enemy, "models/teamfx/electricityarcs_player.md3");
+						e.enemy.viewmodelforclient = targ;
+					}
+					targ.rune_stun.alpha = g_balance_rune_stun_time;
+				}
 				if (attacker.runes & RUNE_IGNITE)
 				if ((d = _damage * g_balance_rune_ignite_damage_factor) >= 1)
 					fire_add_damage(targ, world, d, 5, DEATH_FIRE);
-
 				if (rune_targ_prev_deadflag == DEAD_NO) {
 					if (attacker.runes & RUNE_VAMPIRE)
 					if ((d = _damage * g_balance_rune_vampire_damage_factor) >= 1)
@@ -611,6 +660,7 @@ void rune_init() {
 	physic_csqc_enable();
 	precache_model ("models/runematch/curse.mdl");
 	precache_model ("models/runematch/rune.mdl");
+	precache_model("models/teamfx/electricityarcs_player.md3");
 	precache_sound("misc/minihealth.wav");
 	precache_sound("misc/mediumhealth.wav");
 	precache_sound("misc/bodyimpact1.wav");
@@ -623,6 +673,8 @@ void rune_init() {
 	CACHE_CVAR(g_balance_rune_speed_atkrate);
 	CACHE_CVAR(g_balance_rune_defense_damage_factor);
 	CACHE_CVAR(g_balance_rune_ignite_damage_factor);
+	CACHE_CVAR(g_balance_rune_stun_moverate);
+	CACHE_CVAR(g_balance_rune_stun_time);
 	CACHE_CVAR(g_runes_carried_runes_max);
 	CACHE_CVAR(g_runes_drop_runes_max);
 	CACHE_CVAR(g_runes_respawntime);
@@ -651,6 +703,10 @@ void rune_init() {
 		precache_model(sv_model_rune_defense);
 
 	CACHE_CVAR_STR(sv_model_rune_vampire);
+	if (sv_model_rune_vampire != "")
+		precache_model(sv_model_rune_vampire);
+
+	CACHE_CVAR_STR(sv_model_rune_stun);
 	if (sv_model_rune_vampire != "")
 		precache_model(sv_model_rune_vampire);
 

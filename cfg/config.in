@@ -436,14 +436,15 @@ set sv_world_scale 1
 set sv_jumppads_target_adjust_height 0
 
 set g_runes 0
-set g_runes_count 5
-set g_runes_carried_runes_max 3
+set g_runes_count 6
+set g_runes_carried_runes_max 2
 set g_runes_defense 1
 set g_runes_hacker 0
 set g_runes_ignite 1
 set g_runes_speed 1
 set g_runes_vampire 1
 set g_runes_vitality 1
+set g_runes_stun 1
 set g_runes_shuffletime 5
 set g_runes_respawntime 45
 set g_runes_drop_runes_max 5
@@ -455,12 +456,15 @@ set g_balance_rune_vampire_damage_factor 0.3
 set g_balance_rune_speed_jumpheight 1
 set g_balance_rune_vampire_max_health 300
 set g_balance_rune_regen_max_health 400
+set g_balance_rune_stun_moverate 0.5
+set g_balance_rune_stun_time 1
 set sv_model_rune_ignite "models/runematch/rune.mdl"
 set sv_model_rune_speed "models/runematch/rune.mdl"
 set sv_model_rune_vitality "models/runematch/rune.mdl"
 set sv_model_rune_hacker "models/runematch/rune.mdl"
 set sv_model_rune_defense "models/runematch/rune.mdl"
 set sv_model_rune_vampire "models/runematch/rune.mdl"
+set sv_model_rune_stun "models/runematch/rune.mdl"
 set sv_model_rune_decor "models/runematch/curse.mdl"
 
 set g_start_weapon_supershotgun 0

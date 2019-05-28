@@ -12,6 +12,8 @@ string rune_name(float r)
 		return "^6Vampire^7";
 	if(r == RUNE_HACKER)
 		return "^5Hacker^7";
+	if(r == RUNE_STUN)
+		return "^x88fStun^7";
 
 	return strcat("^8[unnamed", ftos(r), "]^7");
 }
