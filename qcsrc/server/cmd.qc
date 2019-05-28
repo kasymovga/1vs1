@@ -473,8 +473,12 @@ void GameCommand(string command)
 	{
 		float t = COLOR_TEAM4;
 		autoswap_last_best = world;
+		random_queue_start();
 		FOR_EACH_TEAMPLAYER(plr)
-		{
+			random_queue_push(plr, 0, "");
+
+		for(; random_queue_next();) {
+			plr = random_queue_ent();
 			teams_check_allowed(plr);
 			if (t == COLOR_TEAM4)
 				t = COLOR_TEAM1;
@@ -499,16 +503,16 @@ void GameCommand(string command)
 					t = COLOR_TEAM1;
 			}
 			if (t != plr.team) {
-				player_to_spec(plr);
 				SetPlayerTeam(plr, TeamColorSkin(t), TeamColorSkin(t), FALSE);
 				e = self;
 				self = plr;
-				spectator_to_player();
+				PutClientInServer();
 				self = e;
 				if (clienttype(plr) == CLIENTTYPE_REAL)
-					centerprint(plr, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(t)));
+					centerprint(plr, strcat("You have been moved into a different team\nYou are now on: ", ColoredTeamName(t)));
 			}
 		}
+		random_queue_end();
 		return;
 	}
 	if (cmd == "extendmatchtime") {
