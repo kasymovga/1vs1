@@ -367,7 +367,8 @@ void weapon_frame()
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	if(!self.switchweapon)
+	float _switchweapon = GameHookChain_SwitchWeaponMod(self.switchweapon);
+	if(!_switchweapon)
 	{
 		self.weapon = 0;
 		self.weaponentity.state = WS_CLEAR;
@@ -381,22 +382,22 @@ void weapon_frame()
 	up = v_up;
 
 	// Change weapon
-	if (self.weapon != self.switchweapon)
+	if (self.weapon != _switchweapon)
 	{
 		if (!g_balance_weaponswitchdelay)
 		{
 			if (Akimbo_Active(self) > 1)
-			if not(Akimbo_HaveWeapon(self, self.switchweapon))
+			if not(Akimbo_HaveWeapon(self, _switchweapon))
 				return;
 			weapon_action(self.weapon, WR_CLEAR);
-			weapon_action(self.switchweapon, WR_SETUP);
+			weapon_action(_switchweapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
 		} else if (self.weaponentity.state == WS_CLEAR)
 		{
 			anim_set(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_CLEAR);
-			weapon_action(self.switchweapon, WR_SETUP);
+			weapon_action(_switchweapon, WR_SETUP);
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);

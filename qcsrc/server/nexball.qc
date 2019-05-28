@@ -96,11 +96,10 @@ float nb_LeadLimitOverride() {
 }
 
 float nb_WeaponFrameHandle() {
-	if not(Akimbo_Owner(self).ballcarried)
-		return FALSE;
+	if (self.ballcarried)
+		w_nexball_carrier_think();
 
-	w_nexball_carrier_think();
-	return TRUE;
+	return FALSE;
 }
 
 float nb_ReloadAllowed() {
@@ -130,6 +129,14 @@ void nb_SpectateCopy(entity e) {
 float nb_PlayerIsCarrier(entity plr) { return plr.ballcarried != world; }
 void nb_DropCarried(entity plr) { DropBall(plr.ballcarried, plr.origin, plr.velocity); }
 float nb_TeleportationForbiddenFor(entity e) { return e.classname == "nexball_football" || e.classname == "nexball_basketball" || e.classname == "nexball_hockey"; }
+
+var float(float f) nb_SwitchWeaponMod_NextLink;
+float(float f) nb_SwitchWeaponMod {
+	if (Akimbo_Owner(self).ballcarried)
+		return 0;
+
+	return nb_SwitchWeaponMod_NextLink(f);
+}
 
 void nb_init() // Called early (worldspawn stage)
 {
@@ -167,6 +174,8 @@ void nb_init() // Called early (worldspawn stage)
 
 	nb_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = nb_PlayerClear;
+	nb_SwitchWeaponMod_NextLink = GameHookChain_SwitchWeaponMod;
+	GameHookChain_SwitchWeaponMod = nb_SwitchWeaponMod;
 	nexball_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = nexball_PlayerPreThink;
 	nb_SpeedMod_NextLink = GameHookChain_SpeedMod;
@@ -251,27 +260,6 @@ void DropOwner (void)
 	ownr.flags &~= FL_ONGROUND;
 }
 
-void HideWeapon(entity e) {
-	e.message2 = e.weaponname;
-	e.weaponname = "";
-	e.weaponentity.cnt = 0;
-	e.exteriorweaponentity.cnt = 0;
-	entity akimbo_ghost = Akimbo_Ghost(e);
-	if (akimbo_ghost)
-	if (e != akimbo_ghost)
-		HideWeapon(akimbo_ghost);
-}
-
-void UnhideWeapon(entity e) {
-	e.weaponname = e.message2;
-	e.weaponentity.cnt = 0;
-	e.exteriorweaponentity.cnt = 0;
-	entity akimbo_ghost = Akimbo_Ghost(e);
-	if (akimbo_ghost)
-	if (e != akimbo_ghost)
-		UnhideWeapon(akimbo_ghost);
-}
-
 void GiveBall (entity plyr, entity ball)
 {
 	local entity ownr;
@@ -315,7 +303,6 @@ void GiveBall (entity plyr, entity ball)
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
 	ball.team = plyr.team;
-	HideWeapon(plyr);
 	plyr.ballcarried = ball;
 	ball.dropperid = plyr.playerid;
 
@@ -367,7 +354,6 @@ void DropBall (entity ball, vector org, vector vel)
 	remove(ball.owner.pov_ball);
 	ball.owner.pov_ball = world;
 	ball.owner.ballcarried = world;
-	UnhideWeapon(ball.owner);
 	ball.owner = world;
 }
 
