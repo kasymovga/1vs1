@@ -12,6 +12,7 @@ float g_balance_rune_vampire_max_health;
 float g_runes_carried_runes_max;
 float g_runes_drop_runes_max;
 float g_runes_respawntime;
+float g_runes_count;
 //float g_runematch_rune_glow_color;
 //float g_runematch_rune_glow_size;
 float g_runes_shuffletime;
@@ -364,53 +365,60 @@ void rune_spawn_all()
 	if (cvar("g_runes_hacker")) {
 		runes_enabled |= RUNE_HACKER;
 	}
+	random_queue_start();
 	for(rn = RUNE_FIRST; rn <= RUNE_LAST; rn *= 2)
 	{
 		if not(runes_enabled & rn)
 			continue;
 
-		for (i = 0; i < g_runes; i++) {
-			e = spawn();
-			e.runes = rn;
-			e.classname = "rune";
-			e.touch = rune_touch;
-			e.think = rune_respawn;
-			e.nextthink = time;
-			e.movetype = MOVETYPE_TOSS;
-			e.solid = SOLID_TRIGGER;
-			e.flags = FL_ITEM;
-			e.reset = rune_reset;
-			e.modelflags |= MF_ROTATE;
-			if (rn == RUNE_SPEED && sv_model_rune_speed != "")
-				setmodel(e, sv_model_rune_speed);
-			else if (rn == RUNE_IGNITE && sv_model_rune_ignite != "")
-				setmodel(e, sv_model_rune_ignite);
-			else if (rn == RUNE_VAMPIRE && sv_model_rune_vampire != "")
-				setmodel(e, sv_model_rune_vampire);
-			else if (rn == RUNE_DEFENSE && sv_model_rune_defense != "")
-				setmodel(e, sv_model_rune_defense);
-			else if (rn == RUNE_REGEN && sv_model_rune_vitality != "")
-				setmodel(e, sv_model_rune_vitality);
-			else if (rn == RUNE_HACKER && sv_model_rune_hacker != "")
-				setmodel(e, sv_model_rune_hacker);
-			else
-				setmodel(e, "models/runematch/rune.mdl"); // precision set below
-
-			e.enemy = spawn();
-			if (sv_model_rune_decor != "")
-				setmodel(e.enemy, sv_model_rune_decor);
-			else
-				setmodel(e.enemy, "models/runematch/curse.mdl");
-
-			setattachment(e.enemy, e, "");
-			setsize(e, '-12 -12 -35', '12 12 0');
-			e.enemy.colormod = e.colormod = rune_colormod(rn);
-			e.effects = e.enemy.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
-
-			e.glow_size = 50;
-			//e.glow_color = 0;
-		}
+		random_queue_push(world, rn, "");
 	}
+	for (i = 0; i < g_runes_count; i++) {
+		if not(random_queue_next_circle())
+			break;
+
+		rn = random_queue_float();
+		e = spawn();
+		e.runes = rn;
+		e.classname = "rune";
+		e.touch = rune_touch;
+		e.think = rune_respawn;
+		e.nextthink = time;
+		e.movetype = MOVETYPE_TOSS;
+		e.solid = SOLID_TRIGGER;
+		e.flags = FL_ITEM;
+		e.reset = rune_reset;
+		e.modelflags |= MF_ROTATE;
+		if (rn == RUNE_SPEED && sv_model_rune_speed != "")
+			setmodel(e, sv_model_rune_speed);
+		else if (rn == RUNE_IGNITE && sv_model_rune_ignite != "")
+			setmodel(e, sv_model_rune_ignite);
+		else if (rn == RUNE_VAMPIRE && sv_model_rune_vampire != "")
+			setmodel(e, sv_model_rune_vampire);
+		else if (rn == RUNE_DEFENSE && sv_model_rune_defense != "")
+			setmodel(e, sv_model_rune_defense);
+		else if (rn == RUNE_REGEN && sv_model_rune_vitality != "")
+			setmodel(e, sv_model_rune_vitality);
+		else if (rn == RUNE_HACKER && sv_model_rune_hacker != "")
+			setmodel(e, sv_model_rune_hacker);
+		else
+			setmodel(e, "models/runematch/rune.mdl"); // precision set below
+
+		e.enemy = spawn();
+		if (sv_model_rune_decor != "")
+			setmodel(e.enemy, sv_model_rune_decor);
+		else
+			setmodel(e.enemy, "models/runematch/curse.mdl");
+
+		setattachment(e.enemy, e, "");
+		setsize(e, '-12 -12 -35', '12 12 0');
+		e.enemy.colormod = e.colormod = rune_colormod(rn);
+		e.effects = e.enemy.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;//EF_ADDITIVE;// | EF_FULLBRIGHT;
+
+		e.glow_size = 50;
+		//e.glow_color = 0;
+	}
+	random_queue_end();
 }
 
 var float() rune_JumpVelocityMod_NextLink;
@@ -618,6 +626,7 @@ void rune_init() {
 	CACHE_CVAR(g_runes_carried_runes_max);
 	CACHE_CVAR(g_runes_drop_runes_max);
 	CACHE_CVAR(g_runes_respawntime);
+	CACHE_CVAR(g_runes_count);
 	//CACHE_CVAR(g_runematch_rune_glow_color);
 	//CACHE_CVAR(g_runematch_rune_glow_size);
 	CACHE_CVAR(g_runes_shuffletime);

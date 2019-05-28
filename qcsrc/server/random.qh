@@ -9,3 +9,10 @@ void(entity e, float f, string s, float weight, float priority) random_selection
 vector(float side, float up, float up_min, float up_min_rand) random_spread_vector;
 vector(vector m1, vector m2) random_pos;
 float() random_2;
+void(void) random_queue_start;
+void(void) random_queue_end;
+void(entity e, float f, string s) random_queue_push;
+float(void) random_queue_next;
+float(void) random_queue_next_circle;
+entity(void) random_queue_ent;
+float(void) random_queue_float;
