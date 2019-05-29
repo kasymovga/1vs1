@@ -580,7 +580,7 @@ void rune_DamageForceDone(entity targ, entity attacker, float _damage, vector fo
 	entity e;
 	if(targ.classname == "player") {
 		if(attacker.classname == "player") {
-			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker))
+			if(attacker != targ && PLAYER_REALLY_ALIVE(attacker) && (!teamplay || attacker.team != targ.team))
 			{
 				if (attacker.runes & RUNE_STUN) {
 					if not(targ.rune_stun) {
@@ -603,6 +603,7 @@ void rune_DamageForceDone(entity targ, entity attacker, float _damage, vector fo
 				if (attacker.runes & RUNE_IGNITE)
 				if ((d = _damage * g_balance_rune_ignite_damage_factor) >= 1)
 					fire_add_damage(targ, world, d, 5, DEATH_FIRE);
+
 				if (rune_targ_prev_deadflag == DEAD_NO) {
 					if (attacker.runes & RUNE_VAMPIRE)
 					if ((d = _damage * g_balance_rune_vampire_damage_factor) >= 1)
