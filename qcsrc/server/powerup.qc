@@ -24,18 +24,19 @@ void(.float powerupfield, string _model, string _sound, string _name, float it) 
 
 var void(float killed) powerup_PlayerClear_NextLink;
 void(float killed) powerup_PlayerClear {
-	if (g_powerup_strength_droppable)
-		powerup_drop(strength_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Strength Powerup", IT_STRENGTH);
+	if (killed) {
+		if (g_powerup_strength_droppable)
+			powerup_drop(strength_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Strength Powerup", IT_STRENGTH);
 
-	if (g_powerup_shield_droppable)
-		powerup_drop(invincible_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_INVINCIBLE);
+		if (g_powerup_shield_droppable)
+			powerup_drop(invincible_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_INVINCIBLE);
 
-	if (g_powerup_invisibility_droppable)
-		powerup_drop(invisibility_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Invisibility", IT_INVISIBILITY);
+		if (g_powerup_invisibility_droppable)
+			powerup_drop(invisibility_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Invisibility", IT_INVISIBILITY);
 
-	if (g_powerup_speed_droppable)
-		powerup_drop(speed_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_SPEED);
-
+		if (g_powerup_speed_droppable)
+			powerup_drop(speed_finished, "models/items/g_invincible.md3", "misc/powerup_shield.wav", "Shield", IT_SPEED);
+	}
 	self.invincible_finished = 0;
 	self.invisibility_finished = 0;
 	self.strength_finished = 0;
