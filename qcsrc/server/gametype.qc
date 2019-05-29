@@ -102,7 +102,7 @@ void() gametype_init {
 
 	if(game == GAME_NEXBALL) {
 		ActivateTeamplay();
-		nb_init();
+		nexball_init();
 	}
 	if (game == GAME_CONQUEST) {
 		ActivateTeamplay();

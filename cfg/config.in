@@ -319,6 +319,14 @@ set sv_spawnreplace_item_fuel_regen "item_jetpack"
 set sv_spawnreplace_weapon_minstanex "weapon_fireball"
 set sv_spawnreplace_weapon_campingrifle "weapon_nex"
 set sv_spawnreplace_runematch_spawn_point rune_spawn_point
+set sv_spawnreplace_ball nexball_football
+set sv_spawnreplace_ball_football nexball_football
+set sv_spawnreplace_ball_basketball nexball_basketball
+set sv_spawnreplace_ball_hockey nexball_hockey
+set sv_spawnreplace_ball_redgoal nexball_bluegoal
+set sv_spawnreplace_ball_bluegoal nexball_redgoal
+set sv_spawnreplace_ball_fault nexball_fault
+set sv_spawnreplace_ball_bound nexball_out
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn
