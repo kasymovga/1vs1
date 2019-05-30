@@ -5,94 +5,95 @@ seta cl_weaponpriority1 "11 7 18 6 5 1"  "use impulse 201 for prev gun from this
 seta cl_weaponpriority2 "11 7 18 15 3"   "use impulse 202 for prev gun from this list, 212 for best gun, 222 for next gun.  Default value: hitscan exact"
 seta cl_weaponpriority3 "11 7 18 15 3 2" "use impulse 203 for prev gun from this list, 213 for best gun, 223 for next gun.  Default value: hitscan all"
 seta cl_weaponpriority4 "16 4 13 17 8 6 2"  "use impulse 204 for prev gun from this list, 214 for best gun, 224 for next gun.  Default value: spam weapons"
-set bot_ai_custom_weapon_priority_mid "11 16 18 9 4 5 3 7 15 14 6 13 8 17 2 1"	"Desired weapons for middle distances ordered by priority"
-set bot_ai_custom_weapon_priority_close "18 11 16 17 7 3 13 14 18 8 6 4 2 5 15 1 19"	"Desired weapons for close distances ordered by priority"
-set bot_ai_strategyinterval "3"
-set bot_ai_enemydetectioninterval "0.5"
-set bot_ai_aimskill_blendrate "2"
-set bot_ai_aimskill_fixedrate "15"
-set bot_ai_aimskill_firetolerance_distdegrees "180"
-set bot_ai_aimskill_firetolerance_mindegrees "2"
-set bot_ai_aimskill_firetolerance_maxdegrees "60"
-set bot_ai_aimskill_mouse "1"
-set bot_ai_keyboard_distance "100"
-set bot_ai_keyboard_treshold "0.57"
-set bot_ai_aimskill_offset "0.05"
-set bot_ai_aimskill_think "1"
-set bot_ai_enemydetectionradius "10000"
-set bot_ai_ignoregoal_timeout 2
-set bot_ai_weapon_combo "1"
-set bot_ai_chooseweaponinterval "0.3"
-set bot_ai_weapon_combo_threshold "0.3"
-set bot_ai_aimskill_order_mix_1st "0"
-set bot_ai_aimskill_order_mix_2nd "0"
-set bot_ai_aimskill_order_mix_3th "0"
-set bot_ai_aimskill_order_mix_4th "0"
-set bot_ai_aimskill_order_mix_5th "0"
-set bot_ai_aimskill_order_filter_1st "0"
-set bot_ai_aimskill_order_filter_2nd "0"
-set bot_ai_aimskill_order_filter_3th "0"
-set bot_ai_aimskill_order_filter_4th "0"
-set bot_ai_aimskill_order_filter_5th "0"
-set g_forced_respawn 1
-set g_balance_nexball_primary_shootatmaxmeter 1
-set g_maplist_votable "9"
-set g_maplist_votable_nodetail "0"
-set sv_vote_change "1"
-set sv_vote_commands "restart gotomap endmatch endround nextmap kick kickban"
-set net_messagetimeout "30"
-set g_fullbrightitems "1"
-set g_fullbrightplayers "1"
-set g_projectiles_newton_style_2_minfactor "1"
-set g_pickup_cells 50
-set g_pickup_nails 40
-set g_pickup_rockets 25
-set g_balance_shotgun_primary_damage 10
-set g_balance_shotgun_secondary_damage 10
-set g_balance_grenadelauncher_primary_ammo 4
-set g_balance_grenadelauncher_secondary_ammo 4
-set g_balance_crylink_primary_shots 5
-set g_balance_hagar_primary_spread 0
-set g_balance_hagar_primary_speed 4500
-set g_balance_hagar_primary_refire 0.125
-set g_balance_hagar_secondary_spread 0
-set g_balance_hagar_secondary_refire 0.125
-set g_balance_rocketlauncher_ammo 5
-set g_balance_campingrifle_primary_ammo 5
-set g_balance_campingrifle_secondary_ammo 5
-set g_balance_fireball_primary_ammo 8
-set g_balance_fireball_primary_refire 0.5
-set g_balance_fireball_primary_speed 1000
-set g_balance_fireball_secondary_ammo 25
-set g_balance_fireball_secondary_damage 250
-set g_balance_nex_ammo 10
-set g_balance_crylink_primary_ammo 3
-set g_balance_crylink_secondary_ammo 4
-set g_balance_electro_secondary_refire 0.25
-set g_balance_electro_secondary_animtime 0.25
-set g_balance_rune_speed_atkrate 0.8
-set g_nexball_meter_period 2
-set g_voice_flood_spv 20
-set g_balance_electro_primary_ammo 3
-set g_balance_hlac_primary_ammo 1
-set g_balance_hlac_secondary_ammo 6
-set g_start_weapon_laser 1 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_shotgun 1 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_uzi 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_grenadelauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_electro 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_crylink 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_nex 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_hagar 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_rocketlauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_minstanex 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_porto 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_hook 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
-set g_weapon_stay 0 "if set, weapons stay after they were picked up"
+alias _set "unset $1; set $*"
+_set bot_ai_custom_weapon_priority_mid "11 16 18 9 4 5 3 7 15 14 6 13 8 17 2 1"	"Desired weapons for middle distances ordered by priority"
+_set bot_ai_custom_weapon_priority_close "18 11 16 17 7 3 13 14 18 8 6 4 2 5 15 1 19"	"Desired weapons for close distances ordered by priority"
+_set bot_ai_strategyinterval "3"
+_set bot_ai_enemydetectioninterval "0.5"
+_set bot_ai_aimskill_blendrate "2"
+_set bot_ai_aimskill_fixedrate "15"
+_set bot_ai_aimskill_firetolerance_distdegrees "180"
+_set bot_ai_aimskill_firetolerance_mindegrees "2"
+_set bot_ai_aimskill_firetolerance_maxdegrees "60"
+_set bot_ai_aimskill_mouse "1"
+_set bot_ai_keyboard_distance "100"
+_set bot_ai_keyboard_treshold "0.57"
+_set bot_ai_aimskill_offset "0.05"
+_set bot_ai_aimskill_think "1"
+_set bot_ai_enemydetectionradius "10000"
+_set bot_ai_ignoregoal_timeout 2
+_set bot_ai_weapon_combo "1"
+_set bot_ai_chooseweaponinterval "0.3"
+_set bot_ai_weapon_combo_threshold "0.3"
+_set bot_ai_aimskill_order_mix_1st "0"
+_set bot_ai_aimskill_order_mix_2nd "0"
+_set bot_ai_aimskill_order_mix_3th "0"
+_set bot_ai_aimskill_order_mix_4th "0"
+_set bot_ai_aimskill_order_mix_5th "0"
+_set bot_ai_aimskill_order_filter_1st "0"
+_set bot_ai_aimskill_order_filter_2nd "0"
+_set bot_ai_aimskill_order_filter_3th "0"
+_set bot_ai_aimskill_order_filter_4th "0"
+_set bot_ai_aimskill_order_filter_5th "0"
+_set g_forced_respawn 1
+_set g_balance_nexball_primary_shootatmaxmeter 1
+_set g_maplist_votable "9"
+_set g_maplist_votable_nodetail "0"
+_set sv_vote_change "1"
+_set sv_vote_commands "restart gotomap endmatch endround nextmap kick kickban"
+_set net_messagetimeout "30"
+_set g_fullbrightitems "1"
+_set g_fullbrightplayers "1"
+_set g_projectiles_newton_style_2_minfactor "1"
+_set g_pickup_cells 50
+_set g_pickup_nails 40
+_set g_pickup_rockets 25
+_set g_balance_shotgun_primary_damage 10
+_set g_balance_shotgun_secondary_damage 10
+_set g_balance_grenadelauncher_primary_ammo 4
+_set g_balance_grenadelauncher_secondary_ammo 4
+_set g_balance_crylink_primary_shots 5
+_set g_balance_hagar_primary_spread 0
+_set g_balance_hagar_primary_speed 4500
+_set g_balance_hagar_primary_refire 0.125
+_set g_balance_hagar_secondary_spread 0
+_set g_balance_hagar_secondary_refire 0.125
+_set g_balance_rocketlauncher_ammo 5
+_set g_balance_campingrifle_primary_ammo 5
+_set g_balance_campingrifle_secondary_ammo 5
+_set g_balance_fireball_primary_ammo 8
+_set g_balance_fireball_primary_refire 0.5
+_set g_balance_fireball_primary_speed 1000
+_set g_balance_fireball_secondary_ammo 25
+_set g_balance_fireball_secondary_damage 250
+_set g_balance_nex_ammo 10
+_set g_balance_crylink_primary_ammo 3
+_set g_balance_crylink_secondary_ammo 4
+_set g_balance_electro_secondary_refire 0.25
+_set g_balance_electro_secondary_animtime 0.25
+_set g_balance_rune_speed_atkrate 0.8
+_set g_nexball_meter_period 2
+_set g_voice_flood_spv 20
+_set g_balance_electro_primary_ammo 3
+_set g_balance_hlac_primary_ammo 1
+_set g_balance_hlac_secondary_ammo 6
+_set g_start_weapon_laser 1 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_shotgun 1 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_uzi 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_grenadelauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_electro 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_crylink 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_nex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_hagar 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_rocketlauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_minstanex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_porto 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_hook 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_weapon_stay 0 "if set, weapons stay after they were picked up"
 
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
