@@ -16,13 +16,13 @@ entity autoswap_last_best;
 float team_size_adjust;
 float team_size_adjust_value;
 
-void ChangeTeam(entity pl, float dteam, float nobalance);
-void AuditTeams(float force);
+void team_change(entity pl, float dteam, float nobalance);
+void team_balance_audit(float force);
 
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
-string Team_ColorName(float t)
+string team_color_name(float t)
 {
     // fixme: Search for team entities and get their .netname's!
     if (t == COLOR_TEAM1)
@@ -36,7 +36,7 @@ string Team_ColorName(float t)
     return "Neutral";
 }
 
-string Team_ColorNameLowerCase(float t)
+string team_color_nameLowerCase(float t)
 {
     // fixme: Search for team entities and get their .netname's!
     if (t == COLOR_TEAM1)
@@ -51,11 +51,7 @@ string Team_ColorNameLowerCase(float t)
 }
 
 
-void Balance_Centerprint(entity e) {
-	centerprint(e, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(e.team)));
-}
-
-vector TeamColorMod(float teamcolor) {
+vector team_colormod(float teamcolor) {
     if (teamcolor == COLOR_TEAM1)
 		return '1.8 0.6 0.6';
     else if (teamcolor == COLOR_TEAM2)
@@ -68,18 +64,7 @@ vector TeamColorMod(float teamcolor) {
 	return '0 0 0';
 }
 
-float Team_Index(float t) {
-    switch(t) {
-        case COLOR_TEAM1: return 0;
-        case COLOR_TEAM2: return 1;
-        case COLOR_TEAM3: return 2;
-        case COLOR_TEAM4: return 3;
-    }
-
-    return -1;
-}
-
-float Team_FromIndex(float i) {
+float team_from_index(float i) {
     switch(i) {
         case 0: return COLOR_TEAM1;
         case 1: return COLOR_TEAM2;
@@ -90,8 +75,7 @@ float Team_FromIndex(float i) {
     return 0;
 }
 
-vector TeamColor(float teem)
-{
+vector(float teem) team_color {
 	switch(teem)
 	{
 		case COLOR_TEAM1:
@@ -107,16 +91,15 @@ vector TeamColor(float teem)
 	}
 }
 
-string TeamName(float t)
-{
-	return strcat(Team_ColorName(t), " Team");
+string(float t) team_name {
+	return strcat(team_color_name(t), " Team");
 }
-string ColoredTeamName(float t)
-{
-	return strcat(Team_ColorCode(t), Team_ColorName(t), " Team^7");
+
+string(float t) team_colored_name {
+	return strcat(Team_ColorCode(t), team_color_name(t), " Team^7");
 }
-string TeamNoName(float t)
-{
+
+string(float t) team_name_by_no {
 	// fixme: Search for team entities and get their .netname's!
 	if(t == 1)
 		return "Red Team";
@@ -129,48 +112,12 @@ string TeamNoName(float t)
 	return "Neutral Team";
 }
 
-void ActivateTeamplay()
-{
+void(void) team_play_activate {
 	teamplay = TRUE;
 }
 
-void SetPlayerColors(entity pl, float _color)
-{
-	float pants, shirt;
-	pants = _color & 0x0F;
-	shirt = _color & 0xF0;
-	float t = pl.team;
-	if(teamplay)
-		setcolor(pl, 16*pants + pants);
-	else
-		setcolor(pl, shirt + pants);
-
-	pl.team = t;
-}
-
-void SetPlayerTeam(entity pl, float t, float s, float noprint)
-{
-	if(t == 4)
-		pl.team = COLOR_TEAM4;
-	else if(t == 3)
-		pl.team = COLOR_TEAM3;
-	else if(t == 2)
-		pl.team = COLOR_TEAM2;
-	else if (t == 1)
-		pl.team = COLOR_TEAM1;
-	else
-		return;
-
-	if(!noprint && t != s)
-	{
-		//bprint(pl.netname, " has changed to ", TeamNoName(t), "\n");
-		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
-	}
-	scores_touch(pl);
-}
-
 float at1, at2, at3, at4;
-void SetAllowedTeam(float _team) {
+void(float _team) team_teams_set_allowed {
 	if (_team == COLOR_TEAM1)
 		at1 = TRUE;
 	else if (_team == COLOR_TEAM2)
@@ -181,7 +128,7 @@ void SetAllowedTeam(float _team) {
 		at4 = TRUE;
 }
 
-void SetTeamCount(float c) {
+void(float c) team_teams_set_count {
 	at1 = at2 = at3 = at4 = 0;
 	if (c > 0) at1 = 1;
 	if (c > 1) at2 = 1;
@@ -190,7 +137,7 @@ void SetTeamCount(float c) {
 }
 
 // set c1...c4 to show what teams are allowed
-void(entity for_whom) teams_check_allowed {
+void(entity for_whom) team_teams_allowed {
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 	if (at1) c1 = 0;
@@ -233,8 +180,7 @@ void(entity for_whom) teams_check_allowed {
 
 // c1...c4 should be set to -1 (not allowed) or 0 (allowed).
 // teams that are allowed will now have their player counts stored in c1...c4
-void GetTeamCounts(entity ignore)
-{
+void(entity ignore) team_teams_count {
 	entity head;
 	float value, bvalue;
 	// now count how many players are on each team already
@@ -303,17 +249,16 @@ void GetTeamCounts(entity ignore)
 }
 
 // returns # of smallest team (1, 2, 3, 4)
-// NOTE: Assumes teams_check_allowed has already been called!
-float FindSmallestTeam(entity pl)
-{
+// NOTE: Assumes team_teams_allowed has already been called!
+float(entity pl) team_find_smallest {
 	float smallestteam_count, smallestteam_score, team_random;
 
 	// find out what teams are available
-	//teams_check_allowed();
+	//team_teams_allowed();
 
 	// make sure there are at least 2 teams to join
 	// count how many players are in each team
-	GetTeamCounts(pl);
+	team_teams_count(pl);
 
 	// c1...c4 now have counts of each team
 	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
@@ -408,8 +353,7 @@ float FindSmallestTeam(entity pl)
 	return 1;
 }
 
-void JoinBestTeam(entity pl, float forcebestteam)
-{
+void (entity pl, float forcebestteam) team_join_best {
 	float smallest, selectedteam;
 	// don't join a team if we're not playing a team game
 	if not(teamplay) {
@@ -417,7 +361,7 @@ void JoinBestTeam(entity pl, float forcebestteam)
 		return;
 	}
 	// find out what teams are available
-	teams_check_allowed(pl);
+	team_teams_allowed(pl);
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
@@ -434,38 +378,37 @@ void JoinBestTeam(entity pl, float forcebestteam)
 			selectedteam = -1;
 
 		if(selectedteam > 0) {
-			SetPlayerTeam(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
+			player_set_team(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
 			return;
 		}
 		// otherwise end up on the smallest team (handled below)
 	}
-	smallest = FindSmallestTeam(pl);
+	smallest = team_find_smallest(pl);
 	if(smallest == 1)
-		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
 	else if(smallest == 2)
-		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM2), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, TeamColorSkin(COLOR_TEAM2), TeamColorSkin(pl.team), FALSE);
 	else if(smallest == 3)
-		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM3), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, TeamColorSkin(COLOR_TEAM3), TeamColorSkin(pl.team), FALSE);
 	else if(smallest == 4)
-		SetPlayerTeam(pl, TeamColorSkin(COLOR_TEAM4), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, TeamColorSkin(COLOR_TEAM4), TeamColorSkin(pl.team), FALSE);
 	else
 		error("smallest team: invalid team\n");
 
-	AuditTeams(FALSE);
+	team_balance_audit(FALSE);
 	return;
 }
 
-void SV_ChangeTeam(float _color)
-{
+void(float _color) SV_ChangeTeam {
 	if (teamplay)
 		return;
 
-	SetPlayerColors(self, _color);
+	player_set_colors(self, _color);
 }
 
-void ChangeTeam(entity pl, float dteam, float nobalance) {
+void(entity pl, float dteam, float nobalance) team_change {
 	float dcount, scount;
-	teams_check_allowed(pl);
+	team_teams_allowed(pl);
 	switch (dteam) {
 	case COLOR_TEAM1: if (c1 < 0) return; break;
 	case COLOR_TEAM2: if (c2 < 0) return; break;
@@ -484,7 +427,7 @@ void ChangeTeam(entity pl, float dteam, float nobalance) {
 		// only allow changing to a smaller or equal size team
 		// find out what teams are available
 		// count how many players on each team
-		GetTeamCounts(pl);
+		team_teams_count(pl);
 		float cr1 = c1 - cb1;
 		float cr2 = c2 - cb2;
 		float cr3 = c3 - cb3;
@@ -525,7 +468,7 @@ void ChangeTeam(entity pl, float dteam, float nobalance) {
 		return;
 
 	entity oldself = self;
-	SetPlayerTeam(pl, TeamColorSkin(dteam), TeamColorSkin(pl.team), FALSE);
+	player_set_team(pl, TeamColorSkin(dteam), TeamColorSkin(pl.team), FALSE);
 	if(pl.classname == "player") {
 		if(pl.deadflag == DEAD_NO) // kill player when changing teams
 			damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
@@ -547,16 +490,16 @@ void ChangeTeam(entity pl, float dteam, float nobalance) {
 				self = oldself;
 				break;
 			}
-		AuditTeams(FALSE);
+		team_balance_audit(FALSE);
 	}
 }
 
 
-void ShufflePlayerOutOfTeam (float source_team)
-{
+void(float source_team) team_shuffle_player_out {
 	float smallestteam, smallestteam_count, steam;
 	float lowest_bot_score, lowest_player_score;
 	entity head, lowest_bot, lowest_player, selected;
+	bprint("Rebalancing Teams\n");
 
 	smallestteam = 0;
 	smallestteam_count = 999999999;
@@ -694,29 +637,23 @@ void ShufflePlayerOutOfTeam (float source_team)
 	self = selected;
 	player_clear(FALSE);
 	self = oldself;
-	SetPlayerTeam(selected, smallestteam, source_team, FALSE);
+	player_set_team(selected, smallestteam, source_team, FALSE);
 
 	if(selected.deadflag == DEAD_NO)
 		damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
 
-	Balance_Centerprint(selected);
+	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", team_colored_name(selected.team)));
 }
 
-void CauseRebalance(float source_team, float howmany_toomany)
-{
-	bprint("Rebalancing Teams\n");
-	ShufflePlayerOutOfTeam(source_team);
-}
+entity team_note;
 
-entity teams_note;
-
-void Teams_Note_Message() {
+void(void) team_note_message {
 	self.message = "^1Teamnumbers are unbalanced!\n^2Press ^3{menu_showteamselect}^2 to adjust";
 	if (self.dmg)
 		self.message = strcat(self.message, "\n^2Autobalance in ^1", ftos(ceil(self.dmg - time)), "^2 seconds");
 }
 
-float Teams_Note_Customize() {
+float(void) team_note_customize {
 	switch (other.team) {
 	case COLOR_TEAM1: return self.cnt & 1;
 	case COLOR_TEAM2: return self.cnt & 2;
@@ -726,45 +663,45 @@ float Teams_Note_Customize() {
 	return FALSE;
 }
 
-void Teams_Note_Think() {
+void(void) team_note_think {
 	if (time > self.dmg) {
-		AuditTeams(TRUE);
+		team_balance_audit(TRUE);
 		return;
 	}
 	self.nextthink = time + 1;
 	self.SendFlags = 1;
 }
 
-void Teams_Note_Remove() {
-	if (teams_note) {
-		remove(teams_note);
-		teams_note = world;
+void(void) team_note_remove {
+	if (team_note) {
+		remove(team_note);
+		team_note = world;
 	}
 }
 
-void() Teams_Note_Reset {
-	AuditTeams(TRUE);
+void(void) team_note_reset {
+	team_balance_audit(TRUE);
 }
 
-float FastTeamSwitchAllowed(entity plr, float targetteam) {
-	if (teams_note) {
+float(entity plr, float targetteam) team_fast_switch_allowed {
+	if (team_note) {
 		switch (targetteam) {
-		case COLOR_TEAM1: if (teams_note.cnt & 1) return FALSE; break;
-		case COLOR_TEAM2: if (teams_note.cnt & 2) return FALSE; break;
-		case COLOR_TEAM3: if (teams_note.cnt & 4) return FALSE; break;
-		case COLOR_TEAM4: if (teams_note.cnt & 8) return FALSE; break;
+		case COLOR_TEAM1: if (team_note.cnt & 1) return FALSE; break;
+		case COLOR_TEAM2: if (team_note.cnt & 2) return FALSE; break;
+		case COLOR_TEAM3: if (team_note.cnt & 4) return FALSE; break;
+		case COLOR_TEAM4: if (team_note.cnt & 8) return FALSE; break;
 		}
 		switch (plr.team) {
-		case COLOR_TEAM1: return teams_note.cnt & 1;
-		case COLOR_TEAM2: return teams_note.cnt & 2;
-		case COLOR_TEAM3: return teams_note.cnt & 4;
-		case COLOR_TEAM4: return teams_note.cnt & 8;
+		case COLOR_TEAM1: return team_note.cnt & 1;
+		case COLOR_TEAM2: return team_note.cnt & 2;
+		case COLOR_TEAM3: return team_note.cnt & 4;
+		case COLOR_TEAM4: return team_note.cnt & 8;
 		}
 	}
 	return FALSE;
 }
 
-void AuditTeams(float force)
+void team_balance_audit(float force)
 {
 	float numplayers, numteams, smallest, toomany;
 	if(intermission_running)
@@ -776,8 +713,8 @@ void AuditTeams(float force)
 	if (bot_vs_human)
 		return;
 
-	teams_check_allowed(world);
-	GetTeamCounts(world);
+	team_teams_allowed(world);
+	team_teams_count(world);
 	numteams = numplayers = smallest = 0;
 	if(c1 >= 0)
 	{
@@ -808,7 +745,7 @@ void AuditTeams(float force)
 	}
 
 	if(numplayers <= 0) {
-		Teams_Note_Remove();
+		team_note_remove();
 		return; // no players to move around
 	}
 	if(numteams < 2) {
@@ -817,42 +754,41 @@ void AuditTeams(float force)
 	toomany = smallest + 1;
 	float team_flags = ((c1 > toomany) ? 1 : 0) + ((c2 > toomany) ? 2 : 0) + ((c3 > toomany) ? 4 : 0) + ((c4 > toomany) ? 8 : 0);
 	if not(team_flags)
-		Teams_Note_Remove();
+		team_note_remove();
 
 	if (!force && g_balance_teams_force >= 0) {
 		if (team_flags) {
-			if not(teams_note) {
-				teams_note = NoteLine_New(Teams_Note_Message);
-				teams_note.customizeentityforclient = Teams_Note_Customize;
+			if not(team_note) {
+				team_note = NoteLine_New(team_note_message);
+				team_note.customizeentityforclient = team_note_customize;
 				if (g_balance_teams_force) {
-					teams_note.dmg = time + g_balance_teams_force;
-					teams_note.reset = Teams_Note_Reset;
+					team_note.dmg = time + g_balance_teams_force;
+					team_note.reset = team_note_reset;
 				}
 			}
-			teams_note.cnt = team_flags;
-			teams_note.SendFlags = 1;
+			team_note.cnt = team_flags;
+			team_note.SendFlags = 1;
 			if (g_balance_teams_force) {
-				teams_note.think = Teams_Note_Think;
-				teams_note.nextthink = time;
+				team_note.think = team_note_think;
+				team_note.nextthink = time;
 			}
 		}
 		return;
 	}
 	if(c1 > toomany)
-		CauseRebalance(1, c1 - toomany);
+		team_shuffle_player_out(1);
 	if(c2 > toomany)
-		CauseRebalance(2, c2 - toomany);
+		team_shuffle_player_out(2);
 	if(c3 > toomany)
-		CauseRebalance(3, c3 - toomany);
+		team_shuffle_player_out(3);
 	if(c4 > toomany)
-		CauseRebalance(4, c4 - toomany);
+		team_shuffle_player_out(4);
 
 	if (force)
-		AuditTeams(FALSE);
+		team_balance_audit(FALSE);
 }
 
-void Teamplay_ReadCvars()
-{
+void(void) team_init {
 	CACHE_CVAR(g_balance_teams);
 	CACHE_CVAR(g_balance_teams_autoswap);
 	CACHE_CVAR(g_balance_teams_autoswap_from_small_team_minplayers);
@@ -869,7 +805,7 @@ void Teamplay_ReadCvars()
 };
 
 float autoswap_last_time;
-void Team_AutoSwap_BestWithWorst(float from, float to) {
+void team_autoswap_best_with_worst(float from, float to) {
 	entity best = world, worst = world;
 	entity e;
 	autoswap_last_time = time;
@@ -895,17 +831,17 @@ void Team_AutoSwap_BestWithWorst(float from, float to) {
 	autoswap_last_best = best;
 	if (best) {
 		if (c1 - c2 == 0 && worst) {
-			ChangeTeam(best, to, TRUE);
-			ChangeTeam(worst, from, TRUE);
+			team_change(best, to, TRUE);
+			team_change(worst, from, TRUE);
 		} else if ((c1 < c2 && from == COLOR_TEAM2) || (c1 > c2 && from == COLOR_TEAM1)) {
-			ChangeTeam(best, to, TRUE);
+			team_change(best, to, TRUE);
 			if (fabs(c1 - c2) == 1 && worst) {
-				ChangeTeam(worst, from, TRUE);
+				team_change(worst, from, TRUE);
 			} else
-				AuditTeams(FALSE);
+				team_balance_audit(FALSE);
 		} else if ((c1 == c2 + 1 && from == COLOR_TEAM2) || (c1 + 1 == c2 && from == COLOR_TEAM1) && worst && c1 + c2 >= g_balance_teams_autoswap_from_small_team_minplayers) {
-			ChangeTeam(best, to, TRUE);
-			ChangeTeam(worst, from, TRUE);
+			team_change(best, to, TRUE);
+			team_change(worst, from, TRUE);
 		}
 	}
 
@@ -931,7 +867,7 @@ void() teams_balance_check {
 			team_size_adjust = COLOR_TEAM1;
 			team_size_adjust_value = (f / -g_balance_teams_adjust_sizes);
 		}
-		AuditTeams(FALSE);
+		team_balance_audit(FALSE);
 	}
 	if (autoswap_last_time + g_balance_teams_autoswap_interval >= time)
 		return;
@@ -939,8 +875,8 @@ void() teams_balance_check {
 	if not(g_balance_teams_autoswap)
 		return;
 
-	teams_check_allowed(world);
-	GetTeamCounts(world);
+	team_teams_allowed(world);
+	team_teams_count(world);
 	if (c1 >= 0)
 	if (c2 >= 0)
 	if (c3 < 0)
@@ -954,18 +890,18 @@ void() teams_balance_check {
 
 		autoswap_lastmaxscore = maxscore;
 		if (g_balance_teams_autoswap_zerolead && t1 == 0 && t2 >= g_balance_teams_autoswap_zerolead) {
-			Team_AutoSwap_BestWithWorst(COLOR_TEAM2, COLOR_TEAM1);
+			team_autoswap_best_with_worst(COLOR_TEAM2, COLOR_TEAM1);
 		} else if (g_balance_teams_autoswap_zerolead && t2 == 0 && t1 >= g_balance_teams_autoswap_zerolead) {
-			Team_AutoSwap_BestWithWorst(COLOR_TEAM1, COLOR_TEAM2);
+			team_autoswap_best_with_worst(COLOR_TEAM1, COLOR_TEAM2);
 		} else if (g_balance_teams_autoswap_lead && t1 - t2 >= g_balance_teams_autoswap_lead) {
-			Team_AutoSwap_BestWithWorst(COLOR_TEAM1, COLOR_TEAM2);
+			team_autoswap_best_with_worst(COLOR_TEAM1, COLOR_TEAM2);
 		} else if (g_balance_teams_autoswap_lead && t2 - t1 >= g_balance_teams_autoswap_lead) {
-			Team_AutoSwap_BestWithWorst(COLOR_TEAM2, COLOR_TEAM1);
+			team_autoswap_best_with_worst(COLOR_TEAM2, COLOR_TEAM1);
 		}
 	}
 }
 
-float(entity a, entity b) teams_is_different {
+float(entity a, entity b) team_is_different_teams {
 	if(teamplay) {
 		if(a.team == b.team)
 			return 0;
@@ -976,7 +912,7 @@ float(entity a, entity b) teams_is_different {
 	return 1;
 }
 
-void(float t) teams_spawn_team {
+void(float t) team_spawn_players {
 	entity e, oldself;
 	FOR_EACH_CLIENT(e)
 		if (e.team == t)

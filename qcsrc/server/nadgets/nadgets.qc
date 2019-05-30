@@ -321,7 +321,7 @@ void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float all
         if(check == p)
             //bigprint(e, strcat("^7You got a ^3", n, "^7 bonus!"), reason, 3);
             centerprint(e, strcat("^7You got a ^3", n, "^7 bonus!", "\n", reason));
-        else if(teams_is_different(check, p))
+        else if(team_is_different_teams(check, p))
             //bigprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!"), strcat("Given to ^3", p.netname, " ^7(", reason, ")"), 3);
             centerprint(e, strcat("^3Enemy got a ^1", n, " ^3bonus!\nGiven to ^3", p.netname, " ^7(", reason, ")"));
         else

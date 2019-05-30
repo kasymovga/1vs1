@@ -41,7 +41,7 @@ float HG_Sentry_TargetIsValid(entity emitter, entity e) {
     if(PLAYER_DEAD(e))
         return FALSE;
 
-    if(!teams_is_different(e, sentry.realowner)/* && !Buffs_Present(sentry.realowner, BUFF_MEDIC) */)
+    if(!team_is_different_teams(e, sentry.realowner)/* && !Buffs_Present(sentry.realowner, BUFF_MEDIC) */)
         return FALSE;
 
     if(HG_Sentry_TargetIsTaken(emitter, e))
@@ -78,7 +78,7 @@ entity HG_Sentry_FindTarget(entity emitter) {
         return world;
 
     FOR_EACH_PLAYER(p) if not(PLAYER_DEAD(p)) {
-        diffteam = (p != sentry.realowner && teams_is_different(sentry, p));
+        diffteam = (p != sentry.realowner && team_is_different_teams(sentry, p));
 
 #if 0
         if(diffteam) {
@@ -253,7 +253,7 @@ void HG_Sentry_SetOwner(entity sentry, entity newowner) {
     if(newowner) {
         sentry.skin = 0;
         sentry.aiment.effects &~= EF_NODRAW;
-        sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * TeamColor((teamplay ? sentry.team : COLOR_TEAM3));
+        sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((teamplay ? sentry.team : COLOR_TEAM3));
     } else {
         sentry.skin = 1;
         sentry.aiment.effects |= EF_NODRAW;
@@ -435,7 +435,7 @@ void HG_Sentry_Think(void) {
 }
 
 void HG_Sentry_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-    if(!self.realowner || teams_is_different(attacker, self.realowner)) {
+    if(!self.realowner || team_is_different_teams(attacker, self.realowner)) {
         if(DEATH_ISHG(deathtype))
             _damage *= g_nadgets_sentry_damagefactor_nadgets;
         else
@@ -470,7 +470,7 @@ void HG_Sentry_Trigger(void) {
 
     WarpZone_TraceLine(o, o + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
-    while(trace_ent && trace_ent.classname == "hg_sentry" && !teams_is_different(trace_ent, self))
+    while(trace_ent && trace_ent.classname == "hg_sentry" && !team_is_different_teams(trace_ent, self))
         WarpZone_TraceLine(trace_endpos + w_shotdir, trace_endpos + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
     aimloc = trace_endpos;
@@ -597,7 +597,7 @@ HG_HOOKFUNCTION(sentry, Attack) {
     c.skin = 3;
     c.colormap = e.colormap;
     c.pflags = PFLAGS_FULLDYNAMIC;
-    c.color = '0.3 0.3 0.3' + 0.7 * TeamColor(((self.team > 0) ? self.team : COLOR_TEAM3));
+    c.color = '0.3 0.3 0.3' + 0.7 * team_color(((self.team > 0) ? self.team : COLOR_TEAM3));
     c.owner = self;
     c.effects |= EF_DOUBLESIDED;
     dlc_sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);

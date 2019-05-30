@@ -263,7 +263,7 @@ void spawnfunc_dom_team()
 	if(self.cnt)
 		self.team = self.cnt + 1; // WHY are these different anyway?
 
-	SetAllowedTeam(self.team);
+	team_teams_set_allowed(self.team);
 };
 
 void dom_controlpoint_setup()
@@ -368,7 +368,7 @@ void dom_spawnpoint(vector org)
 void dom_spawnteams()
 {
 	float numteams;
-	SetTeamCount(0);
+	team_teams_set_count(0);
 	if(g_domination_teams_override < 2)
 		numteams = g_domination_default_teams;
 	else

@@ -433,9 +433,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if not(clienttype(attacker) == CLIENTTYPE_REAL)
 			Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
 		if (deathtype == DEATH_TEAMCHANGE) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", ColoredTeamName(targ.team)));
+			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", team_colored_name(targ.team)));
 		} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(targ.team)));
+			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You have been moved into a different team to improve team balance\nYou are now on: ", team_colored_name(targ.team)));
 			return;
 		} else if (deathtype == DEATH_NOAMMO) {
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were killed for running out of ammo..."));
@@ -1272,7 +1272,7 @@ void() player_setup_model {
 	if (forcecolor > -2) {
 		float colors = GameHookChain_PlayerColorsMod(forcecolor);
 		if (self.clientcolors != colors)
-			SetPlayerColors(self, colors);
+			player_set_colors(self, colors);
 	}
 }
 
@@ -1302,7 +1302,7 @@ void(entity player) player_to_spec
 		self = oldself;
 		spectator_note_update();
 		if (teamplay)
-			AuditTeams(FALSE);
+			team_balance_audit(FALSE);
 	}
 }
 
@@ -2172,6 +2172,32 @@ string(entity p) player_name {
         return strcat(t, strdecolorize(p.netname));
     } else
         return p.netname;
+}
+
+void(entity pl, float _color) player_set_colors {
+	float pants, shirt;
+	pants = _color & 0x0F;
+	shirt = _color & 0xF0;
+	float t = pl.team;
+	if(teamplay)
+		setcolor(pl, 16*pants + pants);
+	else
+		setcolor(pl, shirt + pants);
+
+	pl.team = t;
+}
+
+void(entity pl, float t, float s, float noprint) player_set_team {
+	float _team = team_from_index(t - 1);
+	if (!_team)
+		return;
+
+	pl.team = _team;
+	if(!noprint && t != s) {
+		//bprint(pl.netname, " has changed to ", team_name_by_no(t), "\n");
+		bprint(pl.netname, "^7 has changed from ", team_name_by_no(s), " to ", team_name_by_no(t), "\n");
+	}
+	scores_touch(pl);
 }
 
 void() player_init {

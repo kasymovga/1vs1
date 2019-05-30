@@ -757,7 +757,7 @@ void(entity to, float t, float w) scores_nice_print_team {
 	sk = teamscorekeepers[t - 1];
 	if(sk)
 	{
-		s = strcat(s, ColoredTeamName(t));
+		s = strcat(s, team_colored_name(t));
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_label[i] != "")
 			{
@@ -938,7 +938,7 @@ void(float sprio, float stprio, float score_enabled) scores_basics {
 }
 
 void() scores_basics_end {
-	teams_check_allowed(world);
+	team_teams_allowed(world);
 	if(scores_initialized) {
 		scores_initialized.SendFlags |= 1; // force a resend
 	} else {

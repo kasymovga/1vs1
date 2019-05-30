@@ -27,7 +27,7 @@ void Napalm_Burn(void) {
 
     for(e = findradius(self.origin, dist); e; e = e.chain) if(e.takedamage == DAMAGE_AIM) {
         if(dtype != DEATH_HURTTRIGGER && e.classname == "player") {
-            sameteam = !teams_is_different(o, e);
+            sameteam = !team_is_different_teams(o, e);
 			if(sameteam && o != e)
 				if(!cvar("g_friendlyfire"))
 						continue;

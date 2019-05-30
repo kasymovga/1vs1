@@ -72,7 +72,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	if (sv_model_ice_use_skins)
 		self.ice.skin = TeamColorSkin(self.team);
 	else
-		self.ice.colormod = TeamColor(self.team);
+		self.ice.colormod = team_color(self.team);
 
 	if (g_freeze_autorevive_delay > 0)
 		self.ice.fade_time = time + g_freeze_autorevive_delay;
@@ -109,7 +109,7 @@ void Ice_Think()
 	float oldprogress = self.unfroze_progress;
 	if (self.team != self.owner.team) {
 		self.team = self.owner.team;
-		self.colormod = TeamColor(self.team);
+		self.colormod = team_color(self.team);
 	}
 	entity e, unfrozer;
 	unfrozer = world;

@@ -27,7 +27,7 @@ float Clanarena_FragLimitOverride() {
 void Clanarena_Init()
 {
 	CACHE_CVAR(g_clanarena_healthrotpause_on_damage);
-	SetTeamCount(bound(2, cvar("g_clanarena_teams"), 4));
+	team_teams_set_count(bound(2, cvar("g_clanarena_teams"), 4));
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;

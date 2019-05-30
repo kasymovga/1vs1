@@ -56,6 +56,8 @@ void() player_think;
 float(entity plr, float wep) player_can_fire;
 float(entity cl, float wpn, float andammo, float complain) player_hasweapon;
 string(entity p) player_name; // decolorizes and team colors the player name when needed
+void(entity pl, float _color) player_set_colors;
+void(entity pl, float t, float s, float noprint) player_set_team;
 #define PLAYER_ALIVE(x) (x.deadflag == 0 || x.deadflag > DEAD_RESPAWNING)
 #define PLAYER_DEAD(x) (x.deadflag)
 #define PLAYER_REALLY_DEAD(x) (x.deadflag > 0 && x.deadflag <= DEAD_RESPAWNING)

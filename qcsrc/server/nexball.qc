@@ -214,7 +214,7 @@ void(void) nexball_PlayerPreThink {
 	self.items &~= IT_KEY1;
 	if (self.ballcarried) {
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time)) {
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", team_colored_name(self.team), " held the ball for too long.\n");
 			oldself = self;
 			self = self.ballcarried;
 			nexball_drop_ball(self, self.owner.origin, '0 0 0');
@@ -360,7 +360,7 @@ void(void) nexball_ball_init {
 void(void) nexball_ball_reset {
 	if (self.cnt < 2) { // step 1
 		if (time == self.teamtime)
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", team_colored_name(self.team), " held the ball for too long.\n");
 		self.touch = stdproc_nothing;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
@@ -507,9 +507,9 @@ void(void) nexball_goal_touch {
 		pscore = -1;
 	} else if (self.team == GOAL_FAULT) {
 		if (nexball_teams == 2)
-			bprint(ColoredTeamName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
+			bprint(team_colored_name(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
-			bprint(ColoredTeamName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
+			bprint(team_colored_name(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
 
 		pscore = -1;
 	} else if (self.team == GOAL_OUT) {
@@ -520,7 +520,7 @@ void(void) nexball_goal_touch {
 
 		pscore = 0;
 	} else {                           //score
-		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", ColoredTeamName(ball.team), ".\n");
+		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", team_colored_name(ball.team), ".\n");
 		pscore = 1;
 	}
 	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -570,7 +570,7 @@ void(void) nexball_goal_touch {
 void(void) spawnfunc_nexball_team {
 	if(!g_nexball) { remove(self); return; }
 	self.team = self.cnt + 1;
-	SetAllowedTeam(self.team);
+	team_teams_set_allowed(self.team);
 }
 
 void(string teamname, float teamcolor) nexball_spawnteam {
@@ -605,7 +605,7 @@ void(void) nexball_delayedinit {
 	if (find(world, classname, "nexball_team") == world)
 		nexball_spawnteams();
 
-	teams_check_allowed(world);
+	team_teams_allowed(world);
 	nexball_teams = 4 + c1 + c2 + c3 + c4;
 	scores_basics(0, 0, TRUE);
 	ST_NEXBALL_GOALS = scores_register_team_score("goals", SFL_SORT_PRIO_PRIMARY);

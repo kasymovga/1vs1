@@ -68,7 +68,7 @@ void W_Plasma_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(teams_is_different(self.owner, other))
+			if(team_is_different_teams(self.owner, other))
 				if(other.deadflag == DEAD_NO)
 					if(physic_is_flying(other))
 						announce(self.owner, "announcer/male/electrobitch.wav");

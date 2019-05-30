@@ -266,7 +266,7 @@ float survive_return0() {
 }
 
 void survive_init() {
-	SetTeamCount(1);
+	team_teams_set_count(1);
 	survive_gameover_message = "^3No time left, game finished";
 	precache_sound("domination/claim.wav");
 	precache_sound("announcer/robotic/begin.wav");

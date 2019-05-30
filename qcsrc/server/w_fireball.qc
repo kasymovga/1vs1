@@ -58,7 +58,7 @@ void W_Fireball_Explode (void)
 
 		// 2. bfg effect
 		for(e = findradius(self.origin, g_balance_fireball_secondary_bfgradius); e; e = e.chain)
-		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || teams_is_different(e, self))
+		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || team_is_different_teams(e, self))
 		{
 			// can we see fireball?
 			traceline(e.origin + e.view_ofs, self.origin, MOVE_NORMAL, e);
@@ -96,7 +96,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float _damage, float edgedamage,
 
 	random_selection_init();
 	for(e = findradius(self.origin, dist); e; e = e.chain)
-	if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || teams_is_different(e, self))
+	if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || team_is_different_teams(e, self))
 	{
 		p = e.origin;
 		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);

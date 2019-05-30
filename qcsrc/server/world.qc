@@ -296,7 +296,7 @@ void world_dynamic_init() {
 	spawn_init();
 	client_initialize();
 	spectator_init();
-	Teamplay_ReadCvars();
+	team_init();
 	hook_init(FALSE);
 	turret_readcvars();
 	WaypointSprite_Init();
@@ -833,7 +833,7 @@ float() world_check_rules_run_out_spawns {
 		if(team2_score) t = COLOR_TEAM2;
 		if(team3_score) t = COLOR_TEAM3;
 		if(team4_score) t = COLOR_TEAM4;
-		teams_check_allowed(world);
+		team_teams_allowed(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
 			if(t != COLOR_TEAM1) if(c1 >= 0) scores_team_add_to(COLOR_TEAM1, i, -1000);
@@ -931,7 +931,7 @@ void() world_gameover {
 	gameover_message = "^2Game finished!";
 	if (teamplay) {
 		if (scores_winning_condition_helper_winnerteam > 0)
-			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(scores_winning_condition_helper_winnerteam), Team_ColorName(scores_winning_condition_helper_winnerteam), " Team^2 wins!");
+			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(scores_winning_condition_helper_winnerteam), team_color_name(scores_winning_condition_helper_winnerteam), " Team^2 wins!");
 	} else {
 		if (scores_winning_condition_helper_winner)
 			gameover_message = strcat(gameover_message, "\nThe winner is ", scores_winning_condition_helper_winner.netname);

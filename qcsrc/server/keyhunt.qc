@@ -377,7 +377,7 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	key.effects &~= EF_NODRAW;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
-	key.colormod = TeamColor(initial_owner.team) * KH_KEY_BRIGHTNESS;
+	key.colormod = team_color(initial_owner.team) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
 
 	switch(initial_owner.team)
@@ -586,7 +586,7 @@ void kh_Key_Think()  // runs all the time
 				else
 					centerprint(head, "All keys are in your team's hands!\n\nHelp the key carriers to meet!");
 			else
-				centerprint(head, strcat("All keys are in the ", ColoredTeamName(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"));
+				centerprint(head, strcat("All keys are in the ", team_colored_name(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"));
 		}
 	}
 
@@ -625,7 +625,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 			bprint(key.owner.netname);
 			first = FALSE;
 		}
-	bprint("^7 captured the keys for the ", ColoredTeamName(teem), "\n");
+	bprint("^7 captured the keys for the ", team_colored_name(teem), "\n");
 	if (kh_roundbased)
 		Roundbased_SetRoundStartWithWinner(other.team);
 
@@ -651,7 +651,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 		te_lightning2(world, lastorigin, firstorigin);
 	}
 	midpoint = midpoint * (1 / kh_teams);
-	te_customflash(midpoint, 1000, 1, TeamColor(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
+	te_customflash(midpoint, 1000, 1, team_color(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
 	play2all(kh_sound_capture);
 	kh_FinishRound();
@@ -691,7 +691,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		kh_Scores_Event(attacker, world, g_balance_keyhunt_score_push, 0);
 		scores_player_add(attacker, SP_KH_PUSHES, 1);
 		centerprint(attacker, "Your push is the best!");
-		bprint("The ", ColoredTeamName(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
+		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
 	}
 	else
 	{
@@ -710,7 +710,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
 			scores_player_add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
 
-		bprint("The ", ColoredTeamName(teem), "^7 could not take care of the ", lostkey.netname, "\n");
+		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "\n");
 	}
 	lostkey.think = kh_Key_MoveToRandomLocation_Think;
 }
@@ -750,7 +750,7 @@ string kh_CheckEnoughPlayers()  // checks enough player are present, runs after 
 		{
 			if(result != "")
 				result = strcat(result, ", ");
-			result = strcat(result, ColoredTeamName(teem));
+			result = strcat(result, team_colored_name(teem));
 		}
 	}
 	return result;
@@ -1023,7 +1023,7 @@ void kh_init() {
 		kh_teams = cvar("g_keyhunt_teams");
 
 	kh_teams = bound(2, kh_teams, 4);
-	SetTeamCount(kh_teams);
+	team_teams_set_count(kh_teams);
 }
 
 void kh_update_state()

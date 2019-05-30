@@ -479,7 +479,7 @@ void GameCommand(string command)
 
 		for(; random_queue_next();) {
 			plr = random_queue_ent();
-			teams_check_allowed(plr);
+			team_teams_allowed(plr);
 			if (t == COLOR_TEAM4)
 				t = COLOR_TEAM1;
 			else if (t == COLOR_TEAM1)
@@ -503,13 +503,13 @@ void GameCommand(string command)
 					t = COLOR_TEAM1;
 			}
 			if (t != plr.team) {
-				SetPlayerTeam(plr, TeamColorSkin(t), TeamColorSkin(t), FALSE);
+				player_set_team(plr, TeamColorSkin(t), TeamColorSkin(t), FALSE);
 				e = self;
 				self = plr;
 				PutClientInServer();
 				self = e;
 				if (clienttype(plr) == CLIENTTYPE_REAL)
-					centerprint(plr, strcat("You have been moved into a different team\nYou are now on: ", ColoredTeamName(t)));
+					centerprint(plr, strcat("You have been moved into a different team\nYou are now on: ", team_colored_name(t)));
 			}
 		}
 		random_queue_end();

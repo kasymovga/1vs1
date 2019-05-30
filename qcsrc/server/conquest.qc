@@ -131,7 +131,7 @@ void conquest_cp_think_capture() {
 			trigger_use_targets();
 
 			if (self.team > 0)
-				teams_spawn_team(self.team);
+				team_spawn_players(self.team);
 
 			WaypointSprite_Ping(self.sprite);
 			conquest_update_waypoint();
@@ -182,7 +182,7 @@ void spawnfunc_conquest_cp() {
 	self.classname = "conquest_cp";
 	if (self.team > 0) {
 		conquest_cp_capture(self.team);
-		SetAllowedTeam(self.team);
+		team_teams_set_allowed(self.team);
 	}
 	self.cnt = self.team;
 	self.solid = SOLID_TRIGGER;

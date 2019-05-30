@@ -320,7 +320,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	//	bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
 	//	backtrace("Flag carrier had no flag sprite?!?");
 	//}
-	GameStatus_Set(strcat(Team_ColorCode(e.team), Team_ColorName(e.team), " Flag^7 dropped"), 1);
+	GameStatus_Set(strcat(Team_ColorCode(e.team), team_color_name(e.team), " Flag^7 dropped"), 1);
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
@@ -520,7 +520,7 @@ void FlagTouch()
 		}
 
 		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
-		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Team^7 scores"), 1);
+		GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Team^7 scores"), 1);
 		WaypointSprite_DetachCarrier(other);
 		RegenFlag (other.flagcarried);
 		other.flagcarried = world;
@@ -550,7 +550,7 @@ void FlagTouch()
 		scores_player_team_add_score(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
 		scores_player_add(other, SP_CTF_PICKUPS, 1);
-		GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
+		GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
@@ -609,7 +609,7 @@ void FlagTouch()
 					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			scores_player_add(other, SP_CTF_RETURNS, 1);
-			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 returned"), 1);
+			GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ReturnFlag(self);
 		}
@@ -637,7 +637,7 @@ void FlagTouch()
 
 			scores_player_team_add_score(other, f);
 			scores_player_add(other, SP_CTF_PICKUPS, 1);
-			GameStatus_Set(strcat(Team_ColorCode(self.team), Team_ColorName(self.team), " Flag^7 taken"), 1);
+			GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
@@ -948,7 +948,7 @@ void spawnfunc_ctf_team()
 	}
 	self.classname = "ctf_team";
 	self.team = self.cnt + 1;
-	SetAllowedTeam(self.team);
+	team_teams_set_allowed(self.team);
 };
 
 // code from here on is just to support maps that don't have control point and team entities

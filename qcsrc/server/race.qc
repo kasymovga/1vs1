@@ -1051,9 +1051,9 @@ void race_init() {
 		qualifying_override = -1;
 		if(cvar("g_race_teams"))
 		{
-			ActivateTeamplay();
+			team_play_activate();
 			race_teams = bound(2, cvar("g_race_teams"), 4);
-			SetTeamCount(race_teams);
+			team_teams_set_count(race_teams);
 		}
 		else
 			race_teams = 0;

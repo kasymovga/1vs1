@@ -155,7 +155,7 @@ void func_breakable_launch_napalm(void) {
 
     var saveteam = self.owner.team;
     self.hg_type = HG_REMOTE;
-    self.owner.team = Team_FromIndex(self.napalm_color);
+    self.owner.team = team_from_index(self.napalm_color);
 
     for(var c = 0; c < nc; ++c) {
         Napalm_Spawn(self.owner, self.origin, 3, 0.15, DEATH_HURTTRIGGER, 180, 80, 20, 1.5) {

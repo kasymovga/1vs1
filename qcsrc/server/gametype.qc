@@ -69,47 +69,46 @@ void() gametype_init {
 	gametype_readcvars();
 	gamemode_name = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
 	if(game == GAME_TEAM_DEATHMATCH) {
-		ActivateTeamplay();
-		GameHook_FragLimitOverride = tdm_FragLimitOverride;
+		team_play_activate();
 		tdm_init();
 	}
 	if(game == GAME_FREEZETAG) {
-		ActivateTeamplay();
+		team_play_activate();
 		Freeze_Init();
 	}
 	if(game == GAME_CLANARENA) {
-		ActivateTeamplay();
+		team_play_activate();
 		Clanarena_Init();
 	}
 	if(game == GAME_DOMINATION) {
-		ActivateTeamplay();
+		team_play_activate();
 		dom_init();
 	}
 	if(game == GAME_CTF || game == GAME_CATF || game == GAME_CTFT) {
-		ActivateTeamplay();
+		team_play_activate();
 		ctf_init();
 	}
 	if(game == GAME_KEYHUNT || game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT) {
-		ActivateTeamplay();
+		team_play_activate();
 		kh_init();
 	}
 	if(game == GAME_ONSLAUGHT) {
-		ActivateTeamplay();
+		team_play_activate();
 		onslaught_init();
 	}
 	if(game == GAME_RACE || game == GAME_CTS)
 		race_init();
 
 	if(game == GAME_NEXBALL) {
-		ActivateTeamplay();
+		team_play_activate();
 		nexball_init();
 	}
 	if (game == GAME_CONQUEST) {
-		ActivateTeamplay();
+		team_play_activate();
 		conquest_init();
 	}
 	if (game == GAME_SURVIVE) {
-		ActivateTeamplay();
+		team_play_activate();
 		survive_init();
 	}
 	if (game == GAME_SINGLE || game == GAME_COOP)

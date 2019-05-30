@@ -77,7 +77,7 @@ void HG_Shield_Discharge_Think(void) {
     //W_SetHitscanVisuals(self.owner, end);
     W_Zapper_Attack2_Effect((teamplay ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
 
-    if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (teams_is_different(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
+    if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (team_is_different_teams(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
         HG_Shield_Discharge_Arc(targ, self.owner, _damage);
     }
 

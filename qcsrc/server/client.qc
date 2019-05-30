@@ -61,7 +61,7 @@ void PutClientInServer()
 			if(clienttype(self) == CLIENTTYPE_BOT)
 				self.team = self.bot_forced_team;
 
-			JoinBestTeam(self, FALSE);
+			team_join_best(self, FALSE);
 		}
 		if (self.team != oldteam)
 			scores_touch(self);
@@ -119,7 +119,7 @@ float client_init_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, teamplay);
 		t = 0;
 		if(teamplay) {
-			teams_check_allowed(self);
+			team_teams_allowed(self);
 			if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
 		}
 		WriteByte(MSG_ENTITY, t);
@@ -214,10 +214,10 @@ void ClientKill_Now_TeamChange()
 	else if(self.killindicator_teamchange == -1)
 	{
 		self.team = -1;
-		JoinBestTeam(self, FALSE);
+		team_join_best(self, FALSE);
 	}
 	else
-		ChangeTeam(self, self.killindicator_teamchange, FALSE);
+		team_change(self, self.killindicator_teamchange, FALSE);
 }
 
 void ClientKill_Now()
@@ -262,7 +262,7 @@ void KillIndicator_Think()
 				if(self.owner.killindicator_teamchange == -1)
 					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
 				else
-					centerprint(self.owner, strcat("Changing to ", ColoredTeamName(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
+					centerprint(self.owner, strcat("Changing to ", team_colored_name(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
 			}
 			else
 				centerprint(self.owner, strcat("^1Suicide in ", ftos(self.cnt), " seconds"));
@@ -282,7 +282,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 
 	if(!self.killindicator)
 	{
-		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO || FastTeamSwitchAllowed(self, targetteam))
+		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, targetteam))
 		{
 			ClientKill_Now();
 		}
@@ -318,7 +318,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 	if(self.killindicator)
 	{
 		if(targetteam)
-			self.killindicator.colormod = TeamColor(targetteam);
+			self.killindicator.colormod = team_color(targetteam);
 		else
 			self.killindicator.colormod = '0 0 0';
 	}
@@ -335,7 +335,7 @@ void DoTeamChange(float destteam)
 	if(!teamplay)
 	{
 		if(destteam >= 0)
-			SetPlayerColors(self, destteam);
+			player_set_colors(self, destteam);
 		return;
 	}
 	if (self.team <= 0)
@@ -347,8 +347,8 @@ void DoTeamChange(float destteam)
 	if(self.classname == "player")
 	if(destteam == -1)
 	{
-		teams_check_allowed(self);
-		t = FindSmallestTeam(self);
+		team_teams_allowed(self);
+		t = team_find_smallest(self);
 		switch(self.team)
 		{
 			case COLOR_TEAM1: c0 = c1; break;
@@ -576,7 +576,7 @@ void ClientDisconnect (void)
 		GameHookChain_RealClientDisconnect();
 
 	if (teamplay) {
-		AuditTeams(FALSE);
+		team_balance_audit(FALSE);
 		if (autoswap_last_best == self)
 			autoswap_last_best = world;
 	}

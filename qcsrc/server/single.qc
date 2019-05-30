@@ -236,8 +236,8 @@ void Single_Init() {
 	e.use = Single_EndLevel;
 	entity_initialize(world, single_init_delayed, INITPRIO_GAMETYPE);
 	if (game == GAME_COOP) {
-		ActivateTeamplay();
-		SetTeamCount(1);
+		team_play_activate();
+		team_teams_set_count(1);
 	}
 }
 

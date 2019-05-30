@@ -83,7 +83,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		if(targ.classname == "player")
-			if not(teams_is_different(targ, attacker))
+			if not(team_is_different_teams(targ, attacker))
 			{
 				self = oldself;
 				return;
@@ -172,7 +172,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 
 			if(targ.classname == "player")
 			{
-				if(teams_is_different(targ, attacker))
+				if(team_is_different_teams(targ, attacker))
 				{
 					if(_damage > 0)
 					{
