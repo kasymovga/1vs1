@@ -140,7 +140,7 @@ warmup.qh
 weapon.qh
 gametype.qh
 chat.qh
-teamplay.qh
+team.qh
 tdm.qh
 mapvote.qh
 stdproc.qh
@@ -161,7 +161,7 @@ damage.qc
 heal.qc
 fire.qc
 arc.qc
-teamplay.qc
+team.qc
 tdm.qc
 gametype.qc
 rune.qc
