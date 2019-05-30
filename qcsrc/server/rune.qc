@@ -455,10 +455,10 @@ var float() rune_SpeedMod_NextLink;
 float rune_SpeedMod() {
 	float maxspd_mod = rune_SpeedMod_NextLink();
 	if(self.runes & RUNE_SPEED)
-		maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate * (self.alpha / g_balance_rune_stun_time);
+		maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
 
 	if (self.rune_stun)
-		maxspd_mod = maxspd_mod * g_balance_rune_stun_moverate;
+		maxspd_mod = maxspd_mod * (1 - (1 - g_balance_rune_stun_moverate) * (self.rune_stun.alpha / g_balance_rune_stun_time));
 
 	return maxspd_mod;
 }
