@@ -1,1 +1,1 @@
-void rune_init();
+void rune_init(void);
