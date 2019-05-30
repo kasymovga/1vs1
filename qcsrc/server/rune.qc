@@ -58,7 +58,7 @@ entity rune_find_spawnpoint()
 
 	random_selection_init();
 
-	for(e = world; (e = find(e, classname, "runematch_spawn_point")); )
+	for(e = world; (e = find(e, classname, "rune_spawn_point")); )
 		if(e.owner == world)
 			random_selection_add(e, 0, string_null, e.cnt, 0);
 
@@ -99,7 +99,7 @@ float rune_spawn_somewhere(entity e)
 
 void rune_unmark_spot(entity e)
 {
-	if(e.owner.classname == "runematch_spawn_point")
+	if(e.owner.classname == "rune_spawn_point")
 	{
 		e.owner.owner = world;
 		e.owner = world;
@@ -340,7 +340,7 @@ void rune_drop_all(entity pl)
 void rune_reset()
 {
 	if(self.owner)
-		if(self.owner.classname != "runematch_spawn_point")
+		if(self.owner.classname != "rune_spawn_point")
 			rune_drop_all(self.owner);
 	rune_respawn();
 }
