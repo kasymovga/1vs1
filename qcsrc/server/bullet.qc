@@ -304,8 +304,8 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 	if(bulletHitScan)
 	{
 		proj = spawn();
-		proj.owner = self;
 		self = Akimbo_Owner(self);
+		proj.owner = self;
 	} else {
 		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
 		proj.think = SUB_Remove;
