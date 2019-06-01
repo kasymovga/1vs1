@@ -1052,7 +1052,6 @@ void ctf_delayedinit()
 	} else if (game == GAME_CTFT) {
 		Freeze_Init_Shared("ctft");
 		Roundbased_SetScoreField(ST_CTF_CAPS);
-		GameHook_BotChooseRole = havocbot_chooserole_ft;
 	}
 };
 
@@ -1139,7 +1138,7 @@ void ctf_init()
 	GameHook_PlayerIsCarrier = ctf_PlayerIsCarrier;
 	GameHook_DropCarried = ctf_DropCarried;
 	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
-	GameHook_BotChooseRole = havocbot_chooserole_ctf;
+	GameHook_BotChooseRole = ctf_role_choose;
 };
 
 void ctf_setstatus2(entity flag, float shift)

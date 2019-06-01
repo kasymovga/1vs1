@@ -51,7 +51,7 @@ ipban.qh
 trigger.qh
 func.qh
 race.qh
-keyhunt.qh
+kh.qh
 model.qh
 antilag.qh
 math.qh
@@ -222,8 +222,11 @@ spawn.qc
 roundbased.qc
 clanarena_shared.qc
 freeze_shared.qc
+ctf_role.qc
 ctf.qc
+dom_role.qc
 dom.qc
+onslaught_role.qc
 onslaught.qc
 nexball.qc
 hook.qc
@@ -235,14 +238,16 @@ campaign.qc
 
 ../menu-server/gamecommand.qc
 cmd.qc
-keyhunt.qc
+kh_role.qc
+kh.qc
 
+conquest_role.qc
 conquest.qc
 
 ipban.qc
 
 ../menu-server/mapinfo.qc
-
+race_role.qc
 race.qc
 
 //// tZork Turrets ////
@@ -268,6 +273,7 @@ akimbo.qc
 ready.qc
 info_messages.qc
 defer.qc
+freeze_role.qc
 freeze.qc
 trace.qc
 clanarena.qc

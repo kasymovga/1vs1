@@ -1,14 +1,13 @@
-void() havocbot_role_kh_carrier;
-void() havocbot_role_kh_defense;
-void() havocbot_role_kh_offense;
-void() havocbot_role_kh_freelancer;
+void() kh_role_carrier;
+void() kh_role_defense;
+void() kh_role_offense;
+void() kh_role_freelancer;
 
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
 
-void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
-{
-	local entity head;
+void(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy) havocbot_goalrating_kh {
+	entity head;
 	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
 		if(head.owner == self)
@@ -33,17 +32,16 @@ void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, f
 	}
 
 	havocbot_goalrating_items(1, self.origin, 10000);
-};
+}
 
-void havocbot_role_kh_carrier()
-{
+void() kh_role_carrier {
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	if (!(self.kh_next))
 	{
 		dprint("changing role to freelancer\n");
-		self.havocbot_role = havocbot_role_kh_freelancer;
+		self.havocbot_role = kh_role_freelancer;
 		self.havocbot_role_timeout = 0;
 		return;
 	}
@@ -62,15 +60,14 @@ void havocbot_role_kh_carrier()
 	}
 }
 
-void havocbot_role_kh_defense()
-{
+void() kh_role_defense {
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	if (self.kh_next)
 	{
 		dprint("changing role to carrier\n");
-		self.havocbot_role = havocbot_role_kh_carrier;
+		self.havocbot_role = kh_role_carrier;
 		self.havocbot_role_timeout = 0;
 		return;
 	}
@@ -80,7 +77,7 @@ void havocbot_role_kh_defense()
 	if (time > self.havocbot_role_timeout)
 	{
 		dprint("changing role to freelancer\n");
-		self.havocbot_role = havocbot_role_kh_freelancer;
+		self.havocbot_role = kh_role_freelancer;
 		self.havocbot_role_timeout = 0;
 		return;
 	}
@@ -101,17 +98,16 @@ void havocbot_role_kh_defense()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
-void havocbot_role_kh_offense()
-{
+void() kh_role_offense {
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	if (self.kh_next)
 	{
 		dprint("changing role to carrier\n");
-		self.havocbot_role = havocbot_role_kh_carrier;
+		self.havocbot_role = kh_role_carrier;
 		self.havocbot_role_timeout = 0;
 		return;
 	}
@@ -121,7 +117,7 @@ void havocbot_role_kh_offense()
 	if (time > self.havocbot_role_timeout)
 	{
 		dprint("changing role to freelancer\n");
-		self.havocbot_role = havocbot_role_kh_freelancer;
+		self.havocbot_role = kh_role_freelancer;
 		self.havocbot_role_timeout = 0;
 		return;
 	}
@@ -143,17 +139,16 @@ void havocbot_role_kh_offense()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
-void havocbot_role_kh_freelancer()
-{
+void() kh_role_freelancer {
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	if (self.kh_next)
 	{
 		dprint("changing role to carrier\n");
-		self.havocbot_role = havocbot_role_kh_carrier;
+		self.havocbot_role = kh_role_carrier;
 		self.havocbot_role_timeout = 0;
 		return;
 	}
@@ -165,12 +160,12 @@ void havocbot_role_kh_freelancer()
 		if (random() < 0.5)
 		{
 			dprint("changing role to offense\n");
-			self.havocbot_role = havocbot_role_kh_offense;
+			self.havocbot_role = kh_role_offense;
 		}
 		else
 		{
 			dprint("changing role to defense\n");
-			self.havocbot_role = havocbot_role_kh_defense;
+			self.havocbot_role = kh_role_defense;
 		}
 		self.havocbot_role_timeout = 0;
 		return;
@@ -193,20 +188,19 @@ void havocbot_role_kh_freelancer()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
-void havocbot_chooserole_kh()
-{
-	local float r;
+void() kh_role_choose {
+	float r;
 
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	r = random() * 3;
 	if (r < 1)
-		self.havocbot_role = havocbot_role_kh_offense;
+		self.havocbot_role = kh_role_offense;
 	else if (r < 2)
-		self.havocbot_role = havocbot_role_kh_defense;
+		self.havocbot_role = kh_role_defense;
 	else
-		self.havocbot_role = havocbot_role_kh_freelancer;
-};
+		self.havocbot_role = kh_role_freelancer;
+}

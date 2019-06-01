@@ -50,6 +50,7 @@ float havocbot_moveto_refresh_route();
 vector havocbot_dodge();
 
 .void() havocbot_role;
+.void() havocbot_previous_role;
 
 /*
  * Imports
@@ -57,4 +58,6 @@ vector havocbot_dodge();
 
 .float ladder_time;
 .entity ladder_entity;
-
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+.float havocbot_role_timeout;

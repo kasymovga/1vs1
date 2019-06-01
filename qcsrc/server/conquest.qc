@@ -387,6 +387,6 @@ void conquest_init() {
 		conquest_ctf_and_dom_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
 		GameHookChain_EntityPreSpawn = conquest_ctf_and_dom_EntityPreSpawn;
 	}
-	GameHook_BotChooseRole = havocbot_chooserole_conquest;
+	GameHook_BotChooseRole = conquest_role_choose;
 	entity_initialize(world, conquest_delayedinit, INITPRIO_LAST);
 }

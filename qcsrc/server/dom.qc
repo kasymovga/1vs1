@@ -445,7 +445,7 @@ void dom_init()
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_FragLimitOverride = dom_FragLimitOverride;
 	GameHook_LeadLimitOverride = dom_LeadLimitOverride;
-	GameHook_BotChooseRole = havocbot_chooserole_dom;
+	GameHook_BotChooseRole = dom_role_choose;
 	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);
 };
 

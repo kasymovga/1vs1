@@ -1,6 +1,3 @@
-#include "role_ctf.qc"
-#include "role_onslaught.qc"
-#include "role_keyhunt.qc"
 #include "roles.qc"
 
 float bot_ai_bunnyhop_firstjumpdelay;
