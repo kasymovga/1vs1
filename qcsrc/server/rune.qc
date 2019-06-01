@@ -373,7 +373,7 @@ float() rune_SpeedMod {
 		maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
 
 	if (self.rune_stun)
-		maxspd_mod = maxspd_mod * (1 - (1 - g_balance_rune_stun_moverate) * (self.rune_stun.alpha / g_balance_rune_stun_time));
+		maxspd_mod = maxspd_mod * (1 - (1 - g_balance_rune_stun_moverate) * (max(0, self.rune_stun.alpha) / g_balance_rune_stun_time));
 
 	return maxspd_mod;
 }
@@ -542,6 +542,9 @@ var void(float killed) rune_PlayerClear_NextLink;
 void(float killed) rune_PlayerClear {
 	rune_drop_all(self);
 	self.runes = 0;
+	if (self.rune_stun)
+		self.rune_stun.alpha = -1;
+
 	rune_PlayerClear_NextLink(killed);
 }
 
