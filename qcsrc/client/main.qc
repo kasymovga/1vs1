@@ -408,9 +408,7 @@ void CSQC_Init(void)
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
 	cvar_clientsettemp("_supports_weaponpriority", "1");
-
-	RegisterWeapons();
-
+	weapon_register_weapons();
 	WaypointSprite_Load();
 
 	Projectile_Precache();

@@ -160,9 +160,7 @@ void() m_init_delayed =
 		return;
 	menuInitialized = 1;
 	GameCommand_Init();
-
-	RegisterWeapons();
-
+	weapon_register_weapons();
 	SkinInit();
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 

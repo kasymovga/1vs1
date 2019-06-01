@@ -13,7 +13,8 @@ constants.qh
 ../common/util.qh
 ../menu-server/util.qh
 ../client-server/util.qh
-../common/items.qh
+../menu-server/weapon.qh
+../common/weapon.qh
 sound.qh
 location_request.qh
 single.qh
@@ -258,7 +259,8 @@ func_breakable.qc
 func_laserbeam.qc
 func.qc
 misc.qc
-../common/items.qc
+../menu-server/weapon.qc
+../common/weapon.qc
 projectile.qc
 irc.qc
 

@@ -74,11 +74,8 @@ string weaponpriority_hudselector_0;
 string weaponpriority_hudselector_1;
 
 // functions:
-entity get_weaponinfo(float id);
-#ifndef CSQC
-string W_FixWeaponOrder(string order, float complete);
-#endif
-void RegisterWeapons();
+entity weapon_info(float id);
+void(void) weapon_register_weapons;
 
 #define WEPSPAWNFLAG_NORMAL 1
 #define WEPSPAWNFLAG_CANCLIMB 2

@@ -140,7 +140,7 @@ void Akimbo_Init()
 		n = tokenize_console(s);
 		for (i = 0; i < n; i++)
 			for (j = WEP_FIRST; j <= WEP_LAST; j++)
-				if (argv(i) == get_weaponinfo(j).netname)
+				if (argv(i) == weapon_info(j).netname)
 				{
 					g_akimbo_weapons |= weapon_bit(j);
 					break;

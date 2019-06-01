@@ -350,7 +350,7 @@ float(entity item, entity player) item_give_to {
 		{
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
-				e = get_weaponinfo(i);
+				e = weapon_info(i);
 				if not(item.weapons & e.weapons)
 					continue;
 				if not(player.weapons & e.weapons)
@@ -561,7 +561,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 		for(i = WEP_FIRST; i < WEP_LAST ; ++i)
 		{
 			// Find weapon
-			if( (get_weaponinfo(i)).weapons & item.weapons  != item.weapons )
+			if( (weapon_info(i)).weapons & item.weapons  != item.weapons )
 				continue;
 
 			// Find the highest position on any range
@@ -600,7 +600,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	// Detect needed ammo
 	for(i = WEP_FIRST; i < WEP_LAST ; ++i)
 	{
-		wi = get_weaponinfo(i);
+		wi = weapon_info(i);
 
 		if not(wi.weapons & player.weapons)
 			continue;
@@ -1262,7 +1262,7 @@ void spawnfunc_target_items (void)
 		{
 			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
+				e = weapon_info(j);
 				if(argv(i) == e.netname)
 				{
 					self.weapons |= e.weapons;
@@ -1478,7 +1478,7 @@ void item_init()
 		}
 
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			e = get_weaponinfo(i);
+			e = weapon_info(i);
 			if (!(e.weapon))
 				continue;
 
@@ -1516,7 +1516,7 @@ void item_init()
 			{
 				for (i = WEP_FIRST; i < WEP_FIREBALL; ++i)
 				{
-					e = get_weaponinfo(i);
+					e = weapon_info(i);
 					if (!(e.weapon))
 						continue;
 					if (e.spawnflags & WEPSPAWNFLAG_NORMAL)

@@ -88,7 +88,7 @@ float client_init_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		for(i = 1; i <= 24; ++i)
-			WriteByte(MSG_ENTITY, (get_weaponinfo(i)).impulse + 1);
+			WriteByte(MSG_ENTITY, (weapon_info(i)).impulse + 1);
 	}
 	if (sf & 2) {
 		t = 0;

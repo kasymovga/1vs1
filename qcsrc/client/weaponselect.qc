@@ -74,7 +74,7 @@ void WS_Draw(void) {
             continue;
 
         var sidx = i;
-        entity winfo = get_weaponinfo(w + 1);
+        entity winfo = weapon_info(w + 1);
 
         vector p;
         float a2 = ws_selalpha[sidx];
@@ -109,7 +109,7 @@ void WS_Draw(void) {
 }
 
 void WS_ConfirmSelection(void) {
-    var w = get_weaponinfo(WS_SelectedWeapon() + 1);
+    var w = weapon_info(WS_SelectedWeapon() + 1);
     localcmd("cmd pickweapon ", w.netname, "; cmd join\n");
     ws_active = FALSE;
     mouse_enabled = FALSE;
@@ -163,7 +163,7 @@ void Net_ReadWeaponSelect(void) {
     using(drawfont = sbar_bigfont) for(var w = 0; w <= WEP_LAST; ++w) {
         if(pow(2, w) & selectable_weapons) {
             ++ws_numoptions;
-            ws_width = max(ws_width, WS_SCALE * 2 + stringwidth(get_weaponinfo(w+1).message, FALSE, [WS_SCALE, WS_SCALE]));
+            ws_width = max(ws_width, WS_SCALE * 2 + stringwidth(weapon_info(w+1).message, FALSE, [WS_SCALE, WS_SCALE]));
         }
     }
 

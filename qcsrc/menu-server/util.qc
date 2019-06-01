@@ -9,44 +9,6 @@ string fstrunzone(string s)
 	return sc;
 }
 
-string fixPriorityList(string order, float from, float to, float subtract, float complete)
-{
-	string neworder;
-	float i, n, w;
-
-	n = tokenize_console(order);
-	for(i = 0; i < n; ++i)
-	{
-		w = stof(argv(i));
-		if(w == floor(w))
-		{
-			if(w >= from && w <= to)
-				neworder = strcat(neworder, ftos(w), " ");
-			else
-			{
-				w -= subtract;
-				if(w >= from && w <= to)
-					neworder = strcat(neworder, ftos(w), " ");
-			}
-		}
-	}
-
-	if(complete)
-	{
-		n = tokenize_console(neworder);
-		for(w = to; w >= from; --w)
-		{
-			for(i = 0; i < n; ++i)
-				if(stof(argv(i)) == w)
-					break;
-			if(i == n) // not found
-				neworder = strcat(neworder, ftos(w), " ");
-		}
-	}
-
-	return substring(neworder, 0, strlen(neworder) - 1);
-}
-
 string swapInPriorityList(string order, float i, float j)
 {
 	string s;

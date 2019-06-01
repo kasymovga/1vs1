@@ -9,7 +9,7 @@ csqc_constants.qc
 csqc_builtins.qc
 ../client-server/util.qh
 ../common/util.qh
-../common/items.qh
+../common/weapon.qh
 ../common/extensions.qh
 
 ../client-server/projinfo.qh
@@ -91,7 +91,7 @@ bgmscript.qc
 ../client-server/util.qc
 ../common/util.qc
 ../client-server/projinfo.qc
-../common/items.qc
+../common/weapon.qc
 ../client-server/cl_physics.qc
 ../client-server/cl_physics_spiderbot.qc
 ../client-server/cl_physics_aircraft.qc

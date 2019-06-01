@@ -441,7 +441,7 @@ void spawnfunc_worldspawn (void)
 	PL_CROUCH_MAX = '16 16 25' * sv_world_scale;
 	dlc_init();
 	// needs to be done so early as they would still spawn
-	RegisterWeapons();
+	weapon_register_weapons();
 	GameTypeVote_Init();
 	world_static_init();
 	world_dynamic_init();

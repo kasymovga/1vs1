@@ -4,7 +4,6 @@
 // unzone the string, and return it as tempstring. Safe to be called on string_null
 string fstrunzone(string s);
 
-string fixPriorityList(string pl, float from, float to, float subtract, float complete);
 string swapInPriorityList(string order, float i, float j);
 
 float cvar_value_issafe(string s);

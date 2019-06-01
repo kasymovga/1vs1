@@ -2136,7 +2136,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 				entity e;
 				string s;
 
-				e = get_weaponinfo(wpn);
+				e = weapon_info(wpn);
 				s = e.model2;
 
 				for(e = world; (e = findfloat(e, weapons, weaponbit)); )

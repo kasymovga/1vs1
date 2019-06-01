@@ -24,7 +24,7 @@ void TwoWeapons_Init() {
 	float i;
 	entity e;
 	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
-		e = get_weaponinfo(i);
+		e = weapon_info(i);
 		if (s == e.netname) {
 			g_twoweapons = i;
 		}

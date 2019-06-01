@@ -14,7 +14,8 @@ mbuiltin.qh
 ../common/constants.qh
 ../menu-server/mapinfo.qh
 ../menu-server/campaign_common.qh
-../common/items.qh
+../menu-server/weapon.qh
+../common/weapon.qh
 ../common/curl.qh
 ../common/dlc.qh
 
@@ -47,7 +48,8 @@ nexuiz/util.qc
 ../menu-server/campaign_file.qc
 ../menu-server/campaign_setup.qc
 ../menu-server/mapinfo.qc
-../common/items.qc
+../menu-server/weapon.qc
+../common/weapon.qc
 ../common/curl.qc
 ../common/dlc.qc
 ../client-menu/ui.qc

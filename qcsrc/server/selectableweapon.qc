@@ -24,7 +24,7 @@ float SelectableWeapon_ClientCommandHandle(string cmd, float tokens) {
 			string s = argv(1);
 			float i;
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
-				e = get_weaponinfo(i);
+				e = weapon_info(i);
 				if (e.netname == s) {
 					if not(g_start_weapon_selectable & weapon_bit(e.weapon))
 						return TRUE;
@@ -78,7 +78,7 @@ void SelectableWeapon_Init() {
 	entity e;
 	for (head = car(s), tail = cdr(s); head != ""; head = car(tail), tail = cdr(tail)) {
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			e = get_weaponinfo(i);
+			e = weapon_info(i);
 			if (head == e.netname) {
 				g_start_weapon_selectable |= weapon_bit(i);
 				selectable_weapon_for_bots = i;

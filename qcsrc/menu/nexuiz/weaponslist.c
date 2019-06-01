@@ -34,7 +34,7 @@ void drawNexuizWeaponsList(entity me)
 	// read in cvar?
 	string s, t;
 	s = cvar_string("cl_weaponpriority");
-	t = W_FixWeaponOrder(s, 1);
+	t = weapon_fix_order(s, 1);
 	if(t != s)
 	{
 		print("AUTOFIXED\n");
@@ -85,7 +85,7 @@ string toStringNexuizWeaponsList(entity me)
 	s = "";
 	for(i = 0; i < n; ++i)
 	{
-		e = get_weaponinfo(stof(argv(i)));
+		e = weapon_info(stof(argv(i)));
 		s = strcat(s, e.message, ", ");
 	}
 	return substring(s, 0, strlen(s) - 2);
@@ -95,7 +95,7 @@ void drawListBoxItemNexuizWeaponsList(entity me, float i, vector absSize, float 
 	entity e;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	e = get_weaponinfo(stof(argv(i)));
+	e = weapon_info(stof(argv(i)));
 	draw_Text(me.realUpperMargin * eY, e.message, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 

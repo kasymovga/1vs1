@@ -397,7 +397,7 @@ void CSQC_UpdateView(float w, float h)
                 wcross_alpha = CVAR(crosshair_color_alpha) * (1-CVAR(_menu_alpha));
                 wcross_sizefloat = CVAR(crosshair_size) * (1-CVAR(_menu_alpha));
                 if (CVAR(crosshair_per_weapon)) {
-                    e = get_weaponinfo(activeweapon);
+                    e = weapon_info(activeweapon);
                     if (e && e.netname != "")
                     {
                         wcross_wep = e.netname;

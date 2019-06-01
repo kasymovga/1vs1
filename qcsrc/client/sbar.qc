@@ -2088,7 +2088,7 @@ void Sbar_DrawAccuracyStats()
 	{
 		weapon_hit = weapon_hits[i];
 		weapon_damage = weapon_fired[i];
-		self = get_weaponinfo(i);
+		self = weapon_info(i);
 
 		//if ((weapon_number != 42))  // print them all :)
 		if (weapon_damage) {

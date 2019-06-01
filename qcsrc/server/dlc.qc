@@ -121,12 +121,12 @@ void dlc_reset_all() {
 		}
 	}
 	self = e;
-	RegisterWeapons();
+	weapon_register_weapons();
 	float i, wbit;
 	for (i = WEP_FIRST; i <= WEP_LAST; i++) {
 		wbit = weapon_bit(i);
 		if ((weaponsInMap & wbit) || (start_weapons & wbit))
-			get_weaponinfo(i).weapon_func(WR_PRECACHE);
+			weapon_info(i).weapon_func(WR_PRECACHE);
 	}
 }
 

@@ -99,7 +99,7 @@ float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, flo
 	{
 		weaponwant = stof(argv(i));
 		if(imp >= 0)
-			if((get_weaponinfo(weaponwant)).impulse != imp)
+			if((weapon_info(weaponwant)).impulse != imp)
 				continue;
 
 		++c;
@@ -139,7 +139,7 @@ float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, flo
 		{
 			weaponwant = stof(argv(i));
 			if(imp >= 0)
-				if((get_weaponinfo(weaponwant)).impulse != imp)
+				if((weapon_info(weaponwant)).impulse != imp)
 					continue;
 
 			--c;
@@ -192,14 +192,14 @@ void(float list) weapon_previous {
 
 string weapon_fix_order_allow_incomplete(string order)
 {
-	return W_FixWeaponOrder(order, 0);
+	return weapon_fix_order(order, 0);
 }
 
 string weapon_fix_order_force_complete(string order)
 {
 	if(order == "")
 		order = cvar_string("cl_weaponpriority");
-	return W_FixWeaponOrder(order, 1);
+	return weapon_fix_order(order, 1);
 }
 
 float weapon_best(entity e)
@@ -211,20 +211,20 @@ float weapon_best(entity e)
 // TODO should they be macros instead?
 float weapon_action(float wpn, float wrequest)
 {
-	return (get_weaponinfo(wpn)).weapon_func(wrequest);
+	return (weapon_info(wpn)).weapon_func(wrequest);
 };
 
 string(float weaponid) weapon_name {
-	return (get_weaponinfo(weaponid)).message;
+	return (weapon_info(weaponid)).message;
 }
 
 float(float wpn) weapon_bit {
-	return (get_weaponinfo(wpn)).weapons;
+	return (weapon_info(wpn)).weapons;
 }
 
 float weapon_ammo_item_code(float wpn)
 {
-	return (get_weaponinfo(wpn)).items;
+	return (weapon_info(wpn)).items;
 }
 
 void weapon_thrown_think()
@@ -483,11 +483,11 @@ void weapon_frame()
 }
 
 void(float wpn) weapon_precache {
-	string s = get_weaponinfo(wpn).mdl;
+	string s = weapon_info(wpn).mdl;
 	precache_model(strcat("models/weapons/g_", s, ".md3"));
 	precache_model(strcat("models/weapons/v_", s, ".md3"));
 	precache_model(strcat("models/weapons/h_", s, ".dpm"));
-	(get_weaponinfo(wpn)).weapon_func(WR_PRECACHE);
+	(weapon_info(wpn)).weapon_func(WR_PRECACHE);
 }
 
 float internalteam;
@@ -501,7 +501,7 @@ void(float wpn) weapon_defaultspawnfunc {
 	var void() item_spawnfunc;
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
-		e = get_weaponinfo(wpn);
+		e = weapon_info(wpn);
 		s = cvar_string(strcat("g_weaponreplace_", e.netname));
 		if(s == "0")
 		{
@@ -519,7 +519,7 @@ void(float wpn) weapon_defaultspawnfunc {
 				s = argv(i);
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					e = get_weaponinfo(j);
+					e = weapon_info(j);
 					if(e.netname == s)
 					{
 						self = spawn();
@@ -547,7 +547,7 @@ void(float wpn) weapon_defaultspawnfunc {
 			wpn = 0;
 			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
+				e = weapon_info(j);
 				if(e.netname == s)
 				{
 					wpn = j;
@@ -582,7 +582,7 @@ void(float wpn) weapon_defaultspawnfunc {
 
 	if(!self.respawntime)
 	{
-		e = get_weaponinfo(wpn);
+		e = weapon_info(wpn);
 		if(e.items == IT_SUPERWEAPON)
 		{
 			self.respawntime = g_pickup_respawntime_powerup;
@@ -595,7 +595,7 @@ void(float wpn) weapon_defaultspawnfunc {
 		}
 	}
 
-	e = get_weaponinfo(wpn);
+	e = weapon_info(wpn);
 
 	if(e.items && e.items != IT_SUPERWEAPON)
 	{
@@ -626,7 +626,7 @@ void(float wpn) weapon_defaultspawnfunc {
 // Setup weapon for client (after this raise frame will be launched)
 void(float windex) weapon_setup {
 	entity e;
-	e = get_weaponinfo(windex);
+	e = weapon_info(windex);
 	self.items &~= IT_AMMO;
 	self.items = self.items | e.items;
 
@@ -799,7 +799,7 @@ void weapon_model_think()
 			else
 			{
 				setmodel(self, strcat("models/weapons/h_", self.owner.weaponname, ".dpm")); // precision set below
-				entity e = get_weaponinfo(self.owner.weapon);
+				entity e = weapon_info(self.owner.weapon);
 				self.anim_fire1  = e.anim_fire1;
 				self.anim_fire2  = e.anim_fire2;
 				self.anim_idle   = e.anim_idle;
@@ -1668,7 +1668,7 @@ void() weapon_init {
 	sv_qcanimation_melee2_morph2origin = stov(cvar_string("sv_qcanimation_melee2_morph2origin"));
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		(get_weaponinfo(i)).weapon_func(WR_CVAR_CACHE);
+		(weapon_info(i)).weapon_func(WR_CVAR_CACHE);
 	}
 	Melee_Init();
 	bullet_init();
