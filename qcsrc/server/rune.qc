@@ -506,6 +506,7 @@ void(entity targ, entity attacker, float _damage, vector force) rune_DamageForce
 						e.enemy = spawn();
 						e.enemy.scale = 0.25;
 						e.enemy.customizeentityforclient = weapon_model_customize;
+						e.enemy.owner = targ;
 						targ.rune_stun = e;
 						setattachment(targ.rune_stun, targ, "");
 						setmodel(e, "models/teamfx/electricityarcs_player.md3");
