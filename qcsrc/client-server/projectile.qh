@@ -15,16 +15,8 @@ float projinfo_sizes[NUM_PROJECTILES];
 
 float projinfo_highest_registered;
 
-void ProjInfo_Register(float csqcid, float entrytype, vector sizes);
-void ProjInfo_RegisterAuto(float csqcid, vector sizes);
-void ProjInfo_SetSize(entity e, float csqcid);
-
-#ifdef PROJINFO_ENABLE_ASSERTIONS
-void ProjInfo_AssertRegistered(float csqcid);
-void ProjInfo_AssertUnregistered(float csqcid);
-#else
-#define ProjInfo_AssertRegistered(csqcid)
-#define ProjInfo_AssertUnregistered(csqcid)
-#endif
+void(float csqcid, float entrytype, vector sizes) projectile_register;
+void(float csqcid, vector sizes) projectile_register_auto;
+void(entity e, float csqcid) projectile_set_size;
 
 #define PROJINFO_PROPERTY(csqcid,property) projinfo_##property[(csqcid) - 1]

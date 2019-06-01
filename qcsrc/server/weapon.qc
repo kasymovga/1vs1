@@ -1672,7 +1672,7 @@ void() weapon_init {
 	}
 	Melee_Init();
 	bullet_init();
-	ProjInfo_RegisterAuto(PROJECTILE_BULLET, '0 0 0');
-	ProjInfo_RegisterAuto(PROJECTILE_BULLET_GLOWING, '0 0 0');
-	ProjInfo_RegisterAuto(PROJECTILE_BULLET_BIG, '0 0 0');
+	projectile_register_auto(PROJECTILE_BULLET, '0 0 0');
+	projectile_register_auto(PROJECTILE_BULLET_GLOWING, '0 0 0');
+	projectile_register_auto(PROJECTILE_BULLET_BIG, '0 0 0');
 }

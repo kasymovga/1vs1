@@ -374,7 +374,6 @@ void Ent_Projectile(float ignore)
 	if(f & 2)
 	{
 		self.cnt = ReadByte();
-		//ProjInfo_AssertRegistered(self.cnt);
 
 		if (f & 16) {
 			self.team = ReadChar();
@@ -509,7 +508,7 @@ void Ent_Projectile(float ignore)
 			default:
 				break;
 		}
-		ProjInfo_SetSize(self, self.cnt);
+		projectile_set_size(self, self.cnt);
 	}
 
     if(f & 4) {
@@ -559,7 +558,7 @@ void Projectile_Precache()
 	precache_sound("weapons/fireball_fly2.wav");
 }
 
-void ProjInfo_Read(void) {
+void(void) projectile_read {
 	float phighest = ReadByte();
 	float i;
 
@@ -569,11 +568,11 @@ void ProjInfo_Read(void) {
 		switch(type) {
 			case PROJINFO_TYPE_UNREGISTERED:
 			case PROJINFO_TYPE_POINT_000:
-				ProjInfo_Register(i + 1, type, '0 0 0');
+				projectile_register(i + 1, type, '0 0 0');
 				break;
 
 			case PROJINFO_TYPE_POINT_00n3:
-				ProjInfo_Register(i + 1, type, '0 -3 -3');
+				projectile_register(i + 1, type, '0 -3 -3');
 				break;
 
 			case PROJINFO_TYPE_POINT:

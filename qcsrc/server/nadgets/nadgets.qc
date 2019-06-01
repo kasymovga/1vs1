@@ -204,18 +204,14 @@ void HG_Init(void) {
     HGDEFS
     #undef HGDEF
 	HG_Precache();
-
-	ProjInfo_RegisterAuto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '1 -1 1');
-	ProjInfo_RegisterAuto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '1 -1 1');
-	ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '1 -1 1');
-	// ProjInfo_RegisterAuto(PROJECTILE_HG_NAPALMSHARD, HG_SIZE_DEFAULT * '-1 -1 -1');
-	ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '1 -1 1');
-	ProjInfo_RegisterAuto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '1 -1 1');
-	ProjInfo_RegisterAuto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '1 -1 1');
-
-    ProjInfo_RegisterAuto(PROJECTILE_HG_RAZE, '16 -3 3');
-    ProjInfo_RegisterAuto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
-
+	projectile_register_auto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '1 -1 1');
+    projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
+    projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
     HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
     GameHookChain_ObserverSpawn = HG_ObserverSpawn;
 	HG_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;

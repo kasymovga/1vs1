@@ -117,13 +117,13 @@ void(float type) projectile_init {
 		sizes = '0 -3 -3';
 		break;
 	}
-	ProjInfo_RegisterAuto(type, sizes);
+	projectile_register_auto(type, sizes);
 }
 
 entity(float clientanimate, float type, float docull, entity _owner) projectile {
 	entity e = spawn();
 	e.owner = Akimbo_Owner(_owner);
-	ProjInfo_SetSize(e, type);
+	projectile_set_size(e, type);
 	net_link_entity(e, docull, 0, projectile_send);
 
 	e.csqcprojectile_clientanimate = clientanimate;
@@ -211,7 +211,7 @@ void(void) projectile_info_send {
 				break;
 
 			default: {
-				error(strcat("Invalid ProjInfo type ", ftos(type)));
+				error(strcat("Invalid projectile info type ", ftos(type)));
 			}
 		}
 	}

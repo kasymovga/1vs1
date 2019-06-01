@@ -31,7 +31,7 @@ footsteps.qh
 campaign.qh
 ../menu-server/campaign_common.qh
 ../menu-server/mapinfo.qh
-../client-server/projinfo.qh
+../client-server/projectile.qh
 cvar.qh
 ../common/dlc.qh
 dlc.qh
@@ -290,7 +290,7 @@ skipnonsolid.qc
 ../common/ip2c.qc
 ip2c.qc
 anim.qc
-../client-server/projinfo.qc
+../client-server/projectile.qc
 ../common/dlc.qc
 dlc.qc
 nadgets/include.qc

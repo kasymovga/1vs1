@@ -12,7 +12,7 @@ csqc_builtins.qc
 ../common/weapon.qh
 ../common/extensions.qh
 
-../client-server/projinfo.qh
+../client-server/projectile.qh
 ../common/curl.qh
 ../client-server/cl_physics.qh
 ../client-server/cl_physics_spiderbot.qh
@@ -90,7 +90,7 @@ bgmscript.qc
 
 ../client-server/util.qc
 ../common/util.qc
-../client-server/projinfo.qc
+../client-server/projectile.qc
 ../common/weapon.qc
 ../client-server/cl_physics.qc
 ../client-server/cl_physics_spiderbot.qc

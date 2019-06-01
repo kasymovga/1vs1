@@ -1203,7 +1203,7 @@ void Ent_Init(float ignore)
 	}
 
 	if (sf & 64) {
-		ProjInfo_Read();
+		projectile_read();
 	}
 
 	if (sf & 128) {
