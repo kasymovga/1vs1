@@ -26,7 +26,7 @@ float g_balance_supershotgun_secondary_spread;
 
 void spawnfunc_weapon_supershotgun(); // defined in t_items.qc
 
-void W_Supershotgun_Pellet_Touch()
+void weapoon_supershotgun_touch()
 {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
@@ -49,7 +49,7 @@ void W_Supershotgun_Pellet_Touch()
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces)
+void weapon_supershotgun_pellet(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces)
 {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
@@ -64,7 +64,7 @@ void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed,
 	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
 	setorigin(proj, start);
-	proj.touch = W_Supershotgun_Pellet_Touch;
+	proj.touch = weapoon_supershotgun_touch;
 	proj.dmg = _damage;
 	proj.dmg_force = force;
 	proj.projectiledeathtype = dtype;
@@ -72,7 +72,7 @@ void W_Supershotgun_Pellet(vector start, vector dir, float spread, float pSpeed,
 	proj.cnt = bounces;
 }
 
-void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
+void weapon_supershotgun_attack(float secondary, float barrels, float ballistic)
 {
 	float a, b, f, d, s, spread, g, bc, dtype;
 	float	sc;
@@ -138,7 +138,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	else
 	{
 		for (sc = 0; sc < b; sc = sc + 1)
-			W_Supershotgun_Pellet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s + (s * random() * spread * 5),
+			weapon_supershotgun_pellet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s + (s * random() * spread * 5),
 					d, f, dtype, g, bounces);
 	}
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -159,7 +159,7 @@ void W_Supershotgun_Attack(float secondary, float barrels, float ballistic)
 	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 
-void W_Supershotgun_Attack2()
+void weapon_supershotgun_attack2()
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (self.ammo_shells < g_balance_supershotgun_secondary_ammo)
@@ -167,11 +167,11 @@ void W_Supershotgun_Attack2()
 		weapon_ready();
 		return;
 	}
-	W_Supershotgun_Attack(TRUE, 2, g_balance_supershotgun_secondary_ballistic);
+	weapon_supershotgun_attack(TRUE, 2, g_balance_supershotgun_secondary_ballistic);
 	weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_refire - g_balance_supershotgun_secondary_animtime, weapon_ready);
 }
 
-float w_supershotgun(float req)
+float weapon_supershotgun(float req)
 {
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin)>200 || !g_balance_supershotgun_secondary)
@@ -183,15 +183,15 @@ float w_supershotgun(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, g_balance_supershotgun_primary_refire))
 		{
-			W_Supershotgun_Attack(FALSE, 3, g_balance_supershotgun_primary_ballistic);
+			weapon_supershotgun_attack(FALSE, 3, g_balance_supershotgun_primary_ballistic);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_supershotgun_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (g_balance_supershotgun_secondary)
 		if (weapon_prepareattack(1, g_balance_supershotgun_secondary_refire))
 		{
-			W_Supershotgun_Attack(TRUE, 1, g_balance_supershotgun_secondary_ballistic);
-			weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_animtime, W_Supershotgun_Attack2);
+			weapon_supershotgun_attack(TRUE, 1, g_balance_supershotgun_secondary_ballistic);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_supershotgun_secondary_animtime, weapon_supershotgun_attack2);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -243,7 +243,7 @@ float w_supershotgun(float req)
 		projectile_init(PROJECTILE_BULLET_BIG);
 	}
 	return TRUE;
-};
+}
 
 void(void) spawnfunc_weapon_supershotgun {
 	weapon_defaultspawnfunc(WEP_SUPERSHOTGUN);

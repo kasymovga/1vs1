@@ -25,9 +25,7 @@ void fireguy_mine_think()
 		remove(self);
 		return;
 	}
-
-	W_Fireball_LaserPlay(0.1, self.dmg_radius, self.dmg_edge, 0, 4);
-
+	weapon_fireball_laser_play(0.1, self.dmg_radius, self.dmg_edge, 0, 4);
 	self.nextthink = time + 0.1;
 }
 

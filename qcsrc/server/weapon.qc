@@ -45,8 +45,8 @@ void weapon_reload() {
 	if(self.switchweapon == self.weapon)
 	if(self.weaponentity.state == WS_READY)
 	{
-		if (W_Melee_Possible())
-			W_Melee_Attack_Check();
+		if (weapon_melee_possible())
+			weapon_melee_attack_check();
 		else
 			weapon_action(self.weapon, WR_RELOAD);
 	}
@@ -442,7 +442,7 @@ void weapon_frame()
 			v_right = ri;
 			v_up = up;
 			if (self.bot_melee)
-				W_Melee_Attack_Check();
+				weapon_melee_attack_check();
 			else
 				weapon_action(self.weapon, WR_THINK);
 		}
@@ -1670,7 +1670,7 @@ void() weapon_init {
 	{
 		(weapon_info(i)).weapon_func(WR_CVAR_CACHE);
 	}
-	Melee_Init();
+	weapon_melee_init();
 	bullet_init();
 	projectile_register_auto(PROJECTILE_BULLET, '0 0 0');
 	projectile_register_auto(PROJECTILE_BULLET_GLOWING, '0 0 0');

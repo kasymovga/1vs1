@@ -10,7 +10,7 @@ float g_balance_powerup_strength_force;
 .entity porto_current_out;
 .vector right_vector;
 
-void W_Porto_Success (void)
+void weapon_port_success (void)
 {
 	if(self.owner == world)
 	{
@@ -25,7 +25,7 @@ void W_Porto_Success (void)
 	remove(self);
 }
 
-void W_Porto_Fail ()
+void weapoon_porto_fail ()
 {
 	if(self.owner == world)
 	{
@@ -41,33 +41,33 @@ void W_Porto_Fail ()
 	remove(self);
 }
 
-void W_Porto_Remove (entity p)
+void weapon_porto_remove (entity p)
 {
 	entity oldself;
 	oldself = self;
 	if(p.porto_current_in)
 	{
 		self = p.porto_current_in;
-		W_Porto_Fail();
+		weapoon_porto_fail();
 	}
 	if(p.porto_current_out)
 	{
 		self = p.porto_current_out;
-		W_Porto_Fail();
+		weapoon_porto_fail();
 	}
 	self = oldself;
 }
 
-void W_Porto_Think (void)
+void weapon_porto_think (void)
 {
 	trace_plane_normal = '0 0 0';
 	if(self.owner.playerid != self.playerid)
 		remove(self);
 	else
-		W_Porto_Fail();
+		weapoon_porto_fail();
 }
 
-void W_Porto_Touch (void)
+void weapon_porto_touch (void)
 {
 	PROJECTILE_SKIPNONSOLID
 	vector norm;
@@ -104,7 +104,7 @@ void W_Porto_Touch (void)
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
-		W_Porto_Fail();
+		weapoon_porto_fail();
 	}
 	else if(self.effects & EF_RED)
 	{
@@ -112,13 +112,13 @@ void W_Porto_Touch (void)
 		{
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			centerprint(self.owner, "^1In^7-portal created.");
-			W_Porto_Success();
+			weapon_port_success();
 		}
 		else
 		{
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
-			W_Porto_Fail();
+			weapoon_porto_fail();
 		}
 	}
 	else
@@ -128,17 +128,17 @@ void W_Porto_Touch (void)
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
 			centerprint(self.owner, "^4Out^7-portal created.");
-			W_Porto_Success();
+			weapon_port_success();
 		}
 		else
 		{
 			sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
-			W_Porto_Fail();
+			weapoon_porto_fail();
 		}
 	}
 }
 
-void W_Porto_Attack (float out)
+void weapon_porto_attack (float out)
 {
 	local entity gren;
 
@@ -170,8 +170,8 @@ void W_Porto_Attack (float out)
 	setorigin(gren, w_shotorg);
 
 	gren.nextthink = time + g_balance_porto_primary_lifetime;
-	gren.think = W_Porto_Think;
-	gren.touch = W_Porto_Touch;
+	gren.think = weapon_porto_think;
+	gren.touch = weapon_porto_touch;
 	gren.velocity = w_shotdir * g_balance_porto_primary_speed;
 	if(self.items & IT_STRENGTH)
 		gren.velocity = gren.velocity * g_balance_powerup_strength_force;
@@ -190,7 +190,7 @@ void spawnfunc_weapon_porto (void)
 	weapon_defaultspawnfunc(WEP_PORTO);
 }
 
-float w_porto(float req)
+float weapon_porto(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -205,14 +205,14 @@ float w_porto(float req)
 		if (!self.porto_current_in)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
-			W_Porto_Attack(FALSE);
+			weapon_porto_attack(FALSE);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (!self.porto_current_out)
 		if (weapon_prepareattack(0, g_balance_porto_primary_refire))
 		{
-			W_Porto_Attack(TRUE);
+			weapon_porto_attack(TRUE);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_porto_primary_animtime, weapon_ready);
 		}
 	}
@@ -240,7 +240,7 @@ float w_porto(float req)
 		self.portal_id = time;
 	}
 	else if (req == WR_CLEAR)
-		W_Porto_Remove(self);
+		weapon_porto_remove(self);
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_porto_primary_animtime);
@@ -253,4 +253,4 @@ float w_porto(float req)
 		projectile_init(PROJECTILE_PORTO_BLUE);
 	}
 	return TRUE;
-};
+}

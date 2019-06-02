@@ -29,7 +29,7 @@ var .float hlac_buttonatck1 = BUTTON_ATCK;
 var .float hlac_buttonatck2 = BUTTON_ATCK2;
 
 .float HLAC_bulletcounter;
-void W_HLAC_Touch (void)
+void weapon_hlac_touch (void)
 {
 	PROJECTILE_TOUCH;
 
@@ -40,7 +40,7 @@ void W_HLAC_Touch (void)
 	remove (self);
 }
 
-void W_HLAC_Touch2 (void)
+void weapon_hlac_touch2 (void)
 {
 	PROJECTILE_TOUCH;
 
@@ -51,9 +51,9 @@ void W_HLAC_Touch2 (void)
 	remove (self);
 }
 
-void W_HLAC_Attack (void)
+void weapon_hlac_attack (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -92,7 +92,7 @@ void W_HLAC_Attack (void)
 	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
-	missile.touch = W_HLAC_Touch;
+	missile.touch = weapon_hlac_touch;
 	missile.think = SUB_Remove;
 
     missile.nextthink = time + g_balance_hlac_primary_lifetime;
@@ -100,9 +100,9 @@ void W_HLAC_Attack (void)
 	missile.projectiledeathtype = WEP_HLAC;
 }
 
-void W_HLAC_Attack2f (void)
+void weapon_hlac_attack2f (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
     spread = g_balance_hlac_secondary_spread;
@@ -132,7 +132,7 @@ void W_HLAC_Attack2f (void)
 	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 
-	missile.touch = W_HLAC_Touch2;
+	missile.touch = weapon_hlac_touch2;
 	missile.think = SUB_Remove;
 
     missile.nextthink = time + g_balance_hlac_secondary_lifetime;
@@ -140,7 +140,7 @@ void W_HLAC_Attack2f (void)
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 }
 
-void W_HLAC_Attack2 (void)
+void weapon_hlac_attack2 (void)
 {
     float i;
 
@@ -150,7 +150,7 @@ void W_HLAC_Attack2 (void)
     }
 
     for(i=g_balance_hlac_secondary_shots;i>0;--i)
-        W_HLAC_Attack2f();
+        weapon_hlac_attack2f();
 
 	if (!g_norecoil)
 	{
@@ -161,7 +161,7 @@ void W_HLAC_Attack2 (void)
 
 
 // weapon frames
-void HLAC_fire1_02()
+void weapon_hlack_fire1_02()
 {
 	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE))
 	{
@@ -180,22 +180,22 @@ void HLAC_fire1_02()
 		}
 
 		ATTACK_FINISHED(self) = time + g_balance_hlac_primary_refire * weapon_rate_factor();
-		W_HLAC_Attack();
+		weapon_hlac_attack();
 		self.HLAC_bulletcounter = self.HLAC_bulletcounter + 1;
-        weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, HLAC_fire1_02);
+        weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
 	}
 	else
 	{
 		weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_animtime, weapon_ready);
 	}
-};
+}
 
 void spawnfunc_weapon_hlac (void)
 {
 	weapon_defaultspawnfunc(WEP_HLAC);
 }
 
-float w_hlac(float req)
+float weapon_hlac(float req)
 {
 	if (req == WR_AIM)
         self.hlac_buttonatck1 = bot_aim(g_balance_hlac_primary_speed, 0, g_balance_hlac_primary_lifetime, FALSE);
@@ -205,15 +205,15 @@ float w_hlac(float req)
 		if (weapon_prepareattack(0, g_balance_hlac_primary_refire))
 		{
 			self.HLAC_bulletcounter = 0;
-			W_HLAC_Attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, HLAC_fire1_02);
+			weapon_hlac_attack();
+			weapon_thinkf(WFRAME_FIRE1, g_balance_hlac_primary_refire, weapon_hlack_fire1_02);
 		}
 
 		if (self.hlac_buttonatck2)
 		if (g_balance_hlac_secondary)
 		if (weapon_prepareattack(1, g_balance_hlac_secondary_refire))
 		{
-			W_HLAC_Attack2();
+			weapon_hlac_attack2();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_hlac_secondary_animtime, weapon_ready);
 		}
 
@@ -268,4 +268,4 @@ float w_hlac(float req)
 		}
 	}
 	return TRUE;
-};
+}

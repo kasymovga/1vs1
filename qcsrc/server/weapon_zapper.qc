@@ -54,7 +54,7 @@ var .float zapper_buttonatck2 = BUTTON_ATCK2;
 
 .vector zapper_beam_start, zapper_beam_end;
 
-vector W_Zapper_BeamRGB(float t) {
+vector weapon_zapper_beam_rgb(float t) {
     switch(t) {
         case COLOR_TEAM1:            return '5.0   1.0   0.5';
         case COLOR_TEAM2: default:   return '0.5   1.0   5.0';
@@ -64,7 +64,7 @@ vector W_Zapper_BeamRGB(float t) {
 }
 
 .vector glowmod;
-void W_Zapper_SpawnSpinner_Think() {
+void weapon_zapper_spinner_think() {
 	if(self.owner.weapon != WEP_ZAPPER) {
 		self.owner.zapper_spinner = world;
 		remove(self);
@@ -90,7 +90,7 @@ void W_Zapper_SpawnSpinner_Think() {
 	self.nextthink = time;
 }
 
-float W_Zapper_Spinner_CustomizeEntityForClient() {
+float weapon_zapper_spinner_customize() {
 	if (other.gameclient == CLIENT_OLDNEXUIZ)
 		self.effects |= EF_NODRAW;
 	else
@@ -99,7 +99,7 @@ float W_Zapper_Spinner_CustomizeEntityForClient() {
 	return weapon_model_customize();
 }
 
-void W_Zapper_SpawnSpinner(void) {
+void weapon_zapper_spinner_spawn(void) {
     if (self.zapper_spinner)
         return;
 
@@ -114,10 +114,10 @@ void W_Zapper_SpawnSpinner(void) {
 	s.owner = self;
 	s.viewmodelforclient = o;
 	s.colormap = self.colormap;
-	s.color = W_Zapper_BeamRGB((teamplay ? self.team : COLOR_TEAM2));
-	s.think = W_Zapper_SpawnSpinner_Think;
+	s.color = weapon_zapper_beam_rgb((teamplay ? self.team : COLOR_TEAM2));
+	s.think = weapon_zapper_spinner_think;
 	s.nextthink = time;
-	s.customizeentityforclient = W_Zapper_Spinner_CustomizeEntityForClient;
+	s.customizeentityforclient = weapon_zapper_spinner_customize;
 
     setattachment(s, self.weaponentity, "shot");
 
@@ -127,18 +127,18 @@ void W_Zapper_SpawnSpinner(void) {
     self.zapper_spinner = s;
 }
 
-float W_Zapper_Attack1_CheckAmmo(entity p) {
+float weapon_zapper_attack1_check_ammo(entity p) {
     return p.ammo_cells >= g_balance_zapper_primary_ammo;
 }
 
-float W_Zapper_Attack2_CheckAmmo(entity p) {
+float weapon_zapper_attack2_check_ammo(entity p) {
     if(g_balance_zapper_secondary_shield)
         return p.ammo_cells >= 1;
 
     return p.ammo_cells >= g_balance_zapper_secondary_ammo;
 }
 
-float W_Zapper_Beam_Send(entity to, float sf) {
+float weapon_zapper_beam_send(entity to, float sf) {
     sf &~= 24;
 	entity _owner = self.owner;
     float o = num_for_edict(_owner);
@@ -182,7 +182,7 @@ float W_Zapper_Beam_Send(entity to, float sf) {
     return TRUE;
 }
 
-float W_Zapper_Beam_Expired(float secondary) {
+float weapon_zapper_beam_expired(float secondary) {
     entity o = self.owner;
 
 	if(self.zapper_expire)
@@ -203,7 +203,7 @@ float W_Zapper_Beam_Expired(float secondary) {
 			if(o.ammo_cells < 1)
 				return TRUE;
 		} else {
-			if(!W_Zapper_Attack1_CheckAmmo(o))
+			if(!weapon_zapper_attack1_check_ammo(o))
 				return TRUE;
 			if(o.zapper_shield)
 				return TRUE;
@@ -213,20 +213,20 @@ float W_Zapper_Beam_Expired(float secondary) {
     return FALSE;
 }
 
-vector W_Zapper_GetVisualShootOrg(entity o) {
+vector weapon_zapper_visual_shotorg(entity o) {
 	float n = gettagindex(o.exteriorweaponentity, "_");
     vector org = gettaginfo(o.exteriorweaponentity, n);
 	return org + v_forward * 30 + v_up * 3;
 }
 
-void W_Zapper_Beam_Think(void) {
-    if(W_Zapper_Beam_Expired(FALSE)) {
+void weapon_zapper_beam_think(void) {
+    if(weapon_zapper_beam_expired(FALSE)) {
         if(self.enemy.zapper_beam == self)
             self.enemy.zapper_beam = world;
         remove(self);
         return;
     }
-	vector org = W_Zapper_GetVisualShootOrg(self.enemy);
+	vector org = weapon_zapper_visual_shotorg(self.enemy);
 
     makevectors(self.owner.v_angle);
     entity o = self.owner;
@@ -318,16 +318,16 @@ void W_Zapper_Beam_Think(void) {
     self.nextthink = time;
 }
 
-void W_Zapper_Attack1(void) {
+void weapon_zapper_attack1(void) {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-    if(!W_Zapper_Attack1_CheckAmmo(self))
+    if(!weapon_zapper_attack1_check_ammo(self))
         return;
 
     dlc_sound(self, CHAN_WEAPON, "weapons/zapper_fire.wav", VOL_BASE, ATTN_NORM);
 
     entity e = spawn();
     e.classname = "zapper_beam";
-    e.think = W_Zapper_Beam_Think;
+    e.think = weapon_zapper_beam_think;
     e.owner = Akimbo_Owner(self);
     e.enemy = self;
 
@@ -336,7 +336,7 @@ void W_Zapper_Attack1(void) {
     e.zapper_dmgdelay = g_balance_zapper_primary_ticrate;
     e.zapper_lastdmg = time - e.zapper_dmgdelay * weapon_rate_factor();
 
-    net_link_entity(e, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(e, FALSE, 0, weapon_zapper_beam_send);
 
     self.zapper_beam = e;
 	entity oldself = self;
@@ -346,12 +346,12 @@ void W_Zapper_Attack1(void) {
 	e.nextthink = time;
 }
 
-float W_Zapper_Attack2_Effect_team;
-void W_Zapper_Attack2_Effect_cb(vector from, vector to, vector end) {
+float weapon_zapper_attack2_effect_team;
+void weapon_zapper_attack2_effect_cb(vector from, vector to, vector end) {
     WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
     WriteByte(MSG_BROADCAST, TE_CSQC_ZAPPERLIGHTNING);
 
-    WriteByte(MSG_BROADCAST, W_Zapper_Attack2_Effect_team);
+    WriteByte(MSG_BROADCAST, weapon_zapper_attack2_effect_team);
     WriteCoord(MSG_BROADCAST, from_x);
     WriteCoord(MSG_BROADCAST, from_y);
     WriteCoord(MSG_BROADCAST, from_z);
@@ -360,12 +360,12 @@ void W_Zapper_Attack2_Effect_cb(vector from, vector to, vector end) {
     WriteCoord(MSG_BROADCAST, to_z);
 }
 
-void W_Zapper_Attack2_Effect(float ateam, vector from, vector to) {
-	W_Zapper_Attack2_Effect_team = ateam;
-	WarpZone_DrawEffectTriangle(from, from, to, W_Zapper_Attack2_Effect_cb);
+void weapon_zapper_attack2_effect(float ateam, vector from, vector to) {
+	weapon_zapper_attack2_effect_team = ateam;
+	WarpZone_DrawEffectTriangle(from, from, to, weapon_zapper_attack2_effect_cb);
 }
 
-void W_Zapper_Attack2_Arc(entity targ, entity attacker, float _damage) {
+void weapon_zapper_attack2_arc(entity targ, entity attacker, float _damage) {
     float arc = g_balance_zapper_secondary_arc;
 
     if(arc <= 0)
@@ -377,7 +377,7 @@ void W_Zapper_Attack2_Arc(entity targ, entity attacker, float _damage) {
     );
 }
 
-void W_Zapper_Attack2_Beam(entity o, vector start, vector start_visual, vector end, float fraction, float range, float bounces, float _damage, float force) {
+void weapon_zapper_attack2_beam(entity o, vector start, vector start_visual, vector end, float fraction, float range, float bounces, float _damage, float force) {
 	WarpZone_TraceLine(start, end, FALSE, (fraction ? world : o));
 	vector plane_normal = trace_plane_normal;
 	entity targ = trace_ent;
@@ -393,12 +393,12 @@ void W_Zapper_Attack2_Beam(entity o, vector start, vector start_visual, vector e
 		_damage *= bullet_exponential_falloff(mindist, maxdist, halflifedist, d);
 		force  *= bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, d);
 		if(targ.iscreature)
-			W_Zapper_Attack2_Arc(targ, o, _damage);
+			weapon_zapper_attack2_arc(targ, o, _damage);
 
 		damage_record_hits(o, targ, WEP_ZAPPER, 1, _damage);
 		damage(targ, o, o, _damage, WEP_ZAPPER | HITTYPE_SECONDARY, end, force * forcedir);
 	}
-	W_Zapper_Attack2_Effect_team = o.team;
+	weapon_zapper_attack2_effect_team = o.team;
 	if(targ.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		damage_info(end, _damage, 0, 0, force * forcedir, WEP_ZAPPER | HITTYPE_SECONDARY, o);
 
@@ -408,13 +408,13 @@ void W_Zapper_Attack2_Beam(entity o, vector start, vector start_visual, vector e
 	if (fraction < 1) {
 		vector reflect_dir = forcedir - 2 * (forcedir * plane_normal) * plane_normal;
 		if (bounces > 0) {
-			W_Zapper_Attack2_Beam(o, end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, _damage, force);
+			weapon_zapper_attack2_beam(o, end, end, end + reflect_dir * range * (1 - fraction), fraction, range, bounces - 1, _damage, force);
 		}
 	}
-	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), W_Zapper_Attack2_Effect_cb);
+	WarpZone_DrawEffectTriangle(start, start_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, end), weapon_zapper_attack2_effect_cb);
 }
 
-void W_Zapper_Attack2(void) {
+void weapon_zapper_attack2(void) {
     float accum_time = g_balance_zapper_secondary_accumulate;
     float charge_time;
     if (accum_time) {
@@ -436,13 +436,13 @@ void W_Zapper_Attack2(void) {
 
     vector end = w_shotorg + w_shotdir * range;
 	entity o = Akimbo_Owner(self);
-	W_Zapper_Attack2_Beam(o, w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
+	weapon_zapper_attack2_beam(o, w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
 	antilag_end();
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
         self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
 }
 
-void W_Zapper_Shield_Beam_Think(void) {
+void weapon_zapper_shield_beam_think(void) {
     if(self.enemy.zapper_shield != self.zapper_shield) {
         remove(self);
         return;
@@ -454,7 +454,7 @@ void W_Zapper_Shield_Beam_Think(void) {
     weapon_setup_shot(self, TRUE, 5, "", 0);
 	vector org = w_shotorg_visual;
 #endif
-    vector org = W_Zapper_GetVisualShootOrg(self.enemy);
+    vector org = weapon_zapper_visual_shotorg(self.enemy);
 	makevectors(self.owner.angles);
 
     end = org + v_forward * 7;
@@ -474,8 +474,8 @@ void W_Zapper_Shield_Beam_Think(void) {
     self.nextthink = time;
 }
 
-void W_Zapper_Shield_Think(void) {
-    if(W_Zapper_Beam_Expired(TRUE) || !self.owner.zapper_shield) {
+void weapon_zapper_shield_think(void) {
+    if(weapon_zapper_beam_expired(TRUE) || !self.owner.zapper_shield) {
         if(self.owner.zapper_shield == self)
             self.owner.zapper_shield = world;
 
@@ -497,7 +497,7 @@ void W_Zapper_Shield_Think(void) {
     self.nextthink = time;
 }
 
-void W_Zapper_Shield_Blocker_Push(entity p) {
+void weapon_zappber_shield_blocker_push(entity p) {
     if(normalize(p.origin - self.oldorigin) * v_forward < 0.5)
         return;
 
@@ -508,7 +508,7 @@ void W_Zapper_Shield_Blocker_Push(entity p) {
     }
 }
 
-void W_Zapper_Shield_Blocker_SetOrigin(entity _shield) {
+void weapon_zapper_shield_blocker_setorigin(entity _shield) {
     vector o = _shield.owner.origin + _shield.owner.view_ofs;
     vector a = _shield.owner.angles;
     _shield.oldorigin = o;
@@ -517,29 +517,29 @@ void W_Zapper_Shield_Blocker_SetOrigin(entity _shield) {
     setorigin(_shield, o - v_forward * 85);
 }
 
-void W_Zapper_Shield_Blocker_Think(void) {
+void weapon_zapper_shield_blocker_think(void) {
     if(self.owner.zapper_shield != self.zapper_shield) {
 		antilag_remove(self);
         remove(self);
         return;
     }
-	W_Zapper_Shield_Blocker_SetOrigin(self);
+	weapon_zapper_shield_blocker_setorigin(self);
     entity e;
     FOR_EACH_PLAYER(e) if(e != self.owner)
-        W_Zapper_Shield_Blocker_Push(e);
+        weapon_zappber_shield_blocker_push(e);
 
     for(e = findchainflags(flags, FL_PROJECTILE); e; e = e.chain)
         if(e.classname != "bullet")
-            W_Zapper_Shield_Blocker_Push(e);
+            weapon_zappber_shield_blocker_push(e);
 
     self.nextthink = time;
 }
 
-void W_Zapper_Attack3(void) {
+void weapon_zapper_attack3(void) {
     entity e = spawn();
     e.classname = "zapper_shield";
     setmodel(e, "models/vhshield.md3");
-    e.think = W_Zapper_Shield_Think;
+    e.think = weapon_zapper_shield_think;
 	e.owner = self;
     e.nextthink = time;
     e.alpha = 0.01;
@@ -562,32 +562,32 @@ void W_Zapper_Attack3(void) {
 
     entity b = spawn();
     b.classname = "zapper_shield_beam";
-    b.think = W_Zapper_Shield_Beam_Think;
+    b.think = weapon_zapper_shield_beam_think;
     b.nextthink = time;
 	b.enemy = self;
     b.owner = Akimbo_Owner(self);
     b.zapper_shield = e;
 
-    net_link_entity(b, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(b, FALSE, 0, weapon_zapper_beam_send);
 
     e.zapper_beam = b;
 
     b = spawn();
     b.classname = "zapper_shield_blocker";
     b.owner = Akimbo_Owner(self);
-    b.think = W_Zapper_Shield_Blocker_Think;
+    b.think = weapon_zapper_shield_blocker_think;
     b.zapper_shield = e;
     b.nextthink = time;
     b.solid = SOLID_BSP;
     b.alpha = -1;
     setmodel(b, "models/vhshield.md3");
-	W_Zapper_Shield_Blocker_SetOrigin(b);
+	weapon_zapper_shield_blocker_setorigin(b);
 	antilag_add(b);
 
     e.zapper_shield = b;
 }
 
-void W_Zapper_Cooloff(void) {
+void weapon_zapper_cooloff(void) {
     if(self.zapper_heat < 0)
         return;
 
@@ -599,16 +599,7 @@ void W_Zapper_Cooloff(void) {
     self.zapper_heat = bound(0, self.zapper_heat - g_balance_zapper_primary_cooloff * frametime * a, 1);
 }
 
-#if 0
-float W_Zapper_PrepareFirstAttack(float sec) {
-    if(self.weaponentity.state == WS_INUSE)
-        self.weaponentity.state = WS_READY;
-
-    return weapon_prepareattack(sec, 0);
-}
-#endif
-
-void W_Zapper_Accumulate(void) {
+void weapon_zapper_accumulate(void) {
 
     setorigin(self, self.owner.origin);
     self.nextthink = time;
@@ -619,7 +610,7 @@ void W_Zapper_Accumulate(void) {
                (!self.zapper_buttonatck2
                || self.zapper_buttonatck1
                || time > self.zapper_accumulator.zapper_accumulate)) {
-            W_Zapper_Attack2();
+            weapon_zapper_attack2();
             weapon_thinkf(WFRAME_FIRE2, g_balance_zapper_animtime, weapon_ready);
         } else
             accumulate_end = 0;
@@ -632,7 +623,7 @@ void W_Zapper_Accumulate(void) {
 }
 
 
-float w_zapper(float req) {
+float weapon_zapper(float req) {
     float dofire;
 
     if (req == WR_AIM) {
@@ -641,8 +632,8 @@ float w_zapper(float req) {
         else
             self.zapper_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
     } else if(req == WR_THINK) {
-        W_Zapper_SpawnSpinner();
-		W_Zapper_Cooloff();
+        weapon_zapper_spinner_spawn();
+		weapon_zapper_cooloff();
 
         if(self.zapper_buttonatck1) {
             if (self.zapper_buttonatck2 && g_balance_zapper_secondary_shield == 2) {
@@ -655,7 +646,7 @@ float w_zapper(float req) {
                             self.zapper_shield.zapper_expire = time + g_balance_zapper_secondary_shield_lifetime;
                         } else if(time > self.zapper_shieldready) {
                             dofire = TRUE;
-                            W_Zapper_Attack3();
+                            weapon_zapper_attack3();
                         }
 
                         if(dofire)
@@ -671,7 +662,7 @@ float w_zapper(float req) {
                         self.zapper_beam.zapper_expire = time + g_balance_zapper_primary_lifetime;
                     } else {
                         dofire = TRUE;
-                        W_Zapper_Attack1();
+                        weapon_zapper_attack1();
                     }
 
                     if(dofire)
@@ -689,7 +680,7 @@ float w_zapper(float req) {
                             self.zapper_shield.zapper_expire = time + g_balance_zapper_secondary_shield_lifetime;
                         } else {
                             dofire = TRUE;
-                            W_Zapper_Attack3();
+                            weapon_zapper_attack3();
                         }
 
                         if(dofire)
@@ -702,14 +693,14 @@ float w_zapper(float req) {
                     self.zapper_accumulator = spawn();
                     self.zapper_accumulator.zapper_accumulate = time + g_balance_zapper_secondary_accumulate; //Accumulate end time
                     self.zapper_accumulator.owner = self;
-                    self.zapper_accumulator.think = W_Zapper_Accumulate;
+                    self.zapper_accumulator.think = weapon_zapper_accumulate;
                     self.zapper_accumulator.nextthink = time;
                     self.zapper_accumulator.zapper_expire = time + g_balance_zapper_animtime;
                     sound(self, CHAN_WEAPON2, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
                     weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
                 }
             } else if(weapon_prepareattack(1, g_balance_zapper_secondary_refire)) {
-                W_Zapper_Attack2();
+                weapon_zapper_attack2();
                 weapon_thinkf(WFRAME_FIRE1, g_balance_zapper_animtime, weapon_ready);
             }
         }
@@ -741,9 +732,9 @@ float w_zapper(float req) {
             self.zapper_spinner = world;
         }
     } else if(req == WR_CHECKAMMO1)
-        return W_Zapper_Attack1_CheckAmmo(self);
+        return weapon_zapper_attack1_check_ammo(self);
     else if(req == WR_CHECKAMMO2)
-        return W_Zapper_Attack2_CheckAmmo(self);
+        return weapon_zapper_attack2_check_ammo(self);
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)

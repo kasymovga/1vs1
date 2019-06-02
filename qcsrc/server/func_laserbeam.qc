@@ -102,7 +102,7 @@ void func_laserbeam_init(void) {
         self.t_length = MAX_SHOT_DISTANCE;
 
     self.reset();
-    net_link_entity(self, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(self, FALSE, 0, weapon_zapper_beam_send);
 
     dlc_require("zapper_v1");
     dlc_require("rm_effects_v2");

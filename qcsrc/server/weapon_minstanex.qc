@@ -22,13 +22,13 @@ float g_balance_minstanex_laser_rapid_refire;
 .float minstanex_lasthit;
 .float laser_hold;
 
-float DrawMinstaNexBeamParticles_effect;
-void DrawMinstaNexBeamParticles(vector start, vector end, vector to) {
-	NexWhoosh(start, end);
-	trailparticles(world, DrawMinstaNexBeamParticles_effect, start, end);
+float weapon_minstanex_draw_beam_particless_effect;
+void weapon_minstanex_draw_beam_particless(vector start, vector end, vector to) {
+	weapon_nex_whoosh(start, end);
+	trailparticles(world, weapon_minstanex_draw_beam_particless_effect, start, end);
 }
 
-void W_MinstaNex_Attack (void)
+void weapon_minstanex_attack (void)
 {
 	float flying;
 	flying = physic_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
@@ -58,34 +58,34 @@ void W_MinstaNex_Attack (void)
 	    {
             case COLOR_TEAM1:   // Red
                 if(damage_goodhits)
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3RED_HIT");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3RED_HIT");
                 else
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3RED");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3RED");
                 break;
             case COLOR_TEAM2:   // Blue
                 if(damage_goodhits)
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3BLUE_HIT");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3BLUE_HIT");
                 else
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3BLUE");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3BLUE");
                 break;
             case COLOR_TEAM3:   // Yellow
                 if(damage_goodhits)
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3YELLOW_HIT");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3YELLOW_HIT");
                 else
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3YELLOW");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3YELLOW");
                 break;
             case COLOR_TEAM4:   // Pink
                 if(damage_goodhits)
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3PINK_HIT");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3PINK_HIT");
                 else
-                    DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3PINK");
+                    weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3PINK");
                 break;
 	    }
 	}
 	else
-        DrawMinstaNexBeamParticles_effect = particleeffectnum("TE_TEI_G3");
+        weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3");
 
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), DrawMinstaNexBeamParticles);
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_minstanex_draw_beam_particless);
 
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
@@ -104,14 +104,14 @@ void W_MinstaNex_Attack (void)
 		self.ammo_cells = self.ammo_cells - 1;
 }
 
-void W_MinstaNex_Laser_Projectile_Touch() {
+void weapon_minstanex_laser_touch() {
 	PROJECTILE_TOUCH;
 	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.owner, g_balance_minstanex_laser_damage * self.dmg, g_balance_minstanex_laser_edgedamage * self.dmg, g_balance_minstanex_laser_radius, world, g_balance_minstanex_laser_force * self.dmg, self.projectiledeathtype, other);
 	remove (self);
 }
 
-void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
+void weapon_minstanex_laser_projectile(vector _shotdir, float ff) {
 	entity missile = projectile(TRUE, (g_balance_minstanex_explode ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE, self);
 	missile.team = self.team;
 	missile.dmg = ff;
@@ -125,19 +125,19 @@ void W_MinstaNex_Laser_Projectile(vector _shotdir, float ff) {
 	missile.velocity = _shotdir * g_balance_minstanex_laser_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
-	missile.touch = W_MinstaNex_Laser_Projectile_Touch;
+	missile.touch = weapon_minstanex_laser_touch;
 	missile.think = SUB_Remove;
 	missile.nextthink = time + g_balance_minstanex_laser_lifetime;
 }
 
-void W_MinstaNex_Laser_Attack_Setup() {
+void weapon_minstanex_laser_attack_setup() {
 	float w_safe = self.weapon;
 	self.weapon = WEP_LASER;
 	weapon_setup_shotdir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
 	self.weapon = w_safe;
 }
 
-float W_MinstaNex_PlayerCanFire() {
+float weapon_minstanex_player_can_fire() {
 	float w_safe = self.weapon;
 	self.weapon = WEP_LASER;
 	float r = player_can_fire(self, TRUE);
@@ -145,8 +145,8 @@ float W_MinstaNex_PlayerCanFire() {
 	return r;
 }
 
-void W_MinstaNex_Laser_Attack() {
-	W_MinstaNex_Laser_Attack_Setup();
+void weapon_minstanex_laser_attack() {
+	weapon_minstanex_laser_attack_setup();
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 	float f1, f2;
 	if (g_balance_minstanex_laser_count > 1) {
@@ -161,17 +161,17 @@ void W_MinstaNex_Laser_Attack() {
 	for (i = 0; i < g_balance_minstanex_laser_count; i++) {
 		v = w_shotdir + v_right * f2;
 		f2 += f1;
-		W_MinstaNex_Laser_Projectile(v, ff);
+		weapon_minstanex_laser_projectile(v, ff);
 	}
 }
 
-void W_MinstaNex_Laser_Attack_Rapid() {
-	W_MinstaNex_Laser_Attack_Setup();
+void weapon_minstanex_laser_attack_rapid() {
+	weapon_minstanex_laser_attack_setup();
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-	W_MinstaNex_Laser_Projectile(w_shotdir, 1);
+	weapon_minstanex_laser_projectile(w_shotdir, 1);
 }
 
-float w_minstanex(float req)
+float weapon_minstanex(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -186,7 +186,7 @@ float w_minstanex(float req)
 		{
 			if (weapon_prepareattack(0, g_balance_minstanex_refire))
 			{
-				W_MinstaNex_Attack();
+				weapon_minstanex_attack();
 				weapon_thinkf(WFRAME_FIRE1, g_balance_minstanex_animtime, weapon_ready);
 			}
 		}
@@ -195,20 +195,20 @@ float w_minstanex(float req)
 			{
 				if not(self.laser_hold) {
 					if (self.jump_interval <= time)
-					if (W_MinstaNex_PlayerCanFire())
+					if (weapon_minstanex_player_can_fire())
 					{
 						self.jump_interval = time + g_balance_minstanex_laser_refire * weapon_rate_factor();
 						//W_Laser_Attack(FALSE);
-						W_MinstaNex_Laser_Attack();
+						weapon_minstanex_laser_attack();
 						if (g_balance_minstanex_laser_rapid)
 							self.laser_hold = time + g_balance_minstanex_laser_rapid_delay;
 					}
 				} else {
 					if (self.laser_hold <= time)
 					if (self.jump_interval <= time)
-					if (W_MinstaNex_PlayerCanFire()) {
+					if (weapon_minstanex_player_can_fire()) {
 						self.jump_interval = time + g_balance_minstanex_laser_rapid_refire * weapon_rate_factor();
-						W_MinstaNex_Laser_Attack_Rapid();
+						weapon_minstanex_laser_attack_rapid();
 					}
 				}
 			} else {
@@ -223,7 +223,7 @@ float w_minstanex(float req)
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
-		w_laser(WR_PRECACHE);
+		weapon_laser(WR_PRECACHE);
 	}
 	else if (req == WR_SETUP)
 	{
@@ -275,4 +275,4 @@ float w_minstanex(float req)
 			projectile_init(PROJECTILE_LASER);
 	}
 	return TRUE;
-};
+}

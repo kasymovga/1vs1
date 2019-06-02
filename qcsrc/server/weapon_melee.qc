@@ -21,7 +21,7 @@ string sv_sound_melee;
 
 float bot_melee_love;
 
-void W_Melee_Attack_Think()
+void weapon_melee_attack_think()
 {
 	float melee_frame;
 	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + g_balance_melee_time - self.melee_lastthink);
@@ -64,7 +64,7 @@ void W_Melee_Attack_Think()
 	self.nextthink = time + g_balance_melee_ticrate;
 }
 
-void W_Melee_Attack (float melee_type, float axe)
+void weapon_melee_attack (float melee_type, float axe)
 {
 	if (melee_type == 2)
 	if (Akimbo_Active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
@@ -73,7 +73,7 @@ void W_Melee_Attack (float melee_type, float axe)
 	sound (Akimbo_Owner(self), CHAN_WEAPON, sv_sound_melee, VOL_BASE, ATTN_NORM);
 	entity melee = spawn();
 	melee.owner = Akimbo_Owner(self);
-	melee.think = W_Melee_Attack_Think;
+	melee.think = weapon_melee_attack_think;
 	melee.nextthink = time + g_balance_melee_delay;
 	melee.melee_startthink = melee.nextthink;
 	melee.melee_lastthink = melee.nextthink;
@@ -93,7 +93,7 @@ void W_Melee_Attack (float melee_type, float axe)
 	self.bot_melee = FALSE;
 }
 
-float W_Melee_Possible()
+float weapon_melee_possible()
 {
 	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
 	if (self.weapon != WEP_CAMPINGRIFLE || g_balance_campingrifle_hotreload)
@@ -102,7 +102,7 @@ float W_Melee_Possible()
 	return FALSE;
 }
 
-void W_Melee_Attack_Check()
+void weapon_melee_attack_check()
 {
 	if (self.weapon != self.switchweapon)
 		return;
@@ -112,14 +112,14 @@ void W_Melee_Attack_Check()
 	float axe = ((w_save == WEP_MELEE) && (g_balance_melee != 2));
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
-		W_Melee_Attack(g_balance_melee, axe);
+		weapon_melee_attack(g_balance_melee, axe);
 		weapon_thinkf((axe ? WFRAME_FIRE1 : ((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE)), g_balance_melee_animtime, weapon_ready);
 	}
 	self.weapon = w_save;
 	self.switchweapon = w_save;
 }
 
-void Melee_Init()
+void weapon_melee_init()
 {
 	unzone_ifneeded(sv_sound_melee);
 	sv_sound_melee = cvar_string_zone_ifneeded("sv_sound_melee");
@@ -141,9 +141,9 @@ void Melee_Init()
 	bot_melee_love = cvar("bot_melee");
 }
 
-float W_Melee_Aim()
+float weapon_melee_aim()
 {
-	if (W_Melee_Possible())
+	if (weapon_melee_possible())
 	if (random() < bot_melee_love)
 	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
 		self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
@@ -158,7 +158,7 @@ void spawnfunc_weapon_axe (void)
 		remove(self);
 }
 
-float w_melee(float req)
+float weapon_melee(float req)
 {
 	if (req == WR_AIM) {
 		if (random() < bot_melee_love)
@@ -169,7 +169,7 @@ float w_melee(float req)
 		if (self.BUTTON_ATCK || self.BUTTON_ATCK2)
 		if (weapon_prepareattack(0, g_balance_melee_refire))
 		{
-			W_Melee_Attack(1, 1);
+			weapon_melee_attack(1, 1);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, weapon_ready);
 		}
 	}
@@ -189,7 +189,7 @@ float w_melee(float req)
 	} else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_axe_damage);
-		Melee_Init();
+		weapon_melee_init();
 	}
 	return TRUE;
 };

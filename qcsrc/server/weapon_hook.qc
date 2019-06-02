@@ -28,7 +28,7 @@ float g_balance_hook_secondary_speed;
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
 
-void W_Hook_ExplodeThink (void)
+void weapon_hook_explode_think (void)
 {
 	float dt, dmg_remaining_next, f;
 
@@ -48,13 +48,13 @@ void W_Hook_ExplodeThink (void)
 		remove(self);
 }
 
-void W_Hook_Explode2 (void)
+void weapon_hook_explode2 (void)
 {
 	self.event_damage = stdproc_nothing;
 	self.touch = stdproc_nothing;
 	self.effects |= EF_NODRAW;
 
-	self.think = W_Hook_ExplodeThink;
+	self.think = weapon_hook_explode_think;
 	self.nextthink = time;
 	self.dmg = g_balance_hook_secondary_damage;
 	self.dmg_edge = g_balance_hook_secondary_edgedamage;
@@ -67,15 +67,15 @@ void W_Hook_Explode2 (void)
 	self.movetype = MOVETYPE_NONE;
 }
 
-void W_Hook_Touch2 (void)
+void weapon_hook_touch2 (void)
 {
 	PROJECTILE_TOUCH;
 	self.use();
 }
 
-void W_Hook_Attack2()
+void weapon_hook_attack2()
 {
-	local entity gren;
+	entity gren;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
@@ -92,8 +92,8 @@ void W_Hook_Attack2()
 
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = projectile_think2use;
-	gren.use = W_Hook_Explode2;
-	gren.touch = W_Hook_Touch2;
+	gren.use = weapon_hook_explode2;
+	gren.touch = weapon_hook_touch2;
 
 	gren.velocity = '0 0 1' * g_balance_hook_secondary_speed;
 	if(g_projectiles_newton_style)
@@ -116,7 +116,7 @@ void spawnfunc_weapon_hook (void)
 	weapon_defaultspawnfunc(WEP_HOOK);
 }
 
-float w_hook(float req)
+float weapon_hook(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -144,7 +144,7 @@ float w_hook(float req)
 		{
 			if (weapon_prepareattack(1, g_balance_hook_secondary_refire))
 			{
-				W_Hook_Attack2();
+				weapon_hook_attack2();
 				weapon_thinkf(WFRAME_FIRE2, g_balance_hook_secondary_animtime, weapon_ready);
 			}
 		}
@@ -279,4 +279,4 @@ float w_hook(float req)
 		projectile_init(PROJECTILE_HOOKBOMB);
 	}
 	return TRUE;
-};
+}

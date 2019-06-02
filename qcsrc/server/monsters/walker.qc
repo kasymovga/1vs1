@@ -16,7 +16,7 @@ void walker_bullet() {
 	setmodel(flash, "models/uziflash.md3");
 	setattachment(flash, self.weaponentity, "tag_fire");
 	flash.scale     = 3;
-	flash.think     = W_Uzi_Flash_Go;
+	flash.think     = weapon_uzi_flash_go;
 	flash.nextthink = time + 0.02;
 	flash.frame     = 2;
 	flash.angles_z  = flash.v_angle_z + random() * 180;

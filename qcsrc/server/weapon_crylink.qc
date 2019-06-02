@@ -40,7 +40,7 @@ var .float crylink_buttonatck1 = BUTTON_ATCK;
 var .float crylink_buttonatck2 = BUTTON_ATCK2;
 
 // NO bounce protection, as bounces are limited!
-void W_Crylink_Touch (void)
+void weapon_crylink_touch (void)
 {
 	float finalhit;
 	float f;
@@ -67,7 +67,7 @@ void W_Crylink_Touch (void)
 	//	projectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
-void W_Crylink_Touch2 (void)
+void weapon_crylink_touch2 (void)
 {
 	float finalhit;
 	float f;
@@ -94,11 +94,11 @@ void W_Crylink_Touch2 (void)
 	//	projectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
-void W_Crylink_Attack (void)
+void weapon_crylink_attack (void)
 {
-	local float counter, shots;
-	local entity proj;
-	local vector s;
+	float counter, shots;
+	entity proj;
+	vector s;
 	vector forward, right, up;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -139,7 +139,7 @@ void W_Crylink_Attack (void)
 		proj.velocity = (w_shotdir + right * s_y + up * s_z) * g_balance_crylink_primary_speed;
 //		proj.velocity = (w_shotdir + randomvec() * g_balance_crylink_primary_spread) * g_balance_crylink_primary_speed;
 		weapon_setup_projectile_velocity(proj);
-		proj.touch = W_Crylink_Touch;
+		proj.touch = weapon_crylink_touch;
 		if(counter == 0)
 			entity_fade_setup(proj, time + g_balance_crylink_primary_middle_lifetime, g_balance_crylink_primary_middle_fadetime);
 		else if(counter <= 3)
@@ -157,10 +157,10 @@ void W_Crylink_Attack (void)
 	}
 }
 
-void W_Crylink_Attack2 (void)
+void weapon_crylink_attack2 (void)
 {
-	local float counter, shots;
-	local entity proj;
+	float counter, shots;
+	entity proj;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
@@ -185,7 +185,7 @@ void W_Crylink_Attack2 (void)
 		setorigin (proj, w_shotorg);
 		proj.velocity = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
 		weapon_setup_projectile_velocity(proj);
-		proj.touch = W_Crylink_Touch2;
+		proj.touch = weapon_crylink_touch2;
 		if(counter == (shots - 1) / 2)
 			entity_fade_setup(proj, time + g_balance_crylink_secondary_middle_lifetime, g_balance_crylink_secondary_middle_fadetime);
 		else
@@ -205,7 +205,7 @@ void spawnfunc_weapon_crylink (void)
 	weapon_defaultspawnfunc(WEP_CRYLINK);
 }
 
-float w_crylink(float req)
+float weapon_crylink(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -219,13 +219,13 @@ float w_crylink(float req)
 		if (self.crylink_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_crylink_primary_refire))
 		{
-			W_Crylink_Attack();
+			weapon_crylink_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_crylink_primary_animtime, weapon_ready);
 		}
 		if (self.crylink_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_crylink_secondary_refire))
 		{
-			W_Crylink_Attack2();
+			weapon_crylink_attack2();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_crylink_secondary_animtime, weapon_ready);
 		}
 	}
@@ -297,4 +297,4 @@ float w_crylink(float req)
 		}
 	}
 	return TRUE;
-};
+}

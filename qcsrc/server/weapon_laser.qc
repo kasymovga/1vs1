@@ -18,7 +18,7 @@ float g_balance_laser_secondary_refire;
 float g_balance_laser_secondary_shotangle;
 float g_balance_laser_secondary_speed;
 
-void W_Laser_Touch (void)
+void weapon_laser_touch (void)
 {
 	PROJECTILE_TOUCH;
 
@@ -31,7 +31,7 @@ void W_Laser_Touch (void)
 	remove (self);
 }
 
-void W_Laser_Attack (float issecondary)
+void weapon_laser_attack (float issecondary)
 {
 	local entity missile;
 	vector s_forward;
@@ -74,7 +74,7 @@ void W_Laser_Attack (float issecondary)
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
-	missile.touch = W_Laser_Touch;
+	missile.touch = weapon_laser_touch;
 	missile.think = SUB_Remove;
 	if (issecondary)
 		missile.nextthink = time + g_balance_laser_secondary_lifetime;
@@ -87,7 +87,7 @@ void spawnfunc_weapon_laser (void)
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
-float w_laser(float req)
+float weapon_laser(float req)
 {
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(g_balance_laser_primary_speed, 0, g_balance_laser_primary_lifetime, FALSE);
@@ -97,7 +97,7 @@ float w_laser(float req)
 		{
 			if (weapon_prepareattack(0, g_balance_laser_primary_refire))
 			{
-				W_Laser_Attack(FALSE);
+				weapon_laser_attack(FALSE);
 				weapon_thinkf(WFRAME_FIRE1, g_balance_laser_primary_animtime, weapon_ready);
 			}
 		}
@@ -107,7 +107,7 @@ float w_laser(float req)
 			{
 				if (weapon_prepareattack(0, g_balance_laser_secondary_refire))
 				{
-					W_Laser_Attack(TRUE);
+					weapon_laser_attack(TRUE);
 					weapon_thinkf(WFRAME_FIRE2, g_balance_laser_secondary_animtime, weapon_ready);
 				}
 			}

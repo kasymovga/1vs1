@@ -38,11 +38,11 @@ float g_balance_electro_secondary_spread;
 var .float electro_buttonatck1 = BUTTON_ATCK;
 var .float electro_buttonatck2 = BUTTON_ATCK2;
 
-void W_Plasma_Explode_Combo (void);
+void weapon_electro_explode_combo (void);
 
-void W_Plasma_TriggerCombo(vector org, float rad, entity own)
+void weapon_electro_trigger_combo(vector org, float rad, entity own)
 {
-	local entity e;
+	entity e;
 	e = findradius(org, rad);
 	while (e)
 	{
@@ -56,7 +56,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 				e.owner = own;
 				e.takedamage = DAMAGE_NO;
 				e.classname = "plasma_chain";
-				e.think = W_Plasma_Explode_Combo;
+				e.think = weapon_electro_explode_combo;
 				e.nextthink = time + vlen(e.origin - org) / g_balance_electro_combo_speed; // delay combo chains, looks cooler
 			}
 		}
@@ -64,7 +64,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 	}
 }
 
-void W_Plasma_Explode (void)
+void weapon_electro_explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
@@ -81,45 +81,45 @@ void W_Plasma_Explode (void)
 	}
 	else
 	{
-		W_Plasma_TriggerCombo(self.origin, g_balance_electro_primary_comboradius, self.owner);
+		weapon_electro_trigger_combo(self.origin, g_balance_electro_primary_comboradius, self.owner);
 		damage_radius (self, self.owner, g_balance_electro_primary_damage, g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, world, g_balance_electro_primary_force, self.projectiledeathtype, other);
 	}
 
 	remove (self);
 }
 
-void W_Plasma_Explode_Combo (void)
+void weapon_electro_explode_combo (void)
 {
 
-	W_Plasma_TriggerCombo(self.origin, g_balance_electro_combo_comboradius, self.owner);
+	weapon_electro_trigger_combo(self.origin, g_balance_electro_combo_comboradius, self.owner);
 
 	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.owner, g_balance_electro_combo_damage, g_balance_electro_combo_edgedamage, g_balance_electro_combo_radius, world, g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
 	remove (self);
 }
 
-void W_Plasma_Touch (void)
+void weapon_electro_touch (void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM) {
-		W_Plasma_Explode ();
+		weapon_electro_explode ();
 	} else {
 		spamsound (self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
 
-void W_Plasma_TouchExplode (void)
+void weapon_electro_touch_explode (void)
 {
 	PROJECTILE_TOUCH;
-	W_Plasma_Explode ();
+	weapon_electro_explode ();
 }
 
-void W_Plasma_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
+void weapon_electro_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
-	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
+	// note: combos are usually triggered by weapon_electro_trigger_combo, not damage
 	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
@@ -130,20 +130,20 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float _damage, float de
 			// change owner to whoever caused the combo explosion
 			self.owner = inflictor.owner;
 			self.classname = "plasma_chain";
-			self.think = W_Plasma_Explode_Combo;
+			self.think = weapon_electro_explode_combo;
 			self.nextthink = time + vlen(self.origin - inflictor.origin) / g_balance_electro_combo_speed; // delay combo chains, looks cooler
 		}
 		else
 		{
-			self.use = W_Plasma_Explode;
+			self.use = weapon_electro_explode;
 			self.think = projectile_think2use;
 		}
 	}
 }
 
-void W_Electro_Attack()
+void weapon_electro_attack()
 {
-	local entity proj;
+	entity proj;
 
 	weapon_setup_shot(self, 2, "weapons/electro_fire.wav", 1);
 
@@ -153,7 +153,7 @@ void W_Electro_Attack()
 	proj.classname = "plasma_prim";
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_electro_primary_damage;
-	proj.use = W_Plasma_Explode;
+	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
 	proj.nextthink = time + g_balance_electro_primary_lifetime;
 	PROJECTILE_MAKETRIGGER(proj);
@@ -166,15 +166,15 @@ void W_Electro_Attack()
 	proj.velocity = w_shotdir * g_balance_electro_primary_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
-	proj.touch = W_Plasma_TouchExplode;
+	proj.touch = weapon_electro_touch_explode;
 	//sound (proj, CHAN_PAIN, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 	//sounds bad
 
 }
 
-void W_Electro_Attack2()
+void weapon_electro_attack2()
 {
-	local entity proj;
+	entity proj;
 
 	weapon_setup_shot(self, 2, "weapons/electro_fire2.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -184,7 +184,7 @@ void W_Electro_Attack2()
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
 	proj.gravity = 1;
 	proj.classname = "plasma";
-	proj.use = W_Plasma_Explode;
+	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_electro_secondary_damage;
@@ -200,18 +200,11 @@ void W_Electro_Attack2()
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.velocity = (w_shotdir + randomvec() * g_balance_electro_secondary_spread) * g_balance_electro_secondary_speed + v_up * g_balance_electro_secondary_speed_up;
 	weapon_setup_projectile_velocity(proj);
-	proj.touch = W_Plasma_Touch;
+	proj.touch = weapon_electro_touch;
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_electro_secondary_damageforcescale;
 	proj.health = g_balance_electro_secondary_health;
-	proj.event_damage = W_Plasma_Damage;
-#if 0
-	entity p2;
-	p2 = spawn();
-	copyentity(proj, p2);
-	setmodel(p2, "models/ebomb.mdl");
-	setsize(p2, proj.mins, proj.maxs);
-#endif
+	proj.event_damage = weapon_electro_damage;
 }
 
 void spawnfunc_weapon_electro (void)
@@ -219,15 +212,15 @@ void spawnfunc_weapon_electro (void)
 	weapon_defaultspawnfunc(WEP_ELECTRO);
 }
 
-void w_electro_checkattack()
+void weapon_electro_checkattack()
 {
 	if(self.electro_count > 1)
 	if(self.electro_buttonatck2)
 	if(weapon_prepareattack(1, -1))
 	{
-		W_Electro_Attack2();
+		weapon_electro_attack2();
 		self.electro_count -= 1;
-		weapon_thinkf(WFRAME_FIRE2, g_balance_electro_secondary_animtime, w_electro_checkattack);
+		weapon_thinkf(WFRAME_FIRE2, g_balance_electro_secondary_animtime, weapon_electro_checkattack);
 		return;
 	}
 
@@ -235,7 +228,7 @@ void w_electro_checkattack()
 }
 
 .float bot_secondary_electromooth;
-float w_electro(float req)
+float weapon_electro(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -245,8 +238,8 @@ float w_electro(float req)
 			self.bot_secondary_electromooth = 0;
 		if(self.bot_secondary_electromooth == 0)
 		{
-			local float aim_electro_speed;
-			local float aim_electro_lifetime;
+			float aim_electro_speed;
+			float aim_electro_lifetime;
 			if (g_balance_electro_primary_lightning)
 			{
 				aim_electro_speed = g_balance_electro_primary_lightning_length * 100;
@@ -278,7 +271,7 @@ float w_electro(float req)
 		if (self.electro_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_electro_primary_refire))
 		{
-			W_Electro_Attack();
+			weapon_electro_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_electro_primary_animtime, weapon_ready);
 		}
 		if (self.electro_buttonatck2)
@@ -286,9 +279,9 @@ float w_electro(float req)
 		if (g_balance_electro_secondary)
 		if (weapon_prepareattack(1, g_balance_electro_secondary_refire))
 		{
-			W_Electro_Attack2();
+			weapon_electro_attack2();
 			self.electro_count = g_balance_electro_secondary_count;
-			weapon_thinkf(WFRAME_FIRE2, g_balance_electro_secondary_animtime, w_electro_checkattack);
+			weapon_thinkf(WFRAME_FIRE2, g_balance_electro_secondary_animtime, weapon_electro_checkattack);
 			self.electro_secondarytime = time + g_balance_electro_secondary_refire2;
 		}
 	}
@@ -379,4 +372,4 @@ float w_electro(float req)
 		}
 	}
 	return TRUE;
-};
+}

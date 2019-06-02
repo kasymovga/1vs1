@@ -180,7 +180,7 @@ entity HG_Sentry_Beam_Spawn(entity emitter) {
     e.think = HG_Sentry_Beam_Think;
     e.nextthink = time;
 
-    net_link_entity(e, FALSE, 0, W_Zapper_Beam_Send);
+    net_link_entity(e, FALSE, 0, weapon_zapper_beam_send);
 
     return e;
 }
@@ -528,7 +528,7 @@ void HG_Sentry_Trigger(void) {
 				damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
 
             dlc_sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
-            W_Zapper_Attack2_Effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
+            weapon_zapper_attack2_effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
             if(targ.solid == SOLID_BSP && !noimpact)
                 damage_info(endpos, c_dmg, 0, 0, force, WEP_ZAPPER | HITTYPE_SECONDARY, self);
 

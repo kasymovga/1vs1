@@ -1,14 +1,14 @@
 // leilei's fancy muzzleflash stuff
-void W_Uzi_Flash_Go() {
+void weapon_uzi_flash_go() {
 	if (self.frame > 10){
 		SUB_Remove();
 		return;
 	}
 	self.frame = self.frame + 2;
 	self.alpha = self.alpha - 0.2;
-	self.think = W_Uzi_Flash_Go;
+	self.think = weapon_uzi_flash_go;
 	self.nextthink = time + 0.02;
-};
+}
 
 float g_balance_uzi_bulletconstant;
 float g_balance_uzi_first;
@@ -29,7 +29,7 @@ float g_balance_uzi_sustained_spread;
 var .float uzi_buttonatck1 = BUTTON_ATCK;
 var .float uzi_buttonatck2 = BUTTON_ATCK2;
 .float uzi_bulletcounter;
-void W_Uzi_Attack (float deathtype)
+void weapon_uzi_attack (float deathtype)
 {
 	local entity flash;
 
@@ -63,7 +63,7 @@ void W_Uzi_Attack (float deathtype)
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3"); // precision set below
 	//SUB_SetFade(flash, time + 0.06, 0);
-	flash.think = W_Uzi_Flash_Go;
+	flash.think = weapon_uzi_flash_go;
 	flash.nextthink = time + 0.02;
 	flash.frame = 2;
 	flash.alpha = 1;
@@ -76,7 +76,7 @@ void W_Uzi_Attack (float deathtype)
 }
 
 // weapon frames
-void uzi_fire1_02()
+void weapon_uzi_fire1_02()
 {
 	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE))
 	{
@@ -93,14 +93,14 @@ void uzi_fire1_02()
 			return;
 		}
 		self.uzi_bulletcounter = self.uzi_bulletcounter + 1;
-		W_Uzi_Attack(WEP_UZI);
-		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, uzi_fire1_02);
+		weapon_uzi_attack(WEP_UZI);
+		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 	}
 	else
 		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
-};
+}
 
-float w_uzi(float req)
+float weapon_uzi(float req)
 {
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200 || !g_balance_uzi_first)
@@ -115,15 +115,15 @@ float w_uzi(float req)
 		if (weapon_prepareattack(0, 0))
 		{
 			self.uzi_bulletcounter = 1;
-			W_Uzi_Attack(WEP_UZI); // sets attack_finished
-			weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, uzi_fire1_02);
+			weapon_uzi_attack(WEP_UZI); // sets attack_finished
+			weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
 		}
 		if (self.uzi_buttonatck2)
 		if (g_balance_uzi_first)
 		if (weapon_prepareattack(1, 0))
 		{
 			self.uzi_bulletcounter = 1;
-			W_Uzi_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
+			weapon_uzi_attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
 			weapon_thinkf(WFRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
 		}
 	}
@@ -170,7 +170,7 @@ float w_uzi(float req)
 		}
 	}
 	return TRUE;
-};
+}
 
 void(void) spawnfunc_weapon_uzi {
 	weapon_defaultspawnfunc(WEP_UZI);

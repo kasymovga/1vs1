@@ -22,7 +22,7 @@ var .float hagar_buttonatck1 = BUTTON_ATCK;
 var .float hagar_buttonatck2 = BUTTON_ATCK2;
 
 // NO bounce protection, as bounces are limited!
-void W_Hagar_Explode (void)
+void weapon_hagar_explode (void)
 {
 	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.realowner, g_balance_hagar_primary_damage, g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, world, g_balance_hagar_primary_force, self.projectiledeathtype, other);
@@ -30,7 +30,7 @@ void W_Hagar_Explode (void)
 	remove (self);
 }
 
-void W_Hagar_Explode2 (void)
+void weapon_hagar_explode2 (void)
 {
 	self.event_damage = stdproc_nothing;
 	damage_radius (self, self.realowner, g_balance_hagar_secondary_damage, g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, world, g_balance_hagar_secondary_force, self.projectiledeathtype, other);
@@ -38,13 +38,13 @@ void W_Hagar_Explode2 (void)
 	remove (self);
 }
 
-void W_Hagar_Touch (void)
+void weapon_hagar_touch (void)
 {
 	PROJECTILE_TOUCH;
 	self.use ();
 }
 
-void W_Hagar_Touch2 (void)
+void weapon_hagar_touch2 (void)
 {
 	PROJECTILE_TOUCH;
 
@@ -59,7 +59,7 @@ void W_Hagar_Touch2 (void)
 	}
 }
 
-void W_Hagar_Attack (void)
+void weapon_hagar_attack (void)
 {
 	local entity missile;
 
@@ -74,8 +74,8 @@ void W_Hagar_Attack (void)
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_primary_damage;
-	missile.touch = W_Hagar_Touch;
-	missile.use = W_Hagar_Explode;
+	missile.touch = weapon_hagar_touch;
+	missile.use = weapon_hagar_explode;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_primary_lifetime;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -89,7 +89,7 @@ void W_Hagar_Attack (void)
 	missile.angles = vectoangles (missile.velocity);
 }
 
-void W_Hagar_Attack2 (void)
+void weapon_hagar_attack2 (void)
 {
 	local entity missile;
 
@@ -105,9 +105,9 @@ void W_Hagar_Attack2 (void)
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = g_balance_hagar_secondary_damage;
-	missile.touch = W_Hagar_Touch2;
+	missile.touch = weapon_hagar_touch2;
 	missile.cnt = 0;
-	missile.use = W_Hagar_Explode;
+	missile.use = weapon_hagar_explode2;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_secondary_lifetime_min + random() * g_balance_hagar_secondary_lifetime_rand;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -127,7 +127,7 @@ void spawnfunc_weapon_hagar (void)
 	weapon_defaultspawnfunc(WEP_HAGAR);
 }
 
-float w_hagar(float req)
+float weapon_hagar(float req)
 {
 	if (req == WR_AIM)
 		if (random()>0.15)
@@ -142,13 +142,13 @@ float w_hagar(float req)
 		if (self.hagar_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_hagar_primary_refire))
 		{
-			W_Hagar_Attack();
+			weapon_hagar_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, weapon_ready);
 		}
 		if (self.hagar_buttonatck2)
 		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire))
 		{
-			W_Hagar_Attack2();
+			weapon_hagar_attack2();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_hagar_secondary_refire, weapon_ready);
 		}
 	}
@@ -200,4 +200,4 @@ float w_hagar(float req)
 		}
 	}
 	return TRUE;
-};
+}

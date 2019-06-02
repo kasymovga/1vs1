@@ -37,7 +37,7 @@ float g_balance_fireball_secondary_speed;
 var .float fireball_buttonatck1 = BUTTON_ATCK;
 var .float fireball_buttonatck2 = BUTTON_ATCK2;
 
-void W_Fireball_Explode (void)
+void weapon_fireball_explode (void)
 {
 	entity e;
 	float dist;
@@ -82,13 +82,13 @@ void W_Fireball_Explode (void)
 	remove (self);
 }
 
-void W_Fireball_TouchExplode (void)
+void weapon_fireball_touchexplode (void)
 {
 	PROJECTILE_TOUCH;
-	W_Fireball_Explode ();
+	weapon_fireball_explode ();
 }
 
-void W_Fireball_LaserPlay(float dt, float dist, float _damage, float edgedamage, float burntime)
+void weapon_fireball_laser_play(float dt, float dist, float _damage, float edgedamage, float burntime)
 {
 	entity e;
 	float d;
@@ -122,21 +122,21 @@ void W_Fireball_LaserPlay(float dt, float dist, float _damage, float edgedamage,
 	}
 }
 
-void W_Fireball_Think()
+void weapon_fireball_think()
 {
 	if(time > self.pushltime)
 	{
 		self.cnt = 1;
-		W_Fireball_Explode();
+		weapon_fireball_explode();
 		return;
 	}
 
-	W_Fireball_LaserPlay(0.1, g_balance_fireball_secondary_laserradius, g_balance_fireball_secondary_laserdamage, g_balance_fireball_secondary_laseredgedamage, g_balance_fireball_secondary_laserburntime);
+	weapon_fireball_laser_play(0.1, g_balance_fireball_secondary_laserradius, g_balance_fireball_secondary_laserdamage, g_balance_fireball_secondary_laseredgedamage, g_balance_fireball_secondary_laserburntime);
 
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
+void weapon_fireball_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -144,13 +144,13 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float _damage, float 
 	if (self.health <= 0)
 	{
 		self.cnt = 1;
-		damage_prepare_explosion(attacker, W_Fireball_Explode);
+		damage_prepare_explosion(attacker, weapon_fireball_explode);
 	}
 }
 
-void W_Fireball_Attack2()
+void weapon_fireball_attack2()
 {
-	local entity proj;
+	entity proj;
 
 	weapon_setup_shot(self, 2, "weapons/fireball_fire2.wav", 1);
 
@@ -162,12 +162,12 @@ void W_Fireball_Attack2()
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = g_balance_fireball_secondary_damage;
 	proj.pushltime = time + g_balance_fireball_secondary_lifetime;
-	proj.use = W_Fireball_Explode;
-	proj.think = W_Fireball_Think;
+	proj.use = weapon_fireball_explode;
+	proj.think = weapon_fireball_think;
 	proj.nextthink = time;
 	proj.health = g_balance_fireball_secondary_health;
 	proj.team = self.team;
-	proj.event_damage = W_Fireball_Damage;
+	proj.event_damage = weapon_fireball_damage;
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_fireball_secondary_damageforcescale;
 	PROJECTILE_MAKETRIGGER(proj);
@@ -178,51 +178,51 @@ void W_Fireball_Attack2()
 	proj.velocity = w_shotdir * g_balance_fireball_secondary_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.angles = vectoangles(proj.velocity);
-	proj.touch = W_Fireball_TouchExplode;
+	proj.touch = weapon_fireball_touchexplode;
 }
 
-void W_Fireball_AttackEffect(float i, vector f_diff)
+void weapon_fireball_attack_effect(float i, vector f_diff)
 {
 	weapon_setup_shot(self, 0, "", 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
 	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 }
 
-void W_Fireball_Attack2_Frame4()
+void weapon_fireball_attack2_frame4()
 {
-	W_Fireball_Attack2();
+	weapon_fireball_attack2();
 	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_ready);
 }
 
-void W_Fireball_Attack2_Frame3()
+void weapon_fireball_attack2_frame3()
 {
-	W_Fireball_AttackEffect(0, '+1.25 +3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, W_Fireball_Attack2_Frame4);
+	weapon_fireball_attack_effect(0, '+1.25 +3.75 0');
+	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame4);
 }
 
-void W_Fireball_Attack2_Frame2()
+void weapon_fireball_attack2_frame2()
 {
-	W_Fireball_AttackEffect(0, '-1.25 +3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, W_Fireball_Attack2_Frame3);
+	weapon_fireball_attack_effect(0, '-1.25 +3.75 0');
+	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame3);
 }
 
-void W_Fireball_Attack2_Frame1()
+void weapon_fireball_attack2_frame1()
 {
-	W_Fireball_AttackEffect(1, '+1.25 -3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, W_Fireball_Attack2_Frame2);
+	weapon_fireball_attack_effect(1, '+1.25 -3.75 0');
+	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame2);
 }
 
-void W_Fireball_Attack2_Frame0()
+void weapon_fireball_attack2_frame0()
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_fireball_secondary_ammo;
 
-	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
+	weapon_fireball_attack_effect(0, '-1.25 -3.75 0');
 	sound (self, CHAN_WEAPON, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
-	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, W_Fireball_Attack2_Frame1);
+	weapon_thinkf(WFRAME_FIRE1, g_balance_fireball_secondary_animtime, weapon_fireball_attack2_frame1);
 }
 
-void W_Firemine_Think()
+void weapon_fireball_mine_think()
 {
 	if(time > self.pushltime)
 	{
@@ -247,12 +247,12 @@ void W_Firemine_Think()
 			self.cnt = 0;
 	}
 
-	W_Fireball_LaserPlay(0.1, g_balance_fireball_primary_laserradius, g_balance_fireball_primary_laserdamage, g_balance_fireball_primary_laseredgedamage, g_balance_fireball_primary_laserburntime);
+	weapon_fireball_laser_play(0.1, g_balance_fireball_primary_laserradius, g_balance_fireball_primary_laserdamage, g_balance_fireball_primary_laseredgedamage, g_balance_fireball_primary_laserburntime);
 
 	self.nextthink = time + 0.1;
 }
 
-void W_Firemine_Touch (void)
+void weapon_fireball_mine_touch (void)
 {
 	PROJECTILE_TOUCH;
 	if not(self.dmg)
@@ -267,9 +267,9 @@ void W_Firemine_Touch (void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void W_Fireball_Attack1()
+void weapon_fireball_attack1()
 {
-	local entity proj;
+	entity proj;
 	vector f_diff;
 	float c;
 
@@ -307,10 +307,10 @@ void W_Fireball_Attack1()
 	proj.bot_dodgerating = g_balance_fireball_primary_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = WEP_FIREBALL;
-	proj.touch = W_Firemine_Touch;
+	proj.touch = weapon_fireball_mine_touch;
 	PROJECTILE_MAKETRIGGER(proj);
 	setorigin(proj, w_shotorg);
-	proj.think = W_Firemine_Think;
+	proj.think = weapon_fireball_mine_think;
 	proj.nextthink = time;
 	proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 	proj.velocity = w_shotdir * g_balance_fireball_primary_speed + v_up * g_balance_fireball_primary_speed_up;
@@ -325,7 +325,7 @@ void spawnfunc_weapon_fireball (void)
 	weapon_defaultspawnfunc(WEP_FIREBALL);
 }
 
-float w_fireball(float req)
+float weapon_fireball(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -353,14 +353,14 @@ float w_fireball(float req)
 		if (self.fireball_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_fireball_primary_refire))
 		{
-			W_Fireball_Attack1();
+			weapon_fireball_attack1();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_fireball_primary_animtime, weapon_ready);
 		}
 		if (self.fireball_buttonatck2)
 		if (time >= self.fireball_secondarytime)
 		if (weapon_prepareattack(1, g_balance_fireball_secondary_refire))
 		{
-			W_Fireball_Attack2_Frame0();
+			weapon_fireball_attack2_frame0();
 			self.fireball_secondarytime = time + g_balance_fireball_secondary_refire2;
 		}
 	}
@@ -458,4 +458,4 @@ float w_fireball(float req)
 		}
 	}
 	return TRUE;
-};
+}

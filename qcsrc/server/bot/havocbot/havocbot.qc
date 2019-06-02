@@ -100,7 +100,7 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			if (!W_Melee_Aim()) //Try melee first
+			if (!weapon_melee_aim()) //Try melee first
 				weapon_action(self.weapon, WR_AIM);
 			if (bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{

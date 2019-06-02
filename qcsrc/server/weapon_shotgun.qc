@@ -22,7 +22,7 @@ float g_balance_shotgun_secondary_spread;
 var .float sg_buttonatck1 = BUTTON_ATCK;
 var .float sg_buttonatck2 = BUTTON_ATCK2;
 
-void W_Shotgun_Attack (void)
+void weapon_shotgun_attack (void)
 {
 	float	sc;
 	local entity flash;
@@ -55,7 +55,7 @@ void W_Shotgun_Attack (void)
 
 }
 
-void W_Shotgun_Attack2 (void)
+void weapon_shotgun_attack2 (void)
 {
 	float	sc;
 	local entity flash;
@@ -88,20 +88,20 @@ void W_Shotgun_Attack2 (void)
 }
 
 // weapon frames
-void shotgun_fire2_03()
+void weapon_shotgun_fire2_03()
 {
-	W_Shotgun_Attack2();
+	weapon_shotgun_attack2();
 	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_ready);
 }
-void shotgun_fire2_02()
+void weapon_shotgun_fire2_02()
 {
-	W_Shotgun_Attack2();
-	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, shotgun_fire2_03);
+	weapon_shotgun_attack2();
+	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_03);
 }
 
 void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
-float w_shotgun(float req)
+float weapon_shotgun(float req)
 {
 	if (req == WR_AIM)
 		if(vlen(self.origin-self.enemy.origin)>200 || !g_balance_shotgun_secondary)
@@ -113,15 +113,15 @@ float w_shotgun(float req)
 		if (self.sg_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
 		{
-			W_Shotgun_Attack();
+			weapon_shotgun_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, weapon_ready);
 		}
 		if (self.sg_buttonatck2)
 		if (g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire))
 		{
-			W_Shotgun_Attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, shotgun_fire2_02);
+			weapon_shotgun_attack2();
+			weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_02);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -171,7 +171,7 @@ float w_shotgun(float req)
 		}
 	}
 	return TRUE;
-};
+}
 
 void(void) spawnfunc_weapon_shotgun {
 	weapon_defaultspawnfunc(WEP_SHOTGUN);

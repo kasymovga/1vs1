@@ -1,0 +1,5 @@
+.float bot_melee;
+float weapon_melee_aim();
+void weapon_melee_attack_check();
+float weapon_melee_possible();
+void weapon_melee_init();

@@ -11,7 +11,7 @@ float g_balance_tuba_volume;
 
 .float tuba_notecount;
 
-float Tuba_GetNote(entity pl, float hittype)
+float weapon_tuba_note(entity pl, float hittype)
 {
 	float note;
 	float movestate;
@@ -78,7 +78,7 @@ float Tuba_GetNote(entity pl, float hittype)
 	return note;
 }
 
-void W_Tuba_Attack(float hittype)
+void weapon_tuba_attack(float hittype)
 {
 	vector o;
 	float c;
@@ -93,7 +93,7 @@ void W_Tuba_Attack(float hittype)
 		self.tuba_notecount = TRUE;
 		c = CHAN_WEAPON2;
 	}
-	sound(self, c, TUBA_NOTE(Tuba_GetNote(self, hittype)), bound(0, VOL_BASE * g_balance_tuba_volume, 1), g_balance_tuba_attenuation);
+	sound(self, c, TUBA_NOTE(weapon_tuba_note(self, hittype)), bound(0, VOL_BASE * g_balance_tuba_volume, 1), g_balance_tuba_attenuation);
 	damage_radius(self, self, g_balance_tuba_damage, g_balance_tuba_edgedamage, g_balance_tuba_radius, world, g_balance_tuba_force, hittype | WEP_TUBA, world);
 
 	o = gettaginfo(self.exteriorweaponentity, 0);
@@ -105,7 +105,7 @@ void spawnfunc_weapon_tuba (void)
 	weapon_defaultspawnfunc(WEP_TUBA);
 }
 
-float w_tuba(float req)
+float weapon_tuba(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -124,13 +124,13 @@ float w_tuba(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, g_balance_tuba_refire))
 		{
-			W_Tuba_Attack(0);
+			weapon_tuba_attack(0);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_tuba_animtime, weapon_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (weapon_prepareattack(1, g_balance_tuba_refire))
 		{
-			W_Tuba_Attack(HITTYPE_SECONDARY);
+			weapon_tuba_attack(HITTYPE_SECONDARY);
 			weapon_thinkf(WFRAME_FIRE2, g_balance_tuba_animtime, weapon_ready);
 		}
 	}
@@ -166,4 +166,4 @@ float w_tuba(float req)
 		CACHE_CVAR(g_balance_tuba_volume);
 	}
 	return TRUE;
-};
+}

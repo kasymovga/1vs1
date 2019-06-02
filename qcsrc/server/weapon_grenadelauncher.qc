@@ -26,7 +26,7 @@ float g_balance_grenadelauncher_secondary;
 var .float gl_buttonatck1 = BUTTON_ATCK;
 var .float gl_buttonatck2 = BUTTON_ATCK2;
 
-void W_Grenade_Explode (void)
+void weapon_grenadelauncher_explode(void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
@@ -42,7 +42,7 @@ void W_Grenade_Explode (void)
 	remove (self);
 }
 
-void W_Grenade_Explode2 (void)
+void weapon_grenadelauncher_explode2 (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
@@ -57,13 +57,13 @@ void W_Grenade_Explode2 (void)
 	remove (self);
 }
 
-void W_Grenade_Touch1 (void)
+void weapon_grenadelauncher_touch1 (void)
 {
 	PROJECTILE_TOUCH;
-	W_Grenade_Explode ();
+	weapon_grenadelauncher_explode();
 }
 
-void W_Grenade_Touch2 (void)
+void weapon_grenadelauncher_touch2 (void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
@@ -90,7 +90,7 @@ void W_Grenade_Touch2 (void)
 	}
 }
 
-void W_Grenade_Damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
+void weapon_grenadelauncher_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -101,7 +101,7 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float _damage, float d
 	}
 }
 
-void W_Grenade_Attack (void)
+void weapon_grenadelauncher_attack (void)
 {
 	local entity gren;
 	float bounce = (g_balance_grenadelauncher_primary_bounce ? TRUE : FALSE);
@@ -125,15 +125,15 @@ void W_Grenade_Attack (void)
 
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
-	gren.use = W_Grenade_Explode;
-	gren.touch = (bounce ? W_Grenade_Touch2 : W_Grenade_Touch1);
+	gren.use = weapon_grenadelauncher_explode;
+	gren.touch = (bounce ? weapon_grenadelauncher_touch2 : weapon_grenadelauncher_touch1);
 	gren.velocity = w_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
 	weapon_setup_projectile_velocity(gren);
 
 	gren.angles = vectoangles (gren.velocity);
 }
 
-void W_Grenade_Attack2 (void)
+void weapon_grenadelauncher_attack2 (void)
 {
 	local entity gren;
 
@@ -156,12 +156,12 @@ void W_Grenade_Attack2 (void)
 
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
-	gren.use = W_Grenade_Explode2;
-	gren.touch = W_Grenade_Touch2;
+	gren.use = weapon_grenadelauncher_explode2;
+	gren.touch = weapon_grenadelauncher_touch2;
 	gren.takedamage = DAMAGE_YES;
 	gren.health = g_balance_grenadelauncher_secondary_health;
 	gren.damageforcescale = g_balance_grenadelauncher_secondary_damageforcescale;
-	gren.event_damage = W_Grenade_Damage;
+	gren.event_damage = weapon_grenadelauncher_damage;
 	gren.velocity = w_shotdir * g_balance_grenadelauncher_secondary_speed + v_up * g_balance_grenadelauncher_secondary_speed_up;
 	weapon_setup_projectile_velocity(gren);
 
@@ -174,7 +174,7 @@ void spawnfunc_weapon_grenadelauncher (void)
 }
 
 .float bot_secondary_grenademooth;
-float w_glauncher(float req)
+float weapon_grenadelauncher(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -202,14 +202,14 @@ float w_glauncher(float req)
 		if (self.gl_buttonatck1)
 		if (weapon_prepareattack(0, g_balance_grenadelauncher_primary_refire))
 		{
-			W_Grenade_Attack();
+			weapon_grenadelauncher_attack();
 			weapon_thinkf(WFRAME_FIRE1, g_balance_grenadelauncher_primary_animtime, weapon_ready);
 		}
 		if (self.gl_buttonatck2)
 		if (g_balance_grenadelauncher_secondary)
 		if (weapon_prepareattack(1, g_balance_grenadelauncher_secondary_refire))
 		{
-			W_Grenade_Attack2();
+			weapon_grenadelauncher_attack2();
 			weapon_thinkf(WFRAME_FIRE2, g_balance_grenadelauncher_secondary_animtime, weapon_ready);
 		}
 	}
@@ -280,4 +280,4 @@ float w_glauncher(float req)
 		}
 	}
 	return TRUE;
-};
+}

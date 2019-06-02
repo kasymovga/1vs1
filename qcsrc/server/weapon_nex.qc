@@ -11,7 +11,7 @@ string sv_announcer_extra_twohits;
 
 .float nex_lasthit;
 
-void NexWhoosh(vector start, vector end) {
+void weapon_nex_whoosh(vector start, vector end) {
 	entity pseudoprojectile;
 	vector beampos;
 	vector dir = normalize(end - start);
@@ -38,8 +38,8 @@ void NexWhoosh(vector start, vector end) {
 		remove(pseudoprojectile);
 }
 
-void DrawNexBeamParticles(vector start, vector endpos, vector to) {
-	NexWhoosh(start, endpos);
+void weapon_nex_beam_particles(vector start, vector endpos, vector to) {
+	weapon_nex_whoosh(start, endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_NEXGUNBEAMPARTICLE);
 	
@@ -51,7 +51,7 @@ void DrawNexBeamParticles(vector start, vector endpos, vector to) {
 	WriteCoord(MSG_BROADCAST, endpos_z);
 }
 
-void W_Nex_Attack (void)
+void weapon_nex_attack (void)
 {
 	float flying;
 	flying = physic_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
@@ -78,7 +78,7 @@ void W_Nex_Attack (void)
 		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_NEX, self);
 
 	//beam and muzzle flash done on client
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), DrawNexBeamParticles);
+	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_nex_beam_particles);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;
@@ -86,7 +86,7 @@ void W_Nex_Attack (void)
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc
 
-float w_nex(float req)
+float weapon_nex(float req)
 {
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
@@ -96,7 +96,7 @@ float w_nex(float req)
 		{
 			if (weapon_prepareattack(0, g_balance_nex_refire))
 			{
-				W_Nex_Attack();
+				weapon_nex_attack();
 				weapon_thinkf(WFRAME_FIRE1, g_balance_nex_animtime, weapon_ready);
 			}
 		}
@@ -140,4 +140,3 @@ float w_nex(float req)
 void(void) spawnfunc_weapon_nex {
 	weapon_defaultspawnfunc(WEP_NEX);
 }
-
