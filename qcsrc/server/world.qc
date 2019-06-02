@@ -564,7 +564,7 @@ void spawnfunc_worldspawn (void)
 
 	world_initialized = 1;
 	IRC_Init();
-	InfoMessages_Init();
+	infomessages_init();
 }
 
 void spawnfunc_light (void)
@@ -1194,7 +1194,7 @@ void SV_Shutdown()
 		bot_endgame();
 
 		MapInfo_Shutdown();
-		InfoMessages_Shutdown();
+		infomessages_shutdown();
 		GameHookChain_Shutdown();
 	}
 	else if(world_initialized == 0)

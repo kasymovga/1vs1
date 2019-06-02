@@ -1,0 +1,2 @@
+void(void) infomessages_init;
+void(void) infomessages_shutdown;

@@ -88,8 +88,7 @@ item.qh
 powerup.qh
 backpack.qh
 pinata.qh
-info_messages.qh
-
+infomessages.qh
 w_campingrifle.qh
 
 w_rocketlauncher.qh
@@ -271,7 +270,7 @@ irc.qc
 
 akimbo.qc
 ready.qc
-info_messages.qc
+infomessages.qc
 defer.qc
 freeze_role.qc
 freeze.qc
