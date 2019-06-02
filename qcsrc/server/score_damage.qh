@@ -1,1 +1,1 @@
-void ScoreDamage_Init();
+void(void) score_damage_init;

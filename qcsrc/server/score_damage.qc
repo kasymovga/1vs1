@@ -1,18 +1,18 @@
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) ScoreDamage_PlayerDamageHandle_NextLink;
-float ScoreDamage_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) score_damage_PlayerDamageHandle_NextLink;
+float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) score_damage_PlayerDamageHandle {
 	if (attacker.scorekeeper)
 	if (!teamplay || attacker.team != self.team)
 	if (deathtype != WEP_PORTO)
 		score_player_add(attacker, SP_DAMAGE, _damage);
 
-	return ScoreDamage_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+	return score_damage_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
 
-void ScoreDamage_Init() {
+void(void) score_damage_init {
 	if not(cvar("g_score_damage"))
 		return;
 
-	ScoreDamage_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = ScoreDamage_PlayerDamageHandle;
+	score_damage_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
+	GameHookChain_PlayerDamageHandle = score_damage_PlayerDamageHandle;
 	SP_DAMAGE = score_register("damage", 0);
 }

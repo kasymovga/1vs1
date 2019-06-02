@@ -21,7 +21,7 @@ void() gametype_default_delayed_init {
 	if(!score_preinitialized)
 		score_generic();
 
-	ScoreDamage_Init();
+	score_damage_init();
 	damage_record_init();
 	IP2C_InitSV();
 	score_basics_end();
