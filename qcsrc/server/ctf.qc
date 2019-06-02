@@ -89,10 +89,10 @@ float(entity attacker, entity targ, float f) ctf_handle_frags {
 		return f;
 
 	if (targ.flagcarried) {
-		scores_player_add(attacker, SP_CTF_FCKILLS, 1);
+		score_player_add(attacker, SP_CTF_FCKILLS, 1);
 		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
 		if not(f)
-			scores_player_team_add_score(attacker, f);
+			score_player_team_add_score(attacker, f);
 	}
 	return f;
 }
@@ -105,7 +105,7 @@ float(entity p) ctf_captureshield_shielded {
 	if(captureshield_max_ratio <= 0)
 		return FALSE;
 
-	s = scores_player_add(p, SP_SCORE, 0);
+	s = score_player_add(p, SP_SCORE, 0);
 	if(s >= -captureshield_min_negscore)
 		return FALSE;
 
@@ -114,7 +114,7 @@ float(entity p) ctf_captureshield_shielded {
 	{
 		if(e.team != p.team)
 			continue;
-		se = scores_player_add(e, SP_SCORE, 0);
+		se = score_player_add(e, SP_SCORE, 0);
 		if(se <= s)
 			++players_worseeq;
 		++players_total;
@@ -296,10 +296,10 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	bprint(p.netname, "^7 lost the ", e.netname, "\n");
 
 	if(penalty_receiver)
-		scores_player_team_add_score(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
+		score_player_team_add_score(penalty_receiver, -CTF_SCORE_VALUE(penalty_suicidedrop));
 	else
-		scores_player_team_add_score(p, -CTF_SCORE_VALUE(penalty_drop));
-	scores_player_add(p, SP_CTF_DROPS, +1);
+		score_player_team_add_score(p, -CTF_SCORE_VALUE(penalty_drop));
+	score_player_add(p, SP_CTF_DROPS, +1);
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
@@ -489,12 +489,12 @@ void() ctf_flag_touch {
 		else
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
-		scores_player_team_add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
+		score_player_team_add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 		if (game == GAME_CATF || game == GAME_CTFT)
 			Roundbased_SetRoundStartWithWinner(other.team);
 
 		// give credit to the individual player
-		scores_player_team_add_score(other, CTF_SCORE_VALUE(score_capture));
+		score_player_team_add_score(other, CTF_SCORE_VALUE(score_capture));
 
 		if (g_ctf_flag_capture_effects) {
 			if (other.team == COLOR_TEAM1) { // red team scores effect
@@ -535,9 +535,9 @@ void() ctf_flag_touch {
 		self.cnt = FLAG_CARRY;
 		self.angles = '0 0 0';
 		bprint(other.netname, "^7 got the ", self.netname, "\n");
-		scores_player_team_add_score(other, CTF_SCORE_VALUE(score_pickup_base));
+		score_player_team_add_score(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
-		scores_player_add(other, SP_CTF_PICKUPS, 1);
+		score_player_add(other, SP_CTF_PICKUPS, 1);
 		GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -571,32 +571,32 @@ void() ctf_flag_touch {
 			FOR_EACH_PLAYER(player)
 				if(player.playerid == self.dropperid)
 				{
-					scores_player_add(player, SP_SCORE, -CTF_SCORE_VALUE(penalty_returned));
+					score_player_add(player, SP_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 					ctf_captureshield_update(player, 0); // shield only
 				}
 
 			// punish the team who was last carrying it
 			if(self.team == COLOR_TEAM1)
-				scores_team_add_to(COLOR_TEAM2, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
+				score_team_add_to(COLOR_TEAM2, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 			else
-				scores_team_add_to(COLOR_TEAM1, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
+				score_team_add_to(COLOR_TEAM1, ST_SCORE, -CTF_SCORE_VALUE(penalty_returned));
 
 			// reward the player who returned it
 			if(other.playerid == self.playerid) // is this the guy who killed the FC last?
 			{
 				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_by_killer));
+					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_by_killer));
 				else
-					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue_by_killer));
+					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue_by_killer));
 			}
 			else
 			{
 				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
-					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return));
+					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return));
 				else
-					scores_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
+					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
-			scores_player_add(other, SP_CTF_RETURNS, 1);
+			score_player_add(other, SP_CTF_RETURNS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
@@ -623,8 +623,8 @@ void() ctf_flag_touch {
 			self.dropperid = other.playerid;
 			//print("score is ", ftos(f), "\n");
 
-			scores_player_team_add_score(other, f);
-			scores_player_add(other, SP_CTF_PICKUPS, 1);
+			score_player_team_add_score(other, f);
+			score_player_add(other, SP_CTF_PICKUPS, 1);
 			GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -1011,13 +1011,13 @@ void() ctf_delayedinit {
 			sp_score = SFL_SORT_PRIO_PRIMARY;
 			break;
 	}
-	scores_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
-	ST_CTF_CAPS = scores_register_team_score("caps", sp_caps);
-	SP_CTF_CAPS = scores_register_score("caps", SFL_SORT_PRIO_SECONDARY);
-	SP_CTF_PICKUPS = scores_register_score("pickups", 0);
-	SP_CTF_FCKILLS = scores_register_score("fckills", 0);
-	SP_CTF_RETURNS = scores_register_score("returns", 0);
-	SP_CTF_DROPS = scores_register_score("drops", SFL_LOWER_IS_BETTER);
+	score_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
+	ST_CTF_CAPS = score_register_team_score("caps", sp_caps);
+	SP_CTF_CAPS = score_register("caps", SFL_SORT_PRIO_SECONDARY);
+	SP_CTF_PICKUPS = score_register("pickups", 0);
+	SP_CTF_FCKILLS = score_register("fckills", 0);
+	SP_CTF_RETURNS = score_register("returns", 0);
+	SP_CTF_DROPS = score_register("drops", SFL_LOWER_IS_BETTER);
 	if (game == GAME_CATF) {
 		Clanarena_Init_Shared("catf");
 		Roundbased_SetScoreField(ST_CTF_CAPS);

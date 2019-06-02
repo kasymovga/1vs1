@@ -469,7 +469,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 
 		if(deathtype != DEATH_TEAMCHANGE)
 		{
-			scores_give_frag(attacker, targ, -1);
+			score_give_frag(attacker, targ, -1);
 		}
 		if (targ.killcount > 2)
 			bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
@@ -516,7 +516,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		{
 			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
 			bprint ("^1", a, "^1 mows down a team mate\n");
-			scores_give_frag(attacker, targ, -1);
+			score_give_frag(attacker, targ, -1);
 			if (targ.killcount > 2) {
 				bprint ("^1",s,"'s ^1",ftos(targ.killcount)," kill spree was ended by a team mate!\n");
 			}
@@ -585,7 +585,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			else
 				bprint ("^1",s, "^1 was ", w_fragprefix, "^1fragged by ", a, "\n");
 
-			scores_give_frag(attacker, targ, 1);
+			score_give_frag(attacker, targ, 1);
 
 			if (targ.killcount > 2) {
 				bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
@@ -679,8 +679,8 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			bprint ("^1",s, "^1 burnt to death\n");
 		else
 			bprint ("^1",s, "^1 died\n");
-		scores_give_frag(targ, targ, -1);
-		if(scores_player_add(targ, SP_SCORE, 0) == -5) {
+		score_give_frag(targ, targ, -1);
+		if(score_player_add(targ, SP_SCORE, 0) == -5) {
 			announce(targ, "announcer/male/botlike.wav");
 		}
 
@@ -1298,7 +1298,7 @@ void(entity player) player_to_spec
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 
 		PutClientInServer();
-		scores_touch(player);
+		score_touch(player);
 		self = oldself;
 		spectator_note_update();
 		if (teamplay)
@@ -1998,7 +1998,7 @@ void(entity spot) player_spawn {
 	self.statdraintime = time + 5;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 	if(self.killcount == -666) {
-		scores_clear(self);
+		score_clear(self);
 		self.killcount = 0;
 	}
 	self.cnt = WEP_LASER;
@@ -2197,7 +2197,7 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 		//bprint(pl.netname, " has changed to ", team_name_by_no(t), "\n");
 		bprint(pl.netname, "^7 has changed from ", team_name_by_no(s), " to ", team_name_by_no(t), "\n");
 	}
-	scores_touch(pl);
+	score_touch(pl);
 }
 
 void() player_init {

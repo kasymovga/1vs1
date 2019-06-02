@@ -140,9 +140,9 @@ void kh_Scores_Event(entity player, entity key, float frags_player, float frags_
 	if(intermission_running)
 		return;
 	if(frags_player)
-		scores_player_team_add_score(player, frags_player);
+		score_player_team_add_score(player, frags_player);
 	if(key && key.owner && frags_owner)
-		scores_player_team_add_score(key.owner, frags_owner);
+		score_player_team_add_score(key.owner, frags_owner);
 }
 
 vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it can run 2 or 3 times.
@@ -445,7 +445,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	if(key.kh_dropperteam != player.team)
 	{
 		kh_Scores_Event(player, key, g_balance_keyhunt_score_collect, 0);
-		scores_player_add(player, SP_KH_PICKUPS, 1);
+		score_player_add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
 	bprint(player.netname, "^7 picked up the ", key.netname, "\n");
@@ -466,7 +466,7 @@ void kh_Key_DropAll(entity player, float suicide, float died) // runs whenever a
 		while((key = player.kh_next))
 		{
 			kh_Scores_Event(player, key, 0, 0);
-			scores_player_add(player, SP_KH_LOSSES, 1);
+			score_player_add(player, SP_KH_LOSSES, 1);
 			bprint(player.netname, "^7 ", (died ? "died and " : ""), "lost the ", key.netname, "\n");
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
@@ -607,14 +607,14 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	FOR_EACH_KH_KEY(key)
 	{
 		if (kh_roundbased)
-			scores_player_add(key.owner, SP_KH_CAPS, 1);
+			score_player_add(key.owner, SP_KH_CAPS, 1);
 		else {
-			scores_player_team_add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+			score_player_team_add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
 			kh_Scores_Event(key.owner, key, f, 0);
 		}
 	}
 	if (kh_roundbased)
-		scores_team_add_to(teem, ST_KH_CAPS, 1);
+		score_team_add_to(teem, ST_KH_CAPS, 1);
 
 	first = TRUE;
 	FOR_EACH_KH_KEY(key)
@@ -689,7 +689,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			kh_Scores_Event(lostkey.kh_previous_owner, world, 0, - g_balance_keyhunt_score_push);
 			// don't actually GIVE him the -nn points, just log
 		kh_Scores_Event(attacker, world, g_balance_keyhunt_score_push, 0);
-		scores_player_add(attacker, SP_KH_PUSHES, 1);
+		score_player_add(attacker, SP_KH_PUSHES, 1);
 		centerprint(attacker, "Your push is the best!");
 		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
 	}
@@ -708,7 +708,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			// don't actually GIVE him the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			scores_player_add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
+			score_player_add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
 
 		bprint("The ", team_colored_name(teem), "^7 could not take care of the ", lostkey.netname, "\n");
 	}
@@ -870,7 +870,7 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 		else
 		{
 			kh_Scores_Event(attacker, targ.kh_next, g_balance_keyhunt_score_carrierfrag - 1, 0);
-			scores_player_add(attacker, SP_KH_KCKILLS, 1);
+			score_player_add(attacker, SP_KH_KCKILLS, 1);
 			// the frag gets added later
 		}
 	}
@@ -967,14 +967,14 @@ void kh_init_delayed()  // sets up th KH environment
 	else
 		kh_Controller_SetThink(0, "", kh_WaitForPlayers);
 
-	scores_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
-	ST_KH_CAPS = scores_register_team_score("caps", (kh_roundbased ? SFL_SORT_PRIO_PRIMARY : SFL_SORT_PRIO_SECONDARY));
-	SP_KH_CAPS = scores_register_score("caps", SFL_SORT_PRIO_SECONDARY);
-	SP_KH_PUSHES = scores_register_score("pushes", 0);
-	SP_KH_DESTROYS = scores_register_score("destroyed", SFL_LOWER_IS_BETTER);
-	SP_KH_PICKUPS = scores_register_score("pickups", 0);
-	SP_KH_KCKILLS = scores_register_score("kckills", 0);
-	SP_KH_LOSSES = scores_register_score("losses", SFL_LOWER_IS_BETTER);
+	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
+	ST_KH_CAPS = score_register_team_score("caps", (kh_roundbased ? SFL_SORT_PRIO_PRIMARY : SFL_SORT_PRIO_SECONDARY));
+	SP_KH_CAPS = score_register("caps", SFL_SORT_PRIO_SECONDARY);
+	SP_KH_PUSHES = score_register("pushes", 0);
+	SP_KH_DESTROYS = score_register("destroyed", SFL_LOWER_IS_BETTER);
+	SP_KH_PICKUPS = score_register("pickups", 0);
+	SP_KH_KCKILLS = score_register("kckills", 0);
+	SP_KH_LOSSES = score_register("losses", SFL_LOWER_IS_BETTER);
 	if (kh_roundbased) {
 		if (game == GAME_KEYHUNT_CA)
 			Clanarena_Init_Shared("khca");

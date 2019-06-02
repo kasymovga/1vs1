@@ -3,7 +3,7 @@ float ScoreDamage_PlayerDamageHandle(entity inflictor, entity attacker, float _d
 	if (attacker.scorekeeper)
 	if (!teamplay || attacker.team != self.team)
 	if (deathtype != WEP_PORTO)
-		scores_player_add(attacker, SP_DAMAGE, _damage);
+		score_player_add(attacker, SP_DAMAGE, _damage);
 
 	return ScoreDamage_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
@@ -14,5 +14,5 @@ void ScoreDamage_Init() {
 
 	ScoreDamage_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = ScoreDamage_PlayerDamageHandle;
-	SP_DAMAGE = scores_register_score("damage", 0);
+	SP_DAMAGE = score_register("damage", 0);
 }

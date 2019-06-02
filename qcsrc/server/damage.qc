@@ -259,7 +259,7 @@ void damage_record_fires(entity attacker, float deathtype, float shots)
 			float bestwep = s.scores[SP_BESTWEP] & 63;
 			if (weaponid == bestwep) {
 				f = rint(attacker.bullets_hit[weaponid] * 100 / f) * 64 + weaponid;
-				scores_player_set(attacker, SP_BESTWEP, f);
+				score_player_set(attacker, SP_BESTWEP, f);
 			}
 		}
 	}
@@ -288,7 +288,7 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 			if (attacker.actual_damage[bestwep] <= d) {
 				float f;
 				f = rint(h * 100 / attacker.bullets_fired[weaponid]) * 64 + weaponid;
-				scores_player_set(attacker, SP_BESTWEP, f);
+				score_player_set(attacker, SP_BESTWEP, f);
 			}
 		}
 		attacker.damage_hits = weaponid + 64 * rint(attacker.bullets_hit[weaponid]);
@@ -298,7 +298,7 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 void damage_record_init() {
 	CACHE_CVAR(g_score_bestweapon);
 	if (g_score_bestweapon)
-		SP_BESTWEP = scores_register_score("bestwep", 0);
+		SP_BESTWEP = score_register("bestwep", 0);
 }
 
 float damage_radius_running;

@@ -44,7 +44,7 @@ entity ready_restart_timer;
  */
 void ready_restart_timer_think() {
 	world_reset(TRUE);
-	scores_clear_all();
+	score_clear_all();
 	remove(self);
 	restart_active = 0;
 	return;
@@ -111,7 +111,7 @@ void(void) ready_restart {
 	//of the countdown if sv_ready_restart_after_countdown is off!
 	//Otherwise scores could be manipulated during the countdown!
 	if (!cvar("sv_ready_restart_after_countdown"))
-		scores_clear_all();
+		score_clear_all();
 }
 
 /**

@@ -108,20 +108,20 @@ void conquest_cp_think_capture() {
 			self.enemy.alpha = 1 - self.capture_progress;
 
 		if (self.capture_progress >= 1) {
-			scores_player_add(self.owner, SP_SCORE, g_conquest_score_capture);
+			score_player_add(self.owner, SP_SCORE, g_conquest_score_capture);
 			if (self.team > 0) {
 				play2all("domination/claim.wav");
 				if (g_conquest_teamscore_alternative)
-					scores_team_add_to(self.owner.team, ST_SCORE, 1);
+					score_team_add_to(self.owner.team, ST_SCORE, 1);
 				else
-					scores_team_add_to(self.team, ST_SCORE, -1);
+					score_team_add_to(self.team, ST_SCORE, -1);
 				conquest_cp_free();
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
 					centerprint(self.owner, "Control Point has been freed");
 
 			} else {
 				conquest_cp_capture(self.owner.team);
-				scores_team_add_to(self.team, ST_SCORE, 1);
+				score_team_add_to(self.team, ST_SCORE, 1);
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
 					centerprint(self.owner, "Control Point has been captured");
 
@@ -222,7 +222,7 @@ float conquest_WinningCondition()
 	t1 = t2 = 0;
 
 	one_of_team_cannot_spawn = FALSE;
-	scores_winning_condition_helper(); // set worldstatus
+	score_winning_condition_helper(); // set worldstatus
 	if(inWarmupStage)
 		return FALSE;
 
@@ -295,7 +295,7 @@ float conquest_WinningCondition()
 }
 
 float conquest_FragsHandle(entity attacker, entity targ, float f) {
-	scores_player_add(attacker, SP_SCORE, f);
+	score_player_add(attacker, SP_SCORE, f);
 	attacker.totalfrags += f;
 	return 0;
 }
@@ -313,10 +313,10 @@ void conquest_Reset() {
 	b1 = b2 = 0;
 	for (e = world; (e = find(e, classname, "conquest_cp")); ) {
 		if (e.team == COLOR_TEAM1)
-			scores_team_add_to(COLOR_TEAM1, ST_SCORE, 1);
+			score_team_add_to(COLOR_TEAM1, ST_SCORE, 1);
 
 		if (e.team == COLOR_TEAM2)
-			scores_team_add_to(COLOR_TEAM2, ST_SCORE, 1);
+			score_team_add_to(COLOR_TEAM2, ST_SCORE, 1);
 	}
 }
 

@@ -45,7 +45,7 @@ projectile.qh
 effect.qh
 portals.qh
 hook.qh
-scores.qh
+score.qh
 sysinfo.qh
 ipban.qh
 trigger.qh
@@ -253,7 +253,7 @@ race.qc
 //// tZork Turrets ////
 tturrets/include/turrets.qh
 
-scores.qc
+score.qc
 
 ../common/extresponse.qc
 

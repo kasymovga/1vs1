@@ -35,11 +35,11 @@ var void(entity spot) survive_Spawn_NextLink;
 void survive_Spawn(entity spot) {
 	survive_Spawn_NextLink(spot);
 	if not(survive_active) {
-		scores_player_set(self, SP_STATUS, 0);
+		score_player_set(self, SP_STATUS, 0);
 		return;
 	}
 	spectator_observer_spawn(FALSE);
-	scores_player_set(self, SP_STATUS, 1);
+	score_player_set(self, SP_STATUS, 1);
 }
 
 void survive_trigger() {
@@ -132,7 +132,7 @@ float survive_checkNextWave() {
 
 float survive_last_countdown;
 float survive_WinningCondition() {
-	scores_winning_condition_helper(); // set worldstatus
+	score_winning_condition_helper(); // set worldstatus
 	if (time < game_starttime)
 		return FALSE;
 
@@ -211,8 +211,8 @@ float survive_WinningCondition() {
 
 void survive_MonsterKilled(entity attacker) {
 	if (attacker.classname == "player") {
-		scores_player_add(attacker, SP_SCORE, self.frags);
-		scores_team_add_to(attacker.team, ST_SCORE, self.frags);
+		score_player_add(attacker, SP_SCORE, self.frags);
+		score_team_add_to(attacker.team, ST_SCORE, self.frags);
 	}
 }
 
@@ -229,15 +229,15 @@ float survive_IceSkipThink() {
 }
 
 void survive_IceUnfroze(entity unfrozer) {
-	scores_player_set(self.owner, SP_STATUS, 0);
+	score_player_set(self.owner, SP_STATUS, 0);
 	if (unfrozer.classname == "player") {
-		scores_player_add(unfrozer, SP_SCORE, 1);
-		scores_player_add(unfrozer, SP_REVIVE, 1);
+		score_player_add(unfrozer, SP_SCORE, 1);
+		score_player_add(unfrozer, SP_REVIVE, 1);
 	}
 }
 
 void survive_IceFrozenStatus() {
-	scores_player_set(self, SP_STATUS, 1);
+	score_player_set(self, SP_STATUS, 1);
 }
 
 float survive_DeathHandle(entity attacker, entity inflictor, float deathtype) {
@@ -288,10 +288,10 @@ void survive_init() {
 	survive_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = survive_Spawn;
 
-	scores_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
-	SP_STATUS = scores_register_score("status", 0);
+	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
+	SP_STATUS = score_register("status", 0);
 	if (g_survive_freeze)
-		SP_REVIVE = scores_register_score("revs", SFL_SORT_PRIO_SECONDARY);
+		SP_REVIVE = score_register("revs", SFL_SORT_PRIO_SECONDARY);
 
 	CACHE_CVAR(g_survive_wave_pause);
 	g_survive_monster_factor = bound(0, cvar("g_survive_monster_factor"), 1);

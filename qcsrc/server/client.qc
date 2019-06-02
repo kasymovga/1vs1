@@ -64,7 +64,7 @@ void PutClientInServer()
 			team_join_best(self, FALSE);
 		}
 		if (self.team != oldteam)
-			scores_touch(self);
+			score_touch(self);
 
 		spot = GameHook_SelectSpawnPoint();
 		if(!spot) {
@@ -461,8 +461,8 @@ void ClientConnect (void)
 		player_count = 0;
 	}
 
-	scores_attach(self);
-	scores_touch(self);
+	score_attach(self);
+	score_touch(self);
 
 	bot_clientconnect();
 
@@ -560,7 +560,7 @@ void ClientDisconnect (void)
 
 	bot_relinkplayerlist();
 
-	scores_detach(self);
+	score_detach(self);
 
 	if(self.clientstatus)
 		strunzone(self.clientstatus);

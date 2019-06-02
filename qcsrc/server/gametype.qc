@@ -18,13 +18,13 @@ void() gametype_readcvars {
 }
 
 void() gametype_default_delayed_init {
-	if(!scores_preinitialized)
-		scores_generic();
+	if(!score_preinitialized)
+		score_generic();
 
 	ScoreDamage_Init();
 	damage_record_init();
 	IP2C_InitSV();
-	scores_basics_end();
+	score_basics_end();
 }
 
 void() gametype_init {

@@ -44,20 +44,20 @@ float ST_RACE_LAPS;
 float SP_RACE_LAPS;
 float SP_RACE_FASTEST;
 float SP_RACE_TIME;
-void scores_race()
+void score_race()
 {
-	scores_basics(0, 0, FALSE);
+	score_basics(0, 0, FALSE);
 	if(race_teams)
 	{
-		ST_RACE_LAPS = scores_register_team_score("laps", SFL_SORT_PRIO_PRIMARY);
-		SP_RACE_LAPS = scores_register_score("laps", SFL_SORT_PRIO_PRIMARY);
-		SP_RACE_TIME = scores_register_score("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		ST_RACE_LAPS = score_register_team_score("laps", SFL_SORT_PRIO_PRIMARY);
+		SP_RACE_LAPS = score_register("laps", SFL_SORT_PRIO_PRIMARY);
+		SP_RACE_TIME = score_register("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 	} else if(g_race_qualifying) {
-		SP_RACE_FASTEST = scores_register_score("fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		SP_RACE_FASTEST = score_register("fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 	} else {
-		//ST_RACE_LAPS = scores_register_team_score("laps", 0);
-		SP_RACE_LAPS = scores_register_score("laps", SFL_SORT_PRIO_PRIMARY);
-		SP_RACE_TIME = scores_register_score("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		//ST_RACE_LAPS = score_register_team_score("laps", 0);
+		SP_RACE_LAPS = score_register("laps", SFL_SORT_PRIO_PRIMARY);
+		SP_RACE_TIME = score_register("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
 }
 
@@ -157,16 +157,16 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		float s;
 		if(g_race_qualifying)
 		{
-			s = scores_player_add(e, SP_RACE_FASTEST, 0);
+			s = score_player_add(e, SP_RACE_FASTEST, 0);
 			if(!s || t < s)
-				scores_player_add(e, SP_RACE_FASTEST, t - s);
+				score_player_add(e, SP_RACE_FASTEST, t - s);
 		}
 		else
 		{
-			s = scores_player_add(e, SP_RACE_TIME, 0);
+			s = score_player_add(e, SP_RACE_TIME, 0);
 			snew = TIME_ENCODE(time - game_starttime);
-			scores_player_add(e, SP_RACE_TIME, snew - s);
-			l = scores_player_team_add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
+			score_player_add(e, SP_RACE_TIME, snew - s);
+			l = score_player_team_add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
 
 			if(cvar("fraglimit"))
 				if(l >= cvar("fraglimit"))
@@ -276,7 +276,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		oth = race_checkpoint_lastplayers[cp];
 		if(oth)
 		{
-			lself = scores_player_add(e, SP_RACE_LAPS, 0);
+			lself = score_player_add(e, SP_RACE_LAPS, 0);
 			lother = race_checkpoint_lastlaps[cp];
 			othtime = race_checkpoint_lasttimes[cp];
 		}
@@ -709,17 +709,17 @@ void race_Reset()
 {
 	float s;
 
-	scores_nice_print(world);
+	score_nice_print(world);
 
 	race_ClearRecords();
-	scores_sort(race_place);
+	score_sort(race_place);
 
 	entity e;
 	FOR_EACH_CLIENT(e)
 	{
 		if(e.race_place)
 		{
-			s = scores_player_add(e, SP_RACE_FASTEST, 0);
+			s = score_player_add(e, SP_RACE_FASTEST, 0);
 			if(!s)
 				e.race_place = 0;
 		}
@@ -733,7 +733,7 @@ void race_Reset()
 		cvar_set("fraglimit", ftos(race_fraglimit));
 		cvar_set("leadlimit", ftos(race_leadlimit));
 		cvar_set("timelimit", ftos(race_timelimit));
-		scores_race();
+		score_race();
 	}
 }
 
@@ -882,14 +882,14 @@ float race_WinningCondition_NonQualifying(float fraglimit)
 	if(n && (n == c))
 		return TRUE;
 
-	return scores_winning_condition(fraglimit, 0);
+	return score_winning_condition(fraglimit, 0);
 }
 
 float race_WinningCondition(float fraglimit, float ignore) {
 	if(!g_race_qualifying)
 		return race_WinningCondition_NonQualifying(fraglimit);
 	else if(g_race_qualifying == 2)
-		return scores_winning_condition(fraglimit, 0);
+		return score_winning_condition(fraglimit, 0);
 
 	return FALSE;
 }
@@ -904,7 +904,7 @@ float race_OvertimeHandle() {
 		FOR_EACH_PLAYER(head)
 		{
 			++totalplayers;
-			if(scores_player_add(head, SP_RACE_FASTEST, 0))
+			if(score_player_add(head, SP_RACE_FASTEST, 0))
 				++playerswithlaps;
 			if(head.ready)
 				++readyplayers;
@@ -1092,7 +1092,7 @@ void race_init() {
 		GameHook_WarmupAllowed = race_WarmupAllowed;
 		GameHook_ClearScoreAllowed = race_ClearScoresAllowed;
 	}
-	scores_race();
+	score_race();
 	GameHook_InitSpectator = race_InitSpectator;
 	GameHook_Reset = race_Reset;
 	GameHook_PlayerAllowedToMove = race_PlayerAllowedToMove;

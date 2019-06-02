@@ -23,7 +23,7 @@ void Single_EndLevel() {
 }
 
 float Single_WinningCondition() {
-	scores_winning_condition_helper(); // set worldstatus
+	score_winning_condition_helper(); // set worldstatus
 	return single_level_finished;
 }
 

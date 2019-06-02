@@ -813,7 +813,7 @@ void team_autoswap_best_with_worst(float from, float to) {
 	FOR_EACH_PLAYER(e) {
 		if (e.team == from) {
 			if (best) {
-				if (scores_compare_players(best.scorekeeper, e.scorekeeper) < 0)
+				if (score_compare_players(best.scorekeeper, e.scorekeeper) < 0)
 					best = e;
 			} else
 				best = e;
@@ -822,7 +822,7 @@ void team_autoswap_best_with_worst(float from, float to) {
 	FOR_EACH_PLAYER(e) {
 		if (e.team == to) {
 			if (worst) {
-				if (scores_compare_players(worst.scorekeeper, e.scorekeeper) > 0)
+				if (score_compare_players(worst.scorekeeper, e.scorekeeper) > 0)
 					worst = e;
 			} else
 				worst = e;
@@ -855,8 +855,8 @@ void() teams_balance_check {
 	if (bot_vs_human)
 		return;
 
-	float t1 = scores_team_comparable_value(COLOR_TEAM1);
-	float t2 = scores_team_comparable_value(COLOR_TEAM2);
+	float t1 = score_team_comparable_value(COLOR_TEAM1);
+	float t2 = score_team_comparable_value(COLOR_TEAM2);
 	if (g_balance_teams_adjust_sizes > 0) {
 		float f = t2 - t1;
 		team_size_adjust = 0;

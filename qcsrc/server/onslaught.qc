@@ -1371,7 +1371,7 @@ float onslaught_WinningCondition()
 	entity head;
 	local float t1, t2, t3, t4;
 
-	scores_winning_condition_helper(); // set worldstatus
+	score_winning_condition_helper(); // set worldstatus
 
 	if(inWarmupStage)
 		return FALSE;

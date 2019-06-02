@@ -56,7 +56,7 @@ void dompoint_captured ()
 
 	bprint("^3", head.netname, "^3", self.message, "\n");
 	if(self.enemy.playerid == self.enemy_playerid)
-		scores_player_add(self.enemy, SP_DOM_TAKES, 1);
+		score_player_add(self.enemy, SP_DOM_TAKES, 1);
 	else
 		self.enemy = world;
 
@@ -149,14 +149,14 @@ void dompointthink()
 		fragamt = g_domination_point_amt;
 		if(!fragamt)
 			fragamt = self.DOMPOINTFRAGS;
-		scores_team_add_to(self.goalentity.team, ST_SCORE, fragamt);
-		scores_team_add_to(self.goalentity.team, ST_DOM_TICKS, fragamt);
+		score_team_add_to(self.goalentity.team, ST_SCORE, fragamt);
+		score_team_add_to(self.goalentity.team, ST_DOM_TICKS, fragamt);
 
 		// give credit to the individual player, if he is still there
 		if (self.enemy.playerid == self.enemy_playerid)
 		{
-			scores_player_add(self.enemy, SP_SCORE, fragamt);
-			scores_player_add(self.enemy, SP_DOM_TICKS, fragamt);
+			score_player_add(self.enemy, SP_SCORE, fragamt);
+			score_player_add(self.enemy, SP_DOM_TICKS, fragamt);
 		}
 		else
 			self.enemy = world;
@@ -408,10 +408,10 @@ void dom_delayedinit()
 		sp_domticks = SFL_SORT_PRIO_PRIMARY;
 	else
 		sp_score = SFL_SORT_PRIO_PRIMARY;
-	scores_basics(sp_score, sp_score, TRUE);
-	ST_DOM_TICKS = scores_register_team_score("ticks", sp_domticks);
-	SP_DOM_TICKS = scores_register_score("ticks", sp_domticks);
-	SP_DOM_TAKES = scores_register_score("takes", 0);
+	score_basics(sp_score, sp_score, TRUE);
+	ST_DOM_TICKS = score_register_team_score("ticks", sp_domticks);
+	SP_DOM_TICKS = score_register("ticks", sp_domticks);
+	SP_DOM_TAKES = score_register("takes", 0);
 };
 
 entity dom_SelectSpawnPoint() {

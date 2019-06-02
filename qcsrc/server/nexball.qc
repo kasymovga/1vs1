@@ -526,15 +526,15 @@ void(void) nexball_goal_touch {
 	sound (ball, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 	if(ball.team && pscore) {
 		if (nexball_teams == 2 && pscore < 0)
-			scores_team_add_to(otherteam, ST_NEXBALL_GOALS, -pscore);
+			score_team_add_to(otherteam, ST_NEXBALL_GOALS, -pscore);
 		else
-			scores_team_add_to(ball.team, ST_NEXBALL_GOALS, pscore);
+			score_team_add_to(ball.team, ST_NEXBALL_GOALS, pscore);
 	}
 	if (isclient) {
 		if (pscore > 0)
-			scores_player_add(ball.pusher, SP_NEXBALL_GOALS, pscore);
+			score_player_add(ball.pusher, SP_NEXBALL_GOALS, pscore);
 		else if (pscore < 0)
-			scores_player_add(ball.pusher, SP_NEXBALL_FAULTS, -pscore);
+			score_player_add(ball.pusher, SP_NEXBALL_FAULTS, -pscore);
 	}
 	if (ball.owner) // Happens on spawnflag GOAL_TOUCHPLAYER
 		nexball_drop_ball(ball, ball.owner.origin, ball.owner.velocity);
@@ -607,10 +607,10 @@ void(void) nexball_delayedinit {
 
 	team_teams_allowed(world);
 	nexball_teams = 4 + c1 + c2 + c3 + c4;
-	scores_basics(0, 0, TRUE);
-	ST_NEXBALL_GOALS = scores_register_team_score("goals", SFL_SORT_PRIO_PRIMARY);
-	SP_NEXBALL_GOALS = scores_register_score("goals", SFL_SORT_PRIO_PRIMARY);
-	SP_NEXBALL_FAULTS = scores_register_score("faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	score_basics(0, 0, TRUE);
+	ST_NEXBALL_GOALS = score_register_team_score("goals", SFL_SORT_PRIO_PRIMARY);
+	SP_NEXBALL_GOALS = score_register("goals", SFL_SORT_PRIO_PRIMARY);
+	SP_NEXBALL_FAULTS = score_register("faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
 }
 
 //=======================//

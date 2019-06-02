@@ -147,7 +147,7 @@ void Roundbased_ServerFrame()
 		rb_need_check_teams = 0;
 	}
 	if (rb_team_alive > 0 && rb_have_death_players)
-		scores_team_add_to(rb_team_alive, rb_score_field, 1);
+		score_team_add_to(rb_team_alive, rb_score_field, 1);
 	else if (rb_team_alive < 0)
 		return;
 

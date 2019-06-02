@@ -11,8 +11,8 @@ float BadAss_Check() {
 		return TRUE;
 
 	if (g_badass_leader)
-	if (scores_winning_condition_helper_topscore >= g_badass_leader)
-	if (scores_winning_condition_helper_topscore == self.scorekeeper.scores[SP_SCORE])
+	if (score_winning_condition_helper_topscore >= g_badass_leader)
+	if (score_winning_condition_helper_topscore == self.scorekeeper.scores[SP_SCORE])
 		return TRUE;
 
 	if (g_badass_kdr) {

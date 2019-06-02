@@ -208,7 +208,7 @@ void GameCommand(string command)
 	}
 	if (cmd == "teamstatus")
 	{
-		scores_nice_print(world);
+		score_nice_print(world);
 		return;
 	}
 	if (cmd == "allready")
@@ -741,7 +741,7 @@ void SV_ParseClientCommand(string s) {
 			sprint(self, "ERROR: usage: tell # playerid text...\n");
 		}
 	} else if(cmd == "teamstatus") {
-		scores_nice_print(self);
+		score_nice_print(self);
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
 	} else if(cmd == "menu_select") {

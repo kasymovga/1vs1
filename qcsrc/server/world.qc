@@ -74,7 +74,7 @@ void() world_cvar_changes_init {
 		BADPREFIX("sv_allowdownloads_");
 		BADPREFIX("sv_autodemo");
 		BADPREFIX("sv_curl_");
-		BADPREFIX("sv_logscores_");
+		BADPREFIX("sv_logscore_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_world");
 		BADPREFIX("sv_infomessage");
@@ -673,8 +673,8 @@ void world_dump_stats(float final)
 	local float to_file;
 	local float i;
 
-	to_console = cvar("sv_logscores_console");
-	to_file = cvar("sv_logscores_file");
+	to_console = cvar("sv_logscore_console");
+	to_file = cvar("sv_logscore_file");
 
 	if(!final)
 		to_console = TRUE; // always print printstats replies
@@ -689,14 +689,14 @@ void world_dump_stats(float final)
 		print(s, "\n");
 	if(to_file)
 	{
-		file = fopen(cvar_string("sv_logscores_filename"), FILE_APPEND);
+		file = fopen(cvar_string("sv_logscore_filename"), FILE_APPEND);
 		if(file == -1)
 			to_file = FALSE;
 		else
 			fputs(file, strcat(s, "\n"));
 	}
 
-	s = strcat(":labels:player:", scores_player_string(world, 0));
+	s = strcat(":labels:player:", score_player_string(world, 0));
 	if(to_console)
 		print(s, "\n");
 	if(to_file)
@@ -704,9 +704,9 @@ void world_dump_stats(float final)
 
 	FOR_EACH_CLIENT(other)
 	{
-		if ((clienttype(other) == CLIENTTYPE_REAL) || (clienttype(other) == CLIENTTYPE_BOT && cvar("sv_logscores_bots")))
+		if ((clienttype(other) == CLIENTTYPE_REAL) || (clienttype(other) == CLIENTTYPE_BOT && cvar("sv_logscore_bots")))
 		{
-			s = strcat(":player:see-labels:", scores_player_string(other, 0), ":");
+			s = strcat(":player:see-labels:", score_player_string(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
 			if(other.classname == "player")
 				s = strcat(s, ftos(other.team), ":");
@@ -722,7 +722,7 @@ void world_dump_stats(float final)
 
 	if(teamplay)
 	{
-		s = strcat(":labels:teamscores:", scores_team_string(0, 0));
+		s = strcat(":labels:teamscores:", score_team_string(0, 0));
 		if(to_console)
 			print(s, "\n");
 		if(to_file)
@@ -730,7 +730,7 @@ void world_dump_stats(float final)
 
 		for(i = 1; i < 16; ++i)
 		{
-			s = strcat(":teamscores:see-labels:", scores_team_string(i, 0));
+			s = strcat(":teamscores:see-labels:", score_team_string(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
 				print(s, "\n");
@@ -836,10 +836,10 @@ float() world_check_rules_run_out_spawns {
 		team_teams_allowed(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			if(t != COLOR_TEAM1) if(c1 >= 0) scores_team_add_to(COLOR_TEAM1, i, -1000);
-			if(t != COLOR_TEAM2) if(c2 >= 0) scores_team_add_to(COLOR_TEAM2, i, -1000);
-			if(t != COLOR_TEAM3) if(c3 >= 0) scores_team_add_to(COLOR_TEAM3, i, -1000);
-			if(t != COLOR_TEAM4) if(c4 >= 0) scores_team_add_to(COLOR_TEAM4, i, -1000);
+			if(t != COLOR_TEAM1) if(c1 >= 0) score_team_add_to(COLOR_TEAM1, i, -1000);
+			if(t != COLOR_TEAM2) if(c2 >= 0) score_team_add_to(COLOR_TEAM2, i, -1000);
+			if(t != COLOR_TEAM3) if(c3 >= 0) score_team_add_to(COLOR_TEAM3, i, -1000);
+			if(t != COLOR_TEAM4) if(c4 >= 0) score_team_add_to(COLOR_TEAM4, i, -1000);
 		}
 
 		world_winners_add(team, t);
@@ -930,11 +930,11 @@ void() world_gameover {
 	string gameover_message;
 	gameover_message = "^2Game finished!";
 	if (teamplay) {
-		if (scores_winning_condition_helper_winnerteam > 0)
-			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(scores_winning_condition_helper_winnerteam), team_color_name(scores_winning_condition_helper_winnerteam), " Team^2 wins!");
+		if (score_winning_condition_helper_winnerteam > 0)
+			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
 	} else {
-		if (scores_winning_condition_helper_winner)
-			gameover_message = strcat(gameover_message, "\nThe winner is ", scores_winning_condition_helper_winner.netname);
+		if (score_winning_condition_helper_winner)
+			gameover_message = strcat(gameover_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
 	}
 	GameStatus_Set(GameHook_GameOverMessageMod(gameover_message), 30);
 	play2all("misc/menu2.wav");
@@ -1057,7 +1057,7 @@ void() world_check_rules {
 		if (timelimit)
 		if (time >= timelimit) {
 			if (GameHook_OvertimeAllowed()) {
-				if (scores_winning_condition_helper_equality) {
+				if (score_winning_condition_helper_equality) {
 					world_overtime();
 				} else {
 					world_gameover();
@@ -1074,7 +1074,7 @@ void() world_check_rules {
 		return;
 	}
 	if (checkrules_suddendeathend)
-	if (time >= checkrules_suddendeathend || !scores_winning_condition_helper_equality)
+	if (time >= checkrules_suddendeathend || !score_winning_condition_helper_equality)
 	{
 		world_gameover();
 		return;

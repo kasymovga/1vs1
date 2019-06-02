@@ -1,13 +1,13 @@
 .entity scorekeeper;
-float scores_preinitialized;
+float score_preinitialized;
 .float scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
-void(entity player) scores_attach;
+void(entity player) score_attach;
 
 /**
  * Detaches a PlayerScore entity from the player. Use that in ClientDisconnect.
  */
-void(entity player) scores_detach;
+void(entity player) score_detach;
 
 /**
  * Adds a score to the player's scores.
@@ -15,80 +15,80 @@ void(entity player) scores_detach;
  * Means: FIXME make players unable to join the game when not called ClientConnect yet.
  * Returns the new score.
  */
-float(entity player, float scorefield, float score) scores_player_add;
-float(entity player, float scorefield, float score) scores_player_set;
-void(entity attacker, entity targ, float f) scores_give_frag;
+float(entity player, float scorefield, float score) score_player_add;
+float(entity player, float scorefield, float score) score_player_set;
+void(entity attacker, entity targ, float f) score_give_frag;
 
 /**
  * Initialize the score of this player if needed.
  * Does nothing in teamplay.
  * Use that when a spectator becomes a player.
  */
-void(entity player) scores_clear;
+void(entity player) score_clear;
 
 /**
  * Adds a score to the player's team's scores.
  * NEVER call this if team has not been set yet!
  * Returns the new score.
  */
-float(entity player, float scorefield, float score) scores_team_add;
+float(entity player, float scorefield, float score) score_team_add;
 
 /**
  * Adds a score to the given team.
  * NEVER call this if team has not been set yet!
  * Returns the new score.
  */
-float(float t, float scorefield, float score) scores_team_add_to;
+float(float t, float scorefield, float score) score_team_add_to;
 
 /**
  * Returns a value indicating the team score (and higher is better).
  */
-float(float t) scores_team_comparable_value;
+float(float t) score_team_comparable_value;
 
 /**
  * Adds a score to both the player and the team. Returns the team score if
  * possible, otherwise the player score.
  */
-float(entity player, float pscorefield, float tscorefield, float score) scores_player_team_add;
+float(entity player, float pscorefield, float tscorefield, float score) score_player_team_add;
 
 /**
  * Adds to the generic score fields for both the player and the team.
  */
-#define scores_player_team_add_score(p,s) scores_player_team_add(p, SP_SCORE, ST_SCORE, s)
+#define score_player_team_add_score(p,s) score_player_team_add(p, SP_SCORE, ST_SCORE, s)
 
 /**
  * Set the label of a team score item, as well as the scoring flags.
  */
-float(string label, float scoreflags) scores_register_team_score;
+float(string label, float scoreflags) score_register_team_score;
 
 /**
  * Set the label of a player score item, as well as the scoring flags.
  */
-float(string label, float scoreflags) scores_register_score;
+float(string label, float scoreflags) score_register;
 
 /**
  * Clear ALL scores (for ready-restart).
  */
-void() scores_clear_all;
+void() score_clear_all;
 
 /**
  * Prints the scores to the console of a player.
  */
-void(entity to) scores_nice_print;
+void(entity to) score_nice_print;
 
 /**
  * Sets the following results for the current scores entities.
  */
-void scores_winning_condition_helper();
-float scores_winning_condition_helper_topscore;      ///< highest score
-float scores_winning_condition_helper_secondscore;   ///< second highest score
-float scores_winning_condition_helper_winnerteam;    ///< the color of the winning team, or -1 if none
-float scores_winning_condition_helper_secondteam;    ///< the color of the second team, or -1 if none
-float scores_winning_condition_helper_equality;      ///< we have no winner
-entity scores_winning_condition_helper_winner;       ///< the winning player, or world if none
-entity scores_winning_condition_helper_second;       ///< the second player, or world if none
-float scores_winning_condition_helper_lowerisbetter; ///< lower is better, duh
-float scores_winning_condition_helper_zeroisworst;   ///< zero is worst, duh
+void score_winning_condition_helper();
+float score_winning_condition_helper_topscore;      ///< highest score
+float score_winning_condition_helper_secondscore;   ///< second highest score
+float score_winning_condition_helper_winnerteam;    ///< the color of the winning team, or -1 if none
+float score_winning_condition_helper_secondteam;    ///< the color of the second team, or -1 if none
+float score_winning_condition_helper_equality;      ///< we have no winner
+entity score_winning_condition_helper_winner;       ///< the winning player, or world if none
+entity score_winning_condition_helper_second;       ///< the second player, or world if none
+float score_winning_condition_helper_lowerisbetter; ///< lower is better, duh
+float score_winning_condition_helper_zeroisworst;   ///< zero is worst, duh
 #define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999
 
 /**
@@ -102,24 +102,24 @@ float scores_winning_condition_helper_zeroisworst;   ///< zero is worst, duh
  * Example label string: score!!,kills,deaths<,suicides<
  * If shortString is set, only the sort keys are returned.
  */
-string(entity pl, float shortString) scores_player_string;
-string(float tm, float shortString) scores_team_string;
+string(entity pl, float shortString) score_player_string;
+string(float tm, float shortString) score_team_string;
 
 /**
  * Sorts the players and stores their place in the given field, starting with
  * 1. Non-players get 0 written into that field.
  * Returns the beginning of a sorted chain of the non-spectators.
  */
-entity(.float field) scores_sort;
+entity(.float field) score_sort;
 
-float scores_winning_condition(float limit, float leadlimit);
+float score_winning_condition(float limit, float leadlimit);
 
-void(entity e) scores_touch;
-float(entity t1, entity t2) scores_compare_players;
+void(entity e) score_touch;
+float(entity t1, entity t2) score_compare_players;
 
-void(float sprio, float stprio, float score_enabled) scores_basics;
-void() scores_basics_end;
-void() scores_generic;
+void(float sprio, float stprio, float score_enabled) score_basics;
+void() score_basics_end;
+void() score_generic;
 
 float SP_KILLS;
 float SP_DEATHS;

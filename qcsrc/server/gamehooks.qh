@@ -22,7 +22,7 @@ var float(float fraglimit, float _leadlimit) GameHook_WinningCondition = {
 		bprint("Hey! Someone ran out of spawns!\n");
 		return TRUE;
 	}
-	return scores_winning_condition(fraglimit, _leadlimit);
+	return score_winning_condition(fraglimit, _leadlimit);
 }
 var float() GameHook_OvertimeHandle = { return FALSE; }
 var float() GameHook_OvertimeAllowed = { return TRUE; }

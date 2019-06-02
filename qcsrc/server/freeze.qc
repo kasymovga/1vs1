@@ -4,7 +4,7 @@ float Freeze_FragLimitOverride() {
 
 void Freeze_Init_Delayed()
 {
-	scores_generic();
+	score_generic();
 	Freeze_Init_Shared("freeze");
 }
 
