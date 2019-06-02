@@ -208,7 +208,6 @@ void vehicles_init() {
 	GameHookChain_PlayerAlphaMod = vehicle_PlayerAlphaMod;
 	vehicle_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
 	GameHookChain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
-	physic_csqc_enable();
 }
 
 float vehicle_enter(vector ang, float() phys_plug, float _hud, float(entity, float)phys_send ) {

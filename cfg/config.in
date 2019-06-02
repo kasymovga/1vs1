@@ -95,6 +95,30 @@ _set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the
 _set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
 _set g_weapon_stay 0 "if set, weapons stay after they were picked up"
 
+set g_stepheight 34 "how high you can step up"
+set g_gravity 800 "how fast you fall"
+set g_maxairspeed 220 "maximum speed a player can accelerate to when airborn (note that it is possible to completely stop by moving the opposite direction)"
+set g_maxspeed 400 "maximum speed a player can accelerate to when on ground (can be exceeded by tricks)"
+set g_friction 7 "how fast you slow down"
+set g_accelerate 8 "rate at which a player accelerates to sv_maxspeed"
+set g_airaccelerate 5.5 "rate at which a player accelerates to sv_maxairspeed while in the air, if less than 0 the sv_accelerate variable is used instead"
+set g_airaccel_sideways_friction 0.35 "anti-sideways movement stabilization (reduces speed gain when zigzagging); when < 0, only so much friction is applied that braking (by accelerating backwards) cannot be stronger"
+set g_airaccel_qw 0.95 "ratio of QW-style air control as opposed to simple acceleration; when < 0, the speed is clamped against the maximum allowed forward speed after the move"
+set g_stopspeed 100 "how fast you come to a complete stop"
+set g_airstopaccelerate 0 "when set, replacement for sv_airaccelerate when moving backwards"
+set g_airstrafeaccelerate 0 "when set, replacement for sv_airaccelerate when just strafing"
+set g_maxairstrafespeed 0 "when set, replacement for sv_maxairspeed when just strafing"
+set g_aircontrol 0 "CPMA-style air control"
+set g_warsowbunny_airforwardaccel 1.00001 "how fast you accelerate until you reach sv_maxspeed"
+set g_warsowbunny_accel 0.1593 "how fast you accelerate until after reaching sv_maxspeed (it gets harder as you near sv_warsowbunny_topspeed)"
+set g_warsowbunny_topspeed 925 "soft speed limit (can get faster with rjs and on ramps)"
+set g_warsowbunny_turnaccel 0 "max sharpness of turns (also master switch for the sv_warsowbunny_* mode; set this to 9 to enable"
+set g_warsowbunny_backtosideratio 0.8 "lower values make it easier to change direction without losing speed; the drawback is 'understeering' in sharp turns"
+set g_jumpvelocity 300 "cvar that can be used by QuakeC code for jump velocity"
+set g_gameplayfix_q2airaccelerate 1 "Quake2-style air acceleration"
+set g_friction_on_land 0
+set g_pogostick 1 "don't require releasing the space bar for jumping again"
+
 set bot_messages_suicide "I am sooo noob today|Ooops"
 set bot_messages_fragged "aaarrrrgggghhhh|:("
 set bot_messages_fragged_priv "nice one|oh|just luck"
@@ -185,8 +209,8 @@ set sv_model_uzi "" "Custom weapon model for uzi"
 set sv_model_zapper "" "Custom weapon model for zapper"
 set sv_model_axe "" "Custom weapon model for axe"
 set sv_model_backpack ""
-set sv_slicksurfaces "0" "Enable slick surfaces"
-set sv_slicksurfaces_allowjump "1" "Enable jumps on slick surfaces"
+set g_slicksurfaces "0" "Enable slick surfaces"
+set g_slicksurfaces_allowjump "1" "Enable jumps on slick surfaces"
 set sv_reset_on_join "0" "Reset map when this client count join game"
 set g_pickup_weapons 1
 set g_pickup_respawntime_healthsmall 15
@@ -276,7 +300,7 @@ set g_balance_uzi_swap_buttons 0
 set g_balance_campingrifle_secondary_gravityfactor 1
 set g_balance_campingrifle_primary_gravityfactor 1
 set g_balance_campingrifle_swap_buttons 0
-set sv_disable_crouch 0
+set g_disable_crouch 0
 set g_pickup_drop_backpack 0
 set g_akimbo_weapons "laser"
 set g_akimbo_throwable 1
@@ -442,7 +466,6 @@ set sv_infomessage9 ""
 set sv_infomessage10 ""
 set _sv_infomessages_firstintervalfactor 0
 
-set sv_csqc_physic 1
 set sv_world_scale 1
 set sv_jumppads_target_adjust_height 0
 
@@ -1823,6 +1846,30 @@ set explosive_minsta_g_minstagib_health_max 200
 set explosive_minsta_g_minstagib_ammo_start 50
 set explosive_minsta_g_use_ammunition 1
 set explosive_minsta_g_minstagib_ammo_drop 25
+
+set promode_g_gravity 1000
+set promode_g_maxspeed 400
+set promode_g_maxairspeed 400
+set promode_g_accelerate 15
+set promode_g_airaccelerate 1
+set promode_g_friction 8
+set promode_g_edgefriction 1
+set promode_g_stepheight 22.5
+set promode_g_jumpvelocity 332.5
+set promode_g_wateraccelerate 4
+set promode_g_waterfriction 1
+set promode_g_airaccel_sideways_friction 0
+set promode_g_airaccel_qw 1
+set promode_g_airstopaccelerate 2.5
+set promode_g_airstrafeaccelerate 70
+set promode_g_maxairstrafespeed 37.5
+set promode_g_aircontrol 187.5
+set promode_g_warsowbunny_turnaccel 0
+set promode_g_warsowbunny_accel 0.1593
+set promode_g_warsowbunny_topspeed 1156.25
+set promode_g_warsowbunny_backtosideratio 0.8
+set promode_g_friction_on_land 0
+set promode_g_doublejump 0
 
 alias g_ctf_respawn_delay "set ctf_g_respawn_delay $1"
 alias g_dm_respawn_delay "set dm_g_respawn_delay $1"

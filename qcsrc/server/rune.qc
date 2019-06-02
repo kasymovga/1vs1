@@ -577,7 +577,6 @@ void(void) rune_init {
 	if not(g_runes)
 		return;
 
-	physic_csqc_enable();
 	precache_model ("models/runematch/curse.mdl");
 	precache_model ("models/runematch/rune.mdl");
 	precache_model("models/teamfx/electricityarcs_player.md3");

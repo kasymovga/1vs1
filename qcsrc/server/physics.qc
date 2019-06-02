@@ -343,51 +343,56 @@ void Physic_RealClientDisconnect()
 	Physic_RealClientDisconnect_NextLink();
 }
 
-void physic_csqc_enable() {
-	if (sv_csqc_physic)
-		return;
-
-	sv_csqc_physic = TRUE;
-	Physic_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-	GameHookChain_RealClientConnect = Physic_RealClientConnect;
-	Physic_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
-	GameHookChain_RealClientDisconnect = Physic_RealClientDisconnect;
+float(string s) physic_cvar {
+	string sv_s = s;
+	if (substring(s, 0, 3) == "sv_") {
+		s = substring(s, 3, -1);
+	}
+	string g_s = strcat("g_", s);
+	string g_s_v = cvar_string(g_s);
+	if (g_s_v != "") {
+		cvar_set(sv_s, g_s_v);
+		return cvar(g_s);
+	}
+	return cvar(sv_s);
 }
 
+float physic_initiated;
 void physic_init()
 {
+#define PHYSIC_CACHE_CVAR(x) x = physic_cvar(#x)
 	//Common
-	CACHE_CVAR(sv_stepheight);
-	CACHE_CVAR(sv_gravity);
-	CACHE_CVAR(sv_maxairspeed);
-	CACHE_CVAR(sv_maxspeed);
-	CACHE_CVAR(sv_friction);
-	CACHE_CVAR(sv_accelerate);
-	CACHE_CVAR(sv_airaccelerate);
-	CACHE_CVAR(sv_airaccel_sideways_friction);
-	CACHE_CVAR(sv_airaccel_qw);
-	CACHE_CVAR(sv_stopspeed);
-	CACHE_CVAR(sv_airstopaccelerate);
-	CACHE_CVAR(sv_airstrafeaccelerate);
-	CACHE_CVAR(sv_maxairstrafespeed);
-	CACHE_CVAR(sv_aircontrol);
-	CACHE_CVAR(sv_warsowbunny_airforwardaccel);
-	CACHE_CVAR(sv_warsowbunny_accel);
-	CACHE_CVAR(sv_warsowbunny_topspeed);
-	CACHE_CVAR(sv_warsowbunny_turnaccel);
-	CACHE_CVAR(sv_warsowbunny_backtosideratio);
-	CACHE_CVAR(sv_jumpvelocity);
-	CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
-	CACHE_CVAR(sv_friction_on_land);
+	PHYSIC_CACHE_CVAR(sv_stepheight);
+	PHYSIC_CACHE_CVAR(sv_gravity);
+	PHYSIC_CACHE_CVAR(sv_maxairspeed);
+	PHYSIC_CACHE_CVAR(sv_maxspeed);
+	PHYSIC_CACHE_CVAR(sv_friction);
+	PHYSIC_CACHE_CVAR(sv_accelerate);
+	PHYSIC_CACHE_CVAR(sv_airaccelerate);
+	PHYSIC_CACHE_CVAR(sv_airaccel_sideways_friction);
+	PHYSIC_CACHE_CVAR(sv_airaccel_qw);
+	PHYSIC_CACHE_CVAR(sv_stopspeed);
+	PHYSIC_CACHE_CVAR(sv_airstopaccelerate);
+	PHYSIC_CACHE_CVAR(sv_airstrafeaccelerate);
+	PHYSIC_CACHE_CVAR(sv_maxairstrafespeed);
+	PHYSIC_CACHE_CVAR(sv_aircontrol);
+	PHYSIC_CACHE_CVAR(sv_warsowbunny_airforwardaccel);
+	PHYSIC_CACHE_CVAR(sv_warsowbunny_accel);
+	PHYSIC_CACHE_CVAR(sv_warsowbunny_topspeed);
+	PHYSIC_CACHE_CVAR(sv_warsowbunny_turnaccel);
+	PHYSIC_CACHE_CVAR(sv_warsowbunny_backtosideratio);
+	PHYSIC_CACHE_CVAR(sv_jumpvelocity);
+	PHYSIC_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
+	PHYSIC_CACHE_CVAR(sv_friction_on_land);
 	CACHE_CVAR(g_jetpack_acceleration_side);
 	CACHE_CVAR(g_jetpack_acceleration_up);
 	CACHE_CVAR(g_jetpack_antigravity);
 	CACHE_CVAR(g_jetpack_maxspeed_side);
 	CACHE_CVAR(g_jetpack_maxspeed_up);
-	CACHE_CVAR(sv_slicksurfaces);
-	CACHE_CVAR(sv_slicksurfaces_allowjump);
-	CACHE_CVAR(sv_pogostick);
-	CACHE_CVAR(sv_disable_crouch);
+	PHYSIC_CACHE_CVAR(sv_slicksurfaces);
+	PHYSIC_CACHE_CVAR(sv_slicksurfaces_allowjump);
+	PHYSIC_CACHE_CVAR(sv_pogostick);
+	PHYSIC_CACHE_CVAR(sv_disable_crouch);
 	CACHE_CVAR(g_walljump);
 	CACHE_CVAR(g_walljump_delay);
 	CACHE_CVAR(g_walljump_force);
@@ -400,9 +405,6 @@ void physic_init()
 	CACHE_CVAR(g_dodging_frozen_factor);
 	CACHE_CVAR(g_dodging_horiz_speed);
 	CACHE_CVAR(g_dodging_up_speed);
-	if (cvar("sv_csqc_physic"))
-		physic_csqc_enable();
-
 	//Server-side only
 	CACHE_CVAR(g_jetpack_fuel);
 	CACHE_CVAR(speedmeter);
@@ -410,6 +412,18 @@ void physic_init()
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
+	if (physic_initiated) {
+		entity e;
+		FOR_EACH_REALCLIENT(e) {
+			e.player_physic.SendFlags |= 3;
+		}
+	} else {
+		Physic_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+		GameHookChain_RealClientConnect = Physic_RealClientConnect;
+		Physic_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
+		GameHookChain_RealClientDisconnect = Physic_RealClientDisconnect;
+		physic_initiated = TRUE;
+	}
 }
 
 float physic_send(entity to, float sf)

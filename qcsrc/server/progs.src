@@ -94,10 +94,10 @@ w_campingrifle.qh
 w_rocketlauncher.qh
 damageindicator.qh
 
-../client-server/cl_physics.qh
-../client-server/cl_physics_spiderbot.qh
-../client-server/cl_physics_aircraft.qh
-../client-server/cl_physics_car.qh
+../client-server/physics.qh
+../client-server/physics_spiderbot.qh
+../client-server/physics_aircraft.qh
+../client-server/physics_car.qh
 physics.qh
 minstagib.qh
 
@@ -166,14 +166,14 @@ tdm.qc
 gametype.qc
 rune.qc
 
-../client-server/cl_physics.qc
+../client-server/physics.qc
 physics.qc
 
 // tZork's libs
 ../client-server/movelib.qc
-../client-server/cl_physics_spiderbot.qc
-../client-server/cl_physics_aircraft.qc
-../client-server/cl_physics_car.qc
+../client-server/physics_spiderbot.qc
+../client-server/physics_aircraft.qc
+../client-server/physics_car.qc
 footsteps.qc
 world.qc
 map.qc

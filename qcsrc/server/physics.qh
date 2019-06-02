@@ -1,5 +1,4 @@
 float physic_is_flying(entity a);
-void physic_csqc_enable();
 void physic_mark_as_teleported(entity pl);
 float g_jetpack_fuel;
 float g_walljump_smokeparticle_num;
