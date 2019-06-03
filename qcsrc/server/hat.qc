@@ -4,18 +4,18 @@ float sv_player_hat_scale;
 vector sv_player_hat_origin, sv_player_hat_angles;
 .entity hat;
 
-var void(float killed) Hat_PlayerClear_NextLink;
-void Hat_PlayerClear(float killed) {
+var void(float killed) hat_PlayerClear_NextLink;
+void(float killed) hat_PlayerClear {
 	if (self.hat)
 	if (!killed || PLAYER_REALLY_DEAD(self)) {
 		remove(self.hat);
 		self.hat = world;
 	}
-	Hat_PlayerClear_NextLink(killed);
+	hat_PlayerClear_NextLink(killed);
 }
 
-var void(entity spot) Hat_Spawn_NextLink;
-void Hat_Spawn(entity spot) {
+var void(entity spot) hat_Spawn_NextLink;
+void(entity spot) hat_Spawn {
 	self.hat = spawn();
 	setmodel(self.hat, sv_player_hat);
 	self.hat.owner = self;
@@ -24,10 +24,10 @@ void Hat_Spawn(entity spot) {
 	self.hat.angles = sv_player_hat_angles;
 	setorigin(self.hat, sv_player_hat_origin);
 	self.hat.customizeentityforclient = weapon_model_exterior_customize;
-	Hat_Spawn_NextLink(spot);
+	hat_Spawn_NextLink(spot);
 }
 
-void Hat_Init() {
+void(void) hat_init {
 	sv_player_hat = cvar_string_zone_ifneeded("sv_player_hat");
 	if (sv_player_hat != "") {
 		sv_player_hat_attachment = cvar_string_zone_ifneeded("sv_player_hat_attachment");
@@ -35,9 +35,9 @@ void Hat_Init() {
 		sv_player_hat_origin = stov(cvar_string("sv_player_hat_origin"));
 		sv_player_hat_angles = stov(cvar_string("sv_player_hat_angles"));
 		precache_model(sv_player_hat);
-		Hat_PlayerClear_NextLink = GameHookChain_PlayerClear;
-		GameHookChain_PlayerClear = Hat_PlayerClear;
-		Hat_Spawn_NextLink = GameHookChain_Spawn;
-		GameHookChain_Spawn = Hat_Spawn;
+		hat_PlayerClear_NextLink = GameHookChain_PlayerClear;
+		GameHookChain_PlayerClear = hat_PlayerClear;
+		hat_Spawn_NextLink = GameHookChain_Spawn;
+		GameHookChain_Spawn = hat_Spawn;
 	}
 }

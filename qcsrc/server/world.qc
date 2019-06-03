@@ -261,7 +261,7 @@ void world_static_init(void)
 	rune_init();
 	WalkieTalkie_Init();
 	Akimbo_Init();
-	Hat_Init();
+	hat_init();
 	Radio_Init();
 	BadAss_Init();
 	DamageIndicator_Init();

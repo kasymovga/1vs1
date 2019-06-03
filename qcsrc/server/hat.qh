@@ -1,1 +1,1 @@
-void Hat_Init();
+void(void) hat_init;
