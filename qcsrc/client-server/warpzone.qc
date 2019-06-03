@@ -20,7 +20,6 @@ void WarpZone_Accumulator_Add(entity acc, entity wz)
 	acc.warpzone_shift = st;
 }
 
-.vector(vector, vector) camera_transform;
 var float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {
@@ -57,21 +56,21 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 
 .entity enemy;
 
-vector WarpZoneLib_BoxTouchesBrush_mins;
-vector WarpZoneLib_BoxTouchesBrush_maxs;
-entity WarpZoneLib_BoxTouchesBrush_ent;
-entity WarpZoneLib_BoxTouchesBrush_ignore;
-float WarpZoneLib_BoxTouchesBrush_Recurse()
+vector WarpZone_BoxTouchesBrush_mins;
+vector WarpZone_BoxTouchesBrush_maxs;
+entity WarpZone_BoxTouchesBrush_ent;
+entity WarpZone_BoxTouchesBrush_ignore;
+float WarpZone_BoxTouchesBrush_Recurse()
 {
 	float s;
 	entity se;
 	float f;
 
-	tracebox('0 0 0', WarpZoneLib_BoxTouchesBrush_mins, WarpZoneLib_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZoneLib_BoxTouchesBrush_ignore);
+	tracebox('0 0 0', WarpZone_BoxTouchesBrush_mins, WarpZone_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZone_BoxTouchesBrush_ignore);
 #ifdef CSQC
 	if (trace_networkentity)
 	{
-		dprint("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush\n");
+		dprint("hit a network ent, cannot continue WarpZone_BoxTouchesBrush\n");
 		// we cannot continue, as a player blocks us...
 		// so, abort
 		return 0;
@@ -79,19 +78,19 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 #endif
 	if not(trace_ent)
 		return 0;
-	if (trace_ent == WarpZoneLib_BoxTouchesBrush_ent)
+	if (trace_ent == WarpZone_BoxTouchesBrush_ent)
 		return 1;
 
 	se = trace_ent;
 	s = se.solid;
 	se.solid = SOLID_NOT;
-	f = WarpZoneLib_BoxTouchesBrush_Recurse();
+	f = WarpZone_BoxTouchesBrush_Recurse();
 	se.solid = s;
 
 	return f;
 }
 
-float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
+float WarpZone_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
     float f, s;
 
@@ -100,11 +99,11 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 
     s = e.solid;
     e.solid = SOLID_BSP;
-    WarpZoneLib_BoxTouchesBrush_mins = mi;
-    WarpZoneLib_BoxTouchesBrush_maxs = ma;
-    WarpZoneLib_BoxTouchesBrush_ent = e;
-    WarpZoneLib_BoxTouchesBrush_ignore = ig;
-    f = WarpZoneLib_BoxTouchesBrush_Recurse();
+    WarpZone_BoxTouchesBrush_mins = mi;
+    WarpZone_BoxTouchesBrush_maxs = ma;
+    WarpZone_BoxTouchesBrush_ent = e;
+    WarpZone_BoxTouchesBrush_ignore = ig;
+    f = WarpZone_BoxTouchesBrush_Recurse();
     e.solid = s;
 
     return f;
@@ -115,7 +114,7 @@ entity WarpZone_Find(vector mi, vector ma)
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
 	entity e;
 	for(e = warpzone_chain_begin; e; e  = e.warpzone_chain)
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, world))
+		if(WarpZone_BoxTouchesBrush(mi, ma, e, world))
 			return e;
 	return world;
 }
@@ -332,7 +331,7 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 	return ang;
 }
 
-vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
+vector WarpZone_NearestPointOnBox(vector mi, vector ma, vector org)
 {
 	vector nearest;
 	nearest_x = bound(mi_x, org_x, ma_x);
@@ -359,7 +358,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 
 	for(e = e0; e; e = e.chain)
 	{
-		p = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
+		p = WarpZone_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
 		{
 			traceline(org, p, MOVE_NOMONSTERS, e);
@@ -425,7 +424,7 @@ entity WarpZone_FindRadius_stub(vector org, float rad, float needlineofsight)
 	entity e0 = findradius(org, rad);
 	entity e;
 	for(e = e0; e; e = e.chain) {
-		e.WarpZone_findradius_nearest = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org);
+		e.WarpZone_findradius_nearest = WarpZone_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org);
 		e.WarpZone_findradius_dist = e.WarpZone_findradius_nearest - org;
 	}
 	return e0;
@@ -531,7 +530,7 @@ entity WarpZone_RefSys_SpawnSameRefSys_real(entity me)
 	return e;
 }
 
-vector WarpZoneLib_PlaneAndLineCross(vector planep, vector planen, vector linep, vector linev) {
+vector WarpZone_PlaneAndLineCross(vector planep, vector planen, vector linep, vector linev) {
 	//Teh Analytic Geometry
 	vector crosspoint;
 	float common_denom = ((planen_x * linev_x) + (planen_y * linev_y) + (planen_z * linev_z));
@@ -570,7 +569,7 @@ void WarpZone_TraceTriangle_callback(vector from, vector endpos, vector to) {
 			normal = trace_ent.warpzone_forward;
 		else
 			normal = WarpZone_trace_dir;
-		to_visual = WarpZoneLib_PlaneAndLineCross(endpos, normal, o, o - to);
+		to_visual = WarpZone_PlaneAndLineCross(endpos, normal, o, o - to);
 	} else
 		to_visual = endpos;
 	if (WarpZone_TraceTriangle_real_callback)

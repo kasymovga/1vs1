@@ -354,6 +354,7 @@ set sv_spawnreplace_ball_fault nexball_fault
 set sv_spawnreplace_ball_bound nexball_out
 set sv_spawnreplace_item_flag_team1 ctf_flag_team1
 set sv_spawnreplace_item_flag_team2 ctf_flag_team2
+set sv_spawnreplace_misc_warpzone_position trigger_warpzone_position
 
 //Quake and Quake 3 compat
 set sv_spawnreplace_monster_army monster_soldier_spawn

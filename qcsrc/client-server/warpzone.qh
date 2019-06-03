@@ -1,6 +1,7 @@
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
 
+.vector(vector, vector) camera_transform;
 .vector warpzone_shift;
 .vector warpzone_origin;
 .vector warpzone_angles;
@@ -11,8 +12,8 @@
 .vector warpzone_transform;
 void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
 
-float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
-vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org);
+float WarpZone_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
+vector WarpZone_NearestPointOnBox(vector mi, vector ma, vector org);
 
 entity WarpZone_Find(vector mi, vector ma);
 void WarpZone_MakeAllSolid();
@@ -70,7 +71,7 @@ vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);
 entity WarpZone_RefSys_SpawnSameRefSys_real(entity me);
 var entity(entity me) WarpZone_RefSys_SpawnSameRefSys;
 
-vector WarpZoneLib_PlaneAndLineCross(vector planep, vector planen, vector linep, vector linev);
+vector WarpZone_PlaneAndLineCross(vector planep, vector planen, vector linep, vector linev);
 void WarpZone_TraceTriangle(vector org, vector org_visual, vector end, float nomonster, entity forent, WarpZone_trace_callback_t cb);
 float WarpZone_FindNearestOrigin_length;
 vector WarpZone_FindNearestOrigin_real(vector from, vector to, float trace_check);

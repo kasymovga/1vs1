@@ -125,10 +125,9 @@ heal.qh
 fire.qh
 badass.qh
 monster.qh
-../client-server/warpzonelib/anglestransform.qh
-../client-server/warpzonelib/common.qh
-warpzonelib/server.qh
-warpzonelib/util_server.qh
+../client-server/anglestransform.qh
+../client-server/warpzone.qh
+warpzone.qh
 ../common/util.qc
 ../client-server/util.qc
 ../menu-server/util.qc
@@ -178,11 +177,12 @@ world.qc
 map.qc
 mapvote.qc
 casing.qc
-trigger_push.qc
 target.qc
 info.qc
-teleport.qc
+trigger_push.qc
+trigger_warpzone.qc
 trigger.qc
+teleport.qc
 model.qc
 bullet.qc
 weapon_melee.qc
@@ -258,9 +258,10 @@ score.qc
 portals.qc
 
 target_spawn.qc
+func.qc
 func_breakable.qc
 func_laserbeam.qc
-func.qc
+func_camera.qc
 misc.qc
 ../menu-server/weapon.qc
 ../common/weapon.qc
@@ -324,10 +325,9 @@ radio.qc
 badass.qc
 gamestatus.qc
 damageindicator.qc
-../client-server/warpzonelib/anglestransform.qc
-../client-server/warpzonelib/common.qc
-warpzonelib/server.qc
-warpzonelib/util_server.qc
+../client-server/anglestransform.qc
+../client-server/warpzone.qc
+warpzone.qc
 selectableweapon.qc
 twoweapons.qc
 noteline.qc

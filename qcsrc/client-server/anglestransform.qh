@@ -1,5 +1,3 @@
-vector fixedvectoangles2(vector a, vector b);
-
 vector AnglesTransform_Apply(vector transform, vector v);
 vector AnglesTransform_Multiply(vector t1, vector t2); // A B
 vector AnglesTransform_Invert(vector transform);

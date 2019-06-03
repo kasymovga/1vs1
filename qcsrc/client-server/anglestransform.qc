@@ -1,13 +1,4 @@
-vector fixedvectoangles2(vector a, vector b)
-{
-	vector ang;
-	ang = vectoangles2(a, b);
-	ang_x = -ang_x;
-	return ang;
-}
-
 // angles transforms
-// angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
 {
 	makevectors(transform);
@@ -21,7 +12,9 @@ vector AnglesTransform_Multiply(vector t1, vector t2)
 	vector m_forward, m_up;
 	makevectors(t2); m_forward = v_forward; m_up = v_up;
 	m_forward = AnglesTransform_Apply(t1, m_forward); m_up = AnglesTransform_Apply(t1, m_up);
-	return fixedvectoangles2(m_forward, m_up);
+	vector a = vectoangles2(m_forward, m_up);
+	a_x = -a_x;
+	return a;
 }
 
 vector AnglesTransform_Invert(vector transform)
@@ -38,7 +31,9 @@ vector AnglesTransform_Invert(vector transform)
 	i_up_x = v_forward_z;
 	i_up_y = -v_right_z;
 	i_up_z = v_up_z;
-	return fixedvectoangles2(i_forward, i_up);
+	vector a = vectoangles2(i_forward, i_up);
+	a_x = -a_x;
+	return a;
 }
 
 vector AnglesTransform_TurnDirectionFR(vector transform)

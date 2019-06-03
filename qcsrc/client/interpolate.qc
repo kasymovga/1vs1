@@ -76,7 +76,8 @@ void InterpolateOrigin_Do()
 		{
 			forward = (1 - f) * self.iforward1 + f * self.iforward2;
 			up = (1 - f) * self.iup1 + f * self.iup2;
-			self.angles = fixedvectoangles2(forward, up);
+			self.angles = vectoangles2(forward, up);
+			self.angles_x = -self.angles_x;
 		}
 		if(self.iflags & IFLAG_VELOCITY)
 			self.velocity = (1 - f) * self.ivelocity1 + f * self.ivelocity2;
@@ -85,8 +86,10 @@ void InterpolateOrigin_Do()
 void InterpolateOrigin_Undo()
 {
 	self.origin = self.iorigin2;
-	if(self.iflags & IFLAG_ANGLES)
-		self.angles = fixedvectoangles2(self.iforward2, self.iup2);
+	if(self.iflags & IFLAG_ANGLES) {
+		self.angles = vectoangles2(self.iforward2, self.iup2);
+		self.angles_x = -self.angles_x;
+	}
 	if(self.iflags & IFLAG_VELOCITY)
 		self.velocity = self.ivelocity2;
 }

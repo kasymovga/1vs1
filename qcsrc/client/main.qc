@@ -479,7 +479,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
 	ent_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
 	ent_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
-	ent_parsers[ENT_CLIENT_WARPZONE_CAMERA] = WarpZone_Camera_Read;
+	ent_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
 	ent_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
 	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
 	ent_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;

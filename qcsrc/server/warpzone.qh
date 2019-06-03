@@ -11,3 +11,8 @@ void WarpZone_HandleObserver();
 // THESE must be defined by calling QC code:
 void WarpZone_PostTeleportPlayer_Callback(entity pl, entity wz);
 
+float WarpZone_MoveOutOfSolid(entity e);
+float WarpZone_ExactTrigger_Touch();
+void WarpZone_ExactTrigger_Init();
+void(void) warpzone_spawn;
+void(void) warpzone_position_spawn;

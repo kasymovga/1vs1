@@ -46,9 +46,9 @@ main.qh
 ../client-server/miscfunctions.qh
 radio.qh
 sbar.qh
-../client-server/warpzonelib/anglestransform.qh
-../client-server/warpzonelib/common.qh
-warpzonelib/client.qh
+../client-server/anglestransform.qh
+../client-server/warpzone.qh
+warpzone.qh
 gui.qh
 noteline.qh
 
@@ -79,6 +79,7 @@ zapper.qc
 ../client-server/nadgets.qc
 nadgetselect.qc
 trip.qc
+func_camera.qc
 main.qc
 view.qc
 interpolate.qc
@@ -111,9 +112,9 @@ radio.qc
 ../client-server/rune.qc
 ../client-menu/ui.qc
 gamestatus.qc
-../client-server/warpzonelib/anglestransform.qc
-../client-server/warpzonelib/common.qc
-warpzonelib/client.qc
+../client-server/anglestransform.qc
+../client-server/warpzone.qc
+warpzone.qc
 weaponselect.qc
 noteline.qc
 ../common/curl.qc

@@ -146,7 +146,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
         if(trace_startsolid)
         {
             setorigin(player, o1 - player.view_ofs);
-            if(WarpZoneLib_MoveOutOfSolid(player))
+            if(WarpZone_MoveOutOfSolid(player))
             {
                 o1 = player.origin + player.view_ofs;
                 setorigin(player, o0 - player.view_ofs);
@@ -274,7 +274,7 @@ void WarpZone_Touch (void)
 	if(time <= other.warpzone_teleport_finishtime) // already teleported this frame
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch())
+	if(WarpZone_ExactTrigger_Touch())
 		return;
 
 	if(other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
@@ -391,35 +391,6 @@ float WarpZone_Send(entity to, float sendflags)
 	return TRUE;
 }
 
-float WarpZone_Camera_Send(entity to, float sendflags)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
-
-	// we need THESE to render the warpzone (and cull properly)...
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
-	WriteByte(MSG_ENTITY, bound(1, self.scale * 16, 255));
-
-	// we need THESE to calculate the proper transform
-	WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-	WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-	WriteCoord(MSG_ENTITY, self.enemy.origin_z);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_x);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_y);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_z);
-
-	return TRUE;
-}
-
 float WarpZone_CheckProjectileImpact()
 {
 	// if self hit a warpzone, abort
@@ -456,7 +427,7 @@ float WarpZone_CheckProjectileImpact()
 	{
 		dpd = normalize(self.velocity) * self.warpzone_targetforward;
 		setorigin(self, self.origin + normalize(self.velocity) * ((mpd - pd) / dpd));
-		if(!WarpZoneLib_MoveOutOfSolid(self))
+		if(!WarpZone_MoveOutOfSolid(self))
 		{
 			setorigin(self, o0);
 			self.angles = a0;
@@ -538,21 +509,6 @@ void WarpZonePosition_InitStep_FindTarget()
 		return;
 	}
 	self.enemy.aiment = self;
-}
-
-void WarpZoneCamera_InitStep_FindTarget()
-{
-	if(self.target == "")
-	{
-		error("Camera with no target");
-		return;
-	}
-	self.enemy = find(world, targetname, self.target);
-	if(self.enemy == world)
-	{
-		error("Camera with nonexisting target");
-		return;
-	}
 }
 
 void WarpZone_InitStep_UpdateTransform()
@@ -650,96 +606,9 @@ void WarpZone_InitStep_FinalizeTransform()
 	self.touch = WarpZone_Touch;
 }
 
-entity warpzone_first;
 entity warpzone_position_first;
-entity warpzone_camera_first;
+entity warpzone_first;
 .entity warpzone_next;
-
-void spawnfunc_misc_warpzone_position(void)
-{
-	// "target", "angles", "origin"
-	self.warpzone_next = warpzone_position_first;
-	warpzone_position_first = self;
-}
-void spawnfunc_trigger_warpzone_position(void)
-{
-	spawnfunc_misc_warpzone_position();
-}
-void spawnfunc_trigger_warpzone(void)
-{
-	// warp zone entities must have:
-	// "killtarget" pointing to a target_position with a direction arrow
-	//              that points AWAY from the warp zone, and that is inside
-	//              the warp zone trigger
-	// "target"     pointing to an identical warp zone at another place in
-	//              the map, with another killtarget to designate its
-	//              orientation
-
-	if(!self.scale)
-		self.scale = self.modelscale;
-	if(!self.scale)
-		self.scale = 1;
-	string m;
-	m = self.model;
-	WarpZoneLib_ExactTrigger_Init();
- 	if(m != "")
- 	{
- 		precache_model(m);
- 		setmodel(self, m); // no precision needed
-	}
-	setorigin(self, self.origin);
-	if(self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
-	self.SendEntity = WarpZone_Send;
-	self.SendFlags = 0xFFFFFF;
-	self.effects |= EF_NODEPTHTEST;
-	self.warpzone_next = warpzone_first;
-	if not(warpzone_first) {
-		WarpZone_Enable();
-		entity e = spawn();
-		e.think = WarpZone_FirstFrame;
-		e.nextthink = time;
-	}
-	warpzone_first = self;
-	WarpZone_ChainAdd(self);
-}
-
-vector WarpZone_Camera_camera_transform(vector org, vector ang)
-{
-    // a fixed camera view
-    trace_endpos = self.enemy.origin;
-    makevectors(self.enemy.velocity);
-    return trace_endpos;
-}
-
-void spawnfunc_func_camera(void)
-{
-	if(!self.scale)
-		self.scale = self.modelscale;
-	if(!self.scale)
-		self.scale = 1;
- 	if(self.model != "")
- 	{
- 		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
-	}
-	setorigin(self, self.origin);
-	if(self.scale)
-		setsize(self, self.mins * self.scale, self.maxs * self.scale);
-	else
-		setsize(self, self.mins, self.maxs);
-	if(!self.solid)
-		self.solid = SOLID_BSP;
-	else if(self.solid < 0)
-		self.solid = SOLID_NOT;
-	self.SendEntity = WarpZone_Camera_Send;
-	self.SendFlags = 0xFFFFFF;
-	self.warpzone_next = warpzone_camera_first;
-    self.camera_transform = WarpZone_Camera_camera_transform;
-	warpzone_camera_first = self;
-}
 
 void WarpZone_FirstFrame() {
 	entity e;
@@ -747,8 +616,6 @@ void WarpZone_FirstFrame() {
 		WarpZone_InitStep_FindTarget();
 	for(self = warpzone_position_first; self; self = self.warpzone_next)
 		WarpZonePosition_InitStep_FindTarget();
-	for(self = warpzone_camera_first; self; self = self.warpzone_next)
-		WarpZoneCamera_InitStep_FindTarget();
 	for(self = warpzone_first; self; self = self.warpzone_next)
 		WarpZone_InitStep_UpdateTransform();
 	for(self = warpzone_first; self; self = self.warpzone_next)
@@ -896,4 +763,133 @@ void WarpZone_InitHook() {
 }
 
 void WarpZone_ShutdownHook() {
+}
+
+void WarpZone_MoveOutOfSolid_Expand(entity e, vector by)
+{
+	float eps = 0.0625;
+	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return;
+	if (trace_fraction < 1)
+	{
+		// hit something
+		// adjust origin in the other direction...
+		setorigin(e,e.origin - by * (1 - trace_fraction));
+	}
+}
+
+float WarpZone_MoveOutOfSolid(entity e)
+{
+	vector o, m0, m1;
+
+	o = e.origin;
+	traceline(o, o, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return FALSE;
+
+	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
+	if (!trace_startsolid)
+		return TRUE;
+
+	m0 = e.mins;
+	m1 = e.maxs;
+	e.mins = '0 0 0';
+	e.maxs = '0 0 0';
+	WarpZone_MoveOutOfSolid_Expand(e, '1 0 0' * m0_x);
+	e.mins_x = m0_x;
+	WarpZone_MoveOutOfSolid_Expand(e, '1 0 0' * m1_x);
+	e.maxs_x = m1_x;
+	WarpZone_MoveOutOfSolid_Expand(e, '0 1 0' * m0_y);
+	e.mins_y = m0_y;
+	WarpZone_MoveOutOfSolid_Expand(e, '0 1 0' * m1_y);
+	e.maxs_y = m1_y;
+	WarpZone_MoveOutOfSolid_Expand(e, '0 0 1' * m0_z);
+	e.mins_z = m0_z;
+	WarpZone_MoveOutOfSolid_Expand(e, '0 0 1' * m1_z);
+	e.maxs_z = m1_z;
+	setorigin(e, e.origin);
+
+	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+	{
+		setorigin(e, o);
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+float WarpZone_ExactTrigger_Touch()
+{
+	return !WarpZone_BoxTouchesBrush(other.absmin, other.absmax, self, other);
+}
+
+void WarpZone_ExactTrigger_Init()
+{
+	if (self.movedir == '0 0 0')
+	if (self.angles != '0 0 0')
+	{
+		makevectors (self.angles);
+		self.movedir = v_forward;
+	}
+ 	if(self.model != "")
+ 	{
+ 		precache_model(self.model);
+ 		setmodel(self, self.model);
+ 	}
+	setorigin(self, self.origin);
+	if(self.scale)
+		setsize(self, self.mins * self.scale, self.maxs * self.scale);
+	else
+		setsize(self, self.mins, self.maxs);
+	self.movetype = MOVETYPE_NONE;
+	self.solid = SOLID_TRIGGER;
+	self.model = "";
+}
+
+void(void) warpzone_spawn {
+	// warp zone entities must have:
+	// "killtarget" pointing to a target_position with a direction arrow
+	//              that points AWAY from the warp zone, and that is inside
+	//              the warp zone trigger
+	// "target"     pointing to an identical warp zone at another place in
+	//              the map, with another killtarget to designate its
+	//              orientation
+
+	if(!self.scale)
+		self.scale = self.modelscale;
+	if(!self.scale)
+		self.scale = 1;
+	string m;
+	m = self.model;
+	WarpZone_ExactTrigger_Init();
+ 	if(m != "")
+ 	{
+ 		precache_model(m);
+ 		setmodel(self, m); // no precision needed
+	}
+	setorigin(self, self.origin);
+	if(self.scale)
+		setsize(self, self.mins * self.scale, self.maxs * self.scale);
+	else
+		setsize(self, self.mins, self.maxs);
+	self.SendEntity = WarpZone_Send;
+	self.SendFlags = 0xFFFFFF;
+	self.effects |= EF_NODEPTHTEST;
+	self.warpzone_next = warpzone_first;
+	if not(warpzone_first) {
+		WarpZone_Enable();
+		entity e = spawn();
+		e.think = WarpZone_FirstFrame;
+		e.nextthink = time;
+	}
+	warpzone_first = self;
+	WarpZone_ChainAdd(self);
+}
+
+void(void) warpzone_position_spawn {
+	// "target", "angles", "origin"
+	self.warpzone_next = warpzone_position_first;
+	warpzone_position_first = self;
 }
