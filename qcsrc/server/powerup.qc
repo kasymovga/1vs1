@@ -10,7 +10,7 @@ float g_balance_powerup_strength_selfforce;
 
 void(.float powerupfield, string _model, string _sound, string _name, float it) powerup_drop {
 	entity oldself;
-	if (self.powerupfield > 0) {
+	if (self.powerupfield > time) {
 		entity e = spawn();
 		e.classname = "droppedpowerup";
 		e.powerupfield = self.powerupfield - time;
