@@ -319,6 +319,7 @@ set g_push_damage 25
 set g_push_damage_speed 500
 set g_push_trampledamage 25
 set g_push_trampledamage_speed 400
+set g_teleport_projectiles 0
 set g_player_forcemodel "models/player/nexus.zym"
 set g_player_forcemodel_red "0"
 set g_player_forcemodel_blue "0"
