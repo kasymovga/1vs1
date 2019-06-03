@@ -501,9 +501,6 @@ void ClientConnect (void)
 	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
 	client_fix_cvars(self);
-	// spawnfunc_waypoint sprites
-	WaypointSprite_InitClient(self);
-
 	// get other cvars from player
 	client_cvars_request();
 	entcs_attach();

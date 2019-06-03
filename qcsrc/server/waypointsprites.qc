@@ -117,9 +117,6 @@ void WaypointSprite_Init()
 	waypointsprite_deployed_lifetime = cvar("g_waypointsprite_deployed_lifetime");
 	waypointsprite_deadlifetime = cvar("g_waypointsprite_deadlifetime");
 }
-void WaypointSprite_InitClient(entity e)
-{
-}
 
 void WaypointSprite_Kill(entity wp)
 {
