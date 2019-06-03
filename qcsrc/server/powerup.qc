@@ -98,7 +98,7 @@ float() powerup_invincible_PlayerEffectsHandle {
 		if (time < self.invincible_finished) {
 			self.items = self.items | IT_INVINCIBLE;
 			sprint(self, "^3Shield surrounds you\n");
-		} else if (time > self.invincible_finished + 1)
+		} else if (time > self.invincible_finished + 1) //1 second for fade effect on client
 			self.invincible_finished = 0;
 	}
 	return powerup_invincible_PlayerEffectsHandle_NextLink();
@@ -147,7 +147,7 @@ float() powerup_strength_PlayerEffectsHandle {
 		if (time < self.strength_finished) {
 			self.items = self.items | IT_STRENGTH;
 			sprint(self, "^3Strength infuses your weapons with devastating power\n");
-		} else if (time > self.strength_finished + 1)
+		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
 			self.strength_finished = 0;
 	}
 	return powerup_strength_PlayerEffectsHandle_NextLink();
@@ -190,7 +190,7 @@ float() powerup_speed_PlayerEffectsHandle {
 		if (time < self.speed_finished) {
 			self.items = self.items | IT_SPEED;
 			sprint(self, "^3You are on speed\n");
-		} else if (time > self.speed_finished + 1)
+		} else if (time > self.speed_finished + 1) //1 second for fade effect on client
 			self.speed_finished = 0;
 	}
 
@@ -233,7 +233,7 @@ float() powerup_invisibility_PlayerEffectsHandle {
 		if (time < self.invisibility_finished) {
 			self.items |= IT_INVISIBILITY;
 			sprint(self, "^3You are invisible\n");
-		} else if (time > self.invisibility_finished + 1)
+		} else if (time > self.invisibility_finished + 1) //1 second for fade effect on client
 			self.invisibility_finished = 0;
 	}
 	return powerup_invisibility_PlayerEffectsHandle_NextLink();
