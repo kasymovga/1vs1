@@ -2,6 +2,7 @@ float SP_COUNTRY;
 
 float sv_ip2country;
 float sv_ip2country_allow_fakeflag;
+string sv_ip2country_bot_flag;
 
 void IP2C_SetCountry_Internal(entity player, string cn) {
     if(/*player.hidecountry ||*/ cn == "") {
@@ -24,8 +25,8 @@ void IP2C_LookupForPlayer_Callback(string ip, string cn, entity player) {
 }
 
 void IP2C_SetCountry(entity player) {
-    if(!sv_ip2country || clienttype(player) != CLIENTTYPE_REAL) {
-        IP2C_SetCountry_Internal(player, "");
+    if(clienttype(player) != CLIENTTYPE_REAL) {
+        IP2C_SetCountry_Internal(player, sv_ip2country_bot_flag);
     } else {
         IP2C_Lookup(player.netaddress, IP2C_LookupForPlayer_Callback, 0, player);
     }
@@ -70,7 +71,7 @@ void IP2C_ClientConnect(void) {
 void IP2C_InitSV(void) {
     CACHE_CVAR(sv_ip2country);
     CACHE_CVAR(sv_ip2country_allow_fakeflag);
-
+	CACHE_CVAR_STR(sv_ip2country_bot_flag);
     if(!sv_ip2country) {
         return;
     }
