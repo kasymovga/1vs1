@@ -8,6 +8,7 @@
 #define MONSTER_SPAWN_SHIELDED 8
 
 float g_monster_pushfactor;
+float monster_difficulty;
 
 void monster_proj_explode(void) {
 	self.event_damage = stdproc_nothing;
@@ -513,6 +514,13 @@ float monster_common_init_done;
 void monster_common_init() {
 	precache_sound("misc/teleport.wav");
 	CACHE_CVAR(g_monster_pushfactor);
+	float g_monster_difficulty;
+	if (g_campaign)
+		g_monster_difficulty = g_campaign_skill;
+	else
+		g_monster_difficulty = cvar("g_monster_difficulty");
+
+	monster_difficulty = 0.5 + bound(0, g_monster_difficulty, 3) * 0.25;
 }
 
 void monster_init(void() init_func) {
@@ -533,8 +541,6 @@ string monster_classname() {
 	}
 	return substring(self.classname, 8, -1);
 }
-
-float monster_difficulty;
 
 void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	self.weapon_think = spawnfunc;
@@ -576,14 +582,7 @@ void spawnfunc_monster_walk_path() {
 #endif
 }
 
-void monsters_init() {
-	float g_monster_difficulty;
-	if (g_campaign)
-		g_monster_difficulty = g_campaign_skill;
-	else
-		g_monster_difficulty = cvar("g_monster_difficulty");
-
-	monster_difficulty = 0.5 + bound(0, g_monster_difficulty, 3) * 0.25;
+void(void) monster_monsters_init {
 	string monster_list = cvar_string("g_monsters_spawn");
 	string head, tail;
 	tail = monster_list;

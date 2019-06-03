@@ -265,7 +265,7 @@ void world_static_init(void)
 	Radio_Init();
 	BadAss_Init();
 	DamageIndicator_Init();
-	monsters_init();
+	monster_monsters_init();
 	WarpZone_Init();
 	SelectableWeapon_Init();
 	TwoWeapons_Init();
