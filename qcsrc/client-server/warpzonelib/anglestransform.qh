@@ -1,5 +1,4 @@
 vector fixedvectoangles2(vector a, vector b);
-void fixedmakevectors2(vector a);
 
 vector AnglesTransform_Apply(vector transform, vector v);
 vector AnglesTransform_Multiply(vector t1, vector t2); // A B

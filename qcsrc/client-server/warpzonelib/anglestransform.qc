@@ -1,22 +1,9 @@
-vector fixedvectoangles(vector a)
-{
-	vector ang;
-	ang = vectoangles(a);
-	ang_x = -ang_x;
-	return ang;
-}
 vector fixedvectoangles2(vector a, vector b)
 {
 	vector ang;
 	ang = vectoangles2(a, b);
 	ang_x = -ang_x;
 	return ang;
-}
-void fixedmakevectors2(vector a)
-{
-    // a makevectors that actually inverts vectoangles
-    a_x = -a_x;
-    makevectors(a);
 }
 
 // angles transforms
