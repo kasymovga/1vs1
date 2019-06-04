@@ -652,6 +652,7 @@ set g_vehicle_spiderbot_turnspeed 180
 set g_vehicle_spiderbot_pushfactor 0.1
 set g_vehicle_car_speed 1600
 set g_vehicle_car_speed_stop 100
+set g_vehicle_car_speed_drift 800
 set g_vehicle_car_turnspeed 270
 set g_vehicle_car_health 500
 set g_vehicle_car_movement_inertia 1

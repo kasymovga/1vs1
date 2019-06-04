@@ -6,6 +6,7 @@
 
 float g_vehicle_car_speed;
 float g_vehicle_car_speed_stop;
+float g_vehicle_car_speed_drift;
 float g_vehicle_car_turnspeed;
 float g_vehicle_car_movement_inertia;
 

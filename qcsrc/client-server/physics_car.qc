@@ -3,8 +3,9 @@ float physic_car()
 	self.angles_x = -self.angles_x;
 	makevectors(self.angles);
     if(self.flags & FL_ONGROUND) {
+		float _speed = vlen(self.velocity);
 		if (physic_v_angle_y != self.angles_y) {
-			float turn_angle_speed = g_vehicle_car_turnspeed * frametime * (vlen(self.velocity) / g_vehicle_car_speed);
+			float turn_angle_speed = g_vehicle_car_turnspeed * frametime * (_speed / g_vehicle_car_speed);
 			while (self.angles_y - physic_v_angle_y > 180)
 				self.angles_y -= 360;
 
@@ -18,8 +19,18 @@ float physic_car()
 
 			makevectors(self.angles);
 		}
+		float turn_inertia_factor = 1 - bound(0, (_speed / g_vehicle_car_speed_drift) - 0.5, 1);
+		float forwdir;
+		if (v_forward * self.velocity >= 0)
+			forwdir = 1;
+		else
+			forwdir = -1;
+
 		if not(physic_movement_x) {
-			movelib_beak_simple(g_vehicle_car_speed_stop * frametime);
+			if (turn_inertia_factor > 0)
+				movelib_move_simple(normalize(v_forward * forwdir), _speed, 20 * turn_inertia_factor * frametime); //Turning
+
+			movelib_beak_simple(g_vehicle_car_speed_stop * frametime); //Stopping
 		} else {
 			if(physic_movement_x != 0) {
 				if(physic_movement_x < 0)
@@ -27,7 +38,10 @@ float physic_car()
 				else if(physic_movement_x > 0)
 					physic_movement_x = 1;
 
-				movelib_move_simple(normalize(v_forward * physic_movement_x),g_vehicle_car_speed,g_vehicle_car_movement_inertia * frametime);
+				if (turn_inertia_factor > 0)
+					movelib_move_simple(normalize(v_forward * forwdir), _speed, 20 * turn_inertia_factor * frametime); //Turning
+
+				movelib_move_simple(normalize(v_forward * physic_movement_x), g_vehicle_car_speed ,g_vehicle_car_movement_inertia * frametime); //Accelerating
 			}
 		}
 	}

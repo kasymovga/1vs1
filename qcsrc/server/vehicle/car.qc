@@ -278,6 +278,7 @@ void(void) vehicle_car_init {
 	CACHE_CVAR(g_vehicle_car_pushfactor);
 	CACHE_CVAR(g_vehicle_car_movement_inertia);
 	CACHE_CVAR(g_vehicle_car_speed_stop);
+	CACHE_CVAR(g_vehicle_car_speed_drift);
 	CACHE_CVAR(g_vehicle_car_speed);
 	CACHE_CVAR(g_vehicle_car_turnspeed);
 	precache_model("models/car/car.md3");
@@ -297,6 +298,7 @@ float(entity to, float sf) vehicle_car_physic_send {
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_turnspeed);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_movement_inertia);
+		WriteCoord(MSG_ENTITY, g_vehicle_car_speed_drift);
 	}
 	if (sf & 2) {
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);

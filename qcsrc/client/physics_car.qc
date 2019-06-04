@@ -66,6 +66,7 @@ void Ent_PhysicCar(float isnew)
 		g_vehicle_car_speed = ReadCoord();
 		g_vehicle_car_turnspeed = ReadCoord();
 		g_vehicle_car_movement_inertia = ReadCoord();
+		g_vehicle_car_speed_drift = ReadCoord();
 	}
 	if (f & 2)
 	{
