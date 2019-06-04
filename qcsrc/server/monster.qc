@@ -157,7 +157,7 @@ void monster_die() {
 			}
 		}
 	}
-	self.think = SUB_Remove;
+	self.think = stdproc_remove;
 
 	if (self.ammo_shells)
 		monster_drop_item(IT_SHELLS, "models/items/a_shells.md3", "misc/itempickup.wav", "Shells", ammo_shells, self.ammo_shells);
@@ -200,7 +200,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
         sh.effects = EF_LOWPRECISION;
         sh.angles = vectoangles(normalize(-force));
 		sh.nextthink = time + 0.2;
-		sh.think = SUB_Remove;
+		sh.think = stdproc_remove;
 		setorigin(sh, hitloc + normalize(force) * sh.scale * 100);
 		if (clienttype(attacker) == CLIENTTYPE_REAL)
 			centerprint(attacker, "Enemy protected by shield!");
@@ -619,7 +619,7 @@ void(void) monster_monsters_init {
 				callfunction(monster_func);
 				if not(entity_move_to_random_location(monster, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256)) {
 					print("Cant find place for ", monster_name, "\n");
-					SUB_Remove();
+					stdproc_remove();
 				}
 				self = oldself;
 			}

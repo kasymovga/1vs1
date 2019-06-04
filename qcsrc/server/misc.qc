@@ -94,7 +94,7 @@ void misc_spikeshooter_use(void) {
 	setorigin(spike, self.origin);
 	PROJECTILE_MAKETRIGGER(spike);
 	spike.velocity = self.movedir * 800;
-	spike.think = SUB_Remove;
+	spike.think = stdproc_remove;
 	spike.nextthink = time + 10;
 	spike.movetype = MOVETYPE_FLY;
 	spike.touch = misc_spikeshooter_spike_touch;

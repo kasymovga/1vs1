@@ -46,20 +46,6 @@ float approach_angle(float v, float t, float d) {
 	return approach(v, t, d);
 }
 
-/*
-==================
-SUB_Remove
-
-Remove self
-==================
-*/
-void SUB_Remove (void)
-{
-	if (self.entremove)
-		self.entremove();
-	remove (self);
-}
-
 string car(string s)
 {
 	float o;

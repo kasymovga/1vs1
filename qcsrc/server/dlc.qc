@@ -406,7 +406,7 @@ entity dlc_sound(entity e, float chan, string s, float vol, float attn) {
 	snd.message = s;
 	snd.scale = vol;
 	snd.health = attn;
-	snd.think = SUB_Remove;
+	snd.think = stdproc_remove;
 	snd.nextthink = time + 0.5;
 	snd.origin = e.origin;
 	snd.owner = e;

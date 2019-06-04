@@ -126,7 +126,7 @@ void weapon_minstanex_laser_projectile(vector _shotdir, float ff) {
 	weapon_setup_projectile_velocity(missile);
 	missile.angles = vectoangles (missile.velocity);
 	missile.touch = weapon_minstanex_laser_touch;
-	missile.think = SUB_Remove;
+	missile.think = stdproc_remove;
 	missile.nextthink = time + g_balance_minstanex_laser_lifetime;
 }
 

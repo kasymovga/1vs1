@@ -93,7 +93,7 @@ void weapon_hlac_attack (void)
 	missile.angles = vectoangles (missile.velocity);
 
 	missile.touch = weapon_hlac_touch;
-	missile.think = SUB_Remove;
+	missile.think = stdproc_remove;
 
     missile.nextthink = time + g_balance_hlac_primary_lifetime;
 
@@ -133,7 +133,7 @@ void weapon_hlac_attack2f (void)
 	missile.angles = vectoangles (missile.velocity);
 
 	missile.touch = weapon_hlac_touch2;
-	missile.think = SUB_Remove;
+	missile.think = stdproc_remove;
 
     missile.nextthink = time + g_balance_hlac_secondary_lifetime;
 

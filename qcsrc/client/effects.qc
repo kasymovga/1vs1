@@ -19,7 +19,7 @@ void b_make(vector s,vector e, string t,float l,float z)
     b.fx_start = s;
     b.fx_end = e;
     b.fx_with = z;
-    b.think = SUB_Remove;
+    b.think = stdproc_remove;
     b.nextthink = time + l;
 	b.draw = b_draw;
 

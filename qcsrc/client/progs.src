@@ -44,6 +44,7 @@ weaponselect.qh
 main.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
+../client-server/stdproc.qh
 radio.qh
 sbar.qh
 ../client-server/anglestransform.qh
@@ -58,6 +59,7 @@ cvar.qc
 miscfunctions.qc
 ../common/miscfunctions.qc
 ../client-server/miscfunctions.qc
+../client-server/stdproc.qc
 teamplay.qc
 
 sbar.qc

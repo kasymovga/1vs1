@@ -75,7 +75,7 @@ void weapon_laser_attack (float issecondary)
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 	missile.touch = weapon_laser_touch;
-	missile.think = SUB_Remove;
+	missile.think = stdproc_remove;
 	if (issecondary)
 		missile.nextthink = time + g_balance_laser_secondary_lifetime;
 	else

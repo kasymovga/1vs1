@@ -58,7 +58,7 @@ void weapon_supershotgun_pellet(vector start, vector dir, float spread, float pS
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.movetype = (gravityfactor ? MOVETYPE_BOUNCE : MOVETYPE_BOUNCEMISSILE);
 	proj.gravity = gravityfactor;
-	proj.think = SUB_Remove;
+	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
@@ -153,7 +153,7 @@ void weapon_supershotgun_attack(float secondary, float barrels, float ballistic)
 	// muzzle flash for 1st person view
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = SUB_Remove;
+	flash.think = stdproc_remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');

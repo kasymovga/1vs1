@@ -32,7 +32,7 @@ void boss2_pellet(vector start, vector dir)
 	proj.realowner = proj.owner;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.movetype = MOVETYPE_BOUNCEMISSILE;
-	proj.think = SUB_Remove;
+	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * 0.1) * 2000;
 	weapon_setup_projectile_velocity(proj);

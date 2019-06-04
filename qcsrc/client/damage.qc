@@ -275,7 +275,7 @@ void DamageIndicator_Remove() {
 	e.alpha = self.alpha;
 	e.draw2d = DamageIndicator_Draw;
 	e.draw2dflag = 1;
-	e.think = SUB_Remove;
+	e.think = stdproc_remove;
 	e.nextthink = time + self.alpha * CVAR(cl_damageindicator);
 }
 

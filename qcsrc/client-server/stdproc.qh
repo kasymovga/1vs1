@@ -1,0 +1,2 @@
+.void() entremove;
+void(void) stdproc_remove; //remove self

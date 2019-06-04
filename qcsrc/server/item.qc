@@ -652,7 +652,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 	// is it a dropped weapon?
 	if (substring(self.classname, 0, 7) == "dropped")
 	{
-		self.reset = SUB_Remove;
+		self.reset = stdproc_remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
 		entity_fade_setup(self, time + 60, 1);

@@ -115,6 +115,7 @@ score_damage.qh
 cmd.qh
 ../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
+../client-server/stdproc.qh
 bot/bot.qh
 gamehooks.qh
 ../client-server/nadgets.qh
@@ -146,6 +147,7 @@ centerprint.qc
 sound.qc
 ../common/miscfunctions.qc
 ../client-server/miscfunctions.qc
+../client-server/stdproc.qc
 ../menu-server/miscfunctions.qc
 waypointsprites.qc
 

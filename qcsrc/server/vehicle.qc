@@ -78,7 +78,7 @@ void(void) vehicle_shieldhit_think {
         setmodel(self,"");
         self.alpha = -1;
     }
-    //self.think = SUB_Remove;
+    //self.think = stdproc_remove;
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) vehicle_stdproc_damage {

@@ -126,7 +126,7 @@ void(float keepvelocity) player_copy_body {
 	//self.weapon = oldself.weapon;
 	setorigin(self, oldself.origin);
 	setsize(self, oldself.mins, oldself.maxs);
-	self.reset = SUB_Remove;
+	self.reset = stdproc_remove;
 
 	self = oldself;
 }

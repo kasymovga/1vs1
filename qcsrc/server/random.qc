@@ -81,7 +81,7 @@ float random_queue_depth;
 void(void) random_queue_end {
 	entity e;
 	for (e = random_queue; e; e = e.owner) {
-		e.think = SUB_Remove;
+		e.think = stdproc_remove;
 		e.nextthink = time;
 	}
 	random_queue = world;

@@ -26,7 +26,7 @@ void weapon_melee_attack_think()
 	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + g_balance_melee_time - self.melee_lastthink);
 	if (melee_frame < 0)
 	{
-		self.think = SUB_Remove;
+		self.think = stdproc_remove;
 		self.nextthink = self.melee_startthink + g_balance_melee_animtime;
 		return;
 	}
@@ -54,7 +54,7 @@ void weapon_melee_attack_think()
 
 		if (g_balance_melee_onehit)
 		{
-			self.think = SUB_Remove;
+			self.think = stdproc_remove;
 			self.nextthink = self.melee_startthink + g_balance_melee_animtime;
 			return;
 		}

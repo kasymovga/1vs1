@@ -70,7 +70,7 @@ void new_te_bloodshower (float ef, vector org, float explosionspeed, float howma
 		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
 }
 
-void SUB_RemoveOnNoImpact()
+void stdproc_removeOnNoImpact()
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		Gib_Delete();
@@ -137,7 +137,7 @@ void TossGib (string mdlname, vector org, vector vconst, vector vrand, float spe
 	if(destroyontouch)
 		gib.move_touch = Gib_Touch;
 	else
-		gib.move_touch = SUB_RemoveOnNoImpact;
+		gib.move_touch = stdproc_removeOnNoImpact;
 
 	gib.move_origin = gib.origin = org;
 	gib.move_velocity = vconst * CVAR_OR(cl_gibs_velocity_scale, 1) + vrand * CVAR_OR(cl_gibs_velocity_random, 1) + '0 0 1' * CVAR(cl_gibs_velocity_up);

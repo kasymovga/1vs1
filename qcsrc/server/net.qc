@@ -21,7 +21,7 @@ void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_e
     if (dt)
     {
         e.nextthink = time + dt;
-        e.think = SUB_Remove;
+        e.think = stdproc_remove;
     }
 }
 

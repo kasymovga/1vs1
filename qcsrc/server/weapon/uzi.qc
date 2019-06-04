@@ -1,7 +1,7 @@
 // leilei's fancy muzzleflash stuff
 void weapon_uzi_flash_go() {
 	if (self.frame > 10){
-		SUB_Remove();
+		stdproc_remove();
 		return;
 	}
 	self.frame = self.frame + 2;

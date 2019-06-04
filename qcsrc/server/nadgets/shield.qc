@@ -103,7 +103,7 @@ void HG_Shield_Trigger(void) {
         self.classname = "hg_shield_discharge";
         self.owner = oldself;
         self.think = HG_Shield_Discharge_Think;
-        self.reset = SUB_Remove;
+        self.reset = stdproc_remove;
         self.think();
 		self = oldself;
     }

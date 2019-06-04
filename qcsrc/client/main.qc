@@ -112,7 +112,7 @@ void ClientUpdateMessage(string msg, float timeout) {
 	e.draw2d = ClientUpdateMessage_Draw;
 	e.draw2dflag = 1;
 	e.nextthink = time + timeout;
-	e.think = SUB_Remove;
+	e.think = stdproc_remove;
 	e.bgmscript = msg;
 }
 

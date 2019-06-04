@@ -93,7 +93,7 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
 
     proj.touch = Napalm_Touch;
     proj.think = Napalm_Think;
-    proj.reset = SUB_Remove;
+    proj.reset = stdproc_remove;
 
     proj.nextthink = time;
 

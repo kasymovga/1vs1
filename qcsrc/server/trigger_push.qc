@@ -202,7 +202,7 @@ void trigger_push_touch()
 	if (self.spawnflags & PUSH_ONCE)
 	{
 		self.touch = stdproc_nothing;
-		self.think = SUB_Remove;
+		self.think = stdproc_remove;
 		self.nextthink = time;
 	}
 };

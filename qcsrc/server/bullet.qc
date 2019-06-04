@@ -308,7 +308,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		proj.owner = self;
 	} else {
 		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
-		proj.think = SUB_Remove;
+		proj.think = stdproc_remove;
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}

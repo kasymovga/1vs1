@@ -48,7 +48,7 @@ void weapon_shotgun_attack (void)
 	// muzzle flash for 1st person view
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = SUB_Remove;
+	flash.think = stdproc_remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');
@@ -81,7 +81,7 @@ void weapon_shotgun_attack2 (void)
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3"); // precision set below
 	flash.scale = 1.2;
-	flash.think = SUB_Remove;
+	flash.think = stdproc_remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');

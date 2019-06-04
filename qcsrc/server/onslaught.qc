@@ -35,7 +35,7 @@ void(void) onslaught_throwgib_think {
 	self.nextthink = time + 0.05;
 	d = self.giblifetime - time;
 	if(d<0) {
-		self.think = SUB_Remove;
+		self.think = stdproc_remove;
 		return;
 	}
 	if(d<1)
@@ -289,7 +289,7 @@ void(vector org) onslaught_generator_ring_spawn {
 void(void) onslaught_generator_ray_think {
 	self.nextthink = time + 0.05;
 	if(self.count > 10) {
-		self.think = SUB_Remove;
+		self.think = stdproc_remove;
 		return;
 	}
 	if(self.count > 5)
@@ -319,7 +319,7 @@ void(vector org) onslaught_generator_shockwave_spawn {
 
 void(void) onslaught_generator_damage_think {
 	if(self.owner.health < 0) {
-		self.think = SUB_Remove;
+		self.think = stdproc_remove;
 		return;
 	}
 	self.nextthink = time+0.1;

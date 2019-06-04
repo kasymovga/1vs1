@@ -79,13 +79,13 @@ void g_turrets_common_precash()
     precache_model ("models/marker.md3");
 }
 
-void SUB_Remove();
+void stdproc_remove();
 void marker_think()
 {
     if(self.cnt)
     if(self.cnt < time)
     {
-        self.think = SUB_Remove;
+        self.think = stdproc_remove;
         self.nextthink = time;
         return;
     }

@@ -392,7 +392,7 @@ void(float health_amount, float _delay, entity _owner) rune_healer_spawn {
 
 	entity e = spawn();
 	e.classname = "healer";
-	e.reset = SUB_Remove;
+	e.reset = stdproc_remove;
 	e.health = health_amount;
 	if (health_amount > 0)
 		e.max_health = (g_balance_rune_vampire_max_health ? g_balance_rune_vampire_max_health : 999);
