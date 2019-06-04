@@ -1,0 +1,52 @@
+float SVC_SETVIEWPORT = 5;    // Net.Protocol 0x05
+float SVC_SETVIEWANGLES = 10; // Net.Protocol 0x0A
+float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
+
+.float vehicle_flags;
+#define VHF_HASSHIELD 2
+#define VHF_SHIELDREGEN 4
+#define VHF_HEALTHREGEN 8
+#define VHF_HIDEPLAYER 16
+
+.float hud;
+.float rockets;
+.float rockets_reload;
+.entity gun1;
+.entity gun2;
+
+.float vehicle_health;
+.float vehicle_shield;
+.float vehicle_heat;
+
+.entity vehicle;
+.float vehicle_exit_time;
+
+.float anim_start;
+.float anim_end;
+
+.float dmg_time;
+.float shield;
+.float shield_max;
+.float health_max;
+.float shield_regen;
+.float health_regen;
+.float shield_regen_dmgpause;
+.float health_regen_dmgpause;
+
+.void(float exit_flags) vehicle_exit;
+.void() vehicle_die;
+.void() vehicle_spawn;
+.float(float message) vehicle_message;
+
+void(void) vehicle_init;
+void(string name, void() delayed_init) vehicle_stdproc_init;
+void(void) vehicle_stdproc_regen;
+void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) vehicle_stdproc_damage;
+void(void) vehicle_stdproc_setcolormod;
+float(entity plr, float eject) vehicle_extract_player;
+float(entity plr) player_can_use_vehicle;
+void(entity plr, entity veh, float start_offset, float back, float up) vehicle_adjust_player_position;
+float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter;
+void(float eject, float eject_range, float exit_up, float range) vehicle_stdproc_exit;
+void(void) vehicle_reset;
+float(void) vehicle_stdproc_customize;

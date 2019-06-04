@@ -26,7 +26,7 @@ random.qh
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
 skipnonsolid.qh
-vehicles/vehicles.qh
+vehicle.qh
 footsteps.qh
 campaign.qh
 ../menu-server/campaign_common.qh
@@ -285,7 +285,10 @@ progressbar.qc
 cvar.qc
 location_request.qc
 effect.qc
-vehicles/vehicles.qc
+vehicle.qc
+vehicle/car.qc
+vehicle/aircraft.qc
+vehicle/spiderbot.qc
 skipnonsolid.qc
 ../common/ip2c.qc
 ip2c.qc
