@@ -186,6 +186,7 @@ teleport.qc
 model.qc
 bullet.qc
 weapon_melee.qc
+weapon_axe.qc
 weapon_laser.qc
 weapon_shotgun.qc
 weapon_uzi.qc

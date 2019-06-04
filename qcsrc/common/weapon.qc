@@ -158,7 +158,7 @@ void(void) weapon_register_weapons {
 	weapon_register(WEP_FIREBALL,         weapon_fireball,     IT_ROCKETS,       9,  1, 0, WEP_TYPE_SPLASH,  BOT_PICKUP_RATING_MID,  "fireball",     "fireball",        "Fireball",                   '1 0.5 0');
 	weapon_register(WEP_SUPERSHOTGUN,     weapon_supershotgun, IT_SHELLS,        8,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "supershotgun", "supershotgun",    "SuperShotgun",               '0.75 0.25 0');
 	weapon_register(WEP_ZAPPER,           weapon_zapper,       IT_CELLS,         5,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "zapper",       "zapper",          "Zapper",                     '0.5 0.5 1');
-	weapon_register(WEP_MELEE,            weapon_melee,        0,                1,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "axe",          "axe",             "Axe",                        '1 0.75 0.5');
+	weapon_register(WEP_MELEE,            weapon_axe,        0,                1,  1, 0, WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID,  "axe",          "axe",             "Axe",                        '1 0.75 0.5');
 	if not(weapon_info_dummy)
 		weapon_register_done();
 }
