@@ -1,1 +1,1 @@
-void() onslaught_init;
+void(void) onslaught_init;
