@@ -138,7 +138,6 @@ float() powerup_strength_PlayerEffectsHandle {
 	if (self.items & IT_STRENGTH) {
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
 		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-
 		if (time > self.strength_finished) {
 			self.items = self.items - (self.items & IT_STRENGTH);
 			sprint(self, "^3Strength has worn off\n");
@@ -153,6 +152,24 @@ float() powerup_strength_PlayerEffectsHandle {
 	return powerup_strength_PlayerEffectsHandle_NextLink();
 }
 
+var float() powerup_strength_akimbo_PlayerEffectsHandle_NextLink;
+float() powerup_strength_akimbo_PlayerEffectsHandle {
+	if (self.items & IT_STRENGTH) {
+		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		if (time > self.strength_finished) {
+			self.items = self.items - (self.items & IT_STRENGTH);
+			sprint(self, "^3Akimbo has worn off\n");
+		}
+	} else if (self.strength_finished) {
+		if (time < self.strength_finished) {
+			self.items = self.items | IT_STRENGTH;
+			sprint(self, "^3Akimbo: double gun, double fun\n");
+		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
+			self.strength_finished = 0;
+	}
+	return powerup_strength_akimbo_PlayerEffectsHandle_NextLink();
+}
+
 float powerup_strength_init_done;
 void() powerup_strength_init {
 	if (powerup_strength_init_done)
@@ -161,9 +178,11 @@ void() powerup_strength_init {
 	powerup_strength_init_done = 1;
 	powerup_init();
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
-	if (g_powerup_strength_akimbo)
+	if (g_powerup_strength_akimbo) {
+		powerup_strength_akimbo_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
+		GameHookChain_PlayerEffectsHandle = powerup_strength_akimbo_PlayerEffectsHandle;
 		return;
-
+	}
 	powerup_strength_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
 	GameHookChain_PlayerEffectsHandle = powerup_strength_PlayerEffectsHandle;
 	powerup_strength_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
