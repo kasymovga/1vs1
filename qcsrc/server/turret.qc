@@ -1,3 +1,807 @@
+//--// Some support routines //--//
+
+float safeangle(float a)
+{
+    if((a > -361) && (a < 361))
+        return a;
+
+    a -= (360 * floor(a / 360));
+
+    return a;
+}
+
+float shortangle_f(float ang1,float ang2)
+{
+    if(ang1 > ang2)
+    {
+        if(ang1 > 180)
+            return ang1 - 360;
+    }
+    else
+    {
+        if(ang1 < -180)
+            return ang1 + 360;
+    }
+
+    return ang1;
+}
+
+vector shortangle_v(vector ang1,vector ang2)
+{
+    vector vtmp;
+
+    vtmp_x = shortangle_f(ang1_x,ang2_x);
+    vtmp_y = shortangle_f(ang1_y,ang2_y);
+    vtmp_z = shortangle_f(ang1_z,ang2_z);
+
+    return vtmp;
+}
+
+vector shortangle_vxy(vector ang1,vector ang2)
+{
+    vector vtmp;
+
+    vtmp_x = shortangle_f(ang1_x,ang2_x);
+    vtmp_y = shortangle_f(ang1_y,ang2_y);
+
+    return vtmp;
+}
+
+// Get real origin
+vector real_origin(entity ent)
+{
+    entity e;
+    vector v;
+
+    e = ent.tag_entity;
+    while(e)
+    {
+        // v = v + e.origin;
+        v = v + ((e.absmin + e.absmax) * 0.5);
+        e = e.tag_entity;
+    }
+    //v = v + ent.origin;
+    v = v + ((ent.absmin + ent.absmax) * 0.5);
+    return v;
+}
+
+// Plug this into wherever precache is done.
+void g_turrets_common_precash()
+{
+    precache_model ("models/turrets/c512.md3");
+    precache_model ("models/marker.md3");
+}
+
+void marker_think()
+{
+    if(self.cnt)
+    if(self.cnt < time)
+    {
+        self.think = stdproc_remove;
+        self.nextthink = time;
+        return;
+    }
+
+    self.frame += 1;
+    if(self.frame > 29)
+        self.frame = 0;
+
+    self.nextthink = time;
+}
+
+void mark_error(vector where,float lifetime)
+{
+    entity err;
+
+    err = spawn();
+    err.classname = "error_marker";
+    setmodel(err,"models/marker.md3");
+    setorigin(err,where);
+    err.movetype = MOVETYPE_NONE;
+    err.think = marker_think;
+    err.nextthink = time;
+    err.skin = 0;
+    if(lifetime)
+        err.cnt = lifetime + time;
+}
+
+void mark_info(vector where,float lifetime)
+{
+    entity err;
+
+    err = spawn();
+    err.classname = "info_marker";
+    setmodel(err,"models/marker.md3");
+    setorigin(err,where);
+    err.movetype = MOVETYPE_NONE;
+    err.think = marker_think;
+    err.nextthink = time;
+    err.skin = 1;
+    if(lifetime)
+        err.cnt = lifetime + time;
+}
+
+entity mark_misc(vector where,float lifetime)
+{
+    entity err;
+
+    err = spawn();
+    err.classname = "mark_misc";
+    setmodel(err,"models/marker.md3");
+    setorigin(err,where);
+    err.movetype = MOVETYPE_NONE;
+    err.think = marker_think;
+    err.nextthink = time;
+    err.skin = 3;
+    if(lifetime)
+        err.cnt = lifetime + time;
+    return err;
+}
+
+/*
+* Paint a v_color colord circle on target onwho
+* that fades away over f_time
+*/
+void paint_target(entity onwho, float f_size, vector v_color, float f_time)
+{
+    entity e;
+
+    e = spawn();
+    setmodel(e, "models/turrets/c512.md3"); // precision set above
+    e.scale = (f_size/512);
+    //setsize(e, '0 0 0', '0 0 0');
+    //setattachment(e,onwho,"");
+    setorigin(e,onwho.origin + '0 0 1');
+    e.alpha = 0.15;
+    e.movetype = MOVETYPE_FLY;
+
+    e.velocity = (v_color * 32); // + '0 0 1' * 64;
+
+    e.colormod = v_color;
+    entity_fade_setup(e,time,f_time);
+}
+
+void paint_target3(vector where, float f_size, vector v_color, float f_time)
+{
+    entity e;
+    e = spawn();
+    setmodel(e, "models/turrets/c512.md3"); // precision set above
+    e.scale = (f_size/512);
+    setsize(e, '0 0 0', '0 0 0');
+    setorigin(e,where+ '0 0 1');
+    e.movetype = MOVETYPE_NONE;
+    e.velocity = '0 0 0';
+    e.colormod = v_color;
+    entity_fade_setup(e,time,f_time);
+}
+
+/*
+* Return the angle between two enteties
+*/
+vector angleofs(entity from, entity to)
+{
+    vector v_res;
+
+    // makevectors(from.angles);
+    v_res = normalize(to.origin - from.origin);
+    v_res = vectoangles(v_res);
+    v_res = v_res - from.angles;
+
+    if (v_res_x < 0) v_res_x += 360;
+    if (v_res_x > 180) v_res_x -= 360;
+
+    if (v_res_y < 0) v_res_y += 360;
+    if (v_res_y > 180) v_res_y -= 360;
+
+    return v_res;
+}
+
+vector angleofs3(vector from,vector from_a, entity to)
+{
+    vector v_res;
+
+    // makevectors(from.angles);
+    v_res = normalize(to.origin - from);
+    v_res = vectoangles(v_res);
+    v_res = v_res - from_a;
+
+    if (v_res_x < 0) v_res_x += 360;
+    if (v_res_x > 180) v_res_x -= 360;
+
+    if (v_res_y < 0) v_res_y += 360;
+    if (v_res_y > 180) v_res_y -= 360;
+
+    return v_res;
+}
+
+float turret_tag_setup()
+{
+    if(!self.tur_head)
+    {
+        dprint("Call to turret_tag_setup with self.tur_head missing!\n");
+        self.tur_shotorg = '0 0 0';
+        return 0;
+    }
+
+    setorigin(self.tur_head,gettaginfo(self,gettagindex(self,"tag_head")));
+    self.tur_shotorg = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
+
+    v_forward = normalize(v_forward);
+
+    return 1;
+}
+
+float turret_tag_fire_update()
+{
+    if(!self.tur_head)
+    {
+        dprint("Call to turret_tag_fire_update with self.tur_head missing!\n");
+        self.tur_shotorg = '0 0 0';
+        return 0;
+    }
+
+    self.tur_shotorg = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
+    v_forward = normalize(v_forward);
+
+    //dprint("update: tur_shotorg: ",vtos(self.tur_shotorg)," origin:", vtos(self.tur_head.origin), " angels: ", vtos(self.tur_head.angles),"\n");
+
+    return 1;
+}
+
+void FireImoBeam (vector start,vector end,vector smin,vector smax,
+                  float bforce,float f_dmg,float f_velfactor, float deathtype)
+
+{
+    local vector hitloc, force, endpoint, dir;
+    local entity ent;
+
+    dir = normalize(end - start);
+    force = dir * bforce;
+
+    // go a little bit into the wall because we need to hit this wall later
+    end = end + dir;
+
+    // trace multiple times until we hit a wall, each obstacle will be made unsolid.
+    // note down which entities were hit so we can damage them later
+    while (1)
+    {
+        tracebox(start, smin, smax, end, FALSE, self);
+
+        // if it is world we can't hurt it so stop now
+        if (trace_ent == world || trace_fraction == 1)
+            break;
+
+        if (trace_ent.solid == SOLID_BSP)
+            break;
+
+        // make the entity non-solid so we can hit the next one
+        trace_ent.railgunhit = TRUE;
+        trace_ent.railgunhitloc = end;
+        trace_ent.railgunhitsolidbackup = trace_ent.solid;
+
+        // stop if this is a wall
+
+        // make the entity non-solid
+        trace_ent.solid = SOLID_NOT;
+    }
+
+    endpoint = trace_endpos;
+
+    // find all the entities the railgun hit and restore their solid state
+    ent = findfloat(world, railgunhit, TRUE);
+    while (ent)
+    {
+        // restore their solid type
+        ent.solid = ent.railgunhitsolidbackup;
+        ent = findfloat(ent, railgunhit, TRUE);
+    }
+
+    // find all the entities the railgun hit and hurt them
+    ent = findfloat(world, railgunhit, TRUE);
+    while (ent)
+    {
+        // get the details we need to call the damage function
+        hitloc = ent.railgunhitloc;
+        ent.railgunhitloc = '0 0 0';
+        ent.railgunhitsolidbackup = SOLID_NOT;
+        ent.railgunhit = FALSE;
+
+        // apply the damage
+        if (ent.takedamage)
+        {
+            damage(ent, self, self, f_dmg, deathtype, hitloc, force);
+            ent.velocity = ent.velocity * f_velfactor;
+            //ent.alpha = 0.25 + random() * 0.75;
+        }
+
+        // advance to the next entity
+        ent = findfloat(ent, railgunhit, TRUE);
+    }
+    trace_endpos = endpoint;
+}
+
+void turrets_precache_debug_models()
+{
+    precache_model ("models/turrets/c512.md3");
+    precache_model ("models/pathlib/goodsquare.md3");
+    precache_model ("models/pathlib/badsquare.md3");
+    precache_model ("models/pathlib/square.md3");
+    precache_model ("models/pathlib/edge.md3");
+}
+
+void turrets_precash()
+{
+    precache_model ("models/turrets/base-gib1.md3");
+    precache_model ("models/turrets/base-gib2.md3");
+    precache_model ("models/turrets/base-gib3.md3");
+    precache_model ("models/turrets/base-gib4.md3");
+
+    precache_model ("models/turrets/head-gib1.md3");
+    precache_model ("models/turrets/head-gib2.md3");
+    precache_model ("models/turrets/head-gib3.md3");
+    precache_model ("models/turrets/head-gib4.md3");
+    precache_model ("models/turrets/terrainbase.md3");
+
+    //precache_model ("models/turrets/base.md3");
+    //precache_model ("models/turrets/flac.md3");
+    //precache_model ("models/turrets/pd_proj.md3");
+    //precache_model ("models/turrets/reactor.md3");
+    //precache_model ("models/turrets/mlrs_rocket.md3");
+    //precache_model ("models/turrets/hellion.md3");
+    //precache_model ("models/turrets/hunter2.md3");
+    //precache_model ("models/turrets/hk.md3");
+    //precache_model ("models/turrets/machinegun.md3");
+    //precache_model ("models/turrets/rocket.md3");
+    //precache_model ("models/turrets/mlrs.md3");
+    //precache_model ("models/turrets/phaser.md3");
+    //precache_model ("models/turrets/phaser_beam.md3");
+    //precache_model ("models/turrets/plasmad.md3");
+    //precache_model ("models/turrets/plasma.md3");
+    //precache_model ("models/turrets/tesla_head.md3");
+    //precache_model ("models/turrets/tesla_base.md3");
+	//turrets_precache_debug_models();
+}
+
+/*
+* Generic aim
+
+supports:
+TFL_AIM_NO
+TFL_AIM_GROUND
+TFL_AIM_LEAD
+TFL_AIM_SHOTTIMECOMPENSATE
+TFL_AIM_INFRONT
+TFL_AIM_BEHIND
+TFL_AIM_ZEASE
+
+not supported:
+TFL_AIM_BALISTIC
+*/
+vector turret_stdproc_aim_generic()
+{
+
+    vector pre_pos,prep;
+    float distance,impact_time,i,mintime;
+
+    turret_tag_fire_update();
+
+    if(self.aim_flags & TFL_AIM_SIMPLE)
+        return real_origin(self.enemy);
+
+    // Keep track of when we can shoot the next time and
+    // try to predict where the target will be then, so we can put our aimpoint there.
+    // + sys_ticrate, becouse spawned REMOVE THIS IF sv_gameplayfix_delayprojectiles are 0!
+    // projectiles dont move during the first tic of their life.
+    //if (self.turrcaps_flags & TFL_TURRCAPS_HITSCAN)
+    //    mintime = max(self.attack_finished_single - time,0) + sys_ticrate;
+    //else
+
+    mintime = max(self.attack_finished_single - time,0) + sys_ticrate;
+
+    // Baseline
+    pre_pos = real_origin(self.enemy);
+
+    if (self.aim_flags & TFL_AIM_INFRONT)   // Aim a bit in front of the target
+        pre_pos = pre_pos + (normalize(self.enemy.velocity) * 64);
+
+    if (self.aim_flags & TFL_AIM_BEHIND)    // Aim a bit behind the target
+        pre_pos = pre_pos - (normalize(self.enemy.velocity) * 32);
+
+    // Lead?
+    if (self.aim_flags & TFL_AIM_LEAD)
+    if (self.aim_flags & TFL_AIM_SHOTTIMECOMPENSATE)       // Need to conpensate for shot traveltime
+    {
+        // FIXME: this cant be the best way to do this..
+        prep = pre_pos;
+        for(i = 0; i < 4; ++i)
+        {
+            distance = vlen(prep - self.tur_shotorg);
+            impact_time = distance / self.shot_speed;
+            prep = pre_pos + self.enemy.velocity * impact_time;
+        }
+
+
+        // tnx to Rudolf "div0" Polzer for this solution.
+        // hmm tobad it dont work.
+        /*
+        vector q;
+        q = solve_quadratic(self.enemy.velocity*self.enemy.velocity - self.shot_speed*self.shot_speed, 2*(pre_pos*self.enemy.velocity), pre_pos * pre_pos);
+        if(q_x > 0)
+            impact_time = q_x;
+        else
+            impact_time = q_y;
+        */
+
+        prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
+
+        if(self.aim_flags & TFL_AIM_ZPREDICT)
+        if not(self.enemy.flags & FL_ONGROUND)
+        if(self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE)
+        {
+            float vz;
+            prep_z = pre_pos_z;
+            vz = self.enemy.velocity_z;
+            for(i = 0; i < impact_time; i += sys_ticrate)
+            {
+                vz = vz - (sv_gravity * sys_ticrate);
+                prep_z = prep_z + vz * sys_ticrate;
+            }
+        }
+        pre_pos = prep;
+    }
+    else
+        pre_pos = pre_pos + self.enemy.velocity * mintime;
+
+    // Smooth out predict-Z?
+    /*
+    if (self.aim_flags & TFL_AIM_ZEASE)
+    if (self.enemy.flags & FL_CLIENT)
+    {
+        vector v;
+        v = real_origin(self.enemy);
+        pre_pos_z = (pre_pos_z + v_z) * 0.5;
+    }
+    */
+
+    if(self.aim_flags & TFL_AIM_GROUND2)
+    {
+        //tracebox(pre_pos + '0 0 32',self.enemy.mins,self.enemy.maxs,pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
+        traceline(pre_pos + '0 0 32',pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
+        if(trace_fraction != 1.0)
+            pre_pos = trace_endpos;
+    }
+
+    /*
+    // This turret should hit the ground neer a target rather the do a direct hit
+    if (self.aim_flags & TFL_AIM_GROUND)
+    {
+        traceline(pre_pos + '0 0 8',pre_pos - '0 0 10000',MOVE_WORLDONLY,self.enemy);
+        pre_pos = trace_endpos;
+    }
+    */
+
+    return pre_pos;
+}
+
+/*
+* Trow a turret gib
+*/
+void turret_gib_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
+{
+    self.velocity += vforce;
+}
+
+void turret_trowgib(
+    vector v_from, vector v_to, vector v_colormod,
+    string smodel,
+    float f_lifetime, float f_fadetime, float b_burn)
+{
+    local entity gib;
+    local entity burn;
+
+    gib = spawn();
+
+    gib.classname = "turret_gib";
+    setmodel(gib,smodel);
+    setorigin(gib,v_from);
+    entity_fade_setup(gib,time + f_lifetime,2);
+
+    gib.solid              = SOLID_BBOX;
+
+    gib.movetype           = MOVETYPE_BOUNCE;
+    gib.takedamage         = DAMAGE_YES;
+    gib.event_damage       = turret_gib_damage;
+    gib.health             = -1;
+    gib.effects            = EF_LOWPRECISION;
+    gib.flags              = FL_NOTARGET;
+    gib.colormod           = v_colormod;
+    gib.velocity           = v_to;
+
+    if (b_burn)
+    {
+        burn = spawn();
+        burn.effects        = EF_LOWPRECISION;//|EF_FLAME;
+        setattachment(burn,gib,"");
+        setorigin(burn,(gib.mins + gib.maxs) * 0.5);
+        entity_fade_setup(burn,time + (f_lifetime * 0.5) ,2);
+    }
+}
+
+void turret_gib_boom()
+{
+    entity gib;
+    float i;
+    string s;
+
+    for (i = 1; i < 5; i = i +1)
+    {
+        gib = spawn();
+        gib.classname = "turret_gib";
+
+        s = strcat("models/turrets/head-gib",ftos(i));
+        s = strcat(s,".md3");
+        // bprint("s:",s,"\n");
+        setmodel(gib,s);
+
+        setorigin(gib,self.origin);
+
+        entity_fade_setup(gib,time + 5,2);
+
+        gib.solid              = SOLID_BBOX;
+
+        gib.movetype           = MOVETYPE_BOUNCE;
+        gib.gravity            = 0.5;
+        gib.damageforcescale   = 2;
+        gib.takedamage         = DAMAGE_YES;
+        gib.event_damage       = turret_gib_damage;
+        gib.health             = -1;
+        gib.effects            = EF_LOWPRECISION;
+        gib.flags              = FL_NOTARGET;
+        gib.velocity           = self.velocity + (randomvec() * 700);
+        gib.avelocity          = randomvec() * 64;
+    }
+
+    WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+    WriteByte (MSG_BROADCAST, 78);
+    WriteCoord (MSG_BROADCAST, self.origin_x);
+    WriteCoord (MSG_BROADCAST, self.origin_y);
+    WriteCoord (MSG_BROADCAST, self.origin_z);
+
+    remove(self);
+}
+
+void turret_trowgib2(
+    vector v_from, vector v_to, vector v_colormod,
+    entity e_mimic, float boomtime)
+{
+    entity gib;
+
+    gib = spawn();
+
+    gib.classname = "turret_gib";
+    setmodel(gib,e_mimic.model);
+    setorigin(gib,v_from);
+
+    gib.solid              = SOLID_BBOX;
+
+    gib.movetype           = MOVETYPE_BOUNCE;
+    gib.gravity            = 0.75;
+    gib.damageforcescale   = 2;
+    gib.takedamage         = DAMAGE_YES;
+    gib.event_damage       = turret_gib_damage;
+    gib.health             = -1;
+    gib.effects            = EF_LOWPRECISION;
+    gib.flags              = FL_NOTARGET;
+    gib.colormod           = v_colormod;
+    gib.velocity           = v_to;
+    gib.avelocity          = randomvec() * 32;
+    gib.think              = turret_gib_boom;
+    gib.nextthink          = boomtime;
+    //gib.effects            = EF_FLAME;
+
+
+}
+/*
+* Spawn a boom, trow fake bits arround
+* and hide the real ones.
+*/
+void turret_stdproc_die()
+{
+    vector org2;
+    vector t_dir;
+
+    self.deadflag           = DEAD_DEAD;
+    self.tur_head.deadflag  = self.deadflag;
+
+    sound (self, CHAN_PLAYER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    org2 = self.origin + '0 0 40';
+
+// Explotion grafix
+    WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+    WriteByte (MSG_BROADCAST, 78);
+    WriteCoord (MSG_BROADCAST, org2_x);
+    WriteCoord (MSG_BROADCAST, org2_y);
+    WriteCoord (MSG_BROADCAST, org2_z);
+
+// Unsolidify and hide real parts
+    self.solid              = SOLID_NOT;
+    self.tur_head.solid     = self.solid;
+
+    self.alpha             = -1;
+    self.tur_head.alpha    = self.alpha;
+    self.customizeentityforclient = stdproc_false;
+    self.tur_head.customizeentityforclient = stdproc_false;
+
+    self.event_damage           = stdproc_nothing;
+    self.tur_head.event_damage  = stdproc_nothing;
+    self.takedamage             = DAMAGE_NO;
+    self.tur_head.takedamage    = self.takedamage;
+
+    self.effects            = 0;
+    self.tur_head.effects   = self.effects;
+    self.health             = 0;
+
+// Trow fake parts arround
+    // base
+    if not(self.damage_flags & TFL_DMG_DEATH_NOGIBS)
+    {
+        makevectors(self.angles);
+        if (random() > 0.5)
+        {
+            turret_trowgib(self.origin, '0 0 0','1 1 1',"models/turrets/base-gib2.md3",min(self.respawntime,20),1,1);
+            t_dir = (v_up * 700) + (randomvec() * 300);
+            turret_trowgib(self.origin, t_dir,'1 1 1',"models/turrets/base-gib3.md3",min(self.respawntime,10),1,1);
+            t_dir = (v_up * 700) + (randomvec() * 300);
+            turret_trowgib(self.origin, t_dir,'1 1 1',"models/turrets/base-gib4.md3",min(self.respawntime,10),1,1);
+        }
+        else
+        {
+            turret_trowgib(self.origin, '0 0 0','1 1 1',"models/turrets/base-gib1.md3",min(self.respawntime,20),1,1);
+        }
+
+        // Blow the top part up into the air
+        turret_trowgib2( self.origin + (v_up * 50),
+                         v_up * 150 + randomvec() * 50,
+                         '0.2 0.2 0.2',
+                         self.tur_head,time + 0.5 + (random() * 0.5));
+    }
+    if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
+    {
+        if (self.turret_diehook)
+            self.turret_diehook();
+
+        remove(self.tur_head);
+        remove(self);
+    }
+    else
+    {
+    // Setup respawn
+        self.nextthink      = time + self.respawntime;
+        //self.think          = self.turret_spawnfunc;
+        self.think          = turret_stdproc_respawn;
+        if (self.turret_diehook)
+            self.turret_diehook();
+    }
+
+}
+
+void turret_stdproc_setcolormod() {
+	vector cmod = team_colormod(self.team);
+	self.colormod = cmod;
+	if (self.tur_head)
+		self.tur_head.colormod = cmod;
+}
+
+void turret_stdproc_respawn()
+{
+    // Make sure all parts belong to the same team since
+    // this function doubles as "teamchange" function.
+
+    self.tur_head.team = self.team;
+
+	turret_stdproc_setcolormod();
+
+    self.deadflag           = DEAD_NO;
+    self.tur_head.deadflag  = self.deadflag;
+    self.effects            = 0;
+    self.tur_head.effects   = self.effects;
+
+    self.solid              = SOLID_BBOX;
+    self.tur_head.solid     = self.solid;
+
+    self.alpha = 1;
+    self.tur_head.alpha     = self.alpha;
+    self.customizeentityforclient = stdproc_true;
+    self.tur_head.customizeentityforclient = stdproc_true;
+
+
+    self.takedamage = DAMAGE_AIM;
+    self.tur_head.takedamage    = self.takedamage;
+
+    self.event_damage           = turret_stdproc_damage;
+    self.tur_head.event_damage  = self.event_damage;
+
+    self.avelocity              = '0 0 0';
+    self.tur_head.avelocity     = self.avelocity;
+    self.tur_head.angles        = self.idle_aim;
+    self.health                 = self.tur_health;
+    self.tur_head.health         = self.tur_health;
+
+    self.enemy                  = world;
+    self.volly_counter          = self.shot_volly;
+    self.ammo                   = self.ammo_max;
+
+    self.nextthink  = time + self.ticrate;
+    self.think      = turret_think;
+
+    if (self.turret_respawnhook)
+        self.turret_respawnhook();
+
+}
+
+/*
+* Standard damage proc.
+*/
+void turret_stdproc_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce)
+{
+    entity baseent;
+
+    if (self.owner)
+        baseent = self.owner;
+    else
+        baseent = self;
+
+    // Enougth allready!
+    if (self.health <= 0)
+        return;
+
+    // Inactive turrets take no damage. (hm..)
+    if not (baseent.tur_active)
+        return;
+
+    if (teamplay != 0)
+    if (self.team == attacker.team)
+    {
+        // This does not happen anymore. Re-enable if you fix that.
+        //if(attacker.flags & FL_CLIENT)
+        if(clienttype(attacker) == CLIENTTYPE_REAL)
+            sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
+
+        if(g_friendlyfire)
+            _damage = _damage * g_friendlyfire;
+        else
+            return;
+    }
+
+    self.health = self.health - _damage;
+
+    // thorw head slightly off aim when hit?
+    if (self.classname == "turret_head")
+        if (baseent.damage_flags & TFL_DMG_HEADSHAKE)
+        {
+            self.angles_x = self.angles_x + (-0.5 + random()) * _damage;
+            self.angles_y = self.angles_y + (-0.5 + random()) * _damage;
+        }
+
+    if (baseent.turrcaps_flags & TFL_TURRCAPS_MOVE)
+        baseent.velocity = baseent.velocity + vforce;
+
+    // FIXME: Better damage feedback
+    // Start burning when we have 10% or less health left
+    //if (self.health < (self.tur_health * 0.1))
+    //    self.effects = EF_FLAME;
+
+    if (self.health <= 0)
+    {
+        baseent.event_damage           = stdproc_nothing;
+        baseent.tur_head.event_damage  = stdproc_nothing;
+        baseent.takedamage             = DAMAGE_NO;
+        baseent.tur_head.takedamage    = baseent.takedamage;
+        baseent.nextthink = time;
+        baseent.think = turret_stdproc_die;
+    }
+}
+
 #define cvar_base "g_turrets_unit_"
 
 float g_turrets_aimidle_delay;
@@ -673,13 +1477,6 @@ entity turret_select_target()
     return e_enemy;
 }
 
-void turret_stdproc_setcolormod() {
-	vector cmod = team_colormod(self.team);
-	self.colormod = cmod;
-	if (self.tur_head)
-		self.tur_head.colormod = cmod;
-}
-
 void turret_think()
 {
     entity e;
@@ -1329,3 +2126,170 @@ void turret_readcvars() {
 		e = nextent(e);
 	}
 }
+
+/*
+.float target_select_flags; /// target selection flags
+float TFL_TARGETSELECT_NO            = 1;   /// Dont select a target on its own.
+float TFL_TARGETSELECT_LOS           = 2;   /// Need line of sight
+float TFL_TARGETSELECT_PLAYERS       = 4;   /// Players are valid targets
+float TFL_TARGETSELECT_MISSILES      = 8;   /// Missiles are valid targets
+float TFL_TARGETSELECT_TRIGGERTARGET = 16;  /// Responds to turret_trigger_target events
+float TFL_TARGETSELECT_ANGLELIMITS   = 32;  /// Angular limitations of turret head limits target selection
+float TFL_TARGETSELECT_RANGELIMTS    = 64;  /// Range limits apply in targetselection
+float TFL_TARGETSELECT_TEAMCHECK     = 128; /// Consider team own <-> targets team
+float TFL_TARGETSELECT_NOBUILTIN     = 256; /// Cant select targets on its own. needs to be triggerd or slaved.
+float TFL_TARGETSELECT_OWNTEAM       = 512;
+*/
+
+float turret_stdproc_targetscore_support(entity e_turret,entity e_target)
+{
+    float score;        // Total score
+    float s_score,d_score;
+
+    if (e_turret.enemy == e_target) s_score = 1;
+
+    d_score = min(e_turret.target_range_optimal,tvt_dist) / max(e_turret.target_range_optimal,tvt_dist);
+
+    score = (d_score * e_turret.target_select_rangebias) +
+            (s_score * e_turret.target_select_samebias);
+
+    return score;
+}
+
+/*
+* Generic bias aware score system.
+*/
+float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
+{
+    //vector v_tmp;
+    float d_dist;       // Defendmode Distance
+
+    float score;        // Total score
+
+    float d_score;      // Distance score
+    float a_score;      // Angular score
+    float m_score;      // missile score
+    float p_score;      // player score
+    //float da_score;   // Distance from aimpoint score
+
+    float ikr;          // ideal kill range
+
+    if(!e_target) return 0;
+
+    //if (e_target == e_turret.enemy) s_score = 1;
+
+    if (e_turret.tur_defend)
+    {
+        d_dist = vlen(real_origin(e_target) - e_turret.tur_defend.origin);
+        ikr = vlen(e_turret.origin - e_turret.tur_defend.origin);
+        d_score = 1 - d_dist / e_turret.target_range;
+    }
+    else
+    {
+        // Make a normlized value base on the targets distance from our optimal killzone
+        ikr = e_turret.target_range_optimal;
+        d_score = min(ikr,tvt_dist) / max(ikr,tvt_dist);
+    }
+
+    /*
+    // Determine the maximum time it could take this turrent to aim at someting.
+    max_aim_delay = (max(e_turret.aim_maxrot,e_turret.aim_maxpitch) / e_turret.aim_speed * 2);
+
+    // Find out how long it would take to aim at this taget.
+    aim_delay = (thadf+0.01) / e_turret.aim_speed;
+
+    // Turn this info into a normalized value.
+    aim_delay = (min(max_aim_delay,aim_delay) / max_aim_delay);
+    a_score = 1 - aim_delay;
+    */
+
+    //a_score = 1 - (tvt_thadf / max(e_turret.aim_maxrot,e_turret.aim_maxpitch));
+    a_score = 1 - tvt_thadf / e_turret.aim_maxrot;
+
+    if ((e_turret.target_select_missilebias > 0) && (e_target.flags & FL_PROJECTILE))
+        m_score = 1;
+
+    if ((e_turret.target_select_playerbias > 0) && (e_target.flags & FL_CLIENT))
+        p_score = 1;
+
+    d_score = max(d_score,0);
+    a_score = max(a_score,0);
+    m_score = max(m_score,0);
+    p_score = max(p_score,0);
+
+    score = (d_score * e_turret.target_select_rangebias) +
+            (a_score * e_turret.target_select_anglebias) +
+            (m_score * e_turret.target_select_missilebias) +
+            (p_score * e_turret.target_select_playerbias);
+
+    if(e_turret.target_range < vlen(e_turret.tur_shotorg - real_origin(e_target)))
+    {
+        dprint("Wtf?\n");
+        score *= 0.001;
+    }
+
+#ifdef TURRET_DEBUG
+    string sd,sa,sm,sp,ss;
+    string sdt,sat,smt,spt;
+
+    sd = ftos(d_score);
+    d_score *= e_turret.target_select_rangebias;
+    sdt = ftos(d_score);
+
+    //sv = ftos(v_score);
+    //v_score *= e_turret.target_select_samebias;
+    //svt = ftos(v_score);
+
+    sa = ftos(a_score);
+    a_score *= e_turret.target_select_anglebias;
+    sat = ftos(a_score);
+
+    sm = ftos(m_score);
+    m_score *= e_turret.target_select_missilebias;
+    smt = ftos(m_score);
+
+    sp = ftos(p_score);
+    p_score *= e_turret.target_select_playerbias;
+    spt = ftos(p_score);
+
+
+    ss = ftos(score);
+    bprint("^3Target scores^7 \[  ",e_turret.netname, "  \] ^3for^7 \[  ", e_target.netname,"  \]\n");
+    bprint("^5Range:\[  ",sd,  "  \]^2+bias:\[  ",sdt,"  \]\n");
+    bprint("^5Angle:\[  ",sa,  "  \]^2+bias:\[  ",sat,"  \]\n");
+    bprint("^5Missile:\[  ",sm,"  \]^2+bias:\[  ",smt,"  \]\n");
+    bprint("^5Player:\[  ",sp, "  \]^2+bias:\[  ",spt,"  \]\n");
+    bprint("^3Total (w/bias):\[^1",ss,"\]\n");
+
+#endif
+
+    return score;
+}
+
+/*
+float turret_stdproc_targetscore_close(entity e_turret,entity e_target)
+{
+    return 1 - (tvt_dist / e_turret.target_range);
+}
+
+float turret_stdproc_targetscore_far (entity e_turret,entity e_target)
+{
+    return  tvt_dist / e_turret.target_range;
+}
+
+float turret_stdproc_targetscore_optimal(entity e_turret,entity e_target)
+{
+    return  min(e_turret.target_range_optimal,tvt_dist) / max(e_turret.target_range_optimal,tvt_dist);
+}
+
+float turret_stdproc_score_angular(entity e_turret,entity e_target)
+{
+    return 1 - (tvt_thadf / e_turret.aim_maxrot);
+}
+
+float turret_stdproc_targetscore_defend(entity e_turret,entity e_target)
+{
+    return 0;
+    //min(e_target.origin,e_turret.tur_defend.origin) / max(e_target.origin,e_turret.tur_defend.origin);
+}
+*/

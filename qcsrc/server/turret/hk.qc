@@ -33,7 +33,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
     return 0;
 }
 
-float hk_is_valid_target(entity e_target)
+float turret_hk_is_valid_target(entity e_target)
 {
     if (e_target == world)
         return 0;
@@ -142,7 +142,7 @@ void turret_hk_missile_think()
         e = findradius(self.origin, 5000);
         while (e)
         {
-            if (hk_is_valid_target(e))
+            if (turret_hk_is_valid_target(e))
             {
                 if (!self.enemy)
                     self.enemy = e;
@@ -420,5 +420,3 @@ void spawnfunc_turret_hk()
     self.think = turret_hk_dinit;
     self.nextthink = time + 0.5;
 }
-
-

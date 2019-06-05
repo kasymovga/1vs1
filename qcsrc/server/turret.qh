@@ -1,10 +1,4 @@
 // Comment out below to skip turrets
-#define TTURRETS_ENABLED
-
-#ifdef TTURRETS_ENABLED
-
-#message "with tZork turrets"
-
 vector real_origin(entity ent);
 
 /// Map time control over pain inflicted
@@ -528,9 +522,3 @@ void turret_do_updates(entity e_turret);
 
 void turrets_precash();
 void turret_readcvars();
-
-
-
-#endif // TTURRETS_ENABLED
-
-

@@ -3,7 +3,7 @@ void turret_tesla_dinit();
 void turret_tesla_fire();
 
 .float toasted;
-entity toast(entity from, float range, float _damage)
+entity turret_tesla_toast(entity from, float range, float _damage)
 {
     entity e;
     entity etarget;
@@ -80,7 +80,7 @@ void turret_tesla_fire()
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
                                  TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
 
-    t = toast(e,r,d);
+    t = turret_tesla_toast(e,r,d);
     remove(e);
 
     if (t == world) return;
@@ -95,7 +95,7 @@ void turret_tesla_fire()
     {
         d *= 0.5;
         r *= 0.85;
-        t = toast(t,r,d);
+        t = turret_tesla_toast(t,r,d);
         if (t == world) break;
     }
 

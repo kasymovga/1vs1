@@ -104,5 +104,3 @@ void spawnfunc_turret_mlrs()
     self.think = turret_mlrs_dinit;
     self.nextthink = time + 0.5;
 }
-
-

@@ -33,7 +33,7 @@ void turret_phaser_postthink()
     }
 }
 
-void beam_think()
+void turret_phaser_beam_think()
 {
     if ((time > self.cnt) || (self.owner.deadflag != DEAD_NO))
     {
@@ -83,7 +83,7 @@ void turret_phaser_attack()
     setmodel(beam,"models/turrets/phaser_beam.md3");
     beam.effects = EF_LOWPRECISION;
     beam.solid = SOLID_NOT;
-    beam.think = beam_think;
+    beam.think = turret_phaser_beam_think;
     beam.cnt = time + self.shot_speed;
     beam.shot_spread = time + 2;
     beam.nextthink = time;

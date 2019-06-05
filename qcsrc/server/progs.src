@@ -24,7 +24,7 @@ world.qh
 spawn.qh
 random.qh
 //// tZork Turrets ////
-tturrets/include/turrets_early.qh
+turret.qh
 skipnonsolid.qh
 vehicle.qh
 footsteps.qh
@@ -165,7 +165,6 @@ team.qc
 tdm.qc
 gametype.qc
 rune.qc
-
 ../client-server/physics.qc
 physics.qc
 
@@ -250,10 +249,18 @@ ipban.qc
 ../menu-server/mapinfo.qc
 race_role.qc
 race.qc
-
-//// tZork Turrets ////
-tturrets/include/turrets.qh
-
+turret.qc
+turret/checkpoint.qc
+turret/flac.qc
+turret/fusionreactor.qc
+turret/hellion.qc
+turret/hk.qc
+turret/machinegun.qc
+turret/mlrs.qc
+turret/phaser.qc
+turret/plasma.qc
+turret/targettrigger.qc
+turret/tesla.qc
 score.qc
 
 ../common/extresponse.qc
