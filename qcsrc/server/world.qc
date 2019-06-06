@@ -143,11 +143,9 @@ void spawnfunc___init_dedicated_server(void)
 }
 
 void() world_precache {
-#ifdef TTURRETS_ENABLED
     if (cvar("g_turrets"))
         turrets_precash();
 
-#endif
     // gore and miscellaneous sounds
     //precache_sound ("misc/h2ohit.wav");
     precache_sound ("misc/armorimpact.wav");
