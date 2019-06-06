@@ -626,8 +626,8 @@ void(void) rune_init {
 		precache_model(sv_model_rune_vampire);
 
 	CACHE_CVAR_STR(sv_model_rune_stun);
-	if (sv_model_rune_vampire != "")
-		precache_model(sv_model_rune_vampire);
+	if (sv_model_rune_stun != "")
+		precache_model(sv_model_rune_stun);
 
 	CACHE_CVAR_STR(sv_model_rune_decor);
 	if (sv_model_rune_vampire != "")
