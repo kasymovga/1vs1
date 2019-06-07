@@ -16,13 +16,6 @@ vector real_origin(entity ent)
     return v;
 }
 
-// Plug this into wherever precache is done.
-void g_turrets_common_precash()
-{
-    precache_model ("models/turrets/c512.md3");
-    precache_model ("models/marker.md3");
-}
-
 void marker_think()
 {
     if(self.cnt)
@@ -278,39 +271,6 @@ void turrets_precache_debug_models()
     precache_model ("models/pathlib/badsquare.md3");
     precache_model ("models/pathlib/square.md3");
     precache_model ("models/pathlib/edge.md3");
-}
-
-void turrets_precash()
-{
-    precache_model ("models/turrets/base-gib1.md3");
-    precache_model ("models/turrets/base-gib2.md3");
-    precache_model ("models/turrets/base-gib3.md3");
-    precache_model ("models/turrets/base-gib4.md3");
-
-    precache_model ("models/turrets/head-gib1.md3");
-    precache_model ("models/turrets/head-gib2.md3");
-    precache_model ("models/turrets/head-gib3.md3");
-    precache_model ("models/turrets/head-gib4.md3");
-    precache_model ("models/turrets/terrainbase.md3");
-
-    //precache_model ("models/turrets/base.md3");
-    //precache_model ("models/turrets/flac.md3");
-    //precache_model ("models/turrets/pd_proj.md3");
-    //precache_model ("models/turrets/reactor.md3");
-    //precache_model ("models/turrets/mlrs_rocket.md3");
-    //precache_model ("models/turrets/hellion.md3");
-    //precache_model ("models/turrets/hunter2.md3");
-    //precache_model ("models/turrets/hk.md3");
-    //precache_model ("models/turrets/machinegun.md3");
-    //precache_model ("models/turrets/rocket.md3");
-    //precache_model ("models/turrets/mlrs.md3");
-    //precache_model ("models/turrets/phaser.md3");
-    //precache_model ("models/turrets/phaser_beam.md3");
-    //precache_model ("models/turrets/plasmad.md3");
-    //precache_model ("models/turrets/plasma.md3");
-    //precache_model ("models/turrets/tesla_head.md3");
-    //precache_model ("models/turrets/tesla_base.md3");
-	//turrets_precache_debug_models();
 }
 
 /*
@@ -1611,6 +1571,25 @@ void turret_link()
     self.nextthink  = time;
 }
 
+float turret_precash_done;
+void(void) turret_precash {
+	if (turret_precash_done)
+		return;
+
+	turret_precash_done = TRUE;
+    precache_model ("models/turrets/base-gib1.md3");
+    precache_model ("models/turrets/base-gib2.md3");
+    precache_model ("models/turrets/base-gib3.md3");
+    precache_model ("models/turrets/base-gib4.md3");
+    precache_model ("models/turrets/head-gib1.md3");
+    precache_model ("models/turrets/head-gib2.md3");
+    precache_model ("models/turrets/head-gib3.md3");
+    precache_model ("models/turrets/head-gib4.md3");
+    precache_model ("models/turrets/terrainbase.md3");
+    precache_model ("models/turrets/c512.md3");
+    precache_model ("models/marker.md3");
+}
+
 /*
 * Standard turret initialization. use this!
 * (unless you have a very good reason not to)
@@ -1620,7 +1599,6 @@ float turret_count;
 float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head)
 {
 	entity e;
-
     if(csqc_shared)
     {
         dprint("turrets: csqc_shared requested but not implemented. expect strange things to happen.\n");
@@ -1631,6 +1609,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     if (cvar("g_turrets") == 0)
         return 0;
 
+	turret_precash();
     // Better more then once then never.
     // turret_gibs_precash();
 

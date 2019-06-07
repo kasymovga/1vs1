@@ -520,5 +520,4 @@ void turret_do_updates(entity e_turret);
 //.vector tur_shotorg_updated; // DP8815 fixes gettaginfo, no longer needed.
 .vector tur_shotdir_updated;
 
-void turrets_precash();
 void turret_readcvars();

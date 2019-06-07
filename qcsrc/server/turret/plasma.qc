@@ -153,7 +153,6 @@ void turret_plasma_dual_init()
 */
 void spawnfunc_turret_plasma()
 {
-    g_turrets_common_precash();
     precache_model ("models/turrets/plasma.md3");
     precache_model ("models/turrets/base.md3");
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
