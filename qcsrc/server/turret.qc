@@ -1,52 +1,3 @@
-//--// Some support routines //--//
-
-float safeangle(float a)
-{
-    if((a > -361) && (a < 361))
-        return a;
-
-    a -= (360 * floor(a / 360));
-
-    return a;
-}
-
-float shortangle_f(float ang1,float ang2)
-{
-    if(ang1 > ang2)
-    {
-        if(ang1 > 180)
-            return ang1 - 360;
-    }
-    else
-    {
-        if(ang1 < -180)
-            return ang1 + 360;
-    }
-
-    return ang1;
-}
-
-vector shortangle_v(vector ang1,vector ang2)
-{
-    vector vtmp;
-
-    vtmp_x = shortangle_f(ang1_x,ang2_x);
-    vtmp_y = shortangle_f(ang1_y,ang2_y);
-    vtmp_z = shortangle_f(ang1_z,ang2_z);
-
-    return vtmp;
-}
-
-vector shortangle_vxy(vector ang1,vector ang2)
-{
-    vector vtmp;
-
-    vtmp_x = shortangle_f(ang1_x,ang2_x);
-    vtmp_y = shortangle_f(ang1_y,ang2_y);
-
-    return vtmp;
-}
-
 // Get real origin
 vector real_origin(entity ent)
 {
@@ -967,72 +918,6 @@ void turret_do_updates(entity t_turret)
     self = oldself;
 }
 
-/*
-vector turret_fovsearch_pingpong()
-{
-    vector wish_angle;
-    if(self.phase < time)
-    {
-        if( self.tur_head.phase )
-            self.tur_head.phase = 0;
-        else
-            self.tur_head.phase = 1;
-        self.phase = time + 5;
-    }
-
-    if( self.tur_head.phase)
-        wish_angle = self.idle_aim + '0 1 0' * (self.aim_maxrot * (self.target_select_fov / 360));
-    else
-        wish_angle = self.idle_aim - '0 1 0' * (self.aim_maxrot * (self.target_select_fov / 360));
-
-    return wish_angle;
-}
-
-vector turret_fovsearch_steprot()
-{
-    vector wish_angle;
-    //float rot_add;
-
-    wish_angle   = self.tur_head.angles;
-    wish_angle_x = self.idle_aim_x;
-
-    if (self.phase < time)
-    {
-        //rot_add = self.aim_maxrot / self.target_select_fov;
-        wish_angle_y += (self.target_select_fov * 2);
-
-        if(wish_angle_y > 360)
-            wish_angle_y = wish_angle_y - 360;
-
-         self.phase = time + 1.5;
-    }
-
-    return wish_angle;
-}
-
-vector turret_fovsearch_random()
-{
-    vector wish_angle;
-
-    if (self.phase < time)
-    {
-        wish_angle_y = random() * self.aim_maxrot;
-        if(random() < 0.5)
-            wish_angle_y *= -1;
-
-        wish_angle_x = random() * self.aim_maxpitch;
-        if(random() < 0.5)
-            wish_angle_x *= -1;
-
-        self.phase = time + 5;
-
-        self.tur_aimpos = wish_angle;
-    }
-
-    return self.idle_aim + self.tur_aimpos;
-}
-*/
-
 /**
 ** Handles head rotation according to
 ** the units .track_type and .track_flags
@@ -1067,21 +952,21 @@ void turret_stdproc_track()
         target_angle = vectoangles(target_angle); // And make a angle
     }
 
-    self.tur_head.angles_x = safeangle(self.tur_head.angles_x);
-    self.tur_head.angles_y = safeangle(self.tur_head.angles_y);
+    self.tur_head.angles_x = math_safeangle(self.tur_head.angles_x);
+    self.tur_head.angles_y = math_safeangle(self.tur_head.angles_y);
 
     // Find the diffrence between where we currently aim and where we want to aim
     if (self.turrcaps_flags & TFL_TURRCAPS_HEADATTACHED)
     {
         move_angle = target_angle - (self.angles + self.tur_head.angles);
-        move_angle = shortangle_vxy(move_angle,(self.angles + self.tur_head.angles));
+        move_angle = math_shortangle_vxy(move_angle,(self.angles + self.tur_head.angles));
         a_off = '0 0 0';
 
     }
     else
     {
         move_angle = target_angle - self.tur_head.angles;
-        move_angle = shortangle_vxy(move_angle,self.tur_head.angles);
+        move_angle = math_shortangle_vxy(move_angle,self.tur_head.angles);
         a_off = self.angles;
     }
 
@@ -1371,7 +1256,7 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
         tvt_thadv = angleofs(e_turret.tur_head,e_target);
     }
 
-    tvt_tadv  = shortangle_vxy(angleofs(e_turret,e_target),e_turret.angles);
+    tvt_tadv  = math_shortangle_vxy(angleofs(e_turret,e_target),e_turret.angles);
     tvt_thadf = vlen(tvt_thadv);
     tvt_tadf  = vlen(tvt_tadv);
 

@@ -1,1 +1,4 @@
 vector(float a, float b, float c) math_solve_quadratic;
+float(float a) math_safeangle;
+float(float ang1,float ang2) math_shortangle_f;
+vector(vector ang1,vector ang2) math_shortangle_vxy;
