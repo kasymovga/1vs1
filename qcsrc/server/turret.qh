@@ -1,6 +1,3 @@
-// Comment out below to skip turrets
-vector real_origin(entity ent);
-
 /// Map time control over pain inflicted
 .float turret_scale_damage;
 /// Map time control targetting range

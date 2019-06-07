@@ -33,6 +33,79 @@ void turret_phaser_postthink()
     }
 }
 
+void turret_phaser_beam_fire(vector start,vector end,vector smin,vector smax,
+                  float bforce,float f_dmg,float f_velfactor, float deathtype)
+
+{
+    local vector hitloc, force, endpoint, dir;
+    local entity ent;
+
+    dir = normalize(end - start);
+    force = dir * bforce;
+
+    // go a little bit into the wall because we need to hit this wall later
+    end = end + dir;
+
+    // trace multiple times until we hit a wall, each obstacle will be made unsolid.
+    // note down which entities were hit so we can damage them later
+    while (1)
+    {
+        tracebox(start, smin, smax, end, FALSE, self);
+
+        // if it is world we can't hurt it so stop now
+        if (trace_ent == world || trace_fraction == 1)
+            break;
+
+        if (trace_ent.solid == SOLID_BSP)
+            break;
+
+        // make the entity non-solid so we can hit the next one
+        trace_ent.railgunhit = TRUE;
+        trace_ent.railgunhitloc = end;
+        trace_ent.railgunhitsolidbackup = trace_ent.solid;
+
+        // stop if this is a wall
+
+        // make the entity non-solid
+        trace_ent.solid = SOLID_NOT;
+    }
+
+    endpoint = trace_endpos;
+
+    // find all the entities the railgun hit and restore their solid state
+    ent = findfloat(world, railgunhit, TRUE);
+    while (ent)
+    {
+        // restore their solid type
+        ent.solid = ent.railgunhitsolidbackup;
+        ent = findfloat(ent, railgunhit, TRUE);
+    }
+
+    // find all the entities the railgun hit and hurt them
+    ent = findfloat(world, railgunhit, TRUE);
+    while (ent)
+    {
+        // get the details we need to call the damage function
+        hitloc = ent.railgunhitloc;
+        ent.railgunhitloc = '0 0 0';
+        ent.railgunhitsolidbackup = SOLID_NOT;
+        ent.railgunhit = FALSE;
+
+        // apply the damage
+        if (ent.takedamage)
+        {
+            damage(ent, self, self, f_dmg, deathtype, hitloc, force);
+            ent.velocity = ent.velocity * f_velfactor;
+            //ent.alpha = 0.25 + random() * 0.75;
+        }
+
+        // advance to the next entity
+        ent = findfloat(ent, railgunhit, TRUE);
+    }
+    trace_endpos = endpoint;
+}
+
+
 void turret_phaser_beam_think()
 {
     if ((time > self.cnt) || (self.owner.deadflag != DEAD_NO))
@@ -61,14 +134,16 @@ void turret_phaser_beam_think()
     oldself = self;
     self = self.owner;
     //w_deathtypestring = "was phased out of existence";
-    FireImoBeam (   self.tur_shotorg,
-                    self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
-                    '-1 -1 -1' * self.shot_radius,
-                    '1 1 1' * self.shot_radius,
-                    self.shot_force,
-                    oldself.shot_dmg,
-                    0.75,
-                    DEATH_TURRET);
+	turret_phaser_beam_fire(
+		self.tur_shotorg,
+		self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
+		'-1 -1 -1' * self.shot_radius,
+		'1 1 1' * self.shot_radius,
+		self.shot_force,
+		oldself.shot_dmg,
+		0.75,
+		DEATH_TURRET);
+
     self = oldself;
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 

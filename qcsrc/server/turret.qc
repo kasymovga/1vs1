@@ -1,5 +1,5 @@
 // Get real origin
-vector real_origin(entity ent)
+vector turret_real_origin(entity ent)
 {
     entity e;
     vector v;
@@ -19,7 +19,7 @@ vector real_origin(entity ent)
 /*
 * Return the angle between two enteties
 */
-vector angleofs(entity from, entity to)
+vector turret_angleofs(entity from, entity to)
 {
     vector v_res;
 
@@ -37,7 +37,7 @@ vector angleofs(entity from, entity to)
     return v_res;
 }
 
-vector angleofs3(vector from,vector from_a, entity to)
+vector turret_angleofs3(vector from,vector from_a, entity to)
 {
     vector v_res;
 
@@ -89,78 +89,6 @@ float turret_tag_fire_update()
     return 1;
 }
 
-void FireImoBeam (vector start,vector end,vector smin,vector smax,
-                  float bforce,float f_dmg,float f_velfactor, float deathtype)
-
-{
-    local vector hitloc, force, endpoint, dir;
-    local entity ent;
-
-    dir = normalize(end - start);
-    force = dir * bforce;
-
-    // go a little bit into the wall because we need to hit this wall later
-    end = end + dir;
-
-    // trace multiple times until we hit a wall, each obstacle will be made unsolid.
-    // note down which entities were hit so we can damage them later
-    while (1)
-    {
-        tracebox(start, smin, smax, end, FALSE, self);
-
-        // if it is world we can't hurt it so stop now
-        if (trace_ent == world || trace_fraction == 1)
-            break;
-
-        if (trace_ent.solid == SOLID_BSP)
-            break;
-
-        // make the entity non-solid so we can hit the next one
-        trace_ent.railgunhit = TRUE;
-        trace_ent.railgunhitloc = end;
-        trace_ent.railgunhitsolidbackup = trace_ent.solid;
-
-        // stop if this is a wall
-
-        // make the entity non-solid
-        trace_ent.solid = SOLID_NOT;
-    }
-
-    endpoint = trace_endpos;
-
-    // find all the entities the railgun hit and restore their solid state
-    ent = findfloat(world, railgunhit, TRUE);
-    while (ent)
-    {
-        // restore their solid type
-        ent.solid = ent.railgunhitsolidbackup;
-        ent = findfloat(ent, railgunhit, TRUE);
-    }
-
-    // find all the entities the railgun hit and hurt them
-    ent = findfloat(world, railgunhit, TRUE);
-    while (ent)
-    {
-        // get the details we need to call the damage function
-        hitloc = ent.railgunhitloc;
-        ent.railgunhitloc = '0 0 0';
-        ent.railgunhitsolidbackup = SOLID_NOT;
-        ent.railgunhit = FALSE;
-
-        // apply the damage
-        if (ent.takedamage)
-        {
-            damage(ent, self, self, f_dmg, deathtype, hitloc, force);
-            ent.velocity = ent.velocity * f_velfactor;
-            //ent.alpha = 0.25 + random() * 0.75;
-        }
-
-        // advance to the next entity
-        ent = findfloat(ent, railgunhit, TRUE);
-    }
-    trace_endpos = endpoint;
-}
-
 /*
 * Generic aim
 
@@ -185,7 +113,7 @@ vector turret_stdproc_aim_generic()
     turret_tag_fire_update();
 
     if(self.aim_flags & TFL_AIM_SIMPLE)
-        return real_origin(self.enemy);
+        return turret_real_origin(self.enemy);
 
     // Keep track of when we can shoot the next time and
     // try to predict where the target will be then, so we can put our aimpoint there.
@@ -198,7 +126,7 @@ vector turret_stdproc_aim_generic()
     mintime = max(self.attack_finished_single - time,0) + sys_ticrate;
 
     // Baseline
-    pre_pos = real_origin(self.enemy);
+    pre_pos = turret_real_origin(self.enemy);
 
     if (self.aim_flags & TFL_AIM_INFRONT)   // Aim a bit in front of the target
         pre_pos = pre_pos + (normalize(self.enemy.velocity) * 64);
@@ -257,7 +185,7 @@ vector turret_stdproc_aim_generic()
     if (self.enemy.flags & FL_CLIENT)
     {
         vector v;
-        v = real_origin(self.enemy);
+        v = turret_real_origin(self.enemy);
         pre_pos_z = (pre_pos_z + v_z) * 0.5;
     }
     */
@@ -729,7 +657,7 @@ void turret_do_updates(entity t_turret)
     oldself = self;
     self = t_turret;
 
-    enemy_pos = real_origin(self.enemy);
+    enemy_pos = turret_real_origin(self.enemy);
 
     turret_tag_fire_update();
 
@@ -1083,7 +1011,7 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     }
 
     // Range limits?
-    tvt_dist = vlen(e_turret.origin - real_origin(e_target));
+    tvt_dist = vlen(e_turret.origin - turret_real_origin(e_target));
     if (validate_flags & TFL_TARGETSELECT_RANGELIMTS)
     {
         if (tvt_dist < e_turret.target_range_min)
@@ -1096,15 +1024,15 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     // Can we even aim this thing?
     if(e_turret.turrcaps_flags & TFL_TURRCAPS_HEADATTACHED)
     {
-        tvt_thadv = angleofs3(e_turret.tur_head.origin,e_turret.angles + e_turret.tur_head.angles ,e_target);
-        //tvt_thadv = angleofs(e_turret.angles,e_target);
+        tvt_thadv = turret_angleofs3(e_turret.tur_head.origin,e_turret.angles + e_turret.tur_head.angles ,e_target);
+        //tvt_thadv = turret_angleofs(e_turret.angles,e_target);
     }
     else
     {
-        tvt_thadv = angleofs(e_turret.tur_head,e_target);
+        tvt_thadv = turret_angleofs(e_turret.tur_head,e_target);
     }
 
-    tvt_tadv  = math_shortangle_vxy(angleofs(e_turret,e_target),e_turret.angles);
+    tvt_tadv  = math_shortangle_vxy(turret_angleofs(e_turret,e_target),e_turret.angles);
     tvt_thadf = vlen(tvt_thadv);
     tvt_tadf  = vlen(tvt_tadv);
 
@@ -1128,7 +1056,7 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     // Line of sight?
     if (validate_flags & TFL_TARGETSELECT_LOS)
     {
-        v_tmp = real_origin(e_target) + ((e_target.mins + e_target.maxs) * 0.5);
+        v_tmp = turret_real_origin(e_target) + ((e_target.mins + e_target.maxs) * 0.5);
         traceline(e_turret.tur_shotorg,v_tmp,0,e_turret);
 
         if (e_turret.aim_firetolerance_dist < vlen(v_tmp - trace_endpos))
@@ -1750,14 +1678,14 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     if(self.turrcaps_flags & TFL_TURRCAPS_HEADATTACHED)
     {
         if (self.tur_defend)
-            self.idle_aim  = self.tur_head.angles + angleofs(self.tur_head,self.tur_defend);
+            self.idle_aim  = self.tur_head.angles + turret_angleofs(self.tur_head,self.tur_defend);
         else
             self.idle_aim  = '0 0 0';
     }
     else
     {
         if (self.tur_defend)
-            self.idle_aim  = self.tur_head.angles + angleofs(self.tur_head,self.tur_defend);
+            self.idle_aim  = self.tur_head.angles + turret_angleofs(self.tur_head,self.tur_defend);
         else
             self.idle_aim  = self.angles;
     }
@@ -1904,7 +1832,7 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
 
     if (e_turret.tur_defend)
     {
-        d_dist = vlen(real_origin(e_target) - e_turret.tur_defend.origin);
+        d_dist = vlen(turret_real_origin(e_target) - e_turret.tur_defend.origin);
         ikr = vlen(e_turret.origin - e_turret.tur_defend.origin);
         d_score = 1 - d_dist / e_turret.target_range;
     }
@@ -1946,7 +1874,7 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
             (m_score * e_turret.target_select_missilebias) +
             (p_score * e_turret.target_select_playerbias);
 
-    if(e_turret.target_range < vlen(e_turret.tur_shotorg - real_origin(e_target)))
+    if(e_turret.target_range < vlen(e_turret.tur_shotorg - turret_real_origin(e_target)))
     {
         dprint("Wtf?\n");
         score *= 0.001;
