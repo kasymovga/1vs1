@@ -17,43 +17,6 @@ vector real_origin(entity ent)
 }
 
 /*
-* Paint a v_color colord circle on target onwho
-* that fades away over f_time
-*/
-void paint_target(entity onwho, float f_size, vector v_color, float f_time)
-{
-    entity e;
-
-    e = spawn();
-    setmodel(e, "models/turrets/c512.md3"); // precision set above
-    e.scale = (f_size/512);
-    //setsize(e, '0 0 0', '0 0 0');
-    //setattachment(e,onwho,"");
-    setorigin(e,onwho.origin + '0 0 1');
-    e.alpha = 0.15;
-    e.movetype = MOVETYPE_FLY;
-
-    e.velocity = (v_color * 32); // + '0 0 1' * 64;
-
-    e.colormod = v_color;
-    entity_fade_setup(e,time,f_time);
-}
-
-void paint_target3(vector where, float f_size, vector v_color, float f_time)
-{
-    entity e;
-    e = spawn();
-    setmodel(e, "models/turrets/c512.md3"); // precision set above
-    e.scale = (f_size/512);
-    setsize(e, '0 0 0', '0 0 0');
-    setorigin(e,where+ '0 0 1');
-    e.movetype = MOVETYPE_NONE;
-    e.velocity = '0 0 0';
-    e.colormod = v_color;
-    entity_fade_setup(e,time,f_time);
-}
-
-/*
 * Return the angle between two enteties
 */
 vector angleofs(entity from, entity to)
@@ -1189,10 +1152,6 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
         return -21;
     */
 
-#ifdef TURRET_DEBUG_TARGETSELECT
-    dprint("Target:",e_target.netname," is a valid target for ",e_turret.netname,"\n");
-#endif
-
     return 1;
 }
 
@@ -1273,15 +1232,6 @@ void turret_think()
         if (self.team != self.tur_head.team)
 			turret_stdproc_setcolormod();
     }
-
-#ifdef TURRET_DEBUG
-    if (self.tur_dbg_tmr1 < time)
-    {
-        if (self.enemy) paint_target (self.enemy,128,self.tur_dbg_rvec,0.9);
-        paint_target(self,256,self.tur_dbg_rvec,0.9);
-        self.tur_dbg_tmr1 = time + 1;
-    }
-#endif
 
     // Handle ammo
     if not (self.spawnflags & TSF_NO_AMMO_REGEN)
@@ -1463,11 +1413,6 @@ void turret_fire()
         if (self.shot_volly > 1)
             self.attack_finished_single = time + self.shot_volly_refire;
     }
-
-
-#ifdef TURRET_DEBUG
-    if (self.enemy) paint_target3(self.tur_aimpos, 64, self.tur_dbg_rvec, self.tur_impacttime + 0.25);
-#endif
 }
 
 void turret_stdproc_fire()
@@ -1883,16 +1828,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     self.tur_head.team = self.team;
     self.view_ofs = '0 0 0';
 
-#ifdef TURRET_DEBUG
-    self.tur_dbg_start = self.nextthink;
-    while (vlen(self.tur_dbg_rvec) < 2)
-        self.tur_dbg_rvec  = randomvec() * 4;
-
-    self.tur_dbg_rvec_x = fabs(self.tur_dbg_rvec_x);
-    self.tur_dbg_rvec_y = fabs(self.tur_dbg_rvec_y);
-    self.tur_dbg_rvec_z = fabs(self.tur_dbg_rvec_z);
-#endif
-
     // Its all good.
     self.classname = "turret_main";
 
@@ -2025,41 +1960,6 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
         dprint("Wtf?\n");
         score *= 0.001;
     }
-
-#ifdef TURRET_DEBUG
-    string sd,sa,sm,sp,ss;
-    string sdt,sat,smt,spt;
-
-    sd = ftos(d_score);
-    d_score *= e_turret.target_select_rangebias;
-    sdt = ftos(d_score);
-
-    //sv = ftos(v_score);
-    //v_score *= e_turret.target_select_samebias;
-    //svt = ftos(v_score);
-
-    sa = ftos(a_score);
-    a_score *= e_turret.target_select_anglebias;
-    sat = ftos(a_score);
-
-    sm = ftos(m_score);
-    m_score *= e_turret.target_select_missilebias;
-    smt = ftos(m_score);
-
-    sp = ftos(p_score);
-    p_score *= e_turret.target_select_playerbias;
-    spt = ftos(p_score);
-
-
-    ss = ftos(score);
-    bprint("^3Target scores^7 \[  ",e_turret.netname, "  \] ^3for^7 \[  ", e_target.netname,"  \]\n");
-    bprint("^5Range:\[  ",sd,  "  \]^2+bias:\[  ",sdt,"  \]\n");
-    bprint("^5Angle:\[  ",sa,  "  \]^2+bias:\[  ",sat,"  \]\n");
-    bprint("^5Missile:\[  ",sm,"  \]^2+bias:\[  ",smt,"  \]\n");
-    bprint("^5Player:\[  ",sp, "  \]^2+bias:\[  ",spt,"  \]\n");
-    bprint("^3Total (w/bias):\[^1",ss,"\]\n");
-
-#endif
 
     return score;
 }

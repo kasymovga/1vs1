@@ -44,15 +44,7 @@ void turret_flac_projectile_explode()
     }
     self.event_damage = stdproc_nothing;
 
-#ifdef TURRET_DEBUG
-    float ftmp;
-    ftmp = damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_HAGAR, world);
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + ftmp; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#else
     damage_radius (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, WEP_HAGAR, world);
-#endif
-
     remove (self);
 }
 

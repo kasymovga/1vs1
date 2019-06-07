@@ -1,9 +1,3 @@
-//#define TURRET_DEBUG_HK
-
-#ifdef TURRET_DEBUG_HK
-.float atime;
-#endif
-
 void spawnfunc_turret_hk();
 void turret_hk_dinit();
 void turret_hk_attack();
@@ -290,27 +284,6 @@ void turret_hk_missile_think()
     // Align model with new heading
     self.angles = vectoangles(self.velocity);
 
-
-#ifdef TURRET_DEBUG_HK
-    //if(self.atime < time) {
-    if ((fe <= 0.99)||(edist > 1000))
-    {
-        te_lightning2(world,self.origin, self.origin + vr * lt_seek);
-        te_lightning2(world,self.origin, self.origin + vl * lt_seek);
-        te_lightning2(world,self.origin, self.origin + vu * lt_seek);
-        te_lightning2(world,self.origin, self.origin + vd * lt_seek);
-        te_lightning2(world,self.origin, vf);
-    }
-    else
-    {
-        te_lightning2(world,self.origin, self.enemy.origin);
-    }
-    bprint("Speed: ", ftos(rint(myspeed)), "\n");
-    bprint("Trace to solid: ", ftos(rint(ff * 100)), "%\n");
-    bprint("Trace to target:", ftos(rint(fe * 100)), "%\n");
-    self.atime = time + 0.2;
-    //}
-#endif
 
 	projectile_update(self);
 }

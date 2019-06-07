@@ -362,21 +362,6 @@ vector real_origin(entity ent);
 .float ammo_max;
 
 
-// Uncomment below to enable various debug output.
-//#define TURRET_DEBUG
-//#define TURRET_DEBUG_TARGETVALIDATE
-//#define TURRET_DEBUG_TARGETSELECT
-
-#ifdef TURRET_DEBUG
-.float tur_dbg_dmg_t_h; // Total dmg that hit something (can be more then tur_dbg_dmg_t_f since it should count radius dmg.
-.float tur_dbg_dmg_t_f; // Total damage spent
-.float tur_dbg_start;   // When did i go online?
-.float tur_dbg_tmr1;    // timer for random use
-.float tur_dbg_tmr2;    // timer for random use
-.float tur_dbg_tmr3;    // timer for random use
-.vector tur_dbg_rvec;   // Random vector, mainly for coloruing stuff'
-#endif
-
 // System main's
 /// Main AI loop
 void turret_think();
