@@ -161,15 +161,6 @@ void FireImoBeam (vector start,vector end,vector smin,vector smax,
     trace_endpos = endpoint;
 }
 
-void turrets_precache_debug_models()
-{
-    precache_model ("models/turrets/c512.md3");
-    precache_model ("models/pathlib/goodsquare.md3");
-    precache_model ("models/pathlib/badsquare.md3");
-    precache_model ("models/pathlib/square.md3");
-    precache_model ("models/pathlib/edge.md3");
-}
-
 /*
 * Generic aim
 
