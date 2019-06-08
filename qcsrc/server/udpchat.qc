@@ -31,26 +31,26 @@ void UDPChat_ER_Response_Callback(float argc, string response) {
 
 	if (sv_udpchat_server != "")
 	if (peer != sv_udpchat_server)
-		ER_Query(sv_udpchat_server, "extResponse udpchat " + msg);
+		extresponse_query(sv_udpchat_server, "extResponse udpchat " + msg);
 
 	n = i;
 	for (i = 1; i < n; i++) {
 		s = cvar_string(strcat("sv_udpchat_client", ftos(i)));
 		if (peer != s)
-			ER_Query(s, "extResponse udpchat " + msg);
+			extresponse_query(s, "extResponse udpchat " + msg);
 	}
 }
 
 void UDPChat_SendPacket(string msg) {
 	string packet = "extResponse udpchat " + msg;
 	if (sv_udpchat_server != "")
-		ER_Query(sv_udpchat_server, packet);
+		extresponse_query(sv_udpchat_server, packet);
 
 	string s;
 	float i;
 	for (i = 1; (s = cvar_string(strcat("sv_udpchat_client", ftos(i)))) != ""; i++)
 		for (i = 1; (s = cvar_string(strcat("sv_udpchat_client", ftos(i)))) != ""; i++)
-			ER_Query(s, packet);
+			extresponse_query(s, packet);
 }
 
 void UDPChat_ShowPlayersStatus() {
@@ -101,7 +101,7 @@ void UDPChat_Init() {
 	sv_udpchat_server = cvar_string_zone_ifneeded("sv_udpchat_server");
 	CACHE_CVAR(sv_udpchat_spamstatus);
 	sv_udpchat_id = cvar_string_zone_ifneeded("sv_udpchat_id");
-    ER_RegisterHandler("udpchat", UDPChat_ER_Response_Callback, world);
+    extresponse_register_handler("udpchat", UDPChat_ER_Response_Callback, world);
 	UDPChat_PupblicPlayerChat_NextLink = GameHookChain_PublicPlayerChat;
 	GameHookChain_PublicPlayerChat = UDPChat_PupblicPlayerChat;
 	UDPChat_RealClientConnect_NextLink = GameHookChain_RealClientConnect;

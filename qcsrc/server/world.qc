@@ -1302,7 +1302,7 @@ Called before each frame by the server
 float world_redirection_think();
 void StartFrame (void)
 {
-	ER_Update();
+	extresponse_update();
 	slowmo_update();
 
 #ifdef PROFILING

@@ -83,10 +83,10 @@ void IP2C_Init(void) {
     IP2C_Log("Loading cached IPs");
     IPCacheDB = db_load(IP2C_DBNAME);
 
-    ER_RegisterHandler("ip2cr", IP2C_ER_Response_Callback, world);
+    extresponse_register_handler("ip2cr", IP2C_ER_Response_Callback, world);
 
     if(cvar("sv_ip2country_proxy"))
-        ER_RegisterHandler("ip2cq", IP2C_ER_Request_Callback, world);
+        extresponse_register_handler("ip2cq", IP2C_ER_Request_Callback, world);
 
 	URI_GET_IP2C = URI_RegisterHandler(IP2C_URI_Get_Callback);
 }
@@ -200,7 +200,7 @@ void IP2C_Lookup(string ip, ip2c_callback_t callback, float timeout, entity call
     IP2C_Log(strcat("IP ", ip, " is not cached, requesting from the server"));
 
     if(substring(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
-        ER_Query(substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), "extResponse ip2cq " + ip);
+        extresponse_query(substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), "extResponse ip2cq " + ip);
     } else {
         uri_get(strcat(url, ip), URI_GET_IP2C);
     }
@@ -256,7 +256,7 @@ void IP2C_ER_Request_Callback(float argc, string query) {
             cn = "--";
 
         IP2C_Log("Sending query response to " + ent.netname + ": " + ip + " " + cn);
-        ER_Query(ent.netname, "extResponse ip2cr " + ip + " " + cn);
+        extresponse_query(ent.netname, "extResponse ip2cr " + ip + " " + cn);
 
         strunzone(ent.netname);
         remove(ent);
