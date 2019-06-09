@@ -97,7 +97,7 @@ void WS_Draw(void) {
 
         if(i < 10) {
             txt = if(i == 9) "0" else ftos(i + 1);
-            txtw = stringwidth(txt, FALSE, sz * 0.5);
+            txtw = stringwidth(txt, FALSE) * sz_x * 0.5;
             drawstring([o_x + s_x - txtw, p_y], txt, sz * 0.5, '0.2 0.2 0.2', a, DRAWFLAG_NORMAL);     
         }
 
@@ -163,7 +163,7 @@ void Net_ReadWeaponSelect(void) {
     using(drawfont = sbar_bigfont) for(var w = 0; w <= WEP_LAST; ++w) {
         if(pow(2, w) & selectable_weapons) {
             ++ws_numoptions;
-            ws_width = max(ws_width, WS_SCALE * 2 + stringwidth(weapon_info(w+1).message, FALSE, [WS_SCALE, WS_SCALE]));
+            ws_width = max(ws_width, WS_SCALE * 2 + stringwidth(weapon_info(w+1).message, FALSE) * WS_SCALE);
         }
     }
 
