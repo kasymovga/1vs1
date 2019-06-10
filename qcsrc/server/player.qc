@@ -67,6 +67,7 @@ string sv_announcer_extra_doublekill;
 float sv_announcer_extra_doublekill_interval;
 string sv_announcer_extra_telefrag;
 string sv_announcer_extra_firstblood;
+string sv_sound_frag;
 float bot_taunt;
 float bot_talk;
 
@@ -851,6 +852,10 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 		// print an obituary message
 		player_obituary(attacker, inflictor, self, deathtype);
+		if (sv_sound_frag != "")
+		if (clienttype(attacker) == CLIENTTYPE_REAL)
+			play2(attacker, sv_sound_frag);
+
 		player_clear(TRUE);
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
@@ -2339,6 +2344,10 @@ void() player_init {
 	EXTRA_ANNOUNCER(telefrag);
 	EXTRA_ANNOUNCER(firstblood);
 #undef EXTRA_ANNOUNCER
+	CACHE_CVAR_STR(sv_sound_frag);
+	if (sv_sound_frag != "")
+		precache_sound(sv_sound_frag);
+
 	CACHE_CVAR(bot_taunt);
 	CACHE_CVAR(bot_talk);
 }

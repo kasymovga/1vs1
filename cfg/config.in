@@ -138,6 +138,7 @@ set sv_announcer_extra_twohits "" "Additional announcer sound"
 set sv_announcer_extra_vote_now "" "Additional announcer sound"
 set sv_announcer_extra_vote_failed "" "Additional announcer sound"
 set sv_announcer_extra_vote_passed "" "Additional announcer sound"
+set sv_sound_frag ""
 set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
 set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
 set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
@@ -543,6 +544,7 @@ set sv_model_ice_alpha 0.5
 set sv_model_ice_scale "8"
 set sv_model_ice_z "15"
 set sv_model_ice_use_skins 0
+set sv_sound_ice_frag ""
 
 set g_minstagib_nolaserdamage 1
 set g_minstagib_health_drop 0

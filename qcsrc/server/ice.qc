@@ -1,5 +1,6 @@
 #define ICE_FRAME_TIME 0.2
-string ice_model;
+string sv_model_ice;
+string sv_sound_ice_frag;
 float g_freeze_unfroze_time;
 float g_freeze_unfroze_interruption;
 float g_freeze_slowdown;
@@ -61,6 +62,10 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	if (self.ice)
 		return TRUE;
 
+	if (sv_sound_ice_frag != "")
+	if (clienttype(attacker) == CLIENTTYPE_REAL)
+		play2(attacker, sv_sound_ice_frag);
+
 	self.ice = spawn();
 	self.ice.alpha = sv_model_ice_alpha;
 	self.ice.scale = sv_model_ice_scale;
@@ -82,7 +87,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	WaypointSprite_AttachCarrier("helpme", self);
 	setattachment(self.ice, self, "");
 	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
-	setmodel(self.ice, ice_model);
+	setmodel(self.ice, sv_model_ice);
 	return TRUE;
 }
 
@@ -253,8 +258,12 @@ void Ice_SpecateCopy(entity spectatee) {
 }
 
 void Ice_Init() {
-	ice_model = strzone(cvar_string("sv_model_ice")); //strzone once and never strunzone
-	precache_model(ice_model);
+	CACHE_CVAR_STR(sv_model_ice); //strzone once and never strunzone
+	precache_model(sv_model_ice);
+	CACHE_CVAR_STR(sv_sound_ice_frag);
+	if (sv_sound_ice_frag != "")
+		precache_sound(sv_sound_ice_frag);
+
 	CACHE_CVAR(g_freeze_unfroze_time);
 	CACHE_CVAR(g_freeze_unfroze_interruption);
 	CACHE_CVAR(g_freeze_slowdown);
