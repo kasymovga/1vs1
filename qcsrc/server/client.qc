@@ -6,6 +6,7 @@ float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
 float sv_maxconnects_per_address;
+float g_buttons_hookuse_swap;
 
 void(entity to) client_set_view {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
@@ -100,6 +101,9 @@ float client_init_send(entity to, float sf)
 
 		if (to.netaddress == "local")
 			t |= 4;
+
+		if (g_buttons_hookuse_swap)
+			t |= 8;
 
 		WriteByte(MSG_ENTITY, t);
 	}
@@ -721,6 +725,14 @@ void() client_initialize {
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);
 	CACHE_CVAR(sv_maxconnects_per_address);
+	CACHE_CVAR(g_buttons_hookuse_swap);
+	if (g_buttons_hookuse_swap) {
+		BUTTON_HOOK = buttonuse;
+		BUTTON_USE = button6;
+	} else {
+		BUTTON_HOOK = button6;
+		BUTTON_USE = buttonuse;
+	}
 }
 
 void client_cvars_request() {

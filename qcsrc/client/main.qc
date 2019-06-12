@@ -1174,6 +1174,7 @@ void Ent_Init(float ignore)
 		g_campaign = i & 1;
 		sv_spectate = i & 2;
 		localgame = i & 4;
+		hook_use_swapped = i & 8;
 	}
 
 	if (sf & 4) {

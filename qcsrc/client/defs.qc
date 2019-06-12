@@ -229,3 +229,4 @@ float camera_correction_needed;
 .float armorvalue;
 string map_description;
 string motd;
+float hook_use_swapped;
