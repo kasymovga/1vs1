@@ -75,6 +75,7 @@ void Physic_CheckGroundHook()
 		} else {
 			if(self.flags & FL_ONGROUND)
 			if(time >= self.ladder_time)
+			if (self.lastground < time - 0.3)
 			if not(self.hook)
 			{
 				self.nextstep = time + 0.2;
