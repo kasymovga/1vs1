@@ -1,4 +1,3 @@
-float buf_load(string filename);
 vector colormapPaletteColor(float c, float isPants);
 
 typedef float(string s) textLengthUpToWidth_widthFunction_t;

@@ -24,11 +24,23 @@ entity makeNexuizCreditsList()
 	me.configureNexuizCreditsList(me);
 	return me;
 }
+
 void configureNexuizCreditsListNexuizCreditsList(entity me)
 {
+	float i, fh;
+	string l;
 	me.configureNexuizListBox(me);
 	// load the file
-	me.bufferIndex = buf_load("rexuiz-credits.txt");
+	me.bufferIndex = buf_create();
+	fh = fopen("rexuiz-credits.txt", FILE_READ);
+	if(fh > 0) {
+		i = 0;
+		while((l = fgets(fh))) {
+			bufstr_set(me.bufferIndex, i, l);
+			++i;
+		}
+		fclose(fh);
+	}
 	me.nItems = buf_getsize(me.bufferIndex);
 }
 void destroyNexuizCreditsList(entity me)

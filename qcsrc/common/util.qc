@@ -203,27 +203,6 @@ string GametypeNameFromType(float g)
 	return "dm";
 }
 
-// Multiline text file buffers
-float buf_load(string pFilename)
-{
-	float buf, fh, i;
-	string l;
-	buf = buf_create();
-	if(buf < 0)
-		return -1;
-	fh = fopen(pFilename, FILE_READ);
-	if(fh < 0)
-		return buf;
-	i = 0;
-	while((l = fgets(fh)))
-	{
-		bufstr_set(buf, i, l);
-		++i;
-	}
-	fclose(fh);
-	return buf;
-}
-
 /*
  *  Operator overloads
  */
