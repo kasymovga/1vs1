@@ -60,7 +60,7 @@ void dlc_find_working_repo_callback(float id, float status, string data) {
 
 void dlc_find_working_repo() {
 	if not(URI_FIND_WORKING_REPO)
-		URI_FIND_WORKING_REPO = URI_RegisterHandler(dlc_find_working_repo_callback);
+		URI_FIND_WORKING_REPO = uri_register_handler(dlc_find_working_repo_callback);
 
 	if (dlc_ready_all())
 		return;

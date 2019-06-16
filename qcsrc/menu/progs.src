@@ -16,7 +16,7 @@ mbuiltin.qh
 ../menu-server/campaign_common.qh
 ../menu-server/weapon.qh
 ../common/weapon.qh
-../common/curl.qh
+../common/uri.qh
 ../common/dlc.qh
 
 gamecommand.qh
@@ -50,7 +50,7 @@ nexuiz/util.qc
 ../menu-server/mapinfo.qc
 ../menu-server/weapon.qc
 ../common/weapon.qc
-../common/curl.qc
+../common/uri.qc
 ../common/dlc.qc
 ../client-menu/ui.qc
 

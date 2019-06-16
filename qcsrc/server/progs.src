@@ -68,7 +68,7 @@ target.qh
 freeze.qh
 ice.qh
 radio.qh
-../common/curl.qh
+../common/uri.qh
 ready.qh
 clanarena.qh
 
@@ -334,7 +334,7 @@ monster/butcher.qc
 survive.qc
 minstagib.qc
 radio.qc
-../common/curl.qc
+../common/uri.qc
 badass.qc
 gamestatus.qc
 damageindicator.qc

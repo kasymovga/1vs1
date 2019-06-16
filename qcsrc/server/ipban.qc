@@ -600,8 +600,8 @@ float GameCommand_Ban(string command)
 
 void Ban_Init() {
 	Ban_LoadBans();
-	URI_GET_IPBAN = URI_RegisterHandler(OnlineBanList_URI_Get_Callback);
+	URI_GET_IPBAN = uri_register_handler(OnlineBanList_URI_Get_Callback);
 	float i;
 	for (i = 1; i < MAX_IPBAN_URIS; i++)
-		URI_RegisterHandler(OnlineBanList_URI_Get_Callback);
+		uri_register_handler(OnlineBanList_URI_Get_Callback);
 }

@@ -95,7 +95,7 @@ void() m_init =
 	string s;
 
 	dprint_load();
-	URI_GET_SERVERLIST = URI_RegisterHandler(ServerList_URI_Get_Callback);
+	URI_GET_SERVERLIST = uri_register_handler(ServerList_URI_Get_Callback);
 	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
 
 	// list all game dirs (TEST)

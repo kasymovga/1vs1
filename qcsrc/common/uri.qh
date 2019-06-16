@@ -1,0 +1,2 @@
+float(void(float id, float status, string data) uri_handler) uri_register_handler;
+const float URI_GET_DISCARD = 0;

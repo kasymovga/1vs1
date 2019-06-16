@@ -52,7 +52,7 @@ void Radio_Init(void) {
 	if(!sv_radio)
 		return;
 
-	URI_GET_RADIO = URI_RegisterHandler(Radio_URI_Get_Callback);
+	URI_GET_RADIO = uri_register_handler(Radio_URI_Get_Callback);
 	registercvar("_radio_queue", "");
 	registercvar("_radio_queue_left", "0");
 	CACHE_CVAR(sv_radio_announce);

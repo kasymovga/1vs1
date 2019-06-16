@@ -77,5 +77,5 @@ void() sysinfo_init {
 	GameHookChain_ClientCommandHandle = sysinfo_ClientCommandHandle;
 	sysinfo_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
 	GameHookChain_RealClientDisconnect = sysinfo_RealClientDisconnect;
-	URI_SYSINFO_CHECKER = URI_RegisterHandler(sysinfo_uri_callback);
+	URI_SYSINFO_CHECKER = uri_register_handler(sysinfo_uri_callback);
 }
