@@ -1,0 +1,6 @@
+#define DB_BUCKETS 8192
+float(void) db_create;
+float(string filename) db_load;
+void(float db) db_close;
+string(float db, string key) db_get;
+void(float db, string key, string value) db_put;

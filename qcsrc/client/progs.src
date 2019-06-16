@@ -9,6 +9,7 @@ csqc_constants.qc
 csqc_builtins.qc
 ../client-server/util.qh
 ../common/util.qh
+../common/db.qh
 ../common/weapon.qh
 ../common/extensions.qh
 
@@ -93,6 +94,7 @@ bgmscript.qc
 
 ../client-server/util.qc
 ../common/util.qc
+../common/db.qc
 ../client-server/projectile.qc
 ../common/weapon.qc
 ../client-server/physics.qc

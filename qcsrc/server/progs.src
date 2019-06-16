@@ -11,6 +11,7 @@ constants.qh
 ../common/constants.qh
 ../client-server/constants.qh
 ../common/util.qh
+../common/db.qh
 ../menu-server/util.qh
 ../client-server/util.qh
 ../menu-server/weapon.qh
@@ -130,6 +131,7 @@ monster.qh
 ../client-server/warpzone.qh
 warpzone.qh
 ../common/util.qc
+../common/db.qc
 ../client-server/util.qc
 ../menu-server/util.qc
 selectableweapon.qh

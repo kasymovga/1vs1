@@ -5,6 +5,7 @@ config.qh
 msys.qh
 mbuiltin.qh
 ../common/util.qh
+../common/db.qh
 ../common/miscfunctions.qh
 ../client-menu/ui.qh
 ../client-menu/util.qh
@@ -36,6 +37,7 @@ nexuiz/util.qh
 	classes.c
 
 ../common/util.qc
+../common/db.qc
 ../menu-server/gamecommand.qc
 gamecommand.qc
 menu.qc
