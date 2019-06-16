@@ -1,12 +1,3 @@
-var void(string s, ...) dprint;
-void dprint_null() { }
-void dprint_load()
-{
-	if(cvar("developer") > 0)
-		dprint = print;
-	else
-		dprint = dprint_null;
-}
 float buf_load(string filename);
 #define DB_BUCKETS 8192
 float db_create();

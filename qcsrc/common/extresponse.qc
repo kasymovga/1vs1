@@ -38,8 +38,6 @@ entity(string command) extresponse_find_handler {
 }
 
 void(string response) extresponse_parse {
-    dprint("Got an ExtResponse: ^5" + response + "\n");
-
     var n = tokenize_console(response);
     var e = extresponse_find_handler(argv(1));
 

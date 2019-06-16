@@ -301,7 +301,6 @@ void bot_custom_weapon_priority_setup()
 void bot_endgame()
 {
 	local entity e;
-	//dprint("bot_endgame\n");
 	e = bot_list;
 	while (e)
 	{
@@ -337,7 +336,6 @@ void bot_relinkplayerlist()
 		}
 		e = e.chain;
 	}
-	dprint(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = TRUE;
 };
@@ -471,18 +469,13 @@ void autoskill(float factor)
 			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
 	}
 
-	dprint("autoskill: best player got ", ftos(bestplayer), ", ");
-	dprint("best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		dprint("not doing anything\n");
-		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(skill < skill_auto_max)
 		{
-			dprint("2 frags difference, increasing skill\n");
 			skill = skill + 1;
 			cvar_set("skill", ftos(skill));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(skill), "\n");
@@ -492,7 +485,6 @@ void autoskill(float factor)
 	{
 		if(skill > skill_auto_min)
 		{
-			dprint("2 frags difference, decreasing skill\n");
 			skill = skill - 1;
 			cvar_set("skill", ftos(skill));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(skill), "\n");
@@ -500,7 +492,6 @@ void autoskill(float factor)
 	}
 	else
 	{
-		dprint("not doing anything\n");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}
@@ -571,7 +562,6 @@ void bot_serverframe()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		//dprint(ftos(bots), " ? ", ftos(currentbots), "\n");
 		while (currentbots < bots)
 		{
 			if (bot_spawn() == world)

@@ -283,16 +283,12 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	}
 
 	if (!e.owner)
-	{
-		dprint("FLAG: drop - no owner?!?!\n");
 		return;
-	}
+
 	p = e.owner;
 	if (p.flagcarried != e)
-	{
-		dprint("FLAG: drop - owner is not carrying this flag??\n");
 		return;
-	}
+
 	bprint(p.netname, "^7 lost the ", e.netname, "\n");
 
 	if(penalty_receiver)
@@ -336,8 +332,6 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 
 	trace_startsolid = FALSE;
 	tracebox(e.origin, e.mins, e.maxs, e.origin, TRUE, e);
-	if(trace_startsolid)
-		dprint("FLAG FALLTHROUGH will happen SOON\n");
 }
 
 void() ctf_animate_flag {
@@ -379,10 +373,8 @@ void() ctf_flag_think {
 	{
 		// flag fallthrough? FIXME remove this if bug is really fixed now
 		if(self.origin_z < -131072)
-		{
-			dprint("FLAG FALLTHROUGH just happened\n");
 			self.pain_finished = 0;
-		}
+
 		setattachment(self, world, "");
 		if (time > self.pain_finished)
 		{
@@ -396,7 +388,6 @@ void() ctf_flag_think {
 	e = self.owner;
 	if (e.classname != "player" || (e.deadflag) || (e.flagcarried != self))
 	{
-		dprint("CANNOT HAPPEN - player dead and STILL had a flag!\n");
 		ctf_flag_drop(self, world, world);
 		return;
 	}

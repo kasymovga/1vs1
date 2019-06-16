@@ -93,8 +93,6 @@ void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
 	string s;
-
-	dprint_load();
 	URI_GET_SERVERLIST = uri_register_handler(ServerList_URI_Get_Callback);
 	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
 
@@ -144,9 +142,6 @@ void UpdateConWidthHeight()
 float dlc_wait_frame;
 void() m_init_delayed =
 {
-
-	dprint_load();
-
 	menuInitialized = 0;
 	if (dlc_ready_all()) {
 		//print("dlc loading finished\n");
@@ -303,7 +298,6 @@ void() m_draw =
 	if(cvar("cl_capturevideo"))
 		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
 
-	dprint_load();
 	gamestatus = 0;
 	if(isserver())
 		gamestatus = gamestatus | GAME_ISSERVER;

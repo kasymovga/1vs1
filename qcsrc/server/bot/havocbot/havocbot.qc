@@ -130,7 +130,6 @@ void havocbot_ai()
 		next = now = self.goalcurrent.origin - (self.origin + self.view_ofs);
 		aimdistance = vlen(now);
 		//heading = self.velocity;
-		//dprint(self.goalstack01.classname,etos(self.goalstack01),"\n");
 		if(
 			self.goalstack01 != self && self.goalstack01 != world && self.aistatus & AI_STATUS_RUNNING == 0 &&
 			!(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
@@ -144,12 +143,9 @@ void havocbot_ai()
 		//v = now * (distanceblend) * (skillblend) + next * (1-distanceblend) * (skillblend) + now * (1-skillblend);
 		//v = now * ((1-skillblend) + (distanceblend) * (skillblend)) + next * (1-distanceblend) * (skillblend);
 		v = now + blend * (next - now);
-		//dprint(etos(self), " ");
-		//dprint(vtos(now), ":", vtos(next), "=", vtos(v), " (blend ", ftos(blend), ")\n");
 		//v = now * (distanceblend) + next * (1-distanceblend);
 		if (self.waterlevel < WATERLEVEL_SWIMMING)
 			v_z = 0;
-		//dprint("walk at:", vtos(v), "\n");
 		//te_lightning2(world, self.origin, self.goalcurrent.origin);
 		bot_aimdir(v, -1);
 	}
@@ -225,7 +221,6 @@ void havocbot_keyboard_movement(vector destorg)
 
 	keyboard = self.havocbot_keyboard;
 	blend = bound(0,vlen(destorg-self.origin)/bot_ai_keyboard_distance,1); // When getting close move with 360 degree
-	//dprint("movement ", vtos(self.movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
 	self.movement = self.movement + (keyboard - self.movement) * blend;
 };
 
@@ -416,7 +411,6 @@ void havocbot_movetogoal()
 			d = vlen(dxy);
 			v = vlen(self.velocity -  self.velocity_z * '0 0 1');
 			db = (pow(v,2) / (g_jetpack_acceleration_side * 2)) + 100;
-		//	dprint("distance ", ftos(ceil(d)), " velocity ", ftos(ceil(v)), " brake at ", ftos(ceil(db)), "\n");
 			if(d < db || d < 500)
 			{
 				// Brake
@@ -995,7 +989,6 @@ float havocbot_moveto(vector pos)
 		// Step 4: Move to waypoint
 		if(self.havocbot_personal_waypoint==world)
 		{
-			dprint("Error: ", self.netname, " trying to walk to a non existent personal waypoint\n");
 			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			return CMD_STATUS_ERROR;
 		}
@@ -1006,7 +999,6 @@ float havocbot_moveto(vector pos)
 			bot_strategytoken_taken = TRUE;
 			if(havocbot_moveto_refresh_route())
 			{
-				dprint(self.netname, " walking to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
 				self.havocbot_personal_waypoint_searchtime = time + 10;
 				self.havocbot_personal_waypoint_failcounter = 0;
 			}
@@ -1016,13 +1008,10 @@ float havocbot_moveto(vector pos)
 				self.havocbot_personal_waypoint_searchtime = time + 2;
 				if(self.havocbot_personal_waypoint_failcounter >= 30)
 				{
-					dprint("Warning: can't walk to the personal waypoint located at ", vtos(self.havocbot_personal_waypoint.origin),"\n");
 					self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 					remove(self.havocbot_personal_waypoint);
 					return CMD_STATUS_ERROR;
 				}
-				else
-					dprint(self.netname, " can't walk to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts), trying later\n");
 			}
 		}
 
@@ -1041,7 +1030,6 @@ float havocbot_moveto(vector pos)
 		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED)
 		{
 			// Step 5: Waypoint reached
-			dprint(self.netname, "'s personal waypoint reached\n");
 			remove(self.havocbot_personal_waypoint);
 			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
@@ -1055,18 +1043,13 @@ float havocbot_moveto(vector pos)
 	{
 		// Wait until it is linked
 		if(!self.havocbot_personal_waypoint.wplinked)
-		{
-			dprint(self.netname, " waiting for personal waypoint to be linked\n");
 			return CMD_STATUS_EXECUTING;
-		}
 
 		self.havocbot_personal_waypoint_searchtime = time; // so we set the route next frame
 		self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 		self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 
 		// Step 3: Route to waypoint
-		dprint(self.netname, " walking to its personal waypoint\n");
-
 		return CMD_STATUS_EXECUTING;
 	}
 
@@ -1074,7 +1057,6 @@ float havocbot_moveto(vector pos)
 	wp = waypoint_spawnpersonal(pos);
 	if(wp==world)
 	{
-		dprint("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
 		return CMD_STATUS_ERROR;
 	}
 

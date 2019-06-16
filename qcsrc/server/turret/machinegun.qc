@@ -51,7 +51,7 @@ void turret_machinegun_std_init()
     self.damage_flags |= TFL_DMG_HEADSHAKE;
 
     if (!turret_tag_setup())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     // Our fire routine
     self.turret_firefunc  = turret_machinegun_attack;

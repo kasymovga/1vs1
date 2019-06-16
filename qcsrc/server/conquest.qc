@@ -279,10 +279,6 @@ float conquest_WinningCondition()
 			world_winners_set(team, COLOR_TEAM2);
 			announce_sound = "ctf/blue_capture.wav";
 		}
-		if (t1 + t2 > 0)
-		FOR_EACH_REALCLIENT(head)
-
-		dprint("Have a winner, ending game.\n");
 		FOR_EACH_REALCLIENT(head) {
 			announce(head, announce_sound);
 			LocationRequest_Remove(head);

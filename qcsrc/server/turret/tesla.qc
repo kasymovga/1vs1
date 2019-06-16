@@ -162,7 +162,7 @@ void turret_tesla_dinit()
                                  TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
 
     if (!turret_tag_setup())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firefunc      = turret_tesla_fire;
     self.turret_postthink     = turret_tesla_postthink;

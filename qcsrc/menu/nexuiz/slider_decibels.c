@@ -41,8 +41,6 @@ float ln(float x)
 		r0 = r;
 		r = r0 - 1 + x / exp(r0);
 	}
-	dprint("ln: ", ftos(i), " iterations\n");
-
 	return r;
 }
 

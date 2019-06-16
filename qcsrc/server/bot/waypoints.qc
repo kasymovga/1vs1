@@ -34,7 +34,6 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
 			{
-				dprint("Killed a waypoint that was stuck in solid at ", vtos(w.origin), "\n");
 				remove(w);
 				return world;
 			}
@@ -161,7 +160,6 @@ void waypoint_think()
 	stepheightvec = sv_stepheight * '0 0 1';
 	bot_navigation_movemode = (bot_navigation_ignoreplayers ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
-	//dprint("waypoint_think wpisbox = ", ftos(self.wpisbox), "\n");
 	sm1 = self.origin + self.mins;
 	sm2 = self.origin + self.maxs;
 	for(e = world; (e = find(e, classname, "waypoint")); )
@@ -202,7 +200,6 @@ void waypoint_think()
 				tracebox(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, FALSE, self);
 				if (!trace_startsolid)
 				{
-					//dprint("sv deviation", vtos(trace_endpos - sv), "\n");
 					sv = trace_endpos + '0 0 1';
 				}
 			}
@@ -211,7 +208,6 @@ void waypoint_think()
 				tracebox(ev - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, ev, FALSE, e);
 				if (!trace_startsolid)
 				{
-					//dprint("ev deviation", vtos(trace_endpos - ev), "\n");
 					ev = trace_endpos + '0 0 1';
 				}
 			}
@@ -372,12 +368,8 @@ float waypoint_load_links()
 	file = fopen(filename, FILE_READ);
 
 	if (file < 0)
-	{
-		dprint("waypoint links load from ");
-		dprint(filename);
-		dprint(" failed\n");
 		return FALSE;
-	}
+
 	while (1)
 	{
 		s = fgets(file);
@@ -447,12 +439,6 @@ float waypoint_load_links()
 
 	fclose(file);
 
-	dprint("loaded ");
-	dprint(ftos(c));
-	dprint(" waypoint links from ");
-	dprint(filename);
-	dprint("\n");
-
 	botframe_cachedwaypointlinks = TRUE;
 	return TRUE;
 };
@@ -470,12 +456,7 @@ void waypoint_load_links_hardwired()
 	botframe_loadedforcedlinks = TRUE;
 
 	if (file < 0)
-	{
-		dprint("waypoint links load from ");
-		dprint(filename);
-		dprint(" failed\n");
 		return;
-	}
 
 	for (;;)
 	{
@@ -545,12 +526,6 @@ void waypoint_load_links_hardwired()
 	}
 
 	fclose(file);
-
-	dprint("loaded ");
-	dprint(ftos(c));
-	dprint(" waypoint links from maps/");
-	dprint(mapname);
-	dprint(".waypoints.hardwired\n");
 };
 
 // Save all waypoint links to a file
@@ -710,19 +685,6 @@ float waypoint_loadall()
 				cwb = cwb + 1;
 		}
 		fclose(file);
-		dprint("loaded ");
-		dprint(ftos(cwp));
-		dprint(" waypoints and ");
-		dprint(ftos(cwb));
-		dprint(" wayboxes from maps/");
-		dprint(mapname);
-		dprint(".waypoints\n");
-	}
-	else
-	{
-		dprint("waypoint load from ");
-		dprint(filename);
-		dprint(" failed\n");
 	}
 	return cwp + cwb;
 };

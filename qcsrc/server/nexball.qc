@@ -367,15 +367,10 @@ void(void) nexball_ball_reset {
 		self.cnt = 2;
 		self.nextthink = time;
 	} else if (self.cnt < 4) { // step 2 and 3
-//		dprint("Step ", ftos(self.cnt), ": Calculated velocity: ", vtos(self.spawnorigin - self.origin), ", time: ", ftos(time), "\n");
 		self.velocity = (self.spawnorigin - self.origin) * (self.cnt - 1); // 1 or 0.5 second movement
 		self.nextthink = time + 0.5;
 		self.cnt += 1;
 	} else { // step 4
-//		dprint("Step 4: time: ", ftos(time), "\n");
-		if (vlen(self.origin - self.spawnorigin) > 10) // should not happen anymore
-			dprint("The ball moved too far away from its spawn origin.\nOffset: ",
-			       vtos(self.origin - self.spawnorigin), " Velocity: ", vtos(self.velocity), "\n");
 		self.velocity = '0 0 0';
 		setorigin(self, self.spawnorigin); // make sure it's positioned correctly anyway
 		self.movetype = MOVETYPE_NONE;
@@ -574,7 +569,6 @@ void(void) spawnfunc_nexball_team {
 }
 
 void(string teamname, float teamcolor) nexball_spawnteam {
-	dprint("^2spawned team ", teamname, "\n");
 	entity e;
 	e = spawn();
 	e.classname = "nexball_team";

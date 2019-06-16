@@ -161,7 +161,6 @@ string ftos_decimals(float number, float decimals)
 	if(len >= 7)
 		if(substring(result, len - 7, 1) == ".")
 		{
-			dprint("ftos(integer) has comma? Can't be. Affected result: ", result, "\n");
 			result = substring(result, 0, len - 7);
 			len -= 7;
 		}

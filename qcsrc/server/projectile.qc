@@ -7,10 +7,8 @@ float() projectile_no_impact_check {
 	// projectile hitting the something, or a touchareagrid one. Neither of
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
-	{
-		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
 		checkclient();
-	}
+
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return 1;
     if (other == world && self.size != '0 0 0')
@@ -19,15 +17,8 @@ float() projectile_no_impact_check {
         tic = self.velocity * sys_ticrate;
         tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
         traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
-        if (trace_fraction >= 1)
-        {
-            dprint("Odd... did not hit...?\n");
-        }
-        else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        {
-            dprint("Detected and prevented the sky-grapple bug.\n");
+        if (trace_fraction < 0 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
             return 1;
-        }
     }
 
     return 0;

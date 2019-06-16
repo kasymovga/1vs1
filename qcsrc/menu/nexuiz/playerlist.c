@@ -36,8 +36,6 @@ entity makeNexuizPlayerList()
 
 void setPlayerListNexuizPlayerList(entity me, string plist)
 {
-	dprint(plist,"------------\n");
-
 	float buf,i,n;
 	string s;
 

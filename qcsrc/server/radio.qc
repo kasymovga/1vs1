@@ -140,12 +140,6 @@ void Radio_Play(string url, string fname, float loop) {
 	radio_playing = TRUE;
 	radio_tracklen = 0;
 	radio_playing_queue = -1;
-
-	dprint("URL: ", radio_url, "\n");
-	dprint("File: ", radio_filename, "\n");
-	dprint("Loop: ", ftos(radio_looping), "\n");
-	dprint("Start: ", ftos(radio_starttime), "\n");
-
 	entity e; FOR_EACH_REALCLIENT(e)
 		Radio_SendPlay(e, FALSE);
 }

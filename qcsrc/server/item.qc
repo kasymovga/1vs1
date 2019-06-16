@@ -498,7 +498,6 @@ void item_find_team()
 	if(self.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		dprint("Initializing item team ", ftos(self.team), "\n");
 		random_selection_init();
 		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
 			random_selection_add(head, 0, string_null, head.cnt, 0);
@@ -748,8 +747,8 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			{
 				if(otheritem.is_item)
 				{
-					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
-					dprint(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
+					print("XXX Found duplicated item: ", itemname, vtos(self.origin));
+					print(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
 					error("Mapper sucks.");
 				}
 			}

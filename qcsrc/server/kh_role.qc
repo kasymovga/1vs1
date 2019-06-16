@@ -40,7 +40,6 @@ void() kh_role_carrier {
 
 	if (!(self.kh_next))
 	{
-		dprint("changing role to freelancer\n");
 		self.havocbot_role = kh_role_freelancer;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -66,7 +65,6 @@ void() kh_role_defense {
 
 	if (self.kh_next)
 	{
-		dprint("changing role to carrier\n");
 		self.havocbot_role = kh_role_carrier;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -76,7 +74,6 @@ void() kh_role_defense {
 		self.havocbot_role_timeout = time + random() * 10 + 20;
 	if (time > self.havocbot_role_timeout)
 	{
-		dprint("changing role to freelancer\n");
 		self.havocbot_role = kh_role_freelancer;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -106,7 +103,6 @@ void() kh_role_offense {
 
 	if (self.kh_next)
 	{
-		dprint("changing role to carrier\n");
 		self.havocbot_role = kh_role_carrier;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -116,7 +112,6 @@ void() kh_role_offense {
 		self.havocbot_role_timeout = time + random() * 10 + 20;
 	if (time > self.havocbot_role_timeout)
 	{
-		dprint("changing role to freelancer\n");
 		self.havocbot_role = kh_role_freelancer;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -147,7 +142,6 @@ void() kh_role_freelancer {
 
 	if (self.kh_next)
 	{
-		dprint("changing role to carrier\n");
 		self.havocbot_role = kh_role_carrier;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -158,15 +152,10 @@ void() kh_role_freelancer {
 	if (time > self.havocbot_role_timeout)
 	{
 		if (random() < 0.5)
-		{
-			dprint("changing role to offense\n");
 			self.havocbot_role = kh_role_offense;
-		}
 		else
-		{
-			dprint("changing role to defense\n");
 			self.havocbot_role = kh_role_defense;
-		}
+
 		self.havocbot_role_timeout = 0;
 		return;
 	}

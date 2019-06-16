@@ -129,8 +129,6 @@ void spawnfunc___init_dedicated_server(void)
 	cvar = cvar_builtin;
 	cvar_string = cvar_string_builtin;
 	cvar_set = cvar_set_builtin;
-	dprint_load(); // load dprint status from cvar
-
 	entity e;
 	map_goto_first_map();
 	e = spawn();
@@ -343,8 +341,6 @@ void spawnfunc_worldspawn (void)
 	cvar = cvar_builtin;
 	cvar_string = cvar_string_builtin;
 	cvar_set = cvar_set_builtin;
-	dprint_load(); // load dprint status from cvar
-
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = TRUE;
@@ -1324,8 +1320,6 @@ void StartFrame (void)
 		client_cefc_accumulator = 0;
 	}
 #endif
-
-	dprint_load(); // load dprint status from cvar
 
 	entity e;
 	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )

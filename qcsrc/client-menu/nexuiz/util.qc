@@ -27,6 +27,5 @@ string getZonedTooltipForIdentifier(string s)
 	if(t != "" && t != "custom cvar")
 		return strzone(t);
 #endif
-	dprint("WARNING: no tooltip set for ", s, "\n");
 	return string_null;
 }

@@ -1410,7 +1410,6 @@ void statechain_push(void) {
     statechain_next = statechain_stack[statechain_stack_ptr];
 
     ++statechain_stack_ptr;
-    dprint("PSH PTR: " + statechain_stack_ptr + "\n");
 }
 
 void statechain_pop(void) {
@@ -1420,7 +1419,6 @@ void statechain_pop(void) {
         error("statechain stack underflow");
 
     statechain_next = statechain_stack[statechain_stack_ptr];
-    dprint("POP PTR: " + statechain_stack_ptr + "\n");
 }
 
 float compute_state(entity e) {
@@ -1489,7 +1487,6 @@ void spawnfunc_trigger_state(void) {
 
     self.use = inline void(void) {
         self.state = !(self.state);
-        dprint("State ^3", self.targetname, "^7 is now ^2", ftos(self.state), "\n");
 
         if((self.state && self.spawnflags & TSTATE_USE_ON) || (!self.state && self.spawnflags & TSTATE_USE_OFF))
             trigger_use_targets();

@@ -269,13 +269,7 @@ void(void) hook_touch {
 		tic = self.velocity * sys_ticrate;
 		tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
 		traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
-		if(trace_fraction >= 1)
-		{
-			dprint("Odd... did not hit...?\n");
-		}
-		else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-		{
-			dprint("Detected and prevented the sky-grapple bug.\n");
+		if (trace_fraction < 1 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
 			hook_remove(self.owner);
 			return;
 		}

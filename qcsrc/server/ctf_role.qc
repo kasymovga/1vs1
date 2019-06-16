@@ -162,44 +162,36 @@ void(float ratingscale, vector org, float sradius) ctf_role_goalrating_carrierit
 }
 
 void(entity bot, float role) ctf_role_set {
-	dprint(strcat(bot.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_CTF_ROLE_CARRIER:
-			dprint("carrier");
 			bot.havocbot_role = ctf_role_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
-			dprint("defense");
 			bot.havocbot_role = ctf_role_defense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_MIDDLE:
-			dprint("middle");
 			bot.havocbot_role = ctf_role_middle;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_OFFENSE:
-			dprint("offense");
 			bot.havocbot_role = ctf_role_offense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_RETRIEVER:
-			dprint("retriever");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = ctf_role_retriever;
 			bot.havocbot_role_timeout = time + 10;
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
-			dprint("escort");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = ctf_role_escort;
 			bot.havocbot_role_timeout = time + 30;
 			break;
 	}
-	dprint("\n");
 }
 
 void() ctf_role_carrier {

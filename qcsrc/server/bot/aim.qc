@@ -177,13 +177,11 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	local float dist, delta_t, blend;
 	local vector desiredang, diffang;
 
-	//dprint("aim ", self.netname, ": old:", vtos(self.v_angle));
 	// make sure v_angle is sane first
 	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
 	self.v_angle_z = 0;
 
 	// get the desired angles to aim at
-	//dprint(" at:", vtos(v));
 	v = normalize(v);
 	//te_lightning2(world, self.origin + self.view_ofs, self.origin + self.view_ofs + v * 200);
 	if (time >= self.bot_badaimtime)
@@ -192,12 +190,10 @@ float bot_aimdir(vector v, float maxfiredeviation)
 		self.bot_badaimoffset = randomvec() * bound(0, 5 - 0.5 * (skill+self.bot_offsetskill), 5) * bot_ai_aimskill_offset;
 	}
 	desiredang = vectoangles(v) + self.bot_badaimoffset;
-	//dprint(" desired:", vtos(desiredang));
 	if (desiredang_x >= 180)
 		desiredang_x = desiredang_x - 360;
 	desiredang_x = bound(-90, 0 - desiredang_x, 90);
 	desiredang_z = self.v_angle_z;
-	//dprint(" / ", vtos(desiredang));
 
 	//// pain throws off aim
 	//if (self.bot_painintensity)
@@ -213,7 +209,6 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	if (diffang_y >= 180)
 		diffang_y = diffang_y - 360;
 	self.bot_olddesiredang = desiredang;
-	//dprint(" diff:", vtos(diffang));
 
 	delta_t = time-self.bot_prevaimtime;
 	self.bot_prevaimtime = time;
@@ -246,7 +241,6 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
 	if (diffang_y >= 180)
 		diffang_y = diffang_y - 360;
-	//dprint(" diff:", vtos(diffang));
 
 	if (time >= self.bot_aimthinktime)
 	{
@@ -269,7 +263,6 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
 	if (diffang_y >= 180)
 		diffang_y = diffang_y - 360;
-	//dprint(" diff:", vtos(diffang));
 
 	// jitter tracking
 	dist = vlen(diffang);
@@ -287,13 +280,11 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//self.v_angle = self.v_angle + diffang * (1/ blendrate);
 	self.v_angle_z = 0;
 	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
-	//dprint(" turn:", vtos(self.v_angle));
 
 	makevectors(self.v_angle);
 	shotorg = self.origin + self.view_ofs;
 	shotdir = v_forward;
 
-	//dprint(" dir:", vtos(v_forward));
 	//te_lightning2(world, shotorg, shotorg + shotdir * 100);
 
 	// calculate turn angles again
@@ -302,7 +293,6 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//if (diffang_y >= 180)
 	//	diffang_y = diffang_y - 360;
 
-	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	// decide whether to fire this time
 	// note the maxfiredeviation is in degrees so this has to convert to radians first
@@ -311,8 +301,6 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+self.bot_aggresskill, 10) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
 		self.bot_firetimer = time + bound(0.1, 0.5-(skill+self.bot_aggresskill)*0.05, 0.5);
 	//traceline(shotorg,shotorg+shotdir*1000,FALSE,world);
-	//dprint(ftos(maxfiredeviation),"\n");
-	//dprint(" diff:", vtos(diffang), "\n");
 
 	return self.bot_canfire && (time < self.bot_firetimer);
 };
@@ -329,22 +317,15 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	local vector v;
 	/*
 	eprint(self);
-	dprint("bot_aim(", ftos(shotspeed));
-	dprint(", ", ftos(shotspeedupward));
-	dprint(", ", ftos(maxshottime));
-	dprint(", ", ftos(applygravity));
-	dprint(");\n");
 	*/
 	shotspeed *= g_weaponspeedfactor;
 	shotspeedupward *= g_weaponspeedfactor;
 	if (!shotspeed)
 	{
-		dprint("bot_aim: WARNING: weapon ", weapon_name(self.weapon), " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		dprint("bot_aim: WARNING: weapon ", weapon_name(self.weapon), " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);
@@ -365,7 +346,6 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	else
 	{
 		f = bot_aimdir(v - shotorg, r);
-		//dprint("AIM: ");dprint(vtos(self.bot_aimtargorigin));dprint(" + ");dprint(vtos(self.bot_aimtargvelocity));dprint(" * ");dprint(ftos(self.bot_aimlatency + vlen(self.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
 		traceline(shotorg, shotorg + shotdir * 10000, FALSE, self);
 		if (trace_ent.takedamage)
 		if (trace_fraction < 1)

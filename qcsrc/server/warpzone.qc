@@ -350,10 +350,6 @@ void WarpZone_Touch (void)
 		if not(self.target2) self.target2 = save2;
 		self = oldself;
 	}
-	else
-	{
-		dprint("WARPZONE FAIL AHAHAHAHAH))\n");
-	}
 }
 
 float WarpZone_Send(entity to, float sendflags)
@@ -695,7 +691,7 @@ void WarpZone_TraceToss_ThroughZone_real(entity e, entity forent, float toss_fra
 			break;
 		if(trace_ent == wz)
 		{
-			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			//print("I transformed into the same zone again, wtf, aborting the trace\n");
 			break;
 		}
 		wz = trace_ent;

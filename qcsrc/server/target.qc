@@ -190,21 +190,12 @@ entity (vector point, .string field, string value, vector axismod) target_locati
     {
         traceline(point, nearest_entity[i].origin, TRUE, world);
         if (trace_fraction == 1)
-        {
-            if (i != 0)
-            {
-                dprint("Nearest point (");
-                dprint(nearest_entity[0].netname);
-                dprint(") is not visible, using a visible one.\n");
-            }
             return nearest_entity[i];
-        }
     }
 
     if (num_nearest == 0)
         return world;
 
-    dprint("Not seeing any location point, using nearest as fallback.\n");
     return nearest_entity[0];
 }
 

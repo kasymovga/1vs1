@@ -49,8 +49,6 @@ float Physic_JumpVelocityFactor()
 
 void Physic_LandingHook()
 {
-	if(speedmeter)
-		dprint(strcat("landing velocity: ", vtos(physic_velocity), " (abs: ", ftos(vlen(physic_velocity)), ")\n"));
 	if(self.lastground < time - 0.3)
 		physic_velocity = physic_velocity * (1 - sv_friction_on_land);
 }
@@ -215,8 +213,6 @@ void Physic_FrameBeginHook()
 			shtest_score = self.shtest_accumulator / (SHTEST_DELTA + time - self.shtest_next);
 			if(shtest_score > SHTEST_THRESHOLD)
 				print("TIME PARADOX: shtest for ", self.netname, " said ", ftos(shtest_score), "\n");
-			else if(developer_shtest)
-				dprint("okay: shtest for ", self.netname, " said ", ftos(shtest_score), "\n");
 		}
 		self.shtest_next = time + SHTEST_DELTA;
 		self.shtest_accumulator = 0;

@@ -67,40 +67,28 @@ float(string map) map_has_right_size {
 	if(currentbots || cvar("bot_number") || player_count < cvar("minplayers"))
 	if(cvar("g_maplist_check_waypoints"))
 	{
-		dprint("checkwp "); dprint(map);
 		fh = fopen(strcat("maps/", map, ".waypoints"), FILE_READ);
 		if(fh < 0)
-		{
-			dprint(": no waypoints\n");
 			return FALSE;
-		}
-		dprint(": has waypoints\n");
+
 		fclose(fh);
 	}
 	// open map size restriction file
-	dprint("opensize "); dprint(map);
 	fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
 	if(fh >= 0)
 	{
 		float mapmin, mapmax;
-		dprint(": ok, ");
 		mapmin = stof(fgets(fh));
 		mapmax = stof(fgets(fh));
 		fclose(fh);
 		if(player_count < mapmin)
-		{
-			dprint("not enough\n");
 			return FALSE;
-		}
+
 		if(player_count > mapmax)
-		{
-			dprint("too many\n");
 			return FALSE;
-		}
-		dprint("right size\n");
+
 		return TRUE;
 	}
-	dprint(": not found\n");
 	return TRUE;
 }
 
@@ -144,9 +132,6 @@ float(float position, float pass) map_check {
 			return 1;
 		return 0;
 	}
-	else
-		dprint( "Couldn't select '", map_next, "'..\n" );
-
 	return 0;
 }
 
@@ -229,8 +214,6 @@ float(float exponent) map_list_method_shuffle = // more clever shuffling
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
-		dprint("SHUFFLE: insert pos = ", ftos(insertpos), "\n");
-
 		// insert the current map there
 		newlist = "";
 		for(j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above

@@ -69,12 +69,9 @@ float WarpZone_BoxTouchesBrush_Recurse()
 	tracebox('0 0 0', WarpZone_BoxTouchesBrush_mins, WarpZone_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZone_BoxTouchesBrush_ignore);
 #ifdef CSQC
 	if (trace_networkentity)
-	{
-		dprint("hit a network ent, cannot continue WarpZone_BoxTouchesBrush\n");
 		// we cannot continue, as a player blocks us...
 		// so, abort
 		return 0;
-	}
 #endif
 	if not(trace_ent)
 		return 0;
@@ -199,7 +196,7 @@ void WarpZone_TraceBox_ThroughZone_real(vector org, vector mi, vector ma, vector
 			break;
 		if(trace_ent == wz)
 		{
-			dprint("I transformed into the same zone again, wtf, aborting the trace\n");
+			//print("I transformed into the same zone again, wtf, aborting the trace\n");
 			break;
 		}
 		wz = trace_ent;
@@ -212,7 +209,7 @@ void WarpZone_TraceBox_ThroughZone_real(vector org, vector mi, vector ma, vector
 		++WarpZone_trace_warpcount;
 	}
 	if (i == 0) {
-		dprint("WarpZone_TraceBox_ThroughZone: escape from loop\n");
+		//print("WarpZone_TraceBox_ThroughZone: escape from loop\n");
 		trace_ent = world;
 	}
 	WarpZone_MakeAllOther();

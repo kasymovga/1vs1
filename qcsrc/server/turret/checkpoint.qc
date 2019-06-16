@@ -48,11 +48,7 @@ void turret_checkpoint_init()
     setorigin(self,trace_endpos + '0 0 8');
 
     if(self.target != "")
-    {
         self.enemy = find(world,targetname,self.target);
-        if(self.enemy == world)
-            dprint("A turret_checkpoint faild to find its target!\n");
-    }
 }
 
 void spawnfunc_turret_checkpoint()

@@ -298,8 +298,6 @@ void() player_setupanimsformodel {
 		if (anim_parseerror)
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
 	}
-	else
-		dprint("File ", animfilename, " not found, assuming legacy .zym model animation timings\n");
 	// reset animstate now
 	anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 }
@@ -966,10 +964,8 @@ void(string f) player_precache_sounds {
 	while((s = fgets(fh)))
 	{
 		if(tokenize_console(s) != 3)
-		{
-			dprint("Invalid sound info line: ", s, "\n");
 			continue;
-		}
+
 		precache_randomsound(argv(1), stof(argv(2)));
 	}
 	fclose(fh);

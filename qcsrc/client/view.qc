@@ -172,8 +172,6 @@ void CSQC_UpdateView(float w, float h)
 {
 	entity e;
 	read_cvars();
-
-	dprint_load();
 	WaypointSprite_Load();
 	spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);

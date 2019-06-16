@@ -233,7 +233,6 @@ void ClientKill_Now()
 
 	if(self.killindicator)
 	{
-		dprint("Cleaned up after a leaked kill indicator.\n");
 		remove(self.killindicator);
 		self.killindicator = world;
 	}
@@ -460,10 +459,7 @@ void ClientConnect (void)
 	self.classname = "player_joining";
 	self.team = -1; //clear engine assigned values
 	if(player_count<0)
-	{
-		dprint("BUG player count is lower than zero, this cannot happen!\n");
 		player_count = 0;
-	}
 
 	score_attach(self);
 	score_touch(self);

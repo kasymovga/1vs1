@@ -198,7 +198,7 @@ void turret_phaser_dinit()
     }
 
     if (!turret_tag_setup())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firecheckfunc = turret_phaser_firecheck;
     self.turret_firefunc  = turret_phaser_attack;

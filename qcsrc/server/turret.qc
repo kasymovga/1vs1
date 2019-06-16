@@ -59,7 +59,6 @@ float turret_tag_setup()
 {
     if(!self.tur_head)
     {
-        dprint("Call to turret_tag_setup with self.tur_head missing!\n");
         self.tur_shotorg = '0 0 0';
         return 0;
     }
@@ -76,16 +75,12 @@ float turret_tag_fire_update()
 {
     if(!self.tur_head)
     {
-        dprint("Call to turret_tag_fire_update with self.tur_head missing!\n");
         self.tur_shotorg = '0 0 0';
         return 0;
     }
 
     self.tur_shotorg = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
     v_forward = normalize(v_forward);
-
-    //dprint("update: tur_shotorg: ",vtos(self.tur_shotorg)," origin:", vtos(self.tur_head.origin), " angels: ", vtos(self.tur_head.angles),"\n");
-
     return 1;
 }
 
@@ -559,9 +554,6 @@ float Turret_SendEntity(entity to, float sf)
 void load_unit_settings(entity ent,string unitname,float is_reload)
 {
     string sbase;
-
-    // dprint("Reloading turret ",e_turret.netname,"\n");
-
     if (ent == world)
         return;
 
@@ -1170,7 +1162,6 @@ void turret_think()
     /*
     if(self.deadflag != DEAD_NO)
     {
-        dprint("WARNING: dead turret running the think function!\n");
         return;
     }
     */
@@ -1336,7 +1327,7 @@ void turret_fire()
 
 void turret_stdproc_fire()
 {
-    dprint("^1Bang, ^3your dead^7 ",self.enemy.netname,"! ^1(turret with no real firefunc)\n");
+    print("^1Bang, ^3your dead^7 ",self.enemy.netname,"! ^1(turret with no real firefunc)\n");
 }
 
 void turret_activate()
@@ -1354,8 +1345,6 @@ void turret_activate()
 */
 void turret_stdproc_use()
 {
-    dprint("Turret ",self.netname, " used by ",activator.classname,"\n");
-
     self.tur_head.team = self.team = activator.team;
 
 	turret_stdproc_setcolormod();
@@ -1398,10 +1387,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 {
 	entity e;
     if(csqc_shared)
-    {
-        dprint("turrets: csqc_shared requested but not implemented. expect strange things to happen.\n");
         csqc_shared = 0;
-    }
 
     // Are turrets allowed atm?
     if (cvar("g_turrets") == 0)
@@ -1664,10 +1650,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     {
         self.tur_defend = find(world, targetname, self.target);
         if (self.tur_defend == world)
-        {
             self.target = "";
-            dprint("Turret has invalid defendpoint!\n");
-        }
     }
 
 // Put pices in place
@@ -1875,10 +1858,7 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
             (p_score * e_turret.target_select_playerbias);
 
     if(e_turret.target_range < vlen(e_turret.tur_shotorg - turret_real_origin(e_target)))
-    {
-        dprint("Wtf?\n");
         score *= 0.001;
-    }
 
     return score;
 }

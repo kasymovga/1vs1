@@ -156,10 +156,10 @@ float _Movetype_UnstickEntity() // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
-	dprint("Some entity is stuck\n");
+	//print("Some entity is stuck\n");
 	return FALSE;
 :success
-	dprint("Unstuck some entity\n");
+	//print("Unstuck some entity\n");
 	_Movetype_LinkEdict(TRUE);
 	return TRUE;
 }

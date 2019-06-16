@@ -668,8 +668,6 @@ void navigation_routerating(entity e, float f, float rangebias)
 	{
 		vector pointa, pointb;
 
-	//	dprint("jetpack ai: evaluating path for ", e.classname,"\n");
-
 		// Point A
 		traceline(self.origin, self.origin + '0 0 65535', MOVE_NORMAL, self);
 		pointa = trace_endpos - '0 0 1';
@@ -683,8 +681,6 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 		if(trace_fraction==1)
 		{
-		//	dprint("jetpack ai: can bridge these two points\n");
-
 			// Lower the altitude of these points as much as possible
 			local float zdistance, xydistance, cost, t, fuel;
 			local vector down, npa, npb;
@@ -720,8 +716,6 @@ void navigation_routerating(entity e, float f, float rangebias)
 			t += xydistance / g_jetpack_maxspeed_side;
 			fuel = t * g_jetpack_fuel * 0.8;
 
-		//	dprint("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel),"\n");
-
 			// enough fuel ?
 			if(self.ammo_fuel>fuel || (self.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
@@ -738,7 +732,6 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 				if (navigation_bestrating < f)
 				{
-			//		dprint("jetpack path: added goal", e.classname, " (with rating ", ftos(f), ")\n");
 					navigation_bestrating = f;
 					navigation_bestgoal = e;
 					self.navigation_jetpack_goal = e;
@@ -764,8 +757,6 @@ void navigation_routerating(entity e, float f, float rangebias)
 			nwp = navigation_findnearestwaypoint(e, TRUE);
 			if(nwp)
 				e.nearestwaypoint = nwp;
-			else
-				dprint("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n");
 
 			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
 			if(e.classname=="item_flag_team")
@@ -915,13 +906,10 @@ void navigation_goalrating_start()
 void navigation_goalrating_end()
 {
 	navigation_routetogoal(navigation_bestgoal, self.origin);
-//	dprint("best goal ", self.goalcurrent.classname , "\n");
 
 	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
 	if not (self.navigation_hasgoals)
 	{
-		dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
-
 		entity head;
 
 		random_selection_init();

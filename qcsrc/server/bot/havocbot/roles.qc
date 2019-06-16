@@ -209,7 +209,6 @@ void havocbot_chooserole_dm()
 
 void havocbot_chooserole()
 {
-	dprint("choosing a role...\n");
 	navigation_clearroute();
 	self.bot_strategytime = 0;
 	GameHook_BotChooseRole();

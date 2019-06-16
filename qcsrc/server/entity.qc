@@ -158,10 +158,7 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 
         // rule 3: we must not end up in trigger_hurt
         if (trigger_tracebox_hits_hurt(start, e.mins, e.maxs, enddown))
-        {
-            dprint("trigger_hurt! ouch! and nothing else could find it!\n");
             continue;
-        }
 
         break;
     }
@@ -175,7 +172,6 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
         e.angles = vectoangles(start - end);
 		e.angles_x = 0;
 		e.angles_z = 0;
-        dprint("Needed ", ftos(i + 1), " attempts\n");
         return TRUE;
     }
     else

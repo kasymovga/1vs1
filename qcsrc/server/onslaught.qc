@@ -71,15 +71,10 @@ void(void) onslaught_updatelinks {
 	entity l, links;
 	float stop, t1, t2, t3, t4;
 	// first check if the game has ended
-	dprint("--- updatelinks ---\n");
 	links = findchain(classname, "onslaught_link");
 	// mark generators as being shielded and networked
 	l = findchain(classname, "onslaught_generator");
 	while (l) {
-		if (l.iscaptured)
-			dprint(etos(l), " (generator) belongs to team ", ftos(l.team), "\n");
-		else
-			dprint(etos(l), " (generator) is destroyed\n");
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
 		l = l.chain;
@@ -93,15 +88,9 @@ void(void) onslaught_updatelinks {
 		l.isgenneighbor_blue = FALSE;
 		l.iscpneighbor_red = FALSE;
 		l.iscpneighbor_blue = FALSE;
-		dprint(etos(l), " (point) belongs to team ", ftos(l.team), "\n");
 		l = l.chain;
 	}
 	// flow power outward from the generators through the network
-	l = links;
-	while (l) {
-		dprint(etos(l), " (link) connects ", etos(l.goalentity), " with ", etos(l.enemy), "\n");
-		l = l.chain;
-	}
 	stop = FALSE;
 	while (!stop) {
 		stop = TRUE;
@@ -117,13 +106,11 @@ void(void) onslaught_updatelinks {
 						{
 							stop = FALSE;
 							l.goalentity.islinked = TRUE;
-							dprint(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n");
 						}
 						else if (!l.enemy.islinked)
 						{
 							stop = FALSE;
 							l.enemy.islinked = TRUE;
-							dprint(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n");
 						}
 					}
 			l = l.chain;
@@ -134,10 +121,9 @@ void(void) onslaught_updatelinks {
 	l = links;
 	while (l) {
 		if (l.goalentity.islinked) {
-			if (l.goalentity.team != l.enemy.team) {
-				dprint(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n");
+			if (l.goalentity.team != l.enemy.team)
 				l.enemy.isshielded = FALSE;
-			}
+
 			if(l.goalentity.classname == "onslaught_generator") {
 				if(l.goalentity.team == COLOR_TEAM1)
 					l.enemy.isgenneighbor_red = TRUE;
@@ -151,10 +137,9 @@ void(void) onslaught_updatelinks {
 			}
 		}
 		if (l.enemy.islinked) {
-			if (l.goalentity.team != l.enemy.team) {
-				dprint(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n");
+			if (l.goalentity.team != l.enemy.team)
 				l.goalentity.isshielded = FALSE;
-			}
+
 			if(l.enemy.classname == "onslaught_generator") {
 				if(l.enemy.team == COLOR_TEAM1)
 					l.goalentity.isgenneighbor_red = TRUE;
@@ -173,12 +158,10 @@ void(void) onslaught_updatelinks {
 	l = findchain(classname, "onslaught_generator");
 	while (l) {
 		if (l.isshielded) {
-			dprint(etos(l), " (generator) is shielded\n");
 			l.enemy.alpha = 1;
 			l.takedamage = DAMAGE_NO;
 			l.bot_attack = FALSE;
 		} else {
-			dprint(etos(l), " (generator) is not shielded\n");
 			l.enemy.alpha = -1;
 			l.takedamage = DAMAGE_AIM;
 			l.bot_attack = TRUE;
@@ -189,14 +172,12 @@ void(void) onslaught_updatelinks {
 	l = findchain(classname, "onslaught_controlpoint");
 	while (l) {
 		if (l.isshielded) {
-			dprint(etos(l), " (point) is shielded\n");
 			l.enemy.alpha = 1;
 			if (l.goalentity) {
 				l.goalentity.takedamage = DAMAGE_NO;
 				l.goalentity.bot_attack = FALSE;
 			}
 		} else {
-			dprint(etos(l), " (point) is not shielded\n");
 			l.enemy.alpha = -1;
 			if (l.goalentity)
 			{
@@ -220,11 +201,6 @@ void(void) onslaught_updatelinks {
 		onslaught_generator_updatesprite(l);
 		l = l.chain;
 	}
-	// see if multiple teams remain (if not, it's game over)
-	if (t1 + t2 + t3 + t4 < 2)
-		dprint("--- game over ---\n");
-	else
-		dprint("--- done updating links ---\n");
 }
 
 float(entity cp, float t) onslaught_controlpoint_can_be_linked {
@@ -1058,7 +1034,6 @@ void(void) onslaught_link_delayed {
 	if (!self.enemy)
 		entity_abort("can not find target2\n");
 
-	dprint(etos(self.goalentity), " linked with ", etos(self.enemy), "\n");
 	self.SendFlags |= 3;
 	self.think = onslaught_link_checkupdate;
 	self.nextthink = time;
@@ -1170,7 +1145,6 @@ float(void) onslaught_WinningCondition {
 		if (t2) world_winners_set(team, COLOR_TEAM2);
 		if (t3) world_winners_set(team, COLOR_TEAM3);
 		if (t4) world_winners_set(team, COLOR_TEAM4);
-		dprint("Have a winner, ending game.\n");
 		return TRUE;
 	}
 	// Two or more teams remain

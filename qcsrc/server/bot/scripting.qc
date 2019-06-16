@@ -11,7 +11,6 @@ void bot_clearqueue(entity bot)
 		error("clearqueue but no queue allocated");
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = FALSE;
-	dprint("bot ", bot.netname, " queue cleared\n");
 }
 
 void bot_queuecommand(entity bot, string cmdstring)
