@@ -360,7 +360,7 @@ void waypoint_schedulerelinkall()
 float waypoint_load_links()
 {
 	local string filename, s;
-	local float file, tokens, c, found;
+	local float file, tokens, found;
 	local entity wp_from, wp_to;
 	local vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
@@ -432,8 +432,6 @@ float waypoint_load_links()
 			fclose(file);
 			return FALSE;
 		}
-
-		++c;
 		waypoint_addlink(wp_from, wp_to);
 	}
 
@@ -446,7 +444,7 @@ float waypoint_load_links()
 void waypoint_load_links_hardwired()
 {
 	local string filename, s;
-	local float file, tokens, c, found;
+	local float file, tokens, found;
 	local entity wp_from, wp_to;
 	local vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
@@ -520,8 +518,6 @@ void waypoint_load_links_hardwired()
 			print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
 			continue;
 		}
-
-		++c;
 		waypoint_addlink(wp_from, wp_to);
 	}
 
