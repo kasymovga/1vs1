@@ -18,13 +18,12 @@ string campaign_title; // filled upon loading
 // load the campaign file, but use the given offset and limit the number of
 // entries being read. Returns the number of entries successfully read (this
 // number is also stored in campaign_entries).
-// NOTE: there MUST be a corresponding CampaignFile_Unload() to unzone the
+// NOTE: there MUST be a corresponding campaign_file_unload() to unzone the
 // strings.
-string campaign_name; // set that to the campaign you want to load before calling CampaignFile_Load
-float CampaignFile_Load(float offset, float entries);
-void CampaignFile_Unload();
-
+string campaign_name; // set that to the campaign you want to load before calling campaign_file_load
+float campaign_file_load(float offset, float entries);
+void campaign_file_unload();
 // Sets up the campaign for the n-th array item (meaning: campaign_offset+nth
 // level) using localcmd()
-void CampaignSetupCvarsOnly(float n);
-void CampaignSetup(float n);
+void campaign_setup_cvars_only(float n);
+void campaign_setup(float n);

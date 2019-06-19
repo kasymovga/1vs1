@@ -282,9 +282,8 @@ string() map_list_next_get {
 };
 
 float() map_do_next_override {
-	if(g_campaign)
-	{
-		CampaignPostIntermission();
+	if (g_campaign) {
+		campaign_postintermission();
 		if (!campaign_map_transition) {
 			alreadychangedlevel = TRUE;
 			return TRUE;

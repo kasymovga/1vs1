@@ -402,10 +402,7 @@ void spawnfunc_worldspawn (void)
 	lightstyle(63, "a");
 
 	world_cvar_changes_init();
-	CACHE_CVAR(g_campaign);
-	if(g_campaign)
-		CampaignPreInit();
-
+	campaign_preinit();
 	map_mark_as_recent(mapname);
 
 	precache_model("null"); // we need this one before gametype_init. or maybe not
@@ -440,10 +437,7 @@ void spawnfunc_worldspawn (void)
 	//	dom_init();
 
 	cvar_set("nextmap", "");
-
-	if(g_campaign)
-		CampaignPostInit();
-
+	campaign_postinit();
 	Ban_Init();
 
 	MapInfo_Enumerate();
@@ -956,8 +950,8 @@ void() world_gameover {
 			// store some statistics?
 		}
 	}
-	if(g_campaign)
-		CampaignPreIntermission();
+	if (g_campaign)
+		campaign_preintermission();
 
 	localcmd("\nsv_hook_gameend;");
 }

@@ -30,7 +30,7 @@ skipnonsolid.qh
 vehicle.qh
 footsteps.qh
 campaign.qh
-../menu-server/campaign_common.qh
+../menu-server/campaign.qh
 ../menu-server/mapinfo.qh
 ../client-server/projectile.qh
 cvar.qh
@@ -235,9 +235,7 @@ hook.qc
 vote.qc
 
 campaign.qc
-../menu-server/campaign_file.qc
-../menu-server/campaign_setup.qc
-
+../menu-server/campaign.qc
 ../menu-server/gamecommand.qc
 cmd.qc
 kh_role.qc

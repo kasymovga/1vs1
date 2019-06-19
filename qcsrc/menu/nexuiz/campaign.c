@@ -115,8 +115,8 @@ void loadCvarsNexuizCampaignList(entity me)
 	campaign_name = strzone(cvar_string("g_campaign_name"));
 	me.cvarName = strzone(strcat("g_campaign", campaign_name, "_index"));
 	registercvar(me.cvarName, "", 0); // saved by server QC anyway
-	CampaignFile_Unload();
-	CampaignFile_Load(0, CAMPAIGN_MAX_ENTRIES);
+	campaign_file_unload();
+	campaign_file_load(0, CAMPAIGN_MAX_ENTRIES);
 	me.campaignIndex = bound(0, cvar(me.cvarName), campaign_entries);
 	cvar_set(me.cvarName, ftos(me.campaignIndex));
 	if(me.columnNameSize)
@@ -237,7 +237,7 @@ void CampaignList_LoadMap(entity btn, entity me)
 		return;
 
 	cvar_set("g_campaign_skill", cvar_string("menu_campaign_skill"));
-	CampaignSetup(me.selectedItem);
+	campaign_setup(me.selectedItem);
 }
 
 void setSelectedNexuizCampaignList(entity me, float i)

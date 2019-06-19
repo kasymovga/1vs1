@@ -2,7 +2,7 @@
 // - Loads campaign level data (up to n entries starting at offset)
 //   into the globals
 // - Returns the number of entries successfully read
-float CampaignFile_Load(float offset, float n)
+float campaign_file_load(float offset, float n)
 {
 	float fh;
 	float lineno;
@@ -72,7 +72,7 @@ float CampaignFile_Load(float offset, float n)
 	return campaign_entries;
 }
 
-void CampaignFile_Unload()
+void campaign_file_unload()
 {
 	float i;
 	if(campaign_title)
@@ -89,4 +89,18 @@ void CampaignFile_Unload()
 		campaign_entries = 0;
 		campaign_title = string_null;
 	}
+}
+
+void campaign_setup_cvars_only(float n) {
+	localcmd("set g_campaign 1\n");
+	localcmd("set _campaign_name \""); localcmd(campaign_name); localcmd("\"\n");
+	localcmd("set _campaign_index "); localcmd(ftos(campaign_offset + n)); localcmd("\n");
+	localcmd(strcat("maxplayers ", ftos(campaign_bots[n] + 1), "\n"));
+}
+
+void campaign_setup(float n)
+{
+	campaign_setup_cvars_only(n);
+	localcmd("disconnect\n");
+	MapInfo_LoadMap(campaign_mapname[n]);
 }
