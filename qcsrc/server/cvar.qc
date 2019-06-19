@@ -6,7 +6,7 @@ float cvar_profile_prefix_len;
 var float(string s) cvar_orig;
 var string(string s) cvar_string_orig;
 
-float cvar_ext(string cvarname) {
+float(string cvarname) cvar_ext {
 	if (substring(cvarname, 0, 2) != "g_")
 		return cvar_orig(cvarname);
 
@@ -30,7 +30,7 @@ float cvar_ext(string cvarname) {
 	return cvar_orig(cvarname);
 }
 
-string cvar_string_ext(string cvarname) {
+string(string cvarname) cvar_string_ext {
 	if (substring(cvarname, 0, 2) != "g_")
 		return cvar_string_orig(cvarname);
 
@@ -58,7 +58,7 @@ string cvar_string_ext(string cvarname) {
 }
 
 float cvar_initialized;
-void cvar_deinit() {
+void(void) cvar_deinit {
 	if not(cvar_initialized)
 		return;
 
@@ -73,7 +73,7 @@ void cvar_deinit() {
 	cvar_initialized = 0;
 }
 
-void cvar_init(string profile) {
+void(string profile) cvar_init {
 	if (cvar_initialized)
 		cvar_deinit();
 
@@ -114,3 +114,8 @@ void cvar_init(string profile) {
 	cvar_initialized = 1;
 }
 
+void(void) cvar_preinit {
+	cvar = cvar_builtin;
+	cvar_string = cvar_string_builtin;
+	cvar_set = cvar_set_builtin;
+}

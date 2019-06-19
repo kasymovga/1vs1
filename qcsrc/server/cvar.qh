@@ -2,5 +2,6 @@
 #define CACHE_CVAR_STR(x) unzone_ifneeded(x); x = cvar_string_zone_ifneeded(#x)
 #define CACHE_CVAR_CHECK_EMPTY(x,y) x = ((cvar_string(#x) != "") ? cvar(#x) : y)
 
-void cvar_init(string profile);
-void cvar_deinit();
+void(string profile) cvar_init;
+void(void) cvar_deinit;
+void(void) cvar_preinit;

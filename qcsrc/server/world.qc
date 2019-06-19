@@ -124,11 +124,8 @@ void() world_cvar_changes_init {
 void spawnfunc___init_dedicated_server(void)
 {
 	// handler for _init/_init map (only for dedicated server initialization)
-
+	cvar_preinit();
 	world_initialized = -1; // don't complain
-	cvar = cvar_builtin;
-	cvar_string = cvar_string_builtin;
-	cvar_set = cvar_set_builtin;
 	entity e;
 	map_goto_first_map();
 	e = spawn();
@@ -337,10 +334,7 @@ void spawnfunc_worldspawn (void)
 
 	float fd, l, i, j, n;
 	string s, col;
-
-	cvar = cvar_builtin;
-	cvar_string = cvar_string_builtin;
-	cvar_set = cvar_set_builtin;
+	cvar_preinit();
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = TRUE;
