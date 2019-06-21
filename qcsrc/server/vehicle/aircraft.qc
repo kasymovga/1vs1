@@ -16,7 +16,7 @@ float g_vehicle_aircraft_rocket_turnrate;
 float g_vehicle_aircraft_rocket_up;
 float g_vehicle_aircraft_pushfactor;
 
-float(entity to, float sf) vehicle_aircraft_physic_send;
+float(entity to, float sf) vehicle_aircraft_physics_send;
 void(float eject) vehicle_aircraft_exit;
 void(void) vehicle_aircraft_enter;
 
@@ -171,7 +171,7 @@ void(void) vehicle_aircraft_miniguns_do {
     }
 }
 
-float(void) vehicle_aircraft_physic_hook {
+float(void) vehicle_aircraft_physics_hook {
     entity player,aircraft;
     player = self;
     aircraft = self.vehicle;
@@ -198,17 +198,17 @@ float(void) vehicle_aircraft_physic_hook {
     else
         player.rockets_reload = 1 - ((aircraft.gun2.cnt - time) /aircraft.attack_finished_single);
 
-	if (physic_movement != '0 0 0' || physic_button_jump)
+	if (physics_movement != '0 0 0' || physics_button_jump)
 		vehicle_aircraft_engine_on();
 	else
 		vehicle_aircraft_engine_off();
 
 	//self.angles_x = -self.angles_x;
-	physic_aircraft();
+	physics_aircraft();
 	//self.angles_x = -self.angles_x;
 	vehicle_adjust_player_position(player, aircraft, AIRCRAFT_VIEW_START_OFFSET, AIRCRAFT_VIEW_BACK, AIRCRAFT_VIEW_UP);
 	player.angles = aircraft.angles;
-	physic_velocity = player.velocity = '0 0 0';
+	physics_velocity = player.velocity = '0 0 0';
     self = player;
 	//print("aircraft.angles_x=", ftos(aircraft.angles_x), "\n");
 	//print("aircraft.tur_head.angles_x=", ftos(aircraft.tur_head.angles_x), "\n");
@@ -232,7 +232,7 @@ void(void) vehicle_aircraft_think {
 }
 
 void(void) vehicle_aircraft_enter {
-	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_aircraft_physic_hook, HUD_SPIDERBOT, vehicle_aircraft_physic_send))
+	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_aircraft_physics_hook, HUD_SPIDERBOT, vehicle_aircraft_physics_send))
 		return;
 
 	self.owner.vehicle_health = (self.health / self.health_max);
@@ -423,7 +423,7 @@ void(void) vehicle_aircraft_init {
 	projectile_init(PROJECTILE_ROCKET);
 }
 
-float(entity to, float sf) vehicle_aircraft_physic_send {
+float(entity to, float sf) vehicle_aircraft_physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC_AIRCRAFT);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {

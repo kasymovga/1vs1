@@ -108,7 +108,7 @@ float zoomscript_caught;
 
 vector wcross_origin;
 void wcross_origin_set() {
-	if (CVAR(chase_active) || physic_plug_adjust_view) {
+	if (CVAR(chase_active) || physics_plug_adjust_view) {
 		traceline(view_origin, view_origin + MAX_SHOT_DISTANCE * view_forward, MOVE_WORLDONLY, world);
 		wcross_origin = project_3d_to_2d(trace_endpos);
 	} else {

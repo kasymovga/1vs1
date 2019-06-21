@@ -148,7 +148,7 @@ void WarpZone_FixView_real()
 		}
 		WarpZone_Inside();
 		if not(warpzone_view)
-			warpzone_view_commandframe = physic_lastcommandframe;
+			warpzone_view_commandframe = physics_lastcommandframe;
 	}
 	else {
 		WarpZone_Outside();

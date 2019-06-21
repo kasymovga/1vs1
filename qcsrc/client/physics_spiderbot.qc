@@ -3,57 +3,57 @@ vector spiderbot_start_angles;
 vector spider_start_origin;
 vector spider_start_velocity;
 
-float physic_spiderbot_hook() {
+float physics_spiderbot_hook() {
 	entity e = self;
 	self = spider;
-	float physic_movetype_save = physic_movetype;
-	physic_movetype = MOVETYPE_WALK;
+	float physics_movetype_save = physics_movetype;
+	physics_movetype = MOVETYPE_WALK;
 	tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(self.velocity) - '0 0 0.125', MOVE_NORMAL, self);
 	if (trace_startsolid || (trace_fraction <= 1 && trace_plane_normal_z > 0.7))
 		self.flags = FL_ONGROUND;
 	else
 		self.flags = 0;
 
-	physic_spiderbot();
+	physics_spiderbot();
 	self.velocity_z = self.velocity_z - sv_gravity * frametime;
-	physic_velocity = self.velocity;
-	PM_ClientMovement_Move();
-	self.velocity = physic_velocity;
-	physic_movetype = physic_movetype_save;
+	physics_velocity = self.velocity;
+	physics_move();
+	self.velocity = physics_velocity;
+	physics_movetype = physics_movetype_save;
 	self = e;
 	return 1;
 }
 
-void physic_spiderbot_pre() {
+void physics_spiderbot_pre() {
 	setorigin(spider, spider_start_origin);
 	spider.velocity = spider_start_velocity;
 	spider.angles = spiderbot_start_angles;
 }
 
-void physic_spiderbot_post() {
-	physic_flags = self.flags;
+void physics_spiderbot_post() {
+	physics_flags = self.flags;
 	setorigin(self, spider.origin + '0 0 48');
 }
 
 void Ent_PhysicSpiderbot_Remove() {
 	spider = world;
-	physic_plug_pre = physic_plug_nopostpre;
-	physic_plug = physic_plug_null;
-	physic_plug_post = physic_plug_nopostpre;
-	physic_plug_adjust_view = physic_plug_no_adjust_view;
+	physics_plug_pre = physics_plug_nopostpre;
+	physics_plug = physics_plug_null;
+	physics_plug_post = physics_plug_nopostpre;
+	physics_plug_adjust_view = physics_plug_no_adjust_view;
 }
 
 void Ent_PhysicSpiderbot(float isnew)
 {
 	float f = ReadShort();
 	if (isnew) {
-		physic_plug = physic_spiderbot_hook;
-		physic_plug_pre = physic_spiderbot_pre;
-		physic_plug_post = physic_spiderbot_post;
+		physics_plug = physics_spiderbot_hook;
+		physics_plug_pre = physics_spiderbot_pre;
+		physics_plug_post = physics_spiderbot_post;
 		vehicle_adjust_view_up = SPIDERBOT_VIEW_UP;
 		vehicle_adjust_view_back = SPIDERBOT_VIEW_BACK;
 		vehicle_adjust_view_start_offs = SPIDERBOT_VIEW_START_OFFSET;
-		physic_plug_adjust_view = vehicle_adjust_view;
+		physics_plug_adjust_view = vehicle_adjust_view;
 		self.entremove = Ent_PhysicSpiderbot_Remove;
 		spider = self;
 		spider.solid = SOLID_BBOX;

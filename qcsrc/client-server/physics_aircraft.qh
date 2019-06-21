@@ -10,5 +10,5 @@ float g_vehicle_aircraft_speed_stop;
 float g_vehicle_aircraft_turnspeed;
 float g_vehicle_aircraft_movement_inertia;
 
-float physic_spiderbot();
+float physics_spiderbot();
 

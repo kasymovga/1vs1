@@ -40,7 +40,7 @@ void weapon_rocketlauncher_explode (void)
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(team_is_different_teams(self.owner, other))
-				if(physic_is_flying(other))
+				if(physics_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav");
 
 	self.event_damage = stdproc_nothing;

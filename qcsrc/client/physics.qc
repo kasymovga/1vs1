@@ -3,13 +3,13 @@
 #define PMF_ONGROUND 8
 
 .float pmove_flags;
-float physic_button_crouch;
+float physics_button_crouch;
 float pmove_onground;
-float physic_maxspeedmod;
-float physic_jump_velocity_factor;
-float physic_can_use_jetpack;
-float physic_start_teleport_time;
-float physic_start_crouch;
+float physics_maxspeedmod;
+float physics_jump_velocity_factor;
+float physics_can_use_jetpack;
+float physics_start_teleport_time;
+float physics_start_crouch;
 
 vector vehicle_adjust_view() {
 	makevectors(view_angles);
@@ -22,57 +22,55 @@ vector vehicle_adjust_view() {
 	return v;
 }
 
-void PM_ClientMovement_UpdateStatus(float ground)
-{
-	if (physic_movetype == MOVETYPE_WALK)
-		physic_velocity_z -= physic_gravity_factor * sv_gravity * frametime;
+void(float ground) physics_update_status {
+	if (physics_movetype == MOVETYPE_WALK)
+		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
 
 	if(ground)
 	{
 		//tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-		tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(physic_velocity) - '0 0 0.125', MOVE_NORMAL, self);
+		tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(physics_velocity) - '0 0 0.125', MOVE_NORMAL, self);
 		float f;
 		if (trace_fraction < 1.0 && trace_plane_normal_z > 0.7)// && (f = self.velocity * trace_plane_normal) <= 0)
 		{
-			physic_flags |= FL_ONGROUND;
+			physics_flags |= FL_ONGROUND;
 
 			// this code actually "predicts" an impact; so let's clip velocity first
 			self.velocity -= f * trace_plane_normal;
 		}
 		else
 		{
-			physic_flags &~= FL_ONGROUND;
+			physics_flags &~= FL_ONGROUND;
 		}
 	}
 
 	// set watertype/waterlevel
 	vector origin1 = self.origin;
 	origin1_z += self.mins_z + 1;
-	physic_waterlevel = WATERLEVEL_NONE;
+	physics_waterlevel = WATERLEVEL_NONE;
 
 	float thepoint = pointcontents(origin1);
 
-	physic_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
+	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 
-	if(physic_watertype)
+	if(physics_watertype)
 	{
-		physic_waterlevel = WATERLEVEL_WETFEET;
+		physics_waterlevel = WATERLEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
 		thepoint = pointcontents(origin1);
 		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
 		{
-			physic_waterlevel = WATERLEVEL_SWIMMING;
+			physics_waterlevel = WATERLEVEL_SWIMMING;
 			origin1_z = self.origin_z + 22;
 			thepoint = pointcontents(origin1);
 			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
-				physic_waterlevel = WATERLEVEL_SUBMERGED;
+				physics_waterlevel = WATERLEVEL_SUBMERGED;
 		}
 	}
 
 }
 
-void PM_ClientMovement_Move()
-{
+void(void) physics_move {
 	float bump;
 	float t;
 	float f;
@@ -90,10 +88,10 @@ void PM_ClientMovement_Move()
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
-	primalvelocity = physic_velocity;
-	for(bump = 0, t = input_timelength; bump < 8 && physic_velocity != '0 0 0'; bump++)
+	primalvelocity = physics_velocity;
+	for(bump = 0, t = input_timelength; bump < 8 && physics_velocity != '0 0 0'; bump++)
 	{
-		neworigin = self.origin + t * physic_velocity;
+		neworigin = self.origin + t * physics_velocity;
 		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
 		trace1_endpos = trace_endpos;
 		trace1_fraction = trace_fraction;
@@ -144,105 +142,93 @@ void PM_ClientMovement_Move()
 		// this got commented out in a change that supposedly makes the code match QW better
 		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
 		//if(trace1_plane_normal_z > 0.7)
-		//	physic_flags |= FL_ONGROUND;
+		//	physics_flags |= FL_ONGROUND;
 
 		t -= t * trace1_fraction;
 
-		f = (physic_velocity * trace1_plane_normal);
-		physic_velocity = physic_velocity - f * trace1_plane_normal;
+		f = (physics_velocity * trace1_plane_normal);
+		physics_velocity = physics_velocity - f * trace1_plane_normal;
 	}
-	//physic_velocity = primalvelocity;
+	//physics_velocity = primalvelocity;
 }
 
-float Physic_MaxSpeedMod()
-{
-	return physic_maxspeedmod;
+float(void) physics_max_speed_mod {
+	return physics_maxspeedmod;
 }
 
-float Physic_JumpVelocityFactor()
-{
-	return physic_jump_velocity_factor;
+float(void) physics_jump_velocity_mod {
+	return physics_jump_velocity_factor;
 }
 
-void Physic_CheckGroundHook()
-{
+void(void) physics_check_ground_hook {
 }
 
-void Physic_CheckWaterJumpHook()
-{
+void(void) physics_check_water_jump_hook {
 }
 
-float Physic_CanUseJetPack()
-{
-	return (physic_can_use_jetpack && (input_buttons & 32));
+float(void) physics_use_jetpack {
+	return (physics_can_use_jetpack && (input_buttons & 32));
 }
 
-float Physic_JetPackVelocityFactor(float fvel)
-{
+float physics_jetpack_velocity_mod(float fvel) {
 	return 1;
 }
 
-void Physic_JetPackHook(float fuel_fact)
-{
+void(float fuel_fact) physics_jetpack_hook {
 }
 
-void Physic_OnJumpHook()
-{
+void(void) physics_on_jump_hook {
 }
 
-void Physic_OnCrouchHook()
-{
+void(void) physics_on_crouch_hook {
 }
 
-void Physic_LandingHook()
-{
+void(void) physics_landing_hook {
 }
 
-void Physic_FrameBeginHook()
-{
-	if not(physic_plug)
-		PM_ClientMovement_UpdateStatus(TRUE);
+void(void) physics_frame_begin_hook {
+	if not(physics_plug)
+		physics_update_status(TRUE);
 }
 
-void Physic_FrameEndHook()
-{
-	physic_teleport_time -= frametime;
-	PM_ClientMovement_Move();
+void(void) physics_frame_end_hook {
+	physics_teleport_time -= frametime;
+	physics_move();
 }
 
-entity physic;
+entity physics;
 
 float stairsmoothz;
 .vector pmove_origin;
 .vector pmove_velocity;
 float was_teleported;
-float physic_lastwj;
-float physic_last_dodging;
-float physic_last_FORWARD_KEY_time;
-float physic_last_BACKWARD_KEY_time;
-float physic_last_RIGHT_KEY_time;
-float physic_last_LEFT_KEY_time;
+float physics_lastwj;
+float physics_last_dodging;
+float physics_last_FORWARD_KEY_time;
+float physics_last_BACKWARD_KEY_time;
+float physics_last_RIGHT_KEY_time;
+float physics_last_LEFT_KEY_time;
 vector CSQCPhysic_SetViewOrg()
 {
 	vector v;
-	if(physic && servercommandframe && clientcommandframe && !spectatee_status)
+	if(physics && servercommandframe && clientcommandframe && !spectatee_status)
 	{
 		float frametime_save = frametime;
 		float i;
 		float n = clientcommandframe + 1;
 		entity oldself = self;
-		self = physic;
+		self = physics;
 		self.origin = self.pmove_origin;
 		pmove_org = self.origin;
-		self.velocity = physic_velocity = self.pmove_velocity;
-		physic_teleport_time = physic_start_teleport_time;
-		physic_deadflag = player_deadflag;
-		physic_cantjump = (physic_deadflag != DEAD_NO);
-		if (physic_plug_pre)
-			physic_plug_pre();
+		self.velocity = physics_velocity = self.pmove_velocity;
+		physics_teleport_time = physics_start_teleport_time;
+		physics_deadflag = player_deadflag;
+		physics_cantjump = (physics_deadflag != DEAD_NO);
+		if (physics_plug_pre)
+			physics_plug_pre();
 
-		physic_crouch = physic_start_crouch;
-		if (physic_start_crouch)
+		physics_crouch = physics_start_crouch;
+		if (physics_start_crouch)
 		{
 			setsize(self, self.crouch_mins, self.crouch_maxs);
 			self.view_ofs = self.crouch_view_ofs;
@@ -253,13 +239,13 @@ vector CSQCPhysic_SetViewOrg()
 			self.view_ofs = self.stand_view_ofs;
 		}
 		
-		self.lastwj = physic_lastwj;
+		self.lastwj = physics_lastwj;
 		if (g_dodging) {
-			self.last_dodging_time = physic_last_dodging;
-			self.last_FORWARD_KEY_time = physic_last_FORWARD_KEY_time;
-			self.last_BACKWARD_KEY_time = physic_last_BACKWARD_KEY_time;
-			self.last_RIGHT_KEY_time = physic_last_RIGHT_KEY_time;
-			self.last_LEFT_KEY_time = physic_last_LEFT_KEY_time;
+			self.last_dodging_time = physics_last_dodging;
+			self.last_FORWARD_KEY_time = physics_last_FORWARD_KEY_time;
+			self.last_BACKWARD_KEY_time = physics_last_BACKWARD_KEY_time;
+			self.last_RIGHT_KEY_time = physics_last_RIGHT_KEY_time;
+			self.last_LEFT_KEY_time = physics_last_LEFT_KEY_time;
 			self.lastkeys = getstatf(STAT_PRESSED_KEYS);
 		}
 		for (i = servercommandframe + 1; i <= n; i++)
@@ -275,23 +261,22 @@ vector CSQCPhysic_SetViewOrg()
 			}
 
 			frametime = input_timelength;
-			physic_button_crouch = input_buttons & 16;
-			physic_movement = input_movevalues;
-			physic_v_angle = input_angles;
-			physic_button_jump = input_buttons & 2;
+			physics_button_crouch = input_buttons & 16;
+			physics_movement = input_movevalues;
+			physics_v_angle = input_angles;
+			physics_button_jump = input_buttons & 2;
 			self.angles_y = input_angles_y;
-			
-			PlayerPhysics();
+			physics_player();
 		}
-		physic_lastcommandframe = i;
+		physics_lastcommandframe = i;
 
-		if (physic_plug_post)
-			physic_plug_post();
+		if (physics_plug_post)
+			physics_plug_post();
 		self = oldself;
 		frametime = frametime_save;
-		v = physic.origin + physic.view_ofs;
+		v = physics.origin + physics.view_ofs;
 		if (CVAR(cl_stairsmoothspeed)) {
-			if (!(physic_flags & FL_ONGROUND) || physic_start_teleport_time > 0 || was_teleported) {
+			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || was_teleported) {
 				stairsmoothz = v_z;
 				was_teleported = FALSE;
 			} else {
@@ -319,12 +304,12 @@ vector CSQCPhysic_SetViewOrg()
 }
 
 void CSQCPhysic_SetCamera() {
-	if (physic)
+	if (physics)
 	if (servercommandframe)
 	if (clientcommandframe) {
 		vector v;
-		if (physic_plug_adjust_view)
-			v = physic_plug_adjust_view();
+		if (physics_plug_adjust_view)
+			v = physics_plug_adjust_view();
 		else
 			v = view_origin;
 
@@ -342,7 +327,7 @@ void CSQCPhysic_SetCamera() {
 void Ent_Physic(float isnew)
 {
 	float f = ReadShort();
-	physic = self;
+	physics = self;
 	if (f & 1)
 	{
 		if (cvar("cl_movement_replay"))
@@ -426,63 +411,64 @@ void Ent_Physic(float isnew)
 		self.pmove_velocity_x = ReadCoord();
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
-		physic_is_player = f & 8;
-		physic_ladder = f & 32;	
-		physic_ladder_iswater = f & 64;	
-		physic_can_use_jetpack = f & 128;
-		physic_start_crouch = f & 256;
-		if (physic_ladder && physic_ladder_iswater)
-		{
-			physic_ladder_speed = ReadCoord();
-			physic_ladder_watertype = ReadCoord();
-			physic_ladder_top = ReadCoord();
+		physics_is_player = f & 8;
+		physics_ladder = f & 32;	
+		physics_ladder_iswater = f & 64;	
+		physics_can_use_jetpack = f & 128;
+		physics_start_crouch = f & 256;
+		if (physics_ladder && physics_ladder_iswater) {
+			physics_ladder_speed = ReadCoord();
+			physics_ladder_watertype = ReadCoord();
+			physics_ladder_top = ReadCoord();
 		}
-		if (f & 512)
-		{
-			physic_maxspeedmod = ReadCoord();
-			physic_jump_velocity_factor = ReadCoord();
+		if (f & 512) {
+			physics_maxspeedmod = ReadCoord();
+			physics_jump_velocity_factor = ReadCoord();
 		}
 		else
 		{
-			physic_maxspeedmod = 1;
-			physic_jump_velocity_factor = 1;
+			physics_maxspeedmod = 1;
+			physics_jump_velocity_factor = 1;
 		}
 		if (f & 1024)
-			physic_movetype = ReadByte();
+			physics_movetype = ReadByte();
 		else
-			physic_movetype = MOVETYPE_WALK;
-		if (physic_movetype == MOVETYPE_NOCLIP)
+			physics_movetype = MOVETYPE_WALK;
+
+		if (physics_movetype == MOVETYPE_NOCLIP)
 			self.dphitcontentsmask = 0;
 		else
 			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BODY;
+
 		if (f & 2048)
-			physic_gravity_factor = ReadCoord();
+			physics_gravity_factor = ReadCoord();
 		else
-			physic_gravity_factor = 1;
+			physics_gravity_factor = 1;
+
 		if (f & 4096) {
-			physic_start_teleport_time = ReadCoord();
+			physics_start_teleport_time = ReadCoord();
 			was_teleported = TRUE;
 		} else
-			physic_start_teleport_time = -1;
+			physics_start_teleport_time = -1;
 
 		if (f & 8192) {
-			physic_lastwj = ReadCoord();
+			physics_lastwj = ReadCoord();
 		} else
-			physic_lastwj = 0;
+			physics_lastwj = 0;
 		if (g_dodging) {
-			physic_last_dodging = 0;
-			physic_last_FORWARD_KEY_time = 0;
-			physic_last_BACKWARD_KEY_time = 0;
-			physic_last_LEFT_KEY_time = 0;
-			physic_last_RIGHT_KEY_time = 0;
+			physics_last_dodging = 0;
+			physics_last_FORWARD_KEY_time = 0;
+			physics_last_BACKWARD_KEY_time = 0;
+			physics_last_LEFT_KEY_time = 0;
+			physics_last_RIGHT_KEY_time = 0;
 		}
 		if (f & 16384) {
 			float dodging_flags = ReadByte();
-			if (dodging_flags & 1) physic_last_dodging = ReadCoord();
-			if (dodging_flags & 2) physic_last_FORWARD_KEY_time = ReadCoord();
-			if (dodging_flags & 4) physic_last_BACKWARD_KEY_time = ReadCoord();
-			if (dodging_flags & 8) physic_last_LEFT_KEY_time = ReadCoord();
-			if (dodging_flags & 16) physic_last_RIGHT_KEY_time = ReadCoord();
+			if (dodging_flags & 1) physics_last_dodging = ReadCoord();
+			if (dodging_flags & 2) physics_last_FORWARD_KEY_time = ReadCoord();
+			if (dodging_flags & 4) physics_last_BACKWARD_KEY_time = ReadCoord();
+			if (dodging_flags & 8) physics_last_LEFT_KEY_time = ReadCoord();
+			if (dodging_flags & 16) physics_last_RIGHT_KEY_time = ReadCoord();
 		}
 	}
 }

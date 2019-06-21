@@ -1,5 +1,5 @@
-float physic_is_flying(entity a);
-void physic_mark_as_teleported(entity pl);
+float(entity a) physics_is_flying;
+void(entity pl) physics_mark_as_teleported;
 float g_jetpack_fuel;
 float g_walljump_smokeparticle_num;
 float g_dodging_sound;

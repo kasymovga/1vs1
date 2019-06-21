@@ -70,7 +70,7 @@ void weapon_electro_explode (void)
 		if(other.classname == "player")
 			if(team_is_different_teams(self.owner, other))
 				if(other.deadflag == DEAD_NO)
-					if(physic_is_flying(other))
+					if(physics_is_flying(other))
 						announce(self.owner, "announcer/male/electrobitch.wav");
 
 	self.event_damage = stdproc_nothing;

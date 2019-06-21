@@ -41,7 +41,7 @@ float g_vehicle_spiderbot_rocket_turnrate;
 float g_vehicle_spiderbot_rocket_up;
 float g_vehicle_spiderbot_pushfactor;
 
-float(entity to, float sf) vehicle_spiderbot_physic_send;
+float(entity to, float sf) vehicle_spiderbot_physics_send;
 void(float eject) vehicle_spiderbot_exit;
 void() vehicle_spiderbot_enter;
 
@@ -183,7 +183,7 @@ void(void) vehicle_spiderbot_miniguns_do {
 	}
 }
 
-float(void) vehicle_spiderbot_physic_hook {
+float(void) vehicle_spiderbot_physics_hook {
 	vector ad;
 	entity player,spider;
 	float ftmp,ftmp2;
@@ -255,7 +255,7 @@ float(void) vehicle_spiderbot_physic_hook {
 	else
 		player.rockets_reload = 1 - ((spider.gun2.cnt - time) /spider.attack_finished_single);
 
-	physic_spiderbot();
+	physics_spiderbot();
 	spider.tur_head.angles_x *= -1;
 	spider.angles_x *= -1;
 	//player.angles_x *= -1;
@@ -277,7 +277,7 @@ float(void) vehicle_spiderbot_physic_hook {
 	vehicle_adjust_player_position(player, spider, SPIDERBOT_VIEW_START_OFFSET, SPIDERBOT_VIEW_BACK, SPIDERBOT_VIEW_UP);
 	player.angles = spider.angles;
 	//spider.vehicle.angles = spider.angles;
-	physic_velocity = '0 0 0';
+	physics_velocity = '0 0 0';
 	player.velocity = spider.velocity;
 	self = player;
 	//print("spider.angles_x=", ftos(spider.angles_x), "\n");
@@ -306,7 +306,7 @@ void(void) vehicle_spiderbot_think {
 }
 
 void(void) vehicle_spiderbot_enter {
-	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_spiderbot_physic_hook, HUD_SPIDERBOT, vehicle_spiderbot_physic_send))
+	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_spiderbot_physics_hook, HUD_SPIDERBOT, vehicle_spiderbot_physics_send))
 		return;
 
 	self.owner.vehicle_health = (self.health / self.health_max);
@@ -505,7 +505,7 @@ void(void) vehicle_spiderbot_init {
 	projectile_init(PROJECTILE_ROCKET);
 }
 
-float(entity to, float sf) vehicle_spiderbot_physic_send {
+float(entity to, float sf) vehicle_spiderbot_physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC_SPIDERBOT);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {

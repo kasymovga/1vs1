@@ -1,6 +1,6 @@
 float g_vehicle_car_pushfactor;
 
-float(entity to, float sf) vehicle_car_physic_send;
+float(entity to, float sf) vehicle_car_physics_send;
 void vehicle_car_exit(float eject);
 void vehicle_car_enter();
 
@@ -27,7 +27,7 @@ void(entity mycar) vehicle_car_dorifto_effect_smoke_b {
 	}
 }
 
-float vehicle_car_physic_hook() {
+float vehicle_car_physics_hook() {
 	entity player,mycar;
 	vector v1, v2;
 	player = self;
@@ -52,7 +52,7 @@ float vehicle_car_physic_hook() {
 	//anim_do();
 	vehicle_stdproc_regen();
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
-	physic_car();
+	physics_car();
 	makevectors(mycar.angles);
 	v1 = v_forward;
 	v1_z = 0;
@@ -86,21 +86,21 @@ float vehicle_car_physic_hook() {
 		if (rotate_factor < 50) {
 			a = -a;
 			if (mycar.flags & FL_ONGROUND)
-			if (physic_movement_x > 0) {
+			if (physics_movement_x > 0) {
 				rotate_factor_b = max(200, rotate_factor * 2);
 				vehicle_car_dorifto_effect_smoke_b(mycar);
 				vehicle_car_dorifto_effect_sound(mycar);
 			}
 		} else {
 			if (mycar.flags & FL_ONGROUND)
-			if (physic_movement_x < 0) {
+			if (physics_movement_x < 0) {
 				rotate_factor_f = 0;
 				vehicle_car_dorifto_effect_smoke_f(mycar);
 				vehicle_car_dorifto_effect_sound(mycar);
 			}
 		}
 	}
-	if (physic_movement_x) {
+	if (physics_movement_x) {
 		if (mycar.attack_finished_single < time) {
 			mycar.attack_finished_single = time + 3;
 			dlc_sound_follow(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
@@ -114,7 +114,7 @@ float vehicle_car_physic_hook() {
 	mycar.gun1.angles_y = -mycar.gun2.angles_y;
 	vehicle_adjust_player_position(player, mycar, CAR_VIEW_START_OFFSET, CAR_VIEW_BACK, CAR_VIEW_UP);
 	player.angles = mycar.angles;
-	physic_velocity = '0 0 0';
+	physics_velocity = '0 0 0';
 	player.velocity = mycar.velocity;
 	self = player;
 	if (mycar.player_physic)
@@ -136,7 +136,7 @@ void(void) vehicle_car_think {
 }
 
 void(void) vehicle_car_enter {
-	if not(vehicle_enter(self.angles, vehicle_car_physic_hook, 0, vehicle_car_physic_send))
+	if not(vehicle_enter(self.angles, vehicle_car_physics_hook, 0, vehicle_car_physics_send))
 		return;
 
 	if (self.noise != "")
@@ -290,7 +290,7 @@ void(void) vehicle_car_init {
 	dlc_precache_sound("car/screech.wav");
 }
 
-float(entity to, float sf) vehicle_car_physic_send {
+float(entity to, float sf) vehicle_car_physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC_CAR);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {

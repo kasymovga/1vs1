@@ -21,11 +21,10 @@ float developer_shtest;
 #endif
 
 float buttons_prev;
-float physic_send(entity to, float sf);
+float physics_send(entity to, float sf);
 
-void Physic_OnJumpHook()
-{
-	if (physic_crouch)
+void(void) physics_on_jump_hook {
+	if (physics_crouch)
 		anim_set(self, self.anim_duckjump, FALSE, TRUE, TRUE);
 	else
 		anim_set(self, self.anim_jump, FALSE, TRUE, TRUE);
@@ -34,27 +33,23 @@ void Physic_OnJumpHook()
 		sound(self, CHAN_PLAYER, self.playersound_jump, VOL_BASE, ATTN_NORM);
 
 	self.restart_jump = -1; // restart jump anim next time
-	self.oldvelocity_z = physic_velocity_z;
+	self.oldvelocity_z = physics_velocity_z;
 }
 
-void Physic_CheckWaterJumpHook()
-{
+void(void) physics_check_water_jump_hook {
 	self.teleport_time = time + 2;	// safety net
 }
 
-float Physic_JumpVelocityFactor()
-{
+float(void) physics_jump_velocity_mod {
 	return GameHookChain_JumpVelocityMod();
 }
 
-void Physic_LandingHook()
-{
+void(void) physics_landing_hook {
 	if(self.lastground < time - 0.3)
-		physic_velocity = physic_velocity * (1 - sv_friction_on_land);
+		physics_velocity = physics_velocity * (1 - sv_friction_on_land);
 }
 
-float physic_is_flying(entity a)
-{
+float(entity a) physics_is_flying {
 	if(a.flags & FL_ONGROUND)
 		return 0;
 	if(a.waterlevel)
@@ -63,9 +58,8 @@ float physic_is_flying(entity a)
 }
 
 .float wasFlying;
-void Physic_CheckGroundHook()
-{
-	if (physic_is_player)
+void(void) physics_check_ground_hook {
+	if (physics_is_player)
 	if (self.wasFlying) {
 		if (self.waterlevel) {
 			self.nextstep = time + 0.5;
@@ -89,16 +83,14 @@ void Physic_CheckGroundHook()
 			}
 		}
 	}
-	self.wasFlying = physic_is_flying(self);
+	self.wasFlying = physics_is_flying(self);
 }
 
-void Physic_OnCrouchHook()
-{
+void(void) physics_on_crouch_hook {
 	anim_set(self, self.anim_duck, FALSE, TRUE, TRUE);
 }
 
-float Physic_CanUseJetPack()
-{
+float(void) physics_use_jetpack {
 	float trying_use_jetpack = (self.items & IT_JETPACK) && self.BUTTON_HOOK;
 	// we get here if we ran out of ammo
 	if (trying_use_jetpack && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -109,8 +101,7 @@ float Physic_CanUseJetPack()
 	return FALSE;
 }
 
-void Physic_JetPackHook(float fuel_fact)
-{
+void(float fuel_fact) physics_jetpack_hook {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
 	self.items |= IT_USING_JETPACK;
@@ -119,17 +110,16 @@ void Physic_JetPackHook(float fuel_fact)
 	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
 }
 
-float Physic_JetPackVelocityFactor(float fvel)
-{
+float(float fvel) physics_jetpack_velocity_mod {
 	if(g_jetpack_fuel && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		return min(1, self.ammo_fuel / (g_jetpack_fuel * frametime * fvel));
+
 	return 1;
 }
 
 .string lastclassname;
 .float last_maxspeedmod;
-float Physic_MaxSpeedMod()
-{
+float(void) physics_max_speed_mod {
 	float maxspd_mod = 1, spd;
 	string temps;
 
@@ -174,32 +164,30 @@ float Physic_MaxSpeedMod()
 	return maxspd_mod;
 }
 
-.float last_physic_ladder;
+.float last_physics_ladder;
 .float last_can_use_jetpack;
 .float buttons_old;
 .vector v_angle_old;
 .vector movement_old;
-void Physic_FrameEndHook()
-{
-	self.last_physic_ladder = physic_ladder;
+void(void) physics_frame_end_hook {
+	self.last_physics_ladder = physics_ladder;
 	self.last_can_use_jetpack = (self.items & IT_JETPACK) && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || (self.items & IT_UNLIMITED_WEAPON_AMMO));
 }
 
 .float() PlayerPhysplug;
 
-void Physic_FrameBeginHook()
-{
+void(void) physics_frame_begin_hook {
 	float buttons;
 	float f;
 	GameHook_PhysicFrameBegin();
 	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
 
-	if(buttons != self.buttons_old || physic_movement != self.movement_old || self.v_angle != self.v_angle_old || self.deadflag != DEAD_NO)
+	if(buttons != self.buttons_old || physics_movement != self.movement_old || self.v_angle != self.v_angle_old || self.deadflag != DEAD_NO)
 		self.parm_idlesince = time;
 
 	buttons_prev = self.buttons_old;
 	self.buttons_old = buttons;
-	self.movement_old = physic_movement;
+	self.movement_old = physics_movement;
 	self.v_angle_old = self.v_angle;
 #if 0
 	float shtest_score;
@@ -223,7 +211,7 @@ void Physic_FrameBeginHook()
 	if (clienttype(self) == CLIENTTYPE_BOT)
 		bot_think();
 
-    if(physic_plug)
+    if(physics_plug)
 		return;
 
 	if (self.punchangle != '0 0 0')
@@ -256,15 +244,15 @@ void Physic_FrameBeginHook()
 				if(self.movetype == MOVETYPE_NONE)
 					self.movetype = MOVETYPE_WALK;
 
-				physic_mark_as_teleported(self);
+				physics_mark_as_teleported(self);
 				self.disableclientprediction = 0;
 			}
 		} else {
-			physic_velocity = '0 0 0';
+			physics_velocity = '0 0 0';
 			self.movetype = MOVETYPE_NONE;
 			self.disableclientprediction = 2;
 		}
-		physic_movetype = self.movetype;
+		physics_movetype = self.movetype;
 	}
 
 
@@ -276,7 +264,7 @@ void Physic_FrameBeginHook()
 	}
 	self.items &~= IT_USING_JETPACK;
 
-	physic_button_crouch = self.BUTTON_CROUCH;
+	physics_button_crouch = self.BUTTON_CROUCH;
 }
 
 void SV_PlayerPhysics()
@@ -284,63 +272,63 @@ void SV_PlayerPhysics()
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
 
-	physic_flags = self.flags;
-	physic_velocity = self.velocity;
-	physic_cantjump = PLAYER_DEAD(self);
-	physic_deadflag = self.deadflag;
-	physic_crouch = self.crouch;
-	physic_button_jump = self.BUTTON_JUMP;
-	physic_v_angle = self.v_angle;
-	physic_is_player = (self.classname == "player");
-	physic_ladder = (time < self.ladder_time);
-	physic_ladder_iswater = (self.ladder_entity.classname == "func_water");
-	physic_gravity_factor = self.gravity;
-	physic_teleport_time = self.teleport_time - time;
-	physic_plug = self.PlayerPhysplug;
-	if (physic_ladder_iswater)
+	physics_flags = self.flags;
+	physics_velocity = self.velocity;
+	physics_cantjump = PLAYER_DEAD(self);
+	physics_deadflag = self.deadflag;
+	physics_crouch = self.crouch;
+	physics_button_jump = self.BUTTON_JUMP;
+	physics_v_angle = self.v_angle;
+	physics_is_player = (self.classname == "player");
+	physics_ladder = (time < self.ladder_time);
+	physics_ladder_iswater = (self.ladder_entity.classname == "func_water");
+	physics_gravity_factor = self.gravity;
+	physics_teleport_time = self.teleport_time - time;
+	physics_plug = self.PlayerPhysplug;
+	if (physics_ladder_iswater)
 	{
-		physic_ladder_speed = self.ladder_entity.speed;
-		physic_ladder_watertype = self.ladder_entity.watertype;
-		physic_ladder_top = self.ladder_entity.origin_z + self.ladder_entity.maxs_z;
+		physics_ladder_speed = self.ladder_entity.speed;
+		physics_ladder_watertype = self.ladder_entity.watertype;
+		physics_ladder_top = self.ladder_entity.origin_z + self.ladder_entity.maxs_z;
 	}
-	physic_movement = self.movement;
-	physic_movetype = self.movetype;
-	physic_waterlevel = self.waterlevel;
-	physic_watertype = self.watertype;
-	PlayerPhysics();
-	if(physic_flags & FL_ONGROUND)
+	physics_movement = self.movement;
+	physics_movetype = self.movetype;
+	physics_waterlevel = self.waterlevel;
+	physics_watertype = self.watertype;
+	physics_player();
+	if(physics_flags & FL_ONGROUND)
 		self.lastground = time;
-	self.crouch = physic_crouch;
-	self.flags = physic_flags;
-	self.velocity = physic_velocity;
-	self.waterlevel = physic_waterlevel;
-	self.watertype = physic_watertype;
+	self.crouch = physics_crouch;
+	self.flags = physics_flags;
+	self.velocity = physics_velocity;
+	self.waterlevel = physics_waterlevel;
+	self.watertype = physics_watertype;
 }
 
-var void() Physic_RealClientConnect_NextLink;
-void Physic_RealClientConnect()
+var void() physics_RealClientConnect_NextLink;
+void physics_RealClientConnect()
 {
 	if not(self.player_physic)
 	{
 		self.player_physic = spawn();
 		self.player_physic.viewmodelforclient = self;
 		self.player_physic.owner = self;
-		net_link_entity(self.player_physic, FALSE, 0, physic_send);
+		net_link_entity(self.player_physic, FALSE, 0, physics_send);
 	}
 	self.player_physic.SendFlags = 3;
-	Physic_RealClientConnect_NextLink();
+	physics_RealClientConnect_NextLink();
 }
 
-var void() Physic_RealClientDisconnect_NextLink;
-void Physic_RealClientDisconnect()
+var void() physics_RealClientDisconnect_NextLink;
+void physics_RealClientDisconnect()
 {
 	if (self.player_physic)
 		remove(self.player_physic);
 
-	Physic_RealClientDisconnect_NextLink();
+	physics_RealClientDisconnect_NextLink();
 }
 
-float(string s) physic_cvar {
+float(string s) physics_cvar {
 	string sv_s = s;
 	if (substring(s, 0, 3) == "sv_") {
 		s = substring(s, 3, -1);
@@ -354,10 +342,9 @@ float(string s) physic_cvar {
 	return cvar(sv_s);
 }
 
-float physic_initiated;
-void physic_init()
-{
-#define PHYSIC_CACHE_CVAR(x) x = physic_cvar(#x)
+float physics_initiated;
+void(void) physics_init {
+#define PHYSIC_CACHE_CVAR(x) x = physics_cvar(#x)
 	//Common
 	PHYSIC_CACHE_CVAR(sv_stepheight);
 	PHYSIC_CACHE_CVAR(sv_gravity);
@@ -409,22 +396,21 @@ void physic_init()
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
-	if (physic_initiated) {
+	if (physics_initiated) {
 		entity e;
 		FOR_EACH_REALCLIENT(e) {
 			e.player_physic.SendFlags |= 3;
 		}
 	} else {
-		Physic_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-		GameHookChain_RealClientConnect = Physic_RealClientConnect;
-		Physic_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
-		GameHookChain_RealClientDisconnect = Physic_RealClientDisconnect;
-		physic_initiated = TRUE;
+		physics_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
+		GameHookChain_RealClientConnect = physics_RealClientConnect;
+		physics_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
+		GameHookChain_RealClientDisconnect = physics_RealClientDisconnect;
+		physics_initiated = TRUE;
 	}
 }
 
-float physic_send(entity to, float sf)
-{
+float(entity to, float sf) physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
 	entity oldself = self;
 	self = self.owner;
@@ -432,7 +418,7 @@ float physic_send(entity to, float sf)
 	if not(sf & 3)
 	{
 		if (self.classname == "player") sf |= 8;
-		if (self.last_physic_ladder) sf |= 32;
+		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
 		if (self.last_can_use_jetpack) sf |= 128;
 		if (self.crouch) sf |= 256;
@@ -545,7 +531,7 @@ float physic_send(entity to, float sf)
 		if (sf & 512)
 		{
 			WriteCoord(MSG_ENTITY, self.last_maxspeedmod);
-			WriteCoord(MSG_ENTITY, Physic_JumpVelocityFactor());
+			WriteCoord(MSG_ENTITY, physics_jump_velocity_mod());
 		}
 		if (sf & 1024)
 			WriteByte(MSG_ENTITY, self.movetype);
@@ -569,7 +555,7 @@ float physic_send(entity to, float sf)
 	return TRUE;
 }
 
-void physic_mark_as_teleported(entity pl) {
+void(entity pl) physics_mark_as_teleported {
 	if (pl.player_physic)
 		pl.player_physic.SendFlags |= 4096;
 

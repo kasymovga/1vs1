@@ -186,7 +186,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
-							if(physic_is_flying(targ))
+							if(physics_is_flying(targ))
 								yoda = max(1, yoda);
 
 							if(targ.items & IT_INVISIBILITY)
