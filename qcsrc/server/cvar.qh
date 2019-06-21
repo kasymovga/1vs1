@@ -5,3 +5,6 @@
 void(string profile) cvar_init;
 void(void) cvar_deinit;
 void(void) cvar_preinit;
+var float(string var) cvar;
+var string(string var) cvar_string;
+var void(string var, string val) cvar_set;

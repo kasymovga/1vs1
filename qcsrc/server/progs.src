@@ -1,12 +1,9 @@
 progs.dat // output filename
-
-../common/util-pre.qh
+../common/qcc.qh
 sys.qh
-pre-builtins.qh
 builtins.qh
 extensions.qh
 ../common/extensions.qh
-post-builtins.qh
 constants.qh
 ../common/constants.qh
 ../client-server/constants.qh

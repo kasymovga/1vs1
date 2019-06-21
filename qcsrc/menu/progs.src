@@ -1,7 +1,7 @@
 menu.dat
 
 config.qh
-../common/util-pre.qh
+../common/qcc.qh
 msys.qh
 mbuiltin.qh
 ../common/util.qh

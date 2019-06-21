@@ -556,7 +556,7 @@ string(string name) cvar_description = #518;
 //idea: VorteX
 //DarkPlaces implementation: VorteX, LordHavoc
 //builtin definitions:
-string(string s) cvar_string = #448;
+string(string s) cvar_string_builtin = #448;
 //description:
 //returns the value of a cvar, as a tempstring.
 
