@@ -202,22 +202,3 @@ string GametypeNameFromType(float g)
 	else if (g == GAME_COOP) return "coop";
 	return "dm";
 }
-
-/*
- *  Operator overloads
- */
-string operator+(string s, float f) {
-    return s + ftos(f);
-}
-
-string operator+(float f, string s) {
-    return ftos(f) + s;
-}
-
-string operator+(string s, vector v) {
-    return s + vtos(v);
-}
-
-string operator+(vector v, string s) {
-    return vtos(v) + s;
-}

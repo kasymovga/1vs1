@@ -1559,7 +1559,7 @@ void spawnfunc_trigger_roundstate(void) {
     } else if(self.cnt == 4 /*ROUNDSTATE_WARMUP*/) {
     	self.reset2 = trigger_roundstate_warmup;
     } else {
-    	print("trigger_roundstate: roundstate " + self.cnt + " is not supported\n");
+    	print("trigger_roundstate: roundstate ", self.cnt, " is not supported\n");
     }
 }
 
