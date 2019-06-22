@@ -229,8 +229,8 @@ void GameCommand(string command)
 	}
 	if (cmd == "records")
 	{
-		unzone_ifneeded(records_reply);
-		records_reply = zone_ifneeded(world_getrecords());
+		str_unzone_ifneeded(records_reply);
+		records_reply = str_zone_ifneeded(world_getrecords());
 		print(records_reply);
 		return;
 	}

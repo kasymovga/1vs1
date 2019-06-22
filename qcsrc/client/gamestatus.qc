@@ -20,7 +20,7 @@ void GameStatus_Draw() {
 }
 
 void GameStatus_Remove() {
-	unzone_ifneeded(self.message);
+	str_unzone_ifneeded(self.message);
 }
 
 void Ent_GameStatus(float isnew) {
@@ -31,7 +31,7 @@ void Ent_GameStatus(float isnew) {
 	float f = ReadByte();
 	self.entremove = GameStatus_Remove;
 	if (f & 1)
-		self.message = zone_ifneeded(ReadString());
+		self.message = str_zone_ifneeded(ReadString());
 
 	if (f & 2)
 		self.alpha = ReadByte() / 100;

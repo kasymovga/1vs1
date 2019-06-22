@@ -16,7 +16,7 @@ void GameStatus_Think() {
 	self.alpha = self.alpha - frametime;
 	self.nextthink = time;
 	if (self.alpha <= 0) {
-		unzone_ifneeded(self.message);
+		str_unzone_ifneeded(self.message);
 		remove(self);
 		game_status = world;
 	} else
@@ -29,8 +29,8 @@ void GameStatus_Set(string status, float _delay) {
 		net_link_entity(game_status, FALSE, 0, GameStatus_SendEntity);
 	}
 	if (game_status.message != status) {
-		unzone_ifneeded(game_status.message);
-		game_status.message = zone_ifneeded(status);
+		str_unzone_ifneeded(game_status.message);
+		game_status.message = str_zone_ifneeded(status);
 		game_status.SendFlags |= 1;
 	}
 	if (game_status.alpha != 1) {

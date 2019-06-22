@@ -76,7 +76,7 @@ void SelectableWeapon_Init() {
 	string head, tail;
 	float i;
 	entity e;
-	for (head = car(s), tail = cdr(s); head != ""; head = car(tail), tail = cdr(tail)) {
+	for (head = str_car(s), tail = str_cdr(s); head != ""; head = str_car(tail), tail = str_cdr(tail)) {
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
 			e = weapon_info(i);
 			if (head == e.netname) {

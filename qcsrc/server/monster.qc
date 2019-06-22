@@ -594,8 +594,8 @@ void(void) monster_monsters_init {
 	entity monster;
 	entity oldself;
 	while (tail != "") {
-		head = car(tail);
-		tail = cdr(tail);
+		head = str_car(tail);
+		tail = str_cdr(tail);
 		n = strstrofs(head, ":", 0);
 		if (n > 0) {
 			monster_name = substring(head, 0, n);

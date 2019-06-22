@@ -35,7 +35,7 @@ float matchacl(string acl, string str)
 	r = 0;
 	while(acl)
 	{
-		t = car(acl); acl = cdr(acl);
+		t = str_car(acl); acl = str_cdr(acl);
 		d = 1;
 		if(substring(t, 0, 1) == "-")
 		{
@@ -297,8 +297,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 		if(inWorldspawn == 1)
 			if(startsWith(s, "}"))
 				inWorldspawn = 0;
-		k = unquote(car(s));
-		v = unquote(cdr(s));
+		k = unquote(str_car(s));
+		v = unquote(str_cdr(s));
 		if(inWorldspawn)
 		{
 			if(k == "classname" && v == "worldspawn")
@@ -432,64 +432,64 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType)
 	}
 	else
 	{
-		cvar_set("fraglimit", car(s));
-		s = cdr(s);
+		cvar_set("fraglimit", str_car(s));
+		s = str_cdr(s);
 	}
 
-	cvar_set("timelimit", car(s));
-	s = cdr(s);
+	cvar_set("timelimit", str_car(s));
+	s = str_cdr(s);
 
 	if(pWantedType == MAPINFO_TYPE_TEAM_DEATHMATCH)
 	{
-		sa = car(s); if(sa == "") sa = "2";
+		sa = str_car(s); if(sa == "") sa = "2";
 		cvar_set("g_tdm_teams", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 	}
 
 	if(pWantedType == MAPINFO_TYPE_KEYHUNT)
 	{
-		sa = car(s); if(sa == "") sa = "3";
+		sa = str_car(s); if(sa == "") sa = "3";
 		cvar_set("g_keyhunt_teams", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 	}
 
 	if(pWantedType == MAPINFO_TYPE_CTF)
 	{
-		sa = car(s); if(sa == "") sa = "10";
+		sa = str_car(s); if(sa == "") sa = "10";
 		if(cvar("g_ctf_win_mode") < 2)
 			cvar_set("fraglimit", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 	}
 
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
-		sa = car(s); if(sa == "") sa = cvar_string("timelimit");
+		sa = str_car(s); if(sa == "") sa = cvar_string("timelimit");
 		cvar_set("g_race_qualifying_timelimit", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 
-		sa = car(s); if(sa == "") sa = "10";
+		sa = str_car(s); if(sa == "") sa = "10";
 		if(cvar("g_race_teams") < 2)
 			cvar_set("fraglimit", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 
-		sa = car(s); if(sa == "") sa = "20";
+		sa = str_car(s); if(sa == "") sa = "20";
 		if(cvar("g_race_teams") >= 2)
 			cvar_set("fraglimit", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 	}
 
 	if(pWantedType == MAPINFO_TYPE_CTS)
 	{
-		sa = car(s); if(sa == "") sa = cvar_string("fraglimit");
+		sa = str_car(s); if(sa == "") sa = cvar_string("fraglimit");
 		if(cvar("g_race_teams"))
 			cvar_set("fraglimit", sa);
-		s = cdr(s);
+		s = str_cdr(s);
 	}
 
-	sa = car(s); if(sa == "") sa = "0";
+	sa = str_car(s); if(sa == "") sa = "0";
 	cvar_set("leadlimit", sa);
-	s = cdr(s);
+	s = str_cdr(s);
 }
 
 float MapInfo_Type_FromString(string t)
@@ -572,7 +572,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, string s, float recurs
 {
 	string t;
 	float fh;
-	t = car(s); s = cdr(s);
+	t = str_car(s); s = str_cdr(s);
 	if(t == "#include")
 	{
 		if(recurse > 0)
@@ -649,7 +649,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 
 	MapInfo_Map_bspname = pFilename;
 
-	if not(fexists(strcat("maps/", pFilename, ".bsp"))) {
+	if not(file_exists(strcat("maps/", pFilename, ".bsp"))) {
 		return 0;
 	}
 	// default all generic fields so they have "good" values in case something fails
@@ -736,7 +736,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		if(substring(s, 0, 1) == "_")  // q3map style
 			continue;
 
-		t = car(s); s = cdr(s);
+		t = str_car(s); s = str_cdr(s);
 		if(t == "title")
 			MapInfo_Map_title = s;
 		else if(t == "description")
@@ -745,7 +745,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 			MapInfo_Map_author = s;
 		else if(t == "has")
 		{
-			t = car(s); s = cdr(s);
+			t = str_car(s); s = str_cdr(s);
 			if     (t == "weapons") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 		}
 		else if(t == "hidden")
@@ -762,7 +762,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		}
 		else if(t == "type")
 		{
-			t = car(s); s = cdr(s);
+			t = str_car(s); s = str_cdr(s);
 			f = MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t));
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f);
@@ -789,16 +789,16 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		else if(t == "size")
 		{
 			float a, b, c, d, e;
-			t = car(s); s = cdr(s); a = stof(t);
-			t = car(s); s = cdr(s); b = stof(t);
-			t = car(s); s = cdr(s); c = stof(t);
-			t = car(s); s = cdr(s); d = stof(t);
-			t = car(s); s = cdr(s); e = stof(t);
+			t = str_car(s); s = str_cdr(s); a = stof(t);
+			t = str_car(s); s = str_cdr(s); b = stof(t);
+			t = str_car(s); s = str_cdr(s); c = stof(t);
+			t = str_car(s); s = str_cdr(s); d = stof(t);
+			t = str_car(s); s = str_cdr(s); e = stof(t);
 			if(s == "")
 				print("Map ", pFilename, " contains an incorrect size line (not enough params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z\n");
 			else
 			{
-				t = car(s); s = cdr(s); f = stof(t);
+				t = str_car(s); s = str_cdr(s); f = stof(t);
 				if(s != "")
 					print("Map ", pFilename, " contains an incorrect size line (too many params), syntax: size mins_x mins_y mins_z maxs_x maxs_y maxs_z\n");
 				else
@@ -819,7 +819,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		}
 		else if(t == "settemp_for_type")
 		{
-			t = car(s); s = cdr(s);
+			t = str_car(s); s = str_cdr(s);
 			if((t == "all" && pGametypeToSet) || (MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t)) & pGametypeToSet))
 			{
 				_MapInfo_Parse_Settemp(pFilename, acl, s, 1);
@@ -827,10 +827,10 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		}
 		else if(t == "clientsettemp_for_type")
 		{
-			t = car(s); s = cdr(s);
+			t = str_car(s); s = str_cdr(s);
 			if((t == "all" && pGametypeToSet) || (MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t)) & pGametypeToSet))
 			{
-				t = car(s); s = cdr(s);
+				t = str_car(s); s = str_cdr(s);
 				if not(cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful client setting, ignored\n");
 				else if not (cvar_value_issafe(s))

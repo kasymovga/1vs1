@@ -1145,7 +1145,7 @@ void(entity e, string modelname) player_setup_lod {
 	if(sv_loddistance1)
 	{
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-		if(fexists(s))
+		if(file_exists(s))
 		{
 			setmodel(e, s); // players have high precision
 			self.modelindex_lod1 = self.modelindex;
@@ -1154,7 +1154,7 @@ void(entity e, string modelname) player_setup_lod {
 			self.modelindex_lod1 = -1;
 
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-		if(fexists(s))
+		if(file_exists(s))
 		{
 			setmodel(e, s); // players have high precision
 			self.modelindex_lod2 = self.modelindex;
@@ -1201,7 +1201,7 @@ string(string plyermodel) player_check_model {
 			return PLAYER_FALLBACKMODEL;
 		if(plyermodel != strtolower(plyermodel))
 			return PLAYER_FALLBACKMODEL;
-		if(!fexists(plyermodel))
+		if(!file_exists(plyermodel))
 			return PLAYER_FALLBACKMODEL;
 	}
 	return plyermodel;
@@ -2272,43 +2272,43 @@ void() player_init {
 	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
 		string s;
 		if ((s = cvar_string("sv_defaultplayermodel")) != "") {
-			unzone_ifneeded(g_player_forcemodel);
-			g_player_forcemodel = zone_ifneeded(s);
+			str_unzone_ifneeded(g_player_forcemodel);
+			g_player_forcemodel = str_zone_ifneeded(s);
 		}
 		if ((s = cvar_string("sv_defaultplayermodel_blue")) != "") {
-			unzone_ifneeded(g_player_forcemodel_blue);
-			g_player_forcemodel_blue = zone_ifneeded(s);
+			str_unzone_ifneeded(g_player_forcemodel_blue);
+			g_player_forcemodel_blue = str_zone_ifneeded(s);
 		}
 		if ((s = cvar_string("sv_defaultplayermodel_red")) != "") {
-			unzone_ifneeded(g_player_forcemodel_red);
-			g_player_forcemodel_red = zone_ifneeded(s);
+			str_unzone_ifneeded(g_player_forcemodel_red);
+			g_player_forcemodel_red = str_zone_ifneeded(s);
 		}
 		if ((s = cvar_string("sv_defaultplayermodel_yellow")) != "") {
-			unzone_ifneeded(g_player_forcemodel_yellow);
-			g_player_forcemodel_yellow = zone_ifneeded(s);
+			str_unzone_ifneeded(g_player_forcemodel_yellow);
+			g_player_forcemodel_yellow = str_zone_ifneeded(s);
 		}
 		if ((s = cvar_string("sv_defaultplayermodel_pink")) != "") {
-			unzone_ifneeded(g_player_forcemodel_pink);
-			g_player_forcemodel_pink = zone_ifneeded(s);
+			str_unzone_ifneeded(g_player_forcemodel_pink);
+			g_player_forcemodel_pink = str_zone_ifneeded(s);
 		}
 		g_player_forcecolor = ((cvar_string("sv_defaultplayercolors") == "") ? -2 : cvar("sv_defaultplayercolors"));
 		g_player_forceskin = ((cvar_string("sv_defaultplayerskin") == "") ? -1 : cvar("sv_defaultplayerskin"));
 	}
 	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
-		unzone_ifneeded(g_player_forcemodel_blue);
-		g_player_forcemodel_blue = zone_ifneeded(g_player_forcemodel);
+		str_unzone_ifneeded(g_player_forcemodel_blue);
+		g_player_forcemodel_blue = str_zone_ifneeded(g_player_forcemodel);
 	}
 	if (g_player_forcemodel_red == "" || g_player_forcemodel_red == "0") {
-		unzone_ifneeded(g_player_forcemodel_red);
-		g_player_forcemodel_red = zone_ifneeded(g_player_forcemodel);
+		str_unzone_ifneeded(g_player_forcemodel_red);
+		g_player_forcemodel_red = str_zone_ifneeded(g_player_forcemodel);
 	}
 	if (g_player_forcemodel_yellow == "" || g_player_forcemodel_yellow == "0") {
-		unzone_ifneeded(g_player_forcemodel_yellow);
-		g_player_forcemodel_yellow = zone_ifneeded(g_player_forcemodel);
+		str_unzone_ifneeded(g_player_forcemodel_yellow);
+		g_player_forcemodel_yellow = str_zone_ifneeded(g_player_forcemodel);
 	}
 	if (g_player_forcemodel_pink == "" || g_player_forcemodel_pink == "0") {
-		unzone_ifneeded(g_player_forcemodel_pink);
-		g_player_forcemodel_pink = zone_ifneeded(g_player_forcemodel);
+		str_unzone_ifneeded(g_player_forcemodel_pink);
+		g_player_forcemodel_pink = str_zone_ifneeded(g_player_forcemodel);
 	}
 	if (g_player_forceskin_blue < 0)
 		g_player_forceskin_blue = g_player_forceskin;
@@ -2329,7 +2329,7 @@ void() player_init {
 		player_precache_model(g_player_forcemodel_yellow);
 		player_precache_model(g_player_forcemodel_pink);
 	}
-#define EXTRA_ANNOUNCER(x) do { unzone_ifneeded(sv_announcer_extra_##x); sv_announcer_extra_##x = cvar_string_zone_ifneeded("sv_announcer_extra_"#x); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
+#define EXTRA_ANNOUNCER(x) do { str_unzone_ifneeded(sv_announcer_extra_##x); sv_announcer_extra_##x = cvar_string_zone_ifneeded("sv_announcer_extra_"#x); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
 	//Extra sounds
 	EXTRA_ANNOUNCER(meleefrag);
 	EXTRA_ANNOUNCER(pushfrag);

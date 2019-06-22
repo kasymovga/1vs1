@@ -6,7 +6,9 @@ msys.qh
 mbuiltin.qh
 ../common/util.qh
 ../common/db.qh
-../common/miscfunctions.qh
+../common/str.qh
+../common/file.qh
+../common/cvar.qh
 ../client-menu/ui.qh
 ../client-menu/util.qh
 ../menu-server/util.qh
@@ -45,7 +47,9 @@ menu.qc
 ../client-menu/nexuiz/util.qc
 nexuiz/util.qc
 
-../common/miscfunctions.qc
+../common/str.qc
+../common/file.qc
+../common/cvar.qc
 ../menu-server/miscfunctions.qc
 ../menu-server/campaign.qc
 ../menu-server/mapinfo.qc

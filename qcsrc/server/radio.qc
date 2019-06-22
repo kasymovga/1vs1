@@ -130,11 +130,11 @@ void Radio_Preload(string url) {
 }
 
 void Radio_Play(string url, string fname, float loop) {
-	unzone_ifneeded(radio_url);
-	unzone_ifneeded(radio_filename);
+	str_unzone_ifneeded(radio_url);
+	str_unzone_ifneeded(radio_filename);
 
-	radio_url = strzone(url);
-	radio_filename = strzone(fname);
+	radio_url = str_zone_ifneeded(url);
+	radio_filename = str_zone_ifneeded(fname);
 	radio_looping = loop;
 	radio_starttime = time;
 	radio_playing = TRUE;
@@ -145,8 +145,8 @@ void Radio_Play(string url, string fname, float loop) {
 }
 
 void Radio_Stop(void) {
-	unzone_ifneeded(radio_url);
-	unzone_ifneeded(radio_filename);
+	str_unzone_ifneeded(radio_url);
+	str_unzone_ifneeded(radio_filename);
 
 	if(!radio_playing)
 		return;

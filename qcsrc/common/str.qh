@@ -1,0 +1,4 @@
+string(string s) str_car;
+string(string s) str_cdr;
+void(string s) str_unzone_ifneeded;
+string(string s) str_zone_ifneeded;

@@ -101,8 +101,8 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	entity head;
 	if (g_chat_forbidden_words != "") {
 		string s1, s2 = g_chat_forbidden_words;
-		for (; s2 != ""; s2 = cdr(s2)) {
-			s1 = car(s2);
+		for (; s2 != ""; s2 = str_cdr(s2)) {
+			s1 = str_car(s2);
 			if (s1 == "") continue;
 			if (strstrofs(strtolower(strdecolorize(msgin)), s1, 0) >= 0) {
 				if (g_chat_forbidden_words_set_retard)

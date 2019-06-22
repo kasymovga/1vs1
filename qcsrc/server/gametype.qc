@@ -44,7 +44,7 @@ void() gametype_init {
 	if (MapInfo_Map_description == "<DESCRIPTION>")
 		map_description = "";
 	else
-		map_description = zone_ifneeded(MapInfo_Map_description);
+		map_description = str_zone_ifneeded(MapInfo_Map_description);
 
 	float force_gametype_restore = 0;
 	string force_gametype = cvar_string("force_gametype");

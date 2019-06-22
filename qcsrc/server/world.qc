@@ -530,7 +530,7 @@ void spawnfunc_worldspawn (void)
 	maplist_reply = strzone(strcat(maplist_reply, "\n"));
 	MapInfo_ClearTemps();
 
-	records_reply = zone_ifneeded(world_getrecords());
+	records_reply = str_zone_ifneeded(world_getrecords());
 
 	client_init_spawn();
 	random_seed_spawn();

@@ -48,8 +48,8 @@ float GameTypeVote_Think() {
 		float gametype_vote_mask = 
 		float mapinfo_type;
 		while (tail != "") {
-			head = car(tail);
-			tail = cdr(tail);
+			head = str_car(tail);
+			tail = str_cdr(tail);
 			t = MapInfo_Type_FromString(head);
 			if (t <= 0)
 				continue;
@@ -132,8 +132,8 @@ void GameTypeVote_Init() {
 	tail = sv_gametypevote;
 	gametypes_mapinfo_mask = 0;
 	while (tail != "") {
-		head = car(tail);
-		tail = cdr(tail);
+		head = str_car(tail);
+		tail = str_cdr(tail);
 		if (head != "") {
 			gametypes_mapinfo_mask = gametypes_mapinfo_mask | MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(head));
 		}

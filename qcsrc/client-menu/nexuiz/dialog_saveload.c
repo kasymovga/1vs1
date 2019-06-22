@@ -21,16 +21,16 @@ ENDCLASS(NexuizSaveLoadDialog)
 string slotdescr[10];
 
 float SaveSlotNotEmpty(float n) {
-	return fexists(strcat("slot", ftos(n), ".sav"));
+	return file_exists(strcat("slot", ftos(n), ".sav"));
 }
 void configureDialogNexuizSaveLoadDialog(entity me) {
 	float i;
 	for (i = 0; i < 10; i++) {
-		unzone_ifneeded(slotdescr[i]);
+		str_unzone_ifneeded(slotdescr[i]);
 		if (SaveSlotNotEmpty(i + 1)) {
 			slotdescr[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
 		} else
-			slotdescr[i] = zone_ifneeded(strcat("Empty slot", ftos(i + 1)));
+			slotdescr[i] = str_zone_ifneeded(strcat("Empty slot", ftos(i + 1)));
 	}
 	configureDialogNexuizDialog(me); //Parent method
 }

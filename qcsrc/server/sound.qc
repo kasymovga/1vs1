@@ -159,8 +159,8 @@ string randomsound(string s, float n) {
 }
 
 string randomsound_bystr(string s) {
-	string s1 = car(s);
-	string s2 = cdr(s);
+	string s1 = str_car(s);
+	string s2 = str_cdr(s);
 	return randomsound(s1, stof(s2));
 }
 

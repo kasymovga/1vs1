@@ -8,8 +8,8 @@ void dlc_precache_sounds() {
 	string s, l;
 	l = dlc_sounds;
 	while (l != "") {
-		s = car(l);
-		l = cdr(l);
+		s = str_car(l);
+		l = str_cdr(l);
 		if (s != "") {
 			precache_sound(s);
 		}
@@ -34,10 +34,10 @@ void DLCWait() {
 	localcmd("\n");
 	l = dlc_list;
 	while (l != "") {
-		s = car(l);
-		l = cdr(l);
+		s = str_car(l);
+		l = str_cdr(l);
 		if (s != "")
-		if (fexists(strcat("rexdlc_", s, "_client.cfg")))
+		if (file_exists(strcat("rexdlc_", s, "_client.cfg")))
 			localcmd(strcat("exec rexdlc_", s, "_client.cfg", "\n"));
 	}
 	dlc_precache_sounds();
@@ -46,10 +46,10 @@ void DLCWait() {
 	}
 	l = dlc_list;
 	while (l != "") {
-		s = car(l);
-		l = cdr(l);
+		s = str_car(l);
+		l = str_cdr(l);
 		if (s != "")
-		if (fexists(strcat("rexdlc_", s, "_client_post.cfg")))
+		if (file_exists(strcat("rexdlc_", s, "_client_post.cfg")))
 			localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
 	}
 	remove(self);
@@ -77,8 +77,8 @@ void Ent_DLCList(float new) {
 		not_all_loaded = FALSE;
 		string l = list;
 		while (l != "") {
-			s = car(l);
-			l = cdr(l);
+			s = str_car(l);
+			l = str_cdr(l);
 			if (s != "")
 			if not(dlc_load(s)) {
 				not_all_loaded = TRUE;
@@ -96,13 +96,13 @@ void Ent_DLCList(float new) {
 			localcmd("\n");
 			l = list;
 			while (l != "") {
-				s = car(l);
-				l = cdr(l);
+				s = str_car(l);
+				l = str_cdr(l);
 				if (s != "") {
-					if (fexists(strcat("rexdlc_", s, "_client.cfg")))
+					if (file_exists(strcat("rexdlc_", s, "_client.cfg")))
 						localcmd(strcat("exec rexdlc_", s, "_client.cfg\n"));
 
-					if (fexists(strcat("rexdlc_", s, "_client_post.cfg")))
+					if (file_exists(strcat("rexdlc_", s, "_client_post.cfg")))
 						localcmd(strcat("exec rexdlc_", s, "_client_post.cfg\n"));
 				}
 			}
@@ -114,8 +114,8 @@ void Ent_DLCList(float new) {
 		localConnection = FALSE;
 
 	if (f & 8) {
-		unzone_ifneeded(dlc_sounds);
-		dlc_sounds = strzone(ReadString());
+		str_unzone_ifneeded(dlc_sounds);
+		dlc_sounds = str_zone_ifneeded(ReadString());
 		if (not_all_loaded)
 			dlc_sounds_ready = FALSE;
 		else

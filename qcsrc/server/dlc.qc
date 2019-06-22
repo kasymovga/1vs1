@@ -70,7 +70,7 @@ void dlc_load_settemps_from(string s) {
 
 void dlc_exec_cfg(string dlc_name) {
 	dlc_load_settemps_from(strcat("rexdlc_", dlc_name, "_settemps.cfg"));
-	if (fexists(strcat("rexdlc_", dlc_name, "_server.cfg")))
+	if (file_exists(strcat("rexdlc_", dlc_name, "_server.cfg")))
 		localcmd(strcat("exec rexdlc_", dlc_name, "_server.cfg", "\n"));
 }
 
@@ -99,8 +99,8 @@ void dlc_load_exts() {
 		dlc_load_settemps_from(s);
 		tail = cvar_string("sv_curl_serverpackages");
 		while (tail != "") {
-			head = car(tail);
-			tail = cdr(tail);
+			head = str_car(tail);
+			tail = str_cdr(tail);
 			if (head == s) {
 				add_to_server_packages = FALSE;
 				break;
@@ -137,8 +137,8 @@ void DLCWait() {
 		localcmd("\n");
 		dlc_load_exts();
 		while (list != "") {
-			s = car(list);
-			list = cdr(list);
+			s = str_car(list);
+			list = str_cdr(list);
 			if (s != "") {
 				dlc_exec_cfg(s);
 			}
@@ -196,8 +196,8 @@ void dlc_require(string dlc_name) {
 	float add_to_server_packages;
 	add_to_server_packages = TRUE;
 	while (list != "") {
-		s = car(list);
-		list = cdr(list);
+		s = str_car(list);
+		list = str_cdr(list);
 		if (s == strcat("rexdlc_", dlc_name, ".serverpackage")) {
 			add_to_server_packages = FALSE;
 			break;
@@ -209,8 +209,8 @@ void dlc_require(string dlc_name) {
 
 	list = dlc_list_send;
 	while (list != "") {
-		s = car(list);
-		list = cdr(list);
+		s = str_car(list);
+		list = str_cdr(list);
 		if (s == dlc_name)
 			return;
 	}
@@ -221,7 +221,7 @@ void dlc_require(string dlc_name) {
 		dlc.SendFlags |= 2;
 
 	s = strzone(strcat(dlc_list_send, " ", dlc_name));
-	unzone_ifneeded(dlc_list_send);
+	str_unzone_ifneeded(dlc_list_send);
 	dlc_list_send = s;
 	dlc_require_server_only(dlc_name);
 }
@@ -270,8 +270,8 @@ void dlc_init() {
 	string server_packages = cvar_string("sv_curl_serverpackages");
 	string server_packages_without_dlc = "";
 	while (server_packages != "") {
-		s = car(server_packages);
-		server_packages = cdr(server_packages);
+		s = str_car(server_packages);
+		server_packages = str_cdr(server_packages);
 		if (s != "")
 		if (strstrofs(s, "rexdlc_", 0) != 0 && strstrofs(s, "rexext_", 0) != 0)
 			server_packages_without_dlc = strcat(server_packages_without_dlc, " ", s);
@@ -280,15 +280,15 @@ void dlc_init() {
 	dlc_load_exts();
 	string dlc_extra = cvar_string("sv_dlc_extra");
 	while (dlc_extra != "") {
-		s = car(dlc_extra);
-		dlc_extra = cdr(dlc_extra);
+		s = str_car(dlc_extra);
+		dlc_extra = str_cdr(dlc_extra);
 		if (s != "")
 			dlc_require(s);
 	}
 	string dlc_server_only = strcat(cvar_string("sv_dlc_maps"), " ", cvar_string("sv_dlc_server_only"));
 	while (dlc_server_only != "") {
-		s = car(dlc_server_only);
-		dlc_server_only = cdr(dlc_server_only);
+		s = str_car(dlc_server_only);
+		dlc_server_only = str_cdr(dlc_server_only);
 		if (s != "")
 			dlc_require_server_only(s);
 	}
@@ -315,8 +315,8 @@ void DLCWaitReload() {
 		string s;
 		dlc_load_exts();
 		while (list != "") {
-			s = car(list);
-			list = cdr(list);
+			s = str_car(list);
+			list = str_cdr(list);
 			if (s != "")
 				dlc_exec_cfg(s);
 		}
@@ -337,15 +337,15 @@ void dlc_reload() {
 	string list = dlc_list;
 	string s;
 	while (list != "") {
-		s = car(list);
-		list = cdr(list);
+		s = str_car(list);
+		list = str_cdr(list);
 		if (s != "")
 			dlc_load(s);
 	}
 	list = dlc_list_send;
 	while (list != "") {
-		s = car(list);
-		list = cdr(list);
+		s = str_car(list);
+		list = str_cdr(list);
 		if (s != "")
 			dlc_require(s);
 	}
@@ -360,13 +360,13 @@ void dlc_precache_sound(string s) {
 	string l, head;
 	l = dlc_sounds;
 	while (l != "") {
-		head = car(l);
-		l = cdr(l);
+		head = str_car(l);
+		l = str_cdr(l);
 		if (head == s)
 			return;
 	}
 	string dlc_sounds_new = strcat(dlc_sounds, " ", s);
-	unzone_ifneeded(dlc_sounds);
+	str_unzone_ifneeded(dlc_sounds);
 	dlc_sounds = strzone(dlc_sounds_new);
 	dlc.SendFlags |= 8;
 }

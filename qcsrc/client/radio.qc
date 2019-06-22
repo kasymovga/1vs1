@@ -25,7 +25,7 @@ void Radio_Think(void) {
 		return;
 	}
 
-	if(!fexists(self.netname)) {
+	if(!file_exists(self.netname)) {
 		self.nextthink = time + 1;
 		return;
 	}

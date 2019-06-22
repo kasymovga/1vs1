@@ -422,8 +422,8 @@ float() client_preconnect_abort {
 		self.retard = 1;
 
 	while (tail != "") {
-		head = car(tail);
-		tail = cdr(tail);
+		head = str_car(tail);
+		tail = str_cdr(tail);
 		if (head == "")
 			continue;
 
@@ -782,13 +782,13 @@ void() client_cvars_parse {
 	else if (s == "cl_gunalpha")
 		self.cvar_cl_gunalpha = stof(val);
 	else if (s == "cl_weaponpriority") {
-		unzone_ifneeded(self.cvar_cl_weaponpriority);
-		self.cvar_cl_weaponpriority = strzone(weapon_fix_order_force_complete(val));
+		str_unzone_ifneeded(self.cvar_cl_weaponpriority);
+		self.cvar_cl_weaponpriority = str_zone_ifneeded(weapon_fix_order_force_complete(val));
 		self.switchweapon = weapon_best(self);
 	} else if (substring(s, 0, 17) == "cl_weaponpriority") {
 		float ind = stof(substring(s, 17, 1));
-		unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
-		(self.cvar_cl_weaponpriorities[ind]) = strzone(weapon_fix_order_allow_incomplete(val));
+		str_unzone_ifneeded(self.cvar_cl_weaponpriorities[ind]);
+		(self.cvar_cl_weaponpriorities[ind]) = str_zone_ifneeded(weapon_fix_order_allow_incomplete(val));
 	} else if (s == "cl_autotaunt")
 		self.cvar_cl_autotaunt = stof(val);
 	else if (s == "cl_voice_directional")
@@ -809,11 +809,11 @@ void() client_cvars_parse {
 }
 
 void() client_cvars_free {
-	unzone_ifneeded(self.cvar_cl_weaponpriority);
+	str_unzone_ifneeded(self.cvar_cl_weaponpriority);
 	self.cvar_cl_weaponpriority = "";
 	float i;
 	for (i = 0; i < 10; i++) {
-		unzone_ifneeded(self.cvar_cl_weaponpriorities[i]);
+		str_unzone_ifneeded(self.cvar_cl_weaponpriorities[i]);
 		(self.cvar_cl_weaponpriorities[i]) = "";
 	}
 }

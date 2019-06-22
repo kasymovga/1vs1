@@ -80,8 +80,8 @@ void() menu_dlc_reload =
 	string s;
 	string l = cvar_string("menu_dlc_list");
 	while (l != "") {
-		s = car(l);
-		l = cdr(l);
+		s = str_car(l);
+		l = str_cdr(l);
 		if (s != "") {
 			dlc_load(s);
 			print("Loading dlc: ", s, "\n");

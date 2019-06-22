@@ -111,9 +111,11 @@ walkietalkie.qh
 hat.qh
 score_damage.qh
 cmd.qh
-../common/miscfunctions.qh
 ../client-server/miscfunctions.qh
 ../client-server/stdproc.qh
+../common/str.qh
+../common/cvar.qh
+../common/file.qh
 bot/bot.qh
 gamehooks.qh
 ../client-server/nadgets.qh
@@ -144,7 +146,11 @@ mapvote.qh
 stdproc.qh
 centerprint.qc
 sound.qc
-../common/miscfunctions.qc
+../client-server/approach.qc
+../common/backtrace.qc
+../common/file.qc
+../common/cvar.qc
+../common/str.qc
 ../client-server/miscfunctions.qc
 ../client-server/stdproc.qc
 ../menu-server/miscfunctions.qc

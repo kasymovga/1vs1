@@ -735,12 +735,9 @@ void VoteCount() {
 }
 
 void Vote_Init() {
-	unzone_ifneeded(sv_announcer_extra_vote_now);
-	unzone_ifneeded(sv_announcer_extra_vote_failed);
-	unzone_ifneeded(sv_announcer_extra_vote_passed);
-	sv_announcer_extra_vote_now = cvar_string_zone_ifneeded("sv_announcer_extra_vote_now");
-	sv_announcer_extra_vote_failed = cvar_string_zone_ifneeded("sv_announcer_extra_vote_failed");
-	sv_announcer_extra_vote_passed = cvar_string_zone_ifneeded("sv_announcer_extra_vote_passed");
+	CACHE_CVAR_STR(sv_announcer_extra_vote_now);
+	CACHE_CVAR_STR(sv_announcer_extra_vote_failed);
+	CACHE_CVAR_STR(sv_announcer_extra_vote_passed);
 	precache_sound(sv_announcer_extra_vote_now);
 	precache_sound(sv_announcer_extra_vote_failed);
 	precache_sound(sv_announcer_extra_vote_passed);

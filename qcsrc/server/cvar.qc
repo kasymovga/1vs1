@@ -64,12 +64,12 @@ void(void) cvar_deinit {
 
 	float i;
 	for (i = 1; i < CVAR_INHERITANCE_DEEP; i++) {
-		unzone_ifneeded(cvar_profile_prefix[i]);
-		unzone_ifneeded(cvar_game_prefix[i]);
+		str_unzone_ifneeded(cvar_profile_prefix[i]);
+		str_unzone_ifneeded(cvar_game_prefix[i]);
 	}
 	cvar = cvar_orig;
 	cvar_string = cvar_string_orig;
-	unzone_ifneeded(cvar_profile_prefix);
+	str_unzone_ifneeded(cvar_profile_prefix);
 	cvar_initialized = 0;
 }
 
@@ -86,13 +86,13 @@ void(string profile) cvar_init {
 	string game_inherit = cvar_string_orig(s);
 	cvar_game_prefix_len = 1;
 	for (i = 1; i < CVAR_INHERITANCE_DEEP; i++) {
-		s = car(game_inherit);
+		s = str_car(game_inherit);
 		if (s == "")
 			break;
 
 		cvar_game_prefix[i] = strzone(s);
 		cvar_game_prefix_len++;
-		game_inherit = cdr(game_inherit);
+		game_inherit = str_cdr(game_inherit);
 	}
 	cvar_profile_prefix_len = 0;
 	if (profile != "") {
@@ -100,13 +100,13 @@ void(string profile) cvar_init {
 		cvar_profile_prefix_len = 1;
 		string profile_inherit = cvar_string_orig(strcat(profile, "_inherit"));
 		for (i = 1; i < CVAR_INHERITANCE_DEEP; i++) {
-			s = car(profile_inherit);
+			s = str_car(profile_inherit);
 			if (s == "")
 				break;
 
 			cvar_profile_prefix[i] = strzone(s);
 			cvar_profile_prefix_len++;
-			profile_inherit = cdr(profile_inherit);
+			profile_inherit = str_cdr(profile_inherit);
 		}
 	}
 	cvar = cvar_ext;

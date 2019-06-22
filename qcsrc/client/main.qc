@@ -294,7 +294,7 @@ void CSQC_Init(void)
 		if not(cvar("mod_alias_force_animated")) {
 			localcmd("\nseta mod_alias_force_animated 1; r_restart\n");
 		}
-	} else if (fexists("rexuiz.cfg")) {
+	} else if (file_exists("rexuiz.cfg")) {
 		localcmd("\ncmd gameclient rexuiz\n");
 	} else if (autocvar_autocvar_check) {
 		localcmd("\ncmd gameclient nexuiz\n");
@@ -325,9 +325,9 @@ void CSQC_Init(void)
 	compressShortVector_init();
 
 	crosshairdot_tex = "gfx/crosshair6";
-	if (fexists("gfx/crosshairdot.tga"))
+	if (file_exists("gfx/crosshairdot.tga"))
 		crosshairdot_tex = "gfx/crosshairdot.tga";
-	else if (fexists("gfx/crosshairdot.png"))
+	else if (file_exists("gfx/crosshairdot.png"))
 		crosshairdot_tex = "gfx/crosshairdot.png";
 
 	drawfont = 0;
@@ -1094,7 +1094,7 @@ void VoteCommands_Read() {
 		strunzone(vote_commands[i]);
 	}
 	vote_commands_count = 0;
-	for (head = car(s), tail = cdr(s); ;head = car(tail), tail = cdr(tail)) {
+	for (head = str_car(s), tail = str_cdr(s); ; head = str_car(tail), tail = str_cdr(tail)) {
 		if (head == "") {
 			if (tail == "")
 				break;
@@ -1176,8 +1176,8 @@ void Ent_Init(float ignore)
 	}
 
 	if (sf & 4) {
-		unzone_ifneeded(forcefog);
-		forcefog = zone_ifneeded(ReadString());
+		str_unzone_ifneeded(forcefog);
+		forcefog = str_zone_ifneeded(ReadString());
 	}
 	if (sf & 8)
 		VoteCommands_Read();
@@ -1206,10 +1206,10 @@ void Ent_Init(float ignore)
 	}
 
 	if (sf & 128) {
-		unzone_ifneeded(map_description);
-		map_description = zone_ifneeded(ReadString());
-		unzone_ifneeded(motd);
-		motd = zone_ifneeded(ReadString());
+		str_unzone_ifneeded(map_description);
+		map_description = str_zone_ifneeded(ReadString());
+		str_unzone_ifneeded(motd);
+		motd = str_zone_ifneeded(ReadString());
 	}
 
 	if(!postinit)
@@ -1388,12 +1388,12 @@ float CSQC_Parse_TempEntity()
 			bHandled = true;
 			break;
 		case TE_CSQC_MAPLIST:
-			unzone_ifneeded(available_maps);
-			available_maps = zone_ifneeded(ReadString());
+			str_unzone_ifneeded(available_maps);
+			available_maps = str_zone_ifneeded(ReadString());
 			string s = available_maps;
 			available_maps_count = 0;
 			while (s != "") {
-				s = cdr(s);
+				s = str_cdr(s);
 				available_maps_count++;
 			}
 			bHandled = true;

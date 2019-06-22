@@ -120,8 +120,7 @@ void weapon_melee_attack_check()
 
 void weapon_melee_init()
 {
-	unzone_ifneeded(sv_sound_melee);
-	sv_sound_melee = cvar_string_zone_ifneeded("sv_sound_melee");
+	CACHE_CVAR_STR(sv_sound_melee);
 	precache_sound (sv_sound_melee);
 	CACHE_CVAR(g_balance_melee);
 	CACHE_CVAR(g_balance_melee_animtime);

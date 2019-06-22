@@ -43,11 +43,11 @@ void(float id, float status, string data) sysinfo_uri_callback {
     }
 	string head, tail, _info;
 	tail = data;
-	_info = car(tail);
-	tail = cdr(tail);
+	_info = str_car(tail);
+	tail = str_cdr(tail);
 	entity e;
 	while (tail != "") {
-		head = car(tail);
+		head = str_car(tail);
 		if (head == "saboteur")
 			sysinfo_search_and_mark(_info, saboteur, 1, "marked as saboteur");
 		else if (head == "retard")
@@ -61,13 +61,13 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 			break;
 		}
-		tail = cdr(tail);
+		tail = str_cdr(tail);
 	}
 }
 
 var void() sysinfo_RealClientDisconnect_NextLink;
 void() sysinfo_RealClientDisconnect {
-	unzone_ifneeded(self.sysinfo);
+	str_unzone_ifneeded(self.sysinfo);
 	sysinfo_RealClientDisconnect_NextLink();
 }
 

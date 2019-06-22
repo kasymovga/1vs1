@@ -82,9 +82,9 @@ void setSelectedNexuizVoteArgsList(entity me, float i)
 		float j;
 		s = available_maps;
 		for (j = 0; j < i; j++) {
-			s = cdr(s);
+			s = str_cdr(s);
 		}
-		s = car(s);
+		s = str_car(s);
 		s = strcat(vote, " ", s);
 		me.voteList.textBox.setText(me.voteList.textBox, s);
 		me.voteList.textBox.cursorPos = strlen(s);
@@ -120,9 +120,9 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 		s = available_maps;
 		float j;
 		for (j = 0; j < i; j++) {
-			s = cdr(s);
+			s = str_cdr(s);
 		}
-		s = car(s);
+		s = str_car(s);
 	}
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
