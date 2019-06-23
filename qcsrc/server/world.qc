@@ -535,7 +535,7 @@ void spawnfunc_worldspawn (void)
 	client_init_spawn();
 	random_seed_spawn();
 
-	localcmd("\n_sv_hook_gamestart ", GametypeNameFromType(game), ";");
+	localcmd("\n_sv_hook_gamestart ", gametype_name(game), ";");
 
 	world_initialized = 1;
 	IRC_Init();
@@ -658,7 +658,7 @@ void world_dump_stats(float final)
 		s = ":scores:";
 	else
 		s = ":status:";
-	s = strcat(s, GametypeNameFromType(game), "_", mapname, ":", ftos(rint(time)));
+	s = strcat(s, gametype_name(game), "_", mapname, ":", ftos(rint(time)));
 
 	if(to_console)
 		print(s, "\n");

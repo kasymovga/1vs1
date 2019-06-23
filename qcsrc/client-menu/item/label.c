@@ -76,14 +76,14 @@ void drawLabel(entity me)
 				draw_Text(me.realOrigin, draw_TextShortenToWidth(t, (1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, me.allowColors), me.realFontSize, me.colorL, me.alpha, me.allowColors);
 			else if(me.allowWrap) // FIXME allowWrap incompatible with align != 0
 			{
-				getWrappedLine_remaining = t;
+				str_wrapped_line_remaining = t;
 				o = me.realOrigin;
-				while(getWrappedLine_remaining)
+				while(str_wrapped_line_remaining)
 				{
 					if (me.allowColors)
-						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, draw_TextWidth_WithColors);
+						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, draw_TextWidth_WithColors);
 					else
-						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, draw_TextWidth_WithoutColors);
+						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, draw_TextWidth_WithoutColors);
 					draw_Text(o, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
 					o_y += me.realFontSize_y;
 				}

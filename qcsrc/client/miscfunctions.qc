@@ -46,12 +46,12 @@ float ReadInt24_t()
 	return v;
 }
 
-string textShortenToWidth(string theText, float maxWidth, textLengthUpToWidth_widthFunction_t tw)
+string textShortenToWidth(string theText, float maxWidth, str_length_up_to_width_width_function_t tw)
 {
 	if(tw(theText) <= maxWidth)
 		return theText;
 	else
-		return strcat(substring(theText, 0, textLengthUpToWidth(theText, maxWidth - tw("..."), tw)), "...");
+		return strcat(substring(theText, 0, str_length_up_to_width(theText, maxWidth - tw("..."), tw)), "...");
 }
 
 void RegisterPlayer(entity player)

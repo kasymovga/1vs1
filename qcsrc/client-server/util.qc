@@ -43,7 +43,7 @@ string ScoreString(float pFlags, float pValue)
 float isGametypeInFilter(float gt, float tp, string pattern)
 {
 	string subpattern, subpattern2, subpattern3;
-	subpattern = strcat(",", GametypeNameFromType(gt), ",");
+	subpattern = strcat(",", gametype_name(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else

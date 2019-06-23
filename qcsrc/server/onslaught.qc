@@ -505,14 +505,14 @@ void(entity e) onslaught_generator_updatesprite {
 		if(e.lastshielded)
 		{
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
+				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormap_palette_color(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.5 0.5 0.5');
 		}
 		else
 		{
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormapPaletteColor(e.team - 1, FALSE));
+				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormap_palette_color(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.75 0.75 0.75');
 		}
@@ -575,12 +575,12 @@ void(entity e) onslaught_controlpoint_updatesprite {
 		}
 		if(e.lastshielded) {
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
+				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, 0.5 * colormap_palette_color(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.5 0.5 0.5');
 		} else {
 			if(e.team == COLOR_TEAM1 || e.team == COLOR_TEAM2)
-				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(e.team - 1, FALSE));
+				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.75 0.75 0.75');
 		}

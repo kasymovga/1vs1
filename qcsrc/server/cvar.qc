@@ -81,7 +81,7 @@ void(string profile) cvar_init {
 	string s;
 	cvar_orig = cvar;
 	cvar_string_orig = cvar_string;
-	cvar_game_prefix[0] = GametypeNameFromType(MapInfo_CurrentGametype());
+	cvar_game_prefix[0] = gametype_name(MapInfo_CurrentGametype());
 	s = strcat(cvar_game_prefix[0], "_inherit");
 	string game_inherit = cvar_string_orig(s);
 	cvar_game_prefix_len = 1;

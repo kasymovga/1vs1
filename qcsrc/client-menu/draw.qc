@@ -298,7 +298,7 @@ float draw_TextWidth_WithoutColors(string s)
 float draw_TextLengthUpToWidth(string theText, float maxWidth, float allowColorCodes)
 {
 	if(allowColorCodes)
-		return textLengthUpToWidth(theText, maxWidth, draw_TextWidth_WithColors);
+		return str_length_up_to_width(theText, maxWidth, draw_TextWidth_WithColors);
 	else
-		return textLengthUpToWidth(theText, maxWidth, draw_TextWidth_WithoutColors);
+		return str_length_up_to_width(theText, maxWidth, draw_TextWidth_WithoutColors);
 }

@@ -717,9 +717,9 @@ string Sbar_GetField(entity pl, float field)
 				{
 					sbar_field_icon0 = "gfx/sb_playercolor_base";
 					sbar_field_icon1 = "gfx/sb_playercolor_shirt";
-					sbar_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
+					sbar_field_icon1_rgb = colormap_palette_color(floor(f / 16), 0);
 					sbar_field_icon2 = "gfx/sb_playercolor_pants";
-					sbar_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
+					sbar_field_icon2_rgb = colormap_palette_color(mod(f, 16), 1);
 				}
 			}
 			return strcat(GetPlayerName(pl.sv_entnum), "^0#", ftos(pl.sv_entnum + 1));
@@ -1176,7 +1176,7 @@ void Sbar_DrawScoreboard()
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("^7Playing ^3", strtoupper(GametypeNameFromType(gametype)), "^7 on ^2", shortmapname);
+	str = strcat("^7Playing ^3", strtoupper(gametype_name(gametype)), "^7 on ^2", shortmapname);
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
 	pos_y += sbar_fontsize_y;
 	if (map_description != "") {
@@ -1335,7 +1335,7 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	{
 		if(mytime > 0)
 		{
-			timestr = strcat("+", ftos_decimals(+mytime, TIME_DECIMALS));
+			timestr = strcat("+", str_float_decimals(+mytime, TIME_DECIMALS));
 			col = "^1";
 		}
 		else if(mytime == 0)
@@ -1345,7 +1345,7 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 		}
 		else
 		{
-			timestr = strcat("-", ftos_decimals(-mytime, TIME_DECIMALS));
+			timestr = strcat("-", str_float_decimals(-mytime, TIME_DECIMALS));
 			col = "^2";
 		}
 
@@ -1363,7 +1363,7 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	else if(histime > 0) // anticipation
 	{
 		if(mytime >= histime)
-			timestr = strcat("+", ftos_decimals(mytime - histime, TIME_DECIMALS));
+			timestr = strcat("+", str_float_decimals(mytime - histime, TIME_DECIMALS));
 		else
 			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(histime));
 		col = "^3";
@@ -1553,7 +1553,7 @@ void()Sbar_Score_Default {
 				a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 				if(a > 0)
 				{
-					s = strcat("^1PENALTY: ", ftos_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
+					s = strcat("^1PENALTY: ", str_float_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
 					dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 					drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 				}
@@ -1597,7 +1597,7 @@ void()Sbar_Score_Default {
 				if(a > 0)
 				{
 					if(time < t)
-						s = strcat("^1PENALTY: ", ftos_decimals(t - time, 1), " (", race_penaltyreason, ")");
+						s = strcat("^1PENALTY: ", str_float_decimals(t - time, 1), " (", race_penaltyreason, ")");
 					else
 						s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
 					dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
@@ -1795,10 +1795,10 @@ void centerprint(string strMessage)
 	i = hcount = 0;
 	for(j = 0; j < n; ++j)
 	{
-		getWrappedLine_remaining = argv(j);
-		while(getWrappedLine_remaining)
+		str_wrapped_line_remaining = argv(j);
+		while(str_wrapped_line_remaining)
 		{
-			s = getWrappedLine(CVAR(vid_conwidth) * 0.75 / centerprint_fontsize_x, stringwidth_colors);
+			s = str_wrapped_line(CVAR(vid_conwidth) * 0.75 / centerprint_fontsize_x, stringwidth_colors);
 			if(centerprint_messages[i])
 				strunzone(centerprint_messages[i]);
 			centerprint_messages[i] = strzone(s);

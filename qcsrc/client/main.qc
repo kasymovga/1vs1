@@ -1027,7 +1027,7 @@ void Gamemode_Init()
 
 	if not(isdemo_flag)
 	{
-		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), ";");
+		localcmd("\n_cl_hook_gamestart ", gametype_name(gametype), ";");
 		calledhooks |= HOOK_START;
 	}
 	Sbar_GameType_Init();

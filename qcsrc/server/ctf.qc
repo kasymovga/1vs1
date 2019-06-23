@@ -448,8 +448,8 @@ void() ctf_flag_touch {
 		if(g_ctf_captimerecord_always || player_count - currentbots <= 1) // at most one human
 		{
 			t = time - other.flagcarried.flagpickuptime;
-			s = ftos_decimals(t, 2);
-			s0 = ftos_decimals(flagcaptimerecord, 2);
+			s = str_float_decimals(t, 2);
+			s0 = str_float_decimals(flagcaptimerecord, 2);
 			h0 = db_get(ServerProgsDB, strcat(mapname, "/captimerecord/netname"));
 			h1 = other.netname;
 			if(h0 == h1)
@@ -781,7 +781,7 @@ void() spawnfunc_ctf_flag_team1 {
 	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
 	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, FALSE);
 	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(COLOR_TEAM1 - 1, FALSE));
 
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
@@ -889,7 +889,7 @@ void() spawnfunc_ctf_flag_team2 {
 	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
 	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, FALSE);
 	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(COLOR_TEAM2 - 1, FALSE));
 
 	precache_model("models/ctf/shield.md3");
 
@@ -1041,7 +1041,7 @@ string(string bspname) ctf_RecordForMap {
 	if (r == 0)
 		return "";
 
-	return strcat(strpad(32, bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
+	return strcat(strpad(32, bspname), " ", strpad(-6, str_float_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
 }
 
 float() ctf_FragLimitOverride {

@@ -39,7 +39,7 @@ void conquest_cp_capture(float byteam) {
 			if not(e.sprite)
 				WaypointSprite_SpawnFixed(string_null, e.origin, e, sprite);
 
-			WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormapPaletteColor(self.team - 1, FALSE));
+			WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(self.team - 1, FALSE));
 		}
 }
 
@@ -55,7 +55,7 @@ void conquest_remove_progress_bar() {
 }
 
 void conquest_update_waypoint() {
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(self.team - 1, FALSE));
 	string s;
 	s = "";
 	if (self.owner) {
@@ -325,7 +325,7 @@ void conquest_delayedinit() {
 		if not(e.sprite)
 			WaypointSprite_SpawnFixed(string_null, e.origin, e, sprite);
 
-		WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormapPaletteColor(e.team - 1, FALSE));
+		WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(e.team - 1, FALSE));
 	}
 	conquest_Reset();
 }

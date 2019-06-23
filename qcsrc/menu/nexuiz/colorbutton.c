@@ -70,7 +70,7 @@ void saveCvarsNexuizColorButton(entity me)
 }
 void drawNexuizColorButton(entity me)
 {
-	me.color2 = colormapPaletteColor(me.cvarValueFloat, me.cvarPart);
+	me.color2 = colormap_palette_color(me.cvarValueFloat, me.cvarPart);
 	drawCheckBox(me);
 }
 #endif

@@ -100,13 +100,13 @@ void drawListBoxItemNexuizPlayerList(entity me, float i, vector absSize, float i
 
 	t = stof(me.getPlayerList(me, i, PLAYERPARM_TEAM));
 	if(t == 1)
-		rgb = colormapPaletteColor(4, 0);
+		rgb = colormap_palette_color(4, 0);
 	else if(t == 2)
-		rgb = colormapPaletteColor(13, 0);
+		rgb = colormap_palette_color(13, 0);
 	else if(t == 3)
-		rgb = colormapPaletteColor(12, 0);
+		rgb = colormap_palette_color(12, 0);
 	else if(t == 4)
-		rgb = colormapPaletteColor(9, 0);
+		rgb = colormap_palette_color(9, 0);
 	else
 		rgb = '1 1 1';
 	

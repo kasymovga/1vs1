@@ -67,10 +67,10 @@ void rewrapCampaign(float w, float l0, float emptyheight)
 				continue;
 			}
 
-			getWrappedLine_remaining = s;
-			while(getWrappedLine_remaining)
+			str_wrapped_line_remaining = s;
+			while(str_wrapped_line_remaining)
 			{
-				s = getWrappedLine(w, draw_TextWidth_WithoutColors);
+				s = str_wrapped_line(w, draw_TextWidth_WithoutColors);
 				if(--l < 0) goto toolong;
 				r = strcat(r, s, "\n");
 			}

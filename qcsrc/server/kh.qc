@@ -298,7 +298,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
 				else if(player.team == COLOR_TEAM4)
 					WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
-				WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
+				WaypointSprite_UpdateTeamRadar(player.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, colormap_palette_color(player.team - 1, 0));
 			}
 			else
 			{

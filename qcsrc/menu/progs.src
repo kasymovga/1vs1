@@ -4,11 +4,12 @@ config.qh
 ../common/qcc.qh
 msys.qh
 mbuiltin.qh
-../common/util.qh
+../common/gametype.qh
 ../common/db.qh
 ../common/str.qh
 ../common/file.qh
 ../common/cvar.qh
+../common/colormap.qh
 ../client-menu/ui.qh
 ../client-menu/util.qh
 ../menu-server/util.qh
@@ -38,7 +39,8 @@ nexuiz/util.qh
 ../client-menu/oo/implementation.h
 	classes.c
 
-../common/util.qc
+../common/gametype.qc
+../common/colormap.qc
 ../common/db.qc
 ../menu-server/gamecommand.qc
 gamecommand.qc

@@ -101,7 +101,7 @@ void dompoint_captured ()
 			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
 			break;
 	}
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;

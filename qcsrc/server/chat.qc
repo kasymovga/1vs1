@@ -221,17 +221,17 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		// to match explanation in default.cfg, a value of 3 must allow three-line bursts and not four!
 
 		// do flood control for the default line size
-		getWrappedLine_remaining = msgstr;
+		str_wrapped_line_remaining = msgstr;
 		msgstr = "";
 		lines = 0;
-		while(getWrappedLine_remaining && (!flood_lmax || lines <= flood_lmax))
+		while(str_wrapped_line_remaining && (!flood_lmax || lines <= flood_lmax))
 		{
-			msgstr = strcat(msgstr, " ", getWrappedLine(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
+			msgstr = strcat(msgstr, " ", str_wrapped_line(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
 			++lines;
 		}
 		msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
 
-		if(getWrappedLine_remaining != "")
+		if(str_wrapped_line_remaining != "")
 		{
 			msgstr = strcat(msgstr, "\n");
 			flood = 2;

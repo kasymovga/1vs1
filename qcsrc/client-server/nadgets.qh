@@ -9,7 +9,7 @@
     HGDEF(HG_LINKER,    linker,     "Linking Shell",    '0.5 0.5 1.0') \
     HGDEF(HG_LASER,     laser,      "Lasergun",         '1.0 0.5 0.0') \
     HGDEF(HG_CLOAK,     cloak,      "Concealing Cloak", '0.7 0.7 0.7') \
-    HGDEF(HG_GG,        gg,         "GG Button",        '0.5 0.5 0.5' + colormapPaletteColor(15, FALSE)) \
+    HGDEF(HG_GG,        gg,         "GG Button",        '0.5 0.5 0.5' + colormap_palette_color(15, FALSE)) \
     HGDEF(HG_SENTRY,    sentry,     "Zapper Sentry",    '0.3 1.0 0.7') \
     HGDEF(HG_RAZE,      raze,       "Raze",             '1.0 0.4 0.5') \
     //HGDEF(HG_BAIT,      bait,       "Hero Bait",        '0.2 0.7 1.0') \
