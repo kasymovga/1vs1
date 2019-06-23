@@ -327,7 +327,6 @@ void _Movetype_Physics_Frame(float movedt)
 	switch(self.move_movetype)
 	{
 		case MOVETYPE_PUSH:
-		case MOVETYPE_FAKEPUSH:
 			error("SV_Physics_Pusher not implemented");
 			break;
 		case MOVETYPE_NONE:
