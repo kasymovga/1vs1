@@ -1,5 +1,33 @@
 float physics_lastflags;
 
+void(void) physics_impact {
+	if not(trace_ent)
+		return;
+
+	if (self.touch) {
+		entity oldother = other;
+		other = trace_ent;
+		self.touch();
+		other = oldother;
+	}
+	if (trace_ent.touch) {
+		entity oldself = self;
+		entity oldother = other;
+		vector old_trace_plane_normal = trace_plane_normal;
+		self.velocity = physics_velocity;
+		self = trace_ent;
+		trace_dpstartcontents = 0;
+		trace_dphitcontents = 0;
+		trace_dphitq3surfaceflags = 0;
+		trace_plane_normal = -trace_plane_normal;
+		other = oldself;
+		self.touch();
+		self = oldself;
+		other = oldother;
+		trace_plane_normal = old_trace_plane_normal;
+	}
+}
+
 void(float ground) physics_update_status {
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
 		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
@@ -13,13 +41,13 @@ void(float ground) physics_update_status {
 		{
 			physics_flags |= FL_ONGROUND;
 			physics_velocity -= f * trace_plane_normal;
+			self.groundentity = trace_ent;
+			physics_impact();
 		}
 		else
 		{
 			physics_flags &~= FL_ONGROUND;
 		}
-		if (trace_ent)
-			self.groundentity = trace_ent;
 	}
 
 	// set watertype/waterlevel
@@ -76,30 +104,7 @@ void(void) physics_move {
 		trace1_plane_normal = trace_plane_normal;
 		if(trace1_fraction < 1 && trace1_plane_normal_z == 0)
 		{
-			if (trace_ent) {
-				if (self.touch) {
-					entity oldother = other;
-					other = trace_ent;
-					self.touch();
-					other = oldother;
-				}
-				if (trace_ent.touch) {
-					entity oldself = self;
-					entity oldother = other;
-					vector old_trace_plane_normal = trace_plane_normal;
-					self.velocity = physics_velocity;
-					self = trace_ent;
-					trace_dpstartcontents = 0;
-					trace_dphitcontents = 0;
-					trace_dphitq3surfaceflags = 0;
-					trace_plane_normal = -trace_plane_normal;
-					other = oldself;
-					self.touch();
-					self = oldself;
-					other = oldother;
-					trace_plane_normal = old_trace_plane_normal;
-				}
-			}
+			physics_impact();
 			// may be a step or wall, try stepping up
 			// first move forward at a higher level
 			currentorigin2 = self.origin;
