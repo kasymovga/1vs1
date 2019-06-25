@@ -226,7 +226,16 @@ void(void) vehicle_aircraft_think {
 	if (self.owner) {
 		self.owner.vehicle_heat = self.vehicle_heat;
 	} else {
+		physics_movetype = MOVETYPE_QCWALK;
+		physics_flags = self.flags;
+		physics_velocity = self.velocity;
+		physics_update_status(TRUE);
+		self.velocity = physics_velocity;
+		self.flags = physics_flags;
         movelib_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
+		physics_velocity = self.velocity;
+		physics_move();
+		self.velocity = physics_velocity;
 	}
     self.nextthink = time;
 }
@@ -284,7 +293,7 @@ void(void) vehicle_aircraft_spawn {
 	self.vehicle_shield = self.shield_max;
 	self.event_damage = vehicle_stdproc_damage;
 	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = MOVETYPE_QCWALK;
 	self.solid = SOLID_SLIDEBOX;
 	self.takedamage = DAMAGE_AIM;
 	self.touch = vehicle_aircraft_touch;

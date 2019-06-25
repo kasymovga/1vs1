@@ -295,12 +295,24 @@ void(void) vehicle_spiderbot_think {
 
 	if (self.owner)
 		self.owner.vehicle_heat = self.vehicle_heat;
-	else if(self.flags & FL_ONGROUND) {
-		movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
-		self.angles_x *= -1;
-		makevectors(self.angles);
-		self.angles_x *= -1;
-		movelib_groundalign4point(75, 75, 1);
+	else {
+		physics_movetype = MOVETYPE_QCWALK;
+		physics_flags = self.flags;
+		physics_velocity = self.velocity;
+		physics_update_status(TRUE);
+		self.flags = physics_flags;
+		if(self.flags & FL_ONGROUND) {
+			self.velocity = physics_velocity;
+			movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);
+			self.angles_x *= -1;
+			makevectors(self.angles);
+			self.angles_x *= -1;
+			movelib_groundalign4point(75, 75, 1);
+			physics_velocity = self.velocity;
+		}
+		physics_move();
+		self.velocity = physics_velocity;
+
 	}
 	self.nextthink = time;
 }
@@ -360,7 +372,7 @@ void(void) vehicle_spiderbot_spawn {
 	self.vehicle_shield = self.shield_max;
 	self.event_damage = vehicle_stdproc_damage;
 	self.iscreature = TRUE;
-	self.movetype   = MOVETYPE_WALK;
+	self.movetype   = MOVETYPE_QCWALK;
 	self.solid	  = SOLID_SLIDEBOX;
 	self.takedamage = DAMAGE_AIM;
 	self.touch	  = vector_spiderbot_touch;

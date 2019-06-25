@@ -10,4 +10,4 @@ float g_vehicle_car_speed_drift;
 float g_vehicle_car_turnspeed;
 float g_vehicle_car_movement_inertia;
 
-float physics_car();
+float(void) physics_car;

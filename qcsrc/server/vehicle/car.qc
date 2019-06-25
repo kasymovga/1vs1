@@ -124,13 +124,23 @@ float vehicle_car_physics_hook() {
 }
 
 void(void) vehicle_car_think {
-	if not(self.owner)
-	if (self.flags & FL_ONGROUND) {
-		movelib_beak_simple(g_vehicle_car_speed_stop * frametime);
-		self.angles_x *= -1;
-		makevectors(self.angles);
-		self.angles_x *= -1;
-		movelib_groundalign4point(75, 75, 1);
+	if not(self.owner) {
+		physics_movetype = MOVETYPE_QCWALK;
+		physics_flags = self.flags;
+		physics_velocity = self.velocity;
+		physics_update_status(TRUE);
+		self.flags = physics_flags;
+		if (physics_flags & FL_ONGROUND) {
+			self.velocity = physics_velocity;
+			movelib_beak_simple(g_vehicle_car_speed_stop * frametime);
+			self.angles_x *= -1;
+			makevectors(self.angles);
+			self.angles_x *= -1;
+			movelib_groundalign4point(75, 75, 1);
+			physics_velocity = self.velocity;
+		}
+		physics_move();
+		self.velocity = physics_velocity;
 	}
 	self.nextthink = time;
 }
@@ -173,7 +183,7 @@ void(void) vehicle_car_spawn {
 	self.health = self.health_max;
 	self.event_damage = vehicle_stdproc_damage;
 	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_WALK;
+	self.movetype = MOVETYPE_QCWALK;
 	self.solid = SOLID_SLIDEBOX;
 	self.takedamage = DAMAGE_AIM;
 	self.touch = vehicle_car_touch;

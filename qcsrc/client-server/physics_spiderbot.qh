@@ -12,5 +12,5 @@ float g_vehicle_spiderbot_speed_walk;
 float g_vehicle_spiderbot_turnspeed;
 float g_vehicle_spiderbot_movement_inertia;
 
-float physics_spiderbot();
+float(void) physics_spiderbot;
 float physics_spiderbot_jump_decr;

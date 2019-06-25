@@ -1,5 +1,10 @@
-float physics_spiderbot()
-{
+float(void) physics_spiderbot {
+	physics_velocity = self.velocity;
+	physics_movetype = MOVETYPE_QCWALK;
+	physics_flags = self.flags;
+	physics_update_status(TRUE);
+	self.velocity = physics_velocity;
+	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;
 	makevectors(self.angles);
     if(self.flags & FL_ONGROUND) {
@@ -48,5 +53,8 @@ float physics_spiderbot()
 	self.angles_x = -self.angles_x;
 	movelib_groundalign4point(75, 75, 1);
 	physics_spiderbot_jump_decr = 0;
+	physics_velocity = self.velocity;
+	physics_move();
+	self.velocity = physics_velocity;
     return 1;
 }

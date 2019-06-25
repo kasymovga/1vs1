@@ -6,20 +6,7 @@ vector spider_start_velocity;
 float physics_spiderbot_hook() {
 	entity e = self;
 	self = spider;
-	float physics_movetype_save = physics_movetype;
-	physics_movetype = MOVETYPE_WALK;
-	tracebox(self.origin, self.mins, self.maxs, self.origin + normalize(self.velocity) - '0 0 0.125', MOVE_NORMAL, self);
-	if (trace_startsolid || (trace_fraction <= 1 && trace_plane_normal_z > 0.7))
-		self.flags = FL_ONGROUND;
-	else
-		self.flags = 0;
-
 	physics_spiderbot();
-	self.velocity_z = self.velocity_z - sv_gravity * frametime;
-	physics_velocity = self.velocity;
-	physics_move();
-	self.velocity = physics_velocity;
-	physics_movetype = physics_movetype_save;
 	self = e;
 	return 1;
 }
@@ -57,7 +44,7 @@ void Ent_PhysicSpiderbot(float isnew)
 		self.entremove = Ent_PhysicSpiderbot_Remove;
 		spider = self;
 		spider.solid = SOLID_BBOX;
-		spider.movetype = MOVETYPE_WALK;
+		spider.movetype = MOVETYPE_QCWALK;
 		setsize(spider, spiderbot_MIN, spiderbot_MAX);
 	}
 	if (f & 1)

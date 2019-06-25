@@ -1,5 +1,10 @@
-float physics_car()
-{
+float(void) physics_car {
+	physics_velocity = self.velocity;
+	physics_movetype = MOVETYPE_QCWALK;
+	physics_flags = self.flags;
+	physics_update_status(TRUE);
+	self.velocity = physics_velocity;
+	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;
 	makevectors(self.angles);
     if(self.flags & FL_ONGROUND) {
@@ -47,5 +52,8 @@ float physics_car()
 	}
 	self.angles_x = -self.angles_x;
 	movelib_groundalign4point(75, 75, 1);
+	physics_velocity = self.velocity;
+	physics_move();
+	self.velocity = physics_velocity;
     return 1;
 }

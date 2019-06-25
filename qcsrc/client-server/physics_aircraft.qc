@@ -1,5 +1,10 @@
-float physics_aircraft()
-{
+float(void) physics_aircraft {
+	physics_velocity = self.velocity;
+	physics_movetype = MOVETYPE_QCWALK;
+	physics_flags = self.flags;
+	physics_update_status(TRUE);
+	self.velocity = physics_velocity;
+	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;
 	if(physics_button_jump) {
 		self.velocity_z = self.velocity_z + g_vehicle_aircraft_accel_up * frametime;
@@ -62,5 +67,8 @@ float physics_aircraft()
 		movelib_move_simple(normalize(v_right * physics_movement_y),g_vehicle_aircraft_speed,g_vehicle_aircraft_movement_inertia * frametime);
 	}
 	self.angles_x = -self.angles_x;
+	physics_velocity = self.velocity;
+	physics_move();
+	self.velocity = physics_velocity;
     return 1;
 }
