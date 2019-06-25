@@ -1,5 +1,162 @@
 float physics_lastflags;
 
+void(float ground) physics_update_status {
+	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
+		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
+
+	if(ground)
+	{
+		//tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+		float f;
+		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (f = physics_velocity * trace_plane_normal) <= 0)
+		{
+			physics_flags |= FL_ONGROUND;
+			physics_velocity -= f * trace_plane_normal;
+		}
+		else
+		{
+			physics_flags &~= FL_ONGROUND;
+		}
+		if (trace_ent)
+			self.groundentity = trace_ent;
+	}
+
+	// set watertype/waterlevel
+	vector origin1 = self.origin;
+	origin1_z += self.mins_z + 1;
+	physics_waterlevel = WATERLEVEL_NONE;
+
+	float thepoint = pointcontents(origin1);
+
+	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
+	if(physics_watertype)
+	{
+		physics_watertype = thepoint;
+		physics_waterlevel = WATERLEVEL_WETFEET;
+		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
+		thepoint = pointcontents(origin1);
+		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+		{
+			physics_waterlevel = WATERLEVEL_SWIMMING;
+			origin1_z = self.origin_z + 22;
+			thepoint = pointcontents(origin1);
+			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+				physics_waterlevel = WATERLEVEL_SUBMERGED;
+		}
+	}
+
+}
+
+void(void) physics_move {
+	float bump;
+	float t;
+	float f;
+	vector neworigin;
+	vector currentorigin2;
+	vector neworigin2;
+	vector primalvelocity;
+
+	vector trace1_endpos = '0 0 0';
+	vector trace2_endpos = '0 0 0';
+	vector trace3_endpos = '0 0 0';
+	float trace1_fraction = 0;
+	float trace2_fraction = 0;
+	float trace3_fraction = 0;
+	vector trace1_plane_normal = '0 0 0';
+	vector trace2_plane_normal = '0 0 0';
+	vector trace3_plane_normal = '0 0 0';
+	primalvelocity = physics_velocity;
+	for(bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++)
+	{
+		neworigin = self.origin + t * physics_velocity;
+		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
+		trace1_endpos = trace_endpos;
+		trace1_fraction = trace_fraction;
+		trace1_plane_normal = trace_plane_normal;
+		if(trace1_fraction < 1 && trace1_plane_normal_z == 0)
+		{
+			if (trace_ent) {
+				if (self.touch) {
+					entity oldother = other;
+					other = trace_ent;
+					self.touch();
+					other = oldother;
+				}
+				if (trace_ent.touch) {
+					entity oldself = self;
+					entity oldother = other;
+					vector old_trace_plane_normal = trace_plane_normal;
+					self.velocity = physics_velocity;
+					self = trace_ent;
+					trace_dpstartcontents = 0;
+					trace_dphitcontents = 0;
+					trace_dphitq3surfaceflags = 0;
+					trace_plane_normal = -trace_plane_normal;
+					other = oldself;
+					self.touch();
+					self = oldself;
+					other = oldother;
+					trace_plane_normal = old_trace_plane_normal;
+				}
+			}
+			// may be a step or wall, try stepping up
+			// first move forward at a higher level
+			currentorigin2 = self.origin;
+			currentorigin2_z += sv_stepheight;
+			neworigin2 = neworigin;
+			neworigin2_z = currentorigin2_z;
+			//neworigin2_z += sv_stepheight;
+			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+			trace2_endpos = trace_endpos;
+			trace2_fraction = trace_fraction;
+			trace2_plane_normal = trace_plane_normal;
+			if(!trace_startsolid)
+			{
+				// then move down from there
+				currentorigin2 = trace2_endpos;
+				neworigin2 = trace2_endpos;
+				neworigin2_z = self.origin_z;
+				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+				trace3_endpos = trace_endpos;
+				trace3_fraction = trace_fraction;
+				trace3_plane_normal = trace_plane_normal;
+				// accept the new trace if it made some progress
+				if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125)
+				{
+					trace1_endpos = trace2_endpos;
+					trace1_fraction = trace2_fraction;
+					trace1_plane_normal = trace2_plane_normal;
+					trace1_endpos = trace3_endpos;
+					if not(physics_flags & FL_ONGROUND)
+						physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
+				}
+			}
+		}
+
+		// check if it moved at all
+		if(trace1_fraction >= 0.001)
+			setorigin(self, trace1_endpos);
+
+		// check if it moved all the way
+		if(trace1_fraction == 1)
+			break;
+
+		// this is only really needed for nogravityonground combined with gravityunaffectedbyticrate
+		// <LordHavoc> I'm pretty sure I commented it out solely because it seemed redundant
+		// this got commented out in a change that supposedly makes the code match QW better
+		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
+		//if(trace1_plane_normal_z > 0.7)
+		//	physics_flags |= FL_ONGROUND;
+
+		t -= t * trace1_fraction;
+
+		f = (physics_velocity * trace1_plane_normal);
+		physics_velocity = physics_velocity - f * trace1_plane_normal;
+	}
+	//physics_velocity = primalvelocity;
+}
+
 void(vector wishdir, float wishspeed) physics_aircontrol {
 	float zspeed, xyspeed, dot, k;
 
@@ -283,6 +440,7 @@ void(void) physics_player_jump {
 		return;
 
 	if (physics_movetype != MOVETYPE_WALK)
+	if (physics_movetype != MOVETYPE_QCWALK)
 		return;
 
 	if (g_walljump)
@@ -387,6 +545,7 @@ void(void) physics_player {
         if(physics_plug())
             return;
 
+	physics_update_status(TRUE);
 	if (physics_button_crouch)
 	{
 		if not(sv_disable_crouch)
@@ -752,4 +911,6 @@ void(void) physics_player {
 
 	physics_lastflags = physics_flags;
 	physics_frame_end_hook();
+	if (physics_movetype == MOVETYPE_QCWALK)
+		physics_move();
 }

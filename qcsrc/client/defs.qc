@@ -230,3 +230,5 @@ float camera_correction_needed;
 string map_description;
 string motd;
 float hook_use_swapped;
+float trace_dphitcontents;
+float trace_dpstartcontents;

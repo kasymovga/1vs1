@@ -59,6 +59,8 @@ float(entity a) physics_is_flying {
 
 .float wasFlying;
 void(void) physics_check_ground_hook {
+	self.flags = physics_flags;
+	self.waterlevel = physics_waterlevel;
 	if (physics_is_player)
 	if (self.wasFlying) {
 		if (self.waterlevel) {
@@ -231,29 +233,6 @@ void(void) physics_frame_begin_hook {
 		else
 			self.punchvector = '0 0 0';
 	}
-	if(self.classname == "player")
-	{
-		float allowed_to_move = 0;
-		if (time >= game_starttime || restart_active)
-		if (GameHook_PlayerAllowedToMove())
-			allowed_to_move = 1;
-
-		if (allowed_to_move)
-		{
-			if(self.disableclientprediction == 2) {
-				if(self.movetype == MOVETYPE_NONE)
-					self.movetype = MOVETYPE_WALK;
-
-				physics_mark_as_teleported(self);
-				self.disableclientprediction = 0;
-			}
-		} else {
-			physics_velocity = '0 0 0';
-			self.movetype = MOVETYPE_NONE;
-			self.disableclientprediction = 2;
-		}
-		physics_movetype = self.movetype;
-	}
 
 
 	if (!self.fixangle)
@@ -263,7 +242,6 @@ void(void) physics_frame_begin_hook {
 		self.angles_z = 0;
 	}
 	self.items &~= IT_USING_JETPACK;
-
 	physics_button_crouch = self.BUTTON_CROUCH;
 }
 
@@ -272,6 +250,20 @@ void SV_PlayerPhysics()
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
 
+	if(self.classname == "player")
+	{
+		float allowed_to_move = 0;
+		if (time >= game_starttime || restart_active)
+		if (GameHook_PlayerAllowedToMove())
+			allowed_to_move = 1;
+
+		if (allowed_to_move) {
+			self.movetype = MOVETYPE_QCWALK;
+		} else {
+			physics_velocity = '0 0 0';
+			self.movetype = MOVETYPE_NONE;
+		}
+	}
 	physics_flags = self.flags;
 	physics_velocity = self.velocity;
 	physics_cantjump = PLAYER_DEAD(self);
@@ -282,7 +274,7 @@ void SV_PlayerPhysics()
 	physics_is_player = (self.classname == "player");
 	physics_ladder = (time < self.ladder_time);
 	physics_ladder_iswater = (self.ladder_entity.classname == "func_water");
-	physics_gravity_factor = self.gravity;
+	physics_gravity_factor = (self.gravity ? self.gravity : 1);
 	physics_teleport_time = self.teleport_time - time;
 	physics_plug = self.PlayerPhysplug;
 	if (physics_ladder_iswater)
@@ -368,6 +360,7 @@ void(void) physics_init {
 	PHYSIC_CACHE_CVAR(sv_jumpvelocity);
 	PHYSIC_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
 	PHYSIC_CACHE_CVAR(sv_friction_on_land);
+	CACHE_CVAR(g_stepairslowdown);
 	CACHE_CVAR(g_jetpack_acceleration_side);
 	CACHE_CVAR(g_jetpack_acceleration_up);
 	CACHE_CVAR(g_jetpack_antigravity);
@@ -423,11 +416,11 @@ float(entity to, float sf) physics_send {
 		if (self.last_can_use_jetpack) sf |= 128;
 		if (self.crouch) sf |= 256;
 		if (self.last_maxspeedmod != 1) sf |= 512;
-		if (self.movetype != MOVETYPE_WALK) sf |= 1024;
+		if (self.movetype != MOVETYPE_QCWALK) sf |= 1024;
 		if (self.gravity && self.gravity != 1) sf |= 2048;
 		if (self.teleport_time - time >= 0) sf |= 4096;
 		if (self.lastwj > 0) sf |= 8192;
-		if (g_dodging) {
+		if (g_dodging || g_dodging_frozen) {
 			dodging_flags = 0;
 			if (self.last_dodging_time > 0) dodging_flags |= 1;
 			if (self.last_FORWARD_KEY_time > 0) dodging_flags |= 2;
@@ -444,6 +437,7 @@ float(entity to, float sf) physics_send {
 	if (sf & 1)
 	{
 		WriteCoord(MSG_ENTITY, sv_stepheight);
+		WriteCoord(MSG_ENTITY, g_stepairslowdown);
 		WriteCoord(MSG_ENTITY, sv_gravity);
 		WriteCoord(MSG_ENTITY, sv_maxairspeed);
 		WriteCoord(MSG_ENTITY, sv_maxspeed);
@@ -485,7 +479,7 @@ float(entity to, float sf) physics_send {
 			WriteCoord(MSG_ENTITY, g_walljump_velocity_xy_factor);
 			WriteCoord(MSG_ENTITY, g_walljump_velocity_z_factor);
 		}
-		if (g_dodging) {
+		if (g_dodging || g_dodging_frozen) {
 			WriteCoord(MSG_ENTITY, g_dodging_horiz_speed);
 			WriteCoord(MSG_ENTITY, g_dodging_up_speed);
 			WriteCoord(MSG_ENTITY, g_dodging_delay);

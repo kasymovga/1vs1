@@ -188,9 +188,6 @@ float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send)
     self.owner.angles         = self.angles;
     self.owner.takedamage     = DAMAGE_NO;
     self.owner.solid          = SOLID_NOT;
-	if not(sv_csqc_physic)
-		self.owner.movetype   = MOVETYPE_NOCLIP;
-
     self.owner.PlayerPhysplug = phys_plug;
     self.owner.vehicle        = self;
     self.owner.event_damage   = stdproc_nothing;
@@ -256,8 +253,7 @@ void(float eject, float eject_range, float exit_up, float range) vehicle_stdproc
         WriteAngle(MSG_ONE, 0);    // roll
     }
     self.owner.takedamage     = DAMAGE_AIM;
-    self.owner.solid          = SOLID_SLIDEBOX;
-    self.owner.movetype       = MOVETYPE_WALK;
+	player_body_setup(self.owner);
     if not (teamplay)
         self.team = 0;
     else

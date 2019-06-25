@@ -502,7 +502,7 @@ void(entity e, entity tagentity, string tagname) setattachment = #443; // attach
 //idea: id Software, LordHavoc (redesigned)
 //darkplaces implementation: LordHavoc
 //movetype definitions:
-float MOVETYPE_FOLLOW = 12;
+//float MOVETYPE_FOLLOW = 12;
 //description:
 //MOVETYPE_FOLLOW implemented, this uses existing entity fields in unusual ways:
 //aiment - the entity this is attached to.

@@ -1893,18 +1893,21 @@ float() player_customizeentityforclient {
 	return TRUE;
 }
 
+void(entity pl) player_body_setup {
+	pl.movetype = MOVETYPE_QCWALK;
+	pl.solid = SOLID_SLIDEBOX;
+	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	if(independent_players)
+		MAKE_INDEPENDENT_PLAYER(pl);
+}
+
 void(entity spot) player_spawn {
 	float currentlyPlaying, i;
 	entity e, oldself;
 	player_clear(FALSE);
 	physics_mark_as_teleported(self);
 	self.iscreature = TRUE;
-	self.movetype = MOVETYPE_WALK;
-	self.solid = SOLID_SLIDEBOX;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	if(independent_players)
-		MAKE_INDEPENDENT_PLAYER(self);
-
+	player_body_setup(self);
 	self.flags = FL_CLIENT;
 	self.takedamage = DAMAGE_AIM;
 	self.effects = 0;

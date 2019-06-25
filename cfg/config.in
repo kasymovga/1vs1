@@ -96,6 +96,7 @@ _set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide
 _set g_weapon_stay 0 "if set, weapons stay after they were picked up"
 
 set g_stepheight 34 "how high you can step up"
+set g_stepairslowdown 0.05 ""
 set g_gravity 800 "how fast you fall"
 set g_maxairspeed 220 "maximum speed a player can accelerate to when airborn (note that it is possible to completely stop by moving the opposite direction)"
 set g_maxspeed 400 "maximum speed a player can accelerate to when on ground (can be exceeded by tricks)"

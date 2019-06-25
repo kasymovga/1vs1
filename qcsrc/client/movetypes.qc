@@ -1,4 +1,3 @@
-.entity move_groundentity;
 .float move_suspendedinair;
 .float move_didgravity;
 

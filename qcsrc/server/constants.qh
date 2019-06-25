@@ -4,20 +4,6 @@ string CVAR_CHECK_BALANCE = "9b590c8f7c3065d917ac8e2e5e842a88";
 float	FALSE					= 0;
 float	TRUE					= 1;
 
-float	MOVETYPE_NONE				= 0;
-float	MOVETYPE_ANGLENOCLIP			= 1;
-float	MOVETYPE_ANGLECLIP			= 2;
-float	MOVETYPE_WALK				= 3;
-float	MOVETYPE_STEP				= 4;
-float	MOVETYPE_FLY				= 5;
-float	MOVETYPE_TOSS				= 6;
-float	MOVETYPE_PUSH				= 7;
-float	MOVETYPE_NOCLIP				= 8;
-float	MOVETYPE_FLYMISSILE			= 9;
-float	MOVETYPE_BOUNCE				= 10;
-float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
-//float	MOVETYPE_FOLLOW				= 12;	// 'Attaches' the entity to its aim_ent
-
 float	SOLID_NOT				= 0;
 float	SOLID_TRIGGER				= 1;
 float	SOLID_BBOX				= 2;
