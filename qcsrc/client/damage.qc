@@ -223,7 +223,7 @@ void Ent_DamageInfo(float isNew)
 			}
 			break;
 		default:
-			print("Unhandled damage of weapon ", ftos(hitwep), "\n");
+			//print("Unhandled damage of weapon ", ftos(hitwep), "\n");
 			break;
 	}
 }
