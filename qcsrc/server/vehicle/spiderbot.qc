@@ -299,6 +299,7 @@ void(void) vehicle_spiderbot_think {
 		physics_movetype = MOVETYPE_QCWALK;
 		physics_flags = self.flags;
 		physics_velocity = self.velocity;
+		physics_gravity_factor = (self.gravity ? self.gravity : 1);
 		physics_update_status(TRUE);
 		self.flags = physics_flags;
 		if(self.flags & FL_ONGROUND) {
