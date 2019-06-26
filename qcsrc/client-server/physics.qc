@@ -28,6 +28,40 @@ void(void) physics_impact {
 	}
 }
 
+float(vector v) physics_unstuck_to {
+	vector o = self.origin + v;
+	tracebox(o, self.mins, self.maxs, o, MOVE_WORLDONLY, self);
+	if (trace_startsolid)
+		return FALSE;
+
+	setorigin(self, o);
+	return TRUE;
+}
+
+void(void) physics_unstuck {
+	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_WORLDONLY, self);
+	if not(trace_startsolid)
+		return;
+
+	if (physics_unstuck_to('0 0 0.125'))
+		return;
+
+	if (physics_unstuck_to('0 0 -0.125'))
+		return;
+
+	if (physics_unstuck_to('0 0.125 0'))
+		return;
+
+	if (physics_unstuck_to('0 -0.125 0'))
+		return;
+
+	if (physics_unstuck_to('0.125 0 0'))
+		return;
+
+	if (physics_unstuck_to('-0.125 0 0'))
+		return;
+}
+
 void(float ground) physics_update_status {
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
 		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
@@ -140,8 +174,10 @@ void(void) physics_move {
 		}
 
 		// check if it moved at all
-		if(trace1_fraction >= 0.001)
+		if(trace1_fraction >= 0.001) {
 			setorigin(self, trace1_endpos);
+			physics_unstuck();
+		}
 
 		// check if it moved all the way
 		if(trace1_fraction == 1)
