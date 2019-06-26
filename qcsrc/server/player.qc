@@ -852,6 +852,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		player_obituary(attacker, inflictor, self, deathtype);
 		if (sv_sound_frag != "")
 		if (clienttype(attacker) == CLIENTTYPE_REAL)
+		if (attacker != self)
+		if (team_is_different_teams(attacker, self))
 			play2(attacker, sv_sound_frag);
 
 		player_clear(TRUE);
