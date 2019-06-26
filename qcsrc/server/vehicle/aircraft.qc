@@ -216,6 +216,7 @@ float(void) vehicle_aircraft_physics_hook {
 	if (aircraft.player_physic)
 		aircraft.player_physic.SendFlags |= 2;
 
+	physics_flags = player.flags;
     return 1;
 }
 

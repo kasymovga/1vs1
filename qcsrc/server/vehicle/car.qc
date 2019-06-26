@@ -120,6 +120,7 @@ float vehicle_car_physics_hook() {
 	if (mycar.player_physic)
 		mycar.player_physic.SendFlags |= 2;
 
+	physics_flags = player.flags;
 	return 1;
 }
 

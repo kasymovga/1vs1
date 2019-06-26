@@ -286,6 +286,7 @@ float(void) vehicle_spiderbot_physics_hook {
 	if (spider.player_physic)
 		spider.player_physic.SendFlags |= 2;
 
+	physics_flags = player.flags;
 	return 1;
 }
 
