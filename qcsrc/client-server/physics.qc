@@ -583,9 +583,12 @@ void(void) physics_player {
 
 	// if dead, behave differently
 	if (physics_deadflag != DEAD_NO)
-	if (physics_deadflag != DEAD_FREEZE)
-		goto end;
+	if (physics_deadflag != DEAD_FREEZE) {
+		if (physics_flags & FL_ONGROUND)
+			physics_velocity = '0 0 0';
 
+		goto end;
+	}
 	if(sv_slicksurfaces)
 	if(physics_flags & FL_ONGROUND) {
 		tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);

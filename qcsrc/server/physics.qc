@@ -235,8 +235,8 @@ void(void) physics_frame_begin_hook {
 	}
 
 
-	if (!self.fixangle)
-	{
+	if not(self.fixangle)
+	if not(PLAYER_REALLY_DEAD(self)) {
 		self.angles_x = 0;
 		self.angles_y = self.v_angle_y;
 		self.angles_z = 0;

@@ -111,7 +111,7 @@ void(float keepvelocity) player_copy_body {
 	self.modelindex_lod2 = oldself.modelindex_lod2;
 	self.skinindex = oldself.skinindex;
 	self.species = oldself.species;
-	self.movetype = oldself.movetype;
+	self.movetype = MOVETYPE_TOSS;
 	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
 	self.takedamage = oldself.takedamage;
