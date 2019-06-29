@@ -24,9 +24,9 @@ float physics_send(entity to, float sf);
 
 void(void) physics_on_jump_hook {
 	if (physics_crouch)
-		anim_set(self, self.anim_duckjump, FALSE, TRUE, TRUE);
+		anim_set(self.body, self.anim_duckjump, FALSE, TRUE, TRUE);
 	else
-		anim_set(self, self.anim_jump, FALSE, TRUE, TRUE);
+		anim_set(self.body, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
 		sound(self, CHAN_PLAYER, self.playersound_jump, VOL_BASE, ATTN_NORM);

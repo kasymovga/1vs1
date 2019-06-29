@@ -74,66 +74,75 @@ float bot_talk;
 .entity pusher;
 .float pushltime;
 
-void(float keepvelocity) player_copy_body {
-	local entity oldself;
-	if (self.effects & EF_NODRAW)
-		return;
-	oldself = self;
-	self = spawn();
-	self.enemy = oldself;
-	self.lip = oldself.lip;
-	self.colormap = oldself.colormap;
-	self.iscreature = oldself.iscreature;
-	self.angles = oldself.angles;
-	self.avelocity = oldself.avelocity;
-	self.classname = "body";
-	self.damageforcescale = oldself.damageforcescale;
-	self.effects = oldself.effects;
-	self.event_damage = oldself.event_damage;
-	self.animstate_startframe = oldself.animstate_startframe;
-	self.animstate_numframes = oldself.animstate_numframes;
-	self.animstate_framerate = oldself.animstate_framerate;
-	self.animstate_starttime = oldself.animstate_starttime;
-	self.animstate_endtime = oldself.animstate_endtime;
-	self.animstate_override = oldself.animstate_override;
-	self.animstate_looping = oldself.animstate_looping;
-	self.frame = oldself.frame;
-	self.dead_frame = oldself.dead_frame;
-	self.pain_finished = oldself.pain_finished;
-	self.health = oldself.health;
-	self.armorvalue = oldself.armorvalue;
-	self.armortype = oldself.armortype;
-	self.model = oldself.model;
-	self.modelindex = oldself.modelindex;
-	self.modelindex_lod0 = oldself.modelindex_lod0;
-	self.modelindex_lod0_from_nexuiz = oldself.modelindex_lod0_from_nexuiz;
-	self.modelindex_lod1 = oldself.modelindex_lod1;
-	self.modelindex_lod2 = oldself.modelindex_lod2;
-	self.skinindex = oldself.skinindex;
-	self.species = oldself.species;
-	self.movetype = MOVETYPE_TOSS;
-	self.nextthink = oldself.nextthink;
-	self.solid = oldself.solid;
-	self.takedamage = oldself.takedamage;
-	self.think = oldself.think;
-	self.customizeentityforclient = oldself.customizeentityforclient;
-	self.scale = oldself.scale;
-	self.deadflag = oldself.deadflag;
-	if (keepvelocity == 1)
-		self.velocity = oldself.velocity;
-	self.oldvelocity = self.velocity;
-	self.fade_time = oldself.fade_time;
-	self.fade_rate = oldself.fade_rate;
-	//self.weapon = oldself.weapon;
-	setorigin(self, oldself.origin);
-	setsize(self, oldself.mins, oldself.maxs);
-	self.reset = stdproc_remove;
+void(void) player_body_spawn {
+	self.body = spawn();
+	self.body.owner = self;
+	setattachment(self.body, self, "");
+}
 
-	self = oldself;
+void(void) player_corpse_think {
+	if (self.frame != self.dead_frame)
+	if (time >= self.animstate_endtime) {
+		if (self.owner.maxs_z > 5) {
+			self.owner.maxs_z = 5;
+			setsize(self.owner, self.owner.mins, self.owner.maxs);
+		}
+		self.frame = self.dead_frame;
+	}
+	if (time < self.fade_time) {
+		self.nextthink = self.fade_time;
+		return;
+	}
+	remove(self);
+}
+
+entity(float keepvelocity, float _movetype) player_body_detach {
+	if (self.effects & EF_NODRAW)
+		return world;
+
+	entity e = self.body;
+	e.owner = e;
+	player_body_spawn();
+	self.body.modelindex_lod0 = e.modelindex_lod0;
+	self.body.modelindex_lod1 = e.modelindex_lod1;
+	self.body.modelindex_lod2 = e.modelindex_lod2;
+	self.body.playermodel = e.playermodel;
+	setmodel(self.body, e.model);
+	setattachment(e, world, "");
+	e.body = e;
+	e.enemy = self;
+	e.iscreature = self.iscreature;
+	e.angles = self.angles;
+	e.avelocity = self.avelocity;
+	e.classname = "body";
+	e.damageforcescale = self.damageforcescale;
+	e.effects = self.effects;
+	e.event_damage = self.event_damage;
+	e.pain_finished = self.pain_finished;
+	e.health = self.health;
+	e.armorvalue = self.armorvalue;
+	e.armortype = self.armortype;
+	e.species = self.species;
+	e.movetype = _movetype;
+	e.solid = self.solid;
+	e.takedamage = self.takedamage;
+	e.scale = self.scale;
+	e.deadflag = self.deadflag;
+	if (keepvelocity == 1)
+		e.velocity = self.velocity;
+
+	e.oldvelocity = self.velocity;
+	e.fade_time = self.fade_time;
+	e.fade_rate = self.fade_rate;
+	//e.weapon = self.weapon;
+	setorigin(e, self.origin);
+	setsize(e, self.mins, self.maxs);
+	e.reset = stdproc_remove;
+	return e;
 }
 
 void(void) player_respawn {
-	player_copy_body(1);
+	player_body_detach(1, MOVETYPE_TOSS);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer();
 }
@@ -159,7 +168,7 @@ float() player_getspecies {
 			fgets(fh); fgets(fh);
 			sk = stof(fgets(fh));
 			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
-			if(fgets(fh) == self.model)
+			if(fgets(fh) == self.body.model)
 			{
 				l = fgets(fh);
 				len = tokenize_console(l);
@@ -217,7 +226,7 @@ void() player_effects {
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME);
 
-	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
+	if(!self.body.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
 	self.alpha = default_player_alpha;
@@ -264,7 +273,7 @@ void() player_setupanimsformodel {
 	self.anim_melee = stov(cvar_string("sv_player_melee_anim"));
 	self.anim_melee2 = stov(cvar_string("sv_player_melee_anim2"));
 	anim_parseerror = FALSE;
-	animfilename = strcat(self.model, ".animinfo");
+	animfilename = strcat(self.body.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
 	if (animfile >= 0)
 	{
@@ -299,7 +308,7 @@ void() player_setupanimsformodel {
 			print("Parse error in ", animfilename, ", some player animations are broken\n");
 	}
 	// reset animstate now
-	anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
+	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 }
 
 void(void) player_anim {
@@ -307,17 +316,7 @@ void(void) player_anim {
 	if (self.weaponentity)
 		anim_update(self.weaponentity);
 
-	if (self.deadflag != DEAD_NO && self.deadflag != DEAD_FREEZE)
-	{
-		if (time > self.animstate_endtime)
-		{
-			if (self.maxs_z > 5)
-			{
-				self.maxs_z = 5;
-				setsize(self, self.mins, self.maxs);
-			}
-			self.frame = self.dead_frame;
-		}
+	if (PLAYER_REALLY_DEAD(self)) {
 		return;
 	}
 
@@ -334,33 +333,33 @@ void(void) player_anim {
 		else if (self.crouch)
 		{
 			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
-				anim_set(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_duckwalk, TRUE, FALSE, FALSE);
 			else
-				anim_set(self, self.anim_duckidle, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_duckidle, TRUE, FALSE, FALSE);
 		}
 		else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20)
 		{
 			if (self.movement_x > 0 && self.movement_y == 0)
-				anim_set(self, self.anim_run, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_run, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y == 0)
-				anim_set(self, self.anim_runbackwards, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_runbackwards, TRUE, FALSE, FALSE);
 			else if (self.movement_x == 0 && self.movement_y > 0)
-				anim_set(self, self.anim_straferight, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_straferight, TRUE, FALSE, FALSE);
 			else if (self.movement_x == 0 && self.movement_y < 0)
-				anim_set(self, self.anim_strafeleft, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_strafeleft, TRUE, FALSE, FALSE);
 			else if (self.movement_x > 0 && self.movement_y > 0)
-				anim_set(self, self.anim_forwardright, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_forwardright, TRUE, FALSE, FALSE);
 			else if (self.movement_x > 0 && self.movement_y < 0)
-				anim_set(self, self.anim_forwardleft, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_forwardleft, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y > 0)
-				anim_set(self, self.anim_backright, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_backright, TRUE, FALSE, FALSE);
 			else if (self.movement_x < 0 && self.movement_y < 0)
-				anim_set(self, self.anim_backleft, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_backleft, TRUE, FALSE, FALSE);
 			else
-				anim_set(self, self.anim_run, TRUE, FALSE, FALSE);
+				anim_set(self.body, self.anim_run, TRUE, FALSE, FALSE);
 		}
 		else
-			anim_set(self, self.anim_idle, TRUE, FALSE, FALSE);
+			anim_set(self.body, self.anim_idle, TRUE, FALSE, FALSE);
 	}
 
 	if (self.weaponentity)
@@ -387,7 +386,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.health = self.health - _damage;
 	self.dmg_take = self.dmg_take + _damage;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-	if (self.health <= -75 && self.modelindex != 0)
+	if (self.health <= -75 && self.body.modelindex != 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
@@ -396,7 +395,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.view_ofs = '0 0 4';
 
 		violence_gib_splash(self, 1, 1, attacker);
-		self.modelindex = 0; // restore later
+		self.body.modelindex = 0; // restore later
+		self.event_damage = world.event_damage;
 		self.solid = SOLID_NOT; // restore later
 	}
 }
@@ -418,6 +418,10 @@ void(float killed) player_clear {
 	GameHookChain_PlayerClear(killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
+	if (self.classname == "disconnecting") {
+		remove(self.body);
+		self.body = world;
+	}
 }
 
 float checkrules_firstblood;
@@ -764,9 +768,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 			{
 				if (random() > 0.5)
-					anim_set(self, self.anim_pain1, FALSE, TRUE, TRUE);
+					anim_set(self.body, self.anim_pain1, FALSE, TRUE, TRUE);
 				else
-					anim_set(self, self.anim_pain2, FALSE, TRUE, TRUE);
+					anim_set(self.body, self.anim_pain2, FALSE, TRUE, TRUE);
 			}
 
 			if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
@@ -864,8 +868,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.avelocity = '0 0 0';
 		// view from the floor
 		self.view_ofs = '0 0 -8';
-		// toss the corpse
-		self.movetype = MOVETYPE_TOSS;
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
 		// don't stick to the floor
@@ -896,20 +898,21 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			self.respawn_countdown = -1; // do not count down
 		if (random() < 0.5)
 		{
-			anim_set(self, self.anim_die1, FALSE, TRUE, TRUE);
-			self.dead_frame = self.anim_dead1_x;
+			anim_set(self.body, self.anim_die1, FALSE, TRUE, TRUE);
+			self.body.dead_frame = self.anim_dead1_x;
 		}
 		else
 		{
-			anim_set(self, self.anim_die2, FALSE, TRUE, TRUE);
-			self.dead_frame = self.anim_dead2_x;
+			anim_set(self.body, self.anim_die2, FALSE, TRUE, TRUE);
+			self.body.dead_frame = self.anim_dead2_x;
 		}
 		// set damage function to corpse damage
 		self.event_damage = player_corpse_damage;
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
-		// set up to fade out later
-		entity_fade_setup(self, time + 12 + random () * 4, 1);
+		self.body.think = player_corpse_think;
+		self.body.fade_time = time + 15;
+		self.body.nextthink = min(self.body.fade_time, self.body.animstate_endtime);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
 		{
@@ -1017,12 +1020,12 @@ void(string f, float first) player_load_sounds {
 
 .float modelindex_for_playersound;
 void() player_update_sounds {
-	if(self.modelindex == self.modelindex_for_playersound)
+	if(self.body.modelindex == self.body.modelindex_for_playersound)
 		return;
-	self.modelindex_for_playersound = self.modelindex;
+	self.body.modelindex_for_playersound = self.body.modelindex;
 	player_clear_sounds();
 	player_load_sounds("sound/player/default.sounds", 1);
-	player_load_sounds(strcat(self.model, ".sounds"), 0);
+	player_load_sounds(strcat(self.body.model, ".sounds"), 0);
 }
 
 void player_voice_message(string type, string msg)
@@ -1072,7 +1075,7 @@ void player_voice_message(string type, string msg)
 	if (type == "taunt") {
 		if(self.classname == "player")
 			if(self.deadflag == DEAD_NO)
-				anim_set(self, self.anim_taunt, FALSE, TRUE, TRUE);
+				anim_set(self.body, self.anim_taunt, FALSE, TRUE, TRUE);
 		if(!sv_taunt)
 			return;
 
@@ -1149,36 +1152,37 @@ void(entity e, string modelname) player_setup_lod {
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
 		if(file_exists(s))
 		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod1 = self.modelindex;
+			setmodel(e.body, s); // players have high precision
+			self.body.modelindex_lod1 = self.body.modelindex;
 		}
 		else
-			self.modelindex_lod1 = -1;
+			self.body.modelindex_lod1 = -1;
 
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
 		if(file_exists(s))
 		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod2 = self.modelindex;
+			setmodel(e.body, s); // players have high precision
+			self.body.modelindex_lod2 = self.body.modelindex;
 		}
 		else
-			self.modelindex_lod2 = -1;
+			self.body.modelindex_lod2 = -1;
 
 		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-		if(self.modelindex_lod1 < 0)
-			self.modelindex_lod1 = self.modelindex;
+		setmodel(e.body, modelname); // players have high precision
+		self.body.modelindex_lod0 = self.body.modelindex;
+		if(self.body.modelindex_lod1 < 0)
+			self.body.modelindex_lod1 = self.body.modelindex;
 
-		if(self.modelindex_lod2 < 0)
-			self.modelindex_lod2 = self.modelindex;
+		if(self.body.modelindex_lod2 < 0)
+			self.body.modelindex_lod2 = self.body.modelindex;
 	} else {
 		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
+		setmodel(e.body, modelname); // players have high precision
+		self.body.modelindex_lod0 = self.body.modelindex;
 	}
-	s = whichpack(self.model);
-	self.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
+	s = whichpack(self.body.model);
+	self.body.playermodel = modelname;
+	self.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
 	player_setupanimsformodel();
 	player_update_sounds();
 }
@@ -1240,12 +1244,9 @@ void() player_setup_model {
 		forcecolor = g_player_forcecolor;
 		forcemodel = g_player_forcemodel;
 	}
-	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
-		self.model = ""; // force the != checks to return true
-
 	if(forcemodel != "" && forcemodel != "0")
 	{
-		if (forcemodel != self.model)
+		if (forcemodel != self.body.playermodel)
 		{
 			m1 = self.mins;
 			m2 = self.maxs;
@@ -1257,7 +1258,7 @@ void() player_setup_model {
 		if (forceskin >= 0)
 			self.skinindex = forceskin;
 	} else {
-		if (self.playermodel != self.model)
+		if (self.playermodel != self.body.playermodel)
 		{
 			self.playermodel = player_check_model(self.playermodel);
 			m1 = self.mins;
@@ -1277,6 +1278,7 @@ void() player_setup_model {
 		if (self.clientcolors != colors)
 			player_set_colors(self, colors);
 	}
+	self.body.colormap = self.colormap;
 }
 
 void(string s) player_precache_model {
@@ -1849,11 +1851,11 @@ void() player_post_think {
 	self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
 }
 
-float() player_customizeentityforclient {
+float() player_body_customize {
 	entity modelsource;
 
-	self.alpha = player_calculate_alpha(self, other);
-	if (GameHookChain_PlayerVisibleThroughWallFor(self, other))
+	self.alpha = player_calculate_alpha(self.owner, other);
+	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;
@@ -1861,16 +1863,16 @@ float() player_customizeentityforclient {
 	if(self.alpha < 0)
 		return FALSE;
 
-	if(self.modelindex == 0)
+	if (!self.modelindex && PLAYER_REALLY_DEAD(self.owner))
 		return TRUE;
 
 	modelsource = self;
 #ifdef ALLOW_FORCEMODELS
 	if(other.cvar_cl_forceplayermodelsfromnexuiz)
 		if not(self.modelindex_lod0_from_nexuiz)
-			modelsource = other;
+			modelsource = other.body;
 	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
-		modelsource = other;
+		modelsource = other.body;
 #endif
 	self.skin = modelsource.skinindex;
 	float distance;
@@ -1917,6 +1919,10 @@ void(entity spot) player_spawn {
 	self.keys = 0;
 	self.touch = push_touch;
 	self.pushfactor = g_player_pushfactor;
+	if not(self.body)
+		player_body_spawn();
+
+	setmodel(self, "null");
 	if not(GameHook_EquipPlayerHandle()) {
 		if(inWarmupStage) {
 			self.ammo_shells = warmup_start_ammo_shells;
@@ -1985,9 +1991,8 @@ void(entity spot) player_spawn {
 		WriteByte(MSG_ONE, TE_CSQC_SPAWN);
 	});
 	if(sv_loddistance1)
-		self.customizeentityforclient = player_customizeentityforclient;
+		self.body.customizeentityforclient = player_body_customize;
 
-	self.model = "";
 	player_setup_model();
 	self.stand_view_ofs = PL_VIEW_OFS;
 	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;

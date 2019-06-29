@@ -400,3 +400,4 @@ string lsmaps_reply2;
 .float bgmscriptdecay;
 .float bgmscriptsustain;
 .float bgmscriptrelease;
+.entity body;

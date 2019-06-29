@@ -243,9 +243,10 @@ void(float frags_team_reset) spectator_observer_spawn {
 	setsize (self, '0 0 0', '0 0 0');
 	self.items = 0;
 	self.weapons = 0;
-	self.model = "";
-	player_setup_model();
-	self.model = "";
+	if (self.body) {
+		remove(self.body);
+		self.body = world;
+	}
 	self.modelindex = 0;
 	self.weapon = 0;
 	self.weaponmodel = "";

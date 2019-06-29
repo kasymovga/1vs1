@@ -20,7 +20,7 @@ void(entity spot) hat_Spawn {
 	setmodel(self.hat, sv_player_hat);
 	self.hat.owner = self;
 	self.hat.scale = sv_player_hat_scale;
-	setattachment(self.hat, self, sv_player_hat_attachment);
+	setattachment(self.hat, self.body, sv_player_hat_attachment);
 	self.hat.angles = sv_player_hat_angles;
 	setorigin(self.hat, sv_player_hat_origin);
 	self.hat.customizeentityforclient = weapon_model_exterior_customize;

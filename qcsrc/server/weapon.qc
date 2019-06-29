@@ -394,7 +394,7 @@ void weapon_frame()
 			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
 		} else if (self.weaponentity.state == WS_CLEAR)
 		{
-			anim_set(self, self.anim_draw, FALSE, TRUE, TRUE);
+			anim_set(self.body, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(_switchweapon, WR_SETUP);
@@ -1116,11 +1116,11 @@ void weapon_model_exterior_dlc_reset() {
 	}
 	else if (akimbo_weapon && g_akimbo_use_left_hand) {
 		if (akimbo_weapon)
-			setattachment(self, ao, "bip01 l hand");
+			setattachment(self, ao.body, "bip01 l hand");
 
 		self.angles = stov(cvar_string("g_akimbo_use_left_hand_rotate"));
 	} else {
-		setattachment(self, ao, "bip01 r hand");
+		setattachment(self, ao.body, "bip01 r hand");
 		if (akimbo_weapon)
 			setorigin(self, '0 20 0');
 	}
@@ -1347,7 +1347,7 @@ void weapon_thinkf(float fr, float t, void() func)
 		else
 			anim = self.anim_shoot;
 		anim_z = anim_y / t;
-		anim_set(self, anim, FALSE, TRUE, TRUE);
+		anim_set(self.body, anim, FALSE, TRUE, TRUE);
 	}
 }
 
