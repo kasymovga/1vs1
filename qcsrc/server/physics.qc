@@ -4,7 +4,6 @@
 float speedmeter;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
-float sv_csqc_physic;
 
 .float ladder_time;
 .entity ladder_entity;
