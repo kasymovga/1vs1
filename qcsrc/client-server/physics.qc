@@ -30,7 +30,7 @@ void(void) physics_impact {
 
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
-	tracebox(o, self.mins, self.maxs, o, MOVE_WORLDONLY, self);
+	tracebox(o, self.mins, self.maxs, o, MOVE_NORMAL, self);
 	if (trace_startsolid)
 		return FALSE;
 
@@ -39,7 +39,7 @@ float(vector v) physics_unstuck_to {
 }
 
 void(void) physics_unstuck {
-	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_WORLDONLY, self);
+	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
 	if not(trace_startsolid)
 		return;
 
