@@ -9,19 +9,6 @@ float(entity to, float sf) model_client_send;
 
 float(void) model_lod_customize {
 	float d;
-
-	if(cvar("loddebug"))
-	{
-		d = cvar("loddebug");
-		if(d == 1)
-			self.modelindex = self.modelindex_lod0;
-		else if(d == 2)
-			self.modelindex = self.modelindex_lod1;
-		else // if(d == 3)
-			self.modelindex = self.modelindex_lod2;
-		return TRUE;
-	}
-
 	// TODO csqc network this so it only gets sent once
 	d = vlen(entity_nearest_point_on_box(self, other.origin) - other.origin);
 	if(d < self.loddistance1)
