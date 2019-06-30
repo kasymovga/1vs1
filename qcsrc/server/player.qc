@@ -146,10 +146,8 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 
 void(void) player_respawn {
 	player_body_detach(1, MOVETYPE_TOSS);
-	self.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer();
 }
-
 
 float() player_getspecies {
 	local float glob, i, j, fh, len, s, sk;
@@ -227,12 +225,9 @@ void() player_effects {
 		}
 	}
 
-	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME);
-
 	if(!self.body.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
-	self.alpha = default_player_alpha;
 	fire_apply_effect(self);
 
 	if (GameHookChain_PlayerEffectsHandle())
@@ -244,6 +239,9 @@ void() player_effects {
 	if (time >= game_starttime)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+
+	self.body.effects = self.effects;
+	self.effects = 0;
 }
 
 void() player_setupanimsformodel {
@@ -852,8 +850,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			}
 		}
         entity_drop_entities(self);
-		// become fully visible
-		self.alpha = 1;
 		// clear selected player display
 		if not(GameHookChain_ThrowWeaponOnDeathHandle())
 			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);

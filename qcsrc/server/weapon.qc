@@ -756,7 +756,7 @@ void weapon_model_dlc_reset() {
 
 void weapon_model_think()
 {
-	float tb, v_shot_idx;
+	float v_shot_idx;
 	self.nextthink = time;
 	if (intermission_running)
 		self.frame = self.anim_idle_x;
@@ -923,12 +923,7 @@ void weapon_model_think()
 		anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 	}
 
-	tb = (self.effects & EF_TELEPORT_BIT);
-	self.effects = self.owner.effects & EFMASK_CHEAP;
-	self.effects &~= EF_LOWPRECISION;
-	self.effects &~= EF_FULLBRIGHT; // can mask team color, so get rid of it
-	self.effects &~= EF_TELEPORT_BIT;
-	self.effects |= tb;
+	self.effects = self.owner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE);
 
 	self.colormap = self.owner.colormap;
 	self.alpha = player_calculate_alpha(self.owner, self.owner);
@@ -1150,9 +1145,7 @@ void weapon_model_exterior_think()
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
 	}
-	self.effects = self.owner.effects | EF_LOWPRECISION;
-	self.effects = self.effects & EFMASK_CHEAP; // eat performance
-
+	self.effects = self.owner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE | EF_LOWPRECISION | EF_FULLBRIGHT);
 	self.colormap = self.owner.colormap;
 }
 
