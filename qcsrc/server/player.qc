@@ -81,19 +81,23 @@ void(void) player_body_spawn {
 }
 
 void(void) player_corpse_think {
-	if (self.frame != self.dead_frame)
-	if (time >= self.animstate_endtime) {
-		if (self.owner.maxs_z > 5) {
-			self.owner.maxs_z = 5;
-			setsize(self.owner, self.owner.mins, self.owner.maxs);
+	if (self.frame != self.dead_frame) {
+		anim_update(self);
+		if (time >= self.animstate_endtime) {
+			if (self.owner.maxs_z > 5) {
+				self.owner.maxs_z = 5;
+				setsize(self.owner, self.owner.mins, self.owner.maxs);
+			}
+			self.frame = self.dead_frame;
 		}
-		self.frame = self.dead_frame;
-	}
-	if (time < self.fade_time) {
-		self.nextthink = self.fade_time;
+	} else if (time >= self.fade_time) {
+		if (self.owner.body == self)
+			self.owner.body = world;
+
+		remove(self);
 		return;
 	}
-	remove(self);
+	self.nextthink = time;
 }
 
 entity(float keepvelocity, float _movetype) player_body_detach {
@@ -133,8 +137,6 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 		e.velocity = self.velocity;
 
 	e.oldvelocity = self.velocity;
-	e.fade_time = self.fade_time;
-	e.fade_rate = self.fade_rate;
 	//e.weapon = self.weapon;
 	setorigin(e, self.origin);
 	setsize(e, self.mins, self.maxs);
@@ -373,6 +375,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	_damage = max(_damage - 5, 1);
+	entity b = self.body;
+	entity o = b.owner;
 
 	if (_damage > 30)
 		sound (self, CHAN_PROJECTILE, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
@@ -384,19 +388,19 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (_damage > 100)
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	self.health = self.health - _damage;
+	o.health = o.health - _damage;
 	self.dmg_take = self.dmg_take + _damage;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-	if (self.health <= -75 && self.body.modelindex != 0)
+	if (o.health <= -75 && b.modelindex != 0)
 	{
 		// don't use any animations as a gib
-		self.frame = 0;
-		self.dead_frame = 0;
+		b.frame = 0;
+		b.dead_frame = 0;
 		// view just above the floor
-		self.view_ofs = '0 0 4';
+		o.view_ofs = '0 0 4';
 
 		violence_gib_splash(self, 1, 1, attacker);
-		self.body.modelindex = 0; // restore later
+		b.modelindex = 0; // restore later
 		self.event_damage = world.event_damage;
 		self.solid = SOLID_NOT; // restore later
 	}
@@ -914,7 +918,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.event_damage(inflictor, attacker, 0, deathtype, hitloc, force);
 		self.body.think = player_corpse_think;
 		self.body.fade_time = time + 15;
-		self.body.nextthink = min(self.body.fade_time, self.body.animstate_endtime);
+		self.body.nextthink = time;
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
 		{
