@@ -102,6 +102,7 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 
 	entity e = self.body;
 	e.owner = e;
+	e.skinindex = self.skinindex;
 	player_body_spawn();
 	self.body.modelindex_lod0 = e.modelindex_lod0;
 	self.body.modelindex_lod1 = e.modelindex_lod1;
@@ -312,7 +313,7 @@ void() player_setupanimsformodel {
 }
 
 void(void) player_anim {
-	anim_update(self);
+	anim_update(self.body);
 	if (self.weaponentity)
 		anim_update(self.weaponentity);
 
@@ -320,14 +321,14 @@ void(void) player_anim {
 		return;
 	}
 
-	if (!self.animstate_override)
+	if (!self.body.animstate_override)
 	{
 		if (!(self.flags & FL_ONGROUND))
 		{
 			if (self.crouch)
-				anim_set(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+				anim_set(self.body, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
 			else
-				anim_set(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+				anim_set(self.body, self.anim_jump, FALSE, TRUE, self.restart_jump);
 			self.restart_jump = FALSE;
 		}
 		else if (self.crouch)
@@ -420,6 +421,7 @@ void(float killed) player_clear {
 	WaypointSprite_PlayerDead();
 	if (self.classname == "disconnecting") {
 		remove(self.body);
+		str_unzone_ifneeded(self.body.playermodel);
 		self.body = world;
 	}
 }
@@ -1147,42 +1149,33 @@ float(entity plr, entity viewer) player_calculate_alpha {
 
 void(entity e, string modelname) player_setup_lod {
 	string s;
-	if(sv_loddistance1)
-	{
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-		if(file_exists(s))
-		{
-			setmodel(e.body, s); // players have high precision
-			self.body.modelindex_lod1 = self.body.modelindex;
-		}
-		else
-			self.body.modelindex_lod1 = -1;
+	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
+	if(file_exists(s)) {
+		setmodel(e.body, s); // players have high precision
+		e.body.modelindex_lod1 = e.body.modelindex;
+	} else
+		e.body.modelindex_lod1 = -1;
 
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-		if(file_exists(s))
-		{
-			setmodel(e.body, s); // players have high precision
-			self.body.modelindex_lod2 = self.body.modelindex;
-		}
-		else
-			self.body.modelindex_lod2 = -1;
+	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
+	if(file_exists(s)) {
+		setmodel(e.body, s); // players have high precision
+		e.body.modelindex_lod2 = e.body.modelindex;
+	} else
+		e.body.modelindex_lod2 = -1;
 
-		precache_model(modelname);
-		setmodel(e.body, modelname); // players have high precision
-		self.body.modelindex_lod0 = self.body.modelindex;
-		if(self.body.modelindex_lod1 < 0)
-			self.body.modelindex_lod1 = self.body.modelindex;
+	precache_model(modelname);
+	setmodel(e.body, modelname); // players have high precision
+	e.body.modelindex_lod0 = e.body.modelindex;
+	if(e.body.modelindex_lod1 < 0)
+		e.body.modelindex_lod1 = e.body.modelindex;
 
-		if(self.body.modelindex_lod2 < 0)
-			self.body.modelindex_lod2 = self.body.modelindex;
-	} else {
-		precache_model(modelname);
-		setmodel(e.body, modelname); // players have high precision
-		self.body.modelindex_lod0 = self.body.modelindex;
-	}
-	s = whichpack(self.body.model);
-	self.body.playermodel = modelname;
-	self.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
+	if(e.body.modelindex_lod2 < 0)
+		e.body.modelindex_lod2 = e.body.modelindex;
+
+	s = whichpack(e.body.model);
+	str_unzone_ifneeded(e.body.playermodel);
+	e.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
+	e.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
 	player_setupanimsformodel();
 	player_update_sounds();
 }
@@ -1258,8 +1251,7 @@ void() player_setup_model {
 		if (forceskin >= 0)
 			self.skinindex = forceskin;
 	} else {
-		if (self.playermodel != self.body.playermodel)
-		{
+		if (self.playermodel != self.body.playermodel) {
 			self.playermodel = player_check_model(self.playermodel);
 			m1 = self.mins;
 			m2 = self.maxs;
@@ -1268,6 +1260,7 @@ void() player_setup_model {
 			chmdl = TRUE;
 		}
 		oldskin = self.skinindex;
+		self.skinindex = stof(self.playerskin);
 		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
 	}
 	if(chmdl || oldskin != self.skinindex)
@@ -1814,9 +1807,9 @@ void(void) player_impulse {
 							setorigin(e, org);
 							print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST;
-							setmodel(e, self.model);
-							e.frame = self.frame;
-							e.skin = self.skin;
+							setmodel(e, self.body.model);
+							e.frame = self.body.frame;
+							e.skin = self.body.skin;
 							setsize(e, '0 0 0', '0 0 0');
 							++i;
 						}
@@ -1874,7 +1867,7 @@ float() player_body_customize {
 	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
 		modelsource = other.body;
 #endif
-	self.skin = modelsource.skinindex;
+	self.skin = modelsource.owner.skinindex;
 	float distance;
 	float f;
 	if(other.cvar_cl_playerdetailreduction <= 0) {
@@ -2301,8 +2294,8 @@ void() player_init {
 			str_unzone_ifneeded(g_player_forcemodel_pink);
 			g_player_forcemodel_pink = str_zone_ifneeded(s);
 		}
-		g_player_forcecolor = ((cvar_string("sv_defaultplayercolors") == "") ? -2 : cvar("sv_defaultplayercolors"));
-		g_player_forceskin = ((cvar_string("sv_defaultplayerskin") == "") ? -1 : cvar("sv_defaultplayerskin"));
+		g_player_forcecolor = ((cvar_string("sv_defaultplayercolors") == "") ? g_player_forcecolor : cvar("sv_defaultplayercolors"));
+		g_player_forceskin = ((cvar_string("sv_defaultplayerskin") == "") ? g_player_forceskin : cvar("sv_defaultplayerskin"));
 	}
 	if (g_player_forcemodel_blue == "" || g_player_forcemodel_blue == "0") {
 		str_unzone_ifneeded(g_player_forcemodel_blue);
