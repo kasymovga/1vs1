@@ -19,6 +19,7 @@ float g_balance_grapplehook_length_min;
 float g_balance_grapplehook_speed_fly;
 float g_balance_grapplehook_speed_pull;
 float g_balance_grapplehook_stretch;
+float g_balance_grapplehook_onground_pullfactor;
 float g_grappling_hook_tarzan;
 vector hook_shotorigin;
 
@@ -208,9 +209,11 @@ void() hook_think {
 				{
 					if(self.aiment.pushfactor)
 					{
-						self.owner.velocity = self.owner.velocity - dv * 0.5;
-						self.aiment.velocity = self.aiment.velocity - dv * self.aiment.pushfactor;
-						self.aiment.flags &~= FL_ONGROUND;
+						float pullfactor = 0.5;
+						if (self.aiment.flags & FL_ONGROUND)
+							pullfactor = 0.5 * g_balance_grapplehook_onground_pullfactor;
+
+						self.aiment.velocity = self.aiment.velocity - dv * (self.aiment.pushfactor / self.owner.pushfactor) * pullfactor;
 						self.aiment.pusher = self.owner;
 						self.aiment.pushltime = time + g_maxpushtime;
 					}
@@ -477,6 +480,7 @@ void(float force) hook_init {
 	CACHE_CVAR(g_balance_grapplehook_speed_fly);
 	CACHE_CVAR(g_balance_grapplehook_speed_pull);
 	CACHE_CVAR(g_balance_grapplehook_stretch);
+	CACHE_CVAR(g_balance_grapplehook_onground_pullfactor);
 	CACHE_CVAR(g_grappling_hook_tarzan);
 	CACHE_CVAR(g_grappling_hook);
 	if not(g_grappling_hook)

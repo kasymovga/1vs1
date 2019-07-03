@@ -337,6 +337,7 @@ set g_player_forceskin_red -1
 set g_player_forceskin_blue -1
 set g_player_forceskin_yellow -1
 set g_player_forceskin_pink -1
+set g_balance_grapplehook_onground_pullfactor 4
 set campaign_g_player_forcemodel "0"
 set campaign_g_player_forceskin "-1"
 set campaign_g_player_forcecolor "-2"
