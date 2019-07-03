@@ -21,6 +21,12 @@ void(vector start, vector end, float t, entity forent) skipnonsolid_traceline {
 void(vector start, vector mi, vector ma, vector end, float nomonst, entity forent) skipnonsolid_tracebox {
     float prev_trace_fract = 0;
     float tries;
+	if (mi_x != ma_x)
+	if (mi_y != ma_y)
+	if (mi_z != ma_z) {
+        tracebox_real(start, mi, ma, end, nomonst, forent);
+		return;
+	}
     for (tries = 10; tries > 0; tries--) {
         tracebox_real(start, mi, ma, end, nomonst, forent);
         if(trace_fraction == 1)
