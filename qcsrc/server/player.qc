@@ -1844,17 +1844,30 @@ void() player_post_think {
 	self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
 }
 
-float() player_body_customize {
-	entity modelsource;
-
+float(void) player_customize {
 	self.alpha = player_calculate_alpha(self.owner, other);
+	if(self.alpha < 0)
+		return FALSE;
+
 	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;
 
+	return TRUE;
+}
+
+float(void) player_body_customize {
+	entity modelsource;
+
+	self.alpha = player_calculate_alpha(self.owner, other);
 	if(self.alpha < 0)
 		return FALSE;
+
+	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
+		self.effects |= EF_NODEPTHTEST;
+	else
+		self.effects &~= EF_NODEPTHTEST;
 
 	if (!self.modelindex && PLAYER_REALLY_DEAD(self.owner))
 		return TRUE;
@@ -1983,9 +1996,8 @@ void(entity spot) player_spawn {
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_SPAWN);
 	});
-	if(sv_loddistance1)
-		self.body.customizeentityforclient = player_body_customize;
-
+	self.customizeentityforclient = player_customize;
+	self.body.customizeentityforclient = player_body_customize;
 	player_setup_model();
 	self.stand_view_ofs = PL_VIEW_OFS;
 	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
