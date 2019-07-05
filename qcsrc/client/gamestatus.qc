@@ -3,6 +3,7 @@ void GameStatus_Draw() {
 		return;
 
 	vector pos, _size;
+	drawfont = sbar_bigfont;
 	pos = self.origin;
 	string tail = self.message, head;
 	float n;

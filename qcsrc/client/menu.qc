@@ -99,6 +99,7 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void Menu_Draw() {
 	float i;
 	string menu_string;
+	drawfont = sbar_bigfont;
 	vector pos;
 	float center;
 	float size_scale;

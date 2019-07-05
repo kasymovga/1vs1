@@ -83,11 +83,13 @@ void GUI_Draw_Remove() {
 	draw_reset();
 	drawBackground(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	draw_reset();
+	drawfont = sbar_font;
 	draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
 }
 void GUI_Draw() {
 	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
+	drawfont = sbar_font;
 	if (GUI_alpha < 1) {
 		if (timescale < 1)
 			GUI_alpha += 0.05;
@@ -100,6 +102,7 @@ void GUI_Draw() {
 	drawBackground(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	draw_reset();
 	draw_alpha *= GUI_alpha;
+	drawfont = sbar_font;
 	mainWindow.drawGUI(mainWindow);
 	m_tooltip(mainWindow, GUI_mouse_pos);
 	Mouse_Enable();
@@ -122,6 +125,7 @@ void GUI_Show(float window) {
 		cvar_set("con_chat", "0");
 		SkinInit();
 		loadTooltips();
+		drawfont = sbar_font;
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
 	}

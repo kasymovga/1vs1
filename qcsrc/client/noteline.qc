@@ -23,6 +23,7 @@ void NoteLine_Remove() {
 vector NoteLine_Pos;
 void NoteLine_DrawLine(string s)
 {
+	drawfont = sbar_font;
 	drawcolorcodedstring(
 		NoteLine_Pos - sbar_fontsize_x * '1 0 0' * (stringwidth(s, TRUE) + 1),
 		s,
