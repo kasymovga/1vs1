@@ -213,7 +213,7 @@ void(void) physics_move {
 
 		// check if it moved at all
 		if(trace1_endpos == self.origin) {
-			if (blocked_prev) {
+			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0) {
 				prev_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
 				f = (physics_velocity * prev_plane_normal);
 				physics_velocity = physics_velocity - f * prev_plane_normal;
@@ -493,22 +493,24 @@ vector(void) physics_player_touch_wall {
 	max_normal = 0.2;
 	start = self.origin;
 	end = start + v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	vector _mins = self.mins;
+	_mins_z = _mins_z + sv_stepheight;
+	tracebox (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start + v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
