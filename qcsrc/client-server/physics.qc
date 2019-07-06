@@ -28,6 +28,7 @@ void(void) physics_impact {
 	}
 }
 
+#ifdef SVQC
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
 	tracebox(o, self.mins, self.maxs, o, MOVE_NORMAL, self);
@@ -61,6 +62,7 @@ void(void) physics_unstuck {
 	if (physics_unstuck_to('-0.125 0 0'))
 		return;
 }
+#endif
 
 void(float ground) physics_update_status {
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
@@ -110,14 +112,50 @@ void(float ground) physics_update_status {
 
 }
 
+vector(vector v1, vector v2) physics_bbox_nearest_normal {
+	vector v = v1 + v2;
+	vector nearest;
+	float _max, check;
+	_max = v * '1 0 0';
+	nearest = '1 0 0';
+	check = v * '-1 0 0';
+	if (check > _max) {
+		nearest = '-1 0 0';
+		_max = check;
+	}
+	check = v * '0 1 0';
+	if (check > _max) {
+		nearest = '0 1 0';
+		_max = check;
+	}
+	check = v * '0 -1 0';
+	if (check > _max) {
+		nearest = '0 -1 0';
+		_max = check;
+	}
+	check = v * '0 0 1';
+	if (check > _max) {
+		nearest = '0 0 1';
+		_max = check;
+	}
+	check = v * '0 0 -1';
+	if (check > _max) {
+		nearest = '0 0 -1';
+		_max = check;
+	}
+	return nearest;
+}
+
 void(void) physics_move {
 	float bump;
 	float t;
 	float f;
+	float blocked_prev = 0;
 	vector neworigin;
 	vector currentorigin2;
 	vector neworigin2;
 	vector primalvelocity;
+	vector prev_plane_normal;
 
 	vector trace1_endpos = '0 0 0';
 	vector trace2_endpos = '0 0 0';
@@ -174,9 +212,21 @@ void(void) physics_move {
 		}
 
 		// check if it moved at all
-		if(trace1_fraction >= 0.001) {
+		if(trace1_endpos == self.origin) {
+			if (blocked_prev) {
+				prev_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
+				f = (physics_velocity * prev_plane_normal);
+				physics_velocity = physics_velocity - f * prev_plane_normal;
+			} else
+				blocked_prev = 1;
+
+			prev_plane_normal = trace1_plane_normal;
+		} else {
 			setorigin(self, trace1_endpos);
+			blocked_prev = 0;
+#ifdef SVQC
 			physics_unstuck();
+#endif
 		}
 
 		// check if it moved all the way
