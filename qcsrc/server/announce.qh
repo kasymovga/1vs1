@@ -1,0 +1,4 @@
+.float announcetime;
+float announce_force(entity player, string msg, string txt);
+float announce(entity player, string msg, string txt);
+void(void) announce_init;
