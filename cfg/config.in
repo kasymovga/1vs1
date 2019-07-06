@@ -139,6 +139,7 @@ set sv_announcer_extra_twohits "" "Additional announcer sound"
 set sv_announcer_extra_vote_now "" "Additional announcer sound"
 set sv_announcer_extra_vote_failed "" "Additional announcer sound"
 set sv_announcer_extra_vote_passed "" "Additional announcer sound"
+set sv_announcer_print 0
 set sv_sound_frag ""
 set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
 set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"

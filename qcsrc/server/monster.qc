@@ -223,7 +223,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 	self.velocity = self.velocity + force * self.damageforcescale;
 	if (self.health < 1) {
-		stopsound(self, CHAN_TRIGGER);
+		sound_stop(self, CHAN_TRIGGER);
 		monster_sound(self, self.noise2, FALSE);
 		GameHook_MonsterKilled(attacker);
 		entity o = self.owner;

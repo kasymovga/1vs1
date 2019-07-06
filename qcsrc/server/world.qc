@@ -144,11 +144,11 @@ void() world_precache {
     precache_sound ("misc/bodyimpact1.wav");
     precache_sound ("misc/bodyimpact2.wav");
     precache_sound ("misc/gib.wav");
-	precache_randomsound("misc/gib_splat0", 4);
+	sound_random_precache("misc/gib_splat0", 4);
     precache_sound ("misc/hit.wav");
 	precache_sound ("misc/menu2.wav");
-    precache_randomsound("misc/hitground", 4);
-    precache_randomsound("misc/metalhitground", 4);
+    sound_random_precache("misc/hitground", 4);
+    sound_random_precache("misc/metalhitground", 4);
     precache_sound("misc/outwater.wav");
     precache_sound ("misc/null.wav");
     precache_sound ("misc/spawn.wav");
@@ -300,6 +300,7 @@ void world_dynamic_init() {
 	backpack_init();
 	pinata_init();
 	chat_init();
+	announce_init();
 }
 
 void world_db_init() {
@@ -879,14 +880,14 @@ void world_check_0min_remaining(float timelimit) { }
 var void(float timelimit) world_check_time_remaining = world_check_0min_remaining;
 void world_check_1min_remaining(float timelimit) {
 	if (time + 60 >= timelimit) {
-		play2all("announcer/robotic/1minuteremains.wav");
+		sound_play2all("announcer/robotic/1minuteremains.wav");
 		world_check_time_remaining = world_check_0min_remaining;
 	}
 }
 
 void world_check_5min_remaining(float timelimit) {
 	if (time + 300 >= timelimit) {
-		play2all("announcer/robotic/5minutesremain.wav");
+		sound_play2all("announcer/robotic/5minutesremain.wav");
 		world_check_time_remaining = world_check_1min_remaining;
 	}
 }
@@ -912,7 +913,7 @@ void() world_gameover {
 			gameover_message = strcat(gameover_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
 	}
 	GameStatus_Set(GameHook_GameOverMessageMod(gameover_message), 30);
-	play2all("misc/menu2.wav");
+	sound_play2all("misc/menu2.wav");
 	intermission_running = 1;
 // enforce a wait time before allowing changelevel
 	if(player_count > 0)
@@ -1008,14 +1009,14 @@ void() world_check_rules {
 			if (f >= 1) {
 				if (floor(f - frametime) != floor(f)) {
 					if (f < 4)
-						play2all(strcat("announcer/robotic/", ftos(floor(f)), ".wav"));
+						sound_play2all(strcat("announcer/robotic/", ftos(floor(f)), ".wav"));
 
 					GameStatus_Set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
 				}
 			}
 			if (time >= game_starttime) {
 				GameStatus_Set("^1Begin!", 1);
-				play2all("announcer/robotic/begin.wav");
+				sound_play2all("announcer/robotic/begin.wav");
 				world_check_time_remaining = world_check_5min_remaining;
 			}
 		}
@@ -1063,16 +1064,16 @@ void EndFrame()
 		if(self.classname == "spectator")
 		{
 			if(self.enemy.typehitsound)
-				play2(self, "misc/typehit.wav");
+				sound_play2(self, "misc/typehit.wav");
 			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				sound_play2(self, "misc/hit.wav");
 		}
 		else
 		{
 			if(self.typehitsound)
-				play2(self, "misc/typehit.wav");
+				sound_play2(self, "misc/typehit.wav");
 			else if(self.hitsound && self.cvar_cl_hitsound)
-				play2(self, "misc/hit.wav");
+				sound_play2(self, "misc/hit.wav");
 		}
 	}
 	FOR_EACH_CLIENT(self) {
@@ -1199,7 +1200,7 @@ void CreatureFrame (void)
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
 					if(self.air_finished < time + 9)
-						sound(self, CHAN_PLAYER, randomsound_bystr(self.playersound_gasp), VOL_BASE, ATTN_NORM);
+						sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_gasp), VOL_BASE, ATTN_NORM);
 					self.air_finished = time + 12;
 					if (self.nextstep < time)
 					if (self.waterlevel < WATERLEVEL_SUBMERGED)
@@ -1583,7 +1584,7 @@ void(float dorespawn) world_reset {
 
 		if(self.flags & FL_PROJECTILE) // remove any projectiles left
 		{
-			stopsound(self, CHAN_PAIN);
+			sound_stop(self, CHAN_PAIN);
 			remove(self);
 		}
 	}

@@ -1299,7 +1299,7 @@ void() item_mushroom_touch {
 		WriteByte(MSG_ONE, TE_CSQC_TRIP);
 		WriteByte(MSG_ONE, 15);
 		if (sv_sound_mushroom != "")
-			announce(other, sv_sound_mushroom);
+			announce(other, sv_sound_mushroom, "");
 	}
 }
 

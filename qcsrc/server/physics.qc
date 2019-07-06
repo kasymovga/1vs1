@@ -77,9 +77,9 @@ void(void) physics_check_ground_hook {
 				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 				{
 					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-						sound(self, CHAN_PLAYER, randomsound("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
+						sound(self, CHAN_PLAYER, sound_random("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 					else
-						sound(self, CHAN_PLAYER, randomsound("misc/hitground", 4), VOL_BASE, ATTN_NORM);
+						sound(self, CHAN_PLAYER, sound_random("misc/hitground", 4), VOL_BASE, ATTN_NORM);
 				}
 			}
 		}

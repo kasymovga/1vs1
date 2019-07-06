@@ -237,7 +237,7 @@ float GameCommand_Vote(string s, entity e) {
 						votecalledmaster = FALSE;
 						votefinished = time + cvar("sv_vote_timeout");
 						if (sv_announcer_extra_vote_now != "")
-							play2all(sv_announcer_extra_vote_now);
+							sound_play2all(sv_announcer_extra_vote_now);
 
 						votecaller = e; // remember who called the vote
 						if(e) {
@@ -279,7 +279,7 @@ float GameCommand_Vote(string s, entity e) {
 					vote_note = NoteLine_New(Vote_Note_Message);
 					votefinished = time + cvar("sv_vote_timeout");
 					if (sv_announcer_extra_vote_now != "")
-						play2all(sv_announcer_extra_vote_now);
+						sound_play2all(sv_announcer_extra_vote_now);
 
 					votecaller = e; // remember who called the vote
 					if(e) {
@@ -553,7 +553,7 @@ void VoteAccept() {
 	}
 	VoteReset();
 	if (sv_announcer_extra_vote_passed)
-		play2all(sv_announcer_extra_vote_passed);
+		sound_play2all(sv_announcer_extra_vote_passed);
 }
 
 void VoteReject() {
@@ -562,7 +562,7 @@ void VoteReject() {
 	IRC_Announce_Vote(tmp);
 	VoteReset();
 	if (sv_announcer_extra_vote_passed)
-		play2all(sv_announcer_extra_vote_failed);
+		sound_play2all(sv_announcer_extra_vote_failed);
 }
 
 void VoteTimeout() {

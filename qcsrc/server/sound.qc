@@ -3,8 +3,7 @@
 #define SND_LARGEENTITY 8
 #define SND_LARGESOUND  16
 
-void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
-{
+void(float dest, entity e, vector o, float chan, string samp, float vol, float atten) sound_to_at {
     float entno, idx;
 
     entno = num_for_edict(e);
@@ -49,18 +48,16 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     WriteCoord(dest, o_y);
     WriteCoord(dest, o_z);
 }
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
-{
+void(float dest, entity e, float chan, string samp, float vol, float atten) sound_to {
     vector o;
     o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(dest, e, o, chan, samp, vol, atten);
+    sound_to_at(dest, e, o, chan, samp, vol, atten);
 }
-void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
-{
-    soundtoat(MSG_BROADCAST, e, o, chan, samp, vol, atten);
+void sound_at(entity e, vector o, float chan, string samp, float vol, float atten) {
+    sound_to_at(MSG_BROADCAST, e, o, chan, samp, vol, atten);
 }
-void stopsoundto(float dest, entity e, float chan)
-{
+
+void sound_stop_to(float dest, entity e, float chan) {
     float entno;
     entno = num_for_edict(e);
 
@@ -89,42 +86,20 @@ void stopsoundto(float dest, entity e, float chan)
         WriteShort(dest, entno * 8 + chan);
     }
 }
-void stopsound(entity e, float chan)
-{
-    stopsoundto(MSG_BROADCAST, e, chan); // unreliable, gets there fast
-    stopsoundto(MSG_ALL, e, chan); // in case of packet loss
+void(entity e, float chan) sound_stop {
+    sound_stop_to(MSG_BROADCAST, e, chan); // unreliable, gets there fast
+    sound_stop_to(MSG_ALL, e, chan); // in case of packet loss
 }
 
-void play2(entity e, string filename)
-{
+void (entity e, string filename) sound_play2 {
     //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CHAN_AUTO, filename, VOL_BASE, ATTN_NONE);
+    sound_to_at(MSG_ONE, world, '0 0 0', CHAN_AUTO, filename, VOL_BASE, ATTN_NONE);
 }
 
-.float announcetime;
-float announce_force(entity player, string msg)
-{
-	if not(clienttype(player) == CLIENTTYPE_REAL)
-		return FALSE;
-
-	player.announcetime = time + 0.8;
-	play2(player, msg);
-	return TRUE;
-}
-
-float announce(entity player, string msg)
-{
-    if (time > player.announcetime)
-		return announce_force(player, msg);
-
-    return FALSE;
-}
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
-float spamsound(entity e, float chan, string samp, float vol, float atten)
-{
-    if (time > e.announcetime)
-    {
+float(entity e, float chan, string samp, float vol, float atten) sound_spam {
+    if (time > e.announcetime) {
         e.announcetime = time;
         sound(e, chan, samp, vol, atten);
         return TRUE;
@@ -132,23 +107,21 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
     return FALSE;
 }
 
-void play2team(float t, string filename)
-{
+void(float t, string filename) sound_play2team {
     local entity head;
 
     FOR_EACH_REALPLAYER(head)
     {
         if (head.team == t)
-            play2(head, filename);
+            sound_play2(head, filename);
     }
 }
 
-void play2all(string samp)
-{
+void(string samp) sound_play2all {
     sound(world, CHAN_AUTO, samp, VOL_BASE, ATTN_NONE);
 }
 
-string randomsound(string s, float n) {
+string(string s, float n) sound_random {
 	if (s == "")
 		return "";
 
@@ -158,13 +131,13 @@ string randomsound(string s, float n) {
 	return strcat(s, ftos(floor(random() * n + 1)), ".wav");
 }
 
-string randomsound_bystr(string s) {
+string(string s) sound_random_by_str {
 	string s1 = str_car(s);
 	string s2 = str_cdr(s);
-	return randomsound(s1, stof(s2));
+	return sound_random(s1, stof(s2));
 }
 
-void precache_randomsound(string s, float n) {
+void(string s, float n) sound_random_precache {
 	float i;
 	if (n < 2) {
 		precache_sound(strcat(s, ".wav"));

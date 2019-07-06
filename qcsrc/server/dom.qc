@@ -66,7 +66,7 @@ void dompoint_captured ()
 		else
 			sound(self, CHAN_TRIGGER, head.noise, VOL_BASE, ATTN_NORM);
 	if (head.noise1 != "")
-		play2all(head.noise1);
+		sound_play2all(head.noise1);
 
 	//self.nextthink = time + g_domination_point_rate;
 	//self.think = dompointthink;

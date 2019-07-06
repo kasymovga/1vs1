@@ -17,9 +17,9 @@ void() footsteps_ServerFrame {
 					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							sound(self, CHAN_PLAYER, randomsound("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
+							sound(self, CHAN_PLAYER, sound_random("misc/metalfootstep0", 6), VOL_BASE, ATTN_NORM);
 						else
-							sound(self, CHAN_PLAYER, randomsound("misc/footstep0", 6), VOL_BASE, ATTN_NORM);
+							sound(self, CHAN_PLAYER, sound_random("misc/footstep0", 6), VOL_BASE, ATTN_NORM);
 					}
 				}
 			}
@@ -32,8 +32,8 @@ void() footsteps_init {
 	if not(cvar("g_footsteps"))
 		return;
 
-	precache_randomsound("misc/footstep0", 6);
-	precache_randomsound("misc/metalfootstep0", 6);
+	sound_random_precache("misc/footstep0", 6);
+	sound_random_precache("misc/metalfootstep0", 6);
 	footsteps_ServerFrame_NextLink = GameHookChain_ServerFrame;
 	GameHookChain_ServerFrame = footsteps_ServerFrame;
 }

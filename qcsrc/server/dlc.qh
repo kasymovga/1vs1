@@ -7,4 +7,4 @@ void dlc_finish();
 void dlc_precache_sound(string s);
 entity dlc_sound(entity e, float chan, string s, float vol, float attn);
 void dlc_sound_follow(entity e, float chan, string s, float vol, float attn);
-float dlc_spamsound(entity e, float chan, string s, float vol, float attn);
+float dlc_sound_spam(entity e, float chan, string s, float vol, float attn);

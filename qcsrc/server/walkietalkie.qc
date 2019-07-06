@@ -63,7 +63,7 @@ void WalkieTalkie_Menu_Select(float n) {
 	entity e;
 	FOR_EACH_REALCLIENT(e)
 		if (self.team == e.team)
-			announce_force(e, WalkieTalkie_SoundPath(n));
+			announce_force(e, WalkieTalkie_SoundPath(n), "");
 
 	WaypointSprite_Attach("here", 0);
 	defer_for(self, 2, WalkeTalkie_WaypointRemove);

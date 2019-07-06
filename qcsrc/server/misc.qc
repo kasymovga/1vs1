@@ -111,8 +111,8 @@ void(void) spawnfunc_misc_spikeshooter {
 
 void(void) misc_lightning_spark {
 	if (time > self.attack_finished_single) {
-		stopsound(self, CHAN_TRIGGER);
-		stopsound(self.enemy, CHAN_TRIGGER);
+		sound_stop(self, CHAN_TRIGGER);
+		sound_stop(self.enemy, CHAN_TRIGGER);
 		return;
 	}
 	self.nextthink = time + 0.1;

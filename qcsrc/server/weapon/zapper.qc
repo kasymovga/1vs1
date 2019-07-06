@@ -616,7 +616,7 @@ void weapon_zapper_accumulate(void) {
             accumulate_end = 0;
     }
     if (accumulate_end) {
-        stopsound(self, CHAN_WEAPON2);
+        sound_stop(self, CHAN_WEAPON2);
         remove(self.zapper_accumulator);
         self.zapper_accumulator = world;
     }

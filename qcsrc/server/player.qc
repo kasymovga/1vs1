@@ -220,7 +220,7 @@ void() player_effects {
 	else
 	{
 		if (self.modelflags & MF_ROCKET) {
-			stopsound(self, CHAN_TRIGGER);
+			sound_stop(self, CHAN_TRIGGER);
 			self.modelflags &~= MF_ROCKET;
 		}
 	}
@@ -542,7 +542,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				blood_message = "^1First blood\n";
 				victim_message = "^1First victim\n";  // or First casualty
 				if (sv_announcer_extra_firstblood != "")
-					announce(attacker, sv_announcer_extra_firstblood);
+					announce(attacker, sv_announcer_extra_firstblood, "^5First ^1Blood");
 			}
 
 
@@ -567,15 +567,15 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			else if (deathtype == DEATH_FALL) {
 				bprint ("^1",s, "^1 was grounded by ", a, "\n");
 				if (sv_announcer_extra_pushfrag != "") {
-					announce(targ, sv_announcer_extra_pushfrag);
-					announce(attacker, sv_announcer_extra_pushfrag);
+					announce(targ, sv_announcer_extra_pushfrag, "");
+					announce(attacker, sv_announcer_extra_pushfrag, "");
 				}
 			} else if (deathtype == DEATH_SWAMP)
 				bprint ("^1",s, "^1 was conserved by ", a, "\n");
 			else if (deathtype == DEATH_HURTTRIGGER) {
 				if (sv_announcer_extra_pushfrag != "") {
-					announce(targ, sv_announcer_extra_pushfrag);
-					announce(attacker, sv_announcer_extra_pushfrag);
+					announce(targ, sv_announcer_extra_pushfrag, "");
+					announce(attacker, sv_announcer_extra_pushfrag, "");
 				}
 				if (inflictor.message2 != "") {
 					p = strstrofs(inflictor.message2, "#", 0);
@@ -608,47 +608,47 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (attacker.killcount == 3)
 			{
 				bprint (a,"^7 made a ^1TRIPLE FRAG\n");
-				announce(attacker, "announcer/male/03kills.wav");
+				announce(attacker, "announcer/male/03kills.wav", "^1Triple Kill");
 			}
 			else if (attacker.killcount == 5)
 			{
 				bprint (a,"^7 unleashes ^1RAGE\n");
-				announce(attacker, "announcer/male/05kills.wav");
+				announce(attacker, "announcer/male/05kills.wav", "^1Rage");
 			}
 			else if (attacker.killcount == 10)
 			{
 				bprint (a,"^7 starts the ^1MASSACRE!\n");
-				announce(attacker, "announcer/male/10kills.wav");
+				announce(attacker, "announcer/male/10kills.wav", "^1MASSACRE");
 			}
 			else if (attacker.killcount == 15)
 			{
 				bprint (a,"^7 executes ^1MAYHEM!\n");
-				announce(attacker, "announcer/male/15kills.wav");
+				announce(attacker, "announcer/male/15kills.wav", "^1MAYHEM!");
 			}
 			else if (attacker.killcount == 20)
 			{
 				bprint (a,"^7 is a ^1BERSERKER!\n");
-				announce(attacker, "announcer/male/20kills.wav");
+				announce(attacker, "announcer/male/20kills.wav", "^1BERSERKER!");
 			}
 			else if (attacker.killcount == 25)
 			{
 				bprint (a,"^7 inflicts ^1CARNAGE!\n");
-				announce(attacker, "announcer/male/25kills.wav");
+				announce(attacker, "announcer/male/25kills.wav", "^1CARNAGE!");
 			}
 			else if (attacker.killcount == 30)
 			{
 				bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
-				announce(attacker, "announcer/male/30kills.wav");
+				announce(attacker, "announcer/male/30kills.wav", "^1ARMAGEDDON!!!");
 			}
 			else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "")
 			{
-					if (announce(attacker, sv_announcer_extra_doublekill))
+					if (announce(attacker, sv_announcer_extra_doublekill, "^3Excellent"))
 						fragtime = 0;
 			}
 			if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "")
 			{
-					announce(targ, sv_announcer_extra_meleefrag);
-					announce(attacker, sv_announcer_extra_meleefrag);
+					announce(targ, sv_announcer_extra_meleefrag, "");
+					announce(attacker, sv_announcer_extra_meleefrag, "");
 			}
 			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", w_fragprefix, "^4fragged ^7", s));
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", w_fragprefix, "^1fragged by ^7", a));
@@ -688,7 +688,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			bprint ("^1",s, "^1 died\n");
 		score_give_frag(targ, targ, -1);
 		if(score_player_add(targ, SP_SCORE, 0) == -5) {
-			announce(targ, "announcer/male/botlike.wav");
+			announce(targ, "announcer/male/botlike.wav", "");
 		}
 
 		if (targ.killcount > 2)
@@ -790,7 +790,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				else if(self.health > 1)
 					pain_sound = self.playersound_pain25;
 
-				sound(self, CHAN_PAIN, randomsound_bystr(pain_sound), VOL_BASE, ATTN_NORM);
+				sound(self, CHAN_PAIN, sound_random_by_str(pain_sound), VOL_BASE, ATTN_NORM);
 			}
 
 			// throw off bot aim temporarily
@@ -830,9 +830,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		defer_ClientKill_Now_TeamChange = FALSE;
 
 		if(deathtype == DEATH_DROWN)
-			sound(self, CHAN_PAIN, randomsound_bystr(self.playersound_drown), VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
 		else
-			sound(self, CHAN_PAIN, randomsound_bystr(self.playersound_death), VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_death), VOL_BASE, ATTN_NORM);
 
 		// get rid of kill indicator
 		if(self.killindicator)
@@ -860,7 +860,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if (clienttype(attacker) == CLIENTTYPE_REAL)
 		if (attacker != self)
 		if (team_is_different_teams(attacker, self))
-			play2(attacker, sv_sound_frag);
+			sound_play2(attacker, sv_sound_frag);
 
 		player_clear(TRUE);
 		// make the corpse upright (not tilted)
@@ -973,7 +973,7 @@ void(string f) player_precache_sounds {
 		if(tokenize_console(s) != 3)
 			continue;
 
-		precache_randomsound(argv(1), stof(argv(2)));
+		sound_random_precache(argv(1), stof(argv(2)));
 	}
 	fclose(fh);
 
@@ -1073,7 +1073,7 @@ void player_voice_message(string type, string msg)
 	if (flood)
 		return;
 
-	string s = randomsound_bystr(self.sample);
+	string s = sound_random_by_str(self.sample);
 	if (type == "taunt") {
 		if(self.classname == "player")
 			if(self.deadflag == DEAD_NO)
@@ -1084,9 +1084,9 @@ void player_voice_message(string type, string msg)
 		FOR_EACH_REALCLIENT(msg_entity)
 		{
 			if (msg_entity.cvar_cl_voice_directional >= 1)
-				soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+				sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
 			else
-				soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
+				sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 		}
 	} else if (type == "teamshoot") {
 		if(self.pusher)
@@ -1096,22 +1096,22 @@ void player_voice_message(string type, string msg)
 				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
+						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
 					else
-						soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
+						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 				}
 				msg_entity = self;
 				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
+					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
 			}
 	} else {
 		FOR_EACH_REALCLIENT(msg_entity)
 			if(!teamplay || msg_entity.team == self.team)
 			{
 				if(msg_entity.cvar_cl_voice_directional == 1)
-					soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
+					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
 				else
-					soundto(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
+					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 			}
 	}
 }
@@ -1358,7 +1358,7 @@ void() player_respawn_countdown {
 		if(number <= self.respawn_countdown) {
 			self.respawn_countdown = number - 1;
 			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				announce(self, strcat("announcer/robotic/", ftos(number), ".wav"));
+				announce(self, strcat("announcer/robotic/", ftos(number), ".wav"), "");
 		}
 	}
 }
@@ -1461,9 +1461,9 @@ void() player_think {
 			msg_entity = self.pusher;
 			if(clienttype(msg_entity) == CLIENTTYPE_REAL) {
 				if(msg_entity.cvar_cl_voice_directional == 1)
-					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
+					sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
 				else
-					soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_NONE);
+					sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_NONE);
 			}
 		}
 		self.pusher = oldpusher;
@@ -1479,9 +1479,9 @@ void() player_think {
 				if (tauntrand < msg_entity.cvar_cl_autotaunt)
 				{
 					if (msg_entity.cvar_cl_voice_directional >= 1)
-						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+						sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_taunt), VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
 					else
-						soundto(MSG_ONE, self, CHAN_VOICE, randomsound_bystr(self.playersound_taunt), VOL_BASEVOICE, ATTN_NONE);
+						sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_taunt), VOL_BASEVOICE, ATTN_NONE);
 				}
 		}
 	}
@@ -2129,7 +2129,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 				if (complain)
 				if(clienttype(cl) == CLIENTTYPE_REAL)
 				{
-					play2(cl, "weapons/unavailable.wav");
+					sound_play2(cl, "weapons/unavailable.wav");
 					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
 				}
 				return FALSE;
@@ -2175,7 +2175,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 		else
 			sprint(cl, strcat("The ^2", weapon_name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
 
-		play2(cl, "weapons/unavailable.wav");
+		sound_play2(cl, "weapons/unavailable.wav");
 	}
 	return FALSE;
 }

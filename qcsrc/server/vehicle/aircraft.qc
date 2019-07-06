@@ -23,7 +23,7 @@ void(void) vehicle_aircraft_enter;
 void(void) vehicle_aircraft_engine_on {
 	if not(self.cnt) {
 		self.modelflags |= MF_ROCKET;
-		soundtoat(MSG_ALL, self, '0 0 0', CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, ATTN_NORM); 
+		sound_to_at(MSG_ALL, self, '0 0 0', CHAN_PLAYER, "misc/jetpack_fly.wav", VOL_BASE, ATTN_NORM); 
 		self.cnt = 1;
 	}
 }
@@ -31,7 +31,7 @@ void(void) vehicle_aircraft_engine_on {
 void(void) vehicle_aircraft_engine_off {
 	if (self.cnt) {
 		self.modelflags &~= MF_ROCKET;
-		stopsoundto(MSG_ALL, self, CHAN_PLAYER);
+		sound_stop_to(MSG_ALL, self, CHAN_PLAYER);
 		self.cnt = 0;
 	}
 }

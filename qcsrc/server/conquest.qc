@@ -97,7 +97,7 @@ void conquest_cp_think_capture() {
 		if not(self.capture_progress)
 		if (self.team > 0)
 		if (self.conquest_delay < time) {
-			play2team(self.team, "onslaught/controlpoint_underattack.ogg");
+			sound_play2team(self.team, "onslaught/controlpoint_underattack.ogg");
 			WaypointSprite_Ping(self.sprite);
 			conquest_update_waypoint();
 			self.conquest_delay = time + g_conquest_capture_time;
@@ -110,7 +110,7 @@ void conquest_cp_think_capture() {
 		if (self.capture_progress >= 1) {
 			score_player_add(self.owner, SP_SCORE, g_conquest_score_capture);
 			if (self.team > 0) {
-				play2all("domination/claim.wav");
+				sound_play2all("domination/claim.wav");
 				if (g_conquest_teamscore_alternative)
 					score_team_add_to(self.owner.team, ST_SCORE, 1);
 				else
@@ -125,7 +125,7 @@ void conquest_cp_think_capture() {
 				if (clienttype(self.owner) == CLIENTTYPE_REAL)
 					centerprint(self.owner, "Control Point has been captured");
 
-				play2team(self.team, "onslaught/controlpoint_built.ogg");
+				sound_play2team(self.team, "onslaught/controlpoint_built.ogg");
 			}
 			activator = self;
 			trigger_use_targets();
@@ -280,7 +280,7 @@ float conquest_WinningCondition()
 			announce_sound = "ctf/blue_capture.wav";
 		}
 		FOR_EACH_REALCLIENT(head) {
-			announce(head, announce_sound);
+			announce(head, announce_sound, "");
 			LocationRequest_Remove(head);
 		}
 		return TRUE;

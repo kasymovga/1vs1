@@ -33,7 +33,7 @@ void weapon_grenadelauncher_explode(void)
 			if(team_is_different_teams(self.owner, other))
 				if(other.deadflag == DEAD_NO)
 					if(physics_is_flying(other))
-						announce(self.owner, "announcer/male/airshot.wav");
+						announce(self.owner, "announcer/male/airshot.wav", "^5Air^3Shot");
 
 	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
@@ -48,7 +48,7 @@ void weapon_grenadelauncher_explode2 (void)
 		if(other.classname == "player")
 			if(team_is_different_teams(self.owner, other))
 				if(physics_is_flying(other))
-					announce(self.owner, "announcer/male/airshot.wav");
+						announce(self.owner, "announcer/male/airshot.wav", "^5Air^3Shot");
 
 	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
@@ -75,17 +75,17 @@ void weapon_grenadelauncher_touch2 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 2)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 3)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 4)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
 		else if(r < 5)
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
-			spamsound (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			sound_spam (self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }

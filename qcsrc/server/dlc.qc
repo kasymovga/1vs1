@@ -421,7 +421,7 @@ void dlc_sound_follow(entity e, float chan, string s, float vol, float attn) {
 	snd.pushltime = time + 2;
 }
 
-float dlc_spamsound(entity e, float chan, string samp, float vol, float attn)
+float dlc_sound_spam(entity e, float chan, string samp, float vol, float attn)
 {
     if (time > e.announcetime)
     {

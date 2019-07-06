@@ -181,7 +181,7 @@ void trigger_use_targets_ex(float preventReuse)
 		{
 			centerprint (activator, self.message);
 			if (!self.noise)
-				play2(activator, "misc/talk.wav");
+				sound_play2(activator, "misc/talk.wav");
 		}
 	}
 

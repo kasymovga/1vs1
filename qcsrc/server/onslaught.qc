@@ -382,7 +382,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			if (time > self.pain_finished)
 				if (attacker.classname == "player")
 				{
-					play2(attacker, "onslaught/damageblockedbyshield.wav");
+					sound_play2(attacker, "onslaught/damageblockedbyshield.wav");
 					self.pain_finished = time + 1;
 				}
 			return;
@@ -390,7 +390,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if (time > self.pain_finished) {
 			self.pain_finished = time + 10;
 			bprint(team_colored_name(self.team), " generator under attack!\n");
-			play2team(self.team, "onslaught/generator_underattack.wav");
+			sound_play2team(self.team, "onslaught/generator_underattack.wav");
 		}
 	}
 	self.health = self.health - _damage;
@@ -680,7 +680,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		// this is protected by a shield, so ignore the damage
 		if (time > self.pain_finished)
 			if (attacker.classname == "player") {
-				play2(attacker, "onslaught/damageblockedbyshield.wav");
+				sound_play2(attacker, "onslaught/damageblockedbyshield.wav");
 				self.pain_finished = time + 1;
 			}
 		return;
@@ -700,7 +700,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 			nag = TRUE;
 
 		if(nag)
-			play2team(self.team, "onslaught/controlpoint_underattack.wav");
+			sound_play2team(self.team, "onslaught/controlpoint_underattack.wav");
 	}
 	self.health = self.health - _damage;
 	if(self.owner.iscaptured)

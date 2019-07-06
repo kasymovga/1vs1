@@ -672,7 +672,7 @@ void func_plat_reset()
 	self.velocity = '0 0 0';
 	self.think = stdproc_nothing;
 	self.nextthink = 0;
-	stopsound(self, CHAN_TRIGGER);
+	sound_stop(self, CHAN_TRIGGER);
 }
 
 void spawnfunc_path_corner() { };
@@ -759,7 +759,7 @@ void func_train_wait()
 	self.nextthink = self.ltime + self.wait;
 
 	if(self.noise != "")
-		stopsoundto(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
+		sound_stop_to(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
 };
 
 float sv_gameplayfix_trainnomins;
@@ -927,7 +927,7 @@ void spawnfunc_func_bobbing()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		sound_to(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 	if (!self.speed)
 		self.speed = 4;
@@ -1381,7 +1381,7 @@ void func_door_trigger_touch()
 
 			if (time >= self.attack_finished_single) {
 				self.attack_finished_single = time + 1;
-				play2(other, "misc/talk.wav");
+				sound_play2(other, "misc/talk.wav");
 			}
 			centerprint (other, strcat("This door required ", s));
 		}
@@ -1433,7 +1433,7 @@ void func_door_touch()
 	{
 		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.owner.message);
-			play2(other, "misc/talk.wav");
+			sound_play2(other, "misc/talk.wav");
 		}
 	}
 };
@@ -2048,7 +2048,7 @@ void func_secret_touch()
 	{
 		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint (other, self.message);
-			play2(other, "misc/talk.wav");
+			sound_play2(other, "misc/talk.wav");
 		}
 	}
 };
@@ -2160,7 +2160,7 @@ void spawnfunc_func_fourier()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		sound_to(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	if (!self.speed)
@@ -2296,7 +2296,7 @@ void spawnfunc_func_vectormamamam()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		sound_to(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	if(!self.targetfactor)

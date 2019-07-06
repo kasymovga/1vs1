@@ -94,7 +94,7 @@ void Roundbased_ServerFrame()
 			rb_countdown_last = 0;
 			Roundbased_Active = 1;
 			FOR_EACH_REALCLIENT(plr) {
-				announce(plr, "announcer/robotic/begin.wav");
+				announce(plr, "announcer/robotic/begin.wav", "");
 			}
 			GameStatus_Set("^2New round started\n", 3);
 		}
@@ -113,7 +113,7 @@ void Roundbased_ServerFrame()
 				FOR_EACH_REALCLIENT(plr)
 				{
 					if (countdown <= 3)
-						announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"));
+						announce(plr, strcat("announcer/robotic/", ftos(countdown), ".wav"), "");
 				}
 				GameStatus_Set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
 				rb_countdown_last = countdown;
@@ -161,7 +161,7 @@ void Roundbased_ServerFrame()
 						"domination/claim.wav"));
 
 		FOR_EACH_REALCLIENT(plr)
-			announce_force(plr, announce_sound);
+			announce_force(plr, announce_sound, "");
 
 		FOR_EACH_CLIENT(plr) {
 			if (plr.classname == "player")

@@ -15,6 +15,7 @@ constants.qh
 ../menu-server/weapon.qh
 ../common/weapon.qh
 sound.qh
+announce.qh
 location_request.qh
 single.qh
 map.qh
@@ -148,6 +149,7 @@ mapvote.qh
 stdproc.qh
 centerprint.qc
 sound.qc
+announce.qc
 ../client-server/approach.qc
 ../common/backtrace.qc
 ../common/file.qc

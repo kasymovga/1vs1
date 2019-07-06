@@ -87,7 +87,7 @@ void survive_trigger() {
 	survive_active = TRUE;
 	GameStatus_Set("^1New wave incoming!\n^1Try to survive", 2);
 	FOR_EACH_REALCLIENT(self)
-		announce(self, "announcer/robotic/begin.wav");
+		announce(self, "announcer/robotic/begin.wav", "");
 
 	self = oldself;
 	remove(self);
@@ -113,7 +113,7 @@ void survive_plan() {
 				PutClientInServer();
 			}
 			if (clienttype(self) == CLIENTTYPE_REAL)
-				announce_force(self, "domination/claim.wav");
+				announce_force(self, "domination/claim.wav", "");
 		}
 	}
 	self = oldself;
@@ -200,7 +200,7 @@ float survive_WinningCondition() {
 			GameStatus_Set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
 			FOR_EACH_REALCLIENT(e)
 				if (countdown <= 3)
-					announce(e, strcat("announcer/robotic/", ftos(countdown), ".wav"));
+					announce(e, strcat("announcer/robotic/", ftos(countdown), ".wav"), "");
 
 			survive_last_countdown = countdown;
 		}

@@ -283,7 +283,7 @@ void HG_Sentry_Remove(void) {
         WaypointSprite_Disown(self.hg_waypoint, 0.5);
 
     if(self.aiment) {
-        stopsound(self.aiment, CHAN_PROJECTILE);
+        sound_stop(self.aiment, CHAN_PROJECTILE);
         remove(self.aiment);
     }
 

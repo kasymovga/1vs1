@@ -71,7 +71,7 @@ void weapon_electro_explode (void)
 			if(team_is_different_teams(self.owner, other))
 				if(other.deadflag == DEAD_NO)
 					if(physics_is_flying(other))
-						announce(self.owner, "announcer/male/electrobitch.wav");
+						announce(self.owner, "announcer/male/electrobitch.wav", "^5Air^5Shot");
 
 	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
@@ -104,7 +104,7 @@ void weapon_electro_touch (void)
 	if (other.takedamage == DAMAGE_AIM) {
 		weapon_electro_explode ();
 	} else {
-		spamsound (self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
+		sound_spam (self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }

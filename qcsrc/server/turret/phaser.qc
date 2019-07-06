@@ -177,7 +177,7 @@ void turret_phaser_attack()
 
     setattachment(beam,self.tur_head,"tag_fire");
 
-    soundat (self, trace_endpos, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+    sound_at (self, trace_endpos, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;

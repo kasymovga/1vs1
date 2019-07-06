@@ -66,7 +66,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	if (clienttype(attacker) == CLIENTTYPE_REAL)
 	if (attacker != self)
 	if (team_is_different_teams(attacker, self))
-		play2(attacker, sv_sound_ice_frag);
+		sound_play2(attacker, sv_sound_ice_frag);
 
 	self.ice = spawn();
 	self.ice.alpha = sv_model_ice_alpha;

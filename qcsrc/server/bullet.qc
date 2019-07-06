@@ -142,9 +142,9 @@ void(void) bullet_hit {
 		if(self.dmg_edge != 0)
 		{
 			if(headshot)
-				announce(self.owner, "announcer/male/headshot.wav");
+				announce(self.owner, "announcer/male/headshot.wav", "^1Head^3Shot");
 			if(yoda)
-				announce(self.owner, "announcer/male/awesome.wav");
+				announce(self.owner, "announcer/male/awesome.wav", "^5Awesome");
 		}
 	}
 

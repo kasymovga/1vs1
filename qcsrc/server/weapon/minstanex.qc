@@ -43,10 +43,10 @@ void weapon_minstanex_attack (void)
 	antilag_end();
 
 	if(yoda > 1)
-		announce(self, "announcer/male/yoda.wav");
+		announce(self, "announcer/male/yoda.wav", "^5Awesome");
 
 	if(headshot)
-		announce(self, "announcer/male/headshot.wav");
+		announce(self, "announcer/male/headshot.wav", "^1Head^3Shot");
 
 	self.minstanex_lasthit = damage_goodhits;
 	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);

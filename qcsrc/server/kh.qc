@@ -653,7 +653,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	midpoint = midpoint * (1 / kh_teams);
 	te_customflash(midpoint, 1000, 1, team_color(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
-	play2all(kh_sound_capture);
+	sound_play2all(kh_sound_capture);
 	kh_FinishRound();
 }
 
@@ -663,7 +663,7 @@ void kh_Key_MoveToRandomLocation_Think() {
 		bprint("The ", self.netname, "^7 respawned\n");
 		self.pain_finished = time + g_balance_keyhunt_delay_return;
 		self.think = kh_Key_Think;
-		play2all(kh_sound_destroy);
+		sound_play2all(kh_sound_destroy);
 		te_tarexplosion(v);
 	}
 	self.nextthink = time;

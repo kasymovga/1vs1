@@ -85,7 +85,7 @@ void HG_Plasma_Shard_Think(void) {
 
 void HG_Plasma_Shard_Touch(void) {
     PROJECTILE_TOUCH;
-    spamsound(self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
+    sound_spam(self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
 }
 
 void HG_Plasma_Shard(float kickangle) {

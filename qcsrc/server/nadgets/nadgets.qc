@@ -325,7 +325,7 @@ void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float all
     }
 
 	bprint(strcat("^3", p.netname, " ^7got a ^3", n, "^7 bonus (", reason, ")\n"));
-    play2all("kh/alarm.wav");
+    sound_play2all("kh/alarm.wav");
 }
 
 void HG_GiveRandomBonus(entity p, float amount, string reason, float allowOptout) {

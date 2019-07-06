@@ -110,7 +110,7 @@ void HG_Shield_Trigger(void) {
 
     // if(!Buffs_Present(self, BUFF_ADEPT) || self.hg_shield_stored <= 0) {
         self.hg_shield = 0;
-        stopsound(self, CHAN_AUTO);
+        sound_stop(self, CHAN_AUTO);
     // }
 }
 
@@ -123,7 +123,7 @@ void HG_Shield_Adept_ExtendRenew(entity plr) {
         return;
 
     plr.hg_shield = max(plr.hg_shield, renew) + extend;
-    stopsound(plr, CHAN_AUTO);
+    sound_stop(plr, CHAN_AUTO);
     sound(plr, CHAN_AUTO, "misc/powerup_shield.wav", VOL_BASE, ATTN_NORM);
 }
 #endif

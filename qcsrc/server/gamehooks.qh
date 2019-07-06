@@ -33,11 +33,11 @@ var float(entity spot) GameHook_SpawnPointGood = { return TRUE; }
 var void(float frags_remain) stub_WinCountDown = {}
 var void(float frags_remain) GameHook_WinCountDown = {
 	if (frags_remain == 1)
-		play2all("announcer/robotic/1fragleft.wav");
+		sound_play2all("announcer/robotic/1fragleft.wav");
 	else if (frags_remain == 2)
-		play2all("announcer/robotic/2fragsleft.wav");
+		sound_play2all("announcer/robotic/2fragsleft.wav");
 	else if (frags_remain == 3)
-		play2all("announcer/robotic/3fragsleft.wav");
+		sound_play2all("announcer/robotic/3fragsleft.wav");
 }
 var float(float f) GameHook_KillDelayMod = { return f; }
 var string(string s) GameHook_SuddenDeathMessageMod = { return s; }

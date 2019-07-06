@@ -83,7 +83,7 @@ void() timeout_handler_think {
 				centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
 			}
 			if(timeout_remaining_time == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
-				play2all("announcer/robotic/prepareforbattle.wav");
+				sound_play2all("announcer/robotic/prepareforbattle.wav");
 			}
 			timeout_remaining_time -= 1;
 			self.nextthink = time + TIMEOUT_SLOWMO_VALUE;
@@ -149,7 +149,7 @@ void() timeout_evaluate_timeout {
 	timeout.nextthink = time; //always let the entity think asap
 
 	//inform all connected clients about the timeout call
-	play2all("announcer/robotic/timeoutcalled.wav");
+	sound_play2all("announcer/robotic/timeoutcalled.wav");
 }
 
 void(entity plr) timeout_evaluate_timein {

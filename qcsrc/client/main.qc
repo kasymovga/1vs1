@@ -1350,6 +1350,10 @@ float CSQC_Parse_TempEntity()
 			Net_ReadBlast();
 			bHandled = true;
 			break;
+		case TE_CSQC_ANNOUNCE_PRINT:
+			announce_print();
+			bHandled = true;
+			break;
 		case TE_CSQC_WEAPONLIST:
 			weapontime = time;
 			bHandled = true;

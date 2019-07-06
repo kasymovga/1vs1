@@ -52,7 +52,7 @@ void(void) target_voicescript_ctrl_think {
 		i = -1;
 
 	if(i >= 0) {
-		play2(pl, strcat(vs.netname, "/", argv(i), ".wav"));
+		sound_play2(pl, strcat(vs.netname, "/", argv(i), ".wav"));
 		dt = stof(argv(i + 1));
 		if(dt >= 0)
 			self.nextthink = time + dt + vs.wait * (0.5 * random());

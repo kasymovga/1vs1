@@ -204,7 +204,7 @@ float(void) vehicle_spiderbot_physics_hook {
 	if(spider.flags & FL_ONGROUND) {
 		if (self.wasFlying || vlen(self.velocity) > 100)
 		if (self.nextstep <= time) {
-			sound(self, CHAN_PLAYER, randomsound("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
+			sound(self, CHAN_PLAYER, sound_random("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 			self.nextstep = time + 0.2;
 		}
 		spider.wasFlying = 0;

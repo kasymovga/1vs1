@@ -31,7 +31,7 @@ void weapon_nex_whoosh(vector start, vector end) {
 
 		if(!pseudoprojectile)
 			pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-		soundtoat(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
+		sound_to_at(MSG_ONE, pseudoprojectile, beampos, CHAN_PROJECTILE, snd, VOL_BASE * f, ATTN_NONE);
 	}
 
 	if(pseudoprojectile)
@@ -65,10 +65,10 @@ void weapon_nex_attack (void)
 	antilag_end();
 
 	if((yoda && flying) || yoda > 1)
-		announce(self, "announcer/male/yoda.wav");
+		announce(self, "announcer/male/yoda.wav", "^5Amazing");
 	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "")
 	{
-		if(announce(self, sv_announcer_extra_twohits))
+		if(announce(self, sv_announcer_extra_twohits, "^5Impressive"))
 			damage_goodhits = 0; // only every second time
 	}
 	self.nex_lasthit = damage_goodhits;

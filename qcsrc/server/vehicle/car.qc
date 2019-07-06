@@ -163,7 +163,7 @@ void(float eject) vehicle_car_exit {
 	self.think = vehicle_car_think;
 	self.nextthink = time;
 	self.colormap			= 1024;
-	stopsound(self, CHAN_VOICE);
+	sound_stop(self, CHAN_VOICE);
 	vehicle_stdproc_setcolormod();
 }
 

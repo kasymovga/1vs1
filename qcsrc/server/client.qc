@@ -42,7 +42,7 @@ void PutClientInServer()
 		self.team = -1;
 		self.just_connected = FALSE;
 		if (time + 5 < game_starttime)
-			announce(self, "announcer/robotic/prepareforbattle.wav");
+			announce(self, "announcer/robotic/prepareforbattle.wav", "^3Prepare for Battle");
 	}
 	entity e;
 	FOR_EACH_PLAYER(e)
@@ -259,7 +259,7 @@ void KillIndicator_Think()
 		if(clienttype(self.owner) == CLIENTTYPE_REAL)
 		{
 			if(self.cnt <= 10)
-				announce(self.owner, strcat("announcer/robotic/", ftos(self.cnt), ".wav"));
+				announce(self.owner, strcat("announcer/robotic/", ftos(self.cnt), ".wav"), "");
 			if(self.owner.killindicator_teamchange)
 			{
 				if(self.owner.killindicator_teamchange == -1)
@@ -686,7 +686,7 @@ void PlayerPostThink (void)
 		if not(intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {
-				announce(self, "announcer/robotic/terminated.wav");
+				announce(self, "announcer/robotic/terminated.wav", "^1Terminated");
 				if (drop) {
 					bprint("^3", self.netname, "^3 was kicked for idling.\n");
 					dropclient(self);
@@ -699,7 +699,7 @@ void PlayerPostThink (void)
 				if(timeleft != self.idlekick_lasttimeleft)
 				{
 					centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
-					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"));
+					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"), "");
 				}
 			} else
 				centerprint_expire(self, CENTERPRIO_IDLEKICK);

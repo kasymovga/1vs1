@@ -253,22 +253,22 @@ void HG_GenericProjectile_Touch(void) {
         }
 
         if(self.hg_type == HG_LASER) {
-			dlc_spamsound(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
+			dlc_sound_spam(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
         } else {
             float r;
             r = random() * 6;
             if(r < 1)
-                spamsound(self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+                sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
             else if(r < 2)
-                spamsound(self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+                sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
             else if(r < 3)
-                spamsound(self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+                sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
             else if(r < 4)
-                spamsound(self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+                sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
             else if(r < 5)
-                spamsound(self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+                sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
             else
-                spamsound(self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+                sound_spam(self, CHAN_PROJECTILE, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
         }
 
         self.cnt -= 1;
@@ -541,7 +541,7 @@ void HG_GenericProjectile_Damage(entity inflictor, entity attacker, float _damag
 void HG_GenericProjectile_Remove(void) {
     HG_Waypoint_Remove(self.hg_waypoint);
 
-    stopsound(self, CHAN_PAIN);
+    sound_stop(self, CHAN_PAIN);
 
     if(self.hg_detonable_updated && self.owner)
         self.owner.hg_detonables -= 1;

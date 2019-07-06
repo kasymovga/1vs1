@@ -87,6 +87,7 @@ zapper.qc
 nadgetselect.qc
 trip.qc
 func_camera.qc
+announce.qc
 main.qc
 view.qc
 interpolate.qc
