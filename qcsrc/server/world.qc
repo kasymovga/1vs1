@@ -1178,8 +1178,7 @@ void SV_Shutdown()
 	require_spawnfunc_prefix = 0;
 }
 
-void CreatureFrame (void)
-{
+void(void) world_create_frame {
 	local entity oldself;
 	local float dm;
 	oldself = self;
@@ -1312,6 +1311,17 @@ void StartFrame (void)
 	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
 		projectile_check(e);
 
+	entity oldself = e;
+	for(e = world; (e = findfloat(e, movetype, MOVETYPE_QCWALK)); ) {
+		if (e.think)
+		if (e.nextthink)
+		if (e.nextthink <= time) {
+			self = e;
+			self.nextthink = 0;
+			self.think();
+		}
+	}
+	self = oldself;
 	if(world_redirection_think())
 		return;
 
@@ -1330,7 +1340,7 @@ void StartFrame (void)
 		return;
 	}
 
-	CreatureFrame ();
+	world_create_frame();
 	world_check_rules();
 
 	GameHookChain_ServerFrame();
