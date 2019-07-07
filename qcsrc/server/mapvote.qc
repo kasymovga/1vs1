@@ -96,11 +96,7 @@ void() mapvote_init {
 		mapvote_add_votable(map_list_next_get(), FALSE);
 
 	if(mapvote_count == 0) {
-		bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-		if(cvar("g_maplist_shuffle"))
-			map_list_shuffle();
-		localcmd("\nmenu_cmd sync\n");
+		map_list_reset();
 		for(i = 0; i < 100 && mapvote_count < nmax; ++i)
 			mapvote_add_votable(map_list_next_get(), FALSE);
 	}

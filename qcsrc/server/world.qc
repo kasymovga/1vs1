@@ -32,7 +32,6 @@ void() world_cvar_changes_init {
 		// internal
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
-		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
 		BADCVAR("slowmo");
 		BADPREFIX("sv_mapformat");
@@ -102,7 +101,6 @@ void() world_cvar_changes_init {
 		// long
 		BADCVAR("hostname");
 		BADCVAR("g_maplist");
-		BADCVAR("g_maplist_mostrecent");
 		BADCVAR("sv_motd");
 #undef BADPREFIX
 #undef BADCVAR
@@ -515,7 +513,7 @@ void spawnfunc_worldspawn (void)
 	lsmaps_reply2 = strzone(lsmaps_reply2);
 
 	maplist_reply = "^7Maps in list: ";
-	n = tokenize_console(cvar_string("g_maplist"));
+	n = tokenize_console(cvar_string("_g_maplist"));
 	for(i = 0, j = 0; i < n; ++i)
 	{
 		if(MapInfo_CheckMap(argv(i)))

@@ -1,6 +1,7 @@
 void map_goto_next();
 void() map_list_shuffle;
 float() map_do_next_override;
+void(void) map_list_init;
 
 void() map_goto_first_map_think {
 	float n;
@@ -10,11 +11,12 @@ void() map_goto_first_map_think {
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
+		map_list_init();
 		if(cvar("g_maplist_shuffle"))
 			map_list_shuffle();
 
-		n = tokenizebyseparator(cvar_string("g_maplist"), " ");
-		cvar_set("g_maplist_index", ftos(n - 1)); // jump to map 0 in map_goto_next
+		n = tokenizebyseparator(cvar_string("_g_maplist"), " ");
+		cvar_set("_g_maplist_index", ftos(n - 1)); // jump to map 0 in map_goto_next
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 		if(!map_do_next_override())
@@ -47,7 +49,7 @@ float() map_list_get_position {
 	string map;
 
 	map = mapname;
-	idx = cvar("g_maplist_index");
+	idx = cvar("_g_maplist_index");
 
 	if(idx >= 0)
 		if(idx < Map_Count)
@@ -109,11 +111,12 @@ float strhasword(string s, string w)
 }
 
 void(string m) map_mark_as_recent {
-	cvar_set("g_maplist_mostrecent", strwords(strcat(m, " ", cvar_string("g_maplist_mostrecent")), max(0, cvar("g_maplist_mostrecent_count"))));
+	registercvar("_g_maplist_mostrecent", "");
+	cvar_set("_g_maplist_mostrecent", strwords(strcat(m, " ", cvar_string("_g_maplist_mostrecent")), max(0, cvar("g_maplist_mostrecent_count"))));
 }
 
 float(string m) map_is_recent {
-	return strhasword(cvar_string("g_maplist_mostrecent"), m);
+	return strhasword(cvar_string("_g_maplist_mostrecent"), m);
 }
 
 float(float position, float pass) map_check {
@@ -146,7 +149,8 @@ void(string nextmapname) map_next_set
 }
 
 void(float position) map_goto_set_index {
-	cvar_set("g_maplist_index", ftos(position));
+	registercvar("_g_maplist_index", "");
+	cvar_set("_g_maplist_index", ftos(position));
 	map_next_set(argv(position));
 }
 
@@ -222,8 +226,8 @@ float(float exponent) map_list_method_shuffle = // more clever shuffling
 		for(j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
 			newlist = strcat(newlist, " ", argv(j));
 		newlist = substring(newlist, 1, strlen(newlist) - 1);
-		cvar_set("g_maplist", newlist);
-		Map_Count = tokenizebyseparator(cvar_string("g_maplist"), " ");
+		cvar_set("_g_maplist", newlist);
+		Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
 		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
@@ -233,16 +237,25 @@ float(float exponent) map_list_method_shuffle = // more clever shuffling
 	return -1;
 }
 
-void map_list_init() {
-	Map_Count = tokenizebyseparator(cvar_string("g_maplist"), " ");
+void(void) map_list_reset {
+	bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
+	cvar_set("_g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+	cvar_set("g_maplist", cvar_string("_g_maplist"));
+	localcmd("\nmenu_cmd sync\n");
+}
+
+void(void) map_list_init {
+	string s = cvar_string("g_maplist");
+	registercvar("_g_maplist_source", "");
+	registercvar("_g_maplist", "");
+	if (s != cvar_string("_g_maplist_source")) {
+		cvar_set("_g_maplist", s);
+		cvar_set("_g_maplist_source", s);
+	}
+	Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	if(Map_Count == 0) {
-		bprint( "Maplist is empty!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-		if(cvar("g_maplist_shuffle"))
-			map_list_shuffle();
-			
-		localcmd("\nmenu_cmd sync\n");
-		Map_Count = tokenizebyseparator(cvar_string("g_maplist"), " ");
+		map_list_reset();
+		Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	}
 	if(Map_Count == 0)
 		error("empty maplist, cannot select a new map");
@@ -342,7 +355,7 @@ void() map_goto_next {
 
 		if(allowReset) {
 			bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-			cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+			cvar_set("_g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 			if(cvar("g_maplist_shuffle"))
 				map_list_shuffle();
 
@@ -371,5 +384,5 @@ string(string m) map_goto {
 }
 
 void() map_list_shuffle {
-	cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
+	cvar_set("_g_maplist", shufflewords(cvar_string("_g_maplist")));
 }
