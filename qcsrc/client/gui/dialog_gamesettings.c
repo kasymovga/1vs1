@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 9)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 10)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -66,6 +66,15 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.addValue(e, "Fast", "0.5");
 			e.addValue(e, "Normal", "1.5");
 			e.addValue(e, "Slow", "2.5");
+			e.configureNexuizTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Announcer print:"));
+		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_announcer_print"));
+			e.addValue(e, "Hidden", "0");
+			e.addValue(e, "Fast", "1");
+			e.addValue(e, "Normal", "2");
+			e.addValue(e, "Slow", "2");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.25);

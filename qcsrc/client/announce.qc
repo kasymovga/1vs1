@@ -21,7 +21,7 @@ void(void) announce_print {
 	if (announce.message == " ")
 		announce.alpha = -1;
 	else
-		announce.alpha = 2;
+		announce.alpha = CVAR(cl_announcer_print);
 
 	announce.origin_x = CVAR(vid_conwidth) / 2;
 	announce.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 12;
