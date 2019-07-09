@@ -1,6 +1,5 @@
 float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
-float world_initialized;
 float g_balance_falldamage_deadminspeed;
 float g_balance_falldamage_factor;
 float g_balance_falldamage_minspeed;
@@ -117,22 +116,6 @@ void() world_cvar_changes_init {
 	else
 		cvar_changes = strcat("// this server runs at modified settings:\n", cvar_changes);
 	cvar_changes = strzone(cvar_changes);
-}
-
-void spawnfunc___init_dedicated_server(void)
-{
-	// handler for _init/_init map (only for dedicated server initialization)
-	cvar_preinit();
-	world_initialized = -1; // don't complain
-	entity e;
-	map_goto_first_map();
-	e = spawn();
-	e.classname = "info_player_deathmatch"; // safeguard against player joining
-
-	self.classname = "worldspawn"; // safeguard against various stuff ;)
-
-	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
 
 void() world_precache {
@@ -541,48 +524,6 @@ void spawnfunc_worldspawn (void)
 	infomessages_init();
 }
 
-void spawnfunc_light (void)
-{
-	remove(self);
-}
-
-
-/*
-============
-IntermissionThink
-
-When the player presses attack or jump, change to the next level
-============
-*/
-.float autoscreenshot;
-float mapvote_initialized;
-void IntermissionThink()
-{
-	FixIntermissionClient(self);
-
-	if(cvar("sv_autoscreenshot"))
-	if(self.autoscreenshot > 0)
-	if(time > self.autoscreenshot)
-	{
-		self.autoscreenshot = -1;
-		if(clienttype(self) == CLIENTTYPE_REAL)
-			stuffcmd(self, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
-		return;
-	}
-
-	if (time < intermission_exittime)
-		return;
-
-	if (GameTypeVote_Think())
-		return;
-
-	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !self.BUTTON_ATCK && !self.BUTTON_JUMP && !self.BUTTON_ATCK2 && !self.BUTTON_HOOK && !self.BUTTON_USE)
-			return;
-
-	mapvote_start();
-};
-
 /*
 ============
 FindIntermission
@@ -720,38 +661,6 @@ void world_dump_stats(float final)
 		fputs(file, ":end\n");
 		fclose(file);
 	}
-}
-
-void FixIntermissionClient(entity e)
-{
-	string s;
-	if(!e.autoscreenshot) // initial call
-	{
-		e.angles = e.v_angle;
-		e.angles_x = -e.angles_x;
-		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
-		e.solid = SOLID_NOT;
-		e.movetype = MOVETYPE_NONE;
-		e.takedamage = DAMAGE_NO;
-		if(e.weaponentity)
-		{
-			e.weaponentity.effects = EF_NODRAW;
-			if (e.weaponentity.weaponentity)
-				e.weaponentity.weaponentity.effects = EF_NODRAW;
-		}
-		if(clienttype(e) == CLIENTTYPE_REAL)
-		{
-			stuffcmd(e, "\nscr_printspeed 1000000\n");
-			s = cvar_string("sv_intermission_cdtrack");
-			if(s != "")
-				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
-		}
-	}
-
-	//e.velocity = '0 0 0';
-	//e.fixangle = TRUE;
-
-	// TODO halt weapon animation
 }
 
 float checkrules_equality;
@@ -924,7 +833,7 @@ void() world_gameover {
 	IRC_Announce_GameOver();
 	FOR_EACH_CLIENT(other)
 	{
-		FixIntermissionClient(other);
+		client_intermission(other);
 
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");

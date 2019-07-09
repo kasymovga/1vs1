@@ -183,7 +183,9 @@ physics.qc
 ../client-server/physics_aircraft.qc
 ../client-server/physics_car.qc
 footsteps.qc
+init_dedicated.qc
 world.qc
+light.qc
 map.qc
 mapvote.qc
 casing.qc

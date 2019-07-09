@@ -1,43 +1,3 @@
-void map_goto_next();
-void() map_list_shuffle;
-float() map_do_next_override;
-void(void) map_list_init;
-
-void() map_goto_first_map_think {
-	float n;
-	if(cvar("_sv_init"))
-	{
-		// cvar_set("_sv_init", "0");
-		// we do NOT set this to 0 any more, so someone "accidentally" changing
-		// to this "init" map on a dedicated server will cause no permanent
-		// harm
-		map_list_init();
-		if(cvar("g_maplist_shuffle"))
-			map_list_shuffle();
-
-		n = tokenizebyseparator(cvar_string("_g_maplist"), " ");
-		cvar_set("_g_maplist_index", ftos(n - 1)); // jump to map 0 in map_goto_next
-		MapInfo_Enumerate();
-		MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		if(!map_do_next_override())
-			map_goto_next();
-
-		return;
-	}
-	if(time < 5)
-		self.nextthink = time;
-	else {
-		self.nextthink = time + 1;
-		print("Waiting for _sv_init being set to 1 by initialization scripts...\n");
-	}
-}
-
-void() map_goto_first_map {
-	entity e = spawn();
-	e.think = map_goto_first_map_think;
-	e.nextthink = time;
-}
-
 string getmapname_stored;
 
 float Map_Count, Map_Current;
@@ -292,7 +252,7 @@ string() map_list_next_get {
 		return getmapname_stored;
 	}
 	return "";
-};
+}
 
 float() map_do_next_override {
 	if (g_campaign) {
@@ -336,7 +296,7 @@ float() map_do_next_override {
 			return TRUE;
 		}
 	return FALSE;
-};
+}
 
 void() map_goto_next {
 	//local string nextmap;

@@ -602,11 +602,59 @@ float() client_join_allowed {
 	return FALSE;
 }
 
+.float autoscreenshot;
+void(entity e) client_intermission {
+	string s;
+	if(!e.autoscreenshot) {
+		e.angles = e.v_angle;
+		e.angles_x = -e.angles_x;
+		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
+		e.solid = SOLID_NOT;
+		e.movetype = MOVETYPE_NONE;
+		e.takedamage = DAMAGE_NO;
+		if(e.weaponentity) {
+			e.weaponentity.effects = EF_NODRAW;
+			if (e.weaponentity.weaponentity)
+				e.weaponentity.weaponentity.effects = EF_NODRAW;
+		}
+		if(clienttype(e) == CLIENTTYPE_REAL) {
+			stuffcmd(e, "\nscr_printspeed 1000000\n");
+			s = cvar_string("sv_intermission_cdtrack");
+			if(s != "")
+				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
+		}
+	}
+}
+
+void(void) client_intermission_think {
+	client_intermission(self);
+	if(cvar("sv_autoscreenshot"))
+	if(self.autoscreenshot > 0)
+	if(time > self.autoscreenshot) {
+		self.autoscreenshot = -1;
+		if(clienttype(self) == CLIENTTYPE_REAL)
+			stuffcmd(self, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
+
+		return;
+	}
+	if (time < intermission_exittime)
+		return;
+
+	if (GameTypeVote_Think())
+		return;
+
+	if(!mapvote_initialized)
+		if (time < intermission_exittime + 10 && !self.BUTTON_ATCK && !self.BUTTON_JUMP && !self.BUTTON_ATCK2 && !self.BUTTON_HOOK && !self.BUTTON_USE)
+			return;
+
+	mapvote_start();
+}
+
 /**
  * Checks whether the client is an observer or spectator, if so, he will get kicked after
  * g_maxplayers_spectator_blocktime seconds
  */
-void checkSpectatorBlock() {
+void(void) client_check_spectator_block {
 	if(self.classname == "spectator" || self.classname == "observer") {
 		if( time > (self.spectatortime + g_maxplayers_spectator_blocktime) ) {
 			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
@@ -628,10 +676,10 @@ void PlayerPreThink (void)
 	self.stat_leadlimit = leadlimit;
 	if(blockSpectators && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
-		checkSpectatorBlock();
+		client_check_spectator_block();
 
 	if (intermission_running) {
-		IntermissionThink();
+		client_intermission_think();
 		return;
 	}
 	if(self.classname == "player") {

@@ -202,7 +202,6 @@ float alreadychangedlevel;
 float restart_active;
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing
-void checkSpectatorBlock();
 
 .float winning;
 .float jointime;
@@ -252,8 +251,6 @@ float sv_loddistance2;
 string gamemode_name;
 
 typedef .float floatfield;
-
-void FixIntermissionClient(entity e);
 
 float weaponsInMap;
 

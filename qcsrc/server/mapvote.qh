@@ -1,2 +1,3 @@
 void() mapvote_start;
 void() mapvote_think;
+float mapvote_initialized;

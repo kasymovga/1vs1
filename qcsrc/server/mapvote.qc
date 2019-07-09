@@ -1,5 +1,4 @@
 float mapvote_nextthink;
-float mapvote_initialized;
 float mapvote_keeptwotime;
 float mapvote_timeout;
 string mapvote_message;
