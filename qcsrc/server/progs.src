@@ -184,7 +184,9 @@ physics.qc
 ../client-server/physics_car.qc
 footsteps.qc
 init_dedicated.qc
+main.qc
 world.qc
+worldspawn.qc
 light.qc
 map.qc
 mapvote.qc

@@ -305,94 +305,66 @@ string world_getrecords() {
 }
 
 float world_already_spawned;
-void spawnfunc_worldspawn (void)
-{
+void(void) world_init {
+	if(world_already_spawned)
+		error("world already spawned - you may have EXACTLY ONE worldspawn!");
+
 	gettaginfo_parent = 0;
 	gettaginfo_offset = '0 0 0';
 	gettaginfo_forward = '0 0 0';
 	gettaginfo_right = '0 0 0';
 	gettaginfo_up = '0 0 0';
 	//trace_dphittexturename = "";
-
 	float fd, l, i, j, n;
 	string s, col;
 	cvar_preinit();
-	if(world_already_spawned)
-		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = TRUE;
 	compressShortVector_init();
-
-	local entity head;
+	entity head;
 	head = nextent(world);
 	maxclients = 0;
-	while(head)
-	{
+	while(head) {
 		++maxclients;
 		head = nextent(head);
 	}
-
 	world_db_init();
-
-	/*
-	TODO sound pack system
-	// initialize sound pack system
-	soundpack = cvar_string("g_soundpack");
-	if(soundpack != "")
-		soundpack = strcat(soundpack, "/");
-	soundpack = strzone(soundpack);
-	*/
-
 	// 0 normal
 	lightstyle(0, "m");
-
 	// 1 FLICKER (first variety)
 	lightstyle(1, "mmnmmommommnonmmonqnmmo");
-
 	// 2 SLOW STRONG PULSE
 	lightstyle(2, "abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba");
-
 	// 3 CANDLE (first variety)
 	lightstyle(3, "mmmmmaaaaammmmmaaaaaabcdefgabcdefg");
-
 	// 4 FAST STROBE
 	lightstyle(4, "mamamamamama");
-
 	// 5 GENTLE PULSE 1
 	lightstyle(5,"jklmnopqrstuvwxyzyxwvutsrqponmlkj");
-
 	// 6 FLICKER (second variety)
 	lightstyle(6, "nmonqnmomnmomomno");
-
 	// 7 CANDLE (second variety)
 	lightstyle(7, "mmmaaaabcdefgmmmmaaaammmaamm");
-
 	// 8 CANDLE (third variety)
 	lightstyle(8, "mmmaaammmaaammmabcdefaaaammmmabcdefmmmaaaa");
-
 	// 9 SLOW STROBE (fourth variety)
 	lightstyle(9, "aaaaaaaazzzzzzzz");
-
 	// 10 FLUORESCENT FLICKER
 	lightstyle(10, "mmamammmmammamamaaamammma");
-
 	// 11 SLOW PULSE NOT FADE TO BLACK
 	lightstyle(11, "abcdefghijklmnopqrrqponmlkjihgfedcba");
-
 	// styles 32-62 are assigned by the spawnfunc_light program for switchable lights
-
 	// 63 testing
 	lightstyle(63, "a");
-
 	world_cvar_changes_init();
 	campaign_preinit();
 	map_mark_as_recent(mapname);
-
 	precache_model("null"); // we need this one before gametype_init. or maybe not
 	gametype_init();
 	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	sv_world_scale = cvar("sv_world_scale");
 	if (sv_world_scale <= 0)
 		sv_world_scale = 1;
+
 	PL_VIEW_OFS = '0 0 35' * sv_world_scale;
 	PL_MIN = '-16 -16 -24' * sv_world_scale;
 	PL_MAX = '16 16 45' * sv_world_scale;
@@ -406,7 +378,6 @@ void spawnfunc_worldspawn (void)
 	world_static_init();
 	world_dynamic_init();
 	HG_Init();
-
 	player_count = 0;
 	bot_waypoints_for_items = cvar("g_waypoints_for_items");
 	if(bot_waypoints_for_items == 1)
@@ -414,44 +385,29 @@ void spawnfunc_worldspawn (void)
 			bot_waypoints_for_items = 0;
 
 	world_precache();
-
-	//if (g_domination)
-	//	dom_init();
-
 	cvar_set("nextmap", "");
 	campaign_postinit();
 	Ban_Init();
-
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
-
-	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
-	{
+	if(whichpack(strcat("maps/", mapname, ".cfg")) != "") {
 		fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
-		if(fd != -1)
-		{
-			while((s = fgets(fd)))
-			{
+		if(fd != -1) {
+			while((s = fgets(fd))) {
 				l = tokenize_console(s);
 				if(l < 2)
 					continue;
-				if(argv(0) == "cd")
-				{
+
+				if(argv(0) == "cd") {
 					print("Found ^1DEPRECATED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
 					print("  cdtrack ", argv(2), "\n");
-				}
-				else if(argv(0) == "fog")
-				{
+				} else if(argv(0) == "fog") {
 					print("Found ^1DEPRECATED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
 					print("  \"fog\" \"", s, "\"\n");
-				}
-				else if(argv(0) == "set")
-				{
+				} else if(argv(0) == "set") {
 					print("Found ^1DEPRECATED^7 set command in .cfg file; put this line in mapinfo instead:\n");
 					print("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
-				}
-				else if(argv(0) != "//")
-				{
+				} else if(argv(0) != "//") {
 					print("Found ^1DEPRECATED^7 set command in .cfg file; put this line in mapinfo instead:\n");
 					print("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
 				}
@@ -459,12 +415,10 @@ void spawnfunc_worldspawn (void)
 			fclose(fd);
 		}
 	}
-
 	addstat(STAT_WEAPONS, AS_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	ready_nagger_init();
-
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_DAMAGE_HITS, AS_INT, damage_hits);
@@ -473,13 +427,10 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
-
 	next_pingtime = time + 5;
-
 	lsmaps_reply = "^7Maps available: ";
 	lsmaps_reply2 = "";
-	for(i = 0, j = 0; i < MapInfo_count; ++i)
-	{
+	for(i = 0, j = 0; i < MapInfo_count; ++i) {
 		if(MapInfo_Get_ByID(i))
 			if not(MapInfo_Map_flags & (MAPINFO_FLAG_HIDDEN | MAPINFO_FLAG_FORBIDDEN))
 			{
@@ -494,7 +445,6 @@ void spawnfunc_worldspawn (void)
 	}
 	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
 	lsmaps_reply2 = strzone(lsmaps_reply2);
-
 	maplist_reply = "^7Maps in list: ";
 	n = tokenize_console(cvar_string("_g_maplist"));
 	for(i = 0, j = 0; i < n; ++i)
@@ -511,14 +461,10 @@ void spawnfunc_worldspawn (void)
 	}
 	maplist_reply = strzone(strcat(maplist_reply, "\n"));
 	MapInfo_ClearTemps();
-
 	records_reply = str_zone_ifneeded(world_getrecords());
-
 	client_init_spawn();
 	random_seed_spawn();
-
 	localcmd("\n_sv_hook_gamestart ", gametype_name(game), ";");
-
 	world_initialized = 1;
 	IRC_Init();
 	infomessages_init();
@@ -1526,16 +1472,4 @@ void(float dorespawn) world_reset {
 		}
 	}
 	self = oldself;
-}
-
-/*
-==================
-main
-
-unused but required by the engine
-==================
-*/
-void main (void)
-{
-
 }
