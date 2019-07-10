@@ -275,7 +275,8 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 	if (targ != attacker)
 	if (!teamplay || targ.team != attacker.team)
 	if not(inWarmupStage)
-	if(weaponid)
+	if(weaponid >= WEP_FIRST)
+	if(weaponid <= WEP_LAST)
 	{
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float h = attacker.bullets_hit[weaponid] + hits;
