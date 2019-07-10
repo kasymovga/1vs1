@@ -247,7 +247,8 @@ void damage_record_fires(entity attacker, float deathtype, float shots)
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if not(inWarmupStage)
-	if(weaponid)
+	if(weaponid >= WEP_FIRST)
+	if(weaponid <= WEP_LAST)
 	{
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float f = attacker.bullets_fired[weaponid] + shots;
