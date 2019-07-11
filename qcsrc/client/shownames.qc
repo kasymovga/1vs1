@@ -108,7 +108,7 @@ void Shownames_DrawPlayer() {
     if(teamplay) {
 		_team = GetPlayerColorForce(self.sv_entnum);
         s = textShortenToWidth(strdecolorize(s), namesize, stringwidth_nocolors);
-        s = strcat(Team_ColorCode(_team), s);
+        s = strcat(team_color_code(_team), s);
     } else
 		s = textShortenToWidth(s, namesize, stringwidth_colors);
 

@@ -96,7 +96,7 @@ string(float t) team_name {
 }
 
 string(float t) team_colored_name {
-	return strcat(Team_ColorCode(t), team_color_name(t), " Team^7");
+	return strcat(team_color_code(t), team_color_name(t), " Team^7");
 }
 
 string(float t) team_name_by_no {
@@ -378,20 +378,20 @@ void (entity pl, float forcebestteam) team_join_best {
 			selectedteam = -1;
 
 		if(selectedteam > 0) {
-			player_set_team(pl, TeamColorSkin(selectedteam), TeamColorSkin(pl.team), FALSE);
+			player_set_team(pl, team_index(selectedteam), team_index(pl.team), FALSE);
 			return;
 		}
 		// otherwise end up on the smallest team (handled below)
 	}
 	smallest = team_find_smallest(pl);
 	if(smallest == 1)
-		player_set_team(pl, TeamColorSkin(COLOR_TEAM1), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, team_index(COLOR_TEAM1), team_index(pl.team), FALSE);
 	else if(smallest == 2)
-		player_set_team(pl, TeamColorSkin(COLOR_TEAM2), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, team_index(COLOR_TEAM2), team_index(pl.team), FALSE);
 	else if(smallest == 3)
-		player_set_team(pl, TeamColorSkin(COLOR_TEAM3), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, team_index(COLOR_TEAM3), team_index(pl.team), FALSE);
 	else if(smallest == 4)
-		player_set_team(pl, TeamColorSkin(COLOR_TEAM4), TeamColorSkin(pl.team), FALSE);
+		player_set_team(pl, team_index(COLOR_TEAM4), team_index(pl.team), FALSE);
 	else
 		error("smallest team: invalid team\n");
 
@@ -468,7 +468,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 		return;
 
 	entity oldself = self;
-	player_set_team(pl, TeamColorSkin(dteam), TeamColorSkin(pl.team), FALSE);
+	player_set_team(pl, team_index(dteam), team_index(pl.team), FALSE);
 	if(pl.classname == "player") {
 		if(pl.deadflag == DEAD_NO) // kill player when changing teams
 			damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');

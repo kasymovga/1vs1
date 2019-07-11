@@ -159,7 +159,7 @@ HG_HOOKFUNCTION(linker, Attack) {
     e.hg_type = HG_LINKER;
 
     if(e.team)
-        e.skin = TeamColorSkin(e.team);
+        e.skin = team_index(e.team);
 
 #if 0
     if(e.hg_adept)

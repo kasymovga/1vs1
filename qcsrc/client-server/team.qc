@@ -1,4 +1,4 @@
-float TeamColorSkin(float t) {
+float(float t) team_index {
     switch(t) {
         case COLOR_TEAM1:   return 1; break;
         case COLOR_TEAM2:   return 2; break;
@@ -8,8 +8,7 @@ float TeamColorSkin(float t) {
     return 0;
 }
 
-string Team_ColorCode(float teamid)
-{
+string(float teamid) team_color_code {
     if (teamid == COLOR_TEAM1)
         return "^1";
     else if (teamid == COLOR_TEAM2)

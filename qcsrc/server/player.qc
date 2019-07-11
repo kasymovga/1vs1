@@ -2184,7 +2184,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 string(entity p) player_name {
     string t;
     if (teamplay && !intermission_running && p.classname == "player") {
-        t = Team_ColorCode(p.team);
+        t = team_color_code(p.team);
         return strcat(t, strdecolorize(p.netname));
     } else
         return p.netname;

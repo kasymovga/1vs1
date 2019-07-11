@@ -46,7 +46,7 @@ dlc.qh
 gamestatus.qh
 weaponselect.qh
 main.qh
-../client-server/miscfunctions.qh
+../client-server/team.qh
 ../client-server/stdproc.qh
 radio.qh
 sbar.qh
@@ -63,7 +63,7 @@ miscfunctions.qc
 ../common/file.qc
 ../common/cvar.qc
 ../common/str.qc
-../client-server/miscfunctions.qc
+../client-server/team.qc
 ../client-server/stdproc.qc
 teamplay.qc
 

@@ -113,7 +113,7 @@ walkietalkie.qh
 hat.qh
 score_damage.qh
 cmd.qh
-../client-server/miscfunctions.qh
+../client-server/team.qh
 ../client-server/stdproc.qh
 ../common/str.qh
 ../common/cvar.qh
@@ -155,7 +155,7 @@ announce.qc
 ../common/file.qc
 ../common/cvar.qc
 ../common/str.qc
-../client-server/miscfunctions.qc
+../client-server/team.qc
 ../client-server/stdproc.qc
 ../menu-server/miscfunctions.qc
 waypointsprites.qc

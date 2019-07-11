@@ -546,9 +546,9 @@ void weapon_zapper_attack3(void) {
 
 	e.skin = 0;
     if(teamplay)
-        e.skin = TeamColorSkin(self.team);
+        e.skin = team_index(self.team);
     if(!e.skin)
-        e.skin = TeamColorSkin(COLOR_TEAM2);
+        e.skin = team_index(COLOR_TEAM2);
 
     // This copies the entity! e becomes a viewmodel, the copy is attached to shotorg.
     weapon_attach_to_shotorg(e, '-120 0 0');

@@ -503,7 +503,7 @@ void GameCommand(string command)
 					t = COLOR_TEAM1;
 			}
 			if (t != plr.team) {
-				player_set_team(plr, TeamColorSkin(t), TeamColorSkin(t), FALSE);
+				player_set_team(plr, team_index(t), team_index(t), FALSE);
 				e = self;
 				self = plr;
 				PutClientInServer();

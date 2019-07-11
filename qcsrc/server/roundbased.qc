@@ -102,7 +102,7 @@ void Roundbased_ServerFrame()
 		{
 			string winner_message;
 			if (rb_winner_team > 0)
-				winner_message = strcat("^2Round finished!\n", Team_ColorCode(rb_winner_team), team_color_name(rb_winner_team), " Team^2 wins!\n");
+				winner_message = strcat("^2Round finished!\n", team_color_code(rb_winner_team), team_color_name(rb_winner_team), " Team^2 wins!\n");
 			else if (rb_winner_team < 0)
 				winner_message = "^1Round aborted!\n";
 			else

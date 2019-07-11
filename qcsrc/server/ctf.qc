@@ -310,7 +310,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	//	bprint("\{1}^1Flag carrier had no flag sprite?!?\n");
 	//	backtrace("Flag carrier had no flag sprite?!?");
 	//}
-	GameStatus_Set(strcat(Team_ColorCode(e.team), team_color_name(e.team), " Flag^7 dropped"), 1);
+	GameStatus_Set(strcat(team_color_code(e.team), team_color_name(e.team), " Flag^7 dropped"), 1);
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
@@ -499,7 +499,7 @@ void() ctf_flag_touch {
 		}
 
 		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
-		GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Team^7 scores"), 1);
+		GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
 		WaypointSprite_DetachCarrier(other);
 		ctf_flag_regen (other.flagcarried);
 		other.flagcarried = world;
@@ -529,7 +529,7 @@ void() ctf_flag_touch {
 		score_player_team_add_score(other, CTF_SCORE_VALUE(score_pickup_base));
 		self.dropperid = other.playerid;
 		score_player_add(other, SP_CTF_PICKUPS, 1);
-		GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
+		GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 
@@ -588,7 +588,7 @@ void() ctf_flag_touch {
 					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			score_player_add(other, SP_CTF_RETURNS, 1);
-			GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
+			GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		}
@@ -616,7 +616,7 @@ void() ctf_flag_touch {
 
 			score_player_team_add_score(other, f);
 			score_player_add(other, SP_CTF_PICKUPS, 1);
-			GameStatus_Set(strcat(Team_ColorCode(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
+			GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 

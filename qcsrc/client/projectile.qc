@@ -419,12 +419,12 @@ void Ent_Projectile(float ignore)
                 break;
             case PROJECTILE_HG_REMOTE:
                 setmodel(self, "models/mine.md3");
-                self.skin = TeamColorSkin(self.team);
+                self.skin = team_index(self.team);
                 break;
             case PROJECTILE_HG_LASER: setmodel(self, "models/elaser.mdl"); break;
             case PROJECTILE_HG_TRANSLOC:
                 setmodel(self, "models/translocator.iqm");
-                self.skin = TeamColorSkin(self.team);
+                self.skin = team_index(self.team);
                 SetupProjectileColormap(COLOR_TEAM4);
                 //self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
                 break;

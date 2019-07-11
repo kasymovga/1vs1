@@ -77,7 +77,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.ice.team = self.team;
 	self.ice.customizeentityforclient = Ice_Customize;
 	if (sv_model_ice_use_skins)
-		self.ice.skin = TeamColorSkin(self.team);
+		self.ice.skin = team_index(self.team);
 	else
 		self.ice.colormod = team_color(self.team);
 

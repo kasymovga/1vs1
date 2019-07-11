@@ -53,11 +53,11 @@ void WalkieTalkie_Menu_Select(float n) {
 	if (self.classname != "player")
 		return;
 
-	float team_index = (teamplay ? TeamColorSkin(self.team) : 0);
-	if (team_index)
-		team_index--;
+	float _team_index = (teamplay ? team_index(self.team) : 0);
+	if (_team_index)
+		_team_index--;
 
-	if (walkietalkie_block[team_index] > time)
+	if (walkietalkie_block[_team_index] > time)
 		return;
 
 	entity e;
@@ -67,7 +67,7 @@ void WalkieTalkie_Menu_Select(float n) {
 
 	WaypointSprite_Attach("here", 0);
 	defer_for(self, 2, WalkeTalkie_WaypointRemove);
-	walkietalkie_block[team_index] = time + 3;
+	walkietalkie_block[_team_index] = time + 3;
 }
 
 void WalkieTalkie_Menu() {

@@ -760,7 +760,7 @@ void() world_gameover {
 	gameover_message = "^2Game finished!";
 	if (teamplay) {
 		if (score_winning_condition_helper_winnerteam > 0)
-			gameover_message = strcat(gameover_message, "\n", Team_ColorCode(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
+			gameover_message = strcat(gameover_message, "\n", team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
 	} else {
 		if (score_winning_condition_helper_winner)
 			gameover_message = strcat(gameover_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
