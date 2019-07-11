@@ -1,11 +1,11 @@
-float ProgressBar_CustomizeEntityForClient() {
+float(void) progressbar_customize {
 	if not(other == self.owner)
 		return FALSE;
 
 	return TRUE;
 }
 
-float ProgressBar_SendEntity(entity to, float sf) {
+float(entity to, float sf) progressbar_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PROGRESSBAR);
 	sf = sf & 127;
 	WriteByte(MSG_ENTITY, sf);
@@ -16,18 +16,18 @@ float ProgressBar_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-entity ProgressBar_Create(string name, entity plr) {
+entity(string name, entity plr) progressbar_create {
 	entity e = spawn();
-	net_link_entity(e, FALSE, 0, ProgressBar_SendEntity);
+	net_link_entity(e, FALSE, 0, progressbar_send);
 	e.netname = name;
 	if (plr)
-		e.customizeentityforclient = ProgressBar_CustomizeEntityForClient;
+		e.customizeentityforclient = progressbar_customize;
 
 	e.owner = plr;
 	return e;
 }
 
-void ProgressBar_SetValue(entity pb, float value) {
+void(entity pb, float value) progressbar_set {
 	pb.cnt = bound(0, value, 1);
 	pb.SendFlags = 1;
 }

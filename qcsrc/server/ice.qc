@@ -143,9 +143,9 @@ void Ice_Think()
 			remove(self.unfroze_pb);
 
 		if (unfrozer) {
-			self.unfroze_pb = ProgressBar_Create("Reviving", unfrozer);
+			self.unfroze_pb = progressbar_create("Reviving", unfrozer);
 			if not(self.owner.unfroze_pb)
-				self.owner.unfroze_pb = ProgressBar_Create("Reviving", self.owner);
+				self.owner.unfroze_pb = progressbar_create("Reviving", self.owner);
 		} else {
 			if (self.owner.unfroze_pb)
 				remove(self.owner.unfroze_pb);
@@ -167,13 +167,13 @@ void Ice_Think()
 		self.unfroze_progress += ICE_FRAME_TIME * unfroze_scale;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL) {
 			if (self.unfroze_pb)
-				ProgressBar_SetValue(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
+				progressbar_set(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
 		} else
 			unfrozer.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
 
 		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
 			if (self.owner.unfroze_pb)
-				ProgressBar_SetValue(self.owner.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
+				progressbar_set(self.owner.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
 		} else {
 			self.owner.movement = '0 0 0';
 			self.owner.bot_dontmove = time + ICE_FRAME_TIME * 1.5;

@@ -146,7 +146,7 @@ void conquest_cp_think_capture() {
 		conquest_remove_progress_bar();
 		return;
 	}
-	ProgressBar_SetValue(self.capture_progress_bar, self.capture_progress);
+	progressbar_set(self.capture_progress_bar, self.capture_progress);
 	self.owner = world;
 	self.nextthink = time;
 }
@@ -167,7 +167,7 @@ void conquest_cp_touch() {
 	other.bot_dontmove = time + sys_ticrate * 2;
 	self.owner = other;
 	if not(self.capture_progress_bar)
-		self.capture_progress_bar = ProgressBar_Create(((self.team > 0) ? "Freeing..." : "Capturing..."), other);
+		self.capture_progress_bar = progressbar_create(((self.team > 0) ? "Freeing..." : "Capturing..."), other);
 	
 	self.think = conquest_cp_think_capture;
 	self.nextthink = time;

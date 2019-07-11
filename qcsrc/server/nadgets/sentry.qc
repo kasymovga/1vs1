@@ -371,7 +371,7 @@ void HG_Sentry_Orphaned_Think(void) {
 
         self.hg_sentry_capture_player = e;
 		if not(e.hg_sentry_capture_pb)
-		e.hg_sentry_capture_pb = ProgressBar_Create("Capturing", e);
+		e.hg_sentry_capture_pb = progressbar_create("Capturing", e);
 
         break;
     }
@@ -380,7 +380,7 @@ void HG_Sentry_Orphaned_Think(void) {
         e = self.hg_sentry_capture_player;
 
         self.hg_sentry_capture_progress = approach(self.hg_sentry_capture_progress, 1.0, g_nadgets_sentry_capture_speed * frametime);
-        ProgressBar_SetValue(e.hg_sentry_capture_pb, self.hg_sentry_capture_progress);
+        progressbar_set(e.hg_sentry_capture_pb, self.hg_sentry_capture_progress);
 
         if(self.hg_sentry_capture_progress == 1) {
             HG_Sentry_SetOwner(self, e);

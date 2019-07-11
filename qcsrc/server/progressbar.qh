@@ -1,2 +1,2 @@
-entity ProgressBar_Create(string name, entity plr);
-void ProgressBar_SetValue(entity pb, float value);
+entity(string name, entity plr) progressbar_create;
+void(entity pb, float value) progressbar_set;
