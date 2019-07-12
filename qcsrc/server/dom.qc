@@ -17,9 +17,8 @@ float ST_DOM_TICKS;
 float SP_DOM_TICKS;
 float SP_DOM_TAKES;
 
-.float enemy_playerid;
 .entity sprite;
-.float captime;
+entity dom_teams[5];
 
 void(void) dom_controlpoint_setup;
 void(void) dom_spawnteams;
@@ -28,8 +27,8 @@ void(void) dom_controlpoint_captured {
 	entity head;
 	float old_delay, old_team, real_team;
 	// now that the delay has expired, switch to the latest team to lay claim to this point
-	head = self.owner;
 	real_team = self.cnt;
+	head = dom_teams[team_index(real_team)];
 	self.cnt = -1;
 	self.dmg_inflictor = world;
 	self.goalentity = head;
@@ -37,7 +36,7 @@ void(void) dom_controlpoint_captured {
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
 	bprint("^3", head.netname, "^3", self.message, "\n");
-	if (self.enemy.playerid == self.enemy_playerid)
+	if (self.enemy.playerid == self.playerid)
 		score_player_add(self.enemy, SP_DOM_TAKES, 1);
 	else
 		self.enemy = world;
@@ -81,7 +80,7 @@ void(void) dom_controlpoint_captured {
 	}
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormap_palette_color(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
-	self.captime = time;
+	self.death_time = time;
 }
 
 void(void) dom_controlpoint_animate {
@@ -121,7 +120,7 @@ void(void) dom_controlpoint_think {
 		score_team_add_to(self.goalentity.team, ST_SCORE, fragamt);
 		score_team_add_to(self.goalentity.team, ST_DOM_TICKS, fragamt);
 		// give credit to the individual player, if he is still there
-		if (self.enemy.playerid == self.enemy_playerid) {
+		if (self.enemy.playerid == self.playerid) {
 			score_player_add(self.enemy, SP_SCORE, fragamt);
 			score_player_add(self.enemy, SP_DOM_TICKS, fragamt);
 		} else
@@ -137,14 +136,11 @@ void(void) dom_controlpoint_touch {
 	if (other.health < 1)
 		return;
 
-	if (time < self.captime + 0.3)
+	if (time < self.death_time + 0.3)
 		return;
 
 	// only valid teams can claim it
-	head = find(world, classname, "dom_team");
-	while (head && head.team != other.team)
-		head = find(head, classname, "dom_team");
-
+	head = dom_teams[team_index(other.team)];
 	if (!head || head.netname == "" || head == self.goalentity)
 		return;
 
@@ -153,13 +149,7 @@ void(void) dom_controlpoint_touch {
 	self.cnt = other.team;
 	self.owner = head; // team to switch to after the delay
 	self.dmg_inflictor = other;
-	head = find(world, classname, "dom_team");
-	while (head && head.netname != "")
-		head = find(head, classname, "dom_team");
-
-	if (head == world)
-		return;
-
+	head = dom_teams[0];
 	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
 	WaypointSprite_Ping(self.sprite);
@@ -168,7 +158,7 @@ void(void) dom_controlpoint_touch {
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
 	self.enemy = other; // individual player scoring
-	self.enemy_playerid = other.playerid;
+	self.playerid = other.playerid;
 	dom_controlpoint_captured();
 }
 
@@ -225,12 +215,7 @@ void(void) spawnfunc_dom_team {
 void(void) dom_controlpoint_setup {
 	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
-	head = find(world, classname, "dom_team");
-	while(head && head.netname != "")
-		head = find(head, classname, "dom_team");
-	if (!head)
-		entity_abort("no spawnfunc_dom_team with netname \"\" found\n");
-
+	head = dom_teams[0];
 	// copy important properties from spawnfunc_dom_team entity
 	self.goalentity = head;
 	setmodel(self, head.mdl); // precision already set
@@ -286,6 +271,9 @@ void(void) spawnfunc_dom_controlpoint {
 // code from here on is just to support maps that don't have control point and team entities
 void(string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage) dom_spawnteam {
 	entity oldself;
+	if (dom_teams[team_index(teamcolor + 1)]) //team already spawned
+		return;
+
 	oldself = self;
 	self = spawn();
 	self.netname = teamname;
@@ -296,6 +284,7 @@ void(string teamname, float teamcolor, string pointmodel, float pointskin, strin
 	self.noise1 = capnarration;
 	self.message = capmessage;
 	spawnfunc_dom_team();
+	dom_teams[team_index(self.team)] = self;
 	self = oldself;
 }
 
@@ -320,13 +309,16 @@ void(void) dom_spawnteams {
 	else
 		numteams = g_domination_teams_override;
 
-	// LordHavoc: edit this if you want to change defaults
-	dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
-	if (numteams > 2)
+	if (team_teams < numteams)
+		dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+
+	if (team_teams < numteams)
+		dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+
+	if (team_teams < numteams)
 		dom_spawnteam("Yellow", COLOR_TEAM3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 
-	if (numteams > 3)
+	if (team_teams < numteams)
 		dom_spawnteam("Pink", COLOR_TEAM4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
@@ -335,9 +327,7 @@ void(void) dom_spawnteams {
 void(void) dom_delayedinit {
 	entity head;
 	// if no teams are found, spawn defaults, if custom teams are set, use them
-	if (find(world, classname, "dom_team") == world || g_domination_teams_override > 1)
-		dom_spawnteams();
-
+	dom_spawnteams();
 	// if no control points are found, spawn defaults
 	if (find(world, classname, "dom_controlpoint") == world) {
 		// if no supported map was found, make every deathmatch spawn a point

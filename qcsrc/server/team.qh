@@ -1,5 +1,6 @@
 // client counts for each team
 float c1, c2, c3, c4;
+float team_teams;
 void(entity pl, float forcebestteam) team_join_best;
 float(entity pl) team_find_smallest;
 void(entity ignore) team_teams_count;

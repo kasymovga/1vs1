@@ -119,13 +119,15 @@ void(void) team_play_activate {
 float at1, at2, at3, at4;
 void(float _team) team_teams_set_allowed {
 	if (_team == COLOR_TEAM1)
-		at1 = TRUE;
+		at1 = 1;
 	else if (_team == COLOR_TEAM2)
-		at2 = TRUE;
+		at2 = 1;
 	else if (_team == COLOR_TEAM3)
-		at3 = TRUE;
+		at3 = 1;
 	else if (_team == COLOR_TEAM4)
-		at4 = TRUE;
+		at4 = 1;
+
+	team_teams = at1 + at2 + at3 + at4;
 }
 
 void(float c) team_teams_set_count {
@@ -134,6 +136,7 @@ void(float c) team_teams_set_count {
 	if (c > 1) at2 = 1;
 	if (c > 2) at3 = 1;
 	if (c > 3) at4 = 1;
+	team_teams = at1 + at2 + at3 + at4;
 }
 
 // set c1...c4 to show what teams are allowed
