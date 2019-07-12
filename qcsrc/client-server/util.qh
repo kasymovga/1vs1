@@ -9,7 +9,6 @@ float mod(float a, float b);
 float isGametypeInFilter(float gt, float tp, string pattern);
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
-string mmsss(float t);
 string mmssss(float t);
 float lengthLogTable[128];
 void compressShortVector_init();

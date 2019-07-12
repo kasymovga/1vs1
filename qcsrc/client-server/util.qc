@@ -75,17 +75,6 @@ float isGametypeInFilter(float gt, float tp, string pattern)
 	return 1;
 }
 
-string mmsss(float tenths)
-{
-	float minutes;
-	string s;
-	tenths = floor(tenths + 0.5);
-	minutes = floor(tenths / 600);
-	tenths -= minutes * 600;
-	s = ftos(1000 + tenths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
-}
-
 string mmssss(float hundredths)
 {
 	float minutes;
