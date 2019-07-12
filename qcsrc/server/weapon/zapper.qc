@@ -251,7 +251,7 @@ void weapon_zapper_beam_think(void) {
     float damageIsDps = FALSE;
 
     if(dt < frametime)
-    if(almost_equals(dt, frametime))
+    if(math_almost_equals(dt, frametime))
         dt = frametime;
 
     float wantedTicrate = self.zapper_dmgdelay * rate;

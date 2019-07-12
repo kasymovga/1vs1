@@ -1139,9 +1139,9 @@ void() ctf_PlayerPreThink {
 
 	// blinking magic: if there is more than one flag, show one of these in a clever way
 	if(redflags)
-		redflags = mod(floor(time * redflags * 0.75), redflags);
+		redflags = math_mod(floor(time * redflags * 0.75), redflags);
 	if(blueflags)
-		blueflags = mod(floor(time * blueflags * 0.75), blueflags);
+		blueflags = math_mod(floor(time * blueflags * 0.75), blueflags);
 
 	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if(flag.cnt != FLAG_BASE)
 	{

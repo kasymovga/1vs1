@@ -152,6 +152,7 @@ void 	loadfromdata(string data) = #68;
 void	loadfromfile(string file) = #69;
 
 float	mod(float val, float m) = #70;
+#define math_mod mod
 
 float	search_begin(string pattern, float caseinsensitive, float quiet) = #74;
 void	search_end(float handle) = #75;

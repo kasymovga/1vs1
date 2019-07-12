@@ -69,9 +69,9 @@ vector GetCurrentFov()
 		}
 	}
 
-	if(almost_equals(current_viewzoom, 1))
+	if(math_almost_equals(current_viewzoom, 1))
 		current_zoomfraction = 0;
-	else if(almost_equals(current_viewzoom, 1/zoomfactor))
+	else if(math_almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
 	else
 		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);

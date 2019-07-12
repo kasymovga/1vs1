@@ -599,7 +599,7 @@ void HG_AdvanceRegen(entity plr, float delta, float limit) {
 
     if(plr.hg_ctx_regentime <= 0) {
         float rem = -plr.hg_ctx_regentime;
-        if(almost_equals(rem, 0))
+        if(math_almost_equals(rem, 0))
             rem = 0;
 
         plr.hg_ctx_ammo += 1;

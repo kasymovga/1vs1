@@ -1,13 +1,3 @@
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a_y * b_z - a_z * b_y)
-	+	'0 1 0' * (a_z * b_x - a_x * b_z)
-	+	'0 0 1' * (a_x * b_y - a_y * b_x);
-}
-
-float mod(float a, float b) { return a - (floor(a / b) * b); }
-
 string ScoreString(float pFlags, float pValue)
 {
 	string valstr;
@@ -84,35 +74,6 @@ string mmssss(float hundredths)
 	hundredths -= minutes * 6000;
 	s = ftos(10000 + hundredths);
 	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
-}
-
-void compressShortVector_init()
-{
-	float l, f, i;
-	l = 1;
-	f = pow(2, 1/8);
-	for(i = 0; i < 128; ++i)
-	{
-		lengthLogTable[i] = l;
-		l *= f;
-	}
-}
-
-// Databases (hash tables)
-void db_save(float db, string pFilename)
-{
-	float fh, i, n;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
-	{
-		print(strcat("^1Can't write DB to ", pFilename));
-		return;
-	}
-	n = buf_getsize(db);
-	fputs(fh, strcat(ftos(DB_BUCKETS), "\n"));
-	for(i = 0; i < n; ++i)
-		fputs(fh, strcat(bufstr_get(db, i), "\n"));
-	fclose(fh);
 }
 
 void get_mi_min_max(float mode)
@@ -197,15 +158,3 @@ void get_mi_min_max(float mode)
 			mi_max_z = trace_endpos_z;
 	}
 }
-
-float almost_equals(float a, float b)
-{
-	float eps;
-	eps = (max(a, -a) + max(b, -b)) * 0.001;
-	if(a - b < eps && b - a < eps)
-		return TRUE;
-	return FALSE;
-}
-
-// requires that m2>m1 in all coordinates, and that m4>m3
-float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;};

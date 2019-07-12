@@ -4,21 +4,12 @@
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
 string ScoreString(float vflags, float value);
-vector cross(vector a, vector b);
-float mod(float a, float b);
 float isGametypeInFilter(float gt, float tp, string pattern);
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
 string mmssss(float t);
-float lengthLogTable[128];
-void compressShortVector_init();
-
-// database (NOTE: keys are case sensitive)
-void db_save(float db, string filename);
 
 string mi_shortname;
 vector mi_min;
 vector mi_max;
 void get_mi_min_max(float mode);
-float almost_equals(float a, float b);
-float boxesoverlap(vector m1, vector m2, vector m3, vector m4);

@@ -52,7 +52,7 @@ void _Movetype_LinkEdict_TouchAreaGrid() // SV_LinkEdict_TouchAreaGrid
 	for(e = findradius(0.5 * (self.absmin + self.absmax), 0.5 * vlen(self.absmax - self.absmin)); e; e = e.chain)
 	{
 		if(e.move_touch)
-		if(boxesoverlap(e.absmin, e.absmax, oldself.absmin, oldself.absmax))
+		if(math_boxes_overlap(e.absmin, e.absmax, oldself.absmin, oldself.absmax))
 		{
 			self = e;
 			other = oldself;

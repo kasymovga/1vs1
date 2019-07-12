@@ -238,7 +238,7 @@ void Draw_WaypointSprite()
 	if(t == 0)
 		spriteimage = strcat("models/sprites/", spriteimage);
 	else
-		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(mod(floor((max(0, time - self.spawntime)) * 2), t)));
+		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(math_mod(floor((max(0, time - self.spawntime)) * 2), t)));
 
 	float edgedistance_min, crosshairdistance;
 	edgedistance_min = min4(o_y, o_x,CVAR(vid_conwidth) - o_x, CVAR(vid_conheight) - o_y);
@@ -386,7 +386,7 @@ void Ent_WaypointSprite()
 		if(f & 0x80)
 		{
 			self.(teamradar_times[self.teamradar_time_index]) = time;
-			self.teamradar_time_index = mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
+			self.teamradar_time_index = math_mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
 		}
 		self.teamradar_color_x = ReadByte() / 255.0;
 		self.teamradar_color_y = ReadByte() / 255.0;

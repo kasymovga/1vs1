@@ -1261,7 +1261,7 @@ void() player_setup_model {
 		}
 		oldskin = self.skinindex;
 		self.skinindex = stof(self.playerskin);
-		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
+		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
 	}
 	if(chmdl || oldskin != self.skinindex)
 		self.species = player_getspecies(); // model or skin has changed
@@ -1587,7 +1587,7 @@ void(void) player_impulse {
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
-			i = mod(imp, 10);
+			i = math_mod(imp, 10);
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			weapon_cycle(self.(cvar_cl_weaponpriorities[i]), m);
 		}

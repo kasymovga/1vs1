@@ -134,7 +134,7 @@ float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, flo
 	if(complain)
 	{
 		self.weaponcomplainindex += 1;
-		c = mod(self.weaponcomplainindex, c) + 1;
+		c = math_mod(self.weaponcomplainindex, c) + 1;
 		for(i = 0; i < n; ++i)
 		{
 			weaponwant = stof(argv(i));

@@ -11,7 +11,10 @@ constants.qh
 ../common/colormap.qh
 ../common/db.qh
 ../menu-server/util.qh
+../client-server/db.qh
 ../client-server/util.qh
+../client-server/math.qh
+../client-server/net.qh
 ../menu-server/weapon.qh
 ../common/weapon.qh
 sound.qh
@@ -135,6 +138,9 @@ warpzone.qh
 ../common/colormap.qc
 ../common/db.qc
 ../client-server/util.qc
+../client-server/math.qc
+../client-server/net.qc
+../client-server/db.qc
 ../menu-server/util.qc
 selectableweapon.qh
 twoweapons.qh

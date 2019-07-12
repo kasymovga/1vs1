@@ -19,7 +19,7 @@ void(entity player, entity teleporter, entity telefragger, vector telefragmin, v
 	for(head = findradius(player.origin, deathradius); head; head = head.chain)
 		if(head != player)
 			if(head.takedamage)
-				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
+				if(math_boxes_overlap(deathmin, deathmax, head.absmin, head.absmax))
 				{
 					if ((player.classname == "player") && (player.health >= 1))
 					{

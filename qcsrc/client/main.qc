@@ -92,7 +92,7 @@ void ClientUpdateMessage_Draw() {
 	string msg;
 	vector pos;
 	pos_z = 0;
-	float _alpha = 0.5 + mod(time, 2) * 0.5;
+	float _alpha = 0.5 + math_mod(time, 2) * 0.5;
 
 	msg = "^1WARNING: ^3Your client is not recommended!";
 	pos_y = 10;
@@ -322,7 +322,7 @@ void CSQC_Init(void)
 	CSQC_CheckEngine();
 	binddb = db_create();
 	tempdb = db_create();
-	compressShortVector_init();
+	net_compress_vector_init();
 
 	crosshairdot_tex = "gfx/crosshair6";
 	if (file_exists("gfx/crosshairdot.tga"))

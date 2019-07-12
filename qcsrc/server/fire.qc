@@ -145,7 +145,7 @@ void fire_apply_damage(entity e)
 		if(other.classname == "player")
 		if(other.deadflag == DEAD_NO)
 		if not(IS_INDEPENDENT_PLAYER(other))
-		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
+		if(math_boxes_overlap(e.absmin, e.absmax, other.absmin, other.absmax))
 		{
 			t = g_balance_firetransfer_time * (e.fire_endtime - time);
 			d = g_balance_firetransfer_damage * e.fire_damagepersec * t;

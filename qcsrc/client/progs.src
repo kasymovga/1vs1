@@ -7,6 +7,9 @@ csqc_constants.qc
 ../client-server/constants.qh
 csqc_builtins.qc
 ../client-server/util.qh
+../client-server/math.qh
+../client-server/net.qh
+../client-server/db.qh
 ../common/gametype.qh
 ../common/colormap.qh
 ../common/db.qh
@@ -98,6 +101,9 @@ prandom.qc
 bgmscript.qc
 
 ../client-server/util.qc
+../client-server/math.qc
+../client-server/net.qc
+../client-server/db.qc
 ../common/gametype.qc
 ../common/colormap.qc
 ../common/db.qc

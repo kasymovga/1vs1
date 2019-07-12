@@ -11,7 +11,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	length_tex = aspect * vlen(to - from) / thickness;
 
 	// direction is perpendicular to the view normal, and perpendicular to the axis
-	thickdir = normalize(cross(axis, view_org - from));
+	thickdir = normalize(math_cross(axis, view_org - from));
 
 	A = from - thickdir * (thickness / 2);
 	B = from + thickdir * (thickness / 2);

@@ -139,7 +139,7 @@ void(void) rune_carried_think {
 			rnum = rcount;
 		rune = find(rune, classname, "rune");
 	}
-	ang_y = rnum*(360 / rcount) + mod(time, 360)*45;//180;
+	ang_y = rnum*(360 / rcount) + math_mod(time, 360)*45;//180;
 	makevectors(ang);
 	setorigin(self, v_forward*32);
 }

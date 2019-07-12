@@ -27,7 +27,7 @@ vector _color;
 float SCOREBOARD_OFFSET = 50;
 #define TIME_DECIMALS 2
 
-#define FLAG_ANIM_LINEAR(frames,rate,offs) mod(floor((time) * (rate) + (offs)), frames)
+#define FLAG_ANIM_LINEAR(frames,rate,offs) math_mod(floor((time) * (rate) + (offs)), frames)
 #define FLAG_ANIM_SINE(frames,rate,offs) (frames - 1) * (sin(time * rate + offs) * 0.5 + 0.5)
 
 float FlagIcon_Animate(string cn) {
@@ -719,7 +719,7 @@ string Sbar_GetField(entity pl, float field)
 					sbar_field_icon1 = "gfx/sb_playercolor_shirt";
 					sbar_field_icon1_rgb = colormap_palette_color(floor(f / 16), 0);
 					sbar_field_icon2 = "gfx/sb_playercolor_pants";
-					sbar_field_icon2_rgb = colormap_palette_color(mod(f, 16), 1);
+					sbar_field_icon2_rgb = colormap_palette_color(math_mod(f, 16), 1);
 				}
 			}
 			return strcat(GetPlayerName(pl.sv_entnum), "^0#", ftos(pl.sv_entnum + 1));
@@ -876,7 +876,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 	else
 	{
 		if (CVAR(sbar_scoreboard_highlight))
-			if(!mod(pl_number,2))
+			if(!math_mod(pl_number,2))
 				drawfill(pos - '1 1 0', tmp + '2 0 0', '1 1 1', 0.09, DRAWFLAG_NORMAL);
 	}
 
@@ -1045,7 +1045,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 		column_dim_x = sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
 		if (CVAR(sbar_scoreboard_highlight))
 		{
-			if (mod(i,2))
+			if (math_mod(i,2))
 				drawfill(pos - '0 1 0' - sbar_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', CVAR(sbar_scoreboard_alpha_bg) * 0.2, DRAWFLAG_NORMAL);
 		}
 		drawstring(pos, sbar_title[i], sbar_fontsize, rgb, 1, DRAWFLAG_NORMAL);
@@ -1064,7 +1064,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 
 			if (CVAR(sbar_scoreboard_highlight))
 			{
-				if (!mod(i,2))
+				if (!math_mod(i,2))
 				{
 					if (i == sbar_num_fields-1)
 						column_dim_x = sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x / 2 + 1;
@@ -2075,7 +2075,7 @@ void Sbar_DrawAccuracyStats()
 	if(warmup_stage)
 	{
 		pos_y += 40;
-		if(mod(time, 1) >= 0.4)
+		if(math_mod(time, 1) >= 0.4)
 			drawstringcenter(pos, "Stats are not tracked during warmup stage", sbar_fontsize, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		return;

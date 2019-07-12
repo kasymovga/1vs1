@@ -672,7 +672,7 @@ void havocbot_movetogoal()
 						evadelava = normalize(self.velocity) * -1;
 					else if (s == CONTENT_SKY)
 						evadeobstacle = normalize(self.velocity) * -1;
-					else if (!boxesoverlap(dst_ahead - self.view_ofs + self.mins, dst_ahead - self.view_ofs + self.maxs,
+					else if (!math_boxes_overlap(dst_ahead - self.view_ofs + self.mins, dst_ahead - self.view_ofs + self.maxs,
 								self.goalcurrent.absmin, self.goalcurrent.absmax))
 					{
 						// if ain't a safe goal with "holes" (like the jumpad on soylent)

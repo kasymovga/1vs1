@@ -13,7 +13,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	while (w)
 	{
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
-		if (boxesoverlap(m1, m2, w.absmin, w.absmax))
+		if (math_boxes_overlap(m1, m2, w.absmin, w.absmax))
 			return w;
 		w = find(w, classname, "waypoint");
 	}
@@ -164,7 +164,7 @@ void waypoint_think()
 	sm2 = self.origin + self.maxs;
 	for(e = world; (e = find(e, classname, "waypoint")); )
 	{
-		if (boxesoverlap(self.absmin, self.absmax, e.absmin, e.absmax))
+		if (math_boxes_overlap(self.absmin, self.absmax, e.absmin, e.absmax))
 		{
 			waypoint_addlink(self, e);
 			waypoint_addlink(e, self);
@@ -708,7 +708,7 @@ void waypoint_spawnforitem_force(entity e, vector org)
 	{
 		if (w.wpisbox)
 		{
-			if (boxesoverlap(org, org, w.absmin, w.absmax))
+			if (math_boxes_overlap(org, org, w.absmin, w.absmax))
 			{
 				e.nearestwaypoint = w;
 				return;

@@ -183,7 +183,7 @@ void(entity platform) entity_drop_entities {
     entity e;
 
     while((e = findflags(e, flags, FL_ONGROUND))) {
-        if(boxesoverlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
+        if(math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
             e.flags &~= FL_ONGROUND;
             projectile_update_next_frame(e);
         }

@@ -47,7 +47,7 @@ void(void) target_voicescript_ctrl_think {
 	if(self.cnt < vs.cnt)
 		i = self.cnt * 2;
 	else if(n > self.cnt * 2)
-		i = mod(self.cnt - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
+		i = math_mod(self.cnt - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
 	else
 		i = -1;
 

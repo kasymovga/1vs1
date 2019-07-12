@@ -42,7 +42,7 @@ void movelib_groundalign4point(float spring_length,float spring_up,float blendra
 	traceline(v1, v1 - vz, MOVE_NORMAL, self);
 	vcross2 -= (trace_startsolid ? v1 : trace_endpos);
 
-	mn = normalize(cross(vcross2, vcross1));
+	mn = normalize(math_cross(vcross2, vcross1));
 	f = asin(mn * v_forward) * RAD2DEG;
 	self.angles_x = bound(-45, self.angles_x - bound(-blendrate, f, blendrate), 45);
 	f = asin(mn * v_right) * RAD2DEG;

@@ -87,7 +87,7 @@ void walker_hunt() {
 		} else {
 			//Rockets
 			w_shotorg = self.origin + v_up * 80;
-			if (mod(self.count, 2))
+			if (math_mod(self.count, 2))
 				w_shotorg = w_shotorg + v_right * 16;
 			else
 				w_shotorg = w_shotorg - v_right * 16;

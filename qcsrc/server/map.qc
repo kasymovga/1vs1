@@ -131,7 +131,7 @@ float() map_list_method_iterate = // usual method
 		for(i = 1; i < Map_Count; ++i)
 		{
 			float mapindex;
-			mapindex = mod(i + Map_Current, Map_Count);
+			mapindex = math_mod(i + Map_Current, Map_Count);
 			if(map_check(mapindex, pass))
 				return mapindex;
 		}
@@ -155,7 +155,7 @@ float() map_list_method_random = // random map selection
 	for(i = 0; i <= imax; ++i)
 	{
 		float mapindex;
-		mapindex = mod(Map_Current + floor(random() * (Map_Count - 1) + 1), Map_Count); // any OTHER map
+		mapindex = math_mod(Map_Current + floor(random() * (Map_Count - 1) + 1), Map_Count); // any OTHER map
 		if(map_check(mapindex, 1))
 			return mapindex;
 	}

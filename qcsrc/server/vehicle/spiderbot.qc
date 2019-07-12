@@ -162,7 +162,7 @@ void(void) vehicle_spiderbot_miniguns_do {
 	if ((self.owner.BUTTON_ATCK) && (self.owner.vehicle_heat < 1) && (self.tur_head.attack_finished_single < time)) {
 		float rotation;
 		rotation = 720 * sys_ticrate / g_vehicle_spiderbot_minigun_refire;
-		float mod_rotation = mod(rotation, 90);
+		float mod_rotation = math_mod(rotation, 90);
 		if (mod_rotation < 10 || mod_rotation > 80)
 			rotation += 30;
 

@@ -58,7 +58,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	move = end - org;
 	for (;;)
 	{
-		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
+		if (math_boxes_overlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
 			// Succeeded
 			#ifdef DEBUG_TRACEWALK
@@ -138,14 +138,14 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			// hit something
 			if (trace_fraction < 1)
 			{
-				if (boxesoverlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
+				if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
 					return TRUE;
 
 				// check if we can walk over this obstacle
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					if (boxesoverlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
+					if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
 						return TRUE;
 
 					#ifdef DEBUG_TRACEWALK
@@ -355,7 +355,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 	{
 		// if object is touching spawnfunc_waypoint
 		if(w != ent)
-			if (boxesoverlap(pm1, pm2, w.absmin, w.absmax))
+			if (math_boxes_overlap(pm1, pm2, w.absmin, w.absmax))
 				return w;
 		w = w.chain;
 	}
@@ -878,7 +878,7 @@ void navigation_poptouchedgoals()
 		}
 	}
 
-	while (self.goalcurrent && boxesoverlap(m1, m2, self.goalcurrent.absmin, self.goalcurrent.absmax))
+	while (self.goalcurrent && math_boxes_overlap(m1, m2, self.goalcurrent.absmin, self.goalcurrent.absmax))
 	{
 		// Detect personal waypoints
 		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)

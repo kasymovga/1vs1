@@ -276,7 +276,7 @@ void weapon_fireball_attack1()
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_fireball_primary_ammo;
 
-	c = mod(self.bulletcounter, 4);
+	c = math_mod(self.bulletcounter, 4);
 	switch(c)
 	{
 		case 0:

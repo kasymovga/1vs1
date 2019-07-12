@@ -1,0 +1,4 @@
+vector(vector a, vector b) math_cross;
+float(float a, float b) math_mod;
+float(float a, float b) math_almost_equals;
+float(vector m1, vector m2, vector m3, vector m4) math_boxes_overlap;

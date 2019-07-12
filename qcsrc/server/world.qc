@@ -319,7 +319,7 @@ void(void) world_init {
 	string s, col;
 	cvar_preinit();
 	world_already_spawned = TRUE;
-	compressShortVector_init();
+	net_compress_vector_init();
 	entity head;
 	head = nextent(world);
 	maxclients = 0;
@@ -434,7 +434,7 @@ void(void) world_init {
 		if(MapInfo_Get_ByID(i))
 			if not(MapInfo_Map_flags & (MAPINFO_FLAG_HIDDEN | MAPINFO_FLAG_FORBIDDEN))
 			{
-				if(mod(i, 2))
+				if(math_mod(i, 2))
 					col = "^2";
 				else
 					col = "^3";
@@ -451,7 +451,7 @@ void(void) world_init {
 	{
 		if(MapInfo_CheckMap(argv(i)))
 		{
-			if(mod(j, 2))
+			if(math_mod(j, 2))
 				col = "^2";
 			else
 				col = "^3";

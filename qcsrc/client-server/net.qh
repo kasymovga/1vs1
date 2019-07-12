@@ -1,0 +1,2 @@
+float lengthLogTable[128];
+void(void) net_compress_vector_init;
