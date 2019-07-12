@@ -115,35 +115,6 @@ void db_save(float db, string pFilename)
 	fclose(fh);
 }
 
-void db_dump(float db, string pFilename)
-{
-	float fh, i, j, n, m;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
-		error(strcat("Can't dump DB to ", pFilename));
-	n = buf_getsize(db);
-	fputs(fh, "0\n");
-	for(i = 0; i < n; ++i)
-	{
-		m = tokenizebyseparator(bufstr_get(db, i), "\\");
-		for(j = 2; j < m; j += 2)
-			fputs(fh, strcat("\\", argv(j-1), "\\", argv(j), "\n"));
-	}
-	fclose(fh);
-}
-
-void buf_save(float buf, string pFilename)
-{
-	float fh, i, n;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
-		error(strcat("Can't write buf to ", pFilename));
-	n = buf_getsize(buf);
-	for(i = 0; i < n; ++i)
-		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
-	fclose(fh);
-}
-
 void get_mi_min_max(float mode)
 {
 	vector mi, ma;

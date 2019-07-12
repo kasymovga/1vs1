@@ -19,6 +19,22 @@ void cmd_make_mapinfo_think()
 	}
 }
 
+void(float db, string pFilename) cmd_db_dump {
+	float fh, i, j, n, m;
+	fh = fopen(pFilename, FILE_WRITE);
+	if(fh < 0)
+		error(strcat("Can't dump DB to ", pFilename));
+
+	n = buf_getsize(db);
+	fputs(fh, "0\n");
+	for(i = 0; i < n; ++i) {
+		m = tokenizebyseparator(bufstr_get(db, i), "\\");
+		for(j = 2; j < m; j += 2)
+			fputs(fh, strcat("\\", argv(j-1), "\\", argv(j), "\n"));
+	}
+	fclose(fh);
+}
+
 void GameCommand(string command)
 {
 	float argc;
@@ -137,7 +153,7 @@ void GameCommand(string command)
 
 	if(cmd == "dumpdb") if(argc == 2)
 	{
-		db_dump(ServerProgsDB, argv(1));
+		cmd_db_dump(ServerProgsDB, argv(1));
 		print("DB dumped.\n");
 		return;
 	}
