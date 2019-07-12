@@ -1,0 +1,1 @@
+float(float gt, float tp, string pattern) gametype_filter;

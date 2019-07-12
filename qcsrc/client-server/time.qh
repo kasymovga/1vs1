@@ -1,0 +1,6 @@
+#define TIME_FACTOR 100
+#define TIME_ENCODED_TOSTRING(n) time_mmssss(n)
+#define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
+#define TIME_DECODE(n) ((n) / TIME_FACTOR)
+#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+string(float t) time_mmssss;
