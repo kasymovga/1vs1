@@ -42,10 +42,10 @@ void get_mi_min_max_texcoords(float mode)
 {
 	vector extend;
 
-	get_mi_min_max(mode);
+	world_get_min_max(mode);
 
-	mi_picmin = mi_min;
-	mi_picmax = mi_max;
+	mi_picmin = world_min;
+	mi_picmax = world_max;
 
 	// extend mi_picmax to get a square aspect ratio
 	// center the map in that area
@@ -69,10 +69,10 @@ void get_mi_min_max_texcoords(float mode)
 	// calculate the texcoords
 	mi_pictexcoord0 = mi_pictexcoord1 = mi_pictexcoord2 = mi_pictexcoord3 = '0 0 0';
 	// first the two corners of the origin
-	mi_pictexcoord0_x = (mi_min_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord0_y = (mi_min_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
-	mi_pictexcoord2_x = (mi_max_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord2_y = (mi_max_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	mi_pictexcoord0_x = (world_min_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
+	mi_pictexcoord0_y = (world_min_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	mi_pictexcoord2_x = (world_max_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
+	mi_pictexcoord2_y = (world_max_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
 	// then the other corners
 	mi_pictexcoord1_x = mi_pictexcoord0_x;
 	mi_pictexcoord1_y = mi_pictexcoord2_y;
@@ -416,21 +416,28 @@ void CSQC_Init(void)
 	WarpZone_Init();
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
-	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
-	shortmapname = mi_shortname;
+	shortmapname = mapname;
+	if(!strcasecmp(substring(shortmapname, 0, 5), "maps/"))
+		shortmapname = substring(shortmapname, 5, strlen(shortmapname) - 5);
+
+	if(!strcasecmp(substring(shortmapname, strlen(shortmapname) - 4, 4), ".bsp"))
+		shortmapname = substring(shortmapname, 0, strlen(shortmapname) - 4);
+
+	shortmapname = strzone(shortmapname);
+	minimapname = strcat("gfx/", shortmapname, "_radar.tga");
 
 	if(precache_pic(minimapname) == "")
 	{
 		// but maybe we have a non-clever minimap
-		minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+		minimapname = strcat("gfx/", shortmapname, "_mini.tga");
 		if(precache_pic(minimapname) == "")
 			minimapname = ""; // FAIL
 		else
 			get_mi_min_max_texcoords(0); // load new texcoords
 	}
 
-	mi_center = (mi_min + mi_max) * 0.5;
-	mi_scale = mi_max - mi_min;
+	mi_center = (world_min + world_max) * 0.5;
+	mi_scale = world_max - world_min;
 	minimapname = strzone(minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 

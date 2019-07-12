@@ -12,7 +12,10 @@ constants.qh
 ../common/db.qh
 ../menu-server/util.qh
 ../client-server/db.qh
-../client-server/util.qh
+../client-server/world.qh
+../client-server/time.qh
+../client-server/score.qh
+../client-server/gametype.qh
 ../client-server/math.qh
 ../client-server/net.qh
 ../menu-server/weapon.qh
@@ -137,7 +140,10 @@ warpzone.qh
 ../common/gametype.qc
 ../common/colormap.qc
 ../common/db.qc
-../client-server/util.qc
+../client-server/world.qc
+../client-server/time.qc
+../client-server/score.qc
+../client-server/gametype.qc
 ../client-server/math.qc
 ../client-server/net.qc
 ../client-server/db.qc

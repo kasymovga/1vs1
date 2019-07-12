@@ -359,6 +359,10 @@ void(void) world_init {
 	campaign_preinit();
 	map_mark_as_recent(mapname);
 	precache_model("null"); // we need this one before gametype_init. or maybe not
+	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
+	world_get_min_max(1);
+	world.mins = world_min;
+	world.maxs = world_max;
 	gametype_init();
 	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	sv_world_scale = cvar("sv_world_scale");
@@ -1245,7 +1249,7 @@ void SV_OnEntityPreSpawnFunction()
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teamplay, self.gametypefilter))
+	if not(gametype_filter(game, teamplay, self.gametypefilter))
 	{
 		remove(self);
 		return;

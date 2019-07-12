@@ -95,7 +95,7 @@ void BGMScript_Init()
 	float fh;
 	bgmscriptbuf = bgmscriptbufsize = 0;
 	bgmscriptbufloaded = 1;
-	s = strcat("maps/", mi_shortname, ".bgs");
+	s = strcat("maps/", shortmapname, ".bgs");
 	fh = fopen(s, FILE_READ);
 	if(fh < 0)
 		return;

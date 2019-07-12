@@ -522,7 +522,7 @@ void Cmd_Sbar_SetFields(float argc)
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
 
-			if not(isGametypeInFilter(gametype, teamplay, pattern))
+			if not(gametype_filter(gametype, teamplay, pattern))
 				continue;
 		}
 
@@ -757,7 +757,7 @@ string Sbar_GetField(entity pl, float field)
 
 		case SP_BESTWEP:
 			tmp = pl.(scores[SP_BESTWEP_FIELD]);
-			return ScoreString(0, tmp);
+			return score_string(0, tmp);
 
 		default:
 			tmp = pl.(scores[field]);
@@ -768,7 +768,7 @@ string Sbar_GetField(entity pl, float field)
 				sbar_field_rgb = '0 1 1';
 			else
 				sbar_field_rgb = '1 1 1';
-			return ScoreString(f, tmp);
+			return score_string(f, tmp);
 	}
 	//return "error";
 }
@@ -1199,7 +1199,7 @@ void Sbar_DrawScoreboard()
 
 		if(teamplay)
 		{
-			str = strcat(str, " until ^3", ScoreString(teamscores_flags[ts_primary], fl));
+			str = strcat(str, " until ^3", score_string(teamscores_flags[ts_primary], fl));
 			if(teamscores_label[ts_primary] == "score")
 				str = strcat(str, " points^7");
 			else if(teamscores_label[ts_primary] == "fastest")
@@ -1209,7 +1209,7 @@ void Sbar_DrawScoreboard()
 		}
 		else
 		{
-			str = strcat(str, " until ^3", ScoreString(scores_flags[ps_primary], fl));
+			str = strcat(str, " until ^3", score_string(scores_flags[ps_primary], fl));
 			if(scores_label[ps_primary] == "score")
 				str = strcat(str, " points^7");
 			else if(scores_label[ps_primary] == "fastest")
@@ -1224,7 +1224,7 @@ void Sbar_DrawScoreboard()
 			str = strcat(str, " or");
 		if(teamplay)
 		{
-			str = strcat(str, " until a lead of ^3", ScoreString(teamscores_flags[ts_primary], ll));
+			str = strcat(str, " until a lead of ^3", score_string(teamscores_flags[ts_primary], ll));
 			if(teamscores_label[ts_primary] == "score")
 				str = strcat(str, " points^7");
 			else if(teamscores_label[ts_primary] == "fastest")
@@ -1234,7 +1234,7 @@ void Sbar_DrawScoreboard()
 		}
 		else
 		{
-			str = strcat(str, " until a lead of ^3", ScoreString(scores_flags[ps_primary], ll));
+			str = strcat(str, " until a lead of ^3", score_string(scores_flags[ps_primary], ll));
 			if(scores_label[ps_primary] == "score")
 				str = strcat(str, " points^7");
 			else if(scores_label[ps_primary] == "fastest")

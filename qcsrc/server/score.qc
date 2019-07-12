@@ -763,7 +763,7 @@ void(entity to, float t, float w) score_nice_print_team {
 			{
 				fl = score_team_flags[i];
 				sc = sk.(teamscores[i]);
-				s = strcat(s, " ", score_nice_print_item_color(fl), ScoreString(fl, sc));
+				s = strcat(s, " ", score_nice_print_item_color(fl), score_string(fl, sc));
 			}
 	}
 	else
@@ -809,7 +809,7 @@ void(entity to, entity p, float w) score_nice_print_player {
 		{
 			fl = score_flags[i];
 			sc = sk.(scores[i]);
-			s = strcat(s, " ", score_nice_print_item_color(fl), strpad(-w, ScoreString(fl, sc)));
+			s = strcat(s, " ", score_nice_print_item_color(fl), strpad(-w, score_string(fl, sc)));
 		}
 
 	cmd_print_to(to, s);

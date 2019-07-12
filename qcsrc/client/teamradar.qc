@@ -311,15 +311,15 @@ void(float big, string title) teamradar_view =
 	if(teamradar_rotation == 0)
 	{
 		// max-min distance must fit the radar in any rotation
-		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_max - mi_min));
+		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(world_max - world_min));
 	}
 	else
 	{
 		vector c0, c1, c2, c3, span;
-		c0 = rotate(mi_min, teamradar_angle * DEG2RAD);
-		c1 = rotate(mi_max, teamradar_angle * DEG2RAD);
-		c2 = rotate('1 0 0' * mi_min_x + '0 1 0' * mi_max_y, teamradar_angle * DEG2RAD);
-		c3 = rotate('1 0 0' * mi_max_x + '0 1 0' * mi_min_y, teamradar_angle * DEG2RAD);
+		c0 = rotate(world_min, teamradar_angle * DEG2RAD);
+		c1 = rotate(world_max, teamradar_angle * DEG2RAD);
+		c2 = rotate('1 0 0' * world_min_x + '0 1 0' * world_max_y, teamradar_angle * DEG2RAD);
+		c3 = rotate('1 0 0' * world_max_x + '0 1 0' * world_min_y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
 		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
 		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);
@@ -339,7 +339,7 @@ void(float big, string title) teamradar_view =
 		  f * bigsize
 		+ (1 - f) * normalsize;
 	teamradar_origin3d_in_texcoord = teamradar_3dcoord_to_texcoord(
-		  f * (mi_min + mi_max) * 0.5
+		  f * (world_min + world_max) * 0.5
 		+ (1 - f) * view_origin);
 
 	color1 = GetPlayerColor(player_localentnum-1);

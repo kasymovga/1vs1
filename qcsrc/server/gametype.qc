@@ -33,11 +33,6 @@ void() gametype_init {
 
 	// make sure only ONE type is selected
 	gametype_readcvars();
-
-	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
-	get_mi_min_max(1);
-	world.mins = mi_min;
-	world.maxs = mi_max;
 	cvar_set("timelimit", cvar_string("timelimit_default"));
 	cvar_set("fraglimit", cvar_string("fraglimit_default"));
 	MapInfo_LoadMapSettings(mapname);
