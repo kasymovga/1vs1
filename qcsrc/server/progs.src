@@ -169,7 +169,6 @@ announce.qc
 ../common/str.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
-../menu-server/miscfunctions.qc
 waypointsprites.qc
 
 bot/bot.qc

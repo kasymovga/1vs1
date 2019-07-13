@@ -52,7 +52,6 @@ nexuiz/util.qc
 ../common/str.qc
 ../common/file.qc
 ../common/cvar.qc
-../menu-server/miscfunctions.qc
 ../menu-server/campaign.qc
 ../menu-server/mapinfo.qc
 ../menu-server/weapon.qc
