@@ -1,14 +1,3 @@
-// unzone the string, and return it as tempstring. Safe to be called on string_null
-string fstrunzone(string s)
-{
-	string sc;
-	if not(s)
-		return s;
-	sc = strcat(s, "");
-	strunzone(s);
-	return sc;
-}
-
 string swapInPriorityList(string order, float i, float j)
 {
 	string s;
