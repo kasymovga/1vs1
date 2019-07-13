@@ -205,6 +205,7 @@ void(void) vehicle_car_blowup {
 	self.alpha = -1;
 	self.nextthink = time + 10;
 	self.think = vehicle_car_spawn;
+	self.velocity = '0 0 0';
 	setorigin(self,self.tur_aimpos);
 }
 

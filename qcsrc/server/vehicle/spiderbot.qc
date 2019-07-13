@@ -397,6 +397,7 @@ void(void) vehicle_spiderbot_blowup {
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
 	self.nextthink  = time + 10;
 	self.think	  = vehicle_spiderbot_spawn;
+	self.velocity = '0 0 0';
 	setorigin(self,self.tur_aimpos);
 }
 
