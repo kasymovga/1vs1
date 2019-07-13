@@ -5,7 +5,7 @@ by LordHavoc (lordhavoc@ghdigital.com)
 float g_domination;
 float g_domination_default_teams;
 float g_domination_point_amt;
-//float g_domination_point_capturetime;
+float g_domination_point_capturetime;
 float g_domination_point_fullbright;
 float g_domination_point_glow;
 float g_domination_point_rate;
@@ -96,12 +96,24 @@ void(void) dom_controlpoint_animate {
 		self.frame = 0;
 }
 
+void(void) dom_controlpoint_capture_stop {
+	remove(self.killindicator);
+	remove(self.killindicator.killindicator);
+	self.killindicator = world;
+	self.state = 0;
+}
+
 void(void) dom_controlpoint_think {
 	float waittime;
 	float fragamt;
 	self.nextthink = time + 0.1;
 	dom_controlpoint_animate();
 	// give points
+	if (self.killindicator) {
+		if (self.killindicator.lastdamage + 0.5 < time) {
+			dom_controlpoint_capture_stop();
+		}
+	}
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
@@ -128,6 +140,29 @@ void(void) dom_controlpoint_think {
 	}
 }
 
+float(void) dom_controlpoint_capture_finished {
+	if (g_domination_point_capturetime <= 0)
+		return TRUE;
+
+	if (clienttype(other) == CLIENTTYPE_BOT)
+		other.bot_dontmove = time + 0.1;
+
+	if (self.state >= g_domination_point_capturetime) {
+		dom_controlpoint_capture_stop();
+		return TRUE;
+	}
+	if not(self.killindicator) {
+		self.killindicator = spawn();
+		self.killindicator.playerid = other.playerid;
+		self.killindicator.enemy = other;
+		self.killindicator.killindicator = progressbar_create("Capturing...", other);
+	}
+	self.state = self.state + frametime;
+	progressbar_set(self.killindicator.killindicator, self.state / g_domination_point_capturetime);
+	self.killindicator.lastdamage = time;
+	return FALSE;
+}
+
 void(void) dom_controlpoint_touch {
 	entity head;
 	if (other.classname != "player")
@@ -142,6 +177,12 @@ void(void) dom_controlpoint_touch {
 	// only valid teams can claim it
 	head = dom_teams[team_index(other.team)];
 	if (!head || head.netname == "" || head == self.goalentity)
+		return;
+
+	if (self.killindicator && self.killindicator.playerid != other.playerid) //somebody already capture point
+		return;
+
+	if not(dom_controlpoint_capture_finished())
 		return;
 
 	// delay capture
@@ -362,7 +403,7 @@ void(void) dom_init {
 	g_domination = 1;
 	CACHE_CVAR(g_domination_default_teams);
 	CACHE_CVAR(g_domination_point_amt);
-	//CACHE_CVAR(g_domination_point_capturetime);
+	CACHE_CVAR(g_domination_point_capturetime);
 	CACHE_CVAR(g_domination_point_fullbright);
 	CACHE_CVAR(g_domination_point_glow);
 	CACHE_CVAR(g_domination_point_rate);

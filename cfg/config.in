@@ -94,6 +94,8 @@ _set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always pro
 _set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
 _set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
 _set g_weapon_stay 0 "if set, weapons stay after they were picked up"
+_set g_domination_point_capturetime 1
+set g_domination_point_leadlimit 0
 
 set g_stepheight 34 "how high you can step up"
 set g_stepairslowdown 0.05 ""
