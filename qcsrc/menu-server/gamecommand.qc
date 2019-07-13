@@ -48,7 +48,7 @@ float GameCommand_Generic(string command)
 		}
 		else if(argv(1) == "shuffle" && argc == 2)
 		{
-			cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
+			cvar_set("_g_maplist", shufflewords(cvar_string("_g_maplist")));
 			return TRUE;
 		}
 		else if(argv(1) == "cleanup")
