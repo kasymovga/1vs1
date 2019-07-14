@@ -31,35 +31,35 @@ void(void) physics_impact {
 #ifdef SVQC
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
-	tracebox(o, self.mins, self.maxs, o, MOVE_NORMAL, self);
+	tracebox(o, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 	if (trace_startsolid)
 		return FALSE;
 
-	setorigin(self, o);
+	setorigin(self, trace_endpos);
 	return TRUE;
 }
 
 void(void) physics_unstuck {
-	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
+	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 	if not(trace_startsolid)
 		return;
 
-	if (physics_unstuck_to('0 0 0.125'))
+	if (physics_unstuck_to('0 0 1' * self.maxs_z))
 		return;
 
-	if (physics_unstuck_to('0 0 -0.125'))
+	if (physics_unstuck_to('0 0 1' * self.mins_z))
 		return;
 
-	if (physics_unstuck_to('0 0.125 0'))
+	if (physics_unstuck_to('0 1 0' * self.maxs_y))
 		return;
 
-	if (physics_unstuck_to('0 -0.125 0'))
+	if (physics_unstuck_to('0 1 0' * self.mins_y))
 		return;
 
-	if (physics_unstuck_to('0.125 0 0'))
+	if (physics_unstuck_to('1 0 0' * self.maxs_x))
 		return;
 
-	if (physics_unstuck_to('-0.125 0 0'))
+	if (physics_unstuck_to('1 0 0' * self.mins_x))
 		return;
 }
 #endif
