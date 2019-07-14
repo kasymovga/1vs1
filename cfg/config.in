@@ -1859,6 +1859,7 @@ set explosive_minsta_g_use_ammunition 1
 set explosive_minsta_g_minstagib_ammo_drop 25
 
 set physiccpma_g_gravity 1000
+set physiccpma_g_stepairslowdown 0
 set physiccpma_g_maxspeed 400
 set physiccpma_g_maxairspeed 400
 set physiccpma_g_accelerate 15
@@ -1883,6 +1884,7 @@ set physiccpma_g_friction_on_land 0
 set physiccpma_g_doublejump 0
 
 set physicq3_g_gravity 1000
+set physiccpma_g_stepairslowdown 0
 set physicq3_g_maxspeed 400
 set physicq3_g_maxairspeed 400
 set physicq3_g_accelerate 10
