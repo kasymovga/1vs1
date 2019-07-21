@@ -38,13 +38,13 @@ entity(string command) extresponse_find_handler {
 }
 
 void(string response) extresponse_parse {
-    var n = tokenize_console(response);
-    var e = extresponse_find_handler(argv(1));
-
+    float n = tokenize_console(response);
+    entity e = extresponse_find_handler(argv(1)), oldself;
     if(e && e.er_func) {
-        using(self = e.owner) {
-            e.er_func(n, response);
-        }
+		oldself = self;
+		self = e.enemy;
+		e.er_func(n, response);
+		self = oldself;
     }
 }
 
@@ -63,5 +63,6 @@ void(string command, er_func_t callback, entity selfent) extresponse_register_ha
 	e.netname = command;
 	e.er_func = callback;
 	e.owner = extresponse_chain;
+	e.enemy = selfent;
 	extresponse_chain = e;
 }
