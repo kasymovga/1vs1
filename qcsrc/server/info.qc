@@ -80,3 +80,5 @@ void(void) spawnfunc_info_teleport_destination {
 	} else
 		entity_abort("^3Teleport destination without a targetname");
 }
+
+void(void) spawnfunc_info_intermission { }
