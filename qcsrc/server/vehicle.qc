@@ -160,6 +160,14 @@ float(void) vehicle_ThrowWeaponHandle {
 	return vehicle_ThrowWeaponHandle_NextLink();
 }
 
+var entity(entity) vehicle_player_entity_next_link;
+entity(entity pl) vehicle_player_entity {
+	if (pl.vehicle)
+		return pl.vehicle;
+
+	return vehicle_player_entity_next_link(pl);
+}
+
 float vehicle_init_done;
 void(void) vehicle_init {
 	if (vehicle_init_done)
@@ -174,6 +182,8 @@ void(void) vehicle_init {
 	GameHookChain_PlayerAlphaMod = vehicle_PlayerAlphaMod;
 	vehicle_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
 	GameHookChain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
+	vehicle_player_entity_next_link = gamehook_chain_player_entity;
+	gamehook_chain_player_entity = vehicle_player_entity;
 }
 
 float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter {
