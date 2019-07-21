@@ -120,13 +120,13 @@ void Ice_Think()
 	}
 	entity e, unfrozer;
 	unfrozer = world;
-	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100)
+	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100 && player_entity(e) == e)
 	{
 		unfrozer = self.last_unfrozer;
 	}
 	else FOR_EACH_PLAYER(e)
 	{
-		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100)
+		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100 || player_entity(e) != e)
 			continue;
 
 		unfrozer = e;
