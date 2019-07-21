@@ -122,7 +122,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
             self.owner.vehicle_shield = self.vehicle_shield / cvar(strcat(self.cvar_basename,"_shield"));
 
     }
-    if(self.health <= 0) {
+    if(self.health < 1) {
         if(self.owner)
             vehicle_extract_player(self.owner, TRUE);
 
