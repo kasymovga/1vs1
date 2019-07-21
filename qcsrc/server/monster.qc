@@ -51,7 +51,7 @@ void monster_set_route() {
 		FOR_EACH_PLAYER(p)
 			if (p.health >= 1)
 			if (p.deadflag == DEAD_NO)
-				navigation_routerating(p, 10000, 10000);
+				navigation_routerating(player_entity(p), 10000, 10000);
 
 	navigation_goalrating_end();
 	if (self.items & IT_JETPACK) {
