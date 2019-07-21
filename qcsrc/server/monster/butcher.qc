@@ -11,20 +11,21 @@ void butcher_hunt() {
 	vector v;
 	float dofire;
 	if (self.attack_finished_single < time) {
-		if (vlen(self.enemy.origin - self.origin) <= self.dmg_radius) {
+		v = entity_nearest_point_on_box(self.enemy, self.origin);
+		if (vlen(v - self.origin) <= self.dmg_radius) {
 			self.attack_finished_single = time + 0.5;
 			self.lastshot_time = FALSE;
 			dofire = TRUE;
 		} else
 			dofire = FALSE;
-	} else if (self.attack_finished_single + 0.5 > time)
+	} else if (self.attack_finished_single + 0.5 > time) {
+		v = entity_nearest_point_on_box(self.enemy, self.origin);
 		dofire = TRUE;
-	else
+	} else
 		dofire = FALSE;
 
 	if (dofire) {
 		if not(self.lastshot_time) {
-			v = entity_nearest_point_on_box(self.enemy, self.origin);
 			if (vlen(v - self.origin) <= self.dmg_radius)
 			if (self.attack_finished_single - time < 0.25) {
 				traceline(self.origin, v, MOVE_NORMAL, self);
