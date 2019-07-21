@@ -1845,7 +1845,7 @@ void() player_post_think {
 }
 
 float(void) player_customize {
-	self.alpha = player_calculate_alpha(self.owner, other);
+	self.alpha = player_calculate_alpha(self, other);
 	if(self.alpha < 0)
 		return FALSE;
 
