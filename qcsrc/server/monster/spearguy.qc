@@ -8,19 +8,20 @@ void spearguy_hunt() {
 		return;
 
 	vector v;
-	if (vlen(self.enemy.origin - self.origin) > self.dmg_radius) {
+	v = entity_nearest_point_on_box(self.enemy, self.origin);
+	if (vlen(v - self.origin) > self.dmg_radius) {
 		anim_set(self, '13 1 1', TRUE, TRUE, FALSE);
 		v = monster_move_walk(600, 5, 500);
 	} else {
-		v = self.enemy.origin - self.origin;
 		movelib_beak_simple(100 * frametime);
 		anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
-		traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
+		traceline(self.origin, v, MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			makevectors(self.angles);
 			te_lightning1(world, self.origin + normalize(v_forward) * 20 + v_right * 10, self.enemy.origin);
 			damage(self.enemy, self, self, self.dmg_edge * frametime, WEP_MELEE, self.enemy.origin, v_forward);
 		}
+		v = self.enemy.origin - self.origin;
 	}
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 360 * frametime);

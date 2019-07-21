@@ -7,9 +7,9 @@ void spider_hunt() {
 	if (monster_check_target(spider_walk, spider_guard))
 		return;
 
-	vector v = self.enemy.origin - self.origin;
+	vector v = entity_nearest_point_on_box(self.enemy, self.origin) - self.origin;
 	float f = vlen(v);
-	if (f < 75) {
+	if (f < 60) {
 		self.enemy = self;
 		monster_die();
 		return;

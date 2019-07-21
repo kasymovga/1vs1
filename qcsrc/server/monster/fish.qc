@@ -18,11 +18,12 @@ void fish_hunt() {
 	vector v;
 	float dofire;
 	dofire = FALSE;
-	if (vlen(self.origin - self.enemy.origin) < self.dmg_radius) {
+	v = entity_nearest_point_on_box(self.enemy, self.origin);
+	if (vlen(self.origin - v) < self.dmg_radius) {
 		dofire = TRUE;
 	}
 	if (dofire) {
-		traceline(self.origin, self.enemy.origin, MOVE_NORMAL, self);
+		traceline(self.origin, v, MOVE_NORMAL, self);
 		if (trace_ent) {
 			damage(trace_ent, self, self, self.dmg_edge * frametime, WEP_MELEE, trace_endpos, v_forward);
 		}
