@@ -89,7 +89,7 @@ float(entity to, float sf) entcs_send {
 
 void() entcs_think {
 	self.nextthink = time;
-	entity o = self.owner;
+	entity o = player_entity(self.owner);
 	if (o.origin_x != self.origin_x || o.origin_y != self.origin_y) {
 		self.origin_x = o.origin_x;
 		self.origin_y = o.origin_y;
