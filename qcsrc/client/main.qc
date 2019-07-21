@@ -786,17 +786,21 @@ void Ent_ReadEntCS(float bIsNewEntity)
 			self.origin_x = ReadShort();
 			self.origin_y = ReadShort();
 		}
-		if (f & 4)
+		if (f & 4) {
 			self.origin_z = ReadShort();
-
-		if (f & 8)
 			self.angles_y = ReadShort();
+		}
 		if (self.cnt)
 			self.cnt = FALSE;
 	} else {
 		if not(self.cnt)
 			self.cnt = TRUE;
 	}
+	if (f & 8) {
+		self.maxs_x = self.maxs_y = 0;
+		self.maxs_z = ReadShort();
+	}
+
 	if (teamplay)
 		Shownames_UpdateTeamBubble(self, f & 32);
 

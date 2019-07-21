@@ -24,7 +24,7 @@ float E_ORIGIN      = 1; // vector
 
 #define SHOWNAMES_MAXDISTANCE 2500
 #define SHOWNAMES_MINDISTANCE 1000
-#define SHOWNAMES_ORIGIN_OFFSET '0 0 64'
+#define SHOWNAMES_ORIGIN_OFFSET '0 0 16'
 
 float Shownames_PreDrawPlayer_Disabled() { return FALSE; }
 
@@ -81,7 +81,7 @@ void Shownames_DrawPlayer() {
     a *= ((SHOWNAMES_MAXDISTANCE - SHOWNAMES_MINDISTANCE) - max(0, dist - SHOWNAMES_MINDISTANCE)) / (SHOWNAMES_MAXDISTANCE - SHOWNAMES_MINDISTANCE);
 
     vector o;
-    o = project_3d_to_2d(self.iorigin + SHOWNAMES_ORIGIN_OFFSET);
+    o = project_3d_to_2d(self.iorigin + self.maxs + SHOWNAMES_ORIGIN_OFFSET);
 
     if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
         return;
@@ -139,7 +139,7 @@ void Shownames_TeamBubbleRemove() {
 void Shownames_TeamBubbleDraw() {
 	entity o = self.owner;
 	self.scale = (1 + (vlen(view_origin - self.origin)) / 400) * (fov_zoomed / 120);
-	setorigin(self, o.iorigin + '0 0 64');
+	setorigin(self, o.iorigin + o.maxs + '0 0 16');
 	float h = o.health;
 	if (h < 100) {
 		float redfactor = 1 - h / 100;

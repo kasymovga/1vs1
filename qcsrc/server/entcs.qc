@@ -72,12 +72,13 @@ float(entity to, float sf) entcs_send {
 			WriteShort(MSG_ENTITY, self.origin_x);
 			WriteShort(MSG_ENTITY, self.origin_y);
 		}
-		if (sf & 4)
+		if (sf & 4) {
 			WriteShort(MSG_ENTITY, self.origin_z);
-
-		if (sf & 8)
 			WriteShort(MSG_ENTITY, self.angles_y);
+		}
 	}
+	if (sf & 8)
+		WriteShort(MSG_ENTITY, self.view_ofs_z);
 
 	if (sf & 128)
 	if (sf & 16) {
@@ -90,17 +91,19 @@ float(entity to, float sf) entcs_send {
 void() entcs_think {
 	self.nextthink = time;
 	entity o = player_entity(self.owner);
-	if (o.origin_x != self.origin_x || o.origin_y != self.origin_y) {
-		self.origin_x = o.origin_x;
-		self.origin_y = o.origin_y;
+	vector v = o.origin;
+	if (v_x != self.origin_x || v_y != self.origin_y) {
+		self.origin_x = v_x;
+		self.origin_y = v_y;
 		self.SendFlags |= 2;
 	}
-	if (o.origin_z != self.origin_z) {
-		self.origin_z = o.origin_z;
+	if (v_z != self.origin_z || o.angles_y != self.angles_y) {
+		self.origin_z = v_z;
+		self.angles_y = o.angles_y;
 		self.SendFlags |= 4;
 	}
-	if (o.angles_y != self.angles_y) {
-		self.angles_y = o.angles_y;
+	if (o.maxs_z != self.view_ofs_z) {
+		self.view_ofs_z = o.maxs_z;
 		self.SendFlags |= 8;
 	}
 	if (o.health != floor(self.health) || o.armorvalue != floor(self.armorvalue)) {
