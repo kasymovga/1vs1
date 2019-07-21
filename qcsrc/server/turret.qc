@@ -1088,11 +1088,7 @@ entity turret_select_target()
 
 	if (g_turrets_targetscan_playersonly) {
 		FOR_EACH_PLAYER(e) {
-			if (e.vehicle)
-				e_real = e.vehicle;
-			else
-				e_real = e;
-
+			e_real = player_entity(e);
 			if (turret_validate_target(self,e_real,self.target_select_flags) <= 0)
 				continue;
 
