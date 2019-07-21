@@ -2216,6 +2216,13 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 	score_touch(pl);
 }
 
+entity(entity pl) player_entity {
+	if (pl.classname == "player")
+		return gamehook_chain_player_entity(pl);
+
+	return pl;
+}
+
 void() player_init {
 	// Precache all player models if desired
 	if (cvar("sv_precacheplayermodels")) {

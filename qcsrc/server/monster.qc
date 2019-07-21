@@ -74,14 +74,16 @@ vector monster_checkpoint(entity e) {
 
 float notice_sound_finished;
 entity monster_look_for_player(float distance, float heardistance, float fov_factor, float attack_delay, float attack_delay_jitter) {
-	entity e;
+	entity e, pl;
 	vector v;
 	vector checkpoint;
 	float f;
 	entity p = world;
 	if not(gameover)
-	FOR_EACH_PLAYER(e)
+	FOR_EACH_PLAYER(pl)
+	if ((e = player_entity(pl)))
 	if (e.health >= 1)
+	if (e.takedamage)
 	if (e.deadflag == DEAD_NO) {
 		if (teamplay) {
 			if not(self.team)

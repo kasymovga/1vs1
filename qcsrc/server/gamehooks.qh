@@ -119,3 +119,4 @@ var float(float tempo) GameHookChain_TempoMod = { return tempo; }
 var float() GameHookChain_ThrowWeaponOnDeathHandle = { return FALSE; }
 var float() GameHookChain_ProjectileTouchHandle = { return FALSE; }
 var float(float f) GameHookChain_SwitchWeaponMod = { return f; }
+var entity(entity pl) gamehook_chain_player_entity = { return pl; }
