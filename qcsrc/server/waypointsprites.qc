@@ -155,9 +155,11 @@ void WaypointSprite_Think()
 			doremove = TRUE;
 	}
 
-	if(self.exteriormodeltoclient)
-		WaypointSprite_UpdateOrigin(self, self.exteriormodeltoclient.origin + self.view_ofs);
-
+	if(self.exteriormodeltoclient) {
+		entity e = player_entity(self.exteriormodeltoclient);
+		vector v = '0 0 1' * e.maxs_z + e.origin;
+		WaypointSprite_UpdateOrigin(self, v + self.view_ofs);
+	}
 	if(doremove)
 		WaypointSprite_Kill(self);
 	else
@@ -379,7 +381,7 @@ entity WaypointSprite_Attach(
 		maxdistance = waypointsprite_limitedrange;
 	else
 		maxdistance = 0;
-	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, FALSE);
+	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 16', world, t, self, waypointsprite_attached, FALSE);
 }
 
 entity WaypointSprite_AttachCarrier(
@@ -389,7 +391,7 @@ entity WaypointSprite_AttachCarrier(
 {
 	entity e;
 	WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE);
+	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 16', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE);
 	return e;
 }
 

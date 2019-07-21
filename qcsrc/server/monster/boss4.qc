@@ -168,7 +168,7 @@ void boss4_spawn() {
 	self.fire_burner = spawn();
 	setattachment(self.fire_burner, self, "Bip01 Head");
 	self.fire_burner.effects = EF_FLAME;
-	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 192', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
+	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);
 	WaypointSprite_UpdateTeamRadar(e, RADARICON_WAYPOINT, '1 0.5 0');

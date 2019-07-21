@@ -779,7 +779,7 @@ void() spawnfunc_ctf_flag_team1 {
 	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
 	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_deployed_fixed);
 	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
-	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, FALSE);
+	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 50', world, 0, self, waypointsprite_attached, FALSE);
 	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(COLOR_TEAM1 - 1, FALSE));
 
@@ -887,7 +887,7 @@ void() spawnfunc_ctf_flag_team2 {
 	self.sprite.waypointsprite_visible_for_player = ctf_base_visibility;
 	WaypointSprite_SpawnFixed("keycarrier-finish", self.origin + '0 0 37', self, waypointsprite_deployed_fixed);
 	self.waypointsprite_deployed_fixed.waypointsprite_visible_for_player = ctf_runhere_visibility;
-	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, FALSE);
+	WaypointSprite_Spawn("flagdropped", 0, 0, self, '0 0 50', world, 0, self, waypointsprite_attached, FALSE);
 	self.waypointsprite_attached.waypointsprite_visible_for_player = ctf_flag_visibility;
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_FLAG, colormap_palette_color(COLOR_TEAM2 - 1, FALSE));
 
