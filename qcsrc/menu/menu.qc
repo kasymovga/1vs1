@@ -109,6 +109,7 @@ void() m_init =
 		}
 	}
 	menu_dlc_reload();
+	udppunchhole_extresponse_handler_register();
 	SetConWidthHeight();
 }
 
@@ -258,7 +259,6 @@ void() m_draw =
 			cvar_set("r_font_disable_freetype", "0");
 			localcmd("\nr_restart\n");
 		}
-
 		m_init_delayed();
 		return;
 	}
@@ -272,12 +272,11 @@ void() m_draw =
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
 		}
 	}
-
+	extresponse_update();
 	t = gettime();
 	realFrametime = frametime = min(0.2, t - menuPrevTime);
 	menuPrevTime = t;
 	time += frametime;
-
 	t = cvar("menu_slowmo");
 	if(t)
 	{
@@ -289,6 +288,14 @@ void() m_draw =
 
 	if(Menu_Active)
 	{
+		entity e, oldself;
+		oldself = self;
+		for(e = findflags(world, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) {
+			self = e;
+			self.nextthink = 0;
+			self.think();
+		}
+		self = oldself;
 		if(getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
 			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
 		else

@@ -22,7 +22,7 @@ void(string dst, string input) extresponse_query {
     }
     if(extrepsone_is_unsafe_input(input)) {
         print("extrespone_query: [for: ", dst, "] prevented a potentially dangerous string from being sent to the console: ", input, "\n");
-        backtrace("extrespone_query");
+        //backtrace("extrespone_query");
         return;
     }
     localcmd("packet " + dst + " " + " \"" + input + "\"\n");

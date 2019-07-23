@@ -230,8 +230,15 @@ void refreshServerListNexuizServerList(entity me, float mode)
 			o |= 1; // descending
 		sethostcachesort(me.currentSortField, o);
 		resorthostcache();
-		if(mode >= 1)
+		if(mode >= 1) {
 			refreshhostcache();
+			if (cvar("sv_udppunchhole")) {
+				s = cvar_string("sv_udppunchhole_server");
+				if (s != "") {
+					extresponse_query(s, "extResponse udppunchhole request");
+				}
+			}
+		}
 	}
 }
 void focusEnterNexuizServerList(entity me)

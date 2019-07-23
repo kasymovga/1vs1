@@ -198,8 +198,7 @@ void() world_precache {
 }
 
 
-void world_static_init(void)
-{
+void(void) world_static_init {
 #ifdef ALLOW_FORCEMODELS
 	CACHE_CVAR(sv_clforceplayermodels);
 #endif
@@ -207,6 +206,7 @@ void world_static_init(void)
 	CACHE_CVAR(sv_loddistance2);
 	if(sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
+
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_norecoil);
@@ -244,6 +244,7 @@ void world_static_init(void)
 	timeout_init();
 	sysinfo_init();
 	footsteps_init();
+	udppunchhole_init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");
