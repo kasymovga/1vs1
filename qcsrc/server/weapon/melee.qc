@@ -81,7 +81,7 @@ void weapon_melee_attack (float melee_type, float axe)
 	melee.dmg = axe;
 	if (melee_type == 2)
 	{
-		setmodel(melee, self.model);
+		setmodel(melee, self.body.playermodel);
 		melee.angles = sv_player_melee_angles;
 		melee.colormap = self.colormap;
 		setorigin(melee, sv_player_melee_origin);
