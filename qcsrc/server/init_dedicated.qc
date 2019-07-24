@@ -1,6 +1,7 @@
 void() init_dedicated_think {
 	float n;
-	if(cvar("_sv_init")) {
+	localcmd("\nset _sv_init2 1\n");
+	if(cvar("_sv_init") && cvar("_sv_init2")) {
 		map_list_init();
 		if(cvar("g_maplist_shuffle"))
 			map_list_shuffle();
@@ -36,4 +37,5 @@ void(void) spawnfunc___init_dedicated_server {
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	dlc_init();
 }

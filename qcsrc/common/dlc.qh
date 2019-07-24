@@ -3,6 +3,7 @@ string dlc_repo;
 string dlc_list;
 string dlc_pk3_name(string dlc_name);
 string dlc_serverpackage_name(string dlc_name);
-float dlc_load(string dlc_name);
+float dlc_load(string dlc_name, float force_local);
+void(string l) dlc_load_local_list;
 float dlc_ready(string dlc_name);
 float dlc_ready_all();

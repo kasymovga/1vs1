@@ -22,7 +22,7 @@ float dlc_load_queue_sumit() {
 		if (head == "")
 			continue;
 
-		dlc_load(head);
+		dlc_load(head, FALSE);
 		if (tail == "")
 			break;
 	}
@@ -82,7 +82,7 @@ void dlc_find_working_repo() {
 	}
 }
 
-float dlc_load(string dlc_name) {
+float dlc_load(string dlc_name, float force_local) {
 	string list = dlc_list;
 	string s;
 	while (list != "") {
@@ -98,10 +98,11 @@ float dlc_load(string dlc_name) {
 	if (dlc_ready(dlc_name))
 		return TRUE;
 
-	if (dlc_repo_finded)
+	if (dlc_repo_finded && !force_local)
 		localcmd("\ncurl --pak ", dlc_url(dlc_name), "\n");
 	else {
 #ifndef MENUQC
+		if not(force_local)
 		if not(dlc_repo_checker) {
 			dlc_repo_checker = spawn();
 			dlc_repo_checker.think = dlc_find_working_repo;
@@ -114,6 +115,20 @@ float dlc_load(string dlc_name) {
 		dlc_load_queue = strzone(s);
 	}
 	return FALSE;
+}
+
+void(string l) dlc_load_local_list {
+	string s;
+	while (l != "") {
+		s = str_car(l);
+		l = str_cdr(l);
+		if (s != "") {
+			if not(dlc_ready(s)) {
+				print("Loading dlc: ", s, "\n");
+				localcmd("\ncurl --pak ", dlc_pk3_name(s), "\n");
+			}
+		}
+	}
 }
 
 float dlc_ready_all() {

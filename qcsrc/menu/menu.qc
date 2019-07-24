@@ -77,16 +77,7 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 
 void() menu_dlc_reload =
 {
-	string s;
-	string l = cvar_string("menu_dlc_list");
-	while (l != "") {
-		s = str_car(l);
-		l = str_cdr(l);
-		if (s != "") {
-			dlc_load(s);
-			print("Loading dlc: ", s, "\n");
-		}
-	}
+	dlc_load_local_list(cvar_string("menu_dlc_list"));
 }
 
 void() m_init =

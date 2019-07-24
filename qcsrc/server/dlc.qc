@@ -181,7 +181,7 @@ float dlc_SendEntity(entity to, float sf) {
 }
 
 void dlc_require_server_only(string dlc_name) {
-	if (dlc_load(dlc_name))
+	if (dlc_load(dlc_name, FALSE))
 		dlc_exec_cfg(dlc_name); //Just in case
 	else if not(dlc_wait) {
 		dlc_wait = spawn();
@@ -296,6 +296,21 @@ void dlc_init() {
 	if (s != "")
 		dlc_require(s);
 
+	dlc_load_local_list(cvar_string("menu_dlc_list"));
+	string map_pk3 = whichpack(strcat("maps/", mapname, ".bsp"));
+	if (substring(map_pk3, 0, 8) == "dlcache/")
+		map_pk3 = substring(map_pk3, 8, -1);
+
+	if (map_pk3 != "")
+	if (substring(map_pk3, 0, 11) == "zzz-rexdlc_") {
+		s = substring(map_pk3, 11, strlen(map_pk3) - 15);
+		if (s != "") {
+			if (file_exists(dlc_serverpackage_name(s))) {
+				print("Map from DLC: ", s, "\n");
+				dlc_require(s);
+			}
+		}
+	}
 	dlc_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = dlc_GameCommandHandle;
 	dlc_TempoMod_NextLink = GameHookChain_TempoMod;
@@ -340,7 +355,7 @@ void dlc_reload() {
 		s = str_car(list);
 		list = str_cdr(list);
 		if (s != "")
-			dlc_load(s);
+			dlc_load(s, FALSE);
 	}
 	list = dlc_list_send;
 	while (list != "") {
