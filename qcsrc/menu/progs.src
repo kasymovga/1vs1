@@ -14,7 +14,7 @@ mbuiltin.qh
 ../client-menu/util.qh
 ../menu-server/util.qh
 ../client-menu/oo/base.h
-
+../menu-server/udppunchhole.qh
 ../common/constants.qh
 ../menu-server/mapinfo.qh
 ../menu-server/campaign.qh
@@ -22,7 +22,7 @@ mbuiltin.qh
 ../common/weapon.qh
 ../common/uri.qh
 ../common/dlc.qh
-
+../common/extresponse.qh
 gamecommand.qh
 menu.qh
 ../client-menu/draw.qh
@@ -48,7 +48,7 @@ menu.qc
 ../client-menu/draw.qc
 ../client-menu/nexuiz/util.qc
 nexuiz/util.qc
-
+../menu-server/udppunchhole.qc
 ../common/str.qc
 ../common/file.qc
 ../common/cvar.qc
@@ -59,6 +59,6 @@ nexuiz/util.qc
 ../common/uri.qc
 ../common/dlc.qc
 ../client-menu/ui.qc
-
+../common/extresponse.qc
 ../client-menu/util.qc
 ../menu-server/util.qc

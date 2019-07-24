@@ -350,3 +350,11 @@ float(float i) argv_end_index = #516;
 string(float, float) getgamedirinfo = #626;
 #define GETGAMEDIRINFO_NAME 0
 #define GETGAMEDIRINFO_DESCRIPTION 1
+
+//DP_RM_QCSENDPACKET
+//idea: Akari
+//darkplaces implementation: Akari
+//builtin definitions:
+float(string addr, string data) net_sendpacket = #801;
+//description:
+//A QC builtin equivalent of the "packet" command

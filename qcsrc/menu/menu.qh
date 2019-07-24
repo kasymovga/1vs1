@@ -22,6 +22,11 @@ void m_display();
 void m_goto(string name);
 void m_goto_skin_selector();
 .string name;
+.float cnt;
+.float nextthink;
+.void(void) think;
+.entity owner;
+.entity enemy;
 
 entity keyGrabber;
 .void(entity me, float key, float ascii) keyGrabbed;

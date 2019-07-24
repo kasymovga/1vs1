@@ -77,7 +77,8 @@ radio.qh
 ../common/uri.qh
 ready.qh
 clanarena.qh
-
+udppunchhole.qh
+../menu-server/udppunchhole.qh
 conquest.qh
 survive.qh
 ctf.qh
@@ -299,7 +300,8 @@ misc.qc
 ../common/weapon.qc
 projectile.qc
 irc.qc
-
+udppunchhole.qc
+../menu-server/udppunchhole.qc
 akimbo.qc
 ready.qc
 infomessages.qc
