@@ -22,7 +22,7 @@ mbuiltin.qh
 ../common/weapon.qh
 ../common/uri.qh
 ../common/dlc.qh
-../common/extresponse.qh
+../menu-server/extresponse.qh
 gamecommand.qh
 menu.qh
 ../client-menu/draw.qh
@@ -59,6 +59,6 @@ nexuiz/util.qc
 ../common/uri.qc
 ../common/dlc.qc
 ../client-menu/ui.qc
-../common/extresponse.qc
+../menu-server/extresponse.qc
 ../client-menu/util.qc
 ../menu-server/util.qc

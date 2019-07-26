@@ -25,6 +25,8 @@ void(float argc, string response) udppunchhole_extresponse_handler {
 		}
 	} else if (s == "pong") {
 		//ignore
+	} else if (udppunchhole_extresponse_handler_extra) {
+		udppunchhole_extresponse_handler_extra(argc, response);
 	} else {
 		print("udppunchhole: unknown command: ", s, "\n");
 	}

@@ -42,7 +42,7 @@ cvar.qh
 ../common/dlc.qh
 dlc.qh
 teleport.qh
-../common/extresponse.qh
+../menu-server/extresponse.qh
 ../common/ip2c.qh
 ip2c.qh
 bullet.qh
@@ -286,7 +286,7 @@ turret/targettrigger.qc
 turret/tesla.qc
 score.qc
 
-../common/extresponse.qc
+../menu-server/extresponse.qc
 
 portals.qc
 
