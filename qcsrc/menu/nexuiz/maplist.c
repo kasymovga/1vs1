@@ -183,7 +183,7 @@ void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSe
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
 
 	s = ftos(p);
-	draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	draw_Picture(me.columnPreviewOrigin * eX, strcat("/", MapInfo_Map_image), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	if(included)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	s = draw_TextShortenToWidth(strcat(MapInfo_Map_bspname, ": ", MapInfo_Map_title), me.columnNameSize / me.realFontSize_x, 0);

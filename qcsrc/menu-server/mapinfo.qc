@@ -106,6 +106,7 @@ void MapInfo_Cache_Store()
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_supportedGametypes));
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_supportedFeatures));
 	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, ftos(MapInfo_Map_flags));
+	bufstr_set(_MapInfo_Cache_Buf_IndexToMapData, ++i, MapInfo_Map_image);
 }
 
 float MapInfo_Cache_Retrieve(string map)
@@ -128,6 +129,7 @@ float MapInfo_Cache_Retrieve(string map)
 	MapInfo_Map_supportedGametypes = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_supportedFeatures = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_flags = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
+	MapInfo_Map_image = bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i);
 	return 1;
 }
 
@@ -652,6 +654,12 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	if not(file_exists(strcat("maps/", pFilename, ".bsp"))) {
 		return 0;
 	}
+	MapInfo_Map_image = strcat("maps/", MapInfo_Map_bspname);
+	if not(file_exists(strcat(MapInfo_Map_image, ".jpg")))
+	if not(file_exists(strcat(MapInfo_Map_image, ".tga")))
+	if not(file_exists(strcat(MapInfo_Map_image, ".png")))
+		MapInfo_Map_image = "gfx/menu/silver/background_ingame";
+
 	// default all generic fields so they have "good" values in case something fails
 	fn = strcat("maps/", pFilename, ".mapinfo");
 	fh = fopen(fn, FILE_READ);
