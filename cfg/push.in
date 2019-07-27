@@ -1,0 +1,5 @@
+set g_player_pushfactor 0.5
+set g_push_damage 25
+set g_push_damage_speed 500
+set g_push_trampledamage 25
+set g_push_trampledamage_speed 400

@@ -1,6 +1,7 @@
 SV_SOURCES=$(shell find qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
 CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)')
 MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)')
+CFG_SOURSES=$(shell ls cfg/*.in)
 SET_CURL_PACKAGE=yes
 QCC=rmqcc
 QCCFLAGS=-O3
@@ -24,11 +25,11 @@ menu.dat : $(MENU_SOURCES)
 	cd qcsrc/menu && $(QCC) $(QCCFLAGS)
 	mv -f qcsrc/menu/menu.dat menu.dat
 
-$(CFG_NAME) : cfg/config.in Makefile
+$(CFG_NAME) : $(CFG_SOURSES) Makefile
 	echo sv_progs $(SV_PROGNAME) > $(CFG_NAME).tmp
 	echo csqc_progname $(CL_PROGNAME) >> $(CFG_NAME).tmp
 	if test "$(SET_CURL_PACKAGE)" = yes; then echo sv_curl_serverpackages $(CL_PROGNAME) >> $(CFG_NAME).tmp; else echo -n; fi
-	cat cfg/config.in >> $(CFG_NAME).tmp
+	for F in $(CFG_SOURSES); do echo "//begin of $$F"; cat $$F; echo "//end of $$F"; done >> $(CFG_NAME).tmp
 	mv -f $(CFG_NAME).tmp $(CFG_NAME)
 
 .PHONY: cl.pk3

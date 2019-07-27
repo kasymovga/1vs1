@@ -1,0 +1,4 @@
+set g_minstagib_nolaserdamage 1
+set g_minstagib_health_drop 0
+set g_minstagib_health_max 200
+set g_minstagib_armor_max 200

@@ -1,0 +1,4 @@
+set g_ctf_showenemycarrier 1
+set g_ctf_showenemycarrier_delay 30
+set g_ctf_dropbutton_use 1 "drop flag with +use bind"
+set g_ctf_dropbutton_hook 0 "drop flag with +hook bind"

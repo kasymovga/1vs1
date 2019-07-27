@@ -1,0 +1,3 @@
+set sv_damageindicator 1
+set sv_damageindicator_accumulate_interval 0.4
+set cl_damageindicator 1.5

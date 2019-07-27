@@ -1,0 +1,130 @@
+//Compatibility with other games
+
+//Nexuiz compat
+set sv_spawnreplace_item_fuel "item_jetpack"
+set sv_spawnreplace_item_fuel_regen "item_jetpack"
+set sv_spawnreplace_weapon_minstanex "weapon_fireball"
+set sv_spawnreplace_weapon_campingrifle "weapon_nex"
+set sv_spawnreplace_runematch_spawn_point rune_spawn_point
+set sv_spawnreplace_ball nexball_football
+set sv_spawnreplace_ball_football nexball_football
+set sv_spawnreplace_ball_basketball nexball_basketball
+set sv_spawnreplace_ball_hockey nexball_hockey
+set sv_spawnreplace_ball_redgoal nexball_bluegoal
+set sv_spawnreplace_ball_bluegoal nexball_redgoal
+set sv_spawnreplace_ball_fault nexball_fault
+set sv_spawnreplace_ball_bound nexball_out
+set sv_spawnreplace_item_flag_team1 ctf_flag_team1
+set sv_spawnreplace_item_flag_team2 ctf_flag_team2
+set sv_spawnreplace_misc_warpzone_position trigger_warpzone_position
+alias g_ctf_respawn_delay "set ctf_g_respawn_delay $1"
+alias g_dm_respawn_delay "set dm_g_respawn_delay $1"
+alias g_dom_respawn_delay "set dom_g_respawn_delay $1"
+alias g_lms_respawn_delay "set lms_g_respawn_delay $1"
+alias g_rune_respawn_delay "set rune_g_respawn_delay $1"
+alias g_tdm_respawn_delay "set tdm_g_respawn_delay $1"
+alias g_ctf_respawn_waves "set ctf_g_respawn_waves $1"
+alias g_dm_respawn_waves "set dm_g_respawn_waves $1"
+alias g_dom_respawn_waves "set dom_g_respawn_waves $1"
+alias g_lms_respawn_waves "set lms_g_respawn_waves $1"
+alias g_rune_respawn_waves "set rune_g_respawn_waves $1"
+alias g_tdm_respawn_waves "set tdm_g_respawn_waves $1"
+
+//Quake and Quake 3 compat
+set sv_spawnreplace_monster_army monster_soldier_spawn
+set sv_spawnreplace_monster_enforcer monster_rlgirl_spawn
+set sv_spawnreplace_monster_knight monster_spearguy_spawn
+set sv_spawnreplace_monster_dog monster_spider_spawn
+set sv_spawnreplace_monster_demon1 monster_heavysoldier_spawn
+set sv_spawnreplace_monster_ogre monster_fireguy_spawn
+set sv_spawnreplace_monster_shambler monster_arachna_spawn
+set sv_spawnreplace_monster_wizard monster_bat_spawn
+set sv_spawnreplace_monster_zombie monster_marine_spawn
+set sv_spawnreplace_monster_fish monster_fish_spawn
+set sv_spawnreplace_monster_hell_knight monster_butcher_spawn
+set sv_spawnreplace_monster_shalrath monster_walker_spawn
+set sv_spawnreplace_monster_tarbaby monster_flyingthing_spawn
+set sv_spawnreplace_item_key2 "item_key_gold"
+set sv_spawnreplace_item_key1 "item_key_silver"
+set sv_spawnreplace_misc_teleporter_dest info_teleport_destination
+set sv_spawnreplace_target_teleporter info_teleport_destination
+set sv_spawnreplace_info_player_survivor info_player_deathmatch
+set sv_spawnreplace_info_player_start info_player_deathmatch
+set sv_spawnreplace_trap_spikeshooter misc_spikeshooter
+
+set sv_spawnreplace_ammo_shells "item_bullets"
+set sv_spawnreplace_ammo_bullets "item_shells"
+set sv_spawnreplace_ammo_grenades "item_rockets"
+set sv_spawnreplace_ammo_lightning "item_cells"
+set sv_spawnreplace_ammo_cells "item_cells"
+set sv_spawnreplace_ammo_slugs "item_cells"
+set sv_spawnreplace_ammo_bfg "item_rockets"
+set sv_spawnreplace_ammo_rockets "item_rockets"
+
+set sv_spawnreplace_item_spikes item_bullets
+set sv_spawnreplace_item_adrenaline item_health_large
+set sv_spawnreplace_item_armor_body item_armor_large
+set sv_spawnreplace_item_armor_combat item_armor_big
+set sv_spawnreplace_item_armor_shard item_armor_small
+set sv_spawnreplace_item_armor_jacket item_armor_medium
+set sv_spawnreplace_item_enviro item_invincible
+set sv_spawnreplace_item_quad item_strength
+set sv_spawnreplace_item_flight item_jetpack
+set sv_spawnreplace_item_armor1 item_armor_small "Must be item_armor_medium for Q1 maps"
+set sv_spawnreplace_item_armor2 item_armor_large
+set sv_spawnreplace_item_armor25 item_armor_large
+set sv_spawnreplace_item_armorInv item_armor_large
+set sv_spawnreplace_item_health1 item_health_small
+set sv_spawnreplace_item_health25 item_health_medium
+set sv_spawnreplace_item_health100 item_health_mega
+
+set sv_spawnreplace_CTF_redflag ctf_flag_team1
+set sv_spawnreplace_CTF_blueflag ctf_flag_team2
+set sv_spawnreplace_CTF_redplayer info_player_team1
+set sv_spawnreplace_CTF_blueplayer info_player_team2
+set sv_spawnreplace_CTF_redspawn info_player_team1
+set sv_spawnreplace_CTF_bluespawn info_player_team2
+set sv_spawnreplace_team_CTF_redflag ctf_flag_team1
+set sv_spawnreplace_team_CTF_blueflag ctf_flag_team2
+set sv_spawnreplace_team_CTF_redspawn info_player_team1
+set sv_spawnreplace_team_CTF_bluespawn info_player_team2
+set sv_spawnreplace_team_CTF_redplayer info_player_team1
+set sv_spawnreplace_team_CTF_blueplayer info_player_team2
+
+set sv_spawnreplace_weapon_machinegun "weapon_uzi"
+set sv_spawnreplace_weapon_lightning "weapon_zapper"
+set sv_spawnreplace_weapon_plasmagun "weapon_hlac"
+set sv_spawnreplace_weapon_railgun "weapon_nex"
+set sv_spawnreplace_weapon_bfg "weapon_fireball"
+set sv_spawnreplace_weapon_nailgun weapon_uzi
+set sv_spawnreplace_weapon_supernailgun weapon_uzi
+set sv_spawnreplace_weapon_supershotgun ""
+set sv_spawnreplace_weapon_shotgun weapon_uzi
+set sv_spawnreplace_weapon_chaingun weapon_uzi
+set sv_spawnreplace_weapon_hyperblaster weapon_hlac
+
+set sv_spawnreplace_item_haste item_speed
+set sv_spawnreplace_item_invis item_invisibility
+
+//Xonotic compat
+set sv_spawnreplace_misc_breakablemodel "func_breakable"
+set sv_spawnreplace_weapon_seeker "weapon_hagar"
+
+//Quake Live compat
+set sv_spawnreplace_func_advertisement "func_wall"
+
+//Previous monster names compat
+set sv_spawnreplace_arachna_spawn monster_arachna_spawn
+set sv_spawnreplace_bat_spawn monster_bat_spawn
+set sv_spawnreplace_boss1_spawn monster_boss1_spawn
+set sv_spawnreplace_boss2_spawn monster_boss2_spawn
+set sv_spawnreplace_ewheel_spawn monster_ewheel_spawn
+set sv_spawnreplace_fireguy_spawn monster_fireguy_spawn
+set sv_spawnreplace_flyingthing_spawn monster_flyingthing_spawn
+set sv_spawnreplace_heavysoldier_spawn monster_heavysoldier_spawn
+set sv_spawnreplace_marine_spawn monster_marine_spawn
+set sv_spawnreplace_rlgirl_spawn monster_rlgirl_spawn
+set sv_spawnreplace_soldier_spawn monster_soldier_spawn
+set sv_spawnreplace_spearguy_spawn monster_spearguy_spawn
+set sv_spawnreplace_spider_spawn monster_spider_spawn
+set sv_spawnreplace_walker_spawn monster_walker_spawn

@@ -1,0 +1,4 @@
+set sv_vote_players_auto_abstain 0.5 "This part of players who ignore vote will be counted as abstain"
+set sv_vote_limit_from_single_address 0 "Allowed vote count from single network address (0 and negative values mean no limit)"
+_set sv_vote_change "1"
+_set sv_vote_commands "restart gotomap endmatch endround nextmap kick kickban"

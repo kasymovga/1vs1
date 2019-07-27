@@ -1,0 +1,6 @@
+_set net_messagetimeout "30"
+alias rereadcvars "sv_cmd rereadcvars"
+set sv_maxconnects_per_address 0
+alias _fs_rescan_alias_disable "unalias fs_rescan"
+alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; sv_cmd dlc_reload; _fs_rescan_alias_enable\""
+_fs_rescan_alias_enable

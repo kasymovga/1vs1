@@ -1,0 +1,14 @@
+set g_nexball_ball_scale 1 ""
+set g_nexball_ball_explosive_radius 1000
+set g_nexball_ball_explosive_damage 1000
+set g_nexball_ball_explosive_force 1000
+set g_nexball_football_melee_boost_forward "200"
+set g_nexball_football_melee_boost_up "150"
+set g_nexball_hockey_boost_forward "100"
+set g_nexball_hockey_bouncefactor 0.8
+set g_nexball_hockey_melee_boost_forward "400"
+set g_nexball_hockey_melee_boost_up "250"
+set nexball_g_start_weapon_shotgun 0
+_set g_nexball_meter_period 2
+set g_balance_nexball_primary_shootatmaxmeter 1
+_set g_balance_nexball_primary_shootatmaxmeter 1

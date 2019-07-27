@@ -1,0 +1,2 @@
+alias timeout "sv_cmd timeout; cmd timeout"
+alias timein "sv_cmd timein; cmd timein"

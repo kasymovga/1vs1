@@ -1,0 +1,11 @@
+set g_balance_teams_autoswap 0
+set g_balance_teams_autoswap_from_small_team_minplayers 9
+set g_balance_teams_autoswap_interval 60
+set g_balance_teams_autoswap_required_humans 3
+set g_balance_teams_autoswap_zerolead 0
+set g_balance_teams_autoswap_lead 5
+set g_balance_teams_adjust_sizes 0 "Score difference for adjust sizes of teams"
+set g_balance_teams_adjust_sizes_factor 0.1
+alias shuffleteams "sv_cmd shuffleteams"
+set g_mirrorforce 1 "Mirror force factor"
+set g_friendlyfire_force 0

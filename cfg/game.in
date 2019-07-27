@@ -1,0 +1,35 @@
+alias alltospec "sv_cmd alltospec"
+set sv_sound_frag ""
+_set g_forced_respawn 1
+set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
+set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
+set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
+set sv_gameplayfix_skipnonsolid 0 "Allow shooting through non-solid curve surfaces."
+set sv_gametype_patterns "" "For compatibility with Q3/QL maps. Patterns to filter items by gametype, separated by '|'. Possible values: ffa, team, duel"
+set g_buttons_hookuse_swap 0
+alias extendmatchtime "sv_cmd extendmatchtime"
+alias reducematchtime "sv_cmd reducematchtime"
+alias increasefraglimit "sv_cmd increasefraglimit"
+alias decreasefraglimit "sv_cmd decreasefraglimit"
+set fraglimit_max 50
+set fraglimit_min 5
+set fraglimit_increment 5
+set fraglimit_decrement 5
+set g_profile "" "Config profile prefix, currently available: akimbo, cra, minsta, explosive_minsta"
+_set g_maplist_votable "9"
+_set g_maplist_votable_nodetail "0"
+_set g_voice_flood_spv 20
+set sv_reset_on_join "0" "Reset map when this client count join game"
+set skill_auto_min 10
+set skill_auto_max 30
+alias endround "sv_cmd endround"
+set timelimit_default 15
+set fraglimit_default 10
+set sv_jumppads_target_adjust_height 0
+set sv_breakable_debris 1
+set sv_door_shootable 1
+set sv_door_trigger_field "60 60 8"
+set sv_door_default_speed 100
+set sv_world_scale 1
+set sv_maxidle_forcespec 120
+set cl_shownames_cos 0.99 "cosinus of show names field angle"

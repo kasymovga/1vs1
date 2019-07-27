@@ -1,0 +1,2 @@
+set sv_sysinfo_checker ""
+alias sysinfoget "prvm_edictget server $1 sysinfo"

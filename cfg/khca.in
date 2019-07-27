@@ -1,0 +1,5 @@
+set g_khca_point_limit 15
+set g_khca_point_leadlimit 0
+set g_khca_startdelay 5
+set g_khca_enddelay 5
+set khca_inherit "ca kh"

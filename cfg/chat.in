@@ -1,0 +1,3 @@
+set g_chat_flood_damage_flooder 25
+set g_chat_forbidden_words ""
+set g_chat_forbidden_words_set_retard 0

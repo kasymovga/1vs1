@@ -1,0 +1,3 @@
+set g_tdm_fraglimit 50
+set g_tdm_use_dm_maps 0
+set g_tdm_use_ctf_maps 0

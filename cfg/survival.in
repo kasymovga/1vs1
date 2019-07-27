@@ -1,0 +1,4 @@
+set g_survive_wave_pause 20
+set g_survive_wave_skip 0
+set g_survive_monster_factor 0.5
+set g_survive_freeze 1

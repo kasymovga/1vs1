@@ -1,0 +1,5 @@
+set sv_player_hat ""
+set sv_player_hat_angles "0 0 0"
+set sv_player_hat_attachment ""
+set sv_player_hat_origin "0 0 0"
+set sv_player_hat_scale 1

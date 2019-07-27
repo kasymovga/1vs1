@@ -1,0 +1,9 @@
+set g_powerup_strength_akimbo 0
+set g_powerup_strength_droppable 1
+set g_powerup_shield_droppable 1
+set g_powerup_invisibility_droppable 1
+set g_powerup_speed_droppable 1
+set g_balance_powerup_invisibility_time 30
+set g_balance_powerup_speed_time 30
+set g_powerup_invisibility 1
+set g_powerup_speed 1

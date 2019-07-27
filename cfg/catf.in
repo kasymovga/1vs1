@@ -1,0 +1,3 @@
+set g_catf_enddelay 5
+set g_catf_startdelay 5
+set catf_inherit "ca ctf"

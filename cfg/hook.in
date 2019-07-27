@@ -1,0 +1,6 @@
+set g_balance_grapplehook_break_damage 10
+set g_balance_grapplehook_damage 10
+set g_balance_grapplehook_damage_interval 0
+set g_balance_grapplehook_dontpull 0
+set g_balance_grapplehook_gravity 0
+set g_balance_grapplehook_onground_pullfactor 4

@@ -1,0 +1,207 @@
+seta cl_weaponpriority "11 9 16 7 4 18 13 17 8 6 15 3 5 14 2 1 12 10 19" "weapon priority list (edit it using the menu, numbers see constants.qh)"
+seta cl_weaponpriority0 "16 9 4 13 8 14" "use impulse 200 for prev gun from this list, 210 for best gun, 220 for next gun.  Default value: explosives"
+seta cl_weaponpriority1 "11 7 18 6 5 1"  "use impulse 201 for prev gun from this list, 211 for best gun, 221 for next gun.  Default value: energy"
+seta cl_weaponpriority2 "11 7 18 15 3"   "use impulse 202 for prev gun from this list, 212 for best gun, 222 for next gun.  Default value: hitscan exact"
+seta cl_weaponpriority3 "11 7 18 15 3 2" "use impulse 203 for prev gun from this list, 213 for best gun, 223 for next gun.  Default value: hitscan all"
+seta cl_weaponpriority4 "16 4 13 17 8 6 2"  "use impulse 204 for prev gun from this list, 214 for best gun, 224 for next gun.  Default value: spam weapons"
+set g_weapon_alpha 0
+seta cl_gunalpha 1
+set sv_model_campingrifle "" "Custom weapon model for rifle"
+set sv_model_crylink "" "Custom weapon model for crylink"
+set sv_model_electro "" "Custom weapon model for electro"
+set sv_model_fireball "" "Custom weapon model for fireball"
+set sv_model_flak "" "Custom weapon model for flak"
+set sv_model_gl "" "Custom weapon model for mortar"
+set sv_model_hagar "" "Custom weapon model for hagar"
+set sv_model_hlac "" "Custom weapon model for HLAC"
+set sv_model_hookgun "" "Custom weapon model for hookgun"
+set sv_model_nex "" "Custom weapon model for nex"
+set sv_model_laser "" "Custom weapon model for laser"
+set sv_model_minstanex "" "Custom weapon model for minstanex"
+set sv_model_porto "" "Custom weapon model for porto"
+set sv_model_rl "" "Custom weapon model for rocket launcher"
+set sv_model_tuba "" "Custom weapon model for tuba"
+set sv_model_shotgun "" "Custom weapon model for shotgun"
+set sv_model_uzi "" "Custom weapon model for uzi"
+set sv_model_zapper "" "Custom weapon model for zapper"
+set sv_model_axe "" "Custom weapon model for axe"
+_set g_weapon_stay 0 "if set, weapons stay after they were picked up"
+_set g_start_weapon_laser 1 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_shotgun 1 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_uzi 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_grenadelauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_electro 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_crylink 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_nex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_hagar 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_rocketlauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_minstanex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_porto 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_hook 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
+_set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_selectable ""
+set g_twoweapons ""
+set g_twoweapons_invert_buttons 0
+
+//Minstanex
+set g_balance_minstanex_explode 0
+set g_balance_minstanex_explode_damage 100
+set g_balance_minstanex_explode_edgedamage 0
+set g_balance_minstanex_explode_force 500
+set g_balance_minstanex_explode_radius 100
+set g_balance_minstanex_laser 1
+set g_balance_minstanex_laser_count 1
+set g_balance_minstanex_laser_damage 35
+set g_balance_minstanex_laser_edgedamage 0
+set g_balance_minstanex_laser_force 400
+set g_balance_minstanex_laser_lifetime 10
+set g_balance_minstanex_laser_speed 9000
+set g_balance_minstanex_laser_spread 0.1
+set g_balance_minstanex_laser_radius 75
+set g_balance_minstanex_laser_refire 0.9
+set g_balance_minstanex_laser_rapid 0
+set g_balance_minstanex_laser_rapid_delay 0.6
+set g_balance_minstanex_laser_rapid_refire 0.35
+
+//Rocketlauncher
+_set g_balance_rocketlauncher_ammo 5
+set g_balance_rocketlauncher_swap_buttons 0
+
+//Fireball
+_set g_balance_fireball_primary_ammo 8
+_set g_balance_fireball_primary_refire 0.5
+_set g_balance_fireball_primary_speed 1000
+_set g_balance_fireball_secondary_ammo 25
+_set g_balance_fireball_secondary_damage 250
+
+//Nex
+_set g_balance_nex_ammo 10
+//Crylink
+set g_balance_crylink_swap_buttons 0
+_set g_balance_crylink_primary_shots 5
+_set g_balance_crylink_primary_ammo 3
+_set g_balance_crylink_secondary_ammo 4
+
+//Electro
+set g_balance_electro_secondary 1
+set g_balance_electro_swap_buttons 0
+_set g_balance_electro_secondary_refire 0.25
+_set g_balance_electro_secondary_animtime 0.25
+_set g_balance_electro_primary_ammo 3
+
+//Grenadelauncher
+_set g_balance_grenadelauncher_primary_ammo 4
+_set g_balance_grenadelauncher_secondary_ammo 4
+set g_balance_grenadelauncher_secondary 1
+set g_balance_grenadelauncher_primary_bounce 0
+set g_balance_grenadelauncher_swap_buttons 0
+
+//Hager
+set g_balance_hagar_swap_buttons 0
+_set g_balance_hagar_primary_spread 0
+_set g_balance_hagar_primary_speed 4500
+_set g_balance_hagar_primary_refire 0.125
+_set g_balance_hagar_secondary_spread 0
+_set g_balance_hagar_secondary_refire 0.125
+
+//HLAC
+set g_balance_hlac_secondary 1
+set g_balance_hlac_swap_buttons 0
+_set g_balance_hlac_primary_ammo 1
+_set g_balance_hlac_secondary_ammo 6
+
+//Shotgun
+set g_balance_shotgun_secondary 1
+set g_balance_shotgun_swap_buttons 0
+set g_balance_shotgun_primary_gravityfactor 1
+set g_balance_shotgun_secondary_gravityfactor 1
+_set g_balance_shotgun_primary_damage 10
+_set g_balance_shotgun_secondary_damage 10
+
+//Uzi
+set g_balance_uzi_first 1
+set g_balance_uzi_first_gravityfactor 1
+set g_balance_uzi_sustained_gravityfactor 1
+set g_balance_uzi_swap_buttons 0
+
+//Zapper
+set g_balance_zapper_animtime 0.1
+set g_balance_zapper_primary_ammo 1
+set g_balance_zapper_primary_cooloff 0
+set g_balance_zapper_primary_cooloff_accel 0
+set g_balance_zapper_primary_damage 20
+set g_balance_zapper_primary_damagefalloff_forcehalflife 0
+set g_balance_zapper_primary_damagefalloff_halflife 0
+set g_balance_zapper_primary_damagefalloff_maxdist 0
+set g_balance_zapper_primary_damagefalloff_mindist 0
+set g_balance_zapper_primary_force 100
+set g_balance_zapper_primary_heatup 0
+set g_balance_zapper_primary_lifetime 0.2
+set g_balance_zapper_primary_range 800
+set g_balance_zapper_primary_refire 0.3
+set g_balance_zapper_primary_ticrate 0.1
+set g_balance_zapper_secondary 1
+set g_balance_zapper_secondary_accumulate 0
+set g_balance_zapper_secondary_ammo 7
+set g_balance_zapper_secondary_bounces 5
+set g_balance_zapper_secondary_charge_time 5
+set g_balance_zapper_secondary_damage 80
+set g_balance_zapper_secondary_damagefalloff_forcehalflife 0
+set g_balance_zapper_secondary_damagefalloff_halflife 0
+set g_balance_zapper_secondary_damagefalloff_maxdist 0
+set g_balance_zapper_secondary_damagefalloff_mindist 0
+set g_balance_zapper_secondary_force 200
+set g_balance_zapper_secondary_shield 0
+set g_balance_zapper_secondary_shield_ammo 1
+set g_balance_zapper_secondary_shield_heatup 0
+set g_balance_zapper_secondary_shield_lifetime 0
+set g_balance_zapper_secondary_shield_refire 1
+set g_balance_zapper_secondary_range 2000
+set g_balance_zapper_secondary_refire 1
+set g_balance_zapper_swap_buttons 0
+set g_start_weapon_zapper 0
+set g_weaponreplace_zapper ""
+
+//Axe
+set g_balance_axe_damage 300
+set g_start_weapon_axe 0
+
+//Supershotgun
+set g_start_weapon_supershotgun 0
+set g_balance_supershotgun_primary_ammo 2
+set g_balance_supershotgun_primary_animtime 0.3
+set g_balance_supershotgun_primary_ballistic 0
+set g_balance_supershotgun_primary_bounces 1
+set g_balance_supershotgun_primary_bulletconstant 75
+set g_balance_supershotgun_primary_bullets 12
+set g_balance_supershotgun_primary_damage 18
+set g_balance_supershotgun_primary_force 60
+set g_balance_supershotgun_primary_gravityfactor 0
+set g_balance_supershotgun_primary_refire 0.8
+set g_balance_supershotgun_primary_speed 2500
+set g_balance_supershotgun_primary_spread 0.15
+set g_balance_supershotgun_secondary 1
+set g_balance_supershotgun_secondary_ammo 1
+set g_balance_supershotgun_secondary_animtime 0.2
+set g_balance_supershotgun_secondary_ballistic 0
+set g_balance_supershotgun_secondary_bounces 2
+set g_balance_supershotgun_secondary_bulletconstant 75
+set g_balance_supershotgun_secondary_bullets 6
+set g_balance_supershotgun_secondary_damage 18
+set g_balance_supershotgun_secondary_force 60
+set g_balance_supershotgun_secondary_gravityfactor 0
+set g_balance_supershotgun_secondary_refire 0.6
+set g_balance_supershotgun_secondary_speed 1500
+set g_balance_supershotgun_secondary_spread 0.15
+set g_weaponreplace_supershotgun ""
+
+//Rifle
+set g_balance_campingrifle_hotreload 0
+set g_balance_campingrifle_secondary_gravityfactor 1
+set g_balance_campingrifle_primary_gravityfactor 1
+set g_balance_campingrifle_swap_buttons 0
+_set g_balance_campingrifle_primary_ammo 5
+_set g_balance_campingrifle_secondary_ammo 5

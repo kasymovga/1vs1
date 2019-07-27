@@ -1,0 +1,11 @@
+set sv_announcer_extra_doublekill "" "Additional announcer sound"
+set sv_announcer_extra_doublekill_interval 0 "Interval for double kill announcer sound"
+set sv_announcer_extra_firstblood "" "Additional announcer sound"
+set sv_announcer_extra_meleefrag "" "Additional announcer sound"
+set sv_announcer_extra_pushfrag "" "Additional announcer sound"
+set sv_announcer_extra_telefrag "" "Additional announcer sound"
+set sv_announcer_extra_twohits "" "Additional announcer sound"
+set sv_announcer_extra_vote_now "" "Additional announcer sound"
+set sv_announcer_extra_vote_failed "" "Additional announcer sound"
+set sv_announcer_extra_vote_passed "" "Additional announcer sound"
+set sv_announcer_print 0
