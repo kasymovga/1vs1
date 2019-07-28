@@ -1,4 +1,5 @@
 string sv_udppunchhole_server;
+float sv_udppunchhole_verbose;
 string sv_udppunchhole_key;
 entity udppunchhole_keepalive;
 entity udppunchhole_porttest;
@@ -14,7 +15,9 @@ void(void) udppunchhole_porttest_think {
 		extresponse_query(sv_udppunchhole_server, "extResponse udppunchhole porttest");
 	}
 	if (self.cnt < 0) {
-		print("Port test failed, will try udp punch hole\n");
+		if (sv_udppunchhole_verbose)
+			print("Port test failed, will try udp punch hole\n");
+
 		remove(udppunchhole_porttest);
 		udppunchhole_porttest = world;
 		udppunchhole_keepalive = spawn();
@@ -28,13 +31,16 @@ void(void) udppunchhole_porttest_think {
 void(float argc, string response) udppunchhole_extresponse_handler_extra_sv {
 	string s = argv(2);
 	if (s == "porttest") {
-		print("Port test success\n");
+		if (sv_udppunchhole_verbose)
+			print("Port test success\n");
+
 		if (udppunchhole_porttest) {
 			remove(udppunchhole_porttest);
 			udppunchhole_porttest = world;
 		}
 	} else {
-		print("udppunchhole: unknown command: ", s, "\n");
+		if (sv_udppunchhole_verbose)
+			print("udppunchhole: unknown command: ", s, "\n");
 	}
 }
 
@@ -45,6 +51,7 @@ void(void) udppunchhole_init {
 	udppunchhole_extresponse_handler_extra = udppunchhole_extresponse_handler_extra_sv;
 	CACHE_CVAR_STR(sv_udppunchhole_server);
 	CACHE_CVAR_STR(sv_udppunchhole_key);
+	CACHE_CVAR(sv_udppunchhole_verbose);
 	udppunchhole_extresponse_handler_register();
 	udppunchhole_porttest = spawn();
 	udppunchhole_porttest.think = udppunchhole_porttest_think;

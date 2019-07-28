@@ -1,3 +1,4 @@
 set sv_udppunchhole_server "108.61.164.188:27950"
+set sv_udppunchhole_verbose 0
 set sv_udppunchhole_key ""
 set sv_udppunchhole 1
