@@ -1355,6 +1355,20 @@ void SV_OnEntityPreSpawnFunction()
 				if(cvar(k) >= stof(v))
 					goto cvar_fail;
 			}
+			else if((o = strstrofs(s, "===", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+3, -1);
+				if (cvar_string(k) != v)
+					goto cvar_fail;
+			}
+			else if((o = strstrofs(s, "!==", 0)) >= 0)
+			{
+				k = substring(s, 0, o);
+				v = substring(s, o+3, -1);
+				if(cvar_string(k) == v)
+					goto cvar_fail;
+			}
 			else if((o = strstrofs(s, "==", 0)) >= 0)
 			{
 				k = substring(s, 0, o);
@@ -1367,20 +1381,6 @@ void SV_OnEntityPreSpawnFunction()
 				k = substring(s, 0, o);
 				v = substring(s, o+2, -1);
 				if(cvar(k) == stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "===", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar_string(k) != v)
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "!==", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar_string(k) == v)
 					goto cvar_fail;
 			}
 			else if(substring(s, 0, 1) == "!")
@@ -1399,12 +1399,12 @@ void SV_OnEntityPreSpawnFunction()
 		inv = !inv;
 :cvar_fail
 		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
-		if not(inv)
-		{
-			//print("cvarfilter fail\n");
+		if not(inv) {
+			print(self.classname, " removed by cvarfilter\n");
 			remove(self);
 			return;
-		}
+		} else
+			print(self.classname, " keeped by cvarfilter\n");
 	}
 
 	// support special -1 and -2 angle from radiant
