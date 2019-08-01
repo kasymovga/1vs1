@@ -22,7 +22,8 @@ float(float req) weapon_axe {
 		}
 	}
 	else if (req == WR_PRECACHE) {
-		dlc_require("axe_v2");
+		if (weapon_info(WEP_MELEE).mdl == "axe")
+			dlc_require("axe_v2");
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_MELEE);
 	else if (req == WR_CHECKAMMO1)
