@@ -366,7 +366,6 @@ void(void) physics_init {
 	CACHE_CVAR(g_jetpack_antigravity);
 	CACHE_CVAR(g_jetpack_maxspeed_side);
 	CACHE_CVAR(g_jetpack_maxspeed_up);
-	PHYSIC_CACHE_CVAR(sv_slicksurfaces);
 	PHYSIC_CACHE_CVAR(sv_slicksurfaces_allowjump);
 	PHYSIC_CACHE_CVAR(sv_pogostick);
 	PHYSIC_CACHE_CVAR(sv_disable_crouch);
@@ -463,8 +462,7 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, g_jetpack_antigravity);
 		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_side);
 		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_up);
-		float switches = (sv_slicksurfaces ? 1 : 0)
-				+ (sv_slicksurfaces_allowjump ? 2 : 0)
+		float switches = (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
 				+ (sv_gameplayfix_q2airaccelerate ? 16 : 0)

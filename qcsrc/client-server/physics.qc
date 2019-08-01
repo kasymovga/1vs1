@@ -68,21 +68,21 @@ void(float ground) physics_update_status {
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
 		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
 
-	if(ground)
-	{
+	if(ground) {
+		physics_flags &~= FL_ONGROUND_OR_SLICK;
 		//tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
 		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		float f;
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (f = physics_velocity * trace_plane_normal) <= 0)
 		{
-			physics_flags |= FL_ONGROUND;
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+				physics_flags |= FL_SLICK;
+			else
+				physics_flags |= FL_ONGROUND;
+
 			physics_velocity -= f * trace_plane_normal;
 			self.groundentity = trace_ent;
 			physics_impact();
-		}
-		else
-		{
-			physics_flags &~= FL_ONGROUND;
 		}
 	}
 
@@ -676,17 +676,6 @@ void(void) physics_player {
 			physics_velocity = '0 0 0';
 
 		goto end;
-	}
-	if(sv_slicksurfaces)
-	if(physics_flags & FL_ONGROUND) {
-		tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-		{
-			physics_flags &~= FL_ONGROUND;
-			physics_flags |= FL_SLICK;
-		}
-		else
-			physics_flags &~= FL_SLICK;
 	}
 	physics_check_ground_hook();
 	if(physics_is_player)

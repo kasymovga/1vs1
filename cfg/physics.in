@@ -1,4 +1,3 @@
-set g_slicksurfaces "0" "Enable slick surfaces"
 set g_slicksurfaces_allowjump "1" "Enable jumps on slick surfaces"
 set g_stepheight 34 "how high you can step up"
 set g_stepairslowdown 0.05 ""

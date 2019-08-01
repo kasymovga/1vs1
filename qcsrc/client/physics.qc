@@ -231,7 +231,6 @@ void Ent_Physic(float isnew)
 		g_jetpack_maxspeed_side = ReadCoord();
 		g_jetpack_maxspeed_up = ReadCoord();
 		float switches = ReadByte();
-		sv_slicksurfaces = switches & 1;
 		sv_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;

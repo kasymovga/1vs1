@@ -8,7 +8,6 @@ float sv_warsowbunny_topspeed;
 float sv_warsowbunny_accel;
 float sv_warsowbunny_turnaccel;
 float sv_warsowbunny_backtosideratio;
-float sv_slicksurfaces;
 float sv_slicksurfaces_allowjump;
 float sv_accelerate;
 float sv_friction;
