@@ -27,6 +27,7 @@ void() init_dedicated_think {
 // handler for _init/_init map (only for dedicated server initialization)
 void(void) spawnfunc___init_dedicated_server {
 	cvar_preinit();
+	weapon_register_weapons();
 	world_initialized = -1; // don't complain
 	entity e;
 	e = spawn();
