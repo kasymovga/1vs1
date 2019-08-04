@@ -80,7 +80,7 @@ void Ent_DLCList(float new) {
 			s = str_car(l);
 			l = str_cdr(l);
 			if (s != "")
-			if not(dlc_load(s)) {
+			if not(dlc_load(s, FALSE)) {
 				not_all_loaded = TRUE;
 			}
 		}
