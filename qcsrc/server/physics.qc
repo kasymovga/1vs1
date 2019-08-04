@@ -88,7 +88,7 @@ void(void) physics_check_ground_hook {
 }
 
 void(void) physics_on_crouch_hook {
-	anim_set(self.body, self.anim_duck, FALSE, TRUE, TRUE);
+	player_anim_set(self, anim_duck, FALSE, TRUE, TRUE);
 }
 
 float(void) physics_use_jetpack {
