@@ -778,9 +778,10 @@ void Ent_ReadEntCS(float bIsNewEntity)
 {
 	float f = ReadByte();
 
-	if (f & 1)
+	if (f & 1) {
 		self.sv_entnum = ReadByte() - 1;
-
+		self.shownames_entnum = ReadShort() - 1;
+	}
 	if (f & 64) {
 		if (f & 2) {
 			self.origin_x = ReadShort();

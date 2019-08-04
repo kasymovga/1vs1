@@ -34,15 +34,16 @@ float() entcs_customize {
 		return FALSE;
 
 	if(teamplay && o.team == other.team) {
-		self.effects |= EF_NODEPTHTEST;
+		self.effects |= EF_FULLBRIGHT;
 	} else {
+		if (o == self.enemy)
 		if (player_calculate_alpha(o, other) < 0.25)
 			return FALSE;
 
 		if (GameHookChain_PlayerVisibleThroughWallFor(o,other)) {
-			self.effects |= EF_NODEPTHTEST;
+			self.effects |= EF_FULLBRIGHT;
 		} else
-			self.effects &~= EF_NODEPTHTEST;
+			self.effects &~= EF_FULLBRIGHT;
 	}
 	return TRUE;
 }
@@ -51,7 +52,7 @@ float(entity to, float sf) entcs_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
-	if (self.effects & EF_NODEPTHTEST)
+	if (self.effects & EF_FULLBRIGHT)
 		sf |= 64;
 
 	if (teamplay)
@@ -64,9 +65,10 @@ float(entity to, float sf) entcs_send {
 		sf |= 128;
 
 	WriteByte(MSG_ENTITY, sf);
-	if (sf & 1)
+	if (sf & 1) {
 		WriteByte(MSG_ENTITY, num_for_edict(o));
-
+		WriteShort(MSG_ENTITY, num_for_edict(self.enemy));
+	}
 	if (sf & 64) {
 		if (sf & 2) {
 			WriteShort(MSG_ENTITY, self.origin_x);
@@ -91,6 +93,10 @@ float(entity to, float sf) entcs_send {
 void() entcs_think {
 	self.nextthink = time;
 	entity o = player_entity(self.owner);
+	if (self.enemy != o) {
+		self.enemy = o;
+		self.SendFlags |= 1;
+	}
 	vector v = o.origin;
 	if (v_x != self.origin_x || v_y != self.origin_y) {
 		self.origin_x = v_x;
@@ -98,8 +104,8 @@ void() entcs_think {
 		self.SendFlags |= 2;
 	}
 	if (v_z != self.origin_z || o.angles_y != self.angles_y) {
-		self.origin_z = v_z;
 		self.angles_y = o.angles_y;
+		self.origin_z = v_z;
 		self.SendFlags |= 4;
 	}
 	if (o.maxs_z != self.view_ofs_z) {
@@ -122,7 +128,7 @@ entity() entcs_attach {
 	ent.owner = self;
 	ent.think = entcs_think;
 	ent.nextthink = time;
-	net_link_entity(ent, TRUE, 0, entcs_send);
+	net_link_entity(ent, FALSE, 0, entcs_send);
 	ent.customizeentityforclient = entcs_customize;
 	return ent;
 }

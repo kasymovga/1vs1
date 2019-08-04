@@ -36,7 +36,6 @@ bgmscript.qh
 mapvoting.qh
 menu.qh
 mouse.qh
-shownames.qh
 progressbar.qh
 physics_spiderbot.qh
 physics_aircraft.qh
@@ -52,6 +51,7 @@ dlc.qh
 gamestatus.qh
 weaponselect.qh
 main.qh
+shownames.qh
 ../client-server/team.qh
 ../client-server/stdproc.qh
 radio.qh

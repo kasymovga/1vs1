@@ -1,14 +1,3 @@
-// plr.isactive = player is in range and coordinates/status (health and armor) are up to date
-// plr.origin = player origin TODO: should maybe move this so it's the origin of the shownames tag already in SSQC for culling?
-// plr.healthvalue
-// plr.armorvalue
-// plr.sameteam = player is on same team as local client
-//
-
-.float the_entnum;
-
-.float sn_lastdraw;
-//.float sn_forcefrozen;
 .vector iorigin;
 .entity teambubble;
 
@@ -31,7 +20,7 @@ float Shownames_PreDrawPlayer_Disabled() { return FALSE; }
 var float() Shownames_PreDrawPlayer;
 
 float Shownames_PreDrawPlayer_Enabled() {
-	float plr_entnum = self.sv_entnum + 1;
+	float plr_entnum = self.shownames_entnum + 1;
 	if(getentity(plr_entnum, E_ACTIVE)) {
 		self.iorigin = getentityvec(plr_entnum, E_ORIGIN);
 		if (self.teambubble)
@@ -56,7 +45,7 @@ float Shownames_PreDrawPlayer_Enabled() {
 		return FALSE;
 
 	if (self.cnt) {
-		traceline(self.iorigin, view_origin, 0, world);
+		traceline(self.iorigin + self.maxs, view_origin, 0, world);
 		if (trace_fraction < 1)
 			return FALSE;
 	}

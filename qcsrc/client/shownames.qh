@@ -1,2 +1,3 @@
 void Shownames_Init(entity plr);
 void Shownames_UpdateTeamBubble(entity plr, float show);
+var .float shownames_entnum = float1;

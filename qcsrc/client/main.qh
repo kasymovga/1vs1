@@ -155,6 +155,7 @@ float SetTeam(entity o, float Team);
 float sv_spectate;
 float g_campaign;
 float localgame;
+.float float1;
 
 .entity sort_next;
 .entity sort_prev;
