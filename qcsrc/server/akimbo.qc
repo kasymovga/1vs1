@@ -84,7 +84,6 @@ void Akimbo_WeaponFrame()
 		self.origin = oldself.origin;
 		self.cnt = oldself.cnt;
 		self.items = oldself.items;
-		self.body = oldself.body;
 		weapon_frame();
 		oldself.ammo_shells = self.ammo_shells;
 		oldself.ammo_cells = self.ammo_cells;

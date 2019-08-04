@@ -312,57 +312,63 @@ void() player_setupanimsformodel {
 	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 }
 
+void(entity e, .vector anim, float looping, float override, float restart) player_anim_set {
+	if not(e.body)
+		return;
+
+	vector animv = e.anim;
+	if (g_akimbo_animation_shift)
+	if (Akimbo_Active(e))
+			animv_x = animv_x + g_akimbo_animation_shift;
+
+	anim_set(e.body, animv, looping, override, restart);
+}
+
 void(void) player_anim {
-	anim_update(self.body);
+	if (self.body)
+		anim_update(self.body);
+
 	if (self.weaponentity)
 		anim_update(self.weaponentity);
 
 	if (PLAYER_REALLY_DEAD(self)) {
 		return;
 	}
-
-	if (!self.body.animstate_override)
-	{
-		if (!(self.flags & FL_ONGROUND))
-		{
+	if (!self.body.animstate_override) {
+		if (!(self.flags & FL_ONGROUND)) {
 			if (self.crouch)
-				anim_set(self.body, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+				player_anim_set(self, anim_duckjump, FALSE, TRUE, self.restart_jump);
 			else
-				anim_set(self.body, self.anim_jump, FALSE, TRUE, self.restart_jump);
-			self.restart_jump = FALSE;
-		}
-		else if (self.crouch)
-		{
-			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
-				anim_set(self.body, self.anim_duckwalk, TRUE, FALSE, FALSE);
-			else
-				anim_set(self.body, self.anim_duckidle, TRUE, FALSE, FALSE);
-		}
-		else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20)
-		{
-			if (self.movement_x > 0 && self.movement_y == 0)
-				anim_set(self.body, self.anim_run, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y == 0)
-				anim_set(self.body, self.anim_runbackwards, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y > 0)
-				anim_set(self.body, self.anim_straferight, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y < 0)
-				anim_set(self.body, self.anim_strafeleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y > 0)
-				anim_set(self.body, self.anim_forwardright, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y < 0)
-				anim_set(self.body, self.anim_forwardleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y > 0)
-				anim_set(self.body, self.anim_backright, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y < 0)
-				anim_set(self.body, self.anim_backleft, TRUE, FALSE, FALSE);
-			else
-				anim_set(self.body, self.anim_run, TRUE, FALSE, FALSE);
-		}
-		else
-			anim_set(self.body, self.anim_idle, TRUE, FALSE, FALSE);
-	}
+				player_anim_set(self, anim_jump, FALSE, TRUE, self.restart_jump);
 
+			self.restart_jump = FALSE;
+		} else if (self.crouch) {
+			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
+				player_anim_set(self, anim_duckwalk, TRUE, FALSE, FALSE);
+			else
+				player_anim_set(self, anim_duckidle, TRUE, FALSE, FALSE);
+		} else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20) {
+			if (self.movement_x > 0 && self.movement_y == 0)
+				player_anim_set(self, anim_run, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y == 0)
+				player_anim_set(self, anim_runbackwards, TRUE, FALSE, FALSE);
+			else if (self.movement_x == 0 && self.movement_y > 0)
+				player_anim_set(self, anim_straferight, TRUE, FALSE, FALSE);
+			else if (self.movement_x == 0 && self.movement_y < 0)
+				player_anim_set(self, anim_strafeleft, TRUE, FALSE, FALSE);
+			else if (self.movement_x > 0 && self.movement_y > 0)
+				player_anim_set(self, anim_forwardright, TRUE, FALSE, FALSE);
+			else if (self.movement_x > 0 && self.movement_y < 0)
+				player_anim_set(self, anim_forwardleft, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y > 0)
+				player_anim_set(self, anim_backright, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y < 0)
+				player_anim_set(self, anim_backleft, TRUE, FALSE, FALSE);
+			else
+				player_anim_set(self, anim_run, TRUE, FALSE, FALSE);
+		} else
+			player_anim_set(self, anim_idle, TRUE, FALSE, FALSE);
+	}
 	if (self.weaponentity)
 	if (!self.weaponentity.animstate_override)
 		anim_set(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);

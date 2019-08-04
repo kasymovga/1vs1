@@ -392,9 +392,8 @@ void weapon_frame()
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(_switchweapon, WR_SETUP);
 			weapon_thinkf(WFRAME_IDLE, 0, weapon_ready);
-		} else if (self.weaponentity.state == WS_CLEAR)
-		{
-			anim_set(self.body, self.anim_draw, FALSE, TRUE, TRUE);
+		} else if (self.weaponentity.state == WS_CLEAR) {
+			player_anim_set(self, anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(_switchweapon, WR_SETUP);
@@ -1330,17 +1329,16 @@ void weapon_thinkf(float fr, float t, void() func)
 
 	if (restartanim)
 	if (t)
-	if (!self.crouch) // shoot anim stands up, this looks bad
-	{
-		local vector anim;
+	if (!self.crouch) { // shoot anim stands up, this looks bad
+		var .vector anim;
 		if (fr == WFRAME_MELEE2)
-			anim = self.anim_melee2;
+			anim = anim_melee2;
 		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE)
-			anim = self.anim_melee;
+			anim = anim_melee;
 		else
-			anim = self.anim_shoot;
-		anim_z = anim_y / t;
-		anim_set(self.body, anim, FALSE, TRUE, TRUE);
+			anim = anim_shoot;
+
+		player_anim_set(self, anim, FALSE, TRUE, TRUE);
 	}
 }
 
