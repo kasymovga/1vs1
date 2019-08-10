@@ -922,7 +922,7 @@ void weapon_model_think()
 		anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 	}
 
-	self.effects = self.owner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE);
+	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE);
 
 	self.colormap = self.owner.colormap;
 	self.alpha = player_calculate_alpha(self.owner, self.owner);
@@ -1144,7 +1144,7 @@ void weapon_model_exterior_think()
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
 	}
-	self.effects = self.owner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE | EF_LOWPRECISION | EF_FULLBRIGHT);
+	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE | EF_LOWPRECISION | EF_FULLBRIGHT);
 	self.colormap = self.owner.colormap;
 }
 
@@ -1155,6 +1155,7 @@ void weapon_model_spawn()
 	self.weaponentity.classname = "weaponentity";
 	self.weaponentity.solid = SOLID_NOT;
 	self.weaponentity.owner = self;
+	self.weaponentity.realowner = Akimbo_Owner(self);
 	setmodel(self.weaponentity, ""); // precision set when changed
 	setorigin(self.weaponentity, '0 0 0');
 	self.weaponentity.angles = '0 0 0';
@@ -1169,6 +1170,7 @@ void weapon_model_spawn()
 	self.exteriorweaponentity.solid = SOLID_NOT;
 	self.exteriorweaponentity.exteriorweaponentity = self.exteriorweaponentity;
 	self.exteriorweaponentity.owner = self;
+	self.exteriorweaponentity.realowner = Akimbo_Owner(self);
 	setorigin(self.exteriorweaponentity, '0 0 0');
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = weapon_model_exterior_think;
