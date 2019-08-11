@@ -92,6 +92,10 @@ float() nexball_LeadLimitOverride {
 	return cvar("g_nexball_goalleadlimit");
 }
 
+float() nexball_TimeLimitOverride {
+	return cvar("g_nexball_timelimit");
+}
+
 float() nexball_WeaponFrameHandle {
 	if (self.ballcarried)
 		nexball_carrier_think();
@@ -176,6 +180,7 @@ void() nexball_init {
 	nexball_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = nexball_SpeedMod;
 	GameHook_FragLimitOverride = nexball_FragLimitOverride;
+	GameHook_TimeLimitOverride = nexball_TimeLimitOverride;
 	GameHook_LeadLimitOverride = nexball_LeadLimitOverride;
 	GameHook_WeaponFrameHandle = nexball_WeaponFrameHandle;
 	GameHook_ReloadAllowed = nexball_ReloadAllowed;
