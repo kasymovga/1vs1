@@ -17,7 +17,6 @@ float SP_NEXBALL_FAULTS;
 #define GOAL_FAULT -1
 #define GOAL_OUT -2
 
-float g_nexball;
 float g_nexball_basketball_carrier_speed;
 float g_nexball_football_boost_forward;
 float g_nexball_football_boost_up;
@@ -140,7 +139,6 @@ float(float f) nexball_SwitchWeaponMod {
 }
 
 void() nexball_init {
-	g_nexball = 1;
 	CACHE_CVAR(g_nexball_meter_period); //sent with the client init entity
 	if (g_nexball_meter_period <= 0)
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
@@ -571,7 +569,10 @@ void(void) nexball_goal_touch {
 }
 
 void(void) spawnfunc_nexball_team {
-	if(!g_nexball) { remove(self); return; }
+	if (game != GAME_NEXBALL) {
+		remove(self);
+		return;
+	}
 	self.team = self.cnt + 1;
 	team_teams_set_allowed(self.team);
 }
@@ -620,7 +621,7 @@ void(void) nexball_delayedinit {
 //=======================//
 
 void(void) nexball_spawn_ball {
-	if(!g_nexball) {
+	if (game != GAME_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -721,7 +722,10 @@ void(void) spawnfunc_nexball_hockey {
 }
 
 void(void) nexball_spawn_goal {
-	if(!g_nexball) { remove(self); return; }
+	if (game != GAME_NEXBALL) {
+		remove(self);
+		return;
+	}
 	EXACTTRIGGER_INIT;
 	self.classname = "nexball_goal";
 	if (!self.noise)
@@ -817,14 +821,14 @@ float nexball_carrier_think() {
 }
 
 void() spawnfunc_nexball_redbase {
-	if (g_nexball)
+	if (game == GAME_NEXBALL)
 		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);
 }
 
 void() spawnfunc_nexball_bluebase {
-	if (g_nexball)
+	if (game == GAME_NEXBALL)
 		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);
