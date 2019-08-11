@@ -247,3 +247,182 @@ float(entity e, float t) entity_move_out_of_solid_with_type {
     }
     return 1;
 }
+
+.vector originjitter;
+.vector anglesjitter;
+.float anglejitter;
+.string gametypefilter;
+.string gametype;
+.string not_gametype;
+.string cvarfilter;
+void(void) SV_OnEntityPreSpawnFunction {
+	if(!self) //Skip pre-spawn function for world.
+		return;
+
+	string s;
+	float i, n;
+	if(self.gametypefilter != "")
+	if not(gametype_filter(game, teamplay, self.gametypefilter)) {
+		remove(self);
+		return;
+	}
+	if (self.gametype != "") {
+		s = gametype_patterns();
+		float matched;
+		matched = 0;
+		n = tokenizebyseparator(s, "|");
+		for (i = 0; i < n; i++) {
+			s = argv(i);
+			if(s == "")
+				continue;
+
+			if(strstrofs(self.gametype, s, 0) >= 0) {
+				print(strcat("Found pattern '", s, "' for entity '", self.classname, "' with gametype '", self.gametype, "'\n"));
+				matched = 1;
+				break;
+			}
+		}
+		if not(matched) {
+			print(strcat("Removed entity '", self.classname, "' with gametype '", self.gametype, "' because no patterns found\n"));
+			remove(self);
+			return;
+		}
+	}
+	if (self.not_gametype != "") {
+		s = gametype_patterns();
+		n = tokenizebyseparator(s, "|");
+		for (i = 0; i < n; i++) {
+			s = argv(i);
+			if(s == "")
+				continue;
+
+			if(strstrofs(self.not_gametype, s, 0) >= 0) {
+				print(strcat("Removed entity '", self.classname, "' with not allowed gametype '", self.not_gametype, "' because patterns found\n"));
+				remove(self);
+				return;
+			}
+		}
+	}
+	if(self.cvarfilter != "") {
+		float o, inv;
+		string k, v;
+		inv = 0;
+
+		s = self.cvarfilter;
+		if(substring(s, 0, 1) == "+") {
+			s = substring(s, 1, -1);
+		} else if(substring(s, 0, 1) == "-") {
+			inv = 1;
+			s = substring(s, 1, -1);
+		}
+
+		n = tokenize(s);
+		for(i = 0; i < n; ++i) {
+			s = argv(i);
+			// syntax:
+			// var>x
+			// var<x
+			// var>=x
+			// var<=x
+			// var==x
+			// var!=x
+			// var===x
+			// var!==x
+			if((o = strstrofs(s, ">=", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) < stof(v))
+					goto cvar_fail;
+			} else if((o = strstrofs(s, "<=", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) > stof(v))
+					goto cvar_fail;
+			} else if((o = strstrofs(s, ">", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+1, -1);
+				if(cvar(k) <= stof(v))
+					goto cvar_fail;
+			} else if((o = strstrofs(s, "<", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+1, -1);
+				if(cvar(k) >= stof(v))
+					goto cvar_fail;
+			} else if((o = strstrofs(s, "===", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+3, -1);
+				if (cvar_string(k) != v)
+					goto cvar_fail;
+			} else if((o = strstrofs(s, "!==", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+3, -1);
+				if(cvar_string(k) == v)
+					goto cvar_fail;
+			} else if((o = strstrofs(s, "==", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) != stof(v))
+					goto cvar_fail;
+			} else if((o = strstrofs(s, "!=", 0)) >= 0) {
+				k = substring(s, 0, o);
+				v = substring(s, o+2, -1);
+				if(cvar(k) == stof(v))
+					goto cvar_fail;
+			} else if(substring(s, 0, 1) == "!") {
+				k = substring(s, 1, -1);
+				if(cvar(k))
+					goto cvar_fail;
+			} else {
+				k = s;
+				if not(cvar(k))
+					goto cvar_fail;
+			}
+		}
+		inv = !inv;
+:cvar_fail
+		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
+		if not(inv) {
+			print(self.classname, " removed by cvarfilter\n");
+			remove(self);
+			return;
+		} else
+			print(self.classname, " keeped by cvarfilter\n");
+	}
+	// support special -1 and -2 angle from radiant
+	if (self.angles == '0 -1 0')
+		self.angles = '-90 0 0';
+	else if (self.angles == '0 -2 0')
+		self.angles = '+90 0 0';
+
+	if(self.originjitter_x != 0)
+		self.origin_x = self.origin_x + (random() * 2 - 1) * self.originjitter_x;
+
+	if(self.originjitter_y != 0)
+		self.origin_y = self.origin_y + (random() * 2 - 1) * self.originjitter_y;
+
+	if(self.originjitter_z != 0)
+		self.origin_z = self.origin_z + (random() * 2 - 1) * self.originjitter_z;
+
+	if(self.anglesjitter_x != 0)
+		self.angles_x = self.angles_x + (random() * 2 - 1) * self.anglesjitter_x;
+
+	if(self.anglesjitter_y != 0)
+		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglesjitter_y;
+
+	if(self.anglesjitter_z != 0)
+		self.angles_z = self.angles_z + (random() * 2 - 1) * self.anglesjitter_z;
+
+	if(self.anglejitter != 0)
+		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
+
+	string repl = cvar_string(strcat("sv_spawnreplace_", self.classname));
+	if(repl != "") {
+		entity e;
+		print("Entity ", self.classname, " replaced with ", repl, "\n");
+		if ((e = find(world, classname, repl))) {
+			self.classname = e.classname;
+		} else
+			self.classname = strzone(repl);
+	}
+	GameHookChain_EntityPreSpawn();
+}
