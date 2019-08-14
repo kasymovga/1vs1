@@ -42,7 +42,7 @@ nexuiz/util.qh
 ../common/gametype.qc
 ../common/colormap.qc
 ../common/db.qc
-../menu-server/gamecommand.qc
+../menu-server/cmd.qc
 gamecommand.qc
 menu.qc
 ../client-menu/draw.qc

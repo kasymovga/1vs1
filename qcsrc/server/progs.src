@@ -259,7 +259,7 @@ vote.qc
 
 campaign.qc
 ../menu-server/campaign.qc
-../menu-server/gamecommand.qc
+../menu-server/cmd.qc
 cmd.qc
 kh_role.qc
 kh.qc

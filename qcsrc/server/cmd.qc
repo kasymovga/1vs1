@@ -62,7 +62,7 @@ void GameCommand(string command)
 		print("  find classname\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
-		GameCommand_Generic("help");
+		cmd_generic("help");
 		IP2C_GameCommand("help", argc);
 		return;
 	}
@@ -73,7 +73,7 @@ void GameCommand(string command)
 	if(GameCommand_Ban(command))
 		return;
 
-	if(GameCommand_Generic(command))
+	if(cmd_generic(command))
 		return;
 
 	if (GameHookChain_GameCommandHandle(cmd, argc))

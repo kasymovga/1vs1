@@ -41,11 +41,11 @@ void GameCommand(string theCommand)
 		print("Usage: menu_cmd theCommand..., where possible theCommands are:\n");
 		print("  sync - reloads all cvars on the current menu page\n");
 		print("  directmenu ITEM - select a menu item as main item\n");
-		GameCommand_Generic("help");
+		cmd_generic("help");
 		return;
 	}
 
-	if(GameCommand_Generic(theCommand))
+	if(cmd_generic(theCommand))
 		return;
 
 	if(argv(0) == "sync")
