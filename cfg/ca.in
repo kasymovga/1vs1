@@ -1,4 +1,3 @@
-set g_clanarena_use_tdm_maps 1
 set g_clanarena_teams 2
 set g_clanarena_winlimit 10
 set g_clanarena_enddelay 3

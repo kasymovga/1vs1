@@ -8,8 +8,6 @@ float MAPINFO_TYPE_CONQUEST			= 256;
 float MAPINFO_TYPE_KEYHUNT			= 1024;
 float MAPINFO_TYPE_NEXBALL          = 2048;
 float MAPINFO_TYPE_CTS              = 4096;
-float MAPINFO_TYPE_FREEZETAG        = 8192;
-float MAPINFO_TYPE_CLANARENA        = 16384;
 float MAPINFO_TYPE_SURVIVE          = 32768;
 float MAPINFO_TYPE_SINGLE           = 65536;
 
@@ -784,12 +782,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
 
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH) {
-				if (cvar("g_freeze_use_tdm_maps"))
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
-
-				if (cvar("g_clanarena_use_tdm_maps"))
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CLANARENA;
-
 				if (cvar("g_keyhunt_use_tdm_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
 			}
@@ -1024,8 +1016,8 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 	switch (t) {
 		case GAME_DEATHMATCH:      return MAPINFO_TYPE_DEATHMATCH;
 		case GAME_TEAM_DEATHMATCH: return MAPINFO_TYPE_TEAM_DEATHMATCH;
-		case GAME_FREEZETAG:       return MAPINFO_TYPE_FREEZETAG;
-		case GAME_CLANARENA:       return MAPINFO_TYPE_CLANARENA;
+		case GAME_FREEZETAG:       return MAPINFO_TYPE_TEAM_DEATHMATCH;
+		case GAME_CLANARENA:       return MAPINFO_TYPE_TEAM_DEATHMATCH;
 		case GAME_DOMINATION:      return MAPINFO_TYPE_DOMINATION;
 		case GAME_CTF:             return MAPINFO_TYPE_CTF;
 		case GAME_CATF:            return MAPINFO_TYPE_CTF;
