@@ -33,10 +33,8 @@ void weapon_rocketlauncher_unregister()
 	}
 }
 
-void weapon_rocketlauncher_explode (void)
-{
+void(void) weapon_rocketlauncher_explode {
 	weapon_rocketlauncher_unregister();
-
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(team_is_different_teams(self.owner, other))
@@ -46,11 +44,9 @@ void weapon_rocketlauncher_explode (void)
 	self.event_damage = stdproc_nothing;
 	self.takedamage = DAMAGE_NO;
 	damage_radius (self, self.owner, g_balance_rocketlauncher_damage, g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, world, g_balance_rocketlauncher_force, self.projectiledeathtype, other);
-
-	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
-	{
-		if(self.owner.ammo_rockets < g_balance_rocketlauncher_ammo)
-		{
+	if (self.owner.weapon == WEP_ROCKET_LAUNCHER) {
+		if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+		if (self.owner.ammo_rockets < g_balance_rocketlauncher_ammo) {
 			self.owner.cnt = WEP_ROCKET_LAUNCHER;
 			ATTACK_FINISHED(self.owner) = time;
 			self.owner.switchweapon = weapon_best(self.owner);
