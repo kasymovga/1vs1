@@ -20,10 +20,6 @@ float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float _dam
 	return Clanarena_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
 
-float Clanarena_FragLimitOverride() {
-	return cvar("g_clanarena_winlimit");
-}
-
 void Clanarena_Init()
 {
 	CACHE_CVAR(g_clanarena_healthrotpause_on_damage);
@@ -32,7 +28,6 @@ void Clanarena_Init()
 	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_FragLimitOverride = Clanarena_FragLimitOverride;
 	score_generic();
 	Clanarena_Init_Shared("clanarena");
 }

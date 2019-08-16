@@ -1,7 +1,3 @@
-float() tdm_FragLimitOverride {
-	return cvar("g_tdm_fraglimit");
-}
-
 void(void) tdm_delayedinit {
 	// if no teams are found, spawn defaults
 	entity e;
@@ -25,6 +21,5 @@ void(void) tdm_delayedinit {
 }
 
 void(void) tdm_init {
-	GameHook_FragLimitOverride = tdm_FragLimitOverride;
 	entity_initialize(world, tdm_delayedinit, INITPRIO_GAMETYPE);
 }

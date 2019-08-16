@@ -365,7 +365,6 @@ void(void) world_init {
 	world.mins = world_min;
 	world.maxs = world_max;
 	gametype_init();
-	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
 	sv_world_scale = cvar("sv_world_scale");
 	if (sv_world_scale <= 0)
 		sv_world_scale = 1;

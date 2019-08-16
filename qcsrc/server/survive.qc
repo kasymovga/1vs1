@@ -261,10 +261,6 @@ void survive_init_delayed() {
 	}
 }
 
-float survive_return0() {
-	return 0;
-}
-
 void survive_init() {
 	team_teams_set_count(1);
 	survive_gameover_message = "^3No time left, game finished";
@@ -278,16 +274,11 @@ void survive_init() {
 	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
 	GameHook_GameOverMessageMod = survive_GameOverMessageMod;
-	GameHook_FragLimitOverride = survive_return0;
-	GameHook_LeadLimitOverride = survive_return0;
-
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;
 	GameHook_MonsterKilled = survive_MonsterKilled;
-
 	survive_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = survive_Spawn;
-
 	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
 	if (g_survive_freeze)

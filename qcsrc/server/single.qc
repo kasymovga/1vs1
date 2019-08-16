@@ -34,10 +34,6 @@ string Single_GameOverMessageMod(string s) {
 		return "^1Game over";
 }
 
-float Single_Return0() {
-	return 0;
-}
-
 float Single_DeathHandle() {
 	single_level_finished = TRUE;
 	campaign_won = FALSE;
@@ -217,9 +213,6 @@ void Single_Init() {
 	GameHook_EquipPlayerHandle = Single_EquipPlayerHandle;
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
-	GameHook_FragLimitOverride = Single_Return0;
-	GameHook_TimeLimitOverride = Single_Return0;
-	GameHook_LeadLimitOverride = Single_Return0;
 	GameHook_DeathHandle = Single_DeathHandle;
 	GameHook_SetNewParms = Single_SetNewParms;
 	GameHook_SetChangeParms = Single_SetChangeParms;

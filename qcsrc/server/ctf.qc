@@ -1044,14 +1044,6 @@ string(string bspname) ctf_RecordForMap {
 	return strcat(strpad(32, bspname), " ", strpad(-6, str_float_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
 }
 
-float() ctf_FragLimitOverride {
-	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_limit") : cvar("capturelimit_override"));
-}
-
-float() ctf_LeadLimitOverride {
-	return ((g_ctf_win_mode == 2) ? cvar("g_ctf_capture_leadlimit") : cvar("captureleadlimit_override"));
-}
-
 var void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet_NextLink;
 void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet {
 	if(targ == attacker)
@@ -1070,9 +1062,7 @@ float(entity e) ctf_TeleportationForbiddenFor { return e.classname == "ctf_flag_
 void() ctf_init {
 	CACHE_CVAR(g_ctf_reverse);
 	g_ctf = 1;
-	if(g_campaign)
-		g_ctf_win_mode = 2;
-	else if (game == GAME_CATF || game == GAME_CTFT)
+	if (game == GAME_CATF || game == GAME_CTFT)
 		g_ctf_win_mode = 0;
 	else
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
@@ -1089,8 +1079,6 @@ void() ctf_init {
 	GameHookChain_PlayerPreThink = ctf_PlayerPreThink;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;
-	GameHook_LeadLimitOverride = ctf_LeadLimitOverride;
-	GameHook_FragLimitOverride = ctf_FragLimitOverride;
 	ctf_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = ctf_DamageForceModsSet;
 	GameHook_PlayerIsCarrier = ctf_PlayerIsCarrier;

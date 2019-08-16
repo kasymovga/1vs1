@@ -1,2 +1,5 @@
+set g_kh_scorelimit 1000 "Scorelimit for keyhunt, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_kh_timelimit "" "Timelimit for keyhunt, when empty, g_timelimit using, <= 0 mean no limit"
+set g_kh_leadlimit "0" "Leadlimit for keyhunt, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_keyhunt_showenemycarrier 1
 set g_keyhunt_use_tdm_maps 0

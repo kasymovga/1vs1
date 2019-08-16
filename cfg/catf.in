@@ -1,3 +1,6 @@
+set g_catf_scorelimit 10 "Scorelimit for CTF clan arena, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_catf_timelimit "" "Timelimit for CTF clan arena, when empty, g_timelimit using, <= 0 mean no limit"
+set g_catf_leadlimit "0" "Leadlimit for CTF clan arena, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_catf_enddelay 5
 set g_catf_startdelay 5
 set catf_inherit "ca ctf"

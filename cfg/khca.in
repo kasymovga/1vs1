@@ -1,5 +1,6 @@
-set g_khca_point_limit 15
-set g_khca_point_leadlimit 0
+set g_khca_scorelimit 15 "Scorelimit for keyhunt clan arena, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_khca_timelimit "" "Timelimit for keyhunt clan arena, when empty, g_timelimit using, <= 0 mean no limit"
+set g_khca_leadlimit "0" "Leadlimit for keyhunt clan arena, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_khca_startdelay 5
 set g_khca_enddelay 5
 set khca_inherit "ca kh"

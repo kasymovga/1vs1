@@ -1,0 +1,3 @@
+set g_ons_scorelimit "" "Dummy cvar, ONS not have scorelimit"
+set g_ons_timelimit "" "Timelimit for OnSlaught, when empty, g_timelimit using, <= 0 mean no limit"
+set g_ons_leadlimit "" "Dummy cvar, ONS not have leadlimit"

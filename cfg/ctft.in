@@ -1,3 +1,6 @@
+set g_ctft_scorelimit 10 "Scorelimit for CTF freeze tag, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_ctft_timelimit "" "Timelimit for CTF freeze tag, when empty, g_timelimit using, <= 0 mean no limit"
+set g_ctft_leadlimit "0" "Leadlimit for CTF freeze tag, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_ctft_startdelay 5
 set g_ctft_enddelay 5
 set ctft_inherit "ft ctf"

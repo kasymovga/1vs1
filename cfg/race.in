@@ -1,1 +1,4 @@
+set g_race_scorelimit "" "Scorelimit for race, when empty, g_timelimit using, <= 0 mean no limit"
+set g_race_timelimit "" "Timelimit for race, when empty, g_timelimit using, <= 0 mean no limit"
+set g_race_leadlimit "" "Leadlimit for race, when empty, g_timelimit using, <= 0 mean no limit"
 set race_g_start_weapon_laser 0

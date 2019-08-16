@@ -395,10 +395,6 @@ entity() dom_SelectSpawnPoint {
 	return spawn_select(TRUE);
 }
 
-float dom_FragLimitOverride() { return cvar("g_domination_point_limit"); }
-
-float dom_LeadLimitOverride() { return cvar("g_domination_point_leadlimit"); }
-
 void(void) dom_init {
 	g_domination = 1;
 	CACHE_CVAR(g_domination_default_teams);
@@ -419,8 +415,6 @@ void(void) dom_init {
 	precache_sound("domination/claim.wav");
 	GameHook_SelectSpawnPoint = dom_SelectSpawnPoint;
 	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_FragLimitOverride = dom_FragLimitOverride;
-	GameHook_LeadLimitOverride = dom_LeadLimitOverride;
 	GameHook_BotChooseRole = dom_role_choose;
 	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);
 }

@@ -419,79 +419,6 @@ void _MapInfo_Map_Reset()
 	cvar_set("_map_dlc", "");
 }
 
-void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType)
-{
-	string sa;
-	MapInfo_Map_supportedGametypes |= pThisType;
-	if(!(pThisType & pWantedType))
-		return;
-	
-	if(pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
-	{
-		cvar_set("fraglimit", "0");
-	}
-	else
-	{
-		cvar_set("fraglimit", str_car(s));
-		s = str_cdr(s);
-	}
-
-	cvar_set("timelimit", str_car(s));
-	s = str_cdr(s);
-
-	if(pWantedType == MAPINFO_TYPE_TEAM_DEATHMATCH)
-	{
-		sa = str_car(s); if(sa == "") sa = "2";
-		cvar_set("g_tdm_teams", sa);
-		s = str_cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_KEYHUNT)
-	{
-		sa = str_car(s); if(sa == "") sa = "3";
-		cvar_set("g_keyhunt_teams", sa);
-		s = str_cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_CTF)
-	{
-		sa = str_car(s); if(sa == "") sa = "10";
-		if(cvar("g_ctf_win_mode") < 2)
-			cvar_set("fraglimit", sa);
-		s = str_cdr(s);
-	}
-
-	// rc = timelimit timelimit_qualification laps laps_teamplay
-	if(pWantedType == MAPINFO_TYPE_RACE)
-	{
-		sa = str_car(s); if(sa == "") sa = cvar_string("timelimit");
-		cvar_set("g_race_qualifying_timelimit", sa);
-		s = str_cdr(s);
-
-		sa = str_car(s); if(sa == "") sa = "10";
-		if(cvar("g_race_teams") < 2)
-			cvar_set("fraglimit", sa);
-		s = str_cdr(s);
-
-		sa = str_car(s); if(sa == "") sa = "20";
-		if(cvar("g_race_teams") >= 2)
-			cvar_set("fraglimit", sa);
-		s = str_cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_CTS)
-	{
-		sa = str_car(s); if(sa == "") sa = cvar_string("fraglimit");
-		if(cvar("g_race_teams"))
-			cvar_set("fraglimit", sa);
-		s = str_cdr(s);
-	}
-
-	sa = str_car(s); if(sa == "") sa = "0";
-	cvar_set("leadlimit", sa);
-	s = str_cdr(s);
-}
-
 float MapInfo_Type_FromString(string t)
 {
 	if     (t == "dm")         return GAME_DEATHMATCH;
@@ -640,7 +567,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		print("Invalid character in map name, ignored\n");
 		return 0;
 	}
-
 	if(pGametypeToSet == 0)
 		if(MapInfo_Cache_Retrieve(pFilename))
 			return 1;
@@ -770,9 +696,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		{
 			t = str_car(s); s = str_cdr(s);
 			f = MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t));
-			if(f)
-				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f);
-
+			MapInfo_Map_supportedGametypes |= f;
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
 				if (cvar("g_tdm_use_dm_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
@@ -868,9 +792,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		}
 	}
 	fclose(fh);
-
-	if(!MapInfo_Map_supportedGametypes)
-		_MapInfo_Map_ApplyGametype("30 20", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
 
 	if(pGametypeToSet)
 		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet)) {

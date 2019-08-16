@@ -1,2 +1,4 @@
 _set g_domination_point_capturetime 1
-set g_domination_point_leadlimit 0
+set g_dom_scorelimit 200 "Scorelimit for domination, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_dom_timelimit "" "Timelimit for domination, when empty, g_timelimit using, <= 0 mean no limit"
+set g_dom_leadlimit "0" "Leadlimit for domination, when empty, g_leadlimit using, <= 0 mean no limit"

@@ -33,3 +33,6 @@ set sv_door_default_speed 100
 set sv_world_scale 1
 set sv_maxidle_forcespec 120
 set cl_shownames_cos 0.99 "cosinus of show names field angle"
+set g_timelimit 20
+set g_scorelimit 30
+set g_leadlimit 0

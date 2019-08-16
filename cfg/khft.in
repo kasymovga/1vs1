@@ -1,3 +1,6 @@
+set g_khft_scorelimit 15 "Scorelimit for keyhunt freeze tag, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_khft_timelimit "" "Timelimit for keyhunt freeze tag, when empty, g_timelimit using, <= 0 mean no limit"
+set g_khft_leadlimit "0" "Leadlimit for keyhunt freeze tag, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_khft_point_limit 15
 set g_khft_point_leadlimit 0
 set g_khft_startdelay 5

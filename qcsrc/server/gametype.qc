@@ -27,14 +27,19 @@ void() gametype_default_delayed_init {
 	score_basics_end();
 }
 
+float(string s) gametype_value {
+	string s2 = cvar_string(strcat("g_", gametype_name(MapInfo_CurrentGametype()), "_", s));
+	if (s2 != "")
+		return max(0, stof(s2));
+	else
+		return cvar(strcat("g_", s));
+}
+
 void() gametype_init {
-	float fraglimit_override, timelimit_override, leadlimit_override;
 	VoteReset();
 
 	// make sure only ONE type is selected
 	gametype_readcvars();
-	cvar_set("timelimit", cvar_string("timelimit_default"));
-	cvar_set("fraglimit", cvar_string("fraglimit_default"));
 	MapInfo_LoadMapSettings(mapname);
 	if (MapInfo_Map_description == "<DESCRIPTION>")
 		map_description = "";
@@ -116,21 +121,13 @@ void() gametype_init {
 	cvar_set("gamecfg", ftos(game));
 
 	// enforce the server's universal frag/time limits
-	if(!g_campaign)
-	{
-		timelimit_override = GameHook_TimeLimitOverride();
-		fraglimit_override = GameHook_FragLimitOverride();
-		leadlimit_override = GameHook_LeadLimitOverride();
-		if(fraglimit_override >= 0)
-			cvar_set("fraglimit", ftos(fraglimit_override));
-		if(timelimit_override >= 0)
-			cvar_set("timelimit", ftos(timelimit_override));
-		if(leadlimit_override >= 0)
-			cvar_set("leadlimit", ftos(leadlimit_override));
-	}
 	entity_initialize(world, gametype_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);
 	if (force_gametype_restore)
 		MapInfo_SwitchGameType(force_gametype_restore);
 
 	gametype_writecvars();
+	cvar_init(g_campaign ? "campaign" : cvar_string("g_profile"));
+	cvar_set("timelimit", ftos(gametype_value("timelimit")));
+	cvar_set("fraglimit", ftos(gametype_value("scorelimit")));
+	cvar_set("leadlimit", ftos(gametype_value("leadlimit")));
 }

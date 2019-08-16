@@ -9,7 +9,7 @@ string(float g) gametype_name {
 	else if (g == GAME_KEYHUNT_CA) return "khca";
 	else if (g == GAME_KEYHUNT_FT) return "khft";
 	else if (g == GAME_ONSLAUGHT) return "ons";
-	else if (g == GAME_RACE) return "rc";
+	else if (g == GAME_RACE) return "race";
 	else if (g == GAME_NEXBALL) return "nexball";
 	else if (g == GAME_CTS) return "cts";
 	else if (g == GAME_FREEZETAG) return "ft";

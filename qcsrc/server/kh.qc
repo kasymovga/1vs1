@@ -913,26 +913,6 @@ void kh_SpectateCopy(entity e) {
 	kh_SpectateCopy_NextLink(e);
 }
 
-float kh_FragLimitOverride() {
-	if (game == GAME_KEYHUNT_CA)
-		return cvar("g_khca_point_limit");
-
-	if (game == GAME_KEYHUNT_FT)
-		return cvar("g_khft_point_limit");
-
-	return cvar("g_keyhunt_point_limit");
-}
-
-float kh_LeadLimitOverride() {
-	if (game == GAME_KEYHUNT_CA)
-		return cvar("g_khca_point_leadlimit");
-
-	if (game == GAME_KEYHUNT_FT)
-		return cvar("g_khca_point_leadlimit");
-
-	return cvar("g_keyhunt_point_leadlimit");
-}
-
 float kh_PlayerIsCarrier(entity plr) { return plr.kh_next != world; }
 void kh_DropCarried(entity plr) { kh_Key_DropAll(plr, FALSE, FALSE); }
 float kh_TeleportationForbiddenFor(entity e) { return e.classname == STR_ITEM_KH_KEY; }
@@ -1011,8 +991,6 @@ void kh_init() {
 	GameHook_WinCountDown = stub_WinCountDown;
 	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = kh_SpectateCopy;
-	GameHook_FragLimitOverride = kh_FragLimitOverride;
-	GameHook_LeadLimitOverride = kh_LeadLimitOverride;
 	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
 	GameHook_DropCarried = kh_DropCarried;
 	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;

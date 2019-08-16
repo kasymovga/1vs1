@@ -1,3 +1,6 @@
+set g_nexball_scorelimit 10 "Scorelimit for nexball, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_nexball_timelimit "" "Timelimit for nexball, when empty, g_timelimit using, <= 0 mean no limit"
+set g_nexball_leadlimit "0" "Leadlimit for nexball, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_nexball_ball_scale 1 ""
 set g_nexball_ball_explosive_radius 1000
 set g_nexball_ball_explosive_damage 1000
