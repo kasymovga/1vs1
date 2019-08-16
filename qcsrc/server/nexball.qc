@@ -44,8 +44,8 @@ float nexball_teams;
 // Nexball
 .entity ballcarried;
 float g_nexball_meter_period;
-float g_balance_nexball_primary_shootatmaxmeter;
-float g_balance_nexball_primary_speed;
+float g_nexball_primary_shootatmaxmeter;
+float g_nexball_primary_speed;
 float g_nexball_basketball_meter;
 float g_nexball_basketball_meter_maxpower;
 float g_nexball_basketball_meter_minpower;
@@ -148,8 +148,8 @@ void() nexball_init {
 	CACHE_CVAR(g_nexball_ball_explosive_radius);
 	CACHE_CVAR(g_nexball_ball_explosive_damage);
 	CACHE_CVAR(g_nexball_ball_explosive_force);
-	CACHE_CVAR(g_balance_nexball_primary_shootatmaxmeter);
-	CACHE_CVAR(g_balance_nexball_primary_speed);
+	CACHE_CVAR(g_nexball_primary_shootatmaxmeter);
+	CACHE_CVAR(g_nexball_primary_speed);
 	CACHE_CVAR(g_nexball_basketball_meter);
 	CACHE_CVAR(g_nexball_basketball_meter_maxpower);
 	CACHE_CVAR(g_nexball_basketball_meter_minpower);
@@ -779,7 +779,7 @@ void(float t) nexball_carrier_attack {
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
-	nexball_drop_ball (ball, w_shotorg, weapon_calculate_projectile_velocity(self.velocity, w_shotdir * g_balance_nexball_primary_speed * mul));
+	nexball_drop_ball (ball, w_shotorg, weapon_calculate_projectile_velocity(self.velocity, w_shotdir * g_nexball_primary_speed * mul));
 	//TODO: use the speed_up cvar too ??
 }
 
@@ -797,7 +797,7 @@ float nexball_carrier_think() {
 		self.metertime_stat = (time - self.metertime) / g_nexball_meter_period;
 		self.metertime_stat = (self.metertime_stat - floor(self.metertime_stat)) * 2;
 		if (!self.BUTTON_ATCK ||
-				(g_balance_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time))
+				(g_nexball_primary_shootatmaxmeter && self.metertime + (g_nexball_meter_period / 2) < time))
 
 			nexball_carrier_attack(time - self.metertime);
 	}

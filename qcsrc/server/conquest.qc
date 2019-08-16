@@ -1,8 +1,8 @@
-float g_conquest;
-float g_conquest_capture_time;
-float g_conquest_lasthope_time;
-float g_conquest_score_capture;
-float g_conquest_teamscore_alternative;
+float g_conq;
+float g_conq_capture_time;
+float g_conq_lasthope_time;
+float g_conq_score_capture;
+float g_conq_teamscore_alternative;
 float conq_timelimit_save;
 float conq_lasthope;
 
@@ -100,18 +100,18 @@ void conquest_cp_think_capture() {
 			sound_play2team(self.team, "onslaught/controlpoint_underattack.ogg");
 			WaypointSprite_Ping(self.sprite);
 			conquest_update_waypoint();
-			self.conquest_delay = time + g_conquest_capture_time;
+			self.conquest_delay = time + g_conq_capture_time;
 		}
 
-		self.capture_progress = self.capture_progress + (frametime / g_conquest_capture_time);
+		self.capture_progress = self.capture_progress + (frametime / g_conq_capture_time);
 		if (self.team)
 			self.enemy.alpha = 1 - self.capture_progress;
 
 		if (self.capture_progress >= 1) {
-			score_player_add(self.owner, SP_SCORE, g_conquest_score_capture);
+			score_player_add(self.owner, SP_SCORE, g_conq_score_capture);
 			if (self.team > 0) {
 				sound_play2all("domination/claim.wav");
-				if (g_conquest_teamscore_alternative)
+				if (g_conq_teamscore_alternative)
 					score_team_add_to(self.owner.team, ST_SCORE, 1);
 				else
 					score_team_add_to(self.team, ST_SCORE, -1);
@@ -174,7 +174,7 @@ void conquest_cp_touch() {
 }
 
 void spawnfunc_conquest_cp() {
-	if not(g_conquest) {
+	if not(g_conq) {
 		remove(self);
 		return;
 	}
@@ -254,7 +254,7 @@ float conquest_WinningCondition()
 
 	if (one_of_team_cannot_spawn) {
 		if not(conq_lasthope) {
-			float new_time_limit = (time - game_starttime + g_conquest_lasthope_time) / 60;
+			float new_time_limit = (time - game_starttime + g_conq_lasthope_time) / 60;
 			conq_timelimit_save = cvar("timelimit");
 			cvar_set("timelimit", ftos(new_time_limit));
 			conq_lasthope = 1;
@@ -349,7 +349,7 @@ void conquest_ctf_and_dom_EntityPreSpawn() {
 }
 
 void conquest_init() {
-	g_conquest = 1;
+	g_conq = 1;
 	precache_model("models/onslaught/controlpoint_pad.md3");
 	precache_model("models/ctf/flags.md3");
 	precache_sound("ctf/blue_capture.wav");
@@ -357,12 +357,12 @@ void conquest_init() {
 	precache_sound("onslaught/controlpoint_built.ogg");
 	precache_sound("onslaught/controlpoint_underattack.ogg");
 	precache_sound("domination/claim.wav");
-	CACHE_CVAR(g_conquest_capture_time);
-	CACHE_CVAR(g_conquest_lasthope_time);
-	CACHE_CVAR(g_conquest_score_capture);
-	CACHE_CVAR(g_conquest_teamscore_alternative);
-	if (g_conquest_capture_time <= 0)
-		g_conquest_capture_time = 1;
+	CACHE_CVAR(g_conq_capture_time);
+	CACHE_CVAR(g_conq_lasthope_time);
+	CACHE_CVAR(g_conq_score_capture);
+	CACHE_CVAR(g_conq_teamscore_alternative);
+	if (g_conq_capture_time <= 0)
+		g_conq_capture_time = 1;
 
 	GameHook_WinningCondition = conquest_WinningCondition;
 	GameHook_FragsHandle = conquest_FragsHandle;
@@ -375,11 +375,11 @@ void conquest_init() {
 	GameHookChain_PlayerClear = onslaught_PlayerClear;
 	GameHook_Reset = conquest_Reset;
 	GameHook_WinCountDown = stub_WinCountDown;
-	if (cvar("g_conquest_use_ons")) {
+	if (cvar("g_conq_use_ons")) {
 		conquest_ons_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
 		GameHookChain_EntityPreSpawn = conquest_ons_EntityPreSpawn;
 	}
-	if (cvar("g_conquest_use_ctf_and_dom")) {
+	if (cvar("g_conq_use_ctf_and_dom")) {
 		conquest_ctf_and_dom_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
 		GameHookChain_EntityPreSpawn = conquest_ctf_and_dom_EntityPreSpawn;
 	}

@@ -36,3 +36,5 @@ set cl_shownames_cos 0.99 "cosinus of show names field angle"
 set g_timelimit 20
 set g_scorelimit 30
 set g_leadlimit 0
+alias timelimit_override "cvardeprecated timelimit_override g_timelimit; g_timelimit $1"
+alias fraglimit_override "cvardeprecated fraglimit_override g_scorelimit; g_scorelimit $1"

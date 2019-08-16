@@ -1,11 +1,11 @@
 #define ICE_FRAME_TIME 0.2
 string sv_model_ice;
 string sv_sound_ice_frag;
-float g_freeze_unfroze_time;
-float g_freeze_unfroze_interruption;
-float g_freeze_slowdown;
-float g_freeze_autorevive_delay;
-float g_freeze_autorevive_time;
+float g_ice_unfroze_time;
+float g_ice_unfroze_interruption;
+float g_ice_slowdown;
+float g_ice_autorevive_delay;
+float g_ice_autorevive_time;
 float sv_model_ice_scale;
 float sv_model_ice_z;
 float sv_model_ice_alpha;
@@ -81,8 +81,8 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	else
 		self.ice.colormod = team_color(self.team);
 
-	if (g_freeze_autorevive_delay > 0)
-		self.ice.fade_time = time + g_freeze_autorevive_delay;
+	if (g_ice_autorevive_delay > 0)
+		self.ice.fade_time = time + g_ice_autorevive_delay;
 	else
 		self.ice.fade_time = 0;
 
@@ -133,7 +133,7 @@ void Ice_Think()
 		break;
 	}
 	if not(unfrozer)
-	if (g_freeze_autorevive_delay > 0)
+	if (g_ice_autorevive_delay > 0)
 	if (time > self.fade_time)
 		unfrozer = self;
 
@@ -160,26 +160,26 @@ void Ice_Think()
 		unfroze_scale = 1;
 	} else {
 		self.last_unfrozer = world;
-		unfroze_scale = g_freeze_unfroze_time / g_freeze_autorevive_time;
+		unfroze_scale = g_ice_unfroze_time / g_ice_autorevive_time;
 	}
 	if (unfrozer)
 	{
 		self.unfroze_progress += ICE_FRAME_TIME * unfroze_scale;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL) {
 			if (self.unfroze_pb)
-				progressbar_set(self.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
+				progressbar_set(self.unfroze_pb, self.unfroze_progress / g_ice_unfroze_time);
 		} else
 			unfrozer.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
 
 		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
 			if (self.owner.unfroze_pb)
-				progressbar_set(self.owner.unfroze_pb, self.unfroze_progress / g_freeze_unfroze_time);
+				progressbar_set(self.owner.unfroze_pb, self.unfroze_progress / g_ice_unfroze_time);
 		} else {
 			self.owner.movement = '0 0 0';
 			self.owner.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
 		}
 	}
-	if (self.unfroze_progress >= g_freeze_unfroze_time)
+	if (self.unfroze_progress >= g_ice_unfroze_time)
 	{
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
@@ -202,7 +202,7 @@ void Ice_Think()
 		self.unfroze_progress = max(0, oldprogress - ICE_FRAME_TIME);
 
 	if (self.unfroze_progress != oldprogress)
-		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.unfroze_progress / g_freeze_unfroze_time));
+		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.unfroze_progress / g_ice_unfroze_time));
 }
 
 var void(float killed) Ice_PlayerClear_NextLink;
@@ -223,7 +223,7 @@ var float() Ice_SpeedMod_NextLink;
 float Ice_SpeedMod() {
 	float f = Ice_SpeedMod_NextLink();
 	if (self.deadflag == DEAD_FREEZE)
-		return g_freeze_slowdown * f;
+		return g_ice_slowdown * f;
 
 	return f;
 }
@@ -236,9 +236,9 @@ float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, f
 
 	if (attacker)
 	if (attacker.team != self.team)
-	if (g_freeze_unfroze_interruption || (self.ice.fade_time && time > self.ice.fade_time)) {
-		if (g_freeze_autorevive_delay > 0)
-			self.ice.fade_time = time + g_freeze_autorevive_delay;
+	if (g_ice_unfroze_interruption || (self.ice.fade_time && time > self.ice.fade_time)) {
+		if (g_ice_autorevive_delay > 0)
+			self.ice.fade_time = time + g_ice_autorevive_delay;
 
 		self.ice.alpha = sv_model_ice_alpha;
 		self.ice.unfroze_progress = 0;
@@ -266,16 +266,16 @@ void Ice_Init() {
 	if (sv_sound_ice_frag != "")
 		precache_sound(sv_sound_ice_frag);
 
-	CACHE_CVAR(g_freeze_unfroze_time);
-	CACHE_CVAR(g_freeze_unfroze_interruption);
-	CACHE_CVAR(g_freeze_slowdown);
-	CACHE_CVAR(g_freeze_autorevive_delay);
-	CACHE_CVAR(g_freeze_autorevive_time);
-	if (g_freeze_unfroze_time <= 0)
-		g_freeze_unfroze_time = 1;
+	CACHE_CVAR(g_ice_unfroze_time);
+	CACHE_CVAR(g_ice_unfroze_interruption);
+	CACHE_CVAR(g_ice_slowdown);
+	CACHE_CVAR(g_ice_autorevive_delay);
+	CACHE_CVAR(g_ice_autorevive_time);
+	if (g_ice_unfroze_time <= 0)
+		g_ice_unfroze_time = 1;
 
-	if (g_freeze_autorevive_time <= 0)
-		g_freeze_autorevive_time = 1;
+	if (g_ice_autorevive_time <= 0)
+		g_ice_autorevive_time = 1;
 
 	CACHE_CVAR(sv_model_ice_alpha);
 	CACHE_CVAR(sv_model_ice_scale);

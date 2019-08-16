@@ -1,4 +1,4 @@
-float g_onslaught;
+float g_ons;
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
 void onslaught_link_checkupdate();
@@ -19,11 +19,11 @@ void onslaught_link_checkupdate();
 
 .string model1, model2, model3;
 
-float g_onslaught_gen_health;
-float g_onslaught_cp_buildhealth;
-float g_onslaught_cp_buildtime;
-float g_onslaught_cp_health;
-float g_onslaught_cp_regen;
+float g_ons_gen_health;
+float g_ons_cp_buildhealth;
+float g_ons_cp_buildtime;
+float g_ons_cp_health;
+float g_ons_cp_regen;
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) onslaught_gib_damage {
 	self.velocity = self.velocity + vforce;
@@ -594,7 +594,7 @@ void(entity e) onslaught_controlpoint_updatesprite {
 void onslaught_generator_reset()
 {
 	self.team = self.team_saved;
-	self.lasthealth = self.max_health = self.health = g_onslaught_gen_health;
+	self.lasthealth = self.max_health = self.health = g_ons_gen_health;
 	self.takedamage = DAMAGE_AIM;
 	self.bot_attack = TRUE;
 	self.iscaptured = TRUE;
@@ -618,7 +618,7 @@ keys:
 "targetname" - name that spawnfunc_onslaught_link entities will use to target this.
  */
 void(void) spawnfunc_onslaught_generator {
-	if (!g_onslaught) {
+	if (!g_ons) {
 		remove(self);
 		return;
 	}
@@ -631,7 +631,7 @@ void(void) spawnfunc_onslaught_generator {
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	self.lasthealth = self.max_health = self.health = g_onslaught_gen_health;
+	self.lasthealth = self.max_health = self.health = g_ons_gen_health;
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
 	setorigin(self, self.origin);
@@ -839,7 +839,7 @@ void(void) onslaught_controlpoint_icon_buildthink {
 	self.health = self.health + self.count;
 	if (self.health >= self.max_health) {
 		self.health = self.max_health;
-		self.count = g_onslaught_cp_regen * sys_ticrate; // slow repair rate from now on
+		self.count = g_ons_cp_regen * sys_ticrate; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
 		bprint(team_colored_name(self.team), " captured ", self.owner.message, " control point\n");
@@ -882,8 +882,8 @@ void onslaught_controlpoint_touch() {
 	self.goalentity = e = spawn();
 	e.classname = "onslaught_controlpoint_icon";
 	e.owner = self;
-	e.max_health = g_onslaught_cp_health;
-	e.health = g_onslaught_cp_buildhealth;
+	e.max_health = g_ons_cp_health;
+	e.health = g_ons_cp_buildhealth;
 	e.solid = SOLID_BBOX;
 	e.movetype = MOVETYPE_NONE;
 	e.scale = 1.2;
@@ -897,7 +897,7 @@ void onslaught_controlpoint_touch() {
 	e.colormap = 1024 + (e.team - 1) * 17;
 	e.think = onslaught_controlpoint_icon_buildthink;
 	e.nextthink = time + sys_ticrate;
-	e.count = (e.max_health - e.health) * sys_ticrate / g_onslaught_cp_buildtime; // how long it takes to build
+	e.count = (e.max_health - e.health) * sys_ticrate / g_ons_cp_buildtime; // how long it takes to build
 	sound(e, CHAN_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
 	self.team = e.team;
 	self.colormap = e.colormap;
@@ -938,7 +938,7 @@ keys:
  */
 void(void) spawnfunc_onslaught_controlpoint {
 	entity e;
-	if (!g_onslaught) {
+	if (!g_ons) {
 		remove(self);
 		return;
 	}
@@ -1049,7 +1049,7 @@ keys:
 "target2" - second control point.
  */
 void(void) spawnfunc_onslaught_link {
-	if (!g_onslaught) {
+	if (!g_ons) {
 		remove(self);
 		return;
 	}
@@ -1152,7 +1152,7 @@ float(void) onslaught_WinningCondition {
 }
 
 void(void) onslaught_init {
-	g_onslaught = 1;
+	g_ons = 1;
 	GameHook_DeathHandle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = onslaught_Spawn;
@@ -1205,9 +1205,9 @@ void(void) onslaught_init {
 	precache_sound("onslaught/controlpoint_underattack.wav");
 	precache_sound("onslaught/ons_spark1.wav");
 	precache_sound("onslaught/ons_spark2.wav");
-	CACHE_CVAR(g_onslaught_gen_health);
-	CACHE_CVAR(g_onslaught_cp_buildhealth);
-	CACHE_CVAR(g_onslaught_cp_buildtime);
-	CACHE_CVAR(g_onslaught_cp_health);
-	CACHE_CVAR(g_onslaught_cp_regen);
+	CACHE_CVAR(g_ons_gen_health);
+	CACHE_CVAR(g_ons_cp_buildhealth);
+	CACHE_CVAR(g_ons_cp_buildtime);
+	CACHE_CVAR(g_ons_cp_health);
+	CACHE_CVAR(g_ons_cp_regen);
 }

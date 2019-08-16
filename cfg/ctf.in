@@ -5,3 +5,9 @@ set g_ctf_showenemycarrier 1
 set g_ctf_showenemycarrier_delay 30
 set g_ctf_dropbutton_use 1 "drop flag with +use bind"
 set g_ctf_dropbutton_hook 0 "drop flag with +hook bind"
+set g_ctf_delay_collect 1.0
+set g_ctf_damageforcescale 1
+alias g_ctf_capture_limit "cvardeprecated g_ctf_capture_limit g_ctf_scorelimit; g_ctf_scorelimit $1"
+alias capturelimit_override "cvardeprecated capturelimit_override g_ctf_scorelimit; g_ctf_scorelimit $1"
+alias g_balance_ctf_delay_collect "cvardeprecated g_balance_ctf_delay_collect g_ctf_delay_collect; g_ctf_delay_collect $1"
+alias g_balance_ctf_damageforcescale "cvardeprecated g_balance_ctf_damageforcescale g_ctf_damageforcescale; g_ctf_damageforcescale $1"

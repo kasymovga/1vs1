@@ -1,4 +1,4 @@
-float g_clanarena_healthrotpause_on_damage;
+float g_ca_healthrotpause_on_damage;
 
 float Clanarena_HandleFrags(entity attacker, entity targ, float f) {
 	if (Roundbased_Active) {
@@ -14,20 +14,20 @@ float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float _dam
 	if (deathtype != WEP_PORTO)
 	if (attacker.team != self.team) {
 		score_player_add(attacker, SP_SCORE, _damage / 10);
-		attacker.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
-		self.pauserothealth_finished = time + g_clanarena_healthrotpause_on_damage;
+		attacker.pauserothealth_finished = time + g_ca_healthrotpause_on_damage;
+		self.pauserothealth_finished = time + g_ca_healthrotpause_on_damage;
 	}
 	return Clanarena_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
 
 void Clanarena_Init()
 {
-	CACHE_CVAR(g_clanarena_healthrotpause_on_damage);
-	team_teams_set_count(bound(2, cvar("g_clanarena_teams"), 4));
+	CACHE_CVAR(g_ca_healthrotpause_on_damage);
+	team_teams_set_count(bound(2, cvar("g_ca_teams"), 4));
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
 	GameHook_WinCountDown = stub_WinCountDown;
 	score_generic();
-	Clanarena_Init_Shared("clanarena");
+	Clanarena_Init_Shared("ca");
 }

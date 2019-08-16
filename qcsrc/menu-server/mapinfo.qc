@@ -706,7 +706,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
 
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH) {
-				if (cvar("g_keyhunt_use_tdm_maps"))
+				if (cvar("g_kh_use_tdm_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
 			}
 		}

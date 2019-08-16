@@ -1,14 +1,9 @@
 set g_ft_scorelimit 10 "Scorelimit for freeze tag, when empty, g_scorelimit using, <= 0 mean no limit"
 set g_ft_timelimit "" "Timelimit for freeze tag, when empty, g_timelimit using, <= 0 mean no limit"
 set g_ft_leadlimit "0" "Leadlimit for freeze tag, when empty, g_leadlimit using, <= 0 mean no limit"
-set g_freeze_teams 2
-set g_freeze_enddelay 3
-set g_freeze_slowdown 0.1
-set g_freeze_startdelay 10
-set g_freeze_unfroze_time 3
-set g_freeze_unfroze_interruption 1
-set g_freeze_autorevive_delay 0 "Delay before autorevive starting. 0 or negative value mean no autorevive"
-set g_freeze_autorevive_time 10
+set g_ft_teams 2
+set g_ft_enddelay 3
+set g_ft_startdelay 10
 set ft_g_start_weapon_shotgun 1
 set ft_g_start_weapon_uzi 1
 set ft_g_start_weapon_grenadelauncher 1

@@ -2,14 +2,14 @@
 Domination as a plugin for netquake mods
 by LordHavoc (lordhavoc@ghdigital.com)
 */
-float g_domination;
-float g_domination_default_teams;
-float g_domination_point_amt;
-float g_domination_point_capturetime;
-float g_domination_point_fullbright;
-float g_domination_point_glow;
-float g_domination_point_rate;
-float g_domination_teams_override;
+float g_dom;
+float g_dom_default_teams;
+float g_dom_point_amt;
+float g_dom_point_capturetime;
+float g_dom_point_fullbright;
+float g_dom_point_glow;
+float g_dom_point_rate;
+float g_dom_teams_override;
 
 #define DOMPOINTFRAGS frags
 
@@ -50,8 +50,8 @@ void(void) dom_controlpoint_captured {
 	if (head.noise1 != "")
 		sound_play2all(head.noise1);
 
-	if (g_domination_point_rate)
-		self.delay = time + g_domination_point_rate;
+	if (g_dom_point_rate)
+		self.delay = time + g_dom_point_rate;
 	else
 		self.delay = time + self.wait;
 
@@ -117,7 +117,7 @@ void(void) dom_controlpoint_think {
 	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
-	waittime = g_domination_point_rate;
+	waittime = g_dom_point_rate;
 	if not(waittime)
 		waittime = self.wait;
 
@@ -125,7 +125,7 @@ void(void) dom_controlpoint_think {
 	// give credit to the team
 	// NOTE: this defaults to 0
 	if (self.goalentity.netname != "") {
-		fragamt = g_domination_point_amt;
+		fragamt = g_dom_point_amt;
 		if not(fragamt)
 			fragamt = self.DOMPOINTFRAGS;
 
@@ -141,13 +141,13 @@ void(void) dom_controlpoint_think {
 }
 
 float(void) dom_controlpoint_capture_finished {
-	if (g_domination_point_capturetime <= 0)
+	if (g_dom_point_capturetime <= 0)
 		return TRUE;
 
 	if (clienttype(other) == CLIENTTYPE_BOT)
 		other.bot_dontmove = time + 0.1;
 
-	if (self.state >= g_domination_point_capturetime) {
+	if (self.state >= g_dom_point_capturetime) {
 		dom_controlpoint_capture_stop();
 		return TRUE;
 	}
@@ -158,7 +158,7 @@ float(void) dom_controlpoint_capture_finished {
 		self.killindicator.killindicator = progressbar_create("Capturing...", other);
 	}
 	self.state = self.state + frametime;
-	progressbar_set(self.killindicator.killindicator, self.state / g_domination_point_capturetime);
+	progressbar_set(self.killindicator.killindicator, self.state / g_dom_point_capturetime);
 	self.killindicator.lastdamage = time;
 	return FALSE;
 }
@@ -229,7 +229,7 @@ Keys:
  (this is a global sound, like "Red team has captured a control point")
 */
 void(void) spawnfunc_dom_team {
-	if not(g_domination) {
+	if not(g_dom) {
 		remove(self);
 		return;
 	}
@@ -294,7 +294,7 @@ void(void) dom_controlpoint_setup {
 Control point for Domination gameplay.
 */
 void(void) spawnfunc_dom_controlpoint {
-	if not(g_domination) {
+	if not(g_dom) {
 		remove(self);
 		return;
 	}
@@ -305,7 +305,7 @@ void(void) spawnfunc_dom_controlpoint {
 		self.scale = 0.6;
 
 	self.effects = self.effects | EF_LOWPRECISION;
-	if (g_domination_point_fullbright)
+	if (g_dom_point_fullbright)
 		self.effects |= EF_FULLBRIGHT;
 }
 
@@ -345,10 +345,10 @@ void(vector org) dom_spawnpoint {
 void(void) dom_spawnteams {
 	float numteams;
 	team_teams_set_count(0);
-	if (g_domination_teams_override < 2)
-		numteams = g_domination_default_teams;
+	if (g_dom_teams_override < 2)
+		numteams = g_dom_default_teams;
 	else
-		numteams = g_domination_teams_override;
+		numteams = g_dom_teams_override;
 
 	if (team_teams < numteams)
 		dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
@@ -380,7 +380,7 @@ void(void) dom_delayedinit {
 	}
 	float sp_domticks, sp_score;
 	sp_score = sp_domticks = 0;
-	if (cvar("g_domination_disable_frags"))
+	if (cvar("g_dom_disable_frags"))
 		sp_domticks = SFL_SORT_PRIO_PRIMARY;
 	else
 		sp_score = SFL_SORT_PRIO_PRIMARY;
@@ -396,14 +396,14 @@ entity() dom_SelectSpawnPoint {
 }
 
 void(void) dom_init {
-	g_domination = 1;
-	CACHE_CVAR(g_domination_default_teams);
-	CACHE_CVAR(g_domination_point_amt);
-	CACHE_CVAR(g_domination_point_capturetime);
-	CACHE_CVAR(g_domination_point_fullbright);
-	CACHE_CVAR(g_domination_point_glow);
-	CACHE_CVAR(g_domination_point_rate);
-	CACHE_CVAR(g_domination_teams_override);
+	g_dom = 1;
+	CACHE_CVAR(g_dom_default_teams);
+	CACHE_CVAR(g_dom_point_amt);
+	CACHE_CVAR(g_dom_point_capturetime);
+	CACHE_CVAR(g_dom_point_fullbright);
+	CACHE_CVAR(g_dom_point_glow);
+	CACHE_CVAR(g_dom_point_rate);
+	CACHE_CVAR(g_dom_teams_override);
 	// we have to precache default models/sounds even if they might not be
 	// used because spawnfunc_worldspawn is executed before any other entities are read,
 	// so we don't even know yet if this map is set up for domination...

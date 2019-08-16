@@ -9,8 +9,8 @@ float SP_CTF_FCKILLS;
 float SP_CTF_RETURNS;
 
 float g_ctf;
-float g_balance_ctf_damageforcescale;
-float g_balance_ctf_delay_collect;
+float g_ctf_damageforcescale;
+float g_ctf_delay_collect;
 float g_ctf_allow_drop;
 float g_ctf_captimerecord_always;
 float g_ctf_default_teams;
@@ -314,7 +314,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 
 	setattachment(e, world, "");
-	e.damageforcescale = g_balance_ctf_damageforcescale;
+	e.damageforcescale = g_ctf_damageforcescale;
 	e.takedamage = DAMAGE_YES;
 
 	if (p.flagcarried == e)
@@ -592,7 +592,7 @@ void() ctf_flag_touch {
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		}
-		else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_balance_ctf_delay_collect))
+		else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_ctf_delay_collect))
 		{
 			if (g_ctf_flag_pickup_effects) // field pickup effect
 				pointparticles(particleeffectnum("smoke_ring"), 0.5 * (self.absmin + self.absmax), '0 0 0', 1);
@@ -942,8 +942,8 @@ void() ctf_spawnteams {
 }
 
 void() ctf_delayedinit {
-	CACHE_CVAR(g_balance_ctf_damageforcescale);
-	CACHE_CVAR(g_balance_ctf_delay_collect);
+	CACHE_CVAR(g_ctf_damageforcescale);
+	CACHE_CVAR(g_ctf_delay_collect);
 	CACHE_CVAR(g_ctf_allow_drop);
 	CACHE_CVAR(g_ctf_captimerecord_always);
 	CACHE_CVAR(g_ctf_default_teams);

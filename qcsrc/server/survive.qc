@@ -1,9 +1,9 @@
 float wave_number;
 float wave_not_found;
 float survive_active;
-float g_survive_wave_pause;
-float g_survive_freeze;
-float g_survive_monster_factor;
+float g_surv_wave_pause;
+float g_surv_freeze;
+float g_surv_monster_factor;
 float survive_monster_quant;
 entity survive_plan_entity;
 string survive_gameover_message;
@@ -44,19 +44,19 @@ void survive_Spawn(entity spot) {
 
 void survive_trigger() {
 	if not(survive_has_players()) {
-		self.nextthink = time + g_survive_wave_pause;
+		self.nextthink = time + g_surv_wave_pause;
 		return;
 	}
 	entity oldself = self;
-	survive_monster_quant = (1 - g_survive_monster_factor);
+	survive_monster_quant = (1 - g_surv_monster_factor);
 	survive_active = FALSE;
 	FOR_EACH_CLIENT(self) {
 		if (self.team >= 0) {
-			if (self.classname != "player" || (g_survive_freeze && self.deadflag == DEAD_FREEZE)) {
+			if (self.classname != "player" || (g_surv_freeze && self.deadflag == DEAD_FREEZE)) {
 				self.classname = "player";
 				PutClientInServer();
 			}
-			survive_monster_quant += g_survive_monster_factor;
+			survive_monster_quant += g_surv_monster_factor;
 		}
 	}
 	self = oldself;
@@ -99,7 +99,7 @@ void survive_plan() {
 	survive_plan_entity = spawn();
 	survive_plan_entity.classname = "monster";
 	survive_plan_entity.think = survive_trigger;
-	survive_plan_entity.nextthink = time + g_survive_wave_pause;
+	survive_plan_entity.nextthink = time + g_surv_wave_pause;
 	survive_plan_entity.team = -1; //Fake team
 	if (survive_active)
 		survive_wave_prefix = "^2Wave cleared!";
@@ -108,7 +108,7 @@ void survive_plan() {
 	entity oldself = self;
 	FOR_EACH_CLIENT(self) {
 		if (self.team >= 0) {
-			if (self.classname != "player" || (g_survive_freeze && self.deadflag == DEAD_FREEZE)) {
+			if (self.classname != "player" || (g_surv_freeze && self.deadflag == DEAD_FREEZE)) {
 				self.classname = "player";
 				PutClientInServer();
 			}
@@ -250,7 +250,7 @@ string survive_GameOverMessageMod(string s) {
 }
 
 void survive_init_delayed() {
-	if (g_survive_freeze) {
+	if (g_surv_freeze) {
 		IceHook_SkipThink = survive_IceSkipThink;
 		IceHook_SkipDeathHandle = survive_IceSkipThink;
 		IceHook_Unfroze = survive_IceUnfroze;
@@ -269,7 +269,7 @@ void survive_init() {
 	precache_sound("announcer/robotic/3.wav");
 	precache_sound("announcer/robotic/2.wav");
 	precache_sound("announcer/robotic/1.wav");
-	CACHE_CVAR(g_survive_freeze);
+	CACHE_CVAR(g_surv_freeze);
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	survive_monster_quant = 1;
 	GameHook_WinningCondition = survive_WinningCondition;
@@ -281,10 +281,10 @@ void survive_init() {
 	GameHookChain_Spawn = survive_Spawn;
 	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
-	if (g_survive_freeze)
+	if (g_surv_freeze)
 		SP_REVIVE = score_register("revs", SFL_SORT_PRIO_SECONDARY);
 
-	CACHE_CVAR(g_survive_wave_pause);
-	g_survive_monster_factor = bound(0, cvar("g_survive_monster_factor"), 1);
-	wave_number = cvar("g_survive_wave_skip");
+	CACHE_CVAR(g_surv_wave_pause);
+	g_surv_monster_factor = bound(0, cvar("g_surv_monster_factor"), 1);
+	wave_number = cvar("g_surv_wave_skip");
 }

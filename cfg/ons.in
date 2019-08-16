@@ -1,3 +1,13 @@
 set g_ons_scorelimit "" "Dummy cvar, ONS not have scorelimit"
 set g_ons_timelimit "" "Timelimit for OnSlaught, when empty, g_timelimit using, <= 0 mean no limit"
 set g_ons_leadlimit "" "Dummy cvar, ONS not have leadlimit"
+set g_ons_gen_health 5000
+set g_ons_cp_health 1000
+set g_ons_cp_buildhealth 100
+set g_ons_cp_buildtime 10
+set g_ons_cp_regen 20
+alias g_onslaught_gen_health "cvardeprecated g_onslaught_gen_health g_ons_gen_health; g_ons_gen_health $1"
+alias g_onslaught_cp_health "cvardeprecated g_onslaught_cp_health g_ons_cp_health; g_ons_cp_health $1"
+alias g_onslaught_cp_buildhealth "cvardeprecated g_onslaught_cp_buildhealth g_ons_cp_buildhealth; g_ons_cp_buildhealth $1"
+alias g_onslaught_cp_buildtime "cvardeprecated g_onslaught_cp_buildtime g_ons_cp_buildtime; g_ons_cp_buildtime $1"
+alias g_onslaught_cp_regen "cvardeprecated g_onslaught_cp_regen g_ons_cp_regen; g_ons_cp_regen $1"

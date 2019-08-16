@@ -11,7 +11,6 @@ CLASS(NexuizServerCreateTab) EXTENDS(NexuizTab)
 	ATTRIB(NexuizServerCreateTab, sliderFraglimit, entity, NULL)
 	ATTRIB(NexuizServerCreateTab, sliderTimelimit, entity, NULL)
 	ATTRIB(NexuizServerCreateTab, checkboxFraglimit, entity, NULL)
-	ATTRIB(NexuizServerCreateTab, checkboxFraglimitMapinfo, entity, NULL)
 ENDCLASS(NexuizServerCreateTab)
 entity makeNexuizServerCreateTab();
 #endif
@@ -66,24 +65,17 @@ void fillNexuizServerCreateTab(entity me)
 			e.onClickEntity = me.mapListBox;
 		me.TDempty(me, 0.5);
 
-	me.gotoRC(me, 3, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 4, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, "Match settings:"));
 	me.TR(me);
-		me.sliderTimelimit = makeNexuizSlider(1.0, 60.0, 0.5, "timelimit_override");
+		me.sliderTimelimit = makeNexuizSlider(1.0, 60.0, 0.5, "g_timelimit");
 		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, me.sliderTimelimit, "Time limit:"));
 		me.TD(me, 1, 2, me.sliderTimelimit);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeNexuizSliderCheckBox(-1, 0, me.sliderTimelimit, "Use map specified default"));
-	me.TR(me);
-		me.sliderFraglimit = makeNexuizSlider(1.0, 2000.0, 5, "fraglimit_override");
+		me.sliderFraglimit = makeNexuizSlider(1.0, 2000.0, 5, "g_scorelimit");
 		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(0, 1, me.sliderFraglimit, "Point limit:"));
 			me.checkboxFraglimit = e;
 		me.TD(me, 1, 2, me.sliderFraglimit);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeNexuizSliderCheckBox(-1, 0, me.sliderFraglimit, "Use map specified default"));
-			me.checkboxFraglimitMapinfo = e;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Player slots:"));
@@ -161,19 +153,19 @@ void fillNexuizServerCreateTab(entity me)
 	me.gameTypeChangeNotify(me);
 }
 
-void GameType_ConfigureSliders(entity e, entity l, entity l2, string pLabel, float pMin, float pMax, float pStep, string pCvar)
+void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, float pMax, float pStep, string pCvar)
 {
 	if(pCvar == "")
 	{
 		e.configureNexuizSlider(e, pMin, pMax, pStep, string_null);
 		l.setText(l, pLabel);
-		e.disabled = l.disabled = l2.disabled = TRUE;
+		e.disabled = l.disabled = TRUE;
 	}
 	else
 	{
 		e.configureNexuizSlider(e, pMin, pMax, pStep, pCvar);
 		l.setText(l, pLabel);
-		e.disabled = l.disabled = l2.disabled = FALSE;
+		e.disabled = l.disabled = FALSE;
 	}
 }
 
@@ -181,28 +173,29 @@ void gameTypeChangeNotifyNexuizServerCreateTab(entity me)
 {
 	// tell the map list to update
 	float gt;
-	entity e, l, l2;
+	entity e, l;
 	gt = MapInfo_CurrentGametype();
 	e = me.sliderFraglimit;
 	l = me.checkboxFraglimit;
-	l2 = me.checkboxFraglimitMapinfo;
 	switch(gt)
 	{
-		case GAME_CATF:
-		case GAME_CTFT:            GameType_ConfigureSliders(e, l, l2, "Win limit:",   1,   20,  1, "capturelimit_override");    break;
-		case GAME_CTF:             GameType_ConfigureSliders(e, l, l2, "Capture limit:",   1,   20,  1, "capturelimit_override");    break;
-		case GAME_DOMINATION:      GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "g_domination_point_limit"); break;
-		case GAME_KEYHUNT:         GameType_ConfigureSliders(e, l, l2, "Point limit:",   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case GAME_KEYHUNT_CA:      GameType_ConfigureSliders(e, l, l2, "Win limit:",   1, 30, 1, "g_khca_point_limit");    break;
-		case GAME_KEYHUNT_FT:      GameType_ConfigureSliders(e, l, l2, "Win limit:",   1, 30, 1, "g_khft_point_limit");    break;
-		case GAME_RACE:            GameType_ConfigureSliders(e, l, l2, "Laps:",            1,   25,  1, "g_race_laps_limit");        break;
-		case GAME_NEXBALL:         GameType_ConfigureSliders(e, l, l2, "Goals:",           1,   50,  1, "g_nexball_goallimit");      break;
-		case GAME_ONSLAUGHT:       GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
-		case GAME_CTS:             GameType_ConfigureSliders(e, l, l2, "Point limit:",    50,  500, 10, "");                         break;
-		case GAME_FREEZETAG:       GameType_ConfigureSliders(e, l, l2, "Win limit:",       1,   50,  1, "g_freeze_winlimit");        break;
-		case GAME_CLANARENA:       GameType_ConfigureSliders(e, l, l2, "Win limit:",       1,   50,  1, "g_clanarena_winlimit");     break;
-		case GAME_TEAM_DEATHMATCH: GameType_ConfigureSliders(e, l, l2, "Frag limit:",      5,  200,  5, "g_tdm_fraglimit");          break;
-		default:                           GameType_ConfigureSliders(e, l, l2, "Frag limit:",      5,  100,  5, "fraglimit_override");       break;
+		case GAME_CATF:            GameType_ConfigureSliders(e, l, "Win limit:",       1,   20,  1, "g_catf_scorelimit");    break;
+		case GAME_CTFT:            GameType_ConfigureSliders(e, l, "Win limit:",       1,   20,  1, "g_ctft_scorelimit");    break;
+		case GAME_CTF:             GameType_ConfigureSliders(e, l, "Capture limit:",   1,   20,  1, "c_ctf_scorelimit");     break;
+		case GAME_DOMINATION:      GameType_ConfigureSliders(e, l, "Point limit:",    50,  500, 10, "g_dom_scorelimit");     break;
+		case GAME_KEYHUNT:         GameType_ConfigureSliders(e, l, "Point limit:",   200, 1500, 50, "g_kh_scorelimit");      break;
+		case GAME_KEYHUNT_CA:      GameType_ConfigureSliders(e, l, "Win limit:",       1,   30,  1, "g_khca_scorelimit");    break;
+		case GAME_KEYHUNT_FT:      GameType_ConfigureSliders(e, l, "Win limit:",       1,   30,  1, "g_khft_scorelimit");    break;
+		case GAME_RACE:            GameType_ConfigureSliders(e, l, "Laps:",            1,   25,  1, "g_race_scorelimit");    break;
+		case GAME_NEXBALL:         GameType_ConfigureSliders(e, l, "Goals:",           1,   50,  1, "g_nexball_scorelimit"); break;
+		case GAME_ONSLAUGHT:       GameType_ConfigureSliders(e, l, "Point limit:",     1,   50,  1, "");                     break;
+		case GAME_CTS:             GameType_ConfigureSliders(e, l, "Point limit:",     1,   50,  1, "");                     break;
+		case GAME_FREEZETAG:       GameType_ConfigureSliders(e, l, "Win limit:",       1,   50,  1, "g_ft_scorelimit");      break;
+		case GAME_CLANARENA:       GameType_ConfigureSliders(e, l, "Win limit:",       1,   50,  1, "g_ca_scorelimit");      break;
+		case GAME_SURVIVE:         GameType_ConfigureSliders(e, l, "Point limit:",     1,   50,  1, "");                     break;
+		case GAME_COOP:            GameType_ConfigureSliders(e, l, "Point limit:",     1,   50,  1, "");                     break;
+		case GAME_TEAM_DEATHMATCH: GameType_ConfigureSliders(e, l, "Frag limit:",      5,  200,  5, "g_tdm_scorelimit");     break;
+		default:                   GameType_ConfigureSliders(e, l, "Frag limit:",      5,  100,  5, "g_scorelimit");         break;
 	}
 	me.mapListBox.refilter(me.mapListBox);
 }
