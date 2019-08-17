@@ -34,7 +34,13 @@ set sv_world_scale 1
 set sv_maxidle_forcespec 120
 set cl_shownames_cos 0.99 "cosinus of show names field angle"
 set g_timelimit 20
+set g_timelimit_suddendeath 5
+set g_timelimit_overtime 2
+set g_timelimit_overtimes 0
 set g_scorelimit 30
 set g_leadlimit 0
+alias timelimit_suddendeath "cvardeprecated timelimit_suddendeath g_timelimit_suddendeath; g_timelimit_suddendeath $1"
+alias timelimit_overtime "cvardeprecated timelimit_overtime g_timelimit_overtime; g_timelimit_overtime $1"
+alias timelimit_overtimes "cvardeprecated timelimit_overtimes g_timelimit_overtimes; g_timelimit_overtimes $1"
 alias timelimit_override "cvardeprecated timelimit_override g_timelimit; g_timelimit $1"
 alias fraglimit_override "cvardeprecated fraglimit_override g_scorelimit; g_scorelimit $1"

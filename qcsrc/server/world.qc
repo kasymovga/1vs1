@@ -683,32 +683,30 @@ float() world_check_rules_run_out_spawns {
 }
 
 
-void world_overtime()
-{
+void(void) world_overtime {
 	// Check first whether normal overtimes could be added before initiating suddendeath mode
-	// - for this timelimit_overtime needs to be >0 of course
+	// - for this g_timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
 	if (GameHook_OvertimeHandle())
 		return;
 
-	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("timelimit_overtimes")) && cvar("timelimit_overtime"))
-	{
+	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("g_timelimit_overtimes")) && cvar("g_timelimit_overtime")) {
 		++checkrules_overtimesadded;
 		//add one more overtime by simply extending the timelimit
 		float tl;
 		tl = cvar("timelimit");
-		tl += cvar("timelimit_overtime");
+		tl += cvar("g_timelimit_overtime");
 		cvar_set("timelimit", ftos(tl));
 		string minutesPlural;
-		if (cvar("timelimit_overtime") == 1)
+		if (cvar("g_timelimit_overtime") == 1)
 			minutesPlural = " ^3minute";
 		else
 			minutesPlural = " ^3minutes";
 
-		GameStatus_Set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("timelimit_overtime")), minutesPlural, " to the game!"), 1);
+		GameStatus_Set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("g_timelimit_overtime")), minutesPlural, " to the game!"), 1);
 	} else if (!checkrules_suddendeathend)
-		checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
+		checkrules_suddendeathend = time + 60 * cvar("g_timelimit_suddendeath");
 }
 
 // set the .winning flag for exactly those players with a given field value
