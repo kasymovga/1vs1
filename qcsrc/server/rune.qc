@@ -1,16 +1,16 @@
 float rune_numspawns;
 
-float g_balance_rune_regen_damage_factor;
-float g_balance_rune_regen_max_health;
-float g_balance_rune_speed_jumpheight;
-float g_balance_rune_speed_moverate;
-float g_balance_rune_speed_atkrate;
-float g_balance_rune_defense_damage_factor;
-float g_balance_rune_ignite_damage_factor;
-float g_balance_rune_vampire_damage_factor;
-float g_balance_rune_vampire_max_health;
-float g_balance_rune_stun_moverate;
-float g_balance_rune_stun_time;
+float g_rune_vitality_damage_factor;
+float g_rune_vitality_max_health;
+float g_rune_speed_jumpheight;
+float g_rune_speed_moverate;
+float g_rune_speed_atkrate;
+float g_rune_defense_damage_factor;
+float g_rune_ignite_damage_factor;
+float g_rune_vampire_damage_factor;
+float g_rune_vampire_max_health;
+float g_rune_stun_moverate;
+float g_rune_stun_time;
 float g_runes_carried_runes_max;
 float g_runes_drop_runes_max;
 float g_runes_respawntime;
@@ -352,7 +352,7 @@ var float() rune_JumpVelocityMod_NextLink;
 float() rune_JumpVelocityMod {
 	float jump_mod = 1;
 	if(self.runes & RUNE_SPEED)
-		jump_mod = g_balance_rune_speed_jumpheight;
+		jump_mod = g_rune_speed_jumpheight;
 
 	return jump_mod * rune_JumpVelocityMod_NextLink();
 }
@@ -361,7 +361,7 @@ var float() rune_WeaponRateFactor_NextLink;
 float() rune_WeaponRateFactor {
 	float f = rune_WeaponRateFactor_NextLink();
 	if(self.runes & RUNE_SPEED)
-		return f * g_balance_rune_speed_atkrate;
+		return f * g_rune_speed_atkrate;
 
 	return f;
 }
@@ -370,10 +370,10 @@ var float() rune_SpeedMod_NextLink;
 float() rune_SpeedMod {
 	float maxspd_mod = rune_SpeedMod_NextLink();
 	if(self.runes & RUNE_SPEED)
-		maxspd_mod = maxspd_mod * g_balance_rune_speed_moverate;
+		maxspd_mod = maxspd_mod * g_rune_speed_moverate;
 
 	if (self.rune_stun)
-		maxspd_mod = maxspd_mod * (1 - (1 - g_balance_rune_stun_moverate) * (max(0, self.rune_stun.alpha) / g_balance_rune_stun_time));
+		maxspd_mod = maxspd_mod * (1 - (1 - g_rune_stun_moverate) * (max(0, self.rune_stun.alpha) / g_rune_stun_time));
 
 	return maxspd_mod;
 }
@@ -395,7 +395,7 @@ void(float health_amount, float _delay, entity _owner) rune_healer_spawn {
 	e.reset = stdproc_remove;
 	e.health = health_amount;
 	if (health_amount > 0)
-		e.max_health = (g_balance_rune_vampire_max_health ? g_balance_rune_vampire_max_health : 999);
+		e.max_health = (g_rune_vampire_max_health ? g_rune_vampire_max_health : 999);
 	else
 		e.max_health = 999;
 
@@ -513,27 +513,27 @@ void(entity targ, entity attacker, float _damage, vector force) rune_DamageForce
 						setmodel(e.enemy, "models/teamfx/electricityarcs_player.md3");
 						e.enemy.viewmodelforclient = targ;
 					}
-					targ.rune_stun.alpha = g_balance_rune_stun_time;
+					targ.rune_stun.alpha = g_rune_stun_time;
 				}
 				if (attacker.runes & RUNE_IGNITE)
-				if ((d = _damage * g_balance_rune_ignite_damage_factor) >= 1)
+				if ((d = _damage * g_rune_ignite_damage_factor) >= 1)
 					fire_add_damage(targ, world, d, 5, DEATH_FIRE);
 
 				if (rune_targ_prev_deadflag == DEAD_NO) {
 					if (attacker.runes & RUNE_VAMPIRE)
-					if ((d = _damage * g_balance_rune_vampire_damage_factor) >= 1)
-					if (attacker.health < g_balance_rune_vampire_max_health)
+					if ((d = _damage * g_rune_vampire_damage_factor) >= 1)
+					if (attacker.health < g_rune_vampire_max_health)
 						rune_healer_spawn(d, 0.5, attacker);
 
 					if (rune_targ_prev_runes & RUNE_DEFENSE)
-					if ((d = _damage * g_balance_rune_defense_damage_factor) >= 1)
+					if ((d = _damage * g_rune_defense_damage_factor) >= 1)
 						defense_attack_spawn(targ, attacker, d);
 				}
 			}
 		}
 		if (targ.runes & RUNE_REGEN)
-		if ((d = _damage * g_balance_rune_regen_damage_factor) >= 1)
-		if (targ.health < g_balance_rune_regen_max_health)
+		if ((d = _damage * g_rune_vitality_damage_factor) >= 1)
+		if (targ.health < g_rune_vitality_max_health)
 			rune_healer_spawn(d, 1, targ);
 	}
 	rune_DamageForceDone_NextLink(targ, attacker, _damage, force);
@@ -583,17 +583,17 @@ void(void) rune_init {
 	precache_sound("misc/minihealth.wav");
 	precache_sound("misc/mediumhealth.wav");
 	precache_sound("misc/bodyimpact1.wav");
-	CACHE_CVAR(g_balance_rune_regen_damage_factor);
-	CACHE_CVAR(g_balance_rune_regen_max_health);
-	CACHE_CVAR(g_balance_rune_speed_jumpheight);
-	CACHE_CVAR(g_balance_rune_speed_moverate);
-	CACHE_CVAR(g_balance_rune_vampire_damage_factor);
-	CACHE_CVAR(g_balance_rune_vampire_max_health);
-	CACHE_CVAR(g_balance_rune_speed_atkrate);
-	CACHE_CVAR(g_balance_rune_defense_damage_factor);
-	CACHE_CVAR(g_balance_rune_ignite_damage_factor);
-	CACHE_CVAR(g_balance_rune_stun_moverate);
-	CACHE_CVAR(g_balance_rune_stun_time);
+	CACHE_CVAR(g_rune_vitality_damage_factor);
+	CACHE_CVAR(g_rune_vitality_max_health);
+	CACHE_CVAR(g_rune_speed_jumpheight);
+	CACHE_CVAR(g_rune_speed_moverate);
+	CACHE_CVAR(g_rune_vampire_damage_factor);
+	CACHE_CVAR(g_rune_vampire_max_health);
+	CACHE_CVAR(g_rune_speed_atkrate);
+	CACHE_CVAR(g_rune_defense_damage_factor);
+	CACHE_CVAR(g_rune_ignite_damage_factor);
+	CACHE_CVAR(g_rune_stun_moverate);
+	CACHE_CVAR(g_rune_stun_time);
 	CACHE_CVAR(g_runes_carried_runes_max);
 	CACHE_CVAR(g_runes_drop_runes_max);
 	CACHE_CVAR(g_runes_respawntime);
