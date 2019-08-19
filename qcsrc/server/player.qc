@@ -11,7 +11,6 @@ float g_respawn_mapsettings_waves;
 float g_respawn_waves;
 float g_voice_flood_spv;
 float g_voice_flood_spv_team;
-float g_jetpack_attenuation;
 float g_fullbrightplayers;
 string g_player_forcemodel;
 string g_player_forcemodel_red;
@@ -2228,7 +2227,6 @@ void() player_init {
 	CACHE_CVAR(g_respawn_waves);
 	CACHE_CVAR(g_voice_flood_spv);
 	CACHE_CVAR(g_voice_flood_spv_team);
-	CACHE_CVAR(g_jetpack_attenuation);
 	CACHE_CVAR(g_fullbrightplayers);
 	CACHE_CVAR_STR(g_player_forcemodel);
 	CACHE_CVAR_STR(g_player_forcemodel_red);
