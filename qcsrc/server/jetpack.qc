@@ -11,11 +11,7 @@ float(entity to, float sf) jetpack_physics_send {
 	return TRUE;
 }
 
-void() jetpack_hook_begin {
-	self.items &~= IT_USING_JETPACK;
-}
-
-void(float fuel_fact) jetpack_hook_end {
+void(float fuel_fact) jetpack_finished {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
 
@@ -50,6 +46,7 @@ void() jetpack_player_effects {
 			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
 			self.modelflags |= MF_ROCKET;
 		}
+		self.items &~= IT_USING_JETPACK;
 	} else {
 		if (self.modelflags & MF_ROCKET) {
 			sound_stop(self, CHAN_TRIGGER);

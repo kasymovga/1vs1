@@ -1,7 +1,6 @@
 float(float maxspd_mod) physics_jetpack {
 	float maxairspd, f;
 	vector wishvel;
-	jetpack_hook_begin();
 	if not(physics_button_jump)
 		return 0;
 
@@ -85,7 +84,7 @@ float(float maxspd_mod) physics_jetpack {
 	if (f > 0 && wishvel != '0 0 0') {
 		physics_velocity = physics_velocity + wishvel * f * frametime;
 		physics_flags &~= FL_ONGROUND;
-		jetpack_hook_end(fvel * f);
+		jetpack_finished(fvel * f);
 	}
 	return 1;
 }

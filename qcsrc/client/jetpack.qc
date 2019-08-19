@@ -11,10 +11,7 @@ float(void) jetpack_using {
 	return 1;
 }
 
-void() jetpack_hook_begin {
-}
-
-void(float fuel_fact) jetpack_hook_end {
+void(float fuel_fact) jetpack_finished {
 }
 
 float(float fvel) jetpack_velocity_mod {
