@@ -25,7 +25,10 @@ csqc_builtins.qc
 ../client-server/physics_spiderbot.qh
 ../client-server/physics_aircraft.qh
 ../client-server/physics_car.qh
+../client-server/physics_jetpack.qh
+../client-server/jetpack.qh
 ../client-server/rune.qh
+jetpack.qh
 physics.qh
 interpolate.qh
 teamradar.qh
@@ -119,10 +122,12 @@ bgmscript.qc
 ../client-server/physics_spiderbot.qc
 ../client-server/physics_aircraft.qc
 ../client-server/physics_car.qc
+../client-server/physics_jetpack.qc
 physics.qc
 physics_spiderbot.qc
 physics_aircraft.qc
 physics_car.qc
+jetpack.qc
 menu.qc
 mouse.qc
 shownames.qc

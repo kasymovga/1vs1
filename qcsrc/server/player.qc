@@ -1448,7 +1448,7 @@ void() player_think {
 		self.items &~= self.items_added;
 		self.items_added = 0;
 		if(self.items & IT_JETPACK)
-			if(self.items & IT_FUEL_REGEN || self.ammo_fuel >= 0.01)
+			if(self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
 				self.items_added |= IT_FUEL;
 
 		self.items |= self.items_added;

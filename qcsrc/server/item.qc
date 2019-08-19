@@ -1278,12 +1278,13 @@ void spawnfunc_target_items (void)
 
 void spawnfunc_item_jetpack(void)
 {
-	if(g_grappling_hook || start_items & IT_JETPACK) {
+	if (start_items & IT_JETPACK) {
 		remove(self);
 		return;
 	}
 	self.ammo_fuel = g_pickup_fuel_jetpack;
 	item_start ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	jetpack_enable();
 }
 
 //Q1 compat
@@ -1528,15 +1529,6 @@ void item_init()
 		}
 	}
 
-	if (g_jetpack) {
-		start_items |= IT_JETPACK;
-		if (g_use_ammunition) {
-			g_grappling_hook = 0; // these two can't coexist, as they use the same button
-			start_items |= IT_FUEL_REGEN;
-			start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-			warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-		}
-	}
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_cells = max(0, start_ammo_cells);

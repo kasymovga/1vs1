@@ -125,7 +125,7 @@ float weapon_hook(float req)
 	else if (req == WR_THINK)
 	{
 		float button_hook = self.BUTTON_HOOK;
-		if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
+		if (self.BUTTON_ATCK || button_hook)
 		{
 			if(!self.hook)
 			if not(self.hook_state & HOOK_WAITING_FOR_RELEASE)
@@ -197,7 +197,7 @@ float weapon_hook(float req)
 		if (self.BUTTON_CROUCH)
 		{
 			self.hook_state &~= HOOK_PULLING;
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
+			if (self.BUTTON_ATCK || button_hook)
 				self.hook_state &~= HOOK_RELEASING;
 			else
 				self.hook_state |= HOOK_RELEASING;
@@ -207,7 +207,7 @@ float weapon_hook(float req)
 			self.hook_state |= HOOK_PULLING;
 			self.hook_state &~= HOOK_RELEASING;
 
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && button_hook))
+			if (self.BUTTON_ATCK || button_hook)
 			{
 				// already fired
 				if(self.hook)

@@ -304,7 +304,7 @@ void(void) vehicle_car_init {
 }
 
 float(entity to, float sf) vehicle_car_physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC_CAR);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_CAR);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed_stop);

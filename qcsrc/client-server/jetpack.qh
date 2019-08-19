@@ -1,0 +1,3 @@
+void(float fuel_fact) jetpack_hook;
+float(float fvel) jetpack_velocity_mod;
+float(void) jetpack_using;

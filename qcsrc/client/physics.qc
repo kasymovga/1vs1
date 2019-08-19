@@ -7,9 +7,9 @@ float physics_button_crouch;
 float pmove_onground;
 float physics_maxspeedmod;
 float physics_jump_velocity_factor;
-float physics_can_use_jetpack;
 float physics_start_teleport_time;
 float physics_start_crouch;
+float physics_start_flags_jumpreleased;
 
 vector vehicle_adjust_view() {
 	makevectors(view_angles);
@@ -34,17 +34,6 @@ void(void) physics_check_ground_hook {
 }
 
 void(void) physics_check_water_jump_hook {
-}
-
-float(void) physics_use_jetpack {
-	return (physics_can_use_jetpack && (input_buttons & 32));
-}
-
-float physics_jetpack_velocity_mod(float fvel) {
-	return 1;
-}
-
-void(float fuel_fact) physics_jetpack_hook {
 }
 
 void(void) physics_on_jump_hook {
@@ -94,6 +83,11 @@ vector CSQCPhysic_SetViewOrg()
 		physics_teleport_time = physics_start_teleport_time;
 		physics_deadflag = player_deadflag;
 		physics_cantjump = (physics_deadflag != DEAD_NO);
+		if (physics_start_flags_jumpreleased)
+			physics_flags = FL_JUMPRELEASED;
+		else
+			physics_flags = 0;
+
 		if (physics_plug_pre)
 			physics_plug_pre();
 
@@ -225,11 +219,6 @@ void Ent_Physic(float isnew)
 		sv_warsowbunny_backtosideratio = ReadCoord();
 		sv_jumpvelocity = ReadCoord();
 		sv_friction_on_land = ReadCoord();
-		g_jetpack_acceleration_side = ReadCoord();
-		g_jetpack_acceleration_up = ReadCoord();
-		g_jetpack_antigravity = ReadCoord();
-		g_jetpack_maxspeed_side = ReadCoord();
-		g_jetpack_maxspeed_up = ReadCoord();
 		float switches = ReadByte();
 		sv_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
@@ -282,9 +271,9 @@ void Ent_Physic(float isnew)
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
 		physics_is_player = f & 8;
-		physics_ladder = f & 32;	
-		physics_ladder_iswater = f & 64;	
-		physics_can_use_jetpack = f & 128;
+		physics_ladder = f & 32;
+		physics_ladder_iswater = f & 64;
+		physics_start_flags_jumpreleased = f & 128;
 		physics_start_crouch = f & 256;
 		if (physics_ladder && physics_ladder_iswater) {
 			physics_ladder_speed = ReadCoord();

@@ -91,33 +91,6 @@ void(void) physics_on_crouch_hook {
 	player_anim_set(self, anim_duck, FALSE, TRUE, TRUE);
 }
 
-float(void) physics_use_jetpack {
-	float trying_use_jetpack = (self.items & IT_JETPACK) && self.BUTTON_HOOK;
-	// we get here if we ran out of ammo
-	if (trying_use_jetpack && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO))
-		return TRUE;
-
-	if(trying_use_jetpack && !(buttons_prev & 32))
-		sprint(self, "You don't have any fuel for the ^2Jetpack\n");
-	return FALSE;
-}
-
-void(float fuel_fact) physics_jetpack_hook {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
-	self.items |= IT_USING_JETPACK;
-
-	// jetpack also inhibits health regeneration, but only for 1 second
-	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
-}
-
-float(float fvel) physics_jetpack_velocity_mod {
-	if(g_jetpack_fuel && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
-		return min(1, self.ammo_fuel / (g_jetpack_fuel * frametime * fvel));
-
-	return 1;
-}
-
 .string lastclassname;
 .float last_maxspeedmod;
 float(void) physics_max_speed_mod {
@@ -166,13 +139,11 @@ float(void) physics_max_speed_mod {
 }
 
 .float last_physics_ladder;
-.float last_can_use_jetpack;
 .float buttons_old;
 .vector v_angle_old;
 .vector movement_old;
 void(void) physics_frame_end_hook {
 	self.last_physics_ladder = physics_ladder;
-	self.last_can_use_jetpack = (self.items & IT_JETPACK) && (!g_jetpack_fuel || self.ammo_fuel >= 0.01 || (self.items & IT_UNLIMITED_WEAPON_AMMO));
 }
 
 .float() PlayerPhysplug;
@@ -336,39 +307,34 @@ float(string s) physics_cvar {
 
 float physics_initiated;
 void(void) physics_init {
-#define PHYSIC_CACHE_CVAR(x) x = physics_cvar(#x)
+#define PHYSICS_CACHE_CVAR(x) x = physics_cvar(#x)
 	//Common
-	PHYSIC_CACHE_CVAR(sv_stepheight);
-	PHYSIC_CACHE_CVAR(sv_gravity);
-	PHYSIC_CACHE_CVAR(sv_maxairspeed);
-	PHYSIC_CACHE_CVAR(sv_maxspeed);
-	PHYSIC_CACHE_CVAR(sv_friction);
-	PHYSIC_CACHE_CVAR(sv_accelerate);
-	PHYSIC_CACHE_CVAR(sv_airaccelerate);
-	PHYSIC_CACHE_CVAR(sv_airaccel_sideways_friction);
-	PHYSIC_CACHE_CVAR(sv_airaccel_qw);
-	PHYSIC_CACHE_CVAR(sv_stopspeed);
-	PHYSIC_CACHE_CVAR(sv_airstopaccelerate);
-	PHYSIC_CACHE_CVAR(sv_airstrafeaccelerate);
-	PHYSIC_CACHE_CVAR(sv_maxairstrafespeed);
-	PHYSIC_CACHE_CVAR(sv_aircontrol);
-	PHYSIC_CACHE_CVAR(sv_warsowbunny_airforwardaccel);
-	PHYSIC_CACHE_CVAR(sv_warsowbunny_accel);
-	PHYSIC_CACHE_CVAR(sv_warsowbunny_topspeed);
-	PHYSIC_CACHE_CVAR(sv_warsowbunny_turnaccel);
-	PHYSIC_CACHE_CVAR(sv_warsowbunny_backtosideratio);
-	PHYSIC_CACHE_CVAR(sv_jumpvelocity);
-	PHYSIC_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
-	PHYSIC_CACHE_CVAR(sv_friction_on_land);
+	PHYSICS_CACHE_CVAR(sv_stepheight);
+	PHYSICS_CACHE_CVAR(sv_gravity);
+	PHYSICS_CACHE_CVAR(sv_maxairspeed);
+	PHYSICS_CACHE_CVAR(sv_maxspeed);
+	PHYSICS_CACHE_CVAR(sv_friction);
+	PHYSICS_CACHE_CVAR(sv_accelerate);
+	PHYSICS_CACHE_CVAR(sv_airaccelerate);
+	PHYSICS_CACHE_CVAR(sv_airaccel_sideways_friction);
+	PHYSICS_CACHE_CVAR(sv_airaccel_qw);
+	PHYSICS_CACHE_CVAR(sv_stopspeed);
+	PHYSICS_CACHE_CVAR(sv_airstopaccelerate);
+	PHYSICS_CACHE_CVAR(sv_airstrafeaccelerate);
+	PHYSICS_CACHE_CVAR(sv_maxairstrafespeed);
+	PHYSICS_CACHE_CVAR(sv_aircontrol);
+	PHYSICS_CACHE_CVAR(sv_warsowbunny_airforwardaccel);
+	PHYSICS_CACHE_CVAR(sv_warsowbunny_accel);
+	PHYSICS_CACHE_CVAR(sv_warsowbunny_topspeed);
+	PHYSICS_CACHE_CVAR(sv_warsowbunny_turnaccel);
+	PHYSICS_CACHE_CVAR(sv_warsowbunny_backtosideratio);
+	PHYSICS_CACHE_CVAR(sv_jumpvelocity);
+	PHYSICS_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
+	PHYSICS_CACHE_CVAR(sv_friction_on_land);
 	CACHE_CVAR(g_stepairslowdown);
-	CACHE_CVAR(g_jetpack_acceleration_side);
-	CACHE_CVAR(g_jetpack_acceleration_up);
-	CACHE_CVAR(g_jetpack_antigravity);
-	CACHE_CVAR(g_jetpack_maxspeed_side);
-	CACHE_CVAR(g_jetpack_maxspeed_up);
-	PHYSIC_CACHE_CVAR(sv_slicksurfaces_allowjump);
-	PHYSIC_CACHE_CVAR(sv_pogostick);
-	PHYSIC_CACHE_CVAR(sv_disable_crouch);
+	PHYSICS_CACHE_CVAR(sv_slicksurfaces_allowjump);
+	PHYSICS_CACHE_CVAR(sv_pogostick);
+	PHYSICS_CACHE_CVAR(sv_disable_crouch);
 	CACHE_CVAR(g_walljump);
 	CACHE_CVAR(g_walljump_delay);
 	CACHE_CVAR(g_walljump_force);
@@ -382,7 +348,6 @@ void(void) physics_init {
 	CACHE_CVAR(g_dodging_horiz_speed);
 	CACHE_CVAR(g_dodging_up_speed);
 	//Server-side only
-	CACHE_CVAR(g_jetpack_fuel);
 	CACHE_CVAR(speedmeter);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
@@ -403,7 +368,7 @@ void(void) physics_init {
 }
 
 float(entity to, float sf) physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSIC);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS);
 	entity oldself = self;
 	self = self.owner;
 	float dodging_flags;
@@ -412,7 +377,7 @@ float(entity to, float sf) physics_send {
 		if (self.classname == "player") sf |= 8;
 		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
-		if (self.last_can_use_jetpack) sf |= 128;
+		if (self.flags & FL_JUMPRELEASED) sf |= 128;
 		if (self.crouch) sf |= 256;
 		if (self.last_maxspeedmod != 1) sf |= 512;
 		if (self.movetype != MOVETYPE_QCWALK) sf |= 1024;
@@ -457,11 +422,6 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_friction_on_land);
-		WriteCoord(MSG_ENTITY, g_jetpack_acceleration_side);
-		WriteCoord(MSG_ENTITY, g_jetpack_acceleration_up);
-		WriteCoord(MSG_ENTITY, g_jetpack_antigravity);
-		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_side);
-		WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_up);
 		float switches = (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)

@@ -104,9 +104,11 @@ damageindicator.qh
 ../client-server/physics_spiderbot.qh
 ../client-server/physics_aircraft.qh
 ../client-server/physics_car.qh
+../client-server/physics_jetpack.qh
+../client-server/jetpack.qh
 physics.qh
 minstagib.qh
-
+jetpack.qh
 client.qh
 player.qh
 spectator.qh
@@ -187,8 +189,9 @@ tdm.qc
 gametype.qc
 rune.qc
 ../client-server/physics.qc
+../client-server/physics_jetpack.qc
 physics.qc
-
+jetpack.qc
 // tZork's libs
 ../client-server/movelib.qc
 ../client-server/physics_spiderbot.qc

@@ -470,10 +470,10 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_RANDOMSEED] = Ent_RandomSeed;
 	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
 	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
-	ent_parsers[ENT_CLIENT_PHYSIC] = Ent_Physic;
-	ent_parsers[ENT_CLIENT_PHYSIC_SPIDERBOT] = Ent_PhysicSpiderbot;
-	ent_parsers[ENT_CLIENT_PHYSIC_AIRCRAFT] = Ent_PhysicAircraft;
-	ent_parsers[ENT_CLIENT_PHYSIC_CAR] = Ent_PhysicCar;
+	ent_parsers[ENT_CLIENT_PHYSICS] = Ent_Physic;
+	ent_parsers[ENT_CLIENT_PHYSICS_SPIDERBOT] = Ent_PhysicSpiderbot;
+	ent_parsers[ENT_CLIENT_PHYSICS_AIRCRAFT] = Ent_PhysicAircraft;
+	ent_parsers[ENT_CLIENT_PHYSICS_CAR] = Ent_PhysicCar;
 	ent_parsers[ENT_CLIENT_GAMESTATUS] = Ent_GameStatus;
 	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
 	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
@@ -489,6 +489,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
 	ent_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;
 	ent_parsers[ENT_CLIENT_DLC_SOUND] = Ent_DLCSound;
+	ent_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
 	SetConWidthHeight();
 	sbar_fontsize = '1 1 0';
 	string s = strcat(cvar_string("cmdline"), " ", cvar_string("gl_info_renderer"), " ", cvar_string("gl_info_version"));

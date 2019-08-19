@@ -1,0 +1,66 @@
+entity jetpack_physics;
+
+float(entity to, float sf) jetpack_physics_send {
+	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_JETPACK);
+	WriteCoord(MSG_ENTITY, g_jetpack_acceleration_side);
+	WriteCoord(MSG_ENTITY, g_jetpack_acceleration_up);
+	WriteCoord(MSG_ENTITY, g_jetpack_antigravity);
+	WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_side);
+	WriteCoord(MSG_ENTITY, g_jetpack_maxspeed_up);
+	return TRUE;
+}
+
+void(float fuel_fact) jetpack_hook {
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
+
+	self.items |= IT_USING_JETPACK;
+	// jetpack also inhibits health regeneration, but only for 1 second
+	self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
+}
+
+float(float fvel) jetpack_velocity_mod {
+	if(g_jetpack_fuel && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		return min(1, self.ammo_fuel / (g_jetpack_fuel * frametime * fvel));
+
+	return 1;
+}
+
+float(void) jetpack_using {
+	if (self.items & IT_JETPACK) {
+		if (!g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO)
+			return TRUE;
+
+		if not(buttons_prev & 2)
+		if (self.items & IT_FUEL_REGEN)
+			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+	}
+	return FALSE;
+}
+
+float jetpack_enabled;
+void(void) jetpack_enable {
+	if (jetpack_enabled)
+		return;
+
+	jetpack_physics = spawn();
+	net_link_entity(jetpack_physics, FALSE, 0, jetpack_physics_send);
+	CACHE_CVAR(g_jetpack_acceleration_side);
+	CACHE_CVAR(g_jetpack_acceleration_up);
+	CACHE_CVAR(g_jetpack_antigravity);
+	CACHE_CVAR(g_jetpack_maxspeed_side);
+	CACHE_CVAR(g_jetpack_maxspeed_up);
+	CACHE_CVAR(g_jetpack_fuel);
+	physics_player_plug = physics_jetpack;
+}
+
+void(void) jetpack_init {
+	CACHE_CVAR(g_jetpack);
+	if not(g_jetpack)
+		return;
+
+	jetpack_enable();
+	start_items |= (IT_JETPACK | IT_FUEL_REGEN);
+	start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+	warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+}

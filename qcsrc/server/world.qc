@@ -208,7 +208,6 @@ void(void) world_static_init {
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
 	CACHE_CVAR(sv_foginterval);
-	CACHE_CVAR(g_jetpack);
 	CACHE_CVAR(g_norecoil);
 	Warmup_Init();
 	CACHE_CVAR(g_warmup_limit);
@@ -245,6 +244,7 @@ void(void) world_static_init {
 	sysinfo_init();
 	footsteps_init();
 	udppunchhole_init();
+	jetpack_init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

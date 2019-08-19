@@ -614,8 +614,8 @@ void(void) physics_check_water_jump {
 };
 
 void(void) physics_player {
-	local vector wishvel, wishdir, v;
-	local float wishspeed, f, maxspd_mod, maxairspd, airaccel;
+	vector wishvel, wishdir, v;
+	float wishspeed, f, maxspd_mod, maxairspd, airaccel;
 	if (g_dodging) {
 		if (self.lastwj > 0)
 			self.lastwj -= frametime;
@@ -634,9 +634,9 @@ void(void) physics_player {
 		self.last_dodging_time -= frametime;
 	
 	physics_frame_begin_hook();
-    if(physics_plug)
-        if(physics_plug())
-            return;
+	if(physics_plug)
+	if(physics_plug())
+		return;
 
 	physics_update_status(TRUE);
 	if (physics_button_crouch)
@@ -689,6 +689,9 @@ void(void) physics_player {
 		if (physics_waterlevel == WATERLEVEL_SWIMMING)
 			physics_check_water_jump();
 	}
+	if (physics_player_plug)
+	if (physics_player_plug(maxspd_mod))
+		goto end;
 
 	if (physics_flags & FL_WATERJUMP )
 	{
@@ -699,9 +702,38 @@ void(void) physics_player {
 			physics_flags &~= FL_WATERJUMP;
 			self.teleport_time = 0;
 		}
-	}
-	else if (physics_movetype == MOVETYPE_NOCLIP || physics_movetype == MOVETYPE_FLY)
-	{
+	} else if (physics_flags & FL_ONGROUND) {
+		// walking
+		makevectors(physics_v_angle_y * '0 1 0');
+		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
+		if(!(physics_lastflags & FL_ONGROUND)) {
+			physics_landing_hook();
+		}
+		v = physics_velocity;
+		v_z = 0;
+		f = vlen(v);
+		if(f > 0) {
+			if (f < sv_stopspeed) {
+				f = 1 - frametime * (sv_stopspeed / f) * sv_friction;
+			} else
+				f = 1 - frametime * sv_friction;
+			if (f > 0)
+				physics_velocity = physics_velocity * f;
+			else
+				physics_velocity = '0 0 0';
+		}
+		// acceleration
+		wishdir = normalize(wishvel);
+		wishspeed = vlen(wishvel);
+		if (wishspeed > sv_maxspeed*maxspd_mod)
+			wishspeed = sv_maxspeed*maxspd_mod;
+
+		if (physics_crouch)
+			wishspeed = wishspeed * 0.5;
+
+		if (physics_teleport_time <= 0)
+			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
+	} else if (physics_movetype == MOVETYPE_NOCLIP || physics_movetype == MOVETYPE_FLY) {
 		// noclipping or flying
 		physics_flags &~= FL_ONGROUND;
 
@@ -783,147 +815,6 @@ void(void) physics_player {
 			// water acceleration
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 		}
-	}
-	else if (physics_use_jetpack())
-	{
-		//makevectors(self.v_angle_y * '0 1 0');
-		makevectors(physics_v_angle);
-		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
-		// add remaining speed as Z component
-		maxairspd = sv_maxairspeed*max(1, maxspd_mod);
-		// fix speedhacks :P
-		wishvel = normalize(wishvel) * min(vlen(wishvel) / maxairspd, 1);
-		// add the unused velocity as up component
-		wishvel_z = 0;
-
-		// if(self.BUTTON_JUMP)
-			wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
-
-		// it is now normalized, so...
-		float a_side, a_up, a_add, a_diff;
-		a_side = g_jetpack_acceleration_side;
-		a_up = g_jetpack_acceleration_up;
-		a_add = g_jetpack_antigravity * sv_gravity;
-
-		wishvel_x *= a_side;
-		wishvel_y *= a_side;
-		wishvel_z *= a_up;
-		wishvel_z += a_add;
-
-		float best;
-		best = 0;
-		//////////////////////////////////////////////////////////////////////////////////////
-		// finding the maximum over all vectors of above form
-		// with wishvel having an absolute value of 1
-		//////////////////////////////////////////////////////////////////////////////////////
-		// we're finding the maximum over
-		//   f(a_side, a_up, a_add, z) := a_side * (1 - z^2) + (a_add + a_up * z)^2;
-		// for z in the range from -1 to 1
-		//////////////////////////////////////////////////////////////////////////////////////
-		// maximum is EITHER attained at the single extreme point:
-		a_diff = a_side * a_side - a_up * a_up;
-		if(a_diff != 0)
-		{
-			f = a_add * a_up / a_diff; // this is the zero of diff(f(a_side, a_up, a_add, z), z)
-			if(f > -1 && f < 1) // can it be attained?
-			{
-				best = (a_diff + a_add * a_add) * (a_diff + a_up * a_up) / a_diff;
-				//print("middle\n");
-			}
-		}
-		// OR attained at z = 1:
-		f = (a_up + a_add) * (a_up + a_add);
-		if(f > best)
-		{
-			best = f;
-			//print("top\n");
-		}
-		// OR attained at z = -1:
-		f = (a_up - a_add) * (a_up - a_add);
-		if(f > best)
-		{
-			best = f;
-			//print("bottom\n");
-		}
-		best = sqrt(best);
-		//////////////////////////////////////////////////////////////////////////////////////
-
-		//print("best possible acceleration: ", ftos(best), "\n");
-
-		float fxy, fz;
-		fxy = bound(0, 1 - (physics_velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / g_jetpack_maxspeed_side, 1);
-		if(wishvel_z - sv_gravity > 0)
-			fz = bound(0, 1 - physics_velocity_z / g_jetpack_maxspeed_up, 1);
-		else
-			fz = bound(0, 1 + physics_velocity_z / g_jetpack_maxspeed_up, 1);
-
-		float fvel;
-		fvel = vlen(wishvel);
-		wishvel_x *= fxy;
-		wishvel_y *= fxy;
-		wishvel_z = (wishvel_z - sv_gravity) * fz + sv_gravity;
-
-		fvel = min(1, vlen(wishvel) / best);
-		f = physics_jetpack_velocity_mod(fvel);
-
-		//print("this acceleration: ", ftos(vlen(wishvel) * f), "\n");
-
-		if (f > 0 && wishvel != '0 0 0')
-		{
-			physics_velocity = physics_velocity + wishvel * f * frametime;
-			physics_flags &~= FL_ONGROUND;
-			physics_jetpack_hook(fvel * f);
-		}
-	}
-	else if (physics_flags & FL_ONGROUND)
-	{
-		// walking
-		makevectors(physics_v_angle_y * '0 1 0');
-		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
-		if(!(physics_lastflags & FL_ONGROUND)) {
-			physics_landing_hook();
-		}
-
-#ifdef LETS_TEST_FTEQCC
-		if(physics_velocity_x || physics_velocity_y)
-		{
-			// good
-		} else {
-			if(physics_velocity_x)
-				checkclient();
-
-			if(physics_velocity_y)
-				checkclient();
-		}
-#endif
-
-		v = physics_velocity;
-		v_z = 0;
-		f = vlen(v);
-		if(f > 0)
-		{
-			if (f < sv_stopspeed)
-			{
-				f = 1 - frametime * (sv_stopspeed / f) * sv_friction;
-			}
-			else
-				f = 1 - frametime * sv_friction;
-			if (f > 0)
-				physics_velocity = physics_velocity * f;
-			else
-				physics_velocity = '0 0 0';
-		}
-
-		// acceleration
-		wishdir = normalize(wishvel);
-		wishspeed = vlen(wishvel);
-
-		if (wishspeed > sv_maxspeed*maxspd_mod)
-			wishspeed = sv_maxspeed*maxspd_mod;
-		if (physics_crouch)
-			wishspeed = wishspeed * 0.5;
-		if (physics_teleport_time <= 0)
-			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 	}
 	else
 	{
