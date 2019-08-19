@@ -691,9 +691,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		else if(t == "frustrating")
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_FRUSTRATING;
-		}
-		else if(t == "type")
-		{
+		} else if(t == "type" || t == "gametype") {
 			t = str_car(s); s = str_cdr(s);
 			f = MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(t));
 			MapInfo_Map_supportedGametypes |= f;
