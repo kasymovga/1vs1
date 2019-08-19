@@ -85,8 +85,8 @@ void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageFor
 	powerup_invincible_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
-var float() powerup_invincible_PlayerEffectsHandle_NextLink;
-float() powerup_invincible_PlayerEffectsHandle {
+var void() powerup_invincible_player_effects_next_link;
+void() powerup_invincible_player_effects {
 	if (self.items & IT_INVINCIBLE) {
 		play_countdown(self.invincible_finished, "misc/poweroff.wav");
 		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
@@ -101,7 +101,7 @@ float() powerup_invincible_PlayerEffectsHandle {
 		} else if (time > self.invincible_finished + 1) //1 second for fade effect on client
 			self.invincible_finished = 0;
 	}
-	return powerup_invincible_PlayerEffectsHandle_NextLink();
+	powerup_invincible_player_effects_next_link();
 }
 
 float powerup_invincible_init_done;
@@ -112,8 +112,8 @@ void() powerup_invincible_init {
 	powerup_invincible_init_done = 1;
 	powerup_init();
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
-	powerup_invincible_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
-	GameHookChain_PlayerEffectsHandle = powerup_invincible_PlayerEffectsHandle;
+	powerup_invincible_player_effects_next_link = gamehook_chain_player_effects;
+	gamehook_chain_player_effects = powerup_invincible_player_effects;
 	powerup_invincible_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = powerup_invincible_DamageForceModsSet;
 }
@@ -133,8 +133,8 @@ void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForce
 	powerup_strength_DamageForceModsSet_NextLink(targ, attacker, deathtype);
 }
 
-var float() powerup_strength_PlayerEffectsHandle_NextLink;
-float() powerup_strength_PlayerEffectsHandle {
+var void() powerup_strength_player_effects_next_link;
+void() powerup_strength_player_effects {
 	if (self.items & IT_STRENGTH) {
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
 		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
@@ -149,11 +149,11 @@ float() powerup_strength_PlayerEffectsHandle {
 		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
 			self.strength_finished = 0;
 	}
-	return powerup_strength_PlayerEffectsHandle_NextLink();
+	powerup_strength_player_effects_next_link();
 }
 
-var float() powerup_strength_akimbo_PlayerEffectsHandle_NextLink;
-float() powerup_strength_akimbo_PlayerEffectsHandle {
+var void() powerup_strength_akimbo_player_effects_next_link;
+void() powerup_strength_akimbo_player_effects {
 	if (self.items & IT_STRENGTH) {
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
 		if (time > self.strength_finished) {
@@ -167,7 +167,7 @@ float() powerup_strength_akimbo_PlayerEffectsHandle {
 		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
 			self.strength_finished = 0;
 	}
-	return powerup_strength_akimbo_PlayerEffectsHandle_NextLink();
+	powerup_strength_akimbo_player_effects_next_link();
 }
 
 float powerup_strength_init_done;
@@ -179,12 +179,12 @@ void() powerup_strength_init {
 	powerup_init();
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
 	if (g_powerup_strength_akimbo) {
-		powerup_strength_akimbo_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
-		GameHookChain_PlayerEffectsHandle = powerup_strength_akimbo_PlayerEffectsHandle;
+		powerup_strength_akimbo_player_effects_next_link = gamehook_chain_player_effects;
+		gamehook_chain_player_effects = powerup_strength_akimbo_player_effects;
 		return;
 	}
-	powerup_strength_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
-	GameHookChain_PlayerEffectsHandle = powerup_strength_PlayerEffectsHandle;
+	powerup_strength_player_effects_next_link = gamehook_chain_player_effects;
+	gamehook_chain_player_effects = powerup_strength_player_effects;
 	powerup_strength_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = powerup_strength_DamageForceModsSet;
 }
@@ -197,8 +197,8 @@ float() powerup_speed_WeaponRateFactor {
 	return powerup_speed_WeaponRateFactor_NextLink();
 }
 
-var float() powerup_speed_PlayerEffectsHandle_NextLink;
-float() powerup_speed_PlayerEffectsHandle {
+var void() powerup_speed_player_effects_next_link;
+void() powerup_speed_player_effects {
 	if (self.items & IT_SPEED) {
 		play_countdown(self.speed_finished, "misc/poweroff.wav");
 		if (time > self.speed_finished) {
@@ -212,8 +212,7 @@ float() powerup_speed_PlayerEffectsHandle {
 		} else if (time > self.speed_finished + 1) //1 second for fade effect on client
 			self.speed_finished = 0;
 	}
-
-	return powerup_speed_PlayerEffectsHandle_NextLink();
+	powerup_speed_player_effects_next_link();
 }
 
 var float() powerup_speed_SpeedMod_NextLink;
@@ -233,15 +232,15 @@ void() powerup_speed_init {
 	powerup_init();
 	powerup_speed_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = powerup_speed_SpeedMod;
-	powerup_speed_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
-	GameHookChain_PlayerEffectsHandle = powerup_speed_PlayerEffectsHandle;
+	powerup_speed_player_effects_next_link = gamehook_chain_player_effects;
+	gamehook_chain_player_effects = powerup_speed_player_effects;
 	powerup_speed_WeaponRateFactor_NextLink = GameHookChain_WeaponRateFactor;
 	GameHookChain_WeaponRateFactor = powerup_speed_WeaponRateFactor;
 	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
 }
 
-var float() powerup_invisibility_PlayerEffectsHandle_NextLink;
-float() powerup_invisibility_PlayerEffectsHandle {
+var void() powerup_invisibility_player_effects_next_link;
+void() powerup_invisibility_player_effects {
 	if (self.items & IT_INVISIBILITY) {
 		play_countdown(self.invisibility_finished, "misc/poweroff.wav");
 		if (time > self.invisibility_finished) {
@@ -255,7 +254,7 @@ float() powerup_invisibility_PlayerEffectsHandle {
 		} else if (time > self.invisibility_finished + 1) //1 second for fade effect on client
 			self.invisibility_finished = 0;
 	}
-	return powerup_invisibility_PlayerEffectsHandle_NextLink();
+	powerup_invisibility_player_effects_next_link();
 }
 
 var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_NextLink;
@@ -275,7 +274,7 @@ void() powerup_invisibility_init {
 	powerup_init();
 	powerup_invisibility_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = powerup_invisibility_PlayerAlphaMod;
-	powerup_invisibility_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
-	GameHookChain_PlayerEffectsHandle = powerup_invisibility_PlayerEffectsHandle;
+	powerup_invisibility_player_effects_next_link = gamehook_chain_player_effects;
+	gamehook_chain_player_effects = powerup_invisibility_player_effects;
 	addstat(STAT_INVISIBILITY_FINISHED, AS_FLOAT, invisibility_finished);
 }

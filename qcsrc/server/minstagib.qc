@@ -254,13 +254,6 @@ float minstagib_ItemForbidden() {
 	return minstagib_ItemForbidden_NextLink();
 }
 
-var float() minstagib_PlayerEffectsHandle_NextLink;
-float minstagib_PlayerEffectsHandle() {
-	minstagib_PlayerEffectsHandle_NextLink();
-	self.effects |= EF_FULLBRIGHT;
-	return TRUE;
-}
-
 var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) minstagib_PlayerDamageHandle_NextLink;
 float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if ((deathtype == DEATH_FALL)  ||
@@ -383,8 +376,6 @@ void minstagib_init() {
 	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
 	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;
 	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
-	minstagib_PlayerEffectsHandle_NextLink = GameHookChain_PlayerEffectsHandle;
-	GameHookChain_PlayerEffectsHandle = minstagib_PlayerEffectsHandle;
 	minstagib_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
 	minstagib_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
