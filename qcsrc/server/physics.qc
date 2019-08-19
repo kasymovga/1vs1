@@ -211,7 +211,6 @@ void(void) physics_frame_begin_hook {
 		self.angles_y = self.v_angle_y;
 		self.angles_z = 0;
 	}
-	self.items &~= IT_USING_JETPACK;
 	physics_button_crouch = self.BUTTON_CROUCH;
 }
 

@@ -1,4 +1,5 @@
 entity jetpack_physics;
+float g_jetpack_attenuation;
 
 float(entity to, float sf) jetpack_physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_JETPACK);
@@ -10,7 +11,11 @@ float(entity to, float sf) jetpack_physics_send {
 	return TRUE;
 }
 
-void(float fuel_fact) jetpack_hook {
+void() jetpack_hook_begin {
+	self.items &~= IT_USING_JETPACK;
+}
+
+void(float fuel_fact) jetpack_hook_end {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_fuel -= g_jetpack_fuel * frametime * fuel_fact;
 
@@ -38,11 +43,28 @@ float(void) jetpack_using {
 	return FALSE;
 }
 
+var void() jetpack_player_effects_next_link;
+void() jetpack_player_effects {
+	if((self.items & IT_USING_JETPACK) && !self.deadflag) {
+		if not(self.modelflags & MF_ROCKET) {
+			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
+			self.modelflags |= MF_ROCKET;
+		}
+	} else {
+		if (self.modelflags & MF_ROCKET) {
+			sound_stop(self, CHAN_TRIGGER);
+			self.modelflags &~= MF_ROCKET;
+		}
+	}
+	jetpack_player_effects_next_link();
+}
+
 float jetpack_enabled;
 void(void) jetpack_enable {
 	if (jetpack_enabled)
 		return;
 
+	jetpack_enabled = TRUE;
 	jetpack_physics = spawn();
 	net_link_entity(jetpack_physics, FALSE, 0, jetpack_physics_send);
 	CACHE_CVAR(g_jetpack_acceleration_side);
@@ -51,7 +73,10 @@ void(void) jetpack_enable {
 	CACHE_CVAR(g_jetpack_maxspeed_side);
 	CACHE_CVAR(g_jetpack_maxspeed_up);
 	CACHE_CVAR(g_jetpack_fuel);
+	CACHE_CVAR(g_jetpack_attenuation);
 	physics_player_plug = physics_jetpack;
+	jetpack_player_effects_next_link = gamehook_chain_player_effects;
+	gamehook_chain_player_effects = jetpack_player_effects;
 }
 
 void(void) jetpack_init {

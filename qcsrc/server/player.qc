@@ -210,21 +210,6 @@ void(float finished, string samp) play_countdown {
 }
 
 void() player_effects {
-	if((self.items & IT_USING_JETPACK) && !self.deadflag)
-	{
-		if not(self.modelflags & MF_ROCKET) {
-			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
-			self.modelflags |= MF_ROCKET;
-		}
-	}
-	else
-	{
-		if (self.modelflags & MF_ROCKET) {
-			sound_stop(self, CHAN_TRIGGER);
-			self.modelflags &~= MF_ROCKET;
-		}
-	}
-
 	if(!self.body.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
