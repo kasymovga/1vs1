@@ -42,8 +42,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float _damage, flo
 // func_breakable
 // - basically func_assault_destructible for general gameplay use
 //
-void LaunchDebris (string debrisname, vector force) =
-{
+void(string debrisname, vector force) func_breakable_launch_debris {
 	local	entity dbr;
 
 	dbr = spawn();
@@ -70,7 +69,7 @@ void LaunchDebris (string debrisname, vector force) =
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
 	entity_fade_setup(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
-};
+}
 
 void func_breakable_colormod()
 {
@@ -176,7 +175,7 @@ void func_breakable_destroy() {
 	{
 		n = tokenize_console(self.debris);
 		for(i = 0; i < n; ++i)
-			LaunchDebris(argv(i), debrisforce);
+			func_breakable_launch_debris(argv(i), debrisforce);
 	}
 
     func_breakable_launch_napalm();
