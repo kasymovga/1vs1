@@ -154,7 +154,6 @@ void func_breakable_launch_napalm(void) {
         return;
 
     var saveteam = self.owner.team;
-    self.hg_type = HG_REMOTE;
     self.owner.team = team_from_index(self.napalm_color);
 
     for(var c = 0; c < nc; ++c) {
@@ -162,8 +161,6 @@ void func_breakable_launch_napalm(void) {
             velocity: random_spread_vector(70, 300, 300, 10)
         };
     }
-
-    self.hg_type = 0;
     self.owner.team = saveteam;
 }
 
