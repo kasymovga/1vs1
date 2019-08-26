@@ -99,7 +99,7 @@ set g_balance_grenadelauncher_secondary 1
 set g_balance_grenadelauncher_primary_bounce 0
 set g_balance_grenadelauncher_swap_buttons 0
 
-//Hager
+//Hagar
 set g_balance_hagar_swap_buttons 0
 _set g_balance_hagar_primary_spread 0
 _set g_balance_hagar_primary_speed 4500
@@ -120,6 +120,7 @@ set g_balance_shotgun_primary_gravityfactor 1
 set g_balance_shotgun_secondary_gravityfactor 1
 _set g_balance_shotgun_primary_damage 10
 _set g_balance_shotgun_secondary_damage 10
+_set g_weaponreplace_shotgun uzi
 
 //Uzi
 set g_balance_uzi_first 1

@@ -6,6 +6,8 @@ set akimbo_g_balance_shotgun_primary_damage 9
 set akimbo_g_balance_shotgun_secondary_damage 9
 set akimbo_g_balance_uzi_first_damage 28
 set akimbo_g_balance_uzi_sustained_damage 16
+set akimbo_g_weaponreplace_shotgun shotgun
+set akimbo_g_weaponreplace_supershotgun shotgun
 set akimbo_ca_g_pinata 1
 set akimbo_ca_g_pinata_drop_all 1
 set akimbo_ca_g_start_delay 0
@@ -31,7 +33,7 @@ set akimbo_ft_g_weaponreplace_nex nex
 set akimbo_ft_g_weaponreplace_electro zapper
 set akimbo_ft_g_weaponreplace_crylink crylink
 set akimbo_ft_g_weaponreplace_shotgun shotgun
-set akimbo_ft_g_weaponreplace_supershotgun supeshotgun
+set akimbo_ft_g_weaponreplace_supershotgun shotgun
 set akimbo_ft_g_weaponreplace_zapper zapper
 set akimbo_ft_g_weaponreplace_hlac crylink
 set akimbo_ft_g_weaponreplace_grenadelauncher grenadelauncher
