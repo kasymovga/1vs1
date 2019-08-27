@@ -1,9 +1,6 @@
 void spawnfunc_turret_plasma();
 void spawnfunc_turret_plasma_dual();
 
-void turret_plasma_std_init();
-void turret_plasma_dual_init();
-
 void turret_plasma_attack();
 void turret_plasma_projectile_explode();
 
@@ -80,69 +77,6 @@ void turret_plasma_projectile_explode()
     remove (self);
 }
 
-void turret_plasma_std_init()
-{
-    if (self.netname == "")      self.netname     = "Plasma Cannon";
-
-    // What ammo to use
-    self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
-
-    // How to aim
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUND2;
-    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
-
-    if (turret_stdproc_init("plasma_std",FALSE,"models/turrets/base.md3","models/turrets/plasma.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-
-    self.damage_flags    |= TFL_DMG_HEADSHAKE;
-    self.firecheck_flags |= TFL_FIRECHECK_AFF;
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    // Our fireing routine
-    self.turret_firefunc  = turret_plasma_attack;
-
-    // Custom per turret frame stuff. usualy animation.
-    self.turret_postthink = turret_plasma_postthink;
-    turret_do_updates(self);
-}
-
-
-void turret_plasma_dual_init()
-{
-    if (self.netname == "")      self.netname     = "Dual Plasma Cannon";
-
-    // What ammo to use
-    self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
-
-    // How to aim at targets
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUND2 ;
-    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
-
-    if (turret_stdproc_init("plasma_dual",0,"models/turrets/base.md3","models/turrets/plasmad.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-
-    self.damage_flags    |= TFL_DMG_HEADSHAKE;
-    self.firecheck_flags |= TFL_FIRECHECK_AFF;
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    // Our fireing routine
-    self.turret_firefunc  = turret_plasma_dual_attack;
-
-    // Custom per turret frame stuff. usualy animation.
-    self.turret_postthink = turret_plasma_dual_postthink;
-}
-
-
 /*
 * Basic moderate (std) or fast (dual) fireing, short-mid range energy cannon.
 * Not too mutch of a therat on its own, but can be rather dangerous in groups.
@@ -151,26 +85,59 @@ void turret_plasma_dual_init()
 
 /*QUAKED turret_plasma (0 .5 .8) ?
 */
-void spawnfunc_turret_plasma()
-{
-    precache_model ("models/turrets/plasma.md3");
-    precache_model ("models/turrets/base.md3");
+void(void) spawnfunc_turret_plasma {
+	precache_model("models/turrets/plasma.md3");
+	precache_model("models/turrets/base.md3");
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
+	if (self.netname == "")
+		self.netname = "Plasma Cannon";
 
-    self.think = turret_plasma_std_init;
-    self.nextthink = time + 0.5;
+	// What ammo to use
+	self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
+	// How to aim
+	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUND2;
+	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
+	if (turret_stdproc_init("plasma_std",FALSE,"models/turrets/base.md3","models/turrets/plasma.md3") == 0) {
+		remove(self);
+		return;
+	}
+	self.damage_flags	|= TFL_DMG_HEADSHAKE;
+	self.firecheck_flags |= TFL_FIRECHECK_AFF;
+	if (!turret_tag_setup())
+		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+	// Our fireing routine
+	self.turret_firefunc  = turret_plasma_attack;
+	// Custom per turret frame stuff. usualy animation.
+	self.turret_postthink = turret_plasma_postthink;
+	turret_do_updates(self);
 }
 
 /*QUAKED turret_plasma_dual (0 .5 .8) ?
 */
-void spawnfunc_turret_plasma_dual()
-{
-
-    precache_model ("models/turrets/plasmad.md3");
-    precache_model ("models/turrets/base.md3");
+void(void) spawnfunc_turret_plasma_dual {
+	precache_model("models/turrets/plasmad.md3");
+	precache_model("models/turrets/base.md3");
 	projectile_init(PROJECTILE_ELECTRO_BEAM);
+	if (self.netname == "")
+		self.netname = "Dual Plasma Cannon";
 
-    self.think = turret_plasma_dual_init;
-    self.nextthink = time + 0.5;
+	// What ammo to use
+	self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
+	// How to aim at targets
+	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUND2 ;
+	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
+	if (turret_stdproc_init("plasma_dual", 0, "models/turrets/base.md3", "models/turrets/plasmad.md3") == 0) {
+		remove(self);
+		return;
+	}
+	self.damage_flags |= TFL_DMG_HEADSHAKE;
+	self.firecheck_flags |= TFL_FIRECHECK_AFF;
+	if (!turret_tag_setup())
+		print("Warning: Turret ", self.classname, " faild to initialize md3 tags\n");
+
+	// Our fireing routine
+	self.turret_firefunc  = turret_plasma_dual_attack;
+	// Custom per turret frame stuff. usualy animation.
+	self.turret_postthink = turret_plasma_dual_postthink;
 }
-

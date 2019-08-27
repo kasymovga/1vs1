@@ -1355,7 +1355,7 @@ void turret_link()
 }
 
 float turret_precash_done;
-void(void) turret_precash {
+void(void) turret_precache {
 	if (turret_precash_done)
 		return;
 
@@ -1373,6 +1373,27 @@ void(void) turret_precash {
     precache_model ("models/marker.md3");
 }
 
+void(void) turret_stdproc_init_delayed {
+	entity e;
+	if not(teamplay)
+		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
+	else {
+		if (self.targetname != "") {
+			e = find(world, target, self.targetname);
+			if(e != world) {
+				self.team = e.team;
+			}
+		}
+	}
+	if(!self.tur_defend)
+	if (self.target != "") {
+		self.tur_defend = find(world, targetname, self.target);
+		if (self.tur_defend == world)
+			self.target = "";
+	}
+	turret_activate();
+}
+
 /*
 * Standard turret initialization. use this!
 * (unless you have a very good reason not to)
@@ -1381,7 +1402,6 @@ void(void) turret_precash {
 float turret_count;
 float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head)
 {
-	entity e;
     if(csqc_shared)
         csqc_shared = 0;
 
@@ -1389,7 +1409,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     if (cvar("g_turrets") == 0)
         return 0;
 
-	turret_precash();
+	turret_precache();
     // Better more then once then never.
     // turret_gibs_precash();
 
@@ -1408,20 +1428,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
     self.cvar_basename = cvar_base_name;
     load_unit_settings(self,self.cvar_basename,0);
-
-    // Handle turret teams.
-	if not(teamplay)
-		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
-	else {
-		if (self.targetname != "")
-		{
-			e = find(world,target,self.targetname);
-			if(e != world)
-			{
-				self.team = e.team;
-			}
-		}
-	}
 
     /*
     * Try to guess some reasonaly defaults
@@ -1638,17 +1644,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
     setsize(self,'-32 -32 0','32 32 32');
     setsize(self.tur_head,'-32 -32 0','32 32 32');
-
-
-    // Defend mode?
-    if(!self.tur_defend)
-    if (self.target != "")
-    {
-        self.tur_defend = find(world, targetname, self.target);
-        if (self.tur_defend == world)
-            self.target = "";
-    }
-
 // Put pices in place
     if not (self.turrcaps_flags & TFL_TURRCAPS_HEADATTACHED)
         setorigin(self.tur_head,self.origin);
@@ -1728,9 +1723,7 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
     // Its all good.
     self.classname = "turret_main";
-
-	turret_activate();
-
+	entity_initialize(self, turret_stdproc_init_delayed, INITPRIO_FIRST);
     return 1;
 }
 

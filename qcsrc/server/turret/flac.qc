@@ -1,5 +1,4 @@
 void spawnfunc_turret_flac();
-void turret_flac_dinit();
 void turret_flac_attack();
 void turret_flac_projectile_explode();
 
@@ -48,42 +47,30 @@ void turret_flac_projectile_explode()
     remove (self);
 }
 
-
-void turret_flac_dinit()
-{
-    if (self.netname == "")      self.netname  = "FLAC Cannon";
-
-    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_FASTPROJ | TFL_TURRCAPS_MISSILEKILL;
-    self.ammo_flags     = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
-
-    if (turret_stdproc_init("flac_std",0,"models/turrets/base.md3","models/turrets/flac.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-    setsize(self.tur_head,'-32 -32 0','32 32 64');
-
-    self.damage_flags |= TFL_DMG_HEADSHAKE;
-    self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    // Our fire routine
-    self.turret_firefunc  = turret_flac_attack;
-
-}
 /*QUAKED turret_flac (0 .5 .8) ?
 */
 
-void spawnfunc_turret_flac()
-{
-    precache_model ("models/turrets/base.md3");
-    precache_model ("models/turrets/flac.md3");
+void(void) spawnfunc_turret_flac {
+	precache_model ("models/turrets/base.md3");
+	precache_model ("models/turrets/flac.md3");
 	projectile_init(PROJECTILE_HAGAR);
+	if (self.netname == "")
+		self.netname = "FLAC Cannon";
 
-    self.think = turret_flac_dinit;
-    self.nextthink = time + 0.5;
+	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_FASTPROJ | TFL_TURRCAPS_MISSILEKILL;
+	self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
+	if (turret_stdproc_init("flac_std",0,"models/turrets/base.md3","models/turrets/flac.md3") == 0) {
+		remove(self);
+		return;
+	}
+	setsize(self.tur_head,'-32 -32 0','32 32 64');
+	self.damage_flags |= TFL_DMG_HEADSHAKE;
+	self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
+	if (!turret_tag_setup())
+		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+	// Our fire routine
+	self.turret_firefunc  = turret_flac_attack;
 }
 

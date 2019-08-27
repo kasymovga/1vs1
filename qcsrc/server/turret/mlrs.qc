@@ -1,5 +1,4 @@
 void spawnfunc_turret_mlrs();
-void turret_mlrs_dinit();
 void turret_mlrs_attack();
 void turret_mlrs_rocket_explode();
 void turret_mlrs_rocket_touch();
@@ -65,42 +64,30 @@ void turret_mlrs_rocket_explode()
     remove (self);
 }
 
-void turret_mlrs_dinit()
-{
-    if (self.netname == "")      self.netname  = "MLRS turret";
-
-    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
-    self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-    self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;// | TFL_AIM_GROUND2;
-
-    if (turret_stdproc_init("mlrs_std",0,"models/turrets/base.md3","models/turrets/mlrs.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-
-    self.damage_flags |= TFL_DMG_HEADSHAKE;
-    self.shoot_flags  |= TFL_SHOOT_VOLLYALWAYS;
-    self.volly_counter = self.shot_volly;
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    // Our fire routine
-    self.turret_firefunc  = turret_mlrs_attack;
-    self.turret_postthink = turret_mlrs_postthink;
-
-}
-
 /*QUAKED turret_mlrs (0 .5 .8) ?
 */
 
-void spawnfunc_turret_mlrs()
-{
-    precache_model ("models/turrets/mlrs.md3");
-    precache_model ("models/turrets/base.md3");
+void(void) spawnfunc_turret_mlrs {
+	precache_model("models/turrets/mlrs.md3");
+	precache_model("models/turrets/base.md3");
 	projectile_init(PROJECTILE_ROCKET);
+	if (self.netname == "")
+		self.netname  = "MLRS turret";
 
-    self.think = turret_mlrs_dinit;
-    self.nextthink = time + 0.5;
+	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
+	self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;// | TFL_AIM_GROUND2;
+	if (turret_stdproc_init("mlrs_std", 0, "models/turrets/base.md3", "models/turrets/mlrs.md3") == 0) {
+		remove(self);
+		return;
+	}
+	self.damage_flags |= TFL_DMG_HEADSHAKE;
+	self.shoot_flags |= TFL_SHOOT_VOLLYALWAYS;
+	self.volly_counter = self.shot_volly;
+	if (!turret_tag_setup())
+		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+	// Our fire routine
+	self.turret_firefunc = turret_mlrs_attack;
+	self.turret_postthink = turret_mlrs_postthink;
 }

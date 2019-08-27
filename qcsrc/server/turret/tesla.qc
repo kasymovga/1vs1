@@ -1,5 +1,4 @@
 void spawnfunc_turret_tesla();
-void turret_tesla_dinit();
 void turret_tesla_fire();
 
 .float toasted;
@@ -135,49 +134,32 @@ void turret_tesla_postthink()
     }
 }
 
+/*QUAKED turret_tesla (0 .5 .8) ?
+*/
+void(void) spawnfunc_turret_tesla {
+    precache_model ("models/turrets/tesla_head.md3");
+    precache_model ("models/turrets/tesla_base.md3");
+    if (self.netname == "")
+		self.netname = "Tesla Coil";
 
-void turret_tesla_dinit()
-{
-    if (self.netname == "")      self.netname     = "Tesla Coil";
-
-    self.turrcaps_flags      = TFL_TURRCAPS_HITSCAN | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
-
-    self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
-                               TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
+    self.turrcaps_flags = TFL_TURRCAPS_HITSCAN | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
+    self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
     self.firecheck_flags     = TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_OWM_AMMO;
     self.shoot_flags         = TFL_SHOOT_CUSTOM;
     self.ammo_flags          = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.aim_flags           = TFL_AIM_NO;
     self.track_flags         = TFL_TRACK_NO;
-
-    if (turret_stdproc_init("tesla_std",0,"models/turrets/tesla_base.md3","models/turrets/tesla_head.md3") == 0)
-    {
+    if (turret_stdproc_init("tesla_std", 0, "models/turrets/tesla_base.md3", "models/turrets/tesla_head.md3") == 0) {
         remove(self);
         return;
     }
     setsize(self,'-48 -48 0','48 48 96');
-
-    self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
-                                 TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
+    self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
     if (!turret_tag_setup())
         print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
-    self.turret_firefunc      = turret_tesla_fire;
-    self.turret_postthink     = turret_tesla_postthink;
+    self.turret_firefunc = turret_tesla_fire;
+    self.turret_postthink = turret_tesla_postthink;
     self.turret_firecheckfunc = turret_tesla_firecheck;
-}
-
-/*QUAKED turret_tesla (0 .5 .8) ?
-*/
-void spawnfunc_turret_tesla()
-{
-    precache_model ("models/turrets/tesla_head.md3");
-    precache_model ("models/turrets/tesla_base.md3");
-
-
-    self.think = turret_tesla_dinit;
-    self.nextthink = time + 0.5;
 }
 

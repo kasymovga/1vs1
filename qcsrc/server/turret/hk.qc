@@ -1,5 +1,4 @@
 void spawnfunc_turret_hk();
-void turret_hk_dinit();
 void turret_hk_attack();
 void turret_hk_missile_explode();
 void turret_hk_missile_think();
@@ -331,65 +330,43 @@ void turret_hk_postthink()
 
 }
 
-void turret_hk_dinit()
-{
-    if (self.netname == "")      self.netname  = "Hunter-killer turret";
-
-    hk_maxspeed = cvar("g_turrets_unit_hk_std_shot_speed_max");
-    hk_minspeed = cvar("g_turrets_unit_hk_std_shot_speed");
-    hk_accel    = cvar("g_turrets_unit_hk_std_shot_speed_accel");
-    hk_accel2   = cvar("g_turrets_unit_hk_std_shot_speed_accel2");
-    hk_decel    = cvar("g_turrets_unit_hk_std_shot_speed_decel");
-
-    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_RECIVETARGETS;
-
-    self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-
-    self.aim_flags = TFL_AIM_SIMPLE;
-
-    self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
-    self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
-
-    self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
-    self.shoot_flags = TFL_SHOOT_CLEARTARGET;
-
-    if (turret_stdproc_init("hk_std",0,"models/turrets/base.md3","models/turrets/hk.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-
-    self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
-
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    // Our fire routine
-    self.turret_firefunc  = turret_hk_attack;
-
-    // re-color badge & handle recoil effect
-    self.turret_postthink = turret_hk_postthink;
-
-    // What to do when reciveing foreign target data
-    self.turret_addtarget = turret_hk_addtarget;
-}
-
-
 /*QUAKED turret_hk (0 .5 .8) ?
 * Turret that fires Hunter-killer missiles.
 * Missiles seek their target and try to avoid obstacles. If target dies early, they
 * pick a new one on their own.
 */
 
-void spawnfunc_turret_hk()
-{
-    precache_model ("models/turrets/base.md3");
-    precache_model ("models/turrets/hk.md3");
+void(void) spawnfunc_turret_hk {
+	precache_model("models/turrets/base.md3");
+	precache_model("models/turrets/hk.md3");
 	projectile_init(PROJECTILE_ROCKET);
+	if (self.netname == "")
+		self.netname = "Hunter-killer turret";
 
-    self.think = turret_hk_dinit;
-    self.nextthink = time + 0.5;
+	hk_maxspeed = cvar("g_turrets_unit_hk_std_shot_speed_max");
+	hk_minspeed = cvar("g_turrets_unit_hk_std_shot_speed");
+	hk_accel = cvar("g_turrets_unit_hk_std_shot_speed_accel");
+	hk_accel2 = cvar("g_turrets_unit_hk_std_shot_speed_accel2");
+	hk_decel = cvar("g_turrets_unit_hk_std_shot_speed_decel");
+	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_RECIVETARGETS;
+	self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+	self.aim_flags = TFL_AIM_SIMPLE;
+	self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
+	self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
+	self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
+	self.shoot_flags = TFL_SHOOT_CLEARTARGET;
+	if (turret_stdproc_init("hk_std",0,"models/turrets/base.md3","models/turrets/hk.md3") == 0) {
+		remove(self);
+		return;
+	}
+	self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
+	if (!turret_tag_setup())
+		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+	// Our fire routine
+	self.turret_firefunc  = turret_hk_attack;
+	// re-color badge & handle recoil effect
+	self.turret_postthink = turret_hk_postthink;
+	// What to do when reciveing foreign target data
+	self.turret_addtarget = turret_hk_addtarget;
 }

@@ -1,5 +1,4 @@
 void spawnfunc_turret_phaser();
-void turret_phaser_dinit();
 void turret_phaser_attack();
 
 .float fireflag;
@@ -183,39 +182,28 @@ void turret_phaser_attack()
         self.tur_head.frame = 1;
 }
 
-void turret_phaser_dinit()
-{
-    if (self.netname == "")      self.netname  = "Phaser Cannon";
-
-    self.turrcaps_flags = TFL_TURRCAPS_SNIPER|TFL_TURRCAPS_HITSCAN|TFL_TURRCAPS_PLAYERKILL;
-    self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
-    self.aim_flags = TFL_AIM_ZEASE | TFL_AIM_LEAD;
-
-    if (turret_stdproc_init("phaser_std",0,"models/turrets/base.md3","models/turrets/phaser.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    self.turret_firecheckfunc = turret_phaser_firecheck;
-    self.turret_firefunc  = turret_phaser_attack;
-    self.turret_postthink = turret_phaser_postthink;
-
-}
-
 /*QUAKED turret_phaser(0 .5 .8) ?
 */
-void spawnfunc_turret_phaser()
-{
-    precache_sound ("turrets/phaser.wav");
-    precache_model ("models/turrets/phaser.md3");
-    precache_model ("models/turrets/phaser_beam.md3");
-    precache_model ("models/turrets/base.md3");
+void(void) spawnfunc_turret_phaser {
+	precache_sound("turrets/phaser.wav");
+	precache_model("models/turrets/phaser.md3");
+	precache_model("models/turrets/phaser_beam.md3");
+	precache_model("models/turrets/base.md3");
+	if (self.netname == "")
+		self.netname = "Phaser Cannon";
 
-    self.think = turret_phaser_dinit;
-    self.nextthink = time + 0.5;
+	self.turrcaps_flags = TFL_TURRCAPS_SNIPER|TFL_TURRCAPS_HITSCAN|TFL_TURRCAPS_PLAYERKILL;
+	self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
+	self.aim_flags = TFL_AIM_ZEASE | TFL_AIM_LEAD;
+	if (turret_stdproc_init("phaser_std", 0, "models/turrets/base.md3", "models/turrets/phaser.md3") == 0) {
+		remove(self);
+		return;
+	}
+	if (!turret_tag_setup())
+		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+	self.turret_firecheckfunc = turret_phaser_firecheck;
+	self.turret_firefunc  = turret_phaser_attack;
+	self.turret_postthink = turret_phaser_postthink;
 }
 

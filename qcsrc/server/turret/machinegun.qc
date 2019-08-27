@@ -1,5 +1,4 @@
 void spawnfunc_turret_machinegun();
-void turret_machinegun_std_init();
 void turret_machinegun_attack();
 
 //.float bulletcounter;
@@ -28,47 +27,33 @@ void turret_machinegun_attack()
     flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 }
 
-
-void turret_machinegun_std_init()
-{
-    if (self.netname == "")      self.netname     = "Machinegun Turret";
-
-    self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
-    self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL;
-    self.aim_flags = TFL_AIM_LEAD;
-
-    if(cvar("g_antilag_bullets"))
-        self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
-    else
-        self.aim_flags      |= TFL_AIM_SHOTTIMECOMPENSATE;
-
-    if (turret_stdproc_init("machinegun_std",0,"models/turrets/base.md3","models/turrets/machinegun.md3") == 0)
-    {
-        remove(self);
-        return;
-    }
-
-    self.damage_flags |= TFL_DMG_HEADSHAKE;
-
-    if (!turret_tag_setup())
-        print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
-
-    // Our fire routine
-    self.turret_firefunc  = turret_machinegun_attack;
-
-}
-
-
 /*QUAKED turret_machinegun (0 .5 .8) ?
 * machinegun turret. does what you'd expect
 */
-void spawnfunc_turret_machinegun()
-{
-    precache_model ("models/turrets/machinegun.md3");
-    precache_model ("models/turrets/base.md3");
-    precache_sound ("weapons/uzi_fire.wav");
+void(void) spawnfunc_turret_machinegun {
+	precache_model("models/turrets/machinegun.md3");
+	precache_model("models/turrets/base.md3");
+	precache_sound("weapons/uzi_fire.wav");
+	if (self.netname == "")
+		self.netname  = "Machinegun Turret";
 
-    self.think = turret_machinegun_std_init;
-    self.nextthink = time + 0.5;
+	self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
+	self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL;
+	self.aim_flags = TFL_AIM_LEAD;
+	if(cvar("g_antilag_bullets"))
+		self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
+	else
+		self.aim_flags |= TFL_AIM_SHOTTIMECOMPENSATE;
+
+	if (turret_stdproc_init("machinegun_std",0,"models/turrets/base.md3","models/turrets/machinegun.md3") == 0) {
+		remove(self);
+		return;
+	}
+	self.damage_flags |= TFL_DMG_HEADSHAKE;
+	if (!turret_tag_setup())
+		print("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+
+	// Our fire routine
+	self.turret_firefunc  = turret_machinegun_attack;
 }
 
