@@ -31,18 +31,16 @@ void(entity e) anim_update {
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
 }
 
-vector(float animfile) anim_parseline {
+void(entity e, float animfile, .vector field) anim_parseline {
 	string line;
 	float c;
 	vector anim;
-	if (animfile < 0)
-		return '0 1 2';
-
 	line = fgets(animfile);
 	c = tokenize_console(line);
 	if (c < 3) {
 		anim_parseerror = TRUE;
-		return '0 1 2';
+		e.field = '0 1 2';
+		return;
 	}
 	anim_x = stof(argv(0));
 	anim_y = stof(argv(1));
@@ -51,5 +49,5 @@ vector(float animfile) anim_parseline {
 	if (anim_x < 0 || anim_y < 1 || anim_z < 0.001)
 		anim = '0 1 2';
 
-	return anim;
+	e.field = anim;
 }

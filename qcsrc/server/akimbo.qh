@@ -5,7 +5,7 @@ entity Akimbo_Owner(entity e);
 entity Akimbo_Ghost(entity e);
 float g_powerup_strength_akimbo;
 float g_akimbo_animation_shift;
-
 float Akimbo_GiveWeapon(entity p, float wpn, string name);
 float Akimbo_HaveWeapon(entity e, float wpn);
 float Akimbo_Active(entity e);
+.float akimbo_animation_shift;

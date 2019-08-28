@@ -99,6 +99,21 @@ void(void) player_corpse_think {
 	self.nextthink = time;
 }
 
+void(entity body_to, entity body_from, float realloc_playermodel) player_body_copy {
+	body_to.modelindex_lod0 = body_from.modelindex_lod0;
+	body_to.modelindex_lod1 = body_from.modelindex_lod1;
+	body_to.modelindex_lod2 = body_from.modelindex_lod2;
+	body_to.modelindex_lod0_from_nexuiz = body_from.modelindex_lod0_from_nexuiz;
+	if (realloc_playermodel) {
+		str_unzone_ifneeded(body_to.playermodel);
+		body_to.playermodel = str_zone_ifneeded(body_from.playermodel); //need independent copy here
+	} else {
+		body_to.playermodel = body_from.playermodel;
+		body_from.playermodel = "";
+	}
+	setmodel(body_to, body_from.model);
+}
+
 entity(float keepvelocity, float _movetype) player_body_detach {
 	if (self.effects & EF_NODRAW)
 		return world;
@@ -107,11 +122,7 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 	e.owner = e;
 	e.skinindex = self.skinindex;
 	player_body_spawn();
-	self.body.modelindex_lod0 = e.modelindex_lod0;
-	self.body.modelindex_lod1 = e.modelindex_lod1;
-	self.body.modelindex_lod2 = e.modelindex_lod2;
-	self.body.playermodel = e.playermodel;
-	setmodel(self.body, e.model);
+	player_body_copy(self.body, e, FALSE);
 	setattachment(e, world, "");
 	e.body = e;
 	e.enemy = self;
@@ -148,57 +159,59 @@ void(void) player_respawn {
 	PutClientInServer();
 }
 
-float() player_getspecies {
-	local float glob, i, j, fh, len, s, sk;
-	local string fn, l;
-
-	s = -1;
-
+void(void) player_species_setup {
+	float glob, i, j, fh, len, sk;
+	string fn, l;
+	entity pl;
+	FOR_EACH_PLAYER(pl)
+		if (pl != self)
+		if (pl.body)
+		if (pl.body.playermodel == self.body.playermodel)
+		if (pl.body.skinindex == self.body.skinindex) {
+			self.species = pl.species;
+			return;
+		}
+	self.species = SPECIES_HUMAN;
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
 	if(glob < 0)
-		return s;
-	for(j = 0; j <= 1; ++j)
-	{
-		for(i = 0; i < search_getsize(glob); ++i)
-		{
+		return;
+
+	for(j = 0; j <= 1; ++j) {
+		for(i = 0; i < search_getsize(glob); ++i) {
 			fn = search_getfilename(glob, i);
 			fh = fopen(fn, FILE_READ);
 			if(fh < 0)
 				continue;
+
 			fgets(fh); fgets(fh);
 			sk = stof(fgets(fh));
 			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
-			if(fgets(fh) == self.body.model)
-			{
+			if(fgets(fh) == self.body.model) {
 				l = fgets(fh);
 				len = tokenize_console(l);
 				if (len != 2)
 					goto nospecies;
+
 				if (argv(0) != "species")
 					goto nospecies;
-				switch(argv(1))
-				{
-					case "human":       s = SPECIES_HUMAN;       break;
-					case "alien":       s = SPECIES_ALIEN;       break;
-					case "robot_shiny": s = SPECIES_ROBOT_SHINY; break;
-					case "robot_rusty": s = SPECIES_ROBOT_RUSTY; break;
-					case "robot_solid": s = SPECIES_ROBOT_SOLID; break;
-					case "animal":      s = SPECIES_ANIMAL;      break;
-					case "reserved":    s = SPECIES_RESERVED;    break;
+
+				switch(argv(1)) {
+				case "human":       self.species = SPECIES_HUMAN;       goto speciesfound;
+				case "alien":       self.species = SPECIES_ALIEN;       goto speciesfound;
+				case "robot_shiny": self.species = SPECIES_ROBOT_SHINY; goto speciesfound;
+				case "robot_rusty": self.species = SPECIES_ROBOT_RUSTY; goto speciesfound;
+				case "robot_solid": self.species = SPECIES_ROBOT_SOLID; goto speciesfound;
+				case "animal":      self.species = SPECIES_ANIMAL;      goto speciesfound;
+				case "reserved":    self.species = SPECIES_RESERVED;    goto speciesfound;
 				}
 			}
 :nospecies
 			fclose(fh);
 		}
-		if (s >= 0)
-			break;
 	}
+	print("No skin file for ", self.body.model, ":", ftos(self.skinindex), "\n");
+:speciesfound
 	search_end(glob);
-
-	if (s < 0)
-		s = SPECIES_HUMAN;
-
-	return s;
 }
 
 void(float finished, string samp) play_countdown {
@@ -226,9 +239,134 @@ void() player_effects {
 	self.effects = 0;
 }
 
-void() player_setupanimsformodel {
-	local string animfilename;
-	local float animfile;
+void(entity to, entity from) player_anim_copy {
+	to.akimbo_animation_shift = from.akimbo_animation_shift;
+#define PLAYERANIMCOPY(x,y,z) x.anim_ ## z = y.anim_ ## z;
+	PLAYERANIMCOPY(to, from, die1)
+	PLAYERANIMCOPY(to, from, die2)
+	PLAYERANIMCOPY(to, from, draw)
+	PLAYERANIMCOPY(to, from, duck)
+	PLAYERANIMCOPY(to, from, duckwalk)
+	PLAYERANIMCOPY(to, from, duckjump)
+	PLAYERANIMCOPY(to, from, duckidle)
+	PLAYERANIMCOPY(to, from, idle)
+	PLAYERANIMCOPY(to, from, jump)
+	PLAYERANIMCOPY(to, from, pain1)
+	PLAYERANIMCOPY(to, from, pain2)
+	PLAYERANIMCOPY(to, from, shoot)
+	PLAYERANIMCOPY(to, from, taunt)
+	PLAYERANIMCOPY(to, from, run)
+	PLAYERANIMCOPY(to, from, runbackwards)
+	PLAYERANIMCOPY(to, from, strafeleft)
+	PLAYERANIMCOPY(to, from, straferight)
+	PLAYERANIMCOPY(to, from, forwardright)
+	PLAYERANIMCOPY(to, from, forwardleft)
+	PLAYERANIMCOPY(to, from, backright)
+	PLAYERANIMCOPY(to, from, backleft)
+	PLAYERANIMCOPY(to, from, melee)
+	PLAYERANIMCOPY(to, from, melee2)
+#undef PLAYERANIMCOPY
+}
+
+float player_anim_parseline_error;
+void(entity e, string s) player_anim_parseline {
+	float c;
+	vector anim;
+	c = tokenize_console(s);
+	if (c < 2) {
+		player_anim_parseline_error = TRUE;
+		return;
+	}
+	string field_name = argv(0);
+	if (field_name == "akimbo_shift") {
+		e.akimbo_animation_shift = stof(argv(1));
+		return;
+	}
+	if (c < 4) {
+		player_anim_parseline_error = TRUE;
+		return;
+	}
+	anim_x = stof(argv(1));
+	anim_y = stof(argv(2));
+	anim_z = stof(argv(3));
+#define READFIELD(x) if (field_name == #x) { e.anim_ ## x = anim; return; }
+	READFIELD(die1)
+	READFIELD(die2)
+	READFIELD(draw)
+	READFIELD(duck)
+	READFIELD(duckwalk)
+	READFIELD(duckjump)
+	READFIELD(duckidle)
+	READFIELD(idle)
+	READFIELD(jump)
+	READFIELD(pain1)
+	READFIELD(pain2)
+	READFIELD(shoot)
+	READFIELD(taunt)
+	READFIELD(run)
+	READFIELD(runbackwards)
+	READFIELD(strafeleft)
+	READFIELD(straferight)
+	READFIELD(forwardright)
+	READFIELD(forwardleft)
+	READFIELD(backright)
+	READFIELD(backleft)
+	READFIELD(melee)
+	READFIELD(melee2)
+#undef READFIELD
+	player_anim_parseline_error = TRUE;
+	print("Unknown field name: ", field_name, "\n");
+}
+
+void(entity e, string _model) player_anim_load {
+	float animfile;
+	string animfilename, s;
+	animfilename = strcat(_model, ".animinfo");
+	animfile = fopen(animfilename, FILE_READ);
+	anim_parseerror = FALSE;
+	if (animfile >= 0) {
+		anim_parseline(e, animfile, anim_die1);
+		anim_parseline(e, animfile, anim_die2);
+		anim_parseline(e, animfile, anim_draw);
+		anim_parseline(e, animfile, anim_duck);
+		anim_parseline(e, animfile, anim_duckwalk);
+		anim_parseline(e, animfile, anim_duckjump);
+		anim_parseline(e, animfile, anim_duckidle);
+		anim_parseline(e, animfile, anim_idle);
+		anim_parseline(e, animfile, anim_jump);
+		anim_parseline(e, animfile, anim_pain1);
+		anim_parseline(e, animfile, anim_pain2);
+		anim_parseline(e, animfile, anim_shoot);
+		anim_parseline(e, animfile, anim_taunt);
+		anim_parseline(e, animfile, anim_run);
+		anim_parseline(e, animfile, anim_runbackwards);
+		anim_parseline(e, animfile, anim_strafeleft);
+		anim_parseline(e, animfile, anim_straferight);
+		anim_parseline(e, animfile, anim_forwardright);
+		anim_parseline(e, animfile, anim_forwardleft);
+		anim_parseline(e, animfile, anim_backright);
+		anim_parseline(e, animfile, anim_backleft);
+		fclose(animfile);
+		// derived anims
+		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
+		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
+		if (anim_parseerror)
+			print("Parse error in ", animfilename, ", some player animations are broken\n");
+	}
+	animfilename = strcat(_model, ".animinfo2");
+	player_anim_parseline_error = FALSE;
+	animfile = fopen(animfilename, FILE_READ);
+	if (animfile >= 0) {
+		while ((s = fgets(animfile)) != "") {
+			player_anim_parseline(e, s);
+		}
+		fclose(animfile);
+		if (player_anim_parseline_error)
+			print("Parse error in ", animfilename, ", some player animations are broken\n");
+	}
+}
+
+void() player_anim_setup {
 	// defaults for legacy .zym models without animinfo files
 	self.anim_die1 = '0 1 0.5'; // 2 seconds
 	self.anim_die2 = '1 1 0.5'; // 2 seconds
@@ -255,41 +393,8 @@ void() player_setupanimsformodel {
 	self.anim_backleft  = '22 1 1';
 	self.anim_melee = stov(cvar_string("sv_player_melee_anim"));
 	self.anim_melee2 = stov(cvar_string("sv_player_melee_anim2"));
-	anim_parseerror = FALSE;
-	animfilename = strcat(self.body.model, ".animinfo");
-	animfile = fopen(animfilename, FILE_READ);
-	if (animfile >= 0)
-	{
-		self.anim_die1         = anim_parseline(animfile);
-		self.anim_die2         = anim_parseline(animfile);
-		self.anim_draw         = anim_parseline(animfile);
-		self.anim_duck         = anim_parseline(animfile);
-		self.anim_duckwalk     = anim_parseline(animfile);
-		self.anim_duckjump     = anim_parseline(animfile);
-		self.anim_duckidle     = anim_parseline(animfile);
-		self.anim_idle         = anim_parseline(animfile);
-		self.anim_jump         = anim_parseline(animfile);
-		self.anim_pain1        = anim_parseline(animfile);
-		self.anim_pain2        = anim_parseline(animfile);
-		self.anim_shoot        = anim_parseline(animfile);
-		self.anim_taunt        = anim_parseline(animfile);
-		self.anim_run          = anim_parseline(animfile);
-		self.anim_runbackwards = anim_parseline(animfile);
-		self.anim_strafeleft   = anim_parseline(animfile);
-		self.anim_straferight  = anim_parseline(animfile);
-		self.anim_forwardright = anim_parseline(animfile);
-		self.anim_forwardleft  = anim_parseline(animfile);
-		self.anim_backright    = anim_parseline(animfile);
-		self.anim_backleft     = anim_parseline(animfile);
-		fclose(animfile);
-
-		// derived anims
-		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
-		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
-
-		if (anim_parseerror)
-			print("Parse error in ", animfilename, ", some player animations are broken\n");
-	}
+	self.akimbo_animation_shift = cvar("g_akimbo_animation_shift");
+	player_anim_load(self, self.body.model);
 	// reset animstate now
 	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 }
@@ -299,9 +404,9 @@ void(entity e, .vector anim, float looping, float override, float restart) playe
 		return;
 
 	vector animv = e.anim;
-	if (g_akimbo_animation_shift)
+	if (e.akimbo_animation_shift)
 	if (Akimbo_Active(e))
-			animv_x = animv_x + g_akimbo_animation_shift;
+			animv_x = animv_x + e.akimbo_animation_shift;
 
 	anim_set(e.body, animv, looping, override, restart);
 }
@@ -982,6 +1087,13 @@ void player_clear_sounds()
 #undef _VOICEMSG
 }
 
+void(entity to, entity from) player_copy_sounds {
+#define _VOICEMSG(m) to.playersound_##m = str_zone_ifneeded(from.playersound_##m);
+	ALLPLAYERSOUNDS
+	ALLVOICEMSGS
+#undef _VOICEMSG
+}
+
 void(string f, float first) player_load_sounds {
 	float fh;
 	string s;
@@ -1010,9 +1122,10 @@ void(string f, float first) player_load_sounds {
 
 .float modelindex_for_playersound;
 void() player_update_sounds {
-	if(self.body.modelindex == self.body.modelindex_for_playersound)
+	if(self.body.modelindex_lod0 == self.body.modelindex_for_playersound)
 		return;
-	self.body.modelindex_for_playersound = self.body.modelindex;
+
+	self.body.modelindex_for_playersound = self.body.modelindex_lod0;
 	player_clear_sounds();
 	player_load_sounds("sound/player/default.sounds", 1);
 	player_load_sounds(strcat(self.body.model, ".sounds"), 0);
@@ -1135,36 +1248,44 @@ float(entity plr, entity viewer) player_calculate_alpha {
 	return sa;
 }
 
-void(entity e, string modelname) player_setup_lod {
+void(string modelname) player_setup_lod {
 	string s;
+	entity pl;
+	FOR_EACH_PLAYER(pl)
+		if (pl.body)
+		if (pl.body.playermodel == modelname) {
+			player_body_copy(self.body, pl.body, TRUE);
+			player_anim_copy(self, pl);
+			player_copy_sounds(self, pl);
+			return;
+		}
 	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
 	if(file_exists(s)) {
-		setmodel(e.body, s); // players have high precision
-		e.body.modelindex_lod1 = e.body.modelindex;
+		setmodel(self.body, s); // players have high precision
+		self.body.modelindex_lod1 = self.body.modelindex;
 	} else
-		e.body.modelindex_lod1 = -1;
+		self.body.modelindex_lod1 = -1;
 
 	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
 	if(file_exists(s)) {
-		setmodel(e.body, s); // players have high precision
-		e.body.modelindex_lod2 = e.body.modelindex;
+		setmodel(self.body, s); // players have high precision
+		self.body.modelindex_lod2 = self.body.modelindex;
 	} else
-		e.body.modelindex_lod2 = -1;
+		self.body.modelindex_lod2 = -1;
 
-	precache_model(modelname);
-	setmodel(e.body, modelname); // players have high precision
-	e.body.modelindex_lod0 = e.body.modelindex;
-	if(e.body.modelindex_lod1 < 0)
-		e.body.modelindex_lod1 = e.body.modelindex;
+	setmodel(self.body, modelname); // players have high precision
+	self.body.modelindex_lod0 = self.body.modelindex;
+	if(self.body.modelindex_lod1 < 0)
+		self.body.modelindex_lod1 = self.body.modelindex;
 
-	if(e.body.modelindex_lod2 < 0)
-		e.body.modelindex_lod2 = e.body.modelindex;
+	if(self.body.modelindex_lod2 < 0)
+		self.body.modelindex_lod2 = self.body.modelindex;
 
-	s = whichpack(e.body.model);
-	str_unzone_ifneeded(e.body.playermodel);
-	e.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
-	e.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
-	player_setupanimsformodel();
+	s = whichpack(self.body.model);
+	str_unzone_ifneeded(self.body.playermodel);
+	self.body.playermodel = str_zone_ifneeded(modelname); //need independent copy here
+	self.body.modelindex_lod0_from_nexuiz = ((s == "") || (substring(s, 0, 4) == "data"));
+	player_anim_setup();
 	player_update_sounds();
 }
 
@@ -1231,7 +1352,7 @@ void() player_setup_model {
 		{
 			m1 = self.mins;
 			m2 = self.maxs;
-			player_setup_lod(self, forcemodel);
+			player_setup_lod(forcemodel);
 			setsize(self, m1, m2);
 			chmdl = TRUE;
 		}
@@ -1243,7 +1364,7 @@ void() player_setup_model {
 			self.playermodel = player_check_model(self.playermodel);
 			m1 = self.mins;
 			m2 = self.maxs;
-			player_setup_lod(self, self.playermodel);
+			player_setup_lod(self.playermodel);
 			setsize(self, m1, m2);
 			chmdl = TRUE;
 		}
@@ -1251,8 +1372,8 @@ void() player_setup_model {
 		self.skinindex = stof(self.playerskin);
 		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
 	}
-	if(chmdl || oldskin != self.skinindex)
-		self.species = player_getspecies(); // model or skin has changed
+	if (chmdl || oldskin != self.skinindex)
+		player_species_setup();
 
 	if (forcecolor > -2) {
 		float colors = GameHookChain_PlayerColorsMod(forcecolor);
@@ -1260,14 +1381,6 @@ void() player_setup_model {
 			player_set_colors(self, colors);
 	}
 	self.body.colormap = self.colormap;
-}
-
-void(string s) player_precache_model {
-	if (s == "" || s == "0")
-		return;
-
-	precache_model(s);
-	player_precache_sounds(strcat(s, ".sounds"));
 }
 
 void(entity player) player_to_spec
@@ -1987,6 +2100,7 @@ void(entity spot) player_spawn {
 	self.customizeentityforclient = player_customize;
 	self.body.customizeentityforclient = player_body_customize;
 	player_setup_model();
+	player_species_setup();
 	self.stand_view_ofs = PL_VIEW_OFS;
 	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
 	setsize (self, PL_MIN, PL_MAX);
@@ -2041,28 +2155,22 @@ void(entity spot) player_spawn {
 }
 
 void(string pattern) player_precache_all_models {
-    float globhandle, i, n;
-    string f;
+	float globhandle, i, n;
+	string s, f;
+	globhandle = search_begin(pattern, TRUE, FALSE);
+	if (globhandle < 0)
+		return;
 
-    globhandle = search_begin(pattern, TRUE, FALSE);
-    if (globhandle < 0)
-        return;
-    n = search_getsize(globhandle);
-    for (i = 0; i < n; ++i)
-    {
-		//print(search_getfilename(globhandle, i), "\n");
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i) {
 		f = search_getfilename(globhandle, i);
-		if(sv_loddistance1)
-			precache_model(f);
-		if(substring(f, -9,5) == "_lod1")
-			continue;
-		if(substring(f, -9,5) == "_lod2")
-			continue;
-		if(!sv_loddistance1)
-			precache_model(f);
-		player_precache_sounds(strcat(f, ".sounds"));
-    }
-    search_end(globhandle);
+		precache_model(f);
+		s = substring(f, -9,5);
+		if (s != "_lod1")
+		if (s != "_lod2")
+			player_precache_sounds(strcat(f, ".sounds"));
+	}
+	search_end(globhandle);
 }
 
 float(entity plr, float wep) player_can_fire {
@@ -2212,14 +2320,11 @@ entity(entity pl) player_entity {
 }
 
 void() player_init {
-	// Precache all player models if desired
-	if (cvar("sv_precacheplayermodels")) {
-		player_precache_sounds("sound/player/default.sounds");
-		player_precache_all_models("models/player/*.zym");
-		player_precache_all_models("models/player/*.dpm");
-		player_precache_all_models("models/player/*.md3");
-		player_precache_all_models("models/player/*.psk");
-	}
+	player_precache_sounds("sound/player/default.sounds");
+	player_precache_all_models("models/player/*.zym");
+	player_precache_all_models("models/player/*.dpm");
+	player_precache_all_models("models/player/*.md3");
+	player_precache_all_models("models/player/*.psk");
 	CACHE_CVAR(g_respawn_delay);
 	CACHE_CVAR(g_respawn_mapsettings);
 	CACHE_CVAR(g_respawn_mapsettings_delay);
@@ -2331,13 +2436,6 @@ void() player_init {
 	if (g_player_forceskin_pink < 0)
 		g_player_forceskin_pink = g_player_forceskin;
 
-	player_precache_model(g_player_forcemodel);
-	if (teamplay) {
-		player_precache_model(g_player_forcemodel_red);
-		player_precache_model(g_player_forcemodel_blue);
-		player_precache_model(g_player_forcemodel_yellow);
-		player_precache_model(g_player_forcemodel_pink);
-	}
 #define EXTRA_ANNOUNCER(x) do { str_unzone_ifneeded(sv_announcer_extra_##x); sv_announcer_extra_##x = cvar_string_zone_ifneeded("sv_announcer_extra_"#x); if (sv_announcer_extra_##x != "") { precache_sound(sv_announcer_extra_##x); print("Extra announcer sound "#x" ", sv_announcer_extra_##x, "\n");} } while (0)
 	//Extra sounds
 	EXTRA_ANNOUNCER(meleefrag);

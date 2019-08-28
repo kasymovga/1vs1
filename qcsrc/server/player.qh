@@ -50,7 +50,6 @@ void() player_update_sounds;
 void() player_clear_sounds;
 void(string type, string message) player_voice_message;
 void() player_setup_model;
-void() player_setupanimsformodel;
 void(entity player) player_to_spec;
 void() player_think;
 float(entity plr, float wep) player_can_fire;

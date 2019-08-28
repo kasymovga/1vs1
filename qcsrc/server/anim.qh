@@ -1,4 +1,4 @@
+float anim_parseerror;
 void(entity e, vector anim, float looping, float override, float restart) anim_set;
 void(entity e) anim_update;
-float anim_parseerror;
-vector(float animfile) anim_parseline;
+void(entity e, float animfile, .vector field) anim_parseline;

@@ -50,13 +50,13 @@ void(float id, float(float) func, float ammotype, float i, float normalweapon, f
 	if (animfile >= 0)
 	{
 		anim_parseerror = FALSE;
-		e.anim_fire1  = anim_parseline(animfile);
-		e.anim_fire2  = anim_parseline(animfile);
-		e.anim_idle   = anim_parseline(animfile);
-		e.anim_reload = anim_parseline(animfile);
+		anim_parseline(e, animfile, anim_fire1);
+		anim_parseline(e, animfile, anim_fire2);
+		anim_parseline(e, animfile, anim_idle);
+		anim_parseline(e, animfile, anim_reload);
 		fclose(animfile);
 		if (anim_parseerror)
-			print("Parse error in ", animfilename, ", some player animations are broken\n");
+			print("Parse error in ", animfilename, ", some animations are broken\n");
 	}
 #endif
 	e.spawnflags = 0;
