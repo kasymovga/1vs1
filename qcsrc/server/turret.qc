@@ -1436,12 +1436,13 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     * if it hits a glitch in my logic :P so try to set as mutch
     * as possible beforehand.
     */
-    if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
-        if (!self.ticrate) self.ticrate = 0.2;     // Support units generaly dont need to have a high speed ai-loop
-    else
-        if (!self.ticrate) self.ticrate = 0.1;     // 10 fps for normal turrets
-
-    self.ticrate = bound(sys_ticrate,self.ticrate,60);  // keep it sane
+	if not(self.ticrate) {
+		if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
+			self.ticrate = 0.2;     // Support units generaly dont need to have a high speed ai-loop
+		else
+			self.ticrate = 0.05;     // 10 fps for normal turrets
+	}
+    self.ticrate = bound(0.05,self.ticrate,60);  // keep it sane
 
 // General stuff
     if (self.netname == "")
