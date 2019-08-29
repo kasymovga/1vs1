@@ -165,7 +165,7 @@ void(void) spawnfunc_turret_hellion {
 	self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK ;
 	self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_OWM_AMMO;
 	self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-	if (turret_stdproc_init("hellion_std",0,"models/turrets/base.md3","models/turrets/hellion.md3") == 0) {
+	if (turret_stdproc_init("hellion_std", "models/turrets/base.md3", "models/turrets/hellion.md3") == 0) {
 		remove(self);
 		return;
 	}

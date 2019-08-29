@@ -60,7 +60,7 @@ void(void) spawnfunc_turret_flac {
 	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_FASTPROJ | TFL_TURRCAPS_MISSILEKILL;
 	self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
-	if (turret_stdproc_init("flac_std",0,"models/turrets/base.md3","models/turrets/flac.md3") == 0) {
+	if (turret_stdproc_init("flac_std", "models/turrets/base.md3", "models/turrets/flac.md3") == 0) {
 		remove(self);
 		return;
 	}

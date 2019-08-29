@@ -45,7 +45,7 @@ void(void) spawnfunc_turret_machinegun {
 	else
 		self.aim_flags |= TFL_AIM_SHOTTIMECOMPENSATE;
 
-	if (turret_stdproc_init("machinegun_std",0,"models/turrets/base.md3","models/turrets/machinegun.md3") == 0) {
+	if (turret_stdproc_init("machinegun_std", "models/turrets/base.md3", "models/turrets/machinegun.md3") == 0) {
 		remove(self);
 		return;
 	}

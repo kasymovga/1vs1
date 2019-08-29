@@ -77,7 +77,7 @@ void(void) spawnfunc_turret_mlrs {
 	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
 	self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;// | TFL_AIM_GROUND2;
-	if (turret_stdproc_init("mlrs_std", 0, "models/turrets/base.md3", "models/turrets/mlrs.md3") == 0) {
+	if (turret_stdproc_init("mlrs_std", "models/turrets/base.md3", "models/turrets/mlrs.md3") == 0) {
 		remove(self);
 		return;
 	}

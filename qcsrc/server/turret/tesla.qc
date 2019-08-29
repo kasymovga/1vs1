@@ -149,7 +149,7 @@ void(void) spawnfunc_turret_tesla {
     self.ammo_flags          = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.aim_flags           = TFL_AIM_NO;
     self.track_flags         = TFL_TRACK_NO;
-    if (turret_stdproc_init("tesla_std", 0, "models/turrets/tesla_base.md3", "models/turrets/tesla_head.md3") == 0) {
+    if (turret_stdproc_init("tesla_std", "models/turrets/tesla_base.md3", "models/turrets/tesla_head.md3") == 0) {
         remove(self);
         return;
     }

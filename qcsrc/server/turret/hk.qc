@@ -355,7 +355,7 @@ void(void) spawnfunc_turret_hk {
 	self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
 	self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
 	self.shoot_flags = TFL_SHOOT_CLEARTARGET;
-	if (turret_stdproc_init("hk_std",0,"models/turrets/base.md3","models/turrets/hk.md3") == 0) {
+	if (turret_stdproc_init("hk_std", "models/turrets/base.md3", "models/turrets/hk.md3") == 0) {
 		remove(self);
 		return;
 	}

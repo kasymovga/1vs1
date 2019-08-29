@@ -1251,7 +1251,6 @@ void turret_think()
             self.enemy = turret_select_target();
             self.target_select_time = time;
         }
-
         // No target, just go to idle, do any custom stuff and bail.
         if (self.enemy == world)
         {
@@ -1347,13 +1346,6 @@ void turret_stdproc_use()
 	turret_activate();
 }
 
-void turret_link()
-{
-    //Net_LinkEntity(self, FALSE, 0, Turret_SendEntity);
-    self.think      = turret_think;
-    self.nextthink  = time;
-}
-
 float turret_precash_done;
 void(void) turret_precache {
 	if (turret_precash_done)
@@ -1373,6 +1365,7 @@ void(void) turret_precache {
     precache_model ("models/marker.md3");
 }
 
+float turret_count;
 void(void) turret_stdproc_init_delayed {
 	entity e;
 	if not(teamplay)
@@ -1385,6 +1378,7 @@ void(void) turret_stdproc_init_delayed {
 			}
 		}
 	}
+    self.tur_head.team = self.team;
 	if(!self.tur_defend)
 	if (self.target != "") {
 		self.tur_defend = find(world, targetname, self.target);
@@ -1392,6 +1386,11 @@ void(void) turret_stdproc_init_delayed {
 			self.target = "";
 	}
 	turret_activate();
+	turret_stdproc_setcolormod();
+	// Initiate the main AI loop
+	self.think = turret_think;
+	++turret_count;
+	self.nextthink = time + self.ticrate + (turret_count * sys_ticrate);
 }
 
 /*
@@ -1399,12 +1398,7 @@ void(void) turret_stdproc_init_delayed {
 * (unless you have a very good reason not to)
 * if the return value is 0, the turret should be removed.
 */
-float turret_count;
-float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base, string head)
-{
-    if(csqc_shared)
-        csqc_shared = 0;
-
+float turret_stdproc_init (string cvar_base_name, string base, string head) {
     // Are turrets allowed atm?
     if (cvar("g_turrets") == 0)
         return 0;
@@ -1637,7 +1631,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 // Spawn extra bits
     self.tur_head         = spawn();
     self.tur_head.netname = self.tur_head.classname = "turret_head";
-    self.tur_head.team    = self.team;
     self.tur_head.owner   = self;
 
     setmodel(self,base);
@@ -1683,9 +1676,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
     self.movetype            = MOVETYPE_NOCLIP;
     self.tur_head.movetype   = MOVETYPE_NOCLIP;
 
-    // Team color
-	turret_stdproc_setcolormod();
-
     // Attach stdprocs. override when and what needed
     if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
     {
@@ -1709,17 +1699,6 @@ float turret_stdproc_init (string cvar_base_name, float csqc_shared, string base
 
     self.use = turret_stdproc_use;
     self.bot_attack = TRUE;
-
-    // Initiate the main AI loop
-    if(csqc_shared)
-        self.think     = turret_link;
-    else
-        self.think     = turret_think;
-
-    ++turret_count;
-    self.nextthink = time + self.ticrate + (turret_count * sys_ticrate);
-
-    self.tur_head.team = self.team;
     self.view_ofs = '0 0 0';
 
     // Its all good.

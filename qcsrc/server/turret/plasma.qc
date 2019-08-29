@@ -97,7 +97,7 @@ void(void) spawnfunc_turret_plasma {
 	// How to aim
 	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUND2;
 	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
-	if (turret_stdproc_init("plasma_std",FALSE,"models/turrets/base.md3","models/turrets/plasma.md3") == 0) {
+	if (turret_stdproc_init("plasma_std", "models/turrets/base.md3", "models/turrets/plasma.md3") == 0) {
 		remove(self);
 		return;
 	}
@@ -127,7 +127,7 @@ void(void) spawnfunc_turret_plasma_dual {
 	// How to aim at targets
 	self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUND2 ;
 	self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
-	if (turret_stdproc_init("plasma_dual", 0, "models/turrets/base.md3", "models/turrets/plasmad.md3") == 0) {
+	if (turret_stdproc_init("plasma_dual", "models/turrets/base.md3", "models/turrets/plasmad.md3") == 0) {
 		remove(self);
 		return;
 	}
