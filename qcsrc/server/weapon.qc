@@ -773,10 +773,8 @@ void weapon_model_think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
-	{
+	if (self.cnt != self.owner.weapon || self.deadflag != self.owner.deadflag) {
 		self.cnt = self.owner.weapon;
-		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
 		{
@@ -1103,12 +1101,12 @@ void weapon_model_exterior_dlc_reset() {
 
 	entity ao = Akimbo_Owner(self.owner);
 	float akimbo_weapon = (Akimbo_Active(self.owner) == 2);
-	if((tag_found = gettagindex(ao, "tag_weapon")))
-	{
+	if((tag_found = gettagindex(ao.body, "tag_weapon"))) {
 		self.tag_index = tag_found;
 		self.tag_entity = ao;
-	}
-	else if (akimbo_weapon && g_akimbo_use_left_hand) {
+		if (akimbo_weapon)
+			setorigin(self, '0 20 0');
+	} else if (akimbo_weapon && g_akimbo_use_left_hand) {
 		if (akimbo_weapon)
 			setattachment(self, ao.body, "bip01 l hand");
 
@@ -1136,10 +1134,9 @@ void weapon_model_exterior_think()
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
-	{
+	if (self.cnt != self.owner.weapon || self.dmg != self.owner.body.modelindex_lod0 || self.deadflag != self.owner.deadflag) {
 		self.cnt = self.owner.weapon;
-		self.dmg = self.owner.modelindex;
+		self.dmg = self.owner.body.modelindex_lod0;
 		self.deadflag = self.owner.deadflag;
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
