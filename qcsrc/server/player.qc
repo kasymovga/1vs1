@@ -519,8 +519,8 @@ void(float killed) player_clear {
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
 	if (self.classname == "disconnecting") {
-		remove(self.body);
 		str_unzone_ifneeded(self.body.playermodel);
+		remove(self.body);
 		self.body = world;
 	}
 }
