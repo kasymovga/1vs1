@@ -160,7 +160,7 @@ void(void) player_respawn {
 }
 
 void(void) player_species_setup {
-	float glob, i, j, fh, len, sk;
+	float glob, i, j, fh = -1, len, sk;
 	string fn, l;
 	entity pl;
 	FOR_EACH_PLAYER(pl)
@@ -179,6 +179,9 @@ void(void) player_species_setup {
 	for(j = 0; j <= 1; ++j) {
 		for(i = 0; i < search_getsize(glob); ++i) {
 			fn = search_getfilename(glob, i);
+			if (fh > 0)
+				fclose(fh);
+
 			fh = fopen(fn, FILE_READ);
 			if(fh < 0)
 				continue;
@@ -190,10 +193,10 @@ void(void) player_species_setup {
 				l = fgets(fh);
 				len = tokenize_console(l);
 				if (len != 2)
-					goto nospecies;
+					continue;
 
 				if (argv(0) != "species")
-					goto nospecies;
+					continue;
 
 				switch(argv(1)) {
 				case "human":       self.species = SPECIES_HUMAN;       goto speciesfound;
@@ -205,12 +208,13 @@ void(void) player_species_setup {
 				case "reserved":    self.species = SPECIES_RESERVED;    goto speciesfound;
 				}
 			}
-:nospecies
-			fclose(fh);
 		}
 	}
 	print("No skin file for ", self.body.model, ":", ftos(self.skinindex), "\n");
 :speciesfound
+	if (fh > 0)
+		fclose(fh);
+
 	search_end(glob);
 }
 
