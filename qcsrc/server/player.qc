@@ -12,6 +12,7 @@ float g_respawn_waves;
 float g_voice_flood_spv;
 float g_voice_flood_spv_team;
 float g_fullbrightplayers;
+string g_player_allowed_models;
 string g_player_forcemodel;
 string g_player_forcemodel_red;
 string g_player_forcemodel_blue;
@@ -1293,30 +1294,66 @@ void(string modelname) player_setup_lod {
 	player_update_sounds();
 }
 
-string PLAYER_FALLBACKMODEL = "models/player/marine.zym";
-string(string plyermodel) player_check_model {
-	if(strlen(plyermodel) < 4)
-		return PLAYER_FALLBACKMODEL;
-	if( substring(plyermodel,0,14) != "models/player/")
-		return PLAYER_FALLBACKMODEL;
-	else if(sv_servermodelsonly)
-	{
-		if(substring(plyermodel,-4,4) != ".zym")
-		if(substring(plyermodel,-4,4) != ".dpm")
-		if(substring(plyermodel,-4,4) != ".md3")
-		if(substring(plyermodel,-4,4) != ".psk")
-			return PLAYER_FALLBACKMODEL;
-		// forbid the LOD models
-		if(substring(plyermodel, -9,5) == "_lod1")
-			return PLAYER_FALLBACKMODEL;
-		if(substring(plyermodel, -9,5) == "_lod2")
-			return PLAYER_FALLBACKMODEL;
-		if(plyermodel != strtolower(plyermodel))
-			return PLAYER_FALLBACKMODEL;
-		if(!file_exists(plyermodel))
-			return PLAYER_FALLBACKMODEL;
+string(string _playermodel) player_allowed_model {
+	string first_allowed_model = str_car(g_player_allowed_models);
+	if (first_allowed_model == "")
+		return _playermodel;
+
+	if (_playermodel == "")
+		return first_allowed_model;
+
+	if (strstrofs(strcat(" ", g_player_allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
+			strstrofs(strcat(" ", g_player_allowed_models), strcat(" ", _playermodel, ":"), 0) >= 0)
+		return _playermodel;
+
+	return first_allowed_model;
+}
+
+float(string _playermodel, float _skin) player_allowed_skin {
+	if (str_car(g_player_allowed_models) == "")
+		return _skin;
+
+	if (strstrofs(strcat(" ", g_player_allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
+			strstrofs(strcat(" ", g_player_allowed_models), strcat(" ", _playermodel, ":", ftos(_skin), " "), 0) >= 0)
+		return _skin;
+
+	float allowed_skin_pos = strstrofs(strcat(" ", g_player_allowed_models), strcat(" ", _playermodel, ":"), 0);
+	if (allowed_skin_pos >= 0) {
+		allowed_skin_pos = allowed_skin_pos + strlen(_playermodel) + 1;
+		return stof(str_car(substring(g_player_allowed_models, allowed_skin_pos, -1)));
 	}
-	return plyermodel;
+	return _skin;
+}
+
+string(string _playermodel) player_check_model {
+	string fallback = player_allowed_model("models/player/marine.zym");
+	_playermodel = player_allowed_model(_playermodel);
+	if (strlen(_playermodel) < 4)
+		return fallback;
+	
+	if (substring(_playermodel,0,14) != "models/player/")
+		return fallback;
+	else if (sv_servermodelsonly) {
+		if (substring(_playermodel,-4,4) != ".zym")
+		if (substring(_playermodel,-4,4) != ".dpm")
+		if (substring(_playermodel,-4,4) != ".md3")
+		if (substring(_playermodel,-4,4) != ".psk")
+		if (substring(_playermodel,-4,4) != ".iqm")
+			return fallback;
+		// forbid the LOD models
+		if (substring(_playermodel, -9,5) == "_lod1")
+			return fallback;
+
+		if (substring(_playermodel, -9,5) == "_lod2")
+			return fallback;
+
+		if (_playermodel != strtolower(_playermodel))
+			return fallback;
+
+		if (!file_exists(_playermodel))
+			return fallback;
+	}
+	return _playermodel;
 }
 
 void() player_setup_model {
@@ -1364,16 +1401,22 @@ void() player_setup_model {
 		if (forceskin >= 0)
 			self.skinindex = forceskin;
 	} else {
-		if (self.playermodel != self.body.playermodel) {
-			self.playermodel = player_check_model(self.playermodel);
-			m1 = self.mins;
-			m2 = self.maxs;
-			player_setup_lod(self.playermodel);
-			setsize(self, m1, m2);
-			chmdl = TRUE;
+		if (self.playermodel != "" || self.body.playermodel == "") {
+			string s = player_check_model(self.playermodel);
+			if (s != self.body.playermodel) {
+				m1 = self.mins;
+				m2 = self.maxs;
+				player_setup_lod(player_check_model(self.playermodel));
+				setsize(self, m1, m2);
+				chmdl = TRUE;
+			}
+			self.playermodel = "";
 		}
 		oldskin = self.skinindex;
-		self.skinindex = stof(self.playerskin);
+		if (self.playerskin != "") {
+			self.skinindex = player_allowed_skin(self.playermodel, stof(self.playerskin));
+			self.playerskin = "";
+		}
 		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
 	}
 	if (chmdl || oldskin != self.skinindex)
@@ -2104,7 +2147,6 @@ void(entity spot) player_spawn {
 	self.customizeentityforclient = player_customize;
 	self.body.customizeentityforclient = player_body_customize;
 	player_setup_model();
-	player_species_setup();
 	self.stand_view_ofs = PL_VIEW_OFS;
 	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
 	setsize (self, PL_MIN, PL_MAX);
@@ -2337,6 +2379,7 @@ void() player_init {
 	CACHE_CVAR(g_voice_flood_spv);
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(g_fullbrightplayers);
+	CACHE_CVAR_STR(g_player_allowed_models);
 	CACHE_CVAR_STR(g_player_forcemodel);
 	CACHE_CVAR_STR(g_player_forcemodel_red);
 	CACHE_CVAR_STR(g_player_forcemodel_blue);

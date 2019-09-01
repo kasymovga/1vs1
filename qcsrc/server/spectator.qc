@@ -247,8 +247,8 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.items = 0;
 	self.weapons = 0;
 	if (self.body) {
-		remove(self.body);
-		self.body = world;
+		self.body.modelindex = 0;
+		self.body.customizeentityforclient = world.customizeentityforclient;
 	}
 	self.modelindex = 0;
 	self.weapon = 0;
