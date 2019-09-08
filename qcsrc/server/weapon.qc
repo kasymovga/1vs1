@@ -458,27 +458,6 @@ void weapon_frame()
 				bprint("\{1}^1ERROR: undefined weapon think function for ", self.netname, "\n");
 		}
 	}
-
-	// don't let attack_finished fall behind when not firing (must be after weapon_setup calls!)
-	//if (ATTACK_FINISHED(self) < time)
-	//	ATTACK_FINISHED(self) = time;
-
-	//if (self.weapon_nextthink < time)
-	//	self.weapon_nextthink = time;
-
-	// update currentammo incase it has changed
-#if 0
-	if (self.items & IT_CELLS)
-		self.currentammo = self.ammo_cells;
-	else if (self.items & IT_ROCKETS)
-		self.currentammo = self.ammo_rockets;
-	else if (self.items & IT_NAILS)
-		self.currentammo = self.ammo_nails;
-	else if (self.items & IT_SHELLS)
-		self.currentammo = self.ammo_shells;
-	else
-		self.currentammo = 1;
-#endif
 }
 
 void(float wpn) weapon_precache {
