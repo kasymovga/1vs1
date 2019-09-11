@@ -13,6 +13,10 @@ float g_voice_flood_spv;
 float g_voice_flood_spv_team;
 float g_fullbrightplayers;
 string g_player_allowed_models;
+string g_player_allowed_models_red;
+string g_player_allowed_models_blue;
+string g_player_allowed_models_yellow;
+string g_player_allowed_models_pink;
 string g_player_forcemodel;
 string g_player_forcemodel_red;
 string g_player_forcemodel_blue;
@@ -1294,33 +1298,55 @@ void(string modelname) player_setup_lod {
 	player_update_sounds();
 }
 
+string(void) player_allowed_model_list {
+	if (teamplay)
+	if (self.team > 0) {
+		if (self.team == COLOR_TEAM1) {
+			if (g_player_allowed_models_red != "")
+				return g_player_allowed_models_red;
+		} else if (self.team == COLOR_TEAM2) {
+			if (g_player_allowed_models_blue != "")
+				return g_player_allowed_models_blue;
+		} else if (self.team == COLOR_TEAM3) {
+			if (g_player_allowed_models_yellow != "")
+				return g_player_allowed_models_yellow;
+		} else if (self.team == COLOR_TEAM4) {
+			if (g_player_allowed_models_pink != "")
+				return g_player_allowed_models_pink;
+		}
+	}
+	return g_player_allowed_models;
+}
+
 string(string _playermodel) player_allowed_model {
-	string first_allowed_model = str_car(g_player_allowed_models);
+	string allowed_models = player_allowed_model_list();
+	string first_allowed_model = str_car(allowed_models);
 	if (first_allowed_model == "")
 		return _playermodel;
 
 	if (_playermodel == "")
 		return first_allowed_model;
 
-	if (strstrofs(strcat(" ", g_player_allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
-			strstrofs(strcat(" ", g_player_allowed_models), strcat(" ", _playermodel, ":"), 0) >= 0)
+	if (strstrofs(strcat(" ", allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
+			strstrofs(strcat(" ", allowed_models), strcat(" ", _playermodel, ":"), 0) >= 0)
 		return _playermodel;
 
 	return first_allowed_model;
 }
 
 float(string _playermodel, float _skin) player_allowed_skin {
-	if (str_car(g_player_allowed_models) == "")
+	string allowed_models = player_allowed_model_list();
+	if (str_car(allowed_models) == "")
 		return _skin;
 
-	if (strstrofs(strcat(" ", g_player_allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
-			strstrofs(strcat(" ", g_player_allowed_models), strcat(" ", _playermodel, ":", ftos(_skin), " "), 0) >= 0)
+	if (strstrofs(strcat(" ", allowed_models, " "), strcat(" ", _playermodel, " "), 0) >= 0 ||
+			strstrofs(strcat(" ", allowed_models), strcat(" ", _playermodel, ":", ftos(_skin), " "), 0) >= 0)
 		return _skin;
 
-	float allowed_skin_pos = strstrofs(strcat(" ", g_player_allowed_models), strcat(" ", _playermodel, ":"), 0);
+	float allowed_skin_pos = strstrofs(strcat(" ", allowed_models), strcat(" ", _playermodel, ":"), 0);
 	if (allowed_skin_pos >= 0) {
 		allowed_skin_pos = allowed_skin_pos + strlen(_playermodel) + 1;
-		return stof(str_car(substring(g_player_allowed_models, allowed_skin_pos, -1)));
+		return stof(str_car(substring(allowed_models, allowed_skin_pos, -1)));
 	}
 	return _skin;
 }
@@ -2380,6 +2406,10 @@ void() player_init {
 	CACHE_CVAR(g_voice_flood_spv_team);
 	CACHE_CVAR(g_fullbrightplayers);
 	CACHE_CVAR_STR(g_player_allowed_models);
+	CACHE_CVAR_STR(g_player_allowed_models_red);
+	CACHE_CVAR_STR(g_player_allowed_models_blue);
+	CACHE_CVAR_STR(g_player_allowed_models_yellow);
+	CACHE_CVAR_STR(g_player_allowed_models_pink);
 	CACHE_CVAR_STR(g_player_forcemodel);
 	CACHE_CVAR_STR(g_player_forcemodel_red);
 	CACHE_CVAR_STR(g_player_forcemodel_blue);

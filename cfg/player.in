@@ -1,4 +1,8 @@
 set g_player_allowed_models "" "List allowed models. Skin can be specified with :<skinnum>, example: g_player_allowed_models \"models/player/marine.zym models/player/nexus.zym:2\""
+set g_player_allowed_models_red "" "List allowed models. Skin can be specified with :<skinnum>, example: g_player_allowed_models_blue \"models/player/marine.zym models/player/nexus.zym:2\""
+set g_player_allowed_models_blue "" "List allowed models. Skin can be specified with :<skinnum>, example: g_player_allowed_models_red \"models/player/marine.zym models/player/nexus.zym:2\""
+set g_player_allowed_models_yellow "" "List allowed models. Skin can be specified with :<skinnum>, example: g_player_allowed_models_yellow \"models/player/marine.zym models/player/nexus.zym:2\""
+set g_player_allowed_models_pink "" "List allowed models. Skin can be specified with :<skinnum>, example: g_player_allowed_models_pink \"models/player/marine.zym models/player/nexus.zym:2\""
 set g_player_forcemodel "models/player/nexus.zym"
 set g_player_forcemodel_red "0"
 set g_player_forcemodel_blue "0"
