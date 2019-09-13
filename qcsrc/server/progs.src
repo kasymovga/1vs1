@@ -159,11 +159,11 @@ warpzone.qh
 ../client-server/net.qc
 ../client-server/db.qc
 ../menu-server/util.qc
-selectableweapon.qh
 twoweapons.qh
 noteline.qh
 warmup.qh
 weapon.qh
+weapon/selectable.qh
 gametype.qh
 chat.qh
 team.qh
@@ -242,6 +242,7 @@ weapon/tuba.qc
 weapon/fireball.qc
 weapon/supershotgun.qc
 weapon/zapper.qc
+weapon/selectable.qc
 item.qc
 powerup.qc
 backpack.qc
@@ -385,7 +386,6 @@ damageindicator.qc
 ../client-server/anglestransform.qc
 ../client-server/warpzone.qc
 warpzone.qc
-selectableweapon.qc
 twoweapons.qc
 noteline.qc
 warmup.qc

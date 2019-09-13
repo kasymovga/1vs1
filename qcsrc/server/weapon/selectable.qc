@@ -2,21 +2,21 @@ float g_start_weapon_selectable;
 float selectable_weapon_for_bots;
 
 .float w_secondary_picked;
-void W_WriteSecondarySelect(void) {
+void(void) weapon_selectable_send {
     msg_entity = self;
     WriteByte(MSG_ONE, SVC_TEMPENTITY);
     WriteByte(MSG_ONE, TE_CSQC_WEAPONSELECT);
     net_write_int24(MSG_ONE, g_start_weapon_selectable);
 }
 
-var void(void(string item, string cmd) Add_Item) SelectableWeapon_GameMenuAddItems_NextLink;
-void SelectableWeapon_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) weapon_selectable_GameMenuAddItems_NextLink;
+void(void(string item, string cmd) Add_Item) weapon_selectable_GameMenuAddItems {
 	Add_Item("Switch Weapon", "cmd pickweapon;");
-	SelectableWeapon_GameMenuAddItems_NextLink(Add_Item);
+	weapon_selectable_GameMenuAddItems_NextLink(Add_Item);
 }
 
-var float(string cmd, float tokens) SelectableWeapon_ClientCommandHandle_NextLink;
-float SelectableWeapon_ClientCommandHandle(string cmd, float tokens) {
+var float(string cmd, float tokens) weapon_selectable_ClientCommandHandle_NextLink;
+float(string cmd, float tokens) weapon_selectable_ClientCommandHandle {
 	if (cmd == "pickweapon") {
 		if (tokens == 2) {
 			entity e;
@@ -33,36 +33,36 @@ float SelectableWeapon_ClientCommandHandle(string cmd, float tokens) {
 				}
 			}
 		} else {
-			W_WriteSecondarySelect();
+			weapon_selectable_send();
 		}
 		return TRUE;
 	}
-	return SelectableWeapon_ClientCommandHandle_NextLink(cmd, tokens);
+	return weapon_selectable_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-var float() SelectableWeapon_JoinHandle_NextLink;
-float SelectableWeapon_JoinHandle() {
+var float(void) weapon_selectable_JoinHandle_NextLink;
+float(void) weapon_selectable_JoinHandle {
     if(clienttype(self) != CLIENTTYPE_REAL)
         return FALSE;
 
     if(!self.w_secondary_picked) {
-        W_WriteSecondarySelect();
+        weapon_selectable_send();
         return TRUE;
     }
-	return SelectableWeapon_JoinHandle_NextLink();
+	return weapon_selectable_JoinHandle_NextLink();
 }
 
-var void(entity spot) SelectableWeapon_Spawn_NextLink;
-void SelectableWeapon_Spawn(entity spot) {
+var void(entity spot) weapon_selectable_Spawn_NextLink;
+void(entity spot) weapon_selectable_Spawn {
 	if (self.w_secondary_picked)
 		self.weapons |= weapon_bit(self.w_secondary_picked);
 	else if (clienttype(self) == CLIENTTYPE_BOT)
 		self.weapons |= weapon_bit(selectable_weapon_for_bots);
 
-	SelectableWeapon_Spawn_NextLink(spot);
+	weapon_selectable_Spawn_NextLink(spot);
 }
 
-void SelectableWeapon_Init() {
+void(void) weapon_selectable_init {
 	string s = cvar_string("g_start_weapon_selectable");
 	string head, tail;
 	float i;
@@ -80,12 +80,12 @@ void SelectableWeapon_Init() {
 	if not(g_start_weapon_selectable)
 		return;
 
-	SelectableWeapon_JoinHandle_NextLink = GameHookChain_JoinHandle;
-	GameHookChain_JoinHandle = SelectableWeapon_JoinHandle;
-	SelectableWeapon_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = SelectableWeapon_ClientCommandHandle;
-	SelectableWeapon_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = SelectableWeapon_Spawn;
-	SelectableWeapon_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = SelectableWeapon_GameMenuAddItems;
+	weapon_selectable_JoinHandle_NextLink = GameHookChain_JoinHandle;
+	GameHookChain_JoinHandle = weapon_selectable_JoinHandle;
+	weapon_selectable_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
+	GameHookChain_ClientCommandHandle = weapon_selectable_ClientCommandHandle;
+	weapon_selectable_Spawn_NextLink = GameHookChain_Spawn;
+	GameHookChain_Spawn = weapon_selectable_Spawn;
+	weapon_selectable_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = weapon_selectable_GameMenuAddItems;
 }

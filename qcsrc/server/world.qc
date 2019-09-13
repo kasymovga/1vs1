@@ -237,7 +237,7 @@ void(void) world_static_init {
 	DamageIndicator_Init();
 	monster_monsters_init();
 	WarpZone_Init();
-	SelectableWeapon_Init();
+	weapon_selectable_init();
 	TwoWeapons_Init();
 	UDPChat_Init();
 	timeout_init();
