@@ -761,7 +761,7 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "cvar_changes") {
 		sprint(self, cvar_changes);
 	} else if(cmd == "menu_select") {
-		Menu_Select(argv(1), stof(argv(2)));
+		menu_select(argv(1), stof(argv(2)));
 	} else if(cmd == "location_select") {
 		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
 	} else if(cmd == "mylocation") {

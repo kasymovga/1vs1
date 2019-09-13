@@ -1,9 +1,8 @@
-#define MENU_ESCAPE_ENABLE 16
-entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeout, void(float choice) _menu_handler);
-void Menu_Add_Item(entity menu, string name);
-void Menu_Set_Item(entity menu, float item, string name);
-void Menu_Set_Title(entity menu, string title);
-void Menu_Remove(entity menu);
-void Menu_Select(string _menu_id, float choice);
-void Menu_Set_Flags(entity menu, float _flags);
-void Menu_Remove_For(entity plr, string _menu_id);
+entity(entity plr, string _menu_id, string _menu_title, float timeout, void(float choice) _menu_handler) menu_prepare;
+void(entity menu, string name) menu_add_item;
+void(entity menu, float item, string name) menu_set_item;
+void(entity menu, string title) menu_set_title;
+void(entity menu) menu_remove;
+void(string _menu_id, float choice) menu_select;
+void(entity menu, float _flags) menu_set_flags;
+void(entity plr, string _menu_id) menu_remove_for;

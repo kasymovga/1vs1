@@ -6,16 +6,16 @@
 .void(float choice) menu_handler;
 entity _menu_chain;
 
-float Menu_CustomizeEntityForClient() {
+float(void) menu_customize {
 	if not(other == self.owner)
 		return FALSE;
 
 	return TRUE;
 }
 
-float Menu_SendEntity(entity to, float sf) {
+float(entity to, float sf) menu_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MENU);
-	sf &~= MENU_ESCAPE_ENABLE;
+	sf &~= 16;
 	sf |= self.flags;
 	WriteByte(MSG_ENTITY, sf & 255);
 	if (sf & 8)
@@ -36,7 +36,7 @@ float Menu_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeout, void(float choice) _menu_handler) {
+entity(entity plr, string _menu_id, string _menu_title, float timeout, void(float choice) _menu_handler) menu_prepare {
 	entity e;
 	for (e = _menu_chain; e; e = e.menu_chain) // Only one menu of one type for player
 		if (e.owner == plr)
@@ -53,24 +53,24 @@ entity Menu_Prepare(entity plr, string _menu_id, string _menu_title, float timeo
 	e.menu_handler = _menu_handler;
 	e.owner = plr;
 	if (plr)
-		e.customizeentityforclient = Menu_CustomizeEntityForClient;
+		e.customizeentityforclient = menu_customize;
 
-	net_link_entity(e, FALSE, 0, Menu_SendEntity);
+	net_link_entity(e, FALSE, 0, menu_send);
 	e.menu_chain = _menu_chain;
 	_menu_chain = e;
 	return e;
 }
 
-void Menu_Set_Flags(entity menu, float _flags) {
+void(entity menu, float _flags) menu_set_flags {
 	if not(menu)
-		backtrace("Menu_Set_Flags get world entity");
+		backtrace("menu_set_flags get world entity");
 
 	menu.flags = _flags;
 }
 
-void Menu_Add_Item(entity menu, string name) {
+void(entity menu, string name) menu_add_item {
 	if not(menu)
-		backtrace("Menu_Add_Item get world entity");
+		backtrace("menu_add_item get world entity");
 
 	if (menu.cnt >= MENU_ITEMS_MAXCOUNT)
 		return;
@@ -79,7 +79,7 @@ void Menu_Add_Item(entity menu, string name) {
 	menu.cnt++;
 }
 
-void Menu_Set_Item(entity menu, float item, string name) {
+void(entity menu, float item, string name) menu_set_item {
 	if (item < 0 || item >= menu.cnt)
 		return;
 
@@ -87,15 +87,15 @@ void Menu_Set_Item(entity menu, float item, string name) {
 	menu.SendFlags |= 1;
 }
 
-void Menu_Set_Title(entity menu, string title) {
+void(entity menu, string title) menu_set_title {
 	if not(menu)
-		backtrace("Menu_Set_Title get world entity");
+		backtrace("menu_set_title get world entity");
 
 	menu.menu_title = title;
 	menu.SendFlags |= 2;
 }
 
-void Menu_Remove(entity menu) {
+void(entity menu) menu_remove {
 	entity e;
 	if (_menu_chain == menu)
 		_menu_chain = _menu_chain.menu_chain;
@@ -108,7 +108,7 @@ void Menu_Remove(entity menu) {
 	remove(menu);
 }
 
-void Menu_Select(string _menu_id, float choice) {
+void(string _menu_id, float choice) menu_select {
 	entity e;
 	for (e = _menu_chain; e; e = e.menu_chain)
 		if (e.menu_id == _menu_id) {
@@ -117,12 +117,12 @@ void Menu_Select(string _menu_id, float choice) {
 		}
 }
 
-void Menu_Remove_For(entity plr, string _menu_id) {
+void(entity plr, string _menu_id) menu_remove_for {
 	entity e;
 	for (e = _menu_chain; e; e = e.menu_chain)
 		if (e.owner == plr)
 		if (e.menu_id == _menu_id) {
-			Menu_Remove(e);
+			menu_remove(e);
 			return;
 		}
 }

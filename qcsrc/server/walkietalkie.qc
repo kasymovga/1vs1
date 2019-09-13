@@ -43,7 +43,7 @@ float walkietalkie_block[4];
 void WalkeTalkie_WaypointRemove() { WaypointSprite_DetachCarrier(self); }
 
 void WalkieTalkie_Menu_Select(float n) {
-	Menu_Remove_For(self, "walkietalkie");
+	menu_remove_for(self, "walkietalkie");
 	if (n < 0)
 		return;
 
@@ -77,12 +77,12 @@ void WalkieTalkie_Menu() {
 	if (self.classname != "player")
 		return;
 
-	entity e = Menu_Prepare(self, "walkietalkie", "Walkie Talkie", 0, WalkieTalkie_Menu_Select);
+	entity e = menu_prepare(self, "walkietalkie", "Walkie Talkie", 0, WalkieTalkie_Menu_Select);
 	if not(e)
 		return;
 
 	float i;
 	for (i = 0; i < sv_walkietalkie_count; i++) {
-		Menu_Add_Item(e, sv_walkietalkie[i]);
+		menu_add_item(e, sv_walkietalkie[i]);
 	}
 }

@@ -15,7 +15,6 @@ void SelectableWeapon_GameMenuAddItems(void(string item, string cmd) Add_Item) {
 	SelectableWeapon_GameMenuAddItems_NextLink(Add_Item);
 }
 
-
 var float(string cmd, float tokens) SelectableWeapon_ClientCommandHandle_NextLink;
 float SelectableWeapon_ClientCommandHandle(string cmd, float tokens) {
 	if (cmd == "pickweapon") {
@@ -61,14 +60,6 @@ void SelectableWeapon_Spawn(entity spot) {
 		self.weapons |= weapon_bit(selectable_weapon_for_bots);
 
 	SelectableWeapon_Spawn_NextLink(spot);
-}
-
-var void(entity menu) SelectableWeapons_GameMenuAddItems_NextLink;
-void SelectableWeapons_GameMenuAddItems(entity menu) {
-	if (self.team > 0 || self.classname == "player")
-		Menu_Add_Item(menu, "Switch Weapon|cmd pickweapon");
-
-	SelectableWeapons_GameMenuAddItems_NextLink(menu);
 }
 
 void SelectableWeapon_Init() {
