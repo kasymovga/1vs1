@@ -1,0 +1,7 @@
+
+.entity hg_waypoint;
+.float hg_wp_nextthink;
+.float hg_wp_state;
+
+void nadget_Waypoint(void);
+void nadget_Waypoint_Remove(entity wp);

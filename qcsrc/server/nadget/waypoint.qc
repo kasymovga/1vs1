@@ -6,8 +6,8 @@ enum {
     WPCOLOR_ORANGE,
 };
 
-void HG_Waypoint_Update(string wpname) {
-    string hgname = HG_TypeToName(self.hg_type);
+void nadget_Waypoint_Update(string wpname) {
+    string hgname = nadget_TypeToName(self.hg_type);
 
 #if 0
     if(fexists(pickfile("models/sprites/pointers/" + hgname + "_" + wpname, "tga", "jpg", "png", NULL)))
@@ -17,16 +17,16 @@ void HG_Waypoint_Update(string wpname) {
     //wpname = strcat("pointers/", wpname);
 
     if(!self.hg_waypoint) {
-        float ownerhack = (/* self.hg_type == HG_BAIT || */ self.hg_type == HG_SENTRY);
+        float ownerhack = (/* self.hg_type == NADGET_BAIT || */ self.hg_type == NADGET_SENTRY);
         float teamwp = (teamplay && GRENVAR(self.hg_type, /*if(self.hg_adept) "adept_detect_enemies_teamwide" else */ "detect_enemies_teamwide"));
         entity o = (ownerhack ? self.realowner : self.owner);
         float t = (teamwp ? o.team : 0);
         o = (teamwp ? world : o);
 
-        WaypointSprite_Spawn(wpname, 0, 0, self, '0 0 32' * (1 + 1 * ownerhack + 1.5 * (self.hg_type == HG_SENTRY)),
+        WaypointSprite_Spawn(wpname, 0, 0, self, '0 0 32' * (1 + 1 * ownerhack + 1.5 * (self.hg_type == NADGET_SENTRY)),
             o, t, self, hg_waypoint, 1);
 
-        if(self.hg_type == HG_SENTRY) {
+        if(self.hg_type == NADGET_SENTRY) {
             WaypointSprite_UpdateMaxHealth(self.hg_waypoint, (self.hg_wp_state == WPCOLOR_RED));
             WaypointSprite_UpdateTeamRadar(self.hg_waypoint, 0, '1 0.5 0');
         } else if(self.hg_detonable && self.hg_detonateready > time) {
@@ -39,7 +39,7 @@ void HG_Waypoint_Update(string wpname) {
     } else {
         WaypointSprite_UpdateSprites(self.hg_waypoint, wpname, "", "");
 
-        if(self.hg_type == HG_SENTRY) {
+        if(self.hg_type == NADGET_SENTRY) {
             if(self.hg_wp_state == WPCOLOR_RED) {
                 WaypointSprite_UpdateMaxHealth(self.hg_waypoint, 1);
                 WaypointSprite_UpdateHealth(self.hg_waypoint, self.hg_sentry_energy);
@@ -49,7 +49,7 @@ void HG_Waypoint_Update(string wpname) {
     }
 }
 
-void HG_Waypoint_SetColor(float wpcolor) {
+void nadget_Waypoint_SetColor(float wpcolor) {
     if(self.hg_wp_state != wpcolor) {
         self.hg_wp_state = wpcolor;
 		string wpcolor_string;
@@ -59,11 +59,11 @@ void HG_Waypoint_SetColor(float wpcolor) {
 			case WPCOLOR_CYAN:   wpcolor_string = "pointers/cyan"; break;
 			default:             wpcolor_string = "";
         }
-        HG_Waypoint_Update(wpcolor_string);
+        nadget_Waypoint_Update(wpcolor_string);
     }
 }
 
-void HG_Waypoint(void) {
+void nadget_Waypoint(void) {
     entity plr;
     float detected;
     float rng;
@@ -72,7 +72,7 @@ void HG_Waypoint(void) {
     if(time < self.hg_wp_nextthink)
         return;
 
-    if(self.hg_type == HG_SENTRY) {
+    if(self.hg_type == NADGET_SENTRY) {
         if(self.hg_waypoint)
             WaypointSprite_UpdateHealth(self.hg_waypoint, self.hg_sentry_energy);
 
@@ -80,7 +80,7 @@ void HG_Waypoint(void) {
         warn = (self.health < cvar("g_nadgets_sentry_health"));
     }
 #if 0
-	else if(self.hg_type == HG_BAIT)
+	else if(self.hg_type == NADGET_BAIT)
         detected = self.revprogress;
 #endif
     else {
@@ -120,13 +120,13 @@ void HG_Waypoint(void) {
     if(!self.hg_waypoint)
         self.hg_wp_state = WPCOLOR_NONE;
 
-    HG_Waypoint_SetColor(
+    nadget_Waypoint_SetColor(
         (detected ?  WPCOLOR_RED : (warn ?  WPCOLOR_ORANGE : WPCOLOR_CYAN)));
 
     self.hg_wp_nextthink = time + 0.1;
 }
 
-void HG_Waypoint_Remove(entity wp) {
+void nadget_Waypoint_Remove(entity wp) {
     if(wp)
         WaypointSprite_Disown(wp, 0.5);
 }

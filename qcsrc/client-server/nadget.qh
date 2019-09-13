@@ -1,0 +1,42 @@
+
+#define NADGETDEFS \
+    NADGETDEF(NADGET_NORMAL,    normal,     "Hand Grenade",     '0.2 1.0 0.2') \
+    NADGETDEF(NADGET_REMOTE,    remote,     "Fire Trap",        '1.0 0.2 0.2') \
+    NADGETDEF(NADGET_PLASMA,    plasma,     "Plasma Bomb",      '0.1 1.0 1.0') \
+    NADGETDEF(NADGET_NAPALM,    napalm,     "Napalm Grenade",   '1.0 0.5 0.0') \
+    NADGETDEF(NADGET_TRANSLOC,  transloc,   "Translocator",     '1.0 0.3 0.9') \
+    NADGETDEF(NADGET_SHIELD,    shield,     "Powershield",      '1.0 1.0 0.0') \
+    NADGETDEF(NADGET_LINKER,    linker,     "Linking Shell",    '0.5 0.5 1.0') \
+    NADGETDEF(NADGET_LASER,     laser,      "Lasergun",         '1.0 0.5 0.0') \
+    NADGETDEF(NADGET_CLOAK,     cloak,      "Concealing Cloak", '0.7 0.7 0.7') \
+    NADGETDEF(NADGET_GG,        gg,         "GG Button",        '0.5 0.5 0.5' + colormap_palette_color(15, FALSE)) \
+    NADGETDEF(NADGET_SENTRY,    sentry,     "Zapper Sentry",    '0.3 1.0 0.7') \
+    NADGETDEF(NADGET_RAZE,      raze,       "Raze",             '1.0 0.4 0.5') \
+    //NADGETDEF(NADGET_BAIT,      bait,       "Hero Bait",        '0.2 0.7 1.0') \
+    //NADGETDEF(NADGET_TIMEWARP,  timewarper, "Time Warper",      '0.7 0.3 1.0') \
+
+
+enum {
+    #define NADGETDEF(id,shortname,longname,color) id,
+    _NADGET_START = 99,
+    NADGETDEFS
+    _NADGET_END
+    #undef NADGETDEF
+};
+
+const float NADGET_START  = _NADGET_START + 1;
+const float NADGET_END    = _NADGET_END   - 1;
+const float NADGET_RANDOM = 25252;
+
+#define DEATH_NADGETTYPE(t)               ((t) & DEATH_WEAPONMASK)
+#define DEATH_ISNADGET(t)                 (DEATH_NADGETTYPE(t) >= NADGET_START && DEATH_NADGETTYPE(t) <= NADGET_END)
+
+string nadget_TypeToName(float);
+float nadget_NameToType(string);
+string nadget_TypeToExpandedName(float);
+string nadget_NameToExpandedName(string);
+vector nadget_TypeToColor(float);
+string nadget_TypeToIcon(float, float, float);
+string nadget_NameToIcon(string, float, float);
+float nadget_CompressDualType(float t1, float t2);
+vector nadget_DecompressDualType(float t);

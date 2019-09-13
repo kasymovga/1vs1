@@ -6,5 +6,5 @@
 .float hg_stealth_saved;
 .float hg_stealth_protectionexpiretime;
 
-void HG_Cloak_PlayerFrame(void);
-void HG_Cloak_Trigger(void);
+void nadget_Cloak_PlayerFrame(void);
+void nadget_Cloak_Trigger(void);

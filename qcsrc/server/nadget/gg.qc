@@ -1,7 +1,7 @@
 float g_nadgets_gg_damage;
 float g_nadgets_gg_range;
 
-HG_HOOKFUNCTION(gg, Attack) {
+NADGET_HOOKFUNCTION(gg, Attack) {
     entity p;
     float pwned;
     float allow;
@@ -20,7 +20,7 @@ HG_HOOKFUNCTION(gg, Attack) {
             allow = (vlen(trace_endpos - e) < 5);
 
         if(allow) {
-            damage(p, world, self, g_nadgets_gg_damage, HG_GG, e, normalize(e - o) * 1000);
+            damage(p, world, self, g_nadgets_gg_damage, NADGET_GG, e, normalize(e - o) * 1000);
             trailparticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), o, e + randomvec() * 10);
             trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), o, e + randomvec() * 10);
@@ -31,15 +31,15 @@ HG_HOOKFUNCTION(gg, Attack) {
 
     if(pwned) {
         dlc_sound(self, CHAN_AUTO, "misc/gg.wav", 1, ATTN_NORM);
-        return HG_ATTACK_OK;
+        return NADGET_ATTACK_OK;
     } else {
         //bigprint_spec(self, "Nobody to win against!", "", 1);
-        return HG_ATTACK_FAIL_COOLDOWN;
+        return NADGET_ATTACK_FAIL_COOLDOWN;
     }
 }
 
-HG_HOOKFUNCTION(gg, Init) {
+NADGET_HOOKFUNCTION(gg, Init) {
 	CACHE_CVAR(g_nadgets_gg_damage);
 	CACHE_CVAR(g_nadgets_gg_range);
-    return HG_INIT_OK;
+    return NADGET_INIT_OK;
 }

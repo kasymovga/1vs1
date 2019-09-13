@@ -7,7 +7,7 @@ float g_nadgets_cloak_unstealthrate;
 float g_nadgets_cloak_actiondelay;
 float g_nadgets_cloak_spy;
 
-void HG_Cloak(void) {
+void nadget_Cloak(void) {
     self.hg_stealth = self.hg_stealth + g_nadgets_cloak_duration/* * Buffs_NadgetPower(self)*/;
     self.fire_endtime = 0;
     self.hg_stealth_protectionexpiretime = time + g_nadgets_cloak_damagereduction_time;
@@ -19,7 +19,7 @@ void HG_Cloak(void) {
 			e.entcs.SendFlags |= 16;
 }
 
-void HG_Cloak_Trigger(void) {
+void nadget_Cloak_Trigger(void) {
 #if 0
     if(!Buffs_Present(self, BUFF_ADEPT)) {
 #endif
@@ -41,7 +41,7 @@ void HG_Cloak_Trigger(void) {
 #endif
 }
 
-void HG_Cloak_PlayerFrame(void) {
+void nadget_Cloak_PlayerFrame(void) {
     if(self.hg_stealth) {
         if(GameHook_PlayerIsCarrier(self))
 			GameHook_DropCarried(self);
@@ -55,9 +55,9 @@ void HG_Cloak_PlayerFrame(void) {
         if(self.hg_wasstealth) {
             self.hg_wasstealth = FALSE;
 
-            HG_DO_IN_ALL_CONTEXTS({
-                if(self.hg_ctx_type == HG_CLOAK)
-                    HG_SetCooldown(hg_ctx_next, 0, g_nadgets_cloak_cooldown_decloak);
+            NADGET_DO_IN_ALL_CONTEXTS({
+                if(self.hg_ctx_type == NADGET_CLOAK)
+                    nadget_SetCooldown(hg_ctx_next, 0, g_nadgets_cloak_cooldown_decloak);
             })
 
             dlc_sound(self, CHAN_AUTO, "misc/unstealth.wav", VOL_BASE, ATTN_NORM);
@@ -67,9 +67,9 @@ void HG_Cloak_PlayerFrame(void) {
     }
 }
 
-var float(entity plr, entity viewer, float palpha) HG_Cloak_PlayerAlphaMod_Next;
+var float(entity plr, entity viewer, float palpha) nadget_Cloak_PlayerAlphaMod_Next;
 
-float HG_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
+float nadget_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
     float sa = 1 - plr.hg_stealthalpha;
 
     if(viewer && viewer != plr) {
@@ -83,40 +83,40 @@ float HG_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
         }
     }
 
-    return HG_Cloak_PlayerAlphaMod_Next(plr, viewer, sa * palpha);
+    return nadget_Cloak_PlayerAlphaMod_Next(plr, viewer, sa * palpha);
 }
 
-var float(float secondary, float attacktime) HG_Cloak_WeaponPrepareAttack_Next;
+var float(float secondary, float attacktime) nadget_Cloak_WeaponPrepareAttack_Next;
 
-float HG_Cloak_WeaponPrepareAttack(float secondary, float attacktime) {
+float nadget_Cloak_WeaponPrepareAttack(float secondary, float attacktime) {
     if(self.hg_stealth) {
-        HG_Cloak_Trigger();
+        nadget_Cloak_Trigger();
     }
 
     if(time - self.hg_stealthtime < g_nadgets_cloak_actiondelay) {
         return FALSE;
     }
 
-    return HG_Cloak_WeaponPrepareAttack_Next(secondary, attacktime);
+    return nadget_Cloak_WeaponPrepareAttack_Next(secondary, attacktime);
 }
 
-HG_HOOKFUNCTION(cloak, Attack) {
+NADGET_HOOKFUNCTION(cloak, Attack) {
     if(self.hg_stealth && !g_nadgets_cloak_usewhileactive)
-        return HG_ATTACK_FAIL;
+        return NADGET_ATTACK_FAIL;
 
-    HG_Cloak();
-    return HG_ATTACK_OK;
+    nadget_Cloak();
+    return NADGET_ATTACK_OK;
 }
 
-var float(entity plr, entity targ) HG_Cloak_PlayerCanSeeHealthFor_NextLink;
-float HG_Cloak_PlayerCanSeeHealthFor(entity plr, entity targ) {
+var float(entity plr, entity targ) nadget_Cloak_PlayerCanSeeHealthFor_NextLink;
+float nadget_Cloak_PlayerCanSeeHealthFor(entity plr, entity targ) {
 	if (plr.hg_stealth)
 		return TRUE;
 
-	return HG_Cloak_PlayerCanSeeHealthFor_NextLink(plr, targ);
+	return nadget_Cloak_PlayerCanSeeHealthFor_NextLink(plr, targ);
 }
 
-HG_HOOKFUNCTION(cloak, Init) {
+NADGET_HOOKFUNCTION(cloak, Init) {
 	CACHE_CVAR(g_nadgets_cloak_cooldown_decloak);
 	CACHE_CVAR(g_nadgets_cloak_duration);
 	CACHE_CVAR(g_nadgets_cloak_damagereduction_time);
@@ -129,16 +129,16 @@ HG_HOOKFUNCTION(cloak, Init) {
     addstat(STAT_STEALTH, AS_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);
 
-    HG_Cloak_PlayerAlphaMod_Next = GameHookChain_PlayerAlphaMod;
-    GameHookChain_PlayerAlphaMod = HG_Cloak_PlayerAlphaMod;
+    nadget_Cloak_PlayerAlphaMod_Next = GameHookChain_PlayerAlphaMod;
+    GameHookChain_PlayerAlphaMod = nadget_Cloak_PlayerAlphaMod;
 
-    HG_Cloak_WeaponPrepareAttack_Next = GameHookChain_WeaponPrepareAttack;
-    GameHookChain_WeaponPrepareAttack = HG_Cloak_WeaponPrepareAttack;
+    nadget_Cloak_WeaponPrepareAttack_Next = GameHookChain_WeaponPrepareAttack;
+    GameHookChain_WeaponPrepareAttack = nadget_Cloak_WeaponPrepareAttack;
 
 	if (g_nadgets_cloak_spy) {
-		HG_Cloak_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
-		GameHookChain_PlayerCanSeeHealthFor = HG_Cloak_PlayerCanSeeHealthFor;
+		nadget_Cloak_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
+		GameHookChain_PlayerCanSeeHealthFor = nadget_Cloak_PlayerCanSeeHealthFor;
 	}
 
-    return HG_INIT_OK;
+    return NADGET_INIT_OK;
 }

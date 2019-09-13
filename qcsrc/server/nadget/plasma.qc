@@ -1,5 +1,5 @@
 
-void HG_Plasma_Shard_Explode(void) {
+void nadget_Plasma_Shard_Explode(void) {
 #if 0
     if(self.meodp_point.enemy) {
         self.realowner = self.meodp_point.enemy;
@@ -20,19 +20,19 @@ void HG_Plasma_Shard_Explode(void) {
         cvar("g_nadgets_plasma_projectile_radius"),
         world,
         cvar("g_nadgets_plasma_projectile_force") /* * p */,
-        HG_PLASMA | HITTYPE_BOUNCE,
+        NADGET_PLASMA | HITTYPE_BOUNCE,
         other
     );
 
     remove(self);
 }
 
-void HG_Plasma_Shard_Think(void) {
+void nadget_Plasma_Shard_Think(void) {
     entity e;
     //float found;
 
     if(time >= self.hg_detonatetime) {
-        HG_Plasma_Shard_Explode();
+        nadget_Plasma_Shard_Explode();
         return;
     }
 
@@ -48,7 +48,7 @@ void HG_Plasma_Shard_Think(void) {
             }
 
         if(!found) {
-            HG_Plasma_Shard_Explode();
+            nadget_Plasma_Shard_Explode();
             return;
         }
     }
@@ -72,7 +72,7 @@ void HG_Plasma_Shard_Think(void) {
 
 		damage(e, self, self.realowner,
 				pdmg,
-				HG_PLASMA | HITTYPE_BOUNCE, trace_endpos,
+				NADGET_PLASMA | HITTYPE_BOUNCE, trace_endpos,
 				'0 0 0');
 
 		effect_lightningarc(o, e.origin);
@@ -83,12 +83,12 @@ void HG_Plasma_Shard_Think(void) {
     self.nextthink = min(self.hg_plasma_projdps_next, self.hg_detonatetime);
 }
 
-void HG_Plasma_Shard_Touch(void) {
+void nadget_Plasma_Shard_Touch(void) {
     PROJECTILE_TOUCH;
     sound_spam(self, CHAN_PROJECTILE, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
 }
 
-void HG_Plasma_Shard(float kickangle) {
+void nadget_Plasma_Shard(float kickangle) {
     entity proj;
     vector kick;
 
@@ -97,14 +97,14 @@ void HG_Plasma_Shard(float kickangle) {
     proj.classname = "hg_plasma";
     proj.realowner = self.owner;
     proj.team = proj.owner.team;
-    proj.use = HG_Plasma_Shard_Explode;
-    proj.think = HG_Plasma_Shard_Think;
+    proj.use = nadget_Plasma_Shard_Explode;
+    proj.think = nadget_Plasma_Shard_Think;
     proj.bot_dodge = TRUE;
     proj.bot_dodgerating = cvar("g_nadgets_plasma_projectile_damage") + 300; // just avoid plasma
     proj.hg_detonatetime = time + cvar("g_nadgets_plasma_projectile_lifetime") + random() * cvar("g_nadgets_plasma_projectile_lifetime_randomfactor");
 
     PROJECTILE_MAKETRIGGER(proj);
-    proj.projectiledeathtype = HG_PLASMA | HITTYPE_SECONDARY;
+    proj.projectiledeathtype = NADGET_PLASMA | HITTYPE_SECONDARY;
     setorigin(proj, self.origin);
 
     proj.movetype = MOVETYPE_BOUNCE;
@@ -122,7 +122,7 @@ void HG_Plasma_Shard(float kickangle) {
     }
 
     proj.velocity = kick + self.velocity;
-    proj.touch = HG_Plasma_Shard_Touch;
+    proj.touch = nadget_Plasma_Shard_Touch;
     proj.takedamage = DAMAGE_NO;
     proj.hg_plasma_projrange = cvar("g_nadgets_plasma_projectile_dps_range");
     proj.hg_plasma_projdps = cvar("g_nadgets_plasma_projectile_dps") /* * Buffs_NadgetPower(self.realowner) */;
@@ -148,7 +148,7 @@ void HG_Plasma_Shard(float kickangle) {
 #endif
 }
 
-void HG_Plasma_Explode(void) {
+void nadget_Plasma_Explode(void) {
     float c;
 
 #if 0
@@ -162,5 +162,5 @@ void HG_Plasma_Explode(void) {
     vectorvectors(normalize(v));
 
     for (c = 0; c < cvar("g_nadgets_plasma_projectile_count"); c ++)
-        HG_Plasma_Shard(2 * M_PI * (c / cvar("g_nadgets_plasma_projectile_count")));
+        nadget_Plasma_Shard(2 * M_PI * (c / cvar("g_nadgets_plasma_projectile_count")));
 }

@@ -119,8 +119,8 @@ void NS_Draw(void) {
             float isConfirmed = t == confirmed;
             float isSelected = i == ns_selected && ns_selected_in == table;
 
-            vector clr = (((confirmed < 0 || isConfirmed || isSelected) && (t != confirmedOther || t == HG_RANDOM)) ?
-					HG_TypeToColor(t) * (0.5 + 0.5 * a2) :
+            vector clr = (((confirmed < 0 || isConfirmed || isSelected) && (t != confirmedOther || t == NADGET_RANDOM)) ?
+					nadget_TypeToColor(t) * (0.5 + 0.5 * a2) :
 					'0.1 0.1 0.1');
 
             if(isConfirmed || isSelected) {
@@ -134,15 +134,15 @@ void NS_Draw(void) {
             p_x = o_x + NS_MARGIN * 0.5;
 			p_y = o_y + i * sz_y + NS_MARGIN * 0.5;
 
-            if(t == HG_RANDOM) {
+            if(t == NADGET_RANDOM) {
                 p_x = p_x + (sz_x - stringwidth("?", FALSE) * sz_x) * 0.5;
                 drawstring(p, "?", sz, clr, a, DRAWFLAG_NORMAL);
             } else {
-                drawpic(p, HG_TypeToIcon(t, TRUE, FALSE), sz, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
+                drawpic(p, nadget_TypeToIcon(t, TRUE, FALSE), sz, '1 1 1' * (0.5 + 0.5 * a2), a, DRAWFLAG_NORMAL);
             }
 
             p_x = NS_MARGIN * 0.5 + o_x + sz_x;
-            drawstring(p, HG_TypeToExpandedName(t), sz, clr, a, DRAWFLAG_NORMAL);
+            drawstring(p, nadget_TypeToExpandedName(t), sz, clr, a, DRAWFLAG_NORMAL);
 
             if(i < 10) {
                 txt = ((i == 9) ? "0" : ftos(i + 1));
@@ -158,18 +158,18 @@ void NS_Draw(void) {
 void NS_ConfirmSelection(void) {
     if(ns_selected_in) {
         ns_confirmed2 = ns_options[NS_MAX_OPTIONS + ns_selected];
-        if(ns_confirmed2 == ns_confirmed1 && ns_confirmed2 != HG_RANDOM)
+        if(ns_confirmed2 == ns_confirmed1 && ns_confirmed2 != NADGET_RANDOM)
             ns_confirmed1 = -1;
     } else {
         ns_confirmed1 = ns_options[ns_selected];
-        if(ns_confirmed1 == ns_confirmed2 && ns_confirmed1 != HG_RANDOM)
+        if(ns_confirmed1 == ns_confirmed2 && ns_confirmed1 != NADGET_RANDOM)
             ns_confirmed2 = -1;
     }
 
     if(!g_nadgets_double || (ns_confirmed1 >= 0 && ns_confirmed2 >= 0)) {
-        string cmd = strcat("cmd picknade ", HG_TypeToName(ns_confirmed1));
+        string cmd = strcat("cmd picknade ", nadget_TypeToName(ns_confirmed1));
         if(ns_confirmed2 >= 0)
-            cmd = strcat(cmd, " ", HG_TypeToName(ns_confirmed2));
+            cmd = strcat(cmd, " ", nadget_TypeToName(ns_confirmed2));
         cmd = strcat(cmd, "; cmd join\n");
         localcmd(cmd);
         ns_active = FALSE;
@@ -255,7 +255,7 @@ void Net_ReadNadgetSelect(void) {
             float valid = (typename != "");
 
             if(valid)
-                ns_options[idx] = HG_NameToType(typename);
+                ns_options[idx] = nadget_NameToType(typename);
             else
                 ns_options[idx] = -1;
 
@@ -265,7 +265,7 @@ void Net_ReadNadgetSelect(void) {
             if(!valid)
                 continue;
 
-            ns_width = max(ns_width, NS_SCALE + stringwidth(HG_TypeToExpandedName(ns_options[idx]), FALSE) * NS_SCALE);
+            ns_width = max(ns_width, NS_SCALE + stringwidth(nadget_TypeToExpandedName(ns_options[idx]), FALSE) * NS_SCALE);
         }
     }
 	drawfont = oldfont;

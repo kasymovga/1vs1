@@ -4,7 +4,7 @@ float g_nadgets_linker_damagefactor;
 float g_nadgets_linker_hps;
 float g_nadgets_linker_duration;
 
-void HG_Linker_Adept_Push(entity p) {
+void nadget_Linker_Adept_Push(entity p) {
     if(vlen(p.origin - self.origin) <= self.hg_linker_range) {
         float v = max(400, vlen(p.velocity));
         p.velocity = normalize(p.origin - self.origin) * v;
@@ -12,18 +12,18 @@ void HG_Linker_Adept_Push(entity p) {
     }
 }
 
-void HG_Linker_Remove(void) {
-    HG_Waypoint_Remove(self.hg_waypoint);
+void nadget_Linker_Remove(void) {
+    nadget_Waypoint_Remove(self.hg_waypoint);
     remove(self);
 }
 
 #define HEAL_PAUSEROT_DEFAULT -1
-void HG_Linker_Think(void) {
+void nadget_Linker_Think(void) {
     entity p, e;
     float denom, thealth, tarmor;
 
     if(!self.owner.iscreature || self.owner.team != self.team) {
-        HG_Linker_Remove();
+        nadget_Linker_Remove();
         return;
     }
 
@@ -47,7 +47,7 @@ void HG_Linker_Think(void) {
         }
 
         if(sharingframe)
-        if(p.hg_linker == self) IF_HG_LINKER_APPLICABLE(p) {
+        if(p.hg_linker == self) IF_NADGET_LINKER_APPLICABLE(p) {
             ++denom;
             thealth += p.health;
             tarmor += p.armorvalue;
@@ -58,7 +58,7 @@ void HG_Linker_Think(void) {
 #endif
 
             if(time > p.hg_linker_effecttime) {
-                FOR_EACH_PLAYER(e) if(e != p) if(e.hg_linker == self) if(time > e.hg_linker_effecttime) IF_HG_LINKER_APPLICABLE(e) {
+                FOR_EACH_PLAYER(e) if(e != p) if(e.hg_linker == self) if(time > e.hg_linker_effecttime) IF_NADGET_LINKER_APPLICABLE(e) {
                     effect_lightningarc(p.origin, e.origin);
                 }
             }
@@ -69,7 +69,7 @@ void HG_Linker_Think(void) {
 #if 0
         if(self.hg_adept)
             if(p != self.owner && !p.frozen && (!teamplay || p.team != self.team))
-                HG_Linker_Adept_Push(p);
+                nadget_Linker_Adept_Push(p);
 #endif
     }
 
@@ -79,7 +79,7 @@ void HG_Linker_Think(void) {
     if(self.hg_adept)
         for(p = findchainflags(flags, FL_PROJECTILE); p; p = p.chain)
             if(p.classname != "bullet" && p.owner != self.owner && (!teamplay || p.owner.team != self.team))
-                HG_Linker_Adept_Push(p);
+                nadget_Linker_Adept_Push(p);
 #endif
 
     if(sharingframe) {
@@ -88,7 +88,7 @@ void HG_Linker_Think(void) {
         if(denom >= 1) {
             if(denom > 1) sound(self, CHAN_AUTO, "kh/capture.wav", 0.4, 1.5);
 
-            FOR_EACH_PLAYER(p) if(p.hg_linker == self) IF_HG_LINKER_APPLICABLE(p) {
+            FOR_EACH_PLAYER(p) if(p.hg_linker == self) IF_NADGET_LINKER_APPLICABLE(p) {
                 if(denom > 1 && g_nadgets_linker_sharefactor) {
                     float newhealth = (1 - g_nadgets_linker_sharefactor) * p.health     + g_nadgets_linker_sharefactor * (thealth / denom);
                     float newarmor  = (1 - g_nadgets_linker_sharefactor) * p.armorvalue + g_nadgets_linker_sharefactor * (tarmor  / denom);
@@ -99,13 +99,13 @@ void HG_Linker_Think(void) {
                     }
 
                     heal(p, self, self.owner,
-                            max(0, newhealth - p.health), max(0, newarmor - p.armorvalue), 0, 0, HG_LINKER | HITTYPE_SECONDARY,
+                            max(0, newhealth - p.health), max(0, newarmor - p.armorvalue), 0, 0, NADGET_LINKER | HITTYPE_SECONDARY,
                             HEAL_PAUSEROT_DEFAULT, HEAL_PAUSEROT_DEFAULT, '0 0 0', '0 0 0');
 
                     p.health = newhealth;
                     p.armorvalue = newarmor;
                 } else {
-                    heal(p, self, self.owner, self.hg_linker_hps, 0, 0, 0, HG_LINKER,
+                    heal(p, self, self.owner, self.hg_linker_hps, 0, 0, 0, NADGET_LINKER,
                          HEAL_PAUSEROT_DEFAULT, HEAL_PAUSEROT_DEFAULT, '0 0 0', '0 0 0');
                 }
             }
@@ -115,11 +115,11 @@ void HG_Linker_Think(void) {
     self.alpha = bound(0, (self.cnt - time) * 2, 1);
 
     if(self.alpha == 0) {
-        HG_Linker_Remove();
+        nadget_Linker_Remove();
         return;
     }
 
-    HG_Waypoint();
+    nadget_Waypoint();
 
     self.alpha = max(0.01, self.alpha * bound(0, (time - self.hg_spawntime) * 2, 1));
     self.glow_size = self.hg_linker_range * self.alpha * 3;
@@ -127,20 +127,20 @@ void HG_Linker_Think(void) {
 }
 
 #if 0
-void HG_Linker_MEODP_Death(entity attacker, entity inflictor) {
-    HG_Linker_Remove();
+void nadget_Linker_MEODP_Death(entity attacker, entity inflictor) {
+    nadget_Linker_Remove();
 }
 #endif
 
-HG_HOOKFUNCTION(linker, Attack) {
+NADGET_HOOKFUNCTION(linker, Attack) {
     entity e = spawn();
     e.classname = "hg_linker";
     e.owner = self;
     e.team = self.team;
-    e.think = HG_Linker_Think;
+    e.think = nadget_Linker_Think;
     e.nextthink = time;
     e.hg_spawntime = time;
-    e.reset = HG_Linker_Remove;
+    e.reset = nadget_Linker_Remove;
     e.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION | EF_DOUBLESIDED;
     e.gravity = 100;
     e.hg_linker_range = g_nadgets_linker_range;
@@ -156,7 +156,7 @@ HG_HOOKFUNCTION(linker, Attack) {
     e.hg_adept = Buffs_Present(self, BUFF_ADEPT);
 #endif
     e.movetype = MOVETYPE_TOSS;
-    e.hg_type = HG_LINKER;
+    e.hg_type = NADGET_LINKER;
 
     if(e.team)
         e.skin = team_index(e.team);
@@ -170,19 +170,19 @@ HG_HOOKFUNCTION(linker, Attack) {
     setsize(e, '-32 -32 0', '32 32 32');
 
 #if 0
-    Buffs_MEODP_Point_Attach(e, HG_Linker_MEODP_Death);
+    Buffs_MEODP_Point_Attach(e, nadget_Linker_MEODP_Death);
 #endif
 
     sound(e, CHAN_PROJECTILE, "misc/powerup.wav", 1, 1.5);
 
-    return HG_ATTACK_OK;
+    return NADGET_ATTACK_OK;
 }
 
-HG_HOOKFUNCTION(linker, Init) {
+NADGET_HOOKFUNCTION(linker, Init) {
 	CACHE_CVAR(g_nadgets_linker_sharefactor);
 	CACHE_CVAR(g_nadgets_linker_range);
 	CACHE_CVAR(g_nadgets_linker_damagefactor);
 	CACHE_CVAR(g_nadgets_linker_hps);
 	CACHE_CVAR(g_nadgets_linker_duration);
-    return HG_INIT_OK;
+    return NADGET_INIT_OK;
 }

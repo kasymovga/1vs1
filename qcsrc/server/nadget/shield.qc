@@ -19,14 +19,14 @@ float g_nadgets_shield_immobile;
 float g_nadgets_shield_health;
 float g_nadgets_shield_diminish;
 
-void HG_Shield_Discharge_Arc(entity targ, entity attacker, float _damage) {
-    arc_damage(targ, attacker, _damage, HG_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
+void nadget_Shield_Discharge_Arc(entity targ, entity attacker, float _damage) {
+    arc_damage(targ, attacker, _damage, NADGET_SHIELD | HITTYPE_SECONDARY | HITTYPE_BOUNCE,
         g_nadgets_shield_damage_store_arc_range, g_nadgets_shield_damage_store_arc,
         g_nadgets_shield_damage_store_arc_pushback, COLOR_TEAM3, shield_arc_hit
     );
 }
 
-void HG_Shield_Discharge_Think(void) {
+void nadget_Shield_Discharge_Think(void) {
     entity targ;
     vector start, end, end_visual;
     float _damage;
@@ -72,19 +72,19 @@ void HG_Shield_Discharge_Think(void) {
     setorigin(self, end);
     damage_radius(self, self.owner, _damage, _damage * g_nadgets_shield_damage_store_edgefactor,
                  g_nadgets_shield_damage_store_radius, world,
-                 _damage * g_nadgets_shield_damage_store_forcefactor, HG_SHIELD | HITTYPE_SECONDARY, targ);
+                 _damage * g_nadgets_shield_damage_store_forcefactor, NADGET_SHIELD | HITTYPE_SECONDARY, targ);
 
     //W_SetHitscanVisuals(self.owner, end);
     weapon_zapper_attack2_effect((teamplay ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
 
     if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (team_is_different_teams(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
-        HG_Shield_Discharge_Arc(targ, self.owner, _damage);
+        nadget_Shield_Discharge_Arc(targ, self.owner, _damage);
     }
 
     self.nextthink = time + g_nadgets_shield_damage_store_burstdelay;
 }
 
-void HG_Shield_Trigger(void) {
+void nadget_Shield_Trigger(void) {
     sound(self, CHAN_WEAPON2, "porto/expire.wav", VOL_BASE, ATTN_NORM);
 
 	entity e;
@@ -102,7 +102,7 @@ void HG_Shield_Trigger(void) {
         self = spawn();
         self.classname = "hg_shield_discharge";
         self.owner = oldself;
-        self.think = HG_Shield_Discharge_Think;
+        self.think = nadget_Shield_Discharge_Think;
         self.reset = stdproc_remove;
         self.think();
 		self = oldself;
@@ -115,7 +115,7 @@ void HG_Shield_Trigger(void) {
 }
 
 #if 0
-void HG_Shield_Adept_ExtendRenew(entity plr) {
+void nadget_Shield_Adept_ExtendRenew(entity plr) {
     var extend = CVAR(g_nadgets_shield_adept_discharge_extend);
     var renew = CVAR(g_nadgets_shield_adept_discharge_renew);
 
@@ -128,7 +128,7 @@ void HG_Shield_Adept_ExtendRenew(entity plr) {
 }
 #endif
 
-void HG_Shield_Model_Think(void) {
+void nadget_Shield_Model_Think(void) {
     if(self.owner.hg_shield)
         self.alpha = approach(self.alpha, 1, frametime * 3);
     else
@@ -150,7 +150,7 @@ void HG_Shield_Model_Think(void) {
     self.nextthink = time;
 }
 
-float HG_Shield_Find() {
+float nadget_Shield_Find() {
 	entity e;
 	for (e = world; (e = find(e, classname, "hg_shield_discharge"));) {
 		if (e.owner == self)
@@ -159,14 +159,14 @@ float HG_Shield_Find() {
 	return FALSE;
 }
 
-void HG_Shield_PlayerFrame(void) {
+void nadget_Shield_PlayerFrame(void) {
     if(self.hg_shieldmax && self.hg_shield)
         self.hg_shieldstat = self.hg_shield / self.hg_shieldmax;
     else
         self.hg_shieldstat = 0;
 
     if (self.hg_shield_stored < 0 || (self.hg_shield_stored && !self.hg_shield))
-	if not(HG_Shield_Find())
+	if not(nadget_Shield_Find())
 		self.hg_shield_stored = 0;
 
     if(!self.hg_shield) {
@@ -196,16 +196,16 @@ void HG_Shield_PlayerFrame(void) {
 
 .float hg_shield_nexteffect;
 
-float HG_Shield_Damage(entity attacker, float _damage, float deathtype, vector hitloc) {
+float nadget_Shield_Damage(entity attacker, float _damage, float deathtype, vector hitloc) {
     if not(_damage && attacker.iscreature && self.hg_shield)
         return 1;
 
-    if(DEATH_HGTYPE(deathtype) == HG_TRANSLOC && g_nadgets_transloc_counters_shield) {
+    if(DEATH_NADGETTYPE(deathtype) == NADGET_TRANSLOC && g_nadgets_transloc_counters_shield) {
         self.hg_shield = 0;
         return 1;
     }
 
-    if not(DEATH_HGTYPE(deathtype) != HG_SHIELD /* && deathtype != DEATH_NOISE && deathtype != DEATH_ARC */ && DEATH_HGTYPE(deathtype) != HG_GG)
+    if not(DEATH_NADGETTYPE(deathtype) != NADGET_SHIELD /* && deathtype != DEATH_NOISE && deathtype != DEATH_ARC */ && DEATH_NADGETTYPE(deathtype) != NADGET_GG)
         return 1;
 
     vector offs = '0 0 1' * self.maxs_z * 0.5;
@@ -221,9 +221,9 @@ float HG_Shield_Damage(entity attacker, float _damage, float deathtype, vector h
         self.hg_shield_nexteffect = time + 0.15;
     }
 
-    if(DEATH_HGTYPE(deathtype) == HG_TRANSLOC)
+    if(DEATH_NADGETTYPE(deathtype) == NADGET_TRANSLOC)
         reflect = 0;
-    else if(DEATH_ISHG(deathtype))
+    else if(DEATH_ISNADGET(deathtype))
         reflect *= g_nadgets_shield_damage_reflect_hg;
 
     if(reflect) {
@@ -234,7 +234,7 @@ float HG_Shield_Damage(entity attacker, float _damage, float deathtype, vector h
         end = trace_endpos;
 
         if(trace_ent.takedamage)
-            damage(trace_ent, self, self, reflect, HG_SHIELD, end, '0 0 0');
+            damage(trace_ent, self, self, reflect, NADGET_SHIELD, end, '0 0 0');
 
         trailparticles(world, particleeffectnum("TE_TEI_G3YELLOW"), start, end);
     }
@@ -246,7 +246,7 @@ float HG_Shield_Damage(entity attacker, float _damage, float deathtype, vector h
     return takefactor;
 }
 
-HG_HOOKFUNCTION(shield, Attack) {
+NADGET_HOOKFUNCTION(shield, Attack) {
     entity e;
     float d;
 #if 0
@@ -283,7 +283,7 @@ HG_HOOKFUNCTION(shield, Attack) {
         e = spawn();
         e.classname = "hg_shieldmodel";
         e.owner = self;
-        e.think = HG_Shield_Model_Think;
+        e.think = nadget_Shield_Model_Think;
         e.nextthink = time;
         e.alpha = 0.1;
         e.effects = EF_ADDITIVE | EF_FULLBRIGHT;
@@ -304,10 +304,10 @@ HG_HOOKFUNCTION(shield, Attack) {
         self.hg_shieldmodel = e;
     }
 
-    return HG_ATTACK_OK;
+    return NADGET_ATTACK_OK;
 }
 
-HG_HOOKFUNCTION(shield, Init) {
+NADGET_HOOKFUNCTION(shield, Init) {
     addstat(STAT_HGSHIELD, AS_FLOAT, hg_shieldstat);
     addstat(STAT_HGSHIELDPOWER, AS_FLOAT, hg_shieldpower);
     addstat(STAT_HGSHIELDSTORE, AS_INT, hg_shield_stored);
@@ -333,5 +333,5 @@ HG_HOOKFUNCTION(shield, Init) {
 	CACHE_CVAR(g_nadgets_shield_immobile);
 	CACHE_CVAR(g_nadgets_shield_health);
 	CACHE_CVAR(g_nadgets_shield_diminish);
-    return HG_INIT_OK;
+    return NADGET_INIT_OK;
 }

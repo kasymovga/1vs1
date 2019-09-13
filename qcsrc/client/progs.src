@@ -49,7 +49,7 @@ dlc.qh
 ../common/str.qh
 ../common/file.qh
 ../common/cvar.qh
-../client-server/nadgets.qh
+../client-server/nadget.qh
 ../client-menu/ui.qh
 gamestatus.qh
 weaponselect.qh
@@ -92,7 +92,7 @@ modeleffects.qc
 zapper.qc
 
 //vehicles/spiderbot.qc
-../client-server/nadgets.qc
+../client-server/nadget.qc
 nadgetselect.qc
 trip.qc
 func_camera.qc

@@ -1,5 +1,5 @@
 
-void HG_Transloc_Explode(void) {
+void nadget_Transloc_Explode(void) {
 #if 0
     if(g_jailbreak && self.owner.jb_isprisoned)
         return;
@@ -11,7 +11,7 @@ void HG_Transloc_Explode(void) {
     setsize(self, PL_MIN, PL_MAX);
 
     if(!entity_move_out_of_solid(self, MOVE_NOMONSTERS)) {
-        if(!self.hg_isbonus) HG_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == HG_TRANSLOC)
+        if(!self.hg_isbonus) NADGET_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == NADGET_TRANSLOC)
             self.owner.hg_ctx_ammo += 1;)
 
         bprint("^1Couldn't move ", self.owner.netname, "^1's translocator out of solid! Teleport aborted. Origin: ", vtos(self.origin), ", velocity: ", vtos(self.velocity), "\n");

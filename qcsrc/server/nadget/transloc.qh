@@ -3,4 +3,4 @@
 .float hg_tl_revived;
 .entity hg_transloc_last;
 
-void HG_Transloc_Explode(void);
+void nadget_Transloc_Explode(void);

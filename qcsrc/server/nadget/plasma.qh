@@ -12,5 +12,5 @@ float hg_plasma_group;
 .float hg_plasma_projdps_last;
 .float hg_plasma_projdist;
 
-void HG_Plasma_Shard(float kickangle);
-void HG_Plasma_Explode(void);
+void nadget_Plasma_Shard(float kickangle);
+void nadget_Plasma_Explode(void);

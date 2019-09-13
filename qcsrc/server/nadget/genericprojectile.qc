@@ -1,20 +1,20 @@
 
-void HG_GenericProjectile_Stick(entity targ, vector normal);
-void HG_GenericProjectile_Think(void);
+void nadget_GenericProjectile_Stick(entity targ, vector normal);
+void nadget_GenericProjectile_Think(void);
 
-float HG_GenericProjectile_CSQCProjType(float t) {
+float nadget_GenericProjectile_CSQCProjType(float t) {
     switch(t) {
-        case HG_NAPALM  :   return PROJECTILE_HG_NAPALM;
-        case HG_PLASMA  :   return PROJECTILE_HG_PLASMA;
-        case HG_TRANSLOC:   return PROJECTILE_HG_TRANSLOC;
-        case HG_REMOTE  :   return PROJECTILE_HG_REMOTE;
-        case HG_LASER   :   return PROJECTILE_HG_LASER;
-        case HG_RAZE    :   return PROJECTILE_HG_RAZE;
+        case NADGET_NAPALM  :   return PROJECTILE_HG_NAPALM;
+        case NADGET_PLASMA  :   return PROJECTILE_HG_PLASMA;
+        case NADGET_TRANSLOC:   return PROJECTILE_HG_TRANSLOC;
+        case NADGET_REMOTE  :   return PROJECTILE_HG_REMOTE;
+        case NADGET_LASER   :   return PROJECTILE_HG_LASER;
+        case NADGET_RAZE    :   return PROJECTILE_HG_RAZE;
         default         :   return PROJECTILE_HG_GENERIC;
     }
 }
 
-void HG_GenericProjectile_ThrowNapalm(void) {
+void nadget_GenericProjectile_ThrowNapalm(void) {
 	float c;
 	entity e;
     for(c = 0; c < GRENVAR(self.hg_type, "numparticles"); c++) {
@@ -42,7 +42,7 @@ void HG_GenericProjectile_ThrowNapalm(void) {
 
 #define GV(v) (GRENVAR(self.hg_type, v))
 
-void HG_GenericProjectile_RadiusDamage(void) {
+void nadget_GenericProjectile_RadiusDamage(void) {
     //float p = Buffs_NadgetPower(self.owner);
     float dmgmod = 1;
     float frcmod = 1;
@@ -58,32 +58,32 @@ void HG_GenericProjectile_RadiusDamage(void) {
                 );
 }
 
-void HG_GenericProjectile_Explode(void) {
+void nadget_GenericProjectile_Explode(void) {
     self.event_damage = stdproc_nothing;
     self.takedamage = DAMAGE_NO;
 
     switch(self.hg_type) {
-        case HG_NAPALM:
-        case HG_REMOTE:
-            HG_GenericProjectile_ThrowNapalm();
+        case NADGET_NAPALM:
+        case NADGET_REMOTE:
+            nadget_GenericProjectile_ThrowNapalm();
             break;
 
-        case HG_PLASMA:
-            HG_Plasma_Explode();
+        case NADGET_PLASMA:
+            nadget_Plasma_Explode();
             break;
 
-        case HG_TRANSLOC:
-            HG_Transloc_Explode();
+        case NADGET_TRANSLOC:
+            nadget_Transloc_Explode();
             break;
     }
 
-    HG_GenericProjectile_RadiusDamage();
-    HG_GenericProjectile_Remove();
+    nadget_GenericProjectile_RadiusDamage();
+    nadget_GenericProjectile_Remove();
 }
 
 #undef GV
 
-float HG_GenericProjectile_TryStick(entity targ, vector normal) {
+float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
     float doStick;
 
 #if 0
@@ -98,7 +98,7 @@ float HG_GenericProjectile_TryStick(entity targ, vector normal) {
 
     self.velocity = '0 0 0';
 
-    if(self.hg_type == HG_TRANSLOC) {
+    if(self.hg_type == NADGET_TRANSLOC) {
         // Check if it's ok to teleport in this location
         // by assuming a player-sized bbox and trying to move out of solid.
         // If that fails, remove and refund the translocator
@@ -112,11 +112,11 @@ float HG_GenericProjectile_TryStick(entity targ, vector normal) {
             setsize(self, PL_MIN, PL_MAX);
 
             if(!entity_move_out_of_solid(self, MOVE_NOMONSTERS)) {
-                if(!self.hg_isbonus) HG_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == HG_TRANSLOC)
+                if(!self.hg_isbonus) NADGET_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == NADGET_TRANSLOC)
                     self.owner.hg_ctx_ammo += 1;)
 
                 bprint("^1Couldn't move ", self.owner.netname, "^1's translocator out of solid! Teleport aborted.\n");
-                HG_GenericProjectile_Remove();
+                nadget_GenericProjectile_Remove();
                 return TRUE;
             }
 
@@ -125,11 +125,11 @@ float HG_GenericProjectile_TryStick(entity targ, vector normal) {
         }
     }
 
-    HG_GenericProjectile_Stick(targ, normal);
+    nadget_GenericProjectile_Stick(targ, normal);
     return TRUE;
 }
 
-void HG_GenericProjectile_Touch(void) {
+void nadget_GenericProjectile_Touch(void) {
     PROJECTILE_SKIPNONSOLID
     if(PROJECTILE_OWNER_CHECK())
         return;
@@ -138,7 +138,7 @@ void HG_GenericProjectile_Touch(void) {
         projectile_update_next_frame(self);
 
     if(projectile_no_impact_check()) {
-        if(self.hg_type == HG_TRANSLOC || self.hg_type == HG_RAZE) {
+        if(self.hg_type == NADGET_TRANSLOC || self.hg_type == NADGET_RAZE) {
             if(trace_dphitcontents & DPCONTENTS_PLAYERCLIP) {
                 projectile_update_next_frame(self);
                 goto troll;
@@ -146,7 +146,7 @@ void HG_GenericProjectile_Touch(void) {
             self.use();
             return;
         }
-        HG_GenericProjectile_Remove();
+        nadget_GenericProjectile_Remove();
         return;
     }
 
@@ -156,10 +156,10 @@ void HG_GenericProjectile_Touch(void) {
     if(other.takedamage == DAMAGE_AIM) {
 		vector v = normalize(self.origin - other.origin);
 		v_z = trace_plane_normal_z;
-        if(HG_GenericProjectile_TryStick(other, v))
+        if(nadget_GenericProjectile_TryStick(other, v))
             return;
 
-        if(self.hg_type == HG_TRANSLOC && teamplay && other.team == self.owner.team) {
+        if(self.hg_type == NADGET_TRANSLOC && teamplay && other.team == self.owner.team) {
 #if 0
             float adeptRev = (Buffs_Present(self.owner, BUFF_ADEPT) && CVAR(g_nadgets_transloc_adept_revive));
 
@@ -177,7 +177,7 @@ void HG_GenericProjectile_Touch(void) {
                         m = max(1.0, m);
 
                     if(m > 1.0)
-                        Heal(other, self, self.owner, other.health - h, other.armorvalue - a, 0, 0, HG_TRANSLOC, 0, 0, self.origin, '0 0 0');
+                        Heal(other, self, self.owner, other.health - h, other.armorvalue - a, 0, 0, NADGET_TRANSLOC, 0, 0, self.origin, '0 0 0');
                     else if(m < 1.0) {
                         other.health = h;
                         other.armorvalue = a;
@@ -187,31 +187,31 @@ void HG_GenericProjectile_Touch(void) {
             } else
 #endif
 				goto troll;
-        } else if(self.hg_type == HG_REMOTE) {
+        } else if(self.hg_type == NADGET_REMOTE) {
             goto troll;
-        } else if(self.hg_type == HG_PLASMA) {
+        } else if(self.hg_type == NADGET_PLASMA) {
             self.velocity = '0 0 0';
         }
 
         self.use();
     } else {
-        if(self.hg_type == HG_TRANSLOC && cvar("g_nadgets_transloc_bounceresetorigin"))
+        if(self.hg_type == NADGET_TRANSLOC && cvar("g_nadgets_transloc_bounceresetorigin"))
             self.spawnorigin = self.origin;
 
         // Check if we should stop bouncing around, then stick or explode if so.
         if(self.cnt <= 0) {
-            if(!HG_GenericProjectile_TryStick(other, trace_plane_normal)) {
-                if(self.hg_type == HG_PLASMA)
+            if(!nadget_GenericProjectile_TryStick(other, trace_plane_normal)) {
+                if(self.hg_type == NADGET_PLASMA)
                     self.velocity = '0 0 0';
                 self.use();
             }
 
             return;
-        } else if(self.hg_type == HG_LASER) {
-            HG_GenericProjectile_RadiusDamage();
+        } else if(self.hg_type == NADGET_LASER) {
+            nadget_GenericProjectile_RadiusDamage();
         }
 #if 0
-		else if(self.hg_type == HG_PLASMA && self.hg_adept) {
+		else if(self.hg_type == NADGET_PLASMA && self.hg_adept) {
             float pcount = cvar("g_nadgets_plasma_adept_projectiles_on_bounce");
 
             if(pcount > 0) {
@@ -220,7 +220,7 @@ void HG_GenericProjectile_Touch(void) {
 
 				float c;
                 for(c = 0; c < pcount; ++c)
-                    HG_Plasma_Shard(2 * M_PI * (c / pcount));
+                    nadget_Plasma_Shard(2 * M_PI * (c / pcount));
 
                 self.velocity = oldvel;
             }
@@ -228,7 +228,7 @@ void HG_GenericProjectile_Touch(void) {
 #endif
 
 :troll
-        if(self.hg_type == HG_RAZE) {
+        if(self.hg_type == NADGET_RAZE) {
             if(trace_ent && trace_ent.solid == SOLID_BSP)
                 self.movedir = trace_plane_normal;
 
@@ -252,7 +252,7 @@ void HG_GenericProjectile_Touch(void) {
             }
         }
 
-        if(self.hg_type == HG_LASER) {
+        if(self.hg_type == NADGET_LASER) {
 			dlc_sound_spam(self, CHAN_PROJECTILE, RM_SOUND_LASER_SECONDARY, VOL_BASE, ATTN_NORM);
         } else {
             float r;
@@ -276,7 +276,7 @@ void HG_GenericProjectile_Touch(void) {
     }
 }
 
-void HG_GenericProjectile_Stick(entity targ, vector normal) {
+void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
 
     // TODO: A better, more general fix
@@ -289,13 +289,13 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
     entity e = self;
     e.hg_state = TRUE;
 
-    if(e.hg_type == HG_TRANSLOC) {
+    if(e.hg_type == NADGET_TRANSLOC) {
         e.angles = randomvec() * 360;
     } else {
         e.angles = vectoangles(-normal);
     }
 
-    if(e.hg_type == HG_PLASMA) {
+    if(e.hg_type == NADGET_PLASMA) {
         vector va = vectoangles(e.hg_lastvel);
         e.angles_x -= 90;
         e.angles_y = va_y - 90;
@@ -321,9 +321,9 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
 
     float sz;
 	switch(e.hg_type) {
-	case HG_TRANSLOC: sz = HG_SIZE_TRANSLOC; break;
-	case HG_PLASMA  : sz = HG_SIZE_PLASMA_STICK; break;
-	default         : sz = HG_SIZE_DEFAULT;
+	case NADGET_TRANSLOC: sz = NADGET_SIZE_TRANSLOC; break;
+	case NADGET_PLASMA  : sz = NADGET_SIZE_PLASMA_STICK; break;
+	default         : sz = NADGET_SIZE_DEFAULT;
     }
 
     vector hitmins = '-1 -1 -1' * sz;
@@ -356,7 +356,7 @@ void HG_GenericProjectile_Stick(entity targ, vector normal) {
 
 .vector hg_oldangles;
 
-void HG_GenericProjectile_Think(void) {
+void nadget_GenericProjectile_Think(void) {
     #define GV(v) (GRENVAR(self.hg_type, v))
 
     if(!self.csqcprojectile_clientanimate) {
@@ -385,7 +385,7 @@ void HG_GenericProjectile_Think(void) {
     if(self.velocity != '0 0 0')
         self.hg_lastvel = self.velocity;
 
-    if(self.hg_type == HG_RAZE) {
+    if(self.hg_type == NADGET_RAZE) {
         if(time < (self.hg_spawntime + GV("movement_delay"))){
         }
         else{
@@ -419,7 +419,7 @@ void HG_GenericProjectile_Think(void) {
 
 #if 0
                 if(self.hg_adept && GV("adept_trailblaze") && time > self.hg_fireSpawnTime){
-                    HG_GenericProjectile_ThrowNapalm();
+                    nadget_GenericProjectile_ThrowNapalm();
                     self.hg_fireSpawnTime = time + GV("fire_spawninterval");
                 }
 #endif
@@ -427,11 +427,11 @@ void HG_GenericProjectile_Think(void) {
         }
     }
 
-    HG_Waypoint();
+    nadget_Waypoint();
 
     if(time >= self.hg_deathtime) {
-        if(self.hg_type == HG_TRANSLOC && self.health > 0) {
-            HG_GenericProjectile_Remove();
+        if(self.hg_type == NADGET_TRANSLOC && self.health > 0) {
+            nadget_GenericProjectile_Remove();
         } else
             self.use();
         return;
@@ -448,11 +448,11 @@ void HG_GenericProjectile_Think(void) {
     if(self.hg_detonable && self.hg_detonatetime) {
         if(time >= self.hg_detonatetime) {
 #if 0
-            if(self.hg_type == HG_REMOTE && self.hg_adept) {
+            if(self.hg_type == NADGET_REMOTE && self.hg_adept) {
                 self.hg_adept = 0;
                 self.health = self.max_health;
-                HG_GenericProjectile_ThrowNapalm();
-                HG_GenericProjectile_RadiusDamage();
+                nadget_GenericProjectile_ThrowNapalm();
+                nadget_GenericProjectile_RadiusDamage();
                 self.hg_detonateready = time + GRENVAR(self.hg_type, "adept_detonate_threshold");
                 self.hg_detonatetime = 0;
                 self.hg_sndcount = 0;
@@ -480,36 +480,36 @@ void HG_GenericProjectile_Think(void) {
     #undef GV
 }
 
-float HG_GenericProjectile_Attack(float hgtype) {
+float nadget_GenericProjectile_Attack(float hgtype) {
 #if 0
     if(Buffs_Present(self, BUFF_ADEPT) && (GRENVAR(hgtype, "adept_split") > 0 ||
-       (hgtype == HG_LASER && self.hg_detonatepressed))) {
+       (hgtype == NADGET_LASER && self.hg_detonatepressed))) {
         float split = GRENVAR(hgtype, "adept_split");
         float spread = GRENVAR(hgtype, "adept_split_spread");
         vector dir;
         float i;
 
-        if(!split && hgtype == HG_LASER) {
+        if(!split && hgtype == NADGET_LASER) {
             split = hg_ammo_used = hg_ammo_available;
         }
 
         if(split == 1)
-            HG_GenericProjectile(hgtype, '0 0 0', FALSE);
+            nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
         else for(i = 0; i < split; ++i) {
             dir_y = spread * (-0.5 + (i / (split-1)));
-            HG_GenericProjectile(hgtype, dir, i);
+            nadget_GenericProjectile(hgtype, dir, i);
         }
     } else {
 #endif
-        HG_GenericProjectile(hgtype, '0 0 0', FALSE);
+        nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
 #if 0
     }
 #endif
 
-    return HG_ATTACK_OK;
+    return NADGET_ATTACK_OK;
 }
 
-void HG_GenericProjectile_ChangeOwner(entity o) {
+void nadget_GenericProjectile_ChangeOwner(entity o) {
     if(!o || o == self.owner)
         return;
 
@@ -522,8 +522,8 @@ void HG_GenericProjectile_ChangeOwner(entity o) {
     self.team = o.team;
 }
 
-void HG_GenericProjectile_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-    if(DEATH_ISHG(deathtype))
+void nadget_GenericProjectile_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+    if(DEATH_ISNADGET(deathtype))
         return;
     if(self.health <= 0)
         return;
@@ -531,15 +531,15 @@ void HG_GenericProjectile_Damage(entity inflictor, entity attacker, float _damag
         return;
     self.health = self.health - _damage;
     if(self.health <= 0) {
-        if(self.hg_type != HG_TRANSLOC)
+        if(self.hg_type != NADGET_TRANSLOC)
         if(attacker.classname == "player")
-            HG_GenericProjectile_ChangeOwner(attacker);
+            nadget_GenericProjectile_ChangeOwner(attacker);
         self.hg_deathtime = time;
     }
 }
 
-void HG_GenericProjectile_Remove(void) {
-    HG_Waypoint_Remove(self.hg_waypoint);
+void nadget_GenericProjectile_Remove(void) {
+    nadget_Waypoint_Remove(self.hg_waypoint);
 
     sound_stop(self, CHAN_PAIN);
 
@@ -551,13 +551,13 @@ void HG_GenericProjectile_Remove(void) {
 
 #define GV(v) (GRENVAR(hgtype, v))
 
-entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
+entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     float hitmask;
 	switch(hgtype) {
-	case HG_RAZE:
+	case NADGET_RAZE:
 		hitmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP;
 		break;
-	case HG_TRANSLOC:
+	case NADGET_TRANSLOC:
 		hitmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 		break;
 	default:
@@ -565,7 +565,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 	}
 
     makevectors(self.((GV("noverticalvelocity")) ? angles : v_angle));
-	if (hgtype == HG_LASER)
+	if (hgtype == NADGET_LASER)
 		dlc_sound(self, CHAN_WEAPON, RM_SOUND_LASER_PRIMARY, VOL_BASE, ATTN_NORM);
 	else
 		sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
@@ -578,7 +578,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     makevectors(a + ang);
     w_shotdir = v_forward;
 
-    entity gren = projectile(hgtype != HG_RAZE, HG_GenericProjectile_CSQCProjType(hgtype), TRUE, self);
+    entity gren = projectile(hgtype != NADGET_RAZE, nadget_GenericProjectile_CSQCProjType(hgtype), TRUE, self);
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
     gren.bot_dodgerating = GV("damage") + 300;
@@ -590,7 +590,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.hg_spawntime = time;
 
 #if 0
-    if(hgtype != HG_NAPALM) {
+    if(hgtype != NADGET_NAPALM) {
         gren.hg_adept = Buffs_Present(self, BUFF_ADEPT);
     }
 #endif
@@ -619,7 +619,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     setorigin(gren, w_shotorg);
 
     float lt;
-    if(hgtype == HG_TRANSLOC && self.BUTTON_CROUCH) {
+    if(hgtype == NADGET_TRANSLOC && self.BUTTON_CROUCH) {
 		lt = GV("crouch_lifetime");
     } else
         lt = GV("lifetime");
@@ -628,18 +628,18 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     if(self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face"))
 		gren.hg_deathtime = time + 0.01;
 	else
-		gren.hg_deathtime = time + lt /* * (if(hgtype == HG_TRANSLOC) Buffs_NadgetPower(self) else 1) */;
+		gren.hg_deathtime = time + lt /* * (if(hgtype == NADGET_TRANSLOC) Buffs_NadgetPower(self) else 1) */;
 
-    gren.think = HG_GenericProjectile_Think;
+    gren.think = nadget_GenericProjectile_Think;
     gren.nextthink = time;
-    gren.use = HG_GenericProjectile_Explode;
-    gren.touch = HG_GenericProjectile_Touch;
-    gren.reset = HG_GenericProjectile_Remove;
+    gren.use = nadget_GenericProjectile_Explode;
+    gren.touch = nadget_GenericProjectile_Touch;
+    gren.reset = nadget_GenericProjectile_Remove;
     gren.team = self.team;
     gren.hg_isbonus = self.hg_bonus;
     if(GV("takedamage") || gren.health) {
         gren.takedamage = DAMAGE_AIM;
-        gren.event_damage = HG_GenericProjectile_Damage;
+        gren.event_damage = nadget_GenericProjectile_Damage;
     } else {
         gren.takedamage = DAMAGE_NO;
         gren.event_damage = stdproc_nothing;
@@ -651,7 +651,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 
     float spd, mspd, upspd;
 
-    if(hgtype == HG_TRANSLOC && self.BUTTON_CROUCH) {
+    if(hgtype == NADGET_TRANSLOC && self.BUTTON_CROUCH) {
         spd   = GV("crouch_speed");
         mspd  = GV("crouch_speed_min");
         upspd = GV("crouch_speed_up");
@@ -680,11 +680,11 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.max_health = gren.health;
     gren.angles = vectoangles(gren.velocity);
     gren.hg_nadesused = self.hg_nadesused;
-    if(hgtype == HG_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
-        damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, HG_NAPALM, self.origin, '0 0 0');
+    if(hgtype == NADGET_NAPALM && self.hg_power == 1 && GV("launch_fullforce_explodes_in_yo_face")) {
+        damage(self, self, self, GV("kamikaze_damage") /* * Buffs_NadgetPower(self) */, NADGET_NAPALM, self.origin, '0 0 0');
     }
 
-    if(hgtype == HG_TRANSLOC) {
+    if(hgtype == NADGET_TRANSLOC) {
         self.hg_transloc_last = gren;
     }
 
@@ -694,7 +694,7 @@ entity HG_GenericProjectile(float hgtype, vector ang, float silent) {
 
 #undef GV
 
-void HG_GenericProjectile_Detonate(entity nade) {
+void nadget_GenericProjectile_Detonate(entity nade) {
     if(!nade || !nade.hg_detonable || nade.hg_detonatetime || nade.hg_detonateready > time)
         return;
 
@@ -705,7 +705,7 @@ void HG_GenericProjectile_Detonate(entity nade) {
     }
 }
 
-float HG_GenericProjectile_DetonateAll(entity plr, float force) {
+float nadget_GenericProjectile_DetonateAll(entity plr, float force) {
     float c;
     entity nade, tl;
 
@@ -713,7 +713,7 @@ float HG_GenericProjectile_DetonateAll(entity plr, float force) {
         return 0;
 
     if(!force) for(nade = world; (nade = find(nade, classname, "hg_generic_projectile"));) {
-        if(nade.owner == plr && nade.hg_type == HG_TRANSLOC) {
+        if(nade.owner == plr && nade.hg_type == NADGET_TRANSLOC) {
             if(!tl || nade.hg_nadesused < tl.hg_nadesused)
                 tl = nade;
         }
@@ -721,9 +721,9 @@ float HG_GenericProjectile_DetonateAll(entity plr, float force) {
 
     if(tl) {
         c = 1;
-        HG_GenericProjectile_Detonate(tl);
+        nadget_GenericProjectile_Detonate(tl);
     } else for(nade = world; (nade = find(nade, classname, "hg_generic_projectile"));) if(nade.owner == plr) {
-        HG_GenericProjectile_Detonate(nade);
+        nadget_GenericProjectile_Detonate(nade);
         ++c;
     }
 

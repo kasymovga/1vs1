@@ -2203,7 +2203,7 @@ void DrawProgress(vector cpos, vector l_size, float progress, float alpha, vecto
 
 float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen) {
 #if 0
-    if(timewarper_active && getstati(stat_type) == HG_TIMEWARP)
+    if(timewarper_active && getstati(stat_type) == NADGET_TIMEWARP)
         return 1 - timewarper_remaining_duration / timewarper_max_duration;
     else
 #endif
@@ -2525,11 +2525,11 @@ void Sbar_Draw (void)
                 string smsg;
                 if(getstati(STAT_HGSHIELDSTORE) > 0) {
                     smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
-                                  " ^3to discharge your ", HG_TypeToExpandedName(hgtype),
+                                  " ^3to discharge your ", nadget_TypeToExpandedName(hgtype),
                                   " for ^1", ftos(getstati(STAT_HGSHIELDSTORE)), " ^3damage");
                 } else {
                     smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
-                                  " ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : HG_TypeToExpandedName(hgtype)));
+                                  " ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : nadget_TypeToExpandedName(hgtype)));
                 }
                 drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(hgdetons) {
@@ -2538,7 +2538,7 @@ void Sbar_Draw (void)
                                             " ^3to trigger your nadget",
                                             ((hgdetons > 1) ? strcat("s (^2", ftos(hgdetons), "^3)") : "")),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-            } else if(hgtype == HG_GG && hgammo) {
+            } else if(hgtype == NADGET_GG && hgammo) {
                 drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(getcommandkey("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 #if 0
             } else if(timewarper_active) {
@@ -2549,7 +2549,7 @@ void Sbar_Draw (void)
 #endif
             }
 
-			string hgicon = HG_TypeToIcon(hgtype, TRUE, 0);
+			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
 			hgapos_x = CVAR(vid_conwidth / 2) + 154;
 			hgapos_y = CVAR(vid_conheight) - 44;
 			float hgregen = Sbar_GetNadgetRegen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
@@ -2565,7 +2565,7 @@ void Sbar_Draw (void)
 			drawpic(hgapos, hgicon, '22 22', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(hgtype2) {
-				hgicon = HG_TypeToIcon(hgtype2, TRUE, 0);
+				hgicon = nadget_TypeToIcon(hgtype2, TRUE, 0);
 				hgapos_y += 26;
 				hgapos_x -= 44;
 				float hgregen2 = Sbar_GetNadgetRegen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2) - hgregen2;

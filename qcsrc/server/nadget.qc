@@ -10,108 +10,108 @@ float g_nadgets_shield_damage_store_allow_cancel_discharge;
 float g_nadgets_initial_regen;
 float g_nadgets_drop_on_death;
 
-void HG_UpdateDetonables(void);
-void HG_ForceDetonateAll(void);
+void nadget_UpdateDetonables(void);
+void nadget_ForceDetonateAll(void);
 
-var void() HG_PlayerPreThink_NextLink;
-void HG_PlayerPreThink();
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) HG_PlayerDamageHandle_NextLink;
-float HG_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
+var void() nadget_PlayerPreThink_NextLink;
+void nadget_PlayerPreThink();
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) nadget_PlayerDamageHandle_NextLink;
+float nadget_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
 
-var float(string cmd, float tokens) HG_ClientCommandHandle_NextLink;
-float HG_ClientCommandHandle(string cmd, float tokens) {
+var float(string cmd, float tokens) nadget_ClientCommandHandle_NextLink;
+float nadget_ClientCommandHandle(string cmd, float tokens) {
 	if(cmd == "picknade") {
-		HG_Pick(tokens);
+		nadget_Pick(tokens);
 		return TRUE;
 	}
-	return HG_ClientCommandHandle_NextLink(cmd, tokens);
+	return nadget_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-var float(entity plr, float wep) HG_PlayerCanFire_NextLink;
-float HG_PlayerCanFire(entity plr, float wep) {
+var float(entity plr, float wep) nadget_PlayerCanFire_NextLink;
+float nadget_PlayerCanFire(entity plr, float wep) {
 	if (self.hg_stealth)
 		return FALSE;
 
-	return HG_PlayerCanFire_NextLink(plr, wep);
+	return nadget_PlayerCanFire_NextLink(plr, wep);
 }
 
-var void(void(string item, string cmd) Add_Item) HG_GameMenuAddItems_NextLink;
-void HG_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) nadget_GameMenuAddItems_NextLink;
+void nadget_GameMenuAddItems(void(string item, string cmd) Add_Item) {
 	Add_Item("Switch Nadget", "cmd picknade;");
-	HG_GameMenuAddItems_NextLink(Add_Item);
+	nadget_GameMenuAddItems_NextLink(Add_Item);
 }
 
-var void(float killed) HG_PlayerClear_NextLink;
-void HG_PlayerClear(float killed) {
+var void(float killed) nadget_PlayerClear_NextLink;
+void nadget_PlayerClear(float killed) {
 	if (killed) {
 		if(g_nadgets_remove_on_death > 1)
-			HG_RemoveAll(self);
+			nadget_RemoveAll(self);
 
 		if(self.hg_power > 0 && g_nadgets_drop_on_death) {
-			HG_SetContext(self.hg_altstate);
+			nadget_SetContext(self.hg_altstate);
 			self.hg_power = 0;
-			HG_Attack();
+			nadget_Attack();
 		}
 		if(g_nadgets_detonate_on_death > 1)
-			HG_ForceDetonateAll();
+			nadget_ForceDetonateAll();
 	} else {
 		if ((self.classname != "player" && self.team <= 0) || self.classname == "disconnecting") {
-			HG_RemoveAll(self);
-			HG_GenericProjectile_DetonateAll(self, TRUE);
+			nadget_RemoveAll(self);
+			nadget_GenericProjectile_DetonateAll(self, TRUE);
 		}
 	}
-	HG_DO_IN_ALL_CONTEXTS({
+	NADGET_DO_IN_ALL_CONTEXTS({
 		if(self.hg_ctx_type_picked_nextround >= 0)
 			self.hg_ctx_type_picked = self.hg_ctx_type_picked_nextround;
 		self.hg_ctx_type_picked_nextround = -1;
 	})
     self.hg_power = 0;
     self.hg_bonus = 0;
-    self.hg_bonustype = HG_NORMAL;
+    self.hg_bonustype = NADGET_NORMAL;
     self.hg_shield = 0;
 	if (self.classname == "player")
-		HG_DO_IN_ALL_CONTEXTS(HG_ResetAmmo(self, FALSE);)
+		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);)
 
     self.hg_shield = 0;
 	self.hg_stealth = 0;
 	self.hg_stealthalpha = 0;
-    HG_UpdateDetonables();
-	HG_PlayerClear_NextLink(killed);
+    nadget_UpdateDetonables();
+	nadget_PlayerClear_NextLink(killed);
 }
 
-var void() HG_GameHookChain_ObserverSpawn_Next;
+var void() nadget_GameHookChain_ObserverSpawn_Next;
 
-void HG_ObserverSpawn(void) {
+void nadget_ObserverSpawn(void) {
     //self.hg_type1_picked = 0;
     //self.hg_type2_picked = 0;
     self.hg_next1 = 0;
     self.hg_next2 = 0;
 
-    HG_GameHookChain_ObserverSpawn_Next();
+    nadget_GameHookChain_ObserverSpawn_Next();
 }
 
-var float() HG_JoinHandle_NextLink;
-float HG_JoinHandle() {
-	if (HG_ShowMenu(FALSE))
+var float() nadget_JoinHandle_NextLink;
+float nadget_JoinHandle() {
+	if (nadget_ShowMenu(FALSE))
 		return TRUE;
 
-	return HG_JoinHandle_NextLink();
+	return nadget_JoinHandle_NextLink();
 }
 
-var float(entity plr) HG_PlayerCanBeCarrier_NextLink;
-float(entity plr) HG_PlayerCanBeCarrier {
-	if (HG_PlayerCanBeCarrier_NextLink(plr))
+var float(entity plr) nadget_PlayerCanBeCarrier_NextLink;
+float(entity plr) nadget_PlayerCanBeCarrier {
+	if (nadget_PlayerCanBeCarrier_NextLink(plr))
 	if not(plr.hg_stealth)
 		return TRUE;
 
 	return FALSE;
 }
 
-var void(entity plr) HG_SpectateCopy_NextLink;
-void(entity plr) HG_SpectateCopy {
+var void(entity plr) nadget_SpectateCopy_NextLink;
+void(entity plr) nadget_SpectateCopy {
 	self.hg_power = plr.hg_power;
 	self.hg_type1 = plr.hg_type1;
 	self.hg_type2 = plr.hg_type2;
@@ -131,17 +131,17 @@ void(entity plr) HG_SpectateCopy {
 	self.hg_bonustype = plr.hg_bonustype;
 	self.hg_detonables = plr.hg_detonables;
 	self.hg_launchspeed = plr.hg_launchspeed;
-	HG_SpectateCopy_NextLink(plr);
+	nadget_SpectateCopy_NextLink(plr);
 }
 
-var float() HG_ThrowWeaponHandle_NextLink;
-float HG_ThrowWeaponHandle() {
-	HG_ThrowWeaponHandle_NextLink();
-	HG_Trigger();
+var float() nadget_ThrowWeaponHandle_NextLink;
+float nadget_ThrowWeaponHandle() {
+	nadget_ThrowWeaponHandle_NextLink();
+	nadget_Trigger();
 	return TRUE;
 }
 
-void HG_Init(void) {
+void nadget_Init(void) {
 	if not(cvar("g_nadgets"))
 		return;
 
@@ -171,22 +171,22 @@ void HG_Init(void) {
     addstat(STAT_HGBONUSTYPE, AS_INT, hg_bonustype);
     addstat(STAT_HGREFIRE, AS_FLOAT, hg_next1);
 
-	HG_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = HG_PlayerClear;
-	HG_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
-	GameHookChain_PlayerCanFire = HG_PlayerCanFire;
-	HG_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = HG_GameMenuAddItems;
-	HG_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = HG_ClientCommandHandle;
-	HG_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = HG_PlayerDamageHandle;
-	HG_JoinHandle_NextLink = GameHookChain_JoinHandle;
-	GameHookChain_JoinHandle = HG_JoinHandle;
-	HG_PlayerCanBeCarrier_NextLink = GameHookChain_PlayerCanBeCarrier;
-	GameHookChain_PlayerCanBeCarrier = HG_PlayerCanBeCarrier;
-	HG_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = HG_SpectateCopy;
+	nadget_PlayerClear_NextLink = GameHookChain_PlayerClear;
+	GameHookChain_PlayerClear = nadget_PlayerClear;
+	nadget_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
+	GameHookChain_PlayerCanFire = nadget_PlayerCanFire;
+	nadget_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = nadget_GameMenuAddItems;
+	nadget_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
+	GameHookChain_ClientCommandHandle = nadget_ClientCommandHandle;
+	nadget_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
+	GameHookChain_PlayerDamageHandle = nadget_PlayerDamageHandle;
+	nadget_JoinHandle_NextLink = GameHookChain_JoinHandle;
+	GameHookChain_JoinHandle = nadget_JoinHandle;
+	nadget_PlayerCanBeCarrier_NextLink = GameHookChain_PlayerCanBeCarrier;
+	GameHookChain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
+	nadget_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	GameHookChain_SpectateCopy = nadget_SpectateCopy;
 
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
@@ -200,29 +200,29 @@ void HG_Init(void) {
 
 	CACHE_CVAR(g_nadgets_detonatelaunches);
 
-    #define HGDEF(id,shortname,longname,color) HG_Hook_Init_##shortname();
-    HGDEFS
-    #undef HGDEF
-	HG_Precache();
-	projectile_register_auto(PROJECTILE_HG_GENERIC, HG_SIZE_DEFAULT * '1 -1 1');
-	projectile_register_auto(PROJECTILE_HG_LASER, HG_SIZE_DEFAULT * '1 -1 1');
-	projectile_register_auto(PROJECTILE_HG_NAPALM, HG_SIZE_DEFAULT * '1 -1 1');
-	projectile_register_auto(PROJECTILE_HG_PLASMA, HG_SIZE_DEFAULT * '1 -1 1');
-	projectile_register_auto(PROJECTILE_HG_REMOTE, HG_SIZE_DEFAULT * '1 -1 1');
-	projectile_register_auto(PROJECTILE_HG_TRANSLOC, HG_SIZE_TRANSLOC * '1 -1 1');
+    #define NADGETDEF(id,shortname,longname,color) nadget_Hook_Init_##shortname();
+    NADGETDEFS
+    #undef NADGETDEF
+	nadget_Precache();
+	projectile_register_auto(PROJECTILE_HG_GENERIC, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_LASER, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_NAPALM, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_PLASMA, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_REMOTE, NADGET_SIZE_DEFAULT * '1 -1 1');
+	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1');
     projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
     projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
-    HG_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
-    GameHookChain_ObserverSpawn = HG_ObserverSpawn;
-	HG_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = HG_PlayerPreThink;
-	HG_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
-	GameHookChain_ThrowWeaponHandle = HG_ThrowWeaponHandle;
+    nadget_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
+    GameHookChain_ObserverSpawn = nadget_ObserverSpawn;
+	nadget_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = nadget_PlayerPreThink;
+	nadget_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
+	GameHookChain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
 
     Napalm_Init();
 }
 
-void HG_Precache(void) {
+void nadget_Precache(void) {
 	dlc_require("rm_effects_v2");
 	dlc_require("rm_laser");
 	dlc_require("rm_arc");
@@ -259,7 +259,7 @@ void HG_Precache(void) {
 	dlc_precache_sound("misc/arc2.wav");
 }
 
-void HG_SetContext(float isalt) {
+void nadget_SetContext(float isalt) {
     hg_context_isaltintended = isalt;
 
     if(!g_nadgets_double)
@@ -290,7 +290,7 @@ void HG_SetContext(float isalt) {
     hg_context_isalt = isalt;
 }
 
-void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float allowOptout) {
+void nadget_GiveBonus(entity p, float hgtype, float amount, string reason, float allowOptout) {
     if((allowOptout && p.hg_optout))
         return;
 
@@ -306,7 +306,7 @@ void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float all
 	p.hg_bonustype = hgtype;
     p.hg_bonus_next = 0;
 
-	string n = HG_TypeToExpandedName(hgtype);
+	string n = nadget_TypeToExpandedName(hgtype);
 	entity e;
 
 	FOR_EACH_REALCLIENT(e) if(e.iscreature || e.classname == "spectator") {
@@ -328,15 +328,15 @@ void HG_GiveBonus(entity p, float hgtype, float amount, string reason, float all
     sound_play2all("kh/alarm.wav");
 }
 
-void HG_GiveRandomBonus(entity p, float amount, string reason, float allowOptout) {
+void nadget_GiveRandomBonus(entity p, float amount, string reason, float allowOptout) {
     if((allowOptout && p.hg_optout))
         return;
 
     random_selection_init();
 
     float n;
-    for(n = HG_START; n <= HG_END; ++n) {
-        //if(g_freeze || (n != HG_BAIT)) {
+    for(n = NADGET_START; n <= NADGET_END; ++n) {
+        //if(g_freeze || (n != NADGET_BAIT)) {
             float w = GRENVAR(n, "bonus_random_weight");
             if(w)
                 random_selection_add(world, n, "", w, 1);
@@ -344,10 +344,10 @@ void HG_GiveRandomBonus(entity p, float amount, string reason, float allowOptout
     }
 
     if(random_selection_chosen_float)
-        HG_GiveBonus(p, random_selection_chosen_float, amount, reason, allowOptout);
+        nadget_GiveBonus(p, random_selection_chosen_float, amount, reason, allowOptout);
 }
 
-float HG_RegenTime(entity e) {
+float nadget_RegenTime(entity e) {
     float base      = GRENVAR(e.hg_ctx_type, "regen_time");
     float exponent  = GRENVAR(e.hg_ctx_type, "regen_exponent");
     float factor    = GRENVAR(e.hg_ctx_type, "regen_factor");
@@ -355,18 +355,18 @@ float HG_RegenTime(entity e) {
     return base * (1 + pow(e.hg_ctx_ammo, exponent) * factor);
 }
 
-void HG_SetRegenTime(entity e, float t) {
+void nadget_SetRegenTime(entity e, float t) {
     e.hg_ctx_regentime = t;
     e.hg_ctx_maxregentime = t;
 }
 
-float HG_PlayerMayDetonate(entity p) {
+float nadget_PlayerMayDetonate(entity p) {
     if(g_nadgets_detonate_on_death)
         return TRUE;
     return PLAYER_REALLY_ALIVE(p);
 }
 
-void HG_RemoveAll(entity plr) {
+void nadget_RemoveAll(entity plr) {
     entity n;
 	string c;
     for (n = nextent(world); n; n = nextent(n)) {
@@ -377,28 +377,28 @@ void HG_RemoveAll(entity plr) {
                (c == "hg_linker")   ||
                ((c == "hg_sentry") &&(!g_nadgets_sentry_disown_on_death)))
         if((n.realowner && n.realowner == plr) || n.owner == plr)
-            HG_FadeOut(n);
+            nadget_FadeOut(n);
     }
 }
 
-float HG_PlayerNadgetType(entity e) {
-    float picked = HG_NameToType(cvar_string("g_nadgets_type"));
-    float argc = tokenize_console(HG_SelectableTypes(hg_context_isalt));
+float nadget_PlayerNadgetType(entity e) {
+    float picked = nadget_NameToType(cvar_string("g_nadgets_type"));
+    float argc = tokenize_console(nadget_SelectableTypes(hg_context_isalt));
     float i;
 
     if(argc)
         for(i = 0; i < argc; ++i)
-            if(e.hg_ctx_type_picked == HG_NameToType(argv(i))) {
+            if(e.hg_ctx_type_picked == nadget_NameToType(argv(i))) {
                 picked = e.hg_ctx_type_picked;
                 break;
             }
 
 
-    if(picked == HG_RANDOM) {
+    if(picked == NADGET_RANDOM) {
         random_selection_init();
         float n; for(i = 0; i < argc; ++i) {
-            n = HG_NameToType(argv(i));
-            if(n != HG_RANDOM && (!hg_context_isalt || n != e.hg_type1_picked))
+            n = nadget_NameToType(argv(i));
+            if(n != NADGET_RANDOM && (!hg_context_isalt || n != e.hg_type1_picked))
                 random_selection_add(world, n, "", 1, 0);
         }
         picked = random_selection_chosen_float;
@@ -408,18 +408,18 @@ float HG_PlayerNadgetType(entity e) {
     return e.hg_ctx_type_picked;
 }
 
-void HG_SetNadgetType(entity p, float t) {
+void nadget_SetNadgetType(entity p, float t) {
     p.hg_ctx_type = t;
 
 #if 0
     if(p.scorekeeper) {
         float s = p.scorekeeper.(scores[SP_STATUSICONS]) & 0xFFFFFF00;
-        PlayerScore_Set(p, SP_STATUSICONS, s + HG_CompressDualType(p.hg_type1, p.hg_type2) & 0x000000FF);
+        PlayerScore_Set(p, SP_STATUSICONS, s + nadget_CompressDualType(p.hg_type1, p.hg_type2) & 0x000000FF);
     }
 #endif
 }
 
-void HG_FadeOut_Think(void) {
+void nadget_FadeOut_Think(void) {
     self.alpha = approach(self.alpha, 0, frametime);
     if(self.hg_linker_factor)
         self.enemy.alpha = self.alpha * 0.5;
@@ -429,18 +429,18 @@ void HG_FadeOut_Think(void) {
             remove(self.enemy);
             remove(self);
         } else
-            HG_GenericProjectile_Remove();
+            nadget_GenericProjectile_Remove();
         return;
     }
 
     self.nextthink = time;
 }
 
-void HG_FadeOut(entity n) {
+void nadget_FadeOut(entity n) {
     if(n.classname == "hg_sentry") {
         entity o = self;
         self = n;
-        HG_Sentry_Explode();
+        nadget_Sentry_Explode();
         self = o;
         return;
     }
@@ -462,11 +462,11 @@ void HG_FadeOut(entity n) {
     n.hg_detonable_updated = FALSE;
     n.event_damage = stdproc_nothing;
     n.use = stdproc_nothing;
-    n.think = HG_FadeOut_Think;
+    n.think = nadget_FadeOut_Think;
     n.nextthink = time;
 }
 
-void HG_SetCooldown(.float cdfield, float gcd, float cd) {
+void nadget_SetCooldown(.float cdfield, float gcd, float cd) {
 #if 0
     float cdmul = Buffs_NadgetCooldown(self);
     gcd *= cdmul;
@@ -479,16 +479,16 @@ void HG_SetCooldown(.float cdfield, float gcd, float cd) {
     self.cdfield = max(self.cdfield, time + cd);
 }
 
-float HG_Attack_CallHook(float hgtype) {
+float nadget_Attack_CallHook(float hgtype) {
     switch(hgtype) {
-        #define HGDEF(id,shortname,longname,color) case id: return HG_Hook_Attack_##shortname();
-        HGDEFS
-        #undef HGDEF
+        #define NADGETDEF(id,shortname,longname,color) case id: return nadget_Hook_Attack_##shortname();
+        NADGETDEFS
+        #undef NADGETDEF
     }
 	return -1;
 }
 
-void HG_Attack(void) {
+void nadget_Attack(void) {
     if(self.deadflag != DEAD_NO)
         return;
 
@@ -521,31 +521,31 @@ void HG_Attack(void) {
     if(!n_bonus && !self.hg_ctx_ammo)
         return;
 
-    switch(HG_Attack_CallHook(hgtype)) {
-        case HG_ATTACK_OK:
+    switch(nadget_Attack_CallHook(hgtype)) {
+        case NADGET_ATTACK_OK:
             break;
-        case HG_ATTACK_FAIL_COOLDOWN: // fallthrough
+        case NADGET_ATTACK_FAIL_COOLDOWN: // fallthrough
             self.cdfield = time + 1;
-        case HG_ATTACK_FAIL:
+        case NADGET_ATTACK_FAIL:
             return;
         default:
-            error(strcat(HG_TypeToExpandedName(hgtype), "'s attack function returned an invalid result\n"));
+            error(strcat(nadget_TypeToExpandedName(hgtype), "'s attack function returned an invalid result\n"));
             return;
     }
 
-    HG_SetCooldown(cdfield, GRENVAR(hgtype, "global_cooldown"), GRENVAR(hgtype, "cooldown"));
+    nadget_SetCooldown(cdfield, GRENVAR(hgtype, "global_cooldown"), GRENVAR(hgtype, "cooldown"));
 
     if(n_bonus) {
         self.hg_bonus -= hg_ammo_used;
     } else {
         if(g_nadgets_regen_compensate) {
-            float oregen = HG_RegenTime(self);
+            float oregen = nadget_RegenTime(self);
             self.hg_ctx_ammo -= hg_ammo_used;
-            self.hg_ctx_maxregentime = HG_RegenTime(self);
+            self.hg_ctx_maxregentime = nadget_RegenTime(self);
             self.hg_ctx_regentime = self.hg_ctx_regentime - oregen + self.hg_ctx_maxregentime;
         } else {
             self.hg_ctx_ammo -= hg_ammo_used;
-            HG_SetRegenTime(self, HG_RegenTime(self));
+            nadget_SetRegenTime(self, nadget_RegenTime(self));
         }
     }
 
@@ -553,7 +553,7 @@ void HG_Attack(void) {
     self.hg_nadesused += hg_ammo_used;
 }
 
-void HG_UpdateDetonables(void) {
+void nadget_UpdateDetonables(void) {
     entity nade;
     self.hg_detonables = 0;
 
@@ -566,7 +566,7 @@ void HG_UpdateDetonables(void) {
             self.hg_detonables += 1;
 }
 
-float HG_RegenLimit(entity plr) {
+float nadget_RegenLimit(entity plr) {
     float mx = 0;
 
     mx = GRENVAR(plr.hg_ctx_type, "regen_limit");
@@ -586,12 +586,12 @@ float HG_RegenLimit(entity plr) {
     return mx;
 }
 
-float HG_StorageLimit(entity plr) {
-    float rlim = HG_RegenLimit(plr);
+float nadget_StorageLimit(entity plr) {
+    float rlim = nadget_RegenLimit(plr);
     return max(rlim, rint(rlim * g_nadgets_storage_limit_factor));
 }
 
-void HG_AdvanceRegen(entity plr, float delta, float limit) {
+void nadget_AdvanceRegen(entity plr, float delta, float limit) {
     if(limit && plr.hg_ctx_ammo >= limit)
         return;
 
@@ -603,23 +603,23 @@ void HG_AdvanceRegen(entity plr, float delta, float limit) {
             rem = 0;
 
         plr.hg_ctx_ammo += 1;
-        HG_SetRegenTime(plr, HG_RegenTime(plr));
+        nadget_SetRegenTime(plr, nadget_RegenTime(plr));
 
         if(rem)
-            HG_AdvanceRegen(plr, rem, limit);
+            nadget_AdvanceRegen(plr, rem, limit);
     }
 }
 
-void HG_PlayerPreThink(void) {
-	HG_PlayerPreThink_NextLink();
+void nadget_PlayerPreThink(void) {
+	nadget_PlayerPreThink_NextLink();
     if(time < game_starttime)
         return;
 
     if(self.hg_linker && wasfreed(self.hg_linker))
         self.hg_linker = world;
 
-    HG_Shield_PlayerFrame();
-    HG_Cloak_PlayerFrame();
+    nadget_Shield_PlayerFrame();
+    nadget_Cloak_PlayerFrame();
 
 #if 0
     if(roundstate == ROUNDSTATE_OVER) {
@@ -663,7 +663,7 @@ void HG_PlayerPreThink(void) {
     if(self.hg_power)
         isalt = self.hg_altstate;
 
-    HG_SetContext(isalt);
+    nadget_SetContext(isalt);
 
     if(!isalt && self.hg_bonus) {
         hg_ctx_ammo = hg_bonus;
@@ -674,11 +674,11 @@ void HG_PlayerPreThink(void) {
     }
 
     if(held && held != self.hg_state) {
-        /* if(self.hg_ctx_type == HG_TIMEWARP && self.hg_twarp_moment) {
-            HG_TimeWarper_Trigger(FALSE);
+        /* if(self.hg_ctx_type == nadget_TIMEWARP && self.hg_twarp_moment) {
+            nadget_TimeWarper_Trigger(FALSE);
         } else */ if(!self.hg_ctx_ammo && self.deadflag == DEAD_NO) {
-            //bigprint_spec(self, strcat("Out of ", HG_TypeToExpandedName(n_type), "s!"), "", 1);
-            centerprint(self, strcat("Out of ", HG_TypeToExpandedName(n_type), "s!"));
+            //bigprint_spec(self, strcat("Out of ", nadget_TypeToExpandedName(n_type), "s!"), "", 1);
+            centerprint(self, strcat("Out of ", nadget_TypeToExpandedName(n_type), "s!"));
         }
     }
 
@@ -691,28 +691,28 @@ void HG_PlayerPreThink(void) {
             self.hg_power = bound(0.01, self.hg_power + frametime * ls, 1);
         else {
             self.hg_power = 0;
-            HG_Attack();
+            nadget_Attack();
         }
 	} else {
 		if(self.hg_power && mayfire && self.hg_launchspeed)
-			HG_Attack();
+			nadget_Attack();
 		self.hg_power = 0;
 	}
 
 	if(self.hg_power == 1 && mayfire && GRENVAR(n_type, "launch_fullforce_launches_immediately"))
-		HG_Attack();
+		nadget_Attack();
 
 	self.hg_state = held;
     self.hg_altstate = isalt;
 
 	float mx, dpause;
-    if(g_nadgets_regen) HG_DO_IN_ALL_CONTEXTS({
-        mx = HG_RegenLimit(self);
+    if(g_nadgets_regen) NADGET_DO_IN_ALL_CONTEXTS({
+        mx = nadget_RegenLimit(self);
         dpause = g_nadgets_regen_damagepause/* * Buffs_NadgetRegenDmgPause(self) */;
 
         self.hg_ctx_regenrate = GRENVAR(self.hg_ctx_type, "regen_scale");
         dpause = min(dpause, dpause / self.hg_ctx_regenrate);
-        self.hg_ctx_regenpaused = (((self.hg_stealth || self.hg_stealth_saved) && self.hg_ctx_type == HG_CLOAK) || (time - self.lastdamage <= dpause) );
+        self.hg_ctx_regenpaused = (((self.hg_stealth || self.hg_stealth_saved) && self.hg_ctx_type == NADGET_CLOAK) || (time - self.lastdamage <= dpause) );
 
         if(self.hg_ctx_ammo < mx || !mx) {
             if(!self.hg_ctx_regenpaused) {
@@ -722,7 +722,7 @@ void HG_PlayerPreThink(void) {
                 self.hg_ctx_regenrate *= Buffs_NadgetRegen(self);
 #endif
 
-                HG_AdvanceRegen(self, frametime * self.hg_ctx_regenrate, mx);
+                nadget_AdvanceRegen(self, frametime * self.hg_ctx_regenrate, mx);
             }
         } else
             self.hg_ctx_regenrate = 0;
@@ -732,21 +732,21 @@ void HG_PlayerPreThink(void) {
         self.hg_detonatepressed = FALSE;
 }
 
-void HG_Trigger(void) {
+void nadget_Trigger(void) {
     if(PLAYER_DEAD(self))
         return;
 
     if(self.hg_stealth || self.hg_stealth_saved)
-        HG_Cloak_Trigger();
+        nadget_Cloak_Trigger();
     else if(self.hg_shield || (self.hg_shield_stored && g_nadgets_shield_damage_store_allow_cancel_discharge))
-        HG_Shield_Trigger();
+        nadget_Shield_Trigger();
     else {
-        HG_Sentry_Trigger();
+        nadget_Sentry_Trigger();
 
-	if(!HG_GenericProjectile_DetonateAll(self, FALSE)) {
+	if(!nadget_GenericProjectile_DetonateAll(self, FALSE)) {
 #if 0
 		if(self.hg_twarp_moment) {
-			HG_TimeWarper_Trigger(FALSE);
+			nadget_TimeWarper_Trigger(FALSE);
 			return;
 		}
 #endif
@@ -757,9 +757,9 @@ void HG_Trigger(void) {
 #if 0
         if(Buffs_Present(self, BUFF_ADEPT)) {
             float i;
-            HG_LOOP_FOR_ALL_CONTEXTS(i, {
-                if(self.hg_ctx_type == HG_LASER) {
-                    HG_Attack();
+            NADGET_LOOP_FOR_ALL_CONTEXTS(i, {
+                if(self.hg_ctx_type == nadget_LASER) {
+                    nadget_Attack();
                     break;
                 }
             })
@@ -768,7 +768,7 @@ void HG_Trigger(void) {
     }
 }
 
-void HG_CopyAmmoState(entity src, entity dst) {
+void nadget_CopyAmmoState(entity src, entity dst) {
     dst.hg_ctx_ammo = src.hg_ctx_ammo;
     dst.hg_ctx_regentime = src.hg_ctx_regentime;
     dst.hg_ctx_maxregentime = src.hg_ctx_maxregentime;
@@ -776,39 +776,39 @@ void HG_CopyAmmoState(entity src, entity dst) {
     dst.hg_ctx_regenpaused = src.hg_ctx_regenpaused;
 }
 
-void HG_ResetAmmo(entity p, float clearammo) {
+void nadget_ResetAmmo(entity p, float clearammo) {
     p.hg_ctx_ammo = (clearammo ? 0 : g_nadgets_ammo);
 
-    HG_SetNadgetType(p, HG_PlayerNadgetType(p));
-    HG_SetRegenTime(p, HG_RegenTime(p));
+    nadget_SetNadgetType(p, nadget_PlayerNadgetType(p));
+    nadget_SetRegenTime(p, nadget_RegenTime(p));
 
     if(!clearammo) {
-        float mx = HG_StorageLimit(p);
-        HG_AdvanceRegen(p, g_nadgets_initial_regen, mx);
+        float mx = nadget_StorageLimit(p);
+        nadget_AdvanceRegen(p, g_nadgets_initial_regen, mx);
 
         if(!g_nadgets_regen) {
             if(p.hg_ctx_regentime / p.hg_ctx_maxregentime < 0.5)
-                HG_AdvanceRegen(p, p.hg_ctx_regentime, mx);
+                nadget_AdvanceRegen(p, p.hg_ctx_regentime, mx);
             else
                 p.hg_ctx_regentime = p.hg_ctx_maxregentime;
         }
     }
 }
 
-void HG_ResetState(entity p, float clearammo) {
+void nadget_ResetState(entity p, float clearammo) {
 }
 
-void HG_ForceDetonateAll(void) {
-    HG_GenericProjectile_DetonateAll(self, TRUE);
+void nadget_ForceDetonateAll(void) {
+    nadget_GenericProjectile_DetonateAll(self, TRUE);
 
 	entity s;
     for(s = world; (s = find(s, classname, "hg_sentry"));) {
         if(s.realowner == self)
-            HG_FadeOut(s);
+            nadget_FadeOut(s);
     }
 }
 
-string HG_SelectableTypes(float issecondary) {
+string nadget_SelectableTypes(float issecondary) {
     string types;
 
     if(!g_nadgets_double) {
@@ -822,32 +822,32 @@ string HG_SelectableTypes(float issecondary) {
     if(types == "all") {
         types = "";
 
-        #define HGDEF(id,shortname,longname,color) \
+        #define NADGETDEF(id,shortname,longname,color) \
             types = strcat(types, #shortname, " ");
-        HGDEFS
-        #undef HGDEF
+        NADGETDEFS
+        #undef NADGETDEF
     }
 
     return types;
 }
 
-void HG_WriteNadgetSelect(void) {
+void nadget_WriteNadgetSelect(void) {
     msg_entity = self;
     WriteByte(MSG_ONE, SVC_TEMPENTITY);
     WriteByte(MSG_ONE, TE_CSQC_NADGETSELECT);
     WriteByte(MSG_ONE, g_nadgets_double);
-    WriteString(MSG_ONE, HG_SelectableTypes(FALSE));
+    WriteString(MSG_ONE, nadget_SelectableTypes(FALSE));
 
     if(g_nadgets_double)
-        WriteString(MSG_ONE, HG_SelectableTypes(TRUE));
+        WriteString(MSG_ONE, nadget_SelectableTypes(TRUE));
 }
 
-float HG_ShowMenu(float always) {
+float nadget_ShowMenu(float always) {
     if((self.hg_type1_picked && self.BUTTON_CHAT) && always < 2)
         return FALSE;
 
-    if(HG_SelectableTypes(FALSE) != "" && (always || !self.hg_type1_picked || (g_nadgets_double && !self.hg_type2_picked)) && clienttype(self) == CLIENTTYPE_REAL) {
-        HG_WriteNadgetSelect();
+    if(nadget_SelectableTypes(FALSE) != "" && (always || !self.hg_type1_picked || (g_nadgets_double && !self.hg_type2_picked)) && clienttype(self) == CLIENTTYPE_REAL) {
+        nadget_WriteNadgetSelect();
         return TRUE;
     }
 
@@ -856,12 +856,12 @@ float HG_ShowMenu(float always) {
 
 void target_bonusnadgets_use() {
 	if(!PLAYER_DEAD(activator))
-		HG_GiveBonus(activator, self.hg_type1, self.cnt, self.message, FALSE);
+		nadget_GiveBonus(activator, self.hg_type1, self.cnt, self.message, FALSE);
 }
 
 void spawnfunc_target_bonusnadgets(void) {
     self.classname = "target_bonusnadgets";
-    self.hg_type1 = HG_NameToType(self.netname);
+    self.hg_type1 = nadget_NameToType(self.netname);
     self.cnt = floor(max(0, self.cnt));
 
     if(!self.message)
@@ -870,12 +870,12 @@ void spawnfunc_target_bonusnadgets(void) {
     self.use = target_bonusnadgets_use;
 }
 
-void HG_Pick(float tokens) {
+void nadget_Pick(float tokens) {
 	if not(self.flags & FL_CLIENT)
 		return;
 
 	if(tokens < 2) {
-		HG_ShowMenu(2);
+		nadget_ShowMenu(2);
 		return;
 	}
 
@@ -884,29 +884,29 @@ void HG_Pick(float tokens) {
 	//float term = (self.term_authed && !self.term_used);
 	float nr = isplayer && (/*gamestarted || */(self.hg_nadesused && !inWarmupStage)) /* && !term */;
 
-	float t1 = HG_NameToType(argv(1));
-	float t2 = HG_NameToType(argv(2));
+	float t1 = nadget_NameToType(argv(1));
+	float t2 = nadget_NameToType(argv(2));
 	float success, t, i, argc;
 
-	if(g_nadgets_double && t1 == t2 && t1 != HG_RANDOM && t2 != HG_RANDOM) {
+	if(g_nadgets_double && t1 == t2 && t1 != NADGET_RANDOM && t2 != NADGET_RANDOM) {
 		sprint(self, "^1Primary and secondary nadgets can't be of the same type\n");
 		return;
 	}
 
 	float revert;
 	entity astate;
-	HG_DO_IN_ALL_CONTEXTS({
-		argc = tokenize_console(HG_SelectableTypes(hg_context_isalt));
+	NADGET_DO_IN_ALL_CONTEXTS({
+		argc = tokenize_console(nadget_SelectableTypes(hg_context_isalt));
 		success = FALSE;
 		t = (hg_context_isalt ? t2 : t1);
 
 		if(argc) for(i = 0; i < argc; ++i) {
-			if(t == HG_NameToType(argv(i))) {
-				sprint(self, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2", HG_TypeToExpandedName(t), (nr ? "^1 on the next respawn.\n" : "^1.\n")));
+			if(t == nadget_NameToType(argv(i))) {
+				sprint(self, strcat("^1Your ", (g_nadgets_double ? (hg_context_isalt ? "secondary " : "primary ") : ""), "nadget type ", (nr ? "will be" : "has been"), " set to the ^2", nadget_TypeToExpandedName(t), (nr ? "^1 on the next respawn.\n" : "^1.\n")));
 				self.hg_ctx_type_picked_nextround = t;
 				if(!nr) {
 					self.hg_ctx_type_picked = t;
-					HG_ResetAmmo(self, FALSE);
+					nadget_ResetAmmo(self, FALSE);
 
 					if(astate) {
 						revert = FALSE;
@@ -919,7 +919,7 @@ void HG_Pick(float tokens) {
 						}
 
 						if(revert)
-							HG_CopyAmmoState(astate, self);
+							nadget_CopyAmmoState(astate, self);
 
 						remove(astate);
 						astate = world;
@@ -939,7 +939,7 @@ void HG_Pick(float tokens) {
 	})
 }
 
-float HG_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-	GameHookChain_PlayerDamageMod = HG_Shield_Damage(attacker, _damage, deathtype, hitloc);
-	return HG_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+float nadget_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+	GameHookChain_PlayerDamageMod = nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
+	return nadget_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }

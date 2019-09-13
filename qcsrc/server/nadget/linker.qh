@@ -6,4 +6,4 @@
 .float hg_linker_nexteffect;
 .float hg_linker_effecttime;
 
-#define IF_HG_LINKER_APPLICABLE(p) if((p).takedamage && PLAYER_REALLY_ALIVE(p))
+#define IF_NADGET_LINKER_APPLICABLE(p) if((p).takedamage && PLAYER_REALLY_ALIVE(p))

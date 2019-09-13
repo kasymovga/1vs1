@@ -24,7 +24,7 @@ float g_nadgets_sentry_pushfactor;
 
 .float spawntime;
 
-float HG_Sentry_TargetIsTaken(entity emitter, entity targ) {
+float nadget_Sentry_TargetIsTaken(entity emitter, entity targ) {
 	entity e;
     for(e = emitter.owner.hg_sentry_emitter_next; e; e = e.hg_sentry_emitter_next)
         if(e != emitter && e.enemy == targ)
@@ -32,7 +32,7 @@ float HG_Sentry_TargetIsTaken(entity emitter, entity targ) {
     return FALSE;
 }
 
-float HG_Sentry_TargetIsValid(entity emitter, entity e) {
+float nadget_Sentry_TargetIsValid(entity emitter, entity e) {
     entity sentry = emitter.owner;
 
     if(!sentry.realowner)
@@ -44,7 +44,7 @@ float HG_Sentry_TargetIsValid(entity emitter, entity e) {
     if(!team_is_different_teams(e, sentry.realowner)/* && !Buffs_Present(sentry.realowner, BUFF_MEDIC) */)
         return FALSE;
 
-    if(HG_Sentry_TargetIsTaken(emitter, e))
+    if(nadget_Sentry_TargetIsTaken(emitter, e))
         return FALSE;
 
     vector o = sentry.origin + sentry.view_ofs;
@@ -61,7 +61,7 @@ float HG_Sentry_TargetIsValid(entity emitter, entity e) {
     return TRUE;
 }
 
-entity HG_Sentry_FindTarget(entity emitter) {
+entity nadget_Sentry_FindTarget(entity emitter) {
     entity sentry = emitter.owner;
 
     entity targ, p;
@@ -90,7 +90,7 @@ entity HG_Sentry_FindTarget(entity emitter) {
 		if not(diffteam)
 			continue;
 
-        if(HG_Sentry_TargetIsTaken(emitter, p))
+        if(nadget_Sentry_TargetIsTaken(emitter, p))
             continue;
 
         t = WarpZone_FindNearestOrigin(o, p.origin + p.view_ofs, FALSE);
@@ -124,7 +124,7 @@ entity HG_Sentry_FindTarget(entity emitter) {
     return targ;
 }
 
-void HG_Sentry_Beam_Think(void) {
+void nadget_Sentry_Beam_Think(void) {
     entity targ = self.enemy.enemy;
     vector end = targ.origin + targ.view_ofs * (0.5 + 0.5 * sin(time * 5 + num_for_edict(self)));
     vector start = self.owner.origin + self.owner.view_ofs;
@@ -150,7 +150,7 @@ void HG_Sentry_Beam_Think(void) {
     end = self.origin;
 
     if(targ.takedamage == DAMAGE_AIM && time > self.cnt) {
-        damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, HG_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - WarpZone_TransformOrigin(WarpZone_trace_transform, start)));
+        damage(targ, self, self.owner.realowner, g_nadgets_sentry_beam_dps * 0.1, NADGET_SENTRY, end, g_nadgets_sentry_beam_force * normalize(end_transformed - WarpZone_TransformOrigin(WarpZone_trace_transform, start)));
         self.cnt = time + 0.1; // FIXME: this is inaccurate
     }
 
@@ -169,7 +169,7 @@ void HG_Sentry_Beam_Think(void) {
     self.nextthink = time;
 }
 
-entity HG_Sentry_Beam_Spawn(entity emitter) {
+entity nadget_Sentry_Beam_Spawn(entity emitter) {
     entity e = spawn(), sentry = emitter.owner;
     e.classname = "hg_sentry_beam";
     e.owner = sentry;
@@ -177,7 +177,7 @@ entity HG_Sentry_Beam_Spawn(entity emitter) {
     e.team = sentry.team;
     e.zapper_beam_start = sentry.origin + sentry.view_ofs;
     e.zapper_beam_end = e.zapper_beam_start;
-    e.think = HG_Sentry_Beam_Think;
+    e.think = nadget_Sentry_Beam_Think;
     e.nextthink = time;
 
     net_link_entity(e, FALSE, 0, weapon_zapper_beam_send);
@@ -185,7 +185,7 @@ entity HG_Sentry_Beam_Spawn(entity emitter) {
     return e;
 }
 
-void HG_Sentry_Emitter_Think() {
+void nadget_Sentry_Emitter_Think() {
 	entity sentry = self.owner;
 
 	if(time < sentry.cnt || sentry.hg_sentry_energy < g_nadgets_sentry_beam_energyrequired) {
@@ -194,17 +194,17 @@ void HG_Sentry_Emitter_Think() {
 		self.zapper_beam = world;
 		self.enemy = world;
 	} else if(!self.zapper_beam) {
-		if(!HG_Sentry_TargetIsValid(self, self.enemy))
+		if(!nadget_Sentry_TargetIsValid(self, self.enemy))
 			self.enemy = world;
 
 		if(!self.enemy)
-			self.enemy = HG_Sentry_FindTarget(self);
+			self.enemy = nadget_Sentry_FindTarget(self);
 
 		if(self.enemy)
-			self.zapper_beam = HG_Sentry_Beam_Spawn(self);
+			self.zapper_beam = nadget_Sentry_Beam_Spawn(self);
 	} else {
-		if(self.enemy && !HG_Sentry_TargetIsValid(self, self.enemy))
-			self.enemy = HG_Sentry_FindTarget(self);
+		if(self.enemy && !nadget_Sentry_TargetIsValid(self, self.enemy))
+			self.enemy = nadget_Sentry_FindTarget(self);
 
 		if(!self.enemy) {
 			remove(self.zapper_beam);
@@ -216,23 +216,23 @@ void HG_Sentry_Emitter_Think() {
 	self.nextthink = time;
 }
 
-entity HG_Sentry_Emitter_Spawn(entity sentry) {
+entity nadget_Sentry_Emitter_Spawn(entity sentry) {
     entity e = spawn();
     e.classname = "hg_sentry_emitter";
     e.owner = sentry;
     e.origin = sentry.origin + sentry.view_ofs;
-    e.think = HG_Sentry_Emitter_Think;
+    e.think = nadget_Sentry_Emitter_Think;
     e.nextthink = time;
 	return e;
 }
 
-void HG_Sentry_Emitter_Remove(entity emitter) {
+void nadget_Sentry_Emitter_Remove(entity emitter) {
     if(emitter.zapper_beam)
         remove(emitter.zapper_beam);
     remove(emitter);
 }
 
-void HG_Sentry_Interrupt_Capture(void) {
+void nadget_Sentry_Interrupt_Capture(void) {
     if(self.hg_sentry_capture_player)
 	if(self.hg_sentry_capture_player.hg_sentry_capture_pb) {
         remove(self.hg_sentry_capture_player.hg_sentry_capture_pb);
@@ -243,8 +243,8 @@ void HG_Sentry_Interrupt_Capture(void) {
     self.hg_sentry_capture_progress = 0;
 }
 
-void HG_Sentry_SetOwner(entity sentry, entity newowner) {
-    HG_Waypoint_Remove(sentry.hg_waypoint);
+void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
+    nadget_Waypoint_Remove(sentry.hg_waypoint);
 
     sentry.team = (teamplay ? newowner.team : 0);
     sentry.colormap = num_for_edict(newowner);
@@ -267,14 +267,14 @@ void HG_Sentry_SetOwner(entity sentry, entity newowner) {
 
     if(newowner) {
         newowner.hg_detonables += 1;
-        //centerprint_spec(newowner, strcat("^3You have claimed a ^1", HG_TypeToExpandedName(HG_SENTRY), "^3!"));
-        centerprint(newowner, strcat("^3You have claimed a ^1", HG_TypeToExpandedName(HG_SENTRY), "^3!"));
+        //centerprint_spec(newowner, strcat("^3You have claimed a ^1", nadget_TypeToExpandedName(NADGET_SENTRY), "^3!"));
+        centerprint(newowner, strcat("^3You have claimed a ^1", nadget_TypeToExpandedName(NADGET_SENTRY), "^3!"));
     }
 }
 
-void HG_Sentry_Remove(void) {
+void nadget_Sentry_Remove(void) {
     entity_drop_entities(self);
-    HG_Sentry_Interrupt_Capture();
+    nadget_Sentry_Interrupt_Capture();
 
     if(self.realowner.classname == "player")
         self.realowner.hg_detonables -= 1;
@@ -290,7 +290,7 @@ void HG_Sentry_Remove(void) {
 	entity e;
     for(e; (e = find(e, classname, "hg_sentry_emitter"));)
         if(e.owner == self)
-            HG_Sentry_Emitter_Remove(e);
+            nadget_Sentry_Emitter_Remove(e);
 
 	if (self.hg_sentry_capture_player)
 	if (self.hg_sentry_capture_player.hg_sentry_capture_pb) {
@@ -300,12 +300,12 @@ void HG_Sentry_Remove(void) {
     remove(self);
 }
 
-void HG_Sentry_Explode(void) {
+void nadget_Sentry_Explode(void) {
     effect_blast(self.origin + self.view_ofs);
-    HG_Sentry_Remove();
+    nadget_Sentry_Remove();
 }
 
-void HG_Sentry_Levitate(void) {
+void nadget_Sentry_Levitate(void) {
     // oscillation effect
     // FIXME: doesn't work properly without g_nadgets_sentry_levitation
     // TODO: maybe move this to CSQC
@@ -341,20 +341,20 @@ void HG_Sentry_Levitate(void) {
     }
 }
 
-void HG_Sentry_Orphaned_Think(void) {
+void nadget_Sentry_Orphaned_Think(void) {
     entity e;
 
-    HG_Sentry_Levitate();
+    nadget_Sentry_Levitate();
 
     if(self.hg_sentry_capture_player) {
         e = self.hg_sentry_capture_player;
 
         if(PLAYER_DEAD(e) || time - e.lastdamage < g_nadgets_sentry_capture_damage_delay || vlen(e.origin - self.origin) > g_nadgets_sentry_capture_range)
-            HG_Sentry_Interrupt_Capture();
+            nadget_Sentry_Interrupt_Capture();
         else {
             traceline(self.origin, e.origin, MOVE_NOMONSTERS, self);
             if(trace_fraction < 1)
-                HG_Sentry_Interrupt_Capture();
+                nadget_Sentry_Interrupt_Capture();
         }
     }
 
@@ -383,26 +383,26 @@ void HG_Sentry_Orphaned_Think(void) {
         progressbar_set(e.hg_sentry_capture_pb, self.hg_sentry_capture_progress);
 
         if(self.hg_sentry_capture_progress == 1) {
-            HG_Sentry_SetOwner(self, e);
-            HG_Sentry_Interrupt_Capture();
+            nadget_Sentry_SetOwner(self, e);
+            nadget_Sentry_Interrupt_Capture();
         }
         //self.hg_sentry_capture_player.buff_stealth_time = time;
     }
 }
 
-void HG_Sentry_Think(void) {
+void nadget_Sentry_Think(void) {
     entity o = self.realowner;
 
-    HG_Sentry_Levitate();
+    nadget_Sentry_Levitate();
 
     if(o && ((teamplay && self.team != o.team) || !o.iscreature))
         o = world;
 
     if(!o || PLAYER_DEAD(o)) {
         if(g_nadgets_sentry_disown_on_death /* && roundstate == ROUNDSTATE_GAME */) {
-            HG_Sentry_SetOwner(self, world);
+            nadget_Sentry_SetOwner(self, world);
         } else if(!o) {
-            HG_Sentry_Explode();
+            nadget_Sentry_Explode();
             return;
         }
     }
@@ -411,7 +411,7 @@ void HG_Sentry_Think(void) {
         self.health = approach(self.health, 0, frametime * g_nadgets_sentry_health_degenerate_when_damaged);
 
     if(!self.health) {
-        HG_Sentry_Explode();
+        nadget_Sentry_Explode();
         return;
     }
 
@@ -424,9 +424,9 @@ void HG_Sentry_Think(void) {
     self.hg_sentry_energy = approach(self.hg_sentry_energy, 1, frametime * g_nadgets_sentry_energy_regen);
 
     if(self.realowner)
-        HG_Waypoint();
+        nadget_Waypoint();
     else
-        HG_Sentry_Orphaned_Think();
+        nadget_Sentry_Orphaned_Think();
 
     setorigin(self.aiment, self.origin + self.view_ofs);
     self.aiment.scale = bound(0.01, self.hg_sentry_energy, 1);
@@ -434,16 +434,16 @@ void HG_Sentry_Think(void) {
     self.nextthink = time;
 }
 
-void HG_Sentry_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+void nadget_Sentry_Damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
     if(!self.realowner || team_is_different_teams(attacker, self.realowner)) {
-        if(DEATH_ISHG(deathtype))
+        if(DEATH_ISNADGET(deathtype))
             _damage *= g_nadgets_sentry_damagefactor_nadgets;
         else
             _damage *= g_nadgets_sentry_damagefactor;
 
         self.health = bound(0, self.health - _damage, self.health);
     } else {
-        if(DEATH_ISHG(deathtype))
+        if(DEATH_ISNADGET(deathtype))
             _damage *= g_nadgets_sentry_repairfactor_nadgets;
         else
             _damage *= g_nadgets_sentry_repairfactor;
@@ -452,14 +452,14 @@ void HG_Sentry_Damage(entity inflictor, entity attacker, float _damage, float de
     }
 
     if(self.health <= 0)
-        HG_Sentry_Explode();
+        nadget_Sentry_Explode();
 }
 
-void HG_Sentry_MEODP_Death(entity attacker, entity inflictor) {
-    HG_Sentry_Explode();
+void nadget_Sentry_MEODP_Death(entity attacker, entity inflictor) {
+    nadget_Sentry_Explode();
 }
 
-void HG_Sentry_Trigger(void) {
+void nadget_Sentry_Trigger(void) {
     entity e, aimtarg, aimtransform;
     vector o, aimloc, aimloc_untransformed;
 
@@ -525,7 +525,7 @@ void HG_Sentry_Trigger(void) {
             vector force = c_frc * dir;
 
 			if (targ)
-				damage(targ, self, self, c_dmg, HG_SENTRY | HITTYPE_SECONDARY, endpos, force);
+				damage(targ, self, self, c_dmg, NADGET_SENTRY | HITTYPE_SECONDARY, endpos, force);
 
             dlc_sound(e, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
             weapon_zapper_attack2_effect((teamplay ? self.team : COLOR_TEAM3), o, end_visual);
@@ -546,19 +546,19 @@ void HG_Sentry_Trigger(void) {
         sound(self, CHAN_WEAPON2, "weapons/unavailable.wav", VOL_BASE, ATTN_NORM);
 }
 
-HG_HOOKFUNCTION(sentry, Attack) {
+NADGET_HOOKFUNCTION(sentry, Attack) {
     vector o = self.origin;
 
     entity e = spawn();
     setmodel(e, "models/rtzsentry.iqm");
-    setsize(e, HG_SENTRY_MINS, HG_SENTRY_MAXS);
+    setsize(e, NADGET_SENTRY_MINS, NADGET_SENTRY_MAXS);
     setorigin(e, o);
 
     if(!entity_move_out_of_solid(e, MOVE_NOMONSTERS)) {
         remove(e);
         //bigprint_spec(self, "Can't put a sentry here!", "", 1);
         centerprint(self, "Can't put a sentry here!");
-        return HG_ATTACK_FAIL_COOLDOWN;
+        return NADGET_ATTACK_FAIL_COOLDOWN;
     }
 
 	e.spawnorigin = e.origin;
@@ -568,15 +568,15 @@ HG_HOOKFUNCTION(sentry, Attack) {
     e.solid = SOLID_BBOX;
     e.movetype = (g_nadgets_sentry_levitation ? MOVETYPE_FLY : (g_nadgets_sentry_pushfactor ? MOVETYPE_WALK : MOVETYPE_TOSS));
     e.angles = '0 360 0' * random();
-    e.reset = HG_Sentry_Remove;
-    e.think = HG_Sentry_Think;
+    e.reset = nadget_Sentry_Remove;
+    e.think = nadget_Sentry_Think;
     e.nextthink = time;
-    e.hg_type = HG_SENTRY;
+    e.hg_type = NADGET_SENTRY;
     e.view_ofs = '0 0 100';
     e.takedamage = DAMAGE_AIM;
     e.colormap = num_for_edict(e.realowner);
     e.health = g_nadgets_sentry_health;
-    e.event_damage = HG_Sentry_Damage;
+    e.event_damage = nadget_Sentry_Damage;
     e.cnt = time + g_nadgets_sentry_beam_initialdelay;
     e.spawntime = time;
     e.damageforcescale = e.pushfactor = g_nadgets_sentry_pushfactor;
@@ -584,13 +584,13 @@ HG_HOOKFUNCTION(sentry, Attack) {
 		e.touch = push_touch;
 
     if(g_nadgets_sentry_levitation) {
-        // also see HG_Sentry_Levitate
+        // also see nadget_Sentry_Levitate
         e.gravity = 0.001;
     }
 
     self.hg_detonables += 1;
 
-    //Buffs_MEODP_Point_Attach(e, HG_Sentry_MEODP_Death);
+    //Buffs_MEODP_Point_Attach(e, nadget_Sentry_MEODP_Death);
 
     entity c = spawn();
     setmodel(c, "models/ebomb.mdl");
@@ -607,16 +607,16 @@ HG_HOOKFUNCTION(sentry, Attack) {
     entity tail = e;
 	float i;
     for(i = 0; i < g_nadgets_sentry_beam_amount; ++i) {
-        tail.hg_sentry_emitter_next = HG_Sentry_Emitter_Spawn(e);
+        tail.hg_sentry_emitter_next = nadget_Sentry_Emitter_Spawn(e);
         tail = tail.hg_sentry_emitter_next;
     }
 
     // TODO: a better sound?
     dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
-    return HG_ATTACK_OK;
+    return NADGET_ATTACK_OK;
 }
 
-HG_HOOKFUNCTION(sentry, Init) {
+NADGET_HOOKFUNCTION(sentry, Init) {
 	CACHE_CVAR(g_nadgets_sentry_beam_range);
 	CACHE_CVAR(g_nadgets_sentry_beam_dps);
 	CACHE_CVAR(g_nadgets_sentry_beam_force);
@@ -640,5 +640,5 @@ HG_HOOKFUNCTION(sentry, Init) {
 	CACHE_CVAR(g_nadgets_sentry_shock_energy_cost);
     CACHE_CVAR(g_nadgets_sentry_friction);
     CACHE_CVAR(g_nadgets_sentry_pushfactor);
-    return HG_INIT_OK;
+    return NADGET_INIT_OK;
 }

@@ -1,0 +1,120 @@
+void nadget_Init(void);
+void nadget_Precache(void);
+void nadget_SetContext(float isalt);
+void nadget_Attack(void);
+void nadget_ResetState(entity, float);
+void nadget_ResetAmmo(entity, float);
+void nadget_CopyAmmoState(entity src, entity dst);
+void nadget_GiveBonus(entity, float, float, string, float);
+void nadget_GiveRandomBonus(entity, float, string, float);
+void nadget_RemoveAll(entity);
+float nadget_ShowMenu(float);
+void nadget_FadeOut(entity);
+float nadget_RegenTime(entity);
+float nadget_RegenLimit(entity);
+float nadget_StorageLimit(entity);
+void nadget_AdvanceRegen(entity, float, float);
+void nadget_SetRegenTime(entity e, float t);
+void nadget_Trigger(void);
+void nadget_SetCooldown(.float cdfield, float gcd, float cd);
+string nadget_SelectableTypes(float issecondary);
+
+typedef float(void) hg_hookfunc_t;
+
+.vector org_explosion;
+.float nextparticle;
+
+.float hg_power;
+.float hg_state;
+.float hg_altstate;
+.float hg_next1;
+.float hg_next2;
+.float hg_bonus_next;
+.float hg_ammo1;
+.float hg_ammo2;
+.float hg_type1;
+.float hg_type1_picked;
+.float hg_type1_picked_nextround;
+.float hg_type2;
+.float hg_type2_picked;
+.float hg_type2_picked_nextround;
+.float hg_bonus;
+.float hg_bonustype;
+.float hg_isbonus;
+.float hg_regentime1;
+.float hg_maxregentime1;
+.float hg_regenrate1;
+.float hg_regenpaused1;
+.float hg_regentime2;
+.float hg_maxregentime2;
+.float hg_regenrate2;
+.float hg_regenpaused2;
+.float hg_detonable;
+.float hg_detonatetime;
+.float hg_detonatedelay;
+.float hg_detonateready;
+.float hg_detonables;
+.float hg_detonable_updated;
+.float hg_detonatepressed;
+.float hg_nadesused;
+.float hg_optout;
+.float hg_optout_nextround;
+.float hg_alwaysask;
+.float hg_altcharge;
+//.float hg_adept;
+
+var .float hg_ctx_next;
+var .float hg_ctx_type;
+var .float hg_ctx_ammo;
+var .float hg_ctx_type;
+var .float hg_ctx_type_picked;
+var .float hg_ctx_type_picked_nextround;
+var .float hg_ctx_regentime;
+var .float hg_ctx_maxregentime;
+var .float hg_ctx_regenrate;
+var .float hg_ctx_regenpaused;
+
+.float hg_launchspeed;
+
+float g_nadgets_detonatelaunches;
+float g_nadgets_double;
+
+float hg_context_isalt;
+float hg_context_isaltintended;
+
+float hg_ammo_used;
+float hg_ammo_available;
+
+#define hg_type hg_type1
+#define GRENVARNAME(t,v) strcat("g_nadgets_", nadget_TypeToName(t), "_", (v))
+#define GRENVAR(t,v) (cvar(GRENVARNAME(t,v)))
+
+#define NADGET_DO_IN_ALL_CONTEXTS(block) { nadget_SetContext(FALSE); block if(g_nadgets_double) { nadget_SetContext(TRUE); block } }
+#define NADGET_LOOP_FOR_ALL_CONTEXTS(i,block) for(i = 0; i <= g_nadgets_double; ++i) { nadget_SetContext(i); block }
+
+enum {
+    NADGET_ATTACK_OK,
+    NADGET_ATTACK_FAIL,
+    NADGET_ATTACK_FAIL_COOLDOWN,
+};
+
+enum {
+    NADGET_INIT_OK,
+};
+
+
+#define NADGETDEF(id,shortname,longname,color) \
+    hg_hookfunc_t nadget_Hook_Attack_##shortname; \
+    hg_hookfunc_t nadget_Hook_Init_##shortname; \
+
+
+NADGETDEFS
+#undef NADGETDEF
+
+#define NADGET_HOOKFUNCTION(hgt,hook) float nadget_Hook_##hook##_##hgt(void)
+
+#define NADGET_EMPTY_INITFUNC(hgt) NADGET_HOOKFUNCTION(hgt, Init) { return NADGET_INIT_OK; }
+
+void nadget_Pick(float token);
+
+#define BUTTON_NADGET2 button9

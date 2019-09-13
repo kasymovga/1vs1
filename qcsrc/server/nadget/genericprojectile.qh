@@ -1,0 +1,39 @@
+
+.float hg_spawntime;
+.float hg_ranthink;
+.float hg_deathtime;
+.vector hg_lastvel;
+.vector hg_deferredVel;
+.float hg_raze_randelayed;
+.vector hg_maxVelocity;
+.vector hg_minVelocity;
+.float hg_fireSpawnTime;
+.float hg_nextsnd;
+.float hg_sndcount;
+
+float nadget_GenericProjectile_CSQCProjType(float t);
+entity nadget_GenericProjectile(float hgtype, vector ang, float silent);
+void nadget_GenericProjectile_Remove(void);
+void nadget_GenericProjectile_Detonate(entity nade);
+float nadget_GenericProjectile_DetonateAll(entity plr, float force);
+void nadget_GenericProjectile_ThrowNapalm(void);
+void nadget_GenericProjectile_RadiusDamage(void);
+float nadget_GenericProjectile_Attack(float hgtype);
+
+
+#define NADGET_GENERIC_ATTACKFUNC(hgtype,hgid) \
+    NADGET_HOOKFUNCTION(hgtype, Attack) { return nadget_GenericProjectile_Attack(hgid); } \
+    NADGET_EMPTY_INITFUNC(hgtype) \
+
+
+NADGET_GENERIC_ATTACKFUNC(normal,   NADGET_NORMAL)
+NADGET_GENERIC_ATTACKFUNC(remote,   NADGET_REMOTE)
+NADGET_GENERIC_ATTACKFUNC(plasma,   NADGET_PLASMA)
+NADGET_GENERIC_ATTACKFUNC(laser,    NADGET_LASER)
+NADGET_GENERIC_ATTACKFUNC(raze,     NADGET_RAZE)
+NADGET_GENERIC_ATTACKFUNC(transloc, NADGET_TRANSLOC)
+NADGET_GENERIC_ATTACKFUNC(napalm,   NADGET_NAPALM)
+
+#define NADGET_SIZE_DEFAULT 5
+#define NADGET_SIZE_TRANSLOC 6
+#define NADGET_SIZE_PLASMA_STICK 7
