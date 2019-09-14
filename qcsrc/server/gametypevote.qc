@@ -5,6 +5,7 @@ entity gametypevote;
 
 float gametypes[MENU_ITEMS_MAXCOUNT];
 string gametypes_descr[MENU_ITEMS_MAXCOUNT];
+string gametypes_profiles[MENU_ITEMS_MAXCOUNT];
 float gametypes_votes[MENU_ITEMS_MAXCOUNT];
 float gametypes_count;
 float gametypes_mapinfo_mask;
@@ -14,10 +15,17 @@ float gametypes_mapinfo_mask;
 void GameTypeVote_Select(float select);
 
 string GameTypeVote_GetDescr(float n) {
-	if (gametypes_descr[n] != "")
-		strunzone(gametypes_descr[n]);
+	str_unzone_ifneeded(gametypes_descr[n]);
+	string s = MapInfo_HumanString_FromType(gametypes[n]);
+	string p = gametypes_profiles[n];
+	if (p == "")
+		p = "default";
 
-	gametypes_descr[n] = strzone(strcat(MapInfo_HumanString_FromType(gametypes[n]), " (", ftos(gametypes_votes[n]), ")"));
+	if (p != " ")
+		s = strcat(s, " with ^2", strtoupper(p), "^7 profile");
+
+	s = strcat(s, " (", ftos(gametypes_votes[n]), ")");
+	gametypes_descr[n] = strzone(s);
 	return gametypes_descr[n];
 }
 
@@ -43,22 +51,32 @@ float GameTypeVote_Think() {
 		gametypevote_start = time;
 		gametypevote = menu_prepare(world, "gametypevote", "Please select game type for next map:", cvar("sv_gametypevote_time"), GameTypeVote_Select);
 		gametypes_count = 0;
-		string head, tail;
+		string head, tail, type, profile;
 		tail = sv_gametypevote;
 		float gametype_vote_mask = 
 		float mapinfo_type;
+		float colon;
 		while (tail != "") {
 			head = str_car(tail);
 			tail = str_cdr(tail);
-			t = MapInfo_Type_FromString(head);
-			if (t <= 0)
+			colon = strstrofs(head, ":", 0);
+			if (colon >= 0) {
+				type = substring(head, 0, colon);
+				profile = substring(head, colon + 1, -1);
+			} else {
+				type = head;
+				profile = " ";
+			}
+			t = MapInfo_Type_FromString(type);
+			if (t <= 0) {
+				print("Unknown game type: ", type, "\n");
 				continue;
-
+			}
 			mapinfo_type = MapInfo_GameTypeToMapInfoType(t);
 			if (!nextmap_types || (mapinfo_type & nextmap_types))
-			if (mapinfo_type & gametypes_mapinfo_mask)
-			{
+			if (mapinfo_type & gametypes_mapinfo_mask) {
 				gametypes[gametypes_count] = t;
+				gametypes_profiles[gametypes_count] = str_zone_ifneeded(profile);
 				menu_add_item(gametypevote, GameTypeVote_GetDescr(gametypes_count));
 				gametypes_count++;
 				if (gametypes_count == MENU_ITEMS_MAXCOUNT)
@@ -78,6 +96,10 @@ float GameTypeVote_Think() {
 	for (i = 0; i < gametypes_count; i++) {
 		if (gametypes_votes[i] > (player_count - currentbots) / 2) {
 			MapInfo_SwitchGameType(gametypes[i]);
+			string p = gametypes_profiles[i];
+			if (p != " ")
+				cvar_set("g_profile", p);
+
 			gametypevote_finished = TRUE;
 			return TRUE;
 		}
@@ -94,6 +116,9 @@ float GameTypeVote_Think() {
 		}
 		if (gametype_max_votes >= 0) {
 			MapInfo_SwitchGameType(gametypes[gametype_max_votes]);
+			string p = gametypes_profiles[gametype_max_votes];
+			if (p != " ")
+				cvar_set("g_profile", p);
 		}
 		gametypevote_finished = TRUE;
 		return TRUE;
@@ -129,10 +154,15 @@ float GameTypeVote_Mask() {
 void GameTypeVote_Init() {
 	sv_gametypevote = cvar_string_zone_ifneeded("sv_gametypevote");
 	string head, tail;
+	float colon;
 	tail = sv_gametypevote;
 	gametypes_mapinfo_mask = 0;
 	while (tail != "") {
 		head = str_car(tail);
+		colon = strstrofs(head, ":", 0);
+		if (colon >= 0)
+			head = substring(head, 0, colon);
+
 		tail = str_cdr(tail);
 		if (head != "") {
 			gametypes_mapinfo_mask = gametypes_mapinfo_mask | MapInfo_GameTypeToMapInfoType(MapInfo_Type_FromString(head));
