@@ -79,6 +79,9 @@ teamplay.qc
 sbar.qc
 mapvoting.qc
 
+../client-server/hook.qh
+../client-server/physics_hook.qh
+../client-server/physics_hook.qc
 hook.qc
 particles.qc
 laser.qc

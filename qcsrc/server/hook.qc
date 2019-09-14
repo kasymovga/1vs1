@@ -6,21 +6,13 @@
 
 ============================================*/
 
-float g_balance_grapplehook_airfriction;
 float g_balance_grapplehook_break_damage;
 float g_balance_grapplehook_damage;
 float g_balance_grapplehook_damage_interval;
-float g_balance_grapplehook_dontpull;
-float g_balance_grapplehook_force_rubber;
-float g_balance_grapplehook_force_rubber_overstretch;
 float g_balance_grapplehook_gravity;
 float g_balance_grapplehook_health;
-float g_balance_grapplehook_length_min;
 float g_balance_grapplehook_speed_fly;
-float g_balance_grapplehook_speed_pull;
-float g_balance_grapplehook_stretch;
 float g_balance_grapplehook_onground_pullfactor;
-float g_grappling_hook_tarzan;
 vector hook_shotorigin;
 
 .string aiment_classname;
@@ -77,12 +69,18 @@ void hook_stop() {
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.hook_length = -1;
+	self.hook.SendFlags |= 16;
 }
 
 float(entity to, float sf) hook_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
-	WriteByte(MSG_ENTITY, sf);
 	entity _hook = self.owner;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
+	sf = sf & 15;
+	if (to == _hook.owner)
+	if (_hook.state == 1)
+		sf |= 16;
+
+	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1)
 		WriteByte(MSG_ENTITY, num_for_edict(_hook.owner));
 
@@ -112,45 +110,56 @@ float(entity to, float sf) hook_send {
 		WriteCoord(MSG_ENTITY, v_y);
 		WriteCoord(MSG_ENTITY, v_z);
 	}
+	if (sf & 16) {
+		WriteCoord(MSG_ENTITY, self.hook_length);
+	}
 	return TRUE;
 }
 
+void(entity _hook, vector v, vector v0, vector dir) hook_pull_aiment {
+	if(_hook.aiment.pushfactor) {
+		vector dv = ((v - v0) * dir) * dir;
+		float pullfactor = 0.5;
+		if (_hook.aiment.flags & FL_ONGROUND)
+			pullfactor = 0.5 * g_balance_grapplehook_onground_pullfactor;
+
+		_hook.aiment.velocity = _hook.aiment.velocity - dv * (_hook.aiment.pushfactor / _hook.owner.pushfactor) * pullfactor;
+		_hook.aiment.pusher = _hook.owner;
+		_hook.aiment.pushltime = time + g_maxpushtime;
+	}
+}
+
+entity(void) hook_get {
+	if (self.hook)
+	if (self.hook.state == 1)
+		return self.hook;
+
+	return world;
+}
+
 void() hook_think {
-	float spd, dist, newlength;
-	vector dir, org, myorg, end, v, v0, dv;
+	vector org, myorg;
 	entity oldself = self;
 	self = self.owner;
-	if(PLAYER_DEAD(self.owner) || self.owner.hook != self)	// how did that happen?
-	{														// well, better fix it anyway
+	if(PLAYER_DEAD(self.owner) || self.owner.hook != self) {// how did that happen?
+		// well, better fix it anyway
 		remove(self.hook);
 		remove(self);
 		self = oldself;
 		return;
 	}
-	if(hook_lost_follow(self))
-	{
+	if(hook_lost_follow(self)) {
 		hook_remove(self.owner);
 		self = oldself;
 		return;
 	}
-
-    if(self.aiment)
-        WarpZone_RefSys_AddIncrementally(self, self.aiment);
+	if (self.aiment)
+		WarpZone_RefSys_AddIncrementally(self, self.aiment);
 
 	self.hook.nextthink = time;
-
 	makevectors(self.owner.v_angle);
 	org = self.owner.origin + self.owner.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
-    myorg = WarpZone_RefSys_TransformOrigin(self.owner, self, org);
-	if(self.hook_length < 0)
-		self.hook_length = vlen(myorg - self.origin);
-
-	if(self.state == 1)
-	{
-		dir = self.origin - myorg;
-		dist = vlen(dir);
-		dir = normalize(dir);
-
+	if(self.state == 1) {
 		if (self.aiment) {
 			if not(player_can_fire(self.owner, FALSE)) {
 				hook_remove(self.owner);
@@ -159,8 +168,7 @@ void() hook_think {
 			if (g_balance_grapplehook_damage_interval)
 			if (self.hook_attack_time)
 			if (self.aiment.takedamage)
-			while (self.hook_attack_time <= time)
-			{
+			while (self.hook_attack_time <= time) {
 				damage(self.aiment, self.owner, self.owner, g_balance_grapplehook_damage, WEP_HOOK, self.origin, '0 0 0');
 				self.hook_attack_time += g_balance_grapplehook_damage_interval;
 			}
@@ -169,75 +177,7 @@ void() hook_think {
 				return;
 			}
 		}
-		if(g_grappling_hook_tarzan)
-		{
-			v = v0 = WarpZone_RefSys_TransformVelocity(self.owner, self, self.owner.velocity);
-
-			// first pull the rope...
-			if(self.owner.hook_state & HOOK_PULLING)
-			{
-				newlength = self.hook_length;
-				newlength = max(newlength - g_balance_grapplehook_speed_pull * frametime, g_balance_grapplehook_length_min);
-
-				if(newlength < dist - g_balance_grapplehook_stretch) // overstretched?
-				{
-					newlength = dist - g_balance_grapplehook_stretch;
-					if(v * dir < 0) // only if not already moving in hook direction
-						v = v + frametime * dir * g_balance_grapplehook_force_rubber_overstretch;
-				}
-
-				self.hook_length = newlength;
-			}
-
-			if(self.owner.hook_state & HOOK_RELEASING)
-			{
-				newlength = dist;
-				self.hook_length = newlength;
-			}
-			else
-			{
-				// then pull the player
-				spd = bound(0, (dist - self.hook_length) / g_balance_grapplehook_stretch, 1);
-				if not(g_balance_grapplehook_dontpull) {
-					v = v * (1 - frametime * g_balance_grapplehook_airfriction);
-					v = v + frametime * dir * spd * g_balance_grapplehook_force_rubber;
-					self.owner.flags &~= FL_ONGROUND;
-				}
-
-				dv = ((v - v0) * dir) * dir;
-				if(g_grappling_hook_tarzan >= 2)
-				{
-					if(self.aiment.pushfactor)
-					{
-						float pullfactor = 0.5;
-						if (self.aiment.flags & FL_ONGROUND)
-							pullfactor = 0.5 * g_balance_grapplehook_onground_pullfactor;
-
-						self.aiment.velocity = self.aiment.velocity - dv * (self.aiment.pushfactor / self.owner.pushfactor) * pullfactor;
-						self.aiment.pusher = self.owner;
-						self.aiment.pushltime = time + g_maxpushtime;
-					}
-				}
-			}
-			self.owner.velocity = WarpZone_RefSys_TransformVelocity(self, self.owner, v);
-		}
-		else
-		{
-			end = self.origin - dir*50;
-			dist = vlen(end - myorg);
-			if(dist < 200)
-				spd = dist * (g_balance_grapplehook_speed_pull / 200);
-			else
-				spd = g_balance_grapplehook_speed_pull;
-			if(spd < 50)
-				spd = 0;
-			self.owner.velocity = dir*spd;
-			self.owner.movetype = MOVETYPE_FLY;
-
-			self.owner.flags &~= FL_ONGROUND;
-		}
 	}
-
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.owner, self.origin);
 	vector a = WarpZone_RefSys_TransformAngles(self, self.owner, self.angles);
 	makevectors(a_x * '-1 0 0' + a_y * '0 1 0');
@@ -465,7 +405,39 @@ void(float killed) hook_PlayerClear {
 	hook_PlayerClear_NextLink(killed);
 }
 
+vector hook_physics_pre_origin_save;
+void(entity _hook, entity pl) hook_physics_pre {
+	if(_hook.aiment)
+		WarpZone_RefSys_AddIncrementally(_hook, _hook.aiment);
+
+	hook_physics_pre_origin_save = pl.origin;
+	pl.origin = WarpZone_RefSys_TransformOrigin(pl, _hook, pl.origin);
+	physics_velocity = WarpZone_RefSys_TransformVelocity(pl, _hook, physics_velocity);
+	physics_hook_old_length = _hook.hook_length;
+}
+
+void(entity _hook, entity pl) hook_physics_post {
+	physics_velocity = WarpZone_RefSys_TransformVelocity(_hook, pl, physics_velocity);
+	pl.origin = hook_physics_pre_origin_save;
+	_hook.hook_length = physics_hook_old_length;
+	_hook.hook.SendFlags |= 16;
+}
+
+float(entity to, float sf) hook_physics_send {
+	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_HOOK);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_airfriction);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_dontpull);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_force_rubber);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_force_rubber_overstretch);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_length_min);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_speed_pull);
+	WriteCoord(MSG_ENTITY, g_balance_grapplehook_stretch);
+	WriteCoord(MSG_ENTITY, g_grappling_hook_tarzan);
+	return TRUE;
+}
+
 float hook_init_done;
+entity hook_physics_sender;
 void(float force) hook_init {
 	CACHE_CVAR(g_balance_grapplehook_airfriction);
 	CACHE_CVAR(g_balance_grapplehook_break_damage);
@@ -490,6 +462,8 @@ void(float force) hook_init {
 	if (hook_init_done)
 		return;
 
+	physics_hook_enable();
+	net_link_entity((hook_physics_sender = spawn()), FALSE, 0, hook_physics_send);
 	hook_init_done = TRUE;
     precache_model("models/hook.md3");
 	precache_sound("weapons/hook_fire.wav");

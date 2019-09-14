@@ -1,0 +1,4 @@
+void(entity _hook, entity pl) hook_physics_pre;
+void(entity _hook, entity pl) hook_physics_post;
+void(entity _hook, vector v, vector v0, vector dir) hook_pull_aiment;
+entity(void) hook_get;

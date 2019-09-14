@@ -1,20 +1,22 @@
+var float(float maxspd_mod) physics_jetpack_next;
 float(float maxspd_mod) physics_jetpack {
 	float maxairspd, f;
 	vector wishvel;
+	float r = (physics_jetpack_next ? physics_jetpack_next(maxspd_mod) : 0);
 	if not(physics_button_jump)
-		return 0;
+		return r;
 
 	if not(physics_flags & FL_JUMPRELEASED)
-		return 0;
+		return r;
 
 	if (physics_flags & FL_ONGROUND)
-		return 0;
+		return r;
 
 	if (physics_waterlevel)
-		return 0;
+		return r;
 
 	if not(jetpack_using())
-		return 0;
+		return r;
 
 	//makevectors(self.v_angle_y * '0 1 0');
 	makevectors(physics_v_angle);
@@ -87,4 +89,14 @@ float(float maxspd_mod) physics_jetpack {
 		jetpack_finished(fvel * f);
 	}
 	return 1;
+}
+
+float physics_jetpack_enabled;
+void(void) physics_jetpack_enable {
+	if (physics_jetpack_enabled)
+		return;
+
+	physics_jetpack_enabled = 1;
+	physics_jetpack_next = physics_player_plug;
+	physics_player_plug = physics_jetpack;
 }

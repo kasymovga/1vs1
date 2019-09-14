@@ -51,6 +51,7 @@ projectile.qh
 effect.qh
 portals.qh
 hook.qh
+../client-server/hook.qh
 score.qh
 sysinfo.qh
 ipban.qh
@@ -105,6 +106,7 @@ damageindicator.qh
 ../client-server/physics_aircraft.qh
 ../client-server/physics_car.qh
 ../client-server/physics_jetpack.qh
+../client-server/physics_hook.qh
 ../client-server/jetpack.qh
 physics.qh
 minstagib.qh
@@ -198,6 +200,7 @@ gametype.qc
 rune.qc
 ../client-server/physics.qc
 ../client-server/physics_jetpack.qc
+../client-server/physics_hook.qc
 physics.qc
 jetpack.qc
 // tZork's libs

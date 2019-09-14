@@ -1,0 +1,12 @@
+float g_balance_grapplehook_airfriction;
+float g_balance_grapplehook_dontpull;
+float g_balance_grapplehook_force_rubber;
+float g_balance_grapplehook_force_rubber_overstretch;
+float g_balance_grapplehook_length_min;
+float g_balance_grapplehook_speed_pull;
+float g_balance_grapplehook_stretch;
+float g_grappling_hook_tarzan;
+
+float physics_hook_old_length;
+
+void(void) physics_hook_enable;

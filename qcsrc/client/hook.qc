@@ -1,4 +1,7 @@
 .vector hook_shootorg;
+entity hook_pull;
+float hook_pull_length_readed;
+
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
 {
 	// I want to draw a quad...
@@ -38,7 +41,9 @@ void Draw_GrapplingHook()
 	float t;
 	InterpolateOrigin_Do();
 	float owner_entnum = self.sv_entnum;
-
+	if (hook_pull == self) {
+		physics_hook_old_length = hook_pull_length_readed;
+	}
 	b = self.origin;
 	if(!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == spectatee_status)) {
 		vector hook_shotorigin = self.hook_shootorg;
@@ -86,10 +91,38 @@ void Draw_GrapplingHook()
 }
 
 void Remove_GrapplingHook() {
+	if (self == hook_pull)
+		hook_pull = world;
+
 	if (self.enemy) {
 		remove(self.enemy);
 		self.enemy = world;
 	}
+}
+
+entity(void) hook_get {
+	return hook_pull;
+}
+
+void(entity _hook, vector v, vector v0, vector dir) hook_pull_aiment {
+}
+
+void(entity _hook, entity pl) hook_physics_pre {
+}
+
+void(entity _hook, entity pl) hook_physics_post {
+}
+
+void(float ignore) hook_physics_read {
+	g_balance_grapplehook_airfriction = ReadCoord();
+	g_balance_grapplehook_dontpull = ReadCoord();
+	g_balance_grapplehook_force_rubber = ReadCoord();
+	g_balance_grapplehook_force_rubber_overstretch = ReadCoord();
+	g_balance_grapplehook_length_min = ReadCoord();
+	g_balance_grapplehook_speed_pull = ReadCoord();
+	g_balance_grapplehook_stretch = ReadCoord();
+	g_grappling_hook_tarzan = ReadCoord();
+	physics_hook_enable();
 }
 
 void Ent_GrapplingHook(float ignore) {
@@ -128,4 +161,9 @@ void Ent_GrapplingHook(float ignore) {
 
 		self = e;
 	}
+	if (f & 16) {
+		hook_pull = self;
+		hook_pull_length_readed = ReadCoord();
+	} else
+		hook_pull = world;
 }
