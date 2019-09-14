@@ -145,13 +145,11 @@ void() hook_think {
 		// well, better fix it anyway
 		remove(self.hook);
 		remove(self);
-		self = oldself;
-		return;
+		goto end;
 	}
 	if(hook_lost_follow(self)) {
 		hook_remove(self.owner);
-		self = oldself;
-		return;
+		goto end;
 	}
 	if (self.aiment)
 		WarpZone_RefSys_AddIncrementally(self, self.aiment);
@@ -163,7 +161,7 @@ void() hook_think {
 		if (self.aiment) {
 			if not(player_can_fire(self.owner, FALSE)) {
 				hook_remove(self.owner);
-				return;
+				goto end;
 			}
 			if (g_balance_grapplehook_damage_interval)
 			if (self.hook_attack_time)
@@ -174,7 +172,7 @@ void() hook_think {
 			}
 			if not(self.aiment) {
 				hook_remove(self.owner);
-				return;
+				goto end;
 			}
 		}
 	}
@@ -193,6 +191,7 @@ void() hook_think {
 	if (self.owner.teleport_time == time)
 		self.hook.SendFlags |= 28;
 
+:end
 	self = oldself;
 }
 
