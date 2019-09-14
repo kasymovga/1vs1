@@ -14,11 +14,16 @@ float(float maxspd_mod) physics_hook {
 	dist = vlen(_hook.origin - self.origin);
 	dir = normalize(_hook.origin - self.origin);
 	if (g_grappling_hook_tarzan) {
+		if (physics_hook_old_length < 0)
+			physics_hook_old_length = dist;
+
 		v0 = v = physics_velocity;
 		// first pull the rope...
-		if not(physics_button_crouch) {
+		if not(physics_button_crouch)
 			newlength = max(physics_hook_old_length - g_balance_grapplehook_speed_pull * frametime, g_balance_grapplehook_length_min);
-		}
+		else
+			newlength = physics_hook_old_length;
+
 		// then pull the player
 		spd = bound(0, (dist - newlength) / g_balance_grapplehook_stretch, 1);
 		physics_hook_old_length = newlength;

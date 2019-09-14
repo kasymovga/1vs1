@@ -111,7 +111,7 @@ float(entity to, float sf) hook_send {
 		WriteCoord(MSG_ENTITY, v_z);
 	}
 	if (sf & 16) {
-		WriteCoord(MSG_ENTITY, self.hook_length);
+		WriteCoord(MSG_ENTITY, _hook.hook_length);
 	}
 	return TRUE;
 }
