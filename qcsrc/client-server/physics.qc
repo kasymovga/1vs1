@@ -719,8 +719,10 @@ void(void) physics_player {
 				f = 1 - frametime * sv_friction;
 			if (f > 0)
 				physics_velocity = physics_velocity * f;
-			else
-				physics_velocity = '0 0 0';
+			else {
+				physics_velocity_x = 0;
+				physics_velocity_y = 0;
+			}
 		}
 		// acceleration
 		wishdir = normalize(wishvel);
