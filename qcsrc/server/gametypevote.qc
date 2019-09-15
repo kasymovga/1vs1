@@ -22,7 +22,7 @@ string GameTypeVote_GetDescr(float n) {
 		p = "default";
 
 	if (p != " ")
-		s = strcat(s, " with ^2", strtoupper(p), "^7 profile");
+		s = strcat(s, " with ", strtoupper(p), " profile");
 
 	s = strcat(s, " (", ftos(gametypes_votes[n]), ")");
 	gametypes_descr[n] = strzone(s);
