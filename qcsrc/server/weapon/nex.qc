@@ -60,14 +60,16 @@ void weapon_nex_attack (void)
 	weapon_setup_shot (self, 5, "weapons/nexfire.wav", 1);
 
 	yoda = 0;
+	headshot = 0;
 	damage_goodhits = 0;
 	bullet_railgun (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
 	antilag_end();
 
-	if((yoda && flying) || yoda > 1)
+	if(headshot)
+		announce(Akimbo_Owner(self), "announcer/male/headshot.wav", "^1Head^3Shot");
+	else if((yoda && flying) || yoda > 1)
 		announce(self, "announcer/male/yoda.wav", "^5Amazing");
-	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "")
-	{
+	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "") {
 		if(announce(self, sv_announcer_extra_twohits, "^5Impressive"))
 			damage_goodhits = 0; // only every second time
 	}
