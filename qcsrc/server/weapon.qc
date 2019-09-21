@@ -362,7 +362,7 @@ void weapon_frame()
 	vector fo, ri, up;
 
 	makevectors(self.v_angle);
-	if (GameHook_WeaponFrameHandle())
+	if (gamehook_chain_weapon_frame_handle())
 		return;
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands

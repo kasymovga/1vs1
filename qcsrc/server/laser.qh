@@ -1,0 +1,2 @@
+void(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float expl, float issec, float lifetime) laser_projectile;
+void(void) laser_init;

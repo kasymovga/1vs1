@@ -20,6 +20,7 @@ constants.qh
 ../client-server/net.qh
 ../menu-server/weapon.qh
 ../common/weapon.qh
+laser.qh
 sound.qh
 announce.qh
 location_request.qh
@@ -246,6 +247,7 @@ weapon/fireball.qc
 weapon/supershotgun.qc
 weapon/zapper.qc
 weapon/selectable.qc
+laser.qc
 item.qc
 powerup.qc
 backpack.qc

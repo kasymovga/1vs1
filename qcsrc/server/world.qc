@@ -245,6 +245,7 @@ void(void) world_static_init {
 	footsteps_init();
 	udppunchhole_init();
 	jetpack_init();
+	laser_init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

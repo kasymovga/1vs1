@@ -18,68 +18,27 @@ float g_balance_laser_secondary_refire;
 float g_balance_laser_secondary_shotangle;
 float g_balance_laser_secondary_speed;
 
-void weapon_laser_touch (void)
-{
-	PROJECTILE_TOUCH;
-
-	self.event_damage = stdproc_nothing;
-	if (self.dmg)
-		damage_radius (self, self.owner, g_balance_laser_secondary_damage, g_balance_laser_secondary_edgedamage, g_balance_laser_secondary_radius, world, g_balance_laser_secondary_force, self.projectiledeathtype, other);
-	else
-		damage_radius (self, self.owner, g_balance_laser_primary_damage, g_balance_laser_primary_edgedamage, g_balance_laser_primary_radius, world, g_balance_laser_primary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void weapon_laser_attack (float issecondary)
-{
-	local entity missile;
+void(float issecondary) weapon_laser_attack {
 	vector s_forward;
 	float a;
-
 	if (issecondary)
 		a = g_balance_laser_secondary_shotangle;
 	else
 		a = g_balance_laser_primary_shotangle;
+
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
-
-	if(issecondary)
-		weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
-	else
-		weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
-	missile = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
-	missile.classname = "laserbolt";
-	missile.dmg = issecondary;
-	missile.bot_dodge = TRUE;
 	if (issecondary)
-		missile.bot_dodgerating = g_balance_laser_secondary_damage;
+		laser_projectile(w_shotdir, g_balance_laser_secondary_speed,
+				g_balance_laser_secondary_damage, g_balance_laser_secondary_edgedamage,
+				g_balance_laser_secondary_radius, g_balance_laser_secondary_force,
+				FALSE, TRUE, g_balance_laser_secondary_lifetime);
 	else
-		missile.bot_dodgerating = g_balance_laser_primary_damage;
-
-	missile.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_LASER;
-	if(issecondary)
-		missile.projectiledeathtype |= HITTYPE_SECONDARY;
-
-	setorigin (missile, w_shotorg);
-
-	if (issecondary)
-		missile.velocity = w_shotdir * g_balance_laser_secondary_speed;
-	else
-		missile.velocity = w_shotdir * g_balance_laser_primary_speed;
-	weapon_setup_projectile_velocity(missile);
-	missile.angles = vectoangles (missile.velocity);
-	//missile.glow_color = 250; // 244, 250
-	//missile.glow_size = 120;
-	missile.touch = weapon_laser_touch;
-	missile.think = stdproc_remove;
-	if (issecondary)
-		missile.nextthink = time + g_balance_laser_secondary_lifetime;
-	else
-		missile.nextthink = time + g_balance_laser_primary_lifetime;
+		laser_projectile(w_shotdir, g_balance_laser_primary_speed,
+				g_balance_laser_primary_damage, g_balance_laser_primary_edgedamage,
+				g_balance_laser_primary_radius, g_balance_laser_primary_force,
+				FALSE, TRUE, g_balance_laser_primary_lifetime);
 }
 
 void spawnfunc_weapon_laser (void)

@@ -83,11 +83,12 @@ float() nexball_SpeedMod {
 	return f;
 }
 
-float() nexball_WeaponFrameHandle {
+var float() nexball_weapon_frame_handle_next;
+float() nexball_weapon_frame_handle {
 	if (self.ballcarried)
 		nexball_carrier_think();
 
-	return FALSE;
+	return nexball_weapon_frame_handle_next();
 }
 
 float() nexball_ReloadAllowed {
@@ -165,7 +166,8 @@ void() nexball_init {
 	GameHookChain_PlayerPreThink = nexball_PlayerPreThink;
 	nexball_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = nexball_SpeedMod;
-	GameHook_WeaponFrameHandle = nexball_WeaponFrameHandle;
+	nexball_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
+	gamehook_chain_weapon_frame_handle = nexball_weapon_frame_handle;
 	GameHook_ReloadAllowed = nexball_ReloadAllowed;
 	nexball_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = nexball_ThrowWeaponAllowed;
