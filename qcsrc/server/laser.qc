@@ -42,6 +42,7 @@ void(void) laser_init {
 	if not(cvar("g_laser"))
 		return;
 
+	client_button_atck2_busy = TRUE;
 	CACHE_CVAR(g_laser_refire);
 	CACHE_CVAR(g_laser_speed);
 	CACHE_CVAR(g_laser_damage);

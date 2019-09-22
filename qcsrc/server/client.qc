@@ -105,6 +105,9 @@ float client_init_send(entity to, float sf)
 		if (g_buttons_hookuse_swap)
 			t |= 8;
 
+		if (client_button_atck2_busy)
+			t |= 16;
+
 		WriteByte(MSG_ENTITY, t);
 	}
 	if (sf & 4) {

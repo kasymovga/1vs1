@@ -1187,6 +1187,7 @@ void Ent_Init(float ignore)
 		sv_spectate = i & 2;
 		localgame = i & 4;
 		hook_use_swapped = i & 8;
+		button_attack2_allowed = !(i & 16);
 	}
 
 	if (sf & 4) {
