@@ -911,6 +911,10 @@ void spawnfunc_item_health_medium (void) {
 }
 
 void spawnfunc_item_health_large (void) {
+	if (g_pickup_healthlarge <= 0) {
+		remove(self);
+		return;
+	}
 	self.max_health = g_pickup_healthlarge_max;
 	self.health = g_pickup_healthlarge;
 	item_start (sv_model_healthlarge, "misc/mediumhealth.wav", g_pickup_respawntime_healthlarge, g_pickup_respawntimejitter_healthlarge, "50 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
