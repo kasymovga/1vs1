@@ -5,31 +5,14 @@ float g_laser_damage_edge;
 float g_laser_radius;
 float g_laser_force;
 
-void(void) laser_touch {
-	PROJECTILE_TOUCH;
-	self.event_damage = stdproc_nothing;
-	damage_radius(self, self.owner, self.dmg, self.dmg_edge, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-	remove(self);
-}
-
 void(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float expl, float issec, float lifetime) laser_projectile {
 	entity missile = projectile(TRUE, (expl ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE, self);
+	projectile_setup(missile, w_shotorg, WEP_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force);
 	missile.team = self.team;
-	missile.dmg = _dmg;
-	missile.dmg_force = _force;
-	missile.dmg_radius = _dmg_radius;
-	missile.dmg_edge = _dmg_edge;
-	missile.classname = "laserbolt";
-	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = _dmg;
 	missile.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_LASER | (issec ? HITTYPE_SECONDARY: 0);
-	setorigin (missile, w_shotorg);
 	missile.velocity = _shotdir * _speed;
 	weapon_setup_projectile_velocity(missile);
-	missile.angles = vectoangles (missile.velocity);
-	missile.touch = laser_touch;
+	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
 	missile.nextthink = time + lifetime;
 }
@@ -67,4 +50,5 @@ void(void) laser_init {
 	CACHE_CVAR(g_laser_force);
 	laser_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
 	gamehook_chain_weapon_frame_handle = laser_weapon_frame_handle;
+	precache_sound ("weapons/lasergun_fire.wav");
 }
