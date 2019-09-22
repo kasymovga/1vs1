@@ -41,9 +41,6 @@ void(void) weapon_rocketlauncher_explode {
 				if(physics_is_flying(other))
 					announce(self.owner, "announcer/male/airshot.wav", "^5Air^1Shot");
 
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-	damage_radius (self, self.owner, g_balance_rocketlauncher_damage, g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, world, g_balance_rocketlauncher_force, self.projectiledeathtype, other);
 	if (self.owner.weapon == WEP_ROCKET_LAUNCHER) {
 		if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 		if (self.owner.ammo_rockets < g_balance_rocketlauncher_ammo) {
@@ -52,7 +49,8 @@ void(void) weapon_rocketlauncher_explode {
 			self.owner.switchweapon = weapon_best(self.owner);
 		}
 	}
-	remove (self);
+	self.realowner = self.owner;
+	projectile_explode();
 }
 
 void weapon_rocketlauncher_remote_explode()
@@ -143,7 +141,6 @@ void weapon_rocketlauncher_think (void)
 			newdir = weapon_rocketlauncher_rocket_steerto(olddir, normalize(goal - self.origin), cos(g_balance_rocketlauncher_guiderate * f * frametime * DEG2RAD));
 
 			self.velocity = newdir * velspeed;
-			self.angles = vectoangles(self.velocity);
 
 			if(!self.count)
 			{
@@ -175,7 +172,6 @@ void weapon_rocketlauncher_damage (entity inflictor, entity attacker, float _dam
 	if (self.health <= 0)
 		return;
 	self.health = self.health - _damage;
-	self.angles = vectoangles(self.velocity);
 	if (self.health <= 0)
 		damage_prepare_explosion(attacker, weapon_rocketlauncher_explode);
 }
@@ -192,31 +188,26 @@ void weapon_rocketlauncher_attack (void)
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
-	missile.realowner = self;
+	projectile_setup(missile, w_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
+			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force);
+
+	missile.classname = "rocket"; //for remote exploding
+	missile.realowner = self; //we neeed it without Akimbo_Owner for guiding
 	missile.lastrocket = self;
 	self.lastrocket = missile;
 	if(g_balance_rocketlauncher_detonatedelay >= 0)
 		missile.spawnshieldtime = time + g_balance_rocketlauncher_detonatedelay;
 	else
 		missile.spawnshieldtime = -1;
-	missile.pushltime = time + g_balance_rocketlauncher_guidedelay;
-	missile.classname = "rocket";
-	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = g_balance_rocketlauncher_damage * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
 
+	missile.pushltime = time + g_balance_rocketlauncher_guidedelay;
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = g_balance_rocketlauncher_damageforcescale;
 	missile.health = g_balance_rocketlauncher_health;
 	missile.event_damage = weapon_rocketlauncher_damage;
-
 	missile.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	missile.velocity = w_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
 	weapon_setup_projectile_velocity(missile);
-	missile.angles = vectoangles (missile.velocity);
-
 	missile.touch = weapon_rocketlauncher_touch;
 	missile.think = weapon_rocketlauncher_think;
 	missile.nextthink = time;

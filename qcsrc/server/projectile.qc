@@ -113,16 +113,26 @@ void(float type) projectile_init {
 
 entity(float clientanimate, float type, float docull, entity _owner) projectile {
 	entity e = spawn();
-	e.owner = Akimbo_Owner(_owner);
+	e.realowner = e.owner = Akimbo_Owner(_owner);
 	projectile_set_size(e, type);
 	net_link_entity(e, docull, 0, projectile_send);
-
 	e.csqcprojectile_clientanimate = clientanimate;
-
 	e.csqcprojectile_type = type;
-
 	e.flags = FL_PROJECTILE;
+	e.classname = "projectile";
 	return e;
+}
+
+void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force) projectile_setup {
+	e.projectiledeathtype = deathtype;
+	PROJECTILE_MAKETRIGGER(e);
+	setorigin(e, _origin);
+	e.dmg = _dmg;
+	e.dmg_force = _force;
+	e.dmg_radius = _dmg_radius;
+	e.dmg_edge = _dmg_edge;
+	e.bot_dodge = TRUE;
+	e.bot_dodgerating = _dmg;
 }
 
 void(entity e) projectile_update {
@@ -180,6 +190,18 @@ void(void) projectile_think2use {
     self.use();
     other = o;
     activator = a;
+}
+
+void(void) projectile_explode {
+	self.event_damage = stdproc_nothing;
+	self.takedamage = DAMAGE_NO;
+	damage_radius(self, self.realowner, self.dmg, self.dmg_edge, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
+	remove(self);
+}
+
+void(void) projectile_touch_explode {
+	PROJECTILE_TOUCH;
+	projectile_explode();
 }
 
 void(void) projectile_info_send {

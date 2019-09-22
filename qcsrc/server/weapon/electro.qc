@@ -64,8 +64,7 @@ void weapon_electro_trigger_combo(vector org, float rad, entity own)
 	}
 }
 
-void weapon_electro_explode (void)
-{
+void(void) weapon_electro_explode {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(team_is_different_teams(self.owner, other))
@@ -73,29 +72,15 @@ void weapon_electro_explode (void)
 					if(physics_is_flying(other))
 						announce(self.owner, "announcer/male/electrobitch.wav", "^5Air^5Shot");
 
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-	if (self.movetype == MOVETYPE_BOUNCE)
-	{
-		damage_radius (self, self.owner, g_balance_electro_secondary_damage, g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, world, g_balance_electro_secondary_force, self.projectiledeathtype, other);
-	}
-	else
-	{
+	if not(self.projectiledeathtype & HITTYPE_SECONDARY)
 		weapon_electro_trigger_combo(self.origin, g_balance_electro_primary_comboradius, self.owner);
-		damage_radius (self, self.owner, g_balance_electro_primary_damage, g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, world, g_balance_electro_primary_force, self.projectiledeathtype, other);
-	}
 
-	remove (self);
+	projectile_explode();
 }
 
-void weapon_electro_explode_combo (void)
-{
-
+void(void) weapon_electro_explode_combo {
 	weapon_electro_trigger_combo(self.origin, g_balance_electro_combo_comboradius, self.owner);
-
-	self.event_damage = stdproc_nothing;
-	damage_radius (self, self.owner, g_balance_electro_combo_damage, g_balance_electro_combo_edgedamage, g_balance_electro_combo_radius, world, g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
-	remove (self);
+	projectile_explode();
 }
 
 void weapon_electro_touch (void)
@@ -141,60 +126,44 @@ void weapon_electro_damage (entity inflictor, entity attacker, float _damage, fl
 	}
 }
 
-void weapon_electro_attack()
-{
+void(void) weapon_electro_attack {
 	entity proj;
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_cells = self.ammo_cells - g_balance_electro_primary_ammo;
 
 	weapon_setup_shot(self, 2, "weapons/electro_fire.wav", 1);
-
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
+	projectile_setup(proj, w_shotorg, WEP_ELECTRO, g_balance_electro_primary_damage,
+			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force);
+
 	proj.classname = "plasma_prim";
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = g_balance_electro_primary_damage;
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
 	proj.nextthink = time + g_balance_electro_primary_lifetime;
-	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_ELECTRO;
-	setorigin(proj, w_shotorg);
-
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - g_balance_electro_primary_ammo;
 	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = w_shotdir * g_balance_electro_primary_speed;
 	weapon_setup_projectile_velocity(proj);
-	proj.angles = vectoangles(proj.velocity);
 	proj.touch = weapon_electro_touch_explode;
-	//sound (proj, CHAN_PAIN, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
-	//sounds bad
-
 }
 
-void weapon_electro_attack2()
-{
+void(void) weapon_electro_attack2 {
 	entity proj;
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.ammo_cells = self.ammo_cells - g_balance_electro_secondary_ammo;
 
 	weapon_setup_shot(self, 2, "weapons/electro_fire2.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
-
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
-	proj.gravity = 1;
+	projectile_setup(proj, w_shotorg, WEP_ELECTRO, g_balance_electro_secondary_damage,
+			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force);
+
 	proj.classname = "plasma";
+	proj.gravity = 1;
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = g_balance_electro_secondary_damage;
 	proj.nextthink = time + g_balance_electro_secondary_lifetime;
-	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_ELECTRO | HITTYPE_SECONDARY;
-	setorigin(proj, w_shotorg);
-
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_cells = self.ammo_cells - g_balance_electro_secondary_ammo;
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;

@@ -14,3 +14,6 @@ void(float type) projectile_init;
 
 void(void) projectile_info_send;
 void(void) projectile_think2use;
+void(void) projectile_explode;
+void(void) projectile_touch_explode;
+void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force) projectile_setup;

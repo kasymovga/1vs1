@@ -5,16 +5,13 @@ float g_balance_crylink_primary_bounces;
 float g_balance_crylink_primary_damage;
 float g_balance_crylink_primary_edgedamage;
 float g_balance_crylink_primary_force;
-float g_balance_crylink_primary_middle_fadetime;
 float g_balance_crylink_primary_middle_lifetime;
-float g_balance_crylink_primary_other_fadetime;
 float g_balance_crylink_primary_other_lifetime;
 float g_balance_crylink_primary_radius;
 float g_balance_crylink_primary_refire;
 float g_balance_crylink_primary_shots;
 float g_balance_crylink_primary_speed;
 float g_balance_crylink_primary_spread;
-float g_balance_crylink_primary_star_fadetime;
 float g_balance_crylink_primary_star_lifetime;
 float g_balance_crylink_secondary_ammo;
 float g_balance_crylink_secondary_animtime;
@@ -23,9 +20,7 @@ float g_balance_crylink_secondary_bounces;
 float g_balance_crylink_secondary_damage;
 float g_balance_crylink_secondary_edgedamage;
 float g_balance_crylink_secondary_force;
-float g_balance_crylink_secondary_line_fadetime;
 float g_balance_crylink_secondary_line_lifetime;
-float g_balance_crylink_secondary_middle_fadetime;
 float g_balance_crylink_secondary_middle_lifetime;
 float g_balance_crylink_secondary_radius;
 float g_balance_crylink_secondary_refire;
@@ -35,72 +30,27 @@ float g_balance_crylink_secondary_spread;
 
 .float gravity;
 
-.entity realowner;
 var .float crylink_buttonatck1 = BUTTON_ATCK;
 var .float crylink_buttonatck2 = BUTTON_ATCK2;
 
 // NO bounce protection, as bounces are limited!
-void weapon_crylink_touch (void)
-{
-	float finalhit;
-	float f;
+void(void) weapon_crylink_touch {
 	PROJECTILE_TOUCH;
-	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
-	if(finalhit)
-		f = 1;
-	else
-		f = g_balance_crylink_primary_bouncedamagefactor;
-	if(self.alpha)
-		f *= self.alpha;
-	damage_radius (self, self.realowner, g_balance_crylink_primary_damage * f, g_balance_crylink_primary_edgedamage * f, g_balance_crylink_primary_radius, world, g_balance_crylink_primary_force * f, self.projectiledeathtype, other);
-	if (finalhit)
-	{
-		remove (self);
+	if ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO)) {
+		projectile_explode();
 		return;
 	}
+	damage_radius (self, self.realowner, self.dmg * self.lip, self.dmg_edge * self.lip, self.dmg_radius, world, self.dmg_force * self.lip, self.projectiledeathtype, other);
 	self.cnt = self.cnt - 1;
-	self.angles = vectoangles(self.velocity);
 	self.owner = world;
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
-	// commented out as it causes a little hitch...
-	//if(proj.cnt == 0)
-	//	projectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
-void weapon_crylink_touch2 (void)
-{
-	float finalhit;
-	float f;
-	PROJECTILE_TOUCH;
-	finalhit = ((self.cnt <= 0) || (other.takedamage != DAMAGE_NO));
-	if(finalhit)
-		f = 1;
-	else
-		f = g_balance_crylink_secondary_bouncedamagefactor;
-	if(self.alpha)
-		f *= self.alpha;
-	damage_radius (self, self.realowner, g_balance_crylink_secondary_damage * f, g_balance_crylink_secondary_edgedamage * f, g_balance_crylink_secondary_radius, world, g_balance_crylink_secondary_force * f, self.projectiledeathtype, other);
-	if (finalhit)
-	{
-		remove (self);
-		return;
-	}
-	self.cnt = self.cnt - 1;
-	self.angles = vectoangles(self.velocity);
-	self.owner = world;
-	self.projectiledeathtype |= HITTYPE_BOUNCE;
-	// commented out as it causes a little hitch...
-	//if(proj.cnt == 0)
-	//	projectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
-}
-
-void weapon_crylink_attack (void)
-{
-	float counter, shots;
+void(void) weapon_crylink_attack {
+	float counter;
 	entity proj;
 	vector s;
 	vector forward, right, up;
-
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_primary_ammo;
 
@@ -108,30 +58,19 @@ void weapon_crylink_attack (void)
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
-
-	shots = g_balance_crylink_primary_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
-	while (counter < shots)
-	{
+	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_crylink_primary_shots);
+	while (counter < g_balance_crylink_primary_shots) {
 		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
-		proj.realowner = proj.owner;
-		proj.classname = "spike";
-		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = g_balance_crylink_primary_damage;
+		projectile_setup(proj, w_shotorg, WEP_CRYLINK, g_balance_crylink_primary_damage,
+				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force);
 
+		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
-		PROJECTILE_MAKETRIGGER(proj);
-		proj.projectiledeathtype = WEP_CRYLINK;
-		//proj.gravity = 0.001;
-
-		setorigin (proj, w_shotorg);
-
 		s = '0 0 0';
 		if (counter == 0)
 			s = '0 0 0';
-		else
-		{
-			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+		else {
+			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (g_balance_crylink_primary_shots - 1)));
 			s_y = v_forward_x;
 			s_z = v_forward_y;
 		}
@@ -140,62 +79,44 @@ void weapon_crylink_attack (void)
 //		proj.velocity = (w_shotdir + randomvec() * g_balance_crylink_primary_spread) * g_balance_crylink_primary_speed;
 		weapon_setup_projectile_velocity(proj);
 		proj.touch = weapon_crylink_touch;
+		proj.think = stdproc_remove;
 		if(counter == 0)
-			entity_fade_setup(proj, time + g_balance_crylink_primary_middle_lifetime, g_balance_crylink_primary_middle_fadetime);
+			proj.nextthink = time + g_balance_crylink_primary_middle_lifetime;
 		else if(counter <= 3)
-			entity_fade_setup(proj, time + g_balance_crylink_primary_star_lifetime, g_balance_crylink_primary_star_fadetime);
+			proj.nextthink = time + g_balance_crylink_primary_star_lifetime;
 		else
-			entity_fade_setup(proj, time + g_balance_crylink_primary_other_lifetime, g_balance_crylink_primary_other_fadetime);
+			proj.nextthink = time + g_balance_crylink_primary_other_lifetime;
+
 		proj.cnt = g_balance_crylink_primary_bounces;
-		//proj.scale = 1 + 1 * proj.cnt;
-
-		proj.angles = vectoangles (proj.velocity);
-
-		//proj.glow_size = 20;
-
 		counter = counter + 1;
 	}
 }
 
-void weapon_crylink_attack2 (void)
-{
-	float counter, shots;
+void(void) weapon_crylink_attack2 {
+	float counter;
 	entity proj;
-
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
 
 	weapon_setup_shot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
-
-	shots = g_balance_crylink_secondary_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, shots);
-	while (counter < shots)
-	{
+	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_crylink_secondary_shots);
+	while (counter < g_balance_crylink_secondary_shots) {
 		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
-		proj.realowner = proj.owner;
-		proj.classname = "spike";
-		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = g_balance_crylink_secondary_damage;
+		projectile_setup(proj, w_shotorg, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
+				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force);
 
+		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
-		PROJECTILE_MAKETRIGGER(proj);
-		proj.projectiledeathtype = WEP_CRYLINK | HITTYPE_SECONDARY;
-		//proj.gravity = 0.001;
-
-		setorigin (proj, w_shotorg);
-		proj.velocity = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
+		proj.velocity = (w_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
 		weapon_setup_projectile_velocity(proj);
-		proj.touch = weapon_crylink_touch2;
-		if(counter == (shots - 1) / 2)
-			entity_fade_setup(proj, time + g_balance_crylink_secondary_middle_lifetime, g_balance_crylink_secondary_middle_fadetime);
+		proj.touch = weapon_crylink_touch;
+		proj.think = stdproc_remove;
+		if(counter == (g_balance_crylink_secondary_shots - 1) / 2)
+			proj.nextthink = time + g_balance_crylink_secondary_middle_lifetime;
 		else
-			entity_fade_setup(proj, time + g_balance_crylink_secondary_line_lifetime, g_balance_crylink_secondary_line_fadetime);
+			proj.nextthink = time + g_balance_crylink_secondary_line_lifetime;
+
 		proj.cnt = g_balance_crylink_secondary_bounces;
-		//proj.scale = 1 + 1 * proj.cnt;
-
-		proj.angles = vectoangles (proj.velocity);
-
-		//proj.glow_size = 20;
 		counter = counter + 1;
 	}
 }
@@ -262,16 +183,13 @@ float weapon_crylink(float req)
 		CACHE_CVAR(g_balance_crylink_primary_damage);
 		CACHE_CVAR(g_balance_crylink_primary_edgedamage);
 		CACHE_CVAR(g_balance_crylink_primary_force);
-		CACHE_CVAR(g_balance_crylink_primary_middle_fadetime);
 		CACHE_CVAR(g_balance_crylink_primary_middle_lifetime);
-		CACHE_CVAR(g_balance_crylink_primary_other_fadetime);
 		CACHE_CVAR(g_balance_crylink_primary_other_lifetime);
 		CACHE_CVAR(g_balance_crylink_primary_radius);
 		CACHE_CVAR(g_balance_crylink_primary_refire);
 		CACHE_CVAR(g_balance_crylink_primary_shots);
 		CACHE_CVAR(g_balance_crylink_primary_speed);
 		CACHE_CVAR(g_balance_crylink_primary_spread);
-		CACHE_CVAR(g_balance_crylink_primary_star_fadetime);
 		CACHE_CVAR(g_balance_crylink_primary_star_lifetime);
 		CACHE_CVAR(g_balance_crylink_secondary_ammo);
 		CACHE_CVAR(g_balance_crylink_secondary_animtime);
@@ -280,9 +198,7 @@ float weapon_crylink(float req)
 		CACHE_CVAR(g_balance_crylink_secondary_damage);
 		CACHE_CVAR(g_balance_crylink_secondary_edgedamage);
 		CACHE_CVAR(g_balance_crylink_secondary_force);
-		CACHE_CVAR(g_balance_crylink_secondary_line_fadetime);
 		CACHE_CVAR(g_balance_crylink_secondary_line_lifetime);
-		CACHE_CVAR(g_balance_crylink_secondary_middle_fadetime);
 		CACHE_CVAR(g_balance_crylink_secondary_middle_lifetime);
 		CACHE_CVAR(g_balance_crylink_secondary_radius);
 		CACHE_CVAR(g_balance_crylink_secondary_refire);

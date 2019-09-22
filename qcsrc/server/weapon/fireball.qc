@@ -43,19 +43,9 @@ void weapon_fireball_explode (void)
 	float dist;
 	float points;
 	vector dir;
-	float d;
-
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-
 	// 1. dist damage
-	d = (self.owner.health + self.owner.armorvalue);
-	damage_radius (self, self.realowner, g_balance_fireball_secondary_damage, g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, world, g_balance_fireball_secondary_force, self.projectiledeathtype, other);
-	if(self.realowner.health + self.realowner.armorvalue >= d)
-	if(!self.cnt)
-	{
+	if(!self.cnt) {
 		effect_model_spawn("models/sphere/sphere.md3", 0, 0, self.origin, '0 0 0', '0 0 0', '0 0 0', 0, g_balance_fireball_secondary_bfgradius, 0.2, 0.05, 0.25);
-
 		// 2. bfg effect
 		for(e = findradius(self.origin, g_balance_fireball_secondary_bfgradius); e; e = e.chain)
 		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || team_is_different_teams(e, self))
@@ -78,8 +68,7 @@ void weapon_fireball_explode (void)
 			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
 		}
 	}
-
-	remove (self);
+	projectile_explode();
 }
 
 void weapon_fireball_touchexplode (void)
@@ -144,7 +133,7 @@ void weapon_fireball_damage (entity inflictor, entity attacker, float _damage, f
 	if (self.health <= 0)
 	{
 		self.cnt = 1;
-		damage_prepare_explosion(attacker, weapon_fireball_explode);
+		damage_prepare_explosion(attacker, projectile_explode);
 	}
 }
 
@@ -157,10 +146,9 @@ void weapon_fireball_attack2()
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 
 	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
-	proj.classname = "plasma_prim";
-	proj.realowner = proj.owner;
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = g_balance_fireball_secondary_damage;
+	projectile_setup(proj, w_shotorg, WEP_FIREBALL | HITTYPE_SECONDARY, g_balance_fireball_secondary_damage,
+			g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, g_balance_fireball_secondary_force);
+
 	proj.pushltime = time + g_balance_fireball_secondary_lifetime;
 	proj.use = weapon_fireball_explode;
 	proj.think = weapon_fireball_think;
@@ -170,14 +158,9 @@ void weapon_fireball_attack2()
 	proj.event_damage = weapon_fireball_damage;
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_fireball_secondary_damageforcescale;
-	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
-	setorigin(proj, w_shotorg);
-
 	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = w_shotdir * g_balance_fireball_secondary_speed;
 	weapon_setup_projectile_velocity(proj);
-	proj.angles = vectoangles(proj.velocity);
 	proj.touch = weapon_fireball_touchexplode;
 }
 
@@ -296,28 +279,18 @@ void weapon_fireball_attack1()
 	weapon_setup_shot(self, 2, "weapons/fireball_fire.wav", 1);
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
-
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
+	projectile_setup(proj, w_shotorg, WEP_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0);
 	proj.gravity = 1;
-	proj.realowner = proj.owner;
-	proj.classname = "grenade";
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = g_balance_fireball_primary_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
-	proj.projectiledeathtype = WEP_FIREBALL;
 	proj.touch = weapon_fireball_mine_touch;
-	PROJECTILE_MAKETRIGGER(proj);
-	setorigin(proj, w_shotorg);
 	proj.think = weapon_fireball_mine_think;
 	proj.nextthink = time;
 	proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 	proj.velocity = w_shotdir * g_balance_fireball_primary_speed + v_up * g_balance_fireball_primary_speed_up;
 	proj.pushltime = time + g_balance_fireball_primary_lifetime;
 	weapon_setup_projectile_velocity(proj);
-
-	proj.angles = vectoangles(proj.velocity);
 }
 
 void spawnfunc_weapon_fireball (void)

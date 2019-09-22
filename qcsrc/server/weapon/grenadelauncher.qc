@@ -26,8 +26,7 @@ float g_balance_grenadelauncher_secondary;
 var .float gl_buttonatck1 = BUTTON_ATCK;
 var .float gl_buttonatck2 = BUTTON_ATCK2;
 
-void weapon_grenadelauncher_explode(void)
-{
+void(void) weapon_grenadelauncher_explode {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
 			if(team_is_different_teams(self.owner, other))
@@ -35,26 +34,7 @@ void weapon_grenadelauncher_explode(void)
 					if(physics_is_flying(other))
 						announce(self.owner, "announcer/male/airshot.wav", "^5Air^3Shot");
 
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-	damage_radius (self, self.owner, g_balance_grenadelauncher_primary_damage, g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, world, g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void weapon_grenadelauncher_explode2 (void)
-{
-	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
-			if(team_is_different_teams(self.owner, other))
-				if(physics_is_flying(other))
-						announce(self.owner, "announcer/male/airshot.wav", "^5Air^3Shot");
-
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-	damage_radius (self, self.owner, g_balance_grenadelauncher_secondary_damage, g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, world, g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
-
-	remove (self);
+	projectile_explode();
 }
 
 void weapon_grenadelauncher_touch1 (void)
@@ -63,15 +43,11 @@ void weapon_grenadelauncher_touch1 (void)
 	weapon_grenadelauncher_explode();
 }
 
-void weapon_grenadelauncher_touch2 (void)
-{
+void(void) weapon_grenadelauncher_touch2 {
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM)
-	{
-		self.use ();
-	}
-	else
-	{
+	if (other.takedamage == DAMAGE_AIM) {
+		projectile_explode();
+	} else {
 		float r;
 		r = random() * 6;
 		if(r < 1)
@@ -101,62 +77,46 @@ void weapon_grenadelauncher_damage (entity inflictor, entity attacker, float _da
 	}
 }
 
-void weapon_grenadelauncher_attack (void)
-{
-	local entity gren;
+void(void) weapon_grenadelauncher_attack {
+	entity gren;
 	float bounce = (g_balance_grenadelauncher_primary_bounce ? TRUE : FALSE);
-
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
+
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
-
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
-	gren.gravity = 1;
-	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = g_balance_grenadelauncher_primary_damage;
-	gren.movetype = MOVETYPE_BOUNCE;
-	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
-	setorigin(gren, w_shotorg);
+	projectile_setup(gren, w_shotorg, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
+			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force);
 
+	gren.gravity = 1;
+	gren.movetype = MOVETYPE_BOUNCE;
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
 	gren.touch = (bounce ? weapon_grenadelauncher_touch2 : weapon_grenadelauncher_touch1);
 	gren.velocity = w_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
 	weapon_setup_projectile_velocity(gren);
-
-	gren.angles = vectoangles (gren.velocity);
 }
 
-void weapon_grenadelauncher_attack2 (void)
-{
-	local entity gren;
-
+void(void) weapon_grenadelauncher_attack2 {
+	entity gren;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_secondary_ammo;
+
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	w_shotdir = v_forward; // no TrueAim for grenades please
-
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
-	gren.gravity = 1;
-	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = g_balance_grenadelauncher_secondary_damage;
-	gren.movetype = MOVETYPE_BOUNCE;
-	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
-	setorigin(gren, w_shotorg);
+	projectile_setup(gren, w_shotorg, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
+			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force);
 
+	gren.gravity = 1;
+	gren.movetype = MOVETYPE_BOUNCE;
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
-	gren.use = weapon_grenadelauncher_explode2;
+	gren.use = weapon_grenadelauncher_explode;
 	gren.touch = weapon_grenadelauncher_touch2;
 	gren.takedamage = DAMAGE_YES;
 	gren.health = g_balance_grenadelauncher_secondary_health;
@@ -164,8 +124,6 @@ void weapon_grenadelauncher_attack2 (void)
 	gren.event_damage = weapon_grenadelauncher_damage;
 	gren.velocity = w_shotdir * g_balance_grenadelauncher_secondary_speed + v_up * g_balance_grenadelauncher_secondary_speed_up;
 	weapon_setup_projectile_velocity(gren);
-
-	gren.angles = vectoangles (gren.velocity);
 }
 
 void spawnfunc_weapon_grenadelauncher (void)

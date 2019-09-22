@@ -398,3 +398,8 @@ string lsmaps_reply2;
 .float bgmscriptsustain;
 .float bgmscriptrelease;
 .entity body;
+.entity realowner;
+.float dmg;
+.float dmg_edge;
+.float dmg_force;
+.float dmg_radius;

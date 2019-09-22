@@ -49,26 +49,17 @@ void weapoon_supershotgun_touch()
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void weapon_supershotgun_pellet(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces)
-{
+void(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces) weapon_supershotgun_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
-	proj.classname = "bullet";
-	proj.realowner = proj.owner;
-	PROJECTILE_MAKETRIGGER(proj);
+	projectile_setup(proj, start, dtype, _damage, 0, 0, force);
 	proj.movetype = (gravityfactor ? MOVETYPE_BOUNCE : MOVETYPE_BOUNCEMISSILE);
 	proj.gravity = gravityfactor;
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
-	proj.angles = vectoangles(proj.velocity);
-	setorigin(proj, start);
 	proj.touch = weapoon_supershotgun_touch;
-	proj.dmg = _damage;
-	proj.dmg_force = force;
-	proj.projectiledeathtype = dtype;
-	proj.oldvelocity = proj.velocity;
 	proj.cnt = bounces;
 }
 

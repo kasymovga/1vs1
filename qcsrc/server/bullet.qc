@@ -312,28 +312,16 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}
-	proj.classname = "bullet";
-	PROJECTILE_MAKETRIGGER(proj);
-	if(gravityfactor > 0)
-	{
+	projectile_setup(proj, start, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force);
+	if(gravityfactor > 0) {
 		proj.movetype = MOVETYPE_TOSS;
 		proj.gravity = gravityfactor;
-	}
-	else
+	} else
 		proj.movetype = MOVETYPE_FLY;
+
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
-	proj.angles = vectoangles(proj.velocity);
-	proj.dmg_radius = g_ballistics_materialconstant / bulletconstant;
-	// so: bulletconstant = bullet mass / area of bullet circle
-	setorigin(proj, start);
-	proj.dmg = _damage;
-	proj.dmg_edge = headshotbonus;
-	proj.dmg_force = force;
-	proj.projectiledeathtype = dtype;
-
 	proj.oldvelocity = proj.velocity;
-
 	if(bulletHitScan)
 	{
 		oldself = self;

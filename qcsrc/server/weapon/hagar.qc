@@ -21,105 +21,58 @@ float g_balance_hagar_secondary_spread;
 var .float hagar_buttonatck1 = BUTTON_ATCK;
 var .float hagar_buttonatck2 = BUTTON_ATCK2;
 
-// NO bounce protection, as bounces are limited!
-void weapon_hagar_explode (void)
-{
-	self.event_damage = stdproc_nothing;
-	damage_radius (self, self.realowner, g_balance_hagar_primary_damage, g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, world, g_balance_hagar_primary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void weapon_hagar_explode2 (void)
-{
-	self.event_damage = stdproc_nothing;
-	damage_radius (self, self.realowner, g_balance_hagar_secondary_damage, g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, world, g_balance_hagar_secondary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void weapon_hagar_touch (void)
-{
+void weapon_hagar_touch2 (void) {
 	PROJECTILE_TOUCH;
-	self.use ();
-}
-
-void weapon_hagar_touch2 (void)
-{
-	PROJECTILE_TOUCH;
-
 	if(self.cnt > 0 || other.takedamage == DAMAGE_AIM) {
-		self.use();
+		projectile_explode();
 	} else {
 		self.cnt++;
 		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
-		self.angles = vectoangles (self.velocity);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
 
-void weapon_hagar_attack (void)
-{
-	local entity missile;
-
+void(void) weapon_hagar_attack {
+	entity missile;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_primary_ammo;
+
 	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
-
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
-	missile.realowner = missile.owner;
-	missile.classname = "missile";
-	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = g_balance_hagar_primary_damage;
-	missile.touch = weapon_hagar_touch;
-	missile.use = weapon_hagar_explode;
+	projectile_setup(missile, w_shotorg, WEP_HAGAR, g_balance_hagar_primary_damage,
+			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force);
+
+	missile.touch = projectile_touch_explode;
+	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_primary_lifetime;
-	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR;
-	setorigin (missile, w_shotorg);
-
 	missile.movetype = MOVETYPE_FLY;
 	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
 	weapon_setup_projectile_velocity(missile);
-
-	missile.angles = vectoangles (missile.velocity);
 }
 
-void weapon_hagar_attack2 (void)
-{
-	local entity missile;
-
+void(void) weapon_hagar_attack2 {
+	entity missile;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_secondary_ammo;
+
 	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
 	//weapon_setup_shot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
-
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE, self);
-	missile.realowner = missile.owner;
-	missile.classname = "missile";
-	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = g_balance_hagar_secondary_damage;
+	projectile_setup(missile, w_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
+			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force);
+
 	missile.touch = weapon_hagar_touch2;
 	missile.cnt = 0;
-	missile.use = weapon_hagar_explode2;
+	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_secondary_lifetime_min + random() * g_balance_hagar_secondary_lifetime_rand;
-	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
-	setorigin (missile, w_shotorg);
-
 	missile.movetype = MOVETYPE_BOUNCEMISSILE;
 	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
-	missile.avelocity = '100 10 10';
-
-	missile.angles = vectoangles (missile.velocity);
 }
 
 void spawnfunc_weapon_hagar (void)

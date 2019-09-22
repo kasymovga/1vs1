@@ -29,38 +29,13 @@ var .float hlac_buttonatck1 = BUTTON_ATCK;
 var .float hlac_buttonatck2 = BUTTON_ATCK2;
 
 .float HLAC_bulletcounter;
-void weapon_hlac_touch (void)
-{
-	PROJECTILE_TOUCH;
 
-	self.event_damage = stdproc_nothing;
-
-    damage_radius (self, self.owner, g_balance_hlac_primary_damage, g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, world, g_balance_hlac_primary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void weapon_hlac_touch2 (void)
-{
-	PROJECTILE_TOUCH;
-
-	self.event_damage = stdproc_nothing;
-
-    damage_radius (self, self.owner, g_balance_hlac_secondary_damage, g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, world, g_balance_hlac_secondary_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void weapon_hlac_attack (void)
-{
+void(void) weapon_hlac_attack {
 	entity missile;
     float spread;
-
-    if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-    {
+    if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
         self.ammo_cells = self.ammo_cells - g_balance_hlac_primary_ammo;
     }
-
     spread = g_balance_hlac_primary_spread_min + (g_balance_hlac_primary_spread_add * self.HLAC_bulletcounter);
     spread = min(spread,g_balance_hlac_primary_spread_max);
     if(self.crouch)
@@ -68,97 +43,56 @@ void weapon_hlac_attack (void)
 
 	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-	if (!g_norecoil)
-	{
+	if (!g_norecoil) {
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
 	}
-
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	missile.classname = "hlacbolt";
-	// missile.dmg = issecondary;
-	missile.bot_dodge = TRUE;
-
-    missile.bot_dodgerating = g_balance_hlac_primary_damage;
+	projectile_setup(missile, w_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
+			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
 
 	missile.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(missile);
-
-	setorigin (missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
-
     missile.velocity = (w_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
-
 	weapon_setup_projectile_velocity(missile);
-	missile.angles = vectoangles (missile.velocity);
-
-	missile.touch = weapon_hlac_touch;
+	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
-
     missile.nextthink = time + g_balance_hlac_primary_lifetime;
-
-	missile.projectiledeathtype = WEP_HLAC;
 }
 
-void weapon_hlac_attack2f (void)
-{
+void(void) weapon_hlac_attack2f {
 	entity missile;
     float spread;
-
     spread = g_balance_hlac_secondary_spread;
-
-
     if(self.crouch)
         spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
-	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	missile.classname = "hlacbolt";
-	// missile.dmg = issecondary;
-	missile.bot_dodge = TRUE;
-
-    missile.bot_dodgerating = g_balance_hlac_secondary_damage;
+	projectile_setup(missile, w_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_primary_damage,
+			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
 
 	missile.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(missile);
-
-	setorigin (missile, w_shotorg);
-	setsize(missile, '0 0 0', '0 0 0');
-
     missile.velocity = (w_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
-
 	weapon_setup_projectile_velocity(missile);
-	missile.angles = vectoangles (missile.velocity);
-
-	missile.touch = weapon_hlac_touch2;
+	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
-
     missile.nextthink = time + g_balance_hlac_secondary_lifetime;
-
-	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 }
 
-void weapon_hlac_attack2 (void)
-{
+void(void) weapon_hlac_attack2 {
     float i;
-
-    if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-    {
+    if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
         self.ammo_cells = self.ammo_cells - g_balance_hlac_secondary_ammo;
     }
-
-    for(i=g_balance_hlac_secondary_shots;i>0;--i)
+	weapon_setup_shot(self, 3, "weapons/lasergun_fire.wav", 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+    for(i = g_balance_hlac_secondary_shots; i > 0; --i)
         weapon_hlac_attack2f();
 
-	if (!g_norecoil)
-	{
+	if (!g_norecoil) {
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
 	}
 }
-
 
 // weapon frames
 void weapon_hlack_fire1_02()

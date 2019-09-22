@@ -1,8 +1,4 @@
 float SP_BESTWEP;
-.float dmg;
-.float dmg_edge;
-.float dmg_force;
-.float dmg_radius;
 .entity dmg_indicator;
 
 float g_score_bestweapon;
@@ -436,8 +432,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 void(entity attacker, void() explode) damage_prepare_explosion {
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = stdproc_nothing;
-	self.owner = attacker;
-
+	self.realowner = self.owner = attacker;
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to damage_radius are not allowed
 	self.nextthink = time;

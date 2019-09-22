@@ -17,13 +17,6 @@ float g_balance_hook_secondary_radius;
 float g_balance_hook_secondary_refire;
 float g_balance_hook_secondary_speed;
 
-.float dmg;
-.float dmg_edge;
-.float dmg_radius;
-.float dmg_force;
-.float dmg_power;
-.float dmg_duration;
-.float dmg_last;
 .float hook_refire;
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
@@ -33,37 +26,29 @@ void weapon_hook_explode_think (void)
 	float dt, dmg_remaining_next, f;
 
 	dt = time - self.teleport_time;
-	dmg_remaining_next = pow(bound(0, 1 - dt / self.dmg_duration, 1), self.dmg_power);
+	dmg_remaining_next = pow(bound(0, 1 - dt / g_balance_hook_secondary_duration, 1), g_balance_hook_secondary_power);
 
-	f = self.dmg_last - dmg_remaining_next;
-	self.dmg_last = dmg_remaining_next;
+	f = self.cnt - dmg_remaining_next;
+	self.cnt = dmg_remaining_next;
 	damage_record_fires(self.owner, WEP_HOOK, 1);
 	damage_radius (self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	//damage_radius (self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, self.dmg_force * f, self.projectiledeathtype, world);
 
-	if(dt < self.dmg_duration)
+	if(dt < g_balance_hook_secondary_duration)
 		self.nextthink = time + 0.05; // soon
 	else
 		remove(self);
 }
 
-void weapon_hook_explode2 (void)
-{
+void weapon_hook_explode2 (void) {
 	self.event_damage = stdproc_nothing;
 	self.touch = stdproc_nothing;
 	self.effects |= EF_NODRAW;
-
 	self.think = weapon_hook_explode_think;
 	self.nextthink = time;
-	self.dmg = g_balance_hook_secondary_damage;
-	self.dmg_edge = g_balance_hook_secondary_edgedamage;
-	self.dmg_radius = g_balance_hook_secondary_radius;
-	self.dmg_force = g_balance_hook_secondary_force;
-	self.dmg_power = g_balance_hook_secondary_power;
-	self.dmg_duration = g_balance_hook_secondary_duration;
 	self.teleport_time = time;
-	self.dmg_last = 1;
+	self.cnt = 1;
 	self.movetype = MOVETYPE_NONE;
 }
 
@@ -73,36 +58,27 @@ void weapon_hook_touch2 (void)
 	self.use();
 }
 
-void weapon_hook_attack2()
-{
+void(void) weapon_hook_attack2 {
 	entity gren;
-
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_hook_secondary_ammo;
+
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
-
 	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
-	gren.classname = "hookbomb";
-	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = g_balance_hook_secondary_damage;
-	gren.movetype = MOVETYPE_TOSS;
-	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
-	setorigin(gren, w_shotorg);
+	projectile_setup(gren, w_shotorg, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
+			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force);
 
+	gren.movetype = MOVETYPE_TOSS;
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_hook_explode2;
 	gren.touch = weapon_hook_touch2;
-
 	gren.velocity = '0 0 1' * g_balance_hook_secondary_speed;
 	if(g_projectiles_newton_style)
 		gren.velocity = gren.velocity + self.velocity;
 
 	gren.gravity = g_balance_hook_secondary_gravity;
 	weapon_setup_projectile_velocity(gren);
-
-	gren.angles = '0 0 0';
 }
 
 void spawnfunc_weapon_hook (void)

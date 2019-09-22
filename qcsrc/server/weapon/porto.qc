@@ -175,13 +175,11 @@ void weapon_porto_attack (float out)
 	gren.velocity = w_shotdir * g_balance_porto_primary_speed;
 	if(self.items & IT_STRENGTH)
 		gren.velocity = gren.velocity * g_balance_powerup_strength_force;
-	weapon_setup_projectile_velocity(gren);
 
-	gren.angles = vectoangles (gren.velocity);
+	weapon_setup_projectile_velocity(gren);
 	gren.playerid = self.playerid;
 	makevectors(vectoangles(gren.velocity));
 	gren.right_vector = v_right;
-
 	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
 
