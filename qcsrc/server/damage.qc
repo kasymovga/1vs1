@@ -365,7 +365,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 					if (power > 1)
 						power = 1;
 					finaldmg = coredamage * power + edgedamage * (1 - power);
-					if (finaldmg > 0)
+					if (finaldmg > 0 || forceintensity > 0)
 					{
 						local float a;
 						local float c;
@@ -378,7 +378,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 						if (targ.classname == "player")
 							center = targ.origin + targ.view_ofs;
 						force = normalize(center - WarpZone_TransformOrigin(targ, blastorigin));
-						force = force * (finaldmg / coredamage) * forceintensity;
+						force = force * (coredamage ? (finaldmg / coredamage) : 1) * forceintensity;
 						// test line of sight to multiple positions on box,
 						// and do damage if any of them hit
 						hits = 0;
