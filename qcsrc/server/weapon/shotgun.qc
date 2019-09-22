@@ -1,3 +1,5 @@
+float g_balance_shotgun_magazinecapacity;
+float g_balance_shotgun_reloadtime;
 float g_balance_shotgun_primary_ammo;
 float g_balance_shotgun_primary_animtime;
 float g_balance_shotgun_primary_bulletconstant;
@@ -21,6 +23,7 @@ float g_balance_shotgun_secondary_speed;
 float g_balance_shotgun_secondary_spread;
 var .float sg_buttonatck1 = BUTTON_ATCK;
 var .float sg_buttonatck2 = BUTTON_ATCK2;
+.float sg_ammoclip;
 
 void weapon_shotgun_attack (void)
 {
@@ -37,6 +40,9 @@ void weapon_shotgun_attack (void)
 	bullet_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_primary_ammo;
+
+	if (g_balance_shotgun_magazinecapacity)
+		self.sg_ammoclip -= 1;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
 
@@ -71,6 +77,9 @@ void weapon_shotgun_attack2 (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - g_balance_shotgun_secondary_ammo;
 
+	if (g_balance_shotgun_magazinecapacity)
+		self.sg_ammoclip -= 1;
+
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_secondary_ammo);
 
 	// casing code
@@ -99,51 +108,76 @@ void weapon_shotgun_fire2_02()
 	weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_03);
 }
 
-void spawnfunc_weapon_shotgun(); // defined in t_items.qc
+void(void) weapon_shotgun_reloadandready {
+	weapon_clip_reloadandready(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip,
+			g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo, g_balance_shotgun_reloadtime);
+}
+
+void(void) weapon_shotgun_reload {
+	weapon_clip_reload(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo,
+			g_balance_shotgun_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_shotgun_reloadtime,
+			weapon_shotgun_reloadandready);
+}
 
 float weapon_shotgun(float req)
 {
-	if (req == WR_AIM)
+	if (req == WR_AIM) {
 		if(vlen(self.origin-self.enemy.origin)>200 || !g_balance_shotgun_secondary)
 			self.sg_buttonatck1 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 			self.sg_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
-	else if (req == WR_THINK)
-	{
-		if (self.sg_buttonatck1)
-		if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
-		{
-			weapon_shotgun_attack();
-			weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, weapon_ready);
+	} else if (req == WR_THINK) {
+		if (g_balance_shotgun_magazinecapacity && (self.sg_ammoclip < 0 || (!self.sg_ammoclip && (self.sg_buttonatck1 || self.sg_buttonatck2)))) { // forced reload (e.g. because interrupted)
+			if(self.switchweapon == self.weapon)
+			if(self.weaponentity.state == WS_READY)
+				weapon_shotgun_reload();
+		} else if (!g_balance_shotgun_magazinecapacity || self.sg_ammoclip > 0) {
+			if (self.sg_buttonatck1)
+			if (weapon_prepareattack(0, g_balance_shotgun_primary_refire))
+			{
+				weapon_shotgun_attack();
+				weapon_thinkf(WFRAME_FIRE1, g_balance_shotgun_primary_animtime, weapon_ready);
+			}
+			if (self.sg_buttonatck2)
+			if (g_balance_shotgun_secondary)
+			if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire))
+			{
+				weapon_shotgun_attack2();
+				weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_02);
+			}
 		}
-		if (self.sg_buttonatck2)
-		if (g_balance_shotgun_secondary)
-		if (weapon_prepareattack(1, g_balance_shotgun_secondary_refire))
-		{
-			weapon_shotgun_attack2();
-			weapon_thinkf(WFRAME_FIRE2, g_balance_shotgun_secondary_animtime, weapon_shotgun_fire2_02);
+		if (g_balance_shotgun_magazinecapacity) {
+			self.ammoclip = self.sg_ammoclip;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
+	} else if (req == WR_PRECACHE) {
 		precache_model ("models/uziflash.md3");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
-	}
-	else if (req == WR_SETUP)
-		weapon_setup(WEP_SHOTGUN);
-	else if (req == WR_CHECKAMMO1)
+		precache_sound("weapons/campingrifle_reload.wav");
+	} else if (req == WR_CHECKAMMO1) {
 		return self.ammo_shells >= g_balance_shotgun_primary_ammo;
-	else if (req == WR_CHECKAMMO2)
+	} else if (req == WR_CHECKAMMO2) {
 		return self.ammo_shells >= g_balance_shotgun_secondary_ammo * 3;
-	else if (req == WR_SUICIDEMESSAGE)
+	} else if (req == WR_RELOAD) {
+		weapon_shotgun_reload();
+	} else if (req == WR_SUICIDEMESSAGE) {
 		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-	{
+	} else if (req == WR_KILLMESSAGE) {
 		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
-	}
-	else if (req == WR_CVAR_CACHE)
-	{
+	} else if (req == WR_SETUP) {
+		weapon_setup(WEP_SHOTGUN);
+		if (g_balance_shotgun_magazinecapacity) {
+			weapon_clip_checkmaxbullets(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo);
+			if not(self.sg_ammoclip)
+				self.sg_ammoclip = -1;
+		}
+	} else if (req == WR_RESETPLAYER) {
+		if (g_balance_shotgun_magazinecapacity)
+			self.sg_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_shotgun_magazinecapacity : -1);
+	} else if (req == WR_CVAR_CACHE) {
+		CACHE_CVAR(g_balance_shotgun_magazinecapacity);
+		CACHE_CVAR(g_balance_shotgun_reloadtime);
 		CACHE_CVAR(g_balance_shotgun_primary_ammo);
 		CACHE_CVAR(g_balance_shotgun_primary_animtime);
 		CACHE_CVAR(g_balance_shotgun_primary_bulletconstant);

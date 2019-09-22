@@ -102,50 +102,15 @@ void(void) weapon_uzi_fire1_02 {
 		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
 }
 
-float weapon_uzi_checkmaxbullets() {
-	float maxbulls;
-	maxbulls = g_balance_uzi_magazinecapacity;
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		maxbulls = min(maxbulls, floor(self.ammo_nails / min(g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo)));
-
-	if(self.uzi_ammoclip > maxbulls)
-		self.uzi_ammoclip = maxbulls;
-
-	return (self.uzi_ammoclip == maxbulls);
+void(void) weapon_uzi_reloadandready {
+	weapon_clip_reloadandready(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip,
+			g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo, g_balance_uzi_reloadtime);
 }
 
-void weapon_uzi_reloadandready() {
-	float t;
-	self.uzi_ammoclip = g_balance_uzi_magazinecapacity;
-	weapon_uzi_checkmaxbullets();
-	t = ATTACK_FINISHED(self) - g_balance_uzi_reloadtime - 1;
-	ATTACK_FINISHED(self) = t;
-	weapon_ready();
-}
-
-void weapon_uzi_reload() {
-	float t;
-	weapon_uzi_checkmaxbullets();
-	if (self.uzi_ammoclip >= g_balance_uzi_magazinecapacity)
-		return;
-
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if(self.ammo_nails < min(g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo)) {
-		self.uzi_ammoclip = -1; // reload later
-		return;
-	}
-	if (self.weaponentity) {
-		if (self.weaponentity.wframe == WFRAME_RELOAD)
-			return;
-
-		// allow to switch away while reloading, but this will cause a new reload!
-		self.weaponentity.state = WS_READY;
-	}
-	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
-	t = max(time, ATTACK_FINISHED(self)) + g_balance_uzi_reloadtime + 1;
-	ATTACK_FINISHED(self) = t;
-	weapon_thinkf(WFRAME_RELOAD, g_balance_uzi_reloadtime, weapon_uzi_reloadandready);
-	self.uzi_ammoclip = -1;
+void(void) weapon_uzi_reload {
+	weapon_clip_reload(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo,
+			g_balance_uzi_sustained_ammo, "weapons/campingrifle_reload.wav", g_balance_uzi_reloadtime,
+			weapon_uzi_reloadandready);
 }
 
 float weapon_uzi(float req)
@@ -183,7 +148,6 @@ float weapon_uzi(float req)
 			self.ammoclip = self.uzi_ammoclip;
 			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
-
 	}
 	else if (req == WR_PRECACHE)
 	{
@@ -199,7 +163,7 @@ float weapon_uzi(float req)
 	} else if (req == WR_SETUP) {
 		weapon_setup(WEP_UZI);
 		if (g_balance_uzi_magazinecapacity) {
-			weapon_uzi_checkmaxbullets();
+			weapon_clip_checkmaxbullets(g_balance_uzi_magazinecapacity, ammo_nails, uzi_ammoclip, g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo);
 			if not(self.uzi_ammoclip)
 				self.uzi_ammoclip = -1;
 		}

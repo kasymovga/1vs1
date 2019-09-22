@@ -1,3 +1,5 @@
+float g_balance_nex_magazinecapacity;
+float g_balance_nex_reloadtime;
 float g_balance_nex_ammo;
 float g_balance_nex_animtime;
 float g_balance_nex_damage;
@@ -8,6 +10,7 @@ float g_balance_nex_damagefalloff_mindist;
 float g_balance_nex_force;
 float g_balance_nex_refire;
 string sv_announcer_extra_twohits;
+.float nex_ammoclip;
 
 .float nex_lasthit;
 
@@ -84,23 +87,41 @@ void weapon_nex_attack (void)
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;
+
+	self.nex_ammoclip -= 1;
 }
 
-void spawnfunc_weapon_nex (void); // defined in t_items.qc
+void(void) weapon_nex_reloadandready {
+	weapon_clip_reloadandready(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip,
+			g_balance_nex_ammo, g_balance_nex_ammo, g_balance_nex_reloadtime);
+}
+
+void(void) weapon_nex_reload {
+	weapon_clip_reload(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo,
+			g_balance_nex_ammo, "weapons/campingrifle_reload.wav", g_balance_nex_reloadtime,
+			weapon_nex_reloadandready);
+}
 
 float weapon_nex(float req)
 {
 	if (req == WR_AIM)
 		self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
-	else if (req == WR_THINK)
-	{
-		if (self.BUTTON_ATCK)
-		{
-			if (weapon_prepareattack(0, g_balance_nex_refire))
-			{
-				weapon_nex_attack();
-				weapon_thinkf(WFRAME_FIRE1, g_balance_nex_animtime, weapon_ready);
+	else if (req == WR_THINK) {
+		if (g_balance_nex_magazinecapacity && (self.nex_ammoclip < 0 || (!self.nex_ammoclip && self.BUTTON_ATCK))) { // forced reload (e.g. because interrupted)
+			if(self.switchweapon == self.weapon)
+			if(self.weaponentity.state == WS_READY)
+				weapon_nex_reload();
+		} else if (!g_balance_nex_magazinecapacity || self.nex_ammoclip > 0) {
+			if (self.BUTTON_ATCK) {
+				if (weapon_prepareattack(0, g_balance_nex_refire)) {
+					weapon_nex_attack();
+					weapon_thinkf(WFRAME_FIRE1, g_balance_nex_animtime, weapon_ready);
+				}
 			}
+		}
+		if (g_balance_nex_magazinecapacity) {
+			self.ammoclip = self.nex_ammoclip;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -111,18 +132,29 @@ float weapon_nex(float req)
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
 	}
-	else if (req == WR_SETUP)
-		weapon_setup(WEP_NEX);
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_nex_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
+	else if (req == WR_KILLMESSAGE) {
 		w_deathtypestring = "has been vaporized by";
-	else if (req == WR_CVAR_CACHE)
-	{
+	} else if (req == WR_RELOAD) {
+		weapon_nex_reload();
+	} else if (req == WR_SETUP) {
+		weapon_setup(WEP_NEX);
+		if (g_balance_nex_magazinecapacity) {
+			weapon_clip_checkmaxbullets(g_balance_nex_magazinecapacity, ammo_cells, nex_ammoclip, g_balance_nex_ammo, g_balance_nex_ammo);
+			if not(self.nex_ammoclip)
+				self.nex_ammoclip = -1;
+		}
+	} else if (req == WR_RESETPLAYER) {
+		if (g_balance_nex_magazinecapacity)
+			self.nex_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_nex_magazinecapacity : -1);
+	} else if (req == WR_CVAR_CACHE) {
+		CACHE_CVAR(g_balance_nex_magazinecapacity);
+		CACHE_CVAR(g_balance_nex_reloadtime);
 		CACHE_CVAR(g_balance_nex_ammo);
 		CACHE_CVAR(g_balance_nex_animtime);
 		CACHE_CVAR(g_balance_nex_damage);
@@ -137,7 +169,7 @@ float weapon_nex(float req)
 			precache_sound(sv_announcer_extra_twohits);
 	}
 	return TRUE;
-};
+}
 
 void(void) spawnfunc_weapon_nex {
 	weapon_defaultspawnfunc(WEP_NEX);

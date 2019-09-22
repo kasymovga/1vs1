@@ -227,6 +227,7 @@ teleport.qc
 model.qc
 bullet.qc
 weapon/melee.qc
+weapon/clip.qc
 weapon/axe.qc
 weapon/laser.qc
 weapon/shotgun.qc

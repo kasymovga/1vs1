@@ -79,6 +79,9 @@ _set g_balance_fireball_secondary_damage 250
 
 //Nex
 _set g_balance_nex_ammo 10
+set g_balance_nex_reloadtime 2
+set g_balance_nex_magazinecapacity 0
+
 //Crylink
 set g_balance_crylink_swap_buttons 0
 _set g_balance_crylink_primary_shots 5
@@ -118,6 +121,8 @@ set g_balance_shotgun_secondary 1
 set g_balance_shotgun_swap_buttons 0
 set g_balance_shotgun_primary_gravityfactor 1
 set g_balance_shotgun_secondary_gravityfactor 1
+set g_balance_shotgun_reloadtime 2
+set g_balance_shotgun_magazinecapacity 0
 _set g_balance_shotgun_primary_damage 10
 _set g_balance_shotgun_secondary_damage 10
 _set g_weaponreplace_shotgun uzi
