@@ -360,7 +360,7 @@ void weapon_throw(vector velo, vector delta, float doreduce)
 void weapon_frame()
 {
 	vector fo, ri, up;
-
+	self.ammoclip = 0;
 	makevectors(self.v_angle);
 	if (gamehook_chain_weapon_frame_handle())
 		return;

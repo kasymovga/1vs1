@@ -379,7 +379,6 @@ void CSQC_UpdateView(float w, float h)
 
         // crosshair goes VERY LAST
         if (draw_crosshair) {
-			float bullets, ring_scale;
 			//wcross_origin = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.5 0' * CVAR(vid_conheight);
 			wcross_origin_set();
             string wcross_style;
@@ -420,19 +419,6 @@ void CSQC_UpdateView(float w, float h)
                 wcross_size = drawgetimagesize(wcross_name);
                 wcross_size_x *= wcross_sizefloat;
                 wcross_size_y *= wcross_sizefloat;
-				
-				// ring around crosshair representing bullets left in camping rifle clip
-				if (activeweapon == WEP_CAMPINGRIFLE)
-				{
-					ring_scale = CVAR(crosshair_campingrifle_ring_size);
-					bullets = bound(0, getstati(STAT_BULLETS_LOADED), 8);
-				}
-				else
-					bullets = 0;
-				
-				if (bullets)
-					drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x * ring_scale) - '0 0.5 0' * (wcross_size_y * ring_scale), strcat("gfx/hud/rifle_ring_", ftos(bullets)), wcross_size * ring_scale, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
-
 				drawpic(wcross_origin - '0.5 0 0' * (wcross_size_x) - '0 0.5 0' * ( wcross_size_y), wcross_name, wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL);
 				if (CVAR(crosshair_dot))
 				{

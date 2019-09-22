@@ -2396,7 +2396,40 @@ void Sbar_Draw (void)
 
 		// ammo
 		float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
-		if not(stat_items & IT_UNLIMITED_WEAPON_AMMO) {
+		float clip = getstati(STAT_BULLETS_LOADED);
+		if (clip) {
+			if (clip < 0) clip = 0;
+			string ai;
+			float at;
+			if (stat_items & IT_SHELLS) { at = STAT_SHELLS; ai = "gfx/hud/sb_shells"; }
+			else if (stat_items & IT_NAILS) { at = STAT_NAILS; ai = "gfx/hud/sb_bullets"; }
+			else if (stat_items & IT_ROCKETS) { at = STAT_ROCKETS; ai = "gfx/hud/sb_rocket"; }
+			else if (stat_items & IT_CELLS) { at = STAT_CELLS; ai = "gfx/hud/sb_cells"; }
+			else at = 0;
+			if (at) {
+				a = getstati(at);
+
+				if (CVAR(vid_conwidth) >= 800) {
+					pos_x = 230;
+					pos_y = 40;
+				} else {
+					pos_x = 206;
+					pos_y = 33;
+				}
+				pos = bottom - pos;
+				drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				if (stat_items & IT_UNLIMITED_WEAPON_AMMO) {
+					Sbar_DrawXNum(pos + '5 5 0', clip, 3, 0, 24, '1 1 0.5', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				} else {
+					if(a < 10)
+						Sbar_DrawXNum(pos + '25 -2 0', a, 3, 0, 16, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					else
+						Sbar_DrawXNum(pos + '25 -2 0', a, 3, 0, 16, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+					Sbar_DrawXNum(pos + '25 18 0', clip, 3, 0, 16, '1 1 0.5', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				}
+			}
+		} else if not(stat_items & IT_UNLIMITED_WEAPON_AMMO) {
 			if(CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < 800) { // force showing current ammo only with conwidths < 800
 				string ai;
 				float at;

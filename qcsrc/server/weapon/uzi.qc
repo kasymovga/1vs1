@@ -10,6 +10,9 @@ void weapon_uzi_flash_go() {
 	self.nextthink = time + 0.02;
 }
 
+.float uzi_ammoclip;
+float g_balance_uzi_magazinecapacity;
+float g_balance_uzi_reloadtime;
 float g_balance_uzi_bulletconstant;
 float g_balance_uzi_first;
 float g_balance_uzi_first_ammo;
@@ -29,17 +32,19 @@ float g_balance_uzi_sustained_spread;
 var .float uzi_buttonatck1 = BUTTON_ATCK;
 var .float uzi_buttonatck2 = BUTTON_ATCK2;
 .float uzi_bulletcounter;
-void weapon_uzi_attack (float deathtype)
-{
-	local entity flash;
-
+void(float deathtype) weapon_uzi_attack {
+	entity flash;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		if (self.uzi_bulletcounter == 1)
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_first_ammo;
 		else
 			self.ammo_nails = self.ammo_nails - g_balance_uzi_sustained_ammo;
+
 	}
+	if (g_balance_uzi_magazinecapacity)
+		self.uzi_ammoclip -= 1;
+
 	bullet_begin(g_balance_uzi_speed);
 	weapon_setup_shot (self, 0, "weapons/uzi_fire.wav", 1);
 	if (!g_norecoil)
@@ -76,15 +81,12 @@ void weapon_uzi_attack (float deathtype)
 }
 
 // weapon frames
-void weapon_uzi_fire1_02()
-{
-	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE))
-	{
+void(void) weapon_uzi_fire1_02 {
+	if(self.weapon != self.switchweapon || !player_can_fire(self, TRUE) || (g_balance_uzi_magazinecapacity && self.uzi_ammoclip <= 0)) {
 		weapon_ready();
 		return;
 	}
-	if (self.uzi_buttonatck1)
-	{
+	if (self.uzi_buttonatck1) {
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		if not(weapon_action(self.weapon, WR_CHECKAMMO1))
 		{
@@ -100,6 +102,52 @@ void weapon_uzi_fire1_02()
 		weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_ready);
 }
 
+float weapon_uzi_checkmaxbullets() {
+	float maxbulls;
+	maxbulls = g_balance_uzi_magazinecapacity;
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		maxbulls = min(maxbulls, floor(self.ammo_nails / min(g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo)));
+
+	if(self.uzi_ammoclip > maxbulls)
+		self.uzi_ammoclip = maxbulls;
+
+	return (self.uzi_ammoclip == maxbulls);
+}
+
+void weapon_uzi_reloadandready() {
+	float t;
+	self.uzi_ammoclip = g_balance_uzi_magazinecapacity;
+	weapon_uzi_checkmaxbullets();
+	t = ATTACK_FINISHED(self) - g_balance_uzi_reloadtime - 1;
+	ATTACK_FINISHED(self) = t;
+	weapon_ready();
+}
+
+void weapon_uzi_reload() {
+	float t;
+	weapon_uzi_checkmaxbullets();
+	if (self.uzi_ammoclip >= g_balance_uzi_magazinecapacity)
+		return;
+
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(self.ammo_nails < min(g_balance_uzi_first_ammo, g_balance_uzi_sustained_ammo)) {
+		self.uzi_ammoclip = -1; // reload later
+		return;
+	}
+	if (self.weaponentity) {
+		if (self.weaponentity.wframe == WFRAME_RELOAD)
+			return;
+
+		// allow to switch away while reloading, but this will cause a new reload!
+		self.weaponentity.state = WS_READY;
+	}
+	sound (self, CHAN_WEAPON2, "weapons/campingrifle_reload.wav", VOL_BASE, ATTN_NORM);
+	t = max(time, ATTACK_FINISHED(self)) + g_balance_uzi_reloadtime + 1;
+	ATTACK_FINISHED(self) = t;
+	weapon_thinkf(WFRAME_RELOAD, g_balance_uzi_reloadtime, weapon_uzi_reloadandready);
+	self.uzi_ammoclip = -1;
+}
+
 float weapon_uzi(float req)
 {
 	if (req == WR_AIM)
@@ -109,47 +157,67 @@ float weapon_uzi(float req)
 		{
 			self.uzi_buttonatck2 = bot_aim(1000000, 0, 0.001, FALSE);
 		}
-	else if (req == WR_THINK)
-	{
-		if (self.uzi_buttonatck1)
-		if (weapon_prepareattack(0, 0))
-		{
-			self.uzi_bulletcounter = 1;
-			weapon_uzi_attack(WEP_UZI); // sets attack_finished
-			weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
+	else if (req == WR_THINK) {
+		if (g_balance_uzi_magazinecapacity && (self.uzi_ammoclip < 0 || (!self.uzi_ammoclip && (self.uzi_buttonatck1 || self.uzi_buttonatck2)))) { // forced reload (e.g. because interrupted)
+			if(self.switchweapon == self.weapon)
+			if(self.weaponentity.state == WS_READY)
+				weapon_uzi_reload();
+		} else if (!g_balance_uzi_magazinecapacity || self.uzi_ammoclip > 0) {
+			if (self.uzi_buttonatck1)
+			if (weapon_prepareattack(0, 0))
+			{
+				self.uzi_bulletcounter = 1;
+				weapon_uzi_attack(WEP_UZI); // sets attack_finished
+				weapon_thinkf(WFRAME_FIRE1, g_balance_uzi_sustained_refire, weapon_uzi_fire1_02);
+			}
+			if (self.uzi_buttonatck2)
+			if (g_balance_uzi_first)
+			if (weapon_prepareattack(1, 0))
+			{
+				self.uzi_bulletcounter = 1;
+				weapon_uzi_attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
+				weapon_thinkf(WFRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
+			}
 		}
-		if (self.uzi_buttonatck2)
-		if (g_balance_uzi_first)
-		if (weapon_prepareattack(1, 0))
-		{
-			self.uzi_bulletcounter = 1;
-			weapon_uzi_attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
-			weapon_thinkf(WFRAME_FIRE2, g_balance_uzi_first_refire, weapon_ready);
+		if (g_balance_uzi_magazinecapacity) {
+			self.ammoclip = self.uzi_ammoclip;
+			if (self.ammoclip <= 0) self.ammoclip = -1;
 		}
+
 	}
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/uziflash.md3");
 		precache_sound ("weapons/uzi_fire.wav");
-	}
-	else if (req == WR_SETUP)
-		weapon_setup(WEP_UZI);
-	else if (req == WR_CHECKAMMO1)
+		precache_sound("weapons/campingrifle_reload.wav");
+	} else if (req == WR_CHECKAMMO1)
 		return self.ammo_nails >= g_balance_uzi_sustained_ammo;
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_nails >= g_balance_uzi_first_ammo;
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
-	else if (req == WR_KILLMESSAGE)
-	{
+	else if (req == WR_RELOAD) {
+		weapon_uzi_reload();
+	} else if (req == WR_SETUP) {
+		weapon_setup(WEP_UZI);
+		if (g_balance_uzi_magazinecapacity) {
+			weapon_uzi_checkmaxbullets();
+			if not(self.uzi_ammoclip)
+				self.uzi_ammoclip = -1;
+		}
+	} else if (req == WR_RESETPLAYER) {
+		if (g_balance_uzi_magazinecapacity)
+			self.uzi_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_uzi_magazinecapacity : -1);
+	} else if (req == WR_KILLMESSAGE) {
 		if(w_deathtype & HITTYPE_SECONDARY)
 			w_deathtypestring = "was sniped by";
 		else
 			w_deathtypestring = "was riddled full of holes by";
-	}
+	} else if (req == WR_SUICIDEMESSAGE)
+		w_deathtypestring = "did the impossible";
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_uzi_bulletconstant);
+		CACHE_CVAR(g_balance_uzi_magazinecapacity);
+		CACHE_CVAR(g_balance_uzi_reloadtime);
 		CACHE_CVAR(g_balance_uzi_first);
 		CACHE_CVAR(g_balance_uzi_first_ammo);
 		CACHE_CVAR(g_balance_uzi_first_damage);

@@ -123,10 +123,12 @@ _set g_balance_shotgun_secondary_damage 10
 _set g_weaponreplace_shotgun uzi
 
 //Uzi
+set g_balance_uzi_magazinecapacity 0
 set g_balance_uzi_first 1
 set g_balance_uzi_first_gravityfactor 1
 set g_balance_uzi_sustained_gravityfactor 1
 set g_balance_uzi_swap_buttons 0
+set g_balance_uzi_reloadtime 2
 
 //Zapper
 set g_balance_zapper_animtime 0.1

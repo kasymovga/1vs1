@@ -429,7 +429,7 @@ void(void) world_init {
 	addstat(STAT_DAMAGE_HITS, AS_INT, damage_hits);
  	addstat(STAT_DAMAGE_FIRED, AS_INT, maxdamage_fired);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
-	addstat(STAT_BULLETS_LOADED, AS_INT, campingrifle_bulletcounter);
+	addstat(STAT_BULLETS_LOADED, AS_INT, ammoclip);
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
 	next_pingtime = time + 5;

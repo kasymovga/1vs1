@@ -30,6 +30,7 @@ float g_balance_campingrifle_secondary_refire;
 float g_balance_campingrifle_secondary_speed;
 float g_balance_campingrifle_secondary_spread;
 
+.float campingrifle_ammoclip;
 var .float cr_buttonatck1 = BUTTON_ATCK;
 var .float cr_buttonatck2 = BUTTON_ATCK2;
 .float campingrifle_accumulator;
@@ -41,9 +42,9 @@ float weapon_campingrifle_checkmaxbullets()
 	maxbulls = g_balance_campingrifle_magazinecapacity;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		maxbulls = min(maxbulls, floor(self.ammo_nails / min(g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo)));
-	if(self.campingrifle_bulletcounter > maxbulls)
-		self.campingrifle_bulletcounter = maxbulls;
-	return (self.campingrifle_bulletcounter == maxbulls);
+	if(self.campingrifle_ammoclip > maxbulls)
+		self.campingrifle_ammoclip = maxbulls;
+	return (self.campingrifle_ammoclip == maxbulls);
 }
 
 void weapon_campingrifle_hotreload()
@@ -51,23 +52,23 @@ void weapon_campingrifle_hotreload()
 	if (time < self.campingrifle_hotreloadtime)
 		return;
 
-	if (self.campingrifle_bulletcounter >= g_balance_campingrifle_magazinecapacity)
+	if (self.campingrifle_ammoclip >= g_balance_campingrifle_magazinecapacity)
 		return;
 
 	if (self.weaponentity.state != WS_READY)
 		return;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if (self.ammo_nails < min(g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo) * (self.campingrifle_bulletcounter + 1))
+	if (self.ammo_nails < min(g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo) * (self.campingrifle_ammoclip + 1))
 		return;
-	self.campingrifle_bulletcounter++;
+	self.campingrifle_ammoclip++;
 	self.campingrifle_hotreloadtime += g_balance_campingrifle_reloadtime;
 }
 
 void weapon_campingrifle_reloadandready()
 {
 	float t;
-	self.campingrifle_bulletcounter = g_balance_campingrifle_magazinecapacity;
+	self.campingrifle_ammoclip = g_balance_campingrifle_magazinecapacity;
 	weapon_campingrifle_checkmaxbullets();
 	t = ATTACK_FINISHED(self) - g_balance_campingrifle_reloadtime - 1;
 	ATTACK_FINISHED(self) = t;
@@ -79,13 +80,13 @@ void weapon_campingrifle_ready()
 	float t;
 
 	weapon_campingrifle_checkmaxbullets();
-	if (self.campingrifle_bulletcounter >= g_balance_campingrifle_magazinecapacity)
+	if (self.campingrifle_ammoclip >= g_balance_campingrifle_magazinecapacity)
 		return;
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if(self.ammo_nails < min(g_balance_campingrifle_primary_ammo, g_balance_campingrifle_secondary_ammo))
 	{
-		self.campingrifle_bulletcounter = -1; // reload later
+		self.campingrifle_ammoclip = -1; // reload later
 		return;
 	}
 	
@@ -105,7 +106,7 @@ void weapon_campingrifle_ready()
 
 	weapon_thinkf(WFRAME_RELOAD, g_balance_campingrifle_reloadtime, weapon_campingrifle_reloadandready);
 
-	self.campingrifle_bulletcounter = -1;
+	self.campingrifle_ammoclip = -1;
 }
 
 void weapon_campingrifle_checkreloadandready()
@@ -116,7 +117,7 @@ void weapon_campingrifle_checkreloadandready()
 		self.campingrifle_hotreloadtime = time + g_balance_campingrifle_reloadtime;
 		return;
 	}
-	if (self.campingrifle_bulletcounter <= 0)
+	if (self.campingrifle_ammoclip <= 0)
 		weapon_campingrifle_ready();
 	else
 		weapon_ready();
@@ -147,7 +148,7 @@ void weapon_campingrifle_fire(float pSpread, float pDamage, float pHeadshotAdded
 	if (g_casings >= 2)
 		casing_spawn (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 	
-	self.campingrifle_bulletcounter = self.campingrifle_bulletcounter - 1;
+	self.campingrifle_ammoclip = self.campingrifle_ammoclip - 1;
 	weapon_campingrifle_checkmaxbullets();
 }
 
@@ -195,14 +196,14 @@ float weapon_campingrifle(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(self.campingrifle_bulletcounter < 0 || (!self.campingrifle_bulletcounter && (self.cr_buttonatck1 || self.cr_buttonatck2))) // forced reload (e.g. because interrupted)
+		if(self.campingrifle_ammoclip < 0 || (!self.campingrifle_ammoclip && (self.cr_buttonatck1 || self.cr_buttonatck2))) // forced reload (e.g. because interrupted)
 		{
 			if not(g_balance_campingrifle_hotreload)
 			if(self.switchweapon == self.weapon)
 			if(self.weaponentity.state == WS_READY)
 				weapon_campingrifle_ready();
 		}
-		else if (self.campingrifle_bulletcounter > 0)
+		else if (self.campingrifle_ammoclip > 0)
 		{
 			self.campingrifle_accumulator = bound(time - g_balance_campingrifle_bursttime, self.campingrifle_accumulator, time);
 			if (self.cr_buttonatck1)
@@ -224,6 +225,12 @@ float weapon_campingrifle(float req)
 		}
 		if (g_balance_campingrifle_hotreload)
 			weapon_campingrifle_hotreload();
+		else {
+			self.ammoclip = self.campingrifle_ammoclip;
+			if (self.ammoclip <= 0)
+				self.ammoclip = 0;
+		}
+
 	}
 	else if (req == WR_PRECACHE)
 	{		
@@ -238,10 +245,10 @@ float weapon_campingrifle(float req)
 		full = weapon_campingrifle_checkmaxbullets();
 		if(g_balance_campingrifle_auto_reload_after_changing_weapons)
 			if(!full)
-				self.campingrifle_bulletcounter = -1;
+				self.campingrifle_ammoclip = -1;
 
-		if not(self.campingrifle_bulletcounter)
-			self.campingrifle_bulletcounter = -1;
+		if not(self.campingrifle_ammoclip)
+			self.campingrifle_ammoclip = -1;
 
 		self.campingrifle_hotreloadtime = time + g_balance_campingrifle_reloadtime;
 	}
@@ -289,7 +296,7 @@ float weapon_campingrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.campingrifle_accumulator = time - g_balance_campingrifle_bursttime;
-		self.campingrifle_bulletcounter = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_campingrifle_magazinecapacity : -1);
+		self.campingrifle_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_campingrifle_magazinecapacity : -1);
 	}
 	else if (req == WR_CVAR_CACHE)
 	{

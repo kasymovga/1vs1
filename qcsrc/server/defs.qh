@@ -359,7 +359,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float campingrifle_bulletcounter;
+.float ammoclip;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
