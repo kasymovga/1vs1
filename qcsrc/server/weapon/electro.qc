@@ -38,26 +38,31 @@ float g_balance_electro_secondary_spread;
 var .float electro_buttonatck1 = BUTTON_ATCK;
 var .float electro_buttonatck2 = BUTTON_ATCK2;
 
-void weapon_electro_explode_combo (void);
+void(void) weapon_electro_explode_combo;
 
-void weapon_electro_trigger_combo(vector org, float rad, entity own)
-{
+void(entity e, entity own, float _delay) weapon_electro_combo_prepare {
+	e.owner = own;
+	e.takedamage = DAMAGE_NO;
+	e.classname = "plasma_chain";
+	e.think = weapon_electro_explode_combo;
+	e.dmg = g_balance_electro_combo_damage;
+	e.dmg_edge = g_balance_electro_combo_edgedamage;
+	e.dmg_force = g_balance_electro_combo_force;
+	e.dmg_radius = g_balance_electro_combo_radius;
+	e.projectiledeathtype = (WEP_ELECTRO | HITTYPE_BOUNCE);
+	e.nextthink = time + _delay;
+}
+
+void(vector org, float rad, entity own) weapon_electro_trigger_combo {
 	entity e;
 	e = findradius(org, rad);
-	while (e)
-	{
-		if (e.classname == "plasma")
-		{
+	while (e) {
+		if (e.classname == "plasma") {
 			// see if there is line of sight to the combo ball
 			traceline(org, e.origin, MOVE_NORMAL, e);
-			if (trace_fraction == 1 || trace_ent == e)
-			{
+			if (trace_fraction == 1 || trace_ent == e) {
 				// change owner to whoever caused the combo explosion
-				e.owner = own;
-				e.takedamage = DAMAGE_NO;
-				e.classname = "plasma_chain";
-				e.think = weapon_electro_explode_combo;
-				e.nextthink = time + vlen(e.origin - org) / g_balance_electro_combo_speed; // delay combo chains, looks cooler
+				weapon_electro_combo_prepare(e, own, vlen(e.origin - org) / g_balance_electro_combo_speed);
 			}
 		}
 		e = e.chain;
@@ -100,26 +105,18 @@ void weapon_electro_touch_explode (void)
 	weapon_electro_explode ();
 }
 
-void weapon_electro_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) weapon_electro_damage {
 	if(self.health <= 0)
 		return;
-	// note: combos are usually triggered by weapon_electro_trigger_combo, not damage
+
 	self.health = self.health - _damage;
-	if (self.health <= 0)
-	{
-		self.takedamage = DAMAGE_NO;
+	if (self.health <= 0) {
 		self.nextthink = time;
-		if (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim")
-		{
+		if (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim") {
 			// change owner to whoever caused the combo explosion
-			self.owner = inflictor.owner;
-			self.classname = "plasma_chain";
-			self.think = weapon_electro_explode_combo;
-			self.nextthink = time + vlen(self.origin - inflictor.origin) / g_balance_electro_combo_speed; // delay combo chains, looks cooler
-		}
-		else
-		{
+			weapon_electro_combo_prepare(self, inflictor.owner, 0);
+		} else {
+			self.takedamage = DAMAGE_NO;
 			self.use = weapon_electro_explode;
 			self.think = projectile_think2use;
 		}
@@ -156,7 +153,7 @@ void(void) weapon_electro_attack2 {
 	w_shotdir = v_forward; // no TrueAim for grenades please
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
-	projectile_setup(proj, w_shotorg, WEP_ELECTRO, g_balance_electro_secondary_damage,
+	projectile_setup(proj, w_shotorg, WEP_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
 			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force);
 
 	proj.classname = "plasma";
