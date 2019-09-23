@@ -826,8 +826,9 @@ string nadget_SelectableTypes(float issecondary) {
             types = strcat(types, #shortname, " ");
         NADGETDEFS
         #undef NADGETDEF
-    }
-
+    } else if(types == "0") {
+		return "";
+	}
     return types;
 }
 
