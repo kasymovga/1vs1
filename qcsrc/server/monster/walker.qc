@@ -28,14 +28,14 @@ void walker_rocket_event_damage (entity inflictor, entity attacker, float _damag
     self.health = self.health - _damage;
     self.velocity = self.velocity + vforce;
     if (self.health <= 0) {
-        self.think = monster_proj_explode;
+        self.think = projectile_explode;
 		self.nextthink = time;
 	}
 }
 
 void walker_rocket_think() {
 	if (time > self.cnt) {
-		monster_proj_explode();
+		projectile_explode();
 		return;
 	}
 	vector v;
@@ -94,9 +94,7 @@ void walker_hunt() {
 
 			self.bulletcounter = self.bulletcounter + 0.5;
 			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self);
-			missile.dmg_edge = self.dmg_edge;
-			missile.dmg_radius = self.dmg_radius;
-			missile.dmg_force = self.dmg_force;
+			projectile_setup(missile, w_shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 			missile.classname = "walker_rocket";
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;
@@ -104,13 +102,9 @@ void walker_hunt() {
 			missile.event_damage = walker_rocket_event_damage;
 			missile.movetype = MOVETYPE_FLY;
 			missile.enemy = self.enemy;
-			PROJECTILE_MAKETRIGGER(missile);
-			missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-			setorigin(missile, w_shotorg);
 			missile.velocity = normalize(v_forward + v_up * 0.5) * 600;
 			weapon_setup_projectile_velocity(missile);
-			missile.angles = vectoangles(missile.velocity);
-			missile.touch = monster_proj_touch;
+			missile.touch = projectile_touch_explode;
 			missile.think = walker_rocket_think;
 			missile.nextthink = time;
 			missile.cnt = time + 30;

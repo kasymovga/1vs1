@@ -10,18 +10,6 @@
 float g_monster_pushfactor;
 float monster_difficulty;
 
-void monster_proj_explode(void) {
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-	damage_radius (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-	remove (self);
-}
-
-void monster_proj_touch(void) {
-	PROJECTILE_TOUCH;
-	monster_proj_explode();
-}
-
 void monster_sound(entity m, string s, float force) {
 	if (force)
 		m.watersound_finished = 0;

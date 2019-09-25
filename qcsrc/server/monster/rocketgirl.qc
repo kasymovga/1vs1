@@ -22,25 +22,15 @@ void rlgirl_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 		entity missile = projectile(TRUE, PROJECTILE_ROCKET, TRUE, self);
-		missile.dmg_edge = self.dmg_edge;
-		missile.dmg_radius = self.dmg_radius;
-		missile.dmg_force = self.dmg_force;
-		missile.classname = "rocket";
+		projectile_setup(missile,_shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 		missile.movetype = MOVETYPE_FLY;
 		missile.gravity = 0;
-		PROJECTILE_MAKETRIGGER(missile);
-		missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-		setorigin(missile, _shotorg);
-
 		missile.nextthink = time + 5;
 		missile.think = projectile_think2use;
-		missile.use = monster_proj_explode;
-		missile.touch = monster_proj_touch;
+		missile.use = projectile_explode;
+		missile.touch = projectile_touch_explode;
 		missile.velocity = normalize(_shotdir) * 800;
 		weapon_setup_projectile_velocity(missile);
-
-		missile.angles = vectoangles (missile.velocity);
-
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else {

@@ -32,22 +32,15 @@ void ewheel_hunt() {
 			float i;
 			for (i = -1; i < 2; i += 2) {
 				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
-				proj.dmg_edge = self.dmg_edge;
-				proj.dmg_radius = self.dmg_radius;
-				proj.dmg_force = self.dmg_force;
-				proj.classname = "ewheel bolt";
+				projectile_setup(proj, _shotorg + v_right * i * 16, WEP_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 				proj.movetype = MOVETYPE_FLYMISSILE;
 				proj.gravity = 0.01;
-				PROJECTILE_MAKETRIGGER(proj);
-				proj.projectiledeathtype = WEP_LASER;
-				setorigin(proj, _shotorg + v_right * i * 16);
 				proj.nextthink = time + 5;
 				proj.think = projectile_think2use;
-				proj.use = monster_proj_explode;
-				proj.touch = monster_proj_touch;
+				proj.use = projectile_explode;
+				proj.touch = projectile_touch_explode;
 				proj.velocity = normalize(_shotdir) * 3200;
 				weapon_setup_projectile_velocity(proj);
-				proj.angles = vectoangles (proj.velocity);
 				self.attack_finished_single = time + 2 + random();
 			}
 		}

@@ -29,7 +29,6 @@ void fireguy_mine_think()
 	self.nextthink = time + 0.1;
 }
 
-
 void fireguy_hunt() {
 	self.nextthink = time;
 	if (monster_check_target(fireguy_walk, fireguy_guard))
@@ -50,28 +49,16 @@ void fireguy_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 12;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
-
 		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
-		proj.realowner = proj.owner;
-		proj.classname = "grenade";
-		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = self.dmg_edge;
-		proj.dmg_edge = self.dmg_edge;
-		proj.dmg_radius = self.dmg_radius;
-		proj.dmg_force = self.dmg_force;
+		projectile_setup(proj, _shotorg, WEP_FIREBALL, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 		proj.movetype = MOVETYPE_BOUNCE;
-		proj.projectiledeathtype = WEP_FIREBALL;
 		proj.touch = fireguy_mine_touch;
-		PROJECTILE_MAKETRIGGER(proj);
-		setorigin(proj, _shotorg);
 		proj.think = fireguy_mine_think;
 		proj.nextthink = time;
-		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
+		proj.damageforcescale = 0.5;
 		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
 		proj.pushltime = time + 10;
 		weapon_setup_projectile_velocity(proj);
-		proj.angles = vectoangles(proj.velocity);
-
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else if (stay) {

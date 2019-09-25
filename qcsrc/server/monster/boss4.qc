@@ -23,10 +23,9 @@ void boss4_mine_think()
 		remove(self);
 		return;
 	}
-	weapon_fireball_laser_play(0.1, self.dmg_radius, self.dmg_edge * 0.25, 0, 4);
+	weapon_fireball_laser_play(0.1, self.dmg_radius, self.dmg * 0.25, 0, 4);
 	self.nextthink = time + 0.1;
 }
-
 
 void boss4_hunt() {
 	self.nextthink = time;
@@ -51,27 +50,15 @@ void boss4_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
-
 		entity proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
-		proj.classname = "grenade";
-		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = self.dmg_edge;
-		proj.dmg_edge = self.dmg_edge;
-		proj.dmg_radius = self.dmg_radius;
-		proj.dmg_force = self.dmg_force;
+		projectile_setup(proj, _shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 		proj.movetype = MOVETYPE_FLY;
-		proj.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-		proj.touch = monster_proj_touch;
-		PROJECTILE_MAKETRIGGER(proj);
-		setorigin(proj, _shotorg);
+		proj.touch = projectile_touch_explode;
 		proj.think = boss4_mine_think;
 		proj.nextthink = time;
-		proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
 		proj.velocity = normalize(_shotdir) * 1000;
 		proj.pushltime = time + 20;
 		weapon_setup_projectile_velocity(proj);
-		proj.angles = vectoangles(proj.velocity);
-
 		self.attack_finished_single = time + 1 + random();
 		self.bulletcounter = time + 0.5;
 	} else if (stay) {

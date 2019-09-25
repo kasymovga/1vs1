@@ -31,24 +31,14 @@ void flyingthing_hunt() {
 		vector _shotorg = self.origin + v_forward * 16 - '0 0 24';
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-		gren.dmg_edge = self.dmg_edge;
-		gren.dmg_radius = self.dmg_radius;
-		gren.dmg_force = self.dmg_force;
-		gren.classname = "grenade";
+		projectile_setup(gren,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 		gren.movetype = MOVETYPE_FLY;
-		PROJECTILE_MAKETRIGGER(gren);
-		gren.projectiledeathtype = WEP_ELECTRO;
-		setorigin(gren, _shotorg);
-
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
-		gren.use = monster_proj_explode;
-		gren.touch = monster_proj_touch;
+		gren.use = projectile_explode;
+		gren.touch = projectile_touch_explode;
 		gren.velocity = normalize(_shotdir) * 2400;
 		weapon_setup_projectile_velocity(gren);
-
-		gren.angles = vectoangles (gren.velocity);
-
 		self.attack_finished_single = time + 1 + random();
 	} else {
 		v = monster_move_fly(450, 5);

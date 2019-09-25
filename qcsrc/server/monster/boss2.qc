@@ -6,7 +6,7 @@ void boss2_pellet_touch()
 {
 	PROJECTILE_TOUCH;
 	if(other.solid == SOLID_BSP)
-		damage_info(self.origin, self.dmg_edge, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
+		damage_info(self.origin, self.dmg, 0, 0, normalize(self.velocity), self.projectiledeathtype, self);
 
 	if (other && other.takedamage)
 	{
@@ -24,29 +24,19 @@ void boss2_pellet_touch()
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void boss2_pellet(vector start, vector dir)
-{
+void(vector start, vector dir) boss2_pellet {
 	entity proj;
 	proj = projectile(TRUE, PROJECTILE_BULLET_BIG, TRUE, self);
-	proj.classname = "bullet";
-	proj.realowner = proj.owner;
-	PROJECTILE_MAKETRIGGER(proj);
+	projectile_setup(proj, start, PROJECTILE_BULLET_BIG, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 	proj.movetype = MOVETYPE_BOUNCEMISSILE;
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * 0.1) * 2000;
 	weapon_setup_projectile_velocity(proj);
-	proj.angles = vectoangles(proj.velocity);
-	setorigin(proj, start);
 	proj.touch = boss2_pellet_touch;
-	proj.dmg_edge = self.dmg_edge;
-	proj.dmg_force = self.dmg_force;
-	proj.projectiledeathtype = WEP_SUPERSHOTGUN;
 	proj.oldvelocity = proj.velocity;
 	proj.cnt = 3;
 }
-
-
 
 void boss2_hunt() {
 	WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, self.health);

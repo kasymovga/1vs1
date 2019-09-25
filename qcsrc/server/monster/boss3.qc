@@ -23,28 +23,16 @@ void boss3_hunt() {
 		vector _shotdir = monster_look_to_end - self.origin;
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
-
 		float i;
 		for (i = 0; i < 6; i++) {
 			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-			proj.realowner = proj.owner;
-			proj.classname = "grenade";
-			proj.bot_dodge = TRUE;
-			proj.bot_dodgerating = self.dmg_edge;
-			proj.dmg_edge = self.dmg_edge;
-			proj.dmg_radius = self.dmg_radius;
-			proj.dmg_force = self.dmg_force;
+			projectile_setup(proj, _shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 			proj.movetype = MOVETYPE_FLY;
-			proj.projectiledeathtype = WEP_ELECTRO;
-			proj.touch = monster_proj_touch;
-			PROJECTILE_MAKETRIGGER(proj);
-			setorigin(proj, _shotorg);
+			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
 			proj.pushltime = time + 10;
 			weapon_setup_projectile_velocity(proj);
-			proj.angles = vectoangles(proj.velocity);
 		}
-
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else {

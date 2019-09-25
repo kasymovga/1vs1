@@ -2,21 +2,6 @@ void arachna_idle();
 void arachna_guard();
 void arachna_walk();
 
-void arachna_grenade_explode (void)
-{
-	self.event_damage = stdproc_nothing;
-	self.takedamage = DAMAGE_NO;
-	damage_radius (self, self.owner, self.dmg_edge, 0, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void arachna_grenade_touch (void)
-{
-	PROJECTILE_TOUCH;
-	arachna_grenade_explode();
-}
-
 void arachna_hunt() {
 	self.nextthink = time;
 	if (monster_check_target(arachna_walk, arachna_guard))
@@ -38,22 +23,12 @@ void arachna_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 
 		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-		proj.classname = "grenade";
-		proj.bot_dodge = TRUE;
-		proj.bot_dodgerating = self.dmg_edge;
-		proj.dmg_edge = self.dmg_edge;
-		proj.dmg_radius = self.dmg_radius;
-		proj.dmg_force = self.dmg_force;
+		projectile_setup(proj,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 		proj.movetype = MOVETYPE_FLY;
-		proj.projectiledeathtype = WEP_ELECTRO;
-		proj.touch = arachna_grenade_touch;
-		PROJECTILE_MAKETRIGGER(proj);
-		setorigin(proj, _shotorg);
+		proj.touch = projectile_touch_explode;
 		proj.velocity = normalize(_shotdir) * 1600;
 		proj.pushltime = time + 10;
 		weapon_setup_projectile_velocity(proj);
-		proj.angles = vectoangles(proj.velocity);
-
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
 	} else {

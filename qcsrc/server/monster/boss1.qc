@@ -25,24 +25,16 @@ void boss1_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		float i;
 		for (i = 0; i < 4; i++) {
-			entity gren =  projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
-			gren.dmg_edge = self.dmg_edge;
-			gren.dmg_radius = self.dmg_radius;
-			gren.dmg_force = self.dmg_force;
-			gren.classname = "grenade";
+			entity gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
+			projectile_setup(gren,_shotorg, WEP_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 			gren.movetype = MOVETYPE_TOSS;
 			gren.gravity = 0.01;
-			PROJECTILE_MAKETRIGGER(gren);
-			gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
-			setorigin(gren, _shotorg);
-
 			gren.nextthink = time + 5;
 			gren.think = projectile_think2use;
-			gren.use = monster_proj_explode;
-			gren.touch = monster_proj_touch;
+			gren.use = projectile_explode;
+			gren.touch = projectile_touch_explode;
 			gren.velocity = normalize(_shotdir + randomvec() * 0.05 * vlen(_shotdir)) * 3200;
 			weapon_setup_projectile_velocity(gren);
-
 			gren.angles = vectoangles (gren.velocity);
 		}
 
