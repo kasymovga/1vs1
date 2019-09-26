@@ -36,39 +36,20 @@ void(void) vehicle_aircraft_engine_off {
 	}
 }
 
-void(void) vehicle_aircraft_rocket_explode {
-    w_deathtypestring = "dident escape the rocket barrage";
-    damage_radius (self, self.realowner,
-     g_vehicle_aircraft_rocket_damage,
-     g_vehicle_aircraft_rocket_edgedamage,
-     g_vehicle_aircraft_rocket_radius, world,
-     g_vehicle_aircraft_rocket_force, WEP_ROCKET_LAUNCHER, world);
-
-    remove (self);
-}
-
-void(void) vehicle_aircraft_rocket_touch {
-    PROJECTILE_TOUCH;
-    vehicle_aircraft_rocket_explode();
-}
-
 void(void) vehicle_aircraft_rocket_think {
     vector newdir,olddir;
+	if (self.fade_time <= time) {
+		projectile_explode();
+		return;
+	}
     self.nextthink  = time;
-    if (self.realowner.deadflag != DEAD_NO) {
-        vehicle_aircraft_rocket_explode();
-        return;
-    }
-    if not (self.realowner.vehicle) {
-        projectile_update(self);
-        return;
-    }
-    self.touch = vehicle_aircraft_rocket_touch;
-    olddir = normalize(self.velocity);
-    newdir = normalize(self.realowner.cursor_trace_endpos - self.origin);
-    newdir += randomvec() * g_vehicle_aircraft_rocket_noise;
-    self.velocity = normalize(olddir + newdir * g_vehicle_aircraft_rocket_turnrate) * g_vehicle_aircraft_rocket_speed;
-    projectile_update(self);
+    if (self.realowner.vehicle == self.owner) {
+		olddir = normalize(self.velocity);
+		newdir = normalize(self.realowner.cursor_trace_endpos - self.origin);
+		newdir += randomvec() * g_vehicle_aircraft_rocket_noise;
+		self.velocity = normalize(olddir + newdir * g_vehicle_aircraft_rocket_turnrate) * g_vehicle_aircraft_rocket_speed;
+	}
+	projectile_update(self);
 }
 
 void(void) vehicle_aircraft_rocket_do {
@@ -91,18 +72,19 @@ void(void) vehicle_aircraft_rocket_do {
     self.gun2.cnt = time + self.attack_finished_single;
 	sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 	missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
-	setorigin(missile,gettaginfo(self.tur_head, gettagindex(self.tur_head,"tag_fire")));
+	projectile_setup(missile, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire")), WEP_ROCKET_LAUNCHER,
+			g_vehicle_aircraft_rocket_damage, g_vehicle_aircraft_rocket_edgedamage, g_vehicle_aircraft_rocket_radius,
+			g_vehicle_aircraft_rocket_force);
+
 	te_explosion (missile.origin);
-	missile.classname = "aircraft_rocket";
+    missile.touch = projectile_touch_explode;
 	missile.realowner = self.owner;
-	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = 75;
 	missile.nextthink = time;// + 0.2;
+	missile.think = vehicle_aircraft_rocket_think;
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.velocity = normalize(v_forward + (v_up * g_vehicle_aircraft_rocket_up) + randomvec() * g_vehicle_aircraft_rocket_spread) * g_vehicle_aircraft_rocket_speed;
-	missile.angles = vectoangles(missile.velocity);
-	missile.think = vehicle_aircraft_rocket_think;
 	missile.solid = SOLID_BBOX;
+	missile.fade_time = time + 10;
 }
 
 void(void) vehicle_aircraft_minigun_fire_flash_go {
@@ -257,16 +239,6 @@ void(void) vehicle_aircraft_enter {
 
 void(float eject) vehicle_aircraft_exit {
 	vehicle_stdproc_exit(eject, 160, 64, 160);
-    entity e;
-    for(e = findchain(classname,"spiderbot_rocket"); e; e = e.chain) {
-        if(e.owner == self.owner) {
-            e.realowner = self.owner;
-            e.owner = world;
-            //e.solid = SOLID_BBOX;
-            //e.think = stdproc_nothing;
-            //e.nextthink = -1;
-        }
-    }
 	vehicle_aircraft_engine_off();
 	self.think = vehicle_aircraft_think;
 	self.nextthink = time;
