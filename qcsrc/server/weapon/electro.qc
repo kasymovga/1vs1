@@ -41,7 +41,7 @@ var .float electro_buttonatck2 = BUTTON_ATCK2;
 void(void) weapon_electro_explode_combo;
 
 void(entity e, entity own, float _delay) weapon_electro_combo_prepare {
-	e.owner = own;
+	e.realowner = e.owner = own;
 	e.takedamage = DAMAGE_NO;
 	e.classname = "plasma_chain";
 	e.think = weapon_electro_explode_combo;
@@ -111,11 +111,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 	self.health = self.health - _damage;
 	if (self.health <= 0) {
-		self.nextthink = time;
 		if (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim") {
 			// change owner to whoever caused the combo explosion
 			weapon_electro_combo_prepare(self, inflictor.owner, 0);
 		} else {
+			self.nextthink = time;
 			self.takedamage = DAMAGE_NO;
 			self.use = weapon_electro_explode;
 			self.think = projectile_think2use;
