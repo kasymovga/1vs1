@@ -6,3 +6,4 @@ set coop_g_weapon_stay 1
 set coop_g_pickup_respawntimejitter_powerup 0
 set coop_g_pickup_respawntime_key 0.1
 set coop_g_pickup_respawntimejitter_key 0
+set coop_g_maxplayers 8
