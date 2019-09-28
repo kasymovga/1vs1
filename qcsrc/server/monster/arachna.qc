@@ -72,7 +72,6 @@ void arachna_walk() {
 	//pointparticles(particleeffectnum("sparks"), self.enemy.origin, '0 0 1', 1);
 	v = vectoangles(v);
 	self.angles_y = approach_angle(self.angles_y, v_y, 90 * frametime);
-
 }
 
 void arachna_remove() {
@@ -80,6 +79,8 @@ void arachna_remove() {
 }
 
 void arachna_dlc_reset() {
+	setmodel(self, "models/arachna/arachna.md3");
+	setsize(self, '-16 -16 -24', '16 16 32');
 	setattachment(self.exteriorweaponentity, self, "tag_weapon");
 }
 
