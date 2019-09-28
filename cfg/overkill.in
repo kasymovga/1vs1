@@ -4,17 +4,21 @@ set overkill_g_start_weapon_shotgun 1
 set overkill_g_start_weapon_nex 1
 set overkill_g_start_weapon_uzi 1
 set overkill_g_use_ammunition 0
-set overkill_g_balance_shotgun_primary_damage 10
+set overkill_g_balance_shotgun_primary_damage 17
 set overkill_g_balance_shotgun_primary_bullets 10
+set overkill_g_balance_shotgun_primary_refire 0.75
+set overkill_g_balance_shotgun_primary_animtime 0.65
 set overkill_g_balance_shotgun_magazinecapacity 8
-set overkill_g_balance_uzi_first_damage 10
-set overkill_g_balance_uzi_sustain_damage 10
+set overkill_g_balance_okshotgun_primary_spread 0.07
+set overkill_g_balance_uzi_first_damage 25
+set overkill_g_balance_uzi_sustained_damage 25
 set overkill_g_balance_uzi_magazinecapacity 30
+set overkill_g_balance_uzi_sustain
 set overkill_g_balance_nex_magazinecapacity 5
 set overkill_g_balance_nex_damage 100
 set overkill_g_balance_nex_ammo 1
-set overkill_g_balance_nex_refire 1.5
-set overkill_g_balance_nex_animtime 1.2
+set overkill_g_balance_nex_refire 1
+set overkill_g_balance_nex_animtime 0.9
 set overkill_g_pickup_weapons 0
 set overkill_g_pickup_healthsmall 0
 set overkill_g_pickup_healthmedium 0
