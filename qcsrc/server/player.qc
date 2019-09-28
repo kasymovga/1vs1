@@ -930,7 +930,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;
-
+		self.switchweapon = self.weapon;
 		if(deathtype == DEATH_DROWN)
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
 		else
@@ -2125,7 +2125,12 @@ void(entity spot) player_spawn {
 		}
 	}
 	self.items = start_items;
-	self.switchweapon = weapon_best(self);
+	if (self.switchweapon) {
+		if not(player_hasweapon(self, self.switchweapon, TRUE, FALSE))
+			self.switchweapon = 0;
+	} else
+		self.switchweapon = weapon_best(self);
+
 	if not(self.switchweapon)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(player_hasweapon(self, i, TRUE, FALSE))
