@@ -930,7 +930,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = FALSE;
-		self.switchweapon = self.weapon;
+		float switchweapon_save = self.weapon;
 		if(deathtype == DEATH_DROWN)
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
 		else
@@ -956,6 +956,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		if not(GameHookChain_ThrowWeaponOnDeathHandle())
 			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
 
+		self.switchweapon = switchweapon_save;
 		// print an obituary message
 		player_obituary(attacker, inflictor, self, deathtype);
 		if (sv_sound_frag != "")
