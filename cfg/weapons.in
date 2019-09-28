@@ -123,6 +123,7 @@ set g_balance_shotgun_swap_buttons 0
 set g_balance_shotgun_primary_gravityfactor 1
 set g_balance_shotgun_secondary_gravityfactor 1
 set g_balance_shotgun_reloadtime 2
+set g_balance_shotgun_reloadtime_shell 0
 set g_balance_shotgun_magazinecapacity 0
 _set g_balance_shotgun_primary_damage 10
 _set g_balance_shotgun_secondary_damage 10

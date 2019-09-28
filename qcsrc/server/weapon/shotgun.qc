@@ -1,5 +1,6 @@
 float g_balance_shotgun_magazinecapacity;
 float g_balance_shotgun_reloadtime;
+float g_balance_shotgun_reloadtime_shell;
 float g_balance_shotgun_primary_ammo;
 float g_balance_shotgun_primary_animtime;
 float g_balance_shotgun_primary_bulletconstant;
@@ -109,14 +110,32 @@ void weapon_shotgun_fire2_02()
 }
 
 void(void) weapon_shotgun_reloadandready {
-	weapon_clip_reloadandready(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip,
-			g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo, g_balance_shotgun_reloadtime);
+	if not(g_balance_shotgun_reloadtime_shell) {
+		weapon_clip_reloadandready(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip,
+				g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo, g_balance_shotgun_reloadtime);
+		return;
+	}
+	float t;
+	float tshells = min(g_balance_shotgun_magazinecapacity, max(1, self.sg_ammoclip + 1));
+	self.sg_ammoclip = tshells;
+	if (weapon_clip_checkmaxbullets(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo, g_balance_shotgun_secondary_ammo) || self.sg_buttonatck1 || self.sg_buttonatck2) {
+		t = ATTACK_FINISHED(self) - g_balance_shotgun_reloadtime - 1;
+		ATTACK_FINISHED(self) = t;
+		weapon_ready();
+	} else {
+		weapon_thinkf(WFRAME_RELOAD, g_balance_shotgun_reloadtime_shell, weapon_shotgun_reloadandready);
+	}
+
 }
 
 void(void) weapon_shotgun_reload {
+	float clipsave = self.sg_ammoclip;
 	weapon_clip_reload(g_balance_shotgun_magazinecapacity, ammo_shells, sg_ammoclip, g_balance_shotgun_primary_ammo,
 			g_balance_shotgun_secondary_ammo, "weapons/campingrifle_reload.wav", g_balance_shotgun_reloadtime,
 			weapon_shotgun_reloadandready);
+
+	if (g_balance_shotgun_reloadtime_shell)
+		self.sg_ammoclip = clipsave; //shotgun not have ammo drop on reload in case of per shell reloading
 }
 
 float weapon_shotgun(float req)
@@ -178,6 +197,7 @@ float weapon_shotgun(float req)
 	} else if (req == WR_CVAR_CACHE) {
 		CACHE_CVAR(g_balance_shotgun_magazinecapacity);
 		CACHE_CVAR(g_balance_shotgun_reloadtime);
+		CACHE_CVAR(g_balance_shotgun_reloadtime_shell);
 		CACHE_CVAR(g_balance_shotgun_primary_ammo);
 		CACHE_CVAR(g_balance_shotgun_primary_animtime);
 		CACHE_CVAR(g_balance_shotgun_primary_bulletconstant);
