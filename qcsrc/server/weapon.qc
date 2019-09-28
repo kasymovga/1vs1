@@ -14,6 +14,7 @@ vector sv_qcanimation_melee2_morph2angles;
 vector sv_qcanimation_melee2_morph1origin;
 vector sv_qcanimation_melee2_morph2origin;
 float sv_qcweaponanimation;
+string sv_weapon_tag_prefix;
 float g_akimbo_use_left_hand;
 float g_shootfromcenter;
 float g_shootfromclient;
@@ -37,6 +38,9 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4origin;
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
+
+#define weapon_gettagindex(x,y) gettagindex(x, strcat(sv_weapon_tag_prefix, y))
+#define weapon_setattachment(x,y,z) setattachment(x, y, strcat(sv_weapon_tag_prefix, z))
 
 void weapon_reload() {
 	if not(GameHook_ReloadAllowed())
@@ -761,7 +765,7 @@ void weapon_model_think()
 			if (self.weaponentity)
 				self.weaponentity.model = "";
 			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
-			v_shot_idx = gettagindex(self, "shot"); // used later
+			v_shot_idx = weapon_gettagindex(self, "shot"); // used later
 			self.dlc_reset = world.dlc_reset;
 			if(sv_qcweaponanimation)
 			{
@@ -783,7 +787,7 @@ void weapon_model_think()
 
 				// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
 				// if we don't, this is a "real" animated model
-				if(gettagindex(self, "weapon"))
+				if(weapon_gettagindex(self, "weapon"))
 				{
 					if (!self.weaponentity)
 						self.weaponentity = spawn();
@@ -804,7 +808,7 @@ void weapon_model_think()
 				self.viewmodelforclient = world;
 
 				float idx;
-				idx = gettagindex(self, "shot");
+				idx = weapon_gettagindex(self, "shot");
 				if(idx)
 				{
 					self.movedir = gettaginfo(self, idx);
@@ -815,7 +819,7 @@ void weapon_model_think()
 					self.movedir = '0 0 0';
 				}
 
-				idx = gettagindex(self, "shell");
+				idx = weapon_gettagindex(self, "shell");
 				if(idx)
 				{
 					self.spawnorigin = gettaginfo(self, idx);
@@ -833,9 +837,9 @@ void weapon_model_think()
 				else
 				{
 					if(self.weaponentity)
-						idx = gettagindex(self, "weapon");
+						idx = weapon_gettagindex(self, "weapon");
 					else
-						idx = gettagindex(self, "handle");
+						idx = weapon_gettagindex(self, "handle");
 					if(idx)
 					{
 						self.oldorigin = self.movedir - gettaginfo(self, idx);
@@ -1577,7 +1581,7 @@ void(entity flash, vector offset) weapon_attach_to_shotorg {
 	}
 	else
 	{
-		setattachment(flash, self.weaponentity, "shot");
+		weapon_setattachment(flash, self.weaponentity, "shot");
 		setorigin(flash, offset);
 
 		xflash = spawn();
@@ -1592,7 +1596,7 @@ void(entity flash, vector offset) weapon_attach_to_shotorg {
 		}
 		else
 		{
-			setattachment(xflash, self.exteriorweaponentity, "shot");
+			weapon_setattachment(xflash, self.exteriorweaponentity, "shot");
 		}
 	}
 }
@@ -1627,6 +1631,7 @@ void() weapon_init {
 	CACHE_CVAR(g_shootfromcenter);
 	CACHE_CVAR(g_shootfromclient);
 	CACHE_CVAR(g_shootfromeye);
+	CACHE_CVAR_STR(sv_weapon_tag_prefix);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
