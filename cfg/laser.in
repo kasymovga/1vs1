@@ -1,0 +1,7 @@
+set g_laser 0 "Secondary laser attack for all weapons"
+set g_laser_refire 0.7
+set g_laser_speed 8000
+set g_laser_damage 35
+set g_laser_damage_edge 0
+set g_laser_radius 70
+set g_laser_force 400
