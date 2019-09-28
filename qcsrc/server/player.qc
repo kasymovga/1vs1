@@ -274,6 +274,8 @@ void(entity to, entity from) player_anim_copy {
 	PLAYERANIMCOPY(to, from, backleft)
 	PLAYERANIMCOPY(to, from, melee)
 	PLAYERANIMCOPY(to, from, melee2)
+	PLAYERANIMCOPY(to, from, dead1)
+	PLAYERANIMCOPY(to, from, dead2)
 #undef PLAYERANIMCOPY
 }
 
