@@ -20,7 +20,6 @@ set overkill_g_balance_okshotgun_primary_spread 0.07
 set overkill_g_balance_uzi_first_damage 25
 set overkill_g_balance_uzi_sustained_damage 25
 set overkill_g_balance_uzi_magazinecapacity 30
-set overkill_g_balance_uzi_sustain
 set overkill_g_balance_nex_magazinecapacity 5
 set overkill_g_balance_nex_damage 100
 set overkill_g_balance_nex_ammo 1
