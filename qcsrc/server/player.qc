@@ -2105,6 +2105,7 @@ void(entity spot) player_spawn {
 	if not(self.body)
 		player_body_spawn();
 
+	self.body.nextthink = 0;
 	setmodel(self, "null");
 	if not(GameHook_EquipPlayerHandle()) {
 		if(inWarmupStage) {
