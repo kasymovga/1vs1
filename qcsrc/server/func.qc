@@ -1058,6 +1058,7 @@ void func_button_touch()
 		return;
 	if(other.velocity * self.movedir < 0)
 		return;
+
 	self.enemy = other;
 	if (other.owner)
 		self.enemy = other.owner;

@@ -4,6 +4,7 @@ void(void) physics_impact {
 	if not(trace_ent)
 		return;
 
+	self.velocity = physics_velocity;
 	if (self.touch) {
 		entity oldother = other;
 		other = trace_ent;
@@ -80,9 +81,9 @@ void(float ground) physics_update_status {
 			else
 				physics_flags |= FL_ONGROUND;
 
-			physics_velocity -= f * trace_plane_normal;
 			self.groundentity = trace_ent;
 			physics_impact();
+			physics_velocity -= f * trace_plane_normal;
 		}
 	}
 
