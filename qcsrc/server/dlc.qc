@@ -60,7 +60,7 @@ float(string s) dlc_load_settemps_from {
 	string cvar_name, cvar_value;
 	float separator;
 	f = fopen(s, FILE_READ);
-	if (f < 0) return;
+	if (f < 0) return FALSE;
 	while ((line = dlc_trimspaces(fgets(f)))) {
 		c = substring(line, 0, 1);
 		if (c == "#" || c == "/") continue;
@@ -81,6 +81,7 @@ float(string s) dlc_load_settemps_from {
 				fclose(f);
 				return FALSE;
 			}
+			continue;
 		}
 		cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
 		dlc_settemp(cvar_name, cvar_value);
