@@ -32,7 +32,7 @@ float(string s) gametype_value {
 	if (s2 != "")
 		return max(0, stof(s2));
 	else
-		return cvar(strcat("g_", s));
+		return max(0, cvar(strcat("g_", s)));
 }
 
 void() gametype_init {
