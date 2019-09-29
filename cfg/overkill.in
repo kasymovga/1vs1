@@ -35,3 +35,6 @@ set overkill_g_nadgets 1
 set overkill_g_nadgets_type_selectable "0"
 set overkill_g_balance_selfdamagepercent 0
 set overkill_g_dodging 1
+set overkill_g_nadgets_normal_radius 500
+set overkill_g_nadgets_normal_lifetime 1.5
+set overkill_g_nadgets_normal_damage 300
