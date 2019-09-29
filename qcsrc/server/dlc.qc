@@ -3,7 +3,7 @@ string dlc_list_send;
 entity dlc_wait;
 string dlc_sounds;
 
-string trimspaces(string s) {
+string(string s) dlc_trimspaces {
 	string c;
 	for (;;) {
 		c = substring(s, 0, 1);
@@ -27,6 +27,20 @@ string trimspaces(string s) {
 	return s;
 }
 
+float(string s) dlc_findspace {
+	float space = strstrofs(s, " ", 0);
+	float tab = strstrofs(s, "\t", 0);
+	float separator = -1;
+	if (space > 0 && tab > 0)
+		separator = min(space, tab);
+	else if (space > 0)
+		separator = space;
+	else if (tab > 0)
+		separator = tab;
+
+	return separator;
+}
+
 void dlc_settemp(string name, string value) {
 	float n = cvar("_dlc_settemps_count");
 	print("DLC set temp: ", name, " = ", value, "\n");
@@ -40,32 +54,39 @@ void dlc_settemp(string name, string value) {
 	cvar_set("_dlc_settemps_count", ftos(n + 1));
 }
 
-void dlc_load_settemps_from(string s) {
+float(string s) dlc_load_settemps_from {
 	float f;
 	string line, c;
 	string cvar_name, cvar_value;
-	float space, tab, separator;
+	float separator;
 	f = fopen(s, FILE_READ);
 	if (f < 0) return;
-	while ((line = trimspaces(fgets(f)))) {
+	while ((line = dlc_trimspaces(fgets(f)))) {
 		c = substring(line, 0, 1);
 		if (c == "#" || c == "/") continue;
-		space = strstrofs(line, " ", 0);
-		tab = strstrofs(line, "\t", 0);
-		if (space > 0 && tab > 0)
-			separator = min(space, tab);
-		else if (space > 0)
-			separator = space;
-		else if (tab > 0)
-			separator = tab;
-		else
+		separator = dlc_findspace(line);
+		if (separator < 0)
 			continue;
 
 		cvar_name = substring(line, 0, separator);
-		cvar_value = trimspaces(substring(line, separator + 1, -1));
+		if (cvar_name == "require") {
+			line = dlc_trimspaces(substring(line, separator + 1, -1));
+			separator = dlc_findspace(line);
+			if (separator < 0)
+				continue;
+
+			cvar_name = substring(line, 0, separator);
+			cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
+			if (cvar_string(cvar_name) != cvar_value) {
+				fclose(f);
+				return FALSE;
+			}
+		}
+		cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
 		dlc_settemp(cvar_name, cvar_value);
 	}
 	fclose(f);
+	return TRUE;
 }
 
 void dlc_exec_cfg(string dlc_name) {
@@ -96,7 +117,9 @@ void dlc_load_exts() {
 	for (i = 0; i < n; i++) {
 		add_to_server_packages = TRUE;
 		s = search_getfilename(search, i);
-		dlc_load_settemps_from(s);
+		if not(dlc_load_settemps_from(s))
+			continue;
+
 		tail = cvar_string("sv_curl_serverpackages");
 		while (tail != "") {
 			head = str_car(tail);
