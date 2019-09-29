@@ -2135,12 +2135,14 @@ void(entity spot) player_spawn {
 	} else
 		self.switchweapon = weapon_best(self);
 
+	if (!self.cnt || !player_hasweapon(self, self.cnt, TRUE, FALSE))
+		self.cnt = weapon_best(self);
+
 	if not(self.switchweapon)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(player_hasweapon(self, i, TRUE, FALSE))
 				self.switchweapon = i;
 
-	self.cnt = self.switchweapon;
 	self.weapon = 0;
 	self.jump_interval = time;
 	self.spawnshieldtime = time + g_spawnshieldtime;
@@ -2200,7 +2202,6 @@ void(entity spot) player_spawn {
 		score_clear(self);
 		self.killcount = 0;
 	}
-	self.cnt = WEP_LASER;
 	weapon_model_spawn();
 	self.alpha = default_player_alpha;
 	self.colormod = '1 1 1' * g_player_brightness;
