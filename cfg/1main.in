@@ -1,4 +1,4 @@
-_set net_messagetimeout "30"
+set net_messagetimeout "30"
 alias rereadcvars "sv_cmd rereadcvars"
 set sv_maxconnects_per_address 0
 alias _fs_rescan_alias_disable "unalias fs_rescan"
