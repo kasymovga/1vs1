@@ -108,7 +108,7 @@ void weapon_porto_touch (void)
 	}
 	else if(self.effects & EF_RED)
 	{
-		if(Portal_SpawnInPortalAtTrace(self.owner, self.right_vector, self.owner.portal_id))
+		if(portal_spawn_in_portal_at_trace(self.owner, self.right_vector, self.owner.portal_id))
 		{
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			centerprint(self.owner, "^1In^7-portal created.");
@@ -123,7 +123,7 @@ void weapon_porto_touch (void)
 	}
 	else
 	{
-		if(Portal_SpawnOutPortalAtTrace(self.owner, self.right_vector, self.owner.portal_id))
+		if(portal_spawn_out_portal_at_trace(self.owner, self.right_vector, self.owner.portal_id))
 		{
 			sound(self, CHAN_PROJECTILE, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;

@@ -50,7 +50,7 @@ bullet.qh
 anim.qh
 projectile.qh
 effect.qh
-portals.qh
+portal.qh
 hook.qh
 ../client-server/hook.qh
 score.qh
@@ -305,9 +305,7 @@ turret/tesla.qc
 score.qc
 
 ../menu-server/extresponse.qc
-
-portals.qc
-
+portal.qc
 target_spawn.qc
 func.qc
 func_breakable.qc

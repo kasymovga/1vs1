@@ -511,9 +511,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 void(float killed) player_clear {
 	float j;
 	if (killed)
-		Portal_ClearAllLater(self);
+		portal_clear_all_later(self);
 	else
-		Portal_ClearAll(self);
+		portal_clear_all(self);
 
 	// reset fields the weapons may use just in case
 	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
