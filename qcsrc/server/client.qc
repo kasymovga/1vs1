@@ -281,19 +281,12 @@ void KillIndicator_Think()
 void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 {
 	float killtime;
-	entity e;
 	killtime = GameHook_KillDelayMod(g_balance_kill_delay);
-
 	self.killindicator_teamchange = targetteam;
-
-	if(!self.killindicator)
-	{
-		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, targetteam))
-		{
+	if not(self.killindicator) {
+		if (killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, targetteam)) {
 			ClientKill_Now();
-		}
-		else
-		{
+		} else {
 			self.killindicator = spawn();
 			self.killindicator.owner = self;
 			self.killindicator.scale = 0.5;
@@ -304,26 +297,11 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
 			sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
-
-			for(e = world; (e = find(e, classname, "body")) != world; )
-			{
-				if(e.enemy != self)
-					continue;
-				e.killindicator = spawn();
-				e.killindicator.owner = e;
-				e.killindicator.scale = 0.5;
-				setattachment(e.killindicator, e, "");
-				setorigin(e.killindicator, '0 0 52');
-				e.killindicator.think = KillIndicator_Think;
-				e.killindicator.nextthink = time + (e.lip) * 0.05;
-				e.killindicator.cnt = ceil(killtime);
-			}
 			self.lip = 0;
 		}
 	}
-	if(self.killindicator)
-	{
-		if(targetteam)
+	if (self.killindicator) {
+		if (targetteam)
 			self.killindicator.colormod = team_color(targetteam);
 		else
 			self.killindicator.colormod = '0 0 0';
