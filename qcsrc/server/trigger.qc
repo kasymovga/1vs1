@@ -663,6 +663,15 @@ void spawnfunc_trigger_heal()
 .float falloff;
 .float strength;
 
+float (entity e) trigger_impulse_affected {
+	if not(other.iscreature)
+	if not(other.flags & FL_PROJECTILE)
+	if (other.movetype != MOVETYPE_TOSS)
+		return FALSE;
+
+	return TRUE;
+}
+
 // targeted (directional) mode
 void trigger_impulse_touch1()
 {
@@ -671,18 +680,7 @@ void trigger_impulse_touch1()
     float str;
 
 	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "body")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
+	if not(trigger_impulse_affected(other))
 		return;
 
 	if (other.deadflag && other.iscreature)
@@ -720,18 +718,7 @@ void trigger_impulse_touch2()
     float pushdeltatime;
 
 	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "body")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
+	if not(trigger_impulse_affected(other))
 		return;
 
 	if (other.deadflag && other.iscreature)
@@ -755,18 +742,7 @@ void trigger_impulse_touch3()
     float str;
 
 	// FIXME: Better checking for what to push and not.
-	if not(other.iscreature)
-	if (other.classname != "body")
-	if (other.classname != "missile")
-	if (other.classname != "rocket")
-	if (other.classname != "casing")
-	if (other.classname != "grenade")
-	if (other.classname != "plasma")
-	if (other.classname != "plasma_prim")
-	if (other.classname != "plasma_chain")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "nexball_basketball")
-	if (other.classname != "nexball_football")
+	if not(trigger_impulse_affected(other))
 		return;
 
 	if (other.deadflag && other.iscreature)

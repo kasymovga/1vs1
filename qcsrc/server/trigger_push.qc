@@ -128,10 +128,10 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 void trigger_push_touch()
 {
 	// FIXME: add a .float for whether an entity should be tossed by jumppads
-	if (!other.iscreature)
+	if not(other.iscreature)
 	if (other.classname != "body")
 	if (other.classname != "droppedweapon")
-	if (!other.projectiledeathtype || other.classname == "bullet")
+	if (!(other.flags & FL_PROJECTILE) || other.classname == "bullet")
 		return;
 
 	if (other.deadflag && other.deadflag != DEAD_FREEZE && other.iscreature)
