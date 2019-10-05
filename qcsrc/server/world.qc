@@ -269,14 +269,6 @@ void world_dynamic_init() {
 	hook_init(FALSE);
 	turret_readcvars();
 	WaypointSprite_Init();
-	default_player_alpha = cvar("g_player_alpha");
-	default_weapon_alpha = cvar("g_weapon_alpha");
-	if not(default_player_alpha)
-		default_player_alpha = 1;
-
-	if not(default_weapon_alpha)
-		default_weapon_alpha = 1;
-
 	Vote_Init();
 	push_init();
 	player_init();

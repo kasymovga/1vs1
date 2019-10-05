@@ -1231,7 +1231,7 @@ void player_voice_message(string type, string msg)
 
 float(entity plr, entity viewer) player_calculate_alpha {
 	plr = Akimbo_Owner(plr);
-	float dalpha = max(0.01, default_player_alpha);
+	float dalpha = 1;
 	if(plr.classname == "observer") {
 		if(plr == viewer) {
 			return dalpha;
@@ -2203,7 +2203,7 @@ void(entity spot) player_spawn {
 		self.killcount = 0;
 	}
 	weapon_model_spawn();
-	self.alpha = default_player_alpha;
+	self.alpha = 1;
 	self.colormod = '1 1 1' * g_player_brightness;
 	if(spawn_debug) {
 		sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
