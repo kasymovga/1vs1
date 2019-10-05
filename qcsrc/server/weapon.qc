@@ -14,7 +14,6 @@ vector sv_qcanimation_melee2_morph2angles;
 vector sv_qcanimation_melee2_morph1origin;
 vector sv_qcanimation_melee2_morph2origin;
 float sv_qcweaponanimation;
-string sv_weapon_tag_prefix;
 float g_akimbo_use_left_hand;
 float g_shootfromcenter;
 float g_shootfromclient;
@@ -39,8 +38,19 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
 
-#define weapon_gettagindex(x,y) gettagindex(x, strcat(sv_weapon_tag_prefix, y))
-#define weapon_setattachment(x,y,z) setattachment(x, y, strcat(sv_weapon_tag_prefix, z))
+float weapon_gettagindex(entity e, string s) {
+	float t = gettagindex(e, s);
+	if not(t)
+		t = gettagindex(e, strcat("tag_", s));
+
+	return t;
+}
+
+void weapon_setattachment(entity e1, entity e2, string s) {
+	setattachment(e1, e2, s);
+	if not(e1.tag_index)
+		setattachment(e1, e2, strcat("tag_", s));
+}
 
 void weapon_reload() {
 	if not(GameHook_ReloadAllowed())
@@ -1631,7 +1641,6 @@ void() weapon_init {
 	CACHE_CVAR(g_shootfromcenter);
 	CACHE_CVAR(g_shootfromclient);
 	CACHE_CVAR(g_shootfromeye);
-	CACHE_CVAR_STR(sv_weapon_tag_prefix);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
