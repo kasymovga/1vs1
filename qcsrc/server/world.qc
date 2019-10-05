@@ -225,7 +225,6 @@ void(void) world_static_init {
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(spawn_debug);
 	CACHE_CVAR(spawn_debugview);
-	CACHE_CVAR(g_telefrags);
 	minstagib_init();
 	item_init();
 	rune_init();
@@ -246,6 +245,7 @@ void(void) world_static_init {
 	udppunchhole_init();
 	jetpack_init();
 	laser_init();
+	teleport_init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

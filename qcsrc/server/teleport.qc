@@ -1,4 +1,5 @@
 float g_teleport_projectiles;
+float g_telefrags;
 
 void(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage) teleport_death {
 	entity head;
@@ -198,11 +199,12 @@ void(void) teleport_findtarget {
 	self.touch = teleport_touch;
 }
 
-float teleport_init_done;
-void(void) teleport_setup {
-	if not(teleport_init_done)
-		CACHE_CVAR(g_teleport_projectiles);
+void(void) teleport_init {
+	CACHE_CVAR(g_teleport_projectiles);
+	CACHE_CVAR(g_telefrags);
+}
 
+void(void) teleport_setup {
 	self.angles = '0 0 0';
 	EXACTTRIGGER_INIT;
 	self.use = teleport_use;

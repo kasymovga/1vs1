@@ -34,8 +34,6 @@ float sv_world_scale;
 float spawn_debug;
 float spawn_debugview;
 
-float g_telefrags;
-
 string map_description;
 
 entity	activator;
