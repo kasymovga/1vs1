@@ -1,0 +1,3 @@
+void(entity e, float prio, string s) centerprint_atprio;
+void(entity e, float prio) centerprint_expire;
+void(entity e, string s) centerprint;

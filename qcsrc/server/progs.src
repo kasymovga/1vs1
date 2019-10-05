@@ -90,7 +90,7 @@ rune.qh
 onslaught.qh
 nexball.qh
 timeout.qh
-
+centerprint.qh
 progressbar.qh
 
 item.qh
