@@ -1,5 +1,5 @@
-float inWarmupStage;
+float warmup_active;
 entity warmup_note;
-void Warmup_Init();
-void Warmup_Finish();
-void Warmup_UpdateNote();
+void(void) warmup_init;
+void(void) warmup_finish;
+void(void) warmup_note_update;

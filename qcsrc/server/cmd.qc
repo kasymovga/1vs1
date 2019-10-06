@@ -677,8 +677,7 @@ void SV_ParseClientCommand(string s) {
 		if not(self.flags & FL_CLIENT)
 			return;
 
-		if(inWarmupStage || cvar("sv_ready_restart") || GameHook_ReadyAllowed())
-		{
+		if(warmup_active || cvar("sv_ready_restart") || GameHook_ReadyAllowed()) {
 			if(!ready_restart_happened || cvar("sv_ready_restart_repeatable"))
 			{
 				if (self.ready) // toggle
@@ -691,7 +690,7 @@ void SV_ParseClientCommand(string s) {
 					self.ready = TRUE;
 					bprint(self.netname, "^2 is ready\n");
 				}
-				Warmup_UpdateNote();
+				warmup_note_update();
 				// cannot reset the game while a timeout is active!
 				if(!timeoutStatus)
 					ready_count();

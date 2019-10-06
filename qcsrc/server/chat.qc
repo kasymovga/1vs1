@@ -274,7 +274,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	if(!privatesay)
 	if(source.classname != "player" && source.team <= 0)
 	{
-		if(teamsay || (g_chat_nospectators == 1) || (g_chat_nospectators == 2 && !inWarmupStage))
+		if(teamsay || (g_chat_nospectators == 1) || (g_chat_nospectators == 2 && !warmup_active))
 			teamsay = -1; // spectators
 	}
 

@@ -114,7 +114,7 @@ void() timeout_handler_think {
 }
 
 void() timeout_evaluate_timeout {
-	if (inWarmupStage && !g_warmup_allow_timeout)
+	if (warmup_active && !g_warmup_allow_timeout)
 		return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
 	if (time < game_starttime )
 		return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");

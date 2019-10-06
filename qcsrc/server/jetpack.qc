@@ -84,5 +84,4 @@ void(void) jetpack_init {
 	jetpack_enable();
 	start_items |= (IT_JETPACK | IT_FUEL_REGEN);
 	start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-	warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 }

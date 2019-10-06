@@ -374,7 +374,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	float i;
 	if (_damage <= 0)
 		return;
-	if(inWarmupStage)
+	if(warmup_active)
 		return;
 	if (attacker != self) {
 		if (self.isshielded) {
@@ -407,7 +407,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			bprint(team_colored_name(self.team), " generator has less than ", ftos(h), " health remaining\n");
 #endif
 		self.lasthealth = self.health;
-	} else if not(inWarmupStage) {
+	} else if not(warmup_active) {
 		if (attacker == self)
 			bprint(team_colored_name(self.team), " generator spontaneously exploded due to overtime!\n");
 		else {
@@ -1123,7 +1123,7 @@ float(void) onslaught_WinningCondition {
 	entity head;
 	float t1, t2, t3, t4;
 	score_winning_condition_helper(); // set worldstatus
-	if(inWarmupStage)
+	if(warmup_active)
 		return FALSE;
 
 	// first check if the game has ended

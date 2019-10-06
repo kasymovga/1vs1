@@ -1,45 +1,130 @@
-void Warmup_Note_Message() {
+float g_warmup_limit;
+float g_warmup_allguns;
+float g_warmup_allow_timeout;
+float warmup_start_health;
+float warmup_start_armorvalue;
+float warmup_start_ammo_shells;
+float warmup_start_ammo_nails;
+float warmup_start_ammo_rockets;
+float warmup_start_ammo_cells;
+float warmup_start_ammo_fuel;
+float warmup_start_weapons;
+
+void(void) warmup_note_message {
 	if (!other.ready && (other.classname == "player" || other.team > 0))
 		self.message = "^2Currently in ^1warmup^2 stage!\n^2Press ^3{ready}^2 to finish warmup!";
 	else
 		self.message = "^2Currently in ^1warmup^2 stage!\n^2Waiting for others to ready up...";
 }
 
-void Warmup_UpdateNote() {
+void(void) warmup_note_update {
 	if (warmup_note)
 		warmup_note.SendFlags = 1;
 }
 
-var void(entity ignore) Warmup_Spawn_NextLink;
-void Warmup_Spawn(entity ignore) {
-	Warmup_UpdateNote();
-	Warmup_Spawn_NextLink(ignore);
+var void(entity ignore) warmup_spawn_next;
+void(entity ignore) warmup_spawn {
+	warmup_note_update();
+	warmup_spawn_next(ignore);
 }
 
-var void() Warmup_ObserverSpawn_NextLink;
-void Warmup_ObserverSpawn() {
-	Warmup_UpdateNote();
-	Warmup_ObserverSpawn_NextLink();
+var void(void) warmup_observer_spawn_next;
+void(void) warmup_observer_spawn {
+	warmup_note_update();
+	warmup_observer_spawn_next();
 }
 
-void Warmup_Init() {
-	inWarmupStage = cvar("g_warmup");
-	if (!GameHook_WarmupAllowed() || g_campaign)
-		inWarmupStage = 0; // these modes cannot work together, sorry
+var float(void) warmup_player_equip_handle_next;
+float(void) warmup_player_equip_handle {
+	if (warmup_player_equip_handle_next())
+		return TRUE;
 
-	if (inWarmupStage) {
-		Warmup_Spawn_NextLink = GameHookChain_Spawn;
-		GameHookChain_Spawn = Warmup_Spawn;
-		Warmup_ObserverSpawn_NextLink = GameHookChain_ObserverSpawn;
-		GameHookChain_ObserverSpawn = Warmup_ObserverSpawn;
-		warmup_note = NoteLine_New(Warmup_Note_Message);
-		Warmup_UpdateNote();
+	if not(warmup_active)
+		return FALSE;
+
+	self.ammo_shells = warmup_start_ammo_shells;
+	self.ammo_nails = warmup_start_ammo_nails;
+	self.ammo_rockets = warmup_start_ammo_rockets;
+	self.ammo_cells = warmup_start_ammo_cells;
+	self.ammo_fuel = warmup_start_ammo_fuel;
+	self.health = warmup_start_health;
+	self.armorvalue = warmup_start_armorvalue;
+	self.weapons = warmup_start_weapons;
+	return TRUE;
+}
+
+var void(void) warmup_server_frame_next;
+void(void) warmup_server_frame {
+	warmup_server_frame_next();
+	if not(warmup_active)
+		return;
+
+	// if in warmup stage and limit for warmup is hit start match
+	if (warmup_active)
+	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
+			|| (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60)) {
+
+		ready_restart();
+		return;
 	}
 }
 
-void Warmup_Finish() {
-	if (inWarmupStage) {
-		inWarmupStage = 0; //once the game is restarted the game is in match stage
+void(void) warmup_init {
+	float i;
+	entity e;
+	CACHE_CVAR(g_warmup_limit);
+	CACHE_CVAR(g_warmup_allguns);
+	CACHE_CVAR(g_warmup_allow_timeout);
+	warmup_active = cvar("g_warmup");
+	if (!GameHook_WarmupAllowed() || g_campaign)
+		warmup_active = 0; // these modes cannot work together, sorry
+
+	if not(warmup_active)
+		return;
+
+	warmup_spawn_next = GameHookChain_Spawn;
+	GameHookChain_Spawn = warmup_spawn;
+	warmup_observer_spawn_next = GameHookChain_ObserverSpawn;
+	GameHookChain_ObserverSpawn = warmup_observer_spawn;
+	warmup_server_frame_next = GameHookChain_ServerFrame;
+	GameHookChain_ServerFrame = warmup_server_frame;
+	warmup_note = NoteLine_New(warmup_note_message);
+	warmup_note_update();
+	warmup_player_equip_handle_next = gamehook_chain_player_equip_handle;
+	gamehook_chain_player_equip_handle = warmup_player_equip_handle;
+	warmup_start_ammo_shells = start_ammo_shells;
+	warmup_start_ammo_nails = start_ammo_nails;
+	warmup_start_ammo_rockets = start_ammo_rockets;
+	warmup_start_ammo_cells = start_ammo_cells;
+	warmup_start_ammo_fuel = start_ammo_fuel;
+	warmup_start_health = start_health;
+	warmup_start_armorvalue = start_armorvalue;
+	warmup_start_weapons = start_weapons;
+	if not(start_items & IT_UNLIMITED_WEAPON_AMMO) {
+		warmup_start_ammo_shells = max(0, cvar("g_warmup_start_ammo_shells"));
+		warmup_start_ammo_cells = max(0, cvar("g_warmup_start_ammo_cells"));
+		warmup_start_ammo_nails = max(0, cvar("g_warmup_start_ammo_nails"));
+		warmup_start_ammo_rockets = max(0, cvar("g_warmup_start_ammo_rockets"));
+	}
+	warmup_start_health = cvar("g_warmup_start_health");
+	warmup_start_armorvalue = cvar("g_warmup_start_armor");
+	if (cvar("g_warmup_allguns")) {
+		for (i = WEP_FIRST; i < WEP_FIREBALL; ++i) {
+			e = weapon_info(i);
+			if (!(e.weapon))
+				continue;
+
+			if (e.spawnflags & WEPSPAWNFLAG_NORMAL) {
+				warmup_start_weapons |= e.weapons;
+				weapon_precache(e.weapon);
+			}
+		}
+	}
+}
+
+void(void) warmup_finish {
+	if (warmup_active) {
+		warmup_active = 0; //once the game is restarted the game is in match stage
 		remove(warmup_note);
 		sound_play2all("announcer/robotic/prepareforbattle.wav");
 	}

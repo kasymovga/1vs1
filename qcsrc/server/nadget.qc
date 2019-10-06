@@ -883,7 +883,7 @@ void nadget_Pick(float tokens) {
 	float isplayer = self.classname != "spectator" && self.classname != "observer";
 	//float gamestarted = roundstate == ROUNDSTATE_GAME;
 	//float term = (self.term_authed && !self.term_used);
-	float nr = isplayer && (/*gamestarted || */(self.hg_nadesused && !inWarmupStage)) /* && !term */;
+	float nr = isplayer && (/*gamestarted || */(self.hg_nadesused && !warmup_active)) /* && !term */;
 
 	float t1 = nadget_NameToType(argv(1));
 	float t2 = nadget_NameToType(argv(2));

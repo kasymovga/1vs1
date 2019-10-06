@@ -93,8 +93,6 @@ var float(entity plr) GameHook_PlayerIsCarrier { return FALSE; }
 var void(entity plr) GameHook_DropCarried {}
 var float(entity plr) GameHookChain_PlayerCanBeCarrier { return TRUE; }
 var float(entity e) GameHook_TeleportationForbiddenFor { return FALSE; }
-var float(float use_ammunition) GameHookChain_StartAmmoHandle { return FALSE; }
-var float(float use_ammunition) GameHookChain_WarmupStartAmmoHandle { return FALSE; }
 string GameHook_ItemName;
 vector GameHook_ItemColor;
 var void() GameHookChain_ItemRespawnCountDown {}
@@ -108,7 +106,7 @@ var void() GameHook_SetNewParms = {}
 var void() GameHook_SetChangeParms = {}
 var void() GameHook_DecodeLevelParms = {}
 var float() GameHook_ForbidSpectators = { return FALSE; }
-var float() GameHook_EquipPlayerHandle = { return FALSE; }
+var float(void) gamehook_chain_player_equip_handle = { return FALSE; }
 var float() GameHook_SameLevel = { return FALSE; }
 var float() GameHook_MonsterTeamSwitchable = { return TRUE; }
 var void() GameHookChain_Shutdown = {}

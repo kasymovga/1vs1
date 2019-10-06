@@ -2107,26 +2107,15 @@ void(entity spot) player_spawn {
 
 	self.body.nextthink = 0;
 	setmodel(self, "null");
-	if not(GameHook_EquipPlayerHandle()) {
-		if(inWarmupStage) {
-			self.ammo_shells = warmup_start_ammo_shells;
-			self.ammo_nails = warmup_start_ammo_nails;
-			self.ammo_rockets = warmup_start_ammo_rockets;
-			self.ammo_cells = warmup_start_ammo_cells;
-			self.ammo_fuel = warmup_start_ammo_fuel;
-			self.health = warmup_start_health;
-			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
-		} else {
-			self.ammo_shells = start_ammo_shells;
-			self.ammo_nails = start_ammo_nails;
-			self.ammo_rockets = start_ammo_rockets;
-			self.ammo_cells = start_ammo_cells;
-			self.ammo_fuel = start_ammo_fuel;
-			self.health = start_health;
-			self.armorvalue = start_armorvalue;
-			self.weapons = start_weapons;
-		}
+	if not(gamehook_chain_player_equip_handle()) {
+		self.ammo_shells = start_ammo_shells;
+		self.ammo_nails = start_ammo_nails;
+		self.ammo_rockets = start_ammo_rockets;
+		self.ammo_cells = start_ammo_cells;
+		self.ammo_fuel = start_ammo_fuel;
+		self.health = start_health;
+		self.armorvalue = start_armorvalue;
+		self.weapons = start_weapons;
 	}
 	self.items = start_items;
 	if (self.switchweapon) {

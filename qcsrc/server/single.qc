@@ -137,9 +137,10 @@ float Single_ForbidSpectators() {
 	return FALSE;
 }
 
-float Single_EquipPlayerHandle() {
+var float(void) single_player_equip_handle_next;
+float(void) single_player_equip_handle {
 	if (self.default_equip)
-		return FALSE;
+		return single_player_equip_handle_next();
 
 	return TRUE;
 }
@@ -210,7 +211,8 @@ void Single_Init() {
 		Coop_ObserverSpawn_NextLink = GameHookChain_ObserverSpawn;
 		GameHookChain_ObserverSpawn = Coop_ObserverSpawn;
 	}
-	GameHook_EquipPlayerHandle = Single_EquipPlayerHandle;
+	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
+	gamehook_chain_player_equip_handle = single_player_equip_handle;
 	GameHook_WinningCondition = Single_WinningCondition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
 	GameHook_DeathHandle = Single_DeathHandle;

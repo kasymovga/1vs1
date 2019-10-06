@@ -223,7 +223,7 @@ float conquest_WinningCondition()
 
 	one_of_team_cannot_spawn = FALSE;
 	score_winning_condition_helper(); // set worldstatus
-	if(inWarmupStage)
+	if(warmup_active)
 		return FALSE;
 
 	FOR_EACH_TEAMPLAYER(head)

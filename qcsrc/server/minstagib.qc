@@ -316,22 +316,21 @@ float minstagib_MirrorDamageHandle(entity attacker, entity inflictor, float mirr
 	return TRUE;
 }
 
-float minstagib_StartAmmoHandle(float use_ammunition) {
-	start_health = 100;
-	start_armorvalue = 0;
-	start_weapons = WEPBIT_MINSTANEX;
-	weapon_precache(WEP_MINSTANEX);
-	if (use_ammunition) {
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		if (g_minstagib_ammo_drop)
-			minstagib_ammo = TRUE;
-	} else 
-		start_items |= IT_UNLIMITED_AMMO;
+var float(void) minstagib_player_equip_handle_next;
+float(void) minstagib_player_equip_handle {
+	self.health = 100;
+	self.armorvalue = 0;
+	self.weapons = WEPBIT_MINSTANEX;
+	self.ammo_shells = 0;
+	self.ammo_nails = 0;
+	self.ammo_rockets = 0;
+	if not(start_items & IT_UNLIMITED_AMMO) {
+		self.ammo_cells = cvar("g_minstagib_ammo_start");
+	} else
+		self.ammo_cells = 0;
 
 	return TRUE;
 }
-
-float minstagib_WarmupStartAmmoHandle(float use_ammunition) { return TRUE; }
 
 var void() minstagib_ItemRespawnCountDown_NextLink;
 void minstagib_ItemRespawnCountDown() {
@@ -356,7 +355,10 @@ void minstagib_init() {
 	CACHE_CVAR(g_minstagib_nolaserdamage);
 	CACHE_CVAR(g_minstagib_health_drop);
 	CACHE_CVAR(g_minstagib_health_max);
+	if (g_minstagib_ammo_drop)
+		minstagib_ammo = TRUE;
 
+	weapon_precache(WEP_MINSTANEX);
 	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	if (g_minstagib_invis_alpha <= 0)
 		g_minstagib_invis_alpha = -1;
@@ -381,8 +383,8 @@ void minstagib_init() {
 	minstagib_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = minstagib_DamageForceModsSet;
 	GameHookChain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
-	GameHookChain_StartAmmoHandle = minstagib_StartAmmoHandle;
-	GameHookChain_WarmupStartAmmoHandle = minstagib_WarmupStartAmmoHandle;
+	minstagib_player_equip_handle_next = gamehook_chain_player_equip_handle;
+	gamehook_chain_player_equip_handle = minstagib_player_equip_handle;
 	minstagib_ItemRespawnCountDown_NextLink = GameHookChain_ItemRespawnCountDown;
 	GameHookChain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
 	GameHookChain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;

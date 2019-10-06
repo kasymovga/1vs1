@@ -209,13 +209,6 @@ void(void) world_static_init {
 
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_norecoil);
-	Warmup_Init();
-	CACHE_CVAR(g_warmup_limit);
-	CACHE_CVAR(g_warmup_allguns);
-	CACHE_CVAR(g_warmup_allow_timeout);
-	if not(inWarmupStage)
-		game_starttime = cvar("g_start_delay");
-
 	CACHE_CVAR(g_antilag_bullets);
 	CACHE_CVAR(g_casings);
 	CACHE_CVAR(g_projectiles_newton_style);
@@ -227,6 +220,10 @@ void(void) world_static_init {
 	CACHE_CVAR(spawn_debugview);
 	minstagib_init();
 	item_init();
+	warmup_init();
+	if not(warmup_active)
+		game_starttime = cvar("g_start_delay");
+
 	rune_init();
 	WalkieTalkie_Init();
 	Akimbo_Init();
@@ -831,7 +828,7 @@ void() world_check_rules {
 	fraglimit = cvar("fraglimit");
 	leadlimit = cvar("leadlimit");
 
-	if(inWarmupStage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
+	if(warmup_active || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
 		if(timelimit > 0)
 			timelimit = 0; // timelimit is not made for warmup
@@ -852,7 +849,7 @@ void() world_check_rules {
 	}
 
 	if (time < game_starttime + frametime) {
-		if (!inWarmupStage || time + 10 >= game_starttime) {
+		if (!warmup_active || time + 10 >= game_starttime) {
 			float f = game_starttime - time;
 			if (f >= 1) {
 				if (floor(f - frametime) != floor(f)) {
@@ -1180,16 +1177,6 @@ void StartFrame (void)
 	sys_ticrate = cvar("sys_ticrate");
 
 	skill = cvar("skill");
-
-	// if in warmup stage and limit for warmup is hit start match
-	if (inWarmupStage)
-	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
-	 || (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60))
-	{
-		ready_restart();
-		return;
-	}
-
 	world_create_frame();
 	world_check_rules();
 

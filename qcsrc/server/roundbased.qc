@@ -45,7 +45,7 @@ void Roundbased_ServerFrame()
 	if (gameover)
 		return;
 
-	if (inWarmupStage)
+	if (warmup_active)
 		return;
 
 	if (time < game_starttime)
@@ -218,7 +218,7 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	rb_enddelay = enddelay;
 	rb_startdelay = startdelay;
 	Roundbased_RestartTime = 0;
-	if (inWarmupStage)
+	if (warmup_active)
 		rb_after_warmup = TRUE;
 	else
 		round_warmup = game_starttime + rb_startdelay;

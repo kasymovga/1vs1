@@ -242,7 +242,7 @@ void damage_record_fires(entity attacker, float deathtype, float shots)
 {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
-	if not(inWarmupStage)
+	if not(warmup_active)
 	if(weaponid >= WEP_FIRST)
 	if(weaponid <= WEP_LAST)
 	{
@@ -270,7 +270,7 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 	if (targ.iscreature)
 	if (targ != attacker)
 	if (!teamplay || targ.team != attacker.team)
-	if not(inWarmupStage)
+	if not(warmup_active)
 	if(weaponid >= WEP_FIRST)
 	if(weaponid <= WEP_LAST)
 	{

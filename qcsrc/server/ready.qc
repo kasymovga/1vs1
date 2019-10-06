@@ -73,7 +73,7 @@ void(void) ready_restart_force {
 	ready_restart_happened = 1;
 	game_starttime = time + RESTART_COUNTDOWN;
 
-	Warmup_Finish();
+	warmup_finish();
 	//reset the .ready status of all players (also spectators)
 	FOR_EACH_CLIENTSLOT(e)
 		e.ready = 0;
