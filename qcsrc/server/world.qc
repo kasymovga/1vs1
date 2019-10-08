@@ -209,7 +209,6 @@ void(void) world_static_init {
 
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_norecoil);
-	CACHE_CVAR(g_antilag_bullets);
 	CACHE_CVAR(g_casings);
 	CACHE_CVAR(g_projectiles_newton_style);
 	CACHE_CVAR(g_balance_pause_fuel_regen);

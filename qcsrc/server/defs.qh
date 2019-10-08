@@ -20,7 +20,6 @@ float g_jetpack;
 float leadlimit;
 float g_maxpushtime;
 
-float g_antilag_bullets;
 float g_casings;
 float g_projectiles_newton_style;
 float g_balance_pause_fuel_regen;
