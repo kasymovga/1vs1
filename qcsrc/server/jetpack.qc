@@ -1,5 +1,6 @@
 entity jetpack_physics;
 float g_jetpack_attenuation;
+float g_balance_pause_fuel_regen;
 
 float(entity to, float sf) jetpack_physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_JETPACK);
@@ -71,6 +72,7 @@ void(void) jetpack_enable {
 	CACHE_CVAR(g_jetpack_maxspeed_up);
 	CACHE_CVAR(g_jetpack_fuel);
 	CACHE_CVAR(g_jetpack_attenuation);
+	CACHE_CVAR(g_balance_pause_fuel_regen);
 	physics_player_plug = physics_jetpack;
 	jetpack_player_effects_next_link = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = jetpack_player_effects;

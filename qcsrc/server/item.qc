@@ -2,7 +2,6 @@
 .float invincible_finished;
 .float invisibility_finished;
 float g_balance_pause_armor_rot;
-float g_balance_pause_fuel_regen;
 float g_balance_pause_fuel_rot;
 float g_balance_pause_health_regen;
 float g_balance_pause_health_rot;
@@ -1210,8 +1209,6 @@ void target_items_use (void)
 
 	if(activator.ammo_fuel > f0)
 		activator.pauserotfuel_finished = max(activator.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
-	else if(activator.ammo_fuel < f0)
-		activator.pauseregen_finished = max(activator.pauseregen_finished, time + g_balance_pause_fuel_regen);
 
 	if(activator.armorvalue > a0)
 		activator.pauserotarmor_finished = max(activator.pauserothealth_finished, time + g_balance_pause_health_rot);
@@ -1336,7 +1333,6 @@ voidfunc(string s) item_spawnfunc_for {
 void item_init()
 {
 	CACHE_CVAR(g_balance_pause_armor_rot);
-	CACHE_CVAR(g_balance_pause_fuel_regen);
 	CACHE_CVAR(g_balance_pause_fuel_rot);
 	CACHE_CVAR(g_balance_pause_health_regen);
 	CACHE_CVAR(g_balance_pause_health_rot);

@@ -21,7 +21,6 @@ float leadlimit;
 float g_maxpushtime;
 
 float g_casings;
-float g_balance_pause_fuel_regen;
 
 float sv_foginterval;
 float sv_world_scale;

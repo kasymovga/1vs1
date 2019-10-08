@@ -115,15 +115,8 @@ float weapon_hook(float req)
 			}
 		}
 
-		if(self.hook)
-		{
-			// if hooked, no bombs, and increase the timer
+		if(self.hook) // if hooked, no bombs, and increase the timer
 			self.hook_refire = max(self.hook_refire, time + g_balance_hook_primary_refire);
-
-			// hook also inhibits health regeneration, but only for 1 second
-			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_fuel_regen);
-		}
 
 		if(self.hook && self.hook.state == 1)
 		{
