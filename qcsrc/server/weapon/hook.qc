@@ -74,9 +74,6 @@ void(void) weapon_hook_attack2 {
 	gren.use = weapon_hook_explode2;
 	gren.touch = weapon_hook_touch2;
 	gren.velocity = '0 0 1' * g_balance_hook_secondary_speed;
-	if(g_projectiles_newton_style)
-		gren.velocity = gren.velocity + self.velocity;
-
 	gren.gravity = g_balance_hook_secondary_gravity;
 	weapon_setup_projectile_velocity(gren);
 }
