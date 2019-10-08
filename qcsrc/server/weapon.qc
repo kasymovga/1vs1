@@ -2,6 +2,7 @@
 
 float g_balance_weaponswitchdelay;
 float g_showweaponspawns;
+float g_projectiles_newton_style;
 float g_projectiles_newton_style_2_maxfactor;
 float g_projectiles_newton_style_2_minfactor;
 float g_weaponratefactor;
@@ -1641,6 +1642,7 @@ void() weapon_init {
 	CACHE_CVAR(g_shootfromcenter);
 	CACHE_CVAR(g_shootfromclient);
 	CACHE_CVAR(g_shootfromeye);
+	CACHE_CVAR(g_projectiles_newton_style);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));
