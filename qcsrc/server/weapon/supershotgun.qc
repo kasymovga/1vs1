@@ -136,11 +136,10 @@ void weapon_supershotgun_attack(float secondary, float barrels, float ballistic)
 		self.ammo_shells = self.ammo_shells - a;
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
+	if not(secondary)
+		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
-	if (g_casings >= 1)
-		for (sc = 0; sc < a; sc = sc + 1)
-			casing_spawn (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
-
+	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 	// muzzle flash for 1st person view
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3"); // precision set below

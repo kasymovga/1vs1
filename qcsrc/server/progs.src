@@ -173,6 +173,7 @@ team.qh
 tdm.qh
 mapvote.qh
 stdproc.qh
+casing.qh
 centerprint.qc
 sound.qc
 announce.qc

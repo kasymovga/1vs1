@@ -1,3 +1,5 @@
+float g_casings;
+
 float(entity to, float sf) casing_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);
 	WriteByte(MSG_ENTITY, self.state); // actually type
@@ -12,6 +14,9 @@ float(entity to, float sf) casing_send {
 }
 
 void(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner) casing_spawn {
+	if (casingtype > g_casings)
+		return;
+
 	entity e;
 	vector org;
 	org = self.origin + self.view_ofs + self.weaponentity.spawnorigin_x * v_forward - self.weaponentity.spawnorigin_y * v_right + self.weaponentity.spawnorigin_z * v_up;
@@ -22,4 +27,8 @@ void(vector vel, float randomvel, vector ang, vector avel, float randomavel, flo
 	e.angles = ang;
 	e.oldorigin_x = net_compress_vec(e.velocity);
 	net_link_entity(e, TRUE, 0.2, casing_send); // 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
+}
+
+void(void) casing_init {
+	CACHE_CVAR(g_casings);
 }

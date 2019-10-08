@@ -478,7 +478,7 @@ void ClientConnect (void)
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 
 	bprint ("^4", self.netname, "^4 connected\n");
-	stuffcmd(self, strcat(clientstuff, "\n"));
+	stuffcmd(self, strcat(client_stuff, "\n"));
 	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");
 	client_fix_cvars(self);

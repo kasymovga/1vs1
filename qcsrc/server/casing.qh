@@ -1,0 +1,2 @@
+void(void) casing_init;
+void(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner) casing_spawn;

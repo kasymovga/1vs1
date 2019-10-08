@@ -209,7 +209,6 @@ void(void) world_static_init {
 
 	CACHE_CVAR(sv_foginterval);
 	CACHE_CVAR(g_norecoil);
-	CACHE_CVAR(g_casings);
 	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
 	CACHE_CVAR(g_maxpushtime);
@@ -240,6 +239,7 @@ void(void) world_static_init {
 	jetpack_init();
 	laser_init();
 	teleport_init();
+	casing_init();
 	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");

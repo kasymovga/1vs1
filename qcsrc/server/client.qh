@@ -24,3 +24,4 @@ float client_entity_from_argv_firsttoken;
 entity(float tokens, float idx) client_entity_from_argv;
 void(entity pl, float tstart, float dt) client_write_recordmarker;
 void(entity e) client_intermission;
+string client_stuff;

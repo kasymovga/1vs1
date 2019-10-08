@@ -33,9 +33,7 @@ void marine_hunt() {
 		bullet_end();
 		pointparticles(particleeffectnum("uzi_muzzleflash"), _shotorg, _shotdir * 1000, g_balance_shotgun_primary_ammo);
 		// casing code
-		if (g_casings >= 1)
-			casing_spawn (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
-
+		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
 		if (self.cnt)
 			self.attack_finished_single = max(self.attack_finished_single, time - frametime) + 0.1;
 		else

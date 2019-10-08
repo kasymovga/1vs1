@@ -20,8 +20,6 @@ float g_jetpack;
 float leadlimit;
 float g_maxpushtime;
 
-float g_casings;
-
 float sv_foginterval;
 float sv_world_scale;
 
@@ -289,7 +287,6 @@ float independent_players;
 #define MAKE_INDEPENDENT_PLAYER(e) ((e).solid = SOLID_TRIGGER)
 // we're using + here instead of , because fteqcc sucks
 
-string clientstuff;
 .float phase;
 .float weapons;
 .float pressedkeys;
