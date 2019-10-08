@@ -620,30 +620,14 @@ void nadget_PlayerPreThink(void) {
 
     nadget_Shield_PlayerFrame();
     nadget_Cloak_PlayerFrame();
-
-#if 0
-    if(roundstate == ROUNDSTATE_OVER) {
-        self.hg_power = 0;
-        return;
-    }
-#endif
-
-	float mayfire = (!g_grappling_hook || (!self.hook/* && !CustomHGHookButton(self) */)) || self.hg_power;
-
-#if 0
-    if(time < self.hg_plasmalock || PLAYER_DEAD(self))
-        mayfire = FALSE;
-#endif
-	if not(player_can_fire(self, FALSE))
-		mayfire = FALSE;
-
+	float mayfire = player_can_fire(self, FALSE);
 	float held, isalt;
 	held = self.(g_nadgets_detonatelaunches ? hg_detonatepressed : BUTTON_USE);
 
     float n_type;
 
     if(!held) {
-        held = (self.BUTTON_NADGET2 || (!g_grappling_hook && self.BUTTON_USE));
+        held = self.BUTTON_NADGET2;
         if(held) {
             isalt = TRUE;
         }

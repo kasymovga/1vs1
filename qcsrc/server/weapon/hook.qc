@@ -81,14 +81,7 @@ void(void) weapon_hook_attack2 {
 	weapon_setup_projectile_velocity(gren);
 }
 
-void spawnfunc_weapon_hook (void)
-{
-	if(g_grappling_hook) // offhand hook
-	{
-		item_start_failed = TRUE;
-		remove(self);
-		return;
-	}
+void spawnfunc_weapon_hook (void) {
 	weapon_defaultspawnfunc(WEP_HOOK);
 }
 

@@ -5,7 +5,7 @@
         Contact: Wazat1@gmail.com
 
 ============================================*/
-
+float g_grappling_hook;
 float g_balance_grapplehook_break_damage;
 float g_balance_grapplehook_damage;
 float g_balance_grapplehook_damage_interval;
@@ -435,6 +435,16 @@ float(entity to, float sf) hook_physics_send {
 	return TRUE;
 }
 
+var void(void) hook_entity_pre_spawn_next;
+void(void) hook_entity_pre_spawn {
+	if (g_grappling_hook)
+	if (self.classname == "weapon_hook") {
+		remove(self);
+		return;
+	}
+	hook_entity_pre_spawn_next();
+}
+
 float hook_init_done;
 entity hook_physics_sender;
 void(float force) hook_init {
@@ -475,4 +485,6 @@ void(float force) hook_init {
 	GameHookChain_PlayerPreThink = hook_PlayerPreThink;
 	hook_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = hook_PlayerClear;
+	hook_entity_pre_spawn_next = GameHookChain_EntityPreSpawn;
+	GameHookChain_EntityPreSpawn = hook_entity_pre_spawn;
 }
