@@ -6,6 +6,7 @@ float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
 float sv_maxconnects_per_address;
+float sv_foginterval;
 float g_buttons_hookuse_swap;
 
 void(entity to) client_set_view {
@@ -751,6 +752,7 @@ void() client_initialize {
 	CACHE_CVAR(sv_maxidle_forcespec);
 	CACHE_CVAR(sv_maxconnects_per_address);
 	CACHE_CVAR(g_buttons_hookuse_swap);
+	CACHE_CVAR(sv_foginterval);
 	if (g_buttons_hookuse_swap) {
 		BUTTON_HOOK = buttonuse;
 		BUTTON_USE = button6;

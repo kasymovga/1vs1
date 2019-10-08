@@ -20,7 +20,6 @@ float g_jetpack;
 float leadlimit;
 float g_maxpushtime;
 
-float sv_foginterval;
 float sv_world_scale;
 
 float spawn_debug;
