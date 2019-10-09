@@ -1,0 +1,2 @@
+float slowmo;
+void(void) slowmo_update;

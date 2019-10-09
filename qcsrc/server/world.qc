@@ -1106,11 +1106,6 @@ void(void) world_create_frame {
 	self = oldself;
 }
 
-void() slowmo_update {
-	slowmo = GameHookChain_TempoMod(1);
-	cvar_set("slowmo", ftos(slowmo));
-}
-
 /*
 =============
 StartFrame

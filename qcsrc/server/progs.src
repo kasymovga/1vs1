@@ -92,7 +92,7 @@ nexball.qh
 timeout.qh
 centerprint.qh
 progressbar.qh
-
+slowmo.qh
 item.qh
 powerup.qh
 backpack.qh
@@ -185,7 +185,7 @@ announce.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
 waypointsprites.qc
-
+slowmo.qc
 bot/bot.qc
 random.qc
 net.qc

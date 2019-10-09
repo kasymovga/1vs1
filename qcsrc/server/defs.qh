@@ -194,8 +194,6 @@ float blockSpectators; //if set, new or existing spectators or observers will be
 
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
-float slowmo;
-void() slowmo_update;
 float sys_ticrate; // gets initialised in worlspawn, saves the value from cvar("sys_ticrate")
 .float spawnshieldtime;
 
