@@ -2150,7 +2150,6 @@ void(entity spot) player_spawn {
 	self.death_time = 0;
 	self.dead_frame = 0;
 	self.alpha = 0;
-	self.scale = sv_world_scale;
 	self.fade_time = 0;
 	self.pain_frame = 0;
 	self.pain_finished = 0;

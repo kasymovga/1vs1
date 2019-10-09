@@ -8,3 +8,4 @@ void(void) map_list_init;
 void() map_list_shuffle;
 float() map_do_next_override;
 void map_goto_next();
+string map_description;

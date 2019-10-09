@@ -699,11 +699,6 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 				return;
 			}
 		}
-		if (self.scale)
-			self.scale = self.scale * sv_world_scale;
-		else
-			self.scale = sv_world_scale;
-
 		if(self.spawnflags & 1)
 			self.noalign = 1;
 		if (self.noalign)
@@ -717,9 +712,9 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			setorigin(self, self.origin + '0 0 1');
 			// set item size before we spawn a spawnfunc_waypoint
 			if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 48' * sv_world_scale);
+				setsize (self, '-16 -16 0', '16 16 48');
 			else
-				setsize (self, '-16 -16 0' * sv_world_scale, '16 16 32' * sv_world_scale);
+				setsize (self, '-16 -16 0', '16 16 32');
 			// note entity_droptofloor returns FALSE if stuck/or would fall too far
 			entity_droptofloor();
 			waypoint_spawnforitem(self);

@@ -20,10 +20,6 @@ float g_jetpack;
 float leadlimit;
 float g_maxpushtime;
 
-float sv_world_scale;
-
-string map_description;
-
 entity	activator;
 string	string_null;
 const var void(void)	func_null;

@@ -349,16 +349,6 @@ void(void) world_init {
 	world.mins = world_min;
 	world.maxs = world_max;
 	gametype_init();
-	sv_world_scale = cvar("sv_world_scale");
-	if (sv_world_scale <= 0)
-		sv_world_scale = 1;
-
-	PL_VIEW_OFS = '0 0 35' * sv_world_scale;
-	PL_MIN = '-16 -16 -24' * sv_world_scale;
-	PL_MAX = '16 16 45' * sv_world_scale;
-	PL_CROUCH_VIEW_OFS = '0 0 15' * sv_world_scale;
-	PL_CROUCH_MIN = '-16 -16 -24' * sv_world_scale;
-	PL_CROUCH_MAX = '16 16 25' * sv_world_scale;
 	dlc_init();
 	// needs to be done so early as they would still spawn
 	weapon_register_weapons();
