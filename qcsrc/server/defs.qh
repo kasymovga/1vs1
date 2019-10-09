@@ -22,9 +22,6 @@ float g_maxpushtime;
 
 float sv_world_scale;
 
-float spawn_debug;
-float spawn_debugview;
-
 string map_description;
 
 entity	activator;

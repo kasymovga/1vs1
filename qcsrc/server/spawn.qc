@@ -116,22 +116,6 @@ entity(entity firstspot, entity playerlist, float mindist, float teamcheck) spaw
 	for(spot = firstspot; spot; spot = spot.chain)
 	{
 		spot.SPAWNPOINT_SCORE = spawn_score(spot, playerlist, teamcheck);
-
-		if(spawn_debugview)
-		{
-			setmodel(spot, "models/runematch/rune.mdl");
-			if(spot.SPAWNPOINT_SCORE < mindist)
-			{
-				spot.colormod = '1 0 0';
-				spot.scale = 1;
-			}
-			else
-			{
-				spot.colormod = '0 1 0';
-				spot.scale = spot.SPAWNPOINT_SCORE / mindist;
-			}
-		}
-
 		if(spot.SPAWNPOINT_SCORE >= 0) // spawning allowed here
 		{
 			if(spot.SPAWNPOINT_SCORE < mindist)
@@ -222,24 +206,9 @@ entity (float anypoint) spawn_select {
 		else
 			spot = spawn_weighted_point(firstspot, 1, 5000, 5); // chooses a far far away spawnpoint
 	}
-	if(spawn_debugview)
-	{
-		print("spot mindistance: ", ftos(spot.SPAWNPOINT_SCORE), "\n");
-
-		entity e;
-		if(teamcheck)
-			for(e = firstspot; e; e = e.chain)
-				if(e.team != teamcheck)
-					error("invalid spawn found");
+	if (!spot) {
+		return world; // team can't spawn any more, because of actions of other team
 	}
-	if (!spot)
-	{
-		if(spawn_debug)
-			map_goto_next();
-		else
-			return world; // team can't spawn any more, because of actions of other team
-	}
-
 	return spot;
 }
 

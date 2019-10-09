@@ -211,8 +211,6 @@ void(void) world_static_init {
 	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
 	CACHE_CVAR(g_maxpushtime);
-	CACHE_CVAR(spawn_debug);
-	CACHE_CVAR(spawn_debugview);
 	minstagib_init();
 	item_init();
 	warmup_init();
@@ -1178,15 +1176,6 @@ void StartFrame (void)
 
 	GameHookChain_ServerFrame();
 	bot_serverframe();
-
-	if(spawn_debugview)
-	{
-		random_selection_init();
-		for(self = world; (self = find(self, classname, "player")); )
-			random_selection_add(self, 0, string_null, 1, 0);
-		self = random_selection_chosen_ent;
-		spawn_select(0);
-	}
 }
 
 string gametype_patterns() {

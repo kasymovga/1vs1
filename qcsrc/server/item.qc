@@ -738,21 +738,6 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			return;
 		}
 		*/
-
-		if(spawn_debug >= 2)
-		{
-			entity otheritem;
-			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
-			{
-				if(otheritem.is_item)
-				{
-					print("XXX Found duplicated item: ", itemname, vtos(self.origin));
-					print(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
-					error("Mapper sucks.");
-				}
-			}
-			self.is_item = TRUE;
-		}
 		weaponsInMap |= weaponid;
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
