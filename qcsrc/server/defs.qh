@@ -161,7 +161,6 @@ string w_deathtypestring;
 string w_fragprefix;
 float w_deathtype;
 
-void(entity client, string s) centerprint_builtin = #73;
 .vector dest1, dest2;
 
 float gameover;
