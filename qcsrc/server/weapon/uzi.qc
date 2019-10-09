@@ -47,12 +47,7 @@ void(float deathtype) weapon_uzi_attack {
 
 	bullet_begin(g_balance_uzi_speed);
 	weapon_setup_shot (self, 0, "weapons/uzi_fire.wav", 1);
-	if (!g_norecoil)
-	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
-	}
-
+	weapon_shake(1);
 	// this attack_finished just enforces a cooldown at the end of a burst
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 

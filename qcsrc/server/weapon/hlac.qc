@@ -42,11 +42,8 @@ void(void) weapon_hlac_attack {
         spread = spread * g_balance_hlac_primary_spread_crouchmod;
 
 	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_shake(1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-	if (!g_norecoil) {
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
-	}
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(missile, w_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
@@ -84,14 +81,10 @@ void(void) weapon_hlac_attack2 {
         self.ammo_cells = self.ammo_cells - g_balance_hlac_secondary_ammo;
     }
 	weapon_setup_shot(self, 3, "weapons/lasergun_fire.wav", 1);
+	weapon_shake(1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
     for(i = g_balance_hlac_secondary_shots; i > 0; --i)
         weapon_hlac_attack2f();
-
-	if (!g_norecoil) {
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
-	}
 }
 
 // weapon frames

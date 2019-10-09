@@ -207,7 +207,6 @@ void(void) world_static_init {
 	if(sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
-	CACHE_CVAR(g_norecoil);
 	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
 	CACHE_CVAR(g_maxpushtime);

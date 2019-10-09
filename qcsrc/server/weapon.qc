@@ -19,6 +19,7 @@ float g_akimbo_use_left_hand;
 float g_shootfromcenter;
 float g_shootfromclient;
 float g_shootfromeye;
+float g_norecoil;
 
 vector weapon_offset = '0 -10 0';
 vector weapon_adjust = '10 0 -15';
@@ -1412,6 +1413,11 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	}
 }
 
+void(float r) weapon_shake {
+	if not(g_norecoil)
+		self.punchangle = self.punchangle + '1 1 0' * r * (random() - 0.5);
+}
+
 vector weapon_calculate_projectile_velocity(vector pvelocity, vector mvelocity)
 {
 	vector mdirection;
@@ -1643,6 +1649,7 @@ void() weapon_init {
 	CACHE_CVAR(g_shootfromclient);
 	CACHE_CVAR(g_shootfromeye);
 	CACHE_CVAR(g_projectiles_newton_style);
+	CACHE_CVAR(g_norecoil);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));

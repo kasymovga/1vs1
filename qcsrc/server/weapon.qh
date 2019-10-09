@@ -63,6 +63,7 @@ void(entity missile) weapon_setup_projectile_velocity;
 vector weapon_shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active);
 #define weapon_setup_shot(ent,recoil,snd,maxhits) weapon_setup_shotdir(ent, v_forward, recoil, snd, maxhits)
 void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir;
+void(float r) weapon_shake;
 float(entity e) weapon_best;
 float(float w) weapon_throwable;
 string(entity own, float wpn, float doreduce, vector org, vector velo) weapon_throw_new;
