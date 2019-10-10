@@ -194,7 +194,6 @@ float sys_ticrate; // gets initialised in worlspawn, saves the value from cvar("
 .entity flagcarried;
 
 .float playerid;
-float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .vector spawnorigin;

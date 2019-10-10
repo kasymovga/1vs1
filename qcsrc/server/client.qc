@@ -425,6 +425,7 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
+float client_playerid_last;
 void ClientConnect (void)
 {
 	if not(self.flags & FL_CLIENT) {
@@ -473,7 +474,7 @@ void ClientConnect (void)
 		}
 	}
 
-	self.playerid = (playerid_last = playerid_last + 1);
+	self.playerid = (client_playerid_last = client_playerid_last + 1);
 	chat_bubble_spawn();
 
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
