@@ -143,10 +143,10 @@ void weapon_fireball_attack2()
 
 	weapon_setup_shot(self, 2, "weapons/fireball_fire2.wav", 1);
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 
 	proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
-	projectile_setup(proj, w_shotorg, WEP_FIREBALL | HITTYPE_SECONDARY, g_balance_fireball_secondary_damage,
+	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL | HITTYPE_SECONDARY, g_balance_fireball_secondary_damage,
 			g_balance_fireball_secondary_edgedamage, g_balance_fireball_secondary_radius, g_balance_fireball_secondary_force);
 
 	proj.pushltime = time + g_balance_fireball_secondary_lifetime;
@@ -159,7 +159,7 @@ void weapon_fireball_attack2()
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_fireball_secondary_damageforcescale;
 	proj.movetype = MOVETYPE_FLY;
-	proj.velocity = w_shotdir * g_balance_fireball_secondary_speed;
+	proj.velocity = weapon_shotdir * g_balance_fireball_secondary_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapon_fireball_touchexplode;
 }
@@ -167,8 +167,8 @@ void weapon_fireball_attack2()
 void weapon_fireball_attack_effect(float i, vector f_diff)
 {
 	weapon_setup_shot(self, 0, "", 0);
-	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
-	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	weapon_shotorg += f_diff_x * v_up + f_diff_y * v_right;
+	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 }
 
 void weapon_fireball_attack2_frame4()
@@ -277,18 +277,18 @@ void weapon_fireball_attack1()
 			break;
 	}
 	weapon_setup_shot(self, 2, "weapons/fireball_fire.wav", 1);
-	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
-	w_shotorg = trace_endpos;
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	traceline(weapon_shotorg, weapon_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
+	weapon_shotorg = trace_endpos;
+	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
-	projectile_setup(proj, w_shotorg, WEP_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0);
+	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0);
 	proj.gravity = 1;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.touch = weapon_fireball_mine_touch;
 	proj.think = weapon_fireball_mine_think;
 	proj.nextthink = time;
 	proj.damageforcescale = g_balance_fireball_primary_damageforcescale;
-	proj.velocity = w_shotdir * g_balance_fireball_primary_speed + v_up * g_balance_fireball_primary_speed_up;
+	proj.velocity = weapon_shotdir * g_balance_fireball_primary_speed + v_up * g_balance_fireball_primary_speed_up;
 	proj.pushltime = time + g_balance_fireball_primary_lifetime;
 	weapon_setup_projectile_velocity(proj);
 }
@@ -352,37 +352,37 @@ float weapon_fireball(float req)
 		return self.ammo_rockets >= g_balance_fireball_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "should have used a smaller gun";
+		if(weapon_deathtype & HITTYPE_SECONDARY)
+			weapon_deathtypestring = "should have used a smaller gun";
 		else
-			w_deathtypestring = "forgot about some firemine";
+			weapon_deathtypestring = "forgot about some firemine";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
+		if(weapon_deathtype & HITTYPE_SECONDARY)
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
+			if(weapon_deathtype & HITTYPE_BOUNCE)
 			{
-				if(w_deathtype & HITTYPE_SPLASH) // BFG effect
+				if(weapon_deathtype & HITTYPE_SPLASH) // BFG effect
 				{
-					w_deathtypestring = "could not hide from #'s fireball";
+					weapon_deathtypestring = "could not hide from #'s fireball";
 				}
 				else // laser
 				{
-					w_deathtypestring = "saw the pretty lights of #'s fireball";
+					weapon_deathtypestring = "saw the pretty lights of #'s fireball";
 				}
 			}
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "got too close to #'s fireball";
+			else if(weapon_deathtype & HITTYPE_SPLASH)
+				weapon_deathtypestring = "got too close to #'s fireball";
 			else
-				w_deathtypestring = "tasted #'s fireball";
+				weapon_deathtypestring = "tasted #'s fireball";
 		}
 		else
 		{
-			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = "tried to catch #'s firemine";
+			if(weapon_deathtype & HITTYPE_HEADSHOT)
+				weapon_deathtypestring = "tried to catch #'s firemine";
 			else
-				w_deathtypestring = "fatefully ignored #'s firemine";
+				weapon_deathtypestring = "fatefully ignored #'s firemine";
 		}
 	}
 	else if (req == WR_RESETPLAYER)

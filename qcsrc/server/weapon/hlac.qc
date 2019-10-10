@@ -43,13 +43,13 @@ void(void) weapon_hlac_attack {
 
 	weapon_setup_shot (self, 3, "weapons/lasergun_fire.wav", 1);
 	weapon_shake(1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	projectile_setup(missile, w_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
+	projectile_setup(missile, weapon_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
 
 	missile.movetype = MOVETYPE_FLY;
-    missile.velocity = (w_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
+    missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
@@ -64,11 +64,11 @@ void(void) weapon_hlac_attack2f {
         spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	projectile_setup(missile, w_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_primary_damage,
+	projectile_setup(missile, weapon_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
 
 	missile.movetype = MOVETYPE_FLY;
-    missile.velocity = (w_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
+    missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
@@ -82,7 +82,7 @@ void(void) weapon_hlac_attack2 {
     }
 	weapon_setup_shot(self, 3, "weapons/lasergun_fire.wav", 1);
 	weapon_shake(1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
     for(i = g_balance_hlac_secondary_shots; i > 0; --i)
         weapon_hlac_attack2f();
 }
@@ -157,9 +157,9 @@ float weapon_hlac(float req)
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= g_balance_hlac_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "should have used a smaller gun";
+		weapon_deathtypestring = "should have used a smaller gun";
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "was cut down by";
+		weapon_deathtypestring = "was cut down by";
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_hlac_primary_ammo);

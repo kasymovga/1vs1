@@ -28,14 +28,14 @@ void(float issecondary) weapon_laser_attack {
 
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 	weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	if (issecondary)
-		laser_projectile(w_shotdir, g_balance_laser_secondary_speed,
+		laser_projectile(weapon_shotdir, g_balance_laser_secondary_speed,
 				g_balance_laser_secondary_damage, g_balance_laser_secondary_edgedamage,
 				g_balance_laser_secondary_radius, g_balance_laser_secondary_force,
 				FALSE, TRUE, g_balance_laser_secondary_lifetime);
 	else
-		laser_projectile(w_shotdir, g_balance_laser_primary_speed,
+		laser_projectile(weapon_shotdir, g_balance_laser_primary_speed,
 				g_balance_laser_primary_damage, g_balance_laser_primary_edgedamage,
 				g_balance_laser_primary_radius, g_balance_laser_primary_force,
 				FALSE, TRUE, g_balance_laser_primary_lifetime);
@@ -86,9 +86,9 @@ float weapon_laser(float req)
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "lasered himself to hell";
+		weapon_deathtypestring = "lasered himself to hell";
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
+		weapon_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_laser_primary_animtime);

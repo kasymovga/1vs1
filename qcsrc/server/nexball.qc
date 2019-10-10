@@ -763,7 +763,7 @@ void(float t) nexball_carrier_attack {
 		return;
 
 	weapon_setup_shot (self, 4, "nexball/shoot1.wav",0);
-	tracebox(w_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, w_shotorg, MOVE_WORLDONLY, world);
+	tracebox(weapon_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, weapon_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid) {
 		if(self.metertime)
 			self.metertime = 0; // Shot failed, hide the power meter
@@ -781,7 +781,7 @@ void(float t) nexball_carrier_attack {
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
-	nexball_drop_ball (ball, w_shotorg, weapon_calculate_projectile_velocity(self.velocity, w_shotdir * g_nexball_primary_speed * mul));
+	nexball_drop_ball (ball, weapon_shotorg, weapon_calculate_projectile_velocity(self.velocity, weapon_shotdir * g_nexball_primary_speed * mul));
 	//TODO: use the speed_up cvar too ??
 }
 

@@ -39,9 +39,9 @@ void(void) weapon_hagar_attack {
 		self.ammo_rockets = self.ammo_rockets - g_balance_hagar_primary_ammo;
 
 	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
-	projectile_setup(missile, w_shotorg, WEP_HAGAR, g_balance_hagar_primary_damage,
+	projectile_setup(missile, weapon_shotorg, WEP_HAGAR, g_balance_hagar_primary_damage,
 			g_balance_hagar_primary_edgedamage, g_balance_hagar_primary_radius, g_balance_hagar_primary_force);
 
 	missile.touch = projectile_touch_explode;
@@ -49,7 +49,7 @@ void(void) weapon_hagar_attack {
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_primary_lifetime;
 	missile.movetype = MOVETYPE_FLY;
-	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
+	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
 	weapon_setup_projectile_velocity(missile);
 }
 
@@ -60,9 +60,9 @@ void(void) weapon_hagar_attack2 {
 
 	weapon_setup_shot (self, 2, "weapons/hagar_fire.wav", 1);
 	//weapon_setup_shot (self, FALSE, 2, "weapons/hagar_fire.wav"); // TODO: move model a little to the right
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("hagar_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE, self);
-	projectile_setup(missile, w_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
+	projectile_setup(missile, weapon_shotorg, WEP_HAGAR | HITTYPE_SECONDARY, g_balance_hagar_secondary_damage,
 			g_balance_hagar_secondary_edgedamage, g_balance_hagar_secondary_radius, g_balance_hagar_secondary_force);
 
 	missile.touch = weapon_hagar_touch2;
@@ -71,7 +71,7 @@ void(void) weapon_hagar_attack2 {
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_secondary_lifetime_min + random() * g_balance_hagar_secondary_lifetime_rand;
 	missile.movetype = MOVETYPE_BOUNCEMISSILE;
-	missile.velocity = (w_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
+	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
 }
 
@@ -116,13 +116,13 @@ float weapon_hagar(float req)
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_rockets >= g_balance_hagar_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "played with tiny rockets";
+		weapon_deathtypestring = "played with tiny rockets";
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
-			w_deathtypestring = "hoped #'s missiles wouldn't bounce";
+		if(weapon_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
+			weapon_deathtypestring = "hoped #'s missiles wouldn't bounce";
 		else // unchecked: SPLASH, SECONDARY
-			w_deathtypestring = "was pummeled by";
+			weapon_deathtypestring = "was pummeled by";
 	}
 	else if (req == WR_CVAR_CACHE)
 	{

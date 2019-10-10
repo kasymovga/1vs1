@@ -5,12 +5,12 @@ void walker_idle();
 
 void walker_bullet() {
     entity flash;
-	w_shotdir = normalize(self.enemy.origin - w_shotorg);
-	w_shotdir_x = v_forward_x;
-	w_shotdir_y = v_forward_y;
+	weapon_shotdir = normalize(self.enemy.origin - weapon_shotorg);
+	weapon_shotdir_x = v_forward_x;
+	weapon_shotdir_y = v_forward_y;
     sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 	bullet_begin(5000);
-    bullet(w_shotorg, w_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 0);
+    bullet(weapon_shotorg, weapon_shotdir, 0.1, 5000, 5, self.dmg_edge * 0.1, 0, self.dmg_force * 0.1, DEATH_TURRET, particleeffectnum("tr_bullet"), 1, 0);
     bullet_end();
 	flash = spawn();
 	setmodel(flash, "models/uziflash.md3");
@@ -80,21 +80,21 @@ void walker_hunt() {
 		if (self.cnt < 0.5 && v_forward * normalize(self.enemy.origin - self.origin) > 0.75) {
 			self.bulletcounter = self.bulletcounter + 0.1;
 			//Minigun
-			w_shotorg = self.origin + v_forward * 32;
+			weapon_shotorg = self.origin + v_forward * 32;
 			anim_set(self.weaponentity, '0 12 12', TRUE, TRUE, FALSE);
 			anim_update(self.weaponentity);
 			walker_bullet();
 		} else {
 			//Rockets
-			w_shotorg = self.origin + v_up * 80;
+			weapon_shotorg = self.origin + v_up * 80;
 			if (math_mod(self.count, 2))
-				w_shotorg = w_shotorg + v_right * 16;
+				weapon_shotorg = weapon_shotorg + v_right * 16;
 			else
-				w_shotorg = w_shotorg - v_right * 16;
+				weapon_shotorg = weapon_shotorg - v_right * 16;
 
 			self.bulletcounter = self.bulletcounter + 0.5;
 			entity missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self);
-			projectile_setup(missile, w_shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
+			projectile_setup(missile, weapon_shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
 			missile.classname = "walker_rocket";
 			missile.takedamage = DAMAGE_YES;
 			missile.damageforcescale = 1;

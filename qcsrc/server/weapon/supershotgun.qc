@@ -118,24 +118,24 @@ void weapon_supershotgun_attack(float secondary, float barrels, float ballistic)
 		hor_spread = 0;
 		hor_shift = spread * -0.25;
 	}
-	shotdir_shifted = w_shotdir + v_right * hor_shift;
+	shotdir_shifted = weapon_shotdir + v_right * hor_shift;
 	if (ballistic)
 	{
 		for (sc = 0; sc < b; sc = sc + 1)
-			bullet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
+			bullet(weapon_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s, 5,
 					d, 0, f, dtype, particleeffectnum("tr_bullet"), g, bc);
 		bullet_end();
 	}
 	else
 	{
 		for (sc = 0; sc < b; sc = sc + 1)
-			weapon_supershotgun_pellet(w_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s + (s * random() * spread * 5),
+			weapon_supershotgun_pellet(weapon_shotorg, shotdir_shifted + hor_spread * (random() - 0.5) * v_right, spread, s + (s * random() * spread * 5),
 					d, f, dtype, g, bounces);
 	}
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_shells = self.ammo_shells - a;
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_primary_ammo);
 	if not(secondary)
 		casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
@@ -198,10 +198,10 @@ float weapon_supershotgun(float req)
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_shells >= g_balance_supershotgun_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "used C++ and shot the leg out";
+		weapon_deathtypestring = "used C++ and shot the leg out";
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
+		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	}
 	else if (req == WR_CVAR_CACHE)
 	{

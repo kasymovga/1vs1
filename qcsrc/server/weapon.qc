@@ -1354,8 +1354,8 @@ void() weapon_ready {
 	weapon_thinkf(WFRAME_IDLE, 1000000, weapon_ready);
 }
 
-// this function calculates w_shotorg and w_shotdir based on the weapon model
-// offset, trueaim and antilag, and won't put w_shotorg inside a wall.
+// this function calculates weapon_shotorg and weapon_shotdir based on the weapon model
+// offset, trueaim and antilag, and won't put weapon_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
 .float lastshot_time;
 void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir {
@@ -1377,15 +1377,15 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	vecs_visual_y = -vecs_visual_y;
 
 	dv = v_right * vecs_y + v_up * vecs_z;
-	w_shotorg = ent.origin + ent.view_ofs;
+	weapon_shotorg = ent.origin + ent.view_ofs;
 
-	w_shotorg_visual = w_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 16;
+	weapon_shotorg_visual = weapon_shotorg + (v_right * vecs_visual_y + v_up * vecs_visual_z) + v_forward * 16;
 
-	w_shotorg = w_shotorg + dv;
+	weapon_shotorg = weapon_shotorg + dv;
 
 	// calculate the shotdir from the chosen shotorg
 	if (Akimbo_Active(ent))
-		w_shotdir = s_forward;
+		weapon_shotdir = s_forward;
 	else
 	{
 		float dphitcontentsmask_save = ent.dphitcontentsmask;
@@ -1396,8 +1396,8 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 
 		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
 		ent.dphitcontentsmask = dphitcontentsmask_save;
-		w_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-		w_shotdir = normalize(w_shotpoint - w_shotorg);
+		weapon_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+		weapon_shotdir = normalize(weapon_shotpoint - weapon_shotorg);
 	}
 	if (!g_norecoil)
 		ent.punchangle_x = recoil * -1;
@@ -1592,8 +1592,8 @@ void(entity flash, vector offset) weapon_attach_to_shotorg {
 	flash.angles_z = random() * 360;
 	if(sv_qcweaponanimation)
 	{
-		setorigin(flash, w_shotorg + w_shotdir * 50);
-		flash.angles = vectoangles(w_shotdir);
+		setorigin(flash, weapon_shotorg + weapon_shotdir * 50);
+		flash.angles = vectoangles(weapon_shotdir);
 		flash.angles_z = random() * 360;
 	}
 	else

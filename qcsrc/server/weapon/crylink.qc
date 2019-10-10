@@ -58,10 +58,10 @@ void(void) weapon_crylink_attack {
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_crylink_primary_shots);
+	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_primary_shots);
 	while (counter < g_balance_crylink_primary_shots) {
 		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
-		projectile_setup(proj, w_shotorg, WEP_CRYLINK, g_balance_crylink_primary_damage,
+		projectile_setup(proj, weapon_shotorg, WEP_CRYLINK, g_balance_crylink_primary_damage,
 				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force);
 
 		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
@@ -75,8 +75,8 @@ void(void) weapon_crylink_attack {
 			s_z = v_forward_y;
 		}
 		s = s * g_balance_crylink_primary_spread;
-		proj.velocity = (w_shotdir + right * s_y + up * s_z) * g_balance_crylink_primary_speed;
-//		proj.velocity = (w_shotdir + randomvec() * g_balance_crylink_primary_spread) * g_balance_crylink_primary_speed;
+		proj.velocity = (weapon_shotdir + right * s_y + up * s_z) * g_balance_crylink_primary_speed;
+//		proj.velocity = (weapon_shotdir + randomvec() * g_balance_crylink_primary_spread) * g_balance_crylink_primary_speed;
 		weapon_setup_projectile_velocity(proj);
 		proj.touch = weapon_crylink_touch;
 		proj.think = stdproc_remove;
@@ -99,15 +99,15 @@ void(void) weapon_crylink_attack2 {
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
 
 	weapon_setup_shot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_crylink_secondary_shots);
+	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_secondary_shots);
 	while (counter < g_balance_crylink_secondary_shots) {
 		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
-		projectile_setup(proj, w_shotorg, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
+		projectile_setup(proj, weapon_shotorg, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
 				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force);
 
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
-		proj.velocity = (w_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
+		proj.velocity = (weapon_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
 		weapon_setup_projectile_velocity(proj);
 		proj.touch = weapon_crylink_touch;
 		proj.think = stdproc_remove;
@@ -163,16 +163,16 @@ float weapon_crylink(float req)
 		return self.ammo_cells >= g_balance_crylink_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = "succeeded at self-destructing himself with the Crylink";
+		weapon_deathtypestring = "succeeded at self-destructing himself with the Crylink";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_BOUNCE)
-			w_deathtypestring = "could not hide from #'s Crylink"; // unchecked: SPLASH (SECONDARY can't be)
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "was too close to #'s Crylink"; // unchecked: SECONDARY
+		if(weapon_deathtype & HITTYPE_BOUNCE)
+			weapon_deathtypestring = "could not hide from #'s Crylink"; // unchecked: SPLASH (SECONDARY can't be)
+		else if(weapon_deathtype & HITTYPE_SPLASH)
+			weapon_deathtypestring = "was too close to #'s Crylink"; // unchecked: SECONDARY
 		else
-			w_deathtypestring = "took a close look at #'s Crylink"; // unchecked: SECONDARY
+			weapon_deathtypestring = "took a close look at #'s Crylink"; // unchecked: SECONDARY
 	}
 	else if (req == WR_CVAR_CACHE)
 	{

@@ -65,7 +65,7 @@ void(void) weapon_hook_attack2 {
 
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
-	projectile_setup(gren, w_shotorg, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
+	projectile_setup(gren, weapon_shotorg, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
 			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force);
 
 	gren.movetype = MOVETYPE_TOSS;
@@ -203,13 +203,13 @@ float weapon_hook(float req)
 		return self.ammo_cells >= g_balance_hook_secondary_ammo;
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE) {
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "has run into #'s gravity bomb";
+		if(weapon_deathtype & HITTYPE_SECONDARY)
+			weapon_deathtypestring = "has run into #'s gravity bomb";
 		else {
-			w_deathtypestring = "was hooked by";
-			w_fragprefix = "^xF44HOOK";
+			weapon_deathtypestring = "was hooked by";
+			weapon_fragprefix = "^xF44HOOK";
 		}
 	} else if (req == WR_RESETPLAYER)
 	{

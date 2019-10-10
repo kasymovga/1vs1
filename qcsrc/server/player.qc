@@ -543,7 +543,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	float p, w;
 	s = targ.netname;
 	a = attacker.netname;
-	w_fragprefix = "";
+	weapon_fragprefix = "";
 	if (targ == attacker)
 	{
 		if not(clienttype(attacker) == CLIENTTYPE_REAL)
@@ -565,10 +565,10 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		w = DEATH_WEAPONOF(deathtype);
 		if(WEP_VALID(w))
 		{
-			w_deathtypestring = "couldn't resist the urge to self-destruct";
-			w_deathtype = deathtype;
+			weapon_deathtypestring = "couldn't resist the urge to self-destruct";
+			weapon_deathtype = deathtype;
 			weapon_action(w, WR_SUICIDEMESSAGE);
-			bprint("^1", s, "^1 ", w_deathtypestring, "\n");
+			bprint("^1", s, "^1 ", weapon_deathtypestring, "\n");
 		}
 		else if (deathtype == DEATH_KILL)
 			bprint ("^1",s, "^1 couldn't take it anymore\n");
@@ -658,14 +658,14 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			w = DEATH_WEAPONOF(deathtype);
 			if(WEP_VALID(w))
 			{
-				w_deathtypestring = "was blasted by";
-				w_deathtype = deathtype;
+				weapon_deathtypestring = "was blasted by";
+				weapon_deathtype = deathtype;
 				weapon_action(w, WR_KILLMESSAGE);
-				p = strstrofs(w_deathtypestring, "#", 0);
+				p = strstrofs(weapon_deathtypestring, "#", 0);
 				if(p < 0)
-					bprint("^1", s, "^1 ", w_deathtypestring, " ", a, "\n");
+					bprint("^1", s, "^1 ", weapon_deathtypestring, " ", a, "\n");
 				else
-					bprint("^1", s, "^1 ", substring(w_deathtypestring, 0, p), a, "^1", substring(w_deathtypestring, p+1, strlen(w_deathtypestring) - (p+1)), "\n");
+					bprint("^1", s, "^1 ", substring(weapon_deathtypestring, 0, p), a, "^1", substring(weapon_deathtypestring, p+1, strlen(weapon_deathtypestring) - (p+1)), "\n");
 			}
 			else if (deathtype == DEATH_DROWN)
 				bprint ("^1",s, "^1 was drowned by ", a, "\n");
@@ -699,7 +699,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			else if (deathtype == DEATH_FIRE)
 				bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
 			else
-				bprint ("^1",s, "^1 was ", w_fragprefix, "^1fragged by ", a, "\n");
+				bprint ("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
 
 			score_give_frag(attacker, targ, 1);
 
@@ -759,8 +759,8 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					announce(targ, sv_announcer_extra_meleefrag, "");
 					announce(attacker, sv_announcer_extra_meleefrag, "");
 			}
-			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", w_fragprefix, "^4fragged ^7", s));
-			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", w_fragprefix, "^1fragged by ^7", a));
+			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, blood_message, "^4You ", weapon_fragprefix, "^4fragged ^7", s));
+			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, victim_message, "^1You were ", weapon_fragprefix, "^1fragged by ^7", a));
 			attacker.taunt_soundtime = time + 1;
 			attacker.lastfrag = fragtime;
 		}

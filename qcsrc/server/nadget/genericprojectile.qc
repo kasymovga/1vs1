@@ -571,13 +571,12 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
 		sound(self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 
     weapon_setup_shot(self, 4, "", -1);
-    pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+    pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 
-    vector a = vectoangles(w_shotdir);
+    vector a = vectoangles(weapon_shotdir);
     a_x = -a_x;
     makevectors(a + ang);
-    w_shotdir = v_forward;
-
+    weapon_shotdir = v_forward;
     entity gren = projectile(hgtype != NADGET_RAZE, nadget_GenericProjectile_CSQCProjType(hgtype), TRUE, self);
     gren.classname = "hg_generic_projectile";
     gren.bot_dodge = TRUE;
@@ -616,7 +615,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
 	if (gren.movetype == MOVETYPE_TOSS || gren.movetype == MOVETYPE_BOUNCE)
 		gren.gravity = GV("gravity");
 
-    setorigin(gren, w_shotorg);
+    setorigin(gren, weapon_shotorg);
 
     float lt;
     if(hgtype == NADGET_TRANSLOC && self.BUTTON_CROUCH) {
@@ -662,18 +661,18 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     }
 
     if(GV("launchspeed")) {
-        gren.velocity = w_shotdir * (mspd + (spd-mspd) * self.hg_power) + v_up * upspd * self.hg_power;
+        gren.velocity = weapon_shotdir * (mspd + (spd-mspd) * self.hg_power) + v_up * upspd * self.hg_power;
     } else {
-        gren.velocity = w_shotdir * spd + v_up * upspd;
+        gren.velocity = weapon_shotdir * spd + v_up * upspd;
     }
 
     if(GV("delayvelocity")) {
-        gren.hg_deferredVel = w_shotdir * GV("movement_speed") + v_up * upspd;
+        gren.hg_deferredVel = weapon_shotdir * GV("movement_speed") + v_up * upspd;
     }
 
     if(GV("speedscale")) {
-        gren.hg_minVelocity = w_shotdir * GV("speedscale_minspeed") + v_up * upspd;
-        gren.hg_maxVelocity = w_shotdir * GV("speedscale_maxspeed") + v_up * upspd;
+        gren.hg_minVelocity = weapon_shotdir * GV("speedscale_minspeed") + v_up * upspd;
+        gren.hg_maxVelocity = weapon_shotdir * GV("speedscale_maxspeed") + v_up * upspd;
     }
 
     weapon_setup_projectile_velocity(gren);

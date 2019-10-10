@@ -129,9 +129,9 @@ void(void) weapon_electro_attack {
 		self.ammo_cells = self.ammo_cells - g_balance_electro_primary_ammo;
 
 	weapon_setup_shot(self, 2, "weapons/electro_fire.wav", 1);
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-	projectile_setup(proj, w_shotorg, WEP_ELECTRO, g_balance_electro_primary_damage,
+	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO, g_balance_electro_primary_damage,
 			g_balance_electro_primary_edgedamage, g_balance_electro_primary_radius, g_balance_electro_primary_force);
 
 	proj.classname = "plasma_prim";
@@ -139,7 +139,7 @@ void(void) weapon_electro_attack {
 	proj.think = projectile_think2use;
 	proj.nextthink = time + g_balance_electro_primary_lifetime;
 	proj.movetype = MOVETYPE_FLY;
-	proj.velocity = w_shotdir * g_balance_electro_primary_speed;
+	proj.velocity = weapon_shotdir * g_balance_electro_primary_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapon_electro_touch_explode;
 }
@@ -150,10 +150,10 @@ void(void) weapon_electro_attack2 {
 		self.ammo_cells = self.ammo_cells - g_balance_electro_secondary_ammo;
 
 	weapon_setup_shot(self, 2, "weapons/electro_fire2.wav", 1);
-	w_shotdir = v_forward; // no TrueAim for grenades please
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	weapon_shotdir = v_forward; // no TrueAim for grenades please
+	pointparticles(particleeffectnum("electro_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_ELECTRO, FALSE, self); // no culling, it has sound
-	projectile_setup(proj, w_shotorg, WEP_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
+	projectile_setup(proj, weapon_shotorg, WEP_ELECTRO | HITTYPE_SECONDARY, g_balance_electro_secondary_damage,
 			g_balance_electro_secondary_edgedamage, g_balance_electro_secondary_radius, g_balance_electro_secondary_force);
 
 	proj.classname = "plasma";
@@ -164,7 +164,7 @@ void(void) weapon_electro_attack2 {
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	proj.velocity = (w_shotdir + randomvec() * g_balance_electro_secondary_spread) * g_balance_electro_secondary_speed + v_up * g_balance_electro_secondary_speed_up;
+	proj.velocity = (weapon_shotdir + randomvec() * g_balance_electro_secondary_spread) * g_balance_electro_secondary_speed + v_up * g_balance_electro_secondary_speed_up;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapon_electro_touch;
 	proj.takedamage = DAMAGE_YES;
@@ -268,28 +268,28 @@ float weapon_electro(float req)
 		return self.ammo_cells >= g_balance_electro_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "could not remember where he put plasma";
+		if(weapon_deathtype & HITTYPE_SECONDARY)
+			weapon_deathtypestring = "could not remember where he put plasma";
 		else
-			w_deathtypestring = "played with plasma";
+			weapon_deathtypestring = "played with plasma";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
+		if(weapon_deathtype & HITTYPE_SECONDARY)
 		{
-			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = "just noticed #'s blue ball";
+			if(weapon_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
+				weapon_deathtypestring = "just noticed #'s blue ball";
 			else // unchecked: BOUNCE
-				w_deathtypestring = "got in touch with #'s blue ball";
+				weapon_deathtypestring = "got in touch with #'s blue ball";
 		}
 		else
 		{
-			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = "felt the electrifying air of #'s combo";
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = "got too close to #'s blue beam";
+			if(weapon_deathtype & HITTYPE_BOUNCE) // combo
+				weapon_deathtypestring = "felt the electrifying air of #'s combo";
+			else if(weapon_deathtype & HITTYPE_SPLASH)
+				weapon_deathtypestring = "got too close to #'s blue beam";
 			else
-				w_deathtypestring = "was blasted by #'s blue beam";
+				weapon_deathtypestring = "was blasted by #'s blue beam";
 		}
 	}
 	else if (req == WR_RESETPLAYER)

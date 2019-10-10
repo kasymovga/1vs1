@@ -538,10 +538,10 @@ float checkrules_overtimesadded; //how many overtimes have been already added
 float() world_check_rules_run_out_spawns {
 	entity head;
 
-	if(!have_team_spawns)
+	if(!spawn_have_team_spawns)
 		return FALSE;
 
-	if(!some_spawn_has_been_used)
+	if(!spawn_has_been_used)
 		return FALSE;
 
 	team1_score = team2_score = team3_score = team4_score = 0;

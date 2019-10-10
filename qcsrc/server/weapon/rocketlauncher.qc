@@ -132,8 +132,8 @@ void weapon_rocketlauncher_think (void)
 
 			makevectors(self.owner.v_angle);
 			weapon_setup_shot(self.realowner, 0, "", 0);
-			desireddir = w_shotdir;
-			desiredorigin = w_shotorg;
+			desireddir = weapon_shotdir;
+			desiredorigin = weapon_shotorg;
 			olddir = normalize(self.velocity);
 			// now it gets tricky... we want to move like some curve to approximate the target direction
 			// but we are limiting the rate at which we can turn!
@@ -185,10 +185,10 @@ void weapon_rocketlauncher_attack (void)
 		self.ammo_rockets = self.ammo_rockets - g_balance_rocketlauncher_ammo;
 
 	weapon_setup_shot(self, 5, "weapons/rocket_fire.wav", 1);
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
-	projectile_setup(missile, w_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
+	projectile_setup(missile, weapon_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force);
 
 	missile.classname = "rocket"; //for remote exploding
@@ -206,7 +206,7 @@ void weapon_rocketlauncher_attack (void)
 	missile.health = g_balance_rocketlauncher_health;
 	missile.event_damage = weapon_rocketlauncher_damage;
 	missile.movetype = MOVETYPE_FLY;
-	missile.velocity = w_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
+	missile.velocity = weapon_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = weapon_rocketlauncher_touch;
 	missile.think = weapon_rocketlauncher_think;
@@ -374,15 +374,15 @@ float weapon_rocketlauncher(float req)
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "exploded";
+		weapon_deathtypestring = "exploded";
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = "got too close to #'s rocket";
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = "almost dodged #'s rocket";
+		if(weapon_deathtype & HITTYPE_BOUNCE) // (remote detonation)
+			weapon_deathtypestring = "got too close to #'s rocket";
+		else if(weapon_deathtype & HITTYPE_SPLASH)
+			weapon_deathtypestring = "almost dodged #'s rocket";
 		else
-			w_deathtypestring = "ate #'s rocket";
+			weapon_deathtypestring = "ate #'s rocket";
 	}
 	else if (req == WR_RESETPLAYER)
 	{

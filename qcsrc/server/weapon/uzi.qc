@@ -52,12 +52,12 @@ void(float deathtype) weapon_uzi_attack {
 	ATTACK_FINISHED(self) = time + g_balance_uzi_first_refire * weapon_rate_factor();
 
 	if (self.uzi_bulletcounter == 1)
-		bullet(w_shotorg, w_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
+		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_first_spread, g_balance_uzi_speed, 5, g_balance_uzi_first_damage, 0, g_balance_uzi_first_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_first_gravityfactor, g_balance_uzi_bulletconstant);
 	else
-		bullet(w_shotorg, w_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
+		bullet(weapon_shotorg, weapon_shotdir, g_balance_uzi_sustained_spread, g_balance_uzi_speed, 5, g_balance_uzi_sustained_damage, 0, g_balance_uzi_sustained_force, deathtype, particleeffectnum("tr_bullet"), g_balance_uzi_sustained_gravityfactor, g_balance_uzi_bulletconstant);
 	bullet_end();
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("uzi_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 
 	// muzzle flash for 1st person view
 	flash = spawn();
@@ -163,12 +163,12 @@ float weapon_uzi(float req)
 		if (g_balance_uzi_magazinecapacity)
 			self.uzi_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_uzi_magazinecapacity : -1);
 	} else if (req == WR_KILLMESSAGE) {
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "was sniped by";
+		if(weapon_deathtype & HITTYPE_SECONDARY)
+			weapon_deathtypestring = "was sniped by";
 		else
-			w_deathtypestring = "was riddled full of holes by";
+			weapon_deathtypestring = "was riddled full of holes by";
 	} else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_uzi_bulletconstant);

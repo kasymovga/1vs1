@@ -39,7 +39,7 @@ void weapon_minstanex_attack (void)
 	yoda = 0;
 	damage_goodhits = 0;
 	headshot = 0;
-	bullet_railgun (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 	antilag_end();
 
 	if(yoda > 1)
@@ -49,7 +49,7 @@ void weapon_minstanex_attack (void)
 		announce(self, "announcer/male/headshot.wav", "^1Head^3Shot");
 
 	self.minstanex_lasthit = damage_goodhits;
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("nex_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	if(teamplay)
@@ -85,7 +85,7 @@ void weapon_minstanex_attack (void)
 	else
         weapon_minstanex_draw_beam_particless_effect = particleeffectnum("TE_TEI_G3");
 
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_minstanex_draw_beam_particless);
+	WarpZone_DrawEffectTriangle(weapon_shotorg, weapon_shotorg_visual,  WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_minstanex_draw_beam_particless);
 
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
@@ -97,7 +97,7 @@ void weapon_minstanex_attack (void)
 			pointparticles(particleeffectnum("rocket_explode"), trace_endpos, '0 0 0', 1);
 			remove(e);
 		}
-		damage_info(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_MINSTANEX, self);
+		damage_info(trace_endpos, 10000, 0, 0, 800 * WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir), WEP_MINSTANEX, self);
 	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -121,7 +121,7 @@ float weapon_minstanex_player_can_fire() {
 
 void weapon_minstanex_laser_attack() {
 	weapon_minstanex_laser_attack_setup();
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	float f1, f2;
 	if (g_balance_minstanex_laser_count > 1) {
 		f1 = g_balance_minstanex_laser_spread / (g_balance_minstanex_laser_count - 1);
@@ -133,7 +133,7 @@ void weapon_minstanex_laser_attack() {
 	vector v;
 	float ff = 1 / g_balance_minstanex_laser_count;
 	for (i = 0; i < g_balance_minstanex_laser_count; i++) {
-		v = w_shotdir + v_right * f2;
+		v = weapon_shotdir + v_right * f2;
 		f2 += f1;
 		laser_projectile(v, g_balance_minstanex_laser_speed,
 				g_balance_minstanex_laser_damage * ff, g_balance_minstanex_laser_edgedamage * ff,
@@ -144,8 +144,8 @@ void weapon_minstanex_laser_attack() {
 
 void weapon_minstanex_laser_attack_rapid() {
 	weapon_minstanex_laser_attack_setup();
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-	laser_projectile(w_shotdir, g_balance_minstanex_laser_speed,
+	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
+	laser_projectile(weapon_shotdir, g_balance_minstanex_laser_speed,
 			g_balance_minstanex_laser_damage, g_balance_minstanex_laser_edgedamage,
 			g_balance_minstanex_laser_radius, g_balance_minstanex_laser_force,
 			g_balance_minstanex_explode, TRUE, g_balance_minstanex_laser_lifetime);
@@ -217,10 +217,10 @@ float weapon_minstanex(float req)
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE) {
-		w_fragprefix = "^5INSTA";
-		w_deathtypestring = "has been vaporized by";
+		weapon_fragprefix = "^5INSTA";
+		weapon_deathtypestring = "has been vaporized by";
 	} else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;

@@ -466,12 +466,10 @@ void nadget_Sentry_Trigger(void) {
     makevectors(self.v_angle);
 	antilag_begin(self);
     weapon_setup_shot(self, 0, "", -1);
-    o = w_shotorg;
-
-    WarpZone_TraceLine(o, o + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
-
+    o = weapon_shotorg;
+    WarpZone_TraceLine(o, o + weapon_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
     while(trace_ent && trace_ent.classname == "hg_sentry" && !team_is_different_teams(trace_ent, self))
-        WarpZone_TraceLine(trace_endpos + w_shotdir, trace_endpos + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
+        WarpZone_TraceLine(trace_endpos + weapon_shotdir, trace_endpos + weapon_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 
     aimloc = trace_endpos;
     aimtarg = trace_ent;

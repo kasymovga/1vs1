@@ -155,10 +155,6 @@ float maxclients;
 .float pauserothealth_finished;
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
-string w_deathtypestring;
-string w_fragprefix;
-float w_deathtype;
-
 .vector dest1, dest2;
 
 float gameover;
@@ -241,9 +237,6 @@ float ServerProgsDB;
 float TemporaryDB;
 
 .float team_saved;
-
-float some_spawn_has_been_used;
-float have_team_spawns;
 
 // set when showing a kill countdown
 .entity killindicator;

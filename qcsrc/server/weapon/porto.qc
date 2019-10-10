@@ -144,11 +144,8 @@ void weapon_porto_attack (float out)
 
 	weapon_setup_shot (self, 4, "porto/fire.wav", 0);
 	// always shoot from the eye
-	w_shotdir = v_forward;
-	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
-
-	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
+	weapon_shotdir = v_forward;
+	weapon_shotorg = self.origin + self.view_ofs + ((weapon_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	gren = projectile(TRUE, PROJECTILE_PORTO_RED, TRUE, self);
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
@@ -167,12 +164,12 @@ void weapon_porto_attack (float out)
 		self.porto_current_in = gren;
 	}
 	gren.scale = 4;
-	setorigin(gren, w_shotorg);
+	setorigin(gren, weapon_shotorg);
 
 	gren.nextthink = time + g_balance_porto_primary_lifetime;
 	gren.think = weapon_porto_think;
 	gren.touch = weapon_porto_touch;
-	gren.velocity = w_shotdir * g_balance_porto_primary_speed;
+	gren.velocity = weapon_shotdir * g_balance_porto_primary_speed;
 	if(self.items & IT_STRENGTH)
 		gren.velocity = gren.velocity * g_balance_powerup_strength_force;
 
@@ -227,10 +224,10 @@ float weapon_porto(float req)
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_PORTO);
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE) {
-		w_fragprefix = "^6TELE";
-		w_deathtypestring = "was telefragged by";
+		weapon_fragprefix = "^6TELE";
+		weapon_deathtypestring = "was telefragged by";
 	} else if (req == WR_RESETPLAYER)
 	{
 		self.porto_current_in = world;

@@ -94,15 +94,15 @@ void weapon_campingrifle_fire(float pSpread, float pDamage, float pHeadshotAdded
 	else
 		weapon_setup_shot (self, 2, "weapons/campingrifle_fire.wav", 1);
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 2000, 1);
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM) // if zoomed, shoot from the eye
 	{
-		w_shotdir = v_forward;
-		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
+		weapon_shotdir = v_forward;
+		weapon_shotorg = self.origin + self.view_ofs + ((weapon_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 	}
 
-	bullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
+	bullet(weapon_shotorg, weapon_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, particleeffectnum("tr_rifle"), ((deathtype & HITTYPE_SECONDARY) ? g_balance_campingrifle_primary_gravityfactor : g_balance_campingrifle_primary_gravityfactor), pBulletConstant);
 	bullet_end();
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
 	self.campingrifle_ammoclip = self.campingrifle_ammoclip - 1;
@@ -215,33 +215,33 @@ float weapon_campingrifle(float req)
 		return self.ammo_nails >= g_balance_campingrifle_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "shot himself automatically";
+		if(weapon_deathtype & HITTYPE_SECONDARY)
+			weapon_deathtypestring = "shot himself automatically";
 		else
-			w_deathtypestring = "sniped himself somehow";
+			weapon_deathtypestring = "sniped himself somehow";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
+		if(weapon_deathtype & HITTYPE_SECONDARY)
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = "failed to hide from #'s bullet hail";
+			if(weapon_deathtype & HITTYPE_BOUNCE)
+				weapon_deathtypestring = "failed to hide from #'s bullet hail";
 			else
-				w_deathtypestring = "died in #'s bullet hail";
+				weapon_deathtypestring = "died in #'s bullet hail";
 		}
 		else
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
+			if(weapon_deathtype & HITTYPE_BOUNCE)
 			{
 				// TODO special headshot message here too?
-				w_deathtypestring = "failed to hide from #'s rifle";
+				weapon_deathtypestring = "failed to hide from #'s rifle";
 			}
 			else
 			{
-				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = "got hit in the head by #";
+				if(weapon_deathtype & HITTYPE_HEADSHOT)
+					weapon_deathtypestring = "got hit in the head by #";
 				else
-					w_deathtypestring = "was sniped by #";
+					weapon_deathtypestring = "was sniped by #";
 			}
 		}
 	}

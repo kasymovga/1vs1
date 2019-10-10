@@ -62,10 +62,10 @@ void nadget_Shield_Discharge_Think(void) {
     makevectors(self.owner.v_angle);
 	antilag_begin(self.owner);
     weapon_setup_shot(self.owner, 0, "weapons/nexfire.wav", -1);
-    WarpZone_TraceLine(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self.owner);
+    WarpZone_TraceLine(weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self.owner);
 	antilag_end();
     targ = trace_ent;
-    start = w_shotorg;
+    start = weapon_shotorg;
     end = trace_endpos;
     end_visual = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 
@@ -75,7 +75,7 @@ void nadget_Shield_Discharge_Think(void) {
                  _damage * g_nadgets_shield_damage_store_forcefactor, NADGET_SHIELD | HITTYPE_SECONDARY, targ);
 
     //W_SetHitscanVisuals(self.owner, end);
-    weapon_zapper_attack2_effect((teamplay ? self.owner.team : COLOR_TEAM3), w_shotorg_visual, end_visual);
+    weapon_zapper_attack2_effect((teamplay ? self.owner.team : COLOR_TEAM3), weapon_shotorg_visual, end_visual);
 
     if(g_nadgets_shield_damage_store_arc && targ && targ.iscreature && (team_is_different_teams(self.owner, targ)/* || Buffs_Present(self.owner, BUFF_MEDIC)*/)) {
         nadget_Shield_Discharge_Arc(targ, self.owner, _damage);

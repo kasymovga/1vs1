@@ -65,7 +65,7 @@ void weapon_nex_attack (void)
 	yoda = 0;
 	headshot = 0;
 	damage_goodhits = 0;
-	bullet_railgun (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
+	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, g_balance_nex_damage, g_balance_nex_force, g_balance_nex_damagefalloff_mindist, g_balance_nex_damagefalloff_maxdist, g_balance_nex_damagefalloff_halflife, g_balance_nex_damagefalloff_forcehalflife, WEP_NEX);
 	antilag_end();
 
 	if(headshot)
@@ -80,10 +80,10 @@ void weapon_nex_attack (void)
 	
 	// flash and burn the wall
 	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir), WEP_NEX, self);
+		damage_info(trace_endpos, g_balance_nex_damage, 0, 0, g_balance_nex_force * WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir), WEP_NEX, self);
 
 	//beam and muzzle flash done on client
-	WarpZone_DrawEffectTriangle(w_shotorg, w_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_nex_beam_particles);
+	WarpZone_DrawEffectTriangle(weapon_shotorg, weapon_shotorg_visual, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), weapon_nex_beam_particles);
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;
@@ -137,9 +137,9 @@ float weapon_nex(float req)
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE) {
-		w_deathtypestring = "has been vaporized by";
+		weapon_deathtypestring = "has been vaporized by";
 	} else if (req == WR_RELOAD) {
 		weapon_nex_reload();
 	} else if (req == WR_SETUP) {

@@ -35,7 +35,7 @@ void weapon_shotgun_attack (void)
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_primary_bullets);
 
 	for (sc = 0;sc < g_balance_shotgun_primary_bullets;sc = sc + 1)
-		bullet(w_shotorg, w_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
+		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_primary_spread, g_balance_shotgun_primary_speed, 5,
 				g_balance_shotgun_primary_damage, 0, g_balance_shotgun_primary_force,
 				WEP_SHOTGUN, particleeffectnum("tr_bullet"), g_balance_shotgun_primary_gravityfactor, g_balance_shotgun_primary_bulletconstant);
 	bullet_end();
@@ -45,7 +45,7 @@ void weapon_shotgun_attack (void)
 	if (g_balance_shotgun_magazinecapacity)
 		self.sg_ammoclip -= 1;
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_primary_ammo);
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_primary_ammo);
 
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
@@ -67,7 +67,7 @@ void weapon_shotgun_attack2 (void)
 	bullet_begin(g_balance_shotgun_secondary_speed);
 	weapon_setup_shot (self, 5, "weapons/shotgun_fire.wav", g_balance_shotgun_secondary_bullets);
 	for (sc = 0; sc < g_balance_shotgun_secondary_bullets; sc = sc + 1)
-		bullet(w_shotorg, w_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
+		bullet(weapon_shotorg, weapon_shotdir, g_balance_shotgun_secondary_spread, g_balance_shotgun_secondary_speed, 5,
 				g_balance_shotgun_secondary_damage, 0, g_balance_shotgun_secondary_force,
 				WEP_SHOTGUN | HITTYPE_SECONDARY, particleeffectnum("tr_bullet"), g_balance_shotgun_secondary_gravityfactor,
 				g_balance_shotgun_secondary_bulletconstant);
@@ -78,7 +78,7 @@ void weapon_shotgun_attack2 (void)
 	if (g_balance_shotgun_magazinecapacity)
 		self.sg_ammoclip -= 1;
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, g_balance_shotgun_secondary_ammo);
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_shotgun_secondary_ammo);
 
 	// casing code
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
@@ -175,9 +175,9 @@ float weapon_shotgun(float req)
 	} else if (req == WR_RELOAD) {
 		weapon_shotgun_reload();
 	} else if (req == WR_SUICIDEMESSAGE) {
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	} else if (req == WR_KILLMESSAGE) {
-		w_deathtypestring = "was gunned by"; // unchecked: SECONDARY
+		weapon_deathtypestring = "was gunned by"; // unchecked: SECONDARY
 	} else if (req == WR_SETUP) {
 		weapon_setup(WEP_SHOTGUN);
 		if (g_balance_shotgun_magazinecapacity) {

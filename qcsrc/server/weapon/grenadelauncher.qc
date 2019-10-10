@@ -84,10 +84,10 @@ void(void) weapon_grenadelauncher_attack {
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_primary_ammo;
 
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
-	w_shotdir = v_forward; // no TrueAim for grenades please
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	weapon_shotdir = v_forward; // no TrueAim for grenades please
+	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
-	projectile_setup(gren, w_shotorg, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
+	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
 			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force);
 
 	gren.gravity = 1;
@@ -96,7 +96,7 @@ void(void) weapon_grenadelauncher_attack {
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
 	gren.touch = (bounce ? weapon_grenadelauncher_touch2 : weapon_grenadelauncher_touch1);
-	gren.velocity = w_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
+	gren.velocity = weapon_shotdir * g_balance_grenadelauncher_primary_speed + v_up * g_balance_grenadelauncher_primary_speed_up;
 	weapon_setup_projectile_velocity(gren);
 }
 
@@ -106,10 +106,10 @@ void(void) weapon_grenadelauncher_attack2 {
 		self.ammo_rockets = self.ammo_rockets - g_balance_grenadelauncher_secondary_ammo;
 
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
-	w_shotdir = v_forward; // no TrueAim for grenades please
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
+	weapon_shotdir = v_forward; // no TrueAim for grenades please
+	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE, self);
-	projectile_setup(gren, w_shotorg, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
+	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY, g_balance_grenadelauncher_secondary_damage,
 			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force);
 
 	gren.gravity = 1;
@@ -122,7 +122,7 @@ void(void) weapon_grenadelauncher_attack2 {
 	gren.health = g_balance_grenadelauncher_secondary_health;
 	gren.damageforcescale = g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = weapon_grenadelauncher_damage;
-	gren.velocity = w_shotdir * g_balance_grenadelauncher_secondary_speed + v_up * g_balance_grenadelauncher_secondary_speed_up;
+	gren.velocity = weapon_shotdir * g_balance_grenadelauncher_secondary_speed + v_up * g_balance_grenadelauncher_secondary_speed_up;
 	weapon_setup_projectile_velocity(gren);
 }
 
@@ -189,20 +189,20 @@ float weapon_grenadelauncher(float req)
 		return self.ammo_rockets >= g_balance_grenadelauncher_secondary_ammo;
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = "tried out his own grenade";
+		if(weapon_deathtype & HITTYPE_SECONDARY)
+			weapon_deathtypestring = "tried out his own grenade";
 		else
-			w_deathtypestring = "detonated";
+			weapon_deathtypestring = "detonated";
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SPLASH)
-			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = "didn't see #'s grenade";
+		if(weapon_deathtype & HITTYPE_SPLASH)
+			if(weapon_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
+				weapon_deathtypestring = "didn't see #'s grenade";
 			else // unchecked: SECONDARY
-				w_deathtypestring = "almost dodged #'s grenade";
+				weapon_deathtypestring = "almost dodged #'s grenade";
 		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = "ate #'s grenade";
+			weapon_deathtypestring = "ate #'s grenade";
 	}
 	else if (req == WR_CVAR_CACHE)
 	{

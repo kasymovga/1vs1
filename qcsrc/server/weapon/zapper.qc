@@ -235,10 +235,10 @@ void weapon_zapper_beam_think(void) {
 
     float fract;
     entity targ;
-    vector end = w_shotorg + w_shotdir * self.zapper_range;
+    vector end = weapon_shotorg + weapon_shotdir * self.zapper_range;
 
     //ExactHitscan_Begin();
-    traceline(w_shotorg, end, FALSE, o);
+    traceline(weapon_shotorg, end, FALSE, o);
 	antilag_end();
     //ExactHitscan_End();
 
@@ -260,7 +260,7 @@ void weapon_zapper_beam_think(void) {
         wantedTicrate = dt;
         damageIsDps = TRUE;
     }
-	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, w_shotdir);
+	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir);
     for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
         float _damage = g_balance_zapper_primary_damage;
         float force  = g_balance_zapper_primary_force;
@@ -270,7 +270,7 @@ void weapon_zapper_beam_think(void) {
             force = force * wantedTicrate;
         }
         if(targ.takedamage) {
-            float d = vlen(end - w_shotorg) * fract;
+            float d = vlen(end - weapon_shotorg) * fract;
 
             float mindist = g_balance_zapper_primary_damagefalloff_mindist;
             float maxdist = g_balance_zapper_primary_damagefalloff_maxdist;
@@ -292,9 +292,6 @@ void weapon_zapper_beam_think(void) {
 
         self.zapper_lastdmg = self.zapper_lastdmg + wantedTicrate;
     }
-
-	//vector org = w_shotorg_visual;
-
     if(org != self.zapper_beam_start) {
         self.SendFlags |= 2;
         self.zapper_beam_start = org;
@@ -434,9 +431,9 @@ void weapon_zapper_attack2(void) {
 	dlc_sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
     weapon_setup_shot(self, 5, "", 1);
 
-    vector end = w_shotorg + w_shotdir * range;
+    vector end = weapon_shotorg + weapon_shotdir * range;
 	entity o = Akimbo_Owner(self);
-	weapon_zapper_attack2_beam(o, w_shotorg, w_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
+	weapon_zapper_attack2_beam(o, weapon_shotorg, weapon_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
 	antilag_end();
     if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
         self.ammo_cells = self.ammo_cells - g_balance_zapper_secondary_ammo;
@@ -450,10 +447,6 @@ void weapon_zapper_shield_beam_think(void) {
     entity o = self.owner;
 
 	vector end;
-#if 0
-    weapon_setup_shot(self, TRUE, 5, "", 0);
-	vector org = w_shotorg_visual;
-#endif
     vector org = weapon_zapper_visual_shotorg(self.enemy);
 	makevectors(self.owner.angles);
 
@@ -736,9 +729,9 @@ float weapon_zapper(float req) {
     else if(req == WR_CHECKAMMO2)
         return weapon_zapper_attack2_check_ammo(self);
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "did the impossible";
+		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = "was zapped by";
+		weapon_deathtypestring = "was zapped by";
 	else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_zapper_animtime);

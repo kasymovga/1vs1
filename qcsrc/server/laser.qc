@@ -9,7 +9,7 @@ float g_laser_offhand;
 
 void(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float expl, float issec, float lifetime) laser_projectile {
 	entity missile = projectile(TRUE, (expl ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE, self);
-	projectile_setup(missile, w_shotorg, WEP_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force);
+	projectile_setup(missile, weapon_shotorg, WEP_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force);
 	missile.team = self.team;
 	missile.movetype = MOVETYPE_FLY;
 	missile.velocity = _shotdir * _speed;
@@ -31,8 +31,8 @@ float(void) laser_weapon_frame_handle {
 		}
 		if (weapon_prepareattack(0, g_laser_refire)) {
 			weapon_setup_shotdir(self, v_forward, 3, "weapons/lasergun_fire.wav", 1);
-			pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg_visual, w_shotdir * 1000, 1);
-			laser_projectile(w_shotdir, g_laser_speed, g_laser_damage, g_laser_damage_edge, g_laser_radius, g_laser_force, 0, TRUE, 10);
+			pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
+			laser_projectile(weapon_shotdir, g_laser_speed, g_laser_damage, g_laser_damage_edge, g_laser_radius, g_laser_force, 0, TRUE, 10);
 			if not(g_laser_offhand) {
 				weapon_thinkf(WFRAME_FIRE1, g_laser_animtime, weapon_ready);
 			}

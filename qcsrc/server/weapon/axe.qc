@@ -30,10 +30,10 @@ float(float req) weapon_axe {
 	else if (req == WR_CHECKAMMO2)
 		return TRUE;
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = "rekt himself";
+		weapon_deathtypestring = "rekt himself";
 	else if (req == WR_KILLMESSAGE) {
-		w_fragprefix = "^xF80MELEE";
-		w_deathtypestring = "was smashed by";
+		weapon_fragprefix = "^xF80MELEE";
+		weapon_deathtypestring = "was smashed by";
 	} else if (req == WR_CVAR_CACHE)
 	{
 		CACHE_CVAR(g_balance_axe_damage);
