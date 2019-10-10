@@ -219,8 +219,6 @@ float sys_ticrate; // gets initialised in worlspawn, saves the value from cvar("
 .float modelindex_lod1;
 .float modelindex_lod2;
 
-string gamemode_name;
-
 typedef .float floatfield;
 
 float weaponsInMap;

@@ -1,1 +1,2 @@
 void() gametype_init;
+string gametype_title;

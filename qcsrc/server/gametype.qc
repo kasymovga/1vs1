@@ -67,7 +67,7 @@ void() gametype_init {
 
 	// in case mapinfo switched the type
 	gametype_readcvars();
-	gamemode_name = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
+	gametype_title = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
 	if(game == GAME_TEAM_DEATHMATCH) {
 		team_play_activate();
 		tdm_init();
