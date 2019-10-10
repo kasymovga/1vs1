@@ -199,14 +199,6 @@ void() world_precache {
 
 
 void(void) world_static_init {
-#ifdef ALLOW_FORCEMODELS
-	CACHE_CVAR(sv_clforceplayermodels);
-#endif
-	CACHE_CVAR(sv_loddistance1);
-	CACHE_CVAR(sv_loddistance2);
-	if(sv_loddistance2 <= sv_loddistance1)
-		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
-
 	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
 	CACHE_CVAR(g_maxpushtime);

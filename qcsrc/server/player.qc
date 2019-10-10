@@ -74,6 +74,11 @@ string sv_announcer_extra_firstblood;
 string sv_sound_frag;
 float bot_taunt;
 float bot_talk;
+float sv_loddistance1;
+float sv_loddistance2;
+#ifdef ALLOW_FORCEMODELS
+float sv_clforceplayermodels;
+#endif
 
 .entity pusher;
 .float pushltime;
@@ -2454,6 +2459,14 @@ void() player_init {
 	CACHE_CVAR(g_spawnsound);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);
+	CACHE_CVAR(sv_loddistance1);
+	CACHE_CVAR(sv_loddistance2);
+	if(sv_loddistance2 <= sv_loddistance1)
+		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
+
+#ifdef ALLOW_FORCEMODELS
+	CACHE_CVAR(sv_clforceplayermodels);
+#endif
 	if (cvar("sv_defaultcharacter")) { //compatibility with old cvars
 		string s;
 		if ((s = cvar_string("sv_defaultplayermodel")) != "") {
