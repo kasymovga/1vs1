@@ -1,2 +1,3 @@
 float g_jetpack_fuel;
+float g_jetpack;
 void(void) jetpack_init;

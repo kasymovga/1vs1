@@ -13,7 +13,6 @@ var .float BUTTON_USE = buttonuse;
 
 // Globals
 
-float g_jetpack;
 float leadlimit;
 float g_maxpushtime;
 
