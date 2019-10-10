@@ -131,7 +131,7 @@ void GameCommand(string command)
 	{
 		entno = stof(argv(1));
 		client = world;
-		if(entno <= maxclients)
+		if(entno <= client_max_count)
 			client = edict_num(entno);
 		if(client.flags & FL_CLIENT)
 		{
@@ -205,7 +205,7 @@ void GameCommand(string command)
 	{
 		entno = stof(argv(1));
 		client = world;
-		if(entno <= maxclients)
+		if(entno <= client_max_count)
 			client = edict_num(entno);
 		if(client.flags & FL_CLIENT)
 		{

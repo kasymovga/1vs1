@@ -538,7 +538,7 @@ float GameCommand_Ban(string command)
 		if(argc >= 3)
 		{
 			entno = stof(argv(2));
-			if(entno > maxclients || entno < 1)
+			if(entno > client_max_count || entno < 1)
 				return TRUE;
 			client = edict_num(entno);
 

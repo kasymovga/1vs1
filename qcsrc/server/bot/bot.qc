@@ -549,7 +549,7 @@ void bot_serverframe()
 			realminbots = bot_number;
 		minbots = max(0, floor(realminbots));
 
-		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
+		bots = min(max(minbots, minplayers - activerealplayers), client_max_count - realplayers);
 		if(bots > minbots)
 			bots_would_leave = TRUE;
 	}

@@ -15,7 +15,7 @@ float ready_nagger_send(entity to, float sendflags)
 	WriteByte(MSG_ENTITY, nags);
 	if(nags & 1)
 	{
-		for(i = 1; i <= maxclients; i += 8)
+		for(i = 1; i <= client_max_count; i += 8)
 		{
 			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
 				if(clienttype(e) != CLIENTTYPE_REAL || e.ready)

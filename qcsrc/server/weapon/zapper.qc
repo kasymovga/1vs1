@@ -142,7 +142,7 @@ float weapon_zapper_beam_send(entity to, float sf) {
     sf &~= 24;
 	entity _owner = self.owner;
     float o = num_for_edict(_owner);
-    if(o > maxclients) {
+    if(o > client_max_count) {
         o = 0;
 	}
     if(!o) {

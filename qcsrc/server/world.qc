@@ -298,9 +298,9 @@ void(void) world_init {
 	net_compress_vector_init();
 	entity head;
 	head = nextent(world);
-	maxclients = 0;
+	client_max_count = 0;
 	while(head) {
-		++maxclients;
+		++client_max_count;
 		head = nextent(head);
 	}
 	world_db_init();
