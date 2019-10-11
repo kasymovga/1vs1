@@ -419,19 +419,12 @@ void weapon_frame()
 		}
 		else if (self.weaponentity.state == WS_READY)
 		{
-#ifndef INDEPENDENT_ATTACK_FINISHED
-			if(ATTACK_FINISHED(self) <= time + frametime * 0.5)
-			{
-#endif
 			weapon_action(self.weapon, WR_CLEAR);
 			// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 			sound (self, CHAN_WEAPON2, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, g_balance_weaponswitchdelay, weapon_clear);
-#ifndef INDEPENDENT_ATTACK_FINISHED
-			}
-#endif
 		}
 	}
 
