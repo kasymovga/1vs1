@@ -963,7 +963,7 @@ void spawnfunc_trigger_gamestart() {
 	if(self.wait)
 	{
 		self.think = self.use;
-		self.nextthink = game_starttime + self.wait;
+		self.nextthink = map_starttime + self.wait;
 	}
 	else
 		entity_initialize(self, trigger_gamestart_use, INITPRIO_FINDTARGET);

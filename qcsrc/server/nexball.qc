@@ -365,7 +365,7 @@ void(void) nexball_ball_reset {
 		setorigin(self, self.spawnorigin); // make sure it's positioned correctly anyway
 		self.movetype = MOVETYPE_NONE;
 		self.think = nexball_ball_init;
-		self.nextthink = max(time, game_starttime) + g_nexball_delay_start;
+		self.nextthink = max(time, map_starttime) + g_nexball_delay_start;
 	}
 }
 
@@ -649,7 +649,7 @@ void(void) nexball_spawn_ball {
 	WaypointSprite_UpdateTeamRadar(self.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
 	self.reset = nexball_ball_restart;
 	self.think = nexball_ball_init;
-	self.nextthink = game_starttime + g_nexball_delay_start;
+	self.nextthink = map_starttime + g_nexball_delay_start;
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = item_generic_pickupevalfunc;
 	self.bot_pickupbasevalue = BOT_PICKUP_RATING_HIGH;

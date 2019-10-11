@@ -46,13 +46,13 @@ void ready_restart_timer_think() {
 	world_reset(TRUE);
 	score_clear_all();
 	remove(self);
-	restart_active = 0;
+	map_restart_active = 0;
 	return;
 }
 
 void(void) ready_restart_force {
 	local entity e;
-	restart_active = 1;
+	map_restart_active = 1;
 
 	bprint("^1Server is restarting...\n");
 
@@ -71,7 +71,7 @@ void(void) ready_restart_force {
 
 
 	ready_restart_happened = 1;
-	game_starttime = time + RESTART_COUNTDOWN;
+	map_starttime = time + RESTART_COUNTDOWN;
 
 	warmup_finish();
 	//reset the .ready status of all players (also spectators)
@@ -81,14 +81,14 @@ void(void) ready_restart_force {
 	ready_nagger_counted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
 	if(cvar("teamplay_lockonrestart") && teamplay) {
-		lockteams = 1;
+		team_lock = 1;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	//initiate the restart-countdown-announcer entity
 	ready_restart_timer = spawn();
 	ready_restart_timer.think = ready_restart_timer_think;
-	ready_restart_timer.nextthink = (cvar("sv_ready_restart_after_countdown") ? game_starttime : time);
+	ready_restart_timer.nextthink = (cvar("sv_ready_restart_after_countdown") ? map_starttime : time);
 
 	//after a restart every players number of allowed timeouts gets reset, too
 	if(cvar("sv_timeout"))

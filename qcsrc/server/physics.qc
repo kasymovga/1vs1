@@ -222,7 +222,7 @@ void SV_PlayerPhysics()
 	if(self.classname == "player")
 	{
 		float allowed_to_move = 0;
-		if (time >= game_starttime || restart_active)
+		if (time >= map_starttime || map_restart_active)
 		if not(map_finished)
 		if (GameHook_PlayerAllowedToMove())
 			allowed_to_move = 1;

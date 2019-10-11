@@ -1127,7 +1127,7 @@ void turret_think()
     entity e;
 
     self.nextthink = time + self.ticrate;
-	if (time < game_starttime)
+	if (time < map_starttime)
 		return;
 
 	if (map_finished)

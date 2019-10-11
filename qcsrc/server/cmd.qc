@@ -179,22 +179,22 @@ void GameCommand(string command)
 		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds!\n"));
 		return;
 	}
-	if (cmd == "lockteams")
+	if (cmd == "team_lock")
 	{
 		if(teamplay)
 		{
-			lockteams = 1;
+			team_lock = 1;
 			bprint("^1The teams are now locked.\n");
 		}
 		else
 			bprint("That command can only be used in a team-based gamemode.\n");
 		return;
 	}
-	if (cmd == "unlockteams")
+	if (cmd == "unteam_lock")
 	{
 		if(teamplay)
 		{
-			lockteams = 0;
+			team_lock = 0;
 			bprint("^1The teams are now unlocked.\n");
 		}
 		else
@@ -210,13 +210,13 @@ void GameCommand(string command)
 		if(client.flags & FL_CLIENT)
 		{
 			float lt;
-			lt = lockteams;
-			lockteams = 0;
+			lt = team_lock;
+			team_lock = 0;
 
 			self = client;
 			SV_ParseClientCommand(strcat("selectteam ", argv(2)));
 
-			lockteams = lt;
+			team_lock = lt;
 		}
 		else
 			print("Client not found\n");
@@ -650,7 +650,7 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if (self.classname != "player" && !lockteams)
+		if (self.classname != "player" && !team_lock)
 			spectator_to_player();
 	} else if( cmd == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
@@ -658,7 +658,7 @@ void SV_ParseClientCommand(string s) {
 		if( !teamplay ) {
 			sprint( self, "selecteam can only be used in teamgames\n");
 		} else if(g_campaign) {
-		} else if(lockteams) {
+		} else if(team_lock) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
 			DoTeamChange(COLOR_TEAM1);
@@ -706,7 +706,7 @@ void SV_ParseClientCommand(string s) {
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_MAPLIST);
-		WriteString(MSG_ONE, lsmaps_reply2);
+		WriteString(MSG_ONE, map_list);
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");

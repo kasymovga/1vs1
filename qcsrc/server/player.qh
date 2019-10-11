@@ -68,3 +68,6 @@ void(entity e, .vector anim, float looping, float override, float restart) playe
 #define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
 float player_count;
 float g_maxpushtime;
+float player_independent;
+#define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
+#define MAKE_INDEPENDENT_PLAYER(e) ((e).solid = SOLID_TRIGGER)

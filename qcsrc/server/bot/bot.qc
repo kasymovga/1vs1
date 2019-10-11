@@ -56,7 +56,7 @@ void bot_think()
 	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
 	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
 
-	if(time < game_starttime || ((g_campaign && !campaign_bots_may_start)))
+	if(time < map_starttime || ((g_campaign && !campaign_bots_may_start)))
 	{
 		self.bot_nextthink = time + 0.5;
 		return;

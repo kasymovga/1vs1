@@ -48,7 +48,7 @@ void Roundbased_ServerFrame()
 	if (warmup_active)
 		return;
 
-	if (time < game_starttime)
+	if (time < map_starttime)
 		return;
 
 	entity oldself;
@@ -74,7 +74,7 @@ void Roundbased_ServerFrame()
 	{
 		if (rb_after_warmup) {
 			Roundbased_RestartTime = 0;
-			round_warmup = game_starttime + rb_startdelay;
+			round_warmup = map_starttime + rb_startdelay;
 			rb_after_warmup = FALSE;
 		}
 		if (Roundbased_RestartTime)
@@ -221,7 +221,7 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	if (warmup_active)
 		rb_after_warmup = TRUE;
 	else
-		round_warmup = game_starttime + rb_startdelay;
+		round_warmup = map_starttime + rb_startdelay;
 
 	Roundbased_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
 	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;

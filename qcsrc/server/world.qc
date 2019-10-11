@@ -92,7 +92,7 @@ void(void) world_static_init {
 	item_init();
 	warmup_init();
 	if not(warmup_active)
-		game_starttime = cvar("g_start_delay");
+		map_starttime = cvar("g_start_delay");
 
 	rune_init();
 	WalkieTalkie_Init();
@@ -267,7 +267,7 @@ void(void) world_init {
 	}
 	addstat(STAT_WEAPONS, AS_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
-	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
+	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_map_starttime);
 	ready_nagger_init();
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
@@ -278,7 +278,7 @@ void(void) world_init {
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
 	lsmaps_reply = "^7Maps available: ";
-	lsmaps_reply2 = "";
+	map_list = "";
 	for(i = 0, j = 0; i < MapInfo_count; ++i) {
 		if(MapInfo_Get_ByID(i))
 			if not(MapInfo_Map_flags & (MAPINFO_FLAG_HIDDEN | MAPINFO_FLAG_FORBIDDEN))
@@ -289,11 +289,11 @@ void(void) world_init {
 					col = "^3";
 				++j;
 				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
-				lsmaps_reply2 = strcat(lsmaps_reply2, MapInfo_Map_bspname, " ");
+				map_list = strcat(map_list, MapInfo_Map_bspname, " ");
 			}
 	}
 	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
-	lsmaps_reply2 = strzone(lsmaps_reply2);
+	map_list = strzone(map_list);
 	maplist_reply = "^7Maps in list: ";
 	n = tokenize_console(cvar_string("_g_maplist"));
 	for(i = 0, j = 0; i < n; ++i)
@@ -570,7 +570,7 @@ void() world_check_rules {
 	fraglimit = cvar("fraglimit");
 	score_leadlimit = cvar("leadlimit");
 
-	if(warmup_active || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
+	if(warmup_active || time <= map_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
 		if(timelimit > 0)
 			timelimit = 0; // timelimit is not made for warmup
@@ -581,7 +581,7 @@ void() world_check_rules {
 
 	if(timelimit > 0)
 	{
-		timelimit += game_starttime;
+		timelimit += map_starttime;
 	}
 	else if (timelimit < 0)
 	{
@@ -590,9 +590,9 @@ void() world_check_rules {
 		return;
 	}
 
-	if (time < game_starttime + frametime) {
-		if (!warmup_active || time + 10 >= game_starttime) {
-			float f = game_starttime - time;
+	if (time < map_starttime + frametime) {
+		if (!warmup_active || time + 10 >= map_starttime) {
+			float f = map_starttime - time;
 			if (f >= 1) {
 				if (floor(f - frametime) != floor(f)) {
 					if (f < 4)
@@ -601,7 +601,7 @@ void() world_check_rules {
 					GameStatus_Set(strcat("^1Game starts in ", ftos(floor(f)), " seconds"), 2);
 				}
 			}
-			if (time >= game_starttime) {
+			if (time >= map_starttime) {
 				GameStatus_Set("^1Begin!", 1);
 				sound_play2all("announcer/robotic/begin.wav");
 				world_check_time_remaining = world_check_5min_remaining;

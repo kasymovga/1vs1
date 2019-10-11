@@ -13,4 +13,8 @@ float map_finished;
 float map_intermission_running;
 float map_intermission_exittime;
 float map_already_changed;
+float map_starttime; //point in time when the countdown is over
+float map_restart_active;
+float sys_ticrate; // gets initialised in worlspawn, saves the value from cvar("sys_ticrate")
 void(void) map_finish;
+string map_list;

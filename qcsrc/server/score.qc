@@ -926,11 +926,11 @@ void(float sprio, float stprio, float score_enabled) score_basics {
 	if(score_enabled)
 		ST_SCORE = score_register_team_score("score", stprio);
 
-	if not(independent_players)
+	if not(player_independent)
 		SP_KILLS = score_register("kills", 0);
 
 	SP_DEATHS = score_register("deaths", SFL_LOWER_IS_BETTER);
-	if not(independent_players)
+	if not(player_independent)
 		SP_SUICIDES = score_register("suicides", SFL_LOWER_IS_BETTER);
 
 	if(score_enabled)

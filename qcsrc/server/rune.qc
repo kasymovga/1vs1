@@ -124,7 +124,7 @@ void(void) rune_carried_think {
 	float rcount, rnum;
 	vector ang;
 	entity rune;
-	if(self.owner.classname != "player" || time < game_starttime) {
+	if(self.owner.classname != "player" || time < map_starttime) {
 		rune_respawn();
 		return;
 	}

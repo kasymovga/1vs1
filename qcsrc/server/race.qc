@@ -164,7 +164,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		else
 		{
 			s = score_player_add(e, SP_RACE_TIME, 0);
-			snew = TIME_ENCODE(time - game_starttime);
+			snew = TIME_ENCODE(time - map_starttime);
 			score_player_add(e, SP_RACE_TIME, snew - s);
 			l = score_player_team_add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
 
@@ -729,7 +729,7 @@ void race_Reset()
 	if(g_race_qualifying == 2)
 	{
 		g_race_qualifying = 0;
-		independent_players = 0;
+		player_independent = 0;
 		cvar_set("fraglimit", ftos(race_fraglimit));
 		cvar_set("leadlimit", ftos(race_leadlimit));
 		cvar_set("timelimit", ftos(race_timelimit));
@@ -1072,7 +1072,7 @@ void race_init() {
 	}
 
 	if (g_race_qualifying)
-		independent_players = 1;
+		player_independent = 1;
 
 	if (g_race) {
 		GameHook_WinningCondition = race_WinningCondition;

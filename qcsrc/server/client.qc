@@ -42,7 +42,7 @@ void PutClientInServer()
 	if (self.just_connected) {
 		self.team = -1;
 		self.just_connected = FALSE;
-		if (time + 5 < game_starttime)
+		if (time + 5 < map_starttime)
 			announce(self, "announcer/robotic/prepareforbattle.wav", "^3Prepare for Battle");
 	}
 	entity e;
@@ -651,7 +651,7 @@ Called every frame for each client before the physics are run
 */
 void PlayerPreThink (void)
 {
-	self.stat_game_starttime = game_starttime;
+	self.stat_map_starttime = map_starttime;
 	self.stat_leadlimit = score_leadlimit;
 	if(spectator_block && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).

@@ -257,7 +257,7 @@ void item_schedule_respawn(entity e)
 void item_schedule_initial_respawn(entity e)
 {
 	item_show(e, 0);
-	item_schedule_respawn_in(e, max(0, game_starttime - time) + ITEM_RESPAWNTIME_INITIAL(e));
+	item_schedule_respawn_in(e, max(0, map_starttime - time) + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
 float(entity item, entity player) item_give_to {
@@ -271,7 +271,7 @@ float(entity item, entity player) item_give_to {
 	pickedup = FALSE;
 	_switchweapon = FALSE;
 
-	if (time < game_starttime)
+	if (time < map_starttime)
 		return FALSE;
 
 	if (GameHookChain_ItemGiveToHandle(item, player)) {

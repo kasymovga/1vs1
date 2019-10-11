@@ -254,7 +254,7 @@ float conquest_WinningCondition()
 
 	if (one_of_team_cannot_spawn) {
 		if not(conq_lasthope) {
-			float new_time_limit = (time - game_starttime + g_conq_lasthope_time) / 60;
+			float new_time_limit = (time - map_starttime + g_conq_lasthope_time) / 60;
 			conq_timelimit_save = cvar("timelimit");
 			cvar_set("timelimit", ftos(new_time_limit));
 			conq_lasthope = 1;

@@ -245,7 +245,7 @@ void() player_effects {
 	if (g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;
 
-	if (time >= game_starttime)
+	if (time >= map_starttime)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
@@ -2089,7 +2089,7 @@ void(entity pl) player_body_setup {
 	pl.movetype = MOVETYPE_QCWALK;
 	pl.solid = SOLID_SLIDEBOX;
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
-	if(independent_players)
+	if(player_independent)
 		MAKE_INDEPENDENT_PLAYER(pl);
 }
 
@@ -2145,11 +2145,11 @@ void(entity spot) player_spawn {
 	self.pauserotfuel_finished = time + g_balance_pause_fuel_rot_spawn;
 	self.pauseregen_finished = time + g_balance_pause_health_regen_spawn;
 	//extend the pause of rotting if client was reset at the beginning of the countdown
-	if(!restart_active && time < game_starttime) {
-		self.spawnshieldtime += game_starttime - time;
-		self.pauserotarmor_finished += game_starttime - time;
-		self.pauserothealth_finished += game_starttime - time;
-		self.pauseregen_finished += game_starttime - time;
+	if(!map_restart_active && time < map_starttime) {
+		self.spawnshieldtime += map_starttime - time;
+		self.pauserotarmor_finished += map_starttime - time;
+		self.pauserothealth_finished += map_starttime - time;
+		self.pauseregen_finished += map_starttime - time;
 	}
 	self.damageforcescale = 2;
 	self.death_time = 0;
@@ -2215,7 +2215,7 @@ void(entity spot) player_spawn {
 
 		if (currentlyPlaying == sv_reset_on_join) {
 			reset_on_join_done = TRUE;
-			if (time > game_starttime)
+			if (time > map_starttime)
 				ready_restart_force();
 		}
 	}
@@ -2248,8 +2248,8 @@ float(entity plr, float wep) player_can_fire {
 	if (PLAYER_DEAD(plr))
 		return FALSE;
 
-	if (time < game_starttime)
-	if (!restart_active)
+	if (time < map_starttime)
+	if (!map_restart_active)
 		return FALSE;
 
 	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused

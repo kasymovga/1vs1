@@ -612,7 +612,7 @@ void nadget_AdvanceRegen(entity plr, float delta, float limit) {
 
 void nadget_PlayerPreThink(void) {
 	nadget_PlayerPreThink_NextLink();
-    if(time < game_starttime)
+    if(time < map_starttime)
         return;
 
     if(self.hg_linker && wasfreed(self.hg_linker))

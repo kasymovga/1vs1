@@ -760,9 +760,9 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 {
 	string teams_missing;
 
-	if(time < game_starttime)
+	if(time < map_starttime)
 	{
-		kh_Controller_SetThink(game_starttime - time + 0.1, "", kh_WaitForPlayers);
+		kh_Controller_SetThink(map_starttime - time + 0.1, "", kh_WaitForPlayers);
 		return;
 	}
 
@@ -779,9 +779,9 @@ void kh_StartRound()  // runs at the start of each round
 	float i, players, teem;
 	entity player;
 
-	if(time < game_starttime)
+	if(time < map_starttime)
 	{
-		kh_Controller_SetThink(game_starttime - time + 0.1, "", kh_WaitForPlayers);
+		kh_Controller_SetThink(map_starttime - time + 0.1, "", kh_WaitForPlayers);
 		return;
 	}
 
@@ -904,7 +904,7 @@ void kh_Reset() {
 	if (kh_roundbased)
 		kh_Controller_SetThink(0, "", kh_WaitRoundBegin);
 	else
-		kh_Controller_SetThink(g_kh_delay_round + max(0, game_starttime - time), "", kh_WaitForPlayers);
+		kh_Controller_SetThink(g_kh_delay_round + max(0, map_starttime - time), "", kh_WaitForPlayers);
 }
 
 var void(entity e) kh_SpectateCopy_NextLink;

@@ -114,7 +114,7 @@ void(void) dom_controlpoint_think {
 			dom_controlpoint_capture_stop();
 		}
 	}
-	if (map_finished || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
+	if (map_finished || self.delay > time || time < map_starttime)	// game has ended, don't keep giving points
 		return;
 
 	waittime = g_dom_point_rate;

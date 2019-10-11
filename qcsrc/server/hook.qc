@@ -316,7 +316,7 @@ void() hook_PlayerPreThink {
 		if(button_hook)
 		{
 			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
-			if (time > game_starttime)
+			if (time > map_starttime)
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
