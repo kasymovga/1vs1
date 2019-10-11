@@ -1570,7 +1570,7 @@ void() player_regen {
 .float items_added;
 void() player_think {
 	if(self.deadflag == DEAD_NO)
-	if not(gameover)
+	if not(map_finished)
 		self.play_time += frametime;
 
 	if(self.teleport_time)
@@ -1703,7 +1703,7 @@ void(void) player_impulse {
 	entity e, e2;
 
 	imp = self.impulse;
-	if (!imp || gameover)
+	if (!imp || map_finished)
 		return;
 	self.impulse = 0;
 
@@ -2009,7 +2009,7 @@ void() player_post_think {
 	if (self.impulse)
 		player_impulse();
 
-	if (intermission_running)
+	if (map_intermission_running)
 		return;		// intermission or finale
 
 	self.pressedkeys = 0;
@@ -2159,7 +2159,7 @@ void(entity spot) player_spawn {
 	self.pain_frame = 0;
 	self.pain_finished = 0;
 	self.pushltime = 0;
-	self.think = world.think;
+	self.think = func_null;
 	self.nextthink = 0;
 	self.dmg_team = 0;
 	client_put_to_spot(spot);
@@ -2350,7 +2350,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 // decolorizes and team colors the player name when needed
 string(entity p) player_name {
     string t;
-    if (teamplay && !intermission_running && p.classname == "player") {
+    if (teamplay && !map_intermission_running && p.classname == "player") {
         t = team_color_code(p.team);
         return strcat(t, strdecolorize(p.netname));
     } else
