@@ -67,3 +67,4 @@ void(entity e, .vector anim, float looping, float override, float restart) playe
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == "player")
 #define FOR_EACH_TEAMPLAYER(x) FOR_EACH_CLIENT(x) if (x.team > 0)
 float player_count;
+float g_maxpushtime;

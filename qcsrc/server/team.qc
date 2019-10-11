@@ -269,7 +269,7 @@ float(entity pl) team_find_smallest {
 	smallestteam_count = 999999999;
 	smallestteam_score = 999999999;
 
-	if(bots_would_leave)
+	if(bot_would_leave)
 	//if(pl.classname != "player")
 	if(clienttype(pl) != CLIENTTYPE_BOT)
 	{
@@ -295,58 +295,58 @@ float(entity pl) team_find_smallest {
 	if (c3 == smallestteam_count && pl.team == COLOR_TEAM3) return 3;
 	if (c4 == smallestteam_count && pl.team == COLOR_TEAM4) return 4;
 	if (c1 == smallestteam_count)
-		smallestteam_score = min(smallestteam_score, team1_score);
+		smallestteam_score = min(smallestteam_score, score_team1);
 
 	if (c2 == smallestteam_count)
-		smallestteam_score = min(smallestteam_score, team2_score);
+		smallestteam_score = min(smallestteam_score, score_team2);
 
 	if (c3 == smallestteam_count)
-		smallestteam_score = min(smallestteam_score, team3_score);
+		smallestteam_score = min(smallestteam_score, score_team3);
 
 	if (c4 == smallestteam_count)
-		smallestteam_score = min(smallestteam_score, team4_score);
+		smallestteam_score = min(smallestteam_score, score_team4);
 
 	team_random = 0;
 	if (c1 == smallestteam_count)
-	if (smallestteam_score == team1_score)
+	if (smallestteam_score == score_team1)
 		team_random++;
 
 	if (c2 == smallestteam_count)
-	if (smallestteam_score == team2_score)
+	if (smallestteam_score == score_team2)
 		team_random++;
 
 	if (c3 == smallestteam_count)
-	if (smallestteam_score == team3_score)
+	if (smallestteam_score == score_team3)
 		team_random++;
 
 	if (c4 == smallestteam_count)
-	if (smallestteam_score == team4_score)
+	if (smallestteam_score == score_team4)
 		team_random++;
 
 	team_random = team_random * random();
 	if (c1 == smallestteam_count)
-	if (smallestteam_score == team1_score) {
+	if (smallestteam_score == score_team1) {
 		if (team_random <= 1)
 			return 1;
 		else
 			team_random -= 1;
 	}
 	if (c2 == smallestteam_count)
-	if (smallestteam_score == team2_score) {
+	if (smallestteam_score == score_team2) {
 		if (team_random <= 1)
 			return 2;
 		else
 			team_random -= 1;
 	}
 	if (c3 == smallestteam_count)
-	if (smallestteam_score == team3_score) {
+	if (smallestteam_score == score_team3) {
 		if (team_random <= 1)
 			return 3;
 		else
 			team_random -= 1;
 	}
 	if (c4 == smallestteam_count)
-	if (smallestteam_score == team4_score) {
+	if (smallestteam_score == score_team4) {
 		if (team_random <= 1)
 			return 4;
 		else

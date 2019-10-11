@@ -2537,4 +2537,5 @@ void() player_init {
 
 	CACHE_CVAR(bot_taunt);
 	CACHE_CVAR(bot_talk);
+	CACHE_CVAR(g_maxpushtime);
 }

@@ -51,7 +51,7 @@ void target_spawn_useon(entity e)
 		}
 		else
 		{
-			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
+			data = stov(db_get(db_temp, strcat("/target_spawn/field/", key)));
 			if(data_y == 0) // undefined field, i.e., invalid type
 			{
 				print("target_spawn: invalid/unknown entity key ", key, " specified, ignored!\n");
@@ -165,7 +165,7 @@ void target_spawn_useon(entity e)
 						print("target_spawn: try to get a field of a non-entity, ignored!\n");
 						continue;
 					}
-					data2 = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", valuefield)));
+					data2 = stov(db_get(db_temp, strcat("/target_spawn/field/", valuefield)));
 					if(data2_y == 0) // undefined field, i.e., invalid type
 					{
 						print("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!\n");
@@ -299,10 +299,10 @@ void target_spawn_initialize_field_db()
 			fn = entityfieldname(i);
 			ft = entityfieldtype(i);
 			new = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
-			prev = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", fn)));
+			prev = stov(db_get(db_temp, strcat("/target_spawn/field/", fn)));
 			if(prev_y == 0)
 			{
-				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(new));
+				db_put(db_temp, strcat("/target_spawn/field/", fn), vtos(new));
 				if(fn == "target_spawn_spawnfunc")
 					target_spawn_spawnfunc_field = i;
 			}

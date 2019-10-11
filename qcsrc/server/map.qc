@@ -26,7 +26,7 @@ float() map_list_get_position {
 
 float(string map) map_has_right_size {
 	float fh;
-	if(currentbots || cvar("bot_number") || player_count < cvar("minplayers"))
+	if(bot_count || cvar("bot_number") || player_count < cvar("minplayers"))
 	if(cvar("g_maplist_check_waypoints"))
 	{
 		fh = fopen(strcat("maps/", map, ".waypoints"), FILE_READ);
@@ -264,7 +264,7 @@ float() map_do_next_override {
 	}
 	if(cvar("quit_when_empty"))
 	{
-		if(player_count <= currentbots)
+		if(player_count <= bot_count)
 		{
 			localcmd("quit\n");
 			alreadychangedlevel = TRUE;

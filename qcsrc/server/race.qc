@@ -209,15 +209,15 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						rr = CTS_RECORD;
 					else
 						rr = RACE_RECORD;
-					grecordtime = stof(db_get(ServerProgsDB, strcat(mapname, rr, "time")));
-					grecordholder = db_get(ServerProgsDB, strcat(mapname, rr, "netname"));
+					grecordtime = stof(db_get(db_server, strcat(mapname, rr, "time")));
+					grecordholder = db_get(db_server, strcat(mapname, rr, "netname"));
 					if(grecordholder == e.netname)
 						grecordholder = "";
 					if(grecordtime == 0)
 					{
 						bprint(e.netname, "^7 set the all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-						db_put(ServerProgsDB, strcat(mapname, rr, "time"), ftos(t));
-						db_put(ServerProgsDB, strcat(mapname, rr, "netname"), e.netname);
+						db_put(db_server, strcat(mapname, rr, "time"), ftos(t));
+						db_put(db_server, strcat(mapname, rr, "netname"), e.netname);
 						client_write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 					}
 					else if(t < grecordtime)
@@ -226,8 +226,8 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 							bprint(e.netname, "^7 broke his all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
 						else
 							bprint(e.netname, "^7 broke ", grecordholder, "^7's all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-						db_put(ServerProgsDB, strcat(mapname, rr, "time"), ftos(t));
-						db_put(ServerProgsDB, strcat(mapname, rr, "netname"), e.netname);
+						db_put(db_server, strcat(mapname, rr, "time"), ftos(t));
+						db_put(db_server, strcat(mapname, rr, "netname"), e.netname);
 						client_write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 					}
 					else
@@ -1012,11 +1012,11 @@ string race_FixClientCvars() {
 
 string race_RecordForMap(string bspname) {
 	string recid = (g_race ? RACE_RECORD : CTS_RECORD);
-	float r = stof(db_get(ServerProgsDB, strcat(bspname, recid, "time")));
+	float r = stof(db_get(db_server, strcat(bspname, recid, "time")));
 	if (r == 0)
 		return "";
 
-	return strcat(strpad(32, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", db_get(ServerProgsDB, strcat(bspname, recid, "netname")), "\n");
+	return strcat(strpad(32, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", db_get(db_server, strcat(bspname, recid, "netname")), "\n");
 }
 
 float race_ReadyAllowed() {

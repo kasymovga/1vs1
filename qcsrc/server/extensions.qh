@@ -1,5 +1,5 @@
-
 //DarkPlaces supported extension list, draft version 1.04
+float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
 
 //things that don't have extensions yet:
 .float disableclientprediction;

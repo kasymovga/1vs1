@@ -201,7 +201,6 @@ void() world_precache {
 void(void) world_static_init {
 	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
-	CACHE_CVAR(g_maxpushtime);
 	minstagib_init();
 	item_init();
 	warmup_init();
@@ -260,11 +259,6 @@ void world_dynamic_init() {
 	announce_init();
 }
 
-void world_db_init() {
-	ServerProgsDB = db_load("server.db");
-	TemporaryDB = db_create();
-}
-
 string world_getrecords() {
     float i;
     string s;
@@ -303,7 +297,7 @@ void(void) world_init {
 		++client_max_count;
 		head = nextent(head);
 	}
-	world_db_init();
+	db_init();
 	// 0 normal
 	lightstyle(0, "m");
 	// 1 FLICKER (first variety)
@@ -544,45 +538,45 @@ float() world_check_rules_run_out_spawns {
 	if(!spawn_has_been_used)
 		return FALSE;
 
-	team1_score = team2_score = team3_score = team4_score = 0;
+	score_team1 = score_team2 = score_team3 = score_team4 = 0;
 
 	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
 	{
 		if(head.team == COLOR_TEAM1)
-			team1_score = 1;
+			score_team1 = 1;
 		else if(head.team == COLOR_TEAM2)
-			team2_score = 1;
+			score_team2 = 1;
 		else if(head.team == COLOR_TEAM3)
-			team3_score = 1;
+			score_team3 = 1;
 		else if(head.team == COLOR_TEAM4)
-			team4_score = 1;
+			score_team4 = 1;
 	}
 
 	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
 	{
 		if(head.team == COLOR_TEAM1)
-			team1_score = 1;
+			score_team1 = 1;
 		else if(head.team == COLOR_TEAM2)
-			team2_score = 1;
+			score_team2 = 1;
 		else if(head.team == COLOR_TEAM3)
-			team3_score = 1;
+			score_team3 = 1;
 		else if(head.team == COLOR_TEAM4)
-			team4_score = 1;
+			score_team4 = 1;
 	}
 
 	world_winners_clear();
-	if(team1_score + team2_score + team3_score + team4_score == 0)
+	if(score_team1 + score_team2 + score_team3 + score_team4 == 0)
 	{
 		checkrules_equality = TRUE;
 		return TRUE;
 	}
-	else if(team1_score + team2_score + team3_score + team4_score == 1)
+	else if(score_team1 + score_team2 + score_team3 + score_team4 == 1)
 	{
 		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
+		if(score_team1) t = COLOR_TEAM1;
+		if(score_team2) t = COLOR_TEAM2;
+		if(score_team3) t = COLOR_TEAM3;
+		if(score_team4) t = COLOR_TEAM4;
 		team_teams_allowed(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
@@ -714,7 +708,7 @@ void() world_gameover {
 		if(minTotalFrags > other.totalfrags)
 			minTotalFrags = other.totalfrags;
 	}
-	if(!currentbots)
+	if(!bot_count)
 	{
 		FOR_EACH_PLAYER(other)
 		{
@@ -753,7 +747,7 @@ void() world_check_rules {
 
 	timelimit = cvar("timelimit") * 60;
 	fraglimit = cvar("fraglimit");
-	leadlimit = cvar("leadlimit");
+	score_leadlimit = cvar("leadlimit");
 
 	if(warmup_active || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
@@ -761,7 +755,7 @@ void() world_check_rules {
 			timelimit = 0; // timelimit is not made for warmup
 		if(fraglimit > 0)
 			fraglimit = 0; // no fraglimit for now
-		leadlimit = 0; // no leadlimit for now
+		score_leadlimit = 0; // no leadlimit for now
 	}
 
 	if(timelimit > 0)
@@ -817,7 +811,7 @@ void() world_check_rules {
 			}
 		}
 	}
-	if (GameHook_WinningCondition(fraglimit, leadlimit)) {
+	if (GameHook_WinningCondition(fraglimit, score_leadlimit)) {
 		world_gameover();
 		return;
 	}
@@ -910,8 +904,7 @@ void RestoreGame()
 	// Loaded from a save game
 	// some things then break, so let's work around them...
 
-	// Progs DB (capture records)
-	world_db_init();
+	db_init();
 	// Mapinfo
 	MapInfo_OnRestore();
 	world_dynamic_init();
@@ -931,12 +924,8 @@ void SV_Shutdown()
 	{
 		world_initialized = 0;
 		print("Saving persistent data...\n");
+		db_shutdown();
 		Ban_SaveBans();
-		db_save(ServerProgsDB, "server.db");
-		if(cvar("developer"))
-			db_save(TemporaryDB, "server-temp.db");
-		db_close(ServerProgsDB);
-		db_close(TemporaryDB);
 		print("done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();

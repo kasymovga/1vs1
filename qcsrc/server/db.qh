@@ -1,0 +1,4 @@
+float db_server;
+float db_temp;
+void(void) db_init;
+void(void) db_shutdown;

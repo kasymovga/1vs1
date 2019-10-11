@@ -323,7 +323,7 @@ void Radio_ClientConnect_Delayed(void) {
 
 void Radio_RealClientConnect(void) {
 	Radio_RealClientConnect_NextLink();
-	if (player_count - currentbots == 1)
+	if (player_count - bot_count == 1)
 		defer(5, Radio_Queue_PlayFirst);
 
 	if(!radio_playing)

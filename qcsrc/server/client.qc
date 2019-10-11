@@ -656,7 +656,7 @@ Called every frame for each client before the physics are run
 void PlayerPreThink (void)
 {
 	self.stat_game_starttime = game_starttime;
-	self.stat_leadlimit = leadlimit;
+	self.stat_leadlimit = score_leadlimit;
 	if(blockSpectators && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		client_check_spectator_block();

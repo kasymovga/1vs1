@@ -861,10 +861,10 @@ float(float limit, float _leadlimit) score_winning_condition {
 
 	if(teamplay)
 	{
-		team1_score = score_team_comparable_value(COLOR_TEAM1);
-		team2_score = score_team_comparable_value(COLOR_TEAM2);
-		team3_score = score_team_comparable_value(COLOR_TEAM3);
-		team4_score = score_team_comparable_value(COLOR_TEAM4);
+		score_team1 = score_team_comparable_value(COLOR_TEAM1);
+		score_team2 = score_team_comparable_value(COLOR_TEAM2);
+		score_team3 = score_team_comparable_value(COLOR_TEAM3);
+		score_team4 = score_team_comparable_value(COLOR_TEAM4);
 	}
 
 	world_winners_clear();

@@ -121,6 +121,9 @@ void(float sprio, float stprio, float score_enabled) score_basics;
 void() score_basics_end;
 void() score_generic;
 
+float score_leadlimit;
+float score_team1, score_team2, score_team3, score_team4;
+
 float SP_KILLS;
 float SP_DEATHS;
 float SP_SUICIDES;

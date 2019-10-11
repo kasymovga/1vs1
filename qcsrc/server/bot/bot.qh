@@ -18,6 +18,10 @@ float AI_STATUS_JETPACK_LANDING			= 1024;
 .float isbot; // true if this client is actually a bot
 .float aistatus;
 
+float bot_count;
+float bot_would_leave;
+float bot_waypoints_for_items;
+
 // Skill system
 float skill;
 float autoskill_nextthink;

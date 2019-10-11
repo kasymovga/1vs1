@@ -29,7 +29,7 @@ entity bot_spawn()
 	bot = spawnclient();
 	if (bot)
 	{
-		currentbots = currentbots + 1;
+		bot_count = bot_count + 1;
 		oldself = self;
 		self = bot;
 		bot_setnameandstuff();
@@ -315,7 +315,7 @@ void bot_relinkplayerlist()
 	local entity e;
 	local entity prevbot;
 	player_count = 0;
-	currentbots = 0;
+	bot_count = 0;
 	player_list = e = findchainflags(flags, FL_CLIENT);
 	bot_list = world;
 	prevbot = world;
@@ -332,7 +332,7 @@ void bot_relinkplayerlist()
 				bot_list = e;
 
 			prevbot = e;
-			currentbots = currentbots + 1;
+			bot_count = bot_count + 1;
 		}
 		e = e.chain;
 	}
@@ -420,7 +420,7 @@ void bot_removefromlargestteam()
 		}
 		head = head.chain;
 	}
-	currentbots = currentbots - 1;
+	bot_count = bot_count - 1;
 	dropclient(best);
 };
 
@@ -449,7 +449,7 @@ void bot_removenewest()
 		}
 		head = head.chain;
 	}
-	currentbots = currentbots - 1;
+	bot_count = bot_count - 1;
 	dropclient(best);
 };
 
@@ -535,8 +535,8 @@ void bot_serverframe()
 	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
-	bots_would_leave = FALSE;
-	if ((realplayers || bot_join_empty || (currentbots > 0 && time < 5)))
+	bot_would_leave = FALSE;
+	if ((realplayers || bot_join_empty || (bot_count > 0 && time < 5)))
 	{
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
@@ -551,7 +551,7 @@ void bot_serverframe()
 
 		bots = min(max(minbots, minplayers - activerealplayers), client_max_count - realplayers);
 		if(bots > minbots)
-			bots_would_leave = TRUE;
+			bot_would_leave = TRUE;
 	}
 	else
 	{
@@ -562,7 +562,7 @@ void bot_serverframe()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		while (currentbots < bots)
+		while (bot_count < bots)
 		{
 			if (bot_spawn() == world)
 			{
@@ -571,7 +571,7 @@ void bot_serverframe()
 				break;
 			}
 		}
-		while (currentbots > bots)
+		while (bot_count > bots)
 			bot_removenewest();
 	}
 
@@ -581,7 +581,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	//if (currentbots > 0 || g_waypointeditor)
+	//if (bot_count > 0 || g_waypointeditor)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)

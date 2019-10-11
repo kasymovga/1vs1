@@ -101,7 +101,7 @@ infomessages.qh
 weapon/campingrifle.qh
 weapon/rocketlauncher.qh
 damageindicator.qh
-
+db.qh
 ../client-server/physics.qh
 ../client-server/physics_spiderbot.qh
 ../client-server/physics_aircraft.qh
@@ -275,7 +275,7 @@ onslaught.qc
 nexball.qc
 hook.qc
 vote.qc
-
+db.qc
 campaign.qc
 ../menu-server/campaign.qc
 ../menu-server/cmd.qc

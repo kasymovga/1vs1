@@ -445,12 +445,12 @@ void() ctf_flag_touch {
 		{
 			return;
 		}
-		if(g_ctf_captimerecord_always || player_count - currentbots <= 1) // at most one human
+		if(g_ctf_captimerecord_always || player_count - bot_count <= 1) // at most one human
 		{
 			t = time - other.flagcarried.flagpickuptime;
 			s = str_float_decimals(t, 2);
 			s0 = str_float_decimals(flagcaptimerecord, 2);
-			h0 = db_get(ServerProgsDB, strcat(mapname, "/captimerecord/netname"));
+			h0 = db_get(db_server, strcat(mapname, "/captimerecord/netname"));
 			h1 = other.netname;
 			if(h0 == h1)
 				h0 = "his";
@@ -460,16 +460,16 @@ void() ctf_flag_touch {
 			{
 				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, " seconds\n");
 				flagcaptimerecord = t;
-				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/time"), ftos(t));
-				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/netname"), h1);
+				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
+				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			}
 			else if (t < flagcaptimerecord)
 			{
 				bprint(other.netname, "^7 captured the ", other.flagcarried.netname, " in ", s, ", breaking ", strcat(h0, " previous record of ", s0, " seconds\n"));
 				flagcaptimerecord = t;
-				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/time"), ftos(t));
-				db_put(ServerProgsDB, strcat(mapname, "/captimerecord/netname"), h1);
+				db_put(db_server, strcat(mapname, "/captimerecord/time"), ftos(t));
+				db_put(db_server, strcat(mapname, "/captimerecord/netname"), h1);
 				client_write_recordmarker(other, time - t, t);
 			}
 			else
@@ -1037,11 +1037,11 @@ float(entity attacker, entity inflictor, float deathtype) ctf_DeathHandle {
 }
 
 string(string bspname) ctf_RecordForMap {
-	float r = stof(db_get(ServerProgsDB, strcat(bspname, "/captimerecord/time")));
+	float r = stof(db_get(db_server, strcat(bspname, "/captimerecord/time")));
 	if (r == 0)
 		return "";
 
-	return strcat(strpad(32, bspname), " ", strpad(-6, str_float_decimals(r, 2)), " ", db_get(ServerProgsDB, strcat(bspname, "/captimerecord/netname")), "\n");
+	return strcat(strpad(32, bspname), " ", strpad(-6, str_float_decimals(r, 2)), " ", db_get(db_server, strcat(bspname, "/captimerecord/netname")), "\n");
 }
 
 var void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet_NextLink;
@@ -1068,7 +1068,7 @@ void() ctf_init {
 		g_ctf_win_mode = cvar("g_ctf_win_mode");
 
 	entity_initialize(world, ctf_delayedinit, INITPRIO_GAMETYPE);
-	flagcaptimerecord = stof(db_get(ServerProgsDB, strcat(mapname, "/captimerecord/time")));
+	flagcaptimerecord = stof(db_get(db_server, strcat(mapname, "/captimerecord/time")));
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");

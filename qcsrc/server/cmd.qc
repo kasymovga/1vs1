@@ -146,22 +146,22 @@ void GameCommand(string command)
 
 	if(cmd == "savedb") if(argc == 2)
 	{
-		db_save(ServerProgsDB, argv(1));
+		db_save(db_server, argv(1));
 		print("DB saved.\n");
 		return;
 	}
 
 	if(cmd == "dumpdb") if(argc == 2)
 	{
-		cmd_db_dump(ServerProgsDB, argv(1));
+		cmd_db_dump(db_server, argv(1));
 		print("DB dumped.\n");
 		return;
 	}
 
 	if(cmd == "loaddb") if(argc == 2)
 	{
-		db_close(ServerProgsDB);
-		ServerProgsDB = db_load(argv(1));
+		db_close(db_server);
+		db_server = db_load(argv(1));
 		print("DB loaded.\n");
 		return;
 	}

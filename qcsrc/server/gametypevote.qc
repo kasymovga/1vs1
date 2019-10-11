@@ -94,7 +94,7 @@ float GameTypeVote_Think() {
 		return TRUE;
 	}
 	for (i = 0; i < gametypes_count; i++) {
-		if (gametypes_votes[i] > (player_count - currentbots) / 2) {
+		if (gametypes_votes[i] > (player_count - bot_count) / 2) {
 			MapInfo_SwitchGameType(gametypes[i]);
 			string p = gametypes_profiles[i];
 			if (p != " ")

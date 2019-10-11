@@ -1,5 +1,5 @@
+entity activator;
 void(void) trigger_use_targets;
-
 float trigger_tracebox_hits_hurt(vector start, vector mi, vector ma, vector end);
 void(void) trigger_solid_brush_init;
 float(void) trigger_exact_hit;

@@ -64,8 +64,8 @@ void UDPChat_ShowPlayersStatus() {
 	if(c >= sv_udpchat_spamstatus) {
 		c = 0;
 		string s = strcat(" * server ", sv_udpchat_id, " have ", ftos(player_count), "/", ftos(client_max_count), " clients");
-		if(currentbots > 0)
-			s = strcat(s, " (", ftos(currentbots), " bots)");
+		if(bot_count > 0)
+			s = strcat(s, " (", ftos(bot_count), " bots)");
 
 		UDPChat_SendPacket(s);
 	}

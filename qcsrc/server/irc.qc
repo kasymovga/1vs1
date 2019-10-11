@@ -96,8 +96,8 @@ string IRC_GameInfoString(void) {
 
 string IRC_ClientsInfoString(void) {
     string s = strcat("^1", ftos(player_count), "^7/", ftos(client_max_count), " clients");
-    if(currentbots > 0)
-        s = strcat(s, " (", ftos(currentbots), " bots)");
+    if(bot_count > 0)
+        s = strcat(s, " (", ftos(bot_count), " bots)");
     return s;
 }
 
