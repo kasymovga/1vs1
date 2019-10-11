@@ -270,11 +270,6 @@ vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damag
 .float damage_hits, maxdamage_fired;
 .float stat_leadlimit;
 
-#ifdef PROFILING
-float client_cefc_accumulator;
-float client_cefc_accumulatortime;
-#endif
-
 .float ammoclip;
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
