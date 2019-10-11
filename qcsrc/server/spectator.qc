@@ -248,7 +248,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.weapons = 0;
 	if (self.body) {
 		self.body.modelindex = 0;
-		self.body.customizeentityforclient = world.customizeentityforclient;
+		self.body.customizeentityforclient = func_null;
 	}
 	self.modelindex = 0;
 	self.weapon = 0;
@@ -263,7 +263,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	spectator_note.SendFlags = 1;
-	self.customizeentityforclient = world.customizeentityforclient;
+	self.customizeentityforclient = func_null;
 
 	if not(frags_team_reset)
 		return;
@@ -272,8 +272,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 		self.team = -1;
 		score_touch(self);
 	}
-
-	self.touch = world.touch;
+	self.touch = func_null;
 }
 
 void() spectator_init {
