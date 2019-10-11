@@ -490,7 +490,7 @@ void ClientConnect (void)
 	bot_relinkplayerlist();
 
 	self.spectatortime = time;
-	if(blockSpectators)
+	if(spectator_block)
 	{
 		sprint(self, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 	}
@@ -653,7 +653,7 @@ void PlayerPreThink (void)
 {
 	self.stat_game_starttime = game_starttime;
 	self.stat_leadlimit = score_leadlimit;
-	if(blockSpectators && frametime)
+	if(spectator_block && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		client_check_spectator_block();
 

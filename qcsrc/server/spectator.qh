@@ -2,3 +2,4 @@ void() spectator_init;
 void() spectator_to_player;
 void() spectator_note_update;
 void(float frags_team_reset) spectator_observer_spawn;
+float spectator_block; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds

@@ -167,7 +167,7 @@ void GameCommand(string command)
 	}
 	if (cmd == "nospectators")
 	{
-		blockSpectators = 1;
+		spectator_block = 1;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 		{
 			if(plr.classname == "spectator" || plr.classname == "observer")
