@@ -230,8 +230,6 @@ float independent_players;
 
 .string fog;
 
-string cvar_changes;
-
 float game_starttime; //point in time when the countdown is over
 .float stat_game_starttime;
 
