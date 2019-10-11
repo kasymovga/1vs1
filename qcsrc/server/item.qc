@@ -733,7 +733,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			return;
 		}
 		*/
-		weaponsInMap |= weaponid;
+		weapon_spawned_list |= weaponid;
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
 		precache_sound ("misc/itemrespawn.wav");

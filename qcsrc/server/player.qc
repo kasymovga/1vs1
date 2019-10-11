@@ -2309,7 +2309,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if(weaponsInMap & weaponbit)
+		if(weapon_spawned_list & weaponbit)
 		{
 			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
 

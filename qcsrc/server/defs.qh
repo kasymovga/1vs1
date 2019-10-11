@@ -198,8 +198,6 @@ float sys_ticrate; // gets initialised in worlspawn, saves the value from cvar("
 
 typedef .float floatfield;
 
-float weaponsInMap;
-
 .float respawn_countdown; // next number to count
 
 .float	attack_finished_for[WEP_COUNT];

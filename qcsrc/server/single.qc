@@ -4,7 +4,7 @@ float _single_transit_weapons;
 var void() Single_Shutdown_NextLink;
 void Single_Shutdown() {
 	registercvar("_single_transit_weapons", "0");
-	cvar_set_builtin("_single_transit_weapons", ftos(_single_transit_weapons | weaponsInMap | start_weapons)); //builting function for avoid campaign wrapper
+	cvar_set_builtin("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | start_weapons)); //builting function for avoid campaign wrapper
 	Single_Shutdown_NextLink();
 }
 
