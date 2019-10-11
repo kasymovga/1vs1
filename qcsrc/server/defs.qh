@@ -221,8 +221,6 @@ float lockteams;
 
 .float parm_idlesince;
 
-float next_pingtime;
-
 .float SendFlags;
 .float(entity to, float sendflags) SendEntity;
 

@@ -390,7 +390,6 @@ void(void) world_init {
 	addstat(STAT_BULLETS_LOADED, AS_INT, ammoclip);
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
-	next_pingtime = time + 5;
 	lsmaps_reply = "^7Maps available: ";
 	lsmaps_reply2 = "";
 	for(i = 0, j = 0; i < MapInfo_count; ++i) {
