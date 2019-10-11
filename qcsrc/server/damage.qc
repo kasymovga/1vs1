@@ -154,7 +154,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 				org = targ.origin;
 				headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
 				headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
-				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+				if(trace_hits_box(bullet_from, bullet_to, headmins, headmaxs))
 				{
 					deathtype |= HITTYPE_HEADSHOT;
 				}

@@ -6,7 +6,7 @@ float g_ballistics_materialconstant;
 .float railgunhit;
 .float railgunhitsolidbackup;
 .vector railgunhitloc;
-.vector railgunhitdir;
+.entity railgunhittransform;
 
 float(float mindist, float maxdist, float halflifedist, float d) bullet_exponential_falloff {
 	if(halflifedist > 0)
@@ -27,9 +27,6 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	float f, ffs;
 	self = Akimbo_Owner(self);
 
-	railgun_start = start;
-	railgun_end = end;
-
 	dir = normalize(end - start);
 
 	// go a little bit into the wall because we need to hit this wall later
@@ -49,7 +46,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		// make the entity non-solid so we can hit the next one
 		trace_ent.railgunhit = TRUE;
 		trace_ent.railgunhitloc = end;
-		trace_ent.railgunhitdir = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
+		trace_ent.railgunhittransform = WarpZone_trace_transform;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 
 		// stop if this is a wall
@@ -87,15 +84,17 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 		ent.railgunhit = FALSE;
 
 		//for stats so that team hit will count as a miss
+		bullet_from = WarpZone_TransformOrigin(ent.railgunhittransform, start);
+		bullet_to = WarpZone_TransformOrigin(ent.railgunhittransform, end);
 
-		f = bullet_exponential_falloff(mindist, maxdist, halflifedist, (ent.origin - start) * ent.railgunhitdir);
-		ffs = bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, (ent.origin - start) * ent.railgunhitdir);
+		f = bullet_exponential_falloff(mindist, maxdist, halflifedist, vlen(ent.origin - bullet_from));
+		ffs = bullet_exponential_falloff(mindist, maxdist, forcehalflifedist, vlen(ent.origin - bullet_from));
 
 		// apply the damage
 		if (ent.takedamage) {
 			float d = bdamage * f;
 			damage_record_hits(self, ent, deathtype, 1, d);
-			damage(ent, self, self, d, deathtype, hitloc, ent.railgunhitdir * bforce * ffs);
+			damage(ent, self, self, d, deathtype, hitloc, normalize(bullet_to - bullet_from) * bforce * ffs);
 		}
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
@@ -132,8 +131,8 @@ void(void) bullet_hit {
 		headshot = 0;
 		yoda = 0;
 		damage_headshotbonus = self.dmg_edge;
-		railgun_start = self.origin - 0.1 * self.velocity;
-		railgun_end = self.origin + 0.1 * self.velocity;
+		bullet_from = self.origin - 0.1 * self.velocity;
+		bullet_to = self.origin + 0.1 * self.velocity;
 
 		float d = self.dmg * f;
 		damage_record_hits(self.owner, other, self.projectiledeathtype, 1, d);
