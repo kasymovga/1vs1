@@ -99,7 +99,7 @@ void(void) ready_restart_force {
 }
 
 void(void) ready_restart {
-	if(GameHook_ReadyRestartHard() | gameover | intermission_running) {
+	if(GameHook_ReadyRestartHard() | map_finished | map_intermission_running) {
 		localcmd("\nrestart\n");
 		return;
 	} else

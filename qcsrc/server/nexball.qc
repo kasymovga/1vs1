@@ -320,7 +320,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 }
 
 void(void) nexball_ball_init {
-	if (gameover) return;
+	if (map_finished) return;
 	self.flags &~= FL_ONGROUND;
 	if (self.classname == "nexball_hockey")
 		self.movetype = MOVETYPE_BOUNCEMISSILE;
@@ -464,7 +464,7 @@ void(void) nexball_goal_touch {
 	entity ball;
 	float isclient, pscore, otherteam;
 	string pname;
-	if (gameover) return;
+	if (map_finished) return;
 	if ((self.spawnflags & GOAL_TOUCHPLAYER) && other.ballcarried)
 		ball = other.ballcarried;
 	else

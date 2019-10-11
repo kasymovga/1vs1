@@ -140,11 +140,6 @@ typedef void() voidfunc;
 .float pauserotfuel_finished;
 .vector dest1, dest2;
 
-float gameover;
-float intermission_running;
-float intermission_exittime;
-float alreadychangedlevel;
-
 // minstagib vars
 .float jump_interval;    // laser refire
 

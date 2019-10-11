@@ -146,7 +146,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	else
 		teamsay = FALSE;
 
-	if(intermission_running)
+	if(map_intermission_running)
 		teamsay = FALSE;
 
 	msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);

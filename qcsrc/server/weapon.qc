@@ -745,7 +745,7 @@ void weapon_model_think()
 {
 	float v_shot_idx;
 	self.nextthink = time;
-	if (intermission_running)
+	if (map_intermission_running)
 		self.frame = self.anim_idle_x;
 	if (self.owner.weaponentity != self)
 	{
@@ -926,7 +926,7 @@ void weapon_model_think()
 	local float f;
 	f = 0;
 	float useqcanimation = (sv_qcweaponanimation || self.wframe >= WFRAME_MELEE);
-	if (self.state == WS_RAISE && !intermission_running && g_balance_weaponswitchdelay)
+	if (self.state == WS_RAISE && !map_intermission_running && g_balance_weaponswitchdelay)
 	{
 		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / weapon_rate_factor_for(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
@@ -936,7 +936,7 @@ void weapon_model_think()
 			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
 		}
 	}
-	else if (self.state == WS_DROP && !intermission_running && g_balance_weaponswitchdelay)
+	else if (self.state == WS_DROP && !map_intermission_running && g_balance_weaponswitchdelay)
 	{
 		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor * (1 / weapon_rate_factor_for(self.owner)) / g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;

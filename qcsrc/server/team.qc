@@ -707,7 +707,7 @@ float(entity plr, float targetteam) team_fast_switch_allowed {
 void team_balance_audit(float force)
 {
 	float numplayers, numteams, smallest, toomany;
-	if(intermission_running)
+	if(map_intermission_running)
 		return; // no rebalancing whatsoever please
 
 	if(g_campaign)
@@ -852,7 +852,7 @@ void team_autoswap_best_with_worst(float from, float to) {
 
 float autoswap_lastmaxscore;
 void() teams_balance_check {
-	if (gameover)
+	if (map_finished)
 		return;
 
 	if (bot_vs_human)

@@ -53,7 +53,7 @@ void PutClientInServer()
 	{
 		self.classname = "player";
 	}
-	if(gameover)
+	if(map_finished)
 		self.classname = "observer";
 
 	if(self.classname == "player") {
@@ -620,15 +620,11 @@ void(void) client_intermission_think {
 
 		return;
 	}
-	if (time < intermission_exittime)
+	if (time < map_intermission_exittime)
 		return;
 
 	if (GameTypeVote_Think())
 		return;
-
-	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !self.BUTTON_ATCK && !self.BUTTON_JUMP && !self.BUTTON_ATCK2 && !self.BUTTON_HOOK && !self.BUTTON_USE)
-			return;
 
 	mapvote_start();
 }
@@ -661,7 +657,7 @@ void PlayerPreThink (void)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		client_check_spectator_block();
 
-	if (intermission_running) {
+	if (map_intermission_running) {
 		client_intermission_think();
 		return;
 	}
@@ -714,7 +710,7 @@ void PlayerPostThink (void)
 		if (maxidle)
 		if not(g_campaign)
 		if not(GameHook_ForbidSpectators())
-		if not(intermission_running) {
+		if not(map_intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {
 				announce(self, "announcer/robotic/terminated.wav", "^1Terminated");

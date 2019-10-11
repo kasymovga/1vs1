@@ -67,7 +67,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	vector checkpoint;
 	float f;
 	entity p = world;
-	if not(gameover)
+	if not(map_finished)
 	FOR_EACH_PLAYER(pl)
 	if ((e = player_entity(pl)))
 	if (e.health >= 1)

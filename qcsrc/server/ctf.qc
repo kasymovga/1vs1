@@ -413,7 +413,7 @@ float() ctf_flagcarrier_visible {
 }
 
 void() ctf_flag_touch {
-	if(gameover) return;
+	if(map_finished) return;
 	if (game == GAME_CATF || game == GAME_CTFT)
 	if not(Roundbased_Active)
 		return;

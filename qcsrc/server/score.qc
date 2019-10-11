@@ -94,20 +94,20 @@ void(float t, string name) score_spawn_team {
 float(float t, float scorefield, float score) score_team_add_to {
 	entity s;
 
-	if(gameover)
+	if(map_finished)
 		score = 0;
 
 	if(!score_initialized) return 0; // FIXME remove this when everything uses this system
 	if(t <= 0 || t >= 16)
 	{
-		if(gameover)
+		if(map_finished)
 			return 0;
 		error("Adding score to invalid team!");
 	}
 	s = score_teem_keepers[t - 1];
 	if(!s)
 	{
-		if(gameover)
+		if(map_finished)
 			return 0;
 		error("Adding score to unknown team!");
 	}
@@ -312,7 +312,7 @@ float(entity player, float scorefield, float score) score_player_set {
 	s = player.scorekeeper;
 	if(!s)
 	{
-		if(gameover)
+		if(map_finished)
 			return 0;
 		error("Adding score to unknown player!");
 	}
@@ -323,14 +323,14 @@ float(entity player, float scorefield, float score) score_player_set {
 float(entity player, float scorefield, float score) score_player_add {
 	entity s;
 
-	if(gameover)
+	if(map_finished)
 		score = 0;
 
 	if(!score_initialized) return 0; // FIXME remove this when everything uses this system
 	s = player.scorekeeper;
 	if(!s)
 	{
-		if(gameover)
+		if(map_finished)
 			return 0;
 		error("Adding score to unknown player!");
 	}
@@ -718,7 +718,7 @@ float(float t) score_team_comparable_value {
 
 	if(t <= 0 || t >= 16)
 	{
-		if(gameover)
+		if(map_finished)
 			return 0;
 		error("Reading score of invalid team!");
 	}
@@ -964,7 +964,7 @@ void() score_generic {
 }
 
 void(entity attacker, entity targ, float f) score_give_frag {
-	if(gameover)
+	if(map_finished)
 		return;
 
 	if(f < 0) {

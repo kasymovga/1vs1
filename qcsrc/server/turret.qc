@@ -1130,7 +1130,7 @@ void turret_think()
 	if (time < game_starttime)
 		return;
 
-	if (gameover)
+	if (map_finished)
 		return;
 
     // ONS uses somewhat backwards linking.

@@ -10,7 +10,7 @@
 .float centerprint_expires;
 void centerprint_atprio(entity e, float prio, string s)
 {
-    if (intermission_running)
+    if (map_intermission_running)
         if (prio < CENTERPRIO_MAPVOTE)
             return;
 

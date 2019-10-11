@@ -7,7 +7,7 @@ float irc_startup_time;
 float sv_ircbot_announce_bans;
 float sv_ircbot_announce_chat_from_bots;
 float sv_ircbot_announce_game_events;
-float sv_ircbot_announce_gameover;
+float sv_ircbot_announce_map_finished;
 float sv_ircbot_announce_gamestart;
 float sv_ircbot_announce_irc_joinparts;
 float sv_ircbot_announce_irc_nick;
@@ -188,7 +188,7 @@ void IRC_Init(void) {
 	CACHE_CVAR(sv_ircbot_announce_bans);
 	CACHE_CVAR(sv_ircbot_announce_chat_from_bots);
 	CACHE_CVAR(sv_ircbot_announce_game_events);
-	CACHE_CVAR(sv_ircbot_announce_gameover);
+	CACHE_CVAR(sv_ircbot_announce_map_finished);
 	CACHE_CVAR(sv_ircbot_announce_gamestart);
 	CACHE_CVAR(sv_ircbot_announce_irc_joinparts);
 	CACHE_CVAR(sv_ircbot_announce_irc_nick);
@@ -427,7 +427,7 @@ void IRC_Announce_GameStart(void) { if(!irc) return;
 }
 
 void IRC_Announce_GameOver(void) { if(!irc) return;
-    if(sv_ircbot_announce_gameover)
+    if(sv_ircbot_announce_map_finished)
     if(sv_ircbot_announce_when_empty || player_count > 0 || irc_gamestart_wasannounced)
         IRC_Privmsg(irc.cnt, irc.target, strcat("^1--> ^5", gametype_title, "^7 on ^2", mapname, " ^7ended ^1<-- "));
 }

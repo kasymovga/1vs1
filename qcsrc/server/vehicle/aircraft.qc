@@ -164,7 +164,7 @@ float(void) vehicle_aircraft_physics_hook {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
-    if (gameover) {
+    if (map_finished) {
 		aircraft.velocity = '0 0 0';
 		return 1;
 	}

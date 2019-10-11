@@ -223,7 +223,7 @@ void SV_PlayerPhysics()
 	{
 		float allowed_to_move = 0;
 		if (time >= game_starttime || restart_active)
-		if not(gameover)
+		if not(map_finished)
 		if (GameHook_PlayerAllowedToMove())
 			allowed_to_move = 1;
 

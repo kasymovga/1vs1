@@ -6,7 +6,7 @@ float g_surv_freeze;
 float g_surv_monster_factor;
 float survive_monster_quant;
 entity survive_plan_entity;
-string survive_gameover_message;
+string survive_map_finished_message;
 string survive_wave_prefix;
 
 string wave_string() {
@@ -142,7 +142,7 @@ float survive_WinningCondition() {
 		FOR_EACH_CLIENT(e)
 			e.winning = TRUE;
 
-		survive_gameover_message = "^2All enemies destroyed!\n^2You successfully survived\n";
+		survive_map_finished_message = "^2All enemies destroyed!\n^2You successfully survived\n";
 		e = find(world, targetname, "survive_success");
 		if (e) {
 			oldself = self;
@@ -158,7 +158,7 @@ float survive_WinningCondition() {
 
 	if (survive_active)
 	if not(survive_has_alive_players()) {
-		survive_gameover_message = "^1No alive players left!\n^1Nobody survived\n";
+		survive_map_finished_message = "^1No alive players left!\n^1Nobody survived\n";
 		return TRUE;
 	}
 
@@ -246,7 +246,7 @@ float survive_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 }
 
 string survive_GameOverMessageMod(string s) {
-	return survive_gameover_message;
+	return survive_map_finished_message;
 }
 
 void survive_init_delayed() {
@@ -263,7 +263,7 @@ void survive_init_delayed() {
 
 void survive_init() {
 	team_teams_set_count(1);
-	survive_gameover_message = "^3No time left, game finished";
+	survive_map_finished_message = "^3No time left, game finished";
 	precache_sound("domination/claim.wav");
 	precache_sound("announcer/robotic/begin.wav");
 	precache_sound("announcer/robotic/3.wav");

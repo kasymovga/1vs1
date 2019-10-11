@@ -39,7 +39,7 @@ float vehicle_car_physics_hook() {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
-	if(gameover) {
+	if(map_finished) {
 		mycar.velocity = '0 0 0';
 		return 1;
 	}

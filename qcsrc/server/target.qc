@@ -38,7 +38,7 @@ void(void) target_voicescript_ctrl_think {
 	entity pl = self.owner;
 	float i, n, dt;
 
-	if (pl.voicescript_ctrl != self || pl.classname != "player" || gameover) {
+	if (pl.voicescript_ctrl != self || pl.classname != "player" || map_finished) {
 		remove(self);
 		return;
 	}

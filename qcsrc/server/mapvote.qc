@@ -124,7 +124,7 @@ void mapvote_send_picture(float id) {
 }
 
 float mapvote_client_command(string cmd) {
-	if(!intermission_running)
+	if(!map_intermission_running)
 		return FALSE;
 
 	if(cmd == "mv_getpic") {
@@ -227,7 +227,7 @@ float(float mappos) mapvote_finished {
 
 	map_next_set(mapvote_maps[mappos]);
 	map_change();
-	alreadychangedlevel = TRUE;
+	map_already_changed = TRUE;
 	return TRUE;
 }
 void() mapvote_check_rules1 {
@@ -350,7 +350,7 @@ void mapvote_think() {
 	if(!mapvote_run)
 		return;
 
-	if(alreadychangedlevel)
+	if(map_already_changed)
 		return;
 
 	if(time < mapvote_nextthink)

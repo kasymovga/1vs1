@@ -166,7 +166,7 @@ void Radio_Queue_Request(void) {
 }
 
 void Radio_Queue_PlayFirst(void) {
-	if(!player_count || gameover) {
+	if(!player_count || map_finished) {
 		Radio_Stop();
 		return;
 	}

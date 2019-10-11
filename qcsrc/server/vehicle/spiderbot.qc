@@ -178,7 +178,7 @@ float(void) vehicle_spiderbot_physics_hook {
 		vehicle_extract_player(player, FALSE);
 		return 1;
 	}
-	if(gameover) {
+	if(map_finished) {
 		spider.velocity = '0 0 0';
 		return 1;
 	}

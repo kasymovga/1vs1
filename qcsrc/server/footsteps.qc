@@ -2,7 +2,7 @@ var void() footsteps_ServerFrame_NextLink;
 void() footsteps_ServerFrame {
 	entity oldself = self;
 	FOR_EACH_PLAYER(self)
-		if (!gameover)
+		if (!map_finished)
 		if (self.flags & FL_ONGROUND)
 		if (vlen(self.velocity) > sv_maxspeed * 0.6)
 		if (!self.deadflag)

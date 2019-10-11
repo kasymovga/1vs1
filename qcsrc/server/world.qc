@@ -658,71 +658,6 @@ void world_check_5min_remaining(float timelimit) {
 }
 
 /*
-go to the next level for deathmatch
-only called if a time or frag limit has expired
-*/
-void() world_gameover {
-	float minTotalFrags;
-	float maxTotalFrags;
-	float score;
-	float f;
-	gameover = TRUE;
-	cvar_deinit();
-	string gameover_message;
-	gameover_message = "^2Game finished!";
-	if (teamplay) {
-		if (score_winning_condition_helper_winnerteam > 0)
-			gameover_message = strcat(gameover_message, "\n", team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
-	} else {
-		if (score_winning_condition_helper_winner)
-			gameover_message = strcat(gameover_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
-	}
-	GameStatus_Set(GameHook_GameOverMessageMod(gameover_message), 30);
-	sound_play2all("misc/menu2.wav");
-	intermission_running = 1;
-// enforce a wait time before allowing changelevel
-	if(player_count > 0)
-		intermission_exittime = time + cvar("sv_mapchange_delay");
-	else
-		intermission_exittime = -1;
-
-	VoteReset();
-	world_dump_stats(TRUE);
-	IRC_Announce_GameOver();
-	FOR_EACH_CLIENT(other)
-	{
-		client_intermission(other);
-
-		if(other.winning)
-			bprint(other.netname, " ^7wins.\n");
-	}
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_GAMEOVER);
-	minTotalFrags = 0;
-	maxTotalFrags = 0;
-	FOR_EACH_PLAYER(other)
-	{
-		if(maxTotalFrags < other.totalfrags)
-			maxTotalFrags = other.totalfrags;
-		if(minTotalFrags > other.totalfrags)
-			minTotalFrags = other.totalfrags;
-	}
-	if(!bot_count)
-	{
-		FOR_EACH_PLAYER(other)
-		{
-			score = (other.totalfrags - minTotalFrags) / max(maxTotalFrags - minTotalFrags, 1);
-			f = bound(0, other.play_time / max(time, 1), 1);
-			// store some statistics?
-		}
-	}
-	if (g_campaign)
-		campaign_preintermission();
-
-	localcmd("\nsv_hook_gameend;");
-}
-
-/*
 ============
 world_check_rules
 
@@ -735,7 +670,7 @@ void() world_check_rules {
 
 	VoteThink();
 	mapvote_think();
-	if (gameover)	// someone else quit the game already
+	if (map_finished)	// someone else quit the game already
 	{
 		if(player_count == 0) // Nobody there? Then let's go to the next map
 			mapvote_start();
@@ -764,7 +699,7 @@ void() world_check_rules {
 	else if (timelimit < 0)
 	{
 		// endmatch
-		world_gameover();
+		map_finish();
 		return;
 	}
 
@@ -801,23 +736,23 @@ void() world_check_rules {
 				if (score_winning_condition_helper_equality) {
 					world_overtime();
 				} else {
-					world_gameover();
+					map_finish();
 					return;
 				}
 			} else {
-				world_gameover();
+				map_finish();
 				return;
 			}
 		}
 	}
 	if (GameHook_WinningCondition(fraglimit, score_leadlimit)) {
-		world_gameover();
+		map_finish();
 		return;
 	}
 	if (checkrules_suddendeathend)
 	if (time >= checkrules_suddendeathend || !score_winning_condition_helper_equality)
 	{
-		world_gameover();
+		map_finish();
 		return;
 	}
 };
@@ -913,11 +848,11 @@ void RestoreGame()
 
 void SV_Shutdown()
 {
-	if(gameover > 1) // shutting down already?
+	if(map_finished > 1) // shutting down already?
 		return;
 
 	dlc_finish();
-	gameover = 2; // 2 = server shutting down
+	map_finished = 2; // 2 = server shutting down
 
 	if(world_initialized > 0)
 	{

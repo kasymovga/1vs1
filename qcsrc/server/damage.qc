@@ -68,7 +68,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	if (deathtype != DEATH_TEAMCHANGE)
 		_damage = 0;
 
-	if (gameover || targ.killcount == -666)
+	if (map_finished || targ.killcount == -666)
 		return;
 
 	local entity oldself;

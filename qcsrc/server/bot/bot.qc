@@ -505,7 +505,7 @@ void bot_serverframe()
 	float realplayers, bots, activerealplayers;
 	entity head;
 
-	if (intermission_running)
+	if (map_intermission_running)
 		return;
 
 	if (time < 2)

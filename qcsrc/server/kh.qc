@@ -108,7 +108,7 @@ void kh_Controller_SetThink(float t, string msg, kh_Think_t func)  // runs occas
 
 void kh_Controller_Think()  // called a lot
 {
-	if(intermission_running)
+	if(map_intermission_running)
 		return;
 	if(self.cnt > 0)
 	{
@@ -137,7 +137,7 @@ void kh_Controller_Think()  // called a lot
 // frags 0: no frags
 void kh_Scores_Event(entity player, entity key, float frags_player, float frags_owner)  // update the score when a key is captured
 {
-	if(intermission_running)
+	if(map_intermission_running)
 		return;
 	if(frags_player)
 		score_player_team_add_score(player, frags_player);
@@ -482,7 +482,7 @@ void kh_Key_DropAll(entity player, float suicide, float died) // runs whenever a
 
 void kh_Key_Touch()  // runs many, many times when a key has been dropped and can be picked up
 {
-	if(intermission_running)
+	if(map_intermission_running)
 		return;
 
 	if (kh_roundbased)
@@ -511,7 +511,7 @@ void kh_Key_Think()  // runs all the time
 	entity head;
 	//entity player;  // needed by FOR_EACH_PLAYER
 
-	if(intermission_running)
+	if(map_intermission_running)
 		return;
 
 #ifdef KH_KEY_ATTACHMENT_DEBUG

@@ -62,7 +62,7 @@ void minst_remove_item (void) {
 var void() minstagib_PlayerPreThink_NextLink;
 void minstagib_PlayerPreThink() {
 	minstagib_PlayerPreThink_NextLink();
-	if (time < self.minstagib_nextthink || self.deadflag || gameover)
+	if (time < self.minstagib_nextthink || self.deadflag || map_finished)
 		return;
 
 	if not(self.items & IT_UNLIMITED_AMMO)

@@ -258,7 +258,7 @@ float() map_do_next_override {
 	if (g_campaign) {
 		campaign_postintermission();
 		if (!campaign_map_transition) {
-			alreadychangedlevel = TRUE;
+			map_already_changed = TRUE;
 			return TRUE;
 		}
 	}
@@ -267,14 +267,14 @@ float() map_do_next_override {
 		if(player_count <= bot_count)
 		{
 			localcmd("quit\n");
-			alreadychangedlevel = TRUE;
+			map_already_changed = TRUE;
 			return TRUE;
 		}
 	}
 	if(cvar_string("quit_and_redirect") != "")
 	{
 		redirection_target = strzone(cvar_string("quit_and_redirect"));
-		alreadychangedlevel = TRUE;
+		map_already_changed = TRUE;
 		return TRUE;
 	}
 	if (cvar("samelevel") || GameHook_SameLevel()) // if samelevel is set, stay on same level
@@ -284,7 +284,7 @@ float() map_do_next_override {
 		// so instead just restart the current map using the restart command (DOES NOT WORK PROPERLY WITH exit_cfg STUFF)
 		localcmd("restart\n");
 		//changelevel (mapname);
-		alreadychangedlevel = TRUE;
+		map_already_changed = TRUE;
 		return TRUE;
 	}
 	if(cvar_string("nextmap") != "")
@@ -292,7 +292,7 @@ float() map_do_next_override {
 		{
 			map_next_set(cvar_string("nextmap"));
 			map_change();
-			alreadychangedlevel = TRUE;
+			map_already_changed = TRUE;
 			return TRUE;
 		}
 	return FALSE;
@@ -302,10 +302,10 @@ void() map_goto_next {
 	//local string nextmap;
 	//local float n, nummaps;
 	//local string s;
-	if (alreadychangedlevel)
+	if (map_already_changed)
 		return;
 
-	alreadychangedlevel = TRUE;
+	map_already_changed = TRUE;
 	string nextMap;
 	float allowReset;
 	for(allowReset = 1; allowReset >= 0; --allowReset) {
@@ -333,7 +333,7 @@ string(string m) map_goto {
 
 	cvar_set("nextmap", m);
 	cvar_set("timelimit", "-1");
-	if(mapvote_initialized || alreadychangedlevel) {
+	if(mapvote_initialized || map_already_changed) {
 		if(map_do_next_override())
 			return "Map switch initiated.";
 		else
@@ -345,4 +345,65 @@ string(string m) map_goto {
 
 void() map_list_shuffle {
 	cvar_set("_g_maplist", shufflewords(cvar_string("_g_maplist")));
+}
+
+void() map_finish {
+	float minTotalFrags;
+	float maxTotalFrags;
+	float score;
+	float f;
+	map_finished = TRUE;
+	cvar_deinit();
+	string map_finished_message;
+	map_finished_message = "^2Game finished!";
+	if (teamplay) {
+		if (score_winning_condition_helper_winnerteam > 0)
+			map_finished_message = strcat(map_finished_message, "\n", team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
+	} else {
+		if (score_winning_condition_helper_winner)
+			map_finished_message = strcat(map_finished_message, "\nThe winner is ", score_winning_condition_helper_winner.netname);
+	}
+	GameStatus_Set(GameHook_GameOverMessageMod(map_finished_message), 30);
+	sound_play2all("misc/menu2.wav");
+	map_intermission_running = 1;
+// enforce a wait time before allowing changelevel
+	if(player_count > 0)
+		map_intermission_exittime = time + cvar("sv_mapchange_delay");
+	else
+		map_intermission_exittime = -1;
+
+	VoteReset();
+	world_dump_stats(TRUE);
+	IRC_Announce_GameOver();
+	FOR_EACH_CLIENT(other)
+	{
+		client_intermission(other);
+
+		if(other.winning)
+			bprint(other.netname, " ^7wins.\n");
+	}
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_GAMEOVER);
+	minTotalFrags = 0;
+	maxTotalFrags = 0;
+	FOR_EACH_PLAYER(other)
+	{
+		if(maxTotalFrags < other.totalfrags)
+			maxTotalFrags = other.totalfrags;
+		if(minTotalFrags > other.totalfrags)
+			minTotalFrags = other.totalfrags;
+	}
+	if(!bot_count)
+	{
+		FOR_EACH_PLAYER(other)
+		{
+			score = (other.totalfrags - minTotalFrags) / max(maxTotalFrags - minTotalFrags, 1);
+			f = bound(0, other.play_time / max(time, 1), 1);
+			// store some statistics?
+		}
+	}
+	if (g_campaign)
+		campaign_preintermission();
+
+	localcmd("\nsv_hook_gameend;");
 }

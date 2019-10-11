@@ -9,3 +9,8 @@ void() map_list_shuffle;
 float() map_do_next_override;
 void map_goto_next();
 string map_description;
+float map_finished;
+float map_intermission_running;
+float map_intermission_exittime;
+float map_already_changed;
+void(void) map_finish;

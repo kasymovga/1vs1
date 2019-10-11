@@ -42,7 +42,7 @@ var void() Roundbased_ServerFrame_NextLink;
 void Roundbased_ServerFrame()
 {
 	Roundbased_ServerFrame_NextLink();
-	if (gameover)
+	if (map_finished)
 		return;
 
 	if (warmup_active)
