@@ -1,9 +1,9 @@
 set g_monster_difficulty 2 "Monster difficulty, 0 - Easy, 1 - Medium, 2 - Hard, 3 - Insane"
 set g_monster_pushfactor 0.25
-set g_monster_arachna_health 90
-set g_monster_arachna_damage 40
+set g_monster_arachna_health 120
+set g_monster_arachna_damage 80
 set g_monster_arachna_force 100
-set g_monster_arachna_radius 100
+set g_monster_arachna_radius 200
 set g_monster_boss1_health 3000
 set g_monster_boss1_damage 50
 set g_monster_boss1_force 100
