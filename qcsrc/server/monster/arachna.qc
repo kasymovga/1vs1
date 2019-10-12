@@ -78,15 +78,22 @@ void arachna_remove() {
 	remove(self.exteriorweaponentity);
 }
 
+void(void) arachna_model_setup {
+	if (dlc_ready("arachna")) {
+		setmodel(self, "models/arachna/arachna.md3");
+		setattachment(self.exteriorweaponentity, self, "tag_weapon");
+	}
+}
+
 void arachna_dlc_reset() {
-	setmodel(self, "models/arachna/arachna.md3");
-	setsize(self, '-16 -16 -24', '16 16 32');
-	setattachment(self.exteriorweaponentity, self, "tag_weapon");
+	vector _mins = self.mins;
+	vector _maxs = self.maxs;
+	arachna_model_setup();
+	setsize(self, _mins, _maxs);
 }
 
 void arachna_spawn() {
 	monster_prepare(arachna_hunt, arachna_walk, arachna_idle);
-	setmodel(self, "models/arachna/arachna.md3");
 	self.movetype = MOVETYPE_WALK;
 	self.species = SPECIES_ALIEN;
 	self.exteriorweaponentity = spawn();
@@ -99,6 +106,8 @@ void arachna_spawn() {
 	self.netname = "Arachna";
 	self.view_ofs = '0 0 16';
 	self.dlc_reset = arachna_dlc_reset;
+	if (dlc_ready("arachna"))
+		arachna_model_setup();
 }
 
 void arachna_init() {
