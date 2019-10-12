@@ -39,10 +39,10 @@ set g_monster_fish_health 50
 set g_monster_fish_damage 25
 set g_monster_fish_force 25
 set g_monster_fish_radius 50
-set g_monster_flyingthing_health 100
-set g_monster_flyingthing_damage 50
+set g_monster_flyingthing_health 80
+set g_monster_flyingthing_damage 40
 set g_monster_flyingthing_force 100
-set g_monster_flyingthing_radius 100
+set g_monster_flyingthing_radius 60
 set g_monster_heavysoldier_health 100
 set g_monster_heavysoldier_damage 50
 set g_monster_heavysoldier_force 100
