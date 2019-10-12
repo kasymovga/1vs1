@@ -2,12 +2,10 @@ void fireguy_idle();
 void fireguy_guard();
 void fireguy_walk();
 
-void fireguy_mine_touch(void)
-{
+void(void) fireguy_mine_touch {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
-	if(fire_add_damage(other, self.realowner, self.dmg_edge, 2, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
-	{
+	if(fire_add_damage(other, self.realowner, self.dmg_edge, 2, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0) {
 		remove(self);
 		return;
 	}
@@ -50,7 +48,7 @@ void fireguy_hunt() {
 		vector _shotorg = self.origin + v_forward * 12;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
-		projectile_setup(proj, _shotorg, WEP_FIREBALL, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
+		projectile_setup(proj, _shotorg, WEP_FIREBALL, self.dmg_edge, self.dmg_edge, self.dmg_radius, self.dmg_force);
 		proj.movetype = MOVETYPE_BOUNCE;
 		proj.touch = fireguy_mine_touch;
 		proj.think = fireguy_mine_think;
