@@ -55,7 +55,7 @@ void fireguy_hunt() {
 		proj.nextthink = time;
 		proj.damageforcescale = 0.5;
 		proj.velocity = normalize(_shotdir) * 2000 + v_up * 50;
-		proj.pushltime = time + 10;
+		proj.pushltime = time + 5;
 		weapon_setup_projectile_velocity(proj);
 		self.attack_finished_single = time + 3 + random();
 		self.bulletcounter = time + 0.5;
