@@ -142,7 +142,7 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if (e.BUTTON_CHAT)
 		return FALSE;
-	if (player_calculate_alpha(e, self) < 0)
+	if (player_calculate_alpha(e, self) < 0.2)
 		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;

@@ -25,4 +25,5 @@ entity(float tokens, float idx) client_entity_from_argv;
 void(entity pl, float tstart, float dt) client_write_recordmarker;
 void(entity e) client_intermission;
 string client_stuff;
+string client_fog;
 float client_max_count;

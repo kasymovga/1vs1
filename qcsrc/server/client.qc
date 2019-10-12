@@ -112,8 +112,8 @@ float client_init_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, t);
 	}
 	if (sf & 4) {
-		if(sv_foginterval && world.fog != "")
-			WriteString(MSG_ENTITY, world.fog);
+		if(sv_foginterval && client_fog != "")
+			WriteString(MSG_ENTITY, client_fog);
 		else
 			WriteString(MSG_ENTITY, "");
 	}
@@ -498,11 +498,10 @@ void ClientConnect (void)
 	self.jointime = time;
 	self.allowedTimeouts = sv_timeout_number;
 
-	if(!sv_foginterval && world.fog != "")
-		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
+	if (clienttype(self) == CLIENTTYPE_REAL) {
+		if(!sv_foginterval && client_fog != "")
+			stuffcmd(self, strcat("\nfog ", client_fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	if (clienttype(self) == CLIENTTYPE_REAL)
-	{
 		GameHookChain_RealClientConnect();
 	}
 	GameHookChain_ClientConnect();
@@ -750,6 +749,9 @@ void() client_initialize {
 	CACHE_CVAR(sv_maxconnects_per_address);
 	CACHE_CVAR(g_buttons_hookuse_swap);
 	CACHE_CVAR(sv_foginterval);
+	if (client_fog == "")
+		client_fog = world.fog;
+
 	if (g_buttons_hookuse_swap) {
 		BUTTON_HOOK = buttonuse;
 		BUTTON_USE = button6;

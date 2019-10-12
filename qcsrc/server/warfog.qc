@@ -1,0 +1,35 @@
+float g_warfog;
+float g_warfog_r;
+float g_warfog_g;
+float g_warfog_b;
+float g_warfog_alpha;
+float g_warfog_fade_distance;
+
+var float(entity plr, entity viewer, float dalpha) warfog_PlayerAlphaMod_NextLink;
+float(entity plr, entity viewer, float dalpha) warfog_PlayerAlphaMod {
+	float d = vlen(plr.origin - viewer.origin);
+	float fade_start = g_warfog - g_warfog_fade_distance;
+	if (d > fade_start) {
+		dalpha = 1 - min((d - fade_start) / g_warfog_fade_distance, 1);
+		if ((teamplay && plr.team == viewer.team) || GameHook_PlayerIsCarrier(plr))
+			dalpha = 0.5 + 0.5 * dalpha;
+	}
+	return warfog_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
+}
+
+void(void) warfog_init {
+	CACHE_CVAR(g_warfog);
+	if (g_warfog <= 0)
+		return;
+
+	CACHE_CVAR(g_warfog_fade_distance);
+	CACHE_CVAR(g_warfog_r);
+	CACHE_CVAR(g_warfog_g);
+	CACHE_CVAR(g_warfog_b);
+	CACHE_CVAR(g_warfog_alpha);
+	g_warfog_fade_distance = max(1, g_warfog_fade_distance);
+	warfog_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
+	GameHookChain_PlayerAlphaMod = warfog_PlayerAlphaMod;
+	string fog_str = strcat(ftos(g_warfog_r), " ", ftos(g_warfog_g), " ", ftos(g_warfog_b), " ", ftos(g_warfog_alpha));
+	client_fog = strzone(strcat("0.5 ", fog_str, " ", ftos(g_warfog)));
+}

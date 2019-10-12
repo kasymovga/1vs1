@@ -118,7 +118,7 @@ spectator.qh
 push.qh
 gametypevote.qh
 gamestatus.qh
-
+warfog.qh
 menu.qh
 gamemenu.qh
 walkietalkie.qh
@@ -401,3 +401,4 @@ single.qc
 dynlight.qc
 timeout.qc
 sysinfo.qc
+warfog.qc
