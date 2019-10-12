@@ -13,45 +13,44 @@ keys:
 "weaponmodel" model
 "START_OFF" spawnfunc_light will be in off state until targeted
 */
-float dynlight_customize() {
+float(void) dynlight_customize {
 	if (vlen(self.origin - other.origin) > 2000)
 		return FALSE;
 
 	return TRUE;
 }
 
-void dynlight_on()
-{
+void(void) dynlight_on {
 	self.light_lev = self.dmg;
+	if (self.enemy)
 	if (self.weaponmodel != "")
 		setmodel(self.enemy, self.weaponmodel);
 }
 
-void dynlight_off()
-{
+void(void) dynlight_off {
 	self.light_lev = 0;
-	setmodel(self.enemy, "");
+	if (self.enemy)
+		setmodel(self.enemy, "");
 }
 
-void dynlight_use()
-{
+void(void) dynlight_use {
 	if (self.light_lev == 0)
 		dynlight_on();
 	else
 		dynlight_off();
 }
 
-void dynlight_reset() {
+void(void) dynlight_reset {
 	if (self.targetname != "")
 		dynlight_off();
 	else
 		dynlight_on();
 }
 
-void spawnfunc_dynlight()
-{
+void(void) spawnfunc_dynlight {
 	if (!self.light_lev)
 		self.light_lev = 200;
+
 	if (!self.color)
 		self.color = '1 1 1';
 
@@ -65,7 +64,6 @@ void spawnfunc_dynlight()
 		self.enemy = spawn();
 		setattachment(self.enemy, self, "");
 	}
-
 	self.solid = SOLID_NOT;
 	self.light_lev = 0;
 	self.reset = dynlight_reset;
