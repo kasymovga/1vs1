@@ -81,4 +81,8 @@ void(void) spawnfunc_info_teleport_destination {
 		entity_abort("^3Teleport destination without a targetname");
 }
 
-void(void) spawnfunc_info_intermission { }
+void(void) spawnfunc_info_intermission {
+	if (self.angles == '0 0 0')
+	if (self.mangle != '0 0 0')
+		self.angles = self.mangle;
+}
