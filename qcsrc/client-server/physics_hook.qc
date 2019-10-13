@@ -27,17 +27,17 @@ float(float maxspd_mod) physics_hook {
 		// then pull the player
 		spd = bound(0, (dist - newlength) / g_balance_grapplehook_stretch, 1);
 		physics_hook_old_length = newlength;
-		if not(g_balance_grapplehook_dontpull) {
-			v = v * (1 - frametime * g_balance_grapplehook_airfriction);
-			if (v * dir < 0) {
-				v = v + dir * (frametime * spd * g_balance_grapplehook_force_rubber_overstretch);
-			}
-			v = v + dir * (frametime * spd * g_balance_grapplehook_force_rubber);
+		v = v * (1 - frametime * g_balance_grapplehook_airfriction);
+		if (v * dir < 0) {
+			v = v + dir * (frametime * spd * g_balance_grapplehook_force_rubber_overstretch);
 		}
+		v = v + dir * (frametime * spd * g_balance_grapplehook_force_rubber);
 		if (g_grappling_hook_tarzan >= 2) {
 			hook_pull_aiment(_hook, v, v0, dir);
-		}
-		physics_velocity = v;
+			if not(g_balance_grapplehook_dontpull)
+				physics_velocity = v;
+		} else
+			physics_velocity = v;
 	} else {
 		end = _hook.origin - dir * 50;
 		dist = vlen(end - _hook.origin);
@@ -51,7 +51,6 @@ float(float maxspd_mod) physics_hook {
 
 		physics_velocity = dir * spd;
 	}
-	physics_velocity = v;
 	hook_physics_post(_hook, self);
 	return r;
 }
