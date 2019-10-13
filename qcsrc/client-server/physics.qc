@@ -93,7 +93,6 @@ void(float ground) physics_update_status {
 	float thepoint = pointcontents(origin1);
 	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 	if(physics_watertype) {
-		physics_flags &~= FL_ONGROUND_OR_SLICK;
 		physics_watertype = thepoint;
 		physics_waterlevel = WATERLEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
@@ -103,8 +102,10 @@ void(float ground) physics_update_status {
 			physics_waterlevel = WATERLEVEL_SWIMMING;
 			origin1_z = self.origin_z + 22;
 			thepoint = pointcontents(origin1);
-			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
 				physics_waterlevel = WATERLEVEL_SUBMERGED;
+				physics_flags &~= FL_ONGROUND_OR_SLICK;
+			}
 		}
 	}
 
