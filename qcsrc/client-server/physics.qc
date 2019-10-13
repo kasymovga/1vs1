@@ -86,17 +86,14 @@ void(float ground) physics_update_status {
 			physics_velocity -= f * trace_plane_normal;
 		}
 	}
-
 	// set watertype/waterlevel
 	vector origin1 = self.origin;
 	origin1_z += self.mins_z + 1;
 	physics_waterlevel = WATERLEVEL_NONE;
-
 	float thepoint = pointcontents(origin1);
-
 	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
-	if(physics_watertype)
-	{
+	if(physics_watertype) {
+		physics_flags &~= FL_ONGROUND_OR_SLICK;
 		physics_watertype = thepoint;
 		physics_waterlevel = WATERLEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
