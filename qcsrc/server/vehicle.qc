@@ -21,7 +21,6 @@ float(entity plr, float eject) vehicle_extract_player {
     plr.vehicle        = world;
 	plr.view_ofs       = PL_VIEW_OFS;
 	plr.hud            = HUD_NORMAL;
-	plr.event_damage   = player_damage;
 	plr.lastpushtime = time;
     setsize(plr,PL_MIN,PL_MAX);
 	return 1;
@@ -194,13 +193,11 @@ float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send)
 
     self.owner = other;
     self.switchweapon = other.switchweapon;
-    self.event_damage         = vehicle_stdproc_damage ;
     self.owner.angles         = self.angles;
     self.owner.takedamage     = DAMAGE_NO;
     self.owner.solid          = SOLID_NOT;
     self.owner.PlayerPhysplug = phys_plug;
     self.owner.vehicle        = self;
-    self.owner.event_damage   = stdproc_nothing;
     self.owner.hud            = _hud;
     self.team                 = self.owner.team;
     if(clienttype(other) == CLIENTTYPE_REAL) {
