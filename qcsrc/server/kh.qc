@@ -532,7 +532,7 @@ void kh_Key_Think()  // runs all the time
 		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
 #endif
 
-		if(self.owner.BUTTON_USE)
+		if(self.owner.BUTTON_DROP)
 		if(time >= self.owner.kh_droptime + g_kh_delay_drop)
 		{
 			self.owner.kh_droptime = time;

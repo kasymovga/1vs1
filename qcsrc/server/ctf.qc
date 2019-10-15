@@ -48,8 +48,6 @@ float g_ctf_flagscore_kill;
 float g_ctf_personalscore_kill;
 float g_ctf_showenemycarrier;
 float g_ctf_showenemycarrier_delay;
-float g_ctf_dropbutton_use;
-float g_ctf_dropbutton_hook;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -393,7 +391,7 @@ void() ctf_flag_think {
 	}
 
 	if(g_ctf_allow_drop)
-	if((g_ctf_dropbutton_use && e.BUTTON_USE) || (g_ctf_dropbutton_hook && e.BUTTON_HOOK))
+	if(e.BUTTON_DROP)
 		ctf_flag_drop(self, e, world);
 }
 
@@ -979,8 +977,6 @@ void() ctf_delayedinit {
 	CACHE_CVAR(g_ctf_personalscore_kill);
 	CACHE_CVAR(g_ctf_showenemycarrier);
 	CACHE_CVAR(g_ctf_showenemycarrier_delay);
-	CACHE_CVAR(g_ctf_dropbutton_use);
-	CACHE_CVAR(g_ctf_dropbutton_hook);
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "ctf_team") == world)
 		ctf_spawnteams();
