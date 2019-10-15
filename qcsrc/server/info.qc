@@ -81,8 +81,22 @@ void(void) spawnfunc_info_teleport_destination {
 		entity_abort("^3Teleport destination without a targetname");
 }
 
+void(void) info_intermission_setup_angles {
+	entity e = find(world, targetname, self.target);
+	if not(e)
+		return;
+
+	self.angles = vectoangles(e.origin - self.origin);
+	self.angles_z = 0;
+}
+
 void(void) spawnfunc_info_intermission {
 	if (self.angles == '0 0 0')
 	if (self.mangle != '0 0 0')
 		self.angles = self.mangle;
+
+	self.angles_z = 0;
+	if (self.target != "") {
+		entity_initialize(self, info_intermission_setup_angles, INITPRIO_FIRST);
+	}
 }
