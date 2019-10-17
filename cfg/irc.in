@@ -20,6 +20,7 @@ set sv_ircbot_announce_joinparts_delay 15
 set sv_ircbot_announce_joinparts_showcountry_timeout 1
 set sv_ircbot_announce_joinparts_showgameinfo 1
 set sv_ircbot_announce_joinparts_showip 0
+set sv_ircbot_announce_map_finished 1
 set sv_ircbot_announce_name 1
 set sv_ircbot_announce_radio 1
 set sv_ircbot_announce_votes 1
