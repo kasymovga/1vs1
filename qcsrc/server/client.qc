@@ -7,6 +7,7 @@ float sv_maxidle;
 float sv_maxidle_forcespec;
 float sv_maxconnects_per_address;
 float sv_foginterval;
+float g_buttons_hookuse_swap;
 
 void(entity to) client_set_view {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
