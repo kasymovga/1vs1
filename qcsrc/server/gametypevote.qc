@@ -33,6 +33,9 @@ float GameTypeVote_Think() {
 	float i, max_votes, gametype_max_votes, tmp, nextmap_types, t;
 	string nextmap;
 
+	if not(gametypes_mapinfo_mask)
+		return FALSE;
+
 	if (gametypevote_finished) {
 		if (gametypevote) {
 			menu_remove(gametypevote);
