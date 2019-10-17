@@ -347,11 +347,33 @@ void() map_list_shuffle {
 	cvar_set("_g_maplist", shufflewords(cvar_string("_g_maplist")));
 }
 
+entity map_intermission;
+void(void) map_intermission_screenshot {
+	entity e;
+	if(cvar("sv_autoscreenshot"))
+	FOR_EACH_CLIENT(e) {
+		if(clienttype(self) == CLIENTTYPE_REAL)
+			stuffcmd(self, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
+
+		return;
+	}
+}
+
+void(void) map_intermission_think {
+	self.nextthink = time + frametime;
+	if (GameTypeVote_Think()) {
+		return;
+	}
+	mapvote_start();
+}
+
 void() map_finish {
 	float minTotalFrags;
 	float maxTotalFrags;
 	float score;
 	float f;
+	string s;
+	entity e;
 	map_finished = TRUE;
 	cvar_deinit();
 	string map_finished_message;
@@ -366,19 +388,40 @@ void() map_finish {
 	GameStatus_Set(GameHook_GameOverMessageMod(map_finished_message), 30);
 	sound_play2all("misc/menu2.wav");
 	map_intermission_running = 1;
+	FOR_EACH_CLIENT(e) {
+		e.solid = SOLID_NOT;
+		e.movetype = MOVETYPE_NONE;
+		e.takedamage = DAMAGE_NO;
+		if(e.weaponentity) {
+			e.weaponentity.effects = EF_NODRAW;
+			if (e.weaponentity.weaponentity)
+				e.weaponentity.weaponentity.effects = EF_NODRAW;
+		}
+		if(clienttype(e) == CLIENTTYPE_REAL) {
+			stuffcmd(e, "\nscr_printspeed 1000000\n");
+			s = cvar_string("sv_intermission_cdtrack");
+			if(s != "")
+				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
+		}
+	}
 // enforce a wait time before allowing changelevel
 	if(player_count > 0)
 		map_intermission_exittime = time + cvar("sv_mapchange_delay");
 	else
 		map_intermission_exittime = -1;
 
+	map_intermission = spawn();
+	map_intermission.think = map_intermission_think;
+	if(cvar("sv_autoscreenshot")) {
+		defer(0.8, map_intermission_screenshot);
+		map_intermission.nextthink = time + max(1 + time, cvar("sv_mapchange_delay"));
+	} else {
+		map_intermission.nextthink = time + max(frametime, cvar("sv_mapchange_delay"));
+	}
 	VoteReset();
 	world_dump_stats(TRUE);
 	IRC_Announce_GameOver();
-	FOR_EACH_CLIENT(other)
-	{
-		client_intermission(other);
-
+	FOR_EACH_CLIENT(other) {
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
 	}
