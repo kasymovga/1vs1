@@ -74,12 +74,6 @@ void single_init_delayed(void) {
 			map_target.use = Single_EndLevel;
 		}
 	}
-	if (game == GAME_COOP) {
-		IceHook_FrozenStatus = Single_IceFrozenStatus;
-		IceHook_SkipDeathHandle = Single_IceSkipDeathHandle;
-		IceHook_Unfroze = Single_IceUnfroze;
-		Ice_Init();
-	}
 	_single_transit_weapons = cvar_builtin("_single_transit_weapons"); //builtin to avoid campaign intercepting
 	float i, j;
 	for(i = WEP_FIRST, j = 1; i < WEP_LAST; ++i, j *= 2) {
@@ -160,57 +154,22 @@ void Single_PlayerPreThink() {
 	Single_PlayerPreThink_NextLink();
 }
 
-var void(float) Coop_PlayerClear_NextLink;
-void Coop_PlayerClear(float killed) {
-	Coop_PlayerClear_NextLink(killed);
-	if (self.classname != "disconnecting")
-		return;
-
-	entity e;
-	FOR_EACH_PLAYER(e) { //last alive player leave
-		if (e != self)
-		if (e.deadflag == DEAD_NO)
-			return;
-	}
-	single_level_finished = TRUE;
-	campaign_won = FALSE;
-}
-
 var void(entity) Single_Spawn_NextLink;
 void Single_Spawn(entity e) {
 	self.default_equip = TRUE;
 	Single_Spawn_NextLink(e);
 }
 
-var void() Coop_ObserverSpawn_NextLink;
-void() Coop_ObserverSpawn {
-	Coop_ObserverSpawn_NextLink();
-	entity e;
-	float have_players;
-	have_players = FALSE;
-	FOR_EACH_PLAYER(e) { //last alive player become spectator
-		if (e != self) {
-			if (e.deadflag == DEAD_NO)
-				return;
-
-			have_players = TRUE;
-		}
-	}
-	if (have_players) {
-		single_level_finished = TRUE;
-		campaign_won = FALSE;
+void(entity attacker) single_MonsterKilled {
+	if (attacker.classname == "player") {
+		score_player_add(attacker, SP_SCORE, self.frags);
+		score_team_add_to(attacker.team, ST_SCORE, self.frags);
 	}
 }
 
 void Single_Init() {
 	GameHook_SameLevel = Single_SameLevel;
 	GameHook_ForbidSpectators = Single_ForbidSpectators;
-	if (game == GAME_COOP) {
-		Coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
-		GameHookChain_PlayerClear = Coop_PlayerClear;
-		Coop_ObserverSpawn_NextLink = GameHookChain_ObserverSpawn;
-		GameHookChain_ObserverSpawn = Coop_ObserverSpawn;
-	}
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = single_player_equip_handle;
 	GameHook_WinningCondition = Single_WinningCondition;
@@ -226,57 +185,9 @@ void Single_Init() {
 	GameHookChain_Spawn = Single_Spawn;
 	Single_Shutdown_NextLink = GameHookChain_Shutdown;
 	GameHookChain_Shutdown = Single_Shutdown;
+	GameHook_MonsterKilled = single_MonsterKilled;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
 	entity_initialize(world, single_init_delayed, INITPRIO_GAMETYPE);
-	if (game == GAME_COOP) {
-		team_play_activate();
-		team_teams_set_count(1);
-	}
-}
-
-void coop_teleporter_think(void) {
-	if (self.solid == SOLID_TRIGGER) {
-		self.alpha = approach(self.alpha, 1, 1);
-		if (self.alpha > 0.99)
-			return;
-	} else {
-		self.alpha = approach(self.alpha, 0, 1);
-		if (self.alpha < 0.01) {
-			self.alpha = -1;
-			return;
-		}
-	}
-	self.nextthink = time;
-}
-
-void coop_teleporter_use(void) {
-	if (self.solid == SOLID_TRIGGER) {
-		self.solid = SOLID_NOT;
-		self.effects &~= EF_STARDUST;
-	} else {
-		self.solid = SOLID_TRIGGER;
-		self.effects |= EF_STARDUST;
-		if (self.alpha < 0)
-			self.alpha = 0.01;
-	}
-	self.nextthink = time;
-}
-
-void spawnfunc_coop_teleporter(void) {
-	if (game != GAME_COOP) {
-		remove(self);
-		return;
-	}
-	precache_model("models/portal.md3");
-	spawnfunc_trigger_teleport();
-	setmodel(self, "models/portal.md3");
-	setsize(self, '-32 -32 0', '32 32 40');
-	self.angles_x = 90;
-	self.angles_z = 0;
-	self.alpha = -1;
-	self.think = coop_teleporter_think;
-	self.use = coop_teleporter_use;
-	self.use();
 }

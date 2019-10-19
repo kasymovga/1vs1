@@ -111,8 +111,11 @@ void() gametype_init {
 		team_play_activate();
 		survive_init();
 	}
-	if (game == GAME_SINGLE || game == GAME_COOP)
+	if (game == GAME_SINGLE)
 		Single_Init();
+
+	if (game == GAME_COOP)
+		coop_init();
 
 	if(teamplay)
 		entcs_init();

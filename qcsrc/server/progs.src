@@ -25,6 +25,7 @@ sound.qh
 announce.qh
 location_request.qh
 single.qh
+coop.qh
 map.qh
 defs.qh		// Should rename this, it has fields and globals
 world.qh
@@ -398,6 +399,7 @@ udpchat.qc
 score_damage.qc
 ice.qc
 single.qc
+coop.qc
 dynlight.qc
 timeout.qc
 sysinfo.qc
