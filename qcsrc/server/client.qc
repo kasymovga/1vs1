@@ -538,7 +538,7 @@ void(void) client_check_spectator_block {
 	}
 }
 
-void(void) client_pre_think {
+void(void) client_pre_think { //called by engine
 	self.stat_map_starttime = map_starttime;
 	self.stat_leadlimit = score_leadlimit;
 	if(spectator_block && frametime)
@@ -565,7 +565,7 @@ void(void) client_pre_think {
 }
 
 .float idlekick_lasttimeleft;
-void(void) client_post_think {
+void(void) client_post_think { //called by engine
 	// Savage: Check for nameless players
 	if (strlen(strdecolorize(self.netname)) < 1) {
 		self.netname = "Empty Name";
