@@ -85,7 +85,7 @@ void Roundbased_ServerFrame()
 			FOR_EACH_TEAMPLAYER(plr) {
 				self = plr;
 				self.classname = "player";
-				PutClientInServer();
+				client_put();
 			}
 			self = oldself;
 		}

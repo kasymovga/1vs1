@@ -145,3 +145,12 @@ void		end_sys_globals;
 /////////////////////////////////////////////////////////
 void		end_sys_fields;
 /////////////////////////////////////////////////////////
+#define client_parms_new SetNewParms
+#define client_parms_change SetChangeParms
+#define client_parms_decode DecodeLevelParms
+#define client_kill ClientKill
+#define client_connect ClientConnect
+#define client_disconnect ClientDisconnect
+#define client_put PutClientInServer
+#define client_pre_think PlayerPreThink
+#define client_post_think PlayerPostThink

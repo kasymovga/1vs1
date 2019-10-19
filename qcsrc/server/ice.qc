@@ -246,7 +246,7 @@ float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, f
 	if (deathtype == DEATH_SLIME ||
 			deathtype == DEATH_LAVA ||
 			deathtype == DEATH_HURTTRIGGER)
-		PutClientInServer();
+		client_put();
 
 	self.unfroze_progress = 0;
 

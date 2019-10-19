@@ -522,7 +522,7 @@ void GameCommand(string command)
 				player_set_team(plr, team_index(t), team_index(t), FALSE);
 				e = self;
 				self = plr;
-				PutClientInServer();
+				client_put();
 				self = e;
 				if (clienttype(plr) == CLIENTTYPE_REAL)
 					centerprint(plr, strcat("You have been moved into a different team\nYou are now on: ", team_colored_name(t)));
@@ -646,7 +646,8 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "spectate") {
 		if not(self.flags & FL_CLIENT)
 			return;
-		ClientKill_TeamChange(-2);
+
+		client_team_change_kill(-2);
 	} else if(cmd == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
@@ -661,15 +662,15 @@ void SV_ParseClientCommand(string s) {
 		} else if(team_lock) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
-			DoTeamChange(COLOR_TEAM1);
+			client_team_change(COLOR_TEAM1);
 		} else if( argv(1) == "blue" ) {
-			DoTeamChange(COLOR_TEAM2);
+			client_team_change(COLOR_TEAM2);
 		} else if( argv(1) == "yellow" ) {
-			DoTeamChange(COLOR_TEAM3);
+			client_team_change(COLOR_TEAM3);
 		} else if( argv(1) == "pink" ) {
-			DoTeamChange(COLOR_TEAM4);
+			client_team_change(COLOR_TEAM4);
 		} else if( argv(1) == "auto" ) {
-			DoTeamChange(-1);
+			client_team_change(-1);
 		} else {
 			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 		}

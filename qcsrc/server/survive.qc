@@ -54,7 +54,7 @@ void survive_trigger() {
 		if (self.team >= 0) {
 			if (self.classname != "player" || (g_surv_freeze && self.deadflag == DEAD_FREEZE)) {
 				self.classname = "player";
-				PutClientInServer();
+				client_put();
 			}
 			survive_monster_quant += g_surv_monster_factor;
 		}
@@ -110,7 +110,7 @@ void survive_plan() {
 		if (self.team >= 0) {
 			if (self.classname != "player" || (g_surv_freeze && self.deadflag == DEAD_FREEZE)) {
 				self.classname = "player";
-				PutClientInServer();
+				client_put();
 			}
 			if (clienttype(self) == CLIENTTYPE_REAL)
 				announce_force(self, "domination/claim.wav", "");

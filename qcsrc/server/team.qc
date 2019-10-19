@@ -489,7 +489,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 			if (e.team == dteam) {
 				e.team = -1;
 				self = e;
-				PutClientInServer();
+				client_put();
 				self = oldself;
 				break;
 			}
@@ -923,7 +923,7 @@ void(float t) team_spawn_players {
 			e.classname = "player";
 			oldself = self;
 			self = e;
-			PutClientInServer();
+			client_put();
 			self = oldself;
 		}
 }

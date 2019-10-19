@@ -108,7 +108,7 @@ void() spectator_think {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
-				PutClientInServer();
+				client_put();
 			}
 		} else if (self.BUTTON_ATCK2 && self.team <= 0) {
 			spectator_observer_spawn(FALSE);
@@ -173,7 +173,7 @@ void() spectator_to_player {
 			if(g_campaign)
 				campaign_bots_may_start = 1;
 
-			PutClientInServer();
+			client_put();
 			score_touch(self);
 			if(self.classname == "player")
 				bprint ("^4", self.netname, "^4 is playing now\n");

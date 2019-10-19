@@ -949,7 +949,7 @@ void(float dorespawn) world_reset {
 			self.velocity = '0 0 0';
 			self.avelocity = '0 0 0';
 			self.movement = '0 0 0';
-			PutClientInServer();
+			client_put();
 		}
 	}
 	self = oldself;

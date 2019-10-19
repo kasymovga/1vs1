@@ -29,16 +29,8 @@ void(entity spot) client_put_to_spot{
 	client_set_view(self);
 }
 
-/*
-=============
-PutClientInServer
-
-Called when a client spawns in the server
-=============
-*/
 .float just_connected;
-void PutClientInServer()
-{
+void(void) client_put {
 	if (self.just_connected) {
 		self.team = -1;
 		self.just_connected = FALSE;
@@ -164,37 +156,19 @@ void() client_init_spawn {
 	net_link_entity(client_init, FALSE, 0, client_init_send);
 }
 
-/*
-=============
-SetNewParms
-=============
-*/
-void SetNewParms (void)
-{
+void(void) client_parms_new { //called by engine
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
 	GameHook_SetNewParms();
 }
 
-/*
-=============
-SetChangeParms
-=============
-*/
-void SetChangeParms (void)
-{
+void(void) client_parms_change { //called by engine
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
 	GameHook_SetChangeParms();
 }
 
-/*
-=============
-DecodeLevelParms
-=============
-*/
-void DecodeLevelParms (void)
-{
+void(void) client_parms_decode { //called by engine
 	// load parms
 	self.parm_idlesince = parm1;
 	if(self.parm_idlesince == -(86400 * 366))
@@ -205,73 +179,52 @@ void DecodeLevelParms (void)
 	GameHook_DecodeLevelParms();
 }
 
-/*
-=============
-ClientKill
-
-Called when a client types 'kill' in the console
-=============
-*/
-
-void ClientKill_Now_TeamChange()
-{
-	if(self.killindicator_teamchange == -2)
-	{
+void(entity cl, float _team) client_kill_now_team_change {
+	if (_team == -2) {
 		player_to_spec(self);
 	}
-	else if(self.killindicator_teamchange == -1)
-	{
-		self.team = -1;
-		team_join_best(self, FALSE);
-	}
-	else
-		team_change(self, self.killindicator_teamchange, FALSE);
+	else if(_team == -1) {
+		cl.team = -1;
+		team_join_best(cl, FALSE);
+	} else
+		team_change(cl, _team, FALSE);
 }
 
-void ClientKill_Now()
-{
-	if(self.killindicator_teamchange)
-		ClientKill_Now_TeamChange();
+void(entity cl, float _team) client_kill_now {
+	if(_team)
+		client_kill_now_team_change(cl, _team);
 	else
-		damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+		damage(cl, cl, cl, 100000, DEATH_KILL, cl.origin, '0 0 0');
 
-	if(self.killindicator)
-	{
-		remove(self.killindicator);
-		self.killindicator = world;
+	if(cl.killindicator) {
+		remove(cl.killindicator);
+		cl.killindicator = world;
 	}
 }
-void KillIndicator_Think()
-{
-	if (!self.owner.modelindex)
-	{
+
+void(void) client_killindicator_think {
+	if (self.owner.classname != "player") {
 		self.owner.killindicator = world;
 		remove(self);
 		return;
 	}
-
-	if(self.cnt <= 0)
-	{
-		self = self.owner;
-		ClientKill_Now(); // no oldself needed
+	if(self.cnt <= 0) {
+		client_kill_now(self.owner, self.team);
 		return;
-	}
-	else
-	{
-		if(self.cnt <= 10)
+	} else {
+		if (self.cnt <= 10)
 			setmodel(self, strcat("models/sprites/", ftos(self.cnt), ".spr32"));
-		if(clienttype(self.owner) == CLIENTTYPE_REAL)
-		{
-			if(self.cnt <= 10)
+
+		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
+			if (self.cnt <= 10)
 				announce(self.owner, strcat("announcer/robotic/", ftos(self.cnt), ".wav"), "");
-			if(self.owner.killindicator_teamchange)
-			{
-				if(self.owner.killindicator_teamchange == -1)
+
+			if (self.owner.killindicator.team) {
+				if (self.owner.killindicator.team == -1)
 					centerprint(self.owner, strcat("Changing team in ", ftos(self.cnt), " seconds"));
 				else
-					centerprint(self.owner, strcat("Changing to ", team_colored_name(self.owner.killindicator_teamchange), " in ", ftos(self.cnt), " seconds"));
-			}
-			else
+					centerprint(self.owner, strcat("Changing to ", team_colored_name(self.owner.killindicator.team), " in ", ftos(self.cnt), " seconds"));
+			} else
 				centerprint(self.owner, strcat("^1Suicide in ", ftos(self.cnt), " seconds"));
 		}
 		self.nextthink = time + 1;
@@ -279,21 +232,20 @@ void KillIndicator_Think()
 	}
 }
 
-void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
-{
+void(float destteam) client_team_change_kill {
 	float killtime;
 	killtime = GameHook_KillDelayMod(g_balance_kill_delay);
-	self.killindicator_teamchange = targetteam;
 	if not(self.killindicator) {
-		if (killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, targetteam)) {
-			ClientKill_Now();
+		if (killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, destteam)) {
+			client_kill_now(self, destteam);
 		} else {
 			self.killindicator = spawn();
 			self.killindicator.owner = self;
 			self.killindicator.scale = 0.5;
+			self.killindicator.team = destteam;
 			setattachment(self.killindicator, self, "");
 			setorigin(self.killindicator, '0 0 52');
-			self.killindicator.think = KillIndicator_Think;
+			self.killindicator.think = client_killindicator_think;
 			self.killindicator.nextthink = time + (self.lip) * 0.05;
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
@@ -302,25 +254,20 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto
 		}
 	}
 	if (self.killindicator) {
-		if (targetteam)
-			self.killindicator.colormod = team_color(targetteam);
+		self.killindicator.team = destteam;
+		if (destteam)
+			self.killindicator.colormod = team_color(destteam);
 		else
 			self.killindicator.colormod = '0 0 0';
 	}
 }
 
-void ClientKill (void)
-{
-	ClientKill_TeamChange(0);
-}
-
-void DoTeamChange(float destteam)
-{
+void(float destteam) client_team_change {
 	float t, c0;
-	if(!teamplay)
-	{
-		if(destteam >= 0)
+	if not(teamplay) {
+		if (destteam >= 0)
 			player_set_colors(self, destteam);
+
 		return;
 	}
 	if (self.team <= 0)
@@ -329,44 +276,54 @@ void DoTeamChange(float destteam)
 		centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
 		return;
 	}
-	if(self.classname == "player")
-	if(destteam == -1)
-	{
+	if (self.classname == "player")
+	if (destteam == -1) {
 		team_teams_allowed(self);
 		t = team_find_smallest(self);
-		switch(self.team)
-		{
-			case COLOR_TEAM1: c0 = c1; break;
-			case COLOR_TEAM2: c0 = c2; break;
-			case COLOR_TEAM3: c0 = c3; break;
-			case COLOR_TEAM4: c0 = c4; break;
-			default:          c0 = 999;
+		switch (self.team) {
+		case COLOR_TEAM1: c0 = c1; break;
+		case COLOR_TEAM2: c0 = c2; break;
+		case COLOR_TEAM3: c0 = c3; break;
+		case COLOR_TEAM4: c0 = c4; break;
+		default:          c0 = 999;
 		}
-		switch(t)
-		{
-			case 1:
-				if(c0 > c1)
-					destteam = COLOR_TEAM1;
-				break;
-			case 2:
-				if(c0 > c2)
-					destteam = COLOR_TEAM2;
-				break;
-			case 3:
-				if(c0 > c3)
-					destteam = COLOR_TEAM3;
-				break;
-			case 4:
-				if(c0 > c4)
-					destteam = COLOR_TEAM4;
-				break;
+		switch (t) {
+		case 1:
+			if (c0 > c1)
+				destteam = COLOR_TEAM1;
+
+			break;
+
+		case 2:
+			if (c0 > c2)
+				destteam = COLOR_TEAM2;
+
+			break;
+
+		case 3:
+			if (c0 > c3)
+				destteam = COLOR_TEAM3;
+
+			break;
+
+		case 4:
+			if (c0 > c4)
+				destteam = COLOR_TEAM4;
+
+			break;
+
 		}
-		if(destteam == -1)
+		if (destteam == -1)
 			return;
 	}
-	if(destteam == self.team && destteam >= 0 && !self.killindicator)
+	if (destteam == self.team && destteam >= 0 && !self.killindicator)
 		return;
-	ClientKill_TeamChange(destteam);
+
+	client_team_change_kill(destteam);
+}
+
+void(void) client_kill { //called by engine, "kill" command
+	client_team_change_kill(0);
 }
 
 void (entity e) client_fix_cvars{
@@ -418,16 +375,8 @@ float() client_preconnect_abort {
 	return FALSE;
 }
 
-/*
-=============
-ClientConnect
-
-Called when a client connects to the server
-=============
-*/
 float client_playerid_last;
-void ClientConnect (void)
-{
+void(void) client_connect { //called by engine
 	if not(self.flags & FL_CLIENT) {
 		if (client_preconnect_abort())
 			return;
@@ -507,15 +456,7 @@ void ClientConnect (void)
 	GameHookChain_ClientConnect();
 }
 
-/*
-=============
-ClientDisconnect
-
-Called when a client disconnects from the server
-=============
-*/
-void ClientDisconnect (void)
-{
+void(void) client_disconnect { //called by engine
 	if not(self.flags & FL_CLIENT)
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
@@ -597,15 +538,7 @@ void(void) client_check_spectator_block {
 	}
 }
 
-/*
-=============
-PlayerPreThink
-
-Called every frame for each client before the physics are run
-=============
-*/
-void PlayerPreThink (void)
-{
+void(void) client_pre_think {
 	self.stat_map_starttime = map_starttime;
 	self.stat_leadlimit = score_leadlimit;
 	if(spectator_block && frametime)
@@ -631,16 +564,8 @@ void PlayerPreThink (void)
 	}
 }
 
-/*
-=============
-PlayerPostThink
-
-Called every frame for each client after the physics are run
-=============
-*/
 .float idlekick_lasttimeleft;
-void PlayerPostThink (void)
-{
+void(void) client_post_think {
 	// Savage: Check for nameless players
 	if (strlen(strdecolorize(self.netname)) < 1) {
 		self.netname = "Empty Name";

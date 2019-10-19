@@ -6,9 +6,8 @@ float client_button_atck2_busy;
 
 void client_initialize();
 float() client_preconnect_abort;
-void PutClientInServer();
 void(entity e) client_fix_cvars;
-void ClientKill_Now_TeamChange();
+void client_kill_now_team_change(entity cl, float _team);
 void() client_init_spawn;
 void() client_cvars_request;
 void() client_cvars_parse;

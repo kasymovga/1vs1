@@ -208,7 +208,6 @@ typedef .float floatfield;
 
 // set when showing a kill countdown
 .entity killindicator;
-.float killindicator_teamchange;
 
 .float parm_idlesince;
 

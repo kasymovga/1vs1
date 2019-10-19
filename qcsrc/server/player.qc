@@ -166,7 +166,7 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 
 void(void) player_respawn {
 	player_body_detach(1, MOVETYPE_TOSS);
-	PutClientInServer();
+	client_put();
 }
 
 void(void) player_species_setup {
@@ -806,7 +806,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	targ.death_origin = targ.origin;
 	if(targ != attacker)
 		targ.killer_origin = attacker.origin;
-	// FIXME: this should go in PutClientInServer
+	// FIXME: this should go in client_put
 	if (targ.killcount)
 		targ.killcount = 0;
 }
@@ -935,8 +935,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (self.health < 1)
 	if not(GameHook_DeathHandle(attacker, inflictor, deathtype))
 	{
-		float defer_ClientKill_Now_TeamChange;
-		defer_ClientKill_Now_TeamChange = FALSE;
+		float defer_client_kill_now_team_change;
+		defer_client_kill_now_team_change = FALSE;
 		float switchweapon_save = self.weapon;
 		if(deathtype == DEATH_DROWN)
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
@@ -944,12 +944,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_death), VOL_BASE, ATTN_NORM);
 
 		// get rid of kill indicator
-		if(self.killindicator)
-		{
-			remove(self.killindicator);
-			self.killindicator = world;
-			if(self.killindicator_teamchange)
-				defer_ClientKill_Now_TeamChange = TRUE;
+		if(self.killindicator) {
+			if(self.killindicator.team)
+				defer_client_kill_now_team_change = TRUE;
 
 			if(self.classname == "body")
 			if(deathtype == DEATH_KILL)
@@ -1036,8 +1033,8 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			//WriteAngle (MSG_ONE, 80);
 		}
 
-		if(defer_ClientKill_Now_TeamChange)
-			ClientKill_Now_TeamChange();
+		if(defer_client_kill_now_team_change)
+			client_kill_now_team_change(self, self.killindicator.team);
 	}
 }
 
@@ -1477,7 +1474,7 @@ void(entity player) player_to_spec
 		if(spectator_block)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 
-		PutClientInServer();
+		client_put();
 		score_touch(player);
 		self = oldself;
 		spectator_note_update();
