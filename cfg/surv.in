@@ -1,6 +1,6 @@
-set g_surv_scorelimit "" "Dummy cvar, survival not have scorelimit"
+set g_surv_scorelimit "0" "Dummy cvar, survival not have scorelimit"
 set g_surv_timelimit "" "Timelimit for survival, when empty, g_timelimit using, <= 0 mean no limit"
-set g_surv_leadlimit "" "Dummy cvar, survival not have leadlimit"
+set g_surv_leadlimit "0" "Dummy cvar, survival not have leadlimit"
 set g_surv_wave_pause 20
 set g_surv_wave_skip 0
 set g_surv_monster_factor 0.5

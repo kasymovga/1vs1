@@ -1,6 +1,6 @@
-set g_ons_scorelimit "" "Dummy cvar, ONS not have scorelimit"
+set g_ons_scorelimit "0" "Dummy cvar, ONS not have scorelimit"
 set g_ons_timelimit "" "Timelimit for OnSlaught, when empty, g_timelimit using, <= 0 mean no limit"
-set g_ons_leadlimit "" "Dummy cvar, ONS not have leadlimit"
+set g_ons_leadlimit "0" "Dummy cvar, ONS not have leadlimit"
 set g_ons_gen_health 5000
 set g_ons_cp_health 1000
 set g_ons_cp_buildhealth 100

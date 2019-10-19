@@ -1,6 +1,6 @@
-set g_single_scorelimit "" "Dummy cvar, single not have scorelimit"
+set g_single_scorelimit "0" "Dummy cvar, single not have scorelimit"
 set g_single_timelimit "0" "Timelimit for single, when empty, g_timelimit using, <= 0 mean no limit"
-set g_single_leadlimit "" "Dummy cvar, single not have leadlimit"
+set g_single_leadlimit "0" "Dummy cvar, single not have leadlimit"
 set single_g_pickup_respawntime_weapon -1
 set single_g_pickup_respawntime_healthsmall -1
 set single_g_pickup_respawntime_healthmedium -1
