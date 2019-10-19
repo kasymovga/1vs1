@@ -161,10 +161,8 @@ void Single_Spawn(entity e) {
 }
 
 void(entity attacker) single_MonsterKilled {
-	if (attacker.classname == "player") {
+	if (attacker.classname == "player")
 		score_player_add(attacker, SP_SCORE, self.frags);
-		score_team_add_to(attacker.team, ST_SCORE, self.frags);
-	}
 }
 
 void Single_Init() {
