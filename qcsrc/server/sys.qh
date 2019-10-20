@@ -154,3 +154,4 @@ void		end_sys_fields;
 #define client_put PutClientInServer
 #define client_pre_think PlayerPreThink
 #define client_post_think PlayerPostThink
+#define cmd_game GameCommand

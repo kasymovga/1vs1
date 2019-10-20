@@ -35,8 +35,7 @@ void(float db, string pFilename) cmd_db_dump {
 	fclose(fh);
 }
 
-void GameCommand(string command)
-{
+void(string command) cmd_game {
 	float argc;
 	entity client, e;
 	vector v;
@@ -214,7 +213,7 @@ void GameCommand(string command)
 			team_lock = 0;
 
 			self = client;
-			SV_ParseClientCommand(strcat("selectteam ", argv(2)));
+			cmd_client(strcat("selectteam ", argv(2)));
 
 			team_lock = lt;
 		}
@@ -598,7 +597,7 @@ float cmd_floodcheck()
 	return FALSE;
 }
 
-void SV_ParseClientCommand(string s) {
+void(string s) cmd_client {
 	string cmd;
 	float tokens;
 	entity e;

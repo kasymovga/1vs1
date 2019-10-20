@@ -681,7 +681,7 @@ void VoteCount() {
 		// master is not allowed.  This could be used for
 		// trolling or worse. 'self' is the user who has
 		// called the vote because this function is called
-		// by SV_ParseClientCommand. Maybe all voting should
+		// by cmd_client. Maybe all voting should
 		// be disabled for a single player?
 		cmd_print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
 		if(votecaller) {

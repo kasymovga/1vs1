@@ -1706,7 +1706,8 @@ float FILE_WRITE = 2;
 //idea: KrimZon
 //darkplaces implementation: KrimZon, LordHavoc
 //engine-called QC prototypes:
-//void(string s) SV_ParseClientCommand;
+void(string s) SV_ParseClientCommand;
+#define cmd_client SV_ParseClientCommand
 //builtin definitions:
 void(entity e, string s) clientcommand = #440;
 float(string s) tokenize = #441;
