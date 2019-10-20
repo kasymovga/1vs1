@@ -138,7 +138,7 @@ void world_dynamic_init() {
 	hook_init(FALSE);
 	turret_readcvars();
 	WaypointSprite_Init();
-	Vote_Init();
+	vote_init();
 	push_init();
 	player_init();
 	backpack_init();
@@ -555,8 +555,7 @@ Exit deathmatch games upon conditions
 void() world_check_rules {
 	float timelimit;
 	float fraglimit;
-
-	VoteThink();
+	vote_think();
 	mapvote_think();
 	if (map_finished)	// someone else quit the game already
 	{

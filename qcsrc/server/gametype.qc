@@ -36,8 +36,7 @@ float(string s) gametype_value {
 }
 
 void() gametype_init {
-	VoteReset();
-
+	vote_reset();
 	// make sure only ONE type is selected
 	gametype_readcvars();
 	MapInfo_LoadMapSettings(mapname);

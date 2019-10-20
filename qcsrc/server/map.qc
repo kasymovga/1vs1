@@ -418,7 +418,7 @@ void() map_finish {
 	} else {
 		map_intermission.nextthink = time + max(frametime, cvar("sv_mapchange_delay"));
 	}
-	VoteReset();
+	vote_reset();
 	world_dump_stats(TRUE);
 	IRC_Announce_GameOver();
 	FOR_EACH_CLIENT(other) {

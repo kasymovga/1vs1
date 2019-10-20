@@ -55,9 +55,7 @@ void(void) ready_restart_force {
 	map_restart_active = 1;
 
 	bprint("^1Server is restarting...\n");
-
-	VoteReset();
-
+	vote_reset();
 	// clear overtime
 	if (checkrules_overtimesadded > 0) {
 		//we have to decrease timelimit to its original value again!!

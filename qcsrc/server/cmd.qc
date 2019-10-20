@@ -59,14 +59,14 @@ void(string command) cmd_game {
 		print("  allready\n");
 		print("  cvar_changes\n");
 		print("  find classname\n");
-		GameCommand_Vote("help", world);
+		vote_cmd("help", world);
 		GameCommand_Ban("help");
 		cmd_generic("help");
 		IP2C_GameCommand("help", argc);
 		return;
 	}
 
-	if(GameCommand_Vote(command, world))
+	if(vote_cmd(command, world))
 		return;
 
 	if(GameCommand_Ban(command))
@@ -621,7 +621,7 @@ void(string s) cmd_client {
 	if (GameHookChain_ClientCommandHandle(cmd, tokens))
 		return;
 
-	if(GameCommand_Vote(s, self)) {
+	if (vote_cmd(s, self)) {
 		return;
 	} else if(mapvote_client_command(argv(0))) {
 		return;
@@ -738,7 +738,7 @@ void(string s) cmd_client {
 		{
 			chat_say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 			if (substring(argv(1), 0, 1) == "/")
-				GameCommand_Vote(strcat("vote call ", substring(s, strstrofs(s, "/", 0) + 1, -1)), self);
+				vote_cmd(strcat("vote call ", substring(s, strstrofs(s, "/", 0) + 1, -1)), self);
 		}
 	} else if(cmd == "say_team") {
 		if(tokens >= 2)
