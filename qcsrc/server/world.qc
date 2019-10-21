@@ -762,7 +762,7 @@ void SV_Shutdown()
 	require_spawnfunc_prefix = 0;
 }
 
-void(void) world_create_frame {
+void(void) world_creature_frame {
 	local entity oldself;
 	local float dm;
 	oldself = self;
@@ -885,7 +885,7 @@ void StartFrame (void)
 	sys_ticrate = cvar("sys_ticrate");
 
 	skill = cvar("skill");
-	world_create_frame();
+	world_creature_frame();
 	world_check_rules();
 
 	GameHookChain_ServerFrame();
