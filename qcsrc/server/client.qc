@@ -181,9 +181,8 @@ void(void) client_parms_decode { //called by engine
 
 void(entity cl, float _team) client_kill_now_team_change {
 	if (_team == -2) {
-		player_to_spec(self);
-	}
-	else if(_team == -1) {
+		player_to_spec(cl);
+	} else if(_team == -1) {
 		cl.team = -1;
 		team_join_best(cl, FALSE);
 	} else
