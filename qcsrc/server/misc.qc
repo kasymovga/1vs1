@@ -394,3 +394,24 @@ void(void) spawnfunc_misc_laser {
 		self.state = 1;
 }
 
+void(void) spawnfunc_misc_tree {
+	precache_model("models/mtree01.md3");
+	setmodel(self, "models/mtree01.md3");
+	self.solid = SOLID_BBOX;
+	setsize(self, '-16 -16 0', '16 16 128');
+	entity_droptofloor();
+}
+
+void(void) spawnfunc_misc_barrel_explosive {
+	precache_model("models/grenademodel.md3");
+	setmodel(self, "models/grenademodel.md3");
+	self.solid = SOLID_BBOX;
+	self.movetype = MOVETYPE_TOSS;
+	self.dmg = 100;
+	self.cnt = particleeffectnum("rocket_explode");
+	spawnfunc_func_breakable();
+	self.angles = '-90 0 0';
+	self.scale = 4;
+	setsize(self, '-16 -16 -24', '16 16 24');
+	entity_droptofloor();
+}
