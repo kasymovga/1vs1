@@ -406,7 +406,9 @@ void(void) spawnfunc_misc_barrel_explosive {
 	precache_model("models/grenademodel.md3");
 	setmodel(self, "models/grenademodel.md3");
 	self.solid = SOLID_BBOX;
-	self.movetype = MOVETYPE_TOSS;
+	self.pushfactor = 0.5;
+	self.friction = 0.5;
+	self.movetype = MOVETYPE_WALK;
 	self.dmg = 100;
 	self.cnt = particleeffectnum("rocket_explode");
 	spawnfunc_func_breakable();
