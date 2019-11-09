@@ -165,7 +165,12 @@ void() spectator_to_player {
 		if (GameHookChain_JoinHandle())
 			return;
 
-		if(!teamplay || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
+		team_teams_allowed();
+		float skip_team_select = FALSE;
+		if (c1 + c2 + c3 + c4 == -3) {
+			skip_team_select = TRUE;
+		}
+		if ( skip_team_select || !teamplay || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.classname = "player";
 			if(g_campaign || g_balance_teams || g_balance_teams_force)
 				team_join_best(self, TRUE);
