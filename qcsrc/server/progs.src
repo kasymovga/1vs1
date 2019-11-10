@@ -18,6 +18,7 @@ constants.qh
 ../client-server/gametype.qh
 ../client-server/math.qh
 ../client-server/net.qh
+../common/item.qh
 ../menu-server/weapon.qh
 ../common/weapon.qh
 laser.qh

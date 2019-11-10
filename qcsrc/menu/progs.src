@@ -20,6 +20,7 @@ mbuiltin.qh
 ../menu-server/campaign.qh
 ../menu-server/weapon.qh
 ../common/weapon.qh
+../common/item.qh
 ../common/uri.qh
 ../common/dlc.qh
 ../menu-server/extresponse.qh

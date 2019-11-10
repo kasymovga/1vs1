@@ -409,8 +409,7 @@ float(entity item, entity player) item_give_to {
 		}
 	}
 	if(item.spawnshieldtime)
-	if((it = item.items & (IT_KEY1 | IT_KEY2)))
-	{
+	if((it = item.items & (IT_KEY1 | IT_KEY2 | IT_KEY3))) {
 		if ((player.keys & it) == it)
 			goto skip;
 
@@ -962,6 +961,14 @@ void spawnfunc_item_key_gold (void) {
 void spawnfunc_item_key_silver (void) {
 	self.origin_z = self.origin_z + 40;
 	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Silver Key", IT_KEY1, 0, 0, item_generic_pickupevalfunc, 100000);
+	self.effects = EF_FULLBRIGHT | EF_STARDUST;
+	self.mins_z = self.mins_z - 48;
+}
+
+void spawnfunc_item_key_blood (void) {
+	self.origin_z = self.origin_z + 48;
+	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Blood Key", IT_KEY3, 0, 0, item_generic_pickupevalfunc, 100000);
+	self.colormod = '1 0 0';
 	self.effects = EF_FULLBRIGHT | EF_STARDUST;
 	self.mins_z = self.mins_z - 48;
 }

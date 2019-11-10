@@ -13,6 +13,7 @@ csqc_builtins.qc
 ../client-server/math.qh
 ../client-server/net.qh
 ../client-server/db.qh
+../common/item.qh
 ../common/gametype.qh
 ../common/colormap.qh
 ../common/db.qh

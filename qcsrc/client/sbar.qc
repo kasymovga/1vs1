@@ -2646,7 +2646,10 @@ void CSQC_single_hud(void)
 		drawpic (bottomleft - '-30 44 0', "gfx/hud/sb_kh_blue", '20 40', '1.125 1.125 0.75', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	if (stat_items & IT_KEY2)
-		drawpic (bottomleft - '-68 44 0', "gfx/hud/sb_kh_yellow", '20 40', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic (bottomleft - '-58 44 0', "gfx/hud/sb_kh_yellow", '20 40', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+	if (stat_items & IT_KEY3)
+		drawpic (bottomleft - '-78 44 0', "gfx/hud/sb_kh_red", '20 40', '2 0.5 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 // CTF HUD

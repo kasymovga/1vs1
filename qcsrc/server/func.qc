@@ -1377,6 +1377,8 @@ void func_door_trigger_touch()
 				s = "Silver Key";
 			else if (self.owner.items & IT_KEY2)
 				s = "Gold Key";
+			else if (self.owner.items & IT_KEY3)
+				s = "Blood Key";
 			else if (self.owner.items)
 				s = "Unknown Key";
 
@@ -1721,6 +1723,9 @@ void spawnfunc_func_door()
 	}
     if(self.spawnflags & 16)
 		self.items |= IT_KEY1;
+
+    if(self.spawnflags & 64)
+		self.items |= IT_KEY3;
 
     if(self.dmg && (!self.message))
 		self.message = "was squished";
