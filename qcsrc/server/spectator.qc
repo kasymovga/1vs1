@@ -165,7 +165,7 @@ void() spectator_to_player {
 		if (GameHookChain_JoinHandle())
 			return;
 
-		team_teams_allowed();
+		team_teams_allowed(self);
 		float skip_team_select = FALSE;
 		if (c1 + c2 + c3 + c4 == -3) {
 			skip_team_select = TRUE;
