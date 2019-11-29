@@ -410,6 +410,7 @@ void(void) spawnfunc_misc_barrel_explosive {
 	self.friction = 0.5;
 	self.movetype = MOVETYPE_WALK;
 	self.dmg = 100;
+	self.health = 50;
 	self.cnt = particleeffectnum("rocket_explode");
 	spawnfunc_func_breakable();
 	self.angles = '-90 0 0';
