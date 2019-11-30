@@ -17,7 +17,6 @@ vector sv_qcanimation_melee2_morph2origin;
 float sv_qcweaponanimation;
 float g_akimbo_use_left_hand;
 float g_shootfromcenter;
-float g_shootfromclient;
 float g_shootfromeye;
 float g_norecoil;
 
@@ -1482,8 +1481,7 @@ vector weapon_calculate_projectile_velocity(vector pvelocity, vector mvelocity)
 }
 
 vector(vector vecs, float y_is_right, float allowcenter) weapon_shotorg_adjustfromclient {
-	switch(self.owner.cvar_cl_gunalign)
-	{
+	switch(self.owner.cvar_cl_gunalign & 7) {
 		case 1: // right
 			break;
 
@@ -1493,27 +1491,21 @@ vector(vector vecs, float y_is_right, float allowcenter) weapon_shotorg_adjustfr
 
 		default:
 		case 3:
-			if(allowcenter) // 2: allow center handedness
-			{
+			if(allowcenter) { // 2: allow center handedness
 				// center
 				vecs_y = 0;
 				vecs_z -= 4;
-			}
-			else
-			{
+			} else {
 				// right
 			}
 			break;
 
 		case 4:
-			if(allowcenter) // 2: allow center handedness
-			{
+			if(allowcenter) {// 2: allow center handedness
 				// center
 				vecs_y = 0;
 				vecs_z -= 4;
-			}
-			else
-			{
+			} else {
 				// left
 				vecs_y = -vecs_y;
 			}
@@ -1523,12 +1515,11 @@ vector(vector vecs, float y_is_right, float allowcenter) weapon_shotorg_adjustfr
 }
 
 vector(vector vecs, float y_is_right, float visual, float akimbo_active) weapon_shotorg_adjust {
-	if (akimbo_active)
-	{
+	if (akimbo_active) {
 		if (akimbo_active == 2)
 			vecs_y = -vecs_y;
-		if not(visual)
-		{
+
+		if not(visual) {
 			if (g_shootfromeye)
 				vecs_z = 0;
 			else if (g_shootfromcenter)
@@ -1537,34 +1528,23 @@ vector(vector vecs, float y_is_right, float visual, float akimbo_active) weapon_
 		vecs_y = vecs_y * 1.2;
 		return vecs;
 	}
-
-	if (g_shootfromeye)
-	{
-		if (visual)
-		{
+	if (g_shootfromeye) {
+		if (visual) {
 			vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, TRUE);
-		}
-		else
-		{
+		} else {
 			vecs_y = 0;
 			vecs_z = 0;
 		}
-	}
-	else if (g_shootfromcenter)
-	{
-		if (visual)
-		{
+	} else if (g_shootfromcenter) {
+		if (visual) {
 			vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, TRUE);
-		}
-		else
-		{
+		} else {
 			vecs_y = 0;
 			vecs_z -= 4;
 		}
-	}
-	else if (g_shootfromclient)
-	{
-		vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, (g_shootfromclient >= 2));
+	} else {
+		if (visual)
+			vecs = weapon_shotorg_adjustfromclient(vecs, y_is_right, self.owner.cvar_cl_gunalign & 8);
 	}
 	return vecs;
 }
@@ -1639,7 +1619,6 @@ void() weapon_init {
 	CACHE_CVAR(g_weaponratefactor);
 	CACHE_CVAR(g_akimbo_use_left_hand);
 	CACHE_CVAR(g_shootfromcenter);
-	CACHE_CVAR(g_shootfromclient);
 	CACHE_CVAR(g_shootfromeye);
 	CACHE_CVAR(g_projectiles_newton_style);
 	CACHE_CVAR(g_norecoil);
