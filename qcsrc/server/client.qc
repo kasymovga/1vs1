@@ -720,7 +720,6 @@ void() client_cvars_parse {
 			self.cvar_cl_gunalign = self.cvar_cl_gunalign | 8;
 		else
 			self.cvar_cl_gunalign = self.cvar_cl_gunalign & 7;
-	
 }
 
 void() client_cvars_free {
