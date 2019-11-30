@@ -2319,7 +2319,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 				}
 			}
 		} else
-			sprint(cl, strcat("The ^2", weapon_name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
+			sprint(cl, "Requested weapon is ^1NOT AVAILABLE^7 in this map\n");
 
 		sound_play2(cl, "weapons/unavailable.wav");
 	}
