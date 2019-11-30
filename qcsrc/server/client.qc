@@ -670,6 +670,7 @@ void client_cvars_request() {
 #endif
 	stuffcmd(self, "sendcvar cl_gunalign\n");
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
+	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
 }
 
 void() client_cvars_parse {
@@ -715,11 +716,14 @@ void() client_cvars_parse {
 #endif
 	else if (s == "cl_gunalign")
 		self.cvar_cl_gunalign = (stof(val) & 7) + (self.cvar_cl_gunalign & 8);
-	else if (s == "cl_gunalign_force_center")
+	else if (s == "cl_gunalign_force_center") {
 		if (stof(val))
 			self.cvar_cl_gunalign = self.cvar_cl_gunalign | 8;
 		else
 			self.cvar_cl_gunalign = self.cvar_cl_gunalign & 7;
+	} else if (s == "cl_showweaponspawns") {
+		self.cvar_cl_showweaponspawns = stof(val);
+	}
 }
 
 void() client_cvars_free {

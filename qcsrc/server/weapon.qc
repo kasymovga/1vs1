@@ -1,7 +1,6 @@
 #define QCWEAPONANIMATION_ORIGIN(e) (sv_qcweaponanimation ?  ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust) : e.view_ofs)
 
 float g_balance_weaponswitchdelay;
-float g_showweaponspawns;
 float g_projectiles_newton_style;
 float g_projectiles_newton_style_2_maxfactor;
 float g_projectiles_newton_style_2_minfactor;
@@ -99,9 +98,9 @@ void weapon_switch(float imp)
 };
 
 .float weaponcomplainindex;
-float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, float complain)
-{
+float(entity pl, string weaponorder, float dir, float imp, float complain) weaypon_cycle_get {
 	float n, i, weaponwant, first_valid, prev_valid, switchtonext, switchtolast, c;
+	float wbit;
 	n = tokenize_console(weaponorder);
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
@@ -109,18 +108,19 @@ float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, flo
 		switchtonext = 1;
 
 	c = 0;
-
-	for(i = 0; i < n; ++i)
-	{
+	for(i = 0; i < n; ++i) {
 		weaponwant = stof(argv(i));
 		if(imp >= 0)
 			if((weapon_info(weaponwant)).impulse != imp)
 				continue;
 
-		++c;
+		wbit = weapon_bit(weaponwant);
+		if not(wbit & weapon_spawned_list)
+		if not(pl.weapons & wbit)
+			continue;
 
-		if(player_hasweapon(pl, weaponwant, TRUE, FALSE))
-		{
+		++c;
+		if(player_hasweapon(pl, weaponwant, TRUE, FALSE)) {
 			if(switchtonext)
 				return weaponwant;
 			if(!first_valid)
@@ -138,28 +138,32 @@ float weaypon_cycle_get(entity pl, string weaponorder, float dir, float imp, flo
 		} else
 			weapon_show_list(pl);
 	}
-	if(first_valid)
-	{
+	if(first_valid) {
 		if(switchtolast)
 			return prev_valid;
 		else
 			return first_valid;
 	}
 	// complain (but only for one weapon on the button that has been pressed)
-	if(complain)
-	{
+	if(complain) {
 		self.weaponcomplainindex += 1;
-		c = math_mod(self.weaponcomplainindex, c) + 1;
-		for(i = 0; i < n; ++i)
-		{
+		if (c)
+			c = math_mod(self.weaponcomplainindex, c) + 1;
+
+		for(i = 0; i < n; ++i) {
 			weaponwant = stof(argv(i));
-			if(imp >= 0)
+			if(imp >= 0) {
 				if((weapon_info(weaponwant)).impulse != imp)
 					continue;
+			}
+			wbit = weapon_bit(weaponwant);
+			if (c > 0)
+			if not(wbit & weapon_spawned_list)
+			if not(pl.weapons & wbit)
+				continue;
 
 			--c;
-			if(c == 0)
-			{
+			if(c <= 0) {
 				player_hasweapon(pl, weaponwant, TRUE, TRUE);
 				break;
 			}
@@ -485,19 +489,16 @@ void(float wpn) weapon_defaultspawnfunc {
 	entity oldself;
 	float i, j;
 	var void() item_spawnfunc;
-	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
-	{
+	if(self.classname != "droppedweapon" && self.classname != "replacedweapon") {
 		e = weapon_info(wpn);
 		s = cvar_string(strcat("g_weaponreplace_", e.netname));
-		if(s == "0")
-		{
+		if(s == "0") {
 			remove(self);
 			item_start_failed = TRUE;
 			return;
 		}
 		t = tokenize_console(s);
-		if(t >= 2)
-		{
+		if(t >= 2) {
 			self.team = --internalteam;
 			oldself = self;
 			for(i = 1; i < t; ++i)
@@ -527,8 +528,7 @@ void(float wpn) weapon_defaultspawnfunc {
 			}
 			self = oldself;
 		}
-		if(t >= 1)
-		{
+		if(t >= 1) {
 			s = argv(0);
 			wpn = 0;
 			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
@@ -550,8 +550,7 @@ void(float wpn) weapon_defaultspawnfunc {
 				print("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
-		if(wpn == 0)
-		{
+		if(wpn == 0) {
 			remove(self);
 			item_start_failed = TRUE;
 			return;
@@ -566,27 +565,19 @@ void(float wpn) weapon_defaultspawnfunc {
 
 	// set the respawntime in advance (so replaced weapons can copy it)
 
-	if(!self.respawntime)
-	{
+	if(!self.respawntime) {
 		e = weapon_info(wpn);
-		if(e.items == IT_SUPERWEAPON)
-		{
+		if(e.items == IT_SUPERWEAPON) {
 			self.respawntime = g_pickup_respawntime_powerup;
 			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
-		}
-		else
-		{
+		} else {
 			self.respawntime = g_pickup_respawntime_weapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
 		}
 	}
-
 	e = weapon_info(wpn);
-
-	if(e.items && e.items != IT_SUPERWEAPON)
-	{
-		for(i = 0, j = 1; i < 24; ++i, j *= 2)
-		{
+	if(e.items && e.items != IT_SUPERWEAPON) {
+		for(i = 0, j = 1; i < 24; ++i, j *= 2) {
 			if(e.items & j)
 			{
 				ammofield = item_counter_field(j);
@@ -594,9 +585,7 @@ void(float wpn) weapon_defaultspawnfunc {
 					self.ammofield = cvar(strcat("g_pickup_", item_counter_field_name(j)));
 			}
 		}
-	}
-	else
-	{
+	} else {
 		self.flags |= FL_NO_WEAPON_STAY;
 	}
 
@@ -605,8 +594,12 @@ void(float wpn) weapon_defaultspawnfunc {
 		self.flags |= FL_NO_WEAPON_STAY;
 
 	item_start(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
-	if (self.modelindex) // don't precache if self was removed
+	if not(item_start_failed)
+	if (self.classname != "droppedweapon") {
 		weapon_precache(e.weapon);
+		self.enemy = weapon_spawn_chain;
+		weapon_spawn_chain = self;
+	}
 }
 
 // Setup weapon for client (after this raise frame will be launched)
@@ -1613,7 +1606,6 @@ void() weapon_init {
 	CACHE_CVAR(g_balance_weaponswitchdelay);
 	CACHE_CVAR(g_projectiles_newton_style_2_minfactor);
 	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
-	CACHE_CVAR(g_showweaponspawns);
 	CACHE_CVAR(sv_qcweaponanimation);
 	CACHE_CVAR(g_weaponspeedfactor);
 	CACHE_CVAR(g_weaponratefactor);

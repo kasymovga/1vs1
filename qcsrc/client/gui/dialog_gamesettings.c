@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 12)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 13)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -72,6 +72,9 @@ void fillNexuizGameSettingsDialog(entity me)
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_gunalign_force_center", "Force center position"));
 	me.TR(me);
 		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showweaponspawns", "Weapon location hint"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Damage indicator:"));
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_damageindicator"));
 			e.addValue(e, "Hidden", "0");
@@ -123,7 +126,7 @@ void fillNexuizGameSettingsDialog(entity me)
 	}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;", COMMANDBUTTON_CLOSE));
 }
 
 #endif

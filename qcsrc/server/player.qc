@@ -2257,42 +2257,34 @@ float(entity plr, float wep) player_can_fire {
 
 .float hasweapon_complain_spam;
 float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
-	local float weaponbit, f;
-	local entity oldself;
-
+	float weaponbit, f;
+	entity oldself;
 	if(time < cl.hasweapon_complain_spam)
 		complain = 0;
+
 	if(complain)
 		cl.hasweapon_complain_spam = time + 0.2;
 
-	if (wpn < WEP_FIRST || wpn > WEP_LAST)
-	{
+	if (wpn < WEP_FIRST || wpn > WEP_LAST) {
 		if (complain)
 			sprint(cl, "Invalid weapon\n");
 		return FALSE;
 	}
 	weaponbit = weapon_bit(wpn);
-	if (cl.weapons & weaponbit)
-	{
-		if (andammo)
-		{
-			if(cl.items & IT_UNLIMITED_WEAPON_AMMO)
-			{
+	if (cl.weapons & weaponbit) {
+		if (andammo) {
+			if(cl.items & IT_UNLIMITED_WEAPON_AMMO) {
 				f = 1;
-			}
-			else
-			{
+			} else {
 				oldself = self;
 				self = cl;
 				f = weapon_action(wpn, WR_CHECKAMMO1);
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 				self = oldself;
 			}
-			if (!f)
-			{
+			if (!f) {
 				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL)
-				{
+				if(clienttype(cl) == CLIENTTYPE_REAL) {
 					sound_play2(cl, "weapons/unavailable.wav");
 					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
 				}
@@ -2302,29 +2294,20 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 		return TRUE;
 	}
 	if (complain)
-	if (clienttype(cl) == CLIENTTYPE_REAL)
-	{
+	if (clienttype(cl) == CLIENTTYPE_REAL) {
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if(weapon_spawned_list & weaponbit)
-		{
+		if (weapon_spawned_list & weaponbit) {
 			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
-
-
-			if(g_showweaponspawns)
-			{
+			if(self.cvar_cl_showweaponspawns) {
 				entity e;
 				string s;
-
 				e = weapon_info(wpn);
 				s = e.model2;
+				for(e = weapon_spawn_chain; e; e = e.enemy) {
+					if (e.weapons != weaponbit)
+						continue;
 
-				for(e = world; (e = findfloat(e, weapons, weaponbit)); )
-				{
-					if(e.classname == "droppedweapon")
-						continue;
-					if not(e.flags & FL_ITEM)
-						continue;
 					WaypointSprite_Spawn(
 						s,
 						1, 0,
@@ -2335,8 +2318,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 					);
 				}
 			}
-		}
-		else
+		} else
 			sprint(cl, strcat("The ^2", weapon_name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
 
 		sound_play2(cl, "weapons/unavailable.wav");

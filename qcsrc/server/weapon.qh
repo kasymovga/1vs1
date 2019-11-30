@@ -16,6 +16,7 @@ vector weapon_shotorg_visual;
 string weapon_deathtypestring;
 string weapon_fragprefix;
 float weapon_deathtype;
+entity weapon_spawn_chain;
 
 .entity weaponentity;
 .entity exteriorweaponentity;
