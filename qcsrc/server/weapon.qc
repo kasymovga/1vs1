@@ -135,8 +135,7 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 					switchtolast = 1;
 			}
 			prev_valid = weaponwant;
-		} else
-			weapon_show_list(pl);
+		}
 	}
 	if(first_valid) {
 		if(switchtolast)
@@ -146,6 +145,7 @@ float(entity pl, string weaponorder, float dir, float imp, float complain) weayp
 	}
 	// complain (but only for one weapon on the button that has been pressed)
 	if(complain) {
+		weapon_show_list(pl);
 		self.weaponcomplainindex += 1;
 		if (c)
 			c = math_mod(self.weaponcomplainindex, c) + 1;
