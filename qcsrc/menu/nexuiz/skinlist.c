@@ -170,8 +170,11 @@ void drawListBoxItemNexuizSkinList(entity me, float i, vector absSize, float isS
 
 void setSkinNexuizSkinList(entity me)
 {
+	if (cvar_string("menu_skin") == me.skinParameter(me, me.selectedItem, SKINPARM_NAME))
+		return;
+
 	me.saveCvars(me);
-	localcmd("\nmenu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
+	localcmd("\nmenu_restart\nr_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
 }
 
 void SetSkin_Click(entity btn, entity me)
