@@ -5,7 +5,9 @@ seta cl_weaponpriority2 "11 7 18 15 3"   "use impulse 202 for prev gun from this
 seta cl_weaponpriority3 "11 7 18 15 3 2" "use impulse 203 for prev gun from this list, 213 for best gun, 223 for next gun.  Default value: hitscan all"
 seta cl_weaponpriority4 "16 4 13 17 8 6 2"  "use impulse 204 for prev gun from this list, 214 for best gun, 224 for next gun.  Default value: spam weapons"
 set g_weapon_alpha 0
-seta cl_gunalpha 1
+seta cl_gunalpha 1 "Weapon opacity"
+seta cl_gunalign_force_center 0 "Force center weapon position (if server support it)"
+seta cl_showweaponspawns 1 "Weapon location hint (if server support it)"
 set sv_model_campingrifle "" "Custom weapon model for rifle"
 set sv_model_crylink "" "Custom weapon model for crylink"
 set sv_model_electro "" "Custom weapon model for electro"

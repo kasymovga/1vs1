@@ -5,8 +5,8 @@ CLASS(NexuizWeaponsDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizWeaponsDialog, showNotify, void(entity))
 	ATTRIB(NexuizWeaponsDialog, title, string, "Weapon settings")
 	ATTRIB(NexuizWeaponsDialog, color, vector, SKINCOLOR_DIALOG_WEAPONS)
-	ATTRIB(NexuizWeaponsDialog, intendedWidth, float, 0.35)
-	ATTRIB(NexuizWeaponsDialog, rows, float, 18)
+	ATTRIB(NexuizWeaponsDialog, intendedWidth, float, 0.45)
+	ATTRIB(NexuizWeaponsDialog, rows, float, 21)
 	ATTRIB(NexuizWeaponsDialog, columns, float, 4)
 	ATTRIB(NexuizWeaponsDialog, weaponsList, entity, NULL)
 ENDCLASS(NexuizWeaponsDialog)
@@ -26,7 +26,7 @@ void fillNexuizWeaponsDialog(entity me)
 	entity e;
 	float h0, h;
 
-	h = me.rows - 8;
+	h = me.rows - 10;
 	
 	me.TR(me);
 		me.TD(me, 1, 4, makeNexuizTextLabel(0, "Weapon priority list:"));
@@ -53,11 +53,20 @@ void fillNexuizWeaponsDialog(entity me)
 			me.TD(me, 1, 2.5, e = makeNexuizSlider(0.05, 1, 0.05, "cl_gunalpha"));
 				setDependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
+		me.TD(me, 1, 0.5, makeNexuizTextLabel(0, "Align:"));
+		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(1, "cl_gunalign", "2", "Left"));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 1.125, e = makeNexuizRadioButton(1, "cl_gunalign", "4", "Left or center"));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 1.125, e = makeNexuizRadioButton(1, "cl_gunalign", "3", "Right or center"));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(1, "cl_gunalign", "1", "Right"));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+	me.TR(me);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "cl_gunalign", "4", "Left align"));
-			setDependent(e, "r_drawviewmodel", 1, 1);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "cl_gunalign", "3", "Right align"));
-			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "cl_gunalign_force_center", "Force center position"));
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "cl_showweaponspawns", "Weapon location hint"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "v_flipped", "Flip view horizontally"));
 	me.TR(me);
