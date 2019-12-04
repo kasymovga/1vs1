@@ -10,8 +10,19 @@ entity makeNexuizMiscSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
+void (entity btn, entity me) apply_misc_settings {
+	if (cvar_string("menu_cl_simpleitems") != cvar_string("cl_simpleitems")) {
+		registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
+		cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
+		localcmd("fs_rescan\n");
+	}
+	SetSkin_Click(btn, me);
+}
+
 entity makeNexuizMiscSettingsTab()
 {
+	registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
+	cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
 	entity me;
 	me = spawnNexuizMiscSettingsTab();
 	me.configureDialog(me);
@@ -27,8 +38,8 @@ void fillNexuizMiscSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 2, 3, sk = makeNexuizSkinList());
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, 3, e = makeNexuizButton("Apply immediately", '0 0 0'));
-			e.onClick = SetSkin_Click;
+		me.TD(me, 1, me.columns, e = makeNexuizButton("Apply immediately", '0 0 0'));
+			e.onClick = apply_misc_settings;
 			e.onClickEntity = sk;
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
@@ -63,6 +74,8 @@ void fillNexuizMiscSettingsTab(entity me)
 			setDependent(e, "cl_showacceleration", 1, 1);
 		me.TD(me, 1, 2.8/2, e = makeNexuizSlider(1, 10, 0.5, "cl_showacceleration_scale"));
 			setDependent(e, "cl_showacceleration", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_simpleitems", "Simple items"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
