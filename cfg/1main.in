@@ -7,3 +7,4 @@ _fs_rescan_alias_enable
 alias cvardeprecated "echo \"$1 is deprecated, use $2 instead!\""
 alias cvarremoved "unset $1; alias $1 \"echo \\\"$1 was removed\\\"\""
 seta cl_simpleitems 0 "Simple items"
+seta cl_oldnexmodel 0 "Old nex model"

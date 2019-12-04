@@ -11,11 +11,20 @@ entity makeNexuizMiscSettingsTab();
 
 #ifdef IMPLEMENTATION
 void (entity btn, entity me) apply_misc_settings {
+	float fs_rescan_needed = FALSE;
 	if (cvar_string("menu_cl_simpleitems") != cvar_string("cl_simpleitems")) {
 		registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
 		cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
-		localcmd("fs_rescan\n");
+		fs_rescan_needed = TRUE;
 	}
+	if (cvar_string("menu_cl_oldnexmodel") != cvar_string("cl_oldnexmodel")) {
+		registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
+		cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
+		fs_rescan_needed = TRUE;
+	}
+	if (fs_rescan_needed)
+		localcmd("fs_rescan\n");
+
 	SetSkin_Click(btn, me);
 }
 
@@ -23,6 +32,8 @@ entity makeNexuizMiscSettingsTab()
 {
 	registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
 	cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
+	registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
+	cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
 	entity me;
 	me = spawnNexuizMiscSettingsTab();
 	me.configureDialog(me);
@@ -76,6 +87,8 @@ void fillNexuizMiscSettingsTab(entity me)
 			setDependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_simpleitems", "Simple items"));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_oldnexmodel", "Old nex model"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
