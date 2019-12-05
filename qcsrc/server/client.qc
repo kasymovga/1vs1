@@ -714,13 +714,18 @@ void() client_cvars_parse {
 	else if (s == "cl_forceplayermodelsfromnexuiz")
 		self.cvar_cl_forceplayermodelsfromnexuiz = stof(val);
 #endif
-	else if (s == "cl_gunalign")
+	else if (s == "cl_gunalign") {
 		self.cvar_cl_gunalign = (stof(val) & 7) + (self.cvar_cl_gunalign & 8);
-	else if (s == "cl_gunalign_force_center") {
+		if (self.weaponentity)
+			self.weaponentity.cnt = 0;
+	} else if (s == "cl_gunalign_force_center") {
 		if (stof(val))
 			self.cvar_cl_gunalign = self.cvar_cl_gunalign | 8;
 		else
 			self.cvar_cl_gunalign = self.cvar_cl_gunalign & 7;
+
+		if (self.weaponentity)
+			self.weaponentity.cnt = 0;
 	} else if (s == "cl_showweaponspawns") {
 		self.cvar_cl_showweaponspawns = stof(val);
 	}
