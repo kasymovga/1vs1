@@ -1,5 +1,6 @@
 float g_balance_teams;
 float g_balance_teams_force;
+float g_balance_teams_movetype;
 float g_balance_teams_prevent_imbalance;
 float g_balance_teams_autoswap;
 float g_balance_teams_autoswap_from_small_team_minplayers;
@@ -497,43 +498,33 @@ void(entity pl, float dteam, float nobalance) team_change {
 	}
 }
 
-
 void(float source_team) team_shuffle_player_out {
 	float smallestteam, smallestteam_count, steam;
-	float lowest_bot_score, lowest_player_score;
-	entity head, lowest_bot, lowest_player, selected;
+	float selected_bot_score, selected_player_score;
+	entity head, selected_bot, selected_player, selected;
 	bprint("Rebalancing Teams\n");
-
 	smallestteam = 0;
 	smallestteam_count = 999999999;
-
-	if(c1 >= 0 && c1 < smallestteam_count)
-	{
+	if(c1 >= 0 && c1 < smallestteam_count) {
 		smallestteam = 1;
 		smallestteam_count = c1;
 	}
-	if(c2 >= 0 && c2 < smallestteam_count)
-	{
+	if(c2 >= 0 && c2 < smallestteam_count) {
 		smallestteam = 2;
 		smallestteam_count = c2;
 	}
-	if(c3 >= 0 && c3 < smallestteam_count)
-	{
+	if(c3 >= 0 && c3 < smallestteam_count) {
 		smallestteam = 3;
 		smallestteam_count = c3;
 	}
-	if(c4 >= 0 && c4 < smallestteam_count)
-	{
+	if(c4 >= 0 && c4 < smallestteam_count) {
 		smallestteam = 4;
 		smallestteam_count = c4;
 	}
-
-	if(!smallestteam)
-	{
+	if(!smallestteam) {
 		bprint("warning: no smallest team\n");
 		return;
 	}
-
 	if(source_team == 1)
 		steam = COLOR_TEAM1;
 	else if(source_team == 2)
@@ -543,95 +534,98 @@ void(float source_team) team_shuffle_player_out {
 	else if(source_team == 4)
 		steam = COLOR_TEAM4;
 
-	lowest_bot = world;
-	lowest_bot_score = 999999999;
-	lowest_player = world;
-	lowest_player_score = 999999999;
-
-	// find the lowest-scoring player & bot of that team
+	selected_bot = world;
+	selected_player = world;
 	float player_score;
-	FOR_EACH_CLIENT(head)
-	{
-		player_score = head.scorekeeper.scores[SP_SCORE];
-		if(head.team == steam)
-		{
-			if(head.isbot)
-			{
-				if(player_score < lowest_bot_score)
-				{
-					lowest_bot = head;
-					lowest_bot_score = player_score;
+	if (g_balance_teams_movetype == 1) { //random
+		random_selection_init();
+		FOR_EACH_CLIENT(head) {
+			if (head.team == steam)
+			if (head.isbot) {
+				random_selection_add(head, 0, "", 1, 1);
+			}
+		}
+		selected_bot = random_selection_chosen_ent;
+		random_selection_init();
+		FOR_EACH_CLIENT(head) {
+			if (head.team == steam)
+			if not(head.isbot) {
+				random_selection_add(head, 0, "", 1, 1);
+			}
+		}
+		selected_player = random_selection_chosen_ent;
+	} else if (g_balance_teams_movetype == 2) { //best
+		FOR_EACH_CLIENT(head) {
+			player_score = head.scorekeeper.scores[SP_SCORE];
+			if(head.team == steam) {
+				if(head.isbot) {
+					if(!selected_bot || player_score > selected_bot_score) {
+						selected_bot = head;
+						selected_bot_score = player_score;
+					}
+				} else {
+					if(!selected_player || player_score > selected_player_score) {
+						selected_player = head;
+						selected_player_score = player_score;
+					}
 				}
 			}
-			else
-			{
-				if(player_score < lowest_player_score)
-				{
-					lowest_player = head;
-					lowest_player_score = player_score;
+		}
+	} else { //worst
+		FOR_EACH_CLIENT(head) {
+			player_score = head.scorekeeper.scores[SP_SCORE];
+			if(head.team == steam) {
+				if(head.isbot) {
+					if(!selected_bot || player_score < selected_bot_score) {
+						selected_bot = head;
+						selected_bot_score = player_score;
+					}
+				} else {
+					if(!selected_player || player_score < selected_player_score) {
+						selected_player = head;
+						selected_player_score = player_score;
+					}
 				}
 			}
 		}
 	}
-
 	// prefers to move a bot...
-	if(lowest_bot != world)
-		selected = lowest_bot;
-	// but it will move a player if it has to
-	else
-		selected = lowest_player;
+	if(selected_bot != world)
+		selected = selected_bot;
+	else // but it will move a player if it has to
+		selected = selected_player;
+
 	// don't do anything if it couldn't find anyone
-	if(!selected)
-	{
+	if(!selected) {
 		bprint("warning: couldn't find a player to move from team\n");
 		return;
 	}
-
 	// smallest team gains a member
-	if(smallestteam == 1)
-	{
+	if(smallestteam == 1) {
 		c1 = c1 + 1;
-	}
-	else if(smallestteam == 2)
-	{
+	} else if(smallestteam == 2) {
 		c2 = c2 + 1;
-	}
-	else if(smallestteam == 3)
-	{
+	} else if(smallestteam == 3) {
 		c3 = c3 + 1;
-	}
-	else if(smallestteam == 4)
-	{
+	} else if(smallestteam == 4) {
 		c4 = c4 + 1;
-	}
-	else
-	{
+	} else {
 		bprint("warning: destination team invalid\n");
 		return;
 	}
 	// source team loses a member
-	if(source_team == 1)
-	{
+	if(source_team == 1) {
 		c1 = c1 + 1;
-	}
-	else if(source_team == 2)
-	{
+	} else if(source_team == 2) {
 		c2 = c2 + 2;
-	}
-	else if(source_team == 3)
-	{
+	} else if(source_team == 3) {
 		c3 = c3 + 3;
-	}
-	else if(source_team == 4)
-	{
+	} else if(source_team == 4) {
 		c4 = c4 + 4;
-	}
-	else
-	{
+	} else {
 		bprint("warning: source team invalid\n");
 		return;
 	}
-
 	// move the player to the new team
 	if (autoswap_last_best == selected)
 		autoswap_last_best = world;
@@ -641,7 +635,6 @@ void(float source_team) team_shuffle_player_out {
 	player_clear(FALSE);
 	self = oldself;
 	player_set_team(selected, smallestteam, source_team, FALSE);
-
 	if(selected.deadflag == DEAD_NO)
 		damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
 
@@ -800,6 +793,7 @@ void(void) team_init {
 	CACHE_CVAR(g_balance_teams_autoswap_zerolead);
 	CACHE_CVAR(g_balance_teams_autoswap_lead);
 	CACHE_CVAR(g_balance_teams_force);
+	CACHE_CVAR(g_balance_teams_movetype);
 	CACHE_CVAR(g_balance_teams_prevent_imbalance);
 	CACHE_CVAR(g_balance_teams_adjust_sizes);
 	CACHE_CVAR(g_balance_teams_adjust_sizes_factor);
