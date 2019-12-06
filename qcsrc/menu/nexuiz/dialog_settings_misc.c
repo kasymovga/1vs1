@@ -22,6 +22,11 @@ void (entity btn, entity me) apply_misc_settings {
 		cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
 		fs_rescan_needed = TRUE;
 	}
+	if (cvar_string("menu_cl_brightskins") != cvar_string("cl_brightskins")) {
+		registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
+		cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
+		fs_rescan_needed = TRUE;
+	}
 	if (fs_rescan_needed)
 		localcmd("fs_rescan\n");
 
@@ -34,6 +39,8 @@ entity makeNexuizMiscSettingsTab()
 	cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
 	registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
 	cvar_set("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"));
+	registercvar("menu_cl_brightskins", cvar_string("cl_brightskins"), 0);
+	cvar_set("menu_cl_brightskins", cvar_string("cl_brightskins"));
 	entity me;
 	me = spawnNexuizMiscSettingsTab();
 	me.configureDialog(me);
@@ -89,6 +96,8 @@ void fillNexuizMiscSettingsTab(entity me)
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_simpleitems", "Simple items"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_oldnexmodel", "Old nex model"));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_brightskins", "Bright player skins"));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
