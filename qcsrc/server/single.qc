@@ -140,6 +140,10 @@ float(void) single_player_equip_handle {
 }
 
 float Single_SameLevel() {
+	if (game == GAME_COOP)
+	if (cvar("timelimit") < 0) //Endmatch
+		return FALSE;
+
 	return !campaign_won;
 }
 
