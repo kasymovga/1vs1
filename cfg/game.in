@@ -27,7 +27,7 @@ set timelimit_default 15
 set fraglimit_default 10
 set sv_jumppads_target_adjust_height 0
 set sv_breakable_debris 1
-set sv_door_shootable 1
+set g_door_shootable 1
 set sv_door_trigger_field "60 60 8"
 set sv_door_default_speed 100
 set sv_world_scale 1

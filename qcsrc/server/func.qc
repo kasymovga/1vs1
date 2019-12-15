@@ -1560,7 +1560,7 @@ void(void) func_doors_link {
 		IFTARGETED
 			return;
 
-		if (self.health || (!self.items && cvar("sv_door_shootable"))) {
+		if (self.health || (!self.items && cvar("g_door_shootable"))) {
 			self.takedamage = DAMAGE_YES;
 			self.event_damage = func_door_damage;
 		}

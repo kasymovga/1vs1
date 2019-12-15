@@ -25,3 +25,4 @@ set single_g_pickup_healthmedium_max 100
 set single_g_pickup_armormedium_max 100
 set single_g_pickup_armorbig_max 100
 set single_g_balance_laser_primary_force 0
+set single_g_door_shootable 0
