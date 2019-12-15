@@ -1067,9 +1067,6 @@ void func_button_touch()
 
 void func_button_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.spawnflags & DOOR_NOSPLASH)
-		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
-			return;
 	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
@@ -1401,9 +1398,6 @@ void(void) func_door_trigger_touch {
 void func_door_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	local entity oself;
-	if(self.spawnflags & DOOR_NOSPLASH)
-		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
-			return;
 	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{

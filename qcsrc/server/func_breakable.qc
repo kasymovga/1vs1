@@ -186,10 +186,6 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if(self.state == 1)
 		return;
 
-	if(self.spawnflags & DOOR_NOSPLASH)
-		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
-			return;
-
 	if(self.team)
 		if(attacker.team == self.team)
 			return;

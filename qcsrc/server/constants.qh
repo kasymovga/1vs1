@@ -108,6 +108,4 @@ float NUM_PLAYERSKINS_TEAMPLAY = 3;
 
 float ASSAULT_VALUE_INACTIVE = 1000;
 
-float DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag
-
 const string retardplayername = "User of RetardNet";

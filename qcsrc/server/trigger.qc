@@ -341,9 +341,6 @@ void trigger_multiple_eventdamage (entity inflictor, entity attacker, float _dam
 {
 	if (!self.takedamage)
 		return;
-	if(self.spawnflags & DOOR_NOSPLASH)
-		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
-			return;
 	self.health = self.health - _damage;
 	if (self.health <= 0)
 	{
