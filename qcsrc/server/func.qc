@@ -1147,6 +1147,10 @@ void spawnfunc_func_button()
 float DOOR_START_OPEN = 1;
 float DOOR_DONT_LINK = 4;
 float DOOR_TOGGLE = 32;
+float DOOR_KEY_GOLD_OR_CRUSH = 8;
+float DOOR_KEY_SILVER = 16;
+float DOOR_KEY_BLOOD = 64;
+float DOOR_PLAYER_ONLY = 128;
 
 /*
 
@@ -1359,13 +1363,12 @@ void func_door_use()
 };
 
 
-void func_door_trigger_touch()
-{
-	//if (other.health < 1)
-	//if not(other.iscreature && other.deadflag == DEAD_NO)
-	//	return;
-
+void(void) func_door_trigger_touch {
 	if not(other.iscreature)
+		return;
+
+	if (self.owner.spawnflags & DOOR_PLAYER_ONLY)
+	if (other.classname != "player")
 		return;
 
 	if (self.owner.items)
@@ -1390,13 +1393,10 @@ void func_door_trigger_touch()
 		}
 		return;
 	}
-
 	activator = other;
-
 	self = self.owner;
 	func_door_use ();
-};
-
+}
 
 void func_door_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
@@ -1513,23 +1513,20 @@ SPAWNING FUNCTIONS
 */
 
 
-entity func_spawn_field(vector fmins, vector fmaxs)
-{
-	local entity	trigger;
-	local	vector	t1, t2, v;
-
+entity(vector fmins, vector fmaxs) func_spawn_field {
+	entity trigger;
+	vector t1, t2, v;
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
 	trigger.touch = func_door_trigger_touch;
-
 	t1 = fmins;
 	t2 = fmaxs;
 	v = stov(cvar_string("sv_door_trigger_field"));
-	setsize (trigger, t1 - v, t2 + v);
-	return (trigger);
+	setsize(trigger, t1 - v, t2 + v);
+	return trigger;
 };
 
 
@@ -1558,95 +1555,86 @@ func_doors_link
 
 =============
 */
-void func_doors_link()
-{
-	local entity	t, starte;
-	local vector	cmins, cmaxs;
-
+void(void) func_doors_link {
+	entity t, starte;
+	vector cmins, cmaxs;
 	if (self.enemy)
-		return;		// already linked by another door
-	if (self.spawnflags & 4)
-	{
-		self.owner = self.enemy = self;
+		return; // already linked by another door
 
+	if (self.spawnflags & DOOR_DONT_LINK) {
+		self.owner = self.enemy = self;
 		IFTARGETED
 			return;
 
-		if (self.health || (!self.items && cvar("sv_door_shootable")))
-		{
+		if (self.health || (!self.items && cvar("sv_door_shootable"))) {
 			self.takedamage = DAMAGE_YES;
 			self.event_damage = func_door_damage;
 		}
 		if (self.health)
 			return;
+
 		self.trigger_field = func_spawn_field(self.absmin, self.absmax);
-
-		return;		// don't want to link this door
+		return; // don't want to link this door
 	}
-
 	cmins = self.absmin;
 	cmaxs = self.absmax;
-
 	starte = self;
 	t = self;
-
-	do
-	{
+	do {
 		if (self.owner != starte) {
-			self.owner = starte;			// master door
-
+			self.owner = starte; // master door
 			if (self.health)
 				starte.health = self.health;
+
 			if (self.items)
 				starte.items = self.items;
+
 			IFTARGETED
 				starte.targetname = self.targetname;
+
 			if (self.message != "")
 				starte.message = self.message;
-
 		}
-
 		t = find(t, classname, self.classname);
-		if (!t)
-		{
-			self.enemy = starte;		// make the chain a loop
-
-		// shootable, or triggered doors just needed the owner/enemy links,
-		// they don't spawn a field
-
+		if (!t) {
+			self.enemy = starte; // make the chain a loop
+			// shootable, or triggered doors just needed the owner/enemy links,
+			// they don't spawn a field
 			self = self.owner;
-
 			if (self.health)
 				break;
+
 			IFTARGETED
 				break;
 
 			self.owner.trigger_field = func_spawn_field(cmins, cmaxs);
 			break;
 		}
-
-		if (func_doors_touching(self,t))
-		{
+		if (func_doors_touching(self,t)) {
 			if (t.enemy)
 				entity_abort("cross connected doors");
 
 			self.enemy = t;
 			self = t;
-
 			if (t.absmin_x < cmins_x)
 				cmins_x = t.absmin_x;
+
 			if (t.absmin_y < cmins_y)
 				cmins_y = t.absmin_y;
+
 			if (t.absmin_z < cmins_z)
 				cmins_z = t.absmin_z;
+
 			if (t.absmax_x > cmaxs_x)
 				cmaxs_x = t.absmax_x;
+
 			if (t.absmax_y > cmaxs_y)
 				cmaxs_y = t.absmax_y;
+
 			if (t.absmax_z > cmaxs_z)
 				cmaxs_z = t.absmax_z;
 		}
-	} while (1 );
+	} while (1);
 	if (starte.targetname == "" || starte.nottargeted)
 	if (starte.health > 0 || (!starte.items && cvar("sv_door_shootable"))) {
 		for (t = starte; ;) {
@@ -1656,9 +1644,7 @@ void func_doors_link()
 				break;
 		}
 	}
-
-};
-
+}
 
 /*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK x x TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -1715,16 +1701,16 @@ void spawnfunc_func_door()
 	self.blocked = func_door_blocked;
 	self.use = func_door_use;
 
-    if(self.spawnflags & 8) {
+    if(self.spawnflags & DOOR_KEY_GOLD_OR_CRUSH) {
 		if (self.wait < 0)
 			self.items |= IT_KEY2;
 		else
 			self.dmg = 10000;
 	}
-    if(self.spawnflags & 16)
+    if(self.spawnflags & DOOR_KEY_SILVER)
 		self.items |= IT_KEY1;
 
-    if(self.spawnflags & 64)
+    if(self.spawnflags & DOOR_KEY_BLOOD)
 		self.items |= IT_KEY3;
 
     if(self.dmg && (!self.message))
