@@ -99,7 +99,7 @@ void heavysoldier_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Heavy Soldier";
-	self.ammo_rockets = 5;
+	self.ammo_rockets = 10;
 	self.view_ofs = '0 0 35';
 }
 

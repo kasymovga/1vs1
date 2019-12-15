@@ -96,7 +96,7 @@ void soldier_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "Soldier";
-	self.ammo_shells = 5;
+	self.ammo_shells = 10;
 	self.view_ofs = '0 0 35';
 }
 

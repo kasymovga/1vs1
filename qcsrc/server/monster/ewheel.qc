@@ -85,6 +85,7 @@ void ewheel_spawn() {
 	self.entremove = ewheel_remove;
 	self.takedamage = DAMAGE_AIM;
 	self.weaponentity.colormod = self.colormod;
+	self.ammo_cells = 10;
 }
 
 void ewheel_init() {

@@ -131,7 +131,7 @@ void fireguy_spawn() {
 	self.solid = SOLID_BBOX;
 	self.damageforcescale = 1;
 	self.netname = "FireGuy";
-	self.ammo_rockets = 10;
+	self.ammo_rockets = 20;
 	self.flags = MONSTER_IGNOREFIRE;
 	self.view_ofs = '0 0 35';
 }
