@@ -448,6 +448,7 @@ void CSQC_Init(void)
 	search_and_precache("gfx/hud/*.tga");
 	search_and_precache("gfx/hud/keys/*.tga");
 	search_and_precache("gfx/teamradar_*.tga");
+	search_and_precache("models/sprites/wpn-*_frame*");
 	for (i = 0; i < ENT_CLIENT_COUNT; i++) {
 		ent_parsers[i] = Ent_Error;
 	}
