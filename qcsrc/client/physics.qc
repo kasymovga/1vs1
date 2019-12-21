@@ -297,7 +297,7 @@ void Ent_Physic(float isnew)
 		if (physics_movetype == MOVETYPE_NOCLIP)
 			self.dphitcontentsmask = 0;
 		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BODY;
+			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 
 		if (f & 2048)
 			physics_gravity_factor = ReadCoord();
