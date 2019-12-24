@@ -2091,7 +2091,7 @@ void(entity pl) player_body_setup {
 }
 
 void(entity spot) player_spawn {
-	float currentlyPlaying, i;
+	float currentlyPlaying;
 	entity e, oldself;
 	player_clear(FALSE);
 	physics_mark_as_teleported(self);
@@ -2120,20 +2120,12 @@ void(entity spot) player_spawn {
 		self.weapons = start_weapons;
 	}
 	self.items = start_items;
-	if (self.switchweapon) {
-		if not(player_hasweapon(self, self.switchweapon, TRUE, FALSE))
-			self.switchweapon = 0;
-	} else
+	if (!self.switchweapon || !player_hasweapon(self, self.switchweapon, TRUE, FALSE))
 		self.switchweapon = weapon_best(self);
 
-	if (!self.cnt || !player_hasweapon(self, self.cnt, TRUE, FALSE))
-		self.cnt = weapon_best(self);
-
-	if not(self.switchweapon)
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(player_hasweapon(self, i, TRUE, FALSE))
-				self.switchweapon = i;
-
+	if (!self.cnt || self.cnt == self.switchweapon || !player_hasweapon(self, self.cnt, TRUE, FALSE)) {
+		self.cnt = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
+	}
 	self.weapon = 0;
 	self.jump_interval = time;
 	self.spawnshieldtime = time + g_spawnshieldtime;
