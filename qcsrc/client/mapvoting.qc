@@ -1,5 +1,6 @@
 float mv_num_maps;
 
+string map_gametype;
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT];
@@ -204,8 +205,9 @@ void MapVote_Draw()
 
 	pos_y = ymin;
 	pos_z = 0;
-	pos_x = center - stringwidth("Vote for a map", false) * 0.5 * 24;
-	drawstring(pos, "Vote for a map", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	string s = strcat("Vote for a map (^2", map_gametype, "^7)");
+	pos_x = center - stringwidth(s, true) * 0.5 * 24;
+	drawcolorcodedstring(pos, s, '24 24 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
 
 	i = ceil(max(0, mv_timeout - time));
@@ -348,7 +350,8 @@ void MapVote_Init()
 	mv_selection = -1;
 
 	ssdir = ReadString();
-	
+	str_unzone_ifneeded(map_gametype);
+	map_gametype = str_zone_ifneeded(ReadString());
 	mv_num_maps = min(MAPVOTE_COUNT, ReadByte());
 	mv_abstain = ReadByte();
 	if(mv_abstain)

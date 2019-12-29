@@ -160,6 +160,7 @@ float(entity to, float sf) mapvote_send {
 	if(sf & 1) {
 		// flag 1 == initialization
 		WriteString(MSG_ENTITY, mapvote_screenshot_dir);
+		WriteString(MSG_ENTITY, MapInfo_HumanString_FromType(MapInfo_CurrentGametype()));
 		WriteByte(MSG_ENTITY, mapvote_count);
 		WriteByte(MSG_ENTITY, mapvote_abstain);
 		WriteByte(MSG_ENTITY, mapvote_detail);
