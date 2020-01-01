@@ -88,7 +88,13 @@ float udpchat_game_announced;
 var void() UDPChat_RealClientConnect_NextLink;
 void UDPChat_RealClientConnect() {
 	if not(udpchat_game_announced) {
-		UDPChat_SendPacket(" * server " + sv_udpchat_id + " playing " + gametype_title + " on " + mapname);
+		string s = strtoupper(cvar_string("g_profile"));
+		if (s != "")
+			s = strcat(s, " ", gametype_title);
+		else
+			s = gametype_title;
+
+		UDPChat_SendPacket(strcat(" * server ", sv_udpchat_id, " playing ", s, " on ", mapname));
 		udpchat_game_announced = TRUE;
 	}
 	UDPChat_RealClientConnect_NextLink();

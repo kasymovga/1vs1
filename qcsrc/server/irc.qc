@@ -91,7 +91,7 @@ float IRC_CheckSession(float s) {
 #define IRC_STRING_SEPARATOR "^9  //  "
 
 string IRC_GameInfoString(void) {
-    return strcat("^7playing ^5", gametype_title, "^7 on ^2", mapname);
+	return strcat("^7playing ^5", gametype_title, "^7 on ^2", mapname);
 }
 
 string IRC_ClientsInfoString(void) {
@@ -418,7 +418,11 @@ void IRC_Defer_Update_Topic()
 void IRC_Announce_GameStart(void) { if(!irc) return;
     if(sv_ircbot_announce_gamestart)
     if(sv_ircbot_announce_when_empty || player_count > 0) {
-        IRC_Privmsg(irc.cnt, irc.target, strcat("^3--> ^7Now playing ^5", gametype_title, "^7 on ^2", mapname, " ^3<-- "));
+		string s = cvar_string("g_profile");
+		if (s != "") {
+			s = strcat("[^3", strtoupper(s), "^7] ");
+		}
+        IRC_Privmsg(irc.cnt, irc.target, strcat("^3--> ^7Now playing ", s, "^5", gametype_title, "^7 on ^2", mapname, " ^3<-- "));
         irc_gamestart_wasannounced = TRUE;
     }
 	entity e = spawn();
