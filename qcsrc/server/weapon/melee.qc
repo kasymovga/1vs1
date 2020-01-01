@@ -1,7 +1,3 @@
-.float melee_time;
-.float melee_lastthink;
-.float melee_startthink;
-
 float g_balance_melee;
 float g_balance_melee_animtime;
 float g_balance_melee_allow_crouched;
@@ -20,17 +16,13 @@ string sv_sound_melee;
 
 float bot_melee_love;
 
-void weapon_melee_attack_think()
-{
-	float melee_frame;
-	melee_frame = min(time - self.melee_lastthink, self.melee_startthink + g_balance_melee_time - self.melee_lastthink);
-	if (melee_frame < 0)
-	{
-		self.think = stdproc_remove;
-		self.nextthink = self.melee_startthink + g_balance_melee_animtime;
+void(void) weapon_melee_attack_think {
+	if (self.cnt < 0) {
+		remove(self);
 		return;
 	}
-	float damage_factor = (g_balance_melee_onehit ? 1 : (melee_frame / g_balance_melee_time));
+	self.cnt = self.cnt - 1;
+	float damage_factor = (g_balance_melee_onehit ? 1 : (1 / self.count));
 	makevectors(self.owner.v_angle);
 	antilag_begin(self.owner);
 	weapon_setup_shot(self.owner, 0, "", (self.dmg ? 1 : 0));
@@ -44,23 +36,19 @@ void weapon_melee_attack_think()
 	antilag_end();
 	if (trace_fraction < 1)
 	if (trace_ent)
-	if (trace_ent.takedamage)
-	{
+	if (trace_ent.takedamage) {
 		if (self.dmg)
 			damage_record_hits(self.owner, trace_ent, WEP_MELEE, 1, _damage * damage_factor);
 
 		damage(trace_ent, self.owner, self.owner, _damage * damage_factor,
 				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir) * g_balance_melee_force * damage_factor + '0 0 1' * g_balance_melee_force_up * damage_factor);
-
-		if (g_balance_melee_onehit)
-		{
-			self.think = stdproc_remove;
-			self.nextthink = self.melee_startthink + g_balance_melee_animtime;
+		if (g_balance_melee_onehit) {
+			remove(self);
 			return;
 		}
 	}
-	self.melee_lastthink = time;
-	self.nextthink = time + g_balance_melee_ticrate;
+	self.delay = self.delay + g_balance_melee_ticrate;
+	self.nextthink = self.delay;
 }
 
 void weapon_melee_attack (float melee_type, float axe)
@@ -73,10 +61,8 @@ void weapon_melee_attack (float melee_type, float axe)
 	entity melee = spawn();
 	melee.owner = Akimbo_Owner(self);
 	melee.think = weapon_melee_attack_think;
-	melee.nextthink = time + g_balance_melee_delay;
-	melee.melee_startthink = melee.nextthink;
-	melee.melee_lastthink = melee.nextthink;
-	melee.nextthink += g_balance_melee_ticrate; //avoid frame with zero melee_frame
+	melee.delay = melee.nextthink = time + g_balance_melee_delay;
+	melee.cnt = melee.count = max(1, 1 + ceil(g_balance_melee_time / g_balance_melee_ticrate));
 	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	melee.dmg = axe;
 	if (melee_type == 2)
