@@ -17,7 +17,7 @@ string sv_sound_melee;
 float bot_melee_love;
 
 void(void) weapon_melee_attack_think {
-	if (self.cnt < 0) {
+	if (self.cnt < 0 || self.owner.playerid != self.playerid) {
 		remove(self);
 		return;
 	}
@@ -65,6 +65,7 @@ void weapon_melee_attack (float melee_type, float axe)
 	melee.cnt = melee.count = max(1, 1 + ceil(g_balance_melee_time / g_balance_melee_ticrate));
 	melee.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	melee.dmg = axe;
+	melee.playerid = melee.owner.playerid;
 	if (melee_type == 2)
 	{
 		setmodel(melee, self.body.playermodel);
