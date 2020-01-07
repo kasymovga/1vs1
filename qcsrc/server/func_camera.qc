@@ -16,9 +16,11 @@ float(entity to, float sendflags) func_camera_send {
 	WriteCoord(MSG_ENTITY, self.enemy.origin_x);
 	WriteCoord(MSG_ENTITY, self.enemy.origin_y);
 	WriteCoord(MSG_ENTITY, self.enemy.origin_z);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_x);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_y);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_z);
+	WriteCoord(MSG_ENTITY, self.enemy.mangle_x + self.enemy.angles_x + self.mangle_x);
+	WriteCoord(MSG_ENTITY, self.enemy.mangle_y + self.enemy.angles_y + self.mangle_y);
+	WriteCoord(MSG_ENTITY, self.enemy.mangle_z + self.enemy.angles_z + self.mangle_z);
+	WriteByte(MSG_ENTITY, self.spawnflags & 255);
+	WriteByte(MSG_ENTITY, self.solid);
 	return TRUE;
 }
 
@@ -37,7 +39,7 @@ void() func_camera_init {
 vector(vector org, vector ang) func_camera_transform {
     // a fixed camera view
     trace_endpos = self.enemy.origin;
-    makevectors(self.enemy.angles);
+    makevectors(self.enemy.angles + self.enemy.mangle);
     return trace_endpos;
 }
 
