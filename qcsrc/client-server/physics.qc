@@ -518,16 +518,9 @@ vector(void) physics_player_touch_wall {
 
 
 void(void) physics_player_jump {
-	if (physics_waterlevel >= WATERLEVEL_SWIMMING) {
-		if (physics_watertype == CONTENT_WATER)
-			physics_velocity_z = 200;
-		else if (physics_watertype == CONTENT_SLIME)
-			physics_velocity_z = 80;
-		else
-			physics_velocity_z = 50;
-
+	if (physics_waterlevel >= WATERLEVEL_SWIMMING)
 		return;
-	}
+
 	if(physics_cantjump)
 		return;
 
@@ -585,8 +578,8 @@ void(void) physics_player_jump {
 }
 
 void(void) physics_check_water_jump {
+	// check for a jump-out-of-water
 	vector start, end;
-// check for a jump-out-of-water
 	makevectors (self.angles);
 	start = self.origin;
 	start_z = start_z + 8;
@@ -594,16 +587,14 @@ void(void) physics_check_water_jump {
 	normalize(v_forward);
 	end = start + v_forward*24;
 	traceline (start, end, TRUE, self);
-	if (trace_fraction < 1)
-	{	// solid at waist
+	if (trace_fraction < 1) { // solid at waist
 		start_z = start_z + self.maxs_z - 8;
 		end = start + v_forward*24;
 		self.movedir = trace_plane_normal * -50;
 		traceline (start, end, TRUE, self);
-		if (trace_fraction == 1)
-		{	// open at eye level
+		if (trace_fraction == 1) { // open at eye level
 			physics_flags |= FL_WATERJUMP;
-			physics_velocity_z = 225;
+			physics_velocity_z = sv_jumpvelocity * 0.75;
 			physics_flags &~= FL_JUMPRELEASED;
 			physics_teleport_time = 2;
 			physics_check_water_jump_hook();
@@ -686,18 +677,17 @@ void(void) physics_player {
 			physics_dodging();
 		}
 		if (physics_waterlevel == WATERLEVEL_SWIMMING)
+		if not(physics_ladder)
 			physics_check_water_jump();
 	}
 	if (physics_player_plug)
 	if (physics_player_plug(maxspd_mod))
 		goto end;
 
-	if (physics_flags & FL_WATERJUMP )
-	{
+	if (physics_flags & FL_WATERJUMP) {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
-		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE)
-		{
+		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE) {
 			physics_flags &~= FL_WATERJUMP;
 			self.teleport_time = 0;
 		}
@@ -749,36 +739,31 @@ void(void) physics_player {
 			wishspeed = sv_maxspeed*maxspd_mod;
 		if (physics_teleport_time <= 0)
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
-	}
-	else if (physics_waterlevel >= WATERLEVEL_SWIMMING)
-	{
+	} else if (physics_waterlevel >= WATERLEVEL_SWIMMING) {
 		// swimming
 		physics_flags &~= FL_ONGROUND;
-
 		makevectors(physics_v_angle);
 		//wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + v_up * physics_movement_z;
+		if (physics_button_jump)
+			physics_movement_z = sv_maxspeed;
+
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + '0 0 1' * physics_movement_z;
 		if (wishvel == '0 0 0')
-			wishvel = '0 0 -60'; // drift towards bottom
+			wishvel_z = sv_gravity * 0.075; // drift towards bottom
 
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
-		if (wishspeed > sv_maxspeed*maxspd_mod)
-			wishspeed = sv_maxspeed*maxspd_mod;
+		if (wishspeed > sv_maxspeed * maxspd_mod)
+			wishspeed = sv_maxspeed * maxspd_mod;
+
 		wishspeed = wishspeed * 0.7;
-
 		// water friction
-		physics_velocity = physics_velocity * (1 - frametime * sv_friction);
-
+		physics_velocity = physics_velocity * max(0, 1 - frametime * sv_friction);
 		// water acceleration
 		physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
-	}
-	else if (physics_ladder)
-	{
+	} else if (physics_ladder) {
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 		physics_flags &~= FL_ONGROUND;
-
-		physics_velocity = physics_velocity * (1 - frametime * sv_friction);
 		makevectors(physics_v_angle);
 		//wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + v_up * physics_movement_z;
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + '0 0 1' * physics_movement_z;
@@ -786,8 +771,9 @@ void(void) physics_player {
 			physics_velocity_z = physics_velocity_z + physics_gravity_factor * sv_gravity * frametime;
 		else
 			physics_velocity_z = physics_velocity_z + sv_gravity * frametime;
-		if (physics_ladder_iswater)
-		{
+
+		physics_velocity = physics_velocity * max(0, 1 - frametime * sv_friction);
+		if (physics_ladder_iswater) {
 			f = vlen(wishvel);
 			if (f > physics_ladder_speed)
 				wishvel = wishvel * (physics_ladder_speed / f);
@@ -811,8 +797,8 @@ void(void) physics_player {
 		wishspeed = vlen(wishvel);
 		if (wishspeed > sv_maxspeed*maxspd_mod)
 			wishspeed = sv_maxspeed*maxspd_mod;
-		if (physics_teleport_time <= 0)
-		{
+
+		if (physics_teleport_time <= 0) {
 			// water acceleration
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 		}

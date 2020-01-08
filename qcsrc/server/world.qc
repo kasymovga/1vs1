@@ -780,8 +780,10 @@ void(void) world_creature_frame {
 				}
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
-					if(self.air_finished < time + 9)
+					if(self.air_finished < time + 9) {
 						sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_gasp), VOL_BASE, ATTN_NORM);
+						self.nextstep = time + 1.5;
+					}
 					self.air_finished = time + 12;
 					if (self.nextstep < time)
 					if (self.waterlevel < WATERLEVEL_SUBMERGED)
