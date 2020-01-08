@@ -37,10 +37,10 @@ void() func_camera_init {
 }
 
 vector(vector org, vector ang) func_camera_transform {
-    // a fixed camera view
-    trace_endpos = self.enemy.origin;
-    makevectors(self.enemy.angles + self.enemy.mangle);
-    return trace_endpos;
+	// a fixed camera view
+	trace_endpos = self.enemy.origin;
+	makevectors(self.enemy.angles + self.enemy.mangle);
+	return trace_endpos;
 }
 
 void(void) spawnfunc_func_camera {
@@ -50,9 +50,9 @@ void(void) spawnfunc_func_camera {
 	if(!self.scale)
 		self.scale = 1;
 
- 	if(self.model != "") {
- 		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+	if(self.model != "") {
+		precache_model(self.model);
+		setmodel(self, self.model); // no precision needed
 	}
 	setorigin(self, self.origin);
 	if(self.scale)
@@ -67,6 +67,6 @@ void(void) spawnfunc_func_camera {
 
 	self.SendEntity = func_camera_send;
 	self.SendFlags = 0xFFFFFF;
-    self.camera_transform = func_camera_transform;
-    entity_initialize(self, func_camera_init, INITPRIO_FIRST);
+	self.camera_transform = func_camera_transform;
+	entity_initialize(self, func_camera_init, INITPRIO_FIRST);
 }
