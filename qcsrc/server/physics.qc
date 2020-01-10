@@ -49,10 +49,12 @@ void(void) physics_landing_hook {
 }
 
 float(entity a) physics_is_flying {
-	if(a.flags & FL_ONGROUND)
+	if (a.flags & FL_ONGROUND_OR_SLICK)
 		return 0;
-	if(a.waterlevel)
+
+	if (a.waterlevel)
 		return 0;
+
 	return 1;
 }
 
@@ -66,7 +68,7 @@ void(void) physics_check_ground_hook {
 			self.nextstep = time + 0.5;
 			sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE, ATTN_NORM);
 		} else {
-			if(self.flags & FL_ONGROUND)
+			if(self.flags & FL_ONGROUND_OR_SLICK)
 			if(time >= self.ladder_time)
 			if (self.lastground < time - 0.3)
 			if not(self.hook)
