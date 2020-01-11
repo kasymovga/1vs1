@@ -87,6 +87,7 @@ void(void) info_intermission_setup_angles {
 		return;
 
 	self.angles = vectoangles(e.origin - self.origin);
+	self.angles_x = -self.angles_x;
 	self.angles_z = 0;
 }
 
