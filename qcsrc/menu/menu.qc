@@ -77,7 +77,7 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 
 void() menu_dlc_reload =
 {
-	string s = "survival_pack survival_pack2 survival_campaign_v2 spdemo classiccampaign classiccampaign-p1 classiccampaign-p2 classiccampaign-p3 supershotgun zapper_v2";
+	string s = DLC_BASE_LIST " supershotgun zapper_v2";
 	if (cvar("cl_brightskins")) {
 		s = strcat(s, " brightskins");
 	}

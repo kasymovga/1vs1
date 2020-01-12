@@ -320,7 +320,7 @@ void dlc_init() {
 	if (s != "")
 		dlc_require(s);
 
-	dlc_load_local_list("survival_pack survival_pack2 survival_campaign_v2 spdemo classiccampaign classiccampaign-p1 classiccampaign-p2 classiccampaign-p3");
+	dlc_load_local_list(DLC_BASE_LIST);
 	string map_pk3 = whichpack(strcat("maps/", mapname, ".bsp"));
 	if (substring(map_pk3, 0, 8) == "dlcache/")
 		map_pk3 = substring(map_pk3, 8, -1);
@@ -393,6 +393,7 @@ void dlc_reload() {
 		dlc_wait_reload.think = DLCWaitReload;
 		dlc_wait_reload.nextthink = time + 0.2;
 	}
+	dlc_load_local_list(DLC_BASE_LIST);
 }
 
 void dlc_precache_sound(string s) {
