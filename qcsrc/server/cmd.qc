@@ -710,13 +710,7 @@ void(string s) cmd_client {
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");
-
-		if (s == "xonotic") {
-			self.gameclient = CLIENT_XONOTIC;
-			self.muted = TRUE;
-			self.netname = "Unsupported client";
-			cvar_set("connections_xonotic", ftos(cvar("connections_xonotic") + 1));
-		} else if (s == "rexuiz") {
+		if (s == "rexuiz") {
 			self.gameclient = CLIENT_REXUIZ;
 			cvar_set("connections_rexuiz", ftos(cvar("connections_rexuiz") + 1));
 		} else if (s == "nexuiz") {
@@ -725,6 +719,8 @@ void(string s) cmd_client {
 		} else if (s == "oldnexuiz") {
 			self.gameclient = CLIENT_OLDNEXUIZ;
 			cvar_set("connections_oldnexuiz", ftos(cvar("connections_oldnexuiz") + 1));
+		} else {
+			self.gameclient = CLIENT_UNKNOWN;
 		}
 	} else if(cmd == "records") {
 		sprint(self, records_reply);
@@ -800,9 +796,6 @@ void(string s) cmd_client {
 		if (cmd == "name") {
 			string name = substring(s, argv_start_index(1), -1);
 			if (self.retard > 0)
-				return;
-
-			if (self.gameclient == CLIENT_XONOTIC)
 				return;
 
 			client_mute_ifneeded(name);

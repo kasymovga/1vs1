@@ -1776,10 +1776,6 @@ void(void) player_impulse {
 	else if(imp >= 230 && imp <= 253)
 	{
 		if(self.deadflag == DEAD_NO) {
-			if (self.gameclient == CLIENT_XONOTIC) {
-				if (imp >= 234)
-					imp--;
-			}
 			weapon_switch(imp - 230 + WEP_FIRST);
 		} else
 			self.impulse = imp; // retry in next frame

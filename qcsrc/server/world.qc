@@ -115,7 +115,6 @@ void(void) world_static_init {
 	teleport_init();
 	casing_init();
 	warfog_init();
-	registercvar("connections_xonotic", "0");
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");
 	registercvar("connections_oldnexuiz", "0");
