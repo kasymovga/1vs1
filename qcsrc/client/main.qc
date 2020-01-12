@@ -305,7 +305,9 @@ void CSQC_Init(void)
 		localcmd("\ncmd gameclient oldnexuiz\n");
 		ClientUpdateMessage("^3You play with really old Nexuiz client", 10);
 	}
-
+	if (cvar("cl_maxfps_alwayssleep")) {
+		localcmd("\nseta cl_maxfps_alwayssleep 0\n");
+	}
 	if (cvar_string("sv_master2") == "")
 	if (cvar_string("sv_masterextra1") == "") {
 		localcmd("\nseta sv_master2 107.161.23.68\n");
