@@ -245,11 +245,12 @@ float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, f
 	}
 	if (deathtype == DEATH_SLIME ||
 			deathtype == DEATH_LAVA ||
-			deathtype == DEATH_HURTTRIGGER)
+			deathtype == DEATH_HURTTRIGGER ||
+			deathtype == DEATH_TEAMCHANGE
+			)
 		client_put();
 
 	self.unfroze_progress = 0;
-
 	return TRUE;
 }
 

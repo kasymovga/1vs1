@@ -474,7 +474,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 	entity oldself = self;
 	player_set_team(pl, team_index(dteam), team_index(pl.team), FALSE);
 	if(pl.classname == "player") {
-		if(pl.deadflag == DEAD_NO) // kill player when changing teams
+		if (PLAYER_ALIVE(pl)) // kill player when changing teams
 			damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
 	} else if not(teamchange) {
 		self = pl;
