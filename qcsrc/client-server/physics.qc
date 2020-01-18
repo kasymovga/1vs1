@@ -678,6 +678,7 @@ void(void) physics_player {
 		}
 		if (physics_waterlevel == WATERLEVEL_SWIMMING)
 		if not(physics_ladder)
+		if (physics_deadflag == DEAD_NO)
 			physics_check_water_jump();
 	}
 	if (physics_player_plug)
@@ -748,9 +749,14 @@ void(void) physics_player {
 			physics_movement_z = sv_maxspeed;
 
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + '0 0 1' * physics_movement_z;
-		if (wishvel == '0 0 0')
-			wishvel_z = sv_gravity * 0.075; // drift towards bottom
-
+		if (physics_deadflag == DEAD_FREEZE) {
+			if (physics_watertype == WATERLEVEL_SWIMMING)
+				physics_accelerate('0 0 1', 0, sv_gravity * 0.25, sv_accelerate, 1, 0);
+			else
+				physics_accelerate('0 0 1', sv_gravity * 0.25, sv_gravity * 0.25, sv_accelerate, 1, 0);
+		} else if (wishvel == '0 0 0') {
+				wishvel_z = -sv_gravity * 0.075; // drift towards bottom
+		}
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
 		if (wishspeed > sv_maxspeed * maxspd_mod)
