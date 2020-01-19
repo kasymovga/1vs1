@@ -951,7 +951,7 @@ void spawnfunc_item_speed (void) {
 }
 
 void spawnfunc_item_key_gold (void) {
-	self.origin_z = self.origin_z + 40;
+	self.origin_z = self.origin_z + 48;
 	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Gold Key", IT_KEY2, 0, 0, item_generic_pickupevalfunc, 100000);
 	self.colormod = '1 1 0';
 	self.effects = EF_FULLBRIGHT | EF_STARDUST;
@@ -959,7 +959,7 @@ void spawnfunc_item_key_gold (void) {
 }
 
 void spawnfunc_item_key_silver (void) {
-	self.origin_z = self.origin_z + 40;
+	self.origin_z = self.origin_z + 48;
 	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Silver Key", IT_KEY1, 0, 0, item_generic_pickupevalfunc, 100000);
 	self.effects = EF_FULLBRIGHT | EF_STARDUST;
 	self.mins_z = self.mins_z - 48;
