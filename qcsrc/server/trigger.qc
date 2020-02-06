@@ -259,53 +259,42 @@ void trigger_multiple_wait()
 	}
 };
 
-
 // the trigger was just touched/killed/used
 // self.enemy should be set to the activator so it can be held through a delay
 // so wait for the delay time before firing
-void trigger_multiple_fire()
-{
-	if (self.nextthink > time)
-	{
-		return;		// allready been triggered
+void(void) trigger_multiple_fire {
+	if (self.nextthink > time) {
+		return; // allready been triggered
 	}
-
-	if (self.classname == "trigger_secret")
-	{
+	if (self.classname == "trigger_secret") {
 		if (self.enemy.classname != "player")
 			return;
+
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
 	}
-
 	if (self.noise)
 		sound (self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 
-// don't trigger again until reset
+	// don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
-
 	activator = self.enemy;
 	other = self.goalentity;
 	trigger_use_targets();
-
-	if (self.wait > 0)
-	{
+	if (self.wait > 0) {
 		self.think = trigger_multiple_wait;
 		self.nextthink = time + self.wait;
-	}
-	else
-	{	// we can't just remove (self) here, because this is a touch function
-		// called wheil C code is looping through area links...
+	} else {
 		self.touch = stdproc_nothing;
+		self.use = stdproc_nothing;
 	}
-};
+}
 
-void trigger_multiple_use()
-{
+void(void) trigger_multiple_use {
 	self.goalentity = other;
 	self.enemy = activator;
 	trigger_multiple_fire();
-};
+}
 
 void trigger_multiple_touch()
 {
@@ -350,17 +339,17 @@ void trigger_multiple_eventdamage (entity inflictor, entity attacker, float _dam
 	}
 }
 
-void trigger_multiple_reset()
-{
-	if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
+void(void) trigger_multiple_reset {
+	if (!(self.spawnflags & SPAWNFLAG_NOTOUCH))
 		self.touch = trigger_multiple_touch;
-	if (self.max_health)
-	{
+
+	if (self.max_health) {
 		self.health = self.max_health;
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
 	self.think = stdproc_nothing;
+	self.use = trigger_multiple_use;
 	self.team = self.team_saved;
 }
 
