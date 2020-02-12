@@ -947,7 +947,7 @@ void kh_init_delayed()  // sets up th KH environment
 	else
 		kh_Controller_SetThink(0, "", kh_WaitForPlayers);
 
-	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
+	score_basics(SFL_SORT_PRIO_PRIMARY, (kh_roundbased ? 0 : SFL_SORT_PRIO_PRIMARY), TRUE);
 	ST_KH_CAPS = score_register_team_score("caps", (kh_roundbased ? SFL_SORT_PRIO_PRIMARY : SFL_SORT_PRIO_SECONDARY));
 	SP_KH_CAPS = score_register("caps", SFL_SORT_PRIO_SECONDARY);
 	SP_KH_PUSHES = score_register("pushes", 0);
