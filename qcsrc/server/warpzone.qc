@@ -600,6 +600,12 @@ void WarpZone_InitStep_FinalizeTransform()
 {
 	WarpZone_SetUp(self, self.warpzone_origin, self.warpzone_angles, self.enemy.warpzone_origin, self.enemy.warpzone_angles);
 	self.touch = WarpZone_Touch;
+	entity w = waypoint_spawn(self.warpzone_origin, self.warpzone_origin, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+	entity dw = waypoint_spawn(self.enemy.warpzone_origin, self.enemy.warpzone_origin, WAYPOINTFLAG_GENERATED);
+	w.wp00 = dw;
+	w.wp00mincost = 0; // this is just for jump pads
+	self.nearestwaypoint = w;
+	self.nearestwaypointtimeout = time + 1000000000;
 }
 
 entity warpzone_position_first;
