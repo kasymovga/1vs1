@@ -266,13 +266,6 @@ void(void) trigger_multiple_fire {
 	if (self.nextthink > time) {
 		return; // allready been triggered
 	}
-	if (self.classname == "trigger_secret") {
-		if (self.enemy.classname != "player")
-			return;
-
-		found_secrets = found_secrets + 1;
-		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
-	}
 	if (self.noise)
 		sound (self.enemy, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 

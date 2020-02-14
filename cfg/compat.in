@@ -31,6 +31,7 @@ alias g_rune_respawn_waves "set rune_g_respawn_waves $1"
 alias g_tdm_respawn_waves "set tdm_g_respawn_waves $1"
 
 //Quake and Quake 3 compat
+set sv_spawnreplace_trigger_secret single_secret
 set sv_spawnreplace_monster_army monster_soldier_spawn
 set sv_spawnreplace_monster_enforcer monster_rlgirl_spawn
 set sv_spawnreplace_monster_knight monster_spearguy_spawn

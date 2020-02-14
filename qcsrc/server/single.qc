@@ -1,5 +1,8 @@
 float single_level_finished;
 float _single_transit_weapons;
+float single_secrets_found;
+float single_secrets_total;
+entity single_secrets_controller;
 
 var void() Single_Shutdown_NextLink;
 void Single_Shutdown() {
@@ -192,4 +195,31 @@ void Single_Init() {
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;
 	entity_initialize(world, single_init_delayed, INITPRIO_GAMETYPE);
+}
+
+void(void) single_secret_controller_use {
+	single_secrets_found++;
+	single_secrets_controller.message = strcat("^2Secrets found: ^3", ftos(single_secrets_found), "^2/^3", ftos(single_secrets_total));
+	GameStatus_Set(single_secrets_controller.message , 2);
+}
+
+void(void) single_secret_controller_reset {
+	single_secrets_found = 0;
+}
+
+void(void) spawnfunc_single_secret {
+	single_secrets_total++;
+	self.noise = "misc/strength_respawn.wav";
+	if (self.message == "") {
+		self.message = "You found a secret area!";
+	}
+	self.spawnflags = self.spawnflags | SPAWNFLAG_PLAYERONLY;
+	if not(single_secrets_controller) {
+		single_secrets_controller = spawn();
+		single_secrets_controller.targetname = "single_secrets_controller";
+		single_secrets_controller.use = single_secret_controller_use;
+		single_secrets_controller.reset = single_secret_controller_reset;
+	}
+	self.target = "single_secrets_controller";
+	spawnfunc_trigger_once();
 }
