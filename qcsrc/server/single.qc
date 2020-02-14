@@ -31,9 +31,10 @@ float Single_WinningCondition() {
 }
 
 string Single_GameOverMessageMod(string s) {
-	if (campaign_won)
-		return "^2Level finished";
-	else
+	if (campaign_won) {
+		string msg = strcat("^2Level finished\n", "Secrets: ", ftos(single_secrets_found), "/", ftos(single_secrets_total));
+		return msg;
+	} else
 		return "^1Game over";
 }
 
