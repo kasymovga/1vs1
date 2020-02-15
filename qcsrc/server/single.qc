@@ -2,6 +2,8 @@ float single_level_finished;
 float _single_transit_weapons;
 float single_secrets_found;
 float single_secrets_total;
+float single_monsters_killed;
+float single_monsters_total;
 entity single_secrets_controller;
 
 var void() Single_Shutdown_NextLink;
@@ -18,7 +20,10 @@ void Single_EndLevel() {
 		e.winning = 1;
 
 	campaign_won = TRUE;
-
+	single_monsters_total = single_monsters_killed;
+	for (e = world; (e = find(e, classname, "monster"));) {
+		single_monsters_total++;
+	}
 	if (self.netname != "") {
 		cvar_set("nextmap", self.netname);
 		campaign_map_transition = TRUE;
@@ -32,7 +37,8 @@ float Single_WinningCondition() {
 
 string Single_GameOverMessageMod(string s) {
 	if (campaign_won) {
-		string msg = strcat("^2Level finished\n", "Secrets: ", ftos(single_secrets_found), "/", ftos(single_secrets_total));
+		string msg = strcat("^2Level finished\nSecrets: ", ftos(single_secrets_found), "/", ftos(single_secrets_total));
+		msg = strcat(msg, "\nMonsters: ", ftos(single_monsters_killed), "/", ftos(single_monsters_total));
 		return msg;
 	} else
 		return "^1Game over";
@@ -169,6 +175,7 @@ void Single_Spawn(entity e) {
 }
 
 void(entity attacker) single_MonsterKilled {
+	single_monsters_killed++;
 	if (attacker.classname == "player")
 		score_player_add(attacker, SP_SCORE, self.frags);
 }
@@ -206,6 +213,7 @@ void(void) single_secret_controller_use {
 
 void(void) single_secret_controller_reset {
 	single_secrets_found = 0;
+	single_monsters_killed = 0;
 }
 
 void(void) spawnfunc_single_secret {
