@@ -364,19 +364,18 @@ void spawnfunc_trigger_multiple()
 	self.reset = trigger_multiple_reset;
 	if (self.sounds == 1)
 	{
-		precache_sound ("misc/secret.wav");
 		self.noise = "misc/secret.wav";
 	}
 	else if (self.sounds == 2)
 	{
-		precache_sound ("misc/talk.wav");
 		self.noise = "misc/talk.wav";
 	}
 	else if (self.sounds == 3)
 	{
-		precache_sound ("misc/trigger1.wav");
 		self.noise = "misc/trigger1.wav";
 	}
+	if (self.noise != "")
+		precache_sound(self.noise);
 
 	if (!self.wait)
 		self.wait = 0.2;
