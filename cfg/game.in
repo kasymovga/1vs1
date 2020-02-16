@@ -5,7 +5,7 @@ set sv_gameplayfix_useheightforplat 0 "Use height attribute for elevators"
 set sv_gameplayfix_trainnomins 0 "Ignore mins/maxs for func_train"
 set sv_gameplayfix_trainnowait 0 "Old behaviour for func_train"
 set sv_gameplayfix_skipnonsolid 0 "Allow shooting through non-solid curve surfaces."
-set sv_gametype_patterns "" "For compatibility with Q3/QL maps. Patterns to filter items by gametype, separated by '|'. Possible values: ffa, team, duel"
+set g_gametype_patterns "" "For compatibility with Q3/QL maps. Patterns to filter items by gametype, separated by '|'. Possible values: ffa, team, duel"
 set g_buttons_hookuse_swap 0
 alias extendmatchtime "sv_cmd extendmatchtime"
 alias reducematchtime "sv_cmd reducematchtime"

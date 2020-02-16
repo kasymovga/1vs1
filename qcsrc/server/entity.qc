@@ -255,10 +255,22 @@ float(entity e, float t) entity_move_out_of_solid_with_type {
 .string gametype;
 .string not_gametype;
 .string cvarfilter;
+string entity_gametype_patterns;
 void(void) SV_OnEntityPreSpawnFunction {
 	if(!self) //Skip pre-spawn function for world.
 		return;
 
+	if (entity_gametype_patterns == "") {
+		entity_gametype_patterns = cvar_string("g_gametype_patterns");
+		if (entity_gametype_patterns == "") { //Trying to guess
+			if (teamplay)
+				entity_gametype_patterns = "team|ctf";
+			else if(cvar("g_maxplayers") == 2)
+				entity_gametype_patterns = "tournament|duel";
+			else
+				entity_gametype_patterns = "ffa";
+		}
+	}
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
@@ -267,7 +279,7 @@ void(void) SV_OnEntityPreSpawnFunction {
 		return;
 	}
 	if (self.gametype != "") {
-		s = gametype_patterns();
+		s = entity_gametype_patterns;
 		float matched;
 		matched = 0;
 		n = tokenizebyseparator(s, "|");
@@ -289,7 +301,7 @@ void(void) SV_OnEntityPreSpawnFunction {
 		}
 	}
 	if (self.not_gametype != "") {
-		s = gametype_patterns();
+		s = entity_gametype_patterns;
 		n = tokenizebyseparator(s, "|");
 		for (i = 0; i < n; i++) {
 			s = argv(i);

@@ -893,26 +893,6 @@ void StartFrame (void)
 	bot_serverframe();
 }
 
-string gametype_patterns() {
-	string s = cvar_string("sv_gametype_patterns");
-	if (s == "") //Trying to guess
-	{
-		if (teamplay)
-		{
-			s = "team|ctf";
-		}
-		else if(cvar("g_maxplayers") == 2)
-		{
-			s = "tournament|duel";
-		}
-		else
-		{
-			s = "ffa";
-		}
-	}
-	return s;
-}
-
 void(float dorespawn) world_reset {
 	entity oldself;
 	oldself = self;
