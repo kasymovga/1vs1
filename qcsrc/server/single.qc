@@ -21,8 +21,16 @@ void Single_EndLevel() {
 
 	campaign_won = TRUE;
 	single_monsters_total = single_monsters_killed;
-	for (e = world; (e = find(e, classname, "monster"));) {
-		single_monsters_total++;
+	for (e = world; (e = nextent(e));) {
+		if (e.classname == "monster") {
+			single_monsters_total++;
+			continue;
+		}
+		if (substring(e.classname, 0, 8) == "monster_") //Untriggered spawn
+		if (substring(e.classname, strlen(e.classname) - 6, 6) == "_spawn")
+		if (e.dmg == max(e.cnt, 1)) {
+			single_monsters_total += e.dmg;
+		}
 	}
 	if (self.netname != "") {
 		cvar_set("nextmap", self.netname);
