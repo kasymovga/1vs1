@@ -10,6 +10,12 @@ float physics_jump_velocity_factor;
 float physics_start_teleport_time;
 float physics_start_crouch;
 float physics_start_flags_jumpreleased;
+float ground_time;
+float ground_curtime;
+float ground_oldtime;
+vector ground_origin;
+vector ground_oldorigin;
+float ground_lastent;
 
 vector vehicle_adjust_view() {
 	makevectors(view_angles);
@@ -77,8 +83,6 @@ vector CSQCPhysic_SetViewOrg()
 		float n = clientcommandframe + 1;
 		entity oldself = self;
 		self = physics;
-		self.origin = self.pmove_origin;
-		pmove_org = self.origin;
 		self.velocity = physics_velocity = self.pmove_velocity;
 		physics_teleport_time = physics_start_teleport_time;
 		physics_deadflag = player_deadflag;
@@ -102,7 +106,18 @@ vector CSQCPhysic_SetViewOrg()
 			setsize(self, self.stand_mins, self.stand_maxs);
 			self.view_ofs = self.stand_view_ofs;
 		}
-		
+		self.origin = self.pmove_origin;
+		if (ground_lastent)
+		if (ground_origin != ground_oldorigin)
+		{
+			float f;
+			f = max(0, (ground_curtime - ground_oldtime) / (ground_time - ground_oldtime));
+			ground_curtime += frametime;
+			vector ground_curorigin = (1 - f) * ground_oldorigin + f * ground_origin;
+			self.origin = self.pmove_origin - (ground_origin - ground_curorigin);
+			physics_unstuck();
+		}
+		pmove_org = self.origin;
 		self.lastwj = physics_lastwj;
 		if (g_dodging || g_dodging_frozen) {
 			self.last_dodging_time = physics_last_dodging;
@@ -328,6 +343,22 @@ void Ent_Physic(float isnew)
 			if (dodging_flags & 4) physics_last_BACKWARD_KEY_time = ReadCoord();
 			if (dodging_flags & 8) physics_last_LEFT_KEY_time = ReadCoord();
 			if (dodging_flags & 16) physics_last_RIGHT_KEY_time = ReadCoord();
+		}
+		if (f & 32768) {
+			ground_oldorigin = ground_origin;
+			ground_curtime = ground_oldtime = ground_time;
+			float ground_ent = ReadCoord();
+			ground_origin_x = ReadCoord();
+			ground_origin_y = ReadCoord();
+			ground_origin_z = ReadCoord();
+			ground_time = time + ticrate;
+			if (ground_lastent != ground_ent) {
+				ground_oldorigin = ground_origin;
+				ground_oldtime = ground_time;
+				ground_lastent = ground_ent;
+			}
+		} else {
+			ground_lastent = 0;
 		}
 	}
 }

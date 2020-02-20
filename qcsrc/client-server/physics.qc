@@ -29,7 +29,6 @@ void(void) physics_impact {
 	}
 }
 
-#ifdef SVQC
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
 	tracebox(o, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
@@ -63,7 +62,6 @@ void(void) physics_unstuck {
 	if (physics_unstuck_to('1 0 0' * self.mins_x))
 		return;
 }
-#endif
 
 void(float ground) physics_update_status {
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
@@ -108,7 +106,6 @@ void(float ground) physics_update_status {
 			}
 		}
 	}
-
 }
 
 vector(vector v1, vector v2) physics_bbox_nearest_normal {

@@ -395,6 +395,9 @@ float(entity to, float sf) physics_send {
 			if (dodging_flags)
 				sf |= 16384;
 		}
+		if (self.groundentity) {
+			sf |= 32768;
+		}
 	}
 	else
 		sf = sf & 7;
@@ -501,6 +504,12 @@ float(entity to, float sf) physics_send {
 			if (dodging_flags & 4) WriteCoord(MSG_ENTITY, self.last_BACKWARD_KEY_time);
 			if (dodging_flags & 8) WriteCoord(MSG_ENTITY, self.last_LEFT_KEY_time);
 			if (dodging_flags & 16) WriteCoord(MSG_ENTITY, self.last_RIGHT_KEY_time);
+		}
+		if (sf & 32768) {
+			WriteCoord(MSG_ENTITY, num_for_edict(self.groundentity));
+			WriteCoord(MSG_ENTITY, self.groundentity.origin_x);
+			WriteCoord(MSG_ENTITY, self.groundentity.origin_y);
+			WriteCoord(MSG_ENTITY, self.groundentity.origin_z);
 		}
 
 	}
