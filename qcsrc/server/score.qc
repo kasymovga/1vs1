@@ -266,6 +266,9 @@ void() score_clear_all {
 			continue;
 		for(i = 0; i < MAX_SCORE; ++i) if not(score_flags[i] & SFL_NOCLEAR)
 		{
+			if (i == SP_TEAM)
+				continue;
+
 			if(sk.(scores[i]) != 0)
 				if(score_label[i] != "")
 					score_send_delayed(sk, pow(2, i));
