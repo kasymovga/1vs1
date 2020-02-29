@@ -212,7 +212,6 @@ void CSQC_Init(void)
 	registercmd("+button4");
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
-	registercmd("showradio");
 
 	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
@@ -503,9 +502,6 @@ float CSQC_ConsoleCommand(string strMessage)
 	} else if(strCmd == "-showaccuracy") {
 		sb_showaccuracy = false;
 		return true;
-	} else if(strCmd == "showradio") {
-		GUI_Show(GUI_RADIO);
-		return true;
 	}
 
 	if(camera_active)
@@ -601,8 +597,9 @@ void GameCommand(string msg)
 		precache_model(argv(1));
 		setmodel(spawnentity, argv(1));
 		spawnentity.frame = stof(argv(2));
-	}
-	else
+	} else if(cmd == "showradio") {
+		GUI_Show(GUI_RADIO);
+	} else
 	{
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}
