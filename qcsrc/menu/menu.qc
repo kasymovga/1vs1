@@ -94,13 +94,13 @@ void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
 	string s;
+	float i;
 	URI_GET_SERVERLIST = uri_register_handler(ServerList_URI_Get_Callback);
 	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
 
 	// list all game dirs (TEST)
 	if(cvar("developer"))
 	{
-		float i;
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
@@ -112,6 +112,9 @@ void() m_init =
 	menu_dlc_reload();
 	udppunchhole_extresponse_handler_register();
 	SetConWidthHeight();
+	i = cvar("cl_escape_code");
+	if (i)
+		K_ESCAPE = i;
 }
 
 void UpdateConWidthHeight()

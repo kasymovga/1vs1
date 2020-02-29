@@ -4,6 +4,7 @@ pre.qh
 defs.qc
 csqc_constants.qc
 ../common/constants.qh
+../client-menu/key.h
 ../client-server/constants.qh
 csqc_builtins.qc
 ../client-server/world.qh

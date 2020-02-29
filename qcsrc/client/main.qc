@@ -364,6 +364,9 @@ void CSQC_Init(void)
 	s = strcat(s, " ", cvar_string("vid_width"), "x", cvar_string("vid_height"));
 	s = strcat(s, " ", ftos(ceil(cvar("sys_memsize_physical") / 512) * 512));
 	localcmd(strcat("\ncmd sysinfo ", s, "\n"));
+	i = cvar("cl_escape_code");
+	if (i)
+		K_ESCAPE = i;
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
