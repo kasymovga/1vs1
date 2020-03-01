@@ -112,9 +112,6 @@ void() m_init =
 	menu_dlc_reload();
 	udppunchhole_extresponse_handler_register();
 	SetConWidthHeight();
-	i = cvar("cl_escape_code");
-	if (i)
-		K_ESCAPE = i;
 }
 
 void UpdateConWidthHeight()

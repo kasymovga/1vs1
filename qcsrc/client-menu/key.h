@@ -6,7 +6,7 @@
 //
 const float K_TAB = 9;
 const float K_ENTER = 13;
-var float K_ESCAPE = 27;
+const float K_ESCAPE = 27;
 const float K_SPACE = 32;
 
 // normal keys should be passed as lowercased ascii
