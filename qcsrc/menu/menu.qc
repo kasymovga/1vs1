@@ -15,6 +15,7 @@ float prevMenuAlpha;
 float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
+float menuRealFrametime;
 
 void SUB_Null() { };
 
@@ -190,6 +191,38 @@ void() m_init_delayed =
 		m_display(); // delayed menu display
 };
 
+float(void) menu_mouse_update {
+	float changed = 0;
+	if(menuMouseMode)
+	{
+		vector newMouse;
+		newMouse = globalToBoxSize(getmousepos(), draw_scale);
+		if(newMouse != '0 0 0')
+			if(newMouse != menuMousePos)
+			{
+				menuMousePos = newMouse;
+				changed = 1;
+			}
+	}
+	else
+	{
+		if(frametime > 0)
+		{
+			vector dMouse;
+			dMouse = getmousepos() * (frametime / menuRealFrametime); // for capturevideo
+			if(dMouse != '0 0 0')
+			{
+				dMouse = globalToBoxSize(dMouse, draw_scale);
+				menuMousePos += dMouse * cvar("menu_mouse_speed");
+				menuMousePos_x = bound(0, menuMousePos_x, 1);
+				menuMousePos_y = bound(0, menuMousePos_y, 1);
+				changed = 1;
+			}
+		}
+	}
+	return changed;
+}
+
 void(float key, float ascii) m_keyup =
 {
 	if(!menuInitialized)
@@ -200,6 +233,7 @@ void(float key, float ascii) m_keyup =
 	main.keyUp(main, key, ascii, menuShiftState);
 	if(key >= K_MOUSE1 && key <= K_MOUSE3)
 	{
+		menu_mouse_update();
 		--mouseButtonsPressed;
 		if(!mouseButtonsPressed)
 			main.mouseRelease(main, menuMousePos);
@@ -230,9 +264,11 @@ void(float key, float ascii) m_keydown =
 	else
 	{
 		draw_reset();
-		if(key >= K_MOUSE1 && key <= K_MOUSE3)
+		if(key >= K_MOUSE1 && key <= K_MOUSE3) {
+			menu_mouse_update();
 			if(!mouseButtonsPressed)
 				main.mousePress(main, menuMousePos);
+		}
 		if(!main.keyDown(main, key, ascii, menuShiftState))
 			if(key == K_ESCAPE)
 				if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) // don't back out to console only
@@ -255,7 +291,6 @@ void(float key, float ascii) m_keydown =
 void() m_draw =
 {
 	float t;
-	float realFrametime;
 
 	menuMouseMode = cvar("menu_mouse_absolute");
 
@@ -287,14 +322,14 @@ void() m_draw =
 	}
 	extresponse_update();
 	t = gettime();
-	realFrametime = frametime = min(0.2, t - menuPrevTime);
+	menuRealFrametime = frametime = min(0.2, t - menuPrevTime);
 	menuPrevTime = t;
 	time += frametime;
 	t = cvar("menu_slowmo");
 	if(t)
 	{
 		frametime *= t;
-		realFrametime *= t;
+		menuRealFrametime *= t;
 	}
 	else
 		t = 1;
@@ -383,39 +418,11 @@ void() m_draw =
 	}
 
 	draw_alpha *= menuAlpha;
-
-	if(menuMouseMode)
-	{
-		vector newMouse;
-		newMouse = globalToBoxSize(getmousepos(), draw_scale);
-		if(newMouse != '0 0 0')
-			if(newMouse != menuMousePos)
-			{
-				menuMousePos = newMouse;
-				if(mouseButtonsPressed)
-					main.mouseDrag(main, menuMousePos);
-				else
-					main.mouseMove(main, menuMousePos);
-			}
-	}
-	else
-	{
-		if(frametime > 0)
-		{
-			vector dMouse;
-			dMouse = getmousepos() * (frametime / realFrametime); // for capturevideo
-			if(dMouse != '0 0 0')
-			{
-				dMouse = globalToBoxSize(dMouse, draw_scale);
-				menuMousePos += dMouse * cvar("menu_mouse_speed");
-				menuMousePos_x = bound(0, menuMousePos_x, 1);
-				menuMousePos_y = bound(0, menuMousePos_y, 1);
-				if(mouseButtonsPressed)
-					main.mouseDrag(main, menuMousePos);
-				else
-					main.mouseMove(main, menuMousePos);
-			}
-		}
+	if (menu_mouse_update()) {
+		if(mouseButtonsPressed)
+			main.mouseDrag(main, menuMousePos);
+		else
+			main.mouseMove(main, menuMousePos);
 	}
 	main.draw(main);
 
