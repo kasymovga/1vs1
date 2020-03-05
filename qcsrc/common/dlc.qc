@@ -16,7 +16,7 @@ float dlc_ready(string dlc_name) {
 }
 
 string dlc_load_queue;
-float dlc_load_queue_sumit() {
+float dlc_load_queue_submit() {
 	string head, tail;
 	for (head = str_car(dlc_load_queue), tail = str_cdr(dlc_load_queue); ; head = str_car(tail), tail = str_cdr(tail)) {
 		if (head == "")
@@ -47,7 +47,7 @@ void dlc_find_working_repo_callback(float id, float status, string data) {
 		dlc_repo_check = "";
 		print("DLC repository succeeded: ", dlc_repo, "\n");
 		dlc_repo_finded = 1;
-		dlc_load_queue_sumit();
+		dlc_load_queue_submit();
 		return;
 	} else {
 		print("DLC repository failed: ", dlc_repo_check, " ", ftos(status), "\n");
@@ -101,14 +101,12 @@ float dlc_load(string dlc_name, float force_local) {
 	if (dlc_repo_finded && !force_local)
 		localcmd("\ncurl --pak ", dlc_url(dlc_name), "\n");
 	else {
-#ifndef MENUQC
 		if not(force_local)
 		if not(dlc_repo_checker) {
 			dlc_repo_checker = spawn();
 			dlc_repo_checker.think = dlc_find_working_repo;
 			dlc_repo_checker.nextthink = time + 2;
 		}
-#endif
 		localcmd("\ncurl --pak ", dlc_pk3_name(dlc_name), "\n");
 		s = strcat(dlc_load_queue, " ", dlc_name);
 		str_unzone_ifneeded(dlc_load_queue);
@@ -141,12 +139,10 @@ float dlc_ready_all() {
 		if not(dlc_ready(s))
 			return FALSE;
 	}
-#ifndef MENUQC
 	if (dlc_repo_checker) {
 		remove(dlc_repo_checker);
 		dlc_repo_checker = world;
 	}
-#endif
 	return TRUE;
 }
 

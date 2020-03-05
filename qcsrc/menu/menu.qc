@@ -75,8 +75,7 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 		ParseServerListLine(argv(i));
 }
 
-void() menu_dlc_reload =
-{
+void(float nodownload) menu_dlc_reload {
 	string s = DLC_BASE_LIST " supershotgun zapper_v2";
 	if (cvar("cl_brightskins")) {
 		s = strcat(s, " brightskins");
@@ -87,7 +86,17 @@ void() menu_dlc_reload =
 	if (cvar("cl_simpleitems")) {
 		s = strcat(s, " simpleitems");
 	}
-	dlc_load_local_list(s);
+	string head = "", tail = s;
+	while (tail != "") {
+		head = str_car(tail);
+		tail = str_cdr(tail);
+		if (head != "") {
+			if not(dlc_load(head, nodownload)) {
+				if not(nodownload)
+					print("Downloading missing pack: ", head, "\n");
+			}
+		}
+	}
 }
 
 void() m_init =
@@ -109,7 +118,7 @@ void() m_init =
 			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
-	menu_dlc_reload();
+	menu_dlc_reload(true);
 	udppunchhole_extresponse_handler_register();
 	SetConWidthHeight();
 }
@@ -152,6 +161,9 @@ void() m_init_delayed =
 		dlc_wait_frame++;
 		preMenuInit();
 		return;
+	} else {
+		dlc_set_repos(cvar_string("sv_dlc_repository"));
+		menu_dlc_reload(false);
 	}
 	if(!preMenuInit())
 		return;
