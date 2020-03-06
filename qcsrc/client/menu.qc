@@ -95,9 +95,9 @@ void Ent_Menu(float bIsNewEntity) {
 	}
 }
 
-float(void) menu_selected_update {
+void(void) menu_selected_update {
 	vector v = mouse_position();
-	return floor((v_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
+	menu_selected = floor((v_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
 }
 
 float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);
