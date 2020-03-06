@@ -1,3 +1,3 @@
-vector mouse_pos;
+vector(void) mouse_position;
 void Mouse_Draw();
 void Mouse_Enable();

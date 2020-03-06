@@ -95,6 +95,11 @@ void Ent_Menu(float bIsNewEntity) {
 	}
 }
 
+float(void) menu_selected_update {
+	vector v = mouse_position();
+	return floor((v_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
+}
+
 float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void Menu_Draw() {
 	float i;
@@ -119,7 +124,7 @@ void Menu_Draw() {
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	}
 	pos_y += ITEM_HEIGHT;
-	menu_selected = floor((mouse_pos_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
+	menu_selected_update();
 
 	for (i = 0; i < self.cnt; i++) {
 		if (menu_selected == i)
@@ -165,6 +170,7 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 			choice--;
 	}
 	if (nPrimary == K_MOUSE1) {
+		menu_selected_update();
 		if (menu_selected < 0)
 			choice = menu.cnt;
 		else

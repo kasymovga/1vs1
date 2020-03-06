@@ -12,25 +12,26 @@ float mv_ownvote;
 float mv_detail;
 float mv_timeout;
 float mv_maps_mask;
+vector mv_pos, mv_dist;
+float mv_rows, mv_columns
 
 float mv_selection;
 
-float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns)
+float MapVote_Selection()
 {
 	float cell;
 	float c, r;
-
 	cell = -1;
-
-	for (r = 0; r < rows; ++r)
-		for (c = 0; c < columns; ++c)
+	vector v = mouse_position();
+	for (r = 0; r < mv_rows; ++r)
+		for (c = 0; c < mv_columns; ++c)
 		{
-			if (mouse_pos_x >= topleft_x + cellsize_x *  c &&
-				mouse_pos_x <= topleft_x + cellsize_x * (c + 1) &&
-				mouse_pos_y >= topleft_y + cellsize_y *  r &&
-				mouse_pos_y <= topleft_y + cellsize_y * (r + 1))
+			if (v_x >= mv_pos_x + mv_dist_x *  c &&
+				v_x <= mv_pos_x + mv_dist_x * (c + 1) &&
+				v_y >= mv_pos_y + mv_dist_y *  r &&
+				v_y <= mv_pos_y + mv_dist_y * (r + 1))
 			{
-				cell = r * columns + c;
+				cell = r * mv_columns + c;
 				break;
 			}
 		}
@@ -61,6 +62,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 
 	if (nPrimary == K_MOUSE1)
+		mv_selection = MapVote_Selection();
 		if (mv_selection >= 0)
 		{
 			imp = min(mv_selection + 1, mv_num_maps);
@@ -185,7 +187,6 @@ void MapVote_Draw()
 	vector pos;
 	float isize;
 	float center;
-	float columns, rows;
 	float tsize;
 	vector dist;
 
@@ -226,20 +227,22 @@ void MapVote_Draw()
 	
 	if(mv_num_maps > 3)
 	{
-		columns = 3;
+		mv_columns = 3;
 	} else {
-		columns = mv_num_maps;
+		mv_columns = mv_num_maps;
 	}
-	rows = ceil(mv_num_maps / columns);
+	mv_rows = ceil(mv_num_maps / mv_columns);
 
-	dist_x = (xmax - xmin) / columns;
-	dist_y = (ymax - pos_y) / rows;
+	dist_x = (xmax - xmin) / mv_columns;
+	dist_y = (ymax - pos_y) / mv_rows;
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 
-	mv_selection = MapVote_Selection(pos, dist, rows, columns);
+	mv_pos = pos;
+	mv_dist = dist;
+	mv_selection = MapVote_Selection();
 
-	pos_x += (xmax - xmin) / (2 * columns);
+	pos_x += (xmax - xmin) / (2 * mv_columns);
 	pos_y += (dist_y - isize) / 2;
 	ymax -= isize;
 	for(i = 0; i < mv_num_maps; ++i)
@@ -249,9 +252,9 @@ void MapVote_Draw()
 			continue;
 		map = mv_maps[i];
 		if(mv_preview[i])
-			MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, columns), isize, tsize, map, mv_pics[i], tmp, i);
+			MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, mv_columns), isize, tsize, map, mv_pics[i], tmp, i);
 		else
-			MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, columns), isize, tsize, map, "", tmp, i);
+			MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, mv_columns), isize, tsize, map, "", tmp, i);
 	}
 
 	if(mv_abstain)

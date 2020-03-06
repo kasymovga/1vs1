@@ -18,12 +18,13 @@ float ns_confirmed2;
 float g_nadgets_double;
 
 void NS_UpdateSelection(vector o, vector s) {
+	vector v = mouse_position();
     if(g_nadgets_double)
-        ns_selected_in = (mouse_pos_x > CVAR(vid_conwidth) * 0.5);
+        ns_selected_in = (v_x > CVAR(vid_conwidth) * 0.5);
     else
         ns_selected_in = 0;
 
-    ns_selected = floor(ns_numoptions * ((bound(o_y, mouse_pos_y, o_y + s_y) - o_y) / s_y));
+    ns_selected = floor(ns_numoptions * ((bound(o_y, v_y, o_y + s_y) - o_y) / s_y));
     ns_selected = min(ns_numoptions - 1, ns_selected);
 }
 
@@ -197,6 +198,15 @@ float NS_InputEvent(float bInputType, float nPrimary, float nSecondary) {
         }
 
         if(nPrimary == K_MOUSE1) {
+			vector o;
+			o_x = (CVAR(vid_conwidth) - ns_width) * 0.5;
+			o_y = (CVAR(vid_conheight) - ns_height) * 0.5;
+			o_z = 0;
+			vector s;
+			s_x = ns_width;
+			s_y = ns_height;
+			s_z = 0;
+			NS_UpdateSelection(o, s);
             NS_ConfirmSelection();
             return TRUE;
         }

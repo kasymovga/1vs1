@@ -12,7 +12,8 @@ float ws_selected;
 float selectable_weapons;
 
 void WS_UpdateSelection(vector o, vector s) {
-    ws_selected = floor(ws_numoptions * ((bound(o_y, mouse_pos_y, o_y + s_y) - o_y) / s_y));
+	vector v = mouse_position();
+    ws_selected = floor(ws_numoptions * ((bound(o_y, v_y, o_y + s_y) - o_y) / s_y));
     ws_selected = min(ws_numoptions - 1, ws_selected);
 }
 
@@ -129,6 +130,9 @@ float WS_InputEvent(float bInputType, float nPrimary, float nSecondary) {
         }
 
         if(nPrimary == K_MOUSE1) {
+			vector o = [CVAR(vid_conwidth) - ws_width, CVAR(vid_conheight) - ws_height] * 0.5;
+			vector s = [ws_width, ws_height];
+			WS_UpdateSelection(o, s);
             WS_ConfirmSelection();
             return TRUE;
         }

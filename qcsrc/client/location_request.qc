@@ -14,7 +14,7 @@ float LocationRequest_InputEvent(float bInputType, float nPrimary, float nSecond
 
 	if (nPrimary == K_MOUSE1) {
 		vector loc;
-		loc = teamradar_2dcoord_to_texcoord(mouse_pos);
+		loc = teamradar_2dcoord_to_texcoord(mouse_position());
 		loc = teamradar_texcoord_to_3dcoord(loc);
 		if (selected_location) {
 			selected_location.teamradar_icon = 1;
