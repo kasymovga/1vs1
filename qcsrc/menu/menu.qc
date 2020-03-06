@@ -233,7 +233,9 @@ void(float key, float ascii) m_keyup =
 	main.keyUp(main, key, ascii, menuShiftState);
 	if(key >= K_MOUSE1 && key <= K_MOUSE3)
 	{
-		menu_mouse_update();
+		if (menuMousePos)
+			menu_mouse_update();
+
 		--mouseButtonsPressed;
 		if(!mouseButtonsPressed)
 			main.mouseRelease(main, menuMousePos);
