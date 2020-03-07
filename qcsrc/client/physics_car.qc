@@ -18,8 +18,7 @@ void physics_car_pre() {
 }
 
 void physics_car_post() {
-	self.origin = mycar.origin + '0 0 40';
-	physics_flags = self.flags;
+	physics_vehicle_common_post(mycar, '0 0 40');
 }
 
 void Ent_PhysicCar_Remove() {
@@ -41,7 +40,7 @@ void Ent_PhysicCar(float isnew)
 		vehicle_adjust_view_up = CAR_VIEW_UP;
 		vehicle_adjust_view_back = CAR_VIEW_BACK;
 		vehicle_adjust_view_start_offs = CAR_VIEW_START_OFFSET;
-		physics_plug_adjust_view = vehicle_adjust_view;
+		physics_plug_adjust_view = physics_vehicle_adjust_view;
 		self.entremove = Ent_PhysicCar_Remove;
 		mycar = self;
 		mycar.solid = SOLID_BBOX;

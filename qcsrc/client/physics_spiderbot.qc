@@ -18,8 +18,7 @@ void physics_spiderbot_pre() {
 }
 
 void physics_spiderbot_post() {
-	physics_flags = self.flags;
-	setorigin(self, spider.origin + '0 0 48');
+	physics_vehicle_common_post(spider, '0 0 48');
 }
 
 void Ent_PhysicSpiderbot_Remove() {
@@ -41,7 +40,7 @@ void Ent_PhysicSpiderbot(float isnew)
 		vehicle_adjust_view_up = SPIDERBOT_VIEW_UP;
 		vehicle_adjust_view_back = SPIDERBOT_VIEW_BACK;
 		vehicle_adjust_view_start_offs = SPIDERBOT_VIEW_START_OFFSET;
-		physics_plug_adjust_view = vehicle_adjust_view;
+		physics_plug_adjust_view = physics_vehicle_adjust_view;
 		self.entremove = Ent_PhysicSpiderbot_Remove;
 		spider = self;
 		spider.solid = SOLID_BBOX;

@@ -16,8 +16,9 @@ float ground_oldtime;
 vector ground_origin;
 vector ground_oldorigin;
 float ground_lastent;
+entity physics;
 
-vector vehicle_adjust_view() {
+vector(void) physics_vehicle_adjust_view {
 	makevectors(view_angles);
 	vector v = view_origin;
 	v_z += vehicle_adjust_view_start_offs;
@@ -26,6 +27,14 @@ vector vehicle_adjust_view() {
 	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * vehicle_adjust_view_up, MOVE_WORLDONLY, world);
 	v = trace_endpos;
 	return v;
+}
+
+void(entity e, vector org) physics_vehicle_common_post {
+	if (ext_DP_RM_SETRENDERENTITY)
+		setentityvec(physics_player_ent, E_ORIGIN, e.origin);
+
+	physics_flags = self.flags;
+	setorigin(physics, e.origin + org);
 }
 
 float(void) physics_max_speed_mod {
@@ -60,8 +69,6 @@ void(void) physics_frame_end_hook {
 		setorigin(self, self.origin + (physics_velocity * frametime));
 	}
 }
-
-entity physics;
 
 float stairsmoothz;
 .vector pmove_origin;
@@ -148,7 +155,6 @@ vector CSQCPhysic_SetViewOrg()
 			physics_player();
 		}
 		physics_lastcommandframe = i;
-
 		if (physics_plug_post)
 			physics_plug_post();
 		self = oldself;
@@ -194,9 +200,10 @@ void CSQCPhysic_SetCamera() {
 
 		if (CVAR(chase_active)) {
 			makevectors(view_angles);
-			if (ext_DP_RM_SETRENDERENTITY) {
-				setentityvec(physics_player_ent ? physics_player_ent : player_localentnum, E_ORIGIN, view_origin - '0 0 1' * getstati(STAT_VIEWHEIGHT));
-			}
+			if not(physics_player_ent)
+			if (ext_DP_RM_SETRENDERENTITY)
+				setentityvec(player_localentnum, E_ORIGIN, physics.origin);
+
 			tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
 			v = trace_endpos;
 			tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);

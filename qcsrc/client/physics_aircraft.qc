@@ -18,8 +18,7 @@ void physics_aircraft_pre() {
 }
 
 void physics_aircraft_post() {
-	setorigin(self, aircraft.origin + '0 0 48');
-	physics_flags = self.flags;
+	physics_vehicle_common_post(aircraft, '0 0 48');
 }
 
 void Ent_PhysicAircraft_Remove() {
@@ -41,7 +40,7 @@ void Ent_PhysicAircraft(float isnew)
 		vehicle_adjust_view_up = AIRCRAFT_VIEW_UP;
 		vehicle_adjust_view_back = AIRCRAFT_VIEW_BACK;
 		vehicle_adjust_view_start_offs = AIRCRAFT_VIEW_START_OFFSET;
-		physics_plug_adjust_view = vehicle_adjust_view;
+		physics_plug_adjust_view = physics_vehicle_adjust_view;
 		self.entremove = Ent_PhysicAircraft_Remove;
 		aircraft = self;
 		aircraft.solid = SOLID_BBOX;

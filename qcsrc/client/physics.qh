@@ -5,7 +5,8 @@ var vector() physics_plug_adjust_view;
 float vehicle_adjust_view_up;
 float vehicle_adjust_view_back;
 float vehicle_adjust_view_start_offs;
-vector vehicle_adjust_view();
+vector(void) physics_vehicle_adjust_view;
+void(entity e, vector org) physics_vehicle_common_post;
 const var vector() physics_plug_no_adjust_view;
 
 vector CSQCPhysic_SetViewOrg();
