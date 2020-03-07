@@ -84,11 +84,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
     float ddmg_take;
     self.dmg_time = time;
     if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0)) {
-        if not (self.tur_head.enemy)
-            self.tur_head.enemy = spawn();
+        if not (self.killindicator)
+            self.killindicator = spawn();
 
         entity sh;
-        sh = self.tur_head.enemy;
+        sh = self.killindicator;
         sh.colormod = '1 1 1';
         sh.alpha = 0.5;
         sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
