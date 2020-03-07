@@ -286,6 +286,13 @@ float(entity ent) wasfreed = #353;
 entity(vector org, float rad) findradius = #22;
 
 string(float uselocaltime, string format, ...) strftime = #478;
+
+float(float entitynum, float fldnum) getentity = #504;
+vector(float entitynum, float fldnum) getentityvec = #504;
+float(float entitynum, float fldnum, vector v) setentityvec = #504;
+float E_ACTIVE      = 0; // float 0/1
+float E_ORIGIN      = 1; // vector
+
 float(float timer) gettime = #519;
 #define GETTIME_CDTRACK 4
 

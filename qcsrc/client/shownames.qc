@@ -1,11 +1,6 @@
 .vector iorigin;
 .entity teambubble;
 
-float(float entitynum, float fldnum) getentity = #504;
-vector(float entitynum, float fldnum) getentityvec = #504;
-float E_ACTIVE      = 0; // float 0/1
-float E_ORIGIN      = 1; // vector
-
 #define SHOWNAMES_ALPHA 0.9
 #define SHOWNAMES_ASPECT 8
 #define SHOWNAMES_FONTSIZE 10

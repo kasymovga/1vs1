@@ -312,6 +312,7 @@ float(entity to, float sf) vehicle_car_physics_send {
 		WriteCoord(MSG_ENTITY, g_vehicle_car_turnspeed);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_movement_inertia);
 		WriteCoord(MSG_ENTITY, g_vehicle_car_speed_drift);
+		WriteShort(MSG_ENTITY, num_for_edict(self.vehicle));
 	}
 	if (sf & 2) {
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);

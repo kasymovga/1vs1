@@ -13,3 +13,5 @@ void CSQCPhysic_SetCamera();
 void Ent_Physic(float isnew);
 
 float physics_lastcommandframe;
+
+float physics_player_ent;

@@ -28,6 +28,7 @@ void Ent_PhysicCar_Remove() {
 	physics_plug = physics_plug_null;
 	physics_plug_post = physics_plug_nopostpre;
 	physics_plug_adjust_view = physics_plug_no_adjust_view;
+	physics_player_ent = 0;
 }
 
 void Ent_PhysicCar(float isnew)
@@ -54,6 +55,7 @@ void Ent_PhysicCar(float isnew)
 		g_vehicle_car_turnspeed = ReadCoord();
 		g_vehicle_car_movement_inertia = ReadCoord();
 		g_vehicle_car_speed_drift = ReadCoord();
+		physics_player_ent = ReadShort();
 	}
 	if (f & 2)
 	{

@@ -194,6 +194,9 @@ void CSQCPhysic_SetCamera() {
 
 		if (CVAR(chase_active)) {
 			makevectors(view_angles);
+			if (ext_DP_RM_SETRENDERENTITY) {
+				setentityvec(physics_player_ent ? physics_player_ent : player_localentnum, E_ORIGIN, view_origin - '0 0 1' * getstati(STAT_VIEWHEIGHT));
+			}
 			tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
 			v = trace_endpos;
 			tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);

@@ -306,6 +306,7 @@ void CSQC_Init(void)
 	mi_scale = world_max - world_min;
 	minimapname = strzone(minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
+	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 
 	search_and_precache("gfx/num_*");
 	search_and_precache("gfx/inv_*");
