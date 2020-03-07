@@ -501,6 +501,7 @@ float(entity to, float sf) vehicle_spiderbot_physics_send {
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_speed_walk);
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_turnspeed);
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_movement_inertia);
+		WriteShort(MSG_ENTITY, num_for_edict(self.vehicle));
 	}
 	if (sf & 2) {
 		WriteCoord(MSG_ENTITY, self.vehicle.angles_x);
