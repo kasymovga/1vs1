@@ -20,7 +20,8 @@ void Mouse_Draw() {
 }
 
 void Mouse_Enable() {
-	if not(mouse_enabled) {
+	if not(mouse_enabled)
+	if (CVAR(_menu_alpha) <= 0) {
 		setcursormode(1);
 		mouse_enabled = TRUE;
 	}

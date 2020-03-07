@@ -619,13 +619,12 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
 	bSkipKey = false;
-
 	if (CSQC_InputEvent_Callback) {
 		bSkipKey = CSQC_InputEvent_Callback(bInputType, nPrimary, nSecondary);
 		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
-		return bSkipKey;
+		if (bSkipKey)
+			return true;
 	}
-
 	if (bInputType == 0)
 	if (nPrimary == K_ESCAPE)
 	if not(isdemo_flag)
