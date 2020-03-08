@@ -41,11 +41,14 @@ void(entity aircraft) vehicle_aircraft_attack_laser {
 	else
 		weapon_shotorg = aircraft.origin + v_forward * 60 - v_right * 15 + v_up * 25;
 
+	damage_record_fires(self.owner, WEP_LASER, 1);
 	sound(aircraft, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
-	laser_projectile(v_forward + aircraft.vehicle_heat * g_vehicle_aircraft_laser_spread * randomvec(), g_vehicle_aircraft_laser_speed, g_vehicle_aircraft_laser_damage, 0,
+	entity proj = laser_projectile(v_forward + aircraft.vehicle_heat * g_vehicle_aircraft_laser_spread * randomvec(), g_vehicle_aircraft_laser_speed, g_vehicle_aircraft_laser_damage, 0,
 			g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force, 0, 0, 5);
 
+
+	proj.realowner = self.owner;
 	self.vehicle_heat += g_vehicle_aircraft_laser_heat * g_vehicle_aircraft_laser_refire;
 	if(self.vehicle_heat >= 1) {
 		self.vehicle_heat = 1;
