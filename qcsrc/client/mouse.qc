@@ -3,7 +3,10 @@ var float mouse_not_centered = TRUE;
 vector mouse_pos;
 
 vector(void) mouse_position {
-	return getmousepos();
+	if (mouse_enabled)
+		return getmousepos();
+	else
+		return mouse_pos;
 }
 
 void Mouse_Draw() {

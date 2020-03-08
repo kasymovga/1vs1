@@ -88,7 +88,8 @@ void weapon_nex_attack (void)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_nex_ammo;
 
-	self.nex_ammoclip -= 1;
+	if (g_balance_nex_magazinecapacity)
+		self.nex_ammoclip -= 1;
 }
 
 void(void) weapon_nex_reloadandready {
