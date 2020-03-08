@@ -148,7 +148,7 @@ void(void) vehicle_car_think {
 }
 
 void(void) vehicle_car_enter {
-	if not(vehicle_enter(self.angles, vehicle_car_physics_hook, 0, vehicle_car_physics_send))
+	if not(vehicle_enter(self.angles, vehicle_car_physics_hook, HUD_SPIDERBOT, vehicle_car_physics_send))
 		return;
 
 	if (self.noise != "")
@@ -253,7 +253,6 @@ void(void) vehicle_car_dinit {
 	//self.vehicle_viewport = spawn();
 	self.vehicle_flags = VHF_HEALTHREGEN | VHF_HIDEPLAYER;
 	self.cvar_basename = "g_vehicle_car";
-	self.vehicle_heat = 0;
 	//setmodel (self.vehicle_viewport, "null");
 	self.gun1 = spawn();
 	self.gun1.effects = EF_LOWPRECISION;

@@ -15,6 +15,9 @@ set g_vehicle_aircraft_laser_damage 50
 set g_vehicle_aircraft_laser_speed 5000
 set g_vehicle_aircraft_laser_radius 50
 set g_vehicle_aircraft_laser_force 100
+set g_vehicle_aircraft_laser_heat 0.2
+set g_vehicle_aircraft_laser_cooldown 0.1
+set g_vehicle_aircraft_laser_spread 0.1
 set g_vehicle_spiderbot_head_pitchspeed 360
 set g_vehicle_spiderbot_head_pitchlimit_up 20
 set g_vehicle_spiderbot_head_pitchlimit_down -20

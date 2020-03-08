@@ -183,6 +183,12 @@ void(void) vehicle_init {
 	GameHookChain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
 	gamehook_chain_player_entity = vehicle_player_entity;
+	addstat(STAT_HUD, AS_INT,  hud);
+	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);
+	addstat(STAT_SPIDERBOT_RELOAD,  AS_FLOAT, rockets_reload);
+	addstat(STAT_SPIDERBOT_HEAT,    AS_FLOAT, vehicle_heat);
+	addstat(STAT_SPIDERBOT_HEALTH,  AS_FLOAT, vehicle_health);
+	addstat(STAT_SPIDERBOT_SHIELD,  AS_FLOAT, vehicle_shield);
 }
 
 float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter {
@@ -191,6 +197,25 @@ float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send)
     if(self.team != other.team)
         return FALSE;
 
+	if (_hud == HUD_SPIDERBOT) {
+		other.vehicle_health = (self.health / self.health_max);
+		if (self.vehicle_flags & VHF_HASSHIELD)
+			other.vehicle_shield = (self.vehicle_shield / self.shield_max);
+		else
+			other.vehicle_shield = -1;
+
+		if (self.vehicle_flags & VHF_HEAT)
+			other.vehicle_heat = self.vehicle_heat;
+		else
+			other.vehicle_heat = -1;
+
+		if (self.vehicle_flags & VHF_HASROCKETS) {
+			other.rockets = self.rockets;
+			other.rockets_reload = self.rockets_reload;
+		} else {
+			other.rockets = -1;
+		}
+	}
     self.owner = other;
     self.switchweapon = other.switchweapon;
     self.owner.angles         = self.angles;

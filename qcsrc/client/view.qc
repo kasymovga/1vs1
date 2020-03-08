@@ -496,44 +496,43 @@ void CSQC_spider_HUD()
     p = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
     p = p + '0 1 0' * CVAR(vid_conheight) - '0 72 0';
     //pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
-    drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, DRAWFLAG_NORMAL);
+	if (shield >= 0)
+		drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, DRAWFLAG_NORMAL);
+
     p_y += 8;
     drawfill(p, '256 0 0' * hp + '0 8 0' , '0 1 0', 0.75, DRAWFLAG_NORMAL);
     p_x += 256 * hp;
     drawfill(p, '256 0 0' * (1-hp) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
 
-    // Draw minigun heat indicator
-    p = '0.5 0 0' * (CVAR(vid_conwidth) - 256);
-    p = p + '0 1 0' * CVAR(vid_conheight) - '0 74  0';
-    drawfill(p, '256 0 0' * (1-heat) + '0 2 0' ,'0 0 1', 0.5, DRAWFLAG_NORMAL);
-    p_x += 256 * (1-heat);
-    drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, DRAWFLAG_NORMAL);
-
+    // Draw heat indicator
+	if (heat >= 0) {
+		p = '0.5 0 0' * (CVAR(vid_conwidth) - 256);
+		p = p + '0 1 0' * CVAR(vid_conheight) - '0 74  0';
+		drawfill(p, '256 0 0' * (1-heat) + '0 2 0' ,'0 0 1', 0.5, DRAWFLAG_NORMAL);
+		p_x += 256 * (1-heat);
+		drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, DRAWFLAG_NORMAL);
+	}
     // Draw rocket icons for loaded/empty tubes.
-    pp = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
-    pp += '0 1 0' * CVAR(vid_conheight) - '0 104 0';
-    for(i = 0; i < 8; ++i)
-    {
-        p = pp + '1 0 0' * (rkt_size * i);
-        if(rockets == 8)
-        {
-            if(floor(reload * 8) == i)
-            {
-                drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 0 0' + '0 1 0' * ((reload*8)-i), 0.75 , DRAWFLAG_NORMAL);
-            }
-            else if(i < reload * 8)
-                drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 1 0', 0.75 , DRAWFLAG_NORMAL);
-            else
-                drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0.5 0.5 0.5', 0.75, DRAWFLAG_NORMAL);
-        }
-        else
-        {
-            if(i < rockets)
-                drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 0 0', 0.25, DRAWFLAG_NORMAL);
-            else
-                drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, DRAWFLAG_NORMAL);
-        }
-    }
+	if (rockets >= 0) {
+		pp = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
+		pp += '0 1 0' * CVAR(vid_conheight) - '0 104 0';
+		for(i = 0; i < 8; ++i) {
+			p = pp + '1 0 0' * (rkt_size * i);
+			if(rockets == 8) {
+				if(floor(reload * 8) == i) {
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 0 0' + '0 1 0' * ((reload*8)-i), 0.75 , DRAWFLAG_NORMAL);
+				} else if(i < reload * 8)
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '1 1 0', 0.75 , DRAWFLAG_NORMAL);
+				else
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0.5 0.5 0.5', 0.75, DRAWFLAG_NORMAL);
+			} else {
+				if(i < rockets)
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 0 0', 0.25, DRAWFLAG_NORMAL);
+				else
+					drawpic(p, spider_rocket_icon, '1 1 0' * rkt_size, '0 1 0' * reload, 0.75, DRAWFLAG_NORMAL);
+			}
+		}
+	}
 }
 
 // following vectors must be global to allow seamless switching between camera modes

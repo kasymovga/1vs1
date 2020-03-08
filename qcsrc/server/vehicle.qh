@@ -7,6 +7,8 @@ float SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
 #define VHF_SHIELDREGEN 4
 #define VHF_HEALTHREGEN 8
 #define VHF_HIDEPLAYER 16
+#define VHF_HASROCKETS 32
+#define VHF_HEAT 64
 
 .float hud;
 .float rockets;

@@ -305,9 +305,6 @@ void(void) vehicle_spiderbot_enter {
 	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_spiderbot_physics_hook, HUD_SPIDERBOT, vehicle_spiderbot_physics_send))
 		return;
 
-	self.owner.vehicle_health = (self.health / self.health_max);
-	self.owner.vehicle_shield = (self.vehicle_shield / self.shield_max);
-	self.owner.vehicle_heat = self.vehicle_heat;
 	self.colormap			 = self.owner.colormap;
 	self.tur_head.colormap	= self.owner.colormap;
 	vehicle_stdproc_setcolormod();
@@ -404,12 +401,6 @@ void(void) vehicle_spiderbot_dinit {
 	else
 		self.enemy.team = self.team;
 
-	addstat(STAT_HUD, AS_INT,  hud);
-	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);
-	addstat(STAT_SPIDERBOT_RELOAD,  AS_FLOAT, rockets_reload);
-	addstat(STAT_SPIDERBOT_HEAT,	AS_FLOAT, vehicle_heat);
-	addstat(STAT_SPIDERBOT_HEALTH,  AS_FLOAT, vehicle_health);
-	addstat(STAT_SPIDERBOT_SHIELD,  AS_FLOAT, vehicle_shield);
 	if (self.netname == "")
 		self.netname = "spiderbot";
 
@@ -417,7 +408,7 @@ void(void) vehicle_spiderbot_dinit {
 	self.gun1 = spawn();
 	self.gun2 = spawn();
 	//self.vehicle_viewport = spawn();
-	self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER;
+	self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER | VHF_HASROCKETS | VHF_HEAT;
 	self.cvar_basename = "g_vehicle_spiderbot";
 	self.vehicle_heat = 0;
 	vehicle_spiderbot_stop(self);

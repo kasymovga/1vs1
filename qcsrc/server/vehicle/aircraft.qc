@@ -4,6 +4,9 @@ float g_vehicle_aircraft_laser_damage;
 float g_vehicle_aircraft_laser_force;
 float g_vehicle_aircraft_laser_speed;
 float g_vehicle_aircraft_laser_radius;
+float g_vehicle_aircraft_laser_heat;
+float g_vehicle_aircraft_laser_cooldown;
+float g_vehicle_aircraft_laser_spread;
 
 float(entity to, float sf) vehicle_aircraft_physics_send;
 void(float eject) vehicle_aircraft_exit;
@@ -26,7 +29,7 @@ void(void) vehicle_aircraft_engine_off {
 }
 
 void(entity aircraft) vehicle_aircraft_attack_laser {
-	if (aircraft.attack_finished_single > time)
+	if (aircraft.attack_finished_single > time || aircraft.vehicle_heat > 1)
 		return;
 
 	self.angles_x = -self.angles_x;
@@ -34,16 +37,21 @@ void(entity aircraft) vehicle_aircraft_attack_laser {
 	self.angles_x = -self.angles_x;
 	aircraft.phase = !aircraft.phase;
 	if (aircraft.phase)
-		weapon_shotorg = aircraft.origin + v_forward * 60 + v_right * 15;
+		weapon_shotorg = aircraft.origin + v_forward * 60 + v_right * 15 + v_up * 25;
 	else
-		weapon_shotorg = aircraft.origin + v_forward * 60 - v_right * 15;
+		weapon_shotorg = aircraft.origin + v_forward * 60 - v_right * 15 + v_up * 25;
 
 	sound(aircraft, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
-	laser_projectile(v_forward, g_vehicle_aircraft_laser_speed, g_vehicle_aircraft_laser_damage, 0,
+	laser_projectile(v_forward + aircraft.vehicle_heat * g_vehicle_aircraft_laser_spread * randomvec(), g_vehicle_aircraft_laser_speed, g_vehicle_aircraft_laser_damage, 0,
 			g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force, 0, 0, 5);
 
-	aircraft.attack_finished_single = max(time - frametime, aircraft.attack_finished_single) + g_vehicle_aircraft_laser_refire;
+	self.vehicle_heat += g_vehicle_aircraft_laser_heat * g_vehicle_aircraft_laser_refire;
+	if(self.vehicle_heat >= 1) {
+		self.vehicle_heat = 1;
+		aircraft.attack_finished_single = time + (1 / g_vehicle_aircraft_laser_cooldown);
+	} else
+		aircraft.attack_finished_single = time + g_vehicle_aircraft_laser_refire;
 }
 
 float(void) vehicle_aircraft_physics_hook {
@@ -86,6 +94,9 @@ float(void) vehicle_aircraft_physics_hook {
 }
 
 void(void) vehicle_aircraft_think {
+	if(self.vehicle_heat > 0)
+		self.vehicle_heat = max(self.vehicle_heat - g_vehicle_aircraft_laser_cooldown * sys_ticrate,0);
+
 	if (self.owner) {
 		self.owner.vehicle_heat = self.vehicle_heat;
 	} else {
@@ -105,12 +116,9 @@ void(void) vehicle_aircraft_think {
 }
 
 void(void) vehicle_aircraft_enter {
-	if not(vehicle_enter(self.angles, vehicle_aircraft_physics_hook, 0, vehicle_aircraft_physics_send))
+	if not(vehicle_enter(self.angles, vehicle_aircraft_physics_hook, HUD_SPIDERBOT, vehicle_aircraft_physics_send))
 		return;
 
-	self.owner.vehicle_health = (self.health / self.health_max);
-	self.owner.vehicle_shield = (self.vehicle_shield / self.shield_max);
-	self.owner.vehicle_heat = self.vehicle_heat;
 	self.colormap = self.owner.colormap;
 	vehicle_stdproc_setcolormod();
 }
@@ -206,7 +214,7 @@ void(void) vehicle_aircraft_dinit {
 		self.netname = "aircraft";
 
     //self.vehicle_viewport = spawn();
-    self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER;
+    self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER | VHF_HEAT;
     self.cvar_basename = "g_vehicle_aircraft";
 	self.vehicle_heat = 0;
     setmodel(self, "models/racers/waka.dpm");
@@ -239,6 +247,9 @@ void(void) vehicle_aircraft_init {
 	CACHE_CVAR(g_vehicle_aircraft_laser_damage);
 	CACHE_CVAR(g_vehicle_aircraft_laser_speed);
 	CACHE_CVAR(g_vehicle_aircraft_laser_radius);
+	CACHE_CVAR(g_vehicle_aircraft_laser_heat);
+	CACHE_CVAR(g_vehicle_aircraft_laser_cooldown);
+	CACHE_CVAR(g_vehicle_aircraft_laser_spread);
     precache_model("models/vhshield.md3");
     precache_model("models/racers/waka.dpm");
 	precache_sound("weapons/lasergun_fire.wav");
