@@ -32,23 +32,29 @@ void(entity aircraft) vehicle_aircraft_attack_laser {
 	if (aircraft.attack_finished_single > time || aircraft.vehicle_heat > 1)
 		return;
 
-	self.angles_x = -self.angles_x;
-	makevectors(aircraft.angles);
-	self.angles_x = -self.angles_x;
 	aircraft.phase = !aircraft.phase;
 	if (aircraft.phase)
 		weapon_shotorg = aircraft.origin + v_forward * 60 + v_right * 15 + v_up * 25;
 	else
 		weapon_shotorg = aircraft.origin + v_forward * 60 - v_right * 15 + v_up * 25;
 
-	damage_record_fires(self.owner, WEP_LASER, 1);
+	damage_record_fires(self.owner, WEP_HLAC, 1);
 	sound(aircraft, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
-	entity proj = laser_projectile(v_forward + aircraft.vehicle_heat * g_vehicle_aircraft_laser_spread * randomvec(), g_vehicle_aircraft_laser_speed, g_vehicle_aircraft_laser_damage, 0,
-			g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force, 0, 0, 5);
-
+	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
+	projectile_setup(proj, weapon_shotorg, WEP_HLAC, g_vehicle_aircraft_laser_damage,
+			0, g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force);
 
 	proj.realowner = self.owner;
+	proj.movetype = MOVETYPE_FLY;
+	self.angles_x = -self.angles_x;
+	makevectors(aircraft.angles);
+	self.angles_x = -self.angles_x;
+	proj.velocity = (v_forward + randomvec() * aircraft.vehicle_heat * g_vehicle_aircraft_laser_spread) * g_vehicle_aircraft_laser_speed;
+	weapon_setup_projectile_velocity(proj);
+	proj.touch = projectile_touch_explode;
+	proj.think = stdproc_remove;
+	proj.nextthink = time + 5;
 	self.vehicle_heat += g_vehicle_aircraft_laser_heat * g_vehicle_aircraft_laser_refire;
 	if(self.vehicle_heat >= 1) {
 		self.vehicle_heat = 1;
