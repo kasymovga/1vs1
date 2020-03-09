@@ -64,8 +64,8 @@ void(void) weapon_hlac_attack2f {
         spread = spread * g_balance_hlac_secondary_spread_crouchmod;
 
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
-	projectile_setup(missile, weapon_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_primary_damage,
-			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
+	projectile_setup(missile, weapon_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_secondary_damage,
+			g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, g_balance_hlac_secondary_force);
 
 	missile.movetype = MOVETYPE_FLY;
     missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
