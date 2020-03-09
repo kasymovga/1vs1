@@ -64,10 +64,30 @@ void() vehicle_aircraft_attack_laser {
 }
 
 void(void) vehicle_aircraft_pull_stop {
-	self.aiment = world;
+	if (self.gun1) {
+		remove(self.gun1);
+		self.gun1 = world;
+		self.aiment = world;
+		sound_stop(self, CHAN_TRIGGER);
+	}
 }
 
 void(void) vehicle_aircraft_pull {
+	if not(self.gun1) {
+		self.gun1 = spawn();
+		setmodel(self.gun1, "models/vhshield.md3");
+		self.gun1.angles_x = 90;
+		self.gun1.scale = 1.75;
+		self.gun1.alpha = 0.5;
+		self.gun1.colormod = '1.5 2 0.25';
+		setattachment(self.gun1, self, "");
+		setorigin(self.gun1, '0 0 -200');
+	}
+	if (self.gun1.nextstep < time) {
+		self.gun1.angles_z += frametime * 180;
+		self.gun1.nextstep = time + 1.5;
+		sound(self, CHAN_TRIGGER, "ambient/machinerydrone01.wav", VOL_BASE, ATTN_NORM);
+	}
 	if not(self.aiment) {
 		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 100', MOVE_NORMAL, self);
 		if (trace_ent)
@@ -179,6 +199,7 @@ void(void) vehicle_aircraft_enter {
 }
 
 void(float eject) vehicle_aircraft_exit {
+	vehicle_aircraft_pull_stop();
 	vehicle_stdproc_exit(eject, 160, 64, 160);
 	vehicle_aircraft_engine_off();
 	self.think = vehicle_aircraft_think;
@@ -308,6 +329,7 @@ void(void) vehicle_aircraft_init {
     precache_model("models/vhshield.md3");
     precache_model("models/racers/waka.dpm");
 	precache_sound("weapons/lasergun_fire.wav");
+	precache_sound("ambient/machinerydrone01.wav");
 	projectile_init(PROJECTILE_LASER);
 }
 
