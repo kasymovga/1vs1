@@ -5,7 +5,7 @@ void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adj
 	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * back, MOVE_WORLDONLY, world);
 	v = trace_endpos;
 	tracebox(v, '-8 -8 -8', '8 8 8', v + v_up * up, MOVE_WORLDONLY, world);
-	setorigin(plr, trace_endpos);
+	setorigin(plr, trace_endpos - plr.view_ofs);
 }
 
 float(entity plr, float eject) vehicle_extract_player {
