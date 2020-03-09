@@ -7,12 +7,17 @@ float g_warfog_fade_distance;
 
 var float(entity plr, entity viewer, float dalpha) warfog_PlayerAlphaMod_NextLink;
 float(entity plr, entity viewer, float dalpha) warfog_PlayerAlphaMod {
-	float d = vlen(plr.origin - viewer.origin);
-	float fade_start = g_warfog - g_warfog_fade_distance;
-	if (d > fade_start) {
-		dalpha = 1 - min((d - fade_start) / g_warfog_fade_distance, 1);
-		if ((teamplay && plr.team == viewer.team) || GameHook_PlayerIsCarrier(plr))
-			dalpha = 0.5 + 0.5 * dalpha;
+	if (dalpha > 0) {
+		float d = vlen(plr.origin - viewer.origin);
+		float fade_start = g_warfog - g_warfog_fade_distance;
+		float fog_alpha;
+		if (d > fade_start) {
+			fog_alpha = 1 - min((d - fade_start) / g_warfog_fade_distance, 1);
+			if ((teamplay && plr.team == viewer.team) || GameHook_PlayerIsCarrier(plr))
+				fog_alpha = 0.5 + 0.5 * fog_alpha;
+
+			dalpha = dalpha * fog_alpha;
+		}
 	}
 	return warfog_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
 }
