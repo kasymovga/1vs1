@@ -18,7 +18,7 @@ void physics_aircraft_pre() {
 }
 
 void physics_aircraft_post() {
-	physics_vehicle_common_post(aircraft, '0 0 48');
+	physics_vehicle_common_post(aircraft);
 }
 
 void Ent_PhysicAircraft_Remove() {

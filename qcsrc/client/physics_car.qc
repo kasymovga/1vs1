@@ -18,7 +18,7 @@ void physics_car_pre() {
 }
 
 void physics_car_post() {
-	physics_vehicle_common_post(mycar, '0 0 40');
+	physics_vehicle_common_post(mycar);
 }
 
 void Ent_PhysicCar_Remove() {

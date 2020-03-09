@@ -18,7 +18,7 @@ void physics_spiderbot_pre() {
 }
 
 void physics_spiderbot_post() {
-	physics_vehicle_common_post(spider, '0 0 48');
+	physics_vehicle_common_post(spider);
 }
 
 void Ent_PhysicSpiderbot_Remove() {

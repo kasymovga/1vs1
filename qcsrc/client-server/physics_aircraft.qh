@@ -1,8 +1,8 @@
 #define aircraft_MIN '-75 -75 -15'
 #define aircraft_MAX '75 75 105'
 #define AIRCRAFT_VIEW_BACK 400
-#define AIRCRAFT_VIEW_UP 100
-#define AIRCRAFT_VIEW_START_OFFSET 40
+#define AIRCRAFT_VIEW_UP 125
+#define AIRCRAFT_VIEW_START_OFFSET 25
 
 float g_vehicle_aircraft_accel_up;
 float g_vehicle_aircraft_speed;

@@ -21,7 +21,6 @@ entity physics;
 vector(void) physics_vehicle_adjust_view {
 	makevectors(view_angles);
 	vector v = view_origin;
-	v_z += vehicle_adjust_view_start_offs;
 	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, MOVE_WORLDONLY, world);
 	v = trace_endpos;
 	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * vehicle_adjust_view_up, MOVE_WORLDONLY, world);
@@ -29,12 +28,12 @@ vector(void) physics_vehicle_adjust_view {
 	return v;
 }
 
-void(entity e, vector org) physics_vehicle_common_post {
+void(entity e) physics_vehicle_common_post {
 	if (ext_DP_RM_SETRENDERENTITY)
 		setentityvec(physics_player_ent, E_ORIGIN, e.origin);
 
 	physics_flags = self.flags;
-	setorigin(physics, e.origin + org);
+	setorigin(physics, e.origin + '0 0 1' * vehicle_adjust_view_start_offs - physics.view_ofs);
 }
 
 float(void) physics_max_speed_mod {
@@ -157,6 +156,7 @@ vector CSQCPhysic_SetViewOrg()
 		physics_lastcommandframe = i;
 		if (physics_plug_post)
 			physics_plug_post();
+
 		self = oldself;
 		frametime = frametime_save;
 		v = physics.origin + physics.view_ofs;
