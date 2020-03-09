@@ -1,3 +1,4 @@
+_set g_balance_teams_prevent_imbalance 1 "prevent players from changing to larger teams"
 set g_balance_teams_autoswap 0
 set g_balance_teams_autoswap_from_small_team_minplayers 9
 set g_balance_teams_autoswap_interval 60
