@@ -28,18 +28,18 @@ void(void) vehicle_aircraft_engine_off {
 	}
 }
 
-void(entity aircraft) vehicle_aircraft_attack_laser {
-	if (aircraft.attack_finished_single > time || aircraft.vehicle_heat > 1)
+void() vehicle_aircraft_attack_laser {
+	if (self.attack_finished_single > time || self.vehicle_heat > 1)
 		return;
 
-	aircraft.phase = !aircraft.phase;
-	if (aircraft.phase)
-		weapon_shotorg = aircraft.origin + v_forward * 60 + v_right * 15 + v_up * 25;
+	self.phase = !self.phase;
+	if (self.phase)
+		weapon_shotorg = self.origin + v_forward * 60 + v_right * 15 + v_up * 25;
 	else
-		weapon_shotorg = aircraft.origin + v_forward * 60 - v_right * 15 + v_up * 25;
+		weapon_shotorg = self.origin + v_forward * 60 - v_right * 15 + v_up * 25;
 
 	damage_record_fires(self.owner, WEP_HLAC, 1);
-	sound(aircraft, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CHAN_WEAPON, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_HLAC, g_vehicle_aircraft_laser_damage,
@@ -48,9 +48,9 @@ void(entity aircraft) vehicle_aircraft_attack_laser {
 	proj.realowner = self.owner;
 	proj.movetype = MOVETYPE_FLY;
 	self.angles_x = -self.angles_x;
-	makevectors(aircraft.angles);
+	makevectors(self.angles);
 	self.angles_x = -self.angles_x;
-	proj.velocity = (v_forward + randomvec() * aircraft.vehicle_heat * g_vehicle_aircraft_laser_spread) * g_vehicle_aircraft_laser_speed;
+	proj.velocity = (v_forward + randomvec() * self.vehicle_heat * g_vehicle_aircraft_laser_spread) * g_vehicle_aircraft_laser_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = projectile_touch_explode;
 	proj.think = stdproc_remove;
@@ -58,9 +58,50 @@ void(entity aircraft) vehicle_aircraft_attack_laser {
 	self.vehicle_heat += g_vehicle_aircraft_laser_heat * g_vehicle_aircraft_laser_refire;
 	if(self.vehicle_heat >= 1) {
 		self.vehicle_heat = 1;
-		aircraft.attack_finished_single = time + (1 / g_vehicle_aircraft_laser_cooldown);
+		self.attack_finished_single = time + (1 / g_vehicle_aircraft_laser_cooldown);
 	} else
-		aircraft.attack_finished_single = time + g_vehicle_aircraft_laser_refire;
+		self.attack_finished_single = time + g_vehicle_aircraft_laser_refire;
+}
+
+void(void) vehicle_aircraft_pull_stop {
+	self.aiment = world;
+}
+
+void(void) vehicle_aircraft_pull {
+	if not(self.aiment) {
+		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 100', MOVE_NORMAL, self);
+		if (trace_ent)
+		if (trace_ent.solid == SOLID_SLIDEBOX || trace_ent.solid == SOLID_BBOX) {
+			float _volume = (trace_ent.maxs_x - trace_ent.mins_x) * (trace_ent.maxs_y - trace_ent.mins_y) *  (trace_ent.maxs_z - trace_ent.mins_z);
+			if (_volume < 3000 || _volume > 3000000) {
+				return;
+			}
+			self.aiment = trace_ent;
+			//self.aiment.disableclientprediction = TRUE;
+		}
+	} else {
+		float zdistance = self.origin_z - self.mins_z - self.aiment.origin_z - self.aiment.maxs_z;
+		vector center = (self.aiment.mins + self.aiment.maxs) * 0.5 + self.aiment.origin;
+		vector delta = center - self.origin;
+		float ldelta = vlen(delta);
+		if (zdistance > 100 || zdistance < 0 || ldelta > 200 || (self.solid != SOLID_BBOX && self.solid != SOLID_SLIDEBOX)) {
+			vehicle_aircraft_pull_stop();
+			return;
+		} else if (zdistance > 50) {
+			self.aiment.velocity_z = self.velocity_z + (zdistance - 50) * 4;
+		} else if (zdistance > 25) {
+			self.aiment.velocity_z = self.velocity_z;
+		} else {
+			self.aiment.velocity_z = self.velocity_z - (zdistance - 25) * 2;
+		}
+		delta_z = 0;
+		if (ldelta < 10)
+			delta = '0 0 0';
+
+		self.aiment.velocity_x = self.velocity_x - delta_x * 4;
+		self.aiment.velocity_y = self.velocity_y - delta_y * 4;
+		te_lightning1(self, self.origin, center);
+	}
 }
 
 float(void) vehicle_aircraft_physics_hook {
@@ -82,7 +123,12 @@ float(void) vehicle_aircraft_physics_hook {
 	self = aircraft;
     vehicle_stdproc_regen();
 	if (player.BUTTON_ATCK) {
-		vehicle_aircraft_attack_laser(aircraft);
+		vehicle_aircraft_attack_laser();
+	}
+	if (player.BUTTON_ATCK2) {
+		vehicle_aircraft_pull();
+	} else {
+		vehicle_aircraft_pull_stop();
 	}
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 	if (physics_movement != '0 0 0' || physics_button_jump)
