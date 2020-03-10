@@ -162,5 +162,6 @@ READ_CVARS_SECTION(33, 34)
 	CACHE_CVAR_DEF(cl_announcer_print, 2)
 READ_CVARS_SECTION(34, 0)
 	CACHE_CVAR_DEF(cl_showweaponspawns, 1)
+	CACHE_CVAR_DEF(cl_hints_skip, 0)
 READ_CVARS_END(0)
 

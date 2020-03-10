@@ -1,0 +1,7 @@
+void(void) hint_net_read;
+string hint;
+float hint_num;
+float hint_user;
+string hint_cmd_prev;
+string hint_cmd_next;
+entity hint_text_label;

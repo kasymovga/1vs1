@@ -342,6 +342,10 @@ void(void) physics_init {
 	CACHE_CVAR(g_walljump_velocity_xy_factor);
 	CACHE_CVAR(g_walljump_velocity_z_factor);
 	CACHE_CVAR(g_dodging);
+	if (g_dodging) {
+		hint_add("Doubletapping any direction key can be used as trick dodging.");
+		hint_add("You can move faster with double tapping forward button then holding jump button.");
+	}
 	CACHE_CVAR(g_dodging_delay);
 	CACHE_CVAR(g_dodging_frozen);
 	CACHE_CVAR(g_dodging_frozen_delay);

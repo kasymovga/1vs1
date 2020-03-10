@@ -223,6 +223,8 @@ void weapon_rocketlauncher_attack (void)
 
 void spawnfunc_weapon_rocketlauncher (void); // defined in t_items.qc
 
+float weapon_rocketlauncher_precached;
+
 float weapon_rocketlauncher(float req)
 {
 	entity rock;
@@ -354,10 +356,13 @@ float weapon_rocketlauncher(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/flash.md3");
-		precache_sound ("weapons/rocket_det.wav");
-		precache_sound ("weapons/rocket_fire.wav");
-		precache_sound ("weapons/rocket_mode.wav");
+		if not(weapon_rocketlauncher_precached) {
+			hint_add("With Rocket Launcher you can guide rockets by holding attack button");
+			precache_model ("models/flash.md3");
+			precache_sound ("weapons/rocket_det.wav");
+			precache_sound ("weapons/rocket_fire.wav");
+			precache_sound ("weapons/rocket_mode.wav");
+		}
 	}
 	else if (req == WR_SETUP)
 	{

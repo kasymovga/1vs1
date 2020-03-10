@@ -154,6 +154,9 @@ void GUI_Show(float window) {
 	case GUI_SAVELOAD:
 		e = GUI_saveLoad;
 		break;
+	case GUI_HINT:
+		e = GUI_hint;
+		break;
 	}
 	if not(e) {
 		GUI_Hide();
@@ -166,7 +169,7 @@ void GUI_Show(float window) {
 }
 
 void GUI_Hide() {
-	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT || GUI_currentWindow == GUI_SAVELOAD) {
+	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT || GUI_currentWindow == GUI_SAVELOAD || (GUI_currentWindow == GUI_HINT && !hint_user)) {
 		mainWindow.draw2d = GUI_Draw_Remove;
 		mainWindow.draw2dflag = 1;
 	} else

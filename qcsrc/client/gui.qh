@@ -7,6 +7,7 @@ entity GUI_voteCallDialog;
 entity GUI_quitDialog;
 entity GUI_radioDialog;
 entity GUI_saveLoad;
+entity GUI_hint;
 
 enum {
 	GUI_TEAMSELECT,
@@ -16,4 +17,5 @@ enum {
 	GUI_QUIT,
 	GUI_RADIO,
 	GUI_SAVELOAD,
+	GUI_HINT,
 };

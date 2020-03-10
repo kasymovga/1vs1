@@ -218,8 +218,11 @@ void nadget_Init(void) {
 	GameHookChain_PlayerPreThink = nadget_PlayerPreThink;
 	nadget_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
 	GameHookChain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
-
     Napalm_Init();
+	hint_add("You can detonate FireTrap of enemy shooting on it");
+	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
+	hint_add("You can increase speed using laser nadget, you can jump higher with laser nadget aiming to ground or wall with laser nadget");
+	hint_add("When enemy stand close to FireTrap you will see red indicator indicating");
 }
 
 void nadget_Precache(void) {

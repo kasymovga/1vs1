@@ -42,6 +42,7 @@
 #include "gui/mainwindow.c"
 #include "gui/dialog_vcall.c"
 #include "../client-menu/nexuiz/dialog_saveload.c"
+#include "gui/dialog_hint.c"
 #undef draw
 #undef frame
 #undef conwidth

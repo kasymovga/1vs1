@@ -66,7 +66,7 @@ sbar.qh
 warpzone.qh
 gui.qh
 noteline.qh
-
+hint.qh
 cvar.qc
 ../client-server/movelib.qc
 miscfunctions.qc
@@ -164,6 +164,6 @@ noteline.qc
 	classes.c
 ../client-menu/oo/implementation.h
 	classes.c
-
 gui.qc
 ../client-menu/util.qc
+hint.qc

@@ -1193,75 +1193,59 @@ void Net_ReadSpawn()
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	local float bHandled;
-		bHandled  = true;
+	float bHandled;
+	bHandled = true;
 	// Acquire TE ID
-	local float nTEID;
-		nTEID = ReadByte();
-
-		// NOTE: Could just do return instead of break...
+	float nTEID = ReadByte();
+	// NOTE: Could just do return instead of break...
 	switch(nTEID)
 	{
 		case TE_CSQC_SPAWN:
 			Net_ReadSpawn();
-			bHandled = true;
 			break;
 		case TE_CSQC_ZCURVEPARTICLES:
 			Net_ReadZCurveParticles();
-			bHandled = true;
 			break;
 		case TE_CSQC_NEXGUNBEAMPARTICLE:
 			Net_ReadNexgunBeamParticle();
-			bHandled = true;
 			break;
         case TE_CSQC_LIGHTNINGARC:
             Net_ReadLightningarc();
-            bHandled = true;
             break;
         case TE_CSQC_BIGLIGHTNINGARC:
             Net_ReadBigLightningarc();
-            bHandled = true;
             break;
         case TE_CSQC_ZAPPERLIGHTNING:
             Zapper_ReadLightning();
-            bHandled = true;
             break;
 		case TE_CSQC_BLAST:
 			Net_ReadBlast();
-			bHandled = true;
 			break;
 		case TE_CSQC_ANNOUNCE_PRINT:
 			announce_print();
-			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONLIST:
 			weapontime = time;
-			bHandled = true;
 			break;
 		case TE_CSQC_RADIO:
 			Net_ReadRadio();
-			bHandled = true;
 			break;
         case TE_CSQC_NADGETSELECT:
 			Net_ReadNadgetSelect();
-            bHandled = true;
             break;
 		case TE_CSQC_WEAPONSELECT:
 			Net_ReadWeaponSelect();
 			break;
 		case TE_CSQC_PICTURE:
 			Net_MapVote_Picture();
-			bHandled = true;
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
 			break;
 		case TE_CSQC_TEAMSELECT:
 			if not(isdemo_flag)
 				GUI_Show(GUI_TEAMSELECT);
 
-			bHandled = true;
 			break;
 		case TE_CSQC_GAMEOVER:
 			if(calledhooks & HOOK_START)
@@ -1269,7 +1253,6 @@ float CSQC_Parse_TempEntity()
 				localcmd("\ncl_hook_gameend;");
 				calledhooks |= HOOK_END;
 			}
-			bHandled = true;
 			break;
 		case TE_CSQC_MAPLIST:
 			str_unzone_ifneeded(available_maps);
@@ -1280,10 +1263,12 @@ float CSQC_Parse_TempEntity()
 				s = str_cdr(s);
 				available_maps_count++;
 			}
-			bHandled = true;
 			break;
 		case TE_CSQC_TRIP:
 			trip_net_read();
+			break;
+		case TE_CSQC_HINT:
+			hint_net_read();
 			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it

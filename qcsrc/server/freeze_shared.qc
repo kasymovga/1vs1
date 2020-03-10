@@ -38,6 +38,7 @@ float Freeze_HandleFrags(entity attacker, entity targ, float f) {
 }
 
 void Freeze_Init_Shared(string gt) {
+	hint_add("You can revive frozen teammates standing close to him");
 	Roundbased_Init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
 	IceHook_SkipThink = Freeze_IceSkipThink;
 	IceHook_SkipDeathHandle = Freeze_IceSkipThink;

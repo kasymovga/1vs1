@@ -1,0 +1,2 @@
+void(void) hint_init;
+void(string s) hint_add;
