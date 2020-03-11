@@ -357,7 +357,8 @@ float weapon_rocketlauncher(float req)
 	else if (req == WR_PRECACHE)
 	{
 		if not(weapon_rocketlauncher_precached) {
-			hint_add("With Rocket Launcher you can guide rockets by holding attack button");
+			weapon_rocketlauncher_precached = 1;
+			hint_add("With Rocket Launcher you can guide rockets by holding attack button. You can explode rocket midair with secondary attack button.");
 			precache_model ("models/flash.md3");
 			precache_sound ("weapons/rocket_det.wav");
 			precache_sound ("weapons/rocket_fire.wav");

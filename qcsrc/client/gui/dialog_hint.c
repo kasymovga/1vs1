@@ -34,7 +34,7 @@ void fillNexuizHintDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.125);
 		me.TD(me, 3, 3.75, e = makeNexuizTextLabel(0, hint));
-
+		e.allowWrap = 1;
 	hint_text_label = e;
 	me.TR(me);
 	me.TR(me);

@@ -46,6 +46,8 @@ void spawnfunc_weapon_laser (void)
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
+float weapon_laser_precached;
+
 float weapon_laser(float req)
 {
 	if (req == WR_AIM)
@@ -78,7 +80,11 @@ float weapon_laser(float req)
 		}
 	}
 	else if (req == WR_PRECACHE) {
-		precache_sound ("weapons/lasergun_fire.wav");
+		if not(weapon_laser_precached) {
+			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
+			precache_sound ("weapons/lasergun_fire.wav");
+			weapon_laser_precached = 1;
+		}
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_LASER);
 	else if (req == WR_CHECKAMMO1)
