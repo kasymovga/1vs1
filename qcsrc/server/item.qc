@@ -1241,7 +1241,7 @@ void spawnfunc_target_items (void)
 		else if(argv(i) == "unlimited_weapon_ammo")  self.items |= IT_UNLIMITED_WEAPON_AMMO;
 		else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
 		else if(argv(i) == "strength")               { self.items |= IT_STRENGTH; powerup_strength_init(); }
-		else if(argv(i) == "invincible")             { self.items |= IT_INVINCIBLE; powerup_invisibility_init(); }
+		else if(argv(i) == "invincible")             { self.items |= IT_INVINCIBLE; powerup_invincible_init(); }
 		else if(argv(i) == "speed")                  { self.items |= IT_SPEED; powerup_speed_init(); }
 		else if(argv(i) == "invisibility")           { self.items |= IT_INVISIBILITY; powerup_invisibility_init(); }
 		else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
