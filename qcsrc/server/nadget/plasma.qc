@@ -151,11 +151,6 @@ void nadget_Plasma_Shard(float kickangle) {
 void nadget_Plasma_Explode(void) {
     float c;
 
-#if 0
-    if(self.hg_adept && CVAR(g_nadgets_plasma_adept_stun))
-        return;
-#endif
-
 	vector v;
 	v = self.hg_lastvel;
 	v_z = 0;

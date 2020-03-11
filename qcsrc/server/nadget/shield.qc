@@ -114,20 +114,6 @@ void nadget_Shield_Trigger(void) {
     // }
 }
 
-#if 0
-void nadget_Shield_Adept_ExtendRenew(entity plr) {
-    var extend = CVAR(g_nadgets_shield_adept_discharge_extend);
-    var renew = CVAR(g_nadgets_shield_adept_discharge_renew);
-
-    if(!extend && !renew)
-        return;
-
-    plr.hg_shield = max(plr.hg_shield, renew) + extend;
-    sound_stop(plr, CHAN_AUTO);
-    sound(plr, CHAN_AUTO, "misc/powerup_shield.wav", VOL_BASE, ATTN_NORM);
-}
-#endif
-
 void nadget_Shield_Model_Think(void) {
     if(self.owner.hg_shield)
         self.alpha = approach(self.alpha, 1, frametime * 3);
@@ -142,10 +128,6 @@ void nadget_Shield_Model_Think(void) {
 
     self.colormod = '1 1 0';
     self.colormod_z = 1 - self.owner.hg_shieldpower;
-#if 0
-    if(self.hg_adept && self.owner.hg_shieldpower == 1)
-        self.colormod_z = 1;
-#endif
     setorigin(self, self.owner.origin);
     self.nextthink = time;
 }
@@ -249,22 +231,11 @@ float nadget_Shield_Damage(entity attacker, float _damage, float deathtype, vect
 NADGET_HOOKFUNCTION(shield, Attack) {
     entity e;
     float d;
-#if 0
-    float adept = Buffs_Present(self, BUFF_ADEPT);
-
-    if(adept) {
-        d = CVAR(g_nadgets_shield_adept_duration);
-    } else {
-#endif
-        d = g_nadgets_shield_duration;
-
-        if(g_nadgets_shield_immobile) {
-            self.hg_shield_oldmovetype = self.movetype;
-            self.movetype = MOVETYPE_NONE;
-        }
-#if 0
-    }
-#endif
+	d = g_nadgets_shield_duration;
+	if(g_nadgets_shield_immobile) {
+		self.hg_shield_oldmovetype = self.movetype;
+		self.movetype = MOVETYPE_NONE;
+	}
 
     self.hg_shieldmax = d /* * Buffs_NadgetPower(self) */;
     self.hg_shield = self.hg_shieldmax;
@@ -296,8 +267,7 @@ NADGET_HOOKFUNCTION(shield, Attack) {
         setorigin(e, self.origin);
         setmodel(e, "models/ctf/shield.md3");
         e.scale = 0.5;
-        //e.hg_adept = adept;
-        e.skin = 10 /* + !!adept */;
+        e.skin = 10;
         e.exteriormodeltoclient = self;
         setsize(e, e.scale * e.mins, e.scale * e.maxs);
 

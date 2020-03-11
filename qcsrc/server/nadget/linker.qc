@@ -65,21 +65,10 @@ void nadget_Linker_Think(void) {
 
             p.hg_linker_effecttime = time;
         }
-
-#if 0
-        if(self.hg_adept)
-            if(p != self.owner && !p.frozen && (!teamplay || p.team != self.team))
-                nadget_Linker_Adept_Push(p);
-#endif
     }
 
 #if 0
     self.buffs &~= CVAR(g_nadgets_linker_sharedbuffs_banmask);
-
-    if(self.hg_adept)
-        for(p = findchainflags(flags, FL_PROJECTILE); p; p = p.chain)
-            if(p.classname != "bullet" && p.owner != self.owner && (!teamplay || p.owner.team != self.team))
-                nadget_Linker_Adept_Push(p);
 #endif
 
     if(sharingframe) {
@@ -152,19 +141,11 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     setmodel(e, "models/ctf/shield.md3");
     e.scale = e.hg_linker_range / e.maxs_x;
     e.glow_color = 0xF5;
-#if 0
-    e.hg_adept = Buffs_Present(self, BUFF_ADEPT);
-#endif
     e.movetype = MOVETYPE_TOSS;
     e.hg_type = NADGET_LINKER;
 
     if(e.team)
         e.skin = team_index(e.team);
-
-#if 0
-    if(e.hg_adept)
-        e.skin += 5;
-#endif
 
     setorigin(e, self.origin + self.view_ofs);
     setsize(e, '-32 -32 0', '32 32 32');

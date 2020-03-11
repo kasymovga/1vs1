@@ -18,7 +18,7 @@ void nadget_Waypoint_Update(string wpname) {
 
     if(!self.hg_waypoint) {
         float ownerhack = (/* self.hg_type == NADGET_BAIT || */ self.hg_type == NADGET_SENTRY);
-        float teamwp = (teamplay && GRENVAR(self.hg_type, /*if(self.hg_adept) "adept_detect_enemies_teamwide" else */ "detect_enemies_teamwide"));
+        float teamwp = (teamplay && GRENVAR(self.hg_type, "detect_enemies_teamwide"));
         entity o = (ownerhack ? self.realowner : self.owner);
         float t = (teamwp ? o.team : 0);
         o = (teamwp ? world : o);
@@ -84,13 +84,7 @@ void nadget_Waypoint(void) {
         detected = self.revprogress;
 #endif
     else {
-#if 0
-        if(self.hg_adept && GRENVAR(self.hg_type, "adept_detect_enemies"))
-            rng = GRENVAR(self.hg_type, "adept_detect_enemies");
-        else
-#endif
-            rng = GRENVAR(self.hg_type, "detect_enemies");
-
+		rng = GRENVAR(self.hg_type, "detect_enemies");
         if(!rng) {
             if(self.hg_waypoint)
                 WaypointSprite_Disown(self.hg_waypoint, 0.5);

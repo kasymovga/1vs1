@@ -85,14 +85,7 @@ void nadget_GenericProjectile_Explode(void) {
 
 float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
     float doStick;
-
-#if 0
-    if(self.hg_adept)
-        doStick = GRENVAR(self.hg_type, "adept_stick");
-    else
-#endif
-        doStick = GRENVAR(self.hg_type, "stick");
-
+	doStick = GRENVAR(self.hg_type, "stick");
     if(!doStick || (targ.takedamage == DAMAGE_AIM && doStick < 2) || targ.solid == SOLID_CORPSE)
         return FALSE;
 
@@ -160,33 +153,7 @@ void nadget_GenericProjectile_Touch(void) {
             return;
 
         if(self.hg_type == NADGET_TRANSLOC && teamplay && other.team == self.owner.team) {
-#if 0
-            float adeptRev = (Buffs_Present(self.owner, BUFF_ADEPT) && CVAR(g_nadgets_transloc_adept_revive));
-
-            if(adeptRev || Buffs_Present(self.owner, BUFF_MEDIC)) {
-                if(g_freeze && other.frozen) {
-                    self.owner.chain = world;
-                    Freeze_RevivePlayer(other, self.owner, TRUE);
-                    self.hg_tl_revived = TRUE;
-
-                    float m = CVAR(g_nadgets_transloc_medic_revive_health_multiplier);
-                    float h = other.health * m;
-                    float a = other.armorvalue * m;
-
-                    if(adeptRev)
-                        m = max(1.0, m);
-
-                    if(m > 1.0)
-                        Heal(other, self, self.owner, other.health - h, other.armorvalue - a, 0, 0, NADGET_TRANSLOC, 0, 0, self.origin, '0 0 0');
-                    else if(m < 1.0) {
-                        other.health = h;
-                        other.armorvalue = a;
-                        other.pauseregen_finished = time + CVAR(g_balance_pause_health_regen);
-                    }
-                }
-            } else
-#endif
-				goto troll;
+			goto troll;
         } else if(self.hg_type == NADGET_REMOTE) {
             goto troll;
         } else if(self.hg_type == NADGET_PLASMA) {
@@ -210,23 +177,6 @@ void nadget_GenericProjectile_Touch(void) {
         } else if(self.hg_type == NADGET_LASER) {
             nadget_GenericProjectile_RadiusDamage();
         }
-#if 0
-		else if(self.hg_type == NADGET_PLASMA && self.hg_adept) {
-            float pcount = cvar("g_nadgets_plasma_adept_projectiles_on_bounce");
-
-            if(pcount > 0) {
-                vector oldvel = self.velocity;
-                self.velocity = '0 0 0';
-
-				float c;
-                for(c = 0; c < pcount; ++c)
-                    nadget_Plasma_Shard(2 * M_PI * (c / pcount));
-
-                self.velocity = oldvel;
-            }
-        }
-#endif
-
 :troll
         if(self.hg_type == NADGET_RAZE) {
             if(trace_ent && trace_ent.solid == SOLID_BSP)
@@ -301,7 +251,6 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
         e.angles_y = va_y - 90;
     }
 
-    //float lt_override = GRENVAR(e.hg_type, strcat((e.hg_adept ? "adept_" : ""), "stick_lifetime_override"));
     float lt_override = GRENVAR(e.hg_type, "stick_lifetime_override");
     if(lt_override > 0) {
         e.hg_deathtime = time + lt_override;
@@ -416,13 +365,6 @@ void nadget_GenericProjectile_Think(void) {
                         self.velocity = self.hg_minVelocity + veldiff;
                     }
                 }
-
-#if 0
-                if(self.hg_adept && GV("adept_trailblaze") && time > self.hg_fireSpawnTime){
-                    nadget_GenericProjectile_ThrowNapalm();
-                    self.hg_fireSpawnTime = time + GV("fire_spawninterval");
-                }
-#endif
             }
         }
     }
@@ -447,23 +389,8 @@ void nadget_GenericProjectile_Think(void) {
 
     if(self.hg_detonable && self.hg_detonatetime) {
         if(time >= self.hg_detonatetime) {
-#if 0
-            if(self.hg_type == NADGET_REMOTE && self.hg_adept) {
-                self.hg_adept = 0;
-                self.health = self.max_health;
-                nadget_GenericProjectile_ThrowNapalm();
-                nadget_GenericProjectile_RadiusDamage();
-                self.hg_detonateready = time + GRENVAR(self.hg_type, "adept_detonate_threshold");
-                self.hg_detonatetime = 0;
-                self.hg_sndcount = 0;
-                WaypointSprite_Disown(self.hg_waypoint, 0.5);
-            } else {
-#endif
-                self.use();
-                return;
-#if 0
-            }
-#endif
+			self.use();
+			return;
         } else if(time >= self.hg_nextsnd) {
 			dlc_sound(self, CHAN_PROJECTILE, "weapons/rm_nadebeep.wav", VOL_BASE * 0.5, ATTN_NORM * 2);
             self.hg_sndcount += 1;
@@ -481,31 +408,7 @@ void nadget_GenericProjectile_Think(void) {
 }
 
 float nadget_GenericProjectile_Attack(float hgtype) {
-#if 0
-    if(Buffs_Present(self, BUFF_ADEPT) && (GRENVAR(hgtype, "adept_split") > 0 ||
-       (hgtype == NADGET_LASER && self.hg_detonatepressed))) {
-        float split = GRENVAR(hgtype, "adept_split");
-        float spread = GRENVAR(hgtype, "adept_split_spread");
-        vector dir;
-        float i;
-
-        if(!split && hgtype == NADGET_LASER) {
-            split = hg_ammo_used = hg_ammo_available;
-        }
-
-        if(split == 1)
-            nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
-        else for(i = 0; i < split; ++i) {
-            dir_y = spread * (-0.5 + (i / (split-1)));
-            nadget_GenericProjectile(hgtype, dir, i);
-        }
-    } else {
-#endif
-        nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
-#if 0
-    }
-#endif
-
+	nadget_GenericProjectile(hgtype, '0 0 0', FALSE);
     return NADGET_ATTACK_OK;
 }
 
@@ -587,30 +490,9 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
     gren.hg_type = hgtype;
     gren.spawnorigin = self.origin;
     gren.hg_spawntime = time;
-
-#if 0
-    if(hgtype != NADGET_NAPALM) {
-        gren.hg_adept = Buffs_Present(self, BUFF_ADEPT);
-    }
-#endif
-
-#if 0
-    if(gren.hg_adept && GV("adept_detonable")) {
-        gren.hg_detonable = GV("adept_detonable");
-        gren.hg_detonatedelay = GV("adept_detonate_delay");
-        gren.hg_detonateready = time + GV("adept_detonate_threshold");
-    } else {
-#endif
-        gren.hg_detonable = GV("detonable");
-        gren.hg_detonatedelay = GV("detonate_delay");
-        gren.hg_detonateready = time + GV("detonate_threshold");
-#if 0
-    }
-
-    if(gren.hg_adept && GV("adept_movetype"))
-        gren.movetype = GV("adept_movetype");
-    else
-#endif
+	gren.hg_detonable = GV("detonable");
+	gren.hg_detonatedelay = GV("detonate_delay");
+	gren.hg_detonateready = time + GV("detonate_threshold");
 	gren.movetype = GV("movetype");
 	if (gren.movetype == MOVETYPE_TOSS || gren.movetype == MOVETYPE_BOUNCE)
 		gren.gravity = GV("gravity");

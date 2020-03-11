@@ -479,14 +479,7 @@ void nadget_Sentry_Trigger(void) {
     float c_dmg = g_nadgets_sentry_shock_damage;
     float c_frc = g_nadgets_sentry_shock_force;
     float c_cost;
-
-#if 0
-    if(Buffs_Present(self, BUFF_ADEPT))
-        c_cost = CVAR(g_nadgets_sentry_adept_shock_energy_cost);
-    else
-#endif
-        c_cost = g_nadgets_sentry_shock_energy_cost;
-
+	c_cost = g_nadgets_sentry_shock_energy_cost;
     float found, triggered;
 
     for(e = world; (e = find(e, classname, "hg_sentry"));) if(e.realowner == self) {
