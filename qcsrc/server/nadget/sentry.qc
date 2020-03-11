@@ -455,10 +455,6 @@ void nadget_Sentry_Damage(entity inflictor, entity attacker, float _damage, floa
         nadget_Sentry_Explode();
 }
 
-void nadget_Sentry_MEODP_Death(entity attacker, entity inflictor) {
-    nadget_Sentry_Explode();
-}
-
 void nadget_Sentry_Trigger(void) {
     entity e, aimtarg, aimtransform;
     vector o, aimloc, aimloc_untransformed;
@@ -580,9 +576,6 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     }
 
     self.hg_detonables += 1;
-
-    //Buffs_MEODP_Point_Attach(e, nadget_Sentry_MEODP_Death);
-
     entity c = spawn();
     setmodel(c, "models/ebomb.mdl");
     c.skin = 3;

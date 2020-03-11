@@ -20,25 +20,8 @@ void nadget_Cloak(void) {
 }
 
 void nadget_Cloak_Trigger(void) {
-#if 0
-    if(!Buffs_Present(self, BUFF_ADEPT)) {
-#endif
-        self.hg_stealth = 0;
-        return;
-#if 0
-    }
-
-
-    if(self.hg_stealth) {
-        self.hg_stealth_saved = self.hg_stealth;
-        self.hg_stealth = 0;
-    } else if(self.hg_stealth_saved) {
-        sound(self, CHAN_AUTO, "misc/stealth.wav", VOL_BASE, ATTN_NORM);
-        self.hg_stealth = self.hg_stealth_saved;
-        self.hg_stealth_saved = 0;
-        self.fire_endtime = 0;
-    }
-#endif
+	self.hg_stealth = 0;
+	return;
 }
 
 void nadget_Cloak_PlayerFrame(void) {
@@ -72,16 +55,9 @@ var float(entity plr, entity viewer, float palpha) nadget_Cloak_PlayerAlphaMod_N
 float nadget_Cloak_PlayerAlphaMod(entity plr, entity viewer, float palpha) {
     float sa = 1 - plr.hg_stealthalpha;
 
-    if(viewer && viewer != plr) {
-        if(
-            (teamplay && viewer.team == plr.team) ||
-            // (viewer.hg_stealth && (!Buffs_Present(plr, BUFF_ADEPT) || Buffs_Present(viewer, BUFF_ADEPT))) ||
-            viewer.hg_stealth ||
-            viewer.classname != "player"
-        ) {
-            sa = 0.3 + 0.7 * sa;
-        }
-    }
+	if (viewer && viewer != plr)
+	if ((teamplay && viewer.team == plr.team) || viewer.hg_stealth || viewer.classname != "player")
+		sa = 0.3 + 0.7 * sa;
 
     return nadget_Cloak_PlayerAlphaMod_Next(plr, viewer, sa * palpha);
 }

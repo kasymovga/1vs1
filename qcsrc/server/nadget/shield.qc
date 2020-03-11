@@ -107,11 +107,8 @@ void nadget_Shield_Trigger(void) {
         self.think();
 		self = oldself;
     }
-
-    // if(!Buffs_Present(self, BUFF_ADEPT) || self.hg_shield_stored <= 0) {
-        self.hg_shield = 0;
-        sound_stop(self, CHAN_AUTO);
-    // }
+	self.hg_shield = 0;
+	sound_stop(self, CHAN_AUTO);
 }
 
 void nadget_Shield_Model_Think(void) {

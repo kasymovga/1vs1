@@ -2202,12 +2202,7 @@ void DrawProgress(vector cpos, vector l_size, float progress, float alpha, vecto
 }
 
 float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen) {
-#if 0
-    if(timewarper_active && getstati(stat_type) == NADGET_TIMEWARP)
-        return 1 - timewarper_remaining_duration / timewarper_max_duration;
-    else
-#endif
-        return getstatf(stat_regen) / getstatf(stat_maxregen);
+	return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
 
 float hg_visual, hg_alpha;
@@ -2573,13 +2568,6 @@ void Sbar_Draw (void)
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(hgtype == NADGET_GG && hgammo) {
                 drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(getcommandkey("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-#if 0
-            } else if(timewarper_active) {
-                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
-                                            "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
-                                            " ^3to go back in time"),
-                                            sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
-#endif
             }
 
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
