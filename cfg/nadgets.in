@@ -311,8 +311,6 @@ set g_nadgets_linker_duration 10
 set g_nadgets_linker_range 190
 set g_nadgets_linker_damagefactor 0.60
 set g_nadgets_linker_hps 10
-set g_nadgets_linker_sharedbuffs 0
-set g_nadgets_linker_sharedbuffs_banmask 528
 set g_nadgets_linker_split_damage 0
 set g_nadgets_linker_sharefactor 0.5
 set g_nadgets_linker_bonus_amount_multiplier 1

@@ -28,12 +28,6 @@ void nadget_Linker_Think(void) {
     }
 
     float sharingframe = (time > self.hg_linker_nexteffect);
-
-#if 0
-    if(sharingframe)
-        self.buffs = 0;
-#endif
-
     FOR_EACH_PLAYER(p) {
         if(p.team != self.team || (!teamplay && p != self.owner)) {
             if(p.hg_linker == self)
@@ -51,12 +45,6 @@ void nadget_Linker_Think(void) {
             ++denom;
             thealth += p.health;
             tarmor += p.armorvalue;
-
-#if 0
-            if(CVAR(g_nadgets_linker_sharedbuffs))
-                self.buffs |= p.buffs;
-#endif
-
             if(time > p.hg_linker_effecttime) {
                 FOR_EACH_PLAYER(e) if(e != p) if(e.hg_linker == self) if(time > e.hg_linker_effecttime) IF_NADGET_LINKER_APPLICABLE(e) {
                     effect_lightningarc(p.origin, e.origin);
@@ -66,11 +54,6 @@ void nadget_Linker_Think(void) {
             p.hg_linker_effecttime = time;
         }
     }
-
-#if 0
-    self.buffs &~= CVAR(g_nadgets_linker_sharedbuffs_banmask);
-#endif
-
     if(sharingframe) {
         self.hg_linker_nexteffect = time + 1;
 
