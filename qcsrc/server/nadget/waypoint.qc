@@ -17,7 +17,7 @@ void nadget_Waypoint_Update(string wpname) {
     //wpname = strcat("pointers/", wpname);
 
     if(!self.hg_waypoint) {
-        float ownerhack = (/* self.hg_type == NADGET_BAIT || */ self.hg_type == NADGET_SENTRY);
+        float ownerhack = (self.hg_type == NADGET_SENTRY);
         float teamwp = (teamplay && GRENVAR(self.hg_type, "detect_enemies_teamwide"));
         entity o = (ownerhack ? self.realowner : self.owner);
         float t = (teamwp ? o.team : 0);
@@ -78,12 +78,7 @@ void nadget_Waypoint(void) {
 
         detected = (self.hg_sentry_energy < 1);
         warn = (self.health < cvar("g_nadgets_sentry_health"));
-    }
-#if 0
-	else if(self.hg_type == NADGET_BAIT)
-        detected = self.revprogress;
-#endif
-    else {
+    } else {
 		rng = GRENVAR(self.hg_type, "detect_enemies");
         if(!rng) {
             if(self.hg_waypoint)
