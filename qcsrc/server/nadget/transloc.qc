@@ -1,13 +1,5 @@
 
 void nadget_Transloc_Explode(void) {
-#if 0
-    if(g_jailbreak && self.owner.jb_isprisoned)
-        return;
-
-    if(time < self.jb_jail_resettime)
-        return;
-#endif
-
     setsize(self, PL_MIN, PL_MAX);
 
     if(!entity_move_out_of_solid(self, MOVE_NOMONSTERS)) {

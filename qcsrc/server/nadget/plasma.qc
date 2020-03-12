@@ -140,9 +140,6 @@ void nadget_Plasma_Shard(float kickangle) {
 #endif
 
     sound(proj, CHAN_WEAPON, "weapons/electro_fire2.wav", VOL_BASE, ATTN_NORM);
-#if 0
-    proj.jb_proj_ownerstate = self.jb_proj_ownerstate;
-#endif
 }
 
 void nadget_Plasma_Explode(void) {

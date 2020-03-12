@@ -30,7 +30,6 @@ void nadget_GenericProjectile_ThrowNapalm(void) {
             GRENVAR(self.hg_type, "burntime")
         );
             e.owner = self; // don't collide with the GenericProjectile that spawned it
-            //e.jb_proj_ownerstate = self.jb_proj_ownerstate;
             e.velocity = random_spread_vector(
                 GRENVAR(self.hg_type, "spread_xy"),
                 GRENVAR(self.hg_type, "spread_z"),
