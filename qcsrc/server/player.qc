@@ -236,7 +236,7 @@ void(float finished, string samp) play_countdown {
 }
 
 void() player_effects {
-	if(!self.body.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
+	if(!self.body.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
 		return;
 
 	fire_apply_effect(self);
