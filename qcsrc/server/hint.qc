@@ -39,7 +39,7 @@ void(void) hint_RealClientConnect {
 		return;
 
 	if (sv_hints > 1)
-		hint_send(0, 0);
+		hint_send(floor(random() * hint_count), 0);
 
 	hint_RealClientConnect_next();
 }
