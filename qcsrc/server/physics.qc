@@ -399,7 +399,8 @@ float(entity to, float sf) physics_send {
 			if (dodging_flags)
 				sf |= 16384;
 		}
-		if (self.groundentity) {
+		if (self.groundentity)
+		if (self.flags & FL_ONGROUND_OR_SLICK) {
 			sf |= 32768;
 		}
 	}
