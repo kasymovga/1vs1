@@ -62,6 +62,7 @@ void(void) jetpack_enable {
 	if (jetpack_enabled)
 		return;
 
+	hint_add("Press jump key while midair to activate jetpack after you picked up one.");
 	jetpack_enabled = TRUE;
 	jetpack_physics = spawn();
 	net_link_entity(jetpack_physics, FALSE, 0, jetpack_physics_send);

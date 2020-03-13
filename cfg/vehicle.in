@@ -10,7 +10,7 @@ set g_vehicle_aircraft_speed 800
 set g_vehicle_aircraft_speed_stop 100
 set g_vehicle_aircraft_turnspeed 180
 set g_vehicle_aircraft_pushfactor 0.2
-set g_vehicle_aircraft_laser_refire 0.1
+set g_vehicle_aircraft_laser_refire 0.085
 set g_vehicle_aircraft_laser_damage 37
 set g_vehicle_aircraft_laser_edgedamage 12
 set g_vehicle_aircraft_laser_speed 9000
