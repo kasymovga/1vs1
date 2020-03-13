@@ -1,0 +1,6 @@
+set g_warfog 0 "War fog distance. Use 0 or negative value to disable"
+set g_warfog_r 0.5
+set g_warfog_g 0.5
+set g_warfog_b 0.5
+set g_warfog_alpha 0.75
+set g_warfog_fade_distance 200 "War fog fade distance. For smooth appear/disappear"
