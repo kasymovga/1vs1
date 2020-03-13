@@ -359,6 +359,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_PHYSICS_HOOK] = hook_physics_read;
 	ent_parsers[ENT_CLIENT_DLC_SOUND] = Ent_DLCSound;
 	ent_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
+	ent_parsers[ENT_CLIENT_LMS_SPHERE] = sphere_read;
 	SetConWidthHeight();
 	sbar_fontsize = '1 1 0';
 	string s = strcat(cvar_string("cmdline"), " ", cvar_string("gl_info_renderer"), " ", cvar_string("gl_info_version"));

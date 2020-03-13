@@ -16,6 +16,7 @@ string(float g) gametype_name {
 	else if (g == GAME_CLANARENA) return "ca";
 	else if (g == GAME_CONQUEST) return "conq";
 	else if (g == GAME_SURVIVE) return "surv";
+	else if (g == GAME_LMS) return "lms";
 	else if (g == GAME_SINGLE) return "single";
 	else if (g == GAME_COOP) return "coop";
 	return "dm";

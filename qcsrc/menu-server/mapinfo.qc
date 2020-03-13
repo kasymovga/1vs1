@@ -445,6 +445,7 @@ float MapInfo_Type_FromString(string t)
 	else if(t == "nexball" ||
 	        t == "nb" )        return GAME_NEXBALL;
 	else if(t == "cts")        return GAME_CTS;
+	else if(t == "lms")        return GAME_LMS;
 	else if(t == "surv" ||
 	        t == "survive")    return GAME_SURVIVE;
 	else if(t == "single")     return GAME_SINGLE;
@@ -487,6 +488,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Clan Arena";
 	} else if (t == GAME_SURVIVE) {
 		return "Survival";
+	} else if (t == GAME_LMS) {
+		return "Last Man Standing";
 	} else if (t == GAME_SINGLE) {
 		return "Single Player";
 	} else if (t == GAME_COOP) {
@@ -925,6 +928,7 @@ string MapInfo_GetGameTypeCvar(float t)
 		case GAME_NEXBALL: return "_g_nexball";
 		case GAME_CTS: return "_g_cts";
 		case GAME_SURVIVE: return "_g_survive";
+		case GAME_LMS: return "_g_lms";
 		case GAME_SINGLE: return "_g_single";
 		case GAME_COOP: return "_g_coop";
 		default: return "";
@@ -949,6 +953,7 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 		case GAME_RACE:            return MAPINFO_TYPE_RACE;
 		case GAME_CTS:             return MAPINFO_TYPE_CTS;
 		case GAME_SURVIVE:         return MAPINFO_TYPE_SURVIVE;
+		case GAME_LMS:             return MAPINFO_TYPE_DEATHMATCH;
 		case GAME_COOP:            return MAPINFO_TYPE_SINGLE;
 		case GAME_SINGLE:          return MAPINFO_TYPE_SINGLE;
 		case GAME_NEXBALL:         return MAPINFO_TYPE_NEXBALL;

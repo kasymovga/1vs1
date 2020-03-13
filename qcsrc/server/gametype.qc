@@ -70,53 +70,42 @@ void() gametype_init {
 	if(game == GAME_TEAM_DEATHMATCH) {
 		team_play_activate();
 		tdm_init();
-	}
-	if(game == GAME_FREEZETAG) {
+	} else if(game == GAME_FREEZETAG) {
 		team_play_activate();
 		Freeze_Init();
-	}
-	if(game == GAME_CLANARENA) {
+	} else if(game == GAME_CLANARENA) {
 		team_play_activate();
 		Clanarena_Init();
-	}
-	if(game == GAME_DOMINATION) {
+	} else if(game == GAME_DOMINATION) {
 		team_play_activate();
 		dom_init();
-	}
-	if(game == GAME_CTF || game == GAME_CATF || game == GAME_CTFT) {
+	} else if(game == GAME_CTF || game == GAME_CATF || game == GAME_CTFT) {
 		team_play_activate();
 		ctf_init();
-	}
-	if(game == GAME_KEYHUNT || game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT) {
+	} else if(game == GAME_KEYHUNT || game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT) {
 		team_play_activate();
 		kh_init();
-	}
-	if(game == GAME_ONSLAUGHT) {
+	} else if(game == GAME_ONSLAUGHT) {
 		team_play_activate();
 		onslaught_init();
-	}
-	if(game == GAME_RACE || game == GAME_CTS)
+	} else if(game == GAME_RACE || game == GAME_CTS) {
 		race_init();
-
-	if(game == GAME_NEXBALL) {
+	} else if(game == GAME_NEXBALL) {
 		team_play_activate();
 		nexball_init();
-	}
-	if (game == GAME_CONQUEST) {
+	} else if (game == GAME_CONQUEST) {
 		team_play_activate();
 		conquest_init();
-	}
-	if (game == GAME_SURVIVE) {
+	} else if (game == GAME_SURVIVE) {
 		team_play_activate();
 		survive_init();
-	}
-	if (game == GAME_SINGLE)
+	} else if (game == GAME_SINGLE) {
 		Single_Init();
-
-	if (game == GAME_COOP)
+	} else if (game == GAME_COOP) {
 		coop_init();
-
-	if(teamplay)
+	} else if (game == GAME_LMS) {
+		lms_init();
+	} else if(teamplay)
 		entcs_init();
 
 	// save it (for the next startup)

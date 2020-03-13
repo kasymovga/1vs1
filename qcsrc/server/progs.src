@@ -86,6 +86,7 @@ udppunchhole.qh
 conquest.qh
 survive.qh
 ctf.qh
+lms.qh
 dom.qh
 entcs.qh
 rune.qh
@@ -407,3 +408,4 @@ timeout.qc
 sysinfo.qc
 warfog.qc
 hint.qc
+lms.qc

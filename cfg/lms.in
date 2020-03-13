@@ -1,0 +1,36 @@
+set g_lms_lives 20 "Start amount of lives for lms"
+set g_lms_scorelimit "0" "Dummy cvar, lms not have scorelimit"
+set g_lms_timelimit "5" "Timelimit for lms, when empty, g_timelimit using, <= 0 mean no limit"
+set g_lms_leadlimit "0" "Dummy cvar, lms not have leadlimit"
+set g_lms_sphere_diameter_min "1200"
+set g_lms_sphere_damage 50
+set g_lms_sphere_damage_distance_factor 100
+set lms_g_start_weapon_shotgun 1
+set lms_g_start_weapon_uzi 1
+set lms_g_start_weapon_grenadelauncher 1
+set lms_g_start_weapon_crylink 1
+set lms_g_start_weapon_electro 1
+set lms_g_start_weapon_nex 1
+set lms_g_start_weapon_hagar 1
+set lms_g_start_weapon_rocketlauncher 1
+set lms_g_pickup_items 0
+set lms_g_warmup_start_armor 150
+set lms_g_warmup_start_health 150
+set lms_g_balance_armor_start 150
+set lms_g_balance_armor_rot 0
+set lms_g_balance_armor_regen 0
+set lms_g_balance_health_start 150
+set lms_g_balance_health_rot 0
+set lms_g_balance_health_regen 0
+set lms_g_powerup_superhealth 0
+set lms_g_powerup_shield 0
+set lms_g_powerup_strength 0
+set lms_g_start_ammo_nails 100
+set lms_g_start_ammo_shells 60
+set lms_g_start_ammo_rockets 120
+set lms_g_start_ammo_cells 120
+set lms_g_warmup_start_ammo_nails 100
+set lms_g_warmup_start_ammo_shells 60
+set lms_g_warmup_start_ammo_rockets 120
+set lms_g_warmup_start_ammo_cells 120
+set lms_g_balance_health_rotlinear 0
