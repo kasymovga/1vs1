@@ -1,6 +1,7 @@
 float g_vehicle_aircraft_pushfactor;
 float g_vehicle_aircraft_laser_refire;
 float g_vehicle_aircraft_laser_damage;
+float g_vehicle_aircraft_laser_edgedamage;
 float g_vehicle_aircraft_laser_force;
 float g_vehicle_aircraft_laser_speed;
 float g_vehicle_aircraft_laser_radius;
@@ -43,7 +44,7 @@ void() vehicle_aircraft_attack_laser {
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg, weapon_shotdir * 1000, 1);
 	entity proj = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_HLAC, g_vehicle_aircraft_laser_damage,
-			0, g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force);
+			g_vehicle_aircraft_laser_edgedamage, g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force);
 
 	proj.realowner = self.owner;
 	proj.movetype = MOVETYPE_FLY;
@@ -321,6 +322,7 @@ void(void) vehicle_aircraft_init {
 	CACHE_CVAR(g_vehicle_aircraft_laser_force);
 	CACHE_CVAR(g_vehicle_aircraft_laser_refire);
 	CACHE_CVAR(g_vehicle_aircraft_laser_damage);
+	CACHE_CVAR(g_vehicle_aircraft_laser_edgedamage);
 	CACHE_CVAR(g_vehicle_aircraft_laser_speed);
 	CACHE_CVAR(g_vehicle_aircraft_laser_radius);
 	CACHE_CVAR(g_vehicle_aircraft_laser_heat);
