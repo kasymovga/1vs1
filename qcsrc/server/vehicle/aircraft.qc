@@ -34,6 +34,9 @@ void() vehicle_aircraft_attack_laser {
 		return;
 
 	self.phase = !self.phase;
+	self.angles_x = -self.angles_x;
+	makevectors(self.angles);
+	self.angles_x = -self.angles_x;
 	if (self.phase)
 		weapon_shotorg = self.origin + v_forward * 60 + v_right * 15 + v_up * 25;
 	else
@@ -48,9 +51,6 @@ void() vehicle_aircraft_attack_laser {
 
 	proj.realowner = self.owner;
 	proj.movetype = MOVETYPE_FLY;
-	self.angles_x = -self.angles_x;
-	makevectors(self.angles);
-	self.angles_x = -self.angles_x;
 	proj.velocity = (v_forward + randomvec() * self.vehicle_heat * g_vehicle_aircraft_laser_spread) * g_vehicle_aircraft_laser_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = projectile_touch_explode;
