@@ -111,10 +111,12 @@ void(void) lms_sphere_setup {
 var void(entity spot) lms_Spawn_next;
 void lms_Spawn(entity spot) {
 	lms_Spawn_next(spot);
+	if (warmup_active)
+		return;
+
 	if (self.scorekeeper.lms_lives > 0)
 		return;
 
-	self.team = 0; //fake team for player spectators
 	score_player_set(self, SP_STATUS, 1);
 	self.killcount = -666; //Prevent bprint
 	self.team = -1; //Prevent score reset
@@ -133,12 +135,14 @@ float(void) lms_JoinHandle {
 }
 
 float(entity attacker, entity inflictor, float deathtype) lms_DeathHandle {
-	score_player_add(self, SP_LIVES, -1);
-	if (self.scorekeeper.lms_lives <= 0)
-		score_player_set(self, SP_STATUS, 1);
+	if not(warmup_active) {
+		score_player_add(self, SP_LIVES, -1);
+		if (self.scorekeeper.lms_lives <= 0)
+			score_player_set(self, SP_STATUS, 1);
 
-	g_lms_lives = min(g_lms_lives, max(0, self.scorekeeper.lms_lives));
-	lms_someone_died = TRUE;
+		g_lms_lives = min(g_lms_lives, max(0, self.scorekeeper.lms_lives));
+		lms_someone_died = TRUE;
+	}
 	return FALSE;
 }
 
@@ -203,7 +207,7 @@ void(void) lms_init {
 	GameHook_SpawnPointGood = lms_SpawnPointGood;
 	score_basics(SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
 	SP_STATUS = score_register("status", 0);
-	SP_LIVES = score_register("lives", SFL_SORT_PRIO_PRIMARY);
+	SP_LIVES = score_register("lives", SFL_SORT_PRIO_PRIMARY | SFL_NOCLEAR);
 	lms_lives = scores[SP_LIVES];
 	CACHE_CVAR(g_lms_lives);
 	CACHE_CVAR(g_lms_sphere_diameter_min);
