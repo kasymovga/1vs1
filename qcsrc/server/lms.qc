@@ -2,6 +2,7 @@ float g_lms_lives;
 float g_lms_sphere_damage;
 float g_lms_sphere_damage_distance_factor;
 float g_lms_sphere_diameter_min;
+float g_lms_sphere_diameter_start_indent;
 float SP_LIVES;
 var .float lms_lives;
 float lms_someone_died;
@@ -100,7 +101,7 @@ void(void) lms_sphere_setup {
 		if (f > max_distance)
 			max_distance = f;
 	}
-	lms_sphere_diameter_start = lms_sphere_diameter = max_distance * 2 + 100;
+	lms_sphere_diameter_start = lms_sphere_diameter = (max_distance * 2) + g_lms_sphere_diameter_start_indent;
 	lms_sphere_update();
 	lms_sphere.think = lms_sphere_think;
 	lms_sphere.nextthink = time + 0.1;
@@ -206,6 +207,7 @@ void(void) lms_init {
 	lms_lives = scores[SP_LIVES];
 	CACHE_CVAR(g_lms_lives);
 	CACHE_CVAR(g_lms_sphere_diameter_min);
+	CACHE_CVAR(g_lms_sphere_diameter_start_indent);
 	CACHE_CVAR(g_lms_sphere_damage);
 	CACHE_CVAR(g_lms_sphere_damage_distance_factor);
 	precache_model("models/sphere/sphere.md3");

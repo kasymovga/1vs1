@@ -2,7 +2,8 @@ set g_lms_lives 20 "Start amount of lives for lms"
 set g_lms_scorelimit "0" "Dummy cvar, lms not have scorelimit"
 set g_lms_timelimit "5" "Timelimit for lms, when empty, g_timelimit using, <= 0 mean no limit"
 set g_lms_leadlimit "0" "Dummy cvar, lms not have leadlimit"
-set g_lms_sphere_diameter_min "1200"
+set g_lms_sphere_diameter_min 1200 "Minimal diameter for lms sphere"
+set g_lms_sphere_diameter_start_indent 100 "Extra size for lms sphere"
 set g_lms_sphere_damage 50
 set g_lms_sphere_damage_distance_factor 100
 set lms_g_start_weapon_shotgun 1
