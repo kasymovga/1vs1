@@ -198,19 +198,32 @@ float(float exponent) map_list_method_shuffle = // more clever shuffling
 }
 
 void(void) map_list_reset {
-	bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-	cvar_set("_g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-	cvar_set("g_maplist", cvar_string("_g_maplist"));
-	localcmd("\nmenu_cmd sync\n");
+	print("Building map list.\n");
+	string exclude = strcat(" ", cvar_string("g_maplist_exclude"), " ");
+	string list;
+	string h, t = MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags());
+	while (t != "") {
+		h = str_car(t);
+		t = str_cdr(t);
+		if (strstrofs(exclude, strcat(" ", h, " "), 0) >= 0) {
+			print("Map ", h, " excluded from map list\n");
+			continue;
+		}
+		list = strcat(list, h, " ");
+	}
+	cvar_set("_g_maplist", list);
 }
 
 void(void) map_list_init {
 	string s = cvar_string("g_maplist");
+	string se = cvar_string("g_maplist_exclude");
 	registercvar("_g_maplist_source", "");
+	registercvar("_g_maplist_source_exclude", "");
 	registercvar("_g_maplist", "");
-	if (s != cvar_string("_g_maplist_source")) {
+	if (s != cvar_string("_g_maplist_source") || se != cvar_string("_g_maplist_source_exclude")) {
 		cvar_set("_g_maplist", s);
 		cvar_set("_g_maplist_source", s);
+		cvar_set("_g_maplist_source_exclude", se);
 	}
 	Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	if(Map_Count == 0) {
