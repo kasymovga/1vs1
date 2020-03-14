@@ -526,7 +526,7 @@ void bot_serverframe()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(head.classname == "player" || head.team > 1)
+		if(head.classname == "player" || head.team >= 0)
 			++activerealplayers;
 		++realplayers;
 	}
