@@ -327,12 +327,10 @@ void() map_goto_next {
 			break;
 
 		if(allowReset) {
-			bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-			cvar_set("_g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+			print( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
+			map_list_reset();
 			if(cvar("g_maplist_shuffle"))
 				map_list_shuffle();
-
-			localcmd("\nmenu_cmd sync\n");
 		} else {
 			error("Everything is broken - not even the default map list works. Please report this to the developers.");
 		}
