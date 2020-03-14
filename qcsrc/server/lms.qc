@@ -9,10 +9,16 @@ entity lms_sphere;
 float lms_sphere_diameter_unscaled;
 float lms_sphere_diameter_start;
 float lms_sphere_diameter;
+vector lms_sphere_origin_start;
+vector lms_sphere_origin_end;
 
-void(void) lms_sphere_size_set {
+void(void) lms_sphere_update {
+	float tl = cvar("timelimit") * 60;
+	float progress = bound(0, (map_starttime + tl - time) / tl, 1);
+	lms_sphere_diameter = g_lms_sphere_diameter_min + (lms_sphere_diameter_start - g_lms_sphere_diameter_min) * progress;
+	setorigin(lms_sphere, lms_sphere_origin_start * progress + (1 - progress) * lms_sphere_origin_end);
 	lms_sphere.scale = max(lms_sphere_diameter, g_lms_sphere_diameter_min) / lms_sphere_diameter_unscaled;
-	lms_sphere.SendFlags |= 2;
+	lms_sphere.SendFlags |= 18;
 }
 
 float(entity to, float sf) lms_sphere_send {
@@ -47,12 +53,7 @@ float(entity to, float sf) lms_sphere_send {
 }
 
 void(void) lms_sphere_think {
-	float tl = cvar("timelimit") * 60;
-	if (time > map_starttime)
-	if (lms_sphere_diameter > g_lms_sphere_diameter_min) {
-		lms_sphere_diameter = g_lms_sphere_diameter_min + (lms_sphere_diameter_start - g_lms_sphere_diameter_min) * bound(0, (map_starttime + tl - time) / tl, 1);
-		lms_sphere_size_set();
-	}
+	lms_sphere_update();
 	self.nextthink = time + 0.1;
 	entity e;
 	float f, r;
@@ -81,18 +82,26 @@ void(void) lms_sphere_setup {
 	random_selection_init();
 	entity e;
 	entity spawns = findchain(classname, "info_player_deathmatch");
+	vector _maxs = spawns.origin, _mins = spawns.origin;
 	for (e = spawns; e; e = e.chain) {
+		if (e.origin_x > _maxs_x) _maxs_x = e.origin_x;
+		if (e.origin_y > _maxs_y) _maxs_y = e.origin_y;
+		if (e.origin_z > _maxs_z) _maxs_z = e.origin_z;
+		if (e.origin_x < _mins_x) _mins_x = e.origin_x;
+		if (e.origin_y < _mins_y) _mins_y = e.origin_y;
+		if (e.origin_z < _mins_z) _mins_z = e.origin_z;
 		random_selection_add(e, 0, string_null, 1, 0);
 	}
-	setorigin(lms_sphere, random_selection_chosen_ent.origin);
+	lms_sphere_origin_start = (_maxs + _mins) * 0.5;
+	lms_sphere_origin_end = random_selection_chosen_ent.origin;
 	float max_distance = 0, f;
 	for (e = spawns; e; e = e.chain) {
-		f = vlen(e.origin - lms_sphere.origin);
+		f = vlen(e.origin - lms_sphere_origin_start);
 		if (f > max_distance)
 			max_distance = f;
 	}
 	lms_sphere_diameter_start = lms_sphere_diameter = max_distance * 2 + 100;
-	lms_sphere_size_set();
+	lms_sphere_update();
 	lms_sphere.think = lms_sphere_think;
 	lms_sphere.nextthink = time + 0.1;
 	net_link_entity(lms_sphere, FALSE, 0, lms_sphere_send);
