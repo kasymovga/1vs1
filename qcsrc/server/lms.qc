@@ -58,6 +58,7 @@ void(void) lms_sphere_think {
 	self.nextthink = time + 0.1;
 	entity e;
 	float f, r;
+	float d;
 	self.cnt = self.cnt + 1;
 	if (self.cnt >= 10) {
 		self.cnt = 0;
@@ -67,9 +68,11 @@ void(void) lms_sphere_think {
 
 			f = vlen(e.origin - lms_sphere.origin);
 			r = lms_sphere_diameter * 0.5;
+			d = 0.5 * g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor);
 			if (f > r) {
 				centerprint(e, "Return to fight area immediateley!");
-				fire_add_damage(e, world, g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor), 2, DEATH_HURTTRIGGER);
+				fire_add_damage(e, world, d, 2, DEATH_FIRE);
+				damage(e, world, world, d, DEATH_FIRE, e.origin, '0 0 0');
 			}
 		}
 	}
