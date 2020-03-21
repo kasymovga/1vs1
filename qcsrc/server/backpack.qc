@@ -19,7 +19,15 @@ float() backpack_ThrowWeaponOnDeathHandle {
 	setorigin(ammopack, self.origin);
 	oldself = self;
 	self = ammopack;
-	item_start(model_backpack, "misc/itempickup.wav", 0, 0, "ammopack", IT_AMMO, weapon_bit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
+	string s;
+	entity e;
+	e = (oldself.weapon ? weapon_info(oldself.weapon) : world);
+	if (e)
+		s = e.message;
+	else
+		s = "Ammo Pack";
+
+	item_start(model_backpack, "misc/itempickup.wav", 0, 0, s, IT_AMMO, weapon_bit(oldself.weapon), FL_WEAPON | FL_NO_WEAPON_STAY, commodity_pickupevalfunc, 3000);
 	self = oldself;
 	return TRUE;
 }
