@@ -260,6 +260,15 @@ void Ice_SpecateCopy(entity spectatee) {
 	Ice_SpecateCopy_NextLink(spectatee);
 }
 
+var void(void) ice_PlayerPreThink_next;
+void(void) ice_PlayerPreThink {
+	if (self.deadflag == DEAD_FREEZE)
+	if (self.BUTTON_ATCK)
+		self.impulse = 38;
+
+	ice_PlayerPreThink_next();
+}
+
 void Ice_Init() {
 	CACHE_CVAR_STR(sv_model_ice); //strzone once and never strunzone
 	precache_model(sv_model_ice);
@@ -293,4 +302,6 @@ void Ice_Init() {
 	GameHookChain_PlayerDamageHandle = Ice_PlayerDamageHandle;
 	Ice_SpecateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = Ice_SpecateCopy;
+	ice_PlayerPreThink_next = GameHookChain_PlayerPreThink;
+	GameHookChain_PlayerPreThink = ice_PlayerPreThink;
 }

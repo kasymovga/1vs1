@@ -1,4 +1,3 @@
-// autotaunt system
 float sv_autotaunt;
 float sv_taunt;
 .float cvar_cl_autotaunt;
@@ -1802,7 +1801,6 @@ void(void) player_impulse {
 					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 					WaypointSprite_Ping(wp);
 				}
-				sprint(self, "personal waypoint spawned at crosshair\n");
 				break;
 			case 32:
 				if(vlen(self.death_origin))
@@ -1845,7 +1843,6 @@ void(void) player_impulse {
 					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 					WaypointSprite_Ping(wp);
 				}
-				sprint(self, "HERE spawned at crosshair\n");
 				break;
 			case 36:
 				if(vlen(self.death_origin))
@@ -1875,7 +1872,6 @@ void(void) player_impulse {
 					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 					WaypointSprite_Ping(wp);
 				}
-				sprint(self, "DANGER spawned at crosshair\n");
 				break;
 			case 39:
 				if(vlen(self.death_origin))
