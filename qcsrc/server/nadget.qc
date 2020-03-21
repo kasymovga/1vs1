@@ -193,6 +193,16 @@ float(void) nadget_bot_aim {
 	return nadget_bot_aim_next();
 }
 
+var float(float deathtype, entity targ, entity inflictor, entity attacker) nadget_player_obituary_frag_next;
+float(float deathtype, entity targ, entity inflictor, entity attacker) nadget_player_obituary_frag {
+	if (DEATH_ISNADGET(deathtype)) {
+		weapon_fragprefix = "^5NADGET";
+		bprint ("^1", targ.netname, "^1 was nadefragged by ", attacker.netname, "\n");
+		return TRUE;
+	}
+	return nadget_player_obituary_frag_next();
+}
+
 void nadget_Init(void) {
 	if not(cvar("g_nadgets"))
 		return;
@@ -241,6 +251,8 @@ void nadget_Init(void) {
 	GameHookChain_SpectateCopy = nadget_SpectateCopy;
 	nadget_bot_aim_next = gamehook_chain_bot_aim;
 	gamehook_chain_bot_aim = nadget_bot_aim;
+	nadget_player_obituary_frag_next = gamehook_chain_player_obituary_frag;
+	gamehook_chain_player_obituary_frag = nadget_player_obituary_frag;
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
         addstat(STAT_HGREFIRE2, AS_FLOAT, hg_next2);

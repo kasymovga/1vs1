@@ -697,7 +697,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
 			else if (deathtype == DEATH_FIRE)
 				bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
-			else
+			else if not(gamehook_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
 				bprint ("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
 
 			score_give_frag(attacker, targ, 1);
