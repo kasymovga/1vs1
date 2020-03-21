@@ -105,6 +105,18 @@ void weapon_melee_attack_check()
 	self.switchweapon = w_save;
 }
 
+var float(void) weapon_melee_bot_aim_next;
+float(void) weapon_melee_bot_aim {
+	if (weapon_melee_possible())
+	if (random() < bot_melee_love)
+	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2) {
+		self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
+		return self.bot_melee;
+	}
+	return weapon_melee_bot_aim_next();
+}
+
+float weapon_melee_init_done;
 void weapon_melee_init()
 {
 	CACHE_CVAR_STR(sv_sound_melee);
@@ -124,13 +136,9 @@ void weapon_melee_init()
 	sv_player_melee_angles = stov(cvar_string("sv_player_melee_angles"));
 	sv_player_melee_origin = stov(cvar_string("sv_player_melee_origin"));
 	bot_melee_love = cvar("bot_melee");
-}
-
-float weapon_melee_aim()
-{
-	if (weapon_melee_possible())
-	if (random() < bot_melee_love)
-	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2)
-		self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
-	return self.bot_melee;
+	if not(weapon_melee_init_done) {
+		weapon_melee_init_done = 1;
+		weapon_melee_bot_aim_next = gamehook_chain_bot_aim;
+		gamehook_chain_bot_aim = weapon_melee_bot_aim;
+	}
 }

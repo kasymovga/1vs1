@@ -141,6 +141,30 @@ float nadget_ThrowWeaponHandle() {
 	return TRUE;
 }
 
+var float(void) nadget_bot_aim_next;
+float(void) nadget_bot_aim {
+	if (self.hg_ammo1 > 0)
+	if (self.hg_type1 == NADGET_NORMAL || self.hg_type1 == NADGET_PLASMA) {
+			self.hg_launchspeed = GRENVAR(self.hg_type1, "launchspeed");
+			if (self.hg_launchspeed)
+			if(bot_aim((GRENVAR(self.hg_type1, "speed_min") + GRENVAR(self.hg_type1, "speed")) * 0.25, GRENVAR(self.hg_type1, "speed_up") * 0.5, GRENVAR(self.hg_type1, "lifetime"), TRUE)) {
+				self.hg_power = 0.5;
+				return TRUE;
+			}
+	}
+	if (self.hg_ammo2 > 0)
+	if (self.hg_type2 == NADGET_NORMAL || self.hg_type2 == NADGET_PLASMA) {
+			self.hg_launchspeed = GRENVAR(self.hg_type2, "launchspeed");
+			if (self.hg_launchspeed)
+			if (bot_aim((GRENVAR(self.hg_type2, "speed_min") + GRENVAR(self.hg_type2, "speed")) * 0.25, GRENVAR(self.hg_type2, "speed_up") * 0.5, GRENVAR(self.hg_type2, "lifetime"), TRUE)) {
+				self.hg_power = 0.5;
+				self.hg_altstate = 1;
+				return TRUE;
+			}
+	}
+	return nadget_bot_aim_next();
+}
+
 void nadget_Init(void) {
 	if not(cvar("g_nadgets"))
 		return;
@@ -187,7 +211,8 @@ void nadget_Init(void) {
 	GameHookChain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
 	nadget_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = nadget_SpectateCopy;
-
+	nadget_bot_aim_next = gamehook_chain_bot_aim;
+	gamehook_chain_bot_aim = nadget_bot_aim;
     if(g_nadgets_double) {
         addstat(STAT_HGTYPE2, AS_INT, hg_type2);
         addstat(STAT_HGREFIRE2, AS_FLOAT, hg_next2);
