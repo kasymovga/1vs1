@@ -82,7 +82,7 @@ void nadget_PlayerClear(float killed) {
 	nadget_PlayerClear_NextLink(killed);
 }
 
-var void() nadget_GameHookChain_ObserverSpawn_Next;
+var void() nadget_ObserverSpawn_Next;
 
 void nadget_ObserverSpawn(void) {
     //self.hg_type1_picked = 0;
@@ -90,7 +90,7 @@ void nadget_ObserverSpawn(void) {
     self.hg_next1 = 0;
     self.hg_next2 = 0;
 
-    nadget_GameHookChain_ObserverSpawn_Next();
+    nadget_ObserverSpawn_Next();
 }
 
 var float() nadget_JoinHandle_NextLink;
@@ -212,7 +212,7 @@ void nadget_Init(void) {
 	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1');
     projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
     projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
-    nadget_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
+    nadget_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
     GameHookChain_ObserverSpawn = nadget_ObserverSpawn;
 	nadget_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = nadget_PlayerPreThink;
