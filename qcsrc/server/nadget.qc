@@ -73,6 +73,7 @@ void nadget_PlayerClear(float killed) {
     self.hg_bonustype = NADGET_NORMAL;
     self.hg_shield = 0;
 	if (self.classname == "player")
+	if not(self.hg_type1_picked)
 		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);)
 
     self.hg_shield = 0;
@@ -141,26 +142,53 @@ float nadget_ThrowWeaponHandle() {
 	return TRUE;
 }
 
+float(.float hg_type_field, .float hg_ammo_field) nadget_bot_aim_nadget {
+	float mt = GRENVAR(self.hg_type_field, "movetype");
+	float _gravity = 0;
+	if (mt == MOVETYPE_BOUNCE || mt == MOVETYPE_TOSS) {
+		_gravity = GRENVAR(self.hg_type_field, "gravity");
+	}
+	if (self.hg_ammo_field > 0) {
+		if (self.hg_type_field == NADGET_NORMAL || self.hg_type_field == NADGET_PLASMA ||
+				self.hg_type_field == NADGET_LASER || self.hg_type_field == NADGET_TRANSLOC ||
+				self.hg_type_field == NADGET_REMOTE || self.hg_type_field == NADGET_RAZE) {
+			self.hg_launchspeed = GRENVAR(self.hg_type_field, "launchspeed");
+			if (self.hg_launchspeed) {
+				if(bot_aim((GRENVAR(self.hg_type_field, "speed_min") + GRENVAR(self.hg_type_field, "speed")) * 0.25, GRENVAR(self.hg_type_field, "speed_up") * 0.5, GRENVAR(self.hg_type_field, "lifetime"), _gravity)) {
+					self.hg_power = 0.5;
+					return TRUE;
+				}
+			} else {
+				if(bot_aim(GRENVAR(self.hg_type_field, "speed"), GRENVAR(self.hg_type_field, "speed_up"), GRENVAR(self.hg_type_field, "lifetime"), _gravity)) {
+					self.hg_power = 0.5;
+					return TRUE;
+				}
+			}
+		} else if (self.hg_type_field == NADGET_CLOAK) {
+			self.hg_power = 0.5;
+			return TRUE;
+		} else {
+			if(bot_aim(2000, 0, 0.5, 0)) { //Enemy close
+				self.hg_power = 0.5;
+				return TRUE;
+			}
+		}
+	}
+	if (self.hg_type_field == NADGET_CLOAK)
+	if (self.hg_stealth) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
 var float(void) nadget_bot_aim_next;
 float(void) nadget_bot_aim {
-	if (self.hg_ammo1 > 0)
-	if (self.hg_type1 == NADGET_NORMAL || self.hg_type1 == NADGET_PLASMA) {
-			self.hg_launchspeed = GRENVAR(self.hg_type1, "launchspeed");
-			if (self.hg_launchspeed)
-			if(bot_aim((GRENVAR(self.hg_type1, "speed_min") + GRENVAR(self.hg_type1, "speed")) * 0.25, GRENVAR(self.hg_type1, "speed_up") * 0.5, GRENVAR(self.hg_type1, "lifetime"), TRUE)) {
-				self.hg_power = 0.5;
-				return TRUE;
-			}
-	}
-	if (self.hg_ammo2 > 0)
-	if (self.hg_type2 == NADGET_NORMAL || self.hg_type2 == NADGET_PLASMA) {
-			self.hg_launchspeed = GRENVAR(self.hg_type2, "launchspeed");
-			if (self.hg_launchspeed)
-			if (bot_aim((GRENVAR(self.hg_type2, "speed_min") + GRENVAR(self.hg_type2, "speed")) * 0.25, GRENVAR(self.hg_type2, "speed_up") * 0.5, GRENVAR(self.hg_type2, "lifetime"), TRUE)) {
-				self.hg_power = 0.5;
-				self.hg_altstate = 1;
-				return TRUE;
-			}
+	if (nadget_bot_aim_nadget(hg_type1, hg_ammo1))
+		return TRUE;
+
+	if (nadget_bot_aim_nadget(hg_type2, hg_ammo2)) {
+		self.hg_altstate = 1;
+		return TRUE;
 	}
 	return nadget_bot_aim_next();
 }
@@ -414,14 +442,14 @@ float nadget_PlayerNadgetType(entity e) {
     float argc = tokenize_console(nadget_SelectableTypes(hg_context_isalt));
     float i;
 
-    if(argc)
-        for(i = 0; i < argc; ++i)
-            if(e.hg_ctx_type_picked == nadget_NameToType(argv(i))) {
-                picked = e.hg_ctx_type_picked;
-                break;
-            }
-
-
+    if(argc) {
+		picked = NADGET_RANDOM;
+		for(i = 0; i < argc; ++i)
+			if(e.hg_ctx_type_picked == nadget_NameToType(argv(i))) {
+				picked = e.hg_ctx_type_picked;
+				break;
+			}
+	}
     if(picked == NADGET_RANDOM) {
         random_selection_init();
         float n; for(i = 0; i < argc; ++i) {
@@ -431,6 +459,8 @@ float nadget_PlayerNadgetType(entity e) {
         }
         picked = random_selection_chosen_float;
     }
+	if (picked == NADGET_RANDOM)
+		picked = NADGET_NORMAL;
 
     e.hg_ctx_type_picked = picked;
     return e.hg_ctx_type_picked;
@@ -557,7 +587,7 @@ void nadget_Attack(void) {
         case NADGET_ATTACK_FAIL:
             return;
         default:
-            error(strcat(nadget_TypeToExpandedName(hgtype), "'s attack function returned an invalid result\n"));
+            error(strcat(nadget_TypeToExpandedName(hgtype), " s (", ftos(hgtype), ") attack function returned an invalid result\n"));
             return;
     }
 
@@ -686,10 +716,7 @@ void nadget_PlayerPreThink(void) {
     }
 
     if(held && held != self.hg_state) {
-        /* if(self.hg_ctx_type == nadget_TIMEWARP && self.hg_twarp_moment) {
-            nadget_TimeWarper_Trigger(FALSE);
-        } else */ if(!self.hg_ctx_ammo && self.deadflag == DEAD_NO) {
-            //bigprint_spec(self, strcat("Out of ", nadget_TypeToExpandedName(n_type), "s!"), "", 1);
+        if(!self.hg_ctx_ammo && self.deadflag == DEAD_NO) {
             centerprint(self, strcat("Out of ", nadget_TypeToExpandedName(n_type), "s!"));
         }
     }
@@ -706,7 +733,7 @@ void nadget_PlayerPreThink(void) {
             nadget_Attack();
         }
 	} else {
-		if(self.hg_power && mayfire && self.hg_launchspeed)
+		if(self.hg_power && mayfire/* && self.hg_launchspeed*/)
 			nadget_Attack();
 		self.hg_power = 0;
 	}
@@ -720,7 +747,7 @@ void nadget_PlayerPreThink(void) {
 	float mx, dpause;
     if(g_nadgets_regen) NADGET_DO_IN_ALL_CONTEXTS({
         mx = nadget_RegenLimit(self);
-        dpause = g_nadgets_regen_damagepause/* * Buffs_NadgetRegenDmgPause(self) */;
+        dpause = g_nadgets_regen_damagepause;
 
         self.hg_ctx_regenrate = GRENVAR(self.hg_ctx_type, "regen_scale");
         dpause = min(dpause, dpause / self.hg_ctx_regenrate);
@@ -728,12 +755,6 @@ void nadget_PlayerPreThink(void) {
 
         if(self.hg_ctx_ammo < mx || !mx) {
             if(!self.hg_ctx_regenpaused) {
-#if 0
-                if(g_freeze && self.frozen)
-                    self.hg_ctx_regenrate *= CVAR(g_nadgets_regen_frozenfactor);
-                self.hg_ctx_regenrate *= Buffs_NadgetRegen(self);
-#endif
-
                 nadget_AdvanceRegen(self, frametime * self.hg_ctx_regenrate, mx);
             }
         } else
@@ -754,29 +775,8 @@ void nadget_Trigger(void) {
         nadget_Shield_Trigger();
     else {
         nadget_Sentry_Trigger();
-
-	if(!nadget_GenericProjectile_DetonateAll(self, FALSE)) {
-#if 0
-		if(self.hg_twarp_moment) {
-			nadget_TimeWarper_Trigger(FALSE);
-			return;
-		}
-#endif
-	}
-
+		nadget_GenericProjectile_DetonateAll(self, FALSE);
         self.hg_detonatepressed = TRUE;
-
-#if 0
-        if(Buffs_Present(self, BUFF_ADEPT)) {
-            float i;
-            NADGET_LOOP_FOR_ALL_CONTEXTS(i, {
-                if(self.hg_ctx_type == nadget_LASER) {
-                    nadget_Attack();
-                    break;
-                }
-            })
-        }
-#endif
     }
 }
 
@@ -863,7 +863,6 @@ float nadget_ShowMenu(float always) {
         nadget_WriteNadgetSelect();
         return TRUE;
     }
-
     return FALSE;
 }
 

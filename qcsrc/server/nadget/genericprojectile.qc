@@ -379,13 +379,17 @@ void nadget_GenericProjectile_Think(void) {
     }
 
     if(self.hg_detonable)
-    if(time >= self.hg_detonateready)
-    if(!self.hg_detonatetime)
-    if(!self.hg_detonable_updated) {
-        self.hg_detonable_updated = TRUE;
-        self.owner.hg_detonables += 1;
-    }
-
+	if(time >= self.hg_detonateready)
+	if(!self.hg_detonatetime) {
+		if(!self.hg_detonable_updated) {
+			self.hg_detonable_updated = TRUE;
+			self.owner.hg_detonables += 1;
+		}
+		if (self.hg_type == NADGET_REMOTE)
+		if (clienttype(self.owner) == CLIENTTYPE_BOT) {
+			nadget_GenericProjectile_Detonate(self);
+		}
+	}
     if(self.hg_detonable && self.hg_detonatetime) {
         if(time >= self.hg_detonatetime) {
 			self.use();
