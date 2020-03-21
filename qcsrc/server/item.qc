@@ -664,14 +664,6 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 	else
 	{
 		// it's a level item
-		if(self.notq3a)
-		{
-			// We aren't TA or something like that, so we keep the Q3A entities
-			print("removed non-Q3A ", self.classname, "\n");
-			item_start_failed = TRUE;
-			remove (self);
-			return;
-		}
 		if (!g_pickup_items || GameHookChain_ItemForbidden())
 		{
 			item_start_failed = TRUE;

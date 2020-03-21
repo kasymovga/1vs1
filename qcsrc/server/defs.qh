@@ -202,7 +202,6 @@ typedef .float floatfield;
 .float notteam;
 .float notsingle;
 .float notfree;
-.float notq3a;
 
 .float team_saved;
 
