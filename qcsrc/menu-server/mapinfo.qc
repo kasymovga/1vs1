@@ -706,6 +706,10 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 				if (cvar("g_tdm_use_ctf_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
 
+			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
+				if (cvar("g_dm_use_tdm_maps"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;
+
 			if (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH) {
 				if (cvar("g_kh_use_tdm_maps"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;

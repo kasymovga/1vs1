@@ -1,3 +1,4 @@
 set g_dm_scorelimit "" "Scorelimit for deathmatch, when empty, g_scorelimit using, <= 0 mean no limit"
 set g_dm_timelimit "" "Timelimit for deathmatch, when empty, g_timelimit using, <= 0 mean no limit"
 set g_dm_leadlimit "" "Leadlimit for deathmatch, when empty, g_leadlimit using, <= 0 mean no limit"
+set g_dm_use_tdm_maps 0
