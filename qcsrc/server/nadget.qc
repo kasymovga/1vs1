@@ -200,7 +200,7 @@ float(float deathtype, entity targ, entity inflictor, entity attacker) nadget_pl
 		bprint ("^1", targ.netname, "^1 was nadefragged by ", attacker.netname, "\n");
 		return TRUE;
 	}
-	return nadget_player_obituary_frag_next();
+	return nadget_player_obituary_frag_next(deathtype, targ, inflictor, attacker);
 }
 
 void nadget_Init(void) {
