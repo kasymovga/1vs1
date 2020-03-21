@@ -81,8 +81,8 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
     proj.team = self.owner.team;
     proj.effects = EF_NODEPTHTEST;
-    //proj.meodp_point_offs = '0 0 64';
-
+	proj.bot_dodge = TRUE;
+	proj.bot_dodgerating = burndamage + 100;
     proj.napalm_burn_radius = burnradius;
     proj.napalm_burn_damage = burndamage;
     proj.napalm_burn_edgedamage = burnedgedamage;
@@ -99,7 +99,6 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
 
     PROJECTILE_MAKETRIGGER(proj);
     setorigin(proj, porg);
-    //Buffs_MEODP_Point_Attach(proj, Buffs_MEODP_Death_Remove_Multiple);
     return proj;
 }
 
