@@ -56,7 +56,7 @@ float(entity to, float sf) lms_sphere_send {
 void(void) lms_sphere_think {
 	lms_sphere_update();
 	self.nextthink = time + 0.1;
-	entity e;
+	entity e, e2;
 	float f, r;
 	float d;
 	self.cnt = self.cnt + 1;
@@ -66,13 +66,14 @@ void(void) lms_sphere_think {
 			if (e.deadflag)
 				continue;
 
-			f = vlen(e.origin - lms_sphere.origin);
+			e2 = player_entity(e);
+			f = vlen(e2.origin - lms_sphere.origin);
 			r = lms_sphere_diameter * 0.5;
 			d = 0.5 * g_lms_sphere_damage * ((f - r) / g_lms_sphere_damage_distance_factor);
 			if (f > r) {
 				centerprint(e, "Return to fight area immediateley!");
-				fire_add_damage(e, world, d, 2, DEATH_FIRE);
-				damage(e, world, world, d, DEATH_FIRE, e.origin, '0 0 0');
+				fire_add_damage(e2, world, d, 2, DEATH_FIRE);
+				damage(e2, world, world, d, DEATH_FIRE, e2.origin, (e2.mins + e2.maxs) * 0.5);
 			}
 		}
 	}
@@ -144,7 +145,10 @@ float(entity attacker, entity inflictor, float deathtype) lms_DeathHandle {
 			score_player_set(self, SP_STATUS, 1);
 
 		g_lms_lives = min(g_lms_lives, max(0, self.scorekeeper.lms_lives));
-		lms_someone_died = TRUE;
+		if (attacker)
+		if (attacker.classname == "player")
+		if (attacker != self)
+			lms_someone_died = TRUE;
 	}
 	return FALSE;
 }
