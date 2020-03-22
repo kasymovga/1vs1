@@ -603,10 +603,10 @@ void(void) physics_check_water_jump {
 void(void) physics_player {
 	vector wishvel, wishdir, v;
 	float wishspeed, f, maxspd_mod, maxairspd, airaccel;
-	if (g_dodging) {
-		if (self.lastwj > 0)
-			self.lastwj -= frametime;
+	if (self.lastwj > 0)
+		self.lastwj -= frametime;
 
+	if (g_dodging) {
 		if (self.last_FORWARD_KEY_time > 0)
 			self.last_FORWARD_KEY_time -= frametime;
 		if (self.last_BACKWARD_KEY_time > 0)
