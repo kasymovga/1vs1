@@ -217,10 +217,13 @@ void(void) map_list_reset {
 void(void) map_list_init {
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
+	string gt = gametype_name(game);
+	registercvar("_g_maplist_gametype", "");
 	registercvar("_g_maplist_source", "");
 	registercvar("_g_maplist_source_exclude", "");
 	registercvar("_g_maplist", "");
-	if (s != cvar_string("_g_maplist_source") || se != cvar_string("_g_maplist_source_exclude")) {
+	if (s != cvar_string("_g_maplist_source") || se != cvar_string("_g_maplist_source_exclude") || gt != cvar_string("_g_maplist_gametype")) {
+		cvar_set("_g_maplist_gametype", gt);
 		cvar_set("_g_maplist", s);
 		cvar_set("_g_maplist_source", s);
 		cvar_set("_g_maplist_source_exclude", se);
