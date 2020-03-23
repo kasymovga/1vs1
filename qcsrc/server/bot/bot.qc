@@ -672,3 +672,7 @@ void bot_init()
 	bot_havocbot_init();
 	bot_custom_weapon_priority_setup();
 };
+
+void(entity bot, float _delay) bot_stay {
+	bot.bot_dontmove = max(time, bot.bot_nextthink) + _delay + 2 * sys_ticrate;
+}

@@ -145,7 +145,7 @@ float(void) dom_controlpoint_capture_finished {
 		return TRUE;
 
 	if (clienttype(other) == CLIENTTYPE_BOT)
-		other.bot_dontmove = time + 0.1;
+		bot_stay(other, 0.1);
 
 	if (self.state >= g_dom_point_capturetime) {
 		dom_controlpoint_capture_stop();

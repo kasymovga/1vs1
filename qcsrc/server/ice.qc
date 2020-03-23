@@ -169,14 +169,14 @@ void Ice_Think()
 			if (self.unfroze_pb)
 				progressbar_set(self.unfroze_pb, self.unfroze_progress / g_ice_unfroze_time);
 		} else
-			unfrozer.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
+			bot_stay(unfrozer, ICE_FRAME_TIME);
 
 		if (clienttype(self.owner) == CLIENTTYPE_REAL) {
 			if (self.owner.unfroze_pb)
 				progressbar_set(self.owner.unfroze_pb, self.unfroze_progress / g_ice_unfroze_time);
 		} else {
 			self.owner.movement = '0 0 0';
-			self.owner.bot_dontmove = time + ICE_FRAME_TIME * 1.5;
+			bot_stay(self.owner, ICE_FRAME_TIME);
 		}
 	}
 	if (self.unfroze_progress >= g_ice_unfroze_time)

@@ -164,7 +164,7 @@ void conquest_cp_touch() {
 	if (self.owner)
 		return;
 
-	other.bot_dontmove = time + sys_ticrate * 2;
+	bot_stay(other, 0);
 	self.owner = other;
 	if not(self.capture_progress_bar)
 		self.capture_progress_bar = progressbar_create(((self.team > 0) ? "Freeing..." : "Capturing..."), other);

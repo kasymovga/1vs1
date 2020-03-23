@@ -118,3 +118,4 @@ float sv_maxspeed;
 
 void() havocbot_setupbot;
 void() bot_init;
+void(entity bot, float _delay) bot_stay;
