@@ -73,7 +73,6 @@ void nadget_PlayerClear(float killed) {
     self.hg_bonustype = NADGET_NORMAL;
     self.hg_shield = 0;
 	if (self.classname == "player")
-	if not(self.hg_type1_picked)
 		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);)
 
     self.hg_shield = 0;
