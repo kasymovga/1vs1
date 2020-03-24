@@ -1,4 +1,3 @@
-.float bot_melee;
 void weapon_melee_attack_check();
 float weapon_melee_possible();
 void weapon_melee_init();

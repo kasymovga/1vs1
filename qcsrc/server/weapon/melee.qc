@@ -76,13 +76,11 @@ void weapon_melee_attack (float melee_type, float axe)
 		melee.customizeentityforclient = weapon_model_customize;
 		melee.viewmodelforclient = self;
 	}
-	self.bot_melee = FALSE;
 }
 
 float weapon_melee_possible()
 {
 	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
-	if (self.weapon != WEP_CAMPINGRIFLE || g_balance_campingrifle_hotreload)
 	if (g_balance_melee || (self.weapon == WEP_MELEE))
 		return TRUE;
 	return FALSE;
@@ -96,6 +94,7 @@ void weapon_melee_attack_check()
 	float w_save = self.weapon;
 	self.switchweapon = self.weapon = WEP_MELEE;
 	float axe = ((w_save == WEP_MELEE) && (g_balance_melee != 2));
+	if (self.weapon_think == weapon_ready)
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
 		weapon_melee_attack(g_balance_melee, axe);
@@ -110,8 +109,11 @@ float(void) weapon_melee_bot_aim {
 	if (weapon_melee_possible())
 	if (random() < bot_melee_love)
 	if (vlen(self.origin - self.enemy.origin) < g_balance_melee_distance * 2) {
-		self.bot_melee = bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE);
-		return self.bot_melee;
+		if (bot_aim(g_balance_melee_distance * 100, 0, 0.1, FALSE)) {
+			self.impulse = 20;
+			return TRUE;
+		} else
+			return FALSE;
 	}
 	return weapon_melee_bot_aim_next();
 }

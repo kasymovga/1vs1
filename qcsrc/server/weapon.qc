@@ -59,10 +59,9 @@ void weapon_reload() {
 	if(self.switchweapon == self.weapon)
 	if(self.weaponentity.state == WS_READY)
 	{
+		weapon_action(self.weapon, WR_RELOAD);
 		if (weapon_melee_possible())
 			weapon_melee_attack_check();
-		else
-			weapon_action(self.weapon, WR_RELOAD);
 	}
 	entity oldself = self;
 	self = Akimbo_Ghost(self);
@@ -452,10 +451,7 @@ void weapon_frame()
 			v_forward = fo;
 			v_right = ri;
 			v_up = up;
-			if (self.bot_melee)
-				weapon_melee_attack_check();
-			else
-				weapon_action(self.weapon, WR_THINK);
+			weapon_action(self.weapon, WR_THINK);
 		}
 		if (time + frametime * 0.5 >= self.weapon_nextthink)
 		{
