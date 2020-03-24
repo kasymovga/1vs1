@@ -1680,8 +1680,16 @@ void func_door_reset()
 	self.think = stdproc_nothing;
 }
 
+.float jaildoormode;
+void(void) func_door_rm_hack {
+	if (self.targetname == "jail_red" || self.targetname == "jail_blue")
+	if (self.jaildoormode != 2)
+		self.spawnflags |= DOOR_START_OPEN;
+}
+
 void spawnfunc_func_door()
 {
+	func_door_rm_hack();
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	entity_movedir_setup();
@@ -1792,7 +1800,7 @@ void func_door_rotating_init_startopen()
 
 void spawnfunc_func_door_rotating()
 {
-
+	func_door_rm_hack();
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 
