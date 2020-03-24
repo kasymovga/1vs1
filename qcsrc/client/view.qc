@@ -331,7 +331,7 @@ void CSQC_UpdateView(float w, float h)
 	if (CVAR(cl_showacceleration))
 		Sbar_ShowAcceleration();
 
-	Sbar_DrawCenterPrint(); // draw centerprint messages even if viewsize >= 120
+	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
 
 	if (observer_status)
 		draw_crosshair = FALSE;

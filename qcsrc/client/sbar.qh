@@ -1,1 +1,2 @@
 void Sbar_GameType_Init();
+float scoreboard_bottom;

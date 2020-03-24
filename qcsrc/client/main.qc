@@ -923,12 +923,6 @@ void CSQC_Parse_Print(string strMessage)
 	print(ColorTranslateRGB(strMessage));
 }
 
-// CSQC_Parse_CenterPrint : Provides the centerprint string in the first parameter that the server provided.
-void CSQC_Parse_CenterPrint(string strMessage)
-{
-	centerprint(strMessage);
-}
-
 void Fog_Force()
 {
 	// TODO somehow thwart prvm_globalset client ...

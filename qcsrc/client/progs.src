@@ -78,7 +78,8 @@ miscfunctions.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
 teamplay.qc
-
+str.qc
+centerprint.qc
 sbar.qc
 mapvoting.qc
 

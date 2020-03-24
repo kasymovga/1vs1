@@ -21,7 +21,6 @@ float sbar_border_thickness;
 
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
-float centerprint_num;
 
 vector _color;
 float SCOREBOARD_OFFSET = 50;
@@ -778,16 +777,6 @@ float sbar_fixscoreboardcolumnwidth_len;
 float sbar_fixscoreboardcolumnwidth_iconlen;
 float sbar_fixscoreboardcolumnwidth_marginlen;
 
-float stringwidth_colors(string s)
-{
-	return stringwidth(s, TRUE);
-}
-
-float stringwidth_nocolors(string s)
-{
-	return stringwidth(s, FALSE);
-}
-
 string Sbar_FixScoreboardColumnWidth(float i, string str)
 {
 	float field, f;
@@ -840,7 +829,7 @@ string Sbar_FixScoreboardColumnWidth(float i, string str)
 
 		if (sbar_fixscoreboardcolumnwidth_iconlen != 0)
 			namesize -= sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen;
-		str = textShortenToWidth(str, namesize, stringwidth_colors);
+		str = textShortenToWidth(str, namesize, str_width_colors);
 		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, TRUE);
 	}
 	else if(field == SP_COUNTRY)
@@ -1115,7 +1104,6 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 
 float nextplayerscheck;
 float lastpingstime;
-float scoreboard_bottom;
 void Sbar_DrawScoreboard()
 {
 	vector rgb, pos, tmp;
@@ -1744,187 +1732,6 @@ void CSQC_Strength_Timer() {
 
 	if (jetpack_time)
 		Sbar_DrawPowerupTimer(jetpack_time, "gfx/hud/sb_fuel");
-}
-
-#define CENTERPRINT_MAX_LINES 30
-string centerprint_messages[CENTERPRINT_MAX_LINES];
-float centerprint_width[CENTERPRINT_MAX_LINES];
-vector centerprint_start;
-float centerprint_expire;
-float centerprint_offset_hint;
-vector centerprint_fontsize;
-
-void centerprint(string strMessage)
-{
-	float i, j, n, hcount;
-	string s;
-
-	centerprint_fontsize = Sbar_GetFontsize(CVAR(scr_centersize));
-
-	centerprint_expire = min(centerprint_expire, time); // if any of the returns happens, this message will fade out
-
-	if(CVAR(scr_centertime) <= 0)
-		return;
-
-	if(strMessage == "")
-		return;
-
-	// strip trailing newlines
-	j = strlen(strMessage) - 1;
-	while(substring(strMessage, j, 1) == "\n" && j >= 0)
-		j = j - 1;
-	strMessage = substring(strMessage, 0, j + 1);
-
-	if(strMessage == "")
-		return;
-
-	// strip leading newlines and remember them, they are a hint that the message should be lower on the screen
-	j = 0;
-	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
-		j = j + 1;
-	strMessage = substring(strMessage, j, strlen(strMessage) - j);
-	centerprint_offset_hint = j;
-
-	if(strMessage == "")
-		return;
-
-	// if we get here, we have a message. Initialize its height.
-	centerprint_num = 0;
-
-	n = tokenizebyseparator(strMessage, "\n");
-	i = hcount = 0;
-	for(j = 0; j < n; ++j)
-	{
-		str_wrapped_line_remaining = argv(j);
-		while(str_wrapped_line_remaining)
-		{
-			s = str_wrapped_line(CVAR(vid_conwidth) * 0.75 / centerprint_fontsize_x, stringwidth_colors);
-			if(centerprint_messages[i])
-				strunzone(centerprint_messages[i]);
-			centerprint_messages[i] = strzone(s);
-			centerprint_width[i] = stringwidth(s, TRUE);
-			++i;
-
-			// half height for empty lines looks better
-			if(s == "")
-				hcount += 0.5;
-			else
-				hcount += 1;
-
-			if(i >= CENTERPRINT_MAX_LINES)
-				break;
-		}
-	}
-
-	float h, havail;
-	h = centerprint_fontsize_y*hcount;
-
-	havail = CVAR(vid_conheight);
-	if(CVAR(con_chatpos) < 0)
-		havail -= (-CVAR(con_chatpos) + CVAR(con_chat)) * CVAR(con_chatsize); // avoid overlapping chat
-	if(havail > CVAR(vid_conheight) - 70)
-		havail = CVAR(vid_conheight) - 70; // avoid overlapping HUD
-
-	centerprint_start_x = 0;
-
-#if 0
-	float forbiddenmin, forbiddenmax, allowedmin, allowedmax, preferred;
-
-	// here, the centerprint would cover the crosshair. REALLY BAD.
-	forbiddenmin = vid_conheight * 0.5 - h - 16;
-	forbiddenmax = vid_conheight * 0.5 + 16;
-
-	allowedmin = scoreboard_bottom;
-	allowedmax = havail - h;
-	preferred = (havail - h)/2;
-
-
-	// possible orderings (total: 4! / 4 = 6)
-	//  allowedmin allowedmax forbiddenmin forbiddenmax
-	//  forbiddenmin forbiddenmax allowedmin allowedmax
-	if(allowedmax < forbiddenmin || allowedmin > forbiddenmax)
-	{
-		// forbidden doesn't matter in this case
-		centerprint_start_y = bound(allowedmin, preferred, allowedmax);
-	}
-	//  allowedmin forbiddenmin allowedmax forbiddenmax
-	else if(allowedmin < forbiddenmin && allowedmax < forbiddenmax)
-	{
-		centerprint_start_y = bound(allowedmin, preferred, forbiddenmin);
-	}
-	//  allowedmin forbiddenmin forbiddenmax allowedmax
-	else if(allowedmin < forbiddenmin)
-	{
-		// make sure the forbidden zone is not covered
-		if(preferred > (forbiddenmin + forbiddenmax) * 0.5)
-			centerprint_start_y = bound(allowedmin, preferred, forbiddenmin);
-		else
-			centerprint_start_y = bound(forbiddenmax, preferred, allowedmin);
-	}
-	//  forbiddenmin allowedmin allowedmax forbiddenmax
-	else if(allowedmax < forbiddenmax)
-	{
-		// it's better to leave the allowed zone (overlap with scoreboard) than
-		// to cover the forbidden zone (crosshair)
-		if(preferred > (forbiddenmin + forbiddenmax) * 0.5)
-			centerprint_start_y = forbiddenmax;
-		else
-			centerprint_start_y = forbiddenmin;
-	}
-	//  forbiddenmin allowedmin forbiddenmax allowedmax
-	else
-	{
-		centerprint_start_y = bound(forbiddenmax, preferred, allowedmax);
-	}
-#else
-	centerprint_start_y =
-		min(
-			max(
-				max(scoreboard_bottom, CVAR(vid_conheight) * 0.5 + 16),
-				(havail - h)/2
-			),
-			havail - h
-		);
-#endif
-
-	centerprint_num = i;
-	centerprint_expire = time + CVAR(scr_centertime);
-}
-
-void Sbar_DrawCenterPrint (void)
-{
-	float i;
-	vector pos;
-	string ts;
-	float a;
-
-	//if(time > centerprint_expire)
-	//	return;
-
-	//a = bound(0, 1 - 2 * (time - centerprint_expire), 1);
-	a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
-	//sz = 1.2 / (a + 0.2);
-
-	if(a <= 0) {
-		centerprint_num = 0;
-		return;
-	}
-	pos = centerprint_start;
-	for (i=0; i<centerprint_num; i = i + 1)
-	{
-		pos_x = (CVAR(vid_conwidth) - centerprint_fontsize_x * centerprint_width[i]) * 0.5;
-		ts = centerprint_messages[i];
-		if (ts != "")
-		{
-			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-			drawcolorcodedstring(pos, ts, centerprint_fontsize, a, DRAWFLAG_NORMAL);
-			//  - '0 0.5 0' * (sz - 1) * centerprint_fontsize_x - '0.5 0 0' * (sz - 1) * centerprint_width[i] * centerprint_fontsize_y, centerprint_fontsize * sz
-			pos_y = pos_y + centerprint_fontsize_y;
-		}
-		else
-			// half height for empty lines looks better
-			pos_y = pos_y + centerprint_fontsize_y * 0.5;
-	}
 }
 
 void Sbar_DrawPressedKeys(void)
