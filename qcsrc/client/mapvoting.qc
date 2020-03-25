@@ -13,7 +13,7 @@ float mv_detail;
 float mv_timeout;
 float mv_maps_mask;
 vector mv_pos, mv_dist;
-float mv_rows, mv_columns
+float mv_rows, mv_columns;
 
 float mv_selection;
 
