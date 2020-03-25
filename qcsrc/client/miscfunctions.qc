@@ -163,19 +163,6 @@ vector Sbar_GetFontsize(vector v)
 	return v;
 }
 
-float Sbar_GetWidth(float teamcolumnwidth)
-{
-	float f;
-	f = CVAR(sbar_width);
-	if(f == 0)
-		f = 640;
-	if(f < 320)
-		f = 320;
-	if(f > CVAR(vid_conwidth) - 2 * teamcolumnwidth)
-		f = CVAR(vid_conwidth) - 2 * teamcolumnwidth;
-	return f;
-}
-
 float PreviewExists(string name)
 {
 	float f;

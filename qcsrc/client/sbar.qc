@@ -846,14 +846,17 @@ string Sbar_FixScoreboardColumnWidth(float i, string str)
 	return str;
 }
 
+float sbar_width_wanted;
 void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
 {
 	vector tmp;
-	string str;
+	string str_full, str;
 	float i, field, f, w;
 	float is_spec;
+	float sbar_size_i;
+	float title_width;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
-
+	float wanted_width = 0;
 	// Layout:
 	tmp_x = sbwidth;
 	tmp_y = sbar_fontsize_y * 1.25;
@@ -872,21 +875,26 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 	tmp_y = 0;
 	for(i = 0; i < sbar_num_fields; ++i)
 	{
+		title_width = stringwidth(sbar_title[i], FALSE) + 1;
+		sbar_size_i = sbar_size[i];
 		field = sbar_field[i];
 		if(field == SP_SEPARATOR)
 			break;
 
+		str_full = Sbar_GetField(pl, field);
+		str = Sbar_FixScoreboardColumnWidth(i, str_full);
+		if (field == SP_NAME)
+			wanted_width = wanted_width + max(stringwidth(str_full, FALSE) + sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen + 1, title_width);
+		else
+			wanted_width = wanted_width + title_width;
+
 		if(is_spec && field != SP_NAME && field != SP_PING && field != SP_COUNTRY) {
-			pos_x += sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
+			pos_x += sbar_fontsize_x * sbar_size_i + sbar_fontsize_x;
 			continue;
 		}
-		str = Sbar_GetField(pl, field);
-		str = Sbar_FixScoreboardColumnWidth(i, str);
-
-		pos_x += sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
-
+		pos_x += sbar_fontsize_x * sbar_size_i + sbar_fontsize_x;
 		if(field == SP_NAME) {
-			tmp_x = sbar_fontsize_x*(sbar_size[i] - sbar_fixscoreboardcolumnwidth_iconlen - sbar_fixscoreboardcolumnwidth_marginlen) + sbar_fontsize_x;
+			tmp_x = sbar_fontsize_x*(sbar_size_i - sbar_fixscoreboardcolumnwidth_iconlen - sbar_fixscoreboardcolumnwidth_marginlen) + sbar_fontsize_x;
 			drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
 		} else if(field == SP_COUNTRY) {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
@@ -924,18 +932,23 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		pos_x = xmax;
 		for(i = sbar_num_fields-1; i > 0; --i)
 		{
+			title_width = stringwidth(sbar_title[i], FALSE) + 1;
+			sbar_size_i = sbar_size[i];
 			field = sbar_field[i];
 			if(field == SP_SEPARATOR)
 				break;
 
+			str_full = Sbar_GetField(pl, field);
+			str = Sbar_FixScoreboardColumnWidth(i, str_full);
+			if (field == SP_NAME)
+				wanted_width = wanted_width + max(stringwidth(str_full, FALSE) + sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen + 1, title_width);
+			else
+				wanted_width = wanted_width + title_width;
+
 			if(is_spec && field != SP_NAME && field != SP_PING) {
-				pos_x -= sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
+				pos_x -= sbar_fontsize_x * sbar_size_i + sbar_fontsize_x;
 				continue;
 			}
-
-			str = Sbar_GetField(pl, field);
-			str = Sbar_FixScoreboardColumnWidth(i, str);
-
 			if(field == SP_NAME) {
 				tmp_x = sbar_fontsize_x*sbar_fixscoreboardcolumnwidth_len; // left or right aligned? let's put it right...
 				drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
@@ -957,7 +970,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 				drawstring(pos - tmp, str, sbar_fontsize, sbar_field_rgb, 1, DRAWFLAG_NORMAL);
 			}
 
-			tmp_x = sbar_fontsize_x*sbar_size[i];
+			tmp_x = sbar_fontsize_x * sbar_size_i;
 			if(field == SP_NAME)
 			if not(is_spec) {
 				if(sbar_field_icon0 != "")
@@ -967,9 +980,10 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 				if(sbar_field_icon2 != "")
 					drawpic(pos - tmp, sbar_field_icon2, '0 1 0' * sbar_fontsize_y + '1 0 0' * sbar_fontsize_x * sbar_fixscoreboardcolumnwidth_iconlen, sbar_field_icon2_rgb, sbar_field_icon2_alpha, DRAWFLAG_NORMAL);
 			}
-			pos_x -= sbar_fontsize_x*sbar_size[i] + sbar_fontsize_x;
+			pos_x -= sbar_fontsize_x * sbar_size_i + sbar_fontsize_x;
 		}
 	}
+	sbar_width_wanted = max(sbar_width_wanted, wanted_width);
 }
 
 /*
@@ -983,6 +997,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	float body_table_height, i;
 	vector tmp, column_dim;
 	entity pl;
+	sbar_width_wanted = 0;
 
 	body_table_height = 1.25 * sbar_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
 
@@ -1142,8 +1157,9 @@ void Sbar_DrawScoreboard()
 		lastpingstime = time;
 	}
 
-	sbwidth = Sbar_GetWidth(6.5 * sbar_fontsize_y);
-
+	sbwidth = sbar_width_wanted * sbar_fontsize_x;
+	sbwidth = min(CVAR(vid_conwidth) - 13 * sbar_fontsize_x, sbwidth);
+	sbwidth = max(sbwidth, 400);
 	xmin = 0.5 * (CVAR(vid_conwidth) - sbwidth);
 	ymin = SCOREBOARD_OFFSET;
 
