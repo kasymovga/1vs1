@@ -25,6 +25,8 @@ set ca_g_balance_health_regen 0
 set ca_g_powerup_superhealth 0
 set ca_g_powerup_shield 0
 set ca_g_powerup_strength 0
+set ca_g_powerup_invisibility 0
+set ca_g_powerup_speed 0
 set ca_g_start_ammo_nails 50
 set ca_g_start_ammo_shells 30
 set ca_g_start_ammo_rockets 60

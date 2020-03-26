@@ -26,6 +26,8 @@ set lms_g_balance_health_regen 0
 set lms_g_powerup_superhealth 0
 set lms_g_powerup_shield 0
 set lms_g_powerup_strength 0
+set lms_g_powerup_inisibility 0
+set lms_g_powerup_speed 0
 set lms_g_start_ammo_nails 100
 set lms_g_start_ammo_shells 60
 set lms_g_start_ammo_rockets 120
