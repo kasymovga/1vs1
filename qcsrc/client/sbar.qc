@@ -997,8 +997,6 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	float body_table_height, i;
 	vector tmp, column_dim;
 	entity pl;
-	sbar_width_wanted = 0;
-
 	body_table_height = 1.25 * sbar_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
 
 	pos -= '1 1 0';
@@ -1156,8 +1154,8 @@ void Sbar_DrawScoreboard()
 		localcmd("pings\n");
 		lastpingstime = time;
 	}
-
 	sbwidth = sbar_width_wanted * sbar_fontsize_x;
+	sbar_width_wanted = 0;
 	sbwidth = min(CVAR(vid_conwidth) - 13 * sbar_fontsize_x, sbwidth);
 	sbwidth = max(sbwidth, 400);
 	xmin = 0.5 * (CVAR(vid_conwidth) - sbwidth);
