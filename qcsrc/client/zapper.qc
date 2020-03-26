@@ -24,17 +24,21 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
     float _alpha = self.alpha;
     rgb *= _alpha;
 
-    Draw_CylindricLine(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_FindNearestOrigin((from + to) * 0.5, view_origin, FALSE));
+    Draw_CylindricLine(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_FindNearestOrigin((from + to) * 0.5, view_camera_origin, FALSE));
     zapper_particles_trace_callback_beamoffs += 0.03 * vlen(from - to) / zapper_beam_width;
 
 }
 
 void Zapper_Interpolate() {
 	InterpolateOrigin_Do();
-	entity e = self;
-	self = self.enemy;
-	InterpolateOrigin_Do();
-	self = e;
+	if (CVAR(chase_active) && !spectatee_status && self.sv_entnum == player_localentnum)
+		self.enemy.origin = self.enemy.iorigin2 + (physics_third_origin - physics_start_origin);
+	else {
+		entity e = self;
+		self = self.enemy;
+		InterpolateOrigin_Do();
+		self = e;
+	}
 }
 
 void Zapper_Draw(void) {
@@ -63,9 +67,11 @@ void Zapper_Draw(void) {
 		} else {
 			Zapper_Interpolate();
 			end = self.origin;
-			real_start = start = self.enemy.origin;
+			start = self.enemy.origin;
+			real_start = start;
 		}
     } else {
+		Zapper_Interpolate();
         end = self.origin;
 		real_start = start = self.enemy.origin;
 	}

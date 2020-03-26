@@ -16,3 +16,5 @@ void Ent_Physic(float isnew);
 float physics_lastcommandframe;
 
 float physics_player_ent;
+vector physics_third_origin;
+vector physics_start_origin;

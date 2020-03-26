@@ -31,7 +31,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 
 string Draw_GrapplingHook_cb_tex;
 void Draw_GrapplingHook_cb(vector start, vector end, vector to) {
-	Draw_CylindricLine(start, end, 8, Draw_GrapplingHook_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin));
+	Draw_CylindricLine(start, end, 8, Draw_GrapplingHook_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, WarpZone_TransformOrigin(WarpZone_trace_transform, view_camera_origin));
 }
 
 void Draw_GrapplingHook()
@@ -53,10 +53,12 @@ void Draw_GrapplingHook()
 	} else {
 		entity e = self;
 		self = self.enemy;
-		if (self)
+		if (CVAR(chase_active) && !spectatee_status && owner_entnum == player_localentnum) {
+			a = self.iorigin2 + (physics_third_origin - physics_start_origin);
+		} else if (self) {
 			InterpolateOrigin_Do();
-
-		a = self.origin;
+			a = self.origin;
+		}
 		self = e;
 	}
 

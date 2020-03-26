@@ -1,5 +1,4 @@
 // FIXME make this generic code, to be used for other entities too?
-.vector iorigin1, iorigin2;
 .vector ivelocity1, ivelocity2;
 .vector iforward1, iforward2;
 .vector iup1, iup2;

@@ -70,7 +70,6 @@ void(void) physics_frame_end_hook {
 }
 
 float stairsmoothz;
-.vector pmove_origin;
 .vector pmove_velocity;
 float was_teleported;
 float physics_lastwj;
@@ -112,7 +111,7 @@ vector CSQCPhysic_SetViewOrg()
 			setsize(self, self.stand_mins, self.stand_maxs);
 			self.view_ofs = self.stand_view_ofs;
 		}
-		self.origin = self.pmove_origin;
+		self.origin = physics_start_origin;
 		if (ground_lastent)
 		if (ground_origin != ground_oldorigin)
 		{
@@ -120,7 +119,7 @@ vector CSQCPhysic_SetViewOrg()
 			f = max(0, (ground_curtime - ground_oldtime) / (ground_time - ground_oldtime));
 			ground_curtime += frametime;
 			vector ground_curorigin = (1 - f) * ground_oldorigin + f * ground_origin;
-			self.origin = self.pmove_origin - (ground_origin - ground_curorigin);
+			self.origin = physics_start_origin - (ground_origin - ground_curorigin);
 			physics_unstuck();
 		}
 		pmove_org = self.origin;
@@ -192,24 +191,28 @@ void CSQCPhysic_SetCamera() {
 	if (physics)
 	if (servercommandframe)
 	if (clientcommandframe) {
-		vector v;
 		if (physics_plug_adjust_view)
-			v = physics_plug_adjust_view();
+			view_camera_origin = physics_plug_adjust_view();
 		else
-			v = view_origin;
+			view_camera_origin = view_origin;
 
 		if (CVAR(chase_active)) {
 			makevectors(view_angles);
-			if not(physics_player_ent)
-			if (ext_DP_RM_SETRENDERENTITY)
-				setentityvec(player_localentnum, E_ORIGIN, physics.origin);
-
-			tracebox(v, '-4 -4 -4', '4 4 4', v - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
-			v = trace_endpos;
-			tracebox(v, '-4 -4 -4', '4 4 4', v + v_up * CVAR(chase_up), MOVE_NORMAL, world);
-			v = trace_endpos;
+			if not(spectatee_status)
+			if not(physics_player_ent) {
+				if (ext_DP_RM_SETRENDERENTITY) {
+					setentityvec(player_localentnum, E_ORIGIN, physics.origin);
+					physics_third_origin = physics.origin;
+				} else {
+					physics_third_origin = physics_start_origin;
+				}
+			}
+			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
+			view_camera_origin = trace_endpos;
+			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
+			view_camera_origin = trace_endpos;
 		}
-		R_SetView(VF_ORIGIN, v);
+		R_SetView(VF_ORIGIN, view_camera_origin);
 	}
 }
 
@@ -289,9 +292,9 @@ void Ent_Physic(float isnew)
 	}
 	if (f & 4)
 	{
-		self.pmove_origin_x = ReadCoord();
-		self.pmove_origin_y = ReadCoord();
-		self.pmove_origin_z = ReadCoord();
+		physics_start_origin_x = ReadCoord();
+		physics_start_origin_y = ReadCoord();
+		physics_start_origin_z = ReadCoord();
 		self.pmove_velocity_x = ReadCoord();
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();

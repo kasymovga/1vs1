@@ -1,3 +1,4 @@
+.vector iorigin1, iorigin2;
 .float iflags;
 #define IFLAG_VELOCITY 1
 #define IFLAG_ANGLES 2
