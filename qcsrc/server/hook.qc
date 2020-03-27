@@ -13,7 +13,6 @@ float g_balance_grapplehook_gravity;
 float g_balance_grapplehook_health;
 float g_balance_grapplehook_speed_fly;
 float g_balance_grapplehook_onground_pullfactor;
-vector hook_shotorigin;
 
 .string aiment_classname;
 .float aiment_deadflag;
@@ -155,8 +154,12 @@ void() hook_think {
 		WarpZone_RefSys_AddIncrementally(self, self.aiment);
 
 	self.hook.nextthink = time;
+	if (self.owner.weapon == WEP_HOOK)
+		org = gettaginfo(self.owner.exteriorweaponentity, gettagindex(self.owner.exteriorweaponentity, "_")) + v_forward * 20 + v_up * 3;
+	else
+		org = self.owner.origin + '0 0 12';
+
 	makevectors(self.owner.v_angle);
-	org = self.owner.origin + self.owner.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
 	if(self.state == 1) {
 		if (self.aiment) {
 			if not(player_can_fire(self.owner, FALSE)) {
@@ -260,7 +263,7 @@ void(void) hook_fire {
 
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
 	sound (self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
-	org = self.origin + self.view_ofs + v_forward * hook_shotorigin_x + v_right * hook_shotorigin_y + v_up * hook_shotorigin_z;
+	org = self.origin;
 	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
