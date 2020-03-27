@@ -43,3 +43,4 @@ set cra_g_weaponreplace_hlac health_medium
 set cra_g_weaponreplace_grenadelauncher health_medium
 set cra_g_weaponreplace_hagar armor_medium
 set cra_g_warmup_allguns 0
+set cra_g_announcer_print 1
