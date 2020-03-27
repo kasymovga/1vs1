@@ -202,16 +202,18 @@ void CSQCPhysic_SetCamera() {
 			if not(physics_player_ent) {
 				if (ext_DP_RM_SETRENDERENTITY) {
 					setentityvec(player_localentnum, E_ORIGIN, physics.origin);
-					physics_third_origin = physics.origin;
+					physics_end_origin = physics.origin;
 				} else {
-					physics_third_origin = physics_start_origin;
+					physics_end_origin = physics_start_origin;
 				}
 			}
 			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
 			view_camera_origin = trace_endpos;
 			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			view_camera_origin = trace_endpos;
-		}
+		} else
+			physics_end_origin = physics.origin;
+
 		R_SetView(VF_ORIGIN, view_camera_origin);
 	}
 }

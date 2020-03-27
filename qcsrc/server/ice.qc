@@ -16,9 +16,10 @@ float sv_model_ice_use_skins;
 .entity unfroze_pb;
 
 void Ice_Remove() {
-	if (self.ice)
+	if (self.ice) {
+		remove(self.ice.ice);
 		remove(self.ice);
-
+	}
 	if (self.unfroze_pb)
 		remove(self.unfroze_pb);
 
@@ -36,6 +37,28 @@ float Ice_Customize() {
 	else
 		self.effects &~= EF_NODEPTHTEST;
 
+	return TRUE;
+}
+
+float(entity to, float sf) ice_pov_send {
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ICE);
+	sf = sf & 3;
+	WriteByte(MSG_ENTITY, sf);
+	entity _ice = self.enemy;
+	if (sf & 1) {
+		WriteShort(MSG_ENTITY, _ice.modelindex);
+		WriteByte(MSG_ENTITY, _ice.colormod_x * 255);
+		WriteByte(MSG_ENTITY, _ice.colormod_y * 255);
+		WriteByte(MSG_ENTITY, _ice.colormod_z * 255);
+		WriteCoord(MSG_ENTITY, _ice.scale);
+		WriteCoord(MSG_ENTITY, _ice.origin_x);
+		WriteCoord(MSG_ENTITY, _ice.origin_y);
+		WriteCoord(MSG_ENTITY, _ice.origin_z);
+		WriteByte(MSG_ENTITY, _ice.skin);
+	}
+	if (sf & 2) {
+		WriteByte(MSG_ENTITY, _ice.alpha * 255);
+	}
 	return TRUE;
 }
 
@@ -76,6 +99,11 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.ice.nextthink = time;
 	self.ice.team = self.team;
 	self.ice.customizeentityforclient = Ice_Customize;
+	self.ice.ice = spawn();
+	self.ice.ice.owner = self;
+	self.ice.ice.enemy = self.ice;
+	self.ice.ice.customizeentityforclient = weapon_model_customize;
+	net_link_entity(self.ice.ice, FALSE, 0, ice_pov_send);
 	if (sv_model_ice_use_skins)
 		self.ice.skin = team_index(self.team);
 	else
@@ -201,8 +229,10 @@ void Ice_Think()
 	if (oldprogress != 0)
 		self.unfroze_progress = max(0, oldprogress - ICE_FRAME_TIME);
 
-	if (self.unfroze_progress != oldprogress)
+	if (self.unfroze_progress != oldprogress) {
 		self.alpha = sv_model_ice_alpha * max(0.01, 1 - (self.unfroze_progress / g_ice_unfroze_time));
+		self.ice.SendFlags |= 2;
+	}
 }
 
 var void(float killed) Ice_PlayerClear_NextLink;

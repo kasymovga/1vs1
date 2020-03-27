@@ -54,7 +54,7 @@ void Draw_GrapplingHook()
 		entity e = self;
 		self = self.enemy;
 		if (CVAR(chase_active) && !spectatee_status && owner_entnum == player_localentnum) {
-			a = self.iorigin2 + (physics_third_origin - physics_start_origin);
+			a = self.iorigin2 + (physics_end_origin - physics_start_origin);
 		} else if (self) {
 			InterpolateOrigin_Do();
 			a = self.origin;

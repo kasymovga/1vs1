@@ -68,6 +68,7 @@ gui.qh
 noteline.qh
 hint.qh
 sphere.qh
+ice.qh
 cvar.qc
 ../client-server/movelib.qc
 miscfunctions.qc
@@ -170,3 +171,4 @@ gui.qc
 ../client-menu/util.qc
 hint.qc
 sphere.qc
+ice.qc

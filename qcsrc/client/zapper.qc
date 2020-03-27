@@ -32,7 +32,7 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
 void Zapper_Interpolate() {
 	InterpolateOrigin_Do();
 	if (CVAR(chase_active) && !spectatee_status && self.sv_entnum == player_localentnum)
-		self.enemy.origin = self.enemy.iorigin2 + (physics_third_origin - physics_start_origin);
+		self.enemy.origin = self.enemy.iorigin2 + (physics_end_origin - physics_start_origin);
 	else {
 		entity e = self;
 		self = self.enemy;
