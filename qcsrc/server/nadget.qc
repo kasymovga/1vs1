@@ -490,11 +490,11 @@ void nadget_SetNadgetType(entity p, float t) {
 
 void nadget_FadeOut_Think(void) {
     self.alpha = approach(self.alpha, 0, frametime);
-    if(self.hg_linker_factor)
+    if(self.classname == "hg_linker")
         self.enemy.alpha = self.alpha * 0.5;
 
     if(!self.alpha) {
-        if(self.hg_linker_factor) {
+        if(self.classname == "hg_linker") {
             remove(self.enemy);
             remove(self);
         } else
@@ -522,9 +522,6 @@ void nadget_FadeOut(entity n) {
 
     if(!n.alpha)
         n.alpha = 1;
-
-    if(n.classname == "hg_linker")
-        n.hg_linker_factor = TRUE;
 
     n.solid = SOLID_NOT;
     n.takedamage = DAMAGE_NO;

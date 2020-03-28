@@ -5,7 +5,7 @@ float g_nadgets_linker_hps;
 float g_nadgets_linker_duration;
 
 void nadget_Linker_Adept_Push(entity p) {
-    if(vlen(p.origin - self.origin) <= self.hg_linker_range) {
+    if(vlen(p.origin - self.origin) <= g_nadgets_linker_range) {
         float v = max(400, vlen(p.velocity));
         p.velocity = normalize(p.origin - self.origin) * v;
         projectile_update(p);
@@ -15,6 +15,12 @@ void nadget_Linker_Adept_Push(entity p) {
 void nadget_Linker_Remove(void) {
     nadget_Waypoint_Remove(self.hg_waypoint);
     remove(self);
+}
+
+var void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet_next;
+void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet {
+	GameHook_DamageMod = GameHook_DamageMod * g_nadgets_linker_damagefactor;
+	nadget_linker_DamageForceModsSet_next();
 }
 
 #define HEAL_PAUSEROT_DEFAULT -1
@@ -33,10 +39,10 @@ void nadget_Linker_Think(void) {
             if(p.hg_linker == self)
                 p.hg_linker = world;
         } else if(p.hg_linker == self) {
-            if(vlen(self.origin - p.origin) > self.hg_linker_range)
+            if(vlen(self.origin - p.origin) > g_nadgets_linker_range)
                 p.hg_linker = world;
         } else if(!p.hg_linker) {
-            if(vlen(self.origin - p.origin) <= self.hg_linker_range)
+            if(vlen(self.origin - p.origin) <= g_nadgets_linker_range)
                 p.hg_linker = self;
         }
 
@@ -65,9 +71,9 @@ void nadget_Linker_Think(void) {
                     float newhealth = (1 - g_nadgets_linker_sharefactor) * p.health     + g_nadgets_linker_sharefactor * (thealth / denom);
                     float newarmor  = (1 - g_nadgets_linker_sharefactor) * p.armorvalue + g_nadgets_linker_sharefactor * (tarmor  / denom);
 
-                    if(self.hg_linker_hps) {
+                    if (g_nadgets_linker_hps) {
                         float lim = g_balance_health_limit;
-                        newhealth = newhealth + min(self.hg_linker_hps, max(0, lim - newhealth));
+                        newhealth = newhealth + min(g_nadgets_linker_hps, max(0, lim - newhealth));
                     }
 
                     heal(p, self, self.owner,
@@ -77,7 +83,7 @@ void nadget_Linker_Think(void) {
                     p.health = newhealth;
                     p.armorvalue = newarmor;
                 } else {
-                    heal(p, self, self.owner, self.hg_linker_hps, 0, 0, 0, NADGET_LINKER,
+                    heal(p, self, self.owner, g_nadgets_linker_hps, 0, 0, 0, NADGET_LINKER,
                          HEAL_PAUSEROT_DEFAULT, HEAL_PAUSEROT_DEFAULT, '0 0 0', '0 0 0');
                 }
             }
@@ -94,7 +100,7 @@ void nadget_Linker_Think(void) {
     nadget_Waypoint();
 
     self.alpha = max(0.01, self.alpha * bound(0, (time - self.hg_spawntime) * 2, 1));
-    self.glow_size = self.hg_linker_range * self.alpha * 3;
+    self.glow_size = g_nadgets_linker_range * self.alpha * 3;
     self.nextthink = time;
 }
 
@@ -109,14 +115,11 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     e.reset = nadget_Linker_Remove;
     e.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION | EF_DOUBLESIDED;
     e.gravity = 100;
-    e.hg_linker_range = g_nadgets_linker_range;
-    e.hg_linker_factor = g_nadgets_linker_damagefactor;
-    e.hg_linker_hps = g_nadgets_linker_hps;
     e.cnt = time + g_nadgets_linker_duration/* * Buffs_NadgetPower(self) */;
     e.hg_deathtime = e.cnt;
     e.alpha = 0.01;
     setmodel(e, "models/ctf/shield.md3");
-    e.scale = e.hg_linker_range / e.maxs_x;
+    e.scale = g_nadgets_linker_range / e.maxs_x;
     e.glow_color = 0xF5;
     e.movetype = MOVETYPE_TOSS;
     e.hg_type = NADGET_LINKER;
@@ -137,5 +140,7 @@ NADGET_HOOKFUNCTION(linker, Init) {
 	CACHE_CVAR(g_nadgets_linker_damagefactor);
 	CACHE_CVAR(g_nadgets_linker_hps);
 	CACHE_CVAR(g_nadgets_linker_duration);
+	nadget_linker_DamageForceModsSet_next = GameHookChain_DamageForceModsSet;
+	GameHookChain_DamageForceModsSet = nadget_linker_DamageForceModsSet;
     return NADGET_INIT_OK;
 }

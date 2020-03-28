@@ -1,8 +1,5 @@
 
 .entity hg_linker;
-.float hg_linker_range;
-.float hg_linker_factor;
-.float hg_linker_hps;
 .float hg_linker_nexteffect;
 .float hg_linker_effecttime;
 
