@@ -19,8 +19,11 @@ void nadget_Linker_Remove(void) {
 
 var void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet_next;
 void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet {
-	GameHook_DamageMod = GameHook_DamageMod * g_nadgets_linker_damagefactor;
-	nadget_linker_DamageForceModsSet_next();
+	if (targ.hg_linker)
+	if (targ.hg_linker.owner == targ || (teamplay && targ.hg_linker.team == targ.team))
+		GameHook_DamageMod = GameHook_DamageMod * g_nadgets_linker_damagefactor;
+
+	nadget_linker_DamageForceModsSet_next(targ, attacker, deathtype);
 }
 
 #define HEAL_PAUSEROT_DEFAULT -1
