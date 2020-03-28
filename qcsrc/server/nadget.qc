@@ -170,9 +170,16 @@ float(.float hg_type_field, .float hg_ammo_field) nadget_bot_aim_nadget {
 		} else {
 			if(bot_aim(2000, 0, 0.5, 0)) { //Enemy close
 				self.hg_power = 0.5;
+				if (self.hg_type_field == NADGET_LINKER)
+					bot_stay(self, 0.5);
+
 				return TRUE;
 			}
 		}
+	} else if (self.hg_type_field = NADGET_LINKER) {
+		if (self.hg_linker)
+		if (random() > 0.5)
+			bot_stay(self, 0);
 	}
 	if (self.hg_type_field == NADGET_CLOAK)
 	if (self.hg_stealth) {
