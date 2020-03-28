@@ -72,6 +72,7 @@ void nadget_PlayerClear(float killed) {
     self.hg_bonus = 0;
     self.hg_bonustype = NADGET_NORMAL;
     self.hg_shield = 0;
+	self.hg_linker = world;
 	if (self.classname == "player")
 		NADGET_DO_IN_ALL_CONTEXTS(nadget_ResetAmmo(self, FALSE);)
 
@@ -680,9 +681,6 @@ void nadget_PlayerPreThink(void) {
 	nadget_PlayerPreThink_NextLink();
     if(time < map_starttime)
         return;
-
-    if(self.hg_linker && wasfreed(self.hg_linker))
-        self.hg_linker = world;
 
     nadget_Shield_PlayerFrame();
     nadget_Cloak_PlayerFrame();

@@ -13,6 +13,11 @@ void nadget_Linker_Adept_Push(entity p) {
 }
 
 void nadget_Linker_Remove(void) {
+	entity  p;
+	FOR_EACH_PLAYER(p) {
+		if (p.hg_linker == self)
+			p.hg_linker = world;
+	}
     nadget_Waypoint_Remove(self.hg_waypoint);
     remove(self);
 }
