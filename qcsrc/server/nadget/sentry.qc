@@ -233,12 +233,10 @@ void nadget_Sentry_Emitter_Remove(entity emitter) {
 }
 
 void nadget_Sentry_Interrupt_Capture(void) {
-    if(self.hg_sentry_capture_player)
-	if(self.hg_sentry_capture_player.hg_sentry_capture_pb) {
-        remove(self.hg_sentry_capture_player.hg_sentry_capture_pb);
-		self.hg_sentry_capture_player.hg_sentry_capture_pb = world;
+	if(self.hg_sentry_capture_pb) {
+        remove(self.hg_sentry_capture_pb);
+		self.hg_sentry_capture_pb = world;
 	}
-
     self.hg_sentry_capture_player = world;
     self.hg_sentry_capture_progress = 0;
 }
@@ -292,11 +290,9 @@ void nadget_Sentry_Remove(void) {
         if(e.owner == self)
             nadget_Sentry_Emitter_Remove(e);
 
-	if (self.hg_sentry_capture_player)
-	if (self.hg_sentry_capture_player.hg_sentry_capture_pb) {
-		remove(self.hg_sentry_capture_player.hg_sentry_capture_pb);
-		self.hg_sentry_capture_player.hg_sentry_capture_pb = world;
-	}
+	if (self.hg_sentry_capture_pb)
+		remove(self.hg_sentry_capture_pb);
+
     remove(self);
 }
 
@@ -349,7 +345,7 @@ void nadget_Sentry_Orphaned_Think(void) {
     if(self.hg_sentry_capture_player) {
         e = self.hg_sentry_capture_player;
 
-        if(PLAYER_DEAD(e) || time - e.lastdamage < g_nadgets_sentry_capture_damage_delay || vlen(e.origin - self.origin) > g_nadgets_sentry_capture_range)
+        if (e.classname != "player" || PLAYER_DEAD(e) || time - e.lastdamage < g_nadgets_sentry_capture_damage_delay || vlen(e.origin - self.origin) > g_nadgets_sentry_capture_range)
             nadget_Sentry_Interrupt_Capture();
         else {
             traceline(self.origin, e.origin, MOVE_NOMONSTERS, self);
@@ -370,8 +366,8 @@ void nadget_Sentry_Orphaned_Think(void) {
             continue;
 
         self.hg_sentry_capture_player = e;
-		if not(e.hg_sentry_capture_pb)
-			e.hg_sentry_capture_pb = progressbar_create("Capturing", e);
+		if not(self.hg_sentry_capture_pb)
+			self.hg_sentry_capture_pb = progressbar_create("Capturing", e);
 
         break;
     }
@@ -380,7 +376,7 @@ void nadget_Sentry_Orphaned_Think(void) {
         e = self.hg_sentry_capture_player;
 
         self.hg_sentry_capture_progress = approach(self.hg_sentry_capture_progress, 1.0, g_nadgets_sentry_capture_speed * frametime);
-        progressbar_set(e.hg_sentry_capture_pb, self.hg_sentry_capture_progress);
+        progressbar_set(self.hg_sentry_capture_pb, self.hg_sentry_capture_progress);
 		bot_stay(e, 0);
         if(self.hg_sentry_capture_progress == 1) {
             nadget_Sentry_SetOwner(self, e);
