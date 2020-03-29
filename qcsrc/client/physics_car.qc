@@ -45,6 +45,7 @@ void Ent_PhysicCar(float isnew)
 		mycar = self;
 		mycar.solid = SOLID_BBOX;
 		mycar.movetype = MOVETYPE_QCWALK;
+		mycar.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 		setsize(mycar, car_MIN, car_MAX);
 	}
 	if (f & 1)

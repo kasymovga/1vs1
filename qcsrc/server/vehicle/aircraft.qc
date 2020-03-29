@@ -220,7 +220,6 @@ void(void) vehicle_aircraft_touch {
     vehicle_aircraft_enter();
 }
 
-//void aircraft_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void(void) vehicle_aircraft_spawn {
 	self.frame = 5;
 	self.think = vehicle_aircraft_think;
@@ -238,6 +237,7 @@ void(void) vehicle_aircraft_spawn {
 	self.deadflag = DEAD_NO;
 	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_aircraft_pushfactor;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(self,aircraft_MIN,aircraft_MAX);
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;

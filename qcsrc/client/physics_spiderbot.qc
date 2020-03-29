@@ -45,6 +45,7 @@ void Ent_PhysicSpiderbot(float isnew)
 		spider = self;
 		spider.solid = SOLID_BBOX;
 		spider.movetype = MOVETYPE_QCWALK;
+		spider.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 		setsize(spider, spiderbot_MIN, spiderbot_MAX);
 	}
 	if (f & 1)

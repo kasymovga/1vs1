@@ -45,6 +45,7 @@ void Ent_PhysicAircraft(float isnew)
 		aircraft = self;
 		aircraft.solid = SOLID_BBOX;
 		aircraft.movetype = MOVETYPE_QCWALK;
+		aircraft.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 		setsize(aircraft, aircraft_MIN, aircraft_MAX);
 	}
 	if (f & 1)

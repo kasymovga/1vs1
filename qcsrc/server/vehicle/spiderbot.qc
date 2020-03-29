@@ -354,6 +354,7 @@ void(void) vehicle_spiderbot_spawn {
 	self.deadflag	= DEAD_NO;
 	self.bot_attack = TRUE;
 	self.pushfactor = g_vehicle_spiderbot_pushfactor;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(self,spiderbot_MIN,spiderbot_MAX);
 	setorigin(self,self.enemy.origin);
 	self.angles = self.enemy.angles;
