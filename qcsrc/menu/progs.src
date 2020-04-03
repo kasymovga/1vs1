@@ -4,6 +4,7 @@ config.qh
 ../common/qcc.qh
 msys.qh
 mbuiltin.qh
+../common/stdproc.qh
 ../common/gametype.qh
 ../common/db.qh
 ../common/str.qh
@@ -64,3 +65,4 @@ nexuiz/util.qc
 ../menu-server/extresponse.qc
 ../client-menu/util.qc
 ../menu-server/util.qc
+../common/stdproc.qc

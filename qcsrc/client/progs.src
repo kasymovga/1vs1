@@ -61,6 +61,7 @@ fog.qh
 net.qh
 ../client-server/team.qh
 ../client-server/stdproc.qh
+../common/stdproc.qh
 radio.qh
 sbar.qh
 ../client-server/anglestransform.qh
@@ -80,6 +81,7 @@ miscfunctions.qc
 ../common/str.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
+../common/stdproc.qc
 teamplay.qc
 str.qc
 centerprint.qc

@@ -130,6 +130,8 @@ score_damage.qh
 cmd.qh
 ../client-server/team.qh
 ../client-server/stdproc.qh
+../common/stdproc.qh
+stdproc.qh
 ../common/str.qh
 ../common/cvar.qh
 ../common/file.qh
@@ -175,7 +177,6 @@ chat.qh
 team.qh
 tdm.qh
 mapvote.qh
-stdproc.qh
 casing.qh
 hint.qh
 centerprint.qc
@@ -188,6 +189,7 @@ announce.qc
 ../common/str.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
+../common/stdproc.qc
 waypointsprites.qc
 slowmo.qc
 bot/bot.qc

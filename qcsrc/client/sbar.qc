@@ -2040,7 +2040,7 @@ void Sbar_GameType_Init() {
 		Sbar_GameType_hud = CSQC_single_hud;
 		Sbar_Score = Sbar_Score_Disabled;
 	} else {
-		Sbar_GameType_hud = SUB_Null;
+		Sbar_GameType_hud = stdproc_nothing;
 		Sbar_Score = Sbar_Score_Default;
 	}
 }

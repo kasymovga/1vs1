@@ -17,8 +17,6 @@ float menuNotTheFirstFrame;
 float menuMouseMode;
 float menuRealFrametime;
 
-void SUB_Null() { };
-
 float URI_GET_SERVERLIST;
 #define SERVERLIST_URIS_COUNT 2
 var float serverlist_uri_index = 0;

@@ -454,7 +454,7 @@ void Ent_Projectile(float ignore)
 				// only new engines support sound moving with object
 				loopsound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_ROCKET:
 				loopsound(self, CHAN_PROJECTILE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
@@ -470,27 +470,27 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_HG_RAZE:
             case PROJECTILE_HG_LASER:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_PORTO_RED:
 				self.colormod = '2 1 1';
 				self.alpha = 0.5;
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_PORTO_BLUE:
 				self.colormod = '1 1 2';
 				self.alpha = 0.5;
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_HAGAR_BOUNCING:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_CRYLINK_BOUNCING:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
@@ -499,11 +499,11 @@ void Ent_Projectile(float ignore)
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			case PROJECTILE_BULLET_BIG:
 				self.move_movetype = MOVETYPE_BOUNCEMISSILE;
-				self.move_touch = SUB_Null;
+				self.move_touch = stdproc_nothing;
 				break;
 			default:
 				break;
