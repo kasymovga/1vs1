@@ -188,9 +188,7 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("r_glsl_postprocess_uservec1", "0 0 0 0");
 	}
 #endif
-
-	Fog_Force();
-
+	fog_force();
 	drawframetime = max(0.000001, time - drawtime);
 	drawtime = time;
 

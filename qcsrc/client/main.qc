@@ -924,14 +924,6 @@ void CSQC_Parse_Print(string strMessage)
 	print(ColorTranslateRGB(strMessage));
 }
 
-void Fog_Force()
-{
-	// TODO somehow thwart prvm_globalset client ...
-
-	if(forcefog != "")
-		localcmd(strcat("\nfog ", forcefog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
-}
-
 #define GAMEMENU_ITEMS_COUNT_MAX 16
 string gamemenu_items[GAMEMENU_ITEMS_COUNT_MAX];
 string gamemenu_commands[GAMEMENU_ITEMS_COUNT_MAX];
@@ -1052,8 +1044,8 @@ void Ent_Init(float ignore)
 	}
 
 	if (sf & 4) {
-		str_unzone_ifneeded(forcefog);
-		forcefog = str_zone_ifneeded(ReadString());
+		str_unzone_ifneeded(fog_settings);
+		fog_settings = str_zone_ifneeded(ReadString());
 	}
 	if (sf & 8)
 		VoteCommands_Read();

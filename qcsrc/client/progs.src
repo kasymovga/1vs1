@@ -57,6 +57,7 @@ gamestatus.qh
 weaponselect.qh
 main.qh
 shownames.qh
+fog.qh
 ../client-server/team.qh
 ../client-server/stdproc.qh
 radio.qh
@@ -172,3 +173,4 @@ gui.qc
 hint.qc
 sphere.qc
 ice.qc
+fog.qc

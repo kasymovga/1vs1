@@ -1,0 +1,2 @@
+void(void) fog_force;
+string fog_settings;
