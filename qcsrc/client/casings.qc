@@ -88,7 +88,7 @@ void Ent_Casing(float isNew)
 	casing.origin_x = ReadCoord();
 	casing.origin_y = ReadCoord();
 	casing.origin_z = ReadCoord();
-	casing.velocity = decompressShortVector(ReadShort());
+	casing.velocity = net_decompress_vec(ReadShort());
 	casing.angles_x = ReadByte() * 360 / 256;
 	casing.angles_y = ReadByte() * 360 / 256;
 	casing.angles_z = ReadByte() * 360 / 256;

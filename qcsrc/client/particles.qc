@@ -167,8 +167,8 @@ void Ent_PointParticles()
 
 		if(f & 0x20)
 		{
-			self.velocity = decompressShortVector(ReadShort());
-			self.movedir = decompressShortVector(ReadShort());
+			self.velocity = net_decompress_vec(ReadShort());
+			self.movedir = net_decompress_vec(ReadShort());
 		}
 		else
 		{
@@ -277,7 +277,7 @@ void Ent_RainOrSnow()
 	self.maxs_x = ReadCoord();
 	self.maxs_y = ReadCoord();
 	self.maxs_z = ReadCoord();
-	self.velocity = decompressShortVector(ReadShort());
+	self.velocity = net_decompress_vec(ReadShort());
 	self.count = ReadShort() * 10;
 	self.glow_color = ReadByte(); // color
 

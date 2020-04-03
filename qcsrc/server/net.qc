@@ -44,9 +44,9 @@ void(float dest, float val) net_write_int24 {
 float(float x) net_invert_log_length {
 	float l, r, m, lerr, rerr;
 
-	if(x >= lengthLogTable[127])
+	if(x >= net_log_table[127])
 		return 127;
-	if(x <= lengthLogTable[0])
+	if(x <= net_log_table[0])
 		return 0;
 
 	l = 0;
@@ -55,15 +55,15 @@ float(float x) net_invert_log_length {
 	while(r - l > 1)
 	{
 		m = floor((l + r) / 2);
-		if(lengthLogTable[m] < x)
+		if(net_log_table[m] < x)
 			l = m;
 		else
 			r = m;
 	}
 
 	// now: r is >=, l is <
-	lerr = (x - lengthLogTable[l]);
-	rerr = (lengthLogTable[r] - x);
+	lerr = (x - net_log_table[l]);
+	rerr = (net_log_table[r] - x);
 	if(lerr < rerr)
 		return l;
 	return r;

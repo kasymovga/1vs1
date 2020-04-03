@@ -169,7 +169,7 @@ void Ent_GibSplash(float isNew)
 	org_x = ReadShort() * 4 + 2;
 	org_y = ReadShort() * 4 + 2;
 	org_z = ReadShort() * 4 + 2;
-	vel = decompressShortVector(ReadShort());
+	vel = net_decompress_vec(ReadShort());
 
 	if(CVAR(cl_gentle))
 		type |= 0x80; // set gentle bit

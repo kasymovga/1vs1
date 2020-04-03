@@ -58,6 +58,7 @@ weaponselect.qh
 main.qh
 shownames.qh
 fog.qh
+net.qh
 ../client-server/team.qh
 ../client-server/stdproc.qh
 radio.qh
@@ -174,3 +175,4 @@ hint.qc
 sphere.qc
 ice.qc
 fog.qc
+net.qc

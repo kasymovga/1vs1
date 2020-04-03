@@ -15,7 +15,7 @@ void Ent_DamageInfo(float isNew)
 	org_y = ReadCoord();
 	org_z = ReadCoord();
 
-	force = decompressShortVector(ReadShort());
+	force = net_decompress_vec(ReadShort());
 
 	self.team = ReadByte();
 
