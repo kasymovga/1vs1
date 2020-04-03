@@ -154,7 +154,7 @@ float WS_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 }
 
 void Net_ReadWeaponSelect(void) {
-    selectable_weapons = ReadInt24_t();
+    selectable_weapons = net_read_int24();
 	if (ws_active)
 		return;
 

@@ -3,14 +3,6 @@ var float(string text, float handleColors) stringwidth;
 entity players;
 entity teams;
 
-float ReadInt24_t()
-{
-	float v;
-	v = ReadShort() * 256; // note: this is signed
-	v += ReadByte(); // note: this is unsigned
-	return v;
-}
-
 string textShortenToWidth(string theText, float maxWidth, str_length_up_to_width_width_function_t tw)
 {
 	if(tw(theText) <= maxWidth)

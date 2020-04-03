@@ -32,3 +32,10 @@ vector(float data) net_decompress_vec {
 	return out * net_log_table[len];
 }
 
+float(void) net_read_int24 {
+	float v;
+	v = ReadShort() * 256; // note: this is signed
+	v += ReadByte(); // note: this is unsigned
+	return v;
+}
+
