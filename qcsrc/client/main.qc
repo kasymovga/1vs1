@@ -134,7 +134,6 @@ void search_and_precache(string s) {
 	search_end(glob);
 }
 
-string forcefog;
 void Ent_ReadEntCS(float bIsNewEntity);
 void Ent_ScoresInfo(float ignore);
 void Ent_ReadPlayerScore(float ignore);
