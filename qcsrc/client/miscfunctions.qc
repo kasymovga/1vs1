@@ -92,12 +92,6 @@ entity GetTeam(float Team, float add)
 	return tm;
 }
 
-void CSQC_CheckEngine()
-{
-	sbar_font = FONT_USER+1;
-	sbar_bigfont = FONT_USER+2;
-}
-
 vector Sbar_GetFontsize(vector v)
 {
 	//vector v;
