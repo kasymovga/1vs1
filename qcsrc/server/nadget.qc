@@ -185,6 +185,11 @@ float(.float hg_type_field, .float hg_ammo_field) nadget_bot_aim_nadget {
 	if (self.hg_stealth) {
 		return TRUE;
 	}
+	if (self.hg_type_field == NADGET_SHIELD)
+	if (self.hg_shield)
+	if (self.hg_shield_stored > g_nadgets_shield_damage_store_base + (g_nadgets_shield_damage_store_limit - g_nadgets_shield_damage_store_base) * 0.75)
+		nadget_Trigger();
+
 	return FALSE;
 }
 

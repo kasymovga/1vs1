@@ -1,3 +1,5 @@
+float g_nadgets_shield_damage_store_base;
+float g_nadgets_shield_damage_store_limit;
 
 .float hg_shield;
 .float hg_shieldstat;

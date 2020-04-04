@@ -10,8 +10,6 @@ float g_nadgets_shield_damage_store_burstdelay;
 float g_nadgets_shield_damage_reflect;
 float g_nadgets_shield_damage_reflect_hg;
 float g_nadgets_shield_damage_take;
-float g_nadgets_shield_damage_store_base;
-float g_nadgets_shield_damage_store_limit;
 float g_nadgets_shield_damage_store;
 float g_nadgets_transloc_counters_shield;
 float g_nadgets_shield_duration;
