@@ -829,7 +829,7 @@ string Sbar_FixScoreboardColumnWidth(float i, string str)
 
 		if (sbar_fixscoreboardcolumnwidth_iconlen != 0)
 			namesize -= sbar_fixscoreboardcolumnwidth_marginlen + sbar_fixscoreboardcolumnwidth_iconlen;
-		str = textShortenToWidth(str, namesize, str_width_colors);
+		str = str_shorten_to_width(str, namesize, str_width_colors);
 		sbar_fixscoreboardcolumnwidth_len = stringwidth(str, TRUE);
 	}
 	else if(field == SP_COUNTRY)

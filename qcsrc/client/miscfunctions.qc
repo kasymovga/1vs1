@@ -1,15 +1,5 @@
-var float(string text, float handleColors) stringwidth;
-
 entity players;
 entity teams;
-
-string textShortenToWidth(string theText, float maxWidth, str_length_up_to_width_width_function_t tw)
-{
-	if(tw(theText) <= maxWidth)
-		return theText;
-	else
-		return strcat(substring(theText, 0, str_length_up_to_width(theText, maxWidth - tw("..."), tw)), "...");
-}
 
 void RegisterPlayer(entity player)
 {

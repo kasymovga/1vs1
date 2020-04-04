@@ -91,10 +91,10 @@ void Shownames_DrawPlayer() {
 	float _team;
     if(teamplay) {
 		_team = GetPlayerColorForce(self.sv_entnum);
-        s = textShortenToWidth(strdecolorize(s), namesize, str_width_nocolors);
+        s = str_shorten_to_width(strdecolorize(s), namesize, str_width_nocolors);
         s = strcat(team_color_code(_team), s);
     } else
-		s = textShortenToWidth(s, namesize, str_width_colors);
+		s = str_shorten_to_width(s, namesize, str_width_colors);
 
 	if (self.health)
 		s = strcat(s, " ^7(^1", UnboundFromByte(self.health), (self.armorvalue ? strcat("^7/^2", UnboundFromByte(self.armorvalue)): ""), "^7)");
