@@ -214,10 +214,6 @@ string shortmapname;
 // database for misc stuff
 float tempdb;
 
-#ifdef BLURTEST
-float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
-#endif
-
 float servertime, serverprevtime, serverdeltatime;
 
 float ticrate;
