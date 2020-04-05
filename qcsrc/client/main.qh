@@ -1,16 +1,6 @@
 const string string_null;
 
 // --------------------------------------------------------------------------
-// MENU Functionality
-
-#define DATABUF_PING 0
-#define DATABUF_CAPTURES (1*maxclients)
-#define DATABUF_DEATHS (2*maxclients)
-#define DATABUF_RETURNS (3*maxclients)
-
-#define DATABUF_NEXT (5*maxclients)
-
-// --------------------------------------------------------------------------
 // Onslaught
 
 // Map coordinate base calculations need these
