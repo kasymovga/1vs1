@@ -92,18 +92,6 @@ entity GetTeam(float Team, float add)
 	return tm;
 }
 
-vector Sbar_GetFontsize(vector v)
-{
-	//vector v;
-	//v = stov(cvar_string(cvarname));
-	if(v_x == 0)
-		v = '8 8 0';
-	if(v_y == 0)
-		v_y = v_x;
-	v_z = 0;
-	return v;
-}
-
 float PreviewExists(string name)
 {
 	float f;

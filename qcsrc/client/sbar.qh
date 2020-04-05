@@ -1,2 +1,3 @@
+vector Sbar_GetFontsize(vector v);
 void Sbar_GameType_Init();
 float scoreboard_bottom;

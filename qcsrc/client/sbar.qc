@@ -2740,3 +2740,15 @@ void CSQC_nb_hud(void)
 	if (stat_items & IT_KEY1)
 		drawpic(pos, "gfx/hud/sb_nexball_carrying", '80 34 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 }
+
+vector Sbar_GetFontsize(vector v)
+{
+	//vector v;
+	//v = stov(cvar_string(cvarname));
+	if(v_x == 0)
+		v = '8 8 0';
+	if(v_y == 0)
+		v_y = v_x;
+	v_z = 0;
+	return v;
+}
