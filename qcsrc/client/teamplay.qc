@@ -1,6 +1,17 @@
 float teamplay;
 float myteam;
 
+float(float t, float d) team_index_def {
+	switch(t) {
+		case COLOR_TEAM1: return 1;
+		case COLOR_TEAM2: return 2;
+		case COLOR_TEAM3: return 3;
+		case COLOR_TEAM4: return 4;
+	}
+	return d;
+}
+
+
 float TeamByColor(float color)
 {
 	switch(color)

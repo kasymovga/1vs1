@@ -249,21 +249,6 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE)), text, scale * sz, alpha * (1 - fadelerp), flag);
 }
 
-float TeamNumber(float t, float d) {
-    switch(t) {
-        case COLOR_TEAM1:
-            return 1;
-        case COLOR_TEAM2:
-            return 2;
-        case COLOR_TEAM3:
-            return 3;
-        case COLOR_TEAM4:
-            return 4;
-        default:
-            return d;
-    }
-}
-
 #define UnboundFromByte(x) ((x < 251) ? ftos(x) : ((x == 251) ? "250+" : ((x == 252) ? "500+" : ((x == 253) ? "1K+" : ((x == 254) ? "2K+" : "5K+")))))
 
-#define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(TeamNumber(t, d))))
+#define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(team_index_def(t, d))))
