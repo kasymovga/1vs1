@@ -1,6 +1,3 @@
-string CVAR_CHECK_DEFAULT = "091f36c4fb0d7b22bbd2d2fdff8b1447";
-string CVAR_CHECK_BALANCE = "9b590c8f7c3065d917ac8e2e5e842a88";
-
 float	FALSE					= 0;
 float	TRUE					= 1;
 
@@ -103,9 +100,5 @@ float TE_BEAM					= 13;		// grappling hook
 float FLAG_BASE = 1;
 float FLAG_CARRY = 2;
 float FLAG_DROPPED = 3;
-
-float NUM_PLAYERSKINS_TEAMPLAY = 3;
-
-float ASSAULT_VALUE_INACTIVE = 1000;
 
 const string retardplayername = "User of RetardNet";
