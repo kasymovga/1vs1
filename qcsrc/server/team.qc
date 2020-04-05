@@ -21,7 +21,7 @@ void team_change(entity pl, float dteam, float nobalance);
 void team_balance_audit(float force);
 
 // # of bots on those teams
-float cb1, cb2, cb3, cb4;
+float team1_bots, team2_bots, team3_bots, team4_bots;
 
 string team_color_name(float t)
 {
@@ -143,7 +143,7 @@ void(float c) team_teams_set_count {
 // set team1...team4 to show what teams are allowed
 void(entity for_whom) team_teams_allowed {
 	team1 = team2 = team3 = team4 = -1;
-	cb1 = cb2 = cb3 = cb4 = 0;
+	team1_bots = team2_bots = team3_bots = team4_bots = 0;
 	if (at1) team1 = 0;
 	if (at2) team2 = 0;
 	if (at3) team3 = 0;
@@ -198,25 +198,25 @@ void(entity ignore) team_teams_count {
 				if(team1 >= 0)
 				{
 					team1 = team1 + value;
-					cb1 = cb1 + bvalue;
+					team1_bots = team1_bots + bvalue;
 				}
 			} else if (head.team == COLOR_TEAM2) {
 				if(team2 >= 0)
 				{
 					team2 = team2 + value;
-					cb2 = cb2 + bvalue;
+					team2_bots = team2_bots + bvalue;
 				}
 			} else if (head.team == COLOR_TEAM3) {
 				if(team3 >= 0)
 				{
 					team3 = team3 + value;
-					cb3 = cb3 + bvalue;
+					team3_bots = team3_bots + bvalue;
 				}
 			} else if (head.team == COLOR_TEAM4) {
 				if(team4 >= 0)
 				{
 					team4 = team4 + value;
-					cb4 = cb4 + bvalue;
+					team4_bots = team4_bots + bvalue;
 				}
 			}
 		}
@@ -253,10 +253,10 @@ float(entity pl) team_find_smallest {
 	smallestteam_score = 999999999;
 	if (bot_would_leave)
 	if (clienttype(pl) != CLIENTTYPE_BOT) {
-		team1 -= cb1 * 255.0/256;
-		team2 -= cb2 * 255.0/256;
-		team3 -= cb3 * 255.0/256;
-		team4 -= cb4 * 255.0/256;
+		team1 -= team1_bots * 255.0/256;
+		team2 -= team2_bots * 255.0/256;
+		team3 -= team3_bots * 255.0/256;
+		team4 -= team4_bots * 255.0/256;
 	}
 	if (team1 >= 0 && team1 < smallestteam_count)
 		smallestteam_count = team1;
@@ -411,10 +411,10 @@ void(entity pl, float dteam, float nobalance) team_change {
 		// find out what teams are available
 		// count how many players on each team
 		team_teams_count(pl);
-		float cr1 = team1 - cb1;
-		float cr2 = team2 - cb2;
-		float cr3 = team3 - cb3;
-		float cr4 = team4 - cb4;
+		float cr1 = team1 - team1_bots;
+		float cr2 = team2 - team2_bots;
+		float cr3 = team3 - team3_bots;
+		float cr4 = team4 - team4_bots;
 		switch (pl.team) {
 		case COLOR_TEAM1: scount = cr1; break;
 		case COLOR_TEAM2: scount = cr2; break;
@@ -855,7 +855,7 @@ void() teams_balance_check {
 	if (team3 < 0)
 	if (team4 < 0)
 	if (team1 + team2 > 2)
-	if (team1 - cb1 + team2 - cb2 >= g_balance_teams_autoswap_required_humans) {
+	if (team1 - team1_bots + team2 - team2_bots >= g_balance_teams_autoswap_required_humans) {
 		float maxscore = max(t1, t2);
 		if (maxscore == autoswap_lastmaxscore)
 			return;
