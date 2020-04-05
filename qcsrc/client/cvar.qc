@@ -84,3 +84,23 @@ void read_cvars_init() {
 	read_cvars = read_cvars_0;
 	do { read_cvars(); } while (read_cvars != read_cvars_0);
 }
+
+void(string cv, string val) cvar_clientsettemp {
+	entity e;
+	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
+		if(e.netname == cv)
+			goto saved;
+
+	e = spawn();
+	e.classname = "saved_cvar_value";
+	e.netname = strzone(cv);
+	e.message = strzone(cvar_string(cv));
+:saved
+	cvar_set(cv, val);
+}
+
+void(void) cvar_clientsettemp_restore {
+	entity e;
+	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
+			cvar_set(e.netname, e.message);
+}

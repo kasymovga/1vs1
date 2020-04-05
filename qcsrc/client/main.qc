@@ -11,27 +11,6 @@ float available_maps_count;
 float con_chat_save;
 float con_chat_was_changed;
 
-void cvar_clientsettemp(string cv, string val)
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
-}
-
-void cvar_clientsettemp_restore()
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-			cvar_set(e.netname, e.message);
-}
-
 vector mi_picmin; // adjusted mins that map to the picture (square)
 vector mi_picmax; // adjusted maxs that map to the picture (square)
 vector mi_pictexcoord0; // texcoords of the image corners (after transforming, these are 2D coords too)
@@ -401,52 +380,6 @@ void CSQC_Shutdown(void)
 	trip_shutdown();
 }
 
-.float has_team;
-float SetTeam(entity o, float Team)
-{
-	entity tm;
-	if (Team != -1)
-	if (team_mode || Team)
-	if not(team_get(Team, false))
-		Team = COLOR_SPECTATOR;
-
-	if(Team == -1) // leave
-	{
-		if(o.has_team)
-		{
-			//print("(DISCONNECT) leave team ", ftos(o.team), "\n");
-			tm = team_get(o.team, false);
-			tm.team_size -= 1;
-			o.has_team = 0;
-			return TRUE;
-		}
-	}
-	else
-	{
-		if not(o.has_team)
-		{
-			//print("(CONNECT) enter team ", ftos(o.team), "\n");
-			o.has_team = 1;
-		}
-		else if(Team != o.team)
-		{
-			tm = team_get(o.team, false);
-			tm.team_size -= 1;
-		} else
-			return FALSE;
-
-		tm = team_get(Team, false);
-		if not(tm) {
-			tm = team_get(COLOR_SPECTATOR, false);
-			Team = COLOR_SPECTATOR;
-		}
-		o.team = Team;
-		tm.team_size += 1;
-		return TRUE;
-	}
-	return FALSE;
-}
-
 void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
@@ -687,7 +620,7 @@ void Ent_RemovePlayerScore()
 
 	if(self.owner)
 	{
-		SetTeam(self.owner, -1);
+		team_set(self.owner, -1);
 		player_remove(self.owner);
 		self.owner.gotscores = 0;
 		for(i = 0; i < MAX_SCORE; ++i)
@@ -750,7 +683,7 @@ void Ent_ReadPlayerScore(float ignore)
 		if (t < 0)
 			t = COLOR_SPECTATOR;
 
-		SetTeam(o, t);
+		team_set(o, t);
 	}
 
 	if(o.sort_prev)
@@ -793,7 +726,7 @@ void Ent_ReadTeamScore(float ignore)
 				if (t < 0)
 					t = COLOR_SPECTATOR;
 
-				SetTeam(o, t);
+				team_set(o, t);
 			}
 }
 
@@ -998,7 +931,7 @@ void Ent_ScoresInfo(float ignore)
 					if (t < 0)
 						t = COLOR_SPECTATOR;
 
-					SetTeam(o, t);
+					team_set(o, t);
 				}
 		} else if (s == "status")
 			SP_STATUS_FIELD = i;
@@ -1054,7 +987,7 @@ void Ent_Init(float ignore)
 		if (SP_TEAM_BIT)
 			for(o = player_list.sort_next; o; o = o.sort_next)
 				if (o.gotscores)
-					SetTeam(o, o.scores[SP_TEAM_FIELD]);
+					team_set(o, o.scores[SP_TEAM_FIELD]);
 
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));
@@ -1164,10 +1097,6 @@ void Net_ReadRace()
 	}
 }
 
-void Net_ReadSpawn()
-{
-}
-
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1181,7 +1110,6 @@ float CSQC_Parse_TempEntity()
 	switch(nTEID)
 	{
 		case TE_CSQC_SPAWN:
-			Net_ReadSpawn();
 			break;
 		case TE_CSQC_ZCURVEPARTICLES:
 			Net_ReadZCurveParticles();

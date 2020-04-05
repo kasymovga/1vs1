@@ -140,7 +140,6 @@ float fov;
 float fov_zoomed;
 float isdemo_flag;
 float player_deadflag;
-float SetTeam(entity o, float Team);
 float sv_spectate;
 float g_campaign;
 float localgame;
