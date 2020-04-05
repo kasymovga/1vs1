@@ -12,18 +12,6 @@ float(float t, float d) team_index_def {
 }
 
 
-float TeamByColor(float color)
-{
-	switch(color)
-	{
-	case COLOR_TEAM1: return 0;
-	case COLOR_TEAM2: return 1;
-	case COLOR_TEAM3: return 2;
-	case COLOR_TEAM4: return 3;
-	default: return 0;
-	}
-}
-
 float GetPlayerColorForce(float i)
 {
 	if(!teamplay)
