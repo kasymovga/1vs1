@@ -1129,7 +1129,7 @@ void Sbar_DrawScoreboard()
 	               e = playerslots[i];
 	               if(player_name(i) == "") {
 	                       if(e.sort_prev) {
-	                               SetTeam(e, -1);
+	                               team_set(e, -1);
 	                               player_remove(e);
 	                               e.sort_prev = world;
 	                       }
@@ -1139,7 +1139,7 @@ void Sbar_DrawScoreboard()
 	                                       playerslots[i] = e = spawn();
 
 	                               e.sv_entnum = i;
-	                               SetTeam(e, COLOR_SPECTATOR);
+	                               team_set(e, COLOR_SPECTATOR);
 	                               player_register(e);
 	                               Sbar_UpdatePlayerPos(e);
 	                       }
