@@ -37,21 +37,6 @@ string team_color_name(float t)
     return "Neutral";
 }
 
-string team_color_nameLowerCase(float t)
-{
-    // fixme: Search for team entities and get their .netname's!
-    if (t == COLOR_TEAM1)
-        return "red";
-    if (t == COLOR_TEAM2)
-        return "blue";
-    if (t == COLOR_TEAM3)
-        return "yellow";
-    if (t == COLOR_TEAM4)
-        return "pink";
-    return "neutral";
-}
-
-
 vector team_colormod(float teamcolor) {
     if (teamcolor == COLOR_TEAM1)
 		return '1.8 0.6 0.6';
