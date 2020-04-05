@@ -60,7 +60,7 @@ void DLCDraw2d() {
 	vector pos;
 	pos_y = 100;
 	string s = "Some content still downloading";
-	pos_x = (CVAR(vid_conwidth) / 2) - stringwidth(s, false) * 6;
+	pos_x = (CVAR(vid_conwidth) / 2) - stringwidth(s, FALSE) * 6;
 	drawstring(pos, s, '12 12 0', '0 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 

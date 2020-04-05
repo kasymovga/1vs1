@@ -35,7 +35,7 @@ float(entity Team) team_register {
 		team_list.sort_next.sort_prev = Team;
 
 	team_list.sort_next = Team;
-	return true;
+	return TRUE;
 }
 
 entity(float Team, float add) team_get {
@@ -60,13 +60,13 @@ float(entity o, float Team) team_set {
 	entity tm;
 	if (Team != -1)
 	if (team_mode || Team)
-	if not(team_get(Team, false))
+	if not(team_get(Team, FALSE))
 		Team = COLOR_SPECTATOR;
 
 	if (Team == -1) {
 		if (o.has_team) {
 			//print("(DISCONNECT) leave team ", ftos(o.team), "\n");
-			tm = team_get(o.team, false);
+			tm = team_get(o.team, FALSE);
 			tm.team_size -= 1;
 			o.has_team = 0;
 			return TRUE;
@@ -76,14 +76,14 @@ float(entity o, float Team) team_set {
 			//print("(CONNECT) enter team ", ftos(o.team), "\n");
 			o.has_team = 1;
 		} else if (Team != o.team) {
-			tm = team_get(o.team, false);
+			tm = team_get(o.team, FALSE);
 			tm.team_size -= 1;
 		} else
 			return FALSE;
 
-		tm = team_get(Team, false);
+		tm = team_get(Team, FALSE);
 		if not(tm) {
-			tm = team_get(COLOR_SPECTATOR, false);
+			tm = team_get(COLOR_SPECTATOR, FALSE);
 			Team = COLOR_SPECTATOR;
 		}
 		o.team = Team;

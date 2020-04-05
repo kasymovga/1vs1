@@ -239,14 +239,14 @@ void CSQC_Init(void)
 	for(i = 0; i < MAX_SBAR_FIELDS; ++i)
 		sbar_title[i] = strzone("(null)");
 
-	postinit = false;
+	postinit = FALSE;
 
 	calledhooks = 0;
 
 	team_list = spawn();
 	player_list = spawn();
 
-	team_get(COLOR_SPECTATOR, true); // add specs first
+	team_get(COLOR_SPECTATOR, TRUE); // add specs first
 
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
@@ -384,7 +384,7 @@ void PostInit(void)
 {
 	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
 	localcmd(strcat("\ncl_cmd sbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
-	postinit = true;
+	postinit = TRUE;
 }
 
 // CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
@@ -404,70 +404,70 @@ float CSQC_ConsoleCommand(string strMessage)
 	strCmd = argv(0);
 
 	if(strCmd == "+button4") { // zoom
-		// return false, because the message shall be sent to the server anyway (for demos/speccing)
+		// return FALSE, because the message shall be sent to the server anyway (for demos/speccing)
 		if(ignore_plus_zoom)
 		{
 			--ignore_plus_zoom;
-			return false;
+			return FALSE;
 		}
 		button_zoom = 1;
-		return false;
+		return FALSE;
 	} else if(strCmd == "-button4") { // zoom
 		if(ignore_minus_zoom)
 		{
 			--ignore_minus_zoom;
-			return false;
+			return FALSE;
 		}
 		button_zoom = 0;
-		return false;
+		return FALSE;
 	} else if(strCmd == "+button3") { // secondary
 		button_attack2 = 1;
-		return false;
+		return FALSE;
 	} else if(strCmd == "-button3") { // secondary
 		button_attack2 = 0;
-		return false;
+		return FALSE;
 	} else if(strCmd == "+showscores") {
-		sb_showscores = true;
-		return true;
+		sb_showscores = TRUE;
+		return TRUE;
 	} else if(strCmd == "-showscores") {
-		sb_showscores = false;
-		return true;
+		sb_showscores = FALSE;
+		return TRUE;
 	} else if(strCmd == "+showaccuracy") {
-		sb_showaccuracy = true;
-		return true;
+		sb_showaccuracy = TRUE;
+		return TRUE;
 	} else if(strCmd == "-showaccuracy") {
-		sb_showaccuracy = false;
-		return true;
+		sb_showaccuracy = FALSE;
+		return TRUE;
 	}
 
 	if(camera_active)
 	if(strCmd == "+forward" || strCmd == "-back") {
 		++camera_direction_x;
-		return true;
+		return TRUE;
 	} else if(strCmd == "-forward" || strCmd == "+back") {
 		--camera_direction_x;
-		return true;
+		return TRUE;
 	} else if(strCmd == "+moveright" || strCmd == "-moveleft") {
 		--camera_direction_y;
-		return true;
+		return TRUE;
 	} else if(strCmd == "-moveright" || strCmd == "+moveleft") {
 		++camera_direction_y;
-		return true;
+		return TRUE;
 	} else if(strCmd == "+moveup" || strCmd == "-movedown") {
 		++camera_direction_z;
-		return true;
+		return TRUE;
 	} else if(strCmd == "-moveup" || strCmd == "+movedown") {
 		--camera_direction_z;
-		return true;
+		return TRUE;
 	} else if(strCmd == "+roll_right" || strCmd == "-roll_left") {
 		++camera_roll;
-		return true;
+		return TRUE;
 	} else if(strCmd == "+roll_left" || strCmd == "-roll_right") {
 		--camera_roll;
-		return true;
+		return TRUE;
 	}
 
-	return false;
+	return FALSE;
 }
 
 .vector view_ofs;
@@ -545,19 +545,19 @@ var float(float bInputType, float nPrimary, float nSecondary) CSQC_InputEvent_Ca
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	local float bSkipKey;
-	bSkipKey = false;
+	bSkipKey = FALSE;
 	if (CSQC_InputEvent_Callback) {
 		bSkipKey = CSQC_InputEvent_Callback(bInputType, nPrimary, nSecondary);
 		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
 		if (bSkipKey)
-			return true;
+			return TRUE;
 	}
 	if (bInputType == 0)
 	if (nPrimary == K_ESCAPE)
 	if not(isdemo_flag)
 	{
 		GUI_Show(GUI_GAMEMENU);
-		return true;
+		return TRUE;
 	}
 
 	return bSkipKey;
@@ -643,7 +643,7 @@ void Ent_ReadPlayerScore(float ignore)
 	if(!isNew && n != self.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		isNew = true;
+		isNew = TRUE;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
 	}
@@ -698,7 +698,7 @@ void Ent_ReadTeamScore(float ignore)
 	entity o;
 
 	self.team = ReadByte();
-	o = self.owner = team_get(self.team, true); // these team numbers can always be trusted
+	o = self.owner = team_get(self.team, TRUE); // these team numbers can always be trusted
 
 	float sf, lf;
 #if MAX_TEAMSCORE <= 8
@@ -981,7 +981,7 @@ void Ent_Init(float ignore)
 	if (sf & 32) {
 		team_mode = ReadByte();
 		if not(team_mode) {
-			team_get(0, true);
+			team_get(0, TRUE);
 		}
 		entity o;
 		if (SP_TEAM_BIT)
@@ -1103,7 +1103,7 @@ void Net_ReadRace()
 float CSQC_Parse_TempEntity()
 {
 	float bHandled;
-	bHandled = true;
+	bHandled = TRUE;
 	// Acquire TE ID
 	float nTEID = ReadByte();
 	// NOTE: Could just do return instead of break...
@@ -1180,7 +1180,7 @@ float CSQC_Parse_TempEntity()
 			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
-			bHandled = false;
+			bHandled = FALSE;
 			break;
 	}
 

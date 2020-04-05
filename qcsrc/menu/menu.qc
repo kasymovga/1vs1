@@ -117,7 +117,7 @@ void() m_init =
 			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
-	menu_dlc_reload(true);
+	menu_dlc_reload(TRUE);
 	udppunchhole_extresponse_handler_register();
 	SetConWidthHeight();
 }
@@ -162,7 +162,7 @@ void() m_init_delayed =
 		return;
 	} else {
 		dlc_set_repos(cvar_string("sv_dlc_repository"));
-		menu_dlc_reload(false);
+		menu_dlc_reload(FALSE);
 	}
 	if(!preMenuInit())
 		return;
@@ -440,7 +440,7 @@ void() m_draw =
 
 void() m_display =
 {
-	Menu_Active = true;
+	Menu_Active = TRUE;
 	setkeydest(KEY_MENU);
 	setmousetarget((menuMouseMode ? MT_CLIENT : MT_MENU));
 
@@ -457,7 +457,7 @@ void() m_display =
 
 void() m_hide =
 {
-	Menu_Active = false;
+	Menu_Active = FALSE;
 	setkeydest(KEY_GAME);
 	setmousetarget(MT_CLIENT);
 

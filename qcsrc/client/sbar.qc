@@ -154,18 +154,18 @@ void Sbar_DrawXNum (vector pos, float num, float digits, float showminusplus, fl
 
 	if((showminusplus == 2 && num >= 0) || (num > 0 && showminusplus == 3))
 	{
-		plus = true;
+		plus = TRUE;
 		pos_x -= lettersize;
 	} else
-		plus = false;
+		plus = FALSE;
 
 	if(num < 0 || (num < 0 && showminusplus == 3) || (showminusplus == 1 && num <= 0))
 	{
-		minus = true;
+		minus = TRUE;
 		num = -num;
 		pos_x -= lettersize;
 	} else
-		minus = false;
+		minus = FALSE;
 
 	if(digits < 0)
 	{
@@ -303,17 +303,17 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 	vr = player_color(right.sv_entnum);
 
 	if(vl > vr)
-		return true;
+		return TRUE;
 	if(vl < vr)
-		return false;
+		return FALSE;
 
 	if(vl == COLOR_SPECTATOR)
 	{
 		// FIRST the one with scores (spectators), THEN the ones without (downloaders)
 		// no other sorting
 		if(!left.gotscores && right.gotscores)
-			return true;
-		return false;
+			return TRUE;
+		return FALSE;
 	}
 
 	vl = left.scores[ps_primary];
@@ -344,7 +344,7 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 	if(vl < vr)
 		return IS_DECREASING(scores_flags[ps_secondary]);
 
-	return false;
+	return FALSE;
 }
 
 void Sbar_UpdatePlayerPos(entity player)
@@ -382,7 +382,7 @@ float Sbar_CompareTeamScores(entity left, entity right)
 	if(vl < vr)
 		return IS_DECREASING(teamscores_flags[ts_secondary]);
 
-	return false;
+	return FALSE;
 }
 
 void Sbar_UpdateTeamPos(entity Team)

@@ -113,14 +113,14 @@ void Menu_Draw() {
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = ITEM_TOP_MARGIN;
 	pos_z = 0;
-	pos_x = center - stringwidth(self.menu_title, false) * 0.5 * 24;
+	pos_x = center - stringwidth(self.menu_title, FALSE) * 0.5 * 24;
     drawfill('0 1' * ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (ITEM_TOP_MARGIN + ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
 	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += ITEM_HEIGHT;
 	if (self.menu_timeout) {
 		i = ceil(max(0, self.menu_timeout - time));
 		menu_string = strcat(ftos(i), " seconds left");
-		pos_x = center - stringwidth(menu_string, false) * 0.5 * 16;
+		pos_x = center - stringwidth(menu_string, FALSE) * 0.5 * 16;
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	}
 	pos_y += ITEM_HEIGHT;
@@ -141,7 +141,7 @@ void Menu_Draw() {
 
 		float subcmd = strstrofs(self.menu_items[i], "|", 0);
 		menu_string = strcat(item_color, ftos(i + 1), ". ", substring(self.menu_items[i], 0, subcmd));
-		pos_x = center - stringwidth(strdecolorize(menu_string), false) * 0.5 * 24 * size_scale;
+		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		pos_y += ITEM_HEIGHT;
 	}

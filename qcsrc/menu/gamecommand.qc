@@ -95,7 +95,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "dlc_reload")
 	{
-		menu_dlc_reload(true);
+		menu_dlc_reload(TRUE);
 		return;
 	}
 #if 0

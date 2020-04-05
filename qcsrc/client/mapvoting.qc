@@ -50,7 +50,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	float imp;
 
 	if (bInputType != 0)
-		return false;
+		return FALSE;
 
 	if ('0' <= nPrimary && nPrimary <= '9')
 	{
@@ -58,7 +58,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		imp = nPrimary - '0';
 		if (imp == 0) imp = 10;
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
-		return true;
+		return TRUE;
 	}
 
 	if (nPrimary == K_MOUSE1) {
@@ -67,10 +67,10 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		{
 			imp = min(mv_selection + 1, mv_num_maps);
 			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
-			return true;
+			return TRUE;
 		}
 	}
-	return false;
+	return FALSE;
 }
 
 string MapVote_FormatMapItem(float id, string map, float count, float maxwidth)
@@ -118,7 +118,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	
 	label = MapVote_FormatMapItem(id, map, count, tsize / sbar_fontsize_x);
 
-	text_size = stringwidth(label, false) * sbar_fontsize_x;
+	text_size = stringwidth(label, FALSE) * sbar_fontsize_x;
 	
 	pos_x -= text_size*0.5;
 	drawstring(pos, label, sbar_fontsize, rgb, 1, DRAWFLAG_NORMAL);
@@ -164,7 +164,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 	
 	label = MapVote_FormatMapItem(id, "Don't care", count, tsize / sbar_fontsize_x);
 
-	text_size = stringwidth(label, false) * sbar_fontsize_x;
+	text_size = stringwidth(label, FALSE) * sbar_fontsize_x;
 	
 	pos_x -= text_size*0.5;
 	drawstring(pos, label, sbar_fontsize, rgb, 1, DRAWFLAG_NORMAL);
@@ -207,13 +207,13 @@ void MapVote_Draw()
 	pos_y = ymin;
 	pos_z = 0;
 	string s = strcat("Vote for a map (^2", map_gametype, "^7)");
-	pos_x = center - stringwidth(s, true) * 0.5 * 24;
+	pos_x = center - stringwidth(s, TRUE) * 0.5 * 24;
 	drawcolorcodedstring(pos, s, '24 24 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
 
 	i = ceil(max(0, mv_timeout - time));
 	map = strcat(ftos(i), " seconds left");
-	pos_x = center - stringwidth(map, false) * 0.5 * 16;
+	pos_x = center - stringwidth(map, FALSE) * 0.5 * 16;
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 22;
 	pos_x = xmin;
@@ -295,7 +295,7 @@ void Cmd_MapVote_MapDownload(float argc)
 	
 	if(PreviewExists(pak.message))
 	{
-		mv_preview[id] = true;
+		mv_preview[id] = TRUE;
 		//print("^2Found...\n");
 		return;
 	} else {
@@ -333,7 +333,7 @@ void MapVote_CheckPic(string pic, string pk3, float id)
 
 	if(PreviewExists(pic))
 	{
-		mv_preview[id] = true;
+		mv_preview[id] = TRUE;
 		return;
 	}
 	MapVote_CheckPK3(pic, pk3, id);
@@ -385,7 +385,7 @@ void MapVote_Init()
 			map = strzone(strcat(ssdir, "/", map));
 			mv_pics[i] = map;
 
-			mv_preview[i] = false;
+			mv_preview[i] = FALSE;
 
 			//print(strcat("RECV: ", map, " in ", pk3, "\n"));
 			MapVote_CheckPic(map, pk3, i);
@@ -395,7 +395,7 @@ void MapVote_Init()
 			mv_maps[i] = strzone("if-you-see-this-the-code-is-broken");
 			mv_pk3[i] = strzone("if-you-see-this-the-code-is-broken");
 			mv_pics[i] = strzone("if-you-see-this-the-code-is-broken");
-			mv_preview[i] = false;
+			mv_preview[i] = FALSE;
 		}
 	}
 }
@@ -460,6 +460,6 @@ void Net_MapVote_Picture()
 {
 	float type;
 	type = ReadByte();
-	mv_preview[type] = true;
+	mv_preview[type] = TRUE;
 	mv_pics[type] = strzone(ReadPicture());
 }

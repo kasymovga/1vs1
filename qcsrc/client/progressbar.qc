@@ -14,7 +14,7 @@ void ProgressBar_Draw() {
 		fillrect_x = 200 * (e.cnt / 100);
 		drawfill(pos, fillrect, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y -= 20;
-		pos_x = center - stringwidth(e.netname, false) * 6;
+		pos_x = center - stringwidth(e.netname, FALSE) * 6;
 		drawstring(pos, e.netname, '12 12 0', '0 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y -= 50;
 	}
