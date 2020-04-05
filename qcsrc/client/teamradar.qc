@@ -343,7 +343,7 @@ void(float big, string title) teamradar_view =
 		+ (1 - f) * view_origin);
 
 	color1 = player_color(player_localentnum-1);
-	rgb = GetTeamRGB(color1);
+	rgb = team_rgb(color1);
 
 	drawsetcliparea(
 		teamradar_origin2d_x - teamradar_size2d_x * 0.5 + teamradar_extraclip_mins_x,
@@ -389,7 +389,7 @@ void(float big, string title) teamradar_view =
 
 		color2 = player_color(tm.sv_entnum);
 		//if(color == COLOR_SPECTATOR || color == color2)
-		draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
+		draw_teamradar_player(tm.origin, tm.angles, team_rgb(color2));
 	}
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 

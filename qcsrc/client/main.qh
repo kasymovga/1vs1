@@ -145,8 +145,6 @@ float ext_DP_RM_SETRENDERENTITY;
 
 var float CSQC_InputEvent_Callback(float bInputType, float nPrimary, float nSecondary);
 float draw_crosshair;
-float teamplay;
-
 float sv_ip2country;
 float fov;
 float fov_zoomed;

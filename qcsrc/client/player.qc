@@ -32,10 +32,10 @@ void (entity player) player_remove {
 }
 
 float(float i) player_color_force {
-	if (!teamplay)
-		return 0;
-	else
+	if (team_mode)
 		return (stof(getplayerkey(i, "colors")) & 15) + 1;
+	else
+		return 0;
 }
 
 float(float i) player_color {
@@ -44,7 +44,7 @@ float(float i) player_color {
 		return COLOR_SPECTATOR;
 	else if (pl.team == COLOR_SPECTATOR)
 		return COLOR_SPECTATOR;
-	else if (teamplay)
+	else if (team_mode)
 		return pl.team;
 	else
 		return player_color_force(i);

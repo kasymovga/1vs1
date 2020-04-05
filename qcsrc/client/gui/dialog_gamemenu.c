@@ -34,7 +34,7 @@ void ShowSaveLoad() {
 }
 
 void configureDialogNexuizGameMenuDialog(entity me) {
-	if (teamplay)
+	if (team_mode)
 		me.rows = me.rows + 1;
 
 	me.rows = me.rows + gamemenu_commands_count;
@@ -64,7 +64,7 @@ void fillNexuizGameMenuDialog(entity me)
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Join", '0 0 0', "cmd join;", COMMANDBUTTON_CLOSE));
 	}
-	if (teamplay) {
+	if (team_mode) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizButton("Switch team", '0 0 0'));
 			e.onClick = ShowSwitchTeam;

@@ -72,6 +72,7 @@ noteline.qh
 hint.qh
 sphere.qh
 ice.qh
+team.qh
 cvar.qc
 ../client-server/movelib.qc
 str.qc
@@ -84,7 +85,7 @@ miscfunctions.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
 ../common/stdproc.qc
-teamplay.qc
+team.qc
 centerprint.qc
 sbar.qc
 mapvoting.qc

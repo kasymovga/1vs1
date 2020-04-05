@@ -391,7 +391,7 @@ void Sbar_UpdateTeamPos(entity Team)
 	{
 		SORT_SWAP(Team, other);
 	}
-	for(other = Team.sort_prev; other != teams && Sbar_CompareTeamScores(other, Team); other = Team.sort_prev)
+	for(other = Team.sort_prev; other != team_list && Sbar_CompareTeamScores(other, Team); other = Team.sort_prev)
 	{
 		SORT_SWAP(other, Team);
 	}
@@ -521,7 +521,7 @@ void Cmd_Sbar_SetFields(float argc)
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
 
-			if not(gametype_filter(gametype, teamplay, pattern))
+			if not(gametype_filter(gametype, team_mode, pattern))
 				continue;
 		}
 
@@ -710,8 +710,7 @@ string Sbar_GetField(entity pl, float field)
 			{
 				sbar_field_icon0 = "gfx/sb_player_ready";
 			}
-			else if(!teamplay)
-			{
+			else if not(team_mode) {
 				f = stof(getplayerkey(pl.sv_entnum, "colors"));
 				{
 					sbar_field_icon0 = "gfx/sb_playercolor_base";
@@ -1089,7 +1088,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 
 	// fill the table and draw the rows
 	i = 0;
-	if (teamplay)
+	if (team_mode)
 		for(pl = player_list.sort_next; pl; pl = pl.sort_next)
 		{
 			if(pl.team != tm.team)
@@ -1199,8 +1198,7 @@ void Sbar_DrawScoreboard()
 		if(tl > 0)
 			str = strcat(str, " or");
 
-		if(teamplay)
-		{
+		if (team_mode) {
 			str = strcat(str, " until ^3", score_string(teamscores_flags[ts_primary], fl));
 			if(teamscores_label[ts_primary] == "score")
 				str = strcat(str, " points^7");
@@ -1224,8 +1222,8 @@ void Sbar_DrawScoreboard()
 	{
 		if(tl > 0 || fl > 0)
 			str = strcat(str, " or");
-		if(teamplay)
-		{
+
+		if (team_mode) {
 			str = strcat(str, " until a lead of ^3", score_string(teamscores_flags[ts_primary], ll));
 			if(teamscores_label[ts_primary] == "score")
 				str = strcat(str, " points^7");
@@ -1254,15 +1252,13 @@ void Sbar_DrawScoreboard()
 	// Draw the scoreboard
 	vector bg_size;
 	bg_size = drawgetimagesize("gfx/hud/sb_scoreboard_bg");
-
-	if(teamplay)
-	{
-		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+	if (team_mode) {
+		for(tm = team_list.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 
-			rgb = GetTeamRGB(tm.team);
+			rgb = team_rgb(tm.team);
 
 			Sbar_DrawXNum(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
 
@@ -1278,7 +1274,7 @@ void Sbar_DrawScoreboard()
 		rgb_y = CVAR(sbar_color_bg_g);
 		rgb_z = CVAR(sbar_color_bg_b);
 
-		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		for(tm = team_list.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
@@ -1401,7 +1397,7 @@ void()Sbar_Score_Default {
 	score_pos = bottomright - '196 42 0';
 	secondary_score_pos = score_pos + '132 -6 0';
 
-	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
+	if((scores_flags[ps_primary] & SFL_TIME) && !team_mode) { // race/cts record display on HUD
 		pl = player_list.sort_next;
 		if(pl == me)
 			pl = pl.sort_next;
@@ -1454,7 +1450,7 @@ void()Sbar_Score_Default {
 		Sbar_DrawXNum(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(bottomright - '0 32 0' - TIME_DECIMALS * '30 0 0' - '84 0 0', "gfx/hud/num_colon", '30 30 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 
-	} else if (!teamplay) { // non-teamgames, except race/cts
+	} else if (!team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
 		if(pl == me)
@@ -1484,7 +1480,7 @@ void()Sbar_Score_Default {
 		float max_fragcount;
 		max_fragcount = -999;
 
-		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
+		for(tm = team_list.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == COLOR_SPECTATOR || !tm.team_size) // no players? don't display
 				continue;
 			score = tm.(teamscores[ts_primary]);
@@ -1493,14 +1489,14 @@ void()Sbar_Score_Default {
 			if (score > max_fragcount)
 				max_fragcount = score;
 
-			if(tm.team == myteam) {
+			if(tm.team == team_my) {
 				if (max_fragcount == score)
 					leader = 1;
-				Sbar_DrawXNum(score_pos, score, 4, 0, 34, GetTeamRGB(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				Sbar_DrawXNum(score_pos, score, 4, 0, 34, team_rgb(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
-				Sbar_DrawXNum(secondary_score_pos, score, 4, 0, 16, GetTeamRGB(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				Sbar_DrawXNum(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				secondary_score_pos = secondary_score_pos + '0 16 0';
 			}
 		}
@@ -1670,8 +1666,8 @@ void Sbar_Timer()
 	}
 
 	if (CVAR(viewsize) <= 100) { // draw timer background when viewsize <= 100
-		if (teamplay)
-			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', GetTeamRGB(myteam) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // timer bg color = myteam color
+		if (team_mode)
+			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', team_rgb(team_my) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // timer bg color = team_my color
 		else {
 			_color_x = CVAR(sbar_color_bg_r);
 			_color_y = CVAR(sbar_color_bg_g);
@@ -2149,8 +2145,8 @@ void Sbar_Draw (void)
 		bg_size = '1600 58 0';
 
 		if (CVAR(viewsize) <= 100 && CVAR(vid_conwidth) <= 1600) {
-			if (teamplay)
-				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, GetTeamRGB(myteam) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // hud color = myteam color
+			if (team_mode)
+				drawpic(bottom - '800 58 0', "gfx/hud/sbar", bg_size, team_rgb(team_my) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // hud color = team_my color
 			else {
 				// allow for custom HUD colors in non-teamgames
 				_color_x = CVAR(sbar_color_bg_r);
@@ -2514,7 +2510,7 @@ void CSQC_ctf_hud(void)
 		case 2: red_icon = "gfx/hud/sb_flag_red_lost"; break;
 		case 3: red_icon = "gfx/hud/sb_flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM2))
+			if((stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM2))
 				red_icon = "gfx/hud/sb_flag_red_shielded";
 			else
 				red_icon = string_null;
@@ -2527,7 +2523,7 @@ void CSQC_ctf_hud(void)
 		default:
 			if(redflag == 3)
 				red_icon_prevstatus = "gfx/hud/sb_flag_red_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM2))
+			else if((stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM2))
 				red_icon_prevstatus = "gfx/hud/sb_flag_red_shielded";
 			else
 				red_icon_prevstatus = string_null;
@@ -2542,7 +2538,7 @@ void CSQC_ctf_hud(void)
 		case 2: blue_icon = "gfx/hud/sb_flag_blue_lost"; break;
 		case 3: blue_icon = "gfx/hud/sb_flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM1))
+			if((stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM1))
 				blue_icon = "gfx/hud/sb_flag_blue_shielded";
 			else
 				blue_icon = string_null;
@@ -2555,14 +2551,14 @@ void CSQC_ctf_hud(void)
 		default:
 			if(blueflag == 3)
 				blue_icon_prevstatus = "gfx/hud/sb_flag_blue_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM1))
+			else if((stat_items & IT_CTF_SHIELDED) && (team_my == COLOR_TEAM1))
 				blue_icon_prevstatus = "gfx/hud/sb_flag_blue_shielded";
 			else
 				blue_icon_prevstatus = string_null;
 			break;
 	}
 
-	if (myteam == COLOR_TEAM1) { // always draw own flag on left
+	if (team_my == COLOR_TEAM1) { // always draw own flag on left
 		redflag_pos = bottomleft - '-4 50 0';
 		blueflag_pos = bottomleft - '-62 50 0';
 	} else {
@@ -2620,7 +2616,7 @@ void CSQC_kh_hud(void)
 		keyteam = key - 1;
 		if(keyteam == 30 && keycount <= 4)
 			keycount += 4;
-		if(keyteam == myteam || keyteam == -1 || keyteam == 30)
+		if(keyteam == team_my || keyteam == -1 || keyteam == 30)
 			keycount += 1;
 	}
 	// this yields 8 exactly if "RUN HERE" shows
@@ -2641,7 +2637,7 @@ void CSQC_kh_hud(void)
 		switch(keyteam)
 		{
 			case 30: // my key
-				keyteam = myteam;
+				keyteam = team_my;
 				a = 1;
 				aa = 1;
 				break;

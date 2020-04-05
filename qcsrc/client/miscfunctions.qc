@@ -1,5 +1,3 @@
-entity teams;
-
 void MoveToLast(entity e)
 {
 	other = e.sort_next;
@@ -8,53 +6,6 @@ void MoveToLast(entity e)
 		SORT_SWAP(other, e);
 		other = e.sort_next;
 	}
-}
-
-float RegisterTeam(entity Team)
-{
-	entity tm;
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm == Team)
-			error("Team already registered!");
-	Team.sort_next = teams.sort_next;
-	Team.sort_prev = teams;
-	if(teams.sort_next)
-		teams.sort_next.sort_prev = Team;
-	teams.sort_next = Team;
-	return true;
-}
-
-void RemoveTeam(entity Team)
-{
-	entity tm, parent;
-	parent = teams;
-	for(tm = teams.sort_next; tm && tm != Team; tm = tm.sort_next)
-		parent = tm;
-
-	if(!tm)
-	{
-		print("Trying to remove a team which is not in the teamlist!");
-		return;
-	}
-	parent.sort_next = Team.sort_next;
-	if(Team.sort_next)
-		Team.sort_next.sort_prev = parent;
-}
-
-entity GetTeam(float Team, float add)
-{
-	float num;
-	entity tm;
-	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
-	if(teamslots[num])
-		return teamslots[num];
-	if not(add)
-		return NULL;
-	tm = spawn();
-	tm.team = Team;
-	teamslots[num] = tm;
-	RegisterTeam(tm);
-	return tm;
 }
 
 float PreviewExists(string name)

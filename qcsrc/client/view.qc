@@ -160,9 +160,9 @@ void CSQC_UpdateView(float w, float h)
 	spectatee_status = spectatee_status & 255;
 	observer_status = (spectatee_status ? (spectatee_status == player_localentnum) : 0);
 	if(spectatee_status)
-		myteam = player_color(spectatee_status - 1);
+		team_my = player_color(spectatee_status - 1);
 	else
-		myteam = player_color(player_localentnum - 1);
+		team_my = player_color(player_localentnum - 1);
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 

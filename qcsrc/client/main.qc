@@ -264,10 +264,10 @@ void CSQC_Init(void)
 
 	calledhooks = 0;
 
-	teams = spawn();
+	team_list = spawn();
 	player_list = spawn();
 
-	GetTeam(COLOR_SPECTATOR, true); // add specs first
+	team_get(COLOR_SPECTATOR, true); // add specs first
 
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
@@ -379,7 +379,7 @@ void CSQC_Shutdown(void)
 #pragma TARGET fte
 #endif
 
-	remove(teams);
+	remove(team_list);
 	remove(player_list);
 	db_close(binddb);
 	db_close(tempdb);
@@ -406,8 +406,8 @@ float SetTeam(entity o, float Team)
 {
 	entity tm;
 	if (Team != -1)
-	if (teamplay || Team)
-	if not(GetTeam(Team, false))
+	if (team_mode || Team)
+	if not(team_get(Team, false))
 		Team = COLOR_SPECTATOR;
 
 	if(Team == -1) // leave
@@ -415,7 +415,7 @@ float SetTeam(entity o, float Team)
 		if(o.has_team)
 		{
 			//print("(DISCONNECT) leave team ", ftos(o.team), "\n");
-			tm = GetTeam(o.team, false);
+			tm = team_get(o.team, false);
 			tm.team_size -= 1;
 			o.has_team = 0;
 			return TRUE;
@@ -430,14 +430,14 @@ float SetTeam(entity o, float Team)
 		}
 		else if(Team != o.team)
 		{
-			tm = GetTeam(o.team, false);
+			tm = team_get(o.team, false);
 			tm.team_size -= 1;
 		} else
 			return FALSE;
 
-		tm = GetTeam(Team, false);
+		tm = team_get(Team, false);
 		if not(tm) {
-			tm = GetTeam(COLOR_SPECTATOR, false);
+			tm = team_get(COLOR_SPECTATOR, false);
 			Team = COLOR_SPECTATOR;
 		}
 		o.team = Team;
@@ -671,7 +671,7 @@ void Ent_ReadEntCS(float bIsNewEntity)
 		self.maxs_z = ReadShort();
 	}
 
-	if (teamplay)
+	if (team_mode)
 		Shownames_UpdateTeamBubble(self, f & 32);
 
 	if (f & 128) {
@@ -773,7 +773,7 @@ void Ent_ReadTeamScore(float ignore)
 	entity o;
 
 	self.team = ReadByte();
-	o = self.owner = GetTeam(self.team, true); // these team numbers can always be trusted
+	o = self.owner = team_get(self.team, true); // these team numbers can always be trusted
 
 	float sf, lf;
 #if MAX_TEAMSCORE <= 8
@@ -1054,9 +1054,9 @@ void Ent_Init(float ignore)
 		GameMenu_Read();
 
 	if (sf & 32) {
-		teamplay = ReadByte();
-		if not(teamplay) {
-			GetTeam(0, true);
+		team_mode = ReadByte();
+		if not(team_mode) {
+			team_get(0, true);
 		}
 		entity o;
 		if (SP_TEAM_BIT)

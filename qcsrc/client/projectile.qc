@@ -17,8 +17,9 @@ void SUB_Stop()
 .float silent;
 
 void SetupProjectileColormap(float default_team) {
-    if(!teamplay)
+    if not(team_mode)
         self.team = default_team;
+
     self.colormap = 1024 + (self.team - 1) * 17;
 }
 
