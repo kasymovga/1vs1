@@ -263,7 +263,7 @@ void DamageIndicator_Draw() {
         return;
 
 	o_z = 0;
-	drawstring(o, UnboundFromByte(self.cnt), '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
+	drawstring(o, NET_UNBOUND_FROM_BYTE(self.cnt), '12 12 0', '1 0.5 0', self.alpha, DRAWFLAG_NORMAL);
 }
 
 void Ent_DamageIndicator(float bisnew);

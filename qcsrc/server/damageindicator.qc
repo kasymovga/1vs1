@@ -3,7 +3,7 @@ float sv_damageindicator_accumulate_interval;
 float DamageIndicator_SendEntity(entity to, float sf) {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DMG_INDICATOR);
 	float _damage = self.dmg + 0.4;
-	WriteByte(MSG_ENTITY, BoundToByte(_damage));
+	WriteByte(MSG_ENTITY, NET_BOUND_TO_BYTE(_damage));
 	WriteShort(MSG_ENTITY, self.origin_x);
 	WriteShort(MSG_ENTITY, self.origin_y);
 	WriteShort(MSG_ENTITY, self.origin_z);

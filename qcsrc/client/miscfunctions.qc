@@ -155,6 +155,4 @@ void drawcolorcodedstring_expanding(vector position, string text, vector scale, 
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE)), text, scale * sz, alpha * (1 - fadelerp), flag);
 }
 
-#define UnboundFromByte(x) ((x < 251) ? ftos(x) : ((x == 251) ? "250+" : ((x == 252) ? "500+" : ((x == 253) ? "1K+" : ((x == 254) ? "2K+" : "5K+")))))
-
 #define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(team_index_def(t, d))))
