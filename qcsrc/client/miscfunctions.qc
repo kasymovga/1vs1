@@ -1,39 +1,4 @@
-entity players;
 entity teams;
-
-void RegisterPlayer(entity player)
-{
-	entity pl;
-	for(pl = players.sort_next; pl; pl = pl.sort_next)
-		if(pl == player) {
-			print("Player already registered!\n");
-			return;
-		}
-	player.sort_next = players.sort_next;
-	player.sort_prev = players;
-	if(players.sort_next)
-		players.sort_next.sort_prev = player;
-	players.sort_next = player;
-}
-
-void RemovePlayer(entity player)
-{
-	entity pl, parent;
-	parent = players;
-	for(pl = players.sort_next; pl && pl != player; pl = pl.sort_next)
-		parent = pl;
-
-	if(!pl)
-	{
-		print("Trying to remove a player which is not in the playerlist!\n");
-		return;
-	}
-	parent.sort_next = player.sort_next;
-	if(player.sort_next)
-		player.sort_next.sort_prev = parent;
-
-	player.sort_prev = world;
-}
 
 void MoveToLast(entity e)
 {
@@ -138,16 +103,6 @@ vector rotate(vector v, float a)
 	w_x =      v_x * cos(a) + v_y * sin(a);
 	w_y = -1 * v_x * sin(a) + v_y * cos(a);
 	return w;
-}
-
-float ColorTranslateMode;
-
-string ColorTranslateRGB(string s)
-{
-	if(ColorTranslateMode & 1)
-		return strdecolorize(s);
-	else
-		return s;
 }
 
 vector project_3d_to_2d(vector vec)

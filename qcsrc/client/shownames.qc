@@ -85,12 +85,12 @@ void Shownames_DrawPlayer() {
     namesize = mySize_x;
 
     string s;
-    s = GetPlayerName(self.sv_entnum);
+    s = player_name(self.sv_entnum);
     float textsz = SHOWNAMES_FONTSIZE;
 
 	float _team;
     if(teamplay) {
-		_team = GetPlayerColorForce(self.sv_entnum);
+		_team = player_color_force(self.sv_entnum);
         s = str_shorten_to_width(strdecolorize(s), namesize, str_width_nocolors);
         s = strcat(team_color_code(_team), s);
     } else

@@ -342,7 +342,7 @@ void(float big, string title) teamradar_view =
 		  f * (world_min + world_max) * 0.5
 		+ (1 - f) * view_origin);
 
-	color1 = GetPlayerColor(player_localentnum-1);
+	color1 = player_color(player_localentnum-1);
 	rgb = GetTeamRGB(color1);
 
 	drawsetcliparea(
@@ -387,7 +387,7 @@ void(float big, string title) teamradar_view =
 		if (tm.cnt)
 			continue;
 
-		color2 = GetPlayerColor(tm.sv_entnum);
+		color2 = player_color(tm.sv_entnum);
 		//if(color == COLOR_SPECTATOR || color == color2)
 		draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
 	}

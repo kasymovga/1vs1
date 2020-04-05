@@ -113,7 +113,7 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 
 		entity  e = playerslots[i];
 		if (e)
-			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(GetPlayerName(e.sv_entnum)));
+			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(player_name(e.sv_entnum)));
 
 	} else if (me.voteType == 3) {
 		me.nItems = available_maps_count;

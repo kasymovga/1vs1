@@ -299,8 +299,8 @@ void Sbar_InitScores()
 float Sbar_ComparePlayerScores(entity left, entity right)
 {
 	float vl, vr;
-	vl = GetPlayerColor(left.sv_entnum);
-	vr = GetPlayerColor(right.sv_entnum);
+	vl = player_color(left.sv_entnum);
+	vr = player_color(right.sv_entnum);
 
 	if(vl > vr)
 		return true;
@@ -353,7 +353,7 @@ void Sbar_UpdatePlayerPos(entity player)
 	{
 		SORT_SWAP(player, other);
 	}
-	for(other = player.sort_prev; other != players && Sbar_ComparePlayerScores(other, player); other = player.sort_prev)
+	for(other = player.sort_prev; other != player_list && Sbar_ComparePlayerScores(other, player); other = player.sort_prev)
 	{
 		SORT_SWAP(other, player);
 	}
@@ -721,7 +721,7 @@ string Sbar_GetField(entity pl, float field)
 					sbar_field_icon2_rgb = colormap_palette_color(math_mod(f, 16), 1);
 				}
 			}
-			return strcat(GetPlayerName(pl.sv_entnum), "^0#", ftos(pl.sv_entnum + 1));
+			return strcat(player_name(pl.sv_entnum), "^0#", ftos(pl.sv_entnum + 1));
 		case SP_STATUS:
 			if ((pl.(scores[SP_STATUS_FIELD]) == 0)) {
 				sbar_field_rgb = '0.25 1 0.25';
@@ -855,7 +855,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 	float is_spec;
 	float sbar_size_i;
 	float title_width;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
+	is_spec = (player_color(pl.sv_entnum) == COLOR_SPECTATOR);
 	float wanted_width = 0;
 	// Layout:
 	tmp_x = sbwidth;
@@ -1090,7 +1090,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	// fill the table and draw the rows
 	i = 0;
 	if (teamplay)
-		for(pl = players.sort_next; pl; pl = pl.sort_next)
+		for(pl = player_list.sort_next; pl; pl = pl.sort_next)
 		{
 			if(pl.team != tm.team)
 				continue;
@@ -1099,7 +1099,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 			++i;
 		}
 	else
-		for(pl = players.sort_next; pl; pl = pl.sort_next)
+		for(pl = player_list.sort_next; pl; pl = pl.sort_next)
 		{
 			if(pl.team == COLOR_SPECTATOR)
 				continue;
@@ -1128,10 +1128,10 @@ void Sbar_DrawScoreboard()
 	       entity e;
 	       for(i = 0; i < maxclients; ++i) {
 	               e = playerslots[i];
-	               if(GetPlayerName(i) == "") {
+	               if(player_name(i) == "") {
 	                       if(e.sort_prev) {
 	                               SetTeam(e, -1);
-	                               RemovePlayer(e);
+	                               player_remove(e);
 	                               e.sort_prev = world;
 	                       }
 	               } else {
@@ -1141,7 +1141,7 @@ void Sbar_DrawScoreboard()
 
 	                               e.sv_entnum = i;
 	                               SetTeam(e, COLOR_SPECTATOR);
-	                               RegisterPlayer(e);
+	                               player_register(e);
 	                               Sbar_UpdatePlayerPos(e);
 	                       }
 	               }
@@ -1293,7 +1293,7 @@ void Sbar_DrawScoreboard()
 	// List spectators
 	float specs;
 	specs = 0;
-	for(pl = players.sort_next; pl; pl = pl.sort_next)
+	for(pl = player_list.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != COLOR_SPECTATOR)
 			continue;
@@ -1402,7 +1402,7 @@ void()Sbar_Score_Default {
 	secondary_score_pos = score_pos + '132 -6 0';
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
-		pl = players.sort_next;
+		pl = player_list.sort_next;
 		if(pl == me)
 			pl = pl.sort_next;
 		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
@@ -1456,7 +1456,7 @@ void()Sbar_Score_Default {
 
 	} else if (!teamplay) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
-		pl = players.sort_next;
+		pl = player_list.sort_next;
 		if(pl == me)
 			pl = pl.sort_next;
 

@@ -12,3 +12,11 @@ float(string s) str_width_colors {
 float(string s) str_width_nocolors {
 	return stringwidth(s, FALSE);
 }
+
+string(string s) str_color_translate_rgb {
+	if (CVAR(cl_stripcolorcodes))
+		return strdecolorize(s);
+	else
+		return s;
+}
+

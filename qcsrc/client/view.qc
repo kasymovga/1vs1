@@ -160,9 +160,9 @@ void CSQC_UpdateView(float w, float h)
 	spectatee_status = spectatee_status & 255;
 	observer_status = (spectatee_status ? (spectatee_status == player_localentnum) : 0);
 	if(spectatee_status)
-		myteam = GetPlayerColor(spectatee_status - 1);
+		myteam = player_color(spectatee_status - 1);
 	else
-		myteam = GetPlayerColor(player_localentnum - 1);
+		myteam = player_color(player_localentnum - 1);
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 
@@ -225,7 +225,6 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	sbar_alpha_fg = CVAR(sbar_alpha_fg) * (1 - CVAR(_menu_alpha));
-	ColorTranslateMode = CVAR(cl_stripcolorcodes);
 	activeweapon = getstati(STAT_SWITCHWEAPON);
 
 	// ALWAYS Clear Current Scene First

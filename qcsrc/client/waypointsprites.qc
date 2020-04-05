@@ -119,7 +119,7 @@ void Draw_WaypointSprite()
 
 	InterpolateOrigin_Do();
 
-	t = GetPlayerColor(player_localentnum - 1);
+	t = player_color(player_localentnum - 1);
 
 	spriteimage = "";
 

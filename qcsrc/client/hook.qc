@@ -62,7 +62,7 @@ void Draw_GrapplingHook()
 		self = e;
 	}
 
-	t = GetPlayerColorForce(owner_entnum - 1);
+	t = player_color_force(owner_entnum - 1);
 
 	if(t == COLOR_TEAM1)
 	{

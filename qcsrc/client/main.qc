@@ -265,7 +265,7 @@ void CSQC_Init(void)
 	calledhooks = 0;
 
 	teams = spawn();
-	players = spawn();
+	player_list = spawn();
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
@@ -380,7 +380,7 @@ void CSQC_Shutdown(void)
 #endif
 
 	remove(teams);
-	remove(players);
+	remove(player_list);
 	db_close(binddb);
 	db_close(tempdb);
 
@@ -696,7 +696,7 @@ void Ent_RemovePlayerScore()
 	if(self.owner)
 	{
 		SetTeam(self.owner, -1);
-		RemovePlayer(self.owner);
+		player_remove(self.owner);
 		self.owner.gotscores = 0;
 		for(i = 0; i < MAX_SCORE; ++i)
 			self.owner.(scores[i]) = 0; // clear all scores
@@ -733,7 +733,7 @@ void Ent_ReadPlayerScore(float ignore)
 	o.gotscores = 1;
 
 	if not(o.sort_prev)
-		RegisterPlayer(o);
+		player_register(o);
 
 	float sf, lf;
 #if MAX_SCORE <= 8
@@ -795,7 +795,7 @@ void Ent_ReadTeamScore(float ignore)
 
 	Sbar_UpdateTeamPos(o);
 	if (SP_TEAM_BIT)
-		for(o = players.sort_next; o; o = o.sort_next)
+		for(o = player_list.sort_next; o; o = o.sort_next)
 			if (o.gotscores) {
 				t = o.scores[SP_TEAM_FIELD];
 				if (t < 0)
@@ -921,7 +921,7 @@ void CSQC_Parse_StuffCmd(string strMessage)
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
-	print(ColorTranslateRGB(strMessage));
+	print(str_color_translate_rgb(strMessage));
 }
 
 #define GAMEMENU_ITEMS_COUNT_MAX 16
@@ -1000,7 +1000,7 @@ void Ent_ScoresInfo(float ignore)
 			SP_TEAM_BIT = 1;
 			SP_TEAM_FIELD = i;
 			for (j = 0; j < i; j++) SP_TEAM_BIT = SP_TEAM_BIT * 2;
-			for (o = players.sort_next; o; o = o.sort_next)
+			for (o = player_list.sort_next; o; o = o.sort_next)
 				if (o.gotscores) {
 					t = o.scores[SP_TEAM_FIELD];
 					if (t < 0)
@@ -1060,7 +1060,7 @@ void Ent_Init(float ignore)
 		}
 		entity o;
 		if (SP_TEAM_BIT)
-			for(o = players.sort_next; o; o = o.sort_next)
+			for(o = player_list.sort_next; o; o = o.sort_next)
 				if (o.gotscores)
 					SetTeam(o, o.scores[SP_TEAM_FIELD]);
 
@@ -1098,7 +1098,7 @@ void Net_ReadRace()
 			race_previousbesttime = net_read_int24();
 			if(race_previousbestname)
 				strunzone(race_previousbestname);
-			race_previousbestname = strzone(ColorTranslateRGB(ReadString()));
+			race_previousbestname = strzone(str_color_translate_rgb(ReadString()));
 
 			race_checkpointtime = time;
 
@@ -1125,7 +1125,7 @@ void Net_ReadRace()
 			race_nextbesttime = net_read_int24();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
-			race_nextbestname = strzone(ColorTranslateRGB(ReadString()));
+			race_nextbestname = strzone(str_color_translate_rgb(ReadString()));
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE:
@@ -1137,7 +1137,7 @@ void Net_ReadRace()
 				race_mycheckpointlapsdelta -= 256;
 			if(race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
-			race_mycheckpointenemy = strzone(ColorTranslateRGB(ReadString()));
+			race_mycheckpointenemy = strzone(str_color_translate_rgb(ReadString()));
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
@@ -1149,7 +1149,7 @@ void Net_ReadRace()
 				race_othercheckpointlapsdelta -= 256;
 			if(race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
-			race_othercheckpointenemy = strzone(ColorTranslateRGB(ReadString()));
+			race_othercheckpointenemy = strzone(str_color_translate_rgb(ReadString()));
 			break;
 
 		case RACE_NET_PENALTY_RACE:

@@ -12,32 +12,6 @@ float(float t, float d) team_index_def {
 }
 
 
-float GetPlayerColorForce(float i)
-{
-	if(!teamplay)
-		return 0;
-	else
-		return (stof(getplayerkey(i, "colors")) & 15) + 1;
-}
-
-float GetPlayerColor(float i)
-{
-	entity pl = playerslots[i];
-	if not(pl.gotscores) // unconnected
-		return COLOR_SPECTATOR;
-	else if(pl.team == COLOR_SPECTATOR)
-		return COLOR_SPECTATOR;
-	else if (teamplay)
-		return pl.team;
-	else
-		return GetPlayerColorForce(i);
-}
-
-string GetPlayerName(float i)
-{
-	return ColorTranslateRGB(getplayerkey(i, "name"));
-}
-
 vector GetTeamRGB(float color)
 {
 	switch(color)

@@ -157,7 +157,7 @@ void Zapper_Read(float t) {
             self.team = ReadByte();
         } else {
             self.sv_entnum = ReadByte();
-            self.team = GetPlayerColor(self.sv_entnum - 1);
+            self.team = player_color(self.sv_entnum - 1);
         }
 
         self.alpha = 1;

@@ -74,6 +74,8 @@ sphere.qh
 ice.qh
 cvar.qc
 ../client-server/movelib.qc
+str.qc
+player.qc
 miscfunctions.qc
 ../client-server/approach.qc
 ../common/file.qc
@@ -83,7 +85,6 @@ miscfunctions.qc
 ../client-server/stdproc.qc
 ../common/stdproc.qc
 teamplay.qc
-str.qc
 centerprint.qc
 sbar.qc
 mapvoting.qc
