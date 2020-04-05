@@ -114,7 +114,7 @@ string(float t) team_name_by_no {
 }
 
 void(void) team_play_activate {
-	teamplay = TRUE;
+	team_mode = TRUE;
 }
 
 float at1, at2, at3, at4;
@@ -140,114 +140,100 @@ void(float c) team_teams_set_count {
 	team_teams = at1 + at2 + at3 + at4;
 }
 
-// set c1...c4 to show what teams are allowed
+// set team1...team4 to show what teams are allowed
 void(entity for_whom) team_teams_allowed {
-	c1 = c2 = c3 = c4 = -1;
+	team1 = team2 = team3 = team4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
-	if (at1) c1 = 0;
-	if (at2) c2 = 0;
-	if (at3) c3 = 0;
-	if (at4) c4 = 0;
+	if (at1) team1 = 0;
+	if (at2) team2 = 0;
+	if (at3) team3 = 0;
+	if (at4) team4 = 0;
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if(c3==-1&&c4==-1)
-	if(bot_vs_human && for_whom)
-	{
-		if(bot_vs_human > 0)
-		{
+	if (team3 == -1 && team4 == -1)
+	if (bot_vs_human && for_whom) {
+		if (bot_vs_human > 0) {
 			// bots are all blue
-			if(clienttype(for_whom) == CLIENTTYPE_BOT)
-				c1 = c3 = c4 = -1;
+			if (clienttype(for_whom) == CLIENTTYPE_BOT)
+				team1 = team3 = team4 = -1;
 			else
-				c2 = -1;
-		}
-		else
-		{
+				team2 = -1;
+		} else {
 			// bots are all red
-			if(clienttype(for_whom) == CLIENTTYPE_BOT)
-				c2 = c3 = c4 = -1;
+			if (clienttype(for_whom) == CLIENTTYPE_BOT)
+				team2 = team3 = team4 = -1;
 			else
-				c1 = -1;
+				team1 = -1;
 		}
 	}
 	if (for_whom && for_whom == autoswap_last_best) {
 		if (autoswap_last_from == COLOR_TEAM1)
-			c1 = -1;
+			team1 = -1;
 		else if (autoswap_last_from == COLOR_TEAM2)
-			c2 = -1;
+			team2 = -1;
 		else if (autoswap_last_from == COLOR_TEAM3)
-			c3 = -1;
+			team3 = -1;
 		else if (autoswap_last_from == COLOR_TEAM4)
-			c4 = -1;
+			team4 = -1;
 	}
 }
 
-// c1...c4 should be set to -1 (not allowed) or 0 (allowed).
-// teams that are allowed will now have their player counts stored in c1...c4
+// team1...team4 should be set to -1 (not allowed) or 0 (allowed).
+// teams that are allowed will now have their player counts stored in team1...team4
 void(entity ignore) team_teams_count {
 	entity head;
 	float value, bvalue;
 	// now count how many players are on each team already
-
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
-
-	FOR_EACH_CLIENT(head)
-	{
-		if(head != ignore)// && head.netname != "")
-		{
+	FOR_EACH_CLIENT(head) {
+		if (head != ignore) {
 			value = 1;
-			if(clienttype(head) == CLIENTTYPE_BOT)
+			if (clienttype(head) == CLIENTTYPE_BOT)
 				bvalue = value;
 			else
 				bvalue = 0;
-			if(head.team == COLOR_TEAM1)
-			{
-				if(c1 >= 0)
+
+			if (head.team == COLOR_TEAM1) {
+				if(team1 >= 0)
 				{
-					c1 = c1 + value;
+					team1 = team1 + value;
 					cb1 = cb1 + bvalue;
 				}
-			}
-			if(head.team == COLOR_TEAM2)
-			{
-				if(c2 >= 0)
+			} else if (head.team == COLOR_TEAM2) {
+				if(team2 >= 0)
 				{
-					c2 = c2 + value;
+					team2 = team2 + value;
 					cb2 = cb2 + bvalue;
 				}
-			}
-			if(head.team == COLOR_TEAM3)
-			{
-				if(c3 >= 0)
+			} else if (head.team == COLOR_TEAM3) {
+				if(team3 >= 0)
 				{
-					c3 = c3 + value;
+					team3 = team3 + value;
 					cb3 = cb3 + bvalue;
 				}
-			}
-			if(head.team == COLOR_TEAM4)
-			{
-				if(c4 >= 0)
+			} else if (head.team == COLOR_TEAM4) {
+				if(team4 >= 0)
 				{
-					c4 = c4 + value;
+					team4 = team4 + value;
 					cb4 = cb4 + bvalue;
 				}
 			}
 		}
 	}
-	float n = c1 + c2;
-	if (c1 >= 0)
-	if (c2 >= 0)
-	if (c3 < 0)
-	if (c4 < 0)
+	float n = team1 + team2;
+	if (team1 >= 0)
+	if (team2 >= 0)
+	if (team3 < 0)
+	if (team4 < 0)
 	if (n > 2)
 	if (team_size_adjust) {
 		float f = ceil((n + ((ignore.team > 0) ? 0 : 1)) * team_size_adjust_value * g_balance_teams_adjust_sizes_factor);
 		f = bound(0, f, n - 2);
 		if (team_size_adjust == COLOR_TEAM1) {
-			c1 = c1 + f;
+			team1 = team1 + f;
 		} else if (team_size_adjust == COLOR_TEAM2) {
-			c2 = c2 + f;
+			team2 = team2 + f;
 		}
 	}
 }
@@ -256,97 +242,90 @@ void(entity ignore) team_teams_count {
 // NOTE: Assumes team_teams_allowed has already been called!
 float(entity pl) team_find_smallest {
 	float smallestteam_count, smallestteam_score, team_random;
-
 	// find out what teams are available
 	//team_teams_allowed();
-
 	// make sure there are at least 2 teams to join
 	// count how many players are in each team
 	team_teams_count(pl);
-
-	// c1...c4 now have counts of each team
+	// team1...team4 now have counts of each team
 	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
-
 	smallestteam_count = 999999999;
 	smallestteam_score = 999999999;
-
-	if(bot_would_leave)
-	//if(pl.classname != "player")
-	if(clienttype(pl) != CLIENTTYPE_BOT)
-	{
-		c1 -= cb1 * 255.0/256;
-		c2 -= cb2 * 255.0/256;
-		c3 -= cb3 * 255.0/256;
-		c4 -= cb4 * 255.0/256;
+	if (bot_would_leave)
+	if (clienttype(pl) != CLIENTTYPE_BOT) {
+		team1 -= cb1 * 255.0/256;
+		team2 -= cb2 * 255.0/256;
+		team3 -= cb3 * 255.0/256;
+		team4 -= cb4 * 255.0/256;
 	}
-	if(c1 >= 0 && c1 < smallestteam_count)
-		smallestteam_count = c1;
+	if (team1 >= 0 && team1 < smallestteam_count)
+		smallestteam_count = team1;
 
-	if(c2 >= 0 && c2 < smallestteam_count)
-		smallestteam_count = c2;
+	if (team2 >= 0 && team2 < smallestteam_count)
+		smallestteam_count = team2;
 
-	if(c3 >= 0 && c3 < smallestteam_count)
-		smallestteam_count = c3;
+	if (team3 >= 0 && team3 < smallestteam_count)
+		smallestteam_count = team3;
 
-	if(c4 >= 0 && c4 < smallestteam_count)
-		smallestteam_count = c4;
+	if (team4 >= 0 && team4 < smallestteam_count)
+		smallestteam_count = team4;
 
-	if (c1 == smallestteam_count && pl.team == COLOR_TEAM1) return 1;
-	if (c2 == smallestteam_count && pl.team == COLOR_TEAM2) return 2;
-	if (c3 == smallestteam_count && pl.team == COLOR_TEAM3) return 3;
-	if (c4 == smallestteam_count && pl.team == COLOR_TEAM4) return 4;
-	if (c1 == smallestteam_count)
+	if (team1 == smallestteam_count && pl.team == COLOR_TEAM1) return 1;
+	if (team2 == smallestteam_count && pl.team == COLOR_TEAM2) return 2;
+	if (team3 == smallestteam_count && pl.team == COLOR_TEAM3) return 3;
+	if (team4 == smallestteam_count && pl.team == COLOR_TEAM4) return 4;
+	if (team1 == smallestteam_count)
 		smallestteam_score = min(smallestteam_score, score_team1);
 
-	if (c2 == smallestteam_count)
+	if (team2 == smallestteam_count)
 		smallestteam_score = min(smallestteam_score, score_team2);
 
-	if (c3 == smallestteam_count)
+	if (team3 == smallestteam_count)
 		smallestteam_score = min(smallestteam_score, score_team3);
 
-	if (c4 == smallestteam_count)
+	if (team4 == smallestteam_count)
 		smallestteam_score = min(smallestteam_score, score_team4);
 
 	team_random = 0;
-	if (c1 == smallestteam_count)
+	if (team1 == smallestteam_count)
 	if (smallestteam_score == score_team1)
 		team_random++;
 
-	if (c2 == smallestteam_count)
+	if (team2 == smallestteam_count)
 	if (smallestteam_score == score_team2)
 		team_random++;
 
-	if (c3 == smallestteam_count)
+	if (team3 == smallestteam_count)
 	if (smallestteam_score == score_team3)
 		team_random++;
 
-	if (c4 == smallestteam_count)
+	if (team4 == smallestteam_count)
 	if (smallestteam_score == score_team4)
 		team_random++;
 
 	team_random = team_random * random();
-	if (c1 == smallestteam_count)
+	if (team1 == smallestteam_count)
 	if (smallestteam_score == score_team1) {
 		if (team_random <= 1)
 			return 1;
 		else
 			team_random -= 1;
 	}
-	if (c2 == smallestteam_count)
+	if (team2 == smallestteam_count)
 	if (smallestteam_score == score_team2) {
 		if (team_random <= 1)
 			return 2;
 		else
 			team_random -= 1;
 	}
-	if (c3 == smallestteam_count)
+	if (team3 == smallestteam_count)
 	if (smallestteam_score == score_team3) {
 		if (team_random <= 1)
 			return 3;
 		else
 			team_random -= 1;
 	}
-	if (c4 == smallestteam_count)
+	if (team4 == smallestteam_count)
 	if (smallestteam_score == score_team4) {
 		if (team_random <= 1)
 			return 4;
@@ -360,7 +339,7 @@ float(entity pl) team_find_smallest {
 void (entity pl, float forcebestteam) team_join_best {
 	float smallest, selectedteam;
 	// don't join a team if we're not playing a team game
-	if not(teamplay) {
+	if not(team_mode) {
 		pl.team = 0;
 		return;
 	}
@@ -370,13 +349,13 @@ void (entity pl, float forcebestteam) team_join_best {
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
 	{
-		if(     c1 >= 0 && pl.team == COLOR_TEAM1)
+		if (team1 >= 0 && pl.team == COLOR_TEAM1)
 			selectedteam = pl.team;
-		else if(c2 >= 0 && pl.team == COLOR_TEAM2)
+		else if (team2 >= 0 && pl.team == COLOR_TEAM2)
 			selectedteam = pl.team;
-		else if(c3 >= 0 && pl.team == COLOR_TEAM3)
+		else if (team3 >= 0 && pl.team == COLOR_TEAM3)
 			selectedteam = pl.team;
-		else if(c4 >= 0 && pl.team == COLOR_TEAM4)
+		else if (team4 >= 0 && pl.team == COLOR_TEAM4)
 			selectedteam = pl.team;
 		else
 			selectedteam = -1;
@@ -404,7 +383,7 @@ void (entity pl, float forcebestteam) team_join_best {
 }
 
 void(float _color) SV_ChangeTeam {
-	if (teamplay)
+	if (team_mode)
 		return;
 
 	player_set_colors(self, _color);
@@ -414,10 +393,10 @@ void(entity pl, float dteam, float nobalance) team_change {
 	float dcount, scount;
 	team_teams_allowed(pl);
 	switch (dteam) {
-	case COLOR_TEAM1: if (c1 < 0) return; break;
-	case COLOR_TEAM2: if (c2 < 0) return; break;
-	case COLOR_TEAM3: if (c3 < 0) return; break;
-	case COLOR_TEAM4: if (c4 < 0) return; break;
+	case COLOR_TEAM1: if (team1 < 0) return; break;
+	case COLOR_TEAM2: if (team2 < 0) return; break;
+	case COLOR_TEAM3: if (team3 < 0) return; break;
+	case COLOR_TEAM4: if (team4 < 0) return; break;
 	}
 	float teamchange = (pl.team > 0);
 	if((g_campaign && teamchange) || (g_changeteam_banned && pl.wasplayer)) {
@@ -432,23 +411,23 @@ void(entity pl, float dteam, float nobalance) team_change {
 		// find out what teams are available
 		// count how many players on each team
 		team_teams_count(pl);
-		float cr1 = c1 - cb1;
-		float cr2 = c2 - cb2;
-		float cr3 = c3 - cb3;
-		float cr4 = c4 - cb4;
+		float cr1 = team1 - cb1;
+		float cr2 = team2 - cb2;
+		float cr3 = team3 - cb3;
+		float cr4 = team4 - cb4;
 		switch (pl.team) {
 		case COLOR_TEAM1: scount = cr1; break;
 		case COLOR_TEAM2: scount = cr2; break;
 		case COLOR_TEAM3: scount = cr3; break;
 		case COLOR_TEAM4: scount = cr4; break;
 		}
-		if(dteam == COLOR_TEAM1 && c1 >= 0)
+		if(dteam == COLOR_TEAM1 && team1 >= 0)
 			dcount = cr1;
-		else if(dteam == COLOR_TEAM2 && c2 >= 0)
+		else if(dteam == COLOR_TEAM2 && team2 >= 0)
 			dcount = cr2;
-		else if(dteam == COLOR_TEAM3 && c3 >= 0)
+		else if(dteam == COLOR_TEAM3 && team3 >= 0)
 			dcount = cr3;
-		else if(dteam == COLOR_TEAM4 && c4 >= 0)
+		else if(dteam == COLOR_TEAM4 && team4 >= 0)
 			dcount = cr4;
 
 		float largeteam;
@@ -505,33 +484,33 @@ void(float source_team) team_shuffle_player_out {
 	bprint("Rebalancing Teams\n");
 	smallestteam = 0;
 	smallestteam_count = 999999999;
-	if(c1 >= 0 && c1 < smallestteam_count) {
+	if (team1 >= 0 && team1 < smallestteam_count) {
 		smallestteam = 1;
-		smallestteam_count = c1;
+		smallestteam_count = team1;
 	}
-	if(c2 >= 0 && c2 < smallestteam_count) {
+	if (team2 >= 0 && team2 < smallestteam_count) {
 		smallestteam = 2;
-		smallestteam_count = c2;
+		smallestteam_count = team2;
 	}
-	if(c3 >= 0 && c3 < smallestteam_count) {
+	if (team3 >= 0 && team3 < smallestteam_count) {
 		smallestteam = 3;
-		smallestteam_count = c3;
+		smallestteam_count = team3;
 	}
-	if(c4 >= 0 && c4 < smallestteam_count) {
+	if (team4 >= 0 && team4 < smallestteam_count) {
 		smallestteam = 4;
-		smallestteam_count = c4;
+		smallestteam_count = team4;
 	}
-	if(!smallestteam) {
+	if not(smallestteam) {
 		bprint("warning: no smallest team\n");
 		return;
 	}
-	if(source_team == 1)
+	if (source_team == 1)
 		steam = COLOR_TEAM1;
-	else if(source_team == 2)
+	else if (source_team == 2)
 		steam = COLOR_TEAM2;
-	else if(source_team == 3)
+	else if (source_team == 3)
 		steam = COLOR_TEAM3;
-	else if(source_team == 4)
+	else if (source_team == 4)
 		steam = COLOR_TEAM4;
 
 	selected_bot = world;
@@ -557,14 +536,14 @@ void(float source_team) team_shuffle_player_out {
 	} else if (g_balance_teams_movetype == 2) { //best
 		FOR_EACH_CLIENT(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
-			if(head.team == steam) {
-				if(head.isbot) {
-					if(!selected_bot || player_score > selected_bot_score) {
+			if (head.team == steam) {
+				if (head.isbot) {
+					if (!selected_bot || player_score > selected_bot_score) {
 						selected_bot = head;
 						selected_bot_score = player_score;
 					}
 				} else {
-					if(!selected_player || player_score > selected_player_score) {
+					if (!selected_player || player_score > selected_player_score) {
 						selected_player = head;
 						selected_player_score = player_score;
 					}
@@ -574,14 +553,14 @@ void(float source_team) team_shuffle_player_out {
 	} else { //worst
 		FOR_EACH_CLIENT(head) {
 			player_score = head.scorekeeper.scores[SP_SCORE];
-			if(head.team == steam) {
-				if(head.isbot) {
-					if(!selected_bot || player_score < selected_bot_score) {
+			if (head.team == steam) {
+				if (head.isbot) {
+					if (!selected_bot || player_score < selected_bot_score) {
 						selected_bot = head;
 						selected_bot_score = player_score;
 					}
 				} else {
-					if(!selected_player || player_score < selected_player_score) {
+					if (!selected_player || player_score < selected_player_score) {
 						selected_player = head;
 						selected_player_score = player_score;
 					}
@@ -590,38 +569,38 @@ void(float source_team) team_shuffle_player_out {
 		}
 	}
 	// prefers to move a bot...
-	if(selected_bot != world)
+	if (selected_bot != world)
 		selected = selected_bot;
 	else // but it will move a player if it has to
 		selected = selected_player;
 
 	// don't do anything if it couldn't find anyone
-	if(!selected) {
+	if (!selected) {
 		bprint("warning: couldn't find a player to move from team\n");
 		return;
 	}
 	// smallest team gains a member
 	if(smallestteam == 1) {
-		c1 = c1 + 1;
+		team1 = team1 + 1;
 	} else if(smallestteam == 2) {
-		c2 = c2 + 1;
+		team2 = team2 + 1;
 	} else if(smallestteam == 3) {
-		c3 = c3 + 1;
+		team3 = team3 + 1;
 	} else if(smallestteam == 4) {
-		c4 = c4 + 1;
+		team4 = team4 + 1;
 	} else {
 		bprint("warning: destination team invalid\n");
 		return;
 	}
 	// source team loses a member
 	if(source_team == 1) {
-		c1 = c1 + 1;
+		team1 = team1 + 1;
 	} else if(source_team == 2) {
-		c2 = c2 + 2;
+		team2 = team2 + 2;
 	} else if(source_team == 3) {
-		c3 = c3 + 3;
+		team3 = team3 + 3;
 	} else if(source_team == 4) {
-		c4 = c4 + 4;
+		team4 = team4 + 4;
 	} else {
 		bprint("warning: source team invalid\n");
 		return;
@@ -697,13 +676,12 @@ float(entity plr, float targetteam) team_fast_switch_allowed {
 	return FALSE;
 }
 
-void team_balance_audit(float force)
-{
+void(float force) team_balance_audit {
 	float numplayers, numteams, smallest, toomany;
-	if(map_intermission_running)
+	if (map_intermission_running)
 		return; // no rebalancing whatsoever please
 
-	if(g_campaign)
+	if (g_campaign)
 		return;
 
 	if (bot_vs_human)
@@ -712,43 +690,38 @@ void team_balance_audit(float force)
 	team_teams_allowed(world);
 	team_teams_count(world);
 	numteams = numplayers = smallest = 0;
-	if(c1 >= 0)
-	{
+	if (team1 >= 0) {
 		numteams = numteams + 1;
-		numplayers = numplayers + c1;
-		smallest = c1;
+		numplayers = numplayers + team1;
+		smallest = team1;
 	}
-	if(c2 >= 0)
-	{
+	if (team2 >= 0) {
 		numteams = numteams + 1;
-		numplayers = numplayers + c2;
-		if(c2 < smallest)
-			smallest = c2;
+		numplayers = numplayers + team2;
+		if(team2 < smallest)
+			smallest = team2;
 	}
-	if(c3 >= 0)
-	{
+	if (team3 >= 0) {
 		numteams = numteams + 1;
-		numplayers = numplayers + c3;
-		if(c3 < smallest)
-			smallest = c3;
+		numplayers = numplayers + team3;
+		if(team3 < smallest)
+			smallest = team3;
 	}
-	if(c4 >= 0)
-	{
+	if (team4 >= 0) {
 		numteams = numteams + 1;
-		numplayers = numplayers + c4;
-		if(c4 < smallest)
-			smallest = c4;
+		numplayers = numplayers + team4;
+		if(team4 < smallest)
+			smallest = team4;
 	}
-
-	if(numplayers <= 0) {
+	if (numplayers <= 0) {
 		team_note_remove();
 		return; // no players to move around
 	}
-	if(numteams < 2) {
+	if (numteams < 2) {
 		return; // don't bother shuffling if for some reason there aren't any teams
 	}
 	toomany = smallest + 1;
-	float team_flags = ((c1 > toomany) ? 1 : 0) + ((c2 > toomany) ? 2 : 0) + ((c3 > toomany) ? 4 : 0) + ((c4 > toomany) ? 8 : 0);
+	float team_flags = ((team1 > toomany) ? 1 : 0) + ((team2 > toomany) ? 2 : 0) + ((team3 > toomany) ? 4 : 0) + ((team4 > toomany) ? 8 : 0);
 	if not(team_flags)
 		team_note_remove();
 
@@ -771,13 +744,16 @@ void team_balance_audit(float force)
 		}
 		return;
 	}
-	if(c1 > toomany)
+	if (team1 > toomany)
 		team_shuffle_player_out(1);
-	if(c2 > toomany)
+
+	if (team2 > toomany)
 		team_shuffle_player_out(2);
-	if(c3 > toomany)
+
+	if (team3 > toomany)
 		team_shuffle_player_out(3);
-	if(c4 > toomany)
+
+	if (team4 > toomany)
 		team_shuffle_player_out(4);
 
 	if (force)
@@ -799,10 +775,10 @@ void(void) team_init {
 	CACHE_CVAR(g_balance_teams_adjust_sizes_factor);
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(bot_vs_human);
-};
+}
 
 float autoswap_last_time;
-void team_autoswap_best_with_worst(float from, float to) {
+void(float from, float to) team_autoswap_best_with_worst {
 	entity best = world, worst = world;
 	entity e;
 	autoswap_last_time = time;
@@ -827,16 +803,16 @@ void team_autoswap_best_with_worst(float from, float to) {
 	}
 	autoswap_last_best = best;
 	if (best) {
-		if (c1 - c2 == 0 && worst) {
+		if (team1 - team2 == 0 && worst) {
 			team_change(best, to, TRUE);
 			team_change(worst, from, TRUE);
-		} else if ((c1 < c2 && from == COLOR_TEAM2) || (c1 > c2 && from == COLOR_TEAM1)) {
+		} else if ((team1 < team2 && from == COLOR_TEAM2) || (team1 > team2 && from == COLOR_TEAM1)) {
 			team_change(best, to, TRUE);
-			if (fabs(c1 - c2) == 1 && worst) {
+			if (fabs(team1 - team2) == 1 && worst) {
 				team_change(worst, from, TRUE);
 			} else
 				team_balance_audit(FALSE);
-		} else if ((c1 == c2 + 1 && from == COLOR_TEAM2) || (c1 + 1 == c2 && from == COLOR_TEAM1) && worst && c1 + c2 >= g_balance_teams_autoswap_from_small_team_minplayers) {
+		} else if ((team1 == team2 + 1 && from == COLOR_TEAM2) || (team1 + 1 == team2 && from == COLOR_TEAM1) && worst && team1 + team2 >= g_balance_teams_autoswap_from_small_team_minplayers) {
 			team_change(best, to, TRUE);
 			team_change(worst, from, TRUE);
 		}
@@ -874,13 +850,12 @@ void() teams_balance_check {
 
 	team_teams_allowed(world);
 	team_teams_count(world);
-	if (c1 >= 0)
-	if (c2 >= 0)
-	if (c3 < 0)
-	if (c4 < 0)
-	if (c1 + c2 > 2)
-	if (c1 - cb1 + c2 - cb2 >= g_balance_teams_autoswap_required_humans)
-	{
+	if (team1 >= 0)
+	if (team2 >= 0)
+	if (team3 < 0)
+	if (team4 < 0)
+	if (team1 + team2 > 2)
+	if (team1 - cb1 + team2 - cb2 >= g_balance_teams_autoswap_required_humans) {
 		float maxscore = max(t1, t2);
 		if (maxscore == autoswap_lastmaxscore)
 			return;
@@ -899,11 +874,11 @@ void() teams_balance_check {
 }
 
 float(entity a, entity b) team_is_different_teams {
-	if(teamplay) {
-		if(a.team == b.team)
+	if (team_mode) {
+		if (a.team == b.team)
 			return 0;
 	} else {
-		if(a == b)
+		if (a == b)
 			return 0;
 	}
 	return 1;

@@ -383,8 +383,7 @@ void world_dump_stats(float final)
 		}
 	}
 
-	if(teamplay)
-	{
+	if (team_mode) {
 		s = strcat(":labels:teamscores:", score_team_string(0, 0));
 		if(to_console)
 			print(s, "\n");
@@ -467,10 +466,10 @@ float() world_check_rules_run_out_spawns {
 		team_teams_allowed(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			if(t != COLOR_TEAM1) if(c1 >= 0) score_team_add_to(COLOR_TEAM1, i, -1000);
-			if(t != COLOR_TEAM2) if(c2 >= 0) score_team_add_to(COLOR_TEAM2, i, -1000);
-			if(t != COLOR_TEAM3) if(c3 >= 0) score_team_add_to(COLOR_TEAM3, i, -1000);
-			if(t != COLOR_TEAM4) if(c4 >= 0) score_team_add_to(COLOR_TEAM4, i, -1000);
+			if (t != COLOR_TEAM1) if (team1 >= 0) score_team_add_to(COLOR_TEAM1, i, -1000);
+			if (t != COLOR_TEAM2) if (team2 >= 0) score_team_add_to(COLOR_TEAM2, i, -1000);
+			if (t != COLOR_TEAM3) if (team3 >= 0) score_team_add_to(COLOR_TEAM3, i, -1000);
+			if (t != COLOR_TEAM4) if (team4 >= 0) score_team_add_to(COLOR_TEAM4, i, -1000);
 		}
 
 		world_winners_add(team, t);

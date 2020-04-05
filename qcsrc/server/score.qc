@@ -862,8 +862,7 @@ float(float limit, float _leadlimit) score_winning_condition {
 	// TODO make everything use THIS winning condition (except LMS)
 	score_winning_condition_helper();
 
-	if(teamplay)
-	{
+	if (team_mode) {
 		score_team1 = score_team_comparable_value(COLOR_TEAM1);
 		score_team2 = score_team_comparable_value(COLOR_TEAM2);
 		score_team3 = score_team_comparable_value(COLOR_TEAM3);
@@ -949,16 +948,16 @@ void() score_basics_end {
 		score_initialized.classname = "ent_client_scoreinfo";
 		net_link_entity(score_initialized, FALSE, 0, score_info_send);
 	}
-	if(c1 >= 0)
+	if (team1 >= 0)
 		score_spawn_team(COLOR_TEAM1, "Red");
 
-	if(c2 >= 0)
+	if (team2 >= 0)
 		score_spawn_team(COLOR_TEAM2, "Blue");
 
-	if(c3 >= 0)
+	if (team3 >= 0)
 		score_spawn_team(COLOR_TEAM3, "Yellow");
 
-	if(c4 >= 0)
+	if (team4 >= 0)
 		score_spawn_team(COLOR_TEAM4, "Pink");
 }
 

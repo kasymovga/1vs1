@@ -369,7 +369,7 @@ void bot_clientconnect()
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
 
-	if (teamplay) {
+	if (team_mode) {
 		if(self.bot_forced_team==1)
 			self.bot_forced_team = COLOR_TEAM1;
 		else if(self.bot_forced_team==2)
@@ -395,20 +395,19 @@ void bot_removefromlargestteam()
 	best = head;
 	besttime = head.createdtime;
 	bestcount = 0;
-	while (head)
-	{
+	while (head) {
 		if(head.team == COLOR_TEAM1)
-			thiscount = c1;
+			thiscount = team1;
 		else if(head.team == COLOR_TEAM2)
-			thiscount = c2;
+			thiscount = team2;
 		else if(head.team == COLOR_TEAM3)
-			thiscount = c3;
+			thiscount = team3;
 		else if(head.team == COLOR_TEAM4)
-			thiscount = c4;
+			thiscount = team4;
 		else
 			thiscount = 0;
-		if (thiscount > bestcount)
-		{
+
+		if (thiscount > bestcount) {
 			bestcount = thiscount;
 			besttime = head.createdtime;
 			best = head;
@@ -429,8 +428,7 @@ void bot_removenewest()
 	local float besttime;
 	local entity best, head;
 
-	if(teamplay)
-	{
+	if (team_mode) {
 		bot_removefromlargestteam();
 		return;
 	}
@@ -543,7 +541,7 @@ void bot_serverframe()
 		minplayers = max(0, floor(realminplayers));
 
 		float realminbots, minbots;
-		if(teamplay && bot_vs_human)
+		if (team_mode && bot_vs_human)
 			realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
 		else
 			realminbots = bot_number;

@@ -7,10 +7,10 @@ NADGET_HOOKFUNCTION(gg, Attack) {
     float allow;
 
     FOR_EACH_PLAYER(p)
-    if(p != self)
-    if(!PLAYER_DEAD(p))
-    if(!teamplay || p.team != self.team /* || Buffs_Present(self, BUFF_MEDIC) */ )
-    if(vlen(self.origin - p.origin) < g_nadgets_gg_range) {
+    if (p != self)
+    if (!PLAYER_DEAD(p))
+    if (!team_mode || p.team != self.team /* || Buffs_Present(self, BUFF_MEDIC) */ )
+    if (vlen(self.origin - p.origin) < g_nadgets_gg_range) {
         vector o = self.origin + self.view_ofs;
         vector e = p.origin + p.view_ofs;
         traceline(o, e, TRUE, self);

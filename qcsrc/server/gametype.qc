@@ -7,7 +7,7 @@ void() gametype_writecvars {
 
 void() gametype_readcvars {
 	game = GAME_DEATHMATCH;
-	teamplay = 0;
+	team_mode = 0;
 	float i;
 	for (i = GAME_DEATHMATCH; i < GAME_END; i++) {
 		if (cvar(MapInfo_GetGameTypeCvar(i))) {
@@ -105,7 +105,7 @@ void() gametype_init {
 		coop_init();
 	} else if (game == GAME_LMS) {
 		lms_init();
-	} else if(teamplay)
+	} else if (team_mode)
 		entcs_init();
 
 	// save it (for the next startup)

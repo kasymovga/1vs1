@@ -263,7 +263,7 @@ float weapon_rocketlauncher(float req)
 					// count potential damage according to type of target
 					if (targ == self)
 						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teamplay)
+					else if (targ.team == self.team && team_mode)
 						teamdamage = teamdamage + d;
 					else if (bot_shouldattack(targ))
 						enemydamage = enemydamage + d;

@@ -263,7 +263,7 @@ void(void) SV_OnEntityPreSpawnFunction {
 	if (entity_gametype_patterns == "") {
 		entity_gametype_patterns = cvar_string("g_gametype_patterns");
 		if (entity_gametype_patterns == "") { //Trying to guess
-			if (teamplay)
+			if (team_mode)
 				entity_gametype_patterns = "team|ctf";
 			else if(cvar("g_maxplayers") == 2)
 				entity_gametype_patterns = "tournament|duel";
@@ -274,7 +274,7 @@ void(void) SV_OnEntityPreSpawnFunction {
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
-	if not(gametype_filter(game, teamplay, self.gametypefilter)) {
+	if not(gametype_filter(game, team_mode, self.gametypefilter)) {
 		remove(self);
 		return;
 	}

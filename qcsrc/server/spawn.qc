@@ -41,7 +41,7 @@ void() spawn_relocate {
     if (!self.cnt)
         self.cnt = 1;
 
-    if (teamplay)
+    if (team_mode)
         if (self.team)
             spawn_have_team_spawns = 1;
 
@@ -58,9 +58,8 @@ void() spawn_relocate {
 }
 
 void() spawnpoint_use {
-	if(teamplay)
-	if(spawn_have_team_spawns)
-	{
+	if (team_mode)
+	if (spawn_have_team_spawns) {
 		self.team = activator.team;
 		spawn_has_been_used = 1;
 	}

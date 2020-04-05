@@ -596,7 +596,7 @@ void(void) nexball_delayedinit {
 		nexball_spawnteams();
 
 	team_teams_allowed(world);
-	nexball_teams = 4 + c1 + c2 + c3 + c4;
+	nexball_teams = 4 + team1 + team2 + team3 + team4;
 	score_basics(0, 0, TRUE);
 	ST_NEXBALL_GOALS = score_register_team_score("goals", SFL_SORT_PRIO_PRIMARY);
 	SP_NEXBALL_GOALS = score_register("goals", SFL_SORT_PRIO_PRIMARY);

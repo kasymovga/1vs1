@@ -192,9 +192,9 @@ void(void) vehicle_init {
 }
 
 float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter {
-    if(teamplay)
-    if(self.team)
-    if(self.team != other.team)
+    if (team_mode)
+    if (self.team)
+    if (self.team != other.team)
         return FALSE;
 
 	if (_hud == HUD_SPIDERBOT) {
@@ -286,7 +286,7 @@ void(float eject, float eject_range, float exit_up, float range) vehicle_stdproc
     }
     self.owner.takedamage     = DAMAGE_AIM;
 	player_body_setup(self.owner);
-    if not (teamplay)
+    if not(team_mode)
         self.team = 0;
     else
         self.team = self.enemy.team ;

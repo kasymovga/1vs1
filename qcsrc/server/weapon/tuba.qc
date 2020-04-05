@@ -52,8 +52,7 @@ float weapon_tuba_note(entity pl, float hittype)
 	// kind of tuba currently is player slot number, or team number if in
 	// teamplay
 	// that way, holes in the range of notes are "plugged"
-	if(teamplay)
-	{
+	if (team_mode) {
 		if(pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
 			note += 3;
 	}

@@ -34,7 +34,7 @@ void damage_info(vector org, float coredamage, float edgedamage, float rad, vect
 	e.projectiledeathtype = deathtype;
 	e.oldorigin_x = net_compress_vec(force);
 
-	if(teamplay) {
+	if (team_mode) {
 		e.team = dmgowner.team;
 	}
 
@@ -113,8 +113,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 			{
 				if(attacker != targ)
 				{
-					if(teamplay)
-					{
+					if (team_mode) {
 						if(targ.deadflag == DEAD_NO)
 						{
 							float teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
@@ -269,7 +268,7 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 	if (targ.deadflag == DEAD_NO)
 	if (targ.iscreature)
 	if (targ != attacker)
-	if (!teamplay || targ.team != attacker.team)
+	if (!team_mode || targ.team != attacker.team)
 	if not(warmup_active)
 	if(weaponid >= WEP_FIRST)
 	if(weaponid <= WEP_LAST)

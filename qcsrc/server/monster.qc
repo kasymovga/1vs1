@@ -73,7 +73,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 	if (e.health >= 1)
 	if (e.takedamage)
 	if (e.deadflag == DEAD_NO) {
-		if (teamplay) {
+		if (team_mode) {
 			if not(self.team)
 				continue;
 
@@ -363,7 +363,7 @@ void monster_shield_destroy(void) {
 
 void monster_spawn_think() {
 	float quant = GameHook_MonsterQuant();
-	if (teamplay)
+	if (team_mode)
 	if not(self.team)
 		return;
 
@@ -547,7 +547,7 @@ void monster_prepare_spawn(void() spawnfunc, void() resetfunc) {
 	if (!self.respawntime)
 		self.respawntime = 1;
 
-	if (teamplay)
+	if (team_mode)
 	if not(self.team)
 		self.team = -1;
 

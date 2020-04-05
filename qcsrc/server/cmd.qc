@@ -178,26 +178,22 @@ void(string command) cmd_game {
 		bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(cvar("g_maxplayers_spectator_blocktime")), " seconds!\n"));
 		return;
 	}
-	if (cmd == "team_lock")
-	{
-		if(teamplay)
-		{
+	if (cmd == "team_lock") {
+		if(team_mode) {
 			team_lock = 1;
 			bprint("^1The teams are now locked.\n");
-		}
-		else
+		} else
 			bprint("That command can only be used in a team-based gamemode.\n");
+
 		return;
 	}
-	if (cmd == "unteam_lock")
-	{
-		if(teamplay)
-		{
+	if (cmd == "unteam_lock") {
+		if (team_mode) {
 			team_lock = 0;
 			bprint("^1The teams are now unlocked.\n");
-		}
-		else
+		} else
 			bprint("That command can only be used in a team-based gamemode.\n");
+
 		return;
 	}
 	if (cmd == "movetoteam") if(argc == 3)
@@ -483,7 +479,7 @@ void(string command) cmd_game {
 		}
 		return;
 	}
-	if (teamplay)
+	if (team_mode)
 	if (cmd == "shuffleteams")
 	{
 		float t = COLOR_TEAM4;
@@ -505,16 +501,16 @@ void(string command) cmd_game {
 				t = COLOR_TEAM4;
 
 			for (i = 0; i < 2; i++) {
-				if (t == COLOR_TEAM1 && c1 < 0)
+				if (t == COLOR_TEAM1 && team1 < 0)
 					t = COLOR_TEAM2;
 
-				if (t == COLOR_TEAM2 && c2 < 0)
+				if (t == COLOR_TEAM2 && team2 < 0)
 					t = COLOR_TEAM3;
 
-				if (t == COLOR_TEAM3 && c3 < 0)
+				if (t == COLOR_TEAM3 && team3 < 0)
 					t = COLOR_TEAM4;
 
-				if (t == COLOR_TEAM4 && c4 < 0)
+				if (t == COLOR_TEAM4 && team4 < 0)
 					t = COLOR_TEAM1;
 			}
 			if (t != plr.team) {
@@ -655,7 +651,7 @@ void(string s) cmd_client {
 	} else if( cmd == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
 			return;
-		if( !teamplay ) {
+		if not(team_mode) {
 			sprint( self, "selecteam can only be used in teamgames\n");
 		} else if(g_campaign) {
 		} else if(team_lock) {

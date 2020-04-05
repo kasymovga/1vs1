@@ -596,7 +596,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (bot_talk)
 			if (random() <= bot_talk)
 			{
-				if (teamplay && attacker.team == targ.team)
+				if (team_mode && attacker.team == targ.team)
 					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
 				else
 					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
@@ -615,7 +615,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if (bot_talk)
 		if (random() <= bot_talk)
 		{
-			if (teamplay && attacker.team == targ.team)
+			if (team_mode && attacker.team == targ.team)
 			{
 				Bot_Say(targ, FALSE, world, cvar_string("bot_messages_teamkilled"), strcat(attacker.netname, "^7: "));
 			}
@@ -627,7 +627,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 		}
-		if(teamplay && attacker.team == targ.team && !targ.saboteur)
+		if(team_mode && attacker.team == targ.team && !targ.saboteur)
 		{
 			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
 			bprint ("^1", a, "^1 mows down a team mate\n");
@@ -1220,7 +1220,7 @@ void player_voice_message(string type, string msg)
 			}
 	} else {
 		FOR_EACH_REALCLIENT(msg_entity)
-			if(!teamplay || msg_entity.team == self.team)
+			if(!team_mode || msg_entity.team == self.team)
 			{
 				if(msg_entity.cvar_cl_voice_directional == 1)
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
@@ -1303,7 +1303,7 @@ void(string modelname) player_setup_lod {
 }
 
 string(void) player_allowed_model_list {
-	if (teamplay)
+	if (team_mode)
 	if (self.team > 0) {
 		if (self.team == COLOR_TEAM1) {
 			if (g_player_allowed_models_red != "")
@@ -1390,7 +1390,7 @@ void() player_setup_model {
 	string forcemodel;
 	float forceskin, forcecolor, chmdl, oldskin;
 	vector m1, m2;
-	if(teamplay)
+	if(team_mode)
 	{
 		forcemodel =
 				((self.team == COLOR_TEAM1) ? g_player_forcemodel_red :
@@ -1447,7 +1447,7 @@ void() player_setup_model {
 			self.skinindex = player_allowed_skin(self.playermodel, stof(self.playerskin));
 			self.playerskin = "";
 		}
-		self.skinindex = (teamplay ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
+		self.skinindex = (team_mode ? ((self.skinindex == 6) ? 6 : math_mod(self.skinindex, 3)) : self.skinindex); //what bad about skins 3, 4 and 5?
 	}
 	if (chmdl || oldskin != self.skinindex)
 		player_species_setup();
@@ -1477,7 +1477,7 @@ void(entity player) player_to_spec
 		score_touch(player);
 		self = oldself;
 		spectator_note_update();
-		if (teamplay)
+		if (team_mode)
 			team_balance_audit(FALSE);
 	}
 }
@@ -1815,7 +1815,7 @@ void(void) player_impulse {
 				}
 				break;
 			case 33:
-				if(self.deadflag == DEAD_NO && teamplay)
+				if(self.deadflag == DEAD_NO && team_mode)
 				{
 					wp = WaypointSprite_Attach("helpme", TRUE);
 					if(wp)
@@ -2313,7 +2313,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 // decolorizes and team colors the player name when needed
 string(entity p) player_name {
     string t;
-    if (teamplay && !map_intermission_running && p.classname == "player") {
+    if (team_mode && !map_intermission_running && p.classname == "player") {
         t = team_color_code(p.team);
         return strcat(t, strdecolorize(p.netname));
     } else
@@ -2325,7 +2325,7 @@ void(entity pl, float _color) player_set_colors {
 	pants = _color & 0x0F;
 	shirt = _color & 0xF0;
 	float t = pl.team;
-	if(teamplay)
+	if(team_mode)
 		setcolor(pl, 16*pants + pants);
 	else
 		setcolor(pl, shirt + pants);

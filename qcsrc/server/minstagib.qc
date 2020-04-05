@@ -289,7 +289,7 @@ void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype)
 				GameHook_MirrorDamageMod = 0;
 			}
 		}
-		if (teamplay)
+		if (team_mode)
 		if (attacker != targ)
 		if (deathtype != DEATH_MIRRORDAMAGE)
 		if (deathtype != DEATH_NOAMMO)

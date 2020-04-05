@@ -27,7 +27,7 @@ void arc_damage_recurse(entity targ, entity attacker, float _damage, float death
     if(plr.deadflag == DEAD_NO || (plr.deadflag == DEAD_FREEZE && targetFrozen))
     if(!plr.hg_stealth || (targetTeamMates && plr.team == attacker.team))
     if(!plr.hitfield) {
-        float sameteam = (teamplay && plr.team == attacker.team);
+        float sameteam = (team_mode && plr.team == attacker.team);
         if((!sameteam && (((plr.deadflag != DEAD_FREEZE) && targetAlive) || ((plr.deadflag == DEAD_FREEZE) && targetFrozen))) || (sameteam && targetTeamMates)) {
             dist = vlen(plr.origin - targ.origin);
             if(dist < shortest) {
@@ -43,7 +43,7 @@ void arc_damage_recurse(entity targ, entity attacker, float _damage, float death
 
     if(newtarget) {
         arc_effect(targ.origin + arcoffset, newtarget.origin + arcoffset,
-                  (targetTeamMates ? 0 : (teamplay ? attacker.team : default_color)));
+                  (targetTeamMates ? 0 : (team_mode ? attacker.team : default_color)));
 
         damage(newtarget, attacker, attacker, _damage, deathtype, '0 0 0',
                normalize(newtarget.origin - targ.origin) * force);
@@ -65,7 +65,7 @@ void arc_damage(entity targ, entity attacker, float _damage, float deathtype,
                float range, float mul, float force, float default_color, .float hitfield) {
 
     float targetTeamMates = 0;
-    if(teamplay && targ.team == attacker.team && !targetTeamMates)
+    if (team_mode && targ.team == attacker.team && !targetTeamMates)
         return;
 
     float targetFrozen = (targ.deadflag == DEAD_FREEZE) && !targetTeamMates;

@@ -167,10 +167,10 @@ void() spectator_to_player {
 
 		team_teams_allowed(self);
 		float skip_team_select = FALSE;
-		if (c1 + c2 + c3 + c4 == -3) {
+		if (team1 + team2 + team3 + team4 == -3) {
 			skip_team_select = TRUE;
 		}
-		if ( skip_team_select || !teamplay || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
+		if ( skip_team_select || !team_mode || g_campaign || g_balance_teams || (self.wasplayer && g_changeteam_banned) || self.team > 0) {
 			self.classname = "player";
 			if(g_campaign || g_balance_teams || g_balance_teams_force)
 				team_join_best(self, TRUE);

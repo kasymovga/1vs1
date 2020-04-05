@@ -52,8 +52,7 @@ void weapon_minstanex_attack (void)
 	pointparticles(particleeffectnum("nex_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
-	if(teamplay)
-	{
+	if (team_mode) {
 	    switch(self.team)
 	    {
             case COLOR_TEAM1:   // Red

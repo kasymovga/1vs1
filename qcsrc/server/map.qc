@@ -392,7 +392,7 @@ void() map_finish {
 	cvar_deinit();
 	string map_finished_message;
 	map_finished_message = "^2Game finished!";
-	if (teamplay) {
+	if (team_mode) {
 		if (score_winning_condition_helper_winnerteam > 0)
 			map_finished_message = strcat(map_finished_message, "\n", team_color_code(score_winning_condition_helper_winnerteam), team_color_name(score_winning_condition_helper_winnerteam), " Team^2 wins!");
 	} else {

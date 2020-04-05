@@ -481,7 +481,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float _damage, fl
     if not (baseent.tur_active)
         return;
 
-    if (teamplay != 0)
+    if (team_mode)
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
@@ -993,11 +993,11 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
         }
         else
         {
-            if (e_target.team == e_turret.team || (teamplay && !e_target.team))
+            if (e_target.team == e_turret.team || (team_mode && !e_target.team))
                 return -13;
 
 			if (e_target.owner)
-            if (e_turret.team == e_target.owner.team || (teamplay && !e_target.owner.team))
+            if (e_turret.team == e_target.owner.team || (team_mode && !e_target.owner.team))
                 return -14;
         }
     }
@@ -1134,8 +1134,7 @@ void turret_think()
 		return;
 
     // ONS uses somewhat backwards linking.
-    if (teamplay)
-    {
+    if (team_mode) {
         if (self.team != self.tur_head.team)
 			turret_stdproc_setcolormod();
     }
@@ -1327,7 +1326,7 @@ void turret_stdproc_fire()
 
 void turret_activate()
 {
-	if (teamplay)
+	if (team_mode)
         self.tur_active = self.team;
     else
         self.tur_active = 1;
@@ -1368,7 +1367,7 @@ void(void) turret_precache {
 float turret_count;
 void(void) turret_stdproc_init_delayed {
 	entity e;
-	if not(teamplay)
+	if not(team_mode)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
 	else {
 		if (self.targetname != "") {

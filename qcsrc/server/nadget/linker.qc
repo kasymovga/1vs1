@@ -25,7 +25,7 @@ void nadget_Linker_Remove(void) {
 var void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet_next;
 void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceModsSet {
 	if (targ.hg_linker)
-	if (targ.hg_linker.owner == targ || (teamplay && targ.hg_linker.team == targ.team))
+	if (targ.hg_linker.owner == targ || (team_mode && targ.hg_linker.team == targ.team))
 		GameHook_DamageMod = GameHook_DamageMod * g_nadgets_linker_damagefactor;
 
 	nadget_linker_DamageForceModsSet_next(targ, attacker, deathtype);
@@ -43,7 +43,7 @@ void nadget_Linker_Think(void) {
 
     float sharingframe = (time > self.hg_linker_nexteffect);
     FOR_EACH_PLAYER(p) {
-        if(p.team != self.team || (!teamplay && p != self.owner)) {
+        if(p.team != self.team || (!team_mode && p != self.owner)) {
             if(p.hg_linker == self)
                 p.hg_linker = world;
         } else if(p.hg_linker == self) {

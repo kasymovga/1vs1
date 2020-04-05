@@ -670,8 +670,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			remove (self);
 			return;
 		}
-		if(teamplay)
-		{
+		if (team_mode) {
 			if(self.notteam)
 			{
 				print("removed non-teamplay ", self.classname, "\n");

@@ -151,7 +151,7 @@ void nadget_GenericProjectile_Touch(void) {
         if(nadget_GenericProjectile_TryStick(other, v))
             return;
 
-        if(self.hg_type == NADGET_TRANSLOC && teamplay && other.team == self.owner.team) {
+        if(self.hg_type == NADGET_TRANSLOC && team_mode && other.team == self.owner.team) {
 			goto troll;
         } else if(self.hg_type == NADGET_REMOTE) {
             goto troll;

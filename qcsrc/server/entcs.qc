@@ -33,7 +33,7 @@ float() entcs_customize {
 	if(other.enemy == o)
 		return FALSE;
 
-	if(teamplay && o.team == other.team) {
+	if (team_mode && o.team == other.team) {
 		self.effects |= EF_FULLBRIGHT;
 	} else {
 		if (o == self.enemy)
@@ -55,7 +55,7 @@ float(entity to, float sf) entcs_send {
 	if (self.effects & EF_FULLBRIGHT)
 		sf |= 64;
 
-	if (teamplay)
+	if (team_mode)
 	if (o.team == to.team) {
 		sf |= 160;
 	}

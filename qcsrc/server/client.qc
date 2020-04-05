@@ -116,11 +116,14 @@ float client_init_send(entity to, float sf)
 		GameMenu_Send();
 
 	if (sf & 32) {
-		WriteByte(MSG_ENTITY, teamplay);
+		WriteByte(MSG_ENTITY, team_mode);
 		t = 0;
-		if(teamplay) {
+		if (team_mode) {
 			team_teams_allowed(self);
-			if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
+			if (team1 >= 0) t |= 1;
+			if (team2 >= 0) t |= 2;
+			if (team3 >= 0) t |= 4;
+			if (team4 >= 0) t |= 8;
 		}
 		WriteByte(MSG_ENTITY, t);
 	}
@@ -263,7 +266,7 @@ void(float destteam) client_team_change_kill {
 
 void(float destteam) client_team_change {
 	float t, c0;
-	if not(teamplay) {
+	if not(team_mode) {
 		if (destteam >= 0)
 			player_set_colors(self, destteam);
 
@@ -280,37 +283,33 @@ void(float destteam) client_team_change {
 		team_teams_allowed(self);
 		t = team_find_smallest(self);
 		switch (self.team) {
-		case COLOR_TEAM1: c0 = c1; break;
-		case COLOR_TEAM2: c0 = c2; break;
-		case COLOR_TEAM3: c0 = c3; break;
-		case COLOR_TEAM4: c0 = c4; break;
+		case COLOR_TEAM1: c0 = team1; break;
+		case COLOR_TEAM2: c0 = team2; break;
+		case COLOR_TEAM3: c0 = team3; break;
+		case COLOR_TEAM4: c0 = team4; break;
 		default:          c0 = 999;
 		}
 		switch (t) {
 		case 1:
-			if (c0 > c1)
+			if (c0 > team1)
 				destteam = COLOR_TEAM1;
 
 			break;
-
 		case 2:
-			if (c0 > c2)
+			if (c0 > team2)
 				destteam = COLOR_TEAM2;
 
 			break;
-
 		case 3:
-			if (c0 > c3)
+			if (c0 > team3)
 				destteam = COLOR_TEAM3;
 
 			break;
-
 		case 4:
-			if (c0 > c4)
+			if (c0 > team4)
 				destteam = COLOR_TEAM4;
 
 			break;
-
 		}
 		if (destteam == -1)
 			return;
@@ -405,8 +404,7 @@ void(void) client_connect { //called by engine
 	} else if (sv_spectate == 1) {
 		self.classname = "observer";
 	} else {
-		if(teamplay)
-		{
+		if(team_mode) {
 			if(g_balance_teams || g_balance_teams_force)
 			{
 				self.classname = "player";
@@ -494,7 +492,7 @@ void(void) client_disconnect { //called by engine
 	if (clienttype(self) == CLIENTTYPE_REAL)
 		GameHookChain_RealClientDisconnect();
 
-	if (teamplay) {
+	if (team_mode) {
 		team_balance_audit(FALSE);
 		if (autoswap_last_best == self)
 			autoswap_last_best = world;
@@ -515,7 +513,7 @@ float() client_join_allowed {
 	float currentlyPlaying;
 	FOR_EACH_REALCLIENT(e) {
 		if (e != self) //avoid wrong self-counting in teamplay
-		if (e.classname == "player" || (teamplay && e.team > 0))
+		if (e.classname == "player" || (team_mode && e.team > 0))
 			currentlyPlaying += 1;
 	}
 	if(currentlyPlaying < g_maxplayers)

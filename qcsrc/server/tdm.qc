@@ -6,7 +6,7 @@ void(void) tdm_delayedinit {
 	}
 	team_teams_allowed(world);
 	float teams_override = cvar("g_tdm_teams_override");
-	if (c1 + c2 + c3 + c4 < -2 || teams_override > 1) {
+	if (team1 + team2 + team3 + team4 < -2 || teams_override > 1) {
 		team_teams_set_count(0);
 		float numteams = teams_override;
 		if(numteams < 2)
