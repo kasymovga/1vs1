@@ -1,13 +1,3 @@
-void MoveToLast(entity e)
-{
-	other = e.sort_next;
-	while(other)
-	{
-		SORT_SWAP(other, e);
-		other = e.sort_next;
-	}
-}
-
 vector rotate(vector v, float a)
 {
 	vector w;
