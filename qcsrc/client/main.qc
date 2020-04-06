@@ -311,7 +311,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_DAMAGEINFO] = Ent_DamageInfo;
 	ent_parsers[ENT_CLIENT_CASING] = Ent_Casing;
 	ent_parsers[ENT_CLIENT_INIT] = Ent_Init;
-	ent_parsers[ENT_CLIENT_MAPVOTE] = Ent_MapVote;
+	ent_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
 	ent_parsers[ENT_CLIENT_RANDOMSEED] = Ent_RandomSeed;
 	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
 	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
@@ -494,7 +494,7 @@ void GameCommand(string msg)
 	string cmd;
 	cmd = argv(0);
 	if(cmd == "mv_download") {
-		Cmd_MapVote_MapDownload(argc);
+		mapvote_preview_download(argc);
 	}
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
@@ -1145,7 +1145,7 @@ float CSQC_Parse_TempEntity()
 			Net_ReadWeaponSelect();
 			break;
 		case TE_CSQC_PICTURE:
-			Net_MapVote_Picture();
+			mapvote_picture_read();
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();

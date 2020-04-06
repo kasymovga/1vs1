@@ -8,45 +8,6 @@ void MoveToLast(entity e)
 	}
 }
 
-float PreviewExists(string name)
-{
-	float f;
-	string file;
-
-	if (CVAR(cl_readpicture_force))
-		return FALSE;
-
-	file = strcat(name, ".tga");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return TRUE;
-	}
-	file = strcat(name, ".png");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return TRUE;
-	}
-	file = strcat(name, ".jpg");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return TRUE;
-	}
-	file = strcat(name, ".pcx");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return TRUE;
-	}
-	return FALSE;
-}
-
 vector rotate(vector v, float a)
 {
 	vector w;

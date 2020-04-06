@@ -1,2 +1,0 @@
-float mv_active;
-void MapVote_Draw();

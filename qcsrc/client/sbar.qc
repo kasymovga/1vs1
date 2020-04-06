@@ -75,8 +75,8 @@ void Sbar_FinaleOverlay()
 	//drawpic(pos, "gfx/finale", '0 0 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	//drawstring(pos, "END", sbar_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-	if (mv_active)
-		MapVote_Draw();
+	if (mapvote_active)
+		mapvote_draw();
 }
 
 float weaponspace[10];
@@ -2100,7 +2100,7 @@ void Sbar_Draw (void)
 	sbar_fontsize_spec = Sbar_GetFontsize(CVAR(sbar_fontsize_spec));
 
 	float _health = getstati(STAT_HEALTH);
-	if (mv_active) // map voting screen
+	if (mapvote_active) // map voting screen
 	{
 		if(sb_showscores) {
 			Sbar_DrawScoreboard();

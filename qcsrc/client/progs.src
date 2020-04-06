@@ -38,7 +38,7 @@ waypointsprites.qh
 movetypes.qh
 prandom.qh
 bgmscript.qh
-mapvoting.qh
+mapvote.qh
 menu.qh
 mouse.qh
 progressbar.qh
@@ -88,7 +88,7 @@ miscfunctions.qc
 team.qc
 centerprint.qc
 sbar.qc
-mapvoting.qc
+mapvote.qc
 
 ../client-server/hook.qh
 ../client-server/physics_hook.qh
