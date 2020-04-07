@@ -58,14 +58,6 @@ float() single_player_death_handle {
 	return FALSE;
 }
 
-float Single_IceSkipDeathHandle() {
-	return !self.wasplayer;
-}
-
-void Single_IceUnfroze() {
-	return;
-}
-
 void single_init_delayed(void) {
 	entity e;
 	string s;

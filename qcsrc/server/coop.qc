@@ -80,6 +80,15 @@ void() coop_ObserverSpawn {
 	}
 }
 
+float() coop_IceSkipDeathHandle {
+	return !self.wasplayer;
+}
+
+void() coop_IceUnfroze {
+	return;
+}
+
+
 void() coop_IceFrozenStatus {
 	entity e;
 	FOR_EACH_PLAYER(e) {
@@ -92,8 +101,8 @@ void() coop_IceFrozenStatus {
 
 void(void) coop_init_delayed {
 	IceHook_FrozenStatus = coop_IceFrozenStatus;
-	IceHook_SkipDeathHandle = Single_IceSkipDeathHandle;
-	IceHook_Unfroze = Single_IceUnfroze;
+	IceHook_SkipDeathHandle = coop_IceSkipDeathHandle;
+	IceHook_Unfroze = coop_IceUnfroze;
 	Ice_Init();
 }
 
