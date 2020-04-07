@@ -1075,7 +1075,7 @@ void race_init() {
 		player_independent = 1;
 
 	if (g_race) {
-		GameHook_WinningCondition = race_WinningCondition;
+		gamehook_winning_condition = race_WinningCondition;
 		GameHook_OvertimeHandle = race_OvertimeHandle;
 		GameHook_KillDelayMod = race_KillDelayMod;
 		GameHook_WarmupAllowed = race_WarmupAllowed;

@@ -222,7 +222,6 @@ float conquest_WinningCondition()
 	t1 = t2 = 0;
 
 	one_of_team_cannot_spawn = FALSE;
-	score_winning_condition_helper(); // set worldstatus
 	if(warmup_active)
 		return FALSE;
 
@@ -364,7 +363,7 @@ void conquest_init() {
 	if (g_conq_capture_time <= 0)
 		g_conq_capture_time = 1;
 
-	GameHook_WinningCondition = conquest_WinningCondition;
+	gamehook_winning_condition = conquest_WinningCondition;
 	GameHook_FragsHandle = conquest_FragsHandle;
 	GameHook_SelectSpawnPoint = conquest_SelectSpawnPoint;
 	GameHook_DeathHandle = onslaught_DeathHandle;

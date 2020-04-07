@@ -859,9 +859,6 @@ void(entity to) score_nice_print {
 
 float leaderfrags;
 float(float limit, float _leadlimit) score_winning_condition {
-	// TODO make everything use THIS winning condition (except LMS)
-	score_winning_condition_helper();
-
 	if (team_mode) {
 		score_team1 = score_team_comparable_value(COLOR_TEAM1);
 		score_team2 = score_team_comparable_value(COLOR_TEAM2);

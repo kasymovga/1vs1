@@ -132,7 +132,6 @@ float survive_checkNextWave() {
 
 float survive_last_countdown;
 float survive_WinningCondition() {
-	score_winning_condition_helper(); // set worldstatus
 	if (time < map_starttime)
 		return FALSE;
 
@@ -272,7 +271,7 @@ void survive_init() {
 	CACHE_CVAR(g_surv_freeze);
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	survive_monster_quant = 1;
-	GameHook_WinningCondition = survive_WinningCondition;
+	gamehook_winning_condition = survive_WinningCondition;
 	GameHook_GameOverMessageMod = survive_GameOverMessageMod;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;

@@ -17,7 +17,7 @@ var entity() GameHook_SelectSpawnPoint = {
 
 	return spot;
 }
-var float(float fraglimit, float _leadlimit) GameHook_WinningCondition = {
+var float(float fraglimit, float _leadlimit) gamehook_winning_condition = {
 	if (world_check_rules_run_out_spawns()) {
 		bprint("Hey! Someone ran out of spawns!\n");
 		return TRUE;

@@ -1122,7 +1122,6 @@ void(float killed) onslaught_PlayerClear {
 float(void) onslaught_WinningCondition {
 	entity head;
 	float t1, t2, t3, t4;
-	score_winning_condition_helper(); // set worldstatus
 	if(warmup_active)
 		return FALSE;
 
@@ -1159,7 +1158,7 @@ void(void) onslaught_init {
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
 	onslaught_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = onslaught_PlayerClear;
-	GameHook_WinningCondition = onslaught_WinningCondition;
+	gamehook_winning_condition = onslaught_WinningCondition;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_BotChooseRole = havocbot_chooserole_ons;
 	precache_model("models/onslaught/generator.md3");

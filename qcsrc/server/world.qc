@@ -631,7 +631,8 @@ void() world_check_rules {
 			}
 		}
 	}
-	if (GameHook_WinningCondition(fraglimit, score_leadlimit)) {
+	score_winning_condition_helper();
+	if (gamehook_winning_condition(fraglimit, score_leadlimit)) {
 		map_finish();
 		return;
 	}

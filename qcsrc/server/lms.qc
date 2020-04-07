@@ -166,7 +166,6 @@ void(void) lms_ClientConnect {
 }
 
 float(void) lms_WinningCondition {
-	score_winning_condition_helper(); // set worldstatus
 	if (time < map_starttime)
 		return FALSE;
 
@@ -208,7 +207,7 @@ void(void) lms_init {
 	GameHookChain_ClientConnect = lms_ClientConnect;
 	lms_JoinHandle_next = GameHookChain_JoinHandle;
 	GameHookChain_JoinHandle = lms_JoinHandle;
-	GameHook_WinningCondition = lms_WinningCondition;
+	gamehook_winning_condition = lms_WinningCondition;
 	gamehook_forbid_specatators = lms_ForbidSpectators;
 	GameHook_DeathHandle = lms_DeathHandle;
 	GameHook_SpawnPointGood = lms_SpawnPointGood;

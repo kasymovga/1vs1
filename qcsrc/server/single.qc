@@ -38,8 +38,7 @@ void Single_EndLevel() {
 	}
 }
 
-float Single_WinningCondition() {
-	score_winning_condition_helper(); // set worldstatus
+float() single_winning_condition {
 	return single_level_finished;
 }
 
@@ -193,7 +192,7 @@ void Single_Init() {
 	gamehook_forbid_specatators = single_forbid_spectators;
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = single_player_equip_handle;
-	GameHook_WinningCondition = Single_WinningCondition;
+	gamehook_winning_condition = single_winning_condition;
 	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
 	GameHook_DeathHandle = Single_DeathHandle;
 	GameHook_SetNewParms = Single_SetNewParms;
