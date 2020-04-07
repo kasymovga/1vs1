@@ -664,12 +664,12 @@ void race_Spawn(entity spot)
 	race_Spawn_NextLink(spot);
 }
 
-var void() race_GameHookChain_ObserverSpawn_Next;
+var void() race_gamehook_chain_observer_spawn_Next;
 
 void race_PreSpawnObserver()
 {
 	race_PreparePlayer();
-	race_GameHookChain_ObserverSpawn_Next();
+	race_gamehook_chain_observer_spawn_Next();
 }
 
 void spawnfunc_info_player_race (void)
@@ -1091,10 +1091,10 @@ void race_init() {
 	GameHook_SelectSpawnPoint = race_PreSpawn;
 	race_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = race_Spawn;
-	race_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = race_PlayerClear;
-	race_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
-	GameHookChain_ObserverSpawn = race_PreSpawnObserver;
+	race_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = race_PlayerClear;
+	race_gamehook_chain_observer_spawn_Next = gamehook_chain_observer_spawn;
+	gamehook_chain_observer_spawn = race_PreSpawnObserver;
 	GameHook_SpawnPointGood = race_SpawnPointGood;
 	race_WinCountDown_orig = GameHook_WinCountDown;
 	GameHook_WinCountDown = race_WinCountDown;

@@ -175,8 +175,8 @@ void(void) vehicle_init {
 	precache_sound("onslaught/ons_hit1.wav");
 	precache_sound("onslaught/ons_hit2.wav");
 	vehicle_init_done = TRUE;
-	vehicle_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = vehicle_PlayerClear;
+	vehicle_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = vehicle_PlayerClear;
 	vehicle_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = vehicle_PlayerAlphaMod;
 	vehicle_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;

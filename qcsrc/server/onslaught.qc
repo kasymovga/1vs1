@@ -1156,8 +1156,8 @@ void(void) onslaught_init {
 	onslaught_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = onslaught_Spawn;
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
-	onslaught_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = onslaught_PlayerClear;
+	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = onslaught_PlayerClear;
 	gamehook_winning_condition = onslaught_WinningCondition;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_BotChooseRole = havocbot_chooserole_ons;

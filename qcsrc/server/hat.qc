@@ -35,8 +35,8 @@ void(void) hat_init {
 		sv_player_hat_origin = stov(cvar_string("sv_player_hat_origin"));
 		sv_player_hat_angles = stov(cvar_string("sv_player_hat_angles"));
 		precache_model(sv_player_hat);
-		hat_PlayerClear_NextLink = GameHookChain_PlayerClear;
-		GameHookChain_PlayerClear = hat_PlayerClear;
+		hat_PlayerClear_NextLink = gamehook_chain_player_clear;
+		gamehook_chain_player_clear = hat_PlayerClear;
 		hat_Spawn_NextLink = gamehook_chain_spawn;
 		gamehook_chain_spawn = hat_Spawn;
 	}

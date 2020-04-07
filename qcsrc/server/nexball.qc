@@ -158,8 +158,8 @@ void() nexball_init {
 	CACHE_CVAR(g_nexball_delay_goal);
 	CACHE_CVAR(g_nexball_delay_start);
 	CACHE_CVAR(g_nexball_basketball_carrier_speed);
-	nexball_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = nexball_PlayerClear;
+	nexball_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = nexball_PlayerClear;
 	nexball_SwitchWeaponMod_NextLink = GameHookChain_SwitchWeaponMod;
 	GameHookChain_SwitchWeaponMod = nexball_SwitchWeaponMod;
 	nexball_PlayerPreThink_NextLink = gamehook_chain_player_think;

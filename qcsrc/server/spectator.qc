@@ -206,7 +206,7 @@ void() spectator_note_update {
 void(float frags_team_reset) spectator_observer_spawn {
 	entity	spot;
 
-	GameHookChain_ObserverSpawn();
+	gamehook_chain_observer_spawn();
 	player_clear(FALSE);
 	spot = find(world, classname, "info_intermission");
 	if not(spot)

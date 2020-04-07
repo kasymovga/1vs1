@@ -245,8 +245,8 @@ void nadget_Init(void) {
     addstat(STAT_HGBONUSTYPE, AS_INT, hg_bonustype);
     addstat(STAT_HGREFIRE, AS_FLOAT, hg_next1);
 
-	nadget_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = nadget_PlayerClear;
+	nadget_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = nadget_PlayerClear;
 	nadget_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
 	GameHookChain_PlayerCanFire = nadget_PlayerCanFire;
 	nadget_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
@@ -289,8 +289,8 @@ void nadget_Init(void) {
 	projectile_register_auto(PROJECTILE_HG_TRANSLOC, NADGET_SIZE_TRANSLOC * '1 -1 1');
     projectile_register_auto(PROJECTILE_HG_RAZE, '16 -3 3');
     projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
-    nadget_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
-    GameHookChain_ObserverSpawn = nadget_ObserverSpawn;
+    nadget_ObserverSpawn_Next = gamehook_chain_observer_spawn;
+    gamehook_chain_observer_spawn = nadget_ObserverSpawn;
 	nadget_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = nadget_PlayerPreThink;
 	nadget_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;

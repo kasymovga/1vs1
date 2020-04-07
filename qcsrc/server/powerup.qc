@@ -69,8 +69,8 @@ void() powerup_init {
 	CACHE_CVAR(g_balance_powerup_strength_force);
 	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
 	CACHE_CVAR(g_balance_powerup_strength_selfforce);
-	powerup_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = powerup_PlayerClear;
+	powerup_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = powerup_PlayerClear;
 	powerup_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = powerup_SpectateCopy;
 }

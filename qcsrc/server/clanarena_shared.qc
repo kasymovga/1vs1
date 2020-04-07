@@ -29,8 +29,8 @@ void Clanarena_PlayerClear(float killed) {
 void Clanarena_Init_Shared(string gt) {
 	Roundbased_Init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
 	gamehook_player_death_handle = Clanarena_DeathHandle;
-	Clanarena_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = Clanarena_PlayerClear;
+	Clanarena_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = Clanarena_PlayerClear;
 	Clanarena_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = Clanarena_Spawn;
 	SP_STATUS = score_register("status", 0);

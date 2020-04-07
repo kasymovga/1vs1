@@ -986,8 +986,8 @@ void kh_init() {
 	precache_sound(kh_sound_alarm);  // the new siren
 	GameHook_FragsHandle = kh_HandleFrags;
 	gamehook_player_death_handle = kh_DeathHandle;
-	kh_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = kh_PlayerClear;
+	kh_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = kh_PlayerClear;
 	GameHook_WinCountDown = stub_WinCountDown;
 	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = kh_SpectateCopy;

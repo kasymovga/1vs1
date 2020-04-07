@@ -1,7 +1,7 @@
 var float(entity attacker, entity inflictor, float deathtype) gamehook_player_death_handle = { return FALSE; }
 var float() GameHookChain_SpeedMod = { return 1; }
 var void(entity spot) gamehook_chain_spawn = {}
-var void(float killed) GameHookChain_PlayerClear = {}
+var void(float killed) gamehook_chain_player_clear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
 float GameHookChain_PlayerDamageMod;
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHookChain_PlayerDamageHandle = { return FALSE; }
@@ -27,7 +27,7 @@ var float(float fraglimit, float _leadlimit) gamehook_winning_condition = {
 var float() GameHook_OvertimeHandle = { return FALSE; }
 var float() GameHook_OvertimeAllowed = { return TRUE; }
 var void() GameHook_Reset = {}
-var void() GameHookChain_ObserverSpawn = {}
+var void() gamehook_chain_observer_spawn = {}
 var void() GameHook_InitSpectator = {}
 var float(entity spot) GameHook_SpawnPointGood = { return TRUE; }
 var void(float frags_remain) stub_WinCountDown = {}

@@ -526,7 +526,7 @@ void(float killed) player_clear {
 		weapon_action(j, WR_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;
 	}
-	GameHookChain_PlayerClear(killed);
+	gamehook_chain_player_clear(killed);
 	//Clear waypoints
 	WaypointSprite_PlayerDead();
 	if (self.classname == "disconnecting") {

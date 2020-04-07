@@ -486,8 +486,8 @@ void(float force) hook_init {
 	GameHookChain_DamageForceModsSet = hook_DamageForceModsSet;
 	hook_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = hook_PlayerPreThink;
-	hook_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = hook_PlayerClear;
+	hook_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = hook_PlayerClear;
 	hook_entity_pre_spawn_next = GameHookChain_EntityPreSpawn;
 	GameHookChain_EntityPreSpawn = hook_entity_pre_spawn;
 }

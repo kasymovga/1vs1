@@ -1069,8 +1069,8 @@ void() ctf_init {
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
 	GameHook_FragsHandle = ctf_handle_frags;
-	ctf_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = ctf_PlayerClear;
+	ctf_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = ctf_PlayerClear;
 	ctf_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = ctf_PlayerPreThink;
 	GameHook_WinCountDown = stub_WinCountDown;

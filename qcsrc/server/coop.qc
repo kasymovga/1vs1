@@ -1,5 +1,4 @@
-
-void coop_teleporter_think(void) {
+void(void) coop_teleporter_think {
 	if (self.solid == SOLID_TRIGGER) {
 		self.alpha = approach(self.alpha, 1, 1);
 		if (self.alpha > 0.99)
@@ -14,9 +13,9 @@ void coop_teleporter_think(void) {
 	self.nextthink = time;
 }
 
-var void(float) coop_PlayerClear_NextLink;
-void coop_PlayerClear(float killed) {
-	coop_PlayerClear_NextLink(killed);
+var void(float) coop_player_clear_next;
+void(float killed) coop_player_clear {
+	coop_player_clear_next(killed);
 	if (self.classname != "disconnecting")
 		return;
 
@@ -30,7 +29,7 @@ void coop_PlayerClear(float killed) {
 	campaign_won = FALSE;
 }
 
-void coop_teleporter_use(void) {
+void(void) coop_teleporter_use {
 	if (self.solid == SOLID_TRIGGER) {
 		self.solid = SOLID_NOT;
 		self.effects &~= EF_STARDUST;
@@ -43,7 +42,7 @@ void coop_teleporter_use(void) {
 	self.nextthink = time;
 }
 
-void spawnfunc_coop_teleporter(void) {
+void(void) spawnfunc_coop_teleporter {
 	if (game != GAME_COOP) {
 		remove(self);
 		return;
@@ -60,9 +59,9 @@ void spawnfunc_coop_teleporter(void) {
 	self.use();
 }
 
-var void() coop_ObserverSpawn_NextLink;
-void() coop_ObserverSpawn {
-	coop_ObserverSpawn_NextLink();
+var void() coop_observer_spawn_next;
+void() coop_observer_spawn {
+	coop_observer_spawn_next();
 	entity e;
 	float have_players;
 	have_players = FALSE;
@@ -108,10 +107,10 @@ void(void) coop_init_delayed {
 
 void(void) coop_init {
 	single_init();
-	coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = coop_PlayerClear;
-	coop_ObserverSpawn_NextLink = GameHookChain_ObserverSpawn;
-	GameHookChain_ObserverSpawn = coop_ObserverSpawn;
+	coop_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = coop_player_clear;
+	coop_observer_spawn_next = gamehook_chain_observer_spawn;
+	gamehook_chain_observer_spawn = coop_observer_spawn;
 	team_play_activate();
 	team_teams_set_count(1);
 	entity_initialize(world, coop_init_delayed, INITPRIO_GAMETYPE);

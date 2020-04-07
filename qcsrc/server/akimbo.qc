@@ -153,8 +153,8 @@ void Akimbo_Init()
 
 	CACHE_CVAR(g_akimbo_animation_shift);
 	CACHE_CVAR(g_akimbo_throwable);
-	Akimbo_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = Akimbo_PlayerClear;
+	Akimbo_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = Akimbo_PlayerClear;
 }
 
 entity Akimbo_Owner(entity e)

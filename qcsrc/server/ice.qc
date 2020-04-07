@@ -322,8 +322,8 @@ void Ice_Init() {
 	CACHE_CVAR(sv_model_ice_z);
 	CACHE_CVAR(sv_model_ice_use_skins);
 	gamehook_player_death_handle = Ice_DeathHandle;
-	Ice_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = Ice_PlayerClear;
+	Ice_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = Ice_PlayerClear;
 	Ice_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = Ice_SpeedMod;
 	Ice_Spawn_NextLink = gamehook_chain_spawn;

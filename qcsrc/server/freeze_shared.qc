@@ -47,8 +47,8 @@ void Freeze_Init_Shared(string gt) {
 	Ice_Init();
 	Freeze_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = Freeze_Spawn;
-	Freeze_PlayerClear_NextLink = GameHookChain_PlayerClear;
-	GameHookChain_PlayerClear = Freeze_PlayerClear;
+	Freeze_PlayerClear_NextLink = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = Freeze_PlayerClear;
 	GameHook_FragsHandle = Freeze_HandleFrags;
 	SP_REVIVE = score_register("revs", SFL_SORT_PRIO_SECONDARY);
 	SP_STATUS = score_register("status", 0);
