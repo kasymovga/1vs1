@@ -47,6 +47,7 @@ void spawnfunc_weapon_laser (void)
 }
 
 float weapon_laser_precached;
+float weapon_laser_hint_added;
 
 float weapon_laser(float req)
 {
@@ -81,7 +82,6 @@ float weapon_laser(float req)
 	}
 	else if (req == WR_PRECACHE) {
 		if not(weapon_laser_precached) {
-			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
 			precache_sound ("weapons/lasergun_fire.wav");
 			weapon_laser_precached = 1;
 		}
@@ -111,6 +111,11 @@ float weapon_laser(float req)
 		CACHE_CVAR(g_balance_laser_secondary_damage);
 		CACHE_CVAR(g_balance_laser_secondary_edgedamage);
 		CACHE_CVAR(g_balance_laser_secondary_force);
+		if (g_balance_laser_primary_force > 50)
+		if not(weapon_laser_hint_added) {
+			weapon_laser_hint_added = TRUE;
+			hint_add("You can use Laser for high jumps or accelerating. Just shoot under your legs or near walls.");
+		}
 		CACHE_CVAR(g_balance_laser_secondary_lifetime);
 		CACHE_CVAR(g_balance_laser_secondary_radius);
 		CACHE_CVAR(g_balance_laser_secondary_refire);
