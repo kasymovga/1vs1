@@ -22,6 +22,7 @@ set cra_g_balance_grapplehook_dontpull 1
 set cra_g_balance_grapplehook_gravity 1
 set cra_g_balance_grapplehook_speed_fly 1000
 set cra_g_shootfromeye 1
+set cra_g_footsteps 1
 set cra_g_buttons_hookuse_swap 1
 set cra_g_runes 1
 set cra_g_runes_count 7
