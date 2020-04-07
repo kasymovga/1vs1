@@ -80,8 +80,18 @@ void() coop_ObserverSpawn {
 	}
 }
 
+void() coop_IceFrozenStatus {
+	entity e;
+	FOR_EACH_PLAYER(e) {
+		if (e.deadflag == DEAD_NO)
+			return;
+	}
+	single_level_finished = TRUE;
+	campaign_won = FALSE;
+}
+
 void(void) coop_init_delayed {
-	IceHook_FrozenStatus = Single_IceFrozenStatus;
+	IceHook_FrozenStatus = coop_IceFrozenStatus;
 	IceHook_SkipDeathHandle = Single_IceSkipDeathHandle;
 	IceHook_Unfroze = Single_IceUnfroze;
 	Ice_Init();

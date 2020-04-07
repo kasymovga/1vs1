@@ -58,16 +58,6 @@ float() single_player_death_handle {
 	return FALSE;
 }
 
-void Single_IceFrozenStatus() {
-	entity e;
-	FOR_EACH_PLAYER(e) {
-		if (e.deadflag == DEAD_NO)
-			return;
-	}
-	single_level_finished = TRUE;
-	campaign_won = FALSE;
-}
-
 float Single_IceSkipDeathHandle() {
 	return !self.wasplayer;
 }
