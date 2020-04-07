@@ -146,7 +146,6 @@ void DrawTintEffects(void) {
 
 void PostInit(void);
 void CSQC_Demo_Camera();
-float view_set;
 float camera_mode;
 void CSQC_spider_HUD();
 void CSQC_UpdateView(float w, float h)
@@ -214,7 +213,6 @@ void CSQC_UpdateView(float w, float h)
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
 	R_SetView(VF_DRAWWORLD, 1);
-
 	view_angles = input_angles;
 	view_origin = CSQCPhysic_SetViewOrg();
 	WarpZone_FixView();
@@ -223,8 +221,6 @@ void CSQC_UpdateView(float w, float h)
 	view_forward = v_forward;
 	view_right = v_right;
 	view_up = v_up;
-	view_set = 1;
-
 	// Set the console size vars
 
 	R_SetView(VF_FOV, GetCurrentFov());
