@@ -215,17 +215,15 @@ void CSQC_UpdateView(float w, float h)
 	// Draw the World (and sky)
 	R_SetView(VF_DRAWWORLD, 1);
 
-	if (!view_set) {
-		view_angles = input_angles;
-		view_origin = CSQCPhysic_SetViewOrg();
-		WarpZone_FixView();
-		CSQCPhysic_SetCamera();
-		makevectors(view_angles);
-		view_forward = v_forward;
-		view_right = v_right;
-		view_up = v_up;
-		view_set = 1;
-	}
+	view_angles = input_angles;
+	view_origin = CSQCPhysic_SetViewOrg();
+	WarpZone_FixView();
+	CSQCPhysic_SetCamera();
+	makevectors(view_angles);
+	view_forward = v_forward;
+	view_right = v_right;
+	view_up = v_up;
+	view_set = 1;
 
 	// Set the console size vars
 
