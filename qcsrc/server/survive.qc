@@ -275,7 +275,7 @@ void survive_init() {
 	gamehook_map_finish_message_mod = survive_GameOverMessageMod;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;
-	GameHook_MonsterKilled = survive_MonsterKilled;
+	gamehook_monster_killed = survive_MonsterKilled;
 	survive_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = survive_Spawn;
 	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3

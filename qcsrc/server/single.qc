@@ -146,7 +146,7 @@ float(void) single_map_restart {
 	return !campaign_won;
 }
 
-float Single_MonsterTeamSwitchable() {
+float() single_monster_team_switchable {
 	return FALSE;
 }
 
@@ -163,7 +163,7 @@ void Single_Spawn(entity e) {
 	Single_Spawn_NextLink(e);
 }
 
-void(entity attacker) single_MonsterKilled {
+void(entity attacker) single_monster_killed {
 	single_monsters_killed++;
 	if (attacker.classname == "player")
 		score_player_add(attacker, SP_SCORE, self.frags);
@@ -180,14 +180,14 @@ void Single_Init() {
 	gamehook_client_parms_new = single_client_parms_new;
 	gamehook_client_parms_change = single_client_parms_change;
 	gamehook_client_parms_decode = single_client_parms_decode;
-	GameHook_MonsterTeamSwitchable = Single_MonsterTeamSwitchable;
+	gamehook_monster_team_switchable = single_monster_team_switchable;
 	Single_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = Single_PlayerPreThink;
 	Single_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = Single_Spawn;
 	Single_Shutdown_NextLink = GameHookChain_Shutdown;
 	GameHookChain_Shutdown = Single_Shutdown;
-	GameHook_MonsterKilled = single_MonsterKilled;
+	gamehook_monster_killed = single_monster_killed;
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = Single_EndLevel;

@@ -215,7 +215,7 @@ void monster_event_damage(entity inflictor, entity attacker, float _damage, floa
 	if (self.health < 1) {
 		sound_stop(self, CHAN_TRIGGER);
 		monster_sound(self, self.noise2, FALSE);
-		GameHook_MonsterKilled(attacker);
+		gamehook_monster_killed(attacker);
 		entity o = self.owner;
 		float quant = GameHook_MonsterQuant();
 		if (o.spawnflags & 1) {
@@ -406,7 +406,7 @@ void monster_spawn_use() {
 		self.reset();
 
 	if (activator)
-	if (GameHook_MonsterTeamSwitchable())
+	if (gamehook_monster_team_switchable())
 		self.team = activator.team;
 
 	self.think();
