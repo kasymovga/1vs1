@@ -170,6 +170,7 @@ void(entity attacker) single_monster_killed {
 }
 
 void(void) single_init {
+	hint_add("You can save/load game at any moment.");
 	gamehook_map_restart = single_map_restart;
 	gamehook_forbid_specatators = single_forbid_spectators;
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
