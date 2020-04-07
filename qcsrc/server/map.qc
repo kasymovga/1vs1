@@ -293,13 +293,8 @@ float() map_do_next_override {
 		map_already_changed = TRUE;
 		return TRUE;
 	}
-	if (cvar("samelevel") || GameHook_SameLevel()) // if samelevel is set, stay on same level
-	{
-		// this does not work because it tries to exec maps/nexdm01.mapcfg (which doesn't exist, it should be trying maps/dm_nexdm01.mapcfg for example)
-		//localcmd(strcat("exec \"maps/", mapname, ".mapcfg\"\n"));
-		// so instead just restart the current map using the restart command (DOES NOT WORK PROPERLY WITH exit_cfg STUFF)
+	if (gamehook_map_restart()) {
 		localcmd("restart\n");
-		//changelevel (mapname);
 		map_already_changed = TRUE;
 		return TRUE;
 	}

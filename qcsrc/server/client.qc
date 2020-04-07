@@ -399,7 +399,7 @@ void(void) client_connect { //called by engine
 	if (g_campaign) {
 		self.classname = "player";
 		campaign_bots_may_start = 1;
-	} else if (GameHook_ForbidSpectators()) {
+	} else if (gamehook_forbid_specatators()) {
 		self.classname = "player";
 	} else if (sv_spectate == 1) {
 		self.classname = "observer";
@@ -585,7 +585,7 @@ void(void) client_post_think { //called by engine
 
 		if (maxidle)
 		if not(g_campaign)
-		if not(GameHook_ForbidSpectators())
+		if not(gamehook_forbid_specatators())
 		if not(map_intermission_running) {
 			timeleft = ceil(maxidle - (time - self.parm_idlesince));
 			if (timeleft <= 0) {

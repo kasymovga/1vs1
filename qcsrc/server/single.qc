@@ -142,7 +142,7 @@ void Single_DecodeLevelParms() {
 	}
 }
 
-float Single_ForbidSpectators() {
+float(void) single_forbid_spectators {
 	if not(self.default_equip) //For just connected players who carried equip from previous level
 		return TRUE;
 
@@ -157,7 +157,7 @@ float(void) single_player_equip_handle {
 	return TRUE;
 }
 
-float Single_SameLevel() {
+float(void) single_map_restart {
 	if (game == GAME_COOP)
 	if (cvar("timelimit") < 0) //Endmatch
 		return FALSE;
@@ -189,8 +189,8 @@ void(entity attacker) single_MonsterKilled {
 }
 
 void Single_Init() {
-	GameHook_SameLevel = Single_SameLevel;
-	GameHook_ForbidSpectators = Single_ForbidSpectators;
+	gamehook_map_restart = single_map_restart;
+	gamehook_forbid_specatators = single_forbid_spectators;
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = single_player_equip_handle;
 	GameHook_WinningCondition = Single_WinningCondition;
