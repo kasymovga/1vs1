@@ -1581,8 +1581,7 @@ void() player_think {
 		self.angles = self.lastV_angle;
 		self.fixangle = TRUE;
 	}
-	GameHookChain_PlayerPreThink();
-
+	gamehook_chain_player_think();
 	if(frametime) {
 		fire_apply_damage(self);
 		player_effects();
@@ -2197,7 +2196,7 @@ void(entity spot) player_spawn {
 		}
 	}
 	player_effects();
-	GameHookChain_Spawn(spot);
+	gamehook_chain_spawn(spot);
 	antilag_teleported(self);
 	self.wasplayer = TRUE;
 }

@@ -82,8 +82,8 @@ void(void) warmup_init {
 	if not(warmup_active)
 		return;
 
-	warmup_spawn_next = GameHookChain_Spawn;
-	GameHookChain_Spawn = warmup_spawn;
+	warmup_spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = warmup_spawn;
 	warmup_observer_spawn_next = GameHookChain_ObserverSpawn;
 	GameHookChain_ObserverSpawn = warmup_observer_spawn;
 	warmup_server_frame_next = GameHookChain_ServerFrame;

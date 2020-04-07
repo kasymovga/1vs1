@@ -1089,8 +1089,8 @@ void race_init() {
 	GameHookChain_PlayerCanFire = race_PlayerCanFire;
 	GameHook_PhysicFrameBegin = race_PhysicFrameBegin;
 	GameHook_SelectSpawnPoint = race_PreSpawn;
-	race_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = race_Spawn;
+	race_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = race_Spawn;
 	race_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = race_PlayerClear;
 	race_GameHookChain_ObserverSpawn_Next = GameHookChain_ObserverSpawn;

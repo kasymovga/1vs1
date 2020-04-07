@@ -37,7 +37,7 @@ void(void) hat_init {
 		precache_model(sv_player_hat);
 		hat_PlayerClear_NextLink = GameHookChain_PlayerClear;
 		GameHookChain_PlayerClear = hat_PlayerClear;
-		hat_Spawn_NextLink = GameHookChain_Spawn;
-		GameHookChain_Spawn = hat_Spawn;
+		hat_Spawn_NextLink = gamehook_chain_spawn;
+		gamehook_chain_spawn = hat_Spawn;
 	}
 }

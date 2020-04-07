@@ -162,8 +162,8 @@ void() nexball_init {
 	GameHookChain_PlayerClear = nexball_PlayerClear;
 	nexball_SwitchWeaponMod_NextLink = GameHookChain_SwitchWeaponMod;
 	GameHookChain_SwitchWeaponMod = nexball_SwitchWeaponMod;
-	nexball_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = nexball_PlayerPreThink;
+	nexball_PlayerPreThink_NextLink = gamehook_chain_player_think;
+	gamehook_chain_player_think = nexball_PlayerPreThink;
 	nexball_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = nexball_SpeedMod;
 	nexball_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;

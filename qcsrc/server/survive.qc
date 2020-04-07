@@ -276,8 +276,8 @@ void survive_init() {
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;
 	gamehook_monster_killed = survive_MonsterKilled;
-	survive_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = survive_Spawn;
+	survive_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = survive_Spawn;
 	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
 	if (g_surv_freeze)

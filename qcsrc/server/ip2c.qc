@@ -91,8 +91,8 @@ void IP2C_InitSV(void) {
     }
 	IP2C_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = IP2C_GameCommandHandle;
-	IP2C_ShutdownHook_NextLink = GameHookChain_Shutdown;
-	GameHookChain_Shutdown = IP2C_ShutdownHook;
+	IP2C_ShutdownHook_NextLink = gamehook_chain_shutdown;
+	gamehook_chain_shutdown = IP2C_ShutdownHook;
 	IP2C_ClientConnect_NextLink = GameHookChain_ClientConnect;
 	GameHookChain_ClientConnect = IP2C_ClientConnect;
 }

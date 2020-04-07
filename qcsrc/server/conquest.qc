@@ -367,8 +367,8 @@ void conquest_init() {
 	GameHook_FragsHandle = conquest_FragsHandle;
 	GameHook_SelectSpawnPoint = conquest_SelectSpawnPoint;
 	gamehook_player_death_handle = onslaught_DeathHandle;
-	onslaught_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = onslaught_Spawn;
+	onslaught_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = onslaught_Spawn;
 
 	onslaught_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = onslaught_PlayerClear;

@@ -36,6 +36,6 @@ void TwoWeapons_Init() {
 		twoweapons_buttonatck1 = BUTTON_ATCK2;
 		twoweapons_buttonatck2 = BUTTON_ATCK;
 	}
-	TwoWeapons_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = TwoWeapons_PlayerPreThink;
+	TwoWeapons_PlayerPreThink_NextLink = gamehook_chain_player_think;
+	gamehook_chain_player_think = TwoWeapons_PlayerPreThink;
 }

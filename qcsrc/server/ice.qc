@@ -326,12 +326,12 @@ void Ice_Init() {
 	GameHookChain_PlayerClear = Ice_PlayerClear;
 	Ice_SpeedMod_NextLink = GameHookChain_SpeedMod;
 	GameHookChain_SpeedMod = Ice_SpeedMod;
-	Ice_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = Ice_Spawn;
+	Ice_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = Ice_Spawn;
 	Ice_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = Ice_PlayerDamageHandle;
 	Ice_SpecateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = Ice_SpecateCopy;
-	ice_PlayerPreThink_next = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = ice_PlayerPreThink;
+	ice_PlayerPreThink_next = gamehook_chain_player_think;
+	gamehook_chain_player_think = ice_PlayerPreThink;
 }

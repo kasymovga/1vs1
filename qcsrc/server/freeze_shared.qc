@@ -45,8 +45,8 @@ void Freeze_Init_Shared(string gt) {
 	IceHook_Unfroze = Freeze_IceUnfroze;
 	IceHook_FrozenStatus = Freeze_IceFrozenStatus;
 	Ice_Init();
-	Freeze_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = Freeze_Spawn;
+	Freeze_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = Freeze_Spawn;
 	Freeze_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Freeze_PlayerClear;
 	GameHook_FragsHandle = Freeze_HandleFrags;

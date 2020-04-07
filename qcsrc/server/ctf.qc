@@ -1071,8 +1071,8 @@ void() ctf_init {
 	GameHook_FragsHandle = ctf_handle_frags;
 	ctf_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = ctf_PlayerClear;
-	ctf_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = ctf_PlayerPreThink;
+	ctf_PlayerPreThink_NextLink = gamehook_chain_player_think;
+	gamehook_chain_player_think = ctf_PlayerPreThink;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;
 	ctf_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;

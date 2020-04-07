@@ -97,8 +97,8 @@ void(void) spawnfunc_target_voicescript {
 
 	float i, n;
 	if not(spawnfunc_target_voicescript_initialized) {
-		target_voicescript_Spawn_NextLink = GameHookChain_Spawn;
-		GameHookChain_Spawn = target_voicescript_Spawn;
+		target_voicescript_Spawn_NextLink = gamehook_chain_spawn;
+		gamehook_chain_spawn = target_voicescript_Spawn;
 		spawnfunc_target_voicescript_initialized = TRUE;
 	}
 	if (self.message == "") {

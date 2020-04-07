@@ -201,8 +201,8 @@ float(entity spot) lms_SpawnPointGood {
 }
 
 void(void) lms_init {
-	lms_Spawn_next = GameHookChain_Spawn;
-	GameHookChain_Spawn = lms_Spawn;
+	lms_Spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = lms_Spawn;
 	lms_ClientConnect_next = GameHookChain_ClientConnect;
 	GameHookChain_ClientConnect = lms_ClientConnect;
 	lms_JoinHandle_next = GameHookChain_JoinHandle;

@@ -291,8 +291,8 @@ void nadget_Init(void) {
     projectile_register_auto(PROJECTILE_HG_PLASMA_SHARD, '0 -3 -3');
     nadget_ObserverSpawn_Next = GameHookChain_ObserverSpawn;
     GameHookChain_ObserverSpawn = nadget_ObserverSpawn;
-	nadget_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = nadget_PlayerPreThink;
+	nadget_PlayerPreThink_NextLink = gamehook_chain_player_think;
+	gamehook_chain_player_think = nadget_PlayerPreThink;
 	nadget_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
 	GameHookChain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
     Napalm_Init();

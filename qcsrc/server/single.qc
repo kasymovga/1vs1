@@ -6,14 +6,14 @@ float single_monsters_killed;
 float single_monsters_total;
 entity single_secrets_controller;
 
-var void() Single_Shutdown_NextLink;
-void Single_Shutdown() {
+var void() single_shutdown_next;
+void() single_shutdown {
 	registercvar("_single_transit_weapons", "0");
 	cvar_set_builtin("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | start_weapons)); //builting function for avoid campaign wrapper
-	Single_Shutdown_NextLink();
+	single_shutdown_next();
 }
 
-void Single_EndLevel() {
+void(void) single_endlevel {
 	single_level_finished = TRUE;
 	entity e;
 	FOR_EACH_PLAYER(e)
@@ -70,7 +70,7 @@ void single_init_delayed(void) {
 			map_target.netname = strzone(s);
 			print("endlevel with nextmap: ", s, "\n");
 			map_target.targetname = e.target;
-			map_target.use = Single_EndLevel;
+			map_target.use = single_endlevel;
 		}
 	}
 	_single_transit_weapons = cvar_builtin("_single_transit_weapons"); //builtin to avoid campaign intercepting
@@ -150,17 +150,17 @@ float() single_monster_team_switchable {
 	return FALSE;
 }
 
-var void() Single_PlayerPreThink_NextLink;
-void Single_PlayerPreThink() {
+var void() single_player_think_next;
+void() single_player_think {
 	self.items &~= (IT_KEY1 | IT_KEY2);
 	self.items |= self.keys;
-	Single_PlayerPreThink_NextLink();
+	single_player_think_next();
 }
 
-var void(entity) Single_Spawn_NextLink;
-void Single_Spawn(entity e) {
+var void(entity) single_spawn_next;
+void(entity e) single_spawn {
 	self.default_equip = TRUE;
-	Single_Spawn_NextLink(e);
+	single_spawn_next(e);
 }
 
 void(entity attacker) single_monster_killed {
@@ -169,7 +169,7 @@ void(entity attacker) single_monster_killed {
 		score_player_add(attacker, SP_SCORE, self.frags);
 }
 
-void Single_Init() {
+void(void) single_init {
 	gamehook_map_restart = single_map_restart;
 	gamehook_forbid_specatators = single_forbid_spectators;
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
@@ -181,16 +181,16 @@ void Single_Init() {
 	gamehook_client_parms_change = single_client_parms_change;
 	gamehook_client_parms_decode = single_client_parms_decode;
 	gamehook_monster_team_switchable = single_monster_team_switchable;
-	Single_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = Single_PlayerPreThink;
-	Single_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = Single_Spawn;
-	Single_Shutdown_NextLink = GameHookChain_Shutdown;
-	GameHookChain_Shutdown = Single_Shutdown;
+	single_player_think_next = gamehook_chain_player_think;
+	gamehook_chain_player_think = single_player_think;
+	single_spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = single_spawn;
+	single_shutdown_next = gamehook_chain_shutdown;
+	gamehook_chain_shutdown = single_shutdown;
 	gamehook_monster_killed = single_monster_killed;
 	entity e = spawn();
 	e.targetname = "endlevel";
-	e.use = Single_EndLevel;
+	e.use = single_endlevel;
 	entity_initialize(world, single_init_delayed, INITPRIO_GAMETYPE);
 }
 

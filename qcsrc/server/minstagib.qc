@@ -365,8 +365,8 @@ void minstagib_init() {
 
 	precache_sound ("announcer/robotic/lastsecond.wav");
 	precache_sound ("announcer/robotic/narrowly.wav");
-	minstagib_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
-	GameHookChain_PlayerPreThink = minstagib_PlayerPreThink;
+	minstagib_PlayerPreThink_NextLink = gamehook_chain_player_think;
+	gamehook_chain_player_think = minstagib_PlayerPreThink;
 	minstagib_ItemGiveToHandle_NextLink = GameHookChain_ItemGiveToHandle;
 	GameHookChain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
 	minstagib_HealthArmorFuelModsSet_NextLink = GameHookChain_HealthArmorFuelModsSet;

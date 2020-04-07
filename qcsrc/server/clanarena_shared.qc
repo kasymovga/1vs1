@@ -31,7 +31,7 @@ void Clanarena_Init_Shared(string gt) {
 	gamehook_player_death_handle = Clanarena_DeathHandle;
 	Clanarena_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = Clanarena_PlayerClear;
-	Clanarena_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = Clanarena_Spawn;
+	Clanarena_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = Clanarena_Spawn;
 	SP_STATUS = score_register("status", 0);
 }

@@ -1,6 +1,6 @@
 var float(entity attacker, entity inflictor, float deathtype) gamehook_player_death_handle = { return FALSE; }
 var float() GameHookChain_SpeedMod = { return 1; }
-var void(entity spot) GameHookChain_Spawn = {}
+var void(entity spot) gamehook_chain_spawn = {}
 var void(float killed) GameHookChain_PlayerClear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
 float GameHookChain_PlayerDamageMod;
@@ -8,7 +8,7 @@ var float(entity inflictor, entity attacker, float damage, float deathtype, vect
 var float(entity plr, float wep) GameHookChain_PlayerCanFire = { return TRUE; }
 var float() GameHook_PlayerAllowedToMove = { return TRUE; }
 var void() GameHook_PhysicFrameBegin = {}
-var void() GameHookChain_PlayerPreThink = {}
+var void(void) gamehook_chain_player_think = {}
 var entity() GameHook_SelectSpawnPoint = {
 	entity spot;
 	spot = spawn_select(FALSE);
@@ -109,7 +109,7 @@ var float(void) gamehook_forbid_specatators = { return FALSE; }
 var float(void) gamehook_chain_player_equip_handle = { return FALSE; }
 var float(void) gamehook_map_restart = { return FALSE; }
 var float() gamehook_monster_team_switchable = { return TRUE; }
-var void() GameHookChain_Shutdown = {}
+var void() gamehook_chain_shutdown = {}
 var float(float tempo) GameHookChain_TempoMod = { return tempo; }
 var float() GameHookChain_ThrowWeaponOnDeathHandle = { return FALSE; }
 var float() GameHookChain_ProjectileTouchHandle = { return FALSE; }

@@ -84,8 +84,8 @@ void(void) weapon_selectable_init {
 	GameHookChain_JoinHandle = weapon_selectable_JoinHandle;
 	weapon_selectable_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
 	GameHookChain_ClientCommandHandle = weapon_selectable_ClientCommandHandle;
-	weapon_selectable_Spawn_NextLink = GameHookChain_Spawn;
-	GameHookChain_Spawn = weapon_selectable_Spawn;
+	weapon_selectable_Spawn_NextLink = gamehook_chain_spawn;
+	gamehook_chain_spawn = weapon_selectable_Spawn;
 	weapon_selectable_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
 	GameHookChain_GameMenuAddItems = weapon_selectable_GameMenuAddItems;
 }

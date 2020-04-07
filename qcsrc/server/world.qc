@@ -753,7 +753,7 @@ void SV_Shutdown()
 
 		MapInfo_Shutdown();
 		infomessages_shutdown();
-		GameHookChain_Shutdown();
+		gamehook_chain_shutdown();
 	}
 	else if(world_initialized == 0)
 	{

@@ -107,7 +107,7 @@ void(void) coop_init_delayed {
 }
 
 void(void) coop_init {
-	Single_Init();
+	single_init();
 	coop_PlayerClear_NextLink = GameHookChain_PlayerClear;
 	GameHookChain_PlayerClear = coop_PlayerClear;
 	coop_ObserverSpawn_NextLink = GameHookChain_ObserverSpawn;

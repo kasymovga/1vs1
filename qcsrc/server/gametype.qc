@@ -100,7 +100,7 @@ void() gametype_init {
 		team_play_activate();
 		survive_init();
 	} else if (game == GAME_SINGLE) {
-		Single_Init();
+		single_init();
 	} else if (game == GAME_COOP) {
 		coop_init();
 	} else if (game == GAME_LMS) {

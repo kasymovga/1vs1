@@ -1,1 +1,1 @@
-void Single_Init();
+void(void) single_init;
