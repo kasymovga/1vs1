@@ -209,7 +209,7 @@ void(void) lms_init {
 	GameHookChain_JoinHandle = lms_JoinHandle;
 	gamehook_winning_condition = lms_WinningCondition;
 	gamehook_forbid_specatators = lms_ForbidSpectators;
-	GameHook_DeathHandle = lms_DeathHandle;
+	gamehook_player_death_handle = lms_DeathHandle;
 	GameHook_SpawnPointGood = lms_SpawnPointGood;
 	score_basics(SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
 	SP_STATUS = score_register("status", 0);

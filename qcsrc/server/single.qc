@@ -42,7 +42,7 @@ float() single_winning_condition {
 	return single_level_finished;
 }
 
-string Single_GameOverMessageMod(string s) {
+string (string s) single_map_finish_message_mod {
 	if (campaign_won) {
 		string msg = strcat("^2Level finished\nSecrets: ", ftos(single_secrets_found), "/", ftos(single_secrets_total));
 		msg = strcat(msg, "\nMonsters: ", ftos(single_monsters_killed), "/", ftos(single_monsters_total));
@@ -51,7 +51,7 @@ string Single_GameOverMessageMod(string s) {
 		return "^1Game over";
 }
 
-float Single_DeathHandle() {
+float() single_player_death_handle {
 	single_level_finished = TRUE;
 	campaign_won = FALSE;
 	campaign_map_transition = TRUE;
@@ -193,8 +193,8 @@ void Single_Init() {
 	single_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = single_player_equip_handle;
 	gamehook_winning_condition = single_winning_condition;
-	GameHook_GameOverMessageMod = Single_GameOverMessageMod;
-	GameHook_DeathHandle = Single_DeathHandle;
+	gamehook_map_finish_message_mod = single_map_finish_message_mod;
+	gamehook_player_death_handle = single_player_death_handle;
 	GameHook_SetNewParms = Single_SetNewParms;
 	GameHook_SetChangeParms = Single_SetChangeParms;
 	GameHook_DecodeLevelParms = Single_DecodeLevelParms;

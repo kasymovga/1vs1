@@ -1,4 +1,4 @@
-var float(entity attacker, entity inflictor, float deathtype) GameHook_DeathHandle = { return FALSE; }
+var float(entity attacker, entity inflictor, float deathtype) gamehook_player_death_handle = { return FALSE; }
 var float() GameHookChain_SpeedMod = { return 1; }
 var void(entity spot) GameHookChain_Spawn = {}
 var void(float killed) GameHookChain_PlayerClear = {}
@@ -41,7 +41,7 @@ var void(float frags_remain) GameHook_WinCountDown = {
 }
 var float(float f) GameHook_KillDelayMod = { return f; }
 var string(string s) GameHook_SuddenDeathMessageMod = { return s; }
-var string(string s) GameHook_GameOverMessageMod = { return s; }
+var string(string s) gamehook_map_finish_message_mod = { return s; }
 var float() false_WarmupAllowed = { return FALSE; }
 var float() GameHook_WarmupAllowed = { return TRUE; }
 var float() GameHook_ReadyAllowed = { return FALSE; }

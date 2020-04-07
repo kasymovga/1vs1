@@ -932,7 +932,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.pushltime = 0;
 
 	if (self.health < 1)
-	if not(GameHook_DeathHandle(attacker, inflictor, deathtype))
+	if not(gamehook_player_death_handle(attacker, inflictor, deathtype))
 	{
 		float defer_client_kill_now_team_change;
 		defer_client_kill_now_team_change = FALSE;

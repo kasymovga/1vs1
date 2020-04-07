@@ -256,7 +256,7 @@ void survive_init_delayed() {
 		IceHook_FrozenStatus = survive_IceFrozenStatus;
 		Ice_Init();
 	} else {
-		GameHook_DeathHandle = survive_DeathHandle;
+		gamehook_player_death_handle = survive_DeathHandle;
 	}
 }
 
@@ -272,7 +272,7 @@ void survive_init() {
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	survive_monster_quant = 1;
 	gamehook_winning_condition = survive_WinningCondition;
-	GameHook_GameOverMessageMod = survive_GameOverMessageMod;
+	gamehook_map_finish_message_mod = survive_GameOverMessageMod;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_MonsterQuant = survive_MonsterQuant;
 	GameHook_MonsterKilled = survive_MonsterKilled;

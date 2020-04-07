@@ -1152,7 +1152,7 @@ float(void) onslaught_WinningCondition {
 
 void(void) onslaught_init {
 	g_ons = 1;
-	GameHook_DeathHandle = onslaught_DeathHandle;
+	gamehook_player_death_handle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = GameHookChain_Spawn;
 	GameHookChain_Spawn = onslaught_Spawn;
 	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
