@@ -1109,8 +1109,6 @@ float CSQC_Parse_TempEntity()
 	// NOTE: Could just do return instead of break...
 	switch(nTEID)
 	{
-		case TE_CSQC_SPAWN:
-			break;
 		case TE_CSQC_ZCURVEPARTICLES:
 			Net_ReadZCurveParticles();
 			break;

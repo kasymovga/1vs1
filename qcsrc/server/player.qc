@@ -2151,10 +2151,6 @@ void(entity spot) player_spawn {
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	msg_entity = self;
-	WRITESPECTATABLE_MSG_ONE({
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_SPAWN);
-	});
 	self.customizeentityforclient = player_customize;
 	self.body.customizeentityforclient = player_body_customize;
 	player_setup_model();
