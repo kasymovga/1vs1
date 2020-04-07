@@ -81,7 +81,7 @@ void single_init_delayed(void) {
 	}
 }
 
-void Single_SetNewParms() {
+void() single_client_parms_new {
 	parm5 = start_health;
 	parm6 = start_armorvalue;
 	parm7 = start_ammo_shells;
@@ -92,7 +92,7 @@ void Single_SetNewParms() {
 	parm12 = FALSE;
 }
 
-void Single_SetChangeParms() {
+void() single_client_parms_change {
 	if (self.classname == "player" && (self.deadflag == DEAD_NO || campaign_won)) {
 		parm5 = self.health;
 		parm6 = self.armorvalue;
@@ -103,12 +103,12 @@ void Single_SetChangeParms() {
 		parm11 = self.weapons;
 		parm12 = TRUE;
 	} else {
-		Single_SetNewParms();
+		single_client_parms_new();
 	}
 }
 
 .float default_equip;
-void Single_DecodeLevelParms() {
+void() single_client_parms_decode {
 	if (parm12) {
 		self.health = parm5;
 		self.armorvalue = parm6;
@@ -177,9 +177,9 @@ void Single_Init() {
 	gamehook_winning_condition = single_winning_condition;
 	gamehook_map_finish_message_mod = single_map_finish_message_mod;
 	gamehook_player_death_handle = single_player_death_handle;
-	GameHook_SetNewParms = Single_SetNewParms;
-	GameHook_SetChangeParms = Single_SetChangeParms;
-	GameHook_DecodeLevelParms = Single_DecodeLevelParms;
+	gamehook_client_parms_new = single_client_parms_new;
+	gamehook_client_parms_change = single_client_parms_change;
+	gamehook_client_parms_decode = single_client_parms_decode;
 	GameHook_MonsterTeamSwitchable = Single_MonsterTeamSwitchable;
 	Single_PlayerPreThink_NextLink = GameHookChain_PlayerPreThink;
 	GameHookChain_PlayerPreThink = Single_PlayerPreThink;

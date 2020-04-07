@@ -162,13 +162,13 @@ void() client_init_spawn {
 void(void) client_parms_new { //called by engine
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
-	GameHook_SetNewParms();
+	gamehook_client_parms_new();
 }
 
 void(void) client_parms_change { //called by engine
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
-	GameHook_SetChangeParms();
+	gamehook_client_parms_change();
 }
 
 void(void) client_parms_decode { //called by engine
@@ -179,7 +179,7 @@ void(void) client_parms_decode { //called by engine
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
-	GameHook_DecodeLevelParms();
+	gamehook_client_parms_decode();
 }
 
 void(entity cl, float _team) client_kill_now_team_change {
