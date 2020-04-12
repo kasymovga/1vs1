@@ -31,10 +31,8 @@ void weapon_hook_explode_think (void)
 	f = self.cnt - dmg_remaining_next;
 	self.cnt = dmg_remaining_next;
 	damage_record_fires(self.owner, WEP_HOOK, 1);
-	damage_radius (self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
-	self.projectiledeathtype |= HITTYPE_BOUNCE;
-	//damage_radius (self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, self.dmg_force * f, self.projectiledeathtype, world);
-
+	damage_radius(self, self.owner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.owner, self.dmg_force * f, self.projectiledeathtype, world);
+	self.projectiledeathtype |= HITTYPE_NOINFO;
 	if(dt < g_balance_hook_secondary_duration)
 		self.nextthink = time + 0.05; // soon
 	else
@@ -45,6 +43,7 @@ void weapon_hook_explode2 (void) {
 	self.event_damage = stdproc_nothing;
 	self.touch = stdproc_nothing;
 	self.effects |= EF_NODRAW;
+	self.projectiledeathtype |= HITTYPE_NOTEAMDAMAGE;
 	self.think = weapon_hook_explode_think;
 	self.nextthink = time;
 	self.teleport_time = time;

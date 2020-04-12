@@ -76,11 +76,9 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	self = targ;
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
-	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
-	{
+	if (deathtype & HITTYPE_NOTEAMDAMAGE) {
 		if(targ.classname == "player")
-			if not(team_is_different_teams(targ, attacker))
-			{
+			if not(team_is_different_teams(targ, attacker)) {
 				self = oldself;
 				return;
 			}
@@ -320,7 +318,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 	}
 	damage_radius_running = 1;
 	blastorigin = (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5);
-	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) { // only send gravity bomb damage once
+	if not(deathtype & HITTYPE_NOINFO) {
 		force = inflictor.velocity;
 		if(vlen(force) == 0)
 			force = '0 0 -1';
