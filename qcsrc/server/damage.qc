@@ -403,7 +403,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 		targ = targ.chain;
 	}
 	if (directhitentity)
-		damage(directhitentity, inflictor, attacker, coredamage, deathtype, nearest, forceintensity * normalize(directhitentity.origin - blastorigin + (directhitentity.mins + directhitentity.maxs) * 0.5));
+		damage(directhitentity, inflictor, attacker, coredamage, deathtype, entity_nearest_point_on_box(directhitentity, blastorigin), forceintensity * normalize(directhitentity.origin - blastorigin + (directhitentity.mins + directhitentity.maxs) * 0.5));
 
 	damage_radius_running = 0;
 }
