@@ -22,8 +22,8 @@ void(.float powerupfield, string _model, string _sound, string _name, float it) 
 	}
 }
 
-var void(float killed) powerup_PlayerClear_NextLink;
-void(float killed) powerup_PlayerClear {
+var void(float killed) powerup_player_clear_next;
+void(float killed) powerup_player_clear {
 	if (killed) {
 		if (g_powerup_strength_droppable)
 			powerup_drop(strength_finished, "models/items/g_strength.md3", "misc/powerup.wav", "Strength Powerup", IT_STRENGTH);
@@ -41,7 +41,7 @@ void(float killed) powerup_PlayerClear {
 	self.invisibility_finished = 0;
 	self.strength_finished = 0;
 	self.speed_finished = 0;
-	powerup_PlayerClear_NextLink(killed);
+	powerup_player_clear_next(killed);
 }
 
 var void(entity e) powerup_SpectateCopy_NextLink;
@@ -69,8 +69,8 @@ void() powerup_init {
 	CACHE_CVAR(g_balance_powerup_strength_force);
 	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
 	CACHE_CVAR(g_balance_powerup_strength_selfforce);
-	powerup_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = powerup_PlayerClear;
+	powerup_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = powerup_player_clear;
 	powerup_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = powerup_SpectateCopy;
 }
