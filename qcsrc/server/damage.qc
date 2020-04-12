@@ -224,7 +224,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	}
 	self = oldself;
 
-	GameHookChain_DamageForceDone(targ, attacker, _damage, force);
+	gamehook_chain_damage_force_done(targ, attacker, _damage, force);
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
@@ -299,42 +299,34 @@ void damage_record_init() {
 }
 
 float damage_radius_running;
-void damage_radius(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
-// Returns total damage applies to creatures
-{
-	entity	targ;
-	float	finaldmg;
-	float	power;
-	vector	blastorigin;
-	vector	force;
-	vector  diff;
-	vector  center;
-	vector  nearest;
-	entity  next;
-	if(damage_radius_running)
-	{
-		string save;
-		print("damage_radius called recursively!\n");
-		print("Expect stuff to go HORRIBLY wrong.\n");
-		print("Causing a stack trace...\n");
-		save = cvar_string("prvm_backtraceforwarnings");
-		cvar_set("prvm_backtraceforwarnings", "1");
-		fclose(-1); // calls VM_Warning
-		cvar_set("prvm_backtraceforwarnings", save);
+void damage_radius(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity) {
+	entity targ;
+	float finaldmg;
+	float power;
+	vector blastorigin;
+	vector force;
+	vector diff;
+	vector center;
+	vector nearest;
+	float a;
+	float c;
+	float hits;
+	float total;
+	float hitratio;
+	vector hitloc;
+	if(damage_radius_running) {
+		backtrace("damage_radius called recursively!\n");
 		return;
 	}
-
 	damage_radius_running = 1;
-
 	blastorigin = (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5);
-
-	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-	{
+	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) { // only send gravity bomb damage once
 		force = inflictor.velocity;
 		if(vlen(force) == 0)
 			force = '0 0 -1';
 		else
 			force = normalize(force);
+
 		if(forceintensity >= 0)
 			damage_info(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, attacker);
 		else
@@ -342,88 +334,78 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 	}
 	float record_damage = attacker.flags & FL_CLIENT;
 	targ = WarpZone_FindRadius(blastorigin, rad, FALSE);
-	while (targ)
-	{
-		next = targ.chain;
+	while (targ) {
 		if (targ != inflictor)
-			if (ignore != targ) if(targ.takedamage)
-			{
-				// LordHavoc: measure distance to nearest point on target (not origin)
-				// (this guarentees 100% damage on a touch impact)
-				nearest = targ.WarpZone_findradius_nearest;
-				diff = targ.WarpZone_findradius_dist;
-				// round up a little on the damage to ensure full damage on impacts
-				// and turn the distance into a fraction of the radius
-				power = 1 - ((vlen (diff) - 2) / rad);
-				//bprint(" ");
-				//bprint(ftos(power));
-				//if (targ == attacker)
-				//	print(ftos(power), "\n");
-				if (power > 0)
-				{
-					if (power > 1)
-						power = 1;
-					finaldmg = coredamage * power + edgedamage * (1 - power);
-					if (finaldmg > 0 || forceintensity > 0)
-					{
-						local float a;
-						local float c;
-						local float hits;
-						local float total;
-						local float hitratio;
-						local vector hitloc;
-						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
-						// if it's a player, use the view origin as reference
-						if (targ.classname == "player")
-							center = targ.origin + targ.view_ofs;
-						force = normalize(center - WarpZone_TransformOrigin(targ, blastorigin));
-						force = force * (coredamage ? (finaldmg / coredamage) : 1) * forceintensity;
-						// test line of sight to multiple positions on box,
-						// and do damage if any of them hit
-						hits = 0;
-						if (targ.classname == "player")
-							total = ceil(bound(1, finaldmg, 10));
-						else
-							total = ceil(bound(1, finaldmg/10, 5));
-						hitloc = nearest;
-						c = 0;
-						while (c < total)
-						{
-							WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor); //targ have .warpzone_transform from WarpZone_FindRadius
-							if (trace_fraction == 1 || trace_ent == targ)
-							{
-								hits = hits + 1;
-								if (hits > 1)
-									hitloc = hitloc + nearest;
-								else
-									hitloc = nearest;
-							}
-							nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
-							nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
-							nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
-							c = c + 1;
-						}
-						nearest = hitloc * (1 / max(1, hits));
-						hitratio = (hits / total);
-						a = bound(0, g_throughfloor_damage + (1-g_throughfloor_damage) * hitratio, 1);
-						finaldmg = finaldmg * a;
-						a = bound(0, g_throughfloor_force + (1-g_throughfloor_force) * hitratio, 1);
-						force = force * a;
-						if(hits || g_throughfloor_damage || g_throughfloor_force)
-						{
-							if (record_damage)
-								damage_record_hits(attacker, targ, deathtype, 1, finaldmg);
+		if (ignore != targ)
+		if (directhitentity != targ)
+		if (targ.takedamage) {
+			// LordHavoc: measure distance to nearest point on target (not origin)
+			// (this guarentees 100% damage on a touch impact)
+			nearest = targ.WarpZone_findradius_nearest;
+			diff = targ.WarpZone_findradius_dist;
+			// round up a little on the damage to ensure full damage on impacts
+			// and turn the distance into a fraction of the radius
+			power = 1 - ((vlen (diff) - 2) / rad);
+			if (power > 0) {
+				if (power > 1)
+					power = 1;
 
-							if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-								damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
+				finaldmg = coredamage * power + edgedamage * (1 - power);
+				if (finaldmg > 0 || forceintensity > 0) {
+					// if it's a player, use the view origin as reference
+					if (targ.classname == "player" && attacker == targ)
+						center = targ.origin + targ.view_ofs;
+					else
+						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+
+					force = normalize(center - WarpZone_TransformOrigin(targ, blastorigin));
+					force = force * (coredamage ? (finaldmg / coredamage) : 1) * forceintensity;
+					// test line of sight to multiple positions on box,
+					// and do damage if any of them hit
+					hits = 0;
+					if (targ.classname == "player")
+						total = ceil(bound(1, finaldmg, 10));
+					else
+						total = ceil(bound(1, finaldmg/10, 5));
+
+					hitloc = nearest;
+					c = 0;
+					while (c < total) {
+						WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor); //targ have .warpzone_transform from WarpZone_FindRadius
+						if (trace_fraction == 1 || trace_ent == targ) {
+							hits = hits + 1;
+							if (hits > 1)
+								hitloc = hitloc + nearest;
 							else
-								damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
+								hitloc = nearest;
 						}
+						nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
+						nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
+						nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
+						c = c + 1;
+					}
+					nearest = hitloc * (1 / max(1, hits));
+					hitratio = (hits / total);
+					a = bound(0, g_throughfloor_damage + (1-g_throughfloor_damage) * hitratio, 1);
+					finaldmg = finaldmg * a;
+					a = bound(0, g_throughfloor_force + (1-g_throughfloor_force) * hitratio, 1);
+					force = force * a;
+					if (hits || g_throughfloor_damage || g_throughfloor_force) {
+						if (record_damage)
+							damage_record_hits(attacker, targ, deathtype, 1, finaldmg);
+
+						if (DEATH_ISSPECIAL(deathtype))
+							damage(targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
+						else
+							damage(targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
 					}
 				}
 			}
-		targ = next;
+		}
+		targ = targ.chain;
 	}
+	if (directhitentity)
+		damage(directhitentity, inflictor, attacker, coredamage, deathtype, nearest, forceintensity * normalize(directhitentity.origin - blastorigin + (directhitentity.mins + directhitentity.maxs) * 0.5));
 
 	damage_radius_running = 0;
 }

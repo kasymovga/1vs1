@@ -100,7 +100,7 @@ void(void) world_static_init {
 	hat_init();
 	Radio_Init();
 	BadAss_Init();
-	DamageIndicator_Init();
+	damageindicator_init();
 	monster_monsters_init();
 	WarpZone_Init();
 	weapon_selectable_init();

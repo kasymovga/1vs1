@@ -1,1 +1,1 @@
-void DamageIndicator_Init();
+void(void) damageindicator_init;

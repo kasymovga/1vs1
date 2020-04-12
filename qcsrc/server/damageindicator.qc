@@ -1,6 +1,6 @@
 float sv_damageindicator_accumulate_interval;
 
-float DamageIndicator_SendEntity(entity to, float sf) {
+float(entity to, float sf) damageindicator_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DMG_INDICATOR);
 	float _damage = self.dmg + 0.4;
 	WriteByte(MSG_ENTITY, NET_BOUND_TO_BYTE(_damage));
@@ -10,7 +10,7 @@ float DamageIndicator_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-void DamageIndicator_Remove() {
+void(void) damageindicator_remove {
 	entity e;
 	float i;
 	for (i = 0, e = self.owner; e && i < 7; e = e.dmg_indicator, i++)
@@ -25,7 +25,7 @@ void DamageIndicator_Remove() {
 	remove(self);
 }
 
-float DamageIndicator_Customize() {
+float(void) damageindicator_customize {
 	if (self.enemy == other)
 		return TRUE;
 
@@ -36,9 +36,9 @@ float DamageIndicator_Customize() {
 	return FALSE;
 }
 
-var void(entity targ, entity attacker, float _damage, vector ignore) DamageIndicator_DamageForceDone_NextLink;
-void DamageIndicator_DamageForceDone(entity targ, entity attacker, float _damage, vector ignore) {
-	DamageIndicator_DamageForceDone_NextLink(targ, attacker, _damage, ignore);
+var void(entity targ, entity attacker, float _damage, vector ignore) damageindicator_damage_force_done_next;
+void damageindicator_damage_force_done(entity targ, entity attacker, float _damage, vector ignore) {
+	damageindicator_damage_force_done_next(targ, attacker, _damage, ignore);
 	if (targ == attacker)
 		return;
 
@@ -63,11 +63,11 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float _damage
 	if not(e) {
 		e = spawn();
 		e.dmg_indicator = targ.dmg_indicator;
-		e.think = DamageIndicator_Remove;
+		e.think = damageindicator_remove;
 		e.owner = targ;
 		e.enemy = attacker;
-		e.customizeentityforclient = DamageIndicator_Customize;
-		net_link_entity(e, FALSE, 0, DamageIndicator_SendEntity);
+		e.customizeentityforclient = damageindicator_customize;
+		net_link_entity(e, FALSE, 0, damageindicator_send);
 		targ.dmg_indicator = e;
 	}
 	setorigin(e, targ.origin + 0.5 * (targ.maxs + targ.mins));
@@ -76,11 +76,11 @@ void DamageIndicator_DamageForceDone(entity targ, entity attacker, float _damage
 	e.nextthink = time + sv_damageindicator_accumulate_interval;
 }
 
-void DamageIndicator_Init() {
+void(void) damageindicator_init {
 	if not(cvar("sv_damageindicator"))
 		return;
 	
 	CACHE_CVAR(sv_damageindicator_accumulate_interval);
-	DamageIndicator_DamageForceDone_NextLink = GameHookChain_DamageForceDone;
-	GameHookChain_DamageForceDone = DamageIndicator_DamageForceDone;
+	damageindicator_damage_force_done_next = gamehook_chain_damage_force_done;
+	gamehook_chain_damage_force_done = damageindicator_damage_force_done;
 }
