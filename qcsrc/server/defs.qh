@@ -167,7 +167,6 @@ typedef void() voidfunc;
 .vector spawnorigin;
 
 .vector death_origin;
-.vector killer_origin;
 
 .float() customizeentityforclient;
 .float cvar_cl_hitsound;

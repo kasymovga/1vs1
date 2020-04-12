@@ -803,8 +803,6 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			bprint ("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
 	}
 	targ.death_origin = targ.origin;
-	if(targ != attacker)
-		targ.killer_origin = attacker.origin;
 	// FIXME: this should go in client_put
 	if (targ.killcount)
 		targ.killcount = 0;
