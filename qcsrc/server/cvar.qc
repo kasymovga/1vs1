@@ -34,6 +34,7 @@ void(void) cvar_changes_init {
 		BADCVAR("slowmo");
 		BADPREFIX("sv_mapformat");
 		// client
+		BADCVAR("fov");
 		BADPREFIX("bgm");
 		BADPREFIX("amb");
 		BADPREFIX("snd");
