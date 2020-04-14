@@ -2116,7 +2116,6 @@ void(entity spot) player_spawn {
 		self.cnt = weaypon_cycle_get(self, self.cvar_cl_weaponpriority, -1, -1, 0);
 	}
 	self.weapon = 0;
-	self.jump_interval = time;
 	self.spawnshieldtime = time + g_spawnshieldtime;
 	self.pauserotarmor_finished = time + g_balance_pause_armor_rot_spawn;
 	self.pauserothealth_finished = time + g_balance_pause_health_rot_spawn;

@@ -139,9 +139,6 @@ typedef void() voidfunc;
 .float pauserotfuel_finished;
 .vector dest1, dest2;
 
-// minstagib vars
-.float jump_interval;    // laser refire
-
 //swamp
 .float in_swamp;              // bool
 .entity swampslug;            // Uses this to release from swamp ("untouch" fix)

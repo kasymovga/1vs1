@@ -21,6 +21,7 @@ float g_balance_minstanex_laser_rapid_refire;
 
 .float minstanex_lasthit;
 .float laser_hold;
+.float jump_interval;
 
 float weapon_minstanex_draw_beam_particless_effect;
 void weapon_minstanex_draw_beam_particless(vector start, vector end, vector to) {
@@ -208,6 +209,7 @@ float weapon_minstanex(float req)
 		weapon_setup(WEP_MINSTANEX);
 		self.minstanex_lasthit = 0;
 		self.laser_hold = 0;
+		self.jump_interval = time;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
