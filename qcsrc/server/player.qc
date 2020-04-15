@@ -61,6 +61,7 @@ float g_teamdamage_resetspeed;
 float sv_reset_on_join;
 float g_player_brightness;
 float g_spawnshieldtime;
+float g_spawnfrags;
 float g_spawnsound;
 float g_player_pushfactor;
 float reset_on_join_done;
@@ -244,6 +245,7 @@ void() player_effects {
 	if (g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;
 
+	if not(g_spawnfrags)
 	if (time >= map_starttime)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
@@ -700,8 +702,11 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			else if not(gamehook_chain_player_obituary_frag(deathtype, targ, inflictor, attacker))
 				bprint ("^1",s, "^1 was ", weapon_fragprefix, "^1fragged by ", a, "\n");
 
-			score_give_frag(attacker, targ, 1);
-
+			if (g_spawnfrags && (targ.spawnshieldtime > time || attacker.spawnshieldtime > time)) {
+				weapon_fragprefix = strcat("^3SPAWN", weapon_fragprefix);
+			} else {
+				score_give_frag(attacker, targ, 1);
+			}
 			if (targ.killcount > 2) {
 				bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
 			}
@@ -864,8 +869,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (take > 100)
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	if (time > self.spawnshieldtime)
-	{
+	if (time > self.spawnshieldtime || g_spawnfrags) {
 		self.armorvalue = self.armorvalue - save;
 		self.health = self.health - take;
 		// pause regeneration for 5 seconds
@@ -2411,6 +2415,7 @@ void() player_init {
 	CACHE_CVAR(g_player_brightness);
 	CACHE_CVAR(g_player_pushfactor);
 	CACHE_CVAR(g_spawnshieldtime);
+	CACHE_CVAR(g_spawnfrags);
 	CACHE_CVAR(g_spawnsound);
 	CACHE_CVAR(sv_autotaunt);
 	CACHE_CVAR(sv_taunt);

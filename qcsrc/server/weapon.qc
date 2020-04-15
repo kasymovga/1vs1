@@ -452,6 +452,10 @@ void weapon_frame()
 			v_right = ri;
 			v_up = up;
 			weapon_action(self.weapon, WR_THINK);
+			if (self.spawnshieldtime > time)
+			if (self.weaponentity.state == WS_INUSE) {
+				self.spawnshieldtime = time; //weapon was used, disable spawnshield
+			}
 		}
 		if (time + frametime * 0.5 >= self.weapon_nextthink)
 		{
@@ -642,9 +646,6 @@ float(float secondary, float attacktime) weapon_prepareattack {
 	}
 
 	self.weaponentity.state = WS_INUSE;
-
-	self.spawnshieldtime = min(self.spawnshieldtime, time); // kill spawn shield when you fire
-
 	// if the weapon hasn't been firing continuously, reset the timer
 	if(attacktime >= 0)
 	{

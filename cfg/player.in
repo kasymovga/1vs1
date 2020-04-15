@@ -24,3 +24,4 @@ set sv_player_mute_namepattern2 ""
 set sv_player_mute_namepattern3 ""
 _set g_fullbrightplayers "1"
 _set g_spawnshieldtime 0
+set g_spawnfrags 0
