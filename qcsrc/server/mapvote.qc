@@ -21,8 +21,10 @@ float mapvote_abstain;
 void() mapvote_spawn;
 
 void() mapvote_clear_all_votes {
-	FOR_EACH_CLIENT(other)
+	FOR_EACH_CLIENT(other) {
+		other.impulse = 0;
 		other.mapvote = 0;
+	}
 }
 
 string(string m) mapvote_suggest {
