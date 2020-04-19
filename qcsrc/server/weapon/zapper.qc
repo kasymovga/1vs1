@@ -45,7 +45,6 @@ var .float zapper_buttonatck2 = BUTTON_ATCK2;
 .float zapper_range;
 .float zapper_expire;
 .float zapper_lastdmg;
-.float zapper_dmgdelay;
 .float zapper_arc_hit;
 .float zapper_heat;
 .float zapper_coolofftime;
@@ -226,49 +225,32 @@ void weapon_zapper_beam_think(void) {
         remove(self);
         return;
     }
-	vector org = weapon_zapper_visual_shotorg(self.enemy);
-
-    makevectors(self.owner.v_angle);
     entity o = self.owner;
+    float dt = time - self.zapper_lastdmg;
+    float rate = weapon_rate_factor_for(o);
+    float wantedTicrate = g_balance_zapper_primary_ticrate * rate;
+	if not(frametime)
+	if (dt < wantedTicrate)
+		return;
+
+	vector org = weapon_zapper_visual_shotorg(self.enemy);
+    makevectors(self.owner.v_angle);
 	antilag_begin(o);
     weapon_setup_shot(self.enemy, 0, "", 0);
-
     float fract;
     entity targ;
     vector end = weapon_shotorg + weapon_shotdir * self.zapper_range;
-
-    //ExactHitscan_Begin();
     traceline(weapon_shotorg, end, FALSE, o);
+	WarpZone_TraceLine(weapon_shotorg, end, FALSE, o);
 	antilag_end();
-    //ExactHitscan_End();
-
     targ = trace_ent;
     end = trace_endpos;
     fract = trace_fraction;
-
-    float dt = time - self.zapper_lastdmg;
-    float rate = weapon_rate_factor_for(o);
-    float damageIsDps = FALSE;
-
-    if(dt < frametime)
-    if(math_almost_equals(dt, frametime))
-        dt = frametime;
-
-    float wantedTicrate = self.zapper_dmgdelay * rate;
-
-    if(wantedTicrate <= 0) {
-        wantedTicrate = dt;
-        damageIsDps = TRUE;
-    }
 	vector forcedir = WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir);
     for ( ;dt >= wantedTicrate; dt -= wantedTicrate) {
         float _damage = g_balance_zapper_primary_damage;
         float force  = g_balance_zapper_primary_force;
 		damage_record_fires(o, WEP_ZAPPER, 1);
-        if(damageIsDps) {
-            _damage = _damage * wantedTicrate;
-            force = force * wantedTicrate;
-        }
         if(targ.takedamage) {
             float d = vlen(end - weapon_shotorg) * fract;
 
@@ -330,8 +312,7 @@ void weapon_zapper_attack1(void) {
 
     e.zapper_range = g_balance_zapper_primary_range;
     e.zapper_expire = time + g_balance_zapper_primary_lifetime;
-    e.zapper_dmgdelay = g_balance_zapper_primary_ticrate;
-    e.zapper_lastdmg = time - e.zapper_dmgdelay * weapon_rate_factor();
+    e.zapper_lastdmg = time - g_balance_zapper_primary_ticrate * weapon_rate_factor();
 
     net_link_entity(e, FALSE, 0, weapon_zapper_beam_send);
 
@@ -627,7 +608,12 @@ float weapon_zapper(float req) {
     } else if(req == WR_THINK) {
         weapon_zapper_spinner_spawn();
 		weapon_zapper_cooloff();
-
+		if (self.zapper_beam) {
+			entity e = self;
+			self = self.zapper_beam;
+			weapon_zapper_beam_think();
+			self = e;
+		}
         if(self.zapper_buttonatck1) {
             if (self.zapper_buttonatck2 && g_balance_zapper_secondary_shield == 2) {
                 if(weapon_prepareattack(1, -1)) {
@@ -749,6 +735,7 @@ float weapon_zapper(float req) {
 		CACHE_CVAR(g_balance_zapper_primary_range);
 		CACHE_CVAR(g_balance_zapper_primary_refire);
 		CACHE_CVAR(g_balance_zapper_primary_ticrate);
+		g_balance_zapper_primary_ticrate = max(0.05, g_balance_zapper_primary_ticrate);
 		CACHE_CVAR(g_balance_zapper_secondary);
 		CACHE_CVAR(g_balance_zapper_secondary_accumulate);
 		CACHE_CVAR(g_balance_zapper_secondary_ammo);
