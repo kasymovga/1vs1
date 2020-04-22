@@ -181,9 +181,9 @@ var void(entity targ, entity attacker, float deathtype) Roundbased_DamageForceMo
 void Roundbased_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	if not(Roundbased_Active)
 	if (DEATH_ISWEAPON(deathtype, WEP_LASER)) {
-		GameHook_DamageMod = 0;
+		gamehook_chain_damage_mod = 0;
 		if (targ != attacker) {
-			GameHook_ForceMod = 0;
+			gamehook_chain_damage_mod_force = 0;
 			return; //No sense in other chain links
 		}
 	}
@@ -225,8 +225,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 
 	Roundbased_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
 	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
-	Roundbased_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = Roundbased_DamageForceModsSet;
+	Roundbased_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = Roundbased_DamageForceModsSet;
 	Roundbased_ServerFrame_NextLink = gamehook_chain_world_frame_start;
 	gamehook_chain_world_frame_start = Roundbased_ServerFrame;
 	Roundbased_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;

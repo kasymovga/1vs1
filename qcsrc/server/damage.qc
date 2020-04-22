@@ -130,12 +130,12 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 		if (targ == attacker)
 			_damage = _damage * g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
-		GameHook_DamageMod = GameHook_ForceMod = GameHook_MirrorDamageMod = GameHook_MirrorForceMod = 1;
-		GameHookChain_DamageForceModsSet(targ, attacker, deathtype);
-		_damage = _damage * GameHook_DamageMod;
-		force = force * GameHook_ForceMod;
-		mirrordamage = mirrordamage * GameHook_MirrorDamageMod;
-		mirrorforce = mirrorforce * GameHook_MirrorForceMod;
+		gamehook_chain_damage_mod = gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_mirror = gamehook_chain_damage_mod_force_mirror = 1;
+		gamehook_chain_damage_mods_set(targ, attacker, deathtype);
+		_damage = _damage * gamehook_chain_damage_mod;
+		force = force * gamehook_chain_damage_mod_force;
+		mirrordamage = mirrordamage * gamehook_chain_damage_mod_mirror;
+		mirrorforce = mirrorforce * gamehook_chain_damage_mod_force_mirror;
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)

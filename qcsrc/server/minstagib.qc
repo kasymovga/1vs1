@@ -280,14 +280,14 @@ void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype)
 		if (DEATH_ISWEAPON(deathtype, WEP_LASER))
 		if (g_minstagib_nolaserdamage || !player_can_fire(attacker, FALSE))
 		{
-			GameHook_DamageMod = 0;
+			gamehook_chain_damage_mod = 0;
 			if (targ != attacker)
 			{
 				if (g_minstagib_nolaserdamage)
 					centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
 
-				GameHook_ForceMod = 0;
-				GameHook_MirrorDamageMod = 0;
+				gamehook_chain_damage_mod_force = 0;
+				gamehook_chain_damage_mod_mirror = 0;
 			}
 		}
 		if (team_mode)
@@ -297,9 +297,9 @@ void minstagib_DamageForceModsSet(entity targ, entity attacker, float deathtype)
 		if (targ.deadflag == DEAD_NO)
 		if (attacker.team == targ.team) {
 			if (g_friendlyfire == 0)
-				GameHook_DamageMod = 0;
+				gamehook_chain_damage_mod = 0;
 			else
-				GameHook_DamageMod = GameHook_DamageMod / g_friendlyfire; //Restore value
+				gamehook_chain_damage_mod = gamehook_chain_damage_mod / g_friendlyfire; //Restore value
 		}
 	}
 	minstagib_DamageForceModsSet_NextLink(targ, attacker, deathtype);
@@ -382,8 +382,8 @@ void minstagib_init() {
 	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
 	minstagib_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
-	minstagib_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = minstagib_DamageForceModsSet;
+	minstagib_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = minstagib_DamageForceModsSet;
 	GameHookChain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
 	minstagib_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = minstagib_player_equip_handle;

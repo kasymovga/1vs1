@@ -743,7 +743,7 @@ void WarpZone_TraceToss_stub(entity e, entity forent, float toss_frametime, floa
 var void(entity targ, entity attacker, float deathtype) WarpZone_DamageForceModsSet_NextLink;
 void WarpZone_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 	if (targ.classname == "wzshadow") {
-		GameHook_DamageMod = GameHook_ForceMod = GameHook_MirrorDamageMod = GameHook_MirrorForceMod = 1;
+		gamehook_chain_damage_mod = gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_mirror = gamehook_chain_damage_mod_force_mirror = 1;
 		return;
 	}
 	WarpZone_DamageForceModsSet_NextLink(targ, attacker, deathtype);
@@ -752,8 +752,8 @@ void WarpZone_DamageForceModsSet(entity targ, entity attacker, float deathtype) 
 void WarpZone_EnableHook() {
 	WarpZone_TraceToss = WarpZone_TraceToss_real;
 	WarpZone_TraceToss_ThroughZone = WarpZone_TraceToss_ThroughZone_real;
-	WarpZone_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = WarpZone_DamageForceModsSet;
+	WarpZone_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = WarpZone_DamageForceModsSet;
 	WarpZone_ProjectileTouchHandle_NextLink = GameHookChain_ProjectileTouchHandle;
 	GameHookChain_ProjectileTouchHandle = WarpZone_ProjectileTouchHandle;
 }

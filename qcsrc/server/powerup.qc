@@ -75,14 +75,14 @@ void() powerup_init {
 	gamehook_chain_spectator_copy = powerup_spectator_copy;
 }
 
-var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_next;
-void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet {
+var void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set_next;
+void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set {
 	if (targ.items & IT_INVINCIBLE) {
-		GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_invincible_takedamage;
+		gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_invincible_takedamage;
 		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
-			GameHook_DamageMod = 0;
+			gamehook_chain_damage_mod = 0;
 	}
-	powerup_invincible_DamageForceModsSet_next(targ, attacker, deathtype);
+	powerup_invincible_damage_mods_set_next(targ, attacker, deathtype);
 }
 
 var void() powerup_invincible_player_effects_next;
@@ -114,23 +114,23 @@ void() powerup_invincible_init {
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	powerup_invincible_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_invincible_player_effects;
-	powerup_invincible_DamageForceModsSet_next = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = powerup_invincible_DamageForceModsSet;
+	powerup_invincible_damage_mods_set_next = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = powerup_invincible_damage_mods_set;
 }
 
-var void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForceModsSet_next;
-void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForceModsSet {
+var void(entity targ, entity attacker, float deathtype) powerup_strength_damage_mods_set_next;
+void(entity targ, entity attacker, float deathtype) powerup_strength_damage_mods_set {
 	// apply strength multiplier
 	if ((attacker.items & IT_STRENGTH)) {
 		if(targ == attacker) {
-			GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_strength_selfdamage;
-			GameHook_ForceMod = GameHook_ForceMod * g_balance_powerup_strength_selfforce;
+			gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_strength_selfdamage;
+			gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_force * g_balance_powerup_strength_selfforce;
 		} else {
-			GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_strength_damage;
-			GameHook_ForceMod = GameHook_ForceMod * g_balance_powerup_strength_force;
+			gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_strength_damage;
+			gamehook_chain_damage_mod_force = gamehook_chain_damage_mod_force * g_balance_powerup_strength_force;
 		}
 	}
-	powerup_strength_DamageForceModsSet_next(targ, attacker, deathtype);
+	powerup_strength_damage_mods_set_next(targ, attacker, deathtype);
 }
 
 var void() powerup_strength_player_effects_next;
@@ -185,8 +185,8 @@ void() powerup_strength_init {
 	}
 	powerup_strength_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_strength_player_effects;
-	powerup_strength_DamageForceModsSet_next = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = powerup_strength_DamageForceModsSet;
+	powerup_strength_damage_mods_set_next = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = powerup_strength_damage_mods_set;
 }
 
 var float() powerup_speed_weapon_rate_factor_next;

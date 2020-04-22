@@ -649,8 +649,8 @@ void(void) rune_init {
 	GameHookChain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
 	rune_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
 	GameHookChain_PlayerCanSeeHealthFor = rune_PlayerCanSeeHealthFor;
-	rune_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = rune_DamageForceModsSet;
+	rune_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = rune_DamageForceModsSet;
 	entity e;
 	e = spawn();
 	e.think = rune_spawn_all;

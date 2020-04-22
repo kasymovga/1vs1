@@ -54,11 +54,11 @@ var float() gamehook_chain_weapon_frame_handle = { return FALSE; }
 var float() GameHook_ReloadAllowed = { return TRUE; }
 var float(float dropped) GameHookChain_ThrowWeaponAllowed = { return TRUE; }
 var void(entity e) gamehook_chain_spectator_copy = {}
-float GameHook_DamageMod;
-float GameHook_ForceMod;
-float GameHook_MirrorDamageMod;
-float GameHook_MirrorForceMod;
-var void(entity targ, entity attacker, float deathtype) GameHookChain_DamageForceModsSet = {}
+float gamehook_chain_damage_mod;
+float gamehook_chain_damage_mod_force;
+float gamehook_chain_damage_mod_mirror;
+float gamehook_chain_damage_mod_force_mirror;
+var void(entity targ, entity attacker, float deathtype) gamehook_chain_damage_mods_set = {}
 var void(void(string item, string cmd) Add_Item) GameHookChain_GameMenuAddItems = {};
 var float(string cmd, float tokens) GameHookChain_ClientCommandHandle = { return FALSE; }
 var float(string cmd, float tokens) GameHookChain_GameCommandHandle = { return FALSE; }

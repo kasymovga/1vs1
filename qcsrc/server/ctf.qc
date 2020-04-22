@@ -1044,8 +1044,8 @@ var void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet_N
 void(entity targ, entity attacker, float deathtype) ctf_DamageForceModsSet {
 	if(targ == attacker)
 	if(targ.flagcarried) {
-		GameHook_ForceMod *= g_ctf_flagcarrier_selfforce;
-		GameHook_DamageMod *= g_ctf_flagcarrier_selfdamage;
+		gamehook_chain_damage_mod_force *= g_ctf_flagcarrier_selfforce;
+		gamehook_chain_damage_mod *= g_ctf_flagcarrier_selfdamage;
 	}
 
 	ctf_DamageForceModsSet_NextLink(targ, attacker, deathtype);
@@ -1075,8 +1075,8 @@ void() ctf_init {
 	gamehook_chain_player_think = ctf_PlayerPreThink;
 	GameHook_WinCountDown = stub_WinCountDown;
 	GameHook_RecordForMap = ctf_RecordForMap;
-	ctf_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = ctf_DamageForceModsSet;
+	ctf_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = ctf_DamageForceModsSet;
 	GameHook_PlayerIsCarrier = ctf_PlayerIsCarrier;
 	GameHook_DropCarried = ctf_DropCarried;
 	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;

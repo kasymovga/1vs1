@@ -393,8 +393,8 @@ void hook_DamageForceModsSet(entity targ, entity attacker, float deathtype) {
 			if (targ.hook.state)
 			if not(attacker)
 			if (deathtype == DEATH_FALL) {
-				GameHook_DamageMod = 0;
-				GameHook_ForceMod = 0;
+				gamehook_chain_damage_mod = 0;
+				gamehook_chain_damage_mod_force = 0;
 			}
 		}
 
@@ -482,8 +482,8 @@ void(float force) hook_init {
 	precache_sound("weapons/hook_impact.wav");
 	hook_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = hook_RealClientConnect;
-	hook_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
-	GameHookChain_DamageForceModsSet = hook_DamageForceModsSet;
+	hook_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
+	gamehook_chain_damage_mods_set = hook_DamageForceModsSet;
 	hook_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = hook_PlayerPreThink;
 	hook_PlayerClear_NextLink = gamehook_chain_player_clear;
