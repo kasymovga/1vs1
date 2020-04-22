@@ -1232,34 +1232,29 @@ void player_voice_message(string type, string msg)
 	}
 }
 
-float(entity plr, entity viewer) player_calculate_alpha {
+float(entity plr, entity viewer) player_alpha {
 	plr = Akimbo_Owner(plr);
 	float dalpha = 1;
-	if(plr.classname == "observer") {
+	if (plr.classname == "observer") {
 		if(plr == viewer) {
 			return dalpha;
 		}
-
 		return -1;
-	} else if(plr.classname == "spectator") {
+	} else if (plr.classname == "spectator") {
 		return -1;
 	}
-
-	if(plr.deadflag) {
+	if (plr.deadflag) {
 		return dalpha;
 	}
-	if(viewer.classname == "spectator") {
+	if (viewer.classname == "spectator") {
 		viewer = viewer.enemy;
 	}
-
-	float sa = GameHookChain_PlayerAlphaMod(plr, viewer, dalpha);
-
-	if(plr == viewer && sa < 0.01) {
+	float sa = gamehook_chain_player_alpha_mod(plr, viewer, dalpha);
+	if (plr == viewer && sa < 0.01) {
 		sa = 0.01;
-	} else if(sa <= 0) {
+	} else if (sa <= 0) {
 		sa = -1;
 	}
-
 	return sa;
 }
 
@@ -2017,7 +2012,7 @@ void() player_post_think {
 }
 
 float(void) player_customize {
-	self.alpha = player_calculate_alpha(self, other);
+	self.alpha = player_alpha(self, other);
 	if(self.alpha < 0)
 		return FALSE;
 
@@ -2032,7 +2027,7 @@ float(void) player_customize {
 float(void) player_body_customize {
 	entity modelsource;
 
-	self.alpha = player_calculate_alpha(self.owner, other);
+	self.alpha = player_alpha(self.owner, other);
 	if(self.alpha < 0)
 		return FALSE;
 

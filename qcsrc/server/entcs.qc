@@ -37,7 +37,7 @@ float() entcs_customize {
 		self.effects |= EF_FULLBRIGHT;
 	} else {
 		if (o == self.enemy)
-		if (player_calculate_alpha(o, other) < 0.25)
+		if (player_alpha(o, other) < 0.25)
 			return FALSE;
 
 		if (GameHookChain_PlayerVisibleThroughWallFor(o,other)) {

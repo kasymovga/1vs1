@@ -33,8 +33,8 @@ void(void) warfog_init {
 	CACHE_CVAR(g_warfog_b);
 	CACHE_CVAR(g_warfog_alpha);
 	g_warfog_fade_distance = max(1, g_warfog_fade_distance);
-	warfog_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
-	GameHookChain_PlayerAlphaMod = warfog_PlayerAlphaMod;
+	warfog_PlayerAlphaMod_NextLink = gamehook_chain_player_alpha_mod;
+	gamehook_chain_player_alpha_mod = warfog_PlayerAlphaMod;
 	string fog_str = strcat(ftos(g_warfog_r), " ", ftos(g_warfog_g), " ", ftos(g_warfog_b), " ", ftos(g_warfog_alpha));
 	client_fog = strzone(strcat("0.5 ", fog_str, " ", ftos(g_warfog)));
 }

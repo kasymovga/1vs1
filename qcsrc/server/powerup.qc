@@ -257,12 +257,12 @@ void() powerup_invisibility_player_effects {
 	powerup_invisibility_player_effects_next();
 }
 
-var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_next;
-float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod {
+var float(entity plr, entity viewer, float dalpha) powerup_invisibility_player_alpha_mod_next;
+float(entity plr, entity viewer, float dalpha) powerup_invisibility_player_alpha_mod {
 	if (time < plr.invisibility_finished)
 		dalpha *= 0.05;
 
-	return powerup_invisibility_PlayerAlphaMod_next(plr, viewer, dalpha);
+	return powerup_invisibility_player_alpha_mod_next(plr, viewer, dalpha);
 }
 
 float powerup_invisibility_init_done;
@@ -272,8 +272,8 @@ void() powerup_invisibility_init {
 
 	powerup_invisibility_init_done = 1;
 	powerup_init();
-	powerup_invisibility_PlayerAlphaMod_next = GameHookChain_PlayerAlphaMod;
-	GameHookChain_PlayerAlphaMod = powerup_invisibility_PlayerAlphaMod;
+	powerup_invisibility_player_alpha_mod_next = gamehook_chain_player_alpha_mod;
+	gamehook_chain_player_alpha_mod = powerup_invisibility_player_alpha_mod;
 	powerup_invisibility_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_invisibility_player_effects;
 	addstat(STAT_INVISIBILITY_FINISHED, AS_FLOAT, invisibility_finished);

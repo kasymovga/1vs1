@@ -689,7 +689,7 @@ float() weapon_model_customize {
 
 float weapon_model_exterior_customize()
 {
-    self.alpha = player_calculate_alpha(self.owner, other);
+    self.alpha = player_alpha(self.owner, other);
     return (self.alpha > 0);
 }
 
@@ -900,7 +900,7 @@ void weapon_model_think()
 	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE);
 
 	self.colormap = self.owner.colormap;
-	self.alpha = player_calculate_alpha(self.owner, self.owner);
+	self.alpha = player_alpha(self.owner, self.owner);
 	if (self.owner.cvar_cl_gunalpha)
 		self.alpha *= self.owner.cvar_cl_gunalpha;
 

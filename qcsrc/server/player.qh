@@ -43,7 +43,7 @@ ALLVOICEMSGS
 void() player_init;
 void(float killed) player_clear;
 void play_countdown(float finished, string samp);
-float(entity plr, entity viewer) player_calculate_alpha;
+float(entity plr, entity viewer) player_alpha;
 
 void(string f) player_precache_sounds;
 void() player_update_sounds;

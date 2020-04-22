@@ -105,8 +105,8 @@ NADGET_HOOKFUNCTION(cloak, Init) {
     addstat(STAT_STEALTH, AS_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);
 
-    nadget_Cloak_PlayerAlphaMod_Next = GameHookChain_PlayerAlphaMod;
-    GameHookChain_PlayerAlphaMod = nadget_Cloak_PlayerAlphaMod;
+    nadget_Cloak_PlayerAlphaMod_Next = gamehook_chain_player_alpha_mod;
+    gamehook_chain_player_alpha_mod = nadget_Cloak_PlayerAlphaMod;
 
     nadget_Cloak_WeaponPrepareAttack_Next = GameHookChain_WeaponPrepareAttack;
     GameHookChain_WeaponPrepareAttack = nadget_Cloak_WeaponPrepareAttack;
