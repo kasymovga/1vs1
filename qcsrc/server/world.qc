@@ -644,19 +644,14 @@ void() world_check_rules {
 	}
 };
 
-void EndFrame()
-{
-	FOR_EACH_REALCLIENT(self)
-	{
-		if(self.classname == "spectator")
-		{
+void(void) world_frame_end {
+	FOR_EACH_REALCLIENT(self) {
+		if(self.classname == "spectator") {
 			if(self.enemy.typehitsound)
 				sound_play2(self, "misc/typehit.wav");
 			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
 				sound_play2(self, "misc/hit.wav");
-		}
-		else
-		{
+		} else {
 			if(self.typehitsound)
 				sound_play2(self, "misc/typehit.wav");
 			else if(self.hitsound && self.cvar_cl_hitsound)
@@ -671,7 +666,6 @@ void EndFrame()
 	// 1 frame of lag (cl_nolerp 0).
 	antilag_record(time + frametime);
 }
-
 
 /*
  * world_redirection_think:
@@ -851,19 +845,10 @@ void(void) world_creature_frame {
 	self = oldself;
 }
 
-/*
-=============
-StartFrame
-
-Called before each frame by the server
-=============
-*/
 float world_redirection_think();
-void StartFrame (void)
-{
+void(void) world_frame_start { //called by engine
 	extresponse_update();
 	slowmo_update();
-
 	entity e;
 	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
 		projectile_check(e);
@@ -883,13 +868,10 @@ void StartFrame (void)
 		return;
 
 	entity_initialize_run();
-
 	sys_ticrate = cvar("sys_ticrate");
-
 	skill = cvar("skill");
 	world_creature_frame();
 	world_check_rules();
-
 	GameHookChain_ServerFrame();
 	bot_serverframe();
 }

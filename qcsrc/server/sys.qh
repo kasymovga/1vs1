@@ -155,3 +155,5 @@ void		end_sys_fields;
 #define client_pre_think PlayerPreThink
 #define client_post_think PlayerPostThink
 #define cmd_game GameCommand
+#define world_frame_start StartFrame
+#define world_frame_end EndFrame
