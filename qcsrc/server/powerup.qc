@@ -44,13 +44,13 @@ void(float killed) powerup_player_clear {
 	powerup_player_clear_next(killed);
 }
 
-var void(entity e) powerup_SpectateCopy_NextLink;
+var void(entity e) powerup_SpectateCopy_next;
 void(entity e) powerup_SpectateCopy {
 	self.strength_finished = e.strength_finished;
 	self.invincible_finished = e.invincible_finished;
 	self.speed_finished = e.speed_finished;
 	self.invisibility_finished = e.invisibility_finished;
-	powerup_SpectateCopy_NextLink(e);
+	powerup_SpectateCopy_next(e);
 }
 
 float powerup_init_done;
@@ -71,21 +71,21 @@ void() powerup_init {
 	CACHE_CVAR(g_balance_powerup_strength_selfforce);
 	powerup_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = powerup_player_clear;
-	powerup_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
+	powerup_SpectateCopy_next = GameHookChain_SpectateCopy;
 	GameHookChain_SpectateCopy = powerup_SpectateCopy;
 }
 
-var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_NextLink;
+var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_next;
 void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet {
 	if (targ.items & IT_INVINCIBLE) {
 		GameHook_DamageMod = GameHook_DamageMod * g_balance_powerup_invincible_takedamage;
 		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
 			GameHook_DamageMod = 0;
 	}
-	powerup_invincible_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+	powerup_invincible_DamageForceModsSet_next(targ, attacker, deathtype);
 }
 
-var void() powerup_invincible_player_effects_next_link;
+var void() powerup_invincible_player_effects_next;
 void() powerup_invincible_player_effects {
 	if (self.items & IT_INVINCIBLE) {
 		play_countdown(self.invincible_finished, "misc/poweroff.wav");
@@ -101,7 +101,7 @@ void() powerup_invincible_player_effects {
 		} else if (time > self.invincible_finished + 1) //1 second for fade effect on client
 			self.invincible_finished = 0;
 	}
-	powerup_invincible_player_effects_next_link();
+	powerup_invincible_player_effects_next();
 }
 
 float powerup_invincible_init_done;
@@ -112,13 +112,13 @@ void() powerup_invincible_init {
 	powerup_invincible_init_done = 1;
 	powerup_init();
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
-	powerup_invincible_player_effects_next_link = gamehook_chain_player_effects;
+	powerup_invincible_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_invincible_player_effects;
-	powerup_invincible_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	powerup_invincible_DamageForceModsSet_next = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = powerup_invincible_DamageForceModsSet;
 }
 
-var void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForceModsSet_NextLink;
+var void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForceModsSet_next;
 void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForceModsSet {
 	// apply strength multiplier
 	if ((attacker.items & IT_STRENGTH)) {
@@ -130,10 +130,10 @@ void(entity targ, entity attacker, float deathtype) powerup_strength_DamageForce
 			GameHook_ForceMod = GameHook_ForceMod * g_balance_powerup_strength_force;
 		}
 	}
-	powerup_strength_DamageForceModsSet_NextLink(targ, attacker, deathtype);
+	powerup_strength_DamageForceModsSet_next(targ, attacker, deathtype);
 }
 
-var void() powerup_strength_player_effects_next_link;
+var void() powerup_strength_player_effects_next;
 void() powerup_strength_player_effects {
 	if (self.items & IT_STRENGTH) {
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
@@ -149,10 +149,10 @@ void() powerup_strength_player_effects {
 		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
 			self.strength_finished = 0;
 	}
-	powerup_strength_player_effects_next_link();
+	powerup_strength_player_effects_next();
 }
 
-var void() powerup_strength_akimbo_player_effects_next_link;
+var void() powerup_strength_akimbo_player_effects_next;
 void() powerup_strength_akimbo_player_effects {
 	if (self.items & IT_STRENGTH) {
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
@@ -167,7 +167,7 @@ void() powerup_strength_akimbo_player_effects {
 		} else if (time > self.strength_finished + 1) //1 second for fade effect on client
 			self.strength_finished = 0;
 	}
-	powerup_strength_akimbo_player_effects_next_link();
+	powerup_strength_akimbo_player_effects_next();
 }
 
 float powerup_strength_init_done;
@@ -179,25 +179,25 @@ void() powerup_strength_init {
 	powerup_init();
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
 	if (g_powerup_strength_akimbo) {
-		powerup_strength_akimbo_player_effects_next_link = gamehook_chain_player_effects;
+		powerup_strength_akimbo_player_effects_next = gamehook_chain_player_effects;
 		gamehook_chain_player_effects = powerup_strength_akimbo_player_effects;
 		return;
 	}
-	powerup_strength_player_effects_next_link = gamehook_chain_player_effects;
+	powerup_strength_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_strength_player_effects;
-	powerup_strength_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
+	powerup_strength_DamageForceModsSet_next = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = powerup_strength_DamageForceModsSet;
 }
 
-var float() powerup_speed_WeaponRateFactor_NextLink;
-float() powerup_speed_WeaponRateFactor {
+var float() powerup_speed_weapon_rate_factor_next;
+float() powerup_speed_weapon_rate_factor {
 	if (time < self.speed_finished)
-		return powerup_speed_WeaponRateFactor_NextLink() * 0.666;
+		return powerup_speed_weapon_rate_factor_next() * 0.666;
 
-	return powerup_speed_WeaponRateFactor_NextLink();
+	return powerup_speed_weapon_rate_factor_next();
 }
 
-var void() powerup_speed_player_effects_next_link;
+var void() powerup_speed_player_effects_next;
 void() powerup_speed_player_effects {
 	if (self.items & IT_SPEED) {
 		play_countdown(self.speed_finished, "misc/poweroff.wav");
@@ -212,15 +212,15 @@ void() powerup_speed_player_effects {
 		} else if (time > self.speed_finished + 1) //1 second for fade effect on client
 			self.speed_finished = 0;
 	}
-	powerup_speed_player_effects_next_link();
+	powerup_speed_player_effects_next();
 }
 
-var float() powerup_speed_SpeedMod_NextLink;
-float() powerup_speed_SpeedMod {
+var float() powerup_speed_physics_max_speed_mod_next;
+float() powerup_speed_max_speed_mod {
 	if (time < self.speed_finished)
-		return powerup_speed_SpeedMod_NextLink() * 1.5;
+		return powerup_speed_physics_max_speed_mod_next() * 1.5;
 
-	return powerup_speed_SpeedMod_NextLink();
+	return powerup_speed_physics_max_speed_mod_next();
 }
 
 float powerup_speed_init_done;
@@ -230,16 +230,16 @@ void() powerup_speed_init {
 
 	powerup_speed_init_done = 1;
 	powerup_init();
-	powerup_speed_SpeedMod_NextLink = GameHookChain_SpeedMod;
-	GameHookChain_SpeedMod = powerup_speed_SpeedMod;
-	powerup_speed_player_effects_next_link = gamehook_chain_player_effects;
+	powerup_speed_physics_max_speed_mod_next = gamehook_chain_physics_max_speed_mod;
+	gamehook_chain_physics_max_speed_mod = powerup_speed_max_speed_mod;
+	powerup_speed_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_speed_player_effects;
-	powerup_speed_WeaponRateFactor_NextLink = GameHookChain_WeaponRateFactor;
-	GameHookChain_WeaponRateFactor = powerup_speed_WeaponRateFactor;
+	powerup_speed_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
+	gamehook_chain_weapon_rate_factor = powerup_speed_weapon_rate_factor;
 	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
 }
 
-var void() powerup_invisibility_player_effects_next_link;
+var void() powerup_invisibility_player_effects_next;
 void() powerup_invisibility_player_effects {
 	if (self.items & IT_INVISIBILITY) {
 		play_countdown(self.invisibility_finished, "misc/poweroff.wav");
@@ -254,15 +254,15 @@ void() powerup_invisibility_player_effects {
 		} else if (time > self.invisibility_finished + 1) //1 second for fade effect on client
 			self.invisibility_finished = 0;
 	}
-	powerup_invisibility_player_effects_next_link();
+	powerup_invisibility_player_effects_next();
 }
 
-var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_NextLink;
+var float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod_next;
 float(entity plr, entity viewer, float dalpha) powerup_invisibility_PlayerAlphaMod {
 	if (time < plr.invisibility_finished)
 		dalpha *= 0.05;
 
-	return powerup_invisibility_PlayerAlphaMod_NextLink(plr, viewer, dalpha);
+	return powerup_invisibility_PlayerAlphaMod_next(plr, viewer, dalpha);
 }
 
 float powerup_invisibility_init_done;
@@ -272,9 +272,9 @@ void() powerup_invisibility_init {
 
 	powerup_invisibility_init_done = 1;
 	powerup_init();
-	powerup_invisibility_PlayerAlphaMod_NextLink = GameHookChain_PlayerAlphaMod;
+	powerup_invisibility_PlayerAlphaMod_next = GameHookChain_PlayerAlphaMod;
 	GameHookChain_PlayerAlphaMod = powerup_invisibility_PlayerAlphaMod;
-	powerup_invisibility_player_effects_next_link = gamehook_chain_player_effects;
+	powerup_invisibility_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_invisibility_player_effects;
 	addstat(STAT_INVISIBILITY_FINISHED, AS_FLOAT, invisibility_finished);
 }

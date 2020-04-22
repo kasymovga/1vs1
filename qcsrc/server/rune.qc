@@ -635,10 +635,10 @@ void(void) rune_init {
 
 	rune_JumpVelocityMod_NextLink = GameHookChain_JumpVelocityMod;
 	GameHookChain_JumpVelocityMod = rune_JumpVelocityMod;
-	rune_SpeedMod_NextLink = GameHookChain_SpeedMod;
-	GameHookChain_SpeedMod = rune_SpeedMod;
-	rune_WeaponRateFactor_NextLink = GameHookChain_WeaponRateFactor;
-	GameHookChain_WeaponRateFactor = rune_WeaponRateFactor;
+	rune_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
+	gamehook_chain_physics_max_speed_mod = rune_SpeedMod;
+	rune_WeaponRateFactor_NextLink = gamehook_chain_weapon_rate_factor;
+	gamehook_chain_weapon_rate_factor = rune_WeaponRateFactor;
 	rune_DamageForceDone_NextLink = gamehook_chain_damage_force_done;
 	gamehook_chain_damage_force_done = rune_DamageForceDone;
 	rune_PlayerClear_NextLink = gamehook_chain_player_clear;

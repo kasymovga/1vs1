@@ -1,5 +1,5 @@
 var float(entity attacker, entity inflictor, float deathtype) gamehook_player_death_handle = { return FALSE; }
-var float() GameHookChain_SpeedMod = { return 1; }
+var float() gamehook_chain_physics_max_speed_mod = { return 1; }
 var void(entity spot) gamehook_chain_spawn = {}
 var void(float killed) gamehook_chain_player_clear = {}
 var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
@@ -70,7 +70,7 @@ float GameHook_RotMod;
 float GameHook_HealthArmorRotRegen;
 var void() GameHookChain_HealthArmorFuelModsSet = {}
 var float() GameHookChain_JumpVelocityMod = { return 1; }
-var float() GameHookChain_WeaponRateFactor = { return 1; }
+var float() gamehook_chain_weapon_rate_factor = { return 1; }
 var void(entity targ, entity attacker, float damage, vector force) gamehook_chain_damage_force_done = {}
 var void(entity attacker) gamehook_monster_killed {}
 var float() GameHook_MonsterQuant { return 1; }

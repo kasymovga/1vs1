@@ -324,8 +324,8 @@ void Ice_Init() {
 	gamehook_player_death_handle = Ice_DeathHandle;
 	Ice_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = Ice_PlayerClear;
-	Ice_SpeedMod_NextLink = GameHookChain_SpeedMod;
-	GameHookChain_SpeedMod = Ice_SpeedMod;
+	Ice_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
+	gamehook_chain_physics_max_speed_mod = Ice_SpeedMod;
 	Ice_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = Ice_Spawn;
 	Ice_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;

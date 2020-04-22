@@ -665,7 +665,7 @@ float() weapon_rate_factor {
 	float t;
 	entity oldself = self;
 	self = Akimbo_Owner(self);
-	t = (1.0 / g_weaponratefactor) * GameHookChain_WeaponRateFactor();
+	t = (1.0 / g_weaponratefactor) * gamehook_chain_weapon_rate_factor();
 	self = oldself;
 	return t;
 }

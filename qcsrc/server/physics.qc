@@ -102,7 +102,7 @@ float(void) physics_max_speed_mod {
 	if(self.in_swamp)
 		maxspd_mod = maxspd_mod * self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 
-	maxspd_mod = maxspd_mod * GameHookChain_SpeedMod();
+	maxspd_mod = maxspd_mod * gamehook_chain_physics_max_speed_mod();
 
 	if(self.classname != "player")
 	{
