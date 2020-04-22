@@ -171,8 +171,8 @@ void() nexball_init {
 	GameHook_ReloadAllowed = nexball_ReloadAllowed;
 	nexball_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
 	GameHookChain_ThrowWeaponAllowed = nexball_ThrowWeaponAllowed;
-	nexball_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = nexball_SpectateCopy;
+	nexball_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = nexball_SpectateCopy;
 	GameHook_PlayerIsCarrier = nexball_PlayerIsCarrier;
 	GameHook_DropCarried = nexball_DropCarried;
 	GameHook_TeleportationForbiddenFor = nexball_TeleportationForbiddenFor;

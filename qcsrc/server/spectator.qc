@@ -26,8 +26,8 @@ void Spectator_Note_Message() {
 spectate mode routines
 ======================
 */
-void spectator_spectate_copy(entity spectatee) {
-	GameHookChain_SpectateCopy(spectatee);
+void spectator_copy(entity spectatee) {
+	gamehook_chain_spectator_copy(spectatee);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -66,7 +66,7 @@ float SpectateUpdate() {
 	if(self.enemy.classname != "player")
 		return 0;
 
-	spectator_spectate_copy(self.enemy);
+	spectator_copy(self.enemy);
 	return 1;
 }
 
@@ -89,7 +89,7 @@ float() spectator_spectate_next {
 	if(self.enemy.classname == "player") {
 		client_set_view(self.enemy);
 		self.movetype = MOVETYPE_NONE;
-		spectator_spectate_copy(self.enemy);
+		spectator_copy(self.enemy);
 		spectator_note.SendFlags = 1;
 		return 1;
 	} else {

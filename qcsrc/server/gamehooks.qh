@@ -53,7 +53,7 @@ var float() GameHook_ReadyRestartHard = { return FALSE; }
 var float() gamehook_chain_weapon_frame_handle = { return FALSE; }
 var float() GameHook_ReloadAllowed = { return TRUE; }
 var float(float dropped) GameHookChain_ThrowWeaponAllowed = { return TRUE; }
-var void(entity e) GameHookChain_SpectateCopy = {}
+var void(entity e) gamehook_chain_spectator_copy = {}
 float GameHook_DamageMod;
 float GameHook_ForceMod;
 float GameHook_MirrorDamageMod;

@@ -44,13 +44,13 @@ void(float killed) powerup_player_clear {
 	powerup_player_clear_next(killed);
 }
 
-var void(entity e) powerup_SpectateCopy_next;
-void(entity e) powerup_SpectateCopy {
+var void(entity e) powerup_spectator_copy_next;
+void(entity e) powerup_spectator_copy {
 	self.strength_finished = e.strength_finished;
 	self.invincible_finished = e.invincible_finished;
 	self.speed_finished = e.speed_finished;
 	self.invisibility_finished = e.invisibility_finished;
-	powerup_SpectateCopy_next(e);
+	powerup_spectator_copy_next(e);
 }
 
 float powerup_init_done;
@@ -71,8 +71,8 @@ void() powerup_init {
 	CACHE_CVAR(g_balance_powerup_strength_selfforce);
 	powerup_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = powerup_player_clear;
-	powerup_SpectateCopy_next = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = powerup_SpectateCopy;
+	powerup_spectator_copy_next = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = powerup_spectator_copy;
 }
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_DamageForceModsSet_next;

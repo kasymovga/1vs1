@@ -259,8 +259,8 @@ void nadget_Init(void) {
 	GameHookChain_JoinHandle = nadget_JoinHandle;
 	nadget_PlayerCanBeCarrier_NextLink = GameHookChain_PlayerCanBeCarrier;
 	GameHookChain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
-	nadget_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = nadget_SpectateCopy;
+	nadget_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = nadget_SpectateCopy;
 	nadget_bot_aim_next = gamehook_chain_bot_aim;
 	gamehook_chain_bot_aim = nadget_bot_aim;
 	nadget_player_obituary_frag_next = gamehook_chain_player_obituary_frag;

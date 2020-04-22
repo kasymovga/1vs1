@@ -643,8 +643,8 @@ void(void) rune_init {
 	gamehook_chain_damage_force_done = rune_DamageForceDone;
 	rune_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = rune_PlayerClear;
-	rune_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = rune_SpectateCopy;
+	rune_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = rune_SpectateCopy;
 	rune_PlayerVisibleThroughWallFor_NextLink = GameHookChain_PlayerVisibleThroughWallFor;
 	GameHookChain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
 	rune_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;

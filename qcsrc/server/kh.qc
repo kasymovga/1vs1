@@ -989,8 +989,8 @@ void kh_init() {
 	kh_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = kh_PlayerClear;
 	GameHook_WinCountDown = stub_WinCountDown;
-	kh_SpectateCopy_NextLink = GameHookChain_SpectateCopy;
-	GameHookChain_SpectateCopy = kh_SpectateCopy;
+	kh_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = kh_SpectateCopy;
 	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
 	GameHook_DropCarried = kh_DropCarried;
 	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
