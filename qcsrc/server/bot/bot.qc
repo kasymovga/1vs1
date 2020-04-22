@@ -538,15 +538,15 @@ void bot_serverframe()
 	{
 		float realminplayers, minplayers;
 		realminplayers = cvar("minplayers");
-		minplayers = max(0, floor(realminplayers));
-
 		float realminbots, minbots;
-		if (team_mode && bot_vs_human)
-			realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
-		else
+		if (team_mode && bot_vs_human) {
+			minbots = realminbots = ceil(fabs(bot_vs_human) * activerealplayers);
+			minplayers = 0;
+		} else {
 			realminbots = bot_number;
-		minbots = max(0, floor(realminbots));
-
+			minplayers = max(0, floor(realminplayers));
+			minbots = max(0, floor(realminbots));
+		}
 		bots = min(max(minbots, minplayers - activerealplayers), client_max_count - realplayers);
 		if(bots > minbots)
 			bot_would_leave = TRUE;
