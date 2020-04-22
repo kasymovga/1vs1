@@ -81,7 +81,8 @@ void(float ground) physics_update_status {
 
 			self.groundentity = trace_ent;
 			physics_impact();
-			physics_velocity -= f * trace_plane_normal;
+			if (!trace_ent || trace_ent.solid != SOLID_NOT)
+				physics_velocity -= f * trace_plane_normal;
 		}
 	}
 	// set watertype/waterlevel
@@ -163,46 +164,50 @@ void(void) physics_move {
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
 	primalvelocity = physics_velocity;
-	for(bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++)
-	{
+	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
 		neworigin = self.origin + t * physics_velocity;
 		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
 		trace1_endpos = trace_endpos;
 		trace1_fraction = trace_fraction;
 		trace1_plane_normal = trace_plane_normal;
-		if(trace1_fraction < 1 && trace1_plane_normal_z == 0)
-		{
+		if (trace1_fraction < 1) {
 			physics_impact();
-			// may be a step or wall, try stepping up
-			// first move forward at a higher level
-			currentorigin2 = self.origin;
-			currentorigin2_z += sv_stepheight;
-			neworigin2 = neworigin;
-			neworigin2_z = currentorigin2_z;
-			//neworigin2_z += sv_stepheight;
-			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-			trace2_endpos = trace_endpos;
-			trace2_fraction = trace_fraction;
-			trace2_plane_normal = trace_plane_normal;
-			if(!trace_startsolid)
-			{
-				// then move down from there
-				currentorigin2 = trace2_endpos;
-				neworigin2 = trace2_endpos;
-				neworigin2_z = self.origin_z;
+			if (trace_ent)
+			if (trace_ent.solid == SOLID_NOT) //become non-solid after impact
+				continue;
+
+			if (trace1_plane_normal_z == 0) {
+				// may be a step or wall, try stepping up
+				// first move forward at a higher level
+				currentorigin2 = self.origin;
+				currentorigin2_z += sv_stepheight;
+				neworigin2 = neworigin;
+				neworigin2_z = currentorigin2_z;
+				//neworigin2_z += sv_stepheight;
 				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-				trace3_endpos = trace_endpos;
-				trace3_fraction = trace_fraction;
-				trace3_plane_normal = trace_plane_normal;
-				// accept the new trace if it made some progress
-				if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125)
+				trace2_endpos = trace_endpos;
+				trace2_fraction = trace_fraction;
+				trace2_plane_normal = trace_plane_normal;
+				if(!trace_startsolid)
 				{
-					trace1_endpos = trace2_endpos;
-					trace1_fraction = trace2_fraction;
-					trace1_plane_normal = trace2_plane_normal;
-					trace1_endpos = trace3_endpos;
-					if not(physics_flags & FL_ONGROUND)
-						physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
+					// then move down from there
+					currentorigin2 = trace2_endpos;
+					neworigin2 = trace2_endpos;
+					neworigin2_z = self.origin_z;
+					tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+					trace3_endpos = trace_endpos;
+					trace3_fraction = trace_fraction;
+					trace3_plane_normal = trace_plane_normal;
+					// accept the new trace if it made some progress
+					if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125)
+					{
+						trace1_endpos = trace2_endpos;
+						trace1_fraction = trace2_fraction;
+						trace1_plane_normal = trace2_plane_normal;
+						trace1_endpos = trace3_endpos;
+						if not(physics_flags & FL_ONGROUND)
+							physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
+					}
 				}
 			}
 		}
