@@ -34,6 +34,6 @@ void() footsteps_init {
 
 	sound_random_precache("misc/footstep0", 6);
 	sound_random_precache("misc/metalfootstep0", 6);
-	footsteps_ServerFrame_NextLink = GameHookChain_ServerFrame;
-	GameHookChain_ServerFrame = footsteps_ServerFrame;
+	footsteps_ServerFrame_NextLink = gamehook_chain_world_frame_start;
+	gamehook_chain_world_frame_start = footsteps_ServerFrame;
 }

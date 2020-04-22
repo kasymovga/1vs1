@@ -64,8 +64,8 @@ void Radio_Init(void) {
 	CACHE_CVAR(sv_radio_log_skips);
 	Radio_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = Radio_RealClientConnect;
-	Radio_ServerFrame_NextLink = GameHookChain_ServerFrame;
-	GameHookChain_ServerFrame = Radio_ServerFrame;
+	Radio_ServerFrame_NextLink = gamehook_chain_world_frame_start;
+	gamehook_chain_world_frame_start = Radio_ServerFrame;
 	Radio_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
 	GameHookChain_ClientCommandHandle = Radio_ClientCommandHandle;
 	Radio_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;

@@ -227,8 +227,8 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
 	Roundbased_DamageForceModsSet_NextLink = GameHookChain_DamageForceModsSet;
 	GameHookChain_DamageForceModsSet = Roundbased_DamageForceModsSet;
-	Roundbased_ServerFrame_NextLink = GameHookChain_ServerFrame;
-	GameHookChain_ServerFrame = Roundbased_ServerFrame;
+	Roundbased_ServerFrame_NextLink = gamehook_chain_world_frame_start;
+	gamehook_chain_world_frame_start = Roundbased_ServerFrame;
 	Roundbased_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = Roundbased_GameCommandHandle;
 }

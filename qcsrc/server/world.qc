@@ -872,7 +872,7 @@ void(void) world_frame_start { //called by engine
 	skill = cvar("skill");
 	world_creature_frame();
 	world_check_rules();
-	GameHookChain_ServerFrame();
+	gamehook_chain_world_frame_start();
 	bot_serverframe();
 }
 
