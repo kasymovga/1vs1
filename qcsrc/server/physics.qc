@@ -216,6 +216,38 @@ void(void) physics_frame_begin_hook {
 	physics_button_crouch = self.BUTTON_CROUCH;
 }
 
+void(vector v1, vector v2, float r) physics_triggers {
+	vector v2_absmins = v2 + self.mins;
+	vector v2_absmaxs = v2 + self.maxs;
+	if not(math_boxes_overlap(v1 + self.mins, v1 + self.maxs, v2_absmins, v2_absmaxs)) {
+		vector m = (v1 + v2) * 0.5;
+		physics_triggers(v1, m, r);
+		physics_triggers(m, v2, r);
+		return;
+	}
+	entity e = findradius((v2_absmins + v2_absmaxs) * 0.5, r);
+	entity oldself = self;
+	entity oldother = other;
+	for (; e; e = e.chain) {
+		if (e == oldself) continue;
+		if (e.solid != SOLID_TRIGGER) continue;
+		if not(math_boxes_overlap(e.origin + e.mins, e.origin + e.maxs, v2_absmins, v2_absmaxs)) continue;
+		if (e.touch) {
+			other = oldself;
+			self = e;
+			vector _oldorigin = oldself.origin;
+			setorigin(oldself, v2);
+			self.touch();
+			if (oldself.origin == v2)
+				setorigin(oldself, _oldorigin);
+
+			break;
+		}
+	}
+	self = oldself;
+	other = oldother;
+}
+
 void SV_PlayerPhysics()
 {
 	if (self.player_physic)
@@ -259,14 +291,20 @@ void SV_PlayerPhysics()
 	physics_movetype = self.movetype;
 	physics_waterlevel = self.waterlevel;
 	physics_watertype = self.watertype;
+	vector _oldorigin = self.origin;
 	physics_player();
 	if(physics_flags & FL_ONGROUND)
 		self.lastground = time;
+
 	self.crouch = physics_crouch;
 	self.flags = physics_flags;
 	self.velocity = physics_velocity;
 	self.waterlevel = physics_waterlevel;
 	self.watertype = physics_watertype;
+	if (physics_is_player)
+	if ((vlen(_oldorigin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32) {
+		physics_triggers(_oldorigin, self.origin, vlen(self.maxs - self.mins) / 2);
+	}
 }
 
 var void() physics_RealClientConnect_NextLink;
