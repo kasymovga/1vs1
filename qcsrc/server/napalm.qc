@@ -110,5 +110,6 @@ void Napalm_Init(void) {
     }
 
 	projectile_init(PROJECTILE_HG_NAPALMSHARD);
+	dlc_require("rm_effects_v2");
     napalm_init_done = TRUE;
 }
