@@ -32,6 +32,8 @@ menu.qh
 ../client-menu/skin.qh
 ../client-menu/nexuiz/util.qh
 nexuiz/util.qh
+../menu-server/util.qh
+../menu-server/cvar.qh
 
 ../client-menu/skin.qc
 ../client-menu/oo/classdefs.h
@@ -65,4 +67,5 @@ nexuiz/util.qc
 ../menu-server/extresponse.qc
 ../client-menu/util.qc
 ../menu-server/util.qc
+../menu-server/cvar.qc
 ../common/stdproc.qc

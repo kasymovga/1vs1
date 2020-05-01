@@ -2,12 +2,6 @@
 // uses tokenize on its argument!
 
 string swapInPriorityList(string order, float i, float j);
-
-float cvar_value_issafe(string s);
-
-void cvar_settemp(string pKey, string pValue);
-void cvar_settemp_restore();
-
 typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
 typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
 void shuffle(float n, swapfunc_t swap, entity pass);

@@ -23,50 +23,6 @@ string swapInPriorityList(string order, float i, float j)
 	return order;
 }
 
-float cvar_value_issafe(string s)
-{
-	if(strstrofs(s, "\"", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "\\", 0) >= 0)
-		return 0;
-	if(strstrofs(s, ";", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "$", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "\r", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "\n", 0) >= 0)
-		return 0;
-	return 1;
-}
-
-void cvar_settemp(string pKey, string pValue)
-{
-	if(cvar_string(pKey) == pValue)
-		return;
-	cvar_set("settemp_list", strcat("1 ", pKey, " ", cvar_string("settemp_var"), " ", cvar_string("settemp_list")));
-#ifdef MENUQC
-	registercvar(cvar_string("settemp_var"), "", 0);
-	registercvar(pKey, "", 0);
-#else
-	registercvar(cvar_string("settemp_var"), "");
-	registercvar(pKey, "");
-#endif
-	cvar_set(cvar_string("settemp_var"), cvar_string(pKey));
-	cvar_set("settemp_var", strcat(cvar_string("settemp_var"), "x"));
-	cvar_set(pKey, pValue);
-}
-
-void cvar_settemp_restore()
-{
-	// undo what cvar_settemp did
-	float n, i;
-	n = tokenize_console(cvar_string("settemp_list"));
-	for(i = 0; i < n - 3; i += 3)
-		cvar_set(argv(i + 1), cvar_string(argv(i + 2)));
-	cvar_set("settemp_list", "0");
-}
-
 void shuffle(float n, swapfunc_t swap, entity pass)
 {
 	float i, j;

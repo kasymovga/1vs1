@@ -1,0 +1,3 @@
+float(string s) cvar_value_issafe;
+void(string pKey, string pValue) cvar_settemp;
+void(void) cvar_settemp_restore;

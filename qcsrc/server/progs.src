@@ -11,6 +11,7 @@ constants.qh
 ../common/colormap.qh
 ../common/db.qh
 ../menu-server/util.qh
+../menu-server/cvar.qh
 ../client-server/db.qh
 ../client-server/world.qh
 ../client-server/time.qh
@@ -167,6 +168,7 @@ warpzone.qh
 ../client-server/net.qc
 ../client-server/db.qc
 ../menu-server/util.qc
+../menu-server/cvar.qc
 twoweapons.qh
 noteline.qh
 warmup.qh

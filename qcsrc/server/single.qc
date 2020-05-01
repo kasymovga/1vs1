@@ -9,7 +9,7 @@ entity single_secrets_controller;
 var void() single_shutdown_next;
 void() single_shutdown {
 	registercvar("_single_transit_weapons", "0");
-	cvar_set_builtin("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | start_weapons)); //builting function for avoid campaign wrapper
+	builtin_cvar_set("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | start_weapons)); //builting function for avoid campaign wrapper
 	single_shutdown_next();
 }
 
@@ -73,7 +73,7 @@ void single_init_delayed(void) {
 			map_target.use = single_endlevel;
 		}
 	}
-	_single_transit_weapons = cvar_builtin("_single_transit_weapons"); //builtin to avoid campaign intercepting
+	_single_transit_weapons = builtin_cvar("_single_transit_weapons"); //builtin to avoid campaign intercepting
 	float i, j;
 	for(i = WEP_FIRST, j = 1; i < WEP_LAST; ++i, j *= 2) {
 		if (_single_transit_weapons & j)

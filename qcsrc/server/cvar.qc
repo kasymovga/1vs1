@@ -20,7 +20,7 @@ void(void) cvar_changes_init {
 
 	for(i = 0; i < n; ++i) {
 		k = bufstr_get(h, i);
-		v = cvar_string_builtin(k);
+		v = builtin_cvar_string(k);
 		d = cvar_defstring(k);
 		if(v == d)
 			continue;
@@ -222,7 +222,7 @@ void(string profile) cvar_init {
 }
 
 void(void) cvar_preinit {
-	cvar = cvar_builtin;
-	cvar_string = cvar_string_builtin;
-	cvar_set = cvar_set_builtin;
+	cvar = builtin_cvar;
+	cvar_string = builtin_cvar_string;
+	cvar_set = builtin_cvar_set;
 }

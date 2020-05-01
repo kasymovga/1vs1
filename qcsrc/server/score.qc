@@ -378,9 +378,7 @@ void() score_winning_condition_helper {
 	s = gametype_name(game);
 	s = strcat(s, ":", cvar_string("g_nexuizversion"));
 	s = strcat(s, "::", score_player_string(world, 2)); // make this 1 once we can
-
-	fullstatus = cvar_builtin("g_full_getstatus_responses");
-
+	fullstatus = builtin_cvar("g_full_getstatus_responses");
 	if(score_team_entities_count)
 	{
 		float t;

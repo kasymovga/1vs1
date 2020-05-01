@@ -33,10 +33,13 @@ void	cmd(string command, ...) = #13;
 // cvar cmds
 
 var float 	cvar(string name) = #14;
-float cvar_builtin(string name) = #14;
-var string cvar_string(string name) = #71;
+float builtin_cvar(string name) = #14;
+#define cvar builtin_cvar
+string builtin_cvar_string(string name) = #71;
+#define cvar_string builtin_cvar_string
 const string cvar_defstring(string name) = #89;
-void	cvar_set(string name, string value) = #15;
+void	builtin_cvar_set(string name, string value) = #15;
+#define cvar_set builtin_cvar_set
 
 //void	dprint(string text,...) = #16;
 

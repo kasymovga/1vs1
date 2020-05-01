@@ -12,9 +12,9 @@ float g_campaign_skill;
 
 float campaign_bailout(string s)
 {
-	cvar = cvar_builtin;
-	cvar_string = cvar_string_builtin;
-	cvar_set = cvar_set_builtin;
+	cvar = builtin_cvar;
+	cvar_string = builtin_cvar_string;
+	cvar_set = builtin_cvar_set;
 	cvar_set("g_campaign", "0");
 	g_campaign = 0;
 	print("campaign initialization failed: ", s, "\n");
@@ -96,11 +96,6 @@ void(void) campaign_preinit {
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));
 	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0]));
-
-	// copy sv_gravity cvar, as the engine needs it too (sorry, this will mess
-	// with the menu a little still...)
-	cvar_set_builtin("sv_gravity", cvar_string("sv_gravity"));
-
 	if(campaign_invalid())
 		return;
 
@@ -120,8 +115,8 @@ void(void) campaign_postinit {
 
 	cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
 	cvar_set("timelimit", "0");
-	cvar_set_builtin("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set_builtin("timelimit", "0");
+	builtin_cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
+	builtin_cvar_set("timelimit", "0");
 }
 
 void(string cvarname, float value) campaign_save_cvar {
@@ -131,7 +126,7 @@ void(string cvarname, float value) campaign_save_cvar {
 	string l;
 
 	registercvar(cvarname, ftos(value));
-	cvar_set_builtin(cvarname, ftos(value));
+	builtin_cvar_set(cvarname, ftos(value));
 	// note: cvarname must be remembered
 
 	fh = fopen("campaign.cfg", FILE_READ);
@@ -207,7 +202,7 @@ void(void) campaign_preintermission {
 			// advance level (for menu to show it right)
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
 		}
-		else if(campaign_level == cvar_builtin(campaign_index_var))
+		else if(campaign_level == builtin_cvar(campaign_index_var))
 		{
 			// advance level
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
@@ -225,7 +220,7 @@ void(void) campaign_postintermission {
 		campaign_file_unload();
 		return;
 	}
-	cvar_set_builtin("g_campaign_skill", ftos(g_campaign_skill));
+	builtin_cvar_set("g_campaign_skill", ftos(g_campaign_skill));
 	if (campaign_map_transition)
 		campaign_setup_cvars_only(0);
 	else
