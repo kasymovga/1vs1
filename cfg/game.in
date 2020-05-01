@@ -23,8 +23,6 @@ set sv_reset_on_join "0" "Reset map when this client count join game"
 set skill_auto_min 10
 set skill_auto_max 30
 alias endround "sv_cmd endround"
-set timelimit_default 15
-set fraglimit_default 10
 set sv_jumppads_target_adjust_height 0
 set sv_breakable_debris 1
 set g_door_shootable 1
