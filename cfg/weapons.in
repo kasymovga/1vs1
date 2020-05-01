@@ -69,9 +69,13 @@ set g_balance_minstanex_laser_rapid 0
 set g_balance_minstanex_laser_rapid_delay 0.6
 set g_balance_minstanex_laser_rapid_refire 0.35
 
+//Laer
+alias weaplaser "impulse 230"
+
 //Rocketlauncher
 _set g_balance_rocketlauncher_ammo 5
 set g_balance_rocketlauncher_swap_buttons 0
+alias weaprocketlauncher "impulse 238"
 
 //Fireball
 _set g_balance_fireball_primary_ammo 8
@@ -79,17 +83,20 @@ _set g_balance_fireball_primary_refire 0.5
 _set g_balance_fireball_primary_speed 1000
 _set g_balance_fireball_secondary_ammo 25
 _set g_balance_fireball_secondary_damage 250
+alias weapfireball "impulse 245"
 
 //Nex
 _set g_balance_nex_ammo 10
 set g_balance_nex_reloadtime 2
 set g_balance_nex_magazinecapacity 0
+alias weapnex "impulse 236"
 
 //Crylink
 set g_balance_crylink_swap_buttons 0
 _set g_balance_crylink_primary_shots 5
 _set g_balance_crylink_primary_ammo 3
 _set g_balance_crylink_secondary_ammo 4
+alias weapcrylink "impulse 235"
 
 //Electro
 set g_balance_electro_secondary 1
@@ -97,6 +104,7 @@ set g_balance_electro_swap_buttons 0
 _set g_balance_electro_secondary_refire 0.25
 _set g_balance_electro_secondary_animtime 0.25
 _set g_balance_electro_primary_ammo 3
+alias weapelectro "impulse 234"
 
 //Grenadelauncher
 _set g_balance_grenadelauncher_primary_ammo 4
@@ -104,6 +112,7 @@ _set g_balance_grenadelauncher_secondary_ammo 4
 set g_balance_grenadelauncher_secondary 1
 set g_balance_grenadelauncher_primary_bounce 0
 set g_balance_grenadelauncher_swap_buttons 0
+alias weapgrenadelauncher "impulse 233"
 
 //Hagar
 set g_balance_hagar_swap_buttons 0
@@ -112,12 +121,14 @@ _set g_balance_hagar_primary_speed 4500
 _set g_balance_hagar_primary_refire 0.125
 _set g_balance_hagar_secondary_spread 0
 _set g_balance_hagar_secondary_refire 0.125
+alias weaphagar "impulse 237"
 
 //HLAC
 set g_balance_hlac_secondary 1
 set g_balance_hlac_swap_buttons 0
 _set g_balance_hlac_primary_ammo 1
 _set g_balance_hlac_secondary_ammo 6
+alias weaphlac "impulse 242"
 
 //Shotgun
 set g_balance_shotgun_secondary 1
@@ -130,6 +141,7 @@ set g_balance_shotgun_magazinecapacity 0
 _set g_balance_shotgun_primary_damage 10
 _set g_balance_shotgun_secondary_damage 10
 _set g_weaponreplace_shotgun uzi
+alias weapshotgun "impulse 231"
 
 //Uzi
 set g_balance_uzi_magazinecapacity 0
@@ -138,6 +150,7 @@ set g_balance_uzi_first_gravityfactor 1
 set g_balance_uzi_sustained_gravityfactor 1
 set g_balance_uzi_swap_buttons 0
 set g_balance_uzi_reloadtime 2
+alias weapuzi "impulse 232"
 
 //Zapper
 set g_balance_zapper_animtime 0.1
@@ -176,10 +189,12 @@ set g_balance_zapper_secondary_refire 1
 set g_balance_zapper_swap_buttons 0
 set g_start_weapon_zapper 0
 set g_weaponreplace_zapper ""
+alias weapzapper "impulse 247"
 
 //Axe
 set g_balance_axe_damage 300
 set g_start_weapon_axe 0
+alias weapaxe "impulse 248"
 
 //Supershotgun
 set g_start_weapon_supershotgun 0
@@ -209,6 +224,7 @@ set g_balance_supershotgun_secondary_refire 0.6
 set g_balance_supershotgun_secondary_speed 1500
 set g_balance_supershotgun_secondary_spread 0.15
 set g_weaponreplace_supershotgun ""
+alias weapsupershotgun "impulse 246"
 
 //Rifle
 set g_balance_campingrifle_hotreload 0
@@ -217,3 +233,10 @@ set g_balance_campingrifle_primary_gravityfactor 1
 set g_balance_campingrifle_swap_buttons 0
 _set g_balance_campingrifle_primary_ammo 5
 _set g_balance_campingrifle_secondary_ammo 5
+alias weapcampingrifle "impulse 244"
+
+//Hook
+alias weaphook "impulse 241"
+
+//Tuba
+alias weaptuba "impulse 243"
