@@ -4,10 +4,9 @@ float g_minstagib_armor_max;
 float g_minstagib_health_drop;
 float g_minstagib_health_max;
 float g_minstagib_invis_alpha;
-float g_minstagib_speed_jumpheight;
 float g_minstagib_speed_moverate;
 float g_minstagib_nolaserdamage;
-float g_minstagib_extra_lives;
+float g_minstagib_extralives;
 float minstagib_ammo;
 /* replace items in minstagib
  * IT_STRENGTH	 = invisibility
@@ -44,7 +43,7 @@ void minstagib_items (float itemid)
 
 	// replace with extra lives
 	if (itemid == IT_NAILS)
-	if (g_minstagib_extra_lives) {
+	if (g_minstagib_extralives) {
 		self.max_health = 1;
 		item_start (sv_model_armorlarge,
 			"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
@@ -351,12 +350,11 @@ void minstagib_init() {
 
 	CACHE_CVAR(g_minstagib_ammo_drop);
 	CACHE_CVAR(g_minstagib_armor_max);
-	CACHE_CVAR(g_minstagib_speed_jumpheight);
 	CACHE_CVAR(g_minstagib_speed_moverate);
 	CACHE_CVAR(g_minstagib_nolaserdamage);
 	CACHE_CVAR(g_minstagib_health_drop);
 	CACHE_CVAR(g_minstagib_health_max);
-	CACHE_CVAR(g_minstagib_extra_lives);
+	CACHE_CVAR(g_minstagib_extralives);
 	if (g_minstagib_ammo_drop)
 		minstagib_ammo = TRUE;
 
