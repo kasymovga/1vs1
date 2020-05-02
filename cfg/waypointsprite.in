@@ -1,0 +1,35 @@
+set g_waypointsprite_normdistance 512
+set g_waypointsprite_minscale 0.5
+set g_waypointsprite_minalpha 0.4
+set g_waypointsprite_distancealphaexponent 2
+set g_waypointsprite_timealphaexponent 1
+set g_waypointsprite_deployed_lifetime 10
+set g_waypointsprite_deadlifetime 1
+set g_waypointsprite_limitedrange 5120
+set g_waypointsprite_stuffbinds 0
+seta g_waypointsprite_scale 1
+seta g_waypointsprite_alpha 1 "This allows the client to control transparency of the waypoint"
+seta g_waypointsprite_edgefadealpha 0.5 "alpha multiplier near the edge"
+seta g_waypointsprite_edgefadescale 1 "scale multiplier near the edge"
+seta g_waypointsprite_edgefadedistance 50 "distance in virtual pixels from edge where to start fading"
+seta g_waypointsprite_crosshairfadealpha 0.25 "alpha multiplier near crosshair"
+seta g_waypointsprite_crosshairfadescale 1 "scale multiplier near the crosshair"
+seta g_waypointsprite_crosshairfadedistance 150 "distance in virtual pixels from crosshair where to start fading"
+seta g_waypointsprite_distancefadealpha 1 "alpha multiplier near distance"
+seta g_waypointsprite_distancefadescale 0.7 "scale multiplier near the distance"
+seta g_waypointsprite_distancefadedistancemultiplier 0.5 "distance in map sizes from distance where to stop fading"
+alias "g_waypointsprite_personal"	"impulse 30"
+alias "g_waypointsprite_personal_p"	"impulse 31"
+alias "g_waypointsprite_personal_d"	"impulse 32"
+alias "g_waypointsprite_team_helpme"	"impulse 33"
+alias "g_waypointsprite_team_here"	"impulse 34"
+alias "g_waypointsprite_team_here_p"	"impulse 35"
+alias "g_waypointsprite_team_here_d"	"impulse 36"
+alias "g_waypointsprite_team_danger"	"impulse 37"
+alias "g_waypointsprite_team_danger_p"	"impulse 38"
+alias "g_waypointsprite_team_danger_d"	"impulse 39"
+alias "g_waypointsprite_clear_personal"	"impulse 47"
+alias "g_waypointsprite_clear"	"impulse 48"
+alias "g_waypointsprite_toggle"	"impulse 49"
+// key for that?
+seta cl_hidewaypoints 0 "disable static waypoints, only show team waypoints"

@@ -1,1 +1,2 @@
+set g_pinata 0 "if set to 1 you will not only drop your current weapon when you are killed, but you will drop all weapons that you possessed"
 set g_pinata_drop_all 0

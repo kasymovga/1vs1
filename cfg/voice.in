@@ -1,0 +1,2 @@
+set g_voice_flood_spv 4	"normal voices: seconds between voices to not count as flooding"
+set g_voice_flood_spv_team 2	"team voices: seconds between voices to not count as flooding"

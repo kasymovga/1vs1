@@ -13,6 +13,28 @@ set g_nexball_hockey_melee_boost_forward "400"
 set g_nexball_hockey_melee_boost_up "250"
 set g_nexball_timelimit 10
 set nexball_g_start_weapon_shotgun 0
-_set g_nexball_meter_period 2
+set g_nexball_meter_period 2
 set g_nexball_primary_shootatmaxmeter 1
 set g_nexball_primary_speed 1000
+set g_nexball_football_physics  2  "0: Revenant's original movement, 1: 0 but half independant of aiming height, 2: 1 fully independant, -1: first recode try"
+set g_nexball_basketball_bouncefactor 0.6    "velocity loss when the ball bounces"
+set g_nexball_basketball_bouncestop   0.075  "speed at which the ball stops when it hits the ground (multiplied by sv_gravity)"
+set g_nexball_football_bouncefactor   0.6    "velocity loss when the ball bounces"
+set g_nexball_football_bouncestop     0.075  "speed at which the ball stops when it hits the ground (multiplied by sv_gravity)"
+set g_nexball_football_boost_forward      100   "forward velocity boost when the ball is touched"
+set g_nexball_football_boost_up           200   "vertical velocity boost when the ball is touched"
+set g_nexball_basketball_delay_hold           20    "time before a player who caught the ball loses it (anti-ballcamp)"
+set g_nexball_basketball_delay_hold_forteam   60    "time before a ball reset when a team holds the ball for too long"
+set g_nexball_basketball_teamsteal             1    "1 to allow players to steal from teammates, 0 to disallow"
+set g_nexball_basketball_carrier_speed         0.9  "speed multiplier for the ballcarrier"
+set g_nexball_basketball_meter              1    "use the power meter for basketball"
+set g_nexball_basketball_meter_minpower   0.5    "minimal multiplier to the launching speed when using the power meter"
+set g_nexball_basketball_meter_maxpower   1.2    "maximal multiplier to the launching speed when using the power meter"
+set g_nexball_delay_goal     3    "delay between a goal and a ball reset"
+set g_nexball_delay_idle     10   "maximal idle time before a reset"
+set g_nexball_delay_start    3    "time the ball stands on its spawn before being released"
+set g_nexball_delay_collect  0.5  "time before the same player can catch the ball he launched"
+set g_nexball_sound_bounce   1    "bouncing sound (0: off)"
+set g_nexball_basketball_trail  1  "1 to leave a trail"
+set g_nexball_football_trail    0  "1 to leave a trail"
+set g_nexball_trail_color     254  "1-256 for different colors (Quake palette, 254 is white)"

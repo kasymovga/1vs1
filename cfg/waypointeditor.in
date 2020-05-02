@@ -1,0 +1,6 @@
+set g_waypointeditor 0 "Waypoint editor"
+alias g_waypointeditor_spawn "impulse 103"
+alias g_waypointeditor_remove "impulse 104"
+alias g_waypointeditor_relinkall "impulse 105"
+alias g_waypointeditor_saveall "impulse 106"
+alias g_waypointeditor_unreachable "impulse 107"

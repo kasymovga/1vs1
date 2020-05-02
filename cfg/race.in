@@ -1,4 +1,7 @@
 set g_race_scorelimit "" "Scorelimit for race, when empty, g_timelimit using, <= 0 mean no limit"
 set g_race_timelimit "" "Timelimit for race, when empty, g_timelimit using, <= 0 mean no limit"
 set g_race_leadlimit "" "Leadlimit for race, when empty, g_timelimit using, <= 0 mean no limit"
+set g_race_qualifying_timelimit 0
+set g_race_qualifying_timelimit_override -1
+set g_race_teams 0	"when 2, 3, or 4, the race is played as a team game (the team members can add up their laps)"
 set race_g_start_weapon_laser 0

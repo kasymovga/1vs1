@@ -1,3 +1,15 @@
 set g_chat_flood_damage_flooder 25
 set g_chat_forbidden_words ""
 set g_chat_forbidden_words_set_retard 0
+set g_chat_nospectators 0 "if 0 spec/observer chat is always visible to the player, if 1 it is never visible to players, if 2 it is only visible to players during warmup stage"
+set g_chat_flood_spl 3	"normal chat: seconds between lines to not count as flooding"
+set g_chat_flood_lmax 2	"normal chat: maximum number of lines per chat message at once"
+set g_chat_flood_burst 2	"normal chat: allow bursts of so many chat lines"
+set g_chat_flood_spl_team 1	"team chat:seconds between lines to not count as flooding"
+set g_chat_flood_lmax_team 2	"team chat: maximum number of lines per chat message at once"
+set g_chat_flood_burst_team 2	"team chat: allow bursts of so many chat lines"
+set g_chat_flood_spl_tell 1	"team chat:seconds between lines to not count as flooding"
+set g_chat_flood_lmax_tell 2	"team chat: maximum number of lines per chat message at once"
+set g_chat_flood_burst_tell 2	"team chat: allow bursts of so many chat lines"
+set g_chat_flood_notify_flooder 1	"when 0, the flooder still can see his own message"
+set g_chat_teamcolors 0	"colorize nicknames in team color for chat"

@@ -1,3 +1,53 @@
+set g_balance_weaponswitchdelay 0.15
+set g_weaponreplace_laser ""
+set g_weaponreplace_uzi ""
+set g_weaponreplace_grenadelauncher ""
+set g_weaponreplace_electro ""
+set g_weaponreplace_crylink ""
+set g_weaponreplace_nex ""
+set g_weaponreplace_hagar ""
+set g_weaponreplace_rocketlauncher ""
+set g_weaponreplace_porto ""
+set g_weaponreplace_minstanex ""
+set g_weaponreplace_hook ""
+set g_weaponreplace_hlac ""
+set g_weaponreplace_campingrifle ""
+set g_weaponreplace_tuba ""
+set g_weaponreplace_fireball ""
+set g_weaponspeedfactor 1 "weapon projectile speed multiplier"
+set g_weaponratefactor 1 "weapon fire rate multiplier"
+set g_ballistics_materialconstant 1414213562
+set g_ballistics_mindistance 16
+alias weapnext "_weapnext_${_supports_weaponpriority}${sbar_hudselector}${cl_weaponpriority_useforcycling}"
+alias _weapnext_000 "impulse 10"
+alias _weapnext_001 "impulse 10"
+alias _weapnext_010 "impulse 10"
+alias _weapnext_011 "impulse 10"
+alias _weapnext_020 "impulse 10"
+alias _weapnext_021 "impulse 10"
+alias _weapnext_100 "impulse 10"
+alias _weapnext_101 "impulse 15"
+alias _weapnext_110 "impulse 18"
+alias _weapnext_111 "impulse 15"
+alias _weapnext_120 "impulse 18"
+alias _weapnext_121 "impulse 15"
+alias weaplast "impulse 11"
+alias weapprev "_weapprev_${_supports_weaponpriority}${sbar_hudselector}${cl_weaponpriority_useforcycling}"
+alias _weapprev_000 "impulse 12"
+alias _weapprev_001 "impulse 12"
+alias _weapprev_010 "impulse 12"
+alias _weapprev_011 "impulse 12"
+alias _weapprev_020 "impulse 12"
+alias _weapprev_021 "impulse 12"
+alias _weapprev_100 "impulse 12"
+alias _weapprev_101 "impulse 16"
+alias _weapprev_110 "impulse 19"
+alias _weapprev_111 "impulse 16"
+alias _weapprev_120 "impulse 19"
+alias _weapprev_121 "impulse 16"
+set _supports_weaponpriority 0	"set to 1 by csqc if supported, and to 0 on disconnect"
+alias weapbest "impulse 13"
+alias reload "impulse 20"
 seta cl_weaponpriority "11 9 16 7 4 18 13 17 8 6 15 3 5 14 2 1 12 10 19" "weapon priority list (edit it using the menu, numbers see constants.qh)"
 seta cl_weaponpriority0 "16 9 4 13 8 14" "use impulse 200 for prev gun from this list, 210 for best gun, 220 for next gun.  Default value: explosives"
 seta cl_weaponpriority1 "11 7 18 6 5 1"  "use impulse 201 for prev gun from this list, 211 for best gun, 221 for next gun.  Default value: energy"
@@ -28,28 +78,33 @@ set sv_model_uzi "" "Custom weapon model for uzi"
 set sv_model_zapper "" "Custom weapon model for zapper"
 set sv_model_axe "" "Custom weapon model for axe"
 set sv_weapon_tag_prefix "" "Prefix for weapon tag names"
-_set g_weapon_stay 0 "if set, weapons stay after they were picked up"
-_set g_start_weapon_laser 1 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_shotgun 1 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_uzi 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_grenadelauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_electro 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_crylink 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_nex 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_hagar 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_rocketlauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_minstanex 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_porto 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_hook 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
-_set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_weapon_stay 0 "if set, weapons stay after they were picked up"
+set g_start_weapon_laser 1 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_shotgun 1 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_uzi 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_grenadelauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_electro 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_crylink 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_nex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_hagar 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_rocketlauncher 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_minstanex 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_porto 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_hook 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_hlac 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_campingrifle 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_tuba 0 "0 = never provide the weapon, 1 = always provide the weapon"
+set g_start_weapon_fireball 0 "0 = never provide the weapon, 1 = always provide the weapon"
 set g_start_weapon_selectable ""
 set g_twoweapons ""
 set g_twoweapons_invert_buttons 0
+set sv_qcweaponanimation 0
+set g_weapon_stay 0 "if set to 1 or 2, weapons stay after they were picked up (1: weapons you don't have yet give you ammo of their type, 2: weapons don't give ammo, but instead players start with one pickup-load of ammo by default, 3: weapons give ammo, weapons only stay as ammo-less ghosts)"
 
 //Minstanex
+set g_balance_minstanex_refire 1
+set g_balance_minstanex_animtime 0.3
+set g_balance_minstanex_ammo 10
 set g_balance_minstanex_explode 0
 set g_balance_minstanex_explode_damage 100
 set g_balance_minstanex_explode_edgedamage 0
@@ -69,65 +124,232 @@ set g_balance_minstanex_laser_rapid 0
 set g_balance_minstanex_laser_rapid_delay 0.6
 set g_balance_minstanex_laser_rapid_refire 0.35
 
-//Laer
-alias weaplaser "impulse 230"
-
 //Rocketlauncher
-_set g_balance_rocketlauncher_ammo 5
+set g_balance_rocketlauncher_damage 105
+set g_balance_rocketlauncher_edgedamage 40
+set g_balance_rocketlauncher_force 600
+set g_balance_rocketlauncher_radius 150
+set g_balance_rocketlauncher_speed 850
+set g_balance_rocketlauncher_speedaccel 0
+set g_balance_rocketlauncher_speedstart 850
+set g_balance_rocketlauncher_lifetime 30
+set g_balance_rocketlauncher_refire 1
+set g_balance_rocketlauncher_animtime 0.3
+set g_balance_rocketlauncher_ammo 5
+set g_balance_rocketlauncher_health 40
+set g_balance_rocketlauncher_damageforcescale 4
+set g_balance_rocketlauncher_detonatedelay 0.2 // positive: timer till detonation is allowed, negative: "security device" that prevents ANY remote detonation if it could hurt its owner, zero: detonatable at any time
+set g_balance_rocketlauncher_guiderate 90 // max degrees per second
+set g_balance_rocketlauncher_guideratedelay 0.01 // immediate
+set g_balance_rocketlauncher_guidegoal 512 // goal distance for (non-laser) guiding (higher = less control, lower = erratic)
+set g_balance_rocketlauncher_guidedelay 0.15 // delay before guiding kicks in
+set g_balance_rocketlauncher_guidestop 0 // stop guiding when firing again
 set g_balance_rocketlauncher_swap_buttons 0
 alias weaprocketlauncher "impulse 238"
 
 //Fireball
-_set g_balance_fireball_primary_ammo 8
-_set g_balance_fireball_primary_refire 0.5
-_set g_balance_fireball_primary_speed 1000
-_set g_balance_fireball_secondary_ammo 25
-_set g_balance_fireball_secondary_damage 250
+set g_balance_fireball_primary_ammo 8
+set g_balance_fireball_primary_animtime 0.3
+set g_balance_fireball_primary_damage 100
+set g_balance_fireball_primary_damageforcescale 4
+set g_balance_fireball_primary_damagetime 5
+set g_balance_fireball_primary_force 100
+set g_balance_fireball_primary_laserburntime 0.5
+set g_balance_fireball_primary_laserdamage 80
+set g_balance_fireball_primary_laseredgedamage 20
+set g_balance_fireball_primary_laserradius 128
+set g_balance_fireball_primary_lifetime 7
+set g_balance_fireball_primary_refire 0.5
+set g_balance_fireball_primary_speed 1000
+set g_balance_fireball_primary_speed_up 100
+set g_balance_fireball_secondary_ammo 25
+set g_balance_fireball_secondary_animtime 0.15
+set g_balance_fireball_secondary_bfgdamage 200
+set g_balance_fireball_secondary_bfgforce 0
+set g_balance_fireball_secondary_bfgradius 1500
+set g_balance_fireball_secondary_damage 250
+set g_balance_fireball_secondary_damageforcescale 4
+set g_balance_fireball_secondary_edgedamage 0
+set g_balance_fireball_secondary_force 700
+set g_balance_fireball_secondary_health 50
+set g_balance_fireball_secondary_laserburntime 0.5
+set g_balance_fireball_secondary_laserdamage 80
+set g_balance_fireball_secondary_laseredgedamage 20
+set g_balance_fireball_secondary_laserradius 256
+set g_balance_fireball_secondary_lifetime 15
+set g_balance_fireball_secondary_radius 200
+set g_balance_fireball_secondary_refire 2
+set g_balance_fireball_secondary_refire2 0
+set g_balance_fireball_secondary_speed 650
 alias weapfireball "impulse 245"
 
 //Nex
-_set g_balance_nex_ammo 10
+set g_balance_nex_damage 110
+set g_balance_nex_force 600
+set g_balance_nex_refire 1.5
+set g_balance_nex_animtime 0.3
+set g_balance_nex_ammo 10
+set g_balance_nex_damagefalloff_mindist 0
+set g_balance_nex_damagefalloff_maxdist 0
+set g_balance_nex_damagefalloff_halflife 0
+set g_balance_nex_damagefalloff_forcehalflife 0
 set g_balance_nex_reloadtime 2
 set g_balance_nex_magazinecapacity 0
 alias weapnex "impulse 236"
 
 //Crylink
+set g_balance_crylink_primary_damage 18
+set g_balance_crylink_primary_edgedamage 0
+set g_balance_crylink_primary_force -55
+set g_balance_crylink_primary_radius 80
+set g_balance_crylink_primary_speed 7000
+set g_balance_crylink_primary_spread 0.03
+set g_balance_crylink_primary_shots 5
+set g_balance_crylink_primary_bounces 1
+set g_balance_crylink_primary_refire 0.4
+set g_balance_crylink_primary_animtime 0.3
+set g_balance_crylink_primary_ammo 3
+set g_balance_crylink_primary_bouncedamagefactor 0.5
+set g_balance_crylink_primary_middle_lifetime 5 // range: 35000 full, fades to 70000
+set g_balance_crylink_primary_middle_fadetime 5
+set g_balance_crylink_primary_star_lifetime 0.1 // range: 700 full, fades to 2450
+set g_balance_crylink_primary_star_fadetime 0.25
+set g_balance_crylink_primary_other_lifetime 0.1 // range: 700 full, fades to 2450
+set g_balance_crylink_primary_other_fadetime 0.25
+set g_balance_crylink_secondary_damage 18
+set g_balance_crylink_secondary_edgedamage 0
+set g_balance_crylink_secondary_force -55
+set g_balance_crylink_secondary_radius 3
+set g_balance_crylink_secondary_speed 7000
+set g_balance_crylink_secondary_spread 0.08
+set g_balance_crylink_secondary_shots 7
+set g_balance_crylink_secondary_bounces 0
+set g_balance_crylink_secondary_refire 0.5
+set g_balance_crylink_secondary_animtime 0.3
+set g_balance_crylink_secondary_ammo 4
+set g_balance_crylink_secondary_bouncedamagefactor 0.5
+set g_balance_crylink_secondary_middle_lifetime 5 // range: 35000 full, fades to 70000
+set g_balance_crylink_secondary_middle_fadetime 5
+set g_balance_crylink_secondary_line_lifetime 2 // range: 35000 full, fades to 70000
+set g_balance_crylink_secondary_line_fadetime 2
 set g_balance_crylink_swap_buttons 0
-_set g_balance_crylink_primary_shots 5
-_set g_balance_crylink_primary_ammo 3
-_set g_balance_crylink_secondary_ammo 4
 alias weapcrylink "impulse 235"
 
 //Electro
+set g_balance_electro_primary_damage 65
+set g_balance_electro_primary_edgedamage 0
+set g_balance_electro_primary_force 200
+set g_balance_electro_primary_radius 150
+set g_balance_electro_primary_comboradius 0
+set g_balance_electro_primary_speed 2000
+set g_balance_electro_primary_lifetime 30
+set g_balance_electro_primary_refire 0.6
+set g_balance_electro_primary_animtime 0.3
+set g_balance_electro_primary_ammo 3
+set g_balance_electro_secondary_damage 50
+set g_balance_electro_secondary_spread 0.05
+set g_balance_electro_secondary_edgedamage 0
+set g_balance_electro_secondary_force 200
+set g_balance_electro_secondary_radius 150
+set g_balance_electro_secondary_speed 900
+set g_balance_electro_secondary_speed_up 200
+set g_balance_electro_secondary_lifetime 5
+set g_balance_electro_secondary_refire 0.25
+set g_balance_electro_secondary_refire2 0
+set g_balance_electro_secondary_animtime 0.25
+set g_balance_electro_secondary_ammo 2
+set g_balance_electro_secondary_health 5
+set g_balance_electro_secondary_damageforcescale 4
+set g_balance_electro_secondary_count 1
+set g_balance_electro_combo_damage 80
+set g_balance_electro_combo_edgedamage 0
+set g_balance_electro_combo_force 200
+set g_balance_electro_combo_radius 250
+set g_balance_electro_combo_comboradius 0
+set g_balance_electro_combo_speed 2000
 set g_balance_electro_secondary 1
 set g_balance_electro_swap_buttons 0
-_set g_balance_electro_secondary_refire 0.25
-_set g_balance_electro_secondary_animtime 0.25
-_set g_balance_electro_primary_ammo 3
 alias weapelectro "impulse 234"
 
 //Grenadelauncher
-_set g_balance_grenadelauncher_primary_ammo 4
-_set g_balance_grenadelauncher_secondary_ammo 4
+set g_balance_grenadelauncher_primary_damage 70
+set g_balance_grenadelauncher_primary_edgedamage 38
+set g_balance_grenadelauncher_primary_force 400
+set g_balance_grenadelauncher_primary_radius 140
+set g_balance_grenadelauncher_primary_speed 2000
+set g_balance_grenadelauncher_primary_speed_up 200
+set g_balance_grenadelauncher_primary_lifetime 30
+set g_balance_grenadelauncher_primary_refire 0.8
+set g_balance_grenadelauncher_primary_animtime 0.3
+set g_balance_grenadelauncher_primary_ammo 4
+set g_balance_grenadelauncher_secondary_damage 70
+set g_balance_grenadelauncher_secondary_edgedamage 38
+set g_balance_grenadelauncher_secondary_force 400
+set g_balance_grenadelauncher_secondary_radius 140
+set g_balance_grenadelauncher_secondary_speed 1400
+set g_balance_grenadelauncher_secondary_speed_up 200
+set g_balance_grenadelauncher_secondary_lifetime 2.5
+set g_balance_grenadelauncher_secondary_refire 0.7
+set g_balance_grenadelauncher_secondary_animtime 0.3
+set g_balance_grenadelauncher_secondary_ammo 4
+set g_balance_grenadelauncher_secondary_health 10
+set g_balance_grenadelauncher_secondary_damageforcescale 4
 set g_balance_grenadelauncher_secondary 1
 set g_balance_grenadelauncher_primary_bounce 0
 set g_balance_grenadelauncher_swap_buttons 0
 alias weapgrenadelauncher "impulse 233"
 
 //Hagar
+set g_balance_hagar_primary_damage 37
+set g_balance_hagar_primary_edgedamage 15
+set g_balance_hagar_primary_force 100
+set g_balance_hagar_primary_radius 65
+set g_balance_hagar_primary_spread 0
+set g_balance_hagar_primary_speed 4500
+set g_balance_hagar_primary_lifetime 30
+set g_balance_hagar_primary_refire 0.125
+set g_balance_hagar_primary_ammo 1
+set g_balance_hagar_secondary_damage 37
+set g_balance_hagar_secondary_edgedamage 15
+set g_balance_hagar_secondary_force 100
+set g_balance_hagar_secondary_radius 65
+set g_balance_hagar_secondary_spread 0
+set g_balance_hagar_secondary_speed 1400
+set g_balance_hagar_secondary_lifetime_min 30
+set g_balance_hagar_secondary_lifetime_rand 0
+set g_balance_hagar_secondary_refire 0.125
+set g_balance_hagar_secondary_ammo 1
 set g_balance_hagar_swap_buttons 0
-_set g_balance_hagar_primary_spread 0
-_set g_balance_hagar_primary_speed 4500
-_set g_balance_hagar_primary_refire 0.125
-_set g_balance_hagar_secondary_spread 0
-_set g_balance_hagar_secondary_refire 0.125
 alias weaphagar "impulse 237"
 
 //HLAC
+set g_balance_hlac_primary_spread_min 0.01
+set g_balance_hlac_primary_spread_max 0.25
+set g_balance_hlac_primary_spread_add 0.0045
+set g_balance_hlac_primary_spread_crouchmod 0.25
+set g_balance_hlac_primary_damage 23
+set g_balance_hlac_primary_edgedamage 10
+set g_balance_hlac_primary_force 100
+set g_balance_hlac_primary_radius 70
+set g_balance_hlac_primary_speed 9000
+set g_balance_hlac_primary_lifetime 5
+set g_balance_hlac_primary_refire 0.1
+set g_balance_hlac_primary_animtime 0.4
+set g_balance_hlac_primary_ammo 1
+set g_balance_hlac_secondary_spread 0.15
+set g_balance_hlac_secondary_spread_crouchmod 0.5
+set g_balance_hlac_secondary_damage 23
+set g_balance_hlac_secondary_edgedamage 10
+set g_balance_hlac_secondary_force 100
+set g_balance_hlac_secondary_radius 70
+set g_balance_hlac_secondary_speed 9000
+set g_balance_hlac_secondary_lifetime 5
+set g_balance_hlac_secondary_refire 1
+set g_balance_hlac_secondary_animtime 0.3
+set g_balance_hlac_secondary_ammo 6
+set g_balance_hlac_secondary_shots 6
 set g_balance_hlac_secondary 1
 set g_balance_hlac_swap_buttons 0
-_set g_balance_hlac_primary_ammo 1
-_set g_balance_hlac_secondary_ammo 6
 alias weaphlac "impulse 242"
 
 //Shotgun
@@ -138,12 +360,40 @@ set g_balance_shotgun_secondary_gravityfactor 1
 set g_balance_shotgun_reloadtime 2
 set g_balance_shotgun_reloadtime_shell 0
 set g_balance_shotgun_magazinecapacity 0
-_set g_balance_shotgun_primary_damage 10
-_set g_balance_shotgun_secondary_damage 10
-_set g_weaponreplace_shotgun uzi
+set g_balance_shotgun_primary_bullets 6
+set g_balance_shotgun_primary_damage 10
+set g_balance_shotgun_primary_force 60
+set g_balance_shotgun_primary_spread 0.07
+set g_balance_shotgun_primary_refire 0.5
+set g_balance_shotgun_primary_animtime 0.2
+set g_balance_shotgun_primary_ammo 1
+set g_balance_shotgun_primary_speed 12000
+set g_balance_shotgun_primary_bulletconstant 75 // 3.8qu
+set g_balance_shotgun_secondary_bullets 6
+set g_balance_shotgun_secondary_damage 10
+set g_balance_shotgun_secondary_force 60
+set g_balance_shotgun_secondary_spread 0.1
+set g_balance_shotgun_secondary_refire 1.35
+set g_balance_shotgun_secondary_animtime 0.2
+set g_balance_shotgun_secondary_ammo 1
+set g_balance_shotgun_secondary_speed 12000
+set g_balance_shotgun_secondary_bulletconstant 75 // 3.8qu
+set g_weaponreplace_shotgun uzi
 alias weapshotgun "impulse 231"
 
 //Uzi
+set g_balance_uzi_first_damage 35
+set g_balance_uzi_first_force 50
+set g_balance_uzi_first_spread 0.015
+set g_balance_uzi_first_refire 0.2
+set g_balance_uzi_first_ammo 1
+set g_balance_uzi_sustained_damage 20
+set g_balance_uzi_sustained_force 27
+set g_balance_uzi_sustained_spread 0.05
+set g_balance_uzi_sustained_refire 0.1
+set g_balance_uzi_sustained_ammo 1
+set g_balance_uzi_speed 18000
+set g_balance_uzi_bulletconstant 115 // 13.1qu
 set g_balance_uzi_magazinecapacity 0
 set g_balance_uzi_first 1
 set g_balance_uzi_first_gravityfactor 1
@@ -191,6 +441,28 @@ set g_start_weapon_zapper 0
 set g_weaponreplace_zapper ""
 alias weapzapper "impulse 247"
 
+//Laser
+set g_balance_laser_primary_damage 35
+set g_balance_laser_primary_edgedamage 10
+set g_balance_laser_primary_force 400
+set g_balance_laser_primary_radius 70
+set g_balance_laser_primary_speed 9000
+set g_balance_laser_primary_refire 0.7
+set g_balance_laser_primary_animtime 0.3
+set g_balance_laser_primary_lifetime 30
+set g_balance_laser_primary_shotangle 0
+set g_balance_laser_secondary 0 // when 1, a secondary laser mode exists
+set g_balance_laser_secondary_damage 35
+set g_balance_laser_secondary_edgedamage 10
+set g_balance_laser_secondary_force 400
+set g_balance_laser_secondary_radius 70
+set g_balance_laser_secondary_speed 9000
+set g_balance_laser_secondary_refire 0.7
+set g_balance_laser_secondary_animtime 0.3
+set g_balance_laser_secondary_lifetime 30
+set g_balance_laser_secondary_shotangle 0
+alias weaplaser "impulse 230"
+
 //Axe
 set g_balance_axe_damage 300
 set g_start_weapon_axe 0
@@ -227,16 +499,74 @@ set g_weaponreplace_supershotgun ""
 alias weapsupershotgun "impulse 246"
 
 //Rifle
+set g_balance_campingrifle_magazinecapacity 8
+set g_balance_campingrifle_reloadtime 2 // matches reload anim
+set g_balance_campingrifle_auto_reload_after_changing_weapons 0
+set g_balance_campingrifle_bursttime 0
+set g_balance_campingrifle_primary_damage 60
+set g_balance_campingrifle_primary_headshotaddeddamage 100
+set g_balance_campingrifle_primary_spread 0
+set g_balance_campingrifle_primary_force 2
+set g_balance_campingrifle_primary_speed 35000
+set g_balance_campingrifle_primary_lifetime 5
+set g_balance_campingrifle_primary_refire 0.7
+set g_balance_campingrifle_primary_animtime 0.3
+set g_balance_campingrifle_primary_ammo 5
+set g_balance_campingrifle_primary_bulletconstant 130 // 56.3qu
+set g_balance_campingrifle_primary_burstcost 0
+set g_balance_campingrifle_secondary_damage 35
+set g_balance_campingrifle_secondary_headshotaddeddamage 15 // 50 damage only on head
+set g_balance_campingrifle_secondary_spread 0.008
+set g_balance_campingrifle_secondary_force 1
+set g_balance_campingrifle_secondary_speed 20000
+set g_balance_campingrifle_secondary_lifetime 5
+set g_balance_campingrifle_secondary_refire 0.12
+set g_balance_campingrifle_secondary_animtime 0.1
+set g_balance_campingrifle_secondary_ammo 5
+set g_balance_campingrifle_secondary_bulletconstant 130 // 18.3qu
+set g_balance_campingrifle_secondary_burstcost 0
 set g_balance_campingrifle_hotreload 0
 set g_balance_campingrifle_secondary_gravityfactor 1
 set g_balance_campingrifle_primary_gravityfactor 1
 set g_balance_campingrifle_swap_buttons 0
-_set g_balance_campingrifle_primary_ammo 5
-_set g_balance_campingrifle_secondary_ammo 5
 alias weapcampingrifle "impulse 244"
 
 //Hook
+set g_balance_hook_primary_fuel 5 // hook monkeys set 0
+set g_balance_hook_primary_refire 0 // hook monkeys set 0
+set g_balance_hook_primary_animtime 0.3 // good shoot anim
+set g_balance_hook_primary_hooked_time_max 0 // infinite
+set g_balance_hook_primary_hooked_time_free 2 // 2s being hooked are free
+set g_balance_hook_primary_hooked_fuel 5 // fuel per second hooked
+set g_balance_hook_secondary_damage 25 // not much
+set g_balance_hook_secondary_edgedamage 5 // not much
+set g_balance_hook_secondary_radius 500 // LOTS
+set g_balance_hook_secondary_force -2000 // LOTS
+set g_balance_hook_secondary_ammo 50 // a whole pack
+set g_balance_hook_secondary_lifetime 30 // infinite
+set g_balance_hook_secondary_speed 0 // not much throwing
+set g_balance_hook_secondary_gravity 5 // fast falling
+set g_balance_hook_secondary_refire 3 // don't drop too many bombs...
+set g_balance_hook_secondary_animtime 0.3 // good shoot anim
+set g_balance_hook_secondary_power 3 // effect behaves like a square function
+set g_balance_hook_secondary_duration 1.5 // effect runs for three seconds
 alias weaphook "impulse 241"
 
 //Tuba
+set g_balance_tuba_refire 0.25
+set g_balance_tuba_animtime 0.25
+set g_balance_tuba_attenuation 0.5
+set g_balance_tuba_volume 1
+set g_balance_tuba_damage 25
+set g_balance_tuba_edgedamage 0
+set g_balance_tuba_radius 200
+set g_balance_tuba_force 200
 alias weaptuba "impulse 243"
+
+//Porto
+set g_balance_porto_primary_refire 1.5
+set g_balance_porto_primary_speed 2000
+set g_balance_porto_primary_lifetime 30
+set g_balance_portal_health 200 // these get recharged whenever the portal is used
+set g_balance_portal_lifetime 15 // these get recharged whenever the portal is used
+alias weapporto "impulse 239"

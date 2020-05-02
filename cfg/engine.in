@@ -1,0 +1,126 @@
+r_picmipsprites 0 // Rexuiz uses sprites that should never be picmipped (team mate, typing, waypoints)
+r_mipsprites 1
+r_mipskins 1
+r_shadow_realtime_world_lightmaps 1
+r_cullentities_trace 1
+bgmvolume 0.4
+volume 0.5
+rate 128000
+set cl_netfps 125
+set vid_vsync 0
+set cl_minfps 125
+set cl_maxfps 125
+set cl_maxfps_alwayssleep 0
+set sv_curl_defaulturl ""
+set cl_curl_enabled 1
+set cl_curl_maxdownloads 5
+set cl_curl_maxspeed 1500
+set cl_curl_timeout 10
+set sv_curl_defaulturl ""
+seta r_picmipworld 1
+sv_cullentities_trace 1
+locs_enable 0
+pausable 0
+set sys_ticrate 0.032
+set mod_q3shader_force_addalpha 1
+set mod_q3shader_default_polygonfactor -1
+set mod_q3bsp_lightmapmergepower 3
+set v_kickroll 0
+set v_kickpitch 0.2
+sensitivity 6
+v_gamma 1.125000
+viewsize 100
+// fullscreen 1024x768x32bit
+vid_bitsperpixel 32
+vid_fullscreen 1
+vid_width 1024
+vid_height 768
+// 2D resolution 800x600
+vid_conwidth 800
+vid_conheight 600
+// menu_conwidth, menu_conheight are set inside quake.rc
+v_deathtilt 0 // needed for spectators (who are dead to avoid prediction)
+// these settings determine how much the view is affected by movement/damage
+cl_bobcycle 0 // how long the cycle of up/down view movement takes (only works if cl_bob is not 0), default is 0.6
+cl_bob 0.01 // how much view moves up/down when moving (does not move if cl_bobcycle is 0, but still enables cl_bobmodel), default is 0.02
+cl_bobmodel 1 // whether to have gun model move around on screen when moving (only works if cl_bob is not 0), default is 1
+cl_rollangle 0 // amount of view tilt when strafing, default is 2.0
+v_kicktime 0.5 // how long damage kicks of the view last, default is 0.5 seconds
+gl_polyblend 0.5 // whether to use screen tints, default is 1
+r_motionblur 0 // motion blur value, default is 0
+r_damageblur 0 // motion blur when damaged, default is 0
+cl_autodemo_nameformat demos/%Y-%m-%d_%H-%M
+_cl_color 102
+_cl_name Player
+_cl_playermodel models/player/marine.zym
+_cl_playerskin 0
+crosshair 1
+fs_empty_files_in_pack_mark_deletions 1 // makes patches able to delete files
+scr_conalpha 0.8
+scr_conbrightness 0.2
+scr_screenshot_jpeg 1
+scr_screenshot_jpeg_quality 0.9
+sv_maxvelocity 1000000000
+cl_sound_wizardhit ""
+cl_sound_hknighthit ""
+cl_sound_tink1 weapons/tink1.wav
+cl_sound_ric1 weapons/ric1.wav
+cl_sound_ric2 weapons/ric2.wav
+cl_sound_ric3 weapons/ric3.wav
+cl_sound_r_exp3 ""
+sv_sound_land ""
+sv_sound_watersplash ""
+r_labelsprites_scale 0.40625 // labels sprites get displayed at 0.5x from 640x480 to 1280x1024, and at 1x from 1600x1200 onwards
+
+// loadfont console     gfx/vera-mono
+// loadfont sbar        gfx/vera-mono
+loadfont notify      gfx/vera-sans
+loadfont chat        gfx/vera-sans
+// loadfont centerprint gfx/vera-mono
+// loadfont infobar     gfx/vera-mono
+loadfont user0       gfx/vera-sans
+r_textbrightness 0.2
+r_textcontrast 0.8
+r_textshadow 1
+// good settings for these fonts
+con_chat 5
+con_chatpos -9
+con_chatsize 10
+con_chatwidth 0.6
+con_notifysize 10
+con_notifyalign 0
+
+sbar_info_pos 50
+// tab completion
+set con_completion_playdemo	*.dem
+set con_completion_timedemo	*.dem
+set con_completion_ply		*.dem
+set con_completion_tdem		*.dem
+set con_completion_exec		*.cfg
+set con_completion_chmap	map
+set con_completion_gotomap	map
+set con_completion_vmap		map
+set con_completion_vdomap	map
+
+seta cl_port $cl_port
+seta r_showsurfaces $r_showsurfaces
+seta r_ambient $r_ambient
+seta skill $skill
+seta gl_finish $gl_finish
+seta v_kicktime $v_kicktime
+seta r_subdivisions_tolerance $r_subdivisions_tolerance
+sv_gameplayfix_droptofloorstartsolid 0
+seta gl_texturecompression 0
+gl_texturecompression_color 1
+gl_texturecompression_gloss 1
+gl_texturecompression_glow 1
+gl_texturecompression_lightcubemaps 1
+gl_texturecompression_q3bsplightmaps 0
+gl_texturecompression_sky 1
+set g_cdtracks_remaplist "digital-pursuit breakdown-easy brainsukker chaos-fog infight neuronal-diving subcities thru-the-mirror calling-bogus beast-of-insanity thunder brokenlight brokenlight stairs sixtyfour_ desert3 ninesix sixtyfour_revisited northern-lights" "list used by mapinfo system to automatically assign cdtracks - must match the cd remap command"
+set g_cdtracks_dontusebydefault "digital-pursuit thunder brokenlight" "list used by mapinfo system to automatically assign cdtracks - must be a subset of g_cdtracks_remaplist"
+cd remap $g_cdtracks_remaplist
+sv_allowdownloads_inarchive 1 // for csprogs.dat
+seta sv_status_privacy 1	"hide IP addresses from \"status\" replies shown to clients"
+sv_status_show_qcstatus 1	"Rexuiz uses this field instead of frags"
+rcon_secure 1

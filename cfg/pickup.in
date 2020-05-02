@@ -31,7 +31,34 @@ set g_pickup_respawntime_key 60
 set g_pickup_healthmushroom_max 999
 set g_pickup_healthmushroom 100
 set g_pickup_weapons 1
-_set g_pickup_cells 50
-_set g_pickup_nails 40
-_set g_pickup_rockets 25
-_set g_fullbrightitems "1"
+set g_pickup_shells 15
+set g_pickup_shells_max 999
+set g_pickup_nails 40
+set g_pickup_nails_max 999
+set g_pickup_rockets 25
+set g_pickup_rockets_max 999
+set g_pickup_cells 50
+set g_pickup_cells_max 999
+set g_pickup_fuel 25
+set g_pickup_fuel_jetpack 50
+set g_pickup_fuel_max 999
+set g_pickup_armorsmall 5
+set g_pickup_armorsmall_max 999
+set g_pickup_armormedium 25
+set g_pickup_armormedium_max 999
+set g_pickup_armorbig 50
+set g_pickup_armorbig_max 999
+set g_pickup_armorlarge 100
+set g_pickup_armorlarge_max 999
+set g_pickup_healthsmall 5
+set g_pickup_healthsmall_max 999
+set g_pickup_healthmedium 25
+set g_pickup_healthmedium_max 999
+set g_pickup_healthlarge 50
+set g_pickup_healthlarge_max 999
+set g_pickup_healthmega 100
+set g_pickup_healthmega_max 999
+set g_fullbrightitems "1"
+set g_use_ammunition 1 "if set to 0 all weapons you pick up have unlimited ammunition"
+set g_pickup_items 1 "if set to 0 all items (health, armor, ammo, weapons...) are removed from the map"
+set g_ghost_items 1 "enable ghosted items (when between 0 and 1, overrides the alpha value)"

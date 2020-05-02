@@ -1,4 +1,4 @@
-_set g_balance_teams_prevent_imbalance 1 "prevent players from changing to larger teams"
+set g_balance_teams_prevent_imbalance 1 "prevent players from changing to larger teams"
 set g_balance_teams_autoswap 0
 set g_balance_teams_autoswap_from_small_team_minplayers 9
 set g_balance_teams_autoswap_interval 60
@@ -9,7 +9,24 @@ set g_balance_teams_adjust_sizes 0 "Score difference for adjust sizes of teams"
 set g_balance_teams_adjust_sizes_factor 0.1
 set g_balance_teams_movetype 1 "1 - random player, 2 - player with highest score, all other values - player with lowest score"
 alias shuffleteams "sv_cmd shuffleteams"
-_set g_mirrordamage "0" "Mirror damage factor"
+set g_mirrordamage "0" "Mirror damage factor"
 set g_mirrorforce "0" "Mirror force factor"
-_set g_friendlyfire 0 "Friendly fire factor"
+set g_friendlyfire 0 "Friendly fire factor"
 set g_friendlyfire_force 0 "Friendly fire force factor"
+seta g_teamdamage_threshold 50	"for teamplay 4: threshold over which to apply mirror damage"
+seta g_teamdamage_resetspeed 30	"for teamplay 4: how fast player's teamdamage count decreases"
+seta g_balance_teams 0	"automatically balance out players entering instead of asking them for their preferred team"
+seta g_balance_teams_force 0	"time to automatically balance out teams when players move or disconnect"
+set g_tdm_teams 2 "how many teams are in team deathmatch (set by mapinfo)"
+seta g_tdm_teams_override 0	"how many teams are in team deathmatch"
+set g_changeteam_banned 0	"not allowed to change team"
+set g_changeteam_fragtransfer 0	"% of frags you get to keep when you change teams (rounded down)"
+alias movetoteam_red "sv_cmd movetoteam $1 red"
+alias movetoteam_blue "sv_cmd movetoteam $1 blue"
+alias movetoteam_pink "sv_cmd movetoteam $1 pink"
+alias movetoteam_yellow "sv_cmd movetoteam $1 yellow"
+alias movetoteam_auto "sv_cmd movetoteam $1 auto"
+//nifreks lockonrestart feature, used in team-based game modes, if set to 1 and all players readied up no other player can then join the game anymore, useful to block spectators from joining
+set teamplay_lockonrestart 0 "it set to 1 in a team-based game, the teams are locked once all players readied up and the game restarted (no new players can join after restart unless using the server-command unlockteams)"
+alias lockteams "sv_cmd lockteams"
+alias unlockteams "sv_cmd unlockteams"

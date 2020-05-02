@@ -32,3 +32,5 @@ alias g_balance_keyhunt_score_push "cvardeprecated g_balance_keyhunt_score_push 
 alias g_balance_keyhunt_dropvelocity "cvardeprecated g_balance_keyhunt_dropvelocity g_kh_dropvelocity; g_kh_dropvelocity $1"
 alias g_balance_keyhunt_throwvelocity "cvardeprecated g_balance_keyhunt_throwvelocity g_kh_throwvelocity; g_kh_throwvelocity $1"
 alias g_balance_keyhunt_protecttime "cvardeprecated g_balance_keyhunt_protecttime g_kh_protecttime; g_kh_protecttime $1"
+seta g_keyhunt_teams_override 0
+set g_keyhunt_teams 0

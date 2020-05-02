@@ -1,2 +1,1 @@
-alias _set "unset $1; set $*"
 alias bprint "sv_cmd bprint $*; echo $*"

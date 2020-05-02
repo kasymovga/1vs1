@@ -1,0 +1,108 @@
+// movement
+bind w +forward
+bind a +moveleft
+bind s +back
+bind d +moveright
+bind UPARROW +forward
+bind LEFTARROW +moveleft
+bind DOWNARROW +back
+bind RIGHTARROW +moveright
+bind SHIFT +crouch
+bind ENTER +jump
+bind SPACE +jump
+
+// weapons
+bind 1 "impulse 1"
+bind 2 "impulse 2"
+bind 3 "impulse 3"
+bind 4 "impulse 4"
+bind 5 "impulse 5"
+bind 6 "impulse 6"
+bind 7 "impulse 7"
+bind 8 "impulse 8"
+bind 9 "impulse 9"
+bind 0 "impulse 14" // cycles the superweapons
+bind q weaplast
+bind MOUSE1 +attack
+bind MOUSE2 +attack2
+bind MOUSE3 +zoom
+bind MOUSE4 weaplast
+bind MOUSE5 +hook
+bind MWHEELUP weapnext
+bind MWHEELDOWN weapprev
+bind r reload
+bind BACKSPACE dropweapon
+bind g dropweapon
+bind f +use
+
+// misc
+bind e +hook
+bind ` toggleconsole
+bind ~ toggleconsole
+bind TAB +showscores
+bind ESCAPE togglemenu
+bind t messagemode
+bind y messagemode2
+bind z messagemode2
+bind u "+con_chat_maximize"
+bind i +show_info
+bind PAUSE pause
+bind F10 quit
+bind F11 disconnect
+bind F12 screenshot
+bind F4 ready
+bind m radar
+bind ALT +showaccuracy
+
+// Gamepad defaults. Tested with Logitech Rumblepad 2, I hope similar ones works as well.
+bind JOY1 "+crouch"
+bind JOY2 "+jump"
+bind JOY3 "weapprev"
+bind JOY4 "weapnext"
+bind JOY5 "+attack2"
+bind JOY6 "+attack"
+bind JOY7 "+zoom"
+bind JOY8 "dropweapon"
+bind JOY9 "menu_showteamselect"
+bind JOY10 "+show_info"
+bind JOY11 "+showscores"
+bind JOY12 "+con_chat_maximize"
+set joyadvanced "1"
+set joyadvaxisr "2"
+set joyadvaxisx "3"
+set joyadvaxisy "1"
+set joyadvaxisz "4"
+set joysidesensitivity "1.0"
+set joypitchsensitivity "0.9"
+set joyyawsensitivity "-1.8"
+// SDL only
+set joy_deadzoneforward "0.05"
+set joy_deadzonepitch "0.05"
+set joy_deadzoneside "0.05"
+set joy_deadzoneup "0.05"
+set joy_deadzoneyaw "0.05"
+set joy_sensitivitypitch "0.9"
+set joy_sensitivityyaw "-1.8"
+
+// team say
+bind kp_ins messagemode
+bind kp_del messagemode2
+bind kp_end "+userbind 1"
+bind kp_downarrow "+userbind 2"
+bind kp_pgdn "+userbind 3"
+bind kp_leftarrow "+userbind 4"
+bind kp_5 "+userbind 6"
+bind kp_rightarrow "+userbind 7"
+bind kp_home "+userbind 9"
+bind kp_uparrow "+userbind 10"
+bind kp_pgup "+userbind 11"
+bind kp_multiply "+userbind 12"
+bind kp_slash "+userbind 13"
+bind kp_enter "+userbind 16"
+bind kp_plus "+userbind 17"
+bind kp_minus "+userbind 18"
+
+bind F1 vyes
+bind F2 vno
+bind F3 spec
+bind f5 menu_showteamselect

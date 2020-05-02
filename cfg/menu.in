@@ -1,0 +1,23 @@
+seta menu_skin "wickedz"
+set menu_slowmo 1
+// for menu server list (eventually make them have engine support?)
+seta menu_slist_showfull 1 "show servers even if they are full and have no slots to join"
+seta menu_slist_showempty 1 "show servers even if they are no empty and have no opponents to play against"
+set menu_slist_modfilter "=" // set to either: !modname or modname. modname of = means "same as we are running now".
+
+// for menu weapon arena
+set menu_weaponarena_with_laser 0 "also enable the Laser in this weapon arena"
+
+seta menu_maxplayers 8 "maxplayers value when the menu starts a game"
+// command executed before loading a map by the menu
+// makes sure maxplayers is at least minplayers or bot_number + 1
+alias _menu_loadmap_prepare_maxpl "maxplayers $_menu_loadmap_maxplayers"
+alias menu_loadmap_prepare "disconnect; wait; g_campaign 0; menu_cmd rpn /_menu_loadmap_maxplayers menu_maxplayers minplayers bot_number 1 add max max def; _menu_loadmap_prepare_maxpl; g_maplist_shufflenow"
+set menu_mouse_absolute 0	"TODO make this seta if the engine understands this right"
+seta menu_mouse_speed 1 "speed multiplier for the mouse in the menu (does not affect in-game aiming)"
+set menu_use_default_hostname 1
+alias sethostname "set menu_use_default_hostname 0; hostname $*"
+set menu_cdtrack brokenlight
+alias menu_showteamselect "menu_cmd directmenu TeamSelect"
+alias menu_sync "menu_cmd sync"
+set _menu_alpha "" // will be set by menu QC to the current fading of the menu, can be used by CSQC to fade items

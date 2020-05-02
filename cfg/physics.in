@@ -39,3 +39,6 @@ set g_dodging_up_speed 200 "the jump velocity of the dodge"
 set g_dodging_horiz_speed 600 "the horizontal velocity of the dodge"
 set g_dodging_sound 1 "if 1 dodging makes a sound. if 0 dodging is silent"
 set g_disable_crouch 0
+sv_jumpstep 1 // step up stairs while jumping, makes it easier to reach ledges
+set g_jump_grunt 0	"Do you make a grunting noise every time you jump? Is it the same grunting noise every time?"
+

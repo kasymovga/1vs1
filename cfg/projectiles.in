@@ -1,3 +1,5 @@
-_set g_projectiles_newton_style_2_minfactor "1"
 set g_teleport_projectiles 0
 set sv_projectile_rocket_size "3 -3 3"
+set g_projectiles_newton_style 2
+set g_projectiles_newton_style_2_minfactor "1"
+set g_projectiles_newton_style_2_maxfactor 5

@@ -22,6 +22,56 @@ set sv_player_mute_namepattern0 ""
 set sv_player_mute_namepattern1 ""
 set sv_player_mute_namepattern2 ""
 set sv_player_mute_namepattern3 ""
-_set g_fullbrightplayers "1"
-_set g_spawnshieldtime 0
+set g_fullbrightplayers "1"
+set g_spawnshieldtime 0
 set g_spawnfrags 0
+set g_player_alpha 1
+set g_player_brightness 0	"set to 2 for brighter players"
+alias sv_fbskin "g_player_forcemodel models/player/nexus.zym; g_player_forceskin 6; rereadcvars"
+alias sv_fbskin_green "sv_fbskin; g_player_forcecolor 51; rereadcvars"
+alias sv_fbskin_red "sv_fbskin; g_player_forcecolor 68; rereadcvars"
+alias sv_fbskin_orange "sv_fbskin; g_player_forcecolor 238; rereadcvars"
+alias sv_fbskin_off "g_player_forcemodel 0; g_player_forceskin 0; g_player_forcecolor \"\"; rereadcvars"
+set g_nick_flood_timeout 120 "time after which nick flood protection resets (set to 0 to disable nick flood checking)"
+set g_nick_flood_penalty 0.5 "duration of the nick flood penalty"
+set g_nick_flood_penalty_yellow 3 "number of changes to allow before warning and movement blocking"
+set g_nick_flood_penalty_red 30 "number of changes to allow before totally disorienting the player"
+set g_balance_health_start 150
+set g_balance_armor_start 0
+set g_start_ammo_shells 40
+set g_start_ammo_nails 0
+set g_start_ammo_rockets 0
+set g_start_ammo_cells 0
+set g_start_ammo_fuel 0
+set g_balance_health_regen 0.1
+set g_balance_health_regenlinear 0
+set g_balance_pause_health_regen 5
+set g_balance_pause_health_regen_spawn 0
+set g_balance_health_rot 0.1
+set g_balance_health_rotlinear 0
+set g_balance_pause_health_rot 5
+set g_balance_pause_health_rot_spawn 10
+set g_balance_health_regenstable 100
+set g_balance_health_rotstable 100
+set g_balance_health_limit 999
+set g_balance_armor_regen 0
+set g_balance_armor_regenlinear 0
+set g_balance_armor_rot 0.1
+set g_balance_armor_rotlinear 0
+set g_balance_pause_armor_rot 5
+set g_balance_pause_armor_rot_spawn 10
+set g_balance_armor_regenstable 100
+set g_balance_armor_rotstable 100
+set g_balance_armor_limit 999
+set g_balance_armor_blockpercent 0.6
+set g_balance_fuel_regen 0.1 "fuel regeneration (only applies if the player owns IT_FUEL_REGEN)"
+set g_balance_fuel_regenlinear 0
+set g_balance_pause_fuel_regen 2 // other than this, fuel uses the health regen counter
+set g_balance_fuel_rot 0.05
+set g_balance_fuel_rotlinear 0
+set g_balance_pause_fuel_rot 5
+set g_balance_pause_fuel_rot_spawn 10
+set g_balance_fuel_regenstable 50
+set g_balance_fuel_rotstable 100
+set g_balance_fuel_limit 999
+set g_balance_selfdamagepercent 0.6

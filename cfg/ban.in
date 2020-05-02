@@ -1,0 +1,12 @@
+set g_ban_default_bantime 5400	"90 minutes"
+set g_ban_default_masksize 3	"whole 255.255.255.0 networks (set to 4 for single IPs)"
+set g_banned_list ""	"format: IP remainingtime IP remainingtime ..."
+alias bans "sv_cmd bans"
+alias ban "sv_cmd ban $*"         // usage: ban address(maybe incomplete, like 1.2.3) bantime(seconds)
+alias kickban "sv_cmd kickban $*" // usage: kickban # playerno bantime(seconds) masksize(bytes)
+alias unban "sv_cmd unban $*"     // usage: unban 3 (number from bans)
+set g_ban_sync_uri ""	"sync using this ban list provider (empty string to disable)"
+set g_ban_sync_interval 5	"sync every 5 minutes"
+set g_ban_sync_trusted_servers ""	"request ban lists from these nexuiz servers (do not include your own server there, or unbanning may fail)"
+set g_ban_sync_timeout 45	"time out in seconds for the ban sync requests"
+set g_ban_sync_trusted_servers_verify 0	"when set to 1, additional bans sent by the servers are ignored, and only bans for the requested IP are used"

@@ -2,3 +2,9 @@ set g_minstagib_nolaserdamage 1
 set g_minstagib_health_drop 0
 set g_minstagib_health_max 200
 set g_minstagib_armor_max 200
+set g_minstagib 0 "enable minstagib"
+set g_minstagib_extralives 1 "Enable extra lives"
+set g_minstagib_ammo_start 10 "starting ammo"
+set g_minstagib_ammo_drop 5 "how much ammo you'll get for weapons or cells"
+set g_minstagib_invis_alpha 0.05
+set g_minstagib_speed_moverate 1.25 "speed-multiplier that applies while you carry the invincibility powerup"
