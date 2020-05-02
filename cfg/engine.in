@@ -124,3 +124,6 @@ sv_allowdownloads_inarchive 1 // for csprogs.dat
 seta sv_status_privacy 1	"hide IP addresses from \"status\" replies shown to clients"
 sv_status_show_qcstatus 1	"Rexuiz uses this field instead of frags"
 rcon_secure 1
+set serverconfig server.cfg
+alias startmap_dm "set _sv_init 0; map _init/_init; exec $serverconfig; set _sv_init 1; map _init/_init"
+alias sv_loadconfig "exec $serverconfig"

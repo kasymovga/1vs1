@@ -29,10 +29,7 @@ set sv_ready_restart_after_countdown 0	"if set to 1 the players and map items ar
 set sv_ready_restart_repeatable 0	"allows the players to restart the game as often as needed"
 set g_maxplayers 0	"maximum number of players allowed to play at the same time, set to 0 to allow all players to join the game"
 set g_maxplayers_spectator_blocktime 5	"if the players voted for the \"nospectators\" command, this setting defines the number of seconds a observer/spectator has time to join the game before he gets kicked"
-alias startmap_dm "set _sv_init 0; map _init/_init; exec $serverconfig; set _sv_init 1; map _init/_init"
-alias sv_loadconfig "exec $serverconfig"
 alias sv_restart "say \"Server will restart at the end of the match, you will all be reconnected automatically. $* \"; quit_and_redirect self"
-set serverconfig server.cfg
 // aliases:
 alias +attack2 +button3
 alias -attack2 -button3
@@ -67,7 +64,6 @@ alias g_maplist_remove	"qc_cmd maplist remove $*"
 alias g_maplist_putfirst	"qc_cmd maplist remove $* ; qc_cmd maplist add $*"
 alias g_maplist_shufflenow	"qc_cmd maplist shuffle"
 alias g_maplist_cleanup	"qc_cmd maplist cleanup" // removes maps that don't exist from the map list
-alias gametype	"sv_cmd gametype $*"
 alias addfav "qc_cmd addtolist net_slist_favorites $*"
 alias addvote "qc_cmd addtolist sv_vote_commands $*"
 set settemp_list 0
