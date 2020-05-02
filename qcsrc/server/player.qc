@@ -2026,17 +2026,17 @@ float(void) player_customize {
 
 float(void) player_body_customize {
 	entity modelsource;
-
-	self.alpha = player_alpha(self.owner, other);
+	entity o = self.owner;
+	self.alpha = player_alpha(o, other);
 	if(self.alpha < 0)
 		return FALSE;
 
-	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
+	if (GameHookChain_PlayerVisibleThroughWallFor(o, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;
 
-	if (!self.modelindex && PLAYER_REALLY_DEAD(self.owner))
+	if (!self.modelindex && PLAYER_REALLY_DEAD(o))
 		return TRUE;
 
 	modelsource = self;
@@ -2058,7 +2058,7 @@ float(void) player_body_customize {
 		else
 			self.modelindex = modelsource.modelindex_lod0;
 	} else {
-		distance = vlen(self.origin - other.origin);
+		distance = vlen(o.origin - other.origin);
 		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
 		if(f > sv_loddistance2)
 			self.modelindex = modelsource.modelindex_lod2;
