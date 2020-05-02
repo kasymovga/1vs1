@@ -18,6 +18,7 @@ set cl_curl_maxspeed 1500
 set cl_curl_timeout 10
 set sv_curl_defaulturl ""
 seta r_picmipworld 1
+seta r_ambient 4
 sv_cullentities_trace 1
 locs_enable 0
 pausable 0
@@ -104,7 +105,6 @@ set con_completion_vdomap	map
 
 seta cl_port $cl_port
 seta r_showsurfaces $r_showsurfaces
-seta r_ambient $r_ambient
 seta skill $skill
 seta gl_finish $gl_finish
 seta v_kicktime $v_kicktime
