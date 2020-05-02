@@ -83,3 +83,4 @@ set timelimit_min 5
 set timelimit_max 60
 alias endmatch "timelimit -1"
 set g_balance_kill_delay 5
+set leadlimit 0
