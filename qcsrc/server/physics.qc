@@ -369,11 +369,11 @@ void(void) physics_init {
 	PHYSICS_CACHE_CVAR(sv_warsowbunny_backtosideratio);
 	PHYSICS_CACHE_CVAR(sv_jumpvelocity);
 	PHYSICS_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
-	PHYSICS_CACHE_CVAR(sv_friction_on_land);
 	CACHE_CVAR(g_stepairslowdown);
-	PHYSICS_CACHE_CVAR(sv_slicksurfaces_allowjump);
-	PHYSICS_CACHE_CVAR(sv_pogostick);
-	PHYSICS_CACHE_CVAR(sv_disable_crouch);
+	sv_friction_on_land = cvar("g_friction_on_land");
+	sv_slicksurfaces_allowjump = cvar("g_slicksurfaces_allowjump");
+	sv_pogostick = cvar("g_pogostick");
+	sv_disable_crouch = cvar("g_disable_crouch");
 	CACHE_CVAR(g_walljump);
 	CACHE_CVAR(g_walljump_delay);
 	CACHE_CVAR(g_walljump_force);
