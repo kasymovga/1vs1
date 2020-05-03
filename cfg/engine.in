@@ -62,6 +62,7 @@ scr_conbrightness 0.2
 scr_screenshot_jpeg 1
 scr_screenshot_jpeg_quality 0.9
 sv_maxvelocity 1000000000
+sv_jumpstep 1
 cl_sound_wizardhit ""
 cl_sound_hknighthit ""
 cl_sound_tink1 weapons/tink1.wav
