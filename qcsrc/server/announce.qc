@@ -1,8 +1,16 @@
 float g_announcer_print;
 
-float(entity player, string msg, string txt) announce_force {
-	if not(clienttype(player) == CLIENTTYPE_REAL)
-		return FALSE;
+void(entity player, string msg, string txt) announce_force {
+	entity e;
+	if (player.classname == "player")
+		FOR_EACH_CLIENT(e) {
+			if (e.enemy == player)
+			if (e.classname == "spectator") {
+				announce_force(e, msg, txt);
+			}
+		}
+	if (clienttype(player) != CLIENTTYPE_REAL)
+		return;
 
 	player.announcetime = time + 0.8;
 	if (msg != "")
@@ -15,14 +23,11 @@ float(entity player, string msg, string txt) announce_force {
 		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE_PRINT);
 		WriteString(MSG_ONE, txt);
 	}
-	return TRUE;
 }
 
-float(entity player, string msg, string txt) announce {
-    if (time > player.announcetime)
-		return announce_force(player, msg, txt);
-
-    return FALSE;
+void(entity player, string msg, string txt) announce {
+	if (time > player.announcetime)
+		announce_force(player, msg, txt);
 }
 
 void(void) announce_init {

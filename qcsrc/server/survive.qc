@@ -86,9 +86,7 @@ void survive_trigger() {
 	}
 	survive_active = TRUE;
 	GameStatus_Set("^1New wave incoming!\n^1Try to survive", 2);
-	FOR_EACH_REALCLIENT(self)
-		announce(self, "announcer/robotic/begin.wav", "");
-
+	sound_play2all("announcer/robotic/begin.wav");
 	self = oldself;
 	remove(self);
 	survive_plan_entity = world;
@@ -112,10 +110,9 @@ void survive_plan() {
 				self.classname = "player";
 				client_put();
 			}
-			if (clienttype(self) == CLIENTTYPE_REAL)
-				announce_force(self, "domination/claim.wav", "");
 		}
 	}
+	sound_play2all("domination/claim.wav");
 	self = oldself;
 }
 
@@ -195,16 +192,15 @@ float survive_WinningCondition() {
 	}
 	if (survive_plan_entity) {
 		float countdown = ceil(survive_plan_entity.nextthink - time);
+		if (countdown > 0)
 		if (survive_last_countdown != countdown) {
 			GameStatus_Set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
-			FOR_EACH_REALCLIENT(e)
-				if (countdown <= 3)
-					announce(e, strcat("announcer/robotic/", ftos(countdown), ".wav"), "");
+			if (countdown <= 3)
+				sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 
 			survive_last_countdown = countdown;
 		}
 	}
-
 	return FALSE;
 }
 

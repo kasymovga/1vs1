@@ -278,8 +278,8 @@ float conquest_WinningCondition()
 			world_winners_set(team, COLOR_TEAM2);
 			announce_sound = "ctf/blue_capture.wav";
 		}
+		sound_play2all(announce_sound);
 		FOR_EACH_REALCLIENT(head) {
-			announce(head, announce_sound, "");
 			LocationRequest_Remove(head);
 		}
 		return TRUE;
