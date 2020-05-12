@@ -1,5 +1,5 @@
-set nexuiz25_g_balance_shotgun_primary_damage 10
-set nexuiz25_g_balance_shotgun_secondary_damage 10
+set nexuiz25_g_balance_shotgun_primary_damage 12
+set nexuiz25_g_balance_shotgun_secondary_damage 12
 set nexuiz25_g_balance_hagar_primary_refire 0.15
 set nexuiz25_g_balance_hagar_secondary_refire 0.15
 set nexuiz25_g_balance_hagar_primary_spread 0.010
@@ -7,4 +7,21 @@ set nexuiz25_g_balance_hagar_primary_speed 3000
 set nexuiz25_g_balance_hagar_secondary_spread 0.015
 set nexuiz25_g_balance_crylink_primary_shots 4
 set nexuiz25_g_balance_electro_secondary_refire 0.25
+set nexuiz25_g_pickup_nails 80
+set nexuiz25_g_pickup_rockets 15
+set nexuiz25_g_pickup_cells 25
+set nexuiz25_g_balance_grenadelauncher_primary_ammo 2
+set nexuiz25_g_balance_grenadelauncher_secondary_ammo 2
+set nexuiz25_g_balance_hlac_secondary_ammo 10
+set nexuiz25_g_balance_fireball_primary_ammo 5
+set nexuiz25_g_balance_fireball_secondary_ammo 15
+set nexuiz25_g_balance_nex_ammo 5
+set nexuiz25_g_balance_electro_primary_ammo 2
+set nexuiz25_g_balance_crylink_primary_ammo 2
+set nexuiz25_g_balance_crylink_secondary_ammo 2
+set nexuiz25_g_balance_fireball_primary_refire 1.5
+set nexuiz25_g_balance_fireball_secondary_damage 150
+set nexuiz25_g_weaponreplace_zapper electro
+set nexuiz25_g_weaponreplace_supershotgun uzi
+set nexuiz25_g_projectiles_newton_style_2_minfactor 0.7
 set nexuiz25_duel_inherit "nexuiz25 duel"
