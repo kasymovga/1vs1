@@ -262,10 +262,16 @@ vector monster_get_direction() {
 			//print("Trying fly\n");
 		} else
 			v = self.goalcurrent.origin - self.origin;
-	} else
+	} else if (self.enemy) {
 		v = self.enemy.origin - self.origin;
+	} else if (self.movedir == '0 0 0') {
+		makevectors(self.angles);
+		v = v_forward;
+	} else
+		v = self.movedir;
 
-	return normalize(v);
+	v = normalize(v);
+	return v;
 }
 
 vector monster_move_swim(float _speed, float blend_factor) {
@@ -322,8 +328,32 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 		self.bot_strategytime = time + 1 + random() * 1;
 		monster_set_route();
 	}
-	v = monster_get_direction();
-	v_z = 0;
+	if (self.spectatortime < time) {
+		v = monster_get_direction();
+		v_z = 0;
+		float t = (self.maxs_x * 2) / _speed;
+		self.spectatortime = time + t;
+		vector o = self.origin + v * _speed * t * 1.5;
+		tracebox(o, self.mins, self.maxs, o - '0 0 1000', MOVE_NOMONSTERS, self);
+		if not(trace_startsolid) {
+			if (trace_fraction == 1) //too deep
+				v = -v;
+			else if (trace_fraction > 0.01) {
+				o = trace_endpos;
+				tracebox(o, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+				if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
+					if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+						v = -v;
+					else if (pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
+						v = -v;
+					}
+				}
+			}
+		}
+		self.movedir = v;
+	} else
+		v = self.movedir;
+
 	dir_z_save = v_z;
 	vel_z_save = self.velocity_z;
 	if not(self.flags & FL_ONGROUND)
