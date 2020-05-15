@@ -1033,6 +1033,7 @@ void MapInfo_ClearTemps()
 	MapInfo_Map_description = string_null;
 	MapInfo_Map_author = string_null;
 	MapInfo_Map_clientstuff = string_null;
+	MapInfo_Map_image = string_null;
 	MapInfo_Map_supportedGametypes = 0;
 	MapInfo_Map_supportedFeatures = 0;
 }
