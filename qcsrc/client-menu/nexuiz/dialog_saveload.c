@@ -10,7 +10,7 @@ CLASS(NexuizSaveLoadDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizSaveLoadDialog, title, string, SAVELOADTITLE)
 	ATTRIB(NexuizSaveLoadDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizSaveLoadDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizSaveLoadDialog, rows, float, 7)
+	ATTRIB(NexuizSaveLoadDialog, rows, float, 9)
 	ATTRIB(NexuizSaveLoadDialog, columns, float, 6)
 	ATTRIB(NexuizSaveLoadDialog, name, string, SAVELOADTITLE)
 ENDCLASS(NexuizSaveLoadDialog)
@@ -18,19 +18,24 @@ ENDCLASS(NexuizSaveLoadDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-string slotdescr[10];
+string slotdescr[12];
 
 float SaveSlotNotEmpty(float n) {
 	return file_exists(strcat("slot", ftos(n), ".sav"));
 }
+
 void configureDialogNexuizSaveLoadDialog(entity me) {
 	float i;
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 12; i++) {
 		str_unzone_ifneeded(slotdescr[i]);
 		if (SaveSlotNotEmpty(i + 1)) {
 			slotdescr[i] = cvar_string_zone_ifneeded(strcat("_slot_description", ftos(i + 1)));
-		} else
-			slotdescr[i] = str_zone_ifneeded(strcat("Empty slot", ftos(i + 1)));
+		} else if (i < 10)
+			slotdescr[i] = strzone(strcat("Empty slot", ftos(i + 1)));
+		else if (i == 10)
+			slotdescr[i] = strzone("Autosave");
+		else
+			slotdescr[i] = strzone("Quicksave");
 	}
 	configureDialogNexuizDialog(me); //Parent method
 }
@@ -62,11 +67,14 @@ void SaveGame(entity btn, entity me) {
 	localcmd(strcat("\nseta _slot_description", ftos(slot), " \""));
 	localcmd(strcat(shortmapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
-	localcmd(strcat("\nsave slot", ftos(slot), "\n"));
+	localcmd(strcat("\nsave slot", ftos(slot), "\nsaveconfig\n"));
 	me.close(me);
 }
 #endif
 
+#ifdef CSQC
+entity buttonSave;
+#endif
 void SlotSelect(entity btn, entity me) {
 	entity e;
 #ifdef MENUQC
@@ -77,6 +85,12 @@ void SlotSelect(entity btn, entity me) {
 		e.forcePressed = 0;
 	}
 	btn.forcePressed = 1;
+#ifdef CSQC
+	if (GetSlotNumber(me) > 9)
+		buttonSave.disabled = TRUE;
+	else
+		buttonSave.disabled = FALSE;
+#endif
 }
 
 void fillNexuizSaveLoadDialog(entity me)
@@ -84,8 +98,13 @@ void fillNexuizSaveLoadDialog(entity me)
 	entity e;
 	float i, j;
 	e = me;
-	for (i = 0; i < 10; i += 2) {
+	for (i = 0; i < 12; i += 2) {
 		me.TR(me);
+			if (i == 10) {
+				me.TD(me, 1, 3, e.saveSlot = makeNexuizTextLabel(0, "Autosave:"));
+				me.TD(me, 1, 3, e.saveSlot = makeNexuizTextLabel(0, "Quicksave:"));
+				me.TR(me);
+			}
 			for (j = 0; j < 2; j++) {
 				me.TD(me, 1, 3, e.saveSlot = makeNexuizButton(slotdescr[i + j], '0 0 0'));
 				e = e.saveSlot;
@@ -102,6 +121,7 @@ void fillNexuizSaveLoadDialog(entity me)
 #endif
 #ifdef CSQC
 		me.TD(me, 1, button_width, e = makeNexuizButton("Save", '0 0 0'));
+		buttonSave = e;
 		e.onClick = SaveGame;
 		e.onClickEntity = me;
 #endif

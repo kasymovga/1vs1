@@ -106,3 +106,5 @@ bind F1 vyes
 bind F2 vno
 bind F3 spec
 bind f5 menu_showteamselect
+bind F6 quicksave
+bind F8 quickload

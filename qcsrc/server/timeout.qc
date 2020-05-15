@@ -224,8 +224,8 @@ void() timeout_init {
 	if not(cvar("sv_timeout"))
 		return;
 
-	timeout_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = timeout_ClientCommandHandle;
+	timeout_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = timeout_ClientCommandHandle;
 	timeout_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = timeout_GameCommandHandle;
 	timeout_TempoMod_NextLink = GameHookChain_TempoMod;

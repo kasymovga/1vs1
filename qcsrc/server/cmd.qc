@@ -614,7 +614,7 @@ void(string s) cmd_client {
 			return;
 	}
 
-	if (GameHookChain_ClientCommandHandle(cmd, tokens))
+	if (gamehook_chain_cmd_client_handle(cmd, tokens))
 		return;
 
 	if (vote_cmd(s, self)) {

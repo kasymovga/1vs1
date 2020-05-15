@@ -130,11 +130,21 @@ float(void) single_forbid_spectators {
 	return FALSE;
 }
 
+void(void) single_autosave {
+	centerprint(self, "Autosaving...");
+	localcmd(strcat("\nseta _slot_description11 \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
+	localcmd(" \"\n");
+	localcmd("save slot11.sav\nsaveconfig\n");
+}
+
 var float(void) single_player_equip_handle_next;
 float(void) single_player_equip_handle {
 	if (self.default_equip)
 		return single_player_equip_handle_next();
 
+	if (self.netaddress == "local") {
+		defer(0.5, single_autosave);
+	}
 	return TRUE;
 }
 
@@ -169,6 +179,18 @@ void(entity attacker) single_monster_killed {
 		score_player_add(attacker, SP_SCORE, self.frags);
 }
 
+var float(string cmd, float tokens) single_cmd_client_handle_next;
+float(string cmd, float tokens) single_cmd_client_handle {
+	if (cmd == "quicksave") {
+		centerprint(self, "Quicksaving...");
+		localcmd(strcat("\nseta _slot_description12 \"", mapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
+		localcmd(" \"\n");
+		localcmd("save slot12.sav\nsaveconfig\n");
+		return TRUE;
+	}
+	return single_cmd_client_handle_next(cmd, tokens);
+}
+
 void(void) single_init {
 	hint_add("You can save/load game at any moment.");
 	gamehook_map_restart = single_map_restart;
@@ -189,6 +211,10 @@ void(void) single_init {
 	single_shutdown_next = gamehook_chain_shutdown;
 	gamehook_chain_shutdown = single_shutdown;
 	gamehook_monster_killed = single_monster_killed;
+	if (game == GAME_SINGLE) {
+		single_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
+		gamehook_chain_cmd_client_handle = single_cmd_client_handle;
+	}
 	entity e = spawn();
 	e.targetname = "endlevel";
 	e.use = single_endlevel;

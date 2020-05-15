@@ -86,8 +86,8 @@ void IP2C_InitSV(void) {
     });
 
     if(sv_ip2country_allow_fakeflag) {
-        IP2C_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-        GameHookChain_ClientCommandHandle = IP2C_ClientCommandHandle;
+        IP2C_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
+        gamehook_chain_cmd_client_handle = IP2C_ClientCommandHandle;
     }
 	IP2C_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = IP2C_GameCommandHandle;

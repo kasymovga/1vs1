@@ -59,6 +59,6 @@ void(void) hint_init {
 	GameHookChain_RealClientConnect = hint_RealClientConnect;
 	hint_GameMenuAddItems_next = GameHookChain_GameMenuAddItems;
 	GameHookChain_GameMenuAddItems = hint_GameMenuAddItems;
-	hint_ClientCommandHandle_next = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = hint_ClientCommandHandle;
+	hint_ClientCommandHandle_next = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = hint_ClientCommandHandle;
 }

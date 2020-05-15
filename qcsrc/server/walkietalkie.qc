@@ -34,8 +34,8 @@ void WalkieTalkie_Init() {
 	}
 	WalkieTalkie_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
 	GameHookChain_GameMenuAddItems = WalkieTalkie_GameMenuAddItems;
-	WalkieTalkie_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = WalkieTalkie_ClientCommandHandle;
+	WalkieTalkie_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = WalkieTalkie_ClientCommandHandle;
 }
 
 float walkietalkie_block[4];

@@ -251,8 +251,8 @@ void nadget_Init(void) {
 	GameHookChain_PlayerCanFire = nadget_PlayerCanFire;
 	nadget_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
 	GameHookChain_GameMenuAddItems = nadget_GameMenuAddItems;
-	nadget_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = nadget_ClientCommandHandle;
+	nadget_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = nadget_ClientCommandHandle;
 	nadget_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
 	GameHookChain_PlayerDamageHandle = nadget_PlayerDamageHandle;
 	nadget_JoinHandle_NextLink = GameHookChain_JoinHandle;

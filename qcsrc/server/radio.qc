@@ -66,8 +66,8 @@ void Radio_Init(void) {
 	GameHookChain_RealClientConnect = Radio_RealClientConnect;
 	Radio_ServerFrame_NextLink = gamehook_chain_world_frame_start;
 	gamehook_chain_world_frame_start = Radio_ServerFrame;
-	Radio_ClientCommandHandle_NextLink = GameHookChain_ClientCommandHandle;
-	GameHookChain_ClientCommandHandle = Radio_ClientCommandHandle;
+	Radio_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = Radio_ClientCommandHandle;
 	Radio_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = Radio_GameCommandHandle;
 	Radio_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
