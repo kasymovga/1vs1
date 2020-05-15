@@ -338,7 +338,7 @@ float(string s) physics_cvar {
 	string g_s = strcat("g_", s);
 	string g_s_v = cvar_string(g_s);
 	if (g_s_v != "") {
-		cvar_set(sv_s, g_s_v);
+		builtin_cvar_set(sv_s, g_s_v);
 		return cvar(g_s);
 	}
 	return cvar(sv_s);
