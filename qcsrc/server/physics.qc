@@ -303,6 +303,7 @@ void SV_PlayerPhysics()
 	self.watertype = physics_watertype;
 	if (physics_is_player)
 	if ((vlen(_oldorigin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32)
+	if (self.solid != SOLID_NOT)
 	if (self.mins != self.maxs) {
 		physics_triggers(_oldorigin, self.origin, vlen(self.maxs - self.mins) / 2);
 	}
