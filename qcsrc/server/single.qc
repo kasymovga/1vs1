@@ -55,6 +55,8 @@ float() single_player_death_handle {
 	single_level_finished = TRUE;
 	campaign_won = FALSE;
 	campaign_map_transition = TRUE;
+	registercvar("_autosave_skip", "0");
+	builtin_cvar_set("_autosave_skip", "1");
 	return FALSE;
 }
 
@@ -142,9 +144,12 @@ float(void) single_player_equip_handle {
 	if (self.default_equip)
 		return single_player_equip_handle_next();
 
-	if (self.netaddress == "local") {
+	registercvar("_autosave_skip", "0");
+	if (self.netaddress == "local")
+	if not(builtin_cvar("_autosave_skip")) {
 		defer(0.5, single_autosave);
 	}
+	builtin_cvar_set("_autosave_skip", "0");
 	return TRUE;
 }
 
