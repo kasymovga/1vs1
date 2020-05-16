@@ -3,7 +3,6 @@
 
 // constants
 
-const string string_null;
 const float GAME_ISSERVER 	= 1;
 const float GAME_CONNECTED	= 2;
 const float GAME_DEVELOPER	= 4;

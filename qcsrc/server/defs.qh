@@ -10,7 +10,6 @@ var .float BUTTON_USE = buttonuse;
 #define BUTTON_DROP buttonuse
 #define BUTTON_DRAG   button8
 
-string	string_null;
 const var void(void)	func_null;
 typedef void() voidfunc;
 
