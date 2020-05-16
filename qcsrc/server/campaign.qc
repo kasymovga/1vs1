@@ -62,6 +62,19 @@ float(void) campaign_invalid {
 }
 
 void(void) campaign_preinit {
+	if (builtin_cvar("_restore_game")) { //Hack for load game
+		campaign_cvar_list = strzone("; ");
+		builtin_cvar_set("sv_public", "0");
+		builtin_cvar_set("pausable", "1");
+		builtin_cvar_set("_restore_game", "0");
+		builtin_cvar_set("g_campaign", "1");
+		cvar = campaign_cvar;
+		cvar_string = campaign_cvar_string;
+		cvar_set = campaign_cvar_set;
+		cvar_set("g_campaign", "1");
+		MapInfo_SwitchGameType(MapInfo_Type_FromString("single"));
+		return;
+	}
 	CACHE_CVAR(g_campaign);
 	if not(g_campaign)
 		return;
