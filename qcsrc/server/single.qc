@@ -36,6 +36,8 @@ void(void) single_endlevel {
 		cvar_set("nextmap", self.netname);
 		campaign_map_transition = TRUE;
 	}
+	registercvar("_autosave_skip", "0");
+	builtin_cvar_set("_autosave_skip", "0");
 }
 
 float() single_winning_condition {
@@ -145,6 +147,7 @@ float(void) single_player_equip_handle {
 		return single_player_equip_handle_next();
 
 	registercvar("_autosave_skip", "0");
+	if (game == GAME_SINGLE)
 	if (self.netaddress == "local")
 	if not(builtin_cvar("_autosave_skip")) {
 		defer(0.5, single_autosave);
