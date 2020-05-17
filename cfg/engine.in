@@ -106,7 +106,7 @@ set con_completion_vdomap	map
 
 seta cl_port $cl_port
 seta r_showsurfaces $r_showsurfaces
-seta skill $skill
+seta skill 4
 seta gl_finish $gl_finish
 seta v_kicktime $v_kicktime
 seta r_subdivisions_tolerance $r_subdivisions_tolerance
