@@ -415,7 +415,7 @@ set g_balance_zapper_primary_damagefalloff_mindist 0
 set g_balance_zapper_primary_force 100
 set g_balance_zapper_primary_heatup 0
 set g_balance_zapper_primary_lifetime 0.2
-set g_balance_zapper_primary_range 800
+set g_balance_zapper_primary_range 900
 set g_balance_zapper_primary_refire 0.3
 set g_balance_zapper_primary_ticrate 0.1
 set g_balance_zapper_secondary 1
