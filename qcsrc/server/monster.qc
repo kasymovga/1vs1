@@ -153,7 +153,7 @@ void monster_die() {
 		monster_drop_item(IT_SHELLS, "models/items/a_shells.md3", "misc/itempickup.wav", "Shells", ammo_shells, self.ammo_shells);
 
 	if (self.ammo_nails)
-		monster_drop_item(IT_NAILS, "models/items/a_bullets.md3", "misc/itempickup.wav", "Bullets", ammo_nails, self.ammo_nails);
+		monster_drop_item(IT_NAILS, "models/items/a_bullets.mdl", "misc/itempickup.wav", "Bullets", ammo_nails, self.ammo_nails);
 
 	if (self.ammo_rockets)
 		monster_drop_item(IT_ROCKETS, "models/items/a_rockets.md3", "misc/itempickup.wav", "Rockets", ammo_rockets, self.ammo_rockets);
