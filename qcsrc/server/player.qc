@@ -64,6 +64,7 @@ float g_spawnshieldtime;
 float g_spawnfrags;
 float g_spawnsound;
 float g_player_pushfactor;
+float g_playerclip_collisions;
 float reset_on_join_done;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;
@@ -2073,7 +2074,7 @@ float(void) player_body_customize {
 void(entity pl) player_body_setup {
 	pl.movetype = MOVETYPE_QCWALK;
 	pl.solid = SOLID_SLIDEBOX;
-	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
 	if(player_independent)
 		MAKE_INDEPENDENT_PLAYER(pl);
 }
@@ -2493,4 +2494,5 @@ void() player_init {
 	CACHE_CVAR(bot_taunt);
 	CACHE_CVAR(bot_talk);
 	CACHE_CVAR(g_maxpushtime);
+	CACHE_CVAR(g_playerclip_collisions);
 }
