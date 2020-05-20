@@ -331,21 +331,35 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	if (self.spectatortime < time) {
 		v = monster_get_direction();
 		v_z = 0;
-		float t = (self.maxs_x * 2) / _speed;
-		self.spectatortime = time + t;
-		vector o = self.origin + v * _speed * t * 1.5;
-		tracebox(o, self.mins, self.maxs, o - '0 0 1000', MOVE_NOMONSTERS, self);
-		if not(trace_startsolid) {
-			if (trace_fraction == 1) //too deep
-				v = -v;
-			else if (trace_fraction > 0.01) {
-				o = trace_endpos;
-				tracebox(o, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
-				if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
-					if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+		if (self.flags & FL_ONGROUND) {
+			float t = (self.maxs_x * 2) / _speed;
+			self.spectatortime = time + t;
+			vector o = self.origin + v * _speed * t * 1.5;
+			tracebox(o, self.mins, self.maxs, o - '0 0 1000', MOVE_NOMONSTERS, self);
+			if (trace_startsolid) {
+				//Check for wall
+				tracebox(self.origin, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+				float trace_fraction_first = trace_fraction;
+				if (trace_fraction < 1)
+				if (trace_plane_normal_z < 0.1)
+				if (trace_plane_normal_z > -0.1) {
+					vector step = '0 0 1' * sv_stepheight;
+					tracebox(self.origin, self.mins + step, self.maxs + step, o, MOVE_NOMONSTERS, self);
+					if (trace_fraction <= trace_fraction_first)
 						v = -v;
-					else if (pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
-						v = -v;
+				}
+			} else {
+				if (trace_fraction == 1) //too deep
+					v = -v;
+				else if (trace_fraction > 0.01) {
+					o = trace_endpos;
+					tracebox(o, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+					if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
+						if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+							v = -v;
+						else if (pointcontents(o + (self.maxs + self.mins) * 0.5) == CONTENT_WATER) {
+							v = -v;
+						}
 					}
 				}
 			}
