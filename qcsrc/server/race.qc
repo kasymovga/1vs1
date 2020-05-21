@@ -46,7 +46,7 @@ float SP_RACE_FASTEST;
 float SP_RACE_TIME;
 void score_race()
 {
-	score_basics(0, 0, FALSE);
+	score_basics(0, 0, TRUE);
 	if(race_teams)
 	{
 		ST_RACE_LAPS = score_register_team_score("laps", SFL_SORT_PRIO_PRIMARY);
