@@ -377,10 +377,6 @@ void(void) map_intermission_think {
 }
 
 void() map_finish {
-	float minTotalFrags;
-	float maxTotalFrags;
-	float score;
-	float f;
 	string s;
 	entity e;
 	map_finished = TRUE;
@@ -436,24 +432,6 @@ void() map_finish {
 	}
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_GAMEOVER);
-	minTotalFrags = 0;
-	maxTotalFrags = 0;
-	FOR_EACH_PLAYER(other)
-	{
-		if(maxTotalFrags < other.totalfrags)
-			maxTotalFrags = other.totalfrags;
-		if(minTotalFrags > other.totalfrags)
-			minTotalFrags = other.totalfrags;
-	}
-	if(!bot_count)
-	{
-		FOR_EACH_PLAYER(other)
-		{
-			score = (other.totalfrags - minTotalFrags) / max(maxTotalFrags - minTotalFrags, 1);
-			f = bound(0, other.play_time / max(time, 1), 1);
-			// store some statistics?
-		}
-	}
 	if (g_campaign)
 		campaign_preintermission();
 
