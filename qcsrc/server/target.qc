@@ -222,3 +222,13 @@ void(void) spawnfunc_target_location {
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
 }
+
+void(void) target_kill_use {
+	if (other.iscreature)
+	if (other.takedamage)
+		damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+}
+
+void(void) spawnfunc_target_kill {
+	self.use = target_kill_use;
+}
