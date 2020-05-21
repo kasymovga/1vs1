@@ -860,9 +860,9 @@ float race_WinningCondition_NonQualifying(float fraglimit)
 }
 
 float race_WinningCondition(float fraglimit, float ignore) {
-	if(!g_race_qualifying)
+	if not(g_race_qualifying)
 		return race_WinningCondition_NonQualifying(fraglimit);
-	else if(g_race_qualifying == 2)
+	else if (g_race_qualifying == 1)
 		return score_winning_condition(fraglimit, 0);
 
 	return FALSE;
@@ -1007,13 +1007,17 @@ float race_TelefragsAllowed() {
 
 float race_ReadyRestartHard() { return race_completing; }
 
+void(void) race_qualifying_limits {
+	cvar_set("fraglimit", "0");
+	cvar_set("leadlimit", "0");
+	cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+}
+
 void race_init() {
 	if (game == GAME_RACE) {
+		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
 		g_race = 1;
-		float qualifying_override;
-		qualifying_override = -1;
-		if(cvar("g_race_teams"))
-		{
+		if (cvar("g_race_teams")) {
 			team_play_activate();
 			race_teams = bound(2, cvar("g_race_teams"), 4);
 			team_teams_set_count(race_teams);
@@ -1021,7 +1025,6 @@ void race_init() {
 		else
 			race_teams = 0;
 
-		qualifying_override = cvar("g_race_qualifying_timelimit_override");
 		if(qualifying_override >= 0)
 			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
 
@@ -1032,9 +1035,7 @@ void race_init() {
 				race_fraglimit = cvar("fraglimit");
 				race_leadlimit = cvar("leadlimit");
 				race_timelimit = cvar("timelimit");
-				cvar_set("fraglimit", "0");
-				cvar_set("leadlimit", "0");
-				cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+				defer(0, race_qualifying_limits);
 				g_race_qualifying = 2;
 			} else
 				g_race_qualifying = 0;

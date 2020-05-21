@@ -1028,12 +1028,12 @@ void Net_ReadRace()
 				strunzone(race_previousbestname);
 			race_previousbestname = strzone(str_color_translate_rgb(ReadString()));
 
-			race_checkpointtime = time;
+			race_checkpointtime = max(time, 0.001);
 
 			if(race_checkpoint == 0 || race_checkpoint == 254)
 			{
 				race_penaltyaccumulator = 0;
-				race_laptime = time; // valid
+				race_laptime = max(time, 0.001); // valid
 			}
 
 			break;
