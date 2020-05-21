@@ -24,8 +24,6 @@ float bot_waypoints_for_items;
 
 // Skill system
 float skill;
-float autoskill_nextthink;
-
 // havocbot_keyboardskill // keyboard movement
 .float bot_moveskill; // moving technique
 .float bot_dodgeskill; // dodging
@@ -42,8 +40,6 @@ float autoskill_nextthink;
 
 .float bot_thinkskill; // target choice
 .float bot_aiskill; // strategy choice
-
-.float totalfrags_lastcheck;
 
 // Custom weapon priorities
 float bot_custom_weapon;
@@ -103,7 +99,6 @@ void bot_clientdisconnect();
 void bot_clientconnect();
 void bot_removefromlargestteam();
 void bot_removenewest();
-void autoskill(float factor);
 void bot_serverframe();
 void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, string prefix);
 

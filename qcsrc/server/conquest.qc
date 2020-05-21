@@ -291,7 +291,6 @@ float conquest_WinningCondition()
 
 float conquest_FragsHandle(entity attacker, entity targ, float f) {
 	score_player_add(attacker, SP_SCORE, f);
-	attacker.totalfrags += f;
 	return 0;
 }
 

@@ -13,8 +13,6 @@ var .float BUTTON_USE = buttonuse;
 const var void(void)	func_null;
 typedef void() voidfunc;
 
-.float totalfrags;
-
 // Fields
 
 .void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;

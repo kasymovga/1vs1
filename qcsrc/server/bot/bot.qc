@@ -451,51 +451,47 @@ void bot_removenewest()
 	dropclient(best);
 };
 
-void autoskill(float factor)
-{
+float bot_skill_auto_last_difference;
+float bot_skill_auto_nextthink;
+void() bot_skill_auto {
 	float bestbot;
 	float bestplayer;
+	float havebot, haveplayer;
+	float _kills;
 	entity head;
-
-	bestbot = -1;
-	bestplayer = -1;
-	FOR_EACH_PLAYER(head)
-	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
-			bestplayer = max(bestplayer, head.totalfrags - head.totalfrags_lastcheck);
-		else
-			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
+	bestbot = -100;
+	bestplayer = -100;
+	havebot = haveplayer = 0;
+	FOR_EACH_PLAYER(head) {
+		_kills = head.scorekeeper.scores[SP_KILLS];
+		if(clienttype(head) == CLIENTTYPE_REAL) {
+			bestplayer = max(bestplayer, _kills);
+			haveplayer = 1;
+		} else {
+			bestbot = max(bestbot, _kills);
+			havebot = 1;
+		}
 	}
+	float difference = bestbot - bestplayer;
+	if (difference == bot_skill_auto_last_difference)
+		return;
 
-	if(bestbot < 0 || bestplayer < 0)
-	{
-	}
-	else if(bestbot <= bestplayer * factor - 2)
-	{
-		if(skill < skill_auto_max)
-		{
+	if (!havebot || !haveplayer) {
+		return;
+	} else if (difference < 0 && difference < bot_skill_auto_last_difference) {
+		if (skill < skill_auto_max) {
 			skill = skill + 1;
 			cvar_set("skill", ftos(skill));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(skill), "\n");
 		}
-	}
-	else if(bestbot >= bestplayer * factor + 2)
-	{
-		if(skill > skill_auto_min)
-		{
+	} else if (difference > 0 && difference > bot_skill_auto_last_difference) {
+		if (skill > skill_auto_min) {
 			skill = skill - 1;
 			cvar_set("skill", ftos(skill));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(skill), "\n");
 		}
 	}
-	else
-	{
-		return;
-		// don't reset counters, wait for them to accumulate
-	}
-
-	FOR_EACH_PLAYER(head)
-		head.totalfrags_lastcheck = head.totalfrags;
+	bot_skill_auto_last_difference = difference;
 }
 
 void bot_serverframe()
@@ -512,11 +508,11 @@ void bot_serverframe()
 	stepheightvec = sv_stepheight * '0 0 1';
 	bot_navigation_movemode = ((bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
-	if(time > autoskill_nextthink)
-	{
+	if(time > bot_skill_auto_nextthink) {
 		if(skill_auto)
-			autoskill(skill_auto);
-		autoskill_nextthink = time + 5;
+			bot_skill_auto();
+
+		bot_skill_auto_nextthink = time + 5;
 	}
 
 	activerealplayers = 0;

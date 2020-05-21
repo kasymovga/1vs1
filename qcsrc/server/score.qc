@@ -984,7 +984,6 @@ void(entity attacker, entity targ, float f) score_give_frag {
 		score_player_add(attacker, SP_KILLS, 1);
 	}
 	f = GameHook_FragsHandle(attacker, targ, f);
-	attacker.totalfrags += f;
 	if(f)
 		score_player_team_add_score(attacker, f);
 }
