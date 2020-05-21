@@ -593,8 +593,6 @@ void race_PreparePlayer()
 
 void race_RetractPlayer()
 {
-	if(!g_race && !g_cts)
-		return;
 	self.race_checkpoint = race_PreviousCheckpoint(self.race_checkpoint);
 	if(self.race_checkpoint == 0)
 	{
