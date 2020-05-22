@@ -5,3 +5,6 @@ set g_race_qualifying_timelimit 0
 set g_race_qualifying_timelimit_override -1
 set g_race_teams 0	"when 2, 3, or 4, the race is played as a team game (the team members can add up their laps)"
 set race_g_start_weapon_laser 0
+set sv_spawnreplace_trigger_race_checkpoint race_trigger_checkpoint
+set sv_spawnreplace_trigger_race_penalty race_trigger_penalty
+set sv_spawnreplace_info_player_race race_info_player

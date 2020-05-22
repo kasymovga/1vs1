@@ -1,4 +1,1 @@
-float race_teams;
-.float race_completed;
-float race_completing;
-void race_init();
+void(void) race_init;

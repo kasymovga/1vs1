@@ -267,7 +267,8 @@ alias cl_hook_gamestart_ctf
 alias cl_hook_gamestart_lms
 alias cl_hook_gamestart_kh
 alias cl_hook_gamestart_ons
-alias cl_hook_gamestart_rc
+alias cl_hook_gamestart_rc cl_hook_gamestart_race
+alias cl_hook_gamestart_race
 alias cl_hook_gamestart_nexball
 alias cl_hook_gamestart_cts
 alias cl_hook_gameend
