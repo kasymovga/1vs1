@@ -22,14 +22,14 @@ set quakiuz_g_balance_pause_armor_rot 0
 set quakiuz_g_balance_pause_health_rot 0
 set quakiuz_g_pickup_respawntime_ammo 40
 set quakiuz_g_pickup_respawntime_weapon 5
-set quakiuz_g_pickup_respawntime_armor_small 25
-set quakiuz_g_pickup_respawntime_armor_medium 25
-set quakiuz_g_pickup_respawntime_armor_big 25
-set quakiuz_g_pickup_respawntime_armor_large 25
-set quakiuz_g_pickup_respawntime_health_small 35
-set quakiuz_g_pickup_respawntime_health_medium 35
-set quakiuz_g_pickup_respawntime_health_large 35
-set quakiuz_g_pickup_respawntime_health_mega 35
+set quakiuz_g_pickup_respawntime_armorsmall 25
+set quakiuz_g_pickup_respawntime_armormedium 25
+set quakiuz_g_pickup_respawntime_armorbig 25
+set quakiuz_g_pickup_respawntime_armorlarge 25
+set quakiuz_g_pickup_respawntime_healthsmall 35
+set quakiuz_g_pickup_respawntime_healthmedium 35
+set quakiuz_g_pickup_respawntime_healthlarge 35
+set quakiuz_g_pickup_respawntime_healthmega 35
 set quakiuz_g_pickup_armorsmall 5
 set quakiuz_g_pickup_armorsmall_max 200
 set quakiuz_g_pickup_armormedium 25
@@ -127,3 +127,4 @@ set quakiuz_g_balance_nex_damage 100
 set quakiuz_g_balance_nex_force 400
 set quakiuz_g_balance_nex_refire 1.5
 set quakiuz_g_balance_nex_animtime 1.5
+set quakiuz_duel_inherit "duel physicsq3 quakiuz"
