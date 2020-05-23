@@ -62,7 +62,7 @@ void(void) warmup_server_frame {
 	// if in warmup stage and limit for warmup is hit start match
 	if (warmup_active)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
-			|| (g_warmup_limit == 0 && cvar("timelimit") != 0 && time >= cvar("timelimit") * 60)) {
+			|| (g_warmup_limit == 0 && cvar("timelimit") > 0 && time >= cvar("timelimit") * 60)) {
 
 		ready_restart();
 		return;
