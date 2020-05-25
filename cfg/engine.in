@@ -3,6 +3,7 @@ r_mipsprites 1
 r_mipskins 1
 r_shadow_realtime_world_lightmaps 1
 r_cullentities_trace 1
+r_glsl_offsetmapping_scale 0.01
 bgmvolume 0.4
 volume 0.5
 rate 128000
