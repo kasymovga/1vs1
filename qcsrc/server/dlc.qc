@@ -2,6 +2,7 @@ entity dlc;
 string dlc_list_send;
 entity dlc_wait;
 string dlc_sounds;
+string dlc_extra_pk3_list;
 
 string(string s) dlc_trimspaces {
 	string c;
@@ -197,6 +198,7 @@ float dlc_SendEntity(entity to, float sf) {
 	}
 	if (sf & 2) {
 		WriteString(MSG_ENTITY, dlc_list_send);
+		WriteString(MSG_ENTITY, dlc_extra_pk3_list);
 	}
 	if (sf & 8) {
 		WriteString(MSG_ENTITY, dlc_sounds);
@@ -287,6 +289,29 @@ float(float tempo) dlc_TempoMod {
 	return dlc_TempoMod_NextLink(tempo);
 }
 
+void(void) dlc_extra_pk3_list_build {
+	string map_file = strcat("maps/", mapname, ".bsp");
+	str_unzone_ifneeded(dlc_extra_pk3_list);
+	dlc_extra_pk3_list = strcat(whichpack(strcat("maps/", mapname, ".bsp")), ":", map_file);
+	string head, tail, pk3;
+	for (tail = cvar_string("sv_curl_serverpackages"); tail != "";) {
+		head = str_car(tail);
+		tail = str_cdr(tail);
+		if (head == "")
+			continue;
+
+		pk3 = whichpack(head);
+		if (substring(pk3, 0, 8) == "dlcache/")
+			pk3 = substring(pk3, 8, -1);
+
+		if (pk3 != "")
+		if (substring(pk3, 0, 11) != "zzz-rexdlc_") {
+			dlc_extra_pk3_list = strcat(dlc_extra_pk3_list, " ", pk3, ":", head);
+		}
+	}
+	dlc_extra_pk3_list = strzone(dlc_extra_pk3_list);
+}
+
 void dlc_init() {
 	string s;
 	registercvar("_dlc_settemps_count", "0");
@@ -335,6 +360,7 @@ void dlc_init() {
 			}
 		}
 	}
+	dlc_extra_pk3_list_build();
 	dlc_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
 	GameHookChain_GameCommandHandle = dlc_GameCommandHandle;
 	dlc_TempoMod_NextLink = GameHookChain_TempoMod;
@@ -368,6 +394,7 @@ void DLCWaitReload() {
 			}
 		remove(self);
 		dlc_wait_reload = world;
+		dlc_extra_pk3_list_build();
 	} else
 		self.nextthink = time + 1;
 }

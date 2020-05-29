@@ -323,7 +323,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
 	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
 	ent_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
-	ent_parsers[ENT_CLIENT_DLC_LIST] = Ent_DLCList;
+	ent_parsers[ENT_CLIENT_DLC_LIST] = dlc_read;
 	ent_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
 	ent_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
 	ent_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
@@ -334,7 +334,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
 	ent_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;
 	ent_parsers[ENT_CLIENT_PHYSICS_HOOK] = hook_physics_read;
-	ent_parsers[ENT_CLIENT_DLC_SOUND] = Ent_DLCSound;
+	ent_parsers[ENT_CLIENT_DLC_SOUND] = dlc_sound_read;
 	ent_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
 	ent_parsers[ENT_CLIENT_LMS_SPHERE] = sphere_read;
 	ent_parsers[ENT_CLIENT_ICE] = ice_read;

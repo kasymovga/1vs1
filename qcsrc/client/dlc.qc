@@ -2,9 +2,10 @@ entity dlc_wait;
 float localConnection;
 string dlc_sounds;
 float dlc_sounds_ready;
+string dlc_extra_pk3_list;
+entity dlc_extra_pk3_list_wait;
 
 void dlc_precache_sounds() {
-	print("dlc_precache_sounds\n");
 	string s, l;
 	l = dlc_sounds;
 	while (l != "") {
@@ -17,7 +18,30 @@ void dlc_precache_sounds() {
 	dlc_sounds_ready = TRUE;
 }
 
-void dlc_sound(entity e, float c, string s, float v, float a) {
+void(void) dlc_extra_pk3_list_wait_think {
+	string tail, head, pk3, pk3_file;
+	float colon;
+	for (tail = dlc_extra_pk3_list; tail != ""; head = str_car(tail), tail = str_cdr(tail)) {
+		if (head == "") continue;
+		colon = strstrofs(head, ":", 0);
+		if (colon < 0) continue;
+		pk3 = substring(head, 0, colon);
+		pk3_file = substring(head, colon + 1, -1);
+		if not(file_exists(pk3_file)) {
+			if (self.cnt <= 0)
+				break;
+
+			self.cnt = self.cnt - 1;
+			self.nextthink = time + 10;
+			return;
+		}
+	}
+	remove(self);
+	dlc_extra_pk3_list_wait = world;
+	localcmd("\nr_restart\n");
+}
+
+void(entity e, float c, string s, float v, float a) dlc_sound {
 	if not(dlc_sounds_ready) {
 		print("dlc_sound: not ready\n");
 		return;
@@ -25,7 +49,7 @@ void dlc_sound(entity e, float c, string s, float v, float a) {
 	sound(e, c, s, v, a);
 }
 
-void DLCWait() {
+void(void) dlc_wait_think {
 	if not(dlc_ready_all()) {
 		self.nextthink = time + 1;
 		return;
@@ -56,7 +80,7 @@ void DLCWait() {
 	dlc_wait = world;
 }
 
-void DLCDraw2d() {
+void(void) dlc_draw2d {
 	vector pos;
 	pos_y = 100;
 	string s = "Some content still downloading";
@@ -64,7 +88,7 @@ void DLCDraw2d() {
 	drawstring(pos, s, '12 12 0', '0 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-void Ent_DLCList(float new) {
+void(float new) dlc_read {
 	float f = ReadByte();
 	if (f & 1) {
 		dlc_set_repos(ReadString());
@@ -87,9 +111,9 @@ void Ent_DLCList(float new) {
 		if (not_all_loaded) {
 			if not(dlc_wait) {
 				dlc_wait = spawn();
-				dlc_wait.think = DLCWait;
+				dlc_wait.think = dlc_wait_think;
 				dlc_wait.nextthink = time + 0.2;
-				dlc_wait.draw2d = DLCDraw2d;
+				dlc_wait.draw2d = dlc_draw2d;
 				dlc_wait.draw2dflag = 1;
 			}
 		} else {
@@ -107,6 +131,7 @@ void Ent_DLCList(float new) {
 				}
 			}
 		}
+		dlc_extra_pk3_list = strzone(ReadString());
 	}
 	if (f & 4)
 		localConnection = TRUE;
@@ -121,9 +146,32 @@ void Ent_DLCList(float new) {
 		else
 			dlc_precache_sounds();
 	}
+	string tail, head, pk3, pk3_file;
+	registercvar("cl_curl_fallback", "http://rexuiz.com/maps/");
+	string cl_curl_fallback = cvar_string("cl_curl_fallback");
+	float colon;
+	for (tail = dlc_extra_pk3_list; tail != "";) {
+		head = str_car(tail);
+		tail = str_cdr(tail);
+		if (head == "") continue;
+		colon = strstrofs(head, ":", 0);
+		if (colon < 0) continue;
+		pk3 = substring(head, 0, colon);
+		pk3_file = substring(head, colon + 1, -1);
+		if (pk3 == "" || pk3_file == "") continue;
+		if (file_exists(pk3_file)) continue;
+		print(pk3, " is missing, trying to fix\n");
+		localcmd(strcat("curl --pak ", cl_curl_fallback, pk3, "\n"));
+		if not(dlc_extra_pk3_list_wait) {
+			dlc_extra_pk3_list_wait = spawn();
+			dlc_extra_pk3_list_wait.cnt = 10;
+			dlc_extra_pk3_list_wait.think = dlc_extra_pk3_list_wait_think;
+			dlc_extra_pk3_list_wait.nextthink = time + 10;
+		}
+	}
 }
 
-void Ent_DLCSound(float new) {
+void(float new) dlc_sound_read {
 	float sf = ReadByte();
 	if (sf & 1) {
 		vector v;
