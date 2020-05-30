@@ -791,18 +791,6 @@ void CSQC_Ent_Remove()
 	remove(self);
 }
 
-void Gamemode_Init()
-{
-	if(gametype == GAME_ONSLAUGHT)
-		search_and_precache("gfx/ons-*");
-
-	if not(isdemo_flag)
-	{
-		localcmd("\n_cl_hook_gamestart ", gametype_name(gametype), ";");
-		calledhooks |= HOOK_START;
-	}
-	Sbar_GameType_Init();
-}
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
@@ -814,7 +802,6 @@ void CSQC_Parse_Print(string strMessage)
 	print(str_color_translate_rgb(strMessage));
 }
 
-void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
 	float i, j, t;
@@ -859,7 +846,7 @@ void Ent_ScoresInfo(float ignore)
 		teamscores_flags[i] = ReadByte();
 	}
 	Sbar_InitScores();
-	Gamemode_Init();
+	gametype_init();
 }
 
 void Ent_Init(float ignore)
