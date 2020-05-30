@@ -114,7 +114,9 @@ announce.qc
 vote.qh
 gamemenu.qh
 race.qh
+ready.qh
 main.qc
+ready.qc
 vote.qc
 gamemenu.qc
 race.qc

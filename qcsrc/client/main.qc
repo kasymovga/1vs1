@@ -117,7 +117,6 @@ void Ent_ReadEntCS(float bIsNewEntity);
 void Ent_ScoresInfo(float ignore);
 void Ent_ReadPlayerScore(float ignore);
 void Ent_ReadTeamScore(float ignore);
-void Ent_Nagger(float ignore);
 void Ent_RandomSeed(float ignore);
 void Ent_Init(float ignore);
 
@@ -304,7 +303,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_POINTPARTICLES] = Ent_PointParticles;
 	ent_parsers[ENT_CLIENT_RAINSNOW] = Ent_RainOrSnow;
 	ent_parsers[ENT_CLIENT_LASER] = Ent_Laser;
-	ent_parsers[ENT_CLIENT_NAGGER] = Ent_Nagger;
+	ent_parsers[ENT_CLIENT_NAGGER] = ready_read;
 	ent_parsers[ENT_CLIENT_WAYPOINT] = Ent_WaypointSprite;
 	ent_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
 	ent_parsers[ENT_CLIENT_PROJECTILE] = Ent_Projectile;
@@ -732,35 +731,6 @@ void Ent_ReadTeamScore(float ignore)
 
 				team_set(o, t);
 			}
-}
-
-void Net_Reset()
-{
-}
-
-void Ent_Nagger(float ignore)
-{
-	float nags, i, j, b, f;
-
-	nags = ReadByte();
-
-	if(nags & 1)
-	{
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if(playerslots[j]) {
-					if (f & b)
-						playerslots[j].ready = 1;
-					else
-						playerslots[j].ready = 0;
-				}
-		}
-	} else
-		for(i = 0; i < maxclients; i++)
-			if(playerslots[i])
-				playerslots[i].ready = 0;
 }
 
 void Ent_RandomSeed(float ignore)
