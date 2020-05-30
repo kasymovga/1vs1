@@ -1,0 +1,3 @@
+#define cvar builtin_cvar
+#define cvar_set builtin_cvar_set
+#define cvar_string builtin_cvar_string

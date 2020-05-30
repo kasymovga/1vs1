@@ -1,1 +1,2 @@
 void(float ignore) ready_read;
+.float ready;

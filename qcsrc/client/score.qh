@@ -1,3 +1,32 @@
+string scores_label[MAX_SCORE];
+float scores_flags[MAX_SCORE];
+string teamscores_label[MAX_SCORE];
+float teamscores_flags[MAX_SCORE];
+.float scores[MAX_SCORE];
+.float teamscores[MAX_TEAMSCORE];
+.float gotscores;
+
+#define SP_END -1
+#define SP_PING -2
+#define SP_NAME -3
+#define SP_KDRATIO -4
+#define SP_CLRATIO -5
+#define SP_PL -6
+#define SP_FRAGS -7
+#define SP_STATUS_STRING -8
+#define SP_COUNTRY -9
+#define SP_STATUS -10
+#define SP_BESTWEP -12
+float SP_COUNTRY_FIELD;
+float SP_TEAM_FIELD;
+float SP_TEAM_BIT;
+float SP_STATUS_FIELD;
+float SP_KILLS_FIELD;
+float SP_BESTWEP_FIELD;
+float SP_SUICIDES_FIELD;
+float SP_DEATHS_FIELD;
+#define SP_SEPARATOR -100
+
 void(float ignore) score_info_read;
 void(float ignore) score_player_read;
 void(float ignore) score_team_read;

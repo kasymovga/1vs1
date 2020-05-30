@@ -77,6 +77,7 @@ team.qh
 cvar.qc
 ../client-server/movelib.qc
 str.qc
+score.qh
 player.qc
 miscfunctions.qc
 ../client-server/approach.qc
@@ -90,6 +91,7 @@ team.qc
 centerprint.qc
 ../common/backtrace.qc
 gametype.qh
+ready.qh
 sbar.qc
 mapvote.qc
 
@@ -117,8 +119,6 @@ announce.qc
 vote.qh
 gamemenu.qh
 race.qh
-ready.qh
-score.qh
 entcs.qh
 main.qc
 entcs.qc

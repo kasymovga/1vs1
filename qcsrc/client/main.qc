@@ -233,8 +233,6 @@ void CSQC_Init(void)
 	for(i = 0; i < MAX_SBAR_FIELDS; ++i)
 		sbar_title[i] = strzone("(null)");
 
-	postinit = FALSE;
-
 	calledhooks = 0;
 
 	team_list = spawn();
