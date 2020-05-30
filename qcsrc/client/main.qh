@@ -13,8 +13,6 @@ float ons_showmap;
 
 float drawfont;
 float postinit;
-float gametype;
-
 //float sorted_players;
 //float sorted_teams;
 

@@ -35,14 +35,14 @@ float (float v)								ceil = #38;
 float (vector v)							pointcontents = #41;
 float (float f)								fabs = #43;
 
-float (string s)							cvar = #45;
+float (string s)							builtin_cvar = #45;
 void (string s, ...)							localcmd = #46;
 entity (entity e)							nextent = #47;
 
 vector (vector v)							vectoangles = #51;
 vector (vector v, vector w)							vectoangles2 = #51;
 
-void (string var, string val)						cvar_set = #72;
+void (string var, string val)						builtin_cvar_set = #72;
 
 float(float property, ...) setproperty = #303
 vector (float property) getpropertyvec = #303;
@@ -230,7 +230,7 @@ vector (entity ent, float tagindex)	gettaginfo = #452;
 float (string s)	tokenize = #441;
 string (float argnum)	argv = #442;
 
-string (string s) cvar_string = #448;
+string (string s) builtin_cvar_string = #448;
 
 float ()						buf_create = #460;
 void (float bufhandle)					buf_del = #461;

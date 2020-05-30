@@ -128,7 +128,6 @@ void DrawTintEffects(void) {
     }
 }
 
-void PostInit(void);
 void CSQC_Demo_Camera();
 float camera_mode;
 void CSQC_spider_HUD();
@@ -155,13 +154,6 @@ void CSQC_UpdateView(float w, float h)
 	fog_force();
 	drawframetime = max(0.000001, time - drawtime);
 	drawtime = time;
-
-	// watch for gametype changes here...
-	// in ParseStuffCMD the cmd isn't executed yet :/
-	// might even be better to add the gametype to TE_CSQC_INIT...?
-	if(!postinit)
-		PostInit();
-
 	fov = cvar("fov");
 	any_button_zoom = button_zoom;
 	if (button_attack2_allowed) {

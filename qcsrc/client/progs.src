@@ -7,6 +7,7 @@ csqc_constants.qc
 ../client-menu/key.h
 ../client-server/constants.qh
 csqc_builtins.qc
+cvar.qh
 ../client-server/world.qh
 ../client-server/time.qh
 ../client-server/score.qh
@@ -87,6 +88,8 @@ miscfunctions.qc
 ../common/stdproc.qc
 team.qc
 centerprint.qc
+../common/backtrace.qc
+gametype.qh
 sbar.qc
 mapvote.qc
 
@@ -115,7 +118,6 @@ vote.qh
 gamemenu.qh
 race.qh
 ready.qh
-gametype.qh
 score.qh
 entcs.qh
 main.qc

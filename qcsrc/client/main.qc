@@ -378,13 +378,6 @@ void CSQC_Shutdown(void)
 	trip_shutdown();
 }
 
-void PostInit(void)
-{
-	print(strcat("PostInit\n    maxclients = ", ftos(maxclients), "\n"));
-	localcmd(strcat("\ncl_cmd sbar_columns_set ", cvar_string("sbar_columns"), ";\n"));
-	postinit = TRUE;
-}
-
 // CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
 // Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 float button_zoom;
@@ -677,7 +670,6 @@ void(float ignore) main_init_read {
 
 		registercvar("_teams_available", "0");
 		cvar_set("_teams_available", ftos(ReadByte()));
-		Sbar_InitScores();
 	}
 	if (sf & 64) {
 		projectile_read();
@@ -688,8 +680,6 @@ void(float ignore) main_init_read {
 		str_unzone_ifneeded(motd);
 		motd = str_zone_ifneeded(ReadString());
 	}
-	if (!postinit)
-		PostInit();
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
