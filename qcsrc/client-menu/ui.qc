@@ -1,4 +1,4 @@
-void SetConWidthHeight() {
+void(void) ui_con_width_height_set {
 	float width = cvar("vid_width"), height = cvar("vid_height");
 	if (width < 1 || height < 1)
 		return;

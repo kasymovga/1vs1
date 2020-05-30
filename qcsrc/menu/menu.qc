@@ -119,7 +119,7 @@ void() m_init =
 	}
 	menu_dlc_reload(TRUE);
 	udppunchhole_extresponse_handler_register();
-	SetConWidthHeight();
+	ui_con_width_height_set();
 }
 
 void UpdateConWidthHeight()

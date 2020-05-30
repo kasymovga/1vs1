@@ -331,7 +331,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
 	ent_parsers[ENT_CLIENT_LMS_SPHERE] = sphere_read;
 	ent_parsers[ENT_CLIENT_ICE] = ice_read;
-	SetConWidthHeight();
+	ui_con_width_height_set();
 	sbar_font = FONT_USER+1;
 	sbar_bigfont = FONT_USER+2;
 	sbar_fontsize = '1 1 0';
