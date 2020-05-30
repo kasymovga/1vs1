@@ -117,7 +117,6 @@ void Ent_ReadEntCS(float bIsNewEntity);
 void Ent_ScoresInfo(float ignore);
 void Ent_ReadPlayerScore(float ignore);
 void Ent_ReadTeamScore(float ignore);
-void Ent_RandomSeed(float ignore);
 void Ent_Init(float ignore);
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -312,7 +311,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_CASING] = Ent_Casing;
 	ent_parsers[ENT_CLIENT_INIT] = Ent_Init;
 	ent_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
-	ent_parsers[ENT_CLIENT_RANDOMSEED] = Ent_RandomSeed;
+	ent_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;
 	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
 	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
 	ent_parsers[ENT_CLIENT_PHYSICS] = Ent_Physic;
@@ -731,14 +730,6 @@ void Ent_ReadTeamScore(float ignore)
 
 				team_set(o, t);
 			}
-}
-
-void Ent_RandomSeed(float ignore)
-{
-	float s;
-	prandom_debug();
-	s = ReadShort();
-	psrandom(s);
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
