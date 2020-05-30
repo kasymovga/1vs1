@@ -2,8 +2,6 @@
 #define spider_rocket_targ "gfx/spiderbot/target.tga"
 #define SPIDER_CROSS "textures/spiderbot/cross.tga"
 #define rkt_size 32
-#define rld_size_x 256
-#define rld_size_y 16
 
 //float trace_dphitcontents;
 float trace_networkentity;
@@ -13,20 +11,6 @@ float DPCONTENTS_BODY = 32; // blocks player movement
 float DPCONTENTS_CORPSE = 64; // blocks player movement
 float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
 float drawtime;
-
-#if 0
-float tan(float x)
-{
-	return sin(x) / cos(x);
-}
-float atan2(float y, float x)
-{
-	vector v;
-	v = '1 0 0' * x + '0 1 0' * y;
-	v = vectoangles(v);
-	return v_y * 0.01745329251994329576;
-}
-#endif
 
 float fovx, fovy;
 float old_vid_width, old_vid_height, old_viewzoom, old_fov, old_vid_pixelheight;
