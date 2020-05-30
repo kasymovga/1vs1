@@ -117,7 +117,9 @@ race.qh
 ready.qh
 gametype.qh
 score.qh
+entcs.qh
 main.qc
+entcs.qc
 score.qc
 gametype.qc
 ready.qc

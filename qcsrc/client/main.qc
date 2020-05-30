@@ -113,7 +113,6 @@ void search_and_precache(string s) {
 	search_end(glob);
 }
 
-void Ent_ReadEntCS(float bIsNewEntity);
 void Ent_Init(float ignore);
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -292,7 +291,7 @@ void CSQC_Init(void)
 	for (i = 0; i < ENT_CLIENT_COUNT; i++) {
 		ent_parsers[i] = Ent_Error;
 	}
-	ent_parsers[ENT_CLIENT_ENTCS] = Ent_ReadEntCS;
+	ent_parsers[ENT_CLIENT_ENTCS] = entcs_read;
 	ent_parsers[ENT_CLIENT_SCORES_INFO] = score_info_read;
 	ent_parsers[ENT_CLIENT_SCORES] = score_player_read;
 	ent_parsers[ENT_CLIENT_TEAMSCORES] = score_team_read;
@@ -567,50 +566,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-void Ent_ReadEntCS(float bIsNewEntity)
-{
-	float f = ReadByte();
-
-	if (f & 1) {
-		self.sv_entnum = ReadByte() - 1;
-		self.shownames_entnum = ReadShort() - 1;
-	}
-	if (f & 64) {
-		if (f & 2) {
-			self.origin_x = ReadShort();
-			self.origin_y = ReadShort();
-		}
-		if (f & 4) {
-			self.origin_z = ReadShort();
-			self.angles_y = ReadShort();
-		}
-		if (self.cnt)
-			self.cnt = FALSE;
-	} else {
-		if not(self.cnt)
-			self.cnt = TRUE;
-	}
-	if (f & 8) {
-		self.maxs_x = self.maxs_y = 0;
-		self.maxs_z = ReadShort();
-	}
-
-	if (team_mode)
-		Shownames_UpdateTeamBubble(self, f & 32);
-
-	if (f & 128) {
-		if (f & 16) {
-			self.health = ReadByte();
-			self.armorvalue = ReadByte();
-		}
-	} else
-		self.health = 0;
-
-	self.classname = "entcs_receiver";
-	if (bIsNewEntity)
-		Shownames_Init(self);
-}
-
 void Ent_Remove();
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
