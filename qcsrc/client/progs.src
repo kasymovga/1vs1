@@ -116,7 +116,9 @@ gamemenu.qh
 race.qh
 ready.qh
 gametype.qh
+score.qh
 main.qc
+score.qc
 gametype.qc
 ready.qc
 vote.qc

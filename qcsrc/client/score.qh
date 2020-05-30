@@ -1,0 +1,3 @@
+void(float ignore) score_info_read;
+void(float ignore) score_player_read;
+void(float ignore) score_team_read;

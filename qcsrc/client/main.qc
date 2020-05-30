@@ -114,9 +114,6 @@ void search_and_precache(string s) {
 }
 
 void Ent_ReadEntCS(float bIsNewEntity);
-void Ent_ScoresInfo(float ignore);
-void Ent_ReadPlayerScore(float ignore);
-void Ent_ReadTeamScore(float ignore);
 void Ent_Init(float ignore);
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -296,9 +293,9 @@ void CSQC_Init(void)
 		ent_parsers[i] = Ent_Error;
 	}
 	ent_parsers[ENT_CLIENT_ENTCS] = Ent_ReadEntCS;
-	ent_parsers[ENT_CLIENT_SCORES_INFO] = Ent_ScoresInfo;
-	ent_parsers[ENT_CLIENT_SCORES] = Ent_ReadPlayerScore;
-	ent_parsers[ENT_CLIENT_TEAMSCORES] = Ent_ReadTeamScore;
+	ent_parsers[ENT_CLIENT_SCORES_INFO] = score_info_read;
+	ent_parsers[ENT_CLIENT_SCORES] = score_player_read;
+	ent_parsers[ENT_CLIENT_TEAMSCORES] = score_team_read;
 	ent_parsers[ENT_CLIENT_POINTPARTICLES] = Ent_PointParticles;
 	ent_parsers[ENT_CLIENT_RAINSNOW] = Ent_RainOrSnow;
 	ent_parsers[ENT_CLIENT_LASER] = Ent_Laser;
@@ -616,122 +613,6 @@ void Ent_ReadEntCS(float bIsNewEntity)
 
 void Ent_Remove();
 
-void Ent_RemovePlayerScore()
-{
-	float i;
-
-	if(self.owner)
-	{
-		team_set(self.owner, -1);
-		player_remove(self.owner);
-		self.owner.gotscores = 0;
-		for(i = 0; i < MAX_SCORE; ++i)
-			self.owner.(scores[i]) = 0; // clear all scores
-	}
-}
-
-void Ent_ReadPlayerScore(float ignore)
-{
-	float i, n;
-	float isNew;
-	entity o;
-
-	// damnit -.- don't want to go change every single .sv_entnum in sbar.qc AGAIN
-	// (no I've never heard of M-x replace-string, sed, or anything like that)
-	isNew = !self.owner; // workaround for DP bug
-	n = ReadByte()-1;
-
-#ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(!isNew && n != self.sv_entnum)
-	{
-		//print("A CSQC entity changed its owner!\n");
-		isNew = TRUE;
-		Ent_Remove();
-		self.enttype = ENT_CLIENT_SCORES;
-	}
-#endif
-
-	self.sv_entnum = n;
-
-	if not(playerslots[self.sv_entnum])
-		playerslots[self.sv_entnum] = spawn();
-	o = self.owner = playerslots[self.sv_entnum];
-	o.sv_entnum = self.sv_entnum;
-	o.gotscores = 1;
-
-	if not(o.sort_prev)
-		player_register(o);
-
-	float sf, lf;
-#if MAX_SCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
-#else
-	sf = ReadShort();
-	lf = ReadShort();
-#endif
-	float p;
-	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(sf & p)
-		{
-			if(lf & p)
-				o.(scores[i]) = net_read_int24();
-			else
-				o.(scores[i]) = ReadChar();
-		}
-
-	if (sf & SP_TEAM_BIT) {
-		float t = o.scores[SP_TEAM_FIELD];
-		if (t < 0)
-			t = COLOR_SPECTATOR;
-
-		team_set(o, t);
-	}
-
-	if(o.sort_prev)
-		Sbar_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
-
-	self.entremove = Ent_RemovePlayerScore;
-}
-
-void Ent_ReadTeamScore(float ignore)
-{
-	float i, t;
-	entity o;
-
-	self.team = ReadByte();
-	o = self.owner = team_get(self.team, TRUE); // these team numbers can always be trusted
-
-	float sf, lf;
-#if MAX_TEAMSCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
-#else
-	sf = ReadShort();
-	lf = ReadShort();
-#endif
-	float p;
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(sf & p)
-		{
-			if(lf & p)
-				o.(teamscores[i]) = net_read_int24();
-			else
-				o.(teamscores[i]) = ReadChar();
-		}
-
-	Sbar_UpdateTeamPos(o);
-	if (SP_TEAM_BIT)
-		for(o = player_list.sort_next; o; o = o.sort_next)
-			if (o.gotscores) {
-				t = o.scores[SP_TEAM_FIELD];
-				if (t < 0)
-					t = COLOR_SPECTATOR;
-
-				team_set(o, t);
-			}
-}
-
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void(float bIsNewEntity) CSQC_Ent_Update =
@@ -800,53 +681,6 @@ void CSQC_Parse_StuffCmd(string strMessage)
 void CSQC_Parse_Print(string strMessage)
 {
 	print(str_color_translate_rgb(strMessage));
-}
-
-void Ent_ScoresInfo(float ignore)
-{
-	float i, j, t;
-	entity o;
-	self.classname = "ent_client_scores_info";
-	gametype = ReadByte();
-	string s;
-	for(i = 0; i < MAX_SCORE; ++i)
-	{
-		s = strzone(ReadString());
-		if (s == "country")
-			SP_COUNTRY_FIELD = i;
-		else if (s == "kills")
-			SP_KILLS_FIELD = i;
-		else if (s == "bestwep")
-			SP_BESTWEP_FIELD = i;
-		else if (s == "suicides")
-			SP_SUICIDES_FIELD = i;
-		else if (s == "deaths")
-			SP_DEATHS_FIELD = i;
-		else if (s == "team") {
-			SP_TEAM_BIT = 1;
-			SP_TEAM_FIELD = i;
-			for (j = 0; j < i; j++) SP_TEAM_BIT = SP_TEAM_BIT * 2;
-			for (o = player_list.sort_next; o; o = o.sort_next)
-				if (o.gotscores) {
-					t = o.scores[SP_TEAM_FIELD];
-					if (t < 0)
-						t = COLOR_SPECTATOR;
-
-					team_set(o, t);
-				}
-		} else if (s == "status")
-			SP_STATUS_FIELD = i;
-
-		scores_label[i] = s;
-		scores_flags[i] = ReadByte();
-	}
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
-	{
-		teamscores_label[i] = strzone(ReadString());
-		teamscores_flags[i] = ReadByte();
-	}
-	Sbar_InitScores();
-	gametype_init();
 }
 
 void Ent_Init(float ignore)
