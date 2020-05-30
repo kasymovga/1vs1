@@ -1,0 +1,4 @@
+#define VOTE_COMMANDS_COUNT 16
+string vote_commands[VOTE_COMMANDS_COUNT];
+float vote_commands_count;
+void(void) vote_commands_read;

@@ -1,0 +1,5 @@
+#define GAMEMENU_ITEMS_COUNT_MAX 16
+string gamemenu_items[GAMEMENU_ITEMS_COUNT_MAX];
+string gamemenu_commands[GAMEMENU_ITEMS_COUNT_MAX];
+float gamemenu_commands_count;
+void(void) gamemenu_read;

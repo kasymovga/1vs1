@@ -111,7 +111,13 @@ nadgetselect.qc
 trip.qc
 func_camera.qc
 announce.qc
+vote.qh
+gamemenu.qh
+race.qh
 main.qc
+vote.qc
+gamemenu.qc
+race.qc
 view.qc
 interpolate.qc
 teamradar.qc

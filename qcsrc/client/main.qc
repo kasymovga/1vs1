@@ -292,6 +292,7 @@ void CSQC_Init(void)
 	search_and_precache("gfx/hud/*.tga");
 	search_and_precache("gfx/hud/keys/*.tga");
 	search_and_precache("gfx/teamradar_*.tga");
+	search_and_precache("particles/*.tga");
 	search_and_precache("models/sprites/wpn-*_frame*");
 	for (i = 0; i < ENT_CLIENT_COUNT; i++) {
 		ent_parsers[i] = Ent_Error;
@@ -852,57 +853,6 @@ void CSQC_Parse_Print(string strMessage)
 	print(str_color_translate_rgb(strMessage));
 }
 
-#define GAMEMENU_ITEMS_COUNT_MAX 16
-string gamemenu_items[GAMEMENU_ITEMS_COUNT_MAX];
-string gamemenu_commands[GAMEMENU_ITEMS_COUNT_MAX];
-float gamemenu_commands_count;
-
-void GameMenu_Read() {
-	float i;
-	string s;
-	for (i = 0; i < GAMEMENU_ITEMS_COUNT_MAX; i++) {
-		if (gamemenu_items[i] != "") {
-			strunzone(gamemenu_items[i]);
-			strunzone(gamemenu_commands[i]);
-		}
-	}
-	for (i = 0; i < GAMEMENU_ITEMS_COUNT_MAX; i++) {
-		s = ReadString();
-		if (s == "")
-			break;
-
-		gamemenu_items[i] = strzone(s);
-		gamemenu_commands[i] = strzone(ReadString());
-	}
-	gamemenu_commands_count = i;
-}
-
-#define VOTE_COMMANDS_COUNT 16
-string vote_commands[VOTE_COMMANDS_COUNT];
-float vote_commands_count;
-
-void VoteCommands_Read() {
-	string s = ReadString();
-	string head, tail;
-	float i;
-	for (i = 0; i < vote_commands_count; i++) {
-		strunzone(vote_commands[i]);
-	}
-	vote_commands_count = 0;
-	for (head = str_car(s), tail = str_cdr(s); ; head = str_car(tail), tail = str_cdr(tail)) {
-		if (head == "") {
-			if (tail == "")
-				break;
-
-			continue;
-		}
-		vote_commands[vote_commands_count] = strzone(head);
-		vote_commands_count++;
-		if (vote_commands_count >= VOTE_COMMANDS_COUNT)
-			return;
-	}
-}
-
 void Gamemode_Init();
 void Ent_ScoresInfo(float ignore)
 {
@@ -976,10 +926,10 @@ void Ent_Init(float ignore)
 		fog_settings = str_zone_ifneeded(ReadString());
 	}
 	if (sf & 8)
-		VoteCommands_Read();
+		vote_commands_read();
 
 	if (sf & 16)
-		GameMenu_Read();
+		gamemenu_read();
 
 	if (sf & 32) {
 		team_mode = ReadByte();
@@ -1010,94 +960,6 @@ void Ent_Init(float ignore)
 
 	if(!postinit)
 		PostInit();
-}
-
-void Net_ReadRace()
-{
-	float b;
-
-	b = ReadByte();
-
-	switch(b)
-	{
-		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
-			race_checkpoint = ReadByte();
-			race_time = net_read_int24();
-			race_previousbesttime = net_read_int24();
-			if(race_previousbestname)
-				strunzone(race_previousbestname);
-			race_previousbestname = strzone(str_color_translate_rgb(ReadString()));
-
-			race_checkpointtime = max(time, 0.001);
-
-			if(race_checkpoint == 0 || race_checkpoint == 254)
-			{
-				race_penaltyaccumulator = 0;
-				race_laptime = max(time, 0.001); // valid
-			}
-
-			break;
-
-		case RACE_NET_CHECKPOINT_CLEAR:
-			race_laptime = 0;
-			race_checkpointtime = 0;
-			break;
-
-		case RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING:
-			race_laptime = ReadCoord();
-			race_checkpointtime = -99999;
-			// fall through
-		case RACE_NET_CHECKPOINT_NEXT_QUALIFYING:
-			race_nextcheckpoint = ReadByte();
-
-			race_nextbesttime = net_read_int24();
-			if(race_nextbestname)
-				strunzone(race_nextbestname);
-			race_nextbestname = strzone(str_color_translate_rgb(ReadString()));
-			break;
-
-		case RACE_NET_CHECKPOINT_HIT_RACE:
-			race_mycheckpoint = ReadByte();
-			race_mycheckpointtime = time;
-			race_mycheckpointdelta = net_read_int24();
-			race_mycheckpointlapsdelta = ReadByte();
-			if(race_mycheckpointlapsdelta >= 128)
-				race_mycheckpointlapsdelta -= 256;
-			if(race_mycheckpointenemy)
-				strunzone(race_mycheckpointenemy);
-			race_mycheckpointenemy = strzone(str_color_translate_rgb(ReadString()));
-			break;
-
-		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
-			race_othercheckpoint = ReadByte();
-			race_othercheckpointtime = time;
-			race_othercheckpointdelta = net_read_int24();
-			race_othercheckpointlapsdelta = ReadByte();
-			if(race_othercheckpointlapsdelta >= 128)
-				race_othercheckpointlapsdelta -= 256;
-			if(race_othercheckpointenemy)
-				strunzone(race_othercheckpointenemy);
-			race_othercheckpointenemy = strzone(str_color_translate_rgb(ReadString()));
-			break;
-
-		case RACE_NET_PENALTY_RACE:
-			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
-			//race_penaltyaccumulator += race_penaltytime;
-			if(race_penaltyreason)
-				strunzone(race_penaltyreason);
-			race_penaltyreason = strzone(ReadString());
-			break;
-
-		case RACE_NET_PENALTY_QUALIFYING:
-			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
-			race_penaltyaccumulator += race_penaltytime;
-			if(race_penaltyreason)
-				strunzone(race_penaltyreason);
-			race_penaltyreason = strzone(ReadString());
-			break;
-	}
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1149,7 +1011,7 @@ float CSQC_Parse_TempEntity()
 			mapvote_picture_read();
 			break;
 		case TE_CSQC_RACE:
-			Net_ReadRace();
+			race_read();
 			break;
 		case TE_CSQC_TEAMSELECT:
 			if not(isdemo_flag)
