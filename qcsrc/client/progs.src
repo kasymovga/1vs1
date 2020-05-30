@@ -1,7 +1,8 @@
 csprogs.dat
 pre.qh
 ../common/qcc.qh
-defs.qc
+sys.qh
+defs.qh
 csqc_constants.qc
 ../common/constants.qh
 ../client-menu/key.h
@@ -93,6 +94,7 @@ centerprint.qc
 ../common/backtrace.qc
 gametype.qh
 ready.qh
+race.qh
 sbar.qc
 mapvote.qc
 
@@ -119,7 +121,6 @@ func_camera.qc
 announce.qc
 vote.qh
 gamemenu.qh
-race.qh
 entcs.qh
 main.qc
 cmd.qc

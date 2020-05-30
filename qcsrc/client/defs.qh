@@ -1,0 +1,54 @@
+// Additional OPTIONAL Fields and Globals
+noref float		intermission;
+float		sb_showscores;
+float		sb_hidescores;
+float		sb_showaccuracy;
+.string		message;
+.float renderflags;
+// float		coop;
+// float		deathmatch;
+
+// float		dmg_take;
+// float		dmg_save;
+// vector		dmg_origin;
+
+// Darkplaces Render Modifications
+#if 0
+.float alpha;
+.float renderflags;
+.vector colormod;
+.float scale;
+#endif
+
+// Basic variables
+.float enttype; // entity type sent from server
+.float sv_entnum; // entity number sent from server
+.float team;
+.float team_size;
+
+float binddb;
+
+// Spectating
+float spectatee_status;
+float observer_status;
+
+// short mapname
+string shortmapname;
+
+// database for misc stuff
+float tempdb;
+
+float servertime, serverprevtime, serverdeltatime;
+
+float ticrate;
+
+.float waterlevel; // direction jitter
+
+float camera_correction_needed;
+.float health;
+.float armorvalue;
+string map_description;
+string motd;
+float hook_use_swapped;
+float trace_dphitcontents;
+float trace_dpstartcontents;

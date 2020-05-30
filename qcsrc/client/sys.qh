@@ -1,16 +1,8 @@
 #pragma flag off fastarrays // make dp behave with new fteqcc versions. remove when dp bug with fteqcc fastarrays is fixed
-
-
 //NOTE: THIS IS AN INTERFACE FILE. DO NOT EDIT.
 //MODIFYING THIS FILE CAN RESULT IN CRC ERRORS.
 //YOU HAVE BEEN WARNED.
-
 //feel free to look though. :)
-
-
-
-
-
 /*
 ==============================================================================
 
@@ -95,7 +87,6 @@ void		end_sys_globals;		// flag for structure dumping
 
 ==============================================================================
 */
-
 //
 // system fields (*** = do not set in prog code, maintained by C code)
 //
@@ -146,85 +137,3 @@ void		end_sys_globals;		// flag for structure dumping
 //================================================
 void		end_sys_fields;			// flag for structure dumping
 //================================================
-
-// Additional OPTIONAL Fields and Globals
-noref float		intermission;
-float		sb_showscores;
-float		sb_hidescores;
-float		sb_showaccuracy;
-.string		message;
-.float renderflags;
-// float		coop;
-// float		deathmatch;
-
-// float		dmg_take;
-// float		dmg_save;
-// vector		dmg_origin;
-
-// Darkplaces Render Modifications
-#if 0
-.float alpha;
-.float renderflags;
-.vector colormod;
-.float scale;
-#endif
-
-// Basic variables
-.float enttype; // entity type sent from server
-.float sv_entnum; // entity number sent from server
-.float team;
-.float team_size;
-
-float binddb;
-
-// QUALIFYING
-float race_checkpoint;
-float race_time;
-float race_laptime;
-float race_checkpointtime;
-float race_previousbesttime;
-string race_previousbestname;
-float race_nextcheckpoint;
-float race_nextbesttime;
-string race_nextbestname;
-float race_penaltyaccumulator; // qualifying: total penalty time in tenths
-float race_penaltyeventtime; // time when the player got the penalty
-float race_penaltytime; // duration of penalty time, in tenths
-string race_penaltyreason; // reason for penalty
-
-// RACE
-float race_mycheckpoint;
-float race_mycheckpointtime;
-float race_mycheckpointdelta;
-float race_mycheckpointlapsdelta;
-string race_mycheckpointenemy;
-float race_othercheckpoint;
-float race_othercheckpointtime;
-float race_othercheckpointdelta;
-float race_othercheckpointlapsdelta;
-string race_othercheckpointenemy;
-
-// Spectating
-float spectatee_status;
-float observer_status;
-
-// short mapname
-string shortmapname;
-
-// database for misc stuff
-float tempdb;
-
-float servertime, serverprevtime, serverdeltatime;
-
-float ticrate;
-
-.float waterlevel; // direction jitter
-
-float camera_correction_needed;
-.float health;
-.float armorvalue;
-string map_description;
-string motd;
-float hook_use_swapped;
-float trace_dphitcontents;
-float trace_dpstartcontents;
