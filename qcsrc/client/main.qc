@@ -113,7 +113,7 @@ void search_and_precache(string s) {
 	search_end(glob);
 }
 
-void Ent_Init(float ignore);
+void(float ignore) main_init_read;
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
@@ -305,7 +305,7 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;
 	ent_parsers[ENT_CLIENT_DAMAGEINFO] = Ent_DamageInfo;
 	ent_parsers[ENT_CLIENT_CASING] = Ent_Casing;
-	ent_parsers[ENT_CLIENT_INIT] = Ent_Init;
+	ent_parsers[ENT_CLIENT_INIT] = main_init_read;
 	ent_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
 	ent_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;
 	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
@@ -638,17 +638,14 @@ void CSQC_Parse_Print(string strMessage)
 	print(str_color_translate_rgb(strMessage));
 }
 
-void Ent_Init(float ignore)
-{
+void(float ignore) main_init_read {
 	float i;
 	self.classname = "ent_client_init";
 	float sf = ReadByte();
-
 	if (sf & 1) {
 		for(i = 0; i < 24; ++i)
 			weaponimpulse[i] = ReadByte() - 1;
 	}
-
 	if (sf & 2) {
 		i = ReadByte();
 		g_campaign = i & 1;
@@ -657,7 +654,6 @@ void Ent_Init(float ignore)
 		hook_use_swapped = i & 8;
 		button_attack2_allowed = !(i & 16);
 	}
-
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);
 		fog_settings = str_zone_ifneeded(ReadString());
@@ -683,19 +679,16 @@ void Ent_Init(float ignore)
 		cvar_set("_teams_available", ftos(ReadByte()));
 		Sbar_InitScores();
 	}
-
 	if (sf & 64) {
 		projectile_read();
 	}
-
 	if (sf & 128) {
 		str_unzone_ifneeded(map_description);
 		map_description = str_zone_ifneeded(ReadString());
 		str_unzone_ifneeded(motd);
 		motd = str_zone_ifneeded(ReadString());
 	}
-
-	if(!postinit)
+	if (!postinit)
 		PostInit();
 }
 
