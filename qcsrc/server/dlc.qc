@@ -310,6 +310,10 @@ void(void) dlc_extra_pk3_list_build {
 		}
 	}
 	dlc_extra_pk3_list = strzone(dlc_extra_pk3_list);
+	if (strstrofs(dlc_extra_pk3_list, ";", 0) >= 0 ||
+			strstrofs(dlc_extra_pk3_list, "\"", 0) >= 0 ||
+			strstrofs(dlc_extra_pk3_list, "\\", 0) >= 0)
+		dlc_extra_pk3_list = ""; //prevent dangerous symbols in localcm
 }
 
 void dlc_init() {
