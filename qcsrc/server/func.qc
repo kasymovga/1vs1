@@ -1630,7 +1630,7 @@ void(void) func_doors_link {
 		}
 	} while (1);
 	if (starte.targetname == "" || starte.nottargeted)
-	if (starte.health > 0 || (!starte.items && cvar("sv_door_shootable"))) {
+	if (starte.health > 0 || (!starte.items && cvar("g_door_shootable"))) {
 		for (t = starte; ;) {
 			t.takedamage = DAMAGE_YES;
 			t.event_damage = func_door_damage;
