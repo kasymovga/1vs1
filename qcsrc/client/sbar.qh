@@ -1,3 +1,5 @@
+void Sbar_SetFields(float);
+void Sbar_Help(float);
 vector Sbar_GetFontsize(vector v);
 void Sbar_GameType_Init();
 float scoreboard_bottom;

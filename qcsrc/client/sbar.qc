@@ -265,7 +265,6 @@ void Sbar_DrawXNum_Colored (vector pos, float x, float lettersize, float alpha)
 	Sbar_DrawXNum(pos, x, 3, 0, lettersize, _color, 0, 0, alpha, DRAWFLAG_NORMAL);
 }
 
-void Cmd_Sbar_SetFields(float argc);
 void Sbar_InitScores()
 {
 	float i, f;
@@ -293,7 +292,7 @@ void Sbar_InitScores()
 	if(ts_secondary == -1)
 		ts_secondary = ts_primary;
 
-	Cmd_Sbar_SetFields(0);
+	Sbar_SetFields(0);
 }
 
 float Sbar_ComparePlayerScores(entity left, entity right)
@@ -397,7 +396,7 @@ void Sbar_UpdateTeamPos(entity Team)
 	}
 }
 
-void Cmd_Sbar_Help(float argc)
+void Sbar_Help(float argc)
 {
 	print("You can modify the scoreboard using the ^2sbar_columns_set command.\n");
 	print("^3|---------------------------------------------------------------|\n");
@@ -460,7 +459,7 @@ string Sbar_DefaultColumnLayout()
 		"+ft,ctft,khft/revs -race,nexball/score +lms/lives");
 }
 
-void Cmd_Sbar_SetFields(float argc)
+void Sbar_SetFields(float argc)
 {
 	float i, j, slash;
 	string str, pattern;
