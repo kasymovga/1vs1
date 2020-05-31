@@ -3,11 +3,11 @@ pre.qh
 ../common/qcc.qh
 sys.qh
 defs.qh
-csqc_constants.qc
+constants.qh
 ../common/constants.qh
 ../client-menu/key.h
 ../client-server/constants.qh
-csqc_builtins.qc
+builtins.qh
 cvar.qh
 ../client-server/world.qh
 ../client-server/time.qh
