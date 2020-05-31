@@ -417,7 +417,7 @@ void rune_defense_attack_lightning(vector start, vector end, vector to) {
 entity rune_defense_attack_chain;
 
 void(void) rune_defense_attack_think {
-	traceline(self.owner.origin, self.enemy.origin, MOVE_NOMONSTERS, world);
+	trace_line(self.owner.origin, self.enemy.origin, MOVE_NOMONSTERS, world);
 	vector v;
 	entity e;
 	if (trace_fraction < 1) {

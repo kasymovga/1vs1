@@ -15,7 +15,7 @@ void spearguy_hunt() {
 	} else {
 		movelib_beak_simple(100 * frametime);
 		anim_set(self, '7 1 1', TRUE, TRUE, FALSE);
-		traceline(self.origin, v, MOVE_WORLDONLY, self);
+		trace_line(self.origin, v, MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			makevectors(self.angles);
 			te_lightning1(world, self.origin + normalize(v_forward) * 20 + v_right * 10, self.enemy.origin);

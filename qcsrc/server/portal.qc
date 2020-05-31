@@ -57,14 +57,14 @@ float(entity teleporter, entity player) portal_teleport_player {
 
 	safe = teleporter.enemy.portal_safe_origin; // a valid player origin
 	step = to + ((safe - to) * v_forward) * v_forward;
-	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
+	trace_box(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
 	if (trace_startsolid) {
 		print("'safe' teleport location is not safe!\n");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
 	safe = trace_endpos + normalize(safe - trace_endpos) * 0;
-	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
+	trace_box(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
 	if (trace_startsolid) {
 		print("trace_endpos in solid, this can't be!\n");
 		// FAIL TODO why does this happen? (reported by MrBougo)
@@ -366,7 +366,7 @@ void(entity e, vector g) portal_think_try_teleport_player {
 
 	// if e would hit the portal in a frame...
 	// already teleport him
-	tracebox(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
+	trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
 	if (trace_ent == self)
 		portal_teleport_player(self, e);
 }
@@ -518,18 +518,18 @@ void(entity own, float id) portal_clear_with_id {
 }
 
 float(entity forent, vector v0, vector dvx, vector dvy, vector dvz) portal_check_wire_frame_box {
-	traceline(v0, v0 + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0, v0 + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0, v0 + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0, v0 + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvx, v0 + dvx + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvx, v0 + dvx + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvy, v0 + dvy + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvy, v0 + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvz, v0 + dvz + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvz, v0 + dvz + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvx + dvy, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvx + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	trace_line(v0 + dvy + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
 	return 1;
 }
 

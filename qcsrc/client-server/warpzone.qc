@@ -32,7 +32,7 @@ vector WarpZone_camera_transform(vector org, vector ang)
 	vr = WarpZone_TransformVelocity(self, vr);
 	vu = WarpZone_TransformVelocity(self, vu);
 	if(autocvar_cl_warpzone_usetrace)
-		traceline(self.warpzone_targetorigin, org, MOVE_NOMONSTERS, world);
+		trace_line(self.warpzone_targetorigin, org, MOVE_NOMONSTERS, world);
 	else
 		trace_endpos = self.warpzone_targetorigin;
 	v_forward = vf;
@@ -66,7 +66,7 @@ float WarpZone_BoxTouchesBrush_Recurse()
 	entity se;
 	float f;
 
-	tracebox('0 0 0', WarpZone_BoxTouchesBrush_mins, WarpZone_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZone_BoxTouchesBrush_ignore);
+	trace_box('0 0 0', WarpZone_BoxTouchesBrush_mins, WarpZone_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZone_BoxTouchesBrush_ignore);
 #ifdef CSQC
 	if (trace_networkentity)
 		// we cannot continue, as a player blocks us...
@@ -180,7 +180,7 @@ void WarpZone_TraceBox_ThroughZone_real(vector org, vector mi, vector ma, vector
 	for(i = 10; i; i--)
 	{
 		WarpZone_trace_dir = normalize(end - org);
-        tracebox(org, mi, ma, end, nomonsters, forent);
+        trace_box(org, mi, ma, end, nomonsters, forent);
 		if(cb)
 			cb(org, trace_endpos, end);
 		if(sol < 0)
@@ -358,7 +358,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 		p = WarpZone_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
 		{
-			traceline(org, p, MOVE_NOMONSTERS, e);
+			trace_line(org, p, MOVE_NOMONSTERS, e);
 			if(trace_fraction < 1)
 				continue;
 		}
@@ -391,7 +391,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	for(e = wz; e; e = e.WarpZone_findradius_next)
 	{
 		org0_new = WarpZone_TransformOrigin(e, org);
-		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
+		trace_line(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
 		org_new = trace_endpos;
 
 		transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
@@ -659,13 +659,13 @@ vector WarpZone_TransformVelocity_stub(entity wz, vector v) {
 }
 
 void WarpZone_TraceBox_ThroughZone_stub(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) {
-	tracebox(org, mi, ma, end, nomonsters, forent);
+	trace_box(org, mi, ma, end, nomonsters, forent);
 	if(cb)
 		cb(org, trace_endpos, trace_endpos);
 }
 
 void WarpZone_TraceLine_ThroughZone_stub(vector org, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb) {
-	traceline(org, end, nomonsters, forent);
+	trace_line(org, end, nomonsters, forent);
 	if(cb)
 		cb(org, trace_endpos, trace_endpos);
 }
@@ -702,7 +702,7 @@ void WarpZone_RefSys_BeginAddingIncrementally_stub(entity me, entity ref) {}
 
 vector WarpZone_FindNearestOrigin_stub(vector from, vector to, float trace_check) {
     if(trace_check > 1) {
-        traceline(from, to, MOVE_NOMONSTERS, world);
+        trace_line(from, to, MOVE_NOMONSTERS, world);
         if(vlen(trace_endpos - to) < 1) {
             WarpZone_FindNearestOrigin_length = vlen(to - from);
         } else {
@@ -725,8 +725,8 @@ void WarpZone_Init()
 	WarpZone_RefSys_TransformVelocity = WarpZone_RefSys_TransformVelocity_stub;
 	WarpZone_FindRadius = WarpZone_FindRadius_stub;
 	WarpZone_DrawEffectTriangle = WarpZone_DrawEffectTriangle_stub;
-	WarpZone_TraceBox = tracebox;
-	WarpZone_TraceLine = traceline;
+	WarpZone_TraceBox = trace_box;
+	WarpZone_TraceLine = trace_line;
 	WarpZone_TraceBox_ThroughZone = WarpZone_TraceBox_ThroughZone_stub;
 	WarpZone_TraceLine_ThroughZone = WarpZone_TraceLine_ThroughZone_stub;
 	WarpZone_UnTransformOrigin = WarpZone_UnTransformOrigin_stub;

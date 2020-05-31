@@ -5,7 +5,7 @@ float(void) trigger_exact_hit_recurse {
     entity se;
     float f;
 
-    tracebox('0 0 0', trigger_exact_hit_mins, trigger_exact_hit_maxs, '0 0 0', MOVE_NORMAL, other);
+    trace_box('0 0 0', trigger_exact_hit_mins, trigger_exact_hit_maxs, '0 0 0', MOVE_NORMAL, other);
     if not(trace_ent)
         return 0;
     if (trace_ent == self)

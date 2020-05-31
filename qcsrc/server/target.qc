@@ -188,7 +188,7 @@ entity (vector point, .string field, string value, vector axismod) target_locati
     // now use the first one from our list that we can see
     for (i = 0; i < num_nearest; ++i)
     {
-        traceline(point, nearest_entity[i].origin, TRUE, world);
+        trace_line(point, nearest_entity[i].origin, TRUE, world);
         if (trace_fraction == 1)
             return nearest_entity[i];
     }

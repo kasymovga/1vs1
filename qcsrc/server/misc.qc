@@ -236,7 +236,7 @@ void(void) misc_laser_think {
 
 	if(self.enemy.target != "") // DETECTOR laser
 	{
-		traceline(self.origin, o, MOVE_NORMAL, self);
+		trace_line(self.origin, o, MOVE_NORMAL, self);
 		if(trace_ent.iscreature)
 		{
 			self.pusher = trace_ent;

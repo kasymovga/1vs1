@@ -80,7 +80,7 @@ void weapon_porto_touch (void)
 	norm = trace_plane_normal;
 	if(trace_ent.iscreature)
 	{
-		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_z, MOVE_WORLDONLY, self);
+		trace_line(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_z, MOVE_WORLDONLY, self);
 		if(trace_fraction >= 1)
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)

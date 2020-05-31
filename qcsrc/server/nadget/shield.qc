@@ -207,7 +207,7 @@ float nadget_Shield_Damage(entity attacker, float _damage, float deathtype, vect
         vector start = self.origin + offs;
         vector end   = attacker.origin + offs;
 
-        traceline(start, end, FALSE, self);
+        trace_line(start, end, FALSE, self);
         end = trace_endpos;
 
         if(trace_ent.takedamage)

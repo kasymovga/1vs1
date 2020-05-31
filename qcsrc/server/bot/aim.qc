@@ -37,7 +37,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	targ.solid = SOLID_NOT;
 	shottime = ((vlen(targ.origin - org) / shotspeed) + shotdelay);
 	v = targ.velocity * shottime + targ.origin;
-	tracebox(targ.origin, targ.mins, targ.maxs, v, FALSE, targ);
+	trace_box(targ.origin, targ.mins, targ.maxs, v, FALSE, targ);
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
 	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
@@ -63,7 +63,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	{
 		setorigin(tracetossent, org); // reset
 		tracetossent.velocity = findtrajectory_velocity = normalize(dir) * shotspeed + shotspeedupward * '0 0 1';
-		tracetoss(tracetossent, ignore, 0.05, 20);
+		trace_toss(tracetossent, ignore, 0.05, 20);
 		if (trace_ent == tracetossfaketarget) // done
 		{
 			targ.solid = savesolid;
@@ -299,7 +299,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
 	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+self.bot_aggresskill, 10) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
 		self.bot_firetimer = time + bound(0.1, 0.5-(skill+self.bot_aggresskill)*0.05, 0.5);
-	//traceline(shotorg,shotorg+shotdir*1000,FALSE,world);
+	//trace_line(shotorg,shotorg+shotdir*1000,FALSE,world);
 
 	return self.bot_canfire && (time < self.bot_firetimer);
 };
@@ -345,12 +345,12 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	else
 	{
 		f = bot_aimdir(v - shotorg, r);
-		traceline(shotorg, shotorg + shotdir * 10000, FALSE, self);
+		trace_line(shotorg, shotorg + shotdir * 10000, FALSE, self);
 		if (trace_ent.takedamage)
 		if (trace_fraction < 1)
 		if (!bot_shouldattack(trace_ent))
 			return FALSE;
-		traceline(shotorg, self.bot_aimtargorigin, FALSE, self);
+		trace_line(shotorg, self.bot_aimtargorigin, FALSE, self);
 		if (trace_fraction < 1)
 		if (trace_ent != self.enemy)
 		if (!bot_shouldattack(trace_ent))

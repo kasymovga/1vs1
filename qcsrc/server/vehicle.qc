@@ -2,9 +2,9 @@ void(entity plr, entity veh, float start_offs, float back, float up) vehicle_adj
 	makevectors(plr.v_angle);
 	vector v = veh.origin;
 	v_z += start_offs;
-	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * back, MOVE_WORLDONLY, world);
+	trace_box(v, '-8 -8 -8', '8 8 8', v - v_forward * back, MOVE_WORLDONLY, world);
 	v = trace_endpos;
-	tracebox(v, '-8 -8 -8', '8 8 8', v + v_up * up, MOVE_WORLDONLY, world);
+	trace_box(v, '-8 -8 -8', '8 8 8', v + v_up * up, MOVE_WORLDONLY, world);
 	setorigin(plr, trace_endpos - plr.view_ofs);
 }
 
@@ -255,19 +255,19 @@ void(float eject, float eject_range, float exit_up, float range) vehicle_stdproc
 	else
 		exit_origin = self.origin + v_forward * range + '0 0 1' * exit_up;
 
-	tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+	trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 	if not(eject) {
 		if (trace_fraction < 1) {
 			exit_origin = self.origin - v_right * range + '0 0 1' * exit_up;
-			tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+			trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1) {
 			exit_origin = self.origin + v_right * range + '0 0 1' * exit_up;
-			tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+			trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1) {
 			exit_origin = self.origin - v_forward * range + '0 0 1' * exit_up;
-			tracebox(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
+			trace_box(self.origin + '0 0 1' * exit_up, PL_MIN, PL_MAX, exit_origin, MOVE_NOMONSTERS, self.owner);
 		}
 		if (trace_fraction < 1)
 			exit_origin = self.origin + '0 0 1' * exit_up;

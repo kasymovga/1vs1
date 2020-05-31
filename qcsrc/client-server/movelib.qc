@@ -27,19 +27,19 @@ void movelib_groundalign4point(float spring_length,float spring_up,float blendra
 	blendrate = 90 * blendrate * frametime;
 	
 	v1 = v + vy;
-	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	trace_line(v1, v1 - vz, MOVE_NORMAL, self);
 	vcross1 = (trace_startsolid ? v1 : trace_endpos);
 
 	v1 = v - vy;
-	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	trace_line(v1, v1 - vz, MOVE_NORMAL, self);
 	vcross1 -= (trace_startsolid ? v1 : trace_endpos);
 
 	v1 = v + vx;
-	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	trace_line(v1, v1 - vz, MOVE_NORMAL, self);
 	vcross2 = (trace_startsolid ? v1 : trace_endpos);
 
 	v1 = v - vx;
-	traceline(v1, v1 - vz, MOVE_NORMAL, self);
+	trace_line(v1, v1 - vz, MOVE_NORMAL, self);
 	vcross2 -= (trace_startsolid ? v1 : trace_endpos);
 
 	mn = normalize(math_cross(vcross2, vcross1));

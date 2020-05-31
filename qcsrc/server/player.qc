@@ -1962,7 +1962,7 @@ void(void) player_impulse {
 					for(e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
 					{
 						org = e.origin;
-						tracebox(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
+						trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
 						setorigin(e, trace_endpos);
 						if(navigation_findnearestwaypoint(e, FALSE))
 						{

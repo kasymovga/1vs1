@@ -65,7 +65,7 @@ void nadget_Plasma_Shard_Think(void) {
 		if not(e.takedamage)
 			continue;
 
-		traceline(o, e.origin, MOVE_NOMONSTERS, self);
+		trace_line(o, e.origin, MOVE_NOMONSTERS, self);
 		if (trace_fraction < 1)
 		if (trace_ent != e)
 			continue;

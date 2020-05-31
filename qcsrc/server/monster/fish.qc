@@ -23,7 +23,7 @@ void fish_hunt() {
 		dofire = TRUE;
 	}
 	if (dofire) {
-		traceline(self.origin, v, MOVE_NORMAL, self);
+		trace_line(self.origin, v, MOVE_NORMAL, self);
 		if (trace_ent) {
 			damage(trace_ent, self, self, self.dmg_edge * frametime, WEP_MELEE, trace_endpos, v_forward);
 		}

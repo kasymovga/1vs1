@@ -1,9 +1,9 @@
 #define SKIPNONSOLID_ESCAPE_STEP 0.1
-void(vector start, vector end, float t, entity forent) skipnonsolid_traceline {
+void(vector start, vector end, float t, entity forent) skipnonsolid_trace_line {
     float prev_trace_fract = 0;
     float tries;
     for (tries = 10; tries > 0; tries--) {
-        traceline_real(start, end, t, forent);
+        builtin_traceline(start, end, t, forent);
         if(trace_fraction == 1)
             break;
         trace_fraction = prev_trace_fract + (trace_fraction * (1 - prev_trace_fract));
@@ -18,17 +18,17 @@ void(vector start, vector end, float t, entity forent) skipnonsolid_traceline {
     if (tries == 0) print("Can't escape from nonsolid!\n");
 }
 
-void(vector start, vector mi, vector ma, vector end, float nomonst, entity forent) skipnonsolid_tracebox {
+void(vector start, vector mi, vector ma, vector end, float nomonst, entity forent) skipnonsolid_trace_box {
     float prev_trace_fract = 0;
     float tries;
 	if (mi_x != ma_x)
 	if (mi_y != ma_y)
 	if (mi_z != ma_z) {
-        tracebox_real(start, mi, ma, end, nomonst, forent);
+        builtin_tracebox(start, mi, ma, end, nomonst, forent);
 		return;
 	}
     for (tries = 10; tries > 0; tries--) {
-        tracebox_real(start, mi, ma, end, nomonst, forent);
+        builtin_tracebox(start, mi, ma, end, nomonst, forent);
         if(trace_fraction == 1)
             break;
         trace_fraction = prev_trace_fract + (trace_fraction * (1 - prev_trace_fract));
@@ -44,7 +44,7 @@ void(vector start, vector mi, vector ma, vector end, float nomonst, entity foren
 }
 
 void(entity ent, entity ignore, float toss_frametime, float toss_count) skipnonsolid_tracetoss {
-    //Almost full copy of darkplaces tracetoss but with skipnonsolid_tracebox instead tracebox.
+    //Almost full copy of darkplaces tracetoss but with skipnonsolid_trace_box instead trace_box.
     float i, tries;
     vector end;
     vector velocity_save = ent.velocity;
@@ -56,7 +56,7 @@ void(entity ent, entity ignore, float toss_frametime, float toss_count) skipnons
         ent.angles = ent.angles + (ent.avelocity *  toss_frametime);
         end = ent.origin + (ent.velocity * toss_frametime);
         for (tries = 10; tries > 0; tries--) {
-            tracebox_real(ent.origin, ent.mins, ent.maxs, end, FALSE, ent);
+            builtin_tracebox(ent.origin, ent.mins, ent.maxs, end, FALSE, ent);
             if (trace_endpos == ent.origin)
                 ent.origin += normalize(ent.velocity) * SKIPNONSOLID_ESCAPE_STEP;
             else
@@ -77,7 +77,7 @@ var float() skipnonsolid_ProjectileTouchHandle_NextLink;
 float() skipnonsolid_ProjectileTouchHandle {
 	if(!other && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID) && !(trace_dphitcontents & self.dphitcontentsmask)) {
 		//Trying correct origin
-		skipnonsolid_tracebox(self.origin, self.mins, self.maxs, self.origin + (self.velocity * (1 - trace_fraction) * frametime), FALSE, self);
+		skipnonsolid_trace_box(self.origin, self.mins, self.maxs, self.origin + (self.velocity * (1 - trace_fraction) * frametime), FALSE, self);
 		if (trace_fraction == 1) // The way is clear
 			setorigin(self, trace_endpos);
 		else // We can't move right to trace_endpos, because we can go through solid surface.
@@ -92,9 +92,9 @@ void() skipnonsolid_init {
 	if not(cvar("sv_gameplayfix_skipnonsolid"))
 		return;
 
-	traceline = skipnonsolid_traceline;
-	tracebox = skipnonsolid_tracebox;
-	tracetoss = skipnonsolid_tracetoss;
+	trace_line = skipnonsolid_trace_line;
+	trace_box = skipnonsolid_trace_box;
+	trace_toss = skipnonsolid_tracetoss;
 	skipnonsolid_ProjectileTouchHandle_NextLink = GameHookChain_ProjectileTouchHandle;
 	GameHookChain_ProjectileTouchHandle = skipnonsolid_ProjectileTouchHandle;
 }

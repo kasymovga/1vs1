@@ -12,7 +12,7 @@ void(float mode) world_get_min_max {
 	// not specified
 	if(mode) {
 		// be clever
-		tracebox('1 0 0' * mi_x,
+		trace_box('1 0 0' * mi_x,
 				 '0 1 0' * mi_y + '0 0 1' * mi_z,
 				 '0 1 0' * ma_y + '0 0 1' * ma_z,
 				 '1 0 0' * ma_x,
@@ -22,7 +22,7 @@ void(float mode) world_get_min_max {
 		if(!trace_startsolid)
 			world_min_x = trace_endpos_x;
 
-		tracebox('0 1 0' * mi_y,
+		trace_box('0 1 0' * mi_y,
 				 '1 0 0' * mi_x + '0 0 1' * mi_z,
 				 '1 0 0' * ma_x + '0 0 1' * ma_z,
 				 '0 1 0' * ma_y,
@@ -32,7 +32,7 @@ void(float mode) world_get_min_max {
 		if(!trace_startsolid)
 			world_min_y = trace_endpos_y;
 
-		tracebox('0 0 1' * mi_z,
+		trace_box('0 0 1' * mi_z,
 				 '1 0 0' * mi_x + '0 1 0' * mi_y,
 				 '1 0 0' * ma_x + '0 1 0' * ma_y,
 				 '0 0 1' * ma_z,
@@ -42,7 +42,7 @@ void(float mode) world_get_min_max {
 		if(!trace_startsolid)
 			world_min_z = trace_endpos_z;
 
-		tracebox('1 0 0' * ma_x,
+		trace_box('1 0 0' * ma_x,
 				 '0 1 0' * mi_y + '0 0 1' * mi_z,
 				 '0 1 0' * ma_y + '0 0 1' * ma_z,
 				 '1 0 0' * mi_x,
@@ -52,7 +52,7 @@ void(float mode) world_get_min_max {
 		if(!trace_startsolid)
 			world_max_x = trace_endpos_x;
 
-		tracebox('0 1 0' * ma_y,
+		trace_box('0 1 0' * ma_y,
 				 '1 0 0' * mi_x + '0 0 1' * mi_z,
 				 '1 0 0' * ma_x + '0 0 1' * ma_z,
 				 '0 1 0' * mi_y,
@@ -62,7 +62,7 @@ void(float mode) world_get_min_max {
 		if(!trace_startsolid)
 			world_max_y = trace_endpos_y;
 
-		tracebox('0 0 1' * ma_z,
+		trace_box('0 0 1' * ma_z,
 				 '1 0 0' * mi_x + '0 1 0' * mi_y,
 				 '1 0 0' * ma_x + '0 1 0' * ma_y,
 				 '0 0 1' * mi_z,

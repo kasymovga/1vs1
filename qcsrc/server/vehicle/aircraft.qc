@@ -90,7 +90,7 @@ void(void) vehicle_aircraft_pull {
 		sound(self, CHAN_TRIGGER, "ambient/machinerydrone01.wav", VOL_BASE, ATTN_NORM);
 	}
 	if not(self.aiment) {
-		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 100', MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 100', MOVE_NORMAL, self);
 		if (trace_ent)
 		if (trace_ent.solid == SOLID_SLIDEBOX || trace_ent.solid == SOLID_BBOX) {
 			float _volume = (trace_ent.maxs_x - trace_ent.mins_x) * (trace_ent.maxs_y - trace_ent.mins_y) *  (trace_ent.maxs_z - trace_ent.mins_z);

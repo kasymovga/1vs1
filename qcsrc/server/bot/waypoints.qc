@@ -197,7 +197,7 @@ void waypoint_think()
 			navigation_testtracewalk = 0;
 			if (!self.wpisbox)
 			{
-				tracebox(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, FALSE, self);
+				trace_box(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, FALSE, self);
 				if (!trace_startsolid)
 				{
 					sv = trace_endpos + '0 0 1';
@@ -205,13 +205,13 @@ void waypoint_think()
 			}
 			if (!e.wpisbox)
 			{
-				tracebox(ev - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, ev, FALSE, e);
+				trace_box(ev - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, ev, FALSE, e);
 				if (!trace_startsolid)
 				{
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			//traceline(self.origin, e.origin, FALSE, world);
+			//trace_line(self.origin, e.origin, FALSE, world);
 			//if (trace_fraction == 1)
 			if (!self.wpisbox && tracewalk(self, sv, PL_MIN, PL_MAX, ev, MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
@@ -687,10 +687,10 @@ float waypoint_loadall()
 
 vector waypoint_fixorigin(vector position)
 {
-	tracebox(position + '0 0 1' * (1 - PL_MIN_z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
+	trace_box(position + '0 0 1' * (1 - PL_MIN_z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
 	if(trace_fraction < 1)
 		position = trace_endpos;
-	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, world);
+	//trace_line(position, position + '0 0 -512', MOVE_NOMONSTERS, world);
 	//print("position is ", ftos(trace_endpos_z - position_z), " above solid\n");
 	return position;
 }

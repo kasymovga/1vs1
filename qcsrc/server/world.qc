@@ -86,7 +86,6 @@ void() world_precache {
 
 
 void(void) world_static_init {
-	tracetoss = trace_toss_wrapper;
 	skipnonsolid_init();
 	minstagib_init();
 	item_init();
@@ -167,6 +166,7 @@ void(void) world_init {
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 
+	trace_init();
 	gettaginfo_parent = 0;
 	gettaginfo_offset = '0 0 0';
 	gettaginfo_forward = '0 0 0';

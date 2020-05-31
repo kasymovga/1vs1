@@ -1,0 +1,2 @@
+#define trace_line traceline
+#define trace_box tracebox

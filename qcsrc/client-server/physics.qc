@@ -31,7 +31,7 @@ void(void) physics_impact {
 
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
-	tracebox(o, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	trace_box(o, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 	if (trace_startsolid)
 		return FALSE;
 
@@ -40,7 +40,7 @@ float(vector v) physics_unstuck_to {
 }
 
 void(void) physics_unstuck {
-	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	trace_box(self.origin, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 	if not(trace_startsolid)
 		return;
 
@@ -69,8 +69,8 @@ void(float ground) physics_update_status {
 
 	if(ground) {
 		physics_flags &~= FL_ONGROUND_OR_SLICK;
-		//tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		float f;
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (f = physics_velocity * trace_plane_normal) <= 0)
 		{
@@ -166,7 +166,7 @@ void(void) physics_move {
 	primalvelocity = physics_velocity;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
 		neworigin = self.origin + t * physics_velocity;
-		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
 		trace1_endpos = trace_endpos;
 		trace1_fraction = trace_fraction;
 		trace1_plane_normal = trace_plane_normal;
@@ -184,7 +184,7 @@ void(void) physics_move {
 				neworigin2 = neworigin;
 				neworigin2_z = currentorigin2_z;
 				//neworigin2_z += sv_stepheight;
-				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
 				trace2_endpos = trace_endpos;
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
@@ -194,7 +194,7 @@ void(void) physics_move {
 					currentorigin2 = trace2_endpos;
 					neworigin2 = trace2_endpos;
 					neworigin2_z = self.origin_z;
-					tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+					trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
 					trace3_endpos = trace_endpos;
 					trace3_fraction = trace_fraction;
 					trace3_plane_normal = trace_plane_normal;
@@ -496,22 +496,22 @@ vector(void) physics_player_touch_wall {
 	end = start + v_forward * 100;
 	vector _mins = self.mins;
 	_mins_z = _mins_z + sv_stepheight;
-	tracebox (start, _mins, self.maxs, end, TRUE, self);
+	trace_box (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_forward * 100;
-	tracebox (start, _mins, self.maxs, end, TRUE, self);
+	trace_box (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start + v_right * 100;
-	tracebox (start, _mins, self.maxs, end, TRUE, self);
+	trace_box (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_right * 100;
-	tracebox (start, _mins, self.maxs, end, TRUE, self);
+	trace_box (start, _mins, self.maxs, end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
@@ -588,12 +588,12 @@ void(void) physics_check_water_jump {
 	v_forward_z = 0;
 	normalize(v_forward);
 	end = start + v_forward*24;
-	traceline (start, end, TRUE, self);
+	trace_line (start, end, TRUE, self);
 	if (trace_fraction < 1) { // solid at waist
 		start_z = start_z + self.maxs_z - 8;
 		end = start + v_forward*24;
 		self.movedir = trace_plane_normal * -50;
-		traceline (start, end, TRUE, self);
+		trace_line (start, end, TRUE, self);
 		if (trace_fraction == 1) { // open at eye level
 			physics_flags |= FL_WATERJUMP;
 			physics_velocity_z = sv_jumpvelocity * 0.75;
@@ -646,7 +646,7 @@ void(void) physics_player {
 	{
 		if (physics_crouch)
 		{
-			tracebox(self.origin, self.stand_mins, self.stand_maxs, self.origin, FALSE, self);
+			trace_box(self.origin, self.stand_mins, self.stand_maxs, self.origin, FALSE, self);
 			if (!trace_startsolid)
 			{
 				physics_crouch = FALSE;

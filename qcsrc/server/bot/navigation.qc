@@ -30,19 +30,19 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	ignorehazards = FALSE;
 
 	// Analyze starting point
-	traceline(start, start, MOVE_NORMAL, e);
+	trace_line(start, start, MOVE_NORMAL, e);
 	if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 		ignorehazards = TRUE;
 	else
 	{
-		traceline( start, start + '0 0 -65536', MOVE_NORMAL, e);
+		trace_line( start, start + '0 0 -65536', MOVE_NORMAL, e);
 		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 		{
 			ignorehazards = TRUE;
 			swimming = TRUE;
 		}
 	}
-	tracebox(start, m1, m2, start, MOVE_NOMONSTERS, e);
+	trace_box(start, m1, m2, start, MOVE_NOMONSTERS, e);
 	if (trace_startsolid)
 	{
 		// Bad start
@@ -77,7 +77,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		if (stepdist > dist)
 			stepdist = dist;
 		dist = dist - stepdist;
-		traceline(org, org, MOVE_NORMAL, e);
+		trace_line(org, org, MOVE_NORMAL, e);
 		if (!ignorehazards)
 		{
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
@@ -93,7 +93,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
 		{
 			move = normalize(end - org);
-			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
+			trace_box(org, m1, m2, org + move * stepdist, movemode, e);
 
 			#ifdef DEBUG_TRACEWALK
 				debugnode(trace_endpos);
@@ -129,7 +129,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		else
 		{
 			move = dir * stepdist + org;
-			tracebox(org, m1, m2, move, movemode, e);
+			trace_box(org, m1, m2, move, movemode, e);
 
 			#ifdef DEBUG_TRACEWALK
 				debugnode(trace_endpos);
@@ -142,7 +142,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 					return TRUE;
 
 				// check if we can walk over this obstacle
-				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+				trace_box(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
 					if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
@@ -153,7 +153,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 					#endif
 
 					// check for doors
-					traceline( org, move, movemode, e);
+					trace_line( org, move, movemode, e);
 					if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 					{
 						local vector nextmove;
@@ -161,7 +161,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 						while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 						{
 							nextmove = move + (dir * stepdist);
-							traceline( move, nextmove, movemode, e);
+							trace_line( move, nextmove, movemode, e);
 							move = nextmove;
 						}
 					}
@@ -186,7 +186,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			// if this starts in solid we try again without the stepup, and
 			// if that also fails we assume it is a wall
 			// (this is the same logic as the Quake walkmove function used)
-			tracebox(move, m1, m2, move + '0 0 -65536', movemode, e);
+			trace_box(move, m1, m2, move + '0 0 -65536', movemode, e);
 
 			// moved successfully
 			if(swimming)
@@ -394,7 +394,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 			dist = vlen(v - org);
 			if (bestdist > dist)
 			{
-				traceline(v, org, TRUE, ent);
+				trace_line(v, org, TRUE, ent);
 				if (trace_fraction == 1)
 				{
 					if (walkfromwp)
@@ -669,15 +669,15 @@ void navigation_routerating(entity e, float f, float rangebias)
 		vector pointa, pointb;
 
 		// Point A
-		traceline(self.origin, self.origin + '0 0 65535', MOVE_NORMAL, self);
+		trace_line(self.origin, self.origin + '0 0 65535', MOVE_NORMAL, self);
 		pointa = trace_endpos - '0 0 1';
 
 		// Point B
-		traceline(e.origin, e.origin + '0 0 65535', MOVE_NORMAL, e);
+		trace_line(e.origin, e.origin + '0 0 65535', MOVE_NORMAL, e);
 		pointb = trace_endpos - '0 0 1';
 
 		// Can I see these two points from the sky?
-		traceline(pointa, pointb, MOVE_NORMAL, self);
+		trace_line(pointa, pointb, MOVE_NORMAL, self);
 
 		if(trace_fraction==1)
 		{
@@ -697,7 +697,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 				if(npb_z<=e.absmax_z)
 					break;
 
-				traceline(npa, npb, MOVE_NORMAL, self);
+				trace_line(npa, npb, MOVE_NORMAL, self);
 				if(trace_fraction==1)
 				{
 					pointa = npa;
@@ -800,7 +800,7 @@ float navigation_routetogoal(entity e, vector startposition)
 	vector v1;
 	vector v2;
 	if (e.movetype == MOVETYPE_WALK) {
-		tracebox(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', MOVE_NORMAL, e);
+		trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', MOVE_NORMAL, e);
 		v1 = trace_endpos + e.mins;
 		v2 = trace_endpos + e.maxs;
 	} else {
@@ -862,7 +862,7 @@ void navigation_poptouchedgoals()
 	{
 		if(vlen(self.origin - self.goalcurrent.origin)<150)
 		{
-			traceline(self.origin + self.view_ofs , self.goalcurrent.origin, TRUE, world);
+			trace_line(self.origin + self.view_ofs , self.goalcurrent.origin, TRUE, world);
 			if(trace_fraction==1)
 			{
 				// Detect personal waypoints
@@ -953,7 +953,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			d = head.bot_dodgerating - vlen(head.origin - v);
 			if (d > 0)
 			{
-				traceline(head.origin, v, TRUE, world);
+				trace_line(head.origin, v, TRUE, world);
 				if (trace_fraction == 1)
 					danger = danger + d;
 			}

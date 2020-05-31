@@ -8,6 +8,7 @@ constants.qh
 ../client-menu/key.h
 ../client-server/constants.qh
 builtins.qh
+trace.qh
 cvar.qh
 ../client-server/world.qh
 ../client-server/time.qh

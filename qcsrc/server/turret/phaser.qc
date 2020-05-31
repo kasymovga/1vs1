@@ -49,7 +49,7 @@ void turret_phaser_beam_fire(vector start,vector end,vector smin,vector smax,
     // note down which entities were hit so we can damage them later
     while (1)
     {
-        tracebox(start, smin, smax, end, FALSE, self);
+        trace_box(start, smin, smax, end, FALSE, self);
 
         // if it is world we can't hurt it so stop now
         if (trace_ent == world || trace_fraction == 1)

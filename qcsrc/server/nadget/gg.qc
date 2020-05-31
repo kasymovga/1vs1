@@ -13,7 +13,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
     if (vlen(self.origin - p.origin) < g_nadgets_gg_range) {
         vector o = self.origin + self.view_ofs;
         vector e = p.origin + p.view_ofs;
-        traceline(o, e, TRUE, self);
+        trace_line(o, e, TRUE, self);
 
         allow = (trace_endpos == e);
         if(!allow)

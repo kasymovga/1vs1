@@ -187,7 +187,7 @@ void nadget_GenericProjectile_Touch(void) {
 				o_z += cvar("sv_stepheight");
                 vector norm = trace_plane_normal;
 
-                tracebox(o, self.mins, self.maxs, o + self.velocity * frametime, MOVE_WORLDONLY, self);
+                trace_box(o, self.mins, self.maxs, o + self.velocity * frametime, MOVE_WORLDONLY, self);
 
                 if(trace_fraction < 1 && trace_dphitcontents & DPCONTENTS_SOLID) {
                     trace_plane_normal = norm;
@@ -280,7 +280,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     setsize(e, hitmins, hitmaxs);
 
     if(!targ || targ.solid == SOLID_BSP) {
-        tracebox(e.origin, e.mins, e.maxs, e.origin - normal * 64, MOVE_NOMONSTERS, e);
+        trace_box(e.origin, e.mins, e.maxs, e.origin - normal * 64, MOVE_NOMONSTERS, e);
         if(!trace_startsolid)
             setorigin(e, trace_endpos);
     }

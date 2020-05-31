@@ -20,7 +20,7 @@ void spider_hunt() {
 		if (self.attack_finished_single < time)
 		if (f < 400)
 		{
-			traceline(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
+			trace_line(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
 			if (trace_fraction == 1)
 				dofire = TRUE;
 		}

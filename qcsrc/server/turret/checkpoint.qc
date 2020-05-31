@@ -44,7 +44,7 @@ If the checkpoint chain in not looped, the unit will go "Roaming" when the last 
 */
 void turret_checkpoint_init()
 {
-    traceline(self.origin, self.origin - '0 0 1024', MOVE_WORLDONLY, self);
+    trace_line(self.origin, self.origin - '0 0 1024', MOVE_WORLDONLY, self);
     setorigin(self,trace_endpos + '0 0 8');
 
     if(self.target != "")

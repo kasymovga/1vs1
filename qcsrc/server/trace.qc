@@ -1,11 +1,11 @@
-void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_toss_wrapper {
+void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_toss_builtin_wrapper {
 	vector v0;
 	float g0;
 	v0 = ent.velocity;
 	g0 = ent.gravity;
 	ent.velocity = ent.velocity * toss_frametime * 20;
 	ent.gravity *= (toss_frametime * toss_frametime * 400);
-	tracetoss_dp(ent, ignore);
+	builtin_tracetoss(ent, ignore);
 	ent.velocity= v0;
 	ent.gravity = g0;
 	return;
@@ -53,4 +53,10 @@ float(vector start, vector end, vector thmi, vector thma) trace_hits_box {
 
 float(vector start, vector mi, vector ma, vector end, vector thmi, vector thma) trace_box_hits_box {
     return trace_hits_box(start, end, thmi - ma, thma - mi);
+}
+
+void(void) trace_init {
+	trace_toss = trace_toss_builtin_wrapper;
+	trace_line = builtin_traceline;
+	trace_box = builtin_tracebox;
 }

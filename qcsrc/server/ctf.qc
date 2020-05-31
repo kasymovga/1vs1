@@ -329,7 +329,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	e.pain_finished = time + g_ctf_flag_returntime;//30;
 
 	trace_startsolid = FALSE;
-	tracebox(e.origin, e.mins, e.maxs, e.origin, TRUE, e);
+	trace_box(e.origin, e.mins, e.maxs, e.origin, TRUE, e);
 }
 
 void() ctf_animate_flag {
@@ -353,7 +353,7 @@ void() ctf_flag_think {
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX)
 	{
 		// if we can grow back, grow back
-		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
+		trace_box(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid)
 			setsize(self, FLAG_MIN, FLAG_MAX);
 	}

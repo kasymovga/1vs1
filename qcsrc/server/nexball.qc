@@ -217,7 +217,7 @@ void(void) nexball_PlayerPreThink {
 }
 
 void(void) nexball_relocate {
-	tracebox(self.origin, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, self.origin, TRUE, self);
+	trace_box(self.origin, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, self.origin, TRUE, self);
 	if (trace_startsolid) {
 		vector o;
 		o = self.origin;
@@ -687,7 +687,7 @@ void(void) hockey_physic_controller_think {
 	self.nextthink = time;
 	if (self.ballcarried.cnt)
 		return;
-	tracebox(self.ballcarried.origin, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, self.ballcarried.origin + '0 0 -1', MOVE_WORLDONLY, world);
+	trace_box(self.ballcarried.origin, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, self.ballcarried.origin + '0 0 -1', MOVE_WORLDONLY, world);
 	if (trace_fraction == 1)
 	{
 		self.ballcarried.velocity_z -= sv_gravity * frametime;
@@ -763,7 +763,7 @@ void(float t) nexball_carrier_attack {
 		return;
 
 	weapon_setup_shot (self, 4, "nexball/shoot1.wav",0);
-	tracebox(weapon_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, weapon_shotorg, MOVE_WORLDONLY, world);
+	trace_box(weapon_shotorg, BALL_MINS * g_nexball_ball_scale, BALL_MAXS * g_nexball_ball_scale, weapon_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid) {
 		if(self.metertime)
 			self.metertime = 0; // Shot failed, hide the power meter

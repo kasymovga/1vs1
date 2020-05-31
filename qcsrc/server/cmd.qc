@@ -323,16 +323,16 @@ void(string command) cmd_game {
 			start = stov(vtos(start));
 			end = stov(vtos(end));
 
-			tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
+			trace_box(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
 			if(!trace_startsolid)
 			{
 				p = trace_endpos;
-				tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
+				trace_box(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
 				if(trace_startsolid)
 				{
 					rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
-					tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-					tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
+					trace_box(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
+					trace_box(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
 
 					// how much do we need to back off?
 					safe = 1;
@@ -340,7 +340,7 @@ void(string command) cmd_game {
 					for(;;)
 					{
 						pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-						tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
+						trace_box(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
 						if(trace_startsolid)
 						{
 							if((safe + unsafe) * 0.5 == unsafe)
@@ -358,7 +358,7 @@ void(string command) cmd_game {
 					print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
 					print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
 
-					tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+					trace_box(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
 					if(trace_startsolid)
 						print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(trace_endpos), "\n");
 					else

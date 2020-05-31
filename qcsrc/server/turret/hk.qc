@@ -167,7 +167,7 @@ void turret_hk_missile_think()
                   self.enemy.velocity *
                   min((vlen(self.enemy.origin - self.origin) / vlen(self.velocity)),0.5);
 
-        traceline(self.origin, pre_pos,TRUE,self.enemy);
+        trace_line(self.origin, pre_pos,TRUE,self.enemy);
         ve = normalize(pre_pos - self.origin);
         fe = trace_fraction;
 
@@ -185,7 +185,7 @@ void turret_hk_missile_think()
         lt_seek = myspeed * 2.95;
 
         // Trace forward
-        traceline(self.origin, self.origin + v_forward * lt_for,FALSE,self);
+        trace_line(self.origin, self.origin + v_forward * lt_for,FALSE,self);
         vf = trace_endpos;
         ff = trace_fraction;
 
@@ -206,22 +206,22 @@ void turret_hk_missile_think()
         if (ff < 0.5) pt_seek = 1;
 
         // Trace left
-        traceline(self.origin, self.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,FALSE,self);
+        trace_line(self.origin, self.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,FALSE,self);
         vl = trace_endpos;
         fl = trace_fraction;
 
         // Trace right
-        traceline(self.origin,  self.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+        trace_line(self.origin,  self.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
         vr = trace_endpos;
         fr = trace_fraction;
 
         // Trace up
-        traceline(self.origin,  self.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+        trace_line(self.origin,  self.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
         vu = trace_endpos;
         fu = trace_fraction;
 
         // Trace down
-        traceline(self.origin,  self.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+        trace_line(self.origin,  self.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
         vd = trace_endpos;
         fd = trace_fraction;
 

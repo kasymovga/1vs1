@@ -7,7 +7,7 @@ float spawn_relocate_claim_once;
 void() spawn_relocate {
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
-    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
+    trace_box(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
     if (trace_startsolid) {
         vector o;
         o = self.origin;

@@ -122,12 +122,12 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		// retry last move but behind the warpzone!
 		// we must first go back as far as we can, then forward again, to not cause double touch events!
 
-		tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
+		trace_box(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
 		{
 			entity own;
 			own = player.owner;
 			player.owner = world;
-			tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
+			trace_box(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
 			player.owner = own;
 		}
 		o1 = trace_endpos + player.view_ofs;
@@ -142,7 +142,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 	// put him out of solid
     if(player.movetype != MOVETYPE_NOCLIP) {
-        tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
+        trace_box(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
         if(trace_startsolid)
         {
             setorigin(player, o1 - player.view_ofs);
@@ -684,7 +684,7 @@ void WarpZone_TraceToss_ThroughZone_real(entity e, entity forent, float toss_fra
 	WarpZone_tracetoss_time = 0;
 	for(;;)
 	{
-		tracetoss(e, forent, toss_frametime, toss_count);
+		trace_toss(e, forent, toss_frametime, toss_count);
 		if(cb)
 			cb(e.origin, trace_endpos, trace_endpos);
 		e.origin = trace_endpos;
@@ -726,7 +726,7 @@ void WarpZone_TraceToss_real(entity e, entity forent, float toss_frametime, floa
 }
 
 void WarpZone_TraceToss_ThroughZone_stub(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb) {
-	tracetoss(e, forent, toss_frametime, toss_count);
+	trace_toss(e, forent, toss_frametime, toss_count);
 	if(cb)
 		cb(e.origin, trace_endpos, trace_endpos);
 
@@ -735,7 +735,7 @@ void WarpZone_TraceToss_ThroughZone_stub(entity e, entity forent, float toss_fra
 }
 
 void WarpZone_TraceToss_stub(entity e, entity forent, float toss_frametime, float toss_count) {
-	tracetoss(e, forent, toss_frametime, toss_count);
+	trace_toss(e, forent, toss_frametime, toss_count);
 	WarpZone_tracetoss_velocity = e.velocity;
 	WarpZone_tracetoss_velocity_z -= sv_gravity * (vlen(trace_endpos - self.origin) / vlen(self.velocity));
 }
@@ -770,7 +770,7 @@ void WarpZone_ShutdownHook() {
 void WarpZone_MoveOutOfSolid_Expand(entity e, vector by)
 {
 	float eps = 0.0625;
-	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
+	trace_box(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return;
 	if (trace_fraction < 1)
@@ -786,11 +786,11 @@ float WarpZone_MoveOutOfSolid(entity e)
 	vector o, m0, m1;
 
 	o = e.origin;
-	traceline(o, o, MOVE_WORLDONLY, e);
+	trace_line(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return FALSE;
 
-	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
+	trace_box(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
 	if (!trace_startsolid)
 		return TRUE;
 
@@ -812,7 +812,7 @@ float WarpZone_MoveOutOfSolid(entity e)
 	e.maxs_z = m1_z;
 	setorigin(e, e.origin);
 
-	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	trace_box(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 	{
 		setorigin(e, o);

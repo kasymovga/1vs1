@@ -452,7 +452,7 @@ void(void) spawnfunc_race_trigger_checkpoint {
 		self.touch = race_trigger_checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o_z - self.absmin_z), MOVE_NORMAL, self);
+	trace_box(o, PL_MIN, PL_MAX, o - '0 0 1' * (o_z - self.absmin_z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 	if (!self.message)

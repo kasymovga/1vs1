@@ -898,8 +898,7 @@ float(float i) argv_end_index = #516;
 //idea: id Software
 //darkplaces implementation: id Software
 //builtin definitions:
-void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) tracebox_real = #90;
-var void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) tracebox = #90;
+void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) builtin_tracebox = #90;
 //description:
 //similar to traceline but much more useful, traces a box of the size specified (technical note: in quake1 and halflife bsp maps the mins and maxs will be rounded up to one of the hull sizes, quake3 bsp does not have this problem, this is the case with normal moving entities as well).
 
@@ -907,8 +906,7 @@ var void(vector v1, vector min, vector max, vector v2, float nomonsters, entity 
 //idea: id Software
 //darkplaces implementation: id Software
 //builtin definitions:
-var void(entity ent, entity ignore, float toss_frametime, float toss_count) tracetoss;
-void(entity ent, entity ignore) tracetoss_dp = #64;
+void(entity ent, entity ignore) builtin_tracetoss = #64;
 //description:
 //simulates movement of the entity as if it is MOVETYPE_TOSS and starting with it's current state (location, velocity, etc), returns relevant trace_ variables (trace_fraction is always 0, all other values are supported - trace_ent, trace_endpos, trace_plane_normal), does not actually alter the entity.
 

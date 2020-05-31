@@ -6,11 +6,11 @@ void func_laserbeam_trace(vector o, vector aimpos) {
         boxsize *= 0.5;
 
         if(boxsize < 1) {
-            traceline(o, aimpos, MOVE_NORMAL, self);
+            trace_line(o, aimpos, MOVE_NORMAL, self);
             return;
         }
 
-        tracebox(o, '-1 -1 -1' * boxsize, '1 1 1' * boxsize, aimpos, MOVE_NORMAL, self);
+        trace_box(o, '-1 -1 -1' * boxsize, '1 1 1' * boxsize, aimpos, MOVE_NORMAL, self);
         o = trace_endpos;
     } while(trace_fraction < 1 && !trace_ent.takedamage);
 }

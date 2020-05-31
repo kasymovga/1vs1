@@ -240,7 +240,7 @@ void weapon_zapper_beam_think(void) {
     float fract;
     entity targ;
     vector end = weapon_shotorg + weapon_shotdir * self.zapper_range;
-    traceline(weapon_shotorg, end, FALSE, o);
+    trace_line(weapon_shotorg, end, FALSE, o);
 	WarpZone_TraceLine(weapon_shotorg, end, FALSE, o);
 	antilag_end();
     targ = trace_ent;
@@ -432,7 +432,7 @@ void weapon_zapper_shield_beam_think(void) {
 	makevectors(self.owner.angles);
 
     end = org + v_forward * 7;
-    traceline(org, end, FALSE, o);
+    trace_line(org, end, FALSE, o);
     end = trace_endpos;
 
     if(org != self.zapper_beam_start) {

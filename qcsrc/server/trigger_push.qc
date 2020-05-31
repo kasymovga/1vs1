@@ -242,7 +242,7 @@ void trigger_push_findtarget()
 	setorigin(e, org);
 	setsize(e, PL_MIN, PL_MAX);
 	e.velocity = self.movedir;
-	tracetoss_dp(e, e);
+	builtin_tracetoss(e, e);
 	self.dest = trace_endpos;
 	remove(e);
 

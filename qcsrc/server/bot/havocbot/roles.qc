@@ -29,7 +29,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		// Check if the item can be picked up safely
 		if(head.classname == "droppedweapon")
 		{
-			traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
+			trace_line(head.origin, head.origin + '0 0 -1500', TRUE, world);
 
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
@@ -46,7 +46,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		else
 		{
 			// Ignore items under water
-			traceline(head.origin + head.maxs, head.origin + head.maxs, MOVE_NORMAL, head);
+			trace_line(head.origin + head.maxs, head.origin + head.maxs, MOVE_NORMAL, head);
 			if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
 			{
 				head = head.chain;
@@ -151,7 +151,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 
 			// rate only visible enemies
 			/*
-			traceline(self.origin + self.view_ofs, head.origin, MOVE_NOMONSTERS, self);
+			trace_line(self.origin + self.view_ofs, head.origin, MOVE_NOMONSTERS, self);
 			if (trace_fraction < 1 || trace_ent != head)
 				continue;
 			*/
@@ -162,7 +162,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			// not falling
 			if(head.flags & FL_ONGROUND == 0)
 			{
-				traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
+				trace_line(head.origin, head.origin + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if( t != CONTENT_SOLID )
 				if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)

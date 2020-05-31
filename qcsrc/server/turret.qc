@@ -187,8 +187,8 @@ vector turret_stdproc_aim_generic()
 
     if(self.aim_flags & TFL_AIM_GROUND2)
     {
-        //tracebox(pre_pos + '0 0 32',self.enemy.mins,self.enemy.maxs,pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
-        traceline(pre_pos + '0 0 32',pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
+        //trace_box(pre_pos + '0 0 32',self.enemy.mins,self.enemy.maxs,pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
+        trace_line(pre_pos + '0 0 32',pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
         if(trace_fraction != 1.0)
             pre_pos = trace_endpos;
     }
@@ -197,7 +197,7 @@ vector turret_stdproc_aim_generic()
     // This turret should hit the ground neer a target rather the do a direct hit
     if (self.aim_flags & TFL_AIM_GROUND)
     {
-        traceline(pre_pos + '0 0 8',pre_pos - '0 0 10000',MOVE_WORLDONLY,self.enemy);
+        trace_line(pre_pos + '0 0 8',pre_pos - '0 0 10000',MOVE_WORLDONLY,self.enemy);
         pre_pos = trace_endpos;
     }
     */
@@ -662,7 +662,7 @@ void turret_do_updates(entity t_turret)
     {
         oldpos = self.enemy.origin;
         setorigin(self.enemy,self.tur_aimpos);
-        tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1',self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
+        trace_box(self.tur_shotorg, '-1 -1 -1','1 1 1',self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
         setorigin(self.enemy,oldpos);
 
         if(trace_ent == self.enemy)
@@ -675,8 +675,8 @@ void turret_do_updates(entity t_turret)
 
     }
     else
-        tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1',self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
-        //traceline(self.tur_shotorg, self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
+        trace_box(self.tur_shotorg, '-1 -1 -1','1 1 1',self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
+        //trace_line(self.tur_shotorg, self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
 
         self.tur_dist_impact_to_aimpos = vlen(trace_endpos - self.tur_aimpos) - (vlen(self.enemy.maxs - self.enemy.mins)*0.5);
         self.tur_impactent             = trace_ent;
@@ -1049,7 +1049,7 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     if (validate_flags & TFL_TARGETSELECT_LOS)
     {
         v_tmp = turret_real_origin(e_target) + ((e_target.mins + e_target.maxs) * 0.5);
-        traceline(e_turret.tur_shotorg,v_tmp,0,e_turret);
+        trace_line(e_turret.tur_shotorg,v_tmp,0,e_turret);
 
         if (e_turret.aim_firetolerance_dist < vlen(v_tmp - trace_endpos))
             return -19;

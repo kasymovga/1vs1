@@ -28,7 +28,7 @@ void butcher_hunt() {
 		if not(self.lastshot_time) {
 			if (vlen(v - self.origin) <= self.dmg_radius)
 			if (self.attack_finished_single - time < 0.25) {
-				traceline(self.origin, v, MOVE_NORMAL, self);
+				trace_line(self.origin, v, MOVE_NORMAL, self);
 				if (trace_ent) {
 					damage(trace_ent, self, self, self.dmg_edge, WEP_MELEE, trace_endpos, v_forward);
 					self.lastshot_time = time;

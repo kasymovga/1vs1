@@ -53,7 +53,7 @@ float nadget_Sentry_TargetIsValid(entity emitter, entity e) {
     if(vlen(o - t) > g_nadgets_sentry_beam_range)
         return FALSE;
 
-    traceline(o, t, MOVE_NORMAL, sentry);
+    trace_line(o, t, MOVE_NORMAL, sentry);
 
     if(trace_ent != e)
         return FALSE;
@@ -107,7 +107,7 @@ entity nadget_Sentry_FindTarget(entity emitter) {
             continue;
 
         WarpZone_TraceLine(o, t, MOVE_NORMAL, sentry);
-        //traceline(o, t, MOVE_NORMAL, sentry);
+        //trace_line(o, t, MOVE_NORMAL, sentry);
 
         if(trace_ent != p)
             continue;
@@ -137,7 +137,7 @@ void nadget_Sentry_Beam_Think(void) {
     end_transformed = trace_endpos;
     end = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 #if 0
-    traceline(start, end, MOVE_NORMAL, self);
+    trace_line(start, end, MOVE_NORMAL, self);
     targ = trace_ent;
     end_transformed = trace_endpos;
 #endif
@@ -310,7 +310,7 @@ void nadget_Sentry_Levitate(void) {
 	if (g_nadgets_sentry_levitation)
 	for(shift = 0; shift < PI * 2; shift += 0.1) {
         vector new_origin = self.origin + frametime * '0 0 8' * sin(self.spawntime + time + self.phase + shift);
-        tracebox(new_origin, self.mins, self.maxs, new_origin, MOVE_NORMAL, self);
+        trace_box(new_origin, self.mins, self.maxs, new_origin, MOVE_NORMAL, self);
 
         if(!trace_startsolid) {
             setorigin(self, new_origin);
@@ -348,7 +348,7 @@ void nadget_Sentry_Orphaned_Think(void) {
         if (e.classname != "player" || PLAYER_DEAD(e) || time - e.lastdamage < g_nadgets_sentry_capture_damage_delay || vlen(e.origin - self.origin) > g_nadgets_sentry_capture_range)
             nadget_Sentry_Interrupt_Capture();
         else {
-            traceline(self.origin, e.origin, MOVE_NOMONSTERS, self);
+            trace_line(self.origin, e.origin, MOVE_NOMONSTERS, self);
             if(trace_fraction < 1)
                 nadget_Sentry_Interrupt_Capture();
         }
@@ -361,7 +361,7 @@ void nadget_Sentry_Orphaned_Think(void) {
         if(time - e.lastdamage < g_nadgets_sentry_capture_damage_delay || vlen(e.origin - self.origin) > g_nadgets_sentry_capture_range)
             continue;
 
-        traceline(self.origin, e.origin, MOVE_NOMONSTERS, self);
+        trace_line(self.origin, e.origin, MOVE_NOMONSTERS, self);
         if(trace_fraction < 1)
             continue;
 

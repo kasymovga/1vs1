@@ -83,7 +83,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		f = vlen(e.origin - self.origin);
 		if (f <= heardistance) {
 			checkpoint = monster_checkpoint(e);
-			traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
+			trace_line(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
 			if (trace_fraction == 1) {
 				p = e;
 				break;
@@ -93,7 +93,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 			v = normalize(e.origin - self.origin);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
-				traceline(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
+				trace_line(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
 				if (trace_fraction == 1) {
 					distance = f;
 					p = e;
@@ -335,16 +335,16 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 			float t = (self.maxs_x * 2) / _speed;
 			self.spectatortime = time + t;
 			vector o = self.origin + v * _speed * t * 1.5;
-			tracebox(o, self.mins, self.maxs, o - '0 0 1000', MOVE_NOMONSTERS, self);
+			trace_box(o, self.mins, self.maxs, o - '0 0 1000', MOVE_NOMONSTERS, self);
 			if (trace_startsolid) {
 				//Check for wall
-				tracebox(self.origin, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+				trace_box(self.origin, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
 				float trace_fraction_first = trace_fraction;
 				if (trace_fraction < 1)
 				if (trace_plane_normal_z < 0.1)
 				if (trace_plane_normal_z > -0.1) {
 					vector step = '0 0 1' * sv_stepheight;
-					tracebox(self.origin, self.mins + step, self.maxs + step, o, MOVE_NOMONSTERS, self);
+					trace_box(self.origin, self.mins + step, self.maxs + step, o, MOVE_NOMONSTERS, self);
 					if (trace_fraction <= trace_fraction_first)
 						v = -v;
 				}
@@ -353,7 +353,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 					v = -v;
 				else if (trace_fraction > 0.01) {
 					o = trace_endpos;
-					tracebox(o, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+					trace_box(o, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
 					if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
 						if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 							v = -v;
@@ -731,7 +731,7 @@ void spawnfunc_monster_group() {
 vector monster_look_to_end;
 float(entity _enemy) monster_look_to {
 	monster_look_to_end = monster_checkpoint(self.enemy);
-	traceline(self.origin, monster_look_to_end, MOVE_WORLDONLY, world);
+	trace_line(self.origin, monster_look_to_end, MOVE_WORLDONLY, world);
 	if (trace_fraction == 1)
 		return TRUE;
 

@@ -58,7 +58,7 @@ void havocbot_ai()
 				if (pointcontents(head.origin + head.maxs + '0 0 1') != CONTENT_EMPTY)
 					continue;
 
-				traceline(self.origin + self.view_ofs , head.origin, TRUE, head);
+				trace_line(self.origin + self.view_ofs , head.origin, TRUE, head);
 
 				if(trace_fraction<1)
 					continue;
@@ -447,11 +447,11 @@ void havocbot_movetogoal()
 	if(skill>6)
 	if not(self.flags & FL_ONGROUND)
 	{
-		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
 		if(trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
 		if(self.items & IT_JETPACK)
 		{
-			tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', MOVE_NOMONSTERS, self);
+			trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', MOVE_NOMONSTERS, self);
 			if(trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos + '0 0 1' ))
 			{
 				if(self.velocity_z<0)
@@ -475,7 +475,7 @@ void havocbot_movetogoal()
 			if(xyspeed < (sv_maxspeed / 2))
 			{
 				makevectors(self.v_angle_y * '0 1 0');
-				tracebox(self.origin, self.mins, self.maxs, self.origin + (dir * sv_maxspeed * 3), MOVE_NOMONSTERS, self);
+				trace_box(self.origin, self.mins, self.maxs, self.origin + (dir * sv_maxspeed * 3), MOVE_NOMONSTERS, self);
 				if(trace_fraction==1)
 				{
 					self.movement_x = dir * v_forward * sv_maxspeed;
@@ -600,17 +600,17 @@ void havocbot_movetogoal()
 
 			// jump if going toward an obstacle that doesn't look like stairs we
 			// can walk up directly
-			tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.2, FALSE, self);
+			trace_box(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.2, FALSE, self);
 			if (trace_fraction < 1)
 			if (trace_plane_normal_z < 0.7)
 			{
 				s = trace_fraction;
-				tracebox(self.origin + '0 0 16', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 16', FALSE, self);
+				trace_box(self.origin + '0 0 16', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 16', FALSE, self);
 				if (trace_fraction < s + 0.01)
 				if (trace_plane_normal_z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(self.origin + '0 0 48', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 48', FALSE, self);
+					trace_box(self.origin + '0 0 48', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 48', FALSE, self);
 					if (trace_fraction > s)
 						self.BUTTON_JUMP = 1;
 				}
@@ -623,7 +623,7 @@ void havocbot_movetogoal()
 			dst_down = dst_ahead + '0 0 -1500';
 
 			// Look ahead
-			traceline(self.origin + self.view_ofs , dst_ahead, TRUE, world);
+			trace_line(self.origin + self.view_ofs , dst_ahead, TRUE, world);
 
 			// Check head-banging against walls
 			if(vlen(self.origin + self.view_ofs - trace_endpos) < 25 && !(self.aistatus & AI_STATUS_OUT_WATER))
@@ -660,7 +660,7 @@ void havocbot_movetogoal()
 			if(self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE)
 			{
 				// Look downwards
-				traceline(dst_ahead , dst_down, TRUE, world);
+				trace_line(dst_ahead , dst_down, TRUE, world);
 			//	te_lightning2(world, self.origin, dst_ahead);	// Draw "ahead" look
 			//	te_lightning2(world, dst_ahead, dst_down);		// Draw "downwards" look
 				if(trace_endpos_z < self.origin_z + self.mins_z)
@@ -701,7 +701,7 @@ void havocbot_movetogoal()
 		dodge = havocbot_dodge();
 		dodge = dodge * bound(0,0.5+(skill+self.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
-		traceline(self.origin, self.enemy.origin, TRUE, world);
+		trace_line(self.origin, self.enemy.origin, TRUE, world);
 		if(trace_ent.classname == "player")
 			dir = dir * bound(0,(skill+self.bot_dodgeskill)/7,1);
 
@@ -771,7 +771,7 @@ void havocbot_chooseenemy()
 			// and not really really far away
 			// and we're not severely injured
 			// then keep tracking for a half second into the future
-			traceline(self.origin+self.view_ofs, self.enemy.origin+self.enemy.view_ofs*0.5,FALSE,world);
+			trace_line(self.origin+self.view_ofs, self.enemy.origin+self.enemy.view_ofs*0.5,FALSE,world);
 			if (trace_ent == self.enemy || trace_fraction == 1)
 			if (vlen(self.enemy.origin - self.origin) < 1000)
 			if (self.health > 30)
@@ -805,7 +805,7 @@ void havocbot_chooseenemy()
 			if (bestrating > rating)
 			if (bot_shouldattack(head))
 			{
-				traceline(eye, v, TRUE, self);
+				trace_line(eye, v, TRUE, self);
 				if (trace_ent == head || trace_fraction >= 1)
 				{
 					best = head;
