@@ -173,8 +173,8 @@ void(void) world_init {
 	gettaginfo_right = '0 0 0';
 	gettaginfo_up = '0 0 0';
 	//trace_dphittexturename = "";
-	float fd, l, i, j, n;
-	string s, col;
+	float i, j, n;
+	string col;
 	cvar_preinit();
 	world_already_spawned = TRUE;
 	net_compress_vector_init();
@@ -241,31 +241,6 @@ void(void) world_init {
 	Ban_Init();
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
-	if(whichpack(strcat("maps/", mapname, ".cfg")) != "") {
-		fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
-		if(fd != -1) {
-			while((s = fgets(fd))) {
-				l = tokenize_console(s);
-				if(l < 2)
-					continue;
-
-				if(argv(0) == "cd") {
-					print("Found ^1DEPRECATED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
-					print("  cdtrack ", argv(2), "\n");
-				} else if(argv(0) == "fog") {
-					print("Found ^1DEPRECATED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
-					print("  \"fog\" \"", s, "\"\n");
-				} else if(argv(0) == "set") {
-					print("Found ^1DEPRECATED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					print("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
-				} else if(argv(0) != "//") {
-					print("Found ^1DEPRECATED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					print("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
-				}
-			}
-			fclose(fd);
-		}
-	}
 	addstat(STAT_WEAPONS, AS_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_map_starttime);
