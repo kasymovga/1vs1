@@ -23,6 +23,7 @@ float g_race_qualifying;
 float race_fraglimit;
 float race_leadlimit;
 float race_timelimit;
+float race_defrag;
 
 .entity sprite;
 
@@ -145,27 +146,34 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 	t = TIME_ENCODE(t); // make integer
 	// adding just 0.4 so it rounds down in the .5 case (matching the timer display)
 	if (tvalid)
-	if (cp == race_timed_checkpoint) // finish line
-	if not(e.race_completed) {
-		float s;
-		if (g_race_qualifying) {
-			s = score_player_add(e, SP_RACE_FASTEST, 0);
-			if (!s || t < s)
-				score_player_add(e, SP_RACE_FASTEST, t - s);
-		} else {
-			s = score_player_add(e, SP_RACE_TIME, 0);
-			snew = TIME_ENCODE(time - map_starttime);
-			score_player_add(e, SP_RACE_TIME, snew - s);
-			l = score_player_team_add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
-			if (cvar("fraglimit"))
-				if (l >= cvar("fraglimit"))
-					race_start_completing();
+	if (cp == race_timed_checkpoint) { // finish line
+		if not(e.race_completed) {
+			float s;
+			if (g_race_qualifying) {
+				s = score_player_add(e, SP_RACE_FASTEST, 0);
+				if (!s || t < s)
+					score_player_add(e, SP_RACE_FASTEST, t - s);
+			} else {
+				s = score_player_add(e, SP_RACE_TIME, 0);
+				snew = TIME_ENCODE(time - map_starttime);
+				score_player_add(e, SP_RACE_TIME, snew - s);
+				l = score_player_team_add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
+				if (cvar("fraglimit"))
+					if (l >= cvar("fraglimit"))
+						race_start_completing();
 
-			if (race_completing) {
-				e.race_completed = 1;
-				MAKE_INDEPENDENT_PLAYER(e);
-				bprint(e.netname, "^7 has finished the race.\n");
+				if (race_completing) {
+					e.race_completed = 1;
+					MAKE_INDEPENDENT_PLAYER(e);
+					bprint(e.netname, "^7 has finished the race.\n");
+				}
 			}
+		}
+		if (race_defrag) {
+			entity oldself = self;
+			self = e;
+			client_put();
+			self = oldself;
 		}
 	}
 	float recordtime;
@@ -340,6 +348,28 @@ void(void) race_checkpoint_passed {
 			self.message = "";
 			trigger_use_targets();
 			self.message = oldmsg;
+		}
+		if (race_defrag) {
+			entity e;
+			float shift_required = FALSE;
+			for (e = find(world, classname, "race_trigger_checkpoint"); e; e = find(e, classname, "race_trigger_checkpoint")) {
+				if (e != self)
+				if (e.race_checkpoint == self.race_checkpoint) {
+					shift_required = TRUE;
+					break;
+				}
+			}
+			if (shift_required) {
+				for (e = find(world, classname, "race_trigger_checkpoint"); e; e = find(e, classname, "race_trigger_checkpoint")) {
+					if (e != self)
+					if (e.race_checkpoint >= self.race_checkpoint)
+						e.race_checkpoint = e.race_checkpoint + 1;
+				}
+				if (race_timed_checkpoint > self.race_checkpoint)
+					race_timed_checkpoint += 1;
+
+				race_highest_checkpoint += 1;
+			}
 		}
 		other.race_checkpoint = race_checkpoint_next(self.race_checkpoint);
 		race_time_send(other, self.race_checkpoint, other.race_movetime, !!other.race_laptime);
@@ -885,6 +915,42 @@ void(void) race_qualifying_limits {
 	cvar_set("fraglimit", "0");
 	cvar_set("leadlimit", "0");
 	cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
+}
+
+void(void) spawnfunc_target_startTimer {
+	if (game != GAME_CTS) {
+		remove(self);
+		return;
+	}
+	race_defrag = TRUE;
+	self.cnt = 0;
+	self.spawnflags = 1;
+	self.classname = "race_trigger_checkpoint";
+	spawnfunc_race_trigger_checkpoint();
+}
+
+void(void) spawnfunc_target_stopTimer {
+	if (game != GAME_CTS) {
+		remove(self);
+		return;
+	}
+	race_defrag = TRUE;
+	self.cnt = 2;
+	self.spawnflags = 9;
+	self.classname = "race_trigger_checkpoint";
+	spawnfunc_race_trigger_checkpoint();
+}
+
+void(void) spawnfunc_target_checkpoint {
+	if (game != GAME_CTS) {
+		remove(self);
+		return;
+	}
+	race_defrag = TRUE;
+	self.cnt = 1;
+	self.spawnflags = 1;
+	self.classname = "race_trigger_checkpoint";
+	spawnfunc_race_trigger_checkpoint();
 }
 
 void(void) race_init {
