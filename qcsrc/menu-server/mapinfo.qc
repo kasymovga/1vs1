@@ -267,7 +267,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	float twoBaseModes;
 	float diameter, spawnpoints;
 	float spawnplaces;
-
 	vector mapMins, mapMaxs;
 
 	r = 1;
@@ -362,11 +361,9 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					++spawnpoints;
 				else if(v == "trigger_race_checkpoint")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RACE;
-				else if(v == "weapon_nex")
-					{ }
-				else if(v == "weapon_railgun")
-					{ }
-				else if(startsWith(v, "weapon_"))
+				else if(v == "target_startTimer") {
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
+				} else if(startsWith(v, "weapon_"))
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			}
 		}
@@ -383,9 +380,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	{
 		// we have a CTF-only or Assault-only map. Don't add other modes then,
 		// as the map is too symmetric for them.
-	}
-	else
-	{
+	} else if not(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTS) {
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
 		if(spawnpoints >= 8  && diameter > 4096)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
