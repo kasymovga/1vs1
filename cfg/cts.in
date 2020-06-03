@@ -1,4 +1,4 @@
-set g_cts_scorelimit "" "Dummy cvar, CTS not have scorelimit"
+set g_cts_scorelimit "0" "Scorelimit for CTS"
 set g_cts_timelimit "" "Timelimit for CTS, when empty, g_timelimit using, <= 0 mean no limit"
 set g_cts_leadlimit "" "Dummy cvar, CTS not have leadlimit"
 set cts_g_balance_kill_delay 0
