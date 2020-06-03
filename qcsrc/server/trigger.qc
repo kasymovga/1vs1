@@ -277,7 +277,7 @@ void(void) trigger_multiple_fire {
 	if (self.wait > 0) {
 		self.think = trigger_multiple_wait;
 		self.nextthink = time + self.wait;
-	} else {
+	} else if not(self.classname == "trigger_multiple") {
 		self.touch = stdproc_nothing;
 		self.use = stdproc_nothing;
 	}
