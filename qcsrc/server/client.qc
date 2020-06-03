@@ -235,10 +235,8 @@ void(void) client_killindicator_think {
 }
 
 void(float destteam) client_team_change_kill {
-	float killtime;
-	killtime = GameHook_KillDelayMod(g_balance_kill_delay);
 	if not(self.killindicator) {
-		if (killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, destteam)) {
+		if (g_balance_kill_delay <= 0 || self.classname != "player" || self.deadflag != DEAD_NO || team_fast_switch_allowed(self, destteam)) {
 			client_kill_now(self, destteam);
 		} else {
 			self.killindicator = spawn();
@@ -249,8 +247,8 @@ void(float destteam) client_team_change_kill {
 			setorigin(self.killindicator, '0 0 52');
 			self.killindicator.think = client_killindicator_think;
 			self.killindicator.nextthink = time + (self.lip) * 0.05;
-			self.killindicator.cnt = ceil(killtime);
-			self.killindicator.count = bound(0, ceil(killtime), 10);
+			self.killindicator.cnt = ceil(g_balance_kill_delay);
+			self.killindicator.count = bound(0, ceil(g_balance_kill_delay), 10);
 			sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
 			self.lip = 0;
 		}

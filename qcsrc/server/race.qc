@@ -924,7 +924,6 @@ void(void) race_init {
 	if (g_race) {
 		gamehook_winning_condition = race_winning_condition;
 		GameHook_OvertimeHandle = race_OvertimeHandle;
-		GameHook_KillDelayMod = race_KillDelayMod;
 		GameHook_WarmupAllowed = race_WarmupAllowed;
 		GameHook_ClearScoreAllowed = race_ClearScoresAllowed;
 	}
