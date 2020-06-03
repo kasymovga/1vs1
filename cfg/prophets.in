@@ -14,7 +14,7 @@ set prophets_g_minstagib 1
 set prophets_g_minstagib_ammo_drop 6
 set prophets_g_minstagib_ammo_start 11
 set prophets_g_respawn_delay 1
-set prophets_g_shootfromyey 1
+set prophets_g_shootfromeye 1
 set prophets_g_spawnfrags 1
 set prophets_g_spawnshieldtime 1
 set prophets_duel_inherit prophets
