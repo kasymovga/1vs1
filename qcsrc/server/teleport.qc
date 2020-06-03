@@ -1,4 +1,5 @@
 float g_teleport_projectiles;
+float g_teleport_keep_velocity;
 float g_telefrags;
 
 void(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax, float _damage) teleport_death {
@@ -96,7 +97,7 @@ void(void) teleport_use {
 
 void(void) teleport_touch {
 	entity oldself, e;
-
+	vector v;
 	if (other.iscreature)
 	if (other.health < 1)
 		return;
@@ -153,7 +154,12 @@ void(void) teleport_touch {
 		if(vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
 
-	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v_forward * vlen(other.velocity), '0 0 0', '0 0 0', 10000);
+	if (g_teleport_keep_velocity)
+		v = v_forward * vlen(other.velocity);
+	else
+		v = '0 0 0';
+
+	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v, '0 0 0', '0 0 0', 10000);
 	if(e.target) {
 		oldself = self;
 		activator = other;
@@ -200,6 +206,7 @@ void(void) teleport_findtarget {
 }
 
 void(void) teleport_init {
+	CACHE_CVAR(g_teleport_keep_velocity);
 	CACHE_CVAR(g_teleport_projectiles);
 	CACHE_CVAR(g_telefrags);
 }

@@ -84,3 +84,4 @@ set timelimit_max 60
 alias endmatch "timelimit -1"
 set g_balance_kill_delay 5
 set leadlimit 0
+set g_teleport_keep_velocity 1
