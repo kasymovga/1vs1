@@ -74,6 +74,7 @@ set defrag_g_pickup_nails_max 300
 set defrag_g_pickup_shells 10
 set defrag_g_pickup_shells_max 100
 set defragcpma_inherit defrag
+set defragcpma_g_stepairslowdown 0
 set defragcpma_g_gravity 800
 set defragcpma_g_maxspeed 320
 set defragcpma_g_maxairspeed 320
@@ -97,6 +98,7 @@ set defragcpma_g_warsowbunny_topspeed 925
 set defragcpma_g_warsowbunny_backtosideratio 0.8
 set defragcpma_g_friction_on_land 0
 set defragvq3_inherit defrag
+set defragvq3_g_stepairslowdown 0
 set defragvq3_g_gravity 800
 set defragvq3_g_maxspeed 320
 set defragvq3_g_maxairspeed 320
