@@ -334,27 +334,31 @@ float weapon_throwable(float w)
 }
 
 // toss current weapon
-void weapon_throw(vector velo, vector delta, float doreduce)
-{
-	local float w, wb;
+void(vector velo, vector delta, float doreduce) weapon_throw {
+	float w, wb;
 	string a;
-
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
+
 	if not(GameHookChain_ThrowWeaponAllowed(doreduce))
 		return;
+
+	if (g_pickup_nodrop)
+		return;
+
 	wb = weapon_bit(w);
 	float akimbo_throw = Akimbo_Throw(wb);
 	if not(akimbo_throw) {
 		if not(g_pickup_items)
 			return;
+
 		if not(g_pickup_weapons)
 			return;
+
 		if(!weapon_throwable(w))
 			return;
 	}
-
 	if(self.weapons & wb != wb)
 		return;
 
@@ -365,8 +369,8 @@ void weapon_throw(vector velo, vector delta, float doreduce)
 	a = weapon_throw_new(self, w, doreduce, self.origin + delta, velo);
 	if not(a)
 		return;
-	if(self.health >= 1)
-	{
+
+	if (self.health >= 1) {
 		if(a == "")
 			sprint(self, strcat("You dropped the ^2", weapon_name(w), "\n"));
 		else
