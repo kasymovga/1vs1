@@ -18,6 +18,7 @@ float g_pickup_cells;
 float g_pickup_fuel;
 float g_ghost_items;
 float g_pickup_items;
+float g_pickup_nodrop;
 float g_pickup_weapons;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_ammo;
@@ -645,48 +646,32 @@ float commodity_pickupevalfunc(entity player, entity item)
 .float is_item;
 void (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start {
 	item_start_failed = FALSE;
-
 	// is it a dropped weapon?
-	if (substring(self.classname, 0, 7) == "dropped")
-	{
+	if (substring(self.classname, 0, 7) == "dropped") {
+		if (g_pickup_nodrop)
+			goto item_start_fail;
+
 		self.reset = stdproc_remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
 		entity_fade_setup(self, time + 60, 1);
 		trace_line(self.origin, self.origin, MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
-		{
-			item_start_failed = TRUE;
-			remove(self);
-			return;
-		}
-	}
-	else
-	{
+			goto item_start_fail;
+	} else {
 		// it's a level item
 		if (!g_pickup_items || GameHookChain_ItemForbidden())
-		{
-			item_start_failed = TRUE;
-			remove (self);
-			return;
-		}
+			goto item_start_fail;
+
 		if (team_mode) {
-			if(self.notteam)
-			{
+			if(self.notteam) {
 				print("removed non-teamplay ", self.classname, "\n");
-				item_start_failed = TRUE;
-				remove (self);
-				return;
+				goto item_start_fail;
 			}
-		}
-		else
-		{
-			if(self.notfree)
-			{
+		} else {
+			if(self.notfree) {
 				print("removed non-FFA ", self.classname, "\n");
-				item_start_failed = TRUE;
-				remove (self);
-				return;
+				goto item_start_fail;
 			}
 		}
 		if(self.spawnflags & 1)
@@ -695,9 +680,9 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			self.movetype = MOVETYPE_NONE;
 		else
 			self.movetype = MOVETYPE_TOSS;
+
 		// do item filtering according to game mode and other things
-		if (!self.noalign)
-		{
+		if (!self.noalign) {
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(self, self.origin + '0 0 1');
 			// set item size before we spawn a spawnfunc_waypoint
@@ -705,47 +690,33 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 				setsize (self, '-16 -16 0', '16 16 48');
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
+
 			// note entity_droptofloor returns FALSE if stuck/or would fall too far
 			entity_droptofloor();
 			waypoint_spawnforitem(self);
 		}
 		self.reset = item_reset;
-		/*
-		 * can't do it that way, as it would break maps
-		 * TODO make a target_give like entity another way, that perhaps has
-		 * the weapon name in a key
-		if(self.targetname)
-		{
-			// target_give not yet supported; maybe later
-			print("removed targeted ", self.classname, "\n");
-			item_start_failed = TRUE;
-			remove (self);
-			return;
-		}
-		*/
 		weapon_spawned_list |= weaponid;
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
 		precache_sound ("misc/itemrespawn.wav");
 		precache_sound ("misc/itemrespawncountdown.wav");
-
 		if(itemid == IT_STRENGTH)
 			precache_sound ("misc/strength_respawn.wav");
+
 		if(itemid == IT_INVINCIBLE)
 			precache_sound ("misc/shield_respawn.wav");
 
 		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
 			self.targetname = "###item###"; // for finding the nearest item using find()
 	}
-
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
 	self.mdl = itemmodel;
 	self.noise = pickupsound;
 	// let mappers override respawntime
-	if(!self.respawntime) // both set
-	{
+	if (!self.respawntime) { // both set
 		self.respawntime = defaultrespawntime;
 		self.respawntimejitter = defaultrespawntimejitter;
 	}
@@ -760,27 +731,31 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 		setsize (self, '-16 -16 0', '16 16 48');
 	else
 		setsize (self, '-16 -16 0', '16 16 32');
+
 	if(itemflags & FL_WEAPON)
 		self.modelflags |= MF_ROTATE;
 
 	if (substring(self.classname, 0, 7) != "dropped") // if dropped, colormap is already set up nicely
-	if (itemflags & FL_WEAPON)
-	{
+	if (itemflags & FL_WEAPON) {
 		// neutral team color for pickup weapons
 		self.colormap = 1024; // color shirt=0 pants=0 grey
 	}
-
 	item_show(self, 1);
 	self.state = 0;
-	if(self.team)
-	{
+	if(self.team) {
 		if(!self.cnt)
 			self.cnt = 1; // item probability weight
+
 		self.effects = self.effects | EF_NODRAW; // marker for item team search
 		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
-	}
-	else if(self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
+	} else if(self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
+
+	return;
+:item_start_fail
+	item_start_failed = TRUE;
+	remove(self);
+	return;
 }
 
 void spawnfunc_item_rockets (void) {
@@ -1346,6 +1321,7 @@ void item_init()
 	CACHE_CVAR(g_pickup_fuel_max);
 	CACHE_CVAR(g_use_ammunition);
 	CACHE_CVAR(g_pickup_items);
+	CACHE_CVAR(g_pickup_nodrop);
 	CACHE_CVAR(g_pickup_weapons);
 	CACHE_CVAR(g_pickup_shells);
 	CACHE_CVAR(g_pickup_nails);

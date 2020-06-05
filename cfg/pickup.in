@@ -68,3 +68,4 @@ set g_pickup_items 1 "if set to 0 all items (health, armor, ammo, weapons...) ar
 set g_ghost_items 1 "enable ghosted items (when between 0 and 1, overrides the alpha value)"
 set g_pickup_respawntime_powerup 120
 set g_pickup_respawntimejitter_powerup 10
+set g_pickup_nodrop 0
