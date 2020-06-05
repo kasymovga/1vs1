@@ -137,6 +137,18 @@ void(void) race_InitSpectator {
 	}
 }
 
+void(void) race_respawn_delayed {
+	if (self.enemy.classname == "player")
+	if (self.enemy.health >= 1)
+	if (self.enemy.playerid == self.playerid) {
+		entity oldself = self;
+		self = self.enemy;
+		client_put();
+		self = oldself;
+	}
+	remove(self);
+}
+
 void(entity e, float cp, float t, float tvalid) race_time_send {
 	float snew, l;
 	entity p;
@@ -170,10 +182,11 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			}
 		}
 		if (race_defrag) {
-			entity oldself = self;
-			self = e;
-			client_put();
-			self = oldself;
+			entity e2 = spawn();
+			e2.think = race_respawn_delayed;
+			e2.nextthink = time + 1;
+			e2.enemy = e;
+			e2.playerid = e.playerid;
 		}
 	}
 	float recordtime;
