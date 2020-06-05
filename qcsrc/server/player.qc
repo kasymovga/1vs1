@@ -2417,6 +2417,12 @@ void() player_init {
 	CACHE_CVAR(sv_taunt);
 	CACHE_CVAR(sv_loddistance1);
 	CACHE_CVAR(sv_loddistance2);
+	PL_VIEW_OFS = '0 0 1' * cvar("g_player_view_ofs");
+	PL_MIN = '-16 -16 -24';
+	PL_MAX = '16 16 45';
+	PL_CROUCH_VIEW_OFS = '0 0 1' * cvar("g_player_crouch_view_ofs");
+	PL_CROUCH_MIN = '-16 -16 -24';
+	PL_CROUCH_MAX = '16 16 25';
 	if(sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 

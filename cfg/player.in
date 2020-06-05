@@ -76,3 +76,5 @@ set g_balance_fuel_rotstable 100
 set g_balance_fuel_limit 999
 set g_balance_selfdamagepercent 0.6
 set g_playerclip_collisions 1
+set g_player_view_ofs 35
+set g_player_crouch_view_ofs 15
