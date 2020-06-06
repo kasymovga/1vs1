@@ -471,7 +471,6 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_friction_on_land);
-		WriteByte(MSG_ENTITY, g_playerclip_collisions);
 		float switches = (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
@@ -479,8 +478,10 @@ float(entity to, float sf) physics_send {
 				+ (g_walljump ? 32 : 0)
 				+ (g_dodging ? 64 : 0)
 				+ (g_dodging_frozen ? 128 : 0)
+				+ (g_playerclip_collisions ? 256 : 0)
+				+ (cvar("mod_q3bsp_curves_collisions") ? 512 : 0)
 				;
-		WriteByte(MSG_ENTITY, switches);
+		WriteShort(MSG_ENTITY, switches);
 		if (g_walljump) {
 			WriteCoord(MSG_ENTITY, g_walljump_delay);
 			WriteCoord(MSG_ENTITY, g_walljump_force);

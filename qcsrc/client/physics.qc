@@ -250,12 +250,7 @@ void Ent_Physic(float isnew)
 		sv_warsowbunny_backtosideratio = ReadCoord();
 		sv_jumpvelocity = ReadCoord();
 		sv_friction_on_land = ReadCoord();
-		if (ReadByte()) //g_playerclip_collisions
-			physics_player_content = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-		else
-			physics_player_content = DPCONTENTS_SOLID;
-
-		float switches = ReadByte();
+		float switches = ReadShort();
 		sv_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
@@ -263,6 +258,14 @@ void Ent_Physic(float isnew)
 		g_walljump = switches & 32;
 		g_dodging = switches & 64;
 		g_dodging_frozen = switches & 128;
+		if (switches & 256) //g_playerclip_collisions
+			physics_player_content = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+		else
+			physics_player_content = DPCONTENTS_SOLID;
+
+		if not(switches & 512) //mod_q3bsp_curves_collisions
+			cvar_clientsettemp("mod_q3bsp_curves_collisions" , "0");
+
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
 			g_walljump_force = ReadCoord();
