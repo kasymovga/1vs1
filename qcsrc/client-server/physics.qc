@@ -172,10 +172,15 @@ void(void) physics_move {
 		trace1_plane_normal = trace_plane_normal;
 		if (trace1_fraction < 1) {
 			physics_impact();
-			if (trace_ent)
-			if (trace_ent.solid == SOLID_NOT) //become non-solid after impact
-				continue;
+			if (trace_ent) {
+				if (trace_ent.solid == SOLID_NOT) //become non-solid after impact
+					continue;
 
+				if (trace1_plane_normal_z > 0.7) {
+					self.groundentity = trace_ent;
+					physics_flags |= FL_ONGROUND; //exact flags will be set on next frame. this one needed for engine
+				}
+			}
 			if (trace1_plane_normal_z == 0) {
 				// may be a step or wall, try stepping up
 				// first move forward at a higher level
