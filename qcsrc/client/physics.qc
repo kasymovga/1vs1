@@ -218,6 +218,7 @@ void CSQCPhysic_SetCamera() {
 	}
 }
 
+float physics_player_content;
 void Ent_Physic(float isnew)
 {
 	float f = ReadShort();
@@ -249,6 +250,11 @@ void Ent_Physic(float isnew)
 		sv_warsowbunny_backtosideratio = ReadCoord();
 		sv_jumpvelocity = ReadCoord();
 		sv_friction_on_land = ReadCoord();
+		if (ReadByte()) //g_playerclip_collisions
+			physics_player_content = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+		else
+			physics_player_content = DPCONTENTS_SOLID;
+
 		float switches = ReadByte();
 		sv_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
@@ -327,7 +333,7 @@ void Ent_Physic(float isnew)
 		if (physics_movetype == MOVETYPE_NOCLIP)
 			self.dphitcontentsmask = 0;
 		else
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
+			self.dphitcontentsmask = physics_player_content;
 
 		if (f & 2048)
 			physics_gravity_factor = ReadCoord();

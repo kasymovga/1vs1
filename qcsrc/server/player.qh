@@ -78,3 +78,4 @@ float g_maxpushtime;
 float player_independent;
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
 #define MAKE_INDEPENDENT_PLAYER(e) ((e).solid = SOLID_TRIGGER)
+float g_playerclip_collisions;

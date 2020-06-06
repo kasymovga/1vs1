@@ -64,7 +64,6 @@ float g_spawnshieldtime;
 float g_spawnfrags;
 float g_spawnsound;
 float g_player_pushfactor;
-float g_playerclip_collisions;
 float reset_on_join_done;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;

@@ -471,6 +471,7 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_friction_on_land);
+		WriteByte(MSG_ENTITY, g_playerclip_collisions);
 		float switches = (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
