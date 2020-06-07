@@ -92,6 +92,9 @@ void(void) vehicle_aircraft_pull {
 	if not(self.aiment) {
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 100', MOVE_NORMAL, self);
 		if (trace_ent)
+		if (trace_ent.movetype != MOVETYPE_NOCLIP)
+		if (trace_ent.movetype != MOVETYPE_NONE)
+		if (trace_ent.movetype != MOVETYPE_FOLLOW)
 		if (trace_ent.solid == SOLID_SLIDEBOX || trace_ent.solid == SOLID_BBOX) {
 			float _volume = (trace_ent.maxs_x - trace_ent.mins_x) * (trace_ent.maxs_y - trace_ent.mins_y) *  (trace_ent.maxs_z - trace_ent.mins_z);
 			if (_volume < 3000 || _volume > 3000000) {
