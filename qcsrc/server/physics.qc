@@ -70,9 +70,7 @@ void(void) physics_check_ground_hook {
 		} else {
 			if(self.flags & FL_ONGROUND_OR_SLICK)
 			if(time >= self.ladder_time)
-			if (self.lastground < time - 0.3)
-			if not(self.hook)
-			{
+			if (self.lastground < time - 0.3) {
 				self.nextstep = time + 0.2;
 				trace_dphitq3surfaceflags = 0;
 				trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
