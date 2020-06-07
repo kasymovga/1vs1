@@ -179,6 +179,7 @@ void(void) physics_move {
 				if (trace1_plane_normal_z > 0.7) {
 					self.groundentity = trace_ent;
 					physics_flags |= FL_ONGROUND; //exact flags will be set on next frame. this one needed for engine
+					physics_check_ground_hook();
 				}
 			}
 			if (trace1_plane_normal_z == 0) {

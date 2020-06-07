@@ -293,7 +293,7 @@ void SV_PlayerPhysics()
 	physics_watertype = self.watertype;
 	vector _oldorigin = self.origin;
 	physics_player();
-	if(physics_flags & FL_ONGROUND)
+	if(physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
 
 	self.crouch = physics_crouch;
