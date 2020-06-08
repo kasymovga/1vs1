@@ -579,9 +579,13 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	MapInfo_Map_image = strcat("maps/", MapInfo_Map_bspname);
 	if not(file_exists(strcat(MapInfo_Map_image, ".jpg")))
 	if not(file_exists(strcat(MapInfo_Map_image, ".tga")))
-	if not(file_exists(strcat(MapInfo_Map_image, ".png")))
-		MapInfo_Map_image = "gfx/menu/silver/background_ingame";
-
+	if not(file_exists(strcat(MapInfo_Map_image, ".png"))) {
+		MapInfo_Map_image = strcat("levelshots/", MapInfo_Map_bspname);
+		if not(file_exists(strcat(MapInfo_Map_image, ".jpg")))
+		if not(file_exists(strcat(MapInfo_Map_image, ".tga")))
+		if not(file_exists(strcat(MapInfo_Map_image, ".png")))
+			MapInfo_Map_image = "gfx/sb_str";
+	}
 	// default all generic fields so they have "good" values in case something fails
 	fn = strcat("maps/", pFilename, ".mapinfo");
 	fh = fopen(fn, FILE_READ);

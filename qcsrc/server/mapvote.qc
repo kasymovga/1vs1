@@ -7,6 +7,7 @@ string mapvote_screenshot_dir;
 float mapvote_count;
 float mapvote_count_real;
 string mapvote_maps[MAPVOTE_COUNT];
+string mapvote_pictures[MAPVOTE_COUNT];
 float mapvote_maps_suggested[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
@@ -71,7 +72,14 @@ void(string nextMap, float isSuggestion) mapvote_add_votable {
 			return;
 	if(strlen(nextMap) > mapvote_maxlen)
 		mapvote_maxlen = strlen(nextMap);
+
 	mapvote_maps[mapvote_count] = strzone(nextMap);
+	MapInfo_Get_ByName(nextMap, 0, 0);
+	string picture = MapInfo_Map_image;
+	if (picture == "")
+		picture = "gfx/menu/silver/background_ingame";
+
+	mapvote_pictures[mapvote_count] = strzone(picture);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 	mapvote_count += 1;
 }
@@ -152,7 +160,7 @@ float mapvote_mask() {
 entity mapvote_ent;
 #define mapvote_send MapVote_SendEntity
 float(entity to, float sf) mapvote_send {
-	string mapfile, pakfile;
+	string picfile, pakfile;
 	float i, o;
 	if(sf & 1)
 		sf &~= 2; // if we send 1, we don't need to also send 2
@@ -161,7 +169,6 @@ float(entity to, float sf) mapvote_send {
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1) {
 		// flag 1 == initialization
-		WriteString(MSG_ENTITY, mapvote_screenshot_dir);
 		WriteString(MSG_ENTITY, MapInfo_HumanString_FromType(MapInfo_CurrentGametype()));
 		WriteByte(MSG_ENTITY, mapvote_count);
 		WriteByte(MSG_ENTITY, mapvote_abstain);
@@ -179,14 +186,9 @@ float(entity to, float sf) mapvote_send {
 					WriteString(MSG_ENTITY, ""); // abstain needs no pack
 				} else {
 					WriteString(MSG_ENTITY, mapvote_maps[i]);
-					mapfile = strcat(mapvote_screenshot_dir, "/", mapvote_maps[i]);
-					pakfile = whichpack(strcat(mapfile, ".tga"));
-					if(pakfile == "")
-						pakfile = whichpack(strcat(mapfile, ".jpg"));
-
-					if(pakfile == "")
-						pakfile = whichpack(strcat(mapfile, ".png"));
-
+					picfile = mapvote_pictures[i];
+					WriteString(MSG_ENTITY, picfile);
+					pakfile = whichpack(picfile);
 					for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 						pakfile = substring(pakfile, o, 999);
 

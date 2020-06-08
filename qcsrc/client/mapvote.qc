@@ -304,13 +304,12 @@ void(string pic, string pk3, float id) mapvote_checkpic {
 
 void(void) mapvote_init {
 	float i, power;
-	string map, pk3, ssdir;
+	string map, pk3, map_pic;
 	precache_sound ("misc/invshot.wav");
 	registercmd("+showscores");
 	registercmd("-showscores");
 	mapvote_active = 1;
 	mapvote_selection = -1;
-	ssdir = ReadString();
 	str_unzone_ifneeded(mapvote_gametype);
 	mapvote_gametype = str_zone_ifneeded(ReadString());
 	mapvote_count = min(MAPVOTE_COUNT, ReadByte());
@@ -332,14 +331,14 @@ void(void) mapvote_init {
 		mapvote_votes[i] = 0;
 		if (mapvote_maps_mask & power) {
 			map = strzone(ReadString());
+			map_pic = strzone(ReadString());
 			pk3 = strzone(ReadString());
 			mapvote_maps[i] = map;
 			mapvote_paks[i] = pk3;
-			map = strzone(strcat(ssdir, "/", map));
-			mapvote_pics[i] = map;
+			mapvote_pics[i] = map_pic;
 			mapvote_previews[i] = FALSE;
 			//print(strcat("RECV: ", map, " in ", pk3, "\n"));
-			mapvote_checkpic(map, pk3, i);
+			mapvote_checkpic(map_pic, pk3, i);
 		} else {
 			mapvote_maps[i] = strzone("if-you-see-this-the-code-is-broken");
 			mapvote_paks[i] = strzone("if-you-see-this-the-code-is-broken");

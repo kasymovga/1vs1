@@ -48,7 +48,7 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 	me.currentMapAuthor = strzone(MapInfo_Map_author);
 	me.currentMapDescription = strzone(MapInfo_Map_description);
 	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? "Full item placement" : "MinstaGib only");
-	me.currentMapPreviewImage = strzone(strcat("/maps/", MapInfo_Map_bspname));
+	me.currentMapPreviewImage = strzone(strcat("/", MapInfo_Map_image));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
