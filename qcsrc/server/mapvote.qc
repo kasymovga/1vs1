@@ -2,7 +2,6 @@ float mapvote_nextthink;
 float mapvote_keeptwotime;
 float mapvote_timeout;
 string mapvote_message;
-string mapvote_screenshot_dir;
 
 float mapvote_count;
 float mapvote_count_real;
@@ -118,10 +117,6 @@ void() mapvote_init {
 	if(mapvote_count_real < 3 || mapvote_keeptwotime <= time)
 		mapvote_keeptwotime = 0;
 	mapvote_message = "Choose a map and press its key!";
-	mapvote_screenshot_dir = cvar_string("g_maplist_votable_screenshot_dir");
-	if(mapvote_screenshot_dir == "")
-		mapvote_screenshot_dir = "maps";
-	mapvote_screenshot_dir = strzone(mapvote_screenshot_dir);
 	mapvote_spawn();
 }
 
@@ -130,7 +125,7 @@ void mapvote_send_picture(float id) {
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_PICTURE);
 	WriteByte(MSG_ONE, id);
-	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dir, "/", mapvote_maps[id]), 3072);
+	WritePicture(MSG_ONE, mapvote_pictures[id], 3072);
 }
 
 float mapvote_client_command(string cmd) {
@@ -188,7 +183,13 @@ float(entity to, float sf) mapvote_send {
 					WriteString(MSG_ENTITY, mapvote_maps[i]);
 					picfile = mapvote_pictures[i];
 					WriteString(MSG_ENTITY, picfile);
-					pakfile = whichpack(picfile);
+					pakfile = whichpack(strcat(picfile, ".tga"));
+					if (pakfile == "")
+						pakfile = whichpack(strcat(picfile, ".jpg"));
+
+					if (pakfile == "")
+						pakfile = whichpack(strcat(picfile, ".png"));
+
 					for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 						pakfile = substring(pakfile, o, 999);
 

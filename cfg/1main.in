@@ -53,7 +53,6 @@ seta g_maplist_votable_suggestions 2
 seta g_maplist_votable_suggestions_override_mostrecent 0
 seta g_maplist_votable_nodetail 1	"nodetail only shows total count instead of all vote counts per map, so votes don't influence others that much"
 seta g_maplist_votable_abstain 0	"when 1, you can abstain from your vote"
-seta g_maplist_votable_screenshot_dir "maps"	"where to look for map screenshots"
 alias suggestmap "cmd suggestmap $1"
 alias qc_cmd	"sv_cmd $*" // menu QC will override this to menu_cmd
 alias adminmsg	"sv_cmd adminmsg $*"
