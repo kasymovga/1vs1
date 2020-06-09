@@ -294,6 +294,7 @@ void SV_PlayerPhysics()
 	if(physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
 
+	self.teleport_time = time + physics_teleport_time;
 	self.crouch = physics_crouch;
 	self.flags = physics_flags;
 	self.velocity = physics_velocity;

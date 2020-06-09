@@ -698,7 +698,7 @@ void(void) physics_player {
 		physics_velocity_y = self.movedir_y;
 		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE) {
 			physics_flags &~= FL_WATERJUMP;
-			self.teleport_time = 0;
+			physics_teleport_time = 0;
 		}
 	} else if (physics_flags & FL_ONGROUND) {
 		// walking
