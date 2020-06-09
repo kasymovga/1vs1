@@ -696,7 +696,7 @@ void(void) physics_player {
 	if (physics_flags & FL_WATERJUMP) {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
-		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE) {
+		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE || physics_velocity_z < 0) {
 			physics_flags &~= FL_WATERJUMP;
 			physics_teleport_time = 0;
 		}
