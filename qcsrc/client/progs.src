@@ -131,6 +131,7 @@ gametype.qc
 ready.qc
 vote.qc
 gamemenu.qc
+../client-server/race.qh
 race.qc
 view.qc
 interpolate.qc

@@ -714,15 +714,14 @@ void SV_Shutdown()
 	{
 		world_initialized = 0;
 		print("Saving persistent data...\n");
-		db_shutdown();
 		Ban_SaveBans();
 		print("done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();
-
 		MapInfo_Shutdown();
 		infomessages_shutdown();
 		gamehook_chain_shutdown();
+		db_shutdown();
 	}
 	else if(world_initialized == 0)
 	{

@@ -1,6 +1,7 @@
 void(void) race_read {
 	float b;
 	b = ReadByte();
+	float i;
 	switch(b) {
 		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
 			race_checkpoint = ReadByte();
@@ -76,7 +77,76 @@ void(void) race_read {
 
 			race_penaltyreason = strzone(ReadString());
 			break;
+		case RACE_NET_RECORDS_TABLE:
+			for (i = 0; i < 10; i++) {
+				race_records_time[i] = ReadCoord();
+				race_records_name[i] = str_zone_ifneeded(ReadString());
+			}
+			break;
 	}
 }
 
+string(float cp, float mytime, float histime, float lapdelta, string hisname) race_checkpoint_string {
+	string col;
+	string timestr;
+	string cpname;
+	string lapstr;
+	lapstr = "";
+
+	if(histime == 0) // goal hit
+	{
+		if(mytime > 0)
+		{
+			timestr = strcat("+", str_float_decimals(+mytime, TIME_DECIMALS));
+			col = "^1";
+		}
+		else if(mytime == 0)
+		{
+			timestr = "+0.0";
+			col = "^3";
+		}
+		else
+		{
+			timestr = strcat("-", str_float_decimals(-mytime, TIME_DECIMALS));
+			col = "^2";
+		}
+
+		if(lapdelta > 0)
+		{
+			lapstr = strcat(" (-", ftos(lapdelta), "L)");
+			col = "^2";
+		}
+		else if(lapdelta < 0)
+		{
+			lapstr = strcat(" (+", ftos(-lapdelta), "L)");
+			col = "^1";
+		}
+	}
+	else if(histime > 0) // anticipation
+	{
+		if(mytime >= histime)
+			timestr = strcat("+", str_float_decimals(mytime - histime, TIME_DECIMALS));
+		else
+			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(histime));
+		col = "^3";
+	}
+	else
+		col = "^7";
+
+	if(cp == 254)
+		cpname = "Start line";
+	else if(cp == 255)
+		cpname = "Finish line";
+	else if(cp)
+		cpname = strcat("Intermediate ", ftos(cp));
+	else
+		cpname = "Finish line";
+
+	if(histime < 0)
+		return strcat(col, cpname);
+	else if(hisname == "")
+		return strcat(col, cpname, " (", timestr, ")");
+	else
+		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
+}
 

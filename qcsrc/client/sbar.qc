@@ -1303,6 +1303,20 @@ void Sbar_DrawScoreboard()
 	scoreboard_bottom = pos_y;
 	if (centerprint_num < 1) {
 		string tail = motd;
+		if (gametype == GAME_CTS || gametype == GAME_RACE)
+		if (race_records_time[0]) {
+			string table = "-----RECORDS-----\n", n;
+			float i, tt;
+			for (i = 0; i < 10; i++) {
+				n = race_records_name[i];
+				tt = race_records_time[i];
+				if (!tt)
+					break;
+
+				table = strcat(table, "^7", ftos(i + 1), ". ", n, "^7    ", TIME_ENCODED_TOSTRING(tt), "\n");
+			}
+			tail = strcat(table, "-----------------\n\n", tail);
+		}
 		float n;
 		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
 		while (tail != "") {
@@ -1318,71 +1332,6 @@ void Sbar_DrawScoreboard()
 			pos_y += sbar_fontsize_y;
 		}
 	}
-}
-
-string MakeRaceString(float cp, float mytime, float histime, float lapdelta, string hisname)
-{
-	string col;
-	string timestr;
-	string cpname;
-	string lapstr;
-	lapstr = "";
-
-	if(histime == 0) // goal hit
-	{
-		if(mytime > 0)
-		{
-			timestr = strcat("+", str_float_decimals(+mytime, TIME_DECIMALS));
-			col = "^1";
-		}
-		else if(mytime == 0)
-		{
-			timestr = "+0.0";
-			col = "^3";
-		}
-		else
-		{
-			timestr = strcat("-", str_float_decimals(-mytime, TIME_DECIMALS));
-			col = "^2";
-		}
-
-		if(lapdelta > 0)
-		{
-			lapstr = strcat(" (-", ftos(lapdelta), "L)");
-			col = "^2";
-		}
-		else if(lapdelta < 0)
-		{
-			lapstr = strcat(" (+", ftos(-lapdelta), "L)");
-			col = "^1";
-		}
-	}
-	else if(histime > 0) // anticipation
-	{
-		if(mytime >= histime)
-			timestr = strcat("+", str_float_decimals(mytime - histime, TIME_DECIMALS));
-		else
-			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(histime));
-		col = "^3";
-	}
-	else
-		col = "^7";
-
-	if(cp == 254)
-		cpname = "Start line";
-	else if(cp == 255)
-		cpname = "Finish line";
-	else if(cp)
-		cpname = strcat("Intermediate ", ftos(cp));
-	else
-		cpname = "Finish line";
-
-	if(histime < 0)
-		return strcat(col, cpname);
-	else if(hisname == "")
-		return strcat(col, cpname, " (", timestr, ")");
-	else
-		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
 }
 
 void()Sbar_Score_Disabled {};
@@ -1520,9 +1469,9 @@ void()Sbar_Score_Default {
 				if(race_checkpoint != 254)
 				{
 					if(race_time && race_previousbesttime)
-						s = MakeRaceString(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, 0, race_previousbestname);
+						s = race_checkpoint_string(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, 0, race_previousbestname);
 					else
-						s = MakeRaceString(race_checkpoint, 0, -1, 0, race_previousbestname);
+						s = race_checkpoint_string(race_checkpoint, 0, -1, 0, race_previousbestname);
 					if(race_time)
 						forcetime = TIME_ENCODED_TOSTRING(race_time);
 				}
@@ -1534,7 +1483,7 @@ void()Sbar_Score_Default {
 					a = bound(0, 2 - ((race_laptime + TIME_DECODE(race_nextbesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1);
 					if(a > 0) // next one?
 					{
-						s = MakeRaceString(race_nextcheckpoint, (time + TIME_DECODE(race_penaltyaccumulator)) - race_laptime, TIME_DECODE(race_nextbesttime), 0, race_nextbestname);
+						s = race_checkpoint_string(race_nextcheckpoint, (time + TIME_DECODE(race_penaltyaccumulator)) - race_laptime, TIME_DECODE(race_nextbesttime), 0, race_nextbestname);
 					}
 				}
 			}
@@ -1575,14 +1524,14 @@ void()Sbar_Score_Default {
 			if(race_mycheckpointtime)
 			{
 				a = bound(0, 2 - (time - race_mycheckpointtime), 1);
-				s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
+				s = race_checkpoint_string(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
 				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 			}
 			if(race_othercheckpointtime && race_othercheckpointenemy != "")
 			{
 				a = bound(0, 2 - (time - race_othercheckpointtime), 1);
-				s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
+				s = race_checkpoint_string(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
 				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 				drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
 			}

@@ -298,6 +298,7 @@ ipban.qc
 
 ../menu-server/mapinfo.qc
 race_role.qc
+../client-server/race.qh
 race.qc
 turret.qc
 turret/checkpoint.qc

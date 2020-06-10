@@ -24,6 +24,7 @@ float race_fraglimit;
 float race_leadlimit;
 float race_timelimit;
 float race_defrag;
+string race_records_path;
 
 .entity sprite;
 
@@ -48,6 +49,95 @@ float ST_RACE_LAPS;
 float SP_RACE_LAPS;
 float SP_RACE_FASTEST;
 float SP_RACE_TIME;
+
+float race_records_time[10];
+string race_records_name[10];
+
+void(void) race_records_load {
+	race_records_time[0] = stof(db_get(db_server, strcat(mapname, race_records_path, "time")));
+	race_records_name[0] = str_zone_ifneeded(db_get(db_server, strcat(mapname, race_records_path, "netname")));
+	float i;
+	for (i = 1; i < 10; i++) {
+		race_records_time[i] = stof(db_get(db_server, strcat(mapname, race_records_path, ftos(i), "/time")));
+		race_records_name[i] = str_zone_ifneeded(db_get(db_server, strcat(mapname, race_records_path, ftos(i), "/netname")));
+	}
+}
+
+void(void) race_records_save {
+	float t;
+	string n;
+	t = race_records_time[0];
+	n = race_records_name[0];
+	db_put(db_server, strcat(mapname, race_records_path, "time"), ftos(t));
+	db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
+	float i;
+	for (i = 1; i < 10; i++) {
+		t = race_records_time[i];
+		n = race_records_name[i];
+		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/time"), ftos(t));
+		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
+	}
+}
+
+float(string name) race_record_delete {
+	float i, j, t;
+	string n;
+	for (i = 0; i < 10; i++) {
+		n = race_records_name[i];
+		if (n == name) {
+			str_unzone_ifneeded(n);
+			for (j = i; j < 9; j++) {
+				n = race_records_name[j + 1];
+				t = race_records_time[j + 1];
+				race_records_name[j] = n;
+				race_records_time[j] = t;
+			}
+			race_records_name[9] = "";
+			race_records_time[9] = 0;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+void(entity to) race_records_send {
+	msg_entity = to;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_RACE);
+	WriteByte(MSG_ONE, RACE_NET_RECORDS_TABLE);
+	float i, t;
+	string n;
+	for (i = 0; i < 10; i++) {
+		n = race_records_name[i];
+		t = race_records_time[i];
+		WriteCoord(MSG_ONE, t);
+		WriteString(MSG_ONE, n);
+	}
+}
+
+float(string name, float checktime) race_records_put {
+	float t, i, j;
+	string n;
+	for (i = 0; i < 10; i++) {
+		t = race_records_time[i];
+		n = race_records_name[i];
+		if (!t || t > checktime) {
+			race_record_delete(name);
+			str_unzone_ifneeded(race_records_name[9]);
+			for (j = 8; j >= i; j--) {
+				n = race_records_name[j];
+				t = race_records_time[j];
+				race_records_name[j + 1] = n;
+				race_records_time[j + 1] = t;
+			}
+			race_records_name[i] = str_zone_ifneeded(name);
+			race_records_time[i] = checktime;
+			return i + 1;
+		}
+		if (n == name) return FALSE;
+	}
+	return FALSE;
+}
 
 void(void) race_score_setup {
 	score_basics(0, 0, FALSE);
@@ -205,45 +295,31 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 					strunzone(race_checkpoint_recordholders[cp]);
 
 				race_checkpoint_recordholders[cp] = strzone(e.netname);
-				if (cp == race_timed_checkpoint) {
-					float grecordtime;
-					string grecordholder;
-					string rr;
-					if (g_cts)
-						rr = CTS_RECORD;
-					else
-						rr = RACE_RECORD;
-
-					grecordtime = stof(db_get(db_server, strcat(mapname, rr, "time")));
-					grecordholder = db_get(db_server, strcat(mapname, rr, "netname"));
-					if (grecordholder == e.netname)
-						grecordholder = "";
-
-					if (grecordtime == 0) {
-						bprint(e.netname, "^7 set the all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-						db_put(db_server, strcat(mapname, rr, "time"), ftos(t));
-						db_put(db_server, strcat(mapname, rr, "netname"), e.netname);
-						client_write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
-					} else if (t < grecordtime) {
-						if (grecordholder == "")
-							bprint(e.netname, "^7 broke his all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-						else
-							bprint(e.netname, "^7 broke ", grecordholder, "^7's all-time fastest lap record with ", TIME_ENCODED_TOSTRING(t), "\n");
-
-						db_put(db_server, strcat(mapname, rr, "time"), ftos(t));
-						db_put(db_server, strcat(mapname, rr, "netname"), e.netname);
-						client_write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
-					} else {
-						if (grecordholder == "")
-							bprint(e.netname, "^7's new fastest lap could not break his all-time fastest lap record of ", TIME_ENCODED_TOSTRING(grecordtime), "\n");
-						else
-							bprint(e.netname, "^7's new fastest lap could not break ", grecordholder, "^7's all-time fastest lap record of ", TIME_ENCODED_TOSTRING(grecordtime), "\n");
+				FOR_EACH_REALPLAYER(p)
+					if (p.race_checkpoint == cp)
+						race_checkpoint_next_send(p, 0);
+			}
+			if (cp == race_timed_checkpoint) {
+				float position = race_records_put(e.netname, t);
+				if (position) {
+					bprint(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), "\n");
+					entity e3;
+					FOR_EACH_REALCLIENT(e3) {
+						race_records_send(e3);
 					}
 				}
-				if (g_race_qualifying) {
-					FOR_EACH_REALPLAYER(p)
-						if (p.race_checkpoint == cp)
-							race_checkpoint_next_send(p, 0);
+				string table;
+				float i, tt;
+				string n;
+				for (i = 0; i < 10; i++) {
+					n = race_records_name[i];
+					tt = race_records_time[i];
+					if (i + 1 == position)
+						table = strcat(table, "^2", ftos(i + 1), ". ", n, "^2    ", TIME_ENCODED_TOSTRING(tt), "\n");
+					else if (n == e.netname)
+						table = strcat(table, "^3", ftos(i + 1), ". ", n, "^3    ", TIME_ENCODED_TOSTRING(tt), "\n");
+					else
+						table = strcat(table, "^7", ftos(i + 1), ". ", n, "^7    ", TIME_ENCODED_TOSTRING(tt), "\n");
 				}
 			}
 		} else {
@@ -253,17 +329,15 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			recordholder = "";
 		}
 		msg_entity = e;
-		if (g_race_qualifying) {
-			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
-				WriteByte(MSG_ONE, SVC_TEMPENTITY);
-				WriteByte(MSG_ONE, TE_CSQC_RACE);
-				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
-				WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player now is at
-				net_write_int24(MSG_ONE, t); // time to that intermediate
-				net_write_int24(MSG_ONE, recordtime); // previously best time
-				WriteString(MSG_ONE, recordholder); // record holder
-			});
-		}
+		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_RACE);
+			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
+			WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player now is at
+			net_write_int24(MSG_ONE, t); // time to that intermediate
+			net_write_int24(MSG_ONE, recordtime); // previously best time
+			WriteString(MSG_ONE, recordholder); // record holder
+		});
 	} else { // RACE! Not Qualifying
 		float lself, lother, othtime;
 		entity oth;
@@ -966,6 +1040,18 @@ void(void) spawnfunc_target_checkpoint {
 	spawnfunc_race_trigger_checkpoint();
 }
 
+var void(void) race_shutdown_next;
+void(void) race_shutdown {
+	race_records_save();
+	race_shutdown_next();
+}
+
+var void(void) race_client_real_connect_next;
+void(void) race_client_real_connect {
+	race_records_send(self);
+	race_client_real_connect_next();
+}
+
 void(void) race_init {
 	if (game == GAME_RACE) {
 		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
@@ -992,14 +1078,21 @@ void(void) race_init {
 			} else
 				g_race_qualifying = 0;
 		}
+		race_records_path = RACE_RECORD;
 	}
 	if (game == GAME_CTS) {
 		g_cts = 1;
 		g_race_qualifying = 1;
+		race_records_path = CTS_RECORD;
 	}
-	if (g_race_qualifying)
+	if (g_race_qualifying) {
 		player_independent = 1;
-
+		race_records_load();
+		race_shutdown_next = gamehook_chain_shutdown;
+		gamehook_chain_shutdown = race_shutdown;
+		race_client_real_connect_next = GameHookChain_RealClientConnect;
+		GameHookChain_RealClientConnect = race_client_real_connect;
+	}
 	if (g_race) {
 		gamehook_winning_condition = race_winning_condition;
 		GameHook_OvertimeHandle = race_OvertimeHandle;

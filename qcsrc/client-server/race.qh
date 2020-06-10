@@ -1,0 +1,11 @@
+enum {
+	RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0, // byte checkpoint, short time, short recordtime, string recordholder
+	RACE_NET_CHECKPOINT_CLEAR,
+	RACE_NET_CHECKPOINT_NEXT_QUALIFYING, // byte nextcheckpoint, short recordtime, string recordholder
+	RACE_NET_CHECKPOINT_HIT_RACE, // byte checkpoint, short delta, byte lapsdelta, string opponent
+	RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT, // byte checkpoint, short delta, byte lapsdelta, string opponent
+	RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING, // byte nextcheckpoint, float laptime, short recordtime, string recordholder
+	RACE_NET_PENALTY_RACE, // byte penaltytime, string reason
+	RACE_NET_PENALTY_QUALIFYING, // byte penaltytime, string reason
+	RACE_NET_RECORDS_TABLE,
+};
