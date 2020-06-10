@@ -51,5 +51,5 @@ float(float i) player_color {
 }
 
 string(float i) player_name {
-	return str_color_translate_rgb(getplayerkey(i, "name"));
+	return getplayerkey(i, "name");
 }

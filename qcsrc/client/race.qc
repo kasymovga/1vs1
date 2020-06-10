@@ -10,7 +10,7 @@ void(void) race_read {
 			if(race_previousbestname)
 				strunzone(race_previousbestname);
 
-			race_previousbestname = strzone(str_color_translate_rgb(ReadString()));
+			race_previousbestname = strzone(ReadString());
 			race_checkpointtime = max(time, 0.001);
 			if(race_checkpoint == 0 || race_checkpoint == 254) {
 				race_penaltyaccumulator = 0;
@@ -31,7 +31,7 @@ void(void) race_read {
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
 
-			race_nextbestname = strzone(str_color_translate_rgb(ReadString()));
+			race_nextbestname = strzone(ReadString());
 			break;
 		case RACE_NET_CHECKPOINT_HIT_RACE:
 			race_mycheckpoint = ReadByte();
@@ -44,7 +44,7 @@ void(void) race_read {
 			if(race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
 
-			race_mycheckpointenemy = strzone(str_color_translate_rgb(ReadString()));
+			race_mycheckpointenemy = strzone(ReadString());
 			break;
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
 			race_othercheckpoint = ReadByte();
@@ -57,7 +57,7 @@ void(void) race_read {
 			if(race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
 
-			race_othercheckpointenemy = strzone(str_color_translate_rgb(ReadString()));
+			race_othercheckpointenemy = strzone(ReadString());
 			break;
 		case RACE_NET_PENALTY_RACE:
 			race_penaltyeventtime = time;

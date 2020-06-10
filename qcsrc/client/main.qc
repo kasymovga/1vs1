@@ -487,7 +487,7 @@ void CSQC_Parse_StuffCmd(string strMessage)
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
-	print(str_color_translate_rgb(strMessage));
+	print(strMessage);
 }
 
 void(float ignore) main_init_read {
