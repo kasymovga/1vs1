@@ -1304,19 +1304,8 @@ void Sbar_DrawScoreboard()
 	if (centerprint_num < 1) {
 		string tail = motd;
 		if (gametype == GAME_CTS || gametype == GAME_RACE)
-		if (race_records_time[0]) {
-			string table = "-----RECORDS-----\n", n;
-			float i, tt;
-			for (i = 0; i < 10; i++) {
-				n = race_records_name[i];
-				tt = race_records_time[i];
-				if (!tt)
-					break;
+			tail = strcat(race_records_table_string(), tail);
 
-				table = strcat(table, "^7", ftos(i + 1), ". ", n, "^7    ", TIME_ENCODED_TOSTRING(tt), "\n");
-			}
-			tail = strcat(table, "-----------------\n\n", tail);
-		}
 		float n;
 		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
 		while (tail != "") {
@@ -1449,110 +1438,8 @@ void()Sbar_Score_Default {
 			}
 		}
 	}
-
-	if(gametype == GAME_RACE || gametype == GAME_CTS)
-	{
-		drawfont = sbar_bigfont;
-		float a, t;
-		vector m;
-		string s, forcetime;
-
-		m = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.25 0' * CVAR(vid_conheight);
-
-		if(race_checkpointtime)
-		{
-			a = bound(0, 2 - (time - race_checkpointtime), 1);
-			s = "";
-			forcetime = "";
-			if(a > 0) // just hit a checkpoint?
-			{
-				if(race_checkpoint != 254)
-				{
-					if(race_time && race_previousbesttime)
-						s = race_checkpoint_string(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, 0, race_previousbestname);
-					else
-						s = race_checkpoint_string(race_checkpoint, 0, -1, 0, race_previousbestname);
-					if(race_time)
-						forcetime = TIME_ENCODED_TOSTRING(race_time);
-				}
-			}
-			else
-			{
-				if(race_laptime && race_nextbesttime && race_nextcheckpoint != 254)
-				{
-					a = bound(0, 2 - ((race_laptime + TIME_DECODE(race_nextbesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1);
-					if(a > 0) // next one?
-					{
-						s = race_checkpoint_string(race_nextcheckpoint, (time + TIME_DECODE(race_penaltyaccumulator)) - race_laptime, TIME_DECODE(race_nextbesttime), 0, race_nextbestname);
-					}
-				}
-			}
-
-			if(s != "" && a > 0)
-			{
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-				drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-			}
-
-			if(race_penaltytime)
-			{
-				a = bound(0, 2 - (time - race_penaltyeventtime), 1);
-				if(a > 0)
-				{
-					s = strcat("^1PENALTY: ", str_float_decimals(race_penaltytime * 0.1, 1), " (", race_penaltyreason, ")");
-					dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-					drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-				}
-			}
-
-			if(forcetime != "")
-			{
-				a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-				drawstring_expanding(m - '16 0 0' * stringwidth(forcetime, FALSE), forcetime, '32 32 0', '1 1 1', sbar_alpha_fg, 0, a);
-			}
-			else
-				a = 1;
-
-			if(race_laptime && race_checkpoint != 255)
-			{
-				s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
-				drawstring(m - '16 0 0' * stringwidth(s, FALSE), s, '32 32 0', '1 1 1', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-			}
-		}
-		else
-		{
-			if(race_mycheckpointtime)
-			{
-				a = bound(0, 2 - (time - race_mycheckpointtime), 1);
-				s = race_checkpoint_string(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-				drawcolorcodedstring(m - '0 16 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-			}
-			if(race_othercheckpointtime && race_othercheckpointenemy != "")
-			{
-				a = bound(0, 2 - (time - race_othercheckpointtime), 1);
-				s = race_checkpoint_string(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
-				dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-				drawcolorcodedstring(m - '0 0 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-			}
-
-			if(race_penaltytime && !race_penaltyaccumulator)
-			{
-				t = race_penaltytime * 0.1 + race_penaltyeventtime;
-				a = bound(0, (1 + t - time), 1);
-				if(a > 0)
-				{
-					if(time < t)
-						s = strcat("^1PENALTY: ", str_float_decimals(t - time, 1), " (", race_penaltyreason, ")");
-					else
-						s = strcat("^2PENALTY: 0.0 (", race_penaltyreason, ")");
-					dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-					drawcolorcodedstring(m - '0 32 0' - '8 0 0' * stringwidth(s, TRUE), s, '16 16 0', sbar_alpha_fg * a, DRAWFLAG_NORMAL);
-				}
-			}
-		}
-
-		drawfont = sbar_font;
+	if(gametype == GAME_RACE || gametype == GAME_CTS) {
+		race_sbar_draw();
 	}
 }
 

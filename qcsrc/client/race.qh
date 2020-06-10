@@ -1,29 +1,3 @@
 void(void) race_read;
-// QUALIFYING
-float race_checkpoint;
-float race_time;
-float race_laptime;
-float race_checkpointtime;
-float race_previousbesttime;
-string race_previousbestname;
-float race_nextcheckpoint;
-float race_nextbesttime;
-string race_nextbestname;
-float race_penaltyaccumulator; // qualifying: total penalty time in tenths
-float race_penaltyeventtime; // time when the player got the penalty
-float race_penaltytime; // duration of penalty time, in tenths
-string race_penaltyreason; // reason for penalty
-// RACE
-float race_mycheckpoint;
-float race_mycheckpointtime;
-float race_mycheckpointdelta;
-float race_mycheckpointlapsdelta;
-string race_mycheckpointenemy;
-float race_othercheckpoint;
-float race_othercheckpointtime;
-float race_othercheckpointdelta;
-float race_othercheckpointlapsdelta;
-string race_othercheckpointenemy;
-float race_records_time[10];
-string race_records_name[10];
-string(float cp, float mytime, float histime, float lapdelta, string hisname) race_checkpoint_string;
+void(void) race_sbar_draw;
+string(void) race_records_table_string;
