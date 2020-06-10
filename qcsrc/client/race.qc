@@ -33,7 +33,6 @@ void(void) race_read {
 	switch(b) {
 		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
 			race_checkpoint = ReadByte();
-			print("passed checkpoint ", ftos(race_checkpoint), "\n");
 			race_time = net_read_int24();
 			race_previousbesttime = net_read_int24();
 			if (race_previousbestname)
