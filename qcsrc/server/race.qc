@@ -205,9 +205,8 @@ void(entity e, float spec) race_checkpoint_next_send { // qualifying only
 	WRITESPECTATABLE_MSG_ONE({
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_RACE);
-		if not(spec) {
+		if (spec) {
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING);
-			//WriteCoord(MSG_ONE, e.race_laptime - e.race_penalty_accumulator);
 			WriteCoord(MSG_ONE, time - e.race_movetime - e.race_penalty_accumulator);
 		} else
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_QUALIFYING);
