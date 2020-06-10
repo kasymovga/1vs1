@@ -177,15 +177,13 @@ void(void) race_sbar_draw {
 		s = "";
 		forcetime = "";
 		if (a > 0) { // just hit a checkpoint?
-			if (race_checkpoint != 254) {
-				if (race_time && race_previousbesttime)
-					s = race_checkpoint_string(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, 0, race_previousbestname);
-				else
-					s = race_checkpoint_string(race_checkpoint, 0, -1, 0, race_previousbestname);
+			if (race_time && race_previousbesttime)
+				s = race_checkpoint_string(race_checkpoint, TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime), 0, 0, race_previousbestname);
+			else
+				s = race_checkpoint_string(race_checkpoint, 0, -1, 0, race_previousbestname);
 
-				if (race_time)
-					forcetime = TIME_ENCODED_TOSTRING(race_time);
-			}
+			if (race_time)
+				forcetime = TIME_ENCODED_TOSTRING(race_time);
 		} else {
 			if (race_laptime && race_nextbesttime && race_nextcheckpoint != 254) {
 				a = bound(0, 2 - ((race_laptime + TIME_DECODE(race_nextbesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1);

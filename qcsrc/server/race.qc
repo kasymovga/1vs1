@@ -1,6 +1,9 @@
 #define MAX_CHECKPOINTS 255
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
+// sorry, but using \ in macros breaks line numbers
+#define RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == "spectator" && msg_entity.enemy == varname)) statement msg_entity = varname
+#define RACE_WRITESPECTATABLE_MSG_ONE(statement) RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 
 float g_race;
 float g_cts;
@@ -202,7 +205,7 @@ void(entity e, float spec) race_checkpoint_next_send { // qualifying only
 	else
 		msg_entity = self;
 
-	WRITESPECTATABLE_MSG_ONE({
+	RACE_WRITESPECTATABLE_MSG_ONE({
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_RACE);
 		if (spec) {
@@ -328,7 +331,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			recordholder = "";
 		}
 		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
+		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
@@ -349,7 +352,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			lself = lother = othtime = 0;
 
 		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy2, {
+		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy2, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE);
@@ -368,7 +371,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 		race_checkpoint_lasttimes[cp] = time;
 		race_checkpoint_lastlaps[cp] = lself;
 		msg_entity = oth;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
+		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT);
@@ -393,7 +396,7 @@ void(entity e) race_time_clear {
 	e.race_penalty_accumulator = 0;
 	e.race_lastpenalty = world;
 	msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE({
+	RACE_WRITESPECTATABLE_MSG_ONE({
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_RACE);
 		WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
@@ -722,7 +725,7 @@ void(entity pl, float penalty, string reason) race_impose_penalty_time {
 	if (g_race_qualifying) {
 		pl.race_penalty_accumulator += penalty;
 		msg_entity = pl;
-		WRITESPECTATABLE_MSG_ONE({
+		RACE_WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_PENALTY_QUALIFYING);
@@ -732,7 +735,7 @@ void(entity pl, float penalty, string reason) race_impose_penalty_time {
 	} else {
 		pl.race_penalty = time + penalty;
 		msg_entity = pl;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy, {
+		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_PENALTY_RACE);
