@@ -8,7 +8,6 @@ float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
 float warmup_start_ammo_cells;
 float warmup_start_ammo_fuel;
-float warmup_start_weapons;
 
 void(void) warmup_note_message {
 	if (!other.ready && (other.classname == "player" || other.team > 0))
@@ -49,7 +48,9 @@ float(void) warmup_player_equip_handle {
 	self.ammo_fuel = warmup_start_ammo_fuel;
 	self.health = warmup_start_health;
 	self.armorvalue = warmup_start_armorvalue;
-	self.weapons = warmup_start_weapons;
+	if (g_warmup_allguns)
+		self.weapons = start_weapons | weapon_spawned_list;
+
 	return TRUE;
 }
 
@@ -108,18 +109,6 @@ void(void) warmup_init {
 	}
 	warmup_start_health = cvar("g_warmup_start_health");
 	warmup_start_armorvalue = cvar("g_warmup_start_armor");
-	if (cvar("g_warmup_allguns")) {
-		for (i = WEP_FIRST; i < WEP_FIREBALL; ++i) {
-			e = weapon_info(i);
-			if (!(e.weapon))
-				continue;
-
-			if (e.spawnflags & WEPSPAWNFLAG_NORMAL) {
-				warmup_start_weapons |= e.weapons;
-				weapon_precache(e.weapon);
-			}
-		}
-	}
 }
 
 void(void) warmup_finish {
