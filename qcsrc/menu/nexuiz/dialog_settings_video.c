@@ -22,8 +22,13 @@ void fillNexuizVideoSettingsTab(entity me)
 	entity e;
 
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "vid_fullscreen", "Full screen"));
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "vid_desktopfullscreen", "Desktop resolution"));
+		setDependent(e, "vid_fullscreen", 1, 1);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Resolution:"));
 		me.TD(me, 1, 2, e = makeNexuizResolutionSlider());
+		setDependentOR(e, "vid_fullscreen", 0, 0, "vid_desktopfullscreen", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Color depth:"));
 		me.TD(me, 1, 2, e = makeNexuizSlider(16, 32, 16, "vid_bitsperpixel"));
@@ -33,9 +38,7 @@ void fillNexuizVideoSettingsTab(entity me)
 		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(2, "gl_texturecompression", "1", "Fast"));
 		me.TD(me, 1, 0.5, e = makeNexuizRadioButton(2, "gl_texturecompression", "2", "Good"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "vid_fullscreen", "Full screen"));
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "vid_vsync", "Vertical Synchronization"));
-	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "r_glsl", "Use OpenGL 2.0 shaders (GLSL)"));
 	me.TR(me);
