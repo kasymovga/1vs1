@@ -100,7 +100,6 @@ void(void) warmup_init {
 	warmup_start_ammo_fuel = start_ammo_fuel;
 	warmup_start_health = start_health;
 	warmup_start_armorvalue = start_armorvalue;
-	warmup_start_weapons = start_weapons;
 	if not(start_items & IT_UNLIMITED_WEAPON_AMMO) {
 		warmup_start_ammo_shells = max(0, cvar("g_warmup_start_ammo_shells"));
 		warmup_start_ammo_cells = max(0, cvar("g_warmup_start_ammo_cells"));
