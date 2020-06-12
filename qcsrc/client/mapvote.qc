@@ -305,7 +305,6 @@ void(string pic, string pk3, float id) mapvote_checkpic {
 void(void) mapvote_init {
 	float i, power;
 	string map, pk3, map_pic;
-	precache_sound ("misc/invshot.wav");
 	registercmd("+showscores");
 	registercmd("-showscores");
 	mapvote_active = 1;
@@ -356,10 +355,6 @@ void(void) mapvote_update_mask {
 		mapvote_maps_mask = ReadByte();
 	else
 		mapvote_maps_mask = ReadShort();
-
-	if (oldmask & mapvote_maps_mask != oldmask)
-		if(oldmask & mapvote_maps_mask == mapvote_maps_mask)
-			 sound(world, CHAN_AUTO, "misc_invshot.wav", VOL_BASE, ATTN_NONE);
 
 	// remove votes that no longer apply
 	for (i = 0, power = 1; i < mapvote_count; ++i, power *= 2)
