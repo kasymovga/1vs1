@@ -123,6 +123,11 @@ seta crosshair_fireball_color_green 1.0 "crosshair color green component to disp
 seta crosshair_fireball_color_blue 0.2 "crosshair color blue component to display when wielding the fireball"
 seta crosshair_fireball_color_alpha 1 "crosshair alpha value to display when wielding the fireball"
 seta crosshair_fireball_size 1 "crosshair size when wielding the fireball"
+seta crosshair_hit_time 0
+seta crosshair_hit_color_red 0
+seta crosshair_hit_color_green 0
+seta crosshair_hit_color_blue 0
+seta crosshair_hit_size 1
 fov 90
 seta cl_zoomfactor 5 "how much +zoom will zoom (1-16)"
 seta cl_zoomspeed 3.5 "how fast it will zoom (0.5-16), negative values mean instant zoom"

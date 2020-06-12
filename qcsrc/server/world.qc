@@ -624,13 +624,19 @@ void(void) world_frame_end {
 		if(self.classname == "spectator") {
 			if(self.enemy.typehitsound)
 				sound_play2(self, "misc/typehit.wav");
-			else if(self.enemy.hitsound && self.cvar_cl_hitsound)
-				sound_play2(self, "misc/hit.wav");
+			else if(self.enemy.hitsound) {
+				msg_entity = self;
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_HIT);
+			}
 		} else {
-			if(self.typehitsound)
+			if(self.typehitsound) {
 				sound_play2(self, "misc/typehit.wav");
-			else if(self.hitsound && self.cvar_cl_hitsound)
-				sound_play2(self, "misc/hit.wav");
+			} else if(self.hitsound) {
+				msg_entity = self;
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_HIT);
+			}
 		}
 	}
 	FOR_EACH_CLIENT(self) {

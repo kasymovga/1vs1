@@ -161,12 +161,9 @@ void CSQC_Init(void)
 	binddb = db_create();
 	tempdb = db_create();
 	net_compress_vector_init();
-
 	crosshairdot_tex = "gfx/crosshair6";
-	if (file_exists("gfx/crosshairdot.tga"))
-		crosshairdot_tex = "gfx/crosshairdot.tga";
-	else if (file_exists("gfx/crosshairdot.png"))
-		crosshairdot_tex = "gfx/crosshairdot.png";
+	if (file_exists("gfx/crosshairdot.tga") || file_exists("gfx/crosshairdot.png"))
+		crosshairdot_tex = "gfx/crosshairdot";
 
 	drawfont = 0;
 
@@ -342,6 +339,7 @@ void CSQC_Init(void)
 	if not(cvar("cl_movement")) {
 		localcmd("seta cl_movement 1\n"); //Some people disable it because their don't understand what is it. Fixing.
 	}
+	precache_sound("misc/hit.wav");
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -553,6 +551,14 @@ float CSQC_Parse_TempEntity()
 	// NOTE: Could just do return instead of break...
 	switch(nTEID)
 	{
+		case TE_CSQC_HIT:
+			if (CVAR(cl_hitsound))
+				sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+
+			if (CVAR(crosshair_hit_time) > 0) {
+				crosshair_hittime = time + CVAR(crosshair_hit_time);
+			}
+			break;
 		case TE_CSQC_ZCURVEPARTICLES:
 			Net_ReadZCurveParticles();
 			break;
