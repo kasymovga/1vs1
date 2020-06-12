@@ -71,8 +71,6 @@ void(void) warmup_server_frame {
 }
 
 void(void) warmup_init {
-	float i;
-	entity e;
 	CACHE_CVAR(g_warmup_limit);
 	CACHE_CVAR(g_warmup_allguns);
 	CACHE_CVAR(g_warmup_allow_timeout);
