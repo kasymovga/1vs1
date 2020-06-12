@@ -282,3 +282,4 @@ seta cl_gibs_maxcount 100 "maximum amount of gibs (must be at least 1)"
 seta cl_vehicle_spiderbot_cross_alpha 0.6
 seta cl_vehicle_spiderbot_cross_size 1
 
+seta cl_nogibs 0
