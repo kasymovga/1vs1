@@ -22,7 +22,6 @@ set ca_g_balance_armor_regen 0
 set ca_g_balance_health_start 200
 set ca_g_balance_health_rot 0
 set ca_g_balance_health_regen 0
-set ca_g_powerup_superhealth 0
 set ca_g_powerup_shield 0
 set ca_g_powerup_strength 0
 set ca_g_powerup_invisibility 0

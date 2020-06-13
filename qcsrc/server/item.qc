@@ -62,7 +62,6 @@ float g_pickup_healthlarge_max;
 float g_pickup_healthmega;
 float g_pickup_healthmega_max;
 float g_pickup_fuel_jetpack;
-float g_powerup_superhealth;
 float g_powerup_strength;
 float g_powerup_speed;
 float g_powerup_invisibility;
@@ -867,7 +866,7 @@ void spawnfunc_item_health_large (void) {
 }
 
 void spawnfunc_item_health_mega (void) {
-	if(!g_powerup_superhealth) {
+	if (g_pickup_healthmega <= 0) {
 		remove(self);
 		return;
 	}
@@ -1347,7 +1346,6 @@ void item_init()
 	CACHE_CVAR(g_pickup_healthmega);
 	CACHE_CVAR(g_pickup_healthmega_max);
 	CACHE_CVAR(g_pickup_fuel_jetpack);
-	CACHE_CVAR(g_powerup_superhealth);
 	CACHE_CVAR(g_powerup_strength);
 	CACHE_CVAR(g_powerup_speed);
 	CACHE_CVAR(g_powerup_invisibility);
