@@ -249,6 +249,7 @@ void Ent_Physic(float isnew)
 		sv_warsowbunny_topspeed = ReadCoord();
 		sv_warsowbunny_backtosideratio = ReadCoord();
 		sv_jumpvelocity = ReadCoord();
+		sv_waterjumpvelocity = ReadCoord();
 		sv_friction_on_land = ReadCoord();
 		float switches = ReadShort();
 		sv_slicksurfaces_allowjump = switches & 2;

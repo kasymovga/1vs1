@@ -369,6 +369,7 @@ void(void) physics_init {
 	PHYSICS_CACHE_CVAR(sv_warsowbunny_turnaccel);
 	PHYSICS_CACHE_CVAR(sv_warsowbunny_backtosideratio);
 	PHYSICS_CACHE_CVAR(sv_jumpvelocity);
+	PHYSICS_CACHE_CVAR(sv_waterjumpvelocity);
 	PHYSICS_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
 	CACHE_CVAR(g_stepairslowdown);
 	sv_friction_on_land = cvar("g_friction_on_land");
@@ -469,6 +470,7 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_topspeed);
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
+		WriteCoord(MSG_ENTITY, sv_waterjumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_friction_on_land);
 		float switches = (sv_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)

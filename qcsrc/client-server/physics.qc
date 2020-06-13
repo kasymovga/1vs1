@@ -602,7 +602,7 @@ void(void) physics_check_water_jump {
 		trace_line (start, end, TRUE, self);
 		if (trace_fraction == 1) { // open at eye level
 			physics_flags |= FL_WATERJUMP;
-			physics_velocity_z = sv_jumpvelocity * 0.75;
+			physics_velocity_z = sv_waterjumpvelocity;
 			physics_flags &~= FL_JUMPRELEASED;
 			physics_teleport_time = 2;
 			physics_check_water_jump_hook();
