@@ -701,8 +701,6 @@ void() client_cvars_parse {
 		self.cvar_cl_voice_directional = stof(val);
 	else if (s == "cl_voice_directional_taunt_attenuation")
 		self.cvar_cl_voice_directional_taunt_attenuation = stof(val);
-	else if (s == "cl_hitsound")
-		self.cvar_cl_hitsound = stof(val);
 #ifdef ALLOW_FORCEMODELS
 	else if (s == "cl_forceplayermodels")
 		self.cvar_cl_forceplayermodels = stof(val);

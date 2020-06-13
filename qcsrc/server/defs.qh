@@ -163,7 +163,6 @@ typedef void() voidfunc;
 .vector death_origin;
 
 .float() customizeentityforclient;
-.float cvar_cl_hitsound;
 .float cvar_cl_gunalpha;
 .float cvar_cl_playerdetailreduction;
 .float cvar_scr_centertime;
