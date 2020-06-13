@@ -2098,16 +2098,16 @@ void(entity spot) player_spawn {
 	self.body.nextthink = 0;
 	setmodel(self, "null");
 	if not(gamehook_chain_player_equip_handle()) {
-		self.ammo_shells = start_ammo_shells;
-		self.ammo_nails = start_ammo_nails;
-		self.ammo_rockets = start_ammo_rockets;
-		self.ammo_cells = start_ammo_cells;
-		self.ammo_fuel = start_ammo_fuel;
-		self.health = start_health;
-		self.armorvalue = start_armorvalue;
-		self.weapons = start_weapons;
+		self.ammo_shells = player_start_ammo_shells;
+		self.ammo_nails = player_start_ammo_nails;
+		self.ammo_rockets = player_start_ammo_rockets;
+		self.ammo_cells = player_start_ammo_cells;
+		self.ammo_fuel = player_start_ammo_fuel;
+		self.health = player_start_health;
+		self.armorvalue = player_start_armorvalue;
+		self.weapons = player_start_weapons;
 	}
-	self.items = start_items;
+	self.items = player_start_items;
 	if (!self.switchweapon || !player_hasweapon(self, self.switchweapon, TRUE, FALSE))
 		self.switchweapon = weapon_best(self);
 

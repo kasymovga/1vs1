@@ -1007,14 +1007,15 @@ void(void) race_qualifying_limits {
 }
 
 void(void) spawnfunc_race_target_init {
-	self.weapons = start_weapons;
-	self.health = start_health;
-	self.armorvalue = start_armorvalue;
-	self.ammo_shells = start_ammo_shells;
-	self.ammo_nails = start_ammo_nails;
-	self.ammo_rockets = start_ammo_rockets;
-	self.ammo_cells = start_ammo_cells;
-	self.ammo_fuel = start_ammo_fuel;
+	self.weapons = player_start_weapons;
+	self.health = player_start_health;
+	self.armorvalue = player_start_armorvalue;
+	self.ammo_shells = player_start_ammo_shells;
+	self.ammo_nails = player_start_ammo_nails;
+	self.ammo_rockets = player_start_ammo_rockets;
+	self.ammo_cells = player_start_ammo_cells;
+	self.ammo_fuel = player_start_ammo_fuel;
+	self.items = player_start_items;
 	spawnfunc_target_items();
 }
 

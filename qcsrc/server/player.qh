@@ -79,3 +79,12 @@ float player_independent;
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
 #define MAKE_INDEPENDENT_PLAYER(e) ((e).solid = SOLID_TRIGGER)
 float g_playerclip_collisions;
+float player_start_items;
+float player_start_health;
+float player_start_armorvalue;
+float player_start_weapons;
+float player_start_ammo_shells;
+float player_start_ammo_nails;
+float player_start_ammo_rockets;
+float player_start_ammo_cells;
+float player_start_ammo_fuel;

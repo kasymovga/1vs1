@@ -152,7 +152,7 @@ float weapon_nex(float req)
 		}
 	} else if (req == WR_RESETPLAYER) {
 		if (g_balance_nex_magazinecapacity)
-			self.nex_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_nex_magazinecapacity : -1);
+			self.nex_ammoclip = ((self.items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_nex_magazinecapacity : -1);
 	} else if (req == WR_CVAR_CACHE) {
 		CACHE_CVAR(g_balance_nex_magazinecapacity);
 		CACHE_CVAR(g_balance_nex_reloadtime);

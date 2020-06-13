@@ -324,7 +324,7 @@ float(void) minstagib_player_equip_handle {
 	self.ammo_shells = 0;
 	self.ammo_nails = 0;
 	self.ammo_rockets = 0;
-	if not(start_items & IT_UNLIMITED_AMMO) {
+	if not(player_start_items & IT_UNLIMITED_AMMO) {
 		self.ammo_cells = cvar("g_minstagib_ammo_start");
 	} else
 		self.ammo_cells = 0;

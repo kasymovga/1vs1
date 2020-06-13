@@ -1233,7 +1233,7 @@ void spawnfunc_target_items (void)
 
 void spawnfunc_item_jetpack(void)
 {
-	if (start_items & IT_JETPACK) {
+	if (player_start_items & IT_JETPACK) {
 		remove(self);
 		return;
 	}
@@ -1404,26 +1404,21 @@ void item_init()
 	float i, t;
 
 	// initialize starting values for players
-	start_weapons = 0;
-	start_items = 0;
-	start_ammo_shells = 0;
-	start_ammo_nails = 0;
-	start_ammo_rockets = 0;
-	start_ammo_cells = 0;
-	start_health = cvar("g_balance_health_start");
-	start_armorvalue = cvar("g_balance_armor_start");
+	player_start_weapons = 0;
+	player_start_items = 0;
+	player_start_health = cvar("g_balance_health_start");
+	player_start_armorvalue = cvar("g_balance_armor_start");
 	if (g_use_ammunition) {
-		start_ammo_shells = cvar("g_start_ammo_shells");
-		start_ammo_nails = cvar("g_start_ammo_nails");
-		start_ammo_rockets = cvar("g_start_ammo_rockets");
-		start_ammo_cells = cvar("g_start_ammo_cells");
+		player_start_ammo_shells = max(0, cvar("g_start_ammo_shells"));
+		player_start_ammo_nails = max(0, cvar("g_start_ammo_nails"));
+		player_start_ammo_rockets = max(0, cvar("g_start_ammo_rockets"));
+		player_start_ammo_cells = max(0, cvar("g_start_ammo_cells"));
 	} else {
-		start_ammo_shells = 0;
-		start_ammo_nails = 0;
-		start_ammo_rockets = 0;
-		start_ammo_cells = 0;
-		start_ammo_fuel = 0;
-		start_items |= IT_UNLIMITED_AMMO;
+		player_start_ammo_shells = 0;
+		player_start_ammo_nails = 0;
+		player_start_ammo_rockets = 0;
+		player_start_ammo_cells = 0;
+		player_start_items |= IT_UNLIMITED_AMMO;
 	}
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
 		e = weapon_info(i);
@@ -1432,13 +1427,8 @@ void item_init()
 
 		t = cvar(strcat("g_start_weapon_", e.netname));
 		if (t > 0) {
-			start_weapons |= e.weapons;
+			player_start_weapons |= e.weapons;
 			weapon_precache(e.weapon);
 		}
 	}
-	start_ammo_shells = max(0, start_ammo_shells);
-	start_ammo_nails = max(0, start_ammo_nails);
-	start_ammo_cells = max(0, start_ammo_cells);
-	start_ammo_rockets = max(0, start_ammo_rockets);
-	start_ammo_fuel = max(0, start_ammo_fuel);
 }

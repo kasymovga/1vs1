@@ -9,7 +9,7 @@ entity single_secrets_controller;
 var void() single_shutdown_next;
 void() single_shutdown {
 	registercvar("_single_transit_weapons", "0");
-	builtin_cvar_set("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | start_weapons)); //builting function for avoid campaign wrapper
+	builtin_cvar_set("_single_transit_weapons", ftos(_single_transit_weapons | weapon_spawned_list | player_start_weapons)); //builting function for avoid campaign wrapper
 	single_shutdown_next();
 }
 
@@ -86,13 +86,13 @@ void single_init_delayed(void) {
 }
 
 void() single_client_parms_new {
-	parm5 = start_health;
-	parm6 = start_armorvalue;
-	parm7 = start_ammo_shells;
-	parm8 = start_ammo_nails;
-	parm9 = start_ammo_rockets;
-	parm10 = start_ammo_cells;
-	parm11 = start_weapons;
+	parm5 = player_start_health;
+	parm6 = player_start_armorvalue;
+	parm7 = player_start_ammo_shells;
+	parm8 = player_start_ammo_nails;
+	parm9 = player_start_ammo_rockets;
+	parm10 = player_start_ammo_cells;
+	parm11 = player_start_weapons;
 	parm12 = FALSE;
 }
 

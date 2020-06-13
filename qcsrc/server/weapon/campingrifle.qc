@@ -253,7 +253,7 @@ float weapon_campingrifle(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.campingrifle_accumulator = time - g_balance_campingrifle_bursttime;
-		self.campingrifle_ammoclip = ((start_items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_campingrifle_magazinecapacity : -1);
+		self.campingrifle_ammoclip = ((self.items & IT_UNLIMITED_WEAPON_AMMO) ? g_balance_campingrifle_magazinecapacity : -1);
 	}
 	else if (req == WR_CVAR_CACHE)
 	{

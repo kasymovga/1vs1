@@ -49,7 +49,7 @@ float(void) warmup_player_equip_handle {
 	self.health = warmup_start_health;
 	self.armorvalue = warmup_start_armorvalue;
 	if (g_warmup_allguns)
-		self.weapons = start_weapons | weapon_spawned_list;
+		self.weapons = player_start_weapons | weapon_spawned_list;
 
 	return TRUE;
 }
@@ -91,14 +91,14 @@ void(void) warmup_init {
 	warmup_note_update();
 	warmup_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = warmup_player_equip_handle;
-	warmup_start_ammo_shells = start_ammo_shells;
-	warmup_start_ammo_nails = start_ammo_nails;
-	warmup_start_ammo_rockets = start_ammo_rockets;
-	warmup_start_ammo_cells = start_ammo_cells;
-	warmup_start_ammo_fuel = start_ammo_fuel;
-	warmup_start_health = start_health;
-	warmup_start_armorvalue = start_armorvalue;
-	if not(start_items & IT_UNLIMITED_WEAPON_AMMO) {
+	warmup_start_ammo_shells = player_start_ammo_shells;
+	warmup_start_ammo_nails = player_start_ammo_nails;
+	warmup_start_ammo_rockets = player_start_ammo_rockets;
+	warmup_start_ammo_cells = player_start_ammo_cells;
+	warmup_start_ammo_fuel = player_start_ammo_fuel;
+	warmup_start_health = player_start_health;
+	warmup_start_armorvalue = player_start_armorvalue;
+	if not(player_start_items & IT_UNLIMITED_WEAPON_AMMO) {
 		warmup_start_ammo_shells = max(0, cvar("g_warmup_start_ammo_shells"));
 		warmup_start_ammo_cells = max(0, cvar("g_warmup_start_ammo_cells"));
 		warmup_start_ammo_nails = max(0, cvar("g_warmup_start_ammo_nails"));

@@ -319,11 +319,10 @@ float weapon_throwable(float w)
 	if(!wb)
 		return 0;
 	wa = weapon_ammo_item_code(w);
-	if(start_weapons & wb)
-	{
-		if(wa == IT_SUPERWEAPON && start_items & IT_UNLIMITED_SUPERWEAPONS)
+	if (player_start_weapons & wb) {
+		if(wa == IT_SUPERWEAPON && player_start_items & IT_UNLIMITED_SUPERWEAPONS)
 			return 0;
-		if(wa != IT_SUPERWEAPON && start_items & IT_UNLIMITED_WEAPON_AMMO)
+		if(wa != IT_SUPERWEAPON && player_start_items & IT_UNLIMITED_WEAPON_AMMO)
 			return 0;
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(wa == 0)
