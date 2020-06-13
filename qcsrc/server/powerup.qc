@@ -77,7 +77,8 @@ void() powerup_init {
 
 var void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set_next;
 void(entity targ, entity attacker, float deathtype) powerup_invincible_damage_mods_set {
-	if (targ.items & IT_INVINCIBLE) {
+	if (targ.items & IT_INVINCIBLE)
+	if (deathtype != DEATH_HURTTRIGGER) {
 		gamehook_chain_damage_mod = gamehook_chain_damage_mod * g_balance_powerup_invincible_takedamage;
 		if (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
 			gamehook_chain_damage_mod = 0;

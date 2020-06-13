@@ -1006,7 +1006,19 @@ void(void) race_qualifying_limits {
 	cvar_set("timelimit", cvar_string("g_race_qualifying_timelimit"));
 }
 
-void(void) spawnfunc_target_startTimer {
+void(void) spawnfunc_race_target_init {
+	self.weapons = start_weapons;
+	self.health = start_health;
+	self.armorvalue = start_armorvalue;
+	self.ammo_shells = start_ammo_shells;
+	self.ammo_nails = start_ammo_nails;
+	self.ammo_rockets = start_ammo_rockets;
+	self.ammo_cells = start_ammo_cells;
+	self.ammo_fuel = start_ammo_fuel;
+	spawnfunc_target_items();
+}
+
+void(void) spawnfunc_race_target_start_timer {
 	if (game != GAME_CTS) {
 		remove(self);
 		return;
@@ -1018,7 +1030,7 @@ void(void) spawnfunc_target_startTimer {
 	spawnfunc_race_trigger_checkpoint();
 }
 
-void(void) spawnfunc_target_stopTimer {
+void(void) spawnfunc_race_target_stop_timer {
 	if (game != GAME_CTS) {
 		remove(self);
 		return;
@@ -1030,7 +1042,7 @@ void(void) spawnfunc_target_stopTimer {
 	spawnfunc_race_trigger_checkpoint();
 }
 
-void(void) spawnfunc_target_checkpoint {
+void(void) spawnfunc_race_target_checkpoint {
 	if (game != GAME_CTS) {
 		remove(self);
 		return;
