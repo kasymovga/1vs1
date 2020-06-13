@@ -8,6 +8,7 @@ set physicscpma_g_friction 8
 set physicscpma_g_edgefriction 1
 set physicscpma_g_stepheight 22.5
 set physicscpma_g_jumpvelocity 332.5
+set physicscpma_g_waterjumpvelocity 281.25
 set physicscpma_g_wateraccelerate 4
 set physicscpma_g_waterfriction 1
 set physicscpma_g_airaccel_sideways_friction 0
