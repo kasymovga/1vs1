@@ -67,6 +67,7 @@ float g_powerup_strength;
 float g_powerup_speed;
 float g_powerup_invisibility;
 float g_powerup_shield;
+float g_powerup_addition;
 float g_balance_powerup_strength_time;
 float g_balance_powerup_invisibility_time;
 float g_balance_powerup_invincible_time;
@@ -92,7 +93,6 @@ float(entity player, entity item) item_generic_pickupevalfunc {
 
 #define ITEM_RESPAWNTIME(i)         ((i).respawntime + random_2() * (i).respawntimejitter)
 	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
-#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
 	// range: 10 .. respawntime + respawntimejitter
 
 floatfield(float it) item_counter_field {
@@ -230,16 +230,12 @@ void(void) item_respawn_countdown {
 	}
 }
 
-void item_schedule_respawn_in(entity e, float t)
-{
-	if(e.flags & FL_POWERUP)
-	{
+void(entity e, float t) item_schedule_respawn_in {
+	if ((e.flags & FL_POWERUP) && t >= ITEM_RESPAWN_TICKS) {
 		e.think = item_respawn_countdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.count = 0;
-	}
-	else
-	{
+	} else {
 		e.think = item_respawn;
 		e.nextthink = time + t;
 	}
@@ -250,6 +246,9 @@ void item_schedule_respawn(entity e)
 	if (e.respawntime < 0) {
 		item_show(e, -1);
 		return;
+	} else if (!e.respawntime) {
+		item_show(e, 1);
+		return;
 	}
 	item_show(e, 0);
 	item_schedule_respawn_in(e, ITEM_RESPAWNTIME(e));
@@ -258,7 +257,20 @@ void item_schedule_respawn(entity e)
 void item_schedule_initial_respawn(entity e)
 {
 	item_show(e, 0);
-	item_schedule_respawn_in(e, max(0, map_starttime - time) + ITEM_RESPAWNTIME_INITIAL(e));
+	item_schedule_respawn_in(e, max(0, map_starttime - time) + ITEM_RESPAWNTIME(e));
+}
+
+float(entity item, entity player, .float field_finished) item_powerup_give_to {
+	if (item.field_finished) {
+		if (g_powerup_addition) {
+			player.field_finished = max(player.field_finished, time) + item.field_finished;
+			return TRUE;
+		} else if (player.field_finished + 0.5 < time + item.field_finished || !player.field_finished) {
+			player.field_finished = time + item.field_finished;
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 float(entity item, entity player) item_give_to {
@@ -370,28 +382,18 @@ float(entity item, entity player) item_give_to {
 			sprint (player, strcat("You got the ^2", item.netname, "\n"));
 		}
 
-		if(item.spawnshieldtime)
-		{
-			if (item.strength_finished)
-			{
+		if (item.spawnshieldtime) {
+			if (item_powerup_give_to(item, player, strength_finished))
 				pickedup = TRUE;
-				player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
-			}
-			if (item.invincible_finished)
-			{
+
+			if (item_powerup_give_to(item, player, invincible_finished))
 				pickedup = TRUE;
-				player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
-			}
-			if (item.speed_finished)
-			{
+
+			if (item_powerup_give_to(item, player, speed_finished))
 				pickedup = TRUE;
-				player.speed_finished = max(player.speed_finished, time) + item.speed_finished;
-			}
-			if (item.invisibility_finished)
-			{
+
+			if (item_powerup_give_to(item, player, invisibility_finished))
 				pickedup = TRUE;
-				player.invisibility_finished = max(player.invisibility_finished, time) + item.invisibility_finished;
-			}
 
 			if (item.health)
 			if (player.health < item.max_health)
@@ -1350,6 +1352,7 @@ void item_init()
 	CACHE_CVAR(g_powerup_speed);
 	CACHE_CVAR(g_powerup_invisibility);
 	CACHE_CVAR(g_powerup_shield);
+	CACHE_CVAR(g_powerup_addition);
 	CACHE_CVAR(g_balance_powerup_strength_time);
 	CACHE_CVAR(g_balance_powerup_invisibility_time);
 	CACHE_CVAR(g_balance_powerup_invincible_time);
