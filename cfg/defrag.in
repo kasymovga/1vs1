@@ -27,6 +27,10 @@ set defrag_g_pickup_respawntime_armorlarge 0
 set defrag_g_pickup_respawntime_powerup 0
 set defrag_g_pickup_respawntimejitter_powerup 0
 set defrag_g_powerup_addition 0
+set defrag_g_balance_uzi_sustained_damage 7
+set defrag_g_balance_uzi_sustained_refire 0.1
+set defrag_g_balance_uzi_first 0
+set defrag_g_balance_uzi_first_damage 7
 set defrag_g_balance_hlac_secondary 0
 set defrag_g_balance_hlac_primary_ammo 1
 set defrag_g_balance_hlac_primary_spread_min 0
