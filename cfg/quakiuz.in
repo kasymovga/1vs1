@@ -86,7 +86,6 @@ set quakiuz_g_balance_grenadelauncher_primary_speed 900
 set quakiuz_g_balance_grenadelauncher_primary_lifetime 2.5
 set quakiuz_g_balance_grenadelauncher_secondary 0
 set quakiuz_g_balance_grenadelauncher_bouncefactor 0.5
-set quakiuz_g_balance_zapper_primary_tracespeed 0
 set quakiuz_g_balance_zapper_primary_lifetime 0.1
 set quakiuz_g_balance_zapper_primary_damage 8
 set quakiuz_g_balance_zapper_primary_force 20
