@@ -161,6 +161,11 @@ string world_getrecords() {
         return strcat("Records on this server:\n", s);
 }
 
+void(void) world_end_of_time {
+	bprint("The server has been running for too long. Restart required\n");
+	localcmd("\nrestart\n");
+}
+
 float world_already_spawned;
 void(void) world_init {
 	if(world_already_spawned)
@@ -293,6 +298,7 @@ void(void) world_init {
 	world_initialized = 1;
 	IRC_Init();
 	infomessages_init();
+	defer(20000, world_end_of_time); //prevent bugs with 32bit float time value
 }
 
 /*
