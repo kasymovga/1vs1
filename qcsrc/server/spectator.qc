@@ -252,8 +252,8 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.items = 0;
 	self.weapons = 0;
 	if (self.body) {
-		self.body.modelindex = 0;
-		self.body.customizeentityforclient = func_null;
+		remove(self.body);
+		self.body = world;
 	}
 	setmodel(self, "null");
 	self.modelindex = 0;
