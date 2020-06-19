@@ -2045,7 +2045,7 @@ float(void) player_real_customize {
 }
 
 float(void) player_customize {
-	self.alpha = player_alpha(self, other);
+	self.alpha = player_alpha(self.owner, other);
 	if(self.alpha < 0)
 		return FALSE;
 
