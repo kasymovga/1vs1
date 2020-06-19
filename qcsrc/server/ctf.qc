@@ -537,7 +537,7 @@ void() ctf_flag_touch {
 
 		self.movetype = MOVETYPE_NONE;
 		setorigin(self, FLAG_CARRY_POS);
-		setattachment(self, other, "");
+		setattachment(self, other.body, "");
 		WaypointSprite_AttachCarrier("flagcarrier", other);
 		WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateSprites(other.waypointsprite_attachedforcarrier, "flagcarrier", "flagcarrier", "flagcarrier");
@@ -624,7 +624,7 @@ void() ctf_flag_touch {
 
 			self.movetype = MOVETYPE_NONE;	// flag must have MOVETYPE_NONE here, otherwise it will drop through the floor...
 			setorigin(self, FLAG_CARRY_POS);
-			setattachment(self, other, "");
+			setattachment(self, other.body, "");
 			self.damageforcescale = 0;
 			self.takedamage = DAMAGE_NO;
 			WaypointSprite_AttachCarrier("flagcarrier", other);

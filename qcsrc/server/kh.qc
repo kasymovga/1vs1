@@ -163,7 +163,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	first = key.owner.kh_next;
 	if(key == first)
 	{
-		setattachment(key, key.owner, KH_PLAYER_ATTACHMENT_BONE);
+		setattachment(key, key.owner.body, KH_PLAYER_ATTACHMENT_BONE);
 		if(key.kh_next)
 		{
 			setattachment(key.kh_next, key, "");
@@ -185,7 +185,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 		key.angles = '0 0 0';
 	}
 #else
-	setattachment(key, key.owner, "");
+	setattachment(key, key.owner.body, "");
 	setorigin(key, '0 0 1' * KH_KEY_ZSHIFT);  // fixing x, y in think
 	key.angles_y -= key.owner.angles_y;
 #endif
@@ -207,7 +207,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	{
 		if(key.kh_next)
 		{
-			setattachment(key.kh_next, key.owner, KH_PLAYER_ATTACHMENT_BONE);
+			setattachment(key.kh_next, key.owner.body, KH_PLAYER_ATTACHMENT_BONE);
 			setorigin(key.kh_next, key.origin + 0.5 * KH_PLAYER_ATTACHMENT_DIST);
 			key.kh_next.angles = KH_PLAYER_ATTACHMENT_ANGLES;
 		}
