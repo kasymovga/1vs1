@@ -2355,16 +2355,10 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 }
 
 entity(entity pl) player_entity {
-	entity e;
-	if (pl.body)
-		e = pl.body.body;
-	else
-		e = pl;
-
 	if (pl.classname == "player")
-		return gamehook_chain_player_entity(e);
+		return gamehook_chain_player_entity(pl);
 
-	return e;
+	return pl;
 }
 
 void() player_init {
