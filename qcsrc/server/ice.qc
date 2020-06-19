@@ -115,7 +115,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 		self.ice.fade_time = 0;
 
 	WaypointSprite_AttachCarrier("helpme", self);
-	setattachment(self.ice, self, "");
+	setattachment(self.ice, self.body.body, "");
 	setorigin(self.ice, '0 0 1' * sv_model_ice_z);
 	setmodel(self.ice, sv_model_ice);
 	return TRUE;

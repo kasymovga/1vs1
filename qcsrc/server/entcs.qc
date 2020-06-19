@@ -93,6 +93,9 @@ float(entity to, float sf) entcs_send {
 void() entcs_think {
 	self.nextthink = time;
 	entity o = player_entity(self.owner);
+	if (o.body)
+		o = o.body.body;
+
 	if (self.enemy != o) {
 		self.enemy = o;
 		self.SendFlags |= 1;
