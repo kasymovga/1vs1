@@ -83,11 +83,16 @@ float sv_clforceplayermodels;
 .entity pusher;
 .float pushltime;
 
+float(void) player_customize;
+float(void) player_body_customize;
+
 void(void) player_body_spawn {
 	self.body = spawn();
+	self.body.customizeentityforclient = player_body_customize;
 	entity bb;
 	self.body.body = bb = spawn();
-	bb.exteriormodeltoclient = self;
+	bb.owner = self;
+	bb.customizeentityforclient = player_customize;
 	setorigin(bb, self.origin);
 	bb.effects = self.effects;
 	setsize(bb, self.mins, self.maxs);
@@ -2028,10 +2033,28 @@ void() player_post_think {
 	self.pressedkeys = self.pressedkeys + ((self.BUTTON_JUMP ? KEY_JUMP : 0) + (self.BUTTON_CROUCH ? KEY_CROUCH : 0));
 }
 
+float(void) player_real_customize {
+	if (other.enemy == self)
+	if (other.classname == "spectator")
+		return TRUE;
+
+	if (other == self)
+		return TRUE;
+
+	return FALSE;
+}
+
 float(void) player_customize {
 	self.alpha = player_alpha(self, other);
 	if(self.alpha < 0)
 		return FALSE;
+
+	if (self.owner == other)
+		self.exteriormodeltoclient = other;
+	else if (self.owner == other.enemy && other.classname == "spectator")
+		self.exteriormodeltoclient = other;
+	else
+		self.exteriormodeltoclient = world;
 
 	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EF_NODEPTHTEST;
@@ -2113,7 +2136,7 @@ void(entity spot) player_spawn {
 		player_body_spawn();
 
 	self.body.nextthink = 0;
-	setmodel(self, "");
+	setmodel(self, "null");
 	if not(gamehook_chain_player_equip_handle()) {
 		self.ammo_shells = player_start_ammo_shells;
 		self.ammo_nails = player_start_ammo_nails;
@@ -2163,8 +2186,7 @@ void(entity spot) player_spawn {
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	msg_entity = self;
-	self.body.customizeentityforclient = player_body_customize;
-	self.body.body.customizeentityforclient = player_customize;
+	self.customizeentityforclient = player_real_customize;
 	player_setup_model();
 	self.stand_view_ofs = PL_VIEW_OFS;
 	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
