@@ -2004,6 +2004,8 @@ void() player_post_think {
 		setorigin(bb, self.origin);
 		bb.angles = self.angles;
 		bb.effects = self.effects;
+		bb.health = self.health; //for entcs
+		bb.armorvalue = self.armorvalue; //for entcs
 		setsize(bb, self.mins, self.maxs);
 	}
 	if (self.impulse)
