@@ -165,7 +165,7 @@ void(void) rune_touch {
 	// detach from the spawn point you're on
 	rune_unmark_spot(self);
 	self.owner = other;
-	setattachment(self, other, "");
+	setattachment(self, other.body, "");
 	self.enemy.alpha = -1;
 	other.runes = other.runes | self.runes;
 	//self.think = stdproc_nothing;
@@ -508,7 +508,7 @@ void(entity targ, entity attacker, float _damage, vector force) rune_DamageForce
 						e.enemy.customizeentityforclient = weapon_model_customize;
 						e.enemy.owner = targ;
 						targ.rune_stun = e;
-						setattachment(targ.rune_stun, targ, "");
+						setattachment(targ.rune_stun, targ.body, "");
 						setmodel(e, "models/teamfx/electricityarcs_player.md3");
 						setmodel(e.enemy, "models/teamfx/electricityarcs_player.md3");
 						e.enemy.viewmodelforclient = targ;
