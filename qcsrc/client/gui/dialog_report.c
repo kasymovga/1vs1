@@ -14,8 +14,7 @@ ENDCLASS(NexuizReportDialog)
 entity typeNexuizReportDialog;
 entity playerNexuizReportDialog;
 
-void reportNexuizReportDialog(entity btn, entity me)
-{
+void(entity btn, entity me) reportNexuizReportDialog {
 	float type = typeNexuizReportDialog.selectedItem;
 	string type_s;
 	switch (type) {
@@ -35,37 +34,33 @@ void reportNexuizReportDialog(entity btn, entity me)
 	GUI_Hide();
 }
 
-void fillNexuizReportDialog(entity me)
-{
-	entity e, vlist;
-	
+void(entity me) fillNexuizReportDialog {
+	entity e;
 	me.TR(me);
 		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Naughty behaviour:"));
-		typeNexuizReportDialog = e;
 		me.TD(me, 1, 10, e = makeNexuizTextLabel(0, "Player:"));
+	me.TR(me);
+		me.TD(me, 13, 10, e = makeNexuizReportTypeList());
+		typeNexuizReportDialog = e;
+        me.TD(me, 13, 10, e = makeNexuizReportPlayerList());
 		playerNexuizReportDialog = e;
 	me.TR(me);
-        me.TD(me, 13, 10, vlist = makeNexuizReportTypeList());
-        me.TD(me, 13, 10, vlist.voteArgsList = makeNexuizReportPlayerList());
 	me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-    me.TR(me);
-        me.TD(me, 1, 10, e = makeNexuizButton("Report", '0 0 0'));
-            e.onClick = reportNexuizReportDialog;
-            e.onClickEntity = me;
-        me.TD(me, 1, 10, e = makeNexuizCommandButton("Cancel", '0 0 0', "", 1));
-    
-    me.voteList = vlist;
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 10, e = makeNexuizButton("Report", '0 0 0'));
+			e.onClick = reportNexuizReportDialog;
+			e.onClickEntity = me;
+		me.TD(me, 1, 10, e = makeNexuizCommandButton("Cancel", '0 0 0', "", 1));
 }
 #endif
 
