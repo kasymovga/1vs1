@@ -38,6 +38,9 @@ void configureMainWindowMainWindow(entity me)
 	GUI_hint = i = spawnNexuizHintDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	GUI_report = i = spawnNexuizReportDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);
 }
 #endif

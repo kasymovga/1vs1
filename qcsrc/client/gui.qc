@@ -157,6 +157,9 @@ void GUI_Show(float window) {
 	case GUI_HINT:
 		e = GUI_hint;
 		break;
+	case GUI_REPORT:
+		e = GUI_report;
+		break;
 	}
 	if not(e) {
 		GUI_Hide();

@@ -38,6 +38,8 @@ void(string msg) GameCommand {
 		spawnentity.frame = stof(argv(2));
 	} else if (cmd == "showradio") {
 		GUI_Show(GUI_RADIO);
+	} else if (cmd == "report") {
+		GUI_Show(GUI_REPORT);
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}

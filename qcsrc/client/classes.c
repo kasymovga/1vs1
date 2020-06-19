@@ -43,6 +43,9 @@
 #include "gui/dialog_vcall.c"
 #include "../client-menu/nexuiz/dialog_saveload.c"
 #include "gui/dialog_hint.c"
+#include "gui/reportplayerlist.c"
+#include "gui/reporttypelist.c"
+#include "gui/dialog_report.c"
 #undef draw
 #undef frame
 #undef conwidth
