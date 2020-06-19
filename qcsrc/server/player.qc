@@ -85,8 +85,15 @@ float sv_clforceplayermodels;
 
 void(void) player_body_spawn {
 	self.body = spawn();
+	entity bb;
+	self.body.body = bb = spawn();
+	bb.exteriormodeltoclient = self;
+	setorigin(bb, self.origin);
+	bb.effects = self.effects;
+	setsize(bb, self.mins, self.maxs);
+	setmodel(bb, "null");
 	self.body.owner = self;
-	setattachment(self.body, self, "");
+	setattachment(self.body, bb, "");
 }
 
 void(void) player_corpse_think {
@@ -134,6 +141,7 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 	player_body_spawn();
 	player_body_copy(self.body, e, FALSE);
 	setattachment(e, world, "");
+	remove(e.body);
 	e.body = e;
 	e.enemy = self;
 	e.iscreature = self.iscreature;
@@ -1991,6 +1999,13 @@ void(void) player_impulse {
 
 
 void() player_post_think {
+	entity bb = self.body.body;
+	if (bb) {
+		setorigin(bb, self.origin);
+		bb.angles = self.angles;
+		bb.effects = self.effects;
+		setsize(bb, self.mins, self.maxs);
+	}
 	if (self.impulse)
 		player_impulse();
 
@@ -2096,7 +2111,7 @@ void(entity spot) player_spawn {
 		player_body_spawn();
 
 	self.body.nextthink = 0;
-	setmodel(self, "null");
+	setmodel(self, "");
 	if not(gamehook_chain_player_equip_handle()) {
 		self.ammo_shells = player_start_ammo_shells;
 		self.ammo_nails = player_start_ammo_nails;
@@ -2146,8 +2161,8 @@ void(entity spot) player_spawn {
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	msg_entity = self;
-	self.customizeentityforclient = player_customize;
 	self.body.customizeentityforclient = player_body_customize;
+	self.body.body.customizeentityforclient = player_customize;
 	player_setup_model();
 	self.stand_view_ofs = PL_VIEW_OFS;
 	self.crouch_view_ofs = PL_CROUCH_VIEW_OFS;
@@ -2338,10 +2353,16 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 }
 
 entity(entity pl) player_entity {
-	if (pl.classname == "player")
-		return gamehook_chain_player_entity(pl);
+	entity e;
+	if (pl.body)
+		e = pl.body.body;
+	else
+		e = pl;
 
-	return pl;
+	if (pl.classname == "player")
+		return gamehook_chain_player_entity(e);
+
+	return e;
 }
 
 void() player_init {
