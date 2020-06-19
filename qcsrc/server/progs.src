@@ -128,6 +128,7 @@ gamemenu.qh
 walkietalkie.qh
 hat.qh
 score_damage.qh
+report.qh
 cmd.qh
 ../client-server/team.qh
 ../client-server/stdproc.qh
@@ -414,3 +415,4 @@ sysinfo.qc
 warfog.qc
 hint.qc
 lms.qc
+report.qc

@@ -17,9 +17,22 @@ entity playerNexuizReportDialog;
 void reportNexuizReportDialog(entity btn, entity me)
 {
 	float type = typeNexuizReportDialog.selectedItem;
+	string type_s;
+	switch (type) {
+	case 1:
+		type_s = "sabotage";
+		break;
+	case 2:
+		type_s = "flood";
+		break;
+	default:
+		type_s = "cheat";
+		break;
+	}
 	float player = playerNexuizReportDialog.selectedItem;
-    localcmd("cmd report ", ftos(type), " ", ftos(player + 1), "\n");
-    btn.onClickEntity.close(btn.onClickEntity);
+    localcmd("cmd report ", type_s, " ", ftos(player + 1), "\n");
+	GUI_Hide();
+	GUI_Hide();
 }
 
 void fillNexuizReportDialog(entity me)

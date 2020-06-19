@@ -115,6 +115,7 @@ void(void) world_static_init {
 	casing_init();
 	warfog_init();
 	hint_init();
+	report_init();
 	registercvar("connections_rexuiz", "0");
 	registercvar("connections_nexuiz", "0");
 	registercvar("connections_oldnexuiz", "0");
