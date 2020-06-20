@@ -672,6 +672,8 @@ void(void) physics_player {
 	if (physics_deadflag != DEAD_FREEZE) {
 		if (physics_flags & FL_ONGROUND)
 			physics_velocity = '0 0 0';
+		else if (physics_waterlevel >= WATERLEVEL_SWIMMING)
+			physics_velocity = physics_velocity * (1 - frametime * sv_friction);
 
 		goto end;
 	}
