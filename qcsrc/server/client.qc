@@ -419,10 +419,7 @@ void(void) client_connect { //called by engine
 	}
 
 	self.playerid = (client_playerid_last = client_playerid_last + 1);
-	chat_bubble_spawn();
-
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
-
 	bprint ("^4", self.netname, "^4 connected\n");
 	stuffcmd(self, strcat(client_stuff, "\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n");

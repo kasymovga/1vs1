@@ -99,6 +99,7 @@ void(void) player_body_spawn {
 	setmodel(bb, "null");
 	self.body.owner = self;
 	setattachment(self.body, bb, "");
+	chat_bubble_spawn();
 }
 
 void(void) player_body_remove {

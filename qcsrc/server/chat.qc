@@ -347,33 +347,31 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 }
 
 .float BUTTON_CHAT;
-#define chat_bubble_think ChatBubbleThink
 void() chat_bubble_think {
 	entity o = self.owner;
-	if (o.playerid != self.playerid) {
+	if (o.playerid != self.playerid || o.body != self.tag_entity) {
 		remove(self);
 		return;
 	}
-	if (o.BUTTON_CHAT && o.modelindex && o.classname == "player") {
+	if (o.BUTTON_CHAT && o.classname == "player") {
+		setorigin(self, '0 0 15' + o.maxs_z * '0 0 1');
 		if (self.effects & EF_NODRAW) {
-			setattachment(self, o, "");
-			setorigin(self, '0 0 15' + o.maxs_z * '0 0 1');
 			self.effects &~= EF_NODRAW;
 		}
-	} else
+	} else if not(self.effects & EF_NODRAW) {
 		self.effects |= EF_NODRAW;
-
+	}
 	self.nextthink = time;
 }
 
 void() chat_bubble_spawn {
 	entity e = spawn();
 	e.owner = self;
-	e.exteriormodeltoclient = self;
+	e.playerid = self.playerid;
+	setattachment(e, self.body, "");
 	e.think = chat_bubble_think;
 	e.nextthink = time;
 	e.effects = EF_LOWPRECISION | EF_NODRAW;
-	e.playerid = self.playerid;
 	setmodel(e, "models/misc/chatbubble.spr");
 }
 
