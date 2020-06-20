@@ -101,6 +101,14 @@ void(void) player_body_spawn {
 	setattachment(self.body, bb, "");
 }
 
+void(void) player_body_remove {
+	if (self.body) {
+		remove(self.body.body);
+		remove(self.body);
+		self.body = world;
+	}
+}
+
 void(void) player_corpse_think {
 	if (self.frame != self.dead_frame) {
 		anim_update(self);
@@ -2050,7 +2058,7 @@ float(void) player_customize {
 		return FALSE;
 
 	if (self.owner == other)
-		self.exteriormodeltoclient = other;
+		return FALSE;
 	else if (self.owner == other.enemy && other.classname == "spectator")
 		self.exteriormodeltoclient = other;
 	else
@@ -2071,6 +2079,12 @@ float(void) player_body_customize {
 	if(self.alpha < 0)
 		return FALSE;
 
+	if (self.tag_entity) {
+		if (other == self.owner)
+			self.tag_entity = other;
+		else
+			self.tag_entity = self.body;
+	}
 	if (GameHookChain_PlayerVisibleThroughWallFor(o, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
