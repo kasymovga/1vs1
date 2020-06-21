@@ -283,33 +283,29 @@ void(vector wishdir, float wishspeed, float wishspeed0, float accel, float accel
 	vector vel_perpend;
 	float addspeed;
 	float savespeed;
-
 	if(sv_gameplayfix_q2airaccelerate)
 		wishspeed0 = wishspeed;
 
 	savespeed = physics_velocity * physics_velocity;
-
 	vel_straight = physics_velocity * wishdir;
 	vel_z = physics_velocity_z;
 	vel_perpend = physics_velocity - vel_straight * wishdir - vel_z * '0 0 1';
-
 	addspeed = wishspeed - vel_straight;
-	if(addspeed > 0)
+	if (addspeed > 0)
 		vel_straight = vel_straight + min(addspeed, accel * frametime * wishspeed0) * accelqw;
-	if(wishspeed > 0)
+
+	if (wishspeed > 0)
 		vel_straight = vel_straight + min(wishspeed, accel * frametime * wishspeed0) * (1 - accelqw);
 
-	if(sidefric < 0 && (vel_perpend*vel_perpend))
-	{
+	if (sidefric < 0 && (vel_perpend*vel_perpend)) {
 		float f, fmin;
 		f = (1 + frametime * wishspeed * sidefric);
 		fmin = (savespeed - vel_straight*vel_straight) / (vel_perpend*vel_perpend);
-		if(fmin <= 0)
+		if (fmin <= 0)
 			vel_perpend = vel_perpend * f;
 		else
 			vel_perpend = vel_perpend * min(1, max(fmin, f));
-	}
-	else
+	} else
 		vel_perpend = vel_perpend * (1 - frametime * wishspeed * sidefric);
 
 	physics_velocity = vel_straight * wishdir + vel_z * '0 0 1' + vel_perpend;
@@ -627,46 +623,37 @@ void(void) physics_player {
 		if (self.last_RIGHT_KEY_time > 0)
 			self.last_RIGHT_KEY_time -= frametime;
 	}
-	
 	if (self.last_dodging_time > 0)
 		self.last_dodging_time -= frametime;
 	
 	physics_frame_begin_hook();
-	if(physics_plug)
-	if(physics_plug())
+	if (physics_plug)
+	if (physics_plug())
 		return;
 
 	physics_update_status(TRUE);
-	if (physics_button_crouch)
-	{
+	if (physics_button_crouch) {
 		if not(sv_disable_crouch)
-		if (!physics_crouch)
-		{
+		if (!physics_crouch) {
 			physics_crouch = TRUE;
 			self.view_ofs = self.crouch_view_ofs;
 			setsize (self, self.crouch_mins, self.crouch_maxs);
 			physics_on_crouch_hook();
 		}
-	}
-	else
-	{
-		if (physics_crouch)
-		{
+	} else {
+		if (physics_crouch) {
 			trace_box(self.origin, self.stand_mins, self.stand_maxs, self.origin, FALSE, self);
-			if (!trace_startsolid)
-			{
+			if (!trace_startsolid) {
 				physics_crouch = FALSE;
 				self.view_ofs = self.stand_view_ofs;
 				setsize (self, self.stand_mins, self.stand_maxs);
 			}
 		}
 	}
-
 	if (physics_movetype == MOVETYPE_NONE)
 		return;
 
 	maxspd_mod = physics_max_speed_mod();
-
 	// if dead, behave differently
 	if (physics_deadflag != DEAD_NO)
 	if (physics_deadflag != DEAD_FREEZE) {
@@ -678,8 +665,7 @@ void(void) physics_player {
 		goto end;
 	}
 	physics_check_ground_hook();
-	if(physics_is_player)
-	{
+	if (physics_is_player) {
 		if (physics_button_jump)
 			physics_player_jump();
 		else {
@@ -706,7 +692,7 @@ void(void) physics_player {
 		// walking
 		makevectors(physics_v_angle_y * '0 1 0');
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
-		if(!(physics_lastflags & FL_ONGROUND)) {
+		if not((physics_lastflags & FL_ONGROUND)) {
 			physics_landing_hook();
 		}
 		v = physics_velocity;
@@ -802,8 +788,7 @@ void(void) physics_player {
 				physics_waterlevel = WATERLEVEL_SWIMMING;
 			else if ((self.origin_z + self.mins_z + 1) < f)
 				physics_waterlevel = WATERLEVEL_WETFEET;
-			else
-			{
+			else {
 				physics_waterlevel = WATERLEVEL_NONE;
 				physics_watertype = CONTENT_EMPTY;
 			}
@@ -818,18 +803,12 @@ void(void) physics_player {
 			// water acceleration
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 		}
-	}
-	else
-	{
+	} else {
 		float wishspeed0;
-
-		if(maxspd_mod < 1)
-		{
+		if (maxspd_mod < 1) {
 			maxairspd = sv_maxairspeed*maxspd_mod;
 			airaccel = sv_airaccelerate*maxspd_mod;
-		}
-		else
-		{
+		} else {
 			maxairspd = sv_maxairspeed;
 			airaccel = sv_airaccelerate;
 		}
@@ -841,42 +820,39 @@ void(void) physics_player {
 		wishspeed = wishspeed0 = vlen(wishvel);
 		if (wishspeed0 > sv_maxspeed*maxspd_mod)
 			wishspeed0 = sv_maxspeed*maxspd_mod;
+
 		if (wishspeed > maxairspd)
 			wishspeed = maxairspd;
+
 		if (physics_crouch)
 			wishspeed = wishspeed * 0.5;
-		if (physics_teleport_time <= 0)
-		{
+
+		if (physics_teleport_time <= 0) {
 			float accelerating;
 			float wishspeed2;
 			float airaccelqw;
-
 			airaccelqw = sv_airaccel_qw;
 			accelerating = (physics_velocity * wishdir > 0);
 			wishspeed2 = wishspeed;
-
 			// CPM
-			if(sv_airstopaccelerate)
-				if(physics_velocity * wishdir < 0)
+			if (sv_airstopaccelerate)
+				if (physics_velocity * wishdir < 0)
 					airaccel = sv_airstopaccelerate*maxspd_mod;
-			if(physics_movement_x == 0 && physics_movement_y != 0)
-			{
-				if(sv_maxairstrafespeed)
-				{
+
+			if (physics_movement_x == 0 && physics_movement_y != 0) {
+				if (sv_maxairstrafespeed) {
 					wishspeed = min(wishspeed, sv_maxairstrafespeed*maxspd_mod);
 					if(sv_maxairstrafespeed < sv_maxairspeed)
 						airaccelqw = 1;
 				}
-				if(sv_airstrafeaccelerate)
-				{
+				if (sv_airstrafeaccelerate) {
 					airaccel = sv_airstrafeaccelerate*maxspd_mod;
 					if(sv_airstrafeaccelerate > sv_airaccelerate)
 						airaccelqw = 1;
 				}
 			}
 			// !CPM
-
-			if(sv_warsowbunny_turnaccel && accelerating && physics_movement_y == 0 && physics_movement_x != 0)
+			if (sv_warsowbunny_turnaccel && accelerating && physics_movement_y == 0 && physics_movement_x != 0)
 				physics_air_accelerate(wishdir, wishspeed);
 			else
 				physics_accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, sv_airaccel_sideways_friction / maxairspd);
@@ -885,9 +861,7 @@ void(void) physics_player {
 				physics_aircontrol(wishdir, wishspeed2);
 		}
 	}
-
 :end
-
 	physics_lastflags = physics_flags;
 	physics_frame_end_hook();
 	if (physics_movetype == MOVETYPE_QCWALK)
