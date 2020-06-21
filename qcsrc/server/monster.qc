@@ -344,7 +344,8 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 				if (trace_plane_normal_z < 0.1)
 				if (trace_plane_normal_z > -0.1) {
 					vector step = '0 0 1' * sv_stepheight;
-					trace_box(self.origin, self.mins + step, self.maxs + step, o, MOVE_NOMONSTERS, self);
+					vector steptop = '0 0 1' * max(sv_stepheight + self.mins_z - self.maxs_z, 0);
+					trace_box(self.origin, self.mins + step, self.maxs + steptop, o, MOVE_NOMONSTERS, self);
 					if (trace_fraction <= trace_fraction_first)
 						v = -v;
 				}
