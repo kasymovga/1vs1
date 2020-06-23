@@ -578,6 +578,7 @@ void(float abstaincount, float notvoters, float mincount, string result) vote_sp
 float(entity pl, float allowed_dups) vote_check_dup_ip {
 	entity e;
 	FOR_EACH_REALCLIENT(e)
+		if (e.vote_vote == pl.vote_vote)
 		if (e.netaddress == pl.netaddress) {
 			if (allowed_dups <= 0)
 				return TRUE;
