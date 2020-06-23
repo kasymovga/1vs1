@@ -166,11 +166,90 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
 }
 
+float(float diffangle) race_strafe_angle {
+	vector vel = physics_velocity;
+	vel_z = 0;
+	float speed = vlen(vel);
+	float maxspeed = sv_maxspeed;
+	if (physics_movement_y)
+	if not(physics_movement_x)
+	if (sv_maxairstrafespeed) {
+		maxspeed = sv_maxairstrafespeed;
+	}
+	float cos_angle = min(1, maxspeed / speed); //cos of optimal angle
+	if (diffangle > 90 || diffangle < -90)
+		return -acos(cos_angle) * RAD2DEG;
+
+	return acos(cos_angle) * RAD2DEG;
+}
+
+float(float f) race_angle_norm {
+	while (f > 180) f -= 360;
+	while (f < -180) f += 360;
+	return f;
+}
+
+float(float f) race_angle_to_con_x {
+	f = race_angle_norm(f);
+	if (f <= -90)
+		return 0;
+
+	if (f >= 90)
+		return CVAR(vid_conwidth);
+
+	vector v = view_angles;
+	v_y -= f;
+	makevectors(v);
+	v = v_forward * 100 + view_origin;
+	v = project_3d_to_2d(v);
+	return v_x;
+}
+
 void(void) race_sbar_draw {
 	drawfont = sbar_bigfont;
 	float a, t;
 	vector m;
 	string s, forcetime;
+	if (gametype == GAME_CTS)
+	if (CVAR(cl_cts_strafe_helper))
+	if (sv_airaccel_qw == 1)
+	if (physics_velocity_x != 0 || physics_velocity_y != 0)
+	if (physics_movement_x != 0 || physics_movement_y != 0) {
+		float wishangle = view_angles_y;
+		vector v = vectoangles(physics_velocity);
+		float moveangle = v_y;
+		if (physics_movement_x > 0) {
+			if (physics_movement_y > 0)
+				wishangle -= 45;
+			else if (physics_movement_y < 0)
+				wishangle += 45;
+		} else if (physics_movement_x < 0) {
+			if (physics_movement_y > 0)
+				wishangle -= 135;
+			else if (physics_movement_y < 0)
+				wishangle += 135;
+		} else {
+			if (physics_movement_y > 0)
+				wishangle -= 90;
+			else if (physics_movement_y < 0)
+				wishangle += 90;
+		}
+		float diffangle = race_angle_norm(wishangle - moveangle);
+		float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
+		vector v1, v2;
+		//v1_x = CVAR(vid_conwidth) * 0.5 + (sin((diffangle + strafeangle) * DEG2RAD)) * CVAR(vid_conwidth) * 0.5;
+		v1_x = race_angle_to_con_x(diffangle + strafeangle);
+		v1_y = CVAR(vid_conheight) * 0.5 - 10;
+		v2_x = CVAR(vid_conwidth) - v1_x;
+		v2_y = 20;
+		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
+		v1_x = 0;
+		v1_y = CVAR(vid_conheight) * 0.5 - 10;
+		//v2_x = CVAR(vid_conwidth) * 0.5 + (sin((diffangle - strafeangle) * DEG2RAD)) * CVAR(vid_conwidth) * 0.5;
+		v2_x = race_angle_to_con_x(diffangle - strafeangle);
+		v2_y = 20;
+		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
+	}
 	m = '0.5 0 0' * CVAR(vid_conwidth) + '0 0.25 0' * CVAR(vid_conheight);
 	if (race_checkpointtime) {
 		a = bound(0, 2 - (time - race_checkpointtime), 1);
