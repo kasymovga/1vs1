@@ -1652,7 +1652,6 @@ void Sbar_ShowSpeed(void)
 
 vector acc_prevspeed;
 float acc_prevtime;
-float acc_avg;
 
 void Sbar_ShowAcceleration(void)
 {
@@ -1663,15 +1662,13 @@ void Sbar_ShowAcceleration(void)
 
 	f = time - acc_prevtime;
 	if(CVAR(cl_showacceleration_z))
-		acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f);
+		acceleration = (vlen(physics_velocity) - vlen(acc_prevspeed)) * (1 / f);
 	else
-		acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
-	acc_prevspeed = pmove_vel;
-	acc_prevtime = time;
+		acceleration = (vlen(physics_velocity - '0 0 1' * physics_velocity_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
 
-	f = bound(0, f * 10, 1);
-	acc_avg = acc_avg * (1 - f) + acceleration * f;
-	acceleration = acc_avg / getstatf(STAT_MOVEVARS_MAXSPEED);
+	acc_prevspeed = physics_velocity;
+	acc_prevtime = time;
+	acceleration = acceleration / getstatf(STAT_MOVEVARS_MAXSPEED);
 
 	pos = top - CVAR(cl_showacceleration_size)/2 * '0 1 0' + (CVAR(cl_showacceleration_position) * CVAR(vid_conheight)) * '0 1 0';
 
