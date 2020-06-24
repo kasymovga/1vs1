@@ -16,6 +16,9 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 	if not(ext_DP_CSQC_QUERYRENDERENTITY)
 		me.rows = me.rows + 2;
 
+	if (gametype == GAME_CTS) {
+		me.rows = me.rows + 3;
+	}
 	configureDialogNexuizDialog(me); //Parent method
 }
 
@@ -123,6 +126,19 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.colorL = '1 0.5 0.5';
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.top"));
 			e.colorL = '0 0.5 1';
+	}
+	if (gametype == GAME_CTS) {
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", "Show strafe helper in CTS"));
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showacceleration", "Show acceleration"));
+			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showacceleration", "Auto enable in CTS"));
+		me.TR(me);
+			me.TDempty(me, 0.25);
+			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showspeed", "Show speed"));
+			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showspeed", "Auto enable in CTS"));
 	}
 	me.TR(me);
 	me.TR(me);
