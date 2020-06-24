@@ -1,3 +1,4 @@
+seta cl_gunalign 3 "Gun alignment; 1 = right, 2 = left, 3 = center or right, 4 = center or left"
 alias asay_ctf_flagcarrier "say_team flag carrier at %y"
 alias asay_ctf_haveflag "say_team (%l) have the flag"
 alias asay_willgo "say_team will go to %y"
