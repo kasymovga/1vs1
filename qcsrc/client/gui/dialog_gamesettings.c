@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 13)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 16)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -16,9 +16,6 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 	if not(ext_DP_CSQC_QUERYRENDERENTITY)
 		me.rows = me.rows + 2;
 
-	if (gametype == GAME_CTS) {
-		me.rows = me.rows + 3;
-	}
 	configureDialogNexuizDialog(me); //Parent method
 }
 
@@ -115,6 +112,17 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_autoswitch", "Auto switch weapons on pickup"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", "Show strafe helper in CTS"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showacceleration", "Show acceleration"));
+		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showacceleration", "Auto enable in CTS"));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showspeed", "Show speed"));
+		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showspeed", "Auto enable in CTS"));
 	if not(ext_DP_CSQC_QUERYRENDERENTITY) {
 		me.TR(me);
 			me.TDempty(me, 0.25);
@@ -126,19 +134,6 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.colorL = '1 0.5 0.5';
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.top"));
 			e.colorL = '0 0.5 1';
-	}
-	if (gametype == GAME_CTS) {
-		me.TR(me);
-			me.TDempty(me, 0.25);
-			me.TD(me, 1, 4, e = makeNexuizCheckBox(0, "cl_cts_strafe_helper", "Show strafe helper in CTS"));
-		me.TR(me);
-			me.TDempty(me, 0.25);
-			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showacceleration", "Show acceleration"));
-			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showacceleration", "Auto enable in CTS"));
-		me.TR(me);
-			me.TDempty(me, 0.25);
-			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showspeed", "Show speed"));
-			me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showspeed", "Auto enable in CTS"));
 	}
 	me.TR(me);
 	me.TR(me);
