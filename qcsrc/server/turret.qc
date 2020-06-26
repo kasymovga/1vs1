@@ -55,32 +55,19 @@ vector turret_angleofs3(vector from,vector from_a, entity to)
     return v_res;
 }
 
-float turret_tag_setup()
-{
-    if(!self.tur_head)
-    {
-        self.tur_shotorg = '0 0 0';
+float() turret_tag_fire_update {
+    if not(self.tur_head) {
+        self.tur_shotorg = self.origin;
         return 0;
     }
-	setattachment(self.tur_head, self, "tag_head");
     self.tur_shotorg = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
-
     v_forward = normalize(v_forward);
-
     return 1;
 }
 
-float turret_tag_fire_update()
-{
-    if(!self.tur_head)
-    {
-        self.tur_shotorg = '0 0 0';
-        return 0;
-    }
-
-    self.tur_shotorg = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
-    v_forward = normalize(v_forward);
-    return 1;
+float() turret_tag_setup {
+	setattachment(self.tur_head, self, "tag_head");
+	return turret_tag_fire_update();
 }
 
 /*
@@ -1002,8 +989,7 @@ float turret_validate_target(entity e_turret,entity e_target,float validate_flag
     if (validate_flags & TFL_TARGETSELECT_LOS)
     {
         v_tmp = turret_real_origin(e_target) + ((e_target.mins + e_target.maxs) * 0.5);
-        trace_line(e_turret.tur_shotorg,v_tmp,0,e_turret);
-
+        trace_line(turret_real_origin(e_turret.tur_head) ,v_tmp, 0, e_turret);
         if (e_turret.aim_firetolerance_dist < vlen(v_tmp - trace_endpos))
             return -19;
     }
@@ -1576,9 +1562,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head) {
     if(self.spawnflags & TSL_NO_RESPAWN)
         if not (self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
             self.damage_flags |= TFL_DMG_DEATH_NORESPAWN;
-
-// Offsets & origins
-    if (!self.tur_shotorg)   self.tur_shotorg = '50 0 50';
 
 // End of default & sanety checks, start building the turret.
 
