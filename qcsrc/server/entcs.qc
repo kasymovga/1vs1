@@ -36,7 +36,7 @@ float() entcs_customize {
 	if (team_mode && o.team == other.team) {
 		self.effects |= EF_FULLBRIGHT;
 	} else {
-		if (o == self.enemy)
+		if (o.body.body == self.enemy)
 		if (player_alpha(o, other) < 0.25)
 			return FALSE;
 
