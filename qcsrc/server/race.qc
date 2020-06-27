@@ -444,8 +444,15 @@ void(void) race_checkpoint_passed {
 			for (e = find(world, classname, "race_trigger_checkpoint"); e; e = find(e, classname, "race_trigger_checkpoint")) {
 				if (e != self)
 				if (e.race_checkpoint == self.race_checkpoint) {
-					shift_required = TRUE;
-					break;
+					if (self.spawnflags == 9) {
+						if (e.sprite)
+							remove(e.sprite);
+
+						remove(e);
+					} else {
+						shift_required = TRUE;
+						break;
+					}
 				}
 			}
 			if (shift_required) {
@@ -454,7 +461,7 @@ void(void) race_checkpoint_passed {
 					if (e.race_checkpoint >= self.race_checkpoint)
 						e.race_checkpoint = e.race_checkpoint + 1;
 				}
-				if (race_timed_checkpoint > self.race_checkpoint)
+				if (race_timed_checkpoint >= self.race_checkpoint)
 					race_timed_checkpoint += 1;
 
 				race_highest_checkpoint += 1;
@@ -552,7 +559,9 @@ void(void) race_trigger_checkpoint_verify {
 			if (cp.sprite) {
 				if (cp.race_checkpoint == 0)
 					WaypointSprite_UpdateSprites(cp.sprite, "race-start", "", "");
-				else if (cp.race_checkpoint == race_timed_checkpoint)
+				else if (cp.race_checkpoint == race_timed_checkpoint && !race_defrag)
+					WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+				else if (race_defrag && cp.spawnflags == 9)
 					WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
 			}
 	remove(self);
@@ -1037,7 +1046,7 @@ void(void) spawnfunc_race_target_stop_timer {
 		return;
 	}
 	race_defrag = TRUE;
-	self.cnt = 2;
+	self.cnt = 1;
 	self.spawnflags = 9;
 	self.classname = "race_trigger_checkpoint";
 	spawnfunc_race_trigger_checkpoint();
