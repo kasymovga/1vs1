@@ -273,6 +273,7 @@ void() player_effects {
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	self.body.effects = self.effects;
+	self.body.body.modelflags = self.modelflags;
 	self.effects = 0;
 }
 
