@@ -39,6 +39,19 @@ void(string msg) GameCommand {
 	} else if (cmd == "showradio") {
 		GUI_Show(GUI_RADIO);
 	} else if (cmd == "report") {
+		float i;
+		if (argc > REPORT_REASONS_COUNT_MAX - 1)
+			argc = REPORT_REASONS_COUNT_MAX - 1;
+
+		report_reasons_count = argc - 1;
+		for (i = 1; i < argc; i++) {
+			str_unzone_ifneeded(report_reasons[i]);
+			report_reasons[i - 1] = str_zone_ifneeded(argv(i));
+		}
+		for (; i < REPORT_REASONS_COUNT_MAX; i++) {
+			str_unzone_ifneeded(report_reasons[i]);
+			report_reasons[i] = "";
+		}
 		GUI_Show(GUI_REPORT);
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");

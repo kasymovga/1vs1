@@ -15,7 +15,7 @@ entity makeNexuizReportTypeList(void)
 	entity me;
 	me = spawnNexuizReportTypeList();
 	me.configureNexuizListBox(me);
-	me.nItems = 3;
+	me.nItems = REPORT_REASONS_COUNT_MAX;
 	return me;
 }
 
@@ -33,14 +33,7 @@ void drawListBoxItemNexuizReportTypeList(entity me, float i, vector absSize, flo
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	string s = "";
-	if (i == 0)
-		s = "Cheats";
-	else if (i == 1)
-		s = "Sabotage";
-	else
-		s = "Flood";
-
+	string s = report_reasons[i];
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 

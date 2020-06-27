@@ -1,0 +1,3 @@
+#define REPORT_REASONS_COUNT_MAX 16
+string report_reasons[REPORT_REASONS_COUNT_MAX];
+float report_reasons_count;

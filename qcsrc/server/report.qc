@@ -3,7 +3,7 @@ float report_uri_handler;
 
 var void(void(string item, string cmd) Add_Item) report_GameMenuAddItems_next;
 void report_GameMenuAddItems(void(string item, string cmd) Add_Item) {
-	Add_Item("Report", "cl_cmd report;");
+	Add_Item("Report", strcat("cl_cmd report " , cvar_string("sv_report_reasons"), ";"));
 	report_GameMenuAddItems_next(Add_Item);
 }
 

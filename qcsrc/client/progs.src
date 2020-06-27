@@ -98,7 +98,7 @@ ready.qh
 race.qh
 sbar.qc
 mapvote.qc
-
+report.qh
 ../client-server/hook.qh
 ../client-server/physics_hook.qh
 ../client-server/physics_hook.qc
