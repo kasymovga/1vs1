@@ -29,7 +29,7 @@ void(void) physics_on_jump_hook {
 		anim_set(self.body, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
-		sound(self, CHAN_PLAYER, self.playersound_jump, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
 	self.restart_jump = -1; // restart jump anim next time
 	self.oldvelocity_z = physics_velocity_z;
