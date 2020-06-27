@@ -106,6 +106,7 @@ set defrag_g_pickup_nails_max 300
 set defrag_g_pickup_shells 100
 set defrag_g_pickup_shells_max 100
 set defragcpm_inherit defrag
+set defragcpm_g_q2doublejump 1
 set defragcpm_g_balance_weaponswitchdelay 0
 set defragcpm_g_stepairslowdown 0
 set defragcpm_g_gravity 800

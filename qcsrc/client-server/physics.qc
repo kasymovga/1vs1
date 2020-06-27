@@ -72,8 +72,7 @@ void(float ground) physics_update_status {
 		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		float f;
-		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (f = physics_velocity * trace_plane_normal) <= 0)
-		{
+		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (g_q2doublejump || (f = physics_velocity * trace_plane_normal) <= 0)) {
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
 				physics_flags |= FL_SLICK;
 			else

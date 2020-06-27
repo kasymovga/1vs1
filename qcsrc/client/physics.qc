@@ -267,6 +267,7 @@ void Ent_Physic(float isnew)
 		if not(switches & 512) //mod_q3bsp_curves_collisions
 			cvar_clientsettemp("mod_q3bsp_curves_collisions" , "0");
 
+		g_q2doublejump = switches & 1024;
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
 			g_walljump_force = ReadCoord();

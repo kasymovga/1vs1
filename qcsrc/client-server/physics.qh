@@ -25,6 +25,7 @@ float sv_waterjumpvelocity;
 float sv_friction_on_land;
 float sv_pogostick;
 float sv_disable_crouch;
+float g_q2doublejump;
 float g_walljump;
 float g_walljump_delay;
 float g_walljump_force;
