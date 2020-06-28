@@ -27,6 +27,7 @@ set sys_ticrate 0.032
 set mod_q3shader_force_addalpha 1
 set mod_q3shader_default_polygonfactor -1
 set mod_q3bsp_lightmapmergepower 3
+set mod_q3bsp_curves_collisions 1
 set v_kickroll 0
 set v_kickpitch 0.2
 sensitivity 6
@@ -96,15 +97,16 @@ cl_movement_track_canjump 0
 
 sbar_info_pos 50
 // tab completion
-set con_completion_playdemo	*.dem
-set con_completion_timedemo	*.dem
-set con_completion_ply		*.dem
-set con_completion_tdem		*.dem
-set con_completion_exec		*.cfg
-set con_completion_chmap	map
-set con_completion_gotomap	map
-set con_completion_vmap		map
-set con_completion_vdomap	map
+set con_completion_playdemo *.dem
+set con_completion_timedemo *.dem
+set con_completion_ply *.dem
+set con_completion_tdem *.dem
+set con_completion_exec *.cfg
+set con_completion_chmap map
+set con_completion_gotomap map
+set con_completion_vmap map
+set con_completion_vdomap map
+set con_completion_ls *
 
 seta cl_port $cl_port
 seta r_showsurfaces $r_showsurfaces
