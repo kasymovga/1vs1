@@ -461,9 +461,7 @@ void(void) race_checkpoint_passed {
 					if (e.race_checkpoint >= self.race_checkpoint)
 						e.race_checkpoint = e.race_checkpoint + 1;
 				}
-				if (race_timed_checkpoint >= self.race_checkpoint)
-					race_timed_checkpoint += 1;
-
+				race_timed_checkpoint += 1;
 				race_highest_checkpoint += 1;
 			}
 		}
@@ -1049,6 +1047,8 @@ void(void) spawnfunc_race_target_stop_timer {
 	self.cnt = 1;
 	self.spawnflags = 9;
 	self.classname = "race_trigger_checkpoint";
+	race_timed_checkpoint = 1;
+	race_highest_checkpoint = 1;
 	spawnfunc_race_trigger_checkpoint();
 }
 
