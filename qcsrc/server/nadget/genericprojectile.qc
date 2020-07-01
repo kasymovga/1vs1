@@ -127,6 +127,7 @@ void nadget_GenericProjectile_Touch(void) {
         return;
 
     if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
+	if (self.movetype != MOVETYPE_FOLLOW && self.movetype != MOVETYPE_NONE)
         projectile_update_next_frame(self);
 
     if(projectile_no_impact_check()) {
@@ -226,8 +227,6 @@ void nadget_GenericProjectile_Touch(void) {
 }
 
 void nadget_GenericProjectile_Stick(entity targ, vector normal) {
-    dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
-
     // TODO: A better, more general fix
     if(targ.classname == "misc_terminal")
         return;
@@ -250,11 +249,13 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
         e.angles_y = va_y - 90;
     }
 
-    float lt_override = GRENVAR(e.hg_type, "stick_lifetime_override");
-    if(lt_override > 0) {
-        e.hg_deathtime = time + lt_override;
-    }
-
+	if (self.movetype != MOVETYPE_NONE)
+	if (self.movetype != MOVETYPE_FOLLOW) { //not already sticked
+		dlc_sound(self, CHAN_PROJECTILE, "weapons/grenade_stick.wav", 1, ATTN_NORM);
+		float lt_override = GRENVAR(e.hg_type, "stick_lifetime_override");
+		if(lt_override > 0)
+			e.hg_deathtime = time + lt_override;
+	}
     if(targ) {
         e.movetype = MOVETYPE_FOLLOW;
         e.view_ofs = e.origin - targ.origin;
