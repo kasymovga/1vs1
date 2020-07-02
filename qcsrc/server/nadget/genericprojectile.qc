@@ -136,8 +136,6 @@ void nadget_GenericProjectile_Touch(void) {
                 projectile_update_next_frame(self);
                 goto troll;
             }
-            self.use();
-            return;
         }
         nadget_GenericProjectile_Remove();
         return;
