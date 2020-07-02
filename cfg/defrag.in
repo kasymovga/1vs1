@@ -106,7 +106,7 @@ set _defrag_g_pickup_nails_max 300
 set _defrag_g_pickup_shells 100
 set _defrag_g_pickup_shells_max 100
 set _defrag_g_stepairslowdown 0
-set _defrag_g_stepheight 22
+set _defrag_g_stepheight 18
 set _defrag_g_maxspeed 320
 set _defrag_g_maxairspeed 320
 set _defrag_g_friction_on_land 0
@@ -134,3 +134,4 @@ set defragvq3_g_airstopaccelerate 0
 set defragvq3_g_airstrafeaccelerate 0
 set defragvq3_g_maxairstrafespeed 0
 set defragvq3_g_aircontrol 0
+set defragcpm_g_stepusevelocity 1

@@ -1,5 +1,6 @@
 float sv_stepheight;
 float g_stepairslowdown;
+float g_stepusevelocity;
 float sv_maxspeed;
 float sv_aircontrol;
 float sv_gameplayfix_q2airaccelerate;

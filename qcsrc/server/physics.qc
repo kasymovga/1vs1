@@ -372,6 +372,7 @@ void(void) physics_init {
 	PHYSICS_CACHE_CVAR(sv_waterjumpvelocity);
 	PHYSICS_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
 	CACHE_CVAR(g_stepairslowdown);
+	CACHE_CVAR(g_stepusevelocity);
 	CACHE_CVAR(g_q2doublejump);
 	sv_friction_on_land = cvar("g_friction_on_land");
 	sv_slicksurfaces_allowjump = cvar("g_slicksurfaces_allowjump");
@@ -483,6 +484,7 @@ float(entity to, float sf) physics_send {
 				+ (g_playerclip_collisions ? 256 : 0)
 				+ (cvar("mod_q3bsp_curves_collisions") ? 512 : 0)
 				+ (g_q2doublejump ? 1024 : 0)
+				+ (g_stepusevelocity ? 2048 : 0)
 				;
 		WriteShort(MSG_ENTITY, switches);
 		if (g_walljump) {
