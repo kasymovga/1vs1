@@ -73,9 +73,12 @@ void(float ground) physics_update_status {
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		float f;
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (g_q2doublejump || (f = physics_velocity * trace_plane_normal) <= 0)) {
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-				physics_flags |= FL_SLICK;
-			else
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
+				if (g_slicksurfaces_levitation)
+					physics_flags |= FL_SLICK;
+				else
+					physics_flags |= FL_ONGROUND_OR_SLICK;
+			} else
 				physics_flags |= FL_ONGROUND;
 
 			self.groundentity = trace_ent;
@@ -561,10 +564,10 @@ void(void) physics_player_jump {
 			#endif
 		}
 	}
+	if not(physics_flags & FL_ONGROUND_OR_SLICK)
+		return;
 
-
-	if not(physics_flags & FL_ONGROUND)
-	if not((physics_flags & FL_SLICK) && sv_slicksurfaces_allowjump)
+	if ((physics_flags & FL_SLICK) && !g_slicksurfaces_allowjump)
 		return;
 
 	if(!sv_pogostick)
@@ -575,13 +578,9 @@ void(void) physics_player_jump {
 		physics_landing_hook();
 
 	physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
-
 	physics_flags &~= FL_ONGROUND_OR_SLICK;
 	physics_flags &~= FL_JUMPRELEASED;
-
 	physics_on_jump_hook();
-
-	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 }
 
 void(void) physics_check_water_jump {
@@ -702,10 +701,16 @@ void(void) physics_player {
 		v_z = 0;
 		f = vlen(v);
 		if(f > 0) {
+			float _friction;
+			if (physics_flags & FL_SLICK)
+				_friction = 0;
+			else
+				_friction = sv_friction;
+
 			if (f < sv_stopspeed) {
-				f = 1 - frametime * (sv_stopspeed / f) * sv_friction;
+				f = 1 - frametime * (sv_stopspeed / f) * _friction;
 			} else
-				f = 1 - frametime * sv_friction;
+				f = 1 - frametime * _friction;
 			if (f > 0)
 				physics_velocity = physics_velocity * f;
 			else {

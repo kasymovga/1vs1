@@ -252,7 +252,7 @@ void Ent_Physic(float isnew)
 		sv_waterjumpvelocity = ReadCoord();
 		sv_friction_on_land = ReadCoord();
 		float switches = ReadShort();
-		sv_slicksurfaces_allowjump = switches & 2;
+		g_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
 		sv_gameplayfix_q2airaccelerate = switches & 16;
@@ -269,6 +269,7 @@ void Ent_Physic(float isnew)
 
 		g_q2doublejump = switches & 1024;
 		g_stepusevelocity = switches & 2048;
+		g_slicksurfaces_levitation = switches & 4096;
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
 			g_walljump_force = ReadCoord();

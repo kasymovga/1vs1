@@ -1,4 +1,5 @@
 set g_slicksurfaces_allowjump "1" "Enable jumps on slick surfaces"
+set g_slicksurfaces_levitation "1" "Use fly physics for slick surfaces"
 set g_stepheight 34 "how high you can step up"
 set g_stepairslowdown 0.05 ""
 set g_gravity 800 "how fast you fall"

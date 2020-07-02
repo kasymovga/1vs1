@@ -375,7 +375,8 @@ void(void) physics_init {
 	CACHE_CVAR(g_stepusevelocity);
 	CACHE_CVAR(g_q2doublejump);
 	sv_friction_on_land = cvar("g_friction_on_land");
-	sv_slicksurfaces_allowjump = cvar("g_slicksurfaces_allowjump");
+	CACHE_CVAR(g_slicksurfaces_allowjump);
+	CACHE_CVAR(g_slicksurfaces_levitation);
 	sv_pogostick = cvar("g_pogostick");
 	sv_disable_crouch = cvar("g_disable_crouch");
 	CACHE_CVAR(g_walljump);
@@ -474,7 +475,7 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_waterjumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_friction_on_land);
-		float switches = (sv_slicksurfaces_allowjump ? 2 : 0)
+		float switches = (g_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
 				+ (sv_gameplayfix_q2airaccelerate ? 16 : 0)
@@ -485,6 +486,7 @@ float(entity to, float sf) physics_send {
 				+ (cvar("mod_q3bsp_curves_collisions") ? 512 : 0)
 				+ (g_q2doublejump ? 1024 : 0)
 				+ (g_stepusevelocity ? 2048 : 0)
+				+ (g_slicksurfaces_levitation ? 4096 : 0)
 				;
 		WriteShort(MSG_ENTITY, switches);
 		if (g_walljump) {
