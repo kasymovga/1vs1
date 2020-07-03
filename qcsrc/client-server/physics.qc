@@ -189,7 +189,7 @@ void(void) physics_move {
 				// first move forward at a higher level
 				currentorigin2 = self.origin;
 				if (g_stepusevelocity && physics_velocity_z > 0)
-					stepheight = sv_stepheight + (physics_velocity_z * physics_velocity_z * 0.5) / sv_gravity;
+					stepheight = min(self.maxs_z - self.mins_z, sv_stepheight + (physics_velocity_z * physics_velocity_z * 0.5) / sv_gravity);
 				else
 					stepheight = sv_stepheight;
 
