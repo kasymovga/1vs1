@@ -19,7 +19,7 @@ set g_profile "" "Config profile prefix, currently available: akimbo, cra, minst
 set g_maplist_votable "9"
 set g_maplist_votable_nodetail "0"
 set g_voice_flood_spv 20
-set sv_reset_on_join "0" "Reset map when this client count join game"
+set g_reset_on_join "0" "Reset map when this client count join game"
 set skill_auto_min 10
 set skill_auto_max 30
 alias endround "sv_cmd endround"

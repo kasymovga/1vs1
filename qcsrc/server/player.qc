@@ -58,13 +58,12 @@ float g_balance_pause_health_regen_spawn;
 float g_balance_pause_health_rot_spawn;
 float g_forced_respawn;
 float g_teamdamage_resetspeed;
-float sv_reset_on_join;
+float g_reset_on_join;
 float g_player_brightness;
 float g_spawnshieldtime;
 float g_spawnfrags;
 float g_spawnsound;
 float g_player_pushfactor;
-float reset_on_join_done;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
@@ -2234,14 +2233,13 @@ void(entity spot) player_spawn {
 	trigger_use_targets();
 	activator = world;
 	self = oldself;
-	if (sv_reset_on_join)
-	if not(reset_on_join_done) {
+	if (g_reset_on_join)
+	if not(warmup_active) {
 		FOR_EACH_REALPLAYER(e)
 			if(e.classname == "player")
 				currentlyPlaying += 1;
 
-		if (currentlyPlaying == sv_reset_on_join) {
-			reset_on_join_done = TRUE;
+		if (currentlyPlaying == g_reset_on_join) {
 			if (time > map_starttime)
 				ready_restart_force();
 		}
@@ -2461,7 +2459,7 @@ void() player_init {
 	CACHE_CVAR(g_balance_pause_health_rot_spawn);
 	CACHE_CVAR(g_forced_respawn);
 	CACHE_CVAR(g_teamdamage_resetspeed);
-	CACHE_CVAR(sv_reset_on_join);
+	CACHE_CVAR(g_reset_on_join);
 	CACHE_CVAR(g_player_brightness);
 	CACHE_CVAR(g_player_pushfactor);
 	CACHE_CVAR(g_spawnshieldtime);
