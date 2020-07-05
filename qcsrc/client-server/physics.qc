@@ -560,7 +560,7 @@ void(void) physics_player_jump {
 			if (physics_crouch) physics_velocity_z *= -1; // thanks Synap for the idea
 			#ifdef SVQC
 			pointparticles (particleeffectnum("smoke_ring"), trace_endpos, plane_normal, g_walljump_smokeparticle_num);
-			sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
+			player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 			#endif
 		}
 	}
