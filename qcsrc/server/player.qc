@@ -85,24 +85,28 @@ float sv_clforceplayermodels;
 float(void) player_customize;
 float(void) player_body_customize;
 
-void(void) player_body_spawn {
+void(entity bb) player_body_spawn {
 	self.body = spawn();
 	self.body.customizeentityforclient = player_body_customize;
-	entity bb;
-	self.body.body = bb = spawn();
-	bb.owner = self;
-	bb.customizeentityforclient = player_customize;
-	setorigin(bb, self.origin);
-	bb.effects = self.effects;
-	setsize(bb, self.mins, self.maxs);
-	setmodel(bb, "null");
-	self.body.owner = self;
+	if not(bb) {
+		bb = spawn();
+		bb.owner = self;
+		bb.customizeentityforclient = player_customize;
+		setorigin(bb, self.origin);
+		bb.effects = self.effects;
+		setsize(bb, self.mins, self.maxs);
+		setmodel(bb, "null");
+	}
+	self.body.body = bb;
 	setattachment(self.body, bb, "");
+	self.body.owner = self;
 	chat_bubble_spawn();
 }
 
 void(void) player_body_remove {
 	if (self.body) {
+		sound_stop(self.body.body, CHAN_VOICE);
+		sound_stop(self.body.body, CHAN_PAIN);
 		remove(self.body.body);
 		remove(self.body);
 		self.body = world;
@@ -151,10 +155,9 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 	entity e = self.body;
 	e.owner = e;
 	e.skinindex = self.skinindex;
-	player_body_spawn();
+	player_body_spawn(e.body);
 	player_body_copy(self.body, e, FALSE);
 	setattachment(e, world, "");
-	remove(e.body);
 	e.body = e;
 	e.enemy = self;
 	e.iscreature = self.iscreature;
@@ -555,8 +558,7 @@ void(float killed) player_clear {
 	WaypointSprite_PlayerDead();
 	if (self.classname == "disconnecting") {
 		str_unzone_ifneeded(self.body.playermodel);
-		remove(self.body);
-		self.body = world;
+		player_body_remove();
 	}
 }
 
@@ -1213,11 +1215,13 @@ void player_voice_message(string type, string msg)
 		if(!sv_taunt)
 			return;
 
-		FOR_EACH_REALCLIENT(msg_entity)
-		{
-			if (msg_entity.cvar_cl_voice_directional >= 1)
-				sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
-			else
+		FOR_EACH_REALCLIENT(msg_entity) {
+			if (msg_entity.cvar_cl_voice_directional >= 1) {
+				if (msg_entity == self || !self.body)
+					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+				else
+					sound_to(MSG_ONE, self.body.body, CHAN_VOICE, s, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+			} else
 				sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 		}
 	} else if (type == "teamshoot") {
@@ -2142,7 +2146,7 @@ void(entity spot) player_spawn {
 	self.touch = push_touch;
 	self.pushfactor = g_player_pushfactor;
 	if not(self.body)
-		player_body_spawn();
+		player_body_spawn(world);
 
 	self.body.nextthink = 0;
 	setmodel(self, "null");
