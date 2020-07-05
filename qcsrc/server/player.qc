@@ -908,23 +908,17 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 				else
 					anim_set(self.body, self.anim_pain2, FALSE, TRUE, TRUE);
 			}
-
-			if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1)
 			// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
-			{
-				string pain_sound;
-				if(self.health > 75) // TODO make a "gentle" version?
-					pain_sound = self.playersound_pain100;
-				else if(self.health > 50)
-					pain_sound = self.playersound_pain75;
-				else if(self.health > 25)
-					pain_sound = self.playersound_pain50;
-				else if(self.health > 1)
-					pain_sound = self.playersound_pain25;
-
-				sound(self, CHAN_PAIN, sound_random_by_str(pain_sound), VOL_BASE, ATTN_NORM);
+			if (!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * g_balance_laser_primary_damage * g_balance_selfdamagepercent + 1) {
+				if (self.health > 75) // TODO make a "gentle" version?
+					player_sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_pain100), VOL_BASE, ATTN_NORM);
+				else if (self.health > 50)
+					player_sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_pain75), VOL_BASE, ATTN_NORM);
+				else if (self.health > 25)
+					player_sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_pain50), VOL_BASE, ATTN_NORM);
+				else if (self.health > 1)
+					player_sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_pain25), VOL_BASE, ATTN_NORM);
 			}
-
 			// throw off bot aim temporarily
 			local float shake;
 			shake = _damage * 5 / (bound(0,skill,100) + 1);
@@ -2395,6 +2389,15 @@ entity(entity pl) player_entity {
 		return gamehook_chain_player_entity(pl);
 
 	return pl;
+}
+
+void(entity e, float chan, string s, float vol, float attn) player_sound {
+	FOR_EACH_REALCLIENT(msg_entity) {
+		if (msg_entity == e)
+			sound_to_at(MSG_ONE, e, msg_entity.origin, chan, s, vol, attn);
+		else
+			sound_to_at(MSG_ONE, e.body.body, msg_entity.origin, chan, s, vol, attn);
+	}
 }
 
 void() player_init {

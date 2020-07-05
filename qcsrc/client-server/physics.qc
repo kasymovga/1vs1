@@ -485,7 +485,7 @@ void(void) physics_dodging {
 		physics_velocity_z += dodge_velocity_z;
 #ifdef SVQC
 		if (g_dodging_sound)
-			sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
+			player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
 		anim_set(self, self.anim_jump, TRUE, FALSE, TRUE);
 #endif
