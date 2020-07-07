@@ -54,17 +54,6 @@ float(string map) map_has_right_size {
 	return TRUE;
 }
 
-string strwords(string s, float w)
-{
-	float endpos;
-	for(endpos = 0; w && endpos >= 0; --w)
-		endpos = strstrofs(s, " ", endpos + 1);
-	if(endpos < 0)
-		return s;
-	else
-		return substring(s, 0, endpos);
-}
-
 float strhasword(string s, string w)
 {
 	return strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0;
@@ -72,7 +61,22 @@ float strhasword(string s, string w)
 
 void(string m) map_mark_as_recent {
 	registercvar("_g_maplist_mostrecent", "");
-	cvar_set("_g_maplist_mostrecent", strwords(strcat(m, " ", cvar_string("_g_maplist_mostrecent")), max(0, cvar("g_maplist_mostrecent_count"))));
+	float n = cvar("g_maplist_mostrecent_count");
+	if (n < 1)
+		cvar_set("_g_maplist_mostrecent", "");
+	else {
+		float i;
+		string head, tail, recentlist;
+		tail = cvar_string("_g_maplist_mostrecent");
+		recentlist = m;
+		n = n - 1;
+		for (i = 0; i < n && tail != ""; i++) {
+			head = str_car(tail);
+			tail = str_cdr(tail);
+			recentlist = strcat(recentlist, " ", head);
+		}
+		cvar_set("_g_maplist_mostrecent", recentlist);
+	}
 }
 
 float(string m) map_is_recent {

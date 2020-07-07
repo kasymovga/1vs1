@@ -1,4 +1,5 @@
 set duel_g_maxplayers 2
+set duel_g_maplist_mostrecent_count 0
 set duel_g_powerup_strength 0
 set duel_g_powerup_invisibility 0
 set duel_g_powerup_shield 0
