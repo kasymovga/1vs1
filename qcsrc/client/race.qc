@@ -171,6 +171,7 @@ float(float diffangle) race_strafe_angle {
 	vel_z = 0;
 	float speed = vlen(vel);
 	float maxspeed = sv_maxspeed;
+	if not(physics_flags & FL_ONGROUND)
 	if (physics_movement_y)
 	if not(physics_movement_x)
 	if (sv_maxairstrafespeed) {
@@ -237,16 +238,14 @@ void(void) race_sbar_draw {
 		float diffangle = race_angle_norm(wishangle - moveangle);
 		float strafeangle = race_angle_norm(race_strafe_angle(diffangle));
 		vector v1, v2;
-		//v1_x = CVAR(vid_conwidth) * 0.5 + (sin((diffangle + strafeangle) * DEG2RAD)) * CVAR(vid_conwidth) * 0.5;
 		v1_x = race_angle_to_con_x(diffangle + strafeangle);
 		v1_y = CVAR(vid_conheight) * 0.5 - 10;
-		v2_x = CVAR(vid_conwidth) - v1_x;
+		v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
 		v2_y = 20;
 		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
-		v1_x = 0;
+		v1_x = race_angle_to_con_x(diffangle - 90);
 		v1_y = CVAR(vid_conheight) * 0.5 - 10;
-		//v2_x = CVAR(vid_conwidth) * 0.5 + (sin((diffangle - strafeangle) * DEG2RAD)) * CVAR(vid_conwidth) * 0.5;
-		v2_x = race_angle_to_con_x(diffangle - strafeangle);
+		v2_x = max(0, race_angle_to_con_x(diffangle - strafeangle) - v1_x);
 		v2_y = 20;
 		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
 	}
