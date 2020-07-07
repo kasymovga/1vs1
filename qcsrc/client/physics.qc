@@ -188,9 +188,7 @@ vector CSQCPhysic_SetViewOrg()
 }
 
 void CSQCPhysic_SetCamera() {
-	if (physics)
-	if (servercommandframe)
-	if (clientcommandframe) {
+	if (physics) {
 		if (physics_plug_adjust_view)
 			view_camera_origin = physics_plug_adjust_view();
 		else
@@ -215,6 +213,8 @@ void CSQCPhysic_SetCamera() {
 			physics_end_origin = physics.origin;
 
 		R_SetView(VF_ORIGIN, view_camera_origin);
+	} else {
+		view_camera_origin = view_origin;
 	}
 }
 
