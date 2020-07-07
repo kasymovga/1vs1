@@ -1,7 +1,7 @@
 set sv_vote_players_auto_abstain 0.5 "This part of players who ignore vote will be counted as abstain"
 set sv_vote_limit_from_single_address 0 "Allowed vote count from single network address (0 and negative values mean no limit)"
 set sv_vote_change "1"
-set sv_vote_commands "restart gotomap endmatch endround nextmap kick kickban"
+set sv_vote_commands "restart gotomap endmatch endround kick kickban"
 set sv_vote_nospectators 0 "if set only players can call a vote (thus spectators and observers can't call a vote)"
 set sv_vote_only_commands ""
 set sv_vote_master_commands "movetoteam_red movetoteam_blue movetoteam_yellow movetoteam_pink"	"maybe add kickban here (but then sv_vote_master 0)"
