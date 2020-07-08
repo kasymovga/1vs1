@@ -1911,3 +1911,14 @@ void(float pause) setpause = #531;
 float(string addr, string data) net_sendpacket = #801;
 //description:
 //A QC builtin equivalent of the "packet" command
+
+//DP_RM_CULLTRACEMODE
+//idea: 802.1ad
+//darkplaces implementation: 802.1ad
+#define CULLTRACEMODE_PLAYER 1
+#define CULLTRACEMODE_EXTRA 2
+#define CULLTRACEMODE_SIMPLE 3
+#define CULLTRACEMODE_NONE 4
+.float culltracemode;
+//description
+//cull trace mode for entity

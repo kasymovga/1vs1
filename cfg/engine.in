@@ -30,6 +30,7 @@ set mod_q3shader_force_addalpha 1
 set mod_q3shader_default_polygonfactor -1
 set mod_q3bsp_lightmapmergepower 3
 set mod_q3bsp_curves_collisions 1
+mod_q3bsp_tracelineofsight_brushes 1
 set v_kickroll 0
 set v_kickpitch 0.2
 sensitivity 6

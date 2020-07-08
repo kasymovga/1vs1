@@ -96,6 +96,7 @@ void(entity bb) player_body_spawn {
 		bb.effects = self.effects;
 		setsize(bb, self.mins, self.maxs);
 		setmodel(bb, "null");
+		bb.culltracemode = CULLTRACEMODE_PLAYER;
 	}
 	self.body.body = bb;
 	setattachment(self.body, bb, "");
