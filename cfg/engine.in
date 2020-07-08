@@ -4,7 +4,7 @@ r_picmipsprites 0 // Rexuiz uses sprites that should never be picmipped (team ma
 r_mipsprites 1
 r_mipskins 1
 r_shadow_realtime_world_lightmaps 1
-r_cullentities_trace 1
+r_cullentities_trace 0
 r_glsl_offsetmapping_scale 0.01
 bgmvolume 0.4
 volume 0.5
