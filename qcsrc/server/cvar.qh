@@ -3,7 +3,6 @@
 #define CACHE_CVAR_CHECK_EMPTY(x,y) x = ((cvar_string(#x) != "") ? cvar(#x) : y)
 
 void(string profile) cvar_init;
-void(void) cvar_deinit;
 void(void) cvar_preinit;
 var float(string var) cvar;
 var string(string var) cvar_string;

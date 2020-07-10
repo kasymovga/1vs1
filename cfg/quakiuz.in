@@ -126,4 +126,4 @@ set quakiuz_g_balance_nex_damage 100
 set quakiuz_g_balance_nex_force 400
 set quakiuz_g_balance_nex_refire 1.5
 set quakiuz_g_balance_nex_animtime 1.5
-set quakiuz_duel_inherit "duel physicsq3 quakiuz"
+set quakiuz_duel_inherit "duel quakiuz"

@@ -1,4 +1,4 @@
-#define CVAR_INHERITANCE_DEEP 4
+#define CVAR_INHERITANCE_DEEP 8
 string cvar_game_prefix[CVAR_INHERITANCE_DEEP];
 float cvar_game_prefix_len;
 string cvar_profile_prefix[CVAR_INHERITANCE_DEEP];
@@ -164,57 +164,61 @@ string(string cvarname) cvar_string_ext {
 	return cvar_string_orig(cvarname);
 }
 
-float cvar_initialized;
-void(void) cvar_deinit {
-	if not(cvar_initialized)
+void(string profile) cvar_profile_add {
+	float i;
+	string s;
+	if (cvar_profile_prefix_len == CVAR_INHERITANCE_DEEP)
 		return;
 
-	float i;
-	for (i = 1; i < CVAR_INHERITANCE_DEEP; i++) {
-		str_unzone_ifneeded(cvar_profile_prefix[i]);
-		str_unzone_ifneeded(cvar_game_prefix[i]);
+	for (i = 0; i < cvar_profile_prefix_len; i++) {
+		s = cvar_profile_prefix[i];
+		if (s == profile)
+			return;
 	}
-	cvar = cvar_orig;
-	cvar_string = cvar_string_orig;
-	str_unzone_ifneeded(cvar_profile_prefix);
-	cvar_initialized = 0;
+	string inherit = cvar_string_orig(strcat(profile, "_inherit"));
+	while (inherit != "") {
+		s = str_car(inherit);
+		inherit = str_cdr(inherit);
+		if (s != "")
+			cvar_profile_add(s);
+	}
+	cvar_profile_prefix[cvar_profile_prefix_len] = strzone(profile);
+	cvar_profile_prefix_len++;
+}
+
+void(string _game) cvar_game_add {
+	float i;
+	string s;
+	if (cvar_game_prefix_len == CVAR_INHERITANCE_DEEP)
+		return;
+
+	for (i = 0; i < cvar_game_prefix_len; i++) {
+		s = cvar_game_prefix[i];
+		if (s == _game)
+			return;
+	}
+	string inherit = cvar_string_orig(strcat(_game, "_inherit"));
+	while (inherit != "") {
+		s = str_car(inherit);
+		inherit = str_cdr(inherit);
+		if (s != "")
+			cvar_game_add(s);
+	}
+	cvar_game_prefix[cvar_game_prefix_len] = strzone(_game);
+	cvar_game_prefix_len++;
 }
 
 void(string profile) cvar_init {
-	if (cvar_initialized)
-		cvar_deinit();
-
 	float i;
 	string s;
 	cvar_orig = cvar;
 	cvar_string_orig = cvar_string;
-	cvar_game_prefix[0] = gametype_name(MapInfo_CurrentGametype());
-	s = strcat(cvar_game_prefix[0], "_inherit");
-	string game_inherit = cvar_string_orig(s);
-	cvar_game_prefix_len = 1;
-	for (i = 1; i < CVAR_INHERITANCE_DEEP; i++) {
-		s = str_car(game_inherit);
-		if (s == "")
-			break;
-
-		cvar_game_prefix[i] = strzone(s);
-		cvar_game_prefix_len++;
-		game_inherit = str_cdr(game_inherit);
-	}
-	cvar_profile_prefix_len = 0;
-	if (profile != "") {
-		cvar_profile_prefix[0] = strzone(profile);
-		cvar_profile_prefix_len = 1;
-		string profile_inherit = cvar_string_orig(strcat(profile, "_inherit"));
-		for (i = 1; i < CVAR_INHERITANCE_DEEP; i++) {
-			s = str_car(profile_inherit);
-			if (s == "")
-				break;
-
-			cvar_profile_prefix[i] = strzone(s);
-			cvar_profile_prefix_len++;
-			profile_inherit = str_cdr(profile_inherit);
-		}
+	cvar_game_add(gametype_name(MapInfo_CurrentGametype()));
+	while (profile != "") {
+		s = str_car(profile);
+		profile = str_cdr(profile);
+		if (s != "")
+			cvar_profile_add(s);
 	}
 	cvar = cvar_ext;
 	cvar_string = cvar_string_ext;

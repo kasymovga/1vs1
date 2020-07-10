@@ -384,7 +384,6 @@ void() map_finish {
 	string s;
 	entity e;
 	map_finished = TRUE;
-	cvar_deinit();
 	string map_finished_message;
 	map_finished_message = "^2Game finished!";
 	if (team_mode) {
