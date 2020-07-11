@@ -209,7 +209,6 @@ void(string _game) cvar_game_add {
 }
 
 void(string profile) cvar_init {
-	float i;
 	string s;
 	cvar_orig = cvar;
 	cvar_string_orig = cvar_string;
