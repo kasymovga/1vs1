@@ -222,7 +222,6 @@ void(string profile) cvar_init {
 	}
 	cvar = cvar_ext;
 	cvar_string = cvar_string_ext;
-	cvar_initialized = 1;
 }
 
 void(void) cvar_preinit {
