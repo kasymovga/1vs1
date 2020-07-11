@@ -175,6 +175,8 @@ void(string profile) cvar_profile_add {
 		if (s == profile)
 			return;
 	}
+	cvar_profile_prefix[cvar_profile_prefix_len] = strzone(profile);
+	cvar_profile_prefix_len++;
 	string inherit = cvar_string_orig(strcat(profile, "_inherit"));
 	while (inherit != "") {
 		s = str_car(inherit);
@@ -182,8 +184,6 @@ void(string profile) cvar_profile_add {
 		if (s != "")
 			cvar_profile_add(s);
 	}
-	cvar_profile_prefix[cvar_profile_prefix_len] = strzone(profile);
-	cvar_profile_prefix_len++;
 }
 
 void(string _game) cvar_game_add {
@@ -197,6 +197,8 @@ void(string _game) cvar_game_add {
 		if (s == _game)
 			return;
 	}
+	cvar_game_prefix[cvar_game_prefix_len] = strzone(_game);
+	cvar_game_prefix_len++;
 	string inherit = cvar_string_orig(strcat(_game, "_inherit"));
 	while (inherit != "") {
 		s = str_car(inherit);
@@ -204,8 +206,6 @@ void(string _game) cvar_game_add {
 		if (s != "")
 			cvar_game_add(s);
 	}
-	cvar_game_prefix[cvar_game_prefix_len] = strzone(_game);
-	cvar_game_prefix_len++;
 }
 
 void(string profile) cvar_init {
