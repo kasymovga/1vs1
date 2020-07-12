@@ -132,6 +132,7 @@ float weapon_nex(float req)
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
+		hint_add("Don't forget to customize your mouse sensitivity for better aim with nex.");
 	}
 	else if (req == WR_CHECKAMMO1)
 		return self.ammo_cells >= g_balance_nex_ammo;

@@ -810,6 +810,7 @@ void spawnfunc_item_armor_medium (void) {
 		remove(self);
 		return;
 	}
+	hint_add("Collect armor to stay alive longer.");
 	self.armorvalue = g_pickup_armormedium;
 	self.max_armorvalue = g_pickup_armormedium_max;
 	item_start (sv_model_armormedium, "misc/armor10.wav", g_pickup_respawntime_armormedium, g_pickup_respawntimejitter_armormedium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -820,6 +821,7 @@ void spawnfunc_item_armor_big (void) {
 		remove(self);
 		return;
 	}
+	hint_add("Collect armor to stay alive longer.");
 	self.armorvalue = g_pickup_armorbig;
 	self.max_armorvalue = g_pickup_armorbig_max;
 	item_start (sv_model_armorbig, "misc/armor17_5.wav", g_pickup_respawntime_armorbig, g_pickup_respawntimejitter_armorbig, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
@@ -830,6 +832,7 @@ void spawnfunc_item_armor_large (void) {
 		remove(self);
 		return;
 	}
+	hint_add("Collect armor to stay alive longer.");
 	self.armorvalue = g_pickup_armorlarge;
 	self.max_armorvalue = g_pickup_armorlarge_max;
 	item_start (sv_model_armorlarge, "misc/armor25.wav", g_pickup_respawntime_armorlarge, g_pickup_respawntimejitter_armorlarge, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
@@ -870,6 +873,7 @@ void spawnfunc_item_health_mega (void) {
 		remove(self);
 		return;
 	}
+	hint_add("Collect extra health to stay alive longer.");
 	self.max_health = g_pickup_healthmega_max;
 	self.health = g_pickup_healthmega;
 	item_start (sv_model_healthmega, "misc/megahealth.wav", g_pickup_respawntime_healthmega, g_pickup_respawntimejitter_healthmega, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);

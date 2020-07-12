@@ -5,6 +5,11 @@ void(string hint) hint_add {
 	if (hint_count >= 100)
 		return;
 
+	float i;
+	for (i = 0; i < hint_count; i++) {
+		if (cvar_string(strcat("_hint", ftos(i))) == hint)
+			return;
+	}
 	string s = strcat("_hint", ftos(hint_count));
 	registercvar(s, hint);
 	cvar_set(s, hint);

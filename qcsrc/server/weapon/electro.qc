@@ -259,6 +259,7 @@ float weapon_electro(float req)
 		precache_sound ("weapons/electro_impact.wav");
 		precache_sound ("weapons/electro_impact_combo.wav");
 		precache_sound ("weapons/electro_fly.wav");
+		hint_add("Spam secondary electro balls and explode them with primary fire to create a powerful explosion.");
 	}
 	else if (req == WR_SETUP)
 		weapon_setup(WEP_ELECTRO);
