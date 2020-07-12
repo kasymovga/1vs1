@@ -17,6 +17,14 @@ void(string hint) hint_add {
 }
 
 void(float n, float p) hint_send {
+	if (hint_count <= 0) {
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_HINT);
+		WriteByte(MSG_ONE, p);
+		WriteByte(MSG_ONE, 0);
+		WriteString(MSG_ONE, "This game mode not have any hints.");
+		return;
+	}
 	if (n < 0)
 		n = hint_count - 1;
 
