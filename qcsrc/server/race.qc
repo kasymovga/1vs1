@@ -85,6 +85,7 @@ void(void) race_records_save {
 float(string name) race_record_delete {
 	float i, j, t;
 	string n;
+	float r = 0;
 	for (i = 0; i < 10; i++) {
 		n = race_records_name[i];
 		if (n == name) {
@@ -97,10 +98,10 @@ float(string name) race_record_delete {
 			}
 			race_records_name[9] = "";
 			race_records_time[9] = 0;
-			return TRUE;
+			r = 1;
 		}
 	}
-	return FALSE;
+	return r;
 }
 
 void(entity to) race_records_send {
