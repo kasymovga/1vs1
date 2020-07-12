@@ -114,14 +114,13 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 			}
 		}
 	}
-
-	if(source.retard > 0) {
+	if (source)
+	if (source.retard > 0) {
 		if (source.retard_last_say)
 		if (time - source.retard_last_say < 60)
 			return;
 
 		source.retard_last_say = time;
-
 		float n = tokenizebyseparator(cvar_string("sv_retard_say"), "|");
 		if (n <= 0)
 			return;
@@ -129,89 +128,77 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		n = floor(random(n));
 		msgin = argv(n);
 	}
-
-	if(!teamsay && !privatesay)
+	if (!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
 			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 
 	msgin = chat_formatmessage(source, msgin);
-
 	if(msgin == "")
 		return;
 
-	if(source.classname != "player" && source.team <= 0)
+	if not(source)
+		teamsay = FALSE;
+	else if (source.classname != "player" && source.team <= 0)
 		colorstr = "^0"; // black for spectators
 	else if (team_mode)
 		colorstr = team_color_code(source.team);
 	else
 		teamsay = FALSE;
 
-	if(map_intermission_running)
+	if (map_intermission_running)
 		teamsay = FALSE;
 
 	msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
-	if(msgin == "")
+	if (msgin == "")
 		return;
 
-	if(g_chat_teamcolors)
+	if not(source)
+		namestr = cvar_string("hostname");
+	else if (g_chat_teamcolors)
 		namestr = player_name(source);
 	else
 		namestr = source.netname;
 
 	namestr = strcat(namestr, "^0#", ftos(num_for_edict(source)));
-
-	if(privatesay)
-	{
+	if (privatesay) {
 		msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
 		privatemsgprefixlen = strlen(msgstr);
 		msgstr = strcat(msgstr, msgin);
 		cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
-		if(g_chat_teamcolors)
+		if (g_chat_teamcolors)
 			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", player_name(privatesay), ": ^7");
 		else
 			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
-	}
-	else if(teamsay)
-	{
+	} else if (teamsay) {
 		msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
 		cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
-	}
-	else
-	{
+	} else {
 		msgstr = strcat("\{1}", namestr, "^7: ", msgin);
 		cmsgstr = "";
 	}
-
 	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	fullmsgstr = msgstr;
 	fullcmsgstr = cmsgstr;
-
 	// FLOOD CONTROL
 	flood = 0;
 	var .float flood_field;
-
-	if(floodcontrol)
-	{
+	if (source)
+	if (floodcontrol) {
 		float flood_spl;
 		float flood_burst;
 		float flood_lmax;
 		float lines;
-		if(privatesay)
-		{
+		if (privatesay) {
 			flood_spl = g_chat_flood_spl_tell;
 			flood_burst = g_chat_flood_burst_tell;
 			flood_lmax = g_chat_flood_lmax_tell;
 			flood_field = floodcontrol_chattell;
-		}
-		else if(teamsay)
-		{
+		} else if (teamsay) {
 			flood_spl = g_chat_flood_spl_team;
 			flood_burst = g_chat_flood_burst_team;
 			flood_lmax = g_chat_flood_lmax_team;
 			flood_field = floodcontrol_chatteam;
-		}
-		else
-		{
+		} else {
 			flood_spl = g_chat_flood_spl;
 			flood_burst = g_chat_flood_burst;
 			flood_lmax = g_chat_flood_lmax;
@@ -224,125 +211,95 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		str_wrapped_line_remaining = msgstr;
 		msgstr = "";
 		lines = 0;
-		while(str_wrapped_line_remaining && (!flood_lmax || lines <= flood_lmax))
-		{
+		while (str_wrapped_line_remaining && (!flood_lmax || lines <= flood_lmax)) {
 			msgstr = strcat(msgstr, " ", str_wrapped_line(82.4289758859709, strlennocol)); // perl averagewidth.pl < gfx/vera-sans.width
 			++lines;
 		}
 		msgstr = substring(msgstr, 1, strlen(msgstr) - 1);
-
-		if(str_wrapped_line_remaining != "")
-		{
+		if (str_wrapped_line_remaining != "") {
 			msgstr = strcat(msgstr, "\n");
 			flood = 2;
 		}
-
-		if(time >= source.flood_field)
-		{
+		if (time >= source.flood_field) {
 			source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + lines * flood_spl;
-		}
-		else
-		{
+		} else {
 			flood = 1;
 			msgstr = fullmsgstr;
 		}
-
 		if (timeoutStatus == 2) //when game is paused, no flood protection
 			source.flood_field = flood = 0;
 	}
-
-	if(flood == 2)
-	{
-		if(g_chat_flood_notify_flooder)
-		{
+	if (flood == 2) {
+		if (g_chat_flood_notify_flooder) {
 			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
 			sourcecmsgstr = "";
-		}
-		else
-		{
+		} else {
 			sourcemsgstr = fullmsgstr;
 			sourcecmsgstr = fullcmsgstr;
 		}
 		cmsgstr = "";
-	}
-	else
-	{
+	} else {
 		sourcemsgstr = msgstr;
 		sourcecmsgstr = cmsgstr;
 	}
-
-	if(!privatesay)
-	if(source.classname != "player" && source.team <= 0)
-	{
+	if (!privatesay)
+	if (source)
+	if (source.classname != "player" && source.team <= 0) {
 		if(teamsay || (g_chat_nospectators == 1) || (g_chat_nospectators == 2 && !warmup_active))
 			teamsay = -1; // spectators
 	}
-
-	if(flood)
+	if (flood)
 		print("NOTE: ", player_name(source), "^7 is flooding.\n");
 	else if (!teamsay && !privatesay && source.retard <= 0 && !source.muted)
 		GameHookChain_PublicPlayerChat(source, msgin);
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
-	if(privatesay)
+	if (privatesay)
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
-	if(source.muted)
-	{
+	if (source.muted && source) {
 		// always fake the message
 		sprint(source, sourcemsgstr);
-		if(cmsgstr != "" && !privatesay)
+		if (cmsgstr != "" && !privatesay)
 			centerprint(source, sourcecmsgstr);
-	}
-	else if(flood == 1)
-	{
-		if(g_chat_flood_notify_flooder)
+	} else if(flood == 1) {
+		if (g_chat_flood_notify_flooder)
 			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
-		else
-		{
+		else {
 			sprint(source, sourcemsgstr);
-			if(cmsgstr != "" && !privatesay)
+			if (cmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
 		if (g_chat_flood_damage_flooder)
 		if not(source.deadflag)
 			damage(source, world, world, g_chat_flood_damage_flooder, DEATH_HURTTRIGGER, source.origin, '0 0 0');
-	}
-	else if(privatesay)
-	{
+	} else if (privatesay) {
 		sprint(source, sourcemsgstr);
 		sprint(privatesay, msgstr);
-		if(cmsgstr != "")
+		if (cmsgstr != "")
 			centerprint(privatesay, cmsgstr);
-	}
-	else if(teamsay > 0)
-	{
+	} else if (teamsay > 0) {
 		sprint(source, sourcemsgstr);
-		if(sourcecmsgstr != "")
+		if (sourcecmsgstr != "")
 			centerprint(source, sourcecmsgstr);
+
 		FOR_EACH_REALPLAYER(head) if(head.team == source.team)
-			if(head != source)
-			{
+			if (head != source) {
 				sprint(head, msgstr);
-				if(cmsgstr != "")
+				if (cmsgstr != "")
 					centerprint(head, cmsgstr);
 			}
-	}
-	else if(teamsay < 0)
-	{
+	} else if(teamsay < 0) {
 		sprint(source, sourcemsgstr);
-		FOR_EACH_REALCLIENT(head) if(head.classname != "player" && head.team <= 0)
-			if(head != source)
+		FOR_EACH_REALCLIENT(head) if (head.classname != "player" && head.team <= 0)
+			if (head != source)
 				sprint(head, msgstr);
-	}
-	else if(sourcemsgstr != msgstr)
-	{
+	} else if (sourcemsgstr != msgstr) {
 		sprint(source, sourcemsgstr);
 		FOR_EACH_REALCLIENT(head)
-			if(head != source)
+			if (head != source)
 				sprint(head, msgstr);
-	}
-	else
+	} else
 		bprint(msgstr);
 }
 

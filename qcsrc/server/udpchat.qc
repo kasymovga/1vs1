@@ -74,10 +74,15 @@ void UDPChat_ShowPlayersStatus() {
 
 var void(entity source, string msg) UDPChat_PupblicPlayerChat_NextLink;
 void UDPChat_PupblicPlayerChat(entity source, string msg) {
-	if (clienttype(source) == CLIENTTYPE_REAL) {
-		string _netname = strreplace(":", "_", source.netname);
-		_netname = strreplace("@", "_", _netname);
-		string text = strcat(strdecolorize(_netname), "#", ftos(num_for_edict(source)), "@", sv_udpchat_id, ": ", strdecolorize(msg));
+	if (!source || clienttype(source) == CLIENTTYPE_REAL) {
+		string text;
+		if (source) {
+			string _netname = strreplace(":", "_", source.netname);
+			_netname = strreplace("@", "_", _netname);
+			text = strcat(strdecolorize(_netname), "#", ftos(num_for_edict(source)), "@", sv_udpchat_id, ": ", strdecolorize(msg));
+		} else
+			text = strcat("SERVER#0@", sv_udpchat_id, ": ", strdecolorize(msg));
+
 		UDPChat_SendPacket(text);
 		UDPChat_ShowPlayersStatus();
 	}

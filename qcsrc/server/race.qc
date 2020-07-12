@@ -304,7 +304,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			if (cp == race_timed_checkpoint) {
 				float position = race_records_put(e.netname, t);
 				if (position) {
-					bprint(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), "\n");
+					chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), "\n"), 0);
 					entity e3;
 					FOR_EACH_REALCLIENT(e3) {
 						race_records_send(e3);

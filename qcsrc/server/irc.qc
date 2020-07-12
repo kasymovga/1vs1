@@ -355,7 +355,9 @@ void IRC_Event(float handle, string event, float numeric, string src, float argc
 
 void IRC_PublicPlayerChat(entity plr, string msg) {
 	if (clienttype(plr) == CLIENTTYPE_REAL || sv_ircbot_announce_chat_from_bots)
-		IRC_Privmsg(irc.cnt, irc.target, strcat("<", plr.netname, "^7> ", msg));
+		IRC_Privmsg(irc.cnt, irc.target, strcat("<", plr.netname, "^7#", ftos(num_for_edict(plr)), "> ", msg));
+	else if not(plr)
+		IRC_Privmsg(irc.cnt, irc.target, strcat("<SERVER#0> ", msg));
 
 	IRC_PublicPlayerChat_NextLink(plr, msg);
 }
