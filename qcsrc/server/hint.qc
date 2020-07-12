@@ -40,12 +40,10 @@ void hint_GameMenuAddItems(void(string item, string cmd) item_add) {
 
 var void(void) hint_RealClientConnect_next;
 void(void) hint_RealClientConnect {
-	if (hint_count <= 0)
-		return;
-
-	if (sv_hints > 1)
-		hint_send(floor(random() * hint_count), 0);
-
+	if (hint_count > 0) {
+		if (sv_hints > 1)
+			hint_send(floor(random() * hint_count), 0);
+	}
 	hint_RealClientConnect_next();
 }
 
