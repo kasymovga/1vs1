@@ -136,10 +136,6 @@ typedef void() voidfunc;
 .float pauserotfuel_finished;
 .vector dest1, dest2;
 
-//swamp
-.float in_swamp;              // bool
-.entity swampslug;            // Uses this to release from swamp ("untouch" fix)
-
 // footstep interval
 .float nextstep;
 

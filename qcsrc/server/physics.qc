@@ -6,7 +6,6 @@ float g_steponskydamage;
 
 .float ladder_time;
 .entity ladder_entity;
-.float swamp_slowdown;
 .float lastground;
 .float spectatorspeed;
 
@@ -92,14 +91,9 @@ void(void) physics_on_crouch_hook {
 .string lastclassname;
 .float last_maxspeedmod;
 float(void) physics_max_speed_mod {
-	float maxspd_mod = 1, spd;
+	float maxspd_mod, spd;
 	string temps;
-
-	if(self.in_swamp)
-		maxspd_mod = maxspd_mod * self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
-
-	maxspd_mod = maxspd_mod * gamehook_chain_physics_max_speed_mod();
-
+	maxspd_mod = gamehook_chain_physics_max_speed_mod();
 	if(self.classname != "player")
 	{
 		maxspd_mod = sv_spectator_speed_multiplier;
