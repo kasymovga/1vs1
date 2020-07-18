@@ -467,11 +467,10 @@ void(void) player_anim {
 	if (!self.body.animstate_override) {
 		if (!(self.flags & FL_ONGROUND)) {
 			if (self.crouch)
-				player_anim_set(self, anim_duckjump, FALSE, TRUE, self.restart_jump);
+				player_anim_set(self, anim_duckjump, FALSE, TRUE, FALSE);
 			else
-				player_anim_set(self, anim_jump, FALSE, TRUE, self.restart_jump);
+				player_anim_set(self, anim_jump, FALSE, TRUE, FALSE);
 
-			self.restart_jump = FALSE;
 		} else if (self.crouch) {
 			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
 				player_anim_set(self, anim_duckwalk, TRUE, FALSE, FALSE);

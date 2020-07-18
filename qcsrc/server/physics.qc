@@ -1,4 +1,3 @@
-.float restart_jump;
 .entity player_physic;
 
 float sv_spectator_speed_multiplier;
@@ -31,7 +30,6 @@ void(void) physics_on_jump_hook {
 	if(g_jump_grunt)
 		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
-	self.restart_jump = -1; // restart jump anim next time
 	self.oldvelocity_z = physics_velocity_z;
 }
 
