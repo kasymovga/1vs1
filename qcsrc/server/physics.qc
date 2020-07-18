@@ -1,7 +1,6 @@
 .float restart_jump;
 .entity player_physic;
 
-float speedmeter;
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 
@@ -396,7 +395,6 @@ void(void) physics_init {
 	CACHE_CVAR(g_dodging_horiz_speed);
 	CACHE_CVAR(g_dodging_up_speed);
 	//Server-side only
-	CACHE_CVAR(speedmeter);
 	CACHE_CVAR(sv_spectator_speed_multiplier);
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(g_dodging_sound);
