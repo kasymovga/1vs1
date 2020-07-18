@@ -3,6 +3,7 @@
 
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
+float g_steponskydamage;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -344,6 +345,11 @@ float(string s) physics_cvar {
 	return cvar(sv_s);
 }
 
+void(void) physics_step_on_sky {
+	if (g_steponskydamage > 0)
+		damage(self, world, world, g_steponskydamage * frametime, DEATH_HURTTRIGGER, self.origin, '0 0 0');
+}
+
 float physics_initiated;
 void(void) physics_init {
 #define PHYSICS_CACHE_CVAR(x) x = physics_cvar(#x)
@@ -399,6 +405,7 @@ void(void) physics_init {
 	CACHE_CVAR(g_jump_grunt);
 	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
+	CACHE_CVAR(g_steponskydamage);
 	if (physics_initiated) {
 		entity e;
 		FOR_EACH_REALCLIENT(e) {

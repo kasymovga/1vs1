@@ -81,6 +81,12 @@ void(float ground) physics_update_status {
 			} else
 				physics_flags |= FL_ONGROUND;
 
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) { //step on sky, usually this is map error
+#ifdef SVQC
+				physics_step_on_sky();
+#endif
+				physics_flags &~= FL_ONGROUND_OR_SLICK;
+			}
 			self.groundentity = trace_ent;
 			physics_impact();
 			if (!trace_ent || trace_ent.solid != SOLID_NOT)
