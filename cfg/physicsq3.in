@@ -6,7 +6,7 @@ set physicsq3_g_accelerate 10
 set physicsq3_g_airaccelerate 1
 set physicsq3_g_friction 6
 set physicsq3_g_edgefriction 1
-set physicsq3_g_stepheight 22.5
+set physicsq3_g_stepheight 25.5
 set physicsq3_g_jumpvelocity 332.5
 set physicsq3_g_waterjumpvelocity 281.25
 set physicsq3_g_wateraccelerate 4
@@ -18,7 +18,4 @@ set physicsq3_g_airstrafeaccelerate 0
 set physicsq3_g_maxairstrafespeed 0
 set physicsq3_g_aircontrol 0
 set physicsq3_g_warsowbunny_turnaccel 0
-set physicsq3_g_warsowbunny_accel 0.1593
-set physicsq3_g_warsowbunny_topspeed 1156.25
-set physicsq3_g_warsowbunny_backtosideratio 0.8
 set physicsq3_g_friction_on_land 0

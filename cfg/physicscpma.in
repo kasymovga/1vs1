@@ -6,7 +6,7 @@ set physicscpma_g_accelerate 15
 set physicscpma_g_airaccelerate 1
 set physicscpma_g_friction 8
 set physicscpma_g_edgefriction 1
-set physicscpma_g_stepheight 22.5
+set physicscpma_g_stepheight 25.5
 set physicscpma_g_jumpvelocity 332.5
 set physicscpma_g_waterjumpvelocity 281.25
 set physicscpma_g_wateraccelerate 4
@@ -18,8 +18,5 @@ set physicscpma_g_airstrafeaccelerate 70
 set physicscpma_g_maxairstrafespeed 37.5
 set physicscpma_g_aircontrol 187.5
 set physicscpma_g_warsowbunny_turnaccel 0
-set physicscpma_g_warsowbunny_accel 0.1593
-set physicscpma_g_warsowbunny_topspeed 1156.25
-set physicscpma_g_warsowbunny_backtosideratio 0.8
 set physicscpma_g_friction_on_land 0
-set physicscpma_g_doublejump 0
+set physicscpma_g_q2doublejump 1
