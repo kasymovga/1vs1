@@ -8,7 +8,7 @@ void(void) physics_impact {
 	if (self.touch) {
 		entity oldother = other;
 		other = trace_ent;
-		self.touch();
+		self.touch(); //Lets hope there is not trace function in this touch function
 		other = oldother;
 	}
 	if (trace_ent.touch) {
@@ -22,7 +22,7 @@ void(void) physics_impact {
 		trace_dphitq3surfaceflags = 0;
 		trace_plane_normal = -trace_plane_normal;
 		other = oldself;
-		self.touch();
+		self.touch(); //Lets hope there is not trace function in this touch function
 		self = oldself;
 		other = oldother;
 		trace_plane_normal = old_trace_plane_normal;
