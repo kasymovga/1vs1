@@ -212,6 +212,7 @@ void(string profile) cvar_init {
 	string s;
 	cvar_orig = cvar;
 	cvar_string_orig = cvar_string;
+	profile = strreplace("+", " ", profile);
 	cvar_game_add(gametype_name(MapInfo_CurrentGametype()));
 	while (profile != "") {
 		s = str_car(profile);
