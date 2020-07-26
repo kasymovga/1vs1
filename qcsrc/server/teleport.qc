@@ -155,7 +155,7 @@ void(void) teleport_touch {
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
 
 	if (g_teleport_keep_velocity > 0)
-		v = v_forward * max(g_teleport_keep_velocity, vlen(other.velocity));
+		v = v_forward * min(g_teleport_keep_velocity, vlen(other.velocity));
 	else if (g_teleport_keep_velocity < 0)
 		v = v_forward * vlen(other.velocity);
 	else
