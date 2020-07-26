@@ -80,7 +80,6 @@ float sv_clforceplayermodels;
 #endif
 
 .entity pusher;
-.float pushltime;
 
 float(void) player_customize;
 float(void) player_body_customize;
@@ -276,6 +275,7 @@ void() player_effects {
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	self.body.effects = self.effects;
+	self.body.angles_x = bound(-15, -0.25 * self.v_angle_x, 15);
 	self.body.body.modelflags = self.modelflags;
 	self.effects = 0;
 }

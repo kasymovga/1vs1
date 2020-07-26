@@ -287,3 +287,4 @@ enum {
 .float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
+.float pushltime;
