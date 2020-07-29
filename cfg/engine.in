@@ -110,6 +110,7 @@ set con_completion_gotomap map
 set con_completion_vmap map
 set con_completion_vdomap map
 set con_completion_ls *
+set con_completion_which *
 
 seta cl_port $cl_port
 seta r_showsurfaces $r_showsurfaces
