@@ -25,7 +25,6 @@ set sv_player_mute_namepattern3 ""
 set g_fullbrightplayers "1"
 set g_spawnshieldtime 0
 set g_spawnfrags 0
-set g_player_alpha 1
 set g_player_brightness 0	"set to 2 for brighter players"
 alias sv_fbskin "g_player_forcemodel models/player/nexus.zym; g_player_forceskin 6; rereadcvars"
 alias sv_fbskin_green "sv_fbskin; g_player_forcecolor 51; rereadcvars"
