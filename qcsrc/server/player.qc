@@ -64,6 +64,7 @@ float g_spawnshieldtime;
 float g_spawnfrags;
 float g_spawnsound;
 float g_player_pushfactor;
+float g_player_body_pitch_maxangle;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
@@ -275,7 +276,7 @@ void() player_effects {
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	self.body.effects = self.effects;
-	self.body.angles_x = bound(-15, -0.25 * self.v_angle_x, 15);
+	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 	self.body.body.modelflags = self.modelflags;
 	self.effects = 0;
 }
@@ -2469,6 +2470,7 @@ void() player_init {
 	CACHE_CVAR(g_reset_on_join);
 	CACHE_CVAR(g_player_brightness);
 	CACHE_CVAR(g_player_pushfactor);
+	CACHE_CVAR(g_player_body_pitch_maxangle);
 	CACHE_CVAR(g_spawnshieldtime);
 	CACHE_CVAR(g_spawnfrags);
 	CACHE_CVAR(g_spawnsound);

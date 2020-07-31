@@ -65,7 +65,7 @@ set g_balance_armor_limit 999
 set g_balance_armor_blockpercent 0.6
 set g_balance_fuel_regen 0.1 "fuel regeneration (only applies if the player owns IT_FUEL_REGEN)"
 set g_balance_fuel_regenlinear 0
-set g_balance_pause_fuel_regen 2 // other than this, fuel uses the health regen counter
+set g_balance_pause_fuel_regen 2 "other than this, fuel uses the health regen counter"
 set g_balance_fuel_rot 0.05
 set g_balance_fuel_rotlinear 0
 set g_balance_pause_fuel_rot 5
@@ -77,3 +77,4 @@ set g_balance_selfdamagepercent 0.6
 set g_playerclip_collisions 1
 set g_player_view_ofs 35
 set g_player_crouch_view_ofs 15
+set g_player_body_pitch_maxangle 15 "Body max pitch angle of player model relative of view angle"
