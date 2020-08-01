@@ -48,10 +48,10 @@ enum {
 	ENT_CLIENT_COUNT,
 };
 
-const float AS_STRING		= 1;
-const float AS_INT		= 2;
-const float AS_FLOAT_TRUNCATED	= 2;
-const float AS_FLOAT		= 8;
+const float AS_STRING = 1;
+const float AS_INT = 2;
+const float AS_FLOAT_TRUNCATED = 2;
+const float AS_FLOAT = 8;
 
 enum {
 	TE_CSQC_PICTURE = 100,
@@ -62,7 +62,7 @@ enum {
 	TE_CSQC_BIGLIGHTNINGARC,
 	TE_CSQC_ZAPPERLIGHTNING,
 	TE_CSQC_NADGETSELECT,
-    TE_CSQC_BLAST,
+	TE_CSQC_BLAST,
 	TE_CSQC_RADIO,
 	TE_CSQC_WEAPONLIST,
 	TE_CSQC_WEAPONSELECT,
@@ -115,36 +115,32 @@ enum {
 	STAT_PLAYER_STATE,
 	STAT_STEALTH,
 	STAT_STEALTH_SAVED,
-    STAT_HGTYPE,
-    STAT_HGAMMO,
-    STAT_HGREFIRE,
-    STAT_HGREGEN,
-    STAT_HGREGENMAX,
-    STAT_HGREGENPAUSED,
-    STAT_HGREGENRATE,
-
-    STAT_HGTYPE2,
-    STAT_HGAMMO2,
-    STAT_HGREFIRE2,
-    STAT_HGREGEN2,
-    STAT_HGREGENMAX2,
-    STAT_HGREGENPAUSED2,
-    STAT_HGREGENRATE2,
-
-    STAT_HGBONUS,
-    STAT_HGBONUSTYPE,
-    STAT_HGDETONABLES,
-    STAT_HGFORCE,
-    STAT_HGLAUNCH,
-
-    STAT_HGSHIELDSTORE,
-    STAT_HGSHIELDSTOREMAX,
-    STAT_HGSHIELD,
-    STAT_HGSHIELDPOWER,
-    STAT_HGSHIELDDAMAGEPERSHOT,
-
-    //STAT_HGTWARP_EXPIRETIME,
-    //STAT_HGTWARP_WARPTIME
+	STAT_HGTYPE,
+	STAT_HGAMMO,
+	STAT_HGREFIRE,
+	STAT_HGREGEN,
+	STAT_HGREGENMAX,
+	STAT_HGREGENPAUSED,
+	STAT_HGREGENRATE,
+	STAT_HGTYPE2,
+	STAT_HGAMMO2,
+	STAT_HGREFIRE2,
+	STAT_HGREGEN2,
+	STAT_HGREGENMAX2,
+	STAT_HGREGENPAUSED2,
+	STAT_HGREGENRATE2,
+	STAT_HGBONUS,
+	STAT_HGBONUSTYPE,
+	STAT_HGDETONABLES,
+	STAT_HGFORCE,
+	STAT_HGLAUNCH,
+	STAT_HGSHIELDSTORE,
+	STAT_HGSHIELDSTOREMAX,
+	STAT_HGSHIELD,
+	STAT_HGSHIELDPOWER,
+	STAT_HGSHIELDDAMAGEPERSHOT,
+	//STAT_HGTWARP_EXPIRETIME,
+	//STAT_HGTWARP_WARPTIME
 	STAT_RUNES,
 	STAT_SPIDERBOT_HEALTH,
 	STAT_SPIDERBOT_ROCKETS,
@@ -152,7 +148,6 @@ enum {
 	STAT_SPIDERBOT_RELOAD,
 	STAT_SPIDERBOT_ENERGY,
 	STAT_SPIDERBOT_SHIELD,
-
 	STAT_SPECSTATUS,
 };
 
@@ -168,27 +163,27 @@ const float HUD_SPIDERBOT = 10;
 /**
  * Lower scores are better (e.g. suicides)
  */
-#define SFL_LOWER_IS_BETTER     1
+#define SFL_LOWER_IS_BETTER 1
 
 /**
  * Don't show zero values as scores
  */
-#define SFL_HIDE_ZERO           2
+#define SFL_HIDE_ZERO 2
 
 /**
  * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
  */
-#define SFL_ALLOW_HIDE         16
+#define SFL_ALLOW_HIDE 16
 
 /**
  * Display as a rank (with st, nd, rd, th suffix)
  */
-#define SFL_RANK               32
+#define SFL_RANK 32
 
 /**
  * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
  */
-#define SFL_TIME               64
+#define SFL_TIME 64
 
 // not an extra constant yet
 #define SFL_ZERO_IS_WORST SFL_TIME
@@ -197,61 +192,61 @@ const float HUD_SPIDERBOT = 10;
  * Scoring priority (NOTE: PRIMARY is used for fraglimit)
  */
 #define SFL_SORT_PRIO_SECONDARY 4
-#define SFL_SORT_PRIO_PRIMARY   8
-#define SFL_SORT_PRIO_MASK     12
-#define SFL_NOCLEAR            16
+#define SFL_SORT_PRIO_PRIMARY 8
+#define SFL_SORT_PRIO_MASK 12
+#define SFL_NOCLEAR 16
 #define MAX_SCORE 16
 #define MAX_TEAMSCORE 2
 
 // this sets sounds and other properties of the projectiles in csqc
 enum {
-	PROJECTILE_BEGIN_LIST,
+ PROJECTILE_BEGIN_LIST,
 
-	PROJECTILE_BULLET,
-	PROJECTILE_BULLET_BIG,
-	PROJECTILE_BULLET_GLOWING,
-	PROJECTILE_CRYLINK,
-	PROJECTILE_CRYLINK_BOUNCING,
-	PROJECTILE_ELECTRO,
-	PROJECTILE_ELECTRO_BEAM,
-	PROJECTILE_FIREBALL,
-	PROJECTILE_FIREMINE,
-	PROJECTILE_GRENADE,
-	PROJECTILE_GRENADE_BOUNCING,
-	PROJECTILE_HAGAR,
-	PROJECTILE_HAGAR_BOUNCING,
-	PROJECTILE_HLAC,
-	PROJECTILE_HOOKBOMB,
-	PROJECTILE_LASER,
-	PROJECTILE_PORTO_BLUE,
-	PROJECTILE_PORTO_RED,
-	PROJECTILE_ROCKET,
+ PROJECTILE_BULLET,
+ PROJECTILE_BULLET_BIG,
+ PROJECTILE_BULLET_GLOWING,
+ PROJECTILE_CRYLINK,
+ PROJECTILE_CRYLINK_BOUNCING,
+ PROJECTILE_ELECTRO,
+ PROJECTILE_ELECTRO_BEAM,
+ PROJECTILE_FIREBALL,
+ PROJECTILE_FIREMINE,
+ PROJECTILE_GRENADE,
+ PROJECTILE_GRENADE_BOUNCING,
+ PROJECTILE_HAGAR,
+ PROJECTILE_HAGAR_BOUNCING,
+ PROJECTILE_HLAC,
+ PROJECTILE_HOOKBOMB,
+ PROJECTILE_LASER,
+ PROJECTILE_PORTO_BLUE,
+ PROJECTILE_PORTO_RED,
+ PROJECTILE_ROCKET,
 
-	PROJECTILE_HG_GENERIC,
-	PROJECTILE_HG_LASER,
-	PROJECTILE_HG_NAPALM,
-	PROJECTILE_HG_NAPALMSHARD,
-	PROJECTILE_HG_PLASMA,
-	PROJECTILE_HG_PLASMA_SHARD,
-	PROJECTILE_HG_RAZE,
-	PROJECTILE_HG_REMOTE,
-	PROJECTILE_HG_TRANSLOC,
+ PROJECTILE_HG_GENERIC,
+ PROJECTILE_HG_LASER,
+ PROJECTILE_HG_NAPALM,
+ PROJECTILE_HG_NAPALMSHARD,
+ PROJECTILE_HG_PLASMA,
+ PROJECTILE_HG_PLASMA_SHARD,
+ PROJECTILE_HG_RAZE,
+ PROJECTILE_HG_REMOTE,
+ PROJECTILE_HG_TRANSLOC,
 
-	PROJECTILE_RM_LASER,
+ PROJECTILE_RM_LASER,
 
-	PROJECTILE_END_LIST
+ PROJECTILE_END_LIST
 };
 
 // NOTE: limited to 255 projectiles. if that's ever seriously a problem, change the ProjInfo protocol.
 const float NUM_PROJECTILES = PROJECTILE_END_LIST - 1;
 
-float SPECIES_HUMAN        =  0;
-float SPECIES_ROBOT_SOLID  =  1;
-float SPECIES_ALIEN        =  2;
-float SPECIES_ANIMAL       =  3;
-float SPECIES_ROBOT_RUSTY  =  4;
-float SPECIES_ROBOT_SHINY  =  5;
-float SPECIES_RESERVED     = 15;
+float SPECIES_HUMAN = 0;
+float SPECIES_ROBOT_SOLID = 1;
+float SPECIES_ALIEN = 2;
+float SPECIES_ANIMAL = 3;
+float SPECIES_ROBOT_RUSTY = 4;
+float SPECIES_ROBOT_SHINY = 5;
+float SPECIES_RESERVED = 15;
 
 // Deathtypes (weapon deathtypes are the IT_* constants below)
 // NOTE: when adding death types, please add an explanation to Docs/spamlog.txt too.
@@ -282,14 +277,11 @@ float HITTYPE_NOINFO = 0x800; //trick for damage_radius()
 float HITTYPE_NOTEAMDAMAGE = 0x1000;
 
 // macros to access these
-#define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
-#define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
-#define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
-#define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
-#define WEP_VALID(w)                  ((w) >= WEP_FIRST && (w) <= WEP_LAST)
-
-//misc. stuff
-#define NEWLINES "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+#define DEATH_ISSPECIAL(t) ((t) >= DEATH_SPECIAL_START)
+#define DEATH_WEAPONOFWEAPONDEATH(t) ((t) & DEATH_WEAPONMASK)
+#define DEATH_ISWEAPON(t,w) (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
+#define DEATH_WEAPONOF(t) (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
+#define WEP_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST)
 
 // water levels
 float WATERLEVEL_NONE = 0;
@@ -299,34 +291,34 @@ float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
 
-float	FL_FLY					= 1;
-float	FL_SWIM					= 2;
-float	FL_CLIENT				= 8;
-float	FL_INWATER				= 16;
-float	FL_MONSTER				= 32;
-float	FL_GODMODE				= 64;
-float	FL_NOTARGET				= 128;
-float	FL_ITEM					= 256;
-float	FL_ONGROUND				= 512;
-float	FL_PARTIALGROUND			= 1024;
-float	FL_WATERJUMP				= 2048;
-float	FL_JUMPRELEASED				= 4096;
-float	FL_WEAPON				= 8192;
-float	FL_POWERUP				= 16384;
-float	FL_PROJECTILE				= 32768;
-float	FL_TOSSED				= 65536;
-float   FL_NO_WEAPON_STAY       = 131072;
-float   FL_SPAWNING       = 262144;
-float   FL_SLICK				= 524288;
-float   FL_ONGROUND_OR_SLICK	= 524800;
+float FL_FLY = 1;
+float FL_SWIM = 2;
+float FL_CLIENT = 8;
+float FL_INWATER = 16;
+float FL_MONSTER = 32;
+float FL_GODMODE = 64;
+float FL_NOTARGET = 128;
+float FL_ITEM = 256;
+float FL_ONGROUND = 512;
+float FL_PARTIALGROUND = 1024;
+float FL_WATERJUMP = 2048;
+float FL_JUMPRELEASED = 4096;
+float FL_WEAPON = 8192;
+float FL_POWERUP = 16384;
+float FL_PROJECTILE = 32768;
+float FL_TOSSED = 65536;
+float FL_NO_WEAPON_STAY = 131072;
+float FL_SPAWNING = 262144;
+float FL_SLICK = 524288;
+float FL_ONGROUND_OR_SLICK = 524800;
 
-float	DEAD_NO					= 0;
-float	DEAD_DYING				= 1;
-float	DEAD_DEAD				= 2;
-float	DEAD_RESPAWNABLE			= 3;
-float	DEAD_RESPAWNING			= 4;
-float	DEAD_FREEZE      = 5;
-float	DEAD_SPEC        = 6;
+float DEAD_NO = 0;
+float DEAD_DYING = 1;
+float DEAD_DEAD = 2;
+float DEAD_RESPAWNABLE = 3;
+float DEAD_RESPAWNING = 4;
+float DEAD_FREEZE = 5;
+float DEAD_SPEC = 6;
 
 float Q3SURFACEFLAG_NODAMAGE = 1;
 float Q3SURFACEFLAG_SLICK = 2; // low friction surface
@@ -349,13 +341,10 @@ float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc // i
 //float Q3SURFACEFLAG_DUST = 262144; // translucent 'light beam' effect (not important to qc)
 
 const float M_PI = 3.14159265358979323846;
-#define RM_SOUND_LASER_SECONDARY "weapons/rm_laser2.wav"
-#define RM_SOUND_LASER_PRIMARY "weapons/rm_laser1.wav"
-
-float COLOR_TEAM1	= 5;  // red
-float COLOR_TEAM2	= 14; // blue
-float COLOR_TEAM3	= 13; // yellow
-float COLOR_TEAM4	= 10; // pink
+float COLOR_TEAM1 = 5; // red
+float COLOR_TEAM2 = 14; // blue
+float COLOR_TEAM3 = 13; // yellow
+float COLOR_TEAM4 = 10; // pink
 
 float MOVETYPE_NONE = 0;
 float MOVETYPE_ANGLENOCLIP = 1;
@@ -371,3 +360,10 @@ float MOVETYPE_BOUNCE = 10;
 float MOVETYPE_BOUNCEMISSILE = 11; // Like bounce but doesn't lose speed on bouncing
 float MOVETYPE_FOLLOW = 12; // 'Attaches' the entity to its aim_ent
 float MOVETYPE_QCWALK = 128;
+
+const float KEY_FORWARD = 1;
+const float KEY_BACKWARD = 2;
+const float KEY_LEFT = 4;
+const float KEY_RIGHT = 8;
+const float KEY_JUMP = 16;
+const float KEY_CROUCH = 32;

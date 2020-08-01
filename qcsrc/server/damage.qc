@@ -41,7 +41,7 @@ void damage_info(vector org, float coredamage, float edgedamage, float rad, vect
 	net_link_entity(e, FALSE, 0.2, damage_info_send);
 }
 
-#define DAMAGE_CENTERPRINT_SPACER NEWLINES
+#define DAMAGE_CENTERPRINT_SPACER "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
 float yoda;
 float damage_goodhits;

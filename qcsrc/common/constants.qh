@@ -26,70 +26,25 @@ enum {
 	GAME_END
 };
 
-///////////////////////////
-// keys pressed
-const float KEY_FORWARD		=	1;
-const float KEY_BACKWARD	=	2;
-const float KEY_LEFT		=	4;
-const float KEY_RIGHT		=	8;
-const float KEY_JUMP		=	16;
-const float KEY_CROUCH		=	32;
+float CVAR_SAVE = 1;
+float CVAR_NOTIFY = 2;
+float CVAR_READONLY = 4;
 
-///////////////////////////
-// cvar constants
+float CHAN_AUTO = 0;
+float CHAN_WEAPON = 1; // Weapon fire
+float CHAN_VOICE = 2; // Voice/Radio
+float CHAN_TRIGGER = 3; // Triggers/Items
+float CHAN_PROJECTILE = 4; // Projectiles
+float CHAN_WEAPON2 = 5; // Nex fire (separated as it is a very long sound)
+float CHAN_PAIN = 6; // Pain
+float CHAN_PLAYER = 7; // Player body
 
-float CVAR_SAVE 	= 1;
-float CVAR_NOTIFY 	= 2;
-float CVAR_READONLY	= 4;
-// this assignment must match menu/nexuiz/dialog_settings_misc.c!
-float	CHAN_AUTO				= 0;
-	// on world: announcers, ...                     INFO
-	// on players: item pickup                       ITEMS
-	// on entities: UNUSED
-	// on csqc: UNUSED
-float	CHAN_WEAPON				= 1; // Weapon fire
-	// on world: UNUSED
-	// on players: weapon firing                     WEAPONS
-	// on entities: turret firing                    WEAPONS
-	// on csqc: UNUSED
-float	CHAN_VOICE				= 2; // Voice/Radio
-	// on world: UNUSED
-	// on players: voice                             VOICE
-	// on entities: ambient                          AMBIENT
-	// on csqc: UNUSED
-float	CHAN_TRIGGER			= 3; // Triggers/Items
-	// on world: UNUSED
-	// on players: item pickup                       ITEMS
-	// on entities: platforms moving etc.            ITEMS
-	// on csqc: UNUSED
-float	CHAN_PROJECTILE			= 4; // Projectiles
-	// on world: UNUSED
-	// on players: projectiles hitting player        SHOTS
-	// on entities: projectiles                      SHOTS
-	// on csqc: projectile sounds                    SHOTS
-float	CHAN_WEAPON2			= 5; // Nex fire (separated as it is a very long sound)
-	// on world: UNUSED
-	// on players: weapon firing                     WEAPONS
-	// on entities: turret firing                    WEAPONS
-	// on csqc: UNUSED
-float	CHAN_PAIN				= 6; // Pain
-	// on world: UNUSED
-	// on players: pain                              PAIN
-	// on entities: projectiles flying               SHOTS
-	// on csqc: player pain                          PAIN
-float	CHAN_PLAYER				= 7; // Player body
-	// on world: UNUSED
-	// on players: player sounds                     PLAYER
-	// on entities: player sounds                    PLAYER
-	// on csqc: UNUSED
-
-float	ATTN_NONE				= 0;
-float	ATTN_MIN				= 0.015625;
-float	ATTN_NORM				= 0.5;
-float	ATTN_IDLE				= 2;
-float	ATTN_STATIC				= 3;
-float	ATTN_MAX   				= 3.984375;
+float ATTN_NONE = 0;
+float ATTN_MIN = 0.015625;
+float ATTN_NORM = 0.5;
+float ATTN_IDLE = 2;
+float ATTN_STATIC = 3;
+float ATTN_MAX = 3.984375;
 
 #define VOL_BASE 0.7
 #define VOL_BASEVOICE 1.0
-
