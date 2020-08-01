@@ -23,7 +23,7 @@ CLASS(ListBox) EXTENDS(Item)
 	ATTRIB(ListBox, dragScrollTimer, float, 0)
 	ATTRIB(ListBox, dragScrollPos, vector, '0 0 0')
 
-	ATTRIB(ListBox, src, string, string_null) // scrollbar
+	ATTRIB(ListBox, src, string, NULL) // scrollbar
 	ATTRIB(ListBox, color, vector, '1 1 1')
 	ATTRIB(ListBox, color2, vector, '1 1 1')
 	ATTRIB(ListBox, colorC, vector, '1 1 1')

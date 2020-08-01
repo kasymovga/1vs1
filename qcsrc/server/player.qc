@@ -1115,7 +1115,7 @@ void(string f) player_precache_sounds {
 
 void player_clear_sounds()
 {
-#define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = string_null; }
+#define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = NULL; }
 	ALLPLAYERSOUNDS
 	ALLVOICEMSGS
 #undef _VOICEMSG
@@ -2189,7 +2189,7 @@ void(entity spot) player_spawn {
 	self.pain_frame = 0;
 	self.pain_finished = 0;
 	self.pushltime = 0;
-	self.think = func_null;
+	self.think = NULL;
 	self.nextthink = 0;
 	self.dmg_team = 0;
 	client_put_to_spot(spot);

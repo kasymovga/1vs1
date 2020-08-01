@@ -80,7 +80,7 @@ string shufflewords(string str)
 	n = tokenizebyseparator(str, " ");
 	shuffle(n, _shufflewords_swapfunc, world);
 	str = _shufflewords_str;
-	_shufflewords_str = string_null;
+	_shufflewords_str = NULL;
 	return str;
 }
 

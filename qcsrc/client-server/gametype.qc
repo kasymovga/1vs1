@@ -9,7 +9,7 @@ float(float gt, float tp, string pattern) gametype_filter {
 	if(gt == GAME_RACE || gt == GAME_CTS)
 		subpattern3 = ",race,";
 	else
-		subpattern3 = string_null;
+		subpattern3 = NULL;
 
 	if(substring(pattern, 0, 1) == "-") {
 		pattern = substring(pattern, 1, strlen(pattern) - 1);

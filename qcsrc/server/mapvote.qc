@@ -267,14 +267,14 @@ float() mapvote_check_rules2 {
 
 	random_selection_init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
-		random_selection_add(world, i, string_null, 1, mapvote_votes[i]);
+		random_selection_add(world, i, NULL, 1, mapvote_votes[i]);
 
 	firstPlace = random_selection_chosen_float;
 	firstPlaceVotes = random_selection_best_priority;
 	random_selection_init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
 		if(i != firstPlace)
-			random_selection_add(world, i, string_null, 1, mapvote_votes[i]);
+			random_selection_add(world, i, NULL, 1, mapvote_votes[i]);
 
 	secondPlace = random_selection_chosen_float;
 	secondPlaceVotes = random_selection_best_priority;

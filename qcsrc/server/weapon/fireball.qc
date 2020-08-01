@@ -98,7 +98,7 @@ void weapon_fireball_laser_play(float dt, float dist, float _damage, float edged
 			if(/* trace_startsolid || */ trace_fraction != 1)
 				continue;
 			e.fireball_impactvec = p;
-			random_selection_add(e, 0, string_null, 1 / (1 + d), !fire_is_burning(e));
+			random_selection_add(e, 0, NULL, 1 / (1 + d), !fire_is_burning(e));
 		}
 	}
 	if(random_selection_chosen_ent)

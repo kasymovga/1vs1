@@ -10,9 +10,9 @@ CLASS(NexuizRadioButton) EXTENDS(RadioButton)
 	ATTRIB(NexuizRadioButton, colorF, vector, SKINCOLOR_RADIOBUTTON_F)
 	ATTRIB(NexuizRadioButton, colorD, vector, SKINCOLOR_RADIOBUTTON_D)
 
-	ATTRIB(NexuizRadioButton, cvarName, string, string_null)
-	ATTRIB(NexuizRadioButton, cvarValue, string, string_null)
-	ATTRIB(NexuizRadioButton, cvarOffValue, string, string_null)
+	ATTRIB(NexuizRadioButton, cvarName, string, NULL)
+	ATTRIB(NexuizRadioButton, cvarValue, string, NULL)
+	ATTRIB(NexuizRadioButton, cvarOffValue, string, NULL)
 	METHOD(NexuizRadioButton, loadCvars, void(entity))
 	METHOD(NexuizRadioButton, saveCvars, void(entity))
 

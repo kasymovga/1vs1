@@ -22,10 +22,10 @@ CLASS(NexuizCvarList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizCvarList, cvarDefaultBox, entity, NULL)
 
 	ATTRIB(NexuizCvarList, handle, float, -1)
-	ATTRIB(NexuizCvarList, cvarName, string, string_null)
-	ATTRIB(NexuizCvarList, cvarDescription, string, string_null)
-	ATTRIB(NexuizCvarList, cvarType, string, string_null)
-	ATTRIB(NexuizCvarList, cvarDefault, string, string_null)
+	ATTRIB(NexuizCvarList, cvarName, string, NULL)
+	ATTRIB(NexuizCvarList, cvarDescription, string, NULL)
+	ATTRIB(NexuizCvarList, cvarType, string, NULL)
+	ATTRIB(NexuizCvarList, cvarDefault, string, NULL)
 ENDCLASS(NexuizCvarList)
 entity makeNexuizCvarList();
 void CvarList_Filter_Change(entity box, entity me);

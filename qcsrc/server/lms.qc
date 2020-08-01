@@ -95,7 +95,7 @@ void(void) lms_sphere_setup {
 		if (e.origin_x < _mins_x) _mins_x = e.origin_x;
 		if (e.origin_y < _mins_y) _mins_y = e.origin_y;
 		if (e.origin_z < _mins_z) _mins_z = e.origin_z;
-		random_selection_add(e, 0, string_null, 1, 0);
+		random_selection_add(e, 0, NULL, 1, 0);
 	}
 	lms_sphere_origin_start = (_maxs + _mins) * 0.5;
 	lms_sphere_origin_end = random_selection_chosen_ent.origin;

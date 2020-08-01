@@ -11,7 +11,7 @@ CLASS(NexuizGametypeButton) EXTENDS(RadioButton)
 	ATTRIB(NexuizGametypeButton, srcMulti, float, 1)
 	ATTRIB(NexuizGametypeButton, useDownAsChecked, float, 1)
 
-	ATTRIB(NexuizGametypeButton, cvarName, string, string_null)
+	ATTRIB(NexuizGametypeButton, cvarName, string, NULL)
 	METHOD(NexuizGametypeButton, loadCvars, void(entity))
 	METHOD(NexuizGametypeButton, saveCvars, void(entity))
 

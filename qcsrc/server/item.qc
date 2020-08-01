@@ -132,18 +132,18 @@ void (entity e, float mode) item_show {
 		e.solid = SOLID_TRIGGER;
 		//e.colormod = '0 0 0';
 		e.alpha = 0;
-		e.customizeentityforclient = func_null;
+		e.customizeentityforclient = NULL;
 
 		e.spawnshieldtime = 1;
 	}
 	else if (mode < 0)
 	{
 		// hide the item completely
-		e.model = string_null;
+		e.model = NULL;
 		e.solid = SOLID_NOT;
 		//e.colormod = '0 0 0';
 		e.alpha = -1;
-		e.customizeentityforclient = func_null;
+		e.customizeentityforclient = NULL;
 
 		e.spawnshieldtime = 1;
 	}
@@ -154,18 +154,18 @@ void (entity e, float mode) item_show {
 		e.solid = SOLID_NOT;
 		//e.colormod = '0.2 1 0.2';
 		e.alpha = g_ghost_items;
-		e.customizeentityforclient = func_null;
+		e.customizeentityforclient = NULL;
 
 		e.spawnshieldtime = 1;
 	}
 	else
 	{
 		// hide the item completely
-		e.model = string_null;
+		e.model = NULL;
 		e.solid = SOLID_NOT;
 		//e.colormod = '0 0 0';
 		e.alpha = 0;
-		e.customizeentityforclient = func_null;
+		e.customizeentityforclient = NULL;
 
 		e.spawnshieldtime = 1;
 	}
@@ -203,7 +203,7 @@ void(void) item_respawn_countdown {
 		self.nextthink = time + 1;
 		self.count += 1;
 		if(self.count == 1) {
-			GameHook_ItemName = string_null;
+			GameHook_ItemName = NULL;
 			GameHookChain_ItemRespawnCountDown();
 			switch(self.items) {
 				case IT_STRENGTH:       GameHook_ItemName = "item-strength"; GameHook_ItemColor = '0 0 1'; break;
@@ -480,7 +480,7 @@ void item_touch (void)
 				if(head.flags & FL_ITEM)
 				{
 					item_show(head, -1);
-					random_selection_add(head, 0, string_null, head.cnt, 0);
+					random_selection_add(head, 0, NULL, head.cnt, 0);
 				}
 			}
 			e = random_selection_chosen_ent;
@@ -500,7 +500,7 @@ void item_find_team()
 		// marker for item team search
 		random_selection_init();
 		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
-			random_selection_add(head, 0, string_null, head.cnt, 0);
+			random_selection_add(head, 0, NULL, head.cnt, 0);
 		e = random_selection_chosen_ent;
 		e.state = 0;
 		item_show(e, 1);
@@ -1285,7 +1285,7 @@ voidfunc(string s) item_spawnfunc_for {
 	RETURN_SPAWNFUNC_FOR(rockets)
 	RETURN_SPAWNFUNC_FOR(shells)
 #undef RETURN_SPAWNFUNC_FOR
-	return func_null;
+	return NULL;
 }
 
 void item_init()

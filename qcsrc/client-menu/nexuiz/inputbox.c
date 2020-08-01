@@ -16,7 +16,7 @@ CLASS(NexuizInputBox) EXTENDS(InputBox)
 
 	ATTRIB(NexuizInputBox, alpha, float, SKINALPHA_TEXT)
 
-	ATTRIB(NexuizInputBox, cvarName, string, string_null)
+	ATTRIB(NexuizInputBox, cvarName, string, NULL)
 	METHOD(NexuizInputBox, loadCvars, void(entity))
 	METHOD(NexuizInputBox, saveCvars, void(entity))
 	METHOD(NexuizInputBox, keyDown, float(entity, float, float, float))

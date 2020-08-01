@@ -465,8 +465,8 @@ void Ent_Remove()
 
 	self.enttype = 0;
 	self.classname = "";
-	self.draw = world.draw;
-	self.entremove = world.entremove;
+	self.draw = NULL;
+	self.entremove = NULL;
 	// TODO possibly set more stuff to defaults
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.

@@ -751,7 +751,7 @@ entity(float tokens, float idx) client_entity_from_argv {
     entity e, head;
     float n;
 
-    s = string_null;
+    s = NULL;
 
     client_entity_from_argv_firsttoken = -1;
 

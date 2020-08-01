@@ -166,7 +166,7 @@ entity(entity firstspot, float lower, float upper, float exponent) spawn_weighte
 	entity spot;
 	random_selection_init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		random_selection_add(spot, 0, string_null, pow(bound(lower, spot.SPAWNPOINT_SCORE, upper), exponent) * spot.cnt, spot.SPAWNPOINT_SCORE >= lower);
+		random_selection_add(spot, 0, NULL, pow(bound(lower, spot.SPAWNPOINT_SCORE, upper), exponent) * spot.cnt, spot.SPAWNPOINT_SCORE >= lower);
 
 	return random_selection_chosen_ent;
 }

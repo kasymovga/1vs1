@@ -266,7 +266,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	spectator_note.SendFlags = 1;
-	self.customizeentityforclient = func_null;
+	self.customizeentityforclient = NULL;
 
 	if not(frags_team_reset)
 		return;
@@ -275,7 +275,7 @@ void(float frags_team_reset) spectator_observer_spawn {
 		self.team = -1;
 		score_touch(self);
 	}
-	self.touch = func_null;
+	self.touch = NULL;
 }
 
 void() spectator_init {

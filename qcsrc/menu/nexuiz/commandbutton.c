@@ -7,7 +7,7 @@
 #ifdef INTERFACE
 CLASS(NexuizCommandButton) EXTENDS(NexuizButton)
 	METHOD(NexuizCommandButton, configureNexuizCommandButton, void(entity, string, vector, string, float))
-	ATTRIB(NexuizCommandButton, onClickCommand, string, string_null)
+	ATTRIB(NexuizCommandButton, onClickCommand, string, NULL)
 	ATTRIB(NexuizCommandButton, flags, float, 0)
 ENDCLASS(NexuizCommandButton)
 entity makeNexuizCommandButton(string theText, vector theColor, string theCommand, float closesMenu);
@@ -30,7 +30,7 @@ void NexuizCommandButton_Click(entity me, entity other)
 	//if(me.flags & COMMANDBUTTON_REVERT)
 	//	loadAllCvars(me.parent);
 	if(me.flags & COMMANDBUTTON_CLOSE)
-		m_goto(string_null);
+		m_goto(NULL);
 }
 
 void configureNexuizCommandButtonNexuizCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)

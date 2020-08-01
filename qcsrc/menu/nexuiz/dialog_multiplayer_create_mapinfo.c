@@ -17,12 +17,12 @@ CLASS(NexuizMapInfoDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizMapInfoDialog, typeLabelNext, entity, NULL)
 
 	ATTRIB(NexuizMapInfoDialog, currentMapIndex, float, 0)
-	ATTRIB(NexuizMapInfoDialog, currentMapBSPName, string, string_null)
-	ATTRIB(NexuizMapInfoDialog, currentMapTitle, string, string_null)
-	ATTRIB(NexuizMapInfoDialog, currentMapAuthor, string, string_null)
-	ATTRIB(NexuizMapInfoDialog, currentMapDescription, string, string_null)
-	ATTRIB(NexuizMapInfoDialog, currentMapPreviewImage, string, string_null)
-	ATTRIB(NexuizMapInfoDialog, currentMapFeaturesText, string, string_null)
+	ATTRIB(NexuizMapInfoDialog, currentMapBSPName, string, NULL)
+	ATTRIB(NexuizMapInfoDialog, currentMapTitle, string, NULL)
+	ATTRIB(NexuizMapInfoDialog, currentMapAuthor, string, NULL)
+	ATTRIB(NexuizMapInfoDialog, currentMapDescription, string, NULL)
+	ATTRIB(NexuizMapInfoDialog, currentMapPreviewImage, string, NULL)
+	ATTRIB(NexuizMapInfoDialog, currentMapFeaturesText, string, NULL)
 	ATTRIB(NexuizMapInfoDialog, instanceOfNexuizMapInfoDialog, float, 1)
 ENDCLASS(NexuizMapInfoDialog)
 #endif
@@ -72,7 +72,7 @@ void fillNexuizMapInfoDialog(entity me)
 	float w;
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, me.rows - 2, 3, e = makeNexuizImage(string_null, 4.0/3.0));
+		me.TD(me, me.rows - 2, 3, e = makeNexuizImage(NULL, 4.0/3.0));
 		me.previewImage = e;
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 	w = me.columns - me.currentColumn;

@@ -139,9 +139,9 @@ void(void) teleport_touch {
 		for(e = world; (e = find(e, targetname, self.target)); )
 		{
 			if(e.cnt)
-				random_selection_add(e, 0, string_null, e.cnt, 0);
+				random_selection_add(e, 0, NULL, e.cnt, 0);
 			else
-				random_selection_add(e, 0, string_null, 1, 0);
+				random_selection_add(e, 0, NULL, 1, 0);
 		}
 		e = random_selection_chosen_ent;
 	}

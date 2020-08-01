@@ -54,7 +54,7 @@ entity(void) rune_find_spawnpoint {
 	random_selection_init();
 	for(e = world; (e = find(e, classname, "rune_spawn_point")); )
 		if(e.owner == world)
-			random_selection_add(e, 0, string_null, e.cnt, 0);
+			random_selection_add(e, 0, NULL, e.cnt, 0);
 
 	return random_selection_chosen_ent;
 }

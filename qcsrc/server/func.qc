@@ -379,7 +379,7 @@ void spawnfunc_func_magicwall(void) {
 
     self.use = if(self.spawnflags & SPAWNFLAG_MW_TOGGLE)
         inline void(void) {
-            func_magicwall_start_transition(if(self.solid == SOLID_BSP) SOLID_NOT else SOLID_BSP, func_null);
+            func_magicwall_start_transition(if(self.solid == SOLID_BSP) SOLID_NOT else SOLID_BSP, NULL);
         } else inline void(void) {
             if(self.oldsolid != self.solid) {
                 if(self.think && self.think != func_magicwall_think_transition)
@@ -391,9 +391,9 @@ void spawnfunc_func_magicwall(void) {
                 if(self.wait >= 0) inline void(void) {
                     self.nextthink = time + self.wait;
                     self.think = inline void(void) {
-                        func_magicwall_start_transition(self.oldsolid, func_null);
+                        func_magicwall_start_transition(self.oldsolid, NULL);
                     };
-                } else func_null);
+                } else NULL);
         };
 
     self.touch = inline void(void) {

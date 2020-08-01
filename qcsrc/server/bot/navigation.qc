@@ -920,7 +920,7 @@ void navigation_goalrating_end()
 			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
 			if(vlen(self.origin-head.origin)>100)
 			if(checkpvs(self.view_ofs,head))
-				random_selection_add(head, 0, string_null, 1 + (vlen(self.origin-head.origin)<500), 0);
+				random_selection_add(head, 0, NULL, 1 + (vlen(self.origin-head.origin)<500), 0);
 			head = head.chain;
 		}
 		if(random_selection_chosen_ent)

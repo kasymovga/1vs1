@@ -13,7 +13,7 @@ void(void) cvar_changes_init {
 	if(cvar_changes)
 		strunzone(cvar_changes);
 
-	cvar_changes = string_null;
+	cvar_changes = NULL;
 	h = buf_create();
 	buf_cvarlist(h, "", "_"); // exclude all _ cvars as they are temporary
 	n = buf_getsize(h);

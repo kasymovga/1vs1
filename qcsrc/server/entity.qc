@@ -121,7 +121,7 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 	random_selection_init();
 	entity spot;
 	for(spot = firstspot; spot; spot = spot.chain)
-		random_selection_add(spot, 0, string_null, 1, 1);
+		random_selection_add(spot, 0, NULL, 1, 1);
 
     for (i = 0; i < attempts; ++i)
     {

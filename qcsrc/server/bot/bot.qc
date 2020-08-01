@@ -350,9 +350,9 @@ void bot_clientdisconnect()
 		strunzone(self.playermodel_freeme);
 	if(self.playerskin_freeme)
 		strunzone(self.playerskin_freeme);
-	self.netname_freeme = string_null;
-	self.playermodel_freeme = string_null;
-	self.playerskin_freeme = string_null;
+	self.netname_freeme = NULL;
+	self.playermodel_freeme = NULL;
+	self.playerskin_freeme = NULL;
 	remove(self.bot_cmd_current);
 }
 

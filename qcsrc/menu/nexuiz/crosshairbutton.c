@@ -7,9 +7,9 @@ CLASS(NexuizCrosshairButton) EXTENDS(RadioButton)
 	ATTRIB(NexuizCrosshairButton, image, string, SKINGFX_CROSSHAIRBUTTON)
 
 	ATTRIB(NexuizCrosshairButton, useDownAsChecked, float, 1)
-	ATTRIB(NexuizCrosshairButton, src3, string, string_null)
+	ATTRIB(NexuizCrosshairButton, src3, string, NULL)
 
-	ATTRIB(NexuizCrosshairButton, cvarName, string, string_null)
+	ATTRIB(NexuizCrosshairButton, cvarName, string, NULL)
 	ATTRIB(NexuizCrosshairButton, cvarValueFloat, float, 0)
 	METHOD(NexuizCrosshairButton, loadCvars, void(entity))
 	METHOD(NexuizCrosshairButton, saveCvars, void(entity))
@@ -30,7 +30,7 @@ void configureNexuizCrosshairButtonNexuizCrosshairButton(entity me, float theGro
 	me.cvarName = "crosshair";
 	me.cvarValueFloat = theCrosshair;
 	me.loadCvars(me);
-	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
+	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
 }

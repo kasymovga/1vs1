@@ -37,7 +37,7 @@ void conquest_cp_capture(float byteam) {
 	for (e = world; (e = find(e, targetname, self.target)); )
 		if (e.classname == "info_player_deathmatch") {
 			if not(e.sprite)
-				WaypointSprite_SpawnFixed(string_null, e.origin, e, sprite);
+				WaypointSprite_SpawnFixed(NULL, e.origin, e, sprite);
 
 			WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(self.team - 1, FALSE));
 		}
@@ -188,7 +188,7 @@ void spawnfunc_conquest_cp() {
 	self.solid = SOLID_TRIGGER;
 	self.reset = conquest_cp_reset;
 	self.touch = conquest_cp_touch;
-	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 64', self, sprite);
+	WaypointSprite_SpawnFixed(NULL, self.origin + '0 0 64', self, sprite);
 	WaypointSprite_UpdateRule(self.sprite, 0, SPRITERULE_DEFAULT);
 	conquest_update_waypoint();
 }
@@ -321,7 +321,7 @@ void conquest_delayedinit() {
 			continue;
 
 		if not(e.sprite)
-			WaypointSprite_SpawnFixed(string_null, e.origin, e, sprite);
+			WaypointSprite_SpawnFixed(NULL, e.origin, e, sprite);
 
 		WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(e.team - 1, FALSE));
 	}

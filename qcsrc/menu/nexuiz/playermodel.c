@@ -5,12 +5,12 @@ CLASS(NexuizPlayerModelSelector) EXTENDS(NexuizImage)
 	METHOD(NexuizPlayerModelSelector, saveCvars, void(entity))
 	METHOD(NexuizPlayerModelSelector, draw, void(entity))
 	METHOD(NexuizPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
-	ATTRIB(NexuizPlayerModelSelector, currentModel, string, string_null)
+	ATTRIB(NexuizPlayerModelSelector, currentModel, string, NULL)
 	ATTRIB(NexuizPlayerModelSelector, currentSkin, float, 0)
-	ATTRIB(NexuizPlayerModelSelector, currentModelName, string, string_null)
-	ATTRIB(NexuizPlayerModelSelector, currentModelTitle, string, string_null)
-	ATTRIB(NexuizPlayerModelSelector, currentModelTxtName, string, string_null)
-	ATTRIB(NexuizPlayerModelSelector, currentModelDescription, string, string_null)
+	ATTRIB(NexuizPlayerModelSelector, currentModelName, string, NULL)
+	ATTRIB(NexuizPlayerModelSelector, currentModelTitle, string, NULL)
+	ATTRIB(NexuizPlayerModelSelector, currentModelTxtName, string, NULL)
+	ATTRIB(NexuizPlayerModelSelector, currentModelDescription, string, NULL)
 	METHOD(NexuizPlayerModelSelector, go, void(entity, float))
 	ATTRIB(NexuizPlayerModelSelector, origin, vector, '0 0 0')
 	ATTRIB(NexuizPlayerModelSelector, size, vector, '0 0 0')
@@ -34,7 +34,7 @@ entity makeNexuizPlayerModelSelector()
 
 void configureNexuizPlayerModelSelectorNexuizPlayerModelSelector(entity me)
 {
-	me.configureNexuizImage(me, string_null, 263.0/360.0);
+	me.configureNexuizImage(me, NULL, 263.0/360.0);
 	me.loadCvars(me);
 }
 
@@ -56,10 +56,10 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		strunzone(me.currentModelDescription);
 	me.currentSkin = cvar("_cl_playerskin");
 	me.currentModel = strzone(cvar_string("_cl_playermodel"));
-	me.currentModelName = string_null;
-	me.currentModelDescription = string_null;
-	me.currentModelTitle = string_null;
-	me.currentModelTxtName = string_null;
+	me.currentModelName = NULL;
+	me.currentModelDescription = NULL;
+	me.currentModelTitle = NULL;
+	me.currentModelTxtName = NULL;
 
 	// lookup model name
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
@@ -178,7 +178,7 @@ void drawNexuizPlayerModelSelector(entity me)
 
 	me.src = me.currentModelName;
 	drawImage(me);
-	me.src = string_null;
+	me.src = NULL;
 
 	// draw text on the image, handle \n in the description
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);

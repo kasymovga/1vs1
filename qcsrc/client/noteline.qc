@@ -98,7 +98,7 @@ void Ent_NoteLine(float bIsNew) {
 	if (noteline) {
 		self.sort_next = noteline;
 		noteline.draw2dflag = 0;
-		noteline.draw2d = world.draw2d;
+		noteline.draw2d = NULL;
 	}
 	noteline = self;
 	noteline.draw2dflag = 1;

@@ -699,7 +699,7 @@ void(void) race_records_clear {
 		if (race_checkpoint_recordholders[i])
 			strunzone(race_checkpoint_recordholders[i]);
 
-		race_checkpoint_recordholders[i] = string_null;
+		race_checkpoint_recordholders[i] = NULL;
 	}
 	FOR_EACH_CLIENT(e)
 		race_time_clear(e);

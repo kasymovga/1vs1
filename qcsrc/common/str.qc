@@ -22,7 +22,7 @@ string(string s) str_cdr {
 	float o;
 	o = strstrofs(s, " ", 0);
 	if(o < 0)
-		return string_null;
+		return NULL;
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
@@ -131,18 +131,18 @@ string(float w, str_length_up_to_width_width_function_t tw) str_wrapped_line {
 		if(take == 0) {
 			str_wrapped_line_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(str_wrapped_line_remaining == "")
-				str_wrapped_line_remaining = string_null;
+				str_wrapped_line_remaining = NULL;
 
 			return substring(s, 0, cantake);
 		} else {
 			str_wrapped_line_remaining = substring(s, take + 1, strlen(s) - take);
 			if(str_wrapped_line_remaining == "")
-				str_wrapped_line_remaining = string_null;
+				str_wrapped_line_remaining = NULL;
 
 			return substring(s, 0, take);
 		}
 	} else {
-		str_wrapped_line_remaining = string_null;
+		str_wrapped_line_remaining = NULL;
 		return s;
 	}
 }

@@ -17,7 +17,7 @@ CLASS(NexuizTab) EXTENDS(Tab)
 	ATTRIB(NexuizTab, rowHeight, float, SKINFONTSIZE_NORMAL * SKINHEIGHT_NORMAL) // pixels
 	ATTRIB(NexuizTab, titleHeight, float, SKINFONTSIZE_TITLE * SKINHEIGHT_TITLE) // pixels
 
-	ATTRIB(NexuizTab, backgroundImage, string, string_null)
+	ATTRIB(NexuizTab, backgroundImage, string, NULL)
 ENDCLASS(NexuizTab)
 #endif
 

@@ -10,9 +10,9 @@ CLASS(Button) EXTENDS(Label)
 	METHOD(Button, mouseRelease, float(entity, vector))
 	ATTRIB(Button, onClick, void(entity, entity), stdproc_nothing)
 	ATTRIB(Button, onClickEntity, entity, NULL)
-	ATTRIB(Button, src, string, string_null)
-	ATTRIB(Button, srcSuffix, string, string_null)
-	ATTRIB(Button, src2, string, string_null) // is centered, same aspect, and stretched to label size
+	ATTRIB(Button, src, string, NULL)
+	ATTRIB(Button, srcSuffix, string, NULL)
+	ATTRIB(Button, src2, string, NULL) // is centered, same aspect, and stretched to label size
 	ATTRIB(Button, src2scale, float, 1)
 	ATTRIB(Button, srcMulti, float, 1) // 0: button square left, text right; 1: button stretched, text over it
 	ATTRIB(Button, buttonLeftOfText, float, 0)

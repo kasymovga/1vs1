@@ -14,7 +14,7 @@ CLASS(NexuizTextSlider) EXTENDS(TextSlider)
 	ATTRIB(NexuizSlider, colorD, vector, SKINCOLOR_SLIDER_D)
 	ATTRIB(NexuizSlider, color2, vector, SKINCOLOR_SLIDER_S)
 
-	ATTRIB(NexuizTextSlider, cvarName, string, string_null)
+	ATTRIB(NexuizTextSlider, cvarName, string, NULL)
 	METHOD(NexuizTextSlider, loadCvars, void(entity))
 	METHOD(NexuizTextSlider, saveCvars, void(entity))
 
@@ -67,7 +67,7 @@ void saveCvarsNexuizTextSlider(entity me)
 }
 void configureNexuizTextSliderValuesNexuizTextSlider(entity me)
 {
-	me.configureTextSliderValues(me, string_null);
+	me.configureTextSliderValues(me, NULL);
 	me.loadCvars(me);
 }
 #endif

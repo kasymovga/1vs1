@@ -37,7 +37,7 @@ void() random_selection_init {
 	random_selection_totalweight = 0;
 	random_selection_chosen_ent = world;
 	random_selection_chosen_float = 0;
-	random_selection_chosen_string = string_null;
+	random_selection_chosen_string = NULL;
 	random_selection_best_priority = -1;
 }
 

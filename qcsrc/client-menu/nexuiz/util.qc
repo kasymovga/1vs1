@@ -13,12 +13,12 @@ string getZonedTooltipForIdentifier(string s)
 {
 	string t;
 	if(s == "")
-		return string_null;
+		return NULL;
 
 	if (tooltipdb >= 0) {
 		t = db_get(tooltipdb, s);
 		if(t == "-")
-			return string_null;
+			return NULL;
 		if(t != "")
 			return strzone(t);
 	}
@@ -27,5 +27,5 @@ string getZonedTooltipForIdentifier(string s)
 	if(t != "" && t != "custom cvar")
 		return strzone(t);
 #endif
-	return string_null;
+	return NULL;
 }

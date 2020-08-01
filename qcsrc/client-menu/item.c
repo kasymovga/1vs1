@@ -21,7 +21,7 @@ CLASS(Item) EXTENDS(Object)
 	ATTRIB(Item, preferredFocusPriority, float, 0)
 	ATTRIB(Item, origin, vector, '0 0 0')
 	ATTRIB(Item, size, vector, '0 0 0')
-	ATTRIB(Item, tooltip, string, string_null)
+	ATTRIB(Item, tooltip, string, NULL)
 ENDCLASS(Item)
 #endif
 
@@ -97,6 +97,6 @@ void focusLeaveItem(entity me)
 
 string toStringItem(entity me)
 {
-	return string_null;
+	return NULL;
 }
 #endif

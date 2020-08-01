@@ -10,7 +10,7 @@ CLASS(InputBox) EXTENDS(Label)
 	METHOD(InputBox, mouseDrag, float(entity, vector))
 	METHOD(InputBox, showNotify, void(entity))
 
-	ATTRIB(InputBox, src, string, string_null)
+	ATTRIB(InputBox, src, string, NULL)
 
 	ATTRIB(InputBox, cursorPos, float, 0) // characters
 	ATTRIB(InputBox, scrollPos, float, 0) // widths

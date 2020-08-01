@@ -21,12 +21,12 @@ CLASS(NexuizServerList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizServerList, columnPlayersOrigin, float, 0)
 	ATTRIB(NexuizServerList, columnPlayersSize, float, 0)
 
-	ATTRIB(NexuizServerList, selectedServer, string, string_null) // to restore selected server when needed
+	ATTRIB(NexuizServerList, selectedServer, string, NULL) // to restore selected server when needed
 	METHOD(NexuizServerList, setSelected, void(entity, float))
 	METHOD(NexuizServerList, setSortOrder, void(entity, float, float))
 	ATTRIB(NexuizServerList, filterShowEmpty, float, 1)
 	ATTRIB(NexuizServerList, filterShowFull, float, 1)
-	ATTRIB(NexuizServerList, filterString, string, string_null)
+	ATTRIB(NexuizServerList, filterString, string, NULL)
 	ATTRIB(NexuizServerList, controlledTextbox, entity, NULL)
 	ATTRIB(NexuizServerList, ipAddressBox, entity, NULL)
 	ATTRIB(NexuizServerList, favoriteButton, entity, NULL)
@@ -395,7 +395,7 @@ void ServerList_Filter_Change(entity box, entity me)
 	if(box.text != "")
 		me.filterString = strzone(box.text);
 	else
-		me.filterString = string_null;
+		me.filterString = NULL;
 	me.refreshServerList(me, 0);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
@@ -434,7 +434,7 @@ void setSortOrderNexuizServerList(entity me, float field, float direction)
 	me.selectedItem = 0;
 	if(me.selectedServer)
 		strunzone(me.selectedServer);
-	me.selectedServer = string_null;
+	me.selectedServer = NULL;
 	me.refreshServerList(me, 0);
 }
 void positionSortButtonNexuizServerList(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)

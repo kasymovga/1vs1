@@ -12,7 +12,7 @@ CLASS(NexuizCheckBox) EXTENDS(CheckBox)
 	ATTRIB(NexuizCheckBox, colorF, vector, SKINCOLOR_CHECKBOX_F)
 	ATTRIB(NexuizCheckBox, colorD, vector, SKINCOLOR_CHECKBOX_D)
 
-	ATTRIB(NexuizCheckBox, cvarName, string, string_null)
+	ATTRIB(NexuizCheckBox, cvarName, string, NULL)
 	METHOD(NexuizCheckBox, loadCvars, void(entity))
 	METHOD(NexuizCheckBox, saveCvars, void(entity))
 

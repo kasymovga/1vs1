@@ -13,7 +13,7 @@ CLASS(NexuizSlider) EXTENDS(Slider)
 	ATTRIB(NexuizSlider, colorD, vector, SKINCOLOR_SLIDER_D)
 	ATTRIB(NexuizSlider, color2, vector, SKINCOLOR_SLIDER_S)
 
-	ATTRIB(NexuizSlider, cvarName, string, string_null)
+	ATTRIB(NexuizSlider, cvarName, string, NULL)
 	METHOD(NexuizSlider, loadCvars, void(entity))
 	METHOD(NexuizSlider, saveCvars, void(entity))
 

@@ -112,10 +112,10 @@ void Ent_PointParticles_Remove()
 {
 	if(self.noise)
 		strunzone(self.noise);
-	self.noise = string_null;
+	self.noise = NULL;
 	if(self.bgmscript)
 		strunzone(self.bgmscript);
-	self.bgmscript = string_null;
+	self.bgmscript = NULL;
 }
 
 void Ent_PointParticles()

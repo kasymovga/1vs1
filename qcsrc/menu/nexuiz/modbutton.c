@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizModButton) EXTENDS(NexuizButton)
 	METHOD(NexuizModButton, configureNexuizModButton, void(entity, string))
-	ATTRIB(NexuizModButton, destination, string, string_null)
+	ATTRIB(NexuizModButton, destination, string, NULL)
 ENDCLASS(NexuizModButton)
 entity makeNexuizModButton(string menu);
 void NexuizModButton_Click(entity me, entity other);

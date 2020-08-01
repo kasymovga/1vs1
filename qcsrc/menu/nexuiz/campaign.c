@@ -31,7 +31,7 @@ CLASS(NexuizCampaignList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizCampaignList, emptyLineHeight, float, 0.5)
 
 	ATTRIB(NexuizCampaignList, campaignIndex, float, 0)
-	ATTRIB(NexuizCampaignList, cvarName, string, string_null)
+	ATTRIB(NexuizCampaignList, cvarName, string, NULL)
 	METHOD(NexuizCampaignList, loadCvars, void(entity))
 	METHOD(NexuizCampaignList, saveCvars, void(entity))
 

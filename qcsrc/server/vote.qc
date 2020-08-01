@@ -422,18 +422,18 @@ string(string m, entity e) vote_validate_map {
 	if (!m)
 	{
 		cmd_print_to(e, "This map is not available on this server.");
-		return string_null;
+		return NULL;
 	}
 	if (!cvar("sv_vote_override_mostrecent"))
 		if (map_is_recent(m))
 		{
 			cmd_print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
-			return string_null;
+			return NULL;
 		}
 	if not(MapInfo_GetGameTypes(m) & (MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask()))
 	{
 		cmd_print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
-		return string_null;
+		return NULL;
 	}
 
 	return m;

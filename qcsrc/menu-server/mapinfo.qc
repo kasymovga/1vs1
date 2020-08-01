@@ -24,7 +24,7 @@ string extractRestOfLine(string haystack, string needle)
 {
 	if(startsWith(haystack, needle))
 		return substring(haystack, strlen(needle), strlen(haystack) - strlen(needle));
-	return string_null;
+	return NULL;
 }
 float matchacl(string acl, string str)
 {
@@ -843,13 +843,13 @@ float MapInfo_FindName(string s)
 	//     and l+1 may be one too
 	if(l == MapInfo_count)
 	{
-		MapInfo_FindName_match = string_null;
+		MapInfo_FindName_match = NULL;
 		MapInfo_FindName_firstResult = -1;
 		return -1; // no MapInfo_FindName_match, behind last item
 	}
 	if(!startsWithNocase(MapInfo_FindName_match, s))
 	{
-		MapInfo_FindName_match = string_null;
+		MapInfo_FindName_match = NULL;
 		MapInfo_FindName_firstResult = -1;
 		return -1; // wrong prefix
 	}
@@ -857,7 +857,7 @@ float MapInfo_FindName(string s)
 		return l; // last one, nothing can follow => unique
 	if(startsWithNocase(_MapInfo_GlobItem(MapInfo_FilterList_Lookup(l + 1)), s))
 	{
-		MapInfo_FindName_match = string_null;
+		MapInfo_FindName_match = NULL;
 		return -1; // ambigous MapInfo_FindName_match
 	}
 	return l;
@@ -1032,12 +1032,12 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 
 void MapInfo_ClearTemps()
 {
-	MapInfo_Map_bspname = string_null;
-	MapInfo_Map_title = string_null;
-	MapInfo_Map_description = string_null;
-	MapInfo_Map_author = string_null;
-	MapInfo_Map_clientstuff = string_null;
-	MapInfo_Map_image = string_null;
+	MapInfo_Map_bspname = NULL;
+	MapInfo_Map_title = NULL;
+	MapInfo_Map_description = NULL;
+	MapInfo_Map_author = NULL;
+	MapInfo_Map_clientstuff = NULL;
+	MapInfo_Map_image = NULL;
 	MapInfo_Map_supportedGametypes = 0;
 	MapInfo_Map_supportedFeatures = 0;
 }

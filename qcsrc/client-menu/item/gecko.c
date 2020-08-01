@@ -8,7 +8,7 @@ CLASS(Gecko) EXTENDS(Item)
 	METHOD( Gecko, mouseMove, float(entity, vector))
 	METHOD( Gecko, mouseDrag, float(entity, vector))
 	METHOD( Gecko, resizeNotify, void(entity, vector, vector, vector, vector))
-	ATTRIB( Gecko, texturePath, string, string_null )
+	ATTRIB( Gecko, texturePath, string, NULL )
 	ATTRIB( Gecko, textureExtent, vector, '0 0 0')
 ENDCLASS(Item)
 #endif

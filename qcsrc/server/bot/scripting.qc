@@ -1123,7 +1123,7 @@ void bot_resetqueues()
 		for(i = 0; i < cl.bot_places_count; ++i)
 		{
 			strunzone(cl.(bot_placenames[i]));
-			cl.(bot_placenames[i]) = string_null;
+			cl.(bot_placenames[i]) = NULL;
 		}
 		cl.bot_places_count = 0;
 	}

@@ -37,7 +37,7 @@ void Ent_Wall_Remove()
 {
 	if(self.bgmscript)
 		strunzone(self.bgmscript);
-	self.bgmscript = string_null;
+	self.bgmscript = NULL;
 }
 
 void Ent_Wall()

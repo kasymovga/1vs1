@@ -16,7 +16,7 @@ float campaign_file_load(float offset, float n)
 
 	campaign_offset = offset;
 	campaign_entries = 0;
-	campaign_title = string_null;
+	campaign_title = NULL;
 
 	fn = strcat("maps/campaign", campaign_name, ".txt");
 	fh = fopen(fn, FILE_READ);
@@ -87,7 +87,7 @@ void campaign_file_unload()
 			strunzone(campaign_longdesc[i]);
 		}
 		campaign_entries = 0;
-		campaign_title = string_null;
+		campaign_title = NULL;
 	}
 }
 

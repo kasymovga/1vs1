@@ -32,7 +32,7 @@ void fillNexuizDemoBrowserTab(entity me)
 		me.TD(me, 1, 0.5, e = makeNexuizTextLabel(0, "Filter:"));
 		me.TD(me, 1, 0.5, btn = makeNexuizButton("Clear", '0 0 0'));
 			btn.onClick = InputBox_Clear_Click;
-		me.TD(me, 1, me.columns - 1, e = makeNexuizInputBox(0, string_null));
+		me.TD(me, 1, me.columns - 1, e = makeNexuizInputBox(0, NULL));
 			e.onChange = DemoList_Filter_Change;
 			e.onChangeEntity = dlist;
 			btn.onClickEntity = e;

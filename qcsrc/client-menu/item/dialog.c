@@ -58,8 +58,8 @@ CLASS(Dialog) EXTENDS(InputContainer)
 	ATTRIB(Dialog, zoomedOutTitleBarPosition, float, 0)
 	ATTRIB(Dialog, zoomedOutTitleBar, float, 0)
 
-	ATTRIB(Dialog, backgroundImage, string, string_null)
-	ATTRIB(Dialog, closeButtonImage, string, string_null)
+	ATTRIB(Dialog, backgroundImage, string, NULL)
+	ATTRIB(Dialog, closeButtonImage, string, NULL)
 
 	ATTRIB(Dialog, frame, entity, NULL)
 	ATTRIB(Dialog, instanceOfDialog, float, 1)

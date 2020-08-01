@@ -16,6 +16,6 @@ ENDCLASS(NexuizRootDialog)
 #ifdef IMPLEMENTATION
 void closeNexuizRootDialog(entity me)
 {
-	m_goto(string_null);
+	m_goto(NULL);
 }
 #endif

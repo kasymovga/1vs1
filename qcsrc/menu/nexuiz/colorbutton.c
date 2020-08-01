@@ -10,7 +10,7 @@ CLASS(NexuizColorButton) EXTENDS(RadioButton)
 	ATTRIB(NexuizColorButton, useDownAsChecked, float, 1)
 
 	ATTRIB(NexuizColorButton, cvarPart, float, 0)
-	ATTRIB(NexuizColorButton, cvarName, string, string_null)
+	ATTRIB(NexuizColorButton, cvarName, string, NULL)
 	ATTRIB(NexuizColorButton, cvarValueFloat, float, 0)
 	METHOD(NexuizColorButton, loadCvars, void(entity))
 	METHOD(NexuizColorButton, saveCvars, void(entity))
@@ -32,7 +32,7 @@ void configureNexuizColorButtonNexuizColorButton(entity me, float theGroup, floa
 	me.cvarValueFloat = theValue;
 	me.cvarPart = theColor;
 	me.loadCvars(me);
-	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
+	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	me.src2 = me.image2;
 }

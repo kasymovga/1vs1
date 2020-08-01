@@ -28,7 +28,7 @@ void fillNexuizServerListTab(entity me)
 		me.TD(me, 1, 0.5, e = makeNexuizTextLabel(0, "Filter:"));
 		me.TD(me, 1, 0.5, btn = makeNexuizButton("Clear", '0 0 0'));
 			btn.onClick = InputBox_Clear_Click;
-		me.TD(me, 1, me.columns - 2.5, e = makeNexuizInputBox(0, string_null));
+		me.TD(me, 1, me.columns - 2.5, e = makeNexuizInputBox(0, NULL));
 			e.onChange = ServerList_Filter_Change;
 			e.onChangeEntity = slist;
 			btn.onClickEntity = e;
@@ -44,17 +44,17 @@ void fillNexuizServerListTab(entity me)
 		me.TD(me, 1, 0.5, e = makeNexuizCheckBox(0, "net_slist_pause", "Pause"));
 
 	me.TR(me);
-		me.TD(me, 1, 1, slist.sortButton1 = makeNexuizButton(string_null, '0 0 0'));
-		me.TD(me, 1, 1, slist.sortButton2 = makeNexuizButton(string_null, '0 0 0'));
-		me.TD(me, 1, 1, slist.sortButton3 = makeNexuizButton(string_null, '0 0 0'));
-		me.TD(me, 1, 1, slist.sortButton4 = makeNexuizButton(string_null, '0 0 0'));
-		me.TD(me, 1, 1, slist.sortButton5 = makeNexuizButton(string_null, '0 0 0'));
+		me.TD(me, 1, 1, slist.sortButton1 = makeNexuizButton(NULL, '0 0 0'));
+		me.TD(me, 1, 1, slist.sortButton2 = makeNexuizButton(NULL, '0 0 0'));
+		me.TD(me, 1, 1, slist.sortButton3 = makeNexuizButton(NULL, '0 0 0'));
+		me.TD(me, 1, 1, slist.sortButton4 = makeNexuizButton(NULL, '0 0 0'));
+		me.TD(me, 1, 1, slist.sortButton5 = makeNexuizButton(NULL, '0 0 0'));
 	me.TR(me);
 		me.TD(me, me.rows - 4, me.columns, slist);
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 0.6, e = makeNexuizTextLabel(0, "Address:"));
-		me.TD(me, 1, 2.9, e = makeNexuizInputBox(0, string_null));
+		me.TD(me, 1, 2.9, e = makeNexuizInputBox(0, NULL));
 			e.onEnter = ServerList_Connect_Click;
 			e.onEnterEntity = slist;
 			slist.ipAddressBox = e;

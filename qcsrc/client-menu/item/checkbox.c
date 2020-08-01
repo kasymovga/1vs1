@@ -37,7 +37,7 @@ void drawCheckBox(entity me)
 	s = me.pressed;
 	if(me.useDownAsChecked)
 	{
-		me.srcSuffix = string_null;
+		me.srcSuffix = NULL;
 		me.forcePressed = me.checked;
 	}
 	else

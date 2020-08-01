@@ -20,7 +20,7 @@ CLASS(NexuizDemoList) EXTENDS(NexuizListBox)
     ATTRIB(NexuizDemoList, itemAbsSize, vector, '0 0 0')
     ATTRIB(NexuizDemoList, lastClickedDemo, float, -1)
     ATTRIB(NexuizDemoList, lastClickedTime, float, 0)
-    ATTRIB(NexuizDemoList, filterString, string, string_null)    
+    ATTRIB(NexuizDemoList, filterString, string, NULL)    
 ENDCLASS(NexuizDemoList)
 
 entity makeNexuizDemoList();
@@ -116,7 +116,7 @@ void DemoList_Filter_Change(entity box, entity me)
     if(box.text != "")
     	me.filterString = strzone(box.text);
     else
-    	me.filterString = string_null;
+    	me.filterString = NULL;
 		
     me.getDemos(me);
 }

@@ -36,7 +36,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeNexuizTextLabel(0, "Name:"));
 			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
-		me.TD(me, 1, 2.5, label = makeNexuizTextLabel(0, string_null));
+		me.TD(me, 1, 2.5, label = makeNexuizTextLabel(0, NULL));
 			label.allowCut = 1;
 			label.allowColors = 1;
 			label.alpha = 1;
@@ -99,7 +99,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 		me.TD(me, 1, 1.5, e = makeNexuizButton("Weapon settings...", '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.weaponsDialog;
-		me.TD(me, 1, 1.5, e0 = makeNexuizTextLabel(0, string_null));
+		me.TD(me, 1, 1.5, e0 = makeNexuizTextLabel(0, NULL));
 			e0.textEntity = main.weaponsDialog;
 			e0.allowCut = 1;
 
@@ -154,9 +154,9 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Force Models:"));
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, string_null, string_null, "None"));
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodelsfromnexuiz", string_null, "Custom"));
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodels", string_null, "All"));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, NULL, NULL, "None"));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodelsfromnexuiz", NULL, "Custom"));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodels", NULL, "All"));
 	#endif
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_gentle", "Disable gore effects"));

@@ -53,11 +53,11 @@ void() gametype_init {
 	}
 	if not(cvar_value_issafe(world.fog)) {
 		print("The current map contains a potentially harmful fog setting, ignored\n");
-		world.fog = string_null;
+		world.fog = NULL;
 	}
 	if(MapInfo_Map_fog != "")
 		if(MapInfo_Map_fog == "none")
-			world.fog = string_null;
+			world.fog = NULL;
 		else
 			world.fog = strzone(MapInfo_Map_fog);
 

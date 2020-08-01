@@ -277,7 +277,7 @@ string weapon_throw_new(entity own, float wpn, float doreduce, vector org, vecto
 		weapon_defaultspawnfunc(wpn);
 		self = oldself;
 		if(item_start_failed)
-			return string_null;
+			return NULL;
 		wep.think = weapon_thrown_think;
 		wep.nextthink = time + 0.5;
 		return "";
@@ -290,7 +290,7 @@ string weapon_throw_new(entity own, float wpn, float doreduce, vector org, vecto
 		weapon_defaultspawnfunc(wpn);
 		self = oldself;
 		if(item_start_failed)
-			return string_null;
+			return NULL;
 		if(doreduce)
 		{
 			for(i = 0, j = 1; i < 24; ++i, j *= 2)
