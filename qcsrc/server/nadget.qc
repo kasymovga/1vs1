@@ -327,6 +327,7 @@ void nadget_Precache(void) {
     precache_sound("porto/expire.wav");
     precache_sound("porto/bounce.wav");
     precache_sound("misc/powerup_shield.wav");
+    precache_sound("misc/powerup.wav");
 	precache_sound("kh/capture.wav");
 	dlc_precache_sound("misc/gg.wav");
 	dlc_precache_sound("misc/stealth.wav");
