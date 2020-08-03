@@ -53,7 +53,6 @@ float current_zoomfraction;
 string crosshairdot_tex;
 float crosshair_hittime;
 
-float cs_project_is_b0rked;
 float vid_width, vid_height;
 
 float camera_active;		// Demo camera is active if set to TRUE

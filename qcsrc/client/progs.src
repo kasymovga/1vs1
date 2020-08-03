@@ -82,7 +82,9 @@ cvar.qc
 str.qc
 score.qh
 player.qc
-miscfunctions.qc
+dummyfunction.qc
+draw.qc
+math.qc
 ../client-server/approach.qc
 ../common/file.qc
 ../common/cvar.qc

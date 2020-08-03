@@ -367,3 +367,4 @@ void Net_ReadNexgunBeamParticle()
 	else
 		trailparticles(world, particleeffectnum("nex_beam"), shotorg, endpos);
 }
+#define rm_particleeffectnum_team(p,t,d) particleeffectnum(strcat(p "_TEAM", ftos(team_index_def(t, d))))

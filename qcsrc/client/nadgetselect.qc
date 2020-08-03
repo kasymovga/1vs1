@@ -87,7 +87,7 @@ void NS_Draw(void) {
         o_x = (CVAR(vid_conwidth) * 0.5) - (1 * tables * 0.5 - 1 * table) * (ns_width + NS_MARGIN);
 
         drawfill(o, s, '0 0 0', 0.3, DRAWFLAG_NORMAL);
-        drawborderlines(2, o, s, '0 0 0', a, DRAWFLAG_NORMAL);
+        draw_borderlines(2, o, s, '0 0 0', a, DRAWFLAG_NORMAL);
 
         string txt;
         float txtw;

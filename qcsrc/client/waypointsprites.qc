@@ -46,10 +46,10 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
 	// rotate them, and make them absolute
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-	v1 = rotate(v1, rot) + org;
-	v2 = rotate(v2, rot) + org;
-	v3 = rotate(v3, rot) + org;
-	v4 = rotate(v4, rot) + org;
+	v1 = math_rotate(v1, rot) + org;
+	v2 = math_rotate(v2, rot) + org;
+	v3 = math_rotate(v3, rot) + org;
+	v4 = math_rotate(v4, rot) + org;
 
 	// draw them
 	R_BeginPolygon(pic, f);
@@ -83,9 +83,9 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	up = '0 1 0';
 	
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-	o = rotate(o, rot) + org;
-	ri = rotate(ri, rot);
-	up = rotate(up, rot);
+	o = math_rotate(o, rot) + org;
+	ri = math_rotate(ri, rot);
+	up = math_rotate(up, rot);
 
 	owidth = width + 2 * border;
 	o = o - up * (margin + border + height) + ri * (sz_x - owidth) * 0.5;
@@ -170,7 +170,7 @@ void Draw_WaypointSprite()
 	// draw the sprite image
 	vector o;
 	float rot;
-	o = project_3d_to_2d(self.origin);
+	o = view_project_3d_to_2d(self.origin);
 	rot = 0;
 
 	if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))

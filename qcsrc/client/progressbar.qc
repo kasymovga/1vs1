@@ -10,7 +10,7 @@ void ProgressBar_Draw() {
 	pos_y = CVAR(vid_conheight) - 100;
 	for (e = progressbar; e; e = e.sort_next) {
 		pos_x = left;
-		drawborderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		fillrect_x = 200 * (e.cnt / 100);
 		drawfill(pos, fillrect, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y -= 20;

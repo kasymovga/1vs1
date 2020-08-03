@@ -1008,7 +1008,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	// table border
 	tmp_y += sbar_border_thickness;
 	tmp_y += body_table_height;
-	drawborderlines(sbar_border_thickness, pos, tmp, '0 0 0', CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL); // more transparency for the scoreboard
+	draw_borderlines(sbar_border_thickness, pos, tmp, '0 0 0', CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL); // more transparency for the scoreboard
 
 	// separator header/table
 	pos_y += 1.25 * sbar_fontsize_y;
@@ -1019,7 +1019,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 
 	// table background
 	tmp_y = body_table_height;
-	drawpic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * CVAR(sbar_color_bg_team), CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL);
+	draw_pic_tiled(pos, "gfx/hud/sb_scoreboard_bg", bg_size, tmp, rgb * CVAR(sbar_color_bg_team), CVAR(sbar_scoreboard_alpha_bg), DRAWFLAG_NORMAL);
 
 	// anyway, apply some color
 	//drawfill(pos, tmp + '2 0 0', rgb, 0.1, DRAWFLAG_NORMAL);
@@ -1527,7 +1527,7 @@ void Sbar_DrawPowerupTimer(float dt, string image) {
 	{
 		if(dt < 5)
 		{
-			drawpic_expanding_two(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+			draw_pic_expanding_two(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 				bound(0, (ceil(dt) - dt) / 0.5, 1));
 		}
 		else
@@ -1541,7 +1541,7 @@ void Sbar_DrawPowerupTimer(float dt, string image) {
 	}
 	else if(dt > -1)
 	{
-		drawpic_expanding(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
+		draw_pic_expanding(powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 			bound(0, -dt / 0.5, 1));
 	}
 	powerup_pos_y -= 40;
@@ -1772,7 +1772,7 @@ void Sbar_DrawAccuracyStats()
 
 			// background
 			drawpic(pos, "gfx/hud/sb_accuracy", fill_size , fill_colour, sbar_alpha_bg, DRAWFLAG_NORMAL);
-			drawborderlines(sbar_border_thickness, pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
+			draw_borderlines(sbar_border_thickness, pos, fill_size, '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
 
 			// the weapon
 			drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(i-1)), '1 0.5 0' * fill_size_x , '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -1832,7 +1832,7 @@ void DrawProgressFragmented(vector cpos, vector l_size, float progress, float al
     drawfill(pos, fill, l_color, alpha * 0.7, DRAWFLAG_NORMAL);
 
     if(fragments < 2) {
-        drawborderlines(1, pos, l_size, l_color, alpha, DRAWFLAG_NORMAL);
+        draw_borderlines(1, pos, l_size, l_color, alpha, DRAWFLAG_NORMAL);
     } else {
         vector fragsize;
 		fragsize_x = l_size_x / fragments;
@@ -1841,7 +1841,7 @@ void DrawProgressFragmented(vector cpos, vector l_size, float progress, float al
 
 		float frag;
         for(frag = 0; frag < fragments; ++frag) {
-            drawborderlines(1, pos + fragsize_x * frag * '1 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
+            draw_borderlines(1, pos + fragsize_x * frag * '1 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
         }
     }
 }
@@ -2402,13 +2402,13 @@ void CSQC_ctf_hud(void)
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
-		drawpic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		draw_pic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(red_icon)
 		drawpic(redflag_pos, red_icon, sz, '1 1 1', sbar_alpha_fg * red_alpha * f, DRAWFLAG_NORMAL);
 
 	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
 	if(blue_icon_prevstatus && f < 1)
-		drawpic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		draw_pic_expanding(blueflag_pos, blue_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic(blueflag_pos, blue_icon, sz, '1 1 1', sbar_alpha_fg * blue_alpha * f, DRAWFLAG_NORMAL);
 }

@@ -43,7 +43,7 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	vector out;
 	in -= teamradar_origin3d_in_texcoord;
 
-	out = rotate(in, teamradar_angle * DEG2RAD);
+	out = math_rotate(in, teamradar_angle * DEG2RAD);
 	out_y = - out_y; // screen space is reversed
 
 	out = out * teamradar_size_scale;
@@ -61,7 +61,7 @@ vector teamradar_2dcoord_to_texcoord(vector in) {
 
 	out = out * (1 / teamradar_size_scale);
 	out_y = -out_y;
-	out = rotate(out, -teamradar_angle * DEG2RAD);
+	out = math_rotate(out, -teamradar_angle * DEG2RAD);
 	out += teamradar_origin3d_in_texcoord;
 	return out;
 }
@@ -316,10 +316,10 @@ void(float big, string title) teamradar_view =
 	else
 	{
 		vector c0, c1, c2, c3, span;
-		c0 = rotate(world_min, teamradar_angle * DEG2RAD);
-		c1 = rotate(world_max, teamradar_angle * DEG2RAD);
-		c2 = rotate('1 0 0' * world_min_x + '0 1 0' * world_max_y, teamradar_angle * DEG2RAD);
-		c3 = rotate('1 0 0' * world_max_x + '0 1 0' * world_min_y, teamradar_angle * DEG2RAD);
+		c0 = math_rotate(world_min, teamradar_angle * DEG2RAD);
+		c1 = math_rotate(world_max, teamradar_angle * DEG2RAD);
+		c2 = math_rotate('1 0 0' * world_min_x + '0 1 0' * world_max_y, teamradar_angle * DEG2RAD);
+		c3 = math_rotate('1 0 0' * world_max_x + '0 1 0' * world_min_y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
 		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
 		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);

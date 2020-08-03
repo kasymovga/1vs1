@@ -258,7 +258,7 @@ void DamageIndicator_Draw() {
 
 	self.alpha -= frametime / CVAR(cl_damageindicator);
 	self.origin_z += frametime * 25;
-	vector o = project_3d_to_2d(self.origin);
+	vector o = view_project_3d_to_2d(self.origin);
     if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
         return;
 

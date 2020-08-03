@@ -202,7 +202,7 @@ float(float f) race_angle_to_con_x {
 	v_y -= f;
 	makevectors(v);
 	v = v_forward * 100 + view_origin;
-	v = project_3d_to_2d(v);
+	v = view_project_3d_to_2d(v);
 	return v_x;
 }
 
@@ -283,7 +283,7 @@ void(void) race_sbar_draw {
 		}
 		if (forcetime != "") {
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-			drawstring_expanding(m - '16 0 0' * stringwidth(forcetime, FALSE), forcetime, '32 32 0', '1 1 1', sbar_alpha_fg, 0, a);
+			draw_string_expanding(m - '16 0 0' * stringwidth(forcetime, FALSE), forcetime, '32 32 0', '1 1 1', sbar_alpha_fg, 0, a);
 		} else
 			a = 1;
 

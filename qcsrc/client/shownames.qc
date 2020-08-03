@@ -65,7 +65,7 @@ void Shownames_DrawPlayer() {
     a *= ((SHOWNAMES_MAXDISTANCE - SHOWNAMES_MINDISTANCE) - max(0, dist - SHOWNAMES_MINDISTANCE)) / (SHOWNAMES_MAXDISTANCE - SHOWNAMES_MINDISTANCE);
 
     vector o;
-    o = project_3d_to_2d(self.iorigin + self.maxs + SHOWNAMES_ORIGIN_OFFSET);
+    o = view_project_3d_to_2d(self.iorigin + self.maxs + SHOWNAMES_ORIGIN_OFFSET);
 
     if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > CVAR(vid_conwidth) || o_y > CVAR(vid_conheight))
         return;

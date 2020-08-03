@@ -145,10 +145,10 @@ void(vector pos, float isize, float tsize, string map, string pic, float count, 
 	}
 	drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, DRAWFLAG_NORMAL);
 	if (id == mapvote_ownvote || pic == "") {
-		drawborderlines(sbar_border_thickness, pos, img_size, rgb, 1, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, img_size, rgb, 1, DRAWFLAG_NORMAL);
 		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', rgb, 0.6, DRAWFLAG_NORMAL);
 	} else {
-		drawborderlines(sbar_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
 		drawpic(pos + '1 0 0', strcat("gfx/hud/num_", ftos(id+1)), (img_size_y / 5) * '1 1 0', '1 1 1', 0.6, DRAWFLAG_NORMAL);
 	}
 }

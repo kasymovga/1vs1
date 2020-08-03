@@ -11,6 +11,7 @@ float DPCONTENTS_BODY = 32; // blocks player movement
 float DPCONTENTS_CORPSE = 64; // blocks player movement
 float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
 float drawtime;
+float cs_project_is_b0rked;
 
 float fovx, fovy;
 float old_vid_width, old_vid_height, old_viewzoom, old_fov, old_vid_pixelheight;
@@ -94,9 +95,9 @@ vector wcross_origin;
 void wcross_origin_set() {
 	if (CVAR(chase_active) || physics_plug_adjust_view) {
 		traceline(view_origin, view_origin + MAX_SHOT_DISTANCE * view_forward, MOVE_WORLDONLY, world);
-		wcross_origin = project_3d_to_2d(trace_endpos);
+		wcross_origin = view_project_3d_to_2d(trace_endpos);
 	} else {
-		wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+		wcross_origin = view_project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 	}
 	wcross_origin_z = 0;
 }
@@ -614,3 +615,13 @@ void CSQC_Demo_Camera()
 	R_SetView(VF_ANGLES, current_angles);
 	R_SetView(VF_ORIGIN, current_position);
 }
+
+vector(vector vec) view_project_3d_to_2d {
+	vec = cs_project(vec);
+	if(cs_project_is_b0rked > 0) {
+		vec_x *= CVAR(vid_conwidth) / vid_width;
+		vec_y *= CVAR(vid_conheight) / vid_height;
+	}
+	return vec;
+}
+
