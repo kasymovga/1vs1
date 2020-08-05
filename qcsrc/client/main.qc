@@ -290,8 +290,8 @@ void CSQC_Init(void)
 	ent_parsers[ENT_CLIENT_SCORES_INFO] = score_info_read;
 	ent_parsers[ENT_CLIENT_SCORES] = score_player_read;
 	ent_parsers[ENT_CLIENT_TEAMSCORES] = score_team_read;
-	ent_parsers[ENT_CLIENT_POINTPARTICLES] = Ent_PointParticles;
-	ent_parsers[ENT_CLIENT_RAINSNOW] = Ent_RainOrSnow;
+	ent_parsers[ENT_CLIENT_POINTPARTICLES] = particles_point_read;
+	ent_parsers[ENT_CLIENT_RAINSNOW] = particles_rain_or_snow_read;
 	ent_parsers[ENT_CLIENT_LASER] = Ent_Laser;
 	ent_parsers[ENT_CLIENT_NAGGER] = ready_read;
 	ent_parsers[ENT_CLIENT_WAYPOINT] = Ent_WaypointSprite;
@@ -560,10 +560,10 @@ float CSQC_Parse_TempEntity()
 			}
 			break;
 		case TE_CSQC_ZCURVEPARTICLES:
-			Net_ReadZCurveParticles();
+			particles_zcurve_read();
 			break;
 		case TE_CSQC_NEXGUNBEAMPARTICLE:
-			Net_ReadNexgunBeamParticle();
+			particles_nex_beam_read();
 			break;
         case TE_CSQC_LIGHTNINGARC:
             Net_ReadLightningarc();

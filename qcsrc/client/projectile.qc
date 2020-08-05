@@ -51,7 +51,7 @@ void Projectile_DrawTrail(vector to)
 				trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 				return;
             case PROJECTILE_HG_PLASMA_SHARD:
-                trailparticles(self, rm_particleeffectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
+                trailparticles(self, particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
                 return;
             case PROJECTILE_HG_RAZE:
             case PROJECTILE_HG_PLASMA:
@@ -76,7 +76,7 @@ void Projectile_DrawTrail(vector to)
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
 			break;
 		case PROJECTILE_HG_PLASMA_SHARD:
-			trailparticles(self, rm_particleeffectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
+			trailparticles(self, particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
 			break;
 		case PROJECTILE_ELECTRO_BEAM:
 			trailparticles(self, particleeffectnum("TR_NEXUIZPLASMA"), from, to);
@@ -131,10 +131,10 @@ void Projectile_DrawTrail(vector to)
 			trailparticles(self, particleeffectnum("fireball"), from, to);
 			break;
         case PROJECTILE_HG_PLASMA:
-            trailparticles(self, rm_particleeffectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
+            trailparticles(self, particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 2), from, to);
             break;
         case PROJECTILE_HG_LASER: case PROJECTILE_HG_RAZE:
-            trailparticles(self, rm_particleeffectnum_team("RM_HG_PLASMA", self.team, 1), from, to);
+            trailparticles(self, particles_rm_effectnum_team("RM_HG_PLASMA", self.team, 1), from, to);
             break;
         case PROJECTILE_HG_TRANSLOC:
             switch(self.team) {
@@ -144,18 +144,18 @@ void Projectile_DrawTrail(vector to)
                 case COLOR_TEAM4: default:  trailparticles(self, particleeffectnum("TE_TEI_G3PINK_HIT"),    from, to); break;
             } break;
         case PROJECTILE_HG_NAPALMSHARD:
-            trailparticles(self, rm_particleeffectnum_team("RM_HG_NAPALM_TRAIL", self.team, 1), from, to);
+            trailparticles(self, particles_rm_effectnum_team("RM_HG_NAPALM_TRAIL", self.team, 1), from, to);
 :flame
             vector v = randomvec();
             v_z = (v_z + 1) * 0.25;
 
 #if 0
             if(DPRM_VersionIsSuitable())
-                pointparticles(rm_particleeffectnum_team("RM_HG_NAPALM_FIRE", self.team, 1), self.origin + v * self.extradata * 0.7, '0 0 0', 4 * drawframetime);
+                pointparticles(particles_rm_effectnum_team("RM_HG_NAPALM_FIRE", self.team, 1), self.origin + v * self.extradata * 0.7, '0 0 0', 4 * drawframetime);
             else
 #endif
 			if(time >= self.nextparticle) {
-                pointparticles(rm_particleeffectnum_team("RM_HG_NAPALM_FIRE", self.team, 1), self.origin + v/* * self.extradata * 0.7 */, '0 0 0', 1);
+                pointparticles(particles_rm_effectnum_team("RM_HG_NAPALM_FIRE", self.team, 1), self.origin + v/* * self.extradata * 0.7 */, '0 0 0', 1);
                 self.nextparticle = time + 0.15 + random() * 0.10;
             }
             break;

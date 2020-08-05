@@ -90,8 +90,8 @@ void Zapper_Draw(void) {
 	vector v = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
 	end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 	end = end - v;
-    pointparticles(rm_particleeffectnum_team("RM_ZAPPER", self.team, 2), end, v, frametime * 300);
-	pointparticles(rm_particleeffectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2), start, '0 0 0', frametime * 300);
+    pointparticles(particles_rm_effectnum_team("RM_ZAPPER", self.team, 2), end, v, frametime * 300);
+	pointparticles(particles_rm_effectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2), start, '0 0 0', frametime * 300);
 }
 
 void Zapper_Draw_Shield(void) {
@@ -114,8 +114,8 @@ void Zapper_Draw_Shield(void) {
     if(self.alpha < 1)
         return;
 
-    float eff_zap = rm_particleeffectnum_team("RM_ZAPPER", self.team, 2);
-    float eff_muz = rm_particleeffectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2);
+    float eff_zap = particles_rm_effectnum_team("RM_ZAPPER", self.team, 2);
+    float eff_muz = particles_rm_effectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2);
     float pcount = frametime * 300;
 
     pointparticles(eff_zap, end, '0 0 0', pcount);
@@ -232,7 +232,7 @@ void LightingArc_Segment(vector start, vector end, float ateam) {
     e.draw = LightingArc_Draw;
     e.team = ateam;
 
-    trailparticles(world, rm_particleeffectnum_team("RM_LIGHTNING", ateam, 2), start, end);
+    trailparticles(world, particles_rm_effectnum_team("RM_LIGHTNING", ateam, 2), start, end);
 }
 
 
@@ -246,7 +246,7 @@ void Zapper_ReadLightning(void) {
     //if(!rm_teamlasers)
     //    zapper_lightning_ateam = COLOR_TEAM2;
 
-    pointparticles(rm_particleeffectnum_team("RM_HG_PLASMA_SHARD_EXPLODE", zapper_lightning_ateam, 2), to, '0 0 0', 1);
+    pointparticles(particles_rm_effectnum_team("RM_HG_PLASMA_SHARD_EXPLODE", zapper_lightning_ateam, 2), to, '0 0 0', 1);
     LightingArc_Segment(from, to, zapper_lightning_ateam);
 
     pointparticles(particleeffectnum("electro_muzzleflash"), from, normalize(to - from) * 1000, 1);

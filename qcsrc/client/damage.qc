@@ -59,12 +59,12 @@ void Ent_DamageInfo(float isNew)
 			case NADGET_PLASMA: case NADGET_LASER:
 				if((hittype == NADGET_PLASMA && (secondary || bounce)) || hittype == NADGET_LASER) {
 					org2 = org + backoff * 6;
-					pointparticles(rm_particleeffectnum_team("RM_HG_PLASMA_SHARD_EXPLODE", self.team, 2 - (hittype == NADGET_LASER)), org2, '0 0 0', 1);
+					pointparticles(particles_rm_effectnum_team("RM_HG_PLASMA_SHARD_EXPLODE", self.team, 2 - (hittype == NADGET_LASER)), org2, '0 0 0', 1);
 					if(!issilent)
 						sound(self, CHAN_PROJECTILE, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 				} else { // plasma bomb explosion
 					org2 = org + backoff * 2;
-					pointparticles(rm_particleeffectnum_team("RM_HG_PLASMA_EXPLODE", self.team, 2), org2, '0 0 0', 1);
+					pointparticles(particles_rm_effectnum_team("RM_HG_PLASMA_EXPLODE", self.team, 2), org2, '0 0 0', 1);
 					if(!issilent)
 						sound(self, CHAN_PROJECTILE, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
 				}

@@ -52,3 +52,4 @@ string motd;
 float hook_use_swapped;
 float trace_dphitcontents;
 float trace_dpstartcontents;
+.float dphitcontentsmask;
