@@ -58,3 +58,24 @@ void(vector position, string text, vector scale, vector rgb, float alpha, float 
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawstring(position + draw_expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE)), text, scale * sz, rgb, alpha * (1 - fadelerp), flag);
 }
+
+void(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org) draw_cylindric_line {
+	// I want to draw a quad...
+	// from and to are MIDPOINTS.
+	vector axis, thickdir, A, B, C, D;
+	float length_tex;
+	axis = normalize(to - from);
+	length_tex = aspect * vlen(to - from) / thickness;
+	// direction is perpendicular to the view normal, and perpendicular to the axis
+	thickdir = normalize(math_cross(axis, view_org - from));
+	A = from - thickdir * (thickness / 2);
+	B = from + thickdir * (thickness / 2);
+	C = to + thickdir * (thickness / 2);
+	D = to - thickdir * (thickness / 2);
+	R_BeginPolygon(texture, drawflag);
+	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, alpha);
+	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, alpha);
+	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
+	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
+	R_EndPolygon();
+}

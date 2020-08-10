@@ -2,36 +2,9 @@
 entity hook_pull;
 float hook_pull_length_readed;
 
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector view_org)
-{
-	// I want to draw a quad...
-	// from and to are MIDPOINTS.
-	
-	vector axis, thickdir, A, B, C, D;
-	float length_tex;
-
-	axis = normalize(to - from);
-	length_tex = aspect * vlen(to - from) / thickness;
-
-	// direction is perpendicular to the view normal, and perpendicular to the axis
-	thickdir = normalize(math_cross(axis, view_org - from));
-
-	A = from - thickdir * (thickness / 2);
-	B = from + thickdir * (thickness / 2);
-	C = to + thickdir * (thickness / 2);
-	D = to - thickdir * (thickness / 2);
-
-	R_BeginPolygon(texture, drawflag);
-	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
-	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
-	R_EndPolygon();
-}
-
 string Draw_GrapplingHook_cb_tex;
 void Draw_GrapplingHook_cb(vector start, vector end, vector to) {
-	Draw_CylindricLine(start, end, 8, Draw_GrapplingHook_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, WarpZone_TransformOrigin(WarpZone_trace_transform, view_camera_origin));
+	draw_cylindric_line(start, end, 8, Draw_GrapplingHook_cb_tex, 0.25, random(), '1 1 1', 1, DRAWFLAG_NORMAL, WarpZone_TransformOrigin(WarpZone_trace_transform, view_camera_origin));
 }
 
 void Draw_GrapplingHook()
