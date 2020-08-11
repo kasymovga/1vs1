@@ -113,7 +113,6 @@ void WS_ConfirmSelection(void) {
     var w = weapon_info(WS_SelectedWeapon() + 1);
     localcmd("cmd pickweapon ", w.netname, "; cmd join\n");
     ws_active = FALSE;
-    mouse_enabled = FALSE;
 }
 
 float WS_InputEvent(float bInputType, float nPrimary, float nSecondary) {
@@ -174,7 +173,6 @@ void Net_ReadWeaponSelect(void) {
     ws_height = WS_SCALE * ws_numoptions + WS_MARGIN;
     ws_width += WS_MARGIN;
     ws_active = TRUE;
-    mouse_enabled = TRUE;
 	entity e = spawn();
 	e.draw2d = WS_Draw;
 	e.draw2dflag = 1;
