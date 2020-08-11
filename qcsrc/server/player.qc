@@ -1346,6 +1346,9 @@ string(string _playermodel) player_allowed_model {
 	if (first_allowed_model == "")
 		return _playermodel;
 
+	if (strstrofs(first_allowed_model, ":", 0) > 0) {
+		first_allowed_model = substring(first_allowed_model, 0, strstrofs(first_allowed_model, ":", 0));
+	}
 	if (_playermodel == "")
 		return first_allowed_model;
 
