@@ -1,7 +1,3 @@
-void drawstringright(vector, string, vector, vector, float, float);
-void drawstringcenter(vector, string, vector, vector, float, float);
-void drawcolorcodedstringcenter(vector, string, vector, float, float);
-
 float weapon_hits[WEP_COUNT];
 float weapon_fired[WEP_COUNT];
 float weapon_number;
@@ -1168,7 +1164,7 @@ void Sbar_DrawScoreboard()
 	pos_z = 0;
 
 	//drawfont = sbar_bigfont;
-	//drawstringcenter('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	//draw_string_center('0 1 0' * ymin, "Scoreboard", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 
 	//pos_y += 24 + 4;
 	//pos_y += sbar_fontsize_y;
@@ -1646,7 +1642,7 @@ void Sbar_ShowSpeed(void)
 	pos = (CVAR(vid_conheight) - numsize_y) * CVAR(cl_showspeed_position);
 
 	drawfont = sbar_bigfont;
-	drawstringcenter('1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	draw_string_center('1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 	drawfont = sbar_font;
 }
 
@@ -1715,7 +1711,7 @@ void Sbar_DrawAccuracyStats()
 	pos_x = 0;
 	pos_y = SCOREBOARD_OFFSET;
 	pos_z = 0;
-	drawstringcenter(pos, "Weapon Accuracy", 2 * sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+	draw_string_center(pos, "Weapon Accuracy", 2 * sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	left_border = col_margin + 11 * sbar_fontsize_x;
 
@@ -1725,7 +1721,7 @@ void Sbar_DrawAccuracyStats()
 	{
 		pos_y += 40;
 		if(math_mod(time, 1) >= 0.4)
-			drawstringcenter(pos, "Stats are not tracked during warmup stage", sbar_fontsize, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			draw_string_center(pos, "Stats are not tracked during warmup stage", sbar_fontsize, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		return;
 	}
@@ -1778,38 +1774,16 @@ void Sbar_DrawAccuracyStats()
 			drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(i-1)), '1 0.5 0' * fill_size_x , '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 			// the amount of shots fired or max damage
-			drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 3 0' * sbar_fontsize_y, ftos(weapon_damage), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
+			draw_string_right(pos + '4.5 0 0' * sbar_fontsize_x + '0 3 0' * sbar_fontsize_y, ftos(weapon_damage), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			// the amount of hits or actual damage
-			drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 5 0' * sbar_fontsize_y, ftos(weapon_hit), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
+			draw_string_right(pos + '4.5 0 0' * sbar_fontsize_x + '0 5 0' * sbar_fontsize_y, ftos(weapon_hit), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			// the accuracy
-			drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 7 0' * sbar_fontsize_y, strcat(ftos(weapon_stats),"%"), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
+			draw_string_right(pos + '4.5 0 0' * sbar_fontsize_x + '0 7 0' * sbar_fontsize_y, strcat(ftos(weapon_stats),"%"), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			// the amount of shots missed or damage wasted
-			drawstringright(pos + '4.5 0 0' * sbar_fontsize_x + '0 9 0' * sbar_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
+			draw_string_right(pos + '4.5 0 0' * sbar_fontsize_x + '0 9 0' * sbar_fontsize_y, ftos(max(0, weapon_damage - weapon_hit)), sbar_fontsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			++count;
 		}
 	}
-}
-
-void drawstringright(vector position, string text, vector scale, vector rgb, float alpha, float flag)
-{
-	position_x -= 2 / 3 * strlen(text) * scale_x;
-	drawstring(position, text, scale, rgb, alpha, flag);
-}
-
-void drawstringcenter(vector position, string text, vector scale, vector rgb, float alpha, float flag)
-{
-	position_x = 0.5 * (CVAR(vid_conwidth) - 0.6025 * strlen(text) * scale_x);
-	drawstring(position, text, scale, rgb, alpha, flag);
-}
-
-void drawcolorcodedstringcenter(vector position, string text, vector scale, float alpha, float flag)
-{
-	position_x = 0.5 * (CVAR(vid_conwidth) - stringwidth(text, TRUE) * scale_x);
-	drawcolorcodedstring(position, text, scale, alpha, flag);
 }
 
 void Sbar_Reset (void)
@@ -2180,18 +2154,18 @@ void Sbar_Draw (void)
             }
 
             if(getstati(STAT_STEALTH)) {
-                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * ('0 2 0'/* + '0 1 0' * !!adept */), strcat(
+                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * ('0 2 0'/* + '0 1 0' * !!adept */), strcat(
                                             "^3Shoot or press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
                                             " ^3to ", /* if(adept) "suspend" else */ "cancel", " stealth (^1", ftos(getstati(STAT_STEALTH)), " ^3seconds remaining)"),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 #if 0
-                if(adept) drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                if(adept) draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
                                             "^3Press ^1", strtoupper(getcommandkey("drop flag", "+use")),
                                             " ^3to cancel stealth completely"),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 #endif
             } else if(getstati(STAT_STEALTH_SAVED)) {
-                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
                                             "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
                                             " ^3to re-enter stealth (^1", ftos(getstati(STAT_STEALTH_SAVED)), " ^3seconds remaining)"),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
@@ -2205,15 +2179,15 @@ void Sbar_Draw (void)
                     smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
                                   " ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : nadget_TypeToExpandedName(hgtype)));
                 }
-                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(hgdetons) {
-                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat(
+                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
                                             "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
                                             " ^3to trigger your nadget",
                                             ((hgdetons > 1) ? strcat("s (^2", ftos(hgdetons), "^3)") : "")),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(hgtype == NADGET_GG && hgammo) {
-                drawcolorcodedstringcenter(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(getcommandkey("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(getcommandkey("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             }
 
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
@@ -2265,7 +2239,7 @@ void Sbar_Draw (void)
 				if (i & a)
 					s = strcat(s, " ", rune_name(i));
 			}
-			drawcolorcodedstringcenter(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
+			draw_string_colorcoded_center(pos, s, sbar_fontsize, 0.4, DRAWFLAG_NORMAL);
 		}
 
 		// draw gametype specific icons

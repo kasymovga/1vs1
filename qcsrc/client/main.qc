@@ -626,6 +626,9 @@ float CSQC_Parse_TempEntity()
 		case TE_CSQC_HINT:
 			hint_net_read();
 			break;
+		case TE_CSQC_MODELSELECT:
+			modelselect_read();
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = FALSE;

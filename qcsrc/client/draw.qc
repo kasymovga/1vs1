@@ -79,3 +79,19 @@ void(vector from, vector to, float thickness, string texture, float aspect, floa
 	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
 	R_EndPolygon();
 }
+
+void(vector position, string text, vector scale, vector rgb, float alpha, float flag) draw_string_right {
+	position_x -= stringwidth(text, FALSE) * scale_x;
+	drawstring(position, text, scale, rgb, alpha, flag);
+}
+
+void(vector position, string text, vector scale, vector rgb, float alpha, float flag) draw_string_center {
+	position_x =  position_x + 0.5 * (CVAR(vid_conwidth) - stringwidth(text, FALSE) * scale_x);
+	drawstring(position, text, scale, rgb, alpha, flag);
+}
+
+void(vector position, string text, vector scale, float alpha, float flag) draw_string_colorcoded_center {
+	position_x = position_x + 0.5 * (CVAR(vid_conwidth) - stringwidth(text, TRUE) * scale_x);
+	drawcolorcodedstring(position, text, scale, alpha, flag);
+}
+

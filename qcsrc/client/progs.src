@@ -23,7 +23,7 @@ cvar.qh
 ../common/db.qh
 ../common/weapon.qh
 ../common/extensions.qh
-
+modelselect.qh
 ../client-server/projectile.qh
 ../common/uri.qh
 ../client-server/physics.qh
@@ -142,7 +142,6 @@ waypointsprites.qc
 movetypes.qc
 prandom.qc
 bgmscript.qc
-
 ../client-server/world.qc
 ../client-server/time.qc
 ../client-server/score.qc
@@ -203,3 +202,4 @@ sphere.qc
 ice.qc
 fog.qc
 net.qc
+modelselect.qc

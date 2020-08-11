@@ -7,7 +7,7 @@ void(void) announce_draw {
 		return;
 	}
 	drawfont = sbar_bigfont;
-	drawcolorcodedstringcenter(self.origin, self.message, sbar_fontsize * 2, self.alpha, DRAWFLAG_NORMAL);
+	draw_string_colorcoded_center(self.origin, self.message, sbar_fontsize * 2, self.alpha, DRAWFLAG_NORMAL);
 	self.alpha -= frametime;
 }
 

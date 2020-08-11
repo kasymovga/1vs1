@@ -2408,6 +2408,33 @@ void(entity e, float chan, string s, float vol, float attn) player_sound {
 	}
 }
 
+var float(string s, float i) player_cmd_client_handle_next;
+float(string s, float i) player_cmd_client_handle {
+	if (s == "modelselect") {
+		if (g_player_forcemodel != "" && g_player_forcemodel != "0") {
+			centerprint(self, "Player model forced");
+		} else {
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_MODELSELECT);
+			WriteString(MSG_ONE, self.body.playermodel);
+			WriteByte(MSG_ONE, stof(self.body.playerskin));
+			WriteString(MSG_ONE, player_allowed_model_list());
+		}
+		return TRUE;
+	}
+	return player_cmd_client_handle_next(s, i);
+}
+
+var void(void(string item, string cmd) Add_Item) player_gamemenu_add_items_next;
+void(void(string item, string cmd) add) player_gamemenu_add_items {
+	if (g_player_forcemodel == "" || g_player_forcemodel == "0")
+		add("Change model", "cmd modelselect;");
+
+	player_gamemenu_add_items_next(add);
+}
+
+float player_init_done;
 void() player_init {
 	player_precache_sounds("sound/player/default.sounds");
 	player_precache_all_models("models/player/*.zym");
@@ -2565,4 +2592,12 @@ void() player_init {
 	CACHE_CVAR(bot_talk);
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(g_playerclip_collisions);
+	if (player_init_done)
+		return;
+
+	player_init_done = TRUE;
+	player_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
+	gamehook_chain_cmd_client_handle = player_cmd_client_handle;
+	player_gamemenu_add_items_next = GameHookChain_GameMenuAddItems;
+	GameHookChain_GameMenuAddItems = player_gamemenu_add_items;
 }

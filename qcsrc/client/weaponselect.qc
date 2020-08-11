@@ -56,7 +56,7 @@ void WS_Draw(void) {
         WS_UpdateSelection(o, s);
 
     vector sz = [WS_SCALE, WS_SCALE];
-    drawstringcenter([o_x, o_y - sz_y * 1.25], "Weapon Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
+    draw_string_center([o_x, o_y - sz_y * 1.25], "Weapon Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
     o_x = (CVAR(vid_conwidth) * 0.5) - 0.5 * (ws_width + WS_MARGIN);
 
     drawfill(o, s, '0 0 0', 0.3, DRAWFLAG_NORMAL);
