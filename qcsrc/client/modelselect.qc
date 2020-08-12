@@ -48,9 +48,9 @@ float(float bInputType, float nPrimary, float nSecondary) modelselect_input_even
 		if (nPrimary == K_MOUSE1) {
 			float i = modelselect_choosen_button();
 			if (i == 1)
-				modelselect_list_pos++;
-			else if (i == 2)
 				modelselect_list_pos--;
+			else if (i == 2)
+				modelselect_list_pos++;
 			else if (i == 3) {
 				localcmd("playermodel ", modelselect_current.model, ";playerskin ", ftos(modelselect_current.skin), "\n");
 				modelselect_remove();
@@ -66,6 +66,7 @@ float(float bInputType, float nPrimary, float nSecondary) modelselect_input_even
 void(void) modelselect_draw {
 	CSQC_InputEvent_Callback = modelselect_input_event;
 	Mouse_Enable();
+	sb_hidescores = TRUE;
 	string s = modelselect_list;
 	if (modelselect_list_pos_prev != modelselect_list_pos) {
 		if (modelselect_list_pos >= modelselect_list_len)
@@ -92,6 +93,7 @@ void(void) modelselect_draw {
 	vector c = '1 0 0' * (CVAR(vid_conwidth) / 2);
 	drawfont = sbar_bigfont;
 	draw_string_center('0 100 0', "Model select", '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+	draw_string_center('0 125 0', strcat(modelselect_current.model, ":", ftos(modelselect_current.skin)), '18 18 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	vector ca;
 	float button = modelselect_choosen_button();
 	//Previous
