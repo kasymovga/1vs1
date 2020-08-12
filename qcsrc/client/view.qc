@@ -159,6 +159,7 @@ void CSQC_UpdateView(float w, float h)
 	any_button_zoom = button_zoom;
 	if (button_attack2_allowed) {
 		if(getstati(STAT_ACTIVEWEAPON) == WEP_NEX)
+		if not(CVAR(cl_nex_secondary_zoom_disable))
 			any_button_zoom += button_attack2;
 	}
 	if(any_button_zoom || fov <= 59.5)
