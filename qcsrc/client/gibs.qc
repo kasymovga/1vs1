@@ -190,9 +190,6 @@ void Ent_GibSplash(float isNew)
 	if not(CVAR(cl_gentle))
 		amount *= 1 - CVAR(cl_nogibs);
 
-	if(CVAR(ekg))
-		amount *= 5;
-
 	if(amount <= 0 || !isNew)
 		return;
 

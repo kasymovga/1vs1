@@ -144,7 +144,6 @@ seta cl_voice_directional_taunt_attenuation 0.5 "this defines the distance from 
 seta cl_particles_oldnexbeam 0 "Uses the old v2.3 Nexgun beam instead of the new beam, only works if server allows it (g_allow_oldnexbeam 1)"
 seta cl_autoswitch 1 "automatically switch to newly picked up weapons if they are better than what you are carrying"
 alias autoswitch "set cl_autoswitch $1 ; cmd autoswitch $1"
-set ekg 0 "Throw huge amounts of gibs"
 seta cl_smoothviewheight 0.01
 seta cl_hitsound 1 "play a hit notifier sound when you have hit an enemy"
 seta cl_shownames 1	"show player names pointed to (0: never, 1: teamplay only, 2: always)"
