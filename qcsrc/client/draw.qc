@@ -95,3 +95,23 @@ void(vector position, string text, vector scale, float alpha, float flag) draw_s
 	drawcolorcodedstring(position, text, scale, alpha, flag);
 }
 
+void(vector cpos, vector l_size, float progress, float alpha, vector l_color, float fragments) draw_progress_fragmented {
+	vector pos;
+	pos_x = cpos_x - l_size_x / 2;
+	pos_y = cpos_y - l_size_y / 2;
+	vector fill = l_size;
+	fill_x *= progress;
+	drawfill(pos, fill, l_color, alpha * 0.7, DRAWFLAG_NORMAL);
+	if (fragments < 2) {
+		draw_borderlines(1, pos, l_size, l_color, alpha, DRAWFLAG_NORMAL);
+	} else {
+		vector fragsize;
+		fragsize_x = l_size_x / fragments;
+		fragsize_y = l_size_y;
+		fragsize_z = 0;
+		float frag;
+		for(frag = 0; frag < fragments; ++frag) {
+			draw_borderlines(1, pos + fragsize_x * frag * '1 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
+		}
+	}
+}

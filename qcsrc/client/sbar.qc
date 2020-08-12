@@ -1795,35 +1795,6 @@ void Sbar_Reset (void)
 		CSQC_ctf_hudreset();
 }
 
-void DrawProgressFragmented(vector cpos, vector l_size, float progress, float alpha, vector l_color, float fragments) {
-    vector pos;
-    pos_x = cpos_x - l_size_x / 2;
-    pos_y = cpos_y - l_size_y / 2;
-
-    vector fill = l_size;
-    fill_x *= progress;
-
-    drawfill(pos, fill, l_color, alpha * 0.7, DRAWFLAG_NORMAL);
-
-    if(fragments < 2) {
-        draw_borderlines(1, pos, l_size, l_color, alpha, DRAWFLAG_NORMAL);
-    } else {
-        vector fragsize;
-		fragsize_x = l_size_x / fragments;
-		fragsize_y = l_size_y;
-		fragsize_z = 0;
-
-		float frag;
-        for(frag = 0; frag < fragments; ++frag) {
-            draw_borderlines(1, pos + fragsize_x * frag * '1 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
-        }
-    }
-}
-
-void DrawProgress(vector cpos, vector l_size, float progress, float alpha, vector l_color) {
-    DrawProgressFragmented(cpos, l_size, progress, alpha, l_color, 1);
-}
-
 float Sbar_GetNadgetRegen(float stat_type, float stat_regen, float stat_maxregen) {
 	return getstatf(stat_regen) / getstatf(stat_maxregen);
 }
@@ -2124,7 +2095,7 @@ void Sbar_Draw (void)
 					vector hgpos;
 					hgpos_x = CVAR(vid_conwidth) / 2;
 					hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
-					DrawProgress(hgpos, '120 5 0', hgstat, 0.7 * hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat));
+					draw_progress_fragmented(hgpos, '120 5 0', hgstat, 0.7 * hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat), 1);
 				}
 			} else {
 				hg_alpha = 0;
@@ -2148,7 +2119,7 @@ void Sbar_Draw (void)
             }
 
             if(getstati(STAT_HGSHIELDSTORE)) {
-                DrawProgressFragmented('0.5 0 0' * CVAR(vid_conwidth) + hgapos - sbar_fontsize_y * '0 2.5 0', '25 0 0' * sbar_fontsize_x + '0 7 0',
+                draw_progress_fragmented('0.5 0 0' * CVAR(vid_conwidth) + hgapos - sbar_fontsize_y * '0 2.5 0', '25 0 0' * sbar_fontsize_x + '0 7 0',
                              getstati(STAT_HGSHIELDSTORE) / getstati(STAT_HGSHIELDSTOREMAX), 0.7, '1 0.3 0',
                              getstati(STAT_HGSHIELDSTOREMAX) / getstati(STAT_HGSHIELDDAMAGEPERSHOT));
             }
