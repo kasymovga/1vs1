@@ -23,6 +23,6 @@ void(void) announce_print {
 	else
 		announce.alpha = CVAR(cl_announcer_print);
 
-	announce.origin_x = CVAR(vid_conwidth) / 2;
+	announce.origin_x = 0;
 	announce.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 12;
 }
