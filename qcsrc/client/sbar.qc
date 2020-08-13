@@ -2203,7 +2203,7 @@ void Sbar_Draw (void)
 
 		a = getstati(STAT_RUNES);
 		if (a) {
-			pos_x = CVAR(vid_conwidth) / 2;
+			pos_x = 0;
 			pos_y = CVAR(vid_conheight) - 50 - sbar_fontsize_y;
 			s = "";
 			for (i = RUNE_FIRST; i <= RUNE_LAST; i *= 2) {
