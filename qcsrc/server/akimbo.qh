@@ -9,3 +9,4 @@ float Akimbo_GiveWeapon(entity p, float wpn, string name);
 float Akimbo_HaveWeapon(entity e, float wpn);
 float Akimbo_Active(entity e);
 .float akimbo_animation_shift;
+.vector akimbo_use_left_hand;

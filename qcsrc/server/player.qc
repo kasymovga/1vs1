@@ -283,6 +283,7 @@ void() player_effects {
 
 void(entity to, entity from) player_anim_copy {
 	to.akimbo_animation_shift = from.akimbo_animation_shift;
+	to.akimbo_use_left_hand = from.akimbo_use_left_hand;
 #define PLAYERANIMCOPY(x,y,z) x.anim_ ## z = y.anim_ ## z;
 	PLAYERANIMCOPY(to, from, die1)
 	PLAYERANIMCOPY(to, from, die2)
@@ -324,6 +325,12 @@ void(entity e, string s) player_anim_parseline {
 	string field_name = argv(0);
 	if (field_name == "akimbo_shift") {
 		e.akimbo_animation_shift = stof(argv(1));
+		return;
+	}
+	if (field_name == "akimbo_use_left_hand") {
+		e.akimbo_use_left_hand_x = stof(argv(1));
+		e.akimbo_use_left_hand_y = stof(argv(2));
+		e.akimbo_use_left_hand_z = stof(argv(3));
 		return;
 	}
 	if (c < 4) {
@@ -435,10 +442,14 @@ void() player_anim_setup {
 	self.anim_forwardleft = '20 1 1';
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
-	self.anim_melee = stov(cvar_string("sv_player_melee_anim"));
-	self.anim_melee2 = stov(cvar_string("sv_player_melee_anim2"));
-	self.akimbo_animation_shift = cvar("g_akimbo_animation_shift");
+	self.anim_melee = '0 0 0';
+	self.anim_melee2 = '0 0 0';
+	self.akimbo_animation_shift = 0;
+	self.akimbo_use_left_hand = '0 0 0';
 	player_anim_load(self, self.body.model);
+	if (self.anim_melee == '0 0 0')
+		self.anim_melee = self.anim_shoot;
+
 	// reset animstate now
 	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 }

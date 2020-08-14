@@ -42,9 +42,6 @@ set akimbo_ft_g_weaponreplace_minstanex nex
 set akimbo_ft_g_weaponreplace_hagar hagar
 set g_akimbo_weapons "laser"
 set g_akimbo_throwable 1
-set g_akimbo_use_left_hand 0
-set g_akimbo_use_left_hand_rotate "0 0 0"
-set g_akimbo_animation_shift 0
 set akimbo_lms_g_pinata 1
 set akimbo_lms_g_pinata_drop_all 1
 set akimbo_lms_g_pickup_cells 10

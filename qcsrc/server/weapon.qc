@@ -13,6 +13,7 @@ vector sv_qcanimation_melee2_morph1angles;
 vector sv_qcanimation_melee2_morph2angles;
 vector sv_qcanimation_melee2_morph1origin;
 vector sv_qcanimation_melee2_morph2origin;
+vector sv_qcanimation_melee_exterior;
 float sv_qcweaponanimation;
 float g_akimbo_use_left_hand;
 float g_shootfromcenter;
@@ -1081,21 +1082,23 @@ void weapon_model_exterior_dlc_reset() {
 
 	entity ao = Akimbo_Owner(self.owner);
 	float akimbo_weapon = (Akimbo_Active(self.owner) == 2);
+	self.angles = '0 0 0';
 	if((tag_found = gettagindex(ao.body, "tag_weapon"))) {
 		self.tag_index = tag_found;
 		self.tag_entity = ao;
 		if (akimbo_weapon)
 			setorigin(self, '0 20 0');
-	} else if (akimbo_weapon && g_akimbo_use_left_hand) {
+	} else if (akimbo_weapon && ao.akimbo_use_left_hand != '0 0 0') {
 		if (akimbo_weapon)
 			setattachment(self, ao.body, "bip01 l hand");
 
-		self.angles = stov(cvar_string("g_akimbo_use_left_hand_rotate"));
+		self.angles = ao.akimbo_use_left_hand;
 	} else {
 		setattachment(self, ao.body, "bip01 r hand");
 		if (akimbo_weapon)
 			setorigin(self, '0 20 0');
 	}
+	self.oldorigin = self.angles;
 	// if that didn't find a tag, hide the exterior weapon model
 	if (!self.tag_index)
 		self.model = "";
@@ -1123,6 +1126,22 @@ void weapon_model_exterior_think()
 	}
 	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE | EF_LOWPRECISION | EF_FULLBRIGHT);
 	self.colormap = self.owner.colormap;
+	entity we = self.owner.weaponentity;
+	if (we.wframe == WFRAME_MELEE) {
+		entity o = self.owner;
+		entity ao = Akimbo_Owner(o);
+		if (ao.anim_melee == ao.anim_shoot) {
+			float f;
+			if (time < o.weapon_morph1time)
+				f = (time - o.weapon_morph0time) / (o.weapon_morph1time - o.weapon_morph0time);
+			else
+				f = 1 - (time - o.weapon_morph1time) / (o.weapon_morph2time - o.weapon_morph1time);
+
+			f = bound(0, f, 1);
+			self.angles = sv_qcanimation_melee_exterior * f;
+		}
+	} else
+		self.angles = self.oldorigin;
 }
 
 // spawning weaponentity for client
@@ -1309,15 +1328,14 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (restartanim)
 	if (t)
 	if (!self.crouch) { // shoot anim stands up, this looks bad
-		var .vector anim;
 		if (fr == WFRAME_MELEE2)
-			anim = anim_melee2;
-		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE)
-			anim = anim_melee;
-		else
-			anim = anim_shoot;
-
-		player_anim_set(self, anim, FALSE, TRUE, TRUE);
+			player_anim_set(self, anim_melee2, FALSE, TRUE, TRUE);
+		else if (fr == WFRAME_MELEE || self.weapon == WEP_MELEE) {
+			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE);
+			if (self.body)
+				self.body.animstate_endtime = time + t;
+		} else
+			player_anim_set(self, anim_shoot, FALSE, TRUE, TRUE);
 	}
 }
 
@@ -1622,6 +1640,7 @@ void() weapon_init {
 	sv_qcanimation_melee2_morph2angles = stov(cvar_string("sv_qcanimation_melee2_morph2angles"));
 	sv_qcanimation_melee2_morph1origin = stov(cvar_string("sv_qcanimation_melee2_morph1origin"));
 	sv_qcanimation_melee2_morph2origin = stov(cvar_string("sv_qcanimation_melee2_morph2origin"));
+	sv_qcanimation_melee_exterior = stov(cvar_string("sv_qcanimation_melee_exterior"));
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		(weapon_info(i)).weapon_func(WR_CVAR_CACHE);
