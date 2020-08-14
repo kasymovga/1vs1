@@ -276,7 +276,7 @@ void() player_effects {
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	self.body.effects = self.effects;
-	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
+	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 	self.body.body.modelflags = self.modelflags;
 	self.effects = 0;
 }
