@@ -37,10 +37,6 @@ void fillNexuizAdvancedDialog(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeNexuizTextLabel(0, "Game speed:"));
-		me.TD(me, 1, 1.7, e = makeNexuizSlider(0.5, 2.0, 0.1, "slowmo"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeNexuizCheckBoxEx(2, 0, "g_antilag", "AntiLag"));
 	me.TR(me);
 	me.TR(me);
