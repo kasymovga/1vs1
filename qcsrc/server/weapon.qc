@@ -1127,8 +1127,8 @@ void weapon_model_exterior_think()
 	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE | EF_LOWPRECISION | EF_FULLBRIGHT);
 	self.colormap = self.owner.colormap;
 	entity we = self.owner.weaponentity;
-	if (we.wframe == WFRAME_MELEE) {
-		entity o = self.owner;
+	entity o = self.owner;
+	if (we.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && (we.frame == WFRAME_FIRE1 || we.frame == WFRAME_FIRE2))) {
 		entity ao = Akimbo_Owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
@@ -1334,6 +1334,12 @@ void weapon_thinkf(float fr, float t, void() func)
 			player_anim_set(self, anim_melee, FALSE, TRUE, TRUE);
 			if (self.body)
 				self.body.animstate_endtime = time + t;
+
+			if (fr != WFRAME_MELEE) {
+				self.weapon_morph0time = time;
+				self.weapon_morph1time = time + t * 0.25;
+				self.weapon_morph2time = time + t * 0.65;
+			}
 		} else
 			player_anim_set(self, anim_shoot, FALSE, TRUE, TRUE);
 	}
