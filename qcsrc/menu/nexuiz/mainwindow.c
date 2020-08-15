@@ -18,14 +18,6 @@ ENDCLASS(MainWindow)
 
 #ifdef IMPLEMENTATION
 
-void DemoButton_Click(entity me, entity other)
-{
-	if(me.text == "Do not press this button again!")
-		DialogOpenButton_Click(me, other);
-	else
-		me.setText(me, "Do not press this button again!");
-}
-
 void configureMainWindowMainWindow(entity me)
 {
 	entity n, i;
