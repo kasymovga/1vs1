@@ -80,7 +80,7 @@ void NS_Draw(void) {
 	sz_x = NS_SCALE;
 	sz_y = NS_SCALE;
 
-    draw_string_center(o_x * '1 0' + (o_y - sz_y * (1.25 + 2 * g_nadgets_double)) * '0 1', "Nadget Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
+    draw_string_center((o_y - sz_y * (1.25 + 2 * g_nadgets_double)) * '0 1', "Nadget Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
 
 	float table, tables;
     for(table = 0; table < (tables = g_nadgets_double + 1); ++table) {
