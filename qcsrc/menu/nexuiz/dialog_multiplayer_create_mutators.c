@@ -4,7 +4,7 @@ CLASS(NexuizMutatorsDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizMutatorsDialog, fill, void(entity))
 	METHOD(NexuizMutatorsDialog, showNotify, void(entity))
 	METHOD(NexuizMutatorsDialog, close, void(entity))
-	ATTRIB(NexuizMutatorsDialog, title, string, "Mutators")
+	ATTRIB(NexuizMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(NexuizMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(NexuizMutatorsDialog, intendedWidth, float, 0.4)
 	ATTRIB(NexuizMutatorsDialog, rows, float, 10)
@@ -37,7 +37,7 @@ void fillNexuizMutatorsDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 2, makeNexuizTextLabel(0, "Gameplay mutators:"));
+		me.TD(me, 1, 2, makeNexuizTextLabel(0, _("Gameplay mutators:")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "", profile_description("")));
 	me.TR(me);
@@ -50,7 +50,7 @@ void fillNexuizMutatorsDialog(entity me)
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profile_description("cra")));
 
 	me.gotoRC(me, me.rows - 1, 0);
-	me.TD(me, 1, me.columns, e = makeNexuizButton("OK", '0 0 0'));
+	me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
 		e.onClick = Dialog_Close;
 		e.onClickEntity = me;
 

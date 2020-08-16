@@ -18,17 +18,17 @@ ENDCLASS(TextSlider)
 string valueToIdentifierTextSlider(entity me, float val)
 {
 	if(val >= me.nValues)
-		return "custom";
+		return _("custom");
 	if(val < 0)
-		return "custom";
+		return _("custom");
 	return me.(valueIdentifiers[val]);
 }
 string valueToTextTextSlider(entity me, float val)
 {
 	if(val >= me.nValues)
-		return "custom";
+		return _("custom");
 	if(val < 0)
-		return "custom";
+		return _("custom");
 	return me.(valueStrings[val]);
 }
 void setValueFromIdentifierTextSlider(entity me, string id)

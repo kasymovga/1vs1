@@ -84,10 +84,10 @@ void saveCvarsNexuizDecibelsSlider(entity me)
 string valueToTextNexuizDecibelsSlider(entity me, float v)
 {
 	if(v < -33)
-		return "OFF";
+		return _("OFF");
 	else if(v >= -0.1)
-		return "MAX";
-	return strcat(valueToTextSlider(me, v), " dB");
+		return _("MAX");
+	return strcat(valueToTextSlider(me, v), _(" dB"));
 }
 
 #endif

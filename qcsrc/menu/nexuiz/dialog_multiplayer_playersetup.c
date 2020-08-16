@@ -2,7 +2,7 @@
 CLASS(NexuizPlayerSettingsTab) EXTENDS(NexuizTab)
 	METHOD(NexuizPlayerSettingsTab, fill, void(entity))
 	METHOD(NexuizPlayerSettingsTab, draw, void(entity))
-	ATTRIB(NexuizPlayerSettingsTab, title, string, "Player Setup")
+	ATTRIB(NexuizPlayerSettingsTab, title, string, _("Player Setup"))
 	ATTRIB(NexuizPlayerSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(NexuizPlayerSettingsTab, rows, float, 22)
 	ATTRIB(NexuizPlayerSettingsTab, columns, float, 6.5)
@@ -34,7 +34,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 	float i, r, m, n;
 
 	me.TR(me);
-		me.TD(me, 1, 0.5, me.playerNameLabel = makeNexuizTextLabel(0, "Name:"));
+		me.TD(me, 1, 0.5, me.playerNameLabel = makeNexuizTextLabel(0, _("Name:")));
 			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
 		me.TD(me, 1, 2.5, label = makeNexuizTextLabel(0, NULL));
 			label.allowCut = 1;
@@ -56,7 +56,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 	me.gotoRC(me, 8, 0.0);
 		pms = makeNexuizPlayerModelSelector();
-		me.TD(me, 1, 0.6, e = makeNexuizTextLabel(1, "Model:"));
+		me.TD(me, 1, 0.6, e = makeNexuizTextLabel(1, _("Model:")));
 		me.TD(me, 1, 0.3, e = makeNexuizButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
@@ -81,22 +81,22 @@ void fillNexuizPlayerSettingsTab(entity me)
 		}
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Field of View:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Field of View:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(60, 130, 1, "fov"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Damage kick:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Damage kick:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.5, 0.05, "v_kicktime"));
 	
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Zoom Factor:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Zoom Factor:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(2, 16, 0.5, "cl_zoomfactor"));
 	me.TR(me);
 		sl = makeNexuizSlider(1, 8, 0.5, "cl_zoomspeed");
-		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(-1, 1, sl, "Zoom speed:"));
+		me.TD(me, 1, 1, e = makeNexuizSliderCheckBox(-1, 1, sl, _("Zoom speed:")));
 		me.TD(me, 1, 2, sl);
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeNexuizButton("Weapon settings...", '0 0 0'));
+		me.TD(me, 1, 1.5, e = makeNexuizButton(_("Weapon settings..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.weaponsDialog;
 		me.TD(me, 1, 1.5, e0 = makeNexuizTextLabel(0, NULL));
@@ -105,18 +105,18 @@ void fillNexuizPlayerSettingsTab(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Show names:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Show names:")));
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_shownames"));
-			e.addValue(e, "Never", "0");
-			e.addValue(e, "Teammates", "1");
-			e.addValue(e, "All players", "2");
+			e.addValue(e, _("Never"), "0");
+			e.addValue(e, _("Teammates"), "1");
+			e.addValue(e, _("All players"), "2");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "crosshair_per_weapon", "Per weapon crosshairs"));
-		me.TD(me, 1, 1.3, e = makeNexuizCheckBox(1, "crosshair_color_override", "& crosshair colors"));
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "crosshair_per_weapon", _("Per weapon crosshairs")));
+		me.TD(me, 1, 1.3, e = makeNexuizCheckBox(1, "crosshair_color_override", _("& crosshair colors")));
 		setDependent(e, "crosshair_per_weapon", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crosshair:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Crosshair:")));
 		for(i = 1; i <= 10; ++i) {
 			me.TDNoMargin(me, 1, 2 / 10, e = makeNexuizCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
@@ -128,50 +128,50 @@ void fillNexuizPlayerSettingsTab(entity me)
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crosshair Size:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Crosshair Size:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.40, 2, 0.05, "crosshair_size"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crosshair Alpha:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Crosshair Alpha:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_alpha"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crosshair Red:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Crosshair Red:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_red"));
 		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crosshair Green:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Crosshair Green:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_green"));
 		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Crosshair Blue:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Crosshair Blue:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_blue"));
 		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeNexuizButton("HUD & Waypoints...", '0 0 0'));
+		me.TD(me, 1, 2.2, e = makeNexuizButton(_("HUD & Waypoints..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.radarDialog;
 		me.TDempty(me, 0.5);
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Force Models:"));
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, NULL, NULL, "None"));
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodelsfromnexuiz", NULL, "Custom"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Force Models:")));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, NULL, NULL, _("None")));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodelsfromnexuiz", NULL, _("Custom")));
 		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(2, "cl_forceplayermodels", NULL, "All"));
 	#endif
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_gentle", "Disable gore effects"));
+		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_gentle", _("Disable gore effects")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Gibs:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Gibs:")));
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_nogibs"));
-			e.addValue(e, "None", "1");
-			e.addValue(e, "Few", "0.75");
-			e.addValue(e, "Many", "0.5");
-			e.addValue(e, "Lots", "0");
+			e.addValue(e, _("None"), "1");
+			e.addValue(e, _("Few"), "0.75");
+			e.addValue(e, _("Many"), "0.5");
+			e.addValue(e, _("Lots"), "0");
 			e.configureNexuizTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
 	me.TR(me);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromnexuiz;sendcvar cl_forceplayermodels;sendcvar cl_gunalpha", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromnexuiz;sendcvar cl_forceplayermodels;sendcvar cl_gunalpha", COMMANDBUTTON_APPLY));
 }
 #endif

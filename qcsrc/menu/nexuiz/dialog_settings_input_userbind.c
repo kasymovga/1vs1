@@ -2,7 +2,7 @@
 CLASS(NexuizUserbindEditDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizUserbindEditDialog, loadUserBind, void(entity, string, string, string))
 	METHOD(NexuizUserbindEditDialog, fill, void(entity))
-	ATTRIB(NexuizUserbindEditDialog, title, string, "User defined key bind")
+	ATTRIB(NexuizUserbindEditDialog, title, string, _("User defined key bind"))
 	ATTRIB(NexuizUserbindEditDialog, color, vector, SKINCOLOR_DIALOG_USERBIND)
 	ATTRIB(NexuizUserbindEditDialog, intendedWidth, float, 0.7)
 	ATTRIB(NexuizUserbindEditDialog, rows, float, 4)
@@ -36,19 +36,19 @@ void fillNexuizUserbindEditDialog(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Name:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Name:")));
 		me.TD(me, 1, me.columns - 1, me.nameBox = makeNexuizInputBox(0, NULL));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Command when pressed:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Command when pressed:")));
 		me.TD(me, 1, me.columns - 1, me.commandPressBox = makeNexuizInputBox(0, NULL));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Command when released:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Command when released:")));
 		me.TD(me, 1, me.columns - 1, me.commandReleaseBox = makeNexuizInputBox(0, NULL));
 	me.TR(me);
-		me.TD(me, 1, me.columns / 2, e = makeNexuizButton("Save", '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeNexuizButton(_("Save"), '0 0 0'));
 			e.onClick = NexuizUserbindEditDialog_Save;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns / 2, e = makeNexuizButton("Cancel", '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeNexuizButton(_("Cancel"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }

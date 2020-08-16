@@ -2,7 +2,7 @@
 CLASS(NexuizServerInfoDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizServerInfoDialog, fill, void(entity))
 	METHOD(NexuizServerInfoDialog, loadServerInfo, void(entity, float))
-	ATTRIB(NexuizServerInfoDialog, title, string, "Server Information")
+	ATTRIB(NexuizServerInfoDialog, title, string, _("Server Information"))
 	ATTRIB(NexuizServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO)
 	ATTRIB(NexuizServerInfoDialog, intendedWidth, float, 0.68)
 	ATTRIB(NexuizServerInfoDialog, rows, float, 11)
@@ -68,8 +68,8 @@ void loadServerInfoNexuizServerInfoDialog(entity me, float i)
 	}
 	else
 	{
-		typestr = "N/A";
-		versionstr = "N/A";
+		typestr = _("N/A");
+		versionstr = _("N/A");
 	}
 	me.currentServerType = strzone(typestr);
 	me.typeLabel.setText(me.typeLabel, me.currentServerType);
@@ -123,7 +123,7 @@ void fillNexuizServerInfoDialog(entity me)
 			me.cnameLabel = e;
 
 	me.TR(me);
-		me.TD(me, 1, 5.5, e = makeNexuizTextLabel(0, "Players:"));
+		me.TD(me, 1, 5.5, e = makeNexuizTextLabel(0, _("Players:")));
 	me.TR(me);
 		me.TD(me, me.rows - 4, 6, e = makeNexuizPlayerList());
 			me.rawPlayerList = e;
@@ -131,47 +131,47 @@ void fillNexuizServerInfoDialog(entity me)
 	me.gotoRC(me, 1, 6.25); me.setFirstColumn(me, me.currentColumn);
 
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Type:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Type:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.typeLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Map:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Map:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.mapLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Players:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Players:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.numPlayersLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Bots:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Bots:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.numBotsLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Mod:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Mod:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.modLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Version:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Version:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.versionLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, "Ping:"));
+		me.TD(me, 1, 1.75, e = makeNexuizTextLabel(0, _("Ping:")));
 		me.TD(me, 1, 4.0, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.pingLabel = e;
 
 	me.gotoRC(me, me.rows - 1, 0);
 
-		me.TD(me, 1, me.columns - 6, e = makeNexuizButton("Close", '0 0 0'));
+		me.TD(me, 1, me.columns - 6, e = makeNexuizButton(_("Close"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns - 6, e = makeNexuizButton("Join!", '0 0 0'));
+		me.TD(me, 1, me.columns - 6, e = makeNexuizButton(_("Join!"), '0 0 0'));
 			e.onClick = Join_Click;
 			e.onClickEntity = me;
 }

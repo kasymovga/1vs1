@@ -2,7 +2,7 @@
 CLASS(NexuizCreditsDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizCreditsDialog, fill, void(entity))
 	METHOD(NexuizCreditsDialog, focusEnter, void(entity))
-	ATTRIB(NexuizCreditsDialog, title, string, "Credits")
+	ATTRIB(NexuizCreditsDialog, title, string, _("Credits"))
 	ATTRIB(NexuizCreditsDialog, color, vector, SKINCOLOR_DIALOG_CREDITS)
 	ATTRIB(NexuizCreditsDialog, intendedWidth, float, SKINWIDTH_CREDITS)
 	ATTRIB(NexuizCreditsDialog, rows, float, SKINROWS_CREDITS)
@@ -18,7 +18,7 @@ void fillNexuizCreditsDialog(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, me.creditsList = makeNexuizCreditsList());
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeNexuizButton("OK", '0 0 0'));
+		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }

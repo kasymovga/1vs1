@@ -2,7 +2,7 @@
 CLASS(NexuizMapInfoDialog) EXTENDS(NexuizDialog)
 	METHOD(NexuizMapInfoDialog, fill, void(entity))
 	METHOD(NexuizMapInfoDialog, loadMapInfo, void(entity, float, entity))
-	ATTRIB(NexuizMapInfoDialog, title, string, "Map Information")
+	ATTRIB(NexuizMapInfoDialog, title, string, _("Map Information"))
 	ATTRIB(NexuizMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
 	ATTRIB(NexuizMapInfoDialog, intendedWidth, float, 0.85)
 	ATTRIB(NexuizMapInfoDialog, rows, float, 16)
@@ -47,7 +47,7 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 	me.currentMapTitle = strzone(MapInfo_Map_title);
 	me.currentMapAuthor = strzone(MapInfo_Map_author);
 	me.currentMapDescription = strzone(MapInfo_Map_description);
-	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? "Full item placement" : "MinstaGib only");
+	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
 	me.currentMapPreviewImage = strzone(strcat("/", MapInfo_Map_image));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
@@ -76,24 +76,24 @@ void fillNexuizMapInfoDialog(entity me)
 		me.previewImage = e;
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 	w = me.columns - me.currentColumn;
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Title:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Title:")));
 		me.TD(me, 1, w-1, e = makeNexuizTextLabel(0, ""));
 			e.colorL = SKINCOLOR_MAPLIST_TITLE;
 			e.allowCut = 1;
 			me.titleLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Author:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Author:")));
 		me.TD(me, 1, w-1, e = makeNexuizTextLabel(0, ""));
 			e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
 			e.allowCut = 1;
 			me.authorLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Features:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Features:")));
 		me.TD(me, 1, w-1, e = makeNexuizTextLabel(0, ""));
 			e.allowCut = 1;
 			me.featuresLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "Game types:"));
+		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Game types:")));
 		float i;
 		e = me;
 		for (i = GAME_DEATHMATCH; i < GAME_SINGLE; i++) {
@@ -113,10 +113,10 @@ void fillNexuizMapInfoDialog(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 0.5);
 
-		me.TD(me, 1, me.columns - 5.5, e = makeNexuizButton("Close", '0 0 0'));
+		me.TD(me, 1, me.columns - 5.5, e = makeNexuizButton(_("Close"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeNexuizButton("Play", '0 0 0'));
+		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeNexuizButton(_("Play"), '0 0 0'));
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
 		me.TDempty(me, 0.5);
