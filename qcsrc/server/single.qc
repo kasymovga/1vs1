@@ -246,7 +246,7 @@ void(void) spawnfunc_single_secret {
 	if (self.message == "") {
 		self.message = "You found a secret area!";
 	}
-	self.spawnflags = self.spawnflags | SPAWNFLAG_PLAYERONLY;
+	self.spawnflags = self.spawnflags | TRIGGER_SPAWNFLAG_PLAYERONLY;
 	if not(single_secrets_controller) {
 		single_secrets_controller = spawn();
 		single_secrets_controller.targetname = "single_secrets_controller";

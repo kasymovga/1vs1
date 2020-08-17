@@ -244,9 +244,10 @@ void trigger_use_targets_prevent_reuse() {
 
 //=============================================================================
 
-float	SPAWNFLAG_NOMESSAGE = 1;
-float	SPAWNFLAG_NOTOUCH = 1;
-float	SPAWNFLAG_PLAYERONLY = 4;
+float TRIGGER_SPAWNFLAG_NOMESSAGE = 1;
+float TRIGGER_SPAWNFLAG_NOTOUCH = 1;
+float TRIGGER_SPAWNFLAG_CREATUREONLY = 2;
+float TRIGGER_SPAWNFLAG_PLAYERONLY = 4;
 
 // the wait time has passed, so set back up for another activation
 void trigger_multiple_wait()
@@ -289,35 +290,34 @@ void(void) trigger_multiple_use {
 	trigger_multiple_fire();
 }
 
-void trigger_multiple_touch()
-{
-	if not(self.spawnflags & 2)
-	{
-		if not(other.iscreature)
+void(void) trigger_multiple_touch {
+	if (self.spawnflags & (TRIGGER_SPAWNFLAG_PLAYERONLY | TRIGGER_SPAWNFLAG_CREATUREONLY)) {
+		if not(self.spawnflags & 2) {
+			if not(other.iscreature)
+				return;
+
+			if(self.team)
+			if(self.team == other.team)
+				return;
+		}
+		if (self.spawnflags & TRIGGER_SPAWNFLAG_PLAYERONLY)
+		if (other.classname != "player")
 			return;
 
-		if(self.team)
-		if(self.team == other.team)
+		if (other.health < 1)
 			return;
 	}
-	if (self.spawnflags & SPAWNFLAG_PLAYERONLY)
-	if (other.classname != "player")
-		return;
-
-// if the trigger has an angles field, check player's facing direction
-	if (self.movedir != '0 0 0')
-	{
+	// if the trigger has an angles field, check player's facing direction
+	if (self.movedir != '0 0 0') {
 		makevectors (other.angles);
 		if (v_forward * self.movedir < 0)
 			return;		// not facing the right way
 	}
-
 	EXACTTRIGGER_TOUCH;
-
 	self.enemy = other;
 	self.goalentity = other;
 	trigger_multiple_fire ();
-};
+}
 
 void trigger_multiple_eventdamage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
@@ -333,7 +333,7 @@ void trigger_multiple_eventdamage (entity inflictor, entity attacker, float _dam
 }
 
 void(void) trigger_multiple_reset {
-	if (!(self.spawnflags & SPAWNFLAG_NOTOUCH))
+	if (!(self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH))
 		self.touch = trigger_multiple_touch;
 
 	if (self.max_health) {
@@ -387,7 +387,7 @@ void spawnfunc_trigger_multiple()
 
 	if (self.health)
 	{
-		if (self.spawnflags & SPAWNFLAG_NOTOUCH)
+		if (self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH)
 			entity_abort("health and notouch don't make sense\n");
 		self.max_health = self.health;
 		self.event_damage = trigger_multiple_eventdamage;
@@ -397,7 +397,7 @@ void spawnfunc_trigger_multiple()
 	}
 	else
 	{
-		if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
+		if ( !(self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH) )
 		{
 			self.touch = trigger_multiple_touch;
 			setorigin (self, self.origin);	// make sure it links into the world
@@ -468,7 +468,7 @@ void trigger_counter_use()
 	if (self.count != 0)
 	{
 		if (activator.classname == "player"
-		&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+		&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0)
 		{
 			if (self.count >= 4)
 				centerprint (activator, "There are more to go...");
@@ -483,7 +483,7 @@ void trigger_counter_use()
 	}
 
 	if (activator.classname == "player"
-	&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+	&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0)
 		centerprint(activator, "Sequence completed!");
 	self.enemy = activator;
 	trigger_multiple_fire ();
