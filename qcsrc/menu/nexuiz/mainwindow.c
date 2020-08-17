@@ -10,6 +10,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, radarDialog, entity, NULL)
 	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
+	ATTRIB(MainWindow, languageDialog, entity, NULL)
 	ATTRIB(MainWindow, saveLoadDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
@@ -53,34 +54,29 @@ void configureMainWindowMainWindow(entity me)
 	me.radarDialog = i = spawnNexuizRadarDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	
+
 	me.serverInfoDialog = i = spawnNexuizServerInfoDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	
+
 	me.cvarsDialog = i = spawnNexuizCvarsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	
+
+	me.languageDialog = i = spawnNexuizLanguageDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	me.saveLoadDialog = i = spawnNexuizSaveLoadDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	
+
 	me.mainNexposee = n = spawnNexuizNexposee();
-	/*
-		if(checkextension("DP_GECKO_SUPPORT"))
-		{
-			i = spawnNexuizNewsDialog();
-			i.configureDialog(i);
-			n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-			n.setNexposee(n, i, '0.1 0.1 0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		}
-	*/
 		i = spawnNexuizSingleplayerDialog();
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_SINGLEPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
-		
+
 		i = spawnNexuizMultiplayerDialog();
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -102,6 +98,7 @@ void configureMainWindowMainWindow(entity me)
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_QUIT, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
+
 	me.addItem(me, n, '0 0 0', '1 1 0', SKINALPHAS_MAINMENU_z);
 	me.moveItemAfter(me, n, NULL);
 

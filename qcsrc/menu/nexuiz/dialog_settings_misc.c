@@ -105,5 +105,11 @@ void fillNexuizMiscSettingsTab(entity me)
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.cvarsDialog;
 		me.TDempty(me, 0.5);
+	me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeNexuizButton(_("Language..."), '0 0 0'));
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.languageDialog;
 }
 #endif

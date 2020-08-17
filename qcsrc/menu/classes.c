@@ -67,6 +67,7 @@
 #include "nexuiz/dialog_singleplayer.c"
 #include "nexuiz/campaign.c"
 #include "nexuiz/dialog_singleplayer_winner.c"
+#include "nexuiz/dialog_language.c"
 #include "nexuiz/dialog_credits.c"
 #include "nexuiz/credits.c"
 #include "nexuiz/dialog_multiplayer_playersetup_weapons.c"
