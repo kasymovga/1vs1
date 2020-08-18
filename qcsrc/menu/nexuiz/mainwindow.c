@@ -103,6 +103,10 @@ void configureMainWindowMainWindow(entity me)
 	me.moveItemAfter(me, n, NULL);
 
 	me.initializeDialog(me, n);
+	if (cvar("_menu_show_language_dialog")) {
+		cvar_set("_menu_show_language_dialog", "0");
+		me.showChild(me, me.languageDialog, '0 0 0', '1 1 0', 0);
+	}
 }
 #endif
 
