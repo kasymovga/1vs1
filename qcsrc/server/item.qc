@@ -714,6 +714,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
+	self.culltracemode = CULLTRACEMODE_NONE;
 	self.mdl = itemmodel;
 	self.noise = pickupsound;
 	// let mappers override respawntime
