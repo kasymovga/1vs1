@@ -2,6 +2,7 @@ float g_powerup_strength_droppable;
 float g_powerup_invisibility_droppable;
 float g_powerup_shield_droppable;
 float g_powerup_speed_droppable;
+float g_powerup_invisibility_full_distance;
 float g_balance_powerup_invincible_takedamage;
 float g_balance_powerup_strength_damage;
 float g_balance_powerup_strength_force;
@@ -64,6 +65,7 @@ void() powerup_init {
 	CACHE_CVAR(g_powerup_invisibility_droppable);
 	CACHE_CVAR(g_powerup_shield_droppable);
 	CACHE_CVAR(g_powerup_speed_droppable);
+	CACHE_CVAR(g_powerup_invisibility_full_distance);
 	CACHE_CVAR(g_balance_powerup_invincible_takedamage);
 	CACHE_CVAR(g_balance_powerup_strength_damage);
 	CACHE_CVAR(g_balance_powerup_strength_force);
@@ -260,9 +262,12 @@ void() powerup_invisibility_player_effects {
 
 var float(entity plr, entity viewer, float dalpha) powerup_invisibility_player_alpha_mod_next;
 float(entity plr, entity viewer, float dalpha) powerup_invisibility_player_alpha_mod {
-	if (time < plr.invisibility_finished)
-		dalpha *= 0.05;
-
+	if (time < plr.invisibility_finished) {
+		if (g_powerup_invisibility_full_distance && vlen(plr.origin - viewer.origin) > g_powerup_invisibility_full_distance)
+			dalpha = 0;
+		else
+			dalpha *= 0.05;
+	}
 	return powerup_invisibility_player_alpha_mod_next(plr, viewer, dalpha);
 }
 
