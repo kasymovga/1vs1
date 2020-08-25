@@ -1299,11 +1299,11 @@ void Sbar_DrawScoreboard()
 	scoreboard_bottom = pos_y;
 	if (centerprint_num < 1) {
 		string tail = motd;
+		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
 		if (gametype == GAME_CTS || gametype == GAME_RACE)
-			tail = strcat(race_records_table_string(), tail);
+			tail = strcat(race_records_table_string(pos_y), tail);
 
 		float n;
-		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
 		while (tail != "") {
 			n = strstrofs(tail, "\n", 0);
 			if (n < 0) {

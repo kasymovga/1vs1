@@ -322,21 +322,46 @@ void(void) race_sbar_draw {
 	drawfont = sbar_font;
 }
 
-string(void) race_records_table_string {
+string(float posy) race_records_table_string {
 	string table = "";
 	if (race_records_time[0]) {
 		string n;
-		table = "-----RECORDS-----\n";
+		table = "***RECORDS***\n";
 		float i, tt;
+		float rows;
+		float name_column_width, table_width;
+		float left;
+		vector pos;
 		for (i = 0; i < 10; i++) {
 			n = race_records_name[i];
 			tt = race_records_time[i];
 			if (!tt)
 				break;
 
-			table = strcat(table, "^7", ftos(i + 1), ". ", n, "^7    ", TIME_ENCODED_TOSTRING(tt), "\n");
+			//table = strcat(table, "^7", ftos(i + 1), ". ", n, "^7    ", TIME_ENCODED_TOSTRING(tt), "\n");
+			name_column_width = max(name_column_width, stringwidth(n, TRUE) * sbar_fontsize_x);
+			table = strcat(table, "\n");
 		}
-		table = strcat(table, "-----------------\n\n");
+		rows = i;
+		table_width = name_column_width + sbar_fontsize_x * 20;
+		pos_x = left = (CVAR(vid_conwidth) - table_width) / 2;
+		pos_y = posy;
+		draw_borderlines(sbar_border_thickness, pos, [table_width, sbar_fontsize_y], '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
+		pos_y += sbar_fontsize_y;
+		draw_borderlines(sbar_border_thickness, pos, [table_width, rows * sbar_fontsize_y], '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
+		for (i = 0; i < rows; i++) {
+			n = race_records_name[i];
+			tt = race_records_time[i];
+			pos_x += sbar_fontsize_x * 2;
+			draw_string_right(pos, strcat(ftos(i + 1), " "), sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, n, sbar_fontsize, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			//pos_x += name_column_width + sbar_fontsize_x * 2;
+			pos_x = CVAR(vid_conwidth) - left;
+			draw_string_right(pos, TIME_ENCODED_TOSTRING(tt), sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			pos_y += sbar_fontsize_y;
+			pos_x = left;
+		}
+		table = strcat(table, "\n\n");
 	}
 	return table;
 }
