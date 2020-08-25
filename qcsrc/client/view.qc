@@ -269,17 +269,17 @@ void CSQC_UpdateView(float w, float h)
 	if(ons_showmap)
 		teamradar_view(TRUE, "");
 
-	if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
-		if ((spectatee_status > 0 && !observer_status) || CVAR(cl_showpressedkeys) >= 2)
-			Sbar_DrawPressedKeys();
+	if not(sb_showscores) {
+		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
+			if ((spectatee_status > 0 && !observer_status) || CVAR(cl_showpressedkeys) >= 2)
+				Sbar_DrawPressedKeys();
+		}
+		if (CVAR(cl_showspeed))
+			Sbar_ShowSpeed();
+
+		if (CVAR(cl_showacceleration))
+			Sbar_ShowAcceleration();
 	}
-
-	if (CVAR(cl_showspeed))
-		Sbar_ShowSpeed();
-
-	if (CVAR(cl_showacceleration))
-		Sbar_ShowAcceleration();
-
 	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
 
 	if (observer_status)
