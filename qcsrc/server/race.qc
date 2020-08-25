@@ -56,13 +56,23 @@ float SP_RACE_TIME;
 float race_records_time[10];
 string race_records_name[10];
 
+float(string name, float checktime) race_records_put;
+
 void(void) race_records_load {
-	race_records_time[0] = stof(db_get(db_server, strcat(mapname, race_records_path, "time")));
-	race_records_name[0] = str_zone_ifneeded(db_get(db_server, strcat(mapname, race_records_path, "netname")));
+	string s = strcat(mapname, race_records_path);
+	string n;
+	float t;
+	n = db_get(db_server, strcat(s, "netname"));
+	t = stof(db_get(db_server, strcat(s, "time")));
+	if (t && n != "")
+		race_records_put(n, t);
+
 	float i;
 	for (i = 1; i < 10; i++) {
-		race_records_time[i] = stof(db_get(db_server, strcat(mapname, race_records_path, ftos(i), "/time")));
-		race_records_name[i] = str_zone_ifneeded(db_get(db_server, strcat(mapname, race_records_path, ftos(i), "/netname")));
+		n = db_get(db_server, strcat(s, ftos(i), "/netname"));
+		t = stof(db_get(db_server, strcat(s, ftos(i), "/time")));
+		if (t && n != "")
+			race_records_put(n, t);
 	}
 }
 
