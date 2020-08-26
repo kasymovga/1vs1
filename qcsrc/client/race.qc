@@ -24,6 +24,7 @@ float race_othercheckpointdelta;
 float race_othercheckpointlapsdelta;
 string race_othercheckpointenemy;
 float race_records_time[10];
+float race_records_speed[10];
 string race_records_name[10];
 
 void(void) race_read {
@@ -108,6 +109,7 @@ void(void) race_read {
 		case RACE_NET_RECORDS_TABLE:
 			for (i = 0; i < 10; i++) {
 				race_records_time[i] = ReadCoord();
+				race_records_speed[i] = ReadShort();
 				race_records_name[i] = str_zone_ifneeded(ReadString());
 			}
 			break;
@@ -327,7 +329,7 @@ string(float posy) race_records_table_string {
 	if (race_records_time[0]) {
 		string n;
 		table = "***RECORDS***\n";
-		float i, tt;
+		float i, tt, sp;
 		float rows;
 		float name_column_width, table_width;
 		float left;
@@ -343,20 +345,32 @@ string(float posy) race_records_table_string {
 			table = strcat(table, "\n");
 		}
 		rows = i;
-		table_width = name_column_width + sbar_fontsize_x * 20;
+		table_width = name_column_width + sbar_fontsize_x * 12;
 		pos_x = left = (CVAR(vid_conwidth) - table_width) / 2;
-		pos_y = posy;
+		pos_y = posy + sbar_fontsize_y;
+		drawfill(pos, [table_width, sbar_fontsize_y * (rows + 1)], '0 0 0', sbar_alpha_bg * 0.5, DRAWFLAG_NORMAL);
 		draw_borderlines(sbar_border_thickness, pos, [table_width, sbar_fontsize_y], '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
+		pos_x += sbar_fontsize_x * 2;
+		draw_string_right(pos, "# ", sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_x += sbar_fontsize_x;
+		drawstring(pos, "Name", sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_x += name_column_width + sbar_fontsize_x;
+		drawstring(pos, "MSpd", sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_x += sbar_fontsize_x * 4;
+		drawstring(pos, "Time", sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
 		pos_y += sbar_fontsize_y;
+		pos_x = left;
 		draw_borderlines(sbar_border_thickness, pos, [table_width, rows * sbar_fontsize_y], '0 0 0', sbar_alpha_bg, DRAWFLAG_NORMAL);
 		for (i = 0; i < rows; i++) {
 			n = race_records_name[i];
 			tt = race_records_time[i];
+			sp = race_records_speed[i];
 			pos_x += sbar_fontsize_x * 2;
 			draw_string_right(pos, strcat(ftos(i + 1), " "), sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			drawcolorcodedstring(pos, n, sbar_fontsize, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			//pos_x += name_column_width + sbar_fontsize_x * 2;
-			pos_x = CVAR(vid_conwidth) - left;
+			pos_x += name_column_width + sbar_fontsize_x * 5;
+			draw_string_right(pos, ftos(sp), sbar_fontsize, '0.5 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			pos_x = left + table_width;
 			draw_string_right(pos, TIME_ENCODED_TOSTRING(tt), sbar_fontsize, '1 1 0.5', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += sbar_fontsize_y;
 			pos_x = left;

@@ -20,6 +20,7 @@ float race_completing;
 .float race_movetime; // for reading
 .float race_movetime_frac; // fractional accumulator for higher accuracy (helper for writing)
 .float race_movetime_count; // integer accumulator
+var .float race_maxspeed;
 
 float g_race_qualifying;
 
@@ -51,49 +52,57 @@ void race_time_clear(entity e);
 float ST_RACE_LAPS;
 float SP_RACE_LAPS;
 float SP_RACE_FASTEST;
+float SP_RACE_MAXSPEED;
 float SP_RACE_TIME;
 
 float race_records_time[10];
+float race_records_speed[10];
 string race_records_name[10];
 
-float(string name, float checktime) race_records_put;
+float(string name, float checktime, float _speed) race_records_put;
 
 void(void) race_records_load {
 	string s = strcat(mapname, race_records_path);
 	string n;
-	float t;
+	float t, sp;
 	n = db_get(db_server, strcat(s, "netname"));
 	t = stof(db_get(db_server, strcat(s, "time")));
+	sp = stof(db_get(db_server, strcat(s, "speed")));
 	if (t && n != "")
-		race_records_put(n, t);
+		race_records_put(n, t, sp);
 
 	float i;
 	for (i = 1; i < 10; i++) {
 		n = db_get(db_server, strcat(s, ftos(i), "/netname"));
 		t = stof(db_get(db_server, strcat(s, ftos(i), "/time")));
+		sp = stof(db_get(db_server, strcat(s, ftos(i), "/speed")));
 		if (t && n != "")
-			race_records_put(n, t);
+			race_records_put(n, t, sp);
 	}
 }
 
 void(void) race_records_save {
-	float t;
+	float t, sp;
 	string n;
 	t = race_records_time[0];
 	n = race_records_name[0];
+	sp = race_records_speed[0];
 	db_put(db_server, strcat(mapname, race_records_path, "time"), ftos(t));
 	db_put(db_server, strcat(mapname, race_records_path, "netname"), n);
+	db_put(db_server, strcat(mapname, race_records_path, "speed"), ftos(sp));
 	float i;
 	for (i = 1; i < 10; i++) {
 		t = race_records_time[i];
 		n = race_records_name[i];
+		sp = race_records_speed[i];
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/time"), ftos(t));
 		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/netname"), n);
+		db_put(db_server, strcat(mapname, race_records_path, ftos(i), "/speed"), ftos(sp));
 	}
 }
 
 float(string name) race_record_delete {
-	float i, j, t;
+	float i, j, t, sp;
 	string n;
 	float r = 0;
 	for (i = 0; i < 10; i++) {
@@ -103,11 +112,14 @@ float(string name) race_record_delete {
 			for (j = i; j < 9; j++) {
 				n = race_records_name[j + 1];
 				t = race_records_time[j + 1];
+				sp = race_records_speed[j + 1];
 				race_records_name[j] = n;
 				race_records_time[j] = t;
+				race_records_speed[j] = sp;
 			}
 			race_records_name[9] = "";
 			race_records_time[9] = 0;
+			race_records_speed[9] = 0;
 			r = 1;
 		}
 	}
@@ -119,33 +131,39 @@ void(entity to) race_records_send {
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_RACE);
 	WriteByte(MSG_ONE, RACE_NET_RECORDS_TABLE);
-	float i, t;
+	float i, t, sp;
 	string n;
 	for (i = 0; i < 10; i++) {
 		n = race_records_name[i];
 		t = race_records_time[i];
+		sp = race_records_speed[i];
 		WriteCoord(MSG_ONE, t);
+		WriteShort(MSG_ONE, sp);
 		WriteString(MSG_ONE, n);
 	}
 }
 
-float(string name, float checktime) race_records_put {
-	float t, i, j;
+float(string name, float checktime, float _speed) race_records_put {
+	float t, i, j, sp;
 	string n;
 	for (i = 0; i < 10; i++) {
 		t = race_records_time[i];
 		n = race_records_name[i];
+		sp = race_records_speed[i];
 		if (!t || t > checktime) {
 			race_record_delete(name);
 			str_unzone_ifneeded(race_records_name[9]);
 			for (j = 8; j >= i; j--) {
 				n = race_records_name[j];
 				t = race_records_time[j];
+				sp = race_records_speed[j];
 				race_records_name[j + 1] = n;
 				race_records_time[j + 1] = t;
+				race_records_speed[j + 1] = sp;
 			}
 			race_records_name[i] = str_zone_ifneeded(name);
 			race_records_time[i] = checktime;
+			race_records_speed[i] = _speed;
 			return i + 1;
 		}
 		if (n == name) return FALSE;
@@ -161,6 +179,8 @@ void(void) race_score_setup {
 		SP_RACE_TIME = score_register("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 	} else if (g_race_qualifying) {
 		SP_RACE_FASTEST = score_register("fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		SP_RACE_MAXSPEED = score_register("maxspeed",   SFL_SORT_PRIO_SECONDARY);
+		race_maxspeed = scores[SP_RACE_MAXSPEED];
 	} else {
 		//ST_RACE_LAPS = score_register_team_score("laps", 0);
 		SP_RACE_LAPS = score_register("laps", SFL_SORT_PRIO_PRIMARY);
@@ -313,7 +333,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 						race_checkpoint_next_send(p, 0);
 			}
 			if (cp == race_timed_checkpoint) {
-				float position = race_records_put(e.netname, t);
+				float position = race_records_put(e.netname, t, e.scorekeeper.race_maxspeed);
 				if (position) {
 					chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
 					entity e3;
@@ -481,6 +501,9 @@ void(void) race_checkpoint_passed {
 		if(!self.race_checkpoint) { // start line
 			other.race_laptime = time;
 			other.race_movetime = other.race_movetime_frac = other.race_movetime_count = 0;
+			if (g_race_qualifying)
+				score_player_set(other, SP_RACE_MAXSPEED, 0);
+
 			other.race_penalty_accumulator = 0;
 			other.race_lastpenalty = world;
 		}
@@ -852,12 +875,19 @@ void() race_PhysicFrameBegin {
 				self.movement_y = -0.70710678118654752440 * wishspeed;
 		}
 	}
-
 	self.race_movetime_frac += frametime;
 	f = floor(self.race_movetime_frac);
 	self.race_movetime_frac -= f;
 	self.race_movetime_count += f;
 	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+	if (g_race_qualifying) {
+		vector v = self.velocity;
+		v_z = 0;
+		float maxspeed = vlen(v);
+		if (self.scorekeeper)
+		if (maxspeed > self.scorekeeper.race_maxspeed)
+			score_player_set(self, SP_RACE_MAXSPEED, maxspeed);
+	}
 }
 
 float(float fraglimit) race_winning_condition_non_qualifying {
