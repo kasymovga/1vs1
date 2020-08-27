@@ -173,9 +173,11 @@ vector CSQCPhysic_SetViewOrg()
 			}
 		}
 		R_SetView(VF_ORIGIN, v);
+		physics_end_origin = physics.origin;
 	}
 	else {
-		v = pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		physics_end_origin = (physics ? physics_start_origin : pmove_org);
+		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		if (camera_correction_needed) {
 			if not(CVAR(chase_active))
 				R_SetView(VF_ORIGIN, v);
@@ -200,7 +202,6 @@ void CSQCPhysic_SetCamera() {
 			if not(physics_player_ent) {
 				if (ext_DP_RM_SETRENDERENTITY) {
 					setentityvec(player_localentnum, E_ORIGIN, physics.origin);
-					physics_end_origin = physics.origin;
 				} else {
 					physics_end_origin = physics_start_origin;
 				}
@@ -209,9 +210,7 @@ void CSQCPhysic_SetCamera() {
 			view_camera_origin = trace_endpos;
 			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			view_camera_origin = trace_endpos;
-		} else
-			physics_end_origin = physics.origin;
-
+		}
 		R_SetView(VF_ORIGIN, view_camera_origin);
 	} else {
 		view_camera_origin = view_origin;
