@@ -366,7 +366,7 @@ void(void) physics_init {
 	PHYSICS_CACHE_CVAR(sv_warsowbunny_turnaccel);
 	PHYSICS_CACHE_CVAR(sv_warsowbunny_backtosideratio);
 	PHYSICS_CACHE_CVAR(sv_jumpvelocity);
-	PHYSICS_CACHE_CVAR(sv_waterjumpvelocity);
+	sv_waterjumpvelocity = cvar("g_waterjumpvelocity");
 	PHYSICS_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
 	CACHE_CVAR(g_stepairslowdown);
 	CACHE_CVAR(g_stepusevelocity);
