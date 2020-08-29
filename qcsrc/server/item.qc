@@ -81,6 +81,7 @@ string sv_model_armorbig;
 string sv_model_armorlarge;
 string sv_model_mushroom;
 string sv_sound_mushroom;
+float sv_item_tracecull;
 
 void(string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start;
 
@@ -714,7 +715,9 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
-	self.culltracemode = CULLTRACEMODE_NONE;
+	if not(sv_item_tracecull)
+		self.culltracemode = CULLTRACEMODE_NONE;
+
 	self.mdl = itemmodel;
 	self.noise = pickupsound;
 	// let mappers override respawntime
@@ -1360,6 +1363,7 @@ void item_init()
 	CACHE_CVAR(g_balance_powerup_invisibility_time);
 	CACHE_CVAR(g_balance_powerup_invincible_time);
 	CACHE_CVAR(g_balance_powerup_speed_time);
+	CACHE_CVAR(sv_item_tracecull);
 	sv_model_healthsmall = cvar_string_zone_ifneeded("sv_model_healthsmall");
 	if (sv_model_healthsmall == "")
 		sv_model_healthsmall = "models/items/g_h1.md3";

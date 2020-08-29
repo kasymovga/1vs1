@@ -1,5 +1,6 @@
 .float csqcprojectile_type;
 .float csqcprojectile_sendangles;
+float sv_projectile_tracecull;
 
 float() projectile_no_impact_check {
 	// zero hitcontents = this is not the real impact, but either the
@@ -91,6 +92,7 @@ void(entity e) projectile_check {
 
 void(float type) projectile_init {
 	vector sizes;
+	CACHE_CVAR(sv_projectile_tracecull);
 	sizes = '0 0 0';
 	switch (type) {
 	case PROJECTILE_FIREBALL:
@@ -113,6 +115,9 @@ void(float type) projectile_init {
 
 entity(float clientanimate, float type, float docull, entity _owner) projectile {
 	entity e = spawn();
+	if not(sv_projectile_tracecull)
+		e.culltracemode = CULLTRACEMODE_NONE;
+
 	e.realowner = e.owner = Akimbo_Owner(_owner);
 	projectile_set_size(e, type);
 	net_link_entity(e, docull, 0, projectile_send);

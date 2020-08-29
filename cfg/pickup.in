@@ -69,3 +69,4 @@ set g_ghost_items 1 "enable ghosted items (when between 0 and 1, overrides the a
 set g_pickup_respawntime_powerup 120
 set g_pickup_respawntimejitter_powerup 10
 set g_pickup_nodrop 0
+set sv_item_tracecull 0
