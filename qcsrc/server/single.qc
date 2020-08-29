@@ -14,9 +14,10 @@ void() single_shutdown {
 }
 
 void(void) single_endlevel {
-	if (PLAYER_DEAD(activator))
-		return;
-
+	// //This broke trigger_once
+	//if (PLAYER_DEAD(activator))
+	//	return;
+	//
 	single_level_finished = TRUE;
 	entity e;
 	FOR_EACH_PLAYER(e)
