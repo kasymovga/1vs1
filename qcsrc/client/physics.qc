@@ -176,7 +176,7 @@ vector CSQCPhysic_SetViewOrg()
 		physics_end_origin = physics.origin;
 	}
 	else {
-		physics_end_origin = (physics ? physics_start_origin : pmove_org);
+		physics_end_origin = pmove_org;
 		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		if (camera_correction_needed) {
 			if not(CVAR(chase_active))
