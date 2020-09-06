@@ -4,7 +4,7 @@ CLASS(NexuizLanguageDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizLanguageDialog, title, string, _("Language"))
 	ATTRIB(NexuizLanguageDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(NexuizLanguageDialog, intendedWidth, float, 0.4)
-	ATTRIB(NexuizLanguageDialog, rows, float, 4)
+	ATTRIB(NexuizLanguageDialog, rows, float, 5)
 	ATTRIB(NexuizLanguageDialog, columns, float, 2)
 ENDCLASS(NexuizLanguageDialog)
 #endif
@@ -31,10 +31,13 @@ void fillNexuizLanguageDialog(entity me) {
 	cvar_set("_menu_current_language", cvar_string("prvm_language"));
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "en", _("English")));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "en", "English"));
 		e.onClick = changeLanguage;
 	me.TR(me);
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "ru", _("Русский")));
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "it", "Italiano"));
+		e.onClick = changeLanguage;
+	me.TR(me);
+		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "ru", "Русский"));
 		e.onClick = changeLanguage;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Close"), '0 0 0'));
