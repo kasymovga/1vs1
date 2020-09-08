@@ -120,11 +120,11 @@ void fillNexuizAudioSettingsTab(entity me)
 			e.addValue(e, "7.1", "8");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
+		me.TDempty(me, 0.1);
 		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(0, "snd_swapstereo", _("Swap Stereo")));
 		setDependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
-		me.TDempty(me, 0.2);
+		me.TDempty(me, 0.1);
 		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(0, "snd_spatialization_control", _("Headphone friendly mode")));
 		setDependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
@@ -134,8 +134,8 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "cl_voice_directional", "2", _("Taunts")));
 		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "cl_voice_directional", "1", _("All")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeNexuizTextLabel(0, _("Taunt range:")));
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.9, e = makeNexuizTextLabel(0, _("Taunt range:")));
 		setDependent(e, "cl_voice_directional", 0.5, -0.5);
 		me.TD(me, 1, 1.8, e = makeNexuizTextSlider("cl_voice_directional_taunt_attenuation"));
 			e.addValue(e, _("Very short"), "3");
@@ -157,8 +157,8 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TD(me, 1, 2, sl);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Time warning:")));
-		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_sound_maptime_warning"));
+		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Time warning:")));
+		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("cl_sound_maptime_warning"));
 			e.addValue(e, _("None"), "0");
 			e.addValue(e, _("1 minute"), "1");
 			e.addValue(e, _("5 minutes"), "2");
