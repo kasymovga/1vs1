@@ -283,3 +283,4 @@ seta cl_vehicle_spiderbot_cross_alpha 0.6
 seta cl_vehicle_spiderbot_cross_size 1
 
 seta cl_nogibs 0
+seta cl_sound_maptime_warning "1" "play announcer sound telling you the remaining maptime - 0: do not play at all, 1: play at one minute, 2: play at five minutes, 3: play both"
