@@ -63,8 +63,8 @@ void fillNexuizInputSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "con_closeontoggleconsole", _("\"enter console\" also closes")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Show binds:")));
-		me.TD(me, 1, 2, e = makeNexuizTextSlider("sbar_showbinds"));
+		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Show binds:")));
+		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("sbar_showbinds"));
 			e.addValue(e, _("Actions"), "0");
 			e.addValue(e, _("Bound keys"), "1");
 			e.addValue(e, _("Both"), "2");
