@@ -34,8 +34,10 @@ string CharMap_CellToChar(float c)
 		return chr(127);
 	else if(c < 32)
 		return chr(c);
-	else
+	else if (cvar("utf8_oldfont_for_oldchars"))
 		return chr(c + 96);
+	else
+		return chr((c + 96) | 0xE000);
 }
 
 void configureNexuizCharmapNexuizCharmap(entity me, entity theTextbox)
