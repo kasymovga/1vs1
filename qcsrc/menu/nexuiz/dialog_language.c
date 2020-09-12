@@ -4,7 +4,7 @@ CLASS(NexuizLanguageDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizLanguageDialog, title, string, _("Language"))
 	ATTRIB(NexuizLanguageDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(NexuizLanguageDialog, intendedWidth, float, 0.4)
-	ATTRIB(NexuizLanguageDialog, rows, float, 4)
+	ATTRIB(NexuizLanguageDialog, rows, float, 5)
 	ATTRIB(NexuizLanguageDialog, columns, float, 2)
 ENDCLASS(NexuizLanguageDialog)
 #endif
@@ -38,7 +38,13 @@ void fillNexuizLanguageDialog(entity me) {
 		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "ru", "Русский"));
 		e.onClick = changeLanguage;
 	me.TR(me);
-		me.TD(me, 1, 2/3, e = makeNexuizCheckBox(1, "utf8_oldfont_for_oldchars", _("Disable nexuiz-compatible symbols")));
+	me.TR(me);
+		me.TD(me, 1, 2/3, e = makeNexuizCheckBox(1, "utf8_oldfont_for_oldchars", _("Disable Nexuiz-compatible symbols")));
+	me.TR(me);
+		me.TDempty(me, 0.05);
+		me.TD(me, 0.5, 2/3, e = makeNexuizTextLabel(0, _("* Needed for some european characters, player names might be displayed incorrectly")));
+		e.colorL = e.colorL * 0.5 + '0.5 0 0';
+		e.fontSize = e.fontSize * 0.6;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Close"), '0 0 0'));
 			e.onClick = DialogCloseButton_Click;
