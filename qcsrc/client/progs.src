@@ -182,10 +182,8 @@ weaponselect.qc
 noteline.qc
 ../common/uri.qc
 ../client-menu/util.qh
-../client-menu/nexuiz/util.qh
 ../client-menu/skin.qh
 ../client-menu/draw.qh
-../client-menu/nexuiz/util.qc
 ../client-menu/skin.qc
 ../client-menu/draw.qc
 ../client-menu/oo/base.h

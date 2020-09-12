@@ -38,7 +38,6 @@ void configureNexuizTextSliderNexuizTextSlider(entity me, string theCvar)
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 		// don't load it yet
 	}
 }

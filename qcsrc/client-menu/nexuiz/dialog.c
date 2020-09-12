@@ -37,6 +37,5 @@ void configureDialogNexuizDialog(entity me)
 {
 	currentDialog = me;
 	configureDialogDialog(me);
-	me.tooltip = getZonedTooltipForIdentifier(me.classname);
 }
 #endif

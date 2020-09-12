@@ -39,7 +39,6 @@ void configureNexuizInputBoxNexuizInputBox(entity me, float doEditColorCodes, st
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 		me.loadCvars(me);
 	}
 	me.cursorPos = strlen(me.text);

@@ -1,3 +1,0 @@
-void loadTooltips();
-void unloadTooltips();
-string getZonedTooltipForIdentifier(string s);

@@ -30,7 +30,6 @@ gamecommand.qh
 menu.qh
 ../client-menu/draw.qh
 ../client-menu/skin.qh
-../client-menu/nexuiz/util.qh
 nexuiz/util.qh
 ../menu-server/util.qh
 ../menu-server/cvar.qh
@@ -51,7 +50,6 @@ nexuiz/util.qh
 gamecommand.qc
 menu.qc
 ../client-menu/draw.qc
-../client-menu/nexuiz/util.qc
 nexuiz/util.qc
 ../menu-server/udppunchhole.qc
 ../common/str.qc

@@ -36,6 +36,5 @@ void configureNexuizButtonNexuizButton(entity me, string theText, vector theColo
 		me.colorC = theColor;
 		me.colorF = theColor;
 	}
-	me.tooltip = getZonedTooltipForIdentifier(strcat(currentDialog.classname, "/", me.text));
 }
 #endif
