@@ -17,6 +17,7 @@ float g_balance_hagar_secondary_radius;
 float g_balance_hagar_secondary_refire;
 float g_balance_hagar_secondary_speed;
 float g_balance_hagar_secondary_spread;
+float g_balance_hagar_secondary;
 
 var .float hagar_buttonatck1 = BUTTON_ATCK;
 var .float hagar_buttonatck2 = BUTTON_ATCK2;
@@ -83,7 +84,7 @@ void spawnfunc_weapon_hagar (void)
 float weapon_hagar(float req)
 {
 	if (req == WR_AIM)
-		if (random()>0.15)
+		if (!g_balance_hagar_secondary || random() > 0.15)
 			self.hagar_buttonatck1 = bot_aim(g_balance_hagar_primary_speed, 0, g_balance_hagar_primary_lifetime, FALSE);
 		else
 		{
@@ -99,6 +100,7 @@ float weapon_hagar(float req)
 			weapon_thinkf(WFRAME_FIRE1, g_balance_hagar_primary_refire, weapon_ready);
 		}
 		if (self.hagar_buttonatck2)
+		if (g_balance_hagar_secondary)
 		if (weapon_prepareattack(1, g_balance_hagar_secondary_refire))
 		{
 			weapon_hagar_attack2();
@@ -135,6 +137,7 @@ float weapon_hagar(float req)
 		CACHE_CVAR(g_balance_hagar_primary_refire);
 		CACHE_CVAR(g_balance_hagar_primary_speed);
 		CACHE_CVAR(g_balance_hagar_primary_spread);
+		CACHE_CVAR(g_balance_hagar_secondary);
 		CACHE_CVAR(g_balance_hagar_secondary_ammo);
 		CACHE_CVAR(g_balance_hagar_secondary_damage);
 		CACHE_CVAR(g_balance_hagar_secondary_edgedamage);

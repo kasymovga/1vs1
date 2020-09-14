@@ -27,6 +27,7 @@ set _defrag_g_shootfromeye 1
 set _defrag_g_pickup_nodrop 1
 set _defrag_g_teleport_keep_velocity 600
 set _defrag_g_weapon_stay 1
+set _defrag_g_weaponreplace_fireball hagar
 set _defrag_g_spawnpoints_auto_move_out_of_solid 1
 set _defrag_g_pickup_respawntime_ammo 0
 set _defrag_g_pickup_respawntime_healthsmall 0
@@ -57,6 +58,12 @@ set _defrag_g_balance_hlac_primary_force 50
 set _defrag_g_balance_hlac_primary_refire 0.1
 set _defrag_g_balance_hlac_primary_animtime 0.1
 set _defrag_g_balance_hlac_primary_radius 20
+set _defrag_g_balance_hagar_primary_ammo 1
+set _defrag_g_balance_hagar_primary_refire 0.2
+set _defrag_g_balance_hagar_primary_damage 100
+set _defrag_g_balance_hagar_primary_force 400
+set _defrag_g_balance_hagar_primary_radius 120
+set _defrag_g_balance_hagar_secondary 0
 set _defrag_g_balance_rocketlauncher_ammo 1
 set _defrag_g_balance_rocketlauncher_damageforcescale 0
 set _defrag_g_balance_rocketlauncher_detonatedelay 1000
