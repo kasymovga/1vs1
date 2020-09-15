@@ -241,8 +241,13 @@ void(void) target_teleporter_use {
 }
 
 void(void) spawnfunc_target_teleporter {
-	teleport_setup();
-	self.solid = SOLID_NOT;
-	self.modelindex = 0;
-	self.use = target_teleporter_use;
+	self.mangle = self.angles;
+	self.angles = '0 0 0';
+	if (self.target != "") {
+		teleport_setup();
+		self.solid = SOLID_NOT;
+		self.modelindex = 0;
+		self.use = target_teleporter_use;
+	}
+	self.classname = "info_teleport_destination";
 }
