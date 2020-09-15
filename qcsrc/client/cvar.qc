@@ -87,6 +87,9 @@ void read_cvars_init() {
 
 void(string cv, string val) cvar_clientsettemp {
 	entity e;
+	if (cvar_string(cv) == val)
+		return;
+
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 		if(e.netname == cv)
 			goto saved;

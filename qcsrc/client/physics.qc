@@ -266,6 +266,11 @@ void Ent_Physic(float isnew)
 		if not(switches & 512) //mod_q3bsp_curves_collisions
 			cvar_clientsettemp("mod_q3bsp_curves_collisions" , "0");
 
+		if (switches & 8192) //mod_collision_bih
+			cvar_clientsettemp("mod_collision_bih" , "1");
+		else
+			cvar_clientsettemp("mod_collision_bih" , "0");
+
 		g_q2doublejump = switches & 1024;
 		g_stepusevelocity = switches & 2048;
 		g_slicksurfaces_levitation = switches & 4096;
