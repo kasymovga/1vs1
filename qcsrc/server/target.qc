@@ -232,3 +232,17 @@ void(void) target_kill_use {
 void(void) spawnfunc_target_kill {
 	self.use = target_kill_use;
 }
+
+void(void) target_teleporter_use {
+	entity oldother = other;
+	other = activator;
+	self.touch();
+	other = oldother;
+}
+
+void(void) spawnfunc_target_teleporter {
+	teleport_setup();
+	self.solid = SOLID_NOT;
+	self.modelindex = 0;
+	self.use = target_teleporter_use;
+}
