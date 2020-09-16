@@ -7,7 +7,7 @@ CLASS(NexuizPlayerModelSelector) EXTENDS(NexuizImage)
 	METHOD(NexuizPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
 	ATTRIB(NexuizPlayerModelSelector, currentModel, string, NULL)
 	ATTRIB(NexuizPlayerModelSelector, currentSkin, float, 0)
-	ATTRIB(NexuizPlayerModelSelector, currentModelName, string, NULL)
+	ATTRIB(NexuizPlayerModelSelector, currentModelImage, string, NULL)
 	ATTRIB(NexuizPlayerModelSelector, currentModelTitle, string, NULL)
 	ATTRIB(NexuizPlayerModelSelector, currentModelTxtName, string, NULL)
 	ATTRIB(NexuizPlayerModelSelector, currentModelDescription, string, NULL)
@@ -38,6 +38,15 @@ void configureNexuizPlayerModelSelectorNexuizPlayerModelSelector(entity me)
 	me.loadCvars(me);
 }
 
+string findImageNexuizPlayerModelSelector(string s) {
+	if not(file_exists(strcat(s, ".jpg")))
+	if not(file_exists(strcat(s, ".png")))
+	if not(file_exists(strcat(s, ".tga"))) {
+		s = "gfx/sb_str";
+	}
+	return s;
+}
+
 void loadCvarsNexuizPlayerModelSelector(entity me)
 {
 	float glob, i, fh;
@@ -48,15 +57,15 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		strunzone(me.currentModel);
 	if(me.currentModelTitle)
 		strunzone(me.currentModelTitle);
-	if(me.currentModelName)
-		strunzone(me.currentModelName);
+	if(me.currentModelImage)
+		strunzone(me.currentModelImage);
 	if(me.currentModelTxtName)
 		strunzone(me.currentModelTxtName);
 	if(me.currentModelDescription)
 		strunzone(me.currentModelDescription);
 	me.currentSkin = cvar("_cl_playerskin");
 	me.currentModel = strzone(cvar_string("_cl_playermodel"));
-	me.currentModelName = NULL;
+	me.currentModelImage = NULL;
 	me.currentModelDescription = NULL;
 	me.currentModelTitle = NULL;
 	me.currentModelTxtName = NULL;
@@ -76,7 +85,7 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		if(stof(fgets(fh)) == me.currentSkin)
 		if(fgets(fh) == me.currentModel)
 		{
-			me.currentModelName = strzone(strcat("/", nm));
+			me.currentModelImage = strzone(strcat("/", findImageNexuizPlayerModelSelector(nm)));
 			me.currentModelTxtName = strzone(fn);
 			me.currentModelTitle = strzone(t);
 			me.currentModelDescription = "";
@@ -93,6 +102,9 @@ void loadCvarsNexuizPlayerModelSelector(entity me)
 		}
 		fclose(fh);
 	}
+	if not(me.currentModelImage)
+		me.currentModelImage = strzone("/gfx/sb_str");
+
 	search_end(glob);
 }
 
@@ -124,8 +136,8 @@ void goNexuizPlayerModelSelector(entity me, float d)
 		strunzone(me.currentModel);
 	if(me.currentModelTitle)
 		strunzone(me.currentModelTitle);
-	if(me.currentModelName)
-		strunzone(me.currentModelName);
+	if(me.currentModelImage)
+		strunzone(me.currentModelImage);
 	if(me.currentModelTxtName)
 		strunzone(me.currentModelTxtName);
 	if(me.currentModelDescription)
@@ -138,7 +150,7 @@ void goNexuizPlayerModelSelector(entity me, float d)
 	if(fh < 0)
 		return;
 	me.currentModelTitle = strzone(fgets(fh));
-	me.currentModelName = strzone(strcat("/", fgets(fh)));
+	me.currentModelImage = strzone(strcat("/", findImageNexuizPlayerModelSelector(fgets(fh))));
 	me.currentSkin = stof(fgets(fh));
 	me.currentModel = strzone(fgets(fh));
 	me.currentModelDescription = "";
@@ -175,8 +187,7 @@ void drawNexuizPlayerModelSelector(entity me)
 {
 	float i, n;
 	vector o;
-
-	me.src = me.currentModelName;
+	me.src = me.currentModelImage;
 	drawImage(me);
 	me.src = NULL;
 
