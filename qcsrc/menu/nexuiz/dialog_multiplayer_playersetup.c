@@ -40,10 +40,12 @@ void fillNexuizPlayerSettingsTab(entity me)
 			label.allowCut = 1;
 			label.allowColors = 1;
 			label.alpha = 1;
+			label.nexuizFont = 1;
 	me.TR(me);
 		me.TD(me, 1, 3.0, box = makeNexuizInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = 63;
+			box.nexuizFont = 1;
 			label.textEntity = box;
 	me.TR(me);
 		me.TD(me, 5, 1, e = makeNexuizColorpicker(box));

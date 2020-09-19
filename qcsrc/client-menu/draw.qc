@@ -24,7 +24,11 @@ void draw_drawMousePointer(vector where)
 
 void draw_reset()
 {
-	drawfont = FONT_USER+0;
+	if (cvar("utf8_oldfont_for_oldchars") && cvar("font3_is_unicode_compat"))
+		drawfont = FONT_USER + 3;
+	else
+		drawfont = FONT_USER + 0;
+
 	draw_shift = '0 0 0';
 	draw_scale = '1 0 0' * cvar("vid_conwidth") + '0 1 0' * cvar("vid_conheight");
 	draw_alpha = 1;

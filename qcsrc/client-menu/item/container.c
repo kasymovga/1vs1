@@ -129,7 +129,7 @@ void drawContainer(entity me)
 	vector oldscale;
 	float oldalpha;
 	entity e;
-
+	float odf = drawfont;
 	oldshift = draw_shift;
 	oldscale = draw_scale;
 	oldalpha = draw_alpha;
@@ -143,7 +143,13 @@ void drawContainer(entity me)
 		draw_shift = boxToGlobal(e.Container_origin, oldshift, oldscale);
 		draw_scale = boxToGlobalSize(e.Container_size, oldscale);
 		draw_alpha *= e.Container_alpha;
+		if (e.nexuizFont)
+		if (cvar("utf8_oldfont_for_oldchars"))
+		if (cvar("font3_is_unicode_compat"))
+			drawfont = FONT_USER + 0;
+
 		e.draw(e);
+		drawfont = odf;
 		draw_shift = oldshift;
 		draw_scale = oldscale;
 		draw_alpha = oldalpha;

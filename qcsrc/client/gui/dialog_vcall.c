@@ -28,6 +28,7 @@ void fillNexuizVcallDialog(entity me)
 	me.TR(me);
         me.TD(me, 13, 10, vlist = makeNexuizVoteList());
         me.TD(me, 13, 10, vlist.voteArgsList = makeNexuizVoteArgsList());
+		vlist.voteArgsList.nexuizFont = 1;
 		vlist.voteArgsList.voteList = vlist;
 	me.TR(me);
     me.TR(me);
