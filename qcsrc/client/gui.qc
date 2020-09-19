@@ -70,7 +70,6 @@ void GUI_Draw_Remove() {
 			GUI_alpha -= frametime * 5;
 	} else {
 		GUI_RemoveRecursive(mainWindow);
-		unloadTooltips();
 		mainWindow = world;
 		cvar_set("con_chat", ftos(con_chat_save));
 		if (CSQC_InputEvent_Callback == GUI_InputEvent)
@@ -104,7 +103,6 @@ void GUI_Draw() {
 	draw_alpha *= GUI_alpha;
 	drawfont = sbar_font;
 	mainWindow.drawGUI(mainWindow);
-	m_tooltip(mainWindow, GUI_mouse_pos);
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = GUI_InputEvent;
 	GUI_InputEvent(1, 0, 0); //workaround for old engines
@@ -124,7 +122,6 @@ void GUI_Show(float window) {
 		con_chat_was_changed = TRUE;
 		cvar_set("con_chat", "0");
 		SkinInit();
-		loadTooltips();
 		drawfont = sbar_font;
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));

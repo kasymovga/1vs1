@@ -35,7 +35,6 @@ void configureNexuizGametypeButtonNexuizGametypeButton(entity me, float theGroup
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 		me.loadCvars(me);
 	}
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);

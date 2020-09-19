@@ -45,7 +45,6 @@ void configureNexuizSliderNexuizSlider(entity me, float theValueMin, float theVa
 	{
 		me.cvarName = theCvar;
 		me.loadCvars(me);
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 	}
 }
 void setValueNexuizSlider(entity me, float val)

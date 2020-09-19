@@ -36,7 +36,6 @@ void configureNexuizRadioButtonNexuizRadioButton(entity me, float theGroup, stri
 	{
 		me.cvarName = theCvar;
 		me.cvarValue = theValue;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 		me.loadCvars(me);
 	}
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);

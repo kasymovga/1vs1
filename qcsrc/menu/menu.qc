@@ -176,9 +176,7 @@ void() m_init_delayed =
 	draw_reset();
 	UpdateConWidthHeight();
 
-	loadTooltips();
 	main = spawnMainWindow(); main.configureMainWindow(main);
-	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 	main.focused = 1;
@@ -425,9 +423,6 @@ void() m_draw =
 			main.mouseMove(main, menuMousePos);
 	}
 	main.draw(main);
-
-	m_tooltip(main, menuMousePos);
-
 	draw_alpha = max(draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
 
 	draw_drawMousePointer(menuMousePos);
