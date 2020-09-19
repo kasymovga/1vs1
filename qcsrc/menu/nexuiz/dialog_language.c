@@ -39,7 +39,7 @@ void fillNexuizLanguageDialog(entity me) {
 		e.onClick = changeLanguage;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 2/3, e = makeNexuizCheckBox(1, "utf8_oldfont_for_oldchars", _("Disable Nexuiz-compatible symbols")));
+		me.TD(me, 1, 2, e = makeNexuizCheckBox(1, "utf8_oldfont_for_oldchars", _("Disable Nexuiz-compatible symbols")));
 	me.TR(me);
 		me.TDempty(me, 0.05);
 		me.TD(me, 0.5, 1.9, e = makeNexuizTextLabel(0, _("* Needed for some european characters, player names might be displayed incorrectly")));
