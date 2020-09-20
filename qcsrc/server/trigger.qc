@@ -246,7 +246,7 @@ void trigger_use_targets_prevent_reuse() {
 
 float TRIGGER_SPAWNFLAG_NOMESSAGE = 1;
 float TRIGGER_SPAWNFLAG_NOTOUCH = 1;
-float TRIGGER_SPAWNFLAG_CREATUREONLY = 2;
+float TRIGGER_SPAWNFLAG_NOCREATUREONLY = 2;
 float TRIGGER_SPAWNFLAG_PLAYERONLY = 4;
 
 // the wait time has passed, so set back up for another activation
@@ -291,8 +291,8 @@ void(void) trigger_multiple_use {
 }
 
 void(void) trigger_multiple_touch {
-	if (self.spawnflags & (TRIGGER_SPAWNFLAG_PLAYERONLY | TRIGGER_SPAWNFLAG_CREATUREONLY)) {
-		if not(self.spawnflags & 2) {
+	if (self.spawnflags & TRIGGER_SPAWNFLAG_PLAYERONLY || !(self.spawnflags & TRIGGER_SPAWNFLAG_NOCREATUREONLY)) {
+		if not(self.spawnflags & TRIGGER_SPAWNFLAG_NOCREATUREONLY) {
 			if not(other.iscreature)
 				return;
 
