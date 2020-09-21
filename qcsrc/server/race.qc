@@ -474,6 +474,7 @@ void(void) race_checkpoint_passed {
 			float shift_required = FALSE;
 			for (e = find(world, classname, "race_trigger_checkpoint"); e; e = find(e, classname, "race_trigger_checkpoint")) {
 				if (e != self)
+				if (e.race_checkpoint) //ignore start triggers
 				if (e.race_checkpoint == self.race_checkpoint) {
 					if (self.spawnflags == 9) {
 						if (e.sprite)
