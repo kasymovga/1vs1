@@ -583,7 +583,12 @@ void(void) physics_player_jump {
 	if(!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND))
 		physics_landing_hook();
 
-	physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
+	if (g_jumpvelocity_nodecrease) {
+		float f = sv_jumpvelocity * physics_jump_velocity_mod();
+		physics_velocity_z = max(f, physics_velocity_z);
+	} else
+		physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
+
 	physics_flags &~= FL_ONGROUND_OR_SLICK;
 	physics_flags &~= FL_JUMPRELEASED;
 	physics_on_jump_hook();

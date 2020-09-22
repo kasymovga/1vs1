@@ -123,6 +123,7 @@ set _defrag_g_wateraccelerate 4
 set _defrag_g_airaccel_qw 1
 set _defrag_g_airaccel_sideways_friction 0
 set _defrag_g_jumpvelocity 270
+set _defrag_g_jumpvelocity_nodecrease 1
 set _defrag_g_slicksurfaces_levitation 0
 set defragcpm_inherit _defrag
 set defragcpm_g_q2doublejump 1

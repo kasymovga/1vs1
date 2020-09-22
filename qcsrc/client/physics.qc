@@ -274,6 +274,7 @@ void Ent_Physic(float isnew)
 		g_q2doublejump = switches & 1024;
 		g_stepusevelocity = switches & 2048;
 		g_slicksurfaces_levitation = switches & 4096;
+		g_jumpvelocity_nodecrease = switches & 16384;
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
 			g_walljump_force = ReadCoord();
