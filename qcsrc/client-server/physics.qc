@@ -585,7 +585,7 @@ void(void) physics_player_jump {
 
 	if (g_jumpvelocity_nodecrease) {
 		float f = sv_jumpvelocity * physics_jump_velocity_mod();
-		physics_velocity_z = max(f, physics_velocity_z);
+		physics_velocity_z = max(f, physics_velocity_z + f);
 	} else
 		physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
 
