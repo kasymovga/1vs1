@@ -31,11 +31,13 @@ void fillNexuizLanguageDialog(entity me) {
 	cvar_set("_menu_current_language", cvar_string("prvm_language"));
 	entity e;
 	me.TR(me);
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "en", "English"));
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "en", "English"));
 		e.onClick = changeLanguage;
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "it", "Italiano"));
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "it", "Italiano"));
 		e.onClick = changeLanguage;
-		me.TD(me, 1, 2/3, e = makeNexuizRadioButton(1, "prvm_language", "ru", "Русский"));
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "ru", "Русский"));
+		e.onClick = changeLanguage;
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "de", "Deutsche"));
 		e.onClick = changeLanguage;
 	me.TR(me);
 	me.TR(me);
