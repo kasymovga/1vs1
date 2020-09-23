@@ -42,11 +42,11 @@ void fillNexuizInputSettingsTab(entity me)
 			e.onClick = KeyBinder_Bind_Clear;
 			e.onClickEntity = kb;
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Sensitivity:")));
-		me.TD(me, 1, 2, e = makeNexuizSlider(0.1, 10, 0.1, "sensitivity"));
+	me.gotoRC(me, 0, 3.25); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Sensitivity:")));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0.05, 10, 0.05, "sensitivity"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
+		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(1.022, "m_pitch", _("Invert mouse")));
@@ -63,12 +63,12 @@ void fillNexuizInputSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "con_closeontoggleconsole", _("\"enter console\" also closes")));
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Show binds:")));
-		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("sbar_showbinds"));
-			e.addValue(e, _("Actions"), "0");
-			e.addValue(e, _("Bound keys"), "1");
-			e.addValue(e, _("Both"), "2");
-			e.configureNexuizTextSliderValues(e);
+		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Show binds:")));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "0", _("Actions")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "1", _("Bound keys")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "2", _("Both")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBoxEx(2, 0, "cl_showpressedkeys", _("Show pressed keys")));
 }
