@@ -60,6 +60,7 @@ gamestatus.qh
 weaponselect.qh
 view.qh
 main.qh
+csqc_entity.qh
 shownames.qh
 fog.qh
 net.qh
@@ -201,3 +202,4 @@ ice.qc
 fog.qc
 net.qc
 modelselect.qc
+csqc_entity.qc

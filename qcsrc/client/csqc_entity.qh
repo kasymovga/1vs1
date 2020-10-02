@@ -1,0 +1,2 @@
+void(void) csqc_entity_clean;
+void(void) csqc_entity_init;

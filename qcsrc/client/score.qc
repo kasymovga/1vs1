@@ -55,18 +55,14 @@ void(void) score_player_remove {
 
 void(float ignore) score_player_read {
 	float i, n;
-	float isNew;
 	entity o;
-	isNew = !self.owner; // workaround for DP bug
-	n = ReadByte()-1;
-#ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if (!isNew && n != self.sv_entnum) {
+	
+	n = ReadByte() - 1;
+	if (self.owner && n != self.sv_entnum) { // workaround for DP bug
 		//print("A CSQC entity changed its owner!\n");
-		isNew = TRUE;
-		Ent_Remove();
+		csqc_entity_clean();
 		self.enttype = ENT_CLIENT_SCORES;
 	}
-#endif
 	self.sv_entnum = n;
 	if not(playerslots[self.sv_entnum])
 		playerslots[self.sv_entnum] = spawn();

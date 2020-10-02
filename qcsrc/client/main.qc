@@ -2,10 +2,6 @@
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
-#define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-
-var void(float) ent_parsers[ENT_CLIENT_COUNT];
-
 string available_maps;
 float available_maps_count;
 float con_chat_save;
@@ -62,10 +58,6 @@ void get_mi_min_max_texcoords(float mode)
 #ifdef USE_FTE
 float __engine_check;
 #endif
-
-void Ent_Error(float ignore) {
-	error(strcat("unknown entity type in CSQC_Ent_Update: ", ftos(self.enttype), "\n"));
-}
 
 void ClientUpdateMessage_Draw() {
 	string msg;
@@ -283,51 +275,7 @@ void CSQC_Init(void)
 	search_and_precache("gfx/teamradar_*.tga");
 	search_and_precache("particles/*.tga");
 	search_and_precache("models/sprites/wpn-*_frame*");
-	for (i = 0; i < ENT_CLIENT_COUNT; i++) {
-		ent_parsers[i] = Ent_Error;
-	}
-	ent_parsers[ENT_CLIENT_ENTCS] = entcs_read;
-	ent_parsers[ENT_CLIENT_SCORES_INFO] = score_info_read;
-	ent_parsers[ENT_CLIENT_SCORES] = score_player_read;
-	ent_parsers[ENT_CLIENT_TEAMSCORES] = score_team_read;
-	ent_parsers[ENT_CLIENT_POINTPARTICLES] = particles_point_read;
-	ent_parsers[ENT_CLIENT_RAINSNOW] = particles_rain_or_snow_read;
-	ent_parsers[ENT_CLIENT_LASER] = Ent_Laser;
-	ent_parsers[ENT_CLIENT_NAGGER] = ready_read;
-	ent_parsers[ENT_CLIENT_WAYPOINT] = Ent_WaypointSprite;
-	ent_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
-	ent_parsers[ENT_CLIENT_PROJECTILE] = Ent_Projectile;
-	ent_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;
-	ent_parsers[ENT_CLIENT_DAMAGEINFO] = Ent_DamageInfo;
-	ent_parsers[ENT_CLIENT_CASING] = Ent_Casing;
-	ent_parsers[ENT_CLIENT_INIT] = main_init_read;
-	ent_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
-	ent_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;
-	ent_parsers[ENT_CLIENT_WALL] = Ent_Wall;
-	ent_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
-	ent_parsers[ENT_CLIENT_PHYSICS] = Ent_Physic;
-	ent_parsers[ENT_CLIENT_PHYSICS_SPIDERBOT] = Ent_PhysicSpiderbot;
-	ent_parsers[ENT_CLIENT_PHYSICS_AIRCRAFT] = Ent_PhysicAircraft;
-	ent_parsers[ENT_CLIENT_PHYSICS_CAR] = Ent_PhysicCar;
-	ent_parsers[ENT_CLIENT_GAMESTATUS] = Ent_GameStatus;
-	ent_parsers[ENT_CLIENT_MENU] = Ent_Menu;
-	ent_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
-	ent_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
-	ent_parsers[ENT_CLIENT_DLC_LIST] = dlc_read;
-	ent_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
-	ent_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
-	ent_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
-	ent_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
-	ent_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
-	ent_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
-	ent_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
-	ent_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
-	ent_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;
-	ent_parsers[ENT_CLIENT_PHYSICS_HOOK] = hook_physics_read;
-	ent_parsers[ENT_CLIENT_DLC_SOUND] = dlc_sound_read;
-	ent_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
-	ent_parsers[ENT_CLIENT_LMS_SPHERE] = sphere_read;
-	ent_parsers[ENT_CLIENT_ICE] = ice_read;
+	csqc_entity_init();
 	ui_con_width_height_set();
 	sbar_font = FONT_USER+1;
 	sbar_bigfont = FONT_USER+2;
@@ -374,8 +322,6 @@ void CSQC_Shutdown(void)
 	trip_shutdown();
 }
 
-// CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
-// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 .vector view_ofs;
 
 entity spawnentity;
@@ -409,72 +355,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 
 	return bSkipKey;
-}
-
-// END REQUIRED CSQC FUNCTIONS
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// BEGIN OPTIONAL CSQC FUNCTIONS
-void Ent_Remove();
-
-// CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
-// The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void(float bIsNewEntity) CSQC_Ent_Update =
-{
-	float t;
-	float savetime;
-	t = ReadByte();
-
-	// set up the "time" global for received entities to be correct for interpolation purposes
-	savetime = time;
-	if(servertime)
-	{
-		time = servertime;
-	}
-	else
-	{
-		serverprevtime = time;
-		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
-		time = serverprevtime + serverdeltatime;
-	}
-	clienttime = time;
-#ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(self.enttype)
-		if(t != self.enttype)
-		{
-			//print("A CSQC entity changed its type!\n");
-			Ent_Remove();
-			bIsNewEntity = 1;
-		}
-#endif
-	if (t >= ENT_CLIENT_COUNT)
-		Ent_Error(0);
-
-	self.enttype = t;
-	ent_parsers[t](bIsNewEntity);
-	time = savetime;
-};
-// Destructor, but does NOT deallocate the entity by calling remove(). Also
-// used when an entity changes its type. For an entity that someone interacts
-// with others, make sure it can no longer do so.
-void Ent_Remove()
-{
-	if(self.entremove)
-		self.entremove();
-
-	self.enttype = 0;
-	self.classname = "";
-	self.draw = NULL;
-	self.entremove = NULL;
-	// TODO possibly set more stuff to defaults
-}
-// CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
-void CSQC_Ent_Remove()
-{
-	if(self.enttype)
-		Ent_Remove();
-	remove(self);
 }
 
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
