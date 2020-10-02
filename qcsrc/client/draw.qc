@@ -115,3 +115,21 @@ void(vector cpos, vector l_size, float progress, float alpha, vector l_color, fl
 		}
 	}
 }
+
+void(string s) draw_search_and_precache {
+	float i;
+	string pic;
+	float glob = search_begin(s, TRUE, TRUE);
+	if (glob < 0)
+		return;
+
+	for(i = 0; i < search_getsize(glob); ++i) {
+		pic = search_getfilename(glob, i);
+		//print("Precaching ", pic, "\n");
+		precache_pic(pic);
+		pic = substring(pic, 0, strstrofs(pic, ".tga", 0));
+		//print("Precaching ", pic, "\n");
+		precache_pic(pic);
+	}
+	search_end(glob);
+}

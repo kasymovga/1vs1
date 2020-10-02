@@ -87,24 +87,6 @@ void ClientUpdateMessage(string msg, float timeout) {
 	e.bgmscript = msg;
 }
 
-void search_and_precache(string s) {
-	float i;
-	string pic;
-	float glob = search_begin(s, TRUE, TRUE);
-	if (glob < 0)
-		return;
-
-	for(i = 0; i < search_getsize(glob); ++i) {
-		pic = search_getfilename(glob, i);
-		//print("Precaching ", pic, "\n");
-		precache_pic(pic);
-		pic = substring(pic, 0, strstrofs(pic, ".tga", 0));
-		//print("Precaching ", pic, "\n");
-		precache_pic(pic);
-	}
-	search_end(glob);
-}
-
 void(float ignore) main_init_read;
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -266,15 +248,15 @@ void CSQC_Init(void)
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 
-	search_and_precache("gfx/num_*");
-	search_and_precache("gfx/inv_*");
-	search_and_precache("gfx/crosshair*");
-	search_and_precache("gfx/sb_*");
-	search_and_precache("gfx/hud/*.tga");
-	search_and_precache("gfx/hud/keys/*.tga");
-	search_and_precache("gfx/teamradar_*.tga");
-	search_and_precache("particles/*.tga");
-	search_and_precache("models/sprites/wpn-*_frame*");
+	draw_search_and_precache("gfx/num_*");
+	draw_search_and_precache("gfx/inv_*");
+	draw_search_and_precache("gfx/crosshair*");
+	draw_search_and_precache("gfx/sb_*");
+	draw_search_and_precache("gfx/hud/*.tga");
+	draw_search_and_precache("gfx/hud/keys/*.tga");
+	draw_search_and_precache("gfx/teamradar_*.tga");
+	draw_search_and_precache("particles/*.tga");
+	draw_search_and_precache("models/sprites/wpn-*_frame*");
 	csqc_entity_init();
 	ui_con_width_height_set();
 	sbar_font = FONT_USER+1;
