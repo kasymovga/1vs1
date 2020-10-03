@@ -82,10 +82,6 @@ void CSQC_Init(void)
 		if(getplayerkey(i, "viewentity") == "")
 			break;
 	maxclients = i;
-
-	registercmd("ons_map");
-	//registercmd("menu_action");
-
 	registercmd("+button3");
 	registercmd("-button3");
 	registercmd("+button4");
