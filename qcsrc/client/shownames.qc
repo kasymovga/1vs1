@@ -40,11 +40,10 @@ float Shownames_PreDrawPlayer_Enabled() {
 		return FALSE;
 
 	if (self.cnt) {
-		traceline(self.iorigin + self.maxs, view_origin, 0, world);
+		traceline(self.iorigin + self.maxs, view_origin, MOVE_NOMONSTERS, world);
 		if (trace_fraction < 1)
 			return FALSE;
 	}
-
 	return TRUE;
 }
 
