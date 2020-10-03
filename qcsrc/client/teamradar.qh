@@ -7,5 +7,6 @@ void teamradar_view(float big, string title);
 .float teamradar_times[MAX_TEAMRADAR_TIMES];
 .float teamradar_time_index;
 .vector teamradar_color;
+void(void) teamradar_init;
 
 void Ent_RadarLink(float ignore);
