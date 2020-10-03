@@ -7,10 +7,6 @@ float available_maps_count;
 float con_chat_save;
 float con_chat_was_changed;
 
-#ifdef USE_FTE
-float __engine_check;
-#endif
-
 void ClientUpdateMessage_Draw() {
 	string msg;
 	vector pos;
@@ -45,17 +41,6 @@ void(float ignore) main_init_read;
 // Useful for precaching things
 void CSQC_Init(void)
 {
-#ifdef USE_FTE
-#pragma target ID
-	__engine_check = checkextension("DP_SV_WRITEPICTURE");
-	if(!__engine_check)
-	{
-		print("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n");
-		localcmd("\ndisconnect\n");
-		return;
-	}
-#pragma target FTE
-#endif
 	read_cvars_init();
 	if (file_exists("rexuiz.cfg")) {
 		localcmd("\ncmd gameclient rexuiz\n");
@@ -224,13 +209,6 @@ void CSQC_Init(void)
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void CSQC_Shutdown(void)
 {
-#ifdef USE_FTE
-#pragma TARGET id
-	if(!__engine_check)
-		return 0;
-#pragma TARGET fte
-#endif
-
 	remove(team_list);
 	remove(player_list);
 	db_close(binddb);
