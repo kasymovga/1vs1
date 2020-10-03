@@ -99,3 +99,91 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_LMS_SPHERE] = sphere_read;
 	csqc_entity_parsers[ENT_CLIENT_ICE] = ice_read;
 }
+
+// CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
+// You must ALWAYS first acquire the temporary ID, which is sent as a byte.
+// Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
+float() CSQC_Parse_TempEntity { //called by engine
+	// Acquire TE ID
+	float nTEID = ReadByte();
+	switch(nTEID) {
+	case TE_CSQC_HIT:
+		if (CVAR(cl_hitsound))
+			sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+
+		if (CVAR(crosshair_hit_time) > 0) {
+			crosshair_hittime = time + CVAR(crosshair_hit_time);
+		}
+		return TRUE;
+	case TE_CSQC_ZCURVEPARTICLES:
+		particles_zcurve_read();
+		return TRUE;
+	case TE_CSQC_NEXGUNBEAMPARTICLE:
+		particles_nex_beam_read();
+		return TRUE;
+	case TE_CSQC_LIGHTNINGARC:
+		Net_ReadLightningarc();
+		return TRUE;
+	case TE_CSQC_BIGLIGHTNINGARC:
+		Net_ReadBigLightningarc();
+		return TRUE;
+	case TE_CSQC_ZAPPERLIGHTNING:
+		Zapper_ReadLightning();
+		return TRUE;
+	case TE_CSQC_BLAST:
+		Net_ReadBlast();
+		return TRUE;
+	case TE_CSQC_ANNOUNCE_PRINT:
+		announce_print();
+		return TRUE;
+	case TE_CSQC_WEAPONLIST:
+		weapontime = time;
+		return TRUE;
+	case TE_CSQC_RADIO:
+		Net_ReadRadio();
+		return TRUE;
+	case TE_CSQC_NADGETSELECT:
+		Net_ReadNadgetSelect();
+		return TRUE;
+	case TE_CSQC_WEAPONSELECT:
+		Net_ReadWeaponSelect();
+		return TRUE;
+	case TE_CSQC_PICTURE:
+		mapvote_picture_read();
+		return TRUE;
+	case TE_CSQC_RACE:
+		race_read();
+		return TRUE;
+	case TE_CSQC_TEAMSELECT:
+		if not(isdemo_flag)
+			GUI_Show(GUI_TEAMSELECT);
+
+		return TRUE;
+	case TE_CSQC_GAMEOVER:
+		if(calledhooks & HOOK_START) {
+			localcmd("\ncl_hook_gameend;");
+			calledhooks |= HOOK_END;
+		}
+		return TRUE;
+	case TE_CSQC_MAPLIST:
+		str_unzone_ifneeded(available_maps);
+		available_maps = str_zone_ifneeded(ReadString());
+		string s = available_maps;
+		available_maps_count = 0;
+		while (s != "") {
+			s = str_cdr(s);
+			available_maps_count++;
+		}
+		return TRUE;
+	case TE_CSQC_TRIP:
+		trip_net_read();
+		return TRUE;
+	case TE_CSQC_HINT:
+		hint_net_read();
+		return TRUE;
+	case TE_CSQC_MODELSELECT:
+		modelselect_read();
+		return TRUE;
+	}
+	return FALSE;
+}

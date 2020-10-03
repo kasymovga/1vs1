@@ -1,4 +1,9 @@
-void(string msg) GameCommand {
+entity cmd_spawnentity;
+void(void) cmd_spawnentity_draw {
+	R_AddEntity(self);
+}
+
+void(string msg) GameCommand { //called by engine
 	float argc;
 	argc = tokenize_console(msg);
 	if (argv(0) == "help" || argc == 0) {
@@ -27,15 +32,15 @@ void(string msg) GameCommand {
 	} else if(cmd == "modelprecache") {
 		precache_model(argv(1));
 	} else if (cmd == "spawnentity") {
-		if (spawnentity)
-			remove(spawnentity);
+		if (cmd_spawnentity)
+			remove(cmd_spawnentity);
 
-		spawnentity = spawn();
-		spawnentity.draw = spawnentity_Draw;
-		setorigin(spawnentity, view_origin + view_forward * 100);
+		cmd_spawnentity = spawn();
+		cmd_spawnentity.draw = cmd_spawnentity_draw;
+		setorigin(cmd_spawnentity, view_origin + view_forward * 100);
 		precache_model(argv(1));
-		setmodel(spawnentity, argv(1));
-		spawnentity.frame = stof(argv(2));
+		setmodel(cmd_spawnentity, argv(1));
+		cmd_spawnentity.frame = stof(argv(2));
 	} else if (cmd == "showradio") {
 		GUI_Show(GUI_RADIO);
 	} else if (cmd == "report") {
@@ -59,7 +64,7 @@ void(string msg) GameCommand {
 	return;
 }
 
-float(string strMessage) CSQC_ConsoleCommand {
+float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	float argc;
 	// Tokenize String
 	//argc = tokenize(strMessage);

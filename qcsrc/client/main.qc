@@ -304,13 +304,6 @@ void CSQC_Shutdown(void)
 	trip_shutdown();
 }
 
-.vector view_ofs;
-
-entity spawnentity;
-void spawnentity_Draw() {
-	R_AddEntity(self);
-}
-
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.
@@ -399,105 +392,6 @@ void(float ignore) main_init_read {
 		str_unzone_ifneeded(motd);
 		motd = str_zone_ifneeded(ReadString());
 	}
-}
-
-// CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
-// You must ALWAYS first acquire the temporary ID, which is sent as a byte.
-// Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
-float CSQC_Parse_TempEntity()
-{
-	float bHandled;
-	bHandled = TRUE;
-	// Acquire TE ID
-	float nTEID = ReadByte();
-	// NOTE: Could just do return instead of break...
-	switch(nTEID)
-	{
-		case TE_CSQC_HIT:
-			if (CVAR(cl_hitsound))
-				sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
-
-			if (CVAR(crosshair_hit_time) > 0) {
-				crosshair_hittime = time + CVAR(crosshair_hit_time);
-			}
-			break;
-		case TE_CSQC_ZCURVEPARTICLES:
-			particles_zcurve_read();
-			break;
-		case TE_CSQC_NEXGUNBEAMPARTICLE:
-			particles_nex_beam_read();
-			break;
-        case TE_CSQC_LIGHTNINGARC:
-            Net_ReadLightningarc();
-            break;
-        case TE_CSQC_BIGLIGHTNINGARC:
-            Net_ReadBigLightningarc();
-            break;
-        case TE_CSQC_ZAPPERLIGHTNING:
-            Zapper_ReadLightning();
-            break;
-		case TE_CSQC_BLAST:
-			Net_ReadBlast();
-			break;
-		case TE_CSQC_ANNOUNCE_PRINT:
-			announce_print();
-			break;
-		case TE_CSQC_WEAPONLIST:
-			weapontime = time;
-			break;
-		case TE_CSQC_RADIO:
-			Net_ReadRadio();
-			break;
-        case TE_CSQC_NADGETSELECT:
-			Net_ReadNadgetSelect();
-            break;
-		case TE_CSQC_WEAPONSELECT:
-			Net_ReadWeaponSelect();
-			break;
-		case TE_CSQC_PICTURE:
-			mapvote_picture_read();
-			break;
-		case TE_CSQC_RACE:
-			race_read();
-			break;
-		case TE_CSQC_TEAMSELECT:
-			if not(isdemo_flag)
-				GUI_Show(GUI_TEAMSELECT);
-
-			break;
-		case TE_CSQC_GAMEOVER:
-			if(calledhooks & HOOK_START)
-			{
-				localcmd("\ncl_hook_gameend;");
-				calledhooks |= HOOK_END;
-			}
-			break;
-		case TE_CSQC_MAPLIST:
-			str_unzone_ifneeded(available_maps);
-			available_maps = str_zone_ifneeded(ReadString());
-			string s = available_maps;
-			available_maps_count = 0;
-			while (s != "") {
-				s = str_cdr(s);
-				available_maps_count++;
-			}
-			break;
-		case TE_CSQC_TRIP:
-			trip_net_read();
-			break;
-		case TE_CSQC_HINT:
-			hint_net_read();
-			break;
-		case TE_CSQC_MODELSELECT:
-			modelselect_read();
-			break;
-		default:
-			// No special logic for this temporary entity; return 0 so the engine can handle it
-			bHandled = FALSE;
-			break;
-	}
-
-	return bHandled;
 }
 
 string getcommandkey(string text, string command)
