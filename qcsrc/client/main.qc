@@ -172,8 +172,6 @@ void CSQC_Init(void)
 			world_get_min_max(0); // load new texcoords
 	}
 	teamradar_init();
-	mi_center = (world_min + world_max) * 0.5;
-	mi_scale = world_max - world_min;
 	minimapname = strzone(minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");

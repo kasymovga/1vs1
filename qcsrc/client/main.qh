@@ -1,9 +1,6 @@
 // --------------------------------------------------------------------------
 // Onslaught
 
-// Map coordinate base calculations need these
-vector mi_center;
-vector mi_scale;
 // Minimap
 string minimapname;
 float ons_showmap;
