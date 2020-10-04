@@ -273,7 +273,6 @@ void(float destteam) client_team_change {
 	if (self.team <= 0)
 	if (destteam > 0)
 	if not(client_join_allowed()) {
-		centerprint_atprio(self, CENTERPRIO_MAPVOTE, PREVENT_JOIN_TEXT);
 		return;
 	}
 	if (self.classname == "player")
@@ -500,6 +499,11 @@ void(void) client_disconnect { //called by engine
  * @return bool TRUE if the player is allowed to join, false otherwise
  */
 float() client_join_allowed {
+	if (team_mode)
+	if (team_teams > 1)
+	if (self.saboteur > 1)
+		return FALSE;
+
 	if (!g_maxplayers)
 		return TRUE;
 
@@ -513,6 +517,7 @@ float() client_join_allowed {
 	if(currentlyPlaying < g_maxplayers)
 		return TRUE;
 
+	centerprint_atprio(self, CENTERPRIO_MAPVOTE, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
 	return FALSE;
 }
 

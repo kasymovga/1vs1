@@ -143,9 +143,6 @@ typedef void() voidfunc;
 
 .float winning;
 .float jointime;
-
-#define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
-
 .float spawnshieldtime;
 
 .entity flagcarried;
