@@ -1496,8 +1496,7 @@ void(entity player) player_to_spec
 {
 	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
 	if not(g_campaign)
-	if not(gamehook_forbid_specatators())
-	if (sv_spectate) {
+	if not(gamehook_forbid_specatators()) {
 		entity oldself = self;
 		self = player;
 		player_clear(FALSE);

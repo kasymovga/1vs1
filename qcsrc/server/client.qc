@@ -1,7 +1,6 @@
 float g_balance_kill_delay;
 float g_changeteam_banned;
 float g_maxplayers;
-float sv_spectate;
 float sv_timeout_number;
 float sv_maxidle;
 float sv_maxidle_forcespec;
@@ -88,9 +87,6 @@ float client_init_send(entity to, float sf)
 		t = 0;
 		if (g_campaign)
 			t |= 1;
-
-		if (sv_spectate)
-			t |= 2;
 
 		if (to.netaddress == "local")
 			t |= 4;
@@ -398,25 +394,9 @@ void(void) client_connect { //called by engine
 		campaign_bots_may_start = 1;
 	} else if (gamehook_forbid_specatators()) {
 		self.classname = "player";
-	} else if (sv_spectate == 1) {
-		self.classname = "observer";
 	} else {
-		if(team_mode) {
-			if(g_balance_teams || g_balance_teams_force)
-			{
-				self.classname = "player";
-			}
-			else
-			{
-				self.classname = "observer"; // do it anyway
-			}
-		}
-		else
-		{
-			self.classname = "player";
-		}
+		self.classname = "observer";
 	}
-
 	self.playerid = (client_playerid_last = client_playerid_last + 1);
 	//stuffcmd(self, "set tmpviewsize $viewsize \n");
 	bprint ("^4", self.netname, "^4 connected\n");
@@ -573,7 +553,7 @@ void(void) client_post_think { //called by engine
 	{
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop, maxidle;
-		if (sv_maxidle_forcespec && sv_spectate && self.classname == "player") {
+		if (sv_maxidle_forcespec && self.classname == "player") {
 			maxidle = sv_maxidle_forcespec;
 			drop = FALSE;
 		} else if (sv_maxidle) {
@@ -618,7 +598,6 @@ void() client_initialize {
 	CACHE_CVAR(g_changeteam_banned);
 	CACHE_CVAR(g_maxplayers);
 	CACHE_CVAR(g_maxplayers_spectator_blocktime);
-	CACHE_CVAR(sv_spectate);
 	CACHE_CVAR(sv_timeout_number);
 	CACHE_CVAR(sv_maxidle);
 	CACHE_CVAR(sv_maxidle_forcespec);

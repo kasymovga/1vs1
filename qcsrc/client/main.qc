@@ -275,7 +275,6 @@ void(float ignore) main_init_read {
 	if (sf & 2) {
 		i = ReadByte();
 		g_campaign = i & 1;
-		sv_spectate = i & 2;
 		localgame = i & 4;
 		hook_use_swapped = i & 8;
 		button_attack2_allowed = !(i & 16);

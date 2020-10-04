@@ -1,6 +1,5 @@
 float g_balance_health_limit;
 float g_balance_armor_limit;
-float sv_spectate;
 float g_maxplayers_spectator_blocktime;
 float client_button_atck2_busy;
 
