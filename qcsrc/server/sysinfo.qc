@@ -56,6 +56,27 @@ void(float id, float status, string data) sysinfo_uri_callback {
 				if (e.sysinfo == _info)
 					player_to_spec(e);
 			}
+		} else if (head == "nodup") {
+			string addr = "";
+			FOR_EACH_REALPLAYER(e) {
+				if (e.sysinfo == _info) {
+					addr = e.netaddress;
+					break;
+				}
+			}
+			if (addr != "") {
+				float keepone = FALSE;
+				FOR_EACH_REALPLAYER(e) {
+					if (e.netaddress == addr) {
+						if not(keepone) {
+							keepone = TRUE;
+							continue;
+						}
+						dropclient(e);
+						break;
+					}
+				}
+			}
 		} else if (head == "retard")
 			sysinfo_search_and_mark(_info, retard, 1, "marked as retard");
 		else if (head == "muted")
