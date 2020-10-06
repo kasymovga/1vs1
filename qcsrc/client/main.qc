@@ -41,6 +41,11 @@ void(float ignore) main_init_read;
 // Useful for precaching things
 void CSQC_Init(void)
 {
+	if (!cvar("con_chat"))
+		cvar_set("con_chat", "5");
+	else if (cvar("con_chat") > 99)
+		cvar_set("con_chat", "0");
+
 	read_cvars_init();
 	if (file_exists("rexuiz.cfg")) {
 		localcmd("\ncmd gameclient rexuiz\n");
