@@ -5,6 +5,8 @@ vector GUI_mouse_pos_old;
 float GUI_alpha;
 float GUI_shiftState;
 float GUI_currentWindow;
+float gui_con_chat_save;
+float gui_con_chat_was_changed;
 
 void GUI_RemoveRecursive(entity me) {
 	entity e;
@@ -71,10 +73,10 @@ void GUI_Draw_Remove() {
 	} else {
 		GUI_RemoveRecursive(mainWindow);
 		mainWindow = world;
-		cvar_set("con_chat", ftos(con_chat_save));
 		if (CSQC_InputEvent_Callback == GUI_InputEvent)
 			CSQC_InputEvent_Callback = NULL;
 
+		gui_chat_restore();
 		return;
 	}
 	mainWindow.focusEnter(mainWindow);
@@ -118,8 +120,12 @@ void GUI_Show(float window) {
 	GUI_shiftState = FALSE;
 	GUI_currentWindow = window;
 	if not(mainWindow) {
-		con_chat_save = cvar("con_chat");
-		con_chat_was_changed = TRUE;
+		if (cvar("_backup_con_chatvars_set")) //avoid conflicts with con_chat_maximize
+			gui_con_chat_save = cvar("_backup_con_chat");
+		else
+			gui_con_chat_save = cvar("con_chat");
+
+		gui_con_chat_was_changed = TRUE;
 		cvar_set("con_chat", "0");
 		SkinInit();
 		drawfont = sbar_font;
@@ -174,4 +180,11 @@ void GUI_Hide() {
 		mainWindow.draw2dflag = 1;
 	} else
 		GUI_Show(GUI_GAMEMENU);
+}
+
+void(void) gui_chat_restore {
+	if (gui_con_chat_was_changed) {
+		cvar_set("con_chat", ftos(gui_con_chat_save));
+		cvar_set("_backup_con_chat", ftos(gui_con_chat_save)); //avoid conflicts with con_chat_maximize
+	}
 }
