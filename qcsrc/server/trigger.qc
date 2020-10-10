@@ -513,6 +513,7 @@ void spawnfunc_trigger_counter()
 	self.reset = trigger_counter_reset;
 };
 
+float g_trigger_hurt_interval;
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
@@ -523,7 +524,7 @@ void trigger_hurt_touch()
 		if (other.triggerhurttime < time)
 		{
 			EXACTTRIGGER_TOUCH;
-			other.triggerhurttime = time + 1;
+			other.triggerhurttime = time + g_trigger_hurt_interval;
 			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
@@ -535,11 +536,6 @@ void trigger_hurt_touch()
 			{
 				EXACTTRIGGER_TOUCH;
 				other.pain_finished = min(other.pain_finished, time + 2);
-			}
-			else if (other.classname == "rune")			// reset runes
-			{
-				EXACTTRIGGER_TOUCH;
-				other.nextthink = min(other.nextthink, time + 1);
 			}
 		}
 	}
@@ -570,6 +566,8 @@ void spawnfunc_trigger_hurt()
 		trigger_hurt_first = self;
 	if(trigger_hurt_last)
 		trigger_hurt_last.trigger_hurt_next = self;
+
+	CACHE_CVAR(g_trigger_hurt_interval);
 	trigger_hurt_last = self;
 };
 
