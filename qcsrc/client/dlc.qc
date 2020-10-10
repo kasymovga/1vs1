@@ -5,7 +5,7 @@ float dlc_sounds_ready;
 string dlc_extra_pk3_list;
 entity dlc_extra_pk3_list_wait;
 
-void dlc_precache_sounds() {
+void(void) dlc_precache_sounds {
 	string s, l;
 	l = dlc_sounds;
 	while (l != "") {
