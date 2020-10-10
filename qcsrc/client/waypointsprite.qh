@@ -1,0 +1,4 @@
+// they are drawn using a .draw function
+void(float) waypointsprite_read;
+void(void) waypointsprite_remove;
+void(void) waypointsprite_init;

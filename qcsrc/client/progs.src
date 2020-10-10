@@ -37,7 +37,7 @@ jetpack.qh
 physics.qh
 interpolate.qh
 teamradar.qh
-waypointsprites.qh
+waypointsprite.qh
 movetypes.qh
 prandom.qh
 bgmscript.qh
@@ -139,7 +139,7 @@ race.qc
 view.qc
 interpolate.qc
 teamradar.qc
-waypointsprites.qc
+waypointsprite.qc
 movetypes.qc
 prandom.qc
 bgmscript.qc

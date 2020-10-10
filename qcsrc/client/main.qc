@@ -149,8 +149,7 @@ void CSQC_Init(void)
 
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
-	WaypointSprite_Load();
-
+	waypointsprite_init();
 	Projectile_Precache();
 	GibSplash_Precache();
 	Casings_Precache();

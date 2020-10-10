@@ -64,7 +64,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_RAINSNOW] = particles_rain_or_snow_read;
 	csqc_entity_parsers[ENT_CLIENT_LASER] = Ent_Laser;
 	csqc_entity_parsers[ENT_CLIENT_NAGGER] = ready_read;
-	csqc_entity_parsers[ENT_CLIENT_WAYPOINT] = Ent_WaypointSprite;
+	csqc_entity_parsers[ENT_CLIENT_WAYPOINT] = waypointsprite_read;
 	csqc_entity_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
 	csqc_entity_parsers[ENT_CLIENT_PROJECTILE] = Ent_Projectile;
 	csqc_entity_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;

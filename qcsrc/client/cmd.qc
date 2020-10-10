@@ -59,6 +59,7 @@ void(string msg) GameCommand { //called by engine
 		}
 		GUI_Show(GUI_REPORT);
 	} else if (cmd == "r_restart") {
+		waypointsprite_init();
 		draw_init();
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");

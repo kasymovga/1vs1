@@ -136,7 +136,6 @@ void CSQC_UpdateView(float w, float h)
 {
 	entity e;
 	read_cvars();
-	WaypointSprite_Load();
 	spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
 	spectatorbutton_zoom = spectatee_status & 256;
