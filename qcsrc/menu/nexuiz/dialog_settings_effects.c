@@ -85,9 +85,18 @@ void fillNexuizEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Gibs count:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_gibs_maxcount"));
+		makeCallback(e, NULL, inline void(entity ignore1, entity ingore2) {
+			if not(cvar("cl_gibs_maxcount")) {
+				if (cvar("cl_nogibs") < 1)
+					cvar_set("cl_nogibs", "1");
+			} else if (cvar("cl_nogibs") >= 1) {
+				cvar_set("cl_nogibs", "0.5");
+			}
+		} );
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Casing count:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_casings_maxcount"));
+		makeCallback(e, NULL, inline void(entity ignore1, entity ingore2) { cvar_set("cl_casings", ftos(!!cvar("cl_casings_maxcount"))); } );
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_decals", _("Decals")));
 	me.TR(me);

@@ -171,6 +171,13 @@ void fillNexuizPlayerSettingsTab(entity me)
 			e.addValue(e, _("Lots"), "0");
 			e.configureNexuizTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
+			makeCallback(e, NULL, inline void(entity ignore1, entity ingore2) {
+				if (cvar("cl_nogibs") == 1) {
+					if (cvar("cl_gibs_maxcount"))
+						cvar_set("cl_gibs_maxcount", "0");
+				} else if not(cvar("cl_gibs_maxcount"))
+					cvar_set("cl_gibs_maxcount", "30");
+			} );
 	me.TR(me);
 
 	me.gotoRC(me, me.rows - 1, 0);
