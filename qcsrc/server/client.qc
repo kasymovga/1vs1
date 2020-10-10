@@ -543,11 +543,14 @@ void(void) client_pre_think { //called by engine
 .float idlekick_lasttimeleft;
 void(void) client_post_think { //called by engine
 	// Savage: Check for nameless players
-	if (strlen(strdecolorize(self.netname)) < 1) {
+	string s = strdecolorize(self.netname);
+	s = strreplace(" ", "", s);
+	s = strreplace(" ", "", s);
+	s = strreplace("", "", s);
+	if (strlen(strdecolorize(s)) < 1) {
 		self.netname = "Empty Name";
 		//stuffcmd(self, "seta _cl_name Player\n");
 	}
-
 	if (frametime)
 	if (clienttype(self) == CLIENTTYPE_REAL)
 	{
