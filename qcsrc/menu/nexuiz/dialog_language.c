@@ -22,12 +22,10 @@ void changeLanguage(entity me, entity e) {
 void fillNexuizLanguageDialog(entity me) {
 	registercvar("_menu_show_language_dialog", "0", 0);
 	registercvar("_menu_current_language", "", 0);
-#if 0
 	if (cvar_string("prvm_language") == "") {
 		cvar_set("prvm_language", "en");
 		cvar_set("_menu_show_language_dialog", "1");
 	}
-#endif
 	cvar_set("_menu_current_language", cvar_string("prvm_language"));
 	entity e;
 	me.TR(me);
