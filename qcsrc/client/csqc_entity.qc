@@ -69,7 +69,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_PROJECTILE] = Ent_Projectile;
 	csqc_entity_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;
 	csqc_entity_parsers[ENT_CLIENT_DAMAGEINFO] = Ent_DamageInfo;
-	csqc_entity_parsers[ENT_CLIENT_CASING] = Ent_Casing;
+	csqc_entity_parsers[ENT_CLIENT_CASING] = casing_read;
 	csqc_entity_parsers[ENT_CLIENT_INIT] = main_init_read;
 	csqc_entity_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
 	csqc_entity_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;

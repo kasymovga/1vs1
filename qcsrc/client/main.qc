@@ -152,7 +152,7 @@ void CSQC_Init(void)
 	waypointsprite_init();
 	Projectile_Precache();
 	GibSplash_Precache();
-	Casings_Precache();
+	casing_precache();
 	DamageInfo_Precache();
 	WarpZone_Init();
 	world_get_min_max(1); // try the CLEVER way first

@@ -111,7 +111,7 @@ laser.qc
 projectile.qc
 gibs.qc
 damage.qc
-casings.qc
+casing.qc
 effects.qc
 wall.qc
 modeleffects.qc
