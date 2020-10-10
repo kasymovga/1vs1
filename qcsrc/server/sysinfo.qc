@@ -58,7 +58,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 		} else if (head == "nodup") {
 			string addr = "";
-			FOR_EACH_REALPLAYER(e) {
+			FOR_EACH_REALCLIENT(e) {
 				if (e.sysinfo == _info) {
 					addr = e.netaddress;
 					break;
@@ -66,14 +66,12 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			}
 			if (addr != "") {
 				float keepone = FALSE;
-				FOR_EACH_REALPLAYER(e) {
+				FOR_EACH_REALCLIENT(e) {
 					if (e.netaddress == addr) {
-						if not(keepone) {
+						if (keepone)
+							dropclient(e);
+						else
 							keepone = TRUE;
-							continue;
-						}
-						dropclient(e);
-						break;
 					}
 				}
 			}
