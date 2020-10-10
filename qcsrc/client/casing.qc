@@ -21,19 +21,15 @@ void(void) casing_delete {
 }
 
 void(void) casing_draw {
-	if(self.move_flags & FL_ONGROUND)
-	{
+	if (self.move_flags & FL_ONGROUND) {
 		self.move_angles_x = 0;
 		self.move_angles_z = 0;
 		self.flags &~= FL_ONGROUND;
 	}
-
 	Movetype_Physics_NoMatchServer();
-
 	self.renderflags = 0;
 	self.alpha = bound(0, self.cnt - time, 1);
-
-	if(self.alpha < ALPHA_MIN_VISIBLE)
+	if (self.alpha < ALPHA_MIN_VISIBLE)
 		casing_delete();
 	else
 		R_AddEntity(self);
@@ -52,12 +48,12 @@ void(void) casing_touch {
 				float f;
 				f = floor(prandom() * 3) + 1;
 				switch (self.state) {
-					case 1:
-						s = strcat("weapons/casings", ftos(f), ".wav");
-						break;
-					default:
-						s = strcat("weapons/brass", ftos(f), ".wav");
-						break;
+				case 1:
+					s = strcat("weapons/casings", ftos(f), ".wav");
+					break;
+				default:
+					s = strcat("weapons/brass", ftos(f), ".wav");
+					break;
 				}
 				sound (self, CHAN_PROJECTILE, s, VOL_BASE, ATTN_NORM);
 			}
@@ -79,7 +75,7 @@ void(float isNew) casing_read {
 	casing.angles_x = ReadByte() * 360 / 256;
 	casing.angles_y = ReadByte() * 360 / 256;
 	casing.angles_z = ReadByte() * 360 / 256;
-	if (CVAR(cl_casings) && isNew) {
+	if (CVAR(cl_casings) && CVAR(cl_casings_maxcount)) {
 		if not(casing_oldest)
 			casing_oldest = casing;
 
@@ -99,20 +95,20 @@ void(float isNew) casing_read {
 		casing.move_time = time;
 		casing.solid = SOLID_TRIGGER;
 		switch (casing.state) {
-			case 1:
-				setmodel(casing, "models/casing_shell.mdl");
-				casing.cnt = time + CVAR(cl_casings_shell_time);
-				break;
-			default:
-				setmodel(casing, "models/casing_bronze.mdl");
-				casing.cnt = time + CVAR(cl_casings_bronze_time);
-				break;
+		case 1:
+			setmodel(casing, "models/casing_shell.mdl");
+			casing.cnt = time + CVAR(cl_casings_shell_time);
+			break;
+		default:
+			setmodel(casing, "models/casing_bronze.mdl");
+			casing.cnt = time + CVAR(cl_casings_bronze_time);
+			break;
 		}
 		setsize(casing, '0 0 -1', '0 0 -1');
 	} else
         remove(casing);
 
-	if (casing_count > CVAR_OR(cl_casings_maxcount, 100)) {
+	if (casing_count > CVAR(cl_casings_maxcount)) {
 		entity oldself = self;
 		self = casing_oldest;
 		casing_delete();
