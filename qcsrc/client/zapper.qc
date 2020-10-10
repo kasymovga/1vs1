@@ -2,25 +2,22 @@
 .vector zapper_shotorg;
 .float zapper_akimbo;
 
-vector Zapper_BeamRGB(float t) {
+vector(float t) zapper_beam_rgb {
     switch(t) {
-        case COLOR_TEAM1:            return '5.0   1.0   0.5';
-        case COLOR_TEAM2: default:   return '0.5   1.0   5.0';
-        case COLOR_TEAM3:            return '4.0   2.5   0.5';
-        case COLOR_TEAM4:            return '5.0   0.7   3.0';
+	case COLOR_TEAM1:            return '5.0   1.0   0.5';
+	case COLOR_TEAM2: default:   return '0.5   1.0   5.0';
+	case COLOR_TEAM3:            return '4.0   2.5   0.5';
+	case COLOR_TEAM4:            return '5.0   0.7   3.0';
     }
 }
 
 float zapper_beam_width;
 float zapper_particles_trace_callback_beamoffs;
 
-void(vector dir) vectorvectors = #432;
-
 void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
-    vector rgb = Zapper_BeamRGB(self.team);
+    vector rgb = zapper_beam_rgb(self.team);
     string tex = "particles/zapper";
     float t = self.cnt + time;
-
     float _alpha = self.alpha;
     rgb *= _alpha;
 	draw_cylindric_line(from, to, zapper_beam_width, tex, 0.03, zapper_particles_trace_callback_beamoffs, rgb, _alpha, DRAWFLAG_ADDITIVE, WarpZone_FindNearestOrigin((from + to) * 0.5, view_camera_origin, FALSE));
@@ -28,7 +25,7 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
 
 }
 
-void Zapper_Interpolate() {
+void(void) zapper_interpolate {
 	InterpolateOrigin_Do();
 	if (CVAR(chase_active) && !spectatee_status && self.sv_entnum == player_localentnum)
 		self.enemy.origin = self.enemy.iorigin2 + (physics_end_origin - physics_start_origin);
@@ -40,18 +37,14 @@ void Zapper_Interpolate() {
 	}
 }
 
-void Zapper_Draw(void) {
+void(void) zapper_draw {
     vector start, real_start;
 	vector end;
-
     float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
-
     float first_person = FALSE;
-
     zapper_beam_width = 12;
-
 	vector zapper_shotorigin = self.zapper_shotorg;
-    if(self.sv_entnum == me) {
+    if (self.sv_entnum == me) {
 		if not(CVAR(chase_active)) {
 			camera_correction_needed = TRUE;
 			start = view_origin + view_forward * zapper_shotorigin_x + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
@@ -64,26 +57,23 @@ void Zapper_Draw(void) {
 
 			real_start = view_origin;
 		} else {
-			Zapper_Interpolate();
+			zapper_interpolate();
 			end = self.origin;
 			start = self.enemy.origin;
 			real_start = start;
 		}
     } else {
-		Zapper_Interpolate();
+		zapper_interpolate();
         end = self.origin;
 		real_start = start = self.enemy.origin;
 	}
-
     zapper_particles_trace_callback_beamoffs = -time * 5;
-
     vector dynlight_org = start;
-
-    if(first_person) {
+    if (first_person) {
         dynlight_org = start + view_forward;
         zapper_particles_trace_callback(start - view_forward * zapper_shotorigin_x, start, start);
     }
-    //R_AddDynamicLight(dynlight_org, 50 * self.alpha, Zapper_BeamRGB(self.team));
+    //R_AddDynamicLight(dynlight_org, 50 * self.alpha, zapper_beam_rgb(self.team));
 	WarpZone_DrawEffectTriangle(real_start, start, end, zapper_particles_trace_callback);
 	//zapper_particles_trace_callback(self.zapper_start, end);
 	vector v = WarpZone_TransformVelocity(WarpZone_trace_transform, normalize(end - start));
@@ -93,7 +83,7 @@ void Zapper_Draw(void) {
 	pointparticles(particles_rm_effectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2), start, '0 0 0', frametime * 300);
 }
 
-void Zapper_Draw_Shield(void) {
+void(void) zapper_draw_shield {
     float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
 	vector start, end;
 	if (!CVAR(chase_active) && self.sv_entnum == me) {
@@ -101,20 +91,19 @@ void Zapper_Draw_Shield(void) {
         start = view_origin + view_forward * (zapper_shotorigin_x - 1) + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
 		end = start + view_forward * 30;
     } else {
-		Zapper_Interpolate();
+		zapper_interpolate();
 		start = self.enemy.origin;
 		end = self.origin;
 	}
     string tex = "particles/zapper";
-    vector rgb = Zapper_BeamRGB(self.team) * 0.5;
+    vector rgb = zapper_beam_rgb(self.team) * 0.5;
 	draw_cylindric_line(end, start,  12, tex, 0.03, 5 * time, rgb, self.alpha, DRAWFLAG_ADDITIVE, view_origin);
-    if(self.alpha < 1)
+    if (self.alpha < 1)
         return;
 
     float eff_zap = particles_rm_effectnum_team("RM_ZAPPER", self.team, 2);
     float eff_muz = particles_rm_effectnum_team("RM_ZAPPER_MUZZLEFLASH", self.team, 2);
     float pcount = frametime * 300;
-
     pointparticles(eff_zap, end, '0 0 0', pcount);
     pointparticles(eff_muz, start, end - start, pcount);
 }
@@ -128,40 +117,34 @@ void Zapper_Remove(void) {
     sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
-void Zapper_Read(float t) {
+void(float t) zapper_read {
     float sf = ReadByte();
-
-    if(sf & 1) {
+    if (sf & 1) {
         float vol, attn;
-
 		vol = VOL_BASE;
 		attn = ATTN_NORM;
-
-        if(t == ENT_CLIENT_ZAPPER_SHIELD) {
-            self.draw = Zapper_Draw_Shield;
+        if (t == ENT_CLIENT_ZAPPER_SHIELD) {
+            self.draw = zapper_draw_shield;
             dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
         } else {
-            self.draw = Zapper_Draw;
+            self.draw = zapper_draw;
             dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_fly.wav", vol, attn);
         }
 		if not(self.enemy)
 			self.enemy = spawn();
 
         self.entremove = Zapper_Remove;
-
-        if(sf & 16) {
+        if (sf & 16) {
             self.sv_entnum = 0;
             self.team = ReadByte();
         } else {
             self.sv_entnum = ReadByte();
             self.team = player_color(self.sv_entnum - 1);
         }
-
         self.alpha = 1;
         self.cnt = random() * 1000;
     }
-
-    if(sf & 2) {
+    if (sf & 2) {
 		entity e = self;
 		self = self.enemy;
         self.origin_x = ReadCoord();
@@ -173,8 +156,7 @@ void Zapper_Read(float t) {
 
 		self = e;
     }
-
-    if(sf & 4) {
+    if (sf & 4) {
         self.origin_x = ReadCoord();
         self.origin_y = ReadCoord();
         self.origin_z = ReadCoord();
@@ -182,7 +164,6 @@ void Zapper_Read(float t) {
 		if (sf & 64)
 			InterpolateOrigin_Note();
     }
-
 	if (sf & 8) {
 		self.zapper_akimbo = 1;
 	} else
@@ -195,57 +176,50 @@ void Zapper_Read(float t) {
 	}
 }
 
-void Zapper_Read_Beam(float ignore) {
-	Zapper_Read(ENT_CLIENT_ZAPPER);
+void zapper_beam_read(float ignore) {
+	zapper_read(ENT_CLIENT_ZAPPER);
 }
 
-void Zapper_Read_Shield(float ignore) {
-	Zapper_Read(ENT_CLIENT_ZAPPER_SHIELD);
+void(float ignore) zapper_shield_read {
+	zapper_read(ENT_CLIENT_ZAPPER_SHIELD);
 }
 
-void LightingArc_Draw(void) {
+void zapper_lightning_arc_draw(void) {
     string tex;
     switch(self.team) {
-        case COLOR_TEAM1: tex = "particles/hook_red";       break;
-        case COLOR_TEAM2: tex = "particles/hook_blue";      break;
-        case COLOR_TEAM3: tex = "particles/hook_yellow";    break;
-        case COLOR_TEAM4: tex = "particles/hook_pink";      break;
-        default         : tex = "particles/hook_green";     break;
+	case COLOR_TEAM1: tex = "particles/hook_red";       break;
+	case COLOR_TEAM2: tex = "particles/hook_blue";      break;
+	case COLOR_TEAM3: tex = "particles/hook_yellow";    break;
+	case COLOR_TEAM4: tex = "particles/hook_pink";      break;
+	default         : tex = "particles/hook_green";     break;
     }
-
     float i; for(i = 0; i < 5; ++i)
 		draw_cylindric_line(self.origin, self.velocity, 25 * self.alpha, tex, 0.02, random(), '1 1 1', self.alpha, DRAWFLAG_ADDITIVE, view_origin);
 
     self.alpha = self.alpha - frametime * 3;
-    if(self.alpha < 0)
+    if (self.alpha < 0)
         remove(self);
 }
 
-void LightingArc_Segment(vector start, vector end, float ateam) {
+void zapper_lightning_arc_segment(vector start, vector end, float ateam) {
     entity e = spawn();
     e.alpha = 1;
     e.origin = start;
     e.velocity = end;
-    e.draw = LightingArc_Draw;
+    e.draw = zapper_lightning_arc_draw;
     e.team = ateam;
-
     trailparticles(world, particles_rm_effectnum_team("RM_LIGHTNING", ateam, 2), start, end);
 }
 
-
-void Zapper_ReadLightning(void) {
+void(void) zapper_lightning_read {
     vector from, to;
-
     float zapper_lightning_ateam  = ReadByte();
     from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
     to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
-
     //if(!rm_teamlasers)
     //    zapper_lightning_ateam = COLOR_TEAM2;
 
     pointparticles(particles_rm_effectnum_team("RM_HG_PLASMA_SHARD_EXPLODE", zapper_lightning_ateam, 2), to, '0 0 0', 1);
-    LightingArc_Segment(from, to, zapper_lightning_ateam);
-
+    zapper_lightning_arc_segment(from, to, zapper_lightning_ateam);
     pointparticles(particleeffectnum("electro_muzzleflash"), from, normalize(to - from) * 1000, 1);
-
 }

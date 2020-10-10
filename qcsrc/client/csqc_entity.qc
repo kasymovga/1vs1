@@ -84,8 +84,8 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
 	csqc_entity_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
 	csqc_entity_parsers[ENT_CLIENT_DLC_LIST] = dlc_read;
-	csqc_entity_parsers[ENT_CLIENT_ZAPPER] = Zapper_Read_Beam;
-	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = Zapper_Read_Shield;
+	csqc_entity_parsers[ENT_CLIENT_ZAPPER] = zapper_beam_read;
+	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = zapper_shield_read;
 	csqc_entity_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
 	csqc_entity_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
@@ -129,7 +129,7 @@ float() CSQC_Parse_TempEntity { //called by engine
 		Net_ReadBigLightningarc();
 		return TRUE;
 	case TE_CSQC_ZAPPERLIGHTNING:
-		Zapper_ReadLightning();
+		zapper_lightning_read();
 		return TRUE;
 	case TE_CSQC_BLAST:
 		Net_ReadBlast();
