@@ -84,8 +84,8 @@ str.qc
 score.qh
 player.qc
 dummyfunction.qc
-draw.qc
 math.qc
+draw.qc
 ../client-server/approach.qc
 ../common/file.qc
 ../common/cvar.qc

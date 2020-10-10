@@ -12,7 +12,7 @@ vector(void) mouse_position {
 void Mouse_Draw() {
 	if (mouse_enabled) {
 		mouse_pos = getmousepos();
-		drawpic(mouse_pos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor.tga"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(mouse_pos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 		mouse_not_centered = TRUE;
 		mouse_enabled = FALSE;
 	} else if (mouse_not_centered) {

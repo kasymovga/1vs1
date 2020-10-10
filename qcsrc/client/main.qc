@@ -76,7 +76,7 @@ void CSQC_Init(void)
 	tempdb = db_create();
 	net_compress_vector_init();
 	crosshairdot_tex = "gfx/crosshair6";
-	if (file_exists("gfx/crosshairdot.tga") || file_exists("gfx/crosshairdot.png"))
+	if (file_exists("gfx/crosshairdot") || file_exists("gfx/crosshairdot.png"))
 		crosshairdot_tex = "gfx/crosshairdot";
 
 	drawfont = 0;
@@ -165,10 +165,10 @@ void CSQC_Init(void)
 		shortmapname = substring(shortmapname, 0, strlen(shortmapname) - 4);
 
 	shortmapname = strzone(shortmapname);
-	minimapname = strcat("gfx/", shortmapname, "_radar.tga");
+	minimapname = strcat("gfx/", shortmapname, "_radar");
 	if (precache_pic(minimapname) == "") {
 		// but maybe we have a non-clever minimap
-		minimapname = strcat("gfx/", shortmapname, "_mini.tga");
+		minimapname = strcat("gfx/", shortmapname, "_mini");
 		if (precache_pic(minimapname) == "")
 			minimapname = ""; // FAIL
 		else
@@ -178,16 +178,6 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
-
-	draw_search_and_precache("gfx/num_*");
-	draw_search_and_precache("gfx/inv_*");
-	draw_search_and_precache("gfx/crosshair*");
-	draw_search_and_precache("gfx/sb_*");
-	draw_search_and_precache("gfx/hud/*.tga");
-	draw_search_and_precache("gfx/hud/keys/*.tga");
-	draw_search_and_precache("gfx/teamradar_*.tga");
-	draw_search_and_precache("particles/*.tga");
-	draw_search_and_precache("models/sprites/wpn-*_frame*");
 	csqc_entity_init();
 	ui_con_width_height_set();
 	sbar_font = FONT_USER+1;

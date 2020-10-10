@@ -1,6 +1,6 @@
-#define spider_rocket_icon "gfx/spiderbot/rocket_ico.tga"
-#define spider_rocket_targ "gfx/spiderbot/target.tga"
-#define SPIDER_CROSS "textures/spiderbot/cross.tga"
+#define spider_rocket_icon "gfx/spiderbot/rocket_ico"
+#define spider_rocket_targ "gfx/spiderbot/target"
+#define SPIDER_CROSS "textures/spiderbot/cross"
 #define rkt_size 32
 
 //float trace_dphitcontents;

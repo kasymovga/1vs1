@@ -38,7 +38,7 @@ void(void) dlc_extra_pk3_list_wait_think {
 	}
 	remove(self);
 	dlc_extra_pk3_list_wait = world;
-	localcmd("\nr_restart\n");
+	localcmd("\nr_restart;cl_cmd r_restart\n");
 }
 
 void(entity e, float c, string s, float v, float a) dlc_sound {
@@ -66,7 +66,7 @@ void(void) dlc_wait_think {
 	}
 	dlc_precache_sounds();
 	if (!localConnection || isdemo_flag) {
-		localcmd("r_restart\n");
+		localcmd("r_restart;cl_cmd r_restart\n");
 	}
 	l = dlc_list;
 	while (l != "") {

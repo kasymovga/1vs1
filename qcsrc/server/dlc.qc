@@ -171,7 +171,7 @@ void DLCWait() {
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
-				localcmd("sv_cmd dlc_pause; r_restart; sv_cmd dlc_unpause\n");
+				localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
 				break;
 			}
 		remove(self);
@@ -393,7 +393,7 @@ void DLCWaitReload() {
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
-				localcmd("dlc_pause; r_restart; dlc_unpause\n");
+				localcmd("dlc_pause; r_restart; cl_cmd r_restart; dlc_unpause\n");
 				break;
 			}
 		remove(self);

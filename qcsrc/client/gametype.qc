@@ -1,7 +1,4 @@
 void(void) gametype_init {
-	if(gametype == GAME_ONSLAUGHT)
-		draw_search_and_precache("gfx/ons-*");
-
 	if (gametype == GAME_CTS) {
 		registercvar("cl_cts_showacceleration", "1", CVAR_SAVE);
 		registercvar("cl_cts_showspeed", "1", CVAR_SAVE);

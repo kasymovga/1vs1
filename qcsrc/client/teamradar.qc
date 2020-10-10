@@ -404,8 +404,8 @@ void(float big, string title) teamradar_view =
 		frame_origin_y = teamradar_origin2d_y - teamradar_size2d_y * 0.55859375;
 		frame_size_x = teamradar_size2d_x * 1.1171875;
 		frame_size_y = teamradar_size2d_y * 1.1171875;
-		drawpic(frame_origin, "gfx/ons-frame.tga", frame_size, '1 1 1', sbar_alpha_fg, 0);
-		drawpic(frame_origin, "gfx/ons-frame-team.tga", frame_size, rgb, sbar_alpha_fg, 0);
+		drawpic(frame_origin, "gfx/ons-frame", frame_size, '1 1 1', sbar_alpha_fg, 0);
+		drawpic(frame_origin, "gfx/ons-frame-team", frame_size, rgb, sbar_alpha_fg, 0);
 		if (title)
 			drawstring(frame_origin - '0 24 0', title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 

@@ -58,6 +58,8 @@ void(string msg) GameCommand { //called by engine
 			report_reasons[i] = "";
 		}
 		GUI_Show(GUI_REPORT);
+	} else if (cmd == "r_restart") {
+		draw_init();
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}

@@ -32,44 +32,6 @@ float SPRITE_HEALTHBAR_BORDER = 2;
 float SPRITE_HEALTHBAR_BORDERALPHA = 1;
 float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
 
-void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
-{
-	vector v1, v2, v3, v4;
-
-	hotspot = -1 * hotspot;
-
-	// hotspot-relative coordinates of the corners
-	v1 = hotspot;
-	v2 = hotspot + '1 0 0' * sz_x;
-	v3 = hotspot + '1 0 0' * sz_x + '0 1 0' * sz_y;
-	v4 = hotspot                  + '0 1 0' * sz_y;
-
-	// rotate them, and make them absolute
-	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-	v1 = math_rotate(v1, rot) + org;
-	v2 = math_rotate(v2, rot) + org;
-	v3 = math_rotate(v3, rot) + org;
-	v4 = math_rotate(v4, rot) + org;
-
-	// draw them
-	R_BeginPolygon(pic, f);
-	R_PolygonVertex(v1, '0 0 0', rgb, a);
-	R_PolygonVertex(v2, '1 0 0', rgb, a);
-	R_PolygonVertex(v3, '1 1 0', rgb, a);
-	R_PolygonVertex(v4, '0 1 0', rgb, a);
-	R_EndPolygon();
-}
-
-void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, float f)
-{
-	R_BeginPolygon(pic, f);
-	R_PolygonVertex(o, '0 0 0', rgb, a);
-	R_PolygonVertex(o + ri, '1 0 0', rgb, a);
-	R_PolygonVertex(o + up + ri, '1 1 0', rgb, a);
-	R_PolygonVertex(o + up, '0 1 0', rgb, a);
-	R_EndPolygon();
-}
-
 void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
 {
 	vector o, ri, up;
@@ -90,11 +52,11 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	owidth = width + 2 * border;
 	o = o - up * (margin + border + height) + ri * (sz_x - owidth) * 0.5;
 
-	drawquad(o - up * border,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o + up * height,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o,                                             ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (owidth - border),                    ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
+	draw_quad(o - up * border,                               ri * owidth,    up * border, "", rgb,  a,  f);
+	draw_quad(o + up * height,                               ri * owidth,    up * border, "", rgb,  a,  f);
+	draw_quad(o,                                             ri * border,    up * height, "", rgb,  a,  f);
+	draw_quad(o + ri * (owidth - border),                    ri * border,    up * height, "", rgb,  a,  f);
+	draw_quad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
 }
 
 void Draw_WaypointSprite()
@@ -259,8 +221,7 @@ void Draw_WaypointSprite()
 		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 	}
-	drawrotpic(o, rot * 90 * DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
-
+	draw_picture_rotate(o, rot * 90 * DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
 	if(self.build_finished)
 	{
 		if(time < self.build_finished + 0.25)
