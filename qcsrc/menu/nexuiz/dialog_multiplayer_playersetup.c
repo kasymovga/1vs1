@@ -163,22 +163,6 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3.25, e = makeNexuizCheckBox(0, "cl_gentle", _("Disable gore effects")));
 	me.TR(me);
-		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Gibs:")));
-		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_nogibs"));
-			e.addValue(e, _("None"), "1");
-			e.addValue(e, _("Few"), "0.75");
-			e.addValue(e, _("Many"), "0.5");
-			e.addValue(e, _("Lots"), "0");
-			e.configureNexuizTextSliderValues(e);
-			setDependent(e, "cl_gentle", 0, 0);
-			makeCallback(e, NULL, inline void(entity ignore1, entity ingore2) {
-				if (cvar("cl_nogibs") == 1) {
-					if (cvar("cl_gibs_maxcount"))
-						cvar_set("cl_gibs_maxcount", "0");
-				} else if not(cvar("cl_gibs_maxcount"))
-					cvar_set("cl_gibs_maxcount", "30");
-			} );
-	me.TR(me);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromnexuiz;sendcvar cl_forceplayermodels;sendcvar cl_gunalpha", COMMANDBUTTON_APPLY));

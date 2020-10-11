@@ -18,6 +18,30 @@ entity makeNexuizEffectsSettingsTab()
 	return me;
 }
 
+void casingsCountUpdate(entity e, entity me) {
+	cvar_set("cl_casings", ftos(!!cvar("cl_casings_maxcount")));
+}
+
+void gibsUpdate(entity gibsMaxCount, entity me) {
+	if (cvar("cl_nogibs") == 1) {
+		if (cvar("cl_gibs_maxcount"))
+			cvar_set("cl_gibs_maxcount", "0");
+	} else if not(cvar("cl_gibs_maxcount"))
+		cvar_set("cl_gibs_maxcount", "30");
+
+	gibsMaxCount.loadCvars(gibsMaxCount);
+}
+
+void gibsCountUpdate(entity gibs, entity me) {
+	if not(cvar("cl_gibs_maxcount")) {
+		if (cvar("cl_nogibs") < 1)
+			cvar_set("cl_nogibs", "1");
+	} else if (cvar("cl_nogibs") >= 1) {
+		cvar_set("cl_nogibs", "0.5");
+	}
+	gibs.loadCvars(gibs);
+}
+
 void fillNexuizEffectsSettingsTab(entity me)
 {
 	entity e;
@@ -76,27 +100,32 @@ void fillNexuizEffectsSettingsTab(entity me)
 			e.addValue(e, "16x", "16");
 			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Particle quality:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.1, 1.0, 0.05, "cl_particles_quality"));
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Particle dist.:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
+		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Gibs:")));
+		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_nogibs"));
+			e.addValue(e, _("None"), "1");
+			e.addValue(e, _("Few"), "0.75");
+			e.addValue(e, _("Many"), "0.5");
+			e.addValue(e, _("Lots"), "0");
+			e.configureNexuizTextSliderValues(e);
+		entity gibs = e;
+	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Gibs count:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_gibs_maxcount"));
-		makeCallback(e, NULL, inline void(entity ignore1, entity ingore2) {
-			if not(cvar("cl_gibs_maxcount")) {
-				if (cvar("cl_nogibs") < 1)
-					cvar_set("cl_nogibs", "1");
-			} else if (cvar("cl_nogibs") >= 1) {
-				cvar_set("cl_nogibs", "0.5");
-			}
-		} );
+		entity gibsMaxCount = e;
+		makeCallback(gibs, gibsMaxCount, gibsUpdate);
+		makeCallback(gibsMaxCount, gibs, gibsCountUpdate);
+		gibsUpdate(gibsMaxCount, gibs);
+		gibsCountUpdate(gibs, gibsMaxCount);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Casing count:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_casings_maxcount"));
-		makeCallback(e, NULL, inline void(entity ignore1, entity ingore2) { cvar_set("cl_casings", ftos(!!cvar("cl_casings_maxcount"))); } );
+		makeCallback(e, NULL, casingsCountUpdate);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_decals", _("Decals")));
 	me.TR(me);
