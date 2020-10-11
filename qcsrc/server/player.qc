@@ -2602,6 +2602,7 @@ void() player_init {
 	CACHE_CVAR(bot_talk);
 	CACHE_CVAR(g_maxpushtime);
 	CACHE_CVAR(g_playerclip_collisions);
+	CACHE_CVAR(sv_servermodelsonly);
 	if (player_init_done)
 		return;
 
