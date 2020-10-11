@@ -82,3 +82,4 @@ set g_balance_kill_delay 5
 set leadlimit 0
 set g_teleport_keep_velocity -1 "Keep velocity up this value after teleportation. Negative value mean keep all velocity."
 set g_trigger_hurt_interval 1
+set sv_dumprecords 0

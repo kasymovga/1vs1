@@ -148,12 +148,22 @@ void world_dynamic_init() {
 }
 
 string world_getrecords() {
-    float i;
-    string s;
-    s = "";
+	float i;
+	string s = "", s1;
+	float f = -1;
+	if (cvar("sv_dumprecords")) {
+		f = fopen(strcat("records-", gametype_name(game), ".txt"), FILE_WRITE);
+	}
 	for (i = 0; i < MapInfo_count; ++i)
-		if (MapInfo_Get_ByID(i))
-			s = strcat(s, GameHook_RecordForMap(MapInfo_Map_bspname));
+		if (MapInfo_Get_ByID(i)) {
+			s1 = GameHook_RecordForMap(MapInfo_Map_bspname);
+			s = strcat(s, s1);
+			if (f >= 0) {
+				fputs(f, s1);
+			}
+		}
+	if (f >= 0)
+		fclose(f);
 
     MapInfo_ClearTemps();
     if (s == "")
