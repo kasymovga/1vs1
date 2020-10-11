@@ -17,6 +17,7 @@ void(string hint) hint_add {
 }
 
 void(float n, float p) hint_send {
+	msg_entity = self;
 	if (hint_count <= 0) {
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_HINT);
@@ -32,7 +33,6 @@ void(float n, float p) hint_send {
 		n = 0;
 
 	string s = cvar_string(strcat("_hint", ftos(n)));
-	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_HINT);
 	WriteByte(MSG_ONE, p);
