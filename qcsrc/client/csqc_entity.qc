@@ -68,7 +68,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
 	csqc_entity_parsers[ENT_CLIENT_PROJECTILE] = Ent_Projectile;
 	csqc_entity_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;
-	csqc_entity_parsers[ENT_CLIENT_DAMAGEINFO] = Ent_DamageInfo;
+	csqc_entity_parsers[ENT_CLIENT_DAMAGEINFO] = damage_info_read;
 	csqc_entity_parsers[ENT_CLIENT_CASING] = casing_read;
 	csqc_entity_parsers[ENT_CLIENT_INIT] = main_init_read;
 	csqc_entity_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
@@ -86,7 +86,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_DLC_LIST] = dlc_read;
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER] = zapper_beam_read;
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = zapper_shield_read;
-	csqc_entity_parsers[ENT_CLIENT_DMG_INDICATOR] = Ent_DamageIndicator;
+	csqc_entity_parsers[ENT_CLIENT_DMG_INDICATOR] = damage_indicator_read;
 	csqc_entity_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
 	csqc_entity_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;

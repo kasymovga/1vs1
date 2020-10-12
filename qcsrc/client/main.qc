@@ -153,7 +153,7 @@ void CSQC_Init(void)
 	Projectile_Precache();
 	GibSplash_Precache();
 	casing_precache();
-	DamageInfo_Precache();
+	damage_info_precache();
 	WarpZone_Init();
 	world_get_min_max(1); // try the CLEVER way first
 	shortmapname = mapname;
