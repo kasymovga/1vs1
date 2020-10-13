@@ -150,7 +150,7 @@ void CSQC_Init(void)
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
 	waypointsprite_init();
-	Projectile_Precache();
+	projectile_precache();
 	GibSplash_Precache();
 	casing_precache();
 	damage_info_precache();
@@ -294,7 +294,7 @@ void(float ignore) main_init_read {
 		cvar_set("_teams_available", ftos(ReadByte()));
 	}
 	if (sf & 64) {
-		projectile_read();
+		projectile_info_read();
 	}
 	if (sf & 128) {
 		str_unzone_ifneeded(map_description);
