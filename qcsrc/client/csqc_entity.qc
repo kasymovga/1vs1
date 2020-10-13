@@ -5,7 +5,7 @@ void (float ignore) csqc_entity_error {
 }
 
 void(void) csqc_entity_clean {
-	if(self.entremove)
+	if (self.entremove)
 		self.entremove();
 
 	self.enttype = 0;
@@ -62,7 +62,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_TEAMSCORES] = score_team_read;
 	csqc_entity_parsers[ENT_CLIENT_POINTPARTICLES] = particles_point_read;
 	csqc_entity_parsers[ENT_CLIENT_RAINSNOW] = particles_rain_or_snow_read;
-	csqc_entity_parsers[ENT_CLIENT_LASER] = Ent_Laser;
+	csqc_entity_parsers[ENT_CLIENT_LASER] = laser_read;
 	csqc_entity_parsers[ENT_CLIENT_NAGGER] = ready_read;
 	csqc_entity_parsers[ENT_CLIENT_WAYPOINT] = waypointsprite_read;
 	csqc_entity_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
@@ -161,7 +161,7 @@ float() CSQC_Parse_TempEntity { //called by engine
 
 		return TRUE;
 	case TE_CSQC_GAMEOVER:
-		if(calledhooks & HOOK_START) {
+		if (calledhooks & HOOK_START) {
 			localcmd("\ncl_hook_gameend;");
 			calledhooks |= HOOK_END;
 		}
