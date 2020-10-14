@@ -150,6 +150,7 @@ void CSQC_Init(void)
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 	csqc_entity_init();
+	draw_init();
 	ui_con_width_height_set();
 	sbar_font = FONT_USER+1;
 	sbar_bigfont = FONT_USER+2;
