@@ -73,7 +73,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_INIT] = main_init_read;
 	csqc_entity_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
 	csqc_entity_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;
-	csqc_entity_parsers[ENT_CLIENT_WALL] = Ent_Wall;
+	csqc_entity_parsers[ENT_CLIENT_WALL] = wall_read;
 	csqc_entity_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS] = Ent_Physic;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_SPIDERBOT] = Ent_PhysicSpiderbot;
