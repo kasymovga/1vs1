@@ -5,34 +5,6 @@
 string available_maps;
 float available_maps_count;
 
-void ClientUpdateMessage_Draw() {
-	string msg;
-	vector pos;
-	pos_z = 0;
-	float _alpha = 0.5 + math_mod(time, 2) * 0.5;
-
-	msg = "^1WARNING: ^3Your client is not recommended!";
-	pos_y = 10;
-	pos_x = 10;
-	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, DRAWFLAG_NORMAL);
-
-	pos_y += 32;
-	drawcolorcodedstring(pos, self.bgmscript, '18 36 0', _alpha, DRAWFLAG_NORMAL);
-
-	msg = "^3Please download and install Rexuiz from ^2http://rexuiz.top^7";
-	pos_y += 32;
-	drawcolorcodedstring(pos, msg, '18 36 0', _alpha, DRAWFLAG_NORMAL);
-}
-
-void ClientUpdateMessage(string msg, float timeout) {
-	entity e = spawn();
-	e.draw2d = ClientUpdateMessage_Draw;
-	e.draw2dflag = 1;
-	e.nextthink = time + timeout;
-	e.think = stdproc_remove;
-	e.bgmscript = msg;
-}
-
 void(float ignore) main_init_read;
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
@@ -54,7 +26,7 @@ void CSQC_Init(void)
 		}
 	} else {
 		localcmd("\ncmd gameclient oldnexuiz\n");
-		ClientUpdateMessage("^3You play with really old Nexuiz client", 10);
+		update_message("^3You play with really old Nexuiz client", 20);
 	}
 	if (cvar("cl_maxfps_alwayssleep")) {
 		localcmd("\nseta cl_maxfps_alwayssleep 0\n");

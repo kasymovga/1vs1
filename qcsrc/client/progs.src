@@ -126,6 +126,7 @@ announce.qc
 vote.qh
 gamemenu.qh
 entcs.qh
+update.qc
 main.qc
 cmd.qc
 entcs.qc
