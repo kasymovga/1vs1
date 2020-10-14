@@ -92,7 +92,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
 	csqc_entity_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
-	csqc_entity_parsers[ENT_CLIENT_HOOK] = Ent_GrapplingHook;
+	csqc_entity_parsers[ENT_CLIENT_HOOK] = hook_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_HOOK] = hook_physics_read;
 	csqc_entity_parsers[ENT_CLIENT_DLC_SOUND] = dlc_sound_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
