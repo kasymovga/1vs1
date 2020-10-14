@@ -151,7 +151,7 @@ void CSQC_Init(void)
 	weapon_register_weapons();
 	waypointsprite_init();
 	projectile_precache();
-	GibSplash_Precache();
+	gib_precache();
 	casing_precache();
 	damage_info_precache();
 	WarpZone_Init();

@@ -109,7 +109,7 @@ hook.qc
 particles.qc
 laser.qc
 projectile.qc
-gibs.qc
+gib.qc
 damage.qc
 casing.qc
 effects.qc

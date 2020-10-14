@@ -67,7 +67,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_WAYPOINT] = waypointsprite_read;
 	csqc_entity_parsers[ENT_CLIENT_RADARLINK] = Ent_RadarLink;
 	csqc_entity_parsers[ENT_CLIENT_PROJECTILE] = projectile_read;
-	csqc_entity_parsers[ENT_CLIENT_GIBSPLASH] = Ent_GibSplash;
+	csqc_entity_parsers[ENT_CLIENT_GIBSPLASH] = gib_read;
 	csqc_entity_parsers[ENT_CLIENT_DAMAGEINFO] = damage_info_read;
 	csqc_entity_parsers[ENT_CLIENT_CASING] = casing_read;
 	csqc_entity_parsers[ENT_CLIENT_INIT] = main_init_read;
