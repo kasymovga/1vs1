@@ -135,7 +135,7 @@ void fillNexuizGameSettingsDialog(entity me)
 			me.TDempty(me, 0.25);
 			me.TD(me, 1, 3, e = makeNexuizTextLabel(0, "Download Rexuiz client here:"));
 			e.colorL = '1 0.5 0.5';
-			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.top"));
+			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.com"));
 			e.colorL = '0 0.5 1';
 	}
 	me.TR(me);
