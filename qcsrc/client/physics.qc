@@ -78,11 +78,9 @@ float physics_last_FORWARD_KEY_time;
 float physics_last_BACKWARD_KEY_time;
 float physics_last_RIGHT_KEY_time;
 float physics_last_LEFT_KEY_time;
-vector CSQCPhysic_SetViewOrg()
-{
+vector(void) physics_view_origin {
 	vector v;
-	if(physics && servercommandframe && clientcommandframe && (!spectatee_status || observer_status))
-	{
+	if (physics && servercommandframe && clientcommandframe && (!spectatee_status || observer_status)) {
 		float frametime_save = frametime;
 		float i;
 		float n = clientcommandframe + 1;
@@ -101,20 +99,16 @@ vector CSQCPhysic_SetViewOrg()
 			physics_plug_pre();
 
 		physics_crouch = physics_start_crouch;
-		if (physics_start_crouch)
-		{
+		if (physics_start_crouch) {
 			setsize(self, self.crouch_mins, self.crouch_maxs);
 			self.view_ofs = self.crouch_view_ofs;
-		}
-		else
-		{
+		} else {
 			setsize(self, self.stand_mins, self.stand_maxs);
 			self.view_ofs = self.stand_view_ofs;
 		}
 		self.origin = physics_start_origin;
 		if (ground_lastent)
-		if (ground_origin != ground_oldorigin)
-		{
+		if (ground_origin != ground_oldorigin) {
 			float f;
 			f = max(0, (ground_curtime - ground_oldtime) / (ground_time - ground_oldtime));
 			ground_curtime += frametime;
@@ -132,8 +126,7 @@ vector CSQCPhysic_SetViewOrg()
 			self.last_LEFT_KEY_time = physics_last_LEFT_KEY_time;
 			self.lastkeys = getstatf(STAT_PRESSED_KEYS);
 		}
-		for (i = servercommandframe + 1; i <= n; i++)
-		{
+		for (i = servercommandframe + 1; i <= n; i++) {
 			if not(RetrieveMovementFrame(i))
 				break;
 
@@ -143,7 +136,6 @@ vector CSQCPhysic_SetViewOrg()
 				input_angles = WarpZone_UnTransformAngles(warpzone_view, input_angles);
 				//print(" ", vtos(input_angles), "\n");
 			}
-
 			frametime = input_timelength;
 			physics_button_crouch = input_buttons & 16;
 			physics_movement = input_movevalues;
@@ -185,11 +177,10 @@ vector CSQCPhysic_SetViewOrg()
 			camera_correction_needed = FALSE;
 		}
 	}
-
 	return v;
 }
 
-void CSQCPhysic_SetCamera() {
+void(void) physics_camera_setup {
 	if (physics) {
 		if (physics_plug_adjust_view)
 			view_camera_origin = physics_plug_adjust_view();
@@ -218,12 +209,10 @@ void CSQCPhysic_SetCamera() {
 }
 
 float physics_player_content;
-void Ent_Physic(float isnew)
-{
+void(float isnew) physics_read {
 	float f = ReadShort();
 	physics = self;
-	if (f & 1)
-	{
+	if (f & 1) {
 		if (cvar("cl_movement_replay"))
 			cvar_clientsettemp("cl_movement_replay", "0");
 
@@ -289,8 +278,7 @@ void Ent_Physic(float isnew)
 			g_dodging_frozen_factor = ReadCoord();
 		}
 	}
-	if (f & 2)
-	{
+	if (f & 2) {
 		self.crouch_mins_x = ReadCoord();
 		self.crouch_mins_y = ReadCoord();
 		self.crouch_mins_z = ReadCoord();
@@ -310,8 +298,7 @@ void Ent_Physic(float isnew)
 		self.stand_view_ofs_y = ReadCoord();
 		self.stand_view_ofs_z = ReadCoord();
 	}
-	if (f & 4)
-	{
+	if (f & 4) {
 		physics_start_origin_x = ReadCoord();
 		physics_start_origin_y = ReadCoord();
 		physics_start_origin_z = ReadCoord();
@@ -331,9 +318,7 @@ void Ent_Physic(float isnew)
 		if (f & 512) {
 			physics_maxspeedmod = ReadCoord();
 			physics_jump_velocity_factor = ReadCoord();
-		}
-		else
-		{
+		} else {
 			physics_maxspeedmod = 1;
 			physics_jump_velocity_factor = 1;
 		}
@@ -362,6 +347,7 @@ void Ent_Physic(float isnew)
 			physics_lastwj = ReadCoord();
 		} else
 			physics_lastwj = 0;
+
 		if (g_dodging) {
 			physics_last_dodging = 0;
 			physics_last_FORWARD_KEY_time = 0;

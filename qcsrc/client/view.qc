@@ -191,9 +191,9 @@ void CSQC_UpdateView(float w, float h)
 	// Draw the World (and sky)
 	R_SetView(VF_DRAWWORLD, 1);
 	view_angles = input_angles;
-	view_origin = CSQCPhysic_SetViewOrg();
+	view_origin = physics_view_origin();
 	WarpZone_FixView();
-	CSQCPhysic_SetCamera();
+	physics_camera_setup();
 	makevectors(view_angles);
 	view_forward = v_forward;
 	view_right = v_right;

@@ -75,7 +75,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;
 	csqc_entity_parsers[ENT_CLIENT_WALL] = wall_read;
 	csqc_entity_parsers[ENT_CLIENT_MODELEFFECT] = effect_model_read;
-	csqc_entity_parsers[ENT_CLIENT_PHYSICS] = Ent_Physic;
+	csqc_entity_parsers[ENT_CLIENT_PHYSICS] = physics_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_SPIDERBOT] = Ent_PhysicSpiderbot;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_AIRCRAFT] = Ent_PhysicAircraft;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_CAR] = Ent_PhysicCar;
