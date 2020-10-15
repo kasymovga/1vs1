@@ -74,7 +74,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_MAPVOTE] = mapvote_read;
 	csqc_entity_parsers[ENT_CLIENT_RANDOMSEED] = prandom_seed_read;
 	csqc_entity_parsers[ENT_CLIENT_WALL] = wall_read;
-	csqc_entity_parsers[ENT_CLIENT_MODELEFFECT] = Ent_ModelEffect;
+	csqc_entity_parsers[ENT_CLIENT_MODELEFFECT] = effect_model_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS] = Ent_Physic;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_SPIDERBOT] = Ent_PhysicSpiderbot;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_AIRCRAFT] = Ent_PhysicAircraft;
@@ -122,16 +122,16 @@ float() CSQC_Parse_TempEntity { //called by engine
 		particles_nex_beam_read();
 		return TRUE;
 	case TE_CSQC_LIGHTNINGARC:
-		Net_ReadLightningarc();
+		effect_lightningarc_read();
 		return TRUE;
 	case TE_CSQC_BIGLIGHTNINGARC:
-		Net_ReadBigLightningarc();
+		effect_lightningarc_big_read();
 		return TRUE;
 	case TE_CSQC_ZAPPERLIGHTNING:
 		zapper_lightning_read();
 		return TRUE;
 	case TE_CSQC_BLAST:
-		Net_ReadBlast();
+		effect_blast_read();
 		return TRUE;
 	case TE_CSQC_ANNOUNCE_PRINT:
 		announce_print();

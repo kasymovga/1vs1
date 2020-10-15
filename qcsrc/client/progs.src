@@ -112,11 +112,9 @@ projectile.qc
 gib.qc
 damage.qc
 casing.qc
-effects.qc
+effect.qc
 wall.qc
-modeleffects.qc
 zapper.qc
-
 //vehicles/spiderbot.qc
 ../client-server/nadget.qc
 nadgetselect.qc
