@@ -1,1 +1,1 @@
-void Ent_PhysicSpiderbot(float isnew);
+void(float isnew) physics_spiderbot_read;

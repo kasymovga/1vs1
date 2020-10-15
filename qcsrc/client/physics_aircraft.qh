@@ -1,1 +1,1 @@
-void Ent_PhysicAircraft(float isnew);
+void(float isnew) physics_aircraft_read;

@@ -1,1 +1,1 @@
-void Ent_PhysicCar(float isnew);
+void(float isnew) physics_car_read;
