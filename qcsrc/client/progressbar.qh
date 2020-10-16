@@ -1,1 +1,1 @@
-void Ent_ProgressBar(float bIsNewEntity);
+void(float bIsNewEntity) progressbar_read;

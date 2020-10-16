@@ -1,6 +1,6 @@
 entity progressbar;
 
-void ProgressBar_Draw() {
+void(void) progressbar_draw {
 	entity e;
 	float center = CVAR(vid_conwidth) / 2;
 	float left = center - 100;
@@ -20,7 +20,7 @@ void ProgressBar_Draw() {
 	}
 }
 
-void Ent_ProgressBar_Remove() {
+void(void) progressbar_remove {
 	entity e;
 	strunzone(self.netname);
 	if (progressbar == self) {
@@ -36,7 +36,7 @@ void Ent_ProgressBar_Remove() {
 		}
 }
 
-void Ent_ProgressBar(float bIsNewEntity) {
+void(float bIsNewEntity) progressbar_read {
 	float f = ReadByte();
 	self.cnt = ReadByte();
 	if (f & 2) {
@@ -51,10 +51,10 @@ void Ent_ProgressBar(float bIsNewEntity) {
 			if (e == self) //Already added in chain
 				return;
 
-		self.entremove = Ent_ProgressBar_Remove;
+		self.entremove = progressbar_remove;
 		self.sort_next = progressbar;
 		progressbar = self;
-		progressbar.draw2d = ProgressBar_Draw;
+		progressbar.draw2d = progressbar_draw;
 		progressbar.draw2dflag = 1;
 	}
 }
