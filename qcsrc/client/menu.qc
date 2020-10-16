@@ -7,8 +7,8 @@ float menu_choiced;
 .string menu_title;
 .float menu_timeout;
 
-#define ITEM_HEIGHT 30
-#define ITEM_TOP_MARGIN 20
+#define MENU_ITEM_HEIGHT 30
+#define MENU_ITEM_TOP_MARGIN 20
 
 void(void) menu_draw;
 
@@ -90,7 +90,7 @@ void(float bIsNewEntity) menu_read {
 
 void(void) menu_selected_update {
 	vector v = mouse_position();
-	menu_selected = floor((v_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
+	menu_selected = floor((v_y - MENU_ITEM_TOP_MARGIN - (MENU_ITEM_HEIGHT * 2)) / MENU_ITEM_HEIGHT);
 }
 
 float(float bInputType, float nPrimary, float nSecondary) menu_input_event;
@@ -104,19 +104,19 @@ void(void) menu_draw {
 	string item_color;
 	sb_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
-	pos_y = ITEM_TOP_MARGIN;
+	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;
 	pos_x = center - stringwidth(self.menu_title, FALSE) * 0.5 * 24;
-    drawfill('0 1' * ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (ITEM_TOP_MARGIN + ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
+    drawfill('0 1' * MENU_ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
 	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
-	pos_y += ITEM_HEIGHT;
+	pos_y += MENU_ITEM_HEIGHT;
 	if (self.menu_timeout) {
 		i = ceil(max(0, self.menu_timeout - time));
 		menu_string = strcat(ftos(i), " seconds left");
 		pos_x = center - stringwidth(menu_string, FALSE) * 0.5 * 16;
 		drawstring(pos, menu_string, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	}
-	pos_y += ITEM_HEIGHT;
+	pos_y += MENU_ITEM_HEIGHT;
 	menu_selected_update();
 	for (i = 0; i < self.cnt; i++) {
 		if (menu_selected == i)
@@ -135,7 +135,7 @@ void(void) menu_draw {
 		menu_string = strcat(item_color, ftos(i + 1), ". ", substring(self.menu_items[i], 0, subcmd));
 		pos_x = center - stringwidth(strdecolorize(menu_string), FALSE) * 0.5 * 24 * size_scale;
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
-		pos_y += ITEM_HEIGHT;
+		pos_y += MENU_ITEM_HEIGHT;
 	}
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = menu_input_event;
