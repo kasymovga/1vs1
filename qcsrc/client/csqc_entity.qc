@@ -82,7 +82,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_GAMESTATUS] = gamestatus_read;
 	csqc_entity_parsers[ENT_CLIENT_MENU] = menu_read;
 	csqc_entity_parsers[ENT_CLIENT_PROGRESSBAR] = progressbar_read;
-	csqc_entity_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
+	csqc_entity_parsers[ENT_CLIENT_LOCATION_REQUEST] = locationrequest_read;
 	csqc_entity_parsers[ENT_CLIENT_DLC_LIST] = dlc_read;
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER] = zapper_beam_read;
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = zapper_shield_read;
@@ -91,7 +91,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
 	csqc_entity_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
-	csqc_entity_parsers[ENT_CLIENT_NOTELINE] = Ent_NoteLine;
+	csqc_entity_parsers[ENT_CLIENT_NOTELINE] = noteline_read;
 	csqc_entity_parsers[ENT_CLIENT_HOOK] = hook_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_HOOK] = hook_physics_read;
 	csqc_entity_parsers[ENT_CLIENT_DLC_SOUND] = dlc_sound_read;

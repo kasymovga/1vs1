@@ -1,14 +1,14 @@
 entity noteline;
 
-void NoteLine_Draw();
+void(void) noteline_draw;
 
-void NoteLine_Remove() {
+void(void) noteline_remove {
 	entity e;
 	if (noteline == self) {
 		noteline = noteline.sort_next;
 		if (noteline) {
 			noteline.draw2dflag = 1;
-			noteline.draw2d = NoteLine_Draw;
+			noteline.draw2d = noteline_draw;
 		}
 	} else
 		for (e = noteline; e.sort_next; e = e.sort_next) {
@@ -20,43 +20,42 @@ void NoteLine_Remove() {
 	strunzone(self.message);
 }
 
-vector NoteLine_Pos;
-void NoteLine_DrawLine(string s)
-{
+vector noteline_pos;
+void(string s) noteline_line_draw {
 	drawfont = sbar_font;
 	drawcolorcodedstring(
-		NoteLine_Pos - sbar_fontsize_x * '1 0 0' * (stringwidth(s, TRUE) + 1),
+		noteline_pos - sbar_fontsize_x * '1 0 0' * (stringwidth(s, TRUE) + 1),
 		s,
 		sbar_fontsize,
 		sbar_alpha_fg,
 		0
 	);
-	NoteLine_Pos_y += sbar_fontsize_y;
+	noteline_pos_y += sbar_fontsize_y;
 }
 
-void NoteLine_Draw() {
-	NoteLine_Pos_x = CVAR(vid_conwidth);
-	NoteLine_Pos_y = 28;
+void(void) noteline_draw {
+	noteline_pos_x = CVAR(vid_conwidth);
+	noteline_pos_y = 28;
 	entity e;
 	string head, tail;
 	float n;
 	for (e = noteline; e; e = e.sort_next) {
-		NoteLine_Pos_y += sbar_fontsize_y * 0.5;
+		noteline_pos_y += sbar_fontsize_y * 0.5;
 		tail = e.message;
 		for (;;) {
 			n = strstrofs(tail, "\n", 0);
 			if (n < 0) {
-				NoteLine_DrawLine(tail);
+				noteline_line_draw(tail);
 				break;
 			}
 			head = substring(tail, 0, n + 1);
 			tail = substring(tail, n + 1, -1);
-			NoteLine_DrawLine(head);
+			noteline_line_draw(head);
 		}
 	}
 }
 
-string NoteLine_PrepareLine(string s) {
+string(string s) noteline_text_prepare {
 	float cmdkey, cmdkey_end;
 	if (isdemo_flag) {
 		cmdkey = strstrofs(s, "\n", 0);
@@ -84,12 +83,12 @@ string NoteLine_PrepareLine(string s) {
 	return s;
 }
 
-void Ent_NoteLine(float bIsNew) {
-	self.entremove = NoteLine_Remove;
+void(float bIsNew) noteline_read {
+	self.entremove = noteline_remove;
 	if (self.message)
 		strunzone(self.message);
 
-	self.message = strzone(NoteLine_PrepareLine(ReadString()));
+	self.message = strzone(noteline_text_prepare(ReadString()));
 	entity e;
 	for (e = noteline; e; e = e.sort_next) {
 		if (e == self)
@@ -102,7 +101,7 @@ void Ent_NoteLine(float bIsNew) {
 	}
 	noteline = self;
 	noteline.draw2dflag = 1;
-	noteline.draw2d = NoteLine_Draw;
+	noteline.draw2d = noteline_draw;
 :skip
 	return;
 }

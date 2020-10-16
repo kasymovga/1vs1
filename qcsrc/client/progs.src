@@ -48,7 +48,7 @@ progressbar.qh
 physics_spiderbot.qh
 physics_aircraft.qh
 physics_car.qh
-location_request.qh
+locationrequest.qh
 dlc.qh
 ../common/dlc.qh
 ../common/str.qh
@@ -168,7 +168,7 @@ menu.qc
 mouse.qc
 shownames.qc
 progressbar.qc
-location_request.qc
+locationrequest.qc
 dlc.qc
 ../common/dlc.qc
 radio.qc

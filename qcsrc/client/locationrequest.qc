@@ -1,6 +1,6 @@
 entity selected_location;
 
-void LocationRequest_Remove() {
+void(void) locationrequest_remove {
 	strunzone(self.netname);
 	if (self == selected_location)
 		selected_location = world;
@@ -8,11 +8,11 @@ void LocationRequest_Remove() {
 	self.teamradar_icon = 0;
 }
 
-float LocationRequest_InputEvent(float bInputType, float nPrimary, float nSecondary) {
-	if (bInputType != 0)
+float locationrequest_input_event(float input_type, float primary, float secondary) {
+	if (input_type != 0)
 		return FALSE;
 
-	if (nPrimary == K_MOUSE1) {
+	if (primary == K_MOUSE1) {
 		vector loc;
 		loc = teamradar_2dcoord_to_texcoord(mouse_position());
 		loc = teamradar_texcoord_to_3dcoord(loc);
@@ -29,24 +29,24 @@ float LocationRequest_InputEvent(float bInputType, float nPrimary, float nSecond
 	return FALSE;
 }
 
-void LocationRequest_Draw() {
+void(void) locationrequest_draw {
 	selected_location = self;
 	sb_hidescores = TRUE;
 	ons_showmap = FALSE;
 	Mouse_Enable();
-	CSQC_InputEvent_Callback = LocationRequest_InputEvent;
+	CSQC_InputEvent_Callback = locationrequest_input_event;
 	teamradar_view(1.8, self.netname);
 	self.chain = world;
 }
 
-void Ent_LocationRequest(float bNew) {
-	self.entremove = LocationRequest_Remove;
+void(float bNew) locationrequest_read {
+	self.entremove = locationrequest_remove;
 	float f = ReadByte();
 	string title;
 	if (f & 1)
 		title = ReadString();
 
 	self.netname = strzone(title);
-	self.draw2d = LocationRequest_Draw;
+	self.draw2d = locationrequest_draw;
 	self.draw2dflag = 1;
 }

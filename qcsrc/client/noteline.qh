@@ -1,1 +1,1 @@
-void Ent_NoteLine(float bIsNew);
+void(float bIsNew) noteline_read;
