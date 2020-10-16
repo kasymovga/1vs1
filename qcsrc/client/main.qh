@@ -69,13 +69,3 @@ float g_campaign;
 float localgame;
 float button_attack2_allowed;
 .float float1;
-
-.entity sort_next;
-.entity sort_prev;
-#define SORT_SWAP(a,b)									\
-	b.sort_prev = a.sort_prev;							\
-	a.sort_next = b.sort_next;							\
-	if(b.sort_next) b.sort_next.sort_prev = a;			\
-	if(a.sort_prev) a.sort_prev.sort_next = b;			\
-	a.sort_prev = b;									\
-	b.sort_next = a

@@ -340,26 +340,26 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 }
 
 void(void) view_spider_hud {
-    float rockets,reload,heat,hp,shield,i;
-    vector p,pp;
+	float rockets,reload,heat,hp,shield,i;
+	vector p,pp;
 	Sbar_Draw();
-    rockets = getstati(STAT_SPIDERBOT_ROCKETS);
-    heat    = min(getstatf(STAT_SPIDERBOT_HEAT),1);
-    reload  = min(getstatf(STAT_SPIDERBOT_RELOAD),1);
-    hp      = min(getstatf(STAT_SPIDERBOT_HEALTH),1);
-    shield  = min(getstatf(STAT_SPIDERBOT_SHIELD),1);
-    // Draw health bar
-    p = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
-    p = p + '0 1 0' * CVAR(vid_conheight) - '0 72 0';
-    //pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
+	rockets = getstati(STAT_SPIDERBOT_ROCKETS);
+	heat = min(getstatf(STAT_SPIDERBOT_HEAT),1);
+	reload = min(getstatf(STAT_SPIDERBOT_RELOAD),1);
+	hp = min(getstatf(STAT_SPIDERBOT_HEALTH),1);
+	shield = min(getstatf(STAT_SPIDERBOT_SHIELD),1);
+	// Draw health bar
+	p = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
+	p = p + '0 1 0' * CVAR(vid_conheight) - '0 72 0';
+	//pp = ('0 1 0' * hp) + ('1 0 0' * (1-hp));
 	if (shield >= 0)
 		drawfill(p, '256 0 0' * shield + '0 8 0' , '0.5 0.5 1', 0.75, DRAWFLAG_NORMAL);
 
-    p_y += 8;
-    drawfill(p, '256 0 0' * hp + '0 8 0' , '0 1 0', 0.75, DRAWFLAG_NORMAL);
-    p_x += 256 * hp;
-    drawfill(p, '256 0 0' * (1-hp) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
-    // Draw heat indicator
+	p_y += 8;
+	drawfill(p, '256 0 0' * hp + '0 8 0' , '0 1 0', 0.75, DRAWFLAG_NORMAL);
+	p_x += 256 * hp;
+	drawfill(p, '256 0 0' * (1-hp) + '0 8 0' , '0 0 0', 0.75, DRAWFLAG_NORMAL);
+	// Draw heat indicator
 	if (heat >= 0) {
 		p = '0.5 0 0' * (CVAR(vid_conwidth) - 256);
 		p = p + '0 1 0' * CVAR(vid_conheight) - '0 74  0';
@@ -367,7 +367,7 @@ void(void) view_spider_hud {
 		p_x += 256 * (1-heat);
 		drawfill(p, '256 0 0' * heat  + '0 2 0' , '1 0 0', 0.5, DRAWFLAG_NORMAL);
 	}
-    // Draw rocket icons for loaded/empty tubes.
+	// Draw rocket icons for loaded/empty tubes.
 	if (rockets >= 0) {
 		pp = '0.5 0 0' * (CVAR(vid_conwidth) - (rkt_size * 8));
 		pp += '0 1 0' * CVAR(vid_conheight) - '0 104 0';

@@ -60,6 +60,7 @@ gamestatus.qh
 weaponselect.qh
 view.qh
 main.qh
+sort.qh
 input.qh
 weapon.qh
 csqc_entity.qh
