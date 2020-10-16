@@ -140,7 +140,7 @@ float() CSQC_Parse_TempEntity { //called by engine
 		weapontime = time;
 		return TRUE;
 	case TE_CSQC_RADIO:
-		Net_ReadRadio();
+		radio_read();
 		return TRUE;
 	case TE_CSQC_NADGETSELECT:
 		Net_ReadNadgetSelect();

@@ -1,1 +1,1 @@
-void Net_ReadRadio(void);
+void(void) radio_read;
