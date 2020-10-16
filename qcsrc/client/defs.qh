@@ -1,8 +1,5 @@
 // Additional OPTIONAL Fields and Globals
 noref float		intermission;
-float		sb_showscores;
-float		sb_hidescores;
-float		sb_showaccuracy;
 .string		message;
 .float renderflags;
 // float		coop;
@@ -50,6 +47,3 @@ float camera_correction_needed;
 string map_description;
 string motd;
 float hook_use_swapped;
-float trace_dphitcontents;
-float trace_dpstartcontents;
-.float dphitcontentsmask;

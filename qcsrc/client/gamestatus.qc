@@ -1,5 +1,5 @@
 void(void) gamestatus_draw {
-	if (sb_hidescores)
+	if (sbar_hidescores)
 		return;
 
 	vector pos, _size;

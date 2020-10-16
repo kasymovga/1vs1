@@ -97,16 +97,16 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 		button_attack2 = 0;
 		return FALSE;
 	} else if(strCmd == "+showscores") {
-		sb_showscores = TRUE;
+		sbar_showscores = TRUE;
 		return TRUE;
 	} else if(strCmd == "-showscores") {
-		sb_showscores = FALSE;
+		sbar_showscores = FALSE;
 		return TRUE;
 	} else if(strCmd == "+showaccuracy") {
-		sb_showaccuracy = TRUE;
+		sbar_showaccuracy = TRUE;
 		return TRUE;
 	} else if(strCmd == "-showaccuracy") {
-		sb_showaccuracy = FALSE;
+		sbar_showaccuracy = FALSE;
 		return TRUE;
 	}
 	if(camera_active)

@@ -57,8 +57,7 @@ void NS_Draw(void) {
         return;
 	}
 	Mouse_Enable();
-	sb_hidescores = TRUE;
-
+	sbar_hidescores = TRUE;
     float a = ns_alpha;
 
     drawfont = sbar_bigfont;

@@ -3,82 +3,68 @@
 #define SPIDER_CROSS "textures/spiderbot/cross"
 #define rkt_size 32
 
-//float trace_dphitcontents;
-float trace_networkentity;
-//float Q3SURFACEFLAG_SLICK = 2; // low friction surface
-float DPCONTENTS_SOLID = 1; // blocks player movement
-float DPCONTENTS_BODY = 32; // blocks player movement
-float DPCONTENTS_CORPSE = 64; // blocks player movement
-float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
-float drawtime;
-float cs_project_is_b0rked;
+float view_drawtime;
+float view_project_is_broken;
+float view_old_vid_width, view_old_vid_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
 
-float fovx, fovy;
-float old_vid_width, old_vid_height, old_viewzoom, old_fov, old_vid_pixelheight;
-vector GetCurrentFov()
-{
+void(void) view_camera_setup;
+
+vector(void) view_fov {
 	float zoomdir, zoomfactor, zoomspeed;
-
 	zoomfactor = CVAR(cl_zoomfactor);
-	if(zoomfactor < 1 || zoomfactor > 16)
+	if (zoomfactor < 1 || zoomfactor > 16)
 		zoomfactor = 2.5;
+
 	zoomspeed = CVAR(cl_zoomspeed);
-	if(zoomspeed >= 0)
-		if(zoomspeed < 0.5 || zoomspeed > 16)
+	if (zoomspeed >= 0)
+		if (zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
 	zoomdir = any_button_zoom;
-	if(spectatee_status > 0 || isdemo_flag)
-	if(spectatorbutton_zoom)
+	if (spectatee_status > 0 || isdemo_flag)
+	if (spectatorbutton_zoom)
 		zoomdir = (zoomdir ? 0 : 1);
 
-	if(camera_active)
-	{
+	if (camera_active) {
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
-	}
-	else
-	{
-		if(zoomspeed < 0) // instant zoom
-		{
-			if(zoomdir)
+	} else {
+		if (zoomspeed < 0) { // instant zoom
+			if (zoomdir)
 				current_viewzoom = 1 / zoomfactor;
 			else
 				current_viewzoom = 1;
-		}
-		else
-		{
-			if(zoomdir)
+		} else {
+			if (zoomdir)
 				current_viewzoom = 1 / bound(1, 1 / current_viewzoom + drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
 			else
 				current_viewzoom = bound(1 / zoomfactor, current_viewzoom + drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
 		}
 	}
-
-	if(math_almost_equals(current_viewzoom, 1))
+	if (math_almost_equals(current_viewzoom, 1))
 		current_zoomfraction = 0;
-	else if(math_almost_equals(current_viewzoom, 1/zoomfactor))
+	else if (math_almost_equals(current_viewzoom, 1/zoomfactor))
 		current_zoomfraction = 1;
 	else
 		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
 
-	if(CVAR(cl_zoomsensitivity) < 1)
+	if (CVAR(cl_zoomsensitivity) < 1)
 		setsensitivityscale(pow(current_viewzoom, 1 - CVAR(cl_zoomsensitivity)));
 	else
 		setsensitivityscale(1);
 
-	if (old_viewzoom == current_viewzoom)
-	if (old_fov == fov)
-	if (old_vid_width == vid_width)
-	if (old_vid_height == vid_height)
-	if (old_vid_pixelheight == CVAR(vid_pixelheight))
+	if (view_old_zoom == current_viewzoom)
+	if (view_old_fov == fov)
+	if (view_old_vid_width == vid_width)
+	if (view_old_vid_height == vid_height)
+	if (view_old_vid_pixelheight == CVAR(vid_pixelheight))
 		goto skip;
 
-	old_viewzoom = current_viewzoom;
-	old_vid_width = vid_width;
-	old_vid_height = vid_height;
-	old_fov = fov;
-	old_vid_pixelheight = CVAR(vid_pixelheight);
-	float frustumx, frustumy;
+	view_old_zoom = current_viewzoom;
+	view_old_vid_width = vid_width;
+	view_old_vid_height = vid_height;
+	view_old_fov = fov;
+	view_old_vid_pixelheight = CVAR(vid_pixelheight);
+	float frustumx, frustumy, fovx, fovy;
 	fov_zoomed = fov * current_viewzoom;
 	frustumy = tan(fov * 0.00872664625997164788) * 0.75 * current_viewzoom;
 	frustumx = frustumy * vid_width / vid_height / CVAR(vid_pixelheight);
@@ -88,7 +74,6 @@ vector GetCurrentFov()
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
-// this function must match W_SetupShot!
 float zoomscript_caught;
 
 vector wcross_origin;
@@ -129,7 +114,6 @@ void DrawTintEffects(void) {
     }
 }
 
-void CSQC_Demo_Camera();
 float camera_mode;
 void CSQC_spider_HUD();
 void CSQC_UpdateView(float w, float h)
@@ -152,8 +136,8 @@ void CSQC_UpdateView(float w, float h)
 	vid_width = w;
 	vid_height = h;
 	fog_force();
-	drawframetime = max(0.000001, time - drawtime);
-	drawtime = time;
+	drawframetime = max(0.000001, time - view_drawtime);
+	view_drawtime = time;
 	fov = cvar("fov");
 	any_button_zoom = button_zoom;
 	if (button_attack2_allowed) {
@@ -161,8 +145,7 @@ void CSQC_UpdateView(float w, float h)
 		if not(CVAR(cl_nex_secondary_zoom_disable))
 			any_button_zoom += button_attack2;
 	}
-	if(any_button_zoom || fov <= 59.5)
-	{
+	if(any_button_zoom || fov <= 59.5) {
 		if not(zoomscript_caught)
 		if not(button_zoom)
 		{
@@ -170,9 +153,7 @@ void CSQC_UpdateView(float w, float h)
 			zoomscript_caught = 1;
 			ignore_plus_zoom += 1;
 		}
-	}
-	else
-	{
+	} else {
 		if(zoomscript_caught)
 		{
 			localcmd("-button4\n");
@@ -180,13 +161,10 @@ void CSQC_UpdateView(float w, float h)
 			ignore_minus_zoom += 1;
 		}
 	}
-
 	sbar_alpha_fg = CVAR(sbar_alpha_fg) * (1 - CVAR(_menu_alpha));
-	activeweapon = getstati(STAT_SWITCHWEAPON);
-
+	weapon_current = getstati(STAT_SWITCHWEAPON);
 	// ALWAYS Clear Current Scene First
 	R_ClearScene();
-
 	// Assign Standard Viewflags
 	// Draw the World (and sky)
 	R_SetView(VF_DRAWWORLD, 1);
@@ -199,27 +177,21 @@ void CSQC_UpdateView(float w, float h)
 	view_right = v_right;
 	view_up = v_up;
 	// Set the console size vars
-
-	R_SetView(VF_FOV, GetCurrentFov());
-
+	R_SetView(VF_FOV, view_fov());
 	// Camera for demo playback
-	if(camera_active)
-	{
-		if(CVAR(camera_enable))
-			CSQC_Demo_Camera();
-		else
-		{
+	if(camera_active) {
+		if (CVAR(camera_enable))
+			view_camera_setup();
+		else {
 			cvar_set("chase_active", ftos(chase_active_backup));
 			cvar_set("cl_demo_mousegrab", "0");
 			camera_active = FALSE;
 		}
-	}
-#ifdef CAMERATEST
-	else if(CVAR(camera_enable))
-#else
-	else if(CVAR(camera_enable) && isdemo_flag)
+	} else if (CVAR(camera_enable)
+#ifndef CAMERATEST
+			&& isdemo_flag
 #endif
-	{
+			) {
 		// Enable required Darkplaces cvars
 		chase_active_backup = cvar("chase_active");
 		cvar_set("chase_active", "2");
@@ -227,48 +199,40 @@ void CSQC_UpdateView(float w, float h)
 		camera_active = TRUE;
 		camera_mode = FALSE;
 	}
-
-	sb_hidescores = FALSE;
+	sbar_hidescores = FALSE;
 	R_SetView(VF_DRAWCROSSHAIR, 0); //Make sure engine crosshairs are always hidden
-
 	// Draw the Engine Status Bar (the default Quake HUD)
 	R_SetView(VF_DRAWENGINESBAR, 0);
-
 	// Update the mouse position
 	/*
 	mousepos_x = vid_conwidth;
 	mousepos_y = vid_conheight;
 	mousepos = mousepos*0.5 + getmousepos();
 	*/
-
 	e = self;
 	for(self = world; (self = nextent(self)); )
 		if(self.draw)
 			self.draw();
-	self = e;
 
+	self = e;
 	R_AddEntities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	R_RenderScene();
-
 	// now switch to 2D drawing mode by calling a 2D drawing function
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
-
 	DrawTintEffects();
-
 	// draw 2D entities
 	e = self;
 	for(self = findchainfloat(draw2dflag, 1); self; self = self.chain)
 		self.draw2d();
 
 	self = e;
-
 	// draw radar
 	if(ons_showmap)
 		teamradar_view(TRUE, "");
 
-	if not(sb_showscores) {
+	if not(sbar_showscores) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
 			if ((spectatee_status > 0 && !observer_status) || CVAR(cl_showpressedkeys) >= 2)
 				Sbar_DrawPressedKeys();
@@ -283,7 +247,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if (observer_status)
 		draw_crosshair = FALSE;
-	else if (sb_hidescores)
+	else if (sbar_hidescores)
 		draw_crosshair = FALSE;
 	else
 		draw_crosshair = TRUE;
@@ -320,7 +284,7 @@ void CSQC_UpdateView(float w, float h)
                 wcross_alpha = CVAR(crosshair_color_alpha) * (1-CVAR(_menu_alpha));
                 wcross_sizefloat = CVAR(crosshair_size) * (1-CVAR(_menu_alpha));
                 if (CVAR(crosshair_per_weapon)) {
-                    e = weapon_info(activeweapon);
+                    e = weapon_info(weapon_current);
                     if (e && e.netname != "")
                     {
                         wcross_wep = e.netname;
@@ -378,12 +342,9 @@ void CSQC_UpdateView(float w, float h)
 		Draw2d_Post_self = NULL;
 		self = e;
 	}
-
 	Mouse_Draw();
-
 	// we must do this check AFTER a frame was rendered, or it won't work
-	if(cs_project_is_b0rked == 0)
-	{
+	if (view_project_is_broken == 0) {
 		string w0, h0;
 		w0 = cvar_string("vid_conwidth");
 		h0 = cvar_string("vid_conheight");
@@ -400,21 +361,20 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("vid_conwidth", "640");
 		cvar_set("vid_conheight", "480");
 		v2 = cs_project(v_forward);
-		if(v1 == v2)
-			cs_project_is_b0rked = 1;
+		if (v1 == v2)
+			view_project_is_broken = 1;
 		else
-			cs_project_is_b0rked = -1;
+			view_project_is_broken = -1;
+
 		cvar_set("vid_conwidth", w0);
 		cvar_set("vid_conheight", h0);
 	}
-
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
 	// unsuspicious
 	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
-void Sbar_Draw();
 void CSQC_spider_HUD()
 {
     float rockets,reload,heat,hp,shield,i;
@@ -472,13 +432,10 @@ void CSQC_spider_HUD()
 
 // following vectors must be global to allow seamless switching between camera modes
 vector camera_offset, current_camera_offset, mouse_angles, current_angles, current_origin, current_position;
-void CSQC_Demo_Camera()
-{
+void(void) view_camera_setup {
 	float speed, attenuation, dimensions;
 	vector tmp, delta;
-
-	if( cvar("camera_reset") || !camera_mode )
-	{
+	if (cvar("camera_reset") || !camera_mode) {
 		camera_offset = '0 0 0';
 		current_angles = '0 0 0';
 		camera_direction = '0 0 0';
@@ -490,24 +447,19 @@ void CSQC_Demo_Camera()
 		cvar_set("camera_reset", "0");
 		camera_mode = CAMERA_CHASE;
 	}
-
 	// Camera angles
-	if( camera_roll )
+	if (camera_roll)
 		mouse_angles_z += camera_roll * cvar("camera_speed_roll");
 
-	if(cvar("camera_look_player"))
-	{
+	if (cvar("camera_look_player")) {
 		local vector dir;
 		local float n;
-
 		dir = normalize(view_origin - current_position);
 		n = mouse_angles_z;
 		mouse_angles = vectoangles(dir);
 		mouse_angles_x = mouse_angles_x * -1;
 		mouse_angles_z = n;
-	}
-	else
-	{
+	} else {
 		tmp = getmousepos() * 0.1;
 		if(vlen(tmp)>cvar("camera_mouse_treshold"))
 		{
@@ -515,110 +467,88 @@ void CSQC_Demo_Camera()
 			mouse_angles_y -= tmp_x * cos(mouse_angles_z * DEG2RAD) + (tmp_y * -sin(mouse_angles_z * DEG2RAD));
 		}
 	}
-
 	while (mouse_angles_x < -180) mouse_angles_x = mouse_angles_x + 360;
 	while (mouse_angles_x > 180) mouse_angles_x = mouse_angles_x - 360;
 	while (mouse_angles_y < -180) mouse_angles_y = mouse_angles_y + 360;
 	while (mouse_angles_y > 180) mouse_angles_y = mouse_angles_y - 360;
-
 	// Fix difference when angles don't have the same sign
 	delta = '0 0 0';
-	if(mouse_angles_y < -60 && current_angles_y > 60)
+	if (mouse_angles_y < -60 && current_angles_y > 60)
 		delta = '0 360 0';
-	if(mouse_angles_y > 60 && current_angles_y < -60)
+	if (mouse_angles_y > 60 && current_angles_y < -60)
 		delta = '0 -360 0';
 
-	if(cvar("camera_look_player"))
+	if (cvar("camera_look_player"))
 		attenuation = cvar("camera_look_attenuation");
 	else
 		attenuation = cvar("camera_speed_attenuation");
 
 	attenuation = 1 / max(1, attenuation);
 	current_angles += (mouse_angles - current_angles + delta) * attenuation;
-
 	while (current_angles_x < -180) current_angles_x = current_angles_x + 360;
 	while (current_angles_x > 180) current_angles_x = current_angles_x - 360;
 	while (current_angles_y < -180) current_angles_y = current_angles_y + 360;
 	while (current_angles_y > 180) current_angles_y = current_angles_y - 360;
-
 	// Camera position
 	tmp = '0 0 0';
 	dimensions = 0;
-
-	if( camera_direction_x )
-	{
+	if (camera_direction_x) {
 		tmp_x = camera_direction_x * cos(current_angles_y * DEG2RAD);
 		tmp_y = camera_direction_x * sin(current_angles_y * DEG2RAD);
-		if( cvar("camera_forward_follows") && !cvar("camera_look_player") )
+		if (cvar("camera_forward_follows") && !cvar("camera_look_player"))
 			tmp_z = camera_direction_x * -sin(current_angles_x * DEG2RAD);
+
 		++dimensions;
 	}
-
-	if( camera_direction_y )
-	{
+	if (camera_direction_y) {
 		tmp_x += camera_direction_y * -sin(current_angles_y * DEG2RAD);
 		tmp_y += camera_direction_y * cos(current_angles_y * DEG2RAD) * cos(current_angles_z * DEG2RAD);
 		tmp_z += camera_direction_y * sin(current_angles_z * DEG2RAD);
 		++dimensions;
 	}
-
-	if( camera_direction_z )
-	{
+	if (camera_direction_z) {
 		tmp_z += camera_direction_z * cos(current_angles_z * DEG2RAD);
 		++dimensions;
 	}
-
-	if(cvar("camera_free"))
+	if (cvar("camera_free"))
 		speed = cvar("camera_speed_free");
 	else
 		speed = cvar("camera_speed_chase");
 
-	if(dimensions)
-	{
+	if (dimensions) {
 		speed = speed * sqrt(1 / dimensions);
 		camera_offset += tmp * speed;
 	}
-
 	current_camera_offset += (camera_offset - current_camera_offset) * attenuation;
-
 	// Camera modes
-	if( cvar("camera_free") )
-	{
-		if ( camera_mode == CAMERA_CHASE )
-		{
+	if (cvar("camera_free")) {
+		if (camera_mode == CAMERA_CHASE) {
 			current_camera_offset = current_origin + current_camera_offset;
 			camera_offset = current_origin + camera_offset;
 		}
-
 		camera_mode = CAMERA_FREE;
 		current_position = current_camera_offset;
-	}
-	else
-	{
-		if ( camera_mode == CAMERA_FREE )
-		{
+	} else {
+		if (camera_mode == CAMERA_FREE) {
 			current_origin = view_origin;
 			camera_offset = camera_offset - current_origin;
 			current_camera_offset = current_camera_offset - current_origin;
 		}
-
 		camera_mode = CAMERA_CHASE;
-
-		if(cvar("camera_chase_smoothly"))
+		if (cvar("camera_chase_smoothly"))
 			current_origin += (view_origin - current_origin) * attenuation;
 		else
 			current_origin = view_origin;
 
 		current_position = current_origin + current_camera_offset;
 	}
-
 	R_SetView(VF_ANGLES, current_angles);
 	R_SetView(VF_ORIGIN, current_position);
 }
 
 vector(vector vec) view_project_3d_to_2d {
 	vec = cs_project(vec);
-	if(cs_project_is_b0rked > 0) {
+	if(view_project_is_broken > 0) {
 		vec_x *= CVAR(vid_conwidth) / vid_width;
 		vec_y *= CVAR(vid_conheight) / vid_height;
 	}

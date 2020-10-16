@@ -1879,12 +1879,11 @@ void Sbar_Draw (void)
 	float _health = getstati(STAT_HEALTH);
 	if (mapvote_active) // map voting screen
 	{
-		if(sb_showscores) {
+		if (sbar_showscores) {
 			Sbar_DrawScoreboard();
 			Sbar_Score();
 			Sbar_Timer();
-		}
-		else if(sb_showaccuracy) {
+		} else if(sbar_showaccuracy) {
 			Sbar_DrawAccuracyStats();
 			Sbar_Score();
 			Sbar_Timer();
@@ -1896,10 +1895,10 @@ void Sbar_Draw (void)
 	}
 	else if (_health <= 0 || observer_status)
 	{
-  		if(sb_showaccuracy)
+  		if (sbar_showaccuracy)
   			Sbar_DrawAccuracyStats();
-		else if (!sb_hidescores) {
-			if (sb_showscores || (_health <= 0 && !sb_hidescores && CVAR(cl_deathscoreboard)))
+		else if (!sbar_hidescores) {
+			if (sbar_showscores || (_health <= 0 && !sbar_hidescores && CVAR(cl_deathscoreboard)))
 				Sbar_DrawScoreboard();
 		}
 		Sbar_Score();
@@ -1908,9 +1907,9 @@ void Sbar_Draw (void)
   	}
 	else
 	{
-		if (sb_showscores)
+		if (sbar_showscores)
 			Sbar_DrawScoreboard();
-		else if(sb_showaccuracy)
+		else if(sbar_showaccuracy)
 			Sbar_DrawAccuracyStats();
 
 		float armor;
@@ -1974,7 +1973,7 @@ void Sbar_Draw (void)
 				if(weaponimpulse[i-1] >= 0)
 				if(stat_weapons & x)
 				{
-					Sbar_DrawWeapon(i-1, fade, (i == activeweapon), i);
+					Sbar_DrawWeapon(i-1, fade, (i == weapon_current), i);
 				}
 				x *= 2;
 			}

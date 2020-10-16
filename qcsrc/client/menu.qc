@@ -13,7 +13,6 @@ float menu_choiced;
 void(void) menu_draw;
 
 void(void) menu_remove {
-	sb_hidescores = TRUE;
 	float i;
 	for (i = 0; i < self.cnt; i++) {
 		str_unzone_ifneeded(self.menu_items[i]);
@@ -102,7 +101,7 @@ void(void) menu_draw {
 	float center;
 	float size_scale;
 	string item_color;
-	sb_hidescores = TRUE;
+	sbar_hidescores = TRUE;
 	center = (CVAR(vid_conwidth) - 1)/2;
 	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;

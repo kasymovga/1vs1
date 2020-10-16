@@ -14,3 +14,6 @@ float sbar_font;
 float sbar_bigfont;
 vector sbar_fontsize;
 vector sbar_fontsize_spec;
+float sbar_showscores;
+float sbar_hidescores;
+float sbar_showaccuracy;

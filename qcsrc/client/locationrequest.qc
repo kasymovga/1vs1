@@ -31,7 +31,7 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 
 void(void) locationrequest_draw {
 	selected_location = self;
-	sb_hidescores = TRUE;
+	sbar_hidescores = TRUE;
 	ons_showmap = FALSE;
 	Mouse_Enable();
 	CSQC_InputEvent_Callback = locationrequest_input_event;
