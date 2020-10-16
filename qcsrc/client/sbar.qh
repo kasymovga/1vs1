@@ -17,3 +17,4 @@ vector sbar_fontsize_spec;
 float sbar_showscores;
 float sbar_hidescores;
 float sbar_showaccuracy;
+float sbar_weapons_time;

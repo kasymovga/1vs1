@@ -137,7 +137,7 @@ float() CSQC_Parse_TempEntity { //called by engine
 		announce_print();
 		return TRUE;
 	case TE_CSQC_WEAPONLIST:
-		weapontime = time;
+		sbar_weapons_time = time;
 		return TRUE;
 	case TE_CSQC_RADIO:
 		radio_read();

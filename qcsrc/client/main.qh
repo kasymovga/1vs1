@@ -15,9 +15,6 @@ const float COLOR_SPECTATOR = 1337;
 
 #define FONT_DEFAULT 0
 #define FONT_USER 8
-#define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
-#define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
-
 //float csqc_flags;
 
 entity playerslots[255]; // 255 is engine limit on maxclients

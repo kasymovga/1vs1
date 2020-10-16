@@ -9,8 +9,6 @@ vector bottomright;
 vector bottomleft;
 
 
-float weapontime;
-
 float sbar_alpha_fg;
 float sbar_alpha_bg;
 float sbar_border_thickness;
@@ -24,6 +22,8 @@ float SCOREBOARD_OFFSET = 50;
 
 #define FLAG_ANIM_LINEAR(frames,rate,offs) math_mod(floor((time) * (rate) + (offs)), frames)
 #define FLAG_ANIM_SINE(frames,rate,offs) (frames - 1) * (sin(time * rate + offs) * 0.5 + 0.5)
+#define SBAR_SCORE_IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
+#define SBAR_SCORE_IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
 
 float FlagIcon_Animate(string cn) {
 	var animparams = stov(cvar_string(strcat("_flagicon_", cn, "_animparams")));
@@ -321,9 +321,9 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 			return 0;
 	}
 	if(vl > vr)
-		return IS_INCREASING(scores_flags[ps_primary]);
+		return SBAR_SCORE_IS_INCREASING(scores_flags[ps_primary]);
 	if(vl < vr)
-		return IS_DECREASING(scores_flags[ps_primary]);
+		return SBAR_SCORE_IS_DECREASING(scores_flags[ps_primary]);
 
 	vl = left.scores[ps_secondary];
 	vr = right.scores[ps_secondary];
@@ -335,9 +335,9 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 			return 0;
 	}
 	if(vl > vr)
-		return IS_INCREASING(scores_flags[ps_secondary]);
+		return SBAR_SCORE_IS_INCREASING(scores_flags[ps_secondary]);
 	if(vl < vr)
-		return IS_DECREASING(scores_flags[ps_secondary]);
+		return SBAR_SCORE_IS_DECREASING(scores_flags[ps_secondary]);
 
 	return FALSE;
 }
@@ -366,16 +366,16 @@ float Sbar_CompareTeamScores(entity left, entity right)
 	vl = left.teamscores[ts_primary];
 	vr = right.teamscores[ts_primary];
 	if(vl > vr)
-		return IS_INCREASING(teamscores_flags[ts_primary]);
+		return SBAR_SCORE_IS_INCREASING(teamscores_flags[ts_primary]);
 	if(vl < vr)
-		return IS_DECREASING(teamscores_flags[ts_primary]);
+		return SBAR_SCORE_IS_DECREASING(teamscores_flags[ts_primary]);
 
 	vl = left.teamscores[ts_secondary];
 	vr = right.teamscores[ts_secondary];
 	if(vl > vr)
-		return IS_INCREASING(teamscores_flags[ts_secondary]);
+		return SBAR_SCORE_IS_INCREASING(teamscores_flags[ts_secondary]);
 	if(vl < vr)
-		return IS_DECREASING(teamscores_flags[ts_secondary]);
+		return SBAR_SCORE_IS_DECREASING(teamscores_flags[ts_secondary]);
 
 	return FALSE;
 }
@@ -1964,7 +1964,7 @@ void Sbar_Draw (void)
 
 		// weapon icons
 		x = 1.0;
-		float fade = bound(0, CVAR(sbar_weapons_fadetime) - (time - weapontime) *  CVAR(sbar_weapons_fadespeed), 1);
+		float fade = bound(0, CVAR(sbar_weapons_fadetime) - (time - sbar_weapons_time) *  CVAR(sbar_weapons_fadespeed), 1);
 		if (fade) {
 			Sbar_DrawWeapon_Clear();
 			for(i = 1; i <= 24; ++i)
