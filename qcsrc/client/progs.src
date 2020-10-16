@@ -137,6 +137,7 @@ gamemenu.qc
 ../client-server/race.qh
 race.qc
 view.qc
+weapon.qc
 interpolate.qc
 teamradar.qc
 waypointsprite.qc

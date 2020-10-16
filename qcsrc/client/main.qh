@@ -28,8 +28,6 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .void(void) draw2d;
 .float draw2dflag;
 float drawframetime;
-entity Draw2d_Post_self;
-var void() Draw2d_Post;
 
 float button_zoom;
 float any_button_zoom;

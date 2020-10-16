@@ -111,8 +111,8 @@ void GUI_Draw() {
 }
 
 void GUI_Draw_Set() {
-	Draw2d_Post_self = self;
-	Draw2d_Post = GUI_Draw;
+	view_draw2d_post_self = self;
+	view_draw2d_post = GUI_Draw;
 }
 
 void GUI_Show(float window) {
