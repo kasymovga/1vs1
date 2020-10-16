@@ -1,1 +1,1 @@
-void Ent_Menu(float bIsNewEntity);
+void(float bIsNewEntity) menu_read;

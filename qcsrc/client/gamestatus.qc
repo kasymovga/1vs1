@@ -1,4 +1,4 @@
-void GameStatus_Draw() {
+void(void) gamestatus_draw {
 	if (sb_hidescores)
 		return;
 
@@ -20,17 +20,17 @@ void GameStatus_Draw() {
 	draw_string_colorcoded_center(pos, tail, _size, self.alpha, DRAWFLAG_NORMAL);
 }
 
-void GameStatus_Remove() {
+void(void) gamestatus_remove {
 	str_unzone_ifneeded(self.message);
 }
 
-void Ent_GameStatus(float isnew) {
+void(float isnew) gamestatus_read {
 	self.origin_x = 0;
 	self.origin_y = CVAR(vid_conheight) / 2 - sbar_fontsize_y * 8;
-	self.draw2d = GameStatus_Draw;
+	self.draw2d = gamestatus_draw;
 	self.draw2dflag = 1;
 	float f = ReadByte();
-	self.entremove = GameStatus_Remove;
+	self.entremove = gamestatus_remove;
 	if (f & 1)
 		self.message = str_zone_ifneeded(ReadString());
 

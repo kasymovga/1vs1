@@ -79,8 +79,8 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_SPIDERBOT] = physics_spiderbot_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_AIRCRAFT] = physics_aircraft_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_CAR] = physics_car_read;
-	csqc_entity_parsers[ENT_CLIENT_GAMESTATUS] = Ent_GameStatus;
-	csqc_entity_parsers[ENT_CLIENT_MENU] = Ent_Menu;
+	csqc_entity_parsers[ENT_CLIENT_GAMESTATUS] = gamestatus_read;
+	csqc_entity_parsers[ENT_CLIENT_MENU] = menu_read;
 	csqc_entity_parsers[ENT_CLIENT_PROGRESSBAR] = Ent_ProgressBar;
 	csqc_entity_parsers[ENT_CLIENT_LOCATION_REQUEST] = Ent_LocationRequest;
 	csqc_entity_parsers[ENT_CLIENT_DLC_LIST] = dlc_read;

@@ -10,45 +10,35 @@ float menu_choiced;
 #define ITEM_HEIGHT 30
 #define ITEM_TOP_MARGIN 20
 
-void Menu_Draw();
-void Ent_Menu_Clear(float f) {
-	float i;
-	f = self.flags & f;
-	if (f & 1)
-		for (i = 0; i < self.cnt; i++) {
-			strunzone(self.menu_items[i]);
-		}
-	if (f & 8)
-		strunzone(self.menu_id);
+void(void) menu_draw;
 
-	if (f & 2)
-		strunzone(self.menu_title);
-}
-
-void Ent_Menu_Remove() {
+void(void) menu_remove {
 	sb_hidescores = TRUE;
-	Ent_Menu_Clear(255);
+	float i;
+	for (i = 0; i < self.cnt; i++) {
+		str_unzone_ifneeded(self.menu_items[i]);
+	}
+	str_unzone_ifneeded(self.menu_id);
+	str_unzone_ifneeded(self.menu_title);
 	if (self == menu) {
 		menu = menu.menu_next;
 		if (menu) {
-			menu.draw2d = Menu_Draw;
+			menu.draw2d = menu_draw;
 			menu.draw2dflag = 1;
 		}
-
 		menu_choiced = -1;
 		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
 		return;
 	}
 	entity e;
 	for (e = menu; e.menu_next; e = e.menu_next)
-		if (e.menu_next == self)
-		{
+		if (e.menu_next == self) {
 			e.menu_next = e.menu_next.menu_next;
 			return;
 		}
 }
 
-void Ent_Menu(float bIsNewEntity) {
+void(float bIsNewEntity) menu_read {
 	entity e;
 	float f;
 	float skip_duplicated;
@@ -62,7 +52,7 @@ void Ent_Menu(float bIsNewEntity) {
 		if not(menu) {
 			menu = self;
 			menu_choiced = -1;
-			menu.draw2d = Menu_Draw;
+			menu.draw2d = menu_draw;
 			menu.draw2dflag = 1;
 		} else {
 			e = menu;
@@ -72,26 +62,29 @@ void Ent_Menu(float bIsNewEntity) {
 			e.menu_next = self;
 		}
 		self.menu_next = world;
-		self.entremove = Ent_Menu_Remove;
+		self.entremove = menu_remove;
 	}
-	Ent_Menu_Clear(f);
 	f = ReadByte();
 	self.flags |= f;
-	if (f & 8)
-		self.menu_id = strzone(ReadString());
-
+	if (f & 8) {
+		str_unzone_ifneeded(self.menu_id);
+		self.menu_id = str_zone_ifneeded(ReadString());
+	}
 	if (f & 4) {
 		self.menu_timeout = ReadCoord();
 		if (self.menu_timeout)
 			self.menu_timeout += time;
 	}
-	if (f & 2)
-		self.menu_title = strzone(ReadString());
-
+	if (f & 2) {
+		str_unzone_ifneeded(self.menu_title);
+		self.menu_title = str_zone_ifneeded(ReadString());
+	}
 	if (f & 1) {
 		self.cnt = ReadByte();
-		for (i = 0; i < self.cnt; i++)
-			(self.menu_items[i]) = strzone(ReadString());
+		for (i = 0; i < self.cnt; i++) {
+			str_unzone_ifneeded(self.menu_items[i]);
+			(self.menu_items[i]) = str_zone_ifneeded(ReadString());
+		}
 	}
 }
 
@@ -100,8 +93,8 @@ void(void) menu_selected_update {
 	menu_selected = floor((v_y - ITEM_TOP_MARGIN - (ITEM_HEIGHT * 2)) / ITEM_HEIGHT);
 }
 
-float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary);
-void Menu_Draw() {
+float(float bInputType, float nPrimary, float nSecondary) menu_input_event;
+void(void) menu_draw {
 	float i;
 	string menu_string;
 	drawfont = sbar_bigfont;
@@ -125,7 +118,6 @@ void Menu_Draw() {
 	}
 	pos_y += ITEM_HEIGHT;
 	menu_selected_update();
-
 	for (i = 0; i < self.cnt; i++) {
 		if (menu_selected == i)
 			size_scale = 1.1;
@@ -145,15 +137,13 @@ void Menu_Draw() {
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		pos_y += ITEM_HEIGHT;
 	}
-
 	Mouse_Enable();
-	CSQC_InputEvent_Callback = Menu_InputEvent;
+	CSQC_InputEvent_Callback = menu_input_event;
 }
 
-float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
+float(float bInputType, float nPrimary, float nSecondary) menu_input_event {
 	float choice;
 	choice = -1;
-
 	if (bInputType != 0)
 		return FALSE;
 
@@ -176,7 +166,6 @@ float Menu_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 		else
 			choice = min(menu_selected, menu.cnt);
 	}
-
 	if (choice >= 0) {
 		float subcmd = strstrofs(menu.menu_items[choice], "|", 0);
 		if (subcmd >= 0) {
