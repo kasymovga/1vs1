@@ -2,3 +2,6 @@ vector view_camera_origin, view_origin, view_angles, view_forward, view_right, v
 vector(vector vec) view_project_3d_to_2d;
 entity view_draw2d_post_self;
 var void() view_draw2d_post;
+float view_crosshair;
+float view_fov;
+float view_fov_zoomed;

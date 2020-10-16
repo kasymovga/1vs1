@@ -30,6 +30,7 @@ float locationrequest_input_event(float input_type, float primary, float seconda
 }
 
 void(void) locationrequest_draw {
+	view_crosshair = FALSE;
 	selected_location = self;
 	sbar_hidescores = TRUE;
 	ons_showmap = FALSE;

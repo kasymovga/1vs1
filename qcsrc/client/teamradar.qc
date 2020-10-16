@@ -256,7 +256,7 @@ void(float big, string title) teamradar_view {
 	float scale2d, normalsize, bigsize;
 	float f;
 	if (big)
-		draw_crosshair = 0;
+		view_crosshair = 0;
 	else if (minimapname == "")
 		return;
 

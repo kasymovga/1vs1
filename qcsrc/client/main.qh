@@ -62,10 +62,7 @@ float calledhooks;
 float ext_DP_CSQC_QUERYRENDERENTITY;
 float ext_DP_RM_SETRENDERENTITY;
 
-float draw_crosshair;
 float sv_ip2country;
-float fov;
-float fov_zoomed;
 float isdemo_flag;
 float player_deadflag;
 float g_campaign;

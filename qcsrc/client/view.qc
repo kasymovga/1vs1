@@ -6,13 +6,14 @@
 float view_drawtime;
 float view_project_is_broken;
 float view_old_vid_width, view_old_vid_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
+float view_fovx, view_fovy; //must be global because of goto skip
 float view_zoomscript_caught;
 float view_camera_mode;
 
 void(void) view_camera_setup;
 void(void) view_spider_hud;
 
-vector(void) view_fov {
+vector(void) view_fov_calculate {
 	float zoomdir, zoomfactor, zoomspeed;
 	zoomfactor = CVAR(cl_zoomfactor);
 	if (zoomfactor < 1 || zoomfactor > 16)
@@ -56,7 +57,7 @@ vector(void) view_fov {
 		setsensitivityscale(1);
 
 	if (view_old_zoom == current_viewzoom)
-	if (view_old_fov == fov)
+	if (view_old_fov == view_fov)
 	if (view_old_vid_width == vid_width)
 	if (view_old_vid_height == vid_height)
 	if (view_old_vid_pixelheight == CVAR(vid_pixelheight))
@@ -65,16 +66,16 @@ vector(void) view_fov {
 	view_old_zoom = current_viewzoom;
 	view_old_vid_width = vid_width;
 	view_old_vid_height = vid_height;
-	view_old_fov = fov;
+	view_old_fov = view_fov;
 	view_old_vid_pixelheight = CVAR(vid_pixelheight);
-	float frustumx, frustumy, fovx, fovy;
-	fov_zoomed = fov * current_viewzoom;
-	frustumy = tan(fov * 0.00872664625997164788) * 0.75 * current_viewzoom;
+	float frustumx, frustumy;
+	view_fov_zoomed = view_fov * current_viewzoom;
+	frustumy = tan(view_fov * 0.00872664625997164788) * 0.75 * current_viewzoom;
 	frustumx = frustumy * vid_width / vid_height / CVAR(vid_pixelheight);
-	fovx = atan2(frustumx, 1) / 0.00872664625997164788;
-	fovy = atan2(frustumy, 1) / 0.00872664625997164788;
+	view_fovx = atan2(frustumx, 1) / 0.00872664625997164788;
+	view_fovy = atan2(frustumy, 1) / 0.00872664625997164788;
 :skip
-	return '1 0 0' * fovx + '0 1 0' * fovy;
+	return '1 0 0' * view_fovx + '0 1 0' * view_fovy;
 }
 
 float view_tint_effect_shield;
@@ -121,14 +122,14 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	fog_force();
 	drawframetime = max(0.000001, time - view_drawtime);
 	view_drawtime = time;
-	fov = cvar("fov");
+	view_fov = cvar("fov");
 	any_button_zoom = button_zoom;
 	if (button_attack2_allowed) {
 		if (getstati(STAT_ACTIVEWEAPON) == WEP_NEX)
 		if not(CVAR(cl_nex_secondary_zoom_disable))
 			any_button_zoom += button_attack2;
 	}
-	if (any_button_zoom || fov <= 59.5) {
+	if (any_button_zoom || view_fov <= 59.5) {
 		if not(view_zoomscript_caught)
 		if not(button_zoom) {
 			localcmd("+button4\n");
@@ -158,7 +159,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_right = v_right;
 	view_up = v_up;
 	// Set the console size vars
-	R_SetView(VF_FOV, view_fov());
+	R_SetView(VF_FOV, view_fov_calculate());
 	// Camera for demo playback
 	if (camera_active) {
 		if (CVAR(camera_enable))
@@ -219,18 +220,18 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	}
 	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
 	if (observer_status)
-		draw_crosshair = FALSE;
+		view_crosshair = FALSE;
 	else if (sbar_hidescores)
-		draw_crosshair = FALSE;
+		view_crosshair = FALSE;
 	else
-		draw_crosshair = TRUE;
+		view_crosshair = TRUE;
 
 	float hud;
 	hud = getstati(STAT_HUD);
 	if (hud == HUD_SPIDERBOT) {
 		vector sz;
 		view_spider_hud();
-		if (draw_crosshair) {
+		if (view_crosshair) {
 			sz = drawgetimagesize(SPIDER_CROSS);
 			sz_x *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
 			sz_y *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
@@ -242,7 +243,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			Sbar_Draw();
 
 		// crosshair goes VERY LAST
-		if (draw_crosshair) {
+		if (view_crosshair) {
 			weapon_cross_origin_set();
 			string wcross_style;
 			wcross_style = cvar_string("crosshair");

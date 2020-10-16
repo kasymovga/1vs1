@@ -1115,8 +1115,7 @@ void Sbar_DrawScoreboard()
 {
 	vector rgb, pos, tmp;
 	entity pl, tm;
-	draw_crosshair = FALSE;
-
+	view_crosshair = FALSE;
 	if (nextplayerscheck < time) { //Check for downloaders
 	       float i;
 	       entity e;
