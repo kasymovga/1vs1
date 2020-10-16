@@ -2125,39 +2125,39 @@ void Sbar_Draw (void)
 
             if(getstati(STAT_STEALTH)) {
                 draw_string_colorcoded_center(hgapos - sbar_fontsize_y * ('0 2 0'/* + '0 1 0' * !!adept */), strcat(
-                                            "^3Shoot or press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            "^3Shoot or press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
                                             " ^3to ", /* if(adept) "suspend" else */ "cancel", " stealth (^1", ftos(getstati(STAT_STEALTH)), " ^3seconds remaining)"),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 #if 0
                 if(adept) draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
-                                            "^3Press ^1", strtoupper(getcommandkey("drop flag", "+use")),
+                                            "^3Press ^1", strtoupper(input_command_key("drop flag", "+use")),
                                             " ^3to cancel stealth completely"),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 #endif
             } else if(getstati(STAT_STEALTH_SAVED)) {
                 draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
-                                            "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            "^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
                                             " ^3to re-enter stealth (^1", ftos(getstati(STAT_STEALTH_SAVED)), " ^3seconds remaining)"),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(getstatf(STAT_HGSHIELD)) {
                 string smsg;
                 if(getstati(STAT_HGSHIELDSTORE) > 0) {
-                    smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                    smsg = strcat("^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
                                   " ^3to discharge your ", nadget_TypeToExpandedName(hgtype),
                                   " for ^1", ftos(getstati(STAT_HGSHIELDSTORE)), " ^3damage");
                 } else {
-                    smsg = strcat("^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                    smsg = strcat("^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
                                   " ^3to cancel your ", ((getstati(STAT_HGSHIELDSTORE) < 0) ? "discharge" : nadget_TypeToExpandedName(hgtype)));
                 }
                 draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', smsg, sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(hgdetons) {
                 draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat(
-                                            "^3Press ^1", strtoupper(getcommandkey("drop weapon", "dropweapon")),
+                                            "^3Press ^1", strtoupper(input_command_key("drop weapon", "dropweapon")),
                                             " ^3to trigger your nadget",
                                             ((hgdetons > 1) ? strcat("s (^2", ftos(hgdetons), "^3)") : "")),
                                             sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             } else if(hgtype == NADGET_GG && hgammo) {
-                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(getcommandkey("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
+                draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(input_command_key("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
             }
 
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);

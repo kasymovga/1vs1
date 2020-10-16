@@ -246,7 +246,7 @@ void(void) mapvote_draw {
 		mapvote_abstain_draw(pos, isize, xmax - xmin, tmp, i);
 	}
 	Mouse_Enable();
-	CSQC_InputEvent_Callback = mapvote_input_event;
+	input_event_callback = mapvote_input_event;
 }
 
 void(float argc) mapvote_preview_download {

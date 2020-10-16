@@ -60,6 +60,7 @@ gamestatus.qh
 weaponselect.qh
 view.qh
 main.qh
+input.qh
 weapon.qh
 csqc_entity.qh
 shownames.qh
@@ -127,6 +128,7 @@ gamemenu.qh
 entcs.qh
 update.qc
 main.qc
+input.qc
 cmd.qc
 entcs.qc
 score.qc

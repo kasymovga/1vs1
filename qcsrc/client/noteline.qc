@@ -74,7 +74,7 @@ string(string s) noteline_text_prepare {
 		} else {
 			s2 = substring(s, cmdkey + 1, cmdkey_end - cmdkey - 1);
 			if (s2 != "")
-				s2 = getcommandkey(s2, s2);
+				s2 = input_command_key(s2, s2);
 		}
 		s3 = substring(s, cmdkey_end + 1, -1);
 		cmdkey = strlen(s1) + strlen(s2);

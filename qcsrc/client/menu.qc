@@ -26,7 +26,7 @@ void(void) menu_remove {
 			menu.draw2dflag = 1;
 		}
 		menu_choiced = -1;
-		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
+		input_event_callback = NULL;
 		return;
 	}
 	entity e;
@@ -137,7 +137,7 @@ void(void) menu_draw {
 		pos_y += MENU_ITEM_HEIGHT;
 	}
 	Mouse_Enable();
-	CSQC_InputEvent_Callback = menu_input_event;
+	input_event_callback = menu_input_event;
 }
 
 float(float bInputType, float nPrimary, float nSecondary) menu_input_event {

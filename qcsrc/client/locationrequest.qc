@@ -34,7 +34,7 @@ void(void) locationrequest_draw {
 	sbar_hidescores = TRUE;
 	ons_showmap = FALSE;
 	Mouse_Enable();
-	CSQC_InputEvent_Callback = locationrequest_input_event;
+	input_event_callback = locationrequest_input_event;
 	teamradar_view(1.8, self.netname);
 	self.chain = world;
 }

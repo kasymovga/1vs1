@@ -40,8 +40,6 @@ float warmup_stage;
 float clienttime;
 
 float weaponimpulse[24];
-string getcommandkey(string text, string command);
-
 float current_zoomfraction;
 
 string crosshairdot_tex;
@@ -54,8 +52,6 @@ float chase_active_backup;
 float camera_roll;
 vector camera_direction;
 
-void centerprint(string strMessage);
-
 #define ALPHA_MIN_VISIBLE 0.003
 
 //hooks
@@ -66,7 +62,6 @@ float calledhooks;
 float ext_DP_CSQC_QUERYRENDERENTITY;
 float ext_DP_RM_SETRENDERENTITY;
 
-var float CSQC_InputEvent_Callback(float bInputType, float nPrimary, float nSecondary);
 float draw_crosshair;
 float sv_ip2country;
 float fov;

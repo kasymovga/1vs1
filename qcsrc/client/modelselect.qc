@@ -64,7 +64,7 @@ float(float bInputType, float nPrimary, float nSecondary) modelselect_input_even
 }
 
 void(void) modelselect_draw {
-	CSQC_InputEvent_Callback = modelselect_input_event;
+	input_event_callback = modelselect_input_event;
 	Mouse_Enable();
 	sbar_hidescores = TRUE;
 	string s = modelselect_list;

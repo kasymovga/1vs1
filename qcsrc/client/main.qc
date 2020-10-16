@@ -9,8 +9,7 @@ void(float ignore) main_init_read;
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
-void CSQC_Init(void)
-{
+void(void) CSQC_Init {
 	if (!cvar("con_chat"))
 		cvar_set("con_chat", "5");
 	else if (cvar("con_chat") > 99)
@@ -166,8 +165,7 @@ void CSQC_Init(void)
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void CSQC_Shutdown(void)
-{
+void(void) CSQC_Shutdown {
 	remove(team_list);
 	remove(player_list);
 	db_close(binddb);
@@ -188,42 +186,12 @@ void CSQC_Shutdown(void)
 	trip_shutdown();
 }
 
-// CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
-// Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
-// All keys are in ascii.
-// bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
-// In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
-// In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
-var float(float bInputType, float nPrimary, float nSecondary) CSQC_InputEvent_Callback_null;
-float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
-{
-	local float bSkipKey;
-	bSkipKey = FALSE;
-	if (CSQC_InputEvent_Callback) {
-		bSkipKey = CSQC_InputEvent_Callback(bInputType, nPrimary, nSecondary);
-		CSQC_InputEvent_Callback = CSQC_InputEvent_Callback_null;
-		if (bSkipKey)
-			return TRUE;
-	}
-	if (bInputType == 0)
-	if (nPrimary == K_ESCAPE)
-	if not(isdemo_flag)
-	{
-		GUI_Show(GUI_GAMEMENU);
-		return TRUE;
-	}
-
-	return bSkipKey;
-}
-
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
-void CSQC_Parse_StuffCmd(string strMessage)
-{
+void(string strMessage) CSQC_Parse_StuffCmd {
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
-void CSQC_Parse_Print(string strMessage)
-{
+void(string strMessage) CSQC_Parse_Print {
 	print(strMessage);
 }
 
@@ -275,46 +243,4 @@ void(float ignore) main_init_read {
 		str_unzone_ifneeded(motd);
 		motd = str_zone_ifneeded(ReadString());
 	}
-}
-
-string getcommandkey(string text, string command)
-{
-	string keys;
-	float n, j, k, l;
-
-	if (!CVAR(sbar_showbinds))
-		return text;
-
-	keys = db_get(binddb, command);
-	if (!keys)
-	{
-		n = tokenize(findkeysforcommand(command)); // uses '...' strings
-		for(j = 0; j < n; ++j)
-		{
-			k = stof(argv(j));
-			if(k != -1)
-			{
-				if ("" == keys)
-					keys = keynumtostring(k);
-				else
-					keys = strcat(keys, ", ", keynumtostring(k));
-
-				++l;
-				if (CVAR(sbar_showbinds_limit) > 0 && CVAR(sbar_showbinds_limit) >= l) break;
-			}
-
-		}
-		db_put(binddb, command, keys);
-	}
-
-	if ("" == keys) {
-		if (CVAR(sbar_showbinds) > 1)
-			return strcat(text, " (not bound)");
-		else
-			return text;
-	}
-	else if (CVAR(sbar_showbinds) > 1)
-		return strcat(text, " (", keys, ")");
-	else
-		return keys;
 }

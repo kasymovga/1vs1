@@ -48,7 +48,7 @@ float NS_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void NS_Draw(void) {
     if(ns_active) {
         ns_alpha = approach(ns_alpha, 1, frametime * 5);
-		CSQC_InputEvent_Callback = NS_InputEvent;
+		input_event_callback = NS_InputEvent;
     } else
         ns_alpha = approach(ns_alpha, 0, frametime * 7);
 

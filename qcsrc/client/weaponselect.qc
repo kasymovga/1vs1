@@ -33,7 +33,7 @@ float WS_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void WS_Draw(void) {
     if(ws_active) {
         ws_alpha = approach(ws_alpha, 1, frametime * 5);
-		CSQC_InputEvent_Callback = WS_InputEvent;
+		input_event_callback = WS_InputEvent;
     } else
         ws_alpha = approach(ws_alpha, 0, frametime * 7);
 

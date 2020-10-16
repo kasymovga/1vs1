@@ -73,8 +73,8 @@ void GUI_Draw_Remove() {
 	} else {
 		GUI_RemoveRecursive(mainWindow);
 		mainWindow = world;
-		if (CSQC_InputEvent_Callback == GUI_InputEvent)
-			CSQC_InputEvent_Callback = NULL;
+		if (input_event_callback == GUI_InputEvent)
+			input_event_callback = NULL;
 
 		gui_chat_restore();
 		return;
@@ -106,7 +106,7 @@ void GUI_Draw() {
 	drawfont = sbar_font;
 	mainWindow.drawGUI(mainWindow);
 	Mouse_Enable();
-	CSQC_InputEvent_Callback = GUI_InputEvent;
+	input_event_callback = GUI_InputEvent;
 	GUI_InputEvent(1, 0, 0); //workaround for old engines
 }
 
