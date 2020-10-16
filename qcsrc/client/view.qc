@@ -192,7 +192,7 @@ void CSQC_UpdateView(float w, float h)
 	R_SetView(VF_DRAWWORLD, 1);
 	view_angles = input_angles;
 	view_origin = physics_view_origin();
-	WarpZone_FixView();
+	warpzone_view_fix();
 	physics_camera_setup();
 	makevectors(view_angles);
 	view_forward = v_forward;

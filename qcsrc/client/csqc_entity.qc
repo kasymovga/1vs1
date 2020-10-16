@@ -88,9 +88,9 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = zapper_shield_read;
 	csqc_entity_parsers[ENT_CLIENT_DMG_INDICATOR] = damage_indicator_read;
 	csqc_entity_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
-	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = WarpZone_Read;
+	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = warpzone_read;
 	csqc_entity_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
-	csqc_entity_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = WarpZone_Teleported_Read;
+	csqc_entity_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = warpzone_teleported_read;
 	csqc_entity_parsers[ENT_CLIENT_NOTELINE] = noteline_read;
 	csqc_entity_parsers[ENT_CLIENT_HOOK] = hook_read;
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_HOOK] = hook_physics_read;

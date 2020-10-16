@@ -1,7 +1,7 @@
-void WarpZone_Read(float isnew)
-{
-	if not(self.enemy)
-	{
+float warpzone_newstyle;
+
+void(float isnew) warpzone_read {
+	if not(self.enemy) {
 		self.enemy = spawn();
 		self.enemy.classname = "warpzone_from";
 	}
@@ -29,21 +29,16 @@ void WarpZone_Read(float isnew)
 	self.avelocity_x = ReadCoord();
 	self.avelocity_y = ReadCoord();
 	self.avelocity_z = ReadCoord();
-
 	// common stuff
 	WarpZone_SetUp(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
-
 	// engine currently wants this
 	self.avelocity = AnglesTransform_TurnDirectionFR(self.avelocity);
 	self.drawmask = MASK_NORMAL;
-
 	// link me
 	//setmodel(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
-
 	WarpZone_ChainAdd(self);
-
     if(!cvar("r_water"))
         cvar_clientsettemp("r_water", "1");
 
@@ -54,8 +49,7 @@ void WarpZone_Read(float isnew)
 }
 
 entity warpzone_passed;
-void WarpZone_Teleported_Read(float isnew)
-{
+void(float isnew) warpzone_teleported_read {
 	vector v;
 	v_x = ReadCoord();
 	v_y = ReadCoord();
@@ -130,8 +124,7 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 }
 
 float warpzone_fixangles;
-void WarpZone_FixView_real()
-{
+void(void) warpzone_view_fix_real {
 	entity e;
 	vector org, nearclip, corner0, corner1, corner2, corner3;
 	float f;
@@ -216,6 +209,6 @@ void WarpZone_ShutdownHook() {
 }
 
 void WarpZone_EnableHook() {
-	WarpZone_FixView = WarpZone_FixView_real;
+	warpzone_view_fix = warpzone_view_fix_real;
 	WarpZone_Outside();
 }
