@@ -61,7 +61,7 @@ void(void) CSQC_Init {
 	registercmd("+button4");
 	registercmd("-button4");
 	registercmd("+showaccuracy");registercmd("-showaccuracy");
-
+	registercmd("+showscores");registercmd("-showscores");
 	registercvar("crosshair_supershotgun", "shotgun", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_size", "1", CVAR_SAVE);
 	registercvar("crosshair_supershotgun_color_blue", "0", CVAR_SAVE);
