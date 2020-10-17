@@ -305,8 +305,6 @@ void(string pic, string pk3, float id) mapvote_checkpic {
 void(void) mapvote_init {
 	float i, power;
 	string map, pk3, map_pic;
-	registercmd("+showscores");
-	registercmd("-showscores");
 	mapvote_active = 1;
 	mapvote_selection = -1;
 	str_unzone_ifneeded(mapvote_gametype);
