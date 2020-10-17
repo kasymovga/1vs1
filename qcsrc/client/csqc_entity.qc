@@ -143,10 +143,10 @@ float() CSQC_Parse_TempEntity { //called by engine
 		radio_read();
 		return TRUE;
 	case TE_CSQC_NADGETSELECT:
-		Net_ReadNadgetSelect();
+		nadgetselect_read();
 		return TRUE;
 	case TE_CSQC_WEAPONSELECT:
-		Net_ReadWeaponSelect();
+		weaponselect_read();
 		return TRUE;
 	case TE_CSQC_PICTURE:
 		mapvote_picture_read();

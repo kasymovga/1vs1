@@ -1,1 +1,1 @@
-void Net_ReadWeaponSelect(void);
+void(void) weaponselect_read;

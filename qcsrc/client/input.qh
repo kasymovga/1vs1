@@ -1,2 +1,3 @@
 var float(float input_type, float primary, float secondary) input_event_callback;
 string(string text, string command) input_command_key;
+string(string cmds) input_command_key_first;

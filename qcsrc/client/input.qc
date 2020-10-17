@@ -55,3 +55,18 @@ string(string text, string command) input_command_key {
 	else
 		return keys;
 }
+
+string(string cmds) input_command_key_first {
+	float i, k;
+	float ncmds = tokenize(cmds), nkeys;
+	for (i = 0; i < ncmds; ++i) {
+		nkeys = tokenize(findkeysforcommand(argv(0)));
+		for(k = 0; k < nkeys; ++k)
+			if(stof(argv(k)) >= 0)
+				return keynumtostring(stof(argv(k)));
+
+		ncmds = tokenize(cmds);
+	}
+	return argv(0);
+}
+
