@@ -9,3 +9,7 @@ float view_zoom_fraction_current;
 string view_crosshairdot_tex;
 float view_crosshair_hittime;
 float view_width, view_height;
+float view_camera_active;
+float view_chase_active_backup;
+float view_camera_roll;
+vector view_camera_direction;

@@ -17,11 +17,6 @@ float drawframetime;
 
 float warmup_stage;
 
-float camera_active;		// Demo camera is active if set to TRUE
-float chase_active_backup;
-float camera_roll;
-vector camera_direction;
-
 #define ALPHA_MIN_VISIBLE 0.003
 
 //hooks

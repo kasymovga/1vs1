@@ -109,30 +109,30 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 		sbar_showaccuracy = FALSE;
 		return TRUE;
 	}
-	if(camera_active)
+	if(view_camera_active)
 	if(strCmd == "+forward" || strCmd == "-back") {
-		++camera_direction_x;
+		++view_camera_direction_x;
 		return TRUE;
 	} else if(strCmd == "-forward" || strCmd == "+back") {
-		--camera_direction_x;
+		--view_camera_direction_x;
 		return TRUE;
 	} else if(strCmd == "+moveright" || strCmd == "-moveleft") {
-		--camera_direction_y;
+		--view_camera_direction_y;
 		return TRUE;
 	} else if(strCmd == "-moveright" || strCmd == "+moveleft") {
-		++camera_direction_y;
+		++view_camera_direction_y;
 		return TRUE;
 	} else if(strCmd == "+moveup" || strCmd == "-movedown") {
-		++camera_direction_z;
+		++view_camera_direction_z;
 		return TRUE;
 	} else if(strCmd == "-moveup" || strCmd == "+movedown") {
-		--camera_direction_z;
+		--view_camera_direction_z;
 		return TRUE;
 	} else if(strCmd == "+roll_right" || strCmd == "-roll_left") {
-		++camera_roll;
+		++view_camera_roll;
 		return TRUE;
 	} else if(strCmd == "+roll_left" || strCmd == "-roll_right") {
-		--camera_roll;
+		--view_camera_roll;
 		return TRUE;
 	}
 	return FALSE;

@@ -164,7 +164,9 @@ vector(void) physics_view_origin {
 				stairsmoothz = v_z;
 			}
 		}
-		R_SetView(VF_ORIGIN, v);
+		if not(view_camera_active)
+			R_SetView(VF_ORIGIN, v);
+
 		physics_end_origin = physics.origin;
 	}
 	else {
@@ -172,6 +174,7 @@ vector(void) physics_view_origin {
 		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		if (camera_correction_needed) {
 			if not(CVAR(chase_active))
+			if not(view_camera_active)
 				R_SetView(VF_ORIGIN, v);
 
 			camera_correction_needed = FALSE;
@@ -187,7 +190,8 @@ void(void) physics_camera_setup {
 		else
 			view_camera_origin = view_origin;
 
-		if (CVAR(chase_active)) {
+		if (CVAR(chase_active))
+		if not(view_camera_active) {
 			makevectors(view_angles);
 			if not(spectatee_status)
 			if not(physics_player_ent) {
@@ -202,7 +206,8 @@ void(void) physics_camera_setup {
 			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 			view_camera_origin = trace_endpos;
 		}
-		R_SetView(VF_ORIGIN, view_camera_origin);
+		if not(view_camera_active)
+			R_SetView(VF_ORIGIN, view_camera_origin);
 	} else {
 		view_camera_origin = view_origin;
 	}

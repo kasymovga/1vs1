@@ -173,8 +173,8 @@ void(void) CSQC_Shutdown {
 
 	cvar_clientsettemp_restore();
 	gui_chat_restore();
-	if(camera_active)
-		cvar_set("chase_active",ftos(chase_active_backup));
+	if(view_camera_active)
+		cvar_set("chase_active",ftos(view_chase_active_backup));
 
 	if not(isdemo_flag)
 	{
