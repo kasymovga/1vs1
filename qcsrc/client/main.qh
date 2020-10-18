@@ -1,5 +1,3 @@
-const float COLOR_SPECTATOR = 1337;
-
 .entity owner;
 .void(void) draw;
 .void(void) draw2d;

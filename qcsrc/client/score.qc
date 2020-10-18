@@ -24,7 +24,7 @@ void(float ignore) score_info_read {
 				if (o.gotscores) {
 					t = o.scores[SP_TEAM_FIELD];
 					if (t < 0)
-						t = COLOR_SPECTATOR;
+						t = TEAM_COLOR_SPECTATOR;
 
 					team_set(o, t);
 				}
@@ -92,7 +92,7 @@ void(float ignore) score_player_read {
 	if (sf & SP_TEAM_BIT) {
 		float t = o.scores[SP_TEAM_FIELD];
 		if (t < 0)
-			t = COLOR_SPECTATOR;
+			t = TEAM_COLOR_SPECTATOR;
 
 		team_set(o, t);
 	}
@@ -129,7 +129,7 @@ void(float ignore) score_team_read {
 			if (o.gotscores) {
 				t = o.scores[SP_TEAM_FIELD];
 				if (t < 0)
-					t = COLOR_SPECTATOR;
+					t = TEAM_COLOR_SPECTATOR;
 
 				team_set(o, t);
 			}

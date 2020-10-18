@@ -1,1 +1,2 @@
 float team_mode;
+const float TEAM_COLOR_SPECTATOR = 1337;

@@ -43,9 +43,9 @@ float(float i) player_color_force {
 float(float i) player_color {
 	entity pl = player_slots[i];
 	if not(pl.gotscores) // unconnected
-		return COLOR_SPECTATOR;
-	else if (pl.team == COLOR_SPECTATOR)
-		return COLOR_SPECTATOR;
+		return TEAM_COLOR_SPECTATOR;
+	else if (pl.team == TEAM_COLOR_SPECTATOR)
+		return TEAM_COLOR_SPECTATOR;
 	else if (team_mode)
 		return pl.team;
 	else

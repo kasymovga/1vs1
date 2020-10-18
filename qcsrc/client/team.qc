@@ -42,7 +42,7 @@ float(entity Team) team_register {
 entity(float Team, float add) team_get {
 	float num;
 	entity tm;
-	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
+	num = (Team == TEAM_COLOR_SPECTATOR) ? 16 : Team;
 	if(team_slots[num])
 		return team_slots[num];
 
@@ -62,7 +62,7 @@ float(entity o, float Team) team_set {
 	if (Team != -1)
 	if (team_mode || Team)
 	if not(team_get(Team, FALSE))
-		Team = COLOR_SPECTATOR;
+		Team = TEAM_COLOR_SPECTATOR;
 
 	if (Team == -1) {
 		if (o.has_team) {
@@ -84,8 +84,8 @@ float(entity o, float Team) team_set {
 
 		tm = team_get(Team, FALSE);
 		if not(tm) {
-			tm = team_get(COLOR_SPECTATOR, FALSE);
-			Team = COLOR_SPECTATOR;
+			tm = team_get(TEAM_COLOR_SPECTATOR, FALSE);
+			Team = TEAM_COLOR_SPECTATOR;
 		}
 		o.team = Team;
 		tm.team_size += 1;

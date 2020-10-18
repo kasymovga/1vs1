@@ -302,7 +302,7 @@ float Sbar_ComparePlayerScores(entity left, entity right)
 	if(vl < vr)
 		return FALSE;
 
-	if(vl == COLOR_SPECTATOR)
+	if(vl == TEAM_COLOR_SPECTATOR)
 	{
 		// FIRST the one with scores (spectators), THEN the ones without (downloaders)
 		// no other sorting
@@ -358,9 +358,9 @@ float Sbar_CompareTeamScores(entity left, entity right)
 {
 	float vl, vr;
 
-	if(left.team == COLOR_SPECTATOR)
+	if(left.team == TEAM_COLOR_SPECTATOR)
 		return 1;
-	if(right.team == COLOR_SPECTATOR)
+	if(right.team == TEAM_COLOR_SPECTATOR)
 		return 0;
 
 	vl = left.teamscores[ts_primary];
@@ -849,7 +849,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 	float is_spec;
 	float sbar_size_i;
 	float title_width;
-	is_spec = (player_color(pl.sv_entnum) == COLOR_SPECTATOR);
+	is_spec = (player_color(pl.sv_entnum) == TEAM_COLOR_SPECTATOR);
 	float wanted_width = 0;
 	// Layout:
 	tmp_x = sbwidth;
@@ -1095,7 +1095,7 @@ vector Sbar_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_si
 	else
 		for(pl = player_list.sort_next; pl; pl = pl.sort_next)
 		{
-			if(pl.team == COLOR_SPECTATOR)
+			if(pl.team == TEAM_COLOR_SPECTATOR)
 				continue;
 			Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
 			pos_y += 1.25 * sbar_fontsize_y;
@@ -1133,7 +1133,7 @@ void Sbar_DrawScoreboard()
 	                                       player_slots[i] = e = spawn();
 
 	                               e.sv_entnum = i;
-	                               team_set(e, COLOR_SPECTATOR);
+	                               team_set(e, TEAM_COLOR_SPECTATOR);
 	                               player_register(e);
 	                               Sbar_UpdatePlayerPos(e);
 	                       }
@@ -1249,7 +1249,7 @@ void Sbar_DrawScoreboard()
 	if (team_mode) {
 		for(tm = team_list.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == TEAM_COLOR_SPECTATOR)
 				continue;
 
 			rgb = team_rgb(tm.team);
@@ -1270,7 +1270,7 @@ void Sbar_DrawScoreboard()
 
 		for(tm = team_list.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == TEAM_COLOR_SPECTATOR)
 				continue;
 
 			pos = Sbar_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
@@ -1285,7 +1285,7 @@ void Sbar_DrawScoreboard()
 	specs = 0;
 	for(pl = player_list.sort_next; pl; pl = pl.sort_next)
 	{
-		if(pl.team != COLOR_SPECTATOR)
+		if(pl.team != TEAM_COLOR_SPECTATOR)
 			continue;
 		Sbar_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
 		pos_y += 1.25 * sbar_fontsize_y;
@@ -1413,7 +1413,7 @@ void()Sbar_Score_Default {
 		max_fragcount = -999;
 
 		for(tm = team_list.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR || !tm.team_size) // no players? don't display
+			if(tm.team == TEAM_COLOR_SPECTATOR || !tm.team_size) // no players? don't display
 				continue;
 			score = tm.(teamscores[ts_primary]);
 			leader = 0;

@@ -112,7 +112,7 @@ void(void) CSQC_Init {
 	main_calledhooks = 0;
 	team_list = spawn();
 	player_list = spawn();
-	team_get(COLOR_SPECTATOR, TRUE); // add specs first
+	team_get(TEAM_COLOR_SPECTATOR, TRUE); // add specs first
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
 	waypointsprite_init();
