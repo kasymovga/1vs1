@@ -59,6 +59,7 @@ dlc.qh
 gamestatus.qh
 weaponselect.qh
 view.qh
+cmd.qh
 main.qh
 sort.qh
 input.qh

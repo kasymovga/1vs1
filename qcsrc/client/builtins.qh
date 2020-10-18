@@ -113,7 +113,9 @@ void	drawresetcliparea(void) = #325;
 float	drawcolorcodedstring(vector position, string text, vector scale, float alpha, float flag) = #326;
 float	stringwidth(string text, float handleColors) = #327;
 float	drawsubpic(vector position, vector size, string pic, vector srcPosition, vector srcSize, vector rgb, float alpha, float flag) = #328;
-
+float drawfont;
+#define FONT_DEFAULT 0
+#define FONT_USER 8
 
 float (float statnum)							getstatf = #330;
 float (float statnum)							getstati = #331;

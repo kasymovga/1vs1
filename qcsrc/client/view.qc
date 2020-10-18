@@ -11,6 +11,7 @@ float view_zoomscript_caught;
 float view_camera_mode;
 float view_anybutton_zoom;
 float view_spectatorbutton_zoom;
+float view_zoom_current;
 
 void(void) view_camera_setup;
 void(void) view_spider_hud;
@@ -32,47 +33,47 @@ vector(void) view_fov_calculate {
 		zoomdir = (zoomdir ? 0 : 1);
 
 	if (camera_active) {
-		current_viewzoom = min(1, current_viewzoom + drawframetime);
+		view_zoom_current = min(1, view_zoom_current + drawframetime);
 	} else {
 		if (zoomspeed < 0) { // instant zoom
 			if (zoomdir)
-				current_viewzoom = 1 / zoomfactor;
+				view_zoom_current = 1 / zoomfactor;
 			else
-				current_viewzoom = 1;
+				view_zoom_current = 1;
 		} else {
 			if (zoomdir)
-				current_viewzoom = 1 / bound(1, 1 / current_viewzoom + drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
+				view_zoom_current = 1 / bound(1, 1 / view_zoom_current + drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
 			else
-				current_viewzoom = bound(1 / zoomfactor, current_viewzoom + drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
+				view_zoom_current = bound(1 / zoomfactor, view_zoom_current + drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
 		}
 	}
-	if (math_almost_equals(current_viewzoom, 1))
+	if (math_almost_equals(view_zoom_current, 1))
 		current_zoomfraction = 0;
-	else if (math_almost_equals(current_viewzoom, 1/zoomfactor))
+	else if (math_almost_equals(view_zoom_current, 1/zoomfactor))
 		current_zoomfraction = 1;
 	else
-		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
+		current_zoomfraction = (view_zoom_current - 1) / (1/zoomfactor - 1);
 
 	if (CVAR(cl_zoomsensitivity) < 1)
-		setsensitivityscale(pow(current_viewzoom, 1 - CVAR(cl_zoomsensitivity)));
+		setsensitivityscale(pow(view_zoom_current, 1 - CVAR(cl_zoomsensitivity)));
 	else
 		setsensitivityscale(1);
 
-	if (view_old_zoom == current_viewzoom)
+	if (view_old_zoom == view_zoom_current)
 	if (view_old_fov == view_fov)
 	if (view_old_vid_width == vid_width)
 	if (view_old_vid_height == vid_height)
 	if (view_old_vid_pixelheight == CVAR(vid_pixelheight))
 		goto skip;
 
-	view_old_zoom = current_viewzoom;
+	view_old_zoom = view_zoom_current;
 	view_old_vid_width = vid_width;
 	view_old_vid_height = vid_height;
 	view_old_fov = view_fov;
 	view_old_vid_pixelheight = CVAR(vid_pixelheight);
 	float frustumx, frustumy;
-	view_fov_zoomed = view_fov * current_viewzoom;
-	frustumy = tan(view_fov * 0.00872664625997164788) * 0.75 * current_viewzoom;
+	view_fov_zoomed = view_fov * view_zoom_current;
+	frustumy = tan(view_fov * 0.00872664625997164788) * 0.75 * view_zoom_current;
 	frustumx = frustumy * vid_width / vid_height / CVAR(vid_pixelheight);
 	view_fovx = atan2(frustumx, 1) / 0.00872664625997164788;
 	view_fovy = atan2(frustumy, 1) / 0.00872664625997164788;
@@ -136,13 +137,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		if not(input_button_zoom) {
 			localcmd("+button4\n");
 			view_zoomscript_caught = 1;
-			ignore_plus_zoom += 1;
+			cmd_ignore_plus_zoom += 1;
 		}
 	} else {
 		if (view_zoomscript_caught) {
 			localcmd("-button4\n");
 			view_zoomscript_caught = 0;
-			ignore_minus_zoom += 1;
+			cmd_ignore_minus_zoom += 1;
 		}
 	}
 	sbar_alpha_fg = CVAR(sbar_alpha_fg) * (1 - CVAR(_menu_alpha));

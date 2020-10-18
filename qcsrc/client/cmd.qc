@@ -77,15 +77,15 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 	strCmd = argv(0);
 	if (strCmd == "+button4") { // zoom
 		// return FALSE, because the message shall be sent to the server anyway (for demos/speccing)
-		if(ignore_plus_zoom) {
-			--ignore_plus_zoom;
+		if(cmd_ignore_plus_zoom) {
+			--cmd_ignore_plus_zoom;
 			return FALSE;
 		}
 		input_button_zoom = 1;
 		return FALSE;
 	} else if (strCmd == "-button4") { // zoom
-		if (ignore_minus_zoom) {
-			--ignore_minus_zoom;
+		if (cmd_ignore_minus_zoom) {
+			--cmd_ignore_minus_zoom;
 			return FALSE;
 		}
 		input_button_zoom = 0;

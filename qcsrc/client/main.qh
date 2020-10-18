@@ -2,13 +2,8 @@
 // --------------------------------------------------------------------------
 // General stuff
 
-float drawfont;
-
 // Constants
 const float COLOR_SPECTATOR = 1337;
-
-#define FONT_DEFAULT 0
-#define FONT_USER 8
 //float csqc_flags;
 
 entity playerslots[255]; // 255 is engine limit on maxclients
@@ -20,9 +15,6 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float draw2dflag;
 float drawframetime;
 
-float current_viewzoom;
-float ignore_plus_zoom;
-float ignore_minus_zoom;
 float warmup_stage;
 
 float weaponimpulse[24];
