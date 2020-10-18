@@ -125,8 +125,8 @@ void(void) waypointsprite_draw {
 		float f1, f2;
 		// get the waypoint angle vector
 		/*
-		d_x = view_right * (self.origin - view_origin) * CVAR(vid_conwidth) / vid_width;
-		d_y = -view_up * (self.origin - view_origin) * CVAR(vid_conheight) / (vid_height * vid_pixelheight);
+		d_x = view_right * (self.origin - view_origin) * CVAR(vid_conwidth) / view_width;
+		d_y = -view_up * (self.origin - view_origin) * CVAR(vid_conheight) / (view_height * vid_pixelheight);
 		d_z = 0;
 		*/
 		d = o - '0.5 0 0' * CVAR(vid_conwidth) - '0 0.5 0' * CVAR(vid_conheight);
@@ -161,7 +161,7 @@ void(void) waypointsprite_draw {
 	}
 	o_z = 0;
 	float vidscale;
-	vidscale = max(CVAR(vid_conwidth) / vid_width, CVAR(vid_conheight) / vid_height);
+	vidscale = max(CVAR(vid_conwidth) / view_width, CVAR(vid_conheight) / view_height);
 	t = stof(db_get(tempdb, strcat("/spriteframes/", spriteimage)));
 	if (t == 0)
 		spriteimage = strcat("models/sprites/", spriteimage);

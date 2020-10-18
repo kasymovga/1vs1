@@ -5,7 +5,7 @@
 
 float view_drawtime;
 float view_project_is_broken;
-float view_old_vid_width, view_old_vid_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
+float view_old_view_width, view_old_view_height, view_old_zoom, view_old_fov, view_old_vid_pixelheight;
 float view_fovx, view_fovy; //must be global because of goto skip
 float view_zoomscript_caught;
 float view_camera_mode;
@@ -48,11 +48,11 @@ vector(void) view_fov_calculate {
 		}
 	}
 	if (math_almost_equals(view_zoom_current, 1))
-		current_zoomfraction = 0;
+		view_zoom_fraction_current = 0;
 	else if (math_almost_equals(view_zoom_current, 1/zoomfactor))
-		current_zoomfraction = 1;
+		view_zoom_fraction_current = 1;
 	else
-		current_zoomfraction = (view_zoom_current - 1) / (1/zoomfactor - 1);
+		view_zoom_fraction_current = (view_zoom_current - 1) / (1/zoomfactor - 1);
 
 	if (CVAR(cl_zoomsensitivity) < 1)
 		setsensitivityscale(pow(view_zoom_current, 1 - CVAR(cl_zoomsensitivity)));
@@ -61,20 +61,20 @@ vector(void) view_fov_calculate {
 
 	if (view_old_zoom == view_zoom_current)
 	if (view_old_fov == view_fov)
-	if (view_old_vid_width == vid_width)
-	if (view_old_vid_height == vid_height)
+	if (view_old_view_width == view_width)
+	if (view_old_view_height == view_height)
 	if (view_old_vid_pixelheight == CVAR(vid_pixelheight))
 		goto skip;
 
 	view_old_zoom = view_zoom_current;
-	view_old_vid_width = vid_width;
-	view_old_vid_height = vid_height;
+	view_old_view_width = view_width;
+	view_old_view_height = view_height;
 	view_old_fov = view_fov;
 	view_old_vid_pixelheight = CVAR(vid_pixelheight);
 	float frustumx, frustumy;
 	view_fov_zoomed = view_fov * view_zoom_current;
 	frustumy = tan(view_fov * 0.00872664625997164788) * 0.75 * view_zoom_current;
-	frustumx = frustumy * vid_width / vid_height / CVAR(vid_pixelheight);
+	frustumx = frustumy * view_width / view_height / CVAR(vid_pixelheight);
 	view_fovx = atan2(frustumx, 1) / 0.00872664625997164788;
 	view_fovy = atan2(frustumy, 1) / 0.00872664625997164788;
 :skip
@@ -120,8 +120,8 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 	// Render the Scene
-	vid_width = w;
-	vid_height = h;
+	view_width = w;
+	view_height = h;
 	fog_force();
 	drawframetime = max(0.000001, time - view_drawtime);
 	view_drawtime = time;
@@ -273,7 +273,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 						wcross_sizefloat *= cvar(strcat("crosshair_", wcross_wep, "_size"));
 					}
 				} else {
-					if (crosshair_hittime >= time) {
+					if (view_crosshair_hittime >= time) {
 						wcross_color_x = CVAR(crosshair_hit_color_red);
 						wcross_color_y = CVAR(crosshair_hit_color_green);
 						wcross_color_z = CVAR(crosshair_hit_color_blue);
@@ -296,7 +296,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 						if (dot_color_string != "0")
 							dot_color = stov(dot_color_string);
 					}
-					drawpic(weapon_cross_origin - '0.5 0 0' * (wcross_size_x * CVAR(crosshair_dot_size)) - '0 0.5 0' * (wcross_size_y * CVAR(crosshair_dot_size)), crosshairdot_tex, wcross_size * CVAR(crosshair_dot_size), dot_color, wcross_alpha * CVAR(crosshair_dot_alpha), DRAWFLAG_NORMAL);
+					drawpic(weapon_cross_origin - '0.5 0 0' * (wcross_size_x * CVAR(crosshair_dot_size)) - '0 0.5 0' * (wcross_size_y * CVAR(crosshair_dot_size)), view_crosshairdot_tex, wcross_size * CVAR(crosshair_dot_size), dot_color, wcross_alpha * CVAR(crosshair_dot_alpha), DRAWFLAG_NORMAL);
 				}
 			}
 		}
@@ -512,8 +512,8 @@ void(void) view_camera_setup {
 vector(vector vec) view_project_3d_to_2d {
 	vec = cs_project(vec);
 	if (view_project_is_broken > 0) {
-		vec_x *= CVAR(vid_conwidth) / vid_width;
-		vec_y *= CVAR(vid_conheight) / vid_height;
+		vec_x *= CVAR(vid_conwidth) / view_width;
+		vec_y *= CVAR(vid_conheight) / view_height;
 	}
 	return vec;
 }

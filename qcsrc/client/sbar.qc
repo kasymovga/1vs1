@@ -86,7 +86,7 @@ void Sbar_DrawWeapon_Clear()
 		weaponspace[idx] = 0;
 	for(idx = 0; idx <= 23; ++idx)
 	{
-		if(weaponimpulse[idx] >= 0)
+		if(weapon_impulses[idx] >= 0)
 		{
 			if(weapon_first < 0)
 				weapon_first = idx;
@@ -99,7 +99,7 @@ void Sbar_DrawWeapon(float nr, float fade, float active, float wc)
 	vector pos, vsize;
 	float value, idx, imp, sp;
 
-	imp = weaponimpulse[nr];
+	imp = weapon_impulses[nr];
 	if(imp == 0)
 		idx = 9;
 	else
@@ -1969,7 +1969,7 @@ void Sbar_Draw (void)
 			Sbar_DrawWeapon_Clear();
 			for(i = 1; i <= 24; ++i)
 			{
-				if(weaponimpulse[i-1] >= 0)
+				if(weapon_impulses[i-1] >= 0)
 				if(stat_weapons & x)
 				{
 					Sbar_DrawWeapon(i-1, fade, (i == weapon_current), i);

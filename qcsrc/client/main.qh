@@ -17,14 +17,6 @@ float drawframetime;
 
 float warmup_stage;
 
-float weaponimpulse[24];
-float current_zoomfraction;
-
-string crosshairdot_tex;
-float crosshair_hittime;
-
-float vid_width, vid_height;
-
 float camera_active;		// Demo camera is active if set to TRUE
 float chase_active_backup;
 float camera_roll;

@@ -46,9 +46,9 @@ void(void) CSQC_Init {
 	binddb = db_create();
 	tempdb = db_create();
 	net_compress_vector_init();
-	crosshairdot_tex = "gfx/crosshair6";
+	view_crosshairdot_tex = "gfx/crosshair6";
 	if (file_exists("gfx/crosshairdot") || file_exists("gfx/crosshairdot.png"))
-		crosshairdot_tex = "gfx/crosshairdot";
+		view_crosshairdot_tex = "gfx/crosshairdot";
 
 	drawfont = 0;
 
@@ -201,7 +201,7 @@ void(float ignore) main_init_read {
 	float sf = ReadByte();
 	if (sf & 1) {
 		for(i = 0; i < 24; ++i)
-			weaponimpulse[i] = ReadByte() - 1;
+			weapon_impulses[i] = ReadByte() - 1;
 	}
 	if (sf & 2) {
 		i = ReadByte();

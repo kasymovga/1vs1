@@ -5,3 +5,7 @@ var void() view_draw2d_post;
 float view_crosshair;
 float view_fov;
 float view_fov_zoomed;
+float view_zoom_fraction_current;
+string view_crosshairdot_tex;
+float view_crosshair_hittime;
+float view_width, view_height;

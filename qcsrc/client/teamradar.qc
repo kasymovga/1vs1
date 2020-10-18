@@ -264,10 +264,10 @@ void(float big, string title) teamradar_view {
 	switch (teamradar_zoommode) {
 	default:
 	case 0:
-		f = current_zoomfraction;
+		f = view_zoom_fraction_current;
 		break;
 	case 1:
-		f = 1 - current_zoomfraction;
+		f = 1 - view_zoom_fraction_current;
 		break;
 	case 2:
 		f = 0;

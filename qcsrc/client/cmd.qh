@@ -1,0 +1,2 @@
+float cmd_ignore_plus_zoom;
+float cmd_ignore_minus_zoom;

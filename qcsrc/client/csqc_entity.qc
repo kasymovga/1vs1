@@ -111,7 +111,7 @@ float() CSQC_Parse_TempEntity { //called by engine
 			sound(world, CHAN_AUTO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
 
 		if (CVAR(crosshair_hit_time) > 0) {
-			crosshair_hittime = time + CVAR(crosshair_hit_time);
+			view_crosshair_hittime = time + CVAR(crosshair_hit_time);
 		}
 		return TRUE;
 	case TE_CSQC_ZCURVEPARTICLES:
