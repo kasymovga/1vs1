@@ -104,6 +104,7 @@ centerprint.qc
 gametype.qh
 ready.qh
 race.qh
+flag.qc
 sbar.qc
 mapvote.qc
 report.qh

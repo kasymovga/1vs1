@@ -20,40 +20,8 @@ vector _color;
 float SCOREBOARD_OFFSET = 50;
 #define TIME_DECIMALS 2
 
-#define FLAG_ANIM_LINEAR(frames,rate,offs) math_mod(floor((time) * (rate) + (offs)), frames)
-#define FLAG_ANIM_SINE(frames,rate,offs) (frames - 1) * (sin(time * rate + offs) * 0.5 + 0.5)
 #define SBAR_SCORE_IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
 #define SBAR_SCORE_IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
-
-float FlagIcon_Animate(string cn) {
-	var animparams = stov(cvar_string(strcat("_flagicon_", cn, "_animparams")));
-
-	if(!animparams_x) {
-		return -1;
-	}
-
-	return switch(cvar(strcat("_flagicon_", cn, "_animparams"))) {
-		default: case 0: FLAG_ANIM_LINEAR(animparams_x, animparams_y, animparams_z),
-				 case 1: FLAG_ANIM_SINE(animparams_x, animparams_y, animparams_z)
-	};
-}
-
-string FlagIcon(string cn) {
-    string i;
-
-    if(cn == "")
-        return "gfx/flagicons/xx";
-
-    i = strcat("gfx/flagicons/", cn);
-    float aframe = FlagIcon_Animate(cn);
-    if(aframe >= 0)
-        i = strcat(i, "-", ftos(fabs(rint(aframe))));
-
-    if(drawgetimagesize(i) == '0 0 0')
-        return "gfx/flagicons/xx";
-
-    return i;
-}
 
 void CSQC_kh_hudreset();
 void CSQC_kh_hud();
@@ -892,7 +860,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 			drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
 		} else if(field == SP_COUNTRY) {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
-			drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, flag_icon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 		} else if(field == SP_BESTWEP) {
 			tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x + sbar_fontsize_x;
 			f = stof(str);
@@ -948,7 +916,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 				drawcolorcodedstring(pos - tmp, str, sbar_fontsize, 1, DRAWFLAG_NORMAL);
 			} else if(field == SP_COUNTRY) {
 				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
-				drawpic(pos - tmp, FlagIcon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, flag_icon(str), '1.5 1 0' * sbar_fontsize_x, '1 1 1', 1.0, DRAWFLAG_NORMAL);
 			} else if(field == SP_BESTWEP) {
 				tmp_x = sbar_fixscoreboardcolumnwidth_len*sbar_fontsize_x;
 				f = stof(str);

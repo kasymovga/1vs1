@@ -1,7 +1,3 @@
-// --------------------------------------------------------------------------
-// BEGIN REQUIRED CSQC FUNCTIONS
-//include "main.qh"
-
 string available_maps;
 float available_maps_count;
 
