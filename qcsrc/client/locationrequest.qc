@@ -33,7 +33,7 @@ void(void) locationrequest_draw {
 	view_crosshair = FALSE;
 	selected_location = self;
 	sbar_hidescores = TRUE;
-	ons_showmap = FALSE;
+	teamradar_show = FALSE;
 	Mouse_Enable();
 	input_event_callback = locationrequest_input_event;
 	teamradar_view(1.8, self.netname);

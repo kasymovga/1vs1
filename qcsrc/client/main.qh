@@ -1,9 +1,3 @@
-// --------------------------------------------------------------------------
-// Onslaught
-
-// Minimap
-string minimapname;
-float ons_showmap;
 
 // --------------------------------------------------------------------------
 // General stuff
@@ -26,15 +20,10 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float draw2dflag;
 float drawframetime;
 
-float button_zoom;
-float any_button_zoom;
-float spectatorbutton_zoom;
-float button_attack2;
 float current_viewzoom;
 float ignore_plus_zoom;
 float ignore_minus_zoom;
 float warmup_stage;
-float clienttime;
 
 float weaponimpulse[24];
 float current_zoomfraction;
@@ -61,7 +50,6 @@ float ext_DP_RM_SETRENDERENTITY;
 
 float sv_ip2country;
 float isdemo_flag;
-float player_deadflag;
 float g_campaign;
 float localgame;
 float button_attack2_allowed;

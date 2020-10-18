@@ -114,10 +114,10 @@ void(float bg, float fg) teamradar_background_draw {
 		R_PolygonVertex('1 0 0' * (teamradar_origin2d_x - teamradar_size2d_x * 0.5 + teamradar_extraclip_mins_x) + '0 1 0' * (teamradar_origin2d_y + teamradar_size2d_y * 0.5 + teamradar_extraclip_maxs_y), '0 0 0', '0 0 0', bg);
 		R_EndPolygon();
 	}
-	if (fg > 0 && minimapname != "") {
+	if (fg > 0 && teamradar_minimapname != "") {
 		fga = 1;
 		fgc = '1 1 1' * fg;
-		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
+		R_BeginPolygon(teamradar_minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP);
 		if (CVAR(v_flipped)) {
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(teamradar_pictexcoord3), teamradar_yinvert(teamradar_pictexcoord3), fgc, fga);
 			R_PolygonVertex(teamradar_texcoord_to_2dcoord(teamradar_pictexcoord2), teamradar_yinvert(teamradar_pictexcoord2), fgc, fga);
@@ -257,7 +257,7 @@ void(float big, string title) teamradar_view {
 	float f;
 	if (big)
 		view_crosshair = 0;
-	else if (minimapname == "")
+	else if (teamradar_minimapname == "")
 		return;
 
 	teamradar_loadcvars(big);

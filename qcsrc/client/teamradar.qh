@@ -7,3 +7,5 @@ void(float big, string title) teamradar_view;
 .vector teamradar_color;
 void(void) teamradar_init;
 void(float ignore) teamradar_link_read;
+string teamradar_minimapname;
+float teamradar_show;

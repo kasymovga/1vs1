@@ -36,7 +36,6 @@ void(float bIsNewEntity) CSQC_Ent_Update { //called by engine
 		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 		time = serverprevtime + serverdeltatime;
 	}
-	clienttime = time;
 	if (self.enttype)
 		if (t != self.enttype) {
 			//print("A CSQC entity changed its type!\n");

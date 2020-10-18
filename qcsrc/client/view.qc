@@ -9,6 +9,8 @@ float view_old_vid_width, view_old_vid_height, view_old_zoom, view_old_fov, view
 float view_fovx, view_fovy; //must be global because of goto skip
 float view_zoomscript_caught;
 float view_camera_mode;
+float view_anybutton_zoom;
+float view_spectatorbutton_zoom;
 
 void(void) view_camera_setup;
 void(void) view_spider_hud;
@@ -24,9 +26,9 @@ vector(void) view_fov_calculate {
 		if (zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
-	zoomdir = any_button_zoom;
+	zoomdir = view_anybutton_zoom;
 	if (spectatee_status > 0 || isdemo_flag)
-	if (spectatorbutton_zoom)
+	if (view_spectatorbutton_zoom)
 		zoomdir = (zoomdir ? 0 : 1);
 
 	if (camera_active) {
@@ -107,7 +109,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	read_cvars();
 	spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
-	spectatorbutton_zoom = spectatee_status & 256;
+	view_spectatorbutton_zoom = spectatee_status & 256;
 	spectatee_status = spectatee_status & 255;
 	observer_status = (spectatee_status ? (spectatee_status == player_localentnum) : 0);
 	if (spectatee_status)
@@ -123,15 +125,15 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	drawframetime = max(0.000001, time - view_drawtime);
 	view_drawtime = time;
 	view_fov = cvar("fov");
-	any_button_zoom = button_zoom;
+	view_anybutton_zoom = input_button_zoom;
 	if (button_attack2_allowed) {
 		if (getstati(STAT_ACTIVEWEAPON) == WEP_NEX)
 		if not(CVAR(cl_nex_secondary_zoom_disable))
-			any_button_zoom += button_attack2;
+			view_anybutton_zoom += input_button_attack2;
 	}
-	if (any_button_zoom || view_fov <= 59.5) {
+	if (view_anybutton_zoom || view_fov <= 59.5) {
 		if not(view_zoomscript_caught)
-		if not(button_zoom) {
+		if not(input_button_zoom) {
 			localcmd("+button4\n");
 			view_zoomscript_caught = 1;
 			ignore_plus_zoom += 1;
@@ -204,7 +206,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 
 	self = e;
 	// draw radar
-	if (ons_showmap)
+	if (teamradar_show)
 		teamradar_view(TRUE, "");
 
 	if not(sbar_showscores) {

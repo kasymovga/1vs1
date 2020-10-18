@@ -135,17 +135,17 @@ void(void) CSQC_Init {
 		shortmapname = substring(shortmapname, 0, strlen(shortmapname) - 4);
 
 	shortmapname = strzone(shortmapname);
-	minimapname = strcat("gfx/", shortmapname, "_radar");
-	if (precache_pic(minimapname) == "") {
+	teamradar_minimapname = strcat("gfx/", shortmapname, "_radar");
+	if (precache_pic(teamradar_minimapname) == "") {
 		// but maybe we have a non-clever minimap
-		minimapname = strcat("gfx/", shortmapname, "_mini");
-		if (precache_pic(minimapname) == "")
-			minimapname = ""; // FAIL
+		teamradar_minimapname = strcat("gfx/", shortmapname, "_mini");
+		if (precache_pic(teamradar_minimapname) == "")
+			teamradar_minimapname = ""; // FAIL
 		else
 			world_get_min_max(0); // load new texcoords
 	}
 	teamradar_init();
-	minimapname = strzone(minimapname);
+	teamradar_minimapname = strzone(teamradar_minimapname);
 	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
 	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 	csqc_entity_init();

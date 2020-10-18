@@ -1,3 +1,4 @@
+float player_deadflag;
 entity player_list;
 
 void (entity player) player_register {

@@ -21,7 +21,7 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	} else if (cmd == "radar") {
-		ons_showmap = !ons_showmap;
+		teamradar_show = !teamradar_show;
 	} else if (cmd == "sbar_columns_set") {
 		Sbar_SetFields(argc);
 	} else if (cmd == "sbar_columns_help") {
@@ -81,20 +81,20 @@ float(string strMessage) CSQC_ConsoleCommand { //called by engine
 			--ignore_plus_zoom;
 			return FALSE;
 		}
-		button_zoom = 1;
+		input_button_zoom = 1;
 		return FALSE;
 	} else if (strCmd == "-button4") { // zoom
 		if (ignore_minus_zoom) {
 			--ignore_minus_zoom;
 			return FALSE;
 		}
-		button_zoom = 0;
+		input_button_zoom = 0;
 		return FALSE;
 	} else if(strCmd == "+button3") { // secondary
-		button_attack2 = 1;
+		input_button_attack2 = 1;
 		return FALSE;
 	} else if(strCmd == "-button3") { // secondary
-		button_attack2 = 0;
+		input_button_attack2 = 0;
 		return FALSE;
 	} else if(strCmd == "+showscores") {
 		sbar_showscores = TRUE;
