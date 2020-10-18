@@ -141,8 +141,8 @@ void(void) CSQC_Init {
 	}
 	teamradar_init();
 	teamradar_minimapname = strzone(teamradar_minimapname);
-	ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
-	ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
+	main_ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
+	main_ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 	csqc_entity_init();
 	draw_init();
 	ui_con_width_height_set();

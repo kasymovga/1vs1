@@ -160,7 +160,7 @@ void Shownames_UpdateTeamBubble(entity plr, float show) {
 void Shownames_Init(entity plr) {
     plr.draw2d = Shownames_DrawPlayer;
 	plr.draw2dflag = 1;
-	if (ext_DP_CSQC_QUERYRENDERENTITY)
+	if (main_ext_DP_CSQC_QUERYRENDERENTITY)
 		Shownames_PreDrawPlayer = Shownames_PreDrawPlayer_Enabled;
 	else
 		Shownames_PreDrawPlayer = Shownames_PreDrawPlayer_Disabled;

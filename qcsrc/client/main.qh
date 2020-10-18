@@ -3,14 +3,12 @@
 .void(void) draw2d;
 .float draw2dflag;
 
-//hooks
 float main_calledhooks;
-#define MAIN_HOOK_START    1
-#define MAIN_HOOK_END      2
+#define MAIN_HOOK_START 1
+#define MAIN_HOOK_END 2
 
-float ext_DP_CSQC_QUERYRENDERENTITY;
-float ext_DP_RM_SETRENDERENTITY;
-
+float main_ext_DP_CSQC_QUERYRENDERENTITY;
+float main_ext_DP_RM_SETRENDERENTITY;
 float main_isdemo;
 float main_campaign;
 float main_localgame;

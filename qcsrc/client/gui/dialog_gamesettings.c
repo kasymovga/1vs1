@@ -13,7 +13,7 @@ ENDCLASS(NexuizGameSettingsDialog)
 
 #ifdef IMPLEMENTATION
 void configureDialogNexuizGameSettingsDialog(entity me) {
-	if not(ext_DP_CSQC_QUERYRENDERENTITY)
+	if not(main_ext_DP_CSQC_QUERYRENDERENTITY)
 		me.rows = me.rows + 2;
 
 	configureDialogNexuizDialog(me); //Parent method
@@ -25,14 +25,14 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Show names:"));
-		if not(ext_DP_CSQC_QUERYRENDERENTITY)
+		if not(main_ext_DP_CSQC_QUERYRENDERENTITY)
 			e.disabled = 1;
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_shownames"));
 			e.addValue(e, "Never", "0");
 			e.addValue(e, "Only for teammates", "1");
 			e.addValue(e, "Always", "2");
 			e.configureNexuizTextSliderValues(e);
-		if not(ext_DP_CSQC_QUERYRENDERENTITY) {
+		if not(main_ext_DP_CSQC_QUERYRENDERENTITY) {
 			e.disabled = 1;
 			me.TDempty(me, 0.5);
 			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
@@ -41,14 +41,14 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizTextLabel(0, "Show names view sector:"));
-		if not(ext_DP_CSQC_QUERYRENDERENTITY)
+		if not(main_ext_DP_CSQC_QUERYRENDERENTITY)
 			e.disabled = 1;
 		me.TD(me, 1, 2.5, e = makeNexuizTextSlider("cl_shownames_cos"));
 			e.addValue(e, "Wide", "0");
 			e.addValue(e, "Narrow", "0.9");
 			e.addValue(e, "Very narrow", "0.99");
 			e.configureNexuizTextSliderValues(e);
-		if not(ext_DP_CSQC_QUERYRENDERENTITY) {
+		if not(main_ext_DP_CSQC_QUERYRENDERENTITY) {
 			e.disabled = 1;
 			me.TDempty(me, 0.5);
 			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
@@ -126,7 +126,7 @@ void fillNexuizGameSettingsDialog(entity me)
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_showspeed", "Show speed"));
 		me.TD(me, 1, 2.5, e = makeNexuizCheckBox(0, "cl_cts_showspeed", "Auto enable in CTS"));
-	if not(ext_DP_CSQC_QUERYRENDERENTITY) {
+	if not(main_ext_DP_CSQC_QUERYRENDERENTITY) {
 		me.TR(me);
 			me.TDempty(me, 0.25);
 			me.TD(me, 1, 4, e = makeNexuizTextLabel(0, "(*) Some features are unavailable. Your client is outdated."));

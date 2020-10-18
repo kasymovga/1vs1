@@ -29,7 +29,7 @@ vector(void) physics_vehicle_adjust_view {
 }
 
 void(entity e) physics_vehicle_common_post {
-	if (ext_DP_RM_SETRENDERENTITY)
+	if (main_ext_DP_RM_SETRENDERENTITY)
 		setentityvec(physics_player_ent, E_ORIGIN, e.origin);
 
 	physics_flags = self.flags;
@@ -195,7 +195,7 @@ void(void) physics_camera_setup {
 			makevectors(view_angles);
 			if not(spectatee_status)
 			if not(physics_player_ent) {
-				if (ext_DP_RM_SETRENDERENTITY) {
+				if (main_ext_DP_RM_SETRENDERENTITY) {
 					setentityvec(player_localentnum, E_ORIGIN, physics.origin);
 				} else {
 					physics_end_origin = physics_start_origin;
