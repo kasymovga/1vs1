@@ -38,11 +38,11 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 		me.rows = me.rows + 1;
 
 	me.rows = me.rows + gamemenu_commands_count;
-	if not(g_campaign)
+	if not(main_campaign)
 		me.rows = me.rows + 2;
 
-	if (localgame)
-	if (g_campaign)
+	if (main_localgame)
+	if (main_campaign)
 	if (gametype == GAME_SINGLE) {
 		me.rows = me.rows + 1;
 	}
@@ -58,7 +58,7 @@ void fillNexuizGameMenuDialog(entity me)
 		me.TD(me, 1, me.columns, e = makeNexuizButton("Game settings", '0 0 0'));
 		e.onClick = ShowGameSettings;
 	me.TR(me);
-	if not(g_campaign) {
+	if not(main_campaign) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Join", '0 0 0', "cmd join;", COMMANDBUTTON_CLOSE));
 	}
@@ -72,12 +72,12 @@ void fillNexuizGameMenuDialog(entity me)
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton(gamemenu_items[i], '0 0 0', gamemenu_commands[i], COMMANDBUTTON_CLOSE));
 	}
-	if not(g_campaign) {
+	if not(main_campaign) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Spectate", '0 0 0', "cmd spectate;", COMMANDBUTTON_CLOSE));
 	}
-	if (localgame)
-	if (g_campaign)
+	if (main_localgame)
+	if (main_campaign)
 	if (gametype == GAME_SINGLE) {
 		me.TR(me);
 			me.TD(me, 1, me.columns, e = makeNexuizButton("Save/Load", '0 0 0'));

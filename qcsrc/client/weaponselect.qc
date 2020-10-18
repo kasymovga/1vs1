@@ -137,7 +137,7 @@ void(void) weaponselect_read {
 	if (weaponselect_active)
 		return;
 
-	if (isdemo_flag)
+	if (main_isdemo)
 		return;
 
 	weaponselect_width = 0;

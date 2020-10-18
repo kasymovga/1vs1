@@ -57,7 +57,7 @@ void(void) noteline_draw {
 
 string(string s) noteline_text_prepare {
 	float cmdkey, cmdkey_end;
-	if (isdemo_flag) {
+	if (main_isdemo) {
 		cmdkey = strstrofs(s, "\n", 0);
 		if (cmdkey >= 0)
 			s = substring(s, 0, cmdkey);

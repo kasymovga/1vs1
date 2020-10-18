@@ -8,9 +8,9 @@ void(void) gametype_init {
 		if (cvar("cl_cts_showspeed"))
 			cvar_clientsettemp("cl_showspeed", "1");
 	}
-	if not(isdemo_flag) {
+	if not(main_isdemo) {
 		localcmd("\n_cl_hook_gamestart ", gametype_name(gametype), ";");
-		calledhooks |= HOOK_START;
+		main_calledhooks |= MAIN_HOOK_START;
 	}
 	Sbar_GameType_Init();
 }

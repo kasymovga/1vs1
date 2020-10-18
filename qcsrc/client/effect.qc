@@ -83,7 +83,7 @@ void(void) effect_model_draw {
 	self.origin = self.origin + frametime * self.velocity;
 	self.scale = self.scale1 + (self.scale2 - self.scale1) * (time - self.teleport_time) / (self.lifetime + self.fadetime - self.teleport_time);
 	self.alpha = self.cnt * bound(0, 1 - (time - self.lifetime) / self.fadetime, 1);
-	if (self.alpha < ALPHA_MIN_VISIBLE) {
+	if (self.alpha < EFFECT_ALPHA_MIN_VISIBLE) {
 		remove(self);
 		return;
 	}

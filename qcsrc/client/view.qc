@@ -28,12 +28,12 @@ vector(void) view_fov_calculate {
 			zoomspeed = 3.5;
 
 	zoomdir = view_anybutton_zoom;
-	if (spectatee_status > 0 || isdemo_flag)
+	if (spectatee_status > 0 || main_isdemo)
 	if (view_spectatorbutton_zoom)
 		zoomdir = (zoomdir ? 0 : 1);
 
 	if (view_camera_active) {
-		view_zoom_current = min(1, view_zoom_current + drawframetime);
+		view_zoom_current = min(1, view_zoom_current + view_drawframetime);
 	} else {
 		if (zoomspeed < 0) { // instant zoom
 			if (zoomdir)
@@ -42,9 +42,9 @@ vector(void) view_fov_calculate {
 				view_zoom_current = 1;
 		} else {
 			if (zoomdir)
-				view_zoom_current = 1 / bound(1, 1 / view_zoom_current + drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
+				view_zoom_current = 1 / bound(1, 1 / view_zoom_current + view_drawframetime * zoomspeed * (zoomfactor - 1), zoomfactor);
 			else
-				view_zoom_current = bound(1 / zoomfactor, view_zoom_current + drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
+				view_zoom_current = bound(1 / zoomfactor, view_zoom_current + view_drawframetime * zoomspeed * (1 - 1 / zoomfactor), 1);
 		}
 	}
 	if (math_almost_equals(view_zoom_current, 1))
@@ -123,11 +123,11 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_width = w;
 	view_height = h;
 	fog_force();
-	drawframetime = max(0.000001, time - view_drawtime);
+	view_drawframetime = max(0.000001, time - view_drawtime);
 	view_drawtime = time;
 	view_fov = cvar("fov");
 	view_anybutton_zoom = input_button_zoom;
-	if (button_attack2_allowed) {
+	if (input_button_attack2_allowed) {
 		if (getstati(STAT_ACTIVEWEAPON) == WEP_NEX)
 		if not(CVAR(cl_nex_secondary_zoom_disable))
 			view_anybutton_zoom += input_button_attack2;
@@ -174,7 +174,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		}
 	} else if (CVAR(camera_enable)
 #ifndef CAMERATEST
-			&& isdemo_flag
+			&& main_isdemo
 #endif
 			) {
 		// Enable required Darkplaces cvars

@@ -5,16 +5,16 @@ void(float ignore) ready_read {
 		for(i = 1; i <= maxclients; i += 8) {
 			f = ReadByte();
 			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if(playerslots[j]) {
+				if(player_slots[j]) {
 					if (f & b)
-						playerslots[j].ready = 1;
+						player_slots[j].ready = 1;
 					else
-						playerslots[j].ready = 0;
+						player_slots[j].ready = 0;
 				}
 		}
 	} else
 		for(i = 0; i < maxclients; i++)
-			if(playerslots[i])
-				playerslots[i].ready = 0;
+			if(player_slots[i])
+				player_slots[i].ready = 0;
 }
 

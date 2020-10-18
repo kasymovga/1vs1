@@ -68,7 +68,7 @@ void setSelectedNexuizVoteArgsList(entity me, float i)
 	string vote = vote_commands[me.voteList.selectedItem];
 	string s = "";
 	if (me.voteType == 1 || me.voteType == 2) {
-		entity e = playerslots[i];
+		entity e = player_slots[i];
 		if (e) {
 			if (me.voteType == 1)
 				s = strcat(vote, " # ", ftos(e.sv_entnum + 1));
@@ -111,7 +111,7 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 
 	if (me.voteType == 1 || me.voteType == 2) {
 
-		entity  e = playerslots[i];
+		entity  e = player_slots[i];
 		if (e)
 			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(player_name(e.sv_entnum)));
 

@@ -29,7 +29,7 @@ void(void) casing_draw {
 	Movetype_Physics_NoMatchServer();
 	self.renderflags = 0;
 	self.alpha = bound(0, self.cnt - time, 1);
-	if (self.alpha < ALPHA_MIN_VISIBLE)
+	if (self.alpha < EFFECT_ALPHA_MIN_VISIBLE)
 		casing_delete();
 	else
 		R_AddEntity(self);

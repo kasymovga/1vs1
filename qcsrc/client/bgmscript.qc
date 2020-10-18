@@ -185,7 +185,7 @@ float BGMScript(entity e)
 	if(t < e.bgmscripttime)
 	{
 		//print("reset ", e.bgmscript, "\n");
-		amp = GetCurrentAmplitude(e, e.bgmscripttime - e.bgmscriptstatetime + drawframetime);
+		amp = GetCurrentAmplitude(e, e.bgmscripttime - e.bgmscriptstatetime + view_drawframetime);
 
 		e.bgmscriptline = e.bgmscriptline0;
 		e.bgmscripttime = t;

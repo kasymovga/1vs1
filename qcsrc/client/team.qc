@@ -1,5 +1,6 @@
 float team_my;
 entity team_list;
+entity team_slots[17];    // 17 teams (including "spectator team")
 
 float(float t, float d) team_index_def {
 	switch(t) {
@@ -42,15 +43,15 @@ entity(float Team, float add) team_get {
 	float num;
 	entity tm;
 	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
-	if(teamslots[num])
-		return teamslots[num];
+	if(team_slots[num])
+		return team_slots[num];
 
 	if not(add)
 		return NULL;
 
 	tm = spawn();
 	tm.team = Team;
-	teamslots[num] = tm;
+	team_slots[num] = tm;
 	team_register(tm);
 	return tm;
 }

@@ -1,4 +1,5 @@
 float player_deadflag;
+entity player_slots[255]; // 255 is engine limit on maxclients
 entity player_list;
 
 void (entity player) player_register {
@@ -40,7 +41,7 @@ float(float i) player_color_force {
 }
 
 float(float i) player_color {
-	entity pl = playerslots[i];
+	entity pl = player_slots[i];
 	if not(pl.gotscores) // unconnected
 		return COLOR_SPECTATOR;
 	else if (pl.team == COLOR_SPECTATOR)

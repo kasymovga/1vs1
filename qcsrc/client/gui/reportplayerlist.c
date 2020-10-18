@@ -34,7 +34,7 @@ void drawListBoxItemNexuizReportPlayerList(entity me, float i, vector absSize, f
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	string s = "";
-	entity  e = playerslots[i];
+	entity  e = player_slots[i];
 	if (e)
 		s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(player_name(e.sv_entnum)));
 

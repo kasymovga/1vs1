@@ -90,7 +90,7 @@ void(void) gib_draw {
 
 	self.renderflags = 0;
 	self.alpha = bound(0, self.nextthink - time, 1);
-	if (self.alpha < ALPHA_MIN_VISIBLE)
+	if (self.alpha < EFFECT_ALPHA_MIN_VISIBLE)
 		gib_remove();
 	else
 		R_AddEntity(self);

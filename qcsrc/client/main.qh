@@ -1,35 +1,19 @@
-
-// --------------------------------------------------------------------------
-// General stuff
-
-// Constants
 const float COLOR_SPECTATOR = 1337;
-//float csqc_flags;
 
-entity playerslots[255]; // 255 is engine limit on maxclients
-entity teamslots[17];    // 17 teams (including "spectator team")
 .entity owner;
-
 .void(void) draw;
 .void(void) draw2d;
 .float draw2dflag;
-float drawframetime;
-
-float warmup_stage;
-
-#define ALPHA_MIN_VISIBLE 0.003
 
 //hooks
-float calledhooks;
-#define HOOK_START    1
-#define HOOK_END      2
+float main_calledhooks;
+#define MAIN_HOOK_START    1
+#define MAIN_HOOK_END      2
 
 float ext_DP_CSQC_QUERYRENDERENTITY;
 float ext_DP_RM_SETRENDERENTITY;
 
-float sv_ip2country;
-float isdemo_flag;
-float g_campaign;
-float localgame;
-float button_attack2_allowed;
+float main_isdemo;
+float main_campaign;
+float main_localgame;
 .float float1;

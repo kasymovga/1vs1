@@ -86,7 +86,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER] = zapper_beam_read;
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = zapper_shield_read;
 	csqc_entity_parsers[ENT_CLIENT_DMG_INDICATOR] = damage_indicator_read;
-	csqc_entity_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sv_ip2country = TRUE; };
+	csqc_entity_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sbar_ip2country = TRUE; };
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = warpzone_read;
 	csqc_entity_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = warpzone_teleported_read;
@@ -154,14 +154,14 @@ float() CSQC_Parse_TempEntity { //called by engine
 		race_read();
 		return TRUE;
 	case TE_CSQC_TEAMSELECT:
-		if not(isdemo_flag)
+		if not(main_isdemo)
 			GUI_Show(GUI_TEAMSELECT);
 
 		return TRUE;
 	case TE_CSQC_GAMEOVER:
-		if (calledhooks & HOOK_START) {
+		if (main_calledhooks & MAIN_HOOK_START) {
 			localcmd("\ncl_hook_gameend;");
-			calledhooks |= HOOK_END;
+			main_calledhooks |= MAIN_HOOK_END;
 		}
 		return TRUE;
 	case TE_CSQC_MAPLIST:

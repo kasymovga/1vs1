@@ -82,11 +82,9 @@ void(void) CSQC_Init {
 	registercvar("crosshair_axe_color_alpha", "0.75", CVAR_SAVE);
 	registercvar("crosshair_dot_color", "1 1 1", CVAR_SAVE);
 	registercvar("_menu_vote_string", "", 0);
-	isdemo_flag = isdemo();
-
+	main_isdemo = isdemo();
 #ifndef CAMERATEST
-	if(isdemo_flag)
-	{
+	if(main_isdemo) {
 #endif
 		registercmd("+forward");registercmd("-forward");
 		registercmd("+back");registercmd("-back");
@@ -111,13 +109,10 @@ void(void) CSQC_Init {
 	for(i = 0; i < MAX_SBAR_FIELDS; ++i)
 		sbar_title[i] = strzone("(null)");
 
-	calledhooks = 0;
-
+	main_calledhooks = 0;
 	team_list = spawn();
 	player_list = spawn();
-
 	team_get(COLOR_SPECTATOR, TRUE); // add specs first
-
 	cvar_clientsettemp("_supports_weaponpriority", "1");
 	weapon_register_weapons();
 	waypointsprite_init();
@@ -176,11 +171,11 @@ void(void) CSQC_Shutdown {
 	if(view_camera_active)
 		cvar_set("chase_active",ftos(view_chase_active_backup));
 
-	if not(isdemo_flag)
-	{
-		if not(calledhooks & HOOK_START)
+	if not(main_isdemo) {
+		if not(main_calledhooks & MAIN_HOOK_START)
 			localcmd("\n_cl_hook_gamestart nop;");
-		if not(calledhooks & HOOK_END)
+
+		if not(main_calledhooks & MAIN_HOOK_END)
 			localcmd("\ncl_hook_gameend;");
 	}
 	trip_shutdown();
@@ -205,10 +200,10 @@ void(float ignore) main_init_read {
 	}
 	if (sf & 2) {
 		i = ReadByte();
-		g_campaign = i & 1;
-		localgame = i & 4;
+		main_campaign = i & 1;
+		main_localgame = i & 4;
 		hook_use_swapped = i & 8;
-		button_attack2_allowed = !(i & 16);
+		input_button_attack2_allowed = !(i & 16);
 	}
 	if (sf & 4) {
 		str_unzone_ifneeded(fog_settings);

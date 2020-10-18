@@ -200,7 +200,7 @@ void(void) nadgetselect_read {
 	if (g_nadgets_double)
 		opts_sec = ReadString();
 
-	if (isdemo_flag)
+	if (main_isdemo)
 		return;
 
 	if (!nadgetselect_active) {

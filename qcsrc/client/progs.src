@@ -61,6 +61,7 @@ weaponselect.qh
 view.qh
 cmd.qh
 main.qh
+effect.qh
 sort.qh
 input.qh
 weapon.qh

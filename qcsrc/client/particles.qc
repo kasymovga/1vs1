@@ -56,9 +56,9 @@ void(void) particles_point_draw {
 		if(n >= 0)
 			n = self.just_toggled ? self.impulse : 0;
 		else
-			n = self.impulse * drawframetime;
+			n = self.impulse * view_drawframetime;
 	} else {
-		n *= self.impulse * drawframetime;
+		n *= self.impulse * view_drawframetime;
 		if (self.just_toggled)
 			if (n < 1)
 				n = 1;

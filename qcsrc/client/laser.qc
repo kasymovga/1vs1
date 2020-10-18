@@ -35,7 +35,7 @@ void(void) laser_draw {
 	}
 	if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)) {
 		if (self.cnt >= 0)
-			pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
+			pointparticles(self.cnt, trace_endpos, trace_plane_normal, view_drawframetime * 1000);
 		if (self.colormod != '0 0 0' && self.modelscale != 0)
 			R_AddDynamicLight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
 	}

@@ -64,10 +64,10 @@ void(float ignore) score_player_read {
 		self.enttype = ENT_CLIENT_SCORES;
 	}
 	self.sv_entnum = n;
-	if not(playerslots[self.sv_entnum])
-		playerslots[self.sv_entnum] = spawn();
+	if not(player_slots[self.sv_entnum])
+		player_slots[self.sv_entnum] = spawn();
 
-	o = self.owner = playerslots[self.sv_entnum];
+	o = self.owner = player_slots[self.sv_entnum];
 	o.sv_entnum = self.sv_entnum;
 	o.gotscores = 1;
 	if not(o.sort_prev)

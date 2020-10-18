@@ -531,7 +531,7 @@ void Sbar_SetFields(float argc)
 			sbar_field[sbar_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			sbar_field[sbar_num_fields] = SP_KDRATIO;
-		} else if(str == "cn" && sv_ip2country) {
+		} else if(str == "cn" && sbar_ip2country) {
 			sbar_field[sbar_num_fields] = SP_COUNTRY;
 		} else if(str == "name" || str == "nick") {
 			sbar_field[sbar_num_fields] = SP_NAME;
@@ -1120,7 +1120,7 @@ void Sbar_DrawScoreboard()
 	       float i;
 	       entity e;
 	       for(i = 0; i < maxclients; ++i) {
-	               e = playerslots[i];
+	               e = player_slots[i];
 	               if(player_name(i) == "") {
 	                       if(e.sort_prev) {
 	                               team_set(e, -1);
@@ -1130,7 +1130,7 @@ void Sbar_DrawScoreboard()
 	               } else {
 	                       if not(e.sort_prev) {
 	                               if not(e)
-	                                       playerslots[i] = e = spawn();
+	                                       player_slots[i] = e = spawn();
 
 	                               e.sv_entnum = i;
 	                               team_set(e, COLOR_SPECTATOR);
@@ -1324,7 +1324,7 @@ void()Sbar_Score_Default {
 	float score, distribution, leader;
 	vector score_pos, secondary_score_pos, distribution_color;
 	entity tm, pl, me;
-	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
+	me = (spectatee_status > 0) ? player_slots[spectatee_status - 1] : player_slots[player_localentnum - 1];
 
 	score_pos = bottomright - '196 42 0';
 	secondary_score_pos = score_pos + '132 -6 0';
@@ -1449,14 +1449,14 @@ void Sbar_Timer()
 	starttime = getstatf(STAT_GAMESTARTTIME);
 
 	timeleft = timelimit * 60 + starttime - time;
-	if(timeleft >= 300 || warmup_stage || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
+	if(timeleft >= 300 || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
 		timer_color = '1 1 1'; //white
 	else if(timeleft >= 60)
 		timer_color = '1 1 0'; //yellow
 	else
 		timer_color = '1 0 0'; //red
 
-	if (CVAR(sbar_increment_maptime) || timelimit == 0 || warmup_stage) {
+	if (CVAR(sbar_increment_maptime) || timelimit == 0) {
 		if (time < starttime) {
 			//while restart is still active, show 00:00
 			minutes = seconds = 0;
@@ -1715,16 +1715,6 @@ void Sbar_DrawAccuracyStats()
 	left_border = col_margin + 11 * sbar_fontsize_x;
 
 	drawfont = sbar_font;
-
-	if(warmup_stage)
-	{
-		pos_y += 40;
-		if(math_mod(time, 1) >= 0.4)
-			draw_string_center(pos, "Stats are not tracked during warmup stage", sbar_fontsize, '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
-		return;
-	}
-
 	float top_border = SCOREBOARD_OFFSET + 55;  // position where the hitscan row starts: pixels down the screen
 	Sbar_DrawAccuracyStats_Description('1 0 0' * col_margin + '0 1 0' * top_border);
 
@@ -2082,11 +2072,11 @@ void Sbar_Draw (void)
 			if (hgstat) {
 				float hgls = getstatf(STAT_HGLAUNCH);
 				if(hgstat) {
-					hg_alpha = approach(hg_alpha, 1, 5 * drawframetime);
+					hg_alpha = approach(hg_alpha, 1, 5 * view_drawframetime);
 				} else {
-					hg_alpha = approach(hg_alpha, 0, 5 * drawframetime);
+					hg_alpha = approach(hg_alpha, 0, 5 * view_drawframetime);
 				}
-				hg_visual = approach(hg_visual, hgstat, drawframetime * hgls);
+				hg_visual = approach(hg_visual, hgstat, view_drawframetime * hgls);
 				hgstat = hg_visual;
 				if(hg_alpha)
 				{

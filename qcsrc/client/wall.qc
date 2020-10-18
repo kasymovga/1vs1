@@ -23,7 +23,7 @@ void(void) wall_draw {
 	} else
 		self.alpha = 1;
 
-	if (self.alpha >= ALPHA_MIN_VISIBLE)
+	if (self.alpha >= EFFECT_ALPHA_MIN_VISIBLE)
 		R_AddEntity(self);
 
 	self.fld = save;
