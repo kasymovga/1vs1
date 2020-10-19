@@ -1,2 +1,6 @@
 void(entity e, string s) cmd_print_to;
 void(string s) cmd_client;
+#define CMD_RECORDS_REPLY_STRINGS_COUNT 16
+string cmd_records_reply[CMD_RECORDS_REPLY_STRINGS_COUNT]; //array for BIG replies
+float cmd_records_reply_extra;
+string cmd_lsmaps_reply, cmd_maplist_reply; // cached replies

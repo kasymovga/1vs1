@@ -8,10 +8,7 @@ float(string command) cmd_generic {
 		print("  maplist remove map\n");
 		print("  maplist shuffle\n");
 		print("  maplist cleanup\n");
-		print("  maplist maplist\n");
-		print("  maplist lsmaps\n");
 		print("  addtolist variable addedvalue\n");
-		print("  records\n");
 		return TRUE;
 	}
 	if (argv(0) == "maplist") {
@@ -56,14 +53,6 @@ float(string command) cmd_generic {
 			cvar_set("g_maplist", s2);
 			return TRUE;
 		}
-		else if (argv(1) == "maplist") {
-			print(maplist_reply);
-			return TRUE;
-		}
-		else if (argv(1) == "lsmaps") {
-			print(lsmaps_reply);
-			return TRUE;
-		}
 	} else if (argv(0) == "addtolist") {
 		if (argc >= 2) {
 			s = argv(1);
@@ -79,9 +68,6 @@ float(string command) cmd_generic {
 				cvar_set(s, strcat(s2, " ", cvar_string(s)));
 			}
 		}
-		return TRUE;
-	} else if (argv(0) == "records") {
-		print(records_reply);
 		return TRUE;
 	}
 	return FALSE;

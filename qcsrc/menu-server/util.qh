@@ -11,5 +11,3 @@ string swapwords(string str, float i, float j);
 string shufflewords(string str);
 
 string substring_range(string s, float b, float e);
-
-string records_reply, lsmaps_reply, maplist_reply; // cached replies

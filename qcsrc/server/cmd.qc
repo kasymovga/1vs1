@@ -59,6 +59,7 @@ void(string command) cmd_game {
 		print("  allready\n");
 		print("  cvar_changes\n");
 		print("  find classname\n");
+		print("  records\n");
 		vote_cmd("help", world);
 		GameCommand_Ban("help");
 		cmd_generic("help");
@@ -238,14 +239,13 @@ void(string command) cmd_game {
 			print(etos(client), "\n");
 		return;
 	}
-	if (cmd == "records")
-	{
-		str_unzone_ifneeded(records_reply);
-		records_reply = str_zone_ifneeded(world_getrecords());
-		print(records_reply);
+	if (cmd == "records") {
+		world_getrecords();
+		for (i = 0; i <= cmd_records_reply_extra; i++)
+			print(cmd_records_reply[i]);
+
 		return;
 	}
-
 	if(cmd == "cointoss")
 	{
 		bprint("^3Throwing coin... Result: ");
@@ -593,6 +593,15 @@ float cmd_floodcheck()
 	return FALSE;
 }
 
+void(void) cmd_records_print_think {
+	self.cnt = self.cnt + 1;
+	sprint(self.enemy, cmd_records_reply[self.cnt]);
+	if (self.cnt >= cmd_records_reply_extra) {
+		remove(self);
+	} else
+		self.nextthink = time + sys_ticrate;
+}
+
 void(string s) cmd_client {
 	string cmd;
 	float tokens;
@@ -695,9 +704,9 @@ void(string s) cmd_client {
 			}
 		}
 	} else if(cmd == "maplist") {
-		sprint(self, maplist_reply);
+		sprint(self, cmd_maplist_reply);
 	} else if(cmd == "lsmaps") {
-		sprint(self, lsmaps_reply);
+		sprint(self, cmd_lsmaps_reply);
 	} else if(cmd == "lsmaps2") {
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
@@ -719,7 +728,18 @@ void(string s) cmd_client {
 			self.gameclient = CLIENT_UNKNOWN;
 		}
 	} else if(cmd == "records") {
-		sprint(self, records_reply);
+		if (cmd_records_reply[0] == "")
+			sprint(self, "No records are available on this server.\n");
+		else {
+			sprint(self, "Records on this server:\n");
+			sprint(self, cmd_records_reply[0]);
+			if (cmd_records_reply_extra) {
+				e = spawn();
+				e.nextthink = time + sys_ticrate;
+				e.enemy = self;
+				e.think = cmd_records_print_think;
+			}
+		}
 	} else if(cmd == "voice") {
 		if(tokens >= 3)
 			player_voice_message(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));

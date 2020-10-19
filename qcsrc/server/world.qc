@@ -147,29 +147,38 @@ void world_dynamic_init() {
 	announce_init();
 }
 
-string world_getrecords() {
+void world_getrecords() {
 	float i;
 	string s = "", s1;
 	float f = -1;
+	for (i = 0; i < CMD_RECORDS_REPLY_STRINGS_COUNT; i++) {
+		str_unzone_ifneeded(cmd_records_reply[i]);
+	}
+	cmd_records_reply_extra = 0;
 	if (cvar("sv_dumprecords")) {
 		f = fopen(strcat("records-", gametype_name(game), ".txt"), FILE_WRITE);
 	}
 	for (i = 0; i < MapInfo_count; ++i)
 		if (MapInfo_Get_ByID(i)) {
 			s1 = GameHook_RecordForMap(MapInfo_Map_bspname);
+			if (strlen(s) + strlen(s1) > 4095) {
+				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
+					break;
+
+				cmd_records_reply[cmd_records_reply_extra] = strzone(s);
+				cmd_records_reply_extra++;
+				s = "";
+			}
 			s = strcat(s, s1);
 			if (f >= 0) {
 				fputs(f, s1);
 			}
 		}
+	cmd_records_reply[cmd_records_reply_extra] = strzone(s);
 	if (f >= 0)
 		fclose(f);
 
-    MapInfo_ClearTemps();
-    if (s == "")
-        return "No records are available on this server.\n";
-    else
-        return strcat("Records on this server:\n", s);
+	MapInfo_ClearTemps();
 }
 
 void(void) world_end_of_time {
@@ -269,7 +278,7 @@ void(void) world_init {
 	addstat(STAT_BULLETS_LOADED, AS_INT, ammoclip);
 	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
 	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
-	lsmaps_reply = "^7Maps available: ";
+	cmd_lsmaps_reply = "^7Maps available: ";
 	map_list = "";
 	for(i = 0, j = 0; i < MapInfo_count; ++i) {
 		if(MapInfo_Get_ByID(i))
@@ -280,13 +289,13 @@ void(void) world_init {
 				else
 					col = "^3";
 				++j;
-				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
+				cmd_lsmaps_reply = strcat(cmd_lsmaps_reply, col, MapInfo_Map_bspname, " ");
 				map_list = strcat(map_list, MapInfo_Map_bspname, " ");
 			}
 	}
-	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
+	cmd_lsmaps_reply = strzone(strcat(cmd_lsmaps_reply, "\n"));
 	map_list = strzone(map_list);
-	maplist_reply = "^7Maps in list: ";
+	cmd_maplist_reply = "^7Maps in list: ";
 	n = tokenize_console(cvar_string("_g_maplist"));
 	for(i = 0, j = 0; i < n; ++i)
 	{
@@ -296,13 +305,13 @@ void(void) world_init {
 				col = "^2";
 			else
 				col = "^3";
-			maplist_reply = strcat(maplist_reply, col, argv(i), " ");
+			cmd_maplist_reply = strcat(cmd_maplist_reply, col, argv(i), " ");
 			++j;
 		}
 	}
-	maplist_reply = strzone(strcat(maplist_reply, "\n"));
+	cmd_maplist_reply = strzone(strcat(cmd_maplist_reply, "\n"));
 	MapInfo_ClearTemps();
-	records_reply = str_zone_ifneeded(world_getrecords());
+	world_getrecords();
 	client_init_spawn();
 	random_seed_spawn();
 	localcmd("\n_sv_hook_gamestart ", gametype_name(game), ";");
