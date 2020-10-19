@@ -11,6 +11,50 @@ float MAPINFO_TYPE_CTS              = 4096;
 float MAPINFO_TYPE_SURVIVE          = 32768;
 float MAPINFO_TYPE_SINGLE           = 65536;
 
+void(float n, swapfunc_t swap, comparefunc_t cmp, entity pass) mapinfo_heapsort {
+	float start, end, root, child;
+	// heapify
+	start = floor((n - 2) / 2);
+	while (start >= 0) {
+		// siftdown(start, count-1);
+		root = start;
+		while (root * 2 + 1 <= n-1) {
+			child = root * 2 + 1;
+			if (child < n-1)
+				if(cmp(child, child+1, pass) < 0)
+					++child;
+
+			if (cmp(root, child, pass) < 0) {
+				swap(root, child, pass);
+				root = child;
+			} else
+				break;
+		}
+		// end of siftdown
+		--start;
+	}
+	// extract
+	end = n - 1;
+	while (end > 0) {
+		swap(0, end, pass);
+		--end;
+		// siftdown(0, end);
+		root = 0;
+		while (root * 2 + 1 <= end) {
+			child = root * 2 + 1;
+			if (child < end && cmp(child, child+1, pass) < 0)
+				++child;
+
+			if (cmp(root, child, pass) < 0) {
+				swap(root, child, pass);
+				root = child;
+			} else
+				break;
+		}
+		// end of siftdown
+	}
+}
+
 // generic string stuff
 float startsWith(string haystack, string needle)
 {
@@ -20,12 +64,7 @@ float startsWithNocase(string haystack, string needle)
 {
 	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
 }
-string extractRestOfLine(string haystack, string needle)
-{
-	if(startsWith(haystack, needle))
-		return substring(haystack, strlen(needle), strlen(haystack) - strlen(needle));
-	return NULL;
-}
+
 float matchacl(string acl, string str)
 {
 	string t, s;
@@ -203,7 +242,7 @@ float MapInfo_FilterGametype(float pGametype, float pFlagsRequired, float pFlags
 	MapInfo_ClearTemps();
 	
 	// sometimes the glob isn't sorted nicely, so fix it here...
-	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
+	mapinfo_heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
 
 	return 1;
 }
