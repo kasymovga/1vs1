@@ -88,6 +88,7 @@ set _defrag_g_balance_grenadelauncher_primary_speed 650
 set _defrag_g_balance_grenadelauncher_primary_lifetime 2.5
 set _defrag_g_balance_grenadelauncher_secondary 0
 set _defrag_g_balance_grenadelauncher_bouncefactor 0.5
+set _defrag_g_balance_powerup_invincible_time 99
 set _defrag_g_pickup_armorsmall 5
 set _defrag_g_pickup_armorsmall_max 200
 set _defrag_g_pickup_armormedium 25
@@ -125,6 +126,7 @@ set _defrag_g_airaccel_sideways_friction 0
 set _defrag_g_jumpvelocity 270
 set _defrag_g_jumpvelocity_nodecrease 1
 set _defrag_g_slicksurfaces_levitation 0
+set _defrag_g_button_nowaitforever 1
 set defragcpm_inherit _defrag
 set defragcpm_g_q2doublejump 1
 set defragcpm_g_balance_weaponswitchdelay 0

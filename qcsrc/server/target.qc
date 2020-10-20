@@ -251,3 +251,51 @@ void(void) spawnfunc_target_teleporter {
 	}
 	self.classname = "info_teleport_destination";
 }
+
+void(void) target_speed_use {
+	if (activator.classname != "player")
+		return;
+
+	float s;
+	if (self.spawnflags & 1)
+		s = vlen(activator.velocity) * (self.speed / 100);
+	else
+		s = self.speed;
+
+	if (self.spawnflags & 2)
+	if not(self.spawnflags & 256)
+		s = s + vlen(activator.velocity);
+
+	if (self.spawnflags & 256) {
+		vector v;
+		v = '0 0 0';
+		if (self.spawnflags & 4)
+			v += '1 0 0';
+
+		if (self.spawnflags & 8)
+			v += '-1 0 0';
+
+		if (self.spawnflags & 16)
+			v += '0 1 0';
+
+		if (self.spawnflags & 32)
+			v += '0 -1 0';
+
+		if (self.spawnflags & 64)
+			v += '0 0 1';
+
+		if (self.spawnflags & 128)
+			v += '0 0 -1';
+
+		activator.velocity = activator.velocity + normalize(v) * s;
+	} else {
+		if (activator.velocity == '0 0 0')
+			return;
+
+		activator.velocity = normalize(activator.velocity) * s;
+	}
+}
+
+void(void) spawnfunc_target_speed {
+	self.use = target_speed_use;
+}

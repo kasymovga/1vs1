@@ -1095,33 +1095,31 @@ When a button is touched, it moves some distance in the direction of it's angle,
 2) metallic click
 3) in-out
 */
-void spawnfunc_func_button()
-{
+void(void) spawnfunc_func_button {
 	entity_movedir_setup();
-
 	if not(func_moving_brush_init())
 		return;
-	self.effects |= EF_LOWPRECISION;
 
+	self.effects |= EF_LOWPRECISION;
 	self.blocked = func_button_blocked;
 	self.use = func_button_use;
-    self.reset = func_button_reset;
-
-//	if (self.health == 0) // all buttons are now shootable
-//		self.health = 10;
-	if (self.health)
-	{
+	self.reset = func_button_reset;
+	if (self.health) {
 		self.max_health = self.health;
 		self.event_damage = func_button_damage;
 		self.takedamage = DAMAGE_YES;
-	}
-	else
+	} else
 		self.touch = func_button_touch;
 
 	if (!self.speed)
 		self.speed = 40;
+
 	if (!self.wait)
 		self.wait = 1;
+
+	if (self.wait < 0 && cvar("g_button_nowaitforever")) {
+		self.wait = 0.001;
+	}
 	if (!self.lip)
 		self.lip = 4;
 
@@ -1129,16 +1127,14 @@ void spawnfunc_func_button()
 	if (self.noise == "")
 		self.noise = "misc/menu1.wav";
 
-    if(self.noise != "")
-        precache_sound(self.noise);
+	if(self.noise != "")
+		precache_sound(self.noise);
 
 	self.pos1 = self.origin;
-	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
-    self.flags |= FL_NOTARGET;
-
+	self.pos2 = self.pos1 + self.movedir * (fabs(self.movedir * self.size) - self.lip);
+	self.flags |= FL_NOTARGET;
 	func_button_reset();
-};
-
+}
 
 float DOOR_START_OPEN = 1;
 float DOOR_DONT_LINK = 4;
