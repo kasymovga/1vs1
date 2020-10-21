@@ -9,6 +9,7 @@ float g_balance_grenadelauncher_primary_radius;
 float g_balance_grenadelauncher_primary_refire;
 float g_balance_grenadelauncher_primary_speed;
 float g_balance_grenadelauncher_primary_speed_up;
+float g_balance_grenadelauncher_primary_up;
 float g_balance_grenadelauncher_secondary_ammo;
 float g_balance_grenadelauncher_secondary_animtime;
 float g_balance_grenadelauncher_secondary_damage;
@@ -85,6 +86,9 @@ void(void) weapon_grenadelauncher_attack {
 
 	weapon_setup_shot(self, 4, "weapons/grenade_fire.wav", 1);
 	weapon_shotdir = v_forward; // no TrueAim for grenades please
+	if (g_balance_grenadelauncher_primary_up) {
+		weapon_shotdir = normalize(weapon_shotdir + '0 0 1' * g_balance_grenadelauncher_primary_up);
+	}
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	gren = projectile(TRUE, (bounce ? PROJECTILE_GRENADE_BOUNCING : PROJECTILE_GRENADE), TRUE, self);
 	projectile_setup(gren, weapon_shotorg, WEP_GRENADE_LAUNCHER, g_balance_grenadelauncher_primary_damage,
@@ -217,6 +221,7 @@ float weapon_grenadelauncher(float req)
 		CACHE_CVAR(g_balance_grenadelauncher_primary_refire);
 		CACHE_CVAR(g_balance_grenadelauncher_primary_speed);
 		CACHE_CVAR(g_balance_grenadelauncher_primary_speed_up);
+		CACHE_CVAR(g_balance_grenadelauncher_primary_up);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_ammo);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_animtime);
 		CACHE_CVAR(g_balance_grenadelauncher_secondary_damage);
