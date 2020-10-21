@@ -71,6 +71,10 @@ void(float ground) physics_update_status {
 		physics_flags &~= FL_ONGROUND_OR_SLICK;
 		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+		if (trace_startsolid) {
+			physics_unstuck();
+			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+		}
 		float f;
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (g_q2doublejump || (f = physics_velocity * trace_plane_normal) <= 0)) {
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
@@ -206,8 +210,7 @@ void(void) physics_move {
 				trace2_endpos = trace_endpos;
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
-				if(!trace_startsolid)
-				{
+				if(!trace_startsolid) {
 					// then move down from there
 					currentorigin2 = trace2_endpos;
 					neworigin2 = trace2_endpos;
@@ -217,8 +220,7 @@ void(void) physics_move {
 					trace3_fraction = trace_fraction;
 					trace3_plane_normal = trace_plane_normal;
 					// accept the new trace if it made some progress
-					if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125)
-					{
+					if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125) {
 						trace1_endpos = trace2_endpos;
 						trace1_fraction = trace2_fraction;
 						trace1_plane_normal = trace2_plane_normal;
@@ -229,7 +231,6 @@ void(void) physics_move {
 				}
 			}
 		}
-
 		// check if it moved at all
 		if(trace1_endpos == self.origin) {
 			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0) {
@@ -243,24 +244,12 @@ void(void) physics_move {
 		} else {
 			setorigin(self, trace1_endpos);
 			blocked_prev = 0;
-#ifdef SVQC
-			physics_unstuck();
-#endif
 		}
-
 		// check if it moved all the way
 		if(trace1_fraction == 1)
 			break;
 
-		// this is only really needed for nogravityonground combined with gravityunaffectedbyticrate
-		// <LordHavoc> I'm pretty sure I commented it out solely because it seemed redundant
-		// this got commented out in a change that supposedly makes the code match QW better
-		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
-		//if(trace1_plane_normal_z > 0.7)
-		//	physics_flags |= FL_ONGROUND;
-
 		t -= t * trace1_fraction;
-
 		f = (physics_velocity * trace1_plane_normal);
 		physics_velocity = physics_velocity - f * trace1_plane_normal;
 	}

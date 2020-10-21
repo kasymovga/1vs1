@@ -114,7 +114,9 @@ vector(void) physics_view_origin {
 			ground_curtime += frametime;
 			vector ground_curorigin = (1 - f) * ground_oldorigin + f * ground_origin;
 			self.origin = physics_start_origin - (ground_origin - ground_curorigin);
-			physics_unstuck();
+			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 16', MOVE_WORLDONLY, self);
+			if not(trace_startsolid)
+				self.origin = trace_endpos;
 		}
 		pmove_org = self.origin;
 		self.lastwj = physics_lastwj;
