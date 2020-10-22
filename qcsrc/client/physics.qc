@@ -17,6 +17,8 @@ vector ground_origin;
 vector ground_oldorigin;
 float ground_lastent;
 entity physics;
+float physics_skimming_start;
+float physics_cpmdoublejump_time_start;
 
 vector(void) physics_vehicle_adjust_view {
 	makevectors(view_angles);
@@ -84,6 +86,8 @@ vector(void) physics_view_origin {
 		float frametime_save = frametime;
 		float i;
 		float n = clientcommandframe + 1;
+		physics_skimming = physics_skimming_start;
+		physics_cpmdoublejump_time = physics_cpmdoublejump_time_start;
 		entity oldself = self;
 		self = physics;
 		self.velocity = physics_velocity = self.pmove_velocity;
@@ -218,6 +222,12 @@ void(void) physics_camera_setup {
 float physics_player_content;
 void(float isnew) physics_read {
 	float f = ReadShort();
+	float f2;
+	if (f & 16384)
+		f2 = ReadByte();
+	else
+		f2 = 0;
+
 	physics = self;
 	if (f & 1) {
 		if (cvar("cl_movement_replay"))
@@ -245,7 +255,7 @@ void(float isnew) physics_read {
 		sv_warsowbunny_backtosideratio = ReadCoord();
 		sv_jumpvelocity = ReadCoord();
 		sv_waterjumpvelocity = ReadCoord();
-		sv_friction_on_land = ReadCoord();
+		g_skimming_time = ReadCoord();
 		float switches = ReadShort();
 		g_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
@@ -271,6 +281,8 @@ void(float isnew) physics_read {
 		g_stepusevelocity = switches & 2048;
 		g_slicksurfaces_levitation = switches & 4096;
 		g_jumpvelocity_nodecrease = switches & 16384;
+		g_cpmdoublejump = switches & 32768;
+		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
 			g_walljump_force = ReadCoord();
@@ -362,7 +374,7 @@ void(float isnew) physics_read {
 			physics_last_LEFT_KEY_time = 0;
 			physics_last_RIGHT_KEY_time = 0;
 		}
-		if (f & 16384) {
+		if (f2 & 4) {
 			float dodging_flags = ReadByte();
 			if (dodging_flags & 1) physics_last_dodging = ReadCoord();
 			if (dodging_flags & 2) physics_last_FORWARD_KEY_time = ReadCoord();
@@ -385,6 +397,16 @@ void(float isnew) physics_read {
 			}
 		} else {
 			ground_lastent = 0;
+		}
+		if (f2 & 1) {
+			physics_skimming_start = ReadCoord();
+		} else {
+			physics_skimming_start = 0;
+		}
+		if (f2 & 2) {
+			physics_cpmdoublejump_time_start = ReadCoord();
+		} else {
+			physics_cpmdoublejump_time_start = 0;
 		}
 	}
 }

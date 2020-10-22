@@ -131,8 +131,10 @@ set _defrag_g_jumpvelocity 270
 set _defrag_g_jumpvelocity_nodecrease 1
 set _defrag_g_slicksurfaces_levitation 0
 set _defrag_g_button_nowaitforever 1
+set _defrag_g_skimming_time 0.3
 set defragcpm_inherit _defrag
-set defragcpm_g_q2doublejump 1
+set defragcpm_g_q2doublejump 0
+set defragcpm_g_cpmdoublejump 1
 set defragcpm_g_balance_weaponswitchdelay 0
 set defragcpm_g_accelerate 15
 set defragcpm_g_airaccelerate 1

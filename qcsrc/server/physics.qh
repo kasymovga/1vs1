@@ -3,3 +3,4 @@ void(entity pl) physics_mark_as_teleported;
 void(void) physics_step_on_sky;
 float g_walljump_smokeparticle_num;
 float g_dodging_sound;
+.float lastground;

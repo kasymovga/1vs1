@@ -25,7 +25,6 @@ float sv_maxairstrafespeed;
 float sv_jumpvelocity;
 float g_jumpvelocity_nodecrease;
 float sv_waterjumpvelocity;
-float sv_friction_on_land;
 float sv_pogostick;
 float sv_disable_crouch;
 float g_q2doublejump;
@@ -41,6 +40,8 @@ float g_dodging_delay;
 float g_dodging_frozen;
 float g_dodging_frozen_delay;
 float g_dodging_frozen_factor;
+float g_skimming_time;
+float g_cpmdoublejump;
 
 float physics_deadflag;
 float physics_cantjump;
@@ -62,6 +63,9 @@ float physics_watertype;
 float physics_movetype;
 float physics_gravity_factor;
 float physics_teleport_time;
+float physics_skimming;
+float physics_have_doubjejump;
+float physics_cpmdoublejump_time;
 
 void physics_player();
 

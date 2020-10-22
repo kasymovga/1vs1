@@ -24,7 +24,6 @@ set g_jumpvelocity 300 "cvar that can be used by QuakeC code for jump velocity"
 set g_jumpvelocity_nodecrease 0
 set g_waterjumpvelocity 225 "water jump velocity"
 set g_gameplayfix_q2airaccelerate 1 "Quake2-style air acceleration"
-set g_friction_on_land 0
 set g_pogostick 1 "don't require releasing the space bar for jumping again"
 set g_walljump 0 "Enable walljumping"
 set g_walljump_delay 1 "Minimum delay between walljumps"
@@ -46,3 +45,5 @@ set g_jump_grunt 0	"Do you make a grunting noise every time you jump? Is it the 
 set g_q2doublejump 0 "Q2-style double jump"
 set g_stepusevelocity 0 "Use z-velocity to increase step height value"
 set g_steponskydamage 100 "Damage from stepping to sky surface"
+set g_skimming_time 0 "Q3-like corner skimming"
+set g_cpmdoublejump 0 "CPM double jump"

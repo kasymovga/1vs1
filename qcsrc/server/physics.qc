@@ -6,8 +6,8 @@ float g_steponskydamage;
 
 .float ladder_time;
 .entity ladder_entity;
-.float lastground;
 .float spectatorspeed;
+.float cpmdoublejump;
 
 #if 0
 float developer_shtest;
@@ -41,8 +41,7 @@ float(void) physics_jump_velocity_mod {
 }
 
 void(void) physics_landing_hook {
-	if(self.lastground < time - 0.3)
-		physics_velocity = physics_velocity * (1 - sv_friction_on_land);
+	self.lastground = time;
 }
 
 float(entity a) physics_is_flying {
@@ -271,8 +270,7 @@ void SV_PlayerPhysics()
 	physics_gravity_factor = (self.gravity ? self.gravity : 1);
 	physics_teleport_time = self.teleport_time - time;
 	physics_plug = self.PlayerPhysplug;
-	if (physics_ladder_iswater)
-	{
+	if (physics_ladder_iswater) {
 		physics_ladder_speed = self.ladder_entity.speed;
 		physics_ladder_watertype = self.ladder_entity.watertype;
 		physics_ladder_top = self.ladder_entity.origin_z + self.ladder_entity.maxs_z;
@@ -282,6 +280,11 @@ void SV_PlayerPhysics()
 	physics_waterlevel = self.waterlevel;
 	physics_watertype = self.watertype;
 	vector _oldorigin = self.origin;
+	if (g_skimming_time)
+	if not(physics_flags & FL_ONGROUND_OR_SLICK)
+		physics_skimming = max(0, g_skimming_time + self.lastground - time);
+
+	physics_cpmdoublejump_time = self.cpmdoublejump;
 	physics_player();
 	if(physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
@@ -292,6 +295,7 @@ void SV_PlayerPhysics()
 	self.velocity = physics_velocity;
 	self.waterlevel = physics_waterlevel;
 	self.watertype = physics_watertype;
+	self.cpmdoublejump = physics_cpmdoublejump_time;
 	if (physics_is_player)
 	if ((vlen(_oldorigin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32)
 	if (self.solid != SOLID_NOT)
@@ -372,7 +376,6 @@ void(void) physics_init {
 	CACHE_CVAR(g_stepairslowdown);
 	CACHE_CVAR(g_stepusevelocity);
 	CACHE_CVAR(g_q2doublejump);
-	sv_friction_on_land = cvar("g_friction_on_land");
 	CACHE_CVAR(g_slicksurfaces_allowjump);
 	CACHE_CVAR(g_slicksurfaces_levitation);
 	sv_pogostick = cvar("g_pogostick");
@@ -399,6 +402,9 @@ void(void) physics_init {
 	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
 	CACHE_CVAR(g_steponskydamage);
+	CACHE_CVAR(g_skimming_time);
+	CACHE_CVAR(g_cpmdoublejump);
+	physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 	if (physics_initiated) {
 		entity e;
 		FOR_EACH_REALCLIENT(e) {
@@ -417,7 +423,8 @@ float(entity to, float sf) physics_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS);
 	entity oldself = self;
 	self = self.owner;
-	float dodging_flags;
+	float dodging_flags, skimming;
+	float sf2 = 0;
 	if not(sf & 3)
 	{
 		if (self.classname == "player") sf |= 8;
@@ -438,16 +445,31 @@ float(entity to, float sf) physics_send {
 			if (self.last_LEFT_KEY_time > 0) dodging_flags |= 8;
 			if (self.last_RIGHT_KEY_time > 0) dodging_flags |= 16;
 			if (dodging_flags)
-				sf |= 16384;
+				sf2 |= 4;
 		}
 		if (self.groundentity)
 		if (self.flags & FL_ONGROUND_OR_SLICK) {
 			sf |= 32768;
 		}
+		if (g_skimming_time)
+		if not(self.flags & FL_ONGROUND_OR_SLICK) {
+			skimming = g_skimming_time + self.lastground - time;
+			if (skimming > 0)
+				sf2 |= 1;
+		}
+		if (g_cpmdoublejump)
+		if (self.cpmdoublejump)
+			sf2 |= 2;
+
+		if (sf2) sf |= 16536;
 	}
 	else
 		sf = sf & 7;
+
 	WriteShort(MSG_ENTITY, sf);
+	if (sf2)
+		WriteByte(MSG_ENTITY, sf2);
+
 	if (sf & 1)
 	{
 		WriteCoord(MSG_ENTITY, sv_stepheight);
@@ -472,7 +494,7 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_warsowbunny_backtosideratio);
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_waterjumpvelocity);
-		WriteCoord(MSG_ENTITY, sv_friction_on_land);
+		WriteCoord(MSG_ENTITY, g_skimming_time);
 		float switches = (g_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)
@@ -487,6 +509,7 @@ float(entity to, float sf) physics_send {
 				+ (g_slicksurfaces_levitation ? 4096 : 0)
 				+ (cvar("mod_collision_bih") ? 8192 : 0)
 				+ (g_jumpvelocity_nodecrease ? 16384 : 0)
+				+ (g_cpmdoublejump ? 32768 : 0)
 				;
 		WriteShort(MSG_ENTITY, switches);
 		if (g_walljump) {
@@ -551,7 +574,7 @@ float(entity to, float sf) physics_send {
 			WriteCoord(MSG_ENTITY, self.teleport_time - time);
 		if (sf & 8192)
 			WriteCoord(MSG_ENTITY, self.lastwj);
-		if (sf & 16384) {
+		if (sf2 & 4) {
 			WriteByte(MSG_ENTITY, dodging_flags);
 			if (dodging_flags & 1) WriteCoord(MSG_ENTITY, self.last_dodging_time);
 			if (dodging_flags & 2) WriteCoord(MSG_ENTITY, self.last_FORWARD_KEY_time);
@@ -565,7 +588,12 @@ float(entity to, float sf) physics_send {
 			WriteCoord(MSG_ENTITY, self.groundentity.origin_y);
 			WriteCoord(MSG_ENTITY, self.groundentity.origin_z);
 		}
-
+		if (sf2 & 1) {
+			WriteCoord(MSG_ENTITY, skimming);
+		}
+		if (sf2 & 2) {
+			WriteCoord(MSG_ENTITY, self.cpmdoublejump);
+		}
 	}
 	self = oldself;
 	return TRUE;

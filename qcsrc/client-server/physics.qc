@@ -64,10 +64,11 @@ void(void) physics_unstuck {
 }
 
 void(float ground) physics_update_status {
+	physics_lastflags = physics_flags;
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
 		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
 
-	if(ground) {
+	if (ground) {
 		physics_flags &~= FL_ONGROUND_OR_SLICK;
 		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
@@ -76,7 +77,7 @@ void(float ground) physics_update_status {
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		}
 		float f;
-		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && (g_q2doublejump || (f = physics_velocity * trace_plane_normal) <= 0)) {
+		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((f = physics_velocity * trace_plane_normal) <= 0 || physics_have_doubjejump)) {
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
 				if (g_slicksurfaces_levitation)
 					physics_flags |= FL_SLICK;
@@ -93,9 +94,19 @@ void(float ground) physics_update_status {
 			}
 			self.groundentity = trace_ent;
 			physics_impact();
-			if (!trace_ent || trace_ent.solid != SOLID_NOT)
-				physics_velocity -= f * trace_plane_normal;
+			if (f < 0) {
+				if (!trace_ent || trace_ent.solid != SOLID_NOT)
+					physics_velocity -= f * trace_plane_normal;
+			}
 		}
+	}
+	if (g_cpmdoublejump) {
+		if (physics_cpmdoublejump_time > 0)
+			physics_cpmdoublejump_time -= frametime;
+
+		if (physics_lastflags & FL_ONGROUND_OR_SLICK)
+		if (physics_flags & FL_ONGROUND_OR_SLICK)
+			physics_cpmdoublejump_time = 0;
 	}
 	// set watertype/waterlevel
 	vector origin1 = self.origin;
@@ -163,7 +174,6 @@ void(void) physics_move {
 	vector neworigin;
 	vector currentorigin2;
 	vector neworigin2;
-	vector primalvelocity;
 	vector prev_plane_normal;
 	float stepheight;
 	vector trace1_endpos = '0 0 0';
@@ -175,7 +185,7 @@ void(void) physics_move {
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
-	primalvelocity = physics_velocity;
+	vector primalvelocity = physics_velocity;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
 		neworigin = self.origin + t * physics_velocity;
 		trace_box(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
@@ -253,7 +263,13 @@ void(void) physics_move {
 		f = (physics_velocity * trace1_plane_normal);
 		physics_velocity = physics_velocity - f * trace1_plane_normal;
 	}
-	//physics_velocity = primalvelocity;
+	if not(physics_flags & FL_ONGROUND_OR_SLICK)
+	if (physics_skimming > 0) {
+		physics_velocity = primalvelocity;
+		physics_skimming -= frametime;
+		if (physics_skimming < 0)
+			physics_skimming = 0;
+	}
 }
 
 void(vector wishdir, float wishspeed) physics_aircontrol {
@@ -572,14 +588,18 @@ void(void) physics_player_jump {
 	if(!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND))
 		physics_landing_hook();
 
-	if (g_jumpvelocity_nodecrease) {
+	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0) {
+		physics_velocity_z = max(sv_jumpvelocity * 1.37, physics_velocity_z);
+	} else if (g_jumpvelocity_nodecrease) {
 		float f = sv_jumpvelocity * physics_jump_velocity_mod();
 		physics_velocity_z = max(f, physics_velocity_z + f);
 	} else
 		physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
 
+	physics_cpmdoublejump_time = 0.4;
 	physics_flags &~= FL_ONGROUND_OR_SLICK;
 	physics_flags &~= FL_JUMPRELEASED;
+	physics_skimming = g_skimming_time;
 	physics_on_jump_hook();
 }
 
@@ -870,8 +890,8 @@ void(void) physics_player {
 		}
 	}
 :end
-	physics_lastflags = physics_flags;
 	physics_frame_end_hook();
 	if (physics_movetype == MOVETYPE_QCWALK)
 		physics_move();
+
 }
