@@ -507,8 +507,8 @@ void(void) physics_dodging {
 }
 
 vector(void) physics_player_touch_wall {
-	local float dist, max_normal;
-	local vector start, end;
+	float dist, max_normal;
+	vector start, end;
 	dist = 10;
 	max_normal = 0.2;
 	start = self.origin;
@@ -555,7 +555,7 @@ void(void) physics_player_jump {
 	if (self.lastwj <= 0)
 	{
 		makevectors(self.angles);
-		local vector plane_normal;
+		vector plane_normal;
 		plane_normal = physics_player_touch_wall();
 		if (plane_normal != '0 0 0')
 		{
