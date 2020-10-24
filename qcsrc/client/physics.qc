@@ -278,7 +278,6 @@ void(float isnew) physics_read {
 			cvar_clientsettemp("mod_collision_bih" , "0");
 
 		g_q2doublejump = switches & 1024;
-		g_stepusevelocity = switches & 2048;
 		g_slicksurfaces_levitation = switches & 4096;
 		g_jumpvelocity_nodecrease = switches & 16384;
 		g_cpmdoublejump = switches & 32768;

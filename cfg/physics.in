@@ -43,7 +43,6 @@ set g_dodging_sound 1 "if 1 dodging makes a sound. if 0 dodging is silent"
 set g_disable_crouch 0
 set g_jump_grunt 0	"Do you make a grunting noise every time you jump? Is it the same grunting noise every time?"
 set g_q2doublejump 0 "Q2-style double jump"
-set g_stepusevelocity 0 "Use z-velocity to increase step height value"
 set g_steponskydamage 100 "Damage from stepping to sky surface"
 set g_skimming_time 0 "Q3-like corner skimming"
 set g_cpmdoublejump 0 "CPM double jump"

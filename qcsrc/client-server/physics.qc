@@ -185,7 +185,6 @@ void(void) physics_move {
 	vector currentorigin2;
 	vector neworigin2;
 	vector prev_plane_normal;
-	float stepheight;
 	vector trace1_endpos = '0 0 0';
 	vector trace2_endpos = '0 0 0';
 	vector trace3_endpos = '0 0 0';
@@ -218,12 +217,7 @@ void(void) physics_move {
 				// may be a step or wall, try stepping up
 				// first move forward at a higher level
 				currentorigin2 = self.origin;
-				if (g_stepusevelocity && physics_velocity_z > 0)
-					stepheight = min(self.maxs_z - self.mins_z, sv_stepheight + (physics_velocity_z * physics_velocity_z * 0.5) / sv_gravity);
-				else
-					stepheight = sv_stepheight;
-
-				currentorigin2_z += stepheight;
+				currentorigin2_z += sv_stepheight;
 				neworigin2 = neworigin;
 				neworigin2_z = currentorigin2_z;
 				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
