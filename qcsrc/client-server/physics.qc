@@ -61,6 +61,16 @@ void(void) physics_unstuck {
 
 	if (physics_unstuck_to('1 0 0' * self.mins_x))
 		return;
+
+	if not(sv_disable_crouch)
+	if not(physics_crouch) { //Last hope
+		trace_box(self.origin, self.crouch_mins, self.crouch_maxs, self.origin, MOVE_NOMONSTERS, self);
+		if not(trace_startsolid) {
+			setsize(self, self.crouch_mins, self.crouch_maxs);
+			physics_crouch = TRUE;
+			self.view_ofs = self.crouch_view_ofs;
+		}
+	}
 }
 
 void(float ground) physics_update_status {
