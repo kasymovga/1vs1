@@ -153,7 +153,7 @@ entity (vector point, .string field, string value, vector axismod) target_locati
     localhead = find(world, field, value);
     while (localhead)
     {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.targetname == "###item###")
+        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.message2 == "###item###")
             dist = localhead.oldorigin;
         else
             dist = localhead.origin;
@@ -210,7 +210,7 @@ string(vector p) target_location_nearest {
     }
     else
     {
-        loc = target_location_find_nearest(p, targetname, "###item###", '1 1 4');
+        loc = target_location_find_nearest(p, message2, "###item###", '1 1 4');
         if (loc)
             ret = loc.netname;
     }
@@ -298,4 +298,25 @@ void(void) target_speed_use {
 
 void(void) spawnfunc_target_speed {
 	self.use = target_speed_use;
+}
+
+void(void) target_give_use {
+	if (self.target == "")
+		return;
+
+	if (activator.classname != "player")
+		return;
+
+	entity e;
+	for (e = find(world, targetname, self.target); e; e = find(e, targetname, self.target)) {
+		if not(e.flags & (FL_ITEM | FL_WEAPON)) {
+			print("Target ", self.target, " is not item\n");
+			continue;
+		}
+		item_give_to(e, activator);
+	}
+}
+
+void(void) spawnfunc_target_give {
+	self.use = target_give_use;
 }

@@ -437,16 +437,18 @@ float(entity item, entity player) item_give_to {
 }
 
 float item_touch_picked;
-void item_touch (void)
-{
+void(void) item_touch  {
 	entity e, head;
-
 	item_touch_picked = FALSE;
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-	{
-		remove(self);
-		return;
+	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) {
+		if (self.targetname == "") {
+			remove(self);
+			return;
+		} else {
+			self.solid = SOLID_NOT;
+			self.touch = NULL;
+		}
 	}
 	if (other.classname != "player")
 		return;
@@ -645,7 +647,6 @@ float commodity_pickupevalfunc(entity player, entity item)
 };
 
 
-.float is_item;
 void (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue) item_start {
 	item_start_failed = FALSE;
 	// is it a dropped weapon?
@@ -710,7 +711,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			precache_sound ("misc/shield_respawn.wav");
 
 		if((itemid & (IT_STRENGTH | IT_INVINCIBLE | IT_SPEED | IT_INVISIBILITY | IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)) || (weaponid & WEPBIT_ALL))
-			self.targetname = "###item###"; // for finding the nearest item using find()
+			self.message2 = "###item###"; // for finding the nearest item using find()
 	}
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;

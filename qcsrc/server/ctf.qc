@@ -726,7 +726,7 @@ void() spawnfunc_ctf_flag_team1 {
 		self.items = IT_KEY2; // gold key (redish enough)
 	}
 	self.netname = "^1RED^7 flag";
-	self.targetname = "###item###";
+	self.message2 = "###item###";
 	self.skin = cvar("g_ctf_flag_red_skin");
 	if(self.spawnflags & 1)
 		self.noalign = 1;
@@ -834,7 +834,7 @@ void() spawnfunc_ctf_flag_team2 {
 		self.items = IT_KEY1; // silver key (bluish enough)
 	}
 	self.netname = "^4BLUE^7 flag";
-	self.targetname = "###item###";
+	self.message2 = "###item###";
 	self.skin = cvar("g_ctf_flag_blue_skin");
 	if(self.spawnflags & 1)
 		self.noalign = 1;
