@@ -424,8 +424,7 @@ float(entity to, float sf) physics_send {
 	self = self.owner;
 	float dodging_flags, skimming;
 	float sf2 = 0;
-	if not(sf & 3)
-	{
+	if not(sf & 3) {
 		if (self.classname == "player") sf |= 8;
 		if (self.last_physics_ladder) sf |= 32;
 		if (self.ladder_entity.classname == "func_water") sf |= 64;
@@ -460,7 +459,7 @@ float(entity to, float sf) physics_send {
 		if (self.cpmdoublejump)
 			sf2 |= 2;
 
-		if (sf2) sf |= 16536;
+		if (sf2) sf |= 16384;
 	}
 	else
 		sf = sf & 7;
