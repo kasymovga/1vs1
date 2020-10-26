@@ -32,6 +32,7 @@ void(void) physics_impact {
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
 	trace_box(o, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	trace_box(trace_endpos, self.mins, self.maxs, trace_endpos, MOVE_NOMONSTERS, self);
 	if (trace_startsolid)
 		return FALSE;
 
@@ -44,26 +45,27 @@ void(void) physics_unstuck {
 	if not(trace_startsolid)
 		return;
 
-	if (physics_unstuck_to('0 0 1' * self.maxs_z))
+	vector v = self.maxs - self.mins;
+	if (physics_unstuck_to('0 0 1' * v_z))
 		return;
 
-	if (physics_unstuck_to('0 0 1' * self.mins_z))
+	if (physics_unstuck_to('0 0 -1' * v_z))
 		return;
 
-	if (physics_unstuck_to('0 1 0' * self.maxs_y))
+	if (physics_unstuck_to('0 1 0' * v_y))
 		return;
 
-	if (physics_unstuck_to('0 1 0' * self.mins_y))
+	if (physics_unstuck_to('0 -1 0' * v_y))
 		return;
 
-	if (physics_unstuck_to('1 0 0' * self.maxs_x))
+	if (physics_unstuck_to('1 0 0' * v_x))
 		return;
 
-	if (physics_unstuck_to('1 0 0' * self.mins_x))
+	if (physics_unstuck_to('-1 0 0' * v_x))
 		return;
 
 	if not(sv_disable_crouch)
-	if (self.crouch_mins != self.crouch_maxs)
+	if (self.crouch_mins != self.crouch_maxs) //prevent this code from objects that not support crouch (vehicles)
 	if not(physics_crouch) { //Last hope
 		trace_box(self.origin, self.crouch_mins, self.crouch_maxs, self.origin, MOVE_NOMONSTERS, self);
 		if not(trace_startsolid) {
