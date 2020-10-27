@@ -314,7 +314,7 @@ void(void) vehicle_spiderbot_enter {
 }
 
 void(float eject) vehicle_spiderbot_exit {
-	vehicle_stdproc_exit(eject, 160, 64, 160);
+	vehicle_stdproc_exit(eject, 160, 160);
 	self.think = vehicle_spiderbot_think;
 	self.nextthink = time;
 	self.colormap			= 1024;

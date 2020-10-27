@@ -204,7 +204,7 @@ void(void) vehicle_aircraft_enter {
 
 void(float eject) vehicle_aircraft_exit {
 	vehicle_aircraft_pull_stop();
-	vehicle_stdproc_exit(eject, 160, 64, 160);
+	vehicle_stdproc_exit(eject, 160, 160);
 	vehicle_aircraft_engine_off();
 	self.think = vehicle_aircraft_think;
 	self.nextthink = time;

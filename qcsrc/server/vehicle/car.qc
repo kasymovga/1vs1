@@ -159,7 +159,7 @@ void(void) vehicle_car_enter {
 }
 
 void(float eject) vehicle_car_exit {
-	vehicle_stdproc_exit(eject, 160, 64, 160);
+	vehicle_stdproc_exit(eject, 160, 160);
 	self.think = vehicle_car_think;
 	self.nextthink = time;
 	self.colormap			= 1024;

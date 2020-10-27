@@ -49,6 +49,6 @@ float(entity plr, float eject) vehicle_extract_player;
 float(entity plr) player_can_use_vehicle;
 void(entity plr, entity veh, float start_offset, float back, float up) vehicle_adjust_player_position;
 float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter;
-void(float eject, float eject_range, float exit_up, float range) vehicle_stdproc_exit;
+void(float eject, float eject_range, float range) vehicle_stdproc_exit;
 void(void) vehicle_reset;
 float(void) vehicle_stdproc_customize;

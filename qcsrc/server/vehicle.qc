@@ -247,9 +247,10 @@ void(void) vehicle_speed_keeper_think { //something reset velocity to 0 0 0, fix
 	remove(self);
 }
 
-void(float eject, float eject_range, float exit_up, float range) vehicle_stdproc_exit {
+void(float eject, float eject_range, float range) vehicle_stdproc_exit {
 	vector exit_origin;
 	makevectors(self.angles);
+	float exit_up = self.maxs_z - PL_MAX_z;
 	if(eject)
 		exit_origin = self.origin + '0 0 1' * eject_range;
 	else
