@@ -70,6 +70,7 @@ set sv_spawnreplace_item_armor_combat item_armor_big
 set sv_spawnreplace_item_armor_shard item_armor_small
 set sv_spawnreplace_item_armor_jacket item_armor_medium
 set sv_spawnreplace_item_enviro item_invincible
+set sv_spawnreplace_item_regen item_invincible
 set sv_spawnreplace_item_quad item_strength
 set sv_spawnreplace_item_flight item_jetpack
 set sv_spawnreplace_item_armor1 item_armor_small "Must be item_armor_medium for Q1 maps"
