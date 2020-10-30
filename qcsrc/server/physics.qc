@@ -205,13 +205,32 @@ void(void) physics_frame_begin_hook {
 	physics_button_crouch = self.BUTTON_CROUCH;
 }
 
-void(vector v1, vector v2, float r) physics_triggers {
+void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
+	if (self.mins_x == self.maxs_x ||
+			self.mins_y == self.maxs_y ||
+			self.mins_z == self.maxs_z) {
+		print("physics_triggers: empty volume\n:");
+		print("self.classname=", self.classname, "\n");
+		print("self.mins=", vtos(self.mins), "\n");
+		print("self.maxs=", vtos(self.maxs), "\n");
+		return;
+	}
+	if (stackprotect > 10) {
+		print("physics_triggers: recursive oferflow prevented\n:");
+		print("v1=", vtos(v1), "\n");
+		print("v2=", vtos(v2), "\n");
+		print("self.classname=", self.classname, "\n");
+		print("self.mins=", vtos(self.mins), "\n");
+		print("self.maxs=", vtos(self.maxs), "\n");
+		return;
+	}
+	stackprotect++;
 	vector v2_absmins = v2 + self.mins;
 	vector v2_absmaxs = v2 + self.maxs;
 	if not(math_boxes_overlap(v1 + self.mins, v1 + self.maxs, v2_absmins, v2_absmaxs)) {
 		vector m = (v1 + v2) * 0.5;
-		physics_triggers(v1, m, r);
-		physics_triggers(m, v2, r);
+		physics_triggers(v1, m, r, stackprotect);
+		physics_triggers(m, v2, r, stackprotect);
 		return;
 	}
 	entity e = findradius((v2_absmins + v2_absmaxs) * 0.5, r);
@@ -300,7 +319,7 @@ void SV_PlayerPhysics()
 	if ((vlen(_oldorigin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32)
 	if (self.solid != SOLID_NOT)
 	if (self.mins != self.maxs) {
-		physics_triggers(_oldorigin, self.origin, vlen(self.maxs - self.mins) / 2);
+		physics_triggers(_oldorigin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	}
 }
 
