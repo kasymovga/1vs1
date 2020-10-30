@@ -258,6 +258,7 @@ weapon/fireball.qc
 weapon/supershotgun.qc
 weapon/zapper.qc
 weapon/selectable.qc
+shooter.qc
 laser.qc
 item.qc
 powerup.qc
