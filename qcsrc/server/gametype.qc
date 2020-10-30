@@ -23,6 +23,7 @@ void() gametype_default_delayed_init {
 
 	score_damage_init();
 	damage_record_init();
+	client_version_init();
 	IP2C_InitSV();
 	score_basics_end();
 }

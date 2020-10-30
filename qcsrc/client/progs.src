@@ -33,6 +33,7 @@ modelselect.qh
 ../client-server/physics_jetpack.qh
 ../client-server/jetpack.qh
 ../client-server/rune.qh
+../client-server/client.qh
 jetpack.qh
 physics.qh
 interpolate.qh

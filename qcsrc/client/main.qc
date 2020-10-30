@@ -11,9 +11,14 @@ void(void) CSQC_Init {
 	else if (cvar("con_chat") > 99)
 		cvar_set("con_chat", "0");
 
+	main_ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
+	main_ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 	read_cvars_init();
 	if (file_exists("rexuiz.cfg")) {
-		localcmd("\ncmd gameclient rexuiz\n");
+		if (main_ext_DP_CSQC_QUERYRENDERENTITY && main_ext_DP_RM_SETRENDERENTITY)
+			localcmd("\ncmd gameclient newrexuiz\n");
+		else
+			localcmd("\ncmd gameclient rexuiz\n");
 	} else if (autocvar_autocvar_check) {
 		localcmd("\ncmd gameclient nexuiz\n");
 		if not(cvar("mod_alias_force_animated")) {
@@ -137,8 +142,6 @@ void(void) CSQC_Init {
 	}
 	teamradar_init();
 	teamradar_minimapname = strzone(teamradar_minimapname);
-	main_ext_DP_CSQC_QUERYRENDERENTITY = checkextension("DP_CSQC_QUERYRENDERENTITY");
-	main_ext_DP_RM_SETRENDERENTITY = checkextension("DP_RM_SETRENDERENTITY");
 	csqc_entity_init();
 	draw_init();
 	ui_con_width_height_set();

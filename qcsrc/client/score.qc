@@ -30,6 +30,8 @@ void(float ignore) score_info_read {
 				}
 		} else if (s == "status")
 			SP_STATUS_FIELD = i;
+		else if (s == "cv")
+			SP_CLIENTVERSION_FIELD = i;
 
 		scores_label[i] = s;
 		scores_flags[i] = ReadByte();

@@ -116,6 +116,7 @@ db.qh
 physics.qh
 minstagib.qh
 jetpack.qh
+../client-server/client.qh
 client.qh
 player.qh
 spectator.qh
