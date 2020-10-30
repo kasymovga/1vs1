@@ -13,6 +13,7 @@ float g_balance_grapplehook_gravity;
 float g_balance_grapplehook_health;
 float g_balance_grapplehook_speed_fly;
 float g_balance_grapplehook_onground_pullfactor;
+float g_balance_grapplehook_team_friendly;
 
 .string aiment_classname;
 .float aiment_deadflag;
@@ -200,16 +201,22 @@ void() hook_think {
 
 void(void) hook_touch {
 	PROJECTILE_SKIPNONSOLID
-	if(PROJECTILE_OWNER_CHECK())
+	if (PROJECTILE_OWNER_CHECK())
 		return;
-	if(projectile_no_impact_check())
-	{
+
+	if (projectile_no_impact_check()) {
 		hook_remove(self.owner);
 		return;
 	}
-
-	if(other == world)
-	{
+	if (team_mode)
+	if (g_balance_grapplehook_team_friendly)
+	if (other.team == self.owner.team)
+	if (other.classname == "player")
+	if (PLAYER_REALLY_ALIVE(other)) {
+		hook_remove(self.owner);
+		return;
+	}
+	if(other == world) {
 		vector tic;
 		tic = self.velocity * sys_ticrate;
 		tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
@@ -465,6 +472,7 @@ void(float force) hook_init {
 	CACHE_CVAR(g_balance_grapplehook_speed_pull);
 	CACHE_CVAR(g_balance_grapplehook_stretch);
 	CACHE_CVAR(g_balance_grapplehook_onground_pullfactor);
+	CACHE_CVAR(g_balance_grapplehook_team_friendly);
 	CACHE_CVAR(g_grappling_hook_tarzan);
 	CACHE_CVAR(g_grappling_hook);
 	if not(g_grappling_hook)
