@@ -4,10 +4,6 @@ float	SOLID_BBOX				= 2;
 float	SOLID_SLIDEBOX				= 3;
 float	SOLID_BSP				= 4;
 
-float	DAMAGE_NO				= 0;
-float	DAMAGE_YES				= 1;
-float	DAMAGE_AIM				= 2;
-
 float	CONTENT_EMPTY				= -1;
 float	CONTENT_SOLID				= -2;
 float	CONTENT_WATER				= -3;
@@ -85,10 +81,5 @@ float	MSG_ENTITY				= 5; // csqc
 float	game;	// set to "gamecfg" on spawnfunc_worldspawn
 
 float TE_BEAM					= 13;		// grappling hook
-
-// CTF
-float FLAG_BASE = 1;
-float FLAG_CARRY = 2;
-float FLAG_DROPPED = 3;
 
 const string retardplayername = "User of RetardNet";
