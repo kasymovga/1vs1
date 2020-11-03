@@ -165,13 +165,13 @@ float() CSQC_Parse_TempEntity { //called by engine
 		}
 		return TRUE;
 	case TE_CSQC_MAPLIST:
-		str_unzone_ifneeded(available_maps);
-		available_maps = str_zone_ifneeded(ReadString());
-		string s = available_maps;
-		available_maps_count = 0;
+		str_unzone_ifneeded(gui_available_maps);
+		gui_available_maps = str_zone_ifneeded(ReadString());
+		string s = gui_available_maps;
+		gui_available_maps_count = 0;
 		while (s != "") {
 			s = str_cdr(s);
-			available_maps_count++;
+			gui_available_maps_count++;
 		}
 		return TRUE;
 	case TE_CSQC_TRIP:
