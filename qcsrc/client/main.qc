@@ -1,6 +1,3 @@
-string available_maps;
-float available_maps_count;
-
 void(float ignore) main_init_read;
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
