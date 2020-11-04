@@ -4,7 +4,7 @@ CLASS(NexuizLanguageDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizLanguageDialog, title, string, _("Language"))
 	ATTRIB(NexuizLanguageDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(NexuizLanguageDialog, intendedWidth, float, 0.4)
-	ATTRIB(NexuizLanguageDialog, rows, float, 5)
+	ATTRIB(NexuizLanguageDialog, rows, float, 6)
 	ATTRIB(NexuizLanguageDialog, columns, float, 2)
 ENDCLASS(NexuizLanguageDialog)
 #endif
@@ -35,7 +35,12 @@ void fillNexuizLanguageDialog(entity me) {
 		e.onClick = changeLanguage;
 		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "ru", "Русский"));
 		e.onClick = changeLanguage;
+	me.TR(me);
 		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "de", "Deutsche"));
+		e.onClick = changeLanguage;
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "fr", "Français"));
+		e.onClick = changeLanguage;
+		me.TD(me, 1, 1/2, e = makeNexuizRadioButton(1, "prvm_language", "pt", "Portugais"));
 		e.onClick = changeLanguage;
 	me.TR(me);
 	me.TR(me);

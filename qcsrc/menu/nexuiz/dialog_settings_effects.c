@@ -143,15 +143,15 @@ void fillNexuizEffectsSettingsTab(entity me)
 	        setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, 2, 3.5); me.setFirstColumn(me, me.currentColumn);
-	me.TD(me, 1, 2, e = makeNexuizCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
-	me.TD(me, 1, 1.9, e = makeNexuizCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
+	me.TD(me, 1, 1, e = makeNexuizCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
+	me.TD(me, 1, 1.8, e = makeNexuizCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		setDependentAND(e, "r_glsl", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TD(me, 1, 0.7, e = makeNexuizCheckBox(0, "r_shadow_gloss", _("Gloss")));
 		setDependentAND3(e, "r_glsl", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 			setDependent(e, "r_glsl", 1, 1);
-		me.TD(me, 1, 1.9, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
+		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
 			setDependentAND(e, "r_glsl", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_water", _("Reflections:")));
