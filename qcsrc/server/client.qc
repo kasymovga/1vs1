@@ -816,7 +816,6 @@ void(void) client_version_set_delayed {
 		return;
 	}
 	if (self.owner.scorekeeper) {
-		print("client_version_set_delayed: set version to ", ftos(self.cnt), "\n");
 		score_player_set(self.owner, SP_CLIENTVERSION, self.cnt);
 		remove(self);
 		return;
