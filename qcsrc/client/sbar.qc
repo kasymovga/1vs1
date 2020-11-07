@@ -499,9 +499,9 @@ void Sbar_SetFields(float argc)
 			sbar_field[sbar_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			sbar_field[sbar_num_fields] = SP_KDRATIO;
-		} else if(str == "cn" && sbar_ip2country) {
+		} else if(str == "cn" && SP_COUNTRY_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_COUNTRY;
-		} else if(str == "cv") {
+		} else if(str == "cv" && SP_CLIENTVERSION_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_CLIENTVERSION;
 		} else if(str == "name" || str == "nick") {
 			sbar_field[sbar_num_fields] = SP_NAME;
