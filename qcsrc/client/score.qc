@@ -4,6 +4,8 @@ void(float ignore) score_info_read {
 	self.classname = "ent_client_scores_info";
 	gametype = ReadByte();
 	string s;
+	SP_CLIENTVERSION_FIELD = -1;
+	SP_COUNTRY_FIELD = -1;
 	for (i = 0; i < MAX_SCORE; ++i) {
 		s = strzone(ReadString());
 		if (s == "country")
@@ -30,6 +32,8 @@ void(float ignore) score_info_read {
 				}
 		} else if (s == "status")
 			SP_STATUS_FIELD = i;
+		else if (s == "cv")
+			SP_CLIENTVERSION_FIELD = i;
 
 		scores_label[i] = s;
 		scores_flags[i] = ReadByte();

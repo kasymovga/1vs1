@@ -715,18 +715,7 @@ void(string s) cmd_client {
 	} else if(cmd == "gameclient") {
 		s = argv(1);
 		print("Game client for ", self.netname, ": ", s, "\n");
-		if (s == "rexuiz") {
-			self.gameclient = CLIENT_REXUIZ;
-			cvar_set("connections_rexuiz", ftos(cvar("connections_rexuiz") + 1));
-		} else if (s == "nexuiz") {
-			self.gameclient = CLIENT_NEXUIZ;
-			cvar_set("connections_nexuiz", ftos(cvar("connections_nexuiz") + 1));
-		} else if (s == "oldnexuiz") {
-			self.gameclient = CLIENT_OLDNEXUIZ;
-			cvar_set("connections_oldnexuiz", ftos(cvar("connections_oldnexuiz") + 1));
-		} else {
-			self.gameclient = CLIENT_UNKNOWN;
-		}
+		client_version_set(self, s);
 	} else if(cmd == "records") {
 		if (cmd_records_reply[0] == "")
 			sprint(self, "No records are available on this server.\n");

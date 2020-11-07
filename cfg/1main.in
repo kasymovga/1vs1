@@ -90,7 +90,6 @@ alias unmute "prvm_edictset server $1 muted 0" // dito
 set sv_loddistance1 1024
 set sv_loddistance2 4096
 set g_mapinfo_settemp_acl "+*" "ACL for mapinfo setting cvars"
-
 // hooks
 alias _sv_hook_gamestart "set _sv_hook_gametype $1; _sv_hook_gamestart_stage2"
 alias _sv_hook_gamestart_stage2 "sv_hook_gamestart_all; sv_hook_gamestart_${_sv_hook_gametype}"
@@ -120,3 +119,4 @@ set g_balance_falldamage_deadminspeed 150
 set g_balance_falldamage_minspeed 1400
 set g_balance_falldamage_factor 0.15
 set g_balance_falldamage_maxdamage 25
+set sv_clientversion_hidden 0

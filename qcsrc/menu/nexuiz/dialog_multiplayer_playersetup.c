@@ -108,7 +108,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Show names:")));
-		me.TD(me, 1, 2, e = makeNexuizTextSlider("cl_shownames"));
+		me.TD(me, 1, 1.5, e = makeNexuizTextSlider("cl_shownames"));
 			e.addValue(e, _("Never"), "0");
 			e.addValue(e, _("Teammates"), "1");
 			e.addValue(e, _("All players"), "2");

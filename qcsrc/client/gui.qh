@@ -22,3 +22,6 @@ enum {
 	GUI_HINT,
 	GUI_REPORT,
 };
+
+string gui_available_maps;
+float gui_available_maps_count;

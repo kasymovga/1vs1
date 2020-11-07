@@ -86,7 +86,6 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER] = zapper_beam_read;
 	csqc_entity_parsers[ENT_CLIENT_ZAPPER_SHIELD] = zapper_shield_read;
 	csqc_entity_parsers[ENT_CLIENT_DMG_INDICATOR] = damage_indicator_read;
-	csqc_entity_parsers[ENT_CLIENT_INIT_IP2C] = inline void(void) { sbar_ip2country = TRUE; };
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE] = warpzone_read;
 	csqc_entity_parsers[ENT_CLIENT_FUNC_CAMERA] = func_camera_read;
 	csqc_entity_parsers[ENT_CLIENT_WARPZONE_TELEPORTED] = warpzone_teleported_read;
@@ -165,13 +164,13 @@ float() CSQC_Parse_TempEntity { //called by engine
 		}
 		return TRUE;
 	case TE_CSQC_MAPLIST:
-		str_unzone_ifneeded(available_maps);
-		available_maps = str_zone_ifneeded(ReadString());
-		string s = available_maps;
-		available_maps_count = 0;
+		str_unzone_ifneeded(gui_available_maps);
+		gui_available_maps = str_zone_ifneeded(ReadString());
+		string s = gui_available_maps;
+		gui_available_maps_count = 0;
 		while (s != "") {
 			s = str_cdr(s);
-			available_maps_count++;
+			gui_available_maps_count++;
 		}
 		return TRUE;
 	case TE_CSQC_TRIP:

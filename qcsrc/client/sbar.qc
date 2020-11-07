@@ -413,7 +413,7 @@ void Sbar_Help(float argc)
 string Sbar_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
-		"ping pl ?cn name | ",
+		"ping pl ?cv ?cn name | ",
 		"-teams,race,single/kills -teams,single/deaths -teams,race,single/suicides -race,dm,tdm,coop,single/frags ", // tdm already has this in "score"
 		"?damage ?bestwep +ca,ft,surv,catf,ctft,khca,khft,lms/status "
 		"+ctf,catf,ctft/caps +ctf,catf,ctft/pickups +ctf,catf,ctft/fckills +ctf,catf,ctft/returns ",
@@ -499,8 +499,10 @@ void Sbar_SetFields(float argc)
 			sbar_field[sbar_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			sbar_field[sbar_num_fields] = SP_KDRATIO;
-		} else if(str == "cn" && sbar_ip2country) {
+		} else if(str == "cn" && SP_COUNTRY_FIELD >= 0) {
 			sbar_field[sbar_num_fields] = SP_COUNTRY;
+		} else if(str == "cv" && SP_CLIENTVERSION_FIELD >= 0) {
+			sbar_field[sbar_num_fields] = SP_CLIENTVERSION;
 		} else if(str == "name" || str == "nick") {
 			sbar_field[sbar_num_fields] = SP_NAME;
 			have_name = 1;
@@ -667,7 +669,25 @@ string Sbar_GetField(entity pl, float field)
                 return "";
 
             return strcat(chr2str(char0), chr2str(char1));
-
+		case SP_CLIENTVERSION:
+			tmp = pl.(scores[SP_CLIENTVERSION_FIELD]);
+			switch (tmp) {
+			case CLIENT_NEWREXUIZ:
+				sbar_field_rgb = '0.25 1 0.25';
+				return "R+";
+			case CLIENT_REXUIZ:
+				sbar_field_rgb = '0.75 0.75 0.25';
+				return "R";
+			case CLIENT_NEXUIZ:
+				sbar_field_rgb = '0.75 0.5 0.25';
+				return "N+";
+			case CLIENT_OLDNEXUIZ:
+				sbar_field_rgb = '1 0.25 0.25';
+				return "N";
+			default:
+				sbar_field_rgb = '0.5 0.5 0.5';
+				return "U";
+			}
 		case SP_NAME:
 			if(pl.ready)
 			{
@@ -850,7 +870,7 @@ void Sbar_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_num
 		else
 			wanted_width = wanted_width + title_width;
 
-		if(is_spec && field != SP_NAME && field != SP_PING && field != SP_COUNTRY) {
+		if(is_spec && field != SP_NAME && field != SP_PING && field != SP_COUNTRY && field != SP_CLIENTVERSION) {
 			pos_x += sbar_fontsize_x * sbar_size_i + sbar_fontsize_x;
 			continue;
 		}

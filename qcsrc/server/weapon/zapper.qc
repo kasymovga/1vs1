@@ -90,11 +90,6 @@ void weapon_zapper_spinner_think() {
 }
 
 float weapon_zapper_spinner_customize() {
-	if (other.gameclient == CLIENT_OLDNEXUIZ)
-		self.effects |= EF_NODRAW;
-	else
-		self.effects &~= EF_NODRAW;
-
 	return weapon_model_customize();
 }
 
@@ -106,10 +101,13 @@ void weapon_zapper_spinner_spawn(void) {
 		return;
 
     entity o = Akimbo_Owner(self);
-
-    entity s = spawn();
+	entity s = spawn();
 	s.classname = "zapper_spinner";
-	s.model = "models/weapons/rtzapper_hyperhonker.iqm";
+	if (o.scorekeeper && o.scorekeeper.clientversion == CLIENT_OLDNEXUIZ)
+		s.model = "null";
+	else
+		s.model = "models/weapons/rtzapper_hyperhonker.iqm";
+
 	s.owner = self;
 	s.viewmodelforclient = o;
 	s.colormap = self.colormap;
@@ -117,13 +115,10 @@ void weapon_zapper_spinner_spawn(void) {
 	s.think = weapon_zapper_spinner_think;
 	s.nextthink = time;
 	s.customizeentityforclient = weapon_zapper_spinner_customize;
-
-    setattachment(s, self.weaponentity, "shot");
-
-    setorigin(s, '-4 0 -0.5');
-    setmodel(s, s.model);
-
-    self.zapper_spinner = s;
+	setattachment(s, self.weaponentity, "shot");
+	setorigin(s, '-4 0 -0.5');
+	setmodel(s, s.model);
+	self.zapper_spinner = s;
 }
 
 float weapon_zapper_attack1_check_ammo(entity p) {

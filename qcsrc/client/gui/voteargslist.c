@@ -49,7 +49,7 @@ void setVoteTypeNexuizVoteArgsList(entity me, string vote) {
 		me.nItems = 255;
 	} else if (vote == "gotomap" || vote == "chmap" || vote == "nextmap") {
 		new_voteType = 3;
-		me.nItems = max(1, available_maps_count);
+		me.nItems = max(1, gui_available_maps_count);
 	}
 	me.selectedItem = -1;
 	if (new_voteType != me.voteType) {
@@ -80,7 +80,7 @@ void setSelectedNexuizVoteArgsList(entity me, float i)
 		}
 	} else if (me.voteType == 3) {
 		float j;
-		s = available_maps;
+		s = gui_available_maps;
 		for (j = 0; j < i; j++) {
 			s = str_cdr(s);
 		}
@@ -116,8 +116,8 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 			s = strcat("#", ftos(e.sv_entnum + 1), ": ", strdecolorize(player_name(e.sv_entnum)));
 
 	} else if (me.voteType == 3) {
-		me.nItems = available_maps_count;
-		s = available_maps;
+		me.nItems = gui_available_maps_count;
+		s = gui_available_maps;
 		float j;
 		for (j = 0; j < i; j++) {
 			s = str_cdr(s);

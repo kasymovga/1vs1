@@ -440,6 +440,7 @@ void monster_spawn_think() {
 	if not(self.frags)
 		self.frags = 1;
 
+	physics_unstuck();
 	self = oldself;
 	self.dmg = self.dmg - quant;
 	self.frags = self.frags + quant;

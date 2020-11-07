@@ -7,6 +7,7 @@ float sv_maxidle_forcespec;
 float sv_maxconnects_per_address;
 float sv_foginterval;
 float g_buttons_hookuse_swap;
+float SP_CLIENTVERSION;
 
 void(entity to) client_set_view {
 	if not(clienttype(self) == CLIENTTYPE_REAL)
@@ -801,4 +802,55 @@ void(entity pl, float tstart, float dt) client_write_recordmarker {
              strcat(
                  strcat("//", strconv(2, 0, 0, gametype_name(game)), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
+}
+
+void(void) client_version_init {
+	SP_CLIENTVERSION = score_register((cvar("sv_clientversion_hidden") ? "cvhidden" : "cv"), SFL_NOCLEAR);
+	clientversion = scores[SP_CLIENTVERSION];
+}
+
+void(void) client_version_set_delayed {
+	if (clienttype(self.owner) != CLIENTTYPE_REAL) {
+		print("client_version_set_delayed: invalid client\n");
+		remove(self);
+		return;
+	}
+	if (self.owner.scorekeeper) {
+		score_player_set(self.owner, SP_CLIENTVERSION, self.cnt);
+		remove(self);
+		return;
+	}
+	self.nextthink = time + 0.1;
+}
+
+void(entity cl, string s) client_version_set {
+	float v;
+	if (s == "newrexuiz") {
+		v = CLIENT_NEWREXUIZ;
+	} else if (s == "rexuiz") {
+		v = CLIENT_REXUIZ;
+	} else if (s == "nexuiz") {
+		v = CLIENT_NEXUIZ;
+	} else if (s == "oldnexuiz") {
+		v = CLIENT_OLDNEXUIZ;
+	} else {
+		v = CLIENT_UNKNOWN;
+	}
+	if not(cl.scorekeeper) {
+		entity e;
+		for (e = world; (e = find(e, classname, "client_version_set")); ) {
+			if (e.owner == self) {
+				e.cnt = v;
+				return;
+			}
+		}
+		e = spawn();
+		e.classname = "client_version_set";
+		e.owner = self;
+		e.think = client_version_set_delayed;
+		e.nextthink = time + 0.1;
+		e.cnt = v;
+		return;
+	}
+	score_player_set(cl, SP_CLIENTVERSION, v);
 }

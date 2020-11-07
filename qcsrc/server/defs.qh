@@ -243,25 +243,12 @@ typedef .float floatfield;
 
 .float ammoclip;
 
-#define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
-// when doing this, hagar can go through clones
-// #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_BBOX
-
 .float spectatee_status;
 .float restriction;
 
 .entity clientdata;
 
 .float retard;
-
-.float gameclient;
-
-enum {
-	CLIENT_UNKNOWN,
-	CLIENT_REXUIZ,
-	CLIENT_NEXUIZ,
-	CLIENT_OLDNEXUIZ,
-};
 
 .float keys;
 
