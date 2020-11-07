@@ -18,4 +18,3 @@ float sbar_showscores;
 float sbar_hidescores;
 float sbar_showaccuracy;
 float sbar_weapons_time;
-float sbar_ip2country;

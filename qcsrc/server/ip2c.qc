@@ -79,12 +79,6 @@ void IP2C_InitSV(void) {
 	SP_COUNTRY = score_register("country", SFL_NOCLEAR);
     IP2C_Init();
     dlc_require("flagicons");
-
-    net_link_entity(spawn(), FALSE, 0, inline float(entity e, float sf) {
-        WriteByte(MSG_ENTITY, ENT_CLIENT_INIT_IP2C);
-        return TRUE;
-    });
-
     if(sv_ip2country_allow_fakeflag) {
         IP2C_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
         gamehook_chain_cmd_client_handle = IP2C_ClientCommandHandle;
