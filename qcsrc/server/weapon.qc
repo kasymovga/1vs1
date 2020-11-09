@@ -1424,7 +1424,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 
 void(float r) weapon_shake {
 	if not(g_norecoil)
-		self.punchangle = self.punchangle + '1 1 0' * r * (random() - 0.5);
+		self.punchangle = self.punchangle + '1 0 0' * r * (random() - 0.5) + '0 1 0' * r * (random() - 0.5);
 }
 
 vector weapon_calculate_projectile_velocity(vector pvelocity, vector mvelocity)
