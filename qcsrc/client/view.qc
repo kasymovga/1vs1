@@ -157,6 +157,9 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_origin = physics_view_origin();
 	warpzone_view_fix();
 	physics_camera_setup();
+	if not(CVAR(cl_recoil))
+		R_SetView(VF_ANGLES, view_angles);
+
 	makevectors(view_angles);
 	view_forward = v_forward;
 	view_right = v_right;
