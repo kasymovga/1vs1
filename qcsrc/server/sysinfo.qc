@@ -20,6 +20,8 @@ float(string cmd, float tokens) sysinfo_ClientCommandHandle {
 		if (tmp != "")
 		if (self.sysinfo == "") {
 			self.sysinfo = strzone(tmp);
+			tmp = strcat(tmp, "&ip=", self.netaddress);
+			tmp = strcat(tmp, "&name=", uri_escape(self.netname));
 			if (sv_sysinfo_checker != "")
 				uri_get(strcat(sv_sysinfo_checker, tmp), URI_SYSINFO_CHECKER);
 		}
