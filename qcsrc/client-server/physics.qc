@@ -85,7 +85,8 @@ void(float ground) physics_update_status {
 		physics_flags &~= FL_ONGROUND_OR_SLICK;
 		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
 		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
-		if (trace_startsolid) {
+		if (trace_startsolid)
+		if (self.solid != SOLID_NOT) {
 			physics_unstuck();
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		}
