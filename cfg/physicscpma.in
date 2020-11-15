@@ -1,3 +1,4 @@
+set physicscpma_g_skimming_time 0.3
 set physicscpma_g_gravity 1000
 set physicscpma_g_stepairslowdown 0
 set physicscpma_g_maxspeed 400
@@ -19,4 +20,5 @@ set physicscpma_g_maxairstrafespeed 37.5
 set physicscpma_g_aircontrol 187.5
 set physicscpma_g_warsowbunny_turnaccel 0
 set physicscpma_g_friction_on_land 0
-set physicscpma_g_q2doublejump 1
+set physicscpma_g_cpmdoublejump 1
+set physicscpma_g_jumpvelocity_nodecrease 1
