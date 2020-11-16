@@ -422,6 +422,7 @@ void(void) physics_init {
 	CACHE_CVAR(g_steponskydamage);
 	CACHE_CVAR(g_skimming_time);
 	CACHE_CVAR(g_cpmdoublejump);
+	CACHE_CVAR(g_doublejump_nopogostick);
 	physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 	if (physics_initiated) {
 		entity e;
@@ -522,6 +523,7 @@ float(entity to, float sf) physics_send {
 				+ (g_playerclip_collisions ? 256 : 0)
 				+ (cvar("mod_q3bsp_curves_collisions") ? 512 : 0)
 				+ (g_q2doublejump ? 1024 : 0)
+				+ (g_doublejump_nopogostick ? 2048 : 0)
 				+ (g_slicksurfaces_levitation ? 4096 : 0)
 				+ (cvar("mod_collision_bih") ? 8192 : 0)
 				+ (g_jumpvelocity_nodecrease ? 16384 : 0)

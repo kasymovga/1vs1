@@ -22,3 +22,4 @@ set physicscpma_g_warsowbunny_turnaccel 0
 set physicscpma_g_friction_on_land 0
 set physicscpma_g_cpmdoublejump 1
 set physicscpma_g_jumpvelocity_nodecrease 1
+set physicscpma_g_doublejump_nopogostick 1

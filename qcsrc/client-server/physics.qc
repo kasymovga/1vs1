@@ -91,7 +91,7 @@ void(float ground) physics_update_status {
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		}
 		float f;
-		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((f = physics_velocity * trace_plane_normal) <= 0 || physics_have_doubjejump)) {
+		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((f = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
 				if (g_slicksurfaces_levitation)
 					physics_flags |= FL_SLICK;
@@ -185,6 +185,7 @@ void(void) physics_move {
 	float t;
 	float f;
 	float blocked_prev = 0;
+	float hitsomething = 0;
 	vector neworigin;
 	vector currentorigin2;
 	vector neworigin2;
@@ -596,7 +597,7 @@ void(void) physics_player_jump {
 	if(!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND))
 		physics_landing_hook();
 
-	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0) {
+	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0 && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))) {
 		physics_velocity_z = max(sv_jumpvelocity * 1.3704, physics_velocity_z + sv_jumpvelocity);
 	} else if (g_jumpvelocity_nodecrease) {
 		float f = sv_jumpvelocity * physics_jump_velocity_mod();
