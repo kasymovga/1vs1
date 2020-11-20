@@ -165,8 +165,7 @@ void fire_apply_effect(entity e)
 void fire_burner_think()
 {
 	// for players, this is done in the regular loop
-	if(wasfreed(self.owner))
-	{
+	if (wasfreed(self.owner) || self.owner.fire_burner != self) {
 		remove(self);
 		return;
 	}
