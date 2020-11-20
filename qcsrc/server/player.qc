@@ -1180,8 +1180,10 @@ void player_voice_message(string type, string msg)
 {
 	var .string sample;
 	float ownteam;
-	sample = player_voice_message_sample_field(type);
+	if (self.classname != "player")
+		return;
 
+	sample = player_voice_message_sample_field(type);
 	if(player_voice_message_sample_not_found)
 	{
 		sprint(self, strcat("Invalid voice. Use one of: ", allvoicesamples, "\n"));
