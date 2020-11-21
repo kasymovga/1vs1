@@ -138,4 +138,4 @@ set serverconfig server.cfg
 alias startmap_dm "set _sv_init 0; map _init/_init; exec $serverconfig; set _sv_init 1; map _init/_init"
 alias sv_loadconfig "exec $serverconfig"
 integration_discord_enable 1
-integration_discord_client_id 77861938443111632
+integration_discord_client_id 778619384431116328
