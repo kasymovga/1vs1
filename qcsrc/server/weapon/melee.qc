@@ -81,8 +81,9 @@ void weapon_melee_attack (float melee_type, float axe)
 float weapon_melee_possible()
 {
 	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
-	if (g_balance_melee || (self.weapon == WEP_MELEE))
+	if (g_balance_melee)
 		return TRUE;
+
 	return FALSE;
 }
 
@@ -93,12 +94,11 @@ void weapon_melee_attack_check()
 
 	float w_save = self.weapon;
 	self.switchweapon = self.weapon = WEP_MELEE;
-	float axe = ((w_save == WEP_MELEE) && (g_balance_melee != 2));
 	if (self.weapon_think == weapon_ready)
 	if (weapon_prepareattack(0, g_balance_melee_refire))
 	{
-		weapon_melee_attack(g_balance_melee, axe);
-		weapon_thinkf((axe ? WFRAME_FIRE1 : ((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE)), g_balance_melee_animtime, weapon_ready);
+		weapon_melee_attack(g_balance_melee, 0);
+		weapon_thinkf(((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE), g_balance_melee_animtime, weapon_ready);
 	}
 	self.weapon = w_save;
 	self.switchweapon = w_save;

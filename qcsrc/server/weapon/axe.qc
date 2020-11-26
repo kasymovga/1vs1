@@ -20,8 +20,13 @@ float(float req) weapon_axe {
 			weapon_melee_attack(1, g_balance_axe_damage);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, weapon_ready);
 		}
-	}
-	else if (req == WR_PRECACHE) {
+	} else if (req == WR_RELOAD) {
+		if (g_balance_melee != 2)
+		if (weapon_prepareattack(0, g_balance_melee_refire)) {
+			weapon_melee_attack(1, g_balance_axe_damage);
+			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, weapon_ready);
+		}
+	} else if (req == WR_PRECACHE) {
 		dlc_require("axe_v2");
 	} else if (req == WR_SETUP)
 		weapon_setup(WEP_MELEE);
