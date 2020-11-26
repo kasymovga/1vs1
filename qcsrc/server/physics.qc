@@ -238,7 +238,7 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	entity oldother = other;
 	for (; e; e = e.chain) {
 		if (e == oldself) continue;
-		if (e.solid != SOLID_TRIGGER) continue;
+		if (e.solid != SOLID_TRIGGER && (e.solid != SOLID_CORPSE || oldself.solid == SOLID_TRIGGER)) continue; //projectiles use SOLID_CORPSE
 		if not(math_boxes_overlap(e.origin + e.mins, e.origin + e.maxs, v2_absmins, v2_absmaxs)) continue;
 		if (e.touch) {
 			other = oldself;
