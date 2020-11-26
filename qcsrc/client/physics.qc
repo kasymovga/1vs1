@@ -117,10 +117,9 @@ vector(void) physics_view_origin {
 			f = max(0, (ground_curtime - ground_oldtime) / (ground_time - ground_oldtime));
 			ground_curtime += frametime;
 			vector ground_curorigin = (1 - f) * ground_oldorigin + f * ground_origin;
-			self.origin = physics_start_origin - (ground_origin - ground_curorigin);
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 16', MOVE_WORLDONLY, self);
-			if not(trace_startsolid)
-				self.origin = trace_endpos;
+			self.origin = physics_start_origin - (ground_origin - ground_curorigin) + '0 0 8';
+			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 16', MOVE_NOMONSTER, self);
+			self.origin = trace_endpos;
 		}
 		pmove_org = self.origin;
 		self.lastwj = physics_lastwj;
@@ -389,7 +388,7 @@ void(float isnew) physics_read {
 			ground_origin_x = ReadCoord();
 			ground_origin_y = ReadCoord();
 			ground_origin_z = ReadCoord();
-			ground_time = time + ticrate;
+			ground_time = time;
 			if (ground_lastent != ground_ent) {
 				ground_oldorigin = ground_origin;
 				ground_oldtime = ground_time;
