@@ -292,9 +292,12 @@ void() score_clear_all {
 
 void(entity player) score_attach {
 	entity sk;
-	if(player.scorekeeper)
-		error("player already has a scorekeeper");
+	if (player.scorekeeper) {
+		backtrace("player already has a scorekeeper");
+		return;
+	}
 	sk = spawn();
+	sk.classname = "scorekeeper";
 	sk.owner = player;
 	sk.think = score_send_delayed_think;
 	net_link_entity(sk, FALSE, 0, score_send_entity);
@@ -302,44 +305,58 @@ void(entity player) score_attach {
 }
 
 void(entity player) score_detach {
-	if(!player.scorekeeper)
-		error("player has no scorekeeper");
+	if (!player.scorekeeper) {
+		backtrace("player has no scorekeeper");
+		return;
+	}
 	remove(player.scorekeeper);
 	player.scorekeeper = world;
 }
 
+entity(entity player) score_keeper_get {
+	entity e = player.scorekeeper;
+	if not(e) {
+		backtrace("Adding score to unknown player!");
+	} else if (e.think == score_send_delayed_think)
+		return e;
+
+	print("player ", player.netname, " have wrong scorekeeper, fixing\n");
+	e = world;
+	while ((e = find(e, classname, "scorekeeper"))) {
+		if (e.owner == player) {
+			player.scorekeeper = e;
+			return e;
+		}
+	}
+	player.scorekeeper = world;
+	score_attach(player);
+	return player.scorekeeper;
+}
+
 float(entity player, float scorefield, float score) score_player_set {
 	entity s;
-
-	if(!score_initialized) return 0; // FIXME remove this when everything uses this system
-	s = player.scorekeeper;
-	if(!s)
-	{
-		if(map_finished)
-			return 0;
-		error("Adding score to unknown player!");
+	if (scorefield < 0 || scorefield >= MAX_SCORE) {
+		backtrace("incorrect score field");
+		return 0;
 	}
+	if (!score_initialized) return 0; // FIXME remove this when everything uses this system
+	s = score_keeper_get(player);
 	score_send_delayed(s, pow(2, scorefield));
 	return (s.(scores[scorefield]) = score);
 }
 
 float(entity player, float scorefield, float score) score_player_add {
 	entity s;
-
-	if(map_finished)
-		score = 0;
-
-	if(!score_initialized) return 0; // FIXME remove this when everything uses this system
-	s = player.scorekeeper;
-	if(!s)
-	{
-		if(map_finished)
-			return 0;
-		error("Adding score to unknown player!");
+	if (scorefield < 0 || scorefield >= MAX_SCORE) {
+		backtrace("incorrect score field");
+		return 0;
 	}
-	if(score)
-		if(score_label[scorefield] != "")
+	if (!score_initialized) return 0; // FIXME remove this when everything uses this system
+	s = score_keeper_get(player);
+	if (score)
+		if (score_label[scorefield] != "")
 			score_send_delayed(s, pow(2, scorefield));
+
 	return (s.(scores[scorefield]) += score);
 }
 
