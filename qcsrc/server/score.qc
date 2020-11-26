@@ -339,7 +339,7 @@ float(entity player, float scorefield, float score) score_player_set {
 		backtrace("incorrect score field");
 		return 0;
 	}
-	if (!score_initialized) return 0; // FIXME remove this when everything uses this system
+	if (!score_initialized || map_finished) return 0;
 	s = score_keeper_get(player);
 	score_send_delayed(s, pow(2, scorefield));
 	return (s.(scores[scorefield]) = score);
@@ -351,7 +351,7 @@ float(entity player, float scorefield, float score) score_player_add {
 		backtrace("incorrect score field");
 		return 0;
 	}
-	if (!score_initialized) return 0; // FIXME remove this when everything uses this system
+	if (!score_initialized || map_finished) return 0;
 	s = score_keeper_get(player);
 	if (score)
 		if (score_label[scorefield] != "")
