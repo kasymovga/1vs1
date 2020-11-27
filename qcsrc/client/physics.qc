@@ -117,9 +117,10 @@ vector(void) physics_view_origin {
 			f = max(0, (ground_curtime - ground_oldtime) / (ground_time - ground_oldtime));
 			ground_curtime += frametime;
 			vector ground_curorigin = (1 - f) * ground_oldorigin + f * ground_origin;
-			self.origin = physics_start_origin - (ground_origin - ground_curorigin) + '0 0 8';
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 16', MOVE_NOMONSTER, self);
-			self.origin = trace_endpos;
+			self.origin = physics_start_origin - (ground_origin - ground_curorigin);
+			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', MOVE_NOMONSTERS, self);
+			if not(trace_startsolid)
+				self.origin = trace_endpos;
 		}
 		pmove_org = self.origin;
 		self.lastwj = physics_lastwj;
@@ -324,6 +325,7 @@ void(float isnew) physics_read {
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
 		physics_is_player = f & 8;
+		self.solid = (physics_is_player ? SOLID_SLIDEBOX : SOLID_NOT);
 		physics_ladder = f & 32;
 		physics_ladder_iswater = f & 64;
 		physics_start_flags_jumpreleased = f & 128;
