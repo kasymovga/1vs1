@@ -89,7 +89,6 @@ set quakiuz_g_balance_grenadelauncher_bouncefactor 0.5
 set quakiuz_g_balance_zapper_primary_lifetime 0.1
 set quakiuz_g_balance_zapper_primary_damage 8
 set quakiuz_g_balance_zapper_primary_force 20
-set quakiuz_g_balance_zapper_primary_ticrate 0.05
 set quakiuz_g_balance_zapper_primary_ammo 1
 set quakiuz_g_balance_zapper_primary_refire 0.05
 set quakiuz_g_balance_zapper_primary_range 980

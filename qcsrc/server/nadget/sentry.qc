@@ -156,13 +156,13 @@ void nadget_Sentry_Beam_Think(void) {
 
     end -= normalize(end - start) * 5;
 
-    if(start != self.zapper_beam_start) {
-        self.zapper_beam_start = start;
+    if(start != self.pos1) {
+        self.pos1 = start;
         self.SendFlags |= 2;
     }
 
-    if(end != self.zapper_beam_end) {
-        self.zapper_beam_end = end;
+    if(end != self.pos2) {
+        self.pos2 = end;
         self.SendFlags |= 4;
     }
 
@@ -175,8 +175,8 @@ entity nadget_Sentry_Beam_Spawn(entity emitter) {
     e.owner = sentry;
     e.enemy = emitter;
     e.team = sentry.team;
-    e.zapper_beam_start = sentry.origin + sentry.view_ofs;
-    e.zapper_beam_end = e.zapper_beam_start;
+    e.pos1 = sentry.origin + sentry.view_ofs;
+    e.pos2 = e.pos1;
     e.think = nadget_Sentry_Beam_Think;
     e.nextthink = time;
 

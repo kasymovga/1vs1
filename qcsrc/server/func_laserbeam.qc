@@ -41,15 +41,15 @@ void func_laserbeam_think(void) {
         self.cnt = time + 0.1;
     }
 
-    end -= normalize(end - self.zapper_beam_start) * 5;
+    end -= normalize(end - self.pos1) * 5;
 
-    if(o != self.zapper_beam_start) {
-        self.zapper_beam_start = o;
+    if(o != self.pos1) {
+        self.pos1 = o;
         self.SendFlags |= 2;
     }
 
-    if(end != self.zapper_beam_end) {
-        self.zapper_beam_end = end;
+    if(end != self.pos2) {
+        self.pos2 = end;
         self.SendFlags |= 4;
     }
 

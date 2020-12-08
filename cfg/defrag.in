@@ -12,7 +12,7 @@ set _defrag_g_balance_nex_animtime 1.5
 set _defrag_g_balance_zapper_primary_lifetime 0.1
 set _defrag_g_balance_zapper_primary_damage 8
 set _defrag_g_balance_zapper_primary_force 20
-set _defrag_g_balance_zapper_primary_ticrate 0.05
+set _defrag_g_balance_zapper_primary_refire 0.05
 set _defrag_g_balance_zapper_primary_ammo 1
 set _defrag_g_balance_zapper_primary_refire 0.05
 set _defrag_g_balance_zapper_primary_range 700
