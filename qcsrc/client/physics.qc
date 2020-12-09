@@ -158,7 +158,7 @@ vector(void) physics_view_origin {
 		frametime = frametime_save;
 		v = physics.origin + physics.view_ofs;
 		if (CVAR(cl_stairsmoothspeed)) {
-			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || was_teleported) {
+			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || was_teleported || ground_lastent) {
 				stairsmoothz = v_z;
 				was_teleported = FALSE;
 			} else {
