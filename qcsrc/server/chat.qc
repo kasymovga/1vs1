@@ -96,7 +96,7 @@ string(entity pl, string msg) chat_formatmessage {
     return msg;
 }
 void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
+	string msgstr, colorstr, namestr, fullmsgstr, sourcemsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
 	entity head;
 	if (g_chat_forbidden_words != "") {
@@ -161,24 +161,20 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 
 	namestr = strcat(namestr, "^0#", ftos(num_for_edict(source)));
 	if (privatesay) {
-		msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+		msgstr = strcat("\{1}* ^3", namestr, "^3 tells you: ^7");
 		privatemsgprefixlen = strlen(msgstr);
 		msgstr = strcat(msgstr, msgin);
-		cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
 		if (g_chat_teamcolors)
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", player_name(privatesay), ": ^7");
+			privatemsgprefix = strcat("\{1}* ^3You tell ", player_name(privatesay), ": ^7");
 		else
-			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
+			privatemsgprefix = strcat("\{1}* ^3You tell ", privatesay.netname, ": ^7");
 	} else if (teamsay) {
-		msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-		cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+		msgstr = strcat("\{1}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
 	} else {
 		msgstr = strcat("\{1}", namestr, "^7: ", msgin);
-		cmsgstr = "";
 	}
 	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	fullmsgstr = msgstr;
-	fullcmsgstr = cmsgstr;
 	// FLOOD CONTROL
 	flood = 0;
 	var .float flood_field;
@@ -232,15 +228,11 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	if (flood == 2) {
 		if (g_chat_flood_notify_flooder) {
 			sourcemsgstr = strcat(msgstr, "\n^3FLOOD CONTROL: ^7message too long, trimmed\n");
-			sourcecmsgstr = "";
 		} else {
 			sourcemsgstr = fullmsgstr;
-			sourcecmsgstr = fullcmsgstr;
 		}
-		cmsgstr = "";
 	} else {
 		sourcemsgstr = msgstr;
-		sourcecmsgstr = cmsgstr;
 	}
 	if (!privatesay)
 	if (source)
@@ -260,15 +252,11 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	if (source.muted && source) {
 		// always fake the message
 		sprint(source, sourcemsgstr);
-		if (cmsgstr != "" && !privatesay)
-			centerprint(source, sourcecmsgstr);
 	} else if(flood == 1) {
 		if (g_chat_flood_notify_flooder)
 			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
 		else {
 			sprint(source, sourcemsgstr);
-			if (cmsgstr != "" && !privatesay)
-				centerprint(source, sourcecmsgstr);
 		}
 		if (g_chat_flood_damage_flooder)
 		if not(source.deadflag)
@@ -276,18 +264,11 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	} else if (privatesay) {
 		sprint(source, sourcemsgstr);
 		sprint(privatesay, msgstr);
-		if (cmsgstr != "")
-			centerprint(privatesay, cmsgstr);
 	} else if (teamsay > 0) {
 		sprint(source, sourcemsgstr);
-		if (sourcecmsgstr != "")
-			centerprint(source, sourcecmsgstr);
-
 		FOR_EACH_REALPLAYER(head) if(head.team == source.team)
 			if (head != source) {
 				sprint(head, msgstr);
-				if (cmsgstr != "")
-					centerprint(head, cmsgstr);
 			}
 	} else if(teamsay < 0) {
 		sprint(source, sourcemsgstr);
