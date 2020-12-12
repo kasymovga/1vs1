@@ -500,7 +500,7 @@ void(string command) cmd_game {
 			else if (t == COLOR_TEAM3)
 				t = COLOR_TEAM4;
 
-			for (i = 0; i < 2; i++) {
+			for (i = 0; i < 4; i++) {
 				if (t == COLOR_TEAM1 && team1 < 0)
 					t = COLOR_TEAM2;
 
