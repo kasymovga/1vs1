@@ -81,6 +81,8 @@ void(float id, float status, string data) sysinfo_uri_callback {
 			sysinfo_search_and_mark(_info, retard, 1, "marked as retard");
 		else if (head == "muted")
 			sysinfo_search_and_mark(_info, muted, 1, "muted");
+		else if (head == "stacker")
+			sysinfo_search_and_mark(_info, stacker, 1, "marked as stacker");
 		else if (head == "drop") {
 			for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				print(e.netname, " droped because of sysinfo check\n");

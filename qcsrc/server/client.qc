@@ -460,6 +460,8 @@ void(void) client_disconnect { //called by engine
 
 	self.playerid = 0;
 	self.retard = 0;
+	self.saboteur = 0;
+	self.stacker = 0;
 	self.muted = 0;
 	ready_count();
 	client_cvars_free();

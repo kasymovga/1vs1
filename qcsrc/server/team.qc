@@ -133,7 +133,33 @@ void(entity for_whom) team_teams_allowed {
 	if (at2) team2 = 0;
 	if (at3) team3 = 0;
 	if (at4) team4 = 0;
-
+	if (team_teams > 1)
+	if (for_whom)
+	if not(bot_vs_human)
+	if (for_whom.stacker) {
+		entity e;
+		float st1 = 0, st2 = 0, st3 = 0, st4 = 0;
+		FOR_EACH_TEAMPLAYER(e) {
+			if (e == for_whom) continue;
+			if (e.stacker) {
+				switch (e.team) {
+				case COLOR_TEAM1: st1++; break;
+				case COLOR_TEAM2: st2++; break;
+				case COLOR_TEAM3: st3++; break;
+				case COLOR_TEAM4: st4++; break;
+				}
+			}
+		}
+		float mst = st1 + st2 + st3 + st4; //search minimal stacker amount for different teams
+		if (at1) mst = min(st1, mst);
+		if (at2) mst = min(st2, mst);
+		if (at3) mst = min(st3, mst);
+		if (at4) mst = min(st4, mst);
+		if (team1 == 0 && st1 > mst) team1 = -1;
+		if (team2 == 0 && st2 > mst) team2 = -1;
+		if (team3 == 0 && st3 > mst) team3 = -1;
+		if (team4 == 0 && st4 > mst) team4 = -1;
+	}
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
 	if (team3 == -1 && team4 == -1)
 	if (bot_vs_human && for_whom) {
