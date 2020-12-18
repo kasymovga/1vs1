@@ -33,9 +33,7 @@ void UDPChat_ER_Response_Callback(float argc, string response) {
 	if (peer != sv_udpchat_server)
 		extresponse_query(sv_udpchat_server, "extResponse udpchat " + msg);
 
-	n = i;
-	for (i = 1; i < n; i++) {
-		s = cvar_string(strcat("sv_udpchat_client", ftos(i)));
+	for (i = 1; (s = cvar_string(strcat("sv_udpchat_client", ftos(i)))) != ""; i++) {
 		if (peer != s)
 			extresponse_query(s, "extResponse udpchat " + msg);
 	}
