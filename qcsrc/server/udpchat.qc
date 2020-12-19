@@ -4,7 +4,7 @@ float sv_udpchat_spamstatus;
 
 void UDPChat_ER_Response_Callback(float argc, string response) {
 	string s;
-	float i, n;
+	float i;
 	string from = argv(0);
 	string peer = "";
 	if (from == sv_udpchat_server)
