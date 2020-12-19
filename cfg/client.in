@@ -235,7 +235,7 @@ set camera_look_player		0	"Always look to the player. Mouse input is ignored in 
 set camera_look_attenuation 	8	"Attenuation of \"looking\" movements, only if camera_look_player is set. Bigger is smoother"
 set camera_forward_follows 	1	"0: Move the camera forwards without changing altitude. 1: Move towards what you are looking"
 seta cl_gentle 0	"client side gentle mode (only replaces gibs); when set to 1, white smoke replaces gibs, when set to 2, colorful clouds replace gibs"
-seta cl_showpressedkeys	0	"Show which movement keys someone is pressing: 1 for spectating, 2 for always"
+seta cl_showpressedkeys 1 "Show which movement keys someone is pressing: 1 for spectating, 2 for always"
 seta cl_showpressedkeys_position "0.5 0.8"	"1 0 would be upper right corner, 0.5 0.5 the center"
 
 seta cl_showspeed 0 "show the XY speed of the player"
