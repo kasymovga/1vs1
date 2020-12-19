@@ -449,7 +449,7 @@ void(void) race_checkpoint_passed {
 	if(other.classname != "player")
 		return;
 
-	if(other.race_checkpoint == -1 || other.race_checkpoint == self.race_checkpoint) {
+	if (other.race_checkpoint == -1 || other.race_checkpoint == self.race_checkpoint || (race_defrag && other.race_checkpoint < self.race_checkpoint && other.race_checkpoint)) {
 		if(self.race_penalty) {
 			if(other.race_lastpenalty != self) {
 				other.race_lastpenalty = self;
