@@ -5,6 +5,7 @@ set g_ca_teams 2
 set g_ca_enddelay 3
 set g_ca_startdelay 10
 set g_ca_healthrotpause_on_damage 20
+set ca_inherit tdm
 set ca_g_start_weapon_shotgun 1
 set ca_g_start_weapon_uzi 1
 set ca_g_start_weapon_grenadelauncher 1

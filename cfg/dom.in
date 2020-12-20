@@ -19,3 +19,4 @@ alias g_domination_point_fullbright "cvardeprecated g_domination_point_fullbrigh
 alias g_domination_point_rate "cvardeprecated g_domination_point_rate g_dom_point_rate; g_dom_point_rate $1"
 alias g_domination_point_capturetime "cvardeprecated g_domination_point_capturetime g_dom_point_capturetime; g_dom_point_capturetime $1"
 alias g_domination_point_glow "cvardeprecated g_domination_point_glow g_dom_point_glow; g_dom_point_glow $1"
+set dom_inherit tdm

@@ -1,3 +1,4 @@
+set ctf_inherit tdm
 set g_ctf_scorelimit 10 "Scorelimit for CTF, when empty, g_scorelimit using, <= 0 mean no limit"
 set g_ctf_timelimit "" "Timelimit for CTF, when empty, g_timelimit using, <= 0 mean no limit"
 set g_ctf_leadlimit "0" "Leadlimit for CTF, when empty, g_leadlimit using, <= 0 mean no limit"

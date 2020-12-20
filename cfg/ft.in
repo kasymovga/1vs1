@@ -4,6 +4,7 @@ set g_ft_leadlimit "0" "Leadlimit for freeze tag, when empty, g_leadlimit using,
 set g_ft_teams 2
 set g_ft_enddelay 3
 set g_ft_startdelay 10
+set ft_inherit tdm
 set ft_g_start_weapon_shotgun 1
 set ft_g_start_weapon_uzi 1
 set ft_g_start_weapon_grenadelauncher 1

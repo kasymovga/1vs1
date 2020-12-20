@@ -6,6 +6,7 @@ set g_lms_sphere_diameter_min 1200 "Minimal diameter for lms sphere"
 set g_lms_sphere_diameter_start_indent 100 "Extra size for lms sphere"
 set g_lms_sphere_damage 50
 set g_lms_sphere_damage_distance_factor 100
+set lms_inherit dm
 set lms_g_start_weapon_shotgun 1
 set lms_g_start_weapon_uzi 1
 set lms_g_start_weapon_grenadelauncher 1
