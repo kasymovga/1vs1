@@ -84,3 +84,4 @@ set g_teleport_keep_velocity -1 "Keep velocity up this value after teleportation
 set g_trigger_hurt_interval 1
 set sv_dumprecords 0
 set g_button_nowaitforever 0
+set g_start_delay 15 "delay before the game starts, so everyone can join; recommended to set this to like 15 on a public server"

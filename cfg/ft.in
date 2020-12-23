@@ -29,3 +29,4 @@ set ft_g_weaponreplace_hagar rockets
 set ft_g_weaponreplace_grenadelauncher rockets
 set ft_g_weaponreplace_rocketlauncher rockets
 set ft_g_weaponreplace_fireball rockets
+set ft_g_start_delay 0

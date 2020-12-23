@@ -81,8 +81,6 @@ set sv_maxidle_spectatorsareidle 0
 alias allready "sv_cmd allready"
 set g_maplist_allow_hidden 0		"allow hidden maps to be, e.g., voted for and in the maplist"
 set g_maplist_allow_frustrating 0	"allow impossible maps to be, e.g., voted for and in the maplist (if set to 2, ONLY impossible maps are allowed)"
-seta g_start_delay 0	"delay before the game starts, so everyone can join; recommended to set this to like 15 on a public server"
-	if_dedicated set g_start_delay 15
 set g_full_getstatus_responses 0	"this currently breaks qstat"
 seta sv_gentle 0	"force gentle mode for everyone, also remove references to acts of killing from the messages"
 alias mute "prvm_edictset server $1 muted 1" // I am lazy and not making an actual command of this
