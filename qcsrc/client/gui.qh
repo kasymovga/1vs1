@@ -10,6 +10,7 @@ entity GUI_radioDialog;
 entity GUI_saveLoad;
 entity GUI_hint;
 entity GUI_report;
+entity GUI_muteList;
 
 enum {
 	GUI_TEAMSELECT,
@@ -21,6 +22,7 @@ enum {
 	GUI_SAVELOAD,
 	GUI_HINT,
 	GUI_REPORT,
+	GUI_MUTELIST,
 };
 
 string gui_available_maps;

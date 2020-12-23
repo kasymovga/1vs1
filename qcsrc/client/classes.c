@@ -46,6 +46,8 @@
 #include "gui/reportplayerlist.c"
 #include "gui/reporttypelist.c"
 #include "gui/dialog_report.c"
+#include "gui/mutelist.c"
+#include "gui/dialog_mutelist.c"
 #undef draw
 #undef frame
 #undef conwidth

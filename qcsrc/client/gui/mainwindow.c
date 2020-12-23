@@ -41,6 +41,9 @@ void configureMainWindowMainWindow(entity me)
 	GUI_report = i = spawnNexuizReportDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	GUI_muteList = i = spawnNexuizMuteListDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	me.initializeDialog(me, me);
 }
 #endif

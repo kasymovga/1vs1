@@ -62,6 +62,7 @@ weaponselect.qh
 view.qh
 cmd.qh
 main.qh
+mute.qh
 effect.qh
 sort.qh
 input.qh
@@ -133,6 +134,7 @@ gamemenu.qh
 entcs.qh
 update.qc
 main.qc
+mute.qc
 input.qc
 cmd.qc
 entcs.qc

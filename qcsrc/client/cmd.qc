@@ -61,6 +61,10 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "r_restart") {
 		waypointsprite_init();
 		draw_init();
+	} else if (cmd == "mute" && argc == 2) {
+		mute_add(rint(stof(argv(1))));
+	} else if (cmd == "unmute" && argc == 2) {
+		mute_remove(rint(stof(argv(1))));
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}

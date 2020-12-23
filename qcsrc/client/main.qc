@@ -153,6 +153,7 @@ void(void) CSQC_Init {
 		localcmd("seta cl_movement 1\n"); //Some people disable it because their don't understand what is it. Fixing.
 	}
 	precache_sound("misc/hit.wav");
+	mute_init();
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -175,14 +176,21 @@ void(void) CSQC_Shutdown {
 			localcmd("\ncl_hook_gameend;");
 	}
 	trip_shutdown();
+	mute_shutdown();
 }
 
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void(string strMessage) CSQC_Parse_StuffCmd {
 	localcmd(strMessage);
 }
+
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void(string strMessage) CSQC_Parse_Print {
+	if (mute_list != "")
+	if (substring(strMessage, 0, 1) == "\{1}")
+	if (mute_check(strMessage))
+		return;
+
 	print(strMessage);
 }
 

@@ -1,0 +1,7 @@
+void(void) mute_init;
+void(void) mute_shutdown;
+float(float n) mute_listed;
+void(float n) mute_add;
+void(float n) mute_remove;
+float(string s) mute_check;
+string mute_list;

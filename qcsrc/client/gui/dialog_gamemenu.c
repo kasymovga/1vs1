@@ -49,6 +49,10 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 	configureDialogNexuizDialog(me); //Parent method
 }
 
+void showMuteListGameMenuDialog() {
+	GUI_Show(GUI_MUTELIST);
+}
+
 void fillNexuizGameMenuDialog(entity me)
 {
 	entity e;
@@ -88,6 +92,9 @@ void fillNexuizGameMenuDialog(entity me)
 			me.TD(me, 1, me.columns, e = makeNexuizButton("Call a vote", '0 0 0'));
 			e.onClick = ShowVcall;
 	}
+	me.TR(me);
+		me.TD(me, 1, me.columns, e = makeNexuizButton("Mute list...", '0 0 0'));
+		e.onClick = showMuteListGameMenuDialog;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Disconnect", '0 0 0', "togglemenu;disconnect;", COMMANDBUTTON_CLOSE));
