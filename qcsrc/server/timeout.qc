@@ -188,7 +188,7 @@ float(string cmd, float tokens) timeout_ClientCommandHandle {
 	if (self.flags & FL_CLIENT) {
 		if (cmd == "timeout" || (cmd == "timeoutin" && timeoutStatus == 0)) {
 			if(self.classname == "player") {
-				if(votecalled)
+				if(vote_called)
 					sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
 				else
 					timeout_evaluate_timeout();

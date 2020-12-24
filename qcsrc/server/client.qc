@@ -423,6 +423,7 @@ void(void) client_connect { //called by engine
 			stuffcmd(self, strcat("\nfog ", client_fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 		GameHookChain_RealClientConnect();
+		vote_client_connect();
 	}
 	GameHookChain_ClientConnect();
 }
@@ -433,31 +434,24 @@ void(void) client_disconnect { //called by engine
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-
 	bot_clientdisconnect();
 	entcs_detach();
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
-
 	self.classname = "disconnecting";
 	player_clear(FALSE);
 	self.flags &~= FL_CLIENT;
 	self.just_connected = FALSE;
-
 	if (self.killindicator)
 		remove (self.killindicator);
 
 	WaypointSprite_PlayerGone();
-
 	bot_relinkplayerlist();
-
 	score_detach(self);
-
-	if(self.clientstatus)
+	if (self.clientstatus)
 		strunzone(self.clientstatus);
 
 	player_clear_sounds();
-
 	self.playerid = 0;
 	self.retard = 0;
 	self.saboteur = 0;
@@ -465,9 +459,10 @@ void(void) client_disconnect { //called by engine
 	self.muted = 0;
 	ready_count();
 	client_cvars_free();
-	if (clienttype(self) == CLIENTTYPE_REAL)
+	if (clienttype(self) == CLIENTTYPE_REAL) {
 		GameHookChain_RealClientDisconnect();
-
+		vote_client_connect();
+	}
 	if (team_mode) {
 		team_balance_audit(FALSE);
 		if (autoswap_last_best == self)

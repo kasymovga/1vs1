@@ -1,3 +1,26 @@
+float vote_was_rejected;
+string vote_called_vote;
+string vote_called_vote_display;
+float vote_called_master;
+entity vote_caller;
+float vote_finished;
+.float vote_master;
+.float vote_next;
+.float vote_vote;
+
+float(string cmd) vote_check_nasty;
+entity(string vote, string cmd, entity caller) vote_kick_victim_get;
+float(string s, entity e) vote_cmd;
+void(entity e) vote_help;
+string(entity e) vote_netname;
+string(string m, entity e) vote_validate_map;
+string(string s, float tokens) vote_parse;
+float(string vote, string cmd) vote_allowed;
+void(void) vote_accept;
+void(void) vote_reject;
+void(void) vote_timeout;
+void(entity stopper) vote_stop;
+void(void) vote_count;
 entity vote_note;
 float yescount;
 float nocount;
@@ -29,7 +52,7 @@ void(void) vote_note_update {
 		return;
 
 	vote_note_clear();
-	string s = strcat("^2A vote has been called for ^1", votecalledvote_display, "^7\n");
+	string s = strcat("^2A vote has been called for ^1", vote_called_vote_display, "^7\n");
 	string vote_bar;
 	float i, n;
 	vote_bar = "^2";
@@ -187,8 +210,8 @@ float(string s, entity e) vote_cmd {
 		} else if (argv(1) == "help") {
 			vote_help(e);
 		} else if (argv(1) == "status") {
-			if (votecalled) {
-				cmd_print_to(e, strcat("^7Vote for ", votecalledvote_display, "^7 called by ^7", vote_netname(votecaller), "^7."));
+			if (vote_called) {
+				cmd_print_to(e, strcat("^7Vote for ", vote_called_vote_display, "^7 called by ^7", vote_netname(vote_caller), "^7."));
 			} else {
 				cmd_print_to(e, "^1No vote called.");
 			}
@@ -200,7 +223,7 @@ float(string s, entity e) vote_cmd {
 				else if (timeoutStatus) { //don't allow a vote call during a timeout
 					cmd_print_to(e, "^1Error: You can not call a vote while a timeout is active.");
 				}
-				else if (votecalled) {
+				else if (vote_called) {
 					cmd_print_to(e, "^1There is already a vote called.");
 				}
 				else if (e.retard > 0) {
@@ -216,21 +239,21 @@ float(string s, entity e) vote_cmd {
 					} else if (vote_check_nasty(vote)) {
 						cmd_print_to(e, "Syntax error in command. See 'vhelp' for more info.");
 					} else if (vote_remap(vote, "vcall", e)) {
-						votecalledvote = strzone(vote_remap_vote);
-						votecalledvote_display = strzone(vote_remap_display);
-						votecalled = TRUE;
+						vote_called_vote = strzone(vote_remap_vote);
+						vote_called_vote_display = strzone(vote_remap_display);
+						vote_called = TRUE;
 						vote_note = NoteLine_New(vote_note_message);
-						votecalledmaster = FALSE;
-						votefinished = time + cvar("sv_vote_timeout");
+						vote_called_master = FALSE;
+						vote_finished = time + cvar("sv_vote_timeout");
 						if (sv_announcer_extra_vote_now != "")
 							sound_play2all(sv_announcer_extra_vote_now);
 
-						votecaller = e; // remember who called the vote
+						vote_caller = e; // remember who called the vote
 						if (e) {
 							e.vote_vote = 1; // of course you vote yes
 							e.vote_next = time + cvar("sv_vote_wait");
 						}
-						tmp = strcat("^2* ^3", vote_netname(votecaller), "^2 calls a vote for ", votecalledvote_display);
+						tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote for ", vote_called_vote_display);
 						bprint("\{1}", tmp, "\n");
 						IRC_Announce_Vote(tmp);
 						vote_count(); // needed if you are the only one
@@ -242,9 +265,9 @@ float(string s, entity e) vote_cmd {
 				cmd_print_to(e, "^1Vote calling is NOT allowed.");
 			}
 		} else if (argv(1) == "stop") {
-			if (!votecalled) {
+			if (!vote_called) {
 				cmd_print_to(e, "^1No vote called.");
-			} else if (e == votecaller) { // the votecaller can stop a vote
+			} else if (e == vote_caller) { // the vote_caller can stop a vote
 				vote_stop(e);
 			} else if (!e) { // server admin / console can too
 				vote_stop(e);
@@ -255,24 +278,24 @@ float(string s, entity e) vote_cmd {
 			}
 		} else if (argv(1) == "master") {
 			if (cvar("sv_vote_master")) {
-				if (votecalled) {
+				if (vote_called) {
 					cmd_print_to(e, "^1There is already a vote called.");
 				} else {
-					votecalled = TRUE;
-					votecalledmaster = TRUE;
-					votecalledvote = strzone("XXX");
-					votecalledvote_display = strzone("^3master");
+					vote_called = TRUE;
+					vote_called_master = TRUE;
+					vote_called_vote = strzone("XXX");
+					vote_called_vote_display = strzone("^3master");
 					vote_note = NoteLine_New(vote_note_message);
-					votefinished = time + cvar("sv_vote_timeout");
+					vote_finished = time + cvar("sv_vote_timeout");
 					if (sv_announcer_extra_vote_now != "")
 						sound_play2all(sv_announcer_extra_vote_now);
 
-					votecaller = e; // remember who called the vote
+					vote_caller = e; // remember who called the vote
 					if (e) {
 						e.vote_vote = 1; // of course you vote yes
 						e.vote_next = time + cvar("sv_vote_wait");
 					}
-					tmp = strcat("^2* ^3", vote_netname(votecaller), "^2 calls a vote to become ^3master^2");
+					tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2 calls a vote to become ^3master^2");
 					bprint("\{1}", tmp, "\n");
 					IRC_Announce_Vote(tmp);
 					vote_count(); // needed if you are the only one
@@ -319,7 +342,7 @@ float(string s, entity e) vote_cmd {
 			else
 				cmd_print_to(e, "^1Login to become master is NOT allowed.");
 		} else if (argv(1) == "yes") {
-			if (!votecalled) {
+			if (!vote_called) {
 				cmd_print_to(e, "^1No vote called.");
 			} else if (!e) {
 				cmd_print_to(e, "^1You can't vote from the server console.");
@@ -335,7 +358,7 @@ float(string s, entity e) vote_cmd {
 				cmd_print_to(e, "^1You have already voted.");
 			}
 		} else if (argv(1) == "no") {
-			if (!votecalled) {
+			if (!vote_called) {
 				cmd_print_to(e, "^1No vote called.");
 			} else if (!e) {
 				cmd_print_to(e, "^1You can't vote from the server console.");
@@ -351,7 +374,7 @@ float(string s, entity e) vote_cmd {
 				cmd_print_to(e, "^1You have already voted.");
 			}
 		} else if (argv(1) == "abstain" || argv(1) == "dontcare") {
-			if (!votecalled) {
+			if (!vote_called) {
 				cmd_print_to(e, "^1No vote called.");
 			} else if (!e) {
 				cmd_print_to(e, "^1You can't vote from the server console.");
@@ -441,8 +464,8 @@ string(string m, entity e) vote_validate_map {
 
 
 void(void) vote_think {
-	if (votefinished > 0) // a vote was called
-	if (time > votefinished) {
+	if (vote_finished > 0) // a vote was called
+	if (time > vote_finished) {
 		vote_count();
 	}
 }
@@ -491,13 +514,13 @@ void(void) vote_reset {
 		player.vote_vote = 0;
 		centerprint_expire(player, CENTERPRIO_VOTE);
 	}
-	if (votecalled) {
-		strunzone(votecalledvote);
-		strunzone(votecalledvote_display);
+	if (vote_called) {
+		strunzone(vote_called_vote);
+		strunzone(vote_called_vote_display);
 	}
-	votecalled = FALSE;
-	votecalledmaster = FALSE;
-	votefinished = 0;
+	vote_called = FALSE;
+	vote_called_master = FALSE;
+	vote_finished = 0;
 	vote_note_clear();
 	if (vote_note) {
 		remove(vote_note);
@@ -506,18 +529,18 @@ void(void) vote_reset {
 }
 
 void(void) vote_accept {
-	string tmp = strcat("^2* ^3", vote_netname(votecaller), "^2's vote for ^1", votecalledvote_display, "^2 was accepted");
+	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ^1", vote_called_vote_display, "^2 was accepted");
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
-	if (votecalledmaster) {
-		if (votecaller) {
-			votecaller.vote_master = 1;
+	if (vote_called_master) {
+		if (vote_caller) {
+			vote_caller.vote_master = 1;
 		}
 	} else {
-		localcmd(strcat(votecalledvote, "\n"));
+		localcmd(strcat(vote_called_vote, "\n"));
 	}
-	if (votecaller) {
-		votecaller.vote_next = 0; // people like your votes,
+	if (vote_caller) {
+		vote_caller.vote_next = 0; // people like your votes,
 					  // no wait for next vote
 	}
 	vote_reset();
@@ -526,29 +549,30 @@ void(void) vote_accept {
 }
 
 void(void) vote_reject {
-	string tmp = strcat("^2* ^3", vote_netname(votecaller), "^2's vote for ", votecalledvote_display, "^2 was rejected");
+	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 was rejected");
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
+	vote_was_rejected = TRUE;
 	vote_reset();
 	if (sv_announcer_extra_vote_passed)
 		sound_play2all(sv_announcer_extra_vote_failed);
 }
 
 void(void) vote_timeout {
-	string tmp = strcat("^2* ^3", vote_netname(votecaller), "^2's vote for ", votecalledvote_display, "^2 timed out");
+	string tmp = strcat("^2* ^3", vote_netname(vote_caller), "^2's vote for ", vote_called_vote_display, "^2 timed out");
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
 	vote_reset();
 }
 
 void(entity stopper) vote_stop {
-	string tmp = strcat("^2* ^3", vote_netname(stopper), "^2 stopped ^3", vote_netname(votecaller), "^2's vote");
+	string tmp = strcat("^2* ^3", vote_netname(stopper), "^2 stopped ^3", vote_netname(vote_caller), "^2's vote");
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
-	if (stopper == votecaller) {
+	if (stopper == vote_caller) {
 		// no wait for next vote so you can correct your vote
-		if (votecaller) {
-			votecaller.vote_next = time + cvar("sv_vote_stop");
+		if (vote_caller) {
+			vote_caller.vote_next = time + cvar("sv_vote_stop");
 		}
 	}
 	vote_reset();
@@ -606,7 +630,7 @@ void(void) vote_count {
 	float allowed_dups = cvar("sv_vote_limit_from_single_address");
 	FOR_EACH_REALCLIENT(player) {
 		if (allowed_dups > 0)
-		if (player != votecaller)
+		if (player != vote_caller)
 		if (vote_check_dup_ip(player, allowed_dups))
 			continue;
 
@@ -614,7 +638,7 @@ void(void) vote_count {
 			++nocount;
 		} else if (player.vote_vote == 1) {
 			++yescount;
-		} else if (player.vote_vote == -2 || (time > votefinished && player.classname == "spectator" && player.team < 0)) {
+		} else if (player.vote_vote == -2 || (time > vote_finished && player.classname == "spectator" && player.team < 0)) {
 			++abstaincount;
 		}
 		++playercount;
@@ -638,12 +662,12 @@ void(void) vote_count {
 		abstaincount = realplayerabstaincount;
 		playercount = realplayercount;
 	}
-	if (time > votefinished) {
+	if (time > vote_finished) {
 		float ignorecount;
 		ignorecount = playercount - nocount - yescount - abstaincount;
 		abstaincount += ignorecount * bound(0, cvar("sv_vote_players_auto_abstain"), 1);
 	}
-	if (votecalledmaster
+	if (vote_called_master
 	   && playercount == 1) {
 		// if only one player is on the server becoming vote
 		// master is not allowed.  This could be used for
@@ -651,9 +675,9 @@ void(void) vote_count {
 		// called the vote because this function is called
 		// by cmd_client. Maybe all voting should
 		// be disabled for a single player?
-		cmd_print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
-		if (votecaller) {
-			votecaller.vote_next = 0;
+		cmd_print_to(vote_caller, "^1You are the only player on this server so you can not become vote master.");
+		if (vote_caller) {
+			vote_caller.vote_next = 0;
 		}
 		vote_reset();
 	} else {
@@ -668,7 +692,7 @@ void(void) vote_count {
 		} else if (nocount >= nocount_target) { // that means, yescount cannot reach minyes any more
 			vote_spam(abstaincount, playercount - yescount - nocount - abstaincount, -1, "no");
 			vote_reject();
-		} else if (time > votefinished) {
+		} else if (time > vote_finished) {
 			if (simplevotefactor) {
 				string result;
 				simplevotefactor = bound(votefactor, simplevotefactor, 0.999);
@@ -692,6 +716,18 @@ void(void) vote_count {
 		}
 	}
 	vote_note_update();
+}
+
+void(void) vote_client_disconnect {
+	if (vote_caller == self)
+		vote_stop(vote_caller);
+}
+
+void(void) vote_client_connect {
+	if (vote_was_rejected)
+		self.vote_next = time + cvar("sv_vote_wait");
+	else
+		self.vote_next = cvar("sv_vote_delay");
 }
 
 void(void) vote_init {
