@@ -263,16 +263,17 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 }
 
 void(void) hook_fire {
-	local entity missile;
-	local vector org;
-
+	entity missile;
 	makevectors(self.v_angle);
-
 	// UGLY WORKAROUND: play this on CHAN_WEAPON2 so it can't cut off fire sounds
-	sound (self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
-	org = self.origin;
-	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
-
+	sound(self, CHAN_WEAPON2, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
+	if (self.weapon == WEP_HOOK) {
+		weapon_setup_shot(self, 0, "", 0);
+	} else {
+		weapon_shotorg = self.origin + self.view_ofs - '0 0 8';
+		weapon_shotdir = v_forward;
+	}
+	pointparticles(particleeffectnum("grapple_muzzleflash"), weapon_shotorg_visual, '0 0 0', 1);
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = self;
 	missile.hook = spawn();
@@ -280,33 +281,25 @@ void(void) hook_fire {
 	net_link_entity(missile.hook, FALSE, 0, hook_send);
 	self.hook = missile;
 	missile.classname = "grapplinghook";
-
 	missile.movetype = (g_balance_grapplehook_gravity ? MOVETYPE_TOSS : MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
-
 	setmodel (missile, "models/hook.md3"); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
-	setorigin (missile, org);
-
+	setorigin (missile, weapon_shotorg);
 	missile.state = 0; // not latched onto anything
-
-	missile.velocity = v_forward * g_balance_grapplehook_speed_fly;
+	missile.velocity = weapon_shotdir * g_balance_grapplehook_speed_fly;
 	weapon_setup_projectile_velocity(missile);
-
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 	missile.touch = hook_touch;
 	missile.hook.think = hook_think;
 	missile.hook.nextthink = time + 0.1;
-
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;
-
 	missile.health = g_balance_grapplehook_health;//120
 	missile.event_damage = hook_damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
-
 	entity oldself = self;
 	self = missile.hook;
 	hook_think();
