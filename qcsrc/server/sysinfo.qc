@@ -77,9 +77,13 @@ void(float id, float status, string data) sysinfo_uri_callback {
 					}
 				}
 			}
-		} else if (head == "retard")
+		} else if (head == "retard") {
 			sysinfo_search_and_mark(_info, retard, 1, "marked as retard");
-		else if (head == "muted")
+			FOR_EACH_REALCLIENT(e) {
+				if (e.retard > 0)
+					e.netname = retardplayername;
+			}
+		} else if (head == "muted")
 			sysinfo_search_and_mark(_info, muted, 1, "muted");
 		else if (head == "stacker")
 			sysinfo_search_and_mark(_info, stacker, 1, "marked as stacker");
