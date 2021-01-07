@@ -390,6 +390,7 @@ void(void) physics_init {
 	PHYSICS_CACHE_CVAR(sv_warsowbunny_backtosideratio);
 	PHYSICS_CACHE_CVAR(sv_jumpvelocity);
 	CACHE_CVAR(g_jumpvelocity_nodecrease);
+	CACHE_CVAR(g_jumpvelocity_noincrease);
 	sv_waterjumpvelocity = cvar("g_waterjumpvelocity");
 	PHYSICS_CACHE_CVAR(sv_gameplayfix_q2airaccelerate);
 	CACHE_CVAR(g_stepairslowdown);
@@ -528,8 +529,9 @@ float(entity to, float sf) physics_send {
 				+ (cvar("mod_collision_bih") ? 8192 : 0)
 				+ (g_jumpvelocity_nodecrease ? 16384 : 0)
 				+ (g_cpmdoublejump ? 32768 : 0)
+				+ (g_jumpvelocity_noincrease ? 65536 : 0)
 				;
-		WriteShort(MSG_ENTITY, switches);
+		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {
 			WriteCoord(MSG_ENTITY, g_walljump_delay);
 			WriteCoord(MSG_ENTITY, g_walljump_force);

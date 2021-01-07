@@ -152,3 +152,4 @@ set defragvq3_g_airstopaccelerate 0
 set defragvq3_g_airstrafeaccelerate 0
 set defragvq3_g_maxairstrafespeed 0
 set defragvq3_g_aircontrol 0
+set defragvq3_g_jumpvelocity_noincrease 1

@@ -22,6 +22,7 @@ set g_warsowbunny_turnaccel 0 "max sharpness of turns (also master switch for th
 set g_warsowbunny_backtosideratio 0.8 "lower values make it easier to change direction without losing speed; the drawback is 'understeering' in sharp turns"
 set g_jumpvelocity 300 "cvar that can be used by QuakeC code for jump velocity"
 set g_jumpvelocity_nodecrease 0
+set g_jumpvelocity_noincrease 0
 set g_waterjumpvelocity 225 "water jump velocity"
 set g_gameplayfix_q2airaccelerate 1 "Quake2-style air acceleration"
 set g_pogostick 1 "don't require releasing the space bar for jumping again"

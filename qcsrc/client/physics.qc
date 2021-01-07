@@ -256,7 +256,7 @@ void(float isnew) physics_read {
 		sv_jumpvelocity = ReadCoord();
 		sv_waterjumpvelocity = ReadCoord();
 		g_skimming_time = ReadCoord();
-		float switches = ReadShort();
+		float switches = ReadCoord();
 		g_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
 		sv_disable_crouch = switches & 8;
@@ -282,6 +282,7 @@ void(float isnew) physics_read {
 		g_slicksurfaces_levitation = switches & 4096;
 		g_jumpvelocity_nodecrease = switches & 16384;
 		g_cpmdoublejump = switches & 32768;
+		g_jumpvelocity_noincrease = switches & 65536;
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();

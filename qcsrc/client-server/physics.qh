@@ -23,6 +23,7 @@ float sv_airstrafeaccelerate;
 float sv_maxairstrafespeed;
 float sv_jumpvelocity;
 float g_jumpvelocity_nodecrease;
+float g_jumpvelocity_noincrease;
 float sv_waterjumpvelocity;
 float sv_pogostick;
 float sv_disable_crouch;

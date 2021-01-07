@@ -1,3 +1,4 @@
+set physicsq3_g_skimming_time 0.3
 set physicsq3_g_gravity 1000
 set physicsq3_g_stepairslowdown 0
 set physicsq3_g_maxspeed 400
@@ -19,3 +20,5 @@ set physicsq3_g_maxairstrafespeed 0
 set physicsq3_g_aircontrol 0
 set physicsq3_g_warsowbunny_turnaccel 0
 set physicsq3_g_friction_on_land 0
+set physicsq3_g_jumpvelocity_nodecrease 1
+set physicsq3_g_jumpvelocity_noincrease 1
