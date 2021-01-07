@@ -248,7 +248,8 @@ void(void) physics_move {
 							physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
 					}
 				}
-			}
+			} else
+				physics_skimming = 0;
 		}
 		// check if it moved at all
 		if(trace1_endpos == self.origin) {
