@@ -1077,6 +1077,7 @@ void(void) spawnfunc_race_target_start_timer {
 	self.cnt = 0;
 	self.spawnflags = 1;
 	self.classname = "race_trigger_checkpoint";
+	self.target = ""; //workaround for some broken defrag maps
 	spawnfunc_race_trigger_checkpoint();
 }
 
@@ -1089,6 +1090,7 @@ void(void) spawnfunc_race_target_stop_timer {
 	self.cnt = 1;
 	self.spawnflags = 9;
 	self.classname = "race_trigger_checkpoint";
+	self.target = ""; //workaround for some broken defrag maps
 	race_timed_checkpoint = 1;
 	race_highest_checkpoint = 1;
 	spawnfunc_race_trigger_checkpoint();
@@ -1103,6 +1105,7 @@ void(void) spawnfunc_race_target_checkpoint {
 	self.cnt = 1;
 	self.spawnflags = 1;
 	self.classname = "race_trigger_checkpoint";
+	self.target = ""; //workaround for some broken defrag maps
 	spawnfunc_race_trigger_checkpoint();
 }
 
