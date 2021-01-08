@@ -4,3 +4,4 @@ set g_cts_leadlimit "" "Dummy cvar, CTS not have leadlimit"
 set cts_g_balance_kill_delay 0
 set cts_g_start_weapon_laser 0
 set cts_g_respawn_delay 0
+set ctg_g_start_delay 0
