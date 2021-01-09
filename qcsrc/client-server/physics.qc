@@ -200,6 +200,7 @@ void(void) physics_move {
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
 	vector primalvelocity = physics_velocity;
+	float skipskimming = 0;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
 		neworigin = self.origin + t * physics_velocity;
 		trace_box(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
@@ -249,7 +250,7 @@ void(void) physics_move {
 					}
 				}
 			} else
-				physics_skimming = 0;
+				skipskimming = 1;
 		}
 		// check if it moved at all
 		if(trace1_endpos == self.origin) {
@@ -274,7 +275,8 @@ void(void) physics_move {
 		physics_velocity = physics_velocity - f * trace1_plane_normal;
 	}
 	if not(physics_flags & FL_ONGROUND_OR_SLICK)
-	if (physics_skimming > 0) {
+	if (physics_skimming > 0)
+	if not(skipskimming) {
 		physics_velocity = primalvelocity;
 		physics_skimming -= frametime;
 		if (physics_skimming < 0)
