@@ -477,10 +477,12 @@ void(void) race_checkpoint_passed {
 				if (e.race_checkpoint) //ignore start triggers
 				if (e.race_checkpoint == self.race_checkpoint) {
 					if (self.spawnflags == 9) {
-						if (e.sprite)
-							remove(e.sprite);
+						if (e.spawnflags != 9) {
+							if (e.sprite)
+								remove(e.sprite);
 
-						remove(e);
+							remove(e);
+						}
 					} else {
 						shift_required = TRUE;
 						break;
