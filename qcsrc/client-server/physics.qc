@@ -1,4 +1,5 @@
 float physics_lastflags;
+float physics_groundvelocity_dotproduct;
 
 void(void) physics_impact {
 	if not(trace_ent)
@@ -90,8 +91,7 @@ void(float ground) physics_update_status {
 			physics_unstuck();
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		}
-		float f;
-		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((f = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
+		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
 				if (g_slicksurfaces_levitation)
 					physics_flags |= FL_SLICK;
@@ -108,9 +108,9 @@ void(float ground) physics_update_status {
 			}
 			self.groundentity = trace_ent;
 			physics_impact();
-			if (f < 0) {
+			if (physics_groundvelocity_dotproduct < 0) {
 				if (!trace_ent || trace_ent.solid != SOLID_NOT)
-					physics_velocity -= f * trace_plane_normal;
+					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
 			}
 		}
 	}
@@ -601,7 +601,12 @@ void(void) physics_player_jump {
 		physics_landing_hook();
 
 	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0 && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))) {
-		physics_velocity_z = max(sv_jumpvelocity * 1.3704, physics_velocity_z + sv_jumpvelocity);
+		if (physics_groundvelocity_dotproduct > 0)
+			physics_velocity_z = max(sv_jumpvelocity * 1.3704, physics_velocity_z);
+		else {
+			float f = sv_jumpvelocity * 1.3704;
+			physics_velocity_z = max(f, physics_velocity_z + f);
+		}
 	} else if (g_jumpvelocity_nodecrease) {
 		float f = sv_jumpvelocity * physics_jump_velocity_mod();
 		if (g_jumpvelocity_noincrease)
