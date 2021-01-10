@@ -16,6 +16,10 @@ void(entity to) client_set_view {
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
 	WriteEntity(MSG_ONE, to);
+	WriteByte (MSG_ONE, SVC_SETVIEWANGLES); //sometimes fixangle not enough (in case of fast respawn)
+	WriteAngle(MSG_ONE, to.angles_x);
+	WriteAngle(MSG_ONE, to.angles_y);
+	WriteAngle(MSG_ONE, 0);
 }
 
 void(entity spot) client_put_to_spot{
