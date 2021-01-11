@@ -1633,24 +1633,17 @@ void Sbar_ShowSpeed(void)
 	drawfont = sbar_font;
 }
 
-vector acc_prevspeed;
-float acc_prevtime;
-
 void Sbar_ShowAcceleration(void)
 {
-	float acceleration, f;
 	vector pos, top, rgb;
 	top_x = CVAR(vid_conwidth)/2;
 	top_y = 0;
-
-	f = time - acc_prevtime;
+	float acceleration;
 	if(CVAR(cl_showacceleration_z))
-		acceleration = (vlen(physics_velocity) - vlen(acc_prevspeed)) * (1 / f);
+		acceleration = (vlen(physics_velocity_frame_end) - vlen(physics_velocity_frame_begin)) * (1 / physics_frametime);
 	else
-		acceleration = (vlen(physics_velocity - '0 0 1' * physics_velocity_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f);
+		acceleration = (vlen(physics_velocity_frame_end - '0 0 1' * physics_velocity_frame_end_z) - vlen(physics_velocity_frame_begin - '0 0 1' * physics_velocity_frame_begin_z)) * (1 / physics_frametime);
 
-	acc_prevspeed = physics_velocity;
-	acc_prevtime = time;
 	acceleration = acceleration / getstatf(STAT_MOVEVARS_MAXSPEED);
 
 	pos = top - CVAR(cl_showacceleration_size)/2 * '0 1 0' + (CVAR(cl_showacceleration_position) * CVAR(vid_conheight)) * '0 1 0';

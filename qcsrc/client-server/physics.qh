@@ -1,3 +1,4 @@
+float g_physics_fixed;
 float sv_stepheight;
 float g_stepairslowdown;
 float sv_maxspeed;
@@ -67,6 +68,7 @@ float physics_teleport_time;
 float physics_skimming;
 float physics_have_doubjejump;
 float physics_cpmdoublejump_time;
+float physics_frametime_accumulator;
 
 void physics_player();
 

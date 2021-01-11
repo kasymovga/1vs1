@@ -10,6 +10,7 @@ float physics_jump_velocity_factor;
 float physics_start_teleport_time;
 float physics_start_crouch;
 float physics_start_flags_jumpreleased;
+float physics_start_frametime_accumulator;
 float ground_time;
 float ground_curtime;
 float ground_oldtime;
@@ -62,6 +63,7 @@ void(void) physics_landing_hook {
 }
 
 void(void) physics_frame_begin_hook {
+	physics_velocity_frame_begin = physics_velocity;
 }
 
 void(void) physics_frame_end_hook {
@@ -69,6 +71,8 @@ void(void) physics_frame_end_hook {
 	if (physics_movetype == MOVETYPE_NOCLIP) {
 		setorigin(self, self.origin + (physics_velocity * frametime));
 	}
+	physics_velocity_frame_end = physics_velocity;
+	physics_frametime = frametime;
 }
 
 float stairsmoothz;
@@ -132,6 +136,7 @@ vector(void) physics_view_origin {
 			self.last_LEFT_KEY_time = physics_last_LEFT_KEY_time;
 			self.lastkeys = getstatf(STAT_PRESSED_KEYS);
 		}
+		physics_frametime_accumulator = physics_start_frametime_accumulator;
 		for (i = servercommandframe + 1; i <= n; i++) {
 			if not(RetrieveMovementFrame(i))
 				break;
@@ -283,6 +288,7 @@ void(float isnew) physics_read {
 		g_jumpvelocity_nodecrease = switches & 16384;
 		g_cpmdoublejump = switches & 32768;
 		g_jumpvelocity_noincrease = switches & 65536;
+		g_physics_fixed = switches & 131072;
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
@@ -383,6 +389,9 @@ void(float isnew) physics_read {
 			if (dodging_flags & 4) physics_last_BACKWARD_KEY_time = ReadCoord();
 			if (dodging_flags & 8) physics_last_LEFT_KEY_time = ReadCoord();
 			if (dodging_flags & 16) physics_last_RIGHT_KEY_time = ReadCoord();
+		}
+		if (f2 & 8) {
+			physics_start_frametime_accumulator = ReadCoord();
 		}
 		if (f & 32768) {
 			ground_oldorigin = ground_origin;

@@ -4,6 +4,7 @@ set sv_spawnreplace_target_checkpoint race_target_checkpoint
 set sv_spawnreplace_target_init race_target_init
 //set _defrag_g_player_view_ofs 26
 //set _defrag_g_player_crouch_view_ofs 14
+set _defrag_g_physics_fixed 1
 set _defrag_g_balance_nex_ammo 10
 set _defrag_g_balance_nex_damage 100
 set _defrag_g_balance_nex_force 400
@@ -118,7 +119,7 @@ set _defrag_g_pickup_nails_max 300
 set _defrag_g_pickup_shells 100
 set _defrag_g_pickup_shells_max 100
 set _defrag_g_stepairslowdown 0
-set _defrag_g_stepheight 22
+set _defrag_g_stepheight 19
 set _defrag_g_maxspeed 320
 set _defrag_g_maxairspeed 320
 set _defrag_g_friction_on_land 0

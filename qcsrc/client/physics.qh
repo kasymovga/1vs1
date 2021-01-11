@@ -19,3 +19,6 @@ float physics_lastcommandframe;
 float physics_player_ent;
 vector physics_end_origin;
 vector physics_start_origin;
+vector physics_velocity_frame_begin;
+vector physics_velocity_frame_end;
+float physics_frametime;

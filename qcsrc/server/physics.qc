@@ -1,4 +1,5 @@
 .entity player_physic;
+.float frametime_accumulator;
 
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
@@ -278,6 +279,7 @@ void SV_PlayerPhysics()
 	}
 	physics_flags = self.flags;
 	physics_velocity = self.velocity;
+	physics_frametime_accumulator = self.frametime_accumulator;
 	physics_cantjump = PLAYER_DEAD(self);
 	physics_deadflag = self.deadflag;
 	physics_crouch = self.crouch;
@@ -305,6 +307,7 @@ void SV_PlayerPhysics()
 
 	physics_cpmdoublejump_time = self.cpmdoublejump;
 	physics_player();
+	self.frametime_accumulator = physics_frametime_accumulator;
 	if(physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
 
@@ -405,6 +408,7 @@ void(void) physics_init {
 	CACHE_CVAR(g_walljump_velocity_xy_factor);
 	CACHE_CVAR(g_walljump_velocity_z_factor);
 	CACHE_CVAR(g_dodging);
+	CACHE_CVAR(g_physics_fixed);
 	if (g_dodging) {
 		hint_add("Doubletapping any direction key can be used as trick dodging.");
 		hint_add("You can move faster with double tapping forward button then holding jump button.");
@@ -480,6 +484,9 @@ float(entity to, float sf) physics_send {
 		if (self.cpmdoublejump)
 			sf2 |= 2;
 
+		if (g_physics_fixed)
+			sf2 |= 8;
+
 		if (sf2) sf |= 16384;
 	}
 	else
@@ -530,6 +537,7 @@ float(entity to, float sf) physics_send {
 				+ (g_jumpvelocity_nodecrease ? 16384 : 0)
 				+ (g_cpmdoublejump ? 32768 : 0)
 				+ (g_jumpvelocity_noincrease ? 65536 : 0)
+				+ (g_physics_fixed ? 131072 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {
@@ -601,6 +609,9 @@ float(entity to, float sf) physics_send {
 			if (dodging_flags & 4) WriteCoord(MSG_ENTITY, self.last_BACKWARD_KEY_time);
 			if (dodging_flags & 8) WriteCoord(MSG_ENTITY, self.last_LEFT_KEY_time);
 			if (dodging_flags & 16) WriteCoord(MSG_ENTITY, self.last_RIGHT_KEY_time);
+		}
+		if (sf2 & 8) {
+			WriteCoord(MSG_ENTITY, self.frametime_accumulator);
 		}
 		if (sf & 32768) {
 			WriteCoord(MSG_ENTITY, num_for_edict(self.groundentity));

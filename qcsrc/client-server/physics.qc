@@ -649,7 +649,7 @@ void(void) physics_check_water_jump {
 	}
 };
 
-void(void) physics_player {
+void(void) physics_player_frame {
 	vector wishvel, wishdir, v;
 	float wishspeed, f, maxspd_mod, maxairspd, airaccel;
 	if (self.lastwj > 0)
@@ -914,4 +914,22 @@ void(void) physics_player {
 	if (physics_movetype == MOVETYPE_QCWALK)
 		physics_move();
 
+}
+
+void(void) physics_player {
+	if (g_physics_fixed) {
+		float oldframetime = frametime;
+		float f = frametime + physics_frametime_accumulator;
+		frametime = 0.008;
+		for ( ; f > 0.000;) {
+			physics_player_frame();
+			f -= 0.008;
+			if (f < 0.004) {
+				break;
+			}
+		}
+		physics_frametime_accumulator = f;
+		frametime = oldframetime;
+	} else
+		physics_player_frame();
 }
