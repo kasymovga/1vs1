@@ -143,6 +143,31 @@ void(entity to) race_records_send {
 	}
 }
 
+void(string m) race_records_clear {
+	entity e;
+	float i;
+	bprint(strcat("Clearing records for ", m, "\n"));
+	if (m == mapname) {
+		for (i = 0; i < 10; i++) {
+			race_records_name[i] = "";
+			race_records_time[i] = 0;
+			race_records_speed[i] = 0;
+		}
+		FOR_EACH_REALCLIENT(e) {
+			race_records_send(e);
+		}
+	} else {
+		db_put(db_server, strcat(m, race_records_path, "time"), "");
+		db_put(db_server, strcat(m, race_records_path, "netname"), "");
+		db_put(db_server, strcat(m, race_records_path, "speed"), "");
+		for (i = 1; i < 10; i++) {
+			db_put(db_server, strcat(m, race_records_path, ftos(i), "/time"), "");
+			db_put(db_server, strcat(m, race_records_path, ftos(i), "/netname"), "");
+			db_put(db_server, strcat(m, race_records_path, ftos(i), "/speed"), "");
+		}
+	}
+}
+
 float(string name, float checktime, float _speed) race_records_put {
 	float t, i, j, sp;
 	string n;
@@ -727,7 +752,7 @@ void(void) spawnfunc_race_info_player {
 		race_lowest_place_spawn = self.race_place;
 }
 
-void(void) race_records_clear {
+void(void) race_checkpoints_records_clear {
 	float i;
 	entity e;
 	for (i = 0; i < MAX_CHECKPOINTS; ++i) {
@@ -744,7 +769,7 @@ void(void) race_records_clear {
 void() race_Reset {
 	float s;
 	score_nice_print(world);
-	race_records_clear();
+	race_checkpoints_records_clear();
 	score_sort(race_place);
 	entity e;
 	FOR_EACH_CLIENT(e) {
@@ -1123,6 +1148,21 @@ void(void) race_client_real_connect {
 	race_client_real_connect_next();
 }
 
+var float(string cmd, float argc) race_cmd_handle_next;
+float(string cmd, float argc) race_cmd_handle {
+	if (cmd == "clear_records") {
+		string m;
+		if (argc > 1)
+			m = argv(1);
+		else
+			m = mapname;
+
+		race_records_clear(m);
+		return TRUE;
+	}
+	return race_cmd_handle_next(cmd, argc);
+}
+
 void(void) race_init {
 	if (game == GAME_RACE) {
 		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
@@ -1194,4 +1234,6 @@ void(void) race_init {
 	GameHook_ReadyRestartHard = race_ReadyRestartHard;
 	GameHook_BotChooseRole = race_role_choose;
 	GameHook_SuddenDeathMessageMod = race_SuddenDeathMod;
+	race_cmd_handle_next = GameHookChain_GameCommandHandle;
+	GameHookChain_GameCommandHandle = race_cmd_handle;
 }
