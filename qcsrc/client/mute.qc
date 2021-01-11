@@ -33,7 +33,7 @@ void(float n) mute_add {
 void(float n) mute_remove {
 	string s;
 	string s1 = strcat(" ", ftos(n), " ");
-	float n = strstrofs(mute_list, s1, 0);
+	n = strstrofs(mute_list, s1, 0);
 	if (n < 0)
 		return;
 
