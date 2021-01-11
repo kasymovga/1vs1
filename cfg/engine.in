@@ -140,3 +140,4 @@ alias sv_loadconfig "exec $serverconfig"
 integration_discord_enable 1
 integration_discord_client_id 778619384431116328
 cl_stairsmoothspeed 200
+mod_bsp_portalize 0
