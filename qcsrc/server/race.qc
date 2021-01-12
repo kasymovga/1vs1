@@ -361,6 +361,15 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 				float position = race_records_put(e.netname, t, e.scorekeeper.race_maxspeed);
 				if (position) {
 					chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
+					if (position == 1)
+						announce(e, "announcer/male/amazing.wav", "^31st place!");
+					else if (position == 2)
+						announce(e, "announcer/male/awesome.wav", "^52st place!");
+					else if (position == 2)
+						announce(e, "announcer/male/impressive.wav", "^23st place!");
+					else
+						announce(e, "announcer/male/impressive.wav", "^2New record!");
+
 					entity e3;
 					FOR_EACH_REALCLIENT(e3) {
 						race_records_send(e3);
