@@ -1,7 +1,6 @@
 string getmapname_stored;
 
 float Map_Count, Map_Current;
-string Map_Current_Name;
 
 // NOTE: this now expects the map list to be already tokenize()d and the count in Map_Count
 float() map_list_get_position {
@@ -221,7 +220,7 @@ void(void) map_list_reset {
 void(void) map_list_init {
 	string s = cvar_string("g_maplist");
 	string se = cvar_string("g_maplist_exclude");
-	string gt = gametype_name(game);
+	string gt = gametype_name(MapInfo_CurrentGametype());
 	registercvar("_g_maplist_gametype", "");
 	registercvar("_g_maplist_source", "");
 	registercvar("_g_maplist_source_exclude", "");
@@ -240,12 +239,6 @@ void(void) map_list_init {
 	if(Map_Count == 0)
 		error("empty maplist, cannot select a new map");
 	Map_Current = bound(0, map_list_get_position(), Map_Count - 1);
-	if(Map_Current_Name)
-		strunzone(Map_Current_Name);
-
-	Map_Current_Name = strzone(argv(Map_Current)); // will be automatically freed on exit thanks to DP
-	// this may or may not be correct, but who cares, in the worst case a map
-	// isn't chosen in the first pass that should have been
 }
 
 string() map_list_next_get {
