@@ -628,13 +628,13 @@ void(void) physics_check_water_jump {
 	vector start, end;
 	makevectors (self.angles);
 	start = self.origin;
-	start_z = start_z + 8;
+	start_z = start_z + (self.mins_z + self.maxs_z) * 0.5;
 	v_forward_z = 0;
 	normalize(v_forward);
 	end = start + v_forward*24;
-	trace_line (start, end, TRUE, self);
+	trace_box(start, '-1 -1 -1', '1 1 1',  end, TRUE, self);
 	if (trace_fraction < 1) { // solid at waist
-		start_z = start_z + self.maxs_z - 8;
+		start_z = self.origin_z + self.maxs_z;
 		end = start + v_forward*24;
 		self.movedir = trace_plane_normal * -50;
 		trace_line (start, end, TRUE, self);
