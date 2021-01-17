@@ -331,6 +331,9 @@ void(float isnew) physics_read {
 		self.pmove_velocity_x = ReadCoord();
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
+		physics_velocity_frame_begin = physics_velocity_frame_end;
+		physics_velocity_frame_end = self.pmove_velocity;
+		physics_frametime = ticrate;
 		physics_is_player = f & 8;
 		self.solid = (physics_is_player ? SOLID_SLIDEBOX : SOLID_NOT);
 		physics_ladder = f & 32;

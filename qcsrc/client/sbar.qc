@@ -1621,9 +1621,9 @@ void Sbar_ShowSpeed(void)
 	}
 
 	if (CVAR(cl_showspeed_z) == 1)
-		speed = strcat(ftos(floor( vlen(pmove_vel) * conversion_factor + 0.5 )), unit);
+		speed = strcat(ftos(floor( vlen(physics_velocity_frame_end) * conversion_factor + 0.5 )), unit);
 	else
-		speed = strcat(ftos(floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 )), unit);
+		speed = strcat(ftos(floor( vlen(physics_velocity_frame_end - physics_velocity_frame_end_z * '0 0 1') * conversion_factor + 0.5 )), unit);
 
 	numsize_x = numsize_y = CVAR(cl_showspeed_size);
 	pos = (CVAR(vid_conheight) - numsize_y) * CVAR(cl_showspeed_position);
@@ -1636,6 +1636,9 @@ void Sbar_ShowSpeed(void)
 void Sbar_ShowAcceleration(void)
 {
 	vector pos, top, rgb;
+	if (spectatee_status)
+		return;
+
 	top_x = CVAR(vid_conwidth)/2;
 	top_y = 0;
 	float acceleration;
