@@ -328,10 +328,10 @@ void(float isnew) physics_read {
 		physics_start_origin_x = ReadCoord();
 		physics_start_origin_y = ReadCoord();
 		physics_start_origin_z = ReadCoord();
+		physics_velocity_frame_begin = self.pmove_velocity;
 		self.pmove_velocity_x = ReadCoord();
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
-		physics_velocity_frame_begin = physics_velocity_frame_end;
 		physics_velocity_frame_end = self.pmove_velocity;
 		physics_frametime = ticrate;
 		physics_is_player = f & 8;
