@@ -304,11 +304,23 @@ float(entity item, entity player) item_give_to {
 						pickedup = TRUE;
 						sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 					}
-
 			if not(pickedup)
-			{
-				if (player.weapons & item.weapons)	// don't let players stack ammo by tossing weapons
+			if (player.weapons & item.weapons) {
+				if (g_weapon_stay == 2 && g_use_ammunition && substring(item.classname, 0, 7) != "dropped")
+				if (player.ammo_shells < item.ammo_shells
+						|| player.ammo_nails < item.ammo_nails
+						|| player.ammo_rockets < item.ammo_rockets
+						|| player.ammo_cells < item.ammo_cells) {
+					player.ammo_shells = max(player.ammo_shells, item.ammo_shells);
+					player.ammo_nails = max(player.ammo_nails, item.ammo_nails);
+					player.ammo_rockets = max(player.ammo_rockets, item.ammo_rockets);
+					player.ammo_cells = max(player.ammo_cells, item.ammo_cells);
+					pickedup = TRUE;
 					goto skip;
+				}
+				if (g_weapon_stay != 1 || substring(item.classname, 0, 7) != "dropped") {
+					goto skip;
+				}
 			}
 		}
 

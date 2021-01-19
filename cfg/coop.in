@@ -2,7 +2,7 @@ set g_coop_scorelimit "0" "Dummy cvar, cooperative not have scorelimit"
 set g_coop_timelimit "0" "Timelimit for cooperative, when empty, g_timelimit using, <= 0 mean no limit"
 set g_coop_leadlimit "0" "Dummy cvar, cooperative not have leadlimit"
 set coop_inherit "single"
-set coop_g_weapon_stay 1
+set coop_g_weapon_stay 2
 set coop_g_pickup_respawntimejitter_powerup 0
 set coop_g_pickup_respawntime_key 0.1
 set coop_g_pickup_respawntimejitter_key 0

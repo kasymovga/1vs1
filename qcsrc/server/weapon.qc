@@ -347,6 +347,9 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 	if (g_pickup_nodrop)
 		return;
 
+	if (doreduce && g_weapon_stay == 1)
+		return;
+
 	wb = weapon_bit(w);
 	float akimbo_throw = Akimbo_Throw(wb);
 	if not(akimbo_throw) {
