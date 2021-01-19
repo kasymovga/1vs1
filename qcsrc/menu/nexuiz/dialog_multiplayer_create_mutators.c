@@ -25,6 +25,7 @@ string profile_description(string profile_name) {
 	if (profile_name == "minsta") return "Minsta+Hook";
 	if (profile_name == "cra") return "Camping Rifle Arena";
 	if (profile_name == "explosive_minsta") return "Explosive Minsta+Hook";
+	if (profile_name == "defragcpm") return "Defrag CPM";
 	return "Unknown";
 }
 
@@ -48,6 +49,8 @@ void fillNexuizMutatorsDialog(entity me)
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "explosive_minsta", profile_description("explosive_minsta")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profile_description("cra")));
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "defragcpm", profile_description("defragcpm")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 	me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
