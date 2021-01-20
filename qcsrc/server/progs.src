@@ -232,6 +232,7 @@ casing.qc
 target.qc
 info.qc
 trigger_push.qc
+target_push.qc
 trigger_warpzone.qc
 trigger.qc
 teleport.qc
