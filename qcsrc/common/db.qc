@@ -7,7 +7,12 @@ string(float db, string pKey) db_get {
 void(float db, string pKey, string pValue) db_put {
 	float h;
 	h = math_mod(crc16(FALSE, pKey), DB_BUCKETS);
-	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
+	string s = bufstr_get(db, h);
+	if (strlen(s) > 4096) {
+		print("Database field keep too much data! Truncating.\n");
+		s = "";
+	}
+	bufstr_set(db, h, infoadd(s, pKey, uri_escape(pValue)));
 }
 
 float(void) db_create {
