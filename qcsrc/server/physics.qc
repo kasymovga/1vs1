@@ -260,10 +260,12 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 			float oldframetime = frametime;
 			frametime = 0;
 			setorigin(oldself, v2);
+			oldself.velocity = physics_velocity;
 			self.touch();
 			if (oldself.origin == v2)
 				setorigin(oldself, _oldorigin);
 
+			physics_velocity = oldself.velocity;
 			frametime = oldframetime;
 			break;
 		}
