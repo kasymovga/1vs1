@@ -234,24 +234,6 @@ void(void) spawnfunc_trigger_push {
 	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_push() {
-	if (self.speed)
-		entity_movedir_setup();
-
-	self.use = trigger_push_touch;
-	//self.touch = trigger_push_touch;
-
-	// normal push setup
-	if (!self.speed)
-		self.speed = 1000;
-	self.movedir = self.movedir * self.speed * 10;
-
-	precache_sound (self.noise);
-
-	// this must be called to spawn the teleport waypoints for bots
-	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
-}
-
 #define TRIGGER_PUSH_VELOCITY_PLAYERDIR_XY 1
 #define TRIGGER_PUSH_VELOCITY_ADD_XY 2
 #define TRIGGER_PUSH_VELOCITY_PLAYERDIR_Z 4
