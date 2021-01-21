@@ -910,10 +910,10 @@ void(void) physics_player_frame {
 		}
 	}
 :end
-	physics_frame_end_hook();
 	if (physics_movetype == MOVETYPE_QCWALK)
 		physics_move();
 
+	physics_frame_end_hook();
 }
 
 void(void) physics_player {

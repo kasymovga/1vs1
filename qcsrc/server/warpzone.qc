@@ -54,7 +54,7 @@ void restore_trace_globals(void) {
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity player, entity teleporter) {
-	physics_mark_as_teleported(player);
+	physics_mark_as_teleported(player, 0);
 	antilag_teleported(player);
 }
 

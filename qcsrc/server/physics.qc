@@ -9,6 +9,10 @@ float g_steponskydamage;
 .entity ladder_entity;
 .float spectatorspeed;
 .float cpmdoublejump;
+void(vector v1, vector v2, float r, float stackprotect) physics_triggers;
+
+vector physics_frame_begin_origin;
+entity physics_current_player;
 
 #if 0
 float developer_shtest;
@@ -136,6 +140,12 @@ float(void) physics_max_speed_mod {
 .vector movement_old;
 void(void) physics_frame_end_hook {
 	self.last_physics_ladder = physics_ladder;
+	if (physics_is_player)
+	if (g_physics_fixed || (vlen(physics_frame_begin_origin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32)
+	if (self.solid != SOLID_NOT)
+	if (self.mins != self.maxs) {
+		physics_triggers(physics_frame_begin_origin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
+	}
 }
 
 .float() PlayerPhysplug;
@@ -204,6 +214,8 @@ void(void) physics_frame_begin_hook {
 		self.angles_z = 0;
 	}
 	physics_button_crouch = self.BUTTON_CROUCH;
+	physics_frame_begin_origin = self.origin;
+	physics_current_player = self;
 }
 
 void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
@@ -245,11 +257,14 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 			other = oldself;
 			self = e;
 			vector _oldorigin = oldself.origin;
+			float oldframetime = frametime;
+			frametime = 0;
 			setorigin(oldself, v2);
 			self.touch();
 			if (oldself.origin == v2)
 				setorigin(oldself, _oldorigin);
 
+			frametime = oldframetime;
 			break;
 		}
 	}
@@ -300,7 +315,6 @@ void SV_PlayerPhysics()
 	physics_movetype = self.movetype;
 	physics_waterlevel = self.waterlevel;
 	physics_watertype = self.watertype;
-	vector _oldorigin = self.origin;
 	if (g_skimming_time)
 	if not(physics_flags & FL_ONGROUND_OR_SLICK)
 		physics_skimming = max(0, g_skimming_time + self.lastground - time);
@@ -318,12 +332,6 @@ void SV_PlayerPhysics()
 	self.waterlevel = physics_waterlevel;
 	self.watertype = physics_watertype;
 	self.cpmdoublejump = physics_cpmdoublejump_time;
-	if (physics_is_player)
-	if ((vlen(_oldorigin - self.origin) / frametime) * max(frametime, sys_ticrate) > 32)
-	if (self.solid != SOLID_NOT)
-	if (self.mins != self.maxs) {
-		physics_triggers(_oldorigin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
-	}
 }
 
 var void() physics_RealClientConnect_NextLink;
@@ -630,9 +638,13 @@ float(entity to, float sf) physics_send {
 	return TRUE;
 }
 
-void(entity pl) physics_mark_as_teleported {
+void(entity pl, float tptime) physics_mark_as_teleported {
 	if (pl.player_physic)
 		pl.player_physic.SendFlags |= 4096;
 
-	pl.teleport_time = time;
+	if (pl == physics_current_player)
+		physics_frame_begin_origin = pl.origin;
+
+	if (tptime)
+		pl.teleport_time = time + tptime;
 }

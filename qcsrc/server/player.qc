@@ -2151,7 +2151,6 @@ void(entity spot) player_spawn {
 	float currentlyPlaying;
 	entity e, oldself;
 	player_clear(FALSE);
-	physics_mark_as_teleported(self);
 	self.iscreature = TRUE;
 	player_body_setup(self);
 	self.flags = FL_CLIENT;
@@ -2208,6 +2207,7 @@ void(entity spot) player_spawn {
 	self.nextthink = 0;
 	self.dmg_team = 0;
 	client_put_to_spot(spot);
+	physics_mark_as_teleported(self, 0);
 	self.velocity = '0 0 0';
 	self.avelocity = '0 0 0';
 	self.punchangle = '0 0 0';
