@@ -181,8 +181,13 @@ void(void) teleport_findtarget {
 		++n;
 		if(e.movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
-		if(e.classname != "info_teleport_destination")
-			print("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
+
+		if (e.classname != "info_teleport_destination") {
+			entity oldself = self;
+			self = e;
+			spawnfunc_info_teleport_destination();
+			self = oldself;
+		}
 	}
 
 	if(n == 0)
