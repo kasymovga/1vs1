@@ -289,7 +289,7 @@ void(float isnew) physics_read {
 		g_cpmdoublejump = switches & 32768;
 		g_jumpvelocity_noincrease = switches & 65536;
 		g_physics_fixed = switches & 131072;
-		g_adjust_view_ofset = switches & 262144;
+		g_adjust_view_offset = switches & 262144;
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();

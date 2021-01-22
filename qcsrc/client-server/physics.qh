@@ -1,5 +1,5 @@
 float g_physics_fixed;
-float g_adjust_view_ofset;
+float g_adjust_view_offset;
 float sv_stepheight;
 float g_stepairslowdown;
 float sv_maxspeed;

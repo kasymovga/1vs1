@@ -913,7 +913,7 @@ void(void) physics_player_frame {
 	if (physics_movetype == MOVETYPE_QCWALK)
 		physics_move();
 
-	if (g_adjust_view_ofset)
+	if (g_adjust_view_offset)
 	if (physics_is_player) {
 		if (physics_crouch)
 			trace_line(self.origin, self.origin + self.crouch_view_ofs + '0 0 2', MOVE_WORLDONLY, self);
