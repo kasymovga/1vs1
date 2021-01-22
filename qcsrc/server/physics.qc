@@ -419,6 +419,7 @@ void(void) physics_init {
 	CACHE_CVAR(g_walljump_velocity_z_factor);
 	CACHE_CVAR(g_dodging);
 	CACHE_CVAR(g_physics_fixed);
+	CACHE_CVAR(g_adjust_view_ofset);
 	if (g_dodging) {
 		hint_add("Doubletapping any direction key can be used as trick dodging.");
 		hint_add("You can move faster with double tapping forward button then holding jump button.");
@@ -548,6 +549,7 @@ float(entity to, float sf) physics_send {
 				+ (g_cpmdoublejump ? 32768 : 0)
 				+ (g_jumpvelocity_noincrease ? 65536 : 0)
 				+ (g_physics_fixed ? 131072 : 0)
+				+ (g_adjust_view_ofset ? 262144 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {
