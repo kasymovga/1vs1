@@ -102,6 +102,8 @@ void resizeNotifyNexuizVoteArgsList(entity me, vector relOrigin, vector relSize,
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 }
 
+string drawListBoxItemNexuizVoteArgsList_cdr_last;
+float drawListBoxItemNexuizVoteArgsList_cdr_last_pos;
 void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float isSelected)
 {
 	if(isSelected)
@@ -118,9 +120,18 @@ void drawListBoxItemNexuizVoteArgsList(entity me, float i, vector absSize, float
 	} else if (me.voteType == 3) {
 		me.nItems = gui_available_maps_count;
 		s = gui_available_maps;
-		float j;
-		for (j = 0; j < i; j++) {
+		float j = 0;
+		if (i >= drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1) {
+			j = drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1;
+			s = drawListBoxItemNexuizVoteArgsList_cdr_last;
+		}
+		for (j; j < i; j++) {
 			s = str_cdr(s);
+		}
+		if (i != drawListBoxItemNexuizVoteArgsList_cdr_last_pos - 1) {
+			str_unzone_ifneeded(drawListBoxItemNexuizVoteArgsList_cdr_last);
+			drawListBoxItemNexuizVoteArgsList_cdr_last = str_zone_ifneeded(s);
+			drawListBoxItemNexuizVoteArgsList_cdr_last_pos = i + 1;
 		}
 		s = str_car(s);
 	}
