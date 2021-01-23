@@ -6,3 +6,5 @@ set cts_g_start_weapon_laser 0
 set cts_g_respawn_delay 0
 set cts_g_start_delay 0
 set cts_g_announcer_print 1
+set cts_g_physics_fixed 1
+set cts_g_pickup_nodrop 1
