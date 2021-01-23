@@ -2148,8 +2148,7 @@ void(entity pl) player_body_setup {
 }
 
 void(entity spot) player_spawn {
-	float currentlyPlaying;
-	entity e, oldself;
+	entity oldself;
 	player_clear(FALSE);
 	self.iscreature = TRUE;
 	player_body_setup(self);
@@ -2247,17 +2246,6 @@ void(entity spot) player_spawn {
 	trigger_use_targets();
 	activator = world;
 	self = oldself;
-	if (g_reset_on_join)
-	if not(warmup_active) {
-		FOR_EACH_REALPLAYER(e)
-			if(e.classname == "player")
-				currentlyPlaying += 1;
-
-		if (currentlyPlaying == g_reset_on_join) {
-			if (time > map_starttime)
-				ready_restart_force();
-		}
-	}
 	player_effects();
 	gamehook_chain_spawn(spot);
 	antilag_teleported(self);
