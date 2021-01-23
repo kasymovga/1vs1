@@ -1,7 +1,5 @@
 float(vector start, vector end, vector thmi, vector thma) trace_hits_box;
 float(vector start, vector mi, vector ma, vector end, vector thmi, vector thma) trace_box_hits_box;
-void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_toss_builtin_wrapper;
-void(void) trace_init;
-var void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_toss;
-var void trace_line(vector v1, vector v2, float nomonst, entity forent);
-var void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) trace_box;
+void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_toss;
+#define trace_line builtin_traceline
+#define trace_box builtin_tracebox

@@ -35,7 +35,6 @@ spawn.qh
 random.qh
 //// tZork Turrets ////
 turret.qh
-skipnonsolid.qh
 vehicle.qh
 footsteps.qh
 campaign.qh
@@ -351,7 +350,6 @@ vehicle.qc
 vehicle/car.qc
 vehicle/aircraft.qc
 vehicle/spiderbot.qc
-skipnonsolid.qc
 ../common/ip2c.qc
 ip2c.qc
 anim.qc
