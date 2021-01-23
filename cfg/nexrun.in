@@ -1,0 +1,10 @@
+set nexrun_inherit physicsnexrun
+set nexrun_g_shootfromcenter 1
+set nexrun_g_projectiles_newton_style 0
+set nexrun_g_start_weapon_laser 0
+set nexrun_g_balance_laser_secondary 1
+set nexrun_g_balance_laser_secondary_shotangle -90
+set nexrun_g_balance_grenadelauncher_secondary_speed_up 0
+set nexrun_g_balance_grenadelauncher_secondary_speed 0
+set nexrun_g_balance_rocketlauncher_speed 1000
+set nexrun_g_balance_rocketlauncher_speedstart 1000
