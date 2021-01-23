@@ -5,6 +5,7 @@ set sv_spawnreplace_target_init race_target_init
 set sv_spawnreplace_target_fragsFilter trigger_relay
 //set _defrag_g_player_view_ofs 26
 //set _defrag_g_player_crouch_view_ofs 14
+set _defrag_g_trigger_push_use_trigger_origin 1
 set _defrag_g_player_maxsz 32
 set _defrag_g_adjust_view_offset 1
 set _defrag_g_player_crouch_maxsz 16

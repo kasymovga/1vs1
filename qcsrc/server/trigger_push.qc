@@ -6,6 +6,7 @@
 void() trigger_use_targets;
 
 float trigger_push_calculatevelocity_flighttime;
+float g_trigger_push_use_trigger_origin;
 
 void(void) trigger_push_use {
 	if(team_mode)
@@ -118,7 +119,7 @@ void(void) trigger_push_touch {
 
 	EXACTTRIGGER_TOUCH;
 	if(self.target)
-		self.movedir = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+		self.movedir = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
 
 	other.flags &~= FL_ONGROUND;
 	other.velocity = self.movedir;
@@ -214,7 +215,13 @@ void(void) trigger_push_findtarget {
  *            values to target a point on the ceiling.
  *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
  */
+
+float trigger_push_init_done;
 void(void) spawnfunc_trigger_push {
+	if not(trigger_push_init_done) {
+		CACHE_CVAR(g_trigger_push_use_trigger_origin);
+		trigger_push_init_done = 1;
+	}
 	if (self.speed)
 		entity_movedir_setup();
 
@@ -252,14 +259,14 @@ void(void) trigger_push_velocity_touch {
 		v1_z = 0;
 		v1 = self.speed * normalize(v1);
 	} else {
-		v1 = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+		v1 = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
 	}
 	v2_x = v1_x;
 	v2_y = v1_y;
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_PLAYERDIR_Z) {
 		v1 = self.count * '0 0 1';
 	} else {
-		v1 = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+		v1 = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
 	}
 	v2_z = v1_z;
 	if (self.spawnflags & TRIGGER_PUSH_VELOCITY_ADD_XY) {
