@@ -2148,7 +2148,7 @@ void(entity pl) player_body_setup {
 }
 
 void(entity spot) player_spawn {
-	entity oldself;
+	entity oldself, oldother;
 	player_clear(FALSE);
 	self.iscreature = TRUE;
 	player_body_setup(self);
@@ -2241,11 +2241,14 @@ void(entity spot) player_spawn {
 		sound (self, CHAN_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 	oldself = self;
+	oldother = other;
 	self = spot;
+	other = spot;
 	activator = oldself;
 	trigger_use_targets();
 	activator = world;
 	self = oldself;
+	other = oldother;
 	player_effects();
 	gamehook_chain_spawn(spot);
 	antilag_teleported(self);
