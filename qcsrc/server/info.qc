@@ -71,11 +71,6 @@ void(void) spawnfunc_info_location {
 }
 
 void(void) spawnfunc_info_teleport_destination {
-	self.classname = "info_teleport_destination";
-	self.mangle = self.angles;
-	self.angles = '0 0 0';
-	//setorigin (self, self.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
-	setorigin (self, self.origin);
 	IFTARGETED {
 	} else
 		entity_abort("^3Teleport destination without a targetname");

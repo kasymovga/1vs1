@@ -148,8 +148,7 @@ void(void) teleport_touch {
 	if(!e) {
 		sprint(other, "Teleport destination vanished. Sorry... please complain to the mapper.\n");
 	}
-
-	makevectors(e.mangle);
+	makevectors(e.angles);
 	if(e.speed)
 		if(vlen(other.velocity) > e.speed)
 			other.velocity = normalize(other.velocity) * max(0, e.speed);
@@ -161,7 +160,7 @@ void(void) teleport_touch {
 	else
 		v = '0 0 0';
 
-	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.mangle, v, '0 0 0', '0 0 0', 10000);
+	teleport(self, other, e.origin + '0 0 1' * (1 - other.mins_z - 24), e.angles, v, '0 0 0', '0 0 0', 10000);
 	if(e.target) {
 		oldself = self;
 		activator = other;
@@ -181,14 +180,6 @@ void(void) teleport_findtarget {
 		++n;
 		if(e.movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
-
-		if (e.classname != "info_teleport_destination")
-		if (e.classname != "info_player_deathmatch") {
-			entity oldself = self;
-			self = e;
-			spawnfunc_info_teleport_destination();
-			self = oldself;
-		}
 	}
 
 	if(n == 0)
