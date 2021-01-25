@@ -182,7 +182,8 @@ void(void) teleport_findtarget {
 		if(e.movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
 
-		if (e.classname != "info_teleport_destination") {
+		if (e.classname != "info_teleport_destination")
+		if (e.classname != "info_player_deathmatch") {
 			entity oldself = self;
 			self = e;
 			spawnfunc_info_teleport_destination();
