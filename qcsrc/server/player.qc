@@ -632,7 +632,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if not(clienttype(attacker) == CLIENTTYPE_REAL)
 		{
 			if (bot_talk)
-			if (random() <= bot_talk)
+			if (random() < bot_talk)
 			{
 				if (team_mode && attacker.team == targ.team)
 					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
