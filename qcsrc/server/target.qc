@@ -241,8 +241,6 @@ void(void) target_teleporter_use {
 }
 
 void(void) spawnfunc_target_teleporter {
-	self.mangle = self.angles;
-	self.angles = '0 0 0';
 	if (self.target != "") {
 		teleport_setup();
 		self.solid = SOLID_NOT;
