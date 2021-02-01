@@ -46,6 +46,8 @@ float g_skimming_time;
 float g_cpmdoublejump;
 float g_doublejump_nopogostick;
 float g_waterfriction;
+float g_wateraccelerate;
+float g_maxwaterspeed;
 
 float physics_deadflag;
 float physics_cantjump;

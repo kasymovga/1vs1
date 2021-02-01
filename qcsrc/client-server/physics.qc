@@ -80,6 +80,7 @@ void(void) physics_unstuck {
 void(float ground) physics_update_status {
 	physics_lastflags = physics_flags;
 	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
+	if (physics_waterlevel < WATERLEVEL_SWIMMING)
 		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
 
 	if (ground) {
@@ -803,14 +804,13 @@ void(void) physics_player_frame {
 		}
 		wishdir = normalize(wishvel);
 		wishspeed = vlen(wishvel);
-		if (wishspeed > sv_maxspeed * maxspd_mod)
-			wishspeed = sv_maxspeed * maxspd_mod;
+		if (wishspeed > g_maxwaterspeed * maxspd_mod)
+			wishspeed = g_maxwaterspeed * maxspd_mod;
 
-		wishspeed = wishspeed * 0.7;
 		// water friction
 		physics_velocity = physics_velocity * max(0, 1 - frametime * g_waterfriction);
 		// water acceleration
-		physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
+		physics_accelerate(wishdir, wishspeed, wishspeed, g_wateraccelerate*maxspd_mod, 1, 0);
 	} else if (physics_ladder) {
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 		physics_flags &~= FL_ONGROUND;

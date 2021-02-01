@@ -262,6 +262,8 @@ void(float isnew) physics_read {
 		sv_waterjumpvelocity = ReadCoord();
 		g_skimming_time = ReadCoord();
 		g_waterfriction = ReadCoord();
+		g_wateraccelerate = ReadCoord();
+		g_maxwaterspeed = ReadCoord();
 		float switches = ReadCoord();
 		g_slicksurfaces_allowjump = switches & 2;
 		sv_pogostick = switches & 4;
