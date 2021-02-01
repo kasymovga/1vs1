@@ -14,6 +14,10 @@ void(void) push_touch {
 	if not(other.takedamage)
 		return;
 
+	if (self.solid == SOLID_TRIGGER)
+	if (other.solid == SOLID_TRIGGER)
+		return;
+
 	float _damage, damage_speed;
 	vector velocity_norm = normalize(self.velocity);
 	if (velocity_norm * trace_plane_normal >= 0) //wrong direction
