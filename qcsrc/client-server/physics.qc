@@ -79,50 +79,6 @@ void(void) physics_unstuck {
 
 void(float ground) physics_update_status {
 	physics_lastflags = physics_flags;
-	if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
-	if (physics_waterlevel < WATERLEVEL_SWIMMING)
-		physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
-
-	if (ground) {
-		physics_flags &~= FL_ONGROUND_OR_SLICK;
-		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
-		if (trace_startsolid)
-		if (self.solid != SOLID_NOT) {
-			physics_unstuck();
-			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
-		}
-		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
-				if (g_slicksurfaces_levitation)
-					physics_flags |= FL_SLICK;
-				else
-					physics_flags |= FL_ONGROUND_OR_SLICK;
-			} else
-				physics_flags |= FL_ONGROUND;
-
-			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) { //step on sky, usually this is map error
-#ifdef SVQC
-				physics_step_on_sky();
-#endif
-				physics_flags &~= FL_ONGROUND_OR_SLICK;
-			}
-			self.groundentity = trace_ent;
-			physics_impact();
-			if (physics_groundvelocity_dotproduct < 0) {
-				if (!trace_ent || trace_ent.solid != SOLID_NOT)
-					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
-			}
-		}
-	}
-	if (g_cpmdoublejump) {
-		if (physics_cpmdoublejump_time > 0)
-			physics_cpmdoublejump_time -= frametime;
-
-		if (physics_lastflags & FL_ONGROUND_OR_SLICK)
-		if (physics_flags & FL_ONGROUND_OR_SLICK)
-			physics_cpmdoublejump_time = 0;
-	}
 	// set watertype/waterlevel
 	vector origin1 = self.origin;
 	origin1_z += self.mins_z + 1;
@@ -143,6 +99,51 @@ void(float ground) physics_update_status {
 			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
 				physics_waterlevel = WATERLEVEL_SUBMERGED;
 			}
+		}
+	}
+	if (physics_waterlevel < WATERLEVEL_SWIMMING) {
+		if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
+			physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
+
+		if (ground) {
+			physics_flags &~= FL_ONGROUND_OR_SLICK;
+			//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+			if (trace_startsolid)
+			if (self.solid != SOLID_NOT) {
+				physics_unstuck();
+				trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+			}
+			if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
+					if (g_slicksurfaces_levitation)
+						physics_flags |= FL_SLICK;
+					else
+						physics_flags |= FL_ONGROUND_OR_SLICK;
+				} else
+					physics_flags |= FL_ONGROUND;
+
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) { //step on sky, usually this is map error
+	#ifdef SVQC
+					physics_step_on_sky();
+	#endif
+					physics_flags &~= FL_ONGROUND_OR_SLICK;
+				}
+				self.groundentity = trace_ent;
+				physics_impact();
+				if (physics_groundvelocity_dotproduct < 0) {
+					if (!trace_ent || trace_ent.solid != SOLID_NOT)
+						physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
+				}
+			}
+		}
+		if (g_cpmdoublejump) {
+			if (physics_cpmdoublejump_time > 0)
+				physics_cpmdoublejump_time -= frametime;
+
+			if (physics_lastflags & FL_ONGROUND_OR_SLICK)
+			if (physics_flags & FL_ONGROUND_OR_SLICK)
+				physics_cpmdoublejump_time = 0;
 		}
 	}
 }
@@ -795,7 +796,7 @@ void(void) physics_player_frame {
 
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + '0 0 1' * physics_movement_z;
 		if (physics_deadflag == DEAD_FREEZE) {
-			if (physics_watertype == WATERLEVEL_SWIMMING)
+			if (physics_waterlevel >= WATERLEVEL_SWIMMING)
 				physics_accelerate('0 0 1', 0, sv_gravity * 0.25, sv_accelerate, 1, 0);
 			else
 				physics_accelerate('0 0 1', sv_gravity * 0.25, sv_gravity * 0.25, sv_accelerate, 1, 0);
