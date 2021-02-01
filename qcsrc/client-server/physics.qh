@@ -45,6 +45,7 @@ float g_dodging_frozen_factor;
 float g_skimming_time;
 float g_cpmdoublejump;
 float g_doublejump_nopogostick;
+float g_waterfriction;
 
 float physics_deadflag;
 float physics_cantjump;

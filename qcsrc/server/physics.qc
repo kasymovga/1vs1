@@ -420,6 +420,7 @@ void(void) physics_init {
 	CACHE_CVAR(g_dodging);
 	CACHE_CVAR(g_physics_fixed);
 	CACHE_CVAR(g_adjust_view_offset);
+	CACHE_CVAR(g_waterfriction);
 	if (g_dodging) {
 		hint_add("Doubletapping any direction key can be used as trick dodging.");
 		hint_add("You can move faster with double tapping forward button then holding jump button.");
@@ -532,6 +533,7 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, sv_jumpvelocity);
 		WriteCoord(MSG_ENTITY, sv_waterjumpvelocity);
 		WriteCoord(MSG_ENTITY, g_skimming_time);
+		WriteCoord(MSG_ENTITY, g_waterfriction);
 		float switches = (g_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)

@@ -808,7 +808,7 @@ void(void) physics_player_frame {
 
 		wishspeed = wishspeed * 0.7;
 		// water friction
-		physics_velocity = physics_velocity * max(0, 1 - frametime * sv_friction);
+		physics_velocity = physics_velocity * max(0, 1 - frametime * g_waterfriction);
 		// water acceleration
 		physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 	} else if (physics_ladder) {
