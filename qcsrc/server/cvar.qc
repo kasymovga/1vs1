@@ -90,6 +90,23 @@ void(void) cvar_changes_init {
 		BADCVAR("timestamps");
 		BADCVAR("sv_progs");
 		BADCVAR("sv_sysinfo_checker");
+		// engine physics cvar (overrides by game)
+		BADCVAR("sv_stepheight");
+		BADCVAR("sv_gravity");
+		BADCVAR("sv_maxairspeed");
+		BADCVAR("sv_maxspeed");
+		BADCVAR("sv_friction");
+		BADCVAR("sv_accelerate");
+		BADPREFIX("sv_airaccel");
+		BADCVAR("sv_stopspeed");
+		BADCVAR("sv_airstopaccelerate");
+		BADCVAR("sv_airstrafeaccelerate");
+		BADCVAR("sv_maxairstrafespeed");
+		BADCVAR("sv_aircontrol");
+		BADPREFIX("sv_warsowbunny");
+		BADCVAR("sv_jumpvelocity");
+		BADCVAR("sv_gameplayfix_q2airaccelerate");
+		BADPREFIX("sv_water");
 		// mapinfo
 		BADCVAR("timelimit");
 		BADCVAR("fraglimit");

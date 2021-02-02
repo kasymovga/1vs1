@@ -420,8 +420,8 @@ void(void) physics_init {
 	CACHE_CVAR(g_dodging);
 	CACHE_CVAR(g_physics_fixed);
 	CACHE_CVAR(g_adjust_view_offset);
-	CACHE_CVAR(g_waterfriction);
-	CACHE_CVAR(g_wateraccelerate);
+	g_waterfriction = physics_cvar("sv_waterfriction");
+	g_wateraccelerate = physics_cvar("sv_wateraccelerate");
 	CACHE_CVAR(g_maxwaterspeed);
 	if (g_dodging) {
 		hint_add("Doubletapping any direction key can be used as trick dodging.");
