@@ -8,3 +8,5 @@ set cts_g_start_delay 0
 set cts_g_announcer_print 1
 set cts_g_physics_fixed 1
 set cts_g_pickup_nodrop 1
+set cts_g_player_forcemodel 0
+set cts_g_player_forcecolor -2
