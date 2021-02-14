@@ -4,6 +4,9 @@ float g_balance_falldamage_deadminspeed;
 float g_balance_falldamage_factor;
 float g_balance_falldamage_minspeed;
 float g_balance_falldamage_maxdamage;
+float g_lava_damage_factor;
+float g_lava_fire_factor;
+float g_lava_fire_time;
 
 void() world_precache {
     // gore and miscellaneous sounds
@@ -122,6 +125,9 @@ void world_dynamic_init() {
 	CACHE_CVAR(g_balance_falldamage_factor);
 	CACHE_CVAR(g_balance_falldamage_minspeed);
 	CACHE_CVAR(g_balance_falldamage_maxdamage);
+	CACHE_CVAR(g_lava_damage_factor);
+	CACHE_CVAR(g_lava_fire_factor);
+	CACHE_CVAR(g_lava_fire_time);
 	weapon_init();
 	damage_init();
 	fire_init();
@@ -758,24 +764,19 @@ void SV_Shutdown()
 }
 
 void(void) world_creature_frame {
-	local entity oldself;
-	local float dm;
+	entity oldself;
+	float dm;
 	oldself = self;
 	self = findfloat(world, iscreature, TRUE);
-	while (self)
-	{
-		if (self.movetype != MOVETYPE_NOCLIP)
-		{
-			if (self.waterlevel)
-			{
-				if (!(self.flags & FL_INWATER))
-				{
+	while (self) {
+		if (self.movetype != MOVETYPE_NOCLIP) {
+			if (self.waterlevel) {
+				if (!(self.flags & FL_INWATER)) {
 					self.flags |= FL_INWATER;
-					self.dmgtime = 0;
+					self.dmgtime = time - 0.1;
 				}
-				if (self.waterlevel != WATERLEVEL_SUBMERGED)
-				{
-					if(self.air_finished < time + 9) {
+				if (self.waterlevel != WATERLEVEL_SUBMERGED) {
+					if (self.air_finished < time + 9) {
 						sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_gasp), VOL_BASE, ATTN_NORM);
 						self.nextstep = time + 1.5;
 					}
@@ -786,43 +787,32 @@ void(void) world_creature_frame {
 						self.nextstep = time + 1.5;
 						sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE * 0.25, ATTN_NORM);
 					}
-				}
-				else if (self.air_finished < time)
-				{	// drown!
+				} else if (self.air_finished < time) { // drown!
 					if (!self.deadflag)
-					if (self.pain_finished < time)
-					{
+					if (self.pain_finished < time) {
 						damage(self, world, world, 5, DEATH_DROWN, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
-				if (self.dmgtime < time)
-				{
-					self.dmgtime = time + 0.1;
-					if (self.watertype == CONTENT_LAVA)
-					{
-						if (self.watersound_finished < time)
-						{
+				if (self.dmgtime < time) {
+					self.dmgtime = self.dmgtime + 0.1;
+					if (self.watertype == CONTENT_LAVA) {
+						if (self.watersound_finished < time) {
 							self.watersound_finished = time + 0.5;
-							sound (self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+							sound(self, CHAN_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
 						}
-						damage(self, world, world, 6 * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
-					}
-					else if (self.watertype == CONTENT_SLIME)
-					{
-						if (self.watersound_finished < time)
-						{
+						damage(self, world, world, g_lava_damage_factor * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						fire_add_damage(self, world, g_lava_fire_factor * self.waterlevel, g_lava_fire_time, DEATH_LAVA);
+					} else if (self.watertype == CONTENT_SLIME) {
+						if (self.watersound_finished < time) {
 							self.watersound_finished = time + 0.5;
-							sound (self, CHAN_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+							sound(self, CHAN_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
 						}
 						damage(self, world, world, 2 * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
 				}
-			}
-			else
-			{
-				if (self.flags & FL_INWATER)
-				{
+			} else {
+				if (self.flags & FL_INWATER) {
 					// play leave water sound
 					self.flags &~= FL_INWATER;
 					self.dmgtime = 0;

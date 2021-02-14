@@ -84,3 +84,6 @@ set sv_dumprecords 0
 set g_button_nowaitforever 0
 set g_start_delay 15 "delay before the game starts, so everyone can join; recommended to set this to like 15 on a public server"
 set g_trigger_push_use_trigger_origin 0
+set g_lava_damage_factor 4 "amount of damage provided by lava"
+set g_lava_fire_factor 2 "amount of fire damage profided by lava"
+set g_lava_fire_time 2 "time of fire profided by lava"
