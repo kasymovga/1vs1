@@ -92,6 +92,7 @@ score.qh
 player.qc
 dummyfunction.qc
 math.qc
+../common/backtrace.qc
 draw.qc
 ../client-server/approach.qc
 ../common/file.qc
@@ -102,7 +103,6 @@ draw.qc
 ../common/stdproc.qc
 team.qc
 centerprint.qc
-../common/backtrace.qc
 gametype.qh
 ready.qh
 race.qh
