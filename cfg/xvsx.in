@@ -1,0 +1,5 @@
+set 2v2_g_maxplayers 4
+set 3v3_g_maxplayers 6
+set 4v4_g_maxplayers 8
+set 5v5_g_maxplayers 10
+set 6v6_g_maxplayers 12
