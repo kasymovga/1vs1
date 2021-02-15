@@ -1,4 +1,4 @@
-set g_tdm_scorelimit 50 "Scorelimit for team deathmatch, when empty, g_scorelimit using, <= 0 mean no limit"
+set g_tdm_scorelimit 100 "Scorelimit for team deathmatch, when empty, g_scorelimit using, <= 0 mean no limit"
 set g_tdm_timelimit "" "Timelimit for team deathmatch, when empty, g_timelimit using, <= 0 mean no limit"
 set g_tdm_leadlimit "0" "Leadlimit for team deathmatch, when empty, g_leadlimit using, <= 0 mean no limit"
 set g_tdm_use_dm_maps 0
