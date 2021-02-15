@@ -27,6 +27,10 @@ void(vector pos, string pic, vector sz, vector area, vector color, float alpha, 
 	vector current_pos, end_pos, new_size, ratio;
 	end_pos = pos + area;
 	current_pos_y = pos_y;
+	if (sz_x == 0 || sz_y == 0) {
+		backtrace("draw_pic_tiled: empty image\n");
+		return;
+	}
 	while (current_pos_y < end_pos_y) {
 		current_pos_x = pos_x;
 		while (current_pos_x < end_pos_x) {
