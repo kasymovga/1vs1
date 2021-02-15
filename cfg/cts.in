@@ -10,3 +10,4 @@ set cts_g_physics_fixed 1
 set cts_g_pickup_nodrop 1
 set cts_g_player_forcemodel 0
 set cts_g_player_forcecolor -2
+set cts_g_jump_nofalldamage 1

@@ -820,15 +820,17 @@ void(void) world_creature_frame {
 				self.air_finished = time + 12;
 			}
 			// check for falling damage
-			dm = vlen(self.oldvelocity) - vlen(self.velocity); // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-			if (self.deadflag)
-				dm = (dm - g_balance_falldamage_deadminspeed) * g_balance_falldamage_factor;
-			else
-				dm = min((dm - g_balance_falldamage_minspeed) * g_balance_falldamage_factor, g_balance_falldamage_maxdamage);
+			if (vlen(self.velocity) < vlen(self.oldvelocity)) { // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+				dm = vlen(self.oldvelocity - self.velocity);
+				if (self.deadflag)
+					dm = (dm - g_balance_falldamage_deadminspeed) * g_balance_falldamage_factor;
+				else
+					dm = min((dm - g_balance_falldamage_minspeed) * g_balance_falldamage_factor, g_balance_falldamage_maxdamage);
 
-			if (dm > 0)
-				damage(self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+				if (dm > 0)
+					damage(self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
 
+			}
 			self.oldvelocity = self.velocity;
 		}
 		self = findfloat(self, iscreature, TRUE);

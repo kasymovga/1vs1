@@ -114,7 +114,7 @@ set g_balance_firetransfer_damage 0.8
 set g_throughfloor_damage 1
 set g_throughfloor_force 1
 set g_balance_falldamage_deadminspeed 150
-set g_balance_falldamage_minspeed 1400
-set g_balance_falldamage_factor 0.15
+set g_balance_falldamage_minspeed 1000
+set g_balance_falldamage_factor 0.05
 set g_balance_falldamage_maxdamage 25
 set sv_clientversion_hidden 0

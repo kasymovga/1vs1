@@ -4,6 +4,7 @@
 float sv_spectator_speed_multiplier;
 float g_jump_grunt;
 float g_steponskydamage;
+float g_jump_nofalldamage;
 
 .float ladder_time;
 .entity ladder_entity;
@@ -34,7 +35,8 @@ void(void) physics_on_jump_hook {
 	if(g_jump_grunt)
 		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 
-	self.oldvelocity_z = physics_velocity_z;
+	if (g_jump_nofalldamage)
+		self.oldvelocity_z = physics_velocity_z;
 }
 
 void(void) physics_check_water_jump_hook {
@@ -439,6 +441,7 @@ void(void) physics_init {
 	CACHE_CVAR(g_dodging_sound);
 	CACHE_CVAR(g_walljump_smokeparticle_num);
 	CACHE_CVAR(g_steponskydamage);
+	CACHE_CVAR(g_jump_nofalldamage);
 	CACHE_CVAR(g_skimming_time);
 	CACHE_CVAR(g_cpmdoublejump);
 	CACHE_CVAR(g_doublejump_nopogostick);
