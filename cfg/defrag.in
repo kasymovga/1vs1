@@ -10,6 +10,7 @@ set _defrag_g_jetpack_fuel 1
 set _defrag_g_pickup_fuel_jetpack 100
 set _defrag_g_trigger_push_use_trigger_origin 1
 set _defrag_g_player_maxsz 32
+set _defrag_g_player_maxsxy 14.96875
 set _defrag_g_adjust_view_offset 1
 set _defrag_g_player_crouch_maxsz 16
 set _defrag_g_physics_fixed 1
