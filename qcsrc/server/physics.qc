@@ -445,6 +445,10 @@ void(void) physics_init {
 	CACHE_CVAR(g_skimming_time);
 	CACHE_CVAR(g_cpmdoublejump);
 	CACHE_CVAR(g_doublejump_nopogostick);
+	if (cvar_string("collision_triangle_directional") == "") {
+		registercvar("collision_triangle_directional", "-1");
+		cvar_set("collision_triangle_directional", "-1");
+	}
 	physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 	if (physics_initiated) {
 		entity e;
@@ -559,6 +563,9 @@ float(entity to, float sf) physics_send {
 				+ (g_jumpvelocity_noincrease ? 65536 : 0)
 				+ (g_physics_fixed ? 131072 : 0)
 				+ (g_adjust_view_offset ? 262144 : 0)
+				+ (g_adjust_view_offset ? 262144 : 0)
+				+ ((cvar("collision_triangle_directional") < 0) ? 524288 : 0)
+				+ ((cvar("collision_triangle_directional") > 0) ? 1048576 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {

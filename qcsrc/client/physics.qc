@@ -293,6 +293,13 @@ void(float isnew) physics_read {
 		g_jumpvelocity_noincrease = switches & 65536;
 		g_physics_fixed = switches & 131072;
 		g_adjust_view_offset = switches & 262144;
+		if (switches & 524288) //collision_triangle_directional
+			cvar_clientsettemp("collision_triangle_directional" , "-1");
+		else if (switches & 1048576)
+			cvar_clientsettemp("collision_triangle_directional" , "1");
+		else
+			cvar_clientsettemp("collision_triangle_directional" , "0");
+
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
 			g_walljump_delay = ReadCoord();
