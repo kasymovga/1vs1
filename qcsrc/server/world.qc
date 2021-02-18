@@ -121,13 +121,13 @@ void(void) world_static_init {
 }
 
 void world_dynamic_init() {
-	CACHE_CVAR(g_balance_falldamage_deadminspeed);
-	CACHE_CVAR(g_balance_falldamage_factor);
-	CACHE_CVAR(g_balance_falldamage_minspeed);
-	CACHE_CVAR(g_balance_falldamage_maxdamage);
-	CACHE_CVAR(g_lava_damage_factor);
-	CACHE_CVAR(g_lava_fire_factor);
-	CACHE_CVAR(g_lava_fire_time);
+	CVAR_CACHE(g_balance_falldamage_deadminspeed);
+	CVAR_CACHE(g_balance_falldamage_factor);
+	CVAR_CACHE(g_balance_falldamage_minspeed);
+	CVAR_CACHE(g_balance_falldamage_maxdamage);
+	CVAR_CACHE(g_lava_damage_factor);
+	CVAR_CACHE(g_lava_fire_factor);
+	CVAR_CACHE(g_lava_fire_time);
 	weapon_init();
 	damage_init();
 	fire_init();

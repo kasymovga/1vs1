@@ -30,5 +30,5 @@ void(vector vel, float randomvel, vector ang, vector avel, float randomavel, flo
 }
 
 void(void) casing_init {
-	CACHE_CVAR(g_casings);
+	CVAR_CACHE(g_casings);
 }

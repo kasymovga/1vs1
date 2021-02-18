@@ -731,9 +731,9 @@ void(void) vote_client_connect {
 }
 
 void(void) vote_init {
-	CACHE_CVAR_STR(sv_announcer_extra_vote_now);
-	CACHE_CVAR_STR(sv_announcer_extra_vote_failed);
-	CACHE_CVAR_STR(sv_announcer_extra_vote_passed);
+	CVAR_CACHE_STR(sv_announcer_extra_vote_now);
+	CVAR_CACHE_STR(sv_announcer_extra_vote_failed);
+	CVAR_CACHE_STR(sv_announcer_extra_vote_passed);
 	precache_sound(sv_announcer_extra_vote_now);
 	precache_sound(sv_announcer_extra_vote_failed);
 	precache_sound(sv_announcer_extra_vote_passed);

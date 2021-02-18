@@ -49,9 +49,9 @@ void(void) udppunchhole_init {
 		return;
 
 	udppunchhole_extresponse_handler_extra = udppunchhole_extresponse_handler_extra_sv;
-	CACHE_CVAR_STR(sv_udppunchhole_server);
-	CACHE_CVAR_STR(sv_udppunchhole_key);
-	CACHE_CVAR(sv_udppunchhole_verbose);
+	CVAR_CACHE_STR(sv_udppunchhole_server);
+	CVAR_CACHE_STR(sv_udppunchhole_key);
+	CVAR_CACHE(sv_udppunchhole_verbose);
 	udppunchhole_extresponse_handler_register();
 	udppunchhole_porttest = spawn();
 	udppunchhole_porttest.think = udppunchhole_porttest_think;

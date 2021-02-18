@@ -219,18 +219,18 @@ void nadget_Init(void) {
 	if not(cvar("g_nadgets"))
 		return;
 
-    CACHE_CVAR(g_nadgets_double);
-	CACHE_CVAR(g_nadgets_detonate_on_death);
-	CACHE_CVAR(g_nadgets_sentry_disown_on_death);
-	CACHE_CVAR(g_nadgets_regen_compensate);
-	CACHE_CVAR(g_nadgets_remove_on_death);
-	CACHE_CVAR(g_nadgets_storage_limit_factor);
-	CACHE_CVAR(g_nadgets_regen);
-	CACHE_CVAR(g_nadgets_regen_damagepause);
-	CACHE_CVAR(g_nadgets_shield_damage_store_allow_cancel_discharge);
-	CACHE_CVAR(g_nadgets_ammo);
-	CACHE_CVAR(g_nadgets_initial_regen);
-	CACHE_CVAR(g_nadgets_drop_on_death);
+    CVAR_CACHE(g_nadgets_double);
+	CVAR_CACHE(g_nadgets_detonate_on_death);
+	CVAR_CACHE(g_nadgets_sentry_disown_on_death);
+	CVAR_CACHE(g_nadgets_regen_compensate);
+	CVAR_CACHE(g_nadgets_remove_on_death);
+	CVAR_CACHE(g_nadgets_storage_limit_factor);
+	CVAR_CACHE(g_nadgets_regen);
+	CVAR_CACHE(g_nadgets_regen_damagepause);
+	CVAR_CACHE(g_nadgets_shield_damage_store_allow_cancel_discharge);
+	CVAR_CACHE(g_nadgets_ammo);
+	CVAR_CACHE(g_nadgets_initial_regen);
+	CVAR_CACHE(g_nadgets_drop_on_death);
 
     addstat(STAT_HGFORCE, AS_FLOAT, hg_power);
     addstat(STAT_HGAMMO, AS_INT, hg_ammo1);
@@ -275,7 +275,7 @@ void nadget_Init(void) {
         addstat(STAT_HGREGENRATE2, AS_FLOAT, hg_regenrate2);
     }
 
-	CACHE_CVAR(g_nadgets_detonatelaunches);
+	CVAR_CACHE(g_nadgets_detonatelaunches);
 
     #define NADGETDEF(id,shortname,longname,color) nadget_Hook_Init_##shortname();
     NADGETDEFS

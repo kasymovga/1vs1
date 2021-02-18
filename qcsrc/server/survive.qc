@@ -264,7 +264,7 @@ void survive_init() {
 	precache_sound("announcer/robotic/3.wav");
 	precache_sound("announcer/robotic/2.wav");
 	precache_sound("announcer/robotic/1.wav");
-	CACHE_CVAR(g_surv_freeze);
+	CVAR_CACHE(g_surv_freeze);
 	entity_initialize(world, survive_init_delayed, INITPRIO_GAMETYPE);
 	survive_monster_quant = 1;
 	gamehook_winning_condition = survive_WinningCondition;
@@ -279,7 +279,7 @@ void survive_init() {
 	if (g_surv_freeze)
 		SP_REVIVE = score_register("revs", SFL_SORT_PRIO_SECONDARY);
 
-	CACHE_CVAR(g_surv_wave_pause);
+	CVAR_CACHE(g_surv_wave_pause);
 	g_surv_monster_factor = bound(0, cvar("g_surv_monster_factor"), 1);
 	wave_number = cvar("g_surv_wave_skip");
 }

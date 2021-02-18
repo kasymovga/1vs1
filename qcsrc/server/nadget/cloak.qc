@@ -93,14 +93,14 @@ float nadget_Cloak_PlayerCanSeeHealthFor(entity plr, entity targ) {
 }
 
 NADGET_HOOKFUNCTION(cloak, Init) {
-	CACHE_CVAR(g_nadgets_cloak_cooldown_decloak);
-	CACHE_CVAR(g_nadgets_cloak_duration);
-	CACHE_CVAR(g_nadgets_cloak_damagereduction_time);
-	CACHE_CVAR(g_nadgets_cloak_stealthrate);
-	CACHE_CVAR(g_nadgets_cloak_usewhileactive);
-	CACHE_CVAR(g_nadgets_cloak_unstealthrate);
-    CACHE_CVAR(g_nadgets_cloak_actiondelay);
-    CACHE_CVAR(g_nadgets_cloak_spy);
+	CVAR_CACHE(g_nadgets_cloak_cooldown_decloak);
+	CVAR_CACHE(g_nadgets_cloak_duration);
+	CVAR_CACHE(g_nadgets_cloak_damagereduction_time);
+	CVAR_CACHE(g_nadgets_cloak_stealthrate);
+	CVAR_CACHE(g_nadgets_cloak_usewhileactive);
+	CVAR_CACHE(g_nadgets_cloak_unstealthrate);
+    CVAR_CACHE(g_nadgets_cloak_actiondelay);
+    CVAR_CACHE(g_nadgets_cloak_spy);
 
     addstat(STAT_STEALTH, AS_INT, hg_stealth);
     addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);

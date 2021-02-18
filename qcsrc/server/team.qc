@@ -772,20 +772,20 @@ void(float force) team_balance_audit {
 }
 
 void(void) team_init {
-	CACHE_CVAR(g_balance_teams);
-	CACHE_CVAR(g_balance_teams_autoswap);
-	CACHE_CVAR(g_balance_teams_autoswap_from_small_team_minplayers);
-	CACHE_CVAR(g_balance_teams_autoswap_required_humans);
-	CACHE_CVAR(g_balance_teams_autoswap_interval);
-	CACHE_CVAR(g_balance_teams_autoswap_zerolead);
-	CACHE_CVAR(g_balance_teams_autoswap_lead);
-	CACHE_CVAR(g_balance_teams_force);
-	CACHE_CVAR(g_balance_teams_movetype);
-	CACHE_CVAR(g_balance_teams_prevent_imbalance);
-	CACHE_CVAR(g_balance_teams_adjust_sizes);
-	CACHE_CVAR(g_balance_teams_adjust_sizes_factor);
-	CACHE_CVAR(g_changeteam_banned);
-	CACHE_CVAR(bot_vs_human);
+	CVAR_CACHE(g_balance_teams);
+	CVAR_CACHE(g_balance_teams_autoswap);
+	CVAR_CACHE(g_balance_teams_autoswap_from_small_team_minplayers);
+	CVAR_CACHE(g_balance_teams_autoswap_required_humans);
+	CVAR_CACHE(g_balance_teams_autoswap_interval);
+	CVAR_CACHE(g_balance_teams_autoswap_zerolead);
+	CVAR_CACHE(g_balance_teams_autoswap_lead);
+	CVAR_CACHE(g_balance_teams_force);
+	CVAR_CACHE(g_balance_teams_movetype);
+	CVAR_CACHE(g_balance_teams_prevent_imbalance);
+	CVAR_CACHE(g_balance_teams_adjust_sizes);
+	CVAR_CACHE(g_balance_teams_adjust_sizes_factor);
+	CVAR_CACHE(g_changeteam_banned);
+	CVAR_CACHE(bot_vs_human);
 }
 
 float autoswap_last_time;

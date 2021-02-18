@@ -400,27 +400,27 @@ float weapon_rocketlauncher(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_rocketlauncher_ammo);
-		CACHE_CVAR(g_balance_rocketlauncher_animtime);
-		CACHE_CVAR(g_balance_rocketlauncher_damage);
-		CACHE_CVAR(g_balance_rocketlauncher_damageforcescale);
-		CACHE_CVAR(g_balance_rocketlauncher_detonatedelay);
-		CACHE_CVAR(g_balance_rocketlauncher_edgedamage);
-		CACHE_CVAR(g_balance_rocketlauncher_force);
-		CACHE_CVAR(g_balance_rocketlauncher_guidedelay);
-		CACHE_CVAR(g_balance_rocketlauncher_guidefadeangle);
-		CACHE_CVAR(g_balance_rocketlauncher_guidegoal);
-		CACHE_CVAR(g_balance_rocketlauncher_guidemaxangle);
-		CACHE_CVAR(g_balance_rocketlauncher_guiderate);
-		CACHE_CVAR(g_balance_rocketlauncher_guideratedelay);
-		CACHE_CVAR(g_balance_rocketlauncher_guidestop);
-		CACHE_CVAR(g_balance_rocketlauncher_health);
-		CACHE_CVAR(g_balance_rocketlauncher_lifetime);
-		CACHE_CVAR(g_balance_rocketlauncher_radius);
-		CACHE_CVAR(g_balance_rocketlauncher_refire);
-		CACHE_CVAR(g_balance_rocketlauncher_speed);
-		CACHE_CVAR(g_balance_rocketlauncher_speedaccel);
-		CACHE_CVAR(g_balance_rocketlauncher_speedstart);
+		CVAR_CACHE(g_balance_rocketlauncher_ammo);
+		CVAR_CACHE(g_balance_rocketlauncher_animtime);
+		CVAR_CACHE(g_balance_rocketlauncher_damage);
+		CVAR_CACHE(g_balance_rocketlauncher_damageforcescale);
+		CVAR_CACHE(g_balance_rocketlauncher_detonatedelay);
+		CVAR_CACHE(g_balance_rocketlauncher_edgedamage);
+		CVAR_CACHE(g_balance_rocketlauncher_force);
+		CVAR_CACHE(g_balance_rocketlauncher_guidedelay);
+		CVAR_CACHE(g_balance_rocketlauncher_guidefadeangle);
+		CVAR_CACHE(g_balance_rocketlauncher_guidegoal);
+		CVAR_CACHE(g_balance_rocketlauncher_guidemaxangle);
+		CVAR_CACHE(g_balance_rocketlauncher_guiderate);
+		CVAR_CACHE(g_balance_rocketlauncher_guideratedelay);
+		CVAR_CACHE(g_balance_rocketlauncher_guidestop);
+		CVAR_CACHE(g_balance_rocketlauncher_health);
+		CVAR_CACHE(g_balance_rocketlauncher_lifetime);
+		CVAR_CACHE(g_balance_rocketlauncher_radius);
+		CVAR_CACHE(g_balance_rocketlauncher_refire);
+		CVAR_CACHE(g_balance_rocketlauncher_speed);
+		CVAR_CACHE(g_balance_rocketlauncher_speedaccel);
+		CVAR_CACHE(g_balance_rocketlauncher_speedstart);
 		projectile_init(PROJECTILE_ROCKET);
 		if (cvar("g_balance_rocketlauncher_swap_buttons")) {
 			rl_buttonatck1 = BUTTON_ATCK2;

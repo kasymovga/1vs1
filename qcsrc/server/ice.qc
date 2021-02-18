@@ -300,27 +300,27 @@ void(void) ice_PlayerPreThink {
 }
 
 void Ice_Init() {
-	CACHE_CVAR_STR(sv_model_ice); //strzone once and never strunzone
+	CVAR_CACHE_STR(sv_model_ice); //strzone once and never strunzone
 	precache_model(sv_model_ice);
-	CACHE_CVAR_STR(sv_sound_ice_frag);
+	CVAR_CACHE_STR(sv_sound_ice_frag);
 	if (sv_sound_ice_frag != "")
 		precache_sound(sv_sound_ice_frag);
 
-	CACHE_CVAR(g_ice_unfroze_time);
-	CACHE_CVAR(g_ice_unfroze_interruption);
-	CACHE_CVAR(g_ice_slowdown);
-	CACHE_CVAR(g_ice_autorevive_delay);
-	CACHE_CVAR(g_ice_autorevive_time);
+	CVAR_CACHE(g_ice_unfroze_time);
+	CVAR_CACHE(g_ice_unfroze_interruption);
+	CVAR_CACHE(g_ice_slowdown);
+	CVAR_CACHE(g_ice_autorevive_delay);
+	CVAR_CACHE(g_ice_autorevive_time);
 	if (g_ice_unfroze_time <= 0)
 		g_ice_unfroze_time = 1;
 
 	if (g_ice_autorevive_time <= 0)
 		g_ice_autorevive_time = 1;
 
-	CACHE_CVAR(sv_model_ice_alpha);
-	CACHE_CVAR(sv_model_ice_scale);
-	CACHE_CVAR(sv_model_ice_z);
-	CACHE_CVAR(sv_model_ice_use_skins);
+	CVAR_CACHE(sv_model_ice_alpha);
+	CVAR_CACHE(sv_model_ice_scale);
+	CVAR_CACHE(sv_model_ice_z);
+	CVAR_CACHE(sv_model_ice_use_skins);
 	gamehook_player_death_handle = Ice_DeathHandle;
 	Ice_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = Ice_PlayerClear;

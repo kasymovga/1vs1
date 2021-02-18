@@ -573,7 +573,7 @@ float(entity plr, entity targ) rune_PlayerCanSeeHealthFor {
 }
 
 void(void) rune_init {
-	CACHE_CVAR(g_runes);
+	CVAR_CACHE(g_runes);
 	if not(g_runes)
 		return;
 
@@ -583,53 +583,53 @@ void(void) rune_init {
 	precache_sound("misc/minihealth.wav");
 	precache_sound("misc/mediumhealth.wav");
 	precache_sound("misc/bodyimpact1.wav");
-	CACHE_CVAR(g_rune_vitality_damage_factor);
-	CACHE_CVAR(g_rune_vitality_max_health);
-	CACHE_CVAR(g_rune_speed_jumpheight);
-	CACHE_CVAR(g_rune_speed_moverate);
-	CACHE_CVAR(g_rune_vampire_damage_factor);
-	CACHE_CVAR(g_rune_vampire_max_health);
-	CACHE_CVAR(g_rune_speed_atkrate);
-	CACHE_CVAR(g_rune_defense_damage_factor);
-	CACHE_CVAR(g_rune_ignite_damage_factor);
-	CACHE_CVAR(g_rune_stun_moverate);
-	CACHE_CVAR(g_rune_stun_time);
-	CACHE_CVAR(g_runes_carried_runes_max);
-	CACHE_CVAR(g_runes_drop_runes_max);
-	CACHE_CVAR(g_runes_respawntime);
-	CACHE_CVAR(g_runes_count);
-	//CACHE_CVAR(g_runematch_rune_glow_color);
-	//CACHE_CVAR(g_runematch_rune_glow_size);
-	CACHE_CVAR(g_runes_shuffletime);
-	CACHE_CVAR_STR(sv_model_rune_ignite);
+	CVAR_CACHE(g_rune_vitality_damage_factor);
+	CVAR_CACHE(g_rune_vitality_max_health);
+	CVAR_CACHE(g_rune_speed_jumpheight);
+	CVAR_CACHE(g_rune_speed_moverate);
+	CVAR_CACHE(g_rune_vampire_damage_factor);
+	CVAR_CACHE(g_rune_vampire_max_health);
+	CVAR_CACHE(g_rune_speed_atkrate);
+	CVAR_CACHE(g_rune_defense_damage_factor);
+	CVAR_CACHE(g_rune_ignite_damage_factor);
+	CVAR_CACHE(g_rune_stun_moverate);
+	CVAR_CACHE(g_rune_stun_time);
+	CVAR_CACHE(g_runes_carried_runes_max);
+	CVAR_CACHE(g_runes_drop_runes_max);
+	CVAR_CACHE(g_runes_respawntime);
+	CVAR_CACHE(g_runes_count);
+	//CVAR_CACHE(g_runematch_rune_glow_color);
+	//CVAR_CACHE(g_runematch_rune_glow_size);
+	CVAR_CACHE(g_runes_shuffletime);
+	CVAR_CACHE_STR(sv_model_rune_ignite);
 	if (sv_model_rune_ignite != "")
 		precache_model(sv_model_rune_ignite);
 
-	CACHE_CVAR_STR(sv_model_rune_speed);
+	CVAR_CACHE_STR(sv_model_rune_speed);
 	if (sv_model_rune_speed != "")
 		precache_model(sv_model_rune_speed);
 
-	CACHE_CVAR_STR(sv_model_rune_vitality);
+	CVAR_CACHE_STR(sv_model_rune_vitality);
 	if (sv_model_rune_vitality != "")
 		precache_model(sv_model_rune_vitality);
 
-	CACHE_CVAR_STR(sv_model_rune_hacker);
+	CVAR_CACHE_STR(sv_model_rune_hacker);
 	if (sv_model_rune_hacker != "")
 		precache_model(sv_model_rune_hacker);
 
-	CACHE_CVAR_STR(sv_model_rune_defense);
+	CVAR_CACHE_STR(sv_model_rune_defense);
 	if (sv_model_rune_defense != "")
 		precache_model(sv_model_rune_defense);
 
-	CACHE_CVAR_STR(sv_model_rune_vampire);
+	CVAR_CACHE_STR(sv_model_rune_vampire);
 	if (sv_model_rune_vampire != "")
 		precache_model(sv_model_rune_vampire);
 
-	CACHE_CVAR_STR(sv_model_rune_stun);
+	CVAR_CACHE_STR(sv_model_rune_stun);
 	if (sv_model_rune_stun != "")
 		precache_model(sv_model_rune_stun);
 
-	CACHE_CVAR_STR(sv_model_rune_decor);
+	CVAR_CACHE_STR(sv_model_rune_decor);
 	if (sv_model_rune_vampire != "")
 		precache_model(sv_model_rune_decor);
 

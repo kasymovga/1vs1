@@ -374,7 +374,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 }
 
 void bullet_init() {
-	CACHE_CVAR(g_ballistics_materialconstant);
-	CACHE_CVAR(g_ballistics_mindistance);
-	CACHE_CVAR(g_antilag_bullets);
+	CVAR_CACHE(g_ballistics_materialconstant);
+	CVAR_CACHE(g_ballistics_mindistance);
+	CVAR_CACHE(g_antilag_bullets);
 }

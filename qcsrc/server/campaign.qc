@@ -75,7 +75,7 @@ void(void) campaign_preinit {
 		MapInfo_SwitchGameType(MapInfo_Type_FromString("single"));
 		return;
 	}
-	CACHE_CVAR(g_campaign);
+	CVAR_CACHE(g_campaign);
 	if not(g_campaign)
 		return;
 
@@ -89,7 +89,7 @@ void(void) campaign_preinit {
 		campaign_bailout("unknown map");
 		return;
 	}
-	CACHE_CVAR(g_campaign_skill);
+	CVAR_CACHE(g_campaign_skill);
 	baseskill = bound(1, g_campaign_skill + 1, 4);
 	float minskill = baseskill * 5 - 4;
 	float maxskill = baseskill * 10;

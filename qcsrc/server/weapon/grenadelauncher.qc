@@ -210,31 +210,31 @@ float weapon_grenadelauncher(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_grenadelauncher_primary_ammo);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_animtime);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_bounce);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_damage);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_edgedamage);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_force);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_lifetime);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_radius);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_refire);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_speed);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_speed_up);
-		CACHE_CVAR(g_balance_grenadelauncher_primary_up);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_ammo);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_animtime);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_damage);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_damageforcescale);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_edgedamage);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_force);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_health);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_lifetime);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_radius);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_refire);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary_speed_up);
-		CACHE_CVAR(g_balance_grenadelauncher_secondary);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_ammo);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_animtime);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_bounce);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_damage);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_edgedamage);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_force);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_lifetime);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_radius);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_refire);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_speed);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_speed_up);
+		CVAR_CACHE(g_balance_grenadelauncher_primary_up);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_ammo);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_animtime);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_damage);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_damageforcescale);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_edgedamage);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_force);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_health);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_lifetime);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_radius);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_refire);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed_up);
+		CVAR_CACHE(g_balance_grenadelauncher_secondary);
 		projectile_init(PROJECTILE_GRENADE);
 		projectile_init(PROJECTILE_GRENADE_BOUNCING);
 		if (cvar("g_balance_grenadelauncher_swap_buttons")) {

@@ -92,7 +92,7 @@ void(entity e) projectile_check {
 
 void(float type) projectile_init {
 	vector sizes;
-	CACHE_CVAR(sv_projectile_tracecull);
+	CVAR_CACHE(sv_projectile_tracecull);
 	sizes = '0 0 0';
 	switch (type) {
 	case PROJECTILE_FIREBALL:

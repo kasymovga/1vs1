@@ -549,7 +549,7 @@ float monster_check_target(void() walk, void() guard) {
 float monster_common_init_done;
 void monster_common_init() {
 	precache_sound("misc/teleport.wav");
-	CACHE_CVAR(g_monster_pushfactor);
+	CVAR_CACHE(g_monster_pushfactor);
 	float g_monster_difficulty;
 	if (g_campaign)
 		g_monster_difficulty = g_campaign_skill;

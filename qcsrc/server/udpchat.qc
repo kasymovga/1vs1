@@ -108,7 +108,7 @@ void UDPChat_Init() {
 		return;
 
 	sv_udpchat_server = cvar_string_zone_ifneeded("sv_udpchat_server");
-	CACHE_CVAR(sv_udpchat_spamstatus);
+	CVAR_CACHE(sv_udpchat_spamstatus);
 	sv_udpchat_id = cvar_string_zone_ifneeded("sv_udpchat_id");
     extresponse_register_handler("udpchat", UDPChat_ER_Response_Callback, world);
 	UDPChat_PupblicPlayerChat_NextLink = GameHookChain_PublicPlayerChat;

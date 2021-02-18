@@ -17,8 +17,8 @@ float() pinata_ThrowWeaponOnDeathHandle {
 
 float pinata_init_done;
 void() pinata_init {
-	CACHE_CVAR(g_pinata);
-	CACHE_CVAR(g_pinata_drop_all);
+	CVAR_CACHE(g_pinata);
+	CVAR_CACHE(g_pinata_drop_all);
 	if (pinata_init_done)
 		return;
 

@@ -205,31 +205,31 @@ float weapon_supershotgun(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_supershotgun_primary_ammo);
-		CACHE_CVAR(g_balance_supershotgun_primary_animtime);
-		CACHE_CVAR(g_balance_supershotgun_primary_ballistic);
-		CACHE_CVAR(g_balance_supershotgun_primary_bounces);
-		CACHE_CVAR(g_balance_supershotgun_primary_bulletconstant);
-		CACHE_CVAR(g_balance_supershotgun_primary_bullets);
-		CACHE_CVAR(g_balance_supershotgun_primary_damage);
-		CACHE_CVAR(g_balance_supershotgun_primary_force);
-		CACHE_CVAR(g_balance_supershotgun_primary_gravityfactor);
-		CACHE_CVAR(g_balance_supershotgun_primary_refire);
-		CACHE_CVAR(g_balance_supershotgun_primary_speed);
-		CACHE_CVAR(g_balance_supershotgun_primary_spread);
-		CACHE_CVAR(g_balance_supershotgun_secondary);
-		CACHE_CVAR(g_balance_supershotgun_secondary_ammo);
-		CACHE_CVAR(g_balance_supershotgun_secondary_animtime);
-		CACHE_CVAR(g_balance_supershotgun_secondary_ballistic);
-		CACHE_CVAR(g_balance_supershotgun_secondary_bounces);
-		CACHE_CVAR(g_balance_supershotgun_secondary_bulletconstant);
-		CACHE_CVAR(g_balance_supershotgun_secondary_bullets);
-		CACHE_CVAR(g_balance_supershotgun_secondary_damage);
-		CACHE_CVAR(g_balance_supershotgun_secondary_force);
-		CACHE_CVAR(g_balance_supershotgun_secondary_gravityfactor);
-		CACHE_CVAR(g_balance_supershotgun_secondary_refire);
-		CACHE_CVAR(g_balance_supershotgun_secondary_speed);
-		CACHE_CVAR(g_balance_supershotgun_secondary_spread);
+		CVAR_CACHE(g_balance_supershotgun_primary_ammo);
+		CVAR_CACHE(g_balance_supershotgun_primary_animtime);
+		CVAR_CACHE(g_balance_supershotgun_primary_ballistic);
+		CVAR_CACHE(g_balance_supershotgun_primary_bounces);
+		CVAR_CACHE(g_balance_supershotgun_primary_bulletconstant);
+		CVAR_CACHE(g_balance_supershotgun_primary_bullets);
+		CVAR_CACHE(g_balance_supershotgun_primary_damage);
+		CVAR_CACHE(g_balance_supershotgun_primary_force);
+		CVAR_CACHE(g_balance_supershotgun_primary_gravityfactor);
+		CVAR_CACHE(g_balance_supershotgun_primary_refire);
+		CVAR_CACHE(g_balance_supershotgun_primary_speed);
+		CVAR_CACHE(g_balance_supershotgun_primary_spread);
+		CVAR_CACHE(g_balance_supershotgun_secondary);
+		CVAR_CACHE(g_balance_supershotgun_secondary_ammo);
+		CVAR_CACHE(g_balance_supershotgun_secondary_animtime);
+		CVAR_CACHE(g_balance_supershotgun_secondary_ballistic);
+		CVAR_CACHE(g_balance_supershotgun_secondary_bounces);
+		CVAR_CACHE(g_balance_supershotgun_secondary_bulletconstant);
+		CVAR_CACHE(g_balance_supershotgun_secondary_bullets);
+		CVAR_CACHE(g_balance_supershotgun_secondary_damage);
+		CVAR_CACHE(g_balance_supershotgun_secondary_force);
+		CVAR_CACHE(g_balance_supershotgun_secondary_gravityfactor);
+		CVAR_CACHE(g_balance_supershotgun_secondary_refire);
+		CVAR_CACHE(g_balance_supershotgun_secondary_speed);
+		CVAR_CACHE(g_balance_supershotgun_secondary_spread);
 		projectile_init(PROJECTILE_BULLET_BIG);
 	}
 	return TRUE;

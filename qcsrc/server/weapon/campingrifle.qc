@@ -257,37 +257,37 @@ float weapon_campingrifle(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_campingrifle_auto_reload_after_changing_weapons);
-		CACHE_CVAR(g_balance_campingrifle_bursttime);
-		CACHE_CVAR(g_balance_campingrifle_magazinecapacity);
+		CVAR_CACHE(g_balance_campingrifle_auto_reload_after_changing_weapons);
+		CVAR_CACHE(g_balance_campingrifle_bursttime);
+		CVAR_CACHE(g_balance_campingrifle_magazinecapacity);
 		if (g_balance_campingrifle_magazinecapacity < 0)
 			g_balance_campingrifle_magazinecapacity = 8;
-		CACHE_CVAR(g_balance_campingrifle_primary_ammo);
-		CACHE_CVAR(g_balance_campingrifle_primary_animtime);
-		CACHE_CVAR(g_balance_campingrifle_primary_bulletconstant);
-		CACHE_CVAR(g_balance_campingrifle_primary_burstcost);
-		CACHE_CVAR(g_balance_campingrifle_primary_damage);
-		CACHE_CVAR(g_balance_campingrifle_primary_force);
-		CACHE_CVAR(g_balance_campingrifle_primary_gravityfactor);
-		CACHE_CVAR(g_balance_campingrifle_primary_headshotaddeddamage);
-		CACHE_CVAR(g_balance_campingrifle_primary_lifetime);
-		CACHE_CVAR(g_balance_campingrifle_primary_refire);
-		CACHE_CVAR(g_balance_campingrifle_primary_speed);
-		CACHE_CVAR(g_balance_campingrifle_primary_spread);
-		CACHE_CVAR(g_balance_campingrifle_reloadtime);
-		CACHE_CVAR(g_balance_campingrifle_secondary_ammo);
-		CACHE_CVAR(g_balance_campingrifle_secondary_animtime);
-		CACHE_CVAR(g_balance_campingrifle_secondary_bulletconstant);
-		CACHE_CVAR(g_balance_campingrifle_secondary_burstcost);
-		CACHE_CVAR(g_balance_campingrifle_secondary_damage);
-		CACHE_CVAR(g_balance_campingrifle_secondary_force);
-		CACHE_CVAR(g_balance_campingrifle_secondary_gravityfactor);
-		CACHE_CVAR(g_balance_campingrifle_secondary_headshotaddeddamage);
-		CACHE_CVAR(g_balance_campingrifle_secondary_lifetime);
-		CACHE_CVAR(g_balance_campingrifle_secondary_refire);
-		CACHE_CVAR(g_balance_campingrifle_secondary_speed);
-		CACHE_CVAR(g_balance_campingrifle_secondary_spread);
-		CACHE_CVAR(g_balance_campingrifle_hotreload);
+		CVAR_CACHE(g_balance_campingrifle_primary_ammo);
+		CVAR_CACHE(g_balance_campingrifle_primary_animtime);
+		CVAR_CACHE(g_balance_campingrifle_primary_bulletconstant);
+		CVAR_CACHE(g_balance_campingrifle_primary_burstcost);
+		CVAR_CACHE(g_balance_campingrifle_primary_damage);
+		CVAR_CACHE(g_balance_campingrifle_primary_force);
+		CVAR_CACHE(g_balance_campingrifle_primary_gravityfactor);
+		CVAR_CACHE(g_balance_campingrifle_primary_headshotaddeddamage);
+		CVAR_CACHE(g_balance_campingrifle_primary_lifetime);
+		CVAR_CACHE(g_balance_campingrifle_primary_refire);
+		CVAR_CACHE(g_balance_campingrifle_primary_speed);
+		CVAR_CACHE(g_balance_campingrifle_primary_spread);
+		CVAR_CACHE(g_balance_campingrifle_reloadtime);
+		CVAR_CACHE(g_balance_campingrifle_secondary_ammo);
+		CVAR_CACHE(g_balance_campingrifle_secondary_animtime);
+		CVAR_CACHE(g_balance_campingrifle_secondary_bulletconstant);
+		CVAR_CACHE(g_balance_campingrifle_secondary_burstcost);
+		CVAR_CACHE(g_balance_campingrifle_secondary_damage);
+		CVAR_CACHE(g_balance_campingrifle_secondary_force);
+		CVAR_CACHE(g_balance_campingrifle_secondary_gravityfactor);
+		CVAR_CACHE(g_balance_campingrifle_secondary_headshotaddeddamage);
+		CVAR_CACHE(g_balance_campingrifle_secondary_lifetime);
+		CVAR_CACHE(g_balance_campingrifle_secondary_refire);
+		CVAR_CACHE(g_balance_campingrifle_secondary_speed);
+		CVAR_CACHE(g_balance_campingrifle_secondary_spread);
+		CVAR_CACHE(g_balance_campingrifle_hotreload);
 		if (cvar("g_balance_campingrifle_swap_buttons")) {
 			cr_buttonatck1 = BUTTON_ATCK2;
 			cr_buttonatck2 = BUTTON_ATCK;

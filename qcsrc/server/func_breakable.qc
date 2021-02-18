@@ -215,7 +215,7 @@ void(void) func_breakable_init {
 	if (func_breakable_init_done)
 		return;
 
-	CACHE_CVAR(sv_breakable_debris);
+	CVAR_CACHE(sv_breakable_debris);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease

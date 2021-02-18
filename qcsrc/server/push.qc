@@ -44,8 +44,8 @@ void(void) push_touch {
 }
 
 void(void) push_init {
-	CACHE_CVAR(g_push_damage);
-	CACHE_CVAR(g_push_damage_speed);
-	CACHE_CVAR(g_push_trampledamage);
-	CACHE_CVAR(g_push_trampledamage_speed);
+	CVAR_CACHE(g_push_damage);
+	CVAR_CACHE(g_push_damage_speed);
+	CVAR_CACHE(g_push_trampledamage);
+	CVAR_CACHE(g_push_trampledamage_speed);
 }

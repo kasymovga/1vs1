@@ -69,9 +69,9 @@ void IP2C_ClientConnect(void) {
 }
 
 void IP2C_InitSV(void) {
-    CACHE_CVAR(sv_ip2country);
-    CACHE_CVAR(sv_ip2country_allow_fakeflag);
-	CACHE_CVAR_STR(sv_ip2country_bot_flag);
+    CVAR_CACHE(sv_ip2country);
+    CVAR_CACHE(sv_ip2country_allow_fakeflag);
+	CVAR_CACHE_STR(sv_ip2country_bot_flag);
     if(!sv_ip2country) {
         return;
     }

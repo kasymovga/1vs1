@@ -60,17 +60,17 @@ void() powerup_init {
 		return;
 
 	powerup_init_done = 1;
-	CACHE_CVAR(g_powerup_strength_akimbo);
-	CACHE_CVAR(g_powerup_strength_droppable);
-	CACHE_CVAR(g_powerup_invisibility_droppable);
-	CACHE_CVAR(g_powerup_shield_droppable);
-	CACHE_CVAR(g_powerup_speed_droppable);
-	CACHE_CVAR(g_powerup_invisibility_full_distance);
-	CACHE_CVAR(g_balance_powerup_invincible_takedamage);
-	CACHE_CVAR(g_balance_powerup_strength_damage);
-	CACHE_CVAR(g_balance_powerup_strength_force);
-	CACHE_CVAR(g_balance_powerup_strength_selfdamage);
-	CACHE_CVAR(g_balance_powerup_strength_selfforce);
+	CVAR_CACHE(g_powerup_strength_akimbo);
+	CVAR_CACHE(g_powerup_strength_droppable);
+	CVAR_CACHE(g_powerup_invisibility_droppable);
+	CVAR_CACHE(g_powerup_shield_droppable);
+	CVAR_CACHE(g_powerup_speed_droppable);
+	CVAR_CACHE(g_powerup_invisibility_full_distance);
+	CVAR_CACHE(g_balance_powerup_invincible_takedamage);
+	CVAR_CACHE(g_balance_powerup_strength_damage);
+	CVAR_CACHE(g_balance_powerup_strength_force);
+	CVAR_CACHE(g_balance_powerup_strength_selfdamage);
+	CVAR_CACHE(g_balance_powerup_strength_selfforce);
 	powerup_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = powerup_player_clear;
 	powerup_spectator_copy_next = gamehook_chain_spectator_copy;

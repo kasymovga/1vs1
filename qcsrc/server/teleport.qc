@@ -205,9 +205,9 @@ void(void) teleport_findtarget {
 }
 
 void(void) teleport_init {
-	CACHE_CVAR(g_teleport_keep_velocity);
-	CACHE_CVAR(g_teleport_projectiles);
-	CACHE_CVAR(g_telefrags);
+	CVAR_CACHE(g_teleport_keep_velocity);
+	CVAR_CACHE(g_teleport_projectiles);
+	CVAR_CACHE(g_telefrags);
 }
 
 void(void) teleport_setup {

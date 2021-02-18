@@ -363,22 +363,22 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 
 void bot_aim_init()
 {
-	CACHE_CVAR(bot_ai_aimskill_blendrate);
-	CACHE_CVAR(bot_ai_aimskill_firetolerance_distdegrees);
-	CACHE_CVAR(bot_ai_aimskill_firetolerance_maxdegrees);
-	CACHE_CVAR(bot_ai_aimskill_firetolerance_mindegrees);
-	CACHE_CVAR(bot_ai_aimskill_fixedrate);
-	CACHE_CVAR(bot_ai_aimskill_mouse);
-	CACHE_CVAR(bot_ai_aimskill_offset);
-	CACHE_CVAR(bot_ai_aimskill_order_filter_1st);
-	CACHE_CVAR(bot_ai_aimskill_order_filter_2nd);
-	CACHE_CVAR(bot_ai_aimskill_order_filter_3th);
-	CACHE_CVAR(bot_ai_aimskill_order_filter_4th);
-	CACHE_CVAR(bot_ai_aimskill_order_filter_5th);
-	CACHE_CVAR(bot_ai_aimskill_order_mix_1st);
-	CACHE_CVAR(bot_ai_aimskill_order_mix_2nd);
-	CACHE_CVAR(bot_ai_aimskill_order_mix_3th);
-	CACHE_CVAR(bot_ai_aimskill_order_mix_4th);
-	CACHE_CVAR(bot_ai_aimskill_order_mix_5th);
-	CACHE_CVAR(bot_ai_aimskill_think);
+	CVAR_CACHE(bot_ai_aimskill_blendrate);
+	CVAR_CACHE(bot_ai_aimskill_firetolerance_distdegrees);
+	CVAR_CACHE(bot_ai_aimskill_firetolerance_maxdegrees);
+	CVAR_CACHE(bot_ai_aimskill_firetolerance_mindegrees);
+	CVAR_CACHE(bot_ai_aimskill_fixedrate);
+	CVAR_CACHE(bot_ai_aimskill_mouse);
+	CVAR_CACHE(bot_ai_aimskill_offset);
+	CVAR_CACHE(bot_ai_aimskill_order_filter_1st);
+	CVAR_CACHE(bot_ai_aimskill_order_filter_2nd);
+	CVAR_CACHE(bot_ai_aimskill_order_filter_3th);
+	CVAR_CACHE(bot_ai_aimskill_order_filter_4th);
+	CVAR_CACHE(bot_ai_aimskill_order_filter_5th);
+	CVAR_CACHE(bot_ai_aimskill_order_mix_1st);
+	CVAR_CACHE(bot_ai_aimskill_order_mix_2nd);
+	CVAR_CACHE(bot_ai_aimskill_order_mix_3th);
+	CVAR_CACHE(bot_ai_aimskill_order_mix_4th);
+	CVAR_CACHE(bot_ai_aimskill_order_mix_5th);
+	CVAR_CACHE(bot_ai_aimskill_think);
 };

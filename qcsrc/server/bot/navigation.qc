@@ -1080,6 +1080,6 @@ void debuggoalstack()
 
 void bot_navigation_init()
 {
-	CACHE_CVAR(bot_ai_navigation_jetpack);
-	CACHE_CVAR(bot_ai_navigation_jetpack_mindistance);
+	CVAR_CACHE(bot_ai_navigation_jetpack);
+	CVAR_CACHE(bot_ai_navigation_jetpack_mindistance);
 }

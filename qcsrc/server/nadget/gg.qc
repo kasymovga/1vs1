@@ -39,7 +39,7 @@ NADGET_HOOKFUNCTION(gg, Attack) {
 }
 
 NADGET_HOOKFUNCTION(gg, Init) {
-	CACHE_CVAR(g_nadgets_gg_damage);
-	CACHE_CVAR(g_nadgets_gg_range);
+	CVAR_CACHE(g_nadgets_gg_damage);
+	CVAR_CACHE(g_nadgets_gg_range);
     return NADGET_INIT_OK;
 }

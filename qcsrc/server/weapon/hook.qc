@@ -216,24 +216,24 @@ float weapon_hook(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_hook_primary_animtime);
-		CACHE_CVAR(g_balance_hook_primary_fuel);
-		CACHE_CVAR(g_balance_hook_primary_hooked_fuel);
-		CACHE_CVAR(g_balance_hook_primary_hooked_time_free);
-		CACHE_CVAR(g_balance_hook_primary_hooked_time_max);
-		CACHE_CVAR(g_balance_hook_primary_refire);
-		CACHE_CVAR(g_balance_hook_secondary_ammo);
-		CACHE_CVAR(g_balance_hook_secondary_animtime);
-		CACHE_CVAR(g_balance_hook_secondary_damage);
-		CACHE_CVAR(g_balance_hook_secondary_duration);
-		CACHE_CVAR(g_balance_hook_secondary_edgedamage);
-		CACHE_CVAR(g_balance_hook_secondary_force);
-		CACHE_CVAR(g_balance_hook_secondary_gravity);
-		CACHE_CVAR(g_balance_hook_secondary_lifetime);
-		CACHE_CVAR(g_balance_hook_secondary_power);
-		CACHE_CVAR(g_balance_hook_secondary_radius);
-		CACHE_CVAR(g_balance_hook_secondary_refire);
-		CACHE_CVAR(g_balance_hook_secondary_speed);
+		CVAR_CACHE(g_balance_hook_primary_animtime);
+		CVAR_CACHE(g_balance_hook_primary_fuel);
+		CVAR_CACHE(g_balance_hook_primary_hooked_fuel);
+		CVAR_CACHE(g_balance_hook_primary_hooked_time_free);
+		CVAR_CACHE(g_balance_hook_primary_hooked_time_max);
+		CVAR_CACHE(g_balance_hook_primary_refire);
+		CVAR_CACHE(g_balance_hook_secondary_ammo);
+		CVAR_CACHE(g_balance_hook_secondary_animtime);
+		CVAR_CACHE(g_balance_hook_secondary_damage);
+		CVAR_CACHE(g_balance_hook_secondary_duration);
+		CVAR_CACHE(g_balance_hook_secondary_edgedamage);
+		CVAR_CACHE(g_balance_hook_secondary_force);
+		CVAR_CACHE(g_balance_hook_secondary_gravity);
+		CVAR_CACHE(g_balance_hook_secondary_lifetime);
+		CVAR_CACHE(g_balance_hook_secondary_power);
+		CVAR_CACHE(g_balance_hook_secondary_radius);
+		CVAR_CACHE(g_balance_hook_secondary_refire);
+		CVAR_CACHE(g_balance_hook_secondary_speed);
 		projectile_init(PROJECTILE_HOOKBOMB);
 	}
 	return TRUE;

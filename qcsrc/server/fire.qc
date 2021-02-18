@@ -144,6 +144,6 @@ void(void) fire_burner_think {
 }
 
 void(void) fire_init {
-	CACHE_CVAR(g_balance_firetransfer_damage);
-	CACHE_CVAR(g_balance_firetransfer_time);
+	CVAR_CACHE(g_balance_firetransfer_damage);
+	CVAR_CACHE(g_balance_firetransfer_time);
 }

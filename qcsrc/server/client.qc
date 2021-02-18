@@ -599,16 +599,16 @@ void(void) client_post_think { //called by engine
 }
 
 void() client_initialize {
-	CACHE_CVAR(g_balance_kill_delay);
-	CACHE_CVAR(g_changeteam_banned);
-	CACHE_CVAR(g_maxplayers);
-	CACHE_CVAR(g_maxplayers_spectator_blocktime);
-	CACHE_CVAR(sv_timeout_number);
-	CACHE_CVAR(sv_maxidle);
-	CACHE_CVAR(sv_maxidle_forcespec);
-	CACHE_CVAR(sv_maxconnects_per_address);
-	CACHE_CVAR(g_buttons_hookuse_swap);
-	CACHE_CVAR(sv_foginterval);
+	CVAR_CACHE(g_balance_kill_delay);
+	CVAR_CACHE(g_changeteam_banned);
+	CVAR_CACHE(g_maxplayers);
+	CVAR_CACHE(g_maxplayers_spectator_blocktime);
+	CVAR_CACHE(sv_timeout_number);
+	CVAR_CACHE(sv_maxidle);
+	CVAR_CACHE(sv_maxidle_forcespec);
+	CVAR_CACHE(sv_maxconnects_per_address);
+	CVAR_CACHE(g_buttons_hookuse_swap);
+	CVAR_CACHE(sv_foginterval);
 	if (client_fog == "")
 		client_fog = world.fog;
 

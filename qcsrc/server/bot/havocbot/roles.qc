@@ -213,5 +213,5 @@ void havocbot_chooserole()
 
 void havocbot_role_init()
 {
-	CACHE_CVAR(bot_ai_friends_aware_pickup_radius);
+	CVAR_CACHE(bot_ai_friends_aware_pickup_radius);
 };

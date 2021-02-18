@@ -143,11 +143,11 @@ NADGET_HOOKFUNCTION(linker, Attack) {
 }
 
 NADGET_HOOKFUNCTION(linker, Init) {
-	CACHE_CVAR(g_nadgets_linker_sharefactor);
-	CACHE_CVAR(g_nadgets_linker_range);
-	CACHE_CVAR(g_nadgets_linker_damagefactor);
-	CACHE_CVAR(g_nadgets_linker_hps);
-	CACHE_CVAR(g_nadgets_linker_duration);
+	CVAR_CACHE(g_nadgets_linker_sharefactor);
+	CVAR_CACHE(g_nadgets_linker_range);
+	CVAR_CACHE(g_nadgets_linker_damagefactor);
+	CVAR_CACHE(g_nadgets_linker_hps);
+	CVAR_CACHE(g_nadgets_linker_duration);
 	nadget_linker_DamageForceModsSet_next = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = nadget_linker_DamageForceModsSet;
     return NADGET_INIT_OK;

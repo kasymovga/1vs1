@@ -1627,11 +1627,11 @@ float turret_stdproc_init (string cvar_base_name, string base, string head) {
 
 void turret_readcvars() {
     entity e;
-	CACHE_CVAR(g_turrets_aimidle_delay);
-	CACHE_CVAR(g_turrets_nofire);
-	CACHE_CVAR(g_turrets_targetscan_maxdelay);
-	CACHE_CVAR(g_turrets_targetscan_mindelay);
-	CACHE_CVAR(g_turrets_targetscan_playersonly);
+	CVAR_CACHE(g_turrets_aimidle_delay);
+	CVAR_CACHE(g_turrets_nofire);
+	CVAR_CACHE(g_turrets_targetscan_maxdelay);
+	CVAR_CACHE(g_turrets_targetscan_mindelay);
+	CVAR_CACHE(g_turrets_targetscan_playersonly);
 	e = nextent(world);
 	while (e)
 	{

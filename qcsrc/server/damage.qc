@@ -291,7 +291,7 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 }
 
 void damage_record_init() {
-	CACHE_CVAR(g_score_bestweapon);
+	CVAR_CACHE(g_score_bestweapon);
 	if (g_score_bestweapon)
 		SP_BESTWEP = score_register("bestwep", 0);
 }
@@ -421,12 +421,12 @@ void(entity attacker, void() explode) damage_prepare_explosion {
 
 void damage_init()
 {
-	CACHE_CVAR(g_friendlyfire);
-	CACHE_CVAR(g_friendlyfire_force);
-	CACHE_CVAR(g_mirrordamage);
-	CACHE_CVAR(g_mirrorforce);
-	CACHE_CVAR(g_teamdamage_threshold);
-	CACHE_CVAR(g_throughfloor_damage);
-	CACHE_CVAR(g_throughfloor_force);
-	CACHE_CVAR(g_balance_selfdamagepercent);
+	CVAR_CACHE(g_friendlyfire);
+	CVAR_CACHE(g_friendlyfire_force);
+	CVAR_CACHE(g_mirrordamage);
+	CVAR_CACHE(g_mirrorforce);
+	CVAR_CACHE(g_teamdamage_threshold);
+	CVAR_CACHE(g_throughfloor_damage);
+	CVAR_CACHE(g_throughfloor_force);
+	CVAR_CACHE(g_balance_selfdamagepercent);
 }

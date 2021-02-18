@@ -65,7 +65,7 @@ float(string cmd, float tokens) hint_ClientCommandHandle {
 }
 
 void(void) hint_init {
-	CACHE_CVAR(sv_hints);
+	CVAR_CACHE(sv_hints);
 	hint_RealClientConnect_next = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = hint_RealClientConnect;
 	hint_GameMenuAddItems_next = GameHookChain_GameMenuAddItems;

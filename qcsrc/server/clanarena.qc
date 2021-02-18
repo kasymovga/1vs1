@@ -21,7 +21,7 @@ float Clanarena_PlayerDamageHandle(entity inflictor, entity attacker, float _dam
 
 void Clanarena_Init()
 {
-	CACHE_CVAR(g_ca_healthrotpause_on_damage);
+	CVAR_CACHE(g_ca_healthrotpause_on_damage);
 	team_teams_set_count(bound(2, cvar("g_ca_teams"), 4));
 	GameHook_FragsHandle = Clanarena_HandleFrags;
 	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;

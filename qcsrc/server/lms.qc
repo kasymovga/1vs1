@@ -215,11 +215,11 @@ void(void) lms_init {
 	SP_STATUS = score_register("status", 0);
 	SP_LIVES = score_register("lives", SFL_SORT_PRIO_PRIMARY | SFL_NOCLEAR);
 	lms_lives = scores[SP_LIVES];
-	CACHE_CVAR(g_lms_lives);
-	CACHE_CVAR(g_lms_sphere_diameter_min);
-	CACHE_CVAR(g_lms_sphere_diameter_start_indent);
-	CACHE_CVAR(g_lms_sphere_damage);
-	CACHE_CVAR(g_lms_sphere_damage_distance_factor);
+	CVAR_CACHE(g_lms_lives);
+	CVAR_CACHE(g_lms_sphere_diameter_min);
+	CVAR_CACHE(g_lms_sphere_diameter_start_indent);
+	CVAR_CACHE(g_lms_sphere_damage);
+	CVAR_CACHE(g_lms_sphere_damage_distance_factor);
 	precache_model("models/sphere/sphere.md3");
 	entity_initialize(world, lms_init_delayed, INITPRIO_GAMETYPE);
 }

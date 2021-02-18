@@ -828,6 +828,6 @@ void botframe_showwaypointlinks()
 
 void bot_waypoints_init()
 {
-	CACHE_CVAR(bot_navigation_ignoreplayers);
-	CACHE_CVAR(g_waypointeditor);
+	CVAR_CACHE(bot_navigation_ignoreplayers);
+	CVAR_CACHE(g_waypointeditor);
 };

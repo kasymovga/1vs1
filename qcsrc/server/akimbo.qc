@@ -151,8 +151,8 @@ void Akimbo_Init()
 	if not(g_powerup_strength_akimbo)
 		return;
 
-	CACHE_CVAR(g_akimbo_animation_shift);
-	CACHE_CVAR(g_akimbo_throwable);
+	CVAR_CACHE(g_akimbo_animation_shift);
+	CVAR_CACHE(g_akimbo_throwable);
 	Akimbo_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = Akimbo_PlayerClear;
 }

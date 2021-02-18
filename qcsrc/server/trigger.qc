@@ -567,7 +567,7 @@ void spawnfunc_trigger_hurt()
 	if(trigger_hurt_last)
 		trigger_hurt_last.trigger_hurt_next = self;
 
-	CACHE_CVAR(g_trigger_hurt_interval);
+	CVAR_CACHE(g_trigger_hurt_interval);
 	trigger_hurt_last = self;
 };
 

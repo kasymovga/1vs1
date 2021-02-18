@@ -597,28 +597,28 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
 }
 
 NADGET_HOOKFUNCTION(sentry, Init) {
-	CACHE_CVAR(g_nadgets_sentry_beam_range);
-	CACHE_CVAR(g_nadgets_sentry_beam_dps);
-	CACHE_CVAR(g_nadgets_sentry_beam_force);
-	CACHE_CVAR(g_nadgets_sentry_beam_energyrequired);
-	CACHE_CVAR(g_nadgets_sentry_beam_initialdelay);
-	CACHE_CVAR(g_nadgets_sentry_beam_amount);
-	CACHE_CVAR(g_nadgets_sentry_capture_range);
-	CACHE_CVAR(g_nadgets_sentry_capture_damage_delay);
-	CACHE_CVAR(g_nadgets_sentry_capture_speed);
+	CVAR_CACHE(g_nadgets_sentry_beam_range);
+	CVAR_CACHE(g_nadgets_sentry_beam_dps);
+	CVAR_CACHE(g_nadgets_sentry_beam_force);
+	CVAR_CACHE(g_nadgets_sentry_beam_energyrequired);
+	CVAR_CACHE(g_nadgets_sentry_beam_initialdelay);
+	CVAR_CACHE(g_nadgets_sentry_beam_amount);
+	CVAR_CACHE(g_nadgets_sentry_capture_range);
+	CVAR_CACHE(g_nadgets_sentry_capture_damage_delay);
+	CVAR_CACHE(g_nadgets_sentry_capture_speed);
 	//float g_nadgets_sentry_disown_on_death; //in nadgets.qc for some reason
-	CACHE_CVAR(g_nadgets_sentry_health);
-	CACHE_CVAR(g_nadgets_sentry_health_degenerate_when_damaged);
-	CACHE_CVAR(g_nadgets_sentry_energy_regen);
-	CACHE_CVAR(g_nadgets_sentry_levitation);
-	CACHE_CVAR(g_nadgets_sentry_damagefactor);
-	CACHE_CVAR(g_nadgets_sentry_damagefactor_nadgets);
-	CACHE_CVAR(g_nadgets_sentry_repairfactor);
-	CACHE_CVAR(g_nadgets_sentry_repairfactor_nadgets);
-	CACHE_CVAR(g_nadgets_sentry_shock_damage);
-	CACHE_CVAR(g_nadgets_sentry_shock_force);
-	CACHE_CVAR(g_nadgets_sentry_shock_energy_cost);
-    CACHE_CVAR(g_nadgets_sentry_friction);
-    CACHE_CVAR(g_nadgets_sentry_pushfactor);
+	CVAR_CACHE(g_nadgets_sentry_health);
+	CVAR_CACHE(g_nadgets_sentry_health_degenerate_when_damaged);
+	CVAR_CACHE(g_nadgets_sentry_energy_regen);
+	CVAR_CACHE(g_nadgets_sentry_levitation);
+	CVAR_CACHE(g_nadgets_sentry_damagefactor);
+	CVAR_CACHE(g_nadgets_sentry_damagefactor_nadgets);
+	CVAR_CACHE(g_nadgets_sentry_repairfactor);
+	CVAR_CACHE(g_nadgets_sentry_repairfactor_nadgets);
+	CVAR_CACHE(g_nadgets_sentry_shock_damage);
+	CVAR_CACHE(g_nadgets_sentry_shock_force);
+	CVAR_CACHE(g_nadgets_sentry_shock_energy_cost);
+    CVAR_CACHE(g_nadgets_sentry_friction);
+    CVAR_CACHE(g_nadgets_sentry_pushfactor);
     return NADGET_INIT_OK;
 }

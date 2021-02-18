@@ -128,26 +128,26 @@ float weapon_hagar(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_hagar_primary_ammo);
-		CACHE_CVAR(g_balance_hagar_primary_damage);
-		CACHE_CVAR(g_balance_hagar_primary_edgedamage);
-		CACHE_CVAR(g_balance_hagar_primary_force);
-		CACHE_CVAR(g_balance_hagar_primary_lifetime);
-		CACHE_CVAR(g_balance_hagar_primary_radius);
-		CACHE_CVAR(g_balance_hagar_primary_refire);
-		CACHE_CVAR(g_balance_hagar_primary_speed);
-		CACHE_CVAR(g_balance_hagar_primary_spread);
-		CACHE_CVAR(g_balance_hagar_secondary);
-		CACHE_CVAR(g_balance_hagar_secondary_ammo);
-		CACHE_CVAR(g_balance_hagar_secondary_damage);
-		CACHE_CVAR(g_balance_hagar_secondary_edgedamage);
-		CACHE_CVAR(g_balance_hagar_secondary_force);
-		CACHE_CVAR(g_balance_hagar_secondary_lifetime_min);
-		CACHE_CVAR(g_balance_hagar_secondary_lifetime_rand);
-		CACHE_CVAR(g_balance_hagar_secondary_radius);
-		CACHE_CVAR(g_balance_hagar_secondary_refire);
-		CACHE_CVAR(g_balance_hagar_secondary_speed);
-		CACHE_CVAR(g_balance_hagar_secondary_spread);
+		CVAR_CACHE(g_balance_hagar_primary_ammo);
+		CVAR_CACHE(g_balance_hagar_primary_damage);
+		CVAR_CACHE(g_balance_hagar_primary_edgedamage);
+		CVAR_CACHE(g_balance_hagar_primary_force);
+		CVAR_CACHE(g_balance_hagar_primary_lifetime);
+		CVAR_CACHE(g_balance_hagar_primary_radius);
+		CVAR_CACHE(g_balance_hagar_primary_refire);
+		CVAR_CACHE(g_balance_hagar_primary_speed);
+		CVAR_CACHE(g_balance_hagar_primary_spread);
+		CVAR_CACHE(g_balance_hagar_secondary);
+		CVAR_CACHE(g_balance_hagar_secondary_ammo);
+		CVAR_CACHE(g_balance_hagar_secondary_damage);
+		CVAR_CACHE(g_balance_hagar_secondary_edgedamage);
+		CVAR_CACHE(g_balance_hagar_secondary_force);
+		CVAR_CACHE(g_balance_hagar_secondary_lifetime_min);
+		CVAR_CACHE(g_balance_hagar_secondary_lifetime_rand);
+		CVAR_CACHE(g_balance_hagar_secondary_radius);
+		CVAR_CACHE(g_balance_hagar_secondary_refire);
+		CVAR_CACHE(g_balance_hagar_secondary_speed);
+		CVAR_CACHE(g_balance_hagar_secondary_spread);
 		projectile_init(PROJECTILE_HAGAR);
 		projectile_init(PROJECTILE_HAGAR_BOUNCING);
 		if (cvar("g_balance_hagar_swap_buttons")) {

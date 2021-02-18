@@ -31,5 +31,5 @@ void(entity player, string msg, string txt) announce {
 }
 
 void(void) announce_init {
-	CACHE_CVAR(g_announcer_print);
+	CVAR_CACHE(g_announcer_print);
 }

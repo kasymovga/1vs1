@@ -397,13 +397,13 @@ entity() dom_SelectSpawnPoint {
 
 void(void) dom_init {
 	g_dom = 1;
-	CACHE_CVAR(g_dom_default_teams);
-	CACHE_CVAR(g_dom_point_amt);
-	CACHE_CVAR(g_dom_point_capturetime);
-	CACHE_CVAR(g_dom_point_fullbright);
-	CACHE_CVAR(g_dom_point_glow);
-	CACHE_CVAR(g_dom_point_rate);
-	CACHE_CVAR(g_dom_teams_override);
+	CVAR_CACHE(g_dom_default_teams);
+	CVAR_CACHE(g_dom_point_amt);
+	CVAR_CACHE(g_dom_point_capturetime);
+	CVAR_CACHE(g_dom_point_fullbright);
+	CVAR_CACHE(g_dom_point_glow);
+	CVAR_CACHE(g_dom_point_rate);
+	CVAR_CACHE(g_dom_teams_override);
 	// we have to precache default models/sounds even if they might not be
 	// used because spawnfunc_worldspawn is executed before any other entities are read,
 	// so we don't even know yet if this map is set up for domination...

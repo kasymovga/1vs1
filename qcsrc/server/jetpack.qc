@@ -66,21 +66,21 @@ void(void) jetpack_enable {
 	jetpack_enabled = TRUE;
 	jetpack_physics = spawn();
 	net_link_entity(jetpack_physics, FALSE, 0, jetpack_physics_send);
-	CACHE_CVAR(g_jetpack_acceleration_side);
-	CACHE_CVAR(g_jetpack_acceleration_up);
-	CACHE_CVAR(g_jetpack_antigravity);
-	CACHE_CVAR(g_jetpack_maxspeed_side);
-	CACHE_CVAR(g_jetpack_maxspeed_up);
-	CACHE_CVAR(g_jetpack_fuel);
-	CACHE_CVAR(g_jetpack_attenuation);
-	CACHE_CVAR(g_balance_pause_fuel_regen);
+	CVAR_CACHE(g_jetpack_acceleration_side);
+	CVAR_CACHE(g_jetpack_acceleration_up);
+	CVAR_CACHE(g_jetpack_antigravity);
+	CVAR_CACHE(g_jetpack_maxspeed_side);
+	CVAR_CACHE(g_jetpack_maxspeed_up);
+	CVAR_CACHE(g_jetpack_fuel);
+	CVAR_CACHE(g_jetpack_attenuation);
+	CVAR_CACHE(g_balance_pause_fuel_regen);
 	physics_player_plug = physics_jetpack;
 	jetpack_player_effects_next_link = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = jetpack_player_effects;
 }
 
 void(void) jetpack_init {
-	CACHE_CVAR(g_jetpack);
+	CVAR_CACHE(g_jetpack);
 	if not(g_jetpack)
 		return;
 

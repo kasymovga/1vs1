@@ -34,11 +34,11 @@ float() backpack_ThrowWeaponOnDeathHandle {
 
 float backpack_init_done;
 void() backpack_init {
-	CACHE_CVAR(g_pickup_drop_backpack);
+	CVAR_CACHE(g_pickup_drop_backpack);
 	if not(g_pickup_drop_backpack)
 		return;
 
-	CACHE_CVAR_STR(sv_model_backpack);
+	CVAR_CACHE_STR(sv_model_backpack);
 	model_backpack = ((sv_model_backpack == "") ? "models/items/g_jetpack.md3" : sv_model_backpack);
 	precache_model(model_backpack);
 	if (backpack_init_done)

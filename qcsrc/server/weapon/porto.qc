@@ -238,11 +238,11 @@ float weapon_porto(float req)
 		weapon_porto_remove(self);
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_porto_primary_animtime);
-		CACHE_CVAR(g_balance_porto_primary_lifetime);
-		CACHE_CVAR(g_balance_porto_primary_refire);
-		CACHE_CVAR(g_balance_porto_primary_speed);
-		CACHE_CVAR(g_balance_powerup_strength_force);
+		CVAR_CACHE(g_balance_porto_primary_animtime);
+		CVAR_CACHE(g_balance_porto_primary_lifetime);
+		CVAR_CACHE(g_balance_porto_primary_refire);
+		CVAR_CACHE(g_balance_porto_primary_speed);
+		CVAR_CACHE(g_balance_powerup_strength_force);
 
 		projectile_init(PROJECTILE_PORTO_RED);
 		projectile_init(PROJECTILE_PORTO_BLUE);

@@ -121,20 +121,20 @@ float(void) weapon_melee_bot_aim {
 float weapon_melee_init_done;
 void weapon_melee_init()
 {
-	CACHE_CVAR_STR(sv_sound_melee);
+	CVAR_CACHE_STR(sv_sound_melee);
 	precache_sound (sv_sound_melee);
-	CACHE_CVAR(g_balance_melee);
-	CACHE_CVAR(g_balance_melee_animtime);
-	CACHE_CVAR(g_balance_melee_allow_crouched);
-	CACHE_CVAR(g_balance_melee_delay);
-	CACHE_CVAR(g_balance_melee_ticrate);
-	CACHE_CVAR(g_balance_melee_time);
-	CACHE_CVAR(g_balance_melee_damage);
-	CACHE_CVAR(g_balance_melee_force);
-	CACHE_CVAR(g_balance_melee_force_up);
-	CACHE_CVAR(g_balance_melee_distance);
-	CACHE_CVAR(g_balance_melee_onehit);
-	CACHE_CVAR(g_balance_melee_refire);
+	CVAR_CACHE(g_balance_melee);
+	CVAR_CACHE(g_balance_melee_animtime);
+	CVAR_CACHE(g_balance_melee_allow_crouched);
+	CVAR_CACHE(g_balance_melee_delay);
+	CVAR_CACHE(g_balance_melee_ticrate);
+	CVAR_CACHE(g_balance_melee_time);
+	CVAR_CACHE(g_balance_melee_damage);
+	CVAR_CACHE(g_balance_melee_force);
+	CVAR_CACHE(g_balance_melee_force_up);
+	CVAR_CACHE(g_balance_melee_distance);
+	CVAR_CACHE(g_balance_melee_onehit);
+	CVAR_CACHE(g_balance_melee_refire);
 	sv_player_melee_angles = stov(cvar_string("sv_player_melee_angles"));
 	sv_player_melee_origin = stov(cvar_string("sv_player_melee_origin"));
 	bot_melee_love = cvar("bot_melee");

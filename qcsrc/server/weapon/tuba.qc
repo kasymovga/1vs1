@@ -155,14 +155,14 @@ float weapon_tuba(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_tuba_animtime);
-		CACHE_CVAR(g_balance_tuba_attenuation);
-		CACHE_CVAR(g_balance_tuba_damage);
-		CACHE_CVAR(g_balance_tuba_edgedamage);
-		CACHE_CVAR(g_balance_tuba_force);
-		CACHE_CVAR(g_balance_tuba_radius);
-		CACHE_CVAR(g_balance_tuba_refire);
-		CACHE_CVAR(g_balance_tuba_volume);
+		CVAR_CACHE(g_balance_tuba_animtime);
+		CVAR_CACHE(g_balance_tuba_attenuation);
+		CVAR_CACHE(g_balance_tuba_damage);
+		CVAR_CACHE(g_balance_tuba_edgedamage);
+		CVAR_CACHE(g_balance_tuba_force);
+		CVAR_CACHE(g_balance_tuba_radius);
+		CVAR_CACHE(g_balance_tuba_refire);
+		CVAR_CACHE(g_balance_tuba_volume);
 	}
 	return TRUE;
 }

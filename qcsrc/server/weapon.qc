@@ -1630,17 +1630,17 @@ void(entity e, float wep, string name) weapon_give {
 
 void() weapon_init {
 	float i;
-	CACHE_CVAR(g_balance_weaponswitchdelay);
-	CACHE_CVAR(g_projectiles_newton_style_2_minfactor);
-	CACHE_CVAR(g_projectiles_newton_style_2_maxfactor);
-	CACHE_CVAR(sv_qcweaponanimation);
-	CACHE_CVAR(g_weaponspeedfactor);
-	CACHE_CVAR(g_weaponratefactor);
-	CACHE_CVAR(g_akimbo_use_left_hand);
-	CACHE_CVAR(g_shootfromcenter);
-	CACHE_CVAR(g_shootfromeye);
-	CACHE_CVAR(g_projectiles_newton_style);
-	CACHE_CVAR(g_norecoil);
+	CVAR_CACHE(g_balance_weaponswitchdelay);
+	CVAR_CACHE(g_projectiles_newton_style_2_minfactor);
+	CVAR_CACHE(g_projectiles_newton_style_2_maxfactor);
+	CVAR_CACHE(sv_qcweaponanimation);
+	CVAR_CACHE(g_weaponspeedfactor);
+	CVAR_CACHE(g_weaponratefactor);
+	CVAR_CACHE(g_akimbo_use_left_hand);
+	CVAR_CACHE(g_shootfromcenter);
+	CVAR_CACHE(g_shootfromeye);
+	CVAR_CACHE(g_projectiles_newton_style);
+	CVAR_CACHE(g_norecoil);
 	sv_qcanimation_melee_morph1angles = stov(cvar_string("sv_qcanimation_melee_morph1angles"));
 	sv_qcanimation_melee_morph2angles = stov(cvar_string("sv_qcanimation_melee_morph2angles"));
 	sv_qcanimation_melee_morph1origin = stov(cvar_string("sv_qcanimation_melee_morph1origin"));

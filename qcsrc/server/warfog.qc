@@ -23,15 +23,15 @@ float(entity plr, entity viewer, float dalpha) warfog_PlayerAlphaMod {
 }
 
 void(void) warfog_init {
-	CACHE_CVAR(g_warfog);
+	CVAR_CACHE(g_warfog);
 	if (g_warfog <= 0)
 		return;
 
-	CACHE_CVAR(g_warfog_fade_distance);
-	CACHE_CVAR(g_warfog_r);
-	CACHE_CVAR(g_warfog_g);
-	CACHE_CVAR(g_warfog_b);
-	CACHE_CVAR(g_warfog_alpha);
+	CVAR_CACHE(g_warfog_fade_distance);
+	CVAR_CACHE(g_warfog_r);
+	CVAR_CACHE(g_warfog_g);
+	CVAR_CACHE(g_warfog_b);
+	CVAR_CACHE(g_warfog_alpha);
 	g_warfog_fade_distance = max(1, g_warfog_fade_distance);
 	warfog_PlayerAlphaMod_NextLink = gamehook_chain_player_alpha_mod;
 	gamehook_chain_player_alpha_mod = warfog_PlayerAlphaMod;

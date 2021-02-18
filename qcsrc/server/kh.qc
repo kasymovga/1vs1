@@ -919,22 +919,22 @@ float kh_TeleportationForbiddenFor(entity e) { return e.classname == STR_ITEM_KH
 
 void kh_init_delayed()  // sets up th KH environment
 {
-	CACHE_CVAR(g_kh_damageforcescale);
-	CACHE_CVAR(g_kh_delay_collect);
-	CACHE_CVAR(g_kh_delay_drop);
-	CACHE_CVAR(g_kh_delay_return);
-	CACHE_CVAR(g_kh_delay_round);
-	CACHE_CVAR(g_kh_delay_tracking);
-	CACHE_CVAR(g_kh_dropvelocity);
-	CACHE_CVAR(g_kh_maxdist);
-	CACHE_CVAR(g_kh_protecttime);
-	CACHE_CVAR(g_kh_score_capture);
-	CACHE_CVAR(g_kh_score_carrierfrag);
-	CACHE_CVAR(g_kh_score_collect);
-	CACHE_CVAR(g_kh_score_destroyed);
-	CACHE_CVAR(g_kh_score_push);
-	CACHE_CVAR(g_kh_throwvelocity);
-	CACHE_CVAR(g_kh_showenemycarrier);
+	CVAR_CACHE(g_kh_damageforcescale);
+	CVAR_CACHE(g_kh_delay_collect);
+	CVAR_CACHE(g_kh_delay_drop);
+	CVAR_CACHE(g_kh_delay_return);
+	CVAR_CACHE(g_kh_delay_round);
+	CVAR_CACHE(g_kh_delay_tracking);
+	CVAR_CACHE(g_kh_dropvelocity);
+	CVAR_CACHE(g_kh_maxdist);
+	CVAR_CACHE(g_kh_protecttime);
+	CVAR_CACHE(g_kh_score_capture);
+	CVAR_CACHE(g_kh_score_carrierfrag);
+	CVAR_CACHE(g_kh_score_collect);
+	CVAR_CACHE(g_kh_score_destroyed);
+	CVAR_CACHE(g_kh_score_push);
+	CVAR_CACHE(g_kh_throwvelocity);
+	CVAR_CACHE(g_kh_showenemycarrier);
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
 	kh_controller.reset2 = kh_Reset;

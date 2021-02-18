@@ -97,25 +97,25 @@ float weapon_laser(float req)
 		weapon_deathtypestring = "was lasered to death by"; // unchecked: SPLASH
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_laser_primary_animtime);
-		CACHE_CVAR(g_balance_laser_primary_damage);
-		CACHE_CVAR(g_balance_laser_primary_edgedamage);
-		CACHE_CVAR(g_balance_laser_primary_force);
-		CACHE_CVAR(g_balance_laser_primary_lifetime);
-		CACHE_CVAR(g_balance_laser_primary_radius);
-		CACHE_CVAR(g_balance_laser_primary_refire);
-		CACHE_CVAR(g_balance_laser_primary_shotangle);
-		CACHE_CVAR(g_balance_laser_primary_speed);
-		CACHE_CVAR(g_balance_laser_secondary);
-		CACHE_CVAR(g_balance_laser_secondary_animtime);
-		CACHE_CVAR(g_balance_laser_secondary_damage);
-		CACHE_CVAR(g_balance_laser_secondary_edgedamage);
-		CACHE_CVAR(g_balance_laser_secondary_force);
-		CACHE_CVAR(g_balance_laser_secondary_lifetime);
-		CACHE_CVAR(g_balance_laser_secondary_radius);
-		CACHE_CVAR(g_balance_laser_secondary_refire);
-		CACHE_CVAR(g_balance_laser_secondary_shotangle);
-		CACHE_CVAR(g_balance_laser_secondary_speed);
+		CVAR_CACHE(g_balance_laser_primary_animtime);
+		CVAR_CACHE(g_balance_laser_primary_damage);
+		CVAR_CACHE(g_balance_laser_primary_edgedamage);
+		CVAR_CACHE(g_balance_laser_primary_force);
+		CVAR_CACHE(g_balance_laser_primary_lifetime);
+		CVAR_CACHE(g_balance_laser_primary_radius);
+		CVAR_CACHE(g_balance_laser_primary_refire);
+		CVAR_CACHE(g_balance_laser_primary_shotangle);
+		CVAR_CACHE(g_balance_laser_primary_speed);
+		CVAR_CACHE(g_balance_laser_secondary);
+		CVAR_CACHE(g_balance_laser_secondary_animtime);
+		CVAR_CACHE(g_balance_laser_secondary_damage);
+		CVAR_CACHE(g_balance_laser_secondary_edgedamage);
+		CVAR_CACHE(g_balance_laser_secondary_force);
+		CVAR_CACHE(g_balance_laser_secondary_lifetime);
+		CVAR_CACHE(g_balance_laser_secondary_radius);
+		CVAR_CACHE(g_balance_laser_secondary_refire);
+		CVAR_CACHE(g_balance_laser_secondary_shotangle);
+		CVAR_CACHE(g_balance_laser_secondary_speed);
 		projectile_init(PROJECTILE_LASER);
 	}
 	return TRUE;

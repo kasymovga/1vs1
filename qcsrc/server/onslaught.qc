@@ -1204,9 +1204,9 @@ void(void) onslaught_init {
 	precache_sound("onslaught/controlpoint_underattack.wav");
 	precache_sound("onslaught/ons_spark1.wav");
 	precache_sound("onslaught/ons_spark2.wav");
-	CACHE_CVAR(g_ons_gen_health);
-	CACHE_CVAR(g_ons_cp_buildhealth);
-	CACHE_CVAR(g_ons_cp_buildtime);
-	CACHE_CVAR(g_ons_cp_health);
-	CACHE_CVAR(g_ons_cp_regen);
+	CVAR_CACHE(g_ons_gen_health);
+	CVAR_CACHE(g_ons_cp_buildhealth);
+	CVAR_CACHE(g_ons_cp_buildtime);
+	CVAR_CACHE(g_ons_cp_health);
+	CVAR_CACHE(g_ons_cp_regen);
 }

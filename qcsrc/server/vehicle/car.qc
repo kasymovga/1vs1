@@ -288,12 +288,12 @@ void(void) vehicle_car_init {
 	vehicle_init();
 	dlc_require("car_v1");
 	vehicle_car_init_done = TRUE;
-	CACHE_CVAR(g_vehicle_car_pushfactor);
-	CACHE_CVAR(g_vehicle_car_movement_inertia);
-	CACHE_CVAR(g_vehicle_car_speed_stop);
-	CACHE_CVAR(g_vehicle_car_speed_drift);
-	CACHE_CVAR(g_vehicle_car_speed);
-	CACHE_CVAR(g_vehicle_car_turnspeed);
+	CVAR_CACHE(g_vehicle_car_pushfactor);
+	CVAR_CACHE(g_vehicle_car_movement_inertia);
+	CVAR_CACHE(g_vehicle_car_speed_stop);
+	CVAR_CACHE(g_vehicle_car_speed_drift);
+	CVAR_CACHE(g_vehicle_car_speed);
+	CVAR_CACHE(g_vehicle_car_turnspeed);
 	precache_model("models/car/car.md3");
 	precache_model("models/car/wheel.md3");
 	precache_model("models/onslaught/gen_gib1.md3");

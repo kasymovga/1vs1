@@ -53,14 +53,14 @@ void(void) laser_init {
 		return;
 
 	client_button_atck2_busy = TRUE;
-	CACHE_CVAR(g_laser_refire);
-	CACHE_CVAR(g_laser_animtime);
-	CACHE_CVAR(g_laser_speed);
-	CACHE_CVAR(g_laser_damage);
-	CACHE_CVAR(g_laser_damage_edge);
-	CACHE_CVAR(g_laser_radius);
-	CACHE_CVAR(g_laser_force);
-	CACHE_CVAR(g_laser_offhand);
+	CVAR_CACHE(g_laser_refire);
+	CVAR_CACHE(g_laser_animtime);
+	CVAR_CACHE(g_laser_speed);
+	CVAR_CACHE(g_laser_damage);
+	CVAR_CACHE(g_laser_damage_edge);
+	CVAR_CACHE(g_laser_radius);
+	CVAR_CACHE(g_laser_force);
+	CVAR_CACHE(g_laser_offhand);
 	laser_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
 	gamehook_chain_weapon_frame_handle = laser_weapon_frame_handle;
 	precache_sound ("weapons/lasergun_fire.wav");

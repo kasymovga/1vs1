@@ -355,10 +355,10 @@ void conquest_init() {
 	precache_sound("onslaught/controlpoint_built.ogg");
 	precache_sound("onslaught/controlpoint_underattack.ogg");
 	precache_sound("domination/claim.wav");
-	CACHE_CVAR(g_conq_capture_time);
-	CACHE_CVAR(g_conq_lasthope_time);
-	CACHE_CVAR(g_conq_score_capture);
-	CACHE_CVAR(g_conq_teamscore_alternative);
+	CVAR_CACHE(g_conq_capture_time);
+	CVAR_CACHE(g_conq_lasthope_time);
+	CVAR_CACHE(g_conq_score_capture);
+	CVAR_CACHE(g_conq_teamscore_alternative);
 	if (g_conq_capture_time <= 0)
 		g_conq_capture_time = 1;
 

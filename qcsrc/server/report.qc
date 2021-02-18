@@ -44,7 +44,7 @@ float(string cmd, float tokens) report_cmd_client_handle {
 }
 
 void(void) report_init {
-	CACHE_CVAR_STR(sv_report_url);
+	CVAR_CACHE_STR(sv_report_url);
 	if (sv_report_url == "")
 		return;
 

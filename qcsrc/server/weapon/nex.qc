@@ -155,18 +155,18 @@ float weapon_nex(float req)
 		if (g_balance_nex_magazinecapacity)
 			self.nex_ammoclip = g_balance_nex_magazinecapacity;
 	} else if (req == WR_CVAR_CACHE) {
-		CACHE_CVAR(g_balance_nex_magazinecapacity);
-		CACHE_CVAR(g_balance_nex_reloadtime);
-		CACHE_CVAR(g_balance_nex_ammo);
-		CACHE_CVAR(g_balance_nex_animtime);
-		CACHE_CVAR(g_balance_nex_damage);
-		CACHE_CVAR(g_balance_nex_damagefalloff_forcehalflife);
-		CACHE_CVAR(g_balance_nex_damagefalloff_halflife);
-		CACHE_CVAR(g_balance_nex_damagefalloff_maxdist);
-		CACHE_CVAR(g_balance_nex_damagefalloff_mindist);
-		CACHE_CVAR(g_balance_nex_force);
-		CACHE_CVAR(g_balance_nex_refire);
-		CACHE_CVAR_STR(sv_announcer_extra_twohits);
+		CVAR_CACHE(g_balance_nex_magazinecapacity);
+		CVAR_CACHE(g_balance_nex_reloadtime);
+		CVAR_CACHE(g_balance_nex_ammo);
+		CVAR_CACHE(g_balance_nex_animtime);
+		CVAR_CACHE(g_balance_nex_damage);
+		CVAR_CACHE(g_balance_nex_damagefalloff_forcehalflife);
+		CVAR_CACHE(g_balance_nex_damagefalloff_halflife);
+		CVAR_CACHE(g_balance_nex_damagefalloff_maxdist);
+		CVAR_CACHE(g_balance_nex_damagefalloff_mindist);
+		CVAR_CACHE(g_balance_nex_force);
+		CVAR_CACHE(g_balance_nex_refire);
+		CVAR_CACHE_STR(sv_announcer_extra_twohits);
 		if (sv_announcer_extra_twohits != "")
 			precache_sound(sv_announcer_extra_twohits);
 	}

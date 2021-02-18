@@ -1307,5 +1307,5 @@ float bot_execute_commands()
 
 void bot_scripting_init()
 {
-	CACHE_CVAR(g_debug_bot_commands);
+	CVAR_CACHE(g_debug_bot_commands);
 }

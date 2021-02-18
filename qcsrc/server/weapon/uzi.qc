@@ -171,23 +171,23 @@ float weapon_uzi(float req)
 		weapon_deathtypestring = "did the impossible";
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_uzi_bulletconstant);
-		CACHE_CVAR(g_balance_uzi_magazinecapacity);
-		CACHE_CVAR(g_balance_uzi_reloadtime);
-		CACHE_CVAR(g_balance_uzi_first);
-		CACHE_CVAR(g_balance_uzi_first_ammo);
-		CACHE_CVAR(g_balance_uzi_first_damage);
-		CACHE_CVAR(g_balance_uzi_first_force);
-		CACHE_CVAR(g_balance_uzi_first_gravityfactor);
-		CACHE_CVAR(g_balance_uzi_first_refire);
-		CACHE_CVAR(g_balance_uzi_first_spread);
-		CACHE_CVAR(g_balance_uzi_speed);
-		CACHE_CVAR(g_balance_uzi_sustained_ammo);
-		CACHE_CVAR(g_balance_uzi_sustained_damage);
-		CACHE_CVAR(g_balance_uzi_sustained_force);
-		CACHE_CVAR(g_balance_uzi_sustained_gravityfactor);
-		CACHE_CVAR(g_balance_uzi_sustained_refire);
-		CACHE_CVAR(g_balance_uzi_sustained_spread);
+		CVAR_CACHE(g_balance_uzi_bulletconstant);
+		CVAR_CACHE(g_balance_uzi_magazinecapacity);
+		CVAR_CACHE(g_balance_uzi_reloadtime);
+		CVAR_CACHE(g_balance_uzi_first);
+		CVAR_CACHE(g_balance_uzi_first_ammo);
+		CVAR_CACHE(g_balance_uzi_first_damage);
+		CVAR_CACHE(g_balance_uzi_first_force);
+		CVAR_CACHE(g_balance_uzi_first_gravityfactor);
+		CVAR_CACHE(g_balance_uzi_first_refire);
+		CVAR_CACHE(g_balance_uzi_first_spread);
+		CVAR_CACHE(g_balance_uzi_speed);
+		CVAR_CACHE(g_balance_uzi_sustained_ammo);
+		CVAR_CACHE(g_balance_uzi_sustained_damage);
+		CVAR_CACHE(g_balance_uzi_sustained_force);
+		CVAR_CACHE(g_balance_uzi_sustained_gravityfactor);
+		CVAR_CACHE(g_balance_uzi_sustained_refire);
+		CVAR_CACHE(g_balance_uzi_sustained_spread);
 		if (cvar("g_balance_uzi_swap_buttons")) {
 			uzi_buttonatck1 = BUTTON_ATCK2;
 			uzi_buttonatck2 = BUTTON_ATCK;

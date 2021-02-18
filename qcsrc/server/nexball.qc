@@ -128,36 +128,36 @@ float(float f) nexball_SwitchWeaponMod {
 }
 
 void() nexball_init {
-	CACHE_CVAR(g_nexball_meter_period); //sent with the client init entity
+	CVAR_CACHE(g_nexball_meter_period); //sent with the client init entity
 	if (g_nexball_meter_period <= 0)
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 
 	g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 	addstat(STAT_NB_METERSTART, AS_FLOAT, metertime_stat);
 	// General settings
-	CACHE_CVAR(g_nexball_football_boost_forward);   //100
-	CACHE_CVAR(g_nexball_football_boost_up);        //200
-	CACHE_CVAR(g_nexball_football_melee_boost_forward);
-	CACHE_CVAR(g_nexball_football_melee_boost_up);
-	CACHE_CVAR(g_nexball_hockey_boost_forward);   //100
-	CACHE_CVAR(g_nexball_hockey_bouncefactor);   //0.9
-	CACHE_CVAR(g_nexball_hockey_melee_boost_forward);   //300
-	CACHE_CVAR(g_nexball_hockey_melee_boost_up);   //100
-	CACHE_CVAR(g_nexball_delay_idle);               //10
-	CACHE_CVAR(g_nexball_football_physics);         //0
-	CACHE_CVAR(g_nexball_ball_scale);
-	CACHE_CVAR(g_nexball_ball_explosive_radius);
-	CACHE_CVAR(g_nexball_ball_explosive_damage);
-	CACHE_CVAR(g_nexball_ball_explosive_force);
-	CACHE_CVAR(g_nexball_primary_shootatmaxmeter);
-	CACHE_CVAR(g_nexball_primary_speed);
-	CACHE_CVAR(g_nexball_basketball_meter);
-	CACHE_CVAR(g_nexball_basketball_meter_maxpower);
-	CACHE_CVAR(g_nexball_basketball_meter_minpower);
-	CACHE_CVAR(g_nexball_delay_collect);
-	CACHE_CVAR(g_nexball_delay_goal);
-	CACHE_CVAR(g_nexball_delay_start);
-	CACHE_CVAR(g_nexball_basketball_carrier_speed);
+	CVAR_CACHE(g_nexball_football_boost_forward);   //100
+	CVAR_CACHE(g_nexball_football_boost_up);        //200
+	CVAR_CACHE(g_nexball_football_melee_boost_forward);
+	CVAR_CACHE(g_nexball_football_melee_boost_up);
+	CVAR_CACHE(g_nexball_hockey_boost_forward);   //100
+	CVAR_CACHE(g_nexball_hockey_bouncefactor);   //0.9
+	CVAR_CACHE(g_nexball_hockey_melee_boost_forward);   //300
+	CVAR_CACHE(g_nexball_hockey_melee_boost_up);   //100
+	CVAR_CACHE(g_nexball_delay_idle);               //10
+	CVAR_CACHE(g_nexball_football_physics);         //0
+	CVAR_CACHE(g_nexball_ball_scale);
+	CVAR_CACHE(g_nexball_ball_explosive_radius);
+	CVAR_CACHE(g_nexball_ball_explosive_damage);
+	CVAR_CACHE(g_nexball_ball_explosive_force);
+	CVAR_CACHE(g_nexball_primary_shootatmaxmeter);
+	CVAR_CACHE(g_nexball_primary_speed);
+	CVAR_CACHE(g_nexball_basketball_meter);
+	CVAR_CACHE(g_nexball_basketball_meter_maxpower);
+	CVAR_CACHE(g_nexball_basketball_meter_minpower);
+	CVAR_CACHE(g_nexball_delay_collect);
+	CVAR_CACHE(g_nexball_delay_goal);
+	CVAR_CACHE(g_nexball_delay_start);
+	CVAR_CACHE(g_nexball_basketball_carrier_speed);
 	nexball_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nexball_PlayerClear;
 	nexball_SwitchWeaponMod_NextLink = GameHookChain_SwitchWeaponMod;
@@ -659,10 +659,10 @@ void(void) spawnfunc_nexball_basketball {
 	self.classname = "nexball_basketball";
 	if not(balls & BALL_BASKET)
 	{
-		CACHE_CVAR(g_nexball_basketball_effects_default);
-		CACHE_CVAR(g_nexball_basketball_delay_hold);
-		CACHE_CVAR(g_nexball_basketball_delay_hold_forteam);
-		CACHE_CVAR(g_nexball_basketball_teamsteal);
+		CVAR_CACHE(g_nexball_basketball_effects_default);
+		CVAR_CACHE(g_nexball_basketball_delay_hold);
+		CVAR_CACHE(g_nexball_basketball_delay_hold_forteam);
+		CVAR_CACHE(g_nexball_basketball_teamsteal);
 		g_nexball_basketball_effects_default = g_nexball_basketball_effects_default & BALL_EFFECTMASK;
 	}
 	if (!self.effects)

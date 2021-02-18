@@ -645,20 +645,20 @@ void Bot_Say(entity source, float teamsay, entity privatesay, string msglist, st
 
 void bot_init()
 {
-	CACHE_CVAR(bot_ai_dangerdetectioninterval);
-	CACHE_CVAR(bot_ai_dangerdetectionupdates);
-	CACHE_CVAR(bot_ai_thinkinterval);
-	CACHE_CVAR(bot_god);
-	CACHE_CVAR(bot_ignore_bots);
-	CACHE_CVAR(bot_join_empty);
-	CACHE_CVAR(bot_navigation_ignoreplayers);
-	CACHE_CVAR(bot_number);
-	CACHE_CVAR(bot_usemodelnames);
-	CACHE_CVAR(bot_vs_human);
-	CACHE_CVAR(waypoint_benchmark);
-	CACHE_CVAR(skill_auto);
-	CACHE_CVAR(skill_auto_min);
-	CACHE_CVAR(skill_auto_max);
+	CVAR_CACHE(bot_ai_dangerdetectioninterval);
+	CVAR_CACHE(bot_ai_dangerdetectionupdates);
+	CVAR_CACHE(bot_ai_thinkinterval);
+	CVAR_CACHE(bot_god);
+	CVAR_CACHE(bot_ignore_bots);
+	CVAR_CACHE(bot_join_empty);
+	CVAR_CACHE(bot_navigation_ignoreplayers);
+	CVAR_CACHE(bot_number);
+	CVAR_CACHE(bot_usemodelnames);
+	CVAR_CACHE(bot_vs_human);
+	CVAR_CACHE(waypoint_benchmark);
+	CVAR_CACHE(skill_auto);
+	CVAR_CACHE(skill_auto_min);
+	CVAR_CACHE(skill_auto_max);
 	bot_aim_init();
 	bot_navigation_init();
 	bot_waypoints_init();

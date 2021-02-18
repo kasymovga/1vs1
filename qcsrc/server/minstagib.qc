@@ -344,17 +344,17 @@ void minstagib_ItemRespawnCountDown() {
 float minstagib_ArmorBlockPercentMod() { return 0; }
 
 void minstagib_init() {
-	CACHE_CVAR(g_minstagib);
+	CVAR_CACHE(g_minstagib);
 	if not(g_minstagib)
 		return;
 
-	CACHE_CVAR(g_minstagib_ammo_drop);
-	CACHE_CVAR(g_minstagib_armor_max);
-	CACHE_CVAR(g_minstagib_speed_moverate);
-	CACHE_CVAR(g_minstagib_nolaserdamage);
-	CACHE_CVAR(g_minstagib_health_drop);
-	CACHE_CVAR(g_minstagib_health_max);
-	CACHE_CVAR(g_minstagib_extralives);
+	CVAR_CACHE(g_minstagib_ammo_drop);
+	CVAR_CACHE(g_minstagib_armor_max);
+	CVAR_CACHE(g_minstagib_speed_moverate);
+	CVAR_CACHE(g_minstagib_nolaserdamage);
+	CVAR_CACHE(g_minstagib_health_drop);
+	CVAR_CACHE(g_minstagib_health_max);
+	CVAR_CACHE(g_minstagib_extralives);
 	if (g_minstagib_ammo_drop)
 		minstagib_ammo = TRUE;
 

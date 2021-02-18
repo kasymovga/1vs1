@@ -212,5 +212,5 @@ entity (float anypoint) spawn_select {
 }
 
 void() spawn_init {
-	CACHE_CVAR(g_spawn_furthest);
+	CVAR_CACHE(g_spawn_furthest);
 }

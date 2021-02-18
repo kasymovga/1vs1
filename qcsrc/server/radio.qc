@@ -48,20 +48,20 @@ void Radio_GameMenuAddItems(void(string item, string cmd) Add_Item) {
 void Radio_Init(void) {
 	radio_playing_queue = -1;
 
-	CACHE_CVAR(sv_radio);
+	CVAR_CACHE(sv_radio);
 	if(!sv_radio)
 		return;
 
 	URI_GET_RADIO = uri_register_handler(Radio_URI_Get_Callback);
 	registercvar("_radio_queue", "");
 	registercvar("_radio_queue_left", "0");
-	CACHE_CVAR(sv_radio_announce);
-	CACHE_CVAR(sv_radio_preload);
-	CACHE_CVAR(sv_radio_queue_autofill);
-	CACHE_CVAR(sv_radio_queue_autofill_retry);
-	CACHE_CVAR(sv_radio_queue_advanceat);
-	CACHE_CVAR(sv_radio_queue_autofill_retry);
-	CACHE_CVAR(sv_radio_log_skips);
+	CVAR_CACHE(sv_radio_announce);
+	CVAR_CACHE(sv_radio_preload);
+	CVAR_CACHE(sv_radio_queue_autofill);
+	CVAR_CACHE(sv_radio_queue_autofill_retry);
+	CVAR_CACHE(sv_radio_queue_advanceat);
+	CVAR_CACHE(sv_radio_queue_autofill_retry);
+	CVAR_CACHE(sv_radio_log_skips);
 	Radio_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
 	GameHookChain_RealClientConnect = Radio_RealClientConnect;
 	Radio_ServerFrame_NextLink = gamehook_chain_world_frame_start;

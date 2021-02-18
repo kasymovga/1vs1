@@ -228,26 +228,26 @@ float weapon_minstanex(float req)
 	}
 	else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_minstanex_animtime);
-		CACHE_CVAR(g_balance_minstanex_refire);
-		CACHE_CVAR(g_balance_minstanex_explode);
-		CACHE_CVAR(g_balance_minstanex_explode_damage);
-		CACHE_CVAR(g_balance_minstanex_explode_edgedamage);
-		CACHE_CVAR(g_balance_minstanex_explode_force);
-		CACHE_CVAR(g_balance_minstanex_explode_radius);
-		CACHE_CVAR(g_balance_minstanex_laser);
+		CVAR_CACHE(g_balance_minstanex_animtime);
+		CVAR_CACHE(g_balance_minstanex_refire);
+		CVAR_CACHE(g_balance_minstanex_explode);
+		CVAR_CACHE(g_balance_minstanex_explode_damage);
+		CVAR_CACHE(g_balance_minstanex_explode_edgedamage);
+		CVAR_CACHE(g_balance_minstanex_explode_force);
+		CVAR_CACHE(g_balance_minstanex_explode_radius);
+		CVAR_CACHE(g_balance_minstanex_laser);
 		g_balance_minstanex_laser_count = max(1, cvar("g_balance_minstanex_laser_count"));
-		CACHE_CVAR(g_balance_minstanex_laser_damage);
-		CACHE_CVAR(g_balance_minstanex_laser_edgedamage);
-		CACHE_CVAR(g_balance_minstanex_laser_force);
-		CACHE_CVAR(g_balance_minstanex_laser_lifetime);
-		CACHE_CVAR(g_balance_minstanex_laser_speed);
-		CACHE_CVAR(g_balance_minstanex_laser_spread);
-		CACHE_CVAR(g_balance_minstanex_laser_radius);
-		CACHE_CVAR(g_balance_minstanex_laser_refire);
-		CACHE_CVAR(g_balance_minstanex_laser_rapid);
-		CACHE_CVAR(g_balance_minstanex_laser_rapid_delay);
-		CACHE_CVAR(g_balance_minstanex_laser_rapid_refire);
+		CVAR_CACHE(g_balance_minstanex_laser_damage);
+		CVAR_CACHE(g_balance_minstanex_laser_edgedamage);
+		CVAR_CACHE(g_balance_minstanex_laser_force);
+		CVAR_CACHE(g_balance_minstanex_laser_lifetime);
+		CVAR_CACHE(g_balance_minstanex_laser_speed);
+		CVAR_CACHE(g_balance_minstanex_laser_spread);
+		CVAR_CACHE(g_balance_minstanex_laser_radius);
+		CVAR_CACHE(g_balance_minstanex_laser_refire);
+		CVAR_CACHE(g_balance_minstanex_laser_rapid);
+		CVAR_CACHE(g_balance_minstanex_laser_rapid_delay);
+		CVAR_CACHE(g_balance_minstanex_laser_rapid_refire);
 		if (g_balance_minstanex_explode) {
 			dlc_require("rm_effects_v2");
 			projectile_init(PROJECTILE_RM_LASER);

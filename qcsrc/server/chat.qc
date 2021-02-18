@@ -315,19 +315,19 @@ void() chat_bubble_spawn {
 
 void() chat_init {
 	precache_model ("models/misc/chatbubble.spr");
-	CACHE_CVAR(g_chat_flood_burst);
-	CACHE_CVAR(g_chat_flood_burst_team);
-	CACHE_CVAR(g_chat_flood_burst_tell);
-	CACHE_CVAR(g_chat_flood_lmax);
-	CACHE_CVAR(g_chat_flood_lmax_team);
-	CACHE_CVAR(g_chat_flood_lmax_tell);
-	CACHE_CVAR(g_chat_flood_notify_flooder);
-	CACHE_CVAR(g_chat_flood_damage_flooder);
-	CACHE_CVAR(g_chat_flood_spl);
-	CACHE_CVAR(g_chat_flood_spl_team);
-	CACHE_CVAR(g_chat_flood_spl_tell);
-	CACHE_CVAR(g_chat_nospectators);
-	CACHE_CVAR(g_chat_teamcolors);
-	CACHE_CVAR_STR(g_chat_forbidden_words);
-	CACHE_CVAR(g_chat_forbidden_words_set_retard);
+	CVAR_CACHE(g_chat_flood_burst);
+	CVAR_CACHE(g_chat_flood_burst_team);
+	CVAR_CACHE(g_chat_flood_burst_tell);
+	CVAR_CACHE(g_chat_flood_lmax);
+	CVAR_CACHE(g_chat_flood_lmax_team);
+	CVAR_CACHE(g_chat_flood_lmax_tell);
+	CVAR_CACHE(g_chat_flood_notify_flooder);
+	CVAR_CACHE(g_chat_flood_damage_flooder);
+	CVAR_CACHE(g_chat_flood_spl);
+	CVAR_CACHE(g_chat_flood_spl_team);
+	CVAR_CACHE(g_chat_flood_spl_tell);
+	CVAR_CACHE(g_chat_nospectators);
+	CVAR_CACHE(g_chat_teamcolors);
+	CVAR_CACHE_STR(g_chat_forbidden_words);
+	CVAR_CACHE(g_chat_forbidden_words_set_retard);
 }

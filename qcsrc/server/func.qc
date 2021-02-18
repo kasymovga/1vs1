@@ -817,8 +817,8 @@ target : targetname of first spawnfunc_path_corner (starts here)
 void spawnfunc_func_train()
 {
 	if not(func_train_init_done) {
-		CACHE_CVAR(sv_gameplayfix_trainnomins);
-		CACHE_CVAR(sv_gameplayfix_trainnowait);
+		CVAR_CACHE(sv_gameplayfix_trainnomins);
+		CVAR_CACHE(sv_gameplayfix_trainnowait);
 		func_train_init_done = TRUE;
 	}
 	if (self.noise != "")

@@ -1131,20 +1131,20 @@ vector havocbot_dodge()
 
 void bot_havocbot_init()
 {
-	CACHE_CVAR(bot_ai_bunnyhop_firstjumpdelay);
-	CACHE_CVAR(bot_ai_bunnyhop_skilloffset);
-	CACHE_CVAR(bot_ai_bunnyhop_startdistance);
-	CACHE_CVAR(bot_ai_bunnyhop_stopdistance);
-	CACHE_CVAR(bot_ai_chooseweaponinterval);
-	CACHE_CVAR(bot_ai_dodgeupdateinterval);
-	CACHE_CVAR(bot_ai_enemydetectioninterval);
-	CACHE_CVAR(bot_ai_enemydetectionradius);
-	CACHE_CVAR(bot_ai_ignoregoal_timeout);
-	CACHE_CVAR(bot_ai_keyboard_distance);
-	CACHE_CVAR(bot_ai_keyboard_treshold);
-	CACHE_CVAR(bot_ai_weapon_combo);
-	CACHE_CVAR(bot_ai_weapon_combo_threshold);
-	CACHE_CVAR(bot_nofire);
-	CACHE_CVAR(bot_ai_strategyinterval);
+	CVAR_CACHE(bot_ai_bunnyhop_firstjumpdelay);
+	CVAR_CACHE(bot_ai_bunnyhop_skilloffset);
+	CVAR_CACHE(bot_ai_bunnyhop_startdistance);
+	CVAR_CACHE(bot_ai_bunnyhop_stopdistance);
+	CVAR_CACHE(bot_ai_chooseweaponinterval);
+	CVAR_CACHE(bot_ai_dodgeupdateinterval);
+	CVAR_CACHE(bot_ai_enemydetectioninterval);
+	CVAR_CACHE(bot_ai_enemydetectionradius);
+	CVAR_CACHE(bot_ai_ignoregoal_timeout);
+	CVAR_CACHE(bot_ai_keyboard_distance);
+	CVAR_CACHE(bot_ai_keyboard_treshold);
+	CVAR_CACHE(bot_ai_weapon_combo);
+	CVAR_CACHE(bot_ai_weapon_combo_threshold);
+	CVAR_CACHE(bot_nofire);
+	CVAR_CACHE(bot_ai_strategyinterval);
 	havocbot_role_init();
 };

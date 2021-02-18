@@ -41,7 +41,7 @@ float(float req) weapon_axe {
 		weapon_deathtypestring = "was smashed by";
 	} else if (req == WR_CVAR_CACHE)
 	{
-		CACHE_CVAR(g_balance_axe_damage);
+		CVAR_CACHE(g_balance_axe_damage);
 		weapon_melee_init();
 	}
 	return TRUE;
