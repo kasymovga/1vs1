@@ -1172,6 +1172,12 @@ float(string cmd, float argc) race_cmd_handle {
 	return race_cmd_handle_next(cmd, argc);
 }
 
+var void(void(string item, string cmd) send_item) race_gamemenu_send_next;
+void race_gamemenu_send(void(string item, string cmd) send_item) {
+	send_item("Respawn", "kill;");
+	race_gamemenu_send_next(send_item);
+}
+
 void(void) race_init {
 	if (game == GAME_RACE) {
 		float qualifying_override = cvar("g_race_qualifying_timelimit_override");
@@ -1204,6 +1210,8 @@ void(void) race_init {
 		g_cts = 1;
 		g_race_qualifying = 1;
 		race_records_path = CTS_RECORD;
+		race_gamemenu_send_next = gamehook_chain_gamemenu_send;
+		gamehook_chain_gamemenu_send = race_gamemenu_send;
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;
