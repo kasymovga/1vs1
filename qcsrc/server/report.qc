@@ -1,10 +1,10 @@
 string sv_report_url;
 float report_uri_handler;
 
-var void(void(string item, string cmd) Add_Item) report_GameMenuAddItems_next;
-void report_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) report_gamemenu_send_next;
+void report_gamemenu_send(void(string item, string cmd) Add_Item) {
 	Add_Item("Report", strcat("cl_cmd report " , cvar_string("sv_report_reasons"), ";"));
-	report_GameMenuAddItems_next(Add_Item);
+	report_gamemenu_send_next(Add_Item);
 }
 
 void(float id, float status, string data) report_uri_callback {
@@ -48,8 +48,8 @@ void(void) report_init {
 	if (sv_report_url == "")
 		return;
 
-	report_GameMenuAddItems_next = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = report_GameMenuAddItems;
+	report_gamemenu_send_next = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = report_gamemenu_send;
 	report_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = report_cmd_client_handle;
 	report_uri_handler = uri_register_handler(report_uri_callback);

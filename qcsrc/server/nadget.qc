@@ -38,10 +38,10 @@ float nadget_PlayerCanFire(entity plr, float wep) {
 	return nadget_PlayerCanFire_NextLink(plr, wep);
 }
 
-var void(void(string item, string cmd) Add_Item) nadget_GameMenuAddItems_NextLink;
-void nadget_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) nadget_gamemenu_send_NextLink;
+void nadget_gamemenu_send(void(string item, string cmd) Add_Item) {
 	Add_Item("Switch Nadget", "cmd picknade;");
-	nadget_GameMenuAddItems_NextLink(Add_Item);
+	nadget_gamemenu_send_NextLink(Add_Item);
 }
 
 var void(float killed) nadget_PlayerClear_NextLink;
@@ -249,8 +249,8 @@ void nadget_Init(void) {
 	gamehook_chain_player_clear = nadget_PlayerClear;
 	nadget_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
 	gamehook_chain_PlayerCanFire = nadget_PlayerCanFire;
-	nadget_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = nadget_GameMenuAddItems;
+	nadget_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = nadget_gamemenu_send;
 	nadget_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = nadget_ClientCommandHandle;
 	nadget_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;

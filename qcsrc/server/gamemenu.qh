@@ -1,1 +1,1 @@
-void GameMenu_Send();
+void(void) gamemenu_send;

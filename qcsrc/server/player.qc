@@ -2602,6 +2602,6 @@ void() player_init {
 	player_init_done = TRUE;
 	player_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = player_cmd_client_handle;
-	player_gamemenu_add_items_next = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = player_gamemenu_add_items;
+	player_gamemenu_add_items_next = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = player_gamemenu_add_items;
 }

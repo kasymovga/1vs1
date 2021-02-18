@@ -1,9 +1,9 @@
-void GameMenu_Add_Item(string item, string cmd) {
+void(string item, string cmd) gamemenu_send_item {
 	WriteString(MSG_ENTITY, item);
 	WriteString(MSG_ENTITY, cmd);
 }
 
-void GameMenu_Send() {
-	gamehook_chain_GameMenuAddItems(GameMenu_Add_Item);
+void(void) gamemenu_send {
+	gamehook_chain_gamemenu_send(gamemenu_send_item);
 	WriteString(MSG_ENTITY, "");
 }

@@ -9,10 +9,10 @@ void(void) weapon_selectable_send {
     net_write_int24(MSG_ONE, g_start_weapon_selectable);
 }
 
-var void(void(string item, string cmd) Add_Item) weapon_selectable_GameMenuAddItems_NextLink;
-void(void(string item, string cmd) Add_Item) weapon_selectable_GameMenuAddItems {
+var void(void(string item, string cmd) Add_Item) weapon_selectable_gamemenu_send_NextLink;
+void(void(string item, string cmd) Add_Item) weapon_selectable_gamemenu_send {
 	Add_Item("Switch Weapon", "cmd pickweapon;");
-	weapon_selectable_GameMenuAddItems_NextLink(Add_Item);
+	weapon_selectable_gamemenu_send_NextLink(Add_Item);
 }
 
 var float(string cmd, float tokens) weapon_selectable_ClientCommandHandle_NextLink;
@@ -86,6 +86,6 @@ void(void) weapon_selectable_init {
 	gamehook_chain_cmd_client_handle = weapon_selectable_ClientCommandHandle;
 	weapon_selectable_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = weapon_selectable_Spawn;
-	weapon_selectable_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = weapon_selectable_GameMenuAddItems;
+	weapon_selectable_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = weapon_selectable_gamemenu_send;
 }

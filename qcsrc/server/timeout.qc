@@ -214,10 +214,10 @@ float(float tempo) timeout_TempoMod {
 	return timeout_TempoMod_NextLink(tempo);
 }
 
-var void(void(string item, string cmd) Add_Item) timeout_GameMenuAddItems_NextLink;
-void timeout_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) timeout_gamemenu_send_NextLink;
+void timeout_gamemenu_send(void(string item, string cmd) Add_Item) {
 	Add_Item("Timeout/Timein", "cmd timeoutin;");
-	timeout_GameMenuAddItems_NextLink(Add_Item);
+	timeout_gamemenu_send_NextLink(Add_Item);
 }
 
 void() timeout_init {
@@ -230,6 +230,6 @@ void() timeout_init {
 	gamehook_chain_GameCommandHandle = timeout_GameCommandHandle;
 	timeout_TempoMod_NextLink = gamehook_chain_TempoMod;
 	gamehook_chain_TempoMod = timeout_TempoMod;
-	timeout_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = timeout_GameMenuAddItems;
+	timeout_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = timeout_gamemenu_send;
 }

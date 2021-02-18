@@ -5,12 +5,12 @@ string WalkieTalkie_SoundPath(float n) {
 	return strcat("walkietalkie/", sv_walkietalkie[n], ".wav");
 }
 
-var void(void(string item, string cmd) Add_Item) WalkieTalkie_GameMenuAddItems_NextLink;
-void WalkieTalkie_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) WalkieTalkie_gamemenu_send_NextLink;
+void WalkieTalkie_gamemenu_send(void(string item, string cmd) Add_Item) {
 	if (sv_walkietalkie_count)
 		Add_Item("Walkie-Talkie", "cmd walkietalkie;");
 
-	WalkieTalkie_GameMenuAddItems_NextLink(Add_Item);
+	WalkieTalkie_gamemenu_send_NextLink(Add_Item);
 }
 var float(string cmd, float tokens) WalkieTalkie_ClientCommandHandle_NextLink;
 float WalkieTalkie_ClientCommandHandle(string cmd, float tokens) {
@@ -32,8 +32,8 @@ void WalkieTalkie_Init() {
 		sv_walkietalkie[i] = strzone(argv(i));
 		precache_sound(WalkieTalkie_SoundPath(i));
 	}
-	WalkieTalkie_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = WalkieTalkie_GameMenuAddItems;
+	WalkieTalkie_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = WalkieTalkie_gamemenu_send;
 	WalkieTalkie_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = WalkieTalkie_ClientCommandHandle;
 }

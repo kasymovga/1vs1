@@ -40,10 +40,10 @@ void(float n, float p) hint_send {
 	WriteString(MSG_ONE, s);
 }
 
-var void(void(string item, string cmd) Add_Item) hint_GameMenuAddItems_next;
-void hint_GameMenuAddItems(void(string item, string cmd) item_add) {
+var void(void(string item, string cmd) Add_Item) hint_gamemenu_send_next;
+void hint_gamemenu_send(void(string item, string cmd) item_add) {
 	item_add("Hints", "cmd hint 0;");
-	hint_GameMenuAddItems_next(item_add);
+	hint_gamemenu_send_next(item_add);
 }
 
 var void(void) hint_RealClientConnect_next;
@@ -68,8 +68,8 @@ void(void) hint_init {
 	CVAR_CACHE(sv_hints);
 	hint_RealClientConnect_next = gamehook_chain_RealClientConnect;
 	gamehook_chain_RealClientConnect = hint_RealClientConnect;
-	hint_GameMenuAddItems_next = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = hint_GameMenuAddItems;
+	hint_gamemenu_send_next = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = hint_gamemenu_send;
 	hint_ClientCommandHandle_next = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = hint_ClientCommandHandle;
 }

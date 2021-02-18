@@ -38,10 +38,10 @@ float Radio_ClientCommandHandle(string cmd, float tokens);
 var float(string cmd, float tokens) Radio_GameCommandHandle_NextLink;
 float Radio_GameCommandHandle(string cmd, float tokens);
 
-var void(void(string item, string cmd) Add_Item) Radio_GameMenuAddItems_NextLink;
-void Radio_GameMenuAddItems(void(string item, string cmd) Add_Item) {
+var void(void(string item, string cmd) Add_Item) Radio_gamemenu_send_NextLink;
+void Radio_gamemenu_send(void(string item, string cmd) Add_Item) {
 	Add_Item("Radio", "cl_cmd showradio;");
-	Radio_GameMenuAddItems_NextLink(Add_Item);
+	Radio_gamemenu_send_NextLink(Add_Item);
 }
 
 
@@ -70,8 +70,8 @@ void Radio_Init(void) {
 	gamehook_chain_cmd_client_handle = Radio_ClientCommandHandle;
 	Radio_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
 	gamehook_chain_GameCommandHandle = Radio_GameCommandHandle;
-	Radio_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
-	gamehook_chain_GameMenuAddItems = Radio_GameMenuAddItems;
+	Radio_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
+	gamehook_chain_gamemenu_send = Radio_gamemenu_send;
 }
 
 void Radio_SendPreload(entity e, string url) {
