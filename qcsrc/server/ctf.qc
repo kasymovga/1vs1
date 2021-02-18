@@ -428,7 +428,7 @@ void() ctf_flag_touch {
 	if (other.team != self.team)
 		return;
 
-	if not(GameHookChain_PlayerCanBeCarrier(other))
+	if not(gamehook_chain_PlayerCanBeCarrier(other))
 		return;
 
 	if (self.cnt == FLAG_CARRY)
@@ -1068,19 +1068,19 @@ void() ctf_init {
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
-	GameHook_FragsHandle = ctf_handle_frags;
+	gamehook_FragsHandle = ctf_handle_frags;
 	ctf_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = ctf_PlayerClear;
 	ctf_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = ctf_PlayerPreThink;
-	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_RecordForMap = ctf_RecordForMap;
+	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_RecordForMap = ctf_RecordForMap;
 	ctf_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = ctf_DamageForceModsSet;
-	GameHook_PlayerIsCarrier = ctf_PlayerIsCarrier;
-	GameHook_DropCarried = ctf_DropCarried;
-	GameHook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
-	GameHook_BotChooseRole = ctf_role_choose;
+	gamehook_PlayerIsCarrier = ctf_PlayerIsCarrier;
+	gamehook_DropCarried = ctf_DropCarried;
+	gamehook_TeleportationForbiddenFor = ctf_TeleportationForbiddenFor;
+	gamehook_BotChooseRole = ctf_role_choose;
 }
 
 void(entity flag, float shift) ctf_setstatus2 {

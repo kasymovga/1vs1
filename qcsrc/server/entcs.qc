@@ -40,7 +40,7 @@ float() entcs_customize {
 		if (player_alpha(o, other) < 0.25)
 			return FALSE;
 
-		if (GameHookChain_PlayerVisibleThroughWallFor(o,other)) {
+		if (gamehook_chain_PlayerVisibleThroughWallFor(o,other)) {
 			self.effects |= EF_FULLBRIGHT;
 		} else
 			self.effects &~= EF_FULLBRIGHT;
@@ -61,7 +61,7 @@ float(entity to, float sf) entcs_send {
 	}
 
 	if not(sf & 128)
-	if (GameHookChain_PlayerCanSeeHealthFor(to, o))
+	if (gamehook_chain_PlayerCanSeeHealthFor(to, o))
 		sf |= 128;
 
 	WriteByte(MSG_ENTITY, sf);

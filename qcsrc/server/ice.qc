@@ -32,7 +32,7 @@ void Ice_Remove() {
 }
 
 float Ice_Customize() {
-	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
+	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;
@@ -328,8 +328,8 @@ void Ice_Init() {
 	gamehook_chain_physics_max_speed_mod = Ice_SpeedMod;
 	Ice_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = Ice_Spawn;
-	Ice_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = Ice_PlayerDamageHandle;
+	Ice_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
+	gamehook_chain_PlayerDamageHandle = Ice_PlayerDamageHandle;
 	Ice_SpecateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = Ice_SpecateCopy;
 	ice_PlayerPreThink_next = gamehook_chain_player_think;

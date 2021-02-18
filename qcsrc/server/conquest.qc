@@ -363,24 +363,24 @@ void conquest_init() {
 		g_conq_capture_time = 1;
 
 	gamehook_winning_condition = conquest_WinningCondition;
-	GameHook_FragsHandle = conquest_FragsHandle;
-	GameHook_SelectSpawnPoint = conquest_SelectSpawnPoint;
+	gamehook_FragsHandle = conquest_FragsHandle;
+	gamehook_SelectSpawnPoint = conquest_SelectSpawnPoint;
 	gamehook_player_death_handle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = onslaught_Spawn;
 
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;
-	GameHook_Reset = conquest_Reset;
-	GameHook_WinCountDown = stub_WinCountDown;
+	gamehook_Reset = conquest_Reset;
+	gamehook_WinCountDown = stub_WinCountDown;
 	if (cvar("g_conq_use_ons")) {
-		conquest_ons_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
-		GameHookChain_EntityPreSpawn = conquest_ons_EntityPreSpawn;
+		conquest_ons_EntityPreSpawn_NextLink = gamehook_chain_EntityPreSpawn;
+		gamehook_chain_EntityPreSpawn = conquest_ons_EntityPreSpawn;
 	}
 	if (cvar("g_conq_use_ctf_and_dom")) {
-		conquest_ctf_and_dom_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
-		GameHookChain_EntityPreSpawn = conquest_ctf_and_dom_EntityPreSpawn;
+		conquest_ctf_and_dom_EntityPreSpawn_NextLink = gamehook_chain_EntityPreSpawn;
+		gamehook_chain_EntityPreSpawn = conquest_ctf_and_dom_EntityPreSpawn;
 	}
-	GameHook_BotChooseRole = conquest_role_choose;
+	gamehook_BotChooseRole = conquest_role_choose;
 	entity_initialize(world, conquest_delayedinit, INITPRIO_LAST);
 }

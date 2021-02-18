@@ -4,6 +4,6 @@ void GameMenu_Add_Item(string item, string cmd) {
 }
 
 void GameMenu_Send() {
-	GameHookChain_GameMenuAddItems(GameMenu_Add_Item);
+	gamehook_chain_GameMenuAddItems(GameMenu_Add_Item);
 	WriteString(MSG_ENTITY, "");
 }

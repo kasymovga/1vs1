@@ -229,12 +229,12 @@ void IRC_Init(void) {
     irc.nextthink = time + 5;
     
     IRC_Announce_GameStart();
-	IRC_Announce_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-	GameHookChain_RealClientConnect = IRC_Announce_RealClientConnect;
-	IRC_Announce_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
-	GameHookChain_RealClientDisconnect = IRC_Announce_RealClientDisconnect;
-	IRC_PublicPlayerChat_NextLink = GameHookChain_PublicPlayerChat;
-	GameHookChain_PublicPlayerChat = IRC_PublicPlayerChat;
+	IRC_Announce_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
+	gamehook_chain_RealClientConnect = IRC_Announce_RealClientConnect;
+	IRC_Announce_RealClientDisconnect_NextLink = gamehook_chain_RealClientDisconnect;
+	gamehook_chain_RealClientDisconnect = IRC_Announce_RealClientDisconnect;
+	IRC_PublicPlayerChat_NextLink = gamehook_chain_PublicPlayerChat;
+	gamehook_chain_PublicPlayerChat = IRC_PublicPlayerChat;
 }
 
 float IRC_IsIgnored(string mask) {

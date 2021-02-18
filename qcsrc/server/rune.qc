@@ -633,8 +633,8 @@ void(void) rune_init {
 	if (sv_model_rune_vampire != "")
 		precache_model(sv_model_rune_decor);
 
-	rune_JumpVelocityMod_NextLink = GameHookChain_JumpVelocityMod;
-	GameHookChain_JumpVelocityMod = rune_JumpVelocityMod;
+	rune_JumpVelocityMod_NextLink = gamehook_chain_JumpVelocityMod;
+	gamehook_chain_JumpVelocityMod = rune_JumpVelocityMod;
 	rune_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
 	gamehook_chain_physics_max_speed_mod = rune_SpeedMod;
 	rune_WeaponRateFactor_NextLink = gamehook_chain_weapon_rate_factor;
@@ -645,10 +645,10 @@ void(void) rune_init {
 	gamehook_chain_player_clear = rune_PlayerClear;
 	rune_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = rune_SpectateCopy;
-	rune_PlayerVisibleThroughWallFor_NextLink = GameHookChain_PlayerVisibleThroughWallFor;
-	GameHookChain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
-	rune_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
-	GameHookChain_PlayerCanSeeHealthFor = rune_PlayerCanSeeHealthFor;
+	rune_PlayerVisibleThroughWallFor_NextLink = gamehook_chain_PlayerVisibleThroughWallFor;
+	gamehook_chain_PlayerVisibleThroughWallFor = rune_PlayerVisibleThroughWallFor;
+	rune_PlayerCanSeeHealthFor_NextLink = gamehook_chain_PlayerCanSeeHealthFor;
+	gamehook_chain_PlayerCanSeeHealthFor = rune_PlayerCanSeeHealthFor;
 	rune_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = rune_DamageForceModsSet;
 	entity e;

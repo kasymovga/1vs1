@@ -32,8 +32,8 @@ void WalkieTalkie_Init() {
 		sv_walkietalkie[i] = strzone(argv(i));
 		precache_sound(WalkieTalkie_SoundPath(i));
 	}
-	WalkieTalkie_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = WalkieTalkie_GameMenuAddItems;
+	WalkieTalkie_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = WalkieTalkie_GameMenuAddItems;
 	WalkieTalkie_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = WalkieTalkie_ClientCommandHandle;
 }

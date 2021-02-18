@@ -162,7 +162,7 @@ void world_getrecords() {
 	}
 	for (i = 0; i < MapInfo_count; ++i)
 		if (MapInfo_Get_ByID(i)) {
-			s1 = GameHook_RecordForMap(MapInfo_Map_bspname);
+			s1 = gamehook_RecordForMap(MapInfo_Map_bspname);
 			if (strlen(s) + strlen(s1) > 4095) {
 				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
 					break;
@@ -487,7 +487,7 @@ void(void) world_overtime {
 	// - for this g_timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
-	if (GameHook_OvertimeHandle())
+	if (gamehook_OvertimeHandle())
 		return;
 
 	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("g_timelimit_overtimes")) && cvar("g_timelimit_overtime")) {
@@ -615,12 +615,12 @@ void() world_check_rules {
 		if(!checkrules_suddendeathwarning)
 		{
 			checkrules_suddendeathwarning = TRUE;
-			GameStatus_Set(GameHook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
+			GameStatus_Set(gamehook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
 		}
 	} else {
 		if (timelimit)
 		if (time >= timelimit) {
-			if (GameHook_OvertimeAllowed()) {
+			if (gamehook_OvertimeAllowed()) {
 				if (score_winning_condition_helper_equality) {
 					world_overtime();
 				} else {
@@ -872,7 +872,7 @@ void(void) world_frame_start { //called by engine
 void(float dorespawn) world_reset {
 	entity oldself;
 	oldself = self;
-	GameHook_Reset();
+	gamehook_Reset();
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT) {
 		if(self.reset) {

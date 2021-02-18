@@ -26,8 +26,8 @@ void nadget_Cloak_Trigger(void) {
 
 void nadget_Cloak_PlayerFrame(void) {
     if(self.hg_stealth) {
-        if(GameHook_PlayerIsCarrier(self))
-			GameHook_DropCarried(self);
+        if(gamehook_PlayerIsCarrier(self))
+			gamehook_DropCarried(self);
 
         self.hg_wasstealth = TRUE;
         self.hg_stealthtime = time;
@@ -108,12 +108,12 @@ NADGET_HOOKFUNCTION(cloak, Init) {
     nadget_Cloak_PlayerAlphaMod_Next = gamehook_chain_player_alpha_mod;
     gamehook_chain_player_alpha_mod = nadget_Cloak_PlayerAlphaMod;
 
-    nadget_Cloak_WeaponPrepareAttack_Next = GameHookChain_WeaponPrepareAttack;
-    GameHookChain_WeaponPrepareAttack = nadget_Cloak_WeaponPrepareAttack;
+    nadget_Cloak_WeaponPrepareAttack_Next = gamehook_chain_WeaponPrepareAttack;
+    gamehook_chain_WeaponPrepareAttack = nadget_Cloak_WeaponPrepareAttack;
 
 	if (g_nadgets_cloak_spy) {
-		nadget_Cloak_PlayerCanSeeHealthFor_NextLink = GameHookChain_PlayerCanSeeHealthFor;
-		GameHookChain_PlayerCanSeeHealthFor = nadget_Cloak_PlayerCanSeeHealthFor;
+		nadget_Cloak_PlayerCanSeeHealthFor_NextLink = gamehook_chain_PlayerCanSeeHealthFor;
+		gamehook_chain_PlayerCanSeeHealthFor = nadget_Cloak_PlayerCanSeeHealthFor;
 	}
 
     return NADGET_INIT_OK;

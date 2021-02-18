@@ -243,7 +243,7 @@ void(entity player) score_clear {
 	if(score_team_entities_count)
 		return;
 
-	if not(GameHook_ClearScoreAllowed())
+	if not(gamehook_ClearScoreAllowed())
 		return;
 
 	sk = player.scorekeeper;
@@ -901,7 +901,7 @@ float(float limit, float _leadlimit) score_winning_condition {
 	if (leaderfrags != score_winning_condition_helper_topscore)
 	{
 		leaderfrags = score_winning_condition_helper_topscore;
-		GameHook_WinCountDown(limit - leaderfrags);
+		gamehook_WinCountDown(limit - leaderfrags);
 	}
 	if (score_winning_condition_helper_equality)
 		return FALSE;
@@ -1000,7 +1000,7 @@ void(entity attacker, entity targ, float f) score_give_frag {
 		// regular frag
 		score_player_add(attacker, SP_KILLS, 1);
 	}
-	f = GameHook_FragsHandle(attacker, targ, f);
+	f = gamehook_FragsHandle(attacker, targ, f);
 	if(f)
 		score_player_team_add_score(attacker, f);
 }

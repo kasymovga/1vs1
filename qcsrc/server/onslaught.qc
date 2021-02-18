@@ -1155,12 +1155,12 @@ void(void) onslaught_init {
 	gamehook_player_death_handle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = onslaught_Spawn;
-	GameHook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
+	gamehook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;
 	gamehook_winning_condition = onslaught_WinningCondition;
-	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_BotChooseRole = havocbot_chooserole_ons;
+	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_BotChooseRole = havocbot_chooserole_ons;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");

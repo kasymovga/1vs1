@@ -76,7 +76,7 @@ void(string command) cmd_game {
 	if(cmd_generic(command))
 		return;
 
-	if (GameHookChain_GameCommandHandle(cmd, argc))
+	if (gamehook_chain_GameCommandHandle(cmd, argc))
 		return;
 
 	if(cmd == "printstats")
@@ -682,7 +682,7 @@ void(string s) cmd_client {
 		if not(self.flags & FL_CLIENT)
 			return;
 
-		if(warmup_active || cvar("sv_ready_restart") || GameHook_ReadyAllowed()) {
+		if(warmup_active || cvar("sv_ready_restart") || gamehook_ReadyAllowed()) {
 			if(!ready_restart_happened || cvar("sv_ready_restart_repeatable"))
 			{
 				if (self.ready) // toggle

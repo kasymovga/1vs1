@@ -80,12 +80,12 @@ void(void) weapon_selectable_init {
 	if not(g_start_weapon_selectable)
 		return;
 
-	weapon_selectable_JoinHandle_NextLink = GameHookChain_JoinHandle;
-	GameHookChain_JoinHandle = weapon_selectable_JoinHandle;
+	weapon_selectable_JoinHandle_NextLink = gamehook_chain_JoinHandle;
+	gamehook_chain_JoinHandle = weapon_selectable_JoinHandle;
 	weapon_selectable_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = weapon_selectable_ClientCommandHandle;
 	weapon_selectable_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = weapon_selectable_Spawn;
-	weapon_selectable_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = weapon_selectable_GameMenuAddItems;
+	weapon_selectable_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = weapon_selectable_GameMenuAddItems;
 }

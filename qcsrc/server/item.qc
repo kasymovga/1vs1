@@ -204,19 +204,19 @@ void(void) item_respawn_countdown {
 		self.nextthink = time + 1;
 		self.count += 1;
 		if(self.count == 1) {
-			GameHook_ItemName = NULL;
-			GameHookChain_ItemRespawnCountDown();
+			gamehook_ItemName = NULL;
+			gamehook_chain_ItemRespawnCountDown();
 			switch(self.items) {
-				case IT_STRENGTH:       GameHook_ItemName = "item-strength"; GameHook_ItemColor = '0 0 1'; break;
-				case IT_INVINCIBLE:     GameHook_ItemName = "item-shield"; GameHook_ItemColor = '1 0 1'; break;
-				case IT_SPEED:          GameHook_ItemName = "item-speed"; GameHook_ItemColor = '1 0 1'; break;
-				case IT_INVISIBILITY:   GameHook_ItemName = "item-invis"; GameHook_ItemColor = '0 0 1'; break;
-				case IT_JETPACK:        GameHook_ItemName = "item-jetpack"; GameHook_ItemColor = '0.5 0.5 0.5'; break;
+				case IT_STRENGTH:       gamehook_ItemName = "item-strength"; gamehook_ItemColor = '0 0 1'; break;
+				case IT_INVINCIBLE:     gamehook_ItemName = "item-shield"; gamehook_ItemColor = '1 0 1'; break;
+				case IT_SPEED:          gamehook_ItemName = "item-speed"; gamehook_ItemColor = '1 0 1'; break;
+				case IT_INVISIBILITY:   gamehook_ItemName = "item-invis"; gamehook_ItemColor = '0 0 1'; break;
+				case IT_JETPACK:        gamehook_ItemName = "item-jetpack"; gamehook_ItemColor = '0.5 0.5 0.5'; break;
 			}
-			if(GameHook_ItemName) {
-				WaypointSprite_Spawn(GameHook_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+			if(gamehook_ItemName) {
+				WaypointSprite_Spawn(gamehook_ItemName, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
 				if(self.waypointsprite_attached) {
-					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, GameHook_ItemColor);
+					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, gamehook_ItemColor);
 					//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
 				}
@@ -287,11 +287,11 @@ float(entity item, entity player) item_give_to {
 	if (time < map_starttime)
 		return FALSE;
 
-	if (GameHookChain_ItemGiveToHandle(item, player)) {
-		pickedup = GameHookChain_ItemGiveToHandle_PickedUp;
-		GameHookChain_ItemGiveToHandle_PickedUp = FALSE;
-		_switchweapon = GameHookChain_ItemGiveToHandle_SwitchWeapon;
-		GameHookChain_ItemGiveToHandle_SwitchWeapon = FALSE;
+	if (gamehook_chain_ItemGiveToHandle(item, player)) {
+		pickedup = gamehook_chain_ItemGiveToHandle_PickedUp;
+		gamehook_chain_ItemGiveToHandle_PickedUp = FALSE;
+		_switchweapon = gamehook_chain_ItemGiveToHandle_SwitchWeapon;
+		gamehook_chain_ItemGiveToHandle_SwitchWeapon = FALSE;
 	} else {
 		if (g_weapon_stay)
 		if not(item.flags & FL_NO_WEAPON_STAY)
@@ -675,7 +675,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 			goto item_start_fail;
 	} else {
 		// it's a level item
-		if (!g_pickup_items || GameHookChain_ItemForbidden())
+		if (!g_pickup_items || gamehook_chain_ItemForbidden())
 			goto item_start_fail;
 
 		if (team_mode) {

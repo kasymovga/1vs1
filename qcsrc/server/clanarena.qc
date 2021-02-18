@@ -23,10 +23,10 @@ void Clanarena_Init()
 {
 	CVAR_CACHE(g_ca_healthrotpause_on_damage);
 	team_teams_set_count(bound(2, cvar("g_ca_teams"), 4));
-	GameHook_FragsHandle = Clanarena_HandleFrags;
-	Clanarena_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
-	GameHook_WinCountDown = stub_WinCountDown;
+	gamehook_FragsHandle = Clanarena_HandleFrags;
+	Clanarena_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
+	gamehook_chain_PlayerDamageHandle = Clanarena_PlayerDamageHandle;
+	gamehook_WinCountDown = stub_WinCountDown;
 	score_generic();
 	Clanarena_Init_Shared("ca");
 }

@@ -436,5 +436,5 @@ void(void) SV_OnEntityPreSpawnFunction {
 		} else
 			self.classname = strzone(repl);
 	}
-	GameHookChain_EntityPreSpawn();
+	gamehook_chain_EntityPreSpawn();
 }

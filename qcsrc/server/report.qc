@@ -48,8 +48,8 @@ void(void) report_init {
 	if (sv_report_url == "")
 		return;
 
-	report_GameMenuAddItems_next = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = report_GameMenuAddItems;
+	report_GameMenuAddItems_next = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = report_GameMenuAddItems;
 	report_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = report_cmd_client_handle;
 	report_uri_handler = uri_register_handler(report_uri_callback);

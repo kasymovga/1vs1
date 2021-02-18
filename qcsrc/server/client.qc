@@ -64,7 +64,7 @@ void(void) client_put {
 		if (self.team != oldteam)
 			score_touch(self);
 
-		spot = GameHook_SelectSpawnPoint();
+		spot = gamehook_SelectSpawnPoint();
 		if(!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
 				centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
@@ -323,7 +323,7 @@ void(void) client_kill { //called by engine, "kill" command
 }
 
 void (entity e) client_fix_cvars{
-	stuffcmd(e, strcat("\nin_bindmap 0 0\n", GameHook_FixClientCvars(), "\n"));
+	stuffcmd(e, strcat("\nin_bindmap 0 0\n", gamehook_FixClientCvars(), "\n"));
 }
 
 float() client_preconnect_abort {
@@ -426,10 +426,10 @@ void(void) client_connect { //called by engine
 		if(!sv_foginterval && client_fog != "")
 			stuffcmd(self, strcat("\nfog ", client_fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-		GameHookChain_RealClientConnect();
+		gamehook_chain_RealClientConnect();
 		vote_client_connect();
 	}
-	GameHookChain_ClientConnect();
+	gamehook_chain_ClientConnect();
 }
 
 void(void) client_disconnect { //called by engine
@@ -464,7 +464,7 @@ void(void) client_disconnect { //called by engine
 	ready_count();
 	client_cvars_free();
 	if (clienttype(self) == CLIENTTYPE_REAL) {
-		GameHookChain_RealClientDisconnect();
+		gamehook_chain_RealClientDisconnect();
 		vote_client_connect();
 	}
 	if (team_mode) {
@@ -538,7 +538,7 @@ void(void) client_pre_think { //called by engine
 		oldspectatee_status = self.spectatee_status & 255;
 		self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
 		if((self.spectatee_status & 255) != (oldspectatee_status & 255))
-			GameHook_InitSpectator();
+			gamehook_InitSpectator();
 	}
 }
 

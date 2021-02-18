@@ -226,10 +226,10 @@ void() timeout_init {
 
 	timeout_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = timeout_ClientCommandHandle;
-	timeout_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
-	GameHookChain_GameCommandHandle = timeout_GameCommandHandle;
-	timeout_TempoMod_NextLink = GameHookChain_TempoMod;
-	GameHookChain_TempoMod = timeout_TempoMod;
-	timeout_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = timeout_GameMenuAddItems;
+	timeout_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
+	gamehook_chain_GameCommandHandle = timeout_GameCommandHandle;
+	timeout_TempoMod_NextLink = gamehook_chain_TempoMod;
+	gamehook_chain_TempoMod = timeout_TempoMod;
+	timeout_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = timeout_GameMenuAddItems;
 }

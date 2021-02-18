@@ -23,6 +23,6 @@ void() pinata_init {
 		return;
 
 	pinata_init_done = TRUE;
-	pinata_ThrowWeaponOnDeathHandle_NextLink = GameHookChain_ThrowWeaponOnDeathHandle;
-	GameHookChain_ThrowWeaponOnDeathHandle = pinata_ThrowWeaponOnDeathHandle;
+	pinata_ThrowWeaponOnDeathHandle_NextLink = gamehook_chain_ThrowWeaponOnDeathHandle;
+	gamehook_chain_ThrowWeaponOnDeathHandle = pinata_ThrowWeaponOnDeathHandle;
 }

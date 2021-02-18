@@ -75,7 +75,7 @@ void(void) warmup_init {
 	CVAR_CACHE(g_warmup_allguns);
 	CVAR_CACHE(g_warmup_allow_timeout);
 	warmup_active = cvar("g_warmup");
-	if (!GameHook_WarmupAllowed() || g_campaign)
+	if (!gamehook_WarmupAllowed() || g_campaign)
 		warmup_active = 0; // these modes cannot work together, sorry
 
 	if not(warmup_active)

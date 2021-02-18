@@ -162,7 +162,7 @@ void() spectator_observer_think {
 
 void() spectator_to_player {
 	if(client_join_allowed()) {
-		if (GameHookChain_JoinHandle())
+		if (gamehook_chain_JoinHandle())
 			return;
 
 		team_teams_allowed(self);

@@ -247,18 +247,18 @@ void nadget_Init(void) {
 
 	nadget_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nadget_PlayerClear;
-	nadget_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
-	GameHookChain_PlayerCanFire = nadget_PlayerCanFire;
-	nadget_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = nadget_GameMenuAddItems;
+	nadget_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
+	gamehook_chain_PlayerCanFire = nadget_PlayerCanFire;
+	nadget_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = nadget_GameMenuAddItems;
 	nadget_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = nadget_ClientCommandHandle;
-	nadget_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = nadget_PlayerDamageHandle;
-	nadget_JoinHandle_NextLink = GameHookChain_JoinHandle;
-	GameHookChain_JoinHandle = nadget_JoinHandle;
-	nadget_PlayerCanBeCarrier_NextLink = GameHookChain_PlayerCanBeCarrier;
-	GameHookChain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
+	nadget_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
+	gamehook_chain_PlayerDamageHandle = nadget_PlayerDamageHandle;
+	nadget_JoinHandle_NextLink = gamehook_chain_JoinHandle;
+	gamehook_chain_JoinHandle = nadget_JoinHandle;
+	nadget_PlayerCanBeCarrier_NextLink = gamehook_chain_PlayerCanBeCarrier;
+	gamehook_chain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
 	nadget_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = nadget_SpectateCopy;
 	nadget_bot_aim_next = gamehook_chain_bot_aim;
@@ -293,8 +293,8 @@ void nadget_Init(void) {
     gamehook_chain_observer_spawn = nadget_ObserverSpawn;
 	nadget_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = nadget_PlayerPreThink;
-	nadget_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
-	GameHookChain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
+	nadget_ThrowWeaponHandle_NextLink = gamehook_chain_ThrowWeaponHandle;
+	gamehook_chain_ThrowWeaponHandle = nadget_ThrowWeaponHandle;
     Napalm_Init();
 	hint_add("You can detonate FireTrap of enemy shooting on it");
 	hint_add("Translocator nadget can be used as teleporting or killing enemy shooting directly on enemy");
@@ -971,6 +971,6 @@ void nadget_Pick(float tokens) {
 }
 
 float nadget_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-	GameHookChain_PlayerDamageMod = nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
+	gamehook_chain_PlayerDamageMod = nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
 	return nadget_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }

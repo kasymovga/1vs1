@@ -108,7 +108,7 @@ void() sysinfo_init {
 	CVAR_CACHE_STR(sv_sysinfo_checker);
 	sysinfo_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = sysinfo_ClientCommandHandle;
-	sysinfo_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
-	GameHookChain_RealClientDisconnect = sysinfo_RealClientDisconnect;
+	sysinfo_RealClientDisconnect_NextLink = gamehook_chain_RealClientDisconnect;
+	gamehook_chain_RealClientDisconnect = sysinfo_RealClientDisconnect;
 	URI_SYSINFO_CHECKER = uri_register_handler(sysinfo_uri_callback);
 }

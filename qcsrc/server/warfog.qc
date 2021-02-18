@@ -13,7 +13,7 @@ float(entity plr, entity viewer, float dalpha) warfog_PlayerAlphaMod {
 		float fog_alpha;
 		if (d > fade_start) {
 			fog_alpha = 1 - min((d - fade_start) / g_warfog_fade_distance, 1);
-			if ((team_mode && plr.team == viewer.team) || GameHook_PlayerIsCarrier(plr))
+			if ((team_mode && plr.team == viewer.team) || gamehook_PlayerIsCarrier(plr))
 				fog_alpha = 0.5 + 0.5 * fog_alpha;
 
 			dalpha = dalpha * fog_alpha;

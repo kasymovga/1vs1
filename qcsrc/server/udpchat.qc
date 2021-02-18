@@ -111,10 +111,10 @@ void UDPChat_Init() {
 	CVAR_CACHE(sv_udpchat_spamstatus);
 	sv_udpchat_id = cvar_string_zone_ifneeded("sv_udpchat_id");
     extresponse_register_handler("udpchat", UDPChat_ER_Response_Callback, world);
-	UDPChat_PupblicPlayerChat_NextLink = GameHookChain_PublicPlayerChat;
-	GameHookChain_PublicPlayerChat = UDPChat_PupblicPlayerChat;
-	UDPChat_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-	GameHookChain_RealClientConnect = UDPChat_RealClientConnect;
+	UDPChat_PupblicPlayerChat_NextLink = gamehook_chain_PublicPlayerChat;
+	gamehook_chain_PublicPlayerChat = UDPChat_PupblicPlayerChat;
+	UDPChat_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
+	gamehook_chain_RealClientConnect = UDPChat_RealClientConnect;
 	registercvar("_sv_udpchat_msgsent", "0");
 }
 

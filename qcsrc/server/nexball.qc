@@ -160,22 +160,22 @@ void() nexball_init {
 	CVAR_CACHE(g_nexball_basketball_carrier_speed);
 	nexball_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nexball_PlayerClear;
-	nexball_SwitchWeaponMod_NextLink = GameHookChain_SwitchWeaponMod;
-	GameHookChain_SwitchWeaponMod = nexball_SwitchWeaponMod;
+	nexball_SwitchWeaponMod_NextLink = gamehook_chain_SwitchWeaponMod;
+	gamehook_chain_SwitchWeaponMod = nexball_SwitchWeaponMod;
 	nexball_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = nexball_PlayerPreThink;
 	nexball_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
 	gamehook_chain_physics_max_speed_mod = nexball_SpeedMod;
 	nexball_weapon_frame_handle_next = gamehook_chain_weapon_frame_handle;
 	gamehook_chain_weapon_frame_handle = nexball_weapon_frame_handle;
-	GameHook_ReloadAllowed = nexball_ReloadAllowed;
-	nexball_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
-	GameHookChain_ThrowWeaponAllowed = nexball_ThrowWeaponAllowed;
+	gamehook_ReloadAllowed = nexball_ReloadAllowed;
+	nexball_ThrowWeaponAllowed_NextLink = gamehook_chain_ThrowWeaponAllowed;
+	gamehook_chain_ThrowWeaponAllowed = nexball_ThrowWeaponAllowed;
 	nexball_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = nexball_SpectateCopy;
-	GameHook_PlayerIsCarrier = nexball_PlayerIsCarrier;
-	GameHook_DropCarried = nexball_DropCarried;
-	GameHook_TeleportationForbiddenFor = nexball_TeleportationForbiddenFor;
+	gamehook_PlayerIsCarrier = nexball_PlayerIsCarrier;
+	gamehook_DropCarried = nexball_DropCarried;
+	gamehook_TeleportationForbiddenFor = nexball_TeleportationForbiddenFor;
 	entity_initialize(world, nexball_delayedinit, INITPRIO_GAMETYPE);
 	precache_model ("models/elaser.mdl");
 	precache_sound ("nexball/shoot1.wav");
@@ -445,7 +445,7 @@ void(void) nexball_hockey_touch {
 }
 
 void(void) nexball_basketball_touch {
-	if (other.ballcarried || !GameHookChain_PlayerCanBeCarrier(other)) {
+	if (other.ballcarried || !gamehook_chain_PlayerCanBeCarrier(other)) {
 		nexball_football_touch();
 		return;
 	}

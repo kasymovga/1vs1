@@ -179,8 +179,8 @@ void(void) vehicle_init {
 	gamehook_chain_player_clear = vehicle_PlayerClear;
 	vehicle_PlayerAlphaMod_NextLink = gamehook_chain_player_alpha_mod;
 	gamehook_chain_player_alpha_mod = vehicle_PlayerAlphaMod;
-	vehicle_ThrowWeaponHandle_NextLink = GameHookChain_ThrowWeaponHandle;
-	GameHookChain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
+	vehicle_ThrowWeaponHandle_NextLink = gamehook_chain_ThrowWeaponHandle;
+	gamehook_chain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
 	gamehook_chain_player_entity = vehicle_player_entity;
 	addstat(STAT_HUD, AS_INT,  hud);

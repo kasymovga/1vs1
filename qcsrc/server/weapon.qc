@@ -54,7 +54,7 @@ void weapon_setattachment(entity e1, entity e2, string s) {
 }
 
 void weapon_reload() {
-	if not(GameHook_ReloadAllowed())
+	if not(gamehook_ReloadAllowed())
 		return;
 
 	if(self.switchweapon == self.weapon)
@@ -341,7 +341,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 	if (w == 0)
 		return; // just in case
 
-	if not(GameHookChain_ThrowWeaponAllowed(doreduce))
+	if not(gamehook_chain_ThrowWeaponAllowed(doreduce))
 		return;
 
 	if (g_pickup_nodrop)
@@ -392,7 +392,7 @@ void weapon_frame()
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	float _switchweapon = GameHookChain_SwitchWeaponMod(self.switchweapon);
+	float _switchweapon = gamehook_chain_SwitchWeaponMod(self.switchweapon);
 	if(!_switchweapon)
 	{
 		self.weapon = 0;
@@ -567,7 +567,7 @@ void(float wpn) weapon_defaultspawnfunc {
 		remove(self);
 		return;
 	}
-	if (GameHookChain_WeaponSpawnHandle(float wpn))
+	if (gamehook_chain_WeaponSpawnHandle(float wpn))
 		return;
 
 	// set the respawntime in advance (so replaced weapons can copy it)
@@ -624,7 +624,7 @@ void(float windex) weapon_setup {
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 float(float secondary, float attacktime) weapon_prepareattack {
-	if(!GameHookChain_WeaponPrepareAttack(secondary, attacktime)) {
+	if(!gamehook_chain_WeaponPrepareAttack(secondary, attacktime)) {
 		return FALSE;
 	}
 

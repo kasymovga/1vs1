@@ -150,26 +150,26 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
 	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
 	if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
 	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.items |= it;
 		sprint (player, strcat("You got the ^2", item.netname, "\n"));
 	}
 
-	GameHookChain_ItemGiveToHandle_SwitchWeapon = TRUE;
+	gamehook_chain_ItemGiveToHandle_SwitchWeapon = TRUE;
 	if (item.health)
 	{
 		player.health = min(max(100, player.health + g_minstagib_health_drop), g_minstagib_health_max);
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 	}
 	if (item.ammo_cells)
 	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		// play some cool sounds ;)
 		if (clienttype(player) == CLIENTTYPE_REAL)
 		{
@@ -189,7 +189,7 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	// extralife powerup
 	if (item.max_health)
 	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		// sound not available
 		// play2(player, "announce/robotic/extra.ogg\nplay2 announce/robotic/_lives.wav");
 		player.armorvalue = min(player.armorvalue + 100, g_minstagib_armor_max);
@@ -198,17 +198,17 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
 	{
-		GameHookChain_ItemGiveToHandle_PickedUp = TRUE;
+		gamehook_chain_ItemGiveToHandle_PickedUp = TRUE;
 		player.ammo_fuel = min(player.ammo_fuel + item.ammo_fuel, g_pickup_fuel_max);
 		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + g_balance_pause_fuel_rot);
 	}
-	return GameHookChain_ItemGiveToHandle_PickedUp;
+	return gamehook_chain_ItemGiveToHandle_PickedUp;
 }
 
 var void() minstagib_HealthArmorFuelModsSet_NextLink;
 void minstagib_HealthArmorFuelModsSet() {
 	minstagib_HealthArmorFuelModsSet_NextLink();
-	GameHook_HealthArmorRotRegen = FALSE;
+	gamehook_HealthArmorRotRegen = FALSE;
 }
 
 float minstagib_WeaponSpawnHandle(float wpn) {
@@ -265,7 +265,7 @@ float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float _dam
 	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && _damage)
 	{
 		self.armorvalue -= min(_damage, min(self.armorvalue, 100));
-		GameHookChain_PlayerDamageMod = 0;
+		gamehook_chain_PlayerDamageMod = 0;
 		self.hitsound += 1;
 		attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 	}
@@ -335,8 +335,8 @@ float(void) minstagib_player_equip_handle {
 var void() minstagib_ItemRespawnCountDown_NextLink;
 void minstagib_ItemRespawnCountDown() {
 	if (self.items == IT_NAILS) {
-		GameHook_ItemName = "item-extralife";
-		GameHook_ItemColor = '1 0 0';
+		gamehook_ItemName = "item-extralife";
+		gamehook_ItemColor = '1 0 0';
 	}
 	minstagib_ItemRespawnCountDown_NextLink();
 }
@@ -367,27 +367,27 @@ void minstagib_init() {
 	precache_sound ("announcer/robotic/narrowly.wav");
 	minstagib_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = minstagib_PlayerPreThink;
-	minstagib_ItemGiveToHandle_NextLink = GameHookChain_ItemGiveToHandle;
-	GameHookChain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
-	minstagib_HealthArmorFuelModsSet_NextLink = GameHookChain_HealthArmorFuelModsSet;
-	GameHookChain_HealthArmorFuelModsSet = minstagib_HealthArmorFuelModsSet;
-	GameHookChain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
-	minstagib_ThrowWeaponAllowed_NextLink = GameHookChain_ThrowWeaponAllowed;
-	GameHookChain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
-	minstagib_EntityPreSpawn_NextLink = GameHookChain_EntityPreSpawn;
-	GameHookChain_EntityPreSpawn = minstagib_EntityPreSpawn;
-	minstagib_ItemForbidden_NextLink = GameHookChain_ItemForbidden;
-	GameHookChain_ItemForbidden = minstagib_ItemForbidden;
-	minstagib_PlayerDamageHandle_NextLink = GameHookChain_PlayerDamageHandle;
-	GameHookChain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
+	minstagib_ItemGiveToHandle_NextLink = gamehook_chain_ItemGiveToHandle;
+	gamehook_chain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
+	minstagib_HealthArmorFuelModsSet_NextLink = gamehook_chain_HealthArmorFuelModsSet;
+	gamehook_chain_HealthArmorFuelModsSet = minstagib_HealthArmorFuelModsSet;
+	gamehook_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
+	minstagib_ThrowWeaponAllowed_NextLink = gamehook_chain_ThrowWeaponAllowed;
+	gamehook_chain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
+	minstagib_EntityPreSpawn_NextLink = gamehook_chain_EntityPreSpawn;
+	gamehook_chain_EntityPreSpawn = minstagib_EntityPreSpawn;
+	minstagib_ItemForbidden_NextLink = gamehook_chain_ItemForbidden;
+	gamehook_chain_ItemForbidden = minstagib_ItemForbidden;
+	minstagib_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
+	gamehook_chain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
 	minstagib_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = minstagib_DamageForceModsSet;
-	GameHookChain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
+	gamehook_chain_MirrorDamageHandle = minstagib_MirrorDamageHandle;
 	minstagib_player_equip_handle_next = gamehook_chain_player_equip_handle;
 	gamehook_chain_player_equip_handle = minstagib_player_equip_handle;
-	minstagib_ItemRespawnCountDown_NextLink = GameHookChain_ItemRespawnCountDown;
-	GameHookChain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
-	GameHookChain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;
+	minstagib_ItemRespawnCountDown_NextLink = gamehook_chain_ItemRespawnCountDown;
+	gamehook_chain_ItemRespawnCountDown = minstagib_ItemRespawnCountDown;
+	gamehook_chain_ArmorBlockPercentMod = minstagib_ArmorBlockPercentMod;
 }
 
 void spawnfunc_item_minst_cells (void) {

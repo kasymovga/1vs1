@@ -207,7 +207,7 @@ void havocbot_chooserole()
 {
 	navigation_clearroute();
 	self.bot_strategytime = 0;
-	GameHook_BotChooseRole();
+	gamehook_BotChooseRole();
 
 };
 

@@ -2,14 +2,14 @@ var float(entity attacker, entity inflictor, float deathtype) gamehook_player_de
 var float() gamehook_chain_physics_max_speed_mod = { return 1; }
 var void(entity spot) gamehook_chain_spawn = {}
 var void(float killed) gamehook_chain_player_clear = {}
-var float(entity attacker, entity targ, float f) GameHook_FragsHandle = { return f; }
-float GameHookChain_PlayerDamageMod;
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) GameHookChain_PlayerDamageHandle = { return FALSE; }
-var float(entity plr, float wep) GameHookChain_PlayerCanFire = { return TRUE; }
-var float() GameHook_PlayerAllowedToMove = { return TRUE; }
-var void() GameHook_PhysicFrameBegin = {}
+var float(entity attacker, entity targ, float f) gamehook_FragsHandle = { return f; }
+float gamehook_chain_PlayerDamageMod;
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) gamehook_chain_PlayerDamageHandle = { return FALSE; }
+var float(entity plr, float wep) gamehook_chain_PlayerCanFire = { return TRUE; }
+var float() gamehook_PlayerAllowedToMove = { return TRUE; }
+var void() gamehook_PhysicFrameBegin = {}
 var void(void) gamehook_chain_player_think = {}
-var entity() GameHook_SelectSpawnPoint = {
+var entity() gamehook_SelectSpawnPoint = {
 	entity spot;
 	spot = spawn_select(FALSE);
 	if not(spot)
@@ -24,14 +24,14 @@ var float(float fraglimit, float _leadlimit) gamehook_winning_condition = {
 	}
 	return score_winning_condition(fraglimit, _leadlimit);
 }
-var float() GameHook_OvertimeHandle = { return FALSE; }
-var float() GameHook_OvertimeAllowed = { return TRUE; }
-var void() GameHook_Reset = {}
+var float() gamehook_OvertimeHandle = { return FALSE; }
+var float() gamehook_OvertimeAllowed = { return TRUE; }
+var void() gamehook_Reset = {}
 var void() gamehook_chain_observer_spawn = {}
-var void() GameHook_InitSpectator = {}
-var float(entity spot) GameHook_SpawnPointGood = { return TRUE; }
+var void() gamehook_InitSpectator = {}
+var float(entity spot) gamehook_SpawnPointGood = { return TRUE; }
 var void(float frags_remain) stub_WinCountDown = {}
-var void(float frags_remain) GameHook_WinCountDown = {
+var void(float frags_remain) gamehook_WinCountDown = {
 	if (frags_remain == 1)
 		sound_play2all("announcer/robotic/1fragleft.wav");
 	else if (frags_remain == 2)
@@ -39,68 +39,68 @@ var void(float frags_remain) GameHook_WinCountDown = {
 	else if (frags_remain == 3)
 		sound_play2all("announcer/robotic/3fragsleft.wav");
 }
-var string(string s) GameHook_SuddenDeathMessageMod = { return s; }
+var string(string s) gamehook_SuddenDeathMessageMod = { return s; }
 var string(string s) gamehook_map_finish_message_mod = { return s; }
 var float() false_WarmupAllowed = { return FALSE; }
-var float() GameHook_WarmupAllowed = { return TRUE; }
-var float() GameHook_ReadyAllowed = { return FALSE; }
-var float() GameHook_ClearScoreAllowed = { return TRUE; }
-var float() GameHook_TelefragsAllowed = { return TRUE; }
-var string() GameHook_FixClientCvars = { return ""; }
-var string(string bspname) GameHook_RecordForMap = { return ""; }
-var float() GameHook_ReadyRestartHard = { return FALSE; }
+var float() gamehook_WarmupAllowed = { return TRUE; }
+var float() gamehook_ReadyAllowed = { return FALSE; }
+var float() gamehook_ClearScoreAllowed = { return TRUE; }
+var float() gamehook_TelefragsAllowed = { return TRUE; }
+var string() gamehook_FixClientCvars = { return ""; }
+var string(string bspname) gamehook_RecordForMap = { return ""; }
+var float() gamehook_ReadyRestartHard = { return FALSE; }
 var float() gamehook_chain_weapon_frame_handle = { return FALSE; }
-var float() GameHook_ReloadAllowed = { return TRUE; }
-var float(float dropped) GameHookChain_ThrowWeaponAllowed = { return TRUE; }
+var float() gamehook_ReloadAllowed = { return TRUE; }
+var float(float dropped) gamehook_chain_ThrowWeaponAllowed = { return TRUE; }
 var void(entity e) gamehook_chain_spectator_copy = {}
 float gamehook_chain_damage_mod;
 float gamehook_chain_damage_mod_force;
 float gamehook_chain_damage_mod_mirror;
 float gamehook_chain_damage_mod_force_mirror;
 var void(entity targ, entity attacker, float deathtype) gamehook_chain_damage_mods_set = {}
-var void(void(string item, string cmd) Add_Item) GameHookChain_GameMenuAddItems = {};
+var void(void(string item, string cmd) Add_Item) gamehook_chain_GameMenuAddItems = {};
 var float(string cmd, float tokens) gamehook_chain_cmd_client_handle = { return FALSE; }
-var float(string cmd, float tokens) GameHookChain_GameCommandHandle = { return FALSE; }
-var void() GameHookChain_EntityPreSpawn = {};
-float GameHook_HealthMaxMod;
-float GameHook_ArmorHealthLimitMod;
-float GameHook_RegenMod;
-float GameHook_RotMod;
-float GameHook_HealthArmorRotRegen;
-var void() GameHookChain_HealthArmorFuelModsSet = {}
-var float() GameHookChain_JumpVelocityMod = { return 1; }
+var float(string cmd, float tokens) gamehook_chain_GameCommandHandle = { return FALSE; }
+var void() gamehook_chain_EntityPreSpawn = {};
+float gamehook_HealthMaxMod;
+float gamehook_ArmorHealthLimitMod;
+float gamehook_RegenMod;
+float gamehook_RotMod;
+float gamehook_HealthArmorRotRegen;
+var void() gamehook_chain_HealthArmorFuelModsSet = {}
+var float() gamehook_chain_JumpVelocityMod = { return 1; }
 var float() gamehook_chain_weapon_rate_factor = { return 1; }
 var void(entity targ, entity attacker, float damage, vector force) gamehook_chain_damage_force_done = {}
 var void(entity attacker) gamehook_monster_killed {}
-var float() GameHook_MonsterQuant { return 1; }
+var float() gamehook_MonsterQuant { return 1; }
 var float(entity plr, entity viewer, float palpha) gamehook_chain_player_alpha_mod = { return palpha; }
-var float(float secondary, float attacktime) GameHookChain_WeaponPrepareAttack = { return TRUE; }
-var float(entity item, entity player) GameHookChain_ItemGiveToHandle = { return FALSE; }
-float GameHookChain_ItemGiveToHandle_PickedUp;
-float GameHookChain_ItemGiveToHandle_SwitchWeapon;
-var float(float wpn) GameHookChain_WeaponSpawnHandle = { return FALSE; }
-var void() GameHookChain_RealClientConnect = {}
-var void() GameHookChain_ClientConnect = {}
-var void() GameHookChain_RealClientDisconnect = {}
+var float(float secondary, float attacktime) gamehook_chain_WeaponPrepareAttack = { return TRUE; }
+var float(entity item, entity player) gamehook_chain_ItemGiveToHandle = { return FALSE; }
+float gamehook_chain_ItemGiveToHandle_PickedUp;
+float gamehook_chain_ItemGiveToHandle_SwitchWeapon;
+var float(float wpn) gamehook_chain_WeaponSpawnHandle = { return FALSE; }
+var void() gamehook_chain_RealClientConnect = {}
+var void() gamehook_chain_ClientConnect = {}
+var void() gamehook_chain_RealClientDisconnect = {}
 var void() gamehook_chain_world_frame_start = {}
-var float() GameHookChain_ItemForbidden = { return FALSE; }
+var float() gamehook_chain_ItemForbidden = { return FALSE; }
 var void() gamehook_chain_player_effects = {}
-var float(float c) GameHookChain_PlayerColorsMod = { return c; }
-var float() GameHookChain_JoinHandle = { return FALSE; }
-var float(entity attacker, entity inflictor, float mirrordamage, vector force) GameHookChain_MirrorDamageHandle = { return FALSE; }
-var float(entity plr) GameHook_PlayerIsCarrier { return FALSE; }
-var void(entity plr) GameHook_DropCarried {}
-var float(entity plr) GameHookChain_PlayerCanBeCarrier { return TRUE; }
-var float(entity e) GameHook_TeleportationForbiddenFor { return FALSE; }
-string GameHook_ItemName;
-vector GameHook_ItemColor;
-var void() GameHookChain_ItemRespawnCountDown {}
-var float() GameHookChain_ArmorBlockPercentMod { return 1; }
-var float(entity plr, entity targ) GameHookChain_PlayerCanSeeHealthFor { return FALSE; }
-var float(entity plr, entity targ) GameHookChain_PlayerVisibleThroughWallFor { return FALSE; }
-var float() GameHookChain_ThrowWeaponHandle { return FALSE; }
-var void(entity source, string msg) GameHookChain_PublicPlayerChat = {}
-var void() GameHook_BotChooseRole = { havocbot_chooserole_dm(); }
+var float(float c) gamehook_chain_PlayerColorsMod = { return c; }
+var float() gamehook_chain_JoinHandle = { return FALSE; }
+var float(entity attacker, entity inflictor, float mirrordamage, vector force) gamehook_chain_MirrorDamageHandle = { return FALSE; }
+var float(entity plr) gamehook_PlayerIsCarrier { return FALSE; }
+var void(entity plr) gamehook_DropCarried {}
+var float(entity plr) gamehook_chain_PlayerCanBeCarrier { return TRUE; }
+var float(entity e) gamehook_TeleportationForbiddenFor { return FALSE; }
+string gamehook_ItemName;
+vector gamehook_ItemColor;
+var void() gamehook_chain_ItemRespawnCountDown {}
+var float() gamehook_chain_ArmorBlockPercentMod { return 1; }
+var float(entity plr, entity targ) gamehook_chain_PlayerCanSeeHealthFor { return FALSE; }
+var float(entity plr, entity targ) gamehook_chain_PlayerVisibleThroughWallFor { return FALSE; }
+var float() gamehook_chain_ThrowWeaponHandle { return FALSE; }
+var void(entity source, string msg) gamehook_chain_PublicPlayerChat = {}
+var void() gamehook_BotChooseRole = { havocbot_chooserole_dm(); }
 var void() gamehook_client_parms_new = {}
 var void() gamehook_client_parms_change = {}
 var void() gamehook_client_parms_decode = {}
@@ -109,10 +109,10 @@ var float(void) gamehook_chain_player_equip_handle = { return FALSE; }
 var float(void) gamehook_map_restart = { return FALSE; }
 var float() gamehook_monster_team_switchable = { return TRUE; }
 var void() gamehook_chain_shutdown = {}
-var float(float tempo) GameHookChain_TempoMod = { return tempo; }
-var float() GameHookChain_ThrowWeaponOnDeathHandle = { return FALSE; }
-var float() GameHookChain_ProjectileTouchHandle = { return FALSE; }
-var float(float f) GameHookChain_SwitchWeaponMod = { return f; }
+var float(float tempo) gamehook_chain_TempoMod = { return tempo; }
+var float() gamehook_chain_ThrowWeaponOnDeathHandle = { return FALSE; }
+var float() gamehook_chain_ProjectileTouchHandle = { return FALSE; }
+var float(float f) gamehook_chain_SwitchWeaponMod = { return f; }
 var entity(entity pl) gamehook_chain_player_entity = { return pl; }
 var float(void) gamehook_chain_bot_aim = { return FALSE; }
 var float(float deathtype, entity targ, entity inflictor, entity attacker) gamehook_chain_player_obituary_frag = { return FALSE; }

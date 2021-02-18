@@ -499,7 +499,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		if(time < self.kh_droptime + g_kh_delay_collect)
 			return;  // you just dropped it!
 
-	if not(GameHookChain_PlayerCanBeCarrier(other))
+	if not(gamehook_chain_PlayerCanBeCarrier(other))
 		return;
 
 	self.think = kh_Key_Think; //in case of kh_Key_MoveToRandomLocation_Think
@@ -984,17 +984,17 @@ void kh_init() {
 	precache_sound(kh_sound_drop);
 	precache_sound(kh_sound_collect);
 	precache_sound(kh_sound_alarm);  // the new siren
-	GameHook_FragsHandle = kh_HandleFrags;
+	gamehook_FragsHandle = kh_HandleFrags;
 	gamehook_player_death_handle = kh_DeathHandle;
 	kh_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = kh_PlayerClear;
-	GameHook_WinCountDown = stub_WinCountDown;
+	gamehook_WinCountDown = stub_WinCountDown;
 	kh_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = kh_SpectateCopy;
-	GameHook_PlayerIsCarrier = kh_PlayerIsCarrier;
-	GameHook_DropCarried = kh_DropCarried;
-	GameHook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
-	GameHook_BotChooseRole = kh_role_choose;
+	gamehook_PlayerIsCarrier = kh_PlayerIsCarrier;
+	gamehook_DropCarried = kh_DropCarried;
+	gamehook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
+	gamehook_BotChooseRole = kh_role_choose;
 	precache_model("models/keyhunt/key.md3");
 	kh_teams = cvar("g_keyhunt_teams_override");
 	if(kh_teams < 2)

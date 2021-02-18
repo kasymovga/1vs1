@@ -217,12 +217,12 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	else
 		round_warmup = map_starttime + rb_startdelay;
 
-	Roundbased_PlayerCanFire_NextLink = GameHookChain_PlayerCanFire;
-	GameHookChain_PlayerCanFire = Roundbased_PlayerCanFire;
+	Roundbased_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
+	gamehook_chain_PlayerCanFire = Roundbased_PlayerCanFire;
 	Roundbased_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = Roundbased_DamageForceModsSet;
 	Roundbased_ServerFrame_NextLink = gamehook_chain_world_frame_start;
 	gamehook_chain_world_frame_start = Roundbased_ServerFrame;
-	Roundbased_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
-	GameHookChain_GameCommandHandle = Roundbased_GameCommandHandle;
+	Roundbased_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
+	gamehook_chain_GameCommandHandle = Roundbased_GameCommandHandle;
 }

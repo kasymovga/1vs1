@@ -365,10 +365,10 @@ void dlc_init() {
 		}
 	}
 	dlc_extra_pk3_list_build();
-	dlc_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
-	GameHookChain_GameCommandHandle = dlc_GameCommandHandle;
-	dlc_TempoMod_NextLink = GameHookChain_TempoMod;
-	GameHookChain_TempoMod = dlc_TempoMod;
+	dlc_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
+	gamehook_chain_GameCommandHandle = dlc_GameCommandHandle;
+	dlc_TempoMod_NextLink = gamehook_chain_TempoMod;
+	gamehook_chain_TempoMod = dlc_TempoMod;
 }
 
 void dlc_finish() {

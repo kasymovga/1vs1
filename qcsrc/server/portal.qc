@@ -118,8 +118,8 @@ float(entity teleporter, entity player) portal_teleport_player {
 	}
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
-	if (GameHook_PlayerIsCarrier(player))
-		GameHook_DropCarried(player);
+	if (gamehook_PlayerIsCarrier(player))
+		gamehook_DropCarried(player);
 
 	if not(teleporter.enemy) {
 		backtrace("portal_teleport_player ended up without other portal being set BEFORE TeleportPlayer. Stop.");
@@ -198,7 +198,7 @@ void(void) portal_touch {
 	if (other.classname == "player")
 		return; // handled by think
 #endif
-	if (GameHook_TeleportationForbiddenFor(other))
+	if (gamehook_TeleportationForbiddenFor(other))
 		return; // never portal these
 
 	if (other.classname == "grapplinghook")

@@ -754,8 +754,8 @@ void WarpZone_EnableHook() {
 	WarpZone_TraceToss_ThroughZone = WarpZone_TraceToss_ThroughZone_real;
 	WarpZone_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = WarpZone_DamageForceModsSet;
-	WarpZone_ProjectileTouchHandle_NextLink = GameHookChain_ProjectileTouchHandle;
-	GameHookChain_ProjectileTouchHandle = WarpZone_ProjectileTouchHandle;
+	WarpZone_ProjectileTouchHandle_NextLink = gamehook_chain_ProjectileTouchHandle;
+	gamehook_chain_ProjectileTouchHandle = WarpZone_ProjectileTouchHandle;
 }
 
 void WarpZone_InitHook() {

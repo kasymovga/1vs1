@@ -851,14 +851,14 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
 	local float take, save, waves, sdelay, dh, da;
-	GameHookChain_PlayerDamageMod = 1;
-	if (GameHookChain_PlayerDamageHandle(inflictor, attacker, _damage, deathtype, hitloc, force))
+	gamehook_chain_PlayerDamageMod = 1;
+	if (gamehook_chain_PlayerDamageHandle(inflictor, attacker, _damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 
-	_damage = _damage * GameHookChain_PlayerDamageMod;
+	_damage = _damage * gamehook_chain_PlayerDamageMod;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
@@ -891,7 +891,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	else
 		violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 
-	save = bound(0, _damage * GameHookChain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
+	save = bound(0, _damage * gamehook_chain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
 	take = bound(0, _damage - save, _damage);
 	if (save > 10)
 		sound (self, CHAN_PROJECTILE, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
@@ -988,7 +988,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
         entity_drop_entities(self);
 		// clear selected player display
-		if not(GameHookChain_ThrowWeaponOnDeathHandle())
+		if not(gamehook_chain_ThrowWeaponOnDeathHandle())
 			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
 
 		self.switchweapon = switchweapon_save;
@@ -1487,7 +1487,7 @@ void() player_setup_model {
 		player_species_setup();
 
 	if (forcecolor > -2) {
-		float colors = GameHookChain_PlayerColorsMod(forcecolor);
+		float colors = gamehook_chain_PlayerColorsMod(forcecolor);
 		if (self.clientcolors != colors)
 			player_set_colors(self, colors);
 	}
@@ -1577,23 +1577,23 @@ void() player_respawn_countdown {
 
 void() player_regen {
 	float minh, maxh, limith, limita;
-	GameHook_HealthArmorRotRegen = GameHook_HealthMaxMod = GameHook_ArmorHealthLimitMod = GameHook_RegenMod = GameHook_RotMod = 1;
-	GameHookChain_HealthArmorFuelModsSet();
-	if (GameHook_HealthArmorRotRegen)
+	gamehook_HealthArmorRotRegen = gamehook_HealthMaxMod = gamehook_ArmorHealthLimitMod = gamehook_RegenMod = gamehook_RotMod = 1;
+	gamehook_chain_HealthArmorFuelModsSet();
+	if (gamehook_HealthArmorRotRegen)
 	{
-		limith = g_balance_health_limit * GameHook_ArmorHealthLimitMod;
-		maxh = g_balance_health_rotstable * GameHook_HealthMaxMod;
-		minh = g_balance_health_regenstable * GameHook_HealthMaxMod;
-		self.health = player_calc_rot_regen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, GameHook_RotMod * frametime * (time > self.pauserothealth_finished), limith);
+		limith = g_balance_health_limit * gamehook_ArmorHealthLimitMod;
+		maxh = g_balance_health_rotstable * gamehook_HealthMaxMod;
+		minh = g_balance_health_regenstable * gamehook_HealthMaxMod;
+		self.health = player_calc_rot_regen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, gamehook_RegenMod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, gamehook_RotMod * frametime * (time > self.pauserothealth_finished), limith);
 		// if player rotted to death...  die!
 		if(self.health < 1)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
-		limita = g_balance_armor_limit * GameHook_ArmorHealthLimitMod;
-		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotarmor_finished), limita);
+		limita = g_balance_armor_limit * gamehook_ArmorHealthLimitMod;
+		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, gamehook_RegenMod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, gamehook_RotMod * frametime * (time > self.pauserotarmor_finished), limita);
 
 	}
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, GameHook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, GameHook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
+		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, gamehook_RegenMod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, gamehook_RotMod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
 }
 
 .float items_added;
@@ -1774,7 +1774,7 @@ void(void) player_impulse {
 					weapon_previous(2);
 					break;
 				case 17:
-					if not(GameHookChain_ThrowWeaponHandle())
+					if not(gamehook_chain_ThrowWeaponHandle())
 						weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 
 					break;
@@ -2079,7 +2079,7 @@ float(void) player_customize {
 	else
 		self.exteriormodeltoclient = world;
 
-	if (GameHookChain_PlayerVisibleThroughWallFor(self.owner, other))
+	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;
@@ -2100,7 +2100,7 @@ float(void) player_body_customize {
 		else
 			self.tag_entity = self.body;
 	}
-	if (GameHookChain_PlayerVisibleThroughWallFor(o, other))
+	if (gamehook_chain_PlayerVisibleThroughWallFor(o, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
 		self.effects &~= EF_NODEPTHTEST;
@@ -2285,7 +2285,7 @@ float(entity plr, float wep) player_can_fire {
 	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
-	return GameHookChain_PlayerCanFire(plr, wep);
+	return gamehook_chain_PlayerCanFire(plr, wep);
 }
 
 .float hasweapon_complain_spam;
@@ -2602,6 +2602,6 @@ void() player_init {
 	player_init_done = TRUE;
 	player_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = player_cmd_client_handle;
-	player_gamemenu_add_items_next = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = player_gamemenu_add_items;
+	player_gamemenu_add_items_next = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = player_gamemenu_add_items;
 }

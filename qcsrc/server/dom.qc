@@ -413,8 +413,8 @@ void(void) dom_init {
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	GameHook_SelectSpawnPoint = dom_SelectSpawnPoint;
-	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_BotChooseRole = dom_role_choose;
+	gamehook_SelectSpawnPoint = dom_SelectSpawnPoint;
+	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_BotChooseRole = dom_role_choose;
 	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);
 }

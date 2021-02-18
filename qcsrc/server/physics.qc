@@ -44,7 +44,7 @@ void(void) physics_check_water_jump_hook {
 }
 
 float(void) physics_jump_velocity_mod {
-	return GameHookChain_JumpVelocityMod();
+	return gamehook_chain_JumpVelocityMod();
 }
 
 void(void) physics_landing_hook {
@@ -155,7 +155,7 @@ void(void) physics_frame_end_hook {
 void(void) physics_frame_begin_hook {
 	float buttons;
 	float f;
-	GameHook_PhysicFrameBegin();
+	gamehook_PhysicFrameBegin();
 	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
 
 	if(buttons != self.buttons_old || physics_movement != self.movement_old || self.v_angle != self.v_angle_old || self.deadflag != DEAD_NO)
@@ -286,7 +286,7 @@ void SV_PlayerPhysics()
 		float allowed_to_move = 0;
 		if (time >= map_starttime || map_restart_active)
 		if not(map_finished)
-		if (GameHook_PlayerAllowedToMove())
+		if (gamehook_PlayerAllowedToMove())
 			allowed_to_move = 1;
 
 		if (allowed_to_move) {
@@ -456,10 +456,10 @@ void(void) physics_init {
 			e.player_physic.SendFlags |= 3;
 		}
 	} else {
-		physics_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-		GameHookChain_RealClientConnect = physics_RealClientConnect;
-		physics_RealClientDisconnect_NextLink = GameHookChain_RealClientDisconnect;
-		GameHookChain_RealClientDisconnect = physics_RealClientDisconnect;
+		physics_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
+		gamehook_chain_RealClientConnect = physics_RealClientConnect;
+		physics_RealClientDisconnect_NextLink = gamehook_chain_RealClientDisconnect;
+		gamehook_chain_RealClientDisconnect = physics_RealClientDisconnect;
 		physics_initiated = TRUE;
 	}
 }

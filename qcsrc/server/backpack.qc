@@ -45,6 +45,6 @@ void() backpack_init {
 		return;
 
 	backpack_init_done = TRUE;
-	backpack_ThrowWeaponOnDeathHandle_NextLink = GameHookChain_ThrowWeaponOnDeathHandle;
-	GameHookChain_ThrowWeaponOnDeathHandle = backpack_ThrowWeaponOnDeathHandle;
+	backpack_ThrowWeaponOnDeathHandle_NextLink = gamehook_chain_ThrowWeaponOnDeathHandle;
+	gamehook_chain_ThrowWeaponOnDeathHandle = backpack_ThrowWeaponOnDeathHandle;
 }

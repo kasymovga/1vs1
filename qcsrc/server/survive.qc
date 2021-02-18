@@ -269,8 +269,8 @@ void survive_init() {
 	survive_monster_quant = 1;
 	gamehook_winning_condition = survive_WinningCondition;
 	gamehook_map_finish_message_mod = survive_GameOverMessageMod;
-	GameHook_WinCountDown = stub_WinCountDown;
-	GameHook_MonsterQuant = survive_MonsterQuant;
+	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_MonsterQuant = survive_MonsterQuant;
 	gamehook_monster_killed = survive_MonsterKilled;
 	survive_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = survive_Spawn;

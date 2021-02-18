@@ -227,7 +227,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
-		if not(GameHookChain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
+		if not(gamehook_chain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
 			damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
 		}
 	}

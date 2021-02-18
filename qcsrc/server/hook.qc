@@ -481,14 +481,14 @@ void(float force) hook_init {
     precache_model("models/hook.md3");
 	precache_sound("weapons/hook_fire.wav");
 	precache_sound("weapons/hook_impact.wav");
-	hook_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-	GameHookChain_RealClientConnect = hook_RealClientConnect;
+	hook_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
+	gamehook_chain_RealClientConnect = hook_RealClientConnect;
 	hook_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = hook_DamageForceModsSet;
 	hook_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = hook_PlayerPreThink;
 	hook_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = hook_PlayerClear;
-	hook_entity_pre_spawn_next = GameHookChain_EntityPreSpawn;
-	GameHookChain_EntityPreSpawn = hook_entity_pre_spawn;
+	hook_entity_pre_spawn_next = gamehook_chain_EntityPreSpawn;
+	gamehook_chain_EntityPreSpawn = hook_entity_pre_spawn;
 }

@@ -1,4 +1,4 @@
-#define PROJECTILE_SKIPNONSOLID if (GameHookChain_ProjectileTouchHandle()) { return; }
+#define PROJECTILE_SKIPNONSOLID if (gamehook_chain_ProjectileTouchHandle()) { return; }
 #define PROJECTILE_TOUCH do { PROJECTILE_SKIPNONSOLID if(PROJECTILE_OWNER_CHECK()) return; if (self.lastpushtime >= time) if (self.velocity * trace_plane_normal > 0) { setorigin(self, self.origin); return; } if(projectile_no_impact_check()) { remove(self); return; } if(trace_ent && trace_ent.solid > SOLID_TRIGGER) projectile_update_next_frame(self); } while(0)
 #define PROJECTILE_OWNER_CHECK() (other && (other == self.owner))
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE

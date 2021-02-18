@@ -203,14 +203,14 @@ float(entity spot) lms_SpawnPointGood {
 void(void) lms_init {
 	lms_Spawn_next = gamehook_chain_spawn;
 	gamehook_chain_spawn = lms_Spawn;
-	lms_ClientConnect_next = GameHookChain_ClientConnect;
-	GameHookChain_ClientConnect = lms_ClientConnect;
-	lms_JoinHandle_next = GameHookChain_JoinHandle;
-	GameHookChain_JoinHandle = lms_JoinHandle;
+	lms_ClientConnect_next = gamehook_chain_ClientConnect;
+	gamehook_chain_ClientConnect = lms_ClientConnect;
+	lms_JoinHandle_next = gamehook_chain_JoinHandle;
+	gamehook_chain_JoinHandle = lms_JoinHandle;
 	gamehook_winning_condition = lms_WinningCondition;
 	gamehook_forbid_specatators = lms_ForbidSpectators;
 	gamehook_player_death_handle = lms_DeathHandle;
-	GameHook_SpawnPointGood = lms_SpawnPointGood;
+	gamehook_SpawnPointGood = lms_SpawnPointGood;
 	score_basics(SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
 	SP_STATUS = score_register("status", 0);
 	SP_LIVES = score_register("lives", SFL_SORT_PRIO_PRIMARY | SFL_NOCLEAR);

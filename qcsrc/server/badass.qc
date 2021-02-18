@@ -51,11 +51,11 @@ void BadAss_Init() {
 	CVAR_CACHE(g_badass_health_limit);
 	CVAR_CACHE(g_badass_armor_limit);
 	if (g_badass_color > -2) {
-		BadAss_PlayerColorsMod_NextLink = GameHookChain_PlayerColorsMod;
-		GameHookChain_PlayerColorsMod = BadAss_PlayerColorsMod;
+		BadAss_PlayerColorsMod_NextLink = gamehook_chain_PlayerColorsMod;
+		gamehook_chain_PlayerColorsMod = BadAss_PlayerColorsMod;
 		if (g_badass_health_limit || g_badass_armor_limit) {
-			BadAss_HealthArmorFuelModsSet_NextLink = GameHookChain_HealthArmorFuelModsSet;
-			GameHookChain_HealthArmorFuelModsSet = BadAss_HealthArmorFuelModsSet;
+			BadAss_HealthArmorFuelModsSet_NextLink = gamehook_chain_HealthArmorFuelModsSet;
+			gamehook_chain_HealthArmorFuelModsSet = BadAss_HealthArmorFuelModsSet;
 		}
 	}
 }

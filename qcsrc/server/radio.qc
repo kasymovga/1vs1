@@ -62,16 +62,16 @@ void Radio_Init(void) {
 	CVAR_CACHE(sv_radio_queue_advanceat);
 	CVAR_CACHE(sv_radio_queue_autofill_retry);
 	CVAR_CACHE(sv_radio_log_skips);
-	Radio_RealClientConnect_NextLink = GameHookChain_RealClientConnect;
-	GameHookChain_RealClientConnect = Radio_RealClientConnect;
+	Radio_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
+	gamehook_chain_RealClientConnect = Radio_RealClientConnect;
 	Radio_ServerFrame_NextLink = gamehook_chain_world_frame_start;
 	gamehook_chain_world_frame_start = Radio_ServerFrame;
 	Radio_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = Radio_ClientCommandHandle;
-	Radio_GameCommandHandle_NextLink = GameHookChain_GameCommandHandle;
-	GameHookChain_GameCommandHandle = Radio_GameCommandHandle;
-	Radio_GameMenuAddItems_NextLink = GameHookChain_GameMenuAddItems;
-	GameHookChain_GameMenuAddItems = Radio_GameMenuAddItems;
+	Radio_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
+	gamehook_chain_GameCommandHandle = Radio_GameCommandHandle;
+	Radio_GameMenuAddItems_NextLink = gamehook_chain_GameMenuAddItems;
+	gamehook_chain_GameMenuAddItems = Radio_GameMenuAddItems;
 }
 
 void Radio_SendPreload(entity e, string url) {
