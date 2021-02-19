@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizRecordListDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizRecordListDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	ATTRIB(NexuizRecordListDialog, title, string, "Record list")
+	ATTRIB(NexuizRecordListDialog, title, string, "Map records")
 	ATTRIB(NexuizRecordListDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizRecordListDialog, intendedWidth, float, 0.6)
 	ATTRIB(NexuizRecordListDialog, rows, float, 15)
