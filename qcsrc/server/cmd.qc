@@ -768,7 +768,7 @@ void(string s) cmd_client {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
 	} else if(cmd == "recordlistchunk" && tokens == 3) {
 		float n1 = floor(stof(argv(1))), n2 = floor(stof(argv(2)));
-		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16) {
+		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished) {
 			msg_entity = self;
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_RECORDLISTCHUNK);
