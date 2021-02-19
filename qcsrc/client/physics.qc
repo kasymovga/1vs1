@@ -201,24 +201,25 @@ void(void) physics_camera_setup {
 		else
 			view_camera_origin = view_origin;
 
-		if (CVAR(chase_active))
 		if not(view_camera_active) {
-			makevectors(view_angles);
 			if not(spectatee_status)
 			if not(physics_player_ent) {
 				if (main_ext_DP_RM_SETRENDERENTITY) {
 					setentityvec(player_localentnum, E_ORIGIN, physics.origin);
 				} else {
-					physics_end_origin = physics_start_origin;
+					if (CVAR(chase_active))
+						physics_end_origin = physics_start_origin;
 				}
 			}
-			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
-			view_camera_origin = trace_endpos;
-			tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
-			view_camera_origin = trace_endpos;
-		}
-		if not(view_camera_active)
+			if (CVAR(chase_active)) {
+				makevectors(view_angles);
+				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
+				view_camera_origin = trace_endpos;
+				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
+				view_camera_origin = trace_endpos;
+			}
 			R_SetView(VF_ORIGIN, view_camera_origin);
+		}
 	} else {
 		view_camera_origin = view_origin;
 	}
