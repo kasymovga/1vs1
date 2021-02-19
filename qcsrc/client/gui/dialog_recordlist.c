@@ -16,6 +16,7 @@ void gotomapNexuizRecordListDialog(entity btn, entity me) {
 		string s = recordlist_get(me.selectedItem);
 		s = str_car(s);
 		localcmd("cmd vote call gotomap " + s + ";");
+		btn.onClickEntity.close(btn.onClickEntity);
 	}
 }
 
@@ -38,7 +39,7 @@ void fillNexuizRecordListDialog(entity me) {
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 10, e = makeNexuizButton("Call the vote for this map", '0 0 0'));
+		me.TD(me, 1, 10, e = makeNexuizButton("Call a vote for this map", '0 0 0'));
 			e.onClick = gotomapNexuizRecordListDialog;
 			e.onClickEntity = record_list;
 		me.TD(me, 1, 10, e = makeNexuizCommandButton("Close", '0 0 0', "", 1));
