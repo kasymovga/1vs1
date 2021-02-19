@@ -766,6 +766,22 @@ void(string s) cmd_client {
 		LocationRequest_Select(stof(argv(1)), stof(argv(2)));
 	} else if(cmd == "mylocation") {
 		sprint(self, strcat("your location: ", vtos(self.origin), "\n"));
+	} else if(cmd == "recordlistchunk" && tokens == 3) {
+		float n1 = floor(stof(argv(1))), n2 = floor(stof(argv(2)));
+		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16) {
+			msg_entity = self;
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_RECORDLISTCHUNK);
+			WriteByte(MSG_ONE, n1);
+			WriteByte(MSG_ONE, n2);
+			if (n1 < CMD_RECORDS_REPLY_STRINGS_COUNT) {
+				string s2 = substring(cmd_records_reply[n1], 1024 * n2, 1024);
+				WriteString(MSG_ONE, s2);
+			} else {
+				WriteString(MSG_ONE, "");
+			}
+		}
+
 	} else {
 		if(cmd != "status")
 		if(cmd != "max")

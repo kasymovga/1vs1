@@ -58,6 +58,8 @@ void(string msg) GameCommand { //called by engine
 			report_reasons[i] = "";
 		}
 		GUI_Show(GUI_REPORT);
+	} else if (cmd == "recordlist") {
+		GUI_Show(GUI_RECORDLIST);
 	} else if (cmd == "r_restart") {
 		waypointsprite_init();
 		draw_init();

@@ -1,16 +1,17 @@
 void(void) gui_chat_restore;
 void GUI_Show(float window);
 void GUI_Hide();
-entity GUI_gameMenuDialog;
-entity GUI_teamSelectDialog;
-entity GUI_gameSettingsDialog;
-entity GUI_voteCallDialog;
-entity GUI_quitDialog;
-entity GUI_radioDialog;
-entity GUI_saveLoad;
-entity GUI_hint;
-entity GUI_report;
-entity GUI_muteList;
+entity gui_gameMenuDialog;
+entity gui_teamSelectDialog;
+entity gui_gameSettingsDialog;
+entity gui_voteCallDialog;
+entity gui_quitDialog;
+entity gui_radioDialog;
+entity gui_saveLoad;
+entity gui_hint;
+entity gui_report;
+entity gui_muteList;
+entity gui_recordList;
 
 enum {
 	GUI_TEAMSELECT,
@@ -23,6 +24,7 @@ enum {
 	GUI_HINT,
 	GUI_REPORT,
 	GUI_MUTELIST,
+	GUI_RECORDLIST,
 };
 
 string gui_available_maps;

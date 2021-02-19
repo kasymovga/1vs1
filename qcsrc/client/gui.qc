@@ -137,34 +137,37 @@ void GUI_Show(float window) {
 	entity e;
 	switch (window) {
 	case GUI_TEAMSELECT:
-		e = GUI_teamSelectDialog;
+		e = gui_teamSelectDialog;
 		break;
 	case GUI_GAMEMENU:
-		e = GUI_gameMenuDialog;
+		e = gui_gameMenuDialog;
 		break;
 	case GUI_GAMESETTINGS:
-		e = GUI_gameSettingsDialog;
+		e = gui_gameSettingsDialog;
 		break;
 	case GUI_VCALL:
-		e = GUI_voteCallDialog;
+		e = gui_voteCallDialog;
 		break;
 	case GUI_QUIT:
-		e = GUI_quitDialog;
+		e = gui_quitDialog;
 		break;
 	case GUI_RADIO:
-		e = GUI_radioDialog;
+		e = gui_radioDialog;
 		break;
 	case GUI_SAVELOAD:
-		e = GUI_saveLoad;
+		e = gui_saveLoad;
 		break;
 	case GUI_HINT:
-		e = GUI_hint;
+		e = gui_hint;
 		break;
 	case GUI_REPORT:
-		e = GUI_report;
+		e = gui_report;
 		break;
 	case GUI_MUTELIST:
-		e = GUI_muteList;
+		e = gui_muteList;
+		break;
+	case GUI_RECORDLIST:
+		e = gui_recordList;
 		break;
 	}
 	if not(e) {

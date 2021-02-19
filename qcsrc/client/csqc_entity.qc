@@ -182,6 +182,9 @@ float() CSQC_Parse_TempEntity { //called by engine
 	case TE_CSQC_MODELSELECT:
 		modelselect_read();
 		return TRUE;
+	case TE_CSQC_RECORDLISTCHUNK:
+		recordlist_read();
+		return TRUE;
 	}
 	return FALSE;
 }

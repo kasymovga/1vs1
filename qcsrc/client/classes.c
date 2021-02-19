@@ -48,6 +48,8 @@
 #include "gui/dialog_report.c"
 #include "gui/mutelist.c"
 #include "gui/dialog_mutelist.c"
+#include "gui/recordlist.c"
+#include "gui/dialog_recordlist.c"
 #undef draw
 #undef frame
 #undef conwidth

@@ -85,6 +85,7 @@ hint.qh
 sphere.qh
 ice.qh
 team.qh
+recordlist.qh
 cvar.qc
 ../client-server/movelib.qc
 str.qc
@@ -213,3 +214,4 @@ fog.qc
 net.qc
 modelselect.qc
 csqc_entity.qc
+recordlist.qc

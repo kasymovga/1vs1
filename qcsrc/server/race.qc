@@ -1175,6 +1175,7 @@ float(string cmd, float argc) race_cmd_handle {
 var void(void(string item, string cmd) send_item) race_gamemenu_send_next;
 void race_gamemenu_send(void(string item, string cmd) send_item) {
 	send_item("Respawn", "kill;");
+	send_item("Record list...", "cl_cmd recordlist;");
 	race_gamemenu_send_next(send_item);
 }
 

@@ -1,0 +1,3 @@
+void() recordlist_read;
+string(float i) recordlist_get;
+float recordlist_size;
