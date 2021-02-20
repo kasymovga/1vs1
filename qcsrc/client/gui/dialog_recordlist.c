@@ -16,7 +16,8 @@ void gotomapNexuizRecordListDialog(entity btn, entity me) {
 		string s = recordlist_get(me.selectedItem);
 		s = str_car(s);
 		localcmd("cmd vote call gotomap " + s + ";");
-		btn.onClickEntity.close(btn.onClickEntity);
+		GUI_Hide();
+		GUI_Hide();
 	}
 }
 
