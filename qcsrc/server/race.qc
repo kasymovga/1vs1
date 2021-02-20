@@ -1064,9 +1064,10 @@ string(string bspname) race_RecordForMap {
 	string recid = (g_race ? RACE_RECORD : CTS_RECORD);
 	float r = stof(db_get(db_server, strcat(bspname, recid, "time")));
 	if (r == 0)
-		return strcat(strpad(32, bspname), " ", "--:--.-- -\n");
+		return strcat(strpad(16, bspname), " ", "--:--.-- -\n");
 
-	return strcat(strpad(32, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", db_get(db_server, strcat(bspname, recid, "netname")), "\n");
+	string n = strreplace("\n", " ", db_get(db_server, strcat(bspname, recid, "netname")));
+	return strcat(strpad(16, bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", n, "\n");
 }
 
 float() race_ReadyAllowed {

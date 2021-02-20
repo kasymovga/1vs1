@@ -66,6 +66,7 @@ void() recordlist_read {
 
 	if not(recordlist) {
 		recordlist_tail = recordlist = spawn();
+		recordlist_size = 1;
 	}
 	if (s == "") {
 		if (recordlist_tail_expected_chunk) {
@@ -75,6 +76,7 @@ void() recordlist_read {
 			recordlist_tail_expected_chunk = 0;
 		} else {
 			recordlist_tail_expected_chunk = -1;
+			recordlist_size--;
 		}
 	} else {
 		recordlist_size -= recordlist_tail.cnt;
