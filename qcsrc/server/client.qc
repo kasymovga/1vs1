@@ -642,7 +642,7 @@ void client_cvars_request() {
 			"sendcvar cl_autotaunt\n"
 			"sendcvar cl_voice_directional\n"
 			"sendcvar cl_voice_directional_taunt_attenuation\n"
-			"sendcvar cl_hitsound\n"
+			"sendcvar cl_netfps\n"
 	);
 #ifdef ALLOW_FORCEMODELS
 	stuffcmd(self, "sendcvar cl_forceplayermodels\n"
@@ -707,6 +707,11 @@ void() client_cvars_parse {
 			self.weaponentity.cnt = 0;
 	} else if (s == "cl_showweaponspawns") {
 		self.cvar_cl_showweaponspawns = stof(val);
+	} else if (s == "cl_netfps") {
+		float f = stof(val);
+		if (!f || f < (1 / sys_ticrate) * 1.5) {
+			stuffcmd(self, "seta cl_netfps " + ftos(ceil((1 / sys_ticrate) * 1.5)) + "\n");
+		}
 	}
 }
 
