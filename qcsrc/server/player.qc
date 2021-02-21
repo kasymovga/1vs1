@@ -276,8 +276,9 @@ void() player_effects {
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	self.body.effects = self.effects;
+	self.body.body.effects = self.effects & EF_TELEPORT_BIT; //for teleportation
 	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
-	self.body.body.modelflags = self.modelflags;
+	self.body.body.modelflags = self.modelflags; //for MF_ROCKET effect
 	self.effects = 0;
 }
 
