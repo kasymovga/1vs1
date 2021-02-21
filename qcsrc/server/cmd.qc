@@ -76,7 +76,7 @@ void(string command) cmd_game {
 	if(cmd_generic(command))
 		return;
 
-	if (gamehook_chain_GameCommandHandle(cmd, argc))
+	if (gamehook_chain_cmd_game_handle(cmd, argc))
 		return;
 
 	if(cmd == "printstats")

@@ -188,15 +188,15 @@ void Roundbased_SetScoreField(float sf) {
 	rb_score_field = sf;
 }
 
-var float(string cmd, float tokens) Roundbased_GameCommandHandle_NextLink;
-float Roundbased_GameCommandHandle(string cmd, float tokens) {
+var float(string cmd, float tokens) Roundbased_cmd_game_handle_NextLink;
+float Roundbased_cmd_game_handle(string cmd, float tokens) {
 	if (cmd == "endround") {
 		if (Roundbased_Active)
 			Roundbased_SetRoundStartWithWinner(-1);
 
 		return TRUE;
 	}
-	return Roundbased_GameCommandHandle_NextLink(cmd, tokens);
+	return Roundbased_cmd_game_handle_NextLink(cmd, tokens);
 }
 
 void Roundbased_Init(float enddelay, float startdelay) {
@@ -223,6 +223,6 @@ void Roundbased_Init(float enddelay, float startdelay) {
 	gamehook_chain_damage_mods_set = Roundbased_DamageForceModsSet;
 	Roundbased_ServerFrame_NextLink = gamehook_chain_world_frame_start;
 	gamehook_chain_world_frame_start = Roundbased_ServerFrame;
-	Roundbased_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
-	gamehook_chain_GameCommandHandle = Roundbased_GameCommandHandle;
+	Roundbased_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
+	gamehook_chain_cmd_game_handle = Roundbased_cmd_game_handle;
 }

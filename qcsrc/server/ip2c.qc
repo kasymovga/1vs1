@@ -48,12 +48,12 @@ float IP2C_ClientCommandHandle(string cmd, float tokens) {
     return IP2C_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-var float(string cmd, float tokens) IP2C_GameCommandHandle_NextLink;
-float IP2C_GameCommandHandle(string cmd, float tokens) {
+var float(string cmd, float tokens) IP2C_cmd_game_handle_NextLink;
+float IP2C_cmd_game_handle(string cmd, float tokens) {
 	if(IP2C_GameCommand(cmd, tokens))
 		return TRUE;
 
-	return IP2C_GameCommandHandle_NextLink(cmd, tokens);
+	return IP2C_cmd_game_handle_NextLink(cmd, tokens);
 }
 
 var void() IP2C_ShutdownHook_NextLink;
@@ -83,8 +83,8 @@ void IP2C_InitSV(void) {
         IP2C_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
         gamehook_chain_cmd_client_handle = IP2C_ClientCommandHandle;
     }
-	IP2C_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
-	gamehook_chain_GameCommandHandle = IP2C_GameCommandHandle;
+	IP2C_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
+	gamehook_chain_cmd_game_handle = IP2C_cmd_game_handle;
 	IP2C_ShutdownHook_NextLink = gamehook_chain_shutdown;
 	gamehook_chain_shutdown = IP2C_ShutdownHook;
 	IP2C_ClientConnect_NextLink = gamehook_chain_ClientConnect;

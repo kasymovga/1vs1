@@ -254,8 +254,8 @@ void dlc_require(string dlc_name) {
 
 float dlc_pause;
 
-var float(string cmd, float argc) dlc_GameCommandHandle_NextLink;
-float(string cmd, float argc) dlc_GameCommandHandle {
+var float(string cmd, float argc) dlc_cmd_game_handle_NextLink;
+float(string cmd, float argc) dlc_cmd_game_handle {
 	if (cmd == "dlc_require")
 	if (argv(1) != "") {
 		dlc_require(argv(1));
@@ -278,7 +278,7 @@ float(string cmd, float argc) dlc_GameCommandHandle {
 		slowmo_update();
 		return TRUE;
 	}
-	return dlc_GameCommandHandle_NextLink(cmd, argc);
+	return dlc_cmd_game_handle_NextLink(cmd, argc);
 }
 
 var float(float tempo) dlc_TempoMod_NextLink;
@@ -365,8 +365,8 @@ void dlc_init() {
 		}
 	}
 	dlc_extra_pk3_list_build();
-	dlc_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
-	gamehook_chain_GameCommandHandle = dlc_GameCommandHandle;
+	dlc_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
+	gamehook_chain_cmd_game_handle = dlc_cmd_game_handle;
 	dlc_TempoMod_NextLink = gamehook_chain_TempoMod;
 	gamehook_chain_TempoMod = dlc_TempoMod;
 }

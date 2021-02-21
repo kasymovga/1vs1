@@ -170,8 +170,8 @@ void(entity plr) timeout_evaluate_timein {
 	}
 }
 
-var float(string cmd, float tokens) timeout_GameCommandHandle_NextLink;
-float(string cmd, float tokens) timeout_GameCommandHandle {
+var float(string cmd, float tokens) timeout_cmd_game_handle_NextLink;
+float(string cmd, float tokens) timeout_cmd_game_handle {
 	if (cmd == "timeout" || (cmd == "timeoutin" && timeoutStatus == 0)) {
 		timeout_evaluate_timeout();
 		return TRUE;
@@ -180,7 +180,7 @@ float(string cmd, float tokens) timeout_GameCommandHandle {
 		timeout_evaluate_timein(world);
 		return TRUE;
 	}
-	return timeout_GameCommandHandle_NextLink(cmd, tokens);
+	return timeout_cmd_game_handle_NextLink(cmd, tokens);
 }
 
 var float(string cmd, float tokens) timeout_ClientCommandHandle_NextLink;
@@ -226,8 +226,8 @@ void() timeout_init {
 
 	timeout_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = timeout_ClientCommandHandle;
-	timeout_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
-	gamehook_chain_GameCommandHandle = timeout_GameCommandHandle;
+	timeout_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
+	gamehook_chain_cmd_game_handle = timeout_cmd_game_handle;
 	timeout_TempoMod_NextLink = gamehook_chain_TempoMod;
 	gamehook_chain_TempoMod = timeout_TempoMod;
 	timeout_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;

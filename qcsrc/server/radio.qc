@@ -35,8 +35,8 @@ var void() Radio_ServerFrame_NextLink;
 void Radio_ServerFrame(void);
 var float(string cmd, float tokens) Radio_ClientCommandHandle_NextLink;
 float Radio_ClientCommandHandle(string cmd, float tokens);
-var float(string cmd, float tokens) Radio_GameCommandHandle_NextLink;
-float Radio_GameCommandHandle(string cmd, float tokens);
+var float(string cmd, float tokens) Radio_cmd_game_handle_NextLink;
+float Radio_cmd_game_handle(string cmd, float tokens);
 
 var void(void(string item, string cmd) Add_Item) Radio_gamemenu_send_NextLink;
 void Radio_gamemenu_send(void(string item, string cmd) Add_Item) {
@@ -68,8 +68,8 @@ void Radio_Init(void) {
 	gamehook_chain_world_frame_start = Radio_ServerFrame;
 	Radio_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = Radio_ClientCommandHandle;
-	Radio_GameCommandHandle_NextLink = gamehook_chain_GameCommandHandle;
-	gamehook_chain_GameCommandHandle = Radio_GameCommandHandle;
+	Radio_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
+	gamehook_chain_cmd_game_handle = Radio_cmd_game_handle;
 	Radio_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = Radio_gamemenu_send;
 }
@@ -354,7 +354,7 @@ float Radio_ClientCommandHandle(string cmd, float tokens) {
 	return Radio_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-float Radio_GameCommandHandle(string cmd, float tokens) {
+float Radio_cmd_game_handle(string cmd, float tokens) {
     if(argv(0) == "netmusic" || argv(0) == "radio_play") {
     	Radio_Play(argv(1), argv(2), (argv(3) == "loop"));
     	return TRUE;
@@ -385,5 +385,5 @@ float Radio_GameCommandHandle(string cmd, float tokens) {
             stuffcmd(e, "radio 1\n");
         return TRUE;
     }
-	return Radio_GameCommandHandle_NextLink(cmd, tokens);
+	return Radio_cmd_game_handle_NextLink(cmd, tokens);
 }

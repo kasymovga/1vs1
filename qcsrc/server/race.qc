@@ -43,6 +43,9 @@ float race_lowest_place_spawn; // where to spawn in qualifying
 .float race_place;
 void(entity pl, float penalty, string reason) race_impose_penalty_time;
 void(void) race_start_completing;
+void(entity pl) race_position_remove;
+float(entity pl) race_position_used;
+void(entity pl) race_position_used_unset;
 
 float race_highest_checkpoint;
 float race_timed_checkpoint;
@@ -358,21 +361,25 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 						race_checkpoint_next_send(p, 0);
 			}
 			if (cp == race_timed_checkpoint) {
-				float position = race_records_put(e.netname, t, e.scorekeeper.race_maxspeed);
-				if (position) {
-					chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
-					if (position == 1)
-						announce(e, "announcer/male/amazing.wav", "^31st place!");
-					else if (position == 2)
-						announce(e, "announcer/male/awesome.wav", "^52st place!");
-					else if (position == 2)
-						announce(e, "announcer/male/impressive.wav", "^23st place!");
-					else
-						announce(e, "announcer/male/impressive.wav", "^2New record!");
+				if (race_position_used(e)) {
+					sprint(e, "\{1}^3Save/retore position was used, time not counted\n");
+				} else {
+					float position = race_records_put(e.netname, t, e.scorekeeper.race_maxspeed);
+					if (position) {
+						chat_say(world, 0, world, strcat(e.netname, "^7 take place #", ftos(position), " with ", TIME_ENCODED_TOSTRING(t), " on ", mapname , "\n"), 0);
+						if (position == 1)
+							announce(e, "announcer/male/amazing.wav", "^31st place!");
+						else if (position == 2)
+							announce(e, "announcer/male/awesome.wav", "^52st place!");
+						else if (position == 2)
+							announce(e, "announcer/male/impressive.wav", "^23st place!");
+						else
+							announce(e, "announcer/male/impressive.wav", "^2New record!");
 
-					entity e3;
-					FOR_EACH_REALCLIENT(e3) {
-						race_records_send(e3);
+						entity e3;
+						FOR_EACH_REALCLIENT(e3) {
+							race_records_send(e3);
+						}
 					}
 				}
 				string table;
@@ -538,6 +545,7 @@ void(void) race_checkpoint_passed {
 		if(!self.race_checkpoint) { // start line
 			other.race_laptime = time;
 			other.race_movetime = other.race_movetime_frac = other.race_movetime_count = 0;
+			race_position_used_unset(other);
 			if (g_race_qualifying)
 				score_player_set(other, SP_RACE_MAXSPEED, 0);
 
@@ -713,6 +721,9 @@ var void(float killed) race_player_clear_next;
 void(float killed) race_player_clear {
 	if (killed)
 		race_abandon_check(self);
+
+	if (self.classname == "disconnecting")
+		race_position_remove(self);
 
 	race_player_clear_next(killed);
 }
@@ -1158,8 +1169,8 @@ void(void) race_client_real_connect {
 	race_client_real_connect_next();
 }
 
-var float(string cmd, float argc) race_cmd_handle_next;
-float(string cmd, float argc) race_cmd_handle {
+var float(string cmd, float argc) race_cmd_game_handle_next;
+float(string cmd, float argc) race_cmd_game_handle {
 	if (cmd == "clear_records") {
 		string m;
 		if (argc > 1)
@@ -1170,13 +1181,118 @@ float(string cmd, float argc) race_cmd_handle {
 		race_records_clear(m);
 		return TRUE;
 	}
-	return race_cmd_handle_next(cmd, argc);
+	return race_cmd_game_handle_next(cmd, argc);
+}
+
+entity(entity pl) race_position_find {
+	entity e;
+	for (e = find(world, classname, "race_position"); e; e = find(e, classname, "race_position")) {
+		if (e.owner == pl)
+			return e;
+	}
+	return world;
+}
+
+void(entity pl) race_position_used_unset {
+	entity e = race_position_find(pl);
+	if (e) e.cnt = 0;
+}
+
+float(entity pl) race_position_used {
+	entity e = race_position_find(pl);
+	if (e)
+		return e.cnt;
+
+	return 0;
+}
+
+void(entity pl) race_position_remove {
+	entity e = race_position_find(pl);
+	if (e) remove(e);
+}
+
+void(entity pl) race_position_create {
+	if (pl.classname != "player") {
+		sprint(pl, "\{1}^1You need join game first!\n");
+		return;
+	}
+	race_position_remove(pl);
+	entity e = spawn();
+	entity oldself = self;
+	self = e;
+	spectator_copy(pl);
+	self = oldself;
+	e.classname = "race_position";
+	e.owner = pl;
+	e.race_completed = pl.race_completed;
+	e.race_penalty_accumulator = pl.race_penalty_accumulator;
+	e.race_penalty_reason = pl.race_penalty_reason;
+	e.race_checkpoint = pl.race_checkpoint;
+	e.race_laptime = pl.race_laptime;
+	e.race_lastpenalty = pl.race_lastpenalty;
+	e.race_penalty = pl.race_penalty;
+	e.race_movetime = pl.race_movetime;
+	e.race_movetime_frac = pl.race_movetime_frac;
+	e.race_movetime_count = pl.race_movetime_count;
+	e.race_maxspeed = pl.race_maxspeed;
+	e.cnt = 1;
+	sprint(pl, "\{1}^2Position was saved\n");
+}
+
+void(entity pl) race_position_restore {
+	if (pl.classname != "player") {
+		sprint(pl, "\{1}^1You need join game first!\n");
+		return;
+	}
+	entity e = race_position_find(pl);
+	if (e) {
+		setorigin(pl, e.origin);
+		entity oldself = self;
+		self = pl;
+		spectator_copy(e);
+		self = oldself;
+		pl.race_completed = e.race_completed;
+		pl.race_penalty_accumulator = e.race_penalty_accumulator;
+		pl.race_penalty_reason = e.race_penalty_reason;
+		pl.race_checkpoint = e.race_checkpoint;
+		pl.race_laptime = e.race_laptime;
+		pl.race_lastpenalty = e.race_lastpenalty;
+		pl.race_penalty = e.race_penalty;
+		pl.race_movetime = e.race_movetime;
+		pl.race_movetime_frac = e.race_movetime_frac;
+		pl.race_movetime_count = e.race_movetime_count;
+		pl.race_maxspeed = e.race_maxspeed;
+		if (pl.race_laptime)
+			race_checkpoint_next_send(pl, 1);
+		else
+			race_time_clear(pl);
+
+		e.cnt = 1;
+		sprint(pl, "\{1}^2Position was restored\n");
+		return;
+	}
+	sprint(pl, "\{1}^1No saved position found!\n");
+}
+
+var float(string cmd, float argc) race_cmd_client_handle_next;
+float(string cmd, float argc) race_cmd_client_handle {
+	if (cmd == "saveposition") {
+		race_position_create(self);
+		return TRUE;
+	}
+	if (cmd == "restoreposition") {
+		race_position_restore(self);
+		return TRUE;
+	}
+	return race_cmd_client_handle_next(cmd, argc);
 }
 
 var void(void(string item, string cmd) send_item) race_gamemenu_send_next;
 void race_gamemenu_send(void(string item, string cmd) send_item) {
 	send_item("Respawn", "kill;");
 	send_item("Map records...", "cl_cmd recordlist;");
+	send_item("Save position", "cmd saveposition;");
+	send_item("Restore position", "cmd restoreposition;");
 	race_gamemenu_send_next(send_item);
 }
 
@@ -1214,6 +1330,8 @@ void(void) race_init {
 		race_records_path = CTS_RECORD;
 		race_gamemenu_send_next = gamehook_chain_gamemenu_send;
 		gamehook_chain_gamemenu_send = race_gamemenu_send;
+		race_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
+		gamehook_chain_cmd_client_handle = race_cmd_client_handle;
 	}
 	if (g_race_qualifying) {
 		player_independent = 1;
@@ -1253,6 +1371,6 @@ void(void) race_init {
 	gamehook_ReadyRestartHard = race_ReadyRestartHard;
 	gamehook_BotChooseRole = race_role_choose;
 	gamehook_SuddenDeathMessageMod = race_SuddenDeathMod;
-	race_cmd_handle_next = gamehook_chain_GameCommandHandle;
-	gamehook_chain_GameCommandHandle = race_cmd_handle;
+	race_cmd_game_handle_next = gamehook_chain_cmd_game_handle;
+	gamehook_chain_cmd_game_handle = race_cmd_game_handle;
 }
