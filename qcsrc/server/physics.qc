@@ -34,9 +34,6 @@ void(void) physics_on_jump_hook {
 
 	if(g_jump_grunt)
 		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
-
-	if (g_jump_nofalldamage)
-		self.oldvelocity_z = physics_velocity_z;
 }
 
 void(void) physics_check_water_jump_hook {
@@ -88,6 +85,12 @@ void(void) physics_check_ground_hook {
 		}
 	}
 	self.wasFlying = physics_is_flying(self);
+	if (physics_is_player)
+	if not(physics_cantjump)
+	if (physics_button_jump)
+	if (sv_pogostick || (physics_flags & FL_JUMPRELEASED))
+	if (g_jump_nofalldamage)
+		self.oldvelocity_z = 0;
 }
 
 void(void) physics_on_crouch_hook {
