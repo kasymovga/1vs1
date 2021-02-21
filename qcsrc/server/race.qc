@@ -382,19 +382,6 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 						}
 					}
 				}
-				string table;
-				float i, tt;
-				string n;
-				for (i = 0; i < 10; i++) {
-					n = race_records_name[i];
-					tt = race_records_time[i];
-					if (i + 1 == position)
-						table = strcat(table, "^2", ftos(i + 1), ". ", n, "^2    ", TIME_ENCODED_TOSTRING(tt), "\n");
-					else if (n == e.netname)
-						table = strcat(table, "^3", ftos(i + 1), ". ", n, "^3    ", TIME_ENCODED_TOSTRING(tt), "\n");
-					else
-						table = strcat(table, "^7", ftos(i + 1), ". ", n, "^7    ", TIME_ENCODED_TOSTRING(tt), "\n");
-				}
 			}
 		} else {
 			// dummies
