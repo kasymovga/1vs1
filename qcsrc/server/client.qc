@@ -709,8 +709,9 @@ void() client_cvars_parse {
 		self.cvar_cl_showweaponspawns = stof(val);
 	} else if (s == "cl_netfps") {
 		float f = stof(val);
-		if (!f || f < (1 / sys_ticrate) * 1.5) {
-			stuffcmd(self, "seta cl_netfps " + ftos(ceil((1 / sys_ticrate) * 1.5)) + "\n");
+		float reqfps = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout")));
+		if (f < reqfps) {
+			stuffcmd(self, "seta cl_netfps " + ftos(reqfps) + "\n");
 		}
 	}
 }
