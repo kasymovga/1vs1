@@ -4,6 +4,7 @@ CLASS(NexuizRecordList) EXTENDS(NexuizListBox)
 	METHOD(NexuizRecordList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizRecordList, setSelected, void(entity, float))
 	METHOD(NexuizRecordList, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(NexuizRecordList, mousePress, float(entity, vector))
 	ATTRIB(NexuizRecordList, realUpperMargin, float, 0)
 	ATTRIB(NexuizRecordList, columnNameOrigin, float, 0)
 	ATTRIB(NexuizRecordList, voteList, entity, NULL)
@@ -12,8 +13,7 @@ entity makeNexuizRecordList();
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeNexuizRecordList(void)
-{
+entity makeNexuizRecordList(void) {
 	entity me;
 	me = spawnNexuizRecordList();
 	me.configureNexuizRecordList(me);
@@ -21,8 +21,7 @@ entity makeNexuizRecordList(void)
 	return me;
 }
 
-void configureNexuizRecordListNexuizRecordList(entity me)
-{
+void configureNexuizRecordListNexuizRecordList(entity me) {
 	me.configureNexuizListBox(me);
 }
 
@@ -30,6 +29,15 @@ void setSelectedNexuizRecordList(entity me, float i) {
 	setSelectedListBox(me, i);
 	if (i >= me.nItems)
 		return;
+}
+
+float mousePressNexuizRecordList(entity list, vector v) {
+	float sel = list.selectedItem;
+	float r = mousePressListBox(list, v);
+	if (list.selectedItem == sel) {
+		list.onClickEntity.onClick(list.onClickEntity, list);
+	}
+	return r;
 }
 
 void resizeNotifyNexuizRecordList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) {
@@ -50,10 +58,22 @@ void drawListBoxItemNexuizRecordList(entity me, float i, vector absSize, float i
 	while (substring(s, trim, 1) == " ")
 		trim++;
 
+	vector c;
 	s = substring(s, trim, -1);
 	string record_time = str_car(s);
 	string record_name = str_cdr(s);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, record_map, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	if (record_map == shortmapname) {
+		c = '1 1 0.5';
+		if (gametype == GAME_CTS) {
+			if (race_records_time[0]) {
+				record_name = race_records_name[0];
+				record_time = TIME_ENCODED_TOSTRING(race_records_time[0]);
+			}
+		}
+	} else
+		c = '1 1 1';
+
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, record_map, me.realFontSize, c, SKINALPHA_TEXT, 0);
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.4 0 0', record_time, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.6 0 0', record_name, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 	me.nItems = max(1, recordlist_size);
