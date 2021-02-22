@@ -179,8 +179,7 @@ vector(void) physics_view_origin {
 			R_SetView(VF_ORIGIN, v);
 
 		physics_end_origin = physics.origin;
-	}
-	else {
+	} else {
 		physics_end_origin = pmove_org;
 		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		if (camera_correction_needed) {
@@ -205,7 +204,8 @@ void(void) physics_camera_setup {
 			if not(spectatee_status)
 			if not(physics_player_ent) {
 				if (main_ext_DP_RM_SETRENDERENTITY) {
-					setentityvec(player_localentnum, E_ORIGIN, physics.origin);
+					if not(main_isdemo)
+						setentityvec(player_localentnum, E_ORIGIN, physics.origin);
 				} else {
 					if (CVAR(chase_active))
 						physics_end_origin = physics_start_origin;
@@ -217,8 +217,8 @@ void(void) physics_camera_setup {
 				view_camera_origin = trace_endpos;
 				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
+				R_SetView(VF_ORIGIN, view_camera_origin);
 			}
-			R_SetView(VF_ORIGIN, view_camera_origin);
 		}
 	} else {
 		view_camera_origin = view_origin;
