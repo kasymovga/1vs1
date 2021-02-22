@@ -7,6 +7,7 @@
 CLASS(NexuizSaveLoadDialog) EXTENDS(NexuizRootDialog)
 	METHOD(NexuizSaveLoadDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	METHOD(NexuizSaveLoadDialog, configureDialog, void(entity))
+	METHOD(NexuizSaveLoadDialog, loadCvars, void(entity))
 	ATTRIB(NexuizSaveLoadDialog, title, string, _(SAVELOADTITLE))
 	ATTRIB(NexuizSaveLoadDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizSaveLoadDialog, intendedWidth, float, 0.5)
@@ -24,7 +25,10 @@ float SaveSlotNotEmpty(float n) {
 	return file_exists(strcat("slot", ftos(n), ".sav"));
 }
 
-void configureDialogNexuizSaveLoadDialog(entity me) {
+.entity saveSlot;
+
+void loadCvarsNexuizSaveLoadDialog(entity me) {
+	entity e;
 	float i;
 	for (i = 0; i < 12; i++) {
 		str_unzone_ifneeded(slotdescr[i]);
@@ -37,10 +41,17 @@ void configureDialogNexuizSaveLoadDialog(entity me) {
 		else
 			slotdescr[i] = strzone(_("Quicksave"));
 	}
-	configureDialogNexuizDialog(me); //Parent method
+	i = 0;
+	for (e = me.saveSlot; e; e = e.saveSlot) {
+		e.setText(e, slotdescr[i]);
+		i++;
+	}
 }
 
-.entity saveSlot;
+void configureDialogNexuizSaveLoadDialog(entity me) {
+	me.loadCvars(me);
+	configureDialogNexuizDialog(me); //Parent method
+}
 
 float GetSlotNumber(entity e) {
 	float i;
@@ -67,7 +78,7 @@ void SaveGame(entity btn, entity me) {
 	localcmd(strcat("\nseta _slot_description", ftos(slot), " \""));
 	localcmd(strcat(shortmapname, " - ", strftime(TRUE, "%Y %b %e %H:%M:%S")));
 	localcmd(" \"\n");
-	localcmd(strcat("\nsave slot", ftos(slot), "\nsaveconfig\n"));
+	localcmd(strcat("\nsave slot", ftos(slot), "\nsaveconfig\nmenu_cmd sync\n"));
 	me.close(me);
 }
 #endif
@@ -103,8 +114,8 @@ void fillNexuizSaveLoadDialog(entity me)
 	for (i = 0; i < 12; i += 2) {
 		me.TR(me);
 			if (i == 10) {
-				me.TD(me, 1, 3, e.saveSlot = makeNexuizTextLabel(0, _("Autosave:")));
-				me.TD(me, 1, 3, e.saveSlot = makeNexuizTextLabel(0, _("Quicksave:")));
+				me.TD(me, 1, 3, makeNexuizTextLabel(0, _("Autosave:")));
+				me.TD(me, 1, 3, makeNexuizTextLabel(0, _("Quicksave:")));
 				me.TR(me);
 			}
 			for (j = 0; j < 2; j++) {
