@@ -217,8 +217,8 @@ void(void) physics_camera_setup {
 				view_camera_origin = trace_endpos;
 				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
-				R_SetView(VF_ORIGIN, view_camera_origin);
 			}
+			R_SetView(VF_ORIGIN, view_camera_origin);
 		}
 	} else {
 		view_camera_origin = view_origin;
