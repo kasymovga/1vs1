@@ -5,9 +5,9 @@ CLASS(NexuizDemoList) EXTENDS(NexuizListBox)
     METHOD(NexuizDemoList, resizeNotify, void(entity, vector, vector, vector, vector))
     METHOD(NexuizDemoList, drawListBoxItem, void(entity, float, vector, float))
     METHOD(NexuizDemoList, getDemos, void(entity))
-    METHOD(NexuizDemoList, startDemo, void(entity))    
+    METHOD(NexuizDemoList, startDemo, void(entity))
     METHOD(NexuizDemoList, demoName, string(entity, float))
-    METHOD(NexuizDemoList, clickListBoxItem, void(entity, float, vector))
+    METHOD(NexuizDemoList, mouseDoubleClick, void(entity, vector))
     METHOD(NexuizDemoList, keyDown, float(entity, float, float, float))
     METHOD(NexuizDemoList, destroy, void(entity))
     METHOD(NexuizDemoList, showNotify, void(entity))
@@ -18,9 +18,7 @@ CLASS(NexuizDemoList) EXTENDS(NexuizListBox)
     ATTRIB(NexuizDemoList, realUpperMargin, float, 0)
     ATTRIB(NexuizDemoList, origin, vector, '0 0 0')
     ATTRIB(NexuizDemoList, itemAbsSize, vector, '0 0 0')
-    ATTRIB(NexuizDemoList, lastClickedDemo, float, -1)
-    ATTRIB(NexuizDemoList, lastClickedTime, float, 0)
-    ATTRIB(NexuizDemoList, filterString, string, NULL)    
+    ATTRIB(NexuizDemoList, filterString, string, NULL)
 ENDCLASS(NexuizDemoList)
 
 entity makeNexuizDemoList();
@@ -140,17 +138,8 @@ void TimeDemo_Click(entity btn, entity me)
     localcmd("timedemo demos/", s, ".dem\nwait\ntogglemenu\n");	
 }
 
-void clickListBoxItemNexuizDemoList(entity me, float i, vector where)
-{
-    if(i == me.lastClickedDemo)
-        if(time < me.lastClickedTime + 0.3)
-        {
-            // DOUBLE CLICK!
-            me.setSelected(me, i);
-            me.startDemo(me);
-        }
-    me.lastClickedDemo = i;
-    me.lastClickedTime = time;
+void mouseDoubleClickNexuizDemoList(entity me, vector where) {
+	me.startDemo(me);
 }
 
 float keyDownNexuizDemoList(entity me, float scan, float ascii, float shift)

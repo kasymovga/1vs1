@@ -4,11 +4,11 @@ CLASS(NexuizCampaignList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizCampaignList, rowsPerItem, float, 10)
 	METHOD(NexuizCampaignList, draw, void(entity))
 	METHOD(NexuizCampaignList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(NexuizCampaignList, clickListBoxItem, void(entity, float, vector))
 	METHOD(NexuizCampaignList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(NexuizCampaignList, setSelected, void(entity, float))
 	METHOD(NexuizCampaignList, keyDown, float(entity, float, float, float))
 	METHOD(NexuizCampaignList, destroy, void(entity))
+	METHOD(NexuizCampaignList, mouseDoubleClick, void(entity, vector))
 
 	ATTRIB(NexuizCampaignList, campaignGlob, float, 0)
 	ATTRIB(NexuizCampaignList, realFontSize, vector, '0 0 0')
@@ -22,9 +22,6 @@ CLASS(NexuizCampaignList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizCampaignList, checkMarkSize, vector, '0 0 0')
 	ATTRIB(NexuizCampaignList, realUpperMargin1, float, 0)
 	ATTRIB(NexuizCampaignList, realUpperMargin2, float, 0)
-
-	ATTRIB(NexuizCampaignList, lastClickedMap, float, -1)
-	ATTRIB(NexuizCampaignList, lastClickedTime, float, 0)
 
 	ATTRIB(NexuizCampaignList, origin, vector, '0 0 0')
 	ATTRIB(NexuizCampaignList, itemAbsSize, vector, '0 0 0')
@@ -164,18 +161,8 @@ void resizeNotifyNexuizCampaignList(entity me, vector relOrigin, vector relSize,
 
 	rewrapCampaign(me.columnNameSize / me.realFontSize_x, me.rowsPerItem - 3, me.emptyLineHeight);
 }
-void clickListBoxItemNexuizCampaignList(entity me, float i, vector where)
-{
-	if(i == me.lastClickedMap)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			// start game
-			CampaignList_LoadMap(me, me);
-			return;
-		}
-	me.lastClickedMap = i;
-	me.lastClickedTime = time;
+void mouseDoubleClickNexuizCampaignList(entity me, vector where) {
+	CampaignList_LoadMap(me, me);
 }
 void drawListBoxItemNexuizCampaignList(entity me, float i, vector absSize, float isSelected)
 {

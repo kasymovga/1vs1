@@ -7,6 +7,8 @@ float GUI_shiftState;
 float GUI_currentWindow;
 float gui_con_chat_save;
 float gui_con_chat_was_changed;
+float gui_doubleclick_time;
+vector gui_doubleclick_position;
 
 void GUI_RemoveRecursive(entity me) {
 	entity e;
@@ -28,6 +30,11 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 			if not(GUI_mouseButtonsPressed) {
 				mainWindow.mousePress(mainWindow, GUI_mouse_pos);
 				GUI_mouseButtonsPressed = TRUE;
+				if (GUI_mouse_pos == gui_doubleclick_position && time < gui_doubleclick_time)
+					mainWindow.mouseDoubleClick(mainWindow, GUI_mouse_pos);
+
+				gui_doubleclick_time = time + 0.4;
+				gui_doubleclick_position = GUI_mouse_pos;
 			}
 			r = TRUE;
 		} else { //Key up

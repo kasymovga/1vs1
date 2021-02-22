@@ -3,7 +3,7 @@ CLASS(NexuizKeyBinder) EXTENDS(NexuizListBox)
 	METHOD(NexuizKeyBinder, configureNexuizKeyBinder, void(entity))
 	ATTRIB(NexuizKeyBinder, rowsPerItem, float, 1)
 	METHOD(NexuizKeyBinder, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(NexuizKeyBinder, clickListBoxItem, void(entity, float, vector))
+	METHOD(NexuizKeyBinder, mouseDoubleClick, void(entity, vector))
 	METHOD(NexuizKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(NexuizKeyBinder, setSelected, void(entity, float))
 	METHOD(NexuizKeyBinder, keyDown, float(entity, float, float, float))
@@ -16,8 +16,6 @@ CLASS(NexuizKeyBinder) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizKeyBinder, columnKeysOrigin, float, 0)
 	ATTRIB(NexuizKeyBinder, columnKeysSize, float, 0)
 
-	ATTRIB(NexuizKeyBinder, lastClickedKey, float, -1)
-	ATTRIB(NexuizKeyBinder, lastClickedTime, float, 0)
 	ATTRIB(NexuizKeyBinder, previouslySelected, float, -1)
 	ATTRIB(NexuizKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(NexuizKeyBinder, userbindEditButton, entity, NULL)
@@ -195,16 +193,8 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	}
 
 }
-void clickListBoxItemNexuizKeyBinder(entity me, float i, vector where)
-{
-	if(i == me.lastClickedServer)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			KeyBinder_Bind_Change(NULL, me);
-		}
-	me.lastClickedServer = i;
-	me.lastClickedTime = time;
+void mouseDoubleClickNexuizKeyBinder(entity me, vector where) {
+	KeyBinder_Bind_Change(NULL, me);
 }
 void setSelectedNexuizKeyBinder(entity me, float i)
 {

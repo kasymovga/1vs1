@@ -9,6 +9,7 @@ CLASS(NexuizMapList) EXTENDS(NexuizListBox)
 	METHOD(NexuizMapList, refilter, void(entity))
 	METHOD(NexuizMapList, refilterCallback, void(entity, entity))
 	METHOD(NexuizMapList, keyDown, float(entity, float, float, float))
+	METHOD(NexuizMapList, mouseDoubleClick, void(entity, vector))
 
 	ATTRIB(NexuizMapList, realFontSize, vector, '0 0 0')
 	ATTRIB(NexuizMapList, columnPreviewOrigin, float, 0)
@@ -19,9 +20,6 @@ CLASS(NexuizMapList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizMapList, checkMarkSize, vector, '0 0 0')
 	ATTRIB(NexuizMapList, realUpperMargin1, float, 0)
 	ATTRIB(NexuizMapList, realUpperMargin2, float, 0)
-
-	ATTRIB(NexuizMapList, lastClickedMap, float, -1)
-	ATTRIB(NexuizMapList, lastClickedTime, float, 0)
 
 	ATTRIB(NexuizMapList, lastGametype, float, 0)
 
@@ -143,21 +141,17 @@ void clickListBoxItemNexuizMapList(entity me, float i, vector where)
 		if(where_x >= 0)
 			me.g_maplistCacheToggle(me, i);
 	}
+}
+
+void mouseDoubleClickNexuizMapList(entity me, vector where) {
 	if(where_x >= me.columnNameOrigin)
-		if(where_x <= 1)
-			{
-				if(i == me.lastClickedMap)
-					if(time < me.lastClickedTime + 0.3)
-					{
-						// DOUBLE CLICK!
-						// pop up map info screen
-						main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
-						DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
-						return;
-					}
-				me.lastClickedMap = i;
-				me.lastClickedTime = time;
-			}
+		if(where_x <= 1) {
+			// DOUBLE CLICK!
+			// pop up map info screen
+			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
+			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+			return;
+		}
 }
 
 void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSelected)

@@ -16,6 +16,8 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 float menuRealFrametime;
+float menu_doubleclick_time;
+vector menu_doubleclick_position;
 
 float URI_GET_SERVERLIST;
 #define SERVERLIST_URIS_COUNT 2
@@ -266,6 +268,14 @@ void(float key, float ascii) m_keydown =
 			menu_mouse_update();
 			if(!mouseButtonsPressed)
 				main.mousePress(main, menuMousePos);
+
+			if (key == K_MOUSE1) {
+				if (time < menu_doubleclick_time && menu_doubleclick_position == menuMousePos)
+					main.mouseDoubleClick(main, menuMousePos);
+
+				menu_doubleclick_position = menuMousePos;
+				menu_doubleclick_time = time + 0.4;
+			}
 		}
 		if(!main.keyDown(main, key, ascii, menuShiftState))
 			if(key == K_ESCAPE)

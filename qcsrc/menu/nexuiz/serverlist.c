@@ -4,7 +4,7 @@ CLASS(NexuizServerList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizServerList, rowsPerItem, float, 1)
 	METHOD(NexuizServerList, draw, void(entity))
 	METHOD(NexuizServerList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(NexuizServerList, clickListBoxItem, void(entity, float, vector))
+	METHOD(NexuizServerList, mouseDoubleClick, void(entity, vector))
 	METHOD(NexuizServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(NexuizServerList, keyDown, float(entity, float, float, float))
 
@@ -44,8 +44,6 @@ CLASS(NexuizServerList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizServerList, infoButton, entity, NULL)
 	ATTRIB(NexuizServerList, currentSortOrder, float, 0)
 	ATTRIB(NexuizServerList, currentSortField, float, -1)
-	ATTRIB(NexuizServerList, lastClickedServer, float, -1)
-	ATTRIB(NexuizServerList, lastClickedTime, float, 0)
 
 	ATTRIB(NexuizServerList, ipAddressBoxFocused, float, -1)
 ENDCLASS(NexuizServerList)
@@ -285,7 +283,6 @@ void drawNexuizServerList(entity me)
 			{
 				if(i != me.selectedItem)
 				{
-					me.lastClickedServer = -1;
 					me.selectedItem = i;
 				}
 				found = 1;
@@ -509,16 +506,8 @@ void ServerList_Info_Click(entity btn, entity me)
 	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 	DialogOpenButton_Click(me, main.serverInfoDialog);
 }
-void clickListBoxItemNexuizServerList(entity me, float i, vector where)
-{
-	if(i == me.lastClickedServer)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			ServerList_Connect_Click(NULL, me);
-		}
-	me.lastClickedServer = i;
-	me.lastClickedTime = time;
+void mouseDoubleClickNexuizServerList(entity me, vector where) {
+	ServerList_Connect_Click(NULL, me);
 }
 void drawListBoxItemNexuizServerList(entity me, float i, vector absSize, float isSelected)
 {

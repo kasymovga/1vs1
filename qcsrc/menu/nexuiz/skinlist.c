@@ -9,7 +9,7 @@ CLASS(NexuizSkinList) EXTENDS(NexuizListBox)
 	METHOD(NexuizSkinList, loadCvars, void(entity))
 	METHOD(NexuizSkinList, saveCvars, void(entity))
 	METHOD(NexuizSkinList, skinParameter, string(entity, float, float))
-	METHOD(NexuizSkinList, clickListBoxItem, void(entity, float, vector))
+	METHOD(NexuizSkinList, mouseDoubleClick, void(entity, vector))
 	METHOD(NexuizSkinList, keyDown, float(entity, float, float, float))
 	METHOD(NexuizSkinList, destroy, void(entity))
 
@@ -23,10 +23,6 @@ CLASS(NexuizSkinList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizSkinList, realUpperMargin2, float, 0)
 	ATTRIB(NexuizSkinList, origin, vector, '0 0 0')
 	ATTRIB(NexuizSkinList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(NexuizSkinList, lastClickedSkin, float, -1)
-	ATTRIB(NexuizSkinList, lastClickedTime, float, 0)
-
 	ATTRIB(NexuizSkinList, name, string, "skinselector")
 ENDCLASS(NexuizSkinList)
 
@@ -182,17 +178,8 @@ void SetSkin_Click(entity btn, entity me)
 	me.setSkin(me);
 }
 
-void clickListBoxItemNexuizSkinList(entity me, float i, vector where)
-{
-	if(i == me.lastClickedSkin)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			me.setSkin(me);
-		}
-	me.lastClickedSkin = i;
-	me.lastClickedTime = time;
+void mouseDoubleClickNexuizSkinList(entity me, vector where) {
+	me.setSkin(me);
 }
 
 float keyDownNexuizSkinList(entity me, float scan, float ascii, float shift)

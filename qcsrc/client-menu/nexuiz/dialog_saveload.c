@@ -77,10 +77,6 @@ entity buttonSave;
 #endif
 void SlotSelect(entity btn, entity me) {
 	entity e;
-#ifdef MENUQC
-	if (btn.forcePressed) //double-click
-		LoadGame(e, me);
-#endif
 	for (e = me.saveSlot; e; e = e.saveSlot) {
 		e.forcePressed = 0;
 	}
@@ -92,6 +88,12 @@ void SlotSelect(entity btn, entity me) {
 		buttonSave.disabled = FALSE;
 #endif
 }
+
+#ifdef MENUQC
+void mouseDoubleClickNexuizSaveLoadDialogSlot(entity btn, vector v) {
+	LoadGame(btn, btn.onClickEntity);
+}
+#endif
 
 void fillNexuizSaveLoadDialog(entity me)
 {
@@ -110,6 +112,9 @@ void fillNexuizSaveLoadDialog(entity me)
 				e = e.saveSlot;
 				e.onClick = SlotSelect;
 				e.onClickEntity = me;
+#ifdef MENUQC
+				e.mouseDoubleClick = mouseDoubleClickNexuizSaveLoadDialogSlot;
+#endif
 			}
 	}
 	me.TR(me);
