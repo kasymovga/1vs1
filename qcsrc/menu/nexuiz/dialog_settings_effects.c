@@ -3,7 +3,7 @@ CLASS(NexuizEffectsSettingsTab) EXTENDS(NexuizTab)
 	METHOD(NexuizEffectsSettingsTab, fill, void(entity))
 	ATTRIB(NexuizEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(NexuizEffectsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(NexuizEffectsSettingsTab, rows, float, 17)
+	ATTRIB(NexuizEffectsSettingsTab, rows, float, 22)
 	ATTRIB(NexuizEffectsSettingsTab, columns, float, 6.5)
 ENDCLASS(NexuizEffectsSettingsTab)
 entity makeNexuizEffectsSettingsTab();

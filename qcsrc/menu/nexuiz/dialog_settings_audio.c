@@ -3,7 +3,7 @@ CLASS(NexuizAudioSettingsTab) EXTENDS(NexuizTab)
 	METHOD(NexuizAudioSettingsTab, fill, void(entity))
 	ATTRIB(NexuizAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(NexuizAudioSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(NexuizAudioSettingsTab, rows, float, 17)
+	ATTRIB(NexuizAudioSettingsTab, rows, float, 22)
 	ATTRIB(NexuizAudioSettingsTab, columns, float, 6.5)
 ENDCLASS(NexuizAudioSettingsTab)
 entity makeNexuizAudioSettingsTab();

@@ -4,17 +4,22 @@ CLASS(NexuizSettingsDialog) EXTENDS(NexuizDialog)
 	ATTRIB(NexuizSettingsDialog, title, string, _("Settings"))
 	ATTRIB(NexuizSettingsDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(NexuizSettingsDialog, intendedWidth, float, 0.96)
-	ATTRIB(NexuizSettingsDialog, rows, float, 19)
-	ATTRIB(NexuizSettingsDialog, columns, float, 6)
+	ATTRIB(NexuizSettingsDialog, rows, float, 24)
+	ATTRIB(NexuizSettingsDialog, columns, float, 7)
 ENDCLASS(NexuizSettingsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
 void fillNexuizSettingsDialog(entity me)
 {
+	entity e;
 	entity mc;
 	mc = makeNexuizTabController(me.rows - 2);
 	me.TR(me);
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Player Setup"),  makeNexuizPlayerSettingsTab()));
+			if(cvar_string("_cl_name") == "Player")
+				e.onClick(e, e.onClickEntity); // lol animation
+
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Input"),   makeNexuizInputSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Video"),   makeNexuizVideoSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Effects"), makeNexuizEffectsSettingsTab()));

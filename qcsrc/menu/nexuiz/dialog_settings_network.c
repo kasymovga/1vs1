@@ -3,7 +3,7 @@ CLASS(NexuizNetworkSettingsTab) EXTENDS(NexuizTab)
 	METHOD(NexuizNetworkSettingsTab, fill, void(entity))
 	ATTRIB(NexuizNetworkSettingsTab, title, string, _("Network"))
 	ATTRIB(NexuizNetworkSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(NexuizNetworkSettingsTab, rows, float, 17)
+	ATTRIB(NexuizNetworkSettingsTab, rows, float, 22)
 	ATTRIB(NexuizNetworkSettingsTab, columns, float, 6.5)
 ENDCLASS(NexuizNetworkSettingsTab)
 entity makeNexuizNetworkSettingsTab();

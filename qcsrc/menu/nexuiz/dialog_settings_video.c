@@ -3,7 +3,7 @@ CLASS(NexuizVideoSettingsTab) EXTENDS(NexuizTab)
 	METHOD(NexuizVideoSettingsTab, fill, void(entity))
 	ATTRIB(NexuizVideoSettingsTab, title, string, _("Video"))
 	ATTRIB(NexuizVideoSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(NexuizVideoSettingsTab, rows, float, 17)
+	ATTRIB(NexuizVideoSettingsTab, rows, float, 22)
 	ATTRIB(NexuizVideoSettingsTab, columns, float, 6.5)
 ENDCLASS(NexuizVideoSettingsTab)
 entity makeNexuizVideoSettingsTab();
