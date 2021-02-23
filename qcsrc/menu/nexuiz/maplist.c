@@ -148,7 +148,7 @@ void mouseDoubleClickNexuizMapList(entity me, vector where) {
 		if(where_x <= 1) {
 			// DOUBLE CLICK!
 			// pop up map info screen
-			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
+			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 			return;
 		}
