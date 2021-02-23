@@ -13,8 +13,7 @@ float CSQC_InputEvent(float input_type, float primary, float secondary) {
 			return TRUE;
 	}
 	if (input_type == 0)
-	if (primary == K_ESCAPE)
-	if not(main_isdemo) {
+	if (primary == K_ESCAPE) {
 		GUI_Show(GUI_GAMEMENU);
 		return TRUE;
 	}

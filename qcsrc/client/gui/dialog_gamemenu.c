@@ -34,17 +34,21 @@ void ShowSaveLoad() {
 }
 
 void configureDialogNexuizGameMenuDialog(entity me) {
-	if (team_mode)
-		me.rows = me.rows + 1;
+	if (main_isdemo)
+		me.rows = me.rows - 4;
+	else {
+		if (team_mode)
+			me.rows = me.rows + 1;
 
-	me.rows = me.rows + gamemenu_commands_count;
-	if not(main_campaign)
-		me.rows = me.rows + 2;
+		me.rows = me.rows + gamemenu_commands_count;
+		if not(main_campaign)
+			me.rows = me.rows + 2;
 
-	if (main_localgame)
-	if (main_campaign)
-	if (gametype == GAME_SINGLE) {
-		me.rows = me.rows + 1;
+		if (main_localgame)
+		if (main_campaign)
+		if (gametype == GAME_SINGLE) {
+			me.rows = me.rows + 1;
+		}
 	}
 	configureDialogNexuizDialog(me); //Parent method
 }
@@ -61,45 +65,52 @@ void fillNexuizGameMenuDialog(entity me)
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton("Game settings", '0 0 0'));
 		e.onClick = ShowGameSettings;
+	if not(main_isdemo) {
+		me.TR(me);
+		if not(main_campaign) {
+			me.TR(me);
+				me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Join", '0 0 0', "cmd join;", COMMANDBUTTON_CLOSE));
+		}
+		if (team_mode) {
+			me.TR(me);
+				me.TD(me, 1, me.columns, e = makeNexuizButton("Switch team", '0 0 0'));
+				e.onClick = ShowSwitchTeam;
+		}
+		float i;
+		for (i = 0; i < gamemenu_commands_count; i++) {
+			me.TR(me);
+				me.TD(me, 1, me.columns, e = makeNexuizCommandButton(gamemenu_items[i], '0 0 0', gamemenu_commands[i], COMMANDBUTTON_CLOSE));
+		}
+		if not(main_campaign) {
+			me.TR(me);
+				me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Spectate", '0 0 0', "cmd spectate;", COMMANDBUTTON_CLOSE));
+		}
+		if (main_localgame)
+		if (main_campaign)
+		if (gametype == GAME_SINGLE) {
+			me.TR(me);
+				me.TD(me, 1, me.columns, e = makeNexuizButton("Save/Load", '0 0 0'));
+				e.onClick = ShowSaveLoad;
+		}
+		if (vote_commands_count) {
+			me.TR(me);
+				me.TD(me, 1, me.columns, e = makeNexuizButton("Call a vote", '0 0 0'));
+				e.onClick = ShowVcall;
+		}
+		me.TR(me);
+			me.TD(me, 1, me.columns, e = makeNexuizButton("Mute list...", '0 0 0'));
+			e.onClick = showMuteListGameMenuDialog;
+	}
 	me.TR(me);
-	if not(main_campaign) {
+	if (main_isdemo) {
 		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Join", '0 0 0', "cmd join;", COMMANDBUTTON_CLOSE));
-	}
-	if (team_mode) {
+			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Stop demo", '0 0 0', "disconnect;", COMMANDBUTTON_CLOSE));
+	} else {
 		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizButton("Switch team", '0 0 0'));
-			e.onClick = ShowSwitchTeam;
-	}
-	float i;
-	for (i = 0; i < gamemenu_commands_count; i++) {
+			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Disconnect", '0 0 0', "togglemenu;disconnect;", COMMANDBUTTON_CLOSE));
 		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizCommandButton(gamemenu_items[i], '0 0 0', gamemenu_commands[i], COMMANDBUTTON_CLOSE));
+			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Reconnect", '0 0 0', "disconnect; reconnect;", COMMANDBUTTON_CLOSE));
 	}
-	if not(main_campaign) {
-		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Spectate", '0 0 0', "cmd spectate;", COMMANDBUTTON_CLOSE));
-	}
-	if (main_localgame)
-	if (main_campaign)
-	if (gametype == GAME_SINGLE) {
-		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizButton("Save/Load", '0 0 0'));
-			e.onClick = ShowSaveLoad;
-	}
-	if (vote_commands_count) {
-		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizButton("Call a vote", '0 0 0'));
-			e.onClick = ShowVcall;
-	}
-	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizButton("Mute list...", '0 0 0'));
-		e.onClick = showMuteListGameMenuDialog;
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Disconnect", '0 0 0', "togglemenu;disconnect;", COMMANDBUTTON_CLOSE));
-	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeNexuizCommandButton("Reconnect", '0 0 0', "disconnect; reconnect;", COMMANDBUTTON_CLOSE));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeNexuizButton("Return to game", '0 0 0'));
