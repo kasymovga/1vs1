@@ -149,7 +149,7 @@ void mouseDoubleClickNexuizMapList(entity me, vector where) {
 			// DOUBLE CLICK!
 			// pop up map info screen
 			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
-			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 			return;
 		}
 }
