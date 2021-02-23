@@ -1600,9 +1600,9 @@ void(void) func_doors_link {
 			break;
 		}
 		if (func_doors_touching(self,t)) {
-			if (t.enemy)
-				entity_abort("cross connected doors");
-
+			if (t.enemy) {
+				continue;
+			}
 			self.enemy = t;
 			self = t;
 			if (t.absmin_x < cmins_x)
