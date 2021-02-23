@@ -46,8 +46,17 @@ void fillNexuizInputSettingsTab(entity me)
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0.05, 10, 0.05, "sensitivity"));
 	me.TR(me);
-		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
-		me.TD(me, 1, 2, e = makeNexuizSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
+		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Acceleration:")));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.1, 0.001, "m_accelerate"));
+		e.loadCvars = inline void(entity e) { e.value = -cvar(e.cvarName); };
+		e.saveCvars = inline void(entity e) { cvar_set(e.cvarName, ftos(-e.value)); };
+	if not(cvar("menu_mouse_absolute")) {
+		me.TR(me);
+			me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
+			setDependent(e, "menu_mouse_absolute", 0, 0);
+			me.TD(me, 1, 2, e = makeNexuizSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
+			//setDependent(e, "menu_mouse_absolute", 0, 0);
+	}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(1.022, "m_pitch", _("Invert mouse")));
 	me.TR(me);
@@ -70,6 +79,11 @@ void fillNexuizInputSettingsTab(entity me)
 		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "1", _("Bound keys")));
 		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "sbar_showbinds", "2", _("Both")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeNexuizCheckBoxEx(2, 0, "cl_showpressedkeys", _("Show pressed keys")));
+		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Show pressed keys:")));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "cl_showpressedkeys", "0", _("Never")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "cl_showpressedkeys", "1", _("Spectating")));
+		me.TD(me, 1, 1.05, e = makeNexuizRadioButton(1, "cl_showpressedkeys", "2", _("Always")));
 }
 #endif

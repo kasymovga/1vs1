@@ -76,12 +76,12 @@ void configureSliderValuesSlider(entity me, float theValueMin, float theValue, f
 	me.valueKeyStep = theValueKeyStep;
 	me.valuePageStep = theValuePageStep;
 	me.valueDigits = 3;
-	if(fabs(floor(me.valueStep * 100 + 0.5) - (me.valueStep * 100)) < 0.01) // about a whole number of 100ths
-		me.valueDigits = 2;
-	if(fabs(floor(me.valueStep * 10 + 0.5) - (me.valueStep * 10)) < 0.01) // about a whole number of 10ths
-		me.valueDigits = 1;
-	if(fabs(floor(me.valueStep * 1 + 0.5) - (me.valueStep * 1)) < 0.01) // about a whole number
+	if (me.valueStep >= 1) // about a whole number
 		me.valueDigits = 0;
+	else if (me.valueStep >= 0.1) // about a whole number of 10ths
+		me.valueDigits = 1;
+	else if (me.valueStep >= 0.01) // about a whole number of 100ths
+		me.valueDigits = 2;
 }
 float keyDownSlider(entity me, float key, float ascii, float shift)
 {
