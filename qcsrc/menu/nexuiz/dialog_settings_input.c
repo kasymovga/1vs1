@@ -50,6 +50,11 @@ void fillNexuizInputSettingsTab(entity me)
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.1, 0.001, "m_accelerate"));
 		e.loadCvars = inline void(entity e) { e.value = -cvar(e.cvarName); };
 		e.saveCvars = inline void(entity e) { cvar_set(e.cvarName, ftos(-e.value)); };
+	me.TR(me);
+		me.TDempty(me, 0.05);
+		me.TD(me, 0.5, 3, e = makeNexuizTextLabel(0, _("* Keep this set to 0 until you know what this setting do")));
+		e.colorL = e.colorL * 0.5 + '0.5 0 0';
+		e.fontSize = e.fontSize * 0.6;
 	if not(cvar("menu_mouse_absolute")) {
 		me.TR(me);
 			me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
