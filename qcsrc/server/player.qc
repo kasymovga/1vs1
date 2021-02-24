@@ -2145,7 +2145,7 @@ void(entity pl) player_body_setup {
 	pl.solid = SOLID_SLIDEBOX;
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
 	if(player_independent)
-		MAKE_INDEPENDENT_PLAYER(pl);
+		PLAYER_MAKE_INDEPENDENT(pl);
 }
 
 void(entity spot) player_spawn {

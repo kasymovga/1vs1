@@ -107,11 +107,11 @@ void(entity e) fire_apply_damage {
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = TRUE;
-	if not(IS_INDEPENDENT_PLAYER(e))
+	if not(PLAYER_IS_INDEPENDENT(e))
 	FOR_EACH_PLAYER(other) if (e != other) {
 		if (other.classname == "player")
 		if (other.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(other))
+		if not(PLAYER_IS_INDEPENDENT(other))
 		if (math_boxes_overlap(e.absmin, e.absmax, other.absmin, other.absmax)) {
 			t = g_balance_firetransfer_time * (e.fire_endtime - time);
 			d = g_balance_firetransfer_damage * e.fire_damagepersec * t;

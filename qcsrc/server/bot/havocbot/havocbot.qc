@@ -102,7 +102,7 @@ void havocbot_ai()
 			if not(gamehook_chain_bot_aim())
 				weapon_action(self.weapon, WR_AIM);
 
-			if (bot_nofire || IS_INDEPENDENT_PLAYER(self))
+			if (bot_nofire || PLAYER_IS_INDEPENDENT(self))
 			{
 				self.BUTTON_ATCK = FALSE;
 				self.BUTTON_ATCK2 = FALSE;
@@ -751,7 +751,7 @@ void havocbot_chooseenemy()
 	local entity head, best, head2;
 	local float rating, bestrating, i, f;
 	local vector eye, v;
-	if (bot_nofire || IS_INDEPENDENT_PLAYER(self))
+	if (bot_nofire || PLAYER_IS_INDEPENDENT(self))
 	{
 		self.enemy = world;
 		return;

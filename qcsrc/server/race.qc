@@ -327,7 +327,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 
 				if (race_completing) {
 					e.race_completed = 1;
-					MAKE_INDEPENDENT_PLAYER(e);
+					PLAYER_MAKE_INDEPENDENT(e);
 					bprint(e.netname, "^7 has finished the race.\n");
 				}
 			}
@@ -677,7 +677,7 @@ void(void) spawnfunc_race_trigger_checkpoint {
 void(entity p) race_abandon_check {
 	if (race_completing && !p.race_completed) {
 		p.race_completed = 1;
-		MAKE_INDEPENDENT_PLAYER(p);
+		PLAYER_MAKE_INDEPENDENT(p);
 		bprint(p.netname, "^7 has abandoned the race.\n");
 	}
 }

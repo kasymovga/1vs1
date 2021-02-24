@@ -1922,3 +1922,5 @@ float(string addr, string data) net_sendpacket = #801;
 .float culltracemode;
 //description
 //cull trace mode for entity
+
+.float clipgroup;

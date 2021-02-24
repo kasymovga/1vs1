@@ -102,7 +102,7 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	{
 		if(targ.classname == "player")
 		{
-			if(attacker.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			if(attacker.classname == "player" && targ != attacker && (PLAYER_IS_INDEPENDENT(attacker) || PLAYER_IS_INDEPENDENT(targ)))
 			{
 				_damage = 0;
 				force = '0 0 0';

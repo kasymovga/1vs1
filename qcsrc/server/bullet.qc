@@ -306,6 +306,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		proj = spawn();
 		self = Akimbo_Owner(self);
 		proj.owner = self;
+		proj.clipgroup = self.clipgroup;
 	} else {
 		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
 		proj.classname = "bullet";

@@ -118,6 +118,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	if not(sv_projectile_tracecull)
 		e.culltracemode = CULLTRACEMODE_NONE;
 
+	e.clipgroup = _owner.clipgroup;
 	e.realowner = e.owner = Akimbo_Owner(_owner);
 	projectile_set_size(e, type);
 	net_link_entity(e, docull, 0, projectile_send);

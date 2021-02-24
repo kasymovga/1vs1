@@ -225,12 +225,12 @@ void(void) portal_touch {
 		}
 	if (other != self.aiment)
 		if(other.classname == "player")
-			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
+			if(PLAYER_IS_INDEPENDENT(other) || PLAYER_IS_INDEPENDENT(self.aiment))
 				return; // cannot go through someone else's portal
 
 	if (other.aiment != self.aiment)
 		if(other.aiment.classname == "player")
-			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(self.aiment))
+			if(PLAYER_IS_INDEPENDENT(other.aiment) || PLAYER_IS_INDEPENDENT(self.aiment))
 				return; // cannot go through someone else's portal
 
 	self.angles_x = -self.angles_x;
@@ -352,7 +352,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		return;
 
 	if (attacker != self.aiment)
-		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(self.aiment))
+		if(PLAYER_IS_INDEPENDENT(attacker) || PLAYER_IS_INDEPENDENT(self.aiment))
 			return;
 
 	self.health -= _damage;
@@ -391,7 +391,7 @@ void(void) portal_think {
 	self.angles_x = -self.angles_x;
 	FOR_EACH_PLAYER(e) {
 		if (e != o)
-			if (IS_INDEPENDENT_PLAYER(e) || IS_INDEPENDENT_PLAYER(o))
+			if (PLAYER_IS_INDEPENDENT(e) || PLAYER_IS_INDEPENDENT(o))
 				continue; // cannot go through someone else's portal
 
 		if (e != o || time >= self.portal_activatetime)
@@ -414,7 +414,7 @@ float(void) portal_customize {
 
 	if (other == self.aiment) {
 		self.modelindex = self.modelindex_lod0;
-	} else if (IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment)) {
+	} else if (PLAYER_IS_INDEPENDENT(other) || PLAYER_IS_INDEPENDENT(self.aiment)) {
 		self.modelindex = 0;
 	} else {
 		self.modelindex = self.modelindex_lod0;
