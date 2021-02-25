@@ -920,7 +920,7 @@ msgid "Acceleration:"
 msgstr "Accélération:"
 
 msgid "* Keep this set to 0 until you know what this setting does"
-msgstr "* Conservez ce paramètre sur 0 jusqu'à ce que vous sachiez ce que fait ce paramètre"
+msgstr "* Laisser cette option à 0 jusqu'à que vous sachiez à quoi ça sert"
 
 msgid "Always"
 msgstr "Toujours"
