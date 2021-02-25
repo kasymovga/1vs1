@@ -829,7 +829,7 @@ msgid "qu/s"
 msgstr "qu/s"
 
 msgid "qu/s (hidden)"
-msgstr "qu/s (caché)"
+msgstr "qu/s (escondido)"
 
 msgid ", will not be saved"
 msgstr ", não será salvo"
@@ -923,7 +923,7 @@ msgid "Acceleration:"
 msgstr "Aceleração:"
 
 msgid "* Keep this set to 0 until you know what this setting does"
-msgstr "* Mantenha isto definido como 0 até que você saiba o que esta configuração faz"
+msgstr "* Deixe esta opção em 0 até você saber para o que ela serve"
 
 msgid "Always"
 msgstr "Sempre"
