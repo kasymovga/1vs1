@@ -16,7 +16,7 @@ void fillNexuizSettingsDialog(entity me)
 	entity mc;
 	mc = makeNexuizTabController(me.rows - 2);
 	me.TR(me);
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Player Setup"),  makeNexuizPlayerSettingsTab()));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Game"),  makeNexuizPlayerSettingsTab()));
 			if(cvar_string("_cl_name") == "Player")
 				e.onClick(e, e.onClickEntity); // lol animation
 
