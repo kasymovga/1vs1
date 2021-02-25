@@ -919,7 +919,7 @@ msgstr ""
 msgid "Acceleration:"
 msgstr "Beschleunigung:"
 
-msgid "* Keep this set to 0 until you know what this setting do"
+msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Lass das mal auf 0 bis du wirklich weißt, was die einstellung bewirkt"
 
 msgid "Always"

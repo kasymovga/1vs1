@@ -922,7 +922,7 @@ msgstr "* "
 msgid "Acceleration:"
 msgstr "Aceleração:"
 
-msgid "* Keep this set to 0 until you know what this setting do"
+msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Mantenha isto definido como 0 até que você saiba o que esta configuração faz"
 
 msgid "Always"

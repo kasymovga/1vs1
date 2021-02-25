@@ -907,7 +907,7 @@ msgstr "* Necessario per alcuni caratteri europei, i nomi dei giocatori potrebbe
 msgid "Acceleration:"
 msgstr "Accelerazione:"
 
-msgid "* Keep this set to 0 until you know what this setting do"
+msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Mantieni questa impostazione su 0 finché non sai cosa fa"
 
 msgid "Always"

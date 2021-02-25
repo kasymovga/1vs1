@@ -907,7 +907,7 @@ msgstr "* Нужно для некоторых европейски символ
 msgid "Acceleration:"
 msgstr "Акселерация:"
 
-msgid "* Keep this set to 0 until you know what this setting do"
+msgid "* Keep this set to 0 until you know what this setting does"
 msgstr "* Используйте 0, если не знаете, что эта настройка делает"
 
 msgid "Always"
