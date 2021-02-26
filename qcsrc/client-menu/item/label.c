@@ -41,6 +41,9 @@ void resizeNotifyLabel(entity me, vector relOrigin, vector relSize, vector absOr
 	// absSize_y is height of label
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
+	if (draw_scale_x / draw_scale_y < 1.5)
+		me.realFontSize_x = 0.666 * me.realFontSize_x;
+
 	if(me.marginLeft)
 		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
 	if(me.marginRight)
