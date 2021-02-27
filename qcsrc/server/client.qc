@@ -486,6 +486,9 @@ float() client_join_allowed {
 	if (self.saboteur > 1)
 		return FALSE;
 
+	if (map_finished)
+		return FALSE;
+
 	if (!g_maxplayers)
 		return TRUE;
 
