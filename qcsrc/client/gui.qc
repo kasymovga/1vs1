@@ -135,7 +135,7 @@ void GUI_Show(float window) {
 		gui_con_chat_was_changed = TRUE;
 		cvar_set("con_chat", "0");
 		SkinInit();
-		drawfont = sbar_font;
+		draw_reset();
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
 	}
