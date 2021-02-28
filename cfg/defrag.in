@@ -127,7 +127,7 @@ set _defrag_g_pickup_nails_max 300
 set _defrag_g_pickup_shells 100
 set _defrag_g_pickup_shells_max 100
 set _defrag_g_stepairslowdown 0
-set _defrag_g_stepheight 19
+set _defrag_g_stepheight 18
 set _defrag_g_maxspeed 320
 set _defrag_g_maxwaterspeed 160
 set _defrag_g_maxairspeed 320
