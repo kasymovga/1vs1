@@ -31,7 +31,6 @@ float g_player_forceskin_red;
 float g_player_forceskin_blue;
 float g_player_forceskin_yellow;
 float g_player_forceskin_pink;
-float sv_servermodelsonly;
 float g_balance_armor_blockpercent;
 float g_balance_armor_regen;
 float g_balance_armor_regenlinear;
@@ -1398,7 +1397,7 @@ string(string _playermodel) player_check_model {
 	
 	if (substring(_playermodel,0,14) != "models/player/")
 		return fallback;
-	else if (sv_servermodelsonly) {
+	else {
 		if (substring(_playermodel,-4,4) != ".zym")
 		if (substring(_playermodel,-4,4) != ".dpm")
 		if (substring(_playermodel,-4,4) != ".md3")
@@ -2596,7 +2595,6 @@ void() player_init {
 	CVAR_CACHE(bot_talk);
 	CVAR_CACHE(g_maxpushtime);
 	CVAR_CACHE(g_playerclip_collisions);
-	CVAR_CACHE(sv_servermodelsonly);
 	if (player_init_done)
 		return;
 
