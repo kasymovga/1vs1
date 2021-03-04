@@ -59,7 +59,7 @@ void(entity gib, string mdlname, float specnum) gib_model_set {
 
 void(float ef, vector org, float explosionspeed, float howmany) gib_blood {
 	float i;
-	for (i = 0; i < 250 * CVAR(cl_particles_quality); ++i)
+	for (i = 0; i < 10; ++i)
 		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
 }
 
@@ -136,6 +136,7 @@ void(string mdlname, vector org, vector vconst, vector vrand, float specnum, flo
 
 void(float isNew) gib_read {
 	float amount, type, specnum;
+	float i;
 	vector org, vel;
 	string specstr;
 	float issilent;
@@ -178,7 +179,10 @@ void(float isNew) gib_read {
 		if (prandom() < amount)
 			gib_toss("models/gibs/eye.md3", org, vel, prandomvec() * 150, specnum, 0, issilent);
 
-		gib_blood(particleeffectnum(strcat(specstr, "bloodshower")), org, 1200, amount);
+		float p = particleeffectnum(strcat(specstr, "bloodshower"));
+		for (i = 0; i < 10; i++)
+			pointparticles(p, org, randomvec() * 1200, amount);
+
 		if (prandom() < amount)
 			gib_toss("models/gibs/bloodyskull.md3", org + 16 * prandomvec(), vel, prandomvec() * 100, specnum, 0, issilent);
 
