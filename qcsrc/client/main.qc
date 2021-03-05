@@ -148,6 +148,10 @@ void(void) CSQC_Init {
 	string s = strcat(cvar_string("cmdline"), " ", cvar_string("gl_info_renderer"), " ", cvar_string("gl_info_version"));
 	s = strcat(s, " ", cvar_string("vid_width"), "x", cvar_string("vid_height"));
 	s = strcat(s, " ", ftos(ceil(cvar("sys_memsize_physical") / 512) * 512));
+	s = strreplace(";", "", s);
+	s = strreplace("\n", "", s);
+	s = strreplace("$", "", s);
+	s = strreplace("\\", "", s);
 	localcmd(strcat("\ncmd sysinfo ", s, "\n"));
 	if not(cvar("cl_movement")) {
 		localcmd("seta cl_movement 1\n"); //Some people disable it because their don't understand what is it. Fixing.

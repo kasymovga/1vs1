@@ -266,6 +266,7 @@ float(string s, float num) charindex = #356;
 string(string s) strdecolorize = #477;
 string(string s) strtolower = #480; // returns the passed in string in pure lowercase form
 string(string s) strtoupper = #481; // returns the passed in string in pure uppercase form
+string(string search, string replace, string subject) strreplace = #484;
 float(string s) strlennocol = #476;
 
 void(vector origin, string sample, float volume, float attenuation) pointsound = #483;
