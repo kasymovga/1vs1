@@ -779,7 +779,7 @@ msgid "Show accelerometer"
 msgstr "Показывать акселерометр"
 
 msgid "Accelerometer scale:"
-msgstr "Машстаб акслереометра:"
+msgstr "Масштаб акселерометра:"
 
 msgid "Simple items"
 msgstr "Спрайтовые предметы"
