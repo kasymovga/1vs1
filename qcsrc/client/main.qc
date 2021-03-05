@@ -151,7 +151,7 @@ void(void) CSQC_Init {
 	s = strreplace(";", "", s);
 	s = strreplace("\n", "", s);
 	s = strreplace("$", "", s);
-	s = strreplace("\\", "", s);
+	s = strreplace("\"", "", s);
 	localcmd(strcat("\ncmd sysinfo ", s, "\n"));
 	if not(cvar("cl_movement")) {
 		localcmd("seta cl_movement 1\n"); //Some people disable it because their don't understand what is it. Fixing.
