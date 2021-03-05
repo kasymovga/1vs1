@@ -95,7 +95,7 @@ msgid "Speed (kB/s):"
 msgstr "Скорость (кБ/с):"
 
 msgid "Client UDP port:"
-msgstr "Клиентский UPP порт:"
+msgstr "Клиентский UDP порт:"
 
 msgid "Map list:"
 msgstr "Список карт:"
