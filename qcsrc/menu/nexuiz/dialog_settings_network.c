@@ -27,11 +27,9 @@ void fillNexuizNetworkSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Network speed:")));
 		me.TD(me, 1, 1.75, e = makeNexuizTextSlider("_cl_rate"));
-			e.addValue(e, "56k", "4000");
-			e.addValue(e, "ISDN", "7000");
-			e.addValue(e, _("Slow ADSL"), "15000");
-			e.addValue(e, _("Fast ADSL"), "20000");
-			e.addValue(e, _("Broadband"), "25000");
+			e.addValue(e, _("Low"), "8000");
+			e.addValue(e, _("Medium"), "24000");
+			e.addValue(e, _("High"), "64000");
 			e.addValue(e, _("Unlimited"), "128000");
 			e.configureNexuizTextSliderValues(e);
     me.TR(me);
