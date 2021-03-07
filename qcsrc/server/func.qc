@@ -4,59 +4,57 @@ void(void) spawnfunc_func_clientillusionary { model_client_init(SOLID_NOT);} // 
 
 // solid brush entities
 void(void) spawnfunc_func_wall              { model_init      (SOLID_BSP);} // Q1 name
-void(void) spawnfunc_func_clientwall        { model_client_init(SOLID_BSP);} // brush entity (WARNING: MISPREDICTED)
+void(void) spawnfunc_func_clientwall        { model_client_init(SOLID_BSP);} // brush entity
 
 void(void) spawnfunc_func_stardust {
 	self.effects = EF_STARDUST;
 }
 
 float(void) func_moving_brush_init {
-// trigger angles are used for one-way touches.  An angle of 0 is assumed
-// to mean no restrictions, so use a yaw of 360 instead.
+	// trigger angles are used for one-way touches.  An angle of 0 is assumed
+	// to mean no restrictions, so use a yaw of 360 instead.
 	self.solid = SOLID_BSP;
 	model_setup();
 	self.movetype = MOVETYPE_PUSH;
-	if(self.modelindex == 0)
-	{
+	if (self.modelindex == 0) {
 		entity_abort("func_moving_brush_init: no brushes found!");
 		return 0;
 	}
 	return 1;
-};
-
+}
 
 float(entity to, float fl) func_pointparticles_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
 	// optional features to save space
 	fl = fl & 0x0F;
-	if(self.spawnflags & 2)
+	if (self.spawnflags & 2)
 		fl |= 0x10; // absolute count on toggle-on
 
-	if(self.movedir != '0 0 0' || self.velocity != '0 0 0')
+	if (self.movedir != '0 0 0' || self.velocity != '0 0 0')
 		fl |= 0x20; // 4 bytes - saves CPU
 
-	if(self.waterlevel || self.count != 1)
+	if (self.waterlevel || self.count != 1)
 		fl |= 0x40; // 4 bytes - obscure features almost never used
 
-	if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+	if (self.mins != '0 0 0' || self.maxs != '0 0 0')
 		fl |= 0x80; // 14 bytes - saves lots of space
 
 	WriteByte(MSG_ENTITY, fl);
-	if(fl & 2) {
-		if(self.state)
+	if (fl & 2) {
+		if (self.state)
 			WriteCoord(MSG_ENTITY, self.impulse);
 		else
 			WriteCoord(MSG_ENTITY, 0); // off
 	}
-	if(fl & 4) {
+	if (fl & 4) {
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
 	}
-	if(fl & 1) {
-		if(self.model != "null") {
+	if (fl & 1) {
+		if (self.model != "null") {
 			WriteShort(MSG_ENTITY, self.modelindex);
-			if(fl & 0x80) {
+			if (fl & 0x80) {
 				WriteCoord(MSG_ENTITY, self.mins_x);
 				WriteCoord(MSG_ENTITY, self.mins_y);
 				WriteCoord(MSG_ENTITY, self.mins_z);
@@ -66,28 +64,28 @@ float(entity to, float fl) func_pointparticles_send {
 			}
 		} else {
 			WriteShort(MSG_ENTITY, 0);
-			if(fl & 0x80) {
+			if (fl & 0x80) {
 				WriteCoord(MSG_ENTITY, self.maxs_x);
 				WriteCoord(MSG_ENTITY, self.maxs_y);
 				WriteCoord(MSG_ENTITY, self.maxs_z);
 			}
 		}
 		WriteShort(MSG_ENTITY, self.cnt);
-		if(fl & 0x20) {
+		if (fl & 0x20) {
 			WriteShort(MSG_ENTITY, net_compress_vec(self.velocity));
 			WriteShort(MSG_ENTITY, net_compress_vec(self.movedir));
 		}
-		if(fl & 0x40) {
+		if (fl & 0x40) {
 			WriteShort(MSG_ENTITY, self.waterlevel * 16.0);
 			WriteByte(MSG_ENTITY, self.count * 16.0);
 		}
 		WriteString(MSG_ENTITY, self.noise);
-		if(self.noise != "") {
+		if (self.noise != "") {
 			WriteByte(MSG_ENTITY, floor(self.atten * 64));
 			WriteByte(MSG_ENTITY, floor(self.volume * 255));
 		}
 		WriteString(MSG_ENTITY, self.bgmscript);
-		if(self.bgmscript != "") {
+		if (self.bgmscript != "") {
 			WriteByte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
 			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
 			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
@@ -103,7 +101,7 @@ void(void) fucn_pointparticles_use {
 }
 
 void(void) func_pointparticles_think {
-	if(self.origin != self.oldorigin) {
+	if (self.origin != self.oldorigin) {
 		self.SendFlags |= 4;
 		self.oldorigin = self.origin;
 	}
@@ -111,43 +109,43 @@ void(void) func_pointparticles_think {
 }
 
 void(void) func_pointparticles_reset {
-	if(self.spawnflags & 1)
+	if (self.spawnflags & 1)
 		self.state = 1;
 	else
 		self.state = 0;
 }
 
 void(void) spawnfunc_func_pointparticles {
-	if(self.model != "")
+	if (self.model != "")
 		setmodel(self, self.model);
 
-	if(self.noise != "")
-		precache_sound (self.noise);
+	if (self.noise != "")
+		precache_sound(self.noise);
 
-	if(!self.bgmscriptsustain)
+	if (!self.bgmscriptsustain)
 		self.bgmscriptsustain = 1;
-	else if(self.bgmscriptsustain < 0)
+	else if (self.bgmscriptsustain < 0)
 		self.bgmscriptsustain = 0;
 
-	if(!self.atten)
+	if (!self.atten)
 		self.atten = ATTN_NORM;
-	else if(self.atten < 0)
+	else if (self.atten < 0)
 		self.atten = 0;
 
-	if(!self.volume)
+	if (!self.volume)
 		self.volume = 1;
 
-	if(!self.count)
+	if (!self.count)
 		self.count = 1;
 
-	if(!self.impulse)
+	if (!self.impulse)
 		self.impulse = 1;
 
-	if(!self.modelindex) {
+	if (!self.modelindex) {
 		setorigin(self, self.origin + self.mins);
 		setsize(self, '0 0 0', self.maxs - self.mins);
 	}
-	if(!self.cnt)
+	if (!self.cnt)
 		self.cnt = particleeffectnum(self.mdl);
 
 	net_link_entity(self, FALSE, 0, func_pointparticles_send);
@@ -164,12 +162,12 @@ void(void) spawnfunc_func_pointparticles {
 
 void(void) spawnfunc_func_sparks {
 	// self.cnt is the amount of sparks that one burst will spawn
-	if(self.cnt < 1) {
+	if (self.cnt < 1) {
 		self.cnt = 25.0; // nice default value
 	}
 	// self.wait is the probability that a sparkthink will spawn a spark shower
 	// range: 0 - 1, but 0 makes little sense, so...
-	if(self.wait < 0.05) {
+	if (self.wait < 0.05) {
 		self.wait = 0.25; // nice default value
 	}
 	self.count = self.cnt;
@@ -228,7 +226,7 @@ void(void) spawnfunc_func_rain {
 	if (self.count < 1)
 		self.count = 1;
 
-	if(self.count > 65535)
+	if (self.count > 65535)
 		self.count = 65535;
 
 	self.state = 1; // 1 is rain, 0 is snow
@@ -266,7 +264,7 @@ void(void) spawnfunc_func_snow {
 	if (self.count < 1)
 		self.count = 1;
 
-	if(self.count > 65535)
+	if (self.count > 65535)
 		self.count = 65535;
 
 	self.state = 0; // 1 is rain, 0 is snow
@@ -293,13 +291,13 @@ void(void) spawnfunc_func_water {
 }
 
 void(void) func_nowalljump_touch {
-	if(other.classname == "player")
+	if (other.classname == "player")
 		other.lastwj = time + frametime;
 }
 
 void(void) spawnfunc_func_nowalljump {
-    EXACTTRIGGER_INIT;
-    self.touch = func_nowalljump_touch;
+	EXACTTRIGGER_INIT;
+	self.touch = func_nowalljump_touch;
 }
 
 /*
@@ -310,113 +308,102 @@ void(void) spawnfunc_func_nowalljump {
 .float alpha_nonsolid;
 .float oldsolid;
 
-#define MAGICWALL_ALPHAFIELD(e) (if((e).solid == SOLID_BSP) alpha_solid else alpha_nonsolid)
-
+#define MAGICWALL_ALPHAFIELD(e) (if ((e).solid == SOLID_BSP) alpha_solid else alpha_nonsolid)
 #define SPAWNFLAG_MW_START_HIDDEN 4
 #define SPAWNFLAG_MW_TOGGLE 8
 
-void func_magicwall_think_transition(void) {
-    self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
-    if(self.alpha && self.alpha < self.alpha_solid)
-        self.nextthink = time;
-    else if(self.think1)
-        self.think1();
+void(void) func_magicwall_think_transition {
+	self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
+	if (self.alpha && self.alpha < self.alpha_solid)
+		self.nextthink = time;
+	else if (self.think1)
+		self.think1();
 }
 
-void func_magicwall_start_transition(float sol, void(void) done) {
-    self.solid = sol;
+void(float sol, void(void) done) func_magicwall_start_transition {
+	self.solid = sol;
+	if (!sol)
+		entity_drop_entities(self);
 
-    if(!sol)
-        entity_drop_entities(self);
+	if (self.speed < 0) {
+		self.alpha = self.MAGICWALL_ALPHAFIELD(self);
+		if (done)
+			done();
 
-    if(self.speed < 0) {
-        self.alpha = self.MAGICWALL_ALPHAFIELD(self);
-        if(done)
-            done();
-        return;
-    }
-
-    self.think = func_magicwall_think_transition;
-    self.think1 = done;
-    self.nextthink = time;
+		return;
+	}
+	self.think = func_magicwall_think_transition;
+	self.think1 = done;
+	self.nextthink = time;
 }
 
-void spawnfunc_func_magicwall(void) {
+void(void) spawnfunc_func_magicwall {
     model_init(SOLID_BSP);
-
-    if(self.alpha_solid <= 0)
+    if (self.alpha_solid <= 0)
         self.alpha_solid = 1;
 
-    if(self.alpha_nonsolid < 0)
+    if (self.alpha_nonsolid < 0)
         self.alpha_nonsolid = 0;
 
-    if(!self.wait && self.target == "")
+    if (!self.wait && self.target == "")
         self.wait = self.delay;
 
-    if(!self.wait)
+    if (!self.wait)
         self.wait = 3;
 
-    if(!self.speed)
+    if (!self.speed)
         self.speed = 1;
 
-    self.oldsolid = if(self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) SOLID_NOT else SOLID_BSP;
-
+    self.oldsolid = if (self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) SOLID_NOT else SOLID_BSP;
     self.customizeentityforclient = inline float(void) {
         return (self.alpha > 0);
     };
-
     self.think = inline void(void) {
         self.nextthink = time;
         self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
     };
-
     self.reset = inline void(void) {
         self.solid = self.oldsolid;
         self.alpha = self.MAGICWALL_ALPHAFIELD(self);
         self.think = stdproc_nothing;
     };
-
-    self.use = if(self.spawnflags & SPAWNFLAG_MW_TOGGLE)
+    self.use = if (self.spawnflags & SPAWNFLAG_MW_TOGGLE)
         inline void(void) {
-            func_magicwall_start_transition(if(self.solid == SOLID_BSP) SOLID_NOT else SOLID_BSP, NULL);
+            func_magicwall_start_transition(if (self.solid == SOLID_BSP) SOLID_NOT else SOLID_BSP, NULL);
         } else inline void(void) {
-            if(self.oldsolid != self.solid) {
-                if(self.think && self.think != func_magicwall_think_transition)
+            if (self.oldsolid != self.solid) {
+                if (self.think && self.think != func_magicwall_think_transition)
                     self.nextthink = time + self.wait;
                 return;
             }
-
-            func_magicwall_start_transition(if(self.oldsolid == SOLID_BSP) SOLID_NOT else SOLID_BSP,
-                if(self.wait >= 0) inline void(void) {
+            func_magicwall_start_transition(if (self.oldsolid == SOLID_BSP) SOLID_NOT else SOLID_BSP,
+                if (self.wait >= 0) inline void(void) {
                     self.nextthink = time + self.wait;
                     self.think = inline void(void) {
                         func_magicwall_start_transition(self.oldsolid, NULL);
                     };
                 } else NULL);
         };
-
     self.touch = inline void(void) {
-        if(other.classname == "player" && !PLAYER_DEAD(other))
+        if (other.classname == "player" && !PLAYER_DEAD(other))
             using(activator = other)
                 trigger_use_targets();
     };
-
     // self.clipgroup = CLIPGROUP_OBSERVER;
     self.reset();
     self.nextthink = time;
 }
 
 .float dmgtime2;
-void func_generic_plat_blocked()
-{
-    if(self.dmg && other.takedamage != DAMAGE_NO) {
-        if(self.dmgtime2 < time) {
+void(void) func_generic_plat_blocked {
+    if (self.dmg && other.takedamage != DAMAGE_NO) {
+        if (self.dmgtime2 < time) {
             damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
             self.dmgtime2 = time + self.dmgtime;
         }
 
         // Gib dead/dying stuff
-        if(other.deadflag != DEAD_NO)
+        if (other.deadflag != DEAD_NO)
             damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
     }
 }
@@ -439,8 +426,8 @@ void(void) func_calc_move_done {
 }
 
 void(vector tdest, float tspeed, void() func) func_calc_move {
-	vector	delta;
-	float	traveltime;
+	vector delta;
+	float traveltime;
 	if (!tspeed)
 		entity_abort("No speed is defined!");
 
@@ -459,20 +446,10 @@ void(vector tdest, float tspeed, void() func) func_calc_move {
 		self.nextthink = self.ltime + 0.1;
 		return;
 	}
-	self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+	self.velocity = delta * (1/traveltime); // QuakeC doesn't allow vector/float division
 	self.nextthink = self.ltime + traveltime;
 }
 
-/*
-=============
-func_calc_angle_move
-
-calculate self.avelocity and self.nextthink to reach destangle from
-self.angles rotating
-
-The calling function should make sure self.think is valid
-===============
-*/
 void(void) func_calc_angle_move_done {
 	// After rotating, set angle to exact final angle
 	self.angles = self.finalangle;
@@ -484,8 +461,8 @@ void(void) func_calc_angle_move_done {
 
 // FIXME: I fixed this function only for rotation around the main axes
 void(vector destangle, float tspeed, void() func) func_calc_angle_move {
-	vector	delta;
-	float	traveltime;
+	vector delta;
+	float traveltime;
 
 	if (!tspeed)
 		entity_abort("No speed is defined!");
@@ -496,97 +473,81 @@ void(vector destangle, float tspeed, void() func) func_calc_angle_move {
 	self.angles_z -= 360 * floor((self.angles_z - destangle_z) / 360 + 0.5);
 	delta = destangle - self.angles;
 	traveltime = vlen (delta) / tspeed;
-
 	self.think1 = func;
 	self.finalangle = destangle;
 	self.think = func_calc_angle_move_done;
-
-	if (traveltime < 0.1)
-	{
+	if (traveltime < 0.1) {
 		self.avelocity = '0 0 0';
 		self.nextthink = self.ltime + 0.1;
 		return;
 	}
-
 	self.avelocity = delta * (1 / traveltime);
 	self.nextthink = self.ltime + traveltime;
 }
 
 .entity trigger_field;
 
-void() func_plat_center_touch;
-void() func_plat_trigger_use;
-void() func_plat_go_up;
-void() func_plat_go_down;
-void() func_plat_crush;
+void(void) func_plat_center_touch;
+void(void) func_plat_trigger_use;
+void(void) func_plat_go_up;
+void(void) func_plat_go_down;
+void(void) func_plat_crush;
 
 float PLAT_LOW_TRIGGER = 1;
 float PLAT_NO_TRIGGER = 8;
 float PLAT_REVERSIBLE = 16;
 
-void func_plat_spawn_inside_trigger()
-{
-	local entity trigger;
-	local vector tmin, tmax;
-
+void(void) func_plat_spawn_inside_trigger {
+	entity trigger;
+	vector tmin, tmax;
 	trigger = spawn();
 	trigger.touch = func_plat_center_touch;
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = self;
-
 	tmin = self.absmin + '25 25 0';
 	tmax = self.absmax - '25 25 -8';
 	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);
 	if (self.spawnflags & PLAT_LOW_TRIGGER)
 		tmax_z = tmin_z + 8;
 
-	if (self.size_x <= 50)
-	{
+	if (self.size_x <= 50) {
 		tmin_x = (self.mins_x + self.maxs_x) / 2;
 		tmax_x = tmin_x + 1;
 	}
-	if (self.size_y <= 50)
-	{
+	if (self.size_y <= 50) {
 		tmin_y = (self.mins_y + self.maxs_y) / 2;
 		tmax_y = tmin_y + 1;
 	}
-
 	self.enemy = trigger;
-
 	setsize (trigger, tmin, tmax);
-};
+}
 
-void func_plat_hit_top()
-{
-	sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+void(void) func_plat_hit_top {
+	sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 1;
 	self.think = func_plat_go_down;
 	self.nextthink = self.ltime + 3;
-};
+}
 
-void func_plat_hit_bottom()
-{
-	sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+void(void) func_plat_hit_bottom {
+	sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 2;
-};
+}
 
-void func_plat_go_down()
-{
-	sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+void(void) func_plat_go_down {
+	sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 3;
 	func_calc_move (self.pos2, self.speed, func_plat_hit_bottom);
-};
+}
 
-void func_plat_go_up()
-{
-	sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+void(void) func_plat_go_up {
+	sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 4;
 	func_calc_move (self.pos1, self.speed, func_plat_hit_top);
-};
+}
 
-void func_plat_center_touch()
-{
+void(void) func_plat_center_touch {
 	if not(other.iscreature)
 		return;
 
@@ -595,77 +556,69 @@ void func_plat_center_touch()
 
 	var trig = self;
 	self = self.enemy;
-
-	if(self.state == 2) {
-		if(trig.wait < 0) {
+	if (self.state == 2) {
+		if (trig.wait < 0) {
 			trig.wait = time + self.delay;
-		} else if(time > trig.wait) {
+		} else if (time > trig.wait) {
 			func_plat_go_up();
 		}
-	} else if(self.state == 1) {
-		self.nextthink = self.ltime + 1;	// delay going down
+	} else if (self.state == 1) {
+		self.nextthink = self.ltime + 1; // delay going down
 	}
-};
+}
 
-void func_plat_trigger_use()
-{
+void(void) func_plat_trigger_use {
 	if (self.think && !(self.spawnflags & PLAT_REVERSIBLE) || self.state != 4 && self.state != 1)
-		return;		// already activated
+		return; // already activated
 
-    if(self.spawnflags & PLAT_REVERSIBLE && self.enemy)
-        self.enemy.wait = -1;
+	if (self.spawnflags & PLAT_REVERSIBLE && self.enemy)
+		self.enemy.wait = -1;
 
 	func_plat_go_down();
-};
+}
 
 
-void func_plat_crush()
-{
-    if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    } else {
-        if((self.dmg) && (other.takedamage != DAMAGE_NO)) {   // Shall we bite?
-            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-            // Gib dead/dying stuff
-            if(other.deadflag != DEAD_NO)
-                damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-        }
+void(void) func_plat_crush {
+	if ((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
+		damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+	} else {
+		if ((self.dmg) && (other.takedamage != DAMAGE_NO)) {   // Shall we bite?
+			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			// Gib dead/dying stuff
+			if (other.deadflag != DEAD_NO)
+				damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		}
 
-        if (self.state == 4)
-            func_plat_go_down ();
-        else if (self.state == 3)
-            func_plat_go_up ();
-        else
-            entity_abort("func_plat_crush: bad self.state\n");
-    }
-};
+		if (self.state == 4)
+			func_plat_go_down ();
+		else if (self.state == 3)
+			func_plat_go_up ();
+		else
+			entity_abort("func_plat_crush: bad self.state\n");
+	}
+}
 
-void func_plat_use()
-{
+void(void) func_plat_use {
 	self.use = stdproc_nothing;
 	if (self.state != 4)
 		entity_abort("func_plat_use: not in up state");
+
 	func_plat_go_down();
-};
+}
 
 .string sound1, sound2;
 
-void func_plat_reset()
-{
-	if(!self.nottargeted && self.targetname != "" && !(self.spawnflags & PLAT_REVERSIBLE))
-	{
+void(void) func_plat_reset {
+	if (!self.nottargeted && self.targetname != "" && !(self.spawnflags & PLAT_REVERSIBLE)) {
 		setorigin (self, self.pos1);
 		self.state = 4;
 		self.use = func_plat_use;
-	}
-	else
-	{
+	} else {
 		setorigin (self, self.pos2);
 		self.state = 2;
 		self.use = func_plat_trigger_use;
 	}
-
-	if(self.enemy)
+	if (self.enemy)
 		self.enemy.wait = 0;
 
 	self.velocity = '0 0 0';
@@ -674,63 +627,55 @@ void func_plat_reset()
 	sound_stop(self, CHAN_TRIGGER);
 }
 
-void spawnfunc_path_corner() { };
-void spawnfunc_func_plat()
-{
+void(void) spawnfunc_path_corner { }
+void(void) spawnfunc_func_plat {
 	if (!self.t_length)
 		self.t_length = 80;
+
 	if (!self.t_width)
 		self.t_width = 10;
 
 	if (self.sounds == 0)
 		self.sounds = 2;
 
-    if(self.spawnflags & 4)
-        self.dmg = 10000;
+	if (self.spawnflags & 4)
+		self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+	if (self.dmg && (!self.message))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+
+	if (self.dmg && (!self.message2))
 		self.message2 = "was squished by";
 
-	if (self.sounds == 1)
-	{
-		precache_sound ("plats/plat1.wav");
-		precache_sound ("plats/plat2.wav");
+	if (self.sounds == 1) {
+		precache_sound("plats/plat1.wav");
+		precache_sound("plats/plat2.wav");
 		self.noise = "plats/plat1.wav";
 		self.noise1 = "plats/plat2.wav";
 	}
-
-	if (self.sounds >= 2)
-	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
+	if (self.sounds >= 2) {
+		precache_sound("plats/medplat1.wav");
+		precache_sound("plats/medplat2.wav");
 		self.noise = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
 	}
-
-	if (self.sound1)
-	{
-		precache_sound (self.sound1);
+	if (self.sound1) {
+		precache_sound(self.sound1);
 		self.noise = self.sound1;
 	}
-	if (self.sound2)
-	{
-		precache_sound (self.sound2);
+	if (self.sound2) {
+		precache_sound(self.sound2);
 		self.noise1 = self.sound2;
 	}
-
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
-
 	self.classname = "plat";
 	if not(func_moving_brush_init())
 		return;
+
 	self.effects |= EF_LOWPRECISION;
 	setsize (self, self.mins , self.maxs);
-
 	self.blocked = func_plat_crush;
-
 	if (!self.speed)
 		self.speed = 150;
 
@@ -738,35 +683,29 @@ void spawnfunc_func_plat()
 	self.pos2 = self.origin;
 	self.pos2_z = self.origin_z -
 			((cvar("sv_gameplayfix_useheightforplat") && self.height) ? self.height : self.size_z) + 8;
-
-	if(!self.delay) {
+	if (!self.delay) {
 		self.delay = 2;
 	}
-
-	if(!(self.spawnflags & PLAT_NO_TRIGGER))
-		func_plat_spawn_inside_trigger ();	// the "start moving" trigger
+	if (!(self.spawnflags & PLAT_NO_TRIGGER))
+		func_plat_spawn_inside_trigger (); // the "start moving" trigger
 
 	self.reset = func_plat_reset;
 	func_plat_reset();
-};
+}
 
-
-void() func_train_next;
-void func_train_wait()
-{
+void(void) func_train_next;
+void(void) func_train_wait {
 	self.think = func_train_next;
 	self.nextthink = self.ltime + self.wait;
-
-	if(self.noise != "")
+	if (self.noise != "")
 		sound_stop_to(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
-};
+}
 
 float sv_gameplayfix_trainnomins;
 float sv_gameplayfix_trainnowait;
 
-void func_train_next()
-{
-	local entity targ;
+void(void) func_train_next {
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	if (!self.target)
@@ -776,23 +715,20 @@ void func_train_next()
 		self.wait = 0.1;
 
 	float _speed = (targ.speed ? targ.speed : self.speed);
-	if(self.wait < 0)
-	{
+	if (self.wait < 0) {
 		if (self.targetname != "" && !sv_gameplayfix_trainnowait)
 			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, stdproc_nothing);
 		else
 			func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, func_train_next);
-	}
-	else
+	} else
 		func_calc_move(targ.origin - (sv_gameplayfix_trainnomins ? '0 0 0' : self.mins), _speed, func_train_wait);
 
-	if(self.noise != "")
+	if (self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
-};
+}
 
-void func_train_find()
-{
-	local entity targ;
+void(void) func_train_find {
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	if (!self.target)
@@ -805,17 +741,15 @@ void func_train_find()
 		self.nextthink = self.ltime + 1;
 		self.think = func_train_next;
 	}
-};
-
-float func_train_init_done;
+}
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
 Ridable platform, targets spawnfunc_path_corner path to follow.
 speed : speed the train moves (can be overridden by each spawnfunc_path_corner)
 target : targetname of first spawnfunc_path_corner (starts here)
 */
-void spawnfunc_func_train()
-{
+float func_train_init_done;
+void(void) spawnfunc_func_train {
 	if not(func_train_init_done) {
 		CVAR_CACHE(sv_gameplayfix_trainnomins);
 		CVAR_CACHE(sv_gameplayfix_trainnowait);
@@ -826,6 +760,7 @@ void spawnfunc_func_train()
 
 	if (!self.target)
 		entity_abort("func_train without a target");
+
 	if (!self.speed)
 		self.speed = 100;
 
@@ -835,18 +770,19 @@ void spawnfunc_func_train()
 
 	// wait for targets to spawn
 	entity_initialize(self, func_train_find, INITPRIO_SETLOCATION);
-
 	self.blocked = func_generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if (self.dmg & (!self.message))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
 
+    if (self.dmg && (!self.message2))
+		self.message2 = "was squished by";
+
+	if (self.dmg && (!self.dmgtime))
+		self.dmgtime = 0.25;
+
+	self.dmgtime2 = time;
 	// TODO make a reset function for this one
-};
+}
 
 /*QUAKED spawnfunc_func_rotating (0 .5 .8) ? - - X_AXIS Y_AXIS
 Brush model that spins in place on one axis (default Z).
@@ -856,10 +792,8 @@ dmg     : Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime : See above.
 */
 
-void spawnfunc_func_rotating()
-{
-	if (self.noise != "")
-	{
+void(void) spawnfunc_func_rotating {
+	if (self.noise != "") {
 		precache_sound(self.noise);
 		ambientsound(self.origin, self.noise, VOL_BASE, ATTN_IDLE);
 	}
@@ -875,34 +809,30 @@ void spawnfunc_func_rotating()
 	else // Z
 		self.avelocity = '0 1 0' * self.speed;
 
-    if(self.dmg & (!self.message))
-        self.message = " was squished";
-    if(self.dmg && (!self.message2))
+	if (self.dmg & (!self.message))
+		self.message = " was squished";
+
+	if (self.dmg && (!self.message2))
 		self.message2 = "was squished by";
 
-
-    if(self.dmg && (!self.dmgtime))
-        self.dmgtime = 0.25;
+	if (self.dmg && (!self.dmgtime))
+		self.dmgtime = 0.25;
 
     self.dmgtime2 = time;
-
 	if not(func_moving_brush_init())
 		return;
+
 	// no EF_LOWPRECISION here, as rounding angles is bad
-
-    self.blocked = func_generic_plat_blocked;
-
+	self.blocked = func_generic_plat_blocked;
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
-
 	// TODO make a reset function for this one
 }
 
 .float height;
-void func_bobbing_controller_think()
-{
-	local vector v;
+void func_bobbing_controller_think() {
+	vector v;
 	self.nextthink = time + 0.1;
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
@@ -920,33 +850,34 @@ noise : path/name of looping .wav file to play.
 dmg : Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime : See above.
 */
-void spawnfunc_func_bobbing()
-{
-	local entity controller;
-	if (self.noise != "")
-	{
+void spawnfunc_func_bobbing() {
+	entity controller;
+	if (self.noise != "") {
 		precache_sound(self.noise);
 		sound_to(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 	if (!self.speed)
 		self.speed = 4;
+
 	if (!self.height)
 		self.height = 32;
+
 	// center of bobbing motion
 	self.destvec = self.origin;
 	// time scale to get degrees
 	self.cnt = 360 / self.speed;
-
 	// damage when blocked
 	self.blocked = func_generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if (self.dmg & (!self.message))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
 
+    if (self.dmg && (!self.message2))
+		self.message2 = "was squished by";
+
+	if (self.dmg && (!self.dmgtime))
+		self.dmgtime = 0.25;
+
+	self.dmgtime2 = time;
 	// how far to bob
 	if (self.spawnflags & 1) // X
 		self.movedir = '1 0 0' * self.height;
@@ -966,50 +897,39 @@ void spawnfunc_func_bobbing()
 	controller.think = func_bobbing_controller_think;
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
-
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
-
 	// TODO make a reset function for this one
 }
 
-// button and multiple button
+void(void) func_button_return;
 
-void() func_button_return;
-
-void func_button_wait()
-{
+void(void) func_button_wait {
 	self.state = STATE_TOP;
 	self.nextthink = self.ltime + self.wait;
 	self.think = func_button_return;
 	activator = self.enemy;
 	trigger_use_targets();
-	self.frame = 1;			// use alternate textures
-};
+	self.frame = 1; // use alternate textures
+}
 
-void func_button_done()
-{
+void(void) func_button_done {
 	self.state = STATE_BOTTOM;
-};
+}
 
-void func_button_return()
-{
+void(void) func_button_return {
 	self.state = STATE_DOWN;
 	func_calc_move (self.pos1, self.speed, func_button_done);
-	self.frame = 0;			// use normal textures
+	self.frame = 0; // use normal textures
 	if (self.health)
-		self.takedamage = DAMAGE_YES;	// can be shot again
-};
+		self.takedamage = DAMAGE_YES; // can be shot again
+}
 
-
-void func_button_blocked()
-{
+void(void) func_button_blocked {
 	// do nothing, just don't come all the way back out
-};
+}
 
-
-void func_button_fire()
-{
+void(void) func_button_fire {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
 
@@ -1017,68 +937,50 @@ void func_button_fire()
 		return;
 
 	if (self.noise != "")
-		sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	self.state = STATE_UP;
 	func_calc_move (self.pos2, self.speed, func_button_wait);
-};
-
-void func_button_reset()
-{
-	self.health = self.max_health;
-	setorigin(self, self.pos1);
-	self.frame = 0;			// use normal textures
-	self.state = STATE_BOTTOM;
-	if (self.health)
-		self.takedamage = DAMAGE_YES;	// can be shot again
 }
 
-void func_button_use()
-{
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" triggered a button\n");
-//	}
+void(void) func_button_reset {
+	self.health = self.max_health;
+	setorigin(self, self.pos1);
+	self.frame = 0; // use normal textures
+	self.state = STATE_BOTTOM;
+	if (self.health)
+		self.takedamage = DAMAGE_YES; // can be shot again
+}
+
+void(void) func_button_use {
 	self.enemy = activator;
 	func_button_fire ();
-};
+}
 
-void func_button_touch()
-{
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" touched a button\n");
-//	}
+void(void) func_button_touch {
 	if (!other)
 		return;
+
 	if not(other.iscreature)
 		return;
-	if(other.velocity * self.movedir < 0)
+
+	if (other.velocity * self.movedir < 0)
 		return;
 
 	self.enemy = other;
 	if (other.owner)
 		self.enemy = other.owner;
-	func_button_fire ();
-};
 
-void func_button_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
+	func_button_fire();
+}
+
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_button_damage {
 	self.health = self.health - _damage;
-	if (self.health <= 0)
-	{
-	//	if (activator.classname != "player")
-	//	{
-	//		dprint(activator.classname);
-	//		dprint(" killed a button\n");
-	//	}
+	if (self.health <= 0) {
 		self.enemy = attacker;
 		func_button_fire ();
 	}
-};
-
+}
 
 /*QUAKED spawnfunc_func_button (0 .5 .8) ?
 When a button is touched, it moves some distance in the direction of it's angle, triggers all of it's targets, waits some time, then returns to it's original position where it can be triggered again.
@@ -1127,7 +1029,7 @@ void(void) spawnfunc_func_button {
 	if (self.noise == "")
 		self.noise = "misc/menu1.wav";
 
-	if(self.noise != "")
+	if (self.noise != "")
 		precache_sound(self.noise);
 
 	self.pos1 = self.origin;
@@ -1144,215 +1046,150 @@ float DOOR_KEY_SILVER = 16;
 float DOOR_KEY_BLOOD = 64;
 float DOOR_PLAYER_ONLY = 128;
 
-/*
+void(void) func_door_go_down;
+void(void) func_door_go_up;
+void(void) func_door_rotating_go_down;
+void(void) func_door_rotating_go_up;
 
-Doors are similar to buttons, but can spawn a fat trigger field around them
-to open without a touch, and they link together to form simultanious
-double/quad doors.
+void(void) func_door_blocked {
+	if ((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
+		damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+	} else {
+		if ((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
+			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 
-Door.owner is the master door.  If there is only one door, it points to itself.
-If multiple doors, all will point to a single one.
-
-Door.enemy chains from the master door through all doors linked in the chain.
-
-*/
-
-/*
-=============================================================================
-
-THINK FUNCTIONS
-
-=============================================================================
-*/
-
-void() func_door_go_down;
-void() func_door_go_up;
-void() func_door_rotating_go_down;
-void() func_door_rotating_go_up;
-
-void func_door_blocked()
-{
-
-    if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    } else {
-
-        if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-            damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-
-         //Dont chamge direction for dead or dying stuff
-        if(other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
-            if (self.wait >= 0)
-            {
-                if (self.state == STATE_DOWN)
-			if (self.classname == "door")
-			{
-				func_door_go_up ();
-			} else
-			{
-				func_door_rotating_go_up ();
+		//Dont chamge direction for dead or dying stuff
+		if (other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
+			if (self.wait >= 0) {
+				if (self.state == STATE_DOWN) {
+					if (self.classname == "door")
+						func_door_go_up();
+					else
+						func_door_rotating_go_up ();
+				} else {
+					if (self.classname == "door")
+						func_door_go_down();
+					else
+						func_door_rotating_go_down ();
+				}
 			}
-                else
-			if (self.classname == "door")
-			{
-				func_door_go_down ();
-			} else
-			{
-				func_door_rotating_go_down ();
-			}
-            }
-        } else {
-            //gib dying stuff just to make sure
-            if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-                damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-        }
-    }
+		} else {
+			//gib dying stuff just to make sure
+			if ((self.dmg) && (other.takedamage != DAMAGE_NO)) // Shall we bite?
+				damage(other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		}
+	}
 }
 
-
-void func_door_hit_top()
-{
+void(void) func_door_hit_top {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
-		return;		// don't come down automatically
+		return; // don't come down automatically
+
 	if (self.classname == "door")
-	{
 		self.think = func_door_go_down;
-	} else
-	{
+	else
 		self.think = func_door_rotating_go_down;
-	}
+
 	self.nextthink = self.ltime + self.wait;
-};
+}
 
-void func_door_hit_bottom()
-{
+void(void) func_door_hit_bottom {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
-	self.state = STATE_BOTTOM;
-};
+		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
-void func_door_go_down()
-{
+	self.state = STATE_BOTTOM;
+}
+
+void(void) func_door_go_down {
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
-	if (self.max_health)
-	{
+		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+
+	if (self.max_health) {
 		self.takedamage = DAMAGE_YES;
 		self.health = self.max_health;
 	}
-
 	self.state = STATE_DOWN;
 	func_calc_move (self.pos1, self.speed, func_door_hit_bottom);
-};
+}
 
-void func_door_go_up()
-{
+void(void) func_door_go_up {
 	if (self.state == STATE_UP)
-		return;		// already going up
+		return; // already going up
 
-	if (self.state == STATE_TOP)
-	{	// reset top wait time
+	if (self.state == STATE_TOP) { // reset top wait time
 		self.nextthink = self.ltime + self.wait;
 		return;
 	}
-
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+
 	self.state = STATE_UP;
 	func_calc_move (self.pos2, self.speed, func_door_hit_top);
-
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
 	trigger_use_targets();
 	self.message = oldmessage;
-};
+}
 
-
-/*
-=============================================================================
-
-ACTIVATION FUNCTIONS
-
-=============================================================================
-*/
-
-void func_door_fire()
-{
-	local entity 	oself;
-	local entity	starte;
-
+void(void) func_door_fire {
+	entity oself;
+	entity starte;
 	if (self.owner != self)
 		entity_abort("func_door_fire: self.owner != self");
 
 	oself = self;
-
-	if (self.spawnflags & DOOR_TOGGLE)
-	{
-		if (self.state == STATE_UP || self.state == STATE_TOP)
-		{
+	if (self.spawnflags & DOOR_TOGGLE) {
+		if (self.state == STATE_UP || self.state == STATE_TOP) {
 			starte = self;
-			do
-			{
+			do {
 				if (self.classname == "door")
-				{
-					func_door_go_down ();
-				}
+					func_door_go_down();
 				else
-				{
-					func_door_rotating_go_down ();
-				}
+					func_door_rotating_go_down();
+
 				self = self.enemy;
 			} while ( (self != starte) && (self != world) );
 			self = oself;
 			return;
 		}
 	}
-
-// trigger all paired doors
+	// trigger all paired doors
 	starte = self;
-	do
-	{
-		if (self.classname == "door")
-		{
-			func_door_go_up ();
-		} else
-		{
+	do {
+		if (self.classname == "door") {
+			func_door_go_up();
+		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((self.spawnflags & 2) && other.trigger_reverse!=0 && self.lip!=666 && self.state == STATE_BOTTOM)
-			{
+			if ((self.spawnflags & 2) && other.trigger_reverse!=0 && self.lip!=666 && self.state == STATE_BOTTOM) {
 				self.lip = 666; // self.lip is used to remember reverse opening direction for door_rotating
-			  	self.pos2 = '0 0 0' - self.pos2;
+				self.pos2 = '0 0 0' - self.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
 			if (!((self.spawnflags & 2) &&  (self.spawnflags & 8) && self.state == STATE_DOWN
-			    && (((self.lip==666) && (other.trigger_reverse==0)) || ((self.lip!=666) && (other.trigger_reverse!=0)))))
-			{
-				func_door_rotating_go_up ();
+					&& (((self.lip==666) && (other.trigger_reverse==0)) || ((self.lip!=666) && (other.trigger_reverse!=0))))) {
+				func_door_rotating_go_up();
 			}
 		}
 		self = self.enemy;
 	} while ( (self != starte) && (self != world) );
 	self = oself;
-};
+}
 
-
-void func_door_use()
-{
-	local entity oself;
-
+void(void) func_door_use {
+	entity oself;
 	//dprint("func_door_use (model: ");dprint(self.model);dprint(")\n");
-	if (self.owner)
-	{
+	if (self.owner) {
 		oself = self;
 		self = self.owner;
-		func_door_fire ();
+		func_door_fire();
 		self = oself;
 	}
-};
+}
 
 
 void(void) func_door_trigger_touch {
@@ -1381,126 +1218,97 @@ void(void) func_door_trigger_touch {
 				self.attack_finished_single = time + 1;
 				sound_play2(other, "misc/talk.wav");
 			}
-			centerprint (other, strcat("This door required ", s));
+			centerprint(other, strcat("This door required ", s));
 		}
 		return;
 	}
 	activator = other;
 	self = self.owner;
-	func_door_use ();
+	func_door_use();
 }
 
-void func_door_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
-	local entity oself;
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_door_damage {
+	entity oself;
 	self.health = self.health - _damage;
-	if (self.health <= 0)
-	{
+	if (self.health <= 0) {
 		oself = self;
 		self = self.owner;
 		self.health = self.max_health;
 		//self.takedamage = DAMAGE_NO; // wil be reset upon return //ORLY?
-		func_door_use ();
+		func_door_use();
 		self = oself;
 	}
-};
+}
 
-
-/*
-================
-func_door_touch
-
-Prints messages
-================
-*/
-void func_door_touch()
-{
+void(void) func_door_touch {
 	if not(other.iscreature)
 		return;
+
 	if (self.owner.attack_finished_single > time)
 		return;
 
 	self.owner.attack_finished_single = time + 2;
-	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == STATE_BOTTOM)
-	{
+	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == STATE_BOTTOM) {
 		if (clienttype(other) == CLIENTTYPE_REAL) {
-			centerprint (other, self.owner.message);
+			centerprint(other, self.owner.message);
 			sound_play2(other, "misc/talk.wav");
 		}
 	}
-};
+}
 
-
-void func_door_rotating_hit_top()
-{
+void(void) func_door_rotating_hit_top {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
-		return;		// don't come down automatically
+		return; // don't come down automatically
+
 	self.think = func_door_rotating_go_down;
 	self.nextthink = self.ltime + self.wait;
-};
+}
 
-void func_door_rotating_hit_bottom()
-{
+void(void) func_door_rotating_hit_bottom {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
-	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
-	{
+		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+	if (self.lip == 666) { // self.lip is used to remember reverse opening direction for door_rotating
 		self.pos2 = '0 0 0' - self.pos2;
 		self.lip = 0;
 	}
 	self.state = STATE_BOTTOM;
-};
+}
 
-void func_door_rotating_go_down()
-{
+void(void) func_door_rotating_go_down {
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
-	if (self.max_health)
-	{
+		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+
+	if (self.max_health) {
 		self.takedamage = DAMAGE_YES;
 		self.health = self.max_health;
 	}
-
 	self.state = STATE_DOWN;
-	func_calc_angle_move (self.pos1, self.speed, func_door_rotating_hit_bottom);
-};
+	func_calc_angle_move(self.pos1, self.speed, func_door_rotating_hit_bottom);
+}
 
-void func_door_rotating_go_up()
-{
+void(void) func_door_rotating_go_up {
 	if (self.state == STATE_UP)
-		return;		// already going up
+		return; // already going up
 
-	if (self.state == STATE_TOP)
-	{	// reset top wait time
+	if (self.state == STATE_TOP) { // reset top wait time
 		self.nextthink = self.ltime + self.wait;
 		return;
 	}
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
-	self.state = STATE_UP;
-	func_calc_angle_move (self.pos2, self.speed, func_door_rotating_hit_top);
+		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
+	self.state = STATE_UP;
+	func_calc_angle_move(self.pos2, self.speed, func_door_rotating_hit_top);
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
 	trigger_use_targets();
 	self.message = oldmessage;
-};
-
-
-
-
-/*
-=============================================================================
-
-SPAWNING FUNCTIONS
-
-=============================================================================
-*/
-
+}
 
 entity(vector fmins, vector fmaxs) func_spawn_field {
 	entity trigger;
@@ -1516,34 +1324,30 @@ entity(vector fmins, vector fmaxs) func_spawn_field {
 	v = stov(cvar_string("sv_door_trigger_field"));
 	setsize(trigger, t1 - v, t2 + v);
 	return trigger;
-};
+}
 
-
-float func_doors_touching(entity e1, entity e2)
-{
+float(entity e1, entity e2) func_doors_touching {
 	if (e1.absmin_x > e2.absmax_x)
 		return FALSE;
+
 	if (e1.absmin_y > e2.absmax_y)
 		return FALSE;
+
 	if (e1.absmin_z > e2.absmax_z)
 		return FALSE;
+
 	if (e1.absmax_x < e2.absmin_x)
 		return FALSE;
+
 	if (e1.absmax_y < e2.absmin_y)
 		return FALSE;
+
 	if (e1.absmax_z < e2.absmin_z)
 		return FALSE;
+
 	return TRUE;
-};
+}
 
-
-/*
-=============
-func_doors_link
-
-
-=============
-*/
 void(void) func_doors_link {
 	entity t, starte;
 	vector cmins, cmaxs;
@@ -1660,15 +1464,13 @@ FIXME: only one sound set available at the time being
 
 */
 
-void func_door_init_startopen()
-{
+void(void) func_door_init_startopen {
 	setorigin (self, self.pos2);
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
 }
 
-void func_door_reset()
-{
+void(void) func_door_reset {
 	setorigin(self, self.pos1);
 	self.velocity = '0 0 0';
 	self.state = STATE_BOTTOM;
@@ -1682,72 +1484,61 @@ void(void) func_door_rm_hack {
 		self.spawnflags |= DOOR_START_OPEN;
 }
 
-void spawnfunc_func_door()
-{
+void(void) spawnfunc_func_door {
 	func_door_rm_hack();
-	//if (!self.deathtype) // map makers can override this
-	//	self.deathtype = " got in the way";
 	entity_movedir_setup();
-
 	self.max_health = self.health;
 	if not(func_moving_brush_init())
 		return;
+
 	self.effects |= EF_LOWPRECISION;
 	self.classname = "door";
-
 	self.blocked = func_door_blocked;
 	self.use = func_door_use;
-
-    if(self.spawnflags & DOOR_KEY_GOLD_OR_CRUSH) {
+    if (self.spawnflags & DOOR_KEY_GOLD_OR_CRUSH) {
 		if (self.wait < 0)
 			self.items |= IT_KEY2;
 		else
 			self.dmg = 10000;
 	}
-    if(self.spawnflags & DOOR_KEY_SILVER)
+	if (self.spawnflags & DOOR_KEY_SILVER)
 		self.items |= IT_KEY1;
 
-    if(self.spawnflags & DOOR_KEY_BLOOD)
+	if (self.spawnflags & DOOR_KEY_BLOOD)
 		self.items |= IT_KEY3;
 
-    if(self.dmg && (!self.message))
+	if (self.dmg && (!self.message))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+	if (self.dmg && (!self.message2))
 		self.message2 = "was squished by";
 
-	if (self.sounds > 0)
-	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
+	if (self.sounds > 0) {
+		precache_sound("plats/medplat1.wav");
+		precache_sound("plats/medplat2.wav");
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
 	}
-
 	if (!self.speed)
 		self.speed = cvar("sv_door_default_speed");
+
 	if (!self.wait)
 		self.wait = 3;
+
 	if (!self.lip)
 		self.lip = 8;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
-
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
+	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
 		entity_initialize(self, func_door_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = STATE_BOTTOM;
-
 	self.touch = func_door_touch;
-
-// func_doors_link can't be done until all of the doors have been spawned, so
-// the sizes can be detected properly.
 	entity_initialize(self, func_doors_link, INITPRIO_LINKDOORS);
-
 	self.reset = func_door_reset;
-};
+}
 
 /*QUAKED spawnfunc_func_door_rotating (0 .5 .8) ? START_OPEN BIDIR DOOR_DONT_LINK BIDIR_IN_DOWN x TOGGLE X_AXIS Y_AXIS
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -1777,28 +1568,21 @@ START_OPEN causes the door to move to its destination when spawned, and operate 
 FIXME: only one sound set available at the time being
 */
 
-void func_door_rotating_reset()
-{
+void(void) func_door_rotating_reset {
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
 	self.think = stdproc_nothing;
 }
 
-void func_door_rotating_init_startopen()
-{
+void(void) func_door_rotating_init_startopen {
 	self.angles = self.movedir;
 	self.pos2 = '0 0 0';
 	self.pos1 = self.movedir;
 }
 
-
-void spawnfunc_func_door_rotating()
-{
+void(void) spawnfunc_func_door_rotating {
 	func_door_rm_hack();
-	//if (!self.deathtype) // map makers can override this
-	//	self.deathtype = " got in the way";
-
 	// I abuse "movedir" for denoting the axis for now
 	if (self.spawnflags & 64) // X (untested)
 		self.movedir = '0 0 1';
@@ -1808,129 +1592,101 @@ void spawnfunc_func_door_rotating()
 		self.movedir = '0 1 0';
 
 	if (self.angles_y==0) self.angles_y = 90;
-
 	self.movedir = self.movedir * self.angles_y;
 	self.angles = '0 0 0';
-
 	self.max_health = self.health;
 	if not(func_moving_brush_init())
 		return;
+
 	//self.effects |= EF_LOWPRECISION;
 	self.classname = "door_rotating";
-
 	self.blocked = func_door_blocked;
 	self.use = func_door_use;
+	if (self.spawnflags & 8)
+		self.dmg = 10000;
 
-    if(self.spawnflags & 8)
-        self.dmg = 10000;
-
-    if(self.dmg && (!self.message))
+	if (self.dmg && (!self.message))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+	if (self.dmg && (!self.message2))
 		self.message2 = "was squished by";
 
-    if (self.sounds > 0)
-	{
+	if (self.sounds > 0) {
 		self.noise2 = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
 	}
+	if (self.noise1)
+		precache_sound(self.noise1);
 
-    if(self.noise1)
-        precache_sound(self.noise1);
-
-    if(self.noise2)
-        precache_sound(self.noise2);
+	if (self.noise2)
+		precache_sound(self.noise2);
 
 	if (!self.speed)
 		self.speed = 50;
+
 	if (!self.wait)
 		self.wait = 1;
-	self.lip = 0; // self.lip is used to remember reverse opening direction for door_rotating
 
+	self.lip = 0; // self.lip is used to remember reverse opening direction for door_rotating
 	self.pos1 = '0 0 0';
 	self.pos2 = self.movedir;
-
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
+	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
 		entity_initialize(self, func_door_rotating_init_startopen, INITPRIO_SETLOCATION);
 
 	self.state = STATE_BOTTOM;
-
-	if (self.health)
-	{
+	if (self.health) {
 		self.takedamage = DAMAGE_YES;
 		self.event_damage = func_door_damage;
 	}
-
 	self.touch = func_door_touch;
-
-// func_doors_link can't be done until all of the doors have been spawned, so
-// the sizes can be detected properly.
+	// func_doors_link can't be done until all of the doors have been spawned, so
+	// the sizes can be detected properly.
 	entity_initialize(self, func_doors_link, INITPRIO_LINKDOORS);
-
 	self.reset = func_door_rotating_reset;
-};
+}
 
-/*
-=============================================================================
+void(void) func_door_secret_move1;
+void(void) func_door_secret_move2;
+void(void) func_door_secret_move3;
+void(void) func_door_secret_move4;
+void(void) func_door_secret_move5;
+void(void) func_door_secret_move6;
+void(void) func_door_secret_done;
 
-SECRET DOORS
+float SECRET_OPEN_ONCE = 1;  // stays open
+float SECRET_1ST_LEFT = 2;   // 1st move is left of arrow
+float SECRET_1ST_DOWN = 4;   // 1st move is down from arrow
+float SECRET_NO_SHOOT = 8;   // only opened by trigger
+float SECRET_YES_SHOOT = 16; // shootable even if targeted
 
-=============================================================================
-*/
-
-void() func_door_secret_move1;
-void() func_door_secret_move2;
-void() func_door_secret_move3;
-void() func_door_secret_move4;
-void() func_door_secret_move5;
-void() func_door_secret_move6;
-void() func_door_secret_done;
-
-float SECRET_OPEN_ONCE = 1;		// stays open
-float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
-float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
-float SECRET_NO_SHOOT = 8;		// only opened by trigger
-float SECRET_YES_SHOOT = 16;	// shootable even if targeted
-
-
-void func_door_secret_use()
-{
-	local float temp;
+void(void) func_door_secret_use {
+	float temp;
 	string message_save;
-
 	self.health = 10000;
 	self.bot_attack = TRUE;
-
 	// exit if still moving around...
 	if (self.origin != self.oldorigin)
 		return;
 
 	message_save = self.message;
 	self.message = ""; // no more message
-	trigger_use_targets();				// fire all targets / killtargets
+	trigger_use_targets(); // fire all targets / killtargets
 	self.message = message_save;
-
 	self.velocity = '0 0 0';
-
 	// Make a sound, wait a little...
-
 	if (self.noise1 != "")
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+
 	self.nextthink = self.ltime + 0.1;
-
-	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
+	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT); // 1 or -1
 	makevectors(self.mangle);
-
-	if (!self.t_width)
-	{
+	if (!self.t_width) {
 		if (self.spawnflags & SECRET_1ST_DOWN)
 			self.t_width = fabs(v_up * self.size);
 		else
 			self.t_width = fabs(v_right * self.size);
 	}
-
 	if (!self.t_length)
 		self.t_length = fabs(v_forward * self.size);
 
@@ -1943,109 +1699,93 @@ void func_door_secret_use()
 	func_calc_move(self.dest1, self.speed, func_door_secret_move1);
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
-};
+}
 
 // Wait after first movement...
-void func_door_secret_move1()
-{
+void(void) func_door_secret_move1 {
 	self.nextthink = self.ltime + 1.0;
 	self.think = func_door_secret_move2;
 	if (self.noise3 != "")
 		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-};
+}
 
 // Start moving sideways w/sound...
-void func_door_secret_move2()
-{
+void(void) func_door_secret_move2 {
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+
 	func_calc_move(self.dest2, self.speed, func_door_secret_move3);
-};
+}
 
 // Wait here until time to go back...
-void func_door_secret_move3()
-{
+void(void) func_door_secret_move3 {
 	if (self.noise3 != "")
 		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-	if (!(self.spawnflags & SECRET_OPEN_ONCE))
-	{
+
+	if (!(self.spawnflags & SECRET_OPEN_ONCE)) {
 		self.nextthink = self.ltime + self.wait;
 		self.think = func_door_secret_move4;
 	}
-};
+}
 
 // Move backward...
-void func_door_secret_move4()
-{
+void(void) func_door_secret_move4 {
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+
 	func_calc_move(self.dest1, self.speed, func_door_secret_move5);
-};
+}
 
 // Wait 1 second...
-void func_door_secret_move5()
-{
+void(void) func_door_secret_move5 {
 	self.nextthink = self.ltime + 1.0;
 	self.think = func_door_secret_move6;
 	if (self.noise3 != "")
 		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-};
+}
 
-void func_door_secret_move6()
-{
+void(void) func_door_secret_move6 {
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
-	func_calc_move(self.oldorigin, self.speed, func_door_secret_done);
-};
 
-void func_door_secret_done()
-{
-	if (self.spawnflags&SECRET_YES_SHOOT)
-	{
+	func_calc_move(self.oldorigin, self.speed, func_door_secret_done);
+}
+
+void(void) func_door_secret_done {
+	if (self.spawnflags&SECRET_YES_SHOOT) {
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
 		//self.th_pain = func_door_secret_use;
 	}
 	if (self.noise3 != "")
 		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-};
+}
 
-void func_secret_blocked()
-{
+void(void) func_secret_blocked {
 	if (time < self.attack_finished_single)
 		return;
+
 	self.attack_finished_single = time + 0.5;
 }
 
-/*
-==============
-func_secret_touch
-
-Prints messages
-================
-*/
-void func_secret_touch()
-{
+void(void) func_secret_touch {
 	if not(other.iscreature)
 		return;
+
 	if (self.attack_finished_single > time)
 		return;
 
 	self.attack_finished_single = time + 2;
-
-	if (self.message)
-	{
+	if (self.message) {
 		if (clienttype(other) == CLIENTTYPE_REAL) {
-			centerprint (other, self.message);
+			centerprint(other, self.message);
 			sound_play2(other, "misc/talk.wav");
 		}
 	}
-};
+}
 
-void func_secret_reset()
-{
-	if (self.spawnflags&SECRET_YES_SHOOT)
-	{
+void(void) func_secret_reset {
+	if (self.spawnflags & SECRET_YES_SHOOT) {
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
 	}
@@ -2070,45 +1810,37 @@ If a secret door has a targetname, it will only be opened by it's botton or trig
 3) base
 */
 
-void spawnfunc_func_door_secret()
-{
-	/*if (!self.deathtype) // map makers can override this
-		self.deathtype = " got in the way";*/
-
+void(void) spawnfunc_func_door_secret {
 	if (!self.dmg)
 		self.dmg = 2;
 
-	// Magic formula...
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
 	self.classname = "door";
 	if not(func_moving_brush_init())
 		return;
-	self.effects |= EF_LOWPRECISION;
 
+	self.effects |= EF_LOWPRECISION;
 	self.touch = func_secret_touch;
 	self.blocked = func_secret_blocked;
 	self.speed = 50;
 	self.use = func_door_secret_use;
-	IFTARGETED
-	{
-	}
-	else
+	IFTARGETED {
+	} else
 		self.spawnflags |= SECRET_YES_SHOOT;
 
-	if(self.spawnflags&SECRET_YES_SHOOT)
-	{
+	if (self.spawnflags & SECRET_YES_SHOOT) {
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
 		self.event_damage = func_door_secret_use;
 	}
 	self.oldorigin = self.origin;
 	if (!self.wait)
-		self.wait = 5;		// 5 seconds before closing
+		self.wait = 5; // 5 seconds before closing
 
 	self.reset = func_secret_reset;
 	func_secret_reset();
-};
+}
 
 /*QUAKED spawnfunc_func_fourier (0 .5 .8) ?
 Brush model that moves in a pattern of added up sine waves, can be used e.g. for circular motions.
@@ -2121,54 +1853,47 @@ dmg: Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime: See above.
 */
 
-void func_fourier_controller_think()
-{
-	local vector v;
+void(void) func_fourier_controller_think {
+	vector v;
 	float n, i, t;
-
 	self.nextthink = time + 0.1;
-
 	n = floor((tokenize_console(self.owner.netname)) / 5);
 	t = self.nextthink * self.owner.cnt + self.owner.phase * 360;
-
 	v = self.owner.destvec;
-
-	for(i = 0; i < n; ++i)
-	{
+	for (i = 0; i < n; ++i) {
 		makevectors((t * stof(argv(i*5)) + stof(argv(i*5+1)) * 360) * '0 1 0');
 		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward_y;
 	}
-
 	// * 10 so it will arrive in 0.1 sec
 	self.owner.velocity = (v - self.owner.origin) * 10;
-};
+}
 
-void spawnfunc_func_fourier()
-{
-	local entity controller;
-	if (self.noise != "")
-	{
+void(void) spawnfunc_func_fourier {
+	entity controller;
+	if (self.noise != "") {
 		precache_sound(self.noise);
 		sound_to(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
 	}
-
 	if (!self.speed)
 		self.speed = 4;
+
 	if (!self.height)
 		self.height = 32;
+
 	self.destvec = self.origin;
 	self.cnt = 360 / self.speed;
-
 	self.blocked = func_generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if (self.dmg & (!self.message))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
 
-	if(self.netname == "")
+	if (self.dmg && (!self.message2))
+		self.message2 = "was squished by";
+
+	if (self.dmg && (!self.dmgtime))
+		self.dmgtime = 0.25;
+
+	self.dmgtime2 = time;
+	if (self.netname == "")
 		self.netname = "1 0 0 0 1";
 
 	if not(func_moving_brush_init())
@@ -2182,12 +1907,10 @@ void spawnfunc_func_fourier()
 	controller.think = func_fourier_controller_think;
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
-
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
-
 	// TODO make a reset function for this one
-};
+}
 
 // reusing some fields havocbots declared
 .entity wp00, wp01, wp02, wp03;
@@ -2195,84 +1918,70 @@ void spawnfunc_func_fourier()
 .float targetfactor, target2factor, target3factor, target4factor;
 .vector targetnormal, target2normal, target3normal, target4normal;
 
-vector func_vectormamamam_origin(entity o, float t)
-{
+vector(entity o, float t) func_vectormamamam_origin {
 	vector v, p;
 	float f;
 	entity e;
-
 	f = o.spawnflags;
 	v = '0 0 0';
-
 	e = o.wp00;
-	if(e)
-	{
+	if (e) {
 		p = e.origin + t * e.velocity;
-		if(f & 1)
+		if (f & 1)
 			v = v + (p * o.targetnormal) * o.targetnormal * o.targetfactor;
 		else
 			v = v + (p - (p * o.targetnormal) * o.targetnormal) * o.targetfactor;
 	}
-
 	e = o.wp01;
-	if(e)
-	{
+	if (e) {
 		p = e.origin + t * e.velocity;
-		if(f & 2)
+		if (f & 2)
 			v = v + (p * o.target2normal) * o.target2normal * o.target2factor;
 		else
 			v = v + (p - (p * o.target2normal) * o.target2normal) * o.target2factor;
 	}
-
 	e = o.wp02;
-	if(e)
-	{
+	if (e) {
 		p = e.origin + t * e.velocity;
-		if(f & 4)
+		if (f & 4)
 			v = v + (p * o.target3normal) * o.target3normal * o.target3factor;
 		else
 			v = v + (p - (p * o.target3normal) * o.target3normal) * o.target3factor;
 	}
-
 	e = o.wp03;
-	if(e)
-	{
+	if (e) {
 		p = e.origin + t * e.velocity;
-		if(f & 8)
+		if (f & 8)
 			v = v + (p * o.target4normal) * o.target4normal * o.target4factor;
 		else
 			v = v + (p - (p * o.target4normal) * o.target4normal) * o.target4factor;
 	}
-
 	return v;
 }
 
-void func_vectormamamam_controller_think()
-{
+void(void) func_vectormamamam_controller_think {
 	self.nextthink = time + 0.1;
 	self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
 }
 
-void func_vectormamamam_findtarget()
-{
-	if(self.target != "")
+void(void) func_vectormamamam_findtarget {
+	if (self.target != "")
 		self.wp00 = find(world, targetname, self.target);
 
-	if(self.target2 != "")
+	if (self.target2 != "")
 		self.wp01 = find(world, targetname, self.target2);
 
-	if(self.target3 != "")
+	if (self.target3 != "")
 		self.wp02 = find(world, targetname, self.target3);
 
-	if(self.target4 != "")
+	if (self.target4 != "")
 		self.wp03 = find(world, targetname, self.target4);
 
-	if(!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
+	if (!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
 		entity_abort("No reference entity found, so there is nothing to move. Aborting.");
 
 	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
-
-	local entity controller;
+	entity controller;
 	controller = spawn();
 	controller.classname = "func_vectormamamam_controller";
 	controller.owner = self;
@@ -2280,48 +1989,48 @@ void func_vectormamamam_findtarget()
 	controller.think = func_vectormamamam_controller_think;
 }
 
-void spawnfunc_func_vectormamamam()
-{
-	if (self.noise != "")
-	{
+void(void) spawnfunc_func_vectormamamam {
+	if (self.noise != "") {
 		precache_sound(self.noise);
 		sound_to(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
 	}
-
-	if(!self.targetfactor)
+	if (!self.targetfactor)
 		self.targetfactor = 1;
 
-	if(!self.target2factor)
+	if (!self.target2factor)
 		self.target2factor = 1;
 
-	if(!self.target3factor)
+	if (!self.target3factor)
 		self.target3factor = 1;
 
-	if(!self.target4factor)
+	if (!self.target4factor)
 		self.target4factor = 1;
 
-	if(vlen(self.targetnormal))
+	if (vlen(self.targetnormal))
 		self.targetnormal = normalize(self.targetnormal);
 
-	if(vlen(self.target2normal))
+	if (vlen(self.target2normal))
 		self.target2normal = normalize(self.target2normal);
 
-	if(vlen(self.target3normal))
+	if (vlen(self.target3normal))
 		self.target3normal = normalize(self.target3normal);
 
-	if(vlen(self.target4normal))
+	if (vlen(self.target4normal))
 		self.target4normal = normalize(self.target4normal);
 
 	self.blocked = func_generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if (self.dmg & (!self.message))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+
+    if (self.dmg && (!self.message2))
 		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
+
+	if (self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
+
 	self.dmgtime2 = time;
 
-	if(self.netname == "")
+	if (self.netname == "")
 		self.netname = "1 0 0 0 1";
 
 	if not(func_moving_brush_init())
@@ -2330,9 +2039,33 @@ void spawnfunc_func_vectormamamam()
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
-
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
-
 	entity_initialize(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
+}
+
+void func_moveentity_think() {
+	vector v = self.enemy.origin;
+	float f = self.speed * frametime;
+	v_x = approach(v_x, self.origin_x, f);
+	v_y = approach(v_y, self.origin_y, f);
+	v_z = approach(v_z, self.origin_z, f);
+	setorigin(self.enemy, v);
+	if (v == self.origin)
+		return;
+
+	self.nextthink = time;
+}
+
+void func_moveentity_use() {
+	self.enemy = find(world, targetname, self.target);
+	if not(self.enemy)
+		return;
+
+	self.think();
+}
+
+void spawnfunc_func_moveentity() {
+	self.use = func_moveentity_use;
+	self.think = func_moveentity_think;
 }
