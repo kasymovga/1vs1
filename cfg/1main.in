@@ -1,18 +1,11 @@
 alias rereadcvars "sv_cmd rereadcvars"
-set sv_maxconnects_per_address 0
 alias _fs_rescan_alias_disable "unalias fs_rescan"
 alias _fs_rescan_alias_enable "alias fs_rescan \"_fs_rescan_alias_disable; fs_rescan; menu_cmd dlc_reload; sv_cmd dlc_reload; _g_maplist_source 0; _fs_rescan_alias_enable\""
 _fs_rescan_alias_enable
 alias cvardeprecated "echo \"$1 is deprecated, use $2 instead!\""
 alias cvarremoved "unset $1; alias $1 \"echo \\\"$1 was removed\\\"\""
-seta cl_simpleitems 0 "Simple items"
-seta cl_oldnexmodel 0 "Old nex model"
-seta cl_brightskins 0 "Bright skins for player models"
 set g_rexuizversion 2.5.2
 set g_nexuizversion 2.5.2
-gameversion 20000
-gameversion_min 20000
-gameversion_max 20699
 alias nospectators "sv_cmd nospectators"
 alias cointoss "sv_cmd cointoss"
 alias bsp "ls maps/*.bsp"
@@ -21,46 +14,24 @@ alias gotomap "sv_cmd gotomap \"$1\""
 // server settings
 hostname "Rexuiz $g_rexuizversion Server"
 set sv_mapchange_delay 5
-set minplayers 0 "number of players playing at the same time (if not enough real players are there the remaining slots are filled with bots)"
 // restart server if all players hit "ready"-button
 set sv_ready_restart 0 "if set to 1 allow a map to be restarted once all players pressed the \"ready\" button'"
-set sv_ready_restart_after_countdown 0	"if set to 1 the players and map items are reset after the countdown ended, otherwise they're reset already at the beginning of the countdown"
-set sv_ready_restart_repeatable 0	"allows the players to restart the game as often as needed"
-set g_maxplayers 0	"maximum number of players allowed to play at the same time, set to 0 to allow all players to join the game"
-set g_maxplayers_spectator_blocktime 5	"if the players voted for the \"nospectators\" command, this setting defines the number of seconds a observer/spectator has time to join the game before he gets kicked"
+set sv_ready_restart_after_countdown 0 "if set to 1 the players and map items are reset after the countdown ended, otherwise they're reset already at the beginning of the countdown"
+set sv_ready_restart_repeatable 0 "allows the players to restart the game as often as needed"
+set g_maxplayers_spectator_blocktime 5 "if the players voted for the \"nospectators\" command, this setting defines the number of seconds a observer/spectator has time to join the game before he gets kicked"
 alias sv_restart "say \"Server will restart at the end of the match, you will all be reconnected automatically. $* \"; quit_and_redirect self"
-// aliases:
-alias +attack2 +button3
-alias -attack2 -button3
-alias +zoom +button4
-alias -zoom -button4
-alias +crouch +button5
-alias -crouch -button5
-alias spec "cmd spectate"
-alias lsmaps "cmd lsmaps" // lists all maps on server (for vmap, suggestmap)
-set nextmap ""	"override the maplist when switching to the next map"
-set lastlevel ""
-set quit_when_empty 0	"set to 1, then the server exits when the next level would start but is empty"
-set quit_and_redirect ""	"set to an IP to redirect all players at the end of the match to another server. Set to \"self\" to let all players reconnect at the end of the match (use it to make seamless engine updates)"
+set nextmap "" "override the maplist when switching to the next map"
+set quit_when_empty 0 "set to 1, then the server exits when the next level would start but is empty"
+set quit_and_redirect "" "set to an IP to redirect all players at the end of the match to another server. Set to \"self\" to let all players reconnect at the end of the match (use it to make seamless engine updates)"
 set sv_motd ""
-set g_waypoints_for_items 1	"make waypoints out of items, values: 0 = never, 1 = unless the mapper prevents it by worldspawn.spawnflags & 1, 2 = always"
-seta g_maplist_votable 6 "number of maps that are shown in the map voting at the end of a match"
-seta g_maplist_votable_keeptwotime 15
-seta g_maplist_votable_timeout 30	"timeout for the map voting; must be below 50 seconds!"
-seta g_maplist_votable_suggestions 2
-seta g_maplist_votable_suggestions_override_mostrecent 0
-seta g_maplist_votable_nodetail 1	"nodetail only shows total count instead of all vote counts per map, so votes don't influence others that much"
-seta g_maplist_votable_abstain 0	"when 1, you can abstain from your vote"
-alias suggestmap "cmd suggestmap $1"
-alias qc_cmd	"sv_cmd $*" // menu QC will override this to menu_cmd
-alias adminmsg	"sv_cmd adminmsg $*"
-alias teamstatus	"cmd teamstatus; sv_cmd teamstatus" // yes, it is broken on listen servers that way, but well, who cares :P
-alias printstats	"sv_cmd printstats" // print status on demand
-alias g_maplist_add	"qc_cmd maplist add $*"
-alias g_maplist_remove	"qc_cmd maplist remove $*"
-alias g_maplist_putfirst	"qc_cmd maplist remove $* ; qc_cmd maplist add $*"
-alias g_maplist_shufflenow	"qc_cmd maplist shuffle"
-alias g_maplist_cleanup	"qc_cmd maplist cleanup" // removes maps that don't exist from the map list
+alias qc_cmd "sv_cmd $*" // menu QC will override this to menu_cmd
+alias adminmsg "sv_cmd adminmsg $*"
+alias printstats "sv_cmd printstats" // print status on demand
+alias g_maplist_add "qc_cmd maplist add $*"
+alias g_maplist_remove "qc_cmd maplist remove $*"
+alias g_maplist_putfirst "qc_cmd maplist remove $* ; qc_cmd maplist add $*"
+alias g_maplist_shufflenow "qc_cmd maplist shuffle"
+alias g_maplist_cleanup "qc_cmd maplist cleanup" // removes maps that don't exist from the map list
 alias addfav "qc_cmd addtolist net_slist_favorites $*"
 alias addvote "qc_cmd addtolist sv_vote_commands $*"
 set settemp_list 0
@@ -72,21 +43,18 @@ alias _settemp_restore_1 "$1 \"${$2}\"; _settemp_restore_${3- asis}"
 // force fog for people who turn it off in game (set this to like 5 if you suspect people are "cheating" that way)
 set sv_foginterval 0
 set sv_intermission_cdtrack ""
-// maxidle (in seconds): kick players idle for more than that amount of time
-set sv_maxidle 0
-// when sv_maxidle is not 0, assume spectators are idle too
-set sv_maxidle_spectatorsareidle 0
+set sv_maxidle 0 "maxidle (in seconds): kick players idle for more than that amount of time"
+set sv_maxidle_forcespec 120  "maxidle (in seconds): move to spectators players idle for more than that amount of time"
 alias allready "sv_cmd allready"
-set g_maplist_allow_hidden 0		"allow hidden maps to be, e.g., voted for and in the maplist"
-set g_maplist_allow_frustrating 0	"allow impossible maps to be, e.g., voted for and in the maplist (if set to 2, ONLY impossible maps are allowed)"
-set g_full_getstatus_responses 0	"this currently breaks qstat"
-seta sv_gentle 0	"force gentle mode for everyone, also remove references to acts of killing from the messages"
+set g_maplist_allow_hidden 0 "allow hidden maps to be, e.g., voted for and in the maplist"
+set g_maplist_allow_frustrating 0 "allow impossible maps to be, e.g., voted for and in the maplist (if set to 2, ONLY impossible maps are allowed)"
+set g_full_getstatus_responses 0 "this currently breaks qstat"
+seta sv_gentle 0 "force gentle mode for everyone, also remove references to acts of killing from the messages"
 alias mute "prvm_edictset server $1 muted 1" // I am lazy and not making an actual command of this
 alias unmute "prvm_edictset server $1 muted 0" // dito
 set sv_loddistance1 1024
 set sv_loddistance2 4096
 set g_mapinfo_settemp_acl "+*" "ACL for mapinfo setting cvars"
-// hooks
 alias _sv_hook_gamestart "set _sv_hook_gametype $1; _sv_hook_gamestart_stage2"
 alias _sv_hook_gamestart_stage2 "sv_hook_gamestart_all; sv_hook_gamestart_${_sv_hook_gametype}"
 alias sv_hook_gamestart_all
@@ -103,16 +71,5 @@ alias sv_hook_gamestart_nexball
 alias sv_hook_gamestart_cts
 alias sv_hook_gamerestart
 alias sv_hook_gameend
-set g_triggerimpulse_accel_power 1 "trigger_impulse accelerator power (applied BEFORE the multiplier)"
-set g_triggerimpulse_accel_multiplier 1 "trigger_impulse accelerator multiplier (applied AFTER the power)"
-set g_triggerimpulse_directional_multiplier 1 "trigger_impulse directional field multiplier"
-set g_triggerimpulse_radial_multiplier 1 "trigger_impulse radial field multiplier"
-set g_balance_firetransfer_time 0.9
-set g_balance_firetransfer_damage 0.8
-set g_throughfloor_damage 1
-set g_throughfloor_force 1
-set g_balance_falldamage_deadminspeed 150
-set g_balance_falldamage_minspeed 1000
-set g_balance_falldamage_factor 0.025
-set g_balance_falldamage_maxdamage 25
 set sv_clientversion_hidden 0
+set sv_maxconnects_per_address 0

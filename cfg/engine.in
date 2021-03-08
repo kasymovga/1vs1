@@ -131,8 +131,8 @@ set g_cdtracks_remaplist "digital-pursuit breakdown-easy brainsukker chaos-fog i
 set g_cdtracks_dontusebydefault "digital-pursuit thunder brokenlight" "list used by mapinfo system to automatically assign cdtracks - must be a subset of g_cdtracks_remaplist"
 cd remap $g_cdtracks_remaplist
 sv_allowdownloads_inarchive 1 // for csprogs.dat
-seta sv_status_privacy 1	"hide IP addresses from \"status\" replies shown to clients"
-sv_status_show_qcstatus 1	"Rexuiz uses this field instead of frags"
+seta sv_status_privacy 1 "hide IP addresses from \"status\" replies shown to clients"
+sv_status_show_qcstatus 1 "Rexuiz uses this field instead of frags"
 rcon_secure 1
 set serverconfig server.cfg
 alias startmap_dm "set _sv_init 0; map _init/_init; exec $serverconfig; set _sv_init 1; map _init/_init"
@@ -142,3 +142,8 @@ integration_discord_client_id 778619384431116328
 cl_stairsmoothspeed 200
 mod_bsp_portalize 0
 sv_gameplayfix_delayprojectiles 0
+collision_brush_buffer_extra_multiplier 4
+collision_triangle_directional 1
+gameversion 20000
+gameversion_min 20000
+gameversion_max 20699
