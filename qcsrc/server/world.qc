@@ -820,8 +820,8 @@ void(void) world_creature_frame {
 				self.air_finished = time + 12;
 			}
 			// check for falling damage
-			if (vlen(self.velocity) < vlen(self.oldvelocity)) { // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-				dm = vlen(self.oldvelocity - self.velocity);
+			dm = vlen(self.oldvelocity) - vlen(self.velocity);
+			if (dm > 0) { // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
 					dm = (dm - g_balance_falldamage_deadminspeed) * g_balance_falldamage_factor;
 				else
