@@ -625,9 +625,8 @@ void() client_initialize {
 }
 
 void client_cvars_request() {
-	stuffcmd(self, "sendcvar cl_retard\n"
+	stuffcmd(self,
 			"sendcvar cl_autoswitch\n"
-			"sendcvar cl_saboteur\n"
 			"sendcvar cl_playerdetailreduction\n"
 			"sendcvar scr_centertime\n"
 			"sendcvar cl_gunalpha\n"
@@ -662,17 +661,9 @@ void() client_cvars_parse {
 	string s = strcat1(argv(1));
 	string val = strcat1(argv(2));
 	float f;
-	if (s == "cl_retard") {
-		if (stof(val)) {
-			self.netname = retardplayername;
-			self.retard = 1;
-		}
-	} else if (s == "cl_autoswitch")
+	if (s == "cl_autoswitch")
 		self.autoswitch = stof(val);
-	else if (s == "cl_saboteur") {
-		if (stof(val))
-			self.saboteur = 1;
-	} else if (s == "cl_playerdetailreduction")
+	else if (s == "cl_playerdetailreduction")
 		self.cvar_cl_playerdetailreduction = stof(val);
 	else if (s == "scr_centertime")
 		self.cvar_scr_centertime = stof(val);
