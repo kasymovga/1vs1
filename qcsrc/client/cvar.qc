@@ -1,6 +1,7 @@
 var void() read_cvars;
 
 float(string varname, float setflags, float unsetflags) cvar_altertype = #505;
+float(string varname) cvar_type = #495;
 
 var void(string varname, string val) registercvar_save;
 
@@ -58,7 +59,8 @@ void registercvar_save_awful(string varname, string val) {
 }
 
 void registercvar_save_rm(string varname, string val) {
-	cvar_altertype(varname, 2, 0);
+	if not(cvar_type(varname) & 8) //engine cvar
+		cvar_altertype(varname, 2, 0);
 }
 
 float autocvar_autocvar_check;
