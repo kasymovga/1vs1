@@ -2044,7 +2044,7 @@ void(void) spawnfunc_func_vectormamamam {
 	entity_initialize(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }
 
-void func_moveentity_think() {
+void(void) func_moveentity_think {
 	vector v = self.enemy.origin;
 	float f = self.speed * frametime;
 	v_x = approach(v_x, self.origin_x, f);
@@ -2057,7 +2057,7 @@ void func_moveentity_think() {
 	self.nextthink = time;
 }
 
-void func_moveentity_use() {
+void(void) func_moveentity_use {
 	self.enemy = find(world, targetname, self.target);
 	if not(self.enemy)
 		return;
@@ -2065,7 +2065,7 @@ void func_moveentity_use() {
 	self.think();
 }
 
-void spawnfunc_func_moveentity() {
+void(void) spawnfunc_func_moveentity {
 	self.use = func_moveentity_use;
 	self.think = func_moveentity_think;
 }
