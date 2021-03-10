@@ -221,7 +221,7 @@ void(void) physics_move {
 					physics_check_ground_hook();
 				}
 			}
-			if (trace1_plane_normal_z == 0) {
+			if (trace1_plane_normal_z < 0.01 && trace1_plane_normal_z > -0.01) {
 				// may be a step or wall, try stepping up
 				// first move forward at a higher level
 				currentorigin2 = self.origin;
@@ -242,7 +242,7 @@ void(void) physics_move {
 					trace3_fraction = trace_fraction;
 					trace3_plane_normal = trace_plane_normal;
 					// accept the new trace if it made some progress
-					if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.0078125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.0078125) {
+					if (fabs(trace3_endpos_x - trace1_endpos_x) >= 0.0078125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.0078125) {
 						trace1_endpos = trace2_endpos;
 						trace1_fraction = trace2_fraction;
 						trace1_plane_normal = trace2_plane_normal;
