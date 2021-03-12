@@ -92,7 +92,6 @@ void(float nodownload) menu_dlc_reload {
 		head = str_car(tail);
 		tail = str_cdr(tail);
 		if (head != "") {
-			print("DLC: ", head, "\n");
 			if not(dlc_load(head, nodownload)) {
 				if not(nodownload)
 					print("Downloading missing pack: ", head, "\n");
