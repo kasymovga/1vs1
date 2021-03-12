@@ -338,7 +338,7 @@ void dlc_init() {
 		if (s != "")
 			dlc_require(s);
 	}
-	string dlc_server_only = strcat(cvar_string("sv_dlc_maps"), " ", cvar_string("sv_dlc_server_only"));
+	string dlc_server_only = cvar_string("sv_dlc_server_only");
 	while (dlc_server_only != "") {
 		s = str_car(dlc_server_only);
 		dlc_server_only = str_cdr(dlc_server_only);
