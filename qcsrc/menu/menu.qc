@@ -77,7 +77,7 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 }
 
 void(float nodownload) menu_dlc_reload {
-	string s = DLC_BASE_LIST " supershotgun zapper_v2";
+	string s = strcat(DLC_BASE_LIST " ", cvar_defstring("menu_dlc_extra"));
 	if (cvar("cl_brightskins")) {
 		s = strcat(s, " brightskins");
 	}
@@ -92,6 +92,7 @@ void(float nodownload) menu_dlc_reload {
 		head = str_car(tail);
 		tail = str_cdr(tail);
 		if (head != "") {
+			print("DLC: ", head, "\n");
 			if not(dlc_load(head, nodownload)) {
 				if not(nodownload)
 					print("Downloading missing pack: ", head, "\n");
