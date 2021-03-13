@@ -105,6 +105,6 @@ void fillNexuizVideoSettingsTab(entity me)
 			e.configureNexuizTextSliderValues(e);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "vid_conwidth $menu_vid_conwidth; vid_conheight $menu_vid_conheight; vid_restart", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd ui_con_width_height_set", COMMANDBUTTON_APPLY));
 }
 #endif

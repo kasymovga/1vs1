@@ -17,5 +17,3 @@ set menu_cdtrack brokenlight
 alias menu_showteamselect "menu_cmd directmenu TeamSelect"
 alias menu_sync "menu_cmd sync"
 set _menu_alpha "" // will be set by menu QC to the current fading of the menu, can be used by CSQC to fade items
-set menu_vid_conheight 600
-set menu_vid_conwidth 800

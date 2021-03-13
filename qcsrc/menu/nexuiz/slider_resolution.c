@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(NexuizResolutionSlider) EXTENDS(NexuizTextSlider)
 	METHOD(NexuizResolutionSlider, configureNexuizResolutionSlider, void(entity))
-	METHOD(NexuizResolutionSlider, addResolution, void(entity, float, float, float, float))
+	METHOD(NexuizResolutionSlider, addResolution, void(entity, float, float))
 	METHOD(NexuizResolutionSlider, loadCvars, void(entity))
 	METHOD(NexuizResolutionSlider, saveCvars, void(entity))
 ENDCLASS(NexuizResolutionSlider)
@@ -16,7 +16,7 @@ entity makeNexuizResolutionSlider()
 	me.configureNexuizResolutionSlider(me);
 	return me;
 }
-void addResolutionNexuizResolutionSlider(entity me, float w, float h, float cw, float ch)
+void addResolutionNexuizResolutionSlider(entity me, float w, float h)
 {
 	float f;
 	f = max(cw / w, ch / h);
@@ -25,7 +25,7 @@ void addResolutionNexuizResolutionSlider(entity me, float w, float h, float cw, 
 		cw = rint(cw / f);
 		ch = rint(ch / f);
 	}
-	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(cw), " ", ftos(ch))));
+	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
 void configureNexuizResolutionSliderNexuizResolutionSlider(entity me)
@@ -51,19 +51,19 @@ void configureNexuizResolutionSliderNexuizResolutionSlider(entity me)
 		c_y = rint(c_x * r_y / r_x);
 		if(c_y >= 600)
 		{
-			me.addResolution(me, r_x, r_y, c_x, c_y);
+			me.addResolution(me, r_x, r_y);
 			continue;
 		}
 		c_y = 600;
 		c_x = rint(c_y * r_x / r_y);
-		me.addResolution(me, r_x, r_y, c_x, c_y);
+		me.addResolution(me, r_x, r_y);
 	}
 
 	me.configureNexuizTextSliderValues(me);
 }
 void loadCvarsNexuizResolutionSlider(entity me)
 {
-	me.setValueFromIdentifier(me, strcat(cvar_string("vid_width"), " ", cvar_string("vid_height"), " ", cvar_string("menu_vid_conwidth"), " ", cvar_string("menu_vid_conheight")));
+	me.setValueFromIdentifier(me, strcat(cvar_string("vid_width"), " ", cvar_string("vid_height")));
 }
 void saveCvarsNexuizResolutionSlider(entity me)
 {
@@ -72,8 +72,6 @@ void saveCvarsNexuizResolutionSlider(entity me)
 		tokenize_console(me.getIdentifier(me));
 		cvar_set("vid_width", argv(0));
 		cvar_set("vid_height", argv(1));
-		cvar_set("menu_vid_conwidth", argv(2));
-		cvar_set("menu_vid_conheight", argv(3));
 	}
 }
 #endif
