@@ -103,6 +103,9 @@ void(float nodownload) menu_dlc_reload {
 void() m_init =
 {
 	cvar_set("_menu_alpha", "0");
+	if (cvar("sys_first_run"))
+		cvar_set("vid_desktopfullscreen", "1");
+
 	string s;
 	float i;
 	URI_GET_SERVERLIST = uri_register_handler(ServerList_URI_Get_Callback);
