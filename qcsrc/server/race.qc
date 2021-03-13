@@ -550,7 +550,7 @@ void(void) race_checkpoint_passed {
 }
 
 void(void) race_trigger_checkpoint_touch {
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	race_checkpoint_passed();
 }
 
@@ -638,7 +638,7 @@ void(void) spawnfunc_race_trigger_checkpoint {
 		remove(self);
 		return;
 	}
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.use = race_trigger_checkpoint_use;
 	if not(self.spawnflags & 1)
 		self.touch = race_trigger_checkpoint_touch;
@@ -822,7 +822,7 @@ void(entity pl, float penalty, string reason) race_impose_penalty_time {
 }
 
 void(void) race_trigger_penalty_touch {
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	if (other.race_lastpenalty != self) {
 		other.race_lastpenalty = self;
 		race_impose_penalty_time(other, self.race_penalty, self.race_penalty_reason);
@@ -834,7 +834,7 @@ void(void) race_trigger_penalty_use {
 }
 
 void(void) spawnfunc_race_trigger_penalty {
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.use = race_trigger_penalty_use;
 	if not(self.spawnflags & 1)
 		self.touch = race_trigger_penalty_touch;

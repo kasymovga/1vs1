@@ -4,5 +4,5 @@ float trigger_tracebox_hits_hurt(vector start, vector mi, vector ma, vector end)
 void(void) trigger_solid_brush_init;
 float(void) trigger_exact_hit;
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH if not(trigger_exact_hit()) return
-#define EXACTTRIGGER_INIT  trigger_solid_brush_init(); self.solid = SOLID_TRIGGER
+#define TRIGGER_EXACT_TOUCH if not(trigger_exact_hit()) return
+#define TRIGGER_EXACT_INIT  trigger_solid_brush_init(); self.solid = SOLID_TRIGGER

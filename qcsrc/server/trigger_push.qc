@@ -117,7 +117,7 @@ void(void) trigger_push_touch {
 		if ((self.spawnflags & 4 == 0) == (self.team != other.team))
 			return;
 
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	if(self.target)
 		self.movedir = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
 
@@ -225,7 +225,7 @@ void(void) spawnfunc_trigger_push {
 	if (self.speed)
 		entity_movedir_setup();
 
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.use = trigger_push_use;
 	self.touch = trigger_push_touch;
 	// normal push setup
@@ -284,7 +284,7 @@ void(void) trigger_push_velocity_touch {
 }
 
 void(void) spawnfunc_trigger_push_velocity {
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.touch = trigger_push_velocity_touch;
 	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }

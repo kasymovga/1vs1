@@ -128,7 +128,7 @@ void(void) teleport_touch {
 		if((self.spawnflags & 4 == 0) == (self.team != other.team))
 			return;
 
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	if(other.classname == "player")
 		hook_remove(other);
 
@@ -212,7 +212,7 @@ void(void) teleport_init {
 
 void(void) teleport_setup {
 	self.angles = '0 0 0';
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.use = teleport_use;
 	// this must be called to spawn the teleport waypoints for bots
 	entity_initialize(self, teleport_findtarget, INITPRIO_FINDTARGET);

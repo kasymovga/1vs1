@@ -1056,7 +1056,7 @@ void target_items_use (void)
 
 	if(substring(activator.classname, 7, 0) == "dropped")
 	{
-		EXACTTRIGGER_TOUCH;
+		TRIGGER_EXACT_TOUCH;
 		remove(activator);
 		return;
 	}
@@ -1065,7 +1065,7 @@ void target_items_use (void)
 		return;
 	if(activator.deadflag != DEAD_NO)
 		return;
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 
 	entity e;
 	for(e = world; (e = findentity(e, enemy, activator)); )

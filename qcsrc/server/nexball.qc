@@ -478,7 +478,7 @@ void(void) nexball_goal_touch {
 	if ((!ball.pusher && self.team != GOAL_OUT) || ball.cnt)
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	if(nexball_teams == 2)
 		otherteam = nexball_other_team(ball.team);
 
@@ -713,7 +713,7 @@ void(void) nexball_spawn_goal {
 		remove(self);
 		return;
 	}
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.classname = "nexball_goal";
 	if (!self.noise)
 		self.noise = "ctf/respawn.wav";

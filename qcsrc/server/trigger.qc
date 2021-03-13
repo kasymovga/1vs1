@@ -1,44 +1,41 @@
 vector trigger_exact_hit_mins;
 vector trigger_exact_hit_maxs;
 float(void) trigger_exact_hit_recurse {
-    float s;
-    entity se;
-    float f;
+	float s;
+	entity se;
+	float f;
+	trace_box('0 0 0', trigger_exact_hit_mins, trigger_exact_hit_maxs, '0 0 0', MOVE_NORMAL, other);
+	if not(trace_ent)
+		return 0;
 
-    trace_box('0 0 0', trigger_exact_hit_mins, trigger_exact_hit_maxs, '0 0 0', MOVE_NORMAL, other);
-    if not(trace_ent)
-        return 0;
-    if (trace_ent == self)
-        return 1;
+	if (trace_ent == self)
+		return 1;
 
-    se = trace_ent;
-    s = se.solid;
-    se.solid = SOLID_NOT;
-    f = trigger_exact_hit_recurse();
-    se.solid = s;
-
-    return f;
+	se = trace_ent;
+	s = se.solid;
+	se.solid = SOLID_NOT;
+	f = trigger_exact_hit_recurse();
+	se.solid = s;
+	return f;
 }
 
 float(void) trigger_exact_hit {
-    float f, s;
+	float f, s;
+	if not(self.modelindex)
+		return 1;
 
-    if not(self.modelindex)
-        return 1;
-
-    s = self.solid;
-    self.solid = SOLID_BSP;
-    trigger_exact_hit_mins = other.absmin;
-    trigger_exact_hit_maxs = other.absmax;
-    f = trigger_exact_hit_recurse();
-    self.solid = s;
-
-    return f;
+	s = self.solid;
+	self.solid = SOLID_BSP;
+	trigger_exact_hit_mins = other.absmin;
+	trigger_exact_hit_maxs = other.absmax;
+	f = trigger_exact_hit_recurse();
+	self.solid = s;
+	return f;
 }
 
 void(void) trigger_solid_brush_init {
-// trigger angles are used for one-way touches.  An angle of 0 is assumed
-// to mean no restrictions, so use a yaw of 360 instead.
+	// trigger angles are used for one-way touches.  An angle of 0 is assumed
+	// to mean no restrictions, so use a yaw of 360 instead.
 	if (self.movedir == '0 0 0')
 	if (self.angles != '0 0 0')
 		entity_movedir_setup();
@@ -50,77 +47,72 @@ void(void) trigger_solid_brush_init {
 	self.model = "";
 }
 
-void trigger_dont_use_targets() { }
+void() trigger_dont_use_targets { }
 
-void trigger_delay_think()
-{
+void(void) trigger_delay_think {
 	activator = self.enemy;
 	trigger_use_targets ();
 	remove(self);
-};
+}
 
-float foreachtarget_callid;
+float trigger_foreachtarget_callid;
 .float targethandled;
 
-void trigger_for_each_target_recurse(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) {
-    float i;
-    string targname;
-    entity targ;
+void(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) trigger_for_each_target_recurse {
+	float i;
+	string targname;
+	entity targ;
+	if (trigger_foreachtarget_callid < 1)
+		trigger_foreachtarget_callid = 1;
 
-    if(foreachtarget_callid < 1)
-        foreachtarget_callid = 1;
+	for (i = 0; i < 4; ++i) {
+		switch (i) {
+			case 0: targname = s.target ; break;
+			case 1: targname = s.target2; break;
+			case 2: targname = s.target3; break;
+			case 3: targname = s.target4; break;
+		}
 
-    for(i = 0; i < 4; ++i) {
-        switch(i) {
-            case 0: targname = s.target ; break;
-            case 1: targname = s.target2; break;
-            case 2: targname = s.target3; break;
-            case 3: targname = s.target4; break;
-        }
+		if (targname != "") {
+			for (targ = world; (targ = find(targ, targetname, targname));)
+			if (targ && targ.targethandled != trigger_foreachtarget_callid) {
+				if (cback(targ, fdata, vdata, sdata, edata))
+					return;
 
-        if(targname != "") {
-            for(targ = world; (targ = find(targ, targetname, targname));)
-            if(targ && targ.targethandled != foreachtarget_callid) {
-                if(cback(targ, fdata, vdata, sdata, edata))
-                    return;
+				targ.targethandled = trigger_foreachtarget_callid;
 
-                targ.targethandled = foreachtarget_callid;
-
-                if(recursive)
-                    trigger_for_each_target_recurse(targ, cback, recursive, fdata, vdata, sdata, edata);
-            }
-        }
-    }
+				if (recursive)
+					trigger_for_each_target_recurse(targ, cback, recursive, fdata, vdata, sdata, edata);
+			}
+		}
+	}
 }
 
 void trigger_for_each_target(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) {
-	foreachtarget_callid++;
-    trigger_for_each_target_recurse(s, cback, recursive, fdata, vdata, sdata, edata);
+	trigger_foreachtarget_callid++;
+	trigger_for_each_target_recurse(s, cback, recursive, fdata, vdata, sdata, edata);
 }
 
-entity linktargets_ent;
-entity linktargets_first;
+entity trigger_linktargets_ent;
+entity trigger_linktargets_first;
 var .entity linktargets_fld;
-
 entity(entity ent, .entity fld, float recursive) trigger_link_targets {
-    linktargets_ent = world;
-    linktargets_first = world;
-    linktargets_fld = fld;
+	trigger_linktargets_ent = world;
+	trigger_linktargets_first = world;
+	linktargets_fld = fld;
+	trigger_for_each_target(ent, inline float(entity targ, float _f, vector _v, string _s, entity _e) {
+		if (trigger_linktargets_ent)
+			trigger_linktargets_ent.linktargets_fld = targ;
+		else
+			trigger_linktargets_first = targ;
 
-    trigger_for_each_target(ent, inline float(entity targ, float _f, vector _v, string _s, entity _e) {
-        if(linktargets_ent)
-            linktargets_ent.linktargets_fld = targ;
-        else
-            linktargets_first = targ;
+		trigger_linktargets_ent = targ;
+		return FALSE;
+	}, recursive, NULL, NULL, NULL, NULL);
+	if (trigger_linktargets_ent)
+		trigger_linktargets_ent.fld = world;
 
-        linktargets_ent = targ;
-        return FALSE;
-    }, recursive, NULL, NULL, NULL, NULL);
-
-    if(linktargets_ent)
-        linktargets_ent.fld = world;
-
-    return linktargets_first;
+	return trigger_linktargets_first;
 }
 
 /*
@@ -145,18 +137,15 @@ match (string)self.target and call their .use function
 
 .float sub_target_used;
 
-void trigger_use_targets_ex(float preventReuse)
-{
+void(float preventReuse) trigger_use_targets_ex {
 	entity t, stemp, otemp, act;
 	string s;
 	float i;
-
-//
-// check for a delay
-//
-	if (self.delay)
-	{
-	// create a temp object to fire at a later time
+	//
+	// check for a delay
+	//
+	if (self.delay) {
+		// create a temp object to fire at a later time
 		t = spawn();
 		t.classname = "DelayedUse";
 		t.nextthink = time + self.delay;
@@ -170,79 +159,64 @@ void trigger_use_targets_ex(float preventReuse)
 		t.target4 = self.target4;
 		return;
 	}
-
-
-//
-// print the message
-//
-	if (activator.classname == "player" && self.message != "")
-	{
-		if(clienttype(activator) == CLIENTTYPE_REAL)
-		{
+	//
+	// print the message
+	//
+	if (activator.classname == "player" && self.message != "") {
+		if (clienttype(activator) == CLIENTTYPE_REAL) {
 			centerprint (activator, self.message);
 			if (!self.noise)
 				sound_play2(activator, "misc/talk.wav");
 		}
 	}
-
-//
-// kill the killtagets
-//
+	//
+	// kill the killtagets
+	//
 	s = self.killtarget;
-	if (s != "")
-	{
-		for(t = world; (t = find(t, targetname, s)); )
+	if (s != "") {
+		for (t = world; (t = find(t, targetname, s)); )
 			remove(t);
 	}
-
-//
-// fire targets
-//
+	//
+	// fire targets
+	//
 	act = activator;
 	stemp = self;
 	otemp = other;
-
-	for(i = 0; i < 4; ++i)
-	{
-		switch(i)
-		{
-			default:
-			case 0: s = stemp.target; break;
-			case 1: s = stemp.target2; break;
-			case 2: s = stemp.target3; break;
-			case 3: s = stemp.target4; break;
+	for (i = 0; i < 4; ++i) {
+		switch (i) {
+		default:
+		case 0: s = stemp.target; break;
+		case 1: s = stemp.target2; break;
+		case 2: s = stemp.target3; break;
+		case 3: s = stemp.target4; break;
 		}
-		if (s != "")
-		{
-			for(t = world; (t = find(t, targetname, s)); )
-			if(t.use && (t.sub_target_used != time || !preventReuse))
-			{
+		if (s != "") {
+			for (t = world; (t = find(t, targetname, s)); )
+			if (t.use && (t.sub_target_used != time || !preventReuse)) {
 				//print(stemp.classname, " ", stemp.targetname, " -> ", t.classname, " ", t.targetname, "\n");
 				self = t;
 				other = otemp;
 				activator = act;
 				self.use();
-				if(preventReuse) {
+				if (preventReuse) {
 					self.sub_target_used = time;
 				}
 			}
 		}
 	}
-
 	activator = act;
 	self = stemp;
 	other = otemp;
 }
 
 void(void) trigger_use_targets {
-    trigger_use_targets_ex(FALSE);
+	trigger_use_targets_ex(FALSE);
 }
 
 void trigger_use_targets_prevent_reuse() {
-    trigger_use_targets_ex(TRUE);
+	trigger_use_targets_ex(TRUE);
 }
-
-//=============================================================================
 
 float TRIGGER_SPAWNFLAG_NOMESSAGE = 1;
 float TRIGGER_SPAWNFLAG_NOTOUCH = 1;
@@ -250,15 +224,13 @@ float TRIGGER_SPAWNFLAG_NOCREATUREONLY = 2;
 float TRIGGER_SPAWNFLAG_PLAYERONLY = 4;
 
 // the wait time has passed, so set back up for another activation
-void trigger_multiple_wait()
-{
-	if (self.max_health)
-	{
+void(void) trigger_multiple_wait {
+	if (self.max_health) {
 		self.health = self.max_health;
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
-};
+}
 
 // the trigger was just touched/killed/used
 // self.enemy should be set to the activator so it can be held through a delay
@@ -296,8 +268,8 @@ void(void) trigger_multiple_touch {
 			if not(other.iscreature)
 				return;
 
-			if(self.team)
-			if(self.team == other.team)
+			if (self.team)
+			if (self.team == other.team)
 				return;
 		}
 		if (self.spawnflags & TRIGGER_SPAWNFLAG_PLAYERONLY)
@@ -313,19 +285,18 @@ void(void) trigger_multiple_touch {
 		if (v_forward * self.movedir < 0)
 			return;		// not facing the right way
 	}
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	self.enemy = other;
 	self.goalentity = other;
 	trigger_multiple_fire ();
 }
 
-void trigger_multiple_eventdamage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
+void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) trigger_multiple_eventdamage {
 	if (!self.takedamage)
 		return;
+
 	self.health = self.health - _damage;
-	if (self.health <= 0)
-	{
+	if (self.health <= 0) {
 		self.enemy = attacker;
 		self.goalentity = inflictor;
 		trigger_multiple_fire();
@@ -353,25 +324,19 @@ If "delay" is set, the trigger waits some time after activating before firing.
 If notouch is set, the trigger is only fired by other entities, not by touching.
 NOTOUCH has been obsoleted by spawnfunc_trigger_relay!
 sounds
-1)	secret
-2)	beep beep
-3)	large switch
+1) secret
+2) beep beep
+3) large switch
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_multiple()
-{
+void(void) spawnfunc_trigger_multiple {
 	self.reset = trigger_multiple_reset;
-	if (self.sounds == 1)
-	{
+	if (self.sounds == 1) {
 		self.noise = "misc/secret.wav";
-	}
-	else if (self.sounds == 2)
-	{
+	} else if (self.sounds == 2) {
 		self.noise = "misc/talk.wav";
-	}
-	else if (self.sounds == 3)
-	{
+	} else if (self.sounds == 3) {
 		self.noise = "misc/trigger1.wav";
 	}
 	if (self.noise != "")
@@ -380,30 +345,24 @@ void spawnfunc_trigger_multiple()
 	if (!self.wait)
 		self.wait = 0.2;
 	self.use = trigger_multiple_use;
-
-	EXACTTRIGGER_INIT;
-
+	TRIGGER_EXACT_INIT;
 	self.team_saved = self.team;
-
-	if (self.health)
-	{
+	if (self.health) {
 		if (self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH)
 			entity_abort("health and notouch don't make sense\n");
+
 		self.max_health = self.health;
 		self.event_damage = trigger_multiple_eventdamage;
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 		setorigin (self, self.origin);	// make sure it links into the world
-	}
-	else
-	{
-		if ( !(self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH) )
-		{
+	} else {
+		if (!(self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH)) {
 			self.touch = trigger_multiple_touch;
 			setorigin (self, self.origin);	// make sure it links into the world
 		}
 	}
-};
+}
 
 
 /*QUAKED spawnfunc_trigger_once (.5 .5 .5) ? notouch
@@ -413,63 +372,52 @@ If notouch is set, the trigger is only fired by other entities, not by touching.
 if "killtarget" is set, any objects that have a matching "target" will be removed when the trigger is fired.
 if "angle" is set, the trigger will only fire when someone is facing the direction of the angle.  Use "360" for an angle of 0.
 sounds
-1)	secret
-2)	beep beep
-3)	large switch
+1) secret
+2) beep beep
+3) large switch
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_once()
-{
+void(void) spawnfunc_trigger_once {
 	self.wait = -1;
 	spawnfunc_trigger_multiple();
-};
+}
 
 //=============================================================================
 
 /*QUAKED spawnfunc_trigger_relay (.5 .5 .5) (-8 -8 -8) (8 8 8)
 This fixed size trigger cannot be touched, it can only be fired by other events.  It can contain killtargets, targets, delays, and messages.
 */
-void spawnfunc_trigger_relay()
-{
+void(void) spawnfunc_trigger_relay {
 	self.use = trigger_use_targets;
 	self.reset = spawnfunc_trigger_relay; // this spawnfunc resets fully
-};
-
-void trigger_delay_use()
-{
-    self.think = trigger_use_targets;
-    self.nextthink = time + self.wait;
 }
 
-void trigger_delay_reset()
-{
+void(void) trigger_delay_use {
+	self.think = trigger_use_targets;
+	self.nextthink = time + self.wait;
+}
+
+void(void) trigger_delay_reset {
 	self.think = stdproc_nothing;
 }
 
-void spawnfunc_trigger_delay()
-{
-    if(!self.wait)
-        self.wait = 1;
+void(void) spawnfunc_trigger_delay {
+	if (!self.wait)
+		self.wait = 1;
 
-    self.use = trigger_delay_use;
-    self.reset = trigger_delay_reset;
+	self.use = trigger_delay_use;
+	self.reset = trigger_delay_reset;
 }
 
-//=============================================================================
-
-
-void trigger_counter_use()
-{
+void(void) trigger_counter_use {
 	self.count = self.count - 1;
 	if (self.count < 0)
 		return;
 
-	if (self.count != 0)
-	{
+	if (self.count != 0) {
 		if (activator.classname == "player"
-		&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0)
-		{
+				&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0) {
 			if (self.count >= 4)
 				centerprint (activator, "There are more to go...");
 			else if (self.count == 3)
@@ -481,16 +429,15 @@ void trigger_counter_use()
 		}
 		return;
 	}
-
 	if (activator.classname == "player"
 	&& (self.spawnflags & TRIGGER_SPAWNFLAG_NOMESSAGE) == 0)
 		centerprint(activator, "Sequence completed!");
+
 	self.enemy = activator;
 	trigger_multiple_fire ();
-};
+}
 
-void trigger_counter_reset()
-{
+void(void) trigger_counter_reset {
 	self.count = self.cnt;
 	trigger_multiple_reset();
 }
@@ -502,8 +449,7 @@ If nomessage is not set, t will print "1 more.. " etc when triggered and "sequen
 
 After the counter has been triggered "count" times (default 2), it will fire all of it's targets and remove itself.
 */
-void spawnfunc_trigger_counter()
-{
+void(void) spawnfunc_trigger_counter {
 	self.wait = -1;
 	if (!self.count)
 		self.count = 2;
@@ -511,37 +457,29 @@ void spawnfunc_trigger_counter()
 
 	self.use = trigger_counter_use;
 	self.reset = trigger_counter_reset;
-};
+}
 
 float g_trigger_hurt_interval;
 .float triggerhurttime;
-void trigger_hurt_touch()
-{
-	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
-	if (other.iscreature)
-	{
+void(void) trigger_hurt_touch {
+	// only do the TRIGGER_EXACT_TOUCH checks when really needed (saves some cpu)
+	if (other.iscreature) {
 		if (other.takedamage)
-		if (other.triggerhurttime < time)
-		{
-			EXACTTRIGGER_TOUCH;
+		if (other.triggerhurttime < time) {
+			TRIGGER_EXACT_TOUCH;
 			other.triggerhurttime = time + g_trigger_hurt_interval;
 			damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
-	}
-	else
-	{
-		if (!other.owner)
-		{
-			if (other.items & IT_KEY1 || other.items & IT_KEY2)	// reset flag
-			{
-				EXACTTRIGGER_TOUCH;
+	} else {
+		if (!other.owner) {
+			if (other.items & IT_KEY1 || other.items & IT_KEY2) {// reset flag
+				TRIGGER_EXACT_TOUCH;
 				other.pain_finished = min(other.pain_finished, time + 2);
 			}
 		}
 	}
-
 	return;
-};
+}
 
 /*QUAKED spawnfunc_trigger_hurt (.5 .5 .5) ?
 Any object touching this will be hurt
@@ -551,88 +489,68 @@ defalt dmg = 5
 .entity trigger_hurt_next;
 entity trigger_hurt_last;
 entity trigger_hurt_first;
-void spawnfunc_trigger_hurt()
-{
-	EXACTTRIGGER_INIT;
+void(void) spawnfunc_trigger_hurt {
+	TRIGGER_EXACT_INIT;
 	self.touch = trigger_hurt_touch;
 	if (!self.dmg)
 		self.dmg = 1000;
+
 	if (!self.message)
 		self.message = "was in the wrong place";
+
 	if (!self.message2)
 		self.message2 = "was thrown into a world of hurt by";
 
-	if(!trigger_hurt_first)
+	if (!trigger_hurt_first)
 		trigger_hurt_first = self;
-	if(trigger_hurt_last)
+
+	if (trigger_hurt_last)
 		trigger_hurt_last.trigger_hurt_next = self;
 
 	CVAR_CACHE(g_trigger_hurt_interval);
 	trigger_hurt_last = self;
-};
+}
 
-float trigger_tracebox_hits_hurt(vector start, vector mi, vector ma, vector end)
-{
+float(vector start, vector mi, vector ma, vector end) trigger_tracebox_hits_hurt {
 	entity th;
-
-	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
-		if(trace_box_hits_box(start, mi, ma, end, th.absmin, th.absmax))
+	for (th = trigger_hurt_first; th; th = th.trigger_hurt_next)
+		if (trace_box_hits_box(start, mi, ma, end, th.absmin, th.absmax))
 			return TRUE;
 
 	return FALSE;
 }
 
-//////////////////////////////////////////////////////////////
-//
-//
-//
-//Trigger heal --a04191b92fbd93aa67214ef7e72d6d2e
-//
-//////////////////////////////////////////////////////////////
-
 .float triggerhealtime;
-void trigger_heal_touch()
-{
-	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
-	if (other.iscreature)
-	{
+void(void) trigger_heal_touch {
+	// only do the TRIGGER_EXACT_TOUCH checks when really needed (saves some cpu)
+	if (other.iscreature) {
 		if (other.takedamage)
-		if (other.triggerhealtime < time)
-		{
-			EXACTTRIGGER_TOUCH;
+		if (other.triggerhealtime < time) {
+			TRIGGER_EXACT_TOUCH;
 			other.triggerhealtime = time + 1;
-
-			if (other.health < self.max_health)
-			{
+			if (other.health < self.max_health) {
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + g_balance_pause_health_rot);
 				sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
-};
+}
 
-void spawnfunc_trigger_heal()
-{
-	EXACTTRIGGER_INIT;
+void(void) spawnfunc_trigger_heal {
+	TRIGGER_EXACT_INIT;
 	self.touch = trigger_heal_touch;
 	if (!self.health)
 		self.health = 10;
+
 	if (!self.max_health)
 		self.max_health = 200; //Max health topoff for field
-	if(self.noise == "")
+
+	if (self.noise == "")
 		self.noise = "misc/mediumhealth.wav";
+
 	precache_sound(self.noise);
-};
-
-
-//////////////////////////////////////////////////////////////
-//
-//
-//
-//End trigger_heal
-//
-//////////////////////////////////////////////////////////////
+}
 
 // tZorks trigger impulse / gravity
 .float radius;
@@ -649,12 +567,10 @@ float (entity e) trigger_impulse_affected {
 }
 
 // targeted (directional) mode
-void trigger_impulse_touch1()
-{
+void(void) trigger_impulse_touch1 {
 	entity targ;
-    float pushdeltatime;
-    float str;
-
+	float pushdeltatime;
+	float str;
 	// FIXME: Better checking for what to push and not.
 	if not(trigger_impulse_affected(other))
 		return;
@@ -662,37 +578,31 @@ void trigger_impulse_touch1()
 	if (other.deadflag && other.iscreature)
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
+	targ = find(world, targetname, self.target);
+	if (!targ) {
+		entity_abort("trigger_force without a (valid) .target!\n");
+		remove(self);
+		return;
+	}
+	if (self.falloff == 1)
+		str = (str / self.radius) * self.strength;
+	else if (self.falloff == 2)
+		str = (1 - (str / self.radius)) * self.strength;
+	else
+		str = self.strength;
 
-    targ = find(world, targetname, self.target);
-    if(!targ)
-    {
-        entity_abort("trigger_force without a (valid) .target!\n");
-        remove(self);
-        return;
-    }
-
-    if(self.falloff == 1)
-        str = (str / self.radius) * self.strength;
-    else if(self.falloff == 2)
-        str = (1 - (str / self.radius)) * self.strength;
-    else
-        str = self.strength;
-
-    pushdeltatime = time - other.lastpushtime;
-    if (pushdeltatime > 0.15) pushdeltatime = 0;
-    other.lastpushtime = time;
-    if(!pushdeltatime) return;
-
-    other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
+	pushdeltatime = time - other.lastpushtime;
+	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	other.lastpushtime = time;
+	if (!pushdeltatime) return;
+	other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
 	other.flags &~= FL_ONGROUND;
 }
 
 // Directionless (accelerator/decelerator) mode
-void trigger_impulse_touch2()
-{
-    float pushdeltatime;
-
+void(void) trigger_impulse_touch2 {
+	float pushdeltatime;
 	// FIXME: Better checking for what to push and not.
 	if not(trigger_impulse_affected(other))
 		return;
@@ -700,23 +610,19 @@ void trigger_impulse_touch2()
 	if (other.deadflag && other.iscreature)
 		return;
 
-	EXACTTRIGGER_TOUCH;
-
-    pushdeltatime = time - other.lastpushtime;
-    if (pushdeltatime > 0.15) pushdeltatime = 0;
-    other.lastpushtime = time;
-    if(!pushdeltatime) return;
-
-    // div0: ticrate independent, 1 = identity (not 20)
-    other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+	TRIGGER_EXACT_TOUCH;
+	pushdeltatime = time - other.lastpushtime;
+	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	other.lastpushtime = time;
+	if (!pushdeltatime) return;
+	// div0: ticrate independent, 1 = identity (not 20)
+	other.velocity = other.velocity * pow(self.strength, pushdeltatime);
 }
 
 // Spherical (gravity/repulsor) mode
-void trigger_impulse_touch3()
-{
-    float pushdeltatime;
-    float str;
-
+void(void) trigger_impulse_touch3 {
+	float pushdeltatime;
+	float str;
 	// FIXME: Better checking for what to push and not.
 	if not(trigger_impulse_affected(other))
 		return;
@@ -724,25 +630,21 @@ void trigger_impulse_touch3()
 	if (other.deadflag && other.iscreature)
 		return;
 
-	EXACTTRIGGER_TOUCH;
-
-    pushdeltatime = time - other.lastpushtime;
-    if (pushdeltatime > 0.15) pushdeltatime = 0;
-    other.lastpushtime = time;
-    if(!pushdeltatime) return;
-
-    setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
-
+	TRIGGER_EXACT_TOUCH;
+	pushdeltatime = time - other.lastpushtime;
+	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	other.lastpushtime = time;
+	if (!pushdeltatime) return;
+	setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
 	str = min(self.radius, vlen(self.origin - other.origin));
+	if (self.falloff == 1)
+		str = (1 - str / self.radius) * self.strength; // 1 in the inside
+	else if (self.falloff == 2)
+		str = (str / self.radius) * self.strength; // 0 in the inside
+	else
+		str = self.strength;
 
-    if(self.falloff == 1)
-        str = (1 - str / self.radius) * self.strength; // 1 in the inside
-    else if(self.falloff == 2)
-        str = (str / self.radius) * self.strength; // 0 in the inside
-    else
-        str = self.strength;
-
-    other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+	other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
 }
 
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
@@ -763,46 +665,38 @@ Use a brush textured with common/origin in the trigger entity to determine the o
 in directional and sperical mode. For damper/accelerator mode this is not nessesary (and has no effect).
 */
 
-void spawnfunc_trigger_impulse()
-{
-	EXACTTRIGGER_INIT;
-    if(self.radius)
-    {
-        if(!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
-        setorigin(self, self.origin);
-        setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
-        self.touch = trigger_impulse_touch3;
-    }
-    else
-    {
-        if(self.target)
-        {
-            if(!self.strength) self.strength = 950 * cvar("g_triggerimpulse_directional_multiplier");
-            self.touch = trigger_impulse_touch1;
-        }
-        else
-        {
-            if(!self.strength) self.strength = 0.9;
+void(void) spawnfunc_trigger_impulse {
+	TRIGGER_EXACT_INIT;
+	if (self.radius) {
+		if (!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
+		setorigin(self, self.origin);
+		setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
+		self.touch = trigger_impulse_touch3;
+	} else {
+		if (self.target) {
+			if (!self.strength) self.strength = 950 * cvar("g_triggerimpulse_directional_multiplier");
+			self.touch = trigger_impulse_touch1;
+		} else {
+			if (!self.strength) self.strength = 0.9;
 			self.strength = pow(self.strength, cvar("g_triggerimpulse_accel_power")) * cvar("g_triggerimpulse_accel_multiplier");
-            self.touch = trigger_impulse_touch2;
-        }
-    }
+			self.touch = trigger_impulse_touch2;
+		}
+	}
 }
 
 /*QUAKED spawnfunc_trigger_flipflop (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ENABLED
 "Flip-flop" trigger gate... lets only every second trigger event through
 */
-void trigger_flipflop_use()
-{
+void(void) trigger_flipflop_use {
 	self.state = !self.state;
-	if(self.state)
+	if (self.state)
 		trigger_use_targets();
 }
 
-void spawnfunc_trigger_flipflop()
-{
-	if(self.spawnflags & 1)
+void(void) spawnfunc_trigger_flipflop {
+	if (self.spawnflags & 1)
 		self.state = 1;
+
 	self.use = trigger_flipflop_use;
 	self.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }
@@ -810,44 +704,41 @@ void spawnfunc_trigger_flipflop()
 /*QUAKED spawnfunc_trigger_monoflop (.5 .5 .5) (-8 -8 -8) (8 8 8)
 "Mono-flop" trigger gate... turns one trigger event into one "on" and one "off" event, separated by a delay of "wait"
 */
-void trigger_monoflop_use()
-{
+void(void) trigger_monoflop_use {
 	self.nextthink = time + self.wait;
 	self.enemy = activator;
-	if(self.state)
+	if (self.state)
 		return;
 	self.state = 1;
 	trigger_use_targets();
 }
-void trigger_monoflop_fixed_use()
-{
-	if(self.state)
+
+void(void) trigger_monoflop_fixed_use {
+	if (self.state)
 		return;
+
 	self.nextthink = time + self.wait;
 	self.state = 1;
 	self.enemy = activator;
 	trigger_use_targets();
 }
 
-void trigger_monoflop_think()
-{
+void(void) trigger_monoflop_think {
 	self.state = 0;
 	activator = self.enemy;
 	trigger_use_targets();
 }
 
-void trigger_monoflop_reset()
-{
+void(void) trigger_monoflop_reset {
 	self.state = 0;
 	self.nextthink = 0;
 }
 
-void spawnfunc_trigger_monoflop()
-{
-	if(!self.wait)
+void(void) spawnfunc_trigger_monoflop {
+	if (!self.wait)
 		self.wait = 1;
 
-	if(self.spawnflags & 1)
+	if (self.spawnflags & 1)
 		self.use = trigger_monoflop_fixed_use;
 	else
 		self.use = trigger_monoflop_use;
@@ -857,33 +748,27 @@ void spawnfunc_trigger_monoflop()
 	self.reset = trigger_monoflop_reset;
 }
 
-void trigger_multivibrator_send()
-{
+void(void) trigger_multivibrator_send {
 	float newstate;
 	float cyclestart;
 	cyclestart = floor((time + self.phase) / (self.wait + self.respawntime)) * (self.wait + self.respawntime) - self.phase;
 	newstate = (time < cyclestart + self.wait);
 	activator = self;
-	if(self.state != newstate)
+	if (self.state != newstate)
 		trigger_use_targets();
 
 	self.state = newstate;
-	if(self.state)
+	if (self.state)
 		self.nextthink = cyclestart + self.wait + 0.01;
 	else
 		self.nextthink = cyclestart + self.wait + self.respawntime + 0.01;
 }
 
-void trigger_multivibrator_toggle()
-{
-	if(self.nextthink == 0)
-	{
+void(void) trigger_multivibrator_toggle {
+	if (self.nextthink == 0) {
 		trigger_multivibrator_send();
-	}
-	else
-	{
-		if(self.state)
-		{
+	} else {
+		if (self.state) {
 			trigger_use_targets();
 			self.state = 0;
 		}
@@ -891,9 +776,8 @@ void trigger_multivibrator_toggle()
 	}
 }
 
-void trigger_multivibrator_reset()
-{
-	if(!(self.spawnflags & 1))
+void(void) trigger_multivibrator_reset {
+	if (!(self.spawnflags & 1))
 		self.nextthink = 0; // wait for a trigger event
 	else
 		self.nextthink = max(1, time);
@@ -910,11 +794,11 @@ respawntime: "off" cycle time (default: same as wait)
 -------- SPAWNFLAGS --------
 START_ON: assume it is already turned on (when targeted)
 */
-void spawnfunc_trigger_multivibrator()
-{
-	if(!self.wait)
+void(void) spawnfunc_trigger_multivibrator {
+	if (!self.wait)
 		self.wait = 1;
-	if(!self.respawntime)
+
+	if (!self.respawntime)
 		self.respawntime = self.wait;
 
 	self.state = 0;
@@ -926,54 +810,42 @@ void spawnfunc_trigger_multivibrator()
 }
 
 
-void trigger_gamestart_use() {
+void(void) trigger_gamestart_use {
 	activator = self;
 	trigger_use_targets();
 	remove(self);
 }
 
-void spawnfunc_trigger_gamestart() {
+void(void) spawnfunc_trigger_gamestart {
 	self.use = trigger_gamestart_use;
 	self.reset2 = spawnfunc_trigger_gamestart;
-
-	if(self.wait)
-	{
+	if (self.wait) {
 		self.think = self.use;
 		self.nextthink = map_starttime + self.wait;
-	}
-	else
+	} else
 		entity_initialize(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
 }
 
-void trigger_relay_teamcheck_use()
-{
-	if(activator.team)
-	{
-		if(self.spawnflags & 2)
-		{
-			if(activator.team != self.team)
+void(void) trigger_relay_teamcheck_use {
+	if (activator.team) {
+		if (self.spawnflags & 2) {
+			if (activator.team != self.team)
+				trigger_use_targets();
+		} else {
+			if (activator.team == self.team)
 				trigger_use_targets();
 		}
-		else
-		{
-			if(activator.team == self.team)
-				trigger_use_targets();
-		}
-	}
-	else
-	{
-		if(self.spawnflags & 1)
+	} else {
+		if (self.spawnflags & 1)
 			trigger_use_targets();
 	}
 }
 
-void trigger_relay_teamcheck_reset()
-{
+void(void) trigger_relay_teamcheck_reset {
 	self.team = self.team_saved;
 }
 
-void spawnfunc_trigger_relay_teamcheck()
-{
+void(void) spawnfunc_trigger_relay_teamcheck {
 	self.team_saved = self.team;
 	self.use = trigger_relay_teamcheck_use;
 	self.reset = trigger_relay_teamcheck_reset;
@@ -981,135 +853,104 @@ void spawnfunc_trigger_relay_teamcheck()
 
 
 
-void trigger_disablerelay_use()
-{
+void(void) trigger_disablerelay_use {
 	entity e;
-
 	float a, b;
 	a = b = 0;
-
-	for(e = world; (e = find(e, targetname, self.target)); )
-	{
-		if(e.use == trigger_use_targets)
-		{
+	for (e = world; (e = find(e, targetname, self.target)); ) {
+		if (e.use == trigger_use_targets) {
 			e.use = trigger_dont_use_targets;
 			++a;
-		}
-		else if(e.use == trigger_dont_use_targets)
-		{
+		} else if (e.use == trigger_dont_use_targets) {
 			e.use = trigger_use_targets;
 			++b;
 		}
 	}
-
-	if((!a) == (!b))
+	if ((!a) == (!b))
 		print("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
 }
 
-void spawnfunc_trigger_disablerelay()
-{
+void(void) spawnfunc_trigger_disablerelay {
 	self.use = trigger_disablerelay_use;
 }
 
 float magicear_matched;
-string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
-{
+string(entity ear, entity source, float teamsay, entity privatesay, string msgin) trigger_magicear_processmessage {
 	float domatch, dotrigger, matchstart, l;
 	string s, msg;
 	entity oldself;
-
 	magicear_matched = FALSE;
-
 	dotrigger = ((self.classname == "player") && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 	if not(domatch)
 		return msgin;
 
-	if(privatesay)
-	{
-		if(ear.spawnflags & 4)
+	if (privatesay) {
+		if (ear.spawnflags & 4)
 			return msgin;
-	}
-	else
-	{
-		if(!teamsay)
-			if(ear.spawnflags & 1)
+	} else {
+		if (!teamsay)
+			if (ear.spawnflags & 1)
 				return msgin;
-		if(teamsay > 0)
-			if(ear.spawnflags & 2)
-				return msgin;
-		if(teamsay < 0)
-			if(ear.spawnflags & 8)
-				return msgin;
-	}
 
+		if (teamsay > 0)
+			if (ear.spawnflags & 2)
+				return msgin;
+
+		if (teamsay < 0)
+			if (ear.spawnflags & 8)
+				return msgin;
+	}
 	matchstart = -1;
 	l = strlen(ear.message);
-
-	if(self.spawnflags & 128)
+	if (self.spawnflags & 128)
 		msg = msgin;
 	else
 		msg = strdecolorize(msgin);
 
-	if(substring(ear.message, 0, 1) == "*")
-	{
-		if(substring(ear.message, -1, 1) == "*")
-		{
+	if (substring(ear.message, 0, 1) == "*") {
+		if (substring(ear.message, -1, 1) == "*") {
 			// two wildcards
 			// as we need multi-replacement here...
 			s = substring(ear.message, 1, -2);
 			l -= 2;
-			if(strstrofs(msg, s, 0) >= 0)
+			if (strstrofs(msg, s, 0) >= 0)
 				matchstart = -2; // we use strreplace on s
-		}
-		else
-		{
+		} else {
 			// match at start
 			s = substring(ear.message, 1, -1);
 			l -= 1;
-			if(substring(msg, -l, l) == s)
+			if (substring(msg, -l, l) == s)
 				matchstart = strlen(msg) - l;
 		}
-	}
-	else
-	{
-		if(substring(ear.message, -1, 1) == "*")
-		{
+	} else {
+		if (substring(ear.message, -1, 1) == "*") {
 			// match at end
 			s = substring(ear.message, 0, -2);
 			l -= 1;
-			if(substring(msg, 0, l) == s)
+			if (substring(msg, 0, l) == s)
 				matchstart = 0;
-		}
-		else
-		{
+		} else {
 			// full match
 			s = ear.message;
-			if(msg == ear.message)
+			if (msg == ear.message)
 				matchstart = 0;
 		}
 	}
-
-	if(matchstart == -1) // no match
+	if (matchstart == -1) // no match
 		return msgin;
 
 	magicear_matched = TRUE;
-
-	if(dotrigger)
-	{
+	if (dotrigger) {
 		oldself = activator = self;
 		self = ear;
 		trigger_use_targets();
 		self = oldself;
 	}
-
-	if(ear.spawnflags & 16)
-	{
+	if (ear.spawnflags & 16) {
 		return ear.netname;
-	}
-	else if(ear.netname != "")
-	{
-		if(matchstart < 0)
+	} else if (ear.netname != "") {
+		if (matchstart < 0)
 			return strreplace(s, ear.netname, msg);
 		else
 			return strcat(
@@ -1122,27 +963,24 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		return msgin;
 }
 
-entity magicears;
-string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin)
-{
+entity trigger_magicears;
+string(entity source, float teamsay, entity privatesay, string msgin) trigger_magicear_processmessage_forallears {
 	entity ear;
 	string msgout;
-	for(ear = magicears; ear; ear = ear.enemy)
-	{
+	for (ear = trigger_magicears; ear; ear = ear.enemy) {
 		msgout = trigger_magicear_processmessage(ear, source, teamsay, privatesay, msgin);
 		if not(ear.spawnflags & 64)
-			if(magicear_matched)
+			if (magicear_matched)
 				return msgout;
+
 		msgin = msgout;
 	}
 	return msgin;
 }
 
-void spawnfunc_trigger_magicear()
-{
-	self.enemy = magicears;
-	magicears = self;
-
+void(void) spawnfunc_trigger_magicear {
+	self.enemy = trigger_magicears;
+	trigger_magicears = self;
 	// actually handled in "say" processing
 	// spawnflags:
 	//   1 = ignore say
@@ -1178,35 +1016,30 @@ void spawnfunc_trigger_always() {
 	entity_initialize(self, trigger_always_init, INITPRIO_LAST);
 }
 
-/*
- * cycle
- */
-
 .string chaintarget;
-
 string trigger_cycle_find_next_target(string curtarget) {
-    while((var e = find(e, targetname, curtarget)))
-        if(e.chaintarget)
-            return e.chaintarget;
+	while((var e = find(e, targetname, curtarget)))
+		if (e.chaintarget)
+			return e.chaintarget;
 
-    error("trigger_cycle: broken chain");
-    return NULL;
+	error("trigger_cycle: broken chain");
+	return NULL;
 }
 
 void trigger_cycle_reset(void) {
-    self.target = self.netname;
+	self.target = self.netname;
 }
 
 void trigger_cycle_use(void) {
-    trigger_use_targets_prevent_reuse();
-    self.target = trigger_cycle_find_next_target(self.target);
-    trigger_use_targets_prevent_reuse();
+	trigger_use_targets_prevent_reuse();
+	self.target = trigger_cycle_find_next_target(self.target);
+	trigger_use_targets_prevent_reuse();
 }
 
 void spawnfunc_trigger_cycle(void) {
-    self.netname = self.target;
-    self.use = trigger_cycle_use;
-    self.reset = trigger_cycle_reset;
+	self.netname = self.target;
+	self.use = trigger_cycle_use;
+	self.reset = trigger_cycle_reset;
 }
 
 /*
@@ -1214,108 +1047,85 @@ void spawnfunc_trigger_cycle(void) {
  */
 
 void spawnfunc_trigger_killcredit(void) {
-    EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
+	if (self.wait <= 0)
+		self.wait = 3;
 
-    if(self.wait <= 0)
-        self.wait = 3;
+	self.use = inline void(void) {
+		self.enemy = activator;
+		self.solid = SOLID_TRIGGER;
+		self.think = self.reset;
+		self.nextthink = time + self.wait;
+	};
+	self.reset = inline void(void) {
+		self.enemy = world;
+		self.solid = SOLID_NOT;
+		self.think = stdproc_nothing;
+	};
+	self.touch = inline void(void) {
+		if (!other.iscreature)
+			return;
 
-    self.use = inline void(void) {
-        self.enemy = activator;
-        self.solid = SOLID_TRIGGER;
-        self.think = self.reset;
-        self.nextthink = time + self.wait;
-    };
-
-    self.reset = inline void(void) {
-        self.enemy = world;
-        self.solid = SOLID_NOT;
-        self.think = stdproc_nothing;
-    };
-
-    self.touch = inline void(void) {
-        if(!other.iscreature)
-            return;
-
-        other.pushltime = time + g_maxpushtime;
-        other.pusher = self.enemy;
-    };
-
-    self.reset();
+		other.pushltime = time + g_maxpushtime;
+		other.pusher = self.enemy;
+	};
+	self.reset();
 }
 
 void spawnfunc_func_killcredit(void) {
-    print("^1FIXME: ^7map has a misnamed killcredit entity 'func_killcredit', the correct name is 'trigger_killcredit'! Please fix this.\n");
-    self.classname = "trigger_killcredit";
-    spawnfunc_trigger_killcredit();
+	print("^1FIXME: ^7map has a misnamed killcredit entity 'func_killcredit', the correct name is 'trigger_killcredit'! Please fix this.\n");
+	self.classname = "trigger_killcredit";
+	spawnfunc_trigger_killcredit();
 }
 
-/*
- * random
- */
-
 void spawnfunc_trigger_relay_chance(void) {
-    self.classname = "trigger_relay";
+	self.classname = "trigger_relay";
+	if (!self.cnt)
+		self.cnt = 0.5;
 
-    if(!self.cnt)
-        self.cnt = 0.5;
-
-    self.use = inline void(void) {
-        if(random() < self.cnt)
-            trigger_use_targets();
-    };
-
-    self.reset = spawnfunc_trigger_relay_chance;
+	self.use = inline void(void) {
+		if (random() < self.cnt)
+			trigger_use_targets();
+	};
+	self.reset = spawnfunc_trigger_relay_chance;
 }
 
 void spawnfunc_trigger_relay_random(void) {
-    self.classname = "trigger_relay";
+	self.classname = "trigger_relay";
+	self.use = inline void(void) {
+		random_selection_init();
+		trigger_for_each_target(self, inline float(entity e, float _f, vector _v, string _s, entity _e) {
+			e.sub_target_used = time;
+			random_selection_add(e, 0, NULL, 1, 1);
+			return FALSE;
+		}, FALSE, NULL, NULL, NULL, NULL);
 
-    self.use = inline void(void) {
-        random_selection_init();
-
-        trigger_for_each_target(self, inline float(entity e, float _f, vector _v, string _s, entity _e) {
-            e.sub_target_used = time;
-            random_selection_add(e, 0, NULL, 1, 1);
-            return FALSE;
-        }, FALSE, NULL, NULL, NULL, NULL);
-
-        if(random_selection_chosen_ent) {
-            random_selection_chosen_ent.sub_target_used = -1;
-            trigger_use_targets_prevent_reuse();
-        }
-    };
-
-    self.reset = spawnfunc_trigger_relay_random;
+		if (random_selection_chosen_ent) {
+			random_selection_chosen_ent.sub_target_used = -1;
+			trigger_use_targets_prevent_reuse();
+		}
+	};
+	self.reset = spawnfunc_trigger_relay_random;
 }
-
-/*
- * iterators
- */
 
 void spawnfunc_trigger_relay_foreachplayer(void) {
-    self.classname = "trigger_relay";
-
-    self.use = inline void(void) {
-        using(activator = world)
-            FOR_EACH_PLAYER(activator)
-                trigger_use_targets();
-    };
-
-    self.reset = spawnfunc_trigger_relay_foreachplayer;
+	self.classname = "trigger_relay";
+	self.use = inline void(void) {
+		using(activator = world)
+			FOR_EACH_PLAYER(activator)
+				trigger_use_targets();
+	};
+	self.reset = spawnfunc_trigger_relay_foreachplayer;
 }
 
-/*
- * state
- */
-
 enumflags {
-    TSTATE_ENABLED,
-    TSTATE_USE_ON,
-    TSTATE_USE_OFF,
+	TSTATE_ENABLED,
+	TSTATE_USE_ON,
+	TSTATE_USE_OFF,
 };
 
 enumflags {
-    TSTATE_NOT,
+	TSTATE_NOT,
 };
 
 typedef float(void) statefunc_t;
@@ -1329,145 +1139,131 @@ const STATECHAIN_STACK_MAX = 16;
 float statechain_stack_ptr;
 var .entity statechain_next;
 
-void statechain_push(void) {
-    if(statechain_stack_ptr >= STATECHAIN_STACK_MAX)
-        error("statechain stack overflow");
+void(void) statechain_push {
+	if (statechain_stack_ptr >= STATECHAIN_STACK_MAX)
+		error("statechain stack overflow");
 
-    statechain_next = statechain_stack[statechain_stack_ptr];
-
-    ++statechain_stack_ptr;
+	statechain_next = statechain_stack[statechain_stack_ptr];
+	++statechain_stack_ptr;
 }
 
-void statechain_pop(void) {
-    --statechain_stack_ptr;
+void(void) statechain_pop {
+	--statechain_stack_ptr;
+	if (statechain_stack_ptr < 0)
+		error("statechain stack underflow");
 
-    if(statechain_stack_ptr < 0)
-        error("statechain stack underflow");
-
-    statechain_next = statechain_stack[statechain_stack_ptr];
+	statechain_next = statechain_stack[statechain_stack_ptr];
 }
 
-float compute_state(entity e) {
-    using(self = e)
-        return e.statefunc();
+float(entity e) compute_state {
+	using(self = e)
+		return e.statefunc();
 }
 
-float aggregate_and(entity e, .entity next) {
-    do {
-        if(e.statefunc)
-        if(!compute_state(e))
-            return FALSE;
-    } while((e = e.next));
-
-    return TRUE;
+float(entity e, .entity next) aggregate_and {
+	do {
+		if (e.statefunc)
+		if (!compute_state(e))
+			return FALSE;
+	} while((e = e.next));
+	return TRUE;
 }
 
-float aggregate_or(entity e, .entity next) {
-    do {
-        if(e.statefunc)
-        if(compute_state(e))
-            return TRUE;
-    } while((e = e.next));
-
-    return FALSE;
+float(entity e, .entity next) aggregate_or {
+	do {
+		if (e.statefunc)
+		if (compute_state(e))
+			return TRUE;
+	} while((e = e.next));
+	return FALSE;
 }
 
-float statefunc_aggregate_targets(statefunc_aggr_t aggr) {
-    statechain_push();
-    var s = aggr(trigger_link_targets(self, statechain_next, FALSE), statechain_next);
-    statechain_pop();
-    return s;
+float(statefunc_aggr_t aggr) statefunc_aggregate_targets {
+	statechain_push();
+	var s = aggr(trigger_link_targets(self, statechain_next, FALSE), statechain_next);
+	statechain_pop();
+	return s;
 }
 
-float statefunc_invertible() {
-    var s = self.statefunc2();
-    if(self.spawnflags & TSTATE_NOT)
-        return !s;
-    return s;
+float(void) statefunc_invertible {
+	var s = self.statefunc2();
+	if (self.spawnflags & TSTATE_NOT)
+		return !s;
+
+	return s;
 }
 
-float statefunc_self(void) {
-    return self.state;
+float(void) statefunc_self {
+	return self.state;
 }
 
-float statefunc_or(void) {
-    return statefunc_aggregate_targets(aggregate_or);
+float(void) statefunc_or {
+	return statefunc_aggregate_targets(aggregate_or);
 }
 
-float statefunc_and(void) {
-    return statefunc_aggregate_targets(aggregate_and);
+float(void) statefunc_and {
+	return statefunc_aggregate_targets(aggregate_and);
 }
 
-void trigger_state_init(void(void) reset_f, statefunc_t state_f) {
-    self.classname = "trigger_state";
-    self.reset = reset_f;
-    self.statefunc = statefunc_invertible;
-    self.statefunc2 = state_f;
-    self.use = stdproc_nothing; // dummy default to ensure that ForEachTarget works on it
+void(void(void) reset_f, statefunc_t state_f) trigger_state_init {
+	self.classname = "trigger_state";
+	self.reset = reset_f;
+	self.statefunc = statefunc_invertible;
+	self.statefunc2 = state_f;
+	self.use = stdproc_nothing; // dummy default to ensure that ForEachTarget works on it
 }
 
-void spawnfunc_trigger_state(void) {
-    trigger_state_init(spawnfunc_trigger_state, statefunc_self);
-    self.statefunc = self.statefunc2;
-    self.state = (self.spawnflags & TSTATE_ENABLED);
+void(void) spawnfunc_trigger_state {
+	trigger_state_init(spawnfunc_trigger_state, statefunc_self);
+	self.statefunc = self.statefunc2;
+	self.state = (self.spawnflags & TSTATE_ENABLED);
 
-    self.use = inline void(void) {
-        self.state = !(self.state);
+	self.use = inline void(void) {
+		self.state = !(self.state);
 
-        if((self.state && self.spawnflags & TSTATE_USE_ON) || (!self.state && self.spawnflags & TSTATE_USE_OFF))
-            trigger_use_targets();
-    };
+		if ((self.state && self.spawnflags & TSTATE_USE_ON) || (!self.state && self.spawnflags & TSTATE_USE_OFF))
+			trigger_use_targets();
+	};
 }
 
-void spawnfunc_trigger_state_and(void) {
-    trigger_state_init(spawnfunc_trigger_state_and, statefunc_and);
+void(void) spawnfunc_trigger_state_and {
+	trigger_state_init(spawnfunc_trigger_state_and, statefunc_and);
 }
 
-void spawnfunc_trigger_state_or(void) {
-    trigger_state_init(spawnfunc_trigger_state_or, statefunc_or);
+void(void) spawnfunc_trigger_state_or {
+	trigger_state_init(spawnfunc_trigger_state_or, statefunc_or);
 }
 
-void spawnfunc_trigger_state_activatoralive(void) {
-    trigger_state_init(spawnfunc_trigger_state_activatoralive, inline float(void) {
-        return !PLAYER_DEAD(activator);
-    });
+void(void) spawnfunc_trigger_state_activatoralive {
+	trigger_state_init(spawnfunc_trigger_state_activatoralive, inline float(void) {
+		return !PLAYER_DEAD(activator);
+	});
 }
 
-void spawnfunc_trigger_relay_ifstate(void) {
-    self.classname = "trigger_relay";
+void(void) spawnfunc_trigger_relay_ifstate {
+	self.classname = "trigger_relay";
+	self.use = inline void(void) {
+		var s = compute_state(self.enemy);
+		if (self.spawnflags & TSTATE_NOT)
+			s = !s;
 
-    self.use = inline void(void) {
-        var s = compute_state(self.enemy);
-
-        if(self.spawnflags & TSTATE_NOT)
-            s = !s;
-
-        if(s > 0) // XXX: why is this necessary?
-            trigger_use_targets();
-    };
-
-    entity_initialize(self, inline void(void) {
-        while((var e = find(e, targetname, self.killtarget))) {
-            if(e.statefunc) {
-                self.killtarget = NULL;
-                self.enemy = e;
-                break;
-            }
-        }
-
-        if(!self.enemy)
-            entity_abort("trigger_relay_ifstate does not point to a valid state entity");
-    }, INITPRIO_FINDTARGET);
+		if (s > 0) // XXX: why is this necessary?
+			trigger_use_targets();
+	};
+	entity_initialize(self, inline void(void) {
+		while((var e = find(e, targetname, self.killtarget))) {
+			if (e.statefunc) {
+				self.killtarget = NULL;
+				self.enemy = e;
+				break;
+			}
+		}
+		if (!self.enemy)
+			entity_abort("trigger_relay_ifstate does not point to a valid state entity");
+	}, INITPRIO_FINDTARGET);
 }
 
-/*
- *	roundstate
- *  FIXME: 	implemented only partially because we don't have the RM roundstate system
- *			currently it supports ROUNDSTATE_GAMEINIT [0] (like trigger_gamestart, fires once and is then removed)
- *			and ROUNDSTATE_WARMUP [4] (fired every time a pre-round warmup begins)
- */
-
-void trigger_roundstate_warmup(void) {
+void(void) trigger_roundstate_warmup {
 	self.reset2 = trigger_roundstate_warmup;
 	entity_initialize(self, inline void(void) {
 		activator = self;
@@ -1475,82 +1271,68 @@ void trigger_roundstate_warmup(void) {
 	}, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_trigger_roundstate(void) {
-    self.classname = "trigger_roundstate";
-    self.reset2 = spawnfunc_trigger_roundstate;
-    self.use = trigger_use_targets;
-
-    if(self.cnt == 0 /*ROUNDSTATE_GAMEINIT*/) {
-        entity_initialize(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
-    } else if(self.cnt == 4 /*ROUNDSTATE_WARMUP*/) {
-    	self.reset2 = trigger_roundstate_warmup;
-    } else {
-    	print("trigger_roundstate: roundstate ", self.cnt, " is not supported\n");
-    }
+void(void) spawnfunc_trigger_roundstate {
+	self.classname = "trigger_roundstate";
+	self.reset2 = spawnfunc_trigger_roundstate;
+	self.use = trigger_use_targets;
+	if (self.cnt == 0 /*ROUNDSTATE_GAMEINIT*/) {
+		entity_initialize(self, trigger_gamestart_use, INITPRIO_FINDTARGET);
+	} else if (self.cnt == 4 /*ROUNDSTATE_WARMUP*/) {
+		self.reset2 = trigger_roundstate_warmup;
+	} else {
+		print("trigger_roundstate: roundstate ", self.cnt, " is not supported\n");
+	}
 }
 
 .entity trigger_gravity_check;
-void trigger_gravity_remove(entity own)
-{
-	if(own.trigger_gravity_check.owner == own)
-	{
+void(entity own) trigger_gravity_remove {
+	if (own.trigger_gravity_check.owner == own) {
 		projectile_update(own);
 		own.gravity = own.trigger_gravity_check.gravity;
 		remove(own.trigger_gravity_check);
-	}
-	else
+	} else
 		backtrace("Removing a trigger_gravity_check with no valid owner");
+
 	own.trigger_gravity_check = world;
 }
-void trigger_gravity_check_think()
-{
+
+void(void) trigger_gravity_check_think {
 	// This spawns when a player enters the gravity zone and checks if he left.
 	// Each frame, self.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
-	if(self.count <= 0)
-	{
-		if(self.owner.trigger_gravity_check == self)
+	if (self.count <= 0) {
+		if (self.owner.trigger_gravity_check == self)
 			trigger_gravity_remove(self.owner);
 		else
 			remove(self);
+
 		return;
-	}
-	else
-	{
+	} else {
 		self.count -= 1;
 		self.nextthink = time;
 	}
 }
 
-void trigger_gravity_use()
-{
+void(void) trigger_gravity_use {
 	self.state = !self.state;
 }
 
-void trigger_gravity_touch()
-{
+void(void) trigger_gravity_touch {
 	float g;
-
-	if(self.state != TRUE)
+	if (self.state != TRUE)
 		return;
 
-	EXACTTRIGGER_TOUCH;
-
+	TRIGGER_EXACT_TOUCH;
 	g = self.gravity;
-
-	if not(self.spawnflags & 1)
-	{
-		if(other.trigger_gravity_check)
-		{
-			if(self == other.trigger_gravity_check.enemy)
-			{
+	if not(self.spawnflags & 1) {
+		if (other.trigger_gravity_check) {
+			if (self == other.trigger_gravity_check.enemy) {
 				// same?
 				other.trigger_gravity_check.count = 2; // gravity one more frame...
 				return;
 			}
-
 			// compare prio
-			if(self.cnt > other.trigger_gravity_check.enemy.cnt)
+			if (self.cnt > other.trigger_gravity_check.enemy.cnt)
 				trigger_gravity_remove(other);
 			else
 				return;
@@ -1562,34 +1344,30 @@ void trigger_gravity_touch()
 		other.trigger_gravity_check.think = trigger_gravity_check_think;
 		other.trigger_gravity_check.nextthink = time;
 		other.trigger_gravity_check.count = 2;
-		if(other.gravity)
+		if (other.gravity)
 			g *= other.gravity;
 	}
-
-	if (other.gravity != g)
-	{
+	if (other.gravity != g) {
 		other.gravity = g;
-		if(self.noise != "")
+		if (self.noise != "")
 			sound (other, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 		projectile_update(other);
 	}
 }
 
-void spawnfunc_trigger_gravity()
-{
-	if(self.gravity == 1)
+void(void) spawnfunc_trigger_gravity {
+	if (self.gravity == 1)
 		return;
 
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.touch = trigger_gravity_touch;
-	if(self.noise != "")
+	if (self.noise != "")
 		precache_sound(self.noise);
 
 	self.state = TRUE;
-	IFTARGETED
-	{
+	IFTARGETED {
 		self.use = trigger_gravity_use;
-		if(self.spawnflags & 2)
+		if (self.spawnflags & 2)
 			self.state = FALSE;
 	}
 }
@@ -1598,18 +1376,9 @@ void(void) spawnfunc_trigger_teleport {
 	teleport_setup();
 }
 
-/*
-*		t_swamp.c
-*		Adds spawnfunc_trigger_swamp and suppoart routines for nexuiz 1.2.1+
-*		Author tZork (Jakob MG) 
-*		jakob@games43.se
-*		2005 11 29
-*/
-
-.float swamp_interval;	//Hurt players in swamp with this interval
-.float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
+.float swamp_interval; //Hurt players in swamp with this interval
+.float swamp_slowdown; //Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
 .entity swampslug;
-
 var float() trigger_swamp_physics_max_speed_mod_next;
 float() trigger_swamp_physics_max_speed_mod {
 	float f = 1;
@@ -1632,7 +1401,7 @@ void(void) trigger_swamp_touch {
 	if ((other.classname != "player") || (other.deadflag != DEAD_NO))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	if (other.swamp_interval < time) {
 		other.swamp_interval = time + self.swamp_interval;
 		damage(other, self, self, self.dmg, DEATH_SWAMP, other.origin, '0 0 0');
@@ -1641,12 +1410,12 @@ void(void) trigger_swamp_touch {
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
-Players gettin into the swamp will 
+Players gettin into the swamp will
 get slowd down and damaged
 */
 float trigger_swamp_init_done;
 void(void) spawnfunc_trigger_swamp {
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.touch = trigger_swamp_touch;
 	if (self.dmg <= 0)
 		self.dmg = 5;
@@ -1703,13 +1472,12 @@ void spawnfunc_trigger_door_check() {
 void(void) trigger_relay_if_use {
 	float n;
 	n = self.count;
-
 	// TODO make this generic AND faster than nextent()ing through all, if somehow possible
 	n = (cvar_string(self.netname) == cvar_string(self.message));
-	if(self.spawnflags & 1)
+	if (self.spawnflags & 1)
 		n = !n;
 
-	if(n)
+	if (n)
 		trigger_use_targets();
 }
 

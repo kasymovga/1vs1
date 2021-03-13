@@ -275,18 +275,18 @@ void(void) func_ladder_touch {
 	if not(other.iscreature)
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	TRIGGER_EXACT_TOUCH;
 	other.ladder_time = time + 0.1;
 	other.ladder_entity = self;
 }
 
 void(void) spawnfunc_func_ladder {
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.touch = func_ladder_touch;
 }
 
 void(void) spawnfunc_func_water {
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.touch = func_ladder_touch;
 }
 
@@ -296,7 +296,7 @@ void(void) func_nowalljump_touch {
 }
 
 void(void) spawnfunc_func_nowalljump {
-	EXACTTRIGGER_INIT;
+	TRIGGER_EXACT_INIT;
 	self.touch = func_nowalljump_touch;
 }
 
