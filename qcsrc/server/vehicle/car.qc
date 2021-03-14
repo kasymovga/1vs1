@@ -103,7 +103,7 @@ float vehicle_car_physics_hook() {
 	if (physics_movement_x) {
 		if (mycar.attack_finished_single < time) {
 			mycar.attack_finished_single = time + 3;
-			dlc_sound_follow(mycar, CHAN_PROJECTILE, "car/engine.wav", VOL_BASE, ATTN_NORM);
+			dlc_sound_follow(mycar, CHAN_PROJECTILE, self.noise2, VOL_BASE, ATTN_NORM);
 		}
 	}
 	mycar.gun1.gun1.angles_x = mycar.gun1.gun1.angles_x - rotate_factor_b * frametime;
@@ -299,7 +299,7 @@ void(void) vehicle_car_init {
 	precache_model("models/onslaught/gen_gib1.md3");
 	precache_model("models/onslaught/gen_gib2.md3");
 	precache_model("models/onslaught/gen_gib3.md3");
-	dlc_precache_sound("car/engine.wav");
+	dlc_precache_sound(self.noise2);
 	dlc_precache_sound("car/screech.wav");
 }
 
@@ -332,6 +332,9 @@ void(void) spawnfunc_vehicle_car {
 	self.message2 = self.model;
 	if (self.message2 == "")
 		self.message2 = "models/car/car.md3";
+
+	if (self.noise2 == "")
+		self.noise2 = "car/engine.wav";
 
 	vehicle_car_init();
 	if (self.noise != "")
