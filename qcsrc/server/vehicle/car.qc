@@ -263,7 +263,7 @@ void(void) vehicle_car_dinit {
 	self.gun1.gun1.effects = EF_LOWPRECISION;
 	self.gun2.gun2 = spawn();
 	self.gun2.gun2.effects = EF_LOWPRECISION;
-	setmodel(self, "models/car/car.md3");
+	setmodel(self, self.message2);
 	setmodel(self.gun1, "models/car/wheel.md3");
 	setmodel(self.gun2, "models/car/wheel.md3");
 	setmodel(self.gun1.gun1, "models/car/wheel.md3");
@@ -294,7 +294,7 @@ void(void) vehicle_car_init {
 	CVAR_CACHE(g_vehicle_car_speed_drift);
 	CVAR_CACHE(g_vehicle_car_speed);
 	CVAR_CACHE(g_vehicle_car_turnspeed);
-	precache_model("models/car/car.md3");
+	precache_model(self.message2);
 	precache_model("models/car/wheel.md3");
 	precache_model("models/onslaught/gen_gib1.md3");
 	precache_model("models/onslaught/gen_gib2.md3");
@@ -329,6 +329,10 @@ float(entity to, float sf) vehicle_car_physics_send {
 }
 
 void(void) spawnfunc_vehicle_car {
+	self.message2 = self.model;
+	if (self.message2 == "")
+		self.message2 = "models/car/car.md3";
+
 	vehicle_car_init();
 	if (self.noise != "")
 		precache_sound(self.noise);
