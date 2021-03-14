@@ -6,7 +6,7 @@ void vehicle_car_enter();
 
 void vehicle_car_dorifto_effect_sound(entity mycar) {
 	if (mycar.dmg < time ) {
-		dlc_sound_follow(mycar, CHAN_WEAPON, "car/screech.wav", VOL_BASE, ATTN_NORM);
+		dlc_sound_follow(mycar, CHAN_WEAPON, self.noise3, VOL_BASE, ATTN_NORM);
 		mycar.dmg = time + 2;
 	}
 }
@@ -264,10 +264,10 @@ void(void) vehicle_car_dinit {
 	self.gun2.gun2 = spawn();
 	self.gun2.gun2.effects = EF_LOWPRECISION;
 	setmodel(self, self.message2);
-	setmodel(self.gun1, "models/car/wheel.md3");
-	setmodel(self.gun2, "models/car/wheel.md3");
-	setmodel(self.gun1.gun1, "models/car/wheel.md3");
-	setmodel(self.gun2.gun2, "models/car/wheel.md3");
+	setmodel(self.gun1, self.weaponmodel);
+	setmodel(self.gun2, self.weaponmodel);
+	setmodel(self.gun1.gun1, self.weaponmodel);
+	setmodel(self.gun2.gun2, self.weaponmodel);
 	setsize(self, car_MIN, car_MAX);
 	self.dlc_reset = car_dlc_reset;
 	self.dlc_reset();
@@ -295,12 +295,12 @@ void(void) vehicle_car_init {
 	CVAR_CACHE(g_vehicle_car_speed);
 	CVAR_CACHE(g_vehicle_car_turnspeed);
 	precache_model(self.message2);
-	precache_model("models/car/wheel.md3");
+	precache_model(self.weaponmodel);
 	precache_model("models/onslaught/gen_gib1.md3");
 	precache_model("models/onslaught/gen_gib2.md3");
 	precache_model("models/onslaught/gen_gib3.md3");
 	dlc_precache_sound(self.noise2);
-	dlc_precache_sound("car/screech.wav");
+	dlc_precache_sound(self.noise3);
 }
 
 float(entity to, float sf) vehicle_car_physics_send {
@@ -333,8 +333,14 @@ void(void) spawnfunc_vehicle_car {
 	if (self.message2 == "")
 		self.message2 = "models/car/car.md3";
 
+	if (self.weaponmodel == "")
+		self.weaponmodel = "models/car/wheel.md3";
+
 	if (self.noise2 == "")
 		self.noise2 = "car/engine.wav";
+
+	if (self.noise3 == "")
+		self.noise3 = "car/screech.wav";
 
 	vehicle_car_init();
 	if (self.noise != "")
