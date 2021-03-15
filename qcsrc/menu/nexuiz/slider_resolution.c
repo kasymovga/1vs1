@@ -18,13 +18,6 @@ entity makeNexuizResolutionSlider()
 }
 void addResolutionNexuizResolutionSlider(entity me, float w, float h)
 {
-	float f;
-	f = max(cw / w, ch / h);
-	if(f > 1)
-	{
-		cw = rint(cw / f);
-		ch = rint(ch / f);
-	}
 	me.addValue(me, strzone(strcat(ftos(w), "x", ftos(h))), strzone(strcat(ftos(w), " ", ftos(h))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
