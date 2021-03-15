@@ -165,36 +165,32 @@ float() map_list_method_random = // random map selection
 	return -1;
 }
 
-float(float exponent) map_list_method_shuffle = // more clever shuffling
-// the exponent sets a bias on the map selection:
-// the higher the exponent, the less likely "shortly repeated" same maps are
-{
+float(float exponent) map_list_method_shuffle { // more clever shuffling
+	// the exponent sets a bias on the map selection:
+	// the higher the exponent, the less likely "shortly repeated" same maps are
 	float i, j, imax, insertpos;
-
 	imax = 42;
-
-	for(i = 0; i <= imax; ++i)
-	{
+	for (i = 0; i <= imax; ++i) {
 		string newlist;
-
 		// now reinsert this at another position
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
 		// insert the current map there
 		newlist = "";
-		for(j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
+		for (j = 1; j < insertpos; ++j)                 // i == 1: no loop, will be inserted as first; however, i == 1 has been excluded above
 			newlist = strcat(newlist, " ", argv(j));
+
 		newlist = strcat(newlist, " ", argv(0));       // now insert the just selected map
-		for(j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
+		for (j = insertpos; j < Map_Count; ++j)         // i == Map_Count: no loop, has just been inserted as last
 			newlist = strcat(newlist, " ", argv(j));
+
 		newlist = substring(newlist, 1, strlen(newlist) - 1);
 		cvar_set("_g_maplist", newlist);
 		Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
-
 		// NOTE: the selected map has just been inserted at (insertpos-1)th position
 		Map_Current = insertpos - 1; // this is not really valid, but this way the fallback has a chance of working
-		if(map_check(Map_Current, 1))
+		if (map_check(Map_Current, 1))
 			return Map_Current;
 	}
 	return -1;
@@ -215,6 +211,8 @@ void(void) map_list_reset {
 		list = strcat(list, h, " ");
 	}
 	cvar_set("_g_maplist", list);
+	if (cvar("g_maplist_shuffle"))
+		map_list_shuffle();
 }
 
 void(void) map_list_init {
@@ -230,6 +228,8 @@ void(void) map_list_init {
 		cvar_set("_g_maplist", s);
 		cvar_set("_g_maplist_source", s);
 		cvar_set("_g_maplist_source_exclude", se);
+		if (cvar("g_maplist_shuffle"))
+			map_list_shuffle();
 	}
 	Map_Count = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	if(Map_Count == 0) {
@@ -245,22 +245,20 @@ string() map_list_next_get {
 	float nextMap;
 	map_list_init();
 	nextMap = -1;
-	if(nextMap == -1)
-		if(cvar("g_maplist_shuffle") > 0)
-			nextMap = map_list_method_shuffle(cvar("g_maplist_shuffle") + 1);
+	if (cvar("g_maplist_shuffle") > 0)
+		nextMap = map_list_method_shuffle(cvar("g_maplist_shuffle") + 1);
 
-	if(nextMap == -1)
+	if (nextMap == -1)
 		if(cvar("g_maplist_selectrandom"))
 			nextMap = map_list_method_random();
 
-	if(nextMap == -1)
+	if (nextMap == -1)
 		nextMap = map_list_method_iterate();
 
-	if(nextMap == -1)
+	if (nextMap == -1)
 		nextMap = map_list_method_repeat();
 
-	if(nextMap >= 0)
-	{
+	if (nextMap >= 0) {
 		map_goto_set_index(nextMap);
 		return getmapname_stored;
 	}
@@ -324,8 +322,6 @@ void() map_goto_next {
 		if(allowReset) {
 			print( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
 			map_list_reset();
-			if(cvar("g_maplist_shuffle"))
-				map_list_shuffle();
 		} else {
 			error("Everything is broken - not even the default map list works. Please report this to the developers.");
 		}
