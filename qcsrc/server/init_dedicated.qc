@@ -1,26 +1,25 @@
 void() init_dedicated_think {
-	float n;
-	localcmd("\nset _sv_init2 1\n");
-	if(cvar("_sv_init") && cvar("_sv_init2")) {
-		map_list_init();
-		if(cvar("g_maplist_shuffle"))
-			map_list_shuffle();
+	if (time < 1)
+		self.nextthink = time;
+	else {
+		self.nextthink = time + 1;
+	}
+	if not(dlc_ready_all()) {
+		if (time > 1)
+			print("Some DLC is not ready\n");
 
-		n = tokenizebyseparator(cvar_string("_g_maplist"), " ");
-		cvar_set("_g_maplist_index", ftos(n - 1)); // jump to map 0 in map_goto_next
+		return;
+	}
+	if (cvar("_sv_init")) {
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		if(!map_do_next_override())
+		if (!map_do_next_override())
 			map_goto_next();
 
 		return;
 	}
-	if(time < 5)
-		self.nextthink = time;
-	else {
-		self.nextthink = time + 1;
+	if (time >= 1)
 		print("Waiting for _sv_init being set to 1 by initialization scripts...\n");
-	}
 }
 
 
@@ -36,7 +35,5 @@ void(void) spawnfunc___init_dedicated_server {
 	e = spawn();
 	e.classname = "info_player_deathmatch"; // safeguard against player joining
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
-	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	dlc_init();
 }

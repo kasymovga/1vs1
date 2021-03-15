@@ -338,7 +338,7 @@ void dlc_init() {
 		if (s != "")
 			dlc_require(s);
 	}
-	string dlc_server_only = cvar_string("sv_dlc_server_only");
+	string dlc_server_only = strcat(cvar_string("sv_dlc_server_only"), " " DLC_BASE_LIST);
 	while (dlc_server_only != "") {
 		s = str_car(dlc_server_only);
 		dlc_server_only = str_cdr(dlc_server_only);
@@ -349,7 +349,6 @@ void dlc_init() {
 	if (s != "")
 		dlc_require(s);
 
-	dlc_load_local_list(DLC_BASE_LIST);
 	string map_pk3 = whichpack(strcat("maps/", mapname, ".bsp"));
 	if (substring(map_pk3, 0, 8) == "dlcache/")
 		map_pk3 = substring(map_pk3, 8, -1);
@@ -424,7 +423,6 @@ void dlc_reload() {
 		dlc_wait_reload.think = DLCWaitReload;
 		dlc_wait_reload.nextthink = time + 0.2;
 	}
-	dlc_load_local_list(DLC_BASE_LIST);
 }
 
 void dlc_precache_sound(string s) {
