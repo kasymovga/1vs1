@@ -58,7 +58,7 @@ vector(float t) weapon_zapper_beam_rgb {
 	}
 }
 
-.vector glowmod;
+.vector glowmod; //THIS PROPERTY CAUSE CSQC CRASH ON OLD NEXUIZ CLIENTS
 void(void) weapon_zapper_spinner_think {
 	if (self.owner.weapon != WEP_ZAPPER) {
 		self.owner.zapper_spinner = world;
@@ -83,6 +83,9 @@ void(void) weapon_zapper_spinner_think {
 }
 
 float(void) weapon_zapper_spinner_customize {
+	if (other.scorekeeper && other.scorekeeper.clientversion == CLIENT_OLDNEXUIZ)
+		return FALSE;
+
 	return weapon_model_customize();
 }
 
@@ -96,11 +99,6 @@ void(void) weapon_zapper_spinner_spawn {
 	entity o = Akimbo_Owner(self);
 	entity s = spawn();
 	s.classname = "zapper_spinner";
-	if (o.scorekeeper && o.scorekeeper.clientversion == CLIENT_OLDNEXUIZ)
-		s.model = "null";
-	else
-		s.model = "models/weapons/rtzapper_hyperhonker.iqm";
-
 	s.owner = self;
 	s.viewmodelforclient = o;
 	s.colormap = self.colormap;
@@ -110,7 +108,7 @@ void(void) weapon_zapper_spinner_spawn {
 	s.customizeentityforclient = weapon_zapper_spinner_customize;
 	setattachment(s, self.weaponentity, "shot");
 	setorigin(s, '-4 0 -0.5');
-	setmodel(s, s.model);
+	setmodel(s, "models/weapons/rtzapper_hyperhonker.iqm");
 	self.zapper_spinner = s;
 }
 
