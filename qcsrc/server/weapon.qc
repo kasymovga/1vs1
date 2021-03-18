@@ -65,7 +65,7 @@ void weapon_reload() {
 			weapon_melee_attack_check();
 	}
 	entity oldself = self;
-	self = Akimbo_Ghost(self);
+	self = Akimbo_Ghost(self, 2);
 	if (self)
 	if (self != oldself)
 		weapon_reload();
@@ -411,8 +411,9 @@ void weapon_frame()
 	{
 		if (!g_balance_weaponswitchdelay)
 		{
-			if (Akimbo_Active(self) > 1)
-			if not(Akimbo_HaveWeapon(self, _switchweapon))
+			float aw = Akimbo_Active(self);
+			if (aw > 1)
+			if not(Akimbo_HaveWeapon(self, _switchweapon, aw))
 				return;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(_switchweapon, WR_SETUP);
@@ -1084,22 +1085,27 @@ void weapon_model_exterior_dlc_reset() {
 		self.model = "";
 
 	entity ao = Akimbo_Owner(self.owner);
-	float akimbo_weapon = (Akimbo_Active(self.owner) == 2);
+	float akimbo_weapon = Akimbo_Active(self.owner);
+	if (akimbo_weapon < 2) akimbo_weapon = 0;
 	self.angles = '0 0 0';
 	if((tag_found = gettagindex(ao.body, "tag_weapon"))) {
 		self.tag_index = tag_found;
 		self.tag_entity = ao;
 		if (akimbo_weapon)
 			setorigin(self, '0 20 0');
-	} else if (akimbo_weapon && ao.akimbo_use_left_hand != '0 0 0') {
+	} else if (akimbo_weapon == 2 && ao.akimbo_use_left_hand != '0 0 0') {
 		if (akimbo_weapon)
 			setattachment(self, ao.body, "bip01 l hand");
 
 		self.angles = ao.akimbo_use_left_hand;
 	} else {
 		setattachment(self, ao.body, "bip01 r hand");
-		if (akimbo_weapon)
-			setorigin(self, '0 20 0');
+		if (akimbo_weapon) {
+			if (akimbo_weapon == 2)
+				setorigin(self, '0 20 0');
+			else
+				setorigin(self, '0 10 0');
+		}
 	}
 	self.oldorigin = self.angles;
 	// if that didn't find a tag, hide the exterior weapon model
@@ -1538,6 +1544,8 @@ vector(vector vecs, float y_is_right, float visual, float akimbo_active) weapon_
 	if (akimbo_active) {
 		if (akimbo_active == 2)
 			vecs_y = -vecs_y;
+		else if (akimbo_active == 3)
+			vecs_y = 0;
 
 		if not(visual) {
 			if (g_shootfromeye)
