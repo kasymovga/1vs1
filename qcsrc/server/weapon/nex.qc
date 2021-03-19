@@ -59,7 +59,7 @@ void weapon_nex_attack (void)
 	float flying;
 	flying = physics_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
 
-	antilag_begin(Akimbo_Owner(self));
+	antilag_begin(akimbo_owner(self));
 	weapon_setup_shot (self, 5, "weapons/nexfire.wav", 1);
 
 	yoda = 0;
@@ -69,7 +69,7 @@ void weapon_nex_attack (void)
 	antilag_end();
 
 	if(headshot)
-		announce(Akimbo_Owner(self), "announcer/male/headshot.wav", "^1Head^3Shot");
+		announce(akimbo_owner(self), "announcer/male/headshot.wav", "^1Head^3Shot");
 	else if((yoda && flying) || yoda > 1)
 		announce(self, "announcer/male/yoda.wav", "^5Amazing");
 	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "") {

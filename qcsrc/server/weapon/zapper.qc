@@ -96,7 +96,7 @@ void(void) weapon_zapper_spinner_spawn {
 	if (self.weaponentity.cnt != self.weapon)
 		return;
 
-	entity o = Akimbo_Owner(self);
+	entity o = akimbo_owner(self);
 	entity s = spawn();
 	s.classname = "zapper_spinner";
 	s.owner = self;
@@ -137,7 +137,7 @@ float(entity to, float sf) weapon_zapper_beam_send {
 		WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER_SHIELD);
 	else {
 		WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER);
-		if (Akimbo_Active(_owner)) {
+		if (akimbo_active(_owner)) {
 			sf |= 8;
 		}
 	}
@@ -285,7 +285,7 @@ void(void) weapon_zapper_attack1 {
 	e.classname = "zapper_beam";
 	e.think = weapon_zapper_beam_think;
 	e.nextthink = time;
-	e.owner = Akimbo_Owner(self);
+	e.owner = akimbo_owner(self);
 	e.enemy = self;
 	e.zapper_range = g_balance_zapper_primary_range;
 	float shottime = g_balance_zapper_primary_refire * weapon_rate_factor();
@@ -381,13 +381,13 @@ void(void) weapon_zapper_attack2 {
 	float range  = g_balance_zapper_secondary_range * accum;
 
 	makevectors(self.v_angle);
-	entity ao = Akimbo_Owner(self);
+	entity ao = akimbo_owner(self);
 	antilag_begin(ao);
 	dlc_sound(ao, CHAN_WEAPON, ((random() > 0.5) ? "misc/arc1.wav": "misc/arc2.wav"), VOL_BASE, ATTN_NORM);
 	weapon_setup_shot(self, 5, "", 1);
 
 	vector end = weapon_shotorg + weapon_shotdir * range;
-	entity o = Akimbo_Owner(self);
+	entity o = akimbo_owner(self);
 	weapon_zapper_attack2_beam(o, weapon_shotorg, weapon_shotorg_visual, end, 0, range, g_balance_zapper_secondary_bounces, _damage, force);
 	antilag_end();
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -502,13 +502,13 @@ void(void) weapon_zapper_attack3 {
 	b.think = weapon_zapper_shield_beam_think;
 	b.nextthink = time;
 	b.enemy = self;
-	b.owner = Akimbo_Owner(self);
+	b.owner = akimbo_owner(self);
 	b.zapper_shield = e;
 	net_link_entity(b, FALSE, 0, weapon_zapper_beam_send);
 	e.zapper_beam = b;
 	b = spawn();
 	b.classname = "zapper_shield_blocker";
-	b.owner = Akimbo_Owner(self);
+	b.owner = akimbo_owner(self);
 	b.think = weapon_zapper_shield_blocker_think;
 	b.zapper_shield = e;
 	b.nextthink = time;

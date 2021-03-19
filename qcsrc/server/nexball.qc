@@ -121,7 +121,7 @@ float(entity e) nexball_TeleportationForbiddenFor { return e.classname == "nexba
 
 var float(float f) nexball_SwitchWeaponMod_NextLink;
 float(float f) nexball_SwitchWeaponMod {
-	if (Akimbo_Owner(self).ballcarried)
+	if (akimbo_owner(self).ballcarried)
 		return 0;
 
 	return nexball_SwitchWeaponMod_NextLink(f);

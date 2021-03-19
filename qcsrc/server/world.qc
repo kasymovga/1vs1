@@ -97,7 +97,7 @@ void(void) world_static_init {
 
 	rune_init();
 	WalkieTalkie_Init();
-	Akimbo_Init();
+	akimbo_init();
 	hat_init();
 	Radio_Init();
 	BadAss_Init();

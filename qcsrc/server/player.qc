@@ -460,7 +460,7 @@ void(entity e, .vector anim, float looping, float override, float restart) playe
 
 	vector animv = e.anim;
 	if (e.akimbo_animation_shift)
-	if (Akimbo_Active(e))
+	if (akimbo_active(e))
 			animv_x = animv_x + e.akimbo_animation_shift;
 
 	anim_set(e.body, animv, looping, override, restart);
@@ -1267,7 +1267,7 @@ void player_voice_message(string type, string msg)
 }
 
 float(entity plr, entity viewer) player_alpha {
-	plr = Akimbo_Owner(plr);
+	plr = akimbo_owner(plr);
 	float dalpha = 1;
 	if (plr.classname == "observer") {
 		if(plr == viewer) {
@@ -1647,7 +1647,7 @@ void() player_think {
 	}
 	player_setup_model();
 	weapon_frame();
-	Akimbo_WeaponFrame();
+	akimbo_weapon_frame();
 	if(frametime) {
 		self.items &~= self.items_added;
 		self.items_added = 0;

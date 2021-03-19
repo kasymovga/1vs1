@@ -299,8 +299,7 @@ float(entity item, entity player) item_give_to {
 		{
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 				if (weapon_bit(i) & item.weapons & player.weapons)
-					if (Akimbo_GiveWeapon (player, i, item.netname))
-					{
+					if (akimbo_weapon_give(player, i, item.netname)) {
 						pickedup = TRUE;
 						sound (player, CHAN_AUTO, item.noise, VOL_BASE, ATTN_NORM);
 					}
@@ -382,7 +381,7 @@ float(entity item, entity player) item_give_to {
 					pickedup = TRUE;
 					weapon_give(player, e.weapon, item.netname);
 				}
-				else if (Akimbo_GiveWeapon (player, e.weapon, item.netname))
+				else if (akimbo_weapon_give(player, e.weapon, item.netname))
 					pickedup = TRUE;
 			}
 		}

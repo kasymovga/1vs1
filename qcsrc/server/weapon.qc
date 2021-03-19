@@ -64,12 +64,7 @@ void weapon_reload() {
 		if (weapon_melee_possible())
 			weapon_melee_attack_check();
 	}
-	entity oldself = self;
-	self = Akimbo_Ghost(self, 2);
-	if (self)
-	if (self != oldself)
-		weapon_reload();
-	self = oldself;
+	akimbo_reload(self);
 }
 
 void weapon_show_list(entity pl) {
@@ -351,7 +346,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		return;
 
 	wb = weapon_bit(w);
-	float akimbo_throw = Akimbo_Throw(wb);
+	float akimbo_throw = akimbo_weapon_throw(wb);
 	if not(akimbo_throw) {
 		if not(g_pickup_items)
 			return;
@@ -411,9 +406,9 @@ void weapon_frame()
 	{
 		if (!g_balance_weaponswitchdelay)
 		{
-			float aw = Akimbo_Active(self);
+			float aw = akimbo_active(self);
 			if (aw > 1)
-			if not(Akimbo_HaveWeapon(self, _switchweapon, aw))
+			if not(akimbo_weapon_have(self, _switchweapon, aw))
 				return;
 			weapon_action(self.weapon, WR_CLEAR);
 			weapon_action(_switchweapon, WR_SETUP);
@@ -648,7 +643,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
-		if (Akimbo_Active(self) < 2)
+		if (akimbo_active(self) < 2)
 			weapon_switch_force(self, weapon_best(self));
 		return FALSE;
 	}
@@ -672,7 +667,7 @@ float(float secondary, float attacktime) weapon_prepareattack {
 float() weapon_rate_factor {
 	float t;
 	entity oldself = self;
-	self = Akimbo_Owner(self);
+	self = akimbo_owner(self);
 	t = (1.0 / g_weaponratefactor) * gamehook_chain_weapon_rate_factor();
 	self = oldself;
 	return t;
@@ -687,7 +682,7 @@ float(entity o) weapon_rate_factor_for {
 }
 
 float() weapon_model_customize {
-	self.viewmodelforclient = Akimbo_Owner(self.owner);
+	self.viewmodelforclient = akimbo_owner(self.owner);
 	if(other.classname == "spectator")
 		if(other.enemy == self.viewmodelforclient)
 			self.viewmodelforclient = other;
@@ -853,7 +848,7 @@ void weapon_model_think()
 					}
 				}
 
-				self.viewmodelforclient = Akimbo_Owner(self.owner);
+				self.viewmodelforclient = akimbo_owner(self.owner);
 			}
 		}
 		else
@@ -877,10 +872,10 @@ void weapon_model_think()
 		{
 			vector v0;
 			v0 = self.movedir;
-			float akimbo_active = Akimbo_Active(self.owner);
-			self.movedir = weapon_shotorg_adjust(v0, FALSE, FALSE, akimbo_active);
-			self.shotorg_visual = weapon_shotorg_adjust(v0, FALSE, TRUE, akimbo_active);
-			self.view_ofs = weapon_shotorg_adjust(v0, FALSE, TRUE, akimbo_active) - v0;
+			float _akimbo_active = akimbo_active(self.owner);
+			self.movedir = weapon_shotorg_adjust(v0, FALSE, FALSE, _akimbo_active);
+			self.shotorg_visual = weapon_shotorg_adjust(v0, FALSE, TRUE, _akimbo_active);
+			self.view_ofs = weapon_shotorg_adjust(v0, FALSE, TRUE, _akimbo_active) - v0;
 		}
 		self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
@@ -1084,8 +1079,8 @@ void weapon_model_exterior_dlc_reset() {
 	else
 		self.model = "";
 
-	entity ao = Akimbo_Owner(self.owner);
-	float akimbo_weapon = Akimbo_Active(self.owner);
+	entity ao = akimbo_owner(self.owner);
+	float akimbo_weapon = akimbo_active(self.owner);
 	if (akimbo_weapon < 2) akimbo_weapon = 0;
 	self.angles = '0 0 0';
 	if((tag_found = gettagindex(ao.body, "tag_weapon"))) {
@@ -1138,7 +1133,7 @@ void weapon_model_exterior_think()
 	entity we = self.owner.weaponentity;
 	entity o = self.owner;
 	if (we.wframe == WFRAME_MELEE || (o.weapon == WEP_MELEE && (we.frame == WFRAME_FIRE1 || we.frame == WFRAME_FIRE2))) {
-		entity ao = Akimbo_Owner(o);
+		entity ao = akimbo_owner(o);
 		if (ao.anim_melee == ao.anim_shoot) {
 			float f;
 			if (time < o.weapon_morph1time)
@@ -1160,11 +1155,11 @@ void weapon_model_spawn()
 	self.weaponentity.classname = "weaponentity";
 	self.weaponentity.solid = SOLID_NOT;
 	self.weaponentity.owner = self;
-	self.weaponentity.realowner = Akimbo_Owner(self);
+	self.weaponentity.realowner = akimbo_owner(self);
 	setmodel(self.weaponentity, ""); // precision set when changed
 	setorigin(self.weaponentity, '0 0 0');
 	self.weaponentity.angles = '0 0 0';
-	self.weaponentity.viewmodelforclient = Akimbo_Owner(self);
+	self.weaponentity.viewmodelforclient = akimbo_owner(self);
 	self.weaponentity.flags = 0;
 	self.weaponentity.think = weapon_model_think;
 	self.weaponentity.customizeentityforclient = weapon_model_customize;
@@ -1175,7 +1170,7 @@ void weapon_model_spawn()
 	self.exteriorweaponentity.solid = SOLID_NOT;
 	self.exteriorweaponentity.exteriorweaponentity = self.exteriorweaponentity;
 	self.exteriorweaponentity.owner = self;
-	self.exteriorweaponentity.realowner = Akimbo_Owner(self);
+	self.exteriorweaponentity.realowner = akimbo_owner(self);
 	setorigin(self.exteriorweaponentity, '0 0 0');
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = weapon_model_exterior_think;
@@ -1379,7 +1374,7 @@ void() weapon_ready {
 void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir {
 	vector vecs, vecs_visual, dv;
 	entity ent_orig = ent;
-	ent = Akimbo_Owner(ent);
+	ent = akimbo_owner(ent);
 	// Track max damage and set the stat to be sent later in g_world.qc
 	if (maxhits > 0)
 		damage_record_fires(ent, ent.weapon, maxhits);
@@ -1402,7 +1397,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	weapon_shotorg = weapon_shotorg + dv;
 
 	// calculate the shotdir from the chosen shotorg
-	if (Akimbo_Active(ent))
+	if (akimbo_active(ent))
 		weapon_shotdir = s_forward;
 	else
 	{
@@ -1540,11 +1535,11 @@ vector(vector vecs, float y_is_right, float allowcenter) weapon_shotorg_adjustfr
 	return vecs;
 }
 
-vector(vector vecs, float y_is_right, float visual, float akimbo_active) weapon_shotorg_adjust {
-	if (akimbo_active) {
-		if (akimbo_active == 2)
+vector(vector vecs, float y_is_right, float visual, float _akimbo_active) weapon_shotorg_adjust {
+	if (_akimbo_active) {
+		if (_akimbo_active == 2)
 			vecs_y = -vecs_y;
-		else if (akimbo_active == 3)
+		else if (_akimbo_active == 3)
 			vecs_y = 0;
 
 		if not(visual) {
@@ -1605,7 +1600,7 @@ void(entity flash, vector offset) weapon_attach_to_shotorg {
 		xflash = spawn();
 		copyentity(flash, xflash);
 
-		flash.viewmodelforclient = Akimbo_Owner(self);
+		flash.viewmodelforclient = akimbo_owner(self);
 
 		if(self.weaponentity.oldorigin_x > 0)
 		{

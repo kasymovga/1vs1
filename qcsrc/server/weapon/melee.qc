@@ -54,12 +54,12 @@ void(void) weapon_melee_attack_think {
 void weapon_melee_attack (float melee_type, float axe)
 {
 	if (melee_type == 2)
-	if (Akimbo_Active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
+	if (akimbo_active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
 		return;
 
-	sound (Akimbo_Owner(self), CHAN_WEAPON, sv_sound_melee, VOL_BASE, ATTN_NORM);
+	sound(akimbo_owner(self), CHAN_WEAPON, sv_sound_melee, VOL_BASE, ATTN_NORM);
 	entity melee = spawn();
-	melee.owner = Akimbo_Owner(self);
+	melee.owner = akimbo_owner(self);
 	melee.think = weapon_melee_attack_think;
 	melee.delay = melee.nextthink = time + g_balance_melee_delay;
 	melee.cnt = melee.count = max(1, 1 + ceil(g_balance_melee_time / g_balance_melee_ticrate));
@@ -80,7 +80,7 @@ void weapon_melee_attack (float melee_type, float axe)
 
 float weapon_melee_possible()
 {
-	if not(Akimbo_Owner(self).crouch && !g_balance_melee_allow_crouched)
+	if not(akimbo_owner(self).crouch && !g_balance_melee_allow_crouched)
 	if (g_balance_melee)
 		return TRUE;
 

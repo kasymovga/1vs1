@@ -34,7 +34,7 @@ void weapon_minstanex_attack (void)
 	float flying;
 	flying = physics_is_flying(self); // do this BEFORE to make the trace values from bullet_railgun last
 
-	antilag_begin(Akimbo_Owner(self));
+	antilag_begin(akimbo_owner(self));
 	weapon_setup_shot (self, 0, "weapons/minstanexfire.wav", 1);
 
 	yoda = 0;
@@ -92,7 +92,7 @@ void weapon_minstanex_attack (void)
 		if (g_balance_minstanex_explode) {
 			entity e = spawn();
 			setorigin(e, trace_endpos);
-			entity o = Akimbo_Owner(self);
+			entity o = akimbo_owner(self);
 			damage_radius (e, o, g_balance_minstanex_explode_damage, g_balance_minstanex_explode_edgedamage, g_balance_minstanex_explode_radius, world, g_balance_minstanex_explode_force, 0, world);
 			pointparticles(particleeffectnum("rocket_explode"), trace_endpos, '0 0 0', 1);
 			remove(e);

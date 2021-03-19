@@ -192,7 +192,7 @@ void weapon_rocketlauncher_attack (void)
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force);
 
 	missile.classname = "rocket"; //for remote exploding
-	missile.realowner = self; //we neeed it without Akimbo_Owner for guiding
+	missile.realowner = self; //we neeed it without akimbo_owner for guiding
 	missile.lastrocket = self;
 	self.lastrocket = missile;
 	if(g_balance_rocketlauncher_detonatedelay >= 0)

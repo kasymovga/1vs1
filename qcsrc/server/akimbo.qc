@@ -3,9 +3,10 @@
 float g_akimbo_weapons;
 float g_akimbo_throwable;
 float weapons_with_akimbo_support;
-void Akimbo_Clear(entity e);
+void(entity e) akimbo_clear;
+entity(entity e, float deep) akimbo_ghost_get;
 
-void Akimbo_GhostHide(entity e) {
+void(entity e) akimbo_ghost_hide {
 	entity oldself = self;
 	self = e.akimbo_ghost;
 	weapon_action(self.weapon, WR_CLEAR);
@@ -21,25 +22,25 @@ void Akimbo_GhostHide(entity e) {
 		self.weaponentity.cnt = 0;
 }
 
-void(entity e) Akimbo_GhostRemove {
+void(entity e) akimbo_ghost_remove {
 	if (e.akimbo_ghost.akimbo_ghost)
-		Akimbo_GhostRemove(e.akimbo_ghost);
+		akimbo_ghost_remove(e.akimbo_ghost);
 
 	if (e.akimbo_ghost.weaponentity)
-		Akimbo_GhostHide(e);
+		akimbo_ghost_hide(e);
 
 	remove(e.akimbo_ghost);
 	e.akimbo_ghost = world;
 }
 
-void(void) Akimbo_WeaponFrame {
+void(void) akimbo_weapon_frame {
 	float akimbo_weapon;
 	float i;
 	entity _akimbo_ghost;
 	entity pl = self;
 	entity prevself;
 	for (i = 2; i < 4; i++) {
-		_akimbo_ghost = Akimbo_Ghost(pl, i);
+		_akimbo_ghost = akimbo_ghost_get(pl, i);
 		if (_akimbo_ghost) {
 			if (_akimbo_ghost.switchweapon != pl.switchweapon)
 				_akimbo_ghost.switchweapon = pl.switchweapon;
@@ -52,7 +53,7 @@ void(void) Akimbo_WeaponFrame {
 			akimbo_weapon = pl.weapon;
 
 		prevself = self;
-		if (akimbo_weapon && Akimbo_HaveWeapon(pl, akimbo_weapon, i)) {
+		if (akimbo_weapon && akimbo_weapon_have(pl, akimbo_weapon, i)) {
 			self = _akimbo_ghost;
 			if not(self.weaponentity) {
 				if not(self)
@@ -97,19 +98,19 @@ void(void) Akimbo_WeaponFrame {
 			pl.ammo_rockets = self.ammo_rockets;
 		} else {
 			if (_akimbo_ghost.weaponentity)
-				Akimbo_GhostHide(prevself);
+				akimbo_ghost_hide(prevself);
 		}
 	}
 	self = pl;
 }
 
-var void(float killed) Akimbo_PlayerClear_NextLink;
-void(float killed) Akimbo_PlayerClear {
-	Akimbo_Clear(self);
-	Akimbo_PlayerClear_NextLink(killed);
+var void(float killed) akimbo_player_clear_next;
+void(float killed) akimbo_player_clear {
+	akimbo_clear(self);
+	akimbo_player_clear_next(killed);
 }
 
-float(float wbit) Akimbo_Throw {
+float(float wbit) akimbo_weapon_throw {
 	if (g_akimbo_weapons)
 	if (self.akimbo_weapons & wbit) {
 		self.akimbo_weapons &~= wbit;
@@ -118,7 +119,7 @@ float(float wbit) Akimbo_Throw {
 	return FALSE;
 }
 
-void(void) Akimbo_Init {
+void(void) akimbo_init {
 	float i, j, n;
 	string s = cvar_string("g_akimbo_weapons");
 	weapons_with_akimbo_support =
@@ -155,11 +156,11 @@ void(void) Akimbo_Init {
 
 	CVAR_CACHE(g_akimbo_animation_shift);
 	CVAR_CACHE(g_akimbo_throwable);
-	Akimbo_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = Akimbo_PlayerClear;
+	akimbo_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = akimbo_player_clear;
 }
 
-entity(entity e) Akimbo_Owner {
+entity(entity e) akimbo_owner {
 	if (e.owner) {
 		entity e2 = e.owner.akimbo_ghost;
 		for ( ; e2; e2 = e2.akimbo_ghost)
@@ -169,7 +170,7 @@ entity(entity e) Akimbo_Owner {
 	return e;
 }
 
-entity(entity e, float deep) Akimbo_Ghost {
+entity(entity e, float deep) akimbo_ghost_get {
 	float i;
 	entity e2;
 	if (e.owner)
@@ -184,7 +185,7 @@ entity(entity e, float deep) Akimbo_Ghost {
 	return e2;
 }
 
-float(entity p, float wpn, string name) Akimbo_GiveWeapon {
+float(entity p, float wpn, string name) akimbo_weapon_give {
 	float wpnbit = weapon_bit(wpn);
 	if (wpnbit & p.akimbo_weapons)
 		return FALSE;
@@ -199,7 +200,7 @@ float(entity p, float wpn, string name) Akimbo_GiveWeapon {
 	return FALSE;
 }
 
-float(entity p, float wpn, string name) Akimbo_DropWeapon {
+float(entity p, float wpn, string name) akimbo_weapon_drop {
 	float wpnbit = weapon_bit(wpn);
 	if not(g_akimbo_weapons & wpnbit)
 		return FALSE;
@@ -214,7 +215,7 @@ float(entity p, float wpn, string name) Akimbo_DropWeapon {
 	return TRUE;
 }
 
-float(entity e) Akimbo_Active {
+float(entity e) akimbo_active {
 	entity e2 = (e.owner ? e.owner.akimbo_ghost : e.akimbo_ghost);
 	if not(e2)
 		return 0;
@@ -229,14 +230,14 @@ float(entity e) Akimbo_Active {
 	return 1;
 }
 
-void(entity e) Akimbo_Clear {
+void(entity e) akimbo_clear {
 	if (e.akimbo_ghost)
-		Akimbo_GhostRemove(e);
+		akimbo_ghost_remove(e);
 
 	e.akimbo_weapons = 0;
 }
 
-float(entity e, float wpn, float deep) Akimbo_HaveWeapon {
+float(entity e, float wpn, float deep) akimbo_weapon_have {
 	float wpnbit = weapon_bit(wpn);
 	if not(wpnbit & weapons_with_akimbo_support)
 		return FALSE;
@@ -250,4 +251,13 @@ float(entity e, float wpn, float deep) Akimbo_HaveWeapon {
 		return deep == 2;
 	}
 	return FALSE;
+}
+
+void(entity e) akimbo_reload {
+	entity oldself = self;
+	self = e.akimbo_ghost;
+	if (self) {
+		weapon_reload();
+	}
+	self = oldself;
 }

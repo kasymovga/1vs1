@@ -25,8 +25,7 @@ void(vector start, vector end, float bdamage, float bforce, float mindist, float
 	local float endq3surfaceflags;
 	//local entity explosion;
 	float f, ffs;
-	self = Akimbo_Owner(self);
-
+	self = akimbo_owner(self);
 	dir = normalize(end - start);
 
 	// go a little bit into the wall because we need to hit this wall later
@@ -293,7 +292,7 @@ void bullet_no_gravity_trace_callback(vector start, vector hit, vector end)
 void bullet_begin(float pSpeed) {
 	bulletHitScan = (g_antilag_bullets && pSpeed >= g_antilag_bullets);
 	if (bulletHitScan) {
-		entity o = Akimbo_Owner(self);
+		entity o = akimbo_owner(self);
 		antilag_begin(o);
 	}
 }
@@ -304,7 +303,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 	if(bulletHitScan)
 	{
 		proj = spawn();
-		self = Akimbo_Owner(self);
+		self = akimbo_owner(self);
 		proj.owner = self;
 		proj.clipgroup = self.clipgroup;
 	} else {
