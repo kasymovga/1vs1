@@ -35,7 +35,7 @@ void(entity e) akimbo_ghost_remove {
 
 void(void) akimbo_weapon_frame {
 	float akimbo_weapon;
-	float i;
+	float i, j;
 	entity _akimbo_ghost;
 	entity pl = self;
 	entity prevself;
@@ -55,24 +55,10 @@ void(void) akimbo_weapon_frame {
 		prevself = self;
 		if (akimbo_weapon && akimbo_weapon_have(pl, akimbo_weapon, i)) {
 			self = _akimbo_ghost;
-			if not(self.weaponentity) {
-				if not(self)
-					prevself.akimbo_ghost = self = spawn();
-
-				self.weapon = akimbo_weapon;
-				self.switchweapon = akimbo_weapon;
-				self.modelindex = pl.modelindex;
-				self.weapons = pl.weapons;
-				self.owner = pl;
-				self.cvar_cl_gunalpha = pl.cvar_cl_gunalpha;
-				weapon_model_spawn();
-				self.weaponentity.state = WS_RAISE;
-				weapon_action(self.weapon, WR_SETUP);
-				weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
-				self = self.weaponentity;
-				self.think();
-				self = prevself.akimbo_ghost;
-				prevself.weaponentity.cnt = 0;
+			if not(self) {
+				prevself.akimbo_ghost = self = spawn();
+				for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+					weapon_action(j, WR_RESETPLAYER);
 			}
 			self.ammo_shells = pl.ammo_shells;
 			self.ammo_cells = pl.ammo_cells;
@@ -91,6 +77,22 @@ void(void) akimbo_weapon_frame {
 			self.origin = pl.origin;
 			self.cnt = pl.cnt;
 			self.items = pl.items;
+			if not(self.weaponentity) {
+				self.weapon = akimbo_weapon;
+				self.switchweapon = akimbo_weapon;
+				self.modelindex = pl.modelindex;
+				self.weapons = pl.weapons;
+				self.owner = pl;
+				self.cvar_cl_gunalpha = pl.cvar_cl_gunalpha;
+				weapon_model_spawn();
+				self.weaponentity.state = WS_RAISE;
+				weapon_action(self.weapon, WR_SETUP);
+				weapon_thinkf(WFRAME_IDLE, g_balance_weaponswitchdelay, weapon_ready);
+				self = self.weaponentity;
+				self.think();
+				self = prevself.akimbo_ghost;
+				prevself.weaponentity.cnt = 0;
+			}
 			weapon_frame();
 			pl.ammo_shells = self.ammo_shells;
 			pl.ammo_cells = self.ammo_cells;
