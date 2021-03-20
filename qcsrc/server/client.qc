@@ -655,6 +655,9 @@ void client_cvars_request() {
 	stuffcmd(self, "sendcvar cl_gunalign\n");
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
 	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
+	if (rank_available) {
+		stuffcmd(self, strcat("sendcvar _rank", rank_id, "\n"));
+	}
 }
 
 void() client_cvars_parse {
@@ -714,6 +717,18 @@ void() client_cvars_parse {
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;
 		if (f < reqrate)
 			stuffcmd(self, "rate " + ftos(reqrate) + "\n");
+	} else if (s == strcat("_rank", rank_id)) {
+		f = stof(val);
+		if (f <= 0)
+			f = 1000;
+
+		f = bound(100, f, 10000);
+		if (rank_available) {
+			if (self.scorekeeper) {
+				print(self.netname, " have rank ", ftos(f), "\n");
+				score_player_set(self, RANK_SCORE_PLAYER_FIELD, floor(f));
+			}
+		}
 	}
 }
 

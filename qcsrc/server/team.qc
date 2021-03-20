@@ -10,6 +10,7 @@ float g_balance_teams_autoswap_zerolead;
 float g_balance_teams_autoswap_lead;
 float g_balance_teams_adjust_sizes;
 float g_balance_teams_adjust_sizes_factor;
+float g_balance_teams_use_rank;
 float g_changeteam_banned;
 float bot_vs_human;
 float autoswap_last_from;
@@ -199,9 +200,13 @@ void(entity ignore) team_teams_count {
 	// also remember the lowest-scoring player
 	FOR_EACH_CLIENT(head) {
 		if (head != ignore) {
-			value = 1;
+			if (g_balance_teams_use_rank)
+				value = head.scorekeeper.rank * 0.001;
+			else
+				value = 1;
+
 			if (clienttype(head) == CLIENTTYPE_BOT)
-				bvalue = value;
+				bvalue = value = 1;
 			else
 				bvalue = 0;
 
@@ -784,6 +789,7 @@ void(void) team_init {
 	CVAR_CACHE(g_balance_teams_prevent_imbalance);
 	CVAR_CACHE(g_balance_teams_adjust_sizes);
 	CVAR_CACHE(g_balance_teams_adjust_sizes_factor);
+	CVAR_CACHE(g_balance_teams_use_rank);
 	CVAR_CACHE(g_changeteam_banned);
 	CVAR_CACHE(bot_vs_human);
 }

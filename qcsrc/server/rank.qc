@@ -1,0 +1,68 @@
+void(void) rank_init {
+	if (rank_available)
+		return;
+
+	if (team_mode && team_teams == 1)
+		return;
+
+	string rank_prefix;
+	if (team_mode)
+		rank_prefix = "team";
+	else if (g_maxplayers == 2)
+		rank_prefix = "duel";
+	else
+		rank_prefix = "ffa";
+
+	rank_id = strzone(strcat(rank_prefix, cvar_string("g_rank_type")));
+	rank_available = 1;
+	RANK_SCORE_PLAYER_FIELD = score_register("rank", SFL_NOCLEAR);
+	rank = scores[RANK_SCORE_PLAYER_FIELD];
+}
+
+void(void) rank_distribute {
+	entity pl;
+	float totalscorepm = 0;
+	float totalrank = 0;
+	float newtotalrank = 0;
+	float newrank;
+	float score;
+	float totalplayers = 0;
+	FOR_EACH_REALCLIENT(pl) {
+		if (pl.classname == "player" || pl.team > 0)
+		if (pl.scorekeeper)
+		if (pl.scorekeeper.rank)
+		if (pl.play_time > 60) {
+			score = max(0, pl.scorekeeper.scores[SP_SCORE] / (pl.play_time / 60));
+			totalrank += pl.scorekeeper.rank;
+			totalscorepm += score;
+			totalplayers++;
+		}
+	}
+	if (totalplayers < 2)
+		return;
+
+	FOR_EACH_REALCLIENT(pl) {
+		if (pl.classname == "player" || pl.team > 0)
+		if (pl.scorekeeper)
+		if (pl.scorekeeper.rank)
+		if (pl.play_time > 60) {
+			score = max(0, pl.scorekeeper.scores[SP_SCORE] / (pl.play_time / 60));
+			newrank = totalrank * (score / totalscorepm);
+			newrank = bound(100, newrank * 0.1 + pl.scorekeeper.rank * 0.9 + 0.5, 10000);
+			newtotalrank += newrank;
+			pl.rank = newrank;
+		}
+	}
+	float norm = totalrank / newtotalrank;
+	FOR_EACH_REALCLIENT(pl) {
+		if (pl.classname == "player" || pl.team > 0)
+		if (pl.scorekeeper)
+		if (pl.scorekeeper.rank)
+		if (pl.play_time > 60) {
+			print(pl.netname, ": rank changed: ", ftos(pl.scorekeeper.rank));
+			newrank = floor(norm * pl.rank + 0.5);
+			print(" -> ", ftos(newrank), "\n");
+			stuffcmd(pl, strcat("seta _rank", rank_id, " ", ftos(newrank) , "\n"));
+		}
+	}
+}

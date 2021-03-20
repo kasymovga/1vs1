@@ -158,6 +158,7 @@ monster.qh
 ../client-server/anglestransform.qh
 ../client-server/warpzone.qh
 warpzone.qh
+rank.qh
 ../common/gametype.qc
 ../common/colormap.qc
 ../common/db.qc
@@ -417,3 +418,4 @@ warfog.qc
 hint.qc
 lms.qc
 report.qc
+rank.qc

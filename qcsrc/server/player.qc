@@ -1600,7 +1600,8 @@ void() player_regen {
 void() player_think {
 	if(self.deadflag == DEAD_NO)
 	if not(map_finished)
-		self.play_time += frametime;
+	if not(warmup_active)
+		self.play_time = self.play_time + frametime;
 
 	if(self.teleport_time)
 	if(time > self.teleport_time) {

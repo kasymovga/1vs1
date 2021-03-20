@@ -947,8 +947,11 @@ void(float sprio, float stprio, float score_enabled) score_basics {
 	if not(player_independent)
 		SP_SUICIDES = score_register("suicides", SFL_LOWER_IS_BETTER);
 
-	if(score_enabled)
+	if(score_enabled) {
 		SP_SCORE = score_register("score", sprio);
+		if (sprio == SFL_SORT_PRIO_PRIMARY)
+			rank_init();
+	}
 }
 
 void() score_basics_end {
