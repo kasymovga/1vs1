@@ -41,6 +41,7 @@ void(void) rank_distribute {
 	if (totalplayers < 2)
 		return;
 
+	totalrank = totalrank * 0.95 + totalplayers * 50; // slowly normalize to 1000 per player
 	FOR_EACH_REALCLIENT(pl) {
 		if (pl.classname == "player" || pl.team > 0)
 		if (pl.scorekeeper)
@@ -53,7 +54,7 @@ void(void) rank_distribute {
 			pl.rank = newrank;
 		}
 	}
-	float norm = totalrank / newtotalrank;
+	float norm = totalrank / newtotalrank; // keep total rank at same level
 	FOR_EACH_REALCLIENT(pl) {
 		if (pl.classname == "player" || pl.team > 0)
 		if (pl.scorekeeper)
