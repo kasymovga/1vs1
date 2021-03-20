@@ -38,7 +38,7 @@ void(void) rank_distribute {
 			totalplayers++;
 		}
 	}
-	if (totalplayers < 2)
+	if (totalplayers < 1)
 		return;
 
 	totalrank = totalrank * 0.95 + totalplayers * 50; // slowly normalize to 1000 per player
@@ -60,10 +60,19 @@ void(void) rank_distribute {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
-			print(pl.netname, ": rank changed: ", ftos(pl.scorekeeper.rank));
+			print(pl.netname, " have rank changed: ", ftos(pl.scorekeeper.rank));
 			newrank = floor(norm * pl.rank + 0.5);
 			print(" -> ", ftos(newrank), "\n");
-			stuffcmd(pl, strcat("seta _rank", rank_id, " ", ftos(newrank) , "\n"));
+			db_put(db_server, strcat("r/", rank_id, "/", pl.clid), ftos(newrank));
 		}
 	}
+}
+
+void(void) rank_load {
+	float _rank = stof(db_get(db_server, strcat("r/", rank_id, "/", self.clid)));
+	if not(_rank)
+		_rank = 1000;
+
+	print(self.netname, " have rank: ", ftos(_rank), "\n");
+	score_player_set(self, RANK_SCORE_PLAYER_FIELD, _rank);
 }

@@ -656,7 +656,7 @@ void client_cvars_request() {
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
 	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
 	if (rank_available) {
-		stuffcmd(self, strcat("sendcvar _rank", rank_id, "\n"));
+		stuffcmd(self, "sendcvar _cl_id\n");
 	}
 }
 
@@ -717,16 +717,22 @@ void() client_cvars_parse {
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;
 		if (f < reqrate)
 			stuffcmd(self, "rate " + ftos(reqrate) + "\n");
-	} else if (s == strcat("_rank", rank_id)) {
-		f = stof(val);
-		if (f <= 0)
-			f = 1000;
-
-		f = bound(100, f, 10000);
+	} else if (s == "_cl_id") {
+		str_unzone_ifneeded(self.clid);
+		if (strlen(val) == 16) {
+			self.clid = strzone(val);
+		} else {
+			self.clid = strftime(TRUE, "%y%m%d%H%M%S");
+			for (f = 0; f < 4; f++) {
+				self.clid = strcat(self.clid, substring("0123456789abcdefg", floor(random() * 16), 1));
+			}
+			self.clid = strzone(self.clid);
+			print(self.netname, ": new id: ", self.clid, "\n");
+			stuffcmd(self, strcat("seta _cl_id ", self.clid, "\n"));
+		}
 		if (rank_available) {
 			if (self.scorekeeper) {
-				print(self.netname, " have rank ", ftos(f), "\n");
-				score_player_set(self, RANK_SCORE_PLAYER_FIELD, floor(f));
+				rank_load();
 			}
 		}
 	}
@@ -740,6 +746,7 @@ void() client_cvars_free {
 		str_unzone_ifneeded(self.cvar_cl_weaponpriorities[i]);
 		(self.cvar_cl_weaponpriorities[i]) = "";
 	}
+	str_unzone_ifneeded(self.clid);
 }
 
 void(string _name) client_mute_ifneeded {

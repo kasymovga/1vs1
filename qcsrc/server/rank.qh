@@ -4,3 +4,4 @@ string rank_id;
 float rank_available;
 void(void) rank_init;
 void(void) rank_distribute;
+void(void) rank_load;
