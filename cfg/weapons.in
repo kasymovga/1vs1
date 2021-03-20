@@ -199,7 +199,7 @@ alias weapnex "impulse 236"
 
 //Crylink
 set g_balance_crylink_primary_damage 18
-set g_balance_crylink_primary_edgedamage 0
+set g_balance_crylink_primary_edgedamage 9
 set g_balance_crylink_primary_force -55
 set g_balance_crylink_primary_radius 80
 set g_balance_crylink_primary_speed 7000
