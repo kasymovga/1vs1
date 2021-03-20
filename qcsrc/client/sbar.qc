@@ -414,7 +414,7 @@ string Sbar_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
 		"ping pl ?cv ?cn name | ",
-		"-teams,race,single/kills -teams,single/deaths -teams,race,single/suicides -race,dm,tdm,coop,single/frags ", // tdm already has this in "score"
+		"+teams/rank -teams,race,single/kills -teams,single/deaths -teams,race,single/suicides -race,dm,tdm,coop,single/frags ", // tdm already has this in "score"
 		"?damage ?bestwep +ca,ft,surv,catf,ctft,khca,khft,lms/status "
 		"+ctf,catf,ctft/caps +ctf,catf,ctft/pickups +ctf,catf,ctft/fckills +ctf,catf,ctft/returns ",
 		"+kh,khca,khft/caps +kh,khca,khft/pushes +kh,khca,khft/destroyed ",
