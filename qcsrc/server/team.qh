@@ -6,7 +6,6 @@ void(entity pl, float forcebestteam) team_join_best;
 float(entity pl) team_find_smallest;
 void(entity ignore) team_teams_count;
 string(float t) team_colored_name;
-void() teams_balance_check;
 void(entity pl) team_teams_allowed;
 float(entity a, entity b) team_is_different_teams;
 void(float t) team_spawn_players;

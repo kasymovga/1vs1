@@ -2,13 +2,9 @@ float g_balance_teams;
 float g_balance_teams_force;
 float g_balance_teams_movetype;
 float g_balance_teams_prevent_imbalance;
-float g_balance_teams_adjust_sizes;
-float g_balance_teams_adjust_sizes_factor;
 float g_balance_teams_use_rank;
 float g_changeteam_banned;
 float bot_vs_human;
-float team_size_adjust;
-float team_size_adjust_value;
 
 void team_change(entity pl, float dteam, float nobalance);
 void team_balance_audit(float force);
@@ -217,21 +213,6 @@ void(entity ignore) team_teams_count {
 					team4_bots = team4_bots + bvalue;
 				}
 			}
-		}
-	}
-	float n = team1 + team2;
-	if (team1 >= 0)
-	if (team2 >= 0)
-	if (team3 < 0)
-	if (team4 < 0)
-	if (n > 2)
-	if (team_size_adjust) {
-		float f = ceil((n + ((ignore.team > 0) ? 0 : 1)) * team_size_adjust_value * g_balance_teams_adjust_sizes_factor);
-		f = bound(0, f, n - 2);
-		if (team_size_adjust == COLOR_TEAM1) {
-			team1 = team1 + f;
-		} else if (team_size_adjust == COLOR_TEAM2) {
-			team2 = team2 + f;
 		}
 	}
 }
@@ -759,34 +740,9 @@ void(void) team_init {
 	CVAR_CACHE(g_balance_teams_force);
 	CVAR_CACHE(g_balance_teams_movetype);
 	CVAR_CACHE(g_balance_teams_prevent_imbalance);
-	CVAR_CACHE(g_balance_teams_adjust_sizes);
-	CVAR_CACHE(g_balance_teams_adjust_sizes_factor);
 	CVAR_CACHE(g_balance_teams_use_rank);
 	CVAR_CACHE(g_changeteam_banned);
 	CVAR_CACHE(bot_vs_human);
-}
-
-void() teams_balance_check {
-	if (map_finished)
-		return;
-
-	if (bot_vs_human)
-		return;
-
-	float t1 = score_team_comparable_value(COLOR_TEAM1);
-	float t2 = score_team_comparable_value(COLOR_TEAM2);
-	if (g_balance_teams_adjust_sizes > 0) {
-		float f = t2 - t1;
-		team_size_adjust = 0;
-		if (f >= g_balance_teams_adjust_sizes) {
-			team_size_adjust = COLOR_TEAM2;
-			team_size_adjust_value = (f / g_balance_teams_adjust_sizes);
-		} else if (f <= -g_balance_teams_adjust_sizes) {
-			team_size_adjust = COLOR_TEAM1;
-			team_size_adjust_value = (f / -g_balance_teams_adjust_sizes);
-		}
-		team_balance_audit(FALSE);
-	}
 }
 
 float(entity a, entity b) team_is_different_teams {

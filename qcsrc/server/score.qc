@@ -115,10 +115,6 @@ float(float t, float scorefield, float score) score_team_add_to {
 		if(score_team_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
 	(s.(teamscores[scorefield]) += score);
-	if (score)
-	if (scorefield == score_team_primary_scorefield)
-		defer(1, teams_balance_check);
-
 	return s.(teamscores[scorefield]);
 }
 
