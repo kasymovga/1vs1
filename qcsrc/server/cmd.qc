@@ -483,7 +483,6 @@ void(string command) cmd_game {
 	if (cmd == "shuffleteams")
 	{
 		float t = COLOR_TEAM4;
-		autoswap_last_best = world;
 		random_queue_start();
 		FOR_EACH_TEAMPLAYER(plr)
 			random_queue_push(plr, 0, "");

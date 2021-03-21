@@ -1,10 +1,4 @@
 set g_balance_teams_prevent_imbalance 1 "prevent players from changing to larger teams"
-set g_balance_teams_autoswap 0
-set g_balance_teams_autoswap_from_small_team_minplayers 9
-set g_balance_teams_autoswap_interval 60
-set g_balance_teams_autoswap_required_humans 3
-set g_balance_teams_autoswap_zerolead 0
-set g_balance_teams_autoswap_lead 5
 set g_balance_teams_adjust_sizes 0 "Score difference for adjust sizes of teams"
 set g_balance_teams_adjust_sizes_factor 0.1
 set g_balance_teams_movetype 1 "1 - random player, 2 - player with highest score, all other values - player with lowest score"

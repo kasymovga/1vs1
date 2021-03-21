@@ -2,19 +2,11 @@ float g_balance_teams;
 float g_balance_teams_force;
 float g_balance_teams_movetype;
 float g_balance_teams_prevent_imbalance;
-float g_balance_teams_autoswap;
-float g_balance_teams_autoswap_from_small_team_minplayers;
-float g_balance_teams_autoswap_required_humans;
-float g_balance_teams_autoswap_interval;
-float g_balance_teams_autoswap_zerolead;
-float g_balance_teams_autoswap_lead;
 float g_balance_teams_adjust_sizes;
 float g_balance_teams_adjust_sizes_factor;
 float g_balance_teams_use_rank;
 float g_changeteam_banned;
 float bot_vs_human;
-float autoswap_last_from;
-entity autoswap_last_best;
 float team_size_adjust;
 float team_size_adjust_value;
 
@@ -177,16 +169,6 @@ void(entity for_whom) team_teams_allowed {
 			else
 				team1 = -1;
 		}
-	}
-	if (for_whom && for_whom == autoswap_last_best) {
-		if (autoswap_last_from == COLOR_TEAM1)
-			team1 = -1;
-		else if (autoswap_last_from == COLOR_TEAM2)
-			team2 = -1;
-		else if (autoswap_last_from == COLOR_TEAM3)
-			team3 = -1;
-		else if (autoswap_last_from == COLOR_TEAM4)
-			team4 = -1;
 	}
 }
 
@@ -621,10 +603,6 @@ void(float source_team) team_shuffle_player_out {
 		bprint("warning: source team invalid\n");
 		return;
 	}
-	// move the player to the new team
-	if (autoswap_last_best == selected)
-		autoswap_last_best = world;
-
 	entity oldself = self;
 	self = selected;
 	player_clear(FALSE);
@@ -778,12 +756,6 @@ void(float force) team_balance_audit {
 
 void(void) team_init {
 	CVAR_CACHE(g_balance_teams);
-	CVAR_CACHE(g_balance_teams_autoswap);
-	CVAR_CACHE(g_balance_teams_autoswap_from_small_team_minplayers);
-	CVAR_CACHE(g_balance_teams_autoswap_required_humans);
-	CVAR_CACHE(g_balance_teams_autoswap_interval);
-	CVAR_CACHE(g_balance_teams_autoswap_zerolead);
-	CVAR_CACHE(g_balance_teams_autoswap_lead);
 	CVAR_CACHE(g_balance_teams_force);
 	CVAR_CACHE(g_balance_teams_movetype);
 	CVAR_CACHE(g_balance_teams_prevent_imbalance);
@@ -794,50 +766,6 @@ void(void) team_init {
 	CVAR_CACHE(bot_vs_human);
 }
 
-float autoswap_last_time;
-void(float from, float to) team_autoswap_best_with_worst {
-	entity best = world, worst = world;
-	entity e;
-	autoswap_last_time = time;
-	autoswap_last_from = from;
-	FOR_EACH_PLAYER(e) {
-		if (e.team == from) {
-			if (best) {
-				if (score_compare_players(best.scorekeeper, e.scorekeeper) < 0)
-					best = e;
-			} else
-				best = e;
-		}
-	}
-	FOR_EACH_PLAYER(e) {
-		if (e.team == to) {
-			if (worst) {
-				if (score_compare_players(worst.scorekeeper, e.scorekeeper) > 0)
-					worst = e;
-			} else
-				worst = e;
-		}
-	}
-	autoswap_last_best = best;
-	if (best) {
-		if (team1 - team2 == 0 && worst) {
-			team_change(best, to, TRUE);
-			team_change(worst, from, TRUE);
-		} else if ((team1 < team2 && from == COLOR_TEAM2) || (team1 > team2 && from == COLOR_TEAM1)) {
-			team_change(best, to, TRUE);
-			if (fabs(team1 - team2) == 1 && worst) {
-				team_change(worst, from, TRUE);
-			} else
-				team_balance_audit(FALSE);
-		} else if ((team1 == team2 + 1 && from == COLOR_TEAM2) || (team1 + 1 == team2 && from == COLOR_TEAM1) && worst && team1 + team2 >= g_balance_teams_autoswap_from_small_team_minplayers) {
-			team_change(best, to, TRUE);
-			team_change(worst, from, TRUE);
-		}
-	}
-
-}
-
-float autoswap_lastmaxscore;
 void() teams_balance_check {
 	if (map_finished)
 		return;
@@ -858,35 +786,6 @@ void() teams_balance_check {
 			team_size_adjust_value = (f / -g_balance_teams_adjust_sizes);
 		}
 		team_balance_audit(FALSE);
-	}
-	if (autoswap_last_time + g_balance_teams_autoswap_interval >= time)
-		return;
-
-	if not(g_balance_teams_autoswap)
-		return;
-
-	team_teams_allowed(world);
-	team_teams_count(world);
-	if (team1 >= 0)
-	if (team2 >= 0)
-	if (team3 < 0)
-	if (team4 < 0)
-	if (team1 + team2 > 2)
-	if (team1 - team1_bots + team2 - team2_bots >= g_balance_teams_autoswap_required_humans) {
-		float maxscore = max(t1, t2);
-		if (maxscore == autoswap_lastmaxscore)
-			return;
-
-		autoswap_lastmaxscore = maxscore;
-		if (g_balance_teams_autoswap_zerolead && t1 == 0 && t2 >= g_balance_teams_autoswap_zerolead) {
-			team_autoswap_best_with_worst(COLOR_TEAM2, COLOR_TEAM1);
-		} else if (g_balance_teams_autoswap_zerolead && t2 == 0 && t1 >= g_balance_teams_autoswap_zerolead) {
-			team_autoswap_best_with_worst(COLOR_TEAM1, COLOR_TEAM2);
-		} else if (g_balance_teams_autoswap_lead && t1 - t2 >= g_balance_teams_autoswap_lead) {
-			team_autoswap_best_with_worst(COLOR_TEAM1, COLOR_TEAM2);
-		} else if (g_balance_teams_autoswap_lead && t2 - t1 >= g_balance_teams_autoswap_lead) {
-			team_autoswap_best_with_worst(COLOR_TEAM2, COLOR_TEAM1);
-		}
 	}
 }
 

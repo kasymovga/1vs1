@@ -469,8 +469,6 @@ void(void) client_disconnect { //called by engine
 	}
 	if (team_mode) {
 		team_balance_audit(FALSE);
-		if (autoswap_last_best == self)
-			autoswap_last_best = world;
 	}
 }
 
