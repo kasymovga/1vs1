@@ -18,6 +18,7 @@ set nexuiz25_g_balance_fireball_secondary_ammo 15
 set nexuiz25_g_balance_nex_ammo 5
 set nexuiz25_g_balance_electro_primary_ammo 2
 set nexuiz25_g_balance_crylink_primary_ammo 2
+set nexuiz25_g_balance_crylink_primary_edgedamage 0
 set nexuiz25_g_balance_crylink_secondary_ammo 2
 set nexuiz25_g_balance_fireball_primary_refire 1.5
 set nexuiz25_g_balance_fireball_secondary_damage 150
