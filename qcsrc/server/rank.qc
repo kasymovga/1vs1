@@ -16,6 +16,9 @@ void(float id, float status, string data) rank_uri_handler {
 	string type = str_car(data);
 	if (type != rank_id) return;
 	float _rank = stof(str_cdr(s));
+	if not(_rank)
+		return;
+
 	entity pl;
 	FOR_EACH_REALCLIENT(pl) {
 		if (pl.clid == player_id) {
