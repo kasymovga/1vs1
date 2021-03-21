@@ -391,7 +391,7 @@ void(void) client_connect { //called by engine
 
 	score_attach(self);
 	score_touch(self);
-
+	self.play_time = 0;
 	bot_clientconnect();
 
 	if (g_campaign) {

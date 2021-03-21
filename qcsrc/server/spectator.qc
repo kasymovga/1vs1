@@ -216,9 +216,10 @@ void(float frags_team_reset) spectator_observer_spawn {
 	if (self.killcount != -666)
 		bprint ("^4", self.netname, "^4 is spectating now\n");
 
-	if (self.team >= 0)
+	if (self.team >= 0) {
+		rank_distribute(self);
 		score_clear(self); // clear scores when needed
-
+	}
 	self.spectatortime = time;
 
 	self.classname = "observer";

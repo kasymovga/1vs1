@@ -243,6 +243,7 @@ void(entity player) score_clear {
 		return;
 
 	sk = player.scorekeeper;
+	player.play_time = 0;
 	for(i = 0; i < MAX_SCORE; ++i) if not(score_flags[i] & SFL_NOCLEAR)
 	{
 		if(sk.(scores[i]) != 0)
@@ -257,6 +258,7 @@ void() score_clear_all {
 	float i, t;
 	FOR_EACH_CLIENTSLOT(p)
 	{
+		p.play_time = 0;
 		sk = p.scorekeeper;
 		if(!sk)
 			continue;

@@ -56,7 +56,7 @@ void(void) rank_init {
 	}
 }
 
-void(void) rank_distribute {
+void(entity whom) rank_distribute {
 	entity pl;
 	float totalscorepm = 0;
 	float totalrank = 0;
@@ -65,7 +65,6 @@ void(void) rank_distribute {
 	float score;
 	float totalplayers = 0;
 	FOR_EACH_REALCLIENT(pl) {
-		if (pl.classname == "player" || pl.team > 0)
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
@@ -80,7 +79,6 @@ void(void) rank_distribute {
 
 	totalrank = totalrank * 0.95 + totalplayers * 50; // slowly normalize to 1000 per player
 	FOR_EACH_REALCLIENT(pl) {
-		if (pl.classname == "player" || pl.team > 0)
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
@@ -93,7 +91,7 @@ void(void) rank_distribute {
 	}
 	float norm = totalrank / newtotalrank; // keep total rank at same level
 	FOR_EACH_REALCLIENT(pl) {
-		if (pl.classname == "player" || pl.team > 0)
+		if (!whom || pl == whom)
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {

@@ -361,7 +361,7 @@ void() map_finish {
 	entity e;
 	map_finished = TRUE;
 	string map_finished_message;
-	if (rank_available) rank_distribute();
+	if (rank_available) rank_distribute(world);
 	map_finished_message = "^2Game finished!";
 	if (team_mode) {
 		if (score_winning_condition_helper_winnerteam > 0)
