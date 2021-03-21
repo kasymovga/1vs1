@@ -100,6 +100,7 @@ void(void) rank_distribute {
 			db_put(db_server, strcat("r/", rank_id, "/", pl.clid), ftos(newrank));
 			if (sv_rank_external_database != "") {
 				string request = strcat(sv_rank_external_database, "?action=put&id=", pl.clid, "&rank=", ftos(newrank), "&type=", uri_escape(rank_id));
+				request = strcat(request, "&nick=", uri_escape(pl.netname));
 				uri_get(request, RANK_URI_HANDLER);
 			}
 		}
@@ -115,6 +116,7 @@ void(void) rank_load {
 	score_player_set(self, RANK_SCORE_PLAYER_FIELD, _rank);
 	if (sv_rank_external_database != "") {
 		string request = strcat(sv_rank_external_database, "?action=get&id=", self.clid, "&type=", uri_escape(rank_id), "&key=", sv_rank_external_database_key);
+		request = strcat(request, "&nick=", uri_escape(self.netname));
 		uri_get(request, RANK_URI_HANDLER);
 	}
 }
