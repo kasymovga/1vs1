@@ -35,8 +35,8 @@ set bot_messages_fragged_priv "nice one|oh|just luck"
 set bot_messages_frag "haha|more frags!"
 set bot_messages_teamkill "sorry|ooops"
 set bot_messages_teamkilled "oh, thanks|check your colors!"
-set bot_taunt "0.5"
-set bot_talk "0.5"
+set bot_taunt 0.25 "how often bots do taunts"
+set bot_talk 0.25 "how often bots speak"
 set bot_melee 0.4
 
 set bot_config_file bots.txt "Name and path of the bot configuration file"
