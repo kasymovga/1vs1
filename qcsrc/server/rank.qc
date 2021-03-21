@@ -1,3 +1,28 @@
+string sv_rank_external_database;
+
+float RANK_URI_HANDLER;
+
+void(float id, float status, string data) rank_uri_handler {
+	if (status) {
+		print(strcat("external rank database error: ", ftos(status), "\n"));
+		return;
+	}
+	if (map_finished)
+		return;
+
+	string player_id = str_car(data);
+	string s = str_cdr(data);
+	string type = str_car(data);
+	if (type != rank_id) return;
+	float _rank = stof(str_cdr(s));
+	entity pl;
+	FOR_EACH_REALCLIENT(pl) {
+		if (pl.clid == player_id) {
+			score_player_set(pl, RANK_SCORE_PLAYER_FIELD, _rank);
+		}
+	}
+}
+
 void(void) rank_init {
 	if (rank_available)
 		return;
@@ -17,6 +42,10 @@ void(void) rank_init {
 	rank_available = 1;
 	RANK_SCORE_PLAYER_FIELD = score_register("rank", SFL_NOCLEAR);
 	rank = scores[RANK_SCORE_PLAYER_FIELD];
+	CVAR_CACHE_STR(sv_rank_external_database);
+	if (sv_rank_external_database != "") {
+		RANK_URI_HANDLER = uri_register_handler(rank_uri_handler);
+	}
 }
 
 void(void) rank_distribute {
@@ -64,6 +93,10 @@ void(void) rank_distribute {
 			newrank = floor(norm * pl.rank + 0.5);
 			print(" -> ", ftos(newrank), "\n");
 			db_put(db_server, strcat("r/", rank_id, "/", pl.clid), ftos(newrank));
+			if (sv_rank_external_database != "") {
+				string request = strcat(sv_rank_external_database, "?action=put&id=", pl.clid, "&rank=", ftos(newrank), "&type=", uri_escape(rank_id));
+				uri_get(request, RANK_URI_HANDLER);
+			}
 		}
 	}
 }
@@ -75,4 +108,8 @@ void(void) rank_load {
 
 	print(self.netname, " have rank: ", ftos(_rank), "\n");
 	score_player_set(self, RANK_SCORE_PLAYER_FIELD, _rank);
+	if (sv_rank_external_database != "") {
+		string request = strcat(sv_rank_external_database, "?action=get&id=", self.clid, "&type=", uri_escape(rank_id));
+		uri_get(request, RANK_URI_HANDLER);
+	}
 }
