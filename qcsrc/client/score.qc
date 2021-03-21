@@ -82,8 +82,12 @@ void(float ignore) score_player_read {
 	sf = ReadByte();
 	lf = ReadByte();
 #else
+#if MAX_SCORE <= 16
 	sf = ReadShort();
 	lf = ReadShort();
+#else
+	sf = ReadCoord();
+	lf = ReadCoord();
 #endif
 	float p;
 	for (i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)

@@ -193,7 +193,7 @@ const float HUD_SPIDERBOT = 10;
 #define SFL_SORT_PRIO_PRIMARY 8
 #define SFL_SORT_PRIO_MASK 12
 #define SFL_NOCLEAR 16
-#define MAX_SCORE 32
+#define MAX_SCORE 20
 #define MAX_TEAMSCORE 2
 
 // this sets sounds and other properties of the projectiles in csqc

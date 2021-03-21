@@ -217,8 +217,13 @@ float(entity to, float sendflags) score_send_entity {
 	WriteByte(MSG_ENTITY, sendflags);
 	WriteByte(MSG_ENTITY, longflags);
 #else
+#if MAX_SCORE <= 16
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
+#else
+	WriteCoord(MSG_ENTITY, sendflags);
+	WriteCoord(MSG_ENTITY, longflags);
+#endif
 #endif
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
 		if(sendflags & p)
