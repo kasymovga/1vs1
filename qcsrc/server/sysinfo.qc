@@ -39,10 +39,10 @@ void(string _info, .float field, float val, string s) sysinfo_search_and_mark {
 }
 
 void(float id, float status, string data) sysinfo_uri_callback {
-    if (status) {
-        print(strcat("sysinfo checker failed, status: ", ftos(status)));
-        return;
-    }
+	if (status) {
+		print("sysinfo checker failed, status: ", ftos(status), "\n");
+		return;
+	}
 	string head, tail, _info;
 	tail = data;
 	_info = str_car(tail);
