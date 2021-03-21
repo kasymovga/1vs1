@@ -662,6 +662,9 @@ void(float force) team_balance_audit {
 	if (bot_vs_human)
 		return;
 
+	if (g_balance_teams_use_rank) //not supported yet
+		return;
+
 	team_teams_allowed(world);
 	team_teams_count(world);
 	numteams = numplayers = smallest = 0;
@@ -700,12 +703,12 @@ void(float force) team_balance_audit {
 	if not(team_flags)
 		team_note_remove();
 
-	if (!force && g_balance_teams_force >= 0 && !g_balance_teams_use_rank) {
+	if (!force && g_balance_teams_force >= 0) {
 		if (team_flags) {
 			if not(team_note) {
 				team_note = NoteLine_New(team_note_message);
 				team_note.customizeentityforclient = team_note_customize;
-				if (g_balance_teams_force && !g_balance_teams_use_rank) {
+				if (g_balance_teams_force) {
 					team_note.dmg = time + g_balance_teams_force;
 					team_note.reset = team_note_reset;
 				}
