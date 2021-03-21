@@ -1,3 +1,4 @@
+set minsta_g_rank_type "minsta"
 set minsta_g_minstagib 1
 set minsta_g_grappling_hook 1
 set minsta_g_balance_grapplehook_speed_fly 5000

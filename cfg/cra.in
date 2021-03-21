@@ -1,3 +1,4 @@
+set cra_g_rank_type "cra"
 set cra_g_start_weapon_laser 0
 set cra_g_start_weapon_shotgun 0
 set cra_g_start_weapon_uzi 0
