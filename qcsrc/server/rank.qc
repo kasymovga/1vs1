@@ -30,6 +30,9 @@ void(void) rank_init {
 	if (team_mode && team_teams == 1)
 		return;
 
+	if (g_maxplayers == 1 || g_campaign) // single player, no rank
+		return;
+
 	string rank_prefix;
 	if (team_mode)
 		rank_prefix = "team";
