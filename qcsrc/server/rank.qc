@@ -1,4 +1,5 @@
 string sv_rank_external_database;
+string sv_rank_external_database_key;
 
 float RANK_URI_HANDLER;
 
@@ -46,6 +47,7 @@ void(void) rank_init {
 	RANK_SCORE_PLAYER_FIELD = score_register("rank", SFL_NOCLEAR);
 	rank = scores[RANK_SCORE_PLAYER_FIELD];
 	CVAR_CACHE_STR(sv_rank_external_database);
+	CVAR_CACHE_STR(sv_rank_external_database_key);
 	if (sv_rank_external_database != "") {
 		RANK_URI_HANDLER = uri_register_handler(rank_uri_handler);
 	}
@@ -112,7 +114,7 @@ void(void) rank_load {
 	print(self.netname, " have rank: ", ftos(_rank), "\n");
 	score_player_set(self, RANK_SCORE_PLAYER_FIELD, _rank);
 	if (sv_rank_external_database != "") {
-		string request = strcat(sv_rank_external_database, "?action=get&id=", self.clid, "&type=", uri_escape(rank_id));
+		string request = strcat(sv_rank_external_database, "?action=get&id=", self.clid, "&type=", uri_escape(rank_id), "&key=", sv_rank_external_database_key);
 		uri_get(request, RANK_URI_HANDLER);
 	}
 }

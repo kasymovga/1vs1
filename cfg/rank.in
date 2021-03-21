@@ -1,3 +1,4 @@
-set sv_rank_external_database ""
+set sv_rank_external_database "" "http/https address of external database"
+set sv_rank_external_database_key "" "query key parameter for access to external database"
 set g_rank_type ""
 set g_balance_teams_use_rank 0 "use player ranks for balance"
