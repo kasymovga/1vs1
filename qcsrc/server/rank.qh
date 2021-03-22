@@ -1,7 +1,6 @@
 var .float rank;
 float RANK_SCORE_PLAYER_FIELD;
 string rank_id;
-float rank_available;
 void(void) rank_init;
 void(entity whom) rank_distribute;
 void(void) rank_load;

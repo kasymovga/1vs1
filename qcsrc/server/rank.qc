@@ -1,3 +1,5 @@
+float rank_available;
+
 string sv_rank_external_database;
 string sv_rank_external_database_key;
 
@@ -28,6 +30,9 @@ void(float id, float status, string data) rank_uri_handler {
 }
 
 void(void) rank_init {
+	if not(cvar("sv_rank"))
+		return;
+
 	if (rank_available)
 		return;
 

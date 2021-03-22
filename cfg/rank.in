@@ -1,3 +1,4 @@
+set sv_rank 1 "Enable rank tracking"
 set sv_rank_external_database "" "http/https address of external database"
 set sv_rank_external_database_key "" "query key parameter for access to external database"
 set g_rank_type ""
