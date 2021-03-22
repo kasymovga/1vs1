@@ -30,32 +30,32 @@ set g_ctf_flag_glowtrails 0
 set g_ctf_flag_pickup_effects 1
 set g_ctf_flag_capture_effects 1
 set g_ctf_captimerecord_always 0 "if enabled, assisted CTF records (with other players on the server) are recorded too"
-set g_ctf_flagscore_pickup_base 4
-set g_ctf_flagscore_pickup_dropped_early 2
-set g_ctf_flagscore_pickup_dropped_late 2
-set g_ctf_flagscore_capture 28
+set g_ctf_flagscore_pickup_base 1
+set g_ctf_flagscore_pickup_dropped_early 1
+set g_ctf_flagscore_pickup_dropped_late 1
+set g_ctf_flagscore_capture 10
 set g_ctf_flagscore_kill 2
-set g_ctf_flagpenalty_drop 2
-set g_ctf_flagpenalty_suicidedrop 2
+set g_ctf_flagpenalty_drop 1
+set g_ctf_flagpenalty_suicidedrop 1
 set g_ctf_flagpenalty_returned 1
-set g_ctf_flagscore_return 5
-set g_ctf_flagscore_return_rogue 10
-set g_ctf_flagscore_return_by_killer 6
-set g_ctf_flagscore_return_rogue_by_killer 10
+set g_ctf_flagscore_return 2
+set g_ctf_flagscore_return_rogue 2
+set g_ctf_flagscore_return_by_killer 2
+set g_ctf_flagscore_return_rogue_by_killer 2
 // succeeded capture (pickup capture) 25 (0 for enemy)
 // failed capture (pickup kill drop return) -6 (8 for enemy)
 // failed (shot into void) (pickup kill drop) -5 (3 for enemy)
 // capture retry (kill drop pickup) 0 (3 for enemy)
 // suicide, then retake (suicidedrop pickup) 0 (0 for enemy)
-set g_ctf_personalscore_pickup_base 4
-set g_ctf_personalscore_pickup_dropped_early 2
-set g_ctf_personalscore_pickup_dropped_late 2
-set g_ctf_personalscore_capture 28
+set g_ctf_personalscore_pickup_base 1
+set g_ctf_personalscore_pickup_dropped_early 1
+set g_ctf_personalscore_pickup_dropped_late 1
+set g_ctf_personalscore_capture 10
 set g_ctf_personalscore_kill 2
-set g_ctf_personalpenalty_drop 2
-set g_ctf_personalpenalty_suicidedrop 2
+set g_ctf_personalpenalty_drop 1
+set g_ctf_personalpenalty_suicidedrop 1
 set g_ctf_personalpenalty_returned 1
-set g_ctf_personalscore_return 5
-set g_ctf_personalscore_return_rogue 10
-set g_ctf_personalscore_return_by_killer 6
-set g_ctf_personalscore_return_rogue_by_killer 10
+set g_ctf_personalscore_return 2
+set g_ctf_personalscore_return_rogue 2
+set g_ctf_personalscore_return_by_killer 2
+set g_ctf_personalscore_return_rogue_by_killer 2
