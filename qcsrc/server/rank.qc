@@ -64,6 +64,9 @@ void(entity whom) rank_distribute {
 	float newrank;
 	float score;
 	float totalplayers = 0;
+	if not(rank_available)
+		return;
+
 	FOR_EACH_REALCLIENT(pl) {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
@@ -110,6 +113,9 @@ void(entity whom) rank_distribute {
 
 void(void) rank_load {
 	float _rank = stof(db_get(db_server, strcat("r/", rank_id, "/", self.clid)));
+	if not(rank_available)
+		return;
+
 	if not(_rank)
 		_rank = 1000;
 

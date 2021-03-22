@@ -653,9 +653,7 @@ void client_cvars_request() {
 	stuffcmd(self, "sendcvar cl_gunalign\n");
 	stuffcmd(self, "sendcvar cl_gunalign_force_center\n");
 	stuffcmd(self, "sendcvar cl_showweaponspawns\n");
-	if (rank_available) {
-		stuffcmd(self, "sendcvar _cl_id\n");
-	}
+	stuffcmd(self, "sendcvar _cl_id\n");
 }
 
 void() client_cvars_parse {
@@ -725,13 +723,10 @@ void() client_cvars_parse {
 				self.clid = strcat(self.clid, substring("0123456789abcdefg", floor(random() * 16), 1));
 			}
 			self.clid = strzone(self.clid);
-			print(self.netname, ": new id: ", self.clid, "\n");
 			stuffcmd(self, strcat("seta _cl_id ", self.clid, "\n"));
 		}
-		if (rank_available) {
-			if (self.scorekeeper) {
-				rank_load();
-			}
+		if (self.scorekeeper) {
+			rank_load();
 		}
 	}
 }
