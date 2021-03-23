@@ -21,6 +21,20 @@ entity physics;
 float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
 
+vector(void) physics_side_adjust_view {
+	mouse_enable(TRUE);
+	vector v = mouse_position();
+	view_forward_y = 0;
+	view_forward_z = v_y - CVAR(vid_conheight) * 0.5;
+	view_forward_x = v_x - CVAR(vid_conwidth) * 0.5;
+	view_angles = vectoangles(view_forward);
+	R_SetView(VF_CL_VIEWANGLES, view_angles);
+	R_SetView(VF_ANGLES, '0 90 0');
+	makevectors('0 90 0');
+	view_crosshair = FALSE;
+	return view_origin - v_forward * 500;
+}
+
 vector(void) physics_vehicle_adjust_view {
 	makevectors(view_angles);
 	vector v = view_origin;
@@ -195,9 +209,11 @@ vector(void) physics_view_origin {
 
 void(void) physics_camera_setup {
 	if (physics) {
-		if (physics_plug_adjust_view)
+		if (physics_plug_adjust_view) {
 			view_camera_origin = physics_plug_adjust_view();
-		else
+			R_SetView(VF_ORIGIN, view_camera_origin);
+			return;
+		} else
 			view_camera_origin = view_origin;
 
 		if not(view_camera_active) {
@@ -300,6 +316,10 @@ void(float isnew) physics_read {
 			cvar_clientsettemp("collision_triangle_directional" , "1");
 		else
 			cvar_clientsettemp("collision_triangle_directional" , "0");
+
+		g_sideview = switches & 2097152;
+		if (g_sideview)
+			physics_plug_adjust_view = physics_side_adjust_view;
 
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {

@@ -156,10 +156,17 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_angles = input_angles;
 	view_origin = physics_view_origin();
 	warpzone_view_fix();
-	physics_camera_setup();
 	if not(CVAR(cl_recoil))
 		R_SetView(VF_ANGLES, view_angles);
 
+	if (observer_status)
+		view_crosshair = FALSE;
+	else if (sbar_hidescores)
+		view_crosshair = FALSE;
+	else
+		view_crosshair = TRUE;
+
+	physics_camera_setup();
 	makevectors(view_angles);
 	view_forward = v_forward;
 	view_right = v_right;
@@ -225,13 +232,6 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			Sbar_ShowAcceleration();
 	}
 	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
-	if (observer_status)
-		view_crosshair = FALSE;
-	else if (sbar_hidescores)
-		view_crosshair = FALSE;
-	else
-		view_crosshair = TRUE;
-
 	float hud;
 	hud = getstati(STAT_HUD);
 	if (hud == HUD_SPIDERBOT) {
@@ -312,7 +312,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		view_draw2d_post_self = NULL;
 		self = e;
 	}
-	Mouse_Draw();
+	mouse_draw();
 	// we must do this check AFTER a frame was rendered, or it won't work
 	if (view_project_is_broken == 0) {
 		string w0, h0;

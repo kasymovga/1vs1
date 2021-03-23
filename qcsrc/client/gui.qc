@@ -112,7 +112,7 @@ void GUI_Draw() {
 	draw_alpha *= GUI_alpha;
 	drawfont = sbar_font;
 	mainWindow.drawGUI(mainWindow);
-	Mouse_Enable();
+	mouse_enable(TRUE);
 	input_event_callback = GUI_InputEvent;
 	GUI_InputEvent(1, 0, 0); //workaround for old engines
 }

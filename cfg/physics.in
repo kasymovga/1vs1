@@ -54,3 +54,4 @@ set g_cpmdoublejump 0 "CPM double jump"
 set g_doublejump_nopogostick 0 "Require repressing jump key for double jump"
 set g_physics_fixed 0 "Player physics with fixed frame time"
 set g_adjust_view_offset 0
+set g_sideview 0

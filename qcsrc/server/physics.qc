@@ -217,10 +217,14 @@ void(void) physics_frame_begin_hook {
 		self.angles_x = 0;
 		self.angles_y = self.v_angle_y;
 		self.angles_z = 0;
+		self.v_angle = physics_v_angle;
 	}
 	physics_button_crouch = self.BUTTON_CROUCH;
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
+	if (g_sideview) {
+		self.movement = physics_movement;
+	}
 }
 
 void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
@@ -448,6 +452,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_skimming_time);
 	CVAR_CACHE(g_cpmdoublejump);
 	CVAR_CACHE(g_doublejump_nopogostick);
+	CVAR_CACHE(g_sideview);
 	if (cvar_string("collision_triangle_directional") == "") {
 		registercvar("collision_triangle_directional", "-1");
 		cvar_set("collision_triangle_directional", "-1");
@@ -566,9 +571,9 @@ float(entity to, float sf) physics_send {
 				+ (g_jumpvelocity_noincrease ? 65536 : 0)
 				+ (g_physics_fixed ? 131072 : 0)
 				+ (g_adjust_view_offset ? 262144 : 0)
-				+ (g_adjust_view_offset ? 262144 : 0)
 				+ ((cvar("collision_triangle_directional") < 0) ? 524288 : 0)
 				+ ((cvar("collision_triangle_directional") > 0) ? 1048576 : 0)
+				+ (g_sideview ? 2097152 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {

@@ -136,7 +136,7 @@ void(void) menu_draw {
 		drawcolorcodedstring(pos, strcat(menu_string), '24 24 0' * size_scale, 1, DRAWFLAG_NORMAL);
 		pos_y += MENU_ITEM_HEIGHT;
 	}
-	Mouse_Enable();
+	mouse_enable(TRUE);
 	input_event_callback = menu_input_event;
 }
 
