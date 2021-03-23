@@ -82,7 +82,7 @@ void(entity whom) rank_distribute {
 			totalplayers++;
 		}
 	}
-	if (totalplayers < 1)
+	if (totalplayers < 2)
 		return;
 
 	if (totalscorepm <= 0)
