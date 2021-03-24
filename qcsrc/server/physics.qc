@@ -215,9 +215,8 @@ void(void) physics_frame_begin_hook {
 	if not(self.fixangle)
 	if not(PLAYER_REALLY_DEAD(self)) {
 		self.angles_x = 0;
-		self.angles_y = self.v_angle_y;
+		self.angles_y = physics_v_angle_y;
 		self.angles_z = 0;
-		self.v_angle = physics_v_angle;
 	}
 	physics_button_crouch = self.BUTTON_CROUCH;
 	physics_frame_begin_origin = self.origin;
