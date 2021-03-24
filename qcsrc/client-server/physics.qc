@@ -872,8 +872,6 @@ void(void) physics_player_frame {
 		}
 	} else {
 		float wishspeed0;
-		if (g_sideview) {
-		}
 		if (maxspd_mod < 1) {
 			maxairspd = sv_maxairspeed*maxspd_mod;
 			airaccel = sv_airaccelerate*maxspd_mod;
