@@ -22,7 +22,7 @@ float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
 
 vector(void) physics_side_adjust_view {
-	mouse_enable(TRUE);
+	mouse_enable(FALSE, "textures/spiderbot/cross");
 	vector v = mouse_position();
 	view_forward_y = 0;
 	view_forward_z = v_y - CVAR(vid_conheight) * 0.5;
@@ -32,6 +32,7 @@ vector(void) physics_side_adjust_view {
 	R_SetView(VF_ANGLES, '0 90 0');
 	makevectors('0 90 0');
 	view_crosshair = FALSE;
+	view_fov = 120;
 	return view_origin - v_forward * 500;
 }
 

@@ -41,7 +41,7 @@ void(void) weaponselect_draw {
 		remove(self);
 		return;
 	}
-	mouse_enable(TRUE);
+	mouse_enable(TRUE, "");
 	sbar_hidescores = TRUE;
 	var a = weaponselect_alpha;
 	drawfont = sbar_bigfont;
