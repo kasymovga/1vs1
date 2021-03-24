@@ -168,28 +168,6 @@ void(void) physics_frame_begin_hook {
 	self.buttons_old = buttons;
 	self.movement_old = physics_movement;
 	self.v_angle_old = self.v_angle;
-#if 0
-	float shtest_score;
-	if(time > self.shtest_next)
-	{
-		if(self.shtest_next > 0)
-		{
-			// self.shtest_accumulator:
-			//   started at time - SHTEST_DELTA
-			//   should be at SHTEST_DELTA
-			shtest_score = self.shtest_accumulator / (SHTEST_DELTA + time - self.shtest_next);
-			if(shtest_score > SHTEST_THRESHOLD)
-				print("TIME PARADOX: shtest for ", self.netname, " said ", ftos(shtest_score), "\n");
-		}
-		self.shtest_next = time + SHTEST_DELTA;
-		self.shtest_accumulator = 0;
-	}
-	self.shtest_accumulator += frametime;
-#endif
-
-	if (clienttype(self) == CLIENTTYPE_BOT)
-		bot_think();
-
     if(physics_plug)
 		return;
 
@@ -300,6 +278,32 @@ void SV_PlayerPhysics()
 		} else {
 			physics_velocity = '0 0 0';
 			self.movetype = MOVETYPE_NONE;
+		}
+	}
+	if (clienttype(self) == CLIENTTYPE_BOT) {
+		bot_think();
+		if (g_sideview)
+		if (self.movement != '0 0 0') {
+			float f;
+			self.movement_y = 0;
+			makevectors(self.v_angle);
+			if (v_forward_x > 0)
+				f = 1;
+			else
+				f = -1;
+
+			if (self.movement_x > 0)
+				self.movement_y = f * sv_maxspeed;
+			else if (self.movement_x < 0)
+				self.movement_y = -f * sv_maxspeed;
+
+			self.movement_x = 0;
+			if (self.movement_z > 0)
+				self.movement_x = sv_maxspeed;
+			else if (self.movement_z < 0)
+				self.movement_x = -sv_maxspeed;
+
+			self.movement_z = 0;
 		}
 	}
 	physics_flags = self.flags;
