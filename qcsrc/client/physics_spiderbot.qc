@@ -26,7 +26,9 @@ void(void) physics_spiderbot_remove {
 	physics_plug_pre = physics_plug_nopostpre;
 	physics_plug = physics_plug_null;
 	physics_plug_post = physics_plug_nopostpre;
-	physics_plug_adjust_view = physics_plug_no_adjust_view;
+	if (physics_plug_adjust_view == physics_vehicle_adjust_view)
+		physics_plug_adjust_view = NULL;
+
 	physics_player_ent = 0;
 }
 
@@ -39,7 +41,9 @@ void(float isnew) physics_spiderbot_read {
 		vehicle_adjust_view_up = SPIDERBOT_VIEW_UP;
 		vehicle_adjust_view_back = SPIDERBOT_VIEW_BACK;
 		vehicle_adjust_view_start_offs = SPIDERBOT_VIEW_START_OFFSET;
-		physics_plug_adjust_view = physics_vehicle_adjust_view;
+		if not(physics_plug_adjust_view)
+			physics_plug_adjust_view = physics_vehicle_adjust_view;
+
 		self.entremove = physics_spiderbot_remove;
 		physics_spiderbot_entity = self;
 		physics_spiderbot_entity.solid = SOLID_BBOX;
