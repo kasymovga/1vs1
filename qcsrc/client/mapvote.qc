@@ -245,7 +245,7 @@ void(void) mapvote_draw {
 		pos_x = (xmax+xmin)*0.5;
 		mapvote_abstain_draw(pos, isize, xmax - xmin, tmp, i);
 	}
-	Mouse_Enable();
+	mouse_enable(TRUE, "");
 	input_event_callback = mapvote_input_event;
 }
 

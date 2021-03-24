@@ -107,7 +107,11 @@ void(void) weapon_crylink_attack2 {
 
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
-		proj.velocity = (weapon_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
+		if (g_sideview)
+			proj.velocity = (weapon_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_up * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
+		else
+			proj.velocity = (weapon_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_right * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
+
 		weapon_setup_projectile_velocity(proj);
 		proj.touch = weapon_crylink_touch;
 		proj.think = stdproc_remove;

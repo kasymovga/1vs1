@@ -168,28 +168,6 @@ void(void) physics_frame_begin_hook {
 	self.buttons_old = buttons;
 	self.movement_old = physics_movement;
 	self.v_angle_old = self.v_angle;
-#if 0
-	float shtest_score;
-	if(time > self.shtest_next)
-	{
-		if(self.shtest_next > 0)
-		{
-			// self.shtest_accumulator:
-			//   started at time - SHTEST_DELTA
-			//   should be at SHTEST_DELTA
-			shtest_score = self.shtest_accumulator / (SHTEST_DELTA + time - self.shtest_next);
-			if(shtest_score > SHTEST_THRESHOLD)
-				print("TIME PARADOX: shtest for ", self.netname, " said ", ftos(shtest_score), "\n");
-		}
-		self.shtest_next = time + SHTEST_DELTA;
-		self.shtest_accumulator = 0;
-	}
-	self.shtest_accumulator += frametime;
-#endif
-
-	if (clienttype(self) == CLIENTTYPE_BOT)
-		bot_think();
-
     if(physics_plug)
 		return;
 
@@ -215,12 +193,15 @@ void(void) physics_frame_begin_hook {
 	if not(self.fixangle)
 	if not(PLAYER_REALLY_DEAD(self)) {
 		self.angles_x = 0;
-		self.angles_y = self.v_angle_y;
+		self.angles_y = physics_v_angle_y;
 		self.angles_z = 0;
 	}
 	physics_button_crouch = self.BUTTON_CROUCH;
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
+	if (g_sideview) {
+		self.movement = physics_movement;
+	}
 }
 
 void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
@@ -297,6 +278,32 @@ void SV_PlayerPhysics()
 		} else {
 			physics_velocity = '0 0 0';
 			self.movetype = MOVETYPE_NONE;
+		}
+	}
+	if (clienttype(self) == CLIENTTYPE_BOT) {
+		bot_think();
+		if (g_sideview)
+		if (self.movement != '0 0 0') {
+			float f;
+			self.movement_y = 0;
+			makevectors(self.v_angle);
+			if (v_forward_x > 0)
+				f = 1;
+			else
+				f = -1;
+
+			if (self.movement_x > 0)
+				self.movement_y = f * sv_maxspeed;
+			else if (self.movement_x < 0)
+				self.movement_y = -f * sv_maxspeed;
+
+			self.movement_x = 0;
+			if (self.movement_z > 0)
+				self.movement_x = sv_maxspeed;
+			else if (self.movement_z < 0)
+				self.movement_x = -sv_maxspeed;
+
+			self.movement_z = 0;
 		}
 	}
 	physics_flags = self.flags;
@@ -448,6 +455,7 @@ void(void) physics_init {
 	CVAR_CACHE(g_skimming_time);
 	CVAR_CACHE(g_cpmdoublejump);
 	CVAR_CACHE(g_doublejump_nopogostick);
+	CVAR_CACHE(g_sideview);
 	if (cvar_string("collision_triangle_directional") == "") {
 		registercvar("collision_triangle_directional", "-1");
 		cvar_set("collision_triangle_directional", "-1");
@@ -566,9 +574,9 @@ float(entity to, float sf) physics_send {
 				+ (g_jumpvelocity_noincrease ? 65536 : 0)
 				+ (g_physics_fixed ? 131072 : 0)
 				+ (g_adjust_view_offset ? 262144 : 0)
-				+ (g_adjust_view_offset ? 262144 : 0)
 				+ ((cvar("collision_triangle_directional") < 0) ? 524288 : 0)
 				+ ((cvar("collision_triangle_directional") > 0) ? 1048576 : 0)
+				+ (g_sideview ? 2097152 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {

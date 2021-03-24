@@ -670,6 +670,24 @@ void(void) physics_player_frame {
 	if (self.last_dodging_time > 0)
 		self.last_dodging_time -= frametime;
 	
+	if (g_sideview) {
+		if (physics_v_angle_y >= 90 && physics_v_angle_y < 270) physics_v_angle_y = 180;
+		else if (physics_v_angle_y >= -270 && physics_v_angle_y < -90) physics_v_angle_y = 180;
+		else physics_v_angle_y = 0;
+		if (physics_movement_x) {
+			if (physics_movement_x > 0) physics_movement_z = sv_maxspeed;
+			else if (physics_movement_x < 0) physics_movement_z = -sv_maxspeed;
+			physics_movement_x = 0;
+		}
+		if (physics_v_angle_y == 0) {
+			if (physics_movement_y > 0) physics_movement_x = sv_maxspeed;
+			else if (physics_movement_y < 0) physics_movement_x = -sv_maxspeed;
+		} else {
+			if (physics_movement_y > 0) physics_movement_x = -sv_maxspeed;
+			else if (physics_movement_y < 0) physics_movement_x = sv_maxspeed;
+		}
+		physics_movement_y = 0;
+	}
 	physics_frame_begin_hook();
 	if (physics_plug)
 	if (physics_plug())

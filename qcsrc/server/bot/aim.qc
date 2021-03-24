@@ -177,6 +177,15 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	local vector desiredang, diffang;
 
 	// make sure v_angle is sane first
+	if (g_sideview) {
+		if (v_x >= 0) {
+			self.v_angle_y = 0;
+			self.bot_mouseaim_y = 0;
+		} else {
+			self.v_angle_y = 180;
+			self.bot_mouseaim_y = 180;
+		}
+	}
 	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
 	self.v_angle_z = 0;
 
