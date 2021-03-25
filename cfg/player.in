@@ -81,3 +81,4 @@ set g_player_maxsxy 16
 set g_player_crouch_maxsz 25
 set g_player_crouch_view_ofs 15
 set g_player_body_pitch_maxangle 15 "Body max pitch angle of player model relative of view angle"
+set g_player_team_collisions 1 "Collisions with teammates"

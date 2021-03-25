@@ -64,6 +64,7 @@ float g_spawnfrags;
 float g_spawnsound;
 float g_player_pushfactor;
 float g_player_body_pitch_maxangle;
+float g_player_team_collisions;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
@@ -2148,7 +2149,7 @@ void(entity pl) player_body_setup {
 		PLAYER_MAKE_INDEPENDENT(pl);
 
 	if (team_mode)
-	if (g_sideview)
+	if (g_sideview || !g_player_team_collisions)
 		pl.clipgroup = pl.team;
 }
 
@@ -2510,6 +2511,7 @@ void() player_init {
 	CVAR_CACHE(g_player_brightness);
 	CVAR_CACHE(g_player_pushfactor);
 	CVAR_CACHE(g_player_body_pitch_maxangle);
+	CVAR_CACHE(g_player_team_collisions);
 	CVAR_CACHE(g_spawnshieldtime);
 	CVAR_CACHE(g_spawnfrags);
 	CVAR_CACHE(g_spawnsound);

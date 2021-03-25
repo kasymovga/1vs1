@@ -57,6 +57,7 @@ void(void) akimbo_weapon_frame {
 			self = _akimbo_ghost;
 			if not(self) {
 				prevself.akimbo_ghost = self = spawn();
+				self.clipgroup = pl.clipgroup;
 				for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 					weapon_action(j, WR_RESETPLAYER);
 			}
