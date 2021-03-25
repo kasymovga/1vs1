@@ -2146,6 +2146,10 @@ void(entity pl) player_body_setup {
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
 	if(player_independent)
 		PLAYER_MAKE_INDEPENDENT(pl);
+
+	if (team_mode)
+	if (g_sideview)
+		pl.clipgroup = pl.team;
 }
 
 void(entity spot) player_spawn {
