@@ -382,6 +382,7 @@ void(void) client_connect { //called by engine
 	if (self.retard > 0)
 		self.netname = retardplayername;
 
+	self.rank = 1000;
 	DecodeLevelParms();
 	self.disableclientprediction = -1;
 	self.classname = "player_joining";
