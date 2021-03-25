@@ -34,7 +34,11 @@ vector(void) physics_side_adjust_view {
 	R_SetView(VF_ANGLES, '0 90 0');
 	makevectors('0 90 0');
 	view_crosshair = FALSE;
-	view_fov = 105;
+	if (view_width / view_height > 1.35)
+		view_fov = 105;
+	else
+		view_fov = 115;
+
 	return view_origin - v_forward * 500;
 }
 
