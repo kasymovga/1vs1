@@ -23,7 +23,7 @@ float physics_cpmdoublejump_time_start;
 
 vector(void) physics_side_adjust_view {
 	if not(main_isdemo) {
-		mouse_enable(FALSE, "textures/spiderbot/cross");
+		mouse_enable(FALSE, "gfx/crosshairuzi");
 		vector v = mouse_position();
 		view_forward_y = 0;
 		view_forward_z = v_y - CVAR(vid_conheight) * 0.5;

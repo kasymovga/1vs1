@@ -34,7 +34,7 @@ void(void) mouse_draw {
 		if (mouse_cursor == "")
 			drawpic(mouse_pos, strcat("gfx/menu/", cvar_string("menu_skin"), "/cursor"), '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 		else {
-			drawpic(mouse_pos - '24 24 0', mouse_cursor, '48 48 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+			drawpic(mouse_pos - '16 16 0', mouse_cursor, '32 32 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 		}
 		mouse_enabled = FALSE;
 		mouse_disabling = TRUE;
