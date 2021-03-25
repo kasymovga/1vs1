@@ -390,6 +390,19 @@ void(void) physics_step_on_sky {
 		damage(self, world, world, g_steponskydamage * frametime, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 }
 
+var float(entity plr, entity viewer, float _alpha) physics_sideview_player_alpha_mod_next;
+float(entity plr, entity viewer, float _alpha) physics_sideview_player_alpha_mod {
+	float f1 = bound(-1, (880 - fabs(plr.origin_x - viewer.origin_x)) / 100, 1);
+	if (f1 < 0)
+		return -1;
+
+	float f2 = bound(-1, (600 - fabs(plr.origin_z - viewer.origin_z)) / 100, 1);
+	if (f2 < 0)
+		return -1;
+
+	return physics_sideview_player_alpha_mod_next(plr, viewer, _alpha * min(f1, f2));
+}
+
 float physics_initiated;
 void(void) physics_init {
 #define PHYSICS_CVAR_CACHE(x) x = physics_cvar(#x)
@@ -455,7 +468,13 @@ void(void) physics_init {
 	CVAR_CACHE(g_skimming_time);
 	CVAR_CACHE(g_cpmdoublejump);
 	CVAR_CACHE(g_doublejump_nopogostick);
-	CVAR_CACHE(g_sideview);
+	if not(g_sideview) {
+		CVAR_CACHE(g_sideview);
+		if (g_sideview) {
+			physics_sideview_player_alpha_mod_next = gamehook_chain_player_alpha_mod;
+			gamehook_chain_player_alpha_mod = physics_sideview_player_alpha_mod;
+		}
+	}
 	if (cvar_string("collision_triangle_directional") == "") {
 		registercvar("collision_triangle_directional", "-1");
 		cvar_set("collision_triangle_directional", "-1");
