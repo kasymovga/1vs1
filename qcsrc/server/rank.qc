@@ -109,11 +109,14 @@ void(entity whom) rank_distribute {
 			print(pl.netname, " have rank changed: ", ftos(pl.scorekeeper.rank));
 			newrank = floor(norm * pl.rank + 0.5);
 			print(" -> ", ftos(newrank), "\n");
-			db_put(db_server, strcat("r/", rank_id, "/", pl.clid), ftos(newrank));
-			if (sv_rank_external_database != "") {
-				string request = strcat(sv_rank_external_database, "?action=put&id=", pl.clid, "&rank=", ftos(newrank), "&type=", uri_escape(rank_id));
-				request = strcat(request, "&nick=", uri_escape(pl.netname));
-				uri_get(request, RANK_URI_HANDLER);
+			pl.scorekeeper.rank = newrank;
+			if (pl.clid != "") {
+				db_put(db_server, strcat("r/", rank_id, "/", pl.clid), ftos(newrank));
+				if (sv_rank_external_database != "") {
+					string request = strcat(sv_rank_external_database, "?action=put&id=", pl.clid, "&rank=", ftos(newrank), "&type=", uri_escape(rank_id));
+					request = strcat(request, "&nick=", uri_escape(pl.netname));
+					uri_get(request, RANK_URI_HANDLER);
+				}
 			}
 		}
 	}

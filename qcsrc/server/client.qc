@@ -382,7 +382,6 @@ void(void) client_connect { //called by engine
 	if (self.retard > 0)
 		self.netname = retardplayername;
 
-	self.rank = 1000;
 	DecodeLevelParms();
 	self.disableclientprediction = -1;
 	self.classname = "player_joining";
@@ -391,6 +390,7 @@ void(void) client_connect { //called by engine
 		player_count = 0;
 
 	score_attach(self);
+	self.scorekeeper.rank = 1000;
 	score_touch(self);
 	self.play_time = 0;
 	bot_clientconnect();
@@ -714,8 +714,7 @@ void() client_cvars_parse {
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;
 		if (f < reqrate)
 			stuffcmd(self, "rate " + ftos(reqrate) + "\n");
-	} else if (s == "_cl_id") {
-		str_unzone_ifneeded(self.clid);
+	} else if (s == "_cl_id" && self.clid == "") {
 		if (strlen(val) == 16) {
 			self.clid = strzone(val);
 		} else {
