@@ -218,8 +218,6 @@ void(void) physics_camera_setup {
 	if (physics) {
 		if (physics_plug_adjust_view) {
 			view_camera_origin = physics_plug_adjust_view();
-			R_SetView(VF_ORIGIN, view_camera_origin);
-			return;
 		} else
 			view_camera_origin = view_origin;
 
@@ -234,7 +232,7 @@ void(void) physics_camera_setup {
 						physics_end_origin = physics_start_origin;
 				}
 			}
-			if (CVAR(chase_active)) {
+			if (CVAR(chase_active) && !physics_plug_adjust_view) {
 				makevectors(view_angles);
 				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
