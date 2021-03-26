@@ -78,19 +78,22 @@ void(float ignore) score_player_read {
 		player_register(o);
 
 	float sf, lf;
-#if MAX_SCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
-#else
-#if MAX_SCORE <= 16
-	sf = ReadShort();
-	lf = ReadShort();
-#else
-	sf = ReadCoord();
-	lf = ReadCoord();
-#endif
+	float l = ReadByte();
+	if (l == 4) {
+		n = MAX_SCORE;
+		sf = ReadCoord();
+		lf = ReadCoord();
+	} else if (l == 2) {
+		n = 16;
+		sf = ReadShort();
+		lf = ReadShort();
+	} else {
+		n = 8;
+		sf = ReadByte();
+		lf = ReadByte();
+	}
 	float p;
-	for (i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
+	for (i = 0, p = 1; i < n; ++i, p *= 2)
 		if (sf & p) {
 			if (lf & p)
 				o.(scores[i]) = net_read_int24();

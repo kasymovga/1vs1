@@ -203,7 +203,7 @@ void(entity e, float f) score_send_delayed {
  */
 
 float(entity to, float sendflags) score_send_entity {
-	float i, p, longflags;
+	float i, p, longflags, n;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES);
 	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
@@ -213,19 +213,23 @@ float(entity to, float sendflags) score_send_entity {
 		if(self.scores[i] > 127 || self.scores[i] <= -128)
 			longflags |= p;
 
-#if MAX_SCORE <= 8
-	WriteByte(MSG_ENTITY, sendflags);
-	WriteByte(MSG_ENTITY, longflags);
-#else
-#if MAX_SCORE <= 16
-	WriteShort(MSG_ENTITY, sendflags);
-	WriteShort(MSG_ENTITY, longflags);
-#else
-	WriteCoord(MSG_ENTITY, sendflags);
-	WriteCoord(MSG_ENTITY, longflags);
-#endif
-#endif
-	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
+	if (sendflags & 0xF0000) {
+		WriteByte(MSG_ENTITY, 4);
+		n = MAX_SCORE;
+		WriteCoord(MSG_ENTITY, sendflags);
+		WriteCoord(MSG_ENTITY, longflags);
+	} else if (sendflags & 0xFF00) {
+		n = 16;
+		WriteByte(MSG_ENTITY, 2);
+		WriteShort(MSG_ENTITY, sendflags & 0xFFFF);
+		WriteShort(MSG_ENTITY, longflags & 0xFFFF);
+	} else {
+		n = 8;
+		WriteByte(MSG_ENTITY, 1);
+		WriteByte(MSG_ENTITY, sendflags & 0xFF);
+		WriteByte(MSG_ENTITY, longflags & 0xFF);
+	}
+	for(i = 0, p = 1; i < n; ++i, p *= 2)
 		if(sendflags & p)
 		{
 			if(longflags & p)
