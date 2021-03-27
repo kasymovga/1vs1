@@ -106,7 +106,7 @@ void(entity whom) rank_distribute {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
-			print(pl.netname, " have rank changed: ", ftos(pl.scorekeeper.rank));
+			print(pl.netname, " have rank changed in ", rank_id, ": ", ftos(pl.scorekeeper.rank));
 			newrank = floor(norm * pl.rank + 0.5);
 			print(" -> ", ftos(newrank), "\n");
 			pl.scorekeeper.rank = newrank;
@@ -130,7 +130,7 @@ void(void) rank_load {
 	if not(_rank)
 		_rank = 1000;
 
-	print(self.netname, " have rank: ", ftos(_rank), "\n");
+	print(self.netname, " have rank", rank_id, ": ", ftos(_rank), "\n");
 	score_player_set(self, RANK_SCORE_PLAYER_FIELD, _rank);
 	if (sv_rank_external_database != "") {
 		string request = strcat(sv_rank_external_database, "?action=get&id=", self.clid, "&type=", uri_escape(rank_id), "&key=", sv_rank_external_database_key);
