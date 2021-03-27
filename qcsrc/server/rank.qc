@@ -88,7 +88,7 @@ void(entity whom) rank_distribute {
 	if (totalscorepm <= 0)
 		return;
 
-	totalrank = totalrank * 0.95 + totalplayers * 50; // slowly normalize to 1000 per player
+	totalrank = totalrank * 0.99 + totalplayers * 10; // slowly normalize to 1000 per player
 	FOR_EACH_REALCLIENT(pl) {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
