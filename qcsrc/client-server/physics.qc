@@ -841,10 +841,17 @@ void(void) physics_player_frame {
 	} else if (physics_ladder) {
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 		physics_flags &~= FL_ONGROUND;
-		makevectors(physics_v_angle);
+		if (g_sideview)
+			makevectors(physics_v_angle - '1 0 0' * physics_v_angle_x);
+		else
+			makevectors(physics_v_angle);
+
 		//wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + v_up * physics_movement_z;
 		wishvel = v_forward * physics_movement_x + v_right * physics_movement_y + '0 0 1' * physics_movement_z;
-		if (physics_gravity_factor)
+		if (physics_button_jump)
+			wishvel_z = wishvel_z + sv_jumpvelocity;
+
+		if (physics_gravity_factor) //antigravity
 			physics_velocity_z = physics_velocity_z + physics_gravity_factor * sv_gravity * frametime;
 		else
 			physics_velocity_z = physics_velocity_z + sv_gravity * frametime;
