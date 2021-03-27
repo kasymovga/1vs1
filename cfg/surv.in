@@ -3,5 +3,5 @@ set g_surv_timelimit "" "Timelimit for survival, when empty, g_timelimit using, 
 set g_surv_leadlimit "0" "Dummy cvar, survival not have leadlimit"
 set g_surv_wave_pause 20
 set g_surv_wave_skip 0
-set g_surv_monster_factor 0.5
+set g_surv_monster_factor 0.25
 set g_surv_freeze 1

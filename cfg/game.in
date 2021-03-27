@@ -92,12 +92,12 @@ set g_throughfloor_damage 1
 set g_throughfloor_force 1
 set g_balance_falldamage_deadminspeed 150
 set g_balance_falldamage_minspeed 1000
-set g_balance_falldamage_factor 0.025
+set g_balance_falldamage_factor 0.05
 set g_balance_falldamage_maxdamage 25
 set g_waypoints_for_items 1 "make waypoints out of items, values: 0 = never, 1 = unless the mapper prevents it by worldspawn.spawnflags & 1, 2 = always"
 seta g_maplist_votable 9 "number of maps that are shown in the map voting at the end of a match"
 seta g_maplist_votable_keeptwotime 15
-seta g_maplist_votable_timeout 30 "timeout for the map voting; must be below 50 seconds!"
+seta g_maplist_votable_timeout 20 "timeout for the map voting; must be below 50 seconds!"
 seta g_maplist_votable_suggestions 2
 seta g_maplist_votable_suggestions_override_mostrecent 0
 seta g_maplist_votable_nodetail 0 "nodetail only shows total count instead of all vote counts per map, so votes don't influence others that much"
