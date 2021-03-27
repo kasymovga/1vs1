@@ -1,6 +1,7 @@
 #define MONSTER_IGNOREFIRE 1
 #define MONSTER_IGNORESLIME 2
 #define MONSTER_IGNOREDROWN 4
+#define MONSTER_CLIPGROUP 65536
 
 #define MONSTER_SPAWN_AUTORESPAWN 1
 #define MONSTER_SPAWN_FREEHUNT 2
@@ -313,16 +314,23 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 		//if(self.air_finished < time + 6)
 			self.velocity_z += (_speed - self.velocity_z) * frametime;
 	}
+	if (self.velocity_z > 200)
+	if not(self.flags & FL_ONGROUND)
+		return normalize(self.velocity);
+
 	if (rushdistance)
 	if (self.enemy)
 	if (rushdistance > vlen(self.origin - self.enemy.origin)) {
-		v = normalize(self.enemy.origin - self.origin);
-		dir_z_save = v_z;
-		vel_z_save = self.velocity_z;
-		movelib_move_simple(v, _speed, blend_factor * frametime);
-		v_z = dir_z_save;
-		self.velocity_z = vel_z_save;
-		return v;
+		trace_line(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
+		if (trace_fraction == 1) {
+			v = normalize(self.enemy.origin - self.origin);
+			dir_z_save = v_z;
+			vel_z_save = self.velocity_z;
+			movelib_move_simple(v, _speed, blend_factor * frametime);
+			v_z = dir_z_save;
+			self.velocity_z = vel_z_save;
+			return v;
+		}
 	}
 	if (self.bot_strategytime < time) {
 		self.bot_strategytime = time + 1 + random() * 1;
@@ -441,6 +449,9 @@ void monster_spawn_think() {
 		self.frags = 1;
 
 	physics_unstuck();
+	if (g_sideview)
+		self.clipgroup = MONSTER_CLIPGROUP;
+
 	self = oldself;
 	self.dmg = self.dmg - quant;
 	self.frags = self.frags + quant;
