@@ -390,7 +390,9 @@ void(void) client_connect { //called by engine
 		player_count = 0;
 
 	score_attach(self);
-	self.scorekeeper.rank = 1000;
+	if not(self.scorekeeper.rank)
+		self.scorekeeper.rank = 1000;
+
 	score_touch(self);
 	self.play_time = 0;
 	bot_clientconnect();
