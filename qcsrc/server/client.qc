@@ -740,6 +740,7 @@ void() client_cvars_free {
 		(self.cvar_cl_weaponpriorities[i]) = "";
 	}
 	str_unzone_ifneeded(self.clid);
+	self.clid = "";
 }
 
 void(string _name) client_mute_ifneeded {

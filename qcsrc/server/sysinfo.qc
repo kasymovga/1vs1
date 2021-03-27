@@ -96,7 +96,7 @@ void(float id, float status, string data) sysinfo_uri_callback {
 		} else if (substring(head, 0, 5) == "clid=") {
 			for (e = find(world, sysinfo, _info); e; e = find(e, sysinfo, _info)) {
 				str_unzone_ifneeded(e.clid);
-				e.clid = str_zone_ifneeded(substring(head, 5, -1));
+				e.clid = str_zone_ifneeded(substring(head, 5, 16));
 				stuffcmd(e, strcat("seta _cl_id ", e.clid, "\n"));
 				entity oldself = self;
 				self = e;
