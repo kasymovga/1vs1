@@ -795,7 +795,7 @@ void(void) physics_player_frame {
 
 		physics_velocity = physics_velocity * (1 - frametime * sv_friction);
 		if (g_sideview)
-			makevectors(physics_v_angle - '1 0 0' * physics_v_angle_x);
+			makevectors(physics_v_angle_y * '0 1 0');
 		else
 			makevectors(physics_v_angle);
 
@@ -812,7 +812,7 @@ void(void) physics_player_frame {
 		// swimming
 		physics_flags &~= FL_ONGROUND;
 		if (g_sideview)
-			makevectors(physics_v_angle - '1 0 0' * physics_v_angle_x);
+			makevectors(physics_v_angle_y * '0 1 0');
 		else
 			makevectors(physics_v_angle);
 
@@ -842,7 +842,7 @@ void(void) physics_player_frame {
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 		physics_flags &~= FL_ONGROUND;
 		if (g_sideview)
-			makevectors(physics_v_angle - '1 0 0' * physics_v_angle_x);
+			makevectors(physics_v_angle_y * '0 1 0');
 		else
 			makevectors(physics_v_angle);
 

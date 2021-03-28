@@ -18,8 +18,11 @@ float(float maxspd_mod) physics_jetpack {
 	if not(jetpack_using())
 		return r;
 
-	//makevectors(self.v_angle_y * '0 1 0');
-	makevectors(physics_v_angle);
+	if (g_sideview)
+		makevectors(physics_v_angle_y * '0 1 0');
+	else
+		makevectors(physics_v_angle);
+
 	wishvel = v_forward * physics_movement_x + v_right * physics_movement_y;
 	// add remaining speed as Z component
 	maxairspd = sv_maxairspeed*max(1, maxspd_mod);
