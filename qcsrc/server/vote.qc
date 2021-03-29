@@ -563,6 +563,8 @@ void(void) vote_timeout {
 	bprint("\{1}", tmp, "\n");
 	IRC_Announce_Vote(tmp);
 	vote_reset();
+	if (sv_announcer_extra_vote_passed)
+		sound_play2all(sv_announcer_extra_vote_failed);
 }
 
 void(entity stopper) vote_stop {
