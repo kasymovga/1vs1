@@ -3,6 +3,7 @@ float g_balance_teams_force;
 float g_balance_teams_movetype;
 float g_balance_teams_prevent_imbalance;
 float g_balance_teams_use_rank;
+float g_balance_teams_use_rank_compress;
 float g_changeteam_banned;
 float bot_vs_human;
 
@@ -179,7 +180,7 @@ void(entity ignore) team_teams_count {
 	FOR_EACH_CLIENT(head) {
 		if (head != ignore) {
 			if (g_balance_teams_use_rank)
-				value = head.scorekeeper.rank * 0.001;
+				value = 1 + (head.scorekeeper.rank * 0.001 - 1) * g_balance_teams_use_rank_compress;
 			else
 				value = 1;
 
@@ -744,6 +745,7 @@ void(void) team_init {
 	CVAR_CACHE(g_balance_teams_movetype);
 	CVAR_CACHE(g_balance_teams_prevent_imbalance);
 	CVAR_CACHE(g_balance_teams_use_rank);
+	CVAR_CACHE(g_balance_teams_use_rank_compress);
 	CVAR_CACHE(g_changeteam_banned);
 	CVAR_CACHE(bot_vs_human);
 }
