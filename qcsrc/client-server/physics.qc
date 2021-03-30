@@ -687,6 +687,11 @@ void(void) physics_player_frame {
 			else if (physics_movement_y < 0) physics_movement_x = sv_maxspeed;
 		}
 		physics_movement_y = 0;
+	} else if (g_topview) {
+		physics_v_angle_x = 0;
+		makevectors(physics_v_angle - g_topview_angles_y * '0 1 0');
+		vector m = -v_right * physics_movement_y + v_forward * physics_movement_x + physics_movement_z * '0 0 1';
+		physics_movement = m;
 	}
 	physics_frame_begin_hook();
 	if (physics_plug)

@@ -49,6 +49,8 @@ float g_waterfriction;
 float g_wateraccelerate;
 float g_maxwaterspeed;
 float g_sideview;
+float g_topview;
+vector g_topview_angles;
 
 float physics_deadflag;
 float physics_cantjump;

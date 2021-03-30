@@ -42,6 +42,34 @@ vector(void) physics_side_adjust_view {
 	return view_origin - v_forward * 500;
 }
 
+vector(void) physics_top_adjust_view {
+	R_SetView(VF_ANGLES, g_topview_angles);
+	makevectors(g_topview_angles);
+	vector o = view_origin - v_forward * 500;
+	if not(main_isdemo) {
+		mouse_enable(FALSE, "gfx/crosshairuzi");
+		vector v = mouse_position();
+		vector v2;
+		float f = CVAR(vid_conwidth) * 0.5;
+		v2_x = tan(view_fovx * 0.5 * DEG2RAD) * (v_x - f) / f;
+		f = CVAR(vid_conheight) * 0.5;
+		v2_y = tan(view_fovy * 0.5 * DEG2RAD) * (v_y - f) / f;
+		v2_z = 0;
+		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
+		//pointparticles(particleeffectnum("laser_impact"), v3, '0 0 0', 0.01);
+		view_angles = vectoangles(WarpZone_PlaneAndLineCross(view_origin, '0 0 1', v3, v_forward) - view_origin);
+		view_angles_x = 0;
+		R_SetView(VF_CL_VIEWANGLES, view_angles);
+	}
+	view_crosshair = FALSE;
+	if (view_width / view_height > 1.35)
+		view_fov = 105;
+	else
+		view_fov = 115;
+
+	return o;
+}
+
 vector(void) physics_vehicle_adjust_view {
 	makevectors(view_angles);
 	vector v = view_origin;
@@ -323,8 +351,11 @@ void(float isnew) physics_read {
 			cvar_clientsettemp("collision_triangle_directional" , "0");
 
 		g_sideview = switches & 2097152;
+		g_topview = switches & 4194304;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
+		else if (g_topview)
+			physics_plug_adjust_view = physics_top_adjust_view;
 
 		physics_have_doubjejump = (g_q2doublejump || g_cpmdoublejump);
 		if (g_walljump) {
@@ -339,6 +370,10 @@ void(float isnew) physics_read {
 			g_dodging_delay = ReadCoord();
 			g_dodging_frozen_delay = ReadCoord();
 			g_dodging_frozen_factor = ReadCoord();
+		}
+		if (g_topview) {
+			g_topview_angles_x = ReadShort();
+			g_topview_angles_y = ReadShort();
 		}
 	}
 	if (f & 2) {

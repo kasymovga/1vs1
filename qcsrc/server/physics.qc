@@ -199,7 +199,7 @@ void(void) physics_frame_begin_hook {
 	physics_button_crouch = self.BUTTON_CROUCH;
 	physics_frame_begin_origin = self.origin;
 	physics_current_player = self;
-	if (g_sideview) {
+	if (g_sideview || g_topview) {
 		self.movement = physics_movement;
 	}
 }
@@ -282,28 +282,34 @@ void SV_PlayerPhysics()
 	}
 	if (clienttype(self) == CLIENTTYPE_BOT) {
 		bot_think();
-		if (g_sideview)
-		if (self.movement != '0 0 0') {
-			float f;
-			self.movement_y = 0;
-			makevectors(self.v_angle);
-			if (v_forward_x > 0)
-				f = 1;
-			else
-				f = -1;
+		if (g_sideview) {
+			if (self.movement != '0 0 0') {
+				float f;
+				self.movement_y = 0;
+				makevectors(self.v_angle);
+				if (v_forward_x > 0)
+					f = 1;
+				else
+					f = -1;
 
-			if (self.movement_x > 0)
-				self.movement_y = f * sv_maxspeed;
-			else if (self.movement_x < 0)
-				self.movement_y = -f * sv_maxspeed;
+				if (self.movement_x > 0)
+					self.movement_y = f * sv_maxspeed;
+				else if (self.movement_x < 0)
+					self.movement_y = -f * sv_maxspeed;
 
-			self.movement_x = 0;
-			if (self.movement_z > 0)
-				self.movement_x = sv_maxspeed;
-			else if (self.movement_z < 0)
-				self.movement_x = -sv_maxspeed;
+				self.movement_x = 0;
+				if (self.movement_z > 0)
+					self.movement_x = sv_maxspeed;
+				else if (self.movement_z < 0)
+					self.movement_x = -sv_maxspeed;
 
-			self.movement_z = 0;
+				self.movement_z = 0;
+			}
+		} else if (g_topview) {
+			if (self.movement != '0 0 0') {
+				makevectors(-physics_v_angle + g_topview_angles_y * '0 1 0');
+				self.movement = v_right * self.movement_y - v_forward * self.movement_x + self.movement_z * '0 0 1';
+			}
 		}
 	}
 	physics_flags = self.flags;
@@ -475,6 +481,11 @@ void(void) physics_init {
 			gamehook_chain_player_alpha_mod = physics_sideview_player_alpha_mod;
 		}
 	}
+	string s = cvar_string("g_topview");
+	if (s != "") {
+		g_topview = 1;
+		g_topview_angles = stov(s);
+	}
 	if (cvar_string("collision_triangle_directional") == "") {
 		registercvar("collision_triangle_directional", "-1");
 		cvar_set("collision_triangle_directional", "-1");
@@ -596,6 +607,7 @@ float(entity to, float sf) physics_send {
 				+ ((cvar("collision_triangle_directional") < 0) ? 524288 : 0)
 				+ ((cvar("collision_triangle_directional") > 0) ? 1048576 : 0)
 				+ (g_sideview ? 2097152 : 0)
+				+ (g_topview ? 4194304 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {
@@ -610,6 +622,10 @@ float(entity to, float sf) physics_send {
 			WriteCoord(MSG_ENTITY, g_dodging_delay);
 			WriteCoord(MSG_ENTITY, g_dodging_frozen_delay);
 			WriteCoord(MSG_ENTITY, g_dodging_frozen_factor);
+		}
+		if (g_topview) {
+			WriteShort(MSG_ENTITY, g_topview_angles_x);
+			WriteShort(MSG_ENTITY, g_topview_angles_y);
 		}
 	}
 	if (sf & 2)

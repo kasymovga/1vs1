@@ -309,7 +309,10 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+self.bot_aggresskill, 10) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
 		self.bot_firetimer = time + bound(0.1, 0.5-(skill+self.bot_aggresskill)*0.05, 0.5);
 	//trace_line(shotorg,shotorg+shotdir*1000,FALSE,world);
-
+	if (g_topview) {
+		self.v_angle_x = 0;
+		self.bot_mouseaim_x = 0;
+	}
 	return self.bot_canfire && (time < self.bot_firetimer);
 };
 
