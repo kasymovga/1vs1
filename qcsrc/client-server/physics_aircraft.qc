@@ -47,8 +47,11 @@ float(void) physics_aircraft {
 		else if (self.angles_x < -60)
 			self.angles_x = -60;
 	}
+	if (g_sideview)
+		makevectors(self.angles_y * '0 1 0');
+	else
+		makevectors(self.angles);
 
-	makevectors(self.angles);
 	if(physics_movement_x != 0)
 	{
 		if(physics_movement_x > 0)
