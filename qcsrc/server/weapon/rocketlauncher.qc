@@ -159,12 +159,9 @@ void weapon_rocketlauncher_think (void)
 		projectile_update(self);
 }
 
-void weapon_rocketlauncher_touch (void)
-{
-	weapon_rocketlauncher_unregister();
-
+void(void) weapon_rocketlauncher_touch {
 	PROJECTILE_TOUCH;
-	weapon_rocketlauncher_explode ();
+	weapon_rocketlauncher_explode();
 }
 
 void weapon_rocketlauncher_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
