@@ -104,7 +104,7 @@ void func_laserbeam_init(void) {
     self.reset();
     net_link_entity(self, FALSE, 0, weapon_zapper_beam_send);
 
-    dlc_require("zapper_v1");
+    dlc_require("zapper_v2");
     dlc_require("rm_effects_v2");
     dlc_precache_sound("weapons/zapper_fly.wav");
 }
