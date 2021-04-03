@@ -331,7 +331,7 @@ string(float posy) race_records_table_string {
 		table = "RECORDS\n";
 		float i, tt, sp;
 		float rows;
-		float name_column_width, table_width;
+		float name_column_width = 4 * sbar_fontsize_x, table_width;
 		float left;
 		float tt_prev;
 		vector pos;
