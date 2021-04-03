@@ -76,7 +76,9 @@ void(entity whom) rank_distribute {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
-			score = max(0, pl.scorekeeper.scores[SP_SCORE] / (pl.play_time / 60));
+			score = pl.scorekeeper.scores[SP_SCORE];
+			if (score <= 0) continue;
+			score = pow(max(0, score / (pl.play_time / 60)), 0.5);
 			totalrank += pl.scorekeeper.rank;
 			totalscorepm += score;
 			totalplayers++;
@@ -93,7 +95,9 @@ void(entity whom) rank_distribute {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
-			score = max(0, pl.scorekeeper.scores[SP_SCORE] / (pl.play_time / 60));
+			score = pl.scorekeeper.scores[SP_SCORE];
+			if (score <= 0) continue;
+			score = pow(max(0, score / (pl.play_time / 60)), 0.5);
 			newrank = totalrank * (score / totalscorepm);
 			newrank = bound(100, newrank * 0.1 + pl.scorekeeper.rank * 0.9 + 0.5, 10000);
 			newtotalrank += newrank;
@@ -106,6 +110,8 @@ void(entity whom) rank_distribute {
 		if (pl.scorekeeper)
 		if (pl.scorekeeper.rank)
 		if (pl.play_time > 60) {
+			score = pl.scorekeeper.scores[SP_SCORE];
+			if (score <= 0) continue;
 			print(pl.netname, " have rank changed in ", rank_id, ": ", ftos(pl.scorekeeper.rank));
 			newrank = floor(norm * pl.rank + 0.5);
 			print(" -> ", ftos(newrank), "\n");
