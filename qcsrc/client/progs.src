@@ -87,6 +87,8 @@ ice.qh
 team.qh
 recordlist.qh
 db.qh
+map.qh
+server.qh
 cvar.qc
 ../client-server/movelib.qc
 str.qc

@@ -18,7 +18,7 @@ void gotomapNexuizRecordListDialog(entity btn, entity me) {
 			return;
 
 		s = str_car(s);
-		if (s == shortmapname)
+		if (s == map_shortname)
 			return;
 
 		localcmd("cmd vote call gotomap " + s + ";");

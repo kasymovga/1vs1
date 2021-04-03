@@ -7,22 +7,7 @@ noref float intermission; //just in case. we don't need it, but engine may want 
 .float enttype; // entity type sent from server
 .float sv_entnum; // entity number sent from server
 
-// Spectating
-float spectatee_status;
-float observer_status;
-
-// short mapname
-string shortmapname;
-
-float servertime, serverprevtime, serverdeltatime;
-
-float ticrate;
-
 .float waterlevel; // direction jitter
 
-float camera_correction_needed;
 .float health;
 .float armorvalue;
-string map_description;
-string motd;
-float hook_use_swapped;

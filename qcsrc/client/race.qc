@@ -217,7 +217,7 @@ void(void) race_sbar_draw {
 	if (CVAR(cl_cts_strafe_helper))
 	if (sv_airaccel_qw == 1)
 	if (physics_velocity_x != 0 || physics_velocity_y != 0)
-	if not(spectatee_status)
+	if not(view_spectatee_status)
 	if (physics_movement_x != 0 || physics_movement_y != 0) {
 		float wishangle = view_angles_y;
 		vector v = vectoangles(physics_velocity);

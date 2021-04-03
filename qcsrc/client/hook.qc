@@ -17,7 +17,7 @@ void(void) hook_draw {
 		physics_hook_old_length = hook_pull_length_readed;
 	}
 	b = self.origin;
-	if (!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == spectatee_status)) {
+	if (!CVAR(chase_active) && (owner_entnum == player_localentnum || owner_entnum == view_spectatee_status)) {
 		vector hook_shotorigin = self.hook_shootorg;
 		a = view_origin + view_forward * hook_shotorigin_x + view_right * hook_shotorigin_y + view_up * hook_shotorigin_z;
 		if (warpzone_view)
@@ -25,7 +25,7 @@ void(void) hook_draw {
 	} else {
 		entity e = self;
 		self = self.enemy;
-		if (CVAR(chase_active) && !spectatee_status && owner_entnum == player_localentnum) {
+		if (CVAR(chase_active) && !view_spectatee_status && owner_entnum == player_localentnum) {
 			a = self.iorigin2 + (physics_end_origin - physics_start_origin);
 		} else if (self) {
 			InterpolateOrigin_Do();

@@ -29,12 +29,12 @@ void(float bIsNewEntity) CSQC_Ent_Update { //called by engine
 	t = ReadByte();
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	savetime = time;
-	if (servertime) {
-		time = servertime;
+	if (server_time) {
+		time = server_time;
 	} else {
-		serverprevtime = time;
-		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
-		time = serverprevtime + serverdeltatime;
+		server_prevtime = time;
+		server_deltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+		time = server_prevtime + server_deltatime;
 	}
 	if (self.enttype)
 		if (t != self.enttype) {

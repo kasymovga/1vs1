@@ -25,7 +25,7 @@ void(void) radio_think {
 		self.nextthink = time + 1;
 		return;
 	}
-	float start = (self.flags ? 0 : (servertime - self.radio_starttime));
+	float start = (self.flags ? 0 : (server_time - self.radio_starttime));
 	localcmd("cd reset; cd remap ", self.netname, "; cd loop 1 ", ftos(start), ";");
 	strunzone(self.netname);
 	if (self.flags) {

@@ -5,3 +5,4 @@ string(string cmds) input_command_key_first;
 float input_button_zoom;
 float input_button_attack2;
 float input_button_attack2_allowed;
+float input_hook_use_swapped;

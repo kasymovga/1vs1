@@ -135,7 +135,7 @@ float physics_last_RIGHT_KEY_time;
 float physics_last_LEFT_KEY_time;
 vector(void) physics_view_origin {
 	vector v;
-	if (physics && servercommandframe && clientcommandframe && (!spectatee_status || observer_status)) {
+	if (physics && servercommandframe && clientcommandframe && (!view_spectatee_status || view_observer_status)) {
 		float frametime_save = frametime;
 		float i;
 		float n = clientcommandframe + 1;
@@ -231,12 +231,12 @@ vector(void) physics_view_origin {
 	} else {
 		physics_end_origin = pmove_org;
 		v = physics_end_origin + '0 0 1' * getstati(STAT_VIEWHEIGHT);
-		if (camera_correction_needed) {
+		if (view_camera_correction_needed) {
 			if not(CVAR(chase_active))
 			if not(view_camera_active)
 				R_SetView(VF_ORIGIN, v);
 
-			camera_correction_needed = FALSE;
+			view_camera_correction_needed = FALSE;
 		}
 	}
 	return v;
@@ -250,7 +250,7 @@ void(void) physics_camera_setup {
 			view_camera_origin = view_origin;
 
 		if not(view_camera_active) {
-			if not(spectatee_status)
+			if not(view_spectatee_status)
 			if not(physics_player_ent) {
 				if (main_ext_DP_RM_SETRENDERENTITY) {
 					if not(main_isdemo)
@@ -405,7 +405,7 @@ void(float isnew) physics_read {
 		self.pmove_velocity_y = ReadCoord();
 		self.pmove_velocity_z = ReadCoord();
 		physics_velocity_frame_end = self.pmove_velocity;
-		physics_frametime = ticrate;
+		physics_frametime = server_ticrate;
 		physics_is_player = f & 8;
 		self.solid = (physics_is_player ? SOLID_SLIDEBOX : SOLID_NOT);
 		physics_ladder = f & 32;

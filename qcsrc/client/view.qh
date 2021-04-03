@@ -14,3 +14,6 @@ float view_chase_active_backup;
 float view_camera_roll;
 vector view_camera_direction;
 float view_drawframetime;
+float view_spectatee_status;
+float view_observer_status;
+float view_camera_correction_needed;

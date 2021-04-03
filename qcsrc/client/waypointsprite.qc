@@ -238,13 +238,13 @@ void(float ignore) waypointsprite_read {
 			self.build_finished = 0;
 		} else {
 			t = (t - 192) * 256 + ReadByte();
-			self.build_started = servertime;
+			self.build_started = server_time;
 			if (self.build_finished)
 				self.build_starthealth = bound(0, self.health, 1);
 			else
 				self.build_starthealth = 0;
 
-			self.build_finished = servertime + t / 32;
+			self.build_finished = server_time + t / 32;
 			//print("build: ", ftos(self.build_finished - self.build_started), "\n");
 		}
 	} else {

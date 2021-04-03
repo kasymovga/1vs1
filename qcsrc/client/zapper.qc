@@ -27,7 +27,7 @@ void zapper_particles_trace_callback(vector from, vector to, vector ignore) {
 
 void(void) zapper_interpolate {
 	InterpolateOrigin_Do();
-	if (CVAR(chase_active) && !spectatee_status && self.sv_entnum == player_localentnum)
+	if (CVAR(chase_active) && !view_spectatee_status && self.sv_entnum == player_localentnum)
 		self.enemy.origin = self.enemy.iorigin2 + (physics_end_origin - physics_start_origin);
 	else {
 		entity e = self;
@@ -40,13 +40,13 @@ void(void) zapper_interpolate {
 void(void) zapper_draw {
     vector start, real_start;
 	vector end;
-    float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
+    float me = ((view_spectatee_status > 0) ? view_spectatee_status : player_localentnum);
     float first_person = FALSE;
     zapper_beam_width = 12;
 	vector zapper_shotorigin = self.zapper_shotorg;
     if (self.sv_entnum == me) {
 		if not(CVAR(chase_active)) {
-			camera_correction_needed = TRUE;
+			view_camera_correction_needed = TRUE;
 			start = view_origin + view_forward * zapper_shotorigin_x + view_right * zapper_shotorigin_y + view_up * zapper_shotorigin_z;
 			zapper_beam_width = 8;
 			first_person = TRUE;
@@ -84,7 +84,7 @@ void(void) zapper_draw {
 }
 
 void(void) zapper_draw_shield {
-    float me = ((spectatee_status > 0) ? spectatee_status : player_localentnum);
+    float me = ((view_spectatee_status > 0) ? view_spectatee_status : player_localentnum);
 	vector start, end;
 	if (!CVAR(chase_active) && self.sv_entnum == me) {
         vector zapper_shotorigin = self.zapper_shotorg;

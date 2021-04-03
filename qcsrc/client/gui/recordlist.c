@@ -59,7 +59,7 @@ void drawListBoxItemNexuizRecordList(entity me, float i, vector absSize, float i
 	s = substring(s, trim, -1);
 	string record_time = str_car(s);
 	string record_name = str_cdr(s);
-	if (record_map == shortmapname) {
+	if (record_map == map_shortname) {
 		c = '1 1 0.5';
 		if (gametype == GAME_CTS) {
 			if (race_records_time[0]) {

@@ -335,8 +335,8 @@ void _Movetype_Physics_Frame(float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater();
-			self.move_origin = self.move_origin + ticrate * self.move_velocity;
-			self.move_angles = self.move_angles + ticrate * self.move_avelocity;
+			self.move_origin = self.move_origin + server_ticrate * self.move_velocity;
+			self.move_angles = self.move_angles + server_ticrate * self.move_avelocity;
 			_Movetype_LinkEdict(FALSE);
 			break;
 		case MOVETYPE_STEP:
@@ -379,7 +379,7 @@ void Movetype_Physics_MatchServer() // SV_Physics_Entity
 {
 	float n, i, dt, movedt;
 
-	if(ticrate <= 0)
+	if(server_ticrate <= 0)
 	{
 		Movetype_Physics_NoMatchServer();
 		return;
@@ -387,10 +387,10 @@ void Movetype_Physics_MatchServer() // SV_Physics_Entity
 
 	dt = time - self.move_time;
 
-	movedt = ticrate;
-	n = max(0, floor(dt / ticrate));
-	dt -= n * ticrate;
-	self.move_time += n * ticrate;
+	movedt = server_ticrate;
+	n = max(0, floor(dt / server_ticrate));
+	dt -= n * server_ticrate;
+	self.move_time += n * server_ticrate;
 
 	//self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
 	// we use the field as set by the last run of this

@@ -990,7 +990,7 @@ void sbar_scoreboard_draw() {
 	// Print info string
 	string str;
 	float tl, fl, ll;
-	str = strcat("^7Playing ^3", strtoupper(gametype_name(gametype)), "^7 on ^2", shortmapname);
+	str = strcat("^7Playing ^3", strtoupper(gametype_name(gametype)), "^7 on ^2", map_shortname);
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbar_width - sbar_fontsize_x * stringwidth(str, TRUE)), str, sbar_fontsize, 0.8, DRAWFLAG_NORMAL);
 	pos_y += sbar_fontsize_y;
 	if (map_description != "") {
@@ -1100,7 +1100,7 @@ void sbar_scoreboard_draw() {
 	}
 	scoreboard_bottom = pos_y;
 	if (centerprint_num < 1) {
-		string tail = motd;
+		string tail = server_motd;
 		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
 		if (gametype == GAME_CTS || gametype == GAME_RACE)
 			tail = strcat(race_records_table_string(pos_y), tail);
@@ -1126,7 +1126,7 @@ void(void) sbar_score_draw_default {
 	float score, distribution, leader;
 	vector score_pos, secondary_score_pos, distribution_color;
 	entity tm, pl, me;
-	me = (spectatee_status > 0) ? player_slots[spectatee_status - 1] : player_slots[player_localentnum - 1];
+	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
 	score_pos = sbar_bottomright - '196 42 0';
 	secondary_score_pos = score_pos + '132 -6 0';
 	if not(team_mode) { // non-teamgames, except race/cts
@@ -1187,7 +1187,7 @@ void(void) sbar_score_draw_race {
 		float score, distribution;
 		vector distribution_color;
 		entity pl, me;
-		me = (spectatee_status > 0) ? player_slots[spectatee_status - 1] : player_slots[player_localentnum - 1];
+		me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
 		pl = player_list.sort_next;
 		if (pl == me)
 			pl = pl.sort_next;
@@ -1425,7 +1425,7 @@ void(void) sbar_speed_draw {
 
 void(void) sbar_acceleration_draw {
 	vector pos, top, rgb;
-	if (spectatee_status)
+	if (view_spectatee_status)
 		return;
 
 	top_x = CVAR(vid_conwidth)/2;
@@ -1622,7 +1622,7 @@ void(void) sbar_draw {
 				mapvote_draw();
 		}
 		sbar_reset();
-	} else if (_health <= 0 || observer_status) {
+	} else if (_health <= 0 || view_observer_status) {
   		if (sbar_showaccuracy)
   			sbar_accuracy_draw();
 		else if (!sbar_hidescores) {
@@ -1788,7 +1788,7 @@ void(void) sbar_draw {
 			float hgammo = getstati(STAT_HGAMMO);
 			float hgdetons = getstati(STAT_HGDETONABLES);
 			float hgcd, hgcd2;
-			hgcd = getstatf(STAT_HGREFIRE) - servertime;
+			hgcd = getstatf(STAT_HGREFIRE) - server_time;
 			// handgrenade force meter
 			float hgstat = getstatf(STAT_HGFORCE);
 			if (hgstat) {
@@ -1811,7 +1811,7 @@ void(void) sbar_draw {
 				sbar_hg_visual = 0;
 			}
 			if (hgtype2) {
-				hgcd2 = getstatf(STAT_HGREFIRE2) - servertime;
+				hgcd2 = getstatf(STAT_HGREFIRE2) - server_time;
 			}
 			if (getstati(STAT_HGSHIELDSTORE)) {
 				draw_progress_fragmented('0.5 0 0' * CVAR(vid_conwidth) + hgapos - sbar_fontsize_y * '0 2.5 0', '25 0 0' * sbar_fontsize_x + '0 7 0',

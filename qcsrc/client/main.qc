@@ -118,18 +118,18 @@ void(void) CSQC_Init {
 	damage_info_precache();
 	WarpZone_Init();
 	world_get_min_max(1); // try the CLEVER way first
-	shortmapname = mapname;
-	if (!strcasecmp(substring(shortmapname, 0, 5), "maps/"))
-		shortmapname = substring(shortmapname, 5, strlen(shortmapname) - 5);
+	map_shortname = mapname;
+	if (!strcasecmp(substring(map_shortname, 0, 5), "maps/"))
+		map_shortname = substring(map_shortname, 5, strlen(map_shortname) - 5);
 
-	if (!strcasecmp(substring(shortmapname, strlen(shortmapname) - 4, 4), ".bsp"))
-		shortmapname = substring(shortmapname, 0, strlen(shortmapname) - 4);
+	if (!strcasecmp(substring(map_shortname, strlen(map_shortname) - 4, 4), ".bsp"))
+		map_shortname = substring(map_shortname, 0, strlen(map_shortname) - 4);
 
-	shortmapname = strzone(shortmapname);
-	teamradar_minimapname = strcat("gfx/", shortmapname, "_radar");
+	map_shortname = strzone(map_shortname);
+	teamradar_minimapname = strcat("gfx/", map_shortname, "_radar");
 	if (precache_pic(teamradar_minimapname) == "") {
 		// but maybe we have a non-clever minimap
-		teamradar_minimapname = strcat("gfx/", shortmapname, "_mini");
+		teamradar_minimapname = strcat("gfx/", map_shortname, "_mini");
 		if (precache_pic(teamradar_minimapname) == "")
 			teamradar_minimapname = ""; // FAIL
 		else
@@ -208,7 +208,7 @@ void(float ignore) main_init_read {
 		i = ReadByte();
 		main_campaign = i & 1;
 		main_localgame = i & 4;
-		hook_use_swapped = i & 8;
+		input_hook_use_swapped = i & 8;
 		input_button_attack2_allowed = !(i & 16);
 	}
 	if (sf & 4) {
@@ -241,7 +241,7 @@ void(float ignore) main_init_read {
 	if (sf & 128) {
 		str_unzone_ifneeded(map_description);
 		map_description = str_zone_ifneeded(ReadString());
-		str_unzone_ifneeded(motd);
-		motd = str_zone_ifneeded(ReadString());
+		str_unzone_ifneeded(server_motd);
+		server_motd = str_zone_ifneeded(ReadString());
 	}
 }

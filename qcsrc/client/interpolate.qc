@@ -54,7 +54,7 @@ void InterpolateOrigin_Note()
 
 	if(dt < 0.2)
 	{
-		self.itime1 = serverprevtime;
+		self.itime1 = server_prevtime;
 		self.itime2 = time;
 	}
 	else

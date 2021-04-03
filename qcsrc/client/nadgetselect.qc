@@ -71,7 +71,7 @@ void(void) nadgetselect_draw {
 			txtw = stringwidth(txt, FALSE) * sz_x;
 			drawstring((o_x + (s_x - txtw) * 0.5) * '1 0' + (o_y - sz_y * 1.25) * '0 1', txt, sz, '1 1 1', a, DRAWFLAG_NORMAL);
 		}
-		txt = (table ? "'+nadget2' '+button9'" : (hook_use_swapped ? "+hook" : "+use"));
+		txt = (table ? "'+nadget2' '+button9'" : (input_hook_use_swapped ? "+hook" : "+use"));
 		txt = strcat("Key: ^2", strtoupper(input_command_key_first(txt)));
 		txtw = stringwidth(txt, TRUE) * sz_x;
 		drawcolorcodedstring((o_x + (s_x - txtw) * 0.5) * '1 0' + (o_y + s_y + NADGETSELECT_MARGIN * 0.5) * '0 1', txt, sz, a, DRAWFLAG_NORMAL);

@@ -28,7 +28,7 @@ vector(void) view_fov_calculate {
 			zoomspeed = 3.5;
 
 	zoomdir = view_anybutton_zoom;
-	if (spectatee_status > 0 || main_isdemo)
+	if (view_spectatee_status > 0 || main_isdemo)
 	if (view_spectatorbutton_zoom)
 		zoomdir = (zoomdir ? 0 : 1);
 
@@ -108,17 +108,17 @@ void view_tint_effect(void) {
 void(float w, float h) CSQC_UpdateView { //called by engine
 	entity e;
 	read_cvars();
-	spectatee_status = getstati(STAT_SPECSTATUS);
+	view_spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
-	view_spectatorbutton_zoom = spectatee_status & 256;
-	spectatee_status = spectatee_status & 255;
-	observer_status = (spectatee_status ? (spectatee_status == player_localentnum) : 0);
-	if (spectatee_status)
-		team_my = player_color(spectatee_status - 1);
+	view_spectatorbutton_zoom = view_spectatee_status & 256;
+	view_spectatee_status = view_spectatee_status & 255;
+	view_observer_status = (view_spectatee_status ? (view_spectatee_status == player_localentnum) : 0);
+	if (view_spectatee_status)
+		team_my = player_color(view_spectatee_status - 1);
 	else
 		team_my = player_color(player_localentnum - 1);
 
-	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+	server_ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 	// Render the Scene
 	view_width = w;
 	view_height = h;
@@ -159,7 +159,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	if not(CVAR(cl_recoil))
 		R_SetView(VF_ANGLES, view_angles);
 
-	if (observer_status)
+	if (view_observer_status)
 		view_crosshair = FALSE;
 	else if (sbar_hidescores)
 		view_crosshair = FALSE;
@@ -222,7 +222,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 
 	if not(sbar_showscores) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
-			if ((spectatee_status > 0 && !observer_status) || CVAR(cl_showpressedkeys) >= 2)
+			if ((view_spectatee_status > 0 && !view_observer_status) || CVAR(cl_showpressedkeys) >= 2)
 				sbar_pressedkeys_draw();
 		}
 		if (CVAR(cl_showspeed))
