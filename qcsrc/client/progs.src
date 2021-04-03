@@ -108,6 +108,10 @@ gametype.qh
 ready.qh
 race.qh
 flag.qc
+ctf.qc
+kh.qc
+single.qc
+nb.qc
 sbar.qc
 mapvote.qc
 report.qh

@@ -42,7 +42,7 @@ void(float ignore) score_info_read {
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
-	Sbar_InitScores();
+	sbar_scores_init();
 	gametype_init();
 }
 
@@ -108,7 +108,7 @@ void(float ignore) score_player_read {
 		team_set(o, t);
 	}
 	if (o.sort_prev)
-		Sbar_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		sbar_scores_player_position_update(o); // if not registered, we cannot do this yet!
 
 	self.entremove = score_player_remove;
 }
@@ -134,7 +134,7 @@ void(float ignore) score_team_read {
 			else
 				o.(teamscores[i]) = ReadChar();
 		}
-	Sbar_UpdateTeamPos(o);
+	sbar_scores_team_position_update(o);
 	if (SP_TEAM_BIT)
 		for (o = player_list.sort_next; o; o = o.sort_next)
 			if (o.gotscores) {

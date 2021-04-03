@@ -23,9 +23,9 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "radar") {
 		teamradar_show = !teamradar_show;
 	} else if (cmd == "sbar_columns_set") {
-		Sbar_SetFields(argc);
+		sbar_field_set(argc);
 	} else if (cmd == "sbar_columns_help") {
-		Sbar_Help(argc);
+		sbar_help(argc);
 	} else if (cmd == "sendcvar") {
 	} else if (cmd == "handlevote") {
 		localcmd(strcat("cmd vote ", argv(1), "\n"));

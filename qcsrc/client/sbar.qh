@@ -1,13 +1,13 @@
-void Sbar_SetFields(float);
-void Sbar_Help(float);
-vector Sbar_GetFontsize(vector v);
-void Sbar_GameType_Init();
+void(float) sbar_field_set;
+void(float) sbar_help;
+vector(vector v) sbar_font_size;
+void(void) sbar_gametype_init;
 float scoreboard_bottom;
 
-#define MAX_SBAR_FIELDS 16
-float sbar_field[MAX_SBAR_FIELDS + 1];
-float sbar_size[MAX_SBAR_FIELDS + 1];
-string sbar_title[MAX_SBAR_FIELDS + 1];
+#define SBAR_FIELDS_MAX 16
+float sbar_field[SBAR_FIELDS_MAX + 1];
+float sbar_size[SBAR_FIELDS_MAX + 1];
+string sbar_title[SBAR_FIELDS_MAX + 1];
 float sbar_num_fields;
 
 float sbar_font;
@@ -18,3 +18,6 @@ float sbar_showscores;
 float sbar_hidescores;
 float sbar_showaccuracy;
 float sbar_weapons_time;
+float sbar_stat_items;
+vector sbar_bottomleft;
+float sbar_alpha_fg;

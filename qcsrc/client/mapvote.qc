@@ -178,6 +178,7 @@ void(void) mapvote_draw {
 	float isize;
 	float center;
 	float tsize;
+	float xmin, xmax, ymin, ymax;
 	vector dist;
 	view_crosshair = FALSE;
 	center = (CVAR(vid_conwidth) - 1)/2;
@@ -187,11 +188,12 @@ void(void) mapvote_draw {
 	i = CVAR(con_chatpos); //*con_chatsize;
 	if (i < 0)
 		ymax = CVAR(vid_conheight) + (i - CVAR(con_chat)) * CVAR(con_chatsize);
+
 	if (i >= 0 || ymax < (CVAR(vid_conheight)*0.5))
 		ymax = CVAR(vid_conheight) - ymin;
 
 	drawfont = sbar_bigfont;
-	sbar_fontsize = Sbar_GetFontsize(CVAR(sbar_fontsize));
+	sbar_fontsize = sbar_font_size(CVAR(sbar_fontsize));
 	pos_y = ymin;
 	pos_z = 0;
 	string s = strcat("Vote for a map (^2", mapvote_gametype, "^7)");

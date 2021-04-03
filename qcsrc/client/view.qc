@@ -223,13 +223,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	if not(sbar_showscores) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
 			if ((spectatee_status > 0 && !observer_status) || CVAR(cl_showpressedkeys) >= 2)
-				Sbar_DrawPressedKeys();
+				sbar_pressedkeys_draw();
 		}
 		if (CVAR(cl_showspeed))
-			Sbar_ShowSpeed();
+			sbar_speed_draw();
 
 		if (CVAR(cl_showacceleration))
-			Sbar_ShowAcceleration();
+			sbar_acceleration_draw();
 	}
 	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
 	float hud;
@@ -246,7 +246,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		}
 	} else {
 		if (CVAR(viewsize) < 120)
-			Sbar_Draw();
+			sbar_draw();
 
 		// crosshair goes VERY LAST
 		if (view_crosshair) {
@@ -348,7 +348,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 void(void) view_spider_hud {
 	float rockets,reload,heat,hp,shield,i;
 	vector p,pp;
-	Sbar_Draw();
+	sbar_draw();
 	rockets = getstati(STAT_SPIDERBOT_ROCKETS);
 	heat = min(getstatf(STAT_SPIDERBOT_HEAT),1);
 	reload = min(getstatf(STAT_SPIDERBOT_RELOAD),1);
