@@ -423,7 +423,11 @@ void(entity pl, float dteam, float nobalance) team_change {
 			largeteam = TRUE;
 		}
 		if (largeteam) {
-			sprint(pl, "Cannot change to a larger team\n");
+			if (g_balance_teams_use_rank)
+				sprint(pl, "Cannot change to a team with higher rank\n");
+			else
+				sprint(pl, "Cannot change to a larger team\n");
+
 			return;
 		}
 	}
