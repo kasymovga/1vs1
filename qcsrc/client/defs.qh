@@ -1,29 +1,11 @@
 // Additional OPTIONAL Fields and Globals
-noref float		intermission;
-.string		message;
+noref float intermission; //just in case. we don't need it, but engine may want it
+.string message;
 .float renderflags;
-// float		coop;
-// float		deathmatch;
-
-// float		dmg_take;
-// float		dmg_save;
-// vector		dmg_origin;
-
-// Darkplaces Render Modifications
-#if 0
-.float alpha;
-.float renderflags;
-.vector colormod;
-.float scale;
-#endif
 
 // Basic variables
 .float enttype; // entity type sent from server
 .float sv_entnum; // entity number sent from server
-.float team;
-.float team_size;
-
-float binddb;
 
 // Spectating
 float spectatee_status;
@@ -31,9 +13,6 @@ float observer_status;
 
 // short mapname
 string shortmapname;
-
-// database for misc stuff
-float tempdb;
 
 float servertime, serverprevtime, serverdeltatime;
 

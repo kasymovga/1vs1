@@ -41,8 +41,8 @@ void(void) CSQC_Init {
 		cvar_set("cl_effects_lightningarc_branchfactor_add", "0.1");
 	}
 	float i;
-	binddb = db_create();
-	tempdb = db_create();
+	db_binds = db_create();
+	db_temp = db_create();
 	net_compress_vector_init();
 	view_crosshairdot_tex = "gfx/crosshair6";
 	if (file_exists("gfx/crosshairdot") || file_exists("gfx/crosshairdot.png"))
@@ -162,8 +162,8 @@ void(void) CSQC_Init {
 void(void) CSQC_Shutdown {
 	remove(team_list);
 	remove(player_list);
-	db_close(binddb);
-	db_close(tempdb);
+	db_close(db_binds);
+	db_close(db_temp);
 
 	cvar_clientsettemp_restore();
 	gui_chat_restore();

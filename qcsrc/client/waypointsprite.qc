@@ -162,7 +162,12 @@ void(void) waypointsprite_draw {
 	o_z = 0;
 	float vidscale;
 	vidscale = max(CVAR(vid_conwidth) / view_width, CVAR(vid_conheight) / view_height);
-	t = stof(db_get(tempdb, strcat("/spriteframes/", spriteimage)));
+	if (!self.cnt) {
+		t = stof(db_get(db_temp, strcat("/spriteframes/", spriteimage)));
+		self.cnt = t + 1;
+	} else
+		t = self.cnt - 1;
+
 	if (t == 0)
 		spriteimage = strcat("models/sprites/", spriteimage);
 	else
@@ -261,12 +266,14 @@ void(float ignore) waypointsprite_read {
 			strunzone(self.netname);
 
 		self.netname = strzone(ReadString());
+		self.cnt = 0;
 	}
 	if (sendflags & 4) {
 		if (self.netname2)
 			strunzone(self.netname2);
 
 		self.netname2 = strzone(ReadString());
+		self.cnt = 0;
 	}
 
 	if (sendflags & 8) {
@@ -274,6 +281,7 @@ void(float ignore) waypointsprite_read {
 			strunzone(self.netname3);
 
 		self.netname3 = strzone(ReadString());
+		self.cnt = 0;
 	}
 	if (sendflags & 16) {
 		self.lifetime = ReadCoord();
@@ -324,7 +332,7 @@ void(void) waypointsprite_init {
 			sname = strcat("/spriteframes/", substring(s, 0, o));
 			sframes = substring(s, o + 6, strlen(s) - o - 6);
 			f = stof(sframes) + 1;
-			db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
+			db_put(db_temp, sname, ftos(max(f, stof(db_get(db_temp, sname)))));
 		}
 		search_end(dh);
 		waypointsprite_initialized = 1;
