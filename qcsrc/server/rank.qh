@@ -4,3 +4,4 @@ string rank_id;
 void(void) rank_init;
 void(entity whom) rank_distribute;
 void(void) rank_load;
+float rank_available;

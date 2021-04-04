@@ -179,7 +179,7 @@ void(entity ignore) team_teams_count {
 	// also remember the lowest-scoring player
 	FOR_EACH_CLIENT(head) {
 		if (head != ignore) {
-			if (g_balance_teams_use_rank)
+			if (g_balance_teams_use_rank && rank_available)
 				value = 1 + (head.scorekeeper.rank * 0.001 - 1) * g_balance_teams_use_rank_compress;
 			else
 				value = 1;
@@ -423,7 +423,7 @@ void(entity pl, float dteam, float nobalance) team_change {
 			largeteam = TRUE;
 		}
 		if (largeteam) {
-			if (g_balance_teams_use_rank)
+			if (g_balance_teams_use_rank && rank_available)
 				sprint(pl, "Cannot change to a team with higher rank\n");
 			else
 				sprint(pl, "Cannot change to a larger team\n");
@@ -667,7 +667,7 @@ void(float force) team_balance_audit {
 	if (bot_vs_human)
 		return;
 
-	if (g_balance_teams_use_rank) //not supported yet
+	if (g_balance_teams_use_rank && rank_available) //not supported yet
 		return;
 
 	team_teams_allowed(world);
