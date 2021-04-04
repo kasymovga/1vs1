@@ -1,5 +1,3 @@
-float rank_available;
-
 string sv_rank_external_database;
 string sv_rank_external_database_key;
 
@@ -120,7 +118,7 @@ void(entity whom) rank_distribute {
 				db_put(db_server, strcat("r/", rank_id, "/", pl.clid), ftos(newrank));
 				if (sv_rank_external_database != "") {
 					string request = strcat(sv_rank_external_database, "?action=put&id=", pl.clid, "&rank=", ftos(newrank), "&type=", uri_escape(rank_id));
-					request = strcat(request, "&nick=", uri_escape(pl.netname));
+					request = strcat(request, "&nick=", uri_escape(pl.netname), "&key=", sv_rank_external_database_key);
 					uri_get(request, RANK_URI_HANDLER);
 				}
 			}
