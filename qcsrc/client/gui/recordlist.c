@@ -4,7 +4,7 @@ CLASS(NexuizRecordList) EXTENDS(NexuizListBox)
 	METHOD(NexuizRecordList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizRecordList, setSelected, void(entity, float))
 	METHOD(NexuizRecordList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(NexuizRecordList, mouseDoubleClick, void(entity, vector))
+	METHOD(NexuizRecordList, clickListBoxItem, void(entity, float, vector, float))
 	ATTRIB(NexuizRecordList, realUpperMargin, float, 0)
 	ATTRIB(NexuizRecordList, columnNameOrigin, float, 0)
 	ATTRIB(NexuizRecordList, voteList, entity, NULL)
@@ -31,10 +31,9 @@ void setSelectedNexuizRecordList(entity me, float i) {
 		return;
 }
 
-void mouseDoubleClickNexuizRecordList(entity list, vector v) {
-	if (list.selectedItem > -1) {
-		list.onClickEntity.onClick(list.onClickEntity, list);
-	}
+void clickListBoxItemNexuizRecordList(entity me, float i, vector where, float doubleclick) {
+	if (doubleclick && i > -1)
+		me.onClickEntity.onClick(me.onClickEntity, me);
 }
 
 void resizeNotifyNexuizRecordList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) {

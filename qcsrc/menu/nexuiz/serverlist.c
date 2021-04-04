@@ -4,7 +4,7 @@ CLASS(NexuizServerList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizServerList, rowsPerItem, float, 1)
 	METHOD(NexuizServerList, draw, void(entity))
 	METHOD(NexuizServerList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(NexuizServerList, mouseDoubleClick, void(entity, vector))
+	METHOD(NexuizServerList, clickListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(NexuizServerList, keyDown, float(entity, float, float, float))
 
@@ -506,8 +506,9 @@ void ServerList_Info_Click(entity btn, entity me)
 	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 	DialogOpenButton_Click(me, main.serverInfoDialog);
 }
-void mouseDoubleClickNexuizServerList(entity me, vector where) {
-	ServerList_Connect_Click(NULL, me);
+void clickListBoxItemNexuizServerList(entity me, float i, vector where, float doubleclick) {
+	if (doubleclick)
+		ServerList_Connect_Click(NULL, me);
 }
 void drawListBoxItemNexuizServerList(entity me, float i, vector absSize, float isSelected)
 {

@@ -9,7 +9,7 @@ CLASS(NexuizSkinList) EXTENDS(NexuizListBox)
 	METHOD(NexuizSkinList, loadCvars, void(entity))
 	METHOD(NexuizSkinList, saveCvars, void(entity))
 	METHOD(NexuizSkinList, skinParameter, string(entity, float, float))
-	METHOD(NexuizSkinList, mouseDoubleClick, void(entity, vector))
+	METHOD(NexuizSkinList, clickListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizSkinList, keyDown, float(entity, float, float, float))
 	METHOD(NexuizSkinList, destroy, void(entity))
 
@@ -178,8 +178,9 @@ void SetSkin_Click(entity btn, entity me)
 	me.setSkin(me);
 }
 
-void mouseDoubleClickNexuizSkinList(entity me, vector where) {
-	me.setSkin(me);
+void clickListBoxItemNexuizSkinList(entity me, float i, vector where, float doubleclick) {
+	if (doubleclick)
+		me.setSkin(me);
 }
 
 float keyDownNexuizSkinList(entity me, float scan, float ascii, float shift)

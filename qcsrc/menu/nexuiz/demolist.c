@@ -7,7 +7,7 @@ CLASS(NexuizDemoList) EXTENDS(NexuizListBox)
     METHOD(NexuizDemoList, getDemos, void(entity))
     METHOD(NexuizDemoList, startDemo, void(entity))
     METHOD(NexuizDemoList, demoName, string(entity, float))
-    METHOD(NexuizDemoList, mouseDoubleClick, void(entity, vector))
+    METHOD(NexuizDemoList, clickListBoxItem, void(entity, float, vector, float))
     METHOD(NexuizDemoList, keyDown, float(entity, float, float, float))
     METHOD(NexuizDemoList, destroy, void(entity))
     METHOD(NexuizDemoList, showNotify, void(entity))
@@ -138,8 +138,9 @@ void TimeDemo_Click(entity btn, entity me)
     localcmd("timedemo demos/", s, ".dem\nwait\ntogglemenu\n");	
 }
 
-void mouseDoubleClickNexuizDemoList(entity me, vector where) {
-	me.startDemo(me);
+void clickListBoxItemNexuizDemoList(entity me, float i, vector where, float doubleclick) {
+	if (doubleclick)
+		me.startDemo(me);
 }
 
 float keyDownNexuizDemoList(entity me, float scan, float ascii, float shift)

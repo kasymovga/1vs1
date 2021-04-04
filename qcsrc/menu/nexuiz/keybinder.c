@@ -3,7 +3,7 @@ CLASS(NexuizKeyBinder) EXTENDS(NexuizListBox)
 	METHOD(NexuizKeyBinder, configureNexuizKeyBinder, void(entity))
 	ATTRIB(NexuizKeyBinder, rowsPerItem, float, 1)
 	METHOD(NexuizKeyBinder, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(NexuizKeyBinder, mouseDoubleClick, void(entity, vector))
+	METHOD(NexuizKeyBinder, clickListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(NexuizKeyBinder, setSelected, void(entity, float))
 	METHOD(NexuizKeyBinder, keyDown, float(entity, float, float, float))
@@ -196,8 +196,9 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	}
 
 }
-void mouseDoubleClickNexuizKeyBinder(entity me, vector where) {
-	KeyBinder_Bind_Change(NULL, me);
+void clickListBoxItemNexuizKeyBinder(entity me, float i, vector where, float doubleclick) {
+	if (doubleclick)
+		KeyBinder_Bind_Change(NULL, me);
 }
 void setSelectedNexuizKeyBinder(entity me, float i)
 {

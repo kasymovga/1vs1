@@ -7,6 +7,7 @@ CLASS(ListBox) EXTENDS(Item)
 	METHOD(ListBox, mousePress, float(entity, vector))
 	METHOD(ListBox, mouseDrag, float(entity, vector))
 	METHOD(ListBox, mouseRelease, float(entity, vector))
+	METHOD(ListBox, mouseDoubleClick, float(entity, vector))
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, selectedItem, float, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
@@ -33,7 +34,7 @@ CLASS(ListBox) EXTENDS(Item)
 	ATTRIB(ListBox, nItems, float, 42)
 	ATTRIB(ListBox, itemHeight, float, 0)
 	METHOD(ListBox, drawListBoxItem, void(entity, float, vector, float)) // item number, width/height, selected
-	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
+	METHOD(ListBox, clickListBoxItem, void(entity, float, vector, float)) // item number, relative clickpos, double click
 	METHOD(ListBox, setSelected, void(entity, float))
 ENDCLASS(ListBox)
 #endif
@@ -180,11 +181,18 @@ float mouseReleaseListBox(entity me, vector pos)
 		if(me.nItems > 0)
 		{
 			absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
-			me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight));
+			me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 0);
 		}
 	}
 	me.pressed = 0;
 	return 1;
+}
+float mouseDoubleClickListBox(entity me, vector pos) {
+	if (me.pressed == 2) {
+		me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 1);
+		return 1;
+	}
+	return 0;
 }
 void updateControlTopBottomListBox(entity me)
 {
@@ -277,7 +285,7 @@ void drawListBox(entity me)
 	draw_ClearClip();
 }
 
-void clickListBoxItemListBox(entity me, float i, vector where)
+void clickListBoxItemListBox(entity me, float i, vector where, float doubleclick)
 {
 	// itemclick, itemclick, does whatever itemclick does
 }

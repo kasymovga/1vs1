@@ -5,7 +5,7 @@ CLASS(Container) EXTENDS(Item)
 	METHOD(Container, keyDown, float(entity, float, float, float))
 	METHOD(Container, mouseMove, float(entity, vector))
 	METHOD(Container, mousePress, float(entity, vector))
-	METHOD(Container, mouseDoubleClick, void(entity, vector))
+	METHOD(Container, mouseDoubleClick, float(entity, vector))
 	METHOD(Container, mouseDrag, float(entity, vector))
 	METHOD(Container, mouseRelease, float(entity, vector))
 	METHOD(Container, focusLeave, void(entity))
@@ -197,11 +197,12 @@ float mousePressContainer(entity me, vector pos)
 		return f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
 	return 0;
 }
-void mouseDoubleClickContainer(entity me, vector pos)
-{
+float mouseDoubleClickContainer(entity me, vector pos) {
 	entity f = me.focusedChild;
 	if (f && f.mouseDoubleClick)
-		f.mouseDoubleClick(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		return f.mouseDoubleClick(f, globalToBox(pos, f.Container_origin, f.Container_size));
+
+	return 0;
 }
 float mouseDragContainer(entity me, vector pos)
 {

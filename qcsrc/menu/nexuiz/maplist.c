@@ -4,13 +4,11 @@ CLASS(NexuizMapList) EXTENDS(NexuizListBox)
 	ATTRIB(NexuizMapList, rowsPerItem, float, 4)
 	METHOD(NexuizMapList, draw, void(entity))
 	METHOD(NexuizMapList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(NexuizMapList, clickListBoxItem, void(entity, float, vector))
+	METHOD(NexuizMapList, clickListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizMapList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(NexuizMapList, refilter, void(entity))
 	METHOD(NexuizMapList, refilterCallback, void(entity, entity))
 	METHOD(NexuizMapList, keyDown, float(entity, float, float, float))
-	METHOD(NexuizMapList, mouseDoubleClick, void(entity, vector))
-
 	ATTRIB(NexuizMapList, realFontSize, vector, '0 0 0')
 	ATTRIB(NexuizMapList, columnPreviewOrigin, float, 0)
 	ATTRIB(NexuizMapList, columnPreviewSize, float, 0)
@@ -134,24 +132,23 @@ void resizeNotifyNexuizMapList(entity me, vector relOrigin, vector relSize, vect
 	me.checkMarkOrigin = eY + eX * (me.columnPreviewOrigin + me.columnPreviewSize) - me.checkMarkSize;
 }
 
-void clickListBoxItemNexuizMapList(entity me, float i, vector where)
+void clickListBoxItemNexuizMapList(entity me, float i, vector where, float doubleclick)
 {
-	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
-	{
-		if(where_x >= 0)
-			me.g_maplistCacheToggle(me, i);
-	}
-}
-
-void mouseDoubleClickNexuizMapList(entity me, vector where) {
-	if(where_x >= me.columnNameOrigin)
-		if(where_x <= 1) {
-			// DOUBLE CLICK!
-			// pop up map info screen
-			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
-			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
-			return;
+	if (doubleclick) {
+		if(where_x >= me.columnNameOrigin)
+			if(where_x <= 1) {
+				// DOUBLE CLICK!
+				// pop up map info screen
+				main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
+				DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+				return;
+			}
+	} else {
+		if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize) {
+			if(where_x >= 0)
+				me.g_maplistCacheToggle(me, i);
 		}
+	}
 }
 
 void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSelected)

@@ -8,7 +8,7 @@ CLASS(NexuizCampaignList) EXTENDS(NexuizListBox)
 	METHOD(NexuizCampaignList, setSelected, void(entity, float))
 	METHOD(NexuizCampaignList, keyDown, float(entity, float, float, float))
 	METHOD(NexuizCampaignList, destroy, void(entity))
-	METHOD(NexuizCampaignList, mouseDoubleClick, void(entity, vector))
+	METHOD(NexuizCampaignList, clickListBoxItem, void(entity, float, vector, float))
 
 	ATTRIB(NexuizCampaignList, campaignGlob, float, 0)
 	ATTRIB(NexuizCampaignList, realFontSize, vector, '0 0 0')
@@ -161,8 +161,9 @@ void resizeNotifyNexuizCampaignList(entity me, vector relOrigin, vector relSize,
 
 	rewrapCampaign(me.columnNameSize / me.realFontSize_x, me.rowsPerItem - 3, me.emptyLineHeight);
 }
-void mouseDoubleClickNexuizCampaignList(entity me, vector where) {
-	CampaignList_LoadMap(me, me);
+void clickListBoxItemNexuizCampaignList(entity me, float i, vector where, float doubleclick) {
+	if (doubleclick)
+		CampaignList_LoadMap(me, me);
 }
 void drawListBoxItemNexuizCampaignList(entity me, float i, vector absSize, float isSelected)
 {
