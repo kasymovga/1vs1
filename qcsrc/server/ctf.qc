@@ -48,6 +48,7 @@ float g_ctf_flagscore_kill;
 float g_ctf_personalscore_kill;
 float g_ctf_showenemycarrier;
 float g_ctf_showenemycarrier_delay;
+float g_ctf_adjust_score_by_enemy_number;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -78,6 +79,16 @@ void() ctf_flag_touch;
 
 var void() ctf_PlayerPreThink_NextLink;
 void ctf_PlayerPreThink();
+
+float(float enemyteam, float score) ctf_adjust_score_by_enemy_number {
+	entity pl;
+	float n = 0;
+	FOR_EACH_TEAMPLAYER(pl)
+		if (pl.team == enemyteam)
+			n++;
+
+	return ceil((1 + n * g_ctf_adjust_score_by_enemy_number) * score);
+}
 
 float(entity attacker, entity targ, float f) ctf_handle_frags {
 	if(g_ctf_ignore_frags)
@@ -483,7 +494,7 @@ void() ctf_flag_touch {
 			Roundbased_SetRoundStartWithWinner(other.team);
 
 		// give credit to the individual player
-		score_player_team_add_score(other, CTF_SCORE_VALUE(score_capture));
+		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(other.flagcarried.team, CTF_SCORE_VALUE(score_capture)));
 
 		if (g_ctf_flag_capture_effects) {
 			if (other.team == COLOR_TEAM1) { // red team scores effect
@@ -524,7 +535,7 @@ void() ctf_flag_touch {
 		self.cnt = FLAG_CARRY;
 		self.angles = '0 0 0';
 		bprint(other.netname, "^7 got the ", self.netname, "\n");
-		score_player_team_add_score(other, CTF_SCORE_VALUE(score_pickup_base));
+		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
 		score_player_add(other, SP_CTF_PICKUPS, 1);
 		GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
@@ -977,6 +988,7 @@ void() ctf_delayedinit {
 	CVAR_CACHE(g_ctf_personalscore_kill);
 	CVAR_CACHE(g_ctf_showenemycarrier);
 	CVAR_CACHE(g_ctf_showenemycarrier_delay);
+	CVAR_CACHE(g_ctf_adjust_score_by_enemy_number);
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "ctf_team") == world)
 		ctf_spawnteams();

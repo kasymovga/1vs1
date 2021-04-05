@@ -59,3 +59,4 @@ set g_ctf_personalscore_return 2
 set g_ctf_personalscore_return_rogue 2
 set g_ctf_personalscore_return_by_killer 2
 set g_ctf_personalscore_return_rogue_by_killer 2
+set g_ctf_adjust_score_by_enemy_number 0.25
