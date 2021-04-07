@@ -49,6 +49,7 @@ float g_ctf_personalscore_kill;
 float g_ctf_showenemycarrier;
 float g_ctf_showenemycarrier_delay;
 float g_ctf_adjust_score_by_enemy_number;
+float g_ctf_count_suicides;
 
 #define CTF_SCORE_VALUE(x) ((g_ctf_win_mode != 2 ) ? g_ctf_personal##x : g_ctf_flag##x)
 
@@ -94,9 +95,12 @@ float(entity attacker, entity targ, float f) ctf_handle_frags {
 	if(g_ctf_ignore_frags)
 		return 0;
 
-	if (f < 0)
-		return f;
-
+	if (f < 0) {
+		if (g_ctf_count_suicides)
+			return f;
+		else
+			return 0;
+	}
 	if (targ.flagcarried) {
 		score_player_add(attacker, SP_CTF_FCKILLS, 1);
 		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
@@ -989,6 +993,7 @@ void() ctf_delayedinit {
 	CVAR_CACHE(g_ctf_showenemycarrier);
 	CVAR_CACHE(g_ctf_showenemycarrier_delay);
 	CVAR_CACHE(g_ctf_adjust_score_by_enemy_number);
+	CVAR_CACHE(g_ctf_count_suicides);
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "ctf_team") == world)
 		ctf_spawnteams();
