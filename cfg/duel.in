@@ -7,3 +7,4 @@ set duel_g_powerup_speed 0
 set duel_g_scorelimit 0
 set duel_g_timelimit 10
 set duel_g_timelimit_overtimes 10
+set duel_g_chat_nospectators 2

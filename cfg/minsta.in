@@ -13,3 +13,4 @@ set minsta_duel_g_powerup_invisibility 0
 set minsta_duel_g_maxplayers 2
 set minsta_duel_g_spawnfrags 1
 set minsta_duel_g_spawnshieldtime 1
+set minsta_duel_g_chat_nospectators 2
