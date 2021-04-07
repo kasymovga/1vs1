@@ -1,6 +1,6 @@
 void(entity e, string s) cmd_print_to {
     if (e)
-        sprint(e, strcat(s, "\n"));
+        sprint(e, strcat("\{1}", s, "\n"));
     else
         print(s, "\n");
 }
