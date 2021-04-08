@@ -40,29 +40,30 @@ void(string debrisname, vector force) func_breakable_launch_debris {
 	entity dbr;
 	dbr = spawn();
 	setorigin(dbr, self.absmin
-	           + '1 0 0' * random() * (self.absmax_x - self.absmin_x)
-	           + '0 1 0' * random() * (self.absmax_y - self.absmin_y)
-	           + '0 0 1' * random() * (self.absmax_z - self.absmin_z));
+			+ '1 0 0' * random() * (self.absmax_x - self.absmin_x)
+			+ '0 1 0' * random() * (self.absmax_y - self.absmin_y)
+			+ '0 0 1' * random() * (self.absmax_z - self.absmin_z));
 	setmodel(dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors
 	dbr.owner = self; // do not be affected by our own explosion
 	dbr.movetype = self.debrismovetype;
 	dbr.solid = self.debrissolid;
-	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
+	if (dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
 
 	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * random_2();
 	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * random_2();
 	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * random_2();
 	self.velocity = self.velocity + force * self.debrisdamageforcescale;
-	dbr.avelocity_x = random()*self.debrisavelocityjitter_x;
-	dbr.avelocity_y = random()*self.debrisavelocityjitter_y;
-	dbr.avelocity_z = random()*self.debrisavelocityjitter_z;
+	dbr.avelocity_x = random() * self.debrisavelocityjitter_x;
+	dbr.avelocity_y = random() * self.debrisavelocityjitter_y;
+	dbr.avelocity_z = random() * self.debrisavelocityjitter_z;
 	dbr.damageforcescale = self.debrisdamageforcescale;
-	if(dbr.damageforcescale)
+	if (dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
 
+	dbr.reset = stdproc_remove;
 	entity_fade_setup(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
 }
 
@@ -70,10 +71,11 @@ void(void) func_breakable_colormod {
 	float h;
 	if not(self.spawnflags & 2)
 		return;
+
 	h = self.health / self.max_health;
-	if(h < 0.25)
+	if (h < 0.25)
 		self.colormod = '1 0 0';
-	else if(h <= 0.75)
+	else if (h <= 0.75)
 		self.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
 		self.colormod = '1 1 1';
@@ -81,7 +83,7 @@ void(void) func_breakable_colormod {
 
 void(void) func_breakable_look_destroyed {
 	float floor_z;
-	if(self.mdl_dead == "")
+	if (self.mdl_dead == "")
 		self.model = "";
 	else {
 		vector _mins = self.mins, _maxs = self.maxs;
@@ -135,7 +137,7 @@ void(void) func_breakable_restore {
 void(void) func_breakable_launch_napalm {
 	// yes, this is a lazy hack
 	float nc = self.napalm_count;
-	if(nc <= 0)
+	if (nc <= 0)
 		return;
 
 	float saveteam = self.owner.team;
@@ -162,16 +164,16 @@ void(void) func_breakable_destroy {
 	}
 	func_breakable_launch_napalm();
 	func_breakable_destroyed();
-	if(self.noise)
+	if (self.noise)
 		sound (self, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
 
-	if(self.dmg)
+	if (self.dmg)
 		damage_radius(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
 
-	if(self.cnt)
+	if (self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
 
-	if(self.respawntime) {
+	if (self.respawntime) {
 		self.think = func_breakable_restore;
 		self.nextthink = time + self.respawntime + random_2() * self.respawntimejitter;
 	}
@@ -183,19 +185,19 @@ void(void) func_breakable_destroy {
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_breakable_damage {
-	if(self.state == 1)
+	if (self.state == 1)
 		return;
 
-	if(self.team)
-		if(attacker.team == self.team)
+	if (self.team)
+		if (attacker.team == self.team)
 			return;
 
-	if(self.sprite)
+	if (self.sprite)
 		WaypointSprite_Ping(self.sprite);
 
 	self.health = self.health - _damage;
 	func_breakable_colormod();
-	if(self.health <= 0) {
+	if (self.health <= 0) {
 		debrisforce = force;
 		damage_prepare_explosion(attacker, func_breakable_destroy);
 	}
@@ -204,7 +206,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 void(void) func_breakable_reset {
 	self.team = self.team_saved;
 	func_breakable_look_restore();
-	if(self.spawnflags & 1)
+	if (self.spawnflags & 1)
 		func_breakable_behave_destroyed();
 	else
 		func_breakable_behave_restore();
@@ -269,14 +271,14 @@ void(void) spawnfunc_func_breakable {
 	for(i = 0; i < n; ++i)
 		precache_model(argv(i));
 
-	if(self.noise)
+	if (self.noise)
 		precache_sound(self.noise);
 
 	self.team_saved = self.team;
 	self.reset = func_breakable_reset;
 	self.spawnorigin = self.origin;
 	func_breakable_reset();
-	if(self.napalm_count > 0) {
+	if (self.napalm_count > 0) {
 		Napalm_Init();
 	}
 }
