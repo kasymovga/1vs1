@@ -61,15 +61,11 @@ void(float effectno, vector start, vector end, vector vel) effect_curveparticles
 	vecxy_z = 0;
 	velxy = vel;
 	velxy_z = 0;
+	if (vlen(velxy) < 0.000001 * fabs(vel_z)) {
+		end_dz = 0;
+	} else
+		end_dz = vlen(vecxy) / vlen(velxy) * vel_z - (end_z - start_z);
 
-	if (vlen(velxy) < 0.000001 * fabs(vel_z))
-	{
-		effect_curveparticles_end();
-		trailparticles(world, effectno, start, end);
-		return;
-	}
-
-	end_dz = vlen(vecxy) / vlen(velxy) * vel_z - (end_z - start_z);
 	effect_curveparticles(effectno, start, end, end_dz, vlen(vel));
 }
 
