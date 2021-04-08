@@ -114,6 +114,9 @@ void(float ignore) hook_read {
 	}
 	if (f & 8) {
 		entity e = self;
+		if not(self.enemy)
+			self.enemy = spawn();
+
 		self = self.enemy;
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();

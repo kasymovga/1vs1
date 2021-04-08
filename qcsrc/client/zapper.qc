@@ -146,6 +146,9 @@ void(float t) zapper_read {
     }
     if (sf & 2) {
 		entity e = self;
+		if not(self.enemy)
+			self.enemy = spawn();
+
 		self = self.enemy;
         self.origin_x = ReadCoord();
         self.origin_y = ReadCoord();
