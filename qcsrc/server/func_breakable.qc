@@ -238,7 +238,8 @@ void(void) spawnfunc_func_breakable {
 	if (self.debrisvelocityjitter == '0 0 0') self.debrisvelocityjitter = '70 70 70';
 	if (self.debrisavelocityjitter == '0 0 0') self.debrisavelocityjitter = '600 600 600';
 	if not(self.debristime) self.debristime = 3.5;
-	if not(self.debristimejitter) self.debristime = 2.5;
+	if not(self.debristimejitter) self.debristimejitter = 2.5;
+	if not(self.debrisfadetime) self.debrisfadetime = 1;
 	if (self.mdl != "")
 		self.cnt = particleeffectnum(self.mdl);
 
