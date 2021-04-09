@@ -168,14 +168,16 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 		return strcat(col, cpname, " (", timestr, " ", strcat(hisname, col, lapstr), ")");
 }
 
+vector race_movement;
+vector race_velocity;
 float(float diffangle) race_strafe_angle {
-	vector vel = physics_velocity;
+	vector vel = race_velocity;
 	vel_z = 0;
 	float speed = vlen(vel);
 	float maxspeed = sv_maxspeed;
 	if not(physics_flags & FL_ONGROUND)
-	if (physics_movement_y)
-	if not(physics_movement_x)
+	if (race_movement_y)
+	if not(race_movement_x)
 	if (sv_maxairstrafespeed) {
 		maxspeed = sv_maxairstrafespeed;
 	}
@@ -213,29 +215,48 @@ void(void) race_sbar_draw {
 	float a, t;
 	vector m;
 	string s, forcetime;
+	if (view_spectatee_status || main_isdemo) {
+		float keys = getstatf(STAT_PRESSED_KEYS);
+		race_movement = '0 0 0';
+		if (keys & KEY_FORWARD)
+			race_movement_x += sv_maxspeed;
+
+		if (keys & KEY_BACKWARD)
+			race_movement_x -= sv_maxspeed;
+
+		if (keys & KEY_LEFT)
+			race_movement_y -= sv_maxspeed;
+
+		if (keys & KEY_RIGHT)
+			race_movement_y += sv_maxspeed;
+
+		race_velocity = physics_velocity_frame_begin;
+	} else {
+		race_velocity = physics_velocity;
+		race_movement = input_movevalues;
+	}
 	if (gametype == GAME_CTS)
 	if (CVAR(cl_cts_strafe_helper))
 	if (sv_airaccel_qw == 1)
-	if (physics_velocity_x != 0 || physics_velocity_y != 0)
-	if not(view_spectatee_status)
-	if (physics_movement_x != 0 || physics_movement_y != 0) {
+	if (race_velocity_x != 0 || race_velocity_y != 0)
+	if (race_movement_x != 0 || race_movement_y != 0) {
 		float wishangle = view_angles_y;
-		vector v = vectoangles(physics_velocity);
+		vector v = vectoangles(race_velocity);
 		float moveangle = v_y;
-		if (physics_movement_x > 0) {
-			if (physics_movement_y > 0)
+		if (race_movement_x > 0) {
+			if (race_movement_y > 0)
 				wishangle -= 45;
-			else if (physics_movement_y < 0)
+			else if (race_movement_y < 0)
 				wishangle += 45;
-		} else if (physics_movement_x < 0) {
-			if (physics_movement_y > 0)
+		} else if (race_movement_x < 0) {
+			if (race_movement_y > 0)
 				wishangle -= 135;
-			else if (physics_movement_y < 0)
+			else if (race_movement_y < 0)
 				wishangle += 135;
 		} else {
-			if (physics_movement_y > 0)
+			if (race_movement_y > 0)
 				wishangle -= 90;
-			else if (physics_movement_y < 0)
+			else if (race_movement_y < 0)
 				wishangle += 90;
 		}
 		float diffangle = race_angle_norm(wishangle - moveangle);
