@@ -225,7 +225,7 @@ void(void) spawnfunc_trigger_push {
 	if (self.speed)
 		entity_movedir_setup();
 
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.use = trigger_push_use;
 	self.touch = trigger_push_touch;
 	// normal push setup
@@ -284,7 +284,7 @@ void(void) trigger_push_velocity_touch {
 }
 
 void(void) spawnfunc_trigger_push_velocity {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = trigger_push_velocity_touch;
 	entity_initialize(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }

@@ -638,7 +638,7 @@ void(void) spawnfunc_race_trigger_checkpoint {
 		remove(self);
 		return;
 	}
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.use = race_trigger_checkpoint_use;
 	if not(self.spawnflags & 1)
 		self.touch = race_trigger_checkpoint_touch;
@@ -834,7 +834,7 @@ void(void) race_trigger_penalty_use {
 }
 
 void(void) spawnfunc_race_trigger_penalty {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.use = race_trigger_penalty_use;
 	if not(self.spawnflags & 1)
 		self.touch = race_trigger_penalty_touch;

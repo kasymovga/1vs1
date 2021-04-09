@@ -281,12 +281,12 @@ void(void) func_ladder_touch {
 }
 
 void(void) spawnfunc_func_ladder {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = func_ladder_touch;
 }
 
 void(void) spawnfunc_func_water {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = func_ladder_touch;
 }
 
@@ -296,7 +296,7 @@ void(void) func_nowalljump_touch {
 }
 
 void(void) spawnfunc_func_nowalljump {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = func_nowalljump_touch;
 }
 

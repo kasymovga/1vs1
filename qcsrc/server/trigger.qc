@@ -19,13 +19,9 @@ float(void) trigger_exact_hit_recurse {
 	return f;
 }
 
-float g_trigger_collisions_exact;
 float(void) trigger_exact_hit {
 	float f, s;
 	if not(self.modelindex)
-		return 1;
-
-	if not(g_trigger_collisions_exact)
 		return 1;
 
 	s = self.solid;
@@ -37,7 +33,6 @@ float(void) trigger_exact_hit {
 	return f;
 }
 
-float trigger_init_done;
 void(void) trigger_solid_brush_init {
 	// trigger angles are used for one-way touches.  An angle of 0 is assumed
 	// to mean no restrictions, so use a yaw of 360 instead.
@@ -45,15 +40,13 @@ void(void) trigger_solid_brush_init {
 	if (self.angles != '0 0 0')
 		entity_movedir_setup();
 
-	if not(trigger_init_done) {
-		trigger_init_done = TRUE;
-		CVAR_CACHE(g_trigger_collisions_exact);
-	}
-	self.solid = SOLID_BSP;
 	model_setup();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
-//	self.modelindex = 0;
+	if (!cvar("g_trigger_collisions_exact") || self.solid < 0)
+		self.modelindex = 0;
+
 	self.model = "";
+	self.solid = SOLID_TRIGGER;
 }
 
 void() trigger_dont_use_targets { }
@@ -354,7 +347,7 @@ void(void) spawnfunc_trigger_multiple {
 	if (!self.wait)
 		self.wait = 0.2;
 	self.use = trigger_multiple_use;
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.team_saved = self.team;
 	if (self.health) {
 		if (self.spawnflags & TRIGGER_SPAWNFLAG_NOTOUCH)
@@ -499,7 +492,7 @@ defalt dmg = 5
 entity trigger_hurt_last;
 entity trigger_hurt_first;
 void(void) spawnfunc_trigger_hurt {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = trigger_hurt_touch;
 	if (!self.dmg)
 		self.dmg = 1000;
@@ -547,7 +540,7 @@ void(void) trigger_heal_touch {
 }
 
 void(void) spawnfunc_trigger_heal {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = trigger_heal_touch;
 	if (!self.health)
 		self.health = 10;
@@ -675,7 +668,7 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 */
 
 void(void) spawnfunc_trigger_impulse {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	if (self.radius) {
 		if (!self.strength) self.strength = 2000 * cvar("g_triggerimpulse_radial_multiplier");
 		setorigin(self, self.origin);
@@ -1056,7 +1049,7 @@ void spawnfunc_trigger_cycle(void) {
  */
 
 void spawnfunc_trigger_killcredit(void) {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	if (self.wait <= 0)
 		self.wait = 3;
 
@@ -1368,7 +1361,7 @@ void(void) spawnfunc_trigger_gravity {
 	if (self.gravity == 1)
 		return;
 
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = trigger_gravity_touch;
 	if (self.noise != "")
 		precache_sound(self.noise);
@@ -1424,7 +1417,7 @@ get slowd down and damaged
 */
 float trigger_swamp_init_done;
 void(void) spawnfunc_trigger_swamp {
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.touch = trigger_swamp_touch;
 	if (self.dmg <= 0)
 		self.dmg = 5;

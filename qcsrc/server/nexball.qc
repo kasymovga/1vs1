@@ -713,7 +713,7 @@ void(void) nexball_spawn_goal {
 		remove(self);
 		return;
 	}
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.classname = "nexball_goal";
 	if (!self.noise)
 		self.noise = "ctf/respawn.wav";

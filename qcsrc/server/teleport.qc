@@ -212,7 +212,7 @@ void(void) teleport_init {
 
 void(void) teleport_setup {
 	self.angles = '0 0 0';
-	TRIGGER_EXACT_INIT;
+	trigger_solid_brush_init();
 	self.use = teleport_use;
 	// this must be called to spawn the teleport waypoints for bots
 	entity_initialize(self, teleport_findtarget, INITPRIO_FINDTARGET);
