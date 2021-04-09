@@ -230,9 +230,10 @@ void(void) race_sbar_draw {
 		if (keys & KEY_RIGHT)
 			race_movement_y += sv_maxspeed;
 
-		race_velocity = physics_velocity_frame_begin;
+		t = bound(0, (time - server_prevtime) / server_ticrate, 1);
+		race_velocity = (physics_velocity_frame_begin * (1 - t) + physics_velocity_frame_end * t);
 	} else {
-		race_velocity = physics_velocity;
+		race_velocity = physics_velocity_frame_end;
 		race_movement = input_movevalues;
 	}
 	if (gametype == GAME_CTS)
