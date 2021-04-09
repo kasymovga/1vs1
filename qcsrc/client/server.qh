@@ -1,2 +1,5 @@
+#define server_time servertime
+#define server_prevtime serverprevtime
+#define server_deltatime serverdeltatime
 float server_time, server_prevtime, server_deltatime, server_ticrate;
 string server_motd;
