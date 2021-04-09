@@ -19,9 +19,13 @@ float(void) trigger_exact_hit_recurse {
 	return f;
 }
 
+float g_trigger_collisions_exact;
 float(void) trigger_exact_hit {
 	float f, s;
 	if not(self.modelindex)
+		return 1;
+
+	if not(g_trigger_collisions_exact)
 		return 1;
 
 	s = self.solid;
@@ -33,6 +37,7 @@ float(void) trigger_exact_hit {
 	return f;
 }
 
+float trigger_init_done;
 void(void) trigger_solid_brush_init {
 	// trigger angles are used for one-way touches.  An angle of 0 is assumed
 	// to mean no restrictions, so use a yaw of 360 instead.
@@ -40,6 +45,10 @@ void(void) trigger_solid_brush_init {
 	if (self.angles != '0 0 0')
 		entity_movedir_setup();
 
+	if not(trigger_init_done) {
+		trigger_init_done = TRUE;
+		CVAR_CACHE(g_trigger_collisions_exact);
+	}
 	self.solid = SOLID_BSP;
 	model_setup();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
