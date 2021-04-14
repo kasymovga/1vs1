@@ -297,7 +297,7 @@ void(void) vehicle_aircraft_dinit {
     self.vehicle_flags = VHF_HASSHIELD | VHF_SHIELDREGEN | VHF_HEALTHREGEN | VHF_HIDEPLAYER | VHF_HEAT;
     self.cvar_basename = "g_vehicle_aircraft";
 	self.vehicle_heat = 0;
-    setmodel(self, "models/racers/waka.dpm");
+    setmodel(self, self.message2);
 	self.scale = 0.6;
     self.customizeentityforclient = vehicle_stdproc_customize;
     //setorigin(self.vehicle_viewport,'35 0 -14');
@@ -332,7 +332,7 @@ void(void) vehicle_aircraft_init {
 	CVAR_CACHE(g_vehicle_aircraft_laser_cooldown);
 	CVAR_CACHE(g_vehicle_aircraft_laser_spread);
     precache_model("models/vhshield.md3");
-    precache_model("models/racers/waka.dpm");
+    precache_model(self.message2);
 	precache_sound("weapons/lasergun_fire.wav");
 	precache_sound("ambient/machinerydrone01.wav");
 	projectile_init(PROJECTILE_LASER);
@@ -364,6 +364,10 @@ float(entity to, float sf) vehicle_aircraft_physics_send {
 }
 
 void(void) spawnfunc_vehicle_aircraft {
+	self.message2 = self.model;
+	if (self.message2 == "")
+		self.message2 = "models/racers/waka.dpm";
+
 	vehicle_aircraft_init();
 	vehicle_stdproc_init("aircraft", vehicle_aircraft_dinit);
 }
