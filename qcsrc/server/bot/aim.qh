@@ -80,19 +80,12 @@ vector shotdir;
 
 .entity bot_aimtarg;
 
-/*
- * Functions
- */
+void(void) bot_aim_lag_update;
+void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) bot_lagfunc;
+void(void) bot_aim_init;
 
-void lag_update();
-void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4);
-void bot_aim_init();
-
-float bot_shouldattack(entity e);
-float bot_aimdir(vector v, float maxfiredeviation);
-float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
-float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore);
-
-vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay);
+float(vector v, float maxfiredeviation) bot_aim_dir;
+float(entity e) bot_aim_shouldattack;
+float(float shotspeed, float shotspeedupward, float maxshottime, float applygravity) bot_aim;
 
 .void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) lag_func;

@@ -50,7 +50,6 @@ void(void) bot_think {
 	self.dmg_inflictor = world;
 	// calculate an aiming latency based on the skill setting
 	// (simulated network latency + naturally delayed reflexes)
-	//self.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
 	// minimum ping 20+10 random
 	self.ping = bound(0,0.07 - bound(0, (skill + self.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
 	// skill 10 = ping 0.2 (adrenaline)

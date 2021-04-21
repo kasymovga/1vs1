@@ -262,7 +262,7 @@ float weapon_rocketlauncher(float req)
 						selfdamage = selfdamage + d;
 					else if (targ.team == self.team && team_mode)
 						teamdamage = teamdamage + d;
-					else if (bot_shouldattack(targ))
+					else if (bot_aim_shouldattack(targ))
 						enemydamage = enemydamage + d;
 					targ = targ.chain;
 				}

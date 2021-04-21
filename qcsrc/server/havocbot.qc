@@ -73,7 +73,7 @@ void(void) havocbot_ai {
 		havocbot_chooseweapon();
 	}
 	havocbot_aim();
-	lag_update();
+	bot_aim_lag_update();
 	if (self.bot_aimtarg) {
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &~= AI_STATUS_ROAMING;
@@ -90,7 +90,7 @@ void(void) havocbot_ai {
 			}
 		} else {
 			if (self.bot_aimtarg.classname=="player")
-				bot_aimdir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
+				bot_aim_dir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
 		}
 	} else if (self.goalcurrent) {
 		self.aistatus |= AI_STATUS_ROAMING;
@@ -116,7 +116,7 @@ void(void) havocbot_ai {
 			v_z = 0;
 
 		//te_lightning2(world, self.origin, self.goalcurrent.origin);
-		bot_aimdir(v, -1);
+		bot_aim_dir(v, -1);
 	}
 	havocbot_movetogoal();
 }
@@ -581,7 +581,7 @@ void(void) havocbot_chooseenemy {
 		return;
 	}
 	if (self.enemy) {
-		if (!bot_shouldattack(self.enemy)) {
+		if (!bot_aim_shouldattack(self.enemy)) {
 			// enemy died or something, find a new target
 			self.enemy = world;
 			self.havocbot_chooseenemy_finished = time;
@@ -620,7 +620,7 @@ void(void) havocbot_chooseenemy {
 			rating = vlen(v - eye);
 			if (rating<bot_ai_enemydetectionradius)
 			if (bestrating > rating)
-			if (bot_shouldattack(head)) {
+			if (bot_aim_shouldattack(head)) {
 				trace_line(eye, v, TRUE, self);
 				if (trace_ent == head || trace_fraction >= 1)
 				{
@@ -762,9 +762,9 @@ void(void) havocbot_aim {
 		if (!self.enemy.waterlevel)
 			enemyvel_z = 0;
 
-		lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, self.enemy.origin, enemyvel);
+		bot_aim_lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, self.enemy.origin, enemyvel);
 	} else
-		lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, self.goalcurrent.origin, '0 0 0');
+		bot_aim_lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, self.goalcurrent.origin, '0 0 0');
 }
 
 float(void) havocbot_moveto_refresh_route {
@@ -804,7 +804,7 @@ float(vector pos) havocbot_moveto {
 		// Heading
 		vector dir = self.goalcurrent.origin - (self.origin + self.view_ofs);
 		dir_z = 0;
-		bot_aimdir(dir, -1);
+		bot_aim_dir(dir, -1);
 		// Go!
 		havocbot_movetogoal();
 		if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED) {

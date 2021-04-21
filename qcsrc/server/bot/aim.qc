@@ -21,16 +21,18 @@ float bot_ai_aimskill_think;
 // 'end' vector is the place it aims for,
 // returns TRUE only if it hit targ (don't target non-solid entities)
 
-float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
-{
-	local float c, savesolid, shottime;
-	local vector dir, end, v;
+float(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore) bot_aim_findtrajectorywithleading {
+	float c, savesolid, shottime;
+	vector dir, end, v;
 	if (shotspeed < 1)
 		return FALSE; // could cause division by zero if calculated
+
 	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
 		return FALSE; // could never hit it
+
 	if (!tracetossent)
 		tracetossent = spawn();
+
 	tracetossent.owner = ignore;
 	setsize(tracetossent, m1, m2);
 	savesolid = targ.solid;
@@ -40,15 +42,14 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	trace_box(targ.origin, targ.mins, targ.maxs, v, FALSE, targ);
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
-	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
-	{
+	if ((vlen(end - org) / shotspeed + 0.2) > maxtime) {
 		// out of range
 		targ.solid = savesolid;
 		return FALSE;
 	}
-
 	if (!tracetossfaketarget)
 		tracetossfaketarget = spawn();
+
 	tracetossfaketarget.solid = savesolid;
 	tracetossfaketarget.movetype = targ.movetype;
 	setmodel(tracetossfaketarget, targ.model); // no low precision
@@ -56,18 +57,14 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	tracetossfaketarget.modelindex = targ.modelindex;
 	setsize(tracetossfaketarget, targ.mins, targ.maxs);
 	setorigin(tracetossfaketarget, v);
-
 	c = 0;
 	dir = normalize(end - org);
-	while (c < 10) // 10 traces
-	{
+	while (c < 10) { // 10 traces
 		setorigin(tracetossent, org); // reset
 		tracetossent.velocity = findtrajectory_velocity = normalize(dir) * shotspeed + shotspeedupward * '0 0 1';
 		trace_toss(tracetossent, ignore, 0.05, 20);
-		if (trace_ent == tracetossfaketarget) // done
-		{
+		if (trace_ent == tracetossfaketarget) { // done
 			targ.solid = savesolid;
-
 			// make it disappear
 			tracetossfaketarget.solid = SOLID_NOT;
 			tracetossfaketarget.movetype = MOVETYPE_NONE;
@@ -75,14 +72,12 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 			tracetossfaketarget.modelindex = 0;
 			// relink to remove it from physics considerations
 			setorigin(tracetossfaketarget, v);
-
 			return TRUE;
 		}
 		dir_z = dir_z + 0.1; // aim up a little more
 		c = c + 1;
 	}
 	targ.solid = savesolid;
-
 	// make it disappear
 	tracetossfaketarget.solid = SOLID_NOT;
 	tracetossfaketarget.movetype = MOVETYPE_NONE;
@@ -90,23 +85,20 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	tracetossfaketarget.modelindex = 0;
 	// relink to remove it from physics considerations
 	setorigin(tracetossfaketarget, v);
-
 	// leave a valid one even if it won't reach
 	findtrajectory_velocity = normalize(end - org) * shotspeed + shotspeedupward * '0 0 1';
 	return FALSE;
-};
+}
 
-void lag_update()
-{
+void(void) bot_aim_lag_update {
 	if (self.lag1_time) if (time > self.lag1_time) {self.lag_func(self.lag1_time, self.lag1_float1, self.lag1_float2, self.lag1_entity1, self.lag1_vec1, self.lag1_vec2, self.lag1_vec3, self.lag1_vec4);self.lag1_time = 0;}
 	if (self.lag2_time) if (time > self.lag2_time) {self.lag_func(self.lag2_time, self.lag2_float1, self.lag2_float2, self.lag2_entity1, self.lag2_vec1, self.lag2_vec2, self.lag2_vec3, self.lag2_vec4);self.lag2_time = 0;}
 	if (self.lag3_time) if (time > self.lag3_time) {self.lag_func(self.lag3_time, self.lag3_float1, self.lag3_float2, self.lag3_entity1, self.lag3_vec1, self.lag3_vec2, self.lag3_vec3, self.lag3_vec4);self.lag3_time = 0;}
 	if (self.lag4_time) if (time > self.lag4_time) {self.lag_func(self.lag4_time, self.lag4_float1, self.lag4_float2, self.lag4_entity1, self.lag4_vec1, self.lag4_vec2, self.lag4_vec3, self.lag4_vec4);self.lag4_time = 0;}
 	if (self.lag5_time) if (time > self.lag5_time) {self.lag_func(self.lag5_time, self.lag5_float1, self.lag5_float2, self.lag5_entity1, self.lag5_vec1, self.lag5_vec2, self.lag5_vec3, self.lag5_vec4);self.lag5_time = 0;}
-};
+}
 
-float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
-{
+float(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) bot_aim_lag_additem {
 	if (self.lag1_time == 0) {self.lag1_time = t;self.lag1_float1 = f1;self.lag1_float2 = f2;self.lag1_entity1 = e1;self.lag1_vec1 = v1;self.lag1_vec2 = v2;self.lag1_vec3 = v3;self.lag1_vec4 = v4;return TRUE;}
 	if (self.lag2_time == 0) {self.lag2_time = t;self.lag2_float1 = f1;self.lag2_float2 = f2;self.lag2_entity1 = e1;self.lag2_vec1 = v1;self.lag2_vec2 = v2;self.lag2_vec3 = v3;self.lag2_vec4 = v4;return TRUE;}
 	if (self.lag3_time == 0) {self.lag3_time = t;self.lag3_float1 = f1;self.lag3_float2 = f2;self.lag3_entity1 = e1;self.lag3_vec1 = v1;self.lag3_vec2 = v2;self.lag3_vec3 = v3;self.lag3_vec4 = v4;return TRUE;}
@@ -114,44 +106,44 @@ float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, 
 	if (self.lag5_time == 0) {self.lag5_time = t;self.lag5_float1 = f1;self.lag5_float2 = f2;self.lag5_entity1 = e1;self.lag5_vec1 = v1;self.lag5_vec2 = v2;self.lag5_vec3 = v3;self.lag5_vec4 = v4;return TRUE;}
 	// no room for it (what is the best thing to do here??)
 	return FALSE;
-};
+}
 
-float bot_shouldattack(entity e)
-{
-	if (e.team == self.team)
-	{
+float(entity e) bot_aim_shouldattack {
+	if (e.team == self.team) {
 		if (e == self)
 			return FALSE;
+
 		if (team_mode)
 		if (e.team != 0)
 			return FALSE;
 	}
-
 	if (team_mode) {
 		if(e.team==0)
 			return FALSE;
-	}
-	else if(bot_ignore_bots)
+	} else if(bot_ignore_bots)
 		if(clienttype(e) == CLIENTTYPE_BOT)
 			return FALSE;
 
 	if (!e.takedamage)
 		return FALSE;
+
 	if (e.deadflag)
 		return FALSE;
+
 	if (e.BUTTON_CHAT)
 		return FALSE;
+
 	if (player_alpha(e, self) < 0.2)
 		return FALSE;
+
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
-	return TRUE;
-};
 
-void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
-{
-	if(self.flags & FL_INWATER)
-	{
+	return TRUE;
+}
+
+void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) bot_lagfunc {
+	if(self.flags & FL_INWATER) {
 		self.bot_aimtarg = world;
 		return;
 	}
@@ -169,13 +161,11 @@ void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, v
 		self.bot_canfire = (random() < 0.95);
 	else
 		self.bot_canfire = 1;
-};
+}
 
-float bot_aimdir(vector v, float maxfiredeviation)
-{
-	local float dist, delta_t, blend;
-	local vector desiredang, diffang;
-
+float(vector v, float maxfiredeviation) bot_aim_dir {
+	float dist, delta_t, blend;
+	vector desiredang, diffang;
 	// make sure v_angle is sane first
 	if (g_sideview) {
 		if (v_x >= 0) {
@@ -188,61 +178,41 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	}
 	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
 	self.v_angle_z = 0;
-
 	// get the desired angles to aim at
 	v = normalize(v);
 	//te_lightning2(world, self.origin + self.view_ofs, self.origin + self.view_ofs + v * 200);
-	if (time >= self.bot_badaimtime)
-	{
+	if (time >= self.bot_badaimtime) {
 		self.bot_badaimtime = max(self.bot_badaimtime + 0.3, time);
 		self.bot_badaimoffset = randomvec() * bound(0, 5 - 0.5 * (skill+self.bot_offsetskill), 5) * bot_ai_aimskill_offset;
 	}
 	desiredang = vectoangles(v) + self.bot_badaimoffset;
 	if (desiredang_x >= 180)
 		desiredang_x = desiredang_x - 360;
+
 	desiredang_x = bound(-90, 0 - desiredang_x, 90);
 	desiredang_z = self.v_angle_z;
-
-	//// pain throws off aim
-	//if (self.bot_painintensity)
-	//{
-	//	// shake from pain
-	//	desiredang = desiredang + randomvec() * self.bot_painintensity * 0.2;
-	//}
-
-	// calculate turn angles
 	diffang = (desiredang - self.bot_olddesiredang);
 	// wrap yaw turn
 	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
 	if (diffang_y >= 180)
 		diffang_y = diffang_y - 360;
-	self.bot_olddesiredang = desiredang;
 
+	self.bot_olddesiredang = desiredang;
 	delta_t = time-self.bot_prevaimtime;
 	self.bot_prevaimtime = time;
 	// Here we will try to anticipate the comming aiming direction
-	self.bot_1st_order_aimfilter= self.bot_1st_order_aimfilter
-		+ (diffang * (1 / delta_t)    - self.bot_1st_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_1st, 1);
-	self.bot_2nd_order_aimfilter= self.bot_2nd_order_aimfilter
-		+ (self.bot_1st_order_aimfilter - self.bot_2nd_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_2nd, 1);
-	self.bot_3th_order_aimfilter= self.bot_3th_order_aimfilter
-		+ (self.bot_2nd_order_aimfilter - self.bot_3th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_3th, 1);
-	self.bot_4th_order_aimfilter= self.bot_4th_order_aimfilter
-		+ (self.bot_3th_order_aimfilter - self.bot_4th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_4th, 1);
-	self.bot_5th_order_aimfilter= self.bot_5th_order_aimfilter
-		+ (self.bot_4th_order_aimfilter - self.bot_5th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_5th, 1);
-
+	self.bot_1st_order_aimfilter = self.bot_1st_order_aimfilter + (diffang * (1 / delta_t) - self.bot_1st_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_1st, 1);
+	self.bot_2nd_order_aimfilter = self.bot_2nd_order_aimfilter + (self.bot_1st_order_aimfilter - self.bot_2nd_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_2nd, 1);
+	self.bot_3th_order_aimfilter = self.bot_3th_order_aimfilter + (self.bot_2nd_order_aimfilter - self.bot_3th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_3th, 1);
+	self.bot_4th_order_aimfilter = self.bot_4th_order_aimfilter + (self.bot_3th_order_aimfilter - self.bot_4th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_4th, 1);
+	self.bot_5th_order_aimfilter = self.bot_5th_order_aimfilter + (self.bot_4th_order_aimfilter - self.bot_5th_order_aimfilter) * bound(0, bot_ai_aimskill_order_filter_5th, 1);
 	//blend = (bound(0,skill,10)*0.1)*pow(1-bound(0,skill,10)*0.05,2.5)*5.656854249; //Plot formule before changing !
 	blend = bound(0,skill+self.bot_aimskill,10)*0.1;
-	desiredang = desiredang + blend *
-	(
-		  self.bot_1st_order_aimfilter * bot_ai_aimskill_order_mix_1st
-		+ self.bot_2nd_order_aimfilter * bot_ai_aimskill_order_mix_2nd
-		+ self.bot_3th_order_aimfilter * bot_ai_aimskill_order_mix_3th
-		+ self.bot_4th_order_aimfilter * bot_ai_aimskill_order_mix_4th
-		+ self.bot_5th_order_aimfilter * bot_ai_aimskill_order_mix_5th
-	);
-
+	desiredang = desiredang + blend * (self.bot_1st_order_aimfilter * bot_ai_aimskill_order_mix_1st
+			+ self.bot_2nd_order_aimfilter * bot_ai_aimskill_order_mix_2nd
+			+ self.bot_3th_order_aimfilter * bot_ai_aimskill_order_mix_3th
+			+ self.bot_4th_order_aimfilter * bot_ai_aimskill_order_mix_4th
+			+ self.bot_5th_order_aimfilter * bot_ai_aimskill_order_mix_5th);
 	// calculate turn angles
 	diffang = desiredang - self.bot_mouseaim;
 	// wrap yaw turn
@@ -250,21 +220,18 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	if (diffang_y >= 180)
 		diffang_y = diffang_y - 360;
 
-	if (time >= self.bot_aimthinktime)
-	{
+	if (time >= self.bot_aimthinktime) {
 		self.bot_aimthinktime = max(self.bot_aimthinktime + 0.5 - 0.05*(skill+self.bot_thinkskill), time);
 		self.bot_mouseaim = self.bot_mouseaim + diffang * (1-random()*0.1*bound(1,10-(skill+self.bot_thinkskill),10));
 	}
-
 	//self.v_angle = self.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
-
 	diffang = self.bot_mouseaim - desiredang;
 	// wrap yaw turn
 	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
 	if (diffang_y >= 180)
 		diffang_y = diffang_y - 360;
-	desiredang = desiredang + diffang * bound(0, bot_ai_aimskill_think, 1);
 
+	desiredang = desiredang + diffang * bound(0, bot_ai_aimskill_think, 1);
 	// calculate turn angles
 	diffang = desiredang - self.v_angle;
 	// wrap yaw turn
@@ -275,9 +242,8 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	// jitter tracking
 	dist = vlen(diffang);
 	//diffang = diffang + randomvec() * (dist * 0.05 * (3.5 - bound(0, skill, 3)));
-
 	// turn
-	local float r, fixedrate, blendrate;
+	float r, fixedrate, blendrate;
 	fixedrate = bot_ai_aimskill_fixedrate / bound(1,dist,1000);
 	blendrate = bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
@@ -288,23 +254,11 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//self.v_angle = self.v_angle + diffang * (1/ blendrate);
 	self.v_angle_z = 0;
 	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
-
 	makevectors(self.v_angle);
 	shotorg = self.origin + self.view_ofs;
 	shotdir = v_forward;
-
-	//te_lightning2(world, shotorg, shotorg + shotdir * 100);
-
-	// calculate turn angles again
-	//diffang = desiredang - self.v_angle;
-	//diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	//if (diffang_y >= 180)
-	//	diffang_y = diffang_y - 360;
-
-
 	// decide whether to fire this time
 	// note the maxfiredeviation is in degrees so this has to convert to radians first
-	//if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
 	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
 	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+self.bot_aggresskill, 10) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
 		self.bot_firetimer = time + bound(0.1, 0.5-(skill+self.bot_aggresskill)*0.05, 0.5);
@@ -314,67 +268,59 @@ float bot_aimdir(vector v, float maxfiredeviation)
 		self.bot_mouseaim_x = 0;
 	}
 	return self.bot_canfire && (time < self.bot_firetimer);
-};
+}
 
-vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
-{
+vector(vector targorigin, vector targvelocity, float shotspeed, float shotdelay) bot_aim_shotlead {
 	// Try to add code here that predicts gravity effect here, no clue HOW to though ... well not yet atleast...
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
-};
+}
 
-float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity)
-{
-	local float f, r;
-	local vector v;
-	/*
-	eprint(self);
-	*/
+float(float shotspeed, float shotspeedupward, float maxshottime, float applygravity) bot_aim {
+	float f, r;
+	vector v;
 	shotspeed *= g_weaponspeedfactor;
 	shotspeedupward *= g_weaponspeedfactor;
-	if (!shotspeed)
-	{
+	if (!shotspeed) {
 		shotspeed = 1000000;
 	}
-	if (!maxshottime)
-	{
+	if (!maxshottime) {
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);
 	shotorg = self.origin + self.view_ofs;
 	shotdir = v_forward;
-	v = bot_shotlead(self.bot_aimtargorigin, self.bot_aimtargvelocity, shotspeed, self.bot_aimlatency);
-	local float distanceratio;
+	v = bot_aim_shotlead(self.bot_aimtargorigin, self.bot_aimtargvelocity, shotspeed, self.bot_aimlatency);
+	float distanceratio;
 	distanceratio =sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/bot_ai_aimskill_firetolerance_distdegrees;
 	distanceratio = bound(0,distanceratio,1);
 	r =  (bot_ai_aimskill_firetolerance_maxdegrees-bot_ai_aimskill_firetolerance_mindegrees)
 		* (1-distanceratio) + bot_ai_aimskill_firetolerance_mindegrees;
-	if (applygravity && self.bot_aimtarg)
-	{
-		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', self.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, self))
+	if (applygravity && self.bot_aimtarg) {
+		if (!bot_aim_findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', self.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, self))
 			return FALSE;
-		f = bot_aimdir(findtrajectory_velocity - shotspeedupward * '0 0 1', r);
-	}
-	else
-	{
-		f = bot_aimdir(v - shotorg, r);
+
+		f = bot_aim_dir(findtrajectory_velocity - shotspeedupward * '0 0 1', r);
+	} else {
+		f = bot_aim_dir(v - shotorg, r);
 		trace_line(shotorg, shotorg + shotdir * 10000, FALSE, self);
 		if (trace_ent.takedamage)
 		if (trace_fraction < 1)
-		if (!bot_shouldattack(trace_ent))
+		if (!bot_aim_shouldattack(trace_ent))
 			return FALSE;
+
 		trace_line(shotorg, self.bot_aimtargorigin, FALSE, self);
 		if (trace_fraction < 1)
 		if (trace_ent != self.enemy)
-		if (!bot_shouldattack(trace_ent))
+		if (!bot_aim_shouldattack(trace_ent))
 			return FALSE;
 	}
 	if (r > maxshottime * shotspeed)
 		return FALSE;
-	return f;
-};
 
-void bot_aim_init()
-{
+	return f;
+}
+
+void(void) bot_aim_init {
 	CVAR_CACHE(bot_ai_aimskill_blendrate);
 	CVAR_CACHE(bot_ai_aimskill_firetolerance_distdegrees);
 	CVAR_CACHE(bot_ai_aimskill_firetolerance_maxdegrees);
@@ -393,4 +339,4 @@ void bot_aim_init()
 	CVAR_CACHE(bot_ai_aimskill_order_mix_4th);
 	CVAR_CACHE(bot_ai_aimskill_order_mix_5th);
 	CVAR_CACHE(bot_ai_aimskill_think);
-};
+}
