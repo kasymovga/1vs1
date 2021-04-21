@@ -585,7 +585,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 	if (targ == attacker)
 	{
 		if not(clienttype(attacker) == CLIENTTYPE_REAL)
-			Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
+			bot_say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
 		if (deathtype == DEATH_TEAMCHANGE) {
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "You are now on: ", team_colored_name(targ.team)));
 		} else if (deathtype == DEATH_AUTOTEAMCHANGE) {
@@ -636,9 +636,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (random() < bot_talk)
 			{
 				if (team_mode && attacker.team == targ.team)
-					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
+					bot_say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
 				else
-					Bot_Say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
+					bot_say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
 			}
 			if (bot_taunt)
 			if (random() <= bot_taunt)
@@ -656,14 +656,14 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		{
 			if (team_mode && attacker.team == targ.team)
 			{
-				Bot_Say(targ, FALSE, world, cvar_string("bot_messages_teamkilled"), strcat(attacker.netname, "^7: "));
+				bot_say(targ, FALSE, world, cvar_string("bot_messages_teamkilled"), strcat(attacker.netname, "^7: "));
 			}
 			else
 			{
 				if (random() < 0.5)
-					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged"), "");
+					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged"), "");
 				else
-					Bot_Say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
+					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 		}
 		if(team_mode && attacker.team == targ.team && !targ.saboteur)
@@ -816,7 +816,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		if not(clienttype(targ) == CLIENTTYPE_REAL)
 		if (bot_talk)
 		if (random() <= bot_talk)
-			Bot_Say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
+			bot_say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
 		centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
 		if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 			bprint ("^1",s, "^1 ", inflictor.message, "\n");

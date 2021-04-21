@@ -138,7 +138,10 @@ stdproc.qh
 ../common/cvar.qh
 ../common/file.qh
 waypoint.qh
-bot/bot.qh
+bot/havocbot/havocbot.qh
+bot/aim.qh
+bot/navigation.qh
+bot.qh
 gamehooks.qh
 ../client-server/nadget.qh
 nadget.qh
@@ -197,7 +200,11 @@ announce.qc
 ../common/stdproc.qc
 waypointsprites.qc
 slowmo.qc
-bot/bot.qc
+bot/aim.qc
+bot/navigation.qc
+bot/scripting.qc
+bot/havocbot/havocbot.qc
+bot.qc
 random.qc
 net.qc
 ../client-server/rune.qh

@@ -42,6 +42,7 @@ void havocbot_chooseweapon();
 void havocbot_bunnyhop(vector dir);
 void havocbot_keyboard_movement(vector destorg);
 void havocbot_chooserole_dm();
+void(void) havocbot_setupbot;
 
 float havocbot_resetgoal();
 float havocbot_moveto(vector pos);
