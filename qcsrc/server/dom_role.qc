@@ -25,9 +25,9 @@ void() dom_role {
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		dom_role_goalrating_controlpoints(10000, self.origin, 15000);
-		havocbot_goalrating_items(8000, self.origin, 8000);
-		//havocbot_goalrating_enemyplayers(3000, self.origin, 2000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		havocbot_role_goalrating_items(8000, self.origin, 8000);
+		//havocbot_role_goalrating_enemyplayers(3000, self.origin, 2000);
+		//havocbot_role_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
 }

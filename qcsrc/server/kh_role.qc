@@ -6,7 +6,7 @@ void() kh_role_freelancer;
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
 
-void(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy) havocbot_goalrating_kh {
+void(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy) kh_role_goalrating {
 	entity head;
 	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
@@ -30,8 +30,7 @@ void(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 		else
 			navigation_routerating(head.owner, ratingscale_enemy * BOT_PICKUP_RATING_HIGH, 100000);
 	}
-
-	havocbot_goalrating_items(1, self.origin, 10000);
+	havocbot_role_goalrating_items(1, self.origin, 10000);
 }
 
 void() kh_role_carrier {
@@ -51,9 +50,9 @@ void() kh_role_carrier {
 		navigation_goalrating_start();
 
 		if(kh_Key_AllOwnedByWhichTeam() == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // bring home
+			kh_role_goalrating(10, 0.1, 0.1); // bring home
 		else
-			havocbot_goalrating_kh(4, 4, 1); // play defensively
+			kh_role_goalrating(4, 4, 1); // play defensively
 
 		navigation_goalrating_end();
 	}
@@ -87,11 +86,11 @@ void() kh_role_defense {
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if(key_owner_team == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // defend key carriers
+			kh_role_goalrating(10, 0.1, 0.1); // defend key carriers
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(4, 1, 0.1); // play defensively
+			kh_role_goalrating(4, 1, 0.1); // play defensively
 		else
-			havocbot_goalrating_kh(0.1, 0.1, 10); // ATTACK ANYWAY
+			kh_role_goalrating(0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end();
 	}
@@ -126,11 +125,11 @@ void() kh_role_offense {
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if(key_owner_team == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // defend anyway
+			kh_role_goalrating(10, 0.1, 0.1); // defend anyway
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(0.1, 1, 4); // play offensively
+			kh_role_goalrating(0.1, 1, 4); // play offensively
 		else
-			havocbot_goalrating_kh(0.1, 0.1, 10); // ATTACK! EMERGENCY!
+			kh_role_goalrating(0.1, 0.1, 10); // ATTACK! EMERGENCY!
 
 		navigation_goalrating_end();
 	}
@@ -169,11 +168,11 @@ void() kh_role_freelancer {
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if(key_owner_team == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // defend anyway
+			kh_role_goalrating(10, 0.1, 0.1); // defend anyway
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(1, 10, 4); // prefer dropped keys
+			kh_role_goalrating(1, 10, 4); // prefer dropped keys
 		else
-			havocbot_goalrating_kh(0.1, 0.1, 10); // ATTACK ANYWAY
+			kh_role_goalrating(0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end();
 	}

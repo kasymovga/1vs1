@@ -285,7 +285,7 @@ void() ctf_role_escort {
 		navigation_goalrating_start();
 		ctf_role_goalrating_enemyflag(30000);
 		ctf_role_goalrating_ourstolenflag(40000);
-		havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_role_goalrating_items(10000, self.origin, 10000);
 		navigation_goalrating_end();
 	}
 }
@@ -364,8 +364,8 @@ void() ctf_role_offense {
 		navigation_goalrating_start();
 		ctf_role_goalrating_ourstolenflag(50000);
 		ctf_role_goalrating_enemybase(20000);
-		havocbot_goalrating_items(5000, self.origin, 1000);
-		havocbot_goalrating_items(1000, self.origin, 10000);
+		havocbot_role_goalrating_items(5000, self.origin, 1000);
+		havocbot_role_goalrating_items(1000, self.origin, 10000);
 		navigation_goalrating_end();
 	}
 }
@@ -413,7 +413,7 @@ void() ctf_role_retriever {
 		ctf_role_goalrating_ourstolenflag(50000);
 		ctf_role_goalrating_droppedflags(40000, self.origin, _radius);
 		ctf_role_goalrating_enemybase(30000);
-		havocbot_goalrating_items(500, self.origin, _radius);
+		havocbot_role_goalrating_items(500, self.origin, _radius);
 		navigation_goalrating_end();
 	}
 }
@@ -460,9 +460,9 @@ void() ctf_role_middle {
 		navigation_goalrating_start();
 		ctf_role_goalrating_ourstolenflag(50000);
 		ctf_role_goalrating_droppedflags(30000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(10000, org, havocbot_ctf_middlepoint_radius * 0.5);
-		havocbot_goalrating_items(5000, org, havocbot_ctf_middlepoint_radius * 0.5);
-		havocbot_goalrating_items(2500, self.origin, 10000);
+		havocbot_role_goalrating_enemyplayers(10000, org, havocbot_ctf_middlepoint_radius * 0.5);
+		havocbot_role_goalrating_items(5000, org, havocbot_ctf_middlepoint_radius * 0.5);
+		havocbot_role_goalrating_items(2500, self.origin, 10000);
 		ctf_role_goalrating_enemybase(2500);
 		navigation_goalrating_end();
 	}
@@ -535,9 +535,9 @@ void() ctf_role_defense {
 
 		ctf_role_goalrating_ourstolenflag(20000);
 		ctf_role_goalrating_droppedflags(20000, org, _radius);
-		havocbot_goalrating_enemyplayers(15000, org, _radius);
-		havocbot_goalrating_items(10000, org, _radius);
-		havocbot_goalrating_items(5000, self.origin, 10000);
+		havocbot_role_goalrating_enemyplayers(15000, org, _radius);
+		havocbot_role_goalrating_items(10000, org, _radius);
+		havocbot_role_goalrating_items(5000, self.origin, 10000);
 		navigation_goalrating_end();
 	}
 }

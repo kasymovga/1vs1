@@ -6,8 +6,6 @@ float g_jump_grunt;
 float g_steponskydamage;
 float g_jump_nofalldamage;
 
-.float ladder_time;
-.entity ladder_entity;
 .float spectatorspeed;
 .float cpmdoublejump;
 void(vector v1, vector v2, float r, float stackprotect) physics_triggers;

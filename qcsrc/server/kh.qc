@@ -994,7 +994,7 @@ void kh_init() {
 	gamehook_PlayerIsCarrier = kh_PlayerIsCarrier;
 	gamehook_DropCarried = kh_DropCarried;
 	gamehook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
-	gamehook_BotChooseRole = kh_role_choose;
+	gamehook_havocbot_role_choose = kh_role_choose;
 	precache_model("models/keyhunt/key.md3");
 	kh_teams = cvar("g_keyhunt_teams_override");
 	if(kh_teams < 2)

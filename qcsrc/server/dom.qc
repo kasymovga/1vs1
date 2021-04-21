@@ -415,6 +415,6 @@ void(void) dom_init {
 	precache_sound("domination/claim.wav");
 	gamehook_SelectSpawnPoint = dom_SelectSpawnPoint;
 	gamehook_WinCountDown = stub_WinCountDown;
-	gamehook_BotChooseRole = dom_role_choose;
+	gamehook_havocbot_role_choose = dom_role_choose;
 	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);
 }

@@ -1356,7 +1356,7 @@ void(void) race_init {
 	gamehook_ReadyAllowed = race_ReadyAllowed;
 	gamehook_TelefragsAllowed = race_TelefragsAllowed;
 	gamehook_ReadyRestartHard = race_ReadyRestartHard;
-	gamehook_BotChooseRole = race_role_choose;
+	gamehook_havocbot_role_choose = race_role_choose;
 	gamehook_SuddenDeathMessageMod = race_SuddenDeathMod;
 	race_cmd_game_handle_next = gamehook_chain_cmd_game_handle;
 	gamehook_chain_cmd_game_handle = race_cmd_game_handle;

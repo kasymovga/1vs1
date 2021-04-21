@@ -1,0 +1,3 @@
+void(void) havocbot_role_choose;
+void(void) havocbot_role_choose_dm;
+

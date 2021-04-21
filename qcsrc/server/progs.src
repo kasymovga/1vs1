@@ -138,7 +138,8 @@ stdproc.qh
 ../common/cvar.qh
 ../common/file.qh
 waypoint.qh
-bot/havocbot/havocbot.qh
+havocbot/role.qh
+havocbot.qh
 bot/aim.qh
 navigation.qh
 bot.qh
@@ -203,7 +204,8 @@ slowmo.qc
 bot/aim.qc
 navigation.qc
 bot/cmd.qc
-bot/havocbot/havocbot.qc
+havocbot/role.qc
+havocbot.qc
 bot.qc
 random.qc
 net.qc

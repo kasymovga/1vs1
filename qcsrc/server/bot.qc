@@ -600,7 +600,7 @@ void(void) bot_init {
 	navigation_init();
 	waypoint_init();
 	bot_cmd_init();
-	bot_havocbot_init();
+	havocbot_init();
 	bot_custom_weapon_priority_setup();
 }
 

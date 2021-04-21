@@ -1,21 +1,15 @@
-#define HAVOCBOT_ONS_ROLE_NONE 		0
-#define HAVOCBOT_ONS_ROLE_DEFENSE	2
-#define HAVOCBOT_ONS_ROLE_ASSISTANT	4
-#define HAVOCBOT_ONS_ROLE_OFFENSE	8
+#define ONS_ROLE_NONE 0
+#define ONS_ROLE_DEFENSE 2
+#define ONS_ROLE_ASSISTANT 4
+#define ONS_ROLE_OFFENSE 8
 
 .float havocbot_role_flags;
 .float havocbot_attack_time;
+void() onslaught_role_defense;
+void() onslaught_role_offense;
+void() onslaught_role_assistant;
 
-.void() havocbot_role;
-.void() havocbot_previous_role;
-
-void() havocbot_role_ons_defense;
-void() havocbot_role_ons_offense;
-void() havocbot_role_ons_assistant;
-
-void(entity bot) havocbot_ons_reset_role;
-void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
-void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+void(entity bot) onslaught_role_reset;
 
 .float isshielded;
 .float iscaptured;
@@ -25,8 +19,7 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 
 .entity havocbot_ons_target;
 
-void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
-{
+void(float ratingscale, vector org, float sradius) onslaught_role_goalrating_offenseitems {
 	entity head;
 	float t, i, c, needarmor, needweapons;
 
@@ -64,45 +57,30 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 		}
 		head = head.chain;
 	}
-};
+}
 
-void havocbot_role_ons_setrole(entity bot, float role)
-{
+void(entity bot, float role) onslaught_role_setrole {
 	switch(role)
 	{
-		case HAVOCBOT_ONS_ROLE_DEFENSE:
-			bot.havocbot_role = havocbot_role_ons_defense;
-			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
+		case ONS_ROLE_DEFENSE:
+			bot.havocbot_role = onslaught_role_defense;
+			bot.havocbot_role_flags = ONS_ROLE_DEFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
-		case HAVOCBOT_ONS_ROLE_ASSISTANT:
-			bot.havocbot_role = havocbot_role_ons_assistant;
-			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
+		case ONS_ROLE_ASSISTANT:
+			bot.havocbot_role = onslaught_role_assistant;
+			bot.havocbot_role_flags = ONS_ROLE_ASSISTANT;
 			bot.havocbot_role_timeout = 0;
 			break;
-		case HAVOCBOT_ONS_ROLE_OFFENSE:
-			bot.havocbot_role = havocbot_role_ons_offense;
-			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
+		case ONS_ROLE_OFFENSE:
+			bot.havocbot_role = onslaught_role_offense;
+			bot.havocbot_role_flags = ONS_ROLE_OFFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 	}
-};
+}
 
-float havocbot_ons_teamcount(entity bot, float role)
-{
-	float c;
-	entity head;
-
-	FOR_EACH_PLAYER(head)
-	if(head.team==self.team)
-	if(head.havocbot_role_flags & role)
-		++c;
-
-	return c;
-};
-
-void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
-{
+void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
 	entity cp, cp1, cp2, best, pl, wp;
 	float _radius, found, bestvalue, c;
 
@@ -133,7 +111,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		// (easier and cleaner than keeping counters per cp and teams)
 		FOR_EACH_PLAYER(pl)
 		if(pl.team==self.team)
-		if(pl.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
+		if(pl.havocbot_role_flags & ONS_ROLE_OFFENSE)
 		if(pl.havocbot_ons_target==cp2)
 			++c;
 
@@ -218,10 +196,9 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		if not(found)
 			navigation_routerating(cp, ratingscale, 10000);
 	}
-};
+}
 
-float havocbot_goalrating_ons_generator_attack(float ratingscale)
-{
+float(float ratingscale) onslaught_role_goalrating_generator_attack {
 	entity g, wp, bestwp;
 	float found, best;
 
@@ -270,14 +247,13 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 		}
 	}
 	return FALSE;
-};
+}
 
-void havocbot_role_ons_offense()
-{
+void() onslaught_role_offense {
 	if(self.deadflag != DEAD_NO)
 	{
 		self.havocbot_attack_time = 0;
-		havocbot_ons_reset_role(self);
+		onslaught_role_reset(self);
 		return;
 	}
 
@@ -287,7 +263,7 @@ void havocbot_role_ons_offense()
 
 	if (time > self.havocbot_role_timeout)
 	{
-		havocbot_ons_reset_role(self);
+		onslaught_role_reset(self);
 		return;
 	}
 
@@ -297,28 +273,25 @@ void havocbot_role_ons_offense()
 	if (self.bot_strategytime < time)
 	{
 		navigation_goalrating_start();
-		havocbot_goalrating_enemyplayers(20000, self.origin, 650);
-		if(!havocbot_goalrating_ons_generator_attack(20000))
-			havocbot_goalrating_ons_controlpoints_attack(20000);
-		havocbot_goalrating_ons_offenseitems(10000, self.origin, 10000);
+		havocbot_role_goalrating_enemyplayers(20000, self.origin, 650);
+		if(!onslaught_role_goalrating_generator_attack(20000))
+			onslaught_role_goalrating_controlpoints_attack(20000);
+		onslaught_role_goalrating_offenseitems(10000, self.origin, 10000);
 		navigation_goalrating_end();
 
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 	}
-};
+}
 
-void havocbot_role_ons_assistant()
-{
-	havocbot_ons_reset_role(self);
-};
+void() onslaught_role_assistant {
+	onslaught_role_reset(self);
+}
 
-void havocbot_role_ons_defense()
-{
-	havocbot_ons_reset_role(self);
-};
+void() onslaught_role_defense {
+	onslaught_role_reset(self);
+}
 
-void havocbot_ons_reset_role(entity bot)
-{
+void(entity bot) onslaught_role_reset {
 	entity head;
 	float c;
 
@@ -337,14 +310,13 @@ void havocbot_ons_reset_role(entity bot)
 
 	if(c==1)
 	{
-		havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
+		onslaught_role_setrole(bot, ONS_ROLE_OFFENSE);
 		return;
 	}
 
-	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
-};
+	onslaught_role_setrole(bot, ONS_ROLE_OFFENSE);
+}
 
-void havocbot_chooserole_ons()
-{
-	havocbot_ons_reset_role(self);
-};
+void() onslaught_role_choose {
+	onslaught_role_reset(self);
+}
