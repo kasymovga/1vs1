@@ -301,7 +301,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 	self = oldself_akimbo;
 }
 
-void bullet_init() {
+void bullet_init(void) {
 	CVAR_CACHE(g_ballistics_materialconstant);
 	CVAR_CACHE(g_ballistics_mindistance);
 	CVAR_CACHE(g_antilag_bullets);

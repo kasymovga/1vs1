@@ -1,4 +1,4 @@
-void() bullet_init;
+void(void) bullet_init;
 void(vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype) bullet_railgun;
 float(float mindist, float maxdist, float halflifedist, float d) bullet_exponential_falloff;
 vector bullet_from, bullet_to; // filled by FireRailgunBullet, used by damage code for head shot

@@ -10,8 +10,7 @@ string campaign_index_var;
 float checkrules_equality;
 float g_campaign_skill;
 
-float campaign_bailout(string s)
-{
+float(string s) campaign_bailout {
 	cvar = builtin_cvar;
 	cvar_string = builtin_cvar_string;
 	cvar_set = builtin_cvar_set;
@@ -25,12 +24,14 @@ string campaign_cvar_list; // string of format ; var value; var value; var value
 string(string theCvar) campaign_cvar_string {
 	float p, q;
 	p = strstrofs(campaign_cvar_list, strcat("; ", theCvar, " "), 0);
-	if(p < 0)
+	if (p < 0)
 		return cvar_defstring(theCvar);
+
 	p += strlen(theCvar) + 3;
 	q = strstrofs(campaign_cvar_list, ";", p);
-	if(q < 0)
+	if (q < 0)
 		return cvar_defstring(theCvar);
+
 	return substring(campaign_cvar_list, p, q - p);
 }
 
@@ -39,25 +40,20 @@ float(string theCvar) campaign_cvar {
 }
 
 void(string theCvar, string theValue) campaign_cvar_set {
-	if(campaign_cvar_string(theCvar) == theValue)
+	if (campaign_cvar_string(theCvar) == theValue)
 		return;
 
 	string s;
 	s = campaign_cvar_list;
 	campaign_cvar_list = strzone(strcat("; ", theCvar, " ", theValue, s));
 	strunzone(s);
-	//print(campaign_cvar_list, "\n");
 }
 
 float(void) campaign_invalid {
-	//string thismapname = GetMapname();
 	string s = campaign_gametype[0];
-	if(MapInfo_CurrentGametype() != MapInfo_Type_FromString(s))
+	if (MapInfo_CurrentGametype() != MapInfo_Type_FromString(s))
 		return campaign_bailout("wrong game type!");
 
-	//wantedmapname = campaign_mapname[0];
-	//if(wantedmapname != thismapname)
-	//	return campaign_bailout(strcat("wrong map: ", wantedmapname, " != ", thismapname));
 	return 0;
 }
 
@@ -94,22 +90,17 @@ void(void) campaign_preinit {
 	float minskill = baseskill * 5 - 4;
 	float maxskill = baseskill * 10;
 	baseskill = bound(minskill, campaign_botskill[0] * baseskill * 0.5, maxskill);
-
 	cvar_set("sv_public", "0");
 	cvar_set("pausable", "1");
-
 	campaign_cvar_list = strzone(strcat("; ", campaign_mutators[0], "; "));
-
 	cvar = campaign_cvar;
 	cvar_string = campaign_cvar_string;
 	cvar_set = campaign_cvar_set;
-
 	cvar_set("g_campaign", "1");
-	cvar_set("g_dm", "0");
 	cvar_set("skill", ftos(baseskill));
 	cvar_set("bot_number", ftos(campaign_bots[0]));
 	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0]));
-	if(campaign_invalid())
+	if (campaign_invalid())
 		return;
 
 	title = campaign_shortdesc[0];
@@ -137,36 +128,32 @@ void(string cvarname, float value) campaign_save_cvar {
 	float len;
 	string contents;
 	string l;
-
 	registercvar(cvarname, ftos(value));
 	builtin_cvar_set(cvarname, ftos(value));
 	// note: cvarname must be remembered
-
 	fh = fopen("campaign.cfg", FILE_READ);
 	contents = "";
-	if(fh >= 0)
-	{
-		while((l = fgets(fh)))
-		{
+	if (fh >= 0) {
+		while ((l = fgets(fh))) {
 			len = tokenize_console(l);
-			if(len != 3)
+			if (len != 3)
 				continue;
-			if(argv(0) != "set")
+
+			if (argv(0) != "set")
 				continue;
-			if(argv(1) == cvarname)
+
+			if (argv(1) == cvarname)
 				continue;
+
 			contents = strcat(contents, "set ", argv(1), " ", argv(2), "\n");
 		}
 		fclose(fh);
 	}
 	contents = strcat(contents, "set ", cvarname,  " ", ftos(value), "\n");
 	fh = fopen("campaign.cfg", FILE_WRITE);
-	if(fh >= 0)
-	{
+	if (fh >= 0) {
 		fputs(fh, contents);
-	}
-	else
-	{
+	} else {
 		error("Cannot write to campaign file");
 	}
 }
@@ -175,48 +162,35 @@ void(void) campaign_preintermission {
 	entity head;
 	float won;
 	float lost;
-	local string savevar;
-
+	string savevar;
 	won = 0;
-
 	head = findchain(classname, "player");
-	while(head)
-	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
-		{
-			if(head.winning)
+	while (head) {
+		if (clienttype(head) == CLIENTTYPE_REAL) {
+			if (head.winning)
 				won = won + 1;
 			else
 				lost = lost + 1;
 		}
 		head = head.chain;
 	}
-
-	if(won == 1 && lost == 0 && checkrules_equality == 0)
-	{
+	if (won == 1 && lost == 0 && checkrules_equality == 0) {
 		campaign_won = 1;
 		bprint("The current level has been WON.\n");
 		// sound!
-	}
-	else
-	{
+	} else {
 		campaign_won = 0;
 		bprint("The current level has been LOST.\n");
 		// sound!
 	}
-
-	if(campaign_won && !campaign_map_transition)
-	{
-		if(campaign_entries < 2)
-		{
+	if (campaign_won && !campaign_map_transition) {
+		if (campaign_entries < 2) {
 			// I have won
 			savevar = strcat("g_campaign", campaign_name, "_won");
 			campaign_save_cvar(savevar, 1);
 			// advance level (for menu to show it right)
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
-		}
-		else if(campaign_level == builtin_cvar(campaign_index_var))
-		{
+		} else if (campaign_level == builtin_cvar(campaign_index_var)) {
 			// advance level
 			campaign_save_cvar(campaign_index_var, campaign_level + 1);
 		}
@@ -225,9 +199,7 @@ void(void) campaign_preintermission {
 
 void(void) campaign_postintermission {
 	// NOTE: campaign_won is 0 or 1, that is, points to the next level
-
-	if(!campaign_map_transition && campaign_won && campaign_entries < 2)
-	{
+	if (!campaign_map_transition && campaign_won && campaign_entries < 2) {
 		// last map won!
 		localcmd("togglemenu 1\n");
 		campaign_file_unload();
