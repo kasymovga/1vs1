@@ -4,20 +4,17 @@ float waypoints_count;
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
 // (suitable for spawnfunc_waypoint editor)
-entity waypoint_spawn(vector m1, vector m2, float f)
-{
-	local entity w;
+entity(vector m1, vector m2, float f) waypoint_spawn {
+	entity w;
 	w = find(world, classname, "waypoint");
-
 	if not(f & WAYPOINTFLAG_PERSONAL)
-	while (w)
-	{
+	while (w) {
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
 		if (math_boxes_overlap(m1, m2, w.absmin, w.absmax))
 			return w;
+
 		w = find(w, classname, "waypoint");
 	}
-
 	w = spawn();
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	w.classname = "waypoint";
@@ -27,20 +24,14 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	if (vlen(w.size) > 0)
 		w.wpisbox = TRUE;
 	
-	if(!w.wpisbox)
-	{
+	if (!w.wpisbox) {
 		setsize(w, PL_MIN - '1 1 0', PL_MAX + '1 1 0');
-		if(!entity_move_out_of_solid(w))
-		{
-			if(!(f & WAYPOINTFLAG_GENERATED))
-			{
+		if (!entity_move_out_of_solid(w)) {
+			if (!(f & WAYPOINTFLAG_GENERATED)) {
 				remove(w);
 				return world;
-			}
-			else
-			{
-				if(cvar("developer"))
-				{
+			} else {
+				if(cvar("developer")) {
 					print("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
 					backtrace("Waypoint stuck");
 				}
@@ -48,12 +39,9 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		}
 		setsize(w, '0 0 0', '0 0 0');
 	}
-
 	waypoint_clearlinks(w);
 	//waypoint_schedulerelink(w);
-
-	if (g_waypointeditor)
-	{
+	if (g_waypointeditor) {
 		m1 = w.mins;
 		m2 = w.maxs;
 		setmodel(w, "models/runematch/rune.mdl"); w.effects = EF_LOWPRECISION;
@@ -64,21 +52,19 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			w.colormod = '1 1 0';
 		else
 			w.colormod = '1 1 1';
-	}
-	else
+	} else
 		w.model = "";
 
 	waypoints_count++;
 	return w;
-};
+}
 
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
-void waypoint_addlink(entity from, entity to)
-{
-	local float c;
-
+void(entity from, entity to) waypoint_addlink {
+	float c;
 	if (from == to)
 		return;
+
 	if (from.wpflags & WAYPOINTFLAG_NORELINK)
 		return;
 
@@ -90,12 +76,10 @@ void waypoint_addlink(entity from, entity to)
 	if (from.wp20 == to) return;if (from.wp21 == to) return;if (from.wp22 == to) return;if (from.wp23 == to) return;
 	if (from.wp24 == to) return;if (from.wp25 == to) return;if (from.wp26 == to) return;if (from.wp27 == to) return;
 	if (from.wp28 == to) return;if (from.wp29 == to) return;if (from.wp30 == to) return;if (from.wp31 == to) return;
-
-	if (to.wpisbox || from.wpisbox)
-	{
+	if (to.wpisbox || from.wpisbox) {
 		// if either is a box we have to find the nearest points on them to
 		// calculate the distance properly
-		local vector v1, v2, m1, m2;
+		vector v1, v2, m1, m2;
 		v1 = from.origin;
 		m1 = to.absmin;
 		m2 = to.absmax;
@@ -146,35 +130,27 @@ void waypoint_addlink(entity from, entity to)
 	if (from.wp02mincost < c) {from.wp03 = to;from.wp03mincost = c;return;} from.wp03 = from.wp02;from.wp03mincost = from.wp02mincost;
 	if (from.wp01mincost < c) {from.wp02 = to;from.wp02mincost = c;return;} from.wp02 = from.wp01;from.wp02mincost = from.wp01mincost;
 	if (from.wp00mincost < c) {from.wp01 = to;from.wp01mincost = c;return;} from.wp01 = from.wp00;from.wp01mincost = from.wp00mincost;
-	from.wp00 = to;from.wp00mincost = c;return;
-};
+	from.wp00 = to;
+	from.wp00mincost = c;
+	return;
+}
 
 // relink this spawnfunc_waypoint
 // (precompile a list of all reachable waypoints from this spawnfunc_waypoint)
 // (SLOW!)
-void waypoint_think()
-{
-	local entity e;
-	local vector sv, sm1, sm2, ev, em1, em2, dv;
-
+void(void) waypoint_think {
+	entity e;
+	vector sv, sm1, sm2, ev, em1, em2, dv;
 	stepheightvec = sv_stepheight * '0 0 1';
 	bot_navigation_movemode = (bot_navigation_ignoreplayers ? MOVE_NOMONSTERS : MOVE_NORMAL);
-
 	sm1 = self.origin + self.mins;
 	sm2 = self.origin + self.maxs;
-	for(e = world; (e = find(e, classname, "waypoint")); )
-	{
-		if (math_boxes_overlap(self.absmin, self.absmax, e.absmin, e.absmax))
-		{
+	for (e = world; (e = find(e, classname, "waypoint")); ) {
+		if (math_boxes_overlap(self.absmin, self.absmax, e.absmin, e.absmax)) {
 			waypoint_addlink(self, e);
 			waypoint_addlink(e, self);
-		}
-		else
-		{
-			++relink_total;
-			if(!checkpvs(self.origin, e))
-			{
-				++relink_pvsculled;
+		} else {
+			if (!checkpvs(self.origin, e)) {
 				continue;
 			}
 			sv = e.origin;
@@ -189,71 +165,56 @@ void waypoint_think()
 			ev_z = bound(em1_z, ev_z, em2_z);
 			dv = ev - sv;
 			dv_z = 0;
-			if (vlen(dv) >= 1050) // max search distance in XY
-			{
-				++relink_lengthculled;
+			if (vlen(dv) >= 1050) { // max search distance in XY
 				continue;
 			}
 			navigation_testtracewalk = 0;
-			if (!self.wpisbox)
-			{
+			if (!self.wpisbox) {
 				trace_box(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, FALSE, self);
-				if (!trace_startsolid)
-				{
+				if (!trace_startsolid) {
 					sv = trace_endpos + '0 0 1';
 				}
 			}
-			if (!e.wpisbox)
-			{
+			if (!e.wpisbox) {
 				trace_box(ev - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, ev, FALSE, e);
-				if (!trace_startsolid)
-				{
+				if (!trace_startsolid) {
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			//trace_line(self.origin, e.origin, FALSE, world);
-			//if (trace_fraction == 1)
 			if (!self.wpisbox && tracewalk(self, sv, PL_MIN, PL_MAX, ev, MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
-			else
-				relink_walkculled += 0.5;
+
 			if (!e.wpisbox && tracewalk(e, ev, PL_MIN, PL_MAX, sv, MOVE_NOMONSTERS))
 				waypoint_addlink(e, self);
-			else
-				relink_walkculled += 0.5;
 		}
 	}
 	navigation_testtracewalk = 0;
 	self.wplinked = TRUE;
-};
+}
 
-void waypoint_clearlinks(entity wp)
-{
+void(entity wp) waypoint_clearlinks {
 	// clear links to other waypoints
-	local float f;
+	float f;
 	f = 10000000;
 	wp.wp00 = wp.wp01 = wp.wp02 = wp.wp03 = wp.wp04 = wp.wp05 = wp.wp06 = wp.wp07 = world;
 	wp.wp08 = wp.wp09 = wp.wp10 = wp.wp11 = wp.wp12 = wp.wp13 = wp.wp14 = wp.wp15 = world;
 	wp.wp16 = wp.wp17 = wp.wp18 = wp.wp19 = wp.wp20 = wp.wp21 = wp.wp22 = wp.wp23 = world;
 	wp.wp24 = wp.wp25 = wp.wp26 = wp.wp27 = wp.wp28 = wp.wp29 = wp.wp30 = wp.wp31 = world;
-
 	wp.wp00mincost = wp.wp01mincost = wp.wp02mincost = wp.wp03mincost = wp.wp04mincost = wp.wp05mincost = wp.wp06mincost = wp.wp07mincost = f;
 	wp.wp08mincost = wp.wp09mincost = wp.wp10mincost = wp.wp11mincost = wp.wp12mincost = wp.wp13mincost = wp.wp14mincost = wp.wp15mincost = f;
 	wp.wp16mincost = wp.wp17mincost = wp.wp18mincost = wp.wp19mincost = wp.wp20mincost = wp.wp21mincost = wp.wp22mincost = wp.wp23mincost = f;
 	wp.wp24mincost = wp.wp25mincost = wp.wp26mincost = wp.wp27mincost = wp.wp28mincost = wp.wp29mincost = wp.wp30mincost = wp.wp31mincost = f;
-
 	wp.wplinked = FALSE;
-};
+}
 
 // tell a spawnfunc_waypoint to relink
-void waypoint_schedulerelink(entity wp)
-{
+void(entity wp) waypoint_schedulerelink {
 	if (wp == world)
 		return;
+
 	// TODO: add some sort of visible box in edit mode for box waypoints
-	if (g_waypointeditor)
-	{
-		local vector m1, m2;
+	if (g_waypointeditor) {
+		vector m1, m2;
 		m1 = wp.mins;
 		m2 = wp.maxs;
 		setmodel(wp, "models/runematch/rune.mdl"); wp.effects = EF_LOWPRECISION;
@@ -264,15 +225,17 @@ void waypoint_schedulerelink(entity wp)
 			wp.colormod = '1 1 0';
 		else
 			wp.colormod = '1 1 1';
-	}
-	else
+	} else
 		wp.model = "";
+
 	wp.wpisbox = vlen(wp.size) > 0;
 	wp.enemy = world;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
 		wp.owner = world;
+
 	if (!(wp.wpflags & WAYPOINTFLAG_NORELINK))
 		waypoint_clearlinks(wp);
+
 	// schedule an actual relink on next frame
 	wp.think = waypoint_think;
 	wp.nextthink = time;
@@ -280,18 +243,16 @@ void waypoint_schedulerelink(entity wp)
 }
 
 // spawnfunc_waypoint map entity
-void spawnfunc_waypoint()
-{
+void(void) spawnfunc_waypoint {
 	setorigin(self, self.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(self);
 	//waypoint_schedulerelink(self);
 	waypoints_count++;
-};
+}
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
-void waypoint_remove(entity e)
-{
+void(entity e) waypoint_remove {
 	// tell all linked waypoints that they need to relink
 	waypoint_schedulerelink(e.wp00);
 	waypoint_schedulerelink(e.wp01);
@@ -327,263 +288,214 @@ void waypoint_remove(entity e)
 	waypoint_schedulerelink(e.wp31);
 	// and now remove the spawnfunc_waypoint
 	remove(e);
-};
+}
 
 // empties the map of waypoints
-void waypoint_removeall()
-{
-	local entity head, next;
+void(void) waypoint_removeall {
+	entity head, next;
 	head = findchain(classname, "waypoint");
-	while (head)
-	{
+	while (head) {
 		next = head.chain;
 		remove(head);
 		head = next;
 	}
-};
+}
 
 // tell all waypoints to relink
 // (is this useful at all?)
-void waypoint_schedulerelinkall()
-{
-	local entity head;
-	relink_total = relink_walkculled = relink_pvsculled = relink_lengthculled = 0;
+void(void) waypoint_schedulerelinkall {
+	entity head;
 	head = findchain(classname, "waypoint");
-	while (head)
-	{
+	while (head) {
 		waypoint_schedulerelink(head);
 		head = head.chain;
 	}
-};
+}
 
 // Load waypoint links from file
-float waypoint_load_links()
-{
-	local string filename, s;
-	local float file, tokens, found;
-	local entity wp_from, wp_to;
-	local vector wp_to_pos, wp_from_pos;
+float(void) waypoint_load_links {
+	string filename, s;
+	float file, tokens, found;
+	entity wp_from, wp_to;
+	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
 	file = fopen(filename, FILE_READ);
-
 	if (file < 0)
 		return FALSE;
 
-	while (1)
-	{
+	while (1) {
 		s = fgets(file);
 		if (!s)
 			break;
 
 		tokens = tokenizebyseparator(s, "*");
-
-		if (tokens!=2)
-		{
+		if (tokens!=2) {
 			// bad file format
 			fclose(file);
 			return FALSE;
 		}
-
-		wp_from_pos	= stov(argv(0));
-		wp_to_pos	= stov(argv(1));
-
+		wp_from_pos = stov(argv(0));
+		wp_to_pos = stov(argv(1));
 		// Search "from" waypoint
-		if(wp_from.origin!=wp_from_pos)
-		{
+		if (wp_from.origin!=wp_from_pos) {
 			wp_from = findradius(wp_from_pos, 1);
 			found = FALSE;
-			while(wp_from)
-			{
-				if(vlen(wp_from.origin-wp_from_pos)<1)
-				if(wp_from.classname == "waypoint")
-				{
+			while (wp_from) {
+				if (vlen(wp_from.origin-wp_from_pos) < 1)
+				if (wp_from.classname == "waypoint") {
 					found = TRUE;
 					break;
 				}
 				wp_from = wp_from.chain;
 			}
-
-			if(!found)
-			{
+			if (!found) {
 				// can't find that waypoint
 				fclose(file);
 				return FALSE;
 			}
 		}
-
 		// Search "to" waypoint
 		wp_to = findradius(wp_to_pos, 1);
 		found = FALSE;
-		while(wp_to)
-		{
-			if(vlen(wp_to.origin-wp_to_pos)<1)
-			if(wp_to.classname == "waypoint")
-			{
+		while (wp_to) {
+			if (vlen(wp_to.origin-wp_to_pos) < 1)
+			if (wp_to.classname == "waypoint") {
 				found = TRUE;
 				break;
 			}
 			wp_to = wp_to.chain;
 		}
-
-		if(!found)
-		{
+		if (!found) {
 			// can't find that waypoint
 			fclose(file);
 			return FALSE;
 		}
 		waypoint_addlink(wp_from, wp_to);
 	}
-
 	fclose(file);
-
-	botframe_cachedwaypointlinks = TRUE;
+	waypoint_cachedwaypointlinks = TRUE;
 	return TRUE;
-};
+}
 
-void waypoint_load_links_hardwired()
-{
-	local string filename, s;
-	local float file, tokens, found;
-	local entity wp_from, wp_to;
-	local vector wp_to_pos, wp_from_pos;
+void(void) waypoint_load_links_hardwired {
+	string filename, s;
+	float file, tokens, found;
+	entity wp_from, wp_to;
+	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.hardwired");
 	file = fopen(filename, FILE_READ);
-
-	botframe_loadedforcedlinks = TRUE;
-
+	waypoint_loadedforcedlinks = TRUE;
 	if (file < 0)
 		return;
 
-	for (;;)
-	{
+	for (;;) {
 		s = fgets(file);
 		if (!s)
 			break;
 
-		if(substring(s, 0, 2)=="//")
+		if (substring(s, 0, 2)=="//")
 			continue;
 
-		if(substring(s, 0, 1)=="#")
+		if (substring(s, 0, 1)=="#")
 			continue;
 
 		tokens = tokenizebyseparator(s, "*");
-
 		if (tokens!=2)
 			continue;
 
 		wp_from_pos	= stov(argv(0));
 		wp_to_pos	= stov(argv(1));
-
 		// Search "from" waypoint
-		if(wp_from.origin!=wp_from_pos)
-		{
+		if (wp_from.origin!=wp_from_pos) {
 			wp_from = findradius(wp_from_pos, 1);
 			found = FALSE;
-			while(wp_from)
-			{
-				if(vlen(wp_from.origin-wp_from_pos)<1)
-				if(wp_from.classname == "waypoint")
-				{
+			while(wp_from) {
+				if (vlen(wp_from.origin-wp_from_pos)<1)
+				if (wp_from.classname == "waypoint") {
 					found = TRUE;
 					break;
 				}
 				wp_from = wp_from.chain;
 			}
-
-			if(!found)
-			{
+			if (!found) {
 				print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
 				continue;
 			}
 		}
-
 		// Search "to" waypoint
 		wp_to = findradius(wp_to_pos, 1);
 		found = FALSE;
-		while(wp_to)
-		{
-			if(vlen(wp_to.origin-wp_to_pos)<1)
-			if(wp_to.classname == "waypoint")
-			{
+		while (wp_to) {
+			if (vlen(wp_to.origin-wp_to_pos)<1)
+			if (wp_to.classname == "waypoint") {
 				found = TRUE;
 				break;
 			}
 			wp_to = wp_to.chain;
 		}
-
-		if(!found)
-		{
+		if (!found) {
 			print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
 			continue;
 		}
 		waypoint_addlink(wp_from, wp_to);
 	}
-
 	fclose(file);
-};
+}
 
 // Save all waypoint links to a file
-void waypoint_save_links()
-{
-	local string filename, s;
-	local float file, c, i;
-	local entity w, link;
+void(void) waypoint_save_links {
+	string filename, s;
+	float file, c, i;
+	entity w, link;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
 	file = fopen(filename, FILE_WRITE);
-	if (file < 0)
-	{
+	if (file < 0) {
 		print("waypoint links save to ");
 		print(filename);
 		print(" failed\n");
 	}
 	c = 0;
 	w = findchain(classname, "waypoint");
-	while (w)
-	{
-		for(i=0;i<32;++i)
-		{
-			// :S
-			switch(i)
-			{
-				//	for i in $(seq -w 0 31); do echo "case $i:link = w.wp$i; break;"; done;
-				case 00:link = w.wp00; break;
-				case 01:link = w.wp01; break;
-				case 02:link = w.wp02; break;
-				case 03:link = w.wp03; break;
-				case 04:link = w.wp04; break;
-				case 05:link = w.wp05; break;
-				case 06:link = w.wp06; break;
-				case 07:link = w.wp07; break;
-				case 08:link = w.wp08; break;
-				case 09:link = w.wp09; break;
-				case 10:link = w.wp10; break;
-				case 11:link = w.wp11; break;
-				case 12:link = w.wp12; break;
-				case 13:link = w.wp13; break;
-				case 14:link = w.wp14; break;
-				case 15:link = w.wp15; break;
-				case 16:link = w.wp16; break;
-				case 17:link = w.wp17; break;
-				case 18:link = w.wp18; break;
-				case 19:link = w.wp19; break;
-				case 20:link = w.wp20; break;
-				case 21:link = w.wp21; break;
-				case 22:link = w.wp22; break;
-				case 23:link = w.wp23; break;
-				case 24:link = w.wp24; break;
-				case 25:link = w.wp25; break;
-				case 26:link = w.wp26; break;
-				case 27:link = w.wp27; break;
-				case 28:link = w.wp28; break;
-				case 29:link = w.wp29; break;
-				case 30:link = w.wp30; break;
-				case 31:link = w.wp31; break;
+	while (w) {
+		for (i = 0; i < 32; ++i) {
+			switch(i) {
+			case 0:link = w.wp00; break;
+			case 1:link = w.wp01; break;
+			case 2:link = w.wp02; break;
+			case 3:link = w.wp03; break;
+			case 4:link = w.wp04; break;
+			case 5:link = w.wp05; break;
+			case 6:link = w.wp06; break;
+			case 7:link = w.wp07; break;
+			case 8:link = w.wp08; break;
+			case 9:link = w.wp09; break;
+			case 10:link = w.wp10; break;
+			case 11:link = w.wp11; break;
+			case 12:link = w.wp12; break;
+			case 13:link = w.wp13; break;
+			case 14:link = w.wp14; break;
+			case 15:link = w.wp15; break;
+			case 16:link = w.wp16; break;
+			case 17:link = w.wp17; break;
+			case 18:link = w.wp18; break;
+			case 19:link = w.wp19; break;
+			case 20:link = w.wp20; break;
+			case 21:link = w.wp21; break;
+			case 22:link = w.wp22; break;
+			case 23:link = w.wp23; break;
+			case 24:link = w.wp24; break;
+			case 25:link = w.wp25; break;
+			case 26:link = w.wp26; break;
+			case 27:link = w.wp27; break;
+			case 28:link = w.wp28; break;
+			case 29:link = w.wp29; break;
+			case 30:link = w.wp30; break;
+			case 31:link = w.wp31; break;
 			}
-
-			if(link==world)
+			if (link == world)
 				continue;
 
 			s = strcat(vtos(w.origin), "*", vtos(link.origin), "\n");
@@ -593,33 +505,27 @@ void waypoint_save_links()
 		w = w.chain;
 	}
 	fclose(file);
-
-	botframe_cachedwaypointlinks = TRUE;
-
+	waypoint_cachedwaypointlinks = TRUE;
 	print("saved ");
 	print(ftos(c));
 	print(" waypoints links to ");
 	print(filename);
 	print("\n");
-};
+}
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
-void waypoint_saveall()
-{
-	local string filename, s;
-	local float file, c;
-	local entity w;
+void(void) waypoint_saveall {
+	string filename, s;
+	float file, c;
+	entity w;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints");
 	file = fopen(filename, FILE_WRITE);
-	if (file >= 0)
-	{
+	if (file >= 0) {
 		c = 0;
 		w = findchain(classname, "waypoint");
-		while (w)
-		{
-			if (!(w.wpflags & WAYPOINTFLAG_GENERATED))
-			{
+		while (w) {
+			if (!(w.wpflags & WAYPOINTFLAG_GENERATED)) {
 				s = strcat(vtos(w.origin + w.mins), "\n");
 				s = strcat(s, vtos(w.origin + w.maxs));
 				s = strcat(s, "\n");
@@ -631,48 +537,46 @@ void waypoint_saveall()
 			w = w.chain;
 		}
 		fclose(file);
-		bprint("saved ");
-		bprint(ftos(c));
-		bprint(" waypoints to maps/");
-		bprint(mapname);
-		bprint(".waypoints\n");
-	}
-	else
-	{
-		bprint("waypoint save to ");
-		bprint(filename);
-		bprint(" failed\n");
+		print("saved ");
+		print(ftos(c));
+		print(" waypoints to maps/");
+		print(mapname);
+		print(".waypoints\n");
+	} else {
+		print("waypoint save to ");
+		print(filename);
+		print(" failed\n");
 	}
 	waypoint_save_links();
-	botframe_loadedforcedlinks = FALSE;
-};
+	waypoint_loadedforcedlinks = FALSE;
+}
 
 // load waypoints from file
-float waypoint_loadall()
-{
-	local string filename, s;
-	local float file, cwp, cwb, fl;
-	local vector m1, m2;
+float(void) waypoint_loadall {
+	string filename, s;
+	float file, cwp, cwb, fl;
+	vector m1, m2;
 	cwp = 0;
 	cwb = 0;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints");
 	file = fopen(filename, FILE_READ);
-	if (file >= 0)
-	{
-		while (1)
-		{
+	if (file >= 0) {
+		while (1) {
 			s = fgets(file);
 			if (!s)
 				break;
+
 			m1 = stov(s);
 			s = fgets(file);
 			if (!s)
 				break;
+
 			m2 = stov(s);
 			s = fgets(file);
 			if (!s)
 				break;
+
 			fl = stof(s);
 			waypoint_spawn(m1, m2, fl);
 			if (m1 == m2)
@@ -683,41 +587,30 @@ float waypoint_loadall()
 		fclose(file);
 	}
 	return cwp + cwb;
-};
+}
 
-vector waypoint_fixorigin(vector position)
-{
+vector(vector position) waypoint_fixorigin {
 	trace_box(position + '0 0 1' * (1 - PL_MIN_z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
 	if(trace_fraction < 1)
 		position = trace_endpos;
-	//trace_line(position, position + '0 0 -512', MOVE_NOMONSTERS, world);
-	//print("position is ", ftos(trace_endpos_z - position_z), " above solid\n");
+
 	return position;
 }
 
-void waypoint_spawnforitem_force(entity e, vector org)
-{
-	local entity w;
-
+void(entity e, vector org) waypoint_spawnforitem_force {
+	entity w;
 	// Fix the waypoint altitude if necessary
 	org = waypoint_fixorigin(org);
-
 	// don't spawn an item spawnfunc_waypoint if it already exists
 	w = findchain(classname, "waypoint");
-	while (w)
-	{
-		if (w.wpisbox)
-		{
-			if (math_boxes_overlap(org, org, w.absmin, w.absmax))
-			{
+	while (w) {
+		if (w.wpisbox) {
+			if (math_boxes_overlap(org, org, w.absmin, w.absmax)) {
 				e.nearestwaypoint = w;
 				return;
 			}
-		}
-		else
-		{
-			if (vlen(w.origin - org) < 16)
-			{
+		} else {
+			if (vlen(w.origin - org) < 16) {
 				e.nearestwaypoint = w;
 				return;
 			}
@@ -727,18 +620,16 @@ void waypoint_spawnforitem_force(entity e, vector org)
 	e.nearestwaypoint = waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_ITEM);
 }
 
-void waypoint_spawnforitem(entity e)
-{
-	if(!bot_waypoints_for_items)
+void(entity e) waypoint_spawnforitem {
+	if (!bot_waypoints_for_items)
 		return;
 
 	waypoint_spawnforitem_force(e, e.origin);
-};
+}
 
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
-{
-	local entity w;
-	local entity dw;
+void(entity e, vector destination, float timetaken) waypoint_spawnforteleporter {
+	entity w;
+	entity dw;
 	w = waypoint_spawn(e.absmin, e.absmax, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
 	dw = waypoint_spawn(destination, destination, WAYPOINTFLAG_GENERATED);
 	// one way link to the destination
@@ -748,45 +639,35 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 	// (teleporters are not goals, so this is probably useless)
 	e.nearestwaypoint = w;
 	e.nearestwaypointtimeout = time + 1000000000;
-};
+}
 
-entity waypoint_spawnpersonal(vector position)
-{
+entity(vector position) waypoint_spawnpersonal {
 	entity w;
-
 	// drop the waypoint to a proper location:
 	//   first move it up by a player height
 	//   then move it down to hit the floor with player bbox size
 	position = waypoint_fixorigin(position);
-
 	w = waypoint_spawn(position, position, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_PERSONAL);
 	w.nearestwaypoint = world;
 	w.nearestwaypointtimeout = 0;
 	w.owner = self;
-
 	waypoint_schedulerelink(w);
-
 	return w;
-};
+}
 
-void botframe_showwaypointlinks()
-{
-	local entity player, head, w;
-	if (time < botframe_waypointeditorlightningtime)
+float waypoint_editorlightningtime;
+void(void) waypoint_show_links {
+	entity player, head, w;
+	if (time < waypoint_editorlightningtime)
 		return;
-	botframe_waypointeditorlightningtime = time + 0.5;
+
+	waypoint_editorlightningtime = time + 0.5;
 	player = find(world, classname, "player");
-	while (player)
-	{
+	while (player) {
 		if (!player.isbot)
-		if (player.flags & FL_ONGROUND || player.waterlevel > WATERLEVEL_NONE)
-		{
-			//navigation_testtracewalk = TRUE;
+		if (player.flags & FL_ONGROUND || player.waterlevel > WATERLEVEL_NONE) {
 			head = navigation_findnearestwaypoint(player, FALSE);
-		//	print("currently selected WP is ", etos(head), "\n");
-			//navigation_testtracewalk = FALSE;
-			if (head)
-			{
+			if (head) {
 				w = head     ;if (w) te_lightning2(world, w.origin, player.origin);
 				w = head.wp00;if (w) te_lightning2(world, w.origin, head.origin);
 				w = head.wp01;if (w) te_lightning2(world, w.origin, head.origin);
@@ -824,10 +705,9 @@ void botframe_showwaypointlinks()
 		}
 		player = find(player, classname, "player");
 	}
-};
+}
 
-void bot_waypoints_init()
-{
+void(void) waypoint_init {
 	CVAR_CACHE(bot_navigation_ignoreplayers);
 	CVAR_CACHE(g_waypointeditor);
-};
+}

@@ -137,6 +137,7 @@ stdproc.qh
 ../common/str.qh
 ../common/cvar.qh
 ../common/file.qh
+waypoint.qh
 bot/bot.qh
 gamehooks.qh
 ../client-server/nadget.qh
@@ -419,3 +420,4 @@ hint.qc
 lms.qc
 report.qc
 rank.qc
+waypoint.qc

@@ -1,10 +1,8 @@
 #include "aim.qh"
 #include "navigation.qh"
-#include "waypoints.qh"
 
 #include "aim.qc"
 #include "navigation.qc"
-#include "waypoints.qc"
 #include "scripting.qc"
 
 #include "havocbot/havocbot.qc"
@@ -578,9 +576,8 @@ void bot_serverframe()
 	//if (bot_count > 0 || g_waypointeditor)
 	if (botframe_spawnedwaypoints)
 	{
-		if(botframe_cachedwaypointlinks)
-		{
-			if(!botframe_loadedforcedlinks)
+		if (waypoint_cachedwaypointlinks) {
+			if (!waypoint_loadedforcedlinks)
 				waypoint_load_links_hardwired();
 		}
 		else
@@ -625,7 +622,7 @@ void bot_serverframe()
 	}
 
 	if (g_waypointeditor)
-		botframe_showwaypointlinks();
+		waypoint_show_links();
 
 	if(time > bot_cvar_nextthink)
 	{
@@ -661,7 +658,7 @@ void bot_init()
 	CVAR_CACHE(skill_auto_max);
 	bot_aim_init();
 	bot_navigation_init();
-	bot_waypoints_init();
+	waypoint_init();
 	bot_scripting_init();
 	bot_havocbot_init();
 	bot_custom_weapon_priority_setup();
