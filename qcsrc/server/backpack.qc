@@ -2,10 +2,10 @@ float g_pickup_drop_backpack;
 string sv_model_backpack;
 string model_backpack;
 
-var float() backpack_ThrowWeaponOnDeathHandle_NextLink;
-float() backpack_ThrowWeaponOnDeathHandle {
+var float() backpack_player_death_weapon_throw_handle_NextLink;
+float() backpack_player_death_weapon_throw_handle {
 	if not(g_pickup_drop_backpack)
-		return backpack_ThrowWeaponOnDeathHandle_NextLink();
+		return backpack_player_death_weapon_throw_handle_NextLink();
 
 	entity ammopack, oldself;
 	ammopack = spawn();
@@ -45,6 +45,6 @@ void() backpack_init {
 		return;
 
 	backpack_init_done = TRUE;
-	backpack_ThrowWeaponOnDeathHandle_NextLink = gamehook_chain_ThrowWeaponOnDeathHandle;
-	gamehook_chain_ThrowWeaponOnDeathHandle = backpack_ThrowWeaponOnDeathHandle;
+	backpack_player_death_weapon_throw_handle_NextLink = gamehook_chain_player_death_weapon_throw_handle;
+	gamehook_chain_player_death_weapon_throw_handle = backpack_player_death_weapon_throw_handle;
 }

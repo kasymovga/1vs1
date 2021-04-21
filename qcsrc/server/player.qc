@@ -989,7 +989,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		}
         entity_drop_entities(self);
 		// clear selected player display
-		if not(gamehook_chain_ThrowWeaponOnDeathHandle())
+		if not(gamehook_chain_player_death_weapon_throw_handle())
 			weapon_throw(randomvec() * 125 + '0 0 200', (self.mins + self.maxs) * 0.5, FALSE);
 
 		self.switchweapon = switchweapon_save;

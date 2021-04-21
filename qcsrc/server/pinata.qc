@@ -1,10 +1,10 @@
 float g_pinata;
 float g_pinata_drop_all;
 
-var float() pinata_ThrowWeaponOnDeathHandle_NextLink;
-float() pinata_ThrowWeaponOnDeathHandle {
+var float() pinata_player_death_weapon_throw_handle_NextLink;
+float() pinata_player_death_weapon_throw_handle {
 	if not(g_pinata)
-		return pinata_ThrowWeaponOnDeathHandle_NextLink();
+		return pinata_player_death_weapon_throw_handle_NextLink();
 
 	float j;
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j) {
@@ -23,6 +23,6 @@ void() pinata_init {
 		return;
 
 	pinata_init_done = TRUE;
-	pinata_ThrowWeaponOnDeathHandle_NextLink = gamehook_chain_ThrowWeaponOnDeathHandle;
-	gamehook_chain_ThrowWeaponOnDeathHandle = pinata_ThrowWeaponOnDeathHandle;
+	pinata_player_death_weapon_throw_handle_NextLink = gamehook_chain_player_death_weapon_throw_handle;
+	gamehook_chain_player_death_weapon_throw_handle = pinata_player_death_weapon_throw_handle;
 }
