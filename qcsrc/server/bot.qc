@@ -422,6 +422,41 @@ void(void) bot_skill_auto {
 	bot_skill_auto_last_difference = difference;
 }
 
+entity bot_dangerwaypoint;
+void(float maxupdate) bot_updatedangerousobjects {
+	entity head, bot_dodgelist;
+	vector m1, m2, v;
+	float c, d, danger;
+	c = 0;
+	bot_dodgelist = findchainfloat(bot_dodge, TRUE);
+	bot_dangerwaypoint = find(bot_dangerwaypoint, classname, "waypoint");
+	while (bot_dangerwaypoint != world) {
+		danger = 0;
+		m1 = bot_dangerwaypoint.mins;
+		m2 = bot_dangerwaypoint.maxs;
+		head = bot_dodgelist;
+		while (head) {
+			v = head.origin;
+			v_x = bound(m1_x, v_x, m2_x);
+			v_y = bound(m1_y, v_y, m2_y);
+			v_z = bound(m1_z, v_z, m2_z);
+			d = head.bot_dodgerating - vlen(head.origin - v);
+			if (d > 0) {
+				trace_line(head.origin, v, TRUE, world);
+				if (trace_fraction == 1)
+					danger = danger + d;
+			}
+			head = head.chain;
+		}
+		bot_dangerwaypoint.dmg = danger;
+		c = c + 1;
+		if (c >= maxupdate)
+			break;
+
+		bot_dangerwaypoint = find(bot_dangerwaypoint, classname, "waypoint");
+	}
+}
+
 float bot_serverframe_spawnedwaypoints;
 float bot_serverframe_nextthink;
 float bot_serverframe_nextdangertime;
@@ -526,7 +561,7 @@ void(void) bot_serverframe {
 				bot_serverframe_nextdangertime = time;
 
 			bot_serverframe_nextdangertime = bot_serverframe_nextdangertime + interval;
-			botframe_updatedangerousobjects(bot_ai_dangerdetectionupdates);
+			bot_updatedangerousobjects(bot_ai_dangerdetectionupdates);
 		}
 	}
 	if (g_waypointeditor)

@@ -930,43 +930,6 @@ void navigation_goalrating_end()
 	}
 };
 
-void botframe_updatedangerousobjects(float maxupdate)
-{
-	local entity head, bot_dodgelist;
-	local vector m1, m2, v;
-	local float c, d, danger;
-	c = 0;
-	bot_dodgelist = findchainfloat(bot_dodge, TRUE);
-	botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
-	while (botframe_dangerwaypoint != world)
-	{
-		danger = 0;
-		m1 = botframe_dangerwaypoint.mins;
-		m2 = botframe_dangerwaypoint.maxs;
-		head = bot_dodgelist;
-		while (head)
-		{
-			v = head.origin;
-			v_x = bound(m1_x, v_x, m2_x);
-			v_y = bound(m1_y, v_y, m2_y);
-			v_z = bound(m1_z, v_z, m2_z);
-			d = head.bot_dodgerating - vlen(head.origin - v);
-			if (d > 0)
-			{
-				trace_line(head.origin, v, TRUE, world);
-				if (trace_fraction == 1)
-					danger = danger + d;
-			}
-			head = head.chain;
-		}
-		botframe_dangerwaypoint.dmg = danger;
-		c = c + 1;
-		if (c >= maxupdate)
-			break;
-		botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
-	}
-};
-
 #ifdef DEBUG_TRACEWALK
 
 void debugresetnodes()
