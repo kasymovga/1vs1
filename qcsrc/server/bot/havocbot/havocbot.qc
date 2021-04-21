@@ -382,11 +382,6 @@ void havocbot_movetogoal()
 	if(self.goalcurrent==self.navigation_jetpack_goal)
 	if(self.ammo_fuel || (self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		#ifdef DEBUG_BOT_GOALSTACK
-			debuggoalstack();
-			te_wizspike(self.navigation_jetpack_point);
-		#endif
-
 		// Take off
 		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
 		{
@@ -551,11 +546,6 @@ void havocbot_movetogoal()
 		self.bot_strategytime = 0;
 		return;
 	}
-
-#ifdef DEBUG_BOT_GOALSTACK
-	debuggoalstack();
-#endif
-
 	m1 = self.goalcurrent.origin + self.goalcurrent.mins;
 	m2 = self.goalcurrent.origin + self.goalcurrent.maxs;
 	destorg = self.origin;
@@ -1013,11 +1003,6 @@ float havocbot_moveto(vector pos)
 				}
 			}
 		}
-
-		#ifdef DEBUG_BOT_GOALSTACK
-			debuggoalstack();
-		#endif
-
 		// Heading
 		local vector dir = self.goalcurrent.origin - (self.origin + self.view_ofs);
 		dir_z = 0;

@@ -4,7 +4,6 @@
 
 float navigation_bestrating;
 float bot_navigation_movemode;
-float navigation_testtracewalk;
 
 vector stepheightvec;
 
@@ -50,21 +49,18 @@ void debugnodestatus(vector position, float status);
 void debuggoalstack();
 #endif
 
-float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
-
 float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist);
 float navigation_routetogoal(entity e, vector startposition);
 
-void navigation_clearroute();
-void navigation_pushroute(entity e);
-void navigation_poproute();
-void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p);
-void navigation_markroutes(entity fixed_source_waypoint);
-void navigation_markroutes_inverted(entity fixed_source_waypoint);
-void navigation_routerating(entity e, float f, float rangebias);
-void navigation_poptouchedgoals();
-void navigation_goalrating_start();
-void navigation_goalrating_end();
-
-entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
-void bot_navigation_init();
+void(void) navigation_clearroute;
+void(entity e) navigation_pushroute;
+void(void) navigation_poproute;
+void(entity w, entity wp, float cost2, vector p) navigation_markroutes_checkwaypoint;
+void(entity fixed_source_waypoint) navigation_markroutes;
+void(entity fixed_source_waypoint) navigation_markroutes_inverted;
+void(entity e, float f, float rangebias) navigation_routerating;
+void(void) navigation_poptouchedgoals;
+void(void) navigation_goalrating_start;
+void(void) navigation_goalrating_end;
+entity(entity ent, float walkfromwp) navigation_findnearestwaypoint;
+void(void) navigation_init;

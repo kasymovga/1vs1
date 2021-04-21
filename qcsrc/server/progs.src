@@ -140,7 +140,7 @@ stdproc.qh
 waypoint.qh
 bot/havocbot/havocbot.qh
 bot/aim.qh
-bot/navigation.qh
+navigation.qh
 bot.qh
 gamehooks.qh
 ../client-server/nadget.qh
@@ -201,7 +201,7 @@ announce.qc
 waypointsprites.qc
 slowmo.qc
 bot/aim.qc
-bot/navigation.qc
+navigation.qc
 bot/scripting.qc
 bot/havocbot/havocbot.qc
 bot.qc

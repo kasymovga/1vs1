@@ -368,17 +368,6 @@ void(string command) cmd_game {
 			}
 		}
 	}
-
-	if(cmd == "tracewalk")
-	{
-		e = nextent(world);
-		if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
-			print("can walk\n");
-		else
-			print("cannot walk\n");
-		return;
-	}
-
 	if(cmd == "onslaught_updatelinks")
 	{
 		onslaught_updatelinks();

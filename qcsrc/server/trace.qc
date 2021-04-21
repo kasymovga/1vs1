@@ -54,3 +54,136 @@ float(vector start, vector end, vector thmi, vector thma) trace_hits_box {
 float(vector start, vector mi, vector ma, vector end, vector thmi, vector thma) trace_box_hits_box {
     return trace_hits_box(start, end, thmi - ma, thma - mi);
 }
+
+float(entity e, vector start, vector m1, vector m2, vector end, float movemode) trace_walk {
+	vector org;
+	vector move;
+	vector dir;
+	float dist;
+	float totaldist;
+	float stepdist;
+	float yaw;
+	float ignorehazards;
+	float swimming;
+	move = end - start;
+	move_z = 0;
+	org = start;
+	dist = totaldist = vlen(move);
+	dir = normalize(move);
+	stepdist = 32;
+	ignorehazards = FALSE;
+	// Analyze starting point
+	trace_line(start, start, MOVE_NORMAL, e);
+	if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+		ignorehazards = TRUE;
+	else {
+		trace_line( start, start + '0 0 -65536', MOVE_NORMAL, e);
+		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
+		{
+			ignorehazards = TRUE;
+			swimming = TRUE;
+		}
+	}
+	trace_box(start, m1, m2, start, MOVE_NOMONSTERS, e);
+	if (trace_startsolid) {
+		// Bad start
+		//print("tracewalk: ", vtos(start), " is a bad start\n");
+		return FALSE;
+	}
+	// Movement loop
+	yaw = vectoyaw(move);
+	move = end - org;
+	for (;;) {
+		if (math_boxes_overlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1')) {
+			// Succeeded
+			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
+			return TRUE;
+		}
+		if (dist <= 0) {
+			break;
+		}
+		if (stepdist > dist)
+			stepdist = dist;
+
+		dist = dist - stepdist;
+		trace_line(org, org, MOVE_NORMAL, e);
+		if (!ignorehazards) {
+			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
+				// hazards blocking path
+				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
+				return FALSE;
+			}
+		}
+		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
+			move = normalize(end - org);
+			trace_box(org, m1, m2, org + move * stepdist, movemode, e);
+			if (trace_fraction < 1) {
+				swimming = TRUE;
+				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
+				for (; org_z < end_z + self.maxs_z; org_z += stepdist) {
+					if(pointcontents(org) == CONTENT_EMPTY)
+						break;
+				}
+				if not(pointcontents(org + '0 0 1') == CONTENT_EMPTY) {
+					return FALSE;
+				}
+				continue;
+			} else
+				org = trace_endpos;
+		} else {
+			move = dir * stepdist + org;
+			trace_box(org, m1, m2, move, movemode, e);
+			// hit something
+			if (trace_fraction < 1) {
+				if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
+					return TRUE;
+
+				// check if we can walk over this obstacle
+				trace_box(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+				if (trace_fraction < 1 || trace_startsolid) {
+					if (math_boxes_overlap(end, end, trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1'))
+						return TRUE;
+
+					// check for doors
+					trace_line( org, move, movemode, e);
+					if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door") {
+						local vector nextmove;
+						move = trace_endpos;
+						while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+						{
+							nextmove = move + (dir * stepdist);
+							trace_line( move, nextmove, movemode, e);
+							move = nextmove;
+						}
+					} else {
+						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
+						//te_explosion(trace_endpos);
+						//print(ftos(e.dphitcontentsmask), "\n");
+						return FALSE; // failed
+					}
+				} else
+					move = trace_endpos;
+			} else
+				move = trace_endpos;
+
+			// trace down from stepheight as far as possible and move there,
+			// if this starts in solid we try again without the stepup, and
+			// if that also fails we assume it is a wall
+			// (this is the same logic as the Quake walkmove function used)
+			trace_box(move, m1, m2, move + '0 0 -65536', movemode, e);
+			// moved successfully
+			if (swimming) {
+				local float c;
+				c = pointcontents(org + '0 0 1');
+				if not(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME)
+					swimming = FALSE;
+				else
+					continue;
+			}
+			org = trace_endpos;
+		}
+	}
+	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
+	// moved but didn't arrive at the intended destination
+	return FALSE;
+}

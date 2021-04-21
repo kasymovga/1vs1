@@ -168,7 +168,6 @@ void(void) waypoint_think {
 			if (vlen(dv) >= 1050) { // max search distance in XY
 				continue;
 			}
-			navigation_testtracewalk = 0;
 			if (!self.wpisbox) {
 				trace_box(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, FALSE, self);
 				if (!trace_startsolid) {
@@ -181,14 +180,13 @@ void(void) waypoint_think {
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			if (!self.wpisbox && tracewalk(self, sv, PL_MIN, PL_MAX, ev, MOVE_NOMONSTERS))
+			if (!self.wpisbox && trace_walk(self, sv, PL_MIN, PL_MAX, ev, MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
 
-			if (!e.wpisbox && tracewalk(e, ev, PL_MIN, PL_MAX, sv, MOVE_NOMONSTERS))
+			if (!e.wpisbox && trace_walk(e, ev, PL_MIN, PL_MAX, sv, MOVE_NOMONSTERS))
 				waypoint_addlink(e, self);
 		}
 	}
-	navigation_testtracewalk = 0;
 	self.wplinked = TRUE;
 }
 
