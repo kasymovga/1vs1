@@ -383,7 +383,7 @@ void(string command) cmd_game {
 		{
 			if(argc==2)
 			{
-				bot_list_commands();
+				bot_cmd_list();
 				print("\nsv_cmd bot_cmd reset          #Clear the cmd queues of all bots\n");
 				print("sv_cmd bot_cmd load <file>    #Load script file\n");
 				print("\nUse sv_cmd bot_cmd help <command> for more\n\n");
@@ -397,7 +397,7 @@ void(string command) cmd_game {
 		// Clear all bot queues
 		if(argv(1) == "reset")
 		{
-			bot_resetqueues();
+			bot_cmd_resetqueues();
 			return;
 		}
 
@@ -420,9 +420,9 @@ void(string command) cmd_game {
 				if(argc >= 3 && cmd == "sv_cmd" && argv(1) == "bot_cmd")
 				{
 					// let's start at token 2 so we can skip sv_cmd bot_cmd
-					bot = find_bot_by_number(stof(argv(2)));
+					bot = bot_cmd_find_bot_by_number(stof(argv(2)));
 					if(bot == world)
-						bot = find_bot_by_name(argv(2));
+						bot = bot_cmd_find_bot_by_name(argv(2));
 					if(bot)
 						bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
 				}
@@ -448,9 +448,9 @@ void(string command) cmd_game {
 			return;
 		}
 
-		bot = find_bot_by_number(stof(argv(1)));
+		bot = bot_cmd_find_bot_by_number(stof(argv(1)));
 		if(bot == world)
-			bot = find_bot_by_name(argv(1));
+			bot = bot_cmd_find_bot_by_name(argv(1));
 
 		if(bot)
 			bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));

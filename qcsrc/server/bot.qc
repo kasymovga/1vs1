@@ -599,7 +599,7 @@ void(void) bot_init {
 	bot_aim_init();
 	navigation_init();
 	waypoint_init();
-	bot_scripting_init();
+	bot_cmd_init();
 	bot_havocbot_init();
 	bot_custom_weapon_priority_setup();
 }

@@ -202,7 +202,7 @@ waypointsprites.qc
 slowmo.qc
 bot/aim.qc
 navigation.qc
-bot/scripting.qc
+bot/cmd.qc
 bot/havocbot/havocbot.qc
 bot.qc
 random.qc

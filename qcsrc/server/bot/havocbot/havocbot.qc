@@ -16,7 +16,7 @@ float bot_ai_weapon_combo_threshold;
 
 void havocbot_ai()
 {
-	if(bot_execute_commands())
+	if(bot_cmd_execute())
 		return;
 
 	if (bot_strategytoken == self)
@@ -979,7 +979,7 @@ float havocbot_moveto(vector pos)
 		if(self.havocbot_personal_waypoint==world)
 		{
 			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
-			return CMD_STATUS_ERROR;
+			return BOT_CMD_STATUS_ERROR;
 		}
 
 		if (!bot_strategytoken_taken)
@@ -999,7 +999,7 @@ float havocbot_moveto(vector pos)
 				{
 					self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 					remove(self.havocbot_personal_waypoint);
-					return CMD_STATUS_ERROR;
+					return BOT_CMD_STATUS_ERROR;
 				}
 			}
 		}
@@ -1016,10 +1016,10 @@ float havocbot_moveto(vector pos)
 			// Step 5: Waypoint reached
 			remove(self.havocbot_personal_waypoint);
 			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
-			return CMD_STATUS_FINISHED;
+			return BOT_CMD_STATUS_FINISHED;
 		}
 
-		return CMD_STATUS_EXECUTING;
+		return BOT_CMD_STATUS_EXECUTING;
 	}
 
 	// Step 2: Linking waypoint
@@ -1027,34 +1027,34 @@ float havocbot_moveto(vector pos)
 	{
 		// Wait until it is linked
 		if(!self.havocbot_personal_waypoint.wplinked)
-			return CMD_STATUS_EXECUTING;
+			return BOT_CMD_STATUS_EXECUTING;
 
 		self.havocbot_personal_waypoint_searchtime = time; // so we set the route next frame
 		self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 		self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 
 		// Step 3: Route to waypoint
-		return CMD_STATUS_EXECUTING;
+		return BOT_CMD_STATUS_EXECUTING;
 	}
 
 	// Step 1: Spawning waypoint
 	wp = waypoint_spawnpersonal(pos);
 	if(wp==world)
 	{
-		return CMD_STATUS_ERROR;
+		return BOT_CMD_STATUS_ERROR;
 	}
 
 	self.havocbot_personal_waypoint = wp;
 	self.havocbot_personal_waypoint_failcounter = 0;
 	self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 
-	return CMD_STATUS_EXECUTING;
+	return BOT_CMD_STATUS_EXECUTING;
 }
 
 float havocbot_resetgoal()
 {
 	navigation_clearroute();
-	return CMD_STATUS_FINISHED;
+	return BOT_CMD_STATUS_FINISHED;
 }
 
 void havocbot_setupbot()
