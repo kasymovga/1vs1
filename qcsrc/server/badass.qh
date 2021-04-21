@@ -1,1 +1,1 @@
-void BadAss_Init();
+void(void) badass_init;

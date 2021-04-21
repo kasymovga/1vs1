@@ -5,7 +5,7 @@ float g_badass_kdr;
 float g_badass_health_limit;
 float g_badass_armor_limit;
 
-float BadAss_Check() {
+float(void) badass_check {
 	if (g_badass_killcount)
 	if (self.killcount >= g_badass_killcount)
 		return TRUE;
@@ -23,27 +23,27 @@ float BadAss_Check() {
 	return FALSE;
 }
 
-var float(float c) BadAss_PlayerColorsMod_NextLink;
-float BadAss_PlayerColorsMod(float c) {
-	if (BadAss_Check())
+var float(float c) badass_player_colors_mod_next;
+float badass_player_colors_mod(float c) {
+	if (badass_check())
 		c = g_badass_color;
 
-	return BadAss_PlayerColorsMod_NextLink(c);
+	return badass_player_colors_mod_next(c);
 }
 
-var void() BadAss_HealthArmorFuelModsSet_NextLink;
-void BadAss_HealthArmorFuelModsSet() {
-	if (BadAss_Check()) {
+var void() badass_player_health_armor_fuel_mods_set_next;
+void() badass_player_health_armor_fuel_mods_set {
+	if (badass_check()) {
 		if (g_badass_health_limit)
 			self.health = min(g_badass_health_limit, self.health);
 
 		if (g_badass_armor_limit)
 			self.armorvalue = min(g_badass_armor_limit, self.armorvalue);
 	}
-	BadAss_HealthArmorFuelModsSet_NextLink();
+	badass_player_health_armor_fuel_mods_set_next();
 }
 
-void BadAss_Init() {
+void(void) badass_init {
 	CVAR_CACHE(g_badass_color);
 	CVAR_CACHE(g_badass_killcount);
 	CVAR_CACHE(g_badass_kdr);
@@ -51,11 +51,11 @@ void BadAss_Init() {
 	CVAR_CACHE(g_badass_health_limit);
 	CVAR_CACHE(g_badass_armor_limit);
 	if (g_badass_color > -2) {
-		BadAss_PlayerColorsMod_NextLink = gamehook_chain_PlayerColorsMod;
-		gamehook_chain_PlayerColorsMod = BadAss_PlayerColorsMod;
+		badass_player_colors_mod_next = gamehook_chain_player_colors_mod;
+		gamehook_chain_player_colors_mod = badass_player_colors_mod;
 		if (g_badass_health_limit || g_badass_armor_limit) {
-			BadAss_HealthArmorFuelModsSet_NextLink = gamehook_chain_HealthArmorFuelModsSet;
-			gamehook_chain_HealthArmorFuelModsSet = BadAss_HealthArmorFuelModsSet;
+			badass_player_health_armor_fuel_mods_set_next = gamehook_chain_player_health_armor_fuel_mods_set;
+			gamehook_chain_player_health_armor_fuel_mods_set = badass_player_health_armor_fuel_mods_set;
 		}
 	}
 }

@@ -95,7 +95,7 @@ void(void) world_static_init {
 	akimbo_init();
 	hat_init();
 	Radio_Init();
-	BadAss_Init();
+	badass_init();
 	damageindicator_init();
 	monster_monsters_init();
 	WarpZone_Init();

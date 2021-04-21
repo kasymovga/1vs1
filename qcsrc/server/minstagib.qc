@@ -205,10 +205,10 @@ float minstagib_ItemGiveToHandle(entity item, entity player) {
 	return gamehook_chain_ItemGiveToHandle_PickedUp;
 }
 
-var void() minstagib_HealthArmorFuelModsSet_NextLink;
-void minstagib_HealthArmorFuelModsSet() {
-	minstagib_HealthArmorFuelModsSet_NextLink();
-	gamehook_HealthArmorRotRegen = FALSE;
+var void() minstagib_player_health_armor_fuel_mods_set_NextLink;
+void minstagib_player_health_armor_fuel_mods_set() {
+	minstagib_player_health_armor_fuel_mods_set_NextLink();
+	gamehook_player_health_armor_rot_regen = FALSE;
 }
 
 float minstagib_WeaponSpawnHandle(float wpn) {
@@ -369,8 +369,8 @@ void minstagib_init() {
 	gamehook_chain_player_think = minstagib_PlayerPreThink;
 	minstagib_ItemGiveToHandle_NextLink = gamehook_chain_ItemGiveToHandle;
 	gamehook_chain_ItemGiveToHandle = minstagib_ItemGiveToHandle;
-	minstagib_HealthArmorFuelModsSet_NextLink = gamehook_chain_HealthArmorFuelModsSet;
-	gamehook_chain_HealthArmorFuelModsSet = minstagib_HealthArmorFuelModsSet;
+	minstagib_player_health_armor_fuel_mods_set_NextLink = gamehook_chain_player_health_armor_fuel_mods_set;
+	gamehook_chain_player_health_armor_fuel_mods_set = minstagib_player_health_armor_fuel_mods_set;
 	gamehook_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
 	minstagib_ThrowWeaponAllowed_NextLink = gamehook_chain_ThrowWeaponAllowed;
 	gamehook_chain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;

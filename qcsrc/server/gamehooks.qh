@@ -62,12 +62,12 @@ var void(void(string item, string cmd) Add_Item) gamehook_chain_gamemenu_send = 
 var float(string cmd, float tokens) gamehook_chain_cmd_client_handle = { return FALSE; }
 var float(string cmd, float tokens) gamehook_chain_cmd_game_handle = { return FALSE; }
 var void() gamehook_chain_EntityPreSpawn = {};
-float gamehook_HealthMaxMod;
-float gamehook_ArmorHealthLimitMod;
-float gamehook_RegenMod;
-float gamehook_RotMod;
-float gamehook_HealthArmorRotRegen;
-var void() gamehook_chain_HealthArmorFuelModsSet = {}
+float gamehook_player_health_max_mod;
+float gamehook_player_armor_health_limit_mod;
+float gamehook_player_regen_mod;
+float gamehook_player_rot_mod;
+float gamehook_player_health_armor_rot_regen;
+var void() gamehook_chain_player_health_armor_fuel_mods_set = {}
 var float() gamehook_chain_JumpVelocityMod = { return 1; }
 var float() gamehook_chain_weapon_rate_factor = { return 1; }
 var void(entity targ, entity attacker, float damage, vector force) gamehook_chain_damage_force_done = {}
@@ -85,7 +85,7 @@ var void() gamehook_chain_RealClientDisconnect = {}
 var void() gamehook_chain_world_frame_start = {}
 var float() gamehook_chain_ItemForbidden = { return FALSE; }
 var void() gamehook_chain_player_effects = {}
-var float(float c) gamehook_chain_PlayerColorsMod = { return c; }
+var float(float c) gamehook_chain_player_colors_mod = { return c; }
 var float() gamehook_chain_JoinHandle = { return FALSE; }
 var float(entity attacker, entity inflictor, float mirrordamage, vector force) gamehook_chain_MirrorDamageHandle = { return FALSE; }
 var float(entity plr) gamehook_PlayerIsCarrier { return FALSE; }
