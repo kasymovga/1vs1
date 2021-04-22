@@ -55,7 +55,7 @@ void() timeout_handler_think {
 			//centerprint the information to every player
 			timeStr = timeout_text(0);
 			FOR_EACH_REALCLIENT(plr) {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+				centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, timeStr);
 			}
 			timeout_remaining_leadtime -= 1;
 			//think again in 1 second:
@@ -80,7 +80,7 @@ void() timeout_handler_think {
 		if (timeout_remaining_time > 0) {
 			timeStr = timeout_text(0);
 			FOR_EACH_REALCLIENT(plr) {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+				centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, timeStr);
 			}
 			if(timeout_remaining_time == cvar("sv_timeout_resumetime")) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
 				sound_play2all("announcer/robotic/prepareforbattle.wav");
@@ -97,7 +97,7 @@ void() timeout_handler_think {
 			}
 			//get rid of the countdown message
 			FOR_EACH_REALCLIENT(plr) {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+				centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, "");
 			}
 			remove(self);
 			return;
@@ -106,7 +106,7 @@ void() timeout_handler_think {
 	}
 	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
 		FOR_EACH_REALCLIENT(plr) {
-			centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+			centerprint_atprio(plr, CENTERPRINT_PRIO_SPAM, "");
 		}
 		remove(self);
 		return;

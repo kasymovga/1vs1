@@ -350,7 +350,6 @@ float(string s, entity e) vote_cmd {
 				  || cvar("sv_vote_change")) {
 				cmd_print_to(e, "^1You accepted the vote.");
 				e.vote_vote = 1;
-				centerprint_expire(e, CENTERPRIO_VOTE);
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
 				}
@@ -366,7 +365,6 @@ float(string s, entity e) vote_cmd {
 				  || cvar("sv_vote_change")) {
 				cmd_print_to(e, "^1You rejected the vote.");
 				e.vote_vote = -1;
-				centerprint_expire(e, CENTERPRIO_VOTE);
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
 				}
@@ -382,7 +380,6 @@ float(string s, entity e) vote_cmd {
 				  || cvar("sv_vote_change")) {
 				cmd_print_to(e, "^1You abstained from your vote.");
 				e.vote_vote = -2;
-				centerprint_expire(e, CENTERPRIO_VOTE);
 				if (!cvar("sv_vote_singlecount")) {
 					vote_count();
 				}
@@ -512,7 +509,6 @@ void(void) vote_reset {
 	entity player;
 	FOR_EACH_CLIENT(player) {
 		player.vote_vote = 0;
-		centerprint_expire(player, CENTERPRIO_VOTE);
 	}
 	if (vote_called) {
 		strunzone(vote_called_vote);

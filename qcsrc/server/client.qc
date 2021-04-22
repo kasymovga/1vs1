@@ -503,7 +503,7 @@ float() client_join_allowed {
 	if(currentlyPlaying < g_maxplayers)
 		return TRUE;
 
-	centerprint_atprio(self, CENTERPRIO_MAPVOTE, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
+	centerprint_atprio(self, CENTERPRINT_PRIO_MAPVOTE, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
 	return FALSE;
 }
 
@@ -589,11 +589,11 @@ void(void) client_post_think { //called by engine
 			} else if(timeleft <= 10) {
 				if(timeleft != self.idlekick_lasttimeleft)
 				{
-					centerprint_atprio(self, CENTERPRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
+					centerprint_atprio(self, CENTERPRINT_PRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
 					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"), "");
 				}
 			} else
-				centerprint_expire(self, CENTERPRIO_IDLEKICK);
+				centerprint_expire(self, CENTERPRINT_PRIO_IDLEKICK);
 
 			self.idlekick_lasttimeleft = timeleft;
 		}

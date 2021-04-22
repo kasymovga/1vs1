@@ -1,3 +1,11 @@
+#define CENTERPRINT_PRIO_POINT 1
+#define CENTERPRINT_PRIO_SPAM 2
+#define CENTERPRINT_PRIO_VOTE 4
+#define CENTERPRINT_PRIO_NORMAL 5
+#define CENTERPRINT_PRIO_SHIELDING 7
+#define CENTERPRINT_PRIO_MAPVOTE 9
+#define CENTERPRINT_PRIO_IDLEKICK 50
+#define CENTERPRINT_PRIO_ADMIN 99
 void(entity e, float prio, string s) centerprint_atprio;
 void(entity e, float prio) centerprint_expire;
 void(entity e, string s) centerprint;
