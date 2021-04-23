@@ -115,9 +115,9 @@ void(entity e) nexball_SpectateCopy {
 	self.metertime = e.metertime;
 }
 
-float(entity plr) nexball_PlayerIsCarrier { return plr.ballcarried != world; }
-void(entity plr) nexball_DropCarried { nexball_drop_ball(plr.ballcarried, plr.origin, plr.velocity); }
-float(entity e) nexball_TeleportationForbiddenFor { return e.classname == "nexball_football" || e.classname == "nexball_basketball" || e.classname == "nexball_hockey"; }
+float(entity plr) nexball_player_is_carrier { return plr.ballcarried != world; }
+void(entity plr) nexball_player_drop_carried { nexball_drop_ball(plr.ballcarried, plr.origin, plr.velocity); }
+float(entity e) nexball_portal_forbidden_for { return e.classname == "nexball_football" || e.classname == "nexball_basketball" || e.classname == "nexball_hockey"; }
 
 var float(float f) nexball_SwitchWeaponMod_NextLink;
 float(float f) nexball_SwitchWeaponMod {
@@ -173,9 +173,9 @@ void() nexball_init {
 	gamehook_chain_ThrowWeaponAllowed = nexball_ThrowWeaponAllowed;
 	nexball_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = nexball_SpectateCopy;
-	gamehook_PlayerIsCarrier = nexball_PlayerIsCarrier;
-	gamehook_DropCarried = nexball_DropCarried;
-	gamehook_TeleportationForbiddenFor = nexball_TeleportationForbiddenFor;
+	gamehook_player_is_carrier = nexball_player_is_carrier;
+	gamehook_player_drop_carried = nexball_player_drop_carried;
+	gamehook_portal_forbidden_for = nexball_portal_forbidden_for;
 	entity_initialize(world, nexball_delayedinit, INITPRIO_GAMETYPE);
 	precache_model ("models/elaser.mdl");
 	precache_sound ("nexball/shoot1.wav");

@@ -35,8 +35,8 @@ set g_ctf_flagscore_pickup_dropped_early 1
 set g_ctf_flagscore_pickup_dropped_late 1
 set g_ctf_flagscore_capture 10
 set g_ctf_flagscore_kill 2
-set g_ctf_flagpenalty_drop 1
-set g_ctf_flagpenalty_suicidedrop 1
+set g_ctf_flagpenalty_drop 0
+set g_ctf_flagpenalty_suicidedrop 0
 set g_ctf_flagpenalty_returned 1
 set g_ctf_flagscore_return 2
 set g_ctf_flagscore_return_rogue 2
@@ -52,8 +52,8 @@ set g_ctf_personalscore_pickup_dropped_early 1
 set g_ctf_personalscore_pickup_dropped_late 1
 set g_ctf_personalscore_capture 10
 set g_ctf_personalscore_kill 2
-set g_ctf_personalpenalty_drop 1
-set g_ctf_personalpenalty_suicidedrop 1
+set g_ctf_personalpenalty_drop 0
+set g_ctf_personalpenalty_suicidedrop 0
 set g_ctf_personalpenalty_returned 1
 set g_ctf_personalscore_return 2
 set g_ctf_personalscore_return_rogue 2

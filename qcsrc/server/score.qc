@@ -908,7 +908,7 @@ float(float limit, float _leadlimit) score_winning_condition {
 	if (leaderfrags != score_winning_condition_helper_topscore)
 	{
 		leaderfrags = score_winning_condition_helper_topscore;
-		gamehook_WinCountDown(limit - leaderfrags);
+		gamehook_score_winning_condition_countdown(limit - leaderfrags);
 	}
 	if (score_winning_condition_helper_equality)
 		return FALSE;

@@ -157,7 +157,7 @@ void(void) world_getrecords {
 	}
 	for (i = 0; i < MapInfo_count; ++i)
 		if (MapInfo_Get_ByID(i)) {
-			s1 = gamehook_RecordForMap(MapInfo_Map_bspname);
+			s1 = gamehook_world_record_for_map(MapInfo_Map_bspname);
 			if (strlen(s) + strlen(s1) > 4095) {
 				if (cmd_records_reply_extra >= CMD_RECORDS_REPLY_STRINGS_COUNT - 1)
 					break;

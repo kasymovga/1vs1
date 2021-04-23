@@ -913,9 +913,9 @@ void kh_SpectateCopy(entity e) {
 	kh_SpectateCopy_NextLink(e);
 }
 
-float kh_PlayerIsCarrier(entity plr) { return plr.kh_next != world; }
-void kh_DropCarried(entity plr) { kh_Key_DropAll(plr, FALSE, FALSE); }
-float kh_TeleportationForbiddenFor(entity e) { return e.classname == STR_ITEM_KH_KEY; }
+float kh_player_is_carrier(entity plr) { return plr.kh_next != world; }
+void kh_player_drop_carried(entity plr) { kh_Key_DropAll(plr, FALSE, FALSE); }
+float kh_portal_forbidden_for(entity e) { return e.classname == STR_ITEM_KH_KEY; }
 
 void kh_init_delayed()  // sets up th KH environment
 {
@@ -988,12 +988,12 @@ void kh_init() {
 	gamehook_player_death_handle = kh_DeathHandle;
 	kh_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = kh_PlayerClear;
-	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	kh_SpectateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = kh_SpectateCopy;
-	gamehook_PlayerIsCarrier = kh_PlayerIsCarrier;
-	gamehook_DropCarried = kh_DropCarried;
-	gamehook_TeleportationForbiddenFor = kh_TeleportationForbiddenFor;
+	gamehook_player_is_carrier = kh_player_is_carrier;
+	gamehook_player_drop_carried = kh_player_drop_carried;
+	gamehook_portal_forbidden_for = kh_portal_forbidden_for;
 	gamehook_havocbot_role_choose = kh_role_choose;
 	precache_model("models/keyhunt/key.md3");
 	kh_teams = cvar("g_keyhunt_teams_override");

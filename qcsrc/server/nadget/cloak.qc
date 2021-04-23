@@ -26,8 +26,8 @@ void nadget_Cloak_Trigger(void) {
 
 void nadget_Cloak_PlayerFrame(void) {
     if(self.hg_stealth) {
-        if(gamehook_PlayerIsCarrier(self))
-			gamehook_DropCarried(self);
+        if(gamehook_player_is_carrier(self))
+			gamehook_player_drop_carried(self);
 
         self.hg_wasstealth = TRUE;
         self.hg_stealthtime = time;

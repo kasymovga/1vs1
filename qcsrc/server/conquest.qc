@@ -366,7 +366,7 @@ void(void) conquest_init {
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;
 	gamehook_world_reset = conquest_world_reset;
-	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	if (cvar("g_conq_use_ons")) {
 		conquest_ons_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
 		gamehook_chain_entity_spawn_pre = conquest_ons_entity_spawn_pre;

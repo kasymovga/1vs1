@@ -1026,11 +1026,11 @@ float race_SpawnPointGood(entity spot) {
 	return TRUE;
 }
 
-var void(float remain_frags) race_WinCountDown_orig;
-void(float remain_frags) race_WinCountDown {
+var void(float remain_frags) race_score_winning_condition_countdown_orig;
+void(float remain_frags) race_score_winning_condition_countdown {
 	if (g_race)
 	if not(g_race_qualifying)
-		race_WinCountDown_orig(remain_frags);
+		race_score_winning_condition_countdown_orig(remain_frags);
 }
 
 float(float f) race_KillDelayMod {
@@ -1058,7 +1058,7 @@ string() race_client_fix_cvars {
 	return "cl_cmd settemp cl_movecliptokeyboard 2";
 }
 
-string(string bspname) race_RecordForMap {
+string(string bspname) race_world_record_for_map {
 	string recid = (g_race ? RACE_RECORD : CTS_RECORD);
 	float r = stof(db_get(db_server, strcat(bspname, recid, "time")));
 	if (r == 0)
@@ -1349,10 +1349,10 @@ void(void) race_init {
 	race_observer_spawn_next = gamehook_chain_observer_spawn;
 	gamehook_chain_observer_spawn = race_observer_spawn;
 	gamehook_SpawnPointGood = race_SpawnPointGood;
-	race_WinCountDown_orig = gamehook_WinCountDown;
-	gamehook_WinCountDown = race_WinCountDown;
+	race_score_winning_condition_countdown_orig = gamehook_score_winning_condition_countdown;
+	gamehook_score_winning_condition_countdown = race_score_winning_condition_countdown;
 	gamehook_client_fix_cvars = race_client_fix_cvars;
-	gamehook_RecordForMap = race_RecordForMap;
+	gamehook_world_record_for_map = race_world_record_for_map;
 	gamehook_ReadyAllowed = race_ReadyAllowed;
 	gamehook_TelefragsAllowed = race_TelefragsAllowed;
 	gamehook_ReadyRestartHard = race_ReadyRestartHard;

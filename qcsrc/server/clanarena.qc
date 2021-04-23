@@ -25,7 +25,7 @@ void(void) clanarena_init {
 	gamehook_score_give_frag_mod = clanarena_HandleFrags;
 	clanarena_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
 	gamehook_chain_player_damage_handle = clanarena_player_damage_handle;
-	gamehook_WinCountDown = stub_WinCountDown;
+	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	score_generic();
 	clanarena_shared_init("ca");
 }

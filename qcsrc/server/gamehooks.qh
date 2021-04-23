@@ -30,8 +30,8 @@ var void() gamehook_world_reset = {}
 var void() gamehook_chain_observer_spawn = {}
 var void() gamehook_InitSpectator = {}
 var float(entity spot) gamehook_SpawnPointGood = { return TRUE; }
-var void(float frags_remain) stub_WinCountDown = {}
-var void(float frags_remain) gamehook_WinCountDown = {
+var void(float frags_remain) stub_score_winning_condition_countdown = {}
+var void(float frags_remain) gamehook_score_winning_condition_countdown = {
 	if (frags_remain == 1)
 		sound_play2all("announcer/robotic/1fragleft.wav");
 	else if (frags_remain == 2)
@@ -47,7 +47,7 @@ var float() gamehook_ReadyAllowed = { return FALSE; }
 var float() gamehook_ClearScoreAllowed = { return TRUE; }
 var float() gamehook_TelefragsAllowed = { return TRUE; }
 var string() gamehook_client_fix_cvars = { return ""; }
-var string(string bspname) gamehook_RecordForMap = { return ""; }
+var string(string bspname) gamehook_world_record_for_map = { return ""; }
 var float() gamehook_ReadyRestartHard = { return FALSE; }
 var float() gamehook_chain_weapon_frame_handle = { return FALSE; }
 var float() gamehook_ReloadAllowed = { return TRUE; }
@@ -88,10 +88,10 @@ var void() gamehook_chain_player_effects = {}
 var float(float c) gamehook_chain_player_colors_mod = { return c; }
 var float() gamehook_chain_JoinHandle = { return FALSE; }
 var float(entity attacker, entity inflictor, float mirrordamage, vector force) gamehook_chain_MirrorDamageHandle = { return FALSE; }
-var float(entity plr) gamehook_PlayerIsCarrier { return FALSE; }
-var void(entity plr) gamehook_DropCarried {}
+var float(entity plr) gamehook_player_is_carrier { return FALSE; }
+var void(entity plr) gamehook_player_drop_carried {}
 var float(entity plr) gamehook_chain_PlayerCanBeCarrier { return TRUE; }
-var float(entity e) gamehook_TeleportationForbiddenFor { return FALSE; }
+var float(entity e) gamehook_portal_forbidden_for { return FALSE; }
 string gamehook_ItemName;
 vector gamehook_ItemColor;
 var void() gamehook_chain_ItemRespawnCountDown {}
