@@ -10,23 +10,22 @@ void(void) cvar_changes_init {
 	float h;
 	string k, v, d;
 	float n, i;
-	if(cvar_changes)
+	if (cvar_changes)
 		strunzone(cvar_changes);
 
 	cvar_changes = NULL;
 	h = buf_create();
 	buf_cvarlist(h, "", "_"); // exclude all _ cvars as they are temporary
 	n = buf_getsize(h);
-
-	for(i = 0; i < n; ++i) {
+	for (i = 0; i < n; ++i) {
 		k = bufstr_get(h, i);
 		v = builtin_cvar_string(k);
 		d = cvar_defstring(k);
-		if(v == d)
+		if (v == d)
 			continue;
 
-#define BADPREFIX(p) if(substring(k, 0, strlen(p)) == p) continue
-#define BADCVAR(p) if(k == p) continue
+#define BADPREFIX(p) if (substring(k, 0, strlen(p)) == p) continue
+#define BADCVAR(p) if (k == p) continue
 		// internal
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
@@ -117,16 +116,17 @@ void(void) cvar_changes_init {
 #undef BADPREFIX
 #undef BADCVAR
 		cvar_changes = strcat(cvar_changes, k, " \"", v, "\" // \"", d, "\"\n");
-		if(strlen(cvar_changes) > 16384) {
+		if (strlen(cvar_changes) > 16384) {
 			cvar_changes = "// too many settings have been changed to show them here\n";
 			break;
 		}
 	}
 	buf_del(h);
-	if(cvar_changes == "")
+	if (cvar_changes == "")
 		cvar_changes = "// this server runs at default settings\n";
 	else
 		cvar_changes = strcat("// this server runs at modified settings:\n", cvar_changes);
+
 	cvar_changes = strzone(cvar_changes);
 }
 
