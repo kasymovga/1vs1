@@ -15,8 +15,8 @@ void nadget_ForceDetonateAll(void);
 
 var void() nadget_PlayerPreThink_NextLink;
 void nadget_PlayerPreThink();
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) nadget_PlayerDamageHandle_NextLink;
-float nadget_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) nadget_player_damage_handle_NextLink;
+float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 
 // Nadgets mutator
 // Intended for the Camping Rifle Arena mode
@@ -253,8 +253,8 @@ void nadget_Init(void) {
 	gamehook_chain_gamemenu_send = nadget_gamemenu_send;
 	nadget_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = nadget_ClientCommandHandle;
-	nadget_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
-	gamehook_chain_PlayerDamageHandle = nadget_PlayerDamageHandle;
+	nadget_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
+	gamehook_chain_player_damage_handle = nadget_player_damage_handle;
 	nadget_JoinHandle_NextLink = gamehook_chain_JoinHandle;
 	gamehook_chain_JoinHandle = nadget_JoinHandle;
 	nadget_PlayerCanBeCarrier_NextLink = gamehook_chain_PlayerCanBeCarrier;
@@ -970,7 +970,7 @@ void nadget_Pick(float tokens) {
 	})
 }
 
-float nadget_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
-	gamehook_chain_PlayerDamageMod = nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
-	return nadget_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+float nadget_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+	gamehook_chain_player_damage_mod = nadget_Shield_Damage(attacker, _damage, deathtype, hitloc);
+	return nadget_player_damage_handle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }

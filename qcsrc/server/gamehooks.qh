@@ -2,9 +2,9 @@ var float(entity attacker, entity inflictor, float deathtype) gamehook_player_de
 var float() gamehook_chain_physics_max_speed_mod = { return 1; }
 var void(entity spot) gamehook_chain_spawn = {}
 var void(float killed) gamehook_chain_player_clear = {}
-var float(entity attacker, entity targ, float f) gamehook_FragsHandle = { return f; }
-float gamehook_chain_PlayerDamageMod;
-var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) gamehook_chain_PlayerDamageHandle = { return FALSE; }
+var float(entity attacker, entity targ, float f) gamehook_score_give_frag_mod = { return f; }
+float gamehook_chain_player_damage_mod;
+var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) gamehook_chain_player_damage_handle = { return FALSE; }
 var float(entity plr, float wep) gamehook_chain_PlayerCanFire = { return TRUE; }
 var float() gamehook_PlayerAllowedToMove = { return TRUE; }
 var void() gamehook_PhysicFrameBegin = {}

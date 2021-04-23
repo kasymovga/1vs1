@@ -852,14 +852,14 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
 	local float take, save, waves, sdelay, dh, da;
-	gamehook_chain_PlayerDamageMod = 1;
-	if (gamehook_chain_PlayerDamageHandle(inflictor, attacker, _damage, deathtype, hitloc, force))
+	gamehook_chain_player_damage_mod = 1;
+	if (gamehook_chain_player_damage_handle(inflictor, attacker, _damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 
-	_damage = _damage * gamehook_chain_PlayerDamageMod;
+	_damage = _damage * gamehook_chain_player_damage_mod;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{

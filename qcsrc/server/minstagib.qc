@@ -254,8 +254,8 @@ float minstagib_ItemForbidden() {
 	return minstagib_ItemForbidden_NextLink();
 }
 
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) minstagib_PlayerDamageHandle_NextLink;
-float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) minstagib_player_damage_handle_NextLink;
+float minstagib_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	if ((deathtype == DEATH_FALL)  ||
 		(deathtype == DEATH_DROWN) ||
 		(deathtype == DEATH_SLIME) ||
@@ -265,11 +265,11 @@ float minstagib_PlayerDamageHandle(entity inflictor, entity attacker, float _dam
 	if (self.armorvalue >= 1  && (deathtype != DEATH_HURTTRIGGER) && _damage)
 	{
 		self.armorvalue -= min(_damage, min(self.armorvalue, 100));
-		gamehook_chain_PlayerDamageMod = 0;
+		gamehook_chain_player_damage_mod = 0;
 		self.hitsound += 1;
 		attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 	}
-	return minstagib_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+	return minstagib_player_damage_handle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 }
 
 var void(entity targ, entity attacker, float deathtype) minstagib_DamageForceModsSet_NextLink;
@@ -378,8 +378,8 @@ void minstagib_init() {
 	gamehook_chain_EntityPreSpawn = minstagib_EntityPreSpawn;
 	minstagib_ItemForbidden_NextLink = gamehook_chain_ItemForbidden;
 	gamehook_chain_ItemForbidden = minstagib_ItemForbidden;
-	minstagib_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
-	gamehook_chain_PlayerDamageHandle = minstagib_PlayerDamageHandle;
+	minstagib_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
+	gamehook_chain_player_damage_handle = minstagib_player_damage_handle;
 	minstagib_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = minstagib_DamageForceModsSet;
 	gamehook_chain_MirrorDamageHandle = minstagib_MirrorDamageHandle;

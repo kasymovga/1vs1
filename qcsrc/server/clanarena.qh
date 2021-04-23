@@ -1,1 +1,1 @@
-void Clanarena_Init();
+void(void) clanarena_init;

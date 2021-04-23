@@ -258,11 +258,11 @@ float Ice_SpeedMod() {
 	return f;
 }
 
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) Ice_PlayerDamageHandle_NextLink;
-float Ice_PlayerDamageHandle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) Ice_player_damage_handle_NextLink;
+float Ice_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
 {
 	if not(self.deadflag == DEAD_FREEZE)
-		return Ice_PlayerDamageHandle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+		return Ice_player_damage_handle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
 
 	if (attacker)
 	if (attacker.team != self.team)
@@ -328,8 +328,8 @@ void Ice_Init() {
 	gamehook_chain_physics_max_speed_mod = Ice_SpeedMod;
 	Ice_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = Ice_Spawn;
-	Ice_PlayerDamageHandle_NextLink = gamehook_chain_PlayerDamageHandle;
-	gamehook_chain_PlayerDamageHandle = Ice_PlayerDamageHandle;
+	Ice_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
+	gamehook_chain_player_damage_handle = Ice_player_damage_handle;
 	Ice_SpecateCopy_NextLink = gamehook_chain_spectator_copy;
 	gamehook_chain_spectator_copy = Ice_SpecateCopy;
 	ice_PlayerPreThink_next = gamehook_chain_player_think;

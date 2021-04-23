@@ -76,7 +76,7 @@ void() gametype_init {
 		Freeze_Init();
 	} else if(game == GAME_CLANARENA) {
 		team_play_activate();
-		Clanarena_Init();
+		clanarena_init();
 	} else if(game == GAME_DOMINATION) {
 		team_play_activate();
 		dom_init();

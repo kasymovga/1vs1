@@ -1010,7 +1010,7 @@ void(entity attacker, entity targ, float f) score_give_frag {
 		// regular frag
 		score_player_add(attacker, SP_KILLS, 1);
 	}
-	f = gamehook_FragsHandle(attacker, targ, f);
+	f = gamehook_score_give_frag_mod(attacker, targ, f);
 	if(f)
 		score_player_team_add_score(attacker, f);
 }

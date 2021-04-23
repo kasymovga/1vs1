@@ -17,84 +17,79 @@ float g_chat_nospectators;
 float g_chat_teamcolors;
 
 string(entity pl, string msg) chat_formatmessage {
-    float p, p1, p2;
-    float n;
-    string escape;
-    string replacement;
-    p = 0;
-    n = 7;
-    while (1)
-    {
-        if (n < 1)
-            break; // too many replacements
-        n = n - 1;
-        p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-        p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+	float p, p1, p2;
+	float n;
+	string escape;
+	string replacement;
+	p = 0;
+	n = 7;
+	while (1) {
+		if (n < 1)
+			break; // too many replacements
 
-        if (p1 < 0)
-            p1 = p2;
-        if (p2 < 0)
-            p2 = p1;
-        p = min(p1, p2);
+		n = n - 1;
+		p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+		p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+		if (p1 < 0)
+			p1 = p2;
 
-        if (p < 0)
-            break;
-        replacement = substring(msg, p, 2);
-        escape = substring(msg, p + 1, 1);
-        if (escape == "%")
-            replacement = "%";
-        else if (escape == "\\")
-            replacement = "\\";
-        else if (escape == "n")
-            replacement = "\n";
-        else if (escape == "a")
-            replacement = ftos(floor(pl.armorvalue));
-        else if (escape == "h")
-            replacement = ftos(floor(pl.health));
-        else if (escape == "l")
-            replacement = target_location_nearest(pl.origin);
-        else if (escape == "y")
-            replacement = target_location_nearest(pl.cursor_trace_endpos);
-        else if (escape == "d")
-            replacement = target_location_nearest(pl.death_origin);
-        else if (escape == "s")
+		if (p2 < 0)
+			p2 = p1;
+
+		p = min(p1, p2);
+		if (p < 0)
+			break;
+
+		replacement = substring(msg, p, 2);
+		escape = substring(msg, p + 1, 1);
+		if (escape == "%")
+			replacement = "%";
+		else if (escape == "\\")
+			replacement = "\\";
+		else if (escape == "n")
+			replacement = "\n";
+		else if (escape == "a")
+			replacement = ftos(floor(pl.armorvalue));
+		else if (escape == "h")
+			replacement = ftos(floor(pl.health));
+		else if (escape == "l")
+			replacement = target_location_nearest(pl.origin);
+		else if (escape == "y")
+			replacement = target_location_nearest(pl.cursor_trace_endpos);
+		else if (escape == "d")
+			replacement = target_location_nearest(pl.death_origin);
+		else if (escape == "s")
 			replacement = ftos(floor(vlen(self.velocity)));
-        else if (escape == "w")
-        {
-            float wep;
-            wep = pl.weapon;
-            if (!wep)
-                wep = pl.switchweapon;
-            if (!wep)
-                wep = pl.cnt;
-            replacement = weapon_name(wep);
-        }
-        else if (escape == "W")
-        {
-            if (pl.items & IT_SHELLS) replacement = "shells";
-            else if (pl.items & IT_NAILS) replacement = "bullets";
-            else if (pl.items & IT_ROCKETS) replacement = "rockets";
-            else if (pl.items & IT_CELLS) replacement = "cells";
-            else replacement = "batteries"; // ;)
-        }
-        else if (escape == "x")
-        {
-            replacement = pl.cursor_trace_ent.netname;
-            if (!replacement || !pl.cursor_trace_ent)
-                replacement = "nothing";
-        }
-        else if (escape == "p")
-        {
-            if (pl.cursor_trace_ent && pl.cursor_trace_ent.classname == "player")
-                replacement = pl.cursor_trace_ent.netname;
-            else
-                replacement = "(nobody)";
-        }
-        msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
-        p = p + strlen(replacement);
-    }
-    return msg;
+		else if (escape == "w") {
+			float wep;
+			wep = pl.weapon;
+			if (!wep)
+				wep = pl.switchweapon;
+			if (!wep)
+				wep = pl.cnt;
+			replacement = weapon_name(wep);
+		} else if (escape == "W") {
+			if (pl.items & IT_SHELLS) replacement = "shells";
+			else if (pl.items & IT_NAILS) replacement = "bullets";
+			else if (pl.items & IT_ROCKETS) replacement = "rockets";
+			else if (pl.items & IT_CELLS) replacement = "cells";
+			else replacement = "batteries"; // ;)
+		} else if (escape == "x") {
+			replacement = pl.cursor_trace_ent.netname;
+			if (!replacement || !pl.cursor_trace_ent)
+				replacement = "nothing";
+		} else if (escape == "p") {
+			if (pl.cursor_trace_ent && pl.cursor_trace_ent.classname == "player")
+				replacement = pl.cursor_trace_ent.netname;
+			else
+				replacement = "(nobody)";
+		}
+		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
+		p = p + strlen(replacement);
+	}
+	return msg;
 }
+
 void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say {
 	string msgstr, colorstr, namestr, fullmsgstr, sourcemsgstr, privatemsgprefix;
 	float flood, privatemsgprefixlen;
@@ -284,8 +279,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		bprint(msgstr);
 }
 
-.float BUTTON_CHAT;
-void() chat_bubble_think {
+void(void) chat_bubble_think {
 	entity o = self.owner;
 	if (o.playerid != self.playerid || o.body != self.tag_entity) {
 		remove(self);
@@ -302,7 +296,7 @@ void() chat_bubble_think {
 	self.nextthink = time;
 }
 
-void() chat_bubble_spawn {
+void(void) chat_bubble_spawn {
 	entity e = spawn();
 	e.owner = self;
 	e.playerid = self.playerid;
@@ -313,7 +307,7 @@ void() chat_bubble_spawn {
 	setmodel(e, "models/misc/chatbubble.spr");
 }
 
-void() chat_init {
+void(void) chat_init {
 	precache_model ("models/misc/chatbubble.spr");
 	CVAR_CACHE(g_chat_flood_burst);
 	CVAR_CACHE(g_chat_flood_burst_team);

@@ -1023,7 +1023,7 @@ void() ctf_delayedinit {
 	SP_CTF_RETURNS = score_register("returns", 0);
 	SP_CTF_DROPS = score_register("drops", SFL_LOWER_IS_BETTER);
 	if (game == GAME_CATF) {
-		Clanarena_Init_Shared("catf");
+		clanarena_shared_init("catf");
 		Roundbased_SetScoreField(ST_CTF_CAPS);
 	} else if (game == GAME_CTFT) {
 		Freeze_Init_Shared("ctft");
@@ -1085,7 +1085,7 @@ void() ctf_init {
 	captureshield_min_negscore = cvar("g_ctf_shield_min_negscore");
 	captureshield_max_ratio = cvar("g_ctf_shield_max_ratio");
 	captureshield_force = cvar("g_ctf_shield_force");
-	gamehook_FragsHandle = ctf_handle_frags;
+	gamehook_score_give_frag_mod = ctf_handle_frags;
 	ctf_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = ctf_PlayerClear;
 	ctf_PlayerPreThink_NextLink = gamehook_chain_player_think;

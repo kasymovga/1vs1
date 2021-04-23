@@ -289,7 +289,7 @@ float conquest_WinningCondition()
 	return FALSE;
 }
 
-float conquest_FragsHandle(entity attacker, entity targ, float f) {
+float conquest_score_give_frag_mod(entity attacker, entity targ, float f) {
 	score_player_add(attacker, SP_SCORE, f);
 	return 0;
 }
@@ -363,7 +363,7 @@ void conquest_init() {
 		g_conq_capture_time = 1;
 
 	gamehook_winning_condition = conquest_WinningCondition;
-	gamehook_FragsHandle = conquest_FragsHandle;
+	gamehook_score_give_frag_mod = conquest_score_give_frag_mod;
 	gamehook_SelectSpawnPoint = conquest_SelectSpawnPoint;
 	gamehook_player_death_handle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = gamehook_chain_spawn;

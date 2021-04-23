@@ -957,7 +957,7 @@ void kh_init_delayed()  // sets up th KH environment
 	SP_KH_LOSSES = score_register("losses", SFL_LOWER_IS_BETTER);
 	if (kh_roundbased) {
 		if (game == GAME_KEYHUNT_CA)
-			Clanarena_Init_Shared("khca");
+			clanarena_shared_init("khca");
 		else if (game == GAME_KEYHUNT_FT)
 			Freeze_Init_Shared("khft");
 
@@ -984,7 +984,7 @@ void kh_init() {
 	precache_sound(kh_sound_drop);
 	precache_sound(kh_sound_collect);
 	precache_sound(kh_sound_alarm);  // the new siren
-	gamehook_FragsHandle = kh_HandleFrags;
+	gamehook_score_give_frag_mod = kh_HandleFrags;
 	gamehook_player_death_handle = kh_DeathHandle;
 	kh_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = kh_PlayerClear;
