@@ -45,18 +45,17 @@ void(void) client_put {
 	FOR_EACH_PLAYER(e)
 		e.entcs.SendFlags |= 16;
 
-	if(clienttype(self) == CLIENTTYPE_BOT)
-	{
+	if (clienttype(self) == CLIENTTYPE_BOT) {
 		self.classname = "player";
 	}
-	if(map_finished)
+	if (map_finished)
 		self.classname = "observer";
 
-	if(self.classname == "player") {
+	if (self.classname == "player") {
 		entity spot;
 		float oldteam = self.team;
 		if (self.team < 0) {
-			if(clienttype(self) == CLIENTTYPE_BOT)
+			if (clienttype(self) == CLIENTTYPE_BOT)
 				self.team = self.bot_forced_team;
 
 			team_join_best(self, FALSE);
@@ -65,7 +64,7 @@ void(void) client_put {
 			score_touch(self);
 
 		spot = gamehook_SelectSpawnPoint();
-		if(!spot) {
+		if (!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
 				centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
 
@@ -74,7 +73,7 @@ void(void) client_put {
 			return;
 		}
 		player_spawn(spot);
-	} else if(self.classname == "observer") {
+	} else if (self.classname == "observer") {
 		spectator_observer_spawn(TRUE);
 	}
 }
@@ -105,7 +104,7 @@ float client_init_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, t);
 	}
 	if (sf & 4) {
-		if(sv_foginterval && client_fog != "")
+		if (sv_foginterval && client_fog != "")
 			WriteString(MSG_ENTITY, client_fog);
 		else
 			WriteString(MSG_ENTITY, "");
@@ -128,17 +127,15 @@ float client_init_send(entity to, float sf)
 		}
 		WriteByte(MSG_ENTITY, t);
 	}
-
-	if(sf & 64) {
+	if (sf & 64) {
 		projectile_info_send();
 	}
-
 	if (sf & 128) {
 		WriteString(MSG_ENTITY, map_description); 
 		string s;
 		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
 		string profile = cvar_string("g_profile");
-		if(profile != "")
+		if (profile != "")
 			s = strcat(s, "\n^8g_profile ^3", profile, "^8");
 
 		if (g_campaign)
@@ -150,7 +147,6 @@ float client_init_send(entity to, float sf)
 		}
 		WriteString(MSG_ENTITY, s);
 	}
-
 	return TRUE;
 }
 
@@ -172,10 +168,10 @@ void(void) client_parms_change { //called by engine
 	gamehook_client_parms_change();
 }
 
-void(void) client_parms_decode { //called by engine
+void(void) client_parms_decode {
 	// load parms
 	self.parm_idlesince = parm1;
-	if(self.parm_idlesince == -(86400 * 366))
+	if (self.parm_idlesince == -(86400 * 366))
 		self.parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
@@ -186,7 +182,7 @@ void(void) client_parms_decode { //called by engine
 void(entity cl, float _team) client_kill_now_team_change {
 	if (_team == -2) {
 		player_to_spec(cl);
-	} else if(_team == -1) {
+	} else if (_team == -1) {
 		cl.team = -1;
 		team_join_best(cl, FALSE);
 	} else
@@ -194,12 +190,12 @@ void(entity cl, float _team) client_kill_now_team_change {
 }
 
 void(entity cl, float _team) client_kill_now {
-	if(_team)
+	if (_team)
 		client_kill_now_team_change(cl, _team);
 	else
 		damage(cl, cl, cl, 100000, DEATH_KILL, cl.origin, '0 0 0');
 
-	if(cl.killindicator) {
+	if (cl.killindicator) {
 		remove(cl.killindicator);
 		cl.killindicator = world;
 	}
@@ -211,7 +207,7 @@ void(void) client_killindicator_think {
 		remove(self);
 		return;
 	}
-	if(self.cnt <= 0) {
+	if (self.cnt <= 0) {
 		client_kill_now(self.owner, self.team);
 		return;
 	} else {
@@ -330,7 +326,7 @@ float() client_preconnect_abort {
 	if (self.just_connected)
 		return FALSE;
 
-	if(Ban_MaybeEnforceBan(self))
+	if (Ban_MaybeEnforceBan(self))
 		return TRUE;
 
 	entity e;
@@ -382,11 +378,11 @@ void(void) client_connect { //called by engine
 	if (self.retard > 0)
 		self.netname = retardplayername;
 
-	DecodeLevelParms();
+	client_parms_decode();
 	self.disableclientprediction = -1;
 	self.classname = "player_joining";
 	self.team = -1; //clear engine assigned values
-	if(player_count<0)
+	if (player_count<0)
 		player_count = 0;
 
 	score_attach(self);
@@ -396,7 +392,6 @@ void(void) client_connect { //called by engine
 	score_touch(self);
 	self.play_time = 0;
 	bot_clientconnect();
-
 	if (g_campaign) {
 		self.classname = "player";
 		campaign_bots_may_start = 1;
@@ -415,18 +410,14 @@ void(void) client_connect { //called by engine
 	client_cvars_request();
 	entcs_attach();
 	bot_relinkplayerlist();
-
 	self.spectatortime = time;
-	if(spectator_block)
-	{
+	if (spectator_block) {
 		sprint(self, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 	}
-
 	self.jointime = time;
 	self.allowedTimeouts = sv_timeout_number;
-
 	if (clienttype(self) == CLIENTTYPE_REAL) {
-		if(!sv_foginterval && client_fog != "")
+		if (!sv_foginterval && client_fog != "")
 			stuffcmd(self, strcat("\nfog ", client_fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 		gamehook_chain_RealClientConnect();
@@ -436,8 +427,7 @@ void(void) client_connect { //called by engine
 }
 
 void(void) client_disconnect { //called by engine
-	if not(self.flags & FL_CLIENT)
-	{
+	if not(self.flags & FL_CLIENT) {
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
@@ -500,7 +490,7 @@ float() client_join_allowed {
 		if (e.classname == "player" || (team_mode && e.team > 0))
 			currentlyPlaying += 1;
 	}
-	if(currentlyPlaying < g_maxplayers)
+	if (currentlyPlaying < g_maxplayers)
 		return TRUE;
 
 	centerprint_atprio(self, CENTERPRINT_PRIO_MAPVOTE, "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity.");
@@ -512,8 +502,8 @@ float() client_join_allowed {
  * g_maxplayers_spectator_blocktime seconds
  */
 void(void) client_check_spectator_block {
-	if(self.classname == "spectator" || self.classname == "observer") {
-		if( time > (self.spectatortime + g_maxplayers_spectator_blocktime) ) {
+	if (self.classname == "spectator" || self.classname == "observer") {
+		if (time > (self.spectatortime + g_maxplayers_spectator_blocktime)) {
 			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
 			dropclient(self);
 		}
@@ -523,25 +513,25 @@ void(void) client_check_spectator_block {
 void(void) client_pre_think { //called by engine
 	self.stat_map_starttime = map_starttime;
 	self.stat_leadlimit = score_leadlimit;
-	if(spectator_block && frametime)
+	if (spectator_block && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		client_check_spectator_block();
 
 	if (map_intermission_running) {
 		return;
 	}
-	if(self.classname == "player") {
+	if (self.classname == "player") {
 		player_think();
 		self.spectatee_status = (self.BUTTON_ZOOM ? 256 : 0);
-	} else if(self.classname == "observer") {
+	} else if (self.classname == "observer") {
 		spectator_observer_think();
 		self.spectatee_status = num_for_edict(self);
-	} else if(self.classname == "spectator") {
+	} else if (self.classname == "spectator") {
 		spectator_think();
 		float oldspectatee_status;
 		oldspectatee_status = self.spectatee_status & 255;
 		self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
-		if((self.spectatee_status & 255) != (oldspectatee_status & 255))
+		if ((self.spectatee_status & 255) != (oldspectatee_status & 255))
 			gamehook_InitSpectator();
 	}
 }
@@ -558,8 +548,7 @@ void(void) client_post_think { //called by engine
 		//stuffcmd(self, "seta _cl_name Player\n");
 	}
 	if (frametime)
-	if (clienttype(self) == CLIENTTYPE_REAL)
-	{
+	if (clienttype(self) == CLIENTTYPE_REAL) {
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 		float timeleft, drop, maxidle;
 		if (sv_maxidle_forcespec && self.classname == "player") {
@@ -586,9 +575,8 @@ void(void) client_post_think { //called by engine
 					player_to_spec(self);
 				}
 				return;
-			} else if(timeleft <= 10) {
-				if(timeleft != self.idlekick_lasttimeleft)
-				{
+			} else if (timeleft <= 10) {
+				if (timeleft != self.idlekick_lasttimeleft) {
 					centerprint_atprio(self, CENTERPRINT_PRIO_IDLEKICK, strcat("^3Stop idling!\n^3", (drop ? "Disconnecting" : "Moving to spectators") , " in ", ftos(timeleft), "..."));
 					announce(self, strcat("announcer/robotic/", ftos(timeleft), ".wav"), "");
 				}
@@ -598,7 +586,7 @@ void(void) client_post_think { //called by engine
 			self.idlekick_lasttimeleft = timeleft;
 		}
 	}
-	if(self.classname == "player")
+	if (self.classname == "player")
 		player_post_think();
 }
 
@@ -761,73 +749,58 @@ void(string _name) client_mute_ifneeded {
 }
 
 entity(float tokens, float idx) client_entity_from_argv {
-    string s;
-    entity e, head;
-    float n;
-
-    s = NULL;
-
-    client_entity_from_argv_firsttoken = -1;
-
-    if (tokens > idx)
-    {
-        if (substring(argv(idx), 0, 1) == "#")
-        {
-            s = substring(argv(idx), 1, -1);
-            ++idx;
-            if (s == "")
-                if (tokens > idx)
-                {
-                    s = argv(idx);
-                    ++idx;
-                }
+	string s;
+	entity e, head;
+	float n;
+	s = NULL;
+	client_entity_from_argv_firsttoken = -1;
+	if (tokens > idx) {
+		if (substring(argv(idx), 0, 1) == "#") {
+			s = substring(argv(idx), 1, -1);
+			++idx;
+			if (s == "")
+				if (tokens > idx) {
+					s = argv(idx);
+					++idx;
+				}
 			client_entity_from_argv_firsttoken = idx;
-            if (s == ftos(stof(s)))
-            {
-                e = edict_num(stof(s));
-                if (e.flags & FL_CLIENT)
-                    return e;
-            }
-        }
-        else
-        {
-            // it must be a nick name
-            s = argv(idx);
-            ++idx;
+			if (s == ftos(stof(s))) {
+				e = edict_num(stof(s));
+				if (e.flags & FL_CLIENT)
+					return e;
+			}
+		} else {
+			// it must be a nick name
+			s = argv(idx);
+			++idx;
 			client_entity_from_argv_firsttoken = idx;
+			n = 0;
+			FOR_EACH_CLIENT(head)
+			if (head.netname == s) {
+				e = head;
+				++n;
+			}
+			if (n == 1)
+				return e;
 
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (head.netname == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
-
-            s = strdecolorize(s);
-            n = 0;
-            FOR_EACH_CLIENT(head)
-            if (strdecolorize(head.netname) == s)
-            {
-                e = head;
-                ++n;
-            }
-            if (n == 1)
-                return e;
-        }
-    }
-
-    return world;
+			s = strdecolorize(s);
+			n = 0;
+			FOR_EACH_CLIENT(head)
+			if (strdecolorize(head.netname) == s) {
+				e = head;
+				++n;
+			}
+			if (n == 1)
+				return e;
+		}
+	}
+	return world;
 }
 
 void(entity pl, float tstart, float dt) client_write_recordmarker {
-    // also write a marker into demo files for demotc-race-record-extractor to find
-    stuffcmd(pl,
-             strcat(
-                 strcat("//", strconv(2, 0, 0, gametype_name(game)), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
-                 " ", ftos(tstart), " ", ftos(dt), "\n"));
+	// also write a marker into demo files for demotc-race-record-extractor to find
+	stuffcmd(pl, strcat( strcat("//", strconv(2, 0, 0, gametype_name(game)), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
+			" ", ftos(tstart), " ", ftos(dt), "\n"));
 }
 
 void(void) client_version_init {
