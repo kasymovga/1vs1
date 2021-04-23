@@ -85,6 +85,7 @@ void(void) entity_initialize_run {
 	entity oldself = self;
 	entity e;
 	float i;
+	initialize_entities_done = TRUE;
 	for (i = INITPRIO_FIRST; i <= INITPRIO_LAST; i++)
 		for (e = find(world, classname, "initialize_entity"); e; e = find(e, classname, "initialize_entity")) {
 			if (e.cnt != i)
@@ -93,9 +94,9 @@ void(void) entity_initialize_run {
 			self = e.enemy;
 			e.think();
 			remove(e);
+			initialize_entities_done = FALSE; //extra check in next frame
 		}
 	self = oldself;
-	initialize_entities_done = TRUE;
 }
 
 // deferred dropping
