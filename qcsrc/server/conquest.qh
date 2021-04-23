@@ -1,1 +1,1 @@
-void conquest_init();
+void(void) conquest_init;

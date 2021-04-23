@@ -489,6 +489,6 @@ void(float force) hook_init {
 	gamehook_chain_player_think = hook_PlayerPreThink;
 	hook_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = hook_PlayerClear;
-	hook_entity_pre_spawn_next = gamehook_chain_EntityPreSpawn;
-	gamehook_chain_EntityPreSpawn = hook_entity_pre_spawn;
+	hook_entity_pre_spawn_next = gamehook_chain_entity_spawn_pre;
+	gamehook_chain_entity_spawn_pre = hook_entity_pre_spawn;
 }

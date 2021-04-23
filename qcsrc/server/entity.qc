@@ -256,7 +256,7 @@ float(entity e, float t) entity_move_out_of_solid_with_type {
 .string not_gametype;
 .string cvarfilter;
 string entity_gametype_patterns;
-void(void) SV_OnEntityPreSpawnFunction {
+void(void) entity_spawn_pre {
 	if(!self) //Skip pre-spawn function for world.
 		return;
 
@@ -436,5 +436,5 @@ void(void) SV_OnEntityPreSpawnFunction {
 		} else
 			self.classname = strzone(repl);
 	}
-	gamehook_chain_EntityPreSpawn();
+	gamehook_chain_entity_spawn_pre();
 }

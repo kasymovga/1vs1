@@ -232,8 +232,8 @@ float minstagib_ThrowWeaponAllowed(float doreduce) {
 
 void spawnfunc_minstagib_extra_lives() { minstagib_items(IT_NAILS); }
 
-var void() minstagib_EntityPreSpawn_NextLink;
-void minstagib_EntityPreSpawn() {
+var void() minstagib_entity_spawn_pre_NextLink;
+void minstagib_entity_spawn_pre() {
 	if (self.classname == "item_health_mega")
 		self.classname = "minstagib_extra_lives";
 	else if (self.classname == "item_strength")
@@ -241,7 +241,7 @@ void minstagib_EntityPreSpawn() {
 	else if (self.classname == "item_invincible")
 		self.classname = "item_speed";
 
-	minstagib_EntityPreSpawn_NextLink();
+	minstagib_entity_spawn_pre_NextLink();
 }
 
 var float() minstagib_ItemForbidden_NextLink;
@@ -374,8 +374,8 @@ void minstagib_init() {
 	gamehook_chain_WeaponSpawnHandle = minstagib_WeaponSpawnHandle;
 	minstagib_ThrowWeaponAllowed_NextLink = gamehook_chain_ThrowWeaponAllowed;
 	gamehook_chain_ThrowWeaponAllowed = minstagib_ThrowWeaponAllowed;
-	minstagib_EntityPreSpawn_NextLink = gamehook_chain_EntityPreSpawn;
-	gamehook_chain_EntityPreSpawn = minstagib_EntityPreSpawn;
+	minstagib_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
+	gamehook_chain_entity_spawn_pre = minstagib_entity_spawn_pre;
 	minstagib_ItemForbidden_NextLink = gamehook_chain_ItemForbidden;
 	gamehook_chain_ItemForbidden = minstagib_ItemForbidden;
 	minstagib_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;

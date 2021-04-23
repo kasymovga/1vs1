@@ -156,3 +156,4 @@ void		end_sys_fields;
 #define cmd_game GameCommand
 #define world_frame_start StartFrame
 #define world_frame_end EndFrame
+#define entity_spawn_pre SV_OnEntityPreSpawnFunction

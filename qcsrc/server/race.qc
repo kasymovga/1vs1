@@ -773,7 +773,7 @@ void(void) race_checkpoints_records_clear {
 		race_time_clear(e);
 }
 
-void() race_Reset {
+void() race_world_reset {
 	float s;
 	score_nice_print(world);
 	race_checkpoints_records_clear();
@@ -1336,7 +1336,7 @@ void(void) race_init {
 	}
 	race_score_setup();
 	gamehook_InitSpectator = race_InitSpectator;
-	gamehook_Reset = race_Reset;
+	gamehook_world_reset = race_world_reset;
 	gamehook_PlayerAllowedToMove = race_PlayerAllowedToMove;
 	race_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
 	gamehook_chain_PlayerCanFire = race_PlayerCanFire;

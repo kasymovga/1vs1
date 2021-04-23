@@ -6,7 +6,7 @@ float g_conq_teamscore_alternative;
 float conq_timelimit_save;
 float conq_lasthope;
 
-void conquest_cp_free() {
+void(void) conquest_cp_free {
 	remove(self.enemy);
 	self.enemy = world;
 	self.team = 0;
@@ -20,7 +20,7 @@ void conquest_cp_free() {
 			}
 }
 
-void conquest_cp_capture(float byteam) {
+void(float byteam) conquest_cp_capture {
 	self.enemy = spawn();
 	setmodel(self.enemy, "models/ctf/flags.md3");
 	if (byteam == COLOR_TEAM1)
@@ -47,14 +47,14 @@ void conquest_cp_capture(float byteam) {
 .float capture_in_progress;
 .entity capture_progress_bar;
 
-void conquest_remove_progress_bar() {
+void(void) conquest_remove_progress_bar {
 	if (self.capture_progress_bar) {
 		remove(self.capture_progress_bar);
 		self.capture_progress_bar = world;
 	}
 }
 
-void conquest_update_waypoint() {
+void(void) conquest_update_waypoint {
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_CONTROLPOINT, colormap_palette_color(self.team - 1, FALSE));
 	string s;
 	s = "";
@@ -73,7 +73,7 @@ void conquest_update_waypoint() {
 	WaypointSprite_UpdateSprites(self.sprite, s, s, s);
 }
 
-void conquest_cp_reset() {
+void(void) conquest_cp_reset {
 	if (self.team == self.cnt)
 		return;
 
@@ -92,7 +92,7 @@ void conquest_cp_reset() {
 
 .float conquest_delay;
 
-void conquest_cp_think_capture() {
+void(void) conquest_cp_think_capture {
 	if (self.owner) {
 		if not(self.capture_progress)
 		if (self.team > 0)
@@ -151,7 +151,7 @@ void conquest_cp_think_capture() {
 	self.nextthink = time;
 }
 
-void conquest_cp_touch() {
+void(void) conquest_cp_touch {
 	if (other.classname != "player")
 		return;
 
@@ -173,7 +173,7 @@ void conquest_cp_touch() {
 	self.nextthink = time;
 }
 
-void spawnfunc_conquest_cp() {
+void(void) spawnfunc_conquest_cp {
 	if not(g_conq) {
 		remove(self);
 		return;
@@ -193,19 +193,19 @@ void spawnfunc_conquest_cp() {
 	conquest_update_waypoint();
 }
 
-void spawnfunc_conquest_cp_fromredflag() {
+void(void) spawnfunc_conquest_cp_fromredflag {
 	self.team = COLOR_TEAM1;
 	setorigin(self, self.origin - '0 0 40');
 	spawnfunc_conquest_cp();
 }
 
-void spawnfunc_conquest_cp_fromblueflag() {
+void(void) spawnfunc_conquest_cp_fromblueflag {
 	self.team = COLOR_TEAM2;
 	setorigin(self, self.origin - '0 0 40');
 	spawnfunc_conquest_cp();
 }
 
-float conquest_TeamCanSpawn(float t) {
+float(float t) conquest_team_can_spawn {
 	entity head;
 	for (head = world; (head = find(head, classname, "conquest_cp")); )
 		if (head.team == t)
@@ -214,13 +214,11 @@ float conquest_TeamCanSpawn(float t) {
 	return FALSE;
 }
 
-float conquest_WinningCondition()
-{
+float() conquest_winning_condition {
 	entity head;
 	float t1, t2;
 	float one_of_team_cannot_spawn;
 	t1 = t2 = 0;
-
 	one_of_team_cannot_spawn = FALSE;
 	if(warmup_active)
 		return FALSE;
@@ -232,7 +230,6 @@ float conquest_WinningCondition()
 			t1 = 1;
 			break;
 		}
-				
 	FOR_EACH_TEAMPLAYER(head)
 		if (head.team == COLOR_TEAM2)
 		if (head.classname == "player")
@@ -240,13 +237,12 @@ float conquest_WinningCondition()
 			t2 = 1;
 			break;
 		}
-
-	if (conquest_TeamCanSpawn(COLOR_TEAM1))
+	if (conquest_team_can_spawn(COLOR_TEAM1))
 		t1 = 1;
 	else
 		one_of_team_cannot_spawn = TRUE;
 
-	if (conquest_TeamCanSpawn(COLOR_TEAM2))
+	if (conquest_team_can_spawn(COLOR_TEAM2))
 		t2 = 1;
 	else
 		one_of_team_cannot_spawn = TRUE;
@@ -264,7 +260,6 @@ float conquest_WinningCondition()
 			conq_lasthope = 0;
 		}
 	}
-
 	if (t1 + t2 < 2) {
 		// game over, only one team remains (or none)
 		world_winners_clear();
@@ -284,24 +279,23 @@ float conquest_WinningCondition()
 		}
 		return TRUE;
 	}
-
 	// Two or more teams remain
 	return FALSE;
 }
 
-float conquest_score_give_frag_mod(entity attacker, entity targ, float f) {
+float(entity attacker, entity targ, float f) conquest_score_give_frag_mod {
 	score_player_add(attacker, SP_SCORE, f);
 	return 0;
 }
 
-entity conquest_SelectSpawnPoint() {
-	if not(conquest_TeamCanSpawn(self.team))
+entity() conquest_SelectSpawnPoint {
+	if not(conquest_team_can_spawn(self.team))
 		return world;
 
 	return onslaught_SelectSpawnPoint();
 }
 
-void conquest_Reset() {
+void() conquest_world_reset {
 	float b1, b2;
 	entity e;
 	b1 = b2 = 0;
@@ -325,18 +319,18 @@ void conquest_delayedinit() {
 
 		WaypointSprite_UpdateTeamRadar(e.sprite, 2, 0.25 * colormap_palette_color(e.team - 1, FALSE));
 	}
-	conquest_Reset();
+	conquest_world_reset();
 }
 
-var void() conquest_ons_EntityPreSpawn_NextLink;
-void conquest_ons_EntityPreSpawn() {
+var void() conquest_ons_entity_spawn_pre_NextLink;
+void conquest_ons_entity_spawn_pre() {
 	if (self.classname == "onslaught_generator" || self.classname == "onslaught_controlpoint") {
 		self.classname = "conquest_cp";
 	}
 }
 
-var void() conquest_ctf_and_dom_EntityPreSpawn_NextLink;
-void conquest_ctf_and_dom_EntityPreSpawn() {
+var void() conquest_ctf_and_dom_entity_spawn_pre_NextLink;
+void() conquest_ctf_and_dom_entity_spawn_pre {
 	if (self.classname == "item_flag_team1") {
 		self.classname = "conquest_cp_fromredflag";
 	} else if (self.classname == "item_flag_team2") {
@@ -346,7 +340,7 @@ void conquest_ctf_and_dom_EntityPreSpawn() {
 	}
 }
 
-void conquest_init() {
+void(void) conquest_init {
 	g_conq = 1;
 	precache_model("models/onslaught/controlpoint_pad.md3");
 	precache_model("models/ctf/flags.md3");
@@ -362,7 +356,7 @@ void conquest_init() {
 	if (g_conq_capture_time <= 0)
 		g_conq_capture_time = 1;
 
-	gamehook_winning_condition = conquest_WinningCondition;
+	gamehook_winning_condition = conquest_winning_condition;
 	gamehook_score_give_frag_mod = conquest_score_give_frag_mod;
 	gamehook_SelectSpawnPoint = conquest_SelectSpawnPoint;
 	gamehook_player_death_handle = onslaught_DeathHandle;
@@ -371,15 +365,15 @@ void conquest_init() {
 
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;
-	gamehook_Reset = conquest_Reset;
+	gamehook_world_reset = conquest_world_reset;
 	gamehook_WinCountDown = stub_WinCountDown;
 	if (cvar("g_conq_use_ons")) {
-		conquest_ons_EntityPreSpawn_NextLink = gamehook_chain_EntityPreSpawn;
-		gamehook_chain_EntityPreSpawn = conquest_ons_EntityPreSpawn;
+		conquest_ons_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
+		gamehook_chain_entity_spawn_pre = conquest_ons_entity_spawn_pre;
 	}
 	if (cvar("g_conq_use_ctf_and_dom")) {
-		conquest_ctf_and_dom_EntityPreSpawn_NextLink = gamehook_chain_EntityPreSpawn;
-		gamehook_chain_EntityPreSpawn = conquest_ctf_and_dom_EntityPreSpawn;
+		conquest_ctf_and_dom_entity_spawn_pre_NextLink = gamehook_chain_entity_spawn_pre;
+		gamehook_chain_entity_spawn_pre = conquest_ctf_and_dom_entity_spawn_pre;
 	}
 	gamehook_havocbot_role_choose = conquest_role_choose;
 	entity_initialize(world, conquest_delayedinit, INITPRIO_LAST);

@@ -809,7 +809,7 @@ void(void) world_frame_start { //called by engine
 void(float dorespawn) world_reset {
 	entity oldself;
 	oldself = self;
-	gamehook_Reset();
+	gamehook_world_reset();
 	for (self = world; (self = nextent(self)); )
 	if (clienttype(self) == CLIENTTYPE_NOTACLIENT) {
 		if (self.reset) {

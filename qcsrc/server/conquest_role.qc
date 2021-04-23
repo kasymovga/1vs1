@@ -1,10 +1,8 @@
 void(float ratingscale, vector org, float sradius) conquest_role_goalrating_controlpoints {
-	local entity head;
+	entity head;
 	head = findchain(classname, "conquest_cp");
-	while (head)
-	{
-		if (vlen(head.origin - org) < sradius)
-		{
+	while (head) {
+		if (vlen(head.origin - org) < sradius) {
 			if(!head.team)
 				navigation_routerating(head, ratingscale * 0.5, 5000);
 			else if(head.team != self.team) // other team's point
@@ -18,8 +16,7 @@ void() conquest_role {
 	if(self.deadflag != DEAD_NO)
 		return;
 
-	if (self.bot_strategytime < time)
-	{
+	if (self.bot_strategytime < time) {
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		conquest_role_goalrating_controlpoints(25000, self.origin, 15000);

@@ -26,7 +26,7 @@ var float(float fraglimit, float _leadlimit) gamehook_winning_condition = {
 }
 var float() gamehook_OvertimeHandle = { return FALSE; }
 var float() gamehook_OvertimeAllowed = { return TRUE; }
-var void() gamehook_Reset = {}
+var void() gamehook_world_reset = {}
 var void() gamehook_chain_observer_spawn = {}
 var void() gamehook_InitSpectator = {}
 var float(entity spot) gamehook_SpawnPointGood = { return TRUE; }
@@ -61,7 +61,7 @@ var void(entity targ, entity attacker, float deathtype) gamehook_chain_damage_mo
 var void(void(string item, string cmd) Add_Item) gamehook_chain_gamemenu_send = {};
 var float(string cmd, float tokens) gamehook_chain_cmd_client_handle = { return FALSE; }
 var float(string cmd, float tokens) gamehook_chain_cmd_game_handle = { return FALSE; }
-var void() gamehook_chain_EntityPreSpawn = {};
+var void() gamehook_chain_entity_spawn_pre = {};
 float gamehook_player_health_max_mod;
 float gamehook_player_armor_health_limit_mod;
 float gamehook_player_regen_mod;
