@@ -1,12 +1,12 @@
-#define FLAG_MIN (PL_MIN + '0 0 -13')
-#define FLAG_MAX (PL_MAX + '0 0 -13')
+#define CTF_FLAG_MIN (PL_MIN + '0 0 -13')
+#define CTF_FLAG_MAX (PL_MAX + '0 0 -13')
 
-float ST_CTF_CAPS;
-float SP_CTF_CAPS;
-float SP_CTF_PICKUPS;
-float SP_CTF_DROPS;
-float SP_CTF_FCKILLS;
-float SP_CTF_RETURNS;
+float CTF_SCORE_TEAM_CAPS;
+float CTF_SCORE_CAPS;
+float CTF_SCORE_PICKUPS;
+float CTF_SCORE_DROPS;
+float CTF_SCORE_FCKILLS;
+float CTF_SCORE_RETURNS;
 
 float g_ctf;
 float g_ctf_damageforcescale;
@@ -60,14 +60,9 @@ entity ctf_worldflaglist; // CTF flags in the map
 .float dropperid;
 .float ctf_droptime;
 
-.float next_take_time;			// the next time a player can pick up a flag (time + blah)
-								/// I used this, in part, to fix the looping score bug. - avirox
-//float FLAGSCORE_PICKUP        =  1;
-//float FLAGSCORE_RETURN        =  5; // returned by owner team
-//float FLAGSCORE_RETURNROGUE   = 10; // returned by rogue team
-//float FLAGSCORE_CAPTURE       =  5;
+.float next_take_time; // the next time a player can pick up a flag (time + blah)
 
-#define FLAG_CARRY_POS '-15 0 7'
+#define CTF_FLAG_CARRY_POS '-15 0 7'
 
 .float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
 
@@ -99,7 +94,7 @@ float(entity attacker, entity targ, float f) ctf_handle_frags {
 			return 0;
 	}
 	if (targ.flagcarried) {
-		score_player_add(attacker, SP_CTF_FCKILLS, 1);
+		score_player_add(attacker, CTF_SCORE_FCKILLS, 1);
 		f = ((g_ctf_win_mode != 2 ) ? g_ctf_personalscore_kill : g_ctf_flagscore_kill);
 		if not(f)
 			score_player_team_add_score(attacker, f);
@@ -223,7 +218,7 @@ void() ctf_flag_place {
 	self.think = ctf_flag_think;
 	self.touch = ctf_flag_touch;
 	self.nextthink = time + 0.1;
-	self.cnt = FLAG_BASE;
+	self.cnt = CTF_FLAG_BASE;
 	self.mangle = self.angles;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	//self.effects = self.effects | EF_DIMLIGHT;
@@ -253,7 +248,7 @@ void(entity e) ctf_flag_regen {
 	// TODO: play a sound here
 	setorigin(e, e.dropped_origin);
 	e.angles = e.mangle;
-	e.cnt = FLAG_BASE;
+	e.cnt = CTF_FLAG_BASE;
 	e.owner = world;
 	e.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
 }
@@ -291,7 +286,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	else
 		score_player_team_add_score(p, -CTF_SCORE_VALUE(penalty_drop));
 
-	score_player_add(p, SP_CTF_DROPS, +1);
+	score_player_add(p, CTF_SCORE_DROPS, +1);
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
@@ -313,7 +308,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 	e.movetype = MOVETYPE_TOSS;
 	// setsize(e, '-16 -16 0', '16 16 74');
 	setorigin(e, p.origin - '0 0 24' + '0 0 37');
-	e.cnt = FLAG_DROPPED;
+	e.cnt = CTF_FLAG_DROPPED;
 	e.velocity = '0 0 300';
 	e.pain_finished = time + g_ctf_flag_returntime;//30;
 	trace_startsolid = FALSE;
@@ -337,21 +332,21 @@ void() ctf_flag_think {
 	entity e;
 	self.nextthink = time + 0.1;
 	// sorry, we have to reset the flag size if it got squished by something
-	if (self.mins != FLAG_MIN || self.maxs != FLAG_MAX) {
+	if (self.mins != CTF_FLAG_MIN || self.maxs != CTF_FLAG_MAX) {
 		// if we can grow back, grow back
-		trace_box(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
+		trace_box(self.origin, CTF_FLAG_MIN, CTF_FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if (!trace_startsolid)
-			setsize(self, FLAG_MIN, FLAG_MAX);
+			setsize(self, CTF_FLAG_MIN, CTF_FLAG_MAX);
 	}
 	if (self == ctf_worldflaglist) { // only for the first flag
 		FOR_EACH_CLIENT(e)
 			ctf_captureshield_update(e, 1); // release shield only
 	}
 	ctf_animate_flag();
-	if (self.cnt == FLAG_BASE)
+	if (self.cnt == CTF_FLAG_BASE)
 		return;
 
-	if (self.cnt == FLAG_DROPPED) {
+	if (self.cnt == CTF_FLAG_DROPPED) {
 		// flag fallthrough? FIXME remove this if bug is really fixed now
 		if (self.origin_z < -131072)
 			self.pain_finished = 0;
@@ -411,10 +406,10 @@ void() ctf_flag_touch {
 	if not(gamehook_chain_PlayerCanBeCarrier(other))
 		return;
 
-	if (self.cnt == FLAG_CARRY)
+	if (self.cnt == CTF_FLAG_CARRY)
 		return;
 
-	if (self.cnt == FLAG_BASE)
+	if (self.cnt == CTF_FLAG_BASE)
 	if (other.team == self.team)
 	if (other.flagcarried) // he's got a flag
 	if (other.flagcarried.team != self.team) { // capture
@@ -450,7 +445,7 @@ void() ctf_flag_touch {
 		} else
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
-		score_player_team_add(other, SP_CTF_CAPS, ST_CTF_CAPS, 1);
+		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
 		if (game == GAME_CATF || game == GAME_CTFT)
 			Roundbased_SetRoundStartWithWinner(other.team);
 
@@ -473,7 +468,7 @@ void() ctf_flag_touch {
 		other.flagcarried = world;
 		other.next_take_time = time + 1;
 	}
-	if (self.cnt == FLAG_BASE)
+	if (self.cnt == CTF_FLAG_BASE)
 	if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2) // only red and blue team can steal flags
 	if (other.team != self.team)
 	if (!other.flagcarried)
@@ -490,12 +485,12 @@ void() ctf_flag_touch {
 		setorigin(self, self.origin); // relink
 		self.owner = other;
 		other.flagcarried = self;
-		self.cnt = FLAG_CARRY;
+		self.cnt = CTF_FLAG_CARRY;
 		self.angles = '0 0 0';
 		bprint(other.netname, "^7 got the ", self.netname, "\n");
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
-		score_player_add(other, SP_CTF_PICKUPS, 1);
+		score_player_add(other, CTF_SCORE_PICKUPS, 1);
 		GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -504,7 +499,7 @@ void() ctf_flag_touch {
 				centerprint(player, "The enemy got your flag! Retrieve it!");
 
 		self.movetype = MOVETYPE_NONE;
-		setorigin(self, FLAG_CARRY_POS);
+		setorigin(self, CTF_FLAG_CARRY_POS);
 		setattachment(self, other.body, "");
 		WaypointSprite_AttachCarrier("flagcarrier", other);
 		WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, other.team, SPRITERULE_TEAMPLAY);
@@ -514,7 +509,7 @@ void() ctf_flag_touch {
 		WaypointSprite_Ping(self.sprite);
 		return;
 	}
-	if (self.cnt == FLAG_DROPPED) {
+	if (self.cnt == CTF_FLAG_DROPPED) {
 		self.flags = FL_ITEM; // clear FL_ONGROUND and any other junk
 		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2)) {
 			// return flag
@@ -543,7 +538,7 @@ void() ctf_flag_touch {
 				else
 					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
-			score_player_add(other, SP_CTF_RETURNS, 1);
+			score_player_add(other, CTF_SCORE_RETURNS, 1);
 			GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
@@ -556,7 +551,7 @@ void() ctf_flag_touch {
 			setorigin(self, self.origin); // relink
 			self.owner = other;
 			other.flagcarried = self;
-			self.cnt = FLAG_CARRY;
+			self.cnt = CTF_FLAG_CARRY;
 			bprint(other.netname, "^7 picked up the ", self.netname, "\n");
 			float f;
 			f = bound(0, (self.pain_finished - time) / g_ctf_flag_returntime, 1);
@@ -567,7 +562,7 @@ void() ctf_flag_touch {
 			self.dropperid = other.playerid;
 			//print("score is ", ftos(f), "\n");
 			score_player_team_add_score(other, f);
-			score_player_add(other, SP_CTF_PICKUPS, 1);
+			score_player_add(other, CTF_SCORE_PICKUPS, 1);
 			GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
@@ -576,7 +571,7 @@ void() ctf_flag_touch {
 					centerprint(player, "The enemy got your flag! Retrieve it!");
 
 			self.movetype = MOVETYPE_NONE;	// flag must have MOVETYPE_NONE here, otherwise it will drop through the floor...
-			setorigin(self, FLAG_CARRY_POS);
+			setorigin(self, CTF_FLAG_CARRY_POS);
 			setattachment(self, other.body, "");
 			self.damageforcescale = 0;
 			self.takedamage = DAMAGE_NO;
@@ -597,7 +592,7 @@ void() ctf_flag_reset {
 float() ctf_runhere_visibility {
 	if (other.flagcarried)
 	if (other.team == self.owner.team)
-	if (self.owner.cnt == FLAG_BASE)
+	if (self.owner.cnt == CTF_FLAG_BASE)
 		return TRUE;
 
 	return FALSE;
@@ -608,7 +603,7 @@ float() ctf_base_visibility {
 }
 
 float() ctf_flag_visibility {
-	if (self.owner.cnt == FLAG_DROPPED)
+	if (self.owner.cnt == CTF_FLAG_DROPPED)
 		return TRUE;
 
 	return FALSE;
@@ -636,7 +631,7 @@ void(string basesprite) ctf_flag_spawn {
 	precache_sound(self.noise2);
 	precache_sound(self.noise3);
 	precache_sound(self.noise4);
-	setsize(self, FLAG_MIN, FLAG_MAX);
+	setsize(self, CTF_FLAG_MIN, CTF_FLAG_MAX);
 	setorigin(self, self.origin + '0 0 37');
 	entity_initialize(self, ctf_flag_place, INITPRIO_SETLOCATION);
 	if (!self.scale)
@@ -891,18 +886,18 @@ void() ctf_delayedinit {
 		break;
 	}
 	score_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
-	ST_CTF_CAPS = score_register_team_score("caps", sp_caps);
-	SP_CTF_CAPS = score_register("caps", SFL_SORT_PRIO_SECONDARY);
-	SP_CTF_PICKUPS = score_register("pickups", 0);
-	SP_CTF_FCKILLS = score_register("fckills", 0);
-	SP_CTF_RETURNS = score_register("returns", 0);
-	SP_CTF_DROPS = score_register("drops", SFL_LOWER_IS_BETTER);
+	CTF_SCORE_TEAM_CAPS = score_register_team_score("caps", sp_caps);
+	CTF_SCORE_CAPS = score_register("caps", SFL_SORT_PRIO_SECONDARY);
+	CTF_SCORE_PICKUPS = score_register("pickups", 0);
+	CTF_SCORE_FCKILLS = score_register("fckills", 0);
+	CTF_SCORE_RETURNS = score_register("returns", 0);
+	CTF_SCORE_DROPS = score_register("drops", SFL_LOWER_IS_BETTER);
 	if (game == GAME_CATF) {
 		clanarena_shared_init("catf");
-		Roundbased_SetScoreField(ST_CTF_CAPS);
+		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
 	} else if (game == GAME_CTFT) {
 		Freeze_Init_Shared("ctft");
-		Roundbased_SetScoreField(ST_CTF_CAPS);
+		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
 	}
 }
 
@@ -947,12 +942,12 @@ void(entity plr) ctf_player_drop_carried { ctf_flag_drop(plr.flagcarried, world,
 float(entity e) ctf_portal_forbidden_for { return e.classname == "ctf_flag_team"; }
 
 void(entity flag, float shift) ctf_setstatus2 {
-	if (flag.cnt == FLAG_CARRY) {
+	if (flag.cnt == CTF_FLAG_CARRY) {
 		if (flag.owner == self)
 			self.items |= shift * 3;
 		else
 			self.items |= shift * 1;
-	} else if (flag.cnt == FLAG_DROPPED)
+	} else if (flag.cnt == CTF_FLAG_DROPPED)
 		self.items |= shift * 2;
 }
 
@@ -970,7 +965,7 @@ void() ctf_player_think {
 
 	redflags = 0;
 	blueflags = 0;
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if (flag.cnt != FLAG_BASE) {
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if (flag.cnt != CTF_FLAG_BASE) {
 		if (flag.items & IT_KEY2) // blue
 			++redflags;
 		else if (flag.items & IT_KEY1) // red
@@ -983,7 +978,7 @@ void() ctf_player_think {
 	if (blueflags)
 		blueflags = math_mod(floor(time * blueflags * 0.75), blueflags);
 
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if (flag.cnt != FLAG_BASE) {
+	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext) if (flag.cnt != CTF_FLAG_BASE) {
 		if (flag.items & IT_KEY2) { // blue
 			if (--redflags == -1) // happens exactly once (redflags is in 0..count-1, and will --'ed count times)
 				ctf_setstatus2(flag, IT_RED_FLAG_TAKEN);
