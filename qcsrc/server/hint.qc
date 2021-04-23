@@ -46,13 +46,13 @@ void hint_gamemenu_send(void(string item, string cmd) item_add) {
 	hint_gamemenu_send_next(item_add);
 }
 
-var void(void) hint_RealClientConnect_next;
-void(void) hint_RealClientConnect {
+var void(void) hint_client_connect_real_next;
+void(void) hint_client_connect_real {
 	if (hint_count > 0) {
 		if (sv_hints > 1)
 			hint_send(floor(random() * hint_count), 0);
 	}
-	hint_RealClientConnect_next();
+	hint_client_connect_real_next();
 }
 
 var float(string cmd, float tokens) hint_ClientCommandHandle_next;
@@ -66,8 +66,8 @@ float(string cmd, float tokens) hint_ClientCommandHandle {
 
 void(void) hint_init {
 	CVAR_CACHE(sv_hints);
-	hint_RealClientConnect_next = gamehook_chain_RealClientConnect;
-	gamehook_chain_RealClientConnect = hint_RealClientConnect;
+	hint_client_connect_real_next = gamehook_chain_client_connect_real;
+	gamehook_chain_client_connect_real = hint_client_connect_real;
 	hint_gamemenu_send_next = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = hint_gamemenu_send;
 	hint_ClientCommandHandle_next = gamehook_chain_cmd_client_handle;

@@ -715,7 +715,7 @@ void(float killed) race_player_clear {
 	race_player_clear_next(killed);
 }
 
-entity() race_SelectSpawnPoint {
+entity() race_client_put_spawn_point {
 	if(self.killcount == -666 || g_race_qualifying)
 		race_player_prepare();
 
@@ -1054,7 +1054,7 @@ float() race_WarmupAllowed {
 	return TRUE;
 }
 
-string() race_FixClientCvars {
+string() race_client_fix_cvars {
 	return "cl_cmd settemp cl_movecliptokeyboard 2";
 }
 
@@ -1325,8 +1325,8 @@ void(void) race_init {
 		race_records_load();
 		race_shutdown_next = gamehook_chain_shutdown;
 		gamehook_chain_shutdown = race_shutdown;
-		race_client_real_connect_next = gamehook_chain_RealClientConnect;
-		gamehook_chain_RealClientConnect = race_client_real_connect;
+		race_client_real_connect_next = gamehook_chain_client_connect_real;
+		gamehook_chain_client_connect_real = race_client_real_connect;
 	}
 	if (g_race) {
 		gamehook_winning_condition = race_winning_condition;
@@ -1341,7 +1341,7 @@ void(void) race_init {
 	race_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
 	gamehook_chain_PlayerCanFire = race_PlayerCanFire;
 	gamehook_PhysicFrameBegin = race_PhysicFrameBegin;
-	gamehook_SelectSpawnPoint = race_SelectSpawnPoint;
+	gamehook_client_put_spawn_point = race_client_put_spawn_point;
 	race_spawn_next = gamehook_chain_spawn;
 	gamehook_chain_spawn = race_spawn;
 	race_player_clear_next = gamehook_chain_player_clear;
@@ -1351,7 +1351,7 @@ void(void) race_init {
 	gamehook_SpawnPointGood = race_SpawnPointGood;
 	race_WinCountDown_orig = gamehook_WinCountDown;
 	gamehook_WinCountDown = race_WinCountDown;
-	gamehook_FixClientCvars = race_FixClientCvars;
+	gamehook_client_fix_cvars = race_client_fix_cvars;
 	gamehook_RecordForMap = race_RecordForMap;
 	gamehook_ReadyAllowed = race_ReadyAllowed;
 	gamehook_TelefragsAllowed = race_TelefragsAllowed;

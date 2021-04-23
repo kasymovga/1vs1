@@ -153,8 +153,8 @@ float(entity attacker, entity inflictor, float deathtype) lms_DeathHandle {
 	return FALSE;
 }
 
-var void(void) lms_ClientConnect_next;
-void(void) lms_ClientConnect {
+var void(void) lms_client_connect_next;
+void(void) lms_client_connect {
 	score_player_set(self, SP_LIVES, g_lms_lives);
 	entity e;
 	FOR_EACH_PLAYER(e) {
@@ -162,7 +162,7 @@ void(void) lms_ClientConnect {
 		if (e.scorekeeper.lms_lives < self.scorekeeper.lms_lives)
 			score_player_set(self, SP_LIVES, e.scorekeeper.lms_lives);
 	}
-	lms_ClientConnect_next();
+	lms_client_connect_next();
 }
 
 float(void) lms_WinningCondition {
@@ -203,8 +203,8 @@ float(entity spot) lms_SpawnPointGood {
 void(void) lms_init {
 	lms_Spawn_next = gamehook_chain_spawn;
 	gamehook_chain_spawn = lms_Spawn;
-	lms_ClientConnect_next = gamehook_chain_ClientConnect;
-	gamehook_chain_ClientConnect = lms_ClientConnect;
+	lms_client_connect_next = gamehook_chain_client_connect;
+	gamehook_chain_client_connect = lms_client_connect;
 	lms_JoinHandle_next = gamehook_chain_JoinHandle;
 	gamehook_chain_JoinHandle = lms_JoinHandle;
 	gamehook_winning_condition = lms_WinningCondition;

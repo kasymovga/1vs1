@@ -20,7 +20,7 @@ entity(void) bot_spawn {
 		oldself = self;
 		self = bot;
 		bot_setnameandstuff();
-		ClientConnect();
+		client_connect();
 		PutClientInServer();
 		self = oldself;
 	}

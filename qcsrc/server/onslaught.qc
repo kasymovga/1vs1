@@ -1070,7 +1070,7 @@ void(float x, float y) onslaught_LocationRequest_Callback {
 	self.ons_spawn_area_z = 1;
 }
 
-entity() onslaught_SelectSpawnPoint {
+entity() onslaught_client_put_spawn_point {
 	entity e, selected;
 	if not(self.ons_spawn_area_z)
 		return spawn_select(FALSE);
@@ -1155,7 +1155,7 @@ void(void) onslaught_init {
 	gamehook_player_death_handle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = onslaught_Spawn;
-	gamehook_SelectSpawnPoint = onslaught_SelectSpawnPoint;
+	gamehook_client_put_spawn_point = onslaught_client_put_spawn_point;
 	onslaught_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = onslaught_PlayerClear;
 	gamehook_winning_condition = onslaught_WinningCondition;

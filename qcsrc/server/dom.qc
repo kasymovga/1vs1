@@ -391,7 +391,7 @@ void(void) dom_delayedinit {
 	SP_DOM_TAKES = score_register("takes", 0);
 }
 
-entity() dom_SelectSpawnPoint {
+entity() dom_client_put_spawn_point {
 	return spawn_select(TRUE);
 }
 
@@ -413,7 +413,7 @@ void(void) dom_init {
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	gamehook_SelectSpawnPoint = dom_SelectSpawnPoint;
+	gamehook_client_put_spawn_point = dom_client_put_spawn_point;
 	gamehook_WinCountDown = stub_WinCountDown;
 	gamehook_havocbot_role_choose = dom_role_choose;
 	entity_initialize(world, dom_delayedinit, INITPRIO_GAMETYPE);

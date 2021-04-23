@@ -353,8 +353,8 @@ void SV_PlayerPhysics()
 	self.cpmdoublejump = physics_cpmdoublejump_time;
 }
 
-var void() physics_RealClientConnect_NextLink;
-void physics_RealClientConnect()
+var void() physics_client_connect_real_NextLink;
+void physics_client_connect_real()
 {
 	if not(self.player_physic)
 	{
@@ -364,16 +364,16 @@ void physics_RealClientConnect()
 		net_link_entity(self.player_physic, FALSE, 0, physics_send);
 	}
 	self.player_physic.SendFlags = 3;
-	physics_RealClientConnect_NextLink();
+	physics_client_connect_real_NextLink();
 }
 
-var void() physics_RealClientDisconnect_NextLink;
-void physics_RealClientDisconnect()
+var void() physics_client_disconnect_real_NextLink;
+void physics_client_disconnect_real()
 {
 	if (self.player_physic)
 		remove(self.player_physic);
 
-	physics_RealClientDisconnect_NextLink();
+	physics_client_disconnect_real_NextLink();
 }
 
 float(string s) physics_cvar {
@@ -496,10 +496,10 @@ void(void) physics_init {
 			e.player_physic.SendFlags |= 3;
 		}
 	} else {
-		physics_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
-		gamehook_chain_RealClientConnect = physics_RealClientConnect;
-		physics_RealClientDisconnect_NextLink = gamehook_chain_RealClientDisconnect;
-		gamehook_chain_RealClientDisconnect = physics_RealClientDisconnect;
+		physics_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+		gamehook_chain_client_connect_real = physics_client_connect_real;
+		physics_client_disconnect_real_NextLink = gamehook_chain_client_disconnect_real;
+		gamehook_chain_client_disconnect_real = physics_client_disconnect_real;
 		physics_initiated = TRUE;
 	}
 }

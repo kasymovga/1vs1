@@ -373,13 +373,13 @@ void() hook_PlayerPreThink {
 	}
 }
 
-var void() hook_RealClientConnect_NextLink;
-void hook_RealClientConnect(void) {
+var void() hook_client_connect_real_NextLink;
+void hook_client_connect_real(void) {
 	// this function has been modified for Nexuiz
 	// don't remove these lines! old server or demos coud overwrite the new aliases
 	stuffcmd(self, "alias +hook +button6\n");
 	stuffcmd(self, "alias -hook -button6\n");
-	hook_RealClientConnect_NextLink();
+	hook_client_connect_real_NextLink();
 }
 
 var void(entity targ, entity attacker, float deathtype) hook_DamageForceModsSet_NextLink;
@@ -481,8 +481,8 @@ void(float force) hook_init {
     precache_model("models/hook.md3");
 	precache_sound("weapons/hook_fire.wav");
 	precache_sound("weapons/hook_impact.wav");
-	hook_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
-	gamehook_chain_RealClientConnect = hook_RealClientConnect;
+	hook_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+	gamehook_chain_client_connect_real = hook_client_connect_real;
 	hook_DamageForceModsSet_NextLink = gamehook_chain_damage_mods_set;
 	gamehook_chain_damage_mods_set = hook_DamageForceModsSet;
 	hook_PlayerPreThink_NextLink = gamehook_chain_player_think;

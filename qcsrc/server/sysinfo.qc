@@ -109,17 +109,17 @@ void(float id, float status, string data) sysinfo_uri_callback {
 	}
 }
 
-var void() sysinfo_RealClientDisconnect_NextLink;
-void() sysinfo_RealClientDisconnect {
+var void() sysinfo_client_disconnect_real_NextLink;
+void() sysinfo_client_disconnect_real {
 	str_unzone_ifneeded(self.sysinfo);
-	sysinfo_RealClientDisconnect_NextLink();
+	sysinfo_client_disconnect_real_NextLink();
 }
 
 void() sysinfo_init {
 	CVAR_CACHE_STR(sv_sysinfo_checker);
 	sysinfo_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = sysinfo_ClientCommandHandle;
-	sysinfo_RealClientDisconnect_NextLink = gamehook_chain_RealClientDisconnect;
-	gamehook_chain_RealClientDisconnect = sysinfo_RealClientDisconnect;
+	sysinfo_client_disconnect_real_NextLink = gamehook_chain_client_disconnect_real;
+	gamehook_chain_client_disconnect_real = sysinfo_client_disconnect_real;
 	URI_SYSINFO_CHECKER = uri_register_handler(sysinfo_uri_callback);
 }

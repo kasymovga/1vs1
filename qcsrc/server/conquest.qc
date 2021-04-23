@@ -288,11 +288,11 @@ float(entity attacker, entity targ, float f) conquest_score_give_frag_mod {
 	return 0;
 }
 
-entity() conquest_SelectSpawnPoint {
+entity() conquest_client_put_spawn_point {
 	if not(conquest_team_can_spawn(self.team))
 		return world;
 
-	return onslaught_SelectSpawnPoint();
+	return onslaught_client_put_spawn_point();
 }
 
 void() conquest_world_reset {
@@ -358,7 +358,7 @@ void(void) conquest_init {
 
 	gamehook_winning_condition = conquest_winning_condition;
 	gamehook_score_give_frag_mod = conquest_score_give_frag_mod;
-	gamehook_SelectSpawnPoint = conquest_SelectSpawnPoint;
+	gamehook_client_put_spawn_point = conquest_client_put_spawn_point;
 	gamehook_player_death_handle = onslaught_DeathHandle;
 	onslaught_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = onslaught_Spawn;

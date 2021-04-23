@@ -129,6 +129,11 @@ void() spectator_think {
 		}
 	}
 	self.flags |= FL_CLIENT | FL_NOTARGET;
+	float oldspectatee_status;
+	oldspectatee_status = self.spectatee_status & 255;
+	self.spectatee_status = num_for_edict(self.enemy) | (self.enemy.BUTTON_ZOOM ? 256 : 0);
+	if ((self.spectatee_status & 255) != (oldspectatee_status & 255))
+		gamehook_InitSpectator();
 }
 
 void() spectator_observer_think {

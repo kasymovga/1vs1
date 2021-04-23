@@ -37,10 +37,10 @@ float irc_reconnect_time;
 float irc_disconnections;
 float irc_gamestart_wasannounced;
 
-var void() IRC_Announce_RealClientConnect_NextLink;
-void IRC_Announce_RealClientConnect();
-var void() IRC_Announce_RealClientDisconnect_NextLink;
-void IRC_Announce_RealClientDisconnect();
+var void() IRC_Announce_client_connect_real_NextLink;
+void IRC_Announce_client_connect_real();
+var void() IRC_Announce_client_disconnect_real_NextLink;
+void IRC_Announce_client_disconnect_real();
 var void(entity plr, string msg) IRC_PublicPlayerChat_NextLink;
 void IRC_PublicPlayerChat(entity plr, string msg);
 
@@ -229,10 +229,10 @@ void IRC_Init(void) {
     irc.nextthink = time + 5;
     
     IRC_Announce_GameStart();
-	IRC_Announce_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
-	gamehook_chain_RealClientConnect = IRC_Announce_RealClientConnect;
-	IRC_Announce_RealClientDisconnect_NextLink = gamehook_chain_RealClientDisconnect;
-	gamehook_chain_RealClientDisconnect = IRC_Announce_RealClientDisconnect;
+	IRC_Announce_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+	gamehook_chain_client_connect_real = IRC_Announce_client_connect_real;
+	IRC_Announce_client_disconnect_real_NextLink = gamehook_chain_client_disconnect_real;
+	gamehook_chain_client_disconnect_real = IRC_Announce_client_disconnect_real;
 	IRC_PublicPlayerChat_NextLink = gamehook_chain_PublicPlayerChat;
 	gamehook_chain_PublicPlayerChat = IRC_PublicPlayerChat;
 }
@@ -398,17 +398,17 @@ void IRC_Announce_Client(entity plr, float ispart) {
     IRC_Announce_Client_Callback(plr.netaddress, "", ctx);
 }
 
-void IRC_Announce_RealClientConnect() {
+void IRC_Announce_client_connect_real() {
     IRC_Announce_Client(self, FALSE);
     if (!irc_gamestart_wasannounced)
         IRC_Announce_GameStart();
 
-	IRC_Announce_RealClientConnect_NextLink();
+	IRC_Announce_client_connect_real_NextLink();
 }
 
-void IRC_Announce_RealClientDisconnect() {
+void IRC_Announce_client_disconnect_real() {
     IRC_Announce_Client(self, TRUE);
-	IRC_Announce_RealClientDisconnect_NextLink();
+	IRC_Announce_client_disconnect_real_NextLink();
 }
 
 void IRC_Defer_Update_Topic()

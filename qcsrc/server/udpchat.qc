@@ -88,8 +88,8 @@ void UDPChat_PupblicPlayerChat(entity source, string msg) {
 }
 
 float udpchat_game_announced;
-var void() UDPChat_RealClientConnect_NextLink;
-void UDPChat_RealClientConnect() {
+var void() UDPChat_client_connect_real_NextLink;
+void UDPChat_client_connect_real() {
 	if not(udpchat_game_announced) {
 		string s = strtoupper(cvar_string("g_profile"));
 		if (s != "")
@@ -100,7 +100,7 @@ void UDPChat_RealClientConnect() {
 		UDPChat_SendPacket(strcat(" * server ", sv_udpchat_id, " playing ", s, " on ", mapname));
 		udpchat_game_announced = TRUE;
 	}
-	UDPChat_RealClientConnect_NextLink();
+	UDPChat_client_connect_real_NextLink();
 }
 
 void UDPChat_Init() {
@@ -113,8 +113,8 @@ void UDPChat_Init() {
     extresponse_register_handler("udpchat", UDPChat_ER_Response_Callback, world);
 	UDPChat_PupblicPlayerChat_NextLink = gamehook_chain_PublicPlayerChat;
 	gamehook_chain_PublicPlayerChat = UDPChat_PupblicPlayerChat;
-	UDPChat_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
-	gamehook_chain_RealClientConnect = UDPChat_RealClientConnect;
+	UDPChat_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+	gamehook_chain_client_connect_real = UDPChat_client_connect_real;
 	registercvar("_sv_udpchat_msgsent", "0");
 }
 

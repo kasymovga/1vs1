@@ -28,8 +28,8 @@ string mmss(float tenths) {
 	return strcat(ftos(minutes), ":", substring(s, 1, 2));
 }
 
-var void() Radio_RealClientConnect_NextLink;
-void Radio_RealClientConnect(void);
+var void() Radio_client_connect_real_NextLink;
+void Radio_client_connect_real(void);
 
 var void() Radio_ServerFrame_NextLink;
 void Radio_ServerFrame(void);
@@ -62,8 +62,8 @@ void Radio_Init(void) {
 	CVAR_CACHE(sv_radio_queue_advanceat);
 	CVAR_CACHE(sv_radio_queue_autofill_retry);
 	CVAR_CACHE(sv_radio_log_skips);
-	Radio_RealClientConnect_NextLink = gamehook_chain_RealClientConnect;
-	gamehook_chain_RealClientConnect = Radio_RealClientConnect;
+	Radio_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+	gamehook_chain_client_connect_real = Radio_client_connect_real;
 	Radio_ServerFrame_NextLink = gamehook_chain_world_frame_start;
 	gamehook_chain_world_frame_start = Radio_ServerFrame;
 	Radio_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
@@ -317,12 +317,12 @@ void Radio_URI_Get_Callback(float id, float status, string data) {
 	Radio_Queue(argv(0), argv(1), stof(argv(2)), d);
 }
 
-void Radio_ClientConnect_Delayed(void) {
+void Radio_client_connect_Delayed(void) {
 	Radio_SendPlay(self, FALSE);
 }
 
-void Radio_RealClientConnect(void) {
-	Radio_RealClientConnect_NextLink();
+void Radio_client_connect_real(void) {
+	Radio_client_connect_real_NextLink();
 	if (player_count - bot_count == 1)
 		defer(5, Radio_Queue_PlayFirst);
 
@@ -331,7 +331,7 @@ void Radio_RealClientConnect(void) {
 
 	if(sv_radio_preload)
 		Radio_SendPreload(self, radio_url);
-	defer(3, Radio_ClientConnect_Delayed);
+	defer(3, Radio_client_connect_Delayed);
 }
 
 float Radio_ClientCommandHandle(string cmd, float tokens) {

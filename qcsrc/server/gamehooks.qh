@@ -9,7 +9,7 @@ var float(entity plr, float wep) gamehook_chain_PlayerCanFire = { return TRUE; }
 var float() gamehook_PlayerAllowedToMove = { return TRUE; }
 var void() gamehook_PhysicFrameBegin = {}
 var void(void) gamehook_chain_player_think = {}
-var entity() gamehook_SelectSpawnPoint = {
+var entity() gamehook_client_put_spawn_point = {
 	entity spot;
 	spot = spawn_select(FALSE);
 	if not(spot)
@@ -46,7 +46,7 @@ var float() gamehook_WarmupAllowed = { return TRUE; }
 var float() gamehook_ReadyAllowed = { return FALSE; }
 var float() gamehook_ClearScoreAllowed = { return TRUE; }
 var float() gamehook_TelefragsAllowed = { return TRUE; }
-var string() gamehook_FixClientCvars = { return ""; }
+var string() gamehook_client_fix_cvars = { return ""; }
 var string(string bspname) gamehook_RecordForMap = { return ""; }
 var float() gamehook_ReadyRestartHard = { return FALSE; }
 var float() gamehook_chain_weapon_frame_handle = { return FALSE; }
@@ -79,9 +79,9 @@ var float(entity item, entity player) gamehook_chain_ItemGiveToHandle = { return
 float gamehook_chain_ItemGiveToHandle_PickedUp;
 float gamehook_chain_ItemGiveToHandle_SwitchWeapon;
 var float(float wpn) gamehook_chain_WeaponSpawnHandle = { return FALSE; }
-var void() gamehook_chain_RealClientConnect = {}
-var void() gamehook_chain_ClientConnect = {}
-var void() gamehook_chain_RealClientDisconnect = {}
+var void() gamehook_chain_client_connect_real = {}
+var void() gamehook_chain_client_connect = {}
+var void() gamehook_chain_client_disconnect_real = {}
 var void() gamehook_chain_world_frame_start = {}
 var float() gamehook_chain_ItemForbidden = { return FALSE; }
 var void() gamehook_chain_player_effects = {}
