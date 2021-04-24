@@ -79,16 +79,16 @@ void() coop_observer_spawn {
 	}
 }
 
-float() coop_IceSkipDeathHandle {
+float() coop_ice_skip_death_handle {
 	return !self.wasplayer;
 }
 
-void() coop_IceUnfroze {
+void() coop_ice_unfroze {
 	return;
 }
 
 
-void() coop_IceFrozenStatus {
+void() coop_ice_frozen_status {
 	entity e;
 	FOR_EACH_PLAYER(e) {
 		if (e.deadflag == DEAD_NO)
@@ -99,9 +99,9 @@ void() coop_IceFrozenStatus {
 }
 
 void(void) coop_init_delayed {
-	ice_hook_frozen_status = coop_IceFrozenStatus;
-	ice_hook_skip_death_handle = coop_IceSkipDeathHandle;
-	ice_hook_unfroze = coop_IceUnfroze;
+	ice_hook_frozen_status = coop_ice_frozen_status;
+	ice_hook_skip_death_handle = coop_ice_skip_death_handle;
+	ice_hook_unfroze = coop_ice_unfroze;
 	ice_init();
 }
 
