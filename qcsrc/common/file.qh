@@ -1,1 +1,2 @@
 float(string path) file_exists;
+float(string path) file_exists_image;
