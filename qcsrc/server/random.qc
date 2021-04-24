@@ -42,19 +42,15 @@ void() random_selection_init {
 }
 
 void(entity e, float f, string s, float weight, float priority) random_selection_add {
-	if(priority > random_selection_best_priority)
-	{
+	if (priority > random_selection_best_priority) {
 		random_selection_best_priority = priority;
 		random_selection_chosen_ent = e;
 		random_selection_chosen_float = f;
 		random_selection_chosen_string = s;
 		random_selection_totalweight = weight;
-	}
-	else if(priority == random_selection_best_priority)
-	{
+	} else if (priority == random_selection_best_priority) {
 		random_selection_totalweight += weight;
-		if(random() * random_selection_totalweight <= weight)
-		{
+		if (random() * random_selection_totalweight <= weight) {
 			random_selection_chosen_ent = e;
 			random_selection_chosen_float = f;
 			random_selection_chosen_string = s;
