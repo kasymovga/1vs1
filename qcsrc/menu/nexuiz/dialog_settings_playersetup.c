@@ -131,7 +131,7 @@ void fillNexuizPlayerSettingsTab(entity me)
 		}
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair Size:")));
-		me.TD(me, 1, 2, e = makeNexuizSlider(0.40, 2, 0.05, "crosshair_size"));
+		me.TD(me, 1, 2, e = makeNexuizSlider(0.20, 4, 0.05, "crosshair_size"));
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair Alpha:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_alpha"));
