@@ -94,16 +94,16 @@ void drawBackground(string img, float a, float algn, float force1)
 		switch(f)
 		{
 			case 1: case 4: case 7: v_x = tl_x; break;
+			default:
 			case 2: case 5: case 8: v_x = ce_x; break;
 			case 3: case 6: case 9: v_x = br_x; break;
-			default: v_x = tl_x + (br_x - tl_x) * random(); break;
 		}
 		switch(f)
 		{
 			case 7: case 8: case 9: v_y = tl_y; break;
+			default:
 			case 4: case 5: case 6: v_y = ce_y; break;
 			case 1: case 2: case 3: v_y = br_y; break;
-			default: v_y = tl_y + (br_y - tl_y) * random(); break;
 		}
 		if(i == 0)
 			draw_Picture(v, img, isz, '1 1 1', a);
