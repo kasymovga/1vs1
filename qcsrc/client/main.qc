@@ -45,11 +45,7 @@ void(void) CSQC_Init {
 	db_temp = db_create();
 	net_compress_vector_init();
 	view_crosshairdot_tex = "gfx/crosshair6";
-	if (file_exists("gfx/crosshairdot") || file_exists("gfx/crosshairdot.png"))
-		view_crosshairdot_tex = "gfx/crosshairdot";
-
 	drawfont = 0;
-
 	for(i = 0; i < 255; ++i)
 		if(getplayerkey(i, "viewentity") == "")
 			break;
