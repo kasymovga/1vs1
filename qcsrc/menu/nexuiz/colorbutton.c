@@ -32,6 +32,9 @@ void configureNexuizColorButtonNexuizColorButton(entity me, float theGroup, floa
 	me.cvarValueFloat = theValue;
 	me.cvarPart = theColor;
 	me.loadCvars(me);
+	if not(file_exists_image(draw_UseSkinFor(me.image2)))
+		me.image2 = "";
+
 	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	me.src2 = me.image2;
@@ -70,7 +73,11 @@ void saveCvarsNexuizColorButton(entity me)
 }
 void drawNexuizColorButton(entity me)
 {
-	me.color2 = colormap_palette_color(me.cvarValueFloat, me.cvarPart);
+	if (me.image2 == "")
+		me.colorF = me.colorC = me.color = colormap_palette_color(me.cvarValueFloat, me.cvarPart);
+	else
+		me.color2 = colormap_palette_color(me.cvarValueFloat, me.cvarPart);
+
 	drawCheckBox(me);
 }
 #endif

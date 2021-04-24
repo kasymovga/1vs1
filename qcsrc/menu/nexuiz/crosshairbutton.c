@@ -30,6 +30,9 @@ void configureNexuizCrosshairButtonNexuizCrosshairButton(entity me, float theGro
 	me.cvarName = "crosshair";
 	me.cvarValueFloat = theCrosshair;
 	me.loadCvars(me);
+	if not(file_exists_image(strcat(draw_UseSkinFor(me.image), "_c")))
+		me.image = "/gfx/menu/default/crosshairbutton";
+
 	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
