@@ -208,12 +208,12 @@ float(string cmd, float tokens) timeout_ClientCommandHandle {
 	return timeout_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-var float(float tempo) timeout_TempoMod_NextLink;
-float(float tempo) timeout_TempoMod {
+var float(float tempo) timeout_slowmo_update_mod_NextLink;
+float(float tempo) timeout_slowmo_update_mod {
 	if (timeoutStatus == 2)
 		return TIMEOUT_SLOWMO_VALUE;
 
-	return timeout_TempoMod_NextLink(tempo);
+	return timeout_slowmo_update_mod_NextLink(tempo);
 }
 
 var void(void(string item, string cmd) Add_Item) timeout_gamemenu_send_NextLink;
@@ -230,8 +230,8 @@ void() timeout_init {
 	gamehook_chain_cmd_client_handle = timeout_ClientCommandHandle;
 	timeout_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
 	gamehook_chain_cmd_game_handle = timeout_cmd_game_handle;
-	timeout_TempoMod_NextLink = gamehook_chain_TempoMod;
-	gamehook_chain_TempoMod = timeout_TempoMod;
+	timeout_slowmo_update_mod_NextLink = gamehook_chain_slowmo_update_mod;
+	gamehook_chain_slowmo_update_mod = timeout_slowmo_update_mod;
 	timeout_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = timeout_gamemenu_send;
 }

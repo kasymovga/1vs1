@@ -91,13 +91,13 @@ float(string s) dlc_load_settemps_from {
 	return TRUE;
 }
 
-void dlc_exec_cfg(string dlc_name) {
+void(string dlc_name) dlc_exec_cfg {
 	dlc_load_settemps_from(strcat("rexdlc_", dlc_name, "_settemps.cfg"));
 	if (file_exists(strcat("rexdlc_", dlc_name, "_server.cfg")))
 		localcmd(strcat("exec rexdlc_", dlc_name, "_server.cfg", "\n"));
 }
 
-void dlc_unload_settemps() {
+void(void) dlc_unload_settemps {
 	float n = cvar("_dlc_settemps_count");
 	float i;
 	for (i = 0; i < n; i++) {
@@ -106,7 +106,7 @@ void dlc_unload_settemps() {
 	cvar_set("_dlc_settemps_count", "0");
 }
 
-void dlc_load_exts() {
+void(void) dlc_load_exts {
 	dlc_unload_settemps();
 	float search = search_begin("rexext_*.cfg", TRUE, TRUE);
 	if (search < 0)
@@ -137,7 +137,7 @@ void dlc_load_exts() {
 	search_end(search);
 }
 
-void dlc_reset_all() {
+void(void) dlc_reset_all {
 	entity e = self;
 	for (self = nextent(world); self; self = nextent(self)) {
 		if (self.dlc_reset) {
@@ -155,7 +155,8 @@ void dlc_reset_all() {
 	}
 }
 
-void DLCWait() {
+#define dlc_wait_think DLCWait //compatibility with old save files
+void(void) dlc_wait_think {
 	if (dlc_ready_all()) {
 		string list, s;
 		list = dlc_list;
@@ -183,7 +184,8 @@ void DLCWait() {
 	self.nextthink = time + 1;
 }
 
-float dlc_SendEntity(entity to, float sf) {
+#define dlc_send dlc_SendEntity //compatibility with old save files
+float(entity to, float sf) dlc_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_LIST);
 	sf &~= 12;
 	if (to.netaddress == "local") {
@@ -206,17 +208,17 @@ float dlc_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-void dlc_require_server_only(string dlc_name) {
+void(string dlc_name) dlc_require_server_only {
 	if (dlc_load(dlc_name, FALSE))
 		dlc_exec_cfg(dlc_name); //Just in case
 	else if not(dlc_wait) {
 		dlc_wait = spawn();
-		dlc_wait.think = DLCWait;
+		dlc_wait.think = dlc_wait_think;
 		dlc_wait.nextthink = time + 0.2;
 	}
 }
 
-void dlc_require(string dlc_name) {
+void(string dlc_name) dlc_require {
 	string s, list;
 	list = cvar_string("sv_curl_serverpackages");
 	float add_to_server_packages;
@@ -229,7 +231,6 @@ void dlc_require(string dlc_name) {
 			break;
 		}
 	}
-
 	if (add_to_server_packages)
 		cvar_set("sv_curl_serverpackages", strcat(cvar_string("sv_curl_serverpackages"), " ", dlc_serverpackage_name(dlc_name)));
 
@@ -242,7 +243,7 @@ void dlc_require(string dlc_name) {
 	}
 	if not(dlc) {
 		dlc = spawn();
-		net_link_entity(dlc, FALSE, 0, dlc_SendEntity);
+		net_link_entity(dlc, FALSE, 0, dlc_send);
 	} else
 		dlc.SendFlags |= 2;
 
@@ -281,12 +282,12 @@ float(string cmd, float argc) dlc_cmd_game_handle {
 	return dlc_cmd_game_handle_NextLink(cmd, argc);
 }
 
-var float(float tempo) dlc_TempoMod_NextLink;
-float(float tempo) dlc_TempoMod {
+var float(float tempo) dlc_slowmo_update_mod_NextLink;
+float(float tempo) dlc_slowmo_update_mod {
 	if (dlc_pause)
 		return 0;
 
-	return dlc_TempoMod_NextLink(tempo);
+	return dlc_slowmo_update_mod_NextLink(tempo);
 }
 
 void(void) dlc_extra_pk3_list_build {
@@ -316,7 +317,7 @@ void(void) dlc_extra_pk3_list_build {
 		dlc_extra_pk3_list = ""; //prevent dangerous symbols in localcm
 }
 
-void dlc_init() {
+void(void) dlc_init {
 	string s;
 	registercvar("_dlc_settemps_count", "0");
 	dlc_set_repos(cvar_string("sv_dlc_repository"));
@@ -366,17 +367,17 @@ void dlc_init() {
 	dlc_extra_pk3_list_build();
 	dlc_cmd_game_handle_NextLink = gamehook_chain_cmd_game_handle;
 	gamehook_chain_cmd_game_handle = dlc_cmd_game_handle;
-	dlc_TempoMod_NextLink = gamehook_chain_TempoMod;
-	gamehook_chain_TempoMod = dlc_TempoMod;
+	dlc_slowmo_update_mod_NextLink = gamehook_chain_slowmo_update_mod;
+	gamehook_chain_slowmo_update_mod = dlc_slowmo_update_mod;
 }
 
-void dlc_finish() {
+void(void) dlc_finish {
 	dlc_unload_settemps();
 }
 
 entity dlc_wait_reload;
 
-void DLCWaitReload() {
+void(void) dlc_wait_reload_think {
 	if (dlc_ready_all()) {
 		localcmd("\n");
 		string list = dlc_list;
@@ -402,7 +403,7 @@ void DLCWaitReload() {
 		self.nextthink = time + 1;
 }
 
-void dlc_reload() {
+void(void) dlc_reload {
 	string list = dlc_list;
 	string s;
 	while (list != "") {
@@ -420,12 +421,12 @@ void dlc_reload() {
 	}
 	if not(dlc_wait_reload) {
 		dlc_wait_reload = spawn();
-		dlc_wait_reload.think = DLCWaitReload;
+		dlc_wait_reload.think = dlc_wait_reload_think;
 		dlc_wait_reload.nextthink = time + 0.2;
 	}
 }
 
-void dlc_precache_sound(string s) {
+void(string s) dlc_precache_sound {
 	string l, head;
 	l = dlc_sounds;
 	while (l != "") {
@@ -440,7 +441,7 @@ void dlc_precache_sound(string s) {
 	dlc.SendFlags |= 8;
 }
 
-void dlc_sound_think() {
+void(void) dlc_sound_think {
 	if (time > self.pushltime) {
 		remove(self);
 		return;
@@ -452,7 +453,8 @@ void dlc_sound_think() {
 	self.nextthink = time;
 }
 
-float dlc_sound_SendEntity(entity to, float sf) {
+#define dlc_sound_send dlc_sound_SendEntity //compatibility with old save files
+float(entity to, float sf) dlc_sound_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_SOUND);
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
@@ -479,7 +481,7 @@ entity dlc_sound(entity e, float chan, string s, float vol, float attn) {
 	snd.nextthink = time + 0.5;
 	snd.origin = e.origin;
 	snd.owner = e;
-	net_link_entity(snd, FALSE, 0, dlc_sound_SendEntity);
+	net_link_entity(snd, FALSE, 0, dlc_sound_send);
 	return snd;
 }
 
@@ -490,13 +492,11 @@ void dlc_sound_follow(entity e, float chan, string s, float vol, float attn) {
 	snd.pushltime = time + 2;
 }
 
-float dlc_sound_spam(entity e, float chan, string samp, float vol, float attn)
-{
-    if (time > e.announcetime)
-    {
-        e.announcetime = time;
-        dlc_sound(e, chan, samp, vol, attn);
-        return TRUE;
-    }
-    return FALSE;
+float(entity e, float chan, string samp, float vol, float attn) dlc_sound_spam {
+	if (time > e.announcetime) {
+		e.announcetime = time;
+		dlc_sound(e, chan, samp, vol, attn);
+		return TRUE;
+	}
+	return FALSE;
 }

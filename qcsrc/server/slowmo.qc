@@ -1,4 +1,4 @@
 void(void) slowmo_update {
-	slowmo = gamehook_chain_TempoMod(1);
+	slowmo = gamehook_chain_slowmo_update_mod(1);
 	cvar_set("slowmo", ftos(slowmo));
 }
