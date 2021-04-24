@@ -15,7 +15,9 @@ float sv_model_ice_use_skins;
 .float unfroze_progress;
 .entity unfroze_pb;
 
-void Ice_Remove() {
+void(void) ice_think;
+
+void(void) ice_remove {
 	if (self.ice) {
 		remove(self.ice.ice);
 		remove(self.ice);
@@ -31,7 +33,7 @@ void Ice_Remove() {
 	WaypointSprite_DetachCarrier(self);
 }
 
-float Ice_Customize() {
+float(void) ice_customize {
 	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EF_NODEPTHTEST;
 	else
@@ -62,15 +64,13 @@ float(entity to, float sf) ice_pov_send {
 	return TRUE;
 }
 
-float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
-{
-	if (IceHook_SkipDeathHandle)
-	if (IceHook_SkipDeathHandle())
+float(entity attacker, entity inflictor, float deathtype) ice_player_death_handle {
+	if (ice_hook_skip_death_handle)
+	if (ice_hook_skip_death_handle())
 		return FALSE;
 
 	player_clear(TRUE);
 	Roundbased_NeedCheckTeams();
-
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
 
@@ -80,8 +80,8 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.deadflag = DEAD_FREEZE;
 	self.clipgroup = 0;
 	self.health = player_start_health;
-	if (IceHook_FrozenStatus)
-		IceHook_FrozenStatus();
+	if (ice_hook_frozen_status)
+		ice_hook_frozen_status();
 
 	if (self.ice)
 		return TRUE;
@@ -96,10 +96,10 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	self.ice.alpha = sv_model_ice_alpha;
 	self.ice.scale = sv_model_ice_scale;
 	self.ice.owner = self;
-	self.ice.think = Ice_Think;
+	self.ice.think = ice_think;
 	self.ice.nextthink = time;
 	self.ice.team = self.team;
-	self.ice.customizeentityforclient = Ice_Customize;
+	self.ice.customizeentityforclient = ice_customize;
 	self.ice.ice = spawn();
 	self.ice.ice.owner = self;
 	self.ice.ice.enemy = self.ice;
@@ -122,24 +122,21 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 	return TRUE;
 }
 
-void Ice_Think()
-{
+void(void) ice_think {
 	self.nextthink = time + ICE_FRAME_TIME;
-	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self)
-	{
+	if (self.owner.deadflag != DEAD_FREEZE || self.owner.ice != self) {
 		if (self.unfroze_pb) //for self.owner.ice != self case
 			remove(self.unfroze_pb);
 
 		self.unfroze_pb = world;
 		entity oldself = self;
 		self = self.owner;
-		Ice_Remove();
+		ice_remove();
 		self = oldself;
 		return;
 	}
-
-	if (IceHook_SkipThink)
-	if (IceHook_SkipThink())
+	if (ice_hook_skip_think)
+	if (ice_hook_skip_think())
 		return;
 
 	float oldprogress = self.unfroze_progress;
@@ -149,12 +146,9 @@ void Ice_Think()
 	}
 	entity e, unfrozer;
 	unfrozer = world;
-	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100 && player_entity(e) == e)
-	{
+	if (self.last_unfrozer && self.last_unfrozer.deadflag == DEAD_NO && vlen(self.last_unfrozer.origin - self.owner.origin) <= 100 && player_entity(e) == e) {
 		unfrozer = self.last_unfrozer;
-	}
-	else FOR_EACH_PLAYER(e)
-	{
+	} else FOR_EACH_PLAYER(e) {
 		if (e == self.owner || e.team != self.owner.team || e.deadflag != DEAD_NO || vlen(e.origin - self.owner.origin) > 100 || player_entity(e) != e)
 			continue;
 
@@ -166,8 +160,7 @@ void Ice_Think()
 	if (time > self.fade_time)
 		unfrozer = self;
 
-	if (unfrozer != self.last_unfrozer)
-	{
+	if (unfrozer != self.last_unfrozer) {
 		if (self.unfroze_pb)
 			remove(self.unfroze_pb);
 
@@ -191,8 +184,7 @@ void Ice_Think()
 		self.last_unfrozer = world;
 		unfroze_scale = g_ice_unfroze_time / g_ice_autorevive_time;
 	}
-	if (unfrozer)
-	{
+	if (unfrozer) {
 		self.unfroze_progress += ICE_FRAME_TIME * unfroze_scale;
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL) {
 			if (self.unfroze_pb)
@@ -208,8 +200,7 @@ void Ice_Think()
 			bot_stay(self.owner, ICE_FRAME_TIME);
 		}
 	}
-	if (self.unfroze_progress >= g_ice_unfroze_time)
-	{
+	if (self.unfroze_progress >= g_ice_unfroze_time) {
 		if (clienttype(unfrozer) == CLIENTTYPE_REAL)
 			centerprint(unfrozer, strcat("^4You revive ^7", self.owner.netname, "\n"));
 
@@ -221,12 +212,11 @@ void Ice_Think()
 			bprint ("^1", self.owner.netname, "^1 was autorevived\n");
 			centerprint(self.owner, "^4You autorevived\n");
 		}
-		IceHook_Unfroze(unfrozer);
+		ice_hook_unfroze(unfrozer);
 		self.owner.deadflag = DEAD_NO;
 		player_body_setup(self.owner);
 		return;
 	}
-
 	if (self.unfroze_progress == oldprogress)
 	if (oldprogress != 0)
 		self.unfroze_progress = max(0, oldprogress - ICE_FRAME_TIME);
@@ -237,34 +227,31 @@ void Ice_Think()
 	}
 }
 
-var void(float killed) Ice_PlayerClear_NextLink;
-void Ice_PlayerClear(float killed)
-{
-	Ice_Remove();
-	Ice_PlayerClear_NextLink(killed);
+var void(float killed) ice_player_clear_next;
+void ice_player_clear(float killed) {
+	ice_remove();
+	ice_player_clear_next(killed);
 }
 
-var void(entity spot) Ice_Spawn_NextLink;
-void Ice_Spawn(entity spot)
-{
-	Ice_Spawn_NextLink(spot);
-	Ice_DeathHandle(world, world, 0);
+var void(entity spot) ice_spawn_next;
+void(entity spot) ice_spawn {
+	ice_spawn_next(spot);
+	ice_player_death_handle(world, world, 0);
 }
 
-var float() Ice_SpeedMod_NextLink;
-float Ice_SpeedMod() {
-	float f = Ice_SpeedMod_NextLink();
+var float() ice_physics_max_speed_mod_next;
+float() ice_physics_max_speed_mod {
+	float f = ice_physics_max_speed_mod_next();
 	if (self.deadflag == DEAD_FREEZE)
 		return g_ice_slowdown * f;
 
 	return f;
 }
 
-var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) Ice_player_damage_handle_NextLink;
-float Ice_player_damage_handle(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
+var float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) ice_player_damage_handle_next;
+float(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) ice_player_damage_handle {
 	if not(self.deadflag == DEAD_FREEZE)
-		return Ice_player_damage_handle_NextLink(inflictor, attacker, _damage, deathtype, hitloc, force);
+		return ice_player_damage_handle_next(inflictor, attacker, _damage, deathtype, hitloc, force);
 
 	if (attacker)
 	if (attacker.team != self.team)
@@ -286,22 +273,22 @@ float Ice_player_damage_handle(entity inflictor, entity attacker, float _damage,
 	return TRUE;
 }
 
-var void(entity spectatee) Ice_SpecateCopy_NextLink;
-void Ice_SpecateCopy(entity spectatee) {
+var void(entity spectatee) ice_spectator_copy_next;
+void ice_spectator_copy(entity spectatee) {
 	self.deadflag = spectatee.deadflag;
-	Ice_SpecateCopy_NextLink(spectatee);
+	ice_spectator_copy_next(spectatee);
 }
 
-var void(void) ice_PlayerPreThink_next;
-void(void) ice_PlayerPreThink {
+var void(void) ice_player_think_next;
+void(void) ice_player_think {
 	if (self.deadflag == DEAD_FREEZE)
 	if (self.BUTTON_ATCK)
 		self.impulse = 38;
 
-	ice_PlayerPreThink_next();
+	ice_player_think_next();
 }
 
-void Ice_Init() {
+void(void) ice_init {
 	CVAR_CACHE_STR(sv_model_ice); //strzone once and never strunzone
 	precache_model(sv_model_ice);
 	CVAR_CACHE_STR(sv_sound_ice_frag);
@@ -323,17 +310,17 @@ void Ice_Init() {
 	CVAR_CACHE(sv_model_ice_scale);
 	CVAR_CACHE(sv_model_ice_z);
 	CVAR_CACHE(sv_model_ice_use_skins);
-	gamehook_player_death_handle = Ice_DeathHandle;
-	Ice_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = Ice_PlayerClear;
-	Ice_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;
-	gamehook_chain_physics_max_speed_mod = Ice_SpeedMod;
-	Ice_Spawn_NextLink = gamehook_chain_spawn;
-	gamehook_chain_spawn = Ice_Spawn;
-	Ice_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
-	gamehook_chain_player_damage_handle = Ice_player_damage_handle;
-	Ice_SpecateCopy_NextLink = gamehook_chain_spectator_copy;
-	gamehook_chain_spectator_copy = Ice_SpecateCopy;
-	ice_PlayerPreThink_next = gamehook_chain_player_think;
-	gamehook_chain_player_think = ice_PlayerPreThink;
+	gamehook_player_death_handle = ice_player_death_handle;
+	ice_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = ice_player_clear;
+	ice_physics_max_speed_mod_next = gamehook_chain_physics_max_speed_mod;
+	gamehook_chain_physics_max_speed_mod = ice_physics_max_speed_mod;
+	ice_spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = ice_spawn;
+	ice_player_damage_handle_next = gamehook_chain_player_damage_handle;
+	gamehook_chain_player_damage_handle = ice_player_damage_handle;
+	ice_spectator_copy_next = gamehook_chain_spectator_copy;
+	gamehook_chain_spectator_copy = ice_spectator_copy;
+	ice_player_think_next = gamehook_chain_player_think;
+	gamehook_chain_player_think = ice_player_think;
 }

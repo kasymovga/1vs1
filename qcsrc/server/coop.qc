@@ -99,10 +99,10 @@ void() coop_IceFrozenStatus {
 }
 
 void(void) coop_init_delayed {
-	IceHook_FrozenStatus = coop_IceFrozenStatus;
-	IceHook_SkipDeathHandle = coop_IceSkipDeathHandle;
-	IceHook_Unfroze = coop_IceUnfroze;
-	Ice_Init();
+	ice_hook_frozen_status = coop_IceFrozenStatus;
+	ice_hook_skip_death_handle = coop_IceSkipDeathHandle;
+	ice_hook_unfroze = coop_IceUnfroze;
+	ice_init();
 }
 
 void(void) coop_init {

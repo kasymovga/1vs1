@@ -39,11 +39,11 @@ float Freeze_HandleFrags(entity attacker, entity targ, float f) {
 void Freeze_Init_Shared(string gt) {
 	hint_add("You can revive frozen teammates standing close to him");
 	Roundbased_Init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
-	IceHook_SkipThink = Freeze_IceSkipThink;
-	IceHook_SkipDeathHandle = Freeze_IceSkipThink;
-	IceHook_Unfroze = Freeze_IceUnfroze;
-	IceHook_FrozenStatus = Freeze_IceFrozenStatus;
-	Ice_Init();
+	ice_hook_skip_think = Freeze_IceSkipThink;
+	ice_hook_skip_death_handle = Freeze_IceSkipThink;
+	ice_hook_unfroze = Freeze_IceUnfroze;
+	ice_hook_frozen_status = Freeze_IceFrozenStatus;
+	ice_init();
 	Freeze_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = Freeze_Spawn;
 	Freeze_PlayerClear_NextLink = gamehook_chain_player_clear;

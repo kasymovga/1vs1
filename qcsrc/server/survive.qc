@@ -246,11 +246,11 @@ string survive_GameOverMessageMod(string s) {
 
 void survive_init_delayed() {
 	if (g_surv_freeze) {
-		IceHook_SkipThink = survive_IceSkipThink;
-		IceHook_SkipDeathHandle = survive_IceSkipThink;
-		IceHook_Unfroze = survive_IceUnfroze;
-		IceHook_FrozenStatus = survive_IceFrozenStatus;
-		Ice_Init();
+		ice_hook_skip_think = survive_IceSkipThink;
+		ice_hook_skip_death_handle = survive_IceSkipThink;
+		ice_hook_unfroze = survive_IceUnfroze;
+		ice_hook_frozen_status = survive_IceFrozenStatus;
+		ice_init();
 	} else {
 		gamehook_player_death_handle = survive_DeathHandle;
 	}
