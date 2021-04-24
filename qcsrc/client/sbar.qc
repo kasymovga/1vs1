@@ -70,7 +70,7 @@ void(float nr, float fade, float active, float wc) sbar_draw_weapon {
 
 void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float highlighted, float stroke, float alpha, float dflags) sbar_draw_num  {
 	float l, i;
-	string str, tmp, l_length;
+	string str, tmp;
 	float minus, plus;
 	vector vsize, num_color;
 	vsize_x = vsize_y = lettersize;
@@ -99,27 +99,12 @@ void(vector pos, float num, float digits, float showminusplus, float lettersize,
 		str = ftos(num);
 
 	l = strlen(str);
-	l_length = ftos(l);
 	if (l > digits) {
 		str = substring(str, l-digits, 999);
 		l = strlen(str);
 	} else if (l < digits)
 		pos_x += (digits-l) * lettersize;
 
-	if (highlighted == 1) {
-		vector hl_size;
-		hl_size_x = vsize_x * l + vsize_x * 0.2;
-		hl_size_y = vsize_y * 1.1;
-		hl_size_z = 0;
-		if (minus)
-			hl_size_x = hl_size_x + vsize_x;
-
-		vector hl_pos;
-		hl_pos_x = pos_x - lettersize/10;
-		hl_pos_y = pos_y - lettersize/20;
-		hl_pos_z = 0;
-		drawpic(hl_pos, strcat("gfx/hud/sb_highlight_", l_length), hl_size, '1 1 1', alpha, dflags);
-	}
 	if (stroke == 1)
 		num_color = '1 1 1';
 	else
@@ -1293,16 +1278,6 @@ void(void) sbar_timer {
 		bgpos_y = 0;
 		bgpos_z = 0;
 	}
-	if (CVAR(viewsize) <= 100) { // draw timer background when viewsize <= 100
-		if (team_mode)
-			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', team_rgb(team_my) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // timer bg color = team_my color
-		else {
-			sbar_color_x = CVAR(sbar_color_bg_r);
-			sbar_color_y = CVAR(sbar_color_bg_g);
-			sbar_color_z = CVAR(sbar_color_bg_b);
-			drawpic(bgpos, "gfx/hud/sb_timerbg", '120 30 0', sbar_color, sbar_alpha_bg, DRAWFLAG_NORMAL);
-		}
-	}
 	if not(hideminutes) {
 		sbar_draw_num(sbar_topright - '103 0 0' + '0 2 0', minutes, 3, 0, 18, timer_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(sbar_topright - '53 0 0' + '0 1 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -1642,19 +1617,6 @@ void(void) sbar_draw {
 		armor = getstati(STAT_ARMOR);
 		sbar_stat_items = getstati(STAT_ITEMS);
 		stat_weapons = getstati(STAT_WEAPONS);
-		vector bg_size; // hud background size
-		bg_size = '1600 58 0';
-		if (CVAR(viewsize) <= 100 && CVAR(vid_conwidth) <= 1600) {
-			if (team_mode)
-				drawpic(sbar_bottom - '800 58 0', "gfx/hud/sbar", bg_size, team_rgb(team_my) * CVAR(sbar_color_bg_team), sbar_alpha_bg, DRAWFLAG_NORMAL); // hud color = team_my color
-			else {
-				// allow for custom HUD colors in non-teamgames
-				sbar_color_x = CVAR(sbar_color_bg_r);
-				sbar_color_y = CVAR(sbar_color_bg_g);
-				sbar_color_z = CVAR(sbar_color_bg_b);
-				drawpic(sbar_bottom - '800 58 0', "gfx/hud/sbar", bg_size, sbar_color, sbar_alpha_bg, DRAWFLAG_NORMAL);
-			}
-		}
 		vector health_pos, armor_pos;
 		if (CVAR(sbar_hudselector) == 0) { // old style layout with armor left of health
 			armor_pos = sbar_bottom - '96 28 0';
@@ -1746,8 +1708,6 @@ void(void) sbar_draw {
 						pos_y = 33;
 					}
 					pos = sbar_bottom - pos;
-					if (CVAR(vid_conwidth) >= 800)
-						drawpic(pos + '0 1.5 0', "gfx/hud/sb_ammobg", '107 29 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					if (a < 10)
 						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
