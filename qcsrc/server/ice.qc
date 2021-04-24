@@ -78,6 +78,7 @@ float Ice_DeathHandle(entity attacker, entity inflictor, float deathtype)
 		player_obituary(attacker, inflictor, self, deathtype);
 
 	self.deadflag = DEAD_FREEZE;
+	self.clipgroup = 0;
 	self.health = player_start_health;
 	if (IceHook_FrozenStatus)
 		IceHook_FrozenStatus();
@@ -222,6 +223,7 @@ void Ice_Think()
 		}
 		IceHook_Unfroze(unfrozer);
 		self.owner.deadflag = DEAD_NO;
+		player_body_setup(self.owner);
 		return;
 	}
 
