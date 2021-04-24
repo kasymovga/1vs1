@@ -124,13 +124,13 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 	lapstr = "";
 	if (histime == 0) { // goal hit
 		if (mytime > 0) {
-			timestr = strcat("+", str_float_decimals(+mytime, SBAR_TIME_DECIMALS));
+			timestr = strcat("+", str_float_decimals(TIME_DECODE(+mytime), SBAR_TIME_DECIMALS));
 			col = "^1";
 		} else if (mytime == 0) {
 			timestr = "+0.0";
 			col = "^3";
 		} else {
-			timestr = strcat("-", str_float_decimals(-mytime, SBAR_TIME_DECIMALS));
+			timestr = strcat("-", str_float_decimals(TIME_DECODE(-mytime), SBAR_TIME_DECIMALS));
 			col = "^2";
 		}
 		if (lapdelta > 0) {
@@ -143,7 +143,7 @@ string(float cp, float mytime, float histime, float lapdelta, string hisname) ra
 	}
 	else if (histime > 0) { // anticipation
 		if (mytime >= histime)
-			timestr = strcat("+", str_float_decimals(mytime - histime, SBAR_TIME_DECIMALS));
+			timestr = strcat("+", str_float_decimals(TIME_DECODE(mytime - histime), SBAR_TIME_DECIMALS));
 		else
 			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(histime));
 
@@ -286,7 +286,7 @@ void(void) race_sbar_draw {
 				s = race_checkpoint_string(race_checkpoint, 0, -1, 0, race_previousbestname);
 
 			if (race_time)
-				forcetime = TIME_TOSTRING(race_time);
+				forcetime = time_mmssss(race_time);
 		} else {
 			if (race_laptime && race_nextbesttime && race_nextcheckpoint != 254) {
 				a = bound(0, 2 - ((race_laptime + race_nextbesttime) - (time + race_penaltyaccumulator)), 1);

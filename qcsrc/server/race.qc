@@ -274,7 +274,7 @@ void(entity e, float spec) race_checkpoint_next_send { // qualifying only
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_QUALIFYING);
 
 		WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player will be at next
-		net_write_int24(MSG_ONE, recordtime);
+		net_write_int24(MSG_ONE, TIME_ENCODE(recordtime));
 		WriteString(MSG_ONE, recordholder);
 	});
 }
@@ -395,8 +395,8 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 			WriteByte(MSG_ONE, TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 			WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player now is at
-			net_write_int24(MSG_ONE, t); // time to that intermediate
-			net_write_int24(MSG_ONE, recordtime); // previously best time
+			net_write_int24(MSG_ONE, TIME_ENCODE(t)); // time to that intermediate
+			net_write_int24(MSG_ONE, TIME_ENCODE(recordtime)); // previously best time
 			WriteString(MSG_ONE, recordholder); // record holder
 		});
 	} else { // RACE! Not Qualifying
