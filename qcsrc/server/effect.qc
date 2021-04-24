@@ -22,18 +22,15 @@ vector effect_curveparticles_start;
 float effect_curveparticles_spd;
 
 void() effect_curveparticles_end {
-	if(effect_curveparticles_effectno)
-	{
-		// terminator
+	if (effect_curveparticles_effectno) // terminator
 		WriteShort(MSG_BROADCAST, effect_curveparticles_spd | 0x8000);
-	}
+
 	effect_curveparticles_effectno = 0;
 }
 
 void(float effectno, vector start, vector end, float end_dz, float spd) effect_curveparticles {
 	spd = bound(0, floor(spd / 16), 32767);
-	if(effectno != effect_curveparticles_effectno || start != effect_curveparticles_start)
-	{
+	if (effectno != effect_curveparticles_effectno || start != effect_curveparticles_start) {
 		effect_curveparticles_end();
 		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 		WriteByte(MSG_BROADCAST, TE_CSQC_ZCURVEPARTICLES);
@@ -43,9 +40,9 @@ void(float effectno, vector start, vector end, float end_dz, float spd) effect_c
 		WriteCoord(MSG_BROADCAST, start_z);
 		effect_curveparticles_effectno = effectno;
 		effect_curveparticles_start = start;
-	}
-	else
+	} else
 		WriteShort(MSG_BROADCAST, effect_curveparticles_spd);
+
 	WriteCoord(MSG_BROADCAST, end_x);
 	WriteCoord(MSG_BROADCAST, end_y);
 	WriteCoord(MSG_BROADCAST, end_z);
@@ -56,7 +53,6 @@ void(float effectno, vector start, vector end, float end_dz, float spd) effect_c
 void(float effectno, vector start, vector end, vector vel) effect_curveparticles_from_tracetoss {
 	float end_dz;
 	vector vecxy, velxy;
-
 	vecxy = end - start;
 	vecxy_z = 0;
 	velxy = vel;
@@ -72,13 +68,14 @@ void(float effectno, vector start, vector end, vector vel) effect_curveparticles
 float(entity to, float sf) effect_model_send {
 	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
-
 	f = 0;
-	if(self.velocity != '0 0 0')
+	if (self.velocity != '0 0 0')
 		f |= 1;
-	if(self.angles != '0 0 0')
+
+	if (self.angles != '0 0 0')
 		f |= 2;
-	if(self.avelocity != '0 0 0')
+
+	if (self.avelocity != '0 0 0')
 		f |= 4;
 
 	WriteByte(MSG_ENTITY, f);
@@ -88,20 +85,17 @@ float(entity to, float sf) effect_model_send {
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);
 	WriteCoord(MSG_ENTITY, self.origin_z);
-	if(f & 1)
-	{
+	if (f & 1) {
 		WriteCoord(MSG_ENTITY, self.velocity_x);
 		WriteCoord(MSG_ENTITY, self.velocity_y);
 		WriteCoord(MSG_ENTITY, self.velocity_z);
 	}
-	if(f & 2)
-	{
+	if (f & 2) {
 		WriteCoord(MSG_ENTITY, self.angles_x);
 		WriteCoord(MSG_ENTITY, self.angles_y);
 		WriteCoord(MSG_ENTITY, self.angles_z);
 	}
-	if(f & 4)
-	{
+	if (f & 4) {
 		WriteCoord(MSG_ENTITY, self.avelocity_x);
 		WriteCoord(MSG_ENTITY, self.avelocity_y);
 		WriteCoord(MSG_ENTITY, self.avelocity_z);
@@ -111,7 +105,6 @@ float(entity to, float sf) effect_model_send {
 	WriteByte(MSG_ENTITY, self.teleport_time * 100.0);
 	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
 	WriteByte(MSG_ENTITY, self.alpha * 255.0);
-
 	return TRUE;
 }
 
@@ -130,14 +123,16 @@ void(string m, float s, float f, vector o, vector v, vector ang, vector angv, fl
 	e.teleport_time = t1;
 	e.fade_time = t2;
 	e.skin = s;
-	if(s0 >= 0)
+	if (s0 >= 0)
 		e.scale = s0 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
 	else
 		e.scale = -s0;
-	if(s2 >= 0)
+
+	if (s2 >= 0)
 		e.dmg = s2 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
 	else
 		e.dmg = -s2;
+
 	sz = max(e.scale, e.dmg);
 	setsize(e, e.mins * sz, e.maxs * sz);
 	net_link_entity(e, FALSE, 0.1, effect_model_send);
@@ -146,4 +141,3 @@ void(string m, float s, float f, vector o, vector v, vector ang, vector angv, fl
 void(string m, vector org, float sz, float t1, float t2) effect_shockwave_spawn {
 	return effect_model_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
 }
-

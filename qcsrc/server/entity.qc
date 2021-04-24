@@ -8,14 +8,7 @@ vector(entity box, vector org) entity_nearest_point_on_box {
 	return nearest;
 }
 
-/*
-==================
-SUB_VanishOrRemove
-
-Makes client invisible or removes non-client
-==================
-*/
-void(entity ent) entity_fade_vanish_or_remove {
+void(entity ent) entity_fade_vanish_or_remove { // Makes client invisible or removes non-client
 	if (ent.flags & FL_CLIENT) {
 		// vanish
 		ent.model = "";
@@ -37,17 +30,7 @@ void(void) entity_fade_think {
 	self.alpha = bound(0.01, self.alpha, 1);
 }
 
-/*
-==================
-SUB_SetFade
-
-Fade 'ent' out when time >= 'when'
-==================
-*/
-void(entity ent, float when, float fadetime) entity_fade_setup {
-	//if (ent.flags & FL_CLIENT) // && ent.deadflag != DEAD_NO)
-	//	return;
-	//ent.alpha = 1;
+void(entity ent, float when, float fadetime) entity_fade_setup { // Fade 'ent' out when time >= 'when'
 	ent.fade_rate = 1/fadetime;
 	ent.fade_time = when;
 	ent.think = entity_fade_think;
@@ -101,152 +84,144 @@ void(void) entity_initialize_run {
 
 // deferred dropping
 void(void) entity_droptofloor_handler {
-    droptofloor_builtin();
-    self.dropped_origin = self.origin;
+	droptofloor_builtin();
+	self.dropped_origin = self.origin;
 }
 
 void(void) entity_droptofloor {
-    entity_initialize(self, entity_droptofloor_handler, INITPRIO_DROPTOFLOOR);
+	entity_initialize(self, entity_droptofloor_handler, INITPRIO_DROPTOFLOOR);
 }
 
 float(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float shiftdistance) entity_move_to_random_location {
-    float m, i;
-    vector start, org, delta, end, enddown;
-
-    m = e.dphitcontentsmask;
-    e.dphitcontentsmask = goodcontents | badcontents;
-
-    org = world.mins;
-    delta = world.maxs - world.mins;
+	float m, i;
+	vector start, org, delta, end, enddown;
+	m = e.dphitcontentsmask;
+	e.dphitcontentsmask = goodcontents | badcontents;
+	org = world.mins;
+	delta = world.maxs - world.mins;
 	entity firstspot = findchain(classname, "info_player_deathmatch");
 	random_selection_init();
 	entity spot;
-	for(spot = firstspot; spot; spot = spot.chain)
+	for (spot = firstspot; spot; spot = spot.chain)
 		random_selection_add(spot, 0, NULL, 1, 1);
 
-    for (i = 0; i < attempts; ++i)
-    {
+	for (i = 0; i < attempts; ++i) {
 		start = random_selection_chosen_ent.origin;
 		if (random_selection_chosen_ent.mins_z > e.mins_z)
 			start_z = start_z - e.mins_z + random_selection_chosen_ent.mins_z;
 
-        end_x = random() - 0.5;
-        end_y = random() - 0.5;
-        end_z = random() / 2;
-        end = start + normalize(end) * (vlen(delta) * random() + shiftdistance);
-        trace_box(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
+		end_x = random() - 0.5;
+		end_y = random() - 0.5;
+		end_z = random() / 2;
+		end = start + normalize(end) * (vlen(delta) * random() + shiftdistance);
+		trace_box(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
 		end = start;
 		start = trace_endpos;
+		// rule 1: start inside world bounds, and outside
+		// solid, and don't start from somewhere where you can
+		// fall down to evil
+		trace_box(start, e.mins, e.maxs, start - '0 0 1' * delta_z, MOVE_NORMAL, e);
+		if (trace_fraction >= 1)
+			continue;
 
-        // rule 1: start inside world bounds, and outside
-        // solid, and don't start from somewhere where you can
-        // fall down to evil
-        trace_box(start, e.mins, e.maxs, start - '0 0 1' * delta_z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
-            continue;
-        if (trace_startsolid)
-            continue;
-        if (trace_dphitcontents & badcontents)
-            continue;
-        if (trace_dphitq3surfaceflags & badsurfaceflags)
-            continue;
+		if (trace_startsolid)
+			continue;
 
-        // rule 2: if we are too high, lower the point
-        if (trace_fraction * delta_z > maxaboveground)
-            start = trace_endpos + '0 0 1' * maxaboveground;
+		if (trace_dphitcontents & badcontents)
+			continue;
 
-        enddown = trace_endpos;
+		if (trace_dphitq3surfaceflags & badsurfaceflags)
+			continue;
 
-        // rule 3: we must not end up in trigger_hurt
-        if (trigger_tracebox_hits_hurt(start, e.mins, e.maxs, enddown))
-            continue;
+		// rule 2: if we are too high, lower the point
+		if (trace_fraction * delta_z > maxaboveground)
+			start = trace_endpos + '0 0 1' * maxaboveground;
 
-        break;
-    }
+		enddown = trace_endpos;
+		// rule 3: we must not end up in trigger_hurt
+		if (trigger_tracebox_hits_hurt(start, e.mins, e.maxs, enddown))
+			continue;
 
-    e.dphitcontentsmask = m;
-
-    if (i < attempts)
-    {
-        setorigin(e, trace_endpos);
+		break;
+	}
+	e.dphitcontentsmask = m;
+	if (i < attempts) {
+		setorigin(e, trace_endpos);
 		e.flags &~= FL_ONGROUND;
-        e.angles = vectoangles(start - end);
+		e.angles = vectoangles(start - end);
 		e.angles_x = 0;
 		e.angles_z = 0;
-        return TRUE;
-    }
-    else
-        return FALSE;
+		return TRUE;
+	} else
+		return FALSE;
 }
 
 void(entity platform) entity_drop_entities {
-    const nudge = '1 1 1';
-    entity e;
-
-    while((e = findflags(e, flags, FL_ONGROUND))) {
-        if(math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
-            e.flags &~= FL_ONGROUND;
-            projectile_update_next_frame(e);
-        }
-    }
-
-    while((e = findentity(e, aiment, platform))) {
-        if(e.movetype == MOVETYPE_FOLLOW) {
-            e.movetype = MOVETYPE_TOSS;
-            e.aiment = world;
-            e.flags &~= FL_ONGROUND;
-            projectile_update_next_frame(e);
-        }
-    }
+	const nudge = '1 1 1';
+	entity e;
+	while((e = findflags(e, flags, FL_ONGROUND))) {
+		if(math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
+			e.flags &~= FL_ONGROUND;
+			projectile_update_next_frame(e);
+		}
+	}
+	while((e = findentity(e, aiment, platform))) {
+		if(e.movetype == MOVETYPE_FOLLOW) {
+			e.movetype = MOVETYPE_TOSS;
+			e.aiment = world;
+			e.flags &~= FL_ONGROUND;
+			projectile_update_next_frame(e);
+		}
+	}
 }
 
 void(entity e, vector by, float t) entity_move_out_of_solid_expand {
-    float eps = 0.0625;
-    trace_box(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, t, e);
-    if (trace_startsolid)
-        return;
+	float eps = 0.0625;
+	trace_box(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, t, e);
+	if (trace_startsolid)
+		return;
 
-    if (trace_fraction < 1) {
-        // hit something
-        // adjust origin in the other direction...
-        setorigin(e,e.origin - by * (1 - trace_fraction));
-    }
+	if (trace_fraction < 1) {
+		// hit something
+		// adjust origin in the other direction...
+		setorigin(e,e.origin - by * (1 - trace_fraction));
+	}
 }
 
 float(entity e, float t) entity_move_out_of_solid_with_type {
-    vector o, m0, m1;
-    o = e.origin;
-    trace_line(o, o, t, e);
-    if (trace_startsolid)
-        return 0;
+	vector o, m0, m1;
+	o = e.origin;
+	trace_line(o, o, t, e);
+	if (trace_startsolid)
+		return 0;
 
-    trace_box(o, e.mins, e.maxs, o, t, e);
-    if (!trace_startsolid)
-        return 1;
+	trace_box(o, e.mins, e.maxs, o, t, e);
+	if (!trace_startsolid)
+		return 1;
 
-    m0 = e.mins;
-    m1 = e.maxs;
-    e.mins = '0 0 0';
-    e.maxs = '0 0 0';
-    entity_move_out_of_solid_expand(e, '1 0 0' * m0_x, t);
-    e.mins_x = m0_x;
-    entity_move_out_of_solid_expand(e, '1 0 0' * m1_x, t);
-    e.maxs_x = m1_x;
-    entity_move_out_of_solid_expand(e, '0 1 0' * m0_y, t);
-    e.mins_y = m0_y;
-    entity_move_out_of_solid_expand(e, '0 1 0' * m1_y, t);
-    e.maxs_y = m1_y;
-    entity_move_out_of_solid_expand(e, '0 0 1' * m0_z, t);
-    e.mins_z = m0_z;
-    entity_move_out_of_solid_expand(e, '0 0 1' * m1_z, t);
-    e.maxs_z = m1_z;
-    setorigin(e, e.origin);
-    trace_box(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
-    if (trace_startsolid) {
-        setorigin(e, o);
-        return 0;
-    }
-    return 1;
+	m0 = e.mins;
+	m1 = e.maxs;
+	e.mins = '0 0 0';
+	e.maxs = '0 0 0';
+	entity_move_out_of_solid_expand(e, '1 0 0' * m0_x, t);
+	e.mins_x = m0_x;
+	entity_move_out_of_solid_expand(e, '1 0 0' * m1_x, t);
+	e.maxs_x = m1_x;
+	entity_move_out_of_solid_expand(e, '0 1 0' * m0_y, t);
+	e.mins_y = m0_y;
+	entity_move_out_of_solid_expand(e, '0 1 0' * m1_y, t);
+	e.maxs_y = m1_y;
+	entity_move_out_of_solid_expand(e, '0 0 1' * m0_z, t);
+	e.mins_z = m0_z;
+	entity_move_out_of_solid_expand(e, '0 0 1' * m1_z, t);
+	e.maxs_z = m1_z;
+	setorigin(e, e.origin);
+	trace_box(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	if (trace_startsolid) {
+		setorigin(e, o);
+		return 0;
+	}
+	return 1;
 }
 
 .vector originjitter;
