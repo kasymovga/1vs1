@@ -97,8 +97,8 @@ void(void) bullet_hit {
 
 	if (other && other != self.enemy) {
 		effect_curveparticles_end();
-		headshot = 0;
-		yoda = 0;
+		damage_headshot = 0;
+		damage_yoda = 0;
 		damage_headshotbonus = self.dmg_edge;
 		bullet_from = self.origin - 0.1 * self.velocity;
 		bullet_to = self.origin + 0.1 * self.velocity;
@@ -107,10 +107,10 @@ void(void) bullet_hit {
 		damage(other, self, self.owner, d, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 		damage_headshotbonus = 0;
 		if (self.dmg_edge != 0) {
-			if (headshot)
+			if (damage_headshot)
 				announce(self.owner, "announcer/male/headshot.wav", "^1Head^3Shot");
 
-			if (yoda)
+			if (damage_yoda)
 				announce(self.owner, "announcer/male/awesome.wav", "^5Awesome");
 		}
 	}

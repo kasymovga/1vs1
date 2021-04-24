@@ -11,8 +11,7 @@ float g_teamdamage_threshold;
 float g_throughfloor_damage;
 float g_throughfloor_force;
 
-float damage_info_send(entity to, float sf)
-{
+float(entity to, float sf) damage_info_send {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
@@ -23,11 +22,9 @@ float damage_info_send(entity to, float sf)
 	return TRUE;
 }
 
-void damage_info(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, entity dmgowner)
-{
+void(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, entity dmgowner) damage_info {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
-
 	entity e;
 	e = spawn();
 	setorigin(e, org);
@@ -37,16 +34,13 @@ void damage_info(vector org, float coredamage, float edgedamage, float rad, vect
 	if (team_mode) {
 		e.team = dmgowner.team;
 	}
-
 	net_link_entity(e, FALSE, 0.2, damage_info_send);
 }
 
 #define DAMAGE_CENTERPRINT_SPACER "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
-float yoda;
 float damage_goodhits;
 float damage_gooddamage;
-float headshot;
 float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after use
 
 .float dmg_team;
@@ -57,8 +51,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 .float taunt_soundtime;
 .float lastfrag;
 
-void damage(entity targ, entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force)
-{
+void(entity targ, entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) damage {
 	float mirrordamage;
 	float mirrorforce;
 	mirrordamage = 0;
@@ -71,20 +64,18 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 	if (map_finished || targ.killcount == -666)
 		return;
 
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = targ;
-
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if (deathtype & HITTYPE_NOTEAMDAMAGE) {
-		if(targ.classname == "player")
+		if (targ.classname == "player")
 			if not(team_is_different_teams(targ, attacker)) {
 				self = oldself;
 				return;
 			}
 	}
-	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
-	{
+	if (deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE) {
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
@@ -93,31 +84,22 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 		targ.health = 0.9; // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		_damage = 100000;
-	}
-	else if(deathtype == DEATH_MIRRORDAMAGE || deathtype == DEATH_NOAMMO)
-	{
+	} else if (deathtype == DEATH_MIRRORDAMAGE || deathtype == DEATH_NOAMMO) {
 		// no processing
-	}
-	else
-	{
-		if(targ.classname == "player")
-		{
-			if(attacker.classname == "player" && targ != attacker && (PLAYER_IS_INDEPENDENT(attacker) || PLAYER_IS_INDEPENDENT(targ)))
-			{
+	} else {
+		if (targ.classname == "player") {
+			if (attacker.classname == "player" && targ != attacker && (PLAYER_IS_INDEPENDENT(attacker) || PLAYER_IS_INDEPENDENT(targ))) {
 				_damage = 0;
 				force = '0 0 0';
-			}
-			else if(attacker.team == targ.team && !targ.saboteur)
-			{
-				if(attacker != targ)
-				{
+			} else if (attacker.team == targ.team && !targ.saboteur) {
+				if (attacker != targ) {
 					if (team_mode) {
-						if(targ.deadflag == DEAD_NO)
-						{
+						if (targ.deadflag == DEAD_NO) {
 							float teamdamage0 = max(attacker.dmg_team, g_teamdamage_threshold);
 							attacker.dmg_team = attacker.dmg_team + _damage;
-							if(attacker.dmg_team > teamdamage0)
+							if (attacker.dmg_team > teamdamage0)
 								mirrordamage = g_mirrordamage * (attacker.dmg_team - teamdamage0);
+
 							mirrorforce = g_mirrorforce * vlen(force);
 							_damage = g_friendlyfire * _damage;
 							force = g_friendlyfire_force * force;
@@ -137,13 +119,11 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 		mirrordamage = mirrordamage * gamehook_chain_damage_mod_mirror;
 		mirrorforce = mirrorforce * gamehook_chain_damage_mod_force_mirror;
 		// count the damage
-		if(attacker)
-		if(!targ.deadflag)
-		if(targ.takedamage == DAMAGE_AIM)
-		if(targ != attacker)
-		{
-			if(targ.classname == "player")
-			{
+		if (attacker)
+		if (!targ.deadflag)
+		if (targ.takedamage == DAMAGE_AIM)
+		if (targ != attacker) {
+			if (targ.classname == "player") {
 				// HEAD SHOT:
 				// find height of hit on player axis
 				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
@@ -151,52 +131,42 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 				org = targ.origin;
 				headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
 				headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
-				if(trace_hits_box(bullet_from, bullet_to, headmins, headmaxs))
-				{
+				if (trace_hits_box(bullet_from, bullet_to, headmins, headmaxs)) {
 					deathtype |= HITTYPE_HEADSHOT;
 				}
-			}
-			else if(targ.classname == "turret_head")
-			{
+			} else if (targ.classname == "turret_head") {
 				deathtype |= HITTYPE_HEADSHOT;
 			}
-			if(deathtype & HITTYPE_HEADSHOT)
+			if (deathtype & HITTYPE_HEADSHOT)
 				_damage *= 1 + damage_headshotbonus;
 
-			if(targ.classname == "player")
-			{
-				if(team_is_different_teams(targ, attacker))
-				{
-					if(_damage > 0)
-					{
-						if(targ.BUTTON_CHAT)
+			if (targ.classname == "player") {
+				if (team_is_different_teams(targ, attacker)) {
+					if (_damage > 0) {
+						if (targ.BUTTON_CHAT)
 							attacker.typehitsound += 1;
 						else
 							attacker.hitsound += 1;
 
 						damage_goodhits += 1;
 						damage_gooddamage += _damage;
+						if not(DEATH_ISSPECIAL(deathtype)) {
+							if (physics_is_flying(targ))
+								damage_yoda = max(1, damage_yoda);
 
-						if not(DEATH_ISSPECIAL(deathtype))
-						{
-							if(physics_is_flying(targ))
-								yoda = max(1, yoda);
+							if (targ.items & IT_INVISIBILITY)
+								damage_yoda = 2;
 
-							if(targ.items & IT_INVISIBILITY)
-								yoda = 2;
-
-							if(deathtype & HITTYPE_HEADSHOT)
-								headshot = 1;
+							if (deathtype & HITTYPE_HEADSHOT)
+								damage_headshot = 1;
 						}
 					}
-				}
-				else
-				{
-					if(deathtype != DEATH_FIRE)
+				} else {
+					if (deathtype != DEATH_FIRE)
 						attacker.typehitsound += 1;
-					if(mirrordamage > 0)
-						if(time > attacker.teamkill_complain)
-						{
+
+					if (mirrordamage > 0)
+						if (time > attacker.teamkill_complain) {
 							attacker.teamkill_complain = time + 5;
 							attacker.teamkill_soundtime = time + 0.4;
 							attacker.teamkill_soundsource = targ;
@@ -205,11 +175,9 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 			}
 		}
 	}
-
 	// apply push
 	if (self.damageforcescale)
-	if (vlen(force))
-	{
+	if (vlen(force)) {
 		self.velocity = self.velocity + self.damageforcescale * force;
 		self.flags &~= FL_ONGROUND;
 		projectile_update(self);
@@ -221,11 +189,9 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 		self.lastdamage = time;
 	}
 	self = oldself;
-
 	gamehook_chain_damage_force_done(targ, attacker, _damage, force);
 	// apply mirror damage if any
-	if(mirrordamage > 0 || mirrorforce > 0)
-	{
+	if (mirrordamage > 0 || mirrorforce > 0) {
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		if not(gamehook_chain_MirrorDamageHandle(attacker, inflictor, mirrordamage, force)) {
 			damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
@@ -235,14 +201,12 @@ void damage(entity targ, entity inflictor, entity attacker, float _damage, float
 
 .float actual_damage[WEP_COUNT]; //amount of damage done
 
-void damage_record_fires(entity attacker, float deathtype, float shots)
-{
+void(entity attacker, float deathtype, float shots) damage_record_fires {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if not(warmup_active)
-	if(weaponid >= WEP_FIRST)
-	if(weaponid <= WEP_LAST)
-	{
+	if (weaponid >= WEP_FIRST)
+	if (weaponid <= WEP_LAST) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float f = attacker.bullets_fired[weaponid] + shots;
 		attacker.(bullets_fired[weaponid]) = f;
@@ -259,8 +223,7 @@ void damage_record_fires(entity attacker, float deathtype, float shots)
 	}
 }
 
-void damage_record_hits(entity attacker, entity targ, float deathtype, float hits, float _damage)
-{
+void(entity attacker, entity targ, float deathtype, float hits, float _damage) damage_record_hits {
 	float weaponid;
 	weaponid = DEATH_WEAPONOF(deathtype);
 	if (targ.deadflag == DEAD_NO)
@@ -268,9 +231,8 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 	if (targ != attacker)
 	if (!team_mode || targ.team != attacker.team)
 	if not(warmup_active)
-	if(weaponid >= WEP_FIRST)
-	if(weaponid <= WEP_LAST)
-	{
+	if (weaponid >= WEP_FIRST)
+	if (weaponid <= WEP_LAST) {
 		// Track damage done and update the stat to be sent later in g_world.qc
 		float h = attacker.bullets_hit[weaponid] + hits;
 		attacker.(bullets_hit[weaponid]) = h;
@@ -290,14 +252,14 @@ void damage_record_hits(entity attacker, entity targ, float deathtype, float hit
 	}
 }
 
-void damage_record_init() {
+void() damage_record_init {
 	CVAR_CACHE(g_score_bestweapon);
 	if (g_score_bestweapon)
 		SP_BESTWEP = score_register("bestwep", 0);
 }
 
 float damage_radius_running;
-void damage_radius(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity) {
+void(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity) damage_radius {
 	entity targ;
 	float finaldmg;
 	float power;
@@ -312,7 +274,7 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 	float total;
 	float hitratio;
 	vector hitloc;
-	if(damage_radius_running) {
+	if (damage_radius_running) {
 		backtrace("damage_radius called recursively!\n");
 		return;
 	}
@@ -320,12 +282,12 @@ void damage_radius(entity inflictor, entity attacker, float coredamage, float ed
 	blastorigin = (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5);
 	if not(deathtype & HITTYPE_NOINFO) {
 		force = inflictor.velocity;
-		if(vlen(force) == 0)
+		if (vlen(force) == 0)
 			force = '0 0 -1';
 		else
 			force = normalize(force);
 
-		if(forceintensity >= 0)
+		if (forceintensity >= 0)
 			damage_info(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, attacker);
 		else
 			damage_info(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, attacker);
@@ -419,8 +381,7 @@ void(entity attacker, void() explode) damage_prepare_explosion {
 	self.think = explode;
 }
 
-void damage_init()
-{
+void(void) damage_init {
 	CVAR_CACHE(g_friendlyfire);
 	CVAR_CACHE(g_friendlyfire_force);
 	CVAR_CACHE(g_mirrordamage);

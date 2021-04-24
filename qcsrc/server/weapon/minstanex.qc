@@ -37,16 +37,16 @@ void weapon_minstanex_attack (void)
 	antilag_begin(akimbo_owner(self));
 	weapon_setup_shot (self, 0, "weapons/minstanexfire.wav", 1);
 
-	yoda = 0;
+	damage_yoda = 0;
 	damage_goodhits = 0;
-	headshot = 0;
+	damage_headshot = 0;
 	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 	antilag_end();
 
-	if(yoda > 1)
+	if(damage_yoda > 1)
 		announce(self, "announcer/male/yoda.wav", "^5Awesome");
 
-	if(headshot)
+	if(damage_headshot)
 		announce(self, "announcer/male/headshot.wav", "^1Head^3Shot");
 
 	self.minstanex_lasthit = damage_goodhits;
