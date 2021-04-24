@@ -40,3 +40,4 @@ float draw_NeedResizeNotify;
 
 float draw_TextWidth_WithColors(string s);
 float draw_TextWidth_WithoutColors(string s);
+string draw_UseSkinFor(string pic);
