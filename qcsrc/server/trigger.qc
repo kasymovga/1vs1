@@ -1439,9 +1439,9 @@ void trigger_door_check_use() {
 	entity e;
 	float state_to_check;
 	if (self.spawnflags & 1)
-		state_to_check = STATE_BOTTOM;
+		state_to_check = FUNC_STATE_BOTTOM;
 	else
-		state_to_check = STATE_TOP;
+		state_to_check = FUNC_STATE_TOP;
 
 	float total, correct;
 	total = correct = 0;
@@ -1452,16 +1452,16 @@ void trigger_door_check_use() {
 			correct++;
 	}
 	self.target = "";
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 	if (self.spawnflags & 2) { //OR check (at least one door in needed state)
 		if (correct > 0) {
 			trigger_use_targets();
-			self.state = STATE_TOP;
+			self.state = FUNC_STATE_TOP;
 		}
 	} else { //AND check (all doors in needed state)
 		if (total == correct) {
 			trigger_use_targets();
-			self.state = STATE_TOP;
+			self.state = FUNC_STATE_TOP;
 		}
 	}
 	self.target = t;

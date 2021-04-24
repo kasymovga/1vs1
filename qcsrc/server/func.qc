@@ -1,10 +1,10 @@
 // non-solid brush entities:
-void(void) spawnfunc_func_illusionary       { model_init      (SOLID_NOT);} // Q1 name (WARNING: MISPREDICTED)
-void(void) spawnfunc_func_clientillusionary { model_client_init(SOLID_NOT);} // brush entity
+void(void) spawnfunc_func_illusionary { model_init(SOLID_NOT); } // Q1 name (WARNING: MISPREDICTED)
+void(void) spawnfunc_func_clientillusionary { model_client_init(SOLID_NOT); } // brush entity
 
 // solid brush entities
-void(void) spawnfunc_func_wall              { model_init      (SOLID_BSP);} // Q1 name
-void(void) spawnfunc_func_clientwall        { model_client_init(SOLID_BSP);} // brush entity
+void(void) spawnfunc_func_wall { model_init(SOLID_BSP); } // Q1 name
+void(void) spawnfunc_func_clientwall { model_client_init(SOLID_BSP); } // brush entity
 
 void(void) spawnfunc_func_stardust {
 	self.effects = EF_STARDUST;
@@ -905,7 +905,7 @@ void spawnfunc_func_bobbing() {
 void(void) func_button_return;
 
 void(void) func_button_wait {
-	self.state = STATE_TOP;
+	self.state = FUNC_STATE_TOP;
 	self.nextthink = self.ltime + self.wait;
 	self.think = func_button_return;
 	activator = self.enemy;
@@ -914,11 +914,11 @@ void(void) func_button_wait {
 }
 
 void(void) func_button_done {
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 }
 
 void(void) func_button_return {
-	self.state = STATE_DOWN;
+	self.state = FUNC_STATE_DOWN;
 	func_calc_move (self.pos1, self.speed, func_button_done);
 	self.frame = 0; // use normal textures
 	if (self.health)
@@ -933,13 +933,13 @@ void(void) func_button_fire {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
 
-	if (self.state == STATE_UP || self.state == STATE_TOP)
+	if (self.state == FUNC_STATE_UP || self.state == FUNC_STATE_TOP)
 		return;
 
 	if (self.noise != "")
 		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
-	self.state = STATE_UP;
+	self.state = FUNC_STATE_UP;
 	func_calc_move (self.pos2, self.speed, func_button_wait);
 }
 
@@ -947,7 +947,7 @@ void(void) func_button_reset {
 	self.health = self.max_health;
 	setorigin(self, self.pos1);
 	self.frame = 0; // use normal textures
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 	if (self.health)
 		self.takedamage = DAMAGE_YES; // can be shot again
 }
@@ -1061,7 +1061,7 @@ void(void) func_door_blocked {
 		//Dont chamge direction for dead or dying stuff
 		if (other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
 			if (self.wait >= 0) {
-				if (self.state == STATE_DOWN) {
+				if (self.state == FUNC_STATE_DOWN) {
 					if (self.classname == "door")
 						func_door_go_up();
 					else
@@ -1085,7 +1085,7 @@ void(void) func_door_hit_top {
 	if (self.noise1 != "")
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
-	self.state = STATE_TOP;
+	self.state = FUNC_STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return; // don't come down automatically
 
@@ -1101,7 +1101,7 @@ void(void) func_door_hit_bottom {
 	if (self.noise1 != "")
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 }
 
 void(void) func_door_go_down {
@@ -1112,22 +1112,22 @@ void(void) func_door_go_down {
 		self.takedamage = DAMAGE_YES;
 		self.health = self.max_health;
 	}
-	self.state = STATE_DOWN;
+	self.state = FUNC_STATE_DOWN;
 	func_calc_move (self.pos1, self.speed, func_door_hit_bottom);
 }
 
 void(void) func_door_go_up {
-	if (self.state == STATE_UP)
+	if (self.state == FUNC_STATE_UP)
 		return; // already going up
 
-	if (self.state == STATE_TOP) { // reset top wait time
+	if (self.state == FUNC_STATE_TOP) { // reset top wait time
 		self.nextthink = self.ltime + self.wait;
 		return;
 	}
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
-	self.state = STATE_UP;
+	self.state = FUNC_STATE_UP;
 	func_calc_move (self.pos2, self.speed, func_door_hit_top);
 	string oldmessage;
 	oldmessage = self.message;
@@ -1144,7 +1144,7 @@ void(void) func_door_fire {
 
 	oself = self;
 	if (self.spawnflags & DOOR_TOGGLE) {
-		if (self.state == STATE_UP || self.state == STATE_TOP) {
+		if (self.state == FUNC_STATE_UP || self.state == FUNC_STATE_TOP) {
 			starte = self;
 			do {
 				if (self.classname == "door")
@@ -1165,12 +1165,12 @@ void(void) func_door_fire {
 			func_door_go_up();
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((self.spawnflags & 2) && other.trigger_reverse!=0 && self.lip!=666 && self.state == STATE_BOTTOM) {
+			if ((self.spawnflags & 2) && other.trigger_reverse!=0 && self.lip!=666 && self.state == FUNC_STATE_BOTTOM) {
 				self.lip = 666; // self.lip is used to remember reverse opening direction for door_rotating
 				self.pos2 = '0 0 0' - self.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
-			if (!((self.spawnflags & 2) &&  (self.spawnflags & 8) && self.state == STATE_DOWN
+			if (!((self.spawnflags & 2) &&  (self.spawnflags & 8) && self.state == FUNC_STATE_DOWN
 					&& (((self.lip==666) && (other.trigger_reverse==0)) || ((self.lip!=666) && (other.trigger_reverse!=0))))) {
 				func_door_rotating_go_up();
 			}
@@ -1202,7 +1202,7 @@ void(void) func_door_trigger_touch {
 
 	if (self.owner.items)
 	if not(other.keys & self.owner.items) {
-		if (self.owner.state == STATE_BOTTOM)
+		if (self.owner.state == FUNC_STATE_BOTTOM)
 		if (clienttype(other) == CLIENTTYPE_REAL) {
 			string s;
 			if  (self.owner.items & IT_KEY1)
@@ -1248,7 +1248,7 @@ void(void) func_door_touch {
 		return;
 
 	self.owner.attack_finished_single = time + 2;
-	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == STATE_BOTTOM) {
+	if (!(self.owner.dmg) && (self.owner.message != "") && self.owner.state == FUNC_STATE_BOTTOM) {
 		if (clienttype(other) == CLIENTTYPE_REAL) {
 			centerprint(other, self.owner.message);
 			sound_play2(other, "misc/talk.wav");
@@ -1260,7 +1260,7 @@ void(void) func_door_rotating_hit_top {
 	if (self.noise1 != "")
 		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
 
-	self.state = STATE_TOP;
+	self.state = FUNC_STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return; // don't come down automatically
 
@@ -1275,7 +1275,7 @@ void(void) func_door_rotating_hit_bottom {
 		self.pos2 = '0 0 0' - self.pos2;
 		self.lip = 0;
 	}
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 }
 
 void(void) func_door_rotating_go_down {
@@ -1286,22 +1286,22 @@ void(void) func_door_rotating_go_down {
 		self.takedamage = DAMAGE_YES;
 		self.health = self.max_health;
 	}
-	self.state = STATE_DOWN;
+	self.state = FUNC_STATE_DOWN;
 	func_calc_angle_move(self.pos1, self.speed, func_door_rotating_hit_bottom);
 }
 
 void(void) func_door_rotating_go_up {
-	if (self.state == STATE_UP)
+	if (self.state == FUNC_STATE_UP)
 		return; // already going up
 
-	if (self.state == STATE_TOP) { // reset top wait time
+	if (self.state == FUNC_STATE_TOP) { // reset top wait time
 		self.nextthink = self.ltime + self.wait;
 		return;
 	}
 	if (self.noise2 != "")
 		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
 
-	self.state = STATE_UP;
+	self.state = FUNC_STATE_UP;
 	func_calc_angle_move(self.pos2, self.speed, func_door_rotating_hit_top);
 	string oldmessage;
 	oldmessage = self.message;
@@ -1473,7 +1473,7 @@ void(void) func_door_init_startopen {
 void(void) func_door_reset {
 	setorigin(self, self.pos1);
 	self.velocity = '0 0 0';
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 	self.think = stdproc_nothing;
 }
 
@@ -1534,7 +1534,7 @@ void(void) spawnfunc_func_door {
 	if (self.spawnflags & DOOR_START_OPEN)
 		entity_initialize(self, func_door_init_startopen, INITPRIO_SETLOCATION);
 
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 	self.touch = func_door_touch;
 	entity_initialize(self, func_doors_link, INITPRIO_LINKDOORS);
 	self.reset = func_door_reset;
@@ -1571,7 +1571,7 @@ FIXME: only one sound set available at the time being
 void(void) func_door_rotating_reset {
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 	self.think = stdproc_nothing;
 }
 
@@ -1634,7 +1634,7 @@ void(void) spawnfunc_func_door_rotating {
 	if (self.spawnflags & DOOR_START_OPEN)
 		entity_initialize(self, func_door_rotating_init_startopen, INITPRIO_SETLOCATION);
 
-	self.state = STATE_BOTTOM;
+	self.state = FUNC_STATE_BOTTOM;
 	if (self.health) {
 		self.takedamage = DAMAGE_YES;
 		self.event_damage = func_door_damage;
