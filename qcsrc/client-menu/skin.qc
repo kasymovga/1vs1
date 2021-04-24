@@ -1,5 +1,5 @@
 void SkinInit() {
-	float fh, glob, n, i;
+	float fh, n;
 	string s;
 	fh = -1;
 	if(cvar_string("menu_skin") != "")
@@ -33,14 +33,4 @@ void SkinInit() {
 			Skin_ApplySetting(argv(0), substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 	}
 	fclose(fh);
-
-	glob = search_begin(strcat(draw_currentSkin, "/*.tga"), TRUE, TRUE);
-	if(glob >= 0)
-	{
-		n = search_getsize(glob);
-		for(i = 0; i < n; ++i)
-			precache_pic(search_getfilename(glob, i));
-		search_end(glob);
-	}
-
 }
