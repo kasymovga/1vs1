@@ -68,7 +68,7 @@ void(float nr, float fade, float active, float wc) sbar_draw_weapon {
 		drawstring(pos, ftos(imp), vsize, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
 }
 
-void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float highlighted, float stroke, float alpha, float dflags) sbar_draw_num  {
+void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float stroke, float alpha, float dflags) sbar_draw_num  {
 	float l, i;
 	string str, tmp;
 	float minus, plus;
@@ -160,7 +160,7 @@ void(vector pos, float x, float lettersize, float alpha) sbar_draw_num_colored  
 		sbar_color_y = 0;
 		sbar_color_z = 0;
 	}
-	sbar_draw_num(pos, x, 3, 0, lettersize, sbar_color, 0, 0, alpha, DRAWFLAG_NORMAL);
+	sbar_draw_num(pos, x, 3, 0, lettersize, sbar_color, 0, alpha, DRAWFLAG_NORMAL);
 }
 
 void(void) sbar_scores_init {
@@ -1049,9 +1049,9 @@ void sbar_scoreboard_draw() {
 				continue;
 
 			rgb = team_rgb(tm.team);
-			sbar_draw_num(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
+			sbar_draw_num(pos - '6.5 0 0' * sbar_fontsize_y + '0 1 0' * sbar_fontsize_y, tm.(teamscores[ts_primary]), 4, 0, sbar_fontsize_y * 1.5, rgb, 1, 1, DRAWFLAG_NORMAL);
 			if (ts_primary != ts_secondary)
-				sbar_draw_num(pos - '4.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 4, 0, sbar_fontsize_y * 1, rgb, 0, 1, 1, DRAWFLAG_NORMAL);
+				sbar_draw_num(pos - '4.5 0 0' * sbar_fontsize_y + '0 2.5 0' * sbar_fontsize_y, tm.(teamscores[ts_secondary]), 4, 0, sbar_fontsize_y * 1, rgb, 1, 1, DRAWFLAG_NORMAL);
 
 			pos = sbar_scoreboard_table_draw(pos, tm, rgb, bg_size);
 		}
@@ -1137,8 +1137,8 @@ void(void) sbar_score_draw_default {
 		else
 			distribution_color = '1 0 0';
 
-		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num(score_pos, score, 4, 0, 34, distribution_color, leader, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(secondary_score_pos, distribution, 4, 3, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(score_pos, score, 4, 0, 34, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float max_fragcount;
 		max_fragcount = -999;
@@ -1155,12 +1155,12 @@ void(void) sbar_score_draw_default {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(score_pos, score, 4, 0, 34, team_rgb(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(score_pos, score, 4, 0, 34, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					leader = 1;
 
-				sbar_draw_num(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * 0.8, leader, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(secondary_score_pos, score, 4, 0, 16, team_rgb(tm.team) * 0.8, 1, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				secondary_score_pos = secondary_score_pos + '0 16 0';
 			}
 		}
@@ -1205,18 +1205,14 @@ void(void) sbar_score_draw_race {
 				distribution_color = '1 0 0';
 				minusplus = 2; // minusplus 1: always prefix with plus sign
 			}
-			sbar_draw_num(sbar_bottomright - '0 48 0' - '16 0 0' * SBAR_TIME_DECIMALS, distmsec, -SBAR_TIME_DECIMALS, 0, 16, distribution_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			sbar_draw_num(sbar_bottomright - '68 48 0' - '16 0 0' * SBAR_TIME_DECIMALS, distsec, 4, minusplus, 16, distribution_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num(sbar_bottomright - '0 48 0' - '16 0 0' * SBAR_TIME_DECIMALS, distmsec, -SBAR_TIME_DECIMALS, 0, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num(sbar_bottomright - '68 48 0' - '16 0 0' * SBAR_TIME_DECIMALS, distsec, 4, minusplus, 16, distribution_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			drawpic(sbar_bottomright - '10 48 0' - '16 0 0' * SBAR_TIME_DECIMALS, "gfx/hud/num_dot", '16 16 0', distribution_color, sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 		}
-		// race record display
-		if (distribution <= 0 || distribution == score) // draw the highlight background behind the timer if we have the lead
-			drawpic(sbar_bottomright - '0 32 0' - '32 0 0' * (4 + SBAR_TIME_DECIMALS), "gfx/hud/sb_highlight_4", '0 28 0' + '32 0 0' * (4 + SBAR_TIME_DECIMALS), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-
-		sbar_draw_num(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0', racemsec, -SBAR_TIME_DECIMALS, 0, 30, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0'  - '66 0 0', racesec, -2, 0, 30, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0', racemsec, -SBAR_TIME_DECIMALS, 0, 30, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0'  - '66 0 0', racesec, -2, 0, 30, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0' - '18 0 0', "gfx/hud/num_dot", '30 30 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
-		sbar_draw_num(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0' - '132 0 0', racemin, -2, 0, 30, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(sbar_bottomright - '0 32 0' - SBAR_TIME_DECIMALS * '30 0 0' - '84 0 0', "gfx/hud/num_colon", '30 30 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 	} else
 		sbar_score_draw_default();
@@ -1279,10 +1275,10 @@ void(void) sbar_timer {
 		bgpos_z = 0;
 	}
 	if not(hideminutes) {
-		sbar_draw_num(sbar_topright - '103 0 0' + '0 2 0', minutes, 3, 0, 18, timer_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(sbar_topright - '103 0 0' + '0 2 0', minutes, 3, 0, 18, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 		drawpic(sbar_topright - '53 0 0' + '0 1 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
-	sbar_draw_num(sbar_topright - '36 0 0' - '3 0 0' + '0 2 0', seconds, -2, 0, 18, timer_color, 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	sbar_draw_num(sbar_topright - '36 0 0' - '3 0 0' + '0 2 0', seconds, -2, 0, 18, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 vector sbar_powerup_pos;
@@ -1300,7 +1296,7 @@ void sbar_powerup_timer_draw(float dt, string image) {
 
 			drawpic(sbar_powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE);
 		}
-		sbar_draw_num(sbar_powerup_pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(sbar_powerup_pos - '40 -2 0', ceil(dt), 2, 0, countdown_fontsize, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	} else if (dt > -1) {
 		draw_pic_expanding(sbar_powerup_pos, image, picsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_ADDITIVE,
 			bound(0, -dt / 0.5, 1));
@@ -1547,7 +1543,7 @@ void(vector pos, float a, float active, string image) sbar_ammo_draw {
 	else
 		sbar_color = '1 1 1';
 
-	sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, sbar_color, 0, 0, sbar_alpha_fg * alpha, DRAWFLAG_NORMAL);
+	sbar_draw_num(pos + '6 4.5 0', a, 3, 0, 16, sbar_color, 0, sbar_alpha_fg * alpha, DRAWFLAG_NORMAL);
 }
 
 float sbar_hg_visual, sbar_hg_alpha;
@@ -1678,14 +1674,14 @@ void(void) sbar_draw {
 				pos = sbar_bottom - pos;
 				drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 				if (sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) {
-					sbar_draw_num(pos + '5 5 0', clip, 3, 0, 24, '1 1 0.5', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num(pos + '5 5 0', clip, 3, 0, 24, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				} else {
 					if (a < 10)
-						sbar_draw_num(pos + '25 -2 0', a, 3, 0, 16, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '25 -2 0', a, 3, 0, 16, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '25 -2 0', a, 3, 0, 16, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '25 -2 0', a, 3, 0, 16, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-					sbar_draw_num(pos + '25 18 0', clip, 3, 0, 16, '1 1 0.5', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num(pos + '25 18 0', clip, 3, 0, 16, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
 			}
 		} else if not(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) {
@@ -1710,9 +1706,9 @@ void(void) sbar_draw {
 					pos = sbar_bottom - pos;
 					drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					if (a < 10)
-						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
 			} else {
 				a = getstati(STAT_SHELLS);
@@ -1819,7 +1815,7 @@ void(void) sbar_draw {
 				drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
 			}
 			hgapos -= '4 4';
-			sbar_draw_num(hgapos, hgammo, 2, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+			sbar_draw_num(hgapos, hgammo, 2, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 			hgapos_x += 48;
 			drawpic(hgapos, hgicon, '22 22', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			if (hgtype2) {
@@ -1834,7 +1830,7 @@ void(void) sbar_draw {
 				}
 				hgapos -= '4 4';
 				hgammo = getstati(STAT_HGAMMO2);
-				sbar_draw_num(hgapos, hgammo, 2, 0, 24, '1 1 1', 0, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num(hgapos, hgammo, 2, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				hgapos_x += 48;
 				drawpic(hgapos, hgicon, '22 22', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			}
