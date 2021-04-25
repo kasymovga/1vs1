@@ -95,7 +95,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "dlc_reload")
 	{
-		menu_dlc_reload(TRUE);
+		menu_dlc_reload(TRUE, TRUE);
 		return;
 	}
 	if (argv(0) == "ui_con_width_height_set") {

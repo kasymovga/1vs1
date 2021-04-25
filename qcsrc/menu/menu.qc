@@ -76,8 +76,24 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 		ParseServerListLine(argv(i));
 }
 
-void(float nodownload) menu_dlc_reload {
+entity menu_dlc_reload_wait;
+void(void) menu_dlc_reload_wait_think {
+	if (dlc_ready_all()) {
+		if (clientstate() != CS_CONNECTED)
+			localcmd("r_restart\n");
+
+	} else if (self.cnt) {
+		self.cnt = self.cnt - 1;
+		self.nextthink = time + 5;
+		return;
+	}
+	remove(menu_dlc_reload_wait);
+	menu_dlc_reload_wait = world;
+}
+
+void(float nodownload, float renderrestart) menu_dlc_reload {
 	string s = strcat(DLC_BASE_LIST " ", cvar_defstring("menu_dlc_extra"));
+	dlc_list = "";
 	if (cvar("cl_brightskins")) {
 		s = strcat(s, " brightskins");
 	}
@@ -97,6 +113,13 @@ void(float nodownload) menu_dlc_reload {
 					print("Downloading missing pack: ", head, "\n");
 			}
 		}
+	}
+	if (renderrestart)
+	if not(menu_dlc_reload_wait) {
+		menu_dlc_reload_wait = spawn();
+		menu_dlc_reload_wait.think = menu_dlc_reload_wait_think;
+		menu_dlc_reload_wait.nextthink = time + 1;
+		menu_dlc_reload_wait.cnt = 10;
 	}
 }
 
@@ -122,7 +145,7 @@ void() m_init =
 			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
-	menu_dlc_reload(TRUE);
+	menu_dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
 	ui_con_width_height_set();
 }
@@ -167,7 +190,7 @@ void() m_init_delayed =
 		return;
 	} else {
 		dlc_set_repos(cvar_string("sv_dlc_repository"));
-		menu_dlc_reload(FALSE);
+		menu_dlc_reload(FALSE, FALSE);
 	}
 	if(!preMenuInit())
 		return;
@@ -349,10 +372,12 @@ void() m_draw =
 	{
 		entity e, oldself;
 		oldself = self;
-		for(e = findflags(world, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) {
-			self = e;
-			self.nextthink = 0;
-			self.think();
+		for(e = findflags(world, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
+			if (e.nextthink < time) {
+				self = e;
+				self.nextthink = 0;
+				self.think();
+			}
 		}
 		self = oldself;
 		if(getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
