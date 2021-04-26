@@ -422,7 +422,7 @@ void() m_draw =
 	{
 		if(menuLogoAlpha > 0)
 		{
-			drawBackground(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
+			draw_background(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
 			if(menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0)
 			{
 				draw_alpha = SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1);
@@ -434,7 +434,7 @@ void() m_draw =
 	else if(SKINALPHA_BACKGROUND_INGAME)
 	{
 		if(menuAlpha > 0)
-			drawBackground(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+			draw_background(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	}
 
 	if(menuAlpha != prevMenuAlpha)

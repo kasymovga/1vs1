@@ -1,7 +1,6 @@
 void m_activate_window(entity wnd);
 void m_setpointerfocus(entity wnd);
 void m_focus_item_chain(entity outermost, entity innermost);
-void drawBackground(string img, float a, float algn, float force1);
 float almost_in_bounds(float a, float b, float c);
 float median(float a, float b, float c);
 

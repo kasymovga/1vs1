@@ -89,7 +89,7 @@ void GUI_Draw_Remove() {
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
 	draw_reset();
-	drawBackground(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	draw_reset();
 	drawfont = sbar_font;
 	draw_alpha *= GUI_alpha;
@@ -107,7 +107,7 @@ void GUI_Draw() {
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
 	draw_reset();
-	drawBackground(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	draw_reset();
 	draw_alpha *= GUI_alpha;
 	drawfont = sbar_font;
