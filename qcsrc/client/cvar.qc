@@ -3,7 +3,7 @@ var void() read_cvars;
 float(string varname, float setflags, float unsetflags) cvar_altertype = #505;
 float(string varname) cvar_type = #495;
 
-var void(string varname, string val) registercvar_save;
+var void(string varname, string val) cvar_register_save;
 
 #define CVAR(x) autocvar_##x
 #define CVAR_OR(x,y) (autocvar_##x ? autocvar_##x : y)
@@ -11,6 +11,7 @@ var void(string varname, string val) registercvar_save;
 #define CACHE_CVAR(x) float autocvar_##x;
 #define CACHE_CVAR_DEF(x,y) var float autocvar_##x = y;
 #define CACHE_CVAR_VEC(x) vector autocvar_##x;
+#define CACHE_CVAR_VEC_DEF(x,y) var vector autocvar_##x = y;
 #define READ_CVARS_BEGIN(x,y)
 #define READ_CVARS_SECTION(x,y)
 #define READ_CVARS_END(x)
@@ -18,20 +19,23 @@ var void(string varname, string val) registercvar_save;
 #undef CACHE_CVAR
 #undef CACHE_CVAR_DEF
 #undef CACHE_CVAR_VEC
+#undef CACHE_CVAR_VEC_DEF
 #undef READ_CVARS_BEGIN
 #undef READ_CVARS_SECTION
 #undef READ_CVARS_END
 
 #define CACHE_CVAR(x) 
-#define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { registercvar_save(#x, ftos(y)); }
+#define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, ftos(y)); }
 #define CACHE_CVAR_VEC(x) 
-#define READ_CVARS_BEGIN(x,y) void register_autocvars() {
+#define CACHE_CVAR_VEC_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, vtos(y)); }
+#define READ_CVARS_BEGIN(x,y) void cvar_register_autocvars() {
 #define READ_CVARS_SECTION(x,y)
 #define READ_CVARS_END(x) }
 #include "cvar_list.qc"
 #undef CACHE_CVAR
 #undef CACHE_CVAR_DEF
 #undef CACHE_CVAR_VEC
+#undef CACHE_CVAR_VEC_DEF
 #undef READ_CVARS_BEGIN
 #undef READ_CVARS_SECTION
 #undef READ_CVARS_END
@@ -39,6 +43,7 @@ var void(string varname, string val) registercvar_save;
 #define CACHE_CVAR(x) autocvar_##x = cvar(#x);
 #define CACHE_CVAR_DEF(x,y) autocvar_##x = cvar(#x);
 #define CACHE_CVAR_VEC(x) autocvar_##x = stov(cvar_string(#x));
+#define CACHE_CVAR_VEC_DEF(x) autocvar_##x = stov(cvar_string(#x));
 #define READ_CVARS_BEGIN(x,y) void read_cvars_##y(); void read_cvars_##x() {
 #define READ_CVARS_SECTION(x,y) read_cvars = read_cvars_##x; } void read_cvars_##y(); void read_cvars_##x() {
 #define READ_CVARS_END(x) read_cvars = read_cvars_##x; }
@@ -46,19 +51,20 @@ var void(string varname, string val) registercvar_save;
 #undef CACHE_CVAR
 #undef CACHE_CVAR_DEF
 #undef CACHE_CVAR_VEC
+#undef CACHE_CVAR_VEC_DEF
 #undef READ_CVARS_BEGIN
 #undef READ_CVARS_SECTION
 #undef READ_CVARS_END
 
-void registercvar_save_old(string varname, string val) {
+void cvar_register_save_old(string varname, string val) {
 	registercvar(varname, val, CVAR_SAVE);
 }
 
-void registercvar_save_awful(string varname, string val) {
+void cvar_register_save_awful(string varname, string val) {
 	localcmd(strcat("\nseta ", varname, " ", val, "\n"));
 }
 
-void registercvar_save_rm(string varname, string val) {
+void cvar_register_save_rm(string varname, string val) {
 	if not(cvar_type(varname) & 8) //engine cvar
 		cvar_altertype(varname, 2, 0);
 }
@@ -71,13 +77,13 @@ void read_cvars_init() {
 	cvar_set("autocvar_check", "1");
 	if (autocvar_autocvar_check) {
 		if (checkextension("DP_RM_CVAR_ALTERTYPE"))
-			registercvar_save = registercvar_save_rm;
+			cvar_register_save = cvar_register_save_rm;
 		else
-			registercvar_save = registercvar_save_awful;
+			cvar_register_save = cvar_register_save_awful;
 	} else {
-		registercvar_save = registercvar_save_old;
+		cvar_register_save = cvar_register_save_old;
 	}
-	register_autocvars();
+	cvar_register_autocvars();
 	if (autocvar_autocvar_check) {
 		//print("Auto cvars working, good\n");
 		read_cvars = read_cvars_dummy;

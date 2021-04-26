@@ -36,6 +36,25 @@ void(void) sbar_draw_weapon_clear {
 	}
 }
 
+vector sbar_position(vector pos, float w, float h) {
+	vector v = '0 0 0';
+	if (pos_z & 1)
+		v_x = pos_x + (CVAR(vid_conwidth) - w) * 0.5;
+	else if (pos_z & 2)
+		v_x = CVAR(vid_conwidth) - pos_x - w;
+	else
+		v_x = pos_x;
+
+	if (pos_z & 4)
+		v_y = pos_y + (CVAR(vid_conheight) - h) * 0.5;
+	else if (pos_z & 8)
+		v_y = CVAR(vid_conheight) - pos_y - h;
+	else
+		v_y = pos_y;
+
+	return v;
+}
+
 void(float nr, float fade, float active, float wc) sbar_draw_weapon {
 	vector pos, vsize;
 	float value, idx, imp, sp;
@@ -1223,8 +1242,7 @@ void(void) sbar_score_draw_race {
 void(void) sbar_timer {
 	float timelimit, elapsedTime, minutes, seconds, timeleft, starttime, hideminutes;
 	hideminutes = FALSE;
-	vector bgpos, timer_color;
-	bgpos = '0 0 0';
+	vector timer_color;
 	timelimit = getstatf(STAT_TIMELIMIT);
 	starttime = getstatf(STAT_GAMESTARTTIME);
 	timeleft = timelimit * 60 + starttime - time;
@@ -1244,14 +1262,6 @@ void(void) sbar_timer {
 			minutes = floor(elapsedTime / 60);
 			seconds = elapsedTime - minutes*60;
 		}
-		if (minutes < 10)
-			bgpos_x = sbar_topright_x - 54 - 17 - 12;
-		else if (minutes < 100)	// nudge the timer background left if more digits are drawn
-			bgpos_x = sbar_topright_x - 72 - 17 - 12;
-		else
-			bgpos_x = sbar_topright_x - 90 - 17 - 12;
-		bgpos_y = 0;
-		bgpos_z = 0;
 	} else {
 		if (timeleft < 0) {
 			timeleft = max(0, -1 - timeleft);
@@ -1262,23 +1272,13 @@ void(void) sbar_timer {
 		timeleft = ceil(timeleft);
 		minutes = floor(timeleft / 60);
 		seconds = timeleft - minutes*60;
-		if (hideminutes)
-			bgpos_x = sbar_topright_x - 36 - 7 - 12;
-		else if (minutes < 10) // nudge the timer background left if more digits are drawn
-			bgpos_x = sbar_topright_x - 54 - 17 - 12;
-		else if (minutes < 100)
-			bgpos_x = sbar_topright_x - 72 - 17 - 12;
-		else
-			bgpos_x = sbar_topright_x - 90 - 17 - 12;
-
-		bgpos_y = 0;
-		bgpos_z = 0;
 	}
+	vector pos = sbar_position(CVAR(sbar_timer_position), 103, 18);
 	if not(hideminutes) {
-		sbar_draw_num(sbar_topright - '103 0 0' + '0 2 0', minutes, 3, 0, 18, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-		drawpic(sbar_topright - '53 0 0' + '0 1 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num(pos, minutes, 3, 0, 18, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(pos + '50 0 0', "gfx/hud/num_colon", '18 18 0', timer_color, sbar_alpha_fg, DRAWFLAG_NORMAL);
 	}
-	sbar_draw_num(sbar_topright - '36 0 0' - '3 0 0' + '0 2 0', seconds, -2, 0, 18, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+	sbar_draw_num(pos + '64 0 0', seconds, -2, 0, 18, timer_color, 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 vector sbar_powerup_pos;
