@@ -7,7 +7,7 @@ string draw_UseSkinFor(string pic)
 	if(substring(pic, 0, 1) == "/")
 		return substring(pic, 1, strlen(pic)-1);
 	else
-		return strcat(draw_currentSkin, "/", pic);
+		return strcat(draw_skin, "/", pic);
 }
 
 void draw_setMousePointer(string pic, vector theSize, vector theOffset)

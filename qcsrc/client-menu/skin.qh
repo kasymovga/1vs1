@@ -1,5 +1,4 @@
-void SkinInit();
-string draw_currentSkin;
+void(void) skin_init;
 #define SKINBEGIN
 #define SKINVECTOR(name,def) var vector SKIN##name = def
 #define SKINFLOAT(name,def) var float SKIN##name = def
@@ -12,7 +11,7 @@ string draw_currentSkin;
 #undef SKINFLOAT
 #undef SKINVECTOR
 
-#define SKINBEGIN void Skin_ApplySetting(string key, string value) { switch(key) {
+#define SKINBEGIN void skin_setting_apply(string key, string value) { switch(key) {
 #define SKINVECTOR(name,def) case #name: SKIN##name = stov(value); break
 #define SKINFLOAT(name,def) case #name: SKIN##name = stof(value); break
 #define SKINSTRING(name,def) case #name: break

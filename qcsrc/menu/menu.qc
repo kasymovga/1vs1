@@ -197,7 +197,7 @@ void() m_init_delayed =
 	menuInitialized = 1;
 	GameCommand_Init();
 	weapon_register_weapons();
-	SkinInit();
+	skin_init();
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
 	conwidth = conheight = -1;

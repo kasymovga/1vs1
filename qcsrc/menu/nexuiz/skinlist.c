@@ -170,7 +170,8 @@ void setSkinNexuizSkinList(entity me)
 		return;
 
 	me.saveCvars(me);
-	localcmd("\nmenu_restart\nr_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
+	skin_init();
+	localcmd("\nr_restart\n");
 }
 
 void SetSkin_Click(entity btn, entity me)
