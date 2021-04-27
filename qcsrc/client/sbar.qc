@@ -18,23 +18,6 @@ float SBAR_SCOREBOARD_OFFSET = 50;
 #define SBAR_SCORE_IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
 
 float sbar_weaponspace[10];
-float sbar_weapon_first, sbar_weapon_last;
-void(void) sbar_draw_weapon_clear {
-	float idx;
-	sbar_weapon_first = -2;
-	sbar_weapon_last = -1;
-	for (idx = 0; idx < 10; ++idx)
-		sbar_weaponspace[idx] = 0;
-
-	for (idx = 0; idx <= 23; ++idx) {
-		if (weapon_impulses[idx] >= 0) {
-			if (sbar_weapon_first < 0)
-				sbar_weapon_first = idx;
-
-			sbar_weapon_last = idx;
-		}
-	}
-}
 
 vector sbar_position(vector pos, float w, float h) {
 	vector v = '0 0 0';
@@ -55,36 +38,49 @@ vector sbar_position(vector pos, float w, float h) {
 	return v;
 }
 
-void(float nr, float fade, float active, float wc) sbar_draw_weapon {
+void(float fade) sbar_draw_weapons {
 	vector pos, vsize;
 	float value, idx, imp, sp;
-	imp = weapon_impulses[nr];
-	if (imp == 0)
-		idx = 9;
-	else
-		idx = imp - 1;
+	float nr;
+	for (idx = 0; idx < 10; ++idx)
+		sbar_weaponspace[idx] = 0;
 
-	value = (active) ? 2 : 0.75;
-	sbar_color_x = sbar_color_y = sbar_color_z = value;
+	float stat_weapons = getstati(STAT_WEAPONS);
 	const float w_width = 48, w_height = 24, w_space = 2, font_size = 12;
-	sp = sbar_weaponspace[idx] + 1;
-	sbar_weaponspace[idx] = sp;
-	pos_x = CVAR(vid_conwidth) - w_width * sp - w_space;
-	pos_y = CVAR(vid_conheight) - 90 - w_height * (idx);
+	float active;
+	vector weapon_position = sbar_position(CVAR(sbar_weapon_position), 98, 240) + '98 240 0';
 	pos_z = 0;
-	vsize_x = w_width;
-	vsize_y = w_height;
-	vsize_z = 0;
-	if (active)
-		drawpic(pos, "gfx/hud/sb_ammobg", vsize, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+	float wbit = 1;
+	for (nr = WEP_FIRST; nr <= WEP_LAST; ++nr, wbit *= 2) {
+		if not(stat_weapons & wbit) continue;
+		imp = weapon_impulses[nr - 1];
+		if not(imp >= 0) continue;
+		if (imp == 0)
+			idx = 9;
+		else
+			idx = imp - 1;
 
-	drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr)), vsize, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-	pos_x += w_space;
-	vsize_x = font_size;
-	vsize_y = font_size;
-	vsize_z = 0;
-	if (sp == 1)
-		drawstring(pos, ftos(imp), vsize, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+		active = (nr == weapon_current);
+		value = (active) ? 2 : 0.75;
+		sbar_color_x = sbar_color_y = sbar_color_z = value;
+		sp = sbar_weaponspace[idx] + 1;
+		sbar_weaponspace[idx] = sp;
+		pos_x = weapon_position_x - w_width * sp - w_space;
+		pos_y = weapon_position_y - w_height * (idx);
+		vsize_x = w_width;
+		vsize_y = w_height;
+		vsize_z = 0;
+		if (active)
+			drawpic(pos, "gfx/hud/sb_ammobg", vsize, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+
+		drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr - 1)), vsize, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
+		pos_x += w_space;
+		vsize_x = font_size;
+		vsize_y = font_size;
+		vsize_z = 0;
+		if (sp == 1)
+			drawstring(pos, ftos(imp), vsize, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+	}
 }
 
 void(vector pos, float num, float digits, float showminusplus, float lettersize, vector rgb, float stroke, float alpha, float dflags) sbar_draw_num  {
@@ -1131,8 +1127,9 @@ void(void) sbar_score_draw_default {
 	vector score_pos, secondary_score_pos, distribution_color;
 	entity tm, pl, me;
 	me = (view_spectatee_status > 0) ? player_slots[view_spectatee_status - 1] : player_slots[player_localentnum - 1];
-	score_pos = sbar_bottomright - '196 42 0';
-	secondary_score_pos = score_pos + '132 -6 0';
+	score_pos = sbar_position(CVAR(sbar_score_position), 196, 48);
+	secondary_score_pos = score_pos + '132 0 0';
+	score_pos_y -= 6;
 	if not(team_mode) { // non-teamgames, except race/cts
 		// me vector := [team/connected frags id]
 		pl = player_list.sort_next;
@@ -1566,7 +1563,6 @@ void(void) sbar_draw {
 	float i;
 	float weapon_stats;
 	float x;
-	float stat_weapons;
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
  	sbar_weapon_number = weapon_stats & 63;
  	sbar_weapon_hits[sbar_weapon_number] = rint(weapon_stats / 64);
@@ -1612,46 +1608,31 @@ void(void) sbar_draw {
 		float armor;
 		armor = getstati(STAT_ARMOR);
 		sbar_stat_items = getstati(STAT_ITEMS);
-		stat_weapons = getstati(STAT_WEAPONS);
-		vector health_pos, armor_pos;
-		if (CVAR(sbar_hudselector) == 0) { // old style layout with armor left of health
-			armor_pos = sbar_bottom - '96 28 0';
-			health_pos = sbar_bottom - '-14 28 0';
-		} else {
-			health_pos = sbar_bottom - '96 28 0';
-			armor_pos = sbar_bottom - '-14 28 0';
-		}
 		// armor
-		x = armor;
-		if (x > 0) {
-			if (x > 45) {
-				drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-				sbar_draw_num_colored(armor_pos, x, 24, sbar_alpha_fg);
+		if (armor > 0) {
+			pos = sbar_position(CVAR(sbar_armor_position), 110, 32);
+			if (armor > 45) {
+				drawpic(pos + '78 0 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num_colored(pos + '0 4', armor, 24, sbar_alpha_fg);
 			} else {
-				drawpic(armor_pos + '78 -4.5 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
-				sbar_draw_num_colored(armor_pos, x, 24, (x+10)/55 * sbar_alpha_fg);
+				drawpic(pos + '78 0 0', "gfx/hud/sb_armor", '32 32 0', '1 1 1', (x+10)/55 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+				sbar_draw_num_colored(pos + '0 4', armor, 24, (x+10)/55 * sbar_alpha_fg);
 			}
 		}
 		// health
-		x = _health;
-		drawpic(health_pos + '78 -4.5 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
-		sbar_draw_num_colored(health_pos, x, 24, sbar_alpha_fg);
+		pos = sbar_position(CVAR(sbar_health_position), 110, 32);
+		drawpic(pos + '78 0 0', "gfx/hud/sb_health", '32 32 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+		sbar_draw_num_colored(pos + '0 4', _health, 24, sbar_alpha_fg);
 		// weapon icons
 		x = 1.0;
 		float fade = bound(0, CVAR(sbar_weapons_fadetime) - (time - sbar_weapons_time) *  CVAR(sbar_weapons_fadespeed), 1);
-		if (fade) {
-			sbar_draw_weapon_clear();
-			for (i = 1; i <= 24; ++i) {
-				if (weapon_impulses[i-1] >= 0)
-				if (stat_weapons & x) {
-					sbar_draw_weapon(i-1, fade, (i == weapon_current), i);
-				}
-				x *= 2;
-			}
-		}
+		if (fade)
+			sbar_draw_weapons(fade);
+
 		// ammo
 		float a; // i will be the ammo type (already declared), a will contain how much ammo there is of type i
 		float clip = getstati(STAT_BULLETS_LOADED);
+		pos = sbar_position(CVAR(sbar_ammo_position), 172, 48);
 		if (clip) {
 			if (clip < 0) clip = 0;
 			string ai;
@@ -1663,29 +1644,20 @@ void(void) sbar_draw {
 			else at = 0;
 			if (at) {
 				a = getstati(at);
-
-				if (CVAR(vid_conwidth) >= 800) {
-					pos_x = 230;
-					pos_y = 40;
-				} else {
-					pos_x = 206;
-					pos_y = 33;
-				}
-				pos = sbar_bottom - pos;
-				drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(pos + '106 13 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 				if (sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) {
-					sbar_draw_num(pos + '5 5 0', clip, 3, 0, 24, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num(pos + '35 15 0', clip, 3, 0, 24, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				} else {
 					if (a < 10)
-						sbar_draw_num(pos + '25 -2 0', a, 3, 0, 16, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '35 8 0', a, 3, 0, 16, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '25 -2 0', a, 3, 0, 16, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '35 8 0', a, 3, 0, 16, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-					sbar_draw_num(pos + '25 18 0', clip, 3, 0, 16, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+					sbar_draw_num(pos + '35 28 0', clip, 3, 0, 16, '1 1 0.5', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
 			}
 		} else if not(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) {
-			if (CVAR(sbar_showcurrentammo) || CVAR(vid_conwidth) < 800) { // force showing current ammo only with conwidths < 800
+			if (CVAR(sbar_showcurrentammo)) { // force showing current ammo only with conwidths < 800
 				string ai;
 				float at;
 				if (sbar_stat_items & IT_SHELLS) { at = STAT_SHELLS; ai = "gfx/hud/sb_shells"; }
@@ -1695,41 +1667,28 @@ void(void) sbar_draw {
 				else at = 0;
 				if (at) {
 					a = getstati(at);
-
-					if (CVAR(vid_conwidth) >= 800) {
-						pos_x = 230;
-						pos_y = 40;
-					} else {
-						pos_x = 206;
-						pos_y = 33;
-					}
-					pos = sbar_bottom - pos;
-					drawpic(pos + '76 3 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawpic(pos + '106 13 0', ai, '24 24 0', '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 					if (a < 10)
-						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '35 15 0', a, 3, 0, 24, '0.7 0 0', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 					else
-						sbar_draw_num(pos + '5 5 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
+						sbar_draw_num(pos + '35 15 0', a, 3, 0, 24, '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
 			} else {
 				a = getstati(STAT_SHELLS);
 				if (a > 0) {
-					pos_x = 286; pos_y = 48;
-					sbar_ammo_draw(sbar_bottom - pos, a, sbar_stat_items & IT_SHELLS, "gfx/hud/sb_shells");
+					sbar_ammo_draw(pos, a, sbar_stat_items & IT_SHELLS, "gfx/hud/sb_shells");
 				}
 				a = getstati(STAT_NAILS);
 				if (a > 0) {
-					pos_x = 286; pos_y = 26;
-					sbar_ammo_draw(sbar_bottom - pos, a, sbar_stat_items & IT_NAILS, "gfx/hud/sb_bullets");
+					sbar_ammo_draw(pos + '0 26', a, sbar_stat_items & IT_NAILS, "gfx/hud/sb_bullets");
 				}
 				a = getstati(STAT_ROCKETS);
 				if (a > 0) {
-					pos_x = 200; pos_y = 48;
-					sbar_ammo_draw(sbar_bottom - pos, a, sbar_stat_items & IT_ROCKETS, "gfx/hud/sb_rocket");
+					sbar_ammo_draw(pos + '86 0', a, sbar_stat_items & IT_ROCKETS, "gfx/hud/sb_rocket");
 				}
 				a = getstati(STAT_CELLS);
 				if (a > 0) {
-					pos_x = 200; pos_y = 26;
-					sbar_ammo_draw(sbar_bottom - pos, a, sbar_stat_items & IT_CELLS, "gfx/hud/sb_cells");
+					sbar_ammo_draw(pos + '86 26', a, sbar_stat_items & IT_CELLS, "gfx/hud/sb_cells");
 				}
 			}
 		}
