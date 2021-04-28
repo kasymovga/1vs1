@@ -48,7 +48,7 @@ void(float fade) sbar_draw_weapons {
 	float stat_weapons = getstati(STAT_WEAPONS);
 	const float w_width = 48, w_height = 24, w_space = 2, font_size = 12;
 	float active;
-	vector weapon_position = sbar_position(CVAR(sbar_weapon_position), 98, 240) + '98 240 0';
+	vector weapon_position = sbar_position(CVAR(sbar_weapons_position), 98, 240) + '98 240 0';
 	pos_z = 0;
 	float wbit = 1;
 	for (nr = WEP_FIRST; nr <= WEP_LAST; ++nr, wbit *= 2) {
