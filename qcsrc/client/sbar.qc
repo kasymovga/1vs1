@@ -1764,8 +1764,7 @@ void(void) sbar_draw {
 				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(input_command_key("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 			}
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
-			hgapos_x = CVAR(vid_conwidth / 2) + 154;
-			hgapos_y = CVAR(vid_conheight) - 44;
+			hgapos = sbar_position(CVAR(sbar_nadget_position), 74, 48) + '4 4';
 			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
 			vector hgrsize;
 			if (hgregen && hgregen != 1) {
