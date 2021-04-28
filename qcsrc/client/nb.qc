@@ -10,11 +10,8 @@
 
 void(void) nb_hud {
 	float nb_pb;
-	vector pos;
+	vector pos = sbar_position(CVAR(sbar_gameinfo_position), 88,  50) + '4 8';
 	nb_pb = getstatf(STAT_NB_METERSTART);
-	pos_x = 4;
-	pos_y = CVAR(vid_conheight) - 42;
-	pos_z = 0;
 	//Manage the progress bar if any
 	if (nb_pb > 0) {
 		vector s;

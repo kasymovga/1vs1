@@ -2,6 +2,7 @@ void(float) sbar_field_set;
 void(float) sbar_help;
 vector(vector v) sbar_font_size;
 void(void) sbar_gametype_init;
+vector sbar_position(vector pos, float w, float h);
 float scoreboard_bottom;
 
 #define SBAR_FIELDS_MAX 16
