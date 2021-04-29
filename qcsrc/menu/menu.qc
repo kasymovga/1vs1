@@ -20,11 +20,12 @@ float menu_doubleclick_time;
 vector menu_doubleclick_position;
 
 float URI_GET_SERVERLIST;
-#define SERVERLIST_URIS_COUNT 2
+#define SERVERLIST_URIS_COUNT 3
 var float serverlist_uri_index = 0;
 string serverlist_uris[SERVERLIST_URIS_COUNT] = {
+	"http://kasymovga.github.io/rexdlc-web/serverlist.txt",
+	"http://rexuiz.com/maps/serverlist.txt",
 	"http://nexuiz.mooo.com/serverlist.txt",
-	"http://nexuiz.trafflow.com/serverlist.txt",
 };
 
 float(string url, float id) uri_get = #513;
