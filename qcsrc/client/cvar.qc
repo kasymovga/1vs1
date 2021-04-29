@@ -115,3 +115,7 @@ void(void) cvar_clientsettemp_restore {
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 			cvar_set(e.netname, e.message);
 }
+
+void(string s, vector v) cvar_set_vec {
+	cvar_set(s, strcat(ftos(v_x), " ", ftos(v_y), " ", ftos(v_z)));
+}

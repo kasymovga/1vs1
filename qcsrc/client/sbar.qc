@@ -19,6 +19,25 @@ float SBAR_SCOREBOARD_OFFSET = 50;
 
 float sbar_weaponspace[10];
 
+void(void) sbar_set_defaults {
+	cvar_set_vec("sbar_timer_position", SBAR_TIMER_POSITION_DEFAULT);
+	cvar_set_vec("sbar_score_position", SBAR_SCORE_POSITION_DEFAULT);
+	cvar_set_vec("sbar_ammo_position", SBAR_AMMO_POSITION_DEFAULT);
+	cvar_set_vec("sbar_health_position", SBAR_HEALTH_POSITION_DEFAULT);
+	cvar_set_vec("sbar_armor_position", SBAR_ARMOR_POSITION_DEFAULT);
+	cvar_set_vec("sbar_nadget_position", SBAR_NADGET_POSITION_DEFAULT);
+	cvar_set_vec("sbar_weapons_position", SBAR_WEAPONS_POSITION_DEFAULT);
+	cvar_set_vec("sbar_gameinfo_position", SBAR_GAMEINFO_POSITION_DEFAULT);
+	cvar_set("sbar_timer_scale", "1");
+	cvar_set("sbar_score_scale", "1");
+	cvar_set("sbar_ammo_scale", "1");
+	cvar_set("sbar_health_scale", "1");
+	cvar_set("sbar_armor_scale", "1");
+	cvar_set("sbar_nadget_scale", "1");
+	cvar_set("sbar_weapons_scale", "1");
+	cvar_set("sbar_gameinfo_scale", "1");
+}
+
 vector sbar_position(vector pos, vector sz) {
 	vector v = '0 0 0';
 	if (pos_z & 1)
