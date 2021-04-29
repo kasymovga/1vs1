@@ -11,6 +11,18 @@ void(void) skin_init;
 #undef SKINFLOAT
 #undef SKINVECTOR
 
+#define SKINBEGIN void skin_reset() {
+#define SKINVECTOR(name,def) SKIN##name = def;
+#define SKINFLOAT(name,def) SKIN##name = def;
+#define SKINSTRING(name,def) 
+#define SKINEND }
+#include "skin-customizables.inc"
+#undef SKINEND
+#undef SKINSTRING
+#undef SKINFLOAT
+#undef SKINVECTOR
+#undef SKINBEGIN
+
 #define SKINBEGIN void skin_setting_apply(string key, string value) { switch(key) {
 #define SKINVECTOR(name,def) case #name: SKIN##name = stov(value); break
 #define SKINFLOAT(name,def) case #name: SKIN##name = stof(value); break
