@@ -6,7 +6,7 @@
 #define SBAR_WEAPONS_POSITION_DEFAULT '0 84 10'
 #define SBAR_POWERUPS_POSITION_DEFAULT '0 320 10'
 #define SBAR_GAMEINFO_POSITION_DEFAULT '0 0 8'
-#define SBAR_NADGET_POSITION_DEFAULT '191 0 9'
+#define SBAR_NADGET_POSITION_DEFAULT '200 0 9'
 void(float) sbar_field_set;
 void(float) sbar_help;
 vector(vector v) sbar_font_size;

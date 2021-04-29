@@ -1770,33 +1770,28 @@ void(void) sbar_draw {
 				draw_string_colorcoded_center(hgapos - sbar_fontsize_y * '0 2 0', strcat("^3Press ^1", strtoupper(input_command_key("hook / nadget key", "+hook")), " ^3to win!"), sbar_fontsize, 0.6, DRAWFLAG_NORMAL);
 			}
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
-			hgapos = sbar_position(CVAR(sbar_nadget_position), '74 48' * CVAR(sbar_nadget_scale)) + '4 4' * CVAR(sbar_nadget_scale);
+			hgapos = sbar_position(CVAR(sbar_nadget_position), '148 24' * CVAR(sbar_nadget_scale));
 			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
 			vector hgrsize;
 			if (hgregen && hgregen != 1) {
 				hgrsize = '64 16 0' * CVAR(sbar_nadget_scale);
 				hgrsize_x *= hgregen;
-				drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawfill(hgapos + '4 4' * CVAR(sbar_nadget_scale), hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
 			}
-			hgapos -= '4 4' * CVAR(sbar_nadget_scale);
 			sbar_draw_num(hgapos, hgammo, 2, 0, 24 * CVAR(sbar_nadget_scale), '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-			hgapos_x += 48 * CVAR(sbar_nadget_scale);
-			drawpic(hgapos, hgicon, '22 22' * CVAR(sbar_nadget_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(hgapos + '48 0' * CVAR(sbar_nadget_scale), hgicon, '22 22' * CVAR(sbar_nadget_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			if (hgtype2) {
 				hgicon = nadget_TypeToIcon(hgtype2, TRUE, 0);
-				hgapos_y += 26 * CVAR(sbar_nadget_scale);
-				hgapos_x -= 44 * CVAR(sbar_nadget_scale);
+				hgapos_x += 74 * CVAR(sbar_nadget_scale);
 				float hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2) - hgregen2;
 				if (hgregen2 && hgregen2 != 1) {
 					hgrsize = '64 16 0' * CVAR(sbar_nadget_scale);
 					hgrsize_x *= hgregen2;
-					drawfill(hgapos, hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED2), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
+					drawfill(hgapos + '4 4' * CVAR(sbar_nadget_scale), hgrsize, '1 1 1' - '0 0.5 0.5' * getstati(STAT_HGREGENPAUSED2), 0.5 * sbar_alpha_fg, DRAWFLAG_NORMAL);
 				}
-				hgapos -= '4 4';
 				hgammo = getstati(STAT_HGAMMO2);
 				sbar_draw_num(hgapos, hgammo, 2, 0, 24 * CVAR(sbar_nadget_scale), '1 1 1', 0, sbar_alpha_fg, DRAWFLAG_NORMAL);
-				hgapos_x += 48;
-				drawpic(hgapos, hgicon, '22 22' * CVAR(sbar_nadget_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
+				drawpic(hgapos + '48 0' * CVAR(sbar_nadget_scale), hgicon, '22 22' * CVAR(sbar_nadget_scale), '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 			}
 		}
 		// draw scores and timer
