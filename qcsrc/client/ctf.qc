@@ -13,7 +13,7 @@ void(void) ctf_hud {
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
 	redflag = (sbar_stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (sbar_stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-	vector pos = sbar_position(CVAR(sbar_gameinfo_position), 124, 50);
+	vector pos = sbar_position(CVAR(sbar_gameinfo_position), '124 50' * CVAR(sbar_gameinfo_scale));
 	// when status CHANGES, set old status into prevstatus and current status into status
 	if (redflag != ctf_redflag_prevframe) {
 		ctf_redflag_statuschange_time = time;
@@ -94,13 +94,13 @@ void(void) ctf_hud {
 		break;
 	}
 	if (team_my == COLOR_TEAM1) { // always draw own flag on left
-		redflag_pos = pos + '4 0 0';
-		blueflag_pos = pos + '62 0 0';
+		redflag_pos = pos + '4 0 0' * CVAR(sbar_gameinfo_scale);
+		blueflag_pos = pos + '62 0 0' * CVAR(sbar_gameinfo_scale);
 	} else {
-		blueflag_pos = pos + '4 0 0';
-		redflag_pos = pos + '62 0 0';
+		blueflag_pos = pos + '4 0 0' * CVAR(sbar_gameinfo_scale);
+		redflag_pos = pos + '62 0 0' * CVAR(sbar_gameinfo_scale);
 	}
-	sz = '52 52 0';
+	sz = '52 52 0' * CVAR(sbar_gameinfo_scale);
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if (red_icon_prevstatus && f < 1)
 		draw_pic_expanding(redflag_pos, red_icon_prevstatus, sz, '1 1 1', sbar_alpha_fg * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);

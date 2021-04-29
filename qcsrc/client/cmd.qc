@@ -3,6 +3,10 @@ void(void) cmd_spawnentity_draw {
 	R_AddEntity(self);
 }
 
+void(string s, vector v) cmd_cvar_set_vec {
+	cvar_set(s, strcat(ftos(v_x), " ", ftos(v_y), " ", ftos(v_z)));
+}
+
 void(string msg) GameCommand { //called by engine
 	float argc;
 	argc = tokenize_console(msg);
@@ -67,6 +71,23 @@ void(string msg) GameCommand { //called by engine
 		mute_add(rint(stof(argv(1))));
 	} else if (cmd == "unmute" && argc == 2) {
 		mute_remove(rint(stof(argv(1))));
+	} else if (cmd == "sbar_reset") {
+		cmd_cvar_set_vec("sbar_timer_position", SBAR_TIMER_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_score_position", SBAR_SCORE_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_ammo_position", SBAR_AMMO_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_health_position", SBAR_HEALTH_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_armor_position", SBAR_ARMOR_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_nadget_position", SBAR_NADGET_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_weapons_position", SBAR_WEAPONS_POSITION_DEFAULT);
+		cmd_cvar_set_vec("sbar_gameinfo_position", SBAR_GAMEINFO_POSITION_DEFAULT);
+		cvar_set("sbar_timer_scale", "1");
+		cvar_set("sbar_score_scale", "1");
+		cvar_set("sbar_ammo_scale", "1");
+		cvar_set("sbar_health_scale", "1");
+		cvar_set("sbar_armor_scale", "1");
+		cvar_set("sbar_nadget_scale", "1");
+		cvar_set("sbar_weapons_scale", "1");
+		cvar_set("sbar_gameinfo_scale", "1");
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}

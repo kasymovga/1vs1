@@ -1,17 +1,17 @@
 #define SBAR_TIMER_POSITION_DEFAULT '0 2 2'
-#define SBAR_SCORE_POSITION_DEFAULT '0 0 10'
+#define SBAR_SCORE_POSITION_DEFAULT '0 14 10'
 #define SBAR_AMMO_POSITION_DEFAULT '-200 0 9'
 #define SBAR_HEALTH_POSITION_DEFAULT '-39 0 9'
 #define SBAR_ARMOR_POSITION_DEFAULT '71 0 9'
-#define SBAR_WEAPON_POSITION_DEFAULT '0 90 10'
-#define SBAR_POWERUP_POSITION_DEFAULT '0 320 10'
-#define SBAR_GAMEINOF_POSITION_DEFAULT '0 0 8'
+#define SBAR_WEAPONS_POSITION_DEFAULT '0 84 10'
+#define SBAR_POWERUPS_POSITION_DEFAULT '0 320 10'
+#define SBAR_GAMEINFO_POSITION_DEFAULT '0 0 8'
 #define SBAR_NADGET_POSITION_DEFAULT '191 0 9'
 void(float) sbar_field_set;
 void(float) sbar_help;
 vector(vector v) sbar_font_size;
 void(void) sbar_gametype_init;
-vector sbar_position(vector pos, float w, float h);
+vector sbar_position(vector pos, vector sz);
 float scoreboard_bottom;
 
 #define SBAR_FIELDS_MAX 16
