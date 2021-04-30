@@ -42,7 +42,7 @@ void(void) sbar_set_defaults {
 
 void(string s) sbar_load {
 	sbar_set_defaults();
-	float f = fopen(strcat(s, ".hud"), FILE_READ);
+	float f = fopen(s, FILE_READ);
 	string l;
 	string h, t;
 	if (f >= 0) {
@@ -73,7 +73,7 @@ void(float f, string s, vector def) sbar_save_write_line_position {
 }
 
 void(string s) sbar_save {
-	float f = fopen(strcat(s, ".hud"), FILE_WRITE);
+	float f = fopen(s, FILE_WRITE);
 	if (f >= 0) {
 		sbar_save_write_line_scale(f, "sbar_timer_scale");
 		sbar_save_write_line_scale(f, "sbar_score_scale");

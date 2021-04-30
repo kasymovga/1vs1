@@ -95,6 +95,7 @@ void GUI_Draw_Remove() {
 	draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
 }
+
 void GUI_Draw() {
 	float timescale = getstatf(STAT_MOVEVARS_TIMESCALE);
 	drawfont = sbar_font;
@@ -176,6 +177,9 @@ void GUI_Show(float window) {
 	case GUI_RECORDLIST:
 		e = gui_recordList;
 		break;
+	case GUI_HUD:
+		e = gui_hud;
+		break;
 	}
 	if not(e) {
 		GUI_Hide();
@@ -191,6 +195,8 @@ void GUI_Hide() {
 	if (GUI_currentWindow == GUI_GAMEMENU || GUI_currentWindow == GUI_TEAMSELECT || GUI_currentWindow == GUI_SAVELOAD || (GUI_currentWindow == GUI_HINT && !hint_user)) {
 		mainWindow.draw2d = GUI_Draw_Remove;
 		mainWindow.draw2dflag = 1;
+	} else if (GUI_currentWindow == GUI_HUD) {
+		GUI_Show(GUI_GAMESETTINGS);
 	} else
 		GUI_Show(GUI_GAMEMENU);
 }

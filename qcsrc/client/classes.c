@@ -50,6 +50,8 @@
 #include "gui/dialog_mutelist.c"
 #include "gui/recordlist.c"
 #include "gui/dialog_recordlist.c"
+#include "gui/dialog_hud.c"
+#include "gui/hudlist.c"
 #undef draw
 #undef frame
 #undef conwidth

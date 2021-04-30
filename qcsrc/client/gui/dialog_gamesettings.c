@@ -5,7 +5,7 @@ CLASS(NexuizGameSettingsDialog) EXTENDS(NexuizRootDialog)
 	ATTRIB(NexuizGameSettingsDialog, title, string, "Game Settings")
 	ATTRIB(NexuizGameSettingsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(NexuizGameSettingsDialog, intendedWidth, float, 0.5)
-	ATTRIB(NexuizGameSettingsDialog, rows, float, 18)
+	ATTRIB(NexuizGameSettingsDialog, rows, float, 19)
 	ATTRIB(NexuizGameSettingsDialog, columns, float, 6)
 	ATTRIB(NexuizGameSettingsDialog, name, string, "GameSettings")
 ENDCLASS(NexuizGameSettingsDialog)
@@ -17,6 +17,10 @@ void configureDialogNexuizGameSettingsDialog(entity me) {
 		me.rows = me.rows + 2;
 
 	configureDialogNexuizDialog(me); //Parent method
+}
+
+void(entity me, entity bnt) showHudDialogGameSettingsDialog {
+	GUI_Show(GUI_HUD);
 }
 
 void fillNexuizGameSettingsDialog(entity me)
@@ -141,6 +145,10 @@ void fillNexuizGameSettingsDialog(entity me)
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.com"));
 			e.colorL = '0 0.5 1';
 	}
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 5, e = makeNexuizButton("HUD Selection...", '0 0 0'));
+			e.onClick = showHudDialogGameSettingsDialog;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;", COMMANDBUTTON_CLOSE));
