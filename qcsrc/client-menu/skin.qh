@@ -12,8 +12,8 @@ void(void) skin_init;
 #undef SKINVECTOR
 
 #define SKINBEGIN void skin_reset() {
-#define SKINVECTOR(name,def) SKIN##name = def;
-#define SKINFLOAT(name,def) SKIN##name = def;
+#define SKINVECTOR(name,def) SKIN##name = def
+#define SKINFLOAT(name,def) SKIN##name = def
 #define SKINSTRING(name,def) 
 #define SKINEND }
 #include "skin-customizables.inc"
