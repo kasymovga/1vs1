@@ -40,6 +40,63 @@ void(void) sbar_set_defaults {
 	cvar_set("sbar_gameinfo_scale", "1");
 }
 
+void(string s) sbar_load {
+	sbar_set_defaults();
+	float f = fopen(strcat(s, ".hud"), FILE_READ);
+	string l;
+	string h, t;
+	if (f >= 0) {
+		while ((l = fgets(f))) {
+			h = str_car(l);
+			if (h != "") {
+				if (substring(h, 0, 5) == "sbar_") {
+					t = str_cdr(l);
+					cvar_set(h, t);
+				}
+			}
+		}
+		fclose(f);
+	}
+}
+
+void(float f, string s) sbar_save_write_line_scale {
+	if (cvar_string(s) != "1") {
+		fputs(f, strcat(s, " ", cvar_string(s), "\n"));
+	}
+}
+
+void(float f, string s, vector def) sbar_save_write_line_position {
+	vector v = stov(cvar_string(s));
+	if (v != def) {
+		fputs(f, strcat(s, " ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n"));
+	}
+}
+
+void(string s) sbar_save {
+	float f = fopen(strcat(s, ".hud"), FILE_WRITE);
+	if (f >= 0) {
+		sbar_save_write_line_scale(f, "sbar_timer_scale");
+		sbar_save_write_line_scale(f, "sbar_score_scale");
+		sbar_save_write_line_scale(f, "sbar_ammo_scale");
+		sbar_save_write_line_scale(f, "sbar_health_scale");
+		sbar_save_write_line_scale(f, "sbar_armor_scale");
+		sbar_save_write_line_scale(f, "sbar_nadget_scale");
+		sbar_save_write_line_scale(f, "sbar_nadget2_scale");
+		sbar_save_write_line_scale(f, "sbar_weapons_scale");
+		sbar_save_write_line_scale(f, "sbar_gameinfo_scale");
+		sbar_save_write_line_position(f, "sbar_timer_position", SBAR_TIMER_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_score_position", SBAR_SCORE_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_ammo_position", SBAR_AMMO_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_health_position", SBAR_HEALTH_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_armor_position", SBAR_ARMOR_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_nadget_position", SBAR_NADGET_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_nadget2_position", SBAR_NADGET2_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_weapons_position", SBAR_WEAPONS_POSITION_DEFAULT);
+		sbar_save_write_line_position(f, "sbar_gameinfo_position", SBAR_GAMEINFO_POSITION_DEFAULT);
+		fclose(f);
+	}
+}
+
 vector sbar_position(vector pos, vector sz) {
 	vector v = '0 0 0';
 	if (pos_z & 1)

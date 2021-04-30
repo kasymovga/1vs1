@@ -69,6 +69,10 @@ void(string msg) GameCommand { //called by engine
 		mute_remove(rint(stof(argv(1))));
 	} else if (cmd == "sbar_reset") {
 		sbar_set_defaults();
+	} else if (cmd == "sbar_save" && argc == 2) {
+		sbar_save(argv(1));
+	} else if (cmd == "sbar_load" && argc == 2) {
+		sbar_load(argv(1));
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}
