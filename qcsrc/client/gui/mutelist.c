@@ -1,8 +1,6 @@
 #ifdef INTERFACE
 CLASS(NexuizMuteList) EXTENDS(NexuizListBox)
-	METHOD(NexuizMuteList, configureNexuizMuteList, void(entity))
 	METHOD(NexuizMuteList, drawListBoxItem, void(entity, float, vector, float))
-	//METHOD(NexuizMuteList, setSelected, void(entity, float))
 	METHOD(NexuizMuteList, resizeNotify, void(entity, vector, vector, vector, vector))
 	ATTRIB(NexuizMuteList, textBox, entity, NULL)
 	ATTRIB(NexuizMuteList, realUpperMargin, float, 0)
@@ -17,14 +15,10 @@ entity makeNexuizMuteList();
 entity makeNexuizMuteList(void) {
 	entity me;
 	me = spawnNexuizMuteList();
-	me.configureNexuizMuteList(me);
-	return me;
-}
-
-void configureNexuizMuteListNexuizMuteList(entity me) {
 	me.nItems = maxclients;
 	me.selectedItem = -1;
 	me.configureNexuizListBox(me);
+	return me;
 }
 
 void resizeNotifyNexuizMuteList(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize) {

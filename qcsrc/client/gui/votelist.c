@@ -1,6 +1,5 @@
 #ifdef INTERFACE
 CLASS(NexuizVoteList) EXTENDS(NexuizListBox)
-	METHOD(NexuizVoteList, configureNexuizVoteList, void(entity))
 	METHOD(NexuizVoteList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizVoteList, setSelected, void(entity, float))
 	METHOD(NexuizVoteList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -18,15 +17,10 @@ entity makeNexuizVoteList(void)
 {
 	entity me;
 	me = spawnNexuizVoteList();
-	me.configureNexuizVoteList(me);
-	return me;
-}
-
-void configureNexuizVoteListNexuizVoteList(entity me)
-{
-    me.nItems = vote_commands_count;
+	me.nItems = vote_commands_count;
 	me.selectedItem = -1;
 	me.configureNexuizListBox(me);
+	return me;
 }
 
 void setSelectedNexuizVoteList(entity me, float i)

@@ -1,6 +1,5 @@
 #ifdef INTERFACE
 CLASS(NexuizVoteArgsList) EXTENDS(NexuizListBox)
-	METHOD(NexuizVoteArgsList, configureNexuizVoteArgsList, void(entity))
 	METHOD(NexuizVoteArgsList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizVoteArgsList, setSelected, void(entity, float))
 	METHOD(NexuizVoteArgsList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -21,14 +20,9 @@ entity makeNexuizVoteArgsList(void)
 	entity me;
 	localcmd("cmd lsmaps2\n");
 	me = spawnNexuizVoteArgsList();
-	me.configureNexuizVoteArgsList(me);
+	me.configureNexuizListBox(me);
 	me.nItems = 0;
 	return me;
-}
-
-void configureNexuizVoteArgsListNexuizVoteArgsList(entity me)
-{
-	me.configureNexuizListBox(me);
 }
 
 void setVoteTypeNexuizVoteArgsList(entity me, string vote) {

@@ -1,6 +1,5 @@
 #ifdef INTERFACE
 CLASS(NexuizRecordList) EXTENDS(NexuizListBox)
-	METHOD(NexuizRecordList, configureNexuizRecordList, void(entity))
 	METHOD(NexuizRecordList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(NexuizRecordList, setSelected, void(entity, float))
 	METHOD(NexuizRecordList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -16,13 +15,9 @@ entity makeNexuizRecordList();
 entity makeNexuizRecordList(void) {
 	entity me;
 	me = spawnNexuizRecordList();
-	me.configureNexuizRecordList(me);
+	me.configureNexuizListBox(me);
 	me.nItems = 1;
 	return me;
-}
-
-void configureNexuizRecordListNexuizRecordList(entity me) {
-	me.configureNexuizListBox(me);
 }
 
 void setSelectedNexuizRecordList(entity me, float i) {
