@@ -28,7 +28,7 @@ void(entity me) fillNexuizHudDialog {
 	me.TR(me);
 	me.TR(me);
 	me.TR(me); // ???
-		me.TD(me, 1, 1, e = makeNexuizButton("Appply", '0 0 0'));
+		me.TD(me, 1, 1, e = makeNexuizButton("Apply", '0 0 0'));
 			e.onClick = loadNexuizHudDialog;
 			e.onClickEntity = hudlist;
 			hudlist.onClickEntity = e;
