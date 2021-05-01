@@ -14,8 +14,47 @@ entity makeNexuizHudList();
 #ifdef IMPLEMENTATION
 float searchHudList;
 
+void(string path, string s) checkDefaultNexuizHudList {
+	if (file_exists(strcat("data/", path, ".hud"))) return;
+	float f = fopen(strcat(path, ".hud"), FILE_WRITE);
+	if (f >= 0) {
+		fputs(f, s);
+		fclose(f);
+	}
+}
+
 entity(void) makeNexuizHudList {
 	entity me;
+	checkDefaultNexuizHudList("default1", "sbar_timer_position -18 20 1\n"
+			"sbar_timer_scale 1.5\n");
+	checkDefaultNexuizHudList("default2", "sbar_weapons_position 0 200 8\n");
+	checkDefaultNexuizHudList("default3", "sbar_weapons_position 0 200 8\n"
+			"sbar_timer_position -18 20 1\n"
+			"sbar_timer_scale 1.5\n");
+	checkDefaultNexuizHudList("alternative1", "sbar_ammo_position 0 0 9\n"
+		"sbar_armor_position 140 5 9\n"
+		"sbar_gameinfo_position 0 0 2\n"
+		"sbar_health_position -140 5 9\n"
+		"sbar_nadget_position 0 9 8\n"
+		"sbar_nadget2_position 74 9 8\n"
+		"sbar_powerups_position 0 336 10\n"
+		"sbar_score_position 0 8 10\n"
+		"sbar_score_scale 0.75\n"
+		"sbar_timer_position -18 20 1\n"
+		"sbar_timer_scale 1.5\n"
+		"sbar_weapons_position 0 100 10\n");
+	checkDefaultNexuizHudList("alternative2", "sbar_ammo_position 0 0 9\n"
+		"sbar_armor_position 140 5 9\n"
+		"sbar_gameinfo_position 0 0 2\n"
+		"sbar_health_position -140 5 9\n"
+		"sbar_nadget_position 0 9 8\n"
+		"sbar_nadget2_position 74 9 8\n"
+		"sbar_powerups_position 0 336 10\n"
+		"sbar_score_position 0 8 10\n"
+		"sbar_score_scale 0.75\n"
+		"sbar_timer_position -18 20 1\n"
+		"sbar_timer_scale 1.5\n"
+		"sbar_weapons_position 0 200 0\n");
 	me = spawnNexuizHudList();
 	me.configureNexuizListBox(me);
 	me.selectedItem = -1;
@@ -31,7 +70,6 @@ entity(void) makeNexuizHudList {
 
 void clickListBoxItemNexuizHudList(entity me, float i, vector where, float doubleclick) {
 	if (doubleclick) {
-		print("i = ", ftos(i), "\n");
 		string s;
 		if (i > 0 && searchHudList >= 0) {
 			s = search_getfilename(searchHudList, i - 1);
@@ -41,6 +79,8 @@ void clickListBoxItemNexuizHudList(entity me, float i, vector where, float doubl
 		} else
 			return;
 
+		GUI_Hide();
+		GUI_Hide();
 		GUI_Hide();
 	}
 }
