@@ -124,14 +124,28 @@ void(float fade) sbar_draw_weapons {
 		sbar_weaponspace[idx] = 0;
 
 	float stat_weapons = getstati(STAT_WEAPONS);
-	vector w_size = '48 24' * CVAR(sbar_weapons_scale), font_size = '12 12' * CVAR(sbar_weapons_scale);
-	float w_space = 2 * CVAR(sbar_weapons_scale), w_shift = w_size_x + w_space;
+	vector w_size = '48 24' * CVAR(sbar_weapons_scale), font_size = '12 12' * CVAR(sbar_weapons_scale), w_shift, w_shift2;
+	float w_space = 2 * CVAR(sbar_weapons_scale);
 	float active;
-	vector weapon_position = sbar_position(CVAR(sbar_weapons_position), '98 240' * CVAR(sbar_weapons_scale)) + '0 216' * CVAR(sbar_weapons_scale);
-	if not(CVAR(sbar_weapons_position_z) & 2) { //from left
-		w_shift = -w_shift;
-	} else {
-		weapon_position_x += w_size_x;
+	vector weapon_position;
+	if (CVAR(sbar_weapons_position_z) & 1) { //horizontal bar
+		w_shift2_x = w_size_x;
+		if (CVAR(sbar_weapons_position_z) & 8) { //down
+			weapon_position = sbar_position(CVAR(sbar_weapons_position), '498 48' * CVAR(sbar_weapons_scale) - '0 24' * CVAR(sbar_weapons_scale));
+			w_shift_y = -w_size_y;
+		} else {
+			weapon_position = sbar_position(CVAR(sbar_weapons_position), '498 48' * CVAR(sbar_weapons_scale));
+			w_shift_y = w_size_y;
+		}
+	} else { //vertical bar
+		w_shift2_y = -w_size_y;
+		if (CVAR(sbar_weapons_position_z) & 2) { //right
+			weapon_position = sbar_position(CVAR(sbar_weapons_position), '98 240' * CVAR(sbar_weapons_scale)) + '48 216' * CVAR(sbar_weapons_scale);
+			w_shift_x = -w_size_x;
+		} else { //left
+			weapon_position = sbar_position(CVAR(sbar_weapons_position), '98 240' * CVAR(sbar_weapons_scale)) + '0 216' * CVAR(sbar_weapons_scale);
+			w_shift_x = w_size_x;
+		}
 	}
 	pos_z = 0;
 	float wbit = 1;
@@ -149,19 +163,18 @@ void(float fade) sbar_draw_weapons {
 		sbar_color_x = sbar_color_y = sbar_color_z = value;
 		sp = sbar_weaponspace[idx];
 		sbar_weaponspace[idx] = sp + 1;
+		pos = weapon_position + w_shift2 * idx;
 		if (sp)
-			pos_x = weapon_position_x - w_shift * sp;
-		else
-			pos_x = weapon_position_x;
+			pos += w_shift * sp;
 
-		pos_y = weapon_position_y - w_size_y * idx;
 		if (active)
 			drawpic(pos, "gfx/hud/sb_ammobg", w_size, '1 1 1', fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		drawpic(pos, strcat("gfx/hud/inv_weapon", ftos(nr - 1)), w_size, sbar_color, fade * sbar_alpha_fg, DRAWFLAG_NORMAL);
-		pos_x += w_space;
-		if (sp == 0)
+		if (sp == 0) {
+			pos_x += w_space;
 			drawstring(pos, ftos(imp), font_size, '1 1 1', sbar_alpha_fg * fade, DRAWFLAG_NORMAL);
+		}
 	}
 }
 
