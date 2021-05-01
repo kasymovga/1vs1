@@ -2,7 +2,6 @@ void(void) skin_init {
 	float fh, n;
 	string s;
 	fh = -1;
-	skin_reset();
 	str_unzone_ifneeded(draw_skin);
 	if (cvar_string("menu_skin") != "") {
 		draw_skin = strcat("gfx/menu/", cvar_string("menu_skin"));

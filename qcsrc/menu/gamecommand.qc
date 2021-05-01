@@ -96,6 +96,9 @@ void GameCommand(string theCommand)
 		ui_con_width_height_set();
 		return;
 	}
-
+	if (argv(0) == "skinselect") {
+		m_goto_skin_selector();
+		return;
+	}
 	print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");
 }
