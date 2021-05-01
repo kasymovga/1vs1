@@ -2152,6 +2152,7 @@ void(entity pl) player_body_setup {
 		pl.clipgroup = pl.team;
 }
 
+float player_real_count;
 void(entity spot) player_spawn {
 	entity oldself, oldother;
 	player_clear(FALSE);
@@ -2259,6 +2260,15 @@ void(entity spot) player_spawn {
 	gamehook_chain_spawn(spot);
 	antilag_teleported(self);
 	self.wasplayer = TRUE;
+	entity e;
+	float n;
+	FOR_EACH_REALPLAYER(e) n++;
+	if (n > player_real_count)
+	if (g_reset_on_join)
+	if (n == g_reset_on_join) {
+		ready_restart();
+	}
+	player_real_count = n;
 }
 
 void(string pattern) player_precache_all_models {
@@ -2514,6 +2524,7 @@ void() player_init {
 	CVAR_CACHE(g_spawnshieldtime);
 	CVAR_CACHE(g_spawnfrags);
 	CVAR_CACHE(g_spawnsound);
+	CVAR_CACHE(g_reset_on_join);
 	CVAR_CACHE(sv_autotaunt);
 	CVAR_CACHE(sv_taunt);
 	CVAR_CACHE(sv_loddistance1);
