@@ -208,23 +208,23 @@ void(void) player_species_setup {
 		}
 	self.species = SPECIES_HUMAN;
 	glob = search_begin("models/player/*.txt", TRUE, TRUE);
-	if(glob < 0)
+	if (glob < 0)
 		return;
 
-	for(j = 0; j <= 1; ++j) {
-		for(i = 0; i < search_getsize(glob); ++i) {
+	for (j = 0; j <= 1; ++j) {
+		for (i = 0; i < search_getsize(glob); ++i) {
 			fn = search_getfilename(glob, i);
 			if (fh > 0)
 				fclose(fh);
 
 			fh = fopen(fn, FILE_READ);
-			if(fh < 0)
+			if (fh < 0)
 				continue;
 
 			fgets(fh); fgets(fh);
 			sk = stof(fgets(fh));
-			if(sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
-			if(fgets(fh) == self.body.model) {
+			if (sk == (j ? 0 : self.skinindex)) // 2nd pass skips the skin test
+			if (fgets(fh) == self.body.model) {
 				l = fgets(fh);
 				len = tokenize_console(l);
 				if (len != 2)
@@ -233,7 +233,7 @@ void(void) player_species_setup {
 				if (argv(0) != "species")
 					continue;
 
-				switch(argv(1)) {
+				switch (argv(1)) {
 				case "human":       self.species = SPECIES_HUMAN;       goto speciesfound;
 				case "alien":       self.species = SPECIES_ALIEN;       goto speciesfound;
 				case "robot_shiny": self.species = SPECIES_ROBOT_SHINY; goto speciesfound;
@@ -254,14 +254,14 @@ void(void) player_species_setup {
 }
 
 void(float finished, string samp) play_countdown {
-	if(clienttype(self) == CLIENTTYPE_REAL)
-		if(floor(finished - time - frametime) != floor(finished - time))
-			if(finished - time < 6)
+	if (clienttype(self) == CLIENTTYPE_REAL)
+		if (floor(finished - time - frametime) != floor(finished - time))
+			if (finished - time < 6)
 				sound (self, CHAN_AUTO, samp, VOL_BASE, ATTN_NORM);
 }
 
 void() player_effects {
-	if(!self.body.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
+	if (!self.body.modelindex || PLAYER_REALLY_DEAD(self)) // don't apply the flags if the player is gibbed
 		return;
 
 	fire_apply_effect(self);
@@ -537,14 +537,12 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	o.health = o.health - _damage;
 	self.dmg_take = self.dmg_take + _damage;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-	if (o.health <= -75 && b.modelindex != 0)
-	{
+	if (o.health <= -75 && b.modelindex != 0) {
 		// don't use any animations as a gib
 		b.frame = 0;
 		b.dead_frame = 0;
 		// view just above the floor
 		o.view_ofs = '0 0 4';
-
 		violence_gib_splash(self, 1, 1, attacker);
 		b.modelindex = 0; // restore later
 		self.event_damage = world.event_damage;
@@ -560,8 +558,7 @@ void(float killed) player_clear {
 		portal_clear_all(self);
 
 	// reset fields the weapons may use just in case
-	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-	{
+	for (j = WEP_FIRST; j <= WEP_LAST; ++j) {
 		weapon_action(j, WR_RESETPLAYER);
 		weapon_action(j, WR_CLEAR);
 		ATTACK_FINISHED_FOR(self, j) = 0;
@@ -577,13 +574,12 @@ void(float killed) player_clear {
 
 float checkrules_firstblood;
 void(entity attacker, entity inflictor, entity targ, float deathtype) player_obituary {
-	string	s, a;
+	string s, a;
 	float p, w;
 	s = targ.netname;
 	a = attacker.netname;
 	weapon_fragprefix = "";
-	if (targ == attacker)
-	{
+	if (targ == attacker) {
 		if not(clienttype(attacker) == CLIENTTYPE_REAL)
 			bot_say(attacker, FALSE, world, cvar_string("bot_messages_suicide"), "");
 		if (deathtype == DEATH_TEAMCHANGE) {
@@ -601,14 +597,12 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
 		}
 		w = DEATH_WEAPONOF(deathtype);
-		if(WEP_VALID(w))
-		{
+		if (WEP_VALID(w)) {
 			weapon_deathtypestring = "couldn't resist the urge to self-destruct";
 			weapon_deathtype = deathtype;
 			weapon_action(w, WR_SUICIDEMESSAGE);
 			bprint("^1", s, "^1 ", weapon_deathtypestring, "\n");
-		}
-		else if (deathtype == DEATH_KILL)
+		} else if (deathtype == DEATH_KILL)
 			bprint ("^1",s, "^1 couldn't take it anymore\n");
 		else if (deathtype == DEATH_ROT)
 			bprint ("^1",s, "^1 died\n");
@@ -621,29 +615,23 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		else if (deathtype != DEATH_TEAMCHANGE)
 			bprint ("^1",s, "^1 couldn't resist the urge to self-destruct\n");
 
-		if(deathtype != DEATH_TEAMCHANGE)
-		{
+		if (deathtype != DEATH_TEAMCHANGE) {
 			score_give_frag(attacker, targ, -1);
 		}
 		if (targ.killcount > 2)
 			bprint ("^1",s,"^1 ended it all after a ",ftos(targ.killcount)," kill spree\n");
-	}
-	else if (attacker.classname == "player")
-	{
-		if not(clienttype(attacker) == CLIENTTYPE_REAL)
-		{
+	} else if (attacker.classname == "player") {
+		if not(clienttype(attacker) == CLIENTTYPE_REAL) {
 			if (bot_talk)
-			if (random() < bot_talk)
-			{
+			if (random() < bot_talk) {
 				if (team_mode && attacker.team == targ.team)
 					bot_say(attacker, FALSE, world, cvar_string("bot_messages_teamkill"), strcat(targ.netname, "^7: "));
 				else
 					bot_say(attacker, FALSE, world, cvar_string("bot_messages_frag"), strcat(targ.netname, "^7: "));
 			}
 			if (bot_taunt)
-			if (random() <= bot_taunt)
-			{
-				local entity oldself;
+			if (random() <= bot_taunt) {
+				entity oldself;
 				oldself = self;
 				self = attacker;
 				player_voice_message("taunt", "");
@@ -652,22 +640,17 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 		}
 		if not(clienttype(targ) == CLIENTTYPE_REAL)
 		if (bot_talk)
-		if (random() <= bot_talk)
-		{
-			if (team_mode && attacker.team == targ.team)
-			{
+		if (random() <= bot_talk) {
+			if (team_mode && attacker.team == targ.team) {
 				bot_say(targ, FALSE, world, cvar_string("bot_messages_teamkilled"), strcat(attacker.netname, "^7: "));
-			}
-			else
-			{
+			} else {
 				if (random() < 0.5)
 					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged"), "");
 				else
 					bot_say(targ, FALSE, world, cvar_string("bot_messages_fragged_priv"), strcat(attacker.netname, "^7: "));
 			}
 		}
-		if(team_mode && attacker.team == targ.team && !targ.saboteur)
-		{
+		if (team_mode && attacker.team == targ.team && !targ.saboteur) {
 			centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Moron! You fragged ", s, ", a team mate!"));
 			bprint ("^1", a, "^1 mows down a team mate\n");
 			score_give_frag(attacker, targ, -1);
@@ -678,12 +661,9 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				bprint ("^1",a,"^1 ended a ",ftos(attacker.killcount)," kill spree by killing a team mate\n");
 			}
 			attacker.killcount = 0;
-		}
-		else
-		{
+		} else {
 			string blood_message, victim_message;
-			if (!checkrules_firstblood)
-			{
+			if (!checkrules_firstblood) {
 				checkrules_firstblood = TRUE;
 				bprint("^1",a, "^1 drew first blood", "\n");
 				blood_message = "^1First blood\n";
@@ -691,21 +671,17 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				if (sv_announcer_extra_firstblood != "")
 					announce(attacker, sv_announcer_extra_firstblood, "^5First ^1Blood");
 			}
-
-
 			w = DEATH_WEAPONOF(deathtype);
-			if(WEP_VALID(w))
-			{
+			if (WEP_VALID(w)) {
 				weapon_deathtypestring = "was blasted by";
 				weapon_deathtype = deathtype;
 				weapon_action(w, WR_KILLMESSAGE);
 				p = strstrofs(weapon_deathtypestring, "#", 0);
-				if(p < 0)
+				if (p < 0)
 					bprint("^1", s, "^1 ", weapon_deathtypestring, " ", a, "\n");
 				else
 					bprint("^1", s, "^1 ", substring(weapon_deathtypestring, 0, p), a, "^1", substring(weapon_deathtypestring, p+1, strlen(weapon_deathtypestring) - (p+1)), "\n");
-			}
-			else if (deathtype == DEATH_DROWN)
+			} else if (deathtype == DEATH_DROWN)
 				bprint ("^1",s, "^1 was drowned by ", a, "\n");
 			else if (deathtype == DEATH_SLIME)
 				bprint ("^1",s, "^1 was slimed by ", a, "\n");
@@ -726,13 +702,12 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				}
 				if (inflictor.message2 != "") {
 					p = strstrofs(inflictor.message2, "#", 0);
-					if(p < 0)
+					if (p < 0)
 						bprint("^1", s, "^1 ", inflictor.message2, " ", a, "\n");
 					else
 						bprint("^1", s, "^1 ", substring(inflictor.message2, 0, p), a, "^1", substring(inflictor.message2, p+1, strlen(inflictor.message2) - (p+1)), "\n");
 				}
-			}
-			else if(deathtype == DEATH_TURRET)
+			} else if (deathtype == DEATH_TURRET)
 				bprint ("^1",s, "^1 was pushed into the line of fire by ^1", a, "\n");
 			else if (deathtype == DEATH_FIRE)
 				bprint ("^1",s, "^1 was burnt to death by ^1", a, "\n");
@@ -747,56 +722,38 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			if (targ.killcount > 2) {
 				bprint ("^1",s,"'s ^1", ftos(targ.killcount), " kill spree was ended by ", a, "\n");
 			}
-
 			attacker.killcount = attacker.killcount + 1;
-
 			if (attacker.killcount > 2) {
 				bprint ("^1",a,"^1 has ",ftos(attacker.killcount)," frags in a row\n");
 			}
 			float fragtime = time;
 
-			if (attacker.killcount == 3)
-			{
+			if (attacker.killcount == 3) {
 				bprint (a,"^7 made a ^1TRIPLE FRAG\n");
 				announce(attacker, "announcer/male/03kills.wav", "^1Triple Kill");
-			}
-			else if (attacker.killcount == 5)
-			{
+			} else if (attacker.killcount == 5) {
 				bprint (a,"^7 unleashes ^1RAGE\n");
 				announce(attacker, "announcer/male/05kills.wav", "^1Rage");
-			}
-			else if (attacker.killcount == 10)
-			{
+			} else if (attacker.killcount == 10) {
 				bprint (a,"^7 starts the ^1MASSACRE!\n");
 				announce(attacker, "announcer/male/10kills.wav", "^1MASSACRE");
-			}
-			else if (attacker.killcount == 15)
-			{
+			} else if (attacker.killcount == 15) {
 				bprint (a,"^7 executes ^1MAYHEM!\n");
 				announce(attacker, "announcer/male/15kills.wav", "^1MAYHEM!");
-			}
-			else if (attacker.killcount == 20)
-			{
+			} else if (attacker.killcount == 20) {
 				bprint (a,"^7 is a ^1BERSERKER!\n");
 				announce(attacker, "announcer/male/20kills.wav", "^1BERSERKER!");
-			}
-			else if (attacker.killcount == 25)
-			{
+			} else if (attacker.killcount == 25) {
 				bprint (a,"^7 inflicts ^1CARNAGE!\n");
 				announce(attacker, "announcer/male/25kills.wav", "^1CARNAGE!");
-			}
-			else if (attacker.killcount == 30)
-			{
+			} else if (attacker.killcount == 30) {
 				bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
 				announce(attacker, "announcer/male/30kills.wav", "^1ARMAGEDDON!!!");
-			}
-			else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "")
-			{
+			} else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "") {
 					if (announce(attacker, sv_announcer_extra_doublekill, "^3Excellent"))
 						fragtime = 0;
 			}
-			if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "")
-			{
+			if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "") {
 					announce(targ, sv_announcer_extra_meleefrag, "");
 					announce(attacker, sv_announcer_extra_meleefrag, "");
 			}
@@ -805,18 +762,15 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			attacker.taunt_soundtime = time + 1;
 			attacker.lastfrag = fragtime;
 		}
-	}
-	else if (attacker.classname == "monster")
-	{
+	} else if (attacker.classname == "monster") {
 		centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You were fragged by ^7", attacker.netname));
 		bprint ("^1",s, "^1 was killed by ", attacker.netname, "\n");
-	}
-	else
-	{
+	} else {
 		if not(clienttype(targ) == CLIENTTYPE_REAL)
 		if (bot_talk)
 		if (random() <= bot_talk)
 			bot_say(targ, FALSE, world, cvar_string("bot_messages_suicide"), "");
+
 		centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1Watch your step!"));
 		if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 			bprint ("^1",s, "^1 ", inflictor.message, "\n");
@@ -830,17 +784,17 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			bprint ("^1",s, "^1 hit the ground with a crunch\n");
 		else if (deathtype == DEATH_SWAMP)
 			bprint ("^1",s, "^1 is now conserved for centuries to come\n");
-		else if(deathtype == DEATH_TURRET)
+		else if (deathtype == DEATH_TURRET)
 			bprint ("^1",s, "^1 was mowed down by a turret \n");
-		else if(deathtype == DEATH_FIRE)
+		else if (deathtype == DEATH_FIRE)
 			bprint ("^1",s, "^1 burnt to death\n");
 		else
 			bprint ("^1",s, "^1 died\n");
+
 		score_give_frag(targ, targ, -1);
-		if(score_player_add(targ, SP_SCORE, 0) == -5) {
+		if (score_player_add(targ, SP_SCORE, 0) == -5) {
 			announce(targ, "announcer/male/botlike.wav", "");
 		}
-
 		if (targ.killcount > 2)
 			bprint ("^1",s,"^1 died with a ",ftos(targ.killcount)," kill spree\n");
 	}
@@ -851,18 +805,15 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) player_damage {
-	local float take, save, waves, sdelay, dh, da;
+	float take, save, waves, sdelay, dh, da;
 	gamehook_chain_player_damage_mod = 1;
 	if (gamehook_chain_player_damage_handle(inflictor, attacker, _damage, deathtype, hitloc, force))
 		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
-
 	_damage = _damage * gamehook_chain_player_damage_mod;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
-	{
+	if (DEATH_ISWEAPON(deathtype, WEP_TUBA)) {
 		// tuba causes blood to come out of the ears
 		vector ear1, ear2;
 		vector d;
@@ -878,18 +829,14 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		force = v_right * vlen(force);
 		violence_gib_splash_at(ear1, force * -1, 2, bound(0, _damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
 		violence_gib_splash_at(ear2, force,      2, bound(0, _damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
-		if(f > 0)
-		{
+		if (f > 0) {
 			hitloc = ear1;
 			force = force * -1;
-		}
-		else
-		{
+		} else {
 			hitloc = ear2;
 			// force is already good
 		}
-	}
-	else
+	} else
 		violence_gib_splash_at(hitloc, force, 2, bound(0, _damage, 200) / 16, self, attacker);
 
 	save = bound(0, _damage * gamehook_chain_ArmorBlockPercentMod() * g_balance_armor_blockpercent, self.armorvalue);
@@ -903,6 +850,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 
 	if (take > 50)
 		violence_gib_splash_at(hitloc, force * -0.1, 3, 1, self, attacker);
+
 	if (take > 100)
 		violence_gib_splash_at(hitloc, force * -0.2, 3, 1, self, attacker);
 
@@ -911,13 +859,9 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.health = self.health - take;
 		// pause regeneration for 5 seconds
 		self.pauseregen_finished = max(self.pauseregen_finished, time + g_balance_pause_health_regen);
-
-		if (time > self.pain_finished)		//Don't switch pain sequences like crazy
-		{
+		if (time > self.pain_finished) { //Don't switch pain sequences like crazy
 			self.pain_finished = time + 0.5;	//Supajoe
-
-			if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
-			{
+			if (self.classname != "body") { // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 				if (random() > 0.5)
 					anim_set(self.body, self.anim_pain1, FALSE, TRUE, TRUE);
 				else
@@ -935,7 +879,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 					player_sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_pain25), VOL_BASE, ATTN_NORM);
 			}
 			// throw off bot aim temporarily
-			local float shake;
+			float shake;
 			shake = _damage * 5 / (bound(0,skill,100) + 1);
 			self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 			self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
@@ -944,45 +888,36 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-
-	if(attacker == self)
-	{
+	if (attacker == self) {
 		// don't reset pushltime for self damage as it may be an attempt to
 		// escape a lava pit or similar
 		//self.pushltime = 0;
-	}
-	else if(attacker.classname == "player")
-	{
+	} else if (attacker.classname == "player") {
 		self.pusher = attacker;
 		self.pushltime = time + g_maxpushtime;
-	}
-	else if(time < self.pushltime)
-	{
+	} else if (time < self.pushltime) {
 		attacker = self.pusher;
 		self.pushltime = max(self.pushltime, time + 0.6);
-	}
-	else
+	} else
 		self.pushltime = 0;
 
 	if (self.health < 1)
-	if not(gamehook_player_death_handle(attacker, inflictor, deathtype))
-	{
+	if not(gamehook_player_death_handle(attacker, inflictor, deathtype)) {
 		float defer_client_kill_now_team_change;
 		defer_client_kill_now_team_change = FALSE;
 		float switchweapon_save = self.weapon;
-		if(deathtype == DEATH_DROWN)
+		if (deathtype == DEATH_DROWN)
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_drown), VOL_BASE, ATTN_NORM);
 		else
 			sound(self, CHAN_PAIN, sound_random_by_str(self.playersound_death), VOL_BASE, ATTN_NORM);
 
 		// get rid of kill indicator
-		if(self.killindicator) {
-			if(self.killindicator.team)
+		if (self.killindicator) {
+			if (self.killindicator.team)
 				defer_client_kill_now_team_change = TRUE;
 
-			if(self.classname == "body")
-			if(deathtype == DEATH_KILL)
-			{
+			if (self.classname == "body")
+			if (deathtype == DEATH_KILL) {
 				// for the lemmings fans, a small harmless explosion
 				pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 			}
@@ -1018,32 +953,30 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// when to allow respawn
 		sdelay = 0;
 		waves = 0;
-		if(g_respawn_mapsettings)
-		{
+		if (g_respawn_mapsettings) {
 			sdelay = g_respawn_mapsettings_delay;
 			waves = g_respawn_mapsettings_waves;
 		}
-		if(!sdelay)
+		if (!sdelay)
 			sdelay = g_respawn_delay;
 
-		if(!waves)
+		if (!waves)
 			waves = g_respawn_waves;
 
-		if(waves)
+		if (waves)
 			self.death_time = ceil((time + sdelay) / waves) * waves;
 		else
 			self.death_time = time + sdelay;
-		if((sdelay + waves >= 5.0) && (self.death_time - time > 1.75))
+
+		if ((sdelay + waves >= 5.0) && (self.death_time - time > 1.75))
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
-		if (random() < 0.5)
-		{
+
+		if (random() < 0.5) {
 			anim_set(self.body, self.anim_die1, FALSE, TRUE, TRUE);
 			self.body.dead_frame = self.anim_dead1_x;
-		}
-		else
-		{
+		} else {
 			anim_set(self.body, self.anim_die2, FALSE, TRUE, TRUE);
 			self.body.dead_frame = self.anim_dead2_x;
 		}
@@ -1054,9 +987,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.body.think = player_corpse_think;
 		self.body.fade_time = time + 15;
 		self.body.nextthink = time;
-
-		if(clienttype(self) == CLIENTTYPE_REAL)
-		{
+		if (clienttype(self) == CLIENTTYPE_REAL) {
 			self.fixangle = TRUE;
 			//msg_entity = self;
 			//WriteByte (MSG_ONE, SVC_SETANGLE);
@@ -1064,8 +995,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 			//WriteAngle (MSG_ONE, self.v_angle_y);
 			//WriteAngle (MSG_ONE, 80);
 		}
-
-		if(defer_client_kill_now_team_change)
+		if (defer_client_kill_now_team_change)
 			client_kill_now_team_change(self, self.killindicator.team);
 	}
 }
@@ -1073,28 +1003,24 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 string allvoicesamples;
 float player_voice_message_sample_not_found;
 float player_voice_message_sample_fixed;
-.string player_voice_message_sample_field(string type)
-{
+stringfield(string type) player_voice_message_sample_field {
 	player_voice_message_sample_not_found = 0;
 	player_voice_message_sample_fixed = 0;
-	switch(type)
-	{
+	switch (type) {
 #define _VOICEMSG(m) case #m: return playersound_##m;
-		ALLVOICEMSGS
+	ALLVOICEMSGS
 #undef _VOICEMSG
 	}
 	player_voice_message_sample_not_found = 1;
 	return playersound_taunt;
 }
 
-.string GetPlayerSoundSampleField(string type)
-{
+stringfield(string type) player_sound_sample_field {
 	player_voice_message_sample_not_found = 0;
 	player_voice_message_sample_fixed = 0;
-	switch(type)
-	{
+	switch (type) {
 #define _VOICEMSG(m) case #m: return playersound_##m;
-		ALLPLAYERSOUNDS
+	ALLPLAYERSOUNDS
 #undef _VOICEMSG
 	}
 	player_voice_message_sample_not_found = 1;
@@ -1105,19 +1031,17 @@ void(string f) player_precache_sounds {
 	float fh;
 	string s;
 	fh = fopen(f, FILE_READ);
-	if(fh < 0)
+	if (fh < 0)
 		return;
-	while((s = fgets(fh)))
-	{
-		if(tokenize_console(s) != 3)
+
+	while ((s = fgets(fh))) {
+		if (tokenize_console(s) != 3)
 			continue;
 
 		sound_random_precache(argv(1), stof(argv(2)));
 	}
 	fclose(fh);
-
-	if not(allvoicesamples)
-	{
+	if not(allvoicesamples) {
 #define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
 		ALLVOICEMSGS
 #undef _VOICEMSG
@@ -1125,9 +1049,8 @@ void(string f) player_precache_sounds {
 	}
 }
 
-void player_clear_sounds()
-{
-#define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = NULL; }
+void() player_clear_sounds {
+#define _VOICEMSG(m) if (self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = NULL; }
 	ALLPLAYERSOUNDS
 	ALLVOICEMSGS
 #undef _VOICEMSG
@@ -1145,22 +1068,27 @@ void(string f, float first) player_load_sounds {
 	string s;
 	var .string field;
 	fh = fopen(f, FILE_READ);
-	if(fh < 0)
+	if (fh < 0)
 		return;
-	while((s = fgets(fh)))
-	{
-		if(tokenize_console(s) != 3)
+
+	while ((s = fgets(fh))) {
+		if (tokenize_console(s) != 3)
 			continue;
-		field = GetPlayerSoundSampleField(argv(0));
-		if(player_voice_message_sample_not_found)
+
+		field = player_sound_sample_field(argv(0));
+		if (player_voice_message_sample_not_found)
 			field = player_voice_message_sample_field(argv(0));
-		if(player_voice_message_sample_not_found)
+
+		if (player_voice_message_sample_not_found)
 			continue;
-		if(player_voice_message_sample_fixed)
+
+		if (player_voice_message_sample_fixed)
 			if not(first)
 				continue;
-		if(self.field)
+
+		if (self.field)
 			strunzone(self.field);
+
 		self.field = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
@@ -1168,7 +1096,7 @@ void(string f, float first) player_load_sounds {
 
 .float modelindex_for_playersound;
 void() player_update_sounds {
-	if(self.body.modelindex_lod0 == self.body.modelindex_for_playersound)
+	if (self.body.modelindex_lod0 == self.body.modelindex_for_playersound)
 		return;
 
 	self.body.modelindex_for_playersound = self.body.modelindex_lod0;
@@ -1177,38 +1105,30 @@ void() player_update_sounds {
 	player_load_sounds(strcat(self.body.model, ".sounds"), 0);
 }
 
-void player_voice_message(string type, string msg)
-{
+void(string type, string msg) player_voice_message {
 	var .string sample;
 	float ownteam;
 	if (self.classname != "player")
 		return;
 
 	sample = player_voice_message_sample_field(type);
-	if(player_voice_message_sample_not_found)
-	{
+	if (player_voice_message_sample_not_found) {
 		sprint(self, strcat("Invalid voice. Use one of: ", allvoicesamples, "\n"));
 		return;
 	}
-
 	ownteam = (type != "taunt" && type != "teamshot");
 	float flood;
 	float flood_spv;
 	var .float flood_field;
-
 	flood = 0;
-	if (ownteam)
-	{
+	if (ownteam) {
 		flood_spv = g_voice_flood_spv_team;
 		flood_field = floodcontrol_voiceteam;
-	}
-	else
-	{
+	} else {
 		flood_spv = g_voice_flood_spv;
 		flood_field = floodcontrol_voice;
 	}
-
-	if(time >= self.flood_field)
+	if (time >= self.flood_field)
 		self.flood_field = max(time, self.flood_field) + flood_spv;
 	else
 		flood = 1;
@@ -1224,10 +1144,10 @@ void player_voice_message(string type, string msg)
 
 	string s = sound_random_by_str(self.sample);
 	if (type == "taunt") {
-		if(self.classname == "player")
-			if(self.deadflag == DEAD_NO)
+		if (self.classname == "player")
+			if (self.deadflag == DEAD_NO)
 				anim_set(self.body, self.anim_taunt, FALSE, TRUE, TRUE);
-		if(!sv_taunt)
+		if (!sv_taunt)
 			return;
 
 		FOR_EACH_REALCLIENT(msg_entity) {
@@ -1240,26 +1160,26 @@ void player_voice_message(string type, string msg)
 				sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 		}
 	} else if (type == "teamshoot") {
-		if(self.pusher)
-			if(self.pusher.team == self.team)
+		if (self.pusher)
+			if (self.pusher.team == self.team)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if (clienttype(msg_entity) == CLIENTTYPE_REAL)
 				{
-					if(msg_entity.cvar_cl_voice_directional == 1)
+					if (msg_entity.cvar_cl_voice_directional == 1)
 						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
 					else
 						sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
 				}
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if (clienttype(msg_entity) == CLIENTTYPE_REAL)
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASE, ATTN_NONE);
 			}
 	} else {
 		FOR_EACH_REALCLIENT(msg_entity)
-			if(!team_mode || msg_entity.team == self.team)
+			if (!team_mode || msg_entity.team == self.team)
 			{
-				if(msg_entity.cvar_cl_voice_directional == 1)
+				if (msg_entity.cvar_cl_voice_directional == 1)
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_MIN);
 				else
 					sound_to(MSG_ONE, self, CHAN_VOICE, s, VOL_BASEVOICE, ATTN_NONE);
@@ -1271,7 +1191,7 @@ float(entity plr, entity viewer) player_alpha {
 	plr = akimbo_owner(plr);
 	float dalpha = 1;
 	if (plr.classname == "observer") {
-		if(plr == viewer) {
+		if (plr == viewer) {
 			return dalpha;
 		}
 		return -1;
@@ -1305,14 +1225,14 @@ void(string modelname) player_setup_lod {
 			return;
 		}
 	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-	if(file_exists(s)) {
+	if (file_exists(s)) {
 		setmodel(self.body, s); // players have high precision
 		self.body.modelindex_lod1 = self.body.modelindex;
 	} else
 		self.body.modelindex_lod1 = -1;
 
 	s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-	if(file_exists(s)) {
+	if (file_exists(s)) {
 		setmodel(self.body, s); // players have high precision
 		self.body.modelindex_lod2 = self.body.modelindex;
 	} else
@@ -1320,10 +1240,10 @@ void(string modelname) player_setup_lod {
 
 	setmodel(self.body, modelname); // players have high precision
 	self.body.modelindex_lod0 = self.body.modelindex;
-	if(self.body.modelindex_lod1 < 0)
+	if (self.body.modelindex_lod1 < 0)
 		self.body.modelindex_lod1 = self.body.modelindex;
 
-	if(self.body.modelindex_lod2 < 0)
+	if (self.body.modelindex_lod2 < 0)
 		self.body.modelindex_lod2 = self.body.modelindex;
 
 	s = whichpack(self.body.model);
@@ -1425,8 +1345,7 @@ void() player_setup_model {
 	string forcemodel;
 	float forceskin, forcecolor, chmdl, oldskin;
 	vector m1, m2;
-	if(team_mode)
-	{
+	if (team_mode) {
 		forcemodel =
 				((self.team == COLOR_TEAM1) ? g_player_forcemodel_red :
 				((self.team == COLOR_TEAM2) ? g_player_forcemodel_blue :
@@ -1452,10 +1371,8 @@ void() player_setup_model {
 		forcecolor = g_player_forcecolor;
 		forcemodel = g_player_forcemodel;
 	}
-	if(forcemodel != "" && forcemodel != "0")
-	{
-		if (forcemodel != self.body.playermodel)
-		{
+	if (forcemodel != "" && forcemodel != "0") {
+		if (forcemodel != self.body.playermodel) {
 			m1 = self.mins;
 			m2 = self.maxs;
 			player_setup_lod(forcemodel);
@@ -1504,7 +1421,7 @@ void(entity player) player_to_spec
 		self = player;
 		player_clear(FALSE);
 		player.classname = "observer";
-		if(spectator_block)
+		if (spectator_block)
 			sprint(player, strcat("^7You have to become a player within the next ", ftos(g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 
 		client_put();
@@ -1517,42 +1434,38 @@ void(entity player) player_to_spec
 }
 
 float(float current, float stable, float regenfactor, float regenframetime) player_calc_regen {
-	if(current > stable)
+	if (current > stable)
 		return current;
-	else if(current > stable - 0.25) // when close enough, "snap"
+
+	if (current > stable - 0.25) // when close enough, "snap"
 		return stable;
-	else
-		return min(stable, current + (stable - current) * regenfactor * regenframetime);
+
+	return min(stable, current + (stable - current) * regenfactor * regenframetime);
 }
 
 float(float current, float stable, float rotfactor, float rotframetime) player_calc_rot {
-	if(current < stable)
+	if (current < stable)
 		return current;
-	else if(current < stable + 0.25) // when close enough, "snap"
+
+	if (current < stable + 0.25) // when close enough, "snap"
 		return stable;
-	else
-		return max(stable, current + (stable - current) * rotfactor * rotframetime);
+
+	return max(stable, current + (stable - current) * rotfactor * rotframetime);
 }
 
 float(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit) player_calc_rot_regen {
-	if(current > rotstable)
-	{
-		if(rotframetime > 0)
-		{
+	if (current > rotstable) {
+		if (rotframetime > 0) {
 			current = player_calc_rot(current, rotstable, rotfactor, rotframetime);
 			current = max(rotstable, current - rotlinear * rotframetime);
 		}
-	}
-	else if(current < regenstable)
-	{
-		if(regenframetime > 0)
-		{
+	} else if (current < regenstable) {
+		if (regenframetime > 0) {
 			current = player_calc_regen(current, regenstable, regenfactor, regenframetime);
 			current = min(regenstable, current + regenlinear * regenframetime);
 		}
 	}
-
-	if(current > limit)
+	if (current > limit)
 		current = limit;
 
 	return current;
@@ -1560,18 +1473,17 @@ float(float current, float regenstable, float regenfactor, float regenlinear, fl
 
 void() player_respawn_countdown {
 	float number;
-	if(self.deadflag == DEAD_NO) // just respawned?
+	if (self.deadflag == DEAD_NO) // just respawned?
 		return;
-	else {
-		number = ceil(self.death_time - time);
-		if(number <= 0)
-			return;
 
-		if(number <= self.respawn_countdown) {
-			self.respawn_countdown = number - 1;
-			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				announce(self, strcat("announcer/robotic/", ftos(number), ".wav"), "");
-		}
+	number = ceil(self.death_time - time);
+	if (number <= 0)
+		return;
+
+	if (number <= self.respawn_countdown) {
+		self.respawn_countdown = number - 1;
+		if (ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
+			announce(self, strcat("announcer/robotic/", ftos(number), ".wav"), "");
 	}
 }
 
@@ -1586,7 +1498,7 @@ void() player_regen {
 		minh = g_balance_health_regenstable * gamehook_player_health_max_mod;
 		self.health = player_calc_rot_regen(self.health, minh, g_balance_health_regen, g_balance_health_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished), maxh, g_balance_health_rot, g_balance_health_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserothealth_finished), limith);
 		// if player rotted to death...  die!
-		if(self.health < 1)
+		if (self.health < 1)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 
 		limita = g_balance_armor_limit * gamehook_player_armor_health_limit_mod;
@@ -1598,47 +1510,46 @@ void() player_regen {
 
 .float items_added;
 void() player_think {
-	if(self.deadflag == DEAD_NO)
+	if (self.deadflag == DEAD_NO)
 	if not(map_finished)
 	if not(warmup_active)
 		self.play_time = self.play_time + frametime;
 
-	if(self.teleport_time)
-	if(time > self.teleport_time) {
+	if (self.teleport_time)
+	if (time > self.teleport_time) {
 		self.teleport_time = 0;
 		self.effects = self.effects - (self.effects & EF_NODRAW);
 	}
-
 	//don't allow the player to turn around while game is paused!
-	if(timeoutStatus == 2) {
+	if (timeoutStatus == 2) {
 		self.v_angle = self.lastV_angle;
 		self.angles = self.lastV_angle;
 		self.fixangle = TRUE;
 	}
 	gamehook_chain_player_think();
-	if(frametime) {
+	if (frametime) {
 		fire_apply_damage(self);
 		player_effects();
 	}
 	if (PLAYER_REALLY_DEAD(self)) {
 		float button_pressed;
-		if(frametime)
+		if (frametime)
 			player_anim();
 
 		button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
 		if (self.deadflag == DEAD_DYING) {
-			if(g_forced_respawn)
+			if (g_forced_respawn)
 				self.deadflag = DEAD_RESPAWNING;
-			else if(!button_pressed)
+			else if (!button_pressed)
 				self.deadflag = DEAD_DEAD;
 		} else if (self.deadflag == DEAD_DEAD) {
-			if(button_pressed)
+			if (button_pressed)
 				self.deadflag = DEAD_RESPAWNABLE;
 		} else if (self.deadflag == DEAD_RESPAWNABLE) {
-			if(!button_pressed)
+			if (!button_pressed)
 				self.deadflag = DEAD_RESPAWNING;
 		} else if (self.deadflag == DEAD_RESPAWNING) {
-			if(time > self.death_time) {
+			if (time > self.death_time) {
 				self.death_time = time + 1; // only retry once a second
 				player_respawn();
 			}
@@ -1649,11 +1560,11 @@ void() player_think {
 	player_setup_model();
 	weapon_frame();
 	akimbo_weapon_frame();
-	if(frametime) {
+	if (frametime) {
 		self.items &~= self.items_added;
 		self.items_added = 0;
-		if(self.items & IT_JETPACK)
-			if(self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
+		if (self.items & IT_JETPACK)
+			if (self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
 				self.items_added |= IT_FUEL;
 
 		self.items |= self.items_added;
@@ -1661,17 +1572,17 @@ void() player_think {
 		player_anim();
 	}
 	self.dmg_team = max(0, self.dmg_team - g_teamdamage_resetspeed * frametime);
-	if(self.teamkill_soundtime)
-	if(time > self.teamkill_soundtime) {
+	if (self.teamkill_soundtime)
+	if (time > self.teamkill_soundtime) {
 		self.teamkill_soundtime = 0;
 		entity oldpusher, oldself;
 		oldself = self; self = self.teamkill_soundsource;
 		oldpusher = self.pusher; self.pusher = oldself;
-		if(self.pusher)
-		if(self.pusher.team == self.team) {
+		if (self.pusher)
+		if (self.pusher.team == self.team) {
 			msg_entity = self.pusher;
-			if(clienttype(msg_entity) == CLIENTTYPE_REAL) {
-				if(msg_entity.cvar_cl_voice_directional == 1)
+			if (clienttype(msg_entity) == CLIENTTYPE_REAL) {
+				if (msg_entity.cvar_cl_voice_directional == 1)
 					sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_MIN);
 				else
 					sound_to(MSG_ONE, self, CHAN_VOICE, sound_random_by_str(self.playersound_teamshoot), VOL_BASEVOICE, ATTN_NONE);
@@ -1680,8 +1591,8 @@ void() player_think {
 		self.pusher = oldpusher;
 		self = oldself;
 	}
-	if(self.taunt_soundtime)
-	if(time > self.taunt_soundtime) {
+	if (self.taunt_soundtime)
+	if (time > self.taunt_soundtime) {
 		self.taunt_soundtime = 0;
 		if (sv_taunt)
 		if (sv_autotaunt) {
@@ -1725,12 +1636,11 @@ void() player_think {
  * 230 to 253: individual weapons (up to 24)
  */
 void(void) player_impulse {
-	local float imp;
+	float imp;
 	vector org;
 	float i;
 	float m;
 	entity e, e2;
-
 	imp = self.impulse;
 	if (!imp || map_finished)
 		return;
@@ -1739,288 +1649,252 @@ void(void) player_impulse {
 	if (timeoutStatus == 2) //don't allow any impulses while the game is paused
 		return;
 
-	if (imp >= 1 && imp <= 9)
-	{
+	if (imp >= 1 && imp <= 9) {
 		// weapon switching impulses
-		if(self.deadflag == DEAD_NO)
+		if (self.deadflag == DEAD_NO)
 			weapon_next_on_impulse(imp);
 		else
 			self.impulse = imp; // retry in next frame
-	}
-	else if(imp >= 10 && imp <= 20)
-	{
-		if(self.deadflag == DEAD_NO)
-		{
-			switch(imp)
-			{
-				case 10:
-					weapon_next(0);
-					break;
-				case 11:
-					weapon_switch(self.cnt); // previously used
-					break;
-				case 12:
-					weapon_previous(0);
-					break;
-				case 13:
-					weapon_switch(weapon_best(self));
-					break;
-				case 14:
-					weapon_next_on_impulse(0);
-					break;
-				case 15:
-					weapon_next(2);
-					break;
-				case 16:
-					weapon_previous(2);
-					break;
-				case 17:
-					if not(gamehook_chain_ThrowWeaponHandle())
-						weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
+	} else if (imp >= 10 && imp <= 20) {
+		if (self.deadflag == DEAD_NO) {
+			switch (imp) {
+			case 10:
+				weapon_next(0);
+				break;
+			case 11:
+				weapon_switch(self.cnt); // previously used
+				break;
+			case 12:
+				weapon_previous(0);
+				break;
+			case 13:
+				weapon_switch(weapon_best(self));
+				break;
+			case 14:
+				weapon_next_on_impulse(0);
+				break;
+			case 15:
+				weapon_next(2);
+				break;
+			case 16:
+				weapon_previous(2);
+				break;
+			case 17:
+				if not(gamehook_chain_ThrowWeaponHandle())
+					weapon_throw(weapon_calculate_projectile_velocity(self.velocity, v_forward * 750), '0 0 0', TRUE);
 
-					break;
-				case 18:
-					weapon_next(1);
-					break;
-				case 19:
-					weapon_previous(1);
-					break;
-				case 20:
-					weapon_reload();
-					break;
+				break;
+			case 18:
+				weapon_next(1);
+				break;
+			case 19:
+				weapon_previous(1);
+				break;
+			case 20:
+				weapon_reload();
+				break;
 			}
-		}
-		else
+		} else
 			self.impulse = imp; // retry in next frame
-	}
-	else if(imp >= 200 && imp <= 229)
-	{
-		if(self.deadflag == DEAD_NO)
-		{
+	} else if (imp >= 200 && imp <= 229) {
+		if (self.deadflag == DEAD_NO) {
 			// custom order weapon cycling
 			i = math_mod(imp, 10);
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			weapon_cycle(self.(cvar_cl_weaponpriorities[i]), m);
-		}
-		else
+		} else
 			self.impulse = imp; // retry in next frame
-	}
-	else if(imp >= 230 && imp <= 253)
-	{
-		if(self.deadflag == DEAD_NO) {
+	} else if (imp >= 230 && imp <= 253) {
+		if (self.deadflag == DEAD_NO) {
 			weapon_switch(imp - 230 + WEP_FIRST);
 		} else
 			self.impulse = imp; // retry in next frame
-	}
-	// deploy waypoints
-	else if (imp >= 30 && imp <= 49)
-	{
+	} else if (imp >= 30 && imp <= 49) { // deploy waypoints
 		entity wp;
-		switch(imp)
-		{
-			case 30:
-				wp = WaypointSprite_DeployPersonal("waypoint", self.origin);
-				if(wp)
-				{
+		switch (imp) {
+		case 30:
+			wp = WaypointSprite_DeployPersonal("waypoint", self.origin);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
+				WaypointSprite_Ping(wp);
+			}
+			sprint(self, "personal waypoint spawned at location\n");
+			break;
+		case 31:
+			wp = WaypointSprite_DeployPersonal("waypoint", self.cursor_trace_endpos);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
+				WaypointSprite_Ping(wp);
+			}
+			break;
+		case 32:
+			if (vlen(self.death_origin)) {
+				wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin);
+				if (wp) {
 					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 					WaypointSprite_Ping(wp);
 				}
-				sprint(self, "personal waypoint spawned at location\n");
-				break;
-			case 31:
-				wp = WaypointSprite_DeployPersonal("waypoint", self.cursor_trace_endpos);
-				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
+				sprint(self, "personal waypoint spawned at death location\n");
+			}
+			break;
+		case 33:
+			if (self.deadflag == DEAD_NO && team_mode) {
+				wp = WaypointSprite_Attach("helpme", TRUE);
+				if (wp)
+					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HELPME, '1 0.5 0'); // TODO choose better color
+
+				if (!wp)
+					wp = self.waypointsprite_attachedforcarrier; // flag sprite?
+
+				if (wp)
 					WaypointSprite_Ping(wp);
-				}
-				break;
-			case 32:
-				if(vlen(self.death_origin))
-				{
-					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin);
-					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
-						WaypointSprite_Ping(wp);
-					}
-					sprint(self, "personal waypoint spawned at death location\n");
-				}
-				break;
-			case 33:
-				if(self.deadflag == DEAD_NO && team_mode)
-				{
-					wp = WaypointSprite_Attach("helpme", TRUE);
-					if(wp)
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_HELPME, '1 0.5 0'); // TODO choose better color
-					if(!wp)
-						wp = self.waypointsprite_attachedforcarrier; // flag sprite?
-					if(wp)
-						WaypointSprite_Ping(wp);
-					sprint(self, "HELP ME attached\n");
-				}
-				break;
-			case 34:
-				wp = WaypointSprite_DeployFixed("here", FALSE, self.origin);
-				if(wp)
-				{
+
+				sprint(self, "HELP ME attached\n");
+			}
+			break;
+		case 34:
+			wp = WaypointSprite_DeployFixed("here", FALSE, self.origin);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
+				WaypointSprite_Ping(wp);
+			}
+			sprint(self, "HERE spawned at location\n");
+			break;
+		case 35:
+			wp = WaypointSprite_DeployFixed("here", FALSE, self.cursor_trace_endpos);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
+				WaypointSprite_Ping(wp);
+			}
+			break;
+		case 36:
+			if (vlen(self.death_origin)) {
+				wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin);
+				if (wp) {
 					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 					WaypointSprite_Ping(wp);
 				}
-				sprint(self, "HERE spawned at location\n");
-				break;
-			case 35:
-				wp = WaypointSprite_DeployFixed("here", FALSE, self.cursor_trace_endpos);
-				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
-					WaypointSprite_Ping(wp);
-				}
-				break;
-			case 36:
-				if(vlen(self.death_origin))
-				{
-					wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin);
-					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
-						WaypointSprite_Ping(wp);
-					}
-					sprint(self, "HERE spawned at death location\n");
-				}
-				break;
-			case 37:
-				wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin);
-				if(wp)
-				{
+				sprint(self, "HERE spawned at death location\n");
+			}
+			break;
+		case 37:
+			wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
+				WaypointSprite_Ping(wp);
+			}
+			sprint(self, "DANGER spawned at location\n");
+			break;
+		case 38:
+			wp = WaypointSprite_DeployFixed("danger", FALSE, self.cursor_trace_endpos);
+			if (wp) {
+				WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
+				WaypointSprite_Ping(wp);
+			}
+			break;
+		case 39:
+			if (vlen(self.death_origin)) {
+				wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin);
+				if (wp) {
 					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 					WaypointSprite_Ping(wp);
 				}
-				sprint(self, "DANGER spawned at location\n");
-				break;
-			case 38:
-				wp = WaypointSprite_DeployFixed("danger", FALSE, self.cursor_trace_endpos);
-				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
-					WaypointSprite_Ping(wp);
-				}
-				break;
-			case 39:
-				if(vlen(self.death_origin))
-				{
-					wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin);
-					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
-						WaypointSprite_Ping(wp);
-					}
-					sprint(self, "DANGER spawned at death location\n");
-				}
-				break;
-			case 47:
-				WaypointSprite_ClearPersonal();
-				sprint(self, "personal waypoint cleared\n");
-				break;
-			case 48:
-				WaypointSprite_ClearOwned();
-				sprint(self, "all waypoints cleared\n");
-				break;
+				sprint(self, "DANGER spawned at death location\n");
+			}
+			break;
+		case 47:
+			WaypointSprite_ClearPersonal();
+			sprint(self, "personal waypoint cleared\n");
+			break;
+		case 48:
+			WaypointSprite_ClearOwned();
+			sprint(self, "all waypoints cleared\n");
+			break;
 		}
-	}
-	else if(imp >= 103 && imp <= 107)
-	{
-		if(g_waypointeditor)
-		{
-			switch(imp)
-			{
-				case 103:
-					waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
-					bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
-					break;
-				case 104:
-					e = navigation_findnearestwaypoint(self, FALSE);
-					if (e)
-					if not(e.wpflags & WAYPOINTFLAG_GENERATED)
-					{
-						bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
-						waypoint_remove(e);
+	} else if (imp >= 103 && imp <= 107) {
+		if (g_waypointeditor) {
+			switch (imp) {
+			case 103:
+				waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
+				bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
+				break;
+			case 104:
+				e = navigation_findnearestwaypoint(self, FALSE);
+				if (e)
+				if not(e.wpflags & WAYPOINTFLAG_GENERATED) {
+					bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
+					waypoint_remove(e);
+				}
+				break;
+			case 105:
+				waypoint_schedulerelinkall();
+				break;
+			case 106:
+				waypoint_saveall();
+				break;
+			case 107:
+				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
+					e.colormod_x = 1;
+					e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+				}
+				e2 = navigation_findnearestwaypoint(self, FALSE);
+				navigation_markroutes(e2);
+				i = 0;
+				m = 0;
+				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
+					if (e.wpcost >= 10000000) {
+						print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
+						e.colormod_x = 0.1;
+						e.effects |= EF_NODEPTHTEST | EF_BLUE;
+						++i;
+						++m;
 					}
-					break;
-				case 105:
-					waypoint_schedulerelinkall();
-					break;
-				case 106:
-					waypoint_saveall();
-					break;
-				case 107:
-					for(e = findchain(classname, "waypoint"); e; e = e.chain)
-					{
-						e.colormod_x = 1;
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
-					}
-					e2 = navigation_findnearestwaypoint(self, FALSE);
-					navigation_markroutes(e2);
-					i = 0;
-					m = 0;
-					for(e = findchain(classname, "waypoint"); e; e = e.chain)
-					{
-						if(e.wpcost >= 10000000)
-						{
-							print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 0.1;
-							e.effects |= EF_NODEPTHTEST | EF_BLUE;
-							++i;
+				}
+				if (i)
+					print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
+
+				navigation_markroutes_inverted(e2);
+				i = 0;
+				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
+					if (e.wpcost >= 10000000) {
+						print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
+						e.colormod_x = 0.1;
+						if not(e.effects & EF_NODEPTHTEST) // not already reported before
 							++m;
-						}
+						e.effects |= EF_NODEPTHTEST | EF_RED;
+						++i;
 					}
-					if(i)
-						print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
-					navigation_markroutes_inverted(e2);
-					i = 0;
-					for(e = findchain(classname, "waypoint"); e; e = e.chain)
-					{
-						if(e.wpcost >= 10000000)
-						{
-							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 0.1;
-							if not(e.effects & EF_NODEPTHTEST) // not already reported before
-								++m;
-							e.effects |= EF_NODEPTHTEST | EF_RED;
-							++i;
-						}
+				}
+				if (i)
+					print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
+
+				if (m)
+					print(ftos(m), " waypoints have been marked total\n");
+
+				i = 0;
+				for (e = findchain(classname, "info_player_deathmatch"); e; e = e.chain) {
+					org = e.origin;
+					trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
+					setorigin(e, trace_endpos);
+					if (navigation_findnearestwaypoint(e, FALSE)) {
+						setorigin(e, org);
+						e.effects &~= EF_NODEPTHTEST;
+						e.model = "";
+					} else {
+						setorigin(e, org);
+						print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+						e.effects |= EF_NODEPTHTEST;
+						setmodel(e, self.body.model);
+						e.frame = self.body.frame;
+						e.skin = self.body.skin;
+						setsize(e, '0 0 0', '0 0 0');
+						++i;
 					}
-					if(i)
-						print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
-					if(m)
-						print(ftos(m), " waypoints have been marked total\n");
-					i = 0;
-					for(e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
-					{
-						org = e.origin;
-						trace_box(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
-						setorigin(e, trace_endpos);
-						if(navigation_findnearestwaypoint(e, FALSE))
-						{
-							setorigin(e, org);
-							e.effects &~= EF_NODEPTHTEST;
-							e.model = "";
-						}
-						else
-						{
-							setorigin(e, org);
-							print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST;
-							setmodel(e, self.body.model);
-							e.frame = self.body.frame;
-							e.skin = self.body.skin;
-							setsize(e, '0 0 0', '0 0 0');
-							++i;
-						}
-					}
-					if(i)
-						print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
-					break;
+				}
+				if (i)
+					print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+
+				break;
 			}
 		}
 	}
@@ -2070,7 +1944,7 @@ float(void) player_real_customize {
 
 float(void) player_customize {
 	self.alpha = player_alpha(self.owner, other);
-	if(self.alpha < 0)
+	if (self.alpha < 0)
 		return FALSE;
 
 	if (self.owner == other)
@@ -2092,7 +1966,7 @@ float(void) player_body_customize {
 	entity modelsource;
 	entity o = self.owner;
 	self.alpha = player_alpha(o, other);
-	if(self.alpha < 0)
+	if (self.alpha < 0)
 		return FALSE;
 
 	if (self.tag_entity) {
@@ -2111,28 +1985,29 @@ float(void) player_body_customize {
 
 	modelsource = self;
 #ifdef ALLOW_FORCEMODELS
-	if(other.cvar_cl_forceplayermodelsfromnexuiz)
+	if (other.cvar_cl_forceplayermodelsfromnexuiz)
 		if not(self.modelindex_lod0_from_nexuiz)
 			modelsource = other.body;
-	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
+
+	if (other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
 		modelsource = other.body;
 #endif
 	self.skin = modelsource.owner.skinindex;
 	float distance;
 	float f;
-	if(other.cvar_cl_playerdetailreduction <= 0) {
-		if(other.cvar_cl_playerdetailreduction <= -2)
+	if (other.cvar_cl_playerdetailreduction <= 0) {
+		if (other.cvar_cl_playerdetailreduction <= -2)
 			self.modelindex = modelsource.modelindex_lod2;
-		else if(other.cvar_cl_playerdetailreduction <= -1)
+		else if (other.cvar_cl_playerdetailreduction <= -1)
 			self.modelindex = modelsource.modelindex_lod1;
 		else
 			self.modelindex = modelsource.modelindex_lod0;
 	} else {
 		distance = vlen(o.origin - other.origin);
 		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
-		if(f > sv_loddistance2)
+		if (f > sv_loddistance2)
 			self.modelindex = modelsource.modelindex_lod2;
-		else if(f > sv_loddistance1)
+		else if (f > sv_loddistance1)
 			self.modelindex = modelsource.modelindex_lod1;
 		else
 			self.modelindex = modelsource.modelindex_lod0;
@@ -2144,7 +2019,7 @@ void(entity pl) player_body_setup {
 	pl.movetype = MOVETYPE_QCWALK;
 	pl.solid = SOLID_SLIDEBOX;
 	pl.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | (g_playerclip_collisions ? DPCONTENTS_PLAYERCLIP : 0);
-	if(player_independent)
+	if (player_independent)
 		PLAYER_MAKE_INDEPENDENT(pl);
 
 	if (team_mode)
@@ -2194,7 +2069,7 @@ void(entity spot) player_spawn {
 	self.pauserotfuel_finished = time + g_balance_pause_fuel_rot_spawn;
 	self.pauseregen_finished = time + g_balance_pause_health_regen_spawn;
 	//extend the pause of rotting if client was reset at the beginning of the countdown
-	if(!map_restart_active && time < map_starttime) {
+	if (!map_restart_active && time < map_starttime) {
 		self.spawnshieldtime += map_starttime - time;
 		self.pauserotarmor_finished += map_starttime - time;
 		self.pauserothealth_finished += map_starttime - time;
@@ -2236,7 +2111,7 @@ void(entity spot) player_spawn {
 	self.bot_attack = TRUE;
 	self.statdraintime = time + 5;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
-	if(self.killcount == -666) {
+	if (self.killcount == -666) {
 		rank_distribute(self);
 		score_clear(self);
 		self.killcount = 0;
@@ -2308,10 +2183,10 @@ float(entity plr, float wep) player_can_fire {
 float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 	float weaponbit, f;
 	entity oldself;
-	if(time < cl.hasweapon_complain_spam)
+	if (time < cl.hasweapon_complain_spam)
 		complain = 0;
 
-	if(complain)
+	if (complain)
 		cl.hasweapon_complain_spam = time + 0.2;
 
 	if (wpn < WEP_FIRST || wpn > WEP_LAST) {
@@ -2322,7 +2197,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 	weaponbit = weapon_bit(wpn);
 	if (cl.weapons & weaponbit) {
 		if (andammo) {
-			if(cl.items & IT_UNLIMITED_WEAPON_AMMO) {
+			if (cl.items & IT_UNLIMITED_WEAPON_AMMO) {
 				f = 1;
 			} else {
 				oldself = self;
@@ -2333,7 +2208,7 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 			}
 			if (!f) {
 				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL) {
+				if (clienttype(cl) == CLIENTTYPE_REAL) {
 					sound_play2(cl, "weapons/unavailable.wav");
 					sprint(cl, strcat("You don't have any ammo for the ^2", weapon_name(wpn), "\n"));
 				}
@@ -2348,12 +2223,12 @@ float(entity cl, float wpn, float andammo, float complain) player_hasweapon {
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
 		if (weapon_spawned_list & weaponbit) {
 			sprint(cl, strcat("You do not have the ^2", weapon_name(wpn), "\n") );
-			if(self.cvar_cl_showweaponspawns) {
+			if (self.cvar_cl_showweaponspawns) {
 				entity e;
 				string s;
 				e = weapon_info(wpn);
 				s = e.model2;
-				for(e = weapon_spawn_chain; e; e = e.enemy) {
+				for (e = weapon_spawn_chain; e; e = e.enemy) {
 					if (e.weapons != weaponbit)
 						continue;
 
@@ -2390,7 +2265,7 @@ void(entity pl, float _color) player_set_colors {
 	pants = _color & 0x0F;
 	shirt = _color & 0xF0;
 	float t = pl.team;
-	if(team_mode)
+	if (team_mode)
 		setcolor(pl, 16*pants + pants);
 	else
 		setcolor(pl, shirt + pants);
@@ -2404,7 +2279,7 @@ void(entity pl, float t, float s, float noprint) player_set_team {
 		return;
 
 	pl.team = _team;
-	if(!noprint && t != s) {
+	if (!noprint && t != s) {
 		//bprint(pl.netname, " has changed to ", team_name_by_no(t), "\n");
 		bprint(pl.netname, "^7 has changed from ", team_name_by_no(s), " to ", team_name_by_no(t), "\n");
 	}
@@ -2535,7 +2410,7 @@ void() player_init {
 	PL_CROUCH_VIEW_OFS = '0 0 1' * cvar("g_player_crouch_view_ofs");
 	PL_CROUCH_MIN = '-1 -1 0' * cvar("g_player_maxsxy") + '0 0 -24';
 	PL_CROUCH_MAX = '1 1 0' * cvar("g_player_maxsxy") + '0 0 1' * cvar("g_player_crouch_maxsz");
-	if(sv_loddistance2 <= sv_loddistance1)
+	if (sv_loddistance2 <= sv_loddistance1)
 		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
 #ifdef ALLOW_FORCEMODELS

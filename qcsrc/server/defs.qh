@@ -271,3 +271,5 @@ typedef .float floatfield;
 .float dmg_force;
 .float dmg_radius;
 .float pushltime;
+
+typedef .string stringfield;
