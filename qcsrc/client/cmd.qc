@@ -72,7 +72,7 @@ void(string msg) GameCommand { //called by engine
 	} else if (cmd == "sbar_save" && argc == 2) {
 		sbar_save(strcat(argv(1), ".hud"));
 	} else if (cmd == "sbar_load" && argc == 2) {
-		sbar_load(strcat(argv(1), ".hud"));
+		sbar_load(strcat("data/", argv(1), ".hud"));
 	} else {
 		print("Invalid command '", cmd, "'. For a list of supported commands, try cl_cmd help.\n");
 	}
