@@ -16,7 +16,7 @@ hostname "Rexuiz $g_rexuizversion Server"
 set sv_mapchange_delay 5
 // restart server if all players hit "ready"-button
 set sv_ready_restart 0 "if set to 1 allow a map to be restarted once all players pressed the \"ready\" button'"
-set sv_ready_restart_after_countdown 0 "if set to 1 the players and map items are reset after the countdown ended, otherwise they're reset already at the beginning of the countdown"
+set sv_ready_restart_after_countdown 1 "if set to 1 the players and map items are reset after the countdown ended, otherwise they're reset already at the beginning of the countdown"
 set sv_ready_restart_repeatable 0 "allows the players to restart the game as often as needed"
 set g_maxplayers_spectator_blocktime 5 "if the players voted for the \"nospectators\" command, this setting defines the number of seconds a observer/spectator has time to join the game before he gets kicked"
 alias sv_restart "say \"Server will restart at the end of the match, you will all be reconnected automatically. $* \"; quit_and_redirect self"
