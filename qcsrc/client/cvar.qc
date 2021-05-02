@@ -62,7 +62,7 @@ void cvar_register_save_old(string varname, string val) {
 }
 
 void cvar_register_save_awful(string varname, string val) {
-	localcmd(strcat("\nseta ", varname, " ", val, "\n"));
+	localcmd(strcat("\nseta ", varname, " \"", val, "\"\n"));
 }
 
 void cvar_register_save_rm(string varname, string val) {
