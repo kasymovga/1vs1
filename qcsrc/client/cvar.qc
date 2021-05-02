@@ -4,6 +4,7 @@ float(string varname, float setflags, float unsetflags) cvar_altertype = #505;
 float(string varname) cvar_type = #495;
 
 var void(string varname, string val) cvar_register_save;
+string(vector v) cvar_vtos;
 
 #define CVAR(x) autocvar_##x
 #define CVAR_OR(x,y) (autocvar_##x ? autocvar_##x : y)
@@ -27,7 +28,7 @@ var void(string varname, string val) cvar_register_save;
 #define CACHE_CVAR(x) 
 #define CACHE_CVAR_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, ftos(y)); }
 #define CACHE_CVAR_VEC(x) 
-#define CACHE_CVAR_VEC_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, vtos(y)); }
+#define CACHE_CVAR_VEC_DEF(x,y) if (autocvar_##x == y) { cvar_register_save(#x, cvar_vtos(y)); }
 #define READ_CVARS_BEGIN(x,y) void cvar_register_autocvars() {
 #define READ_CVARS_SECTION(x,y)
 #define READ_CVARS_END(x) }
@@ -67,6 +68,10 @@ void cvar_register_save_awful(string varname, string val) {
 void cvar_register_save_rm(string varname, string val) {
 	if not(cvar_type(varname) & 8) //engine cvar
 		cvar_altertype(varname, 2, 0);
+}
+
+string(vector v) cvar_vtos {
+	return strcat(ftos(v_x), " ", ftos(v_y), " ", ftos(v_z));
 }
 
 float autocvar_autocvar_check;
