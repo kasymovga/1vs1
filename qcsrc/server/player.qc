@@ -2140,6 +2140,8 @@ void(entity spot) player_spawn {
 	entity e;
 	float n;
 	FOR_EACH_REALPLAYER(e) n++;
+	if not(warmup_active)
+	if not(map_finished)
 	if (n > player_real_count)
 	if (g_reset_on_join)
 	if (n == g_reset_on_join) {
@@ -2152,6 +2154,8 @@ void(void) player_leave {
 	float n;
 	entity e;
 	FOR_EACH_REALPLAYER(e) n++;
+	if not(warmup_active)
+	if not(map_finished)
 	if (n < player_real_count)
 	if (g_endmatch_on_leave)
 	if (n == g_endmatch_on_leave) {
