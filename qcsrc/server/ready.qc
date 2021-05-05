@@ -1,41 +1,39 @@
 #define RESTART_COUNTDOWN 10
 entity ready_nagger;
-float readycount;
-float readywait;
-float ready_nagger_send(entity to, float sendflags)
-{
+float ready_ready;
+float ready_wait;
+
+float(entity to, float sendflags) ready_nagger_send {
 	float nags, i, f, b;
 	entity e;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
-
 	nags = 0;
-	if (readycount)
+	if (ready_ready)
 		nags |= 1;
 
 	WriteByte(MSG_ENTITY, nags);
-	if(nags & 1)
-	{
-		for(i = 1; i <= client_max_count; i += 8)
-		{
-			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-				if(clienttype(e) != CLIENTTYPE_REAL || e.ready)
+	if (nags & 1) {
+		for (i = 1; i <= client_max_count; i += 8) {
+			for (f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
+				if (clienttype(e) != CLIENTTYPE_REAL || e.ready)
 					f |= b;
+
 			WriteByte(MSG_ENTITY, f);
 		}
 	}
 	return TRUE;
 }
+
 void(void) ready_nagger_init {
 	net_link_entity(ready_nagger = spawn(), FALSE, 0, ready_nagger_send);
 }
 
-void ready_nagger_counted()
-{
-	if(ready_nagger)
+void(void) ready_nagger_counted {
+	if (ready_nagger)
 		ready_nagger.SendFlags |= 1;
 }
 
-void ready_count();
+void(void) ready_count;
 entity ready_restart_timer;
 
 /**
@@ -51,9 +49,8 @@ void ready_restart_timer_think() {
 }
 
 void(void) ready_restart_force {
-	local entity e;
+	entity e;
 	map_restart_active = 1;
-
 	bprint("^1Server is restarting...\n");
 	vote_reset();
 	// clear overtime
@@ -64,47 +61,39 @@ void(void) ready_restart_force {
 		newTL -= checkrules_overtimesadded * cvar("timelimit_overtime");
 		cvar_set("timelimit", ftos(newTL));
 	}
-
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
-
-
 	ready_restart_happened = 1;
 	map_starttime = time + RESTART_COUNTDOWN;
-
 	warmup_finish();
 	//reset the .ready status of all players (also spectators)
 	FOR_EACH_CLIENTSLOT(e)
 		e.ready = 0;
-	readycount = 0;
-	ready_nagger_counted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
-	if(cvar("teamplay_lockonrestart") && team_mode) {
+	ready_ready = 0;
+	ready_nagger_counted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
+	if (cvar("teamplay_lockonrestart") && team_mode) {
 		team_lock = 1;
 		bprint("^1The teams are now locked.\n");
 	}
-
 	//initiate the restart-countdown-announcer entity
 	ready_restart_timer = spawn();
 	ready_restart_timer.think = ready_restart_timer_think;
 	ready_restart_timer.nextthink = (cvar("sv_ready_restart_after_countdown") ? map_starttime : time);
-
 	//after a restart every players number of allowed timeouts gets reset, too
-	if(cvar("sv_timeout"))
-	{
+	if (cvar("sv_timeout")) {
 		FOR_EACH_REALPLAYER(e)
 			e.allowedTimeouts = cvar("sv_timeout_number");
 	}
 }
 
 void(void) ready_restart {
-	if(gamehook_ReadyRestartHard() | map_finished | map_intermission_running) {
+	if (gamehook_ready_restart_hard() | map_finished | map_intermission_running) {
 		localcmd("\nrestart\n");
 		return;
 	} else
 		localcmd("\nsv_hook_gamerestart;");
 
 	ready_restart_force();
-
 	// reset ALL scores, but only do that at the beginning
 	//of the countdown if sv_ready_restart_after_countdown is off!
 	//Otherwise scores could be manipulated during the countdown!
@@ -122,19 +111,15 @@ void(void) ready_restart {
  * Function is called after the server receives a 'ready' sign from a player.
  */
 void(void) ready_count {
-	local entity e;
-	readycount = readywait = 0;
-
-	FOR_EACH_REALPLAYER(e)
-	{
-		++readywait;
-		if(e.ready)
-			++readycount;
+	entity e;
+	ready_ready = ready_wait = 0;
+	FOR_EACH_REALPLAYER(e) {
+		++ready_wait;
+		if (e.ready)
+			++ready_ready;
 	}
-
 	ready_nagger_counted();
-
-	if(readycount) // at least one is ready
-	if(readycount == readywait) // and, everyone is ready
+	if (ready_ready) // at least one is ready
+	if (ready_ready == ready_wait) // and, everyone is ready
 		ready_restart();
 }
