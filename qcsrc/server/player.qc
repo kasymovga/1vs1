@@ -65,6 +65,7 @@ float g_spawnsound;
 float g_player_pushfactor;
 float g_player_body_pitch_maxangle;
 float g_player_team_collisions;
+float g_endmatch_on_leave;
 string sv_announcer_extra_meleefrag;
 string sv_announcer_extra_pushfrag;
 string sv_announcer_extra_doublekill;
@@ -1412,8 +1413,7 @@ void() player_setup_model {
 	self.body.colormap = self.colormap;
 }
 
-void(entity player) player_to_spec
-{
+void(entity player) player_to_spec {
 	if (player.classname == "player" || (player.classname == "spectator" && player.team >= 0))
 	if not(g_campaign)
 	if not(gamehook_forbid_specatators()) {
@@ -1430,6 +1430,8 @@ void(entity player) player_to_spec
 		spectator_note_update();
 		if (team_mode)
 			team_balance_audit(FALSE);
+
+		player_leave();
 	}
 }
 
@@ -2146,6 +2148,18 @@ void(entity spot) player_spawn {
 	player_real_count = n;
 }
 
+void(void) player_leave {
+	float n;
+	entity e;
+	FOR_EACH_REALPLAYER(e) n++;
+	if (n < player_real_count)
+	if (g_endmatch_on_leave)
+	if (n == g_endmatch_on_leave) {
+		cvar_set("timelimit", "-1");
+	}
+	player_real_count = n;
+}
+
 void(string pattern) player_precache_all_models {
 	float globhandle, i, n;
 	string s, f;
@@ -2400,6 +2414,7 @@ void() player_init {
 	CVAR_CACHE(g_spawnfrags);
 	CVAR_CACHE(g_spawnsound);
 	CVAR_CACHE(g_reset_on_join);
+	CVAR_CACHE(g_endmatch_on_leave);
 	CVAR_CACHE(sv_autotaunt);
 	CVAR_CACHE(sv_taunt);
 	CVAR_CACHE(sv_loddistance1);

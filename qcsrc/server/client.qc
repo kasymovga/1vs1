@@ -463,6 +463,7 @@ void(void) client_disconnect { //called by engine
 	if (team_mode) {
 		team_balance_audit(FALSE);
 	}
+	player_leave();
 }
 
 /**
