@@ -2158,7 +2158,7 @@ void(void) player_leave {
 	if not(map_finished)
 	if (n < player_real_count)
 	if (g_endmatch_on_leave)
-	if (n == g_endmatch_on_leave) {
+	if (n <= g_endmatch_on_leave) {
 		cvar_set("timelimit", "-1");
 	}
 	player_real_count = n;
