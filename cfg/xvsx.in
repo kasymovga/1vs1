@@ -1,5 +1,12 @@
-set 2v2_g_maxplayers 4
-set 3v3_g_maxplayers 6
-set 4v4_g_maxplayers 8
-set 5v5_g_maxplayers 10
-set 6v6_g_maxplayers 12
+set xvsx_g_warmup 1
+set xvsx_g_warmup_limit 18000
+set 2vs2_inherit xvsx
+set 2vs2_g_maxplayers 4
+set 3vs3_inherit xvsx
+set 3vs3_g_maxplayers 6
+set 4vs4_inherit xvsx
+set 4vs4_g_maxplayers 8
+set 5vs5_inherit xvsx
+set 5vs5_g_maxplayers 10
+set 6vs6_inherit xvsx
+set 6vs6_g_maxplayers 12

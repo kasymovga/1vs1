@@ -22,3 +22,4 @@ set prophets_duel_g_maxplayers 2
 set prophets_duel_g_minstagib_extralives 0
 set prophets_duel_g_powerup_speed 0
 set prophets_duel_g_powerup_invisibility 0
+set prophets_duel_g_reset_on_join 2
