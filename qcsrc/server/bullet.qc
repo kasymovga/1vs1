@@ -225,7 +225,7 @@ entity bullet_trace_callback_ent;
 float bullet_trace_callback_eff;
 void(vector start, vector hit, vector end) bullet_trace_callback {
 	if (vlen(hit - start) > 16)
-		effect_curveparticles_from_tracetoss(bullet_trace_callback_eff, bullet_trace_callback_ent.origin, hit, bullet_trace_callback_ent.velocity); //bullet_trace_callback_ent.origin changed by WarpZone_TraceToss_ThroughZone, it's needed for curve particles
+		effect_curveparticles_from_tracetoss(bullet_trace_callback_eff, bullet_trace_callback_ent.origin, hit, bullet_trace_callback_ent.velocity); //bullet_trace_callback_ent.origin changed by warpzone_trace_toss_trough_zone, it's needed for curve particles
 }
 
 void(float pSpeed) bullet_begin {
@@ -269,8 +269,8 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 			bullet_trace_callback_ent = self;
 			bullet_trace_callback_eff = tracereffects;
 			if (proj.gravity) {
-				WarpZone_TraceToss_ThroughZone(self, oldself, 0.125 * 0.05, 200, world, bullet_trace_callback);
-				self.velocity = WarpZone_tracetoss_velocity;
+				warpzone_trace_toss_trough_zone(self, oldself, 0.125 * 0.05, 200, world, bullet_trace_callback);
+				self.velocity = warpzone_trace_toss_velocity;
 			} else {
 				WarpZone_TraceLine_ThroughZone(self.origin, start + proj.velocity * 1.25, FALSE, self, world, bullet_trace_callback);
 				self.velocity = WarpZone_TransformVelocity(WarpZone_trace_transform, self.velocity);
