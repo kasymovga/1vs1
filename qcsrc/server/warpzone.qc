@@ -210,6 +210,7 @@ float WarpZone_Shadow_CustomizeEntity() {
 		return FALSE;
 
 	entity o = self.owner;
+	if (o.body.body) o = o.body.body;
 	if (o.customizeentityforclient) {
 		entity e = self;
 		self = o;
@@ -231,6 +232,14 @@ void WarpZone_Shadow_Think() {
 		remove_needed = TRUE;
 	}
 	entity o = self.owner;
+	entity b;
+	vector a = o.angles;
+	if (o.body) {
+		b = o.body;
+		a += b.angles;
+	} else
+		b = o;
+
 	if (WarpZone_Find(o.origin + o.mins, o.origin + o.maxs) != self.enemy) {
 		self.owner.wz_shadow = world;
 		remove_needed = TRUE;
@@ -243,15 +252,15 @@ void WarpZone_Shadow_Think() {
 		return;
 	}
 	self.nextthink = time;
-	if (self.modelindex != o.modelindex)
-		setmodel(self, o.model);
+	if (self.modelindex != b.modelindex)
+		setmodel(self, b.model);
 
 	setsize(self, o.mins, o.maxs);
-	self.frame = o.frame;
-	self.colormap = o.colormap;
-	self.color = o.color;
-	self.angles = WarpZone_TransformAngles(self.enemy, o.angles);
-	self.skin = o.skin;
+	self.frame = b.frame;
+	self.colormap = b.colormap;
+	self.color = b.color;
+	self.angles = WarpZone_TransformAngles(self.enemy, a);
+	self.skin = b.skin;
 	self.solid = o.solid;
 	setorigin(self, WarpZone_TransformOrigin(self.enemy, o.origin));
 }
