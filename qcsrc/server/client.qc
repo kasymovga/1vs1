@@ -78,8 +78,7 @@ void(void) client_put {
 	}
 }
 
-float client_init_send(entity to, float sf)
-{
+float(entity to, float sf) client_init_send {
 	float i, t;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, sf);
@@ -131,7 +130,7 @@ float client_init_send(entity to, float sf)
 		projectile_info_send();
 	}
 	if (sf & 128) {
-		WriteString(MSG_ENTITY, map_description); 
+		WriteString(MSG_ENTITY, map_description);
 		string s;
 		s = strcat("This is ^1Rexuiz^7 ", cvar_string("g_nexuizversion"));
 		string profile = cvar_string("g_profile");
@@ -318,7 +317,7 @@ void(void) client_kill { //called by engine, "kill" command
 	client_team_change_kill(0);
 }
 
-void (entity e) client_fix_cvars{
+void(entity e) client_fix_cvars{
 	stuffcmd(e, strcat("\nin_bindmap 0 0\n", gamehook_client_fix_cvars(), "\n"));
 }
 
