@@ -565,22 +565,6 @@ void() warpzone_init_delayed {
 	self = e;
 }
 
-#if 0
-void() warpzone_observer {
-	var vf = v_forward, vr = v_right, vu = v_up;
-	var wz = WarpZone_Find(self.absmin, self.absmax);
-	if (!wz)
-		return;
-
-	using(other = self) using(self = wz)
-		warpzone_touch();
-
-	v_forward = vf;
-	v_right = vr;
-	v_right = vu;
-}
-#endif
-
 void warpzone_trace_toss_trough_zone_real(entity e, entity forent, float toss_frametime, float toss_count, entity zone, WarpZone_trace_callback_t cb) {
 	float g, dt;
 	vector vf, vr, vu, v0, o0;
