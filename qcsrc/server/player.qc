@@ -155,6 +155,7 @@ entity(float keepvelocity, float _movetype) player_body_detach {
 		return world;
 
 	entity e = self.body;
+	fire_move(self, e);
 	e.owner = e;
 	e.skinindex = self.skinindex;
 	player_body_spawn(e.body);
@@ -2094,6 +2095,7 @@ void(entity spot) player_spawn {
 	self.punchangle = '0 0 0';
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
+	self.waterlevel = 0; //prevent wrong waterlevel handing in server frame for bots
 	self.fire_endtime = -1;
 	msg_entity = self;
 	self.customizeentityforclient = player_real_customize;

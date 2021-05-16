@@ -1,2 +1,3 @@
 void(void) fire_init;
+void(entity from, entity to) fire_move;
 float(entity e, entity o, float d, float t, float dt) fire_add_damage;

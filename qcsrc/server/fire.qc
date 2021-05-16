@@ -143,6 +143,14 @@ void(void) fire_burner_think {
 	self.nextthink = time;
 }
 
+void(entity from, entity to) fire_move {
+	float t = from.fire_endtime - time;
+	if (t > 0) {
+		fire_add_damage(to, from.fire_owner, from.fire_damagepersec * t, t, DEATH_FIRE);
+		from.fire_endtime = -1;
+	}
+}
+
 void(void) fire_init {
 	CVAR_CACHE(g_balance_firetransfer_damage);
 	CVAR_CACHE(g_balance_firetransfer_time);
