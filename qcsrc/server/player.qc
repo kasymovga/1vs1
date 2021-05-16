@@ -266,7 +266,6 @@ void() player_effects {
 		return;
 
 	fire_apply_effect(self);
-
 	gamehook_chain_player_effects();
 	if (g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;

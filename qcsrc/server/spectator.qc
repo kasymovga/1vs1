@@ -206,8 +206,7 @@ void() spectator_note_update {
 }
 
 void(float frags_team_reset) spectator_observer_spawn {
-	entity	spot;
-
+	entity spot;
 	gamehook_chain_observer_spawn();
 	player_clear(FALSE);
 	spot = find(world, classname, "info_intermission");
@@ -226,12 +225,11 @@ void(float frags_team_reset) spectator_observer_spawn {
 		score_clear(self); // clear scores when needed
 	}
 	self.spectatortime = time;
-
 	self.classname = "observer";
 	self.iscreature = FALSE;
 	self.health = 1;
 	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_NOT;
+	self.solid = SOLID_TRIGGER;
 	self.movetype = MOVETYPE_NOCLIP;
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 0;

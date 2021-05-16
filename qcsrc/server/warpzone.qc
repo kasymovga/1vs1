@@ -147,7 +147,7 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 	if (dt < frametime)
 		e.warpzone_teleport_finishtime += frametime - dt;
 
-	if (e.classname == "player") {
+	if (e.classname == "player" || e.classname == "observer") {
 		// instead of fixangle, send the transform to the client for smoother operation
 		e.fixangle = FALSE;
 		entity ts = spawn();
