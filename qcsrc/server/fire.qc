@@ -94,9 +94,10 @@ void(entity e) fire_apply_damage {
 
 	// water and slime stop fire
 	if (e.waterlevel)
-	if (e.watertype != CONTENT_LAVA)
+	if (e.watertype != CONTENT_LAVA) {
 		e.fire_endtime = 0;
-
+		return;
+	}
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;
 	hi = e.fire_owner.hitsound;
