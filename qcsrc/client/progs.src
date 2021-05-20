@@ -205,12 +205,12 @@ noteline.qc
 ../client-menu/draw.qh
 ../client-menu/skin.qc
 ../client-menu/draw.qc
-../client-menu/oo/base.h
-../client-menu/oo/classdefs.h
+../client-menu/classes/base.h
+../client-menu/classes/classdefs.h
 	classes.c
-../client-menu/oo/constructors.h
+../client-menu/classes/constructors.h
 	classes.c
-../client-menu/oo/implementation.h
+../client-menu/classes/implementation.h
 	classes.c
 gui.qc
 ../client-menu/util.qc

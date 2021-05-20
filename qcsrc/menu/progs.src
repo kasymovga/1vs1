@@ -14,7 +14,7 @@ mbuiltin.qh
 ../client-menu/ui.qh
 ../client-menu/util.qh
 ../menu-server/util.qh
-../client-menu/oo/base.h
+../client-menu/classes/base.h
 ../menu-server/udppunchhole.qh
 ../common/constants.qh
 ../client-menu/key.h
@@ -30,17 +30,17 @@ gamecommand.qh
 menu.qh
 ../client-menu/draw.qh
 ../client-menu/skin.qh
-nexuiz/util.qh
+util.qh
 ../menu-server/util.qh
 ../menu-server/cvar.qh
 
 ../client-menu/skin.qc
-../client-menu/oo/classdefs.h
+../client-menu/classes/classdefs.h
 	classes.c
 
-../client-menu/oo/constructors.h
+../client-menu/classes/constructors.h
 	classes.c
-../client-menu/oo/implementation.h
+../client-menu/classes/implementation.h
 	classes.c
 
 ../common/gametype.qc
@@ -50,7 +50,7 @@ nexuiz/util.qh
 gamecommand.qc
 menu.qc
 ../client-menu/draw.qc
-nexuiz/util.qc
+util.qc
 ../menu-server/udppunchhole.qc
 ../common/str.qc
 ../common/file.qc
