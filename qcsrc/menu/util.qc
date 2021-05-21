@@ -246,26 +246,6 @@ void preMenuDraw()
 	}
 }
 
-string getcurrentmod()
-{
-	float n;
-	string m;
-	m = cvar_string("fs_gamedir");
-	n = tokenize_console(m);
-	if(n == 0)
-		return "data";
-	else
-		return argv(n - 1);
-}
-
-string resolvemod(string m)
-{
-	if(m == "=")
-		return getcurrentmod();
-	else
-		return m;
-}
-
 void menu_loadmap_prepare() {
 	localcmd("\ndisconnect; wait; g_campaign 0; maxplayers ", ftos(max(max(cvar("bot_number") + 1, cvar("minplayers")), cvar("menu_maxplayers"))), "; g_maplist_shufflenow\n");
 }
