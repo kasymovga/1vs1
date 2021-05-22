@@ -7,20 +7,16 @@ entity makeNexuizNexposee();
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeNexuizNexposee()
-{
+entity() makeNexuizNexposee {
 	entity me;
 	me = spawnNexuizNexposee();
 	me.configureNexuizNexposee(me);
 	return me;
 }
 
-void configureNexuizNexposeeNexuizNexposee(entity me)
-{
-}
+void(entity me) configureNexuizNexposeeNexuizNexposee { }
 
-void closeNexuizNexposee(entity me)
-{
-	m_goto(NULL); // hide
+void(entity me) closeNexuizNexposee {
+	menu_goto(NULL); // hide
 }
 #endif

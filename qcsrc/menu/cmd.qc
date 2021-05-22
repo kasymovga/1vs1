@@ -43,7 +43,7 @@ void(string theCommand) cmd { //called by engine
 	if (argc == 2) {
 		// switch to a menu item
 		if (!isdemo()) // don't allow this command in demos
-			m_goto(argv(1));
+			menu_goto(argv(1));
 
 		return;
 	}
@@ -77,7 +77,7 @@ void(string theCommand) cmd { //called by engine
 		return;
 	}
 	if (argv(0) == "skinselect") {
-		m_goto_skin_selector();
+		menu_goto("skinselector");
 		return;
 	}
 	print("Invalid theCommand. For a list of supported theCommands, try menu_cmd help.\n");

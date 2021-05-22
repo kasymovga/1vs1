@@ -14,8 +14,7 @@ ENDCLASS(NexuizRootDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void closeNexuizRootDialog(entity me)
-{
-	m_goto(NULL);
+void(entity me) closeNexuizRootDialog {
+	menu_goto(NULL);
 }
 #endif

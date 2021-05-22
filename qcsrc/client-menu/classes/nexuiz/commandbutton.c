@@ -31,7 +31,7 @@ void NexuizCommandButton_Click(entity me, entity theOther)
 	//	loadAllCvars(me.parent);
 	if(me.flags & COMMANDBUTTON_CLOSE)
 #ifdef MENUQC
-		m_goto(NULL);
+		menu_goto(NULL);
 #endif
 #ifdef CSQC
 		GUI_Hide();

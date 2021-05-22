@@ -522,38 +522,25 @@ void() m_shutdown =
 	}
 };
 
-void(string itemname) m_goto =
-{
+void(string itemname) menu_goto {
 	entity e;
-	if(!menuInitialized)
+	if not(menuInitialized)
 		return;
-	if(itemname == "") // this can be called by GameCommand
-	{
-		if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
+
+	if (itemname == "") { // this can be called by GameCommand
+		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
 			m_hide();
-		else
-		{
+		else {
 			m_activate_window(main.mainNexposee);
 			m_display();
 		}
-	}
-	else
-	{
+	} else {
 		e = findstring(NULL, name, itemname);
-		if(e)
-		{
+		if (e) {
 			m_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);
 			m_display();
 		}
 	}
-}
-
-void() m_goto_skin_selector =
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the skin selector (no idea how to do it now)
-	m_goto("skinselector");
 }
