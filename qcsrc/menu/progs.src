@@ -1,8 +1,6 @@
 menu.dat
-
-config.qh
 ../common/qcc.qh
-msys.qh
+sys.qh
 mbuiltin.qh
 ../common/stdproc.qh
 ../common/gametype.qh

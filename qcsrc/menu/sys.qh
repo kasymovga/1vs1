@@ -154,4 +154,5 @@ float FONT_CENTERPRINT = 5;
 float FONT_INFOBAR     = 6;
 float FONT_MENU        = 7;
 float FONT_USER        = 8; // add to this the index, like FONT_USER+3 = user3. At least 8 of them are supported.
+#define MENUQC // so common/*.qc can check for menu QC or game QC
 #define cmd GameCommand
