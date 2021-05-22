@@ -26,7 +26,7 @@ mbuiltin.qh
 ../common/uri.qh
 ../common/dlc.qh
 ../menu-server/extresponse.qh
-gamecommand.qh
+cmd.qh
 menu.qh
 ../client-menu/draw.qh
 ../client-menu/skin.qh
@@ -47,7 +47,7 @@ util.qh
 ../common/colormap.qc
 ../common/db.qc
 ../menu-server/cmd.qc
-gamecommand.qc
+cmd.qc
 menu.qc
 ../client-menu/draw.qc
 util.qc

@@ -1,76 +1,58 @@
-void GameCommand_Init()
-{
-	// make gg call menu QC theCommands
-	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
-}
-
-string _dumptree_space;
-void _dumptree_open(entity pass, entity me)
-{
+string cmd_dumptree_space;
+void(entity pass, entity me) cmd_dumptree_open {
 	string s;
 	s = me.toString(me);
-	if(s == "")
+	if (s == "")
 		s = me.classname;
 	else
 		s = strcat(me.classname, ": ", s);
-	print(_dumptree_space, etos(me), " (", s, ")");
-	if(me.firstChild)
-	{
+
+	print(cmd_dumptree_space, etos(me), " (", s, ")");
+	if (me.firstChild) {
 		print(" {\n");
-		_dumptree_space = strcat(_dumptree_space, "  ");
-	}
-	else
+		cmd_dumptree_space = strcat(cmd_dumptree_space, "  ");
+	} else
 		print("\n");
 }
-void _dumptree_close(entity pass, entity me)
-{
-	if(me.firstChild)
-	{
-		_dumptree_space = substring(_dumptree_space, 0, strlen(_dumptree_space) - 2);
-		print(_dumptree_space, "}\n");
+
+void(entity pass, entity me) cmd_dumptree_close {
+	if (me.firstChild) {
+		cmd_dumptree_space = substring(cmd_dumptree_space, 0, strlen(cmd_dumptree_space) - 2);
+		print(cmd_dumptree_space, "}\n");
 	}
 }
 
-void GameCommand(string theCommand)
-{
+void(string theCommand) cmd { //called by engine
 	float argc;
 	argc = tokenize_console(theCommand);
-
-	if(argv(0) == "help" || argc == 0)
-	{
+	if (argv(0) == "help" || argc == 0) {
 		print("Usage: menu_cmd theCommand..., where possible theCommands are:\n");
 		print("  sync - reloads all cvars on the current menu page\n");
 		print("  directmenu ITEM - select a menu item as main item\n");
 		cmd_generic("help");
 		return;
 	}
-
-	if(cmd_generic(theCommand))
+	if (cmd_generic(theCommand))
 		return;
 
-	if(argv(0) == "sync")
-	{
+	if (argv(0) == "sync") {
 		loadAllCvars(main);
 		return;
 	}
-
-	if(argv(0) == "directmenu") if(argc == 2)
-	{
+	if (argv(0) == "directmenu")
+	if (argc == 2) {
 		// switch to a menu item
-		if(!isdemo()) // don't allow this command in demos
+		if (!isdemo()) // don't allow this command in demos
 			m_goto(argv(1));
+
 		return;
 	}
-
-	if(argv(0) == "dumptree")
-	{
-		_dumptree_space = "";
-		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
+	if (argv(0) == "dumptree") {
+		cmd_dumptree_space = "";
+		depthfirst(main, parent, firstChild, nextSibling, cmd_dumptree_open, cmd_dumptree_close, NULL);
 		return;
 	}
-
-	if(argv(0) == "dumpserverlist")
-	{
+	if (argv(0) == "dumpserverlist") {
 		string s = argv(1);
 		if not(s)
 			s = "serverlist.txt";
@@ -86,9 +68,7 @@ void GameCommand(string theCommand)
 		}
 		return;
 	}
-
-	if(argv(0) == "dlc_reload")
-	{
+	if (argv(0) == "dlc_reload") {
 		menu_dlc_reload(TRUE, TRUE);
 		return;
 	}

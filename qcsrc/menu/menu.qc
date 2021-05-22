@@ -196,7 +196,7 @@ void() m_init_delayed =
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-	GameCommand_Init();
+	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
 	weapon_register_weapons();
 	skin_init();
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);

@@ -266,7 +266,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	if(MapInfo_CheckMap(m))
 	{
-		menu_loadmap_prepare();
+		localcmd("\ndisconnect; wait; g_campaign 0; maxplayers ", ftos(max(max(cvar("bot_number") + 1, cvar("minplayers")), cvar("menu_maxplayers"))), "; g_maplist_shufflenow\n");
 		if(cvar("menu_use_default_hostname"))
 			localcmd("hostname \"", strdecolorize(cvar_string("_cl_name")), "'s Rexuiz server\"\n");
 		MapInfo_LoadMap(m);
