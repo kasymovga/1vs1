@@ -32,8 +32,9 @@ set mod_q3bsp_lightmapmergepower 3
 set mod_q3bsp_curves_collisions 1
 mod_q3bsp_tracelineofsight_brushes 1
 mod_collision_bih 0
-set v_kickroll 0
-set v_kickpitch 0.2
+seta v_kickroll 0
+seta v_kickpitch 0.2
+seta v_kicktime 0.5
 sensitivity 6
 v_gamma 1.125000
 viewsize 100
@@ -52,7 +53,6 @@ cl_bobcycle 0 // how long the cycle of up/down view movement takes (only works i
 cl_bob 0.01 // how much view moves up/down when moving (does not move if cl_bobcycle is 0, but still enables cl_bobmodel), default is 0.02
 cl_bobmodel 1 // whether to have gun model move around on screen when moving (only works if cl_bob is not 0), default is 1
 cl_rollangle 0 // amount of view tilt when strafing, default is 2.0
-v_kicktime 0.5 // how long damage kicks of the view last, default is 0.5 seconds
 gl_polyblend 0.5 // whether to use screen tints, default is 1
 r_motionblur 0 // motion blur value, default is 0
 r_damageblur 0 // motion blur when damaged, default is 0
@@ -117,8 +117,8 @@ seta cl_port $cl_port
 seta r_showsurfaces $r_showsurfaces
 seta skill 4
 seta gl_finish $gl_finish
-seta v_kicktime $v_kicktime
 seta r_subdivisions_tolerance $r_subdivisions_tolerance
+seta r_drawviewmodel 1
 sv_gameplayfix_droptofloorstartsolid 0
 seta gl_texturecompression 0
 gl_texturecompression_color 1
