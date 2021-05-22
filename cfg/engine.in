@@ -147,3 +147,4 @@ collision_triangle_directional 1
 gameversion 20000
 gameversion_min 20000
 gameversion_max 20699
+seta r_deformvertexes 1
