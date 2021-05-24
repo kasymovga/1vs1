@@ -12,16 +12,15 @@ ENDCLASS(NexuizCvarsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyNexuizCvarsDialog(entity me)
-{
-	loadAllCvars(me);
+void(entity me) showNotifyNexuizCvarsDialog {
+	gui_load_all_cvars(me);
 }
-string toStringNexuizCvarsDialog(entity me)
-{
+
+string(entity me) toStringNexuizCvarsDialog {
 	return "XXX";
 }
-void fillNexuizCvarsDialog(entity me)
-{
+
+void(entity me) fillNexuizCvarsDialog {
 	entity e, cvarlist, btn;
 	cvarlist = makeNexuizCvarList();
 	me.TR(me);
@@ -65,5 +64,4 @@ void fillNexuizCvarsDialog(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-
 #endif

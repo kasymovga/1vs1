@@ -12,16 +12,15 @@ ENDCLASS(NexuizRadarDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyNexuizRadarDialog(entity me)
-{
-        loadAllCvars(me);
+void(entity me) showNotifyNexuizRadarDialog {
+	gui_load_all_cvars(me);
 }
-string toStringNexuizRadarDialog(entity me)
-{
+
+string(entity me) toStringNexuizRadarDialog {
 	return "XXX";
 }
-void fillNexuizRadarDialog(entity me)
-{
+
+void(entity me) fillNexuizRadarDialog {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 4, makeNexuizTextLabel(0, _("HUD settings:")));

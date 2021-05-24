@@ -28,7 +28,7 @@ cmd.qh
 menu.qh
 ../client-menu/draw.qh
 ../client-menu/skin.qh
-util.qh
+gui.qh
 ../menu-server/util.qh
 ../menu-server/cvar.qh
 
@@ -48,7 +48,7 @@ util.qh
 cmd.qc
 menu.qc
 ../client-menu/draw.qc
-util.qc
+gui.qc
 ../menu-server/udppunchhole.qc
 ../common/str.qc
 ../common/file.qc

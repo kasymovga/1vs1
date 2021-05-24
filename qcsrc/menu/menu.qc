@@ -19,6 +19,8 @@ float menuRealFrametime;
 float menu_doubleclick_time;
 vector menu_doubleclick_position;
 
+float() menu_init_pre;
+
 float URI_GET_SERVERLIST;
 #define SERVERLIST_URIS_COUNT 3
 var float serverlist_uri_index = 0;
@@ -166,13 +168,13 @@ void() menu_init_delayed {
 		//print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
 	} else if (dlc_wait_frame < 10) {
 		dlc_wait_frame++;
-		preMenuInit();
+		menu_init_pre();
 		return;
 	} else {
 		dlc_set_repos(cvar_string("sv_dlc_repository"));
 		menu_dlc_reload(FALSE, FALSE);
 	}
-	if(!preMenuInit())
+	if (!menu_init_pre())
 		return;
 
 	menuInitialized = 1;
@@ -290,6 +292,50 @@ void(float key, float ascii) menu_keydown {
 	if (key == K_SHIFT) menuShiftState |= S_SHIFT;
 }
 
+float() menu_init_pre {
+	vector sz;
+	vector boxA, boxB;
+	MapInfo_Cache_Create();
+	MapInfo_Enumerate();
+	if (!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1)) {
+		draw_reset();
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
+		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
+		boxA += sz * 0.1;
+		boxB -= sz * 0.1;
+		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
+		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
+		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+string menu_campaign_name_previous;
+float menu_campaign_won_previous;
+void() menu_draw_pre {
+	if not(menu_campaign_name_previous)
+		menu_campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
+
+	if (campaign_name == menu_campaign_name_previous) {
+		if (cvar(strcat("g_campaign", campaign_name, "_won"))) {
+			if (!menu_campaign_won_previous) {
+				menu_display();
+				DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * conwidth + eY * conheight);
+			}
+			menu_campaign_won_previous = 1;
+		} else
+			menu_campaign_won_previous = 0;
+	} else {
+		strunzone(menu_campaign_name_previous);
+		menu_campaign_name_previous = strzone(campaign_name);
+		menu_campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
+	}
+}
+
 void(void) menu_draw {
 	float t;
 	menuMouseMode = cvar("menu_mouse_absolute");
@@ -386,13 +432,12 @@ void(void) menu_draw {
 		cvar_set("_menu_alpha", ftos(menuAlpha));
 
 	draw_reset();
-	preMenuDraw();
+	menu_draw_pre();
 	draw_reset();
 	if (menuAlpha <= 0) {
 		if(prevMenuAlpha > 0)
 			main.initializeDialog(main, main.firstChild);
 		draw_reset();
-		postMenuDraw();
 		return;
 	}
 	draw_alpha *= menuAlpha;
@@ -406,7 +451,6 @@ void(void) menu_draw {
 	draw_alpha = max(draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
 	draw_drawMousePointer(menuMousePos);
 	draw_reset();
-	postMenuDraw();
 	frametime = 0;
 }
 

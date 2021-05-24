@@ -13,16 +13,15 @@ ENDCLASS(NexuizWeaponsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyNexuizWeaponsDialog(entity me)
-{
-        loadAllCvars(me);
+void(entity me) showNotifyNexuizWeaponsDialog {
+	gui_load_all_cvars(me);
 }
-string toStringNexuizWeaponsDialog(entity me)
-{
+
+string(entity me) toStringNexuizWeaponsDialog {
 	return me.weaponsList.toString(me.weaponsList);
 }
-void fillNexuizWeaponsDialog(entity me)
-{
+
+void(entity me) fillNexuizWeaponsDialog {
 	entity e;
 	float h0, h;
 
@@ -74,5 +73,4 @@ void fillNexuizWeaponsDialog(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-
 #endif

@@ -7,7 +7,6 @@ CLASS(NexuizTab) EXTENDS(Tab)
 	ATTRIB(NexuizTab, columns, float, 2)
 	*/
 	METHOD(NexuizTab, showNotify, void(entity))
-
 	ATTRIB(NexuizTab, marginTop, float, 0) // pixels
 	ATTRIB(NexuizTab, marginBottom, float, 0) // pixels
 	ATTRIB(NexuizTab, marginLeft, float, 0) // pixels
@@ -16,15 +15,13 @@ CLASS(NexuizTab) EXTENDS(Tab)
 	ATTRIB(NexuizTab, rowSpacing, float, SKINMARGIN_ROWS) // pixels
 	ATTRIB(NexuizTab, rowHeight, float, SKINFONTSIZE_NORMAL * SKINHEIGHT_NORMAL) // pixels
 	ATTRIB(NexuizTab, titleHeight, float, SKINFONTSIZE_TITLE * SKINHEIGHT_TITLE) // pixels
-
 	ATTRIB(NexuizTab, backgroundImage, string, NULL)
 ENDCLASS(NexuizTab)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyNexuizTab(entity me)
-{
-	loadAllCvars(me);
+void(entity me) showNotifyNexuizTab {
+	gui_load_all_cvars(me);
 	showNotifyContainer(me);
 }
 #endif

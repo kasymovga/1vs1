@@ -1,29 +1,25 @@
-void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
-{
-	depthfirst(root, parent, firstChild, nextSibling, funcPre, funcPost, pass);
+void(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass) ui_for_all_descendant {
+	gui_depth_first(root, parent, firstChild, nextSibling, funcPre, funcPost, pass);
 }
 
 .string cvarName;
-void SUB_Null_ee(entity e1, entity e2)
-{
-}
-void saveCvarsOf(entity ignore, entity e)
-{
+void(entity e1, entity e2) gui_nothing_ee { }
+
+void (entity ignore, entity e) gui_save_cvars_of {
 	if(e.saveCvars)
 		e.saveCvars(e);
 }
-void loadCvarsOf(entity ignore, entity e)
-{
+
+void(entity ignore, entity e) gui_load_cvars_of {
 	if(e.loadCvars)
 		e.loadCvars(e);
 }
-void saveAllCvars(entity root)
-{
-	forAllDescendants(root, saveCvarsOf, SUB_Null_ee, NULL);
+
+void(entity root) gui_save_all_cvars {
+	ui_for_all_descendant(root, gui_save_cvars_of, gui_nothing_ee, NULL);
 }
-void loadAllCvars(entity root)
-{
-	forAllDescendants(root, loadCvarsOf, SUB_Null_ee, NULL);
+void(entity root) gui_load_all_cvars {
+	ui_for_all_descendant(root, gui_load_cvars_of, gui_nothing_ee, NULL);
 }
 
 .string cvarNames_Multi;
@@ -168,8 +164,8 @@ void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCva
 	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
-void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max)
-{
+
+void(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max) gui_set_dependent_and3 {
 	e.draw_setDependent = e.draw;
 	e.cvar_setDependent = theCvarName;
 	e.cvarMin_setDependent = theCvarMin;
@@ -185,92 +181,26 @@ void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theC
 	setDependent_Check(e);
 }
 
-float preMenuInit()
-{
-	vector sz;
-	vector boxA, boxB;
-
-	MapInfo_Cache_Create();
-	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1))
-	{
-		draw_reset();
-
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
-
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
-		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
-		
-		boxA += sz * 0.1;
-		boxB -= sz * 0.1;
-		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
-
-		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
-		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
-
-		return FALSE;
-	}
-	return TRUE;
-}
-
-string campaign_name_previous;
-float campaign_won_previous;
-void postMenuDraw()
-{
-}
-void preMenuDraw()
-{
-	if not(campaign_name_previous)
-		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
-	if(campaign_name == campaign_name_previous)
-	{
-		if(cvar(strcat("g_campaign", campaign_name, "_won")))
-		{
-			if(!campaign_won_previous)
-			{
-				menu_display();
-				DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * conwidth + eY * conheight);
-			}
-			campaign_won_previous = 1;
-		}
-		else
-			campaign_won_previous = 0;
-	}
-	else
-	{
-		strunzone(campaign_name_previous);
-		campaign_name_previous = strzone(campaign_name);
-		campaign_won_previous = cvar(strcat("g_campaign", campaign_name, "_won"));
-	}
-}
-
-void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
-{
+void(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass) gui_depth_first {
 	entity e;
 	e = start;
 	funcPre(pass, e);
-	while(e.downleft)
-	{
+	while (e.downleft) {
 		e = e.downleft;
 		funcPre(pass, e);
 	}
 	funcPost(pass, e);
-	while(e != start)
-	{
-		if(e.right)
-		{
+	while (e != start) {
+		if (e.right) {
 			e = e.right;
 			funcPre(pass, e);
-			while(e.downleft)
-			{
+			while (e.downleft) {
 				e = e.downleft;
 				funcPre(pass, e);
 			}
-		}
-		else
+		} else
 			e = e.up;
+
 		funcPost(pass, e);
 	}
 }

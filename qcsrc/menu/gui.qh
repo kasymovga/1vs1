@@ -1,0 +1,11 @@
+void(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass) ui_for_all_descendant;
+void(entity root) gui_save_all_cvars;
+void(entity root) gui_load_all_cvars;
+void makeMulti(entity me, string otherCvars);
+void makeCallback(entity me, entity cbent, void(entity, entity) cbfunc);
+void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
+void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
+void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
+void(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max) gui_set_dependent_and3;
+void(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass) gui_depth_first;
+void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue);

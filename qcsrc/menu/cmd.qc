@@ -36,7 +36,7 @@ void(string theCommand) cmd { //called by engine
 		return;
 
 	if (argv(0) == "sync") {
-		loadAllCvars(main);
+		gui_load_all_cvars(main);
 		return;
 	}
 	if (argv(0) == "directmenu")
@@ -49,7 +49,7 @@ void(string theCommand) cmd { //called by engine
 	}
 	if (argv(0) == "dumptree") {
 		cmd_dumptree_space = "";
-		depthfirst(main, parent, firstChild, nextSibling, cmd_dumptree_open, cmd_dumptree_close, NULL);
+		gui_depth_first(main, parent, firstChild, nextSibling, cmd_dumptree_open, cmd_dumptree_close, NULL);
 		return;
 	}
 	if (argv(0) == "dumpserverlist") {

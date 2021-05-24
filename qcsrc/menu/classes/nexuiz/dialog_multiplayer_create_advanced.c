@@ -13,13 +13,11 @@ ENDCLASS(NexuizAdvancedDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyNexuizAdvancedDialog(entity me)
-{
-	loadAllCvars(me);
+void(entity me) showNotifyNexuizAdvancedDialog {
+	gui_load_all_cvars(me);
 }
 
-void fillNexuizAdvancedDialog(entity me)
-{
+void(entity me) fillNexuizAdvancedDialog {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 1.2, makeNexuizTextLabel(0, _("Game settings:")));
@@ -66,10 +64,10 @@ void fillNexuizAdvancedDialog(entity me)
 			e.onClickEntity = me;
 }
 
-void closeNexuizAdvancedDialog(entity me)
-{
+void(entity me) closeNexuizAdvancedDialog {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
+
 	closeDialog(me);
 }
 #endif

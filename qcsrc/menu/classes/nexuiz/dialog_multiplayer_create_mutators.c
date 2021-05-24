@@ -14,12 +14,11 @@ ENDCLASS(NexuizMutatorsDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void showNotifyNexuizMutatorsDialog(entity me)
-{
-	loadAllCvars(me);
+void showNotifyNexuizMutatorsDialog(entity me) {
+	gui_load_all_cvars(me);
 }
 
-string profile_description(string profile_name) {
+string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	if (profile_name == "") return "Default";
 	if (profile_name == "akimbo") return "Akimbo";
 	if (profile_name == "minsta") return "Minsta+Hook";
@@ -29,28 +28,26 @@ string profile_description(string profile_name) {
 	return "Unknown";
 }
 
-string toStringNexuizMutatorsDialog(entity me)
-{
-	return profile_description(cvar_string("g_profile"));
+string(entity me) toStringNexuizMutatorsDialog {
+	return profileDescriptionNexuizMutatorsDialog(cvar_string("g_profile"));
 }
 
-void fillNexuizMutatorsDialog(entity me)
-{
+void fillNexuizMutatorsDialog(entity me) {
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 2, makeNexuizTextLabel(0, _("Gameplay mutators:")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "", profile_description("")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "", profileDescriptionNexuizMutatorsDialog("")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "akimbo", profile_description("akimbo")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "akimbo", profileDescriptionNexuizMutatorsDialog("akimbo")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "minsta", profile_description("minsta")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "minsta", profileDescriptionNexuizMutatorsDialog("minsta")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "explosive_minsta", profile_description("explosive_minsta")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "explosive_minsta", profileDescriptionNexuizMutatorsDialog("explosive_minsta")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profile_description("cra")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "cra", profileDescriptionNexuizMutatorsDialog("cra")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "defragcpm", profile_description("defragcpm")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "defragcpm", profileDescriptionNexuizMutatorsDialog("defragcpm")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 	me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
@@ -59,10 +56,10 @@ void fillNexuizMutatorsDialog(entity me)
 
 }
 
-void closeNexuizMutatorsDialog(entity me)
-{
+void(entity me) closeNexuizMutatorsDialog {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
+
 	closeDialog(me);
 }
 #endif
