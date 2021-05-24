@@ -124,54 +124,34 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 	}
 }
 
-void() m_init =
-{
+void() menu_init {
 	cvar_set("_menu_alpha", "0");
 	if (cvar("sys_first_run"))
 		cvar_set("vid_desktopfullscreen", "1");
 
-	string s;
-	float i;
 	URI_GET_SERVERLIST = uri_register_handler(ServerList_URI_Get_Callback);
 	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
-
-	// list all game dirs (TEST)
-	if(cvar("developer"))
-	{
-		for(i = 0; ; ++i)
-		{
-			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
-				break;
-			print(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
-		}
-	}
 	menu_dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
 	ui_con_width_height_set();
 }
 
-void UpdateConWidthHeight()
-{
+void UpdateConWidthHeight() {
 	float conwidth_s, conheight_s;
 	conwidth_s = conwidth;
 	conheight_s = conheight;
 	conwidth = cvar("vid_conwidth");
 	conheight = cvar("vid_conheight");
-	if(conwidth < 800)
-	{
+	if (conwidth < 800) {
 		conheight *= 800 / conwidth;
 		conwidth = 800;
 	}
-	if(conheight < 600)
-	{
+	if (conheight < 600) {
 		conwidth *= 600 / conheight;
 		conheight = 600;
 	}
-	if(main)
-	{
-		if(conwidth_s != conwidth || conheight_s != conheight)
-		{
+	if (main) {
+		if (conwidth_s != conwidth || conheight_s != conheight) {
 			draw_reset();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
@@ -179,8 +159,7 @@ void UpdateConWidthHeight()
 }
 
 float dlc_wait_frame;
-void() m_init_delayed =
-{
+void() menu_init_delayed {
 	menuInitialized = 0;
 	if (dlc_ready_all()) {
 		//print("dlc loading finished\n");
@@ -195,31 +174,27 @@ void() m_init_delayed =
 	}
 	if(!preMenuInit())
 		return;
+
 	menuInitialized = 1;
 	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
 	weapon_register_weapons();
 	skin_init();
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
-
 	conwidth = conheight = -1;
 	draw_reset();
 	UpdateConWidthHeight();
-
 	main = spawnMainWindow(); main.configureMainWindow(main);
-
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 	main.focused = 1;
 	menuShiftState = 0;
 	menuMousePos = '0.5 0.5 0';
-
-	if(Menu_Active)
-		m_display(); // delayed menu display
-};
+	if(menu_active)
+		menu_display(); // delayed menu display
+}
 
 float(void) menu_mouse_update {
 	float changed = 0;
-	if(menuMouseMode)
-	{
+	if (menuMouseMode) {
 		vector newMouse;
 		newMouse = globalToBoxSize(getmousepos(), draw_scale);
 		if(newMouse != '0 0 0')
@@ -228,15 +203,11 @@ float(void) menu_mouse_update {
 				menuMousePos = newMouse;
 				changed = 1;
 			}
-	}
-	else
-	{
-		if(frametime > 0)
-		{
+	} else {
+		if(frametime > 0) {
 			vector dMouse;
 			dMouse = getmousepos() * (frametime / menuRealFrametime); // for capturevideo
-			if(dMouse != '0 0 0')
-			{
+			if (dMouse != '0 0 0') {
 				dMouse = globalToBoxSize(dMouse, draw_scale);
 				menuMousePos += dMouse * cvar("menu_mouse_speed");
 				menuMousePos_x = bound(0, menuMousePos_x, 1);
@@ -248,16 +219,16 @@ float(void) menu_mouse_update {
 	return changed;
 }
 
-void(float key, float ascii) m_keyup =
-{
-	if(!menuInitialized)
+void(float key, float ascii) menu_keyup {
+	if (!menuInitialized)
 		return;
-	if(!Menu_Active)
+
+	if (!menu_active)
 		return;
+
 	draw_reset();
 	main.keyUp(main, key, ascii, menuShiftState);
-	if(key >= K_MOUSE1 && key <= K_MOUSE3)
-	{
+	if(key >= K_MOUSE1 && key <= K_MOUSE3) {
 		if (menuMousePos)
 			menu_mouse_update();
 
@@ -270,30 +241,28 @@ void(float key, float ascii) m_keyup =
 			print("Warning: released an already released button\n");
 		}
 	}
-	if(key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
-	if(key == K_CTRL) menuShiftState -= (menuShiftState & S_CTRL);
-	if(key == K_SHIFT) menuShiftState -= (menuShiftState & S_SHIFT);
-};
+	if (key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
+	if (key == K_CTRL) menuShiftState -= (menuShiftState & S_CTRL);
+	if (key == K_SHIFT) menuShiftState -= (menuShiftState & S_SHIFT);
+}
 
-void(float key, float ascii) m_keydown =
-{
-	if(!menuInitialized)
+void(float key, float ascii) menu_keydown {
+	if (!menuInitialized)
 		return;
-	if(!Menu_Active)
+
+	if (!menu_active)
 		return;
-	if(keyGrabber)
-	{
+
+	if (keyGrabber) {
 		entity e;
 		e = keyGrabber;
 		keyGrabber = NULL;
 		e.keyGrabbed(e, key, ascii);
-	}
-	else
-	{
+	} else {
 		draw_reset();
-		if(key >= K_MOUSE1 && key <= K_MOUSE3) {
+		if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 			menu_mouse_update();
-			if(!mouseButtonsPressed)
+			if (!mouseButtonsPressed)
 				main.mousePress(main, menuMousePos);
 
 			if (key == K_MOUSE1) {
@@ -304,36 +273,30 @@ void(float key, float ascii) m_keydown =
 				menu_doubleclick_time = time + 0.4;
 			}
 		}
-		if(!main.keyDown(main, key, ascii, menuShiftState))
-			if(key == K_ESCAPE)
-				if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) // don't back out to console only
-					m_hide(); // disable menu on unhandled ESC
+		if (!main.keyDown(main, key, ascii, menuShiftState))
+			if (key == K_ESCAPE)
+				if (menu_gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) // don't back out to console only
+					menu_hide(); // disable menu on unhandled ESC
 	}
-	if(key >= K_MOUSE1 && key <= K_MOUSE3)
-	{
+	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 		++mouseButtonsPressed;
-		if(mouseButtonsPressed > 10)
-		{
+		if(mouseButtonsPressed > 10) {
 			mouseButtonsPressed = 10;
 			print("Warning: pressed an already pressed button\n");
 		}
 	}
-	if(key == K_ALT) menuShiftState |= S_ALT;
-	if(key == K_CTRL) menuShiftState |= S_CTRL;
-	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
-};
+	if (key == K_ALT) menuShiftState |= S_ALT;
+	if (key == K_CTRL) menuShiftState |= S_CTRL;
+	if (key == K_SHIFT) menuShiftState |= S_SHIFT;
+}
 
-void() m_draw =
-{
+void(void) menu_draw {
 	float t;
-
 	menuMouseMode = cvar("menu_mouse_absolute");
-
-	if(main)
+	if (main)
 		UpdateConWidthHeight();
 
-	if(!menuInitialized)
-	{
+	if (!menuInitialized) {
 		// TODO draw an info image about this situation
 		if not(cvar("utf8_enable"))
 			cvar_set("utf8_enable", "1");
@@ -342,15 +305,13 @@ void() m_draw =
 			cvar_set("r_font_disable_freetype", "0");
 			localcmd("\nr_restart\n");
 		}
-		m_init_delayed();
+		menu_init_delayed();
 		return;
 	}
-	if(!menuNotTheFirstFrame)
-	{
+	if (!menuNotTheFirstFrame) {
 		menuNotTheFirstFrame = 1;
-		if(Menu_Active)
-		if(!cvar("menu_video_played"))
-		{
+		if (menu_active)
+		if (!cvar("menu_video_played")) {
 			localcmd("set menu_video_played 1; cd loop $menu_cdtrack; play sound/announcer/male/welcome.ogg\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
 		}
@@ -361,16 +322,13 @@ void() m_draw =
 	menuPrevTime = t;
 	time += frametime;
 	t = cvar("menu_slowmo");
-	if(t)
-	{
+	if (t) {
 		frametime *= t;
 		menuRealFrametime *= t;
-	}
-	else
+	} else
 		t = 1;
 
-	if(Menu_Active)
-	{
+	if (menu_active) {
 		entity e, oldself;
 		oldself = self;
 		for(e = findflags(world, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
@@ -381,46 +339,35 @@ void() m_draw =
 			}
 		}
 		self = oldself;
-		if(getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
+		if (getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
 			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
 		else
-			m_hide();
+			menu_hide();
 	}
-
 	if(cvar("cl_capturevideo"))
 		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
 
-	gamestatus = 0;
-	if(isserver())
-		gamestatus = gamestatus | GAME_ISSERVER;
-	if(clientstate() == CS_CONNECTED)
-		gamestatus = gamestatus | GAME_CONNECTED;
-	if(cvar("developer"))
-		gamestatus = gamestatus | GAME_DEVELOPER;
+	menu_gamestatus = 0;
+	if (isserver())
+		menu_gamestatus = menu_gamestatus | GAME_ISSERVER;
+
+	if (clientstate() == CS_CONNECTED)
+		menu_gamestatus = menu_gamestatus | GAME_CONNECTED;
 
 	prevMenuAlpha = menuAlpha;
-	if(Menu_Active)
-	{
-		if(menuAlpha == 0 && menuLogoAlpha < 2)
-		{
+	if (menu_active) {
+		if (menuAlpha == 0 && menuLogoAlpha < 2) {
 			menuLogoAlpha = menuLogoAlpha + frametime * 2;
-		}
-		else
-		{
+		} else {
 			menuAlpha = min(1, menuAlpha + frametime * 5);
 			menuLogoAlpha = 2;
 		}
-	}
-	else
-	{
+	} else {
 		menuAlpha = max(0, menuAlpha - frametime * 5);
 		menuLogoAlpha = 2;
 	}
-
 	draw_reset();
-
-	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
-	{
+	if (!(menu_gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) {
 		if(menuLogoAlpha > 0)
 		{
 			draw_background(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
@@ -431,29 +378,23 @@ void() m_draw =
 				draw_alpha = 1;
 			}
 		}
-	}
-	else if(SKINALPHA_BACKGROUND_INGAME)
-	{
+	} else if(SKINALPHA_BACKGROUND_INGAME) {
 		if(menuAlpha > 0)
 			draw_background(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	}
-
-	if(menuAlpha != prevMenuAlpha)
+	if (menuAlpha != prevMenuAlpha)
 		cvar_set("_menu_alpha", ftos(menuAlpha));
 
 	draw_reset();
 	preMenuDraw();
 	draw_reset();
-
-	if(menuAlpha <= 0)
-	{
+	if (menuAlpha <= 0) {
 		if(prevMenuAlpha > 0)
 			main.initializeDialog(main, main.firstChild);
 		draw_reset();
 		postMenuDraw();
 		return;
 	}
-
 	draw_alpha *= menuAlpha;
 	if (menu_mouse_update()) {
 		if(mouseButtonsPressed)
@@ -463,64 +404,53 @@ void() m_draw =
 	}
 	main.draw(main);
 	draw_alpha = max(draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
-
 	draw_drawMousePointer(menuMousePos);
-
 	draw_reset();
 	postMenuDraw();
-
 	frametime = 0;
-};
+}
 
-void() m_display =
-{
-	Menu_Active = TRUE;
+void(void) menu_display {
+	menu_active = TRUE;
 	setkeydest(KEY_MENU);
 	setmousetarget((menuMouseMode ? MT_CLIENT : MT_MENU));
-
-	if(!menuInitialized)
+	if (!menuInitialized)
 		return;
 
-	if(mouseButtonsPressed)
+	if (mouseButtonsPressed)
 		main.mouseRelease(main, menuMousePos);
-	mouseButtonsPressed = 0;
 
+	mouseButtonsPressed = 0;
 	main.focusEnter(main);
 	main.showNotify(main);
-};
+}
 
-void() m_hide =
-{
-	Menu_Active = FALSE;
+void() menu_hide {
+	menu_active = FALSE;
 	setkeydest(KEY_GAME);
 	setmousetarget(MT_CLIENT);
-
 	if(!menuInitialized)
 		return;
 
 	main.focusLeave(main);
 	main.hideNotify(main);
-};
+}
 
-void() m_toggle =
-{
-	if(Menu_Active)
-		m_hide();
+void() menu_toggle {
+	if(menu_active)
+		menu_hide();
 	else
-		m_display();
-};
+		menu_display();
+}
 
-void() m_shutdown =
-{
+void() menu_shutdown {
 	entity e;
-
-	m_hide();
-	for(e = NULL; (e = nextent(e)) != NULL; )
-	{
-		if(e.destroy)
+	menu_hide();
+	for (e = NULL; (e = nextent(e)) != NULL; ) {
+		if (e.destroy)
 			e.destroy(e);
 	}
-};
+}
 
 void(string itemname) menu_goto {
 	entity e;
@@ -528,19 +458,19 @@ void(string itemname) menu_goto {
 		return;
 
 	if (itemname == "") { // this can be called by GameCommand
-		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
-			m_hide();
+		if (menu_gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
+			menu_hide();
 		else {
 			m_activate_window(main.mainNexposee);
-			m_display();
+			menu_display();
 		}
 	} else {
 		e = findstring(NULL, name, itemname);
 		if (e) {
-			m_hide();
+			menu_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);
-			m_display();
+			menu_display();
 		}
 	}
 }

@@ -8,15 +8,15 @@ const float GAME_DEVELOPER	= 4;
 
 // prototypes
 
-float Menu_Active;
-float gamestatus;
+float menu_active;
+float menu_gamestatus;
 
 float frametime;
 float time;
 
 entity main;
-void m_hide();
-void m_display();
+void menu_hide();
+void menu_display();
 void(string name) menu_goto;
 .string name;
 .float cnt;
@@ -35,3 +35,5 @@ void preMenuDraw(); // this is run before the menu is drawn. You may put some st
 void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
 
 void(float nodownload, float renderrestart) menu_dlc_reload;
+void(void) menu_display;
+void(void) menu_hide;

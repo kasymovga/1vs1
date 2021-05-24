@@ -230,7 +230,7 @@ void preMenuDraw()
 		{
 			if(!campaign_won_previous)
 			{
-				m_display();
+				menu_display();
 				DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * conwidth + eY * conheight);
 			}
 			campaign_won_previous = 1;

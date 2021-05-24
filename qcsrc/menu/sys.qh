@@ -18,9 +18,7 @@ void		end_sys_fields;
 void() m_init;
 void(float keynr, float ascii) m_keydown;
 void() m_draw;
-void() m_display; 	// old NG Menu
 void() m_toggle;
-void() m_hide;		// old NG Menu
 void() m_shutdown;
 
 /////////////////////////////////////////////////////////
@@ -156,3 +154,10 @@ float FONT_MENU        = 7;
 float FONT_USER        = 8; // add to this the index, like FONT_USER+3 = user3. At least 8 of them are supported.
 #define MENUQC // so common/*.qc can check for menu QC or game QC
 #define cmd GameCommand
+#define menu_shutdown m_shutdown
+#define menu_toggle m_toggle
+#define menu_hide m_hide
+#define menu_keydown m_keydown
+#define menu_keyup m_keyup
+#define menu_init m_init
+#define menu_draw m_draw
