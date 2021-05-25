@@ -35,7 +35,7 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_staticvolume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Ambient:")));
-		makeMulti(s, "snd_entchannel2volume");
+		gui_make_multi(s, "snd_entchannel2volume");
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
 		setDependentStringNotEqual(s, "volume", "0");
@@ -43,14 +43,14 @@ void fillNexuizAudioSettingsTab(entity me)
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_worldchannel0volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Info:")));
-		makeMulti(s, "snd_csqcchannel0volume");
+		gui_make_multi(s, "snd_csqcchannel0volume");
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
 		setDependentStringNotEqual(s, "volume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_entchannel3volume");
-		makeMulti(s, "snd_playerchannel0volume snd_playerchannel3volume");
+		gui_make_multi(s, "snd_playerchannel0volume snd_playerchannel3volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Items:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
@@ -58,7 +58,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_playerchannel6volume");
-		makeMulti(s, "snd_csqcchannel6volume");
+		gui_make_multi(s, "snd_csqcchannel6volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Pain:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
@@ -66,7 +66,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_playerchannel7volume");
-		makeMulti(s, "snd_entchannel7volume");
+		gui_make_multi(s, "snd_entchannel7volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Player:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
@@ -74,7 +74,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_entchannel4volume");
-		makeMulti(s, "snd_playerchannel4volume snd_entchannel6volume snd_csqcchannel4volume");
+		gui_make_multi(s, "snd_playerchannel4volume snd_entchannel6volume snd_csqcchannel4volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Shots:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");
@@ -89,7 +89,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		s = makeNexuizDecibelsSlider(-20, 0, 0.5, "snd_playerchannel1volume");
-		makeMulti(s, "snd_playerchannel5volume snd_entchannel1volume snd_entchannel5volume");
+		gui_make_multi(s, "snd_playerchannel5volume snd_entchannel1volume snd_entchannel5volume");
 		me.TD(me, 1, 0.9, e = makeNexuizSliderCheckBox(-1000000, 1, s, _("Weapons:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "volume", "0");

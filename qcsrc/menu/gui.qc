@@ -24,37 +24,32 @@ void(entity root) gui_load_all_cvars {
 
 .string cvarNames_Multi;
 .void(entity me) saveCvars_Multi;
-void saveCvarsMulti(entity me)
-{
+void(entity me) gui_save_cvars_multi {
 	float n, i;
 	string s;
-
 	me.saveCvars_Multi(me);
 	s = cvar_string(me.cvarName);
-
 	n = tokenize_console(me.cvarNames_Multi);
-	for(i = 0; i < n; ++i)
+	for (i = 0; i < n; ++i)
 		cvar_set(argv(i), s);
 }
-void makeMulti(entity e, string otherCvars)
-{
+
+void(entity e, string otherCvars) gui_make_multi {
 	e.cvarNames_Multi = otherCvars;
 	e.saveCvars_Multi = e.saveCvars;
-	e.saveCvars = saveCvarsMulti;
+	e.saveCvars = gui_save_cvars_multi;
 }
 
 .void(entity me) saveCvars_Callback;
 .entity saveCvars_Callback_ent;
 .void(entity me, entity cb) saveCvars_Callback_func;
-void saveCvarsCallback(entity me)
-{
+void(entity me) gui_save_cvars_callback {
 	me.saveCvars_Callback(me);
 	me.saveCvars_Callback_func(me.saveCvars_Callback_ent, me);
 }
-void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
-{
+void(entity e, entity cbent, void(entity, entity) cbfunc) gui_make_callback {
 	e.saveCvars_Callback = e.saveCvars;
-	e.saveCvars = saveCvarsCallback;
+	e.saveCvars = gui_save_cvars_callback;
 	e.saveCvars_Callback_ent = cbent;
 	e.saveCvars_Callback_func = cbfunc;
 }

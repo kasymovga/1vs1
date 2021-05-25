@@ -52,7 +52,7 @@ void fillNexuizServerCreateTab(entity me)
 	me.TR(me);
 		me.mapListBox = makeNexuizMapList();
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Map list:")));
-			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
+			gui_make_callback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
 		me.TD(me, me.rows - 9, 3, me.mapListBox);
 	me.gotoRC(me, me.rows - 3, 0);

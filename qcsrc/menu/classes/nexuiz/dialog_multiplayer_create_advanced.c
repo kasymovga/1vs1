@@ -56,8 +56,7 @@ void(entity me) fillNexuizAdvancedDialog {
 			e.addValue(e, _("3 teams"), "3");
 			e.addValue(e, _("4 teams"), "4");
 			e.configureNexuizTextSliderValues(e);
-		makeMulti(e, "g_domination_teams_override g_keyhunt_teams_override");
-
+		gui_make_multi(e, "g_domination_teams_override g_keyhunt_teams_override");
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

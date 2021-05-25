@@ -118,14 +118,14 @@ void fillNexuizEffectsSettingsTab(entity me)
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Gibs count:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_gibs_maxcount"));
 		entity gibsMaxCount = e;
-		makeCallback(gibs, gibsMaxCount, gibsUpdate);
-		makeCallback(gibsMaxCount, gibs, gibsCountUpdate);
+		gui_make_callback(gibs, gibsMaxCount, gibsUpdate);
+		gui_make_callback(gibsMaxCount, gibs, gibsCountUpdate);
 		gibsUpdate(gibsMaxCount, gibs);
 		gibsCountUpdate(gibs, gibsMaxCount);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizTextLabel(0, _("Casing count:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 100, 10, "cl_casings_maxcount"));
-		makeCallback(e, NULL, casingsCountUpdate);
+		gui_make_callback(e, NULL, casingsCountUpdate);
 		casingsCountUpdate(NULL, e);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "cl_decals", _("Decals")));

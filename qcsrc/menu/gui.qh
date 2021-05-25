@@ -1,8 +1,8 @@
 void(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass) ui_for_all_descendant;
 void(entity root) gui_save_all_cvars;
 void(entity root) gui_load_all_cvars;
-void makeMulti(entity me, string otherCvars);
-void makeCallback(entity me, entity cbent, void(entity, entity) cbfunc);
+void(entity me, string otherCvars) gui_make_multi;
+void(entity me, entity cbent, void(entity, entity) cbfunc) gui_make_callback;
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
 void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
 void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
