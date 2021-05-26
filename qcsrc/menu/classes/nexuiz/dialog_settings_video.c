@@ -28,7 +28,7 @@ void fillNexuizVideoSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Resolution:")));
 		me.TD(me, 1, 2, e = makeNexuizResolutionSlider());
-		setDependentOR(e, "vid_fullscreen", 0, 0, "vid_desktopfullscreen", 0, 0);
+		gui_set_dependent_or(e, "vid_fullscreen", 0, 0, "vid_desktopfullscreen", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Color depth:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(16, 32, 16, "vid_bitsperpixel"));

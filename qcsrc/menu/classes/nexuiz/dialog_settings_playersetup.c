@@ -138,15 +138,15 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair Red:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_red"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		gui_set_dependent_or(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair Green:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_green"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		gui_set_dependent_or(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair Blue:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.01, "crosshair_color_blue"));
-		setDependentOR(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
+		gui_set_dependent_or(e, "crosshair_per_weapon", 0, 0, "crosshair_color_override", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = makeNexuizButton(_("HUD & Waypoints..."), '0 0 0'));
