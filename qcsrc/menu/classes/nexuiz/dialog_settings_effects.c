@@ -132,15 +132,15 @@ void fillNexuizEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = makeNexuizTextLabel(0, _("Distance:")));
-			setDependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeNexuizSlider(200, 500, 20, "r_drawdecals_drawdistance"));
-			setDependent(e, "cl_decals", 1, 1);
+			gui_set_dependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 	    me.TD(me, 1, 1.3, e = makeNexuizTextLabel(0, _("Time:")));
-	        setDependent(e, "cl_decals", 1, 1);
+	        gui_set_dependent(e, "cl_decals", 1, 1);
 	    me.TD(me, 1, 2, e = makeNexuizSlider(1, 20, 1, "cl_decals_time"));
-	        setDependent(e, "cl_decals", 1, 1);
+	        gui_set_dependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, 2, 3.5); me.setFirstColumn(me, me.currentColumn);
 	me.TD(me, 1, 1, e = makeNexuizCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
@@ -150,12 +150,12 @@ void fillNexuizEffectsSettingsTab(entity me)
 		gui_set_dependent_and3(e, "r_glsl", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
-			setDependent(e, "r_glsl", 1, 1);
+			gui_set_dependent(e, "r_glsl", 1, 1);
 		me.TD(me, 1, 1.5, e = makeNexuizCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
 			setDependentAND(e, "r_glsl", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_water", _("Reflections:")));
-			setDependent(e, "r_glsl", 1, 1);
+			gui_set_dependent(e, "r_glsl", 1, 1);
 		me.TD(me, 1, 2, e = makeNexuizTextSlider("r_water_resolutionmultiplier"));
 			e.addValue(e, _("Blurred"), "0.25");
 			e.addValue(e, _("Good"), "0.5");
@@ -165,11 +165,11 @@ void fillNexuizEffectsSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_shadow_realtime_dlight", _("Realtime dynamic lighting")));
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_shadow_realtime_dlight_shadows", _("Shadows")));
-			setDependent(e, "r_shadow_realtime_dlight", 1, 1);
+			gui_set_dependent(e, "r_shadow_realtime_dlight", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizCheckBox(0, "r_shadow_realtime_world", _("Realtime world lighting")));
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "r_shadow_realtime_world_shadows", _("Shadows")));
-			setDependent(e, "r_shadow_realtime_world", 1, 1);
+			gui_set_dependent(e, "r_shadow_realtime_world", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(0, "r_shadow_usenormalmap", _("Use normal maps")));
@@ -186,9 +186,9 @@ void fillNexuizEffectsSettingsTab(entity me)
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.1, "r_motionblur"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Damage blur:")));
-			setDependent(e, "r_motionblur", 0, 1);
+			gui_set_dependent(e, "r_motionblur", 0, 1);
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 1, 0.1, "r_damageblur"));
-			setDependent(e, "r_motionblur", 0, 1);
+			gui_set_dependent(e, "r_motionblur", 0, 1);
 	
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeNexuizCommandButton(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd ui_con_width_height_set", COMMANDBUTTON_APPLY));

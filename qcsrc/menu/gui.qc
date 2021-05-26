@@ -67,72 +67,65 @@ void(entity e, entity cbent, void(entity, entity) cbfunc) gui_make_callback {
 .float op_setDependent;
 .string cvarString_setDependent;
 .string cvarValue_setDependent;
-void setDependent_Check(entity e)
-{
+void(entity e) gui_set_dependent_check {
 	float f;
 	string s;
-	if(e.cvarString_setDependent)
-	{
+	if (e.cvarString_setDependent) {
 		s = cvar_string(e.cvarString_setDependent);
 		e.disabled = (cvar_string(e.cvarString_setDependent) == e.cvarValue_setDependent);
-	}
-	else
-	{
-		if(e.cvar_setDependent)
-		{
+	} else {
+		if (e.cvar_setDependent) {
 			f = cvar(e.cvar_setDependent);
 			if(e.cvarMin_setDependent <= e.cvarMax_setDependent)
 				e.disabled = ((f < e.cvarMin_setDependent) || (f > e.cvarMax_setDependent));
 			else
 				e.disabled = ((f >= e.cvarMax_setDependent) && (f <= e.cvarMin_setDependent));
 		}
-		if(e.cvar2_setDependent)
-		{
+		if (e.cvar2_setDependent) {
 			f = cvar(e.cvar2_setDependent);
 			if(e.cvar2Min_setDependent <= e.cvar2Max_setDependent)
 				e.disabled = (e.disabled + ((f < e.cvar2Min_setDependent) || (f > e.cvar2Max_setDependent)) > e.op_setDependent);
 			else
 				e.disabled = (e.disabled + ((f >= e.cvar2Max_setDependent) && (f <= e.cvar2Min_setDependent)) > e.op_setDependent);
 		}
-		if(e.cvar3_setDependent)
-		{
+		if (e.cvar3_setDependent) {
 			f = cvar(e.cvar3_setDependent);
-			if(e.cvar3Min_setDependent <= e.cvar3Max_setDependent)
+			if (e.cvar3Min_setDependent <= e.cvar3Max_setDependent)
 				e.disabled = (e.disabled + ((f < e.cvar3Min_setDependent) || (f > e.cvar3Max_setDependent)) > e.op_setDependent);
 			else
 				e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > e.op_setDependent);
 		}
 	}
 }
-void setDependent_Draw(entity e)
-{
-	setDependent_Check(e);
+
+void(entity e) gui_set_dependent_draw {
+	gui_set_dependent_check(e);
 	e.draw_setDependent(e);
 }
-void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax)
-{
+
+void(entity e, string theCvarName, float theCvarMin, float theCvarMax) gui_set_dependent {
 	e.draw_setDependent = e.draw;
 	e.cvar_setDependent = theCvarName;
 	e.cvarMin_setDependent = theCvarMin;
 	e.cvarMax_setDependent = theCvarMax;
 	e.cvar2_setDependent = NULL;
 	e.cvar3_setDependent = NULL;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
+	e.draw = gui_set_dependent_draw;
+	gui_set_dependent_check(e);
 }
-void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue)
-{
+
+void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue) {
 	e.draw_setDependent = e.draw;
 	e.cvarString_setDependent = theCvarName;
 	e.cvarValue_setDependent = theCvarValue;
 	e.cvar_setDependent = NULL;
 	e.cvar2_setDependent = NULL;
 	e.cvar3_setDependent = NULL;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
+	e.draw = gui_set_dependent_draw;
+	gui_set_dependent_check(e);
 }
-void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max)
-{
+
+void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max) {
 	e.draw_setDependent = e.draw;
 	e.cvar_setDependent = theCvarName;
 	e.cvarMin_setDependent = theCvarMin;
@@ -142,11 +135,11 @@ void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCv
 	e.cvar2Max_setDependent = theCvar2Max;
 	e.cvar3_setDependent = NULL;
 	e.op_setDependent = 0;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
+	e.draw = gui_set_dependent_draw;
+	gui_set_dependent_check(e);
 }
-void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max)
-{
+
+void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max) {
 	e.draw_setDependent = e.draw;
 	e.cvar_setDependent = theCvarName;
 	e.cvarMin_setDependent = theCvarMin;
@@ -156,8 +149,8 @@ void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCva
 	e.cvar2Max_setDependent = theCvar2Max;
 	e.cvar3_setDependent = NULL;
 	e.op_setDependent = 1;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
+	e.draw = gui_set_dependent_draw;
+	gui_set_dependent_check(e);
 }
 
 void(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max) gui_set_dependent_and3 {
@@ -172,8 +165,8 @@ void(entity e, string theCvarName, float theCvarMin, float theCvarMax, string th
 	e.cvar3Min_setDependent = theCvar3Min;
 	e.cvar3Max_setDependent = theCvar3Max;
 	e.op_setDependent = 0;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
+	e.draw = gui_set_dependent_draw;
+	gui_set_dependent_check(e);
 }
 
 void(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass) gui_depth_first {

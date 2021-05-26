@@ -3,7 +3,7 @@ void(entity root) gui_save_all_cvars;
 void(entity root) gui_load_all_cvars;
 void(entity me, string otherCvars) gui_make_multi;
 void(entity me, entity cbent, void(entity, entity) cbfunc) gui_make_callback;
-void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
+void(entity e, string theCvarName, float theCvarMin, float theCvarMax) gui_set_dependent;
 void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
 void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
 void(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max) gui_set_dependent_and3;

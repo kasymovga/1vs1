@@ -58,9 +58,9 @@ void fillNexuizInputSettingsTab(entity me)
 	if not(cvar("menu_mouse_absolute")) {
 		me.TR(me);
 			me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("UI mouse speed:")));
-			setDependent(e, "menu_mouse_absolute", 0, 0);
+			gui_set_dependent(e, "menu_mouse_absolute", 0, 0);
 			me.TD(me, 1, 2, e = makeNexuizSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
-			//setDependent(e, "menu_mouse_absolute", 0, 0);
+			//gui_set_dependent(e, "menu_mouse_absolute", 0, 0);
 	}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(1.022, "m_pitch", _("Invert mouse")));

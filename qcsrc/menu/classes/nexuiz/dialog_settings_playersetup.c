@@ -116,18 +116,18 @@ void fillNexuizPlayerSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 2.25, e = makeNexuizCheckBox(0, "crosshair_per_weapon", _("Per weapon crosshairs")));
 		me.TD(me, 1, 1.3, e = makeNexuizCheckBox(1, "crosshair_color_override", _("& crosshair colors")));
-		setDependent(e, "crosshair_per_weapon", 1, 1);
+		gui_set_dependent(e, "crosshair_per_weapon", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair:")));
 		for(i = 1; i <= 10; ++i) {
 			me.TDNoMargin(me, 1, 2 / 10, e = makeNexuizCrosshairButton(3, i), '1 1 0');
-			setDependent(e, "crosshair_per_weapon", 0, 0);
+			gui_set_dependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
 		me.TDempty(me, 1.25);
 		for(i = 11; i <= 20; ++i) {
 			me.TDNoMargin(me, 1, 2 / 10, e = makeNexuizCrosshairButton(3, i), '1 1 0');
-			setDependent(e, "crosshair_per_weapon", 0, 0);
+			gui_set_dependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Crosshair Size:")));

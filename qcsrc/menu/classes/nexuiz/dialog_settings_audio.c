@@ -122,11 +122,11 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(0, "snd_swapstereo", _("Swap Stereo")));
-		setDependent(e, "snd_channels", 1.5, 0.5);
+		gui_set_dependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 2.8, e = makeNexuizCheckBox(0, "snd_spatialization_control", _("Headphone friendly mode")));
-		setDependent(e, "snd_channels", 1.5, 0.5);
+		gui_set_dependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Spatial voices:")));
@@ -136,7 +136,7 @@ void fillNexuizAudioSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1.1, e = makeNexuizTextLabel(0, _("Taunt range:")));
-		setDependent(e, "cl_voice_directional", 0.5, -0.5);
+		gui_set_dependent(e, "cl_voice_directional", 0.5, -0.5);
 		me.TD(me, 1, 1.6, e = makeNexuizTextSlider("cl_voice_directional_taunt_attenuation"));
 			e.addValue(e, _("Very short"), "3");
 			e.addValue(e, _("Short"), "2");
@@ -144,7 +144,7 @@ void fillNexuizAudioSettingsTab(entity me)
 			e.addValue(e, _("Long"), "0.25");
 			e.addValue(e, _("Very long"), "0.015625");
 			e.configureNexuizTextSliderValues(e);
-		setDependent(e, "cl_voice_directional", 0.5, -0.5);
+		gui_set_dependent(e, "cl_voice_directional", 0.5, -0.5);
 	me.TR(me);
 		sl = makeNexuizSlider(0.15, 1, 0.05, "cl_autotaunt");
 			sl.valueDisplayMultiplier = 100;
