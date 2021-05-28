@@ -193,8 +193,6 @@ void refilterNexuizMapList(entity me)
 	gt = MapInfo_CurrentGametype();
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(gt), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	me.nItems = MapInfo_count;
-	for(i = 0; i < MapInfo_count; ++i)
-		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
 	if(me.g_maplistCache)
 		strunzone(me.g_maplistCache);
 	s = "0";
