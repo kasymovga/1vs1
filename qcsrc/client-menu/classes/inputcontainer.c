@@ -119,7 +119,7 @@ float _changeFocusXYInputContainer(entity me, vector pos)
 			if(ne.instanceOfInputContainer)
 			{
 				ne.focusedChild = NULL;
-				ne._changeFocusXY(e, globalToBox(pos, ne.Container_origin, ne.Container_size));
+				ne._changeFocusXY(e, gui_global_to_box(pos, ne.Container_origin, ne.Container_size));
 			}
 		}
 	return (ne != NULL);

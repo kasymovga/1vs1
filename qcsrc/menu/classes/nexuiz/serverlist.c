@@ -433,9 +433,8 @@ void positionSortButtonNexuizServerList(entity me, entity btn, float theOrigin, 
 	sizeInLBSpace = eY * me.itemHeight + eX * (1 - me.controlWidth);
 
 	vector originInDialogSpace, sizeInDialogSpace;
-	originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
-	sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
-
+	originInDialogSpace = gui_box_to_global(originInLBSpace, me.Container_origin, me.Container_size);
+	sizeInDialogSpace = gui_box_to_global_size(sizeInLBSpace, me.Container_size);
 	btn.Container_origin_x = originInDialogSpace_x + sizeInDialogSpace_x * theOrigin;
 	btn.Container_size_x   =                         sizeInDialogSpace_x * theSize;
 	btn.setText(btn, theTitle);
@@ -567,10 +566,8 @@ float keyDownNexuizServerList(entity me, float scan, float ascii, float shift)
 {
 	float i;
 	vector org, sz;
-
-	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
-	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
-
+	org = gui_box_to_global(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
+	sz = gui_box_to_global_size(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 	if(scan == K_ENTER)
 	{
 		ServerList_Connect_Click(NULL, me);

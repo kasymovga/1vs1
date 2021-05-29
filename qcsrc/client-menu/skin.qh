@@ -1,3 +1,4 @@
+string skin_current;
 void(void) skin_init;
 #define SKINBEGIN
 #define SKINVECTOR(name,def) var vector SKIN##name = def

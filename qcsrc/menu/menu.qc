@@ -198,7 +198,7 @@ float(void) menu_mouse_update {
 	float changed = 0;
 	if (menuMouseMode) {
 		vector newMouse;
-		newMouse = globalToBoxSize(getmousepos(), gui_draw_scale);
+		newMouse = gui_global_to_box_size(getmousepos(), gui_draw_scale);
 		if(newMouse != '0 0 0')
 			if(newMouse != menuMousePos)
 			{
@@ -210,7 +210,7 @@ float(void) menu_mouse_update {
 			vector dMouse;
 			dMouse = getmousepos() * (frametime / menuRealFrametime); // for capturevideo
 			if (dMouse != '0 0 0') {
-				dMouse = globalToBoxSize(dMouse, gui_draw_scale);
+				dMouse = gui_global_to_box_size(dMouse, gui_draw_scale);
 				menuMousePos += dMouse * cvar("menu_mouse_speed");
 				menuMousePos_x = bound(0, menuMousePos_x, 1);
 				menuMousePos_y = bound(0, menuMousePos_y, 1);

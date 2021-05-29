@@ -180,8 +180,8 @@ float mouseReleaseListBox(entity me, vector pos)
 		// and give it a nice click event
 		if(me.nItems > 0)
 		{
-			absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
-			me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 0);
+			absSize = gui_box_to_global_size(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
+			me.clickListBoxItem(me, me.selectedItem, gui_global_to_box(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 0);
 		}
 	}
 	me.pressed = 0;
@@ -189,7 +189,7 @@ float mouseReleaseListBox(entity me, vector pos)
 }
 float mouseDoubleClickListBox(entity me, vector pos) {
 	if (me.pressed == 2) {
-		me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 1);
+		me.clickListBoxItem(me, me.selectedItem, gui_global_to_box(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight), 1);
 		return 1;
 	}
 	return 0;
@@ -268,21 +268,21 @@ void drawListBox(entity me)
 				gui_draw_button_picture_vertical(o, strcat(me.src, "_n"), s, me.color, 1);
 		}
 	}
-	draw_SetClip();
+	gui_draw_set_clip();
 	oldshift = gui_draw_shift;
 	oldscale = gui_draw_scale;
-	absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
+	absSize = gui_box_to_global_size(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
 	for(i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i)
 	{
 		float y;
 		y = i * me.itemHeight - me.scrollPos;
 		if(y >= 1)
 			break;
-		gui_draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
-		gui_draw_scale = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
+		gui_draw_shift = gui_box_to_global(eY * y, oldshift, oldscale);
+		gui_draw_scale = gui_box_to_global_size(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
 	}
-	draw_ClearClip();
+	gui_draw_clip_clear();
 }
 
 void clickListBoxItemListBox(entity me, float i, vector where, float doubleclick)

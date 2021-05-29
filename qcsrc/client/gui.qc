@@ -24,7 +24,7 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	float r;
 	r = FALSE;
 	gui_draw_reset();
-	GUI_mouse_pos = globalToBoxSize(mouse_position(), gui_draw_scale);
+	GUI_mouse_pos = gui_global_to_box_size(mouse_position(), gui_draw_scale);
 	if (nPrimary == K_MOUSE1) {
 		if (bInputType == 0) { //Key down
 			if not(GUI_mouseButtonsPressed) {

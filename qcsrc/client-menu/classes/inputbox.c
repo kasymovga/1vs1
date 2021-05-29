@@ -160,7 +160,7 @@ void drawInputBox(entity me)
 	me.scrollPos = min(me.scrollPos, totalSizeInWidths - (1 - me.keepspaceRight - me.keepspaceLeft));
 	me.scrollPos = max(0, me.scrollPos);
 
-	draw_SetClipRect(eX * me.keepspaceLeft, eX * (1 - me.keepspaceLeft - me.keepspaceRight) + eY);
+	gui_draw_set_clip_rect(eX * me.keepspaceLeft, eX * (1 - me.keepspaceLeft - me.keepspaceRight) + eY);
 	if(me.editColorCodes)
 	{
 		string ch, ch2;
@@ -307,7 +307,7 @@ void drawInputBox(entity me)
 	if(!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 		gui_draw_text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
-	draw_ClearClip();
+	gui_draw_clip_clear();
 }
 
 void showNotifyInputBox(entity me)

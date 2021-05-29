@@ -30,7 +30,7 @@ void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector
 	{
 		vector scrs;
 		scrs = eX * conwidth + eY * conheight;
-		resizeNotifyLabel(me, relOrigin, relSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
+		resizeNotifyLabel(me, relOrigin, relSize, gui_box_to_global(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), gui_box_to_global_size(me.parent.Nexposee_smallSize, scrs));
 		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
 		me.realOrigin_Nexposeed = me.realOrigin;
 		me.realFontSize_Nexposeed = me.realFontSize;

@@ -43,7 +43,7 @@ string CharMap_CellToChar(float c)
 void configureNexuizCharmapNexuizCharmap(entity me, entity theTextbox)
 {
 	me.controlledTextbox = theTextbox;
-	if not(file_exists_image(draw_UseSkinFor(me.image)))
+	if not(file_exists_image(gui_image_path(me.image)))
 		me.image = "/gfx/menu/default/charmap";
 
 	me.configureImage(me, me.image);

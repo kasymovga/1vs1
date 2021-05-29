@@ -83,7 +83,7 @@ void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vecto
 	{
 		o = e.originField;
 		s = e.sizeField;
-		e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
+		e.resizeNotify(e, o, s, gui_box_to_global(o, absOrigin, absSize), gui_box_to_global_size(s, absSize));
 	}
 	do
 	{
@@ -95,7 +95,7 @@ void resizeNotifyLieContainer(entity me, vector relOrigin, vector relSize, vecto
 				d = 1;
 				o = e.originField;
 				s = e.sizeField;
-				e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
+				e.resizeNotify(e, o, s, gui_box_to_global(o, absOrigin, absSize), gui_box_to_global_size(s, absSize));
 			}
 	}
 	while(d);
@@ -141,8 +141,8 @@ void drawContainer(entity me)
 			me.focusable += 1;
 		if(e.Container_alpha < 0.003) // can't change color values anyway
 			continue;
-		gui_draw_shift = boxToGlobal(e.Container_origin, oldshift, oldscale);
-		gui_draw_scale = boxToGlobalSize(e.Container_size, oldscale);
+		gui_draw_shift = gui_box_to_global(e.Container_origin, oldshift, oldscale);
+		gui_draw_scale = gui_box_to_global_size(e.Container_size, oldscale);
 		gui_draw_alpha *= e.Container_alpha;
 		if (e.nexuizFont)
 		if (cvar("utf8_oldfont_for_oldchars"))
@@ -185,7 +185,7 @@ float mouseMoveContainer(entity me, vector pos)
 	entity f;
 	f = me.focusedChild;
 	if(f)
-		return f.mouseMove(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		return f.mouseMove(f, gui_global_to_box(pos, f.Container_origin, f.Container_size));
 
 	return 0;
 }
@@ -194,13 +194,13 @@ float mousePressContainer(entity me, vector pos)
 	entity f;
 	f = me.focusedChild;
 	if(f)
-		return f.mousePress(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		return f.mousePress(f, gui_global_to_box(pos, f.Container_origin, f.Container_size));
 	return 0;
 }
 float mouseDoubleClickContainer(entity me, vector pos) {
 	entity f = me.focusedChild;
 	if (f && f.mouseDoubleClick)
-		return f.mouseDoubleClick(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		return f.mouseDoubleClick(f, gui_global_to_box(pos, f.Container_origin, f.Container_size));
 
 	return 0;
 }
@@ -209,7 +209,7 @@ float mouseDragContainer(entity me, vector pos)
 	entity f;
 	f = me.focusedChild;
 	if(f)
-		return f.mouseDrag(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		return f.mouseDrag(f, gui_global_to_box(pos, f.Container_origin, f.Container_size));
 	return 0;
 }
 float mouseReleaseContainer(entity me, vector pos)
@@ -217,7 +217,7 @@ float mouseReleaseContainer(entity me, vector pos)
 	entity f;
 	f = me.focusedChild;
 	if(f)
-		return f.mouseRelease(f, globalToBox(pos, f.Container_origin, f.Container_size));
+		return f.mouseRelease(f, gui_global_to_box(pos, f.Container_origin, f.Container_size));
 	return 0;
 }
 
@@ -264,8 +264,6 @@ void addItemContainer(entity me, entity theOther, vector theOrigin, vector theSi
 	theOther.prevSibling = l;
 	theOther.nextSibling = NULL;
 	me.lastChild = theOther;
-
-	draw_NeedResizeNotify = 1;
 }
 
 void removeItemContainer(entity me, entity theOther)

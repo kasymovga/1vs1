@@ -32,7 +32,7 @@ void configureNexuizColorButtonNexuizColorButton(entity me, float theGroup, floa
 	me.cvarValueFloat = theValue;
 	me.cvarPart = theColor;
 	me.loadCvars(me);
-	if not(file_exists_image(draw_UseSkinFor(me.image2)))
+	if not(file_exists_image(gui_image_path(me.image2)))
 		me.image2 = "";
 
 	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);

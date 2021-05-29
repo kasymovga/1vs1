@@ -2,22 +2,21 @@ string gui_draw_mousepointer;
 vector gui_draw_mousepointer_offset;
 vector gui_draw_mousepointer_size;
 
-string draw_UseSkinFor(string pic)
-{
+string(string pic) gui_image_path {
 	if(substring(pic, 0, 1) == "/")
 		return substring(pic, 1, strlen(pic)-1);
 	else
-		return strcat(draw_skin, "/", pic);
+		return strcat(skin_current, "/", pic);
 }
 
 void(string pic, vector theSize, vector theOffset) gui_set_mouse_pointer {
-	gui_draw_mousepointer = strzone(draw_UseSkinFor(pic));
+	gui_draw_mousepointer = strzone(gui_image_path(pic));
 	gui_draw_mousepointer_size = theSize;
 	gui_draw_mousepointer_offset = eX * (theOffset_x * theSize_x) + eY * (theOffset_y * theSize_y);
 }
 
 void(vector where) gui_draw_mouse_pointer {
-	drawpic(boxToGlobal(where, gui_draw_shift, gui_draw_scale) - gui_draw_mousepointer_offset, gui_draw_mousepointer, gui_draw_mousepointer_size, '1 1 1', gui_draw_alpha, 0);
+	drawpic(gui_box_to_global(where, gui_draw_shift, gui_draw_scale) - gui_draw_mousepointer_offset, gui_draw_mousepointer, gui_draw_mousepointer_size, '1 1 1', gui_draw_alpha, 0);
 }
 
 void(void) gui_draw_reset {
@@ -31,48 +30,44 @@ void(void) gui_draw_reset {
 	gui_draw_alpha = 1;
 }
 
-vector globalToBox(vector v, vector theOrigin, vector theScale)
-{
+vector(vector v, vector theOrigin, vector theScale) gui_global_to_box {
 	v -= theOrigin;
 	v_x /= theScale_x;
 	v_y /= theScale_y;
 	return v;
 }
 
-vector globalToBoxSize(vector v, vector theScale)
-{
+vector(vector v, vector theScale) gui_global_to_box_size {
 	v_x /= theScale_x;
 	v_y /= theScale_y;
 	return v;
 }
 
-vector boxToGlobal(vector v, vector theOrigin, vector theScale)
-{
+vector(vector v, vector theOrigin, vector theScale) gui_box_to_global {
 	v_x *= theScale_x;
 	v_y *= theScale_y;
 	v += theOrigin;
 	return v;
 }
 
-vector boxToGlobalSize(vector v, vector theScale)
-{
+vector(vector v, vector theScale) gui_box_to_global_size {
 	v_x *= theScale_x;
 	v_y *= theScale_y;
 	return v;
 }
 
 void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha) gui_draw_picture {
-	pic = draw_UseSkinFor(pic);
-	drawpic(boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale), pic, boxToGlobalSize(theSize, gui_draw_scale), theColor, theAlpha * gui_draw_alpha, 0);
+	pic = gui_image_path(pic);
+	drawpic(gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale), pic, gui_box_to_global_size(theSize, gui_draw_scale), theColor, theAlpha * gui_draw_alpha, 0);
 }
 
 vector(string pic) gui_picture_size {
-	pic = draw_UseSkinFor(pic);
+	pic = gui_image_path(pic);
 	return drawgetimagesize(pic);
 }
 
 void(vector theOrigin, vector theSize, vector theColor, float theAlpha) gui_draw_fill {
-	drawfill(boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale), boxToGlobalSize(theSize, gui_draw_scale), theColor, theAlpha * gui_draw_alpha, 0);
+	drawfill(gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale), gui_box_to_global_size(theSize, gui_draw_scale), theColor, theAlpha * gui_draw_alpha, 0);
 }
 
 // a button picture is a texture containing three parts:
@@ -85,9 +80,9 @@ void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlp
 	vector square;
 	vector width, height;
 	vector bW;
-	pic = draw_UseSkinFor(pic);
-	theOrigin = boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale);
-	theSize = boxToGlobalSize(theSize, gui_draw_scale);
+	pic = gui_image_path(pic);
+	theOrigin = gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale);
+	theSize = gui_box_to_global_size(theSize, gui_draw_scale);
 	theAlpha *= gui_draw_alpha;
 	width = eX * theSize_x;
 	height = eY * theSize_y;
@@ -116,9 +111,9 @@ void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlp
 	vector square;
 	vector width, height;
 	vector bH;
-	pic = draw_UseSkinFor(pic);
-	theOrigin = boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale);
-	theSize = boxToGlobalSize(theSize, gui_draw_scale);
+	pic = gui_image_path(pic);
+	theOrigin = gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale);
+	theSize = gui_box_to_global_size(theSize, gui_draw_scale);
 	theAlpha *= gui_draw_alpha;
 	width = eX * theSize_x;
 	height = eY * theSize_y;
@@ -149,10 +144,10 @@ void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlp
 	vector dX, dY;
 	vector width, height;
 	vector bW, bH;
-	pic = draw_UseSkinFor(pic);
-	theOrigin = boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale);
-	theSize = boxToGlobalSize(theSize, gui_draw_scale);
-	theBorderSize = boxToGlobalSize(theBorderSize, gui_draw_scale);
+	pic = gui_image_path(pic);
+	theOrigin = gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale);
+	theSize = gui_box_to_global_size(theSize, gui_draw_scale);
+	theBorderSize = gui_box_to_global_size(theBorderSize, gui_draw_scale);
 	theAlpha *= gui_draw_alpha;
 	width = eX * theSize_x;
 	height = eY * theSize_y;
@@ -206,9 +201,9 @@ void(vector theOrigin, string theText, vector theSize, vector theColor, float th
 		error("Drawing zero size text?\n");
 
 	if (ICanHasKallerz)
-		drawcolorcodedstring(boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale), theText, boxToGlobalSize(theSize, gui_draw_scale), theAlpha * gui_draw_alpha, 0);
+		drawcolorcodedstring(gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale), theText, gui_box_to_global_size(theSize, gui_draw_scale), theAlpha * gui_draw_alpha, 0);
 	else
-		drawstring(boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale), theText, boxToGlobalSize(theSize, gui_draw_scale), theColor, theAlpha * gui_draw_alpha, 0);
+		drawstring(gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale), theText, gui_box_to_global_size(theSize, gui_draw_scale), theColor, theAlpha * gui_draw_alpha, 0);
 }
 
 void(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz) gui_draw_text_center {
@@ -221,32 +216,32 @@ float gui_text_width(string theText, float ICanHasKallerz) {
 	return stringwidth(theText, ICanHasKallerz);
 }
 
-float draw_clipSet;
-void draw_SetClip()
-{
-	if(draw_clipSet)
+float gui_draw_clip_setted;
+void(void) gui_draw_set_clip {
+	if (gui_draw_clip_setted)
 		error("Already clipping, no stack implemented here, sorry");
+
 	drawsetcliparea(gui_draw_shift_x, gui_draw_shift_y, gui_draw_scale_x, gui_draw_scale_y);
-	draw_clipSet = 1;
+	gui_draw_clip_setted = 1;
 }
 
-void draw_SetClipRect(vector theOrigin, vector theScale)
-{
+void(vector theOrigin, vector theScale) gui_draw_set_clip_rect {
 	vector o, s;
-	if(draw_clipSet)
+	if (gui_draw_clip_setted)
 		error("Already clipping, no stack implemented here, sorry");
-	o = boxToGlobal(theOrigin, gui_draw_shift, gui_draw_scale);
-	s = boxToGlobalSize(theScale, gui_draw_scale);
+
+	o = gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale);
+	s = gui_box_to_global_size(theScale, gui_draw_scale);
 	drawsetcliparea(o_x, o_y, s_x, s_y);
-	draw_clipSet = 1;
+	gui_draw_clip_setted = 1;
 }
 
-void draw_ClearClip()
-{
-	if(!draw_clipSet)
+void(void) gui_draw_clip_clear {
+	if (!gui_draw_clip_setted)
 		error("Not clipping, can't clear it then");
+
 	drawresetcliparea();
-	draw_clipSet = 0;
+	gui_draw_clip_setted = 0;
 }
 
 string(string theText, float maxWidth, float ICanHasKallerz) gui_draw_text_shorten_to_width {
@@ -256,21 +251,19 @@ string(string theText, float maxWidth, float ICanHasKallerz) gui_draw_text_short
 		return strcat(substring(theText, 0, gui_draw_text_length_up_to_width(theText, maxWidth - gui_text_width("...", ICanHasKallerz), ICanHasKallerz)), "...");
 }
 
-float gui_text_width_WithColors(string s)
-{
+float(string s) gui_text_width_with_colors {
 	return gui_text_width(s, TRUE);
 }
 
-float gui_text_width_WithoutColors(string s)
-{
+float(string s) gui_text_width_without_colors {
 	return gui_text_width(s, FALSE);
 }
 
 float(string theText, float maxWidth, float allowColorCodes) gui_draw_text_length_up_to_width {
 	if(allowColorCodes)
-		return str_length_up_to_width(theText, maxWidth, gui_text_width_WithColors);
+		return str_length_up_to_width(theText, maxWidth, gui_text_width_with_colors);
 	else
-		return str_length_up_to_width(theText, maxWidth, gui_text_width_WithoutColors);
+		return str_length_up_to_width(theText, maxWidth, gui_text_width_without_colors);
 }
 
 void(string img, float a, float algn, float force1) gui_draw_background {

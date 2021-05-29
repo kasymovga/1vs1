@@ -84,9 +84,9 @@ void drawLabel(entity me)
 				while(str_wrapped_line_remaining)
 				{
 					if (me.allowColors)
-						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_WithColors);
+						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_with_colors);
 					else
-						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_WithoutColors);
+						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_without_colors);
 					gui_draw_text(o, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
 					o_y += me.realFontSize_y;
 				}
