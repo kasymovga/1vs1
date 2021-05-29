@@ -127,7 +127,7 @@ void drawListBoxItemNexuizCvarList(entity me, float i, vector absSize, float isS
 	string s;
 
 	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	
 	k = bufstr_get(me.handle, i);
 
@@ -143,10 +143,10 @@ void drawListBoxItemNexuizCvarList(entity me, float i, vector absSize, float isS
 	else
 		theColor = SKINCOLOR_CVARLIST_CHANGED;
 
-	s = draw_TextShortenToWidth(k, me.columnNameSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = draw_TextShortenToWidth(v, me.columnValueSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin * eY + me.columnValueOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
+	s = gui_draw_text_shorten_to_width(k, me.columnNameSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
+	s = gui_draw_text_shorten_to_width(v, me.columnValueSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin * eY + me.columnValueOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
 float keyDownNexuizCvarList(entity me, float scan, float ascii, float shift)

@@ -99,7 +99,7 @@ void(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSi
 void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuizHudList {
 	string s;
 	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	if (i == 0) {
 		s = "[default]";
@@ -108,6 +108,6 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 	else
 		s = "";
 
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 #endif

@@ -131,9 +131,9 @@ void drawContainer(entity me)
 	float oldalpha;
 	entity e;
 	float odf = drawfont;
-	oldshift = draw_shift;
-	oldscale = draw_scale;
-	oldalpha = draw_alpha;
+	oldshift = gui_draw_shift;
+	oldscale = gui_draw_scale;
+	oldalpha = gui_draw_alpha;
 	me.focusable = 0;
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
@@ -141,9 +141,9 @@ void drawContainer(entity me)
 			me.focusable += 1;
 		if(e.Container_alpha < 0.003) // can't change color values anyway
 			continue;
-		draw_shift = boxToGlobal(e.Container_origin, oldshift, oldscale);
-		draw_scale = boxToGlobalSize(e.Container_size, oldscale);
-		draw_alpha *= e.Container_alpha;
+		gui_draw_shift = boxToGlobal(e.Container_origin, oldshift, oldscale);
+		gui_draw_scale = boxToGlobalSize(e.Container_size, oldscale);
+		gui_draw_alpha *= e.Container_alpha;
 		if (e.nexuizFont)
 		if (cvar("utf8_oldfont_for_oldchars"))
 		if (cvar("font3_is_unicode_compat"))
@@ -151,9 +151,9 @@ void drawContainer(entity me)
 
 		e.draw(e);
 		drawfont = odf;
-		draw_shift = oldshift;
-		draw_scale = oldscale;
-		draw_alpha = oldalpha;
+		gui_draw_shift = oldshift;
+		gui_draw_scale = oldscale;
+		gui_draw_alpha = oldalpha;
 	}
 };
 

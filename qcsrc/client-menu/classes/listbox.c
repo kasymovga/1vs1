@@ -254,23 +254,23 @@ void drawListBox(entity me)
 	me.updateControlTopBottom(me);
 	if(me.controlWidth)
 	{
-		draw_VertButtonPicture(eX * (1 - me.controlWidth), strcat(me.src, "_s"), eX * me.controlWidth + eY, me.color2, 1);
+		gui_draw_button_picture_vertical(eX * (1 - me.controlWidth), strcat(me.src, "_s"), eX * me.controlWidth + eY, me.color2, 1);
 		if(me.nItems * me.itemHeight > 1)
 		{
 			vector o, s;
 			o = eX * (1 - me.controlWidth) + eY * me.controlTop;
 			s = eX * me.controlWidth + eY * (me.controlBottom - me.controlTop);
 			if(me.pressed == 1)
-				draw_VertButtonPicture(o, strcat(me.src, "_c"), s, me.colorC, 1);
+				gui_draw_button_picture_vertical(o, strcat(me.src, "_c"), s, me.colorC, 1);
 			else if(me.focused)
-				draw_VertButtonPicture(o, strcat(me.src, "_f"), s, me.colorF, 1);
+				gui_draw_button_picture_vertical(o, strcat(me.src, "_f"), s, me.colorF, 1);
 			else
-				draw_VertButtonPicture(o, strcat(me.src, "_n"), s, me.color, 1);
+				gui_draw_button_picture_vertical(o, strcat(me.src, "_n"), s, me.color, 1);
 		}
 	}
 	draw_SetClip();
-	oldshift = draw_shift;
-	oldscale = draw_scale;
+	oldshift = gui_draw_shift;
+	oldscale = gui_draw_scale;
 	absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
 	for(i = floor(me.scrollPos / me.itemHeight); i < me.nItems; ++i)
 	{
@@ -278,8 +278,8 @@ void drawListBox(entity me)
 		y = i * me.itemHeight - me.scrollPos;
 		if(y >= 1)
 			break;
-		draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
-		draw_scale = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
+		gui_draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
+		gui_draw_scale = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
 	}
 	draw_ClearClip();
@@ -292,6 +292,6 @@ void clickListBoxItemListBox(entity me, float i, vector where, float doubleclick
 
 void drawListBoxItemListBox(entity me, float i, vector absSize, float selected)
 {
-	draw_Text('0 0 0', strcat("Item ", ftos(i)), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
+	gui_draw_text('0 0 0', strcat("Item ", ftos(i)), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
 }
 #endif

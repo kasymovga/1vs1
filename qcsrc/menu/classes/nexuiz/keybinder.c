@@ -271,9 +271,9 @@ void drawListBoxItemNexuizKeyBinder(entity me, float i, vector absSize, float is
 		if(isSelected)
 		{
 			if(keyGrabber == me)
-				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_WAITING, SKINALPHA_LISTBOX_WAITING);
+				gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_WAITING, SKINALPHA_LISTBOX_WAITING);
 			else
-				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+				gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 		}
 		theAlpha = SKINALPHA_KEYGRABBER_KEYS;
 		theColor = SKINCOLOR_KEYGRABBER_KEYS;
@@ -290,8 +290,7 @@ void drawListBoxItemNexuizKeyBinder(entity me, float i, vector absSize, float is
 			if(cvar_string(strcat(s, "_release")) == "")
 				theAlpha *= SKINALPHA_DISABLED;
 	}
-
-	draw_Text(me.realUpperMargin * eY + extraMargin * eX, descr, me.realFontSize, theColor, theAlpha, 0);
+	gui_draw_text(me.realUpperMargin * eY + extraMargin * eX, descr, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
 		n = tokenize(findkeysforcommand(func)); // uses '...' strings
@@ -306,8 +305,8 @@ void drawListBoxItemNexuizKeyBinder(entity me, float i, vector absSize, float is
 				s = strcat(s, keynumtostring(k));
 			}
 		}
-		s = draw_TextShortenToWidth(s, me.columnKeysSize / me.realFontSize_x, 0);
-		draw_CenterText(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+		s = gui_draw_text_shorten_to_width(s, me.columnKeysSize / me.realFontSize_x, 0);
+		gui_draw_text_center(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	}
 }
 #endif

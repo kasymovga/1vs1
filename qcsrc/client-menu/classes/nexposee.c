@@ -219,8 +219,8 @@ void drawNexposee(entity me)
 		else
 			a = 0.8 - 0.8 * (a0 - e.Nexposee_mediumAlpha) / (1 - e.Nexposee_mediumAlpha);
 		fs = (eX * (1 / draw_scale_x) + eY * (1 / draw_scale_y)) * 36;
-		t = draw_TextWidth(e.title, FALSE) * eX * fs_x + eY * fs_y;
-		draw_Text(e.Container_origin + (e.Container_size_x * eX - t) * 0.5 - 0.5 * eY * t_y, e.title, fs, e.color, a, FALSE);
+		t = gui_text_width(e.title, FALSE) * eX * fs_x + eY * fs_y;
+		gui_draw_text(e.Container_origin + (e.Container_size_x * eX - t) * 0.5 - 0.5 * eY * t_y, e.title, fs, e.color, a, FALSE);
 	}
 	*/
 };
@@ -301,7 +301,7 @@ float keyDownNexposee(entity me, float scan, float ascii, float shift)
 	{
 		if(me.animationState == 0)
 		{
-			if(shift & S_SHIFT)
+			if(shift & GUI_KEY_STATE_SHIFT)
 			{
 				if(me.selectedChild)
 					me.selectedChild = me.selectedChild.prevSibling;

@@ -169,19 +169,19 @@ void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSe
 		theAlpha = SKINALPHA_MAPLIST_NOTINCLUDEDFG;
 
 	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if(included)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
 
 	s = ftos(p);
-	draw_Picture(me.columnPreviewOrigin * eX, strcat("/", MapInfo_Map_image), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	gui_draw_picture(me.columnPreviewOrigin * eX, strcat("/", MapInfo_Map_image), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	if(included)
-		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
-	s = draw_TextShortenToWidth(strcat(MapInfo_Map_bspname, ": ", MapInfo_Map_title), me.columnNameSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_TITLE, theAlpha, 0);
-	s = draw_TextShortenToWidth(MapInfo_Map_author, me.columnNameSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_AUTHOR, theAlpha, 0);
+		gui_draw_picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 
+	s = gui_draw_text_shorten_to_width(strcat(MapInfo_Map_bspname, ": ", MapInfo_Map_title), me.columnNameSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_TITLE, theAlpha, 0);
+	s = gui_draw_text_shorten_to_width(MapInfo_Map_author, me.columnNameSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_AUTHOR, theAlpha, 0);
 	MapInfo_ClearTemps();
 }
 

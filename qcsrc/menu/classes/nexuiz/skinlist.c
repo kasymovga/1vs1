@@ -149,19 +149,17 @@ void drawListBoxItemNexuizSkinList(entity me, float i, vector absSize, float isS
 	string s;
 	
 	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 		
 	s = me.skinParameter(me, i, SKINPARM_PREVIEW);
-	draw_Picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);
-	
+	gui_draw_picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);
 	s = me.skinParameter(me, i, SKINPARM_NAME);
 	s = strcat(s, ": ", me.skinParameter(me, i, SKINPARM_TITLE));
-	s = draw_TextShortenToWidth(s, me.columnNameSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_TITLE, SKINALPHA_TEXT, 0);
-
+	s = gui_draw_text_shorten_to_width(s, me.columnNameSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_TITLE, SKINALPHA_TEXT, 0);
 	s = me.skinParameter(me, i, SKINPARM_AUTHOR);
-	s = draw_TextShortenToWidth(s, me.columnNameSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_AUTHOR, SKINALPHA_TEXT, 0);
+	s = gui_draw_text_shorten_to_width(s, me.columnNameSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_AUTHOR, SKINALPHA_TEXT, 0);
 }
 
 void setSkinNexuizSkinList(entity me)

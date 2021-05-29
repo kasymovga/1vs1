@@ -154,7 +154,7 @@ void UpdateConWidthHeight() {
 	}
 	if (main) {
 		if (conwidth_s != conwidth || conheight_s != conheight) {
-			draw_reset();
+			gui_draw_reset();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
 	}
@@ -181,9 +181,9 @@ void() menu_init_delayed {
 	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
 	weapon_register_weapons();
 	skin_init();
-	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
+	gui_set_mouse_pointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 	conwidth = conheight = -1;
-	draw_reset();
+	gui_draw_reset();
 	UpdateConWidthHeight();
 	main = spawnMainWindow(); main.configureMainWindow(main);
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
@@ -198,7 +198,7 @@ float(void) menu_mouse_update {
 	float changed = 0;
 	if (menuMouseMode) {
 		vector newMouse;
-		newMouse = globalToBoxSize(getmousepos(), draw_scale);
+		newMouse = globalToBoxSize(getmousepos(), gui_draw_scale);
 		if(newMouse != '0 0 0')
 			if(newMouse != menuMousePos)
 			{
@@ -210,7 +210,7 @@ float(void) menu_mouse_update {
 			vector dMouse;
 			dMouse = getmousepos() * (frametime / menuRealFrametime); // for capturevideo
 			if (dMouse != '0 0 0') {
-				dMouse = globalToBoxSize(dMouse, draw_scale);
+				dMouse = globalToBoxSize(dMouse, gui_draw_scale);
 				menuMousePos += dMouse * cvar("menu_mouse_speed");
 				menuMousePos_x = bound(0, menuMousePos_x, 1);
 				menuMousePos_y = bound(0, menuMousePos_y, 1);
@@ -228,7 +228,7 @@ void(float key, float ascii) menu_keyup {
 	if (!menu_active)
 		return;
 
-	draw_reset();
+	gui_draw_reset();
 	main.keyUp(main, key, ascii, menuShiftState);
 	if(key >= K_MOUSE1 && key <= K_MOUSE3) {
 		if (menuMousePos)
@@ -243,9 +243,9 @@ void(float key, float ascii) menu_keyup {
 			print("Warning: released an already released button\n");
 		}
 	}
-	if (key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
-	if (key == K_CTRL) menuShiftState -= (menuShiftState & S_CTRL);
-	if (key == K_SHIFT) menuShiftState -= (menuShiftState & S_SHIFT);
+	if (key == K_ALT) menuShiftState -= (menuShiftState & GUI_KEY_STATE_ALT);
+	if (key == K_CTRL) menuShiftState -= (menuShiftState & GUI_KEY_STATE_CTRL);
+	if (key == K_SHIFT) menuShiftState -= (menuShiftState & GUI_KEY_STATE_SHIFT);
 }
 
 void(float key, float ascii) menu_keydown {
@@ -261,7 +261,7 @@ void(float key, float ascii) menu_keydown {
 		keyGrabber = NULL;
 		e.keyGrabbed(e, key, ascii);
 	} else {
-		draw_reset();
+		gui_draw_reset();
 		if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 			menu_mouse_update();
 			if (!mouseButtonsPressed)
@@ -287,9 +287,9 @@ void(float key, float ascii) menu_keydown {
 			print("Warning: pressed an already pressed button\n");
 		}
 	}
-	if (key == K_ALT) menuShiftState |= S_ALT;
-	if (key == K_CTRL) menuShiftState |= S_CTRL;
-	if (key == K_SHIFT) menuShiftState |= S_SHIFT;
+	if (key == K_ALT) menuShiftState |= GUI_KEY_STATE_ALT;
+	if (key == K_CTRL) menuShiftState |= GUI_KEY_STATE_CTRL;
+	if (key == K_SHIFT) menuShiftState |= GUI_KEY_STATE_SHIFT;
 }
 
 float() menu_init_pre {
@@ -298,17 +298,17 @@ float() menu_init_pre {
 	MapInfo_Cache_Create();
 	MapInfo_Enumerate();
 	if (!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 1)) {
-		draw_reset();
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
+		gui_draw_reset();
+		sz = eX * 0.025 + eY * 0.025 * (gui_draw_scale_x / gui_draw_scale_y);
+		gui_draw_text_center('0.5 0.5 0' - 1.25 * sz_y * eY, "Autogenerating mapinfo for newly added maps...", sz, '1 1 1', 1, 0);
 		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
 		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
-		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
+		gui_draw_fill(boxA, boxB - boxA, '1 1 1', 1);
 		boxA += sz * 0.1;
 		boxB -= sz * 0.1;
-		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
+		gui_draw_fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
 		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
-		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
+		gui_draw_fill(boxA, boxB - boxA, '0 0 1', 1);
 		return FALSE;
 	}
 	return TRUE;
@@ -412,35 +412,34 @@ void(void) menu_draw {
 		menuAlpha = max(0, menuAlpha - frametime * 5);
 		menuLogoAlpha = 2;
 	}
-	draw_reset();
+	gui_draw_reset();
 	if (!(menu_gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) {
-		if(menuLogoAlpha > 0)
-		{
-			draw_background(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
-			if(menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0)
-			{
-				draw_alpha = SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1);
-				draw_drawMousePointer(menuMousePos);
-				draw_alpha = 1;
+		if (menuLogoAlpha > 0) {
+			gui_draw_background(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
+			if (menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0) {
+				gui_draw_alpha = SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1);
+				gui_draw_mouse_pointer(menuMousePos);
+				gui_draw_alpha = 1;
 			}
 		}
 	} else if(SKINALPHA_BACKGROUND_INGAME) {
-		if(menuAlpha > 0)
-			draw_background(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+		if (menuAlpha > 0)
+			gui_draw_background(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	}
 	if (menuAlpha != prevMenuAlpha)
 		cvar_set("_menu_alpha", ftos(menuAlpha));
 
-	draw_reset();
+	gui_draw_reset();
 	menu_draw_pre();
-	draw_reset();
+	gui_draw_reset();
 	if (menuAlpha <= 0) {
-		if(prevMenuAlpha > 0)
+		if (prevMenuAlpha > 0)
 			main.initializeDialog(main, main.firstChild);
-		draw_reset();
+
+		gui_draw_reset();
 		return;
 	}
-	draw_alpha *= menuAlpha;
+	gui_draw_alpha *= menuAlpha;
 	if (menu_mouse_update()) {
 		if(mouseButtonsPressed)
 			main.mouseDrag(main, menuMousePos);
@@ -448,9 +447,9 @@ void(void) menu_draw {
 			main.mouseMove(main, menuMousePos);
 	}
 	main.draw(main);
-	draw_alpha = max(draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
-	draw_drawMousePointer(menuMousePos);
-	draw_reset();
+	gui_draw_alpha = max(gui_draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
+	gui_draw_mouse_pointer(menuMousePos);
+	gui_draw_reset();
 	frametime = 0;
 }
 

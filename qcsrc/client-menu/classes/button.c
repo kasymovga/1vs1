@@ -93,9 +93,9 @@ void drawButton(entity me)
 
 	me.focusable = !me.disabled;
 
-	save = draw_alpha;
+	save = gui_draw_alpha;
 	if(me.disabled)
-		draw_alpha *= me.disabledAlpha;
+		gui_draw_alpha *= me.disabledAlpha;
 
 	if(me.src)
 	{
@@ -104,13 +104,13 @@ void drawButton(entity me)
 			bOrigin = '0 0 0';
 			bSize = '1 1 0';
 			if(me.disabled)
-				draw_ButtonPicture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
+				gui_draw_button_picture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
 			else if(me.forcePressed || me.pressed || me.clickTime > 0)
-				draw_ButtonPicture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
+				gui_draw_button_picture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
 			else if(me.focused)
-				draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
+				gui_draw_button_picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
 			else
-				draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
+				gui_draw_button_picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
 		}
 		else
 		{
@@ -125,13 +125,13 @@ void drawButton(entity me)
 				bSize = me.realFontSize;
 			}
 			if(me.disabled)
-				draw_Picture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
+				gui_draw_picture(bOrigin, strcat(me.src, "_d", me.srcSuffix), bSize, me.colorD, 1);
 			else if(me.forcePressed || me.pressed || me.clickTime > 0)
-				draw_Picture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
+				gui_draw_picture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
 			else if(me.focused)
-				draw_Picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
+				gui_draw_picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
 			else
-				draw_Picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
+				gui_draw_picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, 1);
 		}
 	}
 	if(me.src2)
@@ -141,11 +141,10 @@ void drawButton(entity me)
 
 		bOrigin += bSize * (0.5 - 0.5 * me.src2scale);
 		bSize = bSize * me.src2scale;
-
-		draw_Picture(bOrigin, me.src2, bSize, me.color2, me.alpha2);
+		gui_draw_picture(bOrigin, me.src2, bSize, me.color2, me.alpha2);
 	}
 
-	draw_alpha = save;
+	gui_draw_alpha = save;
 
 	drawLabel(me);
 

@@ -19,7 +19,7 @@ void configureNexuizImageNexuizImage(entity me, string theImage, float theAspect
 	if(theAspect < 0) // use image aspect
 	{
 		vector sz;
-		sz = draw_PictureSize(theImage);
+		sz = gui_picture_size(theImage);
 		me.forcedAspect = sz_x / sz_y;
 	}
 	else

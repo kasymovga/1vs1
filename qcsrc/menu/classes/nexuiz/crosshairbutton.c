@@ -76,15 +76,15 @@ void drawNexuizCrosshairButton(entity me)
 	}
 
 	drawCheckBox(me);
-
-	sz = draw_PictureSize(me.src3);
-	sz = globalToBoxSize(sz, draw_scale);
+	sz = gui_picture_size(me.src3);
+	sz = globalToBoxSize(sz, gui_draw_scale);
 	sz = sz * cvar("crosshair_size");
 	if(sz_x > 0.95)
 		sz = sz * (0.95 / sz_x);
 	if(sz_y > 0.95)
 		sz = sz * (0.95 / sz_y);
 
-	draw_Picture('0.5 0.5 0' - 0.5 * sz, me.src3, sz, rgb, a);
+	gui_draw_picture('0.5 0.5 0' - 0.5 * sz, me.src3, sz, rgb, a);
+
 }
 #endif

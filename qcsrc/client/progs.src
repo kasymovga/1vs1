@@ -202,9 +202,9 @@ noteline.qc
 ../common/uri.qc
 ../client-menu/util.qh
 ../client-menu/skin.qh
-../client-menu/draw.qh
+../client-menu/gui.qh
 ../client-menu/skin.qc
-../client-menu/draw.qc
+../client-menu/gui.qc
 ../client-menu/classes/base.h
 ../client-menu/classes/classdefs.h
 	classes.c

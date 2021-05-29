@@ -132,7 +132,7 @@ void drawNexuizCharmap(entity me)
 			vector c;
 			c = eX * (mod(me.selectedCharacterCell, 16) / 16.0);
 			c += eY * (floor(me.selectedCharacterCell / 16.0) / 10.0);
-			draw_Picture(c, me.image2, '0.0625 0.1 0', '1 1 1', 1);
+			gui_draw_picture(c, me.image2, '0.0625 0.1 0', '1 1 1', 1);
 		}
 	}
 	drawImage(me);

@@ -23,8 +23,8 @@ void GUI_RemoveRecursive(entity me) {
 float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 	float r;
 	r = FALSE;
-	draw_reset();
-	GUI_mouse_pos = globalToBoxSize(mouse_position(), draw_scale);
+	gui_draw_reset();
+	GUI_mouse_pos = globalToBoxSize(mouse_position(), gui_draw_scale);
 	if (nPrimary == K_MOUSE1) {
 		if (bInputType == 0) { //Key down
 			if not(GUI_mouseButtonsPressed) {
@@ -45,9 +45,9 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 		}
 	}
 	if (bInputType == 0) {
-		if(nPrimary == K_ALT) { GUI_shiftState |= S_ALT; r = TRUE; }
-		if(nPrimary == K_CTRL) { GUI_shiftState |= S_CTRL; r = TRUE; }
-		if(nPrimary == K_SHIFT) { GUI_shiftState |= S_SHIFT; r = TRUE; }
+		if(nPrimary == K_ALT) { GUI_shiftState |= GUI_KEY_STATE_ALT; r = TRUE; }
+		if(nPrimary == K_CTRL) { GUI_shiftState |= GUI_KEY_STATE_CTRL; r = TRUE; }
+		if(nPrimary == K_SHIFT) { GUI_shiftState |= GUI_KEY_STATE_SHIFT; r = TRUE; }
 		if (mainWindow.keyDown(mainWindow, nPrimary, nSecondary, GUI_shiftState)) {
 			return TRUE;
 		} else if (nPrimary == K_ESCAPE) {
@@ -55,9 +55,9 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 			return TRUE;
 		}
 	} else {
-		if(nPrimary == K_ALT) { GUI_shiftState &~= (GUI_shiftState & S_ALT); r = TRUE; }
-		if(nPrimary == K_CTRL) { GUI_shiftState &~= (GUI_shiftState & S_CTRL); r = TRUE; }
-		if(nPrimary == K_SHIFT) { GUI_shiftState &~= (GUI_shiftState & S_SHIFT); r = TRUE; }
+		if(nPrimary == K_ALT) { GUI_shiftState &~= (GUI_shiftState & GUI_KEY_STATE_ALT); r = TRUE; }
+		if(nPrimary == K_CTRL) { GUI_shiftState &~= (GUI_shiftState & GUI_KEY_STATE_CTRL); r = TRUE; }
+		if(nPrimary == K_SHIFT) { GUI_shiftState &~= (GUI_shiftState & GUI_KEY_STATE_SHIFT); r = TRUE; }
 	}
 	if (GUI_mouse_pos != GUI_mouse_pos_old) {
 		if (GUI_mouseButtonsPressed) {
@@ -88,11 +88,11 @@ void GUI_Draw_Remove() {
 	}
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
-	draw_reset();
-	draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
-	draw_reset();
+	gui_draw_reset();
+	gui_draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	gui_draw_reset();
 	drawfont = sbar_font;
-	draw_alpha *= GUI_alpha;
+	gui_draw_alpha *= GUI_alpha;
 	mainWindow.drawGUI(mainWindow);
 }
 
@@ -107,10 +107,10 @@ void GUI_Draw() {
 	}
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
-	draw_reset();
-	draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
-	draw_reset();
-	draw_alpha *= GUI_alpha;
+	gui_draw_reset();
+	gui_draw_background(SKINGFX_BACKGROUND_INGAME, GUI_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+	gui_draw_reset();
+	gui_draw_alpha *= GUI_alpha;
 	drawfont = sbar_font;
 	mainWindow.drawGUI(mainWindow);
 	mouse_enable(TRUE, "");
@@ -136,7 +136,7 @@ void GUI_Show(float window) {
 		gui_con_chat_was_changed = TRUE;
 		cvar_set("con_chat", "0");
 		skin_init();
-		draw_reset();
+		gui_draw_reset();
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
 		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
 	}

@@ -23,7 +23,7 @@ void configureImageImage(entity me, string path)
 }
 void drawImage(entity me)
 {
-	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
+	gui_draw_picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
 }
 void resizeNotifyImage(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {

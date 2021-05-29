@@ -93,8 +93,7 @@ void drawListBoxItemNexuizCreditsList(entity me, float i, vector absSize, float 
 		theColor = SKINCOLOR_CREDITS_PERSON;
 		theAlpha = SKINALPHA_CREDITS_PERSON;
 	}
-
-	draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, s, me.realFontSize, theColor, theAlpha, 0);
+	gui_draw_text_center(me.realUpperMargin * eY + 0.5 * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
 float keyDownNexuizCreditsList(entity me, float scan, float ascii, float shift)

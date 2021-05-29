@@ -33,7 +33,7 @@ string toStringLabel(entity me)
 void setTextLabel(entity me, string txt)
 {
 	me.text = txt;
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * draw_TextWidth(me.text, me.allowColors), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * gui_text_width(me.text, me.allowColors), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 }
 void resizeNotifyLabel(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -41,14 +41,14 @@ void resizeNotifyLabel(entity me, vector relOrigin, vector relSize, vector absOr
 	// absSize_y is height of label
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
-	if (draw_scale_x / draw_scale_y < 1.5)
+	if (gui_draw_scale_x / gui_draw_scale_y < 1.5)
 		me.realFontSize_x = 0.666 * me.realFontSize_x;
 
 	if(me.marginLeft)
 		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
 	if(me.marginRight)
 		me.keepspaceRight = me.marginRight * me.realFontSize_x;
-	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * draw_TextWidth(me.text, me.allowColors), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+	me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * gui_text_width(me.text, me.allowColors), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 	me.realOrigin_y = 0.5 * (1 - me.realFontSize_y);
 }
 void configureLabelLabel(entity me, string txt, float sz, float algn)
@@ -62,12 +62,12 @@ void drawLabel(entity me)
 	string t;
 	vector o;
 	if(me.disabled)
-		draw_alpha *= me.disabledAlpha;
+		gui_draw_alpha *= me.disabledAlpha;
 
 	if(me.textEntity)
 	{
 		t = me.textEntity.toString(me.textEntity);
-		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * draw_TextWidth(t, 0), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
+		me.realOrigin_x = me.align * (1 - me.keepspaceLeft - me.keepspaceRight - min(me.realFontSize_x * gui_text_width(t, 0), (1 - me.keepspaceLeft - me.keepspaceRight))) + me.keepspaceLeft;
 	}
 	else
 		t = me.text;
@@ -76,7 +76,7 @@ void drawLabel(entity me)
 		if(t)
 		{
 			if(me.allowCut) // FIXME allowCut incompatible with align != 0
-				draw_Text(me.realOrigin, draw_TextShortenToWidth(t, (1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, me.allowColors), me.realFontSize, me.colorL, me.alpha, me.allowColors);
+				gui_draw_text(me.realOrigin, gui_draw_text_shorten_to_width(t, (1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, me.allowColors), me.realFontSize, me.colorL, me.alpha, me.allowColors);
 			else if(me.allowWrap) // FIXME allowWrap incompatible with align != 0
 			{
 				str_wrapped_line_remaining = t;
@@ -84,15 +84,15 @@ void drawLabel(entity me)
 				while(str_wrapped_line_remaining)
 				{
 					if (me.allowColors)
-						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, draw_TextWidth_WithColors);
+						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_WithColors);
 					else
-						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, draw_TextWidth_WithoutColors);
-					draw_Text(o, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
+						t = str_wrapped_line((1 - me.keepspaceLeft - me.keepspaceRight) / me.realFontSize_x, gui_text_width_WithoutColors);
+					gui_draw_text(o, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
 					o_y += me.realFontSize_y;
 				}
 			}
 			else
-				draw_Text(me.realOrigin, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
+				gui_draw_text(me.realOrigin, t, me.realFontSize, me.colorL, me.alpha, me.allowColors);
 		}
 }
 #endif

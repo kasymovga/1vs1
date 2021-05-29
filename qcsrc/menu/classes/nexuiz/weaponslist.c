@@ -94,9 +94,9 @@ void drawListBoxItemNexuizWeaponsList(entity me, float i, vector absSize, float 
 {
 	entity e;
 	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	e = weapon_info(stof(argv(i)));
-	draw_Text(me.realUpperMargin * eY, e.message, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	gui_draw_text(me.realUpperMargin * eY, e.message, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 
 float keyDownNexuizWeaponsList(entity me, float scan, float ascii, float shift)

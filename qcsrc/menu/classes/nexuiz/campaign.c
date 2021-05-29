@@ -67,7 +67,7 @@ void rewrapCampaign(float w, float l0, float emptyheight)
 			str_wrapped_line_remaining = s;
 			while(str_wrapped_line_remaining)
 			{
-				s = str_wrapped_line(w, draw_TextWidth_WithoutColors);
+				s = str_wrapped_line(w, gui_text_width_WithoutColors);
 				if(--l < 0) goto toolong;
 				r = strcat(r, s, "\n");
 			}
@@ -191,19 +191,18 @@ void drawListBoxItemNexuizCampaignList(entity me, float i, vector absSize, float
 	}
 
 	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	s = ftos(p);
-	draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	gui_draw_picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	if(i < me.campaignIndex)
-		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
+		gui_draw_picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	if(i <= me.campaignIndex)
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
 		s = "???";
-	s = draw_TextShortenToWidth(strcat("Level ", ftos(i + 1), ": ", s), me.columnNameSize / me.realFontSize_x, 0);
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-
+	s = gui_draw_text_shorten_to_width(strcat("Level ", ftos(i + 1), ": ", s), me.columnNameSize / me.realFontSize_x, 0);
+	gui_draw_text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - gui_text_width(s, 0) * me.realFontSize_x)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(i <= me.campaignIndex)
 	{
 		s = campaign_longdesc_wrapped[i];
@@ -212,7 +211,7 @@ void drawListBoxItemNexuizCampaignList(entity me, float i, vector absSize, float
 		for(j = 0; j < n; ++j)
 			if(argv(j) != "")
 			{
-				draw_Text(o, argv(j), me.realFontSize, theColor, theAlpha * SKINALPHA_CAMPAIGN_DESCRIPTION, 0);
+				gui_draw_text(o, argv(j), me.realFontSize, theColor, theAlpha * SKINALPHA_CAMPAIGN_DESCRIPTION, 0);
 				o_y += me.realFontSize_y;
 			}
 			else

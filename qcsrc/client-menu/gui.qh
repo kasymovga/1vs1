@@ -1,0 +1,44 @@
+const float GUI_KEY_STATE_SHIFT = 1;
+const float GUI_KEY_STATE_CTRL = 2;
+const float GUI_KEY_STATE_ALT = 4;
+
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
+
+vector gui_draw_shift;
+vector gui_draw_scale;
+float gui_draw_alpha;
+
+void(void) gui_draw_reset;
+void(string pic, vector theSize, vector theOffset) gui_set_mouse_pointer;
+void(vector where) gui_draw_mouse_pointer;
+
+void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha) gui_draw_button_picture;
+void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha) gui_draw_button_picture_vertical;
+void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize) gui_draw_picture_border;
+void(vector origin, string pic, vector size, vector color, float alpha) gui_draw_picture;
+vector(string pic) gui_picture_size;
+void(vector theOrigin, vector theSize, vector theColor, float theAlpha) gui_draw_fill;
+void(vector origin, string text, vector size, vector color, float alpha, float allowColorCodes) gui_draw_text;
+void(vector origin, string text, vector size, vector color, float alpha, float allowColorCodes) gui_draw_text_center;
+float(string text, float allowColorCodes) gui_text_width;
+string(string text, float maxWidth, float allowColorCodes) gui_draw_text_shorten_to_width;
+float(string text, float maxWidth, float allowColorCodes) gui_draw_text_length_up_to_width;
+
+void draw_SetClip();
+void draw_SetClipRect(vector theOrigin, vector theScale);
+void draw_ClearClip();
+
+vector boxToGlobal(vector v, vector shift, vector scale);
+vector boxToGlobalSize(vector v, vector scale);
+vector globalToBox(vector v, vector shift, vector scale);
+vector globalToBoxSize(vector v, vector scale);
+
+float draw_NeedResizeNotify;
+
+float gui_text_width_WithColors(string s);
+float gui_text_width_WithoutColors(string s);
+string draw_UseSkinFor(string pic);
+string draw_skin;
+void(string img, float a, float algn, float force1) gui_draw_background;

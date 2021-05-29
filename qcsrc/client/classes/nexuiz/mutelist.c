@@ -31,17 +31,17 @@ void resizeNotifyNexuizMuteList(entity me, vector relOrigin, vector relSize, vec
 void drawListBoxItemNexuizMuteList(entity me, float i, vector absSize, float isSelected) {
 	string s;
 	if (isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+		gui_draw_fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	float n = i + 1;
 	s = strdecolorize(player_name(i));
 	if (mute_listed(n)) {
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, "[MUTED]", me.realFontSize, '1.5 0.5 0.5', SKINALPHA_TEXT, 0);
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0', strcat("#", ftos(n)), me.realFontSize, '1.2 0.9 0.9', SKINALPHA_TEXT, 0);
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0', s, me.realFontSize, '1.2 0.9 0.9', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, "[MUTED]", me.realFontSize, '1.5 0.5 0.5', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0', strcat("#", ftos(n)), me.realFontSize, '1.2 0.9 0.9', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0', s, me.realFontSize, '1.2 0.9 0.9', SKINALPHA_TEXT, 0);
 	} else {
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0', strcat("#", ftos(n)), me.realFontSize, '0.8 1.1 1.1', SKINALPHA_TEXT, 0);
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0', s, me.realFontSize, '0.8 1.1 1.1', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0', strcat("#", ftos(n)), me.realFontSize, '0.8 1.1 1.1', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0', s, me.realFontSize, '0.8 1.1 1.1', SKINALPHA_TEXT, 0);
 	}
 }
 

@@ -51,7 +51,7 @@ float keyDownInputContainer(entity me, float scan, float ascii, float shift)
 	if(scan == K_TAB)
 	{
 		f = me.focusedChild;
-		if(shift & S_SHIFT)
+		if(shift & GUI_KEY_STATE_SHIFT)
 		{
 			if(f)
 			{

@@ -26,7 +26,7 @@ mbuiltin.qh
 ../menu-server/extresponse.qh
 cmd.qh
 menu.qh
-../client-menu/draw.qh
+../client-menu/gui.qh
 ../client-menu/skin.qh
 gui.qh
 ../menu-server/util.qh
@@ -47,7 +47,7 @@ gui.qh
 ../menu-server/cmd.qc
 cmd.qc
 menu.qc
-../client-menu/draw.qc
+../client-menu/gui.qc
 gui.qc
 ../menu-server/udppunchhole.qc
 ../common/str.qc

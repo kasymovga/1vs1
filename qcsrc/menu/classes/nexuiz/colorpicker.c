@@ -212,8 +212,7 @@ void drawNexuizColorpicker(entity me)
 	C = bound(0, C, 1-B);
 
 	aC = 1 - C / (1 - B);
-
-	draw_Picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, '0 0 0', aC);
-	draw_Picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, me.color, B);
+	gui_draw_picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, '0 0 0', aC);
+	gui_draw_picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, me.color, B);
 }
 #endif

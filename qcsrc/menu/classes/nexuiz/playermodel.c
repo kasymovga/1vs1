@@ -192,12 +192,12 @@ void drawNexuizPlayerModelSelector(entity me)
 	me.src = NULL;
 
 	// draw text on the image, handle \n in the description
-	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
+	gui_draw_text_center('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
 
 	o = '0.5 1 0' - eY * me.realFontSize_y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
 	for(i = 0; i < n; ++i)
 	{
-		draw_CenterText(o, argv(i), me.realFontSize, '1 1 1', 1, FALSE);
+		gui_draw_text_center(o, argv(i), me.realFontSize, '1 1 1', 1, FALSE);
 		o += eY * me.realFontSize_y;
 	}
 }
