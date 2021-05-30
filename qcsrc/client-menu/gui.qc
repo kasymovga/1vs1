@@ -197,9 +197,12 @@ void(vector theOrigin, string pic, vector theSize, vector theColor, float theAlp
 	}
 }
 void(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz) gui_draw_text {
-	if (theSize_x <= 0 || theSize_y <= 0)
+	if (theSize_x <= 0 || theSize_y <= 0) {
+		print("theSize=", vtos(theSize), "\n");
+		print("gui_conwidth=", ftos(gui_conwidth), "\n");
+		print("gui_conheight=", ftos(gui_conheight), "\n");
 		error("Drawing zero size text?\n");
-
+	}
 	if (ICanHasKallerz)
 		drawcolorcodedstring(gui_box_to_global(theOrigin, gui_draw_shift, gui_draw_scale), theText, gui_box_to_global_size(theSize, gui_draw_scale), theAlpha * gui_draw_alpha, 0);
 	else

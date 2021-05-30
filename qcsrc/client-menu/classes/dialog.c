@@ -138,7 +138,7 @@ void configureDialogDialog(entity me)
 	if not(me.titleFontSize)
 		me.titleHeight = 0; // no title bar
 
-	absWidth = me.intendedWidth * conwidth;
+	absWidth = me.intendedWidth * gui_conwidth;
 	absHeight = me.titleHeight + me.marginTop + me.rows * me.rowHeight + (me.rows - 1) * me.rowSpacing + me.marginBottom;
 	me.itemOrigin  = eX * (me.marginLeft / absWidth)
 	               + eY * ((me.titleHeight + me.marginTop) / absHeight);
@@ -147,7 +147,7 @@ void configureDialogDialog(entity me)
 	me.itemSpacing = me.itemSize
 	               + eX * (me.columnSpacing / absWidth)
 	               + eY * (me.rowSpacing / absHeight);
-	me.intendedHeight = absHeight / conheight;
+	me.intendedHeight = absHeight / gui_conheight;
 	me.currentRow = -1;
 	me.currentColumn = -1;
 

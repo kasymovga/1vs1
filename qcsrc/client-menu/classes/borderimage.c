@@ -29,7 +29,7 @@ void resizeNotifyBorderImage(entity me, vector relOrigin, vector relSize, vector
 	if(me.isNexposeeTitleBar)
 	{
 		vector scrs;
-		scrs = eX * conwidth + eY * conheight;
+		scrs = eX * gui_conwidth + eY * gui_conheight;
 		resizeNotifyLabel(me, relOrigin, relSize, gui_box_to_global(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), gui_box_to_global_size(me.parent.Nexposee_smallSize, scrs));
 		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
 		me.realOrigin_Nexposeed = me.realOrigin;

@@ -28,8 +28,6 @@ void(string name) menu_goto;
 entity keyGrabber;
 .void(entity me, float key, float ascii) keyGrabbed;
 
-float conwidth, conheight; // "virtual" conwidth/height values for other stuff to assume for scaling
-
 void(float nodownload, float renderrestart) menu_dlc_reload;
 void(void) menu_display;
 void(void) menu_hide;

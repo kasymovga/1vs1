@@ -105,6 +105,8 @@ void GUI_Draw() {
 		else
 			GUI_alpha += frametime * 5;
 	}
+	gui_conwidth = CVAR(vid_conwidth);
+	gui_conheight = CVAR(vid_conheight);
 	mainWindow.focusEnter(mainWindow);
 	mainWindow.showNotify(mainWindow);
 	gui_draw_reset();
@@ -136,9 +138,11 @@ void GUI_Show(float window) {
 		gui_con_chat_was_changed = TRUE;
 		cvar_set("con_chat", "0");
 		skin_init();
+		gui_conwidth = CVAR(vid_conwidth);
+		gui_conheight = CVAR(vid_conheight);
 		gui_draw_reset();
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
-		mainWindow.resizeNotify(mainWindow, '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight), '0 0 0', eX * CVAR(vid_conwidth) + eY * CVAR(vid_conheight));
+		mainWindow.resizeNotify(mainWindow, '0 0 0', [gui_conwidth, gui_conheight], '0 0 0', [gui_conwidth, gui_conheight]);
 	}
 	mainWindow.draw2d = GUI_Draw_Set;
 	mainWindow.draw2dflag = 1;

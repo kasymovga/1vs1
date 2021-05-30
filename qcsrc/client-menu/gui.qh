@@ -35,3 +35,4 @@ float(string s) gui_text_width_with_colors;
 float(string s) gui_text_width_without_colors;
 string(string pic) gui_image_path;
 void(string img, float a, float algn, float force1) gui_draw_background;
+float gui_conwidth, gui_conheight;

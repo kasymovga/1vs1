@@ -138,24 +138,16 @@ void() menu_init {
 	ui_con_width_height_set();
 }
 
-void UpdateConWidthHeight() {
+void(void) menu_update_width_height {
 	float conwidth_s, conheight_s;
-	conwidth_s = conwidth;
-	conheight_s = conheight;
-	conwidth = cvar("vid_conwidth");
-	conheight = cvar("vid_conheight");
-	if (conwidth < 800) {
-		conheight *= 800 / conwidth;
-		conwidth = 800;
-	}
-	if (conheight < 600) {
-		conwidth *= 600 / conheight;
-		conheight = 600;
-	}
+	conwidth_s = gui_conwidth;
+	conheight_s = gui_conheight;
+	gui_conwidth = cvar("vid_conwidth");
+	gui_conheight = cvar("vid_conheight");
 	if (main) {
-		if (conwidth_s != conwidth || conheight_s != conheight) {
+		if (conwidth_s != gui_conwidth || conheight_s != gui_conheight) {
 			gui_draw_reset();
-			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
+			main.resizeNotify(main, '0 0 0', eX * gui_conwidth + eY * gui_conheight, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
 		}
 	}
 }
@@ -182,11 +174,11 @@ void() menu_init_delayed {
 	weapon_register_weapons();
 	skin_init();
 	gui_set_mouse_pointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
-	conwidth = conheight = -1;
+	gui_conwidth = gui_conheight = -1;
 	gui_draw_reset();
-	UpdateConWidthHeight();
+	menu_update_width_height();
 	main = spawnMainWindow(); main.configureMainWindow(main);
-	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
+	main.resizeNotify(main, '0 0 0', eX * gui_conwidth + eY * gui_conheight, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
 	main.focused = 1;
 	menuShiftState = 0;
 	menuMousePos = '0.5 0.5 0';
@@ -324,7 +316,7 @@ void() menu_draw_pre {
 		if (cvar(strcat("g_campaign", campaign_name, "_won"))) {
 			if (!menu_campaign_won_previous) {
 				menu_display();
-				DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * conwidth + eY * conheight);
+				DialogOpenButton_Click_withCoords(NULL, main.winnerDialog, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
 			}
 			menu_campaign_won_previous = 1;
 		} else
@@ -340,7 +332,7 @@ void(void) menu_draw {
 	float t;
 	menuMouseMode = cvar("menu_mouse_absolute");
 	if (main)
-		UpdateConWidthHeight();
+		menu_update_width_height();
 
 	if (!menuInitialized) {
 		// TODO draw an info image about this situation

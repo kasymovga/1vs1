@@ -2,8 +2,6 @@
 .entity frameGUI;
 #define draw drawGUI
 #define frame frameGUI
-#define conwidth CVAR(vid_conwidth)
-#define conheight CVAR(vid_conheight)
 #include "../client-menu/classes/item.c"
 #include "../client-menu/classes/container.c"
 #include "../client-menu/classes/inputcontainer.c"
@@ -54,5 +52,3 @@
 #include "classes/nexuiz/hudlist.c"
 #undef draw
 #undef frame
-#undef conwidth
-#undef conheight

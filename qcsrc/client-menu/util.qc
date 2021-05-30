@@ -1,7 +1,3 @@
-#ifdef CSQC
-#define conwidth CVAR(vid_conwidth)
-#define conheight CVAR(vid_conheight)
-#endif
 void m_focus_item_chain(entity outermost, entity innermost)
 {
 	if(innermost.parent != outermost)
@@ -49,18 +45,14 @@ void m_setpointerfocus(entity wnd)
 		{
 #ifndef CSQC
 			menuMousePos = focus.origin + 0.5 * focus.size;
-			menuMousePos_x *= 1 / conwidth;
-			menuMousePos_y *= 1 / conheight;
+			menuMousePos_x *= 1 / gui_conwidth;
+			menuMousePos_y *= 1 / gui_conheight;
 #endif
 			if(wnd.focused) // why does this never happen?
 				m_focus_item_chain(wnd, focus);
 		}
 	}
 }
-#ifdef CSQC
-#undef conwidth
-#undef conheight
-#endif
 
 float almost_in_bounds(float a, float b, float c)
 {
