@@ -194,13 +194,10 @@ void(void) physics_move {
 	vector prev_plane_normal;
 	vector trace1_endpos = '0 0 0';
 	vector trace2_endpos = '0 0 0';
-	vector trace3_endpos = '0 0 0';
 	float trace1_fraction = 0;
 	float trace2_fraction = 0;
-	float trace3_fraction = 0;
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
-	vector trace3_plane_normal = '0 0 0';
 	vector primalvelocity = physics_velocity;
 	float skipskimming = 0;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
@@ -232,21 +229,17 @@ void(void) physics_move {
 				trace2_endpos = trace_endpos;
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
-				if(!trace_startsolid) {
+				if not(trace_startsolid) {
 					// then move down from there
 					currentorigin2 = trace2_endpos;
 					neworigin2 = trace2_endpos;
 					neworigin2_z = self.origin_z;
 					trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-					trace3_endpos = trace_endpos;
-					trace3_fraction = trace_fraction;
-					trace3_plane_normal = trace_plane_normal;
 					// accept the new trace if it made some progress
-					if (fabs(trace3_endpos_x - trace1_endpos_x) >= 0.0078125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.0078125) {
-						trace1_endpos = trace2_endpos;
+					if (fabs(trace_endpos_x - trace1_endpos_x) >= 0.0078125 || fabs(trace_endpos_y - trace1_endpos_y) >= 0.0078125) {
 						trace1_fraction = trace2_fraction;
 						trace1_plane_normal = trace2_plane_normal;
-						trace1_endpos = trace3_endpos;
+						trace1_endpos = trace_endpos;
 						if not(physics_flags & FL_ONGROUND)
 							physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
 					}
