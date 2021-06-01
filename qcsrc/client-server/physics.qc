@@ -193,7 +193,6 @@ void(void) physics_move {
 	vector neworigin2;
 	vector prev_plane_normal;
 	vector trace1_endpos = '0 0 0';
-	vector trace2_endpos = '0 0 0';
 	float trace1_fraction = 0;
 	float trace2_fraction = 0;
 	vector trace1_plane_normal = '0 0 0';
@@ -226,17 +225,15 @@ void(void) physics_move {
 				neworigin2 = neworigin;
 				neworigin2_z = currentorigin2_z;
 				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-				trace2_endpos = trace_endpos;
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
-				if not(trace_startsolid) {
+				if (!trace_startsolid && trace_fraction > 0) {
 					// then move down from there
-					currentorigin2 = trace2_endpos;
-					neworigin2 = trace2_endpos;
+					currentorigin2 = trace_endpos;
+					neworigin2 = trace_endpos;
 					neworigin2_z = self.origin_z;
 					trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-					// accept the new trace if it made some progress
-					if (fabs(trace_endpos_x - trace1_endpos_x) >= 0.0078125 || fabs(trace_endpos_y - trace1_endpos_y) >= 0.0078125) {
+					if (trace_plane_normal_z > 0.7) { //continue if step on ground
 						trace1_fraction = trace2_fraction;
 						trace1_plane_normal = trace2_plane_normal;
 						trace1_endpos = trace_endpos;
