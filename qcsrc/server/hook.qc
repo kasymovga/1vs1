@@ -14,6 +14,7 @@ float g_balance_grapplehook_health;
 float g_balance_grapplehook_speed_fly;
 float g_balance_grapplehook_onground_pullfactor;
 float g_balance_grapplehook_team_friendly;
+string sv_announcer_extra_hooked;
 
 .string aiment_classname;
 .float aiment_deadflag;
@@ -30,6 +31,11 @@ void(entity ent, entity e) hook_follow {
 	ent.v_angle = ent.angles - e.angles; // relative angles
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
+	if (sv_announcer_extra_hooked != "")
+	if (e.classname == "player") {
+		announce(e, sv_announcer_extra_hooked, "");
+		announce(ent.owner, sv_announcer_extra_hooked, "");
+	}
 }
 
 float(entity ent) hook_lost_follow {
@@ -468,6 +474,10 @@ void(float force) hook_init {
 	CVAR_CACHE(g_balance_grapplehook_team_friendly);
 	CVAR_CACHE(g_grappling_hook_tarzan);
 	CVAR_CACHE(g_grappling_hook);
+	CVAR_CACHE_STR(sv_announcer_extra_hooked);
+	if (sv_announcer_extra_hooked != "")
+		precache_sound(sv_announcer_extra_hooked);
+
 	if not(g_grappling_hook)
 	if not(force)
 		return;

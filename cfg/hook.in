@@ -15,3 +15,4 @@ set g_balance_grapplehook_stretch 50
 set g_balance_grapplehook_airfriction 0.2
 set g_balance_grapplehook_health 130
 set g_balance_grapplehook_team_friendly 1
+set sv_announcer_extra_hooked ""
