@@ -215,10 +215,15 @@ void(void) weapon_zapper_beam_think {
 	float dt = time - self.zapper_lastdmg;
 	float rate = weapon_rate_factor_for(o);
 	float wantedTicrate = g_balance_zapper_primary_refire * rate;
-	if not(frametime) //we need finish route in server frames for sending information to client
-	if (dt < wantedTicrate)
-		return;
-
+	if (frametime) {
+		if (map_finished) {
+			remove(self);
+			return;
+		}
+	} else { //we need finish route in server frames for sending information to client
+		if (dt < wantedTicrate)
+			return;
+	}
 	vector org = weapon_zapper_visual_shotorg(self.enemy);
 	makevectors(self.owner.v_angle);
 	antilag_begin(o);
