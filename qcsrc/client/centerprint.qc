@@ -3,6 +3,7 @@ string centerprint_messages[CENTERPRINT_MAX_LINES];
 float centerprint_width[CENTERPRINT_MAX_LINES];
 vector centerprint_start;
 float centerprint_expire;
+float centerprint_last;
 float centerprint_offset_hint;
 vector centerprint_fontsize;
 float centerprint_num;
@@ -25,28 +26,36 @@ void(string strMessage) centerprint {
 
 	strMessage = substring(strMessage, 0, j + 1);
 
-	if(strMessage == "")
+	if (strMessage == "")
 		return;
 
 	// strip leading newlines and remember them, they are a hint that the message should be lower on the screen
 	j = 0;
-	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
+	while (substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
 		j = j + 1;
 
 	strMessage = substring(strMessage, j, strlen(strMessage) - j);
 	centerprint_offset_hint = j;
-	if(strMessage == "")
+	if (strMessage == "")
 		return;
 
-	// if we get here, we have a message. Initialize its height.
-	centerprint_num = 0;
+	if (centerprint_last + 0.5 <= time)
+		centerprint_num = 0;
+
 	n = tokenizebyseparator(strMessage, "\n");
-	i = hcount = 0;
-	for(j = 0; j < n; ++j) {
+	hcount = 0;
+	i = centerprint_num;
+	for (j = 0; j < centerprint_num; j++) {
+		if (s == "")
+			hcount += 0.5;
+		else
+			hcount += 1;
+	}
+	for (j = 0; j < n; ++j) {
 		str_wrapped_line_remaining = argv(j);
 		while (str_wrapped_line_remaining) {
 			s = str_wrapped_line(CVAR(vid_conwidth) * 0.75 / centerprint_fontsize_x, str_width_colors);
-			if(centerprint_messages[i])
+			if (centerprint_messages[i])
 				strunzone(centerprint_messages[i]);
 
 			centerprint_messages[i] = strzone(s);
@@ -58,17 +67,17 @@ void(string strMessage) centerprint {
 			else
 				hcount += 1;
 
-			if(i >= CENTERPRINT_MAX_LINES)
+			if (i >= CENTERPRINT_MAX_LINES)
 				break;
 		}
 	}
 	float h, havail;
 	h = centerprint_fontsize_y*hcount;
 	havail = CVAR(vid_conheight);
-	if(CVAR(con_chatpos) < 0)
+	if (CVAR(con_chatpos) < 0)
 		havail -= (-CVAR(con_chatpos) + CVAR(con_chat)) * CVAR(con_chatsize); // avoid overlapping chat
 
-	if(havail > CVAR(vid_conheight) - 70)
+	if (havail > CVAR(vid_conheight) - 70)
 		havail = CVAR(vid_conheight) - 70; // avoid overlapping HUD
 
 	centerprint_start_x = 0;
@@ -82,6 +91,7 @@ void(string strMessage) centerprint {
 		);
 	centerprint_num = i;
 	centerprint_expire = time + CVAR(scr_centertime);
+	centerprint_last = time;
 }
 
 void(void) centerprint_draw {
@@ -90,7 +100,7 @@ void(void) centerprint_draw {
 	string ts;
 	float a;
 	a = bound(0, 1 - 4 * (time - centerprint_expire), 1);
-	if(a <= 0) {
+	if (a <= 0) {
 		centerprint_num = 0;
 		return;
 	}
