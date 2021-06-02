@@ -32,7 +32,8 @@ void(entity ent, entity e) hook_follow {
 	ent.aiment_classname = strzone(e.classname);
 	ent.aiment_deadflag = e.deadflag;
 	if (sv_announcer_extra_hooked != "")
-	if (e.classname == "player") {
+	if (e.classname == "player")
+	if (e.deadflag == DEAD_NO) {
 		announce(e, sv_announcer_extra_hooked, "");
 		announce(ent.owner, sv_announcer_extra_hooked, "");
 	}
