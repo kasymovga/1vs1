@@ -504,9 +504,8 @@ void(void) physics_dodging {
 			return;
 
 		makevectors(self.angles);
-
 		self.flags &~= FL_ONGROUND;
-
+		self.flags |= FL_DOUBLEJUMP; //prevent double jump after dodge
 		if (tap_direction_x)
 		if (tap_direction_y)
 			tap_direction *= sqrt(0.5);
