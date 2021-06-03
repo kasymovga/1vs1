@@ -130,7 +130,7 @@ void(void) vehicle_car_think {
 		physics_flags = self.flags;
 		physics_velocity = self.velocity;
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);
-		physics_update_status(TRUE);
+		physics_update_status();
 		self.flags = physics_flags;
 		if (physics_flags & FL_ONGROUND) {
 			self.velocity = physics_velocity;

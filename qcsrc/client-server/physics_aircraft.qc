@@ -2,18 +2,16 @@ float(void) physics_aircraft {
 	physics_velocity = self.velocity;
 	physics_movetype = MOVETYPE_QCWALK;
 	physics_flags = self.flags;
-	physics_update_status(TRUE);
+	physics_update_status();
 	self.velocity = physics_velocity;
 	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;
 	if(physics_button_jump) {
 		self.velocity_z = self.velocity_z + g_vehicle_aircraft_accel_up * frametime;
 	}
-
 	if (self.flags & FL_ONGROUND) {
 		movelib_beak_simple(g_vehicle_aircraft_speed_stop * frametime);
 	}
-
 	float turn_angle_speed;
 	if (self.angles_y != physics_v_angle_y) {
 		turn_angle_speed = g_vehicle_aircraft_turnspeed * frametime;
@@ -28,7 +26,6 @@ float(void) physics_aircraft {
 		else
 			self.angles_y = max(self.angles_y - turn_angle_speed, physics_v_angle_y);
 	}
-
 	if (self.angles_x != physics_v_angle_x) {
 		turn_angle_speed = g_vehicle_aircraft_turnspeed * frametime;
 		while (self.angles_x - physics_v_angle_x > 180)

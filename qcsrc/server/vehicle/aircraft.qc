@@ -183,7 +183,7 @@ void(void) vehicle_aircraft_think {
 		physics_flags = self.flags;
 		physics_velocity = self.velocity;
 		physics_gravity_factor = (self.gravity ? self.gravity : 1);
-		physics_update_status(TRUE);
+		physics_update_status();
 		self.velocity = physics_velocity;
 		self.flags = physics_flags;
         movelib_beak_simple(g_vehicle_aircraft_speed_stop * frametime);

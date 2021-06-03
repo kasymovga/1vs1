@@ -77,12 +77,13 @@ void(void) physics_unstuck {
 	}
 }
 
-void(float ground) physics_update_status {
+void(void) physics_update_status {
 	physics_lastflags = physics_flags;
 	// set watertype/waterlevel
 	vector origin1 = self.origin;
 	origin1_z += self.mins_z + 1;
 	physics_waterlevel = WATERLEVEL_NONE;
+	physics_flags &~= FL_ONGROUND_OR_SLICK_OR_CLIMB;
 	float thepoint = pointcontents(origin1);
 	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 	if(physics_watertype) {
@@ -90,10 +91,8 @@ void(float ground) physics_update_status {
 		physics_waterlevel = WATERLEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
 		thepoint = pointcontents(origin1);
-		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
-		{
+		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
 			physics_waterlevel = WATERLEVEL_SWIMMING;
-			physics_flags &~= FL_ONGROUND_OR_SLICK;
 			origin1_z = self.origin_z + self.view_ofs_z;
 			thepoint = pointcontents(origin1);
 			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
@@ -105,36 +104,33 @@ void(float ground) physics_update_status {
 		if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
 			physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
 
-		if (ground) {
-			physics_flags &~= FL_ONGROUND_OR_SLICK;
-			//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+		if (trace_startsolid)
+		if (self.solid != SOLID_NOT) {
+			physics_unstuck();
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
-			if (trace_startsolid)
-			if (self.solid != SOLID_NOT) {
-				physics_unstuck();
-				trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
-			}
-			if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
-				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
-					if (g_slicksurfaces_levitation)
-						physics_flags |= FL_SLICK;
-					else
-						physics_flags |= FL_ONGROUND_OR_SLICK;
-				} else
-					physics_flags |= FL_ONGROUND;
+		}
+		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
+				if (g_slicksurfaces_levitation)
+					physics_flags |= FL_SLICK;
+				else
+					physics_flags |= FL_ONGROUND_OR_SLICK;
+			} else
+				physics_flags |= FL_ONGROUND;
 
-				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) { //step on sky, usually this is map error
-	#ifdef SVQC
-					physics_step_on_sky();
-	#endif
-					physics_flags &~= FL_ONGROUND_OR_SLICK;
-				}
-				self.groundentity = trace_ent;
-				physics_impact();
-				if (physics_groundvelocity_dotproduct < 0) {
-					if (!trace_ent || trace_ent.solid != SOLID_NOT)
-						physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
-				}
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) { //step on sky, usually this is map error
+				#ifdef SVQC
+				physics_step_on_sky();
+				#endif
+				physics_flags &~= FL_ONGROUND_OR_SLICK;
+			}
+			self.groundentity = trace_ent;
+			physics_impact();
+			if (physics_groundvelocity_dotproduct < 0) {
+				if (!trace_ent || trace_ent.solid != SOLID_NOT)
+					physics_velocity -= physics_groundvelocity_dotproduct * trace_plane_normal;
 			}
 		}
 		if (g_cpmdoublejump) {
@@ -227,18 +223,44 @@ void(void) physics_move {
 				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
-				if (!trace_startsolid && trace_fraction > 0) {
-					// then move down from there
-					currentorigin2 = trace_endpos;
-					neworigin2 = trace_endpos;
-					neworigin2_z = self.origin_z;
-					trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-					if (trace_plane_normal_z > 0.7) { //continue if step on ground
-						trace1_fraction = trace2_fraction;
-						trace1_plane_normal = trace2_plane_normal;
-						trace1_endpos = trace_endpos;
-						if not(physics_flags & FL_ONGROUND)
-							physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
+				if not(trace_startsolid) {
+					if (trace_fraction > 0) {
+						// then move down from there
+						currentorigin2 = trace_endpos;
+						neworigin2 = trace_endpos;
+						neworigin2_z = self.origin_z;
+						trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+						if (trace_plane_normal_z > 0.7) { //continue if step on ground
+							trace1_fraction = trace2_fraction;
+							trace1_plane_normal = trace2_plane_normal;
+							trace1_endpos = trace_endpos;
+							if not(physics_flags & FL_ONGROUND)
+								physics_velocity = physics_velocity * (1 - (trace_fraction * g_stepairslowdown));
+						}
+					} else if (g_climb_height > 0 && !(physics_flags & FL_ONGROUND) && physics_velocity_z < g_climb_speed && !physics_crouch) {
+						makevectors(self.angles);
+						if (trace1_plane_normal * v_forward < -0.5)
+						if (trace1_plane_normal * physics_velocity < 0) {
+							currentorigin2 = self.origin;
+							currentorigin2_z += g_climb_height;
+							trace_box(currentorigin2, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
+							if (trace_fraction == 1) {
+								neworigin2 = currentorigin2 - trace1_plane_normal * self.maxs_x * 0.5;
+								trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+								if (trace_fraction == 1)
+								if not(trace_startsolid) {
+									currentorigin2 = trace_endpos;
+									neworigin2_z = self.origin_z;
+									trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+									if (trace_plane_normal_z > 0.7) { //continue if step on ground
+										physics_velocity_z = max(physics_velocity_z, g_climb_speed);
+										physics_velocity_x = physics_velocity_x * (1 - frametime * sv_friction);
+										physics_velocity_y = physics_velocity_y * (1 - frametime * sv_friction);
+										physics_flags |= FL_CLIMB;
+									}
+								}
+							}
+						}
 					}
 				}
 			} else
@@ -688,7 +710,7 @@ void(void) physics_player_frame {
 	if (physics_plug())
 		return;
 
-	physics_update_status(TRUE);
+	physics_update_status();
 	if (physics_button_crouch) {
 		if not(sv_disable_crouch)
 		if (!physics_crouch) {

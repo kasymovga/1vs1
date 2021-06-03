@@ -346,6 +346,10 @@ void SV_PlayerPhysics()
 
 	self.teleport_time = time + physics_teleport_time;
 	self.crouch = physics_crouch;
+	if (physics_flags & FL_CLIMB)
+	if not(physics_lastflags & FL_CLIMB)
+		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
+
 	self.flags = physics_flags;
 	self.velocity = physics_velocity;
 	self.waterlevel = physics_waterlevel;
@@ -406,6 +410,24 @@ float(entity plr, entity viewer, float _alpha) physics_sideview_player_alpha_mod
 		return -1;
 
 	return physics_sideview_player_alpha_mod_next(plr, viewer, _alpha * min(f1, f2));
+}
+
+var float(float f) physics_weapon_switch_mod_next;
+float(float f) physics_weapon_switch_mod {
+	if (akimbo_owner(self).flags & FL_CLIMB)
+		return 0;
+
+	return physics_weapon_switch_mod_next(f);
+}
+
+float physics_climb_init_done;
+void(void) physics_climb_init {
+	if (physics_climb_init_done)
+		return;
+
+	physics_climb_init_done = 1;
+	physics_weapon_switch_mod_next = gamehook_chain_SwitchWeaponMod;
+	gamehook_chain_SwitchWeaponMod = physics_weapon_switch_mod;
 }
 
 float physics_initiated;
@@ -473,6 +495,11 @@ void(void) physics_init {
 	CVAR_CACHE(g_skimming_time);
 	CVAR_CACHE(g_cpmdoublejump);
 	CVAR_CACHE(g_doublejump_nopogostick);
+	CVAR_CACHE(g_climb_height);
+	if (g_climb_height)
+		physics_climb_init();
+
+	CVAR_CACHE(g_climb_speed);
 	if not(g_sideview) {
 		CVAR_CACHE(g_sideview);
 		if (g_sideview) {
@@ -585,6 +612,10 @@ float(entity to, float sf) physics_send {
 		WriteCoord(MSG_ENTITY, g_waterfriction);
 		WriteCoord(MSG_ENTITY, g_wateraccelerate);
 		WriteCoord(MSG_ENTITY, g_maxwaterspeed);
+		WriteCoord(MSG_ENTITY, g_climb_height);
+		if (g_climb_height)
+			WriteCoord(MSG_ENTITY, g_climb_speed);
+
 		float switches = (g_slicksurfaces_allowjump ? 2 : 0)
 				+ (sv_pogostick ? 4 : 0)
 				+ (sv_disable_crouch ? 8 : 0)

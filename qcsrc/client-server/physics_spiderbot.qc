@@ -2,7 +2,7 @@ float(void) physics_spiderbot {
 	physics_velocity = self.velocity;
 	physics_movetype = MOVETYPE_QCWALK;
 	physics_flags = self.flags;
-	physics_update_status(TRUE);
+	physics_update_status();
 	self.velocity = physics_velocity;
 	self.flags = physics_flags;
 	self.angles_x = -self.angles_x;

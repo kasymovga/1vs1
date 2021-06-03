@@ -51,6 +51,8 @@ float g_maxwaterspeed;
 float g_sideview;
 float g_topview;
 vector g_topview_angles;
+float g_climb_height;
+float g_climb_speed;
 
 float physics_deadflag;
 float physics_cantjump;
@@ -99,7 +101,7 @@ var float(float maxspd_mod) physics_player_plug;
 .vector stand_view_ofs;
 .float lastwj;
 .float last_dodging_time;
-void(float ground) physics_update_status;
+void(void) physics_update_status;
 void(void) physics_move;
 
 const var float() physics_plug_null;

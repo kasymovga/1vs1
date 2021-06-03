@@ -56,3 +56,5 @@ set g_physics_fixed 0 "Player physics with fixed frame time"
 set g_adjust_view_offset 0
 set g_sideview 0
 set g_topview ""
+set g_climb_height 0
+set g_climb_speed 100

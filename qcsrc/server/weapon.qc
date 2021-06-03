@@ -390,11 +390,8 @@ void weapon_frame()
 	float _switchweapon = gamehook_chain_SwitchWeaponMod(self.switchweapon);
 	if(!_switchweapon)
 	{
-		self.weapon = 0;
-		self.weaponentity.state = WS_CLEAR;
-		self.weaponname = "";
 		self.items &~= IT_AMMO;
-		return;
+		self.weaponname = "";
 	}
 
 	fo = v_forward; // save them in case the weapon think functions change it
