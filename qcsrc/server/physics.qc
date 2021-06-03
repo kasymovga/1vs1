@@ -500,6 +500,7 @@ void(void) physics_init {
 		physics_climb_init();
 
 	CVAR_CACHE(g_climb_speed);
+	CVAR_CACHE(g_doublejump);
 	if not(g_sideview) {
 		CVAR_CACHE(g_sideview);
 		if (g_sideview) {
@@ -575,6 +576,9 @@ float(entity to, float sf) physics_send {
 		if (g_physics_fixed)
 			sf2 |= 8;
 
+		if (self.flags & FL_DOUBLEJUMP)
+			sf2 |= 16;
+
 		if (sf2) sf |= 16384;
 	}
 	else
@@ -638,6 +642,7 @@ float(entity to, float sf) physics_send {
 				+ ((cvar("collision_triangle_directional") > 0) ? 1048576 : 0)
 				+ (g_sideview ? 2097152 : 0)
 				+ (g_topview ? 4194304 : 0)
+				+ (g_doublejump ? 8388608 : 0)
 				;
 		WriteCoord(MSG_ENTITY, switches);
 		if (g_walljump) {

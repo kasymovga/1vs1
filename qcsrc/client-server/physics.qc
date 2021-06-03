@@ -112,6 +112,7 @@ void(void) physics_update_status {
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
 		}
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
+			physics_flags &~= FL_DOUBLEJUMP;
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
 				if (g_slicksurfaces_levitation)
 					physics_flags |= FL_SLICK;
@@ -600,6 +601,19 @@ void(void) physics_player_jump {
 			player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 			#endif
 		}
+	}
+	if (g_doublejump)
+	if not(physics_flags & FL_DOUBLEJUMP)
+	if (physics_flags & FL_JUMPRELEASED)
+	if not(physics_flags & FL_ONGROUND)
+	if (physics_velocity_z < sv_jumpvelocity * 0.5) {
+		physics_flags |= FL_DOUBLEJUMP;
+		physics_velocity_z = sv_jumpvelocity;
+		#ifdef SVQC
+		self.oldvelocity_z = physics_velocity_z;
+		pointparticles(particleeffectnum("smoke_ring"), self.origin, '0 0 1', 10);
+		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
+		#endif
 	}
 	if not(physics_flags & FL_ONGROUND_OR_SLICK)
 		return;

@@ -10,6 +10,7 @@ float physics_jump_velocity_factor;
 float physics_start_teleport_time;
 float physics_start_crouch;
 float physics_start_flags_jumpreleased;
+float physics_start_flags_doublejump;
 float physics_start_frametime_accumulator;
 float ground_time;
 float ground_curtime;
@@ -151,6 +152,9 @@ vector(void) physics_view_origin {
 			physics_flags = FL_JUMPRELEASED;
 		else
 			physics_flags = 0;
+
+		if (physics_start_flags_doublejump)
+			physics_flags |= FL_DOUBLEJUMP;
 
 		if (physics_plug_pre)
 			physics_plug_pre();
@@ -356,6 +360,7 @@ void(float isnew) physics_read {
 
 		g_sideview = switches & 2097152;
 		g_topview = switches & 4194304;
+		g_doublejump = switches & 8388608;
 		if (g_sideview)
 			physics_plug_adjust_view = physics_side_adjust_view;
 		else if (g_topview)
@@ -498,5 +503,6 @@ void(float isnew) physics_read {
 		} else {
 			physics_cpmdoublejump_time_start = 0;
 		}
+		physics_start_flags_doublejump = f2 & 16;
 	}
 }
