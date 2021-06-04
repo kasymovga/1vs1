@@ -1,4 +1,4 @@
-null_t NULL;
+noref null_t NULL;
 float FALSE = 0;
 float TRUE = 1;
 

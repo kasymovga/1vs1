@@ -1,5 +1,3 @@
-#define world NULL
-
 // constants
 
 const float GAME_ISSERVER 	= 1;

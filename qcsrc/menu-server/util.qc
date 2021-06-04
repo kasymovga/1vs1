@@ -78,7 +78,7 @@ string shufflewords(string str)
 	float n;
 	_shufflewords_str = str;
 	n = tokenizebyseparator(str, " ");
-	shuffle(n, _shufflewords_swapfunc, world);
+	shuffle(n, _shufflewords_swapfunc, NULL);
 	str = _shufflewords_str;
 	_shufflewords_str = NULL;
 	return str;

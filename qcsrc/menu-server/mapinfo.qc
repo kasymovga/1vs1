@@ -242,7 +242,7 @@ float MapInfo_FilterGametype(float pGametype, float pFlagsRequired, float pFlags
 	MapInfo_ClearTemps();
 	
 	// sometimes the glob isn't sorted nicely, so fix it here...
-	mapinfo_heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
+	mapinfo_heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, NULL);
 
 	return 1;
 }

@@ -91,7 +91,7 @@ void(void) menu_dlc_reload_wait_think {
 		return;
 	}
 	remove(menu_dlc_reload_wait);
-	menu_dlc_reload_wait = world;
+	menu_dlc_reload_wait = NULL;
 }
 
 void(float nodownload, float renderrestart) menu_dlc_reload {
@@ -369,7 +369,7 @@ void(void) menu_draw {
 	if (menu_active) {
 		entity e, oldself;
 		oldself = self;
-		for(e = findflags(world, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
+		for(e = findflags(NULL, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
 			if (e.nextthink < time) {
 				self = e;
 				self.nextthink = 0;

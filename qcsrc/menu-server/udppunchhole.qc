@@ -33,5 +33,5 @@ void(float argc, string response) udppunchhole_extresponse_handler {
 }
 
 void(void) udppunchhole_extresponse_handler_register {
-	extresponse_register_handler("udppunchhole", udppunchhole_extresponse_handler, world);
+	extresponse_register_handler("udppunchhole", udppunchhole_extresponse_handler, NULL);
 }

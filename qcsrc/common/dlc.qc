@@ -141,7 +141,7 @@ float dlc_ready_all() {
 	}
 	if (dlc_repo_checker) {
 		remove(dlc_repo_checker);
-		dlc_repo_checker = world;
+		dlc_repo_checker = NULL;
 	}
 	return TRUE;
 }
