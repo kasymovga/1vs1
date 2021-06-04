@@ -137,3 +137,5 @@ void		end_sys_globals;		// flag for structure dumping
 //================================================
 void		end_sys_fields;			// flag for structure dumping
 //================================================
+noref float pmove_onground;
+noref float intermission;

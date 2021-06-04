@@ -86,16 +86,16 @@ void(void) physics_update_status {
 	physics_flags &~= FL_ONGROUND_OR_SLICK_OR_CLIMB;
 	float thepoint = pointcontents(origin1);
 	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
-	if(physics_watertype) {
+	if (physics_watertype) {
 		physics_watertype = thepoint;
 		physics_waterlevel = WATERLEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
 		thepoint = pointcontents(origin1);
-		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
+		if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
 			physics_waterlevel = WATERLEVEL_SWIMMING;
 			origin1_z = self.origin_z + self.view_ofs_z;
 			thepoint = pointcontents(origin1);
-			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
+			if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME) {
 				physics_waterlevel = WATERLEVEL_SUBMERGED;
 			}
 		}
@@ -268,7 +268,7 @@ void(void) physics_move {
 				skipskimming = 1;
 		}
 		// check if it moved at all
-		if(trace1_endpos == self.origin) {
+		if (trace1_endpos == self.origin) {
 			if (blocked_prev && prev_plane_normal * trace1_plane_normal < 0) {
 				prev_plane_normal = physics_bbox_nearest_normal(prev_plane_normal, trace1_plane_normal);
 				f = (physics_velocity * prev_plane_normal);
@@ -282,7 +282,7 @@ void(void) physics_move {
 			blocked_prev = 0;
 		}
 		// check if it moved all the way
-		if(trace1_fraction == 1)
+		if (trace1_fraction == 1)
 			break;
 
 		t -= t * trace1_fraction;
@@ -301,20 +301,17 @@ void(void) physics_move {
 
 void(vector wishdir, float wishspeed) physics_aircontrol {
 	float zspeed, xyspeed, dot, k;
-
-	if(physics_movement_x == 0 || physics_movement_y != 0)
+	if (physics_movement_x == 0 || physics_movement_y != 0)
 		return; // can't control movement if not moving forward or backward
 
 	zspeed = physics_velocity_z;
 	physics_velocity_z = 0;
 	xyspeed = vlen(physics_velocity);
 	physics_velocity = normalize(physics_velocity);
-
 	dot = physics_velocity * wishdir;
 	k = 32;
 	k *= sv_aircontrol*dot*dot*frametime;
-
-	if(dot > 0) // we can't change direction while slowing down
+	if (dot > 0) // we can't change direction while slowing down
 		physics_velocity = normalize(physics_velocity * xyspeed + wishdir * k);
 
 	physics_velocity = physics_velocity * xyspeed;
@@ -327,7 +324,7 @@ void(vector wishdir, float wishspeed, float wishspeed0, float accel, float accel
 	vector vel_perpend;
 	float addspeed;
 	float savespeed;
-	if(sv_gameplayfix_q2airaccelerate)
+	if (sv_gameplayfix_q2airaccelerate)
 		wishspeed0 = wishspeed;
 
 	savespeed = physics_velocity * physics_velocity;
@@ -359,20 +356,15 @@ void(vector wishdir, float wishspeed) physics_air_accelerate {
 	vector curvel, wishvel, acceldir, curdir;
 	float addspeed, accelspeed, curspeed, f;
 	float dot;
-
-	if(wishspeed == 0)
+	if (wishspeed == 0)
 		return;
 
 	curvel = physics_velocity;
 	curvel_z = 0;
 	curspeed = vlen(curvel);
-
-	if(wishspeed > curspeed * 1.01)
-	{
+	if (wishspeed > curspeed * 1.01) {
 		wishspeed = min(wishspeed, curspeed + sv_warsowbunny_airforwardaccel * sv_maxspeed * frametime);
-	}
-	else
-	{
+	} else {
 		f = max(0, (sv_warsowbunny_topspeed - curspeed) / (sv_warsowbunny_topspeed - sv_maxspeed));
 		wishspeed = max(curspeed, sv_maxspeed) + sv_warsowbunny_accel * f * sv_maxspeed * frametime;
 	}
@@ -380,17 +372,13 @@ void(vector wishdir, float wishspeed) physics_air_accelerate {
 	acceldir = wishvel - curvel;
 	addspeed = vlen(acceldir);
 	acceldir = normalize(acceldir);
-
 	accelspeed = min(addspeed, sv_warsowbunny_turnaccel * sv_maxspeed * frametime);
-
-	if(sv_warsowbunny_backtosideratio < 1)
-	{
+	if (sv_warsowbunny_backtosideratio < 1) {
 		curdir = normalize(curvel);
 		dot = acceldir * curdir;
-		if(dot < 0)
+		if (dot < 0)
 			acceldir = acceldir - (1 - sv_warsowbunny_backtosideratio) * dot * curdir;
 	}
-
 	physics_velocity += accelspeed * acceldir;
 }
 
@@ -568,7 +556,7 @@ void(void) physics_player_jump {
 	if (physics_waterlevel >= WATERLEVEL_SWIMMING)
 		return;
 
-	if(physics_cantjump)
+	if (physics_cantjump)
 		return;
 
 	if (physics_movetype != MOVETYPE_WALK)
@@ -576,15 +564,12 @@ void(void) physics_player_jump {
 		return;
 
 	if (g_walljump)
-	//if not(self.hook.state)
 	if not(physics_flags & FL_ONGROUND)
-	if (self.lastwj <= 0)
-	{
+	if (self.lastwj <= 0) {
 		makevectors(self.angles);
 		vector plane_normal;
 		plane_normal = physics_player_touch_wall();
-		if (plane_normal != '0 0 0')
-		{
+		if (plane_normal != '0 0 0') {
 			self.lastwj = g_walljump_delay;
 			float wj_force = g_walljump_force;
 			float wj_xy_factor = g_walljump_velocity_xy_factor;
@@ -620,11 +605,11 @@ void(void) physics_player_jump {
 	if ((physics_flags & FL_SLICK) && !g_slicksurfaces_allowjump)
 		return;
 
-	if(!sv_pogostick)
+	if not(sv_pogostick)
 		if (!(physics_flags & FL_JUMPRELEASED))
 			return;
 
-	if(!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND))
+	if (!(physics_lastflags & FL_ONGROUND) && (physics_flags & FL_ONGROUND))
 		physics_landing_hook();
 
 	if (g_cpmdoublejump && physics_cpmdoublejump_time > 0 && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))) {
@@ -674,7 +659,7 @@ void(void) physics_check_water_jump {
 			return;
 		}
 	}
-};
+}
 
 void(void) physics_player_frame {
 	vector wishvel, wishdir, v;
@@ -790,7 +775,7 @@ void(void) physics_player_frame {
 		v = physics_velocity;
 		v_z = 0;
 		f = vlen(v);
-		if(f > 0) {
+		if (f > 0) {
 			float _friction;
 			if (physics_flags & FL_SLICK)
 				_friction = 0;
@@ -954,12 +939,12 @@ void(void) physics_player_frame {
 			if (physics_movement_x == 0 && physics_movement_y != 0) {
 				if (sv_maxairstrafespeed) {
 					wishspeed = min(wishspeed, sv_maxairstrafespeed*maxspd_mod);
-					if(sv_maxairstrafespeed < sv_maxairspeed)
+					if (sv_maxairstrafespeed < sv_maxairspeed)
 						airaccelqw = 1;
 				}
 				if (sv_airstrafeaccelerate) {
 					airaccel = sv_airstrafeaccelerate*maxspd_mod;
-					if(sv_airstrafeaccelerate > sv_airaccelerate)
+					if (sv_airstrafeaccelerate > sv_airaccelerate)
 						airaccelqw = 1;
 				}
 			}
@@ -969,7 +954,7 @@ void(void) physics_player_frame {
 			else
 				physics_accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, sv_airaccel_sideways_friction / maxairspd);
 
-			if(sv_aircontrol)
+			if (sv_aircontrol)
 				physics_aircontrol(wishdir, wishspeed2);
 		}
 	}

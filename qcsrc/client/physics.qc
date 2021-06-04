@@ -4,7 +4,6 @@
 
 .float pmove_flags;
 float physics_button_crouch;
-float pmove_onground;
 float physics_maxspeedmod;
 float physics_jump_velocity_factor;
 float physics_start_teleport_time;
@@ -12,12 +11,12 @@ float physics_start_crouch;
 float physics_start_flags_jumpreleased;
 float physics_start_flags_doublejump;
 float physics_start_frametime_accumulator;
-float ground_time;
-float ground_curtime;
-float ground_oldtime;
-vector ground_origin;
-vector ground_oldorigin;
-float ground_lastent;
+float physics_ground_time;
+float physics_ground_curtime;
+float physics_ground_oldtime;
+vector physics_ground_origin;
+vector physics_ground_oldorigin;
+float physics_ground_lastent;
 entity physics;
 float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
@@ -168,13 +167,13 @@ vector(void) physics_view_origin {
 			self.view_ofs = self.stand_view_ofs;
 		}
 		self.origin = physics_start_origin;
-		if (ground_lastent)
-		if (ground_origin != ground_oldorigin) {
+		if (physics_ground_lastent)
+		if (physics_ground_origin != physics_ground_oldorigin) {
 			float f;
-			f = max(0, (ground_curtime - ground_oldtime) / (ground_time - ground_oldtime));
-			ground_curtime += frametime;
-			vector ground_curorigin = (1 - f) * ground_oldorigin + f * ground_origin;
-			self.origin = physics_start_origin - (ground_origin - ground_curorigin);
+			f = max(0, (physics_ground_curtime - physics_ground_oldtime) / (physics_ground_time - physics_ground_oldtime));
+			physics_ground_curtime += frametime;
+			vector ground_curorigin = (1 - f) * physics_ground_oldorigin + f * physics_ground_origin;
+			self.origin = physics_start_origin - (physics_ground_origin - ground_curorigin);
 			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', MOVE_NOMONSTERS, self);
 			if not(trace_startsolid)
 				self.origin = trace_endpos;
@@ -216,7 +215,7 @@ vector(void) physics_view_origin {
 		frametime = frametime_save;
 		v = physics.origin + physics.view_ofs;
 		if (CVAR(cl_stairsmoothspeed)) {
-			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || was_teleported || ground_lastent) {
+			if (!(physics_flags & FL_ONGROUND) || physics_start_teleport_time > 0 || was_teleported || physics_ground_lastent) {
 				stairsmoothz = v_z;
 				was_teleported = FALSE;
 			} else {
@@ -478,20 +477,20 @@ void(float isnew) physics_read {
 			physics_start_frametime_accumulator = ReadCoord();
 		}
 		if (f & 32768) {
-			ground_oldorigin = ground_origin;
-			ground_curtime = ground_oldtime = ground_time;
+			physics_ground_oldorigin = physics_ground_origin;
+			physics_ground_curtime = physics_ground_oldtime = physics_ground_time;
 			float ground_ent = ReadCoord();
-			ground_origin_x = ReadCoord();
-			ground_origin_y = ReadCoord();
-			ground_origin_z = ReadCoord();
-			ground_time = time;
-			if (ground_lastent != ground_ent) {
-				ground_oldorigin = ground_origin;
-				ground_oldtime = ground_time;
-				ground_lastent = ground_ent;
+			physics_ground_origin_x = ReadCoord();
+			physics_ground_origin_y = ReadCoord();
+			physics_ground_origin_z = ReadCoord();
+			physics_ground_time = time;
+			if (physics_ground_lastent != ground_ent) {
+				physics_ground_oldorigin = physics_ground_origin;
+				physics_ground_oldtime = physics_ground_time;
+				physics_ground_lastent = ground_ent;
 			}
 		} else {
-			ground_lastent = 0;
+			physics_ground_lastent = 0;
 		}
 		if (f2 & 1) {
 			physics_skimming_start = ReadCoord();

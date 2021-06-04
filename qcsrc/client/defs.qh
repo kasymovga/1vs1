@@ -1,5 +1,4 @@
 // Additional OPTIONAL Fields and Globals
-noref float intermission; //just in case. we don't need it, but engine may want it
 .string message;
 .float renderflags;
 
