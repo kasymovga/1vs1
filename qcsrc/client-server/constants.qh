@@ -46,7 +46,6 @@ enum {
 
 const float AS_STRING = 1;
 const float AS_INT = 2;
-const float AS_FLOAT_TRUNCATED = 2;
 const float AS_FLOAT = 8;
 
 enum {
