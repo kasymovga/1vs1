@@ -457,17 +457,13 @@ void weapon_frame()
 				self.spawnshieldtime = time; //weapon was used, disable spawnshield
 			}
 		}
-		if (time + frametime * 0.5 >= self.weapon_nextthink)
-		{
-			if(self.weapon_think)
-			{
+		if (time + frametime * 0.5 >= self.weapon_nextthink) {
+			if (self.weapon_think) {
 				v_forward = fo;
 				v_right = ri;
 				v_up = up;
 				self.weapon_think();
 			}
-			else
-				bprint("\{1}^1ERROR: undefined weapon think function for ", self.netname, "\n");
 		}
 	}
 }
