@@ -22,3 +22,4 @@ set physicsq2_g_warsowbunny_turnaccel 0
 set physicsq2_g_friction_on_land 0
 set physicsq2_g_gameplayfix_q2airaccelerate 1
 set physicsq2_g_q2doublejump 1
+set physicsq2_g_doublejump_nopogostick 1
