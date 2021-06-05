@@ -1,11 +1,9 @@
-set bestakimbo_inherit akimbo
+set bestakimbo_inherit "bestdef akimbo"
 set bestakimbo_g_casings 0
 set bestakimbo_g_balance_shotgun_primary_gravityfactor 0
 set bestakimbo_g_balance_shotgun_secondary_gravityfactor 0
 set bestakimbo_g_balance_uzi_first_gravityfactor 0
 set bestakimbo_g_balance_uzi_sustained_gravityfactor 0
-set bestakimbo_g_weaponreplace_tuba "crylink"
-set bestakimbo_g_balance_grapplehook_damage_interval 0.1
 set bestakimbo_g_balance_shotgun_primary_spread 0.1
 set bestakimbo_g_balance_shotgun_secondary_spread 0.15
 set bestakimbo_dm_g_badass_health_limit 100
@@ -14,16 +12,8 @@ set bestakimbo_dm_g_badass_color 68
 set bestakimbo_dm_g_badass_killcount 0
 set bestakimbo_dm_g_badass_kdr 1.5
 set bestakimbo_dm_g_badass_leader 0
-set bestakimbo_g_balance_melee 1
-set bestakimbo_g_weaponreplace_minstanex "fireball"
-set bestakimbo_g_weaponreplace_campingrifle "nex"
 set bestakimbo_g_weaponreplace_shotgun "shotgun"
 set bestakimbo_g_weaponreplace_supershotgun "shotgun"
 set bestakimbo_tdm_g_runes 1
 set bestakimbo_tdm_g_runes_carried_runes_max 1
-set bestakimbo_g_powerup_strength_akimbo 1
-set bestakimbo_g_balance_powerup_strength_damage 1
-set bestakimbo_g_balance_powerup_strength_force 1
-set bestakimbo_g_balance_powerup_strength_selfdamage 1
-set bestakimbo_g_balance_powerup_strength_selfforce 1
 set bestakimbo_g_spawnshieldtime 2
