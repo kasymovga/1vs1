@@ -62,6 +62,7 @@ float(string s) dlc_load_settemps_from {
 	float separator;
 	f = fopen(s, FILE_READ);
 	if (f < 0) return FALSE;
+	float r = 1;
 	while ((line = dlc_trimspaces(fgets(f)))) {
 		c = substring(line, 0, 1);
 		if (c == "#" || c == "/") continue;
@@ -78,9 +79,14 @@ float(string s) dlc_load_settemps_from {
 
 			cvar_name = substring(line, 0, separator);
 			cvar_value = dlc_trimspaces(substring(line, separator + 1, -1));
-			if (cvar_string(cvar_name) != cvar_value) {
-				fclose(f);
-				return FALSE;
+			if (cvar_name == "g_profile") {
+				if not(cvar_profile_presents(cvar_value)) {
+					r = 0;
+					break;
+				}
+			} else if (cvar_string(cvar_name) != cvar_value) {
+				r = 0;
+				break;
 			}
 			continue;
 		}
@@ -88,7 +94,7 @@ float(string s) dlc_load_settemps_from {
 		dlc_settemp(cvar_name, cvar_value);
 	}
 	fclose(f);
-	return TRUE;
+	return r;
 }
 
 void(string dlc_name) dlc_exec_cfg {
