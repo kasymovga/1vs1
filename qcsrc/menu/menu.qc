@@ -5,17 +5,17 @@
 // AK contains all menu functions (especially the required ones)
 ///////////////////////////////////////////////
 
-float mouseButtonsPressed;
-vector menuMousePos;
-float menuShiftState;
-float menuPrevTime;
-float menuAlpha;
-float menuLogoAlpha;
-float prevMenuAlpha;
-float menuInitialized;
-float menuNotTheFirstFrame;
-float menuMouseMode;
-float menuRealFrametime;
+float menu_mouse_button_pressed;
+vector menu_mouse_pos;
+float menu_modkeys_state;
+float menu_time_previous;
+float menu_alpha;
+float menu_logo_alpha;
+float menu_alpha_previous;
+float menu_initialized;
+float menu_not_the_first_frame;
+float menu_mouse_mode;
+float menu_frametime_real;
 float menu_doubleclick_time;
 vector menu_doubleclick_position;
 
@@ -154,7 +154,7 @@ void(void) menu_update_width_height {
 
 float dlc_wait_frame;
 void() menu_init_delayed {
-	menuInitialized = 0;
+	menu_initialized = 0;
 	if (dlc_ready_all()) {
 		//print("dlc loading finished\n");
 		//print("dlc_wait_frame=", ftos(dlc_wait_frame), "\n");
@@ -169,7 +169,7 @@ void() menu_init_delayed {
 	if (!menu_init_pre())
 		return;
 
-	menuInitialized = 1;
+	menu_initialized = 1;
 	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
 	weapon_register_weapons();
 	skin_init();
@@ -180,32 +180,32 @@ void() menu_init_delayed {
 	main = spawnMainWindow(); main.configureMainWindow(main);
 	main.resizeNotify(main, '0 0 0', eX * gui_conwidth + eY * gui_conheight, '0 0 0', eX * gui_conwidth + eY * gui_conheight);
 	main.focused = 1;
-	menuShiftState = 0;
-	menuMousePos = '0.5 0.5 0';
+	menu_modkeys_state = 0;
+	menu_mouse_pos = '0.5 0.5 0';
 	if(menu_active)
 		menu_display(); // delayed menu display
 }
 
 float(void) menu_mouse_update {
 	float changed = 0;
-	if (menuMouseMode) {
+	if (menu_mouse_mode) {
 		vector newMouse;
 		newMouse = gui_global_to_box_size(getmousepos(), gui_draw_scale);
 		if(newMouse != '0 0 0')
-			if(newMouse != menuMousePos)
+			if(newMouse != menu_mouse_pos)
 			{
-				menuMousePos = newMouse;
+				menu_mouse_pos = newMouse;
 				changed = 1;
 			}
 	} else {
 		if(frametime > 0) {
 			vector dMouse;
-			dMouse = getmousepos() * (frametime / menuRealFrametime); // for capturevideo
+			dMouse = getmousepos() * (frametime / menu_frametime_real); // for capturevideo
 			if (dMouse != '0 0 0') {
 				dMouse = gui_global_to_box_size(dMouse, gui_draw_scale);
-				menuMousePos += dMouse * cvar("menu_mouse_speed");
-				menuMousePos_x = bound(0, menuMousePos_x, 1);
-				menuMousePos_y = bound(0, menuMousePos_y, 1);
+				menu_mouse_pos += dMouse * cvar("menu_mouse_speed");
+				menu_mouse_pos_x = bound(0, menu_mouse_pos_x, 1);
+				menu_mouse_pos_y = bound(0, menu_mouse_pos_y, 1);
 				changed = 1;
 			}
 		}
@@ -214,34 +214,34 @@ float(void) menu_mouse_update {
 }
 
 void(float key, float ascii) menu_keyup {
-	if (!menuInitialized)
+	if (!menu_initialized)
 		return;
 
 	if (!menu_active)
 		return;
 
 	gui_draw_reset();
-	main.keyUp(main, key, ascii, menuShiftState);
-	if(key >= K_MOUSE1 && key <= K_MOUSE3) {
-		if (menuMousePos)
+	main.keyUp(main, key, ascii, menu_modkeys_state);
+	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
+		if (menu_mouse_pos)
 			menu_mouse_update();
 
-		--mouseButtonsPressed;
-		if(!mouseButtonsPressed)
-			main.mouseRelease(main, menuMousePos);
-		if(mouseButtonsPressed < 0)
-		{
-			mouseButtonsPressed = 0;
+		--menu_mouse_button_pressed;
+		if (!menu_mouse_button_pressed)
+			main.mouseRelease(main, menu_mouse_pos);
+
+		if (menu_mouse_button_pressed < 0) {
+			menu_mouse_button_pressed = 0;
 			print("Warning: released an already released button\n");
 		}
 	}
-	if (key == K_ALT) menuShiftState -= (menuShiftState & GUI_KEY_STATE_ALT);
-	if (key == K_CTRL) menuShiftState -= (menuShiftState & GUI_KEY_STATE_CTRL);
-	if (key == K_SHIFT) menuShiftState -= (menuShiftState & GUI_KEY_STATE_SHIFT);
+	if (key == K_ALT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_ALT);
+	if (key == K_CTRL) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_CTRL);
+	if (key == K_SHIFT) menu_modkeys_state -= (menu_modkeys_state & GUI_KEY_STATE_SHIFT);
 }
 
 void(float key, float ascii) menu_keydown {
-	if (!menuInitialized)
+	if (!menu_initialized)
 		return;
 
 	if (!menu_active)
@@ -256,32 +256,32 @@ void(float key, float ascii) menu_keydown {
 		gui_draw_reset();
 		if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 			menu_mouse_update();
-			if (!mouseButtonsPressed)
-				main.mousePress(main, menuMousePos);
+			if (!menu_mouse_button_pressed)
+				main.mousePress(main, menu_mouse_pos);
 
 			if (key == K_MOUSE1) {
-				if (time < menu_doubleclick_time && menu_doubleclick_position == menuMousePos)
-					main.mouseDoubleClick(main, menuMousePos);
+				if (time < menu_doubleclick_time && menu_doubleclick_position == menu_mouse_pos)
+					main.mouseDoubleClick(main, menu_mouse_pos);
 
-				menu_doubleclick_position = menuMousePos;
+				menu_doubleclick_position = menu_mouse_pos;
 				menu_doubleclick_time = time + 0.4;
 			}
 		}
-		if (!main.keyDown(main, key, ascii, menuShiftState))
+		if (!main.keyDown(main, key, ascii, menu_modkeys_state))
 			if (key == K_ESCAPE)
 				if (menu_gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) // don't back out to console only
 					menu_hide(); // disable menu on unhandled ESC
 	}
 	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
-		++mouseButtonsPressed;
-		if(mouseButtonsPressed > 10) {
-			mouseButtonsPressed = 10;
+		++menu_mouse_button_pressed;
+		if (menu_mouse_button_pressed > 10) {
+			menu_mouse_button_pressed = 10;
 			print("Warning: pressed an already pressed button\n");
 		}
 	}
-	if (key == K_ALT) menuShiftState |= GUI_KEY_STATE_ALT;
-	if (key == K_CTRL) menuShiftState |= GUI_KEY_STATE_CTRL;
-	if (key == K_SHIFT) menuShiftState |= GUI_KEY_STATE_SHIFT;
+	if (key == K_ALT) menu_modkeys_state |= GUI_KEY_STATE_ALT;
+	if (key == K_CTRL) menu_modkeys_state |= GUI_KEY_STATE_CTRL;
+	if (key == K_SHIFT) menu_modkeys_state |= GUI_KEY_STATE_SHIFT;
 }
 
 float() menu_init_pre {
@@ -330,11 +330,11 @@ void() menu_draw_pre {
 
 void(void) menu_draw {
 	float t;
-	menuMouseMode = cvar("menu_mouse_absolute");
+	menu_mouse_mode = cvar("menu_mouse_absolute");
 	if (main)
 		menu_update_width_height();
 
-	if (!menuInitialized) {
+	if (!menu_initialized) {
 		// TODO draw an info image about this situation
 		if not(cvar("utf8_enable"))
 			cvar_set("utf8_enable", "1");
@@ -346,18 +346,18 @@ void(void) menu_draw {
 		menu_init_delayed();
 		return;
 	}
-	if (!menuNotTheFirstFrame) {
-		menuNotTheFirstFrame = 1;
+	if (!menu_not_the_first_frame) {
+		menu_not_the_first_frame = 1;
 		if (menu_active)
 		if (!cvar("menu_video_played")) {
 			localcmd("set menu_video_played 1; cd loop $menu_cdtrack; play sound/announcer/male/welcome.ogg\n");
-			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
+			menu_logo_alpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading
 		}
 	}
 	extresponse_update();
 	t = gettime();
-	menuRealFrametime = frametime = min(0.2, t - menuPrevTime);
-	menuPrevTime = t;
+	menu_frametime_real = frametime = min(0.2, t - menu_time_previous);
+	menu_time_previous = t;
 	time += frametime;
 	if (menu_active) {
 		entity e, oldself;
@@ -370,7 +370,7 @@ void(void) menu_draw {
 			}
 		}
 		self = oldself;
-		if (getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
+		if (getmousetarget() == (menu_mouse_mode ? MT_CLIENT : MT_MENU) && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
 			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
 		else
 			menu_hide();
@@ -385,55 +385,55 @@ void(void) menu_draw {
 	if (clientstate() == CS_CONNECTED)
 		menu_gamestatus = menu_gamestatus | GAME_CONNECTED;
 
-	prevMenuAlpha = menuAlpha;
+	menu_alpha_previous = menu_alpha;
 	if (menu_active) {
-		if (menuAlpha == 0 && menuLogoAlpha < 2) {
-			menuLogoAlpha = menuLogoAlpha + frametime * 2;
+		if (menu_alpha == 0 && menu_logo_alpha < 2) {
+			menu_logo_alpha = menu_logo_alpha + frametime * 2;
 		} else {
-			menuAlpha = min(1, menuAlpha + frametime * 5);
-			menuLogoAlpha = 2;
+			menu_alpha = min(1, menu_alpha + frametime * 5);
+			menu_logo_alpha = 2;
 		}
 	} else {
-		menuAlpha = max(0, menuAlpha - frametime * 5);
-		menuLogoAlpha = 2;
+		menu_alpha = max(0, menu_alpha - frametime * 5);
+		menu_logo_alpha = 2;
 	}
 	gui_draw_reset();
 	if (!(menu_gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) {
-		if (menuLogoAlpha > 0) {
-			gui_draw_background(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
-			if (menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0) {
-				gui_draw_alpha = SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1);
-				gui_draw_mouse_pointer(menuMousePos);
+		if (menu_logo_alpha > 0) {
+			gui_draw_background(SKINGFX_BACKGROUND, bound(0, menu_logo_alpha, 1), SKINALIGN_BACKGROUND, TRUE);
+			if (menu_alpha <= 0 && SKINALPHA_CURSOR_INTRO > 0) {
+				gui_draw_alpha = SKINALPHA_CURSOR_INTRO * bound(0, menu_logo_alpha, 1);
+				gui_draw_mouse_pointer(menu_mouse_pos);
 				gui_draw_alpha = 1;
 			}
 		}
 	} else if(SKINALPHA_BACKGROUND_INGAME) {
-		if (menuAlpha > 0)
-			gui_draw_background(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+		if (menu_alpha > 0)
+			gui_draw_background(SKINGFX_BACKGROUND_INGAME, menu_alpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
 	}
-	if (menuAlpha != prevMenuAlpha)
-		cvar_set("_menu_alpha", ftos(menuAlpha));
+	if (menu_alpha != menu_alpha_previous)
+		cvar_set("_menu_alpha", ftos(menu_alpha));
 
 	gui_draw_reset();
 	menu_draw_pre();
 	gui_draw_reset();
-	if (menuAlpha <= 0) {
-		if (prevMenuAlpha > 0)
+	if (menu_alpha <= 0) {
+		if (menu_alpha_previous > 0)
 			main.initializeDialog(main, main.firstChild);
 
 		gui_draw_reset();
 		return;
 	}
-	gui_draw_alpha *= menuAlpha;
+	gui_draw_alpha *= menu_alpha;
 	if (menu_mouse_update()) {
-		if(mouseButtonsPressed)
-			main.mouseDrag(main, menuMousePos);
+		if (menu_mouse_button_pressed)
+			main.mouseDrag(main, menu_mouse_pos);
 		else
-			main.mouseMove(main, menuMousePos);
+			main.mouseMove(main, menu_mouse_pos);
 	}
 	main.draw(main);
-	gui_draw_alpha = max(gui_draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1));
-	gui_draw_mouse_pointer(menuMousePos);
+	gui_draw_alpha = max(gui_draw_alpha, SKINALPHA_CURSOR_INTRO * bound(0, menu_logo_alpha, 1));
+	gui_draw_mouse_pointer(menu_mouse_pos);
 	gui_draw_reset();
 	frametime = 0;
 }
@@ -441,14 +441,14 @@ void(void) menu_draw {
 void(void) menu_display {
 	menu_active = TRUE;
 	setkeydest(KEY_MENU);
-	setmousetarget((menuMouseMode ? MT_CLIENT : MT_MENU));
-	if (!menuInitialized)
+	setmousetarget((menu_mouse_mode ? MT_CLIENT : MT_MENU));
+	if (!menu_initialized)
 		return;
 
-	if (mouseButtonsPressed)
-		main.mouseRelease(main, menuMousePos);
+	if (menu_mouse_button_pressed)
+		main.mouseRelease(main, menu_mouse_pos);
 
-	mouseButtonsPressed = 0;
+	menu_mouse_button_pressed = 0;
 	main.focusEnter(main);
 	main.showNotify(main);
 }
@@ -457,7 +457,7 @@ void() menu_hide {
 	menu_active = FALSE;
 	setkeydest(KEY_GAME);
 	setmousetarget(MT_CLIENT);
-	if(!menuInitialized)
+	if(!menu_initialized)
 		return;
 
 	main.focusLeave(main);
@@ -482,7 +482,7 @@ void() menu_shutdown {
 
 void(string itemname) menu_goto {
 	entity e;
-	if not(menuInitialized)
+	if not(menu_initialized)
 		return;
 
 	if (itemname == "") { // this can be called by GameCommand

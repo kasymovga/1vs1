@@ -44,9 +44,9 @@ void m_setpointerfocus(entity wnd)
 		if(focus)
 		{
 #ifndef CSQC
-			menuMousePos = focus.origin + 0.5 * focus.size;
-			menuMousePos_x *= 1 / gui_conwidth;
-			menuMousePos_y *= 1 / gui_conheight;
+			menu_mouse_pos = focus.origin + 0.5 * focus.size;
+			menu_mouse_pos_x *= 1 / gui_conwidth;
+			menu_mouse_pos_y *= 1 / gui_conheight;
 #endif
 			if(wnd.focused) // why does this never happen?
 				m_focus_item_chain(wnd, focus);
