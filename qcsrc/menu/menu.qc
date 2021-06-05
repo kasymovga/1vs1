@@ -359,13 +359,6 @@ void(void) menu_draw {
 	menuRealFrametime = frametime = min(0.2, t - menuPrevTime);
 	menuPrevTime = t;
 	time += frametime;
-	t = cvar("menu_slowmo");
-	if (t) {
-		frametime *= t;
-		menuRealFrametime *= t;
-	} else
-		t = 1;
-
 	if (menu_active) {
 		entity e, oldself;
 		oldself = self;
@@ -382,8 +375,8 @@ void(void) menu_draw {
 		else
 			menu_hide();
 	}
-	if(cvar("cl_capturevideo"))
-		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
+	if (cvar("cl_capturevideo"))
+		frametime = 1 / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
 
 	menu_gamestatus = 0;
 	if (isserver())
