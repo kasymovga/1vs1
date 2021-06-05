@@ -339,7 +339,9 @@ void(void) entity_spawn_pre {
 			} else if((o = strstrofs(s, "===", 0)) >= 0) {
 				k = substring(s, 0, o);
 				v = substring(s, o+3, -1);
-				if (cvar_string(k) != v)
+				if (k == "g_profile") {
+					if not(cvar_profile_presents(v)) goto cvar_fail;
+				} else if (cvar_string(k) != v)
 					goto cvar_fail;
 			} else if((o = strstrofs(s, "!==", 0)) >= 0) {
 				k = substring(s, 0, o);
