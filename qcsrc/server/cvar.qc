@@ -225,6 +225,17 @@ void(string _game) cvar_game_add {
 	}
 }
 
+float(string profile) cvar_profile_presents {
+	float i;
+	string s;
+	for (i = 0; i < cvar_profile_prefix_len; i++) {
+		s = cvar_profile_prefix[i];
+		if (s == profile)
+			return TRUE;
+	}
+	return FALSE;
+}
+
 void(string profile) cvar_init {
 	string s;
 	cvar_orig = cvar;
