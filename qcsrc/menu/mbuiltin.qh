@@ -3,9 +3,6 @@
 //////////////////////////////////////////////////
 // AK FIXME: Create perhaps a special builtin file for the common cmds
 
-//#define PROFILESTRZONE
-//#define FIXEDFOPEN
-
 void 	checkextension(string ext) = #1;
 
 // error cmds
@@ -121,23 +118,8 @@ string	substring(string s, float start, float length)  = #54;
 
 vector	stov(string s)  = #55;
 
-#ifdef PROFILESTRZONE
-string	_strzone(string s)  = #56;
-void	_strunzone(string s) = #57;
-
-string( string s ) strzone =
-{
-	return _strzone( s );
-};
-
-void( string s ) strunzone =
-{
-	return _strunzone( s );
-};
-#else
 string	strzone(string s)  = #56;
 void	strunzone(string s) = #57;
-#endif
 
 float	tokenize(string s) = #58;
 float(string s, string separator1, ...) tokenizebyseparator = #479;
@@ -326,26 +308,7 @@ string(string search, string replace, string subject) strreplace = #484;
 
 string(float uselocaltime, string format, ...) strftime = #478;
 
-#ifdef FIXEDFOPEN
-float 	fopen( string filename, float mode ) =
-{
-	local float handle;
-	if( mode == FILE_READ ) {
-		return _fopen( filename, mode );
-	}
-
-	// check for data/
-	filename = strzone( filename );
-	if( substring( filename, 0, 5 ) != "data/" ) {
-		print( "menu: fopen: all output must go into data/!\n" );
-		return -1;
-	}
-	handle = _fopen( substring( filename, 5, 10000 ), mode );
-	strunzone( filename );
-	return handle;
-};
-#endif
-
+float(string url, float id) uri_get = #513;
 float(string s) tokenize_console = #514;
 float(float i) argv_start_index = #515;
 float(float i) argv_end_index = #516;

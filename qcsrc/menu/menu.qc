@@ -30,9 +30,6 @@ string serverlist_uris[SERVERLIST_URIS_COUNT] = {
 	"http://nexuiz.mooo.com/serverlist.txt",
 };
 
-float(string url, float id) uri_get = #513;
-
-
 void ParseServerListLine(string s) {
 	float d;
 	d = strstrofs(s, "/", 0);
