@@ -30,14 +30,11 @@ string serverlist_uris[SERVERLIST_URIS_COUNT] = {
 	"http://nexuiz.mooo.com/serverlist.txt",
 };
 
-void ParseServerListLine(string s) {
-	float d;
-	d = strstrofs(s, "/", 0);
-	cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
-}
-
-void ServerList_URI_Get_Callback(float id, float status, string data) {
+void(float id, float status, string data) menu_server_list_callback {
 	float f;
+	float d;
+	string s;
+	cvar_set("net_slist_extra", "");
 	if (status) {
 		print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
 		serverlist_uri_index++;
@@ -46,7 +43,6 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 			return;
 		} else {
 			f = fopen("data/serverlistcache.txt", FILE_READ);
-			string s;
 			if (f < 0) {
 				f = fopen("serverlistbootstrap.txt", FILE_READ);
 				if (f < 0)
@@ -56,9 +52,10 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 			} else
 				print("Loaded server list cache from data/serverlistcache.txt\n");
 
-			while ((s = fgets(f)))
-				ParseServerListLine(s);
-
+			while ((s = fgets(f))) {
+				d = strstrofs(s, "/", 0);
+				cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
+			}
 			fclose(f);
 		}
 		return;
@@ -69,11 +66,13 @@ void ServerList_URI_Get_Callback(float id, float status, string data) {
 		fputs(f, data);
 		fclose(f);
 	}
-	cvar_set("net_slist_extra", "");
 	float n = tokenizebyseparator(data, "\n");
 	float i;
-	for (i = 0; i < n; i++)
-		ParseServerListLine(argv(i));
+	for (i = 0; i < n; i++) {
+		s = argv(i);
+		d = strstrofs(s, "/", 0);
+		cvar_set("net_slist_extra", strcat(cvar_string("net_slist_extra"), " ", ((d > 0) ? substring(s, 0, d) : s)));
+	}
 }
 
 entity menu_dlc_reload_wait;
@@ -128,7 +127,7 @@ void() menu_init {
 	if (cvar("sys_first_run"))
 		cvar_set("vid_desktopfullscreen", "1");
 
-	URI_GET_SERVERLIST = uri_register_handler(ServerList_URI_Get_Callback);
+	URI_GET_SERVERLIST = uri_register_handler(menu_server_list_callback);
 	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
 	menu_dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
