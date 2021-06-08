@@ -21,10 +21,10 @@ vector menu_doubleclick_position;
 
 float() menu_init_pre;
 
-float URI_GET_SERVERLIST;
-#define SERVERLIST_URIS_COUNT 3
-var float serverlist_uri_index = 0;
-string serverlist_uris[SERVERLIST_URIS_COUNT] = {
+float MENU_URI_GET_SERVERLIST;
+#define MENU_SERVERLIST_URIS_COUNT 3
+var float menu_serverlist_uri_index = 0;
+string menu_serverlist_uris[MENU_SERVERLIST_URIS_COUNT] = {
 	"http://kasymovga.github.io/rexdlc-web/serverlist.txt",
 	"http://rexuiz.com/maps/serverlist.txt",
 	"http://nexuiz.mooo.com/serverlist.txt",
@@ -36,10 +36,10 @@ void(float id, float status, string data) menu_server_list_callback {
 	string s;
 	cvar_set("net_slist_extra", "");
 	if (status) {
-		print(serverlist_uris[serverlist_uri_index], " error: ", ftos(status), "\n");
-		serverlist_uri_index++;
-		if (serverlist_uri_index < SERVERLIST_URIS_COUNT) {
-			uri_get(serverlist_uris[serverlist_uri_index], URI_GET_SERVERLIST);
+		print(menu_serverlist_uris[menu_serverlist_uri_index], " error: ", ftos(status), "\n");
+		menu_serverlist_uri_index++;
+		if (menu_serverlist_uri_index < MENU_SERVERLIST_URIS_COUNT) {
+			uri_get(menu_serverlist_uris[menu_serverlist_uri_index], MENU_URI_GET_SERVERLIST);
 			return;
 		} else {
 			f = fopen("data/serverlistcache.txt", FILE_READ);
@@ -60,7 +60,7 @@ void(float id, float status, string data) menu_server_list_callback {
 		}
 		return;
 	}
-	print(serverlist_uris[serverlist_uri_index], " downloaded successfully\n");
+	print(menu_serverlist_uris[menu_serverlist_uri_index], " downloaded successfully\n");
 	f = fopen("serverlistcache.txt", FILE_WRITE);
 	if not(f < 0) {
 		fputs(f, data);
@@ -127,8 +127,8 @@ void() menu_init {
 	if (cvar("sys_first_run"))
 		cvar_set("vid_desktopfullscreen", "1");
 
-	URI_GET_SERVERLIST = uri_register_handler(menu_server_list_callback);
-	uri_get(serverlist_uris[0], URI_GET_SERVERLIST);
+	MENU_URI_GET_SERVERLIST = uri_register_handler(menu_server_list_callback);
+	uri_get(menu_serverlist_uris[0], MENU_URI_GET_SERVERLIST);
 	menu_dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
 	ui_con_width_height_set();
