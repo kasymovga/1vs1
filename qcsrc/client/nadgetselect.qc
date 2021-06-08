@@ -39,7 +39,7 @@ void(void) nadgetselect_draw {
 		remove(self);
 		return;
 	}
-	mouse_enable(TRUE, "");
+	mouse_enable("");
 	sbar_hidescores = TRUE;
 	float a = nadgetselect_alpha;
 	drawfont = sbar_bigfont;

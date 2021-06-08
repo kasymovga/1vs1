@@ -1,3 +1,3 @@
 vector(void) mouse_position;
 void(void) mouse_draw;
-void(float _absolute, string cursor) mouse_enable;
+void(string cursor) mouse_enable;

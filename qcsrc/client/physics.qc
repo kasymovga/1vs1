@@ -23,7 +23,7 @@ float physics_cpmdoublejump_time_start;
 
 vector(void) physics_side_adjust_view {
 	if not(main_isdemo) {
-		mouse_enable(FALSE, "gfx/crosshairuzi");
+		mouse_enable("gfx/crosshairuzi");
 		vector v = mouse_position();
 		view_forward_y = 0;
 		view_forward_z = v_y - CVAR(vid_conheight) * 0.5;
@@ -31,7 +31,7 @@ vector(void) physics_side_adjust_view {
 		view_angles = vectoangles(view_forward);
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
-	R_SetView(VF_ANGLES, '0 90 0');
+	view_fixed_angles = '0 90 0';
 	makevectors('0 90 0');
 	view_crosshair = FALSE;
 	if (view_width / view_height > 1.35)
@@ -43,11 +43,10 @@ vector(void) physics_side_adjust_view {
 }
 
 vector(void) physics_top_adjust_view {
-	R_SetView(VF_ANGLES, g_topview_angles);
 	makevectors(g_topview_angles);
 	vector o = view_origin - v_forward * 500;
 	if not(main_isdemo) {
-		mouse_enable(FALSE, "gfx/crosshairuzi");
+		mouse_enable("gfx/crosshairuzi");
 		vector v = mouse_position();
 		vector v2;
 		float f = CVAR(vid_conwidth) * 0.5;
@@ -61,6 +60,7 @@ vector(void) physics_top_adjust_view {
 		view_angles_x = 0;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
+	view_fixed_angles = g_topview_angles;
 	view_crosshair = FALSE;
 	if (view_width / view_height > 1.35)
 		view_fov = 105;

@@ -34,7 +34,7 @@ void(void) locationrequest_draw {
 	selected_location = self;
 	sbar_hidescores = TRUE;
 	teamradar_show = FALSE;
-	mouse_enable(TRUE, "");
+	mouse_enable("");
 	input_event_callback = locationrequest_input_event;
 	teamradar_view(1.8, self.netname);
 	self.chain = world;

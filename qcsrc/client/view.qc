@@ -156,9 +156,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	view_angles = input_angles;
 	view_origin = physics_view_origin();
 	warpzone_view_fix();
-	if not(CVAR(cl_recoil))
-		R_SetView(VF_ANGLES, view_angles);
-
+	if (view_fixangle) {
+		R_SetView(VF_ANGLES, view_fixed_angles);
+		view_fixangle = FALSE;
+	} else {
+		if not(CVAR(cl_recoil))
+			R_SetView(VF_ANGLES, view_angles);
+	}
 	if (view_observer_status)
 		view_crosshair = FALSE;
 	else if (sbar_hidescores)

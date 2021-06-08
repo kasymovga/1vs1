@@ -220,7 +220,7 @@ void(void) mapvote_draw {
 		pos_x = (xmax+xmin)*0.5;
 		mapvote_abstain_draw(pos, isize, xmax - xmin, tmp, i);
 	}
-	mouse_enable(TRUE, "");
+	mouse_enable("");
 	input_event_callback = mapvote_input_event;
 }
 
