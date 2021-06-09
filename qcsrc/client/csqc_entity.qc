@@ -96,6 +96,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[ENT_CLIENT_PHYSICS_JETPACK] = jetpack_read;
 	csqc_entity_parsers[ENT_CLIENT_LMS_SPHERE] = sphere_read;
 	csqc_entity_parsers[ENT_CLIENT_ICE] = ice_read;
+	csqc_entity_parsers[ENT_CLIENT_3RDVIEW] = thirdview_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

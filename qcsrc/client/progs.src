@@ -220,5 +220,6 @@ ice.qc
 fog.qc
 net.qc
 modelselect.qc
+3rdview.qc
 csqc_entity.qc
 recordlist.qc

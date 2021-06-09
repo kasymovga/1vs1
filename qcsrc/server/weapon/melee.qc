@@ -51,8 +51,7 @@ void(void) weapon_melee_attack_think {
 	self.nextthink = self.delay;
 }
 
-void weapon_melee_attack (float melee_type, float axe)
-{
+void(float melee_type, float axe) weapon_melee_attack  {
 	if (melee_type == 2)
 	if (akimbo_active(self) > 1) //g_balance_melee 2 suppose that weapon not used, so not duplicate attack for akimbo
 		return;
@@ -67,19 +66,10 @@ void weapon_melee_attack (float melee_type, float axe)
 	melee.dmg = axe;
 	melee.playerid = melee.owner.playerid;
 	if (melee_type == 2)
-	{
-		setmodel(melee, self.body.playermodel);
-		melee.angles = sv_player_melee_angles;
-		melee.colormap = self.colormap;
-		setorigin(melee, sv_player_melee_origin);
-		anim_set(melee, self.anim_melee2, FALSE, TRUE, TRUE);
-		melee.customizeentityforclient = weapon_model_customize;
-		melee.viewmodelforclient = self;
-	}
+		thirdview_set(self, g_balance_melee_animtime, 100, 10);
 }
 
-float weapon_melee_possible()
-{
+float(void) weapon_melee_possible {
 	if not(akimbo_owner(self).crouch && !g_balance_melee_allow_crouched)
 	if (g_balance_melee)
 		return TRUE;
@@ -87,16 +77,14 @@ float weapon_melee_possible()
 	return FALSE;
 }
 
-void weapon_melee_attack_check()
-{
+void(void) weapon_melee_attack_check {
 	if (self.weapon != self.switchweapon)
 		return;
 
 	float w_save = self.weapon;
 	self.switchweapon = self.weapon = WEP_MELEE;
 	if (self.weapon_think == weapon_ready)
-	if (weapon_prepareattack(0, g_balance_melee_refire))
-	{
+	if (weapon_prepareattack(0, g_balance_melee_refire)) {
 		weapon_melee_attack(g_balance_melee, 0);
 		weapon_thinkf(((g_balance_melee == 2) ? WFRAME_MELEE2 : WFRAME_MELEE), g_balance_melee_animtime, weapon_ready);
 	}
@@ -119,8 +107,7 @@ float(void) weapon_melee_bot_aim {
 }
 
 float weapon_melee_init_done;
-void weapon_melee_init()
-{
+void(void) weapon_melee_init {
 	CVAR_CACHE_STR(sv_sound_melee);
 	precache_sound (sv_sound_melee);
 	CVAR_CACHE(g_balance_melee);

@@ -452,6 +452,9 @@ void() player_anim_setup {
 	if (self.anim_melee == '0 0 0')
 		self.anim_melee = self.anim_shoot;
 
+	if (self.anim_melee2 == '0 0 0')
+		self.anim_melee2 = '0 1 2';
+
 	// reset animstate now
 	anim_set(self.body, self.anim_idle, TRUE, FALSE, TRUE);
 }
