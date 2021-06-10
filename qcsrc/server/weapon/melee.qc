@@ -10,8 +10,6 @@ float g_balance_melee_force_up;
 float g_balance_melee_distance;
 float g_balance_melee_onehit;
 float g_balance_melee_refire;
-vector sv_player_melee_angles;
-vector sv_player_melee_origin;
 string sv_sound_melee;
 
 float bot_melee_love;
@@ -122,8 +120,6 @@ void(void) weapon_melee_init {
 	CVAR_CACHE(g_balance_melee_distance);
 	CVAR_CACHE(g_balance_melee_onehit);
 	CVAR_CACHE(g_balance_melee_refire);
-	sv_player_melee_angles = stov(cvar_string("sv_player_melee_angles"));
-	sv_player_melee_origin = stov(cvar_string("sv_player_melee_origin"));
 	bot_melee_love = cvar("bot_melee");
 	if not(weapon_melee_init_done) {
 		weapon_melee_init_done = 1;
