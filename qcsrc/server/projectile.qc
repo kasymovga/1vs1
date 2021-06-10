@@ -212,21 +212,21 @@ void(void) projectile_touch_explode {
 
 void(void) projectile_info_send {
 	float i;
-	WriteByte(MSG_ENTITY, projinfo_highest_registered);
-	for(i = 0; i < projinfo_highest_registered; ++i) {
-		float type = projinfo_type[i];
+	WriteByte(MSG_ENTITY, projectile_info_highest_registered);
+	for(i = 0; i < projectile_info_highest_registered; ++i) {
+		float type = projectile_info_type[i];
 
 		WriteByte(MSG_ENTITY, type);
 		switch(type) {
-			case PROJINFO_TYPE_UNREGISTERED:
-			case PROJINFO_TYPE_POINT_000:
-			case PROJINFO_TYPE_POINT_00n3:
+			case PROJECTILE_INFO_TYPE_UNREGISTERED:
+			case PROJECTILE_INFO_TYPE_POINT_000:
+			case PROJECTILE_INFO_TYPE_POINT_00n3:
 				break;
 
-			case PROJINFO_TYPE_UNCENTERED:
-			case PROJINFO_TYPE_POINT:
-			case PROJINFO_TYPE_CENTERED:
-				WriteCoord(MSG_ENTITY, projinfo_sizes[i]);
+			case PROJECTILE_INFO_TYPE_UNCENTERED:
+			case PROJECTILE_INFO_TYPE_POINT:
+			case PROJECTILE_INFO_TYPE_CENTERED:
+				WriteCoord(MSG_ENTITY, projectile_info_sizes[i]);
 				break;
 
 			default: {

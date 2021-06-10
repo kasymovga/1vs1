@@ -1,22 +1,53 @@
-
-#define PROJINFO_ENABLE_ASSERTIONS
-
 enum {
-    PROJINFO_TYPE_UNREGISTERED,
-    PROJINFO_TYPE_POINT,        // mins == maxs
-    PROJINFO_TYPE_POINT_000,    // mins == maxs == '0  0  0'
-    PROJINFO_TYPE_POINT_00n3,   // mins == maxs == '0  0 -3'
-    PROJINFO_TYPE_CENTERED,     // mins == -maxs
-    PROJINFO_TYPE_UNCENTERED,   // mins != maxs && mins != -maxs
+	PROJECTILE_BEGIN_LIST,
+	PROJECTILE_BULLET,
+	PROJECTILE_BULLET_BIG,
+	PROJECTILE_BULLET_GLOWING,
+	PROJECTILE_CRYLINK,
+	PROJECTILE_CRYLINK_BOUNCING,
+	PROJECTILE_ELECTRO,
+	PROJECTILE_ELECTRO_BEAM,
+	PROJECTILE_FIREBALL,
+	PROJECTILE_FIREMINE,
+	PROJECTILE_GRENADE,
+	PROJECTILE_GRENADE_BOUNCING,
+	PROJECTILE_HAGAR,
+	PROJECTILE_HAGAR_BOUNCING,
+	PROJECTILE_HLAC,
+	PROJECTILE_HOOKBOMB,
+	PROJECTILE_LASER,
+	PROJECTILE_PORTO_BLUE,
+	PROJECTILE_PORTO_RED,
+	PROJECTILE_ROCKET,
+	PROJECTILE_HG_GENERIC,
+	PROJECTILE_HG_LASER,
+	PROJECTILE_HG_NAPALM,
+	PROJECTILE_HG_NAPALMSHARD,
+	PROJECTILE_HG_PLASMA,
+	PROJECTILE_HG_PLASMA_SHARD,
+	PROJECTILE_HG_RAZE,
+	PROJECTILE_HG_REMOTE,
+	PROJECTILE_HG_TRANSLOC,
+	PROJECTILE_RM_LASER,
+	PROJECTILE_END_LIST
 };
 
-float projinfo_type[NUM_PROJECTILES];
-float projinfo_sizes[NUM_PROJECTILES];
+enum {
+    PROJECTILE_INFO_TYPE_UNREGISTERED,
+    PROJECTILE_INFO_TYPE_POINT,        // mins == maxs
+    PROJECTILE_INFO_TYPE_POINT_000,    // mins == maxs == '0  0  0'
+    PROJECTILE_INFO_TYPE_POINT_00n3,   // mins == maxs == '0  0 -3'
+    PROJECTILE_INFO_TYPE_CENTERED,     // mins == -maxs
+    PROJECTILE_INFO_TYPE_UNCENTERED,   // mins != maxs && mins != -maxs
+};
 
-float projinfo_highest_registered;
+const float PROJECTILE_MAX = PROJECTILE_END_LIST - 1;
+float projectile_info_type[PROJECTILE_MAX];
+float projectile_info_sizes[PROJECTILE_MAX];
+float projectile_info_highest_registered;
 
 void(float csqcid, float entrytype, vector sizes) projectile_register;
 void(float csqcid, vector sizes) projectile_register_auto;
 void(entity e, float csqcid) projectile_set_size;
 
-#define PROJINFO_PROPERTY(csqcid,property) projinfo_##property[(csqcid) - 1]
+#define PROJECTILE_INFO_PROPERTY(csqcid,property) projectile_info_##property[(csqcid) - 1]

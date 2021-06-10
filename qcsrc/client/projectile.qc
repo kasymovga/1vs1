@@ -492,18 +492,18 @@ void(void) projectile_info_read {
 	for (i = 0; i < phighest; ++i) {
 		float type = ReadByte();
 		switch (type) {
-		case PROJINFO_TYPE_UNREGISTERED:
-		case PROJINFO_TYPE_POINT_000:
+		case PROJECTILE_INFO_TYPE_UNREGISTERED:
+		case PROJECTILE_INFO_TYPE_POINT_000:
 			projectile_register(i + 1, type, '0 0 0');
 			break;
-		case PROJINFO_TYPE_POINT_00n3:
+		case PROJECTILE_INFO_TYPE_POINT_00n3:
 			projectile_register(i + 1, type, '0 -3 -3');
 			break;
-		case PROJINFO_TYPE_POINT:
-		case PROJINFO_TYPE_CENTERED:
-		case PROJINFO_TYPE_UNCENTERED:
-			projinfo_type[i] = type;
-			projinfo_sizes[i] = ReadCoord();
+		case PROJECTILE_INFO_TYPE_POINT:
+		case PROJECTILE_INFO_TYPE_CENTERED:
+		case PROJECTILE_INFO_TYPE_UNCENTERED:
+			projectile_info_type[i] = type;
+			projectile_info_sizes[i] = ReadCoord();
 			break;
 		default:
 			error(strcat("Invalid ProjInfo type ", ftos(type)));
