@@ -6,7 +6,7 @@ float(float gt, float tp, string pattern) gametype_filter {
 	else
 		subpattern2 = ",noteams,";
 
-	if(gt == GAME_RACE || gt == GAME_CTS)
+	if(gt == GAMETYPE_RACE || gt == GAMETYPE_CTS)
 		subpattern3 = ",race,";
 	else
 		subpattern3 = NULL;

@@ -172,7 +172,7 @@ float (string label, float scoreflags) score_register_team_score {
 float(entity to, float sf) score_info_send {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
-	WriteByte(MSG_ENTITY, game);
+	WriteByte(MSG_ENTITY, gametype);
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		WriteString(MSG_ENTITY, score_label[i]);
@@ -399,7 +399,7 @@ void() score_winning_condition_helper {
 	entity secondscorekeeper;
 	entity sk;
 
-	s = gametype_name(game);
+	s = gametype_name(gametype);
 	s = strcat(s, ":", cvar_string("g_nexuizversion"));
 	s = strcat(s, "::", score_player_string(world, 2)); // make this 1 once we can
 	fullstatus = builtin_cvar("g_full_getstatus_responses");

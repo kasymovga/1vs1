@@ -1197,7 +1197,7 @@ void sbar_scoreboard_draw() {
 	if (centerprint_num < 1) {
 		string tail = server_motd;
 		pos_y = max(CVAR(vid_conheight) * 0.5 + sbar_fontsize_y, pos_y);
-		if (gametype == GAME_CTS || gametype == GAME_RACE)
+		if (gametype == GAMETYPE_CTS || gametype == GAMETYPE_RACE)
 			tail = strcat(race_records_table_string(pos_y), tail);
 
 		float n;
@@ -1593,9 +1593,9 @@ void(void) sbar_accuracy_draw {
 
 void(void) sbar_reset {
 	// reset gametype specific icons
-	if (gametype == GAME_KEYHUNT || gametype == GAME_KEYHUNT_CA || gametype == GAME_KEYHUNT_FT)
+	if (gametype == GAMETYPE_KEYHUNT || gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
 		kh_hud_reset();
-	else if (gametype == GAME_CTF || gametype == GAME_CATF || gametype == GAME_CTFT)
+	else if (gametype == GAMETYPE_CTF || gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
 		ctf_hud_reset();
 }
 
@@ -1605,16 +1605,16 @@ float(float stat_type, float stat_regen, float stat_maxregen) sbar_nadget_regen 
 
 var void(void) sbar_gametype_hud;
 void(void) sbar_gametype_init {
-	if (gametype == GAME_KEYHUNT || gametype == GAME_KEYHUNT_CA || gametype == GAME_KEYHUNT_FT)
+	if (gametype == GAMETYPE_KEYHUNT || gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
 		sbar_gametype_hud = kh_hud;
-	else if (gametype == GAME_CTF || gametype == GAME_CATF || gametype == GAME_CTFT)
+	else if (gametype == GAMETYPE_CTF || gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
 		sbar_gametype_hud = ctf_hud;
-	else if (gametype == GAME_NEXBALL)
+	else if (gametype == GAMETYPE_NEXBALL)
 		sbar_gametype_hud = nb_hud;
-	else if (gametype == GAME_SINGLE || gametype == GAME_COOP) {
+	else if (gametype == GAMETYPE_SINGLE || gametype == GAMETYPE_COOP) {
 		sbar_gametype_hud = single_hud;
 		sbar_score_draw = stdproc_nothing;
-	} else if (gametype == GAME_RACE || gametype == GAME_CTS) {
+	} else if (gametype == GAMETYPE_RACE || gametype == GAMETYPE_CTS) {
 		sbar_gametype_hud = stdproc_nothing;
 		sbar_score_draw = sbar_score_draw_race;
 	} else {

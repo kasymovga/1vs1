@@ -153,7 +153,7 @@ void(void) world_getrecords {
 	}
 	cmd_records_reply_extra = 0;
 	if (cvar("sv_dumprecords")) {
-		f = fopen(strcat("records-", gametype_name(game), ".txt"), FILE_WRITE);
+		f = fopen(strcat("records-", gametype_name(gametype), ".txt"), FILE_WRITE);
 	}
 	for (i = 0; i < MapInfo_count; ++i)
 		if (MapInfo_Get_ByID(i)) {
@@ -262,18 +262,18 @@ void(void) world_init {
 	Ban_Init();
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_GameTypeToMapInfoType(MapInfo_CurrentGametype()) | GameTypeVote_Mask(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1);
-	addstat(STAT_WEAPONS, AS_INT, weapons);
-	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
-	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_map_starttime);
+	addstat(STAT_WEAPONS, STAT_INT, weapons);
+	addstat(STAT_SWITCHWEAPON, STAT_INT, switchweapon);
+	addstat(STAT_GAMESTARTTIME, STAT_FLOAT, stat_map_starttime);
 	ready_nagger_init();
-	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
-	addstat(STAT_FUEL, AS_INT, ammo_fuel);
-	addstat(STAT_DAMAGE_HITS, AS_INT, damage_hits);
- 	addstat(STAT_DAMAGE_FIRED, AS_INT, maxdamage_fired);
-	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
-	addstat(STAT_BULLETS_LOADED, AS_INT, ammoclip);
-	addstat(STAT_PLAYER_STATE, AS_INT, deadflag);
-	addstat(STAT_SPECSTATUS, AS_INT, spectatee_status);
+	addstat(STAT_PRESSED_KEYS, STAT_FLOAT, pressedkeys);
+	addstat(STAT_FUEL, STAT_INT, ammo_fuel);
+	addstat(STAT_DAMAGE_HITS, STAT_INT, damage_hits);
+ 	addstat(STAT_DAMAGE_FIRED, STAT_INT, maxdamage_fired);
+	addstat(STAT_LEADLIMIT, STAT_FLOAT, stat_leadlimit);
+	addstat(STAT_BULLETS_LOADED, STAT_INT, ammoclip);
+	addstat(STAT_PLAYER_STATE, STAT_INT, deadflag);
+	addstat(STAT_SPECSTATUS, STAT_INT, spectatee_status);
 	cmd_lsmaps_reply = "^7Maps available: ";
 	map_list = "";
 	for (i = 0, j = 0; i < MapInfo_count; ++i) {
@@ -309,7 +309,7 @@ void(void) world_init {
 	world_getrecords();
 	client_init_spawn();
 	random_seed_spawn();
-	localcmd("\n_sv_hook_gamestart ", gametype_name(game), ";");
+	localcmd("\n_sv_hook_gamestart ", gametype_name(gametype), ";");
 	world_initialized = 1;
 	IRC_Init();
 	infomessages_init();
@@ -332,7 +332,7 @@ void(float final) world_dump_stats {
 	else
 		s = ":status:";
 
-	s = strcat(s, gametype_name(game), "_", mapname, ":", ftos(rint(time)));
+	s = strcat(s, gametype_name(gametype), "_", mapname, ":", ftos(rint(time)));
 	if (to_console)
 		print(s, "\n");
 

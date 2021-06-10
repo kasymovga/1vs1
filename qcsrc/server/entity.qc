@@ -228,6 +228,7 @@ float(entity e, float t) entity_move_out_of_solid_with_type {
 .vector anglesjitter;
 .float anglejitter;
 .string gametypefilter;
+#undef gametype
 .string gametype;
 .string not_gametype;
 .string cvarfilter;
@@ -250,7 +251,7 @@ void(void) entity_spawn_pre {
 	string s;
 	float i, n;
 	if(self.gametypefilter != "")
-	if not(gametype_filter(game, team_mode, self.gametypefilter)) {
+	if not(gametype_filter(_gametype, team_mode, self.gametypefilter)) {
 		remove(self);
 		return;
 	}
@@ -416,3 +417,4 @@ void(void) entity_spawn_pre {
 	}
 	gamehook_chain_entity_spawn_pre();
 }
+#define gametype _gametype //workaround for gametype field

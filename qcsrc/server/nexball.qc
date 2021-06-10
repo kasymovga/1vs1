@@ -133,7 +133,7 @@ void() nexball_init {
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 
 	g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
-	addstat(STAT_NB_METERSTART, AS_FLOAT, metertime_stat);
+	addstat(STAT_NB_METERSTART, STAT_FLOAT, metertime_stat);
 	// General settings
 	CVAR_CACHE(g_nexball_football_boost_forward);   //100
 	CVAR_CACHE(g_nexball_football_boost_up);        //200
@@ -556,7 +556,7 @@ void(void) nexball_goal_touch {
 }
 
 void(void) spawnfunc_nexball_team {
-	if (game != GAME_NEXBALL) {
+	if (gametype != GAMETYPE_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -608,7 +608,7 @@ void(void) nexball_delayedinit {
 //=======================//
 
 void(void) nexball_spawn_ball {
-	if (game != GAME_NEXBALL) {
+	if (gametype != GAMETYPE_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -709,7 +709,7 @@ void(void) spawnfunc_nexball_hockey {
 }
 
 void(void) nexball_spawn_goal {
-	if (game != GAME_NEXBALL) {
+	if (gametype != GAMETYPE_NEXBALL) {
 		remove(self);
 		return;
 	}
@@ -808,14 +808,14 @@ float nexball_carrier_think() {
 }
 
 void() spawnfunc_nexball_redbase {
-	if (game == GAME_NEXBALL)
+	if (gametype == GAMETYPE_NEXBALL)
 		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);
 }
 
 void() spawnfunc_nexball_bluebase {
-	if (game == GAME_NEXBALL)
+	if (gametype == GAMETYPE_NEXBALL)
 		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 37', self, sprite);
 	else
 		remove(self);

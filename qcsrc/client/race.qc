@@ -236,7 +236,7 @@ void(void) race_sbar_draw {
 		race_velocity = physics_velocity_frame_end;
 		race_movement = input_movevalues;
 	}
-	if (gametype == GAME_CTS)
+	if (gametype == GAMETYPE_CTS)
 	if (CVAR(cl_cts_strafe_helper))
 	if (sv_airaccel_qw == 1)
 	if (race_velocity_x != 0 || race_velocity_y != 0)
