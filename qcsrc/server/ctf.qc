@@ -386,7 +386,7 @@ float() ctf_flagcarrier_visible {
 
 void() ctf_flag_touch {
 	if (map_finished) return;
-	if (game == GAME_CATF || game == GAME_CTFT)
+	if (game == GAMETYPE_CATF || game == GAMETYPE_CTFT)
 	if not(Roundbased_Active)
 		return;
 
@@ -446,7 +446,7 @@ void() ctf_flag_touch {
 			bprint(other.netname, "^7 captured the ", other.flagcarried.netname, "\n");
 
 		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
-		if (game == GAME_CATF || game == GAME_CTFT)
+		if (game == GAMETYPE_CATF || game == GAMETYPE_CTFT)
 			Roundbased_SetRoundStartWithWinner(other.team);
 
 		// give credit to the individual player
@@ -892,10 +892,10 @@ void() ctf_delayedinit {
 	CTF_SCORE_FCKILLS = score_register("fckills", 0);
 	CTF_SCORE_RETURNS = score_register("returns", 0);
 	CTF_SCORE_DROPS = score_register("drops", SFL_LOWER_IS_BETTER);
-	if (game == GAME_CATF) {
+	if (game == GAMETYPE_CATF) {
 		clanarena_shared_init("catf");
 		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
-	} else if (game == GAME_CTFT) {
+	} else if (game == GAMETYPE_CTFT) {
 		Freeze_Init_Shared("ctft");
 		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
 	}
@@ -993,7 +993,7 @@ void() ctf_player_think {
 void() ctf_init {
 	CVAR_CACHE(g_ctf_reverse);
 	g_ctf = 1;
-	if (game == GAME_CATF || game == GAME_CTFT)
+	if (game == GAMETYPE_CATF || game == GAMETYPE_CTFT)
 		g_ctf_win_mode = 0;
 	else
 		g_ctf_win_mode = cvar("g_ctf_win_mode");

@@ -1,5 +1,5 @@
 void(void) gametype_init {
-	if (gametype == GAME_CTS) {
+	if (gametype == GAMETYPE_CTS) {
 		registercvar("cl_cts_showacceleration", "1", CVAR_SAVE);
 		registercvar("cl_cts_showspeed", "1", CVAR_SAVE);
 		if (cvar("cl_cts_showacceleration"))

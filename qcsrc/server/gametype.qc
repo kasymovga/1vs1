@@ -1,15 +1,15 @@
 void() gametype_writecvars {
 	float i;
-	for (i = GAME_DEATHMATCH; i < GAME_END; i++) {
+	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_END; i++) {
 		cvar_set(MapInfo_GetGameTypeCvar(i), ftos(game == i));
 	}
 }
 
 void() gametype_readcvars {
-	game = GAME_DEATHMATCH;
+	game = GAMETYPE_DEATHMATCH;
 	team_mode = 0;
 	float i;
-	for (i = GAME_DEATHMATCH; i < GAME_END; i++) {
+	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_END; i++) {
 		if (cvar(MapInfo_GetGameTypeCvar(i))) {
 			game = i;
 			break;
@@ -68,43 +68,43 @@ void() gametype_init {
 	// in case mapinfo switched the type
 	gametype_readcvars();
 	gametype_title = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
-	if(game == GAME_TEAM_DEATHMATCH) {
+	if(game == GAMETYPE_TEAM_DEATHMATCH) {
 		team_play_activate();
 		tdm_init();
-	} else if(game == GAME_FREEZETAG) {
+	} else if(game == GAMETYPE_FREEZETAG) {
 		team_play_activate();
 		Freeze_Init();
-	} else if(game == GAME_CLANARENA) {
+	} else if(game == GAMETYPE_CLANARENA) {
 		team_play_activate();
 		clanarena_init();
-	} else if(game == GAME_DOMINATION) {
+	} else if(game == GAMETYPE_DOMINATION) {
 		team_play_activate();
 		dom_init();
-	} else if(game == GAME_CTF || game == GAME_CATF || game == GAME_CTFT) {
+	} else if(game == GAMETYPE_CTF || game == GAMETYPE_CATF || game == GAMETYPE_CTFT) {
 		team_play_activate();
 		ctf_init();
-	} else if(game == GAME_KEYHUNT || game == GAME_KEYHUNT_CA || game == GAME_KEYHUNT_FT) {
+	} else if(game == GAMETYPE_KEYHUNT || game == GAMETYPE_KEYHUNT_CA || game == GAMETYPE_KEYHUNT_FT) {
 		team_play_activate();
 		kh_init();
-	} else if(game == GAME_ONSLAUGHT) {
+	} else if(game == GAMETYPE_ONSLAUGHT) {
 		team_play_activate();
 		onslaught_init();
-	} else if(game == GAME_RACE || game == GAME_CTS) {
+	} else if(game == GAMETYPE_RACE || game == GAMETYPE_CTS) {
 		race_init();
-	} else if(game == GAME_NEXBALL) {
+	} else if(game == GAMETYPE_NEXBALL) {
 		team_play_activate();
 		nexball_init();
-	} else if (game == GAME_CONQUEST) {
+	} else if (game == GAMETYPE_CONQUEST) {
 		team_play_activate();
 		conquest_init();
-	} else if (game == GAME_SURVIVE) {
+	} else if (game == GAMETYPE_SURVIVE) {
 		team_play_activate();
 		survive_init();
-	} else if (game == GAME_SINGLE) {
+	} else if (game == GAMETYPE_SINGLE) {
 		single_init();
-	} else if (game == GAME_COOP) {
+	} else if (game == GAMETYPE_COOP) {
 		coop_init();
-	} else if (game == GAME_LMS) {
+	} else if (game == GAMETYPE_LMS) {
 		lms_init();
 	} else if (team_mode)
 		entcs_init();

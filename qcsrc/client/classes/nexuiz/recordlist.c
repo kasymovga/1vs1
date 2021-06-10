@@ -55,7 +55,7 @@ void drawListBoxItemNexuizRecordList(entity me, float i, vector absSize, float i
 	string record_name = str_cdr(s);
 	if (record_map == map_shortname) {
 		c = '1 1 0.5';
-		if (gametype == GAME_CTS) {
+		if (gametype == GAMETYPE_CTS) {
 			if (race_records_time[0]) {
 				record_name = race_records_name[0];
 				record_time = TIME_ENCODED_TOSTRING(race_records_time[0]);

@@ -455,78 +455,78 @@ void _MapInfo_Map_Reset()
 
 float MapInfo_Type_FromString(string t)
 {
-	if     (t == "dm")         return GAME_DEATHMATCH;
-	else if(t == "tdm")        return GAME_TEAM_DEATHMATCH;
+	if     (t == "dm")         return GAMETYPE_DEATHMATCH;
+	else if(t == "tdm")        return GAMETYPE_TEAM_DEATHMATCH;
 	else if(t == "ft" ||
 	        t == "freeze" ||
-	        t == "frezetag")   return GAME_FREEZETAG;
+	        t == "frezetag")   return GAMETYPE_FREEZETAG;
 	else if(t == "ca" ||
-	        t == "clanarena")  return GAME_CLANARENA;
+	        t == "clanarena")  return GAMETYPE_CLANARENA;
 	else if(t == "dom" ||
-	        t == "domination") return GAME_DOMINATION;
-	else if(t == "ctf")        return GAME_CTF;
-	else if(t == "catf")       return GAME_CATF;
-	else if(t == "ctft")       return GAME_CTFT;
+	        t == "domination") return GAMETYPE_DOMINATION;
+	else if(t == "ctf")        return GAMETYPE_CTF;
+	else if(t == "catf")       return GAMETYPE_CATF;
+	else if(t == "ctft")       return GAMETYPE_CTFT;
 	else if(t == "conq" ||
-	        t == "conquest")   return GAME_CONQUEST;
+	        t == "conquest")   return GAMETYPE_CONQUEST;
 	else if(t == "kh" ||
-	        t == "keyhunt")    return GAME_KEYHUNT;
-	else if(t == "khca")       return GAME_KEYHUNT_CA;
-	else if(t == "khft")       return GAME_KEYHUNT_FT;
-	else if(t == "ons")        return GAME_ONSLAUGHT;
+	        t == "keyhunt")    return GAMETYPE_KEYHUNT;
+	else if(t == "khca")       return GAMETYPE_KEYHUNT_CA;
+	else if(t == "khft")       return GAMETYPE_KEYHUNT_FT;
+	else if(t == "ons")        return GAMETYPE_ONSLAUGHT;
 	else if(t == "rc" ||
-	        t == "race")       return GAME_RACE;
+	        t == "race")       return GAMETYPE_RACE;
 	else if(t == "nexball" ||
-	        t == "nb" )        return GAME_NEXBALL;
-	else if(t == "cts")        return GAME_CTS;
-	else if(t == "lms")        return GAME_LMS;
+	        t == "nb" )        return GAMETYPE_NEXBALL;
+	else if(t == "cts")        return GAMETYPE_CTS;
+	else if(t == "lms")        return GAMETYPE_LMS;
 	else if(t == "surv" ||
-	        t == "survive")    return GAME_SURVIVE;
-	else if(t == "single")     return GAME_SINGLE;
-	else if(t == "coop")       return GAME_COOP;
+	        t == "survive")    return GAMETYPE_SURVIVE;
+	else if(t == "single")     return GAMETYPE_SINGLE;
+	else if(t == "coop")       return GAMETYPE_COOP;
 	else                       return 0;
 }
 
 string MapInfo_HumanString_FromType(float t) {
-	if (t == GAME_DEATHMATCH) {
+	if (t == GAMETYPE_DEATHMATCH) {
 		return "Deathmatch";
-	} else if (t == GAME_DOMINATION) {
+	} else if (t == GAMETYPE_DOMINATION) {
 		return "Domination";
-	} else if (t == GAME_TEAM_DEATHMATCH) {
+	} else if (t == GAMETYPE_TEAM_DEATHMATCH) {
 		return "Team Deathmatch";
-	} else if (t == GAME_CTF) {
+	} else if (t == GAMETYPE_CTF) {
 		return "Capture The Flag";
-	} else if (t == GAME_CATF) {
+	} else if (t == GAMETYPE_CATF) {
 		return "CTF with CA";
-	} else if (t == GAME_CTFT) {
+	} else if (t == GAMETYPE_CTFT) {
 		return "CTF with FT";
-	} else if (t == GAME_CONQUEST) {
+	} else if (t == GAMETYPE_CONQUEST) {
 		return "Conquest";
-	} else if (t == GAME_NEXBALL) {
+	} else if (t == GAMETYPE_NEXBALL) {
 		return "Nexball";
-	} else if (t == GAME_ONSLAUGHT) {
+	} else if (t == GAMETYPE_ONSLAUGHT) {
 		return "Onslaught";
-	} else if (t == GAME_KEYHUNT) {
+	} else if (t == GAMETYPE_KEYHUNT) {
 		return "Key Hunt";
-	} else if (t == GAME_KEYHUNT_CA) {
+	} else if (t == GAMETYPE_KEYHUNT_CA) {
 		return "Key Hunt with CA";
-	} else if (t == GAME_KEYHUNT_FT) {
+	} else if (t == GAMETYPE_KEYHUNT_FT) {
 		return "Key Hunt with FT";
-	} else if (t == GAME_CTS) {
+	} else if (t == GAMETYPE_CTS) {
 		return "CTS";
-	} else if (t == GAME_RACE) {
+	} else if (t == GAMETYPE_RACE) {
 		return "Race";
-	} else if (t == GAME_FREEZETAG) {
+	} else if (t == GAMETYPE_FREEZETAG) {
 		return "Freeze Tag";
-	} else if (t == GAME_CLANARENA) {
+	} else if (t == GAMETYPE_CLANARENA) {
 		return "Clan Arena";
-	} else if (t == GAME_SURVIVE) {
+	} else if (t == GAMETYPE_SURVIVE) {
 		return "Survival";
-	} else if (t == GAME_LMS) {
+	} else if (t == GAMETYPE_LMS) {
 		return "Last Man Standing";
-	} else if (t == GAME_SINGLE) {
+	} else if (t == GAMETYPE_SINGLE) {
 		return "Single Player";
-	} else if (t == GAME_COOP) {
+	} else if (t == GAMETYPE_COOP) {
 		return "Cooperative";
 	}
 	return "WTF";
@@ -906,14 +906,14 @@ float MapInfo_CurrentGametype()
 {
 	float f;
 	string s;
-	for (f = 1; f < GAME_END; f++) {
+	for (f = 1; f < GAMETYPE_END; f++) {
 		s = MapInfo_GetGameTypeCvar(f);
 		if (s != "")
 		if (cvar(s)) {
 			return f;
 		}
 	}
-	return GAME_DEATHMATCH;
+	return GAMETYPE_DEATHMATCH;
 }
 
 float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
@@ -952,52 +952,52 @@ string MapInfo_GetGameTypeCvar(float t)
 {
 	switch(t)
 	{
-		case GAME_DEATHMATCH: return "_g_dm";
-		case GAME_TEAM_DEATHMATCH: return "_g_tdm";
-		case GAME_FREEZETAG: return "_g_freeze";
-		case GAME_CLANARENA: return "_g_clanarena";
-		case GAME_DOMINATION: return "_g_domination";
-		case GAME_CTF: return "_g_ctf";
-		case GAME_CATF: return "_g_catf";
-		case GAME_CTFT: return "_g_ctft";
-		case GAME_CONQUEST: return "_g_conquest";
-		case GAME_KEYHUNT: return "_g_keyhunt";
-		case GAME_KEYHUNT_CA: return "_g_khca";
-		case GAME_KEYHUNT_FT: return "_g_khft";
-		case GAME_ONSLAUGHT: return "_g_onslaught";
-		case GAME_RACE: return "_g_race";
-		case GAME_NEXBALL: return "_g_nexball";
-		case GAME_CTS: return "_g_cts";
-		case GAME_SURVIVE: return "_g_survive";
-		case GAME_LMS: return "_g_lms";
-		case GAME_SINGLE: return "_g_single";
-		case GAME_COOP: return "_g_coop";
+		case GAMETYPE_DEATHMATCH: return "_g_dm";
+		case GAMETYPE_TEAM_DEATHMATCH: return "_g_tdm";
+		case GAMETYPE_FREEZETAG: return "_g_freeze";
+		case GAMETYPE_CLANARENA: return "_g_clanarena";
+		case GAMETYPE_DOMINATION: return "_g_domination";
+		case GAMETYPE_CTF: return "_g_ctf";
+		case GAMETYPE_CATF: return "_g_catf";
+		case GAMETYPE_CTFT: return "_g_ctft";
+		case GAMETYPE_CONQUEST: return "_g_conquest";
+		case GAMETYPE_KEYHUNT: return "_g_keyhunt";
+		case GAMETYPE_KEYHUNT_CA: return "_g_khca";
+		case GAMETYPE_KEYHUNT_FT: return "_g_khft";
+		case GAMETYPE_ONSLAUGHT: return "_g_onslaught";
+		case GAMETYPE_RACE: return "_g_race";
+		case GAMETYPE_NEXBALL: return "_g_nexball";
+		case GAMETYPE_CTS: return "_g_cts";
+		case GAMETYPE_SURVIVE: return "_g_survive";
+		case GAMETYPE_LMS: return "_g_lms";
+		case GAMETYPE_SINGLE: return "_g_single";
+		case GAMETYPE_COOP: return "_g_coop";
 		default: return "";
 	}
 }
 
 float MapInfo_GameTypeToMapInfoType(float t) {
 	switch (t) {
-		case GAME_DEATHMATCH:      return MAPINFO_TYPE_DEATHMATCH;
-		case GAME_TEAM_DEATHMATCH: return MAPINFO_TYPE_TEAM_DEATHMATCH;
-		case GAME_FREEZETAG:       return MAPINFO_TYPE_TEAM_DEATHMATCH;
-		case GAME_CLANARENA:       return MAPINFO_TYPE_TEAM_DEATHMATCH;
-		case GAME_DOMINATION:      return MAPINFO_TYPE_DOMINATION;
-		case GAME_CTF:             return MAPINFO_TYPE_CTF;
-		case GAME_CATF:            return MAPINFO_TYPE_CTF;
-		case GAME_CTFT:            return MAPINFO_TYPE_CTF;
-		case GAME_CONQUEST:        return MAPINFO_TYPE_CONQUEST;
-		case GAME_KEYHUNT:         return MAPINFO_TYPE_KEYHUNT;
-		case GAME_KEYHUNT_CA:      return MAPINFO_TYPE_KEYHUNT;
-		case GAME_KEYHUNT_FT:      return MAPINFO_TYPE_KEYHUNT;
-		case GAME_ONSLAUGHT:       return MAPINFO_TYPE_ONSLAUGHT;
-		case GAME_RACE:            return MAPINFO_TYPE_RACE;
-		case GAME_CTS:             return MAPINFO_TYPE_CTS;
-		case GAME_SURVIVE:         return MAPINFO_TYPE_SURVIVE;
-		case GAME_LMS:             return MAPINFO_TYPE_DEATHMATCH;
-		case GAME_COOP:            return MAPINFO_TYPE_SINGLE;
-		case GAME_SINGLE:          return MAPINFO_TYPE_SINGLE;
-		case GAME_NEXBALL:         return MAPINFO_TYPE_NEXBALL;
+		case GAMETYPE_DEATHMATCH:      return MAPINFO_TYPE_DEATHMATCH;
+		case GAMETYPE_TEAM_DEATHMATCH: return MAPINFO_TYPE_TEAM_DEATHMATCH;
+		case GAMETYPE_FREEZETAG:       return MAPINFO_TYPE_TEAM_DEATHMATCH;
+		case GAMETYPE_CLANARENA:       return MAPINFO_TYPE_TEAM_DEATHMATCH;
+		case GAMETYPE_DOMINATION:      return MAPINFO_TYPE_DOMINATION;
+		case GAMETYPE_CTF:             return MAPINFO_TYPE_CTF;
+		case GAMETYPE_CATF:            return MAPINFO_TYPE_CTF;
+		case GAMETYPE_CTFT:            return MAPINFO_TYPE_CTF;
+		case GAMETYPE_CONQUEST:        return MAPINFO_TYPE_CONQUEST;
+		case GAMETYPE_KEYHUNT:         return MAPINFO_TYPE_KEYHUNT;
+		case GAMETYPE_KEYHUNT_CA:      return MAPINFO_TYPE_KEYHUNT;
+		case GAMETYPE_KEYHUNT_FT:      return MAPINFO_TYPE_KEYHUNT;
+		case GAMETYPE_ONSLAUGHT:       return MAPINFO_TYPE_ONSLAUGHT;
+		case GAMETYPE_RACE:            return MAPINFO_TYPE_RACE;
+		case GAMETYPE_CTS:             return MAPINFO_TYPE_CTS;
+		case GAMETYPE_SURVIVE:         return MAPINFO_TYPE_SURVIVE;
+		case GAMETYPE_LMS:             return MAPINFO_TYPE_DEATHMATCH;
+		case GAMETYPE_COOP:            return MAPINFO_TYPE_SINGLE;
+		case GAMETYPE_SINGLE:          return MAPINFO_TYPE_SINGLE;
+		case GAMETYPE_NEXBALL:         return MAPINFO_TYPE_NEXBALL;
 	}
 	return 0;
 }
@@ -1007,7 +1007,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("gamecfg",      "0");
 	float f;
 	string s;
-	for (f = GAME_DEATHMATCH; f < GAME_END; f++) {
+	for (f = GAMETYPE_DEATHMATCH; f < GAMETYPE_END; f++) {
 		s = MapInfo_GetGameTypeCvar(f);
 		if (s != "") {
 			cvar_set(s, ((t == f) ? "1" : "0"));
@@ -1021,7 +1021,7 @@ void MapInfo_LoadMap(string s)
 	if(!MapInfo_CheckMap(s))
 	{
 		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
-		MapInfo_SwitchGameType(GAME_DEATHMATCH);
+		MapInfo_SwitchGameType(GAMETYPE_DEATHMATCH);
 	}
 	localcmd(strcat("\nsettemp_restore\nchangelevel ", s, "\n"));
 }
@@ -1050,13 +1050,13 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 			error("Mapinfo system is not functional at all. BAILED OUT.\n");
 
 		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to a supported mode.\n");
-		for (t = GAME_DEATHMATCH; t < GAME_END; t++) {
+		for (t = GAMETYPE_DEATHMATCH; t < GAMETYPE_END; t++) {
 			if (MapInfo_GameTypeToMapInfoType(t) & MapInfo_Map_supportedGametypes) {
 				MapInfo_SwitchGameType(t);
 				break;
 			}
 		}
-		if (t == GAME_END)
+		if (t == GAMETYPE_END)
 			print("No supported game mode for map!!! How can this possible?\n");
 	}
 	cvar_settemp_restore();

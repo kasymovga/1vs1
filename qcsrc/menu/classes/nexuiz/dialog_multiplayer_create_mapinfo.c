@@ -59,7 +59,7 @@ void loadMapInfoNexuizMapInfoDialog(entity me, float i, entity mlb)
 
 	entity e;
 	float t;
-	t = GAME_DEATHMATCH;
+	t = GAMETYPE_DEATHMATCH;
 	for (e = me.typeLabelNext; e; e = e.typeLabelNext) {
 		e.disabled = !(MapInfo_Map_supportedGametypes & MapInfo_GameTypeToMapInfoType(t));
 		t++;
@@ -96,7 +96,7 @@ void fillNexuizMapInfoDialog(entity me)
 		me.TD(me, 1, 1, e = makeNexuizTextLabel(0, _("Game types:")));
 		float i;
 		e = me;
-		for (i = GAME_DEATHMATCH; i < GAME_SINGLE; i++) {
+		for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_SINGLE; i++) {
 			me.TD(me, 1, 2, e.typeLabelNext = makeNexuizTextLabel(0, MapInfo_HumanString_FromType(i)));
 			e = e.typeLabelNext;
 			if not(mod(i, 2)) {

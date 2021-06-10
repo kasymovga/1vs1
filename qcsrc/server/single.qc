@@ -151,7 +151,7 @@ float(void) single_player_equip_handle {
 		return single_player_equip_handle_next();
 
 	registercvar("_autosave_skip", "0");
-	if (game == GAME_SINGLE)
+	if (game == GAMETYPE_SINGLE)
 	if (self.netaddress == "local")
 	if not(builtin_cvar("_autosave_skip")) {
 		defer(0.5, single_autosave);
@@ -161,7 +161,7 @@ float(void) single_player_equip_handle {
 }
 
 float(void) single_map_restart {
-	if (game == GAME_COOP)
+	if (game == GAMETYPE_COOP)
 	if (cvar("timelimit") < 0) //Endmatch
 		return FALSE;
 
@@ -223,7 +223,7 @@ void(void) single_init {
 	single_shutdown_next = gamehook_chain_shutdown;
 	gamehook_chain_shutdown = single_shutdown;
 	gamehook_monster_killed = single_monster_killed;
-	if (game == GAME_SINGLE) {
+	if (game == GAMETYPE_SINGLE) {
 		single_cmd_client_handle_next = gamehook_chain_cmd_client_handle;
 		gamehook_chain_cmd_client_handle = single_cmd_client_handle;
 	}

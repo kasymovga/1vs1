@@ -43,7 +43,7 @@ void(void) coop_teleporter_use {
 }
 
 void(void) spawnfunc_coop_teleporter {
-	if (game != GAME_COOP) {
+	if (game != GAMETYPE_COOP) {
 		remove(self);
 		return;
 	}

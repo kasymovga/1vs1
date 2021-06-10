@@ -46,7 +46,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 
 		if (main_localgame)
 		if (main_campaign)
-		if (gametype == GAME_SINGLE) {
+		if (gametype == GAMETYPE_SINGLE) {
 			me.rows = me.rows + 1;
 		}
 	}
@@ -87,7 +87,7 @@ void fillNexuizGameMenuDialog(entity me)
 		}
 		if (main_localgame)
 		if (main_campaign)
-		if (gametype == GAME_SINGLE) {
+		if (gametype == GAMETYPE_SINGLE) {
 			me.TR(me);
 				me.TD(me, 1, me.columns, e = makeNexuizButton("Save/Load", '0 0 0'));
 				e.onClick = ShowSaveLoad;
