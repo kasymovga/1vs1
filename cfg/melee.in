@@ -1,6 +1,4 @@
 set sv_sound_melee "sound/nexball/shoot2.wav" "Sound for melee attack"
-set sv_player_melee_anim "9 1 1"
-set sv_player_melee_anim2 "9 1 1"
 set sv_player_melee_angles "45 0 0"
 set sv_player_melee_origin "0 0 -40"
 set g_balance_melee 0 ""
