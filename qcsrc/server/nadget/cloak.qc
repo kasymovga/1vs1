@@ -102,8 +102,8 @@ NADGET_HOOKFUNCTION(cloak, Init) {
     CVAR_CACHE(g_nadgets_cloak_actiondelay);
     CVAR_CACHE(g_nadgets_cloak_spy);
 
-    addstat(STAT_STEALTH, AS_INT, hg_stealth);
-    addstat(STAT_STEALTH_SAVED, AS_INT, hg_stealth_saved);
+    addstat(STAT_STEALTH, STAT_INT, hg_stealth);
+    addstat(STAT_STEALTH_SAVED, STAT_INT, hg_stealth_saved);
 
     nadget_Cloak_PlayerAlphaMod_Next = gamehook_chain_player_alpha_mod;
     gamehook_chain_player_alpha_mod = nadget_Cloak_PlayerAlphaMod;

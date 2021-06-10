@@ -16,6 +16,7 @@ mbuiltin.qh
 ../menu-server/udppunchhole.qh
 ../common/constants.qh
 ../client-menu/key.h
+../client-menu/cvar.qh
 ../menu-server/mapinfo.qh
 ../menu-server/campaign.qh
 ../menu-server/weapon.qh

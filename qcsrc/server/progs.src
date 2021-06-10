@@ -7,6 +7,7 @@ extensions.qh
 constants.qh
 ../common/constants.qh
 ../client-server/constants.qh
+../client-server/stat.qh
 ../common/gametype.qh
 ../common/colormap.qh
 ../common/db.qh

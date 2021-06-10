@@ -114,7 +114,7 @@ void() powerup_invincible_init {
 
 	powerup_invincible_init_done = 1;
 	powerup_init();
-	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
+	addstat(STAT_INVINCIBLE_FINISHED, STAT_FLOAT, invincible_finished);
 	powerup_invincible_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_invincible_player_effects;
 	powerup_invincible_damage_mods_set_next = gamehook_chain_damage_mods_set;
@@ -180,7 +180,7 @@ void() powerup_strength_init {
 
 	powerup_strength_init_done = 1;
 	powerup_init();
-	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
+	addstat(STAT_STRENGTH_FINISHED, STAT_FLOAT, strength_finished);
 	if (g_powerup_strength_akimbo) {
 		powerup_strength_akimbo_player_effects_next = gamehook_chain_player_effects;
 		gamehook_chain_player_effects = powerup_strength_akimbo_player_effects;
@@ -239,7 +239,7 @@ void() powerup_speed_init {
 	gamehook_chain_player_effects = powerup_speed_player_effects;
 	powerup_speed_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
 	gamehook_chain_weapon_rate_factor = powerup_speed_weapon_rate_factor;
-	addstat(STAT_SPEED_FINISHED, AS_FLOAT, speed_finished);
+	addstat(STAT_SPEED_FINISHED, STAT_FLOAT, speed_finished);
 }
 
 var void() powerup_invisibility_player_effects_next;
@@ -282,5 +282,5 @@ void() powerup_invisibility_init {
 	gamehook_chain_player_alpha_mod = powerup_invisibility_player_alpha_mod;
 	powerup_invisibility_player_effects_next = gamehook_chain_player_effects;
 	gamehook_chain_player_effects = powerup_invisibility_player_effects;
-	addstat(STAT_INVISIBILITY_FINISHED, AS_FLOAT, invisibility_finished);
+	addstat(STAT_INVISIBILITY_FINISHED, STAT_FLOAT, invisibility_finished);
 }

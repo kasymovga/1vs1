@@ -7,6 +7,8 @@ constants.qh
 ../common/constants.qh
 ../client-menu/key.h
 ../client-server/constants.qh
+../client-menu/cvar.qh
+../client-server/stat.qh
 builtins.qh
 trace.qh
 cvar.qh

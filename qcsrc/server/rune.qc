@@ -655,5 +655,5 @@ void(void) rune_init {
 	e = spawn();
 	e.think = rune_spawn_all;
 	e.nextthink = time + 0.1;
-	addstat(STAT_RUNES, AS_INT, runes);
+	addstat(STAT_RUNES, STAT_INT, runes);
 }

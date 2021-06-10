@@ -938,7 +938,7 @@ void kh_init_delayed()  // sets up th KH environment
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
 	kh_controller.reset2 = kh_Reset;
-	addstat(STAT_KH_KEYS, AS_INT, kh_state);
+	addstat(STAT_KH_KEYS, STAT_INT, kh_state);
 	if (gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
 		kh_roundbased = TRUE;
 

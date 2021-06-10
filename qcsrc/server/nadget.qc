@@ -232,18 +232,18 @@ void nadget_Init(void) {
 	CVAR_CACHE(g_nadgets_initial_regen);
 	CVAR_CACHE(g_nadgets_drop_on_death);
 
-    addstat(STAT_HGFORCE, AS_FLOAT, hg_power);
-    addstat(STAT_HGAMMO, AS_INT, hg_ammo1);
-    addstat(STAT_HGREGEN, AS_FLOAT, hg_regentime1);
-    addstat(STAT_HGREGENMAX, AS_FLOAT, hg_maxregentime1);
-    addstat(STAT_HGREGENPAUSED, AS_INT, hg_regenpaused1);
-    addstat(STAT_HGREGENRATE, AS_FLOAT, hg_regenrate1);
-    addstat(STAT_HGDETONABLES, AS_INT, hg_detonables);
-    addstat(STAT_HGLAUNCH, AS_FLOAT, hg_launchspeed);
-    addstat(STAT_HGTYPE, AS_INT, hg_type1);
-    addstat(STAT_HGBONUS, AS_INT, hg_bonus);
-    addstat(STAT_HGBONUSTYPE, AS_INT, hg_bonustype);
-    addstat(STAT_HGREFIRE, AS_FLOAT, hg_next1);
+    addstat(STAT_HGFORCE, STAT_FLOAT, hg_power);
+    addstat(STAT_HGAMMO, STAT_INT, hg_ammo1);
+    addstat(STAT_HGREGEN, STAT_FLOAT, hg_regentime1);
+    addstat(STAT_HGREGENMAX, STAT_FLOAT, hg_maxregentime1);
+    addstat(STAT_HGREGENPAUSED, STAT_INT, hg_regenpaused1);
+    addstat(STAT_HGREGENRATE, STAT_FLOAT, hg_regenrate1);
+    addstat(STAT_HGDETONABLES, STAT_INT, hg_detonables);
+    addstat(STAT_HGLAUNCH, STAT_FLOAT, hg_launchspeed);
+    addstat(STAT_HGTYPE, STAT_INT, hg_type1);
+    addstat(STAT_HGBONUS, STAT_INT, hg_bonus);
+    addstat(STAT_HGBONUSTYPE, STAT_INT, hg_bonustype);
+    addstat(STAT_HGREFIRE, STAT_FLOAT, hg_next1);
 
 	nadget_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nadget_PlayerClear;
@@ -266,13 +266,13 @@ void nadget_Init(void) {
 	nadget_player_obituary_frag_next = gamehook_chain_player_obituary_frag;
 	gamehook_chain_player_obituary_frag = nadget_player_obituary_frag;
     if(g_nadgets_double) {
-        addstat(STAT_HGTYPE2, AS_INT, hg_type2);
-        addstat(STAT_HGREFIRE2, AS_FLOAT, hg_next2);
-        addstat(STAT_HGAMMO2, AS_INT, hg_ammo2);
-        addstat(STAT_HGREGEN2, AS_FLOAT, hg_regentime2);
-        addstat(STAT_HGREGENMAX2, AS_FLOAT, hg_maxregentime2);
-        addstat(STAT_HGREGENPAUSED2, AS_INT, hg_regenpaused2);
-        addstat(STAT_HGREGENRATE2, AS_FLOAT, hg_regenrate2);
+        addstat(STAT_HGTYPE2, STAT_INT, hg_type2);
+        addstat(STAT_HGREFIRE2, STAT_FLOAT, hg_next2);
+        addstat(STAT_HGAMMO2, STAT_INT, hg_ammo2);
+        addstat(STAT_HGREGEN2, STAT_FLOAT, hg_regentime2);
+        addstat(STAT_HGREGENMAX2, STAT_FLOAT, hg_maxregentime2);
+        addstat(STAT_HGREGENPAUSED2, STAT_INT, hg_regenpaused2);
+        addstat(STAT_HGREGENRATE2, STAT_FLOAT, hg_regenrate2);
     }
 
 	CVAR_CACHE(g_nadgets_detonatelaunches);

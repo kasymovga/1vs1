@@ -273,11 +273,11 @@ NADGET_HOOKFUNCTION(shield, Attack) {
 }
 
 NADGET_HOOKFUNCTION(shield, Init) {
-    addstat(STAT_HGSHIELD, AS_FLOAT, hg_shieldstat);
-    addstat(STAT_HGSHIELDPOWER, AS_FLOAT, hg_shieldpower);
-    addstat(STAT_HGSHIELDSTORE, AS_INT, hg_shield_stored);
-    addstat(STAT_HGSHIELDSTOREMAX, AS_INT, hg_shield_stored_limit);
-    addstat(STAT_HGSHIELDDAMAGEPERSHOT, AS_INT, hg_shield_damage_per_shot);
+    addstat(STAT_HGSHIELD, STAT_FLOAT, hg_shieldstat);
+    addstat(STAT_HGSHIELDPOWER, STAT_FLOAT, hg_shieldpower);
+    addstat(STAT_HGSHIELDSTORE, STAT_INT, hg_shield_stored);
+    addstat(STAT_HGSHIELDSTOREMAX, STAT_INT, hg_shield_stored_limit);
+    addstat(STAT_HGSHIELDDAMAGEPERSHOT, STAT_INT, hg_shield_damage_per_shot);
 	CVAR_CACHE(g_nadgets_shield_damage_store_arc);
 	CVAR_CACHE(g_nadgets_shield_damage_store_arc_pushback);
 	CVAR_CACHE(g_nadgets_shield_damage_store_arc_range);

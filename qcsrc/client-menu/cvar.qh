@@ -1,0 +1,3 @@
+float CVAR_SAVE = 1;
+float CVAR_NOTIFY = 2;
+float CVAR_READONLY = 4;

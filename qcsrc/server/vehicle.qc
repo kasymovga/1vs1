@@ -183,12 +183,12 @@ void(void) vehicle_init {
 	gamehook_chain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
 	gamehook_chain_player_entity = vehicle_player_entity;
-	addstat(STAT_HUD, AS_INT,  hud);
-	addstat(STAT_SPIDERBOT_ROCKETS, AS_INT,   rockets);
-	addstat(STAT_SPIDERBOT_RELOAD,  AS_FLOAT, rockets_reload);
-	addstat(STAT_SPIDERBOT_HEAT,    AS_FLOAT, vehicle_heat);
-	addstat(STAT_SPIDERBOT_HEALTH,  AS_FLOAT, vehicle_health);
-	addstat(STAT_SPIDERBOT_SHIELD,  AS_FLOAT, vehicle_shield);
+	addstat(STAT_HUD, STAT_INT,  hud);
+	addstat(STAT_SPIDERBOT_ROCKETS, STAT_INT,   rockets);
+	addstat(STAT_SPIDERBOT_RELOAD,  STAT_FLOAT, rockets_reload);
+	addstat(STAT_SPIDERBOT_HEAT,    STAT_FLOAT, vehicle_heat);
+	addstat(STAT_SPIDERBOT_HEALTH,  STAT_FLOAT, vehicle_health);
+	addstat(STAT_SPIDERBOT_SHIELD,  STAT_FLOAT, vehicle_shield);
 }
 
 float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter {

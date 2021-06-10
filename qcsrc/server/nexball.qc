@@ -133,7 +133,7 @@ void() nexball_init {
 		g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 
 	g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
-	addstat(STAT_NB_METERSTART, AS_FLOAT, metertime_stat);
+	addstat(STAT_NB_METERSTART, STAT_FLOAT, metertime_stat);
 	// General settings
 	CVAR_CACHE(g_nexball_football_boost_forward);   //100
 	CVAR_CACHE(g_nexball_football_boost_up);        //200
