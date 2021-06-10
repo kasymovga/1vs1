@@ -1,2 +1,1 @@
-float gametype;
 void(void) gametype_init;

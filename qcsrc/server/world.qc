@@ -153,7 +153,7 @@ void(void) world_getrecords {
 	}
 	cmd_records_reply_extra = 0;
 	if (cvar("sv_dumprecords")) {
-		f = fopen(strcat("records-", gametype_name(game), ".txt"), FILE_WRITE);
+		f = fopen(strcat("records-", gametype_name(gametype), ".txt"), FILE_WRITE);
 	}
 	for (i = 0; i < MapInfo_count; ++i)
 		if (MapInfo_Get_ByID(i)) {
@@ -309,7 +309,7 @@ void(void) world_init {
 	world_getrecords();
 	client_init_spawn();
 	random_seed_spawn();
-	localcmd("\n_sv_hook_gamestart ", gametype_name(game), ";");
+	localcmd("\n_sv_hook_gamestart ", gametype_name(gametype), ";");
 	world_initialized = 1;
 	IRC_Init();
 	infomessages_init();
@@ -332,7 +332,7 @@ void(float final) world_dump_stats {
 	else
 		s = ":status:";
 
-	s = strcat(s, gametype_name(game), "_", mapname, ":", ftos(rint(time)));
+	s = strcat(s, gametype_name(gametype), "_", mapname, ":", ftos(rint(time)));
 	if (to_console)
 		print(s, "\n");
 

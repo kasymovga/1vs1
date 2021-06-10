@@ -1,17 +1,17 @@
 void() gametype_writecvars {
 	float i;
 	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_END; i++) {
-		cvar_set(MapInfo_GetGameTypeCvar(i), ftos(game == i));
+		cvar_set(MapInfo_GetGameTypeCvar(i), ftos(gametype == i));
 	}
 }
 
 void() gametype_readcvars {
-	game = GAMETYPE_DEATHMATCH;
+	gametype = GAMETYPE_DEATHMATCH;
 	team_mode = 0;
 	float i;
 	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_END; i++) {
 		if (cvar(MapInfo_GetGameTypeCvar(i))) {
-			game = i;
+			gametype = i;
 			break;
 		}
 	}
@@ -68,49 +68,49 @@ void() gametype_init {
 	// in case mapinfo switched the type
 	gametype_readcvars();
 	gametype_title = MapInfo_HumanString_FromType(MapInfo_CurrentGametype());
-	if(game == GAMETYPE_TEAM_DEATHMATCH) {
+	if(gametype == GAMETYPE_TEAM_DEATHMATCH) {
 		team_play_activate();
 		tdm_init();
-	} else if(game == GAMETYPE_FREEZETAG) {
+	} else if(gametype == GAMETYPE_FREEZETAG) {
 		team_play_activate();
 		Freeze_Init();
-	} else if(game == GAMETYPE_CLANARENA) {
+	} else if(gametype == GAMETYPE_CLANARENA) {
 		team_play_activate();
 		clanarena_init();
-	} else if(game == GAMETYPE_DOMINATION) {
+	} else if(gametype == GAMETYPE_DOMINATION) {
 		team_play_activate();
 		dom_init();
-	} else if(game == GAMETYPE_CTF || game == GAMETYPE_CATF || game == GAMETYPE_CTFT) {
+	} else if(gametype == GAMETYPE_CTF || gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT) {
 		team_play_activate();
 		ctf_init();
-	} else if(game == GAMETYPE_KEYHUNT || game == GAMETYPE_KEYHUNT_CA || game == GAMETYPE_KEYHUNT_FT) {
+	} else if(gametype == GAMETYPE_KEYHUNT || gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT) {
 		team_play_activate();
 		kh_init();
-	} else if(game == GAMETYPE_ONSLAUGHT) {
+	} else if(gametype == GAMETYPE_ONSLAUGHT) {
 		team_play_activate();
 		onslaught_init();
-	} else if(game == GAMETYPE_RACE || game == GAMETYPE_CTS) {
+	} else if(gametype == GAMETYPE_RACE || gametype == GAMETYPE_CTS) {
 		race_init();
-	} else if(game == GAMETYPE_NEXBALL) {
+	} else if(gametype == GAMETYPE_NEXBALL) {
 		team_play_activate();
 		nexball_init();
-	} else if (game == GAMETYPE_CONQUEST) {
+	} else if (gametype == GAMETYPE_CONQUEST) {
 		team_play_activate();
 		conquest_init();
-	} else if (game == GAMETYPE_SURVIVE) {
+	} else if (gametype == GAMETYPE_SURVIVE) {
 		team_play_activate();
 		survive_init();
-	} else if (game == GAMETYPE_SINGLE) {
+	} else if (gametype == GAMETYPE_SINGLE) {
 		single_init();
-	} else if (game == GAMETYPE_COOP) {
+	} else if (gametype == GAMETYPE_COOP) {
 		coop_init();
-	} else if (game == GAMETYPE_LMS) {
+	} else if (gametype == GAMETYPE_LMS) {
 		lms_init();
 	} else if (team_mode)
 		entcs_init();
 
 	// save it (for the next startup)
-	cvar_set("gamecfg", ftos(game));
+	cvar_set("gamecfg", ftos(gametype));
 
 	// enforce the server's universal frag/time limits
 	entity_initialize(world, gametype_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);
