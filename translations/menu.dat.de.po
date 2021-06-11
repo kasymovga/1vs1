@@ -789,8 +789,8 @@ msgstr "Beschleunigung anzeigen"
 msgid "Accelerometer scale:"
 msgstr "Beschleunigungsgröße:"
 
-msgid "Simple items"
-msgstr "Einfache Items"
+msgid "Simple items:"
+msgstr "Einfache Items:"
 
 msgid "Old nex model"
 msgstr "Altes nex-Modell"

@@ -789,8 +789,8 @@ msgstr "Afficher l'accéléromètre"
 msgid "Accelerometer scale:"
 msgstr "Échelle d'accéléromètre:"
 
-msgid "Simple items"
-msgstr "Objets simples"
+msgid "Simple items:"
+msgstr "Objets simples:"
 
 msgid "Old nex model"
 msgstr "Ancien modèle Nex"

@@ -99,8 +99,13 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 	if not(cvar("cl_oldnexmodel")) {
 		s = strcat(s, " newnex");
 	}
-	if (cvar("cl_simpleitems")) {
-		s = strcat(s, " simpleitems");
+	float n;
+	if ((n = cvar("cl_simpleitems"))) {
+		s = s + " zapper_v2 supershotgun"; //need load them first, to override their g_* models
+		if (n == 2)
+			s = strcat(s, " simpleitems-luma");
+		else
+			s = strcat(s, " simpleitems");
 	}
 	string head = "", tail = s;
 	while (tail != "") {

@@ -781,8 +781,8 @@ msgstr "Показывать акселерометр"
 msgid "Accelerometer scale:"
 msgstr "Масштаб акселерометра:"
 
-msgid "Simple items"
-msgstr "Спрайтовые предметы"
+msgid "Simple items:"
+msgstr "Спрайтовые предметы:"
 
 msgid "Old nex model"
 msgstr "Старая модель для nex"

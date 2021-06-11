@@ -33,8 +33,7 @@ void (entity btn, entity me) apply_misc_settings {
 	SetSkin_Click(btn, me);
 }
 
-entity makeNexuizMiscSettingsTab()
-{
+entity() makeNexuizMiscSettingsTab {
 	registercvar("menu_cl_simpleitems", cvar_string("cl_simpleitems"), 0);
 	cvar_set("menu_cl_simpleitems", cvar_string("cl_simpleitems"));
 	registercvar("menu_cl_oldnexmodel", cvar_string("cl_oldnexmodel"), 0);
@@ -46,11 +45,10 @@ entity makeNexuizMiscSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
-void fillNexuizMiscSettingsTab(entity me)
-{
+
+void(entity me) fillNexuizMiscSettingsTab {
 	entity e;
 	entity sk;
-
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeNexuizTextLabel(0, _("Menu skins:")));
 	me.TR(me);
@@ -59,7 +57,6 @@ void fillNexuizMiscSettingsTab(entity me)
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Apply immediately"), '0 0 0'));
 			e.onClick = apply_misc_settings;
 			e.onClickEntity = sk;
-
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeNexuizCheckBox(0, "showtime", _("Show current time")));
 	me.TR(me);
@@ -93,13 +90,18 @@ void fillNexuizMiscSettingsTab(entity me)
 		me.TD(me, 1, 2.8/2, e = makeNexuizSlider(1, 10, 0.5, "cl_showacceleration_scale"));
 			gui_set_dependent(e, "cl_showacceleration", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_simpleitems", _("Simple items")));
+		me.TD(me, 1, 2.8/2, e = makeNexuizTextLabel(0, _("Simple items:")));
+		me.TD(me, 1, 2.8/2, e = makeNexuizTextSlider("cl_simpleitems"));
+			e.addValue(e, _("None"), "0");
+			e.addValue(e, _("Simple"), "1");
+			e.addValue(e, _("Luma"), "2");
+			e.configureNexuizTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_oldnexmodel", _("Old nex model")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "cl_brightskins", _("Bright player skins")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "integration_discord_enable", _("Discord")));
+		me.TD(me, 1, 1, e = makeNexuizCheckBox(0, "integration_discord_enable", _("Discord status")));
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
