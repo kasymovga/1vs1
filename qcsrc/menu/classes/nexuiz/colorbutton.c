@@ -32,11 +32,13 @@ void configureNexuizColorButtonNexuizColorButton(entity me, float theGroup, floa
 	me.cvarValueFloat = theValue;
 	me.cvarPart = theColor;
 	me.loadCvars(me);
-	if not(file_exists_image(gui_image_path(me.image2)))
+	if not(file_exists_image(gui_image_path(me.image2))) {
 		me.image2 = "";
+		me.srcMulti = 0;
+	} else
+		me.srcMulti = 1;
 
 	me.configureRadioButton(me, NULL, me.fontSize, me.image, theGroup, 0);
-	me.srcMulti = 1;
 	me.src2 = me.image2;
 }
 void setCheckedNexuizColorButton(entity me, float val)
