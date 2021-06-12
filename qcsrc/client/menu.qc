@@ -94,6 +94,9 @@ void(void) menu_selected_update {
 
 float(float bInputType, float nPrimary, float nSecondary) menu_input_event;
 void(void) menu_draw {
+	if (sbar_showscores || sbar_showaccuracy)
+		return;
+
 	float i;
 	string menu_string;
 	drawfont = sbar_bigfont;

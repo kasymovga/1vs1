@@ -1690,12 +1690,13 @@ void(void) sbar_draw {
 		if (sbar_showaccuracy)
 			sbar_accuracy_draw();
 		else if (!sbar_hidescores) {
-			if (sbar_showscores || (_health <= 0 && !sbar_hidescores && CVAR(cl_deathscoreboard)))
+			if (sbar_showscores || (_health <= 0 && CVAR(cl_deathscoreboard)))
 				sbar_scoreboard_draw();
-		}
+		} else
+			return;
+
 		sbar_score_draw();
 		sbar_timer();
-		sbar_reset();
 	} else {
 		if (sbar_showscores)
 			sbar_scoreboard_draw();
@@ -1904,7 +1905,6 @@ void(void) sbar_draw {
 		// draw gametype specific icons
 		sbar_gametype_hud();
 	}
-	return;
 }
 
 vector(vector v) sbar_font_size {
