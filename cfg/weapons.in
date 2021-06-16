@@ -210,12 +210,9 @@ set g_balance_crylink_primary_refire 0.4
 set g_balance_crylink_primary_animtime 0.3
 set g_balance_crylink_primary_ammo 3
 set g_balance_crylink_primary_bouncedamagefactor 0.5
-set g_balance_crylink_primary_middle_lifetime 5 // range: 35000 full, fades to 70000
-set g_balance_crylink_primary_middle_fadetime 5
-set g_balance_crylink_primary_star_lifetime 0.1 // range: 700 full, fades to 2450
-set g_balance_crylink_primary_star_fadetime 0.25
-set g_balance_crylink_primary_other_lifetime 0.1 // range: 700 full, fades to 2450
-set g_balance_crylink_primary_other_fadetime 0.25
+set g_balance_crylink_primary_middle_lifetime 5
+set g_balance_crylink_primary_star_lifetime 5
+set g_balance_crylink_primary_other_lifetime 5
 set g_balance_crylink_secondary_damage 18
 set g_balance_crylink_secondary_edgedamage 0
 set g_balance_crylink_secondary_force -55
