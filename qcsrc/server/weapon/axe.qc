@@ -15,8 +15,7 @@ float(float req) weapon_axe {
 			self.BUTTON_ATCK = TRUE;
 	} else if (req == WR_THINK) {
 		if (self.BUTTON_ATCK || self.BUTTON_ATCK2)
-		if (weapon_prepareattack(0, g_balance_melee_refire))
-		{
+		if (weapon_prepareattack(0, g_balance_melee_refire)) {
 			weapon_melee_attack(1, g_balance_axe_damage);
 			weapon_thinkf(WFRAME_FIRE1, g_balance_melee_animtime, weapon_ready);
 		}
@@ -39,8 +38,7 @@ float(float req) weapon_axe {
 	else if (req == WR_KILLMESSAGE) {
 		weapon_fragprefix = "^xF80MELEE";
 		weapon_deathtypestring = "was smashed by";
-	} else if (req == WR_CVAR_CACHE)
-	{
+	} else if (req == WR_CVAR_CACHE) {
 		CVAR_CACHE(g_balance_axe_damage);
 		weapon_melee_init();
 	}

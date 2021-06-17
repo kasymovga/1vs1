@@ -263,7 +263,7 @@ float dlc_pause;
 
 var float(string cmd, float argc) dlc_cmd_game_handle_NextLink;
 float(string cmd, float argc) dlc_cmd_game_handle {
-	if (cmd == "dlc_require")
+	if (cmd == "dlc_require" || cmd == "require_dlc")
 	if (argv(1) != "") {
 		dlc_require(argv(1));
 		return TRUE;
@@ -399,7 +399,7 @@ void(void) dlc_wait_reload_think {
 		entity e;
 		FOR_EACH_REALCLIENT(e)
 			if (e.netaddress == "local") {
-				localcmd("dlc_pause; r_restart; cl_cmd r_restart; dlc_unpause\n");
+				localcmd("sv_cmd dlc_pause; r_restart; cl_cmd r_restart; sv_cmd dlc_unpause\n");
 				break;
 			}
 		remove(self);

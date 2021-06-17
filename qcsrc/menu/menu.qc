@@ -99,8 +99,13 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 	if not(cvar("cl_oldnexmodel")) {
 		s = strcat(s, " newnex");
 	}
-	if (cvar("cl_simpleitems")) {
-		s = strcat(s, " simpleitems");
+	float n;
+	if ((n = cvar("cl_simpleitems"))) {
+		s = s + " zapper_v2 supershotgun"; //need load them first, to override their g_* models
+		if (n == 2)
+			s = strcat(s, " simpleitems-luma");
+		else
+			s = strcat(s, " simpleitems");
 	}
 	string head = "", tail = s;
 	while (tail != "") {
@@ -117,7 +122,7 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 	if not(menu_dlc_reload_wait) {
 		menu_dlc_reload_wait = spawn();
 		menu_dlc_reload_wait.think = menu_dlc_reload_wait_think;
-		menu_dlc_reload_wait.nextthink = time + 1;
+		menu_dlc_reload_wait.nextthink = time + 0.5;
 		menu_dlc_reload_wait.cnt = 10;
 	}
 }
@@ -132,6 +137,7 @@ void() menu_init {
 	menu_dlc_reload(TRUE, FALSE);
 	udppunchhole_extresponse_handler_register();
 	ui_con_width_height_set();
+	time = 1;
 }
 
 void(void) menu_update_width_height {
@@ -354,10 +360,11 @@ void(void) menu_draw {
 	t = gettime();
 	menu_frametime_real = frametime = min(0.2, t - menu_time_previous);
 	menu_time_previous = t;
-	time += frametime;
 	if (menu_active) {
 		entity e, oldself;
 		oldself = self;
+		time += frametime;
+		if (time > 20000) localcmd("menu_restart\n");
 		for(e = findflags(NULL, nextthink, 0xFFFFFFFF); e; e = findflags(e, nextthink, 0xFFFFFFFF)) { //hack, findflags works only with integer part of float value
 			if (e.nextthink < time) {
 				self = e;

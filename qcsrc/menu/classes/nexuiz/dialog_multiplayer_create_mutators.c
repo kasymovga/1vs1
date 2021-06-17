@@ -20,7 +20,7 @@ void showNotifyNexuizMutatorsDialog(entity me) {
 
 string profileDescriptionNexuizMutatorsDialog(string profile_name) {
 	if (profile_name == "") return "Default";
-	if (profile_name == "akimbo") return "Akimbo";
+	if (profile_name == "bestakimbo") return "Best Akimbo";
 	if (profile_name == "minsta") return "Minsta+Hook";
 	if (profile_name == "cra") return "Camping Rifle Arena";
 	if (profile_name == "explosive_minsta") return "Explosive Minsta+Hook";
@@ -39,7 +39,7 @@ void fillNexuizMutatorsDialog(entity me) {
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "", profileDescriptionNexuizMutatorsDialog("")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "akimbo", profileDescriptionNexuizMutatorsDialog("akimbo")));
+		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "bestakimbo", profileDescriptionNexuizMutatorsDialog("bestakimbo")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeNexuizRadioButton(1, "g_profile", "minsta", profileDescriptionNexuizMutatorsDialog("minsta")));
 	me.TR(me);

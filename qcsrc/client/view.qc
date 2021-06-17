@@ -163,13 +163,6 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		if not(CVAR(cl_recoil))
 			R_SetView(VF_ANGLES, view_angles);
 	}
-	if (view_observer_status)
-		view_crosshair = FALSE;
-	else if (sbar_hidescores)
-		view_crosshair = FALSE;
-	else
-		view_crosshair = TRUE;
-
 	physics_camera_setup();
 	makevectors(view_angles);
 	view_forward = v_forward;
@@ -223,6 +216,13 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	// draw radar
 	if (teamradar_show)
 		teamradar_view(TRUE, "");
+
+	if (view_observer_status)
+		view_crosshair = FALSE;
+	else if (sbar_hidescores)
+		view_crosshair = FALSE;
+	else
+		view_crosshair = TRUE;
 
 	if not(sbar_showscores) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing

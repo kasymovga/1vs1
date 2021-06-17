@@ -789,8 +789,8 @@ msgstr "Mostrar acelerômetro"
 msgid "Accelerometer scale:"
 msgstr "Escala do acelerômetro:"
 
-msgid "Simple items"
-msgstr "Itens simples"
+msgid "Simple items:"
+msgstr "Itens simples:"
 
 msgid "Old nex model"
 msgstr "Antigo modelo Nex"
