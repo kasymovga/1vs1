@@ -9,8 +9,8 @@ mbuiltin.qh
 ../common/file.qh
 ../common/cvar.qh
 ../common/colormap.qh
+../common/digit.qh
 ../client-menu/ui.qh
-../client-menu/util.qh
 ../menu-server/util.qh
 ../client-menu/classes/base.h
 ../menu-server/udppunchhole.qh
@@ -62,7 +62,6 @@ gui.qc
 ../common/dlc.qc
 ../client-menu/ui.qc
 ../menu-server/extresponse.qc
-../client-menu/util.qc
 ../menu-server/util.qc
 ../menu-server/cvar.qc
 ../common/stdproc.qc

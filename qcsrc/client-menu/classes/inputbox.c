@@ -212,17 +212,17 @@ void drawInputBox(entity me)
 					theColor = '1 1 1';
 					theTempColor = '0 0 0';
 					
-					component = HEXDIGIT_TO_DEC(substring(me.text, i+2, 1));
+					component = DIGIT_HEX_TO_DEC(substring(me.text, i+2, 1));
 					if (component >= 0) // ^xr found
 					{
 						theTempColor_x = component/15;
 						
-						component = HEXDIGIT_TO_DEC(substring(me.text, i+3, 1));
+						component = DIGIT_HEX_TO_DEC(substring(me.text, i+3, 1));
 						if (component >= 0) // ^xrg found
 						{
 							theTempColor_y = component/15;
 							
-							component = HEXDIGIT_TO_DEC(substring(me.text, i+4, 1));
+							component = DIGIT_HEX_TO_DEC(substring(me.text, i+4, 1));
 							if (component >= 0) // ^xrgb found
 							{
 								theTempColor_z = component/15;

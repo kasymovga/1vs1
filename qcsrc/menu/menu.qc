@@ -492,15 +492,15 @@ void(string itemname) menu_goto {
 		if (menu_gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
 			menu_hide();
 		else {
-			m_activate_window(main.mainNexposee);
+			gui_activate_window(main.mainNexposee);
 			menu_display();
 		}
 	} else {
 		e = findstring(NULL, name, itemname);
 		if (e) {
 			menu_hide();
-			m_activate_window(e);
-			m_setpointerfocus(e);
+			gui_activate_window(e);
+			gui_setpointerfocus(e);
 			menu_display();
 		}
 	}

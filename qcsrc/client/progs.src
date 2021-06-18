@@ -5,6 +5,7 @@ sys.qh
 defs.qh
 constants.qh
 ../common/constants.qh
+../common/digit.qh
 ../client-menu/key.h
 ../client-server/constants.qh
 ../client-menu/cvar.qh
@@ -202,11 +203,9 @@ warpzone.qc
 weaponselect.qc
 noteline.qc
 ../common/uri.qc
-../client-menu/util.qh
 ../client-menu/skin.qh
 ../client-menu/gui.qh
 ../client-menu/skin.qc
-../client-menu/gui.qc
 ../client-menu/classes/base.h
 ../client-menu/classes/classdefs.h
 	classes.c
@@ -214,8 +213,8 @@ noteline.qc
 	classes.c
 ../client-menu/classes/implementation.h
 	classes.c
+../client-menu/gui.qc
 gui.qc
-../client-menu/util.qc
 hint.qc
 sphere.qc
 ice.qc

@@ -189,8 +189,8 @@ void GUI_Show(float window) {
 		GUI_Hide();
 		return;
 	}
-	m_activate_window(e);
-	m_setpointerfocus(e);
+	gui_activate_window(e);
+	gui_setpointerfocus(e);
 	mainWindow.focused = 1;
 	setFocusContainer(mainWindow, e);
 }
