@@ -1,0 +1,16 @@
+const float CHAN_AUTO = 0;
+const float CHAN_WEAPON = 1; // Weapon fire
+const float CHAN_VOICE = 2; // Voice/Radio
+const float CHAN_TRIGGER = 3; // Triggers/Items
+const float CHAN_PROJECTILE = 4; // Projectiles
+const float CHAN_WEAPON2 = 5; // Nex fire (separated as it is a very long sound)
+const float CHAN_PAIN = 6; // Pain
+const float CHAN_PLAYER = 7; // Player body
+const float ATTN_NONE = 0;
+const float ATTN_MIN = 0.015625;
+const float ATTN_NORM = 0.5;
+const float ATTN_IDLE = 2;
+const float ATTN_STATIC = 3;
+const float ATTN_MAX = 3.984375;
+const float VOL_BASE = 0.7;
+const float VOL_BASEVOICE = 1.0;

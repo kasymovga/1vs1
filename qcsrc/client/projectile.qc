@@ -272,7 +272,7 @@ void(float ignore) projectile_read {
         self.iflags |= IFLAG_ANGLES | IFLAG_AUTOANGLES;
 
 	self.solid = SOLID_TRIGGER;
-	//self.effects = EF_NOMODELFLAGS;
+	//self.effects = EFFECT_NOMODELFLAGS;
 	// this should make collisions with bmodels more exact, but it leads to
 	// projectiles no longer being able to lie on a bmodel
 	self.move_nomonsters = TRACE_MOVE_WORLDONLY;

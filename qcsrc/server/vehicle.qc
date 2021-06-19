@@ -92,7 +92,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
         sh.alpha = 0.5;
         sh.scale  = (128 / vlen(self.maxs - self.mins))*2;
         //sh.scale = 1.25;
-        sh.effects = EF_LOWPRECISION;
+        sh.effects = EFFECT_LOWPRECISION;
         sh.angles = vectoangles(normalize(hitloc - self.origin)) - self.angles;
         setmodel(sh,"models/vhshield.md3");
         setattachment(sh,self,"");

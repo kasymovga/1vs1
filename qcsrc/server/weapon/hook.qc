@@ -42,7 +42,7 @@ void weapon_hook_explode_think (void)
 void weapon_hook_explode2 (void) {
 	self.event_damage = stdproc_nothing;
 	self.touch = stdproc_nothing;
-	self.effects |= EF_NODRAW;
+	self.effects |= EFFECT_NODRAW;
 	self.projectiledeathtype |= HITTYPE_NOTEAMDAMAGE;
 	self.think = weapon_hook_explode_think;
 	self.nextthink = time;

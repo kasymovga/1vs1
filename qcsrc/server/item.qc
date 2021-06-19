@@ -125,7 +125,7 @@ string(float it) item_counter_field_name {
 .float max_armorvalue;
 
 void (entity e, float mode) item_show {
-	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT;
+	e.effects &~= EFFECT_ADDITIVE | EFFECT_STARDUST | EFFECT_FULLBRIGHT;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
@@ -172,9 +172,9 @@ void (entity e, float mode) item_show {
 	}
 
 	if (e.strength_finished || e.invincible_finished)
-		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
+		e.effects |= EFFECT_ADDITIVE | EFFECT_FULLBRIGHT;
 	if (g_fullbrightitems)
-		e.effects |= EF_FULLBRIGHT;
+		e.effects |= EFFECT_FULLBRIGHT;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
@@ -509,7 +509,7 @@ void item_find_team()
 {
 	entity head, e;
 
-	if(self.effects & EF_NODRAW)
+	if(self.effects & EFFECT_NODRAW)
 	{
 		// marker for item team search
 		random_selection_init();
@@ -527,7 +527,7 @@ void item_find_team()
 				item_show(head, -1);
 				head.state = 1; // state 1 = initially hidden item
 			}
-			head.effects &~= EF_NODRAW;
+			head.effects &~= EFFECT_NODRAW;
 		}
 
 		if(e.flags & FL_POWERUP) // do not spawn powerups initially!
@@ -743,7 +743,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 	self.flags = FL_ITEM | itemflags;
 	self.touch = item_touch;
 	setmodel (self, self.mdl); // precision set below
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
 		setsize (self, '-16 -16 0', '16 16 48');
 	else
@@ -763,7 +763,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 		if(!self.cnt)
 			self.cnt = 1; // item probability weight
 
-		self.effects = self.effects | EF_NODRAW; // marker for item team search
+		self.effects = self.effects | EFFECT_NODRAW; // marker for item team search
 		entity_initialize(self, item_find_team, INITPRIO_FINDTARGET);
 	} else if(self.flags & FL_POWERUP && self.respawntime > 0) // do not spawn powerups initially!
 		item_schedule_initial_respawn(self);
@@ -941,14 +941,14 @@ void spawnfunc_item_key_gold (void) {
 	self.origin_z = self.origin_z + 48;
 	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Gold Key", IT_KEY2, 0, 0, item_generic_pickupevalfunc, 100000);
 	self.colormod = '1 1 0';
-	self.effects = EF_FULLBRIGHT | EF_STARDUST;
+	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
 	self.mins_z = self.mins_z - 48;
 }
 
 void spawnfunc_item_key_silver (void) {
 	self.origin_z = self.origin_z + 48;
 	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Silver Key", IT_KEY1, 0, 0, item_generic_pickupevalfunc, 100000);
-	self.effects = EF_FULLBRIGHT | EF_STARDUST;
+	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
 	self.mins_z = self.mins_z - 48;
 }
 
@@ -956,7 +956,7 @@ void spawnfunc_item_key_blood (void) {
 	self.origin_z = self.origin_z + 48;
 	item_start ("models/keyhunt/key.md3", "kh/collect.wav", cvar("g_pickup_respawntime_key"), cvar("g_pickup_respawntimejitter_key"), "Blood Key", IT_KEY3, 0, 0, item_generic_pickupevalfunc, 100000);
 	self.colormod = '1 0 0';
-	self.effects = EF_FULLBRIGHT | EF_STARDUST;
+	self.effects = EFFECT_FULLBRIGHT | EFFECT_STARDUST;
 	self.mins_z = self.mins_z - 48;
 }
 

@@ -220,7 +220,7 @@ void turret_trowgib(
     gib.takedamage         = DAMAGE_YES;
     gib.event_damage       = turret_gib_damage;
     gib.health             = -1;
-    gib.effects            = EF_LOWPRECISION;
+    gib.effects            = EFFECT_LOWPRECISION;
     gib.flags              = FL_NOTARGET;
     gib.colormod           = v_colormod;
     gib.velocity           = v_to;
@@ -228,7 +228,7 @@ void turret_trowgib(
     if (b_burn)
     {
         burn = spawn();
-        burn.effects        = EF_LOWPRECISION;//|EF_FLAME;
+        burn.effects        = EFFECT_LOWPRECISION;//|EFFECT_FLAME;
         setattachment(burn,gib,"");
         setorigin(burn,(gib.mins + gib.maxs) * 0.5);
         entity_fade_setup(burn,time + (f_lifetime * 0.5) ,2);
@@ -263,7 +263,7 @@ void turret_gib_boom()
         gib.takedamage         = DAMAGE_YES;
         gib.event_damage       = turret_gib_damage;
         gib.health             = -1;
-        gib.effects            = EF_LOWPRECISION;
+        gib.effects            = EFFECT_LOWPRECISION;
         gib.flags              = FL_NOTARGET;
         gib.velocity           = self.velocity + (randomvec() * 700);
         gib.avelocity          = randomvec() * 64;
@@ -298,14 +298,14 @@ void turret_trowgib2(
     gib.takedamage         = DAMAGE_YES;
     gib.event_damage       = turret_gib_damage;
     gib.health             = -1;
-    gib.effects            = EF_LOWPRECISION;
+    gib.effects            = EFFECT_LOWPRECISION;
     gib.flags              = FL_NOTARGET;
     gib.colormod           = v_colormod;
     gib.velocity           = v_to;
     gib.avelocity          = randomvec() * 32;
     gib.think              = turret_gib_boom;
     gib.nextthink          = boomtime;
-    //gib.effects            = EF_FLAME;
+    //gib.effects            = EFFECT_FLAME;
 
 
 }
@@ -482,7 +482,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float _damage, fl
     // FIXME: Better damage feedback
     // Start burning when we have 10% or less health left
     //if (self.health < (self.tur_health * 0.1))
-    //    self.effects = EF_FLAME;
+    //    self.effects = EFFECT_FLAME;
 
     if (self.health <= 0)
     {
@@ -1307,7 +1307,7 @@ float turret_count;
 void(void) turret_stdproc_init_delayed {
 	entity e;
 	if not(team_mode)
-		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
+		self.team = WORLD_MAX_SHOT_DISTANCE; // Group all turrets into the same team iso they dont kill eachother.
 	else {
 		if (self.targetname != "") {
 			e = find(world, target, self.targetname);
@@ -1419,7 +1419,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head) {
 
     if (!self.shot_force)
         self.shot_force = self.shot_dmg * 0.5 + self.shot_radius * 0.5;
-    self.shot_force = bound(0.001,self.shot_force,MAX_SHOT_DISTANCE * 0.5);
+    self.shot_force = bound(0.001,self.shot_force,WORLD_MAX_SHOT_DISTANCE * 0.5);
 
     if (!self.shot_volly)
         self.shot_volly = 1;
@@ -1437,19 +1437,19 @@ float turret_stdproc_init (string cvar_base_name, string base, string head) {
 // Range stuff.
     if (!self.target_range)
         self.target_range = self.shot_speed * 0.5;
-    self.target_range = bound(0,self.target_range,MAX_SHOT_DISTANCE);
+    self.target_range = bound(0,self.target_range,WORLD_MAX_SHOT_DISTANCE);
 
     if (!self.target_range_min)
         self.target_range_min = self.shot_radius * 2;
-    self.target_range_min = bound(0,self.target_range_min,MAX_SHOT_DISTANCE);
+    self.target_range_min = bound(0,self.target_range_min,WORLD_MAX_SHOT_DISTANCE);
 
     //if (!self.target_range_fire)
     //    self.target_range_fire = self.target_range * 0.8;
-    //self.target_range_fire = bound(0,self.target_range_fire,MAX_SHOT_DISTANCE);
+    //self.target_range_fire = bound(0,self.target_range_fire,WORLD_MAX_SHOT_DISTANCE);
 
     if (!self.target_range_optimal)
         self.target_range_optimal = self.target_range * 0.5;
-    self.target_range_optimal = bound(0,self.target_range_optimal,MAX_SHOT_DISTANCE);
+    self.target_range_optimal = bound(0,self.target_range_optimal,WORLD_MAX_SHOT_DISTANCE);
 
 
 // Aim stuff.
@@ -1467,7 +1467,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head) {
 
     if (!self.aim_firetolerance_dist)
         self.aim_firetolerance_dist  = 5 + (self.shot_radius * 2);
-    self.aim_firetolerance_dist = bound(0.1,self.aim_firetolerance_dist,MAX_SHOT_DISTANCE);
+    self.aim_firetolerance_dist = bound(0.1,self.aim_firetolerance_dist,WORLD_MAX_SHOT_DISTANCE);
 
     if (!self.aim_flags)
     {

@@ -151,7 +151,7 @@ void(entity body_to, entity body_from, float realloc_playermodel) player_body_co
 }
 
 entity(float keepvelocity, float _movetype) player_body_detach {
-	if (self.effects & EF_NODRAW)
+	if (self.effects & EFFECT_NODRAW)
 		return world;
 
 	entity e = self.body;
@@ -269,15 +269,15 @@ void() player_effects {
 	fire_apply_effect(self);
 	gamehook_chain_player_effects();
 	if (g_fullbrightplayers)
-		self.effects = self.effects | EF_FULLBRIGHT;
+		self.effects = self.effects | EFFECT_FULLBRIGHT;
 
 	if not(g_spawnfrags)
 	if (time >= map_starttime)
 	if (time < self.spawnshieldtime)
-		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+		self.effects = self.effects | (EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 
 	self.body.effects = self.effects;
-	self.body.body.effects = self.effects & EF_TELEPORT_BIT; //for teleportation
+	self.body.body.effects = self.effects & EFFECT_TELEPORT_BIT; //for teleportation
 	self.body.angles_x = bound(-g_player_body_pitch_maxangle, (-g_player_body_pitch_maxangle / 90) * self.v_angle_x, g_player_body_pitch_maxangle);
 	self.body.body.modelflags = self.modelflags; //for MF_ROCKET effect
 	self.effects = 0;
@@ -601,7 +601,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^1You killed your own dumb self!"));
 		}
 		w = DEATH_WEAPONOF(deathtype);
-		if (WEP_VALID(w)) {
+		if (WEAPON_VALID(w)) {
 			weapon_deathtypestring = "couldn't resist the urge to self-destruct";
 			weapon_deathtype = deathtype;
 			weapon_action(w, WR_SUICIDEMESSAGE);
@@ -676,7 +676,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 					announce(attacker, sv_announcer_extra_firstblood, "^5First ^1Blood");
 			}
 			w = DEATH_WEAPONOF(deathtype);
-			if (WEP_VALID(w)) {
+			if (WEAPON_VALID(w)) {
 				weapon_deathtypestring = "was blasted by";
 				weapon_deathtype = deathtype;
 				weapon_action(w, WR_KILLMESSAGE);
@@ -1523,7 +1523,7 @@ void() player_think {
 	if (self.teleport_time)
 	if (time > self.teleport_time) {
 		self.teleport_time = 0;
-		self.effects = self.effects - (self.effects & EF_NODRAW);
+		self.effects = self.effects - (self.effects & EFFECT_NODRAW);
 	}
 	//don't allow the player to turn around while game is paused!
 	if (timeoutStatus == 2) {
@@ -1840,7 +1840,7 @@ void(void) player_impulse {
 			case 107:
 				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
 					e.colormod_x = 1;
-					e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+					e.effects &~= EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE;
 				}
 				e2 = navigation_findnearestwaypoint(self, FALSE);
 				navigation_markroutes(e2);
@@ -1850,7 +1850,7 @@ void(void) player_impulse {
 					if (e.wpcost >= 10000000) {
 						print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
 						e.colormod_x = 0.1;
-						e.effects |= EF_NODEPTHTEST | EF_BLUE;
+						e.effects |= EFFECT_NODEPTHTEST | EFFECT_BLUE;
 						++i;
 						++m;
 					}
@@ -1864,9 +1864,9 @@ void(void) player_impulse {
 					if (e.wpcost >= 10000000) {
 						print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 						e.colormod_x = 0.1;
-						if not(e.effects & EF_NODEPTHTEST) // not already reported before
+						if not(e.effects & EFFECT_NODEPTHTEST) // not already reported before
 							++m;
-						e.effects |= EF_NODEPTHTEST | EF_RED;
+						e.effects |= EFFECT_NODEPTHTEST | EFFECT_RED;
 						++i;
 					}
 				}
@@ -1883,12 +1883,12 @@ void(void) player_impulse {
 					setorigin(e, trace_endpos);
 					if (navigation_findnearestwaypoint(e, FALSE)) {
 						setorigin(e, org);
-						e.effects &~= EF_NODEPTHTEST;
+						e.effects &~= EFFECT_NODEPTHTEST;
 						e.model = "";
 					} else {
 						setorigin(e, org);
 						print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-						e.effects |= EF_NODEPTHTEST;
+						e.effects |= EFFECT_NODEPTHTEST;
 						setmodel(e, self.body.model);
 						e.frame = self.body.frame;
 						e.skin = self.body.skin;
@@ -1960,9 +1960,9 @@ float(void) player_customize {
 		self.exteriormodeltoclient = world;
 
 	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
-		self.effects |= EF_NODEPTHTEST;
+		self.effects |= EFFECT_NODEPTHTEST;
 	else
-		self.effects &~= EF_NODEPTHTEST;
+		self.effects &~= EFFECT_NODEPTHTEST;
 
 	return TRUE;
 }
@@ -1981,9 +1981,9 @@ float(void) player_body_customize {
 			self.tag_entity = self.body;
 	}
 	if (gamehook_chain_PlayerVisibleThroughWallFor(o, other))
-		self.effects |= EF_NODEPTHTEST;
+		self.effects |= EFFECT_NODEPTHTEST;
 	else
-		self.effects &~= EF_NODEPTHTEST;
+		self.effects &~= EFFECT_NODEPTHTEST;
 
 	if (!self.modelindex && PLAYER_REALLY_DEAD(o))
 		return TRUE;

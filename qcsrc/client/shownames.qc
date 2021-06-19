@@ -145,7 +145,7 @@ void Shownames_UpdateTeamBubble(entity plr, float show) {
 			plr.teambubble = spawn();
 			precache_model("models/misc/teambubble.spr");
 			setmodel(plr.teambubble, "models/misc/teambubble.spr");
-			plr.teambubble.effects = EF_NODEPTHTEST;
+			plr.teambubble.effects = EFFECT_NODEPTHTEST;
 			plr.teambubble.owner = plr;
 			plr.teambubble.draw = Shownames_TeamBubbleDraw;
 		}

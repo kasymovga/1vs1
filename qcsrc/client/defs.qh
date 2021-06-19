@@ -5,8 +5,8 @@
 // Basic variables
 .float enttype; // entity type sent from server
 .float sv_entnum; // entity number sent from server
-
-.float waterlevel; // direction jitter
-
+.float waterlevel;
 .float health;
 .float armorvalue;
+.vector movedir;
+.vector colormod;

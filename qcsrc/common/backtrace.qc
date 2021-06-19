@@ -8,7 +8,7 @@ void(string msg) backtrace {
 	print("--- CUT HERE ---\nWARNING: ");
 	print(msg);
 	print("\n");
-	remove(world); // isn't there any better way to cause a backtrace?
+	remove(NULL); // isn't there any better way to cause a backtrace?
 	print("\n--- CUT UNTIL HERE ---\n");
 	builtin_cvar_set("developer", ftos(dev));
 	builtin_cvar_set("prvm_backtraceforwarnings", ftos(war));

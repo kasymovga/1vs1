@@ -21,7 +21,7 @@ void walker_bullet() {
 	flash.frame     = 2;
 	flash.angles_z  = flash.v_angle_z + random() * 180;
 	flash.alpha     = 1;
-	flash.effects   = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	flash.effects   = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
 }
 
 void walker_rocket_event_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce) {

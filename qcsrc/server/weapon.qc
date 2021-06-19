@@ -893,7 +893,7 @@ void weapon_model_think()
 		anim_set(self, self.anim_idle, TRUE, FALSE, TRUE);
 	}
 
-	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE);
+	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE);
 
 	self.colormap = self.owner.colormap;
 	self.alpha = player_alpha(self.owner, self.owner);
@@ -1121,7 +1121,7 @@ void weapon_model_exterior_think()
 		self.dlc_reset = weapon_model_exterior_dlc_reset;
 		self.dlc_reset();
 	}
-	self.effects = self.realowner.body.effects & (EF_ADDITIVE | EF_RED | EF_BLUE | EF_LOWPRECISION | EF_FULLBRIGHT);
+	self.effects = self.realowner.body.effects & (EFFECT_ADDITIVE | EFFECT_RED | EFFECT_BLUE | EFFECT_LOWPRECISION | EFFECT_FULLBRIGHT);
 	self.colormap = self.owner.colormap;
 	entity we = self.owner.weaponentity;
 	entity o = self.owner;
@@ -1398,7 +1398,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 		else
 			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
+		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
 		ent.dphitcontentsmask = dphitcontentsmask_save;
 		weapon_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 		weapon_shotdir = normalize(weapon_shotpoint - weapon_shotorg);

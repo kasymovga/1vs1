@@ -32,10 +32,10 @@ void(float killed) coop_player_clear {
 void(void) coop_teleporter_use {
 	if (self.solid == SOLID_TRIGGER) {
 		self.solid = SOLID_NOT;
-		self.effects &~= EF_STARDUST;
+		self.effects &~= EFFECT_STARDUST;
 	} else {
 		self.solid = SOLID_TRIGGER;
-		self.effects |= EF_STARDUST;
+		self.effects |= EFFECT_STARDUST;
 		if (self.alpha < 0)
 			self.alpha = 0.01;
 	}

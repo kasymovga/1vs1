@@ -1,36 +1,36 @@
 // Effect Constants
-const float EF_BRIGHTFIELD = 1;
-const float EF_MUZZLEFLASH = 2;
-const float EF_BRIGHTLIGHT = 4;
-const float EF_DIMLIGHT = 8;
+const float EFFECT_BRIGHTFIELD = 1;
+const float EFFECT_MUZZLEFLASH = 2;
+const float EFFECT_BRIGHTLIGHT = 4;
+const float EFFECT_DIMLIGHT = 8;
 //DP_EF_NODRAW
 //idea: id Software
 //darkplaces implementation: LordHavoc
 //description:
 //prevents server from sending entity to client (forced invisible, even if it would have been a light source or other such things)
 //effects bit:
-const float EF_NODRAW = 16;
+const float EFFECT_NODRAW = 16;
 //DP_EF_ADDITIVE
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //description:
 //additive blending when this object is rendered
 //effects bit:
-const float EF_ADDITIVE = 32;
+const float EFFECT_ADDITIVE = 32;
 //DP_EF_BLUE
 //idea: id Software
 //darkplaces implementation: LordHavoc
 //description:
 //entity emits blue light (used for quad)
 //effects bit:
-const float EF_BLUE = 64;
+const float EFFECT_BLUE = 64;
 //DP_EF_RED
 //idea: id Software
 //darkplaces implementation: LordHavoc
 //description:
 //entity emits red light (used for invulnerability)
 //effects bit:
-const float EF_RED = 128;
+const float EFFECT_RED = 128;
 //DP_EF_NOGUNBOB
 //idea: Chris Page, Dresk
 //darkplaces implementation: LordHAvoc
@@ -43,42 +43,42 @@ const float EF_RED = 128;
 //disabling gun bobbing on a diving mask or other model used as a .viewmodel.
 //disabling gun bobbing on view-relative models meant to be part of the heads up display.  (note: if fov is changed these entities may be off-screen, or too near the center of the screen, so use fov 90 in this case)
 //effects bit:
-const float EF_NOGUNBOB = 256;
+const float EFFECT_NOGUNBOB = 256;
 //DP_EF_FULLBRIGHT
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //description:
 //entity is always brightly lit
 //effects bit:
-const float EF_FULLBRIGHT = 512;
+const float EFFECT_FULLBRIGHT = 512;
 //DP_EF_FLAME
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //description:
 //entity is on fire
 //effects bit:
-const float EF_FLAME = 1024;
+const float EFFECT_FLAME = 1024;
 //DP_EF_STARDUST
 //idea: MythWorks Inc
 //darkplaces implementation: LordHavoc
 //description:
 //entity emits bouncing sparkles in every direction
 //effects bit:
-const float EF_STARDUST = 2048;
+const float EFFECT_STARDUST = 2048;
 //DP_EF_NOSHADOW
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //description:
 //realtime lights will not cast shadows from this entity (but can still illuminate it)
 //effects bit:
-const float EF_NOSHADOW = 4096;
+const float EFFECT_NOSHADOW = 4096;
 //DP_EF_NODEPTHTEST
 //idea: Supa
 //darkplaces implementation: LordHavoc
 //description:
 //makes entity show up to client even through walls, useful with EF_ADDITIVE for special indicators like where team bases are in a map, so that people don't get lost
 //effects bit:
-const float EF_NODEPTHTEST = 8192;
+const float EFFECT_NODEPTHTEST = 8192;
 //PRYDON_CLIENTCURSOR
 //idea: FrikaC
 //darkplaces implementation: LordHavoc
@@ -89,23 +89,23 @@ const float EF_NODEPTHTEST = 8192;
 //the selected entity highlights only if EF_SELECTABLE is set, a typical selection method would be doubling the brightness of the entity by some means (such as colormod[] *= 2).
 //intended to be used by Prydon Gate.
 //effects bit:
-const float EF_SELECTABLE = 16384; // allows cursor to highlight entity (brighten)
+const float EFFECT_SELECTABLE = 16384; // allows cursor to highlight entity (brighten)
 //DP_EF_DOUBLESIDED
 //idea: LordHavoc
 //darkplaces implementation: [515] and LordHavoc
 //description:
 //render entity as double sided (backfaces are visible, I.E. you see the 'interior' of the model, rather than just the front), can be occasionally useful on transparent stuff.
 //effects bit:
-const float EF_DOUBLESIDED = 32768;
+const float EFFECT_DOUBLESIDED = 32768;
 //DP_ENT_LOWPRECISION
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //description:
 //uses low quality origin coordinates, reducing network traffic compared to the default high precision, intended for numerous objects (projectiles/gibs/bullet holes/etc).
 //effects bit:
-const float EF_LOWPRECISION = 4194304;
+const float EFFECT_LOWPRECISION = 4194304;
 //DP_SV_MODELFLAGS_AS_EFFECTS
-const float EF_NOMODELFLAGS = 8388608;
+const float EFFECT_NOMODELFLAGS = 8388608;
 //DP_EF_TELEPORT_BIT
 //idea: id software
 //darkplaces implementation: div0
@@ -114,5 +114,5 @@ const float EF_NOMODELFLAGS = 8388608;
 //to toggle this bit in QC, you can do:
 //  self.effects += (EF_TELEPORT_BIT - 2 * (self.effects & EF_TELEPORT_BIT));
 //effects bit:
-const float EF_TELEPORT_BIT = 2097152;
-#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
+const float EFFECT_TELEPORT_BIT = 2097152;
+#define EFFECT_MASK_CHEAP (EFFECT_ADDITIVE | EFFECT_DOUBLESIDED | EFFECT_FULLBRIGHT | EFFECT_NODRAW | EFFECT_NOGUNBOB | EFFECT_NOSHADOW | EFFECT_LOWPRECISION | EFFECT_SELECTABLE | EFFECT_TELEPORT_BIT)

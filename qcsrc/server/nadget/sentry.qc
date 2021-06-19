@@ -250,11 +250,11 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
 
     if(newowner) {
         sentry.skin = 0;
-        sentry.aiment.effects &~= EF_NODRAW;
+        sentry.aiment.effects &~= EFFECT_NODRAW;
         sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((team_mode ? sentry.team : COLOR_TEAM3));
     } else {
         sentry.skin = 1;
-        sentry.aiment.effects |= EF_NODRAW;
+        sentry.aiment.effects |= EFFECT_NODRAW;
     }
 
     if(sentry.realowner.classname == "player")
@@ -412,9 +412,9 @@ void nadget_Sentry_Think(void) {
     }
 
     if(self.health < g_nadgets_sentry_health) {
-        self.effects |= EF_FLAME;
+        self.effects |= EFFECT_FLAME;
     } else {
-        self.effects &~= EF_FLAME;
+        self.effects &~= EFFECT_FLAME;
     }
 
     self.hg_sentry_energy = approach(self.hg_sentry_energy, 1, frametime * g_nadgets_sentry_energy_regen);
@@ -459,9 +459,9 @@ void nadget_Sentry_Trigger(void) {
 	antilag_begin(self);
     weapon_setup_shot(self, 0, "", -1);
     o = weapon_shotorg;
-    WarpZone_TraceLine(o, o + weapon_shotdir * MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
+    WarpZone_TraceLine(o, o + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
     while(trace_ent && trace_ent.classname == "hg_sentry" && !team_is_different_teams(trace_ent, self))
-        WarpZone_TraceLine(trace_endpos + weapon_shotdir, trace_endpos + weapon_shotdir * MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
+        WarpZone_TraceLine(trace_endpos + weapon_shotdir, trace_endpos + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self);
 
     aimloc = trace_endpos;
     aimtarg = trace_ent;
@@ -579,7 +579,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     c.pflags = PFLAGS_FULLDYNAMIC;
     c.color = '0.3 0.3 0.3' + 0.7 * team_color(((self.team > 0) ? self.team : COLOR_TEAM3));
     c.owner = self;
-    c.effects |= EF_DOUBLESIDED;
+    c.effects |= EFFECT_DOUBLESIDED;
     dlc_sound(c, CHAN_PROJECTILE, "weapons/electro_fly.wav", 0.5, 2);
 
     e.aiment = c;

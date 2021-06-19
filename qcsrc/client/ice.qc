@@ -9,7 +9,7 @@ void(float isnew) ice_read {
 	float f = ReadByte();
 	if (isnew) {
 		self.draw = ice_draw;
-		self.effects = 32768 | EF_FULLBRIGHT; //EF_DOUBLESIDED;
+		self.effects = 32768 | EFFECT_FULLBRIGHT; //EFFECT_DOUBLESIDED;
 	}
 	if (f & 1) {
 		self.modelindex = ReadShort();

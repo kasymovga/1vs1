@@ -24,7 +24,7 @@ void turret_machinegun_attack()
     flash.frame = 2;
     flash.angles_z = flash.v_angle_z + random() * 180;
     flash.alpha = 1;
-    flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+    flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
 }
 
 /*QUAKED turret_machinegun (0 .5 .8) ?

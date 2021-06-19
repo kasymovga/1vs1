@@ -34,16 +34,16 @@ float() entcs_customize {
 		return FALSE;
 
 	if (team_mode && o.team == other.team) {
-		self.effects |= EF_FULLBRIGHT;
+		self.effects |= EFFECT_FULLBRIGHT;
 	} else {
 		if (o.body.body == self.enemy)
 		if (player_alpha(o, other) < 0.25)
 			return FALSE;
 
 		if (gamehook_chain_PlayerVisibleThroughWallFor(o,other)) {
-			self.effects |= EF_FULLBRIGHT;
+			self.effects |= EFFECT_FULLBRIGHT;
 		} else
-			self.effects &~= EF_FULLBRIGHT;
+			self.effects &~= EFFECT_FULLBRIGHT;
 	}
 	return TRUE;
 }
@@ -52,7 +52,7 @@ float(entity to, float sf) entcs_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
-	if (self.effects & EF_FULLBRIGHT)
+	if (self.effects & EFFECT_FULLBRIGHT)
 		sf |= 64;
 
 	if (team_mode)

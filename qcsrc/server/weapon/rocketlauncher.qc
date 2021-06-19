@@ -214,7 +214,7 @@ void weapon_rocketlauncher_attack (void)
 	flash = spawn ();
 	setmodel (flash, "models/flash.md3"); // precision set below
 	entity_fade_setup(flash, time, 0.1);
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 

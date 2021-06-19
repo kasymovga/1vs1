@@ -198,7 +198,7 @@ void(void) modelselect_read {
 	if not(modelselect_current)
 		modelselect_current = spawn();
 
-	modelselect_current.effects = EF_NODEPTHTEST | EF_FULLBRIGHT;
+	modelselect_current.effects = EFFECT_NODEPTHTEST | EFFECT_FULLBRIGHT;
 	modelselect_current.draw = inline void(void) { R_AddEntity(self); };
 	modelselect_current.colormap = 1023;
 	if not(modelselect_list_len)

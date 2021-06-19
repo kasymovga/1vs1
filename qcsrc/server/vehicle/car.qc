@@ -256,13 +256,13 @@ void(void) vehicle_car_dinit {
 	self.cvar_basename = "g_vehicle_car";
 	//setmodel (self.vehicle_viewport, "null");
 	self.gun1 = spawn();
-	self.gun1.effects = EF_LOWPRECISION;
+	self.gun1.effects = EFFECT_LOWPRECISION;
 	self.gun2 = spawn();
-	self.gun2.effects = EF_LOWPRECISION;
+	self.gun2.effects = EFFECT_LOWPRECISION;
 	self.gun1.gun1 = spawn();
-	self.gun1.gun1.effects = EF_LOWPRECISION;
+	self.gun1.gun1.effects = EFFECT_LOWPRECISION;
 	self.gun2.gun2 = spawn();
-	self.gun2.gun2.effects = EF_LOWPRECISION;
+	self.gun2.gun2.effects = EFFECT_LOWPRECISION;
 	setmodel(self, self.message2);
 	setmodel(self.gun1, self.weaponmodel);
 	setmodel(self.gun2, self.weaponmodel);

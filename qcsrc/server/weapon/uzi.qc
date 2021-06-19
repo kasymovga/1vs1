@@ -67,7 +67,7 @@ void(float deathtype) weapon_uzi_attack {
 	flash.nextthink = time + 0.02;
 	flash.frame = 2;
 	flash.alpha = 1;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');
 	casing_spawn(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 2, self);
 }

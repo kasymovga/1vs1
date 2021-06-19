@@ -58,7 +58,7 @@ void(void) spawnfunc_dynlight {
 	self.dmg = self.light_lev;
 	self.use = dynlight_use;
 	self.customizeentityforclient = dynlight_customize;
-	self.effects = EF_NODEPTHTEST;
+	self.effects = EFFECT_NODEPTHTEST;
 	if (self.weaponmodel != "") {
 		precache_model(self.weaponmodel);
 		self.enemy = spawn();

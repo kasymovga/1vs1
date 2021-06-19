@@ -42,7 +42,6 @@ float(entity brush, vector point) particles_point_in_brush {
 .float atten;
 .float volume;
 .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
-.vector movedir; // trace direction
 
 void(void) particles_point_draw {
 	float n, i, fail;

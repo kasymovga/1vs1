@@ -40,7 +40,7 @@ void weapon_minstanex_attack (void)
 	damage_yoda = 0;
 	damage_goodhits = 0;
 	damage_headshot = 0;
-	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	bullet_railgun (weapon_shotorg, weapon_shotorg + weapon_shotdir * WORLD_MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 	antilag_end();
 
 	if(damage_yoda > 1)

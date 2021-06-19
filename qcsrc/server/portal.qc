@@ -266,7 +266,7 @@ void(entity portal) portal_make_waiting_portal {
 	portal.solid = SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
-	portal.effects = EF_ADDITIVE;
+	portal.effects = EFFECT_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
 }
@@ -277,7 +277,7 @@ void(entity portal) portal_make_in_portal {
 	portal.solid = SOLID_NOT; // this is done when connecting them!
 	portal.touch = portal_touch;
 	portal.think = portal_think;
-	portal.effects = EF_RED;
+	portal.effects = EFFECT_RED;
 	portal.nextthink = time;
 	portal.takedamage = DAMAGE_NO;
 }
@@ -287,7 +287,7 @@ void(entity portal) portal_make_out_portal {
 	portal.solid = SOLID_NOT;
 	portal.touch = stdproc_nothing;
 	portal.think = stdproc_nothing;
-	portal.effects = EF_STARDUST | EF_BLUE;
+	portal.effects = EFFECT_STARDUST | EFFECT_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
 }

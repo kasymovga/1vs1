@@ -287,11 +287,11 @@ void(void) chat_bubble_think {
 	}
 	if (o.BUTTON_CHAT && o.classname == "player") {
 		setorigin(self, '0 0 15' + o.maxs_z * '0 0 1');
-		if (self.effects & EF_NODRAW) {
-			self.effects &~= EF_NODRAW;
+		if (self.effects & EFFECT_NODRAW) {
+			self.effects &~= EFFECT_NODRAW;
 		}
-	} else if not(self.effects & EF_NODRAW) {
-		self.effects |= EF_NODRAW;
+	} else if not(self.effects & EFFECT_NODRAW) {
+		self.effects |= EFFECT_NODRAW;
 	}
 	self.nextthink = time;
 }
@@ -303,7 +303,7 @@ void(void) chat_bubble_spawn {
 	setattachment(e, self.body, "");
 	e.think = chat_bubble_think;
 	e.nextthink = time;
-	e.effects = EF_LOWPRECISION | EF_NODRAW;
+	e.effects = EFFECT_LOWPRECISION | EFFECT_NODRAW;
 	setmodel(e, "models/misc/chatbubble.spr");
 }
 

@@ -124,7 +124,7 @@ void(entity gun) vehicle_spiderbot_minigun_fire {
 	self = self.owner;
 	damage_record_fires(self, WEP_UZI, 1);
 	bullet_begin(10000);
-	bullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, WEP_UZI, particleeffectnum("EF_MGTURRETTRAIL"), 0, 0);
+	bullet(v, v_forward, g_vehicle_spiderbot_minigun_spread, 10000, 5, g_vehicle_spiderbot_minigun_damage, 0, 0, WEP_UZI, particleeffectnum("EFFECT_MGTURRETTRAIL"), 0, 0);
 	self = e;
 	bullet_end();
 	if not(gun.enemy) {
@@ -139,7 +139,7 @@ void(entity gun) vehicle_spiderbot_minigun_fire {
 	flash.frame = 2;
 	flash.angles_z = flash.v_angle_z + random() * 180;
 	flash.alpha = 1;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
 }
 
 void(void) vehicle_spiderbot_miniguns_do {

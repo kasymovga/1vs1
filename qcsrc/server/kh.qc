@@ -374,7 +374,7 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	key.takedamage = DAMAGE_YES;
 	setmodel(key, "models/keyhunt/key.md3");
 	key.kh_dropperteam = 0;
-	key.effects &~= EF_NODRAW;
+	key.effects &~= EFFECT_NODRAW;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = team_color(initial_owner.team) * KH_KEY_BRIGHTNESS;
@@ -409,7 +409,7 @@ void kh_Key_Hide(entity key)  // runs after when all the keys have been collecte
 	o = key.owner;
 	kh_Key_AssignTo(key, world);
 	key.solid = SOLID_NOT;
-	key.effects |= EF_NODRAW;
+	key.effects |= EFFECT_NODRAW;
 
 	kh_update_state();
 }
@@ -552,7 +552,7 @@ void kh_Key_Think()  // runs all the time
 
 	// if in nodrop or time over, respawn key
 	if not(self.owner)
-	if not(self.effects & EF_NODRAW)
+	if not(self.effects & EFFECT_NODRAW)
 		if(time > self.pain_finished)
 			kh_LoserTeam(self.team, self);
 
@@ -833,7 +833,7 @@ float kh_Key_waypointsprite_visible_for_player(entity e) // ??
 	if (g_kh_showenemycarrier)
 		return FALSE;
 
-	if (self.owner.effects & EF_NODRAW)
+	if (self.owner.effects & EFFECT_NODRAW)
 		return FALSE;
 
 	if(!self.owner.owner)
@@ -967,7 +967,7 @@ void kh_init_delayed()  // sets up th KH environment
 	entity key;
 	for (i = 0; i < kh_teams; i++) {
 		key = spawn();
-		key.effects = EF_NODRAW;
+		key.effects = EFFECT_NODRAW;
 		key.kh_worldkeynext = kh_worldkeylist;
 		kh_worldkeylist = key;
 		key.team = kh_Team_ByID(i);

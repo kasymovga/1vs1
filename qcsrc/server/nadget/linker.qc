@@ -121,7 +121,7 @@ NADGET_HOOKFUNCTION(linker, Attack) {
     e.nextthink = time;
     e.hg_spawntime = time;
     e.reset = nadget_Linker_Remove;
-    e.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION | EF_DOUBLESIDED;
+    e.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION | EFFECT_DOUBLESIDED;
     e.gravity = 100;
     e.cnt = time + g_nadgets_linker_duration/* * Buffs_NadgetPower(self) */;
     e.hg_deathtime = e.cnt;

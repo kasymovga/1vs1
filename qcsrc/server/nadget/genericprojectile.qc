@@ -297,7 +297,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     projectile_update(e);
     e.SendFlags = 0xFFFFFF;
     projectile_update_angles(e);
-    e.effects |= EF_NODEPTHTEST; // no culling please
+    e.effects |= EFFECT_NODEPTHTEST; // no culling please
     entity_move_out_of_solid(e, TRACE_MOVE_WORLDONLY);
 }
 

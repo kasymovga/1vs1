@@ -63,7 +63,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	player.angles = to_angles;
 	player.fixangle = TRUE;
 	player.velocity = to_velocity;
-	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
+	BITXOR_ASSIGN(player.effects, EFFECT_TELEPORT_BIT);
 	antilag_teleported(player);
 	projectile_update_after_teleport(player);
 	physics_mark_as_teleported(player, 0.1);

@@ -1,5 +1,5 @@
 float(void) world_check_rules_run_out_spawns;
-void(void) world_winners_clear;;
+void(void) world_winners_clear;
 void(.float field, float value) world_winners_add;
 void(.float field, float value) world_winners_set;
 float world_initialized;

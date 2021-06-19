@@ -155,7 +155,7 @@ void turret_phaser_attack()
     beam = spawn();
     beam.ticrate = 0.1; //cvar("sys_ticrate");
     setmodel(beam,"models/turrets/phaser_beam.md3");
-    beam.effects = EF_LOWPRECISION;
+    beam.effects = EFFECT_LOWPRECISION;
     beam.solid = SOLID_NOT;
     beam.think = turret_phaser_beam_think;
     beam.cnt = time + self.shot_speed;

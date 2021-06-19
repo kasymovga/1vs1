@@ -154,7 +154,7 @@ void boss4_spawn() {
 	self.view_ofs = '0 0 105';
 	self.fire_burner = spawn();
 	setattachment(self.fire_burner, self, "Bip01 Head");
-	self.fire_burner.effects = EF_FLAME;
+	self.fire_burner.effects = EFFECT_FLAME;
 	entity e = WaypointSprite_Spawn("danger", 0, 0, self, '0 0 0', world, 0, self, waypointsprite_attachedforcarrier, FALSE);
 	WaypointSprite_UpdateMaxHealth(e, self.health);
 	WaypointSprite_UpdateHealth(e, self.health);

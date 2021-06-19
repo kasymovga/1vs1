@@ -1,0 +1,6 @@
+const float KEY_FORWARD = 1;
+const float KEY_BACKWARD = 2;
+const float KEY_LEFT = 4;
+const float KEY_RIGHT = 8;
+const float KEY_JUMP = 16;
+const float KEY_CROUCH = 32;

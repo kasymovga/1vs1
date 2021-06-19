@@ -1,3 +1,4 @@
 vector world_min;
 vector world_max;
 void(float mode) world_get_min_max;
+const float WORLD_MAX_SHOT_DISTANCE = 32768;

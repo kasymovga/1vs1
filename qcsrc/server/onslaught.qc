@@ -56,7 +56,7 @@ void(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn) 
 	gib.takedamage = DAMAGE_YES;
 	gib.event_damage = onslaught_gib_damage;
 	gib.health = -1;
-	gib.effects = EF_LOWPRECISION;
+	gib.effects = EFFECT_LOWPRECISION;
 	gib.flags = FL_NOTARGET;
 	gib.velocity = v_to;
 	gib.giblifetime	= time + f_lifetime;
@@ -648,7 +648,7 @@ void(void) spawnfunc_onslaught_generator {
 	e.classname = "onslaught_generator_shield";
 	e.solid = SOLID_NOT;
 	e.movetype = MOVETYPE_NONE;
-	e.effects = EF_ADDITIVE;
+	e.effects = EFFECT_ADDITIVE;
 	setmodel(e, "models/onslaught/generator_shield.md3");
 	setorigin(e, self.origin);
 	e.colormap = self.colormap;
@@ -958,7 +958,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 	e.scale = 0.7;
 	e.solid = SOLID_NOT;
 	e.movetype = MOVETYPE_NONE;
-	e.effects = EF_ADDITIVE;
+	e.effects = EFFECT_ADDITIVE;
 	setmodel(e, "models/onslaught/controlpoint_shield.md3");
 	setorigin(e, self.origin);
 	e.colormap = self.colormap;

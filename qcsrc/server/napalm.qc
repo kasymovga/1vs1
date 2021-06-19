@@ -80,7 +80,7 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.movetype = MOVETYPE_BOUNCE;
     proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
     proj.team = self.owner.team;
-    proj.effects = EF_NODEPTHTEST;
+    proj.effects = EFFECT_NODEPTHTEST;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = burndamage + 100;
     proj.napalm_burn_radius = burnradius;

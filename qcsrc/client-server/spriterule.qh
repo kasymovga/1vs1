@@ -1,0 +1,2 @@
+const float SPRITERULE_DEFAULT = 0;
+const float SPRITERULE_TEAMPLAY = 1;

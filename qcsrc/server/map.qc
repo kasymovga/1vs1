@@ -378,9 +378,9 @@ void() map_finish {
 		e.movetype = MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
 		if (e.weaponentity) {
-			e.weaponentity.effects = EF_NODRAW;
+			e.weaponentity.effects = EFFECT_NODRAW;
 			if (e.weaponentity.weaponentity)
-				e.weaponentity.weaponentity.effects = EF_NODRAW;
+				e.weaponentity.weaponentity.effects = EFFECT_NODRAW;
 		}
 		if (clienttype(e) == CLIENTTYPE_REAL) {
 			stuffcmd(e, "\nscr_printspeed 1000000\n");

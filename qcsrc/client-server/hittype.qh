@@ -1,0 +1,6 @@
+float HITTYPE_SECONDARY = 0x100;
+float HITTYPE_SPLASH = 0x200;
+float HITTYPE_BOUNCE = 0x400;
+float HITTYPE_HEADSHOT = 0x800;
+float HITTYPE_NOINFO = 0x800; //trick for damage_radius()
+float HITTYPE_NOTEAMDAMAGE = 0x1000;

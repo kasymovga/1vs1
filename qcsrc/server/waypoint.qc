@@ -44,7 +44,7 @@ entity(vector m1, vector m2, float f) waypoint_spawn {
 	if (g_waypointeditor) {
 		m1 = w.mins;
 		m2 = w.maxs;
-		setmodel(w, "models/runematch/rune.mdl"); w.effects = EF_LOWPRECISION;
+		setmodel(w, "models/runematch/rune.mdl"); w.effects = EFFECT_LOWPRECISION;
 		setsize(w, m1, m2);
 		if (w.wpflags & WAYPOINTFLAG_ITEM)
 			w.colormod = '1 0 0';
@@ -215,7 +215,7 @@ void(entity wp) waypoint_schedulerelink {
 		vector m1, m2;
 		m1 = wp.mins;
 		m2 = wp.maxs;
-		setmodel(wp, "models/runematch/rune.mdl"); wp.effects = EF_LOWPRECISION;
+		setmodel(wp, "models/runematch/rune.mdl"); wp.effects = EFFECT_LOWPRECISION;
 		setsize(wp, m1, m2);
 		if (wp.wpflags & WAYPOINTFLAG_ITEM)
 			wp.colormod = '1 0 0';
@@ -237,7 +237,7 @@ void(entity wp) waypoint_schedulerelink {
 	// schedule an actual relink on next frame
 	wp.think = waypoint_think;
 	wp.nextthink = time;
-	wp.effects = EF_LOWPRECISION;
+	wp.effects = EFFECT_LOWPRECISION;
 }
 
 // spawnfunc_waypoint map entity

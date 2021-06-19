@@ -96,10 +96,10 @@ void func_laserbeam_init(void) {
         if(!self.enemy)
             entity_abort("func_laser has an invalid target");
     } else if(!self.t_length)
-        self.t_length = MAX_SHOT_DISTANCE;
+        self.t_length = WORLD_MAX_SHOT_DISTANCE;
 
     if(self.t_length < 0)
-        self.t_length = MAX_SHOT_DISTANCE;
+        self.t_length = WORLD_MAX_SHOT_DISTANCE;
 
     self.reset();
     net_link_entity(self, FALSE, 0, weapon_zapper_beam_send);

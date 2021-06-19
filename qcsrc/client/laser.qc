@@ -2,16 +2,12 @@
 // it has color 'colormod'
 // and stops when something is in the way
 .float cnt; // end effect
-.vector colormod;
 .float state; // on-off
 .float count; // flags for the laser
 .vector velocity;
 .float alpha;
 .float scale; // scaling factor of the thickness
 .float modelscale; // scaling factor of the dlight
-
-// TODO move these into a heade file
-float trace_dphitq3surfaceflags;
 
 void(void) laser_draw {
 	if (!self.state)

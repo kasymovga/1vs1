@@ -92,7 +92,7 @@ var void() powerup_invincible_player_effects_next;
 void() powerup_invincible_player_effects {
 	if (self.items & IT_INVINCIBLE) {
 		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
+		self.effects = self.effects | (EFFECT_RED | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 		if (time > self.invincible_finished) {
 			self.items = self.items - (self.items & IT_INVINCIBLE);
 			sprint(self, "^3Shield has worn off\n");
@@ -140,7 +140,7 @@ var void() powerup_strength_player_effects_next;
 void() powerup_strength_player_effects {
 	if (self.items & IT_STRENGTH) {
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+		self.effects = self.effects | (EFFECT_BLUE | EFFECT_ADDITIVE | EFFECT_FULLBRIGHT);
 		if (time > self.strength_finished) {
 			self.items = self.items - (self.items & IT_STRENGTH);
 			sprint(self, "^3Strength has worn off\n");

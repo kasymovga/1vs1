@@ -145,7 +145,7 @@ void weapon_supershotgun_attack(float secondary, float barrels, float ballistic)
 	setmodel(flash, "models/uziflash.md3"); // precision set below
 	flash.think = stdproc_remove;
 	flash.nextthink = time + 0.06;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	flash.effects = EFFECT_ADDITIVE | EFFECT_FULLBRIGHT | EFFECT_LOWPRECISION;
 	weapon_attach_to_shotorg(flash, '5 0 0');
 }
 

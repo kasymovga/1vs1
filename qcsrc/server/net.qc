@@ -16,7 +16,7 @@ void(entity e, float docull, float dt, float(entity, float) sendfunc) net_link_e
     e.SendFlags = 0xFFFFFF;
 
     if (!docull)
-        e.effects |= EF_NODEPTHTEST;
+        e.effects |= EFFECT_NODEPTHTEST;
 
     if (dt)
     {

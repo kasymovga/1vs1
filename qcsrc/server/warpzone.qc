@@ -69,10 +69,10 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	player.angles = to_angles;
 	player.v_angle = to_angles;
 	player.velocity = to_velocity;
-	if (player.effects & EF_TELEPORT_BIT)
-		player.effects &~= EF_TELEPORT_BIT;
+	if (player.effects & EFFECT_TELEPORT_BIT)
+		player.effects &~= EFFECT_TELEPORT_BIT;
 	else
-		player.effects |= EF_TELEPORT_BIT;
+		player.effects |= EFFECT_TELEPORT_BIT;
 
 	if (player.classname == "player")
 		player.flags &~= FL_ONGROUND;
@@ -158,7 +158,7 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 		ts.nextthink = time + 1;
 		ts.owner = e;
 		ts.enemy = wz;
-		ts.effects = EF_NODEPTHTEST;
+		ts.effects = EFFECT_NODEPTHTEST;
 		ts.classname = "warpzone_teleported";
 		ts.angles = wz.warpzone_transform;
 		ts.customizeentityforclient = inline float(void) {
@@ -768,7 +768,7 @@ void(void) warpzone_spawn {
 
 	self.SendEntity = warpzone_send;
 	self.SendFlags = 0xFFFFFF;
-	self.effects |= EF_NODEPTHTEST;
+	self.effects |= EFFECT_NODEPTHTEST;
 	self.warpzone_next = warpzone_first;
 	if not(warpzone_first) {
 		WarpZone_Enable();

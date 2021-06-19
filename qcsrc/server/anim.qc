@@ -5,7 +5,7 @@ void(entity e, vector anim, float looping, float override, float restart) anim_s
 		if(restart) {
 			if(restart > 0)
 			if(anim_y == 1) // ZYM animation
-				BITXOR_ASSIGN(e.effects, EF_TELEPORT_BIT);
+				BITXOR_ASSIGN(e.effects, EFFECT_TELEPORT_BIT);
 		} else
 			return;
 	}

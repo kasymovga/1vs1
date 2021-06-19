@@ -35,9 +35,9 @@ void(void) ice_remove {
 
 float(void) ice_customize {
 	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
-		self.effects |= EF_NODEPTHTEST;
+		self.effects |= EFFECT_NODEPTHTEST;
 	else
-		self.effects &~= EF_NODEPTHTEST;
+		self.effects &~= EFFECT_NODEPTHTEST;
 
 	return TRUE;
 }

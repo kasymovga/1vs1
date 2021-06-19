@@ -18,7 +18,7 @@ void weapon_port_success (void)
 		return;
 	}
 
-	if (self.effects & EF_RED)
+	if (self.effects & EFFECT_RED)
 		self.owner.porto_current_in = world;
 	else
 		self.owner.porto_current_out = world;
@@ -33,7 +33,7 @@ void weapoon_porto_fail ()
 		return;
 	}
 
-	if (self.effects & EF_RED)
+	if (self.effects & EFFECT_RED)
 		self.owner.porto_current_in = world;
 	else
 		self.owner.porto_current_out = world;
@@ -106,7 +106,7 @@ void weapon_porto_touch (void)
 		sound(self, CHAN_PROJECTILE, "porto/unsupported.wav", VOL_BASE, ATTN_NORM);
 		weapoon_porto_fail();
 	}
-	else if(self.effects & EF_RED)
+	else if(self.effects & EFFECT_RED)
 	{
 		if(portal_spawn_in_portal_at_trace(self.owner, self.right_vector, self.owner.portal_id))
 		{
@@ -155,12 +155,12 @@ void weapon_porto_attack (float out)
 	PROJECTILE_MAKETRIGGER(gren);
 	if (out)
 	{
-		gren.effects = EF_BLUE;
+		gren.effects = EFFECT_BLUE;
 		self.porto_current_out = gren;
 	}
 	else
 	{
-		gren.effects = EF_RED;
+		gren.effects = EFFECT_RED;
 		self.porto_current_in = gren;
 	}
 	gren.scale = 4;

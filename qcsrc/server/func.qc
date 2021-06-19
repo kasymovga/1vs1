@@ -7,7 +7,7 @@ void(void) spawnfunc_func_wall { model_init(SOLID_BSP); } // Q1 name
 void(void) spawnfunc_func_clientwall { model_client_init(SOLID_BSP); } // brush entity
 
 void(void) spawnfunc_func_stardust {
-	self.effects = EF_STARDUST;
+	self.effects = EFFECT_STARDUST;
 }
 
 float(void) func_moving_brush_init {
@@ -673,7 +673,7 @@ void(void) spawnfunc_func_plat {
 	if not(func_moving_brush_init())
 		return;
 
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	setsize (self, self.mins , self.maxs);
 	self.blocked = func_plat_crush;
 	if (!self.speed)
@@ -766,7 +766,7 @@ void(void) spawnfunc_func_train {
 
 	if not(func_moving_brush_init())
 		return;
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 
 	// wait for targets to spawn
 	entity_initialize(self, func_train_find, INITPRIO_SETLOCATION);
@@ -822,7 +822,7 @@ void(void) spawnfunc_func_rotating {
 	if not(func_moving_brush_init())
 		return;
 
-	// no EF_LOWPRECISION here, as rounding angles is bad
+	// no EFFECT_LOWPRECISION here, as rounding angles is bad
 	self.blocked = func_generic_plat_blocked;
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
@@ -898,7 +898,7 @@ void spawnfunc_func_bobbing() {
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	// TODO make a reset function for this one
 }
 
@@ -1002,7 +1002,7 @@ void(void) spawnfunc_func_button {
 	if not(func_moving_brush_init())
 		return;
 
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	self.blocked = func_button_blocked;
 	self.use = func_button_use;
 	self.reset = func_button_reset;
@@ -1491,7 +1491,7 @@ void(void) spawnfunc_func_door {
 	if not(func_moving_brush_init())
 		return;
 
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	self.classname = "door";
 	self.blocked = func_door_blocked;
 	self.use = func_door_use;
@@ -1598,7 +1598,7 @@ void(void) spawnfunc_func_door_rotating {
 	if not(func_moving_brush_init())
 		return;
 
-	//self.effects |= EF_LOWPRECISION;
+	//self.effects |= EFFECT_LOWPRECISION;
 	self.classname = "door_rotating";
 	self.blocked = func_door_blocked;
 	self.use = func_door_use;
@@ -1820,7 +1820,7 @@ void(void) spawnfunc_func_door_secret {
 	if not(func_moving_brush_init())
 		return;
 
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	self.touch = func_secret_touch;
 	self.blocked = func_secret_blocked;
 	self.speed = 50;
@@ -1908,7 +1908,7 @@ void(void) spawnfunc_func_fourier {
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	// TODO make a reset function for this one
 }
 
@@ -2040,7 +2040,7 @@ void(void) spawnfunc_func_vectormamamam {
 	self.nextthink = self.ltime + 999999999;
 	self.think = stdproc_nothing;
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
-	self.effects |= EF_LOWPRECISION;
+	self.effects |= EFFECT_LOWPRECISION;
 	entity_initialize(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }
 
