@@ -88,9 +88,6 @@ const float RADARICON_POWERUP = 1;
 
 ///////////////////////////
 // csqc communication stuff
-const float HUD_NORMAL = 0;
-const float HUD_SPIDERBOT = 10;
-
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
 #define MAPVOTE_COUNT 10
