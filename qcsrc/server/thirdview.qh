@@ -1,0 +1,1 @@
+void(entity pl, float t, float back, float up) thirdview_set;

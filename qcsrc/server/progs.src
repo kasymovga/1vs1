@@ -190,7 +190,7 @@ tdm.qh
 mapvote.qh
 casing.qh
 hint.qh
-3rdview.qh
+thirdview.qh
 centerprint.qc
 sound.qc
 announce.qc
@@ -433,4 +433,4 @@ lms.qc
 report.qc
 rank.qc
 waypoint.qc
-3rdview.qc
+thirdview.qc
