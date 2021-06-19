@@ -1064,14 +1064,6 @@ float(string name, string value) registercvar = #93;
 //description:
 //the engine supports stereo WAV files.  (useful with DP_SND_DIRECTIONLESSATTNNONE for music)
 
-//DP_SOLIDCORPSE
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//solid definitions:
-float SOLID_CORPSE = 5;
-//description:
-//the entity will not collide with SOLID_CORPSE and SOLID_SLIDEBOX entities (and likewise they will not collide with it), this is useful if you want dead bodies that are shootable but do not obstruct movement by players and monsters, note that if you traceline with a SOLID_SLIDEBOX entity as the ignoreent, it will ignore SOLID_CORPSE entities, this is desirable for visibility and movement traces, but not for bullets, for the traceline to hit SOLID_CORPSE you must temporarily force the player (or whatever) to SOLID_BBOX and then restore to SOLID_SLIDEBOX after the traceline.
-
 //DP_SPRITE32
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
@@ -1688,10 +1680,6 @@ string(string s, float start, float length) substring = #116; // returns a secti
 vector(string s) stov = #117; // returns vector value from a string
 string(string s, ...) strzone = #118; // makes a copy of a string into the string zone and returns it, this is often used to keep around a tempstring for longer periods of time (tempstrings are replaced often)
 void(string s) strunzone = #119; // removes a copy of a string from the string zone (you can not use that string again or it may crash!!!)
-//constants:
-float FILE_READ = 0;
-float FILE_APPEND = 1;
-float FILE_WRITE = 2;
 //cvars:
 //pr_zone_min_strings : default 64 (64k), min 64 (64k), max 8192 (8mb)
 //description:

@@ -8,6 +8,8 @@ constants.qh
 ../common/constants.qh
 ../common/digit.qh
 ../client-server/constants.qh
+../client-server/solid.qh
+../client-server/content.qh
 ../client-server/stat.qh
 ../common/gametype.qh
 ../common/colormap.qh

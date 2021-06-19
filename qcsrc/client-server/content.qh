@@ -1,0 +1,6 @@
+const float CONTENT_EMPTY = -1;
+const float CONTENT_SOLID = -2;
+const float CONTENT_WATER = -3;
+const float CONTENT_SLIME = -4;
+const float CONTENT_LAVA = -5;
+const float CONTENT_SKY = -6;

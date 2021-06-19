@@ -8,6 +8,8 @@ constants.qh
 ../common/digit.qh
 ../client-menu/key.h
 ../client-server/constants.qh
+../client-server/solid.qh
+../client-server/content.qh
 ../client-menu/cvar.qh
 ../client-server/stat.qh
 builtins.qh

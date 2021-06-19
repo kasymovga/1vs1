@@ -1,0 +1,12 @@
+const float SOLID_NOT = 0;
+const float SOLID_TRIGGER = 1;
+const float SOLID_BBOX = 2;
+const float SOLID_SLIDEBOX = 3;
+const float SOLID_BSP = 4;
+//DP_SOLIDCORPSE
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//solid definitions:
+//description:
+//the entity will not collide with SOLID_CORPSE and SOLID_SLIDEBOX entities (and likewise they will not collide with it), this is useful if you want dead bodies that are shootable but do not obstruct movement by players and monsters, note that if you traceline with a SOLID_SLIDEBOX entity as the ignoreent, it will ignore SOLID_CORPSE entities, this is desirable for visibility and movement traces, but not for bullets, for the traceline to hit SOLID_CORPSE you must temporarily force the player (or whatever) to SOLID_BBOX and then restore to SOLID_SLIDEBOX after the traceline.
+float SOLID_CORPSE = 5;

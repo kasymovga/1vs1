@@ -63,26 +63,6 @@ const float		STAT_TIMELIMIT					= 236;
 const float     STAT_MOVEVARS_GRAVITY           = 242;
 const float     STAT_MOVEVARS_MAXSPEED          = 244;
 
-// Sound Constants
-//const float		CHAN_AUTO						= 0;
-//const float		CHAN_WEAPON						= 1;
-//const float		CHAN_VOICE						= 2;
-//const float		CHAN_ITEM						= 3;
-//const float		CHAN_BODY						= 4;
-
-//const float		ATTN_NONE						= 0;
-//const float		ATTN_NORM						= 1;
-//const float		ATTN_IDLE						= 2;
-//const float		ATTN_STATIC						= 3;
-
-// Quake-style Point Contents
-const float		CONTENT_EMPTY					= -1;
-const float		CONTENT_SOLID					= -2;
-const float		CONTENT_WATER					= -3;
-const float		CONTENT_SLIME					= -4;
-const float		CONTENT_LAVA					= -5;
-const float		CONTENT_SKY						= -6;
-
 // Effect Constants
 const float 	EF_NODRAW						= 16;
 const float 	EF_ADDITIVE						= 32;
@@ -119,15 +99,6 @@ const float 	TE_EXPLOSIONRGB					= 53;
 const float		TE_GUNSHOTQUAD					= 57;
 const float		TE_EXPLOSIONQUAD 				= 70;
 
-// Math Constants
-const float 	EXTRA_LOW 						= -99999999;
-const float 	EXTRA_HIGH 						= 99999999;
-
-// Frik File Constants
-const float		FILE_READ						= 0;
-const float		FILE_APPEND						= 1;
-const float		FILE_WRITE						= 2;
-
 // Button values used by input_buttons
 const float BUTTON_ATTACK = 1;
 const float BUTTON_JUMP = 2;
@@ -156,13 +127,6 @@ const float DRAWFLAG_MODULATE = 2;
 const float DRAWFLAG_2XMODULATE = 3;
 const float DRAWFLAG_SCREEN = 4;
 const float DRAWFLAG_MIPMAP = 0x100; // only for R_BeginPolygon
-
-#define        SOLID_NOT                               0               // no interaction with other objects
-#define        SOLID_TRIGGER                   1               // touch on edge, but not blocking
-#define        SOLID_BBOX                              2               // touch on edge, block
-#define        SOLID_SLIDEBOX                  3               // touch on edge, but not an onground
-#define        SOLID_BSP                               4               // bsp clip, touch on edge, block
-#define        SOLID_CORPSE                    5               // same as SOLID_BBOX, except it behaves as SOLID_NOT against SOLID_SLIDEBOX objects (players/monsters)
 
 float MOVE_NORMAL = 0; // same as FALSE
 float MOVE_NOMONSTERS = 1; // same as TRUE

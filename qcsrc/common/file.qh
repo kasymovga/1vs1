@@ -1,2 +1,8 @@
 float(string path) file_exists;
 float(string path) file_exists_image;
+
+//FRIK_FILE
+// Frik File Constants
+const float FILE_READ = 0;
+const float FILE_APPEND = 1;
+const float FILE_WRITE = 2;

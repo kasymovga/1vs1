@@ -1,16 +1,3 @@
-float	SOLID_NOT				= 0;
-float	SOLID_TRIGGER				= 1;
-float	SOLID_BBOX				= 2;
-float	SOLID_SLIDEBOX				= 3;
-float	SOLID_BSP				= 4;
-
-float	CONTENT_EMPTY				= -1;
-float	CONTENT_SOLID				= -2;
-float	CONTENT_WATER				= -3;
-float	CONTENT_SLIME				= -4;
-float	CONTENT_LAVA				= -5;
-float	CONTENT_SKY				= -6;
-
 float	SVC_BAD					= 0;
 float	SVC_NOP					= 1;
 float	SVC_DISCONNECT				= 2;
