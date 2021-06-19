@@ -202,7 +202,7 @@ announce.qc
 ../client-server/team.qc
 ../client-server/stdproc.qc
 ../common/stdproc.qc
-waypointsprites.qc
+waypointsprite.qc
 slowmo.qc
 bot/aim.qc
 navigation.qc
