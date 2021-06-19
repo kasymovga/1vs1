@@ -202,17 +202,17 @@ float(string name, float checktime, float _speed) race_records_put {
 void(void) race_score_setup {
 	score_basics(0, 0, FALSE);
 	if (race_teams) {
-		ST_RACE_LAPS = score_register_team_score("laps", SFL_SORT_PRIO_PRIMARY);
-		SP_RACE_LAPS = score_register("laps", SFL_SORT_PRIO_PRIMARY);
-		SP_RACE_TIME = score_register("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		ST_RACE_LAPS = score_register_team_score("laps", SCORE_FLAG_SORT_PRIO_PRIMARY);
+		SP_RACE_LAPS = score_register("laps", SCORE_FLAG_SORT_PRIO_PRIMARY);
+		SP_RACE_TIME = score_register("time", SCORE_FLAG_SORT_PRIO_SECONDARY | SCORE_FLAG_LOWER_IS_BETTER | SCORE_FLAG_TIME);
 	} else if (g_race_qualifying) {
-		SP_RACE_FASTEST = score_register("fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		SP_RACE_MAXSPEED = score_register("maxspeed",   SFL_SORT_PRIO_SECONDARY);
+		SP_RACE_FASTEST = score_register("fastest",   SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_LOWER_IS_BETTER | SCORE_FLAG_TIME);
+		SP_RACE_MAXSPEED = score_register("maxspeed",   SCORE_FLAG_SORT_PRIO_SECONDARY);
 		race_maxspeed = scores[SP_RACE_MAXSPEED];
 	} else {
 		//ST_RACE_LAPS = score_register_team_score("laps", 0);
-		SP_RACE_LAPS = score_register("laps", SFL_SORT_PRIO_PRIMARY);
-		SP_RACE_TIME = score_register("time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		SP_RACE_LAPS = score_register("laps", SCORE_FLAG_SORT_PRIO_PRIMARY);
+		SP_RACE_TIME = score_register("time", SCORE_FLAG_SORT_PRIO_SECONDARY | SCORE_FLAG_LOWER_IS_BETTER | SCORE_FLAG_TIME);
 	}
 }
 

@@ -873,25 +873,25 @@ void() ctf_delayedinit {
 	sp_score = sp_caps = 0;
 	switch(g_ctf_win_mode) {
 	case 0: // caps only
-		sp_caps = SFL_SORT_PRIO_PRIMARY;
+		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
 		break;
 	case 1: // caps, then score
-		sp_caps = SFL_SORT_PRIO_PRIMARY;
-		sp_score = SFL_SORT_PRIO_SECONDARY;
+		sp_caps = SCORE_FLAG_SORT_PRIO_PRIMARY;
+		sp_score = SCORE_FLAG_SORT_PRIO_SECONDARY;
 		break;
 	case 2: // score only
 	default:
-		sp_caps = SFL_SORT_PRIO_SECONDARY; // looks better ;)
-		sp_score = SFL_SORT_PRIO_PRIMARY;
+		sp_caps = SCORE_FLAG_SORT_PRIO_SECONDARY; // looks better ;)
+		sp_score = SCORE_FLAG_SORT_PRIO_PRIMARY;
 		break;
 	}
-	score_basics(SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
+	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
 	CTF_SCORE_TEAM_CAPS = score_register_team_score("caps", sp_caps);
-	CTF_SCORE_CAPS = score_register("caps", SFL_SORT_PRIO_SECONDARY);
+	CTF_SCORE_CAPS = score_register("caps", SCORE_FLAG_SORT_PRIO_SECONDARY);
 	CTF_SCORE_PICKUPS = score_register("pickups", 0);
 	CTF_SCORE_FCKILLS = score_register("fckills", 0);
 	CTF_SCORE_RETURNS = score_register("returns", 0);
-	CTF_SCORE_DROPS = score_register("drops", SFL_LOWER_IS_BETTER);
+	CTF_SCORE_DROPS = score_register("drops", SCORE_FLAG_LOWER_IS_BETTER);
 	if (gametype == GAMETYPE_CATF) {
 		clanarena_shared_init("catf");
 		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);

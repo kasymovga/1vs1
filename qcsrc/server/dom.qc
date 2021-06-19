@@ -381,9 +381,9 @@ void(void) dom_delayedinit {
 	float sp_domticks, sp_score;
 	sp_score = sp_domticks = 0;
 	if (cvar("g_dom_disable_frags"))
-		sp_domticks = SFL_SORT_PRIO_PRIMARY;
+		sp_domticks = SCORE_FLAG_SORT_PRIO_PRIMARY;
 	else
-		sp_score = SFL_SORT_PRIO_PRIMARY;
+		sp_score = SCORE_FLAG_SORT_PRIO_PRIMARY;
 
 	score_basics(sp_score, sp_score, TRUE);
 	ST_DOM_TICKS = score_register_team_score("ticks", sp_domticks);

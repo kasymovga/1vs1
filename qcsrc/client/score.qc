@@ -6,7 +6,7 @@ void(float ignore) score_info_read {
 	string s;
 	SP_CLIENTVERSION_FIELD = -1;
 	SP_COUNTRY_FIELD = -1;
-	for (i = 0; i < MAX_SCORE; ++i) {
+	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
 		s = strzone(ReadString());
 		if (s == "country")
 			SP_COUNTRY_FIELD = i;
@@ -38,7 +38,7 @@ void(float ignore) score_info_read {
 		scores_label[i] = s;
 		scores_flags[i] = ReadByte();
 	}
-	for (i = 0; i < MAX_TEAMSCORE; ++i) {
+	for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
@@ -52,7 +52,7 @@ void(void) score_player_remove {
 		team_set(self.owner, -1);
 		player_remove(self.owner);
 		self.owner.gotscores = 0;
-		for (i = 0; i < MAX_SCORE; ++i)
+		for (i = 0; i < SCORE_FILEDS_MAX; ++i)
 			self.owner.(scores[i]) = 0; // clear all scores
 	}
 }
@@ -60,7 +60,6 @@ void(void) score_player_remove {
 void(float ignore) score_player_read {
 	float i, n;
 	entity o;
-	
 	n = ReadByte() - 1;
 	if (self.owner && n != self.sv_entnum) { // workaround for DP bug
 		//print("A CSQC entity changed its owner!\n");
@@ -80,7 +79,7 @@ void(float ignore) score_player_read {
 	float sf, lf;
 	float l = ReadByte();
 	if (l == 4) {
-		n = MAX_SCORE;
+		n = SCORE_FILEDS_MAX;
 		sf = ReadCoord();
 		lf = ReadCoord();
 	} else if (l == 2) {
@@ -119,7 +118,7 @@ void(float ignore) score_team_read {
 	self.team = ReadByte();
 	o = self.owner = team_get(self.team, TRUE); // these team numbers can always be trusted
 	float sf, lf;
-#if MAX_TEAMSCORE <= 8
+#if SCORE_TEAM_FIELDS_MAX <= 8
 	sf = ReadByte();
 	lf = ReadByte();
 #else
@@ -127,7 +126,7 @@ void(float ignore) score_team_read {
 	lf = ReadShort();
 #endif
 	float p;
-	for (i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
+	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
 		if (sf & p) {
 			if (lf & p)
 				o.(teamscores[i]) = net_read_int24();

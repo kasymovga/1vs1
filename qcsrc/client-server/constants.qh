@@ -97,44 +97,6 @@ const float HUD_SPIDERBOT = 10;
 
 #define MENU_ITEMS_MAXCOUNT 10
 
-/**
- * Lower scores are better (e.g. suicides)
- */
-#define SFL_LOWER_IS_BETTER 1
-
-/**
- * Don't show zero values as scores
- */
-#define SFL_HIDE_ZERO 2
-
-/**
- * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
- */
-#define SFL_ALLOW_HIDE 16
-
-/**
- * Display as a rank (with st, nd, rd, th suffix)
- */
-#define SFL_RANK 32
-
-/**
- * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
- */
-#define SFL_TIME 64
-
-// not an extra constant yet
-#define SFL_ZERO_IS_WORST SFL_TIME
-
-/**
- * Scoring priority (NOTE: PRIMARY is used for fraglimit)
- */
-#define SFL_SORT_PRIO_SECONDARY 4
-#define SFL_SORT_PRIO_PRIMARY 8
-#define SFL_SORT_PRIO_MASK 12
-#define SFL_NOCLEAR 16
-#define MAX_SCORE 20
-#define MAX_TEAMSCORE 2
-
 // this sets sounds and other properties of the projectiles in csqc
 // NOTE: limited to 255 projectiles. if that's ever seriously a problem, change the ProjInfo protocol.
 float SPECIES_HUMAN = 0;

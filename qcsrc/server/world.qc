@@ -438,7 +438,7 @@ float(void) world_check_rules_run_out_spawns {
 		if (score_team3) t = COLOR_TEAM3;
 		if (score_team4) t = COLOR_TEAM4;
 		team_teams_allowed(world);
-		for (i = 0; i < MAX_TEAMSCORE; ++i) {
+		for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
 			if (t != COLOR_TEAM1) if (team1 >= 0) score_team_add_to(COLOR_TEAM1, i, -1000);
 			if (t != COLOR_TEAM2) if (team2 >= 0) score_team_add_to(COLOR_TEAM2, i, -1000);
 			if (t != COLOR_TEAM3) if (team3 >= 0) score_team_add_to(COLOR_TEAM3, i, -1000);

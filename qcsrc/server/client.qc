@@ -799,7 +799,7 @@ void(entity pl, float tstart, float dt) client_write_recordmarker {
 }
 
 void(void) client_version_init {
-	SP_CLIENTVERSION = score_register((cvar("sv_clientversion_hidden") ? "cvhidden" : "cv"), SFL_NOCLEAR);
+	SP_CLIENTVERSION = score_register((cvar("sv_clientversion_hidden") ? "cvhidden" : "cv"), SCORE_FLAG_NOCLEAR);
 	clientversion = scores[SP_CLIENTVERSION];
 }
 

@@ -14,8 +14,8 @@ vector sbar_color;
 float SBAR_SCOREBOARD_OFFSET = 50;
 #define SBAR_TIME_DECIMALS 2
 
-#define SBAR_SCORE_IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
-#define SBAR_SCORE_IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
+#define SBAR_SCORE_IS_INCREASING(x) ( (x)&SCORE_FLAG_LOWER_IS_BETTER )
+#define SBAR_SCORE_IS_DECREASING(x) ( !((x)&SCORE_FLAG_LOWER_IS_BETTER) )
 
 float sbar_weaponspace[10];
 
@@ -276,21 +276,21 @@ void(vector pos, float x, float lettersize, float alpha) sbar_draw_num_colored  
 void(void) sbar_scores_init {
 	float i, f;
 	ps_primary = ps_secondary = ts_primary = ts_secondary = -1;
-	for (i = 0; i < MAX_SCORE; ++i) {
-		f = (scores_flags[i] & SFL_SORT_PRIO_MASK);
-		if (f == SFL_SORT_PRIO_PRIMARY)
+	for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
+		f = (scores_flags[i] & SCORE_FLAG_SORT_PRIO_MASK);
+		if (f == SCORE_FLAG_SORT_PRIO_PRIMARY)
 			ps_primary = i;
-		if (f == SFL_SORT_PRIO_SECONDARY)
+		if (f == SCORE_FLAG_SORT_PRIO_SECONDARY)
 			ps_secondary = i;
 	}
 	if (ps_secondary == -1)
 		ps_secondary = ps_primary;
 
-	for (i = 0; i < MAX_TEAMSCORE; ++i) {
-		f = (teamscores_flags[i] & SFL_SORT_PRIO_MASK);
-		if (f == SFL_SORT_PRIO_PRIMARY)
+	for (i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i) {
+		f = (teamscores_flags[i] & SCORE_FLAG_SORT_PRIO_MASK);
+		if (f == SCORE_FLAG_SORT_PRIO_PRIMARY)
 			ts_primary = i;
-		if (f == SFL_SORT_PRIO_SECONDARY)
+		if (f == SCORE_FLAG_SORT_PRIO_SECONDARY)
 			ts_secondary = i;
 	}
 	if (ts_secondary == -1)
@@ -319,7 +319,7 @@ float(entity left, entity right) sbar_scores_players_compare {
 	}
 	vl = left.scores[ps_primary];
 	vr = right.scores[ps_primary];
-	if (scores_flags[ps_primary] & SFL_ZERO_IS_WORST) {
+	if (scores_flags[ps_primary] & SCORE_FLAG_ZERO_IS_WORST) {
 		if (vl == 0 && vr != 0)
 			return 1;
 
@@ -334,7 +334,7 @@ float(entity left, entity right) sbar_scores_players_compare {
 
 	vl = left.scores[ps_secondary];
 	vr = right.scores[ps_secondary];
-	if (scores_flags[ps_secondary] & SFL_ZERO_IS_WORST) {
+	if (scores_flags[ps_secondary] & SCORE_FLAG_ZERO_IS_WORST) {
 		if (vl == 0 && vr != 0)
 			return 1;
 		if (vl != 0 && vr == 0)
@@ -468,7 +468,7 @@ void(float argc) sbar_field_set {
 		else if (argv(1) == "all") {
 			string s;
 			s = "ping pl ?cn color name |";
-			for (i = 0; i < MAX_SCORE; ++i) {
+			for (i = 0; i < SCORE_FILEDS_MAX; ++i) {
 				if (i != ps_primary)
 				if (i != ps_secondary)
 				if (scores_label[i] != "")
@@ -522,7 +522,7 @@ void(float argc) sbar_field_set {
 			sbar_field[sbar_num_fields] = SP_SEPARATOR;
 			have_separator = 1;
 		} else {
-			for (j = 0; j < MAX_SCORE; ++j)
+			for (j = 0; j < SCORE_FILEDS_MAX; ++j)
 				if (str == strtolower(scores_label[j]))
 					goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
 :notfound
@@ -550,10 +550,10 @@ void(float argc) sbar_field_set {
 		if (sbar_num_fields >= SBAR_FIELDS_MAX)
 			break;
 	}
-	if (scores_flags[ps_primary] & SFL_ALLOW_HIDE)
+	if (scores_flags[ps_primary] & SCORE_FLAG_ALLOW_HIDE)
 		have_primary = 1;
 
-	if (scores_flags[ps_secondary] & SFL_ALLOW_HIDE)
+	if (scores_flags[ps_secondary] & SCORE_FLAG_ALLOW_HIDE)
 		have_secondary = 1;
 
 	if (ps_primary == ps_secondary)
@@ -1278,7 +1278,7 @@ void(void) sbar_score_draw_default {
 }
 
 void(void) sbar_score_draw_race {
-	if ((scores_flags[ps_primary] & SFL_TIME) && !team_mode) { // race/cts record display on HUD
+	if ((scores_flags[ps_primary] & SCORE_FLAG_TIME) && !team_mode) { // race/cts record display on HUD
 		float score, distribution;
 		vector distribution_color;
 		entity pl, me;
@@ -1287,7 +1287,7 @@ void(void) sbar_score_draw_race {
 		if (pl == me)
 			pl = pl.sort_next;
 
-		if (scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
+		if (scores_flags[ps_primary] & SCORE_FLAG_ZERO_IS_WORST)
 			if (pl.scores[ps_primary] == 0)
 				pl = world;
 
@@ -1299,7 +1299,7 @@ void(void) sbar_score_draw_race {
 		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
 		vector pos = sbar_position(CVAR(sbar_score_position), '160 34' * CVAR(sbar_score_scale));
 		vector font_size;
-		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
+		if (pl && ((!(scores_flags[ps_primary] & SCORE_FLAG_ZERO_IS_WORST)) || score)) {
 			// distribution display
 			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
 			if (distribution < TIME_FACTOR && distribution > -TIME_FACTOR)

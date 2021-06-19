@@ -211,9 +211,9 @@ void(void) lms_init {
 	gamehook_forbid_specatators = lms_ForbidSpectators;
 	gamehook_player_death_handle = lms_DeathHandle;
 	gamehook_SpawnPointGood = lms_SpawnPointGood;
-	score_basics(SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
+	score_basics(SCORE_FLAG_SORT_PRIO_SECONDARY, SCORE_FLAG_SORT_PRIO_SECONDARY, TRUE);
 	SP_STATUS = score_register("status", 0);
-	SP_LIVES = score_register("lives", SFL_SORT_PRIO_PRIMARY | SFL_NOCLEAR);
+	SP_LIVES = score_register("lives", SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_NOCLEAR);
 	lms_lives = scores[SP_LIVES];
 	CVAR_CACHE(g_lms_lives);
 	CVAR_CACHE(g_lms_sphere_diameter_min);

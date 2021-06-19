@@ -274,10 +274,10 @@ void survive_init() {
 	gamehook_monster_killed = survive_MonsterKilled;
 	survive_Spawn_NextLink = gamehook_chain_spawn;
 	gamehook_chain_spawn = survive_Spawn;
-	score_basics(SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
+	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, SCORE_FLAG_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
 	if (g_surv_freeze)
-		SP_REVIVE = score_register("revs", SFL_SORT_PRIO_SECONDARY);
+		SP_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
 
 	CVAR_CACHE(g_surv_wave_pause);
 	g_surv_monster_factor = bound(0, cvar("g_surv_monster_factor"), 1);

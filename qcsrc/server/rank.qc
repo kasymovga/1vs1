@@ -50,7 +50,7 @@ void(void) rank_init {
 
 	rank_id = strzone(strcat(rank_prefix, cvar_string("g_rank_type")));
 	rank_available = 1;
-	RANK_SCORE_PLAYER_FIELD = score_register("rank", SFL_NOCLEAR);
+	RANK_SCORE_PLAYER_FIELD = score_register("rank", SCORE_FLAG_NOCLEAR);
 	rank = scores[RANK_SCORE_PLAYER_FIELD];
 	CVAR_CACHE_STR(sv_rank_external_database);
 	CVAR_CACHE_STR(sv_rank_external_database_key);

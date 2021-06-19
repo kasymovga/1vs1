@@ -1,9 +1,9 @@
-string scores_label[MAX_SCORE];
-float scores_flags[MAX_SCORE];
-string teamscores_label[MAX_SCORE];
-float teamscores_flags[MAX_SCORE];
-.float scores[MAX_SCORE];
-.float teamscores[MAX_TEAMSCORE];
+string scores_label[SCORE_FILEDS_MAX];
+float scores_flags[SCORE_FILEDS_MAX];
+string teamscores_label[SCORE_FILEDS_MAX];
+float teamscores_flags[SCORE_FILEDS_MAX];
+.float scores[SCORE_FILEDS_MAX];
+.float teamscores[SCORE_TEAM_FIELDS_MAX];
 .float gotscores;
 
 #define SP_END -1

@@ -76,7 +76,7 @@ void IP2C_InitSV(void) {
         return;
     }
 
-	SP_COUNTRY = score_register("country", SFL_NOCLEAR);
+	SP_COUNTRY = score_register("country", SCORE_FLAG_NOCLEAR);
     IP2C_Init();
     dlc_require("flagicons");
     if(sv_ip2country_allow_fakeflag) {

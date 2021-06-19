@@ -598,9 +598,9 @@ void(void) nexball_delayedinit {
 	team_teams_allowed(world);
 	nexball_teams = 4 + team1 + team2 + team3 + team4;
 	score_basics(0, 0, TRUE);
-	ST_NEXBALL_GOALS = score_register_team_score("goals", SFL_SORT_PRIO_PRIMARY);
-	SP_NEXBALL_GOALS = score_register("goals", SFL_SORT_PRIO_PRIMARY);
-	SP_NEXBALL_FAULTS = score_register("faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	ST_NEXBALL_GOALS = score_register_team_score("goals", SCORE_FLAG_SORT_PRIO_PRIMARY);
+	SP_NEXBALL_GOALS = score_register("goals", SCORE_FLAG_SORT_PRIO_PRIMARY);
+	SP_NEXBALL_FAULTS = score_register("faults", SCORE_FLAG_SORT_PRIO_SECONDARY | SCORE_FLAG_LOWER_IS_BETTER);
 }
 
 //=======================//
