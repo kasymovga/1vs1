@@ -6,8 +6,11 @@ float g_balance_melee_ticrate;
 float g_balance_melee_time;
 float g_balance_melee_damage;
 float g_balance_melee_force;
-float g_balance_melee_force_up;
 float g_balance_melee_distance;
+float g_balance_melee_kick_damage;
+float g_balance_melee_kick_force;
+float g_balance_melee_kick_force_up;
+float g_balance_melee_kick_onehit;
 float g_balance_melee_onehit;
 float g_balance_melee_refire;
 string sv_sound_melee;
@@ -20,16 +23,28 @@ void(void) weapon_melee_attack_think {
 		return;
 	}
 	self.cnt = self.cnt - 1;
-	float damage_factor = (g_balance_melee_onehit ? 1 : (1 / self.count));
-	makevectors(self.owner.v_angle);
+	float onehit, force, force_up;
+	float _damage;
+	if (g_balance_melee == 2 && !self.dmg) {
+		makevectors(self.owner.angles);
+		onehit = g_balance_melee_kick_onehit;
+		force = g_balance_melee_kick_force;
+		force_up = g_balance_melee_kick_force_up;
+		_damage = g_balance_melee_kick_damage;
+	} else {
+		makevectors(self.owner.v_angle);
+		onehit = g_balance_melee_onehit;
+		force = g_balance_melee_force;
+		force_up = 0;
+		if (self.dmg)
+			_damage = self.dmg;
+		else
+			_damage = g_balance_melee_damage;
+
+	}
+	float damage_factor = (onehit ? 1 : (1 / self.count));
 	antilag_begin(self.owner);
 	weapon_setup_shot(self.owner, 0, "", (self.dmg ? 1 : 0));
-	float _damage;
-	if (self.dmg)
-		_damage = self.dmg;
-	else
-		_damage = g_balance_melee_damage;
-
 	WarpZone_TraceLine(weapon_shotorg - (weapon_shotdir * 20), weapon_shotorg + weapon_shotdir * g_balance_melee_distance, MOVE_NORMAL, self);
 	antilag_end();
 	if (trace_fraction < 1)
@@ -39,8 +54,8 @@ void(void) weapon_melee_attack_think {
 			damage_record_hits(self.owner, trace_ent, WEP_MELEE, 1, _damage * damage_factor);
 
 		damage(trace_ent, self.owner, self.owner, _damage * damage_factor,
-				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir) * g_balance_melee_force * damage_factor + '0 0 1' * g_balance_melee_force_up * damage_factor);
-		if (g_balance_melee_onehit) {
+				WEP_MELEE, trace_endpos, WarpZone_TransformVelocity(WarpZone_trace_transform, weapon_shotdir) * force * damage_factor + '0 0 1' * force_up * damage_factor);
+		if (onehit) {
 			remove(self);
 			return;
 		}
@@ -116,8 +131,11 @@ void(void) weapon_melee_init {
 	CVAR_CACHE(g_balance_melee_time);
 	CVAR_CACHE(g_balance_melee_damage);
 	CVAR_CACHE(g_balance_melee_force);
-	CVAR_CACHE(g_balance_melee_force_up);
 	CVAR_CACHE(g_balance_melee_distance);
+	CVAR_CACHE(g_balance_melee_kick_damage);
+	CVAR_CACHE(g_balance_melee_kick_force);
+	CVAR_CACHE(g_balance_melee_kick_force_up);
+	CVAR_CACHE(g_balance_melee_kick_onehit);
 	CVAR_CACHE(g_balance_melee_onehit);
 	CVAR_CACHE(g_balance_melee_refire);
 	bot_melee_love = cvar("bot_melee");
