@@ -1,0 +1,4 @@
+string DIGIT_HEX_DIGITS = "0123456789ABCDEF0123456789abcdef";
+#define DIGIT_HEX_TO_DEC_RAW(d) (strstrofs(DIGIT_HEX_DIGITS, (d), 0))
+#define DIGIT_HEX_TO_DEC(d) ((DIGIT_HEX_TO_DEC_RAW(d) | 0x10) - 0x10)
+#define DIGIT_DEC_TO_HEX(d) (substring(DIGIT_HEX_DIGITS, (d), 1))

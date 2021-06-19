@@ -705,7 +705,7 @@ void() client_cvars_parse {
 		} else {
 			self.clid = strftime(TRUE, "%y%m%d%H%M%S");
 			for (f = 0; f < 4; f++) {
-				self.clid = strcat(self.clid, substring("0123456789abcdefg", floor(random() * 16), 1));
+				self.clid = self.clid + DIGIT_DEC_TO_HEX(floor(random() * 16));
 			}
 			self.clid = strzone(self.clid);
 			stuffcmd(self, strcat("seta _cl_id ", self.clid, "\n"));

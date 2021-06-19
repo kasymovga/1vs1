@@ -36,3 +36,6 @@ float(string s) gui_text_width_without_colors;
 string(string pic) gui_image_path;
 void(string img, float a, float algn, float force1) gui_draw_background;
 float gui_conwidth, gui_conheight;
+void(entity wnd) gui_activate_window;
+void(entity wnd) gui_setpointerfocus;
+void(entity outermost, entity innermost) gui_focus_item_chain;

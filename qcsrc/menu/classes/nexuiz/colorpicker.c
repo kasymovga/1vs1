@@ -95,9 +95,9 @@ string rgb_to_hexcolor(vector rgb)
 	return
 		strcat(
 			"^x",
-			DEC_TO_HEXDIGIT(floor(rgb_x * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_y * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_z * 15 + 0.5))
+			DIGIT_DEC_TO_HEX(floor(rgb_x * 15 + 0.5)),
+			DIGIT_DEC_TO_HEX(floor(rgb_y * 15 + 0.5)),
+			DIGIT_DEC_TO_HEX(floor(rgb_z * 15 + 0.5))
 		);
 }
 

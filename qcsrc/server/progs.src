@@ -6,6 +6,7 @@ extensions.qh
 ../common/extensions.qh
 constants.qh
 ../common/constants.qh
+../common/digit.qh
 ../client-server/constants.qh
 ../client-server/stat.qh
 ../common/gametype.qh
