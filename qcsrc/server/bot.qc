@@ -469,7 +469,7 @@ void(void) bot_serverframe {
 		return;
 
 	stepheightvec = sv_stepheight * '0 0 1';
-	bot_navigation_movemode = ((bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+	bot_navigation_movemode = ((bot_navigation_ignoreplayers) ? TRACE_MOVE_NOMONSTERS : TRACE_MOVE_NORMAL);
 	if (time > bot_skill_auto_nextthink) {
 		if (skill_auto)
 			bot_skill_auto();

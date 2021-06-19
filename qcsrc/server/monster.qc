@@ -31,7 +31,7 @@ void monster_set_route() {
 		bot_ai_navigation_jetpack = TRUE;
 		bot_ai_navigation_jetpack_mindistance = 100;
 	}
-	bot_navigation_movemode = MOVE_NORMAL;
+	bot_navigation_movemode = TRACE_MOVE_NORMAL;
 	navigation_clearroute();
 	navigation_goalrating_start();
 	if (self.enemy)
@@ -84,7 +84,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 		f = vlen(e.origin - self.origin);
 		if (f <= heardistance) {
 			checkpoint = monster_checkpoint(e);
-			trace_line(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
+			trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, world);
 			if (trace_fraction == 1) {
 				p = e;
 				break;
@@ -94,7 +94,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 			v = normalize(e.origin - self.origin);
 			makevectors(self.angles);
 			if (v * normalize(v_forward) >= fov_factor) {
-				trace_line(self.origin + self.view_ofs, checkpoint, MOVE_NOMONSTERS, world);
+				trace_line(self.origin + self.view_ofs, checkpoint, TRACE_MOVE_NOMONSTERS, world);
 				if (trace_fraction == 1) {
 					distance = f;
 					p = e;
@@ -321,7 +321,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 	if (rushdistance)
 	if (self.enemy)
 	if (rushdistance > vlen(self.origin - self.enemy.origin)) {
-		trace_line(self.origin, self.enemy.origin, MOVE_WORLDONLY, self);
+		trace_line(self.origin, self.enemy.origin, TRACE_MOVE_WORLDONLY, self);
 		if (trace_fraction == 1) {
 			v = normalize(self.enemy.origin - self.origin);
 			dir_z_save = v_z;
@@ -343,17 +343,17 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 			float t = (self.maxs_x * 2) / _speed;
 			self.spectatortime = time + t;
 			vector o = self.origin + v * _speed * t * 1.5;
-			trace_box(o, self.mins, self.maxs, o - '0 0 1000', MOVE_NOMONSTERS, self);
+			trace_box(o, self.mins, self.maxs, o - '0 0 1000', TRACE_MOVE_NOMONSTERS, self);
 			if (trace_startsolid) {
 				//Check for wall
-				trace_box(self.origin, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+				trace_box(self.origin, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 				float trace_fraction_first = trace_fraction;
 				if (trace_fraction < 1)
 				if (trace_plane_normal_z < 0.1)
 				if (trace_plane_normal_z > -0.1) {
 					vector step = '0 0 1' * sv_stepheight;
 					vector steptop = '0 0 1' * max(sv_stepheight + self.mins_z - self.maxs_z, 0);
-					trace_box(self.origin, self.mins + step, self.maxs + steptop, o, MOVE_NOMONSTERS, self);
+					trace_box(self.origin, self.mins + step, self.maxs + steptop, o, TRACE_MOVE_NOMONSTERS, self);
 					if (trace_fraction <= trace_fraction_first)
 						v = -v;
 				}
@@ -362,7 +362,7 @@ vector monster_move_walk(float _speed, float blend_factor, float rushdistance) {
 					v = -v;
 				else if (trace_fraction > 0.01) {
 					o = trace_endpos;
-					trace_box(o, self.mins, self.maxs, o, MOVE_NOMONSTERS, self);
+					trace_box(o, self.mins, self.maxs, o, TRACE_MOVE_NOMONSTERS, self);
 					if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
 						if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 							v = -v;
@@ -744,7 +744,7 @@ void spawnfunc_monster_group() {
 vector monster_look_to_end;
 float(entity _enemy) monster_look_to {
 	monster_look_to_end = monster_checkpoint(self.enemy);
-	trace_line(self.origin, monster_look_to_end, MOVE_WORLDONLY, world);
+	trace_line(self.origin, monster_look_to_end, TRACE_MOVE_WORLDONLY, world);
 	if (trace_fraction == 1)
 		return TRUE;
 

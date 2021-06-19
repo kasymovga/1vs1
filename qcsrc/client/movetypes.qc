@@ -126,7 +126,7 @@ float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 	
 	cont = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
+	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, TRACE_MOVE_NOMONSTERS, self);
 	self.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
@@ -184,11 +184,11 @@ void _Movetype_PushEntityTrace(vector push)
 	if(self.move_nomonsters)
 		type = max(0, self.move_nomonsters);
 	else if(self.move_movetype == MOVETYPE_FLYMISSILE)
-		type = MOVE_MISSILE;
+		type = TRACE_MOVE_MISSILE;
 	else if(self.solid == SOLID_TRIGGER || self.solid == SOLID_NOT)
-		type = MOVE_NOMONSTERS;
+		type = TRACE_MOVE_NOMONSTERS;
 	else
-		type = MOVE_NORMAL;
+		type = TRACE_MOVE_NORMAL;
 
 	tracebox(self.move_origin, self.mins, self.maxs, end, type, self);
 }

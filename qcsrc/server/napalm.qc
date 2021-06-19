@@ -39,7 +39,7 @@ void Napalm_Burn(void) {
         d = vlen(self.origin - p);
 
         if(d < dist) {
-            trace_line(self.origin, p, MOVE_NOMONSTERS, self);
+            trace_line(self.origin, p, TRACE_MOVE_NOMONSTERS, self);
 
             if(trace_fraction < 1)
                 continue;

@@ -34,7 +34,7 @@ void(float ratingscale, vector org, float sradius) havocbot_role_goalrating_item
 			}
 		} else {
 			// Ignore items under water
-			trace_line(head.origin + head.maxs, head.origin + head.maxs, MOVE_NORMAL, head);
+			trace_line(head.origin + head.maxs, head.origin + head.maxs, TRACE_MOVE_NORMAL, head);
 			if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) {
 				head = head.chain;
 				continue;

@@ -24,7 +24,7 @@ void(float isNew) damage_info_read {
 	bounce = hittype & HITTYPE_BOUNCE;
 	headshot = hittype & HITTYPE_HEADSHOT;
 	r = prandom();
-	traceline(org - normalize(force) * 16, org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+	traceline(org - normalize(force) * 16, org + normalize(force) * 16, TRACE_MOVE_NOMONSTERS, world);
 	if (trace_fraction < 1 && hitwep != WEP_NEX && hitwep != WEP_MINSTANEX)
 		backoff = trace_plane_normal;
 	else

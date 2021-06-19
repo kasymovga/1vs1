@@ -114,13 +114,13 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 		end_y = random() - 0.5;
 		end_z = random() / 2;
 		end = start + normalize(end) * (vlen(delta) * random() + shiftdistance);
-		trace_box(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
+		trace_box(start, e.mins, e.maxs, end, TRACE_MOVE_NORMAL, e);
 		end = start;
 		start = trace_endpos;
 		// rule 1: start inside world bounds, and outside
 		// solid, and don't start from somewhere where you can
 		// fall down to evil
-		trace_box(start, e.mins, e.maxs, start - '0 0 1' * delta_z, MOVE_NORMAL, e);
+		trace_box(start, e.mins, e.maxs, start - '0 0 1' * delta_z, TRACE_MOVE_NORMAL, e);
 		if (trace_fraction >= 1)
 			continue;
 
@@ -216,7 +216,7 @@ float(entity e, float t) entity_move_out_of_solid_with_type {
 	entity_move_out_of_solid_expand(e, '0 0 1' * m1_z, t);
 	e.maxs_z = m1_z;
 	setorigin(e, e.origin);
-	trace_box(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	trace_box(e.origin, e.mins, e.maxs, e.origin, TRACE_MOVE_WORLDONLY, e);
 	if (trace_startsolid) {
 		setorigin(e, o);
 		return 0;

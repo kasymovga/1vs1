@@ -57,14 +57,14 @@ float(entity teleporter, entity player) portal_teleport_player {
 
 	safe = teleporter.enemy.portal_safe_origin; // a valid player origin
 	step = to + ((safe - to) * v_forward) * v_forward;
-	trace_box(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
+	trace_box(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, TRACE_MOVE_NOMONSTERS, player);
 	if (trace_startsolid) {
 		print("'safe' teleport location is not safe!\n");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
 	safe = trace_endpos + normalize(safe - trace_endpos) * 0;
-	trace_box(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
+	trace_box(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, TRACE_MOVE_NOMONSTERS, player);
 	if (trace_startsolid) {
 		print("trace_endpos in solid, this can't be!\n");
 		// FAIL TODO why does this happen? (reported by MrBougo)
@@ -366,7 +366,7 @@ void(entity e, vector g) portal_think_try_teleport_player {
 
 	// if e would hit the portal in a frame...
 	// already teleport him
-	trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
+	trace_box(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, TRACE_MOVE_NORMAL, e);
 	if (trace_ent == self)
 		portal_teleport_player(self, e);
 }

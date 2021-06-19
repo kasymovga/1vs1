@@ -4,4 +4,3 @@ void(entity ent, entity ignore, float toss_frametime, float toss_count) trace_to
 #define trace_line builtin_traceline
 #define trace_box builtin_tracebox
 float(entity e, vector start, vector m1, vector m2, vector end, float movemode) trace_walk;
-

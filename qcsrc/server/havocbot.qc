@@ -349,10 +349,10 @@ void(void) havocbot_movetogoal {
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if (skill>6)
 	if not(self.flags & FL_ONGROUND) {
-		trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', TRACE_MOVE_NOMONSTERS, self);
 		if (trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
 		if (self.items & IT_JETPACK) {
-			trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', MOVE_NOMONSTERS, self);
+			trace_box(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', TRACE_MOVE_NOMONSTERS, self);
 			if (trigger_tracebox_hits_hurt(self.origin, self.mins, self.maxs, trace_endpos + '0 0 1' )) {
 				if (self.velocity_z<0) {
 					self.BUTTON_HOOK = TRUE;
@@ -370,7 +370,7 @@ void(void) havocbot_movetogoal {
 			float xyspeed = xyvelocity * dir;
 			if (xyspeed < (sv_maxspeed / 2)) {
 				makevectors(self.v_angle_y * '0 1 0');
-				trace_box(self.origin, self.mins, self.maxs, self.origin + (dir * sv_maxspeed * 3), MOVE_NOMONSTERS, self);
+				trace_box(self.origin, self.mins, self.maxs, self.origin + (dir * sv_maxspeed * 3), TRACE_MOVE_NOMONSTERS, self);
 				if (trace_fraction==1) {
 					self.movement_x = dir * v_forward * sv_maxspeed;
 					self.movement_y = dir * v_right * sv_maxspeed;

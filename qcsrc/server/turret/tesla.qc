@@ -19,7 +19,7 @@ entity turret_tesla_toast(entity from, float range, float _damage)
             r = turret_validate_target(self,e,self.target_validate_flags);
             if (r > 0)
             {
-                trace_line(from.origin,0.5 * (e.absmin + e.absmax),MOVE_WORLDONLY,from);
+                trace_line(from.origin,0.5 * (e.absmin + e.absmax),TRACE_MOVE_WORLDONLY,from);
                 if (trace_fraction == 1.0)
                 {
                     d = vlen(e.origin - from.origin);

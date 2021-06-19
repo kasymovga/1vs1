@@ -4,12 +4,6 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 //things that don't have extensions yet:
 .float disableclientprediction;
 
-//definitions that id Software left out:
-//these are passed as the 'nomonsters' parameter to traceline/tracebox (yes really this was supported in all quake engines, nomonsters is misnamed)
-float MOVE_NORMAL = 0; // same as FALSE
-float MOVE_NOMONSTERS = 1; // same as TRUE
-float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
-
 //checkextension function
 //idea: expected by almost everyone
 //darkplaces implementation: LordHavoc
@@ -909,22 +903,6 @@ void(vector v1, vector min, vector max, vector v2, float nomonsters, entity fore
 void(entity ent, entity ignore) builtin_tracetoss = #64;
 //description:
 //simulates movement of the entity as if it is MOVETYPE_TOSS and starting with it's current state (location, velocity, etc), returns relevant trace_ variables (trace_fraction is always 0, all other values are supported - trace_ent, trace_endpos, trace_plane_normal), does not actually alter the entity.
-
-//DP_QC_TRACE_MOVETYPE_HITMODEL
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//constant definitions:
-float MOVE_HITMODEL = 4;
-//description:
-//allows traces to hit alias models (not sprites!) instead of entity boxes, use as the nomonsters parameter to trace functions, note that you can hit invisible model entities (alpha < 0 or EF_NODRAW or model "", it only checks modelindex)
-
-//DP_QC_TRACE_MOVETYPE_WORLDONLY
-//idea: LordHavoc
-//darkplaces implementation: LordHavoc
-//constant definitions:
-float MOVE_WORLDONLY = 3;
-//description:
-//allows traces to hit only world (ignoring all entities, unlike MOVE_NOMONSTERS which hits all bmodels), use as the nomonsters parameter to trace functions
 
 //DP_QC_UNLIMITEDTEMPSTRINGS
 //idea: div0

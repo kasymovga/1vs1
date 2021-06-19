@@ -51,11 +51,11 @@ void weapon_fireball_explode (void)
 		if(e != self.owner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.owner || team_is_different_teams(e, self))
 		{
 			// can we see fireball?
-			trace_line(e.origin + e.view_ofs, self.origin, MOVE_NORMAL, e);
+			trace_line(e.origin + e.view_ofs, self.origin, TRACE_MOVE_NORMAL, e);
 			if(/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
 				continue;
 			// can we see player who shot fireball?
-			trace_line(e.origin + e.view_ofs, self.realowner.origin + self.realowner.view_ofs, MOVE_NORMAL, e);
+			trace_line(e.origin + e.view_ofs, self.realowner.origin + self.realowner.view_ofs, TRACE_MOVE_NORMAL, e);
 			if(trace_ent != self.realowner)
 			if(/* trace_startsolid || */ trace_fraction != 1)
 				continue;
@@ -94,7 +94,7 @@ void weapon_fireball_laser_play(float dt, float dist, float _damage, float edged
 		d = vlen(self.origin - p);
 		if(d < dist)
 		{
-			trace_line(p, self.origin, MOVE_NORMAL, e);
+			trace_line(p, self.origin, TRACE_MOVE_NORMAL, e);
 			if(/* trace_startsolid || */ trace_fraction != 1)
 				continue;
 			e.fireball_impactvec = p;
@@ -277,7 +277,7 @@ void weapon_fireball_attack1()
 			break;
 	}
 	weapon_setup_shot(self, 2, "weapons/fireball_fire.wav", 1);
-	trace_line(weapon_shotorg, weapon_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
+	trace_line(weapon_shotorg, weapon_shotorg + f_diff_x * v_up + f_diff_y * v_right, TRACE_MOVE_NORMAL, self);
 	weapon_shotorg = trace_endpos;
 	pointparticles(particleeffectnum("fireball_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);

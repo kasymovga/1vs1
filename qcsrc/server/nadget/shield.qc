@@ -60,7 +60,7 @@ void nadget_Shield_Discharge_Think(void) {
     makevectors(self.owner.v_angle);
 	antilag_begin(self.owner);
     weapon_setup_shot(self.owner, 0, "weapons/nexfire.wav", -1);
-    WarpZone_TraceLine(weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self.owner);
+    WarpZone_TraceLine(weapon_shotorg, weapon_shotorg + weapon_shotdir * MAX_SHOT_DISTANCE, TRACE_MOVE_NORMAL, self.owner);
 	antilag_end();
     targ = trace_ent;
     start = weapon_shotorg;

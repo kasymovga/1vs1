@@ -32,7 +32,7 @@ vector WarpZone_camera_transform(vector org, vector ang)
 	vr = WarpZone_TransformVelocity(self, vr);
 	vu = WarpZone_TransformVelocity(self, vu);
 	if(autocvar_cl_warpzone_usetrace)
-		trace_line(self.warpzone_targetorigin, org, MOVE_NOMONSTERS, world);
+		trace_line(self.warpzone_targetorigin, org, TRACE_MOVE_NOMONSTERS, world);
 	else
 		trace_endpos = self.warpzone_targetorigin;
 	v_forward = vf;
@@ -66,7 +66,7 @@ float WarpZone_BoxTouchesBrush_Recurse()
 	entity se;
 	float f;
 
-	trace_box('0 0 0', WarpZone_BoxTouchesBrush_mins, WarpZone_BoxTouchesBrush_maxs, '0 0 0', MOVE_NOMONSTERS, WarpZone_BoxTouchesBrush_ignore);
+	trace_box('0 0 0', WarpZone_BoxTouchesBrush_mins, WarpZone_BoxTouchesBrush_maxs, '0 0 0', TRACE_MOVE_NOMONSTERS, WarpZone_BoxTouchesBrush_ignore);
 #ifdef CSQC
 	if (trace_networkentity)
 		// we cannot continue, as a player blocks us...
@@ -241,7 +241,7 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector org_visua
 {
     WarpZone_TrailParticles_trace_callback_own = own;
     WarpZone_TrailParticles_trace_callback_eff = eff;
-    WarpZone_TraceTriangle(org, org_visual, end, MOVE_NOMONSTERS, world, WarpZone_TrailParticles_trace_callback);
+    WarpZone_TraceTriangle(org, org_visual, end, TRACE_MOVE_NOMONSTERS, world, WarpZone_TrailParticles_trace_callback);
 }
 
 float WarpZone_PlaneDist(entity wz, vector v)
@@ -358,7 +358,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 		p = WarpZone_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
 		{
-			trace_line(org, p, MOVE_NOMONSTERS, e);
+			trace_line(org, p, TRACE_MOVE_NOMONSTERS, e);
 			if(trace_fraction < 1)
 				continue;
 		}
@@ -391,7 +391,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	for(e = wz; e; e = e.WarpZone_findradius_next)
 	{
 		org0_new = WarpZone_TransformOrigin(e, org);
-		trace_line(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
+		trace_line(e.warpzone_targetorigin, org0_new, TRACE_MOVE_NOMONSTERS, e);
 		org_new = trace_endpos;
 
 		transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
@@ -596,7 +596,7 @@ vector WarpZone_FindNearestOrigin_real(vector from, vector to, float trace_check
     vector to_warped, to_nearest = to;
 
     if(trace_check > 1) {
-        WarpZone_TraceLine(from, to, MOVE_NOMONSTERS, world);
+        WarpZone_TraceLine(from, to, TRACE_MOVE_NOMONSTERS, world);
 
         if(vlen(trace_endpos - to) < 1) {
             WarpZone_FindNearestOrigin_length = vlen(to - from);
@@ -612,7 +612,7 @@ vector WarpZone_FindNearestOrigin_real(vector from, vector to, float trace_check
 		length_warped = vlen(to_warped - from);
 		if (length_warped < WarpZone_FindNearestOrigin_length || WarpZone_FindNearestOrigin_length < 0) {
 			if (trace_check) {
-                WarpZone_TraceLine(from, to_warped, MOVE_NOMONSTERS, world);
+                WarpZone_TraceLine(from, to_warped, TRACE_MOVE_NOMONSTERS, world);
 				if (vlen(trace_endpos - to) < 1) {
 					WarpZone_FindNearestOrigin_length = length_warped;
 					to_nearest = to_warped;
@@ -671,7 +671,7 @@ void WarpZone_TraceLine_ThroughZone_stub(vector org, vector end, float nomonster
 }
 
 void WarpZone_DrawEffectTriangle_real(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb) {
-	WarpZone_TraceTriangle(org, org_visual, end, MOVE_NOMONSTERS, world, cb);
+	WarpZone_TraceTriangle(org, org_visual, end, TRACE_MOVE_NOMONSTERS, world, cb);
 }
 
 void WarpZone_DrawEffectTriangle_stub(vector org, vector org_visual, vector end, WarpZone_trace_callback_t cb) {
@@ -702,7 +702,7 @@ void WarpZone_RefSys_BeginAddingIncrementally_stub(entity me, entity ref) {}
 
 vector WarpZone_FindNearestOrigin_stub(vector from, vector to, float trace_check) {
     if(trace_check > 1) {
-        trace_line(from, to, MOVE_NOMONSTERS, world);
+        trace_line(from, to, TRACE_MOVE_NOMONSTERS, world);
         if(vlen(trace_endpos - to) < 1) {
             WarpZone_FindNearestOrigin_length = vlen(to - from);
         } else {

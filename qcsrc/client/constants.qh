@@ -128,12 +128,6 @@ const float DRAWFLAG_2XMODULATE = 3;
 const float DRAWFLAG_SCREEN = 4;
 const float DRAWFLAG_MIPMAP = 0x100; // only for R_BeginPolygon
 
-float MOVE_NORMAL = 0; // same as FALSE
-float MOVE_NOMONSTERS = 1; // same as TRUE
-float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
-float MOVE_HITMODEL = 4;
-float MOVE_WORLDONLY = 3;
-
 float CAMERA_FREE = 1;
 float CAMERA_CHASE = 2;
 

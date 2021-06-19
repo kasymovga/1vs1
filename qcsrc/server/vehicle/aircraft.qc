@@ -90,7 +90,7 @@ void(void) vehicle_aircraft_pull {
 		sound(self, CHAN_TRIGGER, "ambient/machinerydrone01.wav", VOL_BASE, ATTN_NORM);
 	}
 	if not(self.aiment) {
-		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 100', MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 100', TRACE_MOVE_NORMAL, self);
 		if (trace_ent)
 		if (trace_ent.movetype != MOVETYPE_NOCLIP)
 		if (trace_ent.movetype != MOVETYPE_NONE)

@@ -17,7 +17,7 @@ float() projectile_no_impact_check {
         vector tic;
         tic = self.velocity * sys_ticrate;
         tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
-        trace_line(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
+        trace_line(self.origin - tic, self.origin + tic, TRACE_MOVE_NORMAL, self);
         if (trace_fraction < 0 && (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
             return 1;
     }

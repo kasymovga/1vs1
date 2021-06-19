@@ -245,7 +245,7 @@ void(void) projectile_remove {
 		sound(self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 
 	if (self.count & 0x80) {
-		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, MOVE_NORMAL, self);
+		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, TRACE_MOVE_NORMAL, self);
 		projectile_trail_draw(trace_endpos);
 	}
 }
@@ -275,7 +275,7 @@ void(float ignore) projectile_read {
 	//self.effects = EF_NOMODELFLAGS;
 	// this should make collisions with bmodels more exact, but it leads to
 	// projectiles no longer being able to lie on a bmodel
-	self.move_nomonsters = MOVE_WORLDONLY;
+	self.move_nomonsters = TRACE_MOVE_WORLDONLY;
 	if (f & 0x40)
 		self.move_flags |= FL_ONGROUND;
 	else

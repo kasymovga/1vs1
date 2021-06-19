@@ -73,18 +73,18 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	stepdist = 32;
 	ignorehazards = FALSE;
 	// Analyze starting point
-	trace_line(start, start, MOVE_NORMAL, e);
+	trace_line(start, start, TRACE_MOVE_NORMAL, e);
 	if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 		ignorehazards = TRUE;
 	else {
-		trace_line( start, start + '0 0 -65536', MOVE_NORMAL, e);
+		trace_line( start, start + '0 0 -65536', TRACE_MOVE_NORMAL, e);
 		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 		{
 			ignorehazards = TRUE;
 			swimming = TRUE;
 		}
 	}
-	trace_box(start, m1, m2, start, MOVE_NOMONSTERS, e);
+	trace_box(start, m1, m2, start, TRACE_MOVE_NOMONSTERS, e);
 	if (trace_startsolid) {
 		// Bad start
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
@@ -106,7 +106,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 			stepdist = dist;
 
 		dist = dist - stepdist;
-		trace_line(org, org, MOVE_NORMAL, e);
+		trace_line(org, org, TRACE_MOVE_NORMAL, e);
 		if (!ignorehazards) {
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)) {
 				// hazards blocking path

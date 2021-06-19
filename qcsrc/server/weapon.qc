@@ -1398,7 +1398,7 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 		else
 			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, MOVE_NOMONSTERS, ent);
+		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
 		ent.dphitcontentsmask = dphitcontentsmask_save;
 		weapon_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 		weapon_shotdir = normalize(weapon_shotpoint - weapon_shotorg);

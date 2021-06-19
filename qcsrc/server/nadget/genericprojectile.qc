@@ -103,7 +103,7 @@ float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
             vector oorig = self.origin;
             setsize(self, PL_MIN, PL_MAX);
 
-            if(!entity_move_out_of_solid(self, MOVE_NOMONSTERS)) {
+            if(!entity_move_out_of_solid(self, TRACE_MOVE_NOMONSTERS)) {
                 if(!self.hg_isbonus) NADGET_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == NADGET_TRANSLOC)
                     self.owner.hg_ctx_ammo += 1;)
 
@@ -186,7 +186,7 @@ void nadget_GenericProjectile_Touch(void) {
 				o_z += cvar("sv_stepheight");
                 vector norm = trace_plane_normal;
 
-                trace_box(o, self.mins, self.maxs, o + self.velocity * frametime, MOVE_WORLDONLY, self);
+                trace_box(o, self.mins, self.maxs, o + self.velocity * frametime, TRACE_MOVE_WORLDONLY, self);
 
                 if(trace_fraction < 1 && trace_dphitcontents & DPCONTENTS_SOLID) {
                     trace_plane_normal = norm;
@@ -195,7 +195,7 @@ void nadget_GenericProjectile_Touch(void) {
                     dir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal;
                     self.velocity = dir * spd;
                     setorigin(self, self.origin + self.velocity * frametime);
-                    entity_move_out_of_solid(self, MOVE_NOMONSTERS);
+                    entity_move_out_of_solid(self, TRACE_MOVE_NOMONSTERS);
                 }
             }
         }
@@ -279,7 +279,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     setsize(e, hitmins, hitmaxs);
 
     if(!targ || targ.solid == SOLID_BSP) {
-        trace_box(e.origin, e.mins, e.maxs, e.origin - normal * 64, MOVE_NOMONSTERS, e);
+        trace_box(e.origin, e.mins, e.maxs, e.origin - normal * 64, TRACE_MOVE_NOMONSTERS, e);
         if(!trace_startsolid)
             setorigin(e, trace_endpos);
     }
@@ -298,7 +298,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     e.SendFlags = 0xFFFFFF;
     projectile_update_angles(e);
     e.effects |= EF_NODEPTHTEST; // no culling please
-    entity_move_out_of_solid(e, MOVE_WORLDONLY);
+    entity_move_out_of_solid(e, TRACE_MOVE_WORLDONLY);
 }
 
 .vector hg_oldangles;
@@ -342,7 +342,7 @@ void nadget_GenericProjectile_Think(void) {
                     self.velocity = self.hg_minVelocity;
                 } else {
                     setorigin(self, self.origin + self.movedir * 5);
-                    entity_move_out_of_solid(self, MOVE_NOMONSTERS);
+                    entity_move_out_of_solid(self, TRACE_MOVE_NOMONSTERS);
                     self.velocity = self.hg_deferredVel;
                     sound(self, CHAN_WEAPON2, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
                     pointparticles(particleeffectnum("smoke_ring"), self.origin, -self.velocity, 10);

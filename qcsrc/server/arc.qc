@@ -29,7 +29,7 @@ void(entity targ, entity attacker, float _damage, float deathtype,
 		if ((!sameteam && (((plr.deadflag != DEAD_FREEZE) && targetAlive) || ((plr.deadflag == DEAD_FREEZE) && targetFrozen))) || (sameteam && targetTeamMates)) {
 			dist = vlen(plr.origin - targ.origin);
 			if (dist < shortest) {
-				trace_line(targ.origin + arcoffset, plr.origin + arcoffset, MOVE_NORMAL, world);
+				trace_line(targ.origin + arcoffset, plr.origin + arcoffset, TRACE_MOVE_NORMAL, world);
 
 				if (trace_fraction < 1 && trace_ent == plr) {
 					shortest = dist;

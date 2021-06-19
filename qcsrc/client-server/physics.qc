@@ -32,8 +32,8 @@ void(void) physics_impact {
 
 float(vector v) physics_unstuck_to {
 	vector o = self.origin + v;
-	trace_box(o, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
-	trace_box(trace_endpos, self.mins, self.maxs, trace_endpos, MOVE_NOMONSTERS, self);
+	trace_box(o, self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
+	trace_box(trace_endpos, self.mins, self.maxs, trace_endpos, TRACE_MOVE_NOMONSTERS, self);
 	if (trace_startsolid)
 		return FALSE;
 
@@ -42,7 +42,7 @@ float(vector v) physics_unstuck_to {
 }
 
 void(void) physics_unstuck {
-	trace_box(self.origin, self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	trace_box(self.origin, self.mins, self.maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
 	if not(trace_startsolid)
 		return;
 
@@ -68,7 +68,7 @@ void(void) physics_unstuck {
 	if not(sv_disable_crouch)
 	if (self.crouch_mins != self.crouch_maxs) //prevent this code from objects that not support crouch (vehicles)
 	if not(physics_crouch) { //Last hope
-		trace_box(self.origin, self.crouch_mins, self.crouch_maxs, self.origin, MOVE_NOMONSTERS, self);
+		trace_box(self.origin, self.crouch_mins, self.crouch_maxs, self.origin, TRACE_MOVE_NOMONSTERS, self);
 		if not(trace_startsolid) {
 			setsize(self, self.crouch_mins, self.crouch_maxs);
 			physics_crouch = TRUE;
@@ -104,12 +104,12 @@ void(void) physics_update_status {
 		if (physics_movetype == MOVETYPE_WALK || physics_movetype == MOVETYPE_QCWALK)
 			physics_velocity_z -= physics_gravity_factor * sv_gravity * frametime;
 
-		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+		//trace_box(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', TRACE_MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 		if (trace_startsolid)
 		if (self.solid != SOLID_NOT) {
 			physics_unstuck();
-			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', MOVE_NORMAL, self);
+			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 		}
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
 			physics_flags &~= FL_DOUBLEJUMP;
@@ -198,7 +198,7 @@ void(void) physics_move {
 	float skipskimming = 0;
 	for (bump = 0, t = frametime; bump < 8 && physics_velocity != '0 0 0'; bump++) {
 		neworigin = self.origin + t * physics_velocity;
-		trace_box(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
+		trace_box(self.origin, self.mins, self.maxs, neworigin, TRACE_MOVE_NORMAL, self);
 		trace1_endpos = trace_endpos;
 		trace1_fraction = trace_fraction;
 		trace1_plane_normal = trace_plane_normal;
@@ -221,7 +221,7 @@ void(void) physics_move {
 				currentorigin2_z += sv_stepheight;
 				neworigin2 = neworigin;
 				neworigin2_z = currentorigin2_z;
-				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+				trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 				trace2_fraction = trace_fraction;
 				trace2_plane_normal = trace_plane_normal;
 				if not(trace_startsolid) {
@@ -230,7 +230,7 @@ void(void) physics_move {
 						currentorigin2 = trace_endpos;
 						neworigin2 = trace_endpos;
 						neworigin2_z = self.origin_z;
-						trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+						trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 						if (trace_plane_normal_z > 0.7 || trace_plane_normal == '0 0 0') { //continue if step on ground, trace_plane_normal is 0-vector sometimes, engine bug?
 							trace1_fraction = trace2_fraction;
 							trace1_plane_normal = trace2_plane_normal;
@@ -244,15 +244,15 @@ void(void) physics_move {
 						if (trace1_plane_normal * physics_velocity < 0) {
 							currentorigin2 = self.origin;
 							currentorigin2_z += g_climb_height;
-							trace_box(currentorigin2, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
+							trace_box(currentorigin2, self.mins, self.maxs, self.origin, TRACE_MOVE_NORMAL, self);
 							if (trace_fraction == 1) {
 								neworigin2 = currentorigin2 - trace1_plane_normal * self.maxs_x * 0.5;
-								trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+								trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 								if (trace_fraction == 1)
 								if not(trace_startsolid) {
 									currentorigin2 = trace_endpos;
 									neworigin2_z = self.origin_z;
-									trace_box(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+									trace_box(currentorigin2, self.mins, self.maxs, neworigin2, TRACE_MOVE_NORMAL, self);
 									if (trace_plane_normal_z > 0.7) { //continue if step on ground
 										physics_velocity_z = max(physics_velocity_z, g_climb_speed);
 										physics_velocity_x = physics_velocity_x * (1 - frametime * sv_friction);
@@ -965,9 +965,9 @@ void(void) physics_player_frame {
 	if (g_adjust_view_offset)
 	if (physics_is_player) {
 		if (physics_crouch)
-			trace_line(self.origin, self.origin + self.crouch_view_ofs + '0 0 2', MOVE_WORLDONLY, self);
+			trace_line(self.origin, self.origin + self.crouch_view_ofs + '0 0 2', TRACE_MOVE_WORLDONLY, self);
 		else
-			trace_line(self.origin, self.origin + self.stand_view_ofs + '0 0 2', MOVE_WORLDONLY, self);
+			trace_line(self.origin, self.origin + self.stand_view_ofs + '0 0 2', TRACE_MOVE_WORLDONLY, self);
 
 		if (trace_fraction < 1)
 			self.view_ofs = trace_endpos - self.origin - '0 0 2';

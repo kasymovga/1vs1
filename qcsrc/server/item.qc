@@ -669,7 +669,7 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
 		entity_fade_setup(self, time + 60, 1);
-		trace_line(self.origin, self.origin, MOVE_NORMAL, self);
+		trace_line(self.origin, self.origin, TRACE_MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 			goto item_start_fail;
 	} else {

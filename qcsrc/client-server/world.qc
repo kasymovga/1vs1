@@ -16,7 +16,7 @@ void(float mode) world_get_min_max {
 				 '0 1 0' * mi_y + '0 0 1' * mi_z,
 				 '0 1 0' * ma_y + '0 0 1' * ma_z,
 				 '1 0 0' * ma_x,
-				 MOVE_WORLDONLY,
+				 TRACE_MOVE_WORLDONLY,
 				 world);
 
 		if(!trace_startsolid)
@@ -26,7 +26,7 @@ void(float mode) world_get_min_max {
 				 '1 0 0' * mi_x + '0 0 1' * mi_z,
 				 '1 0 0' * ma_x + '0 0 1' * ma_z,
 				 '0 1 0' * ma_y,
-				 MOVE_WORLDONLY,
+				 TRACE_MOVE_WORLDONLY,
 				 world);
 
 		if(!trace_startsolid)
@@ -36,7 +36,7 @@ void(float mode) world_get_min_max {
 				 '1 0 0' * mi_x + '0 1 0' * mi_y,
 				 '1 0 0' * ma_x + '0 1 0' * ma_y,
 				 '0 0 1' * ma_z,
-				 MOVE_WORLDONLY,
+				 TRACE_MOVE_WORLDONLY,
 				 world);
 
 		if(!trace_startsolid)
@@ -46,7 +46,7 @@ void(float mode) world_get_min_max {
 				 '0 1 0' * mi_y + '0 0 1' * mi_z,
 				 '0 1 0' * ma_y + '0 0 1' * ma_z,
 				 '1 0 0' * mi_x,
-				 MOVE_WORLDONLY,
+				 TRACE_MOVE_WORLDONLY,
 				 world);
 
 		if(!trace_startsolid)
@@ -56,7 +56,7 @@ void(float mode) world_get_min_max {
 				 '1 0 0' * mi_x + '0 0 1' * mi_z,
 				 '1 0 0' * ma_x + '0 0 1' * ma_z,
 				 '0 1 0' * mi_y,
-				 MOVE_WORLDONLY,
+				 TRACE_MOVE_WORLDONLY,
 				 world);
 
 		if(!trace_startsolid)
@@ -66,7 +66,7 @@ void(float mode) world_get_min_max {
 				 '1 0 0' * mi_x + '0 1 0' * mi_y,
 				 '1 0 0' * ma_x + '0 1 0' * ma_y,
 				 '0 0 1' * mi_z,
-				 MOVE_WORLDONLY,
+				 TRACE_MOVE_WORLDONLY,
 				 world);
 
 		if(!trace_startsolid)

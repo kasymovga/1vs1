@@ -76,9 +76,9 @@ vector(void) physics_vehicle_adjust_view {
 	view_vehicle = TRUE;
 	makevectors(view_angles);
 	vector v = view_origin;
-	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, MOVE_WORLDONLY, world);
+	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, TRACE_MOVE_WORLDONLY, world);
 	v = trace_endpos;
-	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * vehicle_adjust_view_up, MOVE_WORLDONLY, world);
+	tracebox(v, '-8 -8 -8', '8 8 8', v  + v_up * vehicle_adjust_view_up, TRACE_MOVE_WORLDONLY, world);
 	v = trace_endpos;
 	return v;
 }
@@ -177,7 +177,7 @@ vector(void) physics_view_origin {
 			physics_ground_curtime += frametime;
 			vector ground_curorigin = (1 - f) * physics_ground_oldorigin + f * physics_ground_origin;
 			self.origin = physics_start_origin - (physics_ground_origin - ground_curorigin);
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', MOVE_NOMONSTERS, self);
+			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 8', TRACE_MOVE_NOMONSTERS, self);
 			if not(trace_startsolid)
 				self.origin = trace_endpos;
 		}
@@ -268,9 +268,9 @@ void(void) physics_camera_setup {
 			}
 			if (CVAR(chase_active) && !physics_plug_adjust_view) {
 				makevectors(view_angles);
-				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), MOVE_NORMAL, world);
+				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin - v_forward * CVAR(chase_back), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
-				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), MOVE_NORMAL, world);
+				tracebox(view_camera_origin, '-4 -4 -4', '4 4 4', view_camera_origin + v_up * CVAR(chase_up), TRACE_MOVE_NORMAL, world);
 				view_camera_origin = trace_endpos;
 			}
 			R_SetView(VF_ORIGIN, view_camera_origin);

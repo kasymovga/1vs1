@@ -160,14 +160,14 @@ float(entity e, vector vel, float constant) bullet_leave_solid {
 	vector org = self.origin + dir;
 	float i;
 	for (i = 1; i < 4; i++) {
-		trace_line(org, v, MOVE_NORMAL, self);
+		trace_line(org, v, TRACE_MOVE_NORMAL, self);
 		if (trace_fraction > 0)
 			break;
 
 		org = org + dir;
 	}
 	if (trace_startsolid) {
-		trace_line(trace_endpos, self.origin, MOVE_NORMAL, self);
+		trace_line(trace_endpos, self.origin, TRACE_MOVE_NORMAL, self);
 		if (trace_fraction == 1) {// 1: we never got out of solid
 			return 0;
 		}

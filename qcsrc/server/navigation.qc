@@ -394,13 +394,13 @@ void(entity e, float f, float rangebias) navigation_routerating {
 	if (vlen(self.origin - e.origin) > bot_ai_navigation_jetpack_mindistance) {
 		vector pointa, pointb;
 		// Point A
-		trace_line(self.origin, self.origin + '0 0 65535', MOVE_NORMAL, self);
+		trace_line(self.origin, self.origin + '0 0 65535', TRACE_MOVE_NORMAL, self);
 		pointa = trace_endpos - '0 0 1';
 		// Point B
-		trace_line(e.origin, e.origin + '0 0 65535', MOVE_NORMAL, e);
+		trace_line(e.origin, e.origin + '0 0 65535', TRACE_MOVE_NORMAL, e);
 		pointb = trace_endpos - '0 0 1';
 		// Can I see these two points from the sky?
-		trace_line(pointa, pointb, MOVE_NORMAL, self);
+		trace_line(pointa, pointb, TRACE_MOVE_NORMAL, self);
 		if (trace_fraction==1) {
 			// Lower the altitude of these points as much as possible
 			float zdistance, xydistance, cost, t, fuel;
@@ -416,7 +416,7 @@ void(entity e, float f, float rangebias) navigation_routerating {
 				if (npb_z<=e.absmax_z)
 					break;
 
-				trace_line(npa, npb, MOVE_NORMAL, self);
+				trace_line(npa, npb, TRACE_MOVE_NORMAL, self);
 				if (trace_fraction==1)
 				{
 					pointa = npa;
@@ -497,7 +497,7 @@ float(entity e, vector startposition) navigation_routetogoal {
 	vector v1;
 	vector v2;
 	if (e.movetype == MOVETYPE_WALK) {
-		trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', MOVE_NORMAL, e);
+		trace_box(e.origin, e.mins, e.maxs, e.origin + '0 0 -1000', TRACE_MOVE_NORMAL, e);
 		v1 = trace_endpos + e.mins;
 		v2 = trace_endpos + e.maxs;
 	} else {

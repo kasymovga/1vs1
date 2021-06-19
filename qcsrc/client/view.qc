@@ -344,7 +344,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	// be safe against triggerbots until everyone has the fixed engine
 	// this call is meant to overwrite the trace globals by something
 	// unsuspicious
-	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
+	traceline('0 0 0', '0 0 0', TRACE_MOVE_WORLDONLY, world);
 }
 
 void(void) view_vehicle_hud {

@@ -331,7 +331,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 					hitloc = nearest;
 					c = 0;
 					while (c < total) {
-						WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor); //targ have .warpzone_transform from WarpZone_FindRadius
+						WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), TRACE_MOVE_NOMONSTERS, inflictor); //targ have .warpzone_transform from WarpZone_FindRadius
 						if (trace_fraction == 1 || trace_ent == targ) {
 							hits = hits + 1;
 							if (hits > 1)

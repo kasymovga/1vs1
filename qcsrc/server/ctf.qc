@@ -334,7 +334,7 @@ void() ctf_flag_think {
 	// sorry, we have to reset the flag size if it got squished by something
 	if (self.mins != CTF_FLAG_MIN || self.maxs != CTF_FLAG_MAX) {
 		// if we can grow back, grow back
-		trace_box(self.origin, CTF_FLAG_MIN, CTF_FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
+		trace_box(self.origin, CTF_FLAG_MIN, CTF_FLAG_MAX, self.origin, TRACE_MOVE_NOMONSTERS, self);
 		if (!trace_startsolid)
 			setsize(self, CTF_FLAG_MIN, CTF_FLAG_MAX);
 	}

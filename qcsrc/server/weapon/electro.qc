@@ -59,7 +59,7 @@ void(vector org, float rad, entity own) weapon_electro_trigger_combo {
 	while (e) {
 		if (e.classname == "plasma") {
 			// see if there is line of sight to the combo ball
-			trace_line(org, e.origin, MOVE_NORMAL, e);
+			trace_line(org, e.origin, TRACE_MOVE_NORMAL, e);
 			if (trace_fraction == 1 || trace_ent == e) {
 				// change owner to whoever caused the combo explosion
 				weapon_electro_combo_prepare(e, own, vlen(e.origin - org) / g_balance_electro_combo_speed);

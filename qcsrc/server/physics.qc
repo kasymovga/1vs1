@@ -71,7 +71,7 @@ void(void) physics_check_ground_hook {
 			if (self.lastground < time - 0.3) {
 				self.nextstep = time + 0.2;
 				trace_dphitq3surfaceflags = 0;
-				trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+				trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
 				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 				{
 					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)

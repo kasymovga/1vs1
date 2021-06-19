@@ -212,7 +212,7 @@ void(float d) particles_snow_or_rain_set_bbox {
 
 	float skyz = view_origin_z + d * 0.5;
 	if (particles_snow_or_rain_maxs_z > skyz) {
-		tracebox('0 0 0', particles_snow_or_rain_mins, particles_snow_or_rain_maxs, '0 0 1' * (skyz - particles_snow_or_rain_maxs_z), MOVE_WORLDONLY, world);
+		tracebox('0 0 0', particles_snow_or_rain_mins, particles_snow_or_rain_maxs, '0 0 1' * (skyz - particles_snow_or_rain_maxs_z), TRACE_MOVE_WORLDONLY, world);
 		particles_snow_or_rain_maxs = particles_snow_or_rain_maxs + trace_endpos;
 		particles_snow_or_rain_mins = particles_snow_or_rain_mins + trace_endpos;
 	}

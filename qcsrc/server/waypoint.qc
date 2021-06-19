@@ -142,7 +142,7 @@ void(void) waypoint_think {
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 	stepheightvec = sv_stepheight * '0 0 1';
-	bot_navigation_movemode = (bot_navigation_ignoreplayers ? MOVE_NOMONSTERS : MOVE_NORMAL);
+	bot_navigation_movemode = (bot_navigation_ignoreplayers ? TRACE_MOVE_NOMONSTERS : TRACE_MOVE_NORMAL);
 	sm1 = self.origin + self.mins;
 	sm2 = self.origin + self.maxs;
 	for (e = world; (e = find(e, classname, "waypoint")); ) {
@@ -180,10 +180,10 @@ void(void) waypoint_think {
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			if (!self.wpisbox && trace_walk(self, sv, PL_MIN, PL_MAX, ev, MOVE_NOMONSTERS))
+			if (!self.wpisbox && trace_walk(self, sv, PL_MIN, PL_MAX, ev, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
 
-			if (!e.wpisbox && trace_walk(e, ev, PL_MIN, PL_MAX, sv, MOVE_NOMONSTERS))
+			if (!e.wpisbox && trace_walk(e, ev, PL_MIN, PL_MAX, sv, TRACE_MOVE_NOMONSTERS))
 				waypoint_addlink(e, self);
 		}
 	}
@@ -588,7 +588,7 @@ float(void) waypoint_loadall {
 }
 
 vector(vector position) waypoint_fixorigin {
-	trace_box(position + '0 0 1' * (1 - PL_MIN_z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
+	trace_box(position + '0 0 1' * (1 - PL_MIN_z), PL_MIN, PL_MAX, position + '0 0 -512', TRACE_MOVE_NOMONSTERS, world);
 	if(trace_fraction < 1)
 		position = trace_endpos;
 
