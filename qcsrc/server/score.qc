@@ -363,8 +363,9 @@ float(entity player, float scorefield, float score) score_player_add {
 	if (score)
 		if (score_label[scorefield] != "")
 			score_send_delayed(s, pow(2, scorefield));
-
-	return (s.(scores[scorefield]) += score);
+	float newscore = (s.(scores[scorefield]) + score);
+	s.(scores[scorefield]) = newscore;
+	return newscore;
 }
 
 float(entity player, float pscorefield, float tscorefield, float score) score_player_team_add {
