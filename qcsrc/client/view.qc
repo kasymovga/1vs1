@@ -122,6 +122,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	// Render the Scene
 	view_width = w;
 	view_height = h;
+	view_crosshair = TRUE;
 	fog_force();
 	view_drawframetime = max(0.000001, time - view_drawtime);
 	view_drawtime = time;
@@ -221,8 +222,6 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 		view_crosshair = FALSE;
 	else if (sbar_hidescores)
 		view_crosshair = FALSE;
-	else
-		view_crosshair = TRUE;
 
 	if not(sbar_showscores) {
 		if (CVAR(cl_showpressedkeys)) { // draw pressed keys when spectating and playing
