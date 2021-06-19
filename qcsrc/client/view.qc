@@ -408,8 +408,8 @@ void(void) view_camera_setup {
 		view_camera_current_angles = '0 0 0';
 		view_camera_direction = '0 0 0';
 		view_camera_offset_z += 30;
-		view_camera_offset_x += 30 * -cos(view_camera_current_angles_y * DEG2RAD);
-		view_camera_offset_y += 30 * -sin(view_camera_current_angles_y * DEG2RAD);
+		view_camera_offset_x += 30 * -cos(view_camera_current_angles_y * MATH_DEG2RAD);
+		view_camera_offset_y += 30 * -sin(view_camera_current_angles_y * MATH_DEG2RAD);
 		view_camera_current_origin = view_origin;
 		view_camera_current_offset  = view_camera_offset;
 		cvar_set("camera_reset", "0");
@@ -431,8 +431,8 @@ void(void) view_camera_setup {
 		tmp = getmousepos() * 0.1;
 		if (vlen(tmp)>cvar("camera_mouse_treshold"))
 		{
-			view_camera_mouse_angles_x += tmp_y * cos(view_camera_mouse_angles_z * DEG2RAD) + (tmp_x * sin(view_camera_mouse_angles_z * DEG2RAD));
-			view_camera_mouse_angles_y -= tmp_x * cos(view_camera_mouse_angles_z * DEG2RAD) + (tmp_y * -sin(view_camera_mouse_angles_z * DEG2RAD));
+			view_camera_mouse_angles_x += tmp_y * cos(view_camera_mouse_angles_z * MATH_DEG2RAD) + (tmp_x * sin(view_camera_mouse_angles_z * MATH_DEG2RAD));
+			view_camera_mouse_angles_y -= tmp_x * cos(view_camera_mouse_angles_z * MATH_DEG2RAD) + (tmp_y * -sin(view_camera_mouse_angles_z * MATH_DEG2RAD));
 		}
 	}
 	while (view_camera_mouse_angles_x < -180) view_camera_mouse_angles_x = view_camera_mouse_angles_x + 360;
@@ -461,21 +461,21 @@ void(void) view_camera_setup {
 	tmp = '0 0 0';
 	dimensions = 0;
 	if (view_camera_direction_x) {
-		tmp_x = view_camera_direction_x * cos(view_camera_current_angles_y * DEG2RAD);
-		tmp_y = view_camera_direction_x * sin(view_camera_current_angles_y * DEG2RAD);
+		tmp_x = view_camera_direction_x * cos(view_camera_current_angles_y * MATH_DEG2RAD);
+		tmp_y = view_camera_direction_x * sin(view_camera_current_angles_y * MATH_DEG2RAD);
 		if (cvar("camera_forward_follows") && !cvar("camera_look_player"))
-			tmp_z = view_camera_direction_x * -sin(view_camera_current_angles_x * DEG2RAD);
+			tmp_z = view_camera_direction_x * -sin(view_camera_current_angles_x * MATH_DEG2RAD);
 
 		++dimensions;
 	}
 	if (view_camera_direction_y) {
-		tmp_x += view_camera_direction_y * -sin(view_camera_current_angles_y * DEG2RAD);
-		tmp_y += view_camera_direction_y * cos(view_camera_current_angles_y * DEG2RAD) * cos(view_camera_current_angles_z * DEG2RAD);
-		tmp_z += view_camera_direction_y * sin(view_camera_current_angles_z * DEG2RAD);
+		tmp_x += view_camera_direction_y * -sin(view_camera_current_angles_y * MATH_DEG2RAD);
+		tmp_y += view_camera_direction_y * cos(view_camera_current_angles_y * MATH_DEG2RAD) * cos(view_camera_current_angles_z * MATH_DEG2RAD);
+		tmp_z += view_camera_direction_y * sin(view_camera_current_angles_z * MATH_DEG2RAD);
 		++dimensions;
 	}
 	if (view_camera_direction_z) {
-		tmp_z += view_camera_direction_z * cos(view_camera_current_angles_z * DEG2RAD);
+		tmp_z += view_camera_direction_z * cos(view_camera_current_angles_z * MATH_DEG2RAD);
 		++dimensions;
 	}
 	if (cvar("camera_free"))

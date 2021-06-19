@@ -138,7 +138,7 @@ void weapon_rocketlauncher_think (void)
 			// now it gets tricky... we want to move like some curve to approximate the target direction
 			// but we are limiting the rate at which we can turn!
 			goal = desiredorigin + ((self.origin - desiredorigin) * desireddir + g_balance_rocketlauncher_guidegoal) * desireddir;
-			newdir = weapon_rocketlauncher_rocket_steerto(olddir, normalize(goal - self.origin), cos(g_balance_rocketlauncher_guiderate * f * frametime * DEG2RAD));
+			newdir = weapon_rocketlauncher_rocket_steerto(olddir, normalize(goal - self.origin), cos(g_balance_rocketlauncher_guiderate * f * frametime * MATH_DEG2RAD));
 
 			self.velocity = newdir * velspeed;
 

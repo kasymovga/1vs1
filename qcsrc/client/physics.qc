@@ -51,9 +51,9 @@ vector(void) physics_top_adjust_view {
 		vector v = mouse_position();
 		vector v2;
 		float f = CVAR(vid_conwidth) * 0.5;
-		v2_x = tan(view_fovx * 0.5 * DEG2RAD) * (v_x - f) / f;
+		v2_x = tan(view_fovx * 0.5 * MATH_DEG2RAD) * (v_x - f) / f;
 		f = CVAR(vid_conheight) * 0.5;
-		v2_y = tan(view_fovy * 0.5 * DEG2RAD) * (v_y - f) / f;
+		v2_y = tan(view_fovy * 0.5 * MATH_DEG2RAD) * (v_y - f) / f;
 		v2_z = 0;
 		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
 		//pointparticles(particleeffectnum("laser_impact"), v3, '0 0 0', 0.01);

@@ -151,5 +151,5 @@ void nadget_Plasma_Explode(void) {
     vectorvectors(normalize(v));
 
     for (c = 0; c < cvar("g_nadgets_plasma_projectile_count"); c ++)
-        nadget_Plasma_Shard(2 * M_PI * (c / cvar("g_nadgets_plasma_projectile_count")));
+        nadget_Plasma_Shard(2 * MATH_PI * (c / cvar("g_nadgets_plasma_projectile_count")));
 }

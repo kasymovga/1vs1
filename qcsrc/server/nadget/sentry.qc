@@ -308,7 +308,7 @@ void nadget_Sentry_Levitate(void) {
 
     float shift;
 	if (g_nadgets_sentry_levitation)
-	for(shift = 0; shift < PI * 2; shift += 0.1) {
+	for(shift = 0; shift < MATH_PI * 2; shift += 0.1) {
         vector new_origin = self.origin + frametime * '0 0 8' * sin(self.spawntime + time + self.phase + shift);
         trace_box(new_origin, self.mins, self.maxs, new_origin, MOVE_NORMAL, self);
 

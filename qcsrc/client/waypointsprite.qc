@@ -186,7 +186,7 @@ void(void) waypointsprite_draw {
 		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/CVAR(g_waypointsprite_crosshairfadedistance), 1)));
 	}
-	draw_picture_rotate(o, rot * 90 * DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
+	draw_picture_rotate(o, rot * 90 * MATH_DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
 	if (self.build_finished) {
 		if (time < self.build_finished + 0.25) {
 			if (time < self.build_started)
@@ -206,7 +206,7 @@ void(void) waypointsprite_draw {
 		else
 			align = 0;
 
-		waypointsprite_healthbar_draw(o, rot * 90 * DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.teamradar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.teamradar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
+		waypointsprite_healthbar_draw(o, rot * 90 * MATH_DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.teamradar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.teamradar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
 	}
 }
 

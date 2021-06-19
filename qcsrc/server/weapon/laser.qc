@@ -26,7 +26,7 @@ void(float issecondary) weapon_laser_attack {
 	else
 		a = g_balance_laser_primary_shotangle;
 
-	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
+	s_forward = v_forward * cos(a * MATH_DEG2RAD) + v_up * sin(a * MATH_DEG2RAD);
 	weapon_setup_shotdir (self, s_forward, 3, "weapons/lasergun_fire.wav", 1);
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	if (issecondary)

@@ -183,9 +183,9 @@ float(float diffangle) race_strafe_angle {
 	}
 	float cos_angle = min(1, maxspeed / speed); //cos of optimal angle
 	if (diffangle > 90 || diffangle < -90)
-		return -acos(cos_angle) * RAD2DEG;
+		return -acos(cos_angle) * MATH_RAD2DEG;
 
-	return acos(cos_angle) * RAD2DEG;
+	return acos(cos_angle) * MATH_RAD2DEG;
 }
 
 float(float f) race_angle_norm {
