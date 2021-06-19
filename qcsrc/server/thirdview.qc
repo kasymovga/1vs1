@@ -1,5 +1,5 @@
 float(entity to, float f) thirdview_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_3RDVIEW);
+	WriteByte(MSG_ENTITY, NET_CSQC_3RDVIEW);
 	WriteShort(MSG_ENTITY, self.view_ofs_x);
 	WriteShort(MSG_ENTITY, self.view_ofs_y);
 	WriteCoord(MSG_ENTITY, self.delay - (time - self.cnt));

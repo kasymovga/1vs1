@@ -339,7 +339,7 @@ void(void) vehicle_aircraft_init {
 }
 
 float(entity to, float sf) vehicle_aircraft_physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_AIRCRAFT);
+	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_AIRCRAFT);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
 		WriteCoord(MSG_ENTITY, g_vehicle_aircraft_accel_up);

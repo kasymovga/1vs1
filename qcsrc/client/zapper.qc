@@ -123,7 +123,7 @@ void(float t) zapper_read {
         float vol, attn;
 		vol = VOL_BASE;
 		attn = ATTN_NORM;
-        if (t == ENT_CLIENT_ZAPPER_SHIELD) {
+        if (t == NET_CSQC_ZAPPER_SHIELD) {
             self.draw = zapper_draw_shield;
             dlc_sound(self, CHAN_PROJECTILE, "weapons/zapper_shield_loop.wav", 1, attn);
         } else {
@@ -180,11 +180,11 @@ void(float t) zapper_read {
 }
 
 void zapper_beam_read(float ignore) {
-	zapper_read(ENT_CLIENT_ZAPPER);
+	zapper_read(NET_CSQC_ZAPPER);
 }
 
 void(float ignore) zapper_shield_read {
-	zapper_read(ENT_CLIENT_ZAPPER_SHIELD);
+	zapper_read(NET_CSQC_ZAPPER_SHIELD);
 }
 
 void zapper_lightning_arc_draw(void) {

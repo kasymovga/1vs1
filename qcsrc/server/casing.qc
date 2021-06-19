@@ -1,7 +1,7 @@
 float g_casings;
 
 float(entity to, float sf) casing_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);
+	WriteByte(MSG_ENTITY, NET_CSQC_CASING);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);

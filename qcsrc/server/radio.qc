@@ -77,7 +77,7 @@ void Radio_Init(void) {
 void Radio_SendPreload(entity e, string url) {
 	msg_entity = e;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_RADIO);
+	WriteByte(MSG_ONE, NET_TE_CSQC_RADIO);
 	WriteByte(MSG_ONE, TRUE);
 	WriteString(MSG_ONE, url);
 }
@@ -112,7 +112,7 @@ void Radio_SendPlay(entity e, float force) {
 
 	msg_entity = e;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_RADIO);
+	WriteByte(MSG_ONE, NET_TE_CSQC_RADIO);
 	WriteByte(MSG_ONE, FALSE); //preload
 	WriteString(MSG_ONE, radio_url);
 	WriteString(MSG_ONE, radio_filename);

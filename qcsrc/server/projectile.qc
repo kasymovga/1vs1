@@ -48,7 +48,7 @@ float(entity to, float sf) projectile_send {
 		sf &~= 16;
 	}
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
+	WriteByte(MSG_ENTITY, NET_CSQC_PROJECTILE);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)

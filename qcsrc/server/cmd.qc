@@ -543,7 +543,7 @@ void(string s) cmd_client {
 	} else if (cmd == "lsmaps2") {
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_MAPLIST);
+		WriteByte(MSG_ONE, NET_TE_CSQC_MAPLIST);
 		WriteString(MSG_ONE, map_list);
 	} else if (cmd == "gameclient") {
 		s = argv(1);
@@ -600,7 +600,7 @@ void(string s) cmd_client {
 		if (n1 >= 0 && n1 <= CMD_RECORDS_REPLY_STRINGS_COUNT && n2 >= 0 && n2 < 16 && !map_finished) {
 			msg_entity = self;
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RECORDLISTCHUNK);
+			WriteByte(MSG_ONE, NET_TE_CSQC_RECORDLISTCHUNK);
 			WriteByte(MSG_ONE, n1);
 			WriteByte(MSG_ONE, n2);
 			if (n1 < CMD_RECORDS_REPLY_STRINGS_COUNT) {

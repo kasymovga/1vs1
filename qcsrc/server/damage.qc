@@ -12,7 +12,7 @@ float g_throughfloor_damage;
 float g_throughfloor_force;
 
 float(entity to, float sf) damage_info_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
+	WriteByte(MSG_ENTITY, NET_CSQC_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
 	WriteCoord(MSG_ENTITY, floor(self.origin_x));
 	WriteCoord(MSG_ENTITY, floor(self.origin_y));

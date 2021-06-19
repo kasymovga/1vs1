@@ -49,7 +49,7 @@ float() entcs_customize {
 }
 
 float(entity to, float sf) entcs_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
+	WriteByte(MSG_ENTITY, NET_CSQC_ENTCS);
 	sf = sf & 31;
 	entity o = self.owner;
 	if (self.effects & EF_FULLBRIGHT)

@@ -134,9 +134,9 @@ float(entity to, float sf) weapon_zapper_beam_send {
 		sf |= 16;
 	}
 	if (self.classname == "zapper_shield_beam")
-		WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER_SHIELD);
+		WriteByte(MSG_ENTITY, NET_CSQC_ZAPPER_SHIELD);
 	else {
-		WriteByte(MSG_ENTITY, ENT_CLIENT_ZAPPER);
+		WriteByte(MSG_ENTITY, NET_CSQC_ZAPPER);
 		if (akimbo_active(_owner)) {
 			sf |= 8;
 		}
@@ -307,7 +307,7 @@ void(void) weapon_zapper_attack1 {
 float weapon_zapper_attack2_effect_team;
 void(vector from, vector to, vector end) weapon_zapper_attack2_effect_cb {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_ZAPPERLIGHTNING);
+	WriteByte(MSG_BROADCAST, NET_TE_CSQC_ZAPPERLIGHTNING);
 	WriteByte(MSG_BROADCAST, weapon_zapper_attack2_effect_team);
 	WriteCoord(MSG_BROADCAST, from_x);
 	WriteCoord(MSG_BROADCAST, from_y);

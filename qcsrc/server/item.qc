@@ -1272,7 +1272,7 @@ void() item_mushroom_touch {
 	if (clienttype(other) == CLIENTTYPE_REAL) {
 		msg_entity = other;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_TRIP);
+		WriteByte(MSG_ONE, NET_TE_CSQC_TRIP);
 		WriteByte(MSG_ONE, 15);
 		if (sv_sound_mushroom != "")
 			announce(other, sv_sound_mushroom, "");

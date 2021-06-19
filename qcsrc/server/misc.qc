@@ -117,7 +117,7 @@ void(void) misc_lightning_spark {
 	}
 	self.nextthink = time + 0.1;
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_BIGLIGHTNINGARC);
+	WriteByte(MSG_BROADCAST, NET_TE_CSQC_BIGLIGHTNINGARC);
 	WriteCoord(MSG_BROADCAST, self.origin_x);
 	WriteCoord(MSG_BROADCAST, self.origin_y);
 	WriteCoord(MSG_BROADCAST, self.origin_z);
@@ -268,7 +268,7 @@ void(void) misc_laser_think {
 }
 
 float(entity to, float fl) misc_laser_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
+	WriteByte(MSG_ENTITY, NET_CSQC_LASER);
 	fl = fl - (fl & 0xE0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;

@@ -2332,7 +2332,7 @@ float(string s, float i) player_cmd_client_handle {
 		} else {
 			msg_entity = self;
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_MODELSELECT);
+			WriteByte(MSG_ONE, NET_TE_CSQC_MODELSELECT);
 			WriteString(MSG_ONE, self.body.playermodel);
 			WriteByte(MSG_ONE, stof(self.body.playerskin));
 			WriteString(MSG_ONE, player_allowed_model_list());

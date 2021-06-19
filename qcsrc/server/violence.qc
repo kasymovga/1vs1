@@ -1,5 +1,5 @@
 float(entity to, float sf) violence_gib_splash_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
+	WriteByte(MSG_ENTITY, NET_CSQC_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
 	WriteShort(MSG_ENTITY, floor(self.origin_x / 4)); // not using a coord here, as gibs don't need this accuracy

@@ -6,7 +6,7 @@ float LocationRequest_CustomizeEntityForClient() {
 }
 
 float LocationRequest_SendEntity(entity to, float sf) {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LOCATION_REQUEST);
+	WriteByte(MSG_ENTITY, NET_CSQC_LOCATION_REQUEST);
 	WriteByte(MSG_ENTITY, sf & 255);
 	if (sf & 1)
 		WriteString(MSG_ENTITY, self.netname);

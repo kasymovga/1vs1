@@ -866,7 +866,7 @@ string nadget_SelectableTypes(float issecondary) {
 void nadget_WriteNadgetSelect(void) {
     msg_entity = self;
     WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteByte(MSG_ONE, TE_CSQC_NADGETSELECT);
+    WriteByte(MSG_ONE, NET_TE_CSQC_NADGETSELECT);
     WriteByte(MSG_ONE, g_nadgets_double);
     WriteString(MSG_ONE, nadget_SelectableTypes(FALSE));
 

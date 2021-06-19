@@ -64,7 +64,7 @@ void(float ignore) score_player_read {
 	if (self.owner && n != self.sv_entnum) { // workaround for DP bug
 		//print("A CSQC entity changed its owner!\n");
 		csqc_entity_clean();
-		self.enttype = ENT_CLIENT_SCORES;
+		self.enttype = NET_CSQC_SCORES;
 	}
 	self.sv_entnum = n;
 	if not(player_slots[self.sv_entnum])

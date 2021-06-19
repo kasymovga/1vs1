@@ -23,7 +23,7 @@ void(void) lms_sphere_update {
 }
 
 float(entity to, float sf) lms_sphere_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LMS_SPHERE);
+	WriteByte(MSG_ENTITY, NET_CSQC_LMS_SPHERE);
 	sf = sf & 63;
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1)

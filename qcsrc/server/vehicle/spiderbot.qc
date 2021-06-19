@@ -485,7 +485,7 @@ void(void) vehicle_spiderbot_init {
 }
 
 float(entity to, float sf) vehicle_spiderbot_physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_SPIDERBOT);
+	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_SPIDERBOT);
 	WriteShort(MSG_ENTITY, sf);
 	if (sf & 1) {
 		WriteCoord(MSG_ENTITY, g_vehicle_spiderbot_jump_accel);

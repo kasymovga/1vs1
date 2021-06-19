@@ -533,7 +533,7 @@ void(void) physics_init {
 }
 
 float(entity to, float sf) physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS);
+	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS);
 	entity oldself = self;
 	self = self.owner;
 	float dodging_flags, skimming;

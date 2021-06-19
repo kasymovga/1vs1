@@ -71,7 +71,7 @@ void weapon_show_list(entity pl) {
 	if (clienttype(pl) == CLIENTTYPE_REAL) {
 		msg_entity = pl;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_WEAPONLIST);
+		WriteByte(MSG_ONE, NET_TE_CSQC_WEAPONLIST);
 	}
 }
 

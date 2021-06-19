@@ -47,18 +47,6 @@ float	TE_LIGHTNING3				= 9;
 float	TE_LAVASPLASH				= 10;
 float	TE_TELEPORT				= 11;
 
-float	UPDATE_GENERAL				= 0;
-float	UPDATE_STATIC				= 1;
-float	UPDATE_BINARY				= 2;
-float	UPDATE_TEMP				= 3;
-
-float	EF_BRIGHTFIELD				= 1;
-float	EF_MUZZLEFLASH				= 2;
-float	EF_BRIGHTLIGHT				= 4;
-float	EF_DIMLIGHT				= 8;
-
-#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
-
 float	MSG_BROADCAST				= 0; // unreliable
 float	MSG_ONE					= 1; // reliable
 float	MSG_ALL					= 2; // reliable

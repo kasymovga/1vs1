@@ -1,5 +1,5 @@
 float NoteLine_SendEntity(entity to, float sf) {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_NOTELINE);
+	WriteByte(MSG_ENTITY, NET_CSQC_NOTELINE);
 	other = to;
 	self.touch();
 	WriteString(MSG_ENTITY, self.message);

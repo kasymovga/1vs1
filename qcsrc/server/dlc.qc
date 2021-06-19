@@ -192,7 +192,7 @@ void(void) dlc_wait_think {
 
 #define dlc_send dlc_SendEntity //compatibility with old save files
 float(entity to, float sf) dlc_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_LIST);
+	WriteByte(MSG_ENTITY, NET_CSQC_DLC_LIST);
 	sf &~= 12;
 	if (to.netaddress == "local") {
 		sf |= 4;
@@ -461,7 +461,7 @@ void(void) dlc_sound_think {
 
 #define dlc_sound_send dlc_sound_SendEntity //compatibility with old save files
 float(entity to, float sf) dlc_sound_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DLC_SOUND);
+	WriteByte(MSG_ENTITY, NET_CSQC_DLC_SOUND);
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		WriteCoord(MSG_ENTITY, self.origin_x);

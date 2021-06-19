@@ -169,7 +169,7 @@ float(void) WaypointSprite_Customize {
 
 float(entity to, float sendflags) WaypointSprite_SendEntity {
 	float dt;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WAYPOINT);
+	WriteByte(MSG_ENTITY, NET_CSQC_WAYPOINT);
 	sendflags = sendflags & 0x7F;
 	if (self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))
 		sendflags |= 0x80;

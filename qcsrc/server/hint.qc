@@ -20,7 +20,7 @@ void(float n, float p) hint_send {
 	msg_entity = self;
 	if (hint_count <= 0) {
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_HINT);
+		WriteByte(MSG_ONE, NET_TE_CSQC_HINT);
 		WriteByte(MSG_ONE, p);
 		WriteByte(MSG_ONE, 0);
 		WriteString(MSG_ONE, "This game mode not have any hints.");
@@ -34,7 +34,7 @@ void(float n, float p) hint_send {
 
 	string s = cvar_string(strcat("_hint", ftos(n)));
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_HINT);
+	WriteByte(MSG_ONE, NET_TE_CSQC_HINT);
 	WriteByte(MSG_ONE, p);
 	WriteByte(MSG_ONE, n);
 	WriteString(MSG_ONE, s);

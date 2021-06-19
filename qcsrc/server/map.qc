@@ -411,7 +411,7 @@ void() map_finish {
 			bprint(other.netname, " ^7wins.\n");
 	}
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_GAMEOVER);
+	WriteByte(MSG_BROADCAST, NET_TE_CSQC_GAMEOVER);
 	if (g_campaign)
 		campaign_preintermission();
 

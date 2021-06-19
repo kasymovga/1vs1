@@ -83,7 +83,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 }
 
 float(entity to, float sf) warpzone_teleported_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
+	WriteByte(MSG_ENTITY, NET_CSQC_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles_x);
 	WriteCoord(MSG_ENTITY, self.angles_y);
 	WriteCoord(MSG_ENTITY, self.angles_z);
@@ -324,7 +324,7 @@ void(void) warpzone_touch {
 }
 
 float(entity to, float sendflags) warpzone_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
+	WriteByte(MSG_ENTITY, NET_CSQC_WARPZONE);
 	// we need THESE to render the warpzone (and cull properly)...
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);

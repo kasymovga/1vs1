@@ -53,7 +53,7 @@ vector(entity t1, entity t2, .float field, float fieldflags, vector previous) sc
 float(entity to, float sendflags) score_team_send {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
+	WriteByte(MSG_ENTITY, NET_CSQC_TEAMSCORES);
 	WriteByte(MSG_ENTITY, self.team);
 
 	longflags = 0;
@@ -171,7 +171,7 @@ float (string label, float scoreflags) score_register_team_score {
 
 float(entity to, float sf) score_info_send {
 	float i;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
+	WriteByte(MSG_ENTITY, NET_CSQC_SCORES_INFO);
 	WriteByte(MSG_ENTITY, gametype);
 	for(i = 0; i < SCORE_FILEDS_MAX; ++i)
 	{
@@ -205,7 +205,7 @@ void(entity e, float f) score_send_delayed {
 float(entity to, float sendflags) score_send_entity {
 	float i, p, longflags, n;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES);
+	WriteByte(MSG_ENTITY, NET_CSQC_SCORES);
 	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
 	longflags = 0;

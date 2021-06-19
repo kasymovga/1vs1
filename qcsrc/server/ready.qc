@@ -6,7 +6,7 @@ float ready_wait;
 float(entity to, float sendflags) ready_nagger_send {
 	float nags, i, f, b;
 	entity e;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
+	WriteByte(MSG_ENTITY, NET_CSQC_NAGGER);
 	nags = 0;
 	if (ready_ready)
 		nags |= 1;

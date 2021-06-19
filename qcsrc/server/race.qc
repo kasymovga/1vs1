@@ -132,7 +132,7 @@ float(string name) race_record_delete {
 void(entity to) race_records_send {
 	msg_entity = to;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_RACE);
+	WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 	WriteByte(MSG_ONE, RACE_NET_RECORDS_TABLE);
 	float i, t, sp;
 	string n;
@@ -266,7 +266,7 @@ void(entity e, float spec) race_checkpoint_next_send { // qualifying only
 
 	RACE_WRITESPECTATABLE_MSG_ONE({
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_RACE);
+		WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 		if (spec) {
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING);
 			WriteCoord(MSG_ONE, time - e.race_movetime - e.race_penalty_accumulator);
@@ -392,7 +392,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 		msg_entity = e;
 		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
+			WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 			WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player now is at
 			net_write_int24(MSG_ONE, TIME_ENCODE(t)); // time to that intermediate
@@ -413,7 +413,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 		msg_entity = e;
 		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy2, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
+			WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE);
 			WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player now is at
 			if(e == oth) {
@@ -432,7 +432,7 @@ void(entity e, float cp, float t, float tvalid) race_time_send {
 		msg_entity = oth;
 		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
+			WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT);
 			WriteByte(MSG_ONE, race_checkpoint_id(cp)); // checkpoint the player now is at
 			if(e == oth) {
@@ -457,7 +457,7 @@ void(entity e) race_time_clear {
 	msg_entity = e;
 	RACE_WRITESPECTATABLE_MSG_ONE({
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_RACE);
+		WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 		WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
 	});
 }
@@ -803,7 +803,7 @@ void(entity pl, float penalty, string reason) race_impose_penalty_time {
 		msg_entity = pl;
 		RACE_WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
+			WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_PENALTY_QUALIFYING);
 			WriteShort(MSG_ONE, TIME_ENCODE(penalty));
 			WriteString(MSG_ONE, reason);
@@ -813,7 +813,7 @@ void(entity pl, float penalty, string reason) race_impose_penalty_time {
 		msg_entity = pl;
 		RACE_WRITESPECTATABLE_MSG_ONE_VARNAME(dummy, {
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
+			WriteByte(MSG_ONE, NET_TE_CSQC_RACE);
 			WriteByte(MSG_ONE, RACE_NET_PENALTY_RACE);
 			WriteShort(MSG_ONE, TIME_ENCODE(penalty));
 			WriteString(MSG_ONE, reason);

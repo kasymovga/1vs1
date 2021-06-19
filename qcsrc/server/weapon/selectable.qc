@@ -5,7 +5,7 @@ float selectable_weapon_for_bots;
 void(void) weapon_selectable_send {
     msg_entity = self;
     WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteByte(MSG_ONE, TE_CSQC_WEAPONSELECT);
+    WriteByte(MSG_ONE, NET_TE_CSQC_WEAPONSELECT);
     net_write_int24(MSG_ONE, g_start_weapon_selectable);
 }
 

@@ -81,7 +81,7 @@ void hook_stop() {
 
 float(entity to, float sf) hook_send {
 	entity _hook = self.owner;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
+	WriteByte(MSG_ENTITY, NET_CSQC_HOOK);
 	sf = sf & 15;
 	if (to == _hook.owner)
 	if (_hook.state == 1)
@@ -433,7 +433,7 @@ void(entity _hook, entity pl) hook_physics_post {
 }
 
 float(entity to, float sf) hook_physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_HOOK);
+	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_HOOK);
 	WriteCoord(MSG_ENTITY, g_balance_grapplehook_airfriction);
 	WriteCoord(MSG_ENTITY, g_balance_grapplehook_dontpull);
 	WriteCoord(MSG_ENTITY, g_balance_grapplehook_force_rubber);

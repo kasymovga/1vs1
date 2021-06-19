@@ -43,7 +43,7 @@ float(void) ice_customize {
 }
 
 float(entity to, float sf) ice_pov_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ICE);
+	WriteByte(MSG_ENTITY, NET_CSQC_ICE);
 	sf = sf & 3;
 	WriteByte(MSG_ENTITY, sf);
 	entity _ice = self.enemy;

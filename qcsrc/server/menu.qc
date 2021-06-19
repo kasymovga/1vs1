@@ -14,7 +14,7 @@ float(void) menu_customize {
 }
 
 float(entity to, float sf) menu_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MENU);
+	WriteByte(MSG_ENTITY, NET_CSQC_MENU);
 	sf &~= 16;
 	sf |= self.flags;
 	WriteByte(MSG_ENTITY, sf & 255);

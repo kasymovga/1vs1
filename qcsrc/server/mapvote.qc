@@ -123,7 +123,7 @@ void() mapvote_init {
 void mapvote_send_picture(float id) {
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_PICTURE);
+	WriteByte(MSG_ONE, NET_TE_CSQC_PICTURE);
 	WriteByte(MSG_ONE, id);
 	WritePicture(MSG_ONE, mapvote_pictures[id], 3072);
 }
@@ -160,7 +160,7 @@ float(entity to, float sf) mapvote_send {
 	if(sf & 1)
 		sf &~= 2; // if we send 1, we don't need to also send 2
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
+	WriteByte(MSG_ENTITY, NET_CSQC_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1) {
 		// flag 1 == initialization

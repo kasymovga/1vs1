@@ -20,7 +20,7 @@ void(entity player, string msg, string txt) announce_force {
 	if (g_announcer_print) {
 		msg_entity = player;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE_PRINT);
+		WriteByte(MSG_ONE, NET_TE_CSQC_ANNOUNCE_PRINT);
 		WriteString(MSG_ONE, txt);
 	}
 }

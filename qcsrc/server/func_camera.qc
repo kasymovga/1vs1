@@ -1,5 +1,5 @@
 float(entity to, float sendflags) func_camera_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_FUNC_CAMERA);
+	WriteByte(MSG_ENTITY, NET_CSQC_FUNC_CAMERA);
 	// we need THESE to render the warpzone (and cull properly)...
 	WriteCoord(MSG_ENTITY, self.origin_x);
 	WriteCoord(MSG_ENTITY, self.origin_y);

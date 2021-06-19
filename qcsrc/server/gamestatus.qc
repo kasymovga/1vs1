@@ -1,7 +1,7 @@
 entity game_status;
 
 float GameStatus_SendEntity(entity to, float sf) {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_GAMESTATUS);
+	WriteByte(MSG_ENTITY, NET_CSQC_GAMESTATUS);
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1)
 		WriteString(MSG_ENTITY, self.message);

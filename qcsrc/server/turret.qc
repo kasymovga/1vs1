@@ -509,7 +509,7 @@ float turret_customizeentityforclient()
 float Turret_SendEntity(entity to, float sf)
 {
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
+	WriteByte(MSG_ENTITY, NET_CSQC_TURRET);
 	WriteCoord(MSG_ENTITY, self.tur_head.angles_x);
 	WriteCoord(MSG_ENTITY, self.tur_head.angles_y);
     WriteByte(MSG_ENTITY, self.tur_head.frame);

@@ -970,7 +970,7 @@ void(void) spawnfunc_onslaught_controlpoint {
 }
 
 float(entity to, float sendflags) onslaught_link_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RADARLINK);
+	WriteByte(MSG_ENTITY, NET_CSQC_RADARLINK);
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & 1) {
 		WriteCoord(MSG_ENTITY, self.goalentity.origin_x);

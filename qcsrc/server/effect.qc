@@ -1,6 +1,6 @@
 void(vector from,vector to) effect_lightningarc {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_LIGHTNINGARC);
+	WriteByte(MSG_BROADCAST, NET_TE_CSQC_LIGHTNINGARC);
 	WriteCoord(MSG_BROADCAST, from_x);
 	WriteCoord(MSG_BROADCAST, from_y);
 	WriteCoord(MSG_BROADCAST, from_z);
@@ -11,7 +11,7 @@ void(vector from,vector to) effect_lightningarc {
 
 void(vector loc) effect_blast {
     WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-    WriteByte(MSG_BROADCAST, TE_CSQC_BLAST);
+    WriteByte(MSG_BROADCAST, NET_TE_CSQC_BLAST);
     WriteCoord(MSG_BROADCAST, loc_x);
     WriteCoord(MSG_BROADCAST, loc_y);
     WriteCoord(MSG_BROADCAST, loc_z);
@@ -33,7 +33,7 @@ void(float effectno, vector start, vector end, float end_dz, float spd) effect_c
 	if (effectno != effect_curveparticles_effectno || start != effect_curveparticles_start) {
 		effect_curveparticles_end();
 		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_ZCURVEPARTICLES);
+		WriteByte(MSG_BROADCAST, NET_TE_CSQC_ZCURVEPARTICLES);
 		WriteShort(MSG_BROADCAST, effectno);
 		WriteCoord(MSG_BROADCAST, start_x);
 		WriteCoord(MSG_BROADCAST, start_y);
@@ -67,7 +67,7 @@ void(float effectno, vector start, vector end, vector vel) effect_curveparticles
 
 float(entity to, float sf) effect_model_send {
 	float f;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
+	WriteByte(MSG_ENTITY, NET_CSQC_MODELEFFECT);
 	f = 0;
 	if (self.velocity != '0 0 0')
 		f |= 1;

@@ -3,7 +3,7 @@ float g_jetpack_attenuation;
 float g_balance_pause_fuel_regen;
 
 float(entity to, float sf) jetpack_physics_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PHYSICS_JETPACK);
+	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS_JETPACK);
 	WriteCoord(MSG_ENTITY, g_jetpack_acceleration_side);
 	WriteCoord(MSG_ENTITY, g_jetpack_acceleration_up);
 	WriteCoord(MSG_ENTITY, g_jetpack_antigravity);

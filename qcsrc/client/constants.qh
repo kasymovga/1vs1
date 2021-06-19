@@ -63,42 +63,6 @@ const float		STAT_TIMELIMIT					= 236;
 const float     STAT_MOVEVARS_GRAVITY           = 242;
 const float     STAT_MOVEVARS_MAXSPEED          = 244;
 
-// Effect Constants
-const float 	EF_NODRAW						= 16;
-const float 	EF_ADDITIVE						= 32;
-const float 	EF_BLUE							= 64;
-const float 	EF_RED							= 128;
-const float 	EF_FULLBRIGHT					= 512;
-const float 	EF_FLAME						= 1024;
-const float 	EF_STARDUST						= 2048;
-const float 	EF_NOSHADOW						= 4096;
-const float 	EF_NODEPTHTEST					= 8192;
-
-// Quake Player Flag Constants
-const float 	PFL_ONGROUND					= 1;
-const float 	PFL_CROUCH						= 2;
-const float 	PFL_DEAD						= 4;
-const float 	PFL_GIBBED						= 8;
-
-// Quake Temporary Entity Constants
-const float		TE_SPIKE						= 0;
-const float		TE_SUPERSPIKE					= 1;
-const float		TE_GUNSHOT						= 2;
-const float		TE_EXPLOSION					= 3;
-const float		TE_TAREXPLOSION					= 4;
-const float		TE_LIGHTNING1					= 5;
-const float		TE_LIGHTNING2					= 6;
-const float		TE_WIZSPIKE						= 7;
-const float		TE_KNIGHTSPIKE					= 8;
-const float		TE_LIGHTNING3					= 9;
-const float		TE_LAVASPLASH					= 10;
-const float		TE_TELEPORT						= 11;
-const float 	TE_EXPLOSION2					= 12;
-// Darkplaces Additions
-const float 	TE_EXPLOSIONRGB					= 53;
-const float		TE_GUNSHOTQUAD					= 57;
-const float		TE_EXPLOSIONQUAD 				= 70;
-
 // Button values used by input_buttons
 const float BUTTON_ATTACK = 1;
 const float BUTTON_JUMP = 2;
@@ -120,7 +84,6 @@ const float BUTTON_14 = 65536;
 const float BUTTON_15 = 131072;
 const float BUTTON_16 = 262144;
 
-
 const float DRAWFLAG_NORMAL = 0;
 const float DRAWFLAG_ADDITIVE = 1;
 const float DRAWFLAG_MODULATE = 2;
@@ -130,5 +93,3 @@ const float DRAWFLAG_MIPMAP = 0x100; // only for R_BeginPolygon
 
 float CAMERA_FREE = 1;
 float CAMERA_CHASE = 2;
-
-float EF_NOMODELFLAGS = 8388608;

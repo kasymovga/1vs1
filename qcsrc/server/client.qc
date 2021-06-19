@@ -80,7 +80,7 @@ void(void) client_put {
 
 float(entity to, float sf) client_init_send {
 	float i, t;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
+	WriteByte(MSG_ENTITY, NET_CSQC_INIT);
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1) {
 		for(i = 1; i <= 24; ++i)

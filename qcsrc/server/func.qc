@@ -24,7 +24,7 @@ float(void) func_moving_brush_init {
 }
 
 float(entity to, float fl) func_pointparticles_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
+	WriteByte(MSG_ENTITY, NET_CSQC_POINTPARTICLES);
 	// optional features to save space
 	fl = fl & 0x0F;
 	if (self.spawnflags & 2)
@@ -182,7 +182,7 @@ void(void) spawnfunc_func_sparks {
 }
 
 float(entity to, float sf) func_rainsnow_send {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
+	WriteByte(MSG_ENTITY, NET_CSQC_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
 	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
 	WriteCoord(MSG_ENTITY, self.origin_y + self.mins_y);
