@@ -195,7 +195,7 @@ void(void) vehicle_aircraft_think {
 }
 
 void(void) vehicle_aircraft_enter {
-	if not(vehicle_enter(self.angles, vehicle_aircraft_physics_hook, HUD_SPIDERBOT, vehicle_aircraft_physics_send))
+	if not(vehicle_enter(self.angles, vehicle_aircraft_physics_hook, vehicle_aircraft_physics_send))
 		return;
 
 	self.colormap = self.owner.colormap;

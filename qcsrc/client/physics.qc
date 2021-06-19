@@ -73,6 +73,7 @@ vector(void) physics_top_adjust_view {
 }
 
 vector(void) physics_vehicle_adjust_view {
+	view_vehicle = TRUE;
 	makevectors(view_angles);
 	vector v = view_origin;
 	tracebox(v, '-8 -8 -8', '8 8 8', v - v_forward * vehicle_adjust_view_back, MOVE_WORLDONLY, world);

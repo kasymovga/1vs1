@@ -304,7 +304,7 @@ void(void) vehicle_spiderbot_think {
 }
 
 void(void) vehicle_spiderbot_enter {
-	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_spiderbot_physics_hook, HUD_SPIDERBOT, vehicle_spiderbot_physics_send))
+	if not(vehicle_enter(self.tur_head.angles + self.angles, vehicle_spiderbot_physics_hook, vehicle_spiderbot_physics_send))
 		return;
 
 	self.colormap			 = self.owner.colormap;

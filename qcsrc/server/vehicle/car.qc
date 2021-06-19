@@ -148,7 +148,7 @@ void(void) vehicle_car_think {
 }
 
 void(void) vehicle_car_enter {
-	if not(vehicle_enter(self.angles, vehicle_car_physics_hook, HUD_SPIDERBOT, vehicle_car_physics_send))
+	if not(vehicle_enter(self.angles, vehicle_car_physics_hook, vehicle_car_physics_send))
 		return;
 
 	if (self.noise != "")

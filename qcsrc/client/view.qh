@@ -19,3 +19,4 @@ float view_observer_status;
 float view_camera_correction_needed;
 float view_fixangle;
 vector view_fixed_angles;
+float view_vehicle;

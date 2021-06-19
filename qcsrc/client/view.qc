@@ -14,7 +14,7 @@ float view_spectatorbutton_zoom;
 float view_zoom_current;
 
 void(void) view_camera_setup;
-void(void) view_spider_hud;
+void(void) view_vehicle_hud;
 
 vector(void) view_fov_calculate {
 	float zoomdir, zoomfactor, zoomspeed;
@@ -107,6 +107,7 @@ void view_tint_effect(void) {
 
 void(float w, float h) CSQC_UpdateView { //called by engine
 	entity e;
+	view_vehicle = FALSE;
 	read_cvars();
 	view_spectatee_status = getstati(STAT_SPECSTATUS);
 	player_deadflag = getstati(STAT_PLAYER_STATE);
@@ -235,11 +236,9 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			sbar_acceleration_draw();
 	}
 	centerprint_draw(); // draw centerprint messages even if viewsize >= 120
-	float hud;
-	hud = getstati(STAT_HUD);
-	if (hud == HUD_SPIDERBOT) {
+	if (view_vehicle) {
 		vector sz;
-		view_spider_hud();
+		view_vehicle_hud();
 		if (view_crosshair) {
 			sz = drawgetimagesize(SPIDER_CROSS);
 			sz_x *= CVAR_OR(cl_vehicle_spiderbot_cross_size,1);
@@ -348,7 +347,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 	traceline('0 0 0', '0 0 0', MOVE_WORLDONLY, world);
 }
 
-void(void) view_spider_hud {
+void(void) view_vehicle_hud {
 	float rockets,reload,heat,hp,shield,i;
 	vector p,pp;
 	sbar_draw();

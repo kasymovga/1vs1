@@ -20,7 +20,6 @@ float(entity plr, float eject) vehicle_extract_player {
     plr.PlayerPhysplug = physics_plug_null;
     plr.vehicle        = world;
 	plr.view_ofs       = PL_VIEW_OFS;
-	plr.hud            = HUD_NORMAL;
 	plr.lastpushtime = time;
     setsize(plr,PL_MIN,PL_MAX);
 	return 1;
@@ -183,7 +182,6 @@ void(void) vehicle_init {
 	gamehook_chain_ThrowWeaponHandle = vehicle_ThrowWeaponHandle;
 	vehicle_player_entity_next_link = gamehook_chain_player_entity;
 	gamehook_chain_player_entity = vehicle_player_entity;
-	addstat(STAT_HUD, STAT_INT,  hud);
 	addstat(STAT_SPIDERBOT_ROCKETS, STAT_INT,   rockets);
 	addstat(STAT_SPIDERBOT_RELOAD,  STAT_FLOAT, rockets_reload);
 	addstat(STAT_SPIDERBOT_HEAT,    STAT_FLOAT, vehicle_heat);
@@ -191,30 +189,28 @@ void(void) vehicle_init {
 	addstat(STAT_SPIDERBOT_SHIELD,  STAT_FLOAT, vehicle_shield);
 }
 
-float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send) vehicle_enter {
+float(vector ang, float() phys_plug, float(entity, float) phys_send) vehicle_enter {
     if (team_mode)
     if (self.team)
     if (self.team != other.team)
         return FALSE;
 
-	if (_hud == HUD_SPIDERBOT) {
-		other.vehicle_health = (self.health / self.health_max);
-		if (self.vehicle_flags & VHF_HASSHIELD)
-			other.vehicle_shield = (self.vehicle_shield / self.shield_max);
-		else
-			other.vehicle_shield = -1;
+	other.vehicle_health = (self.health / self.health_max);
+	if (self.vehicle_flags & VHF_HASSHIELD)
+		other.vehicle_shield = (self.vehicle_shield / self.shield_max);
+	else
+		other.vehicle_shield = -1;
 
-		if (self.vehicle_flags & VHF_HEAT)
-			other.vehicle_heat = self.vehicle_heat;
-		else
-			other.vehicle_heat = -1;
+	if (self.vehicle_flags & VHF_HEAT)
+		other.vehicle_heat = self.vehicle_heat;
+	else
+		other.vehicle_heat = -1;
 
-		if (self.vehicle_flags & VHF_HASROCKETS) {
-			other.rockets = self.rockets;
-			other.rockets_reload = self.rockets_reload;
-		} else {
-			other.rockets = -1;
-		}
+	if (self.vehicle_flags & VHF_HASROCKETS) {
+		other.rockets = self.rockets;
+		other.rockets_reload = self.rockets_reload;
+	} else {
+		other.rockets = -1;
 	}
     self.owner = other;
     self.switchweapon = other.switchweapon;
@@ -223,7 +219,6 @@ float(vector ang, float() phys_plug, float _hud, float(entity, float) phys_send)
     self.owner.solid          = SOLID_NOT;
     self.owner.PlayerPhysplug = phys_plug;
     self.owner.vehicle        = self;
-    self.owner.hud            = _hud;
     self.team                 = self.owner.team;
     if(clienttype(other) == CLIENTTYPE_REAL) {
         msg_entity = other;
