@@ -99,7 +99,7 @@ float(float r) rune_count {
 }
 
 vector(float r) rune_colormod {
-	vector _color;
+	vector _color = '0 0 0';
 	if(r == RUNE_IGNITE)
 		_color = '255 0 0';
 	else if(r == RUNE_DEFENSE)
@@ -121,8 +121,8 @@ vector(float r) rune_colormod {
 void(void) rune_respawn;
 
 void(void) rune_carried_think {
-	float rcount, rnum;
-	vector ang;
+	float rcount, rnum = 0;
+	vector ang = '0 0 0';
 	entity rune;
 	if(self.owner.classname != "player" || time < map_starttime) {
 		rune_respawn();

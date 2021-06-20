@@ -672,7 +672,7 @@ float ons_notification_time_team2;
 
 void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) {
 	entity oself;
-	float nag;
+	float nag = 0;
 	if (_damage <= 0)
 		return;
 
@@ -1075,7 +1075,7 @@ entity() onslaught_client_put_spawn_point {
 	if not(self.ons_spawn_area_z)
 		return spawn_select(FALSE);
 
-	vector v;
+	vector v = '0 0 0';
 	float fmin, f;
 	e = world;
 	selected = world;

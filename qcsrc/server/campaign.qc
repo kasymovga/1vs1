@@ -161,7 +161,7 @@ void(string cvarname, float value) campaign_save_cvar {
 void(void) campaign_preintermission {
 	entity head;
 	float won;
-	float lost;
+	float lost = FALSE;
 	string savevar;
 	won = 0;
 	head = findchain(classname, "player");

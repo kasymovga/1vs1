@@ -596,7 +596,7 @@ void kh_Key_Think()  // runs all the time
 void kh_WinnerTeam(float teem)  // runs when a team wins
 {
 	// all key carriers get some points
-	vector firstorigin, lastorigin, midpoint;
+	vector firstorigin = '0 0 0', lastorigin = '0 0 0', midpoint = '0 0 0';
 	float first;
 	entity key;
 	float score;
@@ -800,7 +800,7 @@ void kh_StartRound()  // runs at the start of each round
 	{
 		teem = kh_Team_ByID(i);
 		players = 0;
-		entity my_player;
+		entity my_player = NULL;
 		FOR_EACH_PLAYER(player)
 			if(player.deadflag == DEAD_NO)
 				if(!player.BUTTON_CHAT)

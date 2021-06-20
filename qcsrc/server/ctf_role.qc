@@ -47,7 +47,7 @@ entity(entity bot) ctf_role_find_enemy_flag {
 }
 
 float(entity bot, vector org, float _radius) ctf_role_teamcount {
-	float c;
+	float c = 0;
 	entity head;
 	FOR_EACH_PLAYER(head) {
 		if (head.team!=bot.team || head.deadflag != DEAD_NO || head == bot)
@@ -417,8 +417,8 @@ void() ctf_role_defense {
 		self.bot_strategytime = time + bot_ai_strategyinterval;
 		navigation_goalrating_start();
 		// if enemies are closer to our base, go there
-		entity head, closestplayer;
-		float distance, bestdistance;
+		entity head, closestplayer = NULL;
+		float distance, bestdistance = 0;
 		distance = 10000;
 		FOR_EACH_PLAYER(head) {
 			if (head.deadflag!=DEAD_NO)
@@ -447,7 +447,7 @@ void() ctf_role_defense {
 
 void() ctf_role_calculate_middlepoint {
 	entity f;
-	vector p1, p2;
+	vector p1 = '0 0 0', p2 = '0 0 0';
 	f = ctf_worldflaglist;
 	while (f) {
 		if (p1)

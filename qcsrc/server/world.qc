@@ -317,7 +317,7 @@ void(void) world_init {
 }
 
 void(float final) world_dump_stats {
-	float file;
+	float file = 0;
 	string s;
 	float to_console;
 	float to_file;
@@ -432,7 +432,7 @@ float(void) world_check_rules_run_out_spawns {
 		checkrules_equality = TRUE;
 		return TRUE;
 	} else if (score_team1 + score_team2 + score_team3 + score_team4 == 1) {
-		float t, i;
+		float t = 0, i;
 		if (score_team1) t = COLOR_TEAM1;
 		if (score_team2) t = COLOR_TEAM2;
 		if (score_team3) t = COLOR_TEAM3;

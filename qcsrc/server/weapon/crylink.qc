@@ -57,8 +57,8 @@ void(void) weapon_crylink_velocity_change {
 }
 
 void(void) weapon_crylink_attack {
-	float counter;
-	entity proj;
+	float counter = 0;
+	entity proj = NULL;
 	vector s;
 	vector forward, right, up;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -107,8 +107,8 @@ void(void) weapon_crylink_attack {
 }
 
 void(void) weapon_crylink_attack2 {
-	float counter;
-	entity proj;
+	float counter = 0;
+	entity proj = NULL;
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_cells = self.ammo_cells - g_balance_crylink_secondary_ammo;
 

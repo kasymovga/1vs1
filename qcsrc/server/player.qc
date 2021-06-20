@@ -666,7 +666,7 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 			}
 			attacker.killcount = 0;
 		} else {
-			string blood_message, victim_message;
+			string blood_message = "", victim_message = "";
 			if (!checkrules_firstblood) {
 				checkrules_firstblood = TRUE;
 				bprint("^1",a, "^1 drew first blood", "\n");
@@ -1347,7 +1347,7 @@ string(string _playermodel) player_check_model {
 
 void() player_setup_model {
 	string forcemodel;
-	float forceskin, forcecolor, chmdl, oldskin;
+	float forceskin, forcecolor, chmdl = FALSE, oldskin;
 	vector m1, m2;
 	if (team_mode) {
 		forcemodel =
@@ -2142,7 +2142,7 @@ void(entity spot) player_spawn {
 	antilag_teleported(self);
 	self.wasplayer = TRUE;
 	entity e;
-	float n;
+	float n = 0;
 	FOR_EACH_REALPLAYER(e) n++;
 	if not(warmup_active)
 	if not(map_finished)
@@ -2155,7 +2155,7 @@ void(entity spot) player_spawn {
 }
 
 void(void) player_leave {
-	float n;
+	float n = 0;
 	entity e;
 	FOR_EACH_REALPLAYER(e) n++;
 	if not(warmup_active)

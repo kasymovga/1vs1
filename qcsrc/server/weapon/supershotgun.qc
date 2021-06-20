@@ -68,7 +68,7 @@ void weapon_supershotgun_attack(float secondary, float barrels, float ballistic)
 	float a, b, f, d, s, spread, g, bc, dtype;
 	float	sc;
 	local entity flash;
-	float hor_spread, hor_shift;
+	float hor_spread = 0, hor_shift = 0;
 	vector shotdir_shifted;
 	float bounces;
 

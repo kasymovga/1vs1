@@ -483,8 +483,8 @@ float() client_join_allowed {
 	if (!g_maxplayers)
 		return TRUE;
 
-	entity e;
-	float currentlyPlaying;
+	entity e = NULL;
+	float currentlyPlaying = 0;
 	FOR_EACH_REALCLIENT(e) {
 		if (e != self) //avoid wrong self-counting in teamplay
 		if (e.classname == "player" || (team_mode && e.team > 0))
@@ -545,10 +545,9 @@ void(void) client_post_think { //called by engine
 	if (frametime)
 	if (clienttype(self) == CLIENTTYPE_REAL) {
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
-		float timeleft, drop, maxidle;
+		float timeleft, drop = FALSE, maxidle;
 		if (sv_maxidle_forcespec && self.classname == "player") {
 			maxidle = sv_maxidle_forcespec;
-			drop = FALSE;
 		} else if (sv_maxidle) {
 			maxidle = sv_maxidle;
 			drop = TRUE;
@@ -745,7 +744,7 @@ void(string _name) client_mute_ifneeded {
 
 entity(float tokens, float idx) client_entity_from_argv {
 	string s;
-	entity e, head;
+	entity e = NULL, head;
 	float n;
 	s = NULL;
 	client_entity_from_argv_firsttoken = -1;

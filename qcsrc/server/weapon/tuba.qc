@@ -13,7 +13,7 @@ float g_balance_tuba_volume;
 
 float weapon_tuba_note(entity pl, float hittype)
 {
-	float note;
+	float note = 0;
 	float movestate;
 	movestate = 5;
 	if(pl.movement_x < 0) movestate -= 3;

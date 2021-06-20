@@ -396,15 +396,15 @@ float(string s, entity e) vote_cmd {
 }
 
 void(entity e) vote_help {
-	string vmasterdis;
+	string vmasterdis = "";
 	if (!cvar("sv_vote_master")) {
 		vmasterdis = " ^1(disabled)";
 	}
-	string vlogindis;
+	string vlogindis = "";
 	if ("" == cvar_string("sv_vote_master_password")) {
 		vlogindis = " ^1(disabled)";
 	}
-	string vcalldis;
+	string vcalldis = "";
 	if (!cvar("sv_vote_call")) {
 		vcalldis = " ^1(disabled)";
 	}

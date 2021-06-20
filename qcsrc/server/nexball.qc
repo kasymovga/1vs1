@@ -462,7 +462,7 @@ void(void) nexball_basketball_touch {
 
 void(void) nexball_goal_touch {
 	entity ball;
-	float isclient, pscore, otherteam;
+	float isclient, pscore, otherteam = 0;
 	string pname;
 	if (map_finished) return;
 	if ((self.spawnflags & GOAL_TOUCHPLAYER) && other.ballcarried)
@@ -577,7 +577,7 @@ void(string teamname, float teamcolor) nexball_spawnteam {
 }
 
 void(void) nexball_spawnteams {
-	float t_r, t_b, t_y, t_p;
+	float t_r = 0, t_b = 0, t_y = 0, t_p = 0;
 	entity e;
 	for(e = world; (e = find(e, classname, "nexball_goal")); )
 	{

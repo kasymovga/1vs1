@@ -91,8 +91,8 @@ string(entity pl, string msg) chat_formatmessage {
 }
 
 void(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol) chat_say {
-	string msgstr, colorstr, namestr, fullmsgstr, sourcemsgstr, privatemsgprefix;
-	float flood, privatemsgprefixlen;
+	string msgstr, colorstr = "", namestr, fullmsgstr, sourcemsgstr, privatemsgprefix = "";
+	float flood, privatemsgprefixlen = 0;
 	entity head;
 	if (g_chat_forbidden_words != "") {
 		string s1, s2 = g_chat_forbidden_words;
@@ -172,7 +172,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 	fullmsgstr = msgstr;
 	// FLOOD CONTROL
 	flood = 0;
-	var .float flood_field;
+	var .float flood_field = NULL;
 	if (source)
 	if (floodcontrol) {
 		float flood_spl;

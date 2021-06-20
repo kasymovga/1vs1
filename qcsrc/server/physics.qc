@@ -536,7 +536,7 @@ float(entity to, float sf) physics_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_PHYSICS);
 	entity oldself = self;
 	self = self.owner;
-	float dodging_flags, skimming;
+	float dodging_flags = 0, skimming = 0;
 	float sf2 = 0;
 	if not(sf & 3) {
 		if (self.classname == "player") sf |= 8;

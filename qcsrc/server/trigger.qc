@@ -62,7 +62,7 @@ float trigger_foreachtarget_callid;
 
 void(entity s, float(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata) trigger_for_each_target_recurse {
 	float i;
-	string targname;
+	string targname = "";
 	entity targ;
 	if (trigger_foreachtarget_callid < 1)
 		trigger_foreachtarget_callid = 1;
@@ -574,7 +574,7 @@ float (entity e) trigger_impulse_affected {
 void(void) trigger_impulse_touch1 {
 	entity targ;
 	float pushdeltatime;
-	float str;
+	float str = 0;
 	// FIXME: Better checking for what to push and not.
 	if not(trigger_impulse_affected(other))
 		return;
@@ -1022,7 +1022,7 @@ void spawnfunc_trigger_always() {
 
 .string chaintarget;
 string trigger_cycle_find_next_target(string curtarget) {
-	entity e;
+	entity e = NULL;
 	while((e = find(e, targetname, curtarget)))
 		if (e.chaintarget)
 			return e.chaintarget;
@@ -1276,7 +1276,7 @@ void(void) trigger_relay_ifstate_use {
 }
 
 void(void) trigger_relay_ifstate_init {
-	entity e;
+	entity e = NULL;
 	while((e = find(e, targetname, self.killtarget))) {
 		if (e.statefunc) {
 			self.killtarget = NULL;

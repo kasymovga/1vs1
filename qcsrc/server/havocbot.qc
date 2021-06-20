@@ -574,7 +574,7 @@ void(void) havocbot_movetogoal {
 
 void(void) havocbot_chooseenemy {
 	entity head, best, head2;
-	float rating, bestrating, i, f;
+	float rating, bestrating, i = 0, f = 0;
 	vector eye, v;
 	if (bot_nofire || PLAYER_IS_INDEPENDENT(self)) {
 		self.enemy = world;

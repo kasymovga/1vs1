@@ -373,7 +373,7 @@ void(entity o, vector start, vector start_visual, vector end, float fraction, fl
 
 void(void) weapon_zapper_attack2 {
 	float accum_time = g_balance_zapper_secondary_accumulate;
-	float charge_time;
+	float charge_time = 0;
 	if (accum_time) {
 		charge_time = g_balance_zapper_secondary_charge_time;
 		if (!charge_time)

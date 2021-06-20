@@ -8,7 +8,7 @@ float Spectator_Note_Customize() {
 }
 
 void Spectator_Note_Message() {
-	string s;
+	string s = "";
 	if (other.classname == "spectator") {
 		s = strcat("^1Spectating ^7", strreplace("{", "{}", other.enemy.netname), "\n^1Press ^3{+attack}^1 for another player\n^1Press ^3{+attack2}^1 to observe");
 	} else if (other.classname == "observer")

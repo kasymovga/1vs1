@@ -15,7 +15,7 @@ string sv_announcer_extra_twohits;
 .float nex_lasthit;
 
 void weapon_nex_whoosh(vector start, vector end) {
-	entity pseudoprojectile;
+	entity pseudoprojectile = NULL;
 	vector beampos;
 	vector dir = normalize(end - start);
 	string snd;

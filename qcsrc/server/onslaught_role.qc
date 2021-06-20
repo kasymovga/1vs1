@@ -21,7 +21,7 @@ void(entity bot) onslaught_role_reset;
 
 void(float ratingscale, vector org, float sradius) onslaught_role_goalrating_offenseitems {
 	entity head;
-	float t, i, c, needarmor, needweapons;
+	float t, i, c = 0, needarmor = FALSE, needweapons = FALSE;
 
 	// Needs armor/health?
 	if(self.health<100)
@@ -81,11 +81,9 @@ void(entity bot, float role) onslaught_role_setrole {
 }
 
 void(float ratingscale) onslaught_role_goalrating_controlpoints_attack {
-	entity cp, cp1, cp2, best, pl, wp;
-	float _radius, found, bestvalue, c;
-
+	entity cp = NULL, cp1, cp2, best, pl, wp;
+	float _radius, found = FALSE, bestvalue, c;
 	cp1 = cp2 = findchain(classname, "onslaught_controlpoint");
-
 	// Filter control points
 	for (; cp2; cp2 = cp2.chain)
 	{

@@ -615,7 +615,7 @@ void(void) race_trigger_checkpoint_verify {
 		g_race_qualifying = 1;
 		self.race_place = race_lowest_place_spawn;
 		if (!spawn_filter_out_of_bad_spots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE))
-			error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
+			error(strcat("Checkpoint ", ftos(self.race_checkpoint), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 	}
 	g_race_qualifying = qual;
 	if (race_timed_checkpoint)
@@ -990,7 +990,7 @@ float race_SpawnPointGood(entity spot) {
 		return TRUE;
 
 	entity ent;
-	float good, found;
+	float good = FALSE, found = FALSE;
 	ent = find(world, targetname, spot.target);
 	while (ent) {
 		if (ent.classname == "race_trigger_checkpoint") {

@@ -608,7 +608,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c, i, need_shells, need_nails, need_rockets, need_cells;
+	float c, i, need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE;
 	entity wi;
 	c = 0;
 

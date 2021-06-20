@@ -370,7 +370,7 @@ void(float _color) SV_ChangeTeam {
 }
 
 void(entity pl, float dteam, float nobalance) team_change {
-	float dcount, scount;
+	float dcount = 0, scount = 0;
 	team_teams_allowed(pl);
 	switch (dteam) {
 	case COLOR_TEAM1: if (team1 < 0) return; break;
@@ -462,8 +462,8 @@ void(entity pl, float dteam, float nobalance) team_change {
 }
 
 void(float source_team) team_shuffle_player_out {
-	float smallestteam, smallestteam_count, steam;
-	float selected_bot_score, selected_player_score;
+	float smallestteam, smallestteam_count, steam = 0;
+	float selected_bot_score = 0, selected_player_score = 0;
 	entity head, selected_bot, selected_player, selected;
 	bprint("Rebalancing Teams\n");
 	smallestteam = 0;

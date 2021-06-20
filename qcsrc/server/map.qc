@@ -172,7 +172,7 @@ float(float exponent) map_list_method_shuffle { // more clever shuffling
 }
 
 void(void) map_list_filter {
-	string sf;
+	string sf = "";
 	float n = tokenizebyseparator(cvar_string("_g_maplist"), " ");
 	float i;
 	for (i = 0; i < n; i++) {
@@ -185,7 +185,7 @@ void(void) map_list_filter {
 void(void) map_list_reset {
 	print("Building map list...\n");
 	string exclude = strcat(" ", cvar_string("g_maplist_exclude"), " ");
-	string list;
+	string list = "";
 	string h, t = MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags());
 	while (t != "") {
 		h = str_car(t);

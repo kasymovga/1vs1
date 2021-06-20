@@ -78,7 +78,7 @@ void(void) bot_think {
 }
 
 void(void) bot_setnameandstuff {
-	string readfile, s;
+	string readfile = "", s;
 	float file, tokens, prio;
 	entity p;
 	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;

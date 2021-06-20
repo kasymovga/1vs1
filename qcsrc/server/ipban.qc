@@ -514,10 +514,10 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 float GameCommand_Ban(string command)
 {
 	float argc;
-	float bantime;
+	float bantime = 0;
 	entity client;
 	float entno;
-	float masksize;
+	float masksize = 0;
 	string reason;
 	float reasonarg;
 

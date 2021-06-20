@@ -1173,10 +1173,9 @@ void weapon_model_spawn()
 
 void weapon_thinkf(float fr, float t, void() func)
 {
-	vector a;
+	vector a = '0 0 0';
 	vector of, or, ou;
 	float restartanim;
-
 	if(fr == WFRAME_DONTCHANGE)
 	{
 		fr = self.weaponentity.wframe;
@@ -1427,10 +1426,8 @@ vector weapon_calculate_projectile_velocity(vector pvelocity, vector mvelocity)
 	vector mdirection;
 	float mspeed;
 	float outspeed;
-	vector outvelocity;
-
+	vector outvelocity = '0 0 0';
 	mvelocity = mvelocity * g_weaponspeedfactor;
-
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
 

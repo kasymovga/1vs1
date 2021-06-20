@@ -236,7 +236,7 @@ entity(string name) bot_cmd_find_bot_by_name {
 // Returns a bot by number on list
 entity(float number) bot_cmd_find_bot_by_number {
 	entity bot;
-	float c;
+	float c = 0;
 	if (!number)
 		return world;
 
