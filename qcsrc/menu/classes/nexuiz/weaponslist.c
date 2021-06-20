@@ -18,6 +18,26 @@ void WeaponsList_MoveDown_Click(entity box, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
+string(string order, float i, float j) swapInPriorityNexuizWeaponsList {
+	string s;
+	float w, n;
+	n = tokenize_console(order);
+	if(i >= 0 && i < n && j >= 0 && j < n && i != j) {
+		s = "";
+		for(w = 0; w < n; ++w)
+		{
+			if(w == i)
+				s = strcat(s, argv(j), " ");
+			else if(w == j)
+				s = strcat(s, argv(i), " ");
+			else
+				s = strcat(s, argv(w), " ");
+		}
+		return substring(s, 0, strlen(s) - 1);
+	}
+	return order;
+}
+
 entity makeNexuizWeaponsList()
 {
 	entity me;
@@ -47,7 +67,7 @@ void WeaponsList_MoveUp_Click(entity box, entity me)
 {
 	if(me.selectedItem > 0)
 	{
-		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
+		cvar_set("cl_weaponpriority", swapInPriorityNexuizWeaponsList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
 		me.selectedItem -= 1;
 	}
 }
@@ -55,7 +75,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me)
 {
 	if(me.selectedItem < me.nItems - 1)
 	{
-		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
+		cvar_set("cl_weaponpriority", swapInPriorityNexuizWeaponsList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
 		me.selectedItem += 1;
 	}
 }
@@ -73,7 +93,7 @@ float mouseDragNexuizWeaponsList(entity me, vector pos)
 	i = me.selectedItem;
 	f = mouseDragListBox(me, pos);
 	if(me.selectedItem != i)
-		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
+		cvar_set("cl_weaponpriority", swapInPriorityNexuizWeaponsList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
 	return f;
 }
 string toStringNexuizWeaponsList(entity me)

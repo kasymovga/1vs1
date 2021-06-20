@@ -2,6 +2,6 @@
 #include "cvar.qh"
 #include "extresponse.qh"
 #include "mapinfo.qh"
+#include "shuffle.qh"
 #include "udppunchhole.qh"
-#include "util.qh"
 #include "weapon.qh"

@@ -38,7 +38,7 @@ float(string command) cmd_generic {
 			cvar_set("g_maplist", s2);
 			return TRUE;
 		} else if (argv(1) == "shuffle" && argc == 2) {
-			cvar_set("_g_maplist", shufflewords(cvar_string("_g_maplist")));
+			cvar_set("_g_maplist", shuffle_words(cvar_string("_g_maplist")));
 			return TRUE;
 		} else if (argv(1) == "cleanup") {
 			MapInfo_Enumerate();

@@ -3,6 +3,6 @@
 #include "cvar.qc"
 #include "extresponse.qc"
 #include "mapinfo.qc"
+#include "shuffle.qc"
 #include "udppunchhole.qc"
-#include "util.qc"
 #include "weapon.qc"
