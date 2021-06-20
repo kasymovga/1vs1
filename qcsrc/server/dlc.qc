@@ -263,9 +263,9 @@ float dlc_pause;
 
 var float(string cmd, float argc) dlc_cmd_game_handle_NextLink;
 float(string cmd, float argc) dlc_cmd_game_handle {
-	if (cmd == "dlc_require" || cmd == "require_dlc")
+	if (cmd == "dlc_require" || cmd == "require_dlc") //this command is deprecated, only present for prevent warnings
 	if (argv(1) != "") {
-		dlc_require(argv(1));
+		//dlc_require(argv(1));
 		return TRUE;
 	}
 	if (cmd == "dlc_reload") {
