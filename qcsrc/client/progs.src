@@ -1,8 +1,8 @@
 csprogs.dat
 pre.qh
+sys.qh
 ../common/qcc.qh
 ../common/progs.qh
-sys.qh
 defs.qh
 constants.qh
 ../client-server/progs.qh
