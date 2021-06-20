@@ -1,3 +1,14 @@
+#define SKINBEGIN void skin_setting_apply(string key, string _value) { switch(key) {
+#define SKINVECTOR(name,def) case #name: SKIN##name = stov(_value); break
+#define SKINFLOAT(name,def) case #name: SKIN##name = stof(_value); break
+#define SKINSTRING(name,def) case #name: break
+#define SKINEND case "": break; case "//": break; default: print("Invalid key in skin file: ", key, "\n"); } }
+#include "skin-customizables.inc"
+#undef SKINEND
+#undef SKINSTRING
+#undef SKINFLOAT
+#undef SKINVECTOR
+#undef SKINBEGIN
 void(void) skin_init {
 	float fh, n;
 	string s;
