@@ -65,9 +65,9 @@ void nadget_Waypoint_SetColor(float wpcolor) {
 
 void nadget_Waypoint(void) {
     entity plr;
-    float detected;
+    float detected = 0;
     float rng;
-    float warn;
+    float warn = 0;
 
     if(time < self.hg_wp_nextthink)
         return;

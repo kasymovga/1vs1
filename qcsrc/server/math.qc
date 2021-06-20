@@ -76,5 +76,6 @@ vector(vector ang1,vector ang2) math_shortangle_vxy {
     vector vtmp;
     vtmp_x = math_shortangle_f(ang1_x,ang2_x);
     vtmp_y = math_shortangle_f(ang1_y,ang2_y);
+    vtmp_z = 0;
     return vtmp;
 }

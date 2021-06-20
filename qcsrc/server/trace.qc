@@ -64,7 +64,7 @@ float(entity e, vector start, vector m1, vector m2, vector end, float movemode) 
 	float stepdist;
 	float yaw;
 	float ignorehazards;
-	float swimming;
+	float swimming = FALSE;
 	move = end - start;
 	move_z = 0;
 	org = start;

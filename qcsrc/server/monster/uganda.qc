@@ -3,7 +3,7 @@ void ugandaknuckles_guard();
 void ugandaknuckles_walk();
 
 void ugandaknuckles_hunt() {
-	float dofire;
+	float dofire = FALSE;
 	self.nextthink = time;
 	if (monster_check_target(ugandaknuckles_walk, ugandaknuckles_guard))
 		return;

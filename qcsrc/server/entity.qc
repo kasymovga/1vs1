@@ -94,7 +94,7 @@ void(void) entity_droptofloor {
 
 float(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float shiftdistance) entity_move_to_random_location {
 	float m, i;
-	vector start, org, delta, end, enddown;
+	vector start = '0 0 0', org, delta, end = '0 0 0', enddown;
 	m = e.dphitcontentsmask;
 	e.dphitcontentsmask = goodcontents | badcontents;
 	org = world.mins;
@@ -158,7 +158,7 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 
 void(entity platform) entity_drop_entities {
 	const vector nudge = '1 1 1';
-	entity e;
+	entity e = NULL;
 	while((e = findflags(e, flags, FL_ONGROUND))) {
 		if(math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
 			e.flags &= ~FL_ONGROUND;

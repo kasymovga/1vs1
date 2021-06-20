@@ -5,10 +5,9 @@ void turret_tesla_fire();
 entity turret_tesla_toast(entity from, float range, float _damage)
 {
     entity e;
-    entity etarget;
+    entity etarget = NULL;
     float d,dd;
     float r;
-
     dd = range + 1;
 
     e = findradius(from.origin,range);

@@ -1230,7 +1230,7 @@ void(void) func_door_trigger_touch {
 				s = "Gold Key";
 			else if (self.owner.items & IT_KEY3)
 				s = "Blood Key";
-			else if (self.owner.items)
+			else
 				s = "Unknown Key";
 
 			if (time >= self.attack_finished_single) {

@@ -34,8 +34,7 @@ void(entity targ, entity attacker, float deathtype) nadget_linker_DamageForceMod
 #define HEAL_PAUSEROT_DEFAULT -1
 void nadget_Linker_Think(void) {
     entity p, e;
-    float denom, thealth, tarmor;
-
+    float denom = 0, thealth = 0, tarmor = 0;
     if(!self.owner.iscreature || self.owner.team != self.team) {
         nadget_Linker_Remove();
         return;

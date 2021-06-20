@@ -64,7 +64,7 @@ float nadget_Sentry_TargetIsValid(entity emitter, entity e) {
 entity nadget_Sentry_FindTarget(entity emitter) {
     entity sentry = emitter.owner;
 
-    entity targ, p;
+    entity targ = NULL, p;
     float mindist, dist;
 #if 0
     float medic = Buffs_Present(sentry.realowner, BUFF_MEDIC), medicflag;
@@ -285,7 +285,7 @@ void nadget_Sentry_Remove(void) {
         remove(self.aiment);
     }
 
-	entity e;
+	entity e = NULL;
     for(e; (e = find(e, classname, "hg_sentry_emitter"));)
         if(e.owner == self)
             nadget_Sentry_Emitter_Remove(e);
@@ -306,7 +306,7 @@ void nadget_Sentry_Levitate(void) {
     // FIXME: doesn't work properly without g_nadgets_sentry_levitation
     // TODO: maybe move this to CSQC
 
-    float shift;
+    float shift = 0;
 	if (g_nadgets_sentry_levitation)
 	for(shift = 0; shift < MATH_PI * 2; shift += 0.1) {
         vector new_origin = self.origin + frametime * '0 0 8' * sin(self.spawntime + time + self.phase + shift);
@@ -472,7 +472,7 @@ void nadget_Sentry_Trigger(void) {
     float c_frc = g_nadgets_sentry_shock_force;
     float c_cost;
 	c_cost = g_nadgets_sentry_shock_energy_cost;
-    float found, triggered;
+    float found = 0, triggered = 0;
 
     for(e = world; (e = find(e, classname, "hg_sentry"));) if(e.realowner == self) {
         ++found;

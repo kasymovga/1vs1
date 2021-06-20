@@ -589,9 +589,8 @@ void nadget_GenericProjectile_Detonate(entity nade) {
 }
 
 float nadget_GenericProjectile_DetonateAll(entity plr, float force) {
-    float c;
-    entity nade, tl;
-
+    float c = 0;
+    entity nade, tl = NULL;
     if(!plr.hg_detonables || (!force && PLAYER_REALLY_DEAD(plr)))
         return 0;
 

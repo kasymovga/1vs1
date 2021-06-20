@@ -2,8 +2,7 @@
 vector turret_real_origin(entity ent)
 {
     entity e;
-    vector v;
-
+    vector v = '0 0 0';
     e = ent.tag_entity;
     while(e)
     {
@@ -89,8 +88,7 @@ vector turret_stdproc_aim_generic()
 {
 
     vector pre_pos,prep;
-    float distance,impact_time,i,mintime;
-
+    float distance, impact_time = 0, i, mintime;
     turret_tag_fire_update();
 
     if(self.aim_flags & TFL_AIM_SIMPLE)
@@ -1172,7 +1170,7 @@ void turret_think()
         // Check if we have a vailid enemy, and try to find one if we dont.
 
         // g_turrets_targetscan_maxdelay forces a target re-scan this often
-        float do_target_scan;
+        float do_target_scan = FALSE;
         if((self.target_select_time + g_turrets_targetscan_maxdelay) < time)
             do_target_scan = 1;
 
@@ -1666,12 +1664,9 @@ float TFL_TARGETSELECT_OWNTEAM       = 512;
 float turret_stdproc_targetscore_support(entity e_turret,entity e_target)
 {
     float score;        // Total score
-    float s_score,d_score;
-
+    float s_score = 0,d_score;
     if (e_turret.enemy == e_target) s_score = 1;
-
     d_score = min(e_turret.target_range_optimal,tvt_dist) / max(e_turret.target_range_optimal,tvt_dist);
-
     score = (d_score * e_turret.target_select_rangebias) +
             (s_score * e_turret.target_select_samebias);
 
@@ -1685,17 +1680,13 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
 {
     //vector v_tmp;
     float d_dist;       // Defendmode Distance
-
     float score;        // Total score
-
     float d_score;      // Distance score
     float a_score;      // Angular score
-    float m_score;      // missile score
-    float p_score;      // player score
+    float m_score = 0;      // missile score
+    float p_score = 0;      // player score
     //float da_score;   // Distance from aimpoint score
-
     float ikr;          // ideal kill range
-
     if(!e_target) return 0;
 
     //if (e_target == e_turret.enemy) s_score = 1;

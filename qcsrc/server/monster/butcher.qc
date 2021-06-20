@@ -8,7 +8,7 @@ void butcher_hunt() {
 	if (monster_check_target(butcher_walk, butcher_guard))
 		return;
 
-	vector v;
+	vector v = '0 0 0';
 	float dofire;
 	if (self.attack_finished_single < time) {
 		v = entity_nearest_point_on_box(self.enemy, self.origin);

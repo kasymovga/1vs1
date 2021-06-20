@@ -3,7 +3,7 @@ float g_nadgets_gg_range;
 
 NADGET_HOOKFUNCTION(gg, Attack) {
     entity p;
-    float pwned;
+    float pwned = 0;
     float allow;
 
     FOR_EACH_PLAYER(p)

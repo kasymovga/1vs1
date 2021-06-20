@@ -314,7 +314,7 @@ void(void) waypoint_schedulerelinkall {
 float(void) waypoint_load_links {
 	string filename, s;
 	float file, tokens, found;
-	entity wp_from, wp_to;
+	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
@@ -379,7 +379,7 @@ float(void) waypoint_load_links {
 void(void) waypoint_load_links_hardwired {
 	string filename, s;
 	float file, tokens, found;
-	entity wp_from, wp_to;
+	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.hardwired");
@@ -446,7 +446,7 @@ void(void) waypoint_load_links_hardwired {
 void(void) waypoint_save_links {
 	string filename, s;
 	float file, c, i;
-	entity w, link;
+	entity w, link = NULL;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.", ftos(waypoints_count), ".cache");
 	file = fopen(filename, FILE_WRITE);

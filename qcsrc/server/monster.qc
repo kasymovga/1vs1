@@ -23,7 +23,7 @@ void monster_sound(entity m, string s, float force) {
 }
 
 void monster_set_route() {
-	float f1, f2;
+	float f1 = 0, f2 = 0;
 	entity p;
 	if (self.items & IT_JETPACK) {
 		f1 = bot_ai_navigation_jetpack;
@@ -685,7 +685,7 @@ void monster_group_reset() {
 
 void monster_group_counter_remove() {
 	self.owner.enemy = world;
-	entity e;
+	entity e = NULL;
 	while ((e = find(e, target2, self.targetname))) {
 		e.target2 = "";
 	}

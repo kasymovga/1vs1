@@ -634,7 +634,7 @@ void nadget_Attack(void) {
 }
 
 void nadget_UpdateDetonables(void) {
-    entity nade;
+    entity nade = NULL;
     self.hg_detonables = 0;
 
     for(;(nade = find(nade, classname, "hg_generic_projectile"));)
@@ -698,7 +698,7 @@ void nadget_PlayerPreThink(void) {
     nadget_Shield_PlayerFrame();
     nadget_Cloak_PlayerFrame();
 	float mayfire = player_can_fire(self, FALSE);
-	float held, isalt;
+	float held, isalt = 0;
 	held = self.(g_nadgets_detonatelaunches ? hg_detonatepressed : BUTTON_USE);
 
     float n_type;
@@ -925,7 +925,7 @@ void nadget_Pick(float tokens) {
 	}
 
 	float revert;
-	entity astate;
+	entity astate = NULL;
 	NADGET_DO_IN_ALL_CONTEXTS({
 		argc = tokenize_console(nadget_SelectableTypes(hg_context_isalt));
 		success = FALSE;

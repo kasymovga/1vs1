@@ -458,7 +458,7 @@ void(void) warpzone_position_init_find_target {
 }
 
 void(void) warpzone_init_update_transform {
-	vector org, ang, norm, point;
+	vector org, ang = '0 0 0', norm, point;
 	float area;
 	vector tri, a, b, c, p, q, n;
 	float i_s, i_t, n_t;
@@ -551,7 +551,7 @@ entity warpzone_first;
 .entity warpzone_next;
 
 void() warpzone_init_delayed {
-	entity e;
+	entity e = self;
 	for (self = warpzone_first; self; self = self.warpzone_next)
 		warpzone_init_find_target();
 

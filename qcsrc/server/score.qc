@@ -126,8 +126,7 @@ float(entity player, float scorefield, float score) score_team_add {
 
 float(entity t1, entity t2) score_compare_teams {
 	if(!t1 || !t2) return (!t2) - !t1;
-
-	vector result;
+	vector result = '0 0 0';
 	float i;
 	for(i = 0; i < SCORE_TEAM_FIELDS_MAX; ++i)
 	{
@@ -381,8 +380,7 @@ float(entity player, float pscorefield, float tscorefield, float score) score_pl
 
 float(entity t1, entity t2) score_compare_players {
 	if(!t1 || !t2) return (!t2) - !t1;
-
-	vector result;
+	vector result = '0 0 0';
 	float i;
 	for(i = 0; i < SCORE_FILEDS_MAX; ++i)
 	{

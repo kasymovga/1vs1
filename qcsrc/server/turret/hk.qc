@@ -110,7 +110,7 @@ void turret_hk_attack()
 
 void turret_hk_missile_think()
 {
-    vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
+    vector vu, vd, vf, vl, vr, ve = '0 0 0';  // Vector (direction)
     float  fu, fd, ff, fl, fr, fe;  // Fraction to solid
     vector olddir,wishdir,newdir;   // Final direction
     float lt_for;   // Length of Trace FORwrad
@@ -119,8 +119,7 @@ void turret_hk_missile_think()
     vector pre_pos;
     float myspeed;
     entity e;
-    float ad,edist;
-
+    float ad, edist = 0;
     self.nextthink = time + self.ticrate;
 
     //if (self.cnt < time)
