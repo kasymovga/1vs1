@@ -70,12 +70,12 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 	player.v_angle = to_angles;
 	player.velocity = to_velocity;
 	if (player.effects & EFFECT_TELEPORT_BIT)
-		player.effects &~= EFFECT_TELEPORT_BIT;
+		player.effects &= ~EFFECT_TELEPORT_BIT;
 	else
 		player.effects |= EFFECT_TELEPORT_BIT;
 
 	if (player.classname == "player")
-		player.flags &~= FL_ONGROUND;
+		player.flags &= ~FL_ONGROUND;
 
 	projectile_update_after_teleport(player);
 	physics_mark_as_teleported(player, 0);
@@ -88,6 +88,16 @@ float(entity to, float sf) warpzone_teleported_send {
 	WriteCoord(MSG_ENTITY, self.angles_y);
 	WriteCoord(MSG_ENTITY, self.angles_z);
 	return TRUE;
+}
+
+float(void) warpzone_teleported_customize {
+	if (other == self.owner)
+		return TRUE;
+
+	if (other.enemy == self.owner && other.classname == "spectator")
+		return TRUE;
+
+	return FALSE;
 }
 
 float(entity wz, entity e, float f0, float f1) warpzone_teleport {
@@ -161,15 +171,7 @@ float(entity wz, entity e, float f0, float f1) warpzone_teleport {
 		ts.effects = EFFECT_NODEPTHTEST;
 		ts.classname = "warpzone_teleported";
 		ts.angles = wz.warpzone_transform;
-		ts.customizeentityforclient = inline float(void) {
-			if (other == self.owner)
-				return TRUE;
-
-			if (other.enemy == self.owner && other.classname == "spectator")
-				return TRUE;
-
-			return FALSE;
-		};
+		ts.customizeentityforclient = warpzone_teleported_customize;
 	}
 	return 1;
 }

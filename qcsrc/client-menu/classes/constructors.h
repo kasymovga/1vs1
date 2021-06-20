@@ -19,5 +19,5 @@
 #define EXTENDS(base)                      me = spawn##base ();
 #define METHOD(cname,name,prototype)       me.name = name##cname;
 #define ATTRIB(cname,name,type,val)        me.name = val;
-#define ATTRIBARRAY(cname,name,type,cnt)   me.name = me.name;
+#define ATTRIBARRAY(cname,name,type,cnt)   
 #define ENDCLASS(cname)                    me.classname = #cname; return me; }

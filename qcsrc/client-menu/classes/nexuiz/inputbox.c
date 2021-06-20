@@ -5,9 +5,9 @@ CLASS(NexuizInputBox) EXTENDS(InputBox)
 	METHOD(NexuizInputBox, setText, void(entity, string))
 	ATTRIB(NexuizInputBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(NexuizInputBox, image, string, SKINGFX_INPUTBOX)
-	ATTRIB(NexuizInputBox, onChange, void(entity, entity), stdproc_nothing)
+	ATTRIB(NexuizInputBox, onChange, void(entity, entity), NULL)
 	ATTRIB(NexuizInputBox, onChangeEntity, entity, NULL)
-	ATTRIB(NexuizInputBox, onEnter, void(entity, entity), stdproc_nothing)
+	ATTRIB(NexuizInputBox, onEnter, void(entity, entity), NULL)
 	ATTRIB(NexuizInputBox, onEnterEntity, entity, NULL)
 	ATTRIB(NexuizInputBox, marginLeft, float, SKINMARGIN_INPUTBOX_CHARS)
 	ATTRIB(NexuizInputBox, marginRight, float, SKINMARGIN_INPUTBOX_CHARS)
@@ -52,7 +52,8 @@ void setTextNexuizInputBox(entity me, string new)
 	if(me.text != new)
 	{
 		setTextInputBox(me, new);
-		me.onChange(me, me.onChangeEntity);
+		if (me.onChange)
+			me.onChange(me, me.onChangeEntity);
 	}
 	else
 		setTextInputBox(me, new);

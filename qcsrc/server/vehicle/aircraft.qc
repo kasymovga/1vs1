@@ -23,7 +23,7 @@ void(void) vehicle_aircraft_engine_on {
 
 void(void) vehicle_aircraft_engine_off {
 	if (self.cnt) {
-		self.modelflags &~= MF_ROCKET;
+		self.modelflags &= ~MF_ROCKET;
 		sound_stop_to(MSG_ALL, self, CHAN_PLAYER);
 		self.cnt = 0;
 	}
@@ -260,11 +260,11 @@ void(void) vehicle_aircraft_blowup {
 void(void) vehicle_aircraft_die {
 	vehicle_aircraft_engine_off();
 	self.health = 0;
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.iscreature = FALSE;
 	self.solid = SOLID_NOT;
 	self.takedamage = DAMAGE_NO;
-	self.touch = stdproc_nothing;
+	self.touch = NULL;
 	self.deadflag = DEAD_DEAD;
 	self.frame = 0;
 	self.think = vehicle_aircraft_blowup;

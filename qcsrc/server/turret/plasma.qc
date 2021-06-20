@@ -71,7 +71,7 @@ void turret_plasma_dual_attack()
 
 void turret_plasma_projectile_explode()
 {
-    self.event_damage = stdproc_nothing;
+    self.event_damage = NULL;
     //w_deathtypestring = "ate to much plasma";
     damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ELECTRO, world);
     remove (self);

@@ -114,8 +114,8 @@ void(vector cpos, vector l_size, float progress, float alpha, vector l_color, fl
 		fragsize_y = l_size_y;
 		fragsize_z = 0;
 		float frag;
-		for(frag = 0; frag < fragments; ++frag) {
-			draw_borderlines(1, pos + fragsize_x * frag * '1 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
+		for (frag = 0; frag < fragments; ++frag) {
+			draw_borderlines(1, pos + fragsize_x * frag * '1 0 0', fragsize, l_color, alpha, DRAWFLAG_NORMAL);
 		}
 	}
 }

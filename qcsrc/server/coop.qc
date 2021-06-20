@@ -32,7 +32,7 @@ void(float killed) coop_player_clear {
 void(void) coop_teleporter_use {
 	if (self.solid == SOLID_TRIGGER) {
 		self.solid = SOLID_NOT;
-		self.effects &~= EFFECT_STARDUST;
+		self.effects &= ~EFFECT_STARDUST;
 	} else {
 		self.solid = SOLID_TRIGGER;
 		self.effects |= EFFECT_STARDUST;
@@ -83,7 +83,7 @@ float() coop_ice_skip_death_handle {
 	return !self.wasplayer;
 }
 
-void() coop_ice_unfroze {
+void(entity ignore) coop_ice_unfroze {
 	return;
 }
 

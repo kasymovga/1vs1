@@ -593,5 +593,7 @@ float keyDownNexuizServerList(entity me, float scan, float ascii, float shift)
 		return 0;
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+
+	return 0;
 }
 #endif

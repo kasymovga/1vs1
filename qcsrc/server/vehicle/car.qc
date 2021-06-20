@@ -212,7 +212,7 @@ void(void) vehicle_car_blowup {
 
 void(void) vehicle_car_die {
 	self.health = 0;
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.iscreature = FALSE;
 	self.solid	  = SOLID_NOT;
 	self.takedamage = DAMAGE_NO;

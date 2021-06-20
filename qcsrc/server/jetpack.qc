@@ -47,11 +47,11 @@ void() jetpack_player_effects {
 			sound(self, CHAN_TRIGGER, "misc/jetpack_fly.wav", VOL_BASE, g_jetpack_attenuation);
 			self.modelflags |= MF_ROCKET;
 		}
-		self.items &~= IT_USING_JETPACK;
+		self.items &= ~IT_USING_JETPACK;
 	} else {
 		if (self.modelflags & MF_ROCKET) {
 			sound_stop(self, CHAN_TRIGGER);
-			self.modelflags &~= MF_ROCKET;
+			self.modelflags &= ~MF_ROCKET;
 		}
 	}
 	jetpack_player_effects_next_link();

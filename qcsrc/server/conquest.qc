@@ -214,7 +214,7 @@ float(float t) conquest_team_can_spawn {
 	return FALSE;
 }
 
-float() conquest_winning_condition {
+float(float ignore, float ignore2) conquest_winning_condition {
 	entity head;
 	float t1, t2;
 	float one_of_team_cannot_spawn;

@@ -75,7 +75,7 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 			teleport_death(player, teleporter, telefragger, telefragmin, telefragmax, _damage);
 
 		// player no longer is on ground
-		player.flags &~= FL_ONGROUND;
+		player.flags &= ~FL_ONGROUND;
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
 		// reset tracking of who pushed you into a hazard (for kill credit)

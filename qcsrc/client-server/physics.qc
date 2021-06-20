@@ -83,7 +83,7 @@ void(void) physics_update_status {
 	vector origin1 = self.origin;
 	origin1_z += self.mins_z + 1;
 	physics_waterlevel = WATERLEVEL_NONE;
-	physics_flags &~= FL_ONGROUND_OR_SLICK_OR_CLIMB;
+	physics_flags &= ~FL_ONGROUND_OR_SLICK_OR_CLIMB;
 	float thepoint = pointcontents(origin1);
 	physics_watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 	if (physics_watertype) {
@@ -112,7 +112,7 @@ void(void) physics_update_status {
 			trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 0.125', TRACE_MOVE_NORMAL, self);
 		}
 		if (trace_fraction <= 0.01 && trace_plane_normal_z > 0.7 && ((physics_groundvelocity_dotproduct = physics_velocity * trace_plane_normal) <= 0 || (physics_have_doubjejump && (!g_doublejump_nopogostick || (physics_flags & FL_JUMPRELEASED))))) {
-			physics_flags &~= FL_DOUBLEJUMP;
+			physics_flags &= ~FL_DOUBLEJUMP;
 			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) {
 				if (g_slicksurfaces_levitation)
 					physics_flags |= FL_SLICK;
@@ -125,7 +125,7 @@ void(void) physics_update_status {
 				#ifdef SVQC
 				physics_step_on_sky();
 				#endif
-				physics_flags &~= FL_ONGROUND_OR_SLICK;
+				physics_flags &= ~FL_ONGROUND_OR_SLICK;
 			}
 			self.groundentity = trace_ent;
 			physics_impact();
@@ -439,9 +439,9 @@ void(void) physics_dodging {
 				self.last_FORWARD_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_FORWARD;
-			self.lastkeys &~= KEY_BACKWARD;
+			self.lastkeys &= ~KEY_BACKWARD;
 		} else
-			self.lastkeys &~= KEY_FORWARD;
+			self.lastkeys &= ~KEY_FORWARD;
 
 		if (physics_movement_x < 0) {
 			// is this a state change?
@@ -453,9 +453,9 @@ void(void) physics_dodging {
 				self.last_BACKWARD_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_BACKWARD;
-			self.lastkeys &~= KEY_FORWARD;
+			self.lastkeys &= ~KEY_FORWARD;
 		} else
-			self.lastkeys &~= KEY_BACKWARD;
+			self.lastkeys &= ~KEY_BACKWARD;
 
 		if (physics_movement_y > 0) {
 			// is this a state change?
@@ -467,9 +467,9 @@ void(void) physics_dodging {
 				self.last_RIGHT_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_RIGHT;
-			self.lastkeys &~= KEY_LEFT;
+			self.lastkeys &= ~KEY_LEFT;
 		} else
-			self.lastkeys &~= KEY_RIGHT;
+			self.lastkeys &= ~KEY_RIGHT;
 
 		if (physics_movement_y < 0) {
 			// is this a state change?
@@ -481,9 +481,9 @@ void(void) physics_dodging {
 				self.last_LEFT_KEY_time = dodging_timeout;
 			}
 			self.lastkeys |= KEY_LEFT;
-			self.lastkeys &~= KEY_RIGHT;
+			self.lastkeys &= ~KEY_RIGHT;
 		} else
-			self.lastkeys &~= KEY_LEFT;
+			self.lastkeys &= ~KEY_LEFT;
 	}
 
 	if (dodge_detected == 1) {
@@ -492,7 +492,7 @@ void(void) physics_dodging {
 			return;
 
 		makevectors(self.angles);
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		self.flags |= FL_DOUBLEJUMP; //prevent double jump after dodge
 		if (tap_direction_x)
 		if (tap_direction_y)
@@ -629,8 +629,8 @@ void(void) physics_player_jump {
 		physics_velocity_z = physics_velocity_z + sv_jumpvelocity * physics_jump_velocity_mod();
 
 	physics_cpmdoublejump_time = 0.4;
-	physics_flags &~= FL_ONGROUND_OR_SLICK;
-	physics_flags &~= FL_JUMPRELEASED;
+	physics_flags &= ~FL_ONGROUND_OR_SLICK;
+	physics_flags &= ~FL_JUMPRELEASED;
 	physics_skimming = g_skimming_time;
 	physics_on_jump_hook();
 }
@@ -653,7 +653,7 @@ void(void) physics_check_water_jump {
 		if (trace_fraction == 1) { // open at eye level
 			physics_flags |= FL_WATERJUMP;
 			physics_velocity_z = sv_waterjumpvelocity;
-			physics_flags &~= FL_JUMPRELEASED;
+			physics_flags &= ~FL_JUMPRELEASED;
 			physics_teleport_time = 2;
 			physics_check_water_jump_hook();
 			return;
@@ -762,7 +762,7 @@ void(void) physics_player_frame {
 		physics_velocity_x = self.movedir_x;
 		physics_velocity_y = self.movedir_y;
 		if (physics_teleport_time < 0 || physics_waterlevel == WATERLEVEL_NONE || physics_velocity_z < 0) {
-			physics_flags &~= FL_WATERJUMP;
+			physics_flags &= ~FL_WATERJUMP;
 			physics_teleport_time = 0;
 		}
 	} else if (physics_flags & FL_ONGROUND) {
@@ -806,7 +806,7 @@ void(void) physics_player_frame {
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 	} else if (physics_movetype == MOVETYPE_NOCLIP || physics_movetype == MOVETYPE_FLY) {
 		// noclipping or flying
-		physics_flags &~= FL_ONGROUND;
+		physics_flags &= ~FL_ONGROUND;
 
 		physics_velocity = physics_velocity * (1 - frametime * sv_friction);
 		if (g_sideview)
@@ -825,7 +825,7 @@ void(void) physics_player_frame {
 			physics_accelerate(wishdir, wishspeed, wishspeed, sv_accelerate*maxspd_mod, 1, 0);
 	} else if (physics_waterlevel >= WATERLEVEL_SWIMMING) {
 		// swimming
-		physics_flags &~= FL_ONGROUND;
+		physics_flags &= ~FL_ONGROUND;
 		if (g_sideview)
 			makevectors(physics_v_angle_y * '0 1 0');
 		else
@@ -855,7 +855,7 @@ void(void) physics_player_frame {
 		physics_accelerate(wishdir, wishspeed, wishspeed, g_wateraccelerate*maxspd_mod, 1, 0);
 	} else if (physics_ladder) {
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
-		physics_flags &~= FL_ONGROUND;
+		physics_flags &= ~FL_ONGROUND;
 		if (g_sideview)
 			makevectors(physics_v_angle_y * '0 1 0');
 		else

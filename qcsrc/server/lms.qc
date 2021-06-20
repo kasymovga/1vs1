@@ -165,7 +165,7 @@ void(void) lms_client_connect {
 	lms_client_connect_next();
 }
 
-float(void) lms_WinningCondition {
+float(float ignore, float ignore2) lms_WinningCondition {
 	if (time < map_starttime)
 		return FALSE;
 

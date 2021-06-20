@@ -160,6 +160,10 @@ void(string s, string curmodel, float curskin) modelselect_search_by_path {
 	search_end(glob);
 }
 
+void(void) modelselect_model_draw {
+	R_AddEntity(self);
+}
+
 void(void) modelselect_read {
 	string currentmodel = ReadString();
 	float currentskin = ReadByte();
@@ -199,7 +203,7 @@ void(void) modelselect_read {
 		modelselect_current = spawn();
 
 	modelselect_current.effects = EFFECT_NODEPTHTEST | EFFECT_FULLBRIGHT;
-	modelselect_current.draw = inline void(void) { R_AddEntity(self); };
+	modelselect_current.draw = modelselect_model_draw;
 	modelselect_current.colormap = 1023;
 	if not(modelselect_list_len)
 		modelselect_remove();

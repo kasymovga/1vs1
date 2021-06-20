@@ -100,7 +100,7 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 	}
 	float n;
 	if ((n = cvar("cl_simpleitems"))) {
-		s = s + " zapper_v2 supershotgun"; //need load them first, to override their g_* models
+		s = strcat(s, " zapper_v2 supershotgun"); //need load them first, to override their g_* models
 		if (n == 2)
 			s = strcat(s, " simpleitems-luma");
 		else
@@ -476,7 +476,7 @@ void() menu_toggle {
 void() menu_shutdown {
 	entity e;
 	menu_hide();
-	for (e = NULL; (e = nextent(e)) != NULL; ) {
+	for (e = NULL; (e = nextent(e)); ) {
 		if (e.destroy)
 			e.destroy(e);
 	}

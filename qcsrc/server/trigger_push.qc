@@ -121,7 +121,7 @@ void(void) trigger_push_touch {
 	if(self.target)
 		self.movedir = trigger_push_calculatevelocity((g_trigger_push_use_trigger_origin ? (self.origin + (self.mins + self.maxs) * 0.5) : other.origin), self.enemy, self.height);
 
-	other.flags &~= FL_ONGROUND;
+	other.flags &= ~FL_ONGROUND;
 	other.velocity = self.movedir;
 	if (other.iscreature) {
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)

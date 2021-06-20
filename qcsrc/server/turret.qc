@@ -337,7 +337,7 @@ void turret_stdproc_die()
     self.customizeentityforclient = stdproc_false;
     self.tur_head.customizeentityforclient = stdproc_false;
 
-    self.event_damage           = stdproc_nothing;
+    self.event_damage           = NULL;
     self.takedamage             = DAMAGE_NO;
     self.effects            = 0;
     self.tur_head.effects   = self.effects;
@@ -486,7 +486,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float _damage, fl
 
     if (self.health <= 0)
     {
-        baseent.event_damage           = stdproc_nothing;
+        baseent.event_damage           = NULL;
         baseent.takedamage             = DAMAGE_NO;
         baseent.nextthink = time;
         baseent.think = turret_stdproc_die;

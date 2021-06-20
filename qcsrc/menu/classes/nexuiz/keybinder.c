@@ -42,7 +42,7 @@ void Nexuiz_KeyBinds_Read()
 	float fh;
 	string s;
 	Nexuiz_KeyBinds_Count = 0;
-	fh = fopen("keybinds_" + cvar_string("prvm_language") + ".txt", FILE_READ);
+	fh = fopen(strcat("keybinds_", cvar_string("prvm_language"), ".txt"), FILE_READ);
 	if (fh < 0)
 		fh = fopen("keybinds.txt", FILE_READ);
 

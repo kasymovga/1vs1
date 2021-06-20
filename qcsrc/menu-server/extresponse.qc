@@ -25,7 +25,7 @@ void(string dst, string input) extresponse_query {
         //backtrace("extrespone_query");
         return;
     }
-    localcmd("packet " + dst + " " + " \"" + input + "\"\n");
+    localcmd(strcat("packet ", dst, " ", " \"", input ,"\"\n"));
 }
 
 entity(string command) extresponse_find_handler {
@@ -49,7 +49,8 @@ void(string response) extresponse_parse {
 }
 
 void(void) extresponse_update {
-    while((var s = getextresponse()))
+	string s;
+    while((s = getextresponse()))
         extresponse_parse(s);
 }
 

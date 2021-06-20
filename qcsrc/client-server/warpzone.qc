@@ -629,7 +629,7 @@ vector WarpZone_FindNearestOrigin_real(vector from, vector to, float trace_check
 
 void WarpZone_ChainAdd(entity wz)
 {
-    for(var e = warpzone_chain_begin; e; e = e.warpzone_chain) {
+    for(entity e = warpzone_chain_begin; e; e = e.warpzone_chain) {
         if(e == wz) {
             //backtrace("warpzone chain loop");
             return;
@@ -781,7 +781,7 @@ void WarpZone_Sound(entity e, float chan, string sound_path, float vol, float at
 #ifdef WZ_SLOW_FINDLOS
 
 vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float traceflag, entity traceent) {
-    var wz = world;
+    entity wz = world;
 
     do {
         var viewee_warped = if(wz) WarpZone_UnTransformOrigin(wz, viewee) else viewee;
@@ -809,8 +809,8 @@ vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float 
 #else
 
 vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float traceflag, entity traceent) {
-    var dir = normalize(viewee - viewer);
-    var viewee_warped;
+    vector dir = normalize(viewee - viewer);
+    vector viewee_warped;
 
     // try a direct trace first
 
@@ -826,17 +826,17 @@ vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float 
 
     // failed, let's try the nearest warpzone
 
-    var nearest_dst = 1250; // initialize with the maximum distance
-    var nearest_wz;
-    var nearest_wz_vw;
-    var nearest_dir;
+    float nearest_dst = 1250; // initialize with the maximum distance
+    entity nearest_wz;
+    vector nearest_wz_vw;
+    vector nearest_dir;
 
-    for(var wz = warpzone_chain_begin; wz; wz = wz.warpzone_chain) {
-        var org = wz.origin;
+    for(entity wz = warpzone_chain_begin; wz; wz = wz.warpzone_chain) {
+        vector org = wz.origin;
         if(org == '0 0 0')
             org = 0.5 * (wz.mins + wz.maxs);
 
-        var dst = vlen(org - viewer);
+        float dst = vlen(org - viewer);
 
         if(dst < nearest_dst) {
             viewee_warped = WarpZone_UnTransformOrigin(wz, viewee);

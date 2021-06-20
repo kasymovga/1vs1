@@ -120,7 +120,7 @@ void(entity source, float teamsay, entity privatesay, string msgin, float floodc
 		if (n <= 0)
 			return;
 
-		n = floor(random(n));
+		n = floor(n * random());
 		msgin = argv(n);
 	}
 	if (!teamsay && !privatesay)
@@ -288,7 +288,7 @@ void(void) chat_bubble_think {
 	if (o.BUTTON_CHAT && o.classname == "player") {
 		setorigin(self, '0 0 15' + o.maxs_z * '0 0 1');
 		if (self.effects & EFFECT_NODRAW) {
-			self.effects &~= EFFECT_NODRAW;
+			self.effects &= ~EFFECT_NODRAW;
 		}
 	} else if not(self.effects & EFFECT_NODRAW) {
 		self.effects |= EFFECT_NODRAW;

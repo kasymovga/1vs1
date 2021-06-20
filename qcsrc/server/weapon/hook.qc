@@ -40,7 +40,7 @@ void weapon_hook_explode_think (void)
 }
 
 void weapon_hook_explode2 (void) {
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.touch = stdproc_nothing;
 	self.effects |= EFFECT_NODRAW;
 	self.projectiledeathtype |= HITTYPE_NOTEAMDAMAGE;
@@ -154,16 +154,16 @@ float weapon_hook(float req)
 
 		if (self.BUTTON_CROUCH)
 		{
-			self.hook_state &~= HOOK_PULLING;
+			self.hook_state &= ~HOOK_PULLING;
 			if (self.BUTTON_ATCK || button_hook)
-				self.hook_state &~= HOOK_RELEASING;
+				self.hook_state &= ~HOOK_RELEASING;
 			else
 				self.hook_state |= HOOK_RELEASING;
 		}
 		else
 		{
 			self.hook_state |= HOOK_PULLING;
-			self.hook_state &~= HOOK_RELEASING;
+			self.hook_state &= ~HOOK_RELEASING;
 
 			if (self.BUTTON_ATCK || button_hook)
 			{
@@ -174,7 +174,7 @@ float weapon_hook(float req)
 			else
 			{
 				self.hook_state |= HOOK_REMOVING;
-				self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+				self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 		}
 	}
@@ -188,7 +188,7 @@ float weapon_hook(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_HOOK);
-		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+		self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{

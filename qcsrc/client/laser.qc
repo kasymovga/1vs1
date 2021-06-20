@@ -37,7 +37,7 @@ void(void) laser_draw {
 	}
 }
 
-void(void) laser_read {
+void(float ignore) laser_read {
 	float f;
 	InterpolateOrigin_Undo();
 	// 30 bytes, or 13 bytes for just moving

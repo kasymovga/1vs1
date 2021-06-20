@@ -13,23 +13,23 @@ ENDCLASS(NexuizGameMenuDialog)
 
 #ifdef IMPLEMENTATION
 
-void ShowGameSettings() {
+void ShowGameSettings(entity ignore, entity ignore2) {
 	GUI_Show(GUI_GAMESETTINGS);
 }
 
-void ShowVcall() {
+void ShowVcall(entity ignore, entity ignore2) {
 	GUI_Show(GUI_VCALL);
 }
 
-void ShowQuit() {
+void ShowQuit(entity ignore, entity ignore2) {
 	GUI_Show(GUI_QUIT);
 }
 
-void ShowSwitchTeam() {
+void ShowSwitchTeam(entity ignore, entity ignore2) {
 	GUI_Show(GUI_TEAMSELECT);
 }
 
-void ShowSaveLoad() {
+void ShowSaveLoad(entity ignore, entity ignore2) {
 	GUI_Show(GUI_SAVELOAD);
 }
 
@@ -53,7 +53,7 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 	configureDialogNexuizDialog(me); //Parent method
 }
 
-void showMuteListGameMenuDialog() {
+void showMuteListGameMenuDialog(entity ignore, entity ignore2) {
 	GUI_Show(GUI_MUTELIST);
 }
 

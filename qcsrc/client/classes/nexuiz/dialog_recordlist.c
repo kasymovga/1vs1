@@ -21,7 +21,7 @@ void gotomapNexuizRecordListDialog(entity btn, entity me) {
 		if (s == map_shortname)
 			return;
 
-		localcmd("cmd vote call gotomap " + s + ";");
+		localcmd(strcat("cmd vote call gotomap ", s, ";"));
 		GUI_Hide();
 		GUI_Hide();
 	}

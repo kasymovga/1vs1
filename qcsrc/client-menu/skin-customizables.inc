@@ -1,37 +1,35 @@
-#if 0
-"Perl code to convert this to a skinvalues.txt file.";
-print "title Generic\n";
-print "author Morphed\n";
-print "\n";
-while(<DATA>)
-{
-	chomp;
-	if(/^\s*(?:SKINFLOAT|SKINVECTOR)\(([A-Z_]+), ([-'0-9. ]+)\);$/)
-	{
-		printf "%-31s %s\n", $1, $2;
-	}
-	elsif(/^\s*SKINSTRING\(([A-Z_]+), "(.*)"\);$/)
-	{
-		printf "//   uses \"$2\" images\n";
-	}
-	elsif(/^$/)
-	{
-		print "\n";
-	}
-	elsif(/^\s+\/\/ (.*)$/)
-	{
-		print "// $1\n";
-	}
-	elsif(/^SKINBEGIN$|^SKINEND$|^#endif$/)
-	{
-	}
-	else
-	{
-		print "!!! $_\n";
-	}
-}
-__DATA__
-#endif
+//"Perl code to convert this to a skinvalues.txt file.";
+//print "title Generic\n";
+//print "author Morphed\n";
+//print "\n";
+//while(<DATA>)
+//{
+//	chomp;
+//	if(/^\s*(?:SKINFLOAT|SKINVECTOR)\(([A-Z_]+), ([-'0-9. ]+)\);$/)
+//	{
+//		printf "%-31s %s\n", $1, $2;
+//	}
+//	elsif(/^\s*SKINSTRING\(([A-Z_]+), "(.*)"\);$/)
+//	{
+//		printf "//   uses \"$2\" images\n";
+//	}
+//	elsif(/^$/)
+//	{
+//		print "\n";
+//	}
+//	elsif(/^\s+\/\/ (.*)$/)
+//	{
+//		print "// $1\n";
+//	}
+//	elsif(/^SKINBEGIN$|^SKINEND$|^#endif$/)
+//	{
+//	}
+//	else
+//	{
+//		print "!!! $_\n";
+//	}
+//}
+//__DATA__
 SKINBEGIN
 	// font sizes (used for everything)
 	SKINFLOAT(FONTSIZE_NORMAL, 12);

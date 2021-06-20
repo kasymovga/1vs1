@@ -107,6 +107,7 @@ floatfield(float it) item_counter_field {
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field");
 	}
+	return NULL;
 }
 
 string(float it) item_counter_field_name {
@@ -120,12 +121,13 @@ string(float it) item_counter_field_name {
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field name");
 	}
+	return NULL;
 }
 
 .float max_armorvalue;
 
 void (entity e, float mode) item_show {
-	e.effects &~= EFFECT_ADDITIVE | EFFECT_STARDUST | EFFECT_FULLBRIGHT;
+	e.effects &= ~(EFFECT_ADDITIVE | EFFECT_STARDUST | EFFECT_FULLBRIGHT);
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
@@ -527,7 +529,7 @@ void item_find_team()
 				item_show(head, -1);
 				head.state = 1; // state 1 = initially hidden item
 			}
-			head.effects &~= EFFECT_NODRAW;
+			head.effects &= ~EFFECT_NODRAW;
 		}
 
 		if(e.flags & FL_POWERUP) // do not spawn powerups initially!

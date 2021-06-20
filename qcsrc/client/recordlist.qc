@@ -9,7 +9,7 @@ void(float n1, float n2) recordlist_request_chunk {
 		return;
 
 	recordlist_last_request = time + 0.1;
-	localcmd("cmd recordlistchunk " + ftos(n1) + " " + ftos(n2) + ";");
+	localcmd(strcat("cmd recordlistchunk ", ftos(n1), " ", ftos(n2), ";"));
 }
 
 string(entity e, float n) recordlist_line {
@@ -80,7 +80,7 @@ void() recordlist_read {
 		}
 	} else {
 		recordlist_size -= recordlist_tail.cnt;
-		string s2 = str_zone_ifneeded(recordlist_tail.message + s);
+		string s2 = str_zone_ifneeded(strcat(recordlist_tail.message, s));
 		str_unzone_ifneeded(recordlist_tail.message);
 		recordlist_tail.message = s2;
 		recordlist_tail_expected_chunk++;

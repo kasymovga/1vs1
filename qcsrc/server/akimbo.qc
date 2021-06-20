@@ -116,7 +116,7 @@ void(float killed) akimbo_player_clear {
 float(float wbit) akimbo_weapon_throw {
 	if (g_akimbo_weapons)
 	if (self.akimbo_weapons & wbit) {
-		self.akimbo_weapons &~= wbit;
+		self.akimbo_weapons &= ~wbit;
 		return TRUE;
 	}
 	return FALSE;
@@ -211,7 +211,7 @@ float(entity p, float wpn, string name) akimbo_weapon_drop {
 	if not(wpnbit & p.akimbo_weapons)
 		return FALSE;
 
-	p.akimbo_weapons &~= wpnbit;
+	p.akimbo_weapons &= ~wpnbit;
 	sprint(p, "You drop ^4Akimbo ^2");
 	sprint(p, name);
 	sprint(p, "\n");

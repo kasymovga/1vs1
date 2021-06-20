@@ -158,7 +158,7 @@ float(entity to, float sf) mapvote_send {
 	string picfile, pakfile;
 	float i, o;
 	if(sf & 1)
-		sf &~= 2; // if we send 1, we don't need to also send 2
+		sf &= ~2; // if we send 1, we don't need to also send 2
 
 	WriteByte(MSG_ENTITY, NET_CSQC_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);

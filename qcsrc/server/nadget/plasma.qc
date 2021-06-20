@@ -7,7 +7,7 @@ void nadget_Plasma_Shard_Explode(void) {
     }
 #endif
 
-    self.event_damage = stdproc_nothing;
+    self.event_damage = NULL;
     self.takedamage = DAMAGE_NO;
     //self.damage_noinfo = FALSE;
 #if 0

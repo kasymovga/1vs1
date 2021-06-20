@@ -179,7 +179,7 @@ void(entity targ, entity inflictor, entity attacker, float _damage, float deatht
 	if (self.damageforcescale)
 	if (vlen(force)) {
 		self.velocity = self.velocity + self.damageforcescale * force;
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		projectile_update(self);
 	}
 	// apply damage
@@ -373,7 +373,7 @@ void(entity inflictor, entity attacker, float coredamage, float edgedamage, floa
 
 void(entity attacker, void() explode) damage_prepare_explosion {
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.realowner = self.owner = attacker;
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to damage_radius are not allowed

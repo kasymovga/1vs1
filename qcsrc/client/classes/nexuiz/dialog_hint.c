@@ -16,15 +16,15 @@ void(entity me) configureDialogNexuizHintDialog {
 	configureDialogNexuizDialog(me); //Parent method
 }
 
-void(entity me) nextNexuizHintDialog {
+void(entity ignore, entity ignore2) nextNexuizHintDialog {
 	localcmd(hint_cmd_next);
 }
 
-void(entity me) prevNexuizHintDialog {
+void(entity ignore, entity ignore2) prevNexuizHintDialog {
 	localcmd(hint_cmd_prev);
 }
 
-void(entity me) closeNexuizHintDialog {
+void(entity ignore, entity ignore2) closeNexuizHintDialog {
 	GUI_Hide();
 }
 

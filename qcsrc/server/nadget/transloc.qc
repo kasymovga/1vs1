@@ -2,7 +2,7 @@
 void nadget_Transloc_Explode(void) {
     setsize(self, PL_MIN, PL_MAX);
 
-    if(!entity_move_out_of_solid(self, MOVE_NOMONSTERS)) {
+    if(!entity_move_out_of_solid(self)) {
         if(!self.hg_isbonus) NADGET_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == NADGET_TRANSLOC)
             self.owner.hg_ctx_ammo += 1;)
 

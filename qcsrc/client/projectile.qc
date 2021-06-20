@@ -279,7 +279,7 @@ void(float ignore) projectile_read {
 	if (f & 0x40)
 		self.move_flags |= FL_ONGROUND;
 	else
-		self.move_flags &~= FL_ONGROUND;
+		self.move_flags &= ~FL_ONGROUND;
 
 	if (!self.move_time) {
 		// for some unknown reason, we don't need to care for
@@ -449,7 +449,7 @@ void(float ignore) projectile_read {
 		self.server_angles_x = ReadCoord();
 		self.server_angles_y = ReadCoord();
 		self.server_angles_z = ReadCoord();
-		self.iflags &~= IFLAG_ANGLES | IFLAG_AUTOANGLES;
+		self.iflags &= ~(IFLAG_ANGLES | IFLAG_AUTOANGLES);
 		self.use_server_angles = TRUE;
 	}
 	if (self.gravity) {

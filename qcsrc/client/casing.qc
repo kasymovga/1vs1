@@ -24,7 +24,7 @@ void(void) casing_draw {
 	if (self.move_flags & FL_ONGROUND) {
 		self.move_angles_x = 0;
 		self.move_angles_z = 0;
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 	}
 	Movetype_Physics_NoMatchServer();
 	self.renderflags = 0;

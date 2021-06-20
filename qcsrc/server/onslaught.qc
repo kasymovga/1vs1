@@ -419,7 +419,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		self.islinked = FALSE;
 		self.isshielded = FALSE;
 		self.takedamage = DAMAGE_NO; // can't be hurt anymore
-		self.event_damage = stdproc_nothing; // won't do anything if hurt
+		self.event_damage = NULL; // won't do anything if hurt
 		self.count = 0;	// reset counter
 		self.think = onslaught_generator_deaththink; // explosion sequence
 		self.nextthink = time; // start exploding immediately
@@ -917,8 +917,8 @@ void(void) onslaught_controlpoint_reset {
 	self.isshielded = TRUE;
 	self.enemy.solid = SOLID_NOT;
 	self.enemy.colormap = self.colormap;
-	self.think = self.enemy.think = stdproc_nothing;
-	self.nextthink = 0; // don't like stdproc_nothing :P
+	self.think = self.enemy.think = NULL;
+	self.nextthink = 0;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
 	onslaught_updatelinks();
@@ -1119,7 +1119,7 @@ void(float killed) onslaught_PlayerClear {
 
 // Onslaught winning condition:
 // game terminates if only one team has a working generator (or none)
-float(void) onslaught_WinningCondition {
+float(float ignore, float ignore2) onslaught_WinningCondition {
 	entity head;
 	float t1, t2, t3, t4;
 	if(warmup_active)

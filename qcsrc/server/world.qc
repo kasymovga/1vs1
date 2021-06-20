@@ -500,7 +500,7 @@ void(void) world_winners_clear {
 }
 
 void(float timelimit) world_check_0min_remaining { }
-var void(float timelimit) world_check_time_remaining = world_check_0min_remaining;
+var void(float timelimit) world_check_time_remaining = {};
 void(float timelimit) world_check_1min_remaining {
 	if (time + 60 >= timelimit) {
 		sound_play2all("announcer/robotic/1minuteremains.wav");
@@ -751,7 +751,7 @@ void(void) world_creature_frame {
 			} else {
 				if (self.flags & FL_INWATER) {
 					// play leave water sound
-					self.flags &~= FL_INWATER;
+					self.flags &= ~FL_INWATER;
 					self.dmgtime = 0;
 				}
 				self.air_finished = time + 12;

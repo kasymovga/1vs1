@@ -374,7 +374,7 @@ void kh_Key_Spawn(entity key, entity initial_owner, float angle, float i)  // ru
 	key.takedamage = DAMAGE_YES;
 	setmodel(key, "models/keyhunt/key.md3");
 	key.kh_dropperteam = 0;
-	key.effects &~= EFFECT_NODRAW;
+	key.effects &= ~EFFECT_NODRAW;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = team_color(initial_owner.team) * KH_KEY_BRIGHTNESS;

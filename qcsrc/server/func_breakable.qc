@@ -108,7 +108,7 @@ void(void) func_breakable_look_restore {
 void(void) func_breakable_behave_destroyed {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.state = 1;
 	func_breakable_colormod();
 }

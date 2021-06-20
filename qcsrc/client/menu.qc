@@ -109,7 +109,7 @@ void(void) menu_draw {
 	pos_y = MENU_ITEM_TOP_MARGIN;
 	pos_z = 0;
 	pos_x = center - stringwidth(self.menu_title, FALSE) * 0.5 * 24;
-    drawfill('0 1' * MENU_ITEM_TOP_MARGIN, '1 0' * CVAR(vid_conwidth) + '0 1' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
+    drawfill('0 1 0' * MENU_ITEM_TOP_MARGIN, '1 0 0' * CVAR(vid_conwidth) + '0 1 0' * (MENU_ITEM_TOP_MARGIN + MENU_ITEM_HEIGHT * (self.cnt + 1)), '0 0 0', 0.5, DRAWFLAG_NORMAL);
 	drawstring(pos, self.menu_title, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += MENU_ITEM_HEIGHT;
 	if (self.menu_timeout) {

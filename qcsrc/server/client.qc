@@ -436,7 +436,7 @@ void(void) client_disconnect { //called by engine
 	bprint ("^4 disconnected\n");
 	self.classname = "disconnecting";
 	player_clear(FALSE);
-	self.flags &~= FL_CLIENT;
+	self.flags &= ~FL_CLIENT;
 	self.just_connected = FALSE;
 	if (self.killindicator)
 		remove (self.killindicator);
@@ -692,20 +692,20 @@ void() client_cvars_parse {
 		f = stof(val);
 		float reqfps = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout")));
 		if (f < reqfps) {
-			stuffcmd(self, "seta cl_netfps " + ftos(reqfps) + "\n");
+			stuffcmd(self, strcat("seta cl_netfps ", ftos(reqfps), "\n"));
 		}
 	} else if (s == "_cl_rate") {
 		f = stof(val);
 		float reqrate = ceil(max(1.5 / sys_ticrate, 1.8 / cvar("sv_clmovement_inputtimeout"))) * 125;
 		if (f < reqrate)
-			stuffcmd(self, "rate " + ftos(reqrate) + "\n");
+			stuffcmd(self, strcat("rate ", ftos(reqrate), "\n"));
 	} else if (s == "_cl_id" && self.clid == "") {
 		if (strlen(val) == 16) {
 			self.clid = strzone(val);
 		} else {
 			self.clid = strftime(TRUE, "%y%m%d%H%M%S");
 			for (f = 0; f < 4; f++) {
-				self.clid = self.clid + DIGIT_DEC_TO_HEX(floor(random() * 16));
+				self.clid = strcat(self.clid, DIGIT_DEC_TO_HEX(floor(random() * 16)));
 			}
 			self.clid = strzone(self.clid);
 			stuffcmd(self, strcat("seta _cl_id ", self.clid, "\n"));

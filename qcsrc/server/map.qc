@@ -281,13 +281,18 @@ float() map_do_next_override {
 		map_already_changed = TRUE;
 		return TRUE;
 	}
-	if (cvar_string("nextmap") != "")
+	if (cvar_string("nextmap") != "") {
+		print("Have nextmap override (", cvar_string("nextmap"), ")\n");
 		if (MapInfo_CheckMap(cvar_string("nextmap"))) {
+			print("nextmap override successful\n");
 			map_next_set(cvar_string("nextmap"));
 			map_change();
 			map_already_changed = TRUE;
 			return TRUE;
+		} else {
+			print("nextmap override don't support game mode\n");
 		}
+	}
 	return FALSE;
 }
 

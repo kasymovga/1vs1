@@ -122,7 +122,7 @@ float _changeFocusXYInputContainer(entity me, vector pos)
 				ne._changeFocusXY(e, gui_global_to_box(pos, ne.Container_origin, ne.Container_size));
 			}
 		}
-	return (ne != NULL);
+	return (ne ? TRUE : FALSE);
 }
 
 float mouseDragInputContainer(entity me, vector pos)

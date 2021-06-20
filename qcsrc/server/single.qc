@@ -44,7 +44,7 @@ void(void) single_endlevel {
 	builtin_cvar_set("_autosave_skip", "0");
 }
 
-float() single_winning_condition {
+float(float ignore, float ignore2) single_winning_condition {
 	return single_level_finished;
 }
 
@@ -57,7 +57,7 @@ string (string s) single_map_finish_message_mod {
 		return "^1Game over";
 }
 
-float() single_player_death_handle {
+float(entity ignore, entity ignore2, float ignore3) single_player_death_handle {
 	single_level_finished = TRUE;
 	campaign_won = FALSE;
 	campaign_map_transition = TRUE;
@@ -174,7 +174,7 @@ float() single_monster_team_switchable {
 
 var void() single_player_think_next;
 void() single_player_think {
-	self.items &~= (IT_KEY1 | IT_KEY2);
+	self.items &= ~(IT_KEY1 | IT_KEY2);
 	self.items |= self.keys;
 	single_player_think_next();
 }

@@ -88,7 +88,7 @@ float(float maxspd_mod) physics_jetpack {
 	f = jetpack_velocity_mod(fvel);
 	if (f > 0 && wishvel != '0 0 0') {
 		physics_velocity = physics_velocity + wishvel * f * frametime;
-		physics_flags &~= FL_ONGROUND;
+		physics_flags &= ~FL_ONGROUND;
 		jetpack_finished(fvel * f);
 	}
 	return 1;

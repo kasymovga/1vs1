@@ -72,8 +72,8 @@ void weapon_nex_attack (void)
 	else if ((damage_yoda && flying) || damage_yoda > 1)
 		announce(self, "announcer/male/yoda.wav", "^5Amazing");
 	else if (damage_goodhits && self.nex_lasthit && sv_announcer_extra_twohits != "") {
-		if(announce(self, sv_announcer_extra_twohits, "^5Impressive"))
-			damage_goodhits = 0; // only every second time
+		announce(self, sv_announcer_extra_twohits, "^5Impressive");
+		damage_goodhits = 0; // only every second time
 	}
 	self.nex_lasthit = damage_goodhits;
 	

@@ -55,9 +55,9 @@ float GUI_InputEvent(float bInputType, float nPrimary, float nSecondary) {
 			return TRUE;
 		}
 	} else {
-		if(nPrimary == K_ALT) { GUI_shiftState &~= (GUI_shiftState & GUI_KEY_STATE_ALT); r = TRUE; }
-		if(nPrimary == K_CTRL) { GUI_shiftState &~= (GUI_shiftState & GUI_KEY_STATE_CTRL); r = TRUE; }
-		if(nPrimary == K_SHIFT) { GUI_shiftState &~= (GUI_shiftState & GUI_KEY_STATE_SHIFT); r = TRUE; }
+		if(nPrimary == K_ALT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_ALT); r = TRUE; }
+		if(nPrimary == K_CTRL) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_CTRL); r = TRUE; }
+		if(nPrimary == K_SHIFT) { GUI_shiftState &= ~(GUI_shiftState & GUI_KEY_STATE_SHIFT); r = TRUE; }
 	}
 	if (GUI_mouse_pos != GUI_mouse_pos_old) {
 		if (GUI_mouseButtonsPressed) {
@@ -142,7 +142,11 @@ void GUI_Show(float window) {
 		gui_conheight = CVAR(vid_conheight);
 		gui_draw_reset();
 		mainWindow = spawnMainWindow(); mainWindow.configureMainWindow(mainWindow);
-		mainWindow.resizeNotify(mainWindow, '0 0 0', [gui_conwidth, gui_conheight], '0 0 0', [gui_conwidth, gui_conheight]);
+		vector wh;
+		wh_x = gui_conwidth;
+		wh_y = gui_conheight;
+		wh_z = 0;
+		mainWindow.resizeNotify(mainWindow, '0 0 0', wh, '0 0 0', wh);
 	}
 	mainWindow.draw2d = GUI_Draw_Set;
 	mainWindow.draw2dflag = 1;

@@ -37,7 +37,7 @@ float(void) ice_customize {
 	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
-		self.effects &~= EFFECT_NODEPTHTEST;
+		self.effects &= ~EFFECT_NODEPTHTEST;
 
 	return TRUE;
 }

@@ -100,10 +100,10 @@ float() spectator_spectate_next {
 void() spectator_think {
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && self.team <= 0) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			if(spectator_spectate_next() == 1) {
 				self.classname = "spectator";
 			} else {
@@ -122,7 +122,7 @@ void() spectator_think {
 			if (self.team <= 0)
 			if (self.flags & FL_SPAWNING)
 			{
-				self.flags &~= FL_SPAWNING;
+				self.flags &= ~FL_SPAWNING;
 				spectator_to_player();
 				return;
 			}
@@ -144,10 +144,10 @@ void() spectator_observer_think {
 		}
 	} else if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			if(spectator_spectate_next() == 1) {
 				self.classname = "spectator";
 			}
@@ -157,7 +157,7 @@ void() spectator_observer_think {
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
-				self.flags &~= FL_SPAWNING;
+				self.flags &= ~FL_SPAWNING;
 				spectator_to_player();
 				return;
 			}

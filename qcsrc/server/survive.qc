@@ -128,7 +128,7 @@ float survive_checkNextWave() {
 }
 
 float survive_last_countdown;
-float survive_WinningCondition() {
+float survive_WinningCondition(float ignore, float ignore2) {
 	if (time < map_starttime)
 		return FALSE;
 

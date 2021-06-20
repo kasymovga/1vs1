@@ -43,7 +43,7 @@ float() entcs_customize {
 		if (gamehook_chain_PlayerVisibleThroughWallFor(o,other)) {
 			self.effects |= EFFECT_FULLBRIGHT;
 		} else
-			self.effects &~= EFFECT_FULLBRIGHT;
+			self.effects &= ~EFFECT_FULLBRIGHT;
 	}
 	return TRUE;
 }

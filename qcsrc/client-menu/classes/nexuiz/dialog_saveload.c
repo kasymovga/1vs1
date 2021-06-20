@@ -101,8 +101,9 @@ void SlotSelect(entity btn, entity me) {
 }
 
 #ifdef MENUQC
-void mouseDoubleClickNexuizSaveLoadDialogSlot(entity btn, vector v) {
+float mouseDoubleClickNexuizSaveLoadDialogSlot(entity btn, vector v) {
 	LoadGame(btn, btn.onClickEntity);
+	return TRUE;
 }
 #endif
 

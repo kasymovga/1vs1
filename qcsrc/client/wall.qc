@@ -36,7 +36,7 @@ void(void) wall_remove {
 	self.bgmscript = NULL;
 }
 
-void(void) wall_read {
+void(float ignore) wall_read {
 	float f;
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_ANGLES;

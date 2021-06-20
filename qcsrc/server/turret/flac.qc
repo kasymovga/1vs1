@@ -41,7 +41,7 @@ void turret_flac_projectile_explode()
         // OMG HAXX!
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
     }
-    self.event_damage = stdproc_nothing;
+    self.event_damage = NULL;
 
     damage_radius (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, WEP_HAGAR, world);
     remove (self);

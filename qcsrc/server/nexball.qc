@@ -201,7 +201,7 @@ void(void) nexball_ball_restart {
 
 void(void) nexball_PlayerPreThink {
 	entity oldself;
-	self.items &~= IT_KEY1;
+	self.items &= ~IT_KEY1;
 	if (self.ballcarried) {
 		if (self.ballcarried.teamtime && (self.ballcarried.teamtime < time)) {
 			bprint("The ", team_colored_name(self.team), " held the ball for too long.\n");
@@ -238,13 +238,13 @@ void(void) nexball_drop_owner {
 	nexball_drop_ball(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle_y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
-	ownr.flags &~= FL_ONGROUND;
+	ownr.flags &= ~FL_ONGROUND;
 }
 
 void(entity plyr, entity ball) nexball_give_ball {
 	entity ownr;
 	if ((ownr = ball.owner)) {
-		ownr.effects &~= g_nexball_basketball_effects_default;
+		ownr.effects &= ~g_nexball_basketball_effects_default;
 		ownr.ballcarried = world;
 		if (ownr.metertime)
 			ownr.metertime_stat = ownr.metertime = 0;
@@ -277,7 +277,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	plyr.ballcarried = ball;
 	ball.dropperid = plyr.playerid;
 	plyr.effects |= g_nexball_basketball_effects_default;
-	ball.effects &~= g_nexball_basketball_effects_default;
+	ball.effects &= ~g_nexball_basketball_effects_default;
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
 	ball.touch = stdproc_nothing;
@@ -294,12 +294,12 @@ void(entity plyr, entity ball) nexball_give_ball {
 
 void(entity ball, vector org, vector vel) nexball_drop_ball {
 	ball.effects |= g_nexball_basketball_effects_default;
-	ball.effects &~= EFFECT_NOSHADOW;
-	ball.owner.effects &~= g_nexball_basketball_effects_default;
+	ball.effects &= ~EFFECT_NOSHADOW;
+	ball.owner.effects &= ~g_nexball_basketball_effects_default;
 	setattachment(ball, world, "");
 	setorigin (ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.flags &~= FL_ONGROUND;
+	ball.flags &= ~FL_ONGROUND;
 	ball.scale = ball_scale;
 	ball.velocity = vel;
 	ball.ctf_droptime = time;
@@ -321,7 +321,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 
 void(void) nexball_ball_init {
 	if (map_finished) return;
-	self.flags &~= FL_ONGROUND;
+	self.flags &= ~FL_ONGROUND;
 	if (self.classname == "nexball_hockey")
 		self.movetype = MOVETYPE_BOUNCEMISSILE;
 	else

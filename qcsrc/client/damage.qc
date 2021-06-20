@@ -35,7 +35,7 @@ void(float isNew) damage_info_read {
 		if (!issilent)
 			sound(self, CHAN_AUTO, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 
-		hittype &~= DEATH_HITTYPEMASK;
+		hittype &= ~DEATH_HITTYPEMASK;
 		switch (hittype) {
 		case NADGET_NORMAL:
 		case NADGET_REMOTE:

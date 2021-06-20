@@ -247,7 +247,7 @@ void() powerup_invisibility_player_effects {
 	if (self.items & IT_INVISIBILITY) {
 		play_countdown(self.invisibility_finished, "misc/poweroff.wav");
 		if (time > self.invisibility_finished) {
-			self.items &~= IT_INVISIBILITY;
+			self.items &= ~IT_INVISIBILITY;
 			sprint(self, "^3Invisibility has worn off\n");
 		}
 	} else if (self.invisibility_finished) {

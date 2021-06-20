@@ -128,7 +128,7 @@ void(void) bullet_leave_solid_think {
 	self.think = self.bullet_leave_solid_think_save;
 	self.nextthink = max(time, self.bullet_leave_solid_nextthink_save);
 	self.bullet_leave_solid_think_save = stdproc_nothing;
-	self.flags &~= FL_ONGROUND;
+	self.flags &= ~FL_ONGROUND;
 	if (self.enemy.solid == SOLID_BSP) {
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier

@@ -754,8 +754,8 @@ void(entity attacker, entity inflictor, entity targ, float deathtype) player_obi
 				bprint (a,"^7 unleashes ^1ARMAGEDDON!\n");
 				announce(attacker, "announcer/male/30kills.wav", "^1ARMAGEDDON!!!");
 			} else if (time - attacker.lastfrag < sv_announcer_extra_doublekill_interval && attacker.lastfrag && sv_announcer_extra_doublekill != "") {
-					if (announce(attacker, sv_announcer_extra_doublekill, "^3Excellent"))
-						fragtime = 0;
+					announce(attacker, sv_announcer_extra_doublekill, "^3Excellent");
+					fragtime = 0;
 			}
 			if (DEATH_ISWEAPON(deathtype, WEP_MELEE) && sv_announcer_extra_meleefrag != "") {
 					announce(targ, sv_announcer_extra_meleefrag, "");
@@ -951,7 +951,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		// shootable corpse
 		self.solid = SOLID_CORPSE;
 		// don't stick to the floor
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		// dying animation
 		self.deadflag = DEAD_DYING;
 		// when to allow respawn
@@ -1566,7 +1566,7 @@ void() player_think {
 	weapon_frame();
 	akimbo_weapon_frame();
 	if (frametime) {
-		self.items &~= self.items_added;
+		self.items &= ~self.items_added;
 		self.items_added = 0;
 		if (self.items & IT_JETPACK)
 			if (self.items & IT_FUEL_REGEN || self.ammo_fuel > 0 || !g_jetpack_fuel)
@@ -1840,7 +1840,7 @@ void(void) player_impulse {
 			case 107:
 				for (e = findchain(classname, "waypoint"); e; e = e.chain) {
 					e.colormod_x = 1;
-					e.effects &~= EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE;
+					e.effects &= ~(EFFECT_NODEPTHTEST | EFFECT_RED | EFFECT_BLUE);
 				}
 				e2 = navigation_findnearestwaypoint(self, FALSE);
 				navigation_markroutes(e2);
@@ -1883,7 +1883,7 @@ void(void) player_impulse {
 					setorigin(e, trace_endpos);
 					if (navigation_findnearestwaypoint(e, FALSE)) {
 						setorigin(e, org);
-						e.effects &~= EFFECT_NODEPTHTEST;
+						e.effects &= ~EFFECT_NODEPTHTEST;
 						e.model = "";
 					} else {
 						setorigin(e, org);
@@ -1962,7 +1962,7 @@ float(void) player_customize {
 	if (gamehook_chain_PlayerVisibleThroughWallFor(self.owner, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
-		self.effects &~= EFFECT_NODEPTHTEST;
+		self.effects &= ~EFFECT_NODEPTHTEST;
 
 	return TRUE;
 }
@@ -1983,7 +1983,7 @@ float(void) player_body_customize {
 	if (gamehook_chain_PlayerVisibleThroughWallFor(o, other))
 		self.effects |= EFFECT_NODEPTHTEST;
 	else
-		self.effects &~= EFFECT_NODEPTHTEST;
+		self.effects &= ~EFFECT_NODEPTHTEST;
 
 	if (!self.modelindex && PLAYER_REALLY_DEAD(o))
 		return TRUE;

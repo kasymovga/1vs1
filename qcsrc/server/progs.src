@@ -1,5 +1,5 @@
 progs.dat // output filename
-../common/qcc.qh
+//../common/qcc.qh
 sys.qh
 builtins.qh
 extensions.qh

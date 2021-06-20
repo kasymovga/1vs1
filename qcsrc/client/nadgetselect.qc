@@ -58,7 +58,7 @@ void(void) nadgetselect_draw {
 	vector sz;
 	sz_x = NADGETSELECT_SCALE;
 	sz_y = NADGETSELECT_SCALE;
-	draw_string_center((o_y - sz_y * (1.25 + 2 * g_nadgets_double)) * '0 1', "Nadget Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
+	draw_string_center((o_y - sz_y * (1.25 + 2 * g_nadgets_double)) * '0 1 0', "Nadget Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
 	float table, tables;
 	for (table = 0; table < (tables = g_nadgets_double + 1); ++table) {
 		o_x = (CVAR(vid_conwidth) * 0.5) - (1 * tables * 0.5 - 1 * table) * (nadgetselect_width + NADGETSELECT_MARGIN);
@@ -69,12 +69,12 @@ void(void) nadgetselect_draw {
 		if (g_nadgets_double) {
 			txt = (table ? "Secondary" : "Primary");
 			txtw = stringwidth(txt, FALSE) * sz_x;
-			drawstring((o_x + (s_x - txtw) * 0.5) * '1 0' + (o_y - sz_y * 1.25) * '0 1', txt, sz, '1 1 1', a, DRAWFLAG_NORMAL);
+			drawstring((o_x + (s_x - txtw) * 0.5) * '1 0 0' + (o_y - sz_y * 1.25) * '0 1 0', txt, sz, '1 1 1', a, DRAWFLAG_NORMAL);
 		}
 		txt = (table ? "'+nadget2' '+button9'" : (input_hook_use_swapped ? "+hook" : "+use"));
 		txt = strcat("Key: ^2", strtoupper(input_command_key_first(txt)));
 		txtw = stringwidth(txt, TRUE) * sz_x;
-		drawcolorcodedstring((o_x + (s_x - txtw) * 0.5) * '1 0' + (o_y + s_y + NADGETSELECT_MARGIN * 0.5) * '0 1', txt, sz, a, DRAWFLAG_NORMAL);
+		drawcolorcodedstring((o_x + (s_x - txtw) * 0.5) * '1 0 0' + (o_y + s_y + NADGETSELECT_MARGIN * 0.5) * '0 1 0', txt, sz, a, DRAWFLAG_NORMAL);
 		float confirmed = (table ? nadgetselect_confirmed2 : nadgetselect_confirmed1);
 		float confirmedOther = (table ? nadgetselect_confirmed1 : nadgetselect_confirmed2);
 		float i;
@@ -96,7 +96,7 @@ void(void) nadgetselect_draw {
 				nadgetselect_selalpha[sidx] = approach(nadgetselect_selalpha[sidx], 1, frametime * 3);
 				p_x = o_x;
 				p_y = o_y + i * sz_y + NADGETSELECT_MARGIN * 0.5;
-				drawfill(p, (s_x * '1 0' + sz_y * '0 1'), clr, 0.2 * a, DRAWFLAG_NORMAL);
+				drawfill(p, (s_x * '1 0 0' + sz_y * '0 1 0'), clr, 0.2 * a, DRAWFLAG_NORMAL);
 			} else
 				nadgetselect_selalpha[sidx] = approach(nadgetselect_selalpha[sidx], 0, frametime * 3);
 
@@ -113,7 +113,7 @@ void(void) nadgetselect_draw {
 			if (i < 10) {
 				txt = ((i == 9) ? "0" : ftos(i + 1));
 				txtw = stringwidth(txt, FALSE) * sz_x * 0.5;
-				drawstring((o_x + s_x - txtw) * '1 0' + p_y * '0 1', txt, sz * 0.5, '0.2 0.2 0.2', a, DRAWFLAG_NORMAL);	 
+				drawstring((o_x + s_x - txtw) * '1 0 0' + p_y * '0 1 0', txt, sz * 0.5, '0.2 0.2 0.2', a, DRAWFLAG_NORMAL);	 
 			}
 		}
 	}

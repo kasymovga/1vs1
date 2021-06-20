@@ -361,7 +361,7 @@ void(vector velo, vector delta, float doreduce) weapon_throw {
 		return;
 
 	if not(akimbo_throw) {
-		self.weapons &~= wb;
+		self.weapons &= ~wb;
 		weapon_switch_force(self, weapon_best(self));
 	}
 	a = weapon_throw_new(self, w, doreduce, self.origin + delta, velo);
@@ -390,7 +390,7 @@ void weapon_frame()
 	float _switchweapon = gamehook_chain_SwitchWeaponMod(self.switchweapon);
 	if(!_switchweapon)
 	{
-		self.items &~= IT_AMMO;
+		self.items &= ~IT_AMMO;
 		self.weaponname = "";
 	}
 
@@ -556,7 +556,7 @@ void(float wpn) weapon_defaultspawnfunc {
 		remove(self);
 		return;
 	}
-	if (gamehook_chain_WeaponSpawnHandle(float wpn))
+	if (gamehook_chain_WeaponSpawnHandle(wpn))
 		return;
 
 	// set the respawntime in advance (so replaced weapons can copy it)
@@ -602,7 +602,7 @@ void(float wpn) weapon_defaultspawnfunc {
 void(float windex) weapon_setup {
 	entity e;
 	e = weapon_info(windex);
-	self.items &~= IT_AMMO;
+	self.items &= ~IT_AMMO;
 	self.items = self.items | e.items;
 
 	// the two weapon entities will notice this has changed and update their models

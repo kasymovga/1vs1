@@ -56,7 +56,7 @@ float GameTypeVote_Think() {
 		gametypes_count = 0;
 		string head, tail, type, profile;
 		tail = sv_gametypevote;
-		float gametype_vote_mask = 
+		float gametype_vote_mask = 0;
 		float mapinfo_type;
 		float colon;
 		while (tail != "") {

@@ -34,10 +34,10 @@ float(entity to, float sf) projectile_send {
 	}
 
 	if(self.csqcprojectile_clientanimate) {
-        sf &~= 4;
+        sf &= ~4;
 		sf |= 128; // client animated, not interpolated
     } else if(!self.csqcprojectile_sendangles) {
-        sf &~= 4;
+        sf &= ~4;
     }
 
 	if(self.flags & FL_ONGROUND) {
@@ -45,7 +45,7 @@ float(entity to, float sf) projectile_send {
 	}
 
 	if(self.team <= 0) {
-		sf &~= 16;
+		sf &= ~16;
 	}
 
 	WriteByte(MSG_ENTITY, NET_CSQC_PROJECTILE);
@@ -199,7 +199,7 @@ void(void) projectile_think2use {
 }
 
 void(void) projectile_explode {
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.takedamage = DAMAGE_NO;
 	damage_radius(self, self.realowner, self.dmg, self.dmg_edge, self.dmg_radius, world, self.dmg_force, self.projectiledeathtype, other);
 	remove(self);

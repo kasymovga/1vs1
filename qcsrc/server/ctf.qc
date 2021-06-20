@@ -373,7 +373,7 @@ void(vector org) ctf_flag_cap_ring_spawn {
 	effect_shockwave_spawn("models/ctf/shockwavetransring.md3", org - '0 0 15', -0.8, 0, 1);
 }
 
-float() ctf_flagcarrier_visible {
+float(entity ignore) ctf_flagcarrier_visible {
 	if (other.team == self.owner.team)
 		return TRUE;
 
@@ -589,7 +589,7 @@ void() ctf_flag_reset {
 	ctf_flag_return(self);
 }
 
-float() ctf_runhere_visibility {
+float(entity ignore) ctf_runhere_visibility {
 	if (other.flagcarried)
 	if (other.team == self.owner.team)
 	if (self.owner.cnt == CTF_FLAG_BASE)
@@ -598,11 +598,11 @@ float() ctf_runhere_visibility {
 	return FALSE;
 }
 
-float() ctf_base_visibility {
-	return !ctf_runhere_visibility();
+float(entity ignore) ctf_base_visibility {
+	return !ctf_runhere_visibility(NULL);
 }
 
-float() ctf_flag_visibility {
+float(entity ignore) ctf_flag_visibility {
 	if (self.owner.cnt == CTF_FLAG_DROPPED)
 		return TRUE;
 
@@ -953,11 +953,11 @@ void(entity flag, float shift) ctf_setstatus2 {
 
 var void() ctf_player_think_next;
 void() ctf_player_think {
-	self.items &~= IT_RED_FLAG_TAKEN;
-	self.items &~= IT_RED_FLAG_LOST;
-	self.items &~= IT_BLUE_FLAG_TAKEN;
-	self.items &~= IT_BLUE_FLAG_LOST;
-	self.items &~= IT_CTF_SHIELDED;
+	self.items &= ~IT_RED_FLAG_TAKEN;
+	self.items &= ~IT_RED_FLAG_LOST;
+	self.items &= ~IT_BLUE_FLAG_TAKEN;
+	self.items &= ~IT_BLUE_FLAG_LOST;
+	self.items &= ~IT_CTF_SHIELDED;
 	entity flag;
 	float redflags, blueflags;
 	if (self.ctf_captureshielded)

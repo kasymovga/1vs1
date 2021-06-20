@@ -349,7 +349,7 @@ void(void) mapvote_update_votes {
 	mapvote_ownvote = ReadByte() - 1;
 }
 
-void(void) mapvote_read {
+void(float ignore) mapvote_read {
 	float sf;
 	sf = ReadByte();
 	if(sf & 1)

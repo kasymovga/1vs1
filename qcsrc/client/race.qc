@@ -371,8 +371,8 @@ string(float posy) race_records_table_string {
 		table_width = name_column_width + sbar_fontsize_x * 18;
 		pos_x = left = (CVAR(vid_conwidth) - table_width) / 2;
 		pos_y = posy + sbar_fontsize_y;
-		drawfill(pos, [table_width, sbar_fontsize_y * (rows + 1)], '0 0 0', 0.5, DRAWFLAG_NORMAL);
-		draw_borderlines(sbar_border_thickness, pos, [table_width, sbar_fontsize_y], '0 0 0', 1, DRAWFLAG_NORMAL);
+		drawfill(pos, '1 0 0' * table_width + sbar_fontsize_y * (rows + 1) * '0 1 0', '0 0 0', 0.5, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, '1 0 0' * table_width + sbar_fontsize_y * '0 1 0', '0 0 0', 1, DRAWFLAG_NORMAL);
 		pos_x += sbar_fontsize_x * 2;
 		draw_string_right(pos, "# ", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
 		pos_x += sbar_fontsize_x;
@@ -385,7 +385,7 @@ string(float posy) race_records_table_string {
 		drawstring(pos, "Gap", sbar_fontsize, '1 1 0.5', 1, DRAWFLAG_NORMAL);
 		pos_y += sbar_fontsize_y;
 		pos_x = left;
-		draw_borderlines(sbar_border_thickness, pos, [table_width, rows * sbar_fontsize_y], '0 0 0', 1, DRAWFLAG_NORMAL);
+		draw_borderlines(sbar_border_thickness, pos, '1 0 0' * table_width + rows * sbar_fontsize_y * '0 1 0', '0 0 0', 1, DRAWFLAG_NORMAL);
 		for (i = 0; i < rows; i++) {
 			n = race_records_name[i];
 			tt = race_records_time[i];

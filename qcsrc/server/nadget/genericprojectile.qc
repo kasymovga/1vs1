@@ -58,7 +58,7 @@ void nadget_GenericProjectile_RadiusDamage(void) {
 }
 
 void nadget_GenericProjectile_Explode(void) {
-    self.event_damage = stdproc_nothing;
+    self.event_damage = NULL;
     self.takedamage = DAMAGE_NO;
 
     switch(self.hg_type) {
@@ -103,7 +103,7 @@ float nadget_GenericProjectile_TryStick(entity targ, vector normal) {
             vector oorig = self.origin;
             setsize(self, PL_MIN, PL_MAX);
 
-            if(!entity_move_out_of_solid(self, TRACE_MOVE_NOMONSTERS)) {
+            if(!entity_move_out_of_solid(self)) {
                 if(!self.hg_isbonus) NADGET_DO_IN_ALL_CONTEXTS(if(self.owner.hg_ctx_type == NADGET_TRANSLOC)
                     self.owner.hg_ctx_ammo += 1;)
 
@@ -195,7 +195,7 @@ void nadget_GenericProjectile_Touch(void) {
                     dir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal;
                     self.velocity = dir * spd;
                     setorigin(self, self.origin + self.velocity * frametime);
-                    entity_move_out_of_solid(self, TRACE_MOVE_NOMONSTERS);
+                    entity_move_out_of_solid(self);
                 }
             }
         }
@@ -298,7 +298,7 @@ void nadget_GenericProjectile_Stick(entity targ, vector normal) {
     e.SendFlags = 0xFFFFFF;
     projectile_update_angles(e);
     e.effects |= EFFECT_NODEPTHTEST; // no culling please
-    entity_move_out_of_solid(e, TRACE_MOVE_WORLDONLY);
+    entity_move_out_of_solid(e);
 }
 
 .vector hg_oldangles;
@@ -342,7 +342,7 @@ void nadget_GenericProjectile_Think(void) {
                     self.velocity = self.hg_minVelocity;
                 } else {
                     setorigin(self, self.origin + self.movedir * 5);
-                    entity_move_out_of_solid(self, TRACE_MOVE_NOMONSTERS);
+                    entity_move_out_of_solid(self);
                     self.velocity = self.hg_deferredVel;
                     sound(self, CHAN_WEAPON2, "porto/bounce.wav", VOL_BASE, ATTN_NORM);
                     pointparticles(particleeffectnum("smoke_ring"), self.origin, -self.velocity, 10);
@@ -525,7 +525,7 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
         gren.event_damage = nadget_GenericProjectile_Damage;
     } else {
         gren.takedamage = DAMAGE_NO;
-        gren.event_damage = stdproc_nothing;
+        gren.event_damage = NULL;
     }
 
     if(!gren.health)

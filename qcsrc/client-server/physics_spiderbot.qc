@@ -10,7 +10,7 @@ float(void) physics_spiderbot {
     if(self.flags & FL_ONGROUND) {
         if(physics_button_jump) {
 			self.velocity = self.velocity * g_vehicle_spiderbot_jump_accel + v_up * g_vehicle_spiderbot_jump_up;
-			self.flags &~= FL_ONGROUND;
+			self.flags &= ~FL_ONGROUND;
         } else {
             if(vlen(physics_movement) == 0) {
                 movelib_beak_simple(g_vehicle_spiderbot_speed_stop * frametime);

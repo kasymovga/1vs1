@@ -98,19 +98,21 @@ void trigger_for_each_target(entity s, float(entity, float, vector, string, enti
 entity trigger_linktargets_ent;
 entity trigger_linktargets_first;
 var .entity linktargets_fld;
+float(entity targ, float _f, vector _v, string _s, entity _e) trigger_link_targets_add {
+	if (trigger_linktargets_ent)
+		trigger_linktargets_ent.linktargets_fld = targ;
+	else
+		trigger_linktargets_first = targ;
+
+	trigger_linktargets_ent = targ;
+	return FALSE;
+}
+
 entity(entity ent, .entity fld, float recursive) trigger_link_targets {
 	trigger_linktargets_ent = world;
 	trigger_linktargets_first = world;
 	linktargets_fld = fld;
-	trigger_for_each_target(ent, inline float(entity targ, float _f, vector _v, string _s, entity _e) {
-		if (trigger_linktargets_ent)
-			trigger_linktargets_ent.linktargets_fld = targ;
-		else
-			trigger_linktargets_first = targ;
-
-		trigger_linktargets_ent = targ;
-		return FALSE;
-	}, recursive, NULL, NULL, NULL, NULL);
+	trigger_for_each_target(ent, trigger_link_targets_add, recursive, NULL, NULL, NULL, NULL);
 	if (trigger_linktargets_ent)
 		trigger_linktargets_ent.fld = world;
 
@@ -599,7 +601,7 @@ void(void) trigger_impulse_touch1 {
 	other.lastpushtime = time;
 	if (!pushdeltatime) return;
 	other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-	other.flags &~= FL_ONGROUND;
+	other.flags &= ~FL_ONGROUND;
 }
 
 // Directionless (accelerator/decelerator) mode
@@ -1020,7 +1022,8 @@ void spawnfunc_trigger_always() {
 
 .string chaintarget;
 string trigger_cycle_find_next_target(string curtarget) {
-	while((var e = find(e, targetname, curtarget)))
+	entity e;
+	while((e = find(e, targetname, curtarget)))
 		if (e.chaintarget)
 			return e.chaintarget;
 
@@ -1048,29 +1051,35 @@ void spawnfunc_trigger_cycle(void) {
  * killcredit
  */
 
+void(void) trigger_killcredit_use {
+	self.enemy = activator;
+	self.solid = SOLID_TRIGGER;
+	self.think = self.reset;
+	self.nextthink = time + self.wait;
+}
+
+void(void) trigger_killcredit_reset {
+	self.enemy = world;
+	self.solid = SOLID_NOT;
+	self.think = stdproc_nothing;
+}
+
+void(void) trigger_killcredit_touch {
+	if (!other.iscreature)
+		return;
+
+	other.pushltime = time + g_maxpushtime;
+	other.pusher = self.enemy;
+}
+
 void spawnfunc_trigger_killcredit(void) {
 	trigger_solid_brush_init();
 	if (self.wait <= 0)
 		self.wait = 3;
 
-	self.use = inline void(void) {
-		self.enemy = activator;
-		self.solid = SOLID_TRIGGER;
-		self.think = self.reset;
-		self.nextthink = time + self.wait;
-	};
-	self.reset = inline void(void) {
-		self.enemy = world;
-		self.solid = SOLID_NOT;
-		self.think = stdproc_nothing;
-	};
-	self.touch = inline void(void) {
-		if (!other.iscreature)
-			return;
-
-		other.pushltime = time + g_maxpushtime;
-		other.pusher = self.enemy;
-	};
+	self.use = trigger_killcredit_use;
+	self.reset = trigger_killcredit_reset;
+	self.touch = trigger_killcredit_touch;
 	self.reset();
 }
 
@@ -1080,53 +1089,62 @@ void spawnfunc_func_killcredit(void) {
 	spawnfunc_trigger_killcredit();
 }
 
+void(void) trigger_relay_chance_use {
+	if (random() < self.cnt)
+		trigger_use_targets();
+}
+
 void spawnfunc_trigger_relay_chance(void) {
 	self.classname = "trigger_relay";
 	if (!self.cnt)
 		self.cnt = 0.5;
 
-	self.use = inline void(void) {
-		if (random() < self.cnt)
-			trigger_use_targets();
-	};
+	self.use = trigger_relay_chance_use;
 	self.reset = spawnfunc_trigger_relay_chance;
+}
+
+float(entity e, float _f, vector _v, string _s, entity _e) trigger_relay_random_use_target {
+	e.sub_target_used = time;
+	random_selection_add(e, 0, NULL, 1, 1);
+	return FALSE;
+}
+
+void(void) trigger_relay_random_use {
+	random_selection_init();
+	trigger_for_each_target(self, trigger_relay_random_use_target, FALSE, NULL, NULL, NULL, NULL);
+	if (random_selection_chosen_ent) {
+		random_selection_chosen_ent.sub_target_used = -1;
+		trigger_use_targets_prevent_reuse();
+	}
 }
 
 void spawnfunc_trigger_relay_random(void) {
 	self.classname = "trigger_relay";
-	self.use = inline void(void) {
-		random_selection_init();
-		trigger_for_each_target(self, inline float(entity e, float _f, vector _v, string _s, entity _e) {
-			e.sub_target_used = time;
-			random_selection_add(e, 0, NULL, 1, 1);
-			return FALSE;
-		}, FALSE, NULL, NULL, NULL, NULL);
-
-		if (random_selection_chosen_ent) {
-			random_selection_chosen_ent.sub_target_used = -1;
-			trigger_use_targets_prevent_reuse();
-		}
-	};
+	self.use = trigger_relay_random_use;
 	self.reset = spawnfunc_trigger_relay_random;
+}
+
+void(void) trigger_relay_foreachplayer_use {
+	entity activatorold = activator;
+	FOR_EACH_PLAYER(activator)
+		trigger_use_targets();
+
+	activator = activatorold;
 }
 
 void spawnfunc_trigger_relay_foreachplayer(void) {
 	self.classname = "trigger_relay";
-	self.use = inline void(void) {
-		using(activator = world)
-			FOR_EACH_PLAYER(activator)
-				trigger_use_targets();
-	};
+	self.use = trigger_relay_foreachplayer_use;
 	self.reset = spawnfunc_trigger_relay_foreachplayer;
 }
 
-enumflags {
+enum: flag {
 	TSTATE_ENABLED,
 	TSTATE_USE_ON,
 	TSTATE_USE_OFF,
 };
 
-enumflags {
+enum: flag {
 	TSTATE_NOT,
 };
 
@@ -1136,7 +1154,7 @@ typedef float(entity, .entity) statefunc_aggr_t;
 .statefunc_t statefunc;
 .statefunc_t statefunc2;
 
-const STATECHAIN_STACK_MAX = 16;
+const float STATECHAIN_STACK_MAX = 16;
 .entity statechain_stack[STATECHAIN_STACK_MAX];
 float statechain_stack_ptr;
 var .entity statechain_next;
@@ -1158,8 +1176,11 @@ void(void) statechain_pop {
 }
 
 float(entity e) compute_state {
-	using(self = e)
-		return e.statefunc();
+	entity oldself = self;
+	self = e;
+	float r = e.statefunc();
+	self = oldself;
+	return r;
 }
 
 float(entity e, .entity next) aggregate_and {
@@ -1182,13 +1203,13 @@ float(entity e, .entity next) aggregate_or {
 
 float(statefunc_aggr_t aggr) statefunc_aggregate_targets {
 	statechain_push();
-	var s = aggr(trigger_link_targets(self, statechain_next, FALSE), statechain_next);
+	float s = aggr(trigger_link_targets(self, statechain_next, FALSE), statechain_next);
 	statechain_pop();
 	return s;
 }
 
 float(void) statefunc_invertible {
-	var s = self.statefunc2();
+	float s = self.statefunc2();
 	if (self.spawnflags & TSTATE_NOT)
 		return !s;
 
@@ -1215,17 +1236,18 @@ void(void(void) reset_f, statefunc_t state_f) trigger_state_init {
 	self.use = stdproc_nothing; // dummy default to ensure that ForEachTarget works on it
 }
 
+void(void) trigger_state_use {
+	self.state = !(self.state);
+	if ((self.state && self.spawnflags & TSTATE_USE_ON) || (!self.state && self.spawnflags & TSTATE_USE_OFF))
+		trigger_use_targets();
+}
+
 void(void) spawnfunc_trigger_state {
 	trigger_state_init(spawnfunc_trigger_state, statefunc_self);
 	self.statefunc = self.statefunc2;
 	self.state = (self.spawnflags & TSTATE_ENABLED);
 
-	self.use = inline void(void) {
-		self.state = !(self.state);
-
-		if ((self.state && self.spawnflags & TSTATE_USE_ON) || (!self.state && self.spawnflags & TSTATE_USE_OFF))
-			trigger_use_targets();
-	};
+	self.use = trigger_state_use;
 }
 
 void(void) spawnfunc_trigger_state_and {
@@ -1236,41 +1258,50 @@ void(void) spawnfunc_trigger_state_or {
 	trigger_state_init(spawnfunc_trigger_state_or, statefunc_or);
 }
 
+float(void) trigger_state_activatoralive_check {
+	return !PLAYER_DEAD(activator);
+}
+
 void(void) spawnfunc_trigger_state_activatoralive {
-	trigger_state_init(spawnfunc_trigger_state_activatoralive, inline float(void) {
-		return !PLAYER_DEAD(activator);
-	});
+	trigger_state_init(spawnfunc_trigger_state_activatoralive, trigger_state_activatoralive_check);
+}
+
+void(void) trigger_relay_ifstate_use {
+	float s = compute_state(self.enemy);
+	if (self.spawnflags & TSTATE_NOT)
+		s = !s;
+
+	if (s > 0) // XXX: why is this necessary?
+		trigger_use_targets();
+}
+
+void(void) trigger_relay_ifstate_init {
+	entity e;
+	while((e = find(e, targetname, self.killtarget))) {
+		if (e.statefunc) {
+			self.killtarget = NULL;
+			self.enemy = e;
+			break;
+		}
+	}
+	if (!self.enemy)
+		entity_abort("trigger_relay_ifstate does not point to a valid state entity");
 }
 
 void(void) spawnfunc_trigger_relay_ifstate {
 	self.classname = "trigger_relay";
-	self.use = inline void(void) {
-		var s = compute_state(self.enemy);
-		if (self.spawnflags & TSTATE_NOT)
-			s = !s;
+	self.use = trigger_relay_ifstate_use;
+	entity_initialize(self, trigger_relay_ifstate_init, INITPRIO_FINDTARGET);
+}
 
-		if (s > 0) // XXX: why is this necessary?
-			trigger_use_targets();
-	};
-	entity_initialize(self, inline void(void) {
-		while((var e = find(e, targetname, self.killtarget))) {
-			if (e.statefunc) {
-				self.killtarget = NULL;
-				self.enemy = e;
-				break;
-			}
-		}
-		if (!self.enemy)
-			entity_abort("trigger_relay_ifstate does not point to a valid state entity");
-	}, INITPRIO_FINDTARGET);
+void(void) trigger_roundstate_warmup_init {
+	activator = self;
+	trigger_use_targets();
 }
 
 void(void) trigger_roundstate_warmup {
 	self.reset2 = trigger_roundstate_warmup;
-	entity_initialize(self, inline void(void) {
-		activator = self;
-		trigger_use_targets();
-	}, INITPRIO_FINDTARGET);
+	entity_initialize(self, trigger_roundstate_warmup_init, INITPRIO_FINDTARGET);
 }
 
 void(void) spawnfunc_trigger_roundstate {

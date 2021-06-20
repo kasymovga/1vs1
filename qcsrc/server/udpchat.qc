@@ -31,16 +31,16 @@ void UDPChat_ER_Response_Callback(float argc, string response) {
 
 	if (sv_udpchat_server != "")
 	if (peer != sv_udpchat_server)
-		extresponse_query(sv_udpchat_server, "extResponse udpchat " + msg);
+		extresponse_query(sv_udpchat_server, strcat("extResponse udpchat ", msg));
 
 	for (i = 1; (s = cvar_string(strcat("sv_udpchat_client", ftos(i)))) != ""; i++) {
 		if (peer != s)
-			extresponse_query(s, "extResponse udpchat " + msg);
+			extresponse_query(s, strcat("extResponse udpchat ", msg));
 	}
 }
 
 void UDPChat_SendPacket(string msg) {
-	string packet = "extResponse udpchat " + msg;
+	string packet = strcat("extResponse udpchat ", msg);
 	if (sv_udpchat_server != "")
 		extresponse_query(sv_udpchat_server, packet);
 

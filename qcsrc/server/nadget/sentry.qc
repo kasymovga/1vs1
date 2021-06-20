@@ -250,7 +250,7 @@ void nadget_Sentry_SetOwner(entity sentry, entity newowner) {
 
     if(newowner) {
         sentry.skin = 0;
-        sentry.aiment.effects &~= EFFECT_NODRAW;
+        sentry.aiment.effects &= ~EFFECT_NODRAW;
         sentry.aiment.color = '0.3 0.3 0.3' + 0.7 * team_color((team_mode ? sentry.team : COLOR_TEAM3));
     } else {
         sentry.skin = 1;
@@ -414,7 +414,7 @@ void nadget_Sentry_Think(void) {
     if(self.health < g_nadgets_sentry_health) {
         self.effects |= EFFECT_FLAME;
     } else {
-        self.effects &~= EFFECT_FLAME;
+        self.effects &= ~EFFECT_FLAME;
     }
 
     self.hg_sentry_energy = approach(self.hg_sentry_energy, 1, frametime * g_nadgets_sentry_energy_regen);
@@ -537,7 +537,7 @@ NADGET_HOOKFUNCTION(sentry, Attack) {
     setsize(e, NADGET_SENTRY_MINS, NADGET_SENTRY_MAXS);
     setorigin(e, o);
 
-    if(!entity_move_out_of_solid(e, TRACE_MOVE_NOMONSTERS)) {
+    if(!entity_move_out_of_solid(e)) {
         remove(e);
         //bigprint_spec(self, "Can't put a sentry here!", "", 1);
         centerprint(self, "Can't put a sentry here!");

@@ -120,7 +120,7 @@ entity monster_look_for_player(float distance, float heardistance, float fov_fac
 }
 
 void monster_drop_item(float item_code, string _model, string _sound, string _name, .float itemfield, float itemvalue) {
-	if (random(1) > 0.3)
+	if (random() > 0.3)
 		return;
 
 	entity e = self;
@@ -405,7 +405,7 @@ void monster_shield_restore(void) {
 }
 
 void monster_shield_destroy(void) {
-	self.owner.spawnflags &~= MONSTER_SPAWN_SHIELDED;
+	self.owner.spawnflags &= ~MONSTER_SPAWN_SHIELDED;
 	if (clienttype(activator) == CLIENTTYPE_REAL) {
 		monster_sound(self.owner, self.owner.noise3, TRUE);
 		centerprint(activator, "Enemy shield is broken!");

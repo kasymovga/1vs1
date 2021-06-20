@@ -308,7 +308,7 @@ void(void) spawnfunc_func_nowalljump {
 .float alpha_nonsolid;
 .float oldsolid;
 
-#define MAGICWALL_ALPHAFIELD(e) (if ((e).solid == SOLID_BSP) alpha_solid else alpha_nonsolid)
+#define MAGICWALL_ALPHAFIELD(e) (((e).solid == SOLID_BSP)? alpha_solid : alpha_nonsolid)
 #define SPAWNFLAG_MW_START_HIDDEN 4
 #define SPAWNFLAG_MW_TOGGLE 8
 
@@ -337,6 +337,54 @@ void(float sol, void(void) done) func_magicwall_start_transition {
 	self.nextthink = time;
 }
 
+float(void) func_magicwall_customize {
+	return (self.alpha > 0);
+}
+
+void(void) func_magicwall_think {
+	self.nextthink = time;
+	self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
+}
+
+void(void) func_magicwall_reset {
+	self.solid = self.oldsolid;
+	self.alpha = self.MAGICWALL_ALPHAFIELD(self);
+	self.think = stdproc_nothing;
+}
+
+void(void) func_magicwall_use_toggle {
+	func_magicwall_start_transition(((self.solid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP), NULL);
+}
+
+void(void) func_magicwall_think_transition_start {
+	func_magicwall_start_transition(self.oldsolid, NULL);
+}
+
+void(void) func_magicwall_think_transition_schedule_back {
+	self.nextthink = time + self.wait;
+	self.think = func_magicwall_think_transition_start;
+}
+
+void(void) func_magicwall_use {
+	if (self.oldsolid != self.solid) {
+		if (self.think && self.think != func_magicwall_think_transition)
+			self.nextthink = time + self.wait;
+
+		return;
+	}
+	func_magicwall_start_transition(((self.oldsolid == SOLID_BSP) ? SOLID_NOT : SOLID_BSP),
+		((self.wait >= 0) ? func_magicwall_think_transition_schedule_back : NULL));
+}
+
+void(void) func_magicwall_touch {
+	if (other.classname == "player" && !PLAYER_DEAD(other)) {
+		entity oldactivator = activator;
+		activator = other;
+		trigger_use_targets();
+		activator = oldactivator;
+	}
+}
+
 void(void) spawnfunc_func_magicwall {
     model_init(SOLID_BSP);
     if (self.alpha_solid <= 0)
@@ -354,41 +402,12 @@ void(void) spawnfunc_func_magicwall {
     if (!self.speed)
         self.speed = 1;
 
-    self.oldsolid = if (self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) SOLID_NOT else SOLID_BSP;
-    self.customizeentityforclient = inline float(void) {
-        return (self.alpha > 0);
-    };
-    self.think = inline void(void) {
-        self.nextthink = time;
-        self.alpha = approach(self.alpha, self.MAGICWALL_ALPHAFIELD(self), self.speed * frametime);
-    };
-    self.reset = inline void(void) {
-        self.solid = self.oldsolid;
-        self.alpha = self.MAGICWALL_ALPHAFIELD(self);
-        self.think = stdproc_nothing;
-    };
-    self.use = if (self.spawnflags & SPAWNFLAG_MW_TOGGLE)
-        inline void(void) {
-            func_magicwall_start_transition(if (self.solid == SOLID_BSP) SOLID_NOT else SOLID_BSP, NULL);
-        } else inline void(void) {
-            if (self.oldsolid != self.solid) {
-                if (self.think && self.think != func_magicwall_think_transition)
-                    self.nextthink = time + self.wait;
-                return;
-            }
-            func_magicwall_start_transition(if (self.oldsolid == SOLID_BSP) SOLID_NOT else SOLID_BSP,
-                if (self.wait >= 0) inline void(void) {
-                    self.nextthink = time + self.wait;
-                    self.think = inline void(void) {
-                        func_magicwall_start_transition(self.oldsolid, NULL);
-                    };
-                } else NULL);
-        };
-    self.touch = inline void(void) {
-        if (other.classname == "player" && !PLAYER_DEAD(other))
-            using(activator = other)
-                trigger_use_targets();
-    };
+    self.oldsolid = ((self.spawnflags & SPAWNFLAG_MW_START_HIDDEN) ? SOLID_NOT : SOLID_BSP);
+    self.customizeentityforclient = func_magicwall_customize;
+    self.think = func_magicwall_think;
+    self.reset = func_magicwall_reset;
+    self.use = ((self.spawnflags & SPAWNFLAG_MW_TOGGLE) ? func_magicwall_use_toggle : func_magicwall_use);
+    self.touch = func_magicwall_touch;
     // self.clipgroup = CLIPGROUP_OBSERVER;
     self.reset();
     self.nextthink = time;
@@ -554,7 +573,7 @@ void(void) func_plat_center_touch {
 	if (other.health <= 0)
 		return;
 
-	var trig = self;
+	entity trig = self;
 	self = self.enemy;
 	if (self.state == 2) {
 		if (trig.wait < 0) {
@@ -1810,6 +1829,10 @@ If a secret door has a targetname, it will only be opened by it's botton or trig
 3) base
 */
 
+void(entity, entity, float, float, vector, vector) func_door_secret_event_damage {
+	func_door_secret_use();
+}
+
 void(void) spawnfunc_func_door_secret {
 	if (!self.dmg)
 		self.dmg = 2;
@@ -1832,7 +1855,7 @@ void(void) spawnfunc_func_door_secret {
 	if (self.spawnflags & SECRET_YES_SHOOT) {
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
-		self.event_damage = func_door_secret_use;
+		self.event_damage = func_door_secret_event_damage;
 	}
 	self.oldorigin = self.origin;
 	if (!self.wait)

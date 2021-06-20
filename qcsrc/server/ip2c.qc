@@ -199,7 +199,7 @@ void IP2C_ClearCache(void) {
 }
 
 string IP2C_LookupCached(string ip) {
-    var res = db_get(IPCacheDB, ip);
+    string res = db_get(IPCacheDB, ip);
 
     if(res != "") {
         return res;
@@ -262,7 +262,7 @@ void IP2C_Lookup(string ip, ip2c_callback_t callback, float timeout, entity call
         return;
     }
 
-    var url = IP2C_GetQueryURL();
+    string url = IP2C_GetQueryURL();
 
     if(url == "") {
         IP2C_Log(strcat("Can't lookup ip ", ip, ", sv_ip2country_server is not set"));
@@ -272,30 +272,30 @@ void IP2C_Lookup(string ip, ip2c_callback_t callback, float timeout, entity call
     IP2C_Log(strcat("IP ", ip, " is not cached, requesting from the server"));
 
     if(substring(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
-        extresponse_query(substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), "extResponse ip2cq " + ip);
+        extresponse_query(substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url)), strcat("extResponse ip2cq ", ip));
     } else {
         uri_get(strcat(url, ip), URI_GET_IP2C);
     }
 }
 
 void IP2C_ER_Response_Callback(float argc, string response) {
-    var source = argv(0);
-    var ok = FALSE;
+    string source = argv(0);
+    float ok = FALSE;
 
-    var url = IP2C_GetQueryURL();
+    string url = IP2C_GetQueryURL();
     if(substring(url, 0, strlen(IP2C_UDP_PROTOCOL_PREFIX)) == IP2C_UDP_PROTOCOL_PREFIX) {
-        var trusted = substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url));
+        string trusted = substring(url, strlen(IP2C_UDP_PROTOCOL_PREFIX), strlen(url));
         if(source == trusted)
             ok = TRUE;
     }
 
     if(!ok) {
-        IP2C_Log("Response packet from an untrusted origin " + source + " ignored");
+        IP2C_Log(strcat("Response packet from an untrusted origin ", source, " ignored"));
         return;
     }
 
-    var ip = argv(2);
-    var cn = argv(3);
+    string ip = argv(2);
+    string cn = argv(3);
 
     if(!ip || !cn || cn == "--") {
         IP2C_Log(strcat("The remote server failed to resolve ", ip));
@@ -307,35 +307,34 @@ void IP2C_ER_Response_Callback(float argc, string response) {
     IP2C_ExecCallbacks(ip, cn);
 }
 
+void(string ip, string cn, entity ent) ip2c_request_callback_lookup {
+	if (ent.classname != "ip2cr_sourceinfo") {
+		IP2C_Log(strcat("Huh? Lost the requester's address somehow. Was going to send: ", ip, " ", cn));
+		return;
+	}
+	if (cn == "")
+		cn = "--";
+
+	IP2C_Log(strcat("Sending query response to ", ent.netname, ": ", ip, " ", cn));
+	extresponse_query(ent.netname, strcat("extResponse ip2cr ", ip, " ", cn));
+	strunzone(ent.netname);
+	remove(ent);
+}
+
 void IP2C_ER_Request_Callback(float argc, string query) {
-    var source = argv(0);
-    var ip = argv(2);
+    string source = argv(0);
+    string ip = argv(2);
 
     if(ip == "") {
-        IP2C_Log("Malformed IP2C query ignored: " + query);
+        IP2C_Log(strcat("Malformed IP2C query ignored: ", query));
         return;
     } else {
-        IP2C_Log("Got query from " + source + ": " + ip);
+        IP2C_Log(strcat("Got query from ", source, ": ", ip));
     }
-
-    IP2C_Lookup(ip, inline void(string ip, string cn, entity ent) {
-        if(ent.classname != "ip2cr_sourceinfo") {
-            IP2C_Log("Huh? Lost the requester's address somehow. Was going to send: " + ip + " " + cn);
-            return;
-        }
-
-        if(cn == "")
-            cn = "--";
-
-        IP2C_Log("Sending query response to " + ent.netname + ": " + ip + " " + cn);
-        extresponse_query(ent.netname, "extResponse ip2cr " + ip + " " + cn);
-
-        strunzone(ent.netname);
-        remove(ent);
-    }, 0, spawn() {
-        classname: "ip2cr_sourceinfo",
-        netname: strzone(source),
-    });
+    entity e = spawn();
+    e.classname = "ip2cr_sourceinfo";
+    e.netname = strzone(source);
+    IP2C_Lookup(ip, ip2c_request_callback_lookup, 0, e);
 }
 
 void IP2C_URI_Get_Callback(float id, float status, string data) {

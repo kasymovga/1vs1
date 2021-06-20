@@ -17,6 +17,15 @@ entity makeNexuizInputSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
+
+void(entity e) accelerationLoadCvarsNexuizInputSettingsTab {
+	e.value = -cvar(e.cvarName); if (e.value == 1) e.value = 0;
+}
+
+void(entity e) accelerationSaveCvarsNexuizInputSettingsTab {
+	if (e.value == 0) cvar_set(e.cvarName, "1"); else cvar_set(e.cvarName, ftos(-e.value));
+}
+
 void fillNexuizInputSettingsTab(entity me)
 {
 	entity e;
@@ -48,8 +57,8 @@ void fillNexuizInputSettingsTab(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.25, e = makeNexuizTextLabel(0, _("Acceleration:")));
 		me.TD(me, 1, 2, e = makeNexuizSlider(0, 0.1, 0.001, "m_accelerate"));
-		e.loadCvars = inline void(entity e) { e.value = -cvar(e.cvarName); if (e.value == 1) e.value = 0; };
-		e.saveCvars = inline void(entity e) { if (e.value == 0) cvar_set(e.cvarName, "1"); else cvar_set(e.cvarName, ftos(-e.value));  };
+		e.loadCvars = accelerationLoadCvarsNexuizInputSettingsTab;
+		e.saveCvars = accelerationSaveCvarsNexuizInputSettingsTab;
 	me.TR(me);
 		me.TDempty(me, 0.05);
 		me.TD(me, 0.5, 3, e = makeNexuizTextLabel(0, _("* Keep this set to 0 until you know what this setting does")));

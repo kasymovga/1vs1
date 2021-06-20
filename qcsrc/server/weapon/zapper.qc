@@ -124,7 +124,7 @@ float(entity p) weapon_zapper_attack2_check_ammo {
 }
 
 float(entity to, float sf) weapon_zapper_beam_send {
-	sf &~= 24;
+	sf &= ~24;
 	entity _owner = self.owner;
 	float o = num_for_edict(_owner);
 	if (o > client_max_count) {

@@ -373,11 +373,11 @@ void(void) vehicle_spiderbot_blowup {
 
 void(void) vehicle_spiderbot_die {
 	self.health = 0;
-	self.event_damage = stdproc_nothing;
+	self.event_damage = NULL;
 	self.iscreature = FALSE;
 	self.solid	  = SOLID_NOT;
 	self.takedamage = DAMAGE_NO;
-	self.touch	  = stdproc_nothing;
+	self.touch	  = NULL;
 	self.deadflag	= DEAD_DEAD;
 	self.frame = 0;
 	self.tur_head.frame = 0;

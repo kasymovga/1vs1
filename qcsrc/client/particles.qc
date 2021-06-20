@@ -103,7 +103,7 @@ void(void) particles_point_remove {
 	self.bgmscript = NULL;
 }
 
-void() particles_point_read {
+void(float ignore) particles_point_read {
 	float f, i;
 	vector v;
 	f = ReadByte();
@@ -231,7 +231,7 @@ void(void) particles_snor_draw {
 		te_particlesnow(particles_snow_or_rain_mins, particles_snow_or_rain_maxs, self.velocity, particles_snow_or_rain_count, self.glow_color);
 }
 
-void() particles_rain_or_snow_read {
+void(float ignore) particles_rain_or_snow_read {
 	self.impulse = ReadByte(); // Rain, Snow, or Whatever
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();

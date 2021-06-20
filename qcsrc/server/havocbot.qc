@@ -76,7 +76,7 @@ void(void) havocbot_ai {
 	bot_aim_lag_update();
 	if (self.bot_aimtarg) {
 		self.aistatus |= AI_STATUS_ATTACKING;
-		self.aistatus &~= AI_STATUS_ROAMING;
+		self.aistatus &= ~AI_STATUS_ROAMING;
 		if (self.weapons) {
 			if not(gamehook_chain_bot_aim())
 				weapon_action(self.weapon, WR_AIM);
@@ -94,7 +94,7 @@ void(void) havocbot_ai {
 		}
 	} else if (self.goalcurrent) {
 		self.aistatus |= AI_STATUS_ROAMING;
-		self.aistatus &~= AI_STATUS_ATTACKING;
+		self.aistatus &= ~AI_STATUS_ATTACKING;
 		vector now,v,next;//,heading;
 		float aimdistance,skillblend,distanceblend,blend;
 		next = now = self.goalcurrent.origin - (self.origin + self.view_ofs);
@@ -192,14 +192,14 @@ void(vector dir) havocbot_bunnyhop {
 		return;
 
 	if (self.aistatus & AI_STATUS_DANGER_AHEAD) {
-		self.aistatus &~= AI_STATUS_RUNNING;
+		self.aistatus &= ~AI_STATUS_RUNNING;
 		self.BUTTON_JUMP = FALSE;
 		self.bot_canruntogoal = 0;
 		self.bot_timelastseengoal = 0;
 		return;
 	}
 	if (self.waterlevel > WATERLEVEL_WETFEET) {
-		self.aistatus &~= AI_STATUS_RUNNING;
+		self.aistatus &= ~AI_STATUS_RUNNING;
 		return;
 	}
 	if (self.bot_lastseengoal != self.goalcurrent && !(self.aistatus & AI_STATUS_RUNNING)) {
@@ -246,7 +246,7 @@ void(vector dir) havocbot_bunnyhop {
 						}
 					}
 					if (checkdistance) {
-						self.aistatus &~= AI_STATUS_RUNNING;
+						self.aistatus &= ~AI_STATUS_RUNNING;
 						if (bunnyhopdistance > bot_ai_bunnyhop_stopdistance)
 							self.BUTTON_JUMP = TRUE;
 					} else {
@@ -328,13 +328,13 @@ void(void) havocbot_movetogoal {
 				}
 				// Switch to normal mode
 				self.navigation_jetpack_goal = world;
-				self.aistatus &~= AI_STATUS_JETPACK_LANDING;
-				self.aistatus &~= AI_STATUS_JETPACK_FLYING;
+				self.aistatus &= ~AI_STATUS_JETPACK_LANDING;
+				self.aistatus &= ~AI_STATUS_JETPACK_FLYING;
 				return;
 			}
 		} else if (checkpvs(self.origin,self.goalcurrent)) {
 			// If I can see the goal switch to landing code
-			self.aistatus &~= AI_STATUS_JETPACK_FLYING;
+			self.aistatus &= ~AI_STATUS_JETPACK_FLYING;
 			self.aistatus |= AI_STATUS_JETPACK_LANDING;
 			return;
 		}
@@ -459,7 +459,7 @@ void(void) havocbot_movetogoal {
 		makevectors(self.v_angle_y * '0 1 0');
 	} else {
 		if (self.aistatus & AI_STATUS_OUT_WATER)
-			self.aistatus &~= AI_STATUS_OUT_WATER;
+			self.aistatus &= ~AI_STATUS_OUT_WATER;
 
 		// jump if going toward an obstacle that doesn't look like stairs we
 		// can walk up directly
@@ -503,7 +503,7 @@ void(void) havocbot_movetogoal {
 		}
 		// Check for water/slime/lava and dangerous edges
 		// (only when the bot is on the ground or jumping intentionally)
-		self.aistatus &~= AI_STATUS_DANGER_AHEAD;
+		self.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 		if (trace_fraction == 1)
 		if (self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE) {
 			// Look downwards
@@ -782,7 +782,7 @@ float(vector pos) havocbot_moveto {
 	if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING) {
 		// Step 4: Move to waypoint
 		if (self.havocbot_personal_waypoint==world) {
-			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			return BOT_CMD_STATUS_ERROR;
 		}
 		if (!bot_strategytoken_taken)
@@ -795,7 +795,7 @@ float(vector pos) havocbot_moveto {
 				self.havocbot_personal_waypoint_failcounter += 1;
 				self.havocbot_personal_waypoint_searchtime = time + 2;
 				if (self.havocbot_personal_waypoint_failcounter >= 30) {
-					self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
+					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 					remove(self.havocbot_personal_waypoint);
 					return BOT_CMD_STATUS_ERROR;
 				}
@@ -810,7 +810,7 @@ float(vector pos) havocbot_moveto {
 		if (self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED) {
 			// Step 5: Waypoint reached
 			remove(self.havocbot_personal_waypoint);
-			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
+			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return BOT_CMD_STATUS_FINISHED;
 		}
 		return BOT_CMD_STATUS_EXECUTING;
@@ -822,7 +822,7 @@ float(vector pos) havocbot_moveto {
 			return BOT_CMD_STATUS_EXECUTING;
 
 		self.havocbot_personal_waypoint_searchtime = time; // so we set the route next frame
-		self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
+		self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 		self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 		// Step 3: Route to waypoint
 		return BOT_CMD_STATUS_EXECUTING;

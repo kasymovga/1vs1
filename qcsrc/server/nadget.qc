@@ -540,8 +540,8 @@ void nadget_FadeOut(entity n) {
     n.solid = SOLID_NOT;
     n.takedamage = DAMAGE_NO;
     n.hg_detonable_updated = FALSE;
-    n.event_damage = stdproc_nothing;
-    n.use = stdproc_nothing;
+    n.event_damage = NULL;
+    n.use = NULL;
     n.think = nadget_FadeOut_Think;
     n.nextthink = time;
 }

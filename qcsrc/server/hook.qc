@@ -335,19 +335,19 @@ void() hook_PlayerPreThink {
 		else
 		{
 			self.hook_state |= HOOK_REMOVING;
-			self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 		}
 
-		self.hook_state &~= HOOK_RELEASING;
+		self.hook_state &= ~HOOK_RELEASING;
 		if(self.BUTTON_CROUCH)
 		{
-			self.hook_state &~= HOOK_PULLING;
+			self.hook_state &= ~HOOK_PULLING;
 			//self.hook_state |= HOOK_RELEASING;
 		}
 		else
 		{
 			self.hook_state |= HOOK_PULLING;
-			//self.hook_state &~= HOOK_RELEASING;
+			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
 	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
@@ -359,7 +359,7 @@ void() hook_PlayerPreThink {
 
 	if(!g_grappling_hook && self.weapon != WEP_HOOK)
 	{
-		self.hook_state &~= HOOK_FIRING;
+		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}
 
@@ -369,14 +369,14 @@ void() hook_PlayerPreThink {
 			hook_remove(self);
 
 		hook_fire();
-		self.hook_state &~= HOOK_FIRING;
+		self.hook_state &= ~HOOK_FIRING;
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{
 		if (self.hook)
 			hook_remove(self);
 
-		self.hook_state &~= HOOK_REMOVING;
+		self.hook_state &= ~HOOK_REMOVING;
 	}
 }
 

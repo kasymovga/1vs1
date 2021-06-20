@@ -147,7 +147,7 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 	e.dphitcontentsmask = m;
 	if (i < attempts) {
 		setorigin(e, trace_endpos);
-		e.flags &~= FL_ONGROUND;
+		e.flags &= ~FL_ONGROUND;
 		e.angles = vectoangles(start - end);
 		e.angles_x = 0;
 		e.angles_z = 0;
@@ -157,11 +157,11 @@ float(entity e, float goodcontents, float badcontents, float badsurfaceflags, fl
 }
 
 void(entity platform) entity_drop_entities {
-	const nudge = '1 1 1';
+	const vector nudge = '1 1 1';
 	entity e;
 	while((e = findflags(e, flags, FL_ONGROUND))) {
 		if(math_boxes_overlap(platform.absmin, platform.absmax, e.absmin - nudge, e.absmax + nudge)) {
-			e.flags &~= FL_ONGROUND;
+			e.flags &= ~FL_ONGROUND;
 			projectile_update_next_frame(e);
 		}
 	}
@@ -169,7 +169,7 @@ void(entity platform) entity_drop_entities {
 		if(e.movetype == MOVETYPE_FOLLOW) {
 			e.movetype = MOVETYPE_TOSS;
 			e.aiment = world;
-			e.flags &~= FL_ONGROUND;
+			e.flags &= ~FL_ONGROUND;
 			projectile_update_next_frame(e);
 		}
 	}

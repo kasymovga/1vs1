@@ -19,8 +19,8 @@ void ugandaknuckles_hunt() {
 	}
 	vector v;
 	if (dofire) {
-		self.attack_finished_single = time + 3 + random(2);
-		float f = random(5);
+		self.attack_finished_single = time + 3 + 2 * random();
+		float f = random() * 5;
 		if (f > 4)
 			dlc_sound(self, CHAN_WEAPON, "myqueenyoulook.ogg", VOL_BASE, ATTN_NORM);
 		else if (f > 3)

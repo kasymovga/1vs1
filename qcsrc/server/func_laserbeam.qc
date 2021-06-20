@@ -1,6 +1,6 @@
 
 void func_laserbeam_trace(vector o, vector aimpos) {
-    var boxsize = 16;
+    float boxsize = 16;
 
     do {
         boxsize *= 0.5;
@@ -33,8 +33,8 @@ void func_laserbeam_think(void) {
         aimpos = o + normalize(aimpos - o) * self.t_length;
 
     func_laserbeam_trace(o, aimpos);
-    var end = trace_endpos;
-    var targ = trace_ent;
+    vector end = trace_endpos;
+    entity targ = trace_ent;
 
     if(targ.takedamage && time > self.cnt) {
         damage(targ, self, world, self.dmg, DEATH_HURTTRIGGER, end, 10 * normalize(end - o));
@@ -111,6 +111,6 @@ void func_laserbeam_init(void) {
 
 void spawnfunc_func_laserbeam(void) {
     setsize(self, '-4 -4 -4', '4 4 4');
-    entity_move_out_of_solid(self, MOVE_WORLDONLY);
+    entity_move_out_of_solid(self);
     entity_initialize(self, func_laserbeam_init, INITPRIO_FINDTARGET);
 }

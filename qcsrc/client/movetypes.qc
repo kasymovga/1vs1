@@ -215,7 +215,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 	if(self.move_flags & FL_ONGROUND)
 	{
 		if(self.move_velocity_z >= 1/32)
-			self.move_flags &~= FL_ONGROUND;
+			self.move_flags &= ~FL_ONGROUND;
 		else if(!self.move_groundentity)
 			return;
 		else if(self.move_suspendedinair && wasfreed(self.move_groundentity))
@@ -266,7 +266,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		if(self.move_movetype == MOVETYPE_BOUNCEMISSILE)
 		{
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 2.0);
-			self.move_flags &~= FL_ONGROUND;
+			self.move_flags &= ~FL_ONGROUND;
 		}
 		else if(self.move_movetype == MOVETYPE_BOUNCE)
 		{
@@ -290,7 +290,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 				self.move_avelocity = '0 0 0';
 			}
 			else
-				self.move_flags &~= FL_ONGROUND;
+				self.move_flags &= ~FL_ONGROUND;
 		}
 		else
 		{
@@ -305,7 +305,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 				self.move_avelocity = '0 0 0';
 			}
 			else
-				self.move_flags &~= FL_ONGROUND;
+				self.move_flags &= ~FL_ONGROUND;
 		}
 
 		// DP revision 8905 (just, WHY...)

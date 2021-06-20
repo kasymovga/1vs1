@@ -193,7 +193,7 @@ void(void) dlc_wait_think {
 #define dlc_send dlc_SendEntity //compatibility with old save files
 float(entity to, float sf) dlc_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_DLC_LIST);
-	sf &~= 12;
+	sf &= ~12;
 	if (to.netaddress == "local") {
 		sf |= 4;
 	}

@@ -125,7 +125,7 @@ void(entity e) fire_apply_effect {
 	if (fire_is_burning(e))
 		e.effects |= EFFECT_FLAME;
 	else
-		e.effects &~= EFFECT_FLAME;
+		e.effects &= ~EFFECT_FLAME;
 }
 
 void(void) fire_burner_think {
