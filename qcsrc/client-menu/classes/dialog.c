@@ -125,7 +125,7 @@ void TDemptyDialog(entity me, float colspan)
 
 void configureDialogDialog(entity me)
 {
-	entity closebutton;
+	entity closebutton = NULL;
 	float absWidth, absHeight;
 
 	me.frame = spawnBorderImage();

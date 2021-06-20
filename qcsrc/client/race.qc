@@ -118,7 +118,7 @@ void(void) race_read {
 
 string(float cp, float mytime, float histime, float lapdelta, string hisname) race_checkpoint_string {
 	string col;
-	string timestr;
+	string timestr = "";
 	string cpname;
 	string lapstr;
 	lapstr = "";
@@ -265,8 +265,10 @@ void(void) race_sbar_draw {
 		vector v1, v2;
 		v1_x = race_angle_to_con_x(diffangle + strafeangle);
 		v1_y = CVAR(vid_conheight) * 0.5 - 10;
+		v1_z = 0;
 		v2_x = max(0, race_angle_to_con_x(diffangle + 90) - v1_x);
 		v2_y = 20;
+		v2_z = 0;
 		drawfill(v1, v2, '0 1 0', 0.25, DRAWFLAG_NORMAL);
 		v1_x = race_angle_to_con_x(diffangle - 90);
 		v1_y = CVAR(vid_conheight) * 0.5 - 10;
@@ -355,8 +357,8 @@ string(float posy) race_records_table_string {
 		float rows;
 		float name_column_width = 4 * sbar_fontsize_x, table_width;
 		float left;
-		float tt_prev;
-		vector pos;
+		float tt_prev = 0;
+		vector pos = '0 0 0';
 		for (i = 0; i < 10; i++) {
 			n = race_records_name[i];
 			tt = race_records_time[i];

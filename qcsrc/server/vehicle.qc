@@ -17,7 +17,7 @@ float(entity plr, float eject) vehicle_extract_player {
 	self = plr.vehicle;
 	self.vehicle_exit(eject);
 	self = e;
-    plr.PlayerPhysplug = physics_plug_null;
+    plr.PlayerPhysplug = NULL;
     plr.vehicle        = world;
 	plr.view_ofs       = PL_VIEW_OFS;
 	plr.lastpushtime = time;

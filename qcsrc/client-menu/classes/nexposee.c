@@ -293,7 +293,7 @@ float keyUpNexposee(entity me, float scan, float ascii, float shift)
 
 float keyDownNexposee(entity me, float scan, float ascii, float shift)
 {
-	float nexposeeKey;
+	float nexposeeKey = 0;
 	if(me.animationState == 2)
 		if(keyDownContainer(me, scan, ascii, shift))
 			return 1;

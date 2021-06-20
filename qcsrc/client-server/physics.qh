@@ -105,8 +105,6 @@ var float(float maxspd_mod) physics_player_plug;
 void(void) physics_update_status;
 void(void) physics_move;
 
-const var float() physics_plug_null;
-
 const float WATERLEVEL_NONE = 0;
 const float WATERLEVEL_WETFEET = 1;
 const float WATERLEVEL_SWIMMING = 2;

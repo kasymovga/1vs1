@@ -67,7 +67,7 @@ float startsWithNocase(string haystack, string needle)
 
 float matchacl(string acl, string str)
 {
-	string t, s;
+	string t, s = "";
 	float r, d;
 	r = 0;
 	while(acl)
@@ -306,7 +306,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	float twoBaseModes;
 	float diameter, spawnpoints;
 	float spawnplaces;
-	vector mapMins, mapMaxs;
+	vector mapMins = '0 0 0', mapMaxs = '0 0 0';
 
 	r = 1;
 	fn = strcat("maps/", pFilename, ".ent");

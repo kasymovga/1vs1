@@ -10,7 +10,7 @@ float centerprint_num;
 
 void(string strMessage) centerprint {
 	float i, j, n, hcount;
-	string s;
+	string s = "";
 	centerprint_fontsize = sbar_font_size(CVAR(scr_centersize));
 	centerprint_expire = min(centerprint_expire, time); // if any of the returns happens, this message will fade out
 	if (CVAR(scr_centertime) <= 0)

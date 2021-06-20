@@ -155,7 +155,7 @@ void drawListBoxItemNexuizMapList(entity me, float i, vector absSize, float isSe
 {
 	// layout: Ping, Map name, Map name, NP, TP, MP
 	string s;
-	float p;
+	float p = 0;
 	float theAlpha;
 	float included;
 

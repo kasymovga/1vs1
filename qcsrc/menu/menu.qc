@@ -331,7 +331,7 @@ void() menu_draw_pre {
 
 void(void) menu_draw {
 	float t;
-	menu_mouse_mode = cvar("menu_mouse_absolute") || cvar("vid_touchscreen");
+	menu_mouse_mode = (cvar("menu_mouse_absolute") || cvar("vid_touchscreen"));
 	if (main)
 		menu_update_width_height();
 

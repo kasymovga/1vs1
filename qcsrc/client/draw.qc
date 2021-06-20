@@ -13,6 +13,7 @@ void(float thickness, vector pos, vector dim, vector color, float alpha, float d
 	pos_x -= thickness;
 	line_dim_x = thickness;
 	line_dim_y = dim_y;
+	line_dim_z = 0;
 	drawfill(pos, line_dim, color, alpha, drawflag);
 	drawfill(pos + (dim_x + thickness) * '1 0 0', line_dim, color, alpha, drawflag);
 	// upper and lower lines
@@ -25,6 +26,9 @@ void(float thickness, vector pos, vector dim, vector color, float alpha, float d
 
 void(vector pos, string pic, vector sz, vector area, vector color, float alpha, float drawflag) draw_pic_tiled {
 	vector current_pos, end_pos, new_size, ratio;
+	new_size_z = 0;
+	ratio_z = 0;
+	current_pos_z = 0;
 	end_pos = pos + area;
 	current_pos_y = pos_y;
 	if (sz_x == 0 || sz_y == 0) {
@@ -103,6 +107,7 @@ void(vector cpos, vector l_size, float progress, float alpha, vector l_color, fl
 	vector pos;
 	pos_x = cpos_x - l_size_x / 2;
 	pos_y = cpos_y - l_size_y / 2;
+	pos_z = 0;
 	vector fill = l_size;
 	fill_x *= progress;
 	drawfill(pos, fill, l_color, alpha * 0.7, DRAWFLAG_NORMAL);

@@ -93,7 +93,7 @@ vector(float id) mapvote_rgb {
 }
 
 void(vector pos, float isize, float tsize, string map, string pic, float count, float id) mapvote_item_draw {
-	vector img_size;
+	vector img_size = '0 0 0';
 	vector rgb;
 	string label;
 	float text_size;
@@ -151,7 +151,7 @@ void(void) mapvote_draw {
 	float isize;
 	float center;
 	float tsize;
-	float xmin, xmax, ymin, ymax;
+	float xmin, xmax, ymin, ymax = 0;
 	vector dist;
 	view_crosshair = FALSE;
 	center = (CVAR(vid_conwidth) - 1)/2;
@@ -193,6 +193,7 @@ void(void) mapvote_draw {
 	mapvote_rows = ceil(mapvote_count / mapvote_columns);
 	dist_x = (xmax - xmin) / mapvote_columns;
 	dist_y = (ymax - pos_y) / mapvote_rows;
+	dist_z = 0;
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 	mapvote_pos = pos;

@@ -19,7 +19,7 @@ void(void) dlc_precache_sounds {
 }
 
 void(void) dlc_extra_pk3_list_wait_think {
-	string tail, head, pk3, pk3_file;
+	string tail, head = "", pk3, pk3_file;
 	float colon;
 	for (tail = dlc_extra_pk3_list; tail != ""; head = str_car(tail), tail = str_cdr(tail)) {
 		if (head == "") continue;
@@ -85,6 +85,7 @@ void(void) dlc_draw2d {
 	pos_y = 100;
 	string s = "Some content still downloading";
 	pos_x = (CVAR(vid_conwidth) / 2) - stringwidth(s, FALSE) * 6;
+	pos_z = 0;
 	drawstring(pos, s, '12 12 0', '0 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
@@ -94,7 +95,7 @@ void(float new) dlc_read {
 		dlc_set_repos(ReadString());
 	}
 
-	float not_all_loaded;
+	float not_all_loaded = FALSE;
 	if (f & 2) {
 		string list = ReadString();
 		string s;

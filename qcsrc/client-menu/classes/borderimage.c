@@ -64,7 +64,7 @@ void drawBorderImage(entity me)
 
 	if(me.fontSize > 0)
 	{
-		vector ro, rf;
+		vector ro = '0 0 0', rf = '0 0 0';
 		if(me.isNexposeeTitleBar)
 		{
 			// me.parent.Nexposee_animationFactor 0 (small) or 1 (full)

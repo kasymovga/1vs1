@@ -168,7 +168,7 @@ void clickListBoxItemNexuizCampaignList(entity me, float i, vector where, float 
 void drawListBoxItemNexuizCampaignList(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
-	float p;
+	float p = 0;
 	vector theColor;
 	float theAlpha;
 	float j, n;

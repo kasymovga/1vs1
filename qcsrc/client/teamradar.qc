@@ -69,6 +69,7 @@ vector(vector in) teamradar_texcoord_to_3dcoord {
 	vector out;
 	out_x = in_x * (teamradar_picmax_x - teamradar_picmin_x) + teamradar_picmin_x;
 	out_y = in_y * (teamradar_picmax_y - teamradar_picmin_y) + teamradar_picmin_y;
+	out_z = 0;
 	return out;
 }
 

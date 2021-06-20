@@ -271,7 +271,7 @@ float(string theText, float maxWidth, float allowColorCodes) gui_draw_text_lengt
 
 void(string img, float a, float algn, float force1) gui_draw_background {
 	vector sz;
-	vector isz;
+	vector isz = '0 0 0';
 	vector tl, ce, br;
 	vector v;
 	string s;

@@ -140,7 +140,7 @@ void(float isNew) gib_read {
 	vector org, vel;
 	string specstr;
 	float issilent;
-	string gentle_prefix;
+	string gentle_prefix = "";
 	float c, randomvalue;
 	type = ReadByte(); // gibbage type
 	amount = ReadByte() / 16.0; // gibbage amount

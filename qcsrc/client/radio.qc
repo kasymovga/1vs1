@@ -55,7 +55,7 @@ void(void) radio_read {
 	float f = ReadByte();
 	float loop = f & 1;
 	float force = f & 2;
-	float start;
+	float start = 0;
 	if (!loop)
 		start = ReadCoord();
 

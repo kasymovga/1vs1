@@ -827,10 +827,9 @@ vector WarpZone_FindLineOfSight(vector fwd, vector viewer, vector viewee, float 
     // failed, let's try the nearest warpzone
 
     float nearest_dst = 1250; // initialize with the maximum distance
-    entity nearest_wz;
-    vector nearest_wz_vw;
-    vector nearest_dir;
-
+    entity nearest_wz = NULL;
+    vector nearest_wz_vw = '0 0 0';
+    vector nearest_dir = '0 0 0';
     for(entity wz = warpzone_chain_begin; wz; wz = wz.warpzone_chain) {
         vector org = wz.origin;
         if(org == '0 0 0')

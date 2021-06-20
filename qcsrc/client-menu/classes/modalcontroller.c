@@ -136,7 +136,7 @@ void switchStateModalController(entity me, entity theOther, float theState, floa
 void drawModalController(entity me)
 {
 	entity e;
-	entity front;
+	entity front = NULL;
 	float animating;
 	float f; // animation factor
 	float df; // animation step size

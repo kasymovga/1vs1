@@ -1,7 +1,6 @@
 .vector view_ofs;
 var void() physics_plug_pre;
 var void() physics_plug_post;
-const var void() physics_plug_nopostpre;
 var vector() physics_plug_adjust_view;
 float vehicle_adjust_view_up;
 float vehicle_adjust_view_back;

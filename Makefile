@@ -1,9 +1,9 @@
-SV_SOURCES=$(shell find qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)')
-CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)')
-MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c|inc)')
+SV_SOURCES=$(shell find qcsrc/server qcsrc/client-server qcsrc/common qcsrc/menu-server -type f -regextype posix-egrep -regex '.*\.(qc|qh|src)') Makefile
+CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c)') Makefile
+MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c|inc)') Makefile
 CFG_SOURSES=$(shell ls cfg/*.in)
 SET_CURL_PACKAGE=yes
-QCC=gmqcc -fFTEPP -std=gmqcc -fFALSE_EMPTY_STRINGS -fno-TRUE_EMPTY_STRINGS
+QCC=gmqcc -std=gmqcc -fFTEPP -fFALSE_EMPTY_STRINGS -fno-TRUE_EMPTY_STRINGS -Wno-FIELD_REDECLARED -Wno-unused-variable -Wno-double-declaration -Wno-implicit-function-pointer
 QCCFLAGS=-O3
 MOD_NAME=1vs1
 SV_PROGNAME=$(MOD_NAME).dat

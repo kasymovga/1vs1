@@ -124,7 +124,7 @@ void(float fade) sbar_draw_weapons {
 		sbar_weaponspace[idx] = 0;
 
 	float stat_weapons = getstati(STAT_WEAPONS);
-	vector w_size = '48 24 0' * CVAR(sbar_weapons_scale), font_size = '12 12 0' * CVAR(sbar_weapons_scale), w_shift, w_shift2;
+	vector w_size = '48 24 0' * CVAR(sbar_weapons_scale), font_size = '12 12 0' * CVAR(sbar_weapons_scale), w_shift = '0 0 0', w_shift2 = '0 0 0';
 	float w_space = 2 * CVAR(sbar_weapons_scale);
 	float active;
 	vector weapon_position;
@@ -453,7 +453,7 @@ void(float argc) sbar_field_set {
 	float i, j, slash;
 	string str, pattern;
 	float digit;
-	float have_name, have_primary, have_secondary, have_separator;
+	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
 	// TODO: re enable with gametype dependant cvars?
 	if (argc < 2) // no arguments provided
@@ -939,7 +939,7 @@ void(vector pos, entity pl, float is_self, float pl_number) sbar_scoreboard_item
 
 vector(vector pos, entity tm, vector rgb, vector bg_size) sbar_scoreboard_table_draw {
 	float body_table_height, i;
-	vector tmp, column_dim;
+	vector tmp = '0 0 0', column_dim = '0 0 0';
 	entity pl;
 	body_table_height = 1.25 * sbar_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
 	pos -= '1 1 0';
@@ -1293,7 +1293,7 @@ void(void) sbar_score_draw_race {
 
 		score = me.(scores[ps_primary]);
 		float racemin, racesec, racemsec;
-		float distsec, distmsec, minusplus;
+		float distsec = 0, distmsec, minusplus;
 		racemin = floor(score/(60 * TIME_FACTOR));
 		racesec = floor((score - racemin*(60 * TIME_FACTOR))/TIME_FACTOR);
 		racemsec = score - racemin*60*TIME_FACTOR - racesec*TIME_FACTOR;
@@ -1482,6 +1482,7 @@ void(void) sbar_speed_draw {
 		speed = strcat(ftos(floor( vlen(physics_velocity_frame_end - physics_velocity_frame_end_z * '0 0 1') * conversion_factor + 0.5 )), unit);
 
 	numsize_x = numsize_y = CVAR(cl_showspeed_size);
+	numsize_z = 0;
 	pos = (CVAR(vid_conheight) - numsize_y) * CVAR(cl_showspeed_position);
 	drawfont = sbar_bigfont;
 	draw_string_center('1 0 0' + pos * '0 1 0', speed, numsize, '1 1 1', sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -1494,7 +1495,7 @@ void(void) sbar_acceleration_draw {
 		return;
 
 	top_x = CVAR(vid_conwidth)/2;
-	top_y = 0;
+	top_z = top_y = 0;
 	float acceleration;
 	if (CVAR(cl_showacceleration_z))
 		acceleration = (vlen(physics_velocity_frame_end) - vlen(physics_velocity_frame_begin)) * (1 / physics_frametime);
@@ -1527,10 +1528,10 @@ void(vector position) sbar_accuracy_description_draw {
 }
 
 void(void) sbar_accuracy_draw {
-	float i, count, row;  // count is the number of 'colums'
+	float i, count = 0, row = 0;  // count is the number of 'colums'
 	float weapon_hit, weapon_damage, weapon_stats;
 	float left_border;  // position where the weapons start, the description is in the border
-	vector fill_colour, fill_size;
+	vector fill_colour = '0 0 0', fill_size = '0 0 0';
 	vector pos;
 	float col_margin = 20;  // pixels between the columns
 	float row_margin = 20;  // pixels between the rows
@@ -1659,7 +1660,7 @@ void(void) sbar_draw {
 	sbar_border_thickness = bound(0, CVAR(sbar_border_thickness), 5);
 	float i;
 	float weapon_stats;
-	float x;
+	float x = 0;
 	weapon_stats = getstati(STAT_DAMAGE_HITS);
 	sbar_weapon_number = weapon_stats & 63;
 	sbar_weapon_hits[sbar_weapon_number] = rint(weapon_stats / 64);
@@ -1733,7 +1734,7 @@ void(void) sbar_draw {
 		pos = sbar_position(CVAR(sbar_ammo_position), '172 48 0' * CVAR(sbar_ammo_scale));
 		if (clip) {
 			if (clip < 0) clip = 0;
-			string ai;
+			string ai = NULL;
 			float at;
 			if (sbar_stat_items & IT_SHELLS) { at = STAT_SHELLS; ai = "gfx/hud/sb_shells"; }
 			else if (sbar_stat_items & IT_NAILS) { at = STAT_NAILS; ai = "gfx/hud/sb_bullets"; }
@@ -1756,7 +1757,7 @@ void(void) sbar_draw {
 			}
 		} else if not(sbar_stat_items & IT_UNLIMITED_WEAPON_AMMO) {
 			if (CVAR(sbar_showcurrentammo)) { // force showing current ammo only with conwidths < 800
-				string ai;
+				string ai = NULL;
 				float at;
 				if (sbar_stat_items & IT_SHELLS) { at = STAT_SHELLS; ai = "gfx/hud/sb_shells"; }
 				else if (sbar_stat_items & IT_NAILS) { at = STAT_NAILS; ai = "gfx/hud/sb_bullets"; }
@@ -1817,6 +1818,7 @@ void(void) sbar_draw {
 					vector hgpos;
 					hgpos_x = CVAR(vid_conwidth) / 2;
 					hgpos_y = CVAR(vid_conheight) - CVAR(vid_conheight) / 4;
+					hgpos_z = 0;
 					draw_progress_fragmented(hgpos, '120 5 0', hgstat, 0.7 * sbar_hg_alpha, '1 0 0' + '0 1 0' * (1 - hgstat), 1);
 				}
 			} else {
@@ -1863,7 +1865,7 @@ void(void) sbar_draw {
 			}
 			string hgicon = nadget_TypeToIcon(hgtype, TRUE, 0);
 			hgapos = sbar_position(CVAR(sbar_nadget_position), '74 24 0' * CVAR(sbar_nadget_scale));
-			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX) - hgregen;
+			float hgregen = sbar_nadget_regen(STAT_HGTYPE, STAT_HGREGEN, STAT_HGREGENMAX);
 			vector hgrsize;
 			if (hgregen && hgregen != 1) {
 				hgrsize = '64 16 0' * CVAR(sbar_nadget_scale);
@@ -1875,7 +1877,7 @@ void(void) sbar_draw {
 			if (hgtype2) {
 				hgapos = sbar_position(CVAR(sbar_nadget2_position), '74 24 0' * CVAR(sbar_nadget2_scale));
 				hgicon = nadget_TypeToIcon(hgtype2, TRUE, 0);
-				float hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2) - hgregen2;
+				float hgregen2 = sbar_nadget_regen(STAT_HGTYPE2, STAT_HGREGEN2, STAT_HGREGENMAX2);
 				if (hgregen2 && hgregen2 != 1) {
 					hgrsize = '64 16 0' * CVAR(sbar_nadget2_scale);
 					hgrsize_x *= hgregen2;

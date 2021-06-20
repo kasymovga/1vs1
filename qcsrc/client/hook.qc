@@ -8,7 +8,7 @@ void(vector start, vector end, vector to) hook_draw_cb {
 }
 
 void(void) hook_draw {
-	vector a, b;
+	vector a = '0 0 0', b;
 	vector rgb;
 	float t;
 	InterpolateOrigin_Do();

@@ -78,5 +78,6 @@ vector nadget_DecompressDualType(float t) {
     vector v;
     v_x = (t & 0x0F)      + NADGET_START;
     v_y = (t & 0xF0) / 16 + NADGET_START;
+    v_z = 0;
     return v;
 }

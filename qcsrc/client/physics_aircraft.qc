@@ -23,9 +23,9 @@ void(void) physics_aircraft_post {
 
 void(void) physics_aircraft_remove {
 	physics_aircraft_entity = world;
-	physics_plug_pre = physics_plug_nopostpre;
-	physics_plug = physics_plug_null;
-	physics_plug_post = physics_plug_nopostpre;
+	physics_plug_pre = NULL;
+	physics_plug = NULL;
+	physics_plug_post = NULL;
 	if (physics_plug_adjust_view == physics_vehicle_adjust_view)
 		physics_plug_adjust_view = NULL;
 

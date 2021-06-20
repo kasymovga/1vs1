@@ -22,7 +22,7 @@ float CSQC_InputEvent(float input_type, float primary, float secondary) {
 
 string(string text, string command) input_command_key {
 	string keys;
-	float n, j, k, l;
+	float n, j, k, l = 0;
 	if (!CVAR(sbar_showbinds))
 		return text;
 

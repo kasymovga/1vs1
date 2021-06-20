@@ -1,7 +1,6 @@
 string(string order, float from, float to, float subtract, float complete) weapon_fix_priority_list {
-	string neworder;
+	string neworder = "";
 	float i, n, w;
-
 	n = tokenize_console(order);
 	for(i = 0; i < n; ++i)
 	{

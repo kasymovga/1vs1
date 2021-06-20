@@ -57,6 +57,7 @@ void(void) weaponselect_draw {
 	vector sz;
 	sz_x = WEAPONSELECT_SCALE;
 	sz_y = WEAPONSELECT_SCALE;
+	sz_z = 0;
 	draw_string_center('0 1 0' * (o_y - sz_y * 1.25), "Weapon Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
 	o_x = (CVAR(vid_conwidth) * 0.5) - 0.5 * (weaponselect_width + WEAPONSELECT_MARGIN);
 	drawfill(o, s, '0 0 0', 0.3, DRAWFLAG_NORMAL);

@@ -256,7 +256,7 @@ void(float w, float h) CSQC_UpdateView { //called by engine
 			string wcross_style;
 			wcross_style = cvar_string("crosshair");
 			if (wcross_style != "0") {
-				vector wcross_color, wcross_size;
+				vector wcross_color = '0 0 0', wcross_size;
 				string wcross_wep, wcross_name;
 				float wcross_alpha, wcross_sizefloat;
 				wcross_alpha = CVAR(crosshair_color_alpha) * (1-CVAR(_menu_alpha));

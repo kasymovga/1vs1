@@ -188,7 +188,7 @@ void(void) physics_move {
 	vector neworigin;
 	vector currentorigin2;
 	vector neworigin2;
-	vector prev_plane_normal;
+	vector prev_plane_normal = '0 0 0';
 	vector trace1_endpos = '0 0 0';
 	float trace1_fraction = 0;
 	float trace2_fraction = 0;
@@ -405,6 +405,7 @@ void(void) physics_dodging {
 
 	tap_direction_x = 0;
 	tap_direction_y = 0;
+	tap_direction_z = 0;
 	dodge_detected = 0;
     float dodging_timeout = 0.2;
 

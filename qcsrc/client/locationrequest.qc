@@ -1,7 +1,7 @@
 entity selected_location;
 
 void(void) locationrequest_remove {
-	strunzone(self.netname);
+	str_unzone_ifneeded(self.netname);
 	if (self == selected_location)
 		selected_location = world;
 
@@ -43,11 +43,10 @@ void(void) locationrequest_draw {
 void(float bNew) locationrequest_read {
 	self.entremove = locationrequest_remove;
 	float f = ReadByte();
-	string title;
-	if (f & 1)
-		title = ReadString();
-
-	self.netname = strzone(title);
+	if (f & 1) {
+		str_unzone_ifneeded(self.netname);
+		self.netname = str_zone_ifneeded(ReadString());
+	}
 	self.draw2d = locationrequest_draw;
 	self.draw2dflag = 1;
 }

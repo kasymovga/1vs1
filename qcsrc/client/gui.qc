@@ -150,7 +150,7 @@ void GUI_Show(float window) {
 	}
 	mainWindow.draw2d = GUI_Draw_Set;
 	mainWindow.draw2dflag = 1;
-	entity e;
+	entity e = NULL;
 	switch (window) {
 	case GUI_TEAMSELECT:
 		e = gui_teamSelectDialog;

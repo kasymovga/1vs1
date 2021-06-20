@@ -4,10 +4,10 @@ void(void) progressbar_draw {
 	entity e;
 	float center = CVAR(vid_conwidth) / 2;
 	float left = center - 100;
-	vector pos, posleft, fillrect;
+	vector pos, fillrect;
 	fillrect = '200 10 0';
-	posleft = pos + '-100 0 0';
 	pos_y = CVAR(vid_conheight) - 100;
+	pos_z = 0;
 	for (e = progressbar; e; e = e.sort_next) {
 		pos_x = left;
 		draw_borderlines(1, pos, '200 10 0', '1 1 0', sbar_alpha_fg, DRAWFLAG_NORMAL);

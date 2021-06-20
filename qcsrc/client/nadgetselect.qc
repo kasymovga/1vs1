@@ -58,6 +58,7 @@ void(void) nadgetselect_draw {
 	vector sz;
 	sz_x = NADGETSELECT_SCALE;
 	sz_y = NADGETSELECT_SCALE;
+	sz_z = 0;
 	draw_string_center((o_y - sz_y * (1.25 + 2 * g_nadgets_double)) * '0 1 0', "Nadget Selection", sz, '1 1 1', a, DRAWFLAG_NORMAL);
 	float table, tables;
 	for (table = 0; table < (tables = g_nadgets_double + 1); ++table) {
@@ -84,7 +85,7 @@ void(void) nadgetselect_draw {
 			if (t < 0)
 				break;
 
-			vector p;
+			vector p = '0 0 0';
 			float a2 = nadgetselect_selalpha[sidx];
 			float isConfirmed = t == confirmed;
 			float isSelected = i == nadgetselect_selected && nadgetselect_selected_in == table;
@@ -192,7 +193,7 @@ float(float bInputType, float nPrimary, float nSecondary) nadgetselect_input_eve
 }
 
 void(void) nadgetselect_read {
-	string opts_pri, opts_sec;
+	string opts_pri, opts_sec = "";
 	if (ReadByte())
 		g_nadgets_double = 1;
 
