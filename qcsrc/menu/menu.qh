@@ -8,7 +8,7 @@ const float GAME_DEVELOPER	= 4;
 
 float menu_active;
 float menu_gamestatus;
-
+vector menu_mouse_pos;
 float frametime;
 float time;
 

@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////
 
 float menu_mouse_button_pressed;
-vector menu_mouse_pos;
 float menu_modkeys_state;
 float menu_time_previous;
 float menu_alpha;
