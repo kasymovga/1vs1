@@ -55,12 +55,13 @@ float(entity to, float sendflags) score_team_send {
 
 	WriteByte(MSG_ENTITY, NET_CSQC_TEAMSCORES);
 	WriteByte(MSG_ENTITY, self.team);
-
 	longflags = 0;
-	for(i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
-		if(self.teamscores[i] > 127 || self.teamscores[i] <= -128)
+	float score;
+	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2) {
+		score = self.teamscores[i];
+		if(score > 127 || score <= -128)
 			longflags |= p;
-
+	}
 #if SCORE_TEAM_FIELDS_MAX <= 8
 	WriteByte(MSG_ENTITY, sendflags);
 	WriteByte(MSG_ENTITY, longflags);
@@ -68,15 +69,14 @@ float(entity to, float sendflags) score_team_send {
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
 #endif
-	for(i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
-		if(sendflags & p)
-		{
-			if(longflags & p)
-				net_write_int24(MSG_ENTITY, self.teamscores[i]);
+	for (i = 0, p = 1; i < SCORE_TEAM_FIELDS_MAX; ++i, p *= 2)
+		if (sendflags & p) {
+			score = self.teamscores[i];
+			if (longflags & p)
+				net_write_int24(MSG_ENTITY, score);
 			else
-				WriteChar(MSG_ENTITY, self.teamscores[i]);
+				WriteChar(MSG_ENTITY, score);
 		}
-
 	return TRUE;
 }
 
@@ -113,9 +113,11 @@ float(float t, float scorefield, float score) score_team_add_to {
 	}
 	if(score)
 		if(score_team_label[scorefield] != "")
-			s.SendFlags |= pow(2, scorefield);
-	(s.(teamscores[scorefield]) += score);
-	return s.(teamscores[scorefield]);
+			s.SendFlags = s.SendFlags | pow(2, scorefield);
+
+	float newscore = s.(teamscores[scorefield]) + score;
+	s.(teamscores[scorefield]) = newscore;
+	return newscore;
 }
 
 float(entity player, float scorefield, float score) score_team_add {
