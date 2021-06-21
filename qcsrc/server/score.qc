@@ -147,7 +147,7 @@ float(string label, float scoreflags) score_register {
 
 	score_label[score_registered] = label;
 	score_flags[score_registered] = scoreflags;
-	if(scoreflags & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_PRIMARY) {
+	if((scoreflags & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_PRIMARY) {
 		score_primary = scores[score_registered];
 		score_flags_primary = scoreflags;
 	}
@@ -161,7 +161,7 @@ float (string label, float scoreflags) score_register_team_score {
 
 	score_team_label[score_team_registered] = label;
 	score_team_flags[score_team_registered] = scoreflags;
-	if(scoreflags & SCORE_FLAG_SORT_PRIO_MASK == SCORE_FLAG_SORT_PRIO_PRIMARY) {
+	if((scoreflags & SCORE_FLAG_SORT_PRIO_MASK) == SCORE_FLAG_SORT_PRIO_PRIMARY) {
 		score_team_primary = teamscores[score_team_registered];
 		score_team_primary_scorefield = score_team_registered;
 		score_team_flags_primary = scoreflags;
