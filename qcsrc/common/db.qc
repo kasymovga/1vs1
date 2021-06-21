@@ -1,7 +1,15 @@
 string(float db, string pKey) db_get {
 	float h;
 	h = math_mod(crc16(FALSE, pKey), DB_BUCKETS);
-	return uri_unescape(infoget(bufstr_get(db, h), pKey));
+	string s = bufstr_get(db, h);
+	if not(s)
+		return NULL;
+
+	s = infoget(s, pKey);
+	if not(s)
+		return NULL;
+
+	return uri_unescape(s);
 }
 
 void(float db, string pKey, string pValue) db_put {
