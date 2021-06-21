@@ -4,7 +4,7 @@ MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client
 CFG_SOURSES=$(shell ls cfg/*.in)
 SET_CURL_PACKAGE=yes
 QCC=gmqcc
-QCCFLAGS_BASE=-std=gmqcc -fftepp -ffalse-empty-strings -fno-true-empty-strings -Wno-field-redeclared -Wno-unused-variable -Wno-double-declaration -Wno-implicit-function-pointer
+QCCFLAGS_BASE=-std=gmqcc -fftepp -fno-false-empty-strings -ftrue-empty-strings -Wno-field-redeclared -Wno-unused-variable -Wno-double-declaration -Wno-implicit-function-pointer
 QCCFLAGS=-O3
 COMPILE=$(QCC) $(QCCFLAGS_BASE) $(QCCFLAGS)
 MOD_NAME=1vs1
