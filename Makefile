@@ -3,8 +3,10 @@ CL_SOURCES=$(shell find qcsrc/client qcsrc/client-server qcsrc/common qcsrc/clie
 MENU_SOURCES=$(shell find qcsrc/menu qcsrc/common qcsrc/menu-server qcsrc/client-menu -type f -regextype posix-egrep -regex '.*\.(qc|qh|src|c|inc)') Makefile
 CFG_SOURSES=$(shell ls cfg/*.in)
 SET_CURL_PACKAGE=yes
-QCC=gmqcc -std=gmqcc -fFTEPP -fFALSE_EMPTY_STRINGS -fno-TRUE_EMPTY_STRINGS -Wno-FIELD_REDECLARED -Wno-unused-variable -Wno-double-declaration -Wno-implicit-function-pointer
+QCC=gmqcc
+QCCFLAGS_BASE=-std=gmqcc -fftepp -ffalse-empty-strings -fno-true-empty-strings -Wno-field-redeclared -Wno-unused-variable -Wno-double-declaration -Wno-implicit-function-pointer
 QCCFLAGS=-O3
+COMPILE=$(QCC) $(QCCFLAGS_BASE) $(QCCFLAGS)
 MOD_NAME=1vs1
 SV_PROGNAME=$(MOD_NAME).dat
 CL_PROGNAME=cl_$(MOD_NAME).dat
@@ -14,15 +16,15 @@ PK3_NAME=cl_$(MOD_NAME)
 all: $(SV_PROGNAME) $(CL_PROGNAME) menu.dat cl.pk3 $(CFG_NAME)
 
 $(SV_PROGNAME) : $(SV_SOURCES)
-	cd qcsrc/server && $(QCC) $(QCCFLAGS)
+	cd qcsrc/server && $(COMPILE)
 	mv -f qcsrc/server/progs.dat $(SV_PROGNAME)
 
 $(CL_PROGNAME) : $(CL_SOURCES)
-	cd qcsrc/client && $(QCC) $(QCCFLAGS)
+	cd qcsrc/client && $(COMPILE)
 	mv -f qcsrc/client/csprogs.dat $(CL_PROGNAME)
 
 menu.dat : $(MENU_SOURCES)
-	cd qcsrc/menu && $(QCC) $(QCCFLAGS)
+	cd qcsrc/menu && $(COMPILE)
 	mv -f qcsrc/menu/menu.dat menu.dat
 
 $(CFG_NAME) : $(CFG_SOURSES) Makefile
