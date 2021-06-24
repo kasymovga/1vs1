@@ -161,10 +161,12 @@ float(void) single_player_equip_handle {
 }
 
 float(void) single_map_restart {
-	if (gametype == GAMETYPE_COOP)
-	if (cvar("timelimit") < 0) //Endmatch
-		return FALSE;
-
+	if (gametype == GAMETYPE_COOP) {
+		if (single_level_finished)
+			return !campaign_won;
+		else
+			return FALSE; //Endmatch
+	}
 	return !campaign_won;
 }
 
