@@ -421,4 +421,5 @@ void() map_finish {
 		campaign_preintermission();
 
 	localcmd("\nsv_hook_gameend;");
+	cvar_set("timelimit", "-1");
 }

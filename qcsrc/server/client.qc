@@ -512,7 +512,12 @@ void(void) client_check_spectator_block {
 }
 
 void(void) client_pre_think { //called by engine
-	self.stat_map_starttime = map_starttime;
+	if (frametime) {
+		if (warmup_active)
+			self.stat_map_starttime = time;
+		else
+			self.stat_map_starttime = map_starttime;
+	}
 	self.stat_leadlimit = score_leadlimit;
 	if (spectator_block && frametime)
 		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).

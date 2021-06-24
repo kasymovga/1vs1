@@ -1334,39 +1334,39 @@ void(void) sbar_score_draw_race {
 	race_sbar_draw();
 }
 
+float sbar_timelimit;
+float sbar_timeleft;
+float sbar_starttime;
 void(void) sbar_timer {
-	float timelimit, elapsedTime, minutes, seconds, timeleft, starttime, hideminutes;
+	float elapsedTime, minutes, seconds, hideminutes;
 	hideminutes = FALSE;
 	vector timer_color;
-	timelimit = getstatf(STAT_TIMELIMIT);
-	starttime = getstatf(STAT_GAMESTARTTIME);
-	timeleft = timelimit * 60 + starttime - time;
-	if (timeleft >= 300 || timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
+	if (sbar_timeleft >= 300 || sbar_timelimit == 0) //don't use red or yellow in warmup or when there is no timelimit
 		timer_color = '1 1 1'; //white
-	else if (timeleft >= 60)
+	else if (sbar_timeleft >= 60)
 		timer_color = '1 1 0'; //yellow
 	else
 		timer_color = '1 0 0'; //red
 
-	if (CVAR(sbar_increment_maptime) || timelimit == 0) {
-		if (time < starttime) {
+	if (CVAR(sbar_increment_maptime) || sbar_timelimit == 0) {
+		if (time < sbar_starttime) {
 			//while restart is still active, show 00:00
 			minutes = seconds = 0;
 		} else {
-			elapsedTime = floor(time - starttime);
+			elapsedTime = floor(time - sbar_starttime);
 			minutes = floor(elapsedTime / 60);
 			seconds = elapsedTime - minutes*60;
 		}
 	} else {
-		if (timeleft < 0) {
-			timeleft = max(0, -1 - timeleft);
+		if (sbar_timeleft < 0) {
+			sbar_timeleft = max(0, -1 - sbar_timeleft);
 		} else {
-			if (timeleft < 60)
+			if (sbar_timeleft < 60)
 				hideminutes = TRUE;
 		}
-		timeleft = ceil(timeleft);
-		minutes = floor(timeleft / 60);
-		seconds = timeleft - minutes*60;
+		sbar_timeleft = ceil(sbar_timeleft);
+		minutes = floor(sbar_timeleft / 60);
+		seconds = sbar_timeleft - minutes*60;
 	}
 	vector pos = sbar_position(CVAR(sbar_timer_position), '103 20 0' * CVAR(sbar_timer_scale));
 	if not(hideminutes) {
@@ -1673,15 +1673,16 @@ void(void) sbar_draw {
 	sbar_fontsize = sbar_font_size(CVAR(sbar_fontsize));
 	sbar_fontsize_spec = sbar_font_size(CVAR(sbar_fontsize_spec));
 	float _health = getstati(STAT_HEALTH);
-	if (mapvote_active) { // map voting screen
+	sbar_starttime = getstatf(STAT_GAMESTARTTIME);
+	sbar_timelimit = getstatf(STAT_TIMELIMIT);
+	sbar_timeleft = sbar_timelimit * 60 + sbar_starttime - time;
+	if (sbar_timeleft < 0) { // map voting screen
 		if (sbar_showscores) {
 			sbar_scoreboard_draw();
 			sbar_score_draw();
-			sbar_timer();
 		} else if (sbar_showaccuracy) {
 			sbar_accuracy_draw();
 			sbar_score_draw();
-			sbar_timer();
 		} else {
 			if (mapvote_active)
 				mapvote_draw();
@@ -1690,10 +1691,9 @@ void(void) sbar_draw {
 	} else if (_health <= 0 || view_observer_status) {
 		if (sbar_showaccuracy)
 			sbar_accuracy_draw();
-		else if (!sbar_hidescores) {
-			if (sbar_showscores || (_health <= 0 && CVAR(cl_deathscoreboard)))
-				sbar_scoreboard_draw();
-		} else
+		else if (sbar_showscores || (_health <= 0 && CVAR(cl_deathscoreboard && !sbar_hidescores)))
+			sbar_scoreboard_draw();
+		else if (sbar_hidescores)
 			return;
 
 		sbar_score_draw();
@@ -1703,6 +1703,8 @@ void(void) sbar_draw {
 			sbar_scoreboard_draw();
 		else if (sbar_showaccuracy)
 			sbar_accuracy_draw();
+		else if (sbar_hidescores)
+			return;
 
 		float armor;
 		armor = getstati(STAT_ARMOR);
