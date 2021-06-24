@@ -37,7 +37,6 @@ void turret_plasma_attack()
     proj.think           = turret_plasma_projectile_explode;
     proj.nextthink       = time + 9;
     proj.solid           = SOLID_BBOX;
-    proj.movetype        = MOVETYPE_FLYMISSILE;
     proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     proj.touch           = turret_plasma_projectile_explode;
     proj.flags           = FL_PROJECTILE;
@@ -60,7 +59,6 @@ void turret_plasma_dual_attack()
     proj.think           = turret_plasma_projectile_explode;
     proj.nextthink       = time + 9;
     proj.solid           = SOLID_BBOX;
-    proj.movetype        = MOVETYPE_FLYMISSILE;
     proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     proj.touch           = turret_plasma_projectile_explode;
     proj.flags           = FL_PROJECTILE;
@@ -88,7 +86,6 @@ void turret_plasma_projectile_explode()
 void(void) spawnfunc_turret_plasma {
 	precache_model("models/turrets/plasma.md3");
 	precache_model("models/turrets/base.md3");
-	projectile_init(PROJECTILE_ELECTRO_BEAM);
 	if (self.netname == "")
 		self.netname = "Plasma Cannon";
 
@@ -118,7 +115,6 @@ void(void) spawnfunc_turret_plasma {
 void(void) spawnfunc_turret_plasma_dual {
 	precache_model("models/turrets/plasmad.md3");
 	precache_model("models/turrets/base.md3");
-	projectile_init(PROJECTILE_ELECTRO_BEAM);
 	if (self.netname == "")
 		self.netname = "Dual Plasma Cannon";
 

@@ -100,7 +100,6 @@ void walker_hunt() {
 			missile.damageforcescale = 1;
 			missile.health = 10;
 			missile.event_damage = walker_rocket_event_damage;
-			missile.movetype = MOVETYPE_FLY;
 			missile.enemy = self.enemy;
 			missile.velocity = normalize(v_forward + v_up * 0.5) * 600;
 			weapon_setup_projectile_velocity(missile);
@@ -184,7 +183,6 @@ void walker_init() {
 	precache_model("models/turrets/walker_body.md3");
 	precache_model("models/turrets/walker_head_minigun.md3");
 	precache_sound("weapons/uzi_fire.wav");
-	projectile_init(PROJECTILE_ROCKET);
 }
 
 void spawnfunc_monster_walker_spawn() {

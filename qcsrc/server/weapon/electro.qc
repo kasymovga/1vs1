@@ -136,7 +136,6 @@ void(void) weapon_electro_attack {
 	proj.use = weapon_electro_explode;
 	proj.think = projectile_think2use;
 	proj.nextthink = time + g_balance_electro_primary_lifetime;
-	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = weapon_shotdir * g_balance_electro_primary_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapon_electro_touch_explode;
@@ -160,7 +159,6 @@ void(void) weapon_electro_attack2 {
 	proj.nextthink = time + g_balance_electro_secondary_lifetime;
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
-	proj.movetype = MOVETYPE_BOUNCE;
 	proj.velocity = (weapon_shotdir + randomvec() * g_balance_electro_secondary_spread) * g_balance_electro_secondary_speed + v_up * g_balance_electro_secondary_speed_up;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapon_electro_touch;
@@ -300,8 +298,8 @@ float(float req) weapon_electro {
 		CVAR_CACHE(g_balance_electro_secondary_speed);
 		CVAR_CACHE(g_balance_electro_secondary_speed_up);
 		CVAR_CACHE(g_balance_electro_secondary_spread);
-		projectile_init(PROJECTILE_ELECTRO);
-		projectile_init(PROJECTILE_ELECTRO_BEAM);
+		projectile_init(PROJECTILE_ELECTRO, MOVETYPE_BOUNCE);
+		projectile_init(PROJECTILE_ELECTRO_BEAM, MOVETYPE_FLY);
 		if (cvar("g_balance_electro_swap_buttons")) {
 			electro_buttonatck1 = BUTTON_ATCK2;
 			electro_buttonatck2 = BUTTON_ATCK;

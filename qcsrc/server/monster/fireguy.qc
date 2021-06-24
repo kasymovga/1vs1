@@ -49,7 +49,6 @@ void fireguy_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
 		projectile_setup(proj, _shotorg, WEP_FIREBALL, self.dmg_edge, self.dmg_edge, self.dmg_radius, self.dmg_force);
-		proj.movetype = MOVETYPE_BOUNCE;
 		proj.touch = fireguy_mine_touch;
 		proj.think = fireguy_mine_think;
 		proj.nextthink = time;
@@ -140,7 +139,6 @@ void fireguy_init() {
 	precache_model("models/player/lycanthrope.zym");
 	precache_model("models/weapons/v_fireball.md3");
 	precache_sound("weapons/fireball_fire.wav");
-	projectile_init(PROJECTILE_FIREMINE);
 }
 
 void spawnfunc_monster_fireguy_spawn() {

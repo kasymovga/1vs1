@@ -495,7 +495,6 @@ entity nadget_GenericProjectile(float hgtype, vector ang, float silent) {
 	gren.hg_detonable = GV("detonable");
 	gren.hg_detonatedelay = GV("detonate_delay");
 	gren.hg_detonateready = time + GV("detonate_threshold");
-	gren.movetype = GV("movetype");
 	if (gren.movetype == MOVETYPE_TOSS || gren.movetype == MOVETYPE_BOUNCE)
 		gren.gravity = GV("gravity");
 

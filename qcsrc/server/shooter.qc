@@ -9,7 +9,6 @@ void(void) shooter_plasma_use {
 	projectile_setup(missile, self.origin, WEP_HLAC, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
 
-	missile.movetype = MOVETYPE_FLY;
     missile.velocity = v * g_balance_hlac_primary_speed;
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
@@ -23,7 +22,6 @@ void(void) shooter_rocket_use {
 	projectile_setup(missile, self.origin, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage,
 			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force);
 
-	missile.movetype = MOVETYPE_FLY;
     missile.velocity = v * g_balance_rocketlauncher_speed;
 	missile.touch = projectile_touch_explode;
 	missile.think = stdproc_remove;
@@ -31,13 +29,11 @@ void(void) shooter_rocket_use {
 }
 
 void(void) spawnfunc_shooter_plasma {
-	projectile_init(PROJECTILE_HLAC);
 	self.use = shooter_plasma_use;
 	entity_initialize(self, shooter_setup, INITPRIO_FINDTARGET);
 }
 
 void(void) spawnfunc_shooter_rocket {
-	projectile_init(PROJECTILE_ROCKET);
 	self.use = shooter_rocket_use;
 	entity_initialize(self, shooter_setup, INITPRIO_FINDTARGET);
 }

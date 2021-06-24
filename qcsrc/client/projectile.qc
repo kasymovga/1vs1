@@ -327,27 +327,27 @@ void(float ignore) projectile_read {
 		switch (self.cnt) {
 		case PROJECTILE_ELECTRO: setmodel(self, "models/ebomb.mdl"); break;
 		case PROJECTILE_ROCKET: setmodel(self, "models/rocket.md3"); self.scale = 2; break;
-		case PROJECTILE_BULLET: setmodel(self, "models/tracer.mdl"); break;
+		case PROJECTILE_BULLET:
 		case PROJECTILE_BULLET_GLOWING: setmodel(self, "models/tracer.mdl"); break;
-		case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl"); break;
+		case PROJECTILE_CRYLINK:
 		case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl"); break;
 		case PROJECTILE_ELECTRO_BEAM:
-		case PROJECTILE_RM_LASER:
-			setmodel(self, "models/elaser.mdl"); break;
 		case PROJECTILE_GRENADE:
+		case PROJECTILE_HOOKBOMB:
 		case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3"); break;
 		case PROJECTILE_LASER: setmodel(self, "models/laser.mdl"); break;
 		case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3"); break;
-		case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3"); self.scale = 4; break;
+		case PROJECTILE_PORTO_RED:
 		case PROJECTILE_PORTO_BLUE: setmodel(self, "models/grenademodel.md3"); self.scale = 4; break;
-		case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3"); break;
-		case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; break;
+		case PROJECTILE_HAGAR:
 		case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; break;
-		case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
+		case PROJECTILE_FIREBALL:
+		case PROJECTILE_HG_NAPALMSHARD:
 		case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; break; // particle effect is good enough
-		case PROJECTILE_BULLET_BIG: setmodel(self, "models/tracer.mdl"); self.scale = 3; break;
-		case PROJECTILE_HG_NAPALMSHARD: self.model = ""; self.modelindex = 0; break;
-		case PROJECTILE_HG_GENERIC: case PROJECTILE_HG_NAPALM:
+		case PROJECTILE_BULLET_BIG:
+		case PROJECTILE_BULLET_BIG_BOUNCING: setmodel(self, "models/tracer.mdl"); self.scale = 3; break;
+		case PROJECTILE_HG_GENERIC:
+		case PROJECTILE_HG_NAPALM:
 			setmodel(self, "models/handgrenade.iqm");
 			projectile_colormap_setup(COLOR_TEAM1);
 			break;
@@ -359,6 +359,7 @@ void(float ignore) projectile_read {
 			setmodel(self, "models/mine.md3");
 			self.skin = team_index(self.team);
 			break;
+		case PROJECTILE_RM_LASER:
 		case PROJECTILE_HG_LASER: setmodel(self, "models/elaser.mdl"); break;
 		case PROJECTILE_HG_TRANSLOC:
 			setmodel(self, "models/translocator.iqm");
@@ -381,51 +382,23 @@ void(float ignore) projectile_read {
 			break;
 		}
 		self.colormod = '0 0 0';
-		self.move_touch = projectile_touch_stop;
-		self.move_movetype = MOVETYPE_TOSS;
+		self.move_movetype = PROJECTILE_INFO_PROPERTY(self.cnt, movetype);
 		switch (self.cnt) {
 		case PROJECTILE_HG_PLASMA_SHARD:
 		case PROJECTILE_ELECTRO:
 			// only new engines support sound moving with object
 			projectile_loopsound(self, CHAN_PROJECTILE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
 			break;
 		case PROJECTILE_ROCKET:
 			projectile_loopsound(self, CHAN_PROJECTILE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
 			break;
-		case PROJECTILE_GRENADE:
-			break;
-		case PROJECTILE_GRENADE_BOUNCING:
-		case PROJECTILE_HG_GENERIC:
-		case PROJECTILE_HG_PLASMA:
-		case PROJECTILE_HG_NAPALM:
-		case PROJECTILE_HG_TRANSLOC:
-		case PROJECTILE_HG_REMOTE:
-		case PROJECTILE_HG_RAZE:
-		case PROJECTILE_HG_LASER:
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
-			break;
 		case PROJECTILE_PORTO_RED:
 			self.colormod = '2 1 1';
 			self.alpha = 0.5;
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
 			break;
 		case PROJECTILE_PORTO_BLUE:
 			self.colormod = '1 1 2';
 			self.alpha = 0.5;
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
-			break;
-		case PROJECTILE_HAGAR_BOUNCING:
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
-			break;
-		case PROJECTILE_CRYLINK_BOUNCING:
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
 			break;
 		case PROJECTILE_FIREBALL:
 			projectile_loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
@@ -433,16 +406,15 @@ void(float ignore) projectile_read {
 		case PROJECTILE_HG_NAPALMSHARD:
 		case PROJECTILE_FIREMINE:
 			projectile_loopsound(self, CHAN_PROJECTILE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = stdproc_nothing;
-			break;
-		case PROJECTILE_BULLET_BIG:
-			self.move_movetype = MOVETYPE_BOUNCEMISSILE;
-			self.move_touch = stdproc_nothing;
 			break;
 		default:
 			break;
 		}
+		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE || self.move_movetype == MOVETYPE_BOUNCE)
+			self.move_touch = NULL;
+		else
+			self.move_touch = projectile_touch_stop;
+
 		projectile_set_size(self, self.cnt);
 	}
 	if (f & 4) {
@@ -455,12 +427,12 @@ void(float ignore) projectile_read {
 	if (self.gravity) {
 		if (self.move_movetype == MOVETYPE_FLY)
 			self.move_movetype = MOVETYPE_TOSS;
-		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
+		else if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
 			self.move_movetype = MOVETYPE_BOUNCE;
 	} else {
 		if (self.move_movetype == MOVETYPE_TOSS)
 			self.move_movetype = MOVETYPE_FLY;
-		if (self.move_movetype == MOVETYPE_BOUNCE)
+		else if (self.move_movetype == MOVETYPE_BOUNCE)
 			self.move_movetype = MOVETYPE_BOUNCEMISSILE;
 	}
 	if (!(self.count & 0x80))
@@ -491,19 +463,22 @@ void(void) projectile_info_read {
 	float i;
 	for (i = 0; i < phighest; ++i) {
 		float type = ReadByte();
+		float _movetype = ReadByte();
 		switch (type) {
 		case PROJECTILE_INFO_TYPE_UNREGISTERED:
 		case PROJECTILE_INFO_TYPE_POINT_000:
-			projectile_register(i + 1, type, '0 0 0');
+			projectile_register(i + 1, type, '0 0 0', _movetype);
 			break;
 		case PROJECTILE_INFO_TYPE_POINT_00n3:
-			projectile_register(i + 1, type, '0 -3 -3');
+			projectile_register(i + 1, type, '0 -3 -3', _movetype);
 			break;
 		case PROJECTILE_INFO_TYPE_POINT:
 		case PROJECTILE_INFO_TYPE_CENTERED:
 		case PROJECTILE_INFO_TYPE_UNCENTERED:
 			projectile_info_type[i] = type;
 			projectile_info_sizes[i] = ReadCoord();
+			projectile_info_movetype[i] = _movetype;
+			projectile_info_highest_registered = max(projectile_info_highest_registered, i + 1);
 			break;
 		default:
 			error(strcat("Invalid ProjInfo type ", ftos(type)));

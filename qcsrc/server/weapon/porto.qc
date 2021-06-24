@@ -151,7 +151,6 @@ void weapon_porto_attack (float out)
 	gren.classname = "porto";
 	gren.bot_dodge = TRUE;
 	gren.bot_dodgerating = 200;
-	gren.movetype = MOVETYPE_BOUNCEMISSILE;
 	PROJECTILE_MAKETRIGGER(gren);
 	if (out)
 	{
@@ -243,9 +242,8 @@ float weapon_porto(float req)
 		CVAR_CACHE(g_balance_porto_primary_refire);
 		CVAR_CACHE(g_balance_porto_primary_speed);
 		CVAR_CACHE(g_balance_powerup_strength_force);
-
-		projectile_init(PROJECTILE_PORTO_RED);
-		projectile_init(PROJECTILE_PORTO_BLUE);
+		projectile_init(PROJECTILE_PORTO_RED, MOVETYPE_FLY);
+		projectile_init(PROJECTILE_PORTO_BLUE, MOVETYPE_FLY);
 	}
 	return TRUE;
 }

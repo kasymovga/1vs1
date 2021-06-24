@@ -1647,7 +1647,7 @@ void() weapon_init {
 	}
 	weapon_melee_init();
 	bullet_init();
-	projectile_register_auto(PROJECTILE_BULLET, '0 0 0');
-	projectile_register_auto(PROJECTILE_BULLET_GLOWING, '0 0 0');
-	projectile_register_auto(PROJECTILE_BULLET_BIG, '0 0 0');
+	projectile_register_auto(PROJECTILE_BULLET, '0 0 0', MOVETYPE_TOSS);
+	projectile_register_auto(PROJECTILE_BULLET_GLOWING, '0 0 0', MOVETYPE_TOSS);
+	projectile_register_auto(PROJECTILE_BULLET_BIG, '0 0 0', MOVETYPE_TOSS);
 }

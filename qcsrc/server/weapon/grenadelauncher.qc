@@ -95,7 +95,6 @@ void(void) weapon_grenadelauncher_attack {
 			g_balance_grenadelauncher_primary_edgedamage, g_balance_grenadelauncher_primary_radius, g_balance_grenadelauncher_primary_force);
 
 	gren.gravity = 1;
-	gren.movetype = MOVETYPE_BOUNCE;
 	gren.nextthink = time + g_balance_grenadelauncher_primary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
@@ -117,7 +116,6 @@ void(void) weapon_grenadelauncher_attack2 {
 			g_balance_grenadelauncher_secondary_edgedamage, g_balance_grenadelauncher_secondary_radius, g_balance_grenadelauncher_secondary_force);
 
 	gren.gravity = 1;
-	gren.movetype = MOVETYPE_BOUNCE;
 	gren.nextthink = time + g_balance_grenadelauncher_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_grenadelauncher_explode;
@@ -235,8 +233,8 @@ float weapon_grenadelauncher(float req)
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary_speed_up);
 		CVAR_CACHE(g_balance_grenadelauncher_secondary);
-		projectile_init(PROJECTILE_GRENADE);
-		projectile_init(PROJECTILE_GRENADE_BOUNCING);
+		projectile_init(PROJECTILE_GRENADE, MOVETYPE_TOSS);
+		projectile_init(PROJECTILE_GRENADE_BOUNCING, MOVETYPE_BOUNCE);
 		if (cvar("g_balance_grenadelauncher_swap_buttons")) {
 			gl_buttonatck1 = BUTTON_ATCK2;
 			gl_buttonatck2 = BUTTON_ATCK;

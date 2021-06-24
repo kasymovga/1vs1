@@ -96,7 +96,6 @@ void misc_spikeshooter_use(void) {
 	spike.velocity = self.movedir * 800;
 	spike.think = stdproc_remove;
 	spike.nextthink = time + 10;
-	spike.movetype = MOVETYPE_FLY;
 	spike.touch = misc_spikeshooter_spike_touch;
 	sound (self, CHAN_WEAPON, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
 }
@@ -106,7 +105,6 @@ void(void) spawnfunc_misc_spikeshooter {
 	self.movedir = normalize(v_forward);
 	self.use = misc_spikeshooter_use;
 	precache_sound("weapons/uzi_fire.wav");
-	projectile_init(PROJECTILE_BULLET_BIG);
 }
 
 void(void) misc_lightning_spark {

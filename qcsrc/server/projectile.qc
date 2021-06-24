@@ -90,7 +90,25 @@ void(entity e) projectile_check {
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
-void(float type) projectile_init {
+void(float csqcid, vector sizes, float _movetype) projectile_register_auto {
+	float type;
+	if (sizes_x == 0 && sizes_y == sizes_z) {
+		if (sizes == '0 0 0') {
+			type = PROJECTILE_INFO_TYPE_POINT_000;
+		} else if (sizes == '0 -3 -3') {
+			type = PROJECTILE_INFO_TYPE_POINT_00n3;
+		} else {
+			type = PROJECTILE_INFO_TYPE_POINT;
+		}
+	} else if (sizes_y == sizes_z * -1) {
+		type = PROJECTILE_INFO_TYPE_CENTERED;
+	} else {
+		type = PROJECTILE_INFO_TYPE_UNCENTERED;
+	}
+	projectile_register(csqcid, type, sizes, _movetype);
+}
+
+void(float type, float _movetype) projectile_init {
 	vector sizes;
 	CVAR_CACHE(sv_projectile_tracecull);
 	sizes = '0 0 0';
@@ -110,7 +128,7 @@ void(float type) projectile_init {
 		sizes = '0 -3 -3';
 		break;
 	}
-	projectile_register_auto(type, sizes);
+	projectile_register_auto(type, sizes, _movetype);
 }
 
 entity(float clientanimate, float type, float docull, entity _owner) projectile {
@@ -126,6 +144,7 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	e.csqcprojectile_type = type;
 	e.flags = FL_PROJECTILE;
 	e.classname = "projectile";
+	e.movetype = PROJECTILE_INFO_PROPERTY(type, movetype);
 	return e;
 }
 
@@ -215,23 +234,21 @@ void(void) projectile_info_send {
 	WriteByte(MSG_ENTITY, projectile_info_highest_registered);
 	for(i = 0; i < projectile_info_highest_registered; ++i) {
 		float type = projectile_info_type[i];
-
+		float _movetype = projectile_info_movetype[i];
 		WriteByte(MSG_ENTITY, type);
+		WriteByte(MSG_ENTITY, _movetype);
 		switch(type) {
-			case PROJECTILE_INFO_TYPE_UNREGISTERED:
-			case PROJECTILE_INFO_TYPE_POINT_000:
-			case PROJECTILE_INFO_TYPE_POINT_00n3:
-				break;
-
-			case PROJECTILE_INFO_TYPE_UNCENTERED:
-			case PROJECTILE_INFO_TYPE_POINT:
-			case PROJECTILE_INFO_TYPE_CENTERED:
-				WriteCoord(MSG_ENTITY, projectile_info_sizes[i]);
-				break;
-
-			default: {
-				error(strcat("Invalid projectile info type ", ftos(type)));
-			}
+		case PROJECTILE_INFO_TYPE_UNREGISTERED:
+		case PROJECTILE_INFO_TYPE_POINT_000:
+		case PROJECTILE_INFO_TYPE_POINT_00n3:
+			break;
+		case PROJECTILE_INFO_TYPE_UNCENTERED:
+		case PROJECTILE_INFO_TYPE_POINT:
+		case PROJECTILE_INFO_TYPE_CENTERED:
+			WriteCoord(MSG_ENTITY, projectile_info_sizes[i]);
+			break;
+		default:
+			error(strcat("Invalid projectile info type ", ftos(type)));
 		}
 	}
 }

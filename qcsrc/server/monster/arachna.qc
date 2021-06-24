@@ -24,7 +24,6 @@ void arachna_hunt() {
 
 		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
 		projectile_setup(proj,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-		proj.movetype = MOVETYPE_FLY;
 		proj.touch = projectile_touch_explode;
 		proj.velocity = normalize(_shotdir) * 1600;
 		proj.pushltime = time + 10;
@@ -115,7 +114,6 @@ void arachna_init() {
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
 	dlc_require("arachna");
-	projectile_init(PROJECTILE_ELECTRO);
 }
 
 void spawnfunc_monster_arachna_spawn() {

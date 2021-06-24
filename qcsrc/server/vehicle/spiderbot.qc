@@ -96,7 +96,6 @@ void(void) vehicle_spiderbot_rocket_do {
 	missile.realowner = self.owner;
 	missile.nextthink = time;// 0.2;
 	missile.touch = projectile_touch_explode;
-	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.velocity = normalize(v_forward + (v_up * g_vehicle_spiderbot_rocket_up) + randomvec() * g_vehicle_spiderbot_rocket_spread) * g_vehicle_spiderbot_rocket_speed;
 	missile.think = vehicle_spiderbot_rocket_think;
 	missile.solid = SOLID_BBOX;
@@ -481,7 +480,6 @@ void(void) vehicle_spiderbot_init {
 	precache_model ( "models/onslaught/gen_gib3.md3");
 	precache_model ( "models/turrets/rocket.md3");
 	precache_sound ( "weapons/uzi_fire.wav" );
-	projectile_init(PROJECTILE_ROCKET);
 }
 
 float(entity to, float sf) vehicle_spiderbot_physics_send {

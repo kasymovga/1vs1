@@ -35,7 +35,6 @@ void bat_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/crylink_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
 		projectile_setup(gren,_shotorg, WEP_CRYLINK, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-		gren.movetype = MOVETYPE_FLY;
 		gren.nextthink = time + 5;
 		gren.think = projectile_think2use;
 		gren.use = projectile_explode;
@@ -89,7 +88,6 @@ void bat_init() {
 	precache_sound("weapons/crylink_fire.wav");
 	precache_model("models/bat.md3");
 	dlc_require("bat");
-	projectile_init(PROJECTILE_CRYLINK);
 }
 
 void spawnfunc_monster_bat_spawn() {

@@ -33,7 +33,6 @@ void ewheel_hunt() {
 			for (i = -1; i < 2; i += 2) {
 				entity proj = projectile(TRUE, PROJECTILE_LASER, TRUE, self);
 				projectile_setup(proj, _shotorg + v_right * i * 16, WEP_LASER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-				proj.movetype = MOVETYPE_FLYMISSILE;
 				proj.gravity = 0.01;
 				proj.nextthink = time + 5;
 				proj.think = projectile_think2use;
@@ -92,7 +91,6 @@ void ewheel_init() {
     precache_model ("models/turrets/ewheel-base2.md3");
     precache_model ("models/turrets/ewheel-gun1.md3");
 	precache_sound("weapons/uzi_fire.wav");
-	projectile_init(PROJECTILE_LASER);
 }
 
 void spawnfunc_monster_ewheel_spawn() {

@@ -27,7 +27,6 @@ void boss3_hunt() {
 		for (i = 0; i < 6; i++) {
 			entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
 			projectile_setup(proj, _shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-			proj.movetype = MOVETYPE_FLY;
 			proj.touch = projectile_touch_explode;
 			proj.velocity = normalize(normalize(_shotdir) + randomvec() * 0.1) * 1600;
 			proj.pushltime = time + 10;
@@ -117,7 +116,6 @@ void boss3_init() {
 	precache_model("models/weapons/v_electro.md3");
 	precache_sound("weapons/electro_fire.wav");
 	dlc_require("arachna");
-	projectile_init(PROJECTILE_ELECTRO);
 }
 
 void spawnfunc_monster_boss3_spawn() {

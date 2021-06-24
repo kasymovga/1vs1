@@ -23,7 +23,6 @@ void heavysoldier_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 		entity gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
 		projectile_setup(gren,_shotorg, WEP_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-		gren.movetype = MOVETYPE_TOSS;
 		gren.gravity = 0.01;
 		PROJECTILE_MAKETRIGGER(gren);
 		gren.nextthink = time + 5;
@@ -107,7 +106,6 @@ void heavysoldier_init() {
 	precache_model("models/player/grunt.zym");
 	precache_model("models/weapons/v_gl.md3");
 	precache_sound("weapons/grenade_fire.wav");
-	projectile_init(PROJECTILE_GRENADE);
 }
 
 void spawnfunc_monster_heavysoldier_spawn() {

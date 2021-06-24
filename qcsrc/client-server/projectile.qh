@@ -29,6 +29,7 @@ enum {
 	PROJECTILE_HG_REMOTE,
 	PROJECTILE_HG_TRANSLOC,
 	PROJECTILE_RM_LASER,
+	PROJECTILE_BULLET_BIG_BOUNCING,
 	PROJECTILE_END_LIST
 };
 
@@ -45,9 +46,9 @@ const float PROJECTILE_MAX = PROJECTILE_END_LIST - 1;
 float projectile_info_type[PROJECTILE_MAX];
 float projectile_info_sizes[PROJECTILE_MAX];
 float projectile_info_highest_registered;
+float projectile_info_movetype[PROJECTILE_MAX];
 
-void(float csqcid, float entrytype, vector sizes) projectile_register;
-void(float csqcid, vector sizes) projectile_register_auto;
+void(float csqcid, float entrytype, vector sizes, float _movetype) projectile_register;
 void(entity e, float csqcid) projectile_set_size;
 
 #define PROJECTILE_INFO_PROPERTY(csqcid,property) projectile_info_##property[(csqcid) - 1]

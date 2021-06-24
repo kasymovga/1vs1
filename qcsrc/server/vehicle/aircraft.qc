@@ -50,7 +50,6 @@ void() vehicle_aircraft_attack_laser {
 			g_vehicle_aircraft_laser_edgedamage, g_vehicle_aircraft_laser_radius, g_vehicle_aircraft_laser_force);
 
 	proj.realowner = self.owner;
-	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = (v_forward + randomvec() * self.vehicle_heat * g_vehicle_aircraft_laser_spread) * g_vehicle_aircraft_laser_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = projectile_touch_explode;
@@ -335,7 +334,6 @@ void(void) vehicle_aircraft_init {
     precache_model(self.message2);
 	precache_sound("weapons/lasergun_fire.wav");
 	precache_sound("ambient/machinerydrone01.wav");
-	projectile_init(PROJECTILE_LASER);
 }
 
 float(entity to, float sf) vehicle_aircraft_physics_send {

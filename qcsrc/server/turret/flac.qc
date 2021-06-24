@@ -15,7 +15,6 @@ void turret_flac_attack()
     proj.bot_dodge          = TRUE;
     proj.bot_dodgerating    = self.shot_dmg;
     proj.solid              = SOLID_BBOX;
-    proj.movetype           = MOVETYPE_FLYMISSILE;
     proj.takedamage         = DAMAGE_NO;
     proj.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     proj.angles             = vectoangles(proj.velocity);
@@ -53,7 +52,6 @@ void turret_flac_projectile_explode()
 void(void) spawnfunc_turret_flac {
 	precache_model ("models/turrets/base.md3");
 	precache_model ("models/turrets/flac.md3");
-	projectile_init(PROJECTILE_HAGAR);
 	if (self.netname == "")
 		self.netname = "FLAC Cannon";
 

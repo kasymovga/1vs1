@@ -94,7 +94,6 @@ void turret_hk_attack()
     missile.think            = turret_hk_missile_think;
     missile.event_damage     = turret_hk_missile_damage;
     missile.nextthink        = time + 0.25;
-    missile.movetype         = MOVETYPE_BOUNCEMISSILE;
     missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
     missile.angles           = vectoangles(missile.velocity);
     missile.touch            = turret_hk_missile_explode; //turret_hk_missile_touch;
@@ -338,7 +337,6 @@ void turret_hk_postthink()
 void(void) spawnfunc_turret_hk {
 	precache_model("models/turrets/base.md3");
 	precache_model("models/turrets/hk.md3");
-	projectile_init(PROJECTILE_ROCKET);
 	if (self.netname == "")
 		self.netname = "Hunter-killer turret";
 

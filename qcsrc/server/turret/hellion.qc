@@ -45,7 +45,6 @@ void turret_hellion_attack()
     missile.think              = turret_hellion_missile_think;
     missile.nextthink          = time;// + 0.2;
     missile.solid              = SOLID_BBOX;
-    missile.movetype           = MOVETYPE_FLY;
     missile.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     missile.angles             = vectoangles(missile.velocity);
     missile.touch              = turret_hellion_missile_explode;
@@ -151,7 +150,6 @@ void turret_hellion_missile_explode()
 void(void) spawnfunc_turret_hellion {
 	precache_model ("models/turrets/hellion.md3");
 	precache_model ("models/turrets/base.md3");
-	projectile_init(PROJECTILE_ROCKET);
 	if (self.netname == "") self.netname = "Hellion Missile Turret";
 
 	if not (self.shot_speed_max)

@@ -202,7 +202,6 @@ void weapon_rocketlauncher_attack (void)
 	missile.damageforcescale = g_balance_rocketlauncher_damageforcescale;
 	missile.health = g_balance_rocketlauncher_health;
 	missile.event_damage = weapon_rocketlauncher_damage;
-	missile.movetype = MOVETYPE_FLY;
 	missile.velocity = weapon_shotdir * g_balance_rocketlauncher_speedstart * g_weaponspeedfactor;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = weapon_rocketlauncher_touch;
@@ -418,7 +417,7 @@ float weapon_rocketlauncher(float req)
 		CVAR_CACHE(g_balance_rocketlauncher_speed);
 		CVAR_CACHE(g_balance_rocketlauncher_speedaccel);
 		CVAR_CACHE(g_balance_rocketlauncher_speedstart);
-		projectile_init(PROJECTILE_ROCKET);
+		projectile_init(PROJECTILE_ROCKET, MOVETYPE_FLY);
 		if (cvar("g_balance_rocketlauncher_swap_buttons")) {
 			rl_buttonatck1 = BUTTON_ATCK2;
 			rl_buttonatck2 = BUTTON_ATCK;

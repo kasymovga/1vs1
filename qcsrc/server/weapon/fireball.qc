@@ -158,7 +158,6 @@ void weapon_fireball_attack2()
 	proj.event_damage = weapon_fireball_damage;
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = g_balance_fireball_secondary_damageforcescale;
-	proj.movetype = MOVETYPE_FLY;
 	proj.velocity = weapon_shotdir * g_balance_fireball_secondary_speed;
 	weapon_setup_projectile_velocity(proj);
 	proj.touch = weapon_fireball_touchexplode;
@@ -283,7 +282,6 @@ void weapon_fireball_attack1()
 	proj = projectile(TRUE, PROJECTILE_FIREMINE, TRUE, self);
 	projectile_setup(proj, weapon_shotorg, WEP_FIREBALL, g_balance_fireball_primary_damage, 0, 0, 0);
 	proj.gravity = 1;
-	proj.movetype = MOVETYPE_BOUNCE;
 	proj.touch = weapon_fireball_mine_touch;
 	proj.think = weapon_fireball_mine_think;
 	proj.nextthink = time;
@@ -423,8 +421,8 @@ float weapon_fireball(float req)
 		CVAR_CACHE(g_balance_fireball_secondary_refire);
 		CVAR_CACHE(g_balance_fireball_secondary_refire2);
 		CVAR_CACHE(g_balance_fireball_secondary_speed);
-		projectile_init(PROJECTILE_FIREMINE);
-		projectile_init(PROJECTILE_FIREBALL);
+		projectile_init(PROJECTILE_FIREMINE, MOVETYPE_BOUNCE);
+		projectile_init(PROJECTILE_FIREBALL, MOVETYPE_FLY);
 		if (cvar("g_balance_fireball_swap_buttons")) {
 			fireball_buttonatck1 = BUTTON_ATCK2;
 			fireball_buttonatck2 = BUTTON_ATCK;

@@ -250,9 +250,9 @@ float weapon_minstanex(float req)
 		CVAR_CACHE(g_balance_minstanex_laser_rapid_refire);
 		if (g_balance_minstanex_explode) {
 			dlc_require("rm_effects_v2");
-			projectile_init(PROJECTILE_RM_LASER);
+			projectile_init(PROJECTILE_RM_LASER, MOVETYPE_FLY);
 		} else
-			projectile_init(PROJECTILE_LASER);
+			projectile_init(PROJECTILE_LASER, MOVETYPE_FLY);
 	}
 	return TRUE;
 }

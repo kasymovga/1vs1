@@ -77,7 +77,6 @@ entity Napalm_Spawn(entity powner, vector porg, float lifetime, float lifetime_r
     proj.classname = "napalm";
     proj.realowner = proj.owner;
     proj.projectiledeathtype = deathtype;
-    proj.movetype = MOVETYPE_BOUNCE;
     proj.pushltime = time + lifetime + random_2() * lifetime_randfactor;
     proj.team = self.owner.team;
     proj.effects = EFFECT_NODEPTHTEST;
@@ -108,8 +107,7 @@ void Napalm_Init(void) {
     if(napalm_init_done) {
         return;
     }
-
-	projectile_init(PROJECTILE_HG_NAPALMSHARD);
+	projectile_init(PROJECTILE_HG_NAPALMSHARD, MOVETYPE_BOUNCE);
 	dlc_require("rm_effects_v2");
     napalm_init_done = TRUE;
 }

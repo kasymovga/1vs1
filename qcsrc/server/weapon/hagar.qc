@@ -49,7 +49,6 @@ void(void) weapon_hagar_attack {
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_primary_lifetime;
-	missile.movetype = MOVETYPE_FLY;
 	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_primary_spread) * g_balance_hagar_primary_speed;
 	weapon_setup_projectile_velocity(missile);
 }
@@ -71,7 +70,6 @@ void(void) weapon_hagar_attack2 {
 	missile.use = projectile_explode;
 	missile.think = projectile_think2use;
 	missile.nextthink = time + g_balance_hagar_secondary_lifetime_min + random() * g_balance_hagar_secondary_lifetime_rand;
-	missile.movetype = MOVETYPE_BOUNCEMISSILE;
 	missile.velocity = (weapon_shotdir + randomvec() * g_balance_hagar_secondary_spread) * g_balance_hagar_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
 }
@@ -148,8 +146,8 @@ float weapon_hagar(float req)
 		CVAR_CACHE(g_balance_hagar_secondary_refire);
 		CVAR_CACHE(g_balance_hagar_secondary_speed);
 		CVAR_CACHE(g_balance_hagar_secondary_spread);
-		projectile_init(PROJECTILE_HAGAR);
-		projectile_init(PROJECTILE_HAGAR_BOUNCING);
+		projectile_init(PROJECTILE_HAGAR, MOVETYPE_FLY);
+		projectile_init(PROJECTILE_HAGAR_BOUNCING, MOVETYPE_BOUNCEMISSILE);
 		if (cvar("g_balance_hagar_swap_buttons")) {
 			hagar_buttonatck1 = BUTTON_ATCK2;
 			hagar_buttonatck2 = BUTTON_ATCK;

@@ -52,7 +52,6 @@ void boss4_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
 		projectile_setup(proj, _shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-		proj.movetype = MOVETYPE_FLY;
 		proj.touch = projectile_touch_explode;
 		proj.think = boss4_mine_think;
 		proj.nextthink = time;
@@ -165,7 +164,6 @@ void boss4_init() {
 	precache_model("models/player/lycanthrope.zym");
 	precache_model("models/weapons/v_fireball.md3");
 	precache_sound("weapons/fireball_fire.wav");
-	projectile_init(PROJECTILE_FIREBALL);
 }
 
 void spawnfunc_monster_boss4_spawn() {

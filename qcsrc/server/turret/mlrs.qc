@@ -28,7 +28,6 @@ void turret_mlrs_attack()
     missile.think              = turret_mlrs_rocket_explode;
     missile.nextthink          = time + max(self.tur_impacttime,(self.shot_radius * 2) / self.shot_speed);
     missile.solid              = SOLID_BBOX;
-    missile.movetype           = MOVETYPE_FLYMISSILE;
     missile.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     missile.angles             = vectoangles(missile.velocity);
     missile.touch              = turret_mlrs_rocket_touch;
@@ -70,7 +69,6 @@ void turret_mlrs_rocket_explode()
 void(void) spawnfunc_turret_mlrs {
 	precache_model("models/turrets/mlrs.md3");
 	precache_model("models/turrets/base.md3");
-	projectile_init(PROJECTILE_ROCKET);
 	if (self.netname == "")
 		self.netname  = "MLRS turret";
 

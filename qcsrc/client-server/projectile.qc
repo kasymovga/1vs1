@@ -1,4 +1,4 @@
-void(float csqcid, float entrytype, vector sizes) projectile_register {
+void(float csqcid, float entrytype, vector sizes, float _movetype) projectile_register {
 	sizes_x = bound(0, sizes_x, 63);
 	sizes_z = bound(-31, sizes_z, 32);
 	sizes_y = bound(-31, sizes_y, sizes_z);
@@ -13,27 +13,10 @@ void(float csqcid, float entrytype, vector sizes) projectile_register {
 	PROJECTILE_INFO_PROPERTY(csqcid, type) = entrytype;
 	float f = (sizes_x & 0x3F) + ((sizes_y * 64) & (0xFC0)) + (sizes_z * 4096);
 	PROJECTILE_INFO_PROPERTY(csqcid, sizes) = f;
+	PROJECTILE_INFO_PROPERTY(csqcid, movetype) = _movetype;
 	if (projectile_info_highest_registered < csqcid) {
 		projectile_info_highest_registered = csqcid;
 	}
-}
-
-void(float csqcid, vector sizes) projectile_register_auto {
-	float type;
-	if (sizes_x == 0 && sizes_y == sizes_z) {
-		if (sizes == '0 0 0') {
-			type = PROJECTILE_INFO_TYPE_POINT_000;
-		} else if (sizes == '0 -3 -3') {
-			type = PROJECTILE_INFO_TYPE_POINT_00n3;
-		} else {
-			type = PROJECTILE_INFO_TYPE_POINT;
-		}
-	} else if (sizes_y == sizes_z * -1) {
-		type = PROJECTILE_INFO_TYPE_CENTERED;
-	} else {
-		type = PROJECTILE_INFO_TYPE_UNCENTERED;
-	}
-	projectile_register(csqcid, type, sizes);
 }
 
 void(entity e, float csqcid) projectile_set_size {

@@ -48,7 +48,6 @@ void(void) weapon_hlac_attack {
 	projectile_setup(missile, weapon_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
 			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
 
-	missile.movetype = MOVETYPE_FLY;
     missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = projectile_touch_explode;
@@ -67,7 +66,6 @@ void(void) weapon_hlac_attack2f {
 	projectile_setup(missile, weapon_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_secondary_damage,
 			g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, g_balance_hlac_secondary_force);
 
-	missile.movetype = MOVETYPE_FLY;
     missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = projectile_touch_explode;
@@ -188,7 +186,7 @@ float weapon_hlac(float req)
 		CVAR_CACHE(g_balance_hlac_secondary_speed);
 		CVAR_CACHE(g_balance_hlac_secondary_spread);
 		CVAR_CACHE(g_balance_hlac_secondary_spread_crouchmod);
-		projectile_init(PROJECTILE_HLAC);
+		projectile_init(PROJECTILE_HLAC, MOVETYPE_FLY);
 		if (cvar("g_balance_hlac_swap_buttons")) {
 			hlac_buttonatck1 = BUTTON_ATCK2;
 			hlac_buttonatck2 = BUTTON_ATCK;

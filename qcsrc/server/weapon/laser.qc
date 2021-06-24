@@ -116,7 +116,7 @@ float weapon_laser(float req)
 		CVAR_CACHE(g_balance_laser_secondary_refire);
 		CVAR_CACHE(g_balance_laser_secondary_shotangle);
 		CVAR_CACHE(g_balance_laser_secondary_speed);
-		projectile_init(PROJECTILE_LASER);
+		projectile_init(PROJECTILE_LASER, MOVETYPE_FLY);
 	}
 	return TRUE;
 };
