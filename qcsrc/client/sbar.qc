@@ -1676,7 +1676,7 @@ void(void) sbar_draw {
 	sbar_starttime = getstatf(STAT_GAMESTARTTIME);
 	sbar_timelimit = getstatf(STAT_TIMELIMIT);
 	sbar_timeleft = sbar_timelimit * 60 + sbar_starttime - time;
-	if (sbar_timeleft < 0) { // map voting screen
+	if (sbar_timeleft < 0 && sbar_timelimit) { // map voting screen
 		if (sbar_showscores) {
 			sbar_scoreboard_draw();
 			sbar_score_draw();
