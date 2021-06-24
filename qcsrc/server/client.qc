@@ -438,6 +438,7 @@ void(void) client_disconnect { //called by engine
 	player_clear(FALSE);
 	self.flags &= ~FL_CLIENT;
 	self.just_connected = FALSE;
+	self.team = -1;
 	if (self.killindicator)
 		remove (self.killindicator);
 
