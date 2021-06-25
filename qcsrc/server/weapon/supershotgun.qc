@@ -52,8 +52,7 @@ void weapoon_supershotgun_touch()
 void(vector start, vector dir, float spread, float pSpeed, float _damage, float force, float dtype, float gravityfactor, float bounces) weapon_supershotgun_pellet {
 	entity proj;
 	proj = projectile(TRUE, (bounces ? PROJECTILE_BULLET_BIG_BOUNCING : PROJECTILE_BULLET_BIG), TRUE, self);
-	projectile_setup(proj, start, dtype, _damage, 0, 0, force);
-	proj.gravity = gravityfactor;
+	projectile_setup(proj, start, dtype, _damage, 0, 0, force, gravityfactor);
 	proj.think = stdproc_remove;
 	proj.nextthink = time + 10;
 	proj.velocity = normalize(dir + randomvec() * spread) * pSpeed;

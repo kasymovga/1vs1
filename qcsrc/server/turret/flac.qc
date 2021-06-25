@@ -10,40 +10,19 @@ void turret_flac_attack()
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     proj = projectile(TRUE, PROJECTILE_HAGAR, TRUE, self);
-    setorigin(proj, self.tur_shotorg);
+	projectile_setup(proj, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, self.shot_dmg * 0.5, self.shot_radius, self.owner.shot_force, 0);
+	proj.solid = SOLID_BBOX;
     proj.classname          = "flac_projectile";
-    proj.bot_dodge          = TRUE;
-    proj.bot_dodgerating    = self.shot_dmg;
-    proj.solid              = SOLID_BBOX;
     proj.takedamage         = DAMAGE_NO;
     proj.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.angles             = vectoangles(proj.velocity);
-    proj.touch              = turret_flac_projectile_explode;
-    proj.think              = turret_flac_projectile_explode;
+	proj.touch = turret_projectile_touch_explode;
+	proj.think = turret_projectile_think_explode;
     proj.nextthink          = time + max(self.tur_impacttime,(self.shot_radius * 3) / self.shot_speed);
     proj.enemy              = self.enemy;
     proj.cnt                = time + 5;
     self.tur_head.frame = self.tur_head.frame + 1;
     if (self.tur_head.frame >= 4) self.tur_head.frame = 0;
 
-}
-
-void turret_flac_projectile_explode()
-{
-    // FIXME: tur_impacttime is not accurate enougth, this is a dirty hakk to make flac work.
-
-    //w_deathtypestring = "got caught in the flack.";
-
-    if( (self.enemy != world) &&
-        (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3) )
-    {
-        // OMG HAXX!
-        setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
-    }
-    self.event_damage = NULL;
-
-    damage_radius (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, WEP_HAGAR, world);
-    remove (self);
 }
 
 /*QUAKED turret_flac (0 .5 .8) ?

@@ -26,8 +26,7 @@ void boss1_hunt() {
 		float i;
 		for (i = 0; i < 4; i++) {
 			entity gren = projectile(TRUE, PROJECTILE_GRENADE, TRUE, self);
-			projectile_setup(gren,_shotorg, WEP_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
-			gren.gravity = 0.01;
+			projectile_setup(gren,_shotorg, WEP_GRENADE_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0.01);
 			gren.nextthink = time + 5;
 			gren.think = projectile_think2use;
 			gren.use = projectile_explode;

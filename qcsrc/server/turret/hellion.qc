@@ -3,7 +3,6 @@
 
 void spawnfunc_turret_hellion();
 void turret_hellion_attack();
-void turret_hellion_missile_explode();
 void turret_hellion_missile_think();
 void turret_hellion_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector vforce);
 
@@ -32,11 +31,9 @@ void turret_hellion_attack()
     //self.tur_shotorg_y = self.tur_shotorg_y * -1;
 
     missile = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, has fly sound
-    setorigin(missile, self.tur_shotorg);
-
+	projectile_setup(missile, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0);
+	missile.solid = SOLID_BBOX;
     missile.classname          = "hellion_missile";
-    missile.bot_dodge          = TRUE;
-    missile.bot_dodgerating    = self.shot_dmg;
     missile.takedamage         = DAMAGE_YES;
     missile.event_damage       = turret_hellion_missile_damage;
     missile.damageforcescale   = 2;
@@ -44,11 +41,9 @@ void turret_hellion_attack()
     missile.enemy              = self.enemy;
     missile.think              = turret_hellion_missile_think;
     missile.nextthink          = time;// + 0.2;
-    missile.solid              = SOLID_BBOX;
     missile.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
     missile.angles             = vectoangles(missile.velocity);
-    missile.touch              = turret_hellion_missile_explode;
-    missile.solid              = SOLID_BBOX;
+	missile.touch              = turret_projectile_touch_explode;
     missile.tur_health         = time + 9;
     missile.tur_aimpos         = randomvec() * 128;
     te_explosion (missile.origin);
@@ -61,7 +56,7 @@ void turret_hellion_missile_damage (entity inflictor, entity attacker, float _da
 {
     self.health = self.health - _damage;
     self.velocity = self.velocity + vforce;
-    if (self.health <= 0) turret_hellion_missile_explode();
+    if (self.health <= 0) turret_projectile_think_explode();
 }
 
 void turret_hellion_missile_think()
@@ -75,7 +70,7 @@ void turret_hellion_missile_think()
     olddir = normalize(self.velocity);
 
     if(self.tur_health < time)
-        turret_hellion_missile_explode();
+        turret_projectile_think_explode();
 
     // Enemy dead? just keep on the current heading then.
     if ((self.enemy == world) || (self.enemy.deadflag != DEAD_NO))
@@ -88,7 +83,7 @@ void turret_hellion_missile_think()
         self.angles = vectoangles(self.velocity);
 
         if ( (vlen(self.origin - self.owner.origin)) > (self.owner.shot_radius * 5) )
-            turret_hellion_missile_explode();
+            turret_projectile_think_explode();
 
         // Accelerate
         self.velocity = olddir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
@@ -100,7 +95,7 @@ void turret_hellion_missile_think()
 
     // Enemy in range?
     if (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 0.2)
-        turret_hellion_missile_explode();
+        turret_projectile_think_explode();
 
     // Predict enemy position
     itime = vlen(self.enemy.origin - self.origin) / vlen(self.velocity);
@@ -121,28 +116,9 @@ void turret_hellion_missile_think()
     self.velocity = newdir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
 
     if (itime < 0.05)
-        self.think = turret_hellion_missile_explode;
+        self.think = turret_projectile_think_explode;
 
     projectile_update(self);
-}
-
-void turret_hellion_missile_explode()
-{
-    if(self.event_damage)
-    {
-        self.event_damage = NULL;
-        self.think = turret_hellion_missile_explode;
-        self.nextthink = time;
-        return;
-    }
-    //w_deathtypestring = "could not dodge the twin missiles.";
-    self.event_damage = NULL;
-    damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
-    // Target dead, get another is still targeting the same.
-    if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
-        self.owner.enemy = world;
-
-    remove (self);
 }
 
 /*QUAKED turret_hellion (0 .5 .8) ?

@@ -148,9 +148,19 @@ entity(float clientanimate, float type, float docull, entity _owner) projectile 
 	return e;
 }
 
-void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force) projectile_setup {
+void(entity e, vector _origin, float deathtype, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float _gravity) projectile_setup {
 	e.projectiledeathtype = deathtype;
 	PROJECTILE_MAKETRIGGER(e);
+	if (_gravity) {
+		e.gravity = _gravity;
+		if (e.movetype == MOVETYPE_FLY)
+			e.movetype = MOVETYPE_TOSS;
+		else if (e.movetype == MOVETYPE_BOUNCEMISSILE)
+			e.movetype = MOVETYPE_BOUNCE;
+	} else {
+		if (e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
+			e.gravity = 1;
+	}
 	setorigin(e, _origin);
 	e.dmg = _dmg;
 	e.dmg_force = _force;

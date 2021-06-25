@@ -29,8 +29,6 @@ float g_balance_crylink_secondary_speed;
 float g_balance_crylink_secondary_spread;
 float g_balance_crylink_secondary_spread_time;
 
-.float gravity;
-
 var .float crylink_buttonatck1 = BUTTON_ATCK;
 var .float crylink_buttonatck2 = BUTTON_ATCK2;
 
@@ -70,10 +68,9 @@ void(void) weapon_crylink_attack {
 	up = v_up;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_primary_shots);
 	while (counter < g_balance_crylink_primary_shots) {
-		proj = projectile(TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
+		proj = projectile(TRUE, (g_balance_crylink_primary_bounces ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
 		projectile_setup(proj, weapon_shotorg, WEP_CRYLINK, g_balance_crylink_primary_damage,
-				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force);
-
+				g_balance_crylink_primary_edgedamage, g_balance_crylink_primary_radius, g_balance_crylink_primary_force, 0);
 		proj.lip = g_balance_crylink_primary_bouncedamagefactor;
 		s = '0 0 0';
 		if (counter == 0)
@@ -114,10 +111,9 @@ void(void) weapon_crylink_attack2 {
 	weapon_setup_shot (self, 2, "weapons/crylink_fire2.wav", g_balance_crylink_secondary_shots);
 	pointparticles(particleeffectnum("crylink_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, g_balance_crylink_secondary_shots);
 	while (counter < g_balance_crylink_secondary_shots) {
-		proj = projectile(TRUE, PROJECTILE_CRYLINK, TRUE, self);
+		proj = projectile(TRUE, (g_balance_crylink_secondary_bounces ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE, self);
 		projectile_setup(proj, weapon_shotorg, WEP_CRYLINK | HITTYPE_SECONDARY, g_balance_crylink_secondary_damage,
-				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force);
-
+				g_balance_crylink_secondary_edgedamage, g_balance_crylink_secondary_radius, g_balance_crylink_secondary_force, 0);
 		proj.lip = g_balance_crylink_secondary_bouncedamagefactor;
 		if (g_sideview)
 			proj.velocity = (weapon_shotdir + (((counter + 0.5) / g_balance_crylink_secondary_shots) * 2 - 1) * v_up * g_balance_crylink_secondary_spread) * g_balance_crylink_secondary_speed;
@@ -213,7 +209,7 @@ float(float req) weapon_crylink {
 		CVAR_CACHE(g_balance_crylink_secondary_speed);
 		CVAR_CACHE(g_balance_crylink_secondary_spread);
 		CVAR_CACHE(g_balance_crylink_secondary_spread_time);
-		projectile_init(PROJECTILE_CRYLINK, (g_balance_crylink_secondary_bounces ? MOVETYPE_FLY : MOVETYPE_BOUNCEMISSILE));
+		projectile_init(PROJECTILE_CRYLINK, MOVETYPE_FLY);
 		projectile_init(PROJECTILE_CRYLINK_BOUNCING, MOVETYPE_BOUNCEMISSILE);
 		if (cvar("g_balance_crylink_swap_buttons")) {
 			crylink_buttonatck1 = BUTTON_ATCK2;

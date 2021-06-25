@@ -65,14 +65,13 @@ void(void) weapon_hook_attack2 {
 	weapon_setup_shot (self, 4, "weapons/hookbomb_fire.wav", 0);
 	gren = projectile(TRUE, PROJECTILE_HOOKBOMB, TRUE, self);
 	projectile_setup(gren, weapon_shotorg, WEP_HOOK | HITTYPE_SECONDARY, g_balance_hook_secondary_damage,
-			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force);
+			g_balance_hook_secondary_edgedamage, g_balance_hook_secondary_radius, g_balance_hook_secondary_force, g_balance_hook_secondary_gravity);
 
 	gren.nextthink = time + g_balance_hook_secondary_lifetime;
 	gren.think = projectile_think2use;
 	gren.use = weapon_hook_explode2;
 	gren.touch = weapon_hook_touch2;
 	gren.velocity = '0 0 1' * g_balance_hook_secondary_speed;
-	gren.gravity = g_balance_hook_secondary_gravity;
 	weapon_setup_projectile_velocity(gren);
 }
 

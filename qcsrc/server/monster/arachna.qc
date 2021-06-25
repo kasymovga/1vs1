@@ -23,7 +23,7 @@ void arachna_hunt() {
 		sound (self, CHAN_WEAPON, "weapons/electro_fire.wav", VOL_BASE, ATTN_NORM);
 
 		entity proj = projectile(TRUE, PROJECTILE_ELECTRO, TRUE, self);
-		projectile_setup(proj,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
+		projectile_setup(proj,_shotorg, WEP_ELECTRO, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0);
 		proj.touch = projectile_touch_explode;
 		proj.velocity = normalize(_shotdir) * 1600;
 		proj.pushltime = time + 10;

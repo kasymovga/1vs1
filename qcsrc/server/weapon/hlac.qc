@@ -46,8 +46,7 @@ void(void) weapon_hlac_attack {
 	pointparticles(particleeffectnum("laser_muzzleflash"), weapon_shotorg_visual, weapon_shotdir * 1000, 1);
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HLAC, g_balance_hlac_primary_damage,
-			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force);
-
+			g_balance_hlac_primary_edgedamage, g_balance_hlac_primary_radius, g_balance_hlac_primary_force, 0);
     missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_primary_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = projectile_touch_explode;
@@ -64,8 +63,7 @@ void(void) weapon_hlac_attack2f {
 
 	missile = projectile(TRUE, PROJECTILE_HLAC, TRUE, self);
 	projectile_setup(missile, weapon_shotorg, WEP_HLAC | HITTYPE_SECONDARY, g_balance_hlac_secondary_damage,
-			g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, g_balance_hlac_secondary_force);
-
+			g_balance_hlac_secondary_edgedamage, g_balance_hlac_secondary_radius, g_balance_hlac_secondary_force, 0);
     missile.velocity = (weapon_shotdir + randomvec() * spread) * g_balance_hlac_secondary_speed;
 	weapon_setup_projectile_velocity(missile);
 	missile.touch = projectile_touch_explode;

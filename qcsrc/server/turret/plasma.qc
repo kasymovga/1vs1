@@ -2,7 +2,6 @@ void spawnfunc_turret_plasma();
 void spawnfunc_turret_plasma_dual();
 
 void turret_plasma_attack();
-void turret_plasma_projectile_explode();
 
 void turret_plasma_postthink()
 {
@@ -30,15 +29,13 @@ void turret_plasma_attack()
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
     proj                    = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-    setorigin(proj, self.tur_shotorg);
+	projectile_setup(proj, self.tur_shotorg, WEP_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0);
     proj.classname       = "plasmabomb";
-    proj.bot_dodge       = TRUE;
-    proj.bot_dodgerating = self.shot_dmg;
-    proj.think           = turret_plasma_projectile_explode;
+    proj.think           = turret_projectile_think_explode;
     proj.nextthink       = time + 9;
     proj.solid           = SOLID_BBOX;
     proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.touch           = turret_plasma_projectile_explode;
+    proj.touch           = turret_projectile_touch_explode;
     proj.flags           = FL_PROJECTILE;
     proj.enemy           = self.enemy;
     proj.flags           |= FL_NOTARGET;
@@ -52,27 +49,17 @@ void turret_plasma_dual_attack()
 
     sound (self, CHAN_WEAPON, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
     proj                    = projectile(TRUE, PROJECTILE_ELECTRO_BEAM, TRUE, self);
-    setorigin(proj, self.tur_shotorg);
+	projectile_setup(proj, self.tur_shotorg, WEP_ELECTRO, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0);
     proj.classname       = "plasmabomb";
-    proj.bot_dodge       = TRUE;
-    proj.bot_dodgerating = self.shot_dmg;
-    proj.think           = turret_plasma_projectile_explode;
+    proj.think           = turret_projectile_think_explode;
     proj.nextthink       = time + 9;
     proj.solid           = SOLID_BBOX;
     proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.touch           = turret_plasma_projectile_explode;
+    proj.touch           = turret_projectile_touch_explode;
     proj.flags           = FL_PROJECTILE;
     proj.enemy           = self.enemy;
     proj.flags           |= FL_NOTARGET;
     self.tur_head.frame += 1;
-}
-
-void turret_plasma_projectile_explode()
-{
-    self.event_damage = NULL;
-    //w_deathtypestring = "ate to much plasma";
-    damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ELECTRO, world);
-    remove (self);
 }
 
 /*

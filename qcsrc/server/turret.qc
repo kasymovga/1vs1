@@ -1741,30 +1741,24 @@ float turret_stdproc_targetscore_generic(entity e_turret,entity e_target)
     return score;
 }
 
-/*
-float turret_stdproc_targetscore_close(entity e_turret,entity e_target)
-{
-    return 1 - (tvt_dist / e_turret.target_range);
+void(void) turret_projectile_explode {
+	entity e = self.enemy;
+	entity o = self.owner;
+	//w_deathtypestring = "got hunted to extinction";
+	projectile_explode();
+	// Target dead, get another is still targeting the same.
+	if ((e.deadflag != DEAD_NO) && (e == o.enemy))
+		o.enemy = world;
 }
 
-float turret_stdproc_targetscore_far (entity e_turret,entity e_target)
-{
-    return  tvt_dist / e_turret.target_range;
+void(void) turret_projectile_think_explode {
+	other = world;
+	turret_projectile_explode();
 }
 
-float turret_stdproc_targetscore_optimal(entity e_turret,entity e_target)
-{
-    return  min(e_turret.target_range_optimal,tvt_dist) / max(e_turret.target_range_optimal,tvt_dist);
-}
+void(void) turret_projectile_touch_explode {
+	if ((other == self.owner) || (other == self.owner.tur_head))
+		return;
 
-float turret_stdproc_score_angular(entity e_turret,entity e_target)
-{
-    return 1 - (tvt_thadf / e_turret.aim_maxrot);
+	turret_projectile_explode();
 }
-
-float turret_stdproc_targetscore_defend(entity e_turret,entity e_target)
-{
-    return 0;
-    //min(e_target.origin,e_turret.tur_defend.origin) / max(e_target.origin,e_turret.tur_defend.origin);
-}
-*/

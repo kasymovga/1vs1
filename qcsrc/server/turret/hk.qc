@@ -1,6 +1,5 @@
 void spawnfunc_turret_hk();
 void turret_hk_attack();
-void turret_hk_missile_explode();
 void turret_hk_missile_think();
 void turret_hk_missile_damage (entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force);
 float turret_hk_addtarget(entity e_target,entity e_sender);
@@ -70,7 +69,7 @@ void turret_hk_missile_damage (entity inflictor, entity attacker, float _damage,
     self.health -= _damage;
 
     if (self.health <= 0)
-        turret_hk_missile_explode();
+        turret_projectile_think_explode();
 }
 
 void turret_hk_attack()
@@ -81,13 +80,12 @@ void turret_hk_attack()
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
     missile                  = projectile(FALSE, PROJECTILE_ROCKET, FALSE, self); // no culling, fly sound
+	projectile_setup(missile, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, 0, self.shot_radius, self.owner.shot_force, 0);
     missile.solid            = SOLID_BBOX;
     setorigin(missile, self.tur_shotorg);
 
     missile.scale            = 1;
     missile.classname        = "hk_missile";
-    missile.bot_dodge        = TRUE;
-    missile.bot_dodgerating  = self.shot_dmg;
     missile.takedamage       = DAMAGE_YES;
     missile.damageforcescale = 4;
     missile.health           = 10;
@@ -96,7 +94,7 @@ void turret_hk_attack()
     missile.nextthink        = time + 0.25;
     missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
     missile.angles           = vectoangles(missile.velocity);
-    missile.touch            = turret_hk_missile_explode; //turret_hk_missile_touch;
+    missile.touch            = turret_projectile_touch_explode; //turret_hk_missile_touch;
     missile.enemy            = self.enemy;
     missile.team             = self.team;
     missile.cnt              = time + 30;
@@ -120,9 +118,6 @@ void turret_hk_missile_think()
     entity e;
     float ad, edist = 0;
     self.nextthink = time + self.ticrate;
-
-    //if (self.cnt < time)
-    //    turret_hk_missile_explode();
 
     if (self.enemy.deadflag != DEAD_NO)
         self.enemy = world;
@@ -156,7 +151,7 @@ void turret_hk_missile_think()
         // Close enougth to do decent damage?
         if ( edist <= (self.owner.shot_radius * 0.25) )
         {
-            turret_hk_missile_explode();
+            turret_projectile_explode();
             return;
         }
 
@@ -283,30 +278,6 @@ void turret_hk_missile_think()
 
 
 	projectile_update(self);
-}
-
-void turret_hk_missile_explode()
-{
-    if(self.event_damage)
-    {
-        self.event_damage = NULL;
-        self.think = turret_hk_missile_explode;
-        self.nextthink = time;
-        return;
-    }
-
-    if ((other == self.owner)||(other == self.owner.tur_head))
-        return;
-
-    //w_deathtypestring = "got hunted to extinction";
-    self.event_damage = NULL;
-    damage_radius (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
-
-    // Target dead, get another is still targeting the same.
-    if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
-        self.owner.enemy = world;
-
-    remove (self);
 }
 
 void turret_hk_postthink()

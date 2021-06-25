@@ -244,6 +244,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		self = akimbo_owner(self);
 		proj.owner = self;
 		proj.clipgroup = self.clipgroup;
+		proj.movetype = MOVETYPE_FLY;
 	} else {
 		proj = projectile(TRUE, PROJECTILE_BULLET, TRUE, self);
 		proj.classname = "bullet";
@@ -251,13 +252,7 @@ void(vector start, vector dir, float spread, float pSpeed, float lifetime, float
 		proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 		proj.touch = bullet_touch;
 	}
-	projectile_setup(proj, start, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force);
-	if (gravityfactor > 0) {
-		proj.movetype = MOVETYPE_TOSS;
-		proj.gravity = gravityfactor;
-	} else
-		proj.movetype = MOVETYPE_FLY;
-
+	projectile_setup(proj, start, dtype, _damage, headshotbonus, g_ballistics_materialconstant / bulletconstant, force, gravityfactor);
 	proj.velocity = (dir + randomvec() * spread) * pSpeed;
 	weapon_setup_projectile_velocity(proj);
 	proj.oldvelocity = proj.velocity;

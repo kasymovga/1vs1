@@ -1,7 +1,5 @@
 void spawnfunc_turret_mlrs();
 void turret_mlrs_attack();
-void turret_mlrs_rocket_explode();
-void turret_mlrs_rocket_touch();
 
 void turret_mlrs_postthink()
 {
@@ -19,48 +17,17 @@ void turret_mlrs_attack()
     sound (self, CHAN_WEAPON, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 
     missile                    = projectile(TRUE, PROJECTILE_ROCKET, FALSE, self); // no cull, fly sound
-    setorigin(missile, self.tur_shotorg);
+	projectile_setup(missile, self.tur_shotorg, WEP_ROCKET_LAUNCHER, self.shot_dmg, self.shot_dmg * 0.5, self.shot_radius, self.owner.shot_force, 0);
+	missile.solid = SOLID_BBOX;
     missile.classname          = "mlrs_missile";
-    missile.bot_dodge          = TRUE;
-    missile.bot_dodgerating    = self.shot_dmg;
     missile.takedamage         = DAMAGE_NO;
     missile.damageforcescale   = 4;
-    missile.think              = turret_mlrs_rocket_explode;
+    missile.think              = turret_projectile_think_explode;
     missile.nextthink          = time + max(self.tur_impacttime,(self.shot_radius * 2) / self.shot_speed);
-    missile.solid              = SOLID_BBOX;
     missile.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    missile.angles             = vectoangles(missile.velocity);
-    missile.touch              = turret_mlrs_rocket_touch;
-    missile.solid              = SOLID_BBOX;
+    missile.touch              = turret_projectile_touch_explode;
     missile.enemy              = self.enemy;
     te_explosion (missile.origin);
-}
-
-void turret_mlrs_rocket_touch()
-{
-    if( (other == self.owner) || (other == self.owner.tur_head) )
-        return;
-
-    PROJECTILE_TOUCH;
-
-    turret_mlrs_rocket_explode();
-}
-
-void turret_mlrs_rocket_explode()
-{
-    if(self.event_damage)
-    {
-        self.event_damage = NULL;
-        self.think = turret_mlrs_rocket_explode;
-        self.nextthink = time;
-        return;
-    }
-    damage_radius (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, WEP_ROCKET_LAUNCHER, world);
-    // Target dead, Tell turret.
-    if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
-        self.owner.enemy = world;
-
-    remove (self);
 }
 
 /*QUAKED turret_mlrs (0 .5 .8) ?

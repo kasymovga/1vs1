@@ -51,7 +51,7 @@ void boss4_hunt() {
 		vector _shotorg = self.origin + v_forward * 16;
 		sound (self, CHAN_WEAPON, "weapons/fireball_fire.wav", VOL_BASE, ATTN_NORM);
 		entity proj = projectile(TRUE, PROJECTILE_FIREBALL, TRUE, self);
-		projectile_setup(proj, _shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force);
+		projectile_setup(proj, _shotorg, WEP_ROCKET_LAUNCHER, self.dmg_edge, 0, self.dmg_radius, self.dmg_force, 0);
 		proj.touch = projectile_touch_explode;
 		proj.think = boss4_mine_think;
 		proj.nextthink = time;

@@ -9,7 +9,7 @@ float g_laser_offhand;
 
 entity(vector _shotdir, float _speed, float _dmg, float _dmg_edge, float _dmg_radius, float _force, float expl, float issec, float lifetime) laser_projectile {
 	entity missile = projectile(TRUE, (expl ? PROJECTILE_RM_LASER : PROJECTILE_LASER), TRUE, self);
-	projectile_setup(missile, weapon_shotorg, WEP_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force);
+	projectile_setup(missile, weapon_shotorg, WEP_LASER | (issec ? HITTYPE_SECONDARY: 0), _dmg, _dmg_edge, _dmg_radius, _force, 0);
 	missile.team = self.team;
 	missile.velocity = _shotdir * _speed;
 	weapon_setup_projectile_velocity(missile);

@@ -186,7 +186,7 @@ void weapon_rocketlauncher_attack (void)
 
 	missile = projectile(g_balance_rocketlauncher_guiderate == 0 && g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE, self); // because of fly sound
 	projectile_setup(missile, weapon_shotorg - v_forward * 3, WEP_ROCKET_LAUNCHER, g_balance_rocketlauncher_damage, // move it back so it hits the wall at the right point
-			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force);
+			g_balance_rocketlauncher_edgedamage, g_balance_rocketlauncher_radius, g_balance_rocketlauncher_force, 0);
 
 	missile.classname = "rocket"; //for remote exploding
 	missile.realowner = self; //we neeed it without akimbo_owner for guiding
