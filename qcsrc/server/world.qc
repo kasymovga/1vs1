@@ -500,7 +500,8 @@ void(void) world_winners_clear {
 }
 
 void(float timelimit) world_check_0min_remaining { }
-var void(float timelimit) world_check_time_remaining = {};
+void(float timelimit) world_check_5min_remaining;
+var void(float timelimit) world_check_time_remaining = { world_check_5min_remaining(timelimit); };
 void(float timelimit) world_check_1min_remaining {
 	if (time + 60 >= timelimit) {
 		sound_play2all("announcer/robotic/1minuteremains.wav");
