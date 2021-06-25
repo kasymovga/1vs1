@@ -743,7 +743,11 @@ void (string itemmodel, string pickupsound, float defaultrespawntime, float defa
 	self.items = itemid;
 	self.weapons = weaponid;
 	self.flags = FL_ITEM | itemflags;
-	self.touch = item_touch;
+	if (self.targetname != "")
+		self.mdl = ""; //invisible
+	else
+		self.touch = item_touch;
+
 	setmodel (self, self.mdl); // precision set below
 	self.effects |= EFFECT_LOWPRECISION;
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
