@@ -527,7 +527,12 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 			// again, but this shouldn't hurt
 		return;
 	}
-	timelimit = cvar("timelimit") * 60;
+	timelimit = cvar("timelimit");
+	float timelimit_real = builtin_cvar("timelimit");
+	if (timelimit_real != timelimit) {
+		builtin_cvar_set("timelimit", ftos(timelimit));
+	}
+	timelimit *= 60;
 	fraglimit = cvar("fraglimit");
 	score_leadlimit = cvar("leadlimit");
 	if (warmup_active || time <= map_starttime) { // NOTE: this is <= to prevent problems in the very tic where the game starts
