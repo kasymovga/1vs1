@@ -3,11 +3,11 @@ string(float db, string pKey) db_get {
 	h = math_mod(crc16(FALSE, pKey), DB_BUCKETS);
 	string s = bufstr_get(db, h);
 	if not(s)
-		return NULL;
+		return "";
 
 	s = infoget(s, pKey);
 	if not(s)
-		return NULL;
+		return "";
 
 	return uri_unescape(s);
 }

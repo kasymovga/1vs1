@@ -127,8 +127,7 @@ void MapInfo_Cache_Store()
 		return;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, MapInfo_Map_bspname);
-	//both checks for NULL and empty strings required
-	if (!s || s == "") {
+	if (s == "") {
 		i = buf_getsize(_MapInfo_Cache_Buf_IndexToMapData);
 		db_put(_MapInfo_Cache_DB_NameToIndex, MapInfo_Map_bspname, ftos(i));
 	}
@@ -154,8 +153,7 @@ float MapInfo_Cache_Retrieve(string map)
 		return 0;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, map);
-	//both checks for NULL and empty strings required
-	if (!s || s == "")
+	if (s == "")
 		return 0;
 
 	i = stof(s);

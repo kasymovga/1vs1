@@ -27,7 +27,7 @@ string(string text, string command) input_command_key {
 		return text;
 
 	keys = db_get(db_binds, command);
-	if (!keys) {
+	if (keys == "") {
 		n = tokenize(findkeysforcommand(command)); // uses '...' strings
 		for(j = 0; j < n; ++j) {
 			k = stof(argv(j));
