@@ -49,6 +49,12 @@ void(float ignore) score_info_read {
 void(void) score_player_remove {
 	float i;
 	if (self.owner) {
+		for (entity e = find(NULL, classname, "score_receiver"); e; e = find(e, classname, "score_receiver")) // Not the last score receiver
+			if (e != self)
+			if (e.owner == self.owner)
+			if (e.entremove == score_player_remove)
+				return;
+
 		team_set(self.owner, -1);
 		player_remove(self.owner);
 		self.owner.gotscores = 0;
@@ -78,6 +84,7 @@ void(float ignore) score_player_read {
 
 	float sf, lf;
 	float l = ReadByte();
+	self.classname = "score_receiver";
 	if (l == 4) {
 		n = SCORE_FILEDS_MAX;
 		sf = ReadCoord();
