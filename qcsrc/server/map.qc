@@ -198,7 +198,6 @@ void(void) map_list_reset {
 	}
 	cvar_set("_g_maplist", list);
 	map_list_filter();
-	print("Map list: ", list, "\n");
 	if (cvar("g_maplist_shuffle"))
 		map_list_shuffle();
 }
