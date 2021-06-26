@@ -45,6 +45,7 @@ void(void) client_put {
 	FOR_EACH_PLAYER(e)
 		e.entcs.SendFlags |= 16;
 
+	float oldteam = self.team;
 	if (clienttype(self) == CLIENTTYPE_BOT) {
 		self.classname = "player";
 	}
@@ -53,16 +54,12 @@ void(void) client_put {
 
 	if (self.classname == "player") {
 		entity spot;
-		float oldteam = self.team;
 		if (self.team < 0) {
 			if (clienttype(self) == CLIENTTYPE_BOT)
 				self.team = self.bot_forced_team;
 
 			team_join_best(self, FALSE);
 		}
-		if (self.team != oldteam)
-			score_touch(self);
-
 		spot = gamehook_client_put_spawn_point();
 		if (!spot) {
 			if (clienttype(self) == CLIENTTYPE_REAL)
@@ -70,12 +67,14 @@ void(void) client_put {
 
 			print(self.netname, " not have place to spawn\n");
 			spectator_observer_spawn(FALSE);
-			return;
-		}
-		player_spawn(spot);
+		} else
+			player_spawn(spot);
 	} else if (self.classname == "observer") {
 		spectator_observer_spawn(TRUE);
 	}
+	if (self.team != oldteam)
+		score_touch(self);
+
 }
 
 float(entity to, float sf) client_init_send {

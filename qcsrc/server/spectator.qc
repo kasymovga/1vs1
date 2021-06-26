@@ -184,7 +184,6 @@ void() spectator_to_player {
 				campaign_bots_may_start = 1;
 
 			client_put();
-			score_touch(self);
 			if(self.classname == "player")
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
@@ -274,7 +273,6 @@ void(float frags_team_reset) spectator_observer_spawn {
 
 	if (self.team != -1) {
 		self.team = -1;
-		score_touch(self);
 	}
 	self.touch = NULL;
 }
