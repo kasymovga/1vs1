@@ -62,7 +62,7 @@ void fillNexuizInputSettingsTab(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.05);
 		me.TD(me, 0.5, 3, e = makeNexuizTextLabel(0, _("* Keep this set to 0 until you know what this setting does")));
-		e.colorL = e.colorL * 0.5 + '0.5 0 0';
+		e.colorL = SKINCOLOR_TEXT_WARNING;
 		e.fontSize = e.fontSize * 0.6;
 	if not(cvar("menu_mouse_absolute")) {
 		me.TR(me);

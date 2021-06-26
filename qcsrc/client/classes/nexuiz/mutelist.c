@@ -36,12 +36,12 @@ void drawListBoxItemNexuizMuteList(entity me, float i, vector absSize, float isS
 	float n = i + 1;
 	s = strdecolorize(player_name(i));
 	if (mute_listed(n)) {
-		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, "[MUTED]", me.realFontSize, '1.5 0.5 0.5', SKINALPHA_TEXT, 0);
-		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0 0', strcat("#", ftos(n)), me.realFontSize, '1.2 0.9 0.9', SKINALPHA_TEXT, 0);
-		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0 0', s, me.realFontSize, '1.2 0.9 0.9', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, "[MUTED]", me.realFontSize, SKINCOLOR_TEXT_WARNING, SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0 0', strcat("#", ftos(n)), me.realFontSize, SKINCOLOR_TEXT_WARNING, SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0 0', s, me.realFontSize, SKINCOLOR_TEXT_WARNING, SKINALPHA_TEXT, 0);
 	} else {
-		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0 0', strcat("#", ftos(n)), me.realFontSize, '0.8 1.1 1.1', SKINALPHA_TEXT, 0);
-		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0 0', s, me.realFontSize, '0.8 1.1 1.1', SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.1 0 0', strcat("#", ftos(n)), me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+		gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX + '0.2 0 0', s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	}
 }
 

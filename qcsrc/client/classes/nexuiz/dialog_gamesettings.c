@@ -40,7 +40,7 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.disabled = 1;
 			me.TDempty(me, 0.5);
 			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
-			e.colorL = '1 0.5 0.5';
+			e.colorL = SKINCOLOR_TEXT_WARNING;
 		}
 	me.TR(me);
 		me.TDempty(me, 0.25);
@@ -56,7 +56,7 @@ void fillNexuizGameSettingsDialog(entity me)
 			e.disabled = 1;
 			me.TDempty(me, 0.5);
 			me.TD(me, 1, 0.25, e = makeNexuizTextLabel(0, "*"));
-			e.colorL = '1 0.5 0.5';
+			e.colorL = SKINCOLOR_TEXT_WARNING;
 		}
 	me.TR(me);
 		me.TDempty(me, 0.25);
@@ -137,13 +137,13 @@ void fillNexuizGameSettingsDialog(entity me)
 		me.TR(me);
 			me.TDempty(me, 0.25);
 			me.TD(me, 1, 4, e = makeNexuizTextLabel(0, "(*) Some features are unavailable. Your client is outdated."));
-			e.colorL = '1 0.5 0.5';
+			e.colorL = SKINCOLOR_TEXT_WARNING;
 		me.TR(me);
 			me.TDempty(me, 0.25);
 			me.TD(me, 1, 3, e = makeNexuizTextLabel(0, "Download Rexuiz client here:"));
-			e.colorL = '1 0.5 0.5';
+			e.colorL = SKINCOLOR_TEXT_WARNING;
 			me.TD(me, 1, 1, e = makeNexuizTextLabel(0, "http://rexuiz.com"));
-			e.colorL = '0 0.5 1';
+			e.colorL = SKINCOLOR_TEXT_LINK;
 	}
 	me.TR(me);
 		me.TDempty(me, 0.25);
@@ -153,5 +153,4 @@ void fillNexuizGameSettingsDialog(entity me)
 	me.TR(me);
 		me.TD(me, 1, me.columns, makeNexuizCommandButton("Apply immediately", '0 0 0', ";sendcvar cl_gunalpha;sendcvar cl_autoswitch;sendcvar cl_gunalign_force_center;sendcvar cl_gunalign;sendcvar cl_showweaponspawns;", COMMANDBUTTON_CLOSE));
 }
-
 #endif

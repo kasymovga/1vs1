@@ -5,6 +5,7 @@ CLASS(NexuizTextLabel) EXTENDS(Label)
 	ATTRIB(NexuizTextLabel, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(NexuizTextLabel, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(NexuizTextLabel, disabledAlpha, float, SKINALPHA_DISABLED)
+	ATTRIB(NexuizTextLabel, colorL, vector, SKINCOLOR_TEXT)
 ENDCLASS(NexuizTextLabel)
 entity makeNexuizTextLabel(float theAlign, string theText);
 #endif

@@ -49,7 +49,7 @@ void fillNexuizLanguageDialog(entity me) {
 		me.TDempty(me, 0.05);
 		me.TD(me, 0.5, 1.9, e = makeNexuizTextLabel(0, _("* Needed for some european characters, player names might be displayed incorrectly")));
 		e.allowWrap = 1;
-		e.colorL = e.colorL * 0.5 + '0.5 0 0';
+		e.colorL = SKINCOLOR_TEXT_WARNING;
 		e.fontSize = e.fontSize * 0.6;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeNexuizButton(_("Close"), '0 0 0'));
