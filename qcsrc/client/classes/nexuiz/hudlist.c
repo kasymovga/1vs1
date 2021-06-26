@@ -108,6 +108,6 @@ void(entity me, float i, vector absSize, float isSelected) drawListBoxItemNexuiz
 	else
 		s = "";
 
-	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	gui_draw_text(me.realUpperMargin * eY + (me.columnNameOrigin) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }
 #endif
