@@ -1,1 +1,2 @@
-void() entcs_init;
+entity() entcs_attach;
+void() entcs_detach;

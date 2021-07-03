@@ -13,10 +13,6 @@
 // it did when I added this) But you have to use .Version
 // Capital V
 
-void() entcs_init {
-	print("Initializing ClientSide information entities\n");
-};
-
 float() entcs_customize {
 	entity o;
 	o = self.owner;
