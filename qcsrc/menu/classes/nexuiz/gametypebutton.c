@@ -25,6 +25,7 @@ entity makeNexuizGametypeButton(float, string, string);
 void GameTypeButton_Click(entity me, entity other);
 entity makeNexuizGametypeButton(float theGroup, string theCvar, string theText)
 {
+	registercvar("_gametype", "dm", 0);
 	entity me;
 	me = spawnNexuizGametypeButton();
 	me.configureNexuizGametypeButton(me, theGroup, theCvar, theText);
@@ -55,14 +56,14 @@ void loadCvarsNexuizGametypeButton(entity me)
 	if not(me.cvarName)
 		return;
 
-	me.checked = cvar(me.cvarName);
+	me.checked = (cvar_string("_gametype") == me.cvarName);
 }
 void saveCvarsNexuizGametypeButton(entity me)
 {
 	if not(me.cvarName)
 		return;
 
-	cvar_set(me.cvarName, ftos(me.checked));
+	cvar_set("_gametype", me.cvarName);
 }
 void GameTypeButton_Click(entity me, entity other)
 {

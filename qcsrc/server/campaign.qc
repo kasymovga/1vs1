@@ -20,7 +20,7 @@ float(string s) campaign_bailout {
 	return 1;
 }
 
-string campaign_cvar_list; // string of format ; var value; var value; var value; 
+string campaign_cvar_list; // string of format ; var value; var value; var value;
 string(string theCvar) campaign_cvar_string {
 	float p, q;
 	p = strstrofs(campaign_cvar_list, strcat("; ", theCvar, " "), 0);

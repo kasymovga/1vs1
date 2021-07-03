@@ -680,6 +680,8 @@ void(void) world_restore {
 	world_dynamic_init();
 	if not(dlc_ready_all())
 		dlc_reload();
+
+	MapInfo_SwitchGameType(MapInfo_Type_FromString("single"));
 }
 
 #define world_shutdown SV_Shutdown

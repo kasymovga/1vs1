@@ -1,20 +1,9 @@
 void() gametype_writecvars {
-	float i;
-	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_END; i++) {
-		cvar_set(MapInfo_GetGameTypeCvar(i), ftos(gametype == i));
-	}
+	MapInfo_SwitchGameType(gametype);
 }
 
 void() gametype_readcvars {
-	gametype = GAMETYPE_DEATHMATCH;
-	team_mode = 0;
-	float i;
-	for (i = GAMETYPE_DEATHMATCH; i < GAMETYPE_END; i++) {
-		if (cvar(MapInfo_GetGameTypeCvar(i))) {
-			gametype = i;
-			break;
-		}
-	}
+	gametype = MapInfo_CurrentGametype();
 }
 
 void() gametype_default_delayed_init {
@@ -37,6 +26,7 @@ float(string s) gametype_value {
 }
 
 void() gametype_init {
+	registercvar("_gametype", "dm");
 	vote_reset();
 	// make sure only ONE type is selected
 	gametype_readcvars();
@@ -108,9 +98,6 @@ void() gametype_init {
 		lms_init();
 	} else if (team_mode)
 		entcs_init();
-
-	// save it (for the next startup)
-	cvar_set("gamecfg", ftos(gametype));
 
 	// enforce the server's universal frag/time limits
 	entity_initialize(world, gametype_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);

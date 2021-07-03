@@ -904,13 +904,10 @@ string MapInfo_FixName(string s)
 float MapInfo_CurrentGametype()
 {
 	float f;
-	string s;
+	string s = cvar_string("_gametype");;
 	for (f = 1; f < GAMETYPE_END; f++) {
-		s = MapInfo_GetGameTypeCvar(f);
-		if (s != "")
-		if (cvar(s)) {
+		if (gametype_name(f) == s)
 			return f;
-		}
 	}
 	return GAMETYPE_DEATHMATCH;
 }
@@ -947,34 +944,6 @@ float MapInfo_GetGameTypes(string s) // returns 0 if the map can't be played wit
 	return r;
 }
 
-string MapInfo_GetGameTypeCvar(float t)
-{
-	switch(t)
-	{
-		case GAMETYPE_DEATHMATCH: return "_g_dm";
-		case GAMETYPE_TEAM_DEATHMATCH: return "_g_tdm";
-		case GAMETYPE_FREEZETAG: return "_g_freeze";
-		case GAMETYPE_CLANARENA: return "_g_clanarena";
-		case GAMETYPE_DOMINATION: return "_g_domination";
-		case GAMETYPE_CTF: return "_g_ctf";
-		case GAMETYPE_CATF: return "_g_catf";
-		case GAMETYPE_CTFT: return "_g_ctft";
-		case GAMETYPE_CONQUEST: return "_g_conquest";
-		case GAMETYPE_KEYHUNT: return "_g_keyhunt";
-		case GAMETYPE_KEYHUNT_CA: return "_g_khca";
-		case GAMETYPE_KEYHUNT_FT: return "_g_khft";
-		case GAMETYPE_ONSLAUGHT: return "_g_onslaught";
-		case GAMETYPE_RACE: return "_g_race";
-		case GAMETYPE_NEXBALL: return "_g_nexball";
-		case GAMETYPE_CTS: return "_g_cts";
-		case GAMETYPE_SURVIVE: return "_g_survive";
-		case GAMETYPE_LMS: return "_g_lms";
-		case GAMETYPE_SINGLE: return "_g_single";
-		case GAMETYPE_COOP: return "_g_coop";
-		default: return "";
-	}
-}
-
 float MapInfo_GameTypeToMapInfoType(float t) {
 	switch (t) {
 		case GAMETYPE_DEATHMATCH:      return MAPINFO_TYPE_DEATHMATCH;
@@ -1001,17 +970,8 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 	return 0;
 }
 
-void MapInfo_SwitchGameType(float t)
-{
-	cvar_set("gamecfg",      "0");
-	float f;
-	string s;
-	for (f = GAMETYPE_DEATHMATCH; f < GAMETYPE_END; f++) {
-		s = MapInfo_GetGameTypeCvar(f);
-		if (s != "") {
-			cvar_set(s, ((t == f) ? "1" : "0"));
-		}
-	}
+void MapInfo_SwitchGameType(float t) {
+	cvar_set("_gametype", gametype_name(t));
 }
 
 void MapInfo_LoadMap(string s)

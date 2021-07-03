@@ -37,7 +37,7 @@ void fillNexuizServerCreateTab(entity me)
 		if (mod(i - 1, n) == 0)
 			me.TR(me);
 
-		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, MapInfo_GetGameTypeCvar(i), MapInfo_HumanString_FromType(i)));
+		me.TD(me, 1, me.columns / n, e = makeNexuizGametypeButton(1, gametype_name(i), MapInfo_HumanString_FromType(i)));
 			if not(selected)
 				selected = e;
 			else if(e.checked)

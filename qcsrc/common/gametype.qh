@@ -23,4 +23,3 @@ enum {
 	GAMETYPE_SINGLE,
 	GAMETYPE_END
 };
-
