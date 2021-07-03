@@ -96,9 +96,7 @@ void() gametype_init {
 		coop_init();
 	} else if (gametype == GAMETYPE_LMS) {
 		lms_init();
-	} else if (team_mode)
-		entcs_init();
-
+	}
 	// enforce the server's universal frag/time limits
 	entity_initialize(world, gametype_default_delayed_init, INITPRIO_GAMETYPE_FALLBACK);
 	if (force_gametype_restore)
