@@ -1,15 +1,16 @@
-float MAPINFO_TYPE_CTF				= 1;
-float MAPINFO_TYPE_ONSLAUGHT		= 4;
-float MAPINFO_TYPE_RACE				= 8;
-float MAPINFO_TYPE_DEATHMATCH		= 16;
-float MAPINFO_TYPE_TEAM_DEATHMATCH	= 32;
-float MAPINFO_TYPE_DOMINATION		= 64;
-float MAPINFO_TYPE_CONQUEST			= 256;
-float MAPINFO_TYPE_KEYHUNT			= 1024;
-float MAPINFO_TYPE_NEXBALL          = 2048;
-float MAPINFO_TYPE_CTS              = 4096;
-float MAPINFO_TYPE_SURVIVE          = 32768;
-float MAPINFO_TYPE_SINGLE           = 65536;
+float MAPINFO_TYPE_CTF = 1;
+float MAPINFO_TYPE_SHOOTINGRANGE = 2;
+float MAPINFO_TYPE_ONSLAUGHT = 4;
+float MAPINFO_TYPE_RACE = 8;
+float MAPINFO_TYPE_DEATHMATCH = 16;
+float MAPINFO_TYPE_TEAM_DEATHMATCH = 32;
+float MAPINFO_TYPE_DOMINATION = 64;
+float MAPINFO_TYPE_CONQUEST = 256;
+float MAPINFO_TYPE_KEYHUNT = 1024;
+float MAPINFO_TYPE_NEXBALL = 2048;
+float MAPINFO_TYPE_CTS = 4096;
+float MAPINFO_TYPE_SURVIVE = 32768;
+float MAPINFO_TYPE_SINGLE = 65536;
 
 void(float n, swapfunc_t swap, comparefunc_t cmp, entity pass) mapinfo_heapsort {
 	float start, end, root, child;
@@ -403,6 +404,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
 				} else if(startsWith(v, "weapon_"))
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+				else if(v == "shootingrange_target")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_SHOOTINGRANGE;
 			}
 		}
 	}
@@ -483,6 +486,7 @@ float MapInfo_Type_FromString(string t)
 	        t == "survive")    return GAMETYPE_SURVIVE;
 	else if(t == "single")     return GAMETYPE_SINGLE;
 	else if(t == "coop")       return GAMETYPE_COOP;
+	else if(t == "shootingrange" || t == "sr") return GAMETYPE_SHOOTINGRANGE;
 	else                       return 0;
 }
 
@@ -527,6 +531,8 @@ string MapInfo_HumanString_FromType(float t) {
 		return "Single Player";
 	} else if (t == GAMETYPE_COOP) {
 		return "Cooperative";
+	} else if (t == GAMETYPE_SHOOTINGRANGE) {
+		return "Shooting Range";
 	}
 	return "WTF";
 }
@@ -966,6 +972,7 @@ float MapInfo_GameTypeToMapInfoType(float t) {
 		case GAMETYPE_COOP:            return MAPINFO_TYPE_SINGLE;
 		case GAMETYPE_SINGLE:          return MAPINFO_TYPE_SINGLE;
 		case GAMETYPE_NEXBALL:         return MAPINFO_TYPE_NEXBALL;
+		case GAMETYPE_SHOOTINGRANGE:   return MAPINFO_TYPE_SHOOTINGRANGE;
 	}
 	return 0;
 }

@@ -90,6 +90,8 @@ void() gametype_init {
 	} else if (gametype == GAMETYPE_SURVIVE) {
 		team_play_activate();
 		survive_init();
+	} else if (gametype == GAMETYPE_SHOOTINGRANGE) {
+		shootingrange_init();
 	} else if (gametype == GAMETYPE_SINGLE) {
 		single_init();
 	} else if (gametype == GAMETYPE_COOP) {

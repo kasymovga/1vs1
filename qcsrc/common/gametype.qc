@@ -19,5 +19,6 @@ string(float g) gametype_name {
 	else if (g == GAMETYPE_LMS) return "lms";
 	else if (g == GAMETYPE_SINGLE) return "single";
 	else if (g == GAMETYPE_COOP) return "coop";
+	else if (g == GAMETYPE_SHOOTINGRANGE) return "sr";
 	return "dm";
 }
