@@ -42,13 +42,18 @@ void configureDialogNexuizGameMenuDialog(entity me) {
 
 		me.rows = me.rows + gamemenu_commands_count;
 		if not(main_campaign)
-			me.rows = me.rows + 2;
+			me.rows = me.rows + 2; //join and spectate
 
 		if (main_localgame)
 		if (main_campaign)
 		if (gametype == GAMETYPE_SINGLE) {
-			me.rows = me.rows + 1;
+			me.rows = me.rows + 1; //save/load
 		}
+		if (main_campaign)
+			me.rows = me.rows - 1; //vote
+
+		if (gametype == GAMETYPE_SINGLE)
+			me.rows = me.rows - 1; //mute
 	}
 	configureDialogNexuizDialog(me); //Parent method
 }
@@ -92,14 +97,18 @@ void fillNexuizGameMenuDialog(entity me)
 				me.TD(me, 1, me.columns, e = makeNexuizButton("Save/Load", '0 0 0'));
 				e.onClick = ShowSaveLoad;
 		}
-		if (vote_commands_count) {
+		if (!main_campaign) {
 			me.TR(me);
+			if (vote_commands_count) {
 				me.TD(me, 1, me.columns, e = makeNexuizButton("Call a vote", '0 0 0'));
 				e.onClick = ShowVcall;
+			}
+			if (gametype != GAMETYPE_SINGLE) {
+				me.TR(me);
+					me.TD(me, 1, me.columns, e = makeNexuizButton("Mute list...", '0 0 0'));
+					e.onClick = showMuteListGameMenuDialog;
+			}
 		}
-		me.TR(me);
-			me.TD(me, 1, me.columns, e = makeNexuizButton("Mute list...", '0 0 0'));
-			e.onClick = showMuteListGameMenuDialog;
 	}
 	me.TR(me);
 	if (main_isdemo) {
