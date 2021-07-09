@@ -673,7 +673,7 @@ void(void) monster_monsters_init {
 		} else
 			print("Function ", monster_func, " not found\n");
 	}
-	precache_model("models/items/a_bullets.md3");
+	precache_model("models/items/a_bullets.mdl");
 	precache_model("models/items/a_shells.md3");
 	precache_model("models/items/a_rockets.md3");
 	precache_model("models/items/a_cells.md3");
