@@ -8,9 +8,6 @@ float SP_NEXBALL_FAULTS;
 #define BALL_ATTACHORG '10 0 10'
 #define BALL_POV '30 0 -16'
 #define BALL_SPRITECOLOR '.91 .85 .62'
-#define BALL_FOOT   1
-#define BALL_BASKET 2
-#define BALL_HOCKEY 4
 //spawnflags
 #define GOAL_TOUCHPLAYER 1
 //goal types
@@ -23,6 +20,10 @@ float g_nexball_football_boost_up;
 float g_nexball_football_melee_boost_forward;
 float g_nexball_football_melee_boost_up;
 float g_nexball_football_physics;
+float g_nexball_volleyball_boost_forward;
+float g_nexball_volleyball_boost_up;
+float g_nexball_volleyball_melee_boost_forward;
+float g_nexball_volleyball_melee_boost_up;
 float g_nexball_hockey_boost_forward;
 float g_nexball_hockey_bouncefactor;
 float g_nexball_hockey_melee_boost_forward;
@@ -36,7 +37,6 @@ float g_nexball_ball_explosive_radius;
 float g_nexball_ball_explosive_damage;
 float g_nexball_ball_explosive_force;
 float g_nexball_ball_scale;
-float balls;
 float ball_scale;
 float nexball_teams;
 .float metertime;
@@ -64,6 +64,7 @@ void() nexball_ball_reset;
 void() nexball_basketball_touch;
 void() nexball_football_touch;
 void() nexball_hockey_touch;
+void(void) nexball_volleyball_touch;
 void(entity ball, vector org, vector vel) nexball_drop_ball;
 
 var void(float killed) nexball_PlayerClear_NextLink;
@@ -158,6 +159,10 @@ void() nexball_init {
 	CVAR_CACHE(g_nexball_delay_goal);
 	CVAR_CACHE(g_nexball_delay_start);
 	CVAR_CACHE(g_nexball_basketball_carrier_speed);
+	CVAR_CACHE(g_nexball_volleyball_boost_up);
+	CVAR_CACHE(g_nexball_volleyball_boost_forward);
+	CVAR_CACHE(g_nexball_volleyball_melee_boost_up);
+	CVAR_CACHE(g_nexball_volleyball_melee_boost_forward);
 	nexball_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nexball_PlayerClear;
 	nexball_SwitchWeaponMod_NextLink = gamehook_chain_SwitchWeaponMod;
@@ -330,6 +335,8 @@ void(void) nexball_ball_init {
 		self.touch = nexball_basketball_touch;
 	else if (self.classname == "nexball_football")
 		self.touch = nexball_football_touch;
+	else if (self.classname == "nexball_volleyball")
+		self.touch = nexball_volleyball_touch;
 	else if (self.classname == "nexball_hockey")
 	{
 		self.touch = nexball_hockey_touch;
@@ -367,6 +374,36 @@ void(void) nexball_ball_reset {
 		self.think = nexball_ball_init;
 		self.nextthink = max(time, map_starttime) + g_nexball_delay_start;
 	}
+}
+
+void(void) nexball_volleyball_touch {
+	if (other.solid == SOLID_BSP) {
+		if (time > self.lastground + 0.1) {
+			sound (self, CHAN_PROJECTILE, self.noise, VOL_BASE, ATTN_NORM);
+			self.lastground = time;
+		}
+		if (vlen(self.velocity) && !self.cnt)
+			self.nextthink = time + g_nexball_delay_idle;
+
+		return;
+	}
+	if (other.classname != "player")
+		return;
+
+	if (other.health < 1)
+		return;
+
+	if (!self.cnt)
+		self.nextthink = time + g_nexball_delay_idle;
+
+	self.pusher = other;
+	self.team = other.team;
+	makevectors(other.v_angle);
+	self.velocity = v_forward * g_nexball_volleyball_boost_forward + '0 0 1' * g_nexball_volleyball_boost_up;
+	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1)) {
+		self.velocity = self.velocity + v_forward * g_nexball_volleyball_melee_boost_forward + v_up * g_nexball_volleyball_melee_boost_up;
+	}
+	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
 
 void(void) nexball_football_touch {
@@ -473,6 +510,7 @@ void(void) nexball_goal_touch {
 	if (ball.classname != "nexball_basketball")
 	if (ball.classname != "nexball_football")
 	if (ball.classname != "nexball_hockey")
+	if (ball.classname != "nexball_volleyball")
 		return;
 
 	if ((!ball.pusher && self.team != GOAL_OUT) || ball.cnt)
@@ -657,27 +695,39 @@ void(void) nexball_spawn_ball {
 
 void(void) spawnfunc_nexball_basketball {
 	self.classname = "nexball_basketball";
-	if not(balls & BALL_BASKET)
-	{
-		CVAR_CACHE(g_nexball_basketball_effects_default);
-		CVAR_CACHE(g_nexball_basketball_delay_hold);
-		CVAR_CACHE(g_nexball_basketball_delay_hold_forteam);
-		CVAR_CACHE(g_nexball_basketball_teamsteal);
-		g_nexball_basketball_effects_default = g_nexball_basketball_effects_default & BALL_EFFECTMASK;
-	}
+	CVAR_CACHE(g_nexball_basketball_effects_default);
+	CVAR_CACHE(g_nexball_basketball_delay_hold);
+	CVAR_CACHE(g_nexball_basketball_delay_hold_forteam);
+	CVAR_CACHE(g_nexball_basketball_teamsteal);
+	g_nexball_basketball_effects_default = g_nexball_basketball_effects_default & BALL_EFFECTMASK;
 	if (!self.effects)
 		self.effects = g_nexball_basketball_effects_default;
+
 	self.solid = SOLID_TRIGGER;
-	balls |= BALL_BASKET;
 	self.bouncefactor = cvar("g_nexball_basketball_bouncefactor");
 	self.bouncestop = cvar("g_nexball_basketball_bouncestop");
+	nexball_spawn_ball();
+}
+
+void(void) spawnfunc_nexball_volleyball {
+	self.classname = "nexball_volleyball";
+	CVAR_CACHE(g_nexball_basketball_effects_default);
+	CVAR_CACHE(g_nexball_basketball_delay_hold);
+	CVAR_CACHE(g_nexball_basketball_delay_hold_forteam);
+	CVAR_CACHE(g_nexball_basketball_teamsteal);
+	g_nexball_basketball_effects_default = g_nexball_basketball_effects_default & BALL_EFFECTMASK;
+	if (!self.effects)
+		self.effects = g_nexball_basketball_effects_default;
+
+	self.solid = SOLID_TRIGGER;
+	self.bouncefactor = cvar("g_nexball_volleyball_bouncefactor");
+	self.bouncestop = cvar("g_nexball_volleyball_bouncestop");
 	nexball_spawn_ball();
 }
 
 void(void) spawnfunc_nexball_football {
 	self.classname = "nexball_football";
 	self.solid = SOLID_TRIGGER;
-	balls |= BALL_FOOT;
 	self.bouncefactor = cvar("g_nexball_football_bouncefactor");
 	self.bouncestop = cvar("g_nexball_football_bouncestop");
 	nexball_spawn_ball();
@@ -699,7 +749,6 @@ void(void) hockey_physic_controller_think {
 void(void) spawnfunc_nexball_hockey {
 	self.classname = "nexball_hockey";
 	self.solid = SOLID_TRIGGER;
-	balls |= BALL_HOCKEY;
 	self.hockey_physic_controller = spawn();
 	self.hockey_physic_controller.ballcarried = self;
 	self.hockey_physic_controller.think = hockey_physic_controller_think;
