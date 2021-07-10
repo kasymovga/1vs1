@@ -1361,7 +1361,7 @@ void(void) sbar_timer {
 		if (sbar_timeleft < 0) {
 			sbar_timeleft = max(0, -1 - sbar_timeleft);
 		} else {
-			if (sbar_timeleft < 60)
+			if (sbar_timeleft <= 59)
 				hideminutes = TRUE;
 		}
 		sbar_timeleft = ceil(sbar_timeleft);
