@@ -37,7 +37,6 @@ float g_nexball_ball_explosive_radius;
 float g_nexball_ball_explosive_damage;
 float g_nexball_ball_explosive_force;
 float g_nexball_ball_scale;
-float ball_scale;
 float nexball_teams;
 .float metertime;
 .float metertime_stat;
@@ -287,7 +286,7 @@ void(entity plyr, entity ball) nexball_give_ball {
 	ball.movetype = MOVETYPE_NONE;
 	ball.touch = stdproc_nothing;
 	ball.effects |= EFFECT_NOSHADOW;
-	ball.scale = 1; // scale down.
+	ball.scale = (ball.scale ? (ball.scale * 0.75) : 0.75); // scale down.
 	WaypointSprite_AttachCarrier("nb-ball", plyr);
 	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_UpdateTeamRadar(plyr.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
@@ -305,7 +304,7 @@ void(entity ball, vector org, vector vel) nexball_drop_ball {
 	setorigin (ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.flags &= ~FL_ONGROUND;
-	ball.scale = ball_scale;
+	ball.scale = ball.dmg;
 	ball.velocity = vel;
 	ball.ctf_droptime = time;
 	ball.touch = nexball_basketball_touch;
@@ -656,13 +655,12 @@ void(void) nexball_spawn_ball {
 	}
 	if (!self.model) {
 		self.model = "models/nexball/ball.md3";
-		self.scale = 1.3;
+		self.dmg = self.scale = 1.3;
 	}
 	self.scale *= g_nexball_ball_scale;
 	precache_model (self.model);
 	setmodel (self, self.model);
 	self.mdl = self.model;
-	ball_scale = self.scale;
 	nexball_relocate();
 	self.spawnorigin = self.origin;
 	self.effects = self.effects | EFFECT_LOWPRECISION;
