@@ -459,10 +459,10 @@ void(void) world_overtime {
 	if (gamehook_OvertimeHandle())
 		return;
 
+	float tl;
 	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("g_timelimit_overtimes")) && cvar("g_timelimit_overtime")) {
 		++checkrules_overtimesadded;
 		//add one more overtime by simply extending the timelimit
-		float tl;
 		tl = cvar("timelimit");
 		tl += cvar("g_timelimit_overtime");
 		cvar_set("timelimit", ftos(tl));
@@ -473,8 +473,12 @@ void(void) world_overtime {
 			minutesPlural = " ^3minutes";
 
 		GameStatus_Set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("g_timelimit_overtime")), minutesPlural, " to the game!"), 1);
-	} else if (!checkrules_suddendeathend)
-		checkrules_suddendeathend = time + 60 * cvar("g_timelimit_suddendeath");
+	} else if (!checkrules_suddendeathend) {
+		tl = cvar("timelimit");
+		tl += cvar("g_timelimit_suddendeath");
+		checkrules_suddendeathend = map_starttime + 60 * tl;
+		cvar_set("timelimit", ftos(tl));
+	}
 }
 
 // set the .winning flag for exactly those players with a given field value
