@@ -100,7 +100,7 @@ void(float nodownload, float renderrestart) menu_dlc_reload {
 	}
 	float n;
 	if ((n = cvar("cl_simpleitems"))) {
-		s = strcat(s, " zapper_v2 supershotgun"); //need load them first, to override their g_* models
+		s = strcat(s, " axe_v2 zapper_v2 supershotgun"); //need load them first, to override their g_* models
 		if (n == 2)
 			s = strcat(s, " simpleitems-luma");
 		else
