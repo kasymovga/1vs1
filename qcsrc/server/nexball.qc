@@ -401,7 +401,7 @@ void(void) nexball_volleyball_touch {
 	makevectors(other.v_angle);
 	self.velocity = v_forward * g_nexball_volleyball_boost_forward + '0 0 1' * g_nexball_volleyball_boost_up;
 	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1)) {
-		self.velocity = self.velocity + v_forward * g_nexball_volleyball_melee_boost_forward + v_up * g_nexball_volleyball_melee_boost_up;
+		self.velocity = self.velocity + v_forward * g_nexball_volleyball_melee_boost_forward + '0 0 1' * g_nexball_volleyball_melee_boost_up;
 	}
 	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
