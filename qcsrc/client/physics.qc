@@ -22,25 +22,33 @@ float physics_skimming_start;
 float physics_cpmdoublejump_time_start;
 
 vector(void) physics_side_adjust_view {
+	makevectors('0 90 0');
+	vector o = view_origin - v_forward * 500 + '0 0 1' * g_sideview_up;
 	if not(main_isdemo) {
 		mouse_enable("gfx/crosshairuzi");
 		vector v = mouse_position();
-		view_forward_y = 0;
-		view_forward_z = v_y - CVAR(vid_conheight) * 0.5;
-		view_forward_x = v_x - CVAR(vid_conwidth) * 0.5;
-		view_angles = vectoangles(view_forward);
+		vector v2;
+		float f = CVAR(vid_conwidth) * 0.5;
+		v2_x = tan(view_fovx * 0.5 * MATH_DEG2RAD) * (v_x - f) / f;
+		f = CVAR(vid_conheight) * 0.5;
+		v2_y = tan(view_fovy * 0.5 * MATH_DEG2RAD) * (v_y - f) / f;
+		v2_z = 0;
+		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
+		//pointparticles(particleeffectnum("laser_impact"), v3, '0 0 0', 0.01);
+		view_angles = vectoangles(WarpZone_PlaneAndLineCross(view_origin, v_forward, o, normalize(v3 - o)) - view_origin);
+		view_angles_z = 0;
+		view_angles_x = -view_angles_x;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
 	}
 	view_fixangle = TRUE;
 	view_fixed_angles = '0 90 0';
-	makevectors('0 90 0');
 	view_crosshair = FALSE;
 	if (view_width / view_height > 1.35)
 		view_fov = 105;
 	else
 		view_fov = 115;
 
-	return view_origin - v_forward * 500;
+	return o;
 }
 
 vector(void) physics_top_adjust_view {
@@ -56,7 +64,6 @@ vector(void) physics_top_adjust_view {
 		v2_y = tan(view_fovy * 0.5 * MATH_DEG2RAD) * (v_y - f) / f;
 		v2_z = 0;
 		vector v3 = o + v_forward * 200 - v_up * v2_y * 200 + v_right * v2_x * 200;
-		//pointparticles(particleeffectnum("laser_impact"), v3, '0 0 0', 0.01);
 		view_angles = vectoangles(WarpZone_PlaneAndLineCross(view_origin, '0 0 1', v3, v_forward) - view_origin);
 		view_angles_x = 0;
 		R_SetView(VF_CL_VIEWANGLES, view_angles);
@@ -381,6 +388,9 @@ void(float isnew) physics_read {
 			g_dodging_delay = ReadCoord();
 			g_dodging_frozen_delay = ReadCoord();
 			g_dodging_frozen_factor = ReadCoord();
+		}
+		if (g_sideview) {
+			g_sideview_up = ReadShort();
 		}
 		if (g_topview) {
 			g_topview_angles_x = ReadShort();

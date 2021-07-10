@@ -405,7 +405,7 @@ float(entity plr, entity viewer, float _alpha) physics_sideview_player_alpha_mod
 	if (f1 < 0)
 		return -1;
 
-	float f2 = bound(-1, (600 - fabs(plr.origin_z - viewer.origin_z)) / 100, 1);
+	float f2 = bound(-1, (600 - fabs(plr.origin_z - viewer.origin_z - g_sideview_up)) / 100, 1);
 	if (f2 < 0)
 		return -1;
 
@@ -508,6 +508,7 @@ void(void) physics_init {
 			gamehook_chain_player_alpha_mod = physics_sideview_player_alpha_mod;
 		}
 	}
+	CVAR_CACHE(g_sideview_up);
 	string s = cvar_string("g_topview");
 	if (s != "") {
 		g_topview = 1;
@@ -657,6 +658,9 @@ float(entity to, float sf) physics_send {
 			WriteCoord(MSG_ENTITY, g_dodging_delay);
 			WriteCoord(MSG_ENTITY, g_dodging_frozen_delay);
 			WriteCoord(MSG_ENTITY, g_dodging_frozen_factor);
+		}
+		if (g_sideview) {
+			WriteShort(MSG_ENTITY, g_sideview_up);
 		}
 		if (g_topview) {
 			WriteShort(MSG_ENTITY, g_topview_angles_x);
