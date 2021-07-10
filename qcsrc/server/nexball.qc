@@ -398,8 +398,12 @@ void(void) nexball_volleyball_touch {
 
 	self.pusher = other;
 	self.team = other.team;
-	makevectors(other.v_angle);
-	self.velocity = v_forward * g_nexball_volleyball_boost_forward + '0 0 1' * g_nexball_volleyball_boost_up;
+	makevectors(other.angles);
+	vector v = other.velocity;
+	if (vlen(v) > g_nexball_volleyball_boost_forward * 0.5) {
+		v = normalize(v) * g_nexball_volleyball_boost_forward * 0.5;
+	}
+	self.velocity = v + v_forward * g_nexball_volleyball_boost_forward + '0 0 1' * g_nexball_volleyball_boost_up;
 	if (other.weaponentity.wframe == WFRAME_MELEE || other.weaponentity.wframe == WFRAME_MELEE2 || (other.weapon == WEP_MELEE && other.weaponentity.wframe == WFRAME_FIRE1)) {
 		self.velocity = self.velocity + v_forward * g_nexball_volleyball_melee_boost_forward + '0 0 1' * g_nexball_volleyball_melee_boost_up;
 	}
