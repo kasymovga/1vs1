@@ -577,6 +577,7 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 		world_check_time_remaining(timelimit);
 
 	if (checkrules_suddendeathend) {
+		cvar_set("timelimit", ftos((checkrules_suddendeathend - map_starttime) / 60));
 		if (!checkrules_suddendeathwarning) {
 			checkrules_suddendeathwarning = TRUE;
 			GameStatus_Set(gamehook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
