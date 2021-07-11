@@ -968,17 +968,14 @@ float() race_OvertimeHandle {
 		// at least 2 of the players have completed a lap: start the RACE
 		// otherwise, the players should end the qualifying on their own
 		if (readyplayers || playerswithlaps >= 2) {
-			checkrules_suddendeathend = 0;
 			ready_restart(); // go to race
 			return TRUE;
 		}
 	}
-	if (!checkrules_suddendeathend) {
-		checkrules_suddendeathend = time + 60 * cvar("timelimit_suddendeath");
-		if (g_race && !g_race_qualifying)
-			race_start_completing();
-	}
-	return TRUE;
+	if (g_race && !g_race_qualifying)
+		race_start_completing();
+
+	return FALSE;
 }
 
 float race_SpawnPointGood(entity spot) {

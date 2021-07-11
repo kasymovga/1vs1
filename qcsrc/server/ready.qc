@@ -54,14 +54,19 @@ void(void) ready_restart_force {
 	bprint("^1Server is restarting...\n");
 	vote_reset();
 	// clear overtime
-	if (checkrules_overtimesadded > 0) {
+	float newTL;
+	if (world_check_rules_overtimesadded > 0) {
 		//we have to decrease timelimit to its original value again!!
-		float newTL;
 		newTL = cvar("timelimit");
-		newTL -= checkrules_overtimesadded * cvar("timelimit_overtime");
+		newTL -= world_check_rules_overtimesadded * cvar("g_timelimit_overtime");
 		cvar_set("timelimit", ftos(newTL));
 	}
-	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
+	if (world_check_rules_suddendeathend) {
+		newTL = (world_check_rules_suddendeathend - time) / 60;
+		newTL -= cvar("g_timelimit_suddendeath");
+		cvar_set("timelimit", ftos(newTL));
+	}
+	world_check_rules_suddendeathend = world_check_rules_overtimesadded = world_check_rules_suddendeathwarning = 0;
 	ready_restart_happened = 1;
 	map_starttime = time + RESTART_COUNTDOWN;
 	warmup_finish();

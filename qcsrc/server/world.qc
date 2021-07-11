@@ -393,10 +393,10 @@ void(float final) world_dump_stats {
 	}
 }
 
-float checkrules_equality;
-float checkrules_suddendeathwarning;
-float checkrules_suddendeathend;
-float checkrules_overtimesadded; //how many overtimes have been already added
+float world_check_rules_equality;
+float world_check_rules_suddendeathwarning;
+float world_check_rules_suddendeathend;
+float world_check_rules_overtimesadded; //how many overtimes have been already added
 
 float(void) world_check_rules_run_out_spawns {
 	entity head;
@@ -429,7 +429,7 @@ float(void) world_check_rules_run_out_spawns {
 	}
 	world_winners_clear();
 	if (score_team1 + score_team2 + score_team3 + score_team4 == 0) {
-		checkrules_equality = TRUE;
+		world_check_rules_equality = TRUE;
 		return TRUE;
 	} else if (score_team1 + score_team2 + score_team3 + score_team4 == 1) {
 		float t = 0, i;
@@ -460,8 +460,8 @@ void(void) world_overtime {
 		return;
 
 	float tl;
-	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < cvar("g_timelimit_overtimes")) && cvar("g_timelimit_overtime")) {
-		++checkrules_overtimesadded;
+	if ((world_check_rules_overtimesadded >= 0) && (world_check_rules_overtimesadded < cvar("g_timelimit_overtimes")) && cvar("g_timelimit_overtime")) {
+		++world_check_rules_overtimesadded;
 		//add one more overtime by simply extending the timelimit
 		tl = cvar("timelimit");
 		tl += cvar("g_timelimit_overtime");
@@ -473,10 +473,10 @@ void(void) world_overtime {
 			minutesPlural = " ^3minutes";
 
 		GameStatus_Set(strcat("^3Now playing ^1OVERTIME^3!\n\n^3Added ^1", ftos(cvar("g_timelimit_overtime")), minutesPlural, " to the game!"), 1);
-	} else if (!checkrules_suddendeathend) {
+	} else if (!world_check_rules_suddendeathend) {
 		tl = cvar("timelimit");
 		tl += cvar("g_timelimit_suddendeath");
-		checkrules_suddendeathend = map_starttime + 60 * tl;
+		world_check_rules_suddendeathend = map_starttime + 60 * tl;
 		cvar_set("timelimit", ftos(tl));
 	}
 }
@@ -576,10 +576,10 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 	} else if (timelimit)
 		world_check_time_remaining(timelimit);
 
-	if (checkrules_suddendeathend) {
-		cvar_set("timelimit", ftos((checkrules_suddendeathend - map_starttime) / 60));
-		if (!checkrules_suddendeathwarning) {
-			checkrules_suddendeathwarning = TRUE;
+	if (world_check_rules_suddendeathend) {
+		cvar_set("timelimit", ftos((world_check_rules_suddendeathend - map_starttime) / 60));
+		if (!world_check_rules_suddendeathwarning) {
+			world_check_rules_suddendeathwarning = TRUE;
 			GameStatus_Set(gamehook_SuddenDeathMessageMod("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!"), 1);
 		}
 	} else {
@@ -603,8 +603,8 @@ void(void) world_check_rules { // Exit deathmatch games upon conditions
 		map_finish();
 		return;
 	}
-	if (checkrules_suddendeathend)
-	if (time >= checkrules_suddendeathend || !score_winning_condition_helper_equality) {
+	if (world_check_rules_suddendeathend)
+	if (time >= world_check_rules_suddendeathend || !score_winning_condition_helper_equality) {
 		map_finish();
 		return;
 	}
