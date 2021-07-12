@@ -2,6 +2,8 @@ entity shootingrange_controller;
 float shootingrange_round_start;
 float shootingrange_round_active;
 float SHOOTINGRANGE_ROUND_SCORE;
+float g_shootingrange_roundtime;
+float g_shootingrange_rounddelay;
 
 void(void) shootingrange_target_show {
 	self.alpha = 1;
@@ -26,6 +28,18 @@ void(void) shootingrange_target_hide {
 	self.nextthink = 0;
 }
 
+float(entity to, float f) shootingrange_controller_send {
+	WriteByte(MSG_ENTITY, NET_CSQC_SHOOTINGRANGE);
+	if (shootingrange_round_active) {
+		WriteCoord(MSG_ENTITY, shootingrange_round_start);
+		WriteShort(MSG_ENTITY, g_shootingrange_roundtime);
+	} else {
+		WriteCoord(MSG_ENTITY, 0);
+		WriteShort(MSG_ENTITY, 0);
+	}
+	return TRUE;
+}
+
 void(float a) shootingrange_activate {
 	if (a) {
 		if (shootingrange_round_active)
@@ -38,6 +52,7 @@ void(float a) shootingrange_activate {
 
 		shootingrange_round_active = FALSE;
 	}
+	shootingrange_controller.SendFlags |= 1;
 	entity e = self;
 	for (self = find(world, classname, "shootingrange_target"); self; self = find(self, classname, "shootingrange_target")) {
 		if (shootingrange_round_active)
@@ -48,7 +63,7 @@ void(float a) shootingrange_activate {
 	self = e;
 	if (shootingrange_round_active)
 		FOR_EACH_PLAYER(e) {
-			score_player_set(e, SP_SCORE, 0);
+			score_player_set(e, SHOOTINGRANGE_ROUND_SCORE, 0);
 		}
 }
 
@@ -68,11 +83,11 @@ void(void) shootingrange_controller_think {
 			sound_play2all("announcer/robotic/begin.wav");
 			shootingrange_countdown_last = 0;
 			shootingrange_activate(TRUE);
-		} else if (time - shootingrange_round_start > 60) {
+		} else if (time - shootingrange_round_start > g_shootingrange_roundtime) {
 			GameStatus_Set("^3Round over", 5);
 			sound_play2all("domination/claim.wav");
 			shootingrange_activate(FALSE);
-			shootingrange_round_start = time + 10;
+			shootingrange_round_start = time + g_shootingrange_rounddelay;
 		}
 	} else {
 		float countdown = ceil(shootingrange_round_start - time);
@@ -91,7 +106,11 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	if (deathtype & HITTYPE_SPLASH)
 		return;
 
-	float s = score_player_add(attacker, SP_SCORE, 1);
+	float s = score_player_add(attacker, SHOOTINGRANGE_ROUND_SCORE, 1);
+	float sm = attacker.scorekeeper.scores[SP_SCORE];
+	if (s > sm)
+		score_player_set(attacker, SP_SCORE, s);
+
 	shootingrange_target_hide();
 	if (shootingrange_round_active) {
 		self.nextthink = time + self.delay;
@@ -110,6 +129,7 @@ void(void) spawnfunc_shootingrange_target {
 		return;
 	}
 	model_setup();
+	self.iscreature = TRUE; //for accuracy tracking
 	self.classname = "shootingrange_target";
 	self.takedamage = DAMAGE_AIM;
 	if (self.solid == SOLID_NOT)
@@ -132,15 +152,18 @@ void(void) spawnfunc_shootingrange_area {
 }
 
 void(void) shootingrange_init {
-	score_generic();
-	SHOOTINGRANGE_ROUND_SCORE = score_register("current", SCORE_FLAG_LOWER_IS_BETTER);
 	player_independent = 1;
+	score_generic();
+	SHOOTINGRANGE_ROUND_SCORE = score_register("current", SCORE_FLAG_SORT_PRIO_SECONDARY);
 	shootingrange_controller = spawn();
 	shootingrange_controller.nextthink = time;
 	shootingrange_controller.think = shootingrange_controller_think;
+	net_link_entity(shootingrange_controller, FALSE, 0, shootingrange_controller_send);
 	precache_sound("announcer/robotic/begin.wav");
 	precache_sound("announcer/robotic/3.wav");
 	precache_sound("announcer/robotic/2.wav");
 	precache_sound("announcer/robotic/1.wav");
 	precache_sound("domination/claim.wav");
+	CVAR_CACHE(g_shootingrange_roundtime);
+	CVAR_CACHE(g_shootingrange_rounddelay);
 }

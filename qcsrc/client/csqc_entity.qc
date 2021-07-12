@@ -97,6 +97,7 @@ void(void) csqc_entity_init {
 	csqc_entity_parsers[NET_CSQC_LMS_SPHERE] = sphere_read;
 	csqc_entity_parsers[NET_CSQC_ICE] = ice_read;
 	csqc_entity_parsers[NET_CSQC_3RDVIEW] = thirdview_read;
+	csqc_entity_parsers[NET_CSQC_SHOOTINGRANGE] = shootingrange_read;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

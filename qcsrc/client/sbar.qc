@@ -1606,6 +1606,7 @@ float(float stat_type, float stat_regen, float stat_maxregen) sbar_nadget_regen 
 
 var void(void) sbar_gametype_hud;
 void(void) sbar_gametype_init {
+	sbar_score_draw = sbar_score_draw_default;
 	if (gametype == GAMETYPE_KEYHUNT || gametype == GAMETYPE_KEYHUNT_CA || gametype == GAMETYPE_KEYHUNT_FT)
 		sbar_gametype_hud = kh_hud;
 	else if (gametype == GAMETYPE_CTF || gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
@@ -1618,9 +1619,10 @@ void(void) sbar_gametype_init {
 	} else if (gametype == GAMETYPE_RACE || gametype == GAMETYPE_CTS) {
 		sbar_gametype_hud = stdproc_nothing;
 		sbar_score_draw = sbar_score_draw_race;
+	} else if (gametype == GAMETYPE_SHOOTINGRANGE) {
+		sbar_gametype_hud = shootingrange_hud;
 	} else {
 		sbar_gametype_hud = stdproc_nothing;
-		sbar_score_draw = sbar_score_draw_default;
 	}
 }
 

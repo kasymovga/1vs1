@@ -55,6 +55,7 @@ recordlist.qh
 db.qh
 map.qh
 server.qh
+shootingrange.qh
 ../client-server/progs.qc
 cvar.qc
 str.qc
@@ -144,3 +145,4 @@ modelselect.qc
 thirdview.qc
 csqc_entity.qc
 recordlist.qc
+shootingrange.qc
