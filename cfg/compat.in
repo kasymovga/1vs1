@@ -11,6 +11,7 @@ set sv_spawnreplace_ball_football nexball_football
 set sv_spawnreplace_ball_basketball nexball_basketball
 set sv_spawnreplace_ball_hockey nexball_hockey
 set sv_spawnreplace_ball_volleyball nexball_volleyball
+//This is not mistake but strange historical behavior
 set sv_spawnreplace_ball_redgoal nexball_bluegoal
 set sv_spawnreplace_ball_bluegoal nexball_redgoal
 set sv_spawnreplace_ball_fault nexball_fault
