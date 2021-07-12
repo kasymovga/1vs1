@@ -81,7 +81,8 @@ float keyDownNexuizInputBox(entity me, float key, float ascii, float shift)
 			me.saveCvars(me);
 			r = 1;
 		}
-		me.onEnter(me, me.onEnterEntity);
+		if (me.onEnter)
+			me.onEnter(me, me.onEnterEntity);
 	}
 	if(keyDownInputBox(me, key, ascii, shift))
 		r = 1;
