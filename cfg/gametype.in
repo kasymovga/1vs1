@@ -15,7 +15,7 @@ alias gametype_catf "reset_gametype; _gametype catf; bprint_gtswitch ^3CTF with 
 alias gametype_ctft "reset_gametype; _gametype ctft; bprint_gtswitch ^3CTF with FT"
 alias gametype_conq "reset_gametype; _gametype conquest; bprint_gtswitch ^3Conquest"
 alias gametype_conquest gametype_conq
-alias gametype_kh "reset_gametype; _gametype keyhunt; bprint_gtswitch ^3Key Hunt"
+alias gametype_kh "reset_gametype; _gametype kh; bprint_gtswitch ^3Key Hunt"
 alias gametype_keyhunt gametype_kh
 alias gametype_khca "reset_gametype; _gametype khca; bprint_gtswitch ^3Key Hunt with CA"
 alias gametype_khft "reset_gametype; _gametype khft; bprint_gtswitch ^3Key Hunt with FT"
