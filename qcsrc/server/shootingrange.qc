@@ -20,6 +20,8 @@ void(void) shootingrange_target_show {
 	v_y = from_y + random() * (to_y - from_y);
 	v_z = from_z + random() * (to_z - from_z);
 	setorigin(self, v);
+	pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+	sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 }
 
 void(void) shootingrange_target_hide {
@@ -128,6 +130,10 @@ void(void) spawnfunc_shootingrange_target {
 		remove(self);
 		return;
 	}
+	if (self.noise == "")
+		self.noise = "misc/spawn.wav";
+
+	precache_sound(self.noise);
 	model_setup();
 	self.iscreature = TRUE; //for accuracy tracking
 	self.classname = "shootingrange_target";
