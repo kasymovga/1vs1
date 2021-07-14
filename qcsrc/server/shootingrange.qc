@@ -4,6 +4,9 @@ float shootingrange_round_active;
 float SHOOTINGRANGE_ROUND_SCORE;
 float g_shootingrange_roundtime;
 float g_shootingrange_rounddelay;
+enum: flag {
+	SHOOTINGRANGE_SPLASH,
+};
 
 void(void) shootingrange_target_show {
 	self.alpha = 1;
@@ -105,7 +108,10 @@ void(void) shootingrange_controller_think {
 }
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) shootingrange_target_damage {
-	if (deathtype & HITTYPE_SPLASH)
+	if ((deathtype & HITTYPE_SPLASH) && !(self.spawnflags & SHOOTINGRANGE_SPLASH))
+		return;
+
+	if (_damage < self.health)
 		return;
 
 	float s = score_player_add(attacker, SHOOTINGRANGE_ROUND_SCORE, 1);
@@ -137,7 +143,7 @@ void(void) spawnfunc_shootingrange_target {
 	model_setup();
 	self.iscreature = TRUE; //for accuracy tracking
 	self.classname = "shootingrange_target";
-	self.takedamage = DAMAGE_AIM;
+	self.takedamage = DAMAGE_YES;
 	if (self.solid == SOLID_NOT)
 		self.solid = SOLID_BSP;
 
