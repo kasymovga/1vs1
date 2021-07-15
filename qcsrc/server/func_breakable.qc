@@ -1,21 +1,9 @@
-float sv_breakable_debris;
 .entity sprite;
 
-.float debrismovetype;
-.float debrissolid;
-.vector debrisvelocity;
-.vector debrisvelocityjitter;
-.vector debrisavelocityjitter;
-.float debristime;
-.float debristimejitter;
-.float debrisfadetime;
-.float debrisdamageforcescale;
-.float debrisskin;
 .float napalm_count;
 .float napalm_color;
 
 .string mdl_dead; // or "" to hide when broken
-.string debris; // space separated list of debris models
 // other fields:
 //   mdl = particle effect name
 //   count = particle effect multiplier
@@ -31,41 +19,6 @@ float sv_breakable_debris;
 //   want that!
 
 void(entity inflictor, entity attacker, float _damage, float deathtype, vector hitloc, vector force) func_breakable_damage;
-
-//
-// func_breakable
-// - basically func_assault_destructible for general gameplay use
-//
-void(string debrisname, vector force) func_breakable_launch_debris {
-	entity dbr;
-	dbr = spawn();
-	setorigin(dbr, self.absmin
-			+ '1 0 0' * random() * (self.absmax_x - self.absmin_x)
-			+ '0 1 0' * random() * (self.absmax_y - self.absmin_y)
-			+ '0 0 1' * random() * (self.absmax_z - self.absmin_z));
-	setmodel(dbr, debrisname );
-	dbr.skin = self.debrisskin;
-	dbr.colormap = self.colormap; // inherit team colors
-	dbr.owner = self; // do not be affected by our own explosion
-	dbr.movetype = self.debrismovetype;
-	dbr.solid = self.debrissolid;
-	if (dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
-		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
-
-	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * random_2();
-	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * random_2();
-	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * random_2();
-	self.velocity = self.velocity + force * self.debrisdamageforcescale;
-	dbr.avelocity_x = random() * self.debrisavelocityjitter_x;
-	dbr.avelocity_y = random() * self.debrisavelocityjitter_y;
-	dbr.avelocity_z = random() * self.debrisavelocityjitter_z;
-	dbr.damageforcescale = self.debrisdamageforcescale;
-	if (dbr.damageforcescale)
-		dbr.takedamage = DAMAGE_YES;
-
-	dbr.reset = stdproc_remove;
-	entity_fade_setup(dbr, time + self.debristime + random_2() * self.debristimejitter, self.debrisfadetime);
-}
 
 void(void) func_breakable_colormod {
 	float h;
@@ -151,17 +104,12 @@ void(void) func_breakable_launch_napalm {
 	self.owner.team = saveteam;
 }
 
-vector debrisforce; // global, set before calling this
+vector func_breakable_debrisforce; // global, set before calling this
 void(void) func_breakable_destroy {
-	float n, i;
 	string oldmsg;
 	activator = self.owner;
 	// now throw around the debris
-	if (sv_breakable_debris) {
-		n = tokenize_console(self.debris);
-		for(i = 0; i < n; ++i)
-			func_breakable_launch_debris(argv(i), debrisforce);
-	}
+	debris_throw(func_breakable_debrisforce);
 	func_breakable_launch_napalm();
 	func_breakable_destroyed();
 	if (self.noise)
@@ -198,7 +146,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 	self.health = self.health - _damage;
 	func_breakable_colormod();
 	if (self.health <= 0) {
-		debrisforce = force;
+		func_breakable_debrisforce = force;
 		damage_prepare_explosion(attacker, func_breakable_destroy);
 	}
 }
@@ -216,15 +164,13 @@ float func_breakable_init_done;
 void(void) func_breakable_init {
 	if (func_breakable_init_done)
 		return;
-
-	CVAR_CACHE(sv_breakable_debris);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
 void(void) spawnfunc_func_breakable {
-	float n, i;
 	func_breakable_init();
 	model_movable_init();
+	debris_init();
 	if not(self.health)
 		self.health = 100;
 
@@ -234,14 +180,6 @@ void(void) spawnfunc_func_breakable {
 	self.oldsolid = self.solid;
 	self.max_health = self.health;
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
-	if not(self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
-	if not(self.debrissolid) self.debrissolid = SOLID_NOT;
-	if (self.debrisvelocity == '0 0 0') self.debrisvelocity = '0 0 140';
-	if (self.debrisvelocityjitter == '0 0 0') self.debrisvelocityjitter = '70 70 70';
-	if (self.debrisavelocityjitter == '0 0 0') self.debrisavelocityjitter = '600 600 600';
-	if not(self.debristime) self.debristime = 3.5;
-	if not(self.debristimejitter) self.debristimejitter = 2.5;
-	if not(self.debrisfadetime) self.debrisfadetime = 1;
 	if (self.mdl != "")
 		self.cnt = particleeffectnum(self.mdl);
 
@@ -266,10 +204,6 @@ void(void) spawnfunc_func_breakable {
 	// precache all the models
 	if (self.mdl_dead)
 		precache_model(self.mdl_dead);
-
-	n = tokenize_console(self.debris);
-	for(i = 0; i < n; ++i)
-		precache_model(argv(i));
 
 	if (self.noise)
 		precache_sound(self.noise);

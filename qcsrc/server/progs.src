@@ -139,6 +139,7 @@ tdm.qh
 mapvote.qh
 casing.qh
 hint.qh
+debris.qh
 thirdview.qh
 centerprint.qc
 sound.qc
@@ -260,6 +261,7 @@ portal.qc
 target_spawn.qc
 func.qc
 func_breakable.qc
+debris.qc
 func_laserbeam.qc
 func_camera.qc
 misc.qc

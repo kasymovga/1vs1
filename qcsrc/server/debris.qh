@@ -1,0 +1,2 @@
+void(void) debris_init;
+void(vector force) debris_throw;

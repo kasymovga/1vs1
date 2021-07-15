@@ -120,6 +120,7 @@ void(entity inflictor, entity attacker, float _damage, float deathtype, vector h
 		score_player_set(attacker, SP_SCORE, s);
 
 	shootingrange_target_hide();
+	debris_throw(force);
 	if (shootingrange_round_active) {
 		self.nextthink = time + self.delay;
 		self.think = shootingrange_target_show;
@@ -139,6 +140,7 @@ void(void) spawnfunc_shootingrange_target {
 	if (self.noise == "")
 		self.noise = "misc/spawn.wav";
 
+	debris_init();
 	precache_sound(self.noise);
 	model_setup();
 	self.iscreature = TRUE; //for accuracy tracking
