@@ -1,0 +1,2 @@
+void(void) shootingrange_hud;
+void(float _ignore) shootingrange_read;
