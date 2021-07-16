@@ -10,6 +10,7 @@ set akimbo_g_balance_shotgun_primary_damage 9
 set akimbo_g_balance_shotgun_secondary_damage 9
 set akimbo_g_balance_uzi_first_damage 28
 set akimbo_g_balance_uzi_sustained_damage 16
+set akimbo_g_balance_electro_secondary_refire 0.35
 set akimbo_g_weaponreplace_shotgun shotgun
 set akimbo_g_weaponreplace_supershotgun shotgun
 set akimbo_ca_g_pinata 1
