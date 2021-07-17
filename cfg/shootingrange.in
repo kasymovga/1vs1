@@ -1,3 +1,5 @@
 set g_shootingrange_roundtime 60
 set g_shootingrange_rounddelay 10
 set sr_g_score_bestweapon 1
+alias sv_hook_gamestart_sr ""
+alias cl_hook_gamestart_sr ""
