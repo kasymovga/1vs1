@@ -2,6 +2,7 @@
 .entity akimbo_ghost;
 float g_akimbo_weapons;
 float g_akimbo_throwable;
+float g_akimbo_weaponratefactor;
 float weapons_with_akimbo_support;
 void(entity e) akimbo_clear;
 entity(entity e, float deep) akimbo_ghost_get;
@@ -122,6 +123,16 @@ float(float wbit) akimbo_weapon_throw {
 	return FALSE;
 }
 
+var float() akimbo_weapon_rate_factor_next;
+float() akimbo_weapon_rate_factor {
+	float f = 1;
+	if (self.akimbo_ghost)
+	if (self.akimbo_ghost.weaponentity)
+		f = g_akimbo_weaponratefactor;
+
+	return f * akimbo_weapon_rate_factor_next();
+}
+
 void(void) akimbo_init {
 	float i, j, n;
 	string s = cvar_string("g_akimbo_weapons");
@@ -159,8 +170,11 @@ void(void) akimbo_init {
 
 	CVAR_CACHE(g_akimbo_animation_shift);
 	CVAR_CACHE(g_akimbo_throwable);
+	CVAR_CACHE(g_akimbo_weaponratefactor);
 	akimbo_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = akimbo_player_clear;
+	akimbo_weapon_rate_factor_next = gamehook_chain_weapon_rate_factor;
+	gamehook_chain_weapon_rate_factor = akimbo_weapon_rate_factor;
 }
 
 entity(entity e) akimbo_owner {
