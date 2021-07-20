@@ -1389,14 +1389,9 @@ void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weap
 	// calculate the shotdir from the chosen shotorg
 	if (akimbo_active(ent))
 		weapon_shotdir = s_forward;
-	else
-	{
+	else {
 		float dphitcontentsmask_save = ent.dphitcontentsmask;
-		if(ent.weapon == WEP_CAMPINGRIFLE)
-			ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-		else
-			ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-
+		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * WORLD_MAX_SHOT_DISTANCE, TRACE_MOVE_NOMONSTERS, ent);
 		ent.dphitcontentsmask = dphitcontentsmask_save;
 		weapon_shotpoint = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
