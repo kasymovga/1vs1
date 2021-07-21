@@ -65,7 +65,7 @@ void Roundbased_ServerFrame()
 		}
 	}
 	if (rb_team_check >= 0) {
-		GameStatus_Set("^2Awaiting players...\n", 1);
+		gamestatus_set("^2Awaiting players...\n", 1);
 		Roundbased_SetRoundStartWithWinner(0);
 		rb_need_check_teams = 0;
 		return;
@@ -94,7 +94,7 @@ void Roundbased_ServerFrame()
 			rb_countdown_last = 0;
 			Roundbased_Active = 1;
 			sound_play2all("announcer/robotic/begin.wav");
-			GameStatus_Set("^2New round started\n", 3);
+			gamestatus_set("^2New round started\n", 3);
 		}
 		else
 		{
@@ -111,7 +111,7 @@ void Roundbased_ServerFrame()
 				if (countdown <= 3)
 					sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 
-				GameStatus_Set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
+				gamestatus_set(strcat(winner_message, "^2Starting in ", ftos(countdown), "\n"), 3);
 				rb_countdown_last = countdown;
 			}
 		}

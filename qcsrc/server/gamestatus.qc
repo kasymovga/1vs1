@@ -1,6 +1,7 @@
 entity game_status;
 
-float GameStatus_SendEntity(entity to, float sf) {
+#define gamestatus_send GameStatus_SendEntity
+float(entity to, float sf) gamestatus_send {
 	WriteByte(MSG_ENTITY, NET_CSQC_GAMESTATUS);
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1)
@@ -12,7 +13,8 @@ float GameStatus_SendEntity(entity to, float sf) {
 	return TRUE;
 }
 
-void GameStatus_Think() {
+#define gamestatus_think GameStatus_Think
+void(void) gamestatus_think {
 	self.alpha = self.alpha - frametime;
 	self.nextthink = time;
 	if (self.alpha <= 0) {
@@ -23,10 +25,10 @@ void GameStatus_Think() {
 		self.SendFlags |= 2;
 }
 
-void GameStatus_Set(string status, float _delay) {
+void(string status, float _delay) gamestatus_set {
 	if not(game_status) {
 		game_status = spawn();
-		net_link_entity(game_status, FALSE, 0, GameStatus_SendEntity);
+		net_link_entity(game_status, FALSE, 0, gamestatus_send);
 	}
 	if (game_status.message != status) {
 		str_unzone_ifneeded(game_status.message);
@@ -38,5 +40,5 @@ void GameStatus_Set(string status, float _delay) {
 		game_status.SendFlags |= 2;
 	}
 	game_status.nextthink = time + _delay;
-	game_status.think = GameStatus_Think;
+	game_status.think = gamestatus_think;
 }

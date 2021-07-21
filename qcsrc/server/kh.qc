@@ -121,7 +121,7 @@ void kh_Controller_Think()  // called a lot
 				s = kh_Controller_Waitmsg;
 
 			if not(kh_roundbased)
-				GameStatus_Set(s, 2);
+				gamestatus_set(s, 2);
 		}
 		self.cnt -= 1;
 	}
@@ -792,7 +792,7 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 	if not(kh_roundbased)
-		GameStatus_Set("", 1);
+		gamestatus_set("", 1);
 
 	entity key;
 	i = 0;
@@ -822,7 +822,7 @@ void kh_StartRound()  // runs at the start of each round
 void kh_EnableTrackingDevice()  // runs after each round
 {
 	if not(kh_roundbased)
-		GameStatus_Set("", 1);
+		gamestatus_set("", 1);
 
 	kh_tracking_enabled = TRUE;
 }

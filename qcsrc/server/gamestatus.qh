@@ -1,1 +1,1 @@
-void GameStatus_Set(string status, float time);
+void(string status, float time) gamestatus_set;

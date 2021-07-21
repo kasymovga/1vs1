@@ -294,7 +294,7 @@ void(entity e, entity penalty_receiver, entity attacker) ctf_flag_drop {
 		WaypointSprite_Ping(p.waypointsprite_attachedforcarrier);
 		WaypointSprite_DetachCarrier(p);
 	}
-	GameStatus_Set(strcat(team_color_code(e.team), team_color_name(e.team), " Flag^7 dropped"), 1);
+	gamestatus_set(strcat(team_color_code(e.team), team_color_name(e.team), " Flag^7 dropped"), 1);
 	sound (e, CHAN_TRIGGER, e.noise4, VOL_BASE, ATTN_NONE);
 	setattachment(e, world, "");
 	e.damageforcescale = g_ctf_damageforcescale;
@@ -462,7 +462,7 @@ void() ctf_flag_touch {
 			}
 		}
 		sound (other, CHAN_AUTO, self.noise2, VOL_BASE, ATTN_NONE);
-		GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
+		gamestatus_set(strcat(team_color_code(self.team), team_color_name(self.team), " Team^7 scores"), 1);
 		WaypointSprite_DetachCarrier(other);
 		ctf_flag_regen (other.flagcarried);
 		other.flagcarried = world;
@@ -491,7 +491,7 @@ void() ctf_flag_touch {
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(self.team, CTF_SCORE_VALUE(score_pickup_base)));
 		self.dropperid = other.playerid;
 		score_player_add(other, CTF_SCORE_PICKUPS, 1);
-		GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
+		gamestatus_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 		centerprint(other, "You have the flag!");
 		sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 		FOR_EACH_PLAYER(player)
@@ -539,7 +539,7 @@ void() ctf_flag_touch {
 					score_player_team_add_score(other, CTF_SCORE_VALUE(score_return_rogue));
 			}
 			score_player_add(other, CTF_SCORE_RETURNS, 1);
-			GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
+			gamestatus_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 returned"), 1);
 			sound (other, CHAN_AUTO, self.noise1, VOL_BASE, ATTN_NONE);
 			ctf_flag_return(self);
 		} else if (!other.flagcarried && (other.playerid != self.dropperid || time > self.ctf_droptime + g_ctf_delay_collect)) {
@@ -563,7 +563,7 @@ void() ctf_flag_touch {
 			//print("score is ", ftos(f), "\n");
 			score_player_team_add_score(other, f);
 			score_player_add(other, CTF_SCORE_PICKUPS, 1);
-			GameStatus_Set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
+			gamestatus_set(strcat(team_color_code(self.team), team_color_name(self.team), " Flag^7 taken"), 1);
 			centerprint(other, "You have the flag!");
 			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NONE);
 			FOR_EACH_PLAYER(player)

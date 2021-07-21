@@ -85,7 +85,7 @@ void survive_trigger() {
 			self.use();
 	}
 	survive_active = TRUE;
-	GameStatus_Set("^1New wave incoming!\n^1Try to survive", 2);
+	gamestatus_set("^1New wave incoming!\n^1Try to survive", 2);
 	sound_play2all("announcer/robotic/begin.wav");
 	self = oldself;
 	remove(self);
@@ -194,7 +194,7 @@ float survive_WinningCondition(float ignore, float ignore2) {
 		float countdown = ceil(survive_plan_entity.nextthink - time);
 		if (countdown > 0)
 		if (survive_last_countdown != countdown) {
-			GameStatus_Set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
+			gamestatus_set(strcat(survive_wave_prefix, "\n^3New wave starts in ", ftos(countdown), " seconds"), 1);
 			if (countdown <= 3)
 				sound_play2all(strcat("announcer/robotic/", ftos(countdown), ".wav"));
 

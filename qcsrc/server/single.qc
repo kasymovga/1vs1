@@ -237,8 +237,7 @@ void(void) single_init {
 
 void(void) single_secret_controller_use {
 	single_secrets_found++;
-	single_secrets_controller.message = strcat("^2Secrets found: ^3", ftos(single_secrets_found), "^2/^3", ftos(single_secrets_total));
-	GameStatus_Set(single_secrets_controller.message , 2);
+	gamestatus_set(strcat("^2Secrets found: ^3", ftos(single_secrets_found), "^2/^3", ftos(single_secrets_total)), 2);
 }
 
 void(void) single_secret_controller_reset {
