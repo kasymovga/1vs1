@@ -3,6 +3,7 @@
 float g_akimbo_weapons;
 float g_akimbo_throwable;
 float g_akimbo_weaponratefactor;
+float g_akimbo_weaponratefactor_for;
 float weapons_with_akimbo_support;
 void(entity e) akimbo_clear;
 entity(entity e, float deep) akimbo_ghost_get;
@@ -128,6 +129,9 @@ float() akimbo_weapon_rate_factor {
 	float f = 1;
 	if (self.akimbo_ghost)
 	if (self.akimbo_ghost.weaponentity)
+	if (self.weaponentity.state != WS_DROP)
+	if (self.weaponentity.state != WS_RAISE)
+	if (weapon_bit(self.weapon) & g_akimbo_weaponratefactor_for)
 		f = g_akimbo_weaponratefactor;
 
 	return f * akimbo_weapon_rate_factor_next();
@@ -157,8 +161,7 @@ void(void) akimbo_init {
 		n = tokenize_console(s);
 		for (i = 0; i < n; i++)
 			for (j = WEP_FIRST; j <= WEP_LAST; j++)
-				if (argv(i) == weapon_info(j).netname)
-				{
+				if (argv(i) == weapon_info(j).netname) {
 					g_akimbo_weapons |= weapon_bit(j);
 					break;
 				}
@@ -168,6 +171,18 @@ void(void) akimbo_init {
 	if not(g_powerup_strength_akimbo)
 		return;
 
+	s = cvar_string("g_akimbo_weaponratefactor_for");
+	if (s == "all")
+		g_akimbo_weaponratefactor_for = weapons_with_akimbo_support;
+	else {
+		n = tokenize_console(s);
+		for (i = 0; i < n; i++)
+			for (j = WEP_FIRST; j <= WEP_LAST; j++)
+				if (argv(i) == weapon_info(j).netname) {
+					g_akimbo_weaponratefactor_for |= weapon_bit(j);
+					break;
+				}
+	}
 	CVAR_CACHE(g_akimbo_animation_shift);
 	CVAR_CACHE(g_akimbo_throwable);
 	CVAR_CACHE(g_akimbo_weaponratefactor);
