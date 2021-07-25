@@ -24,7 +24,7 @@ entity weapon_spawn_chain;
 .float autoswitch;
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
-.void() weapon_think;
+.void(void) weapon_think;
 
 // weapon states (self.weaponentity.state)
 float WS_CLEAR			= 0; // no weapon selected
@@ -53,17 +53,17 @@ float WR_CVAR_CACHE     = 12; // update cvar cache
 .vector shotorg_visual;
 
 void(float wpn) weapon_defaultspawnfunc;
-float weapon_action(float wpn, float wrequest);
+float(float wpn, float wrequest) weapon_action;
 void(entity e, float wep, string name) weapon_give;
 void(float windex) weapon_setup;
 void(entity flash, vector offset) weapon_attach_to_shotorg;
-float() weapon_rate_factor;
+float(void) weapon_rate_factor;
 float(entity o) weapon_rate_factor_for;
-void() weapon_clear;
-float() weapon_model_customize;
-void() weapon_ready;
+void(void) weapon_clear;
+float(void) weapon_model_customize;
+void(void) weapon_ready;
 void(entity missile) weapon_setup_projectile_velocity;
-vector weapon_shotorg_adjust(vector vecs, float y_is_right, float visual, float akimbo_active);
+vector(vector vecs, float y_is_right, float visual, float akimbo_active) weapon_shotorg_adjust;
 #define weapon_setup_shot(ent,recoil,snd,maxhits) weapon_setup_shotdir(ent, v_forward, recoil, snd, maxhits)
 void(entity ent, vector s_forward, float recoil, string snd, float maxhits) weapon_setup_shotdir;
 void(float r) weapon_shake;
@@ -78,7 +78,7 @@ float(float wpn) weapon_bit;
 void(float imp) weapon_switch;
 void(float fr, float t, void() func) weapon_thinkf;
 float(float secondary, float attacktime) weapon_prepareattack;
-void() weapon_ready;
-void() weapon_init;
+void(void) weapon_ready;
+void(void) weapon_init;
 float weapon_spawned_list;
 #define WEAPON_VALID(w) ((w) >= WEP_FIRST && (w) <= WEP_LAST)
