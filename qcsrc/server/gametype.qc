@@ -63,7 +63,7 @@ void() gametype_init {
 		tdm_init();
 	} else if(gametype == GAMETYPE_FREEZETAG) {
 		team_play_activate();
-		Freeze_Init();
+		freeze_init();
 	} else if(gametype == GAMETYPE_CLANARENA) {
 		team_play_activate();
 		clanarena_init();

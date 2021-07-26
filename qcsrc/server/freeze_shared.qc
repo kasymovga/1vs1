@@ -1,54 +1,52 @@
-float SP_REVIVE;
+float FREEZE_SHARED_SCORE_REVIVE;
 
-var void(entity spot) Freeze_Spawn_NextLink;
-void Freeze_Spawn(entity spot)
-{
+var void(entity spot) freeze_shared_spawn_next;
+void(entity spot) freeze_shared_spawn {
 	Roundbased_NeedCheckTeams();
-	Freeze_Spawn_NextLink(spot);
+	freeze_shared_spawn_next(spot);
 }
 
-float Freeze_IceSkipThink() {
+float(void) freeze_shared_ice_skip_think {
 	return !Roundbased_Active;
 }
 
-void Freeze_IceUnfroze(entity unfrozer) {
+void(entity unfrozer) freeze_shared_ice_unfroze {
 	score_player_set(self.owner, SP_STATUS, 0);
 	if (unfrozer.classname == "player") {
 		score_player_add(unfrozer, SP_SCORE, 1);
-		score_player_add(unfrozer, SP_REVIVE, 1);
+		score_player_add(unfrozer, FREEZE_SHARED_SCORE_REVIVE, 1);
 	}
 }
 
-void Freeze_IceFrozenStatus() {
+void(void) freeze_shared_ice_frozen_status {
 	score_player_set(self, SP_STATUS, 1);
 }
 
-var void(float killed) Freeze_PlayerClear_NextLink;
-void Freeze_PlayerClear(float killed)
-{
+var void(float killed) freeze_shared_player_clear_next;
+void(float killed) freeze_shared_player_clear {
 	score_player_set(self, SP_STATUS, 0);
 	Roundbased_NeedCheckTeams();
-	Freeze_PlayerClear_NextLink(killed);
+	freeze_shared_player_clear_next(killed);
 }
 
-float Freeze_HandleFrags(entity attacker, entity targ, float f) {
+float(entity attacker, entity targ, float f) freeze_shared_score_give_frag_mod {
 	score_player_add(attacker, SP_SCORE, f);
 	return 0;
 }
 
-void Freeze_Init_Shared(string gt) {
+void(string gt) freeze_shared_init {
 	hint_add("You can revive frozen teammates standing close to him");
 	Roundbased_Init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
-	ice_hook_skip_think = Freeze_IceSkipThink;
-	ice_hook_skip_death_handle = Freeze_IceSkipThink;
-	ice_hook_unfroze = Freeze_IceUnfroze;
-	ice_hook_frozen_status = Freeze_IceFrozenStatus;
+	ice_hook_skip_think = freeze_shared_ice_skip_think;
+	ice_hook_skip_death_handle = freeze_shared_ice_skip_think;
+	ice_hook_unfroze = freeze_shared_ice_unfroze;
+	ice_hook_frozen_status = freeze_shared_ice_frozen_status;
 	ice_init();
-	Freeze_Spawn_NextLink = gamehook_chain_spawn;
-	gamehook_chain_spawn = Freeze_Spawn;
-	Freeze_PlayerClear_NextLink = gamehook_chain_player_clear;
-	gamehook_chain_player_clear = Freeze_PlayerClear;
-	gamehook_score_give_frag_mod = Freeze_HandleFrags;
-	SP_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
+	freeze_shared_spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = freeze_shared_spawn;
+	freeze_shared_player_clear_next = gamehook_chain_player_clear;
+	gamehook_chain_player_clear = freeze_shared_player_clear;
+	gamehook_score_give_frag_mod = freeze_shared_score_give_frag_mod;
+	FREEZE_SHARED_SCORE_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
 	SP_STATUS = score_register("status", 0);
 }

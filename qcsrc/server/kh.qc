@@ -959,7 +959,7 @@ void kh_init_delayed()  // sets up th KH environment
 		if (gametype == GAMETYPE_KEYHUNT_CA)
 			clanarena_shared_init("khca");
 		else if (gametype == GAMETYPE_KEYHUNT_FT)
-			Freeze_Init_Shared("khft");
+			freeze_shared_init("khft");
 
 		Roundbased_SetScoreField(ST_KH_CAPS);
 	}

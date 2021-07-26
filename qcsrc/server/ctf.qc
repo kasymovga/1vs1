@@ -896,7 +896,7 @@ void() ctf_delayedinit {
 		clanarena_shared_init("catf");
 		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
 	} else if (gametype == GAMETYPE_CTFT) {
-		Freeze_Init_Shared("ctft");
+		freeze_shared_init("ctft");
 		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
 	}
 }

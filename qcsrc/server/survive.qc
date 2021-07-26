@@ -227,7 +227,7 @@ void survive_IceUnfroze(entity unfrozer) {
 	score_player_set(self.owner, SP_STATUS, 0);
 	if (unfrozer.classname == "player") {
 		score_player_add(unfrozer, SP_SCORE, 1);
-		score_player_add(unfrozer, SP_REVIVE, 1);
+		score_player_add(unfrozer, FREEZE_SHARED_SCORE_REVIVE, 1);
 	}
 }
 
@@ -277,7 +277,7 @@ void survive_init() {
 	score_basics(SCORE_FLAG_SORT_PRIO_PRIMARY, SCORE_FLAG_SORT_PRIO_PRIMARY, TRUE); // NOTE this assumes that the rogue team is team 3
 	SP_STATUS = score_register("status", 0);
 	if (g_surv_freeze)
-		SP_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
+		FREEZE_SHARED_SCORE_REVIVE = score_register("revs", SCORE_FLAG_SORT_PRIO_SECONDARY);
 
 	CVAR_CACHE(g_surv_wave_pause);
 	g_surv_monster_factor = bound(0, cvar("g_surv_monster_factor"), 1);

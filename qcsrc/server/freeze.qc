@@ -1,13 +1,11 @@
-void Freeze_Init_Delayed()
-{
+void(void) freeze_init_delayed {
 	score_generic();
-	Freeze_Init_Shared("ft");
+	freeze_shared_init("ft");
 }
 
-void Freeze_Init()
-{
+void(void) freeze_init {
 	gamehook_score_winning_condition_countdown = stub_score_winning_condition_countdown;
 	gamehook_havocbot_role_choose = freeze_role_choose;
 	team_teams_set_count(bound(2, cvar("g_ft_teams"), 4));
-	entity_initialize(world, Freeze_Init_Delayed, INITPRIO_GAMETYPE);
+	entity_initialize(world, freeze_init_delayed, INITPRIO_GAMETYPE);
 }

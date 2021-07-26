@@ -1,1 +1,1 @@
-void Freeze_Init();
+void(void) freeze_init;
