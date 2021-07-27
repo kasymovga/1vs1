@@ -70,7 +70,7 @@ float(entity attacker, entity inflictor, float deathtype) ice_player_death_handl
 		return FALSE;
 
 	player_clear(TRUE);
-	Roundbased_NeedCheckTeams();
+	roundbased_check_teams();
 	if (self.deadflag == DEAD_FREEZE)
 		return TRUE;
 

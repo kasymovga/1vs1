@@ -2197,7 +2197,7 @@ float(entity plr, float wep) player_can_fire {
 	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
 		return FALSE;
 
-	return gamehook_chain_PlayerCanFire(plr, wep);
+	return gamehook_chain_player_can_fire(plr, wep);
 }
 
 .float hasweapon_complain_spam;

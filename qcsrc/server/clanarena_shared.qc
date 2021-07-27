@@ -1,9 +1,9 @@
 var void(entity spot) clanarena_shared_spawn_next;
 void clanarena_shared_spawn(entity spot) {
 	clanarena_shared_spawn_next(spot);
-	Roundbased_NeedCheckTeams();
-	if not(Roundbased_Active)
-	if not(Roundbased_RestartTime) {
+	roundbased_check_teams();
+	if not(roundbased_active)
+	if not(roundbased_restart_time) {
 		score_player_set(self, SP_STATUS, 0);
 		return;
 	}
@@ -12,8 +12,8 @@ void clanarena_shared_spawn(entity spot) {
 }
 
 float clanarena_shared_death_handle(entity attacker, entity inflictor, float deathtype) {
-	Roundbased_NeedCheckTeams();
-	if (Roundbased_Active)
+	roundbased_check_teams();
+	if (roundbased_active)
 		score_player_set(self, SP_STATUS, 1);
 
 	return FALSE;
@@ -21,12 +21,12 @@ float clanarena_shared_death_handle(entity attacker, entity inflictor, float dea
 
 var void(float killed) clanarena_shared_player_clear_next;
 void clanarena_shared_player_clear(float killed) {
-	Roundbased_NeedCheckTeams();
+	roundbased_check_teams();
 	clanarena_shared_player_clear_next(killed);
 }
 
 void(string gt) clanarena_shared_init {
-	Roundbased_Init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
+	roundbased_init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
 	gamehook_player_death_handle = clanarena_shared_death_handle;
 	clanarena_shared_player_clear_next = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = clanarena_shared_player_clear;

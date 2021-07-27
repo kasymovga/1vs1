@@ -486,7 +486,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		return;
 
 	if (kh_roundbased)
-	if not(Roundbased_Active)
+	if not(roundbased_active)
 		return;
 
 	if(self.owner) // already carried
@@ -627,7 +627,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 		}
 	bprint("^7 captured the keys for the ", team_colored_name(teem), "\n");
 	if (kh_roundbased)
-		Roundbased_SetRoundStartWithWinner(other.team);
+		roundbased_round_start_with_winner(other.team);
 
 	first = TRUE;
 	midpoint = '0 0 0';
@@ -894,7 +894,7 @@ float kh_DeathHandle(entity attacker, entity inflictor, float deathtype) {
 }
 
 void kh_WaitRoundBegin() {
-	if (Roundbased_Active)
+	if (roundbased_active)
 		kh_Controller_SetThink(0, "", kh_WaitForPlayers);
 	else
 		kh_Controller_SetThink(1, "", kh_WaitRoundBegin);
@@ -961,7 +961,7 @@ void kh_init_delayed()  // sets up th KH environment
 		else if (gametype == GAMETYPE_KEYHUNT_FT)
 			freeze_shared_init("khft");
 
-		Roundbased_SetScoreField(ST_KH_CAPS);
+		roundbased_score_field_set(ST_KH_CAPS);
 	}
 	float i;
 	entity key;

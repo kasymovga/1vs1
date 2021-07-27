@@ -387,7 +387,7 @@ float(entity ignore) ctf_flagcarrier_visible {
 void() ctf_flag_touch {
 	if (map_finished) return;
 	if (gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
-	if not(Roundbased_Active)
+	if not(roundbased_active)
 		return;
 
 	float t;
@@ -447,7 +447,7 @@ void() ctf_flag_touch {
 
 		score_player_team_add(other, CTF_SCORE_CAPS, CTF_SCORE_TEAM_CAPS, 1);
 		if (gametype == GAMETYPE_CATF || gametype == GAMETYPE_CTFT)
-			Roundbased_SetRoundStartWithWinner(other.team);
+			roundbased_round_start_with_winner(other.team);
 
 		// give credit to the individual player
 		score_player_team_add_score(other, ctf_adjust_score_by_enemy_number(other.flagcarried.team, CTF_SCORE_VALUE(score_capture)));
@@ -894,10 +894,10 @@ void() ctf_delayedinit {
 	CTF_SCORE_DROPS = score_register("drops", SCORE_FLAG_LOWER_IS_BETTER);
 	if (gametype == GAMETYPE_CATF) {
 		clanarena_shared_init("catf");
-		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
+		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
 	} else if (gametype == GAMETYPE_CTFT) {
 		freeze_shared_init("ctft");
-		Roundbased_SetScoreField(CTF_SCORE_TEAM_CAPS);
+		roundbased_score_field_set(CTF_SCORE_TEAM_CAPS);
 	}
 }
 

@@ -2,12 +2,12 @@ float FREEZE_SHARED_SCORE_REVIVE;
 
 var void(entity spot) freeze_shared_spawn_next;
 void(entity spot) freeze_shared_spawn {
-	Roundbased_NeedCheckTeams();
+	roundbased_check_teams();
 	freeze_shared_spawn_next(spot);
 }
 
 float(void) freeze_shared_ice_skip_think {
-	return !Roundbased_Active;
+	return !roundbased_active;
 }
 
 void(entity unfrozer) freeze_shared_ice_unfroze {
@@ -25,7 +25,7 @@ void(void) freeze_shared_ice_frozen_status {
 var void(float killed) freeze_shared_player_clear_next;
 void(float killed) freeze_shared_player_clear {
 	score_player_set(self, SP_STATUS, 0);
-	Roundbased_NeedCheckTeams();
+	roundbased_check_teams();
 	freeze_shared_player_clear_next(killed);
 }
 
@@ -36,7 +36,7 @@ float(entity attacker, entity targ, float f) freeze_shared_score_give_frag_mod {
 
 void(string gt) freeze_shared_init {
 	hint_add("You can revive frozen teammates standing close to him");
-	Roundbased_Init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
+	roundbased_init(cvar(strcat("g_", gt, "_enddelay")), cvar(strcat("g_", gt, "_startdelay")));
 	ice_hook_skip_think = freeze_shared_ice_skip_think;
 	ice_hook_skip_death_handle = freeze_shared_ice_skip_think;
 	ice_hook_unfroze = freeze_shared_ice_unfroze;

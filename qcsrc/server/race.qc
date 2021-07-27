@@ -857,12 +857,12 @@ float() race_PlayerAllowedToMove {
 	return TRUE;
 }
 
-var float(entity plr, float wep) race_PlayerCanFire_NextLink;
-float race_PlayerCanFire(entity plr, float wep) {
+var float(entity plr, float wep) race_player_can_fire_NextLink;
+float race_player_can_fire(entity plr, float wep) {
 	if (time < plr.race_penalty)
 		return FALSE;
 
-	return race_PlayerCanFire_NextLink(plr, wep);
+	return race_player_can_fire_NextLink(plr, wep);
 }
 
 void() race_PhysicFrameBegin {
@@ -1335,8 +1335,8 @@ void(void) race_init {
 	gamehook_InitSpectator = race_InitSpectator;
 	gamehook_world_reset = race_world_reset;
 	gamehook_PlayerAllowedToMove = race_PlayerAllowedToMove;
-	race_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
-	gamehook_chain_PlayerCanFire = race_PlayerCanFire;
+	race_player_can_fire_NextLink = gamehook_chain_player_can_fire;
+	gamehook_chain_player_can_fire = race_player_can_fire;
 	gamehook_PhysicFrameBegin = race_PhysicFrameBegin;
 	gamehook_client_put_spawn_point = race_client_put_spawn_point;
 	race_spawn_next = gamehook_chain_spawn;

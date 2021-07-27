@@ -1,7 +1,7 @@
 float g_ca_healthrotpause_on_damage;
 
 float(entity attacker, entity targ, float f) clanarena_HandleFrags {
-	if (Roundbased_Active) {
+	if (roundbased_active) {
 		score_player_add(attacker, SP_SCORE, f);
 	}
 	return 0;

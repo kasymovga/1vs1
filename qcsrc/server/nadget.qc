@@ -30,12 +30,12 @@ float nadget_ClientCommandHandle(string cmd, float tokens) {
 	return nadget_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-var float(entity plr, float wep) nadget_PlayerCanFire_NextLink;
-float nadget_PlayerCanFire(entity plr, float wep) {
+var float(entity plr, float wep) nadget_player_can_fire_NextLink;
+float nadget_player_can_fire(entity plr, float wep) {
 	if (self.hg_stealth)
 		return FALSE;
 
-	return nadget_PlayerCanFire_NextLink(plr, wep);
+	return nadget_player_can_fire_NextLink(plr, wep);
 }
 
 var void(void(string item, string cmd) Add_Item) nadget_gamemenu_send_NextLink;
@@ -247,8 +247,8 @@ void nadget_Init(void) {
 
 	nadget_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nadget_PlayerClear;
-	nadget_PlayerCanFire_NextLink = gamehook_chain_PlayerCanFire;
-	gamehook_chain_PlayerCanFire = nadget_PlayerCanFire;
+	nadget_player_can_fire_NextLink = gamehook_chain_player_can_fire;
+	gamehook_chain_player_can_fire = nadget_player_can_fire;
 	nadget_gamemenu_send_NextLink = gamehook_chain_gamemenu_send;
 	gamehook_chain_gamemenu_send = nadget_gamemenu_send;
 	nadget_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
