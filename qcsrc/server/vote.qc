@@ -242,7 +242,7 @@ float(string s, entity e) vote_cmd {
 						vote_called_vote = strzone(vote_remap_vote);
 						vote_called_vote_display = strzone(vote_remap_display);
 						vote_called = TRUE;
-						vote_note = NoteLine_New(vote_note_message);
+						vote_note = noteline_new(vote_note_message);
 						vote_called_master = FALSE;
 						vote_finished = time + cvar("sv_vote_timeout");
 						if (sv_announcer_extra_vote_now != "")
@@ -285,7 +285,7 @@ float(string s, entity e) vote_cmd {
 					vote_called_master = TRUE;
 					vote_called_vote = strzone("XXX");
 					vote_called_vote_display = strzone("^3master");
-					vote_note = NoteLine_New(vote_note_message);
+					vote_note = noteline_new(vote_note_message);
 					vote_finished = time + cvar("sv_vote_timeout");
 					if (sv_announcer_extra_vote_now != "")
 						sound_play2all(sv_announcer_extra_vote_now);

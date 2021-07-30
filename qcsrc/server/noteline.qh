@@ -1,1 +1,1 @@
-entity NoteLine_New(void() msggen);
+entity(void() msggen) noteline_new;
