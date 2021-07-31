@@ -41,7 +41,6 @@ var void(float frags_remain) gamehook_score_winning_condition_countdown = {
 }
 var string(string s) gamehook_SuddenDeathMessageMod = { return s; }
 var string(string s) gamehook_map_finish_message_mod = { return s; }
-var float() false_WarmupAllowed = { return FALSE; }
 var float() gamehook_WarmupAllowed = { return TRUE; }
 var float() gamehook_ReadyAllowed = { return FALSE; }
 var float() gamehook_ClearScoreAllowed = { return TRUE; }
