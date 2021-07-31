@@ -2117,7 +2117,6 @@ void(entity spot) player_spawn {
 	self.statdraintime = time + 5;
 	self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 	if (self.killcount == -666) {
-		rank_distribute(self);
 		score_clear(self);
 		self.killcount = 0;
 	}

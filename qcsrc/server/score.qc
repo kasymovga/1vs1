@@ -253,6 +253,7 @@ void(entity player) score_clear {
 		return;
 
 	sk = player.scorekeeper;
+	rank_distribute(player);
 	player.play_time = 0;
 	for(i = 0; i < SCORE_FILEDS_MAX; ++i) if not(score_flags[i] & SCORE_FLAG_NOCLEAR)
 	{
