@@ -45,7 +45,6 @@ var float() false_WarmupAllowed = { return FALSE; }
 var float() gamehook_WarmupAllowed = { return TRUE; }
 var float() gamehook_ReadyAllowed = { return FALSE; }
 var float() gamehook_ClearScoreAllowed = { return TRUE; }
-var float() gamehook_TelefragsAllowed = { return TRUE; }
 var string() gamehook_client_fix_cvars = { return ""; }
 var string(string bspname) gamehook_world_record_for_map = { return ""; }
 var float() gamehook_ready_restart_hard = { return FALSE; }

@@ -1073,10 +1073,6 @@ float() race_ClearScoresAllowed {
 	return g_race_qualifying;
 }
 
-float() race_TelefragsAllowed {
-	return FALSE;
-}
-
 float() race_ready_restart_hard {
 	return race_completing;
 }
@@ -1351,7 +1347,6 @@ void(void) race_init {
 	gamehook_client_fix_cvars = race_client_fix_cvars;
 	gamehook_world_record_for_map = race_world_record_for_map;
 	gamehook_ReadyAllowed = race_ReadyAllowed;
-	gamehook_TelefragsAllowed = race_TelefragsAllowed;
 	gamehook_ready_restart_hard = race_ready_restart_hard;
 	gamehook_havocbot_role_choose = race_role_choose;
 	gamehook_SuddenDeathMessageMod = race_SuddenDeathMod;

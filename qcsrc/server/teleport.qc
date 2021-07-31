@@ -71,7 +71,6 @@ void(entity teleporter, entity player, vector to, vector to_angles, vector to_ve
 		if (g_telefrags)
 		if (player.takedamage)
 		if (player.deadflag == DEAD_NO)
-		if (gamehook_TelefragsAllowed())
 			teleport_death(player, teleporter, telefragger, telefragmin, telefragmax, _damage);
 
 		// player no longer is on ground
