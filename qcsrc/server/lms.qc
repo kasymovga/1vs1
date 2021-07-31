@@ -112,9 +112,9 @@ void(void) lms_sphere_setup {
 	net_link_entity(lms_sphere, FALSE, 0, lms_sphere_send);
 }
 
-var void(entity spot) lms_Spawn_next;
-void lms_Spawn(entity spot) {
-	lms_Spawn_next(spot);
+var void(entity spot) lms_spawn_next;
+void lms_spawn(entity spot) {
+	lms_spawn_next(spot);
 	if (warmup_active)
 		return;
 
@@ -128,17 +128,17 @@ void lms_Spawn(entity spot) {
 	self.team = 0;
 }
 
-var float(void) lms_JoinHandle_next;
-float(void) lms_JoinHandle {
+var float(void) lms_spectator_to_player_handle_next;
+float(void) lms_spectator_to_player_handle {
 	if (g_lms_lives <= 0)
 		return TRUE;
 
 	score_player_set(self, SP_LIVES, g_lms_lives);
 	self.killcount = 0; //Prevent score reset
-	return lms_JoinHandle_next();
+	return lms_spectator_to_player_handle_next();
 }
 
-float(entity attacker, entity inflictor, float deathtype) lms_DeathHandle {
+float(entity attacker, entity inflictor, float deathtype) lms_player_death_handle {
 	if not(warmup_active) {
 		score_player_add(self, SP_LIVES, -1);
 		if (self.scorekeeper.lms_lives <= 0)
@@ -165,7 +165,7 @@ void(void) lms_client_connect {
 	lms_client_connect_next();
 }
 
-float(float ignore, float ignore2) lms_WinningCondition {
+float(float ignore, float ignore2) lms_winning_condition {
 	if (time < map_starttime)
 		return FALSE;
 
@@ -184,7 +184,7 @@ float(float ignore, float ignore2) lms_WinningCondition {
 	return FALSE;
 }
 
-float(void) lms_ForbidSpectators {
+float(void) lms_forbid_spectators {
 	return FALSE;
 }
 
@@ -192,7 +192,7 @@ void(void) lms_init_delayed {
 	lms_sphere_setup();
 }
 
-float(entity spot) lms_SpawnPointGood {
+float(entity spot) lms_spawn_score_good {
 	float f = vlen(spot.origin - lms_sphere.origin);
 	if (f < (lms_sphere_diameter * 0.5) - 40)
 		return TRUE;
@@ -201,16 +201,16 @@ float(entity spot) lms_SpawnPointGood {
 }
 
 void(void) lms_init {
-	lms_Spawn_next = gamehook_chain_spawn;
-	gamehook_chain_spawn = lms_Spawn;
+	lms_spawn_next = gamehook_chain_spawn;
+	gamehook_chain_spawn = lms_spawn;
 	lms_client_connect_next = gamehook_chain_client_connect;
 	gamehook_chain_client_connect = lms_client_connect;
-	lms_JoinHandle_next = gamehook_chain_JoinHandle;
-	gamehook_chain_JoinHandle = lms_JoinHandle;
-	gamehook_winning_condition = lms_WinningCondition;
-	gamehook_forbid_specatators = lms_ForbidSpectators;
-	gamehook_player_death_handle = lms_DeathHandle;
-	gamehook_SpawnPointGood = lms_SpawnPointGood;
+	lms_spectator_to_player_handle_next = gamehook_chain_spectator_to_player_handle;
+	gamehook_chain_spectator_to_player_handle = lms_spectator_to_player_handle;
+	gamehook_winning_condition = lms_winning_condition;
+	gamehook_forbid_specatators = lms_forbid_spectators;
+	gamehook_player_death_handle = lms_player_death_handle;
+	gamehook_spawn_score_good = lms_spawn_score_good;
 	score_basics(SCORE_FLAG_SORT_PRIO_SECONDARY, SCORE_FLAG_SORT_PRIO_SECONDARY, TRUE);
 	SP_STATUS = score_register("status", 0);
 	SP_LIVES = score_register("lives", SCORE_FLAG_SORT_PRIO_PRIMARY | SCORE_FLAG_NOCLEAR);

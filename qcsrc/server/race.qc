@@ -978,7 +978,7 @@ float() race_OvertimeHandle {
 	return FALSE;
 }
 
-float race_SpawnPointGood(entity spot) {
+float race_spawn_score_good(entity spot) {
 	if (race_spawns)
 		if (spot.target == "")
 			return FALSE;
@@ -1345,7 +1345,7 @@ void(void) race_init {
 	gamehook_chain_player_clear = race_player_clear;
 	race_observer_spawn_next = gamehook_chain_observer_spawn;
 	gamehook_chain_observer_spawn = race_observer_spawn;
-	gamehook_SpawnPointGood = race_SpawnPointGood;
+	gamehook_spawn_score_good = race_spawn_score_good;
 	race_score_winning_condition_countdown_orig = gamehook_score_winning_condition_countdown;
 	gamehook_score_winning_condition_countdown = race_score_winning_condition_countdown;
 	gamehook_client_fix_cvars = race_client_fix_cvars;

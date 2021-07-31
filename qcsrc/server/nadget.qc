@@ -94,12 +94,12 @@ void nadget_ObserverSpawn(void) {
     nadget_ObserverSpawn_Next();
 }
 
-var float() nadget_JoinHandle_NextLink;
-float nadget_JoinHandle() {
+var float() nadget_spectator_to_player_handle_NextLink;
+float nadget_spectator_to_player_handle() {
 	if (nadget_ShowMenu(FALSE))
 		return TRUE;
 
-	return nadget_JoinHandle_NextLink();
+	return nadget_spectator_to_player_handle_NextLink();
 }
 
 var float(entity plr) nadget_PlayerCanBeCarrier_NextLink;
@@ -255,8 +255,8 @@ void nadget_Init(void) {
 	gamehook_chain_cmd_client_handle = nadget_ClientCommandHandle;
 	nadget_player_damage_handle_NextLink = gamehook_chain_player_damage_handle;
 	gamehook_chain_player_damage_handle = nadget_player_damage_handle;
-	nadget_JoinHandle_NextLink = gamehook_chain_JoinHandle;
-	gamehook_chain_JoinHandle = nadget_JoinHandle;
+	nadget_spectator_to_player_handle_NextLink = gamehook_chain_spectator_to_player_handle;
+	gamehook_chain_spectator_to_player_handle = nadget_spectator_to_player_handle;
 	nadget_PlayerCanBeCarrier_NextLink = gamehook_chain_PlayerCanBeCarrier;
 	gamehook_chain_PlayerCanBeCarrier = nadget_PlayerCanBeCarrier;
 	nadget_SpectateCopy_NextLink = gamehook_chain_spectator_copy;

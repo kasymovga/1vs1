@@ -40,8 +40,8 @@ float(string cmd, float tokens) weapon_selectable_ClientCommandHandle {
 	return weapon_selectable_ClientCommandHandle_NextLink(cmd, tokens);
 }
 
-var float(void) weapon_selectable_JoinHandle_NextLink;
-float(void) weapon_selectable_JoinHandle {
+var float(void) weapon_selectable_spectator_to_player_handle_NextLink;
+float(void) weapon_selectable_spectator_to_player_handle {
     if(clienttype(self) != CLIENTTYPE_REAL)
         return FALSE;
 
@@ -49,7 +49,7 @@ float(void) weapon_selectable_JoinHandle {
         weapon_selectable_send();
         return TRUE;
     }
-	return weapon_selectable_JoinHandle_NextLink();
+	return weapon_selectable_spectator_to_player_handle_NextLink();
 }
 
 var void(entity spot) weapon_selectable_Spawn_NextLink;
@@ -80,8 +80,8 @@ void(void) weapon_selectable_init {
 	if not(g_start_weapon_selectable)
 		return;
 
-	weapon_selectable_JoinHandle_NextLink = gamehook_chain_JoinHandle;
-	gamehook_chain_JoinHandle = weapon_selectable_JoinHandle;
+	weapon_selectable_spectator_to_player_handle_NextLink = gamehook_chain_spectator_to_player_handle;
+	gamehook_chain_spectator_to_player_handle = weapon_selectable_spectator_to_player_handle;
 	weapon_selectable_ClientCommandHandle_NextLink = gamehook_chain_cmd_client_handle;
 	gamehook_chain_cmd_client_handle = weapon_selectable_ClientCommandHandle;
 	weapon_selectable_Spawn_NextLink = gamehook_chain_spawn;
