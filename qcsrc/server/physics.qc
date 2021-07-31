@@ -426,8 +426,8 @@ void(void) physics_climb_init {
 		return;
 
 	physics_climb_init_done = 1;
-	physics_weapon_switch_mod_next = gamehook_chain_SwitchWeaponMod;
-	gamehook_chain_SwitchWeaponMod = physics_weapon_switch_mod;
+	physics_weapon_switch_mod_next = gamehook_chain_weapon_frame_switch_mod;
+	gamehook_chain_weapon_frame_switch_mod = physics_weapon_switch_mod;
 }
 
 float physics_initiated;

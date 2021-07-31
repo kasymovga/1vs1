@@ -119,12 +119,12 @@ float(entity plr) nexball_player_is_carrier { return plr.ballcarried != world; }
 void(entity plr) nexball_player_drop_carried { nexball_drop_ball(plr.ballcarried, plr.origin, plr.velocity); }
 float(entity e) nexball_portal_forbidden_for { return e.classname == "nexball_football" || e.classname == "nexball_basketball" || e.classname == "nexball_hockey"; }
 
-var float(float f) nexball_SwitchWeaponMod_NextLink;
-float(float f) nexball_SwitchWeaponMod {
+var float(float f) nexball_weapon_frame_switch_mod_NextLink;
+float(float f) nexball_weapon_frame_switch_mod {
 	if (akimbo_owner(self).ballcarried)
 		return 0;
 
-	return nexball_SwitchWeaponMod_NextLink(f);
+	return nexball_weapon_frame_switch_mod_NextLink(f);
 }
 
 void() nexball_init {
@@ -164,8 +164,8 @@ void() nexball_init {
 	CVAR_CACHE(g_nexball_volleyball_melee_boost_forward);
 	nexball_PlayerClear_NextLink = gamehook_chain_player_clear;
 	gamehook_chain_player_clear = nexball_PlayerClear;
-	nexball_SwitchWeaponMod_NextLink = gamehook_chain_SwitchWeaponMod;
-	gamehook_chain_SwitchWeaponMod = nexball_SwitchWeaponMod;
+	nexball_weapon_frame_switch_mod_NextLink = gamehook_chain_weapon_frame_switch_mod;
+	gamehook_chain_weapon_frame_switch_mod = nexball_weapon_frame_switch_mod;
 	nexball_PlayerPreThink_NextLink = gamehook_chain_player_think;
 	gamehook_chain_player_think = nexball_PlayerPreThink;
 	nexball_SpeedMod_NextLink = gamehook_chain_physics_max_speed_mod;

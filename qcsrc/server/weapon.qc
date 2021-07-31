@@ -369,7 +369,7 @@ void(void) weapon_frame {
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	float _switchweapon = gamehook_chain_SwitchWeaponMod(self.switchweapon);
+	float _switchweapon = gamehook_chain_weapon_frame_switch_mod(self.switchweapon);
 	if (!_switchweapon) {
 		self.items &= ~IT_AMMO;
 		self.weaponname = "";
