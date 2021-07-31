@@ -125,6 +125,7 @@ void lms_spawn(entity spot) {
 	self.killcount = -666; //Prevent bprint
 	self.team = -1; //Prevent score reset
 	spectator_observer_spawn(FALSE);
+	self.killcount = 0; //prevent possible score clear by join
 	self.team = 0;
 }
 
