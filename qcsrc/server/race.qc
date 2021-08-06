@@ -865,7 +865,7 @@ float race_player_can_fire(entity plr, float wep) {
 	return race_player_can_fire_NextLink(plr, wep);
 }
 
-void() race_PhysicFrameBegin {
+void() race_physics_frame_begin_hook {
 	vector wishvel;
 	float wishspeed, f;
 	// if record times matter
@@ -1333,7 +1333,7 @@ void(void) race_init {
 	gamehook_physics_player_allowed_to_move = race_physics_player_allowed_to_move;
 	race_player_can_fire_NextLink = gamehook_chain_player_can_fire;
 	gamehook_chain_player_can_fire = race_player_can_fire;
-	gamehook_PhysicFrameBegin = race_PhysicFrameBegin;
+	gamehook_physics_frame_begin_hook = race_physics_frame_begin_hook;
 	gamehook_client_put_spawn_point = race_client_put_spawn_point;
 	race_spawn_next = gamehook_chain_spawn;
 	gamehook_chain_spawn = race_spawn;

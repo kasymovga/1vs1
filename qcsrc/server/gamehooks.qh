@@ -7,7 +7,7 @@ float gamehook_chain_player_damage_mod;
 var float(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) gamehook_chain_player_damage_handle = { return FALSE; }
 var float(entity plr, float wep) gamehook_chain_player_can_fire = { return TRUE; }
 var float() gamehook_physics_player_allowed_to_move = { return TRUE; }
-var void() gamehook_PhysicFrameBegin = {}
+var void() gamehook_physics_frame_begin_hook = {}
 var void(void) gamehook_chain_player_think = {}
 var entity() gamehook_client_put_spawn_point = {
 	entity spot;
