@@ -259,17 +259,15 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers {
 	other = oldother;
 }
 
-void SV_PlayerPhysics()
-{
+void(void) physics_player_pre { //called by engine
 	if (self.player_physic)
 		self.player_physic.SendFlags |= 4;
 
-	if(self.classname == "player")
-	{
+	if (self.classname == "player") {
 		float allowed_to_move = 0;
 		if (time >= map_starttime || map_restart_active)
 		if not(map_finished)
-		if (gamehook_PlayerAllowedToMove())
+		if (gamehook_physics_player_allowed_to_move())
 			allowed_to_move = 1;
 
 		if (allowed_to_move) {

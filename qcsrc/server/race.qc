@@ -846,7 +846,7 @@ void(void) spawnfunc_race_trigger_penalty {
 		self.race_penalty = 5;
 }
 
-float() race_PlayerAllowedToMove {
+float() race_physics_player_allowed_to_move {
 	if (self.race_penalty)
 		if (time > self.race_penalty)
 			self.race_penalty = 0;
@@ -1330,7 +1330,7 @@ void(void) race_init {
 	race_score_setup();
 	gamehook_InitSpectator = race_InitSpectator;
 	gamehook_world_reset = race_world_reset;
-	gamehook_PlayerAllowedToMove = race_PlayerAllowedToMove;
+	gamehook_physics_player_allowed_to_move = race_physics_player_allowed_to_move;
 	race_player_can_fire_NextLink = gamehook_chain_player_can_fire;
 	gamehook_chain_player_can_fire = race_player_can_fire;
 	gamehook_PhysicFrameBegin = race_PhysicFrameBegin;

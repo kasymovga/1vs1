@@ -156,3 +156,4 @@ void		end_sys_fields;
 #define world_frame_start StartFrame
 #define world_frame_end EndFrame
 #define entity_spawn_pre SV_OnEntityPreSpawnFunction
+#define physics_player_pre SV_PlayerPhysics
