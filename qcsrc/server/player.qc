@@ -1508,8 +1508,9 @@ void() player_regen {
 		limita = g_balance_armor_limit * gamehook_player_armor_health_limit_mod;
 		self.armorvalue = player_calc_rot_regen(self.armorvalue, g_balance_armor_regenstable, g_balance_armor_regen, g_balance_armor_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished), g_balance_armor_rotstable, g_balance_armor_rot, g_balance_armor_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 	}
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO) {
+		self.ammo_fuel = player_calc_rot_regen(self.ammo_fuel, g_balance_fuel_regenstable, g_balance_fuel_regen, g_balance_fuel_regenlinear, gamehook_player_regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), g_balance_fuel_rotstable, g_balance_fuel_rot, g_balance_fuel_rotlinear, gamehook_player_rot_mod * frametime * (time > self.pauserotfuel_finished), g_balance_fuel_limit);
+	}
 }
 
 .float items_added;
