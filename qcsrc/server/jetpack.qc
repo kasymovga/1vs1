@@ -33,7 +33,7 @@ float(void) jetpack_using {
 		if (!g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO)
 			return TRUE;
 
-		if not(buttons_prev & 2)
+		if not(self.buttons_old & 2)
 		if (self.items & IT_FUEL_REGEN)
 			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
 	}

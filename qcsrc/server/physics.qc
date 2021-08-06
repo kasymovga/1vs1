@@ -13,15 +13,6 @@ void(vector v1, vector v2, float r, float stackprotect) physics_triggers;
 vector physics_frame_begin_origin;
 entity physics_current_player;
 
-#if 0
-float developer_shtest;
-#define SHTEST_DELTA 10
-#define SHTEST_THRESHOLD 1.1
-.float shtest_next;
-.float shtest_accumulator;
-#endif
-
-float buttons_prev;
 float physics_send(entity to, float sf);
 
 void(void) physics_on_jump_hook {
@@ -30,7 +21,7 @@ void(void) physics_on_jump_hook {
 	else
 		anim_set(self.body, self.anim_jump, FALSE, TRUE, TRUE);
 
-	if(g_jump_grunt)
+	if (g_jump_grunt)
 		player_sound(self, CHAN_PLAYER, sound_random_by_str(self.playersound_jump), VOL_BASE, ATTN_NORM);
 }
 
@@ -66,15 +57,14 @@ void(void) physics_check_ground_hook {
 			self.nextstep = time + 0.5;
 			sound(self, CHAN_PLAYER, "misc/outwater.wav", VOL_BASE, ATTN_NORM);
 		} else {
-			if(self.flags & FL_ONGROUND_OR_SLICK)
-			if(time >= self.ladder_time)
+			if (self.flags & FL_ONGROUND_OR_SLICK)
+			if (time >= self.ladder_time)
 			if (self.lastground < time - 0.3) {
 				self.nextstep = time + 0.2;
 				trace_dphitq3surfaceflags = 0;
 				trace_box(self.origin, self.mins, self.maxs, self.origin - '0 0 1', TRACE_MOVE_NOMONSTERS, self);
-				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-				{
-					if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) {
+					if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 						sound(self, CHAN_PLAYER, sound_random("misc/metalhitground", 4), VOL_BASE, ATTN_NORM);
 					else
 						sound(self, CHAN_PLAYER, sound_random("misc/hitground", 4), VOL_BASE, ATTN_NORM);
@@ -101,22 +91,20 @@ float(void) physics_max_speed_mod {
 	float maxspd_mod, spd;
 	string temps;
 	maxspd_mod = gamehook_chain_physics_max_speed_mod();
-	if(self.classname != "player")
-	{
+	if (self.classname != "player") {
 		maxspd_mod = sv_spectator_speed_multiplier;
-		if(!self.spectatorspeed)
+		if (!self.spectatorspeed)
 			self.spectatorspeed = maxspd_mod;
-		if(self.impulse && self.impulse <= 19)
-		{
-			if(self.lastclassname != "player")
-			{
-				if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+
+		if (self.impulse && self.impulse <= 19) {
+			if (self.lastclassname != "player") {
+				if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 					self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
-				else if(self.impulse == 11)
+				else if (self.impulse == 11)
 					self.spectatorspeed = maxspd_mod;
-				else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19)
+				else if (self.impulse == 12 || self.impulse == 16  || self.impulse == 19)
 					self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
-				else if(self.impulse >= 1 && self.impulse <= 9)
+				else if (self.impulse >= 1 && self.impulse <= 9)
 					self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
 			} // otherwise just clear
 			self.impulse = 0;
@@ -124,8 +112,7 @@ float(void) physics_max_speed_mod {
 		maxspd_mod = self.spectatorspeed;
 	}
 	spd = max(sv_maxspeed, sv_maxairspeed) * maxspd_mod;
-	if(self.speed != spd)
-	{
+	if (self.speed != spd) {
 		self.speed = spd;
 		temps = ftos(spd);
 		stuffcmd(self, strcat("cl_forwardspeed ", temps, "\n"));
@@ -149,54 +136,43 @@ void(void) physics_frame_end_hook {
 	if (self.mins != self.maxs) {
 		physics_triggers(physics_frame_begin_origin, self.origin, vlen(self.maxs - self.mins) / 2, 0);
 	}
+	float buttons;
+	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
+	if (buttons != self.buttons_old || physics_movement != self.movement_old || self.v_angle != self.v_angle_old || self.deadflag != DEAD_NO)
+		self.parm_idlesince = time;
+
+	self.buttons_old = buttons;
+	self.movement_old = physics_movement;
+	self.v_angle_old = self.v_angle;
 }
 
 .float() PlayerPhysplug;
 
 void(void) physics_frame_begin_hook {
-	float buttons;
 	float f;
 	gamehook_physics_frame_begin_hook();
-	buttons = self.BUTTON_ATCK + 2 * self.BUTTON_JUMP + 4 * self.BUTTON_ATCK2 + 8 * self.BUTTON_ZOOM + 16 * self.BUTTON_CROUCH + 32 * self.BUTTON_HOOK + 64 * self.BUTTON_USE + 128 * (self.movement_x < 0) + 256 * (self.movement_x > 0) + 512 * (self.movement_y < 0) + 1024 * (self.movement_y > 0);
-
-	if(buttons != self.buttons_old || physics_movement != self.movement_old || self.v_angle != self.v_angle_old || self.deadflag != DEAD_NO)
-		self.parm_idlesince = time;
-
-	buttons_prev = self.buttons_old;
-	self.buttons_old = buttons;
-	self.movement_old = physics_movement;
-	self.v_angle_old = self.v_angle;
-    if(physics_plug)
-		return;
-
-	if (self.punchangle != '0 0 0')
-	{
+	physics_frame_begin_origin = self.origin;
+	physics_current_player = self;
+	if (self.punchangle != '0 0 0') {
 		f = vlen(self.punchangle) - 10 * frametime;
 		if (f > 0)
 			self.punchangle = normalize(self.punchangle) * f;
 		else
 			self.punchangle = '0 0 0';
 	}
-
-	if (self.punchvector != '0 0 0')
-	{
+	if (self.punchvector != '0 0 0') {
 		f = vlen(self.punchvector) - 30 * frametime;
 		if (f > 0)
 			self.punchvector = normalize(self.punchvector) * f;
 		else
 			self.punchvector = '0 0 0';
 	}
-
-
 	if not(self.fixangle)
 	if not(PLAYER_REALLY_DEAD(self)) {
 		self.angles_x = 0;
 		self.angles_y = physics_v_angle_y;
 		self.angles_z = 0;
 	}
-	physics_button_crouch = self.BUTTON_CROUCH;
-	physics_frame_begin_origin = self.origin;
-	physics_current_player = self;
 	if (g_sideview || g_topview) {
 		self.movement = physics_movement;
 	}
@@ -316,6 +292,7 @@ void(void) physics_player_pre { //called by engine
 	physics_deadflag = self.deadflag;
 	physics_crouch = self.crouch;
 	physics_button_jump = self.BUTTON_JUMP;
+	physics_button_crouch = self.BUTTON_CROUCH;
 	physics_v_angle = self.v_angle;
 	physics_is_player = (self.classname == "player");
 	physics_ladder = (time < self.ladder_time);
@@ -339,7 +316,7 @@ void(void) physics_player_pre { //called by engine
 	physics_cpmdoublejump_time = self.cpmdoublejump;
 	physics_player();
 	self.frametime_accumulator = physics_frametime_accumulator;
-	if(physics_flags & FL_ONGROUND_OR_SLICK)
+	if (physics_flags & FL_ONGROUND_OR_SLICK)
 		self.lastground = time;
 
 	self.teleport_time = time + physics_teleport_time;
@@ -355,27 +332,24 @@ void(void) physics_player_pre { //called by engine
 	self.cpmdoublejump = physics_cpmdoublejump_time;
 }
 
-var void() physics_client_connect_real_NextLink;
-void physics_client_connect_real()
-{
-	if not(self.player_physic)
-	{
+var void(void) physics_client_connect_real_next;
+void(void) physics_client_connect_real {
+	if not(self.player_physic) {
 		self.player_physic = spawn();
 		self.player_physic.viewmodelforclient = self;
 		self.player_physic.owner = self;
 		net_link_entity(self.player_physic, FALSE, 0, physics_send);
 	}
 	self.player_physic.SendFlags = 3;
-	physics_client_connect_real_NextLink();
+	physics_client_connect_real_next();
 }
 
-var void() physics_client_disconnect_real_NextLink;
-void physics_client_disconnect_real()
-{
+var void() physics_client_disconnect_real_next;
+void(void) physics_client_disconnect_real {
 	if (self.player_physic)
 		remove(self.player_physic);
 
-	physics_client_disconnect_real_NextLink();
+	physics_client_disconnect_real_next();
 }
 
 float(string s) physics_cvar {
@@ -523,9 +497,9 @@ void(void) physics_init {
 			e.player_physic.SendFlags |= 3;
 		}
 	} else {
-		physics_client_connect_real_NextLink = gamehook_chain_client_connect_real;
+		physics_client_connect_real_next = gamehook_chain_client_connect_real;
 		gamehook_chain_client_connect_real = physics_client_connect_real;
-		physics_client_disconnect_real_NextLink = gamehook_chain_client_disconnect_real;
+		physics_client_disconnect_real_next = gamehook_chain_client_disconnect_real;
 		gamehook_chain_client_disconnect_real = physics_client_disconnect_real;
 		physics_initiated = TRUE;
 	}

@@ -706,9 +706,10 @@ void(void) physics_player_frame {
 	}
 	physics_frame_begin_hook();
 	if (physics_plug)
-	if (physics_plug())
+	if (physics_plug()) {
+		physics_frame_end_hook();
 		return;
-
+	}
 	physics_update_status();
 	if (physics_button_crouch) {
 		if not(sv_disable_crouch)
